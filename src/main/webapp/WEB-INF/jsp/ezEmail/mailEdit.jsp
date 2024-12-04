@@ -20,8 +20,35 @@
 		</style>
 		</c:if>
 		<style>
+			.viewtxtScroller {
+				width:calc(100% - 20px);
+				overflow-y:auto;
+				max-height: 19px;
+				margin-bottom: 3px;
+			}
+			.viewtxtWrapper {
+				display: table;
+				height: 100%;
+			}
+			.viewtxt {
+				min-height: 16px;
+			}
+			.viewtxt > span {
+				display: inline-block;
+				padding-right: 5px;
+			}
+			.viewtxt > span > span {
+				font-size: 12px;
+			}
+
+			#menu > ul:nth-child(2) > li {
+				margin: 0 2px !important;
+			}
 			.ui-autocomplete { height: 200px; max-height: 200px; overflow-y: auto; overflow-x: hidden; padding : 0px}
 			#AutoCompleteResults .ui-state-focus { background: #f0f6ff;  border: none }
+			.mailAddressAdd { position:relative; }
+			.expnd { position:absolute; right:9px; top:50%; margin-top:-8px; cursor: pointer; content: url(/images/expnd.gif); }
+			.cllps { position:absolute; right:9px; top:50%; margin-top:-8px; cursor: pointer; content: url(/images/cllps.gif); }
 		</style>
 		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -143,7 +170,7 @@
 				{
 					try {
 						window.opener.document.Script.refreshUnreadCount()
-					} catch (e) {}
+					} catch (e) {console.log(e);}
 				}
 			    if (pSecurity == "Security")
 			    {
@@ -210,7 +237,6 @@
 		        
 		        if (g_bodyType == "1") {
 					document.getElementById("plainTextArea").style.display = "";
-					document.getElementById("bodyType").options[1].selected = true;
 		        	document.getElementById("SelMailSign").disabled = true;
 		        	dadiframe.document.getElementById("btnBigFileUpload").style.display = "none";
 				} else {
@@ -231,7 +257,22 @@
 	            	$( "#MsgCC" ).autocomplete("disable");
 	            	$( "#MsgBCC" ).autocomplete("disable");
 	        	</c:if>
-	            
+
+				// 2024-10-16 김은실 : [표준모듈] 메일쓰기창 To, Cc, Bcc 간 Drag & Drop 구현
+				$("#MsgToGot, #MsgCCGot, #MsgBCCGot").sortable({
+					connectWith: ".viewtxt",
+					// helper, stop 옵션 사용한 이유에 대해서는 commit message 참고 바람.
+					helper: function(event,ui) {
+						var width = parseFloat(window.getComputedStyle(ui.get(0)).width); // 또는, ui.css('width', ui.width() + 1); 가능함.
+						console.debug("origin width: %s", width); // 개발자도구에서 Default levels → Vervose 변경하면 확인 가능.
+
+						ui.css('width', Math.ceil(width));
+						return ui;
+					},
+					stop: function(event,ui) {
+						ui.item.css('width', ""); // helper에서 셋팅한 width값이 inline으로 남아있어서 원복함. 하지만 반드시 필요한 절차는 아니다. (ui.width() + 1 하면 반드시 필요한 절차)
+					}
+				});
 			}
 			
 			var MailStatus = "NO";
@@ -341,7 +382,7 @@
 			    var xmpMailSign = "";
 			    try{
 			        xmpMailSign = message.EditorElementHTML("MailSign","2");
-			    }catch(e){}
+			    }catch(e){console.log(e);}
 			    message.SetEditorContentURL_Format(fullPath);
 			    message.SetEditorContent(message.GetHtmlValue()  + xmpMailSign);
 			}
@@ -383,7 +424,7 @@
 		                                         tempSignDiv.document.getElementById('MailSign').outerHTML + Orgcontentdiv);
 		            
 			        }
-			    }catch(e){}
+			    }catch(e){console.log(e);}
 			    tempDiv.innerHTML = message.GetHtmlValue();
 			    switch(SelMailSign.value)
 			    {
@@ -439,7 +480,7 @@
 		        mail_newreceiverchoose_dialogArguments[1] = new_Address_Complete;
 			    if (CrossYN()) {
 				    var OpenWin = window.open("/ezEmail/mailNewReceiverChoose.do?defaultwin=&type=" + type, receiverData, 'width=1120,height=720,status=no');
-		            try { OpenWin.focus(); } catch (e) { }
+		            try { OpenWin.focus(); } catch (e) {console.log(e);}
 			    } else {
 				    window.showModalDialog("/ezEmail/mailNewReceiverChoose.do?defaultwin=&type=" + type, receiverData, "dialogHeight:720px;dialogWidth:1120px; status:no; help:no; edge:sunken");
                 }
@@ -594,7 +635,7 @@
 		        try {
 		            window.opener.window.close();
 		        } catch (e) {
-		    
+		            console.log(e);
 		        }
 		    }
 		    function DownloadAttach(DownloadUrl) {
@@ -1129,7 +1170,14 @@
 		        xmlhttp = null;
 		        isDelted = true;
 		    }
-		    
+
+			// 수신자칸 : 접기, 펼치기 버튼
+			function changeMode(obj, className) {
+				var mode = { expnd: {switch: 'cllps', height: '55px'},
+							cllps: {switch: 'expnd', height: '19px'} };
+				obj.className = mode[className].switch;
+				$(obj).siblings('.viewtxtScroller').css('max-height', mode[className].height);
+			}
 		</script>
         <c:if test="${isCrossBrowser != true}">
         <script language="javascript" for="EzHTTPTrans" event="AttachAddFile(filename)">  
@@ -1231,7 +1279,12 @@
 		            <td style="width:200px;BORDER-LEFT: #ffffff 1px solid;" ><a class="imgbtn imgbck"><span onClick="new_Address()"><spring:message code='ezEmail.t832' /></span></a></td>
 		          </tr>
 		          <tr>
-		            <td colspan="3"><div id="MsgToGot" style="OVERFLOW-Y: auto; HEIGHT: 17px" class="viewtxt"></div></td>
+		            <td colspan="3" class="mailAddressAdd">
+						<div class="viewtxtScroller">
+							<div id="MsgToGot" class="viewtxt"></div>
+						</div>
+						<img class="expnd" onclick="changeMode(this, this.className)" align="absmiddle">
+					</td>
 		          </tr>
 		          <tr id="MsgCC_TR">
 		            <th rowspan="2"  ><a class="imgbtn"><span onClick="SelectReceiver_onClick('CC')" style="width:50px; text-align: center;"><spring:message code='ezEmail.t594' /></span></a>
@@ -1245,7 +1298,12 @@
 		            <td style="width:200px;BORDER-LEFT: #ffffff 1px solid;" ><a class="imgbtn imgbck"><span onClick="new_Address()"><spring:message code='ezEmail.t832' /></span></a></td>
 		          </tr>
 		          <tr id="MsgCC_TRu">
-		            <td colspan="3"><div id="MsgCCGot" style="OVERFLOW-Y: auto; HEIGHT: 17px" class="viewtxt"></div></td>
+		            <td colspan="3" class="mailAddressAdd">
+						<div class="viewtxtScroller">
+							<div id="MsgCCGot" class="viewtxt"></div>
+						</div>
+						<img class="expnd" onclick="changeMode(this, this.className)" align="absmiddle">
+					</td>
 		          </tr>
 		          <tr id="MsgBCC_TR" style="display:none;">
 		            <th rowspan="2" ><a class="imgbtn"><span onClick="SelectReceiver_onClick('BCC')"><spring:message code='ezEmail.t562' /></span></a></th>
@@ -1257,7 +1315,12 @@
 		            <td style="width:200px;BORDER-LEFT: #ffffff 1px solid;" ><a class="imgbtn imgbck"><span onClick="new_Address()"><spring:message code='ezEmail.t832' /></span></a></td>
 		          </tr>
 		          <tr id="MsgBCC_TRu" style="display:none;">
-		            <td colspan="3"><div id="MsgBCCGot" style="OVERFLOW-Y: auto; HEIGHT: 17px" class="viewtxt"></div></td>
+		            <td colspan="3" class="mailAddressAdd">
+						<div class="viewtxtScroller">
+							<div id="MsgBCCGot" class="viewtxt"></div>
+						</div>
+						<img class="expnd" onclick="changeMode(this, this.className)" align="absmiddle">
+					</td>
 		          </tr>
 		          <tr>
 		            <th style="text-align:center"><spring:message code='ezEmail.t98' /></th>

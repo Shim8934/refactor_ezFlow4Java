@@ -16,6 +16,7 @@
 	<typeAlias  alias="OrganUserVO"         						type="egovframework.ezEKP.ezOrgan.vo.OrganUserVO"/>
 	<typeAlias  alias="ResGetClsAclListVO" 					type="egovframework.ezEKP.ezResource.vo.ResGetClsAclListVO"/>
 	<typeAlias  alias="ResOccuVO" 								type="egovframework.ezEKP.ezResource.vo.ResOccuVO"/>
+	<typeAlias  alias="ResFavoriteCategoryVO" 					type="egovframework.ezEKP.ezResource.vo.ResFavoriteCategoryVO"/>
 	
 	<resultMap class="ResGetAdmSubClsTreeVO" id="resGetAdmSubClsTreeVO">
 		<result property="brdID"					column="BRD_ID"					columnIndex="1"/>
@@ -308,6 +309,17 @@
 	<!-- <procedure id="EzResourceDAO.getAdmSubClsTree" parameterClass="Map" resultMap="resGetAdmSubClsTreeVO" >
 		{CALL EZSP_GETADMSUBCLSTREE(#v_P_ParentID#, #v_P_CompanyID#, #v_P_TreeType#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure> -->
+	
+	<resultMap class="ResFavoriteCategoryVO" id="resFavoriteCategoryVO">            
+			<result property="catId"					column="CAT_ID"					/>
+			<result property="topId"					column="TOP_ID"					/>
+			<result property="tenantId"					column="TENANT_ID"				/>
+			<result property="userId"					column="USER_ID"				/>
+			<result property="catName"					column="CAT_NAME"				/>
+			<result property="updateDate"				column="UPDATEDATE"				/>
+			<result property="companyid"				column="COMPANYID"				/>
+			<result property="brdYn"					column="BRDYN"					/>
+	</resultMap>
 	
 	<select id="EzResourceDAO.getAdmSubClsTree" parameterClass="Map" resultMap="resGetAdmSubClsTreeVO">
 		<isEmpty property="v_P_ParentID">
@@ -923,15 +935,21 @@
 		]]>
 	</select>
 	
+	<!-- 2024-07-05 홍승비 - SQL Injection 수정 > $ 기호 제거 -->
 	<select id="EzResourceDAO.getBrdList" parameterClass="Map" resultMap="resBrdListVO">
 		<![CDATA[
 			SELECT
-				ATTACH_SIZE, BRD_ACCESS, BRD_COMPANY, BRD_COUNT, 
-                BRD_EXPLAIN, BRD_GB, BRD_GROUP, BRD_ID, BRD_LEVEL, $v_PBRDNM$ AS BRD_NM, 
-                BRD_POSTTERM, BRD_REF, BRD_STEP, BRD_UPPER, BRD_URL, 
-                SUBSTR(MAKEDATE, 1, 4) || '-' || SUBSTR(MAKEDATE, 5, 2) || '-' || SUBSTR(MAKEDATE, 7, 2) MAKEDATE, OWNDEPTID,  $v_POWNDEPTNM$  AS OWNDEPTNM, OWNERCALL, 
-                OWNERID,  $v_POWNERNM$  AS OWNERNM,  $v_POWNERPOSITION$   AS OWNERPOSITION, 
-                REPLY_MAIL_FG, RESLOCATION, APPROVEFLAG 
+				ATTACH_SIZE, BRD_ACCESS, BRD_COMPANY, BRD_COUNT,
+                BRD_EXPLAIN, BRD_GB, BRD_GROUP, BRD_ID, BRD_LEVEL,
+                CASE #v_lang# WHEN '2' THEN BRD_NM2 ELSE BRD_NM END AS BRD_NM,
+                BRD_POSTTERM, BRD_REF, BRD_STEP, BRD_UPPER, BRD_URL,
+                SUBSTR(MAKEDATE, 1, 4) || '-' || SUBSTR(MAKEDATE, 5, 2) || '-' || SUBSTR(MAKEDATE, 7, 2) MAKEDATE, OWNDEPTID,
+                CASE #v_lang# WHEN '2' THEN OWNDEPTNM2 ELSE OWNDEPTNM END AS OWNDEPTNM,
+                OWNERCALL,
+                OWNERID,
+                CASE #v_lang# WHEN '2' THEN OWNERNM2 ELSE OWNERNM END AS OWNERNM,
+                CASE #v_lang# WHEN '2' THEN OWNERPOSITION2 ELSE OWNERPOSITION END AS OWNERPOSITION,
+                REPLY_MAIL_FG, RESLOCATION, APPROVEFLAG
 			FROM
 				TBL_RS_BRD  
 			WHERE
@@ -944,7 +962,8 @@
 				BRD_COMPANY = #v_PCOMPANYID#
 			AND
 				TENANT_ID = #tenantID#
-			ORDER BY BRD_STEP	
+			ORDER BY
+				BRD_STEP	
 		]]>
 	</select>
 	
@@ -2482,7 +2501,6 @@
 	</update>
 	
 	<select id="EzResourceDAO.getDeptAcl" parameterClass="Map"  resultMap="resGetClsAclListVO">
-		<![CDATA[
 			SELECT
 				DEPT_YN , 
 				SDA_YN ,
@@ -2500,8 +2518,10 @@
        		AND
        			SDA_Yn = 'Y'
        		AND
-       			MEMBER_ID in ( $v_PUSERID$ )
-		]]>
+       			MEMBER_ID IN
+       			<iterate property="v_PUSERID" open="(" close=")" conjunction=",">
+		   			#v_PUSERID[]#
+		   		</iterate>
 	</select>
 	
 	<select id="EzResourceDAO.isResourceGroupManager" parameterClass="map" resultClass="String">
@@ -2566,14 +2586,16 @@
 				TBL_RS_PERSPORTLET B
 			ON
 				A.BRD_ID = B.BRD_ID
+			AND 
+				A.TENANT_ID = B.TENANT_ID
+			AND
+				A.BRD_COMPANY = B.BRD_COMPANY
 			WHERE
 				B.CN = #cn#
 			AND
-				B.TENANT_ID = #tenant_id#
+				A.TENANT_ID = #tenant_id#
 			AND
-				B.BRD_COMPANY = #brd_company#
-			AND
-				A.BRD_COMPANY = B.BRD_COMPANY
+				A.BRD_COMPANY = #brd_company#
 		]]>
 	</select>
 
@@ -2721,4 +2743,330 @@
 				TO_NUMBER(A.OWNERID), TO_NUMBER(A.NUM) ASC
 		]]>
 	</select>
+	
+	<select id="EzResourceDAO.getNewFavoriteCategoryId" resultClass="String">
+	    SELECT
+	    	NVL(MAX(TO_NUMBER(CAT_ID)), 0) + 1 AS CAT_ID
+	    FROM
+	    	TBL_RS_FAV_CAT
+	</select>
+	
+	<insert id="EzResourceDAO.insertFavoriteCategory" parameterClass="map">
+	    INSERT INTO 
+	    	TBL_RS_FAV_CAT
+	    		(CAT_ID, TOP_ID, USER_ID, CAT_NAME, UPDATEDATE, COMPANYID, BRDYN, TENANT_ID)
+	    VALUES (
+	        #CAT_ID#,
+	        <isEmpty property="TOP_ID">
+	            NULL
+	        </isEmpty>
+	        <isNotEmpty property="TOP_ID">
+	            #TOP_ID#
+	        </isNotEmpty>,
+	        #USER_ID#,
+	        #CAT_NAME#,
+	        SYSTIMESTAMP,
+	        #COMPANYID#,
+	        NULL,
+	        #TENANT_ID#
+	    )
+	</insert>
+	
+	<select id="EzResourceDAO.selectFavoriteCategory" parameterClass="map" resultMap="resFavoriteCategoryVO">
+		SELECT 
+			CAT_ID, 
+			TOP_ID, 
+			USER_ID, 
+			CAT_NAME, 
+			TO_CHAR(UPDATEDATE, 'YYYY-MM-DD HH24:MI:SS') AS UPDATEDATE, 
+			COMPANYID, 
+			BRDYN, 
+			TENANT_ID
+	    FROM 
+	    	TBL_RS_FAV_CAT
+		WHERE
+			CAT_ID = #CAT_ID#
+	</select>
+	
+	<select id="EzResourceDAO.selectFavoriteCategoryList" resultMap="resFavoriteCategoryVO" parameterClass="map">
+	    SELECT 
+			CAT_ID, 
+			TOP_ID, 
+			USER_ID, 
+			CAT_NAME, 
+			TO_CHAR(UPDATEDATE, 'YYYY-MM-DD HH24:MI:SS') AS UPDATEDATE, 
+			COMPANYID, 
+			BRDYN, 
+			TENANT_ID
+	    FROM 
+	    	TBL_RS_FAV_CAT
+	    WHERE
+	    <isEmpty property="TOP_ID">
+	        TOP_ID IS NULL
+	    </isEmpty>
+	    <isNotEmpty property="TOP_ID">
+	        TOP_ID = #TOP_ID#
+	    </isNotEmpty>
+	    AND 
+	    	USER_ID = #USER_ID#
+	    ORDER BY 
+	    	UPDATEDATE DESC
+	</select>
+	
+	<update id="EzResourceDAO.updateFavoriteCategory" parameterClass="map">
+	    UPDATE 
+	    	TBL_RS_FAV_CAT 
+	    SET 
+	    	CAT_NAME = #CAT_NAME# 
+	    WHERE 
+	    	CAT_ID = #CAT_ID#
+	</update>
+	
+	<delete id="EzResourceDAO.delFavoriteCategory" parameterClass="String">
+		DELETE FROM 
+			TBL_RS_FAV_CAT 
+		WHERE 
+			CAT_ID = #catId# 
+	</delete>
+	
+	<insert id="EzResourceDAO.insertBrdFavoriteCategory" parameterClass="map">
+	    INSERT INTO 
+	    	TBL_RS_CAT_BRD
+	    		(CAT_ID, BRD_ID, USER_ID, COMPANYID, UPDATEDATE, TENANT_ID)
+	    VALUES (
+	        #CAT_ID#, 
+	        #BRD_ID#, 
+	        #USER_ID#, 
+	        #COMPANY_ID#, 
+	        SYSTIMESTAMP,
+	        #TENANT_ID#
+	    )
+	</insert>
+	
+	<select id="EzResourceDAO.selectFavoriteBrdList" resultMap="resBrdVO" parameterClass="map">
+	    <![CDATA[
+	    SELECT
+	        TBL_RS_BRD.BRD_ID,
+	        TBL_RS_BRD.BRD_NM,
+	        TBL_RS_BRD.BRD_NM2,
+	        TBL_RS_BRD.BRD_EXPLAIN,
+	        TBL_RS_BRD.OWNDEPTID,
+	        TBL_RS_BRD.OWNDEPTNM,
+	        TBL_RS_BRD.OWNDEPTNM2,
+	        TBL_RS_BRD.OWNERID,
+	        TBL_RS_BRD.OWNERNM,
+	        TBL_RS_BRD.OWNERNM2,
+	        TBL_RS_BRD.OWNERPOSITION,
+	        TBL_RS_BRD.OWNERPOSITION2,
+	        TBL_RS_BRD.OWNERCALL,
+	        NVL(RESLOCATION, ' ') AS RESLOCATION,
+	        TO_CHAR(TO_DATE(MAKEDATE, 'YYYYMMDD'), 'YYYY-MM-DD') AS MAKEDATE,
+	        NVL(APPROVEFLAG, '0') AS APPROVEFLAG,
+	        NVL(RETURNFLAG, '0') AS RETURNFLAG,
+	        NVL(REPEATFLAG, '1') AS REPEATFLAG,
+	        BRD_ACCESS
+	    FROM
+	        TBL_RS_BRD
+	    JOIN 
+	    	TBL_RS_CAT_BRD
+	    ON 
+	        TBL_RS_BRD.BRD_ID = TBL_RS_CAT_BRD.BRD_ID
+	    AND 
+	        TBL_RS_BRD.BRD_COMPANY = TBL_RS_CAT_BRD.COMPANYID
+	    AND 
+	        TBL_RS_BRD.TENANT_ID = TBL_RS_CAT_BRD.TENANT_ID
+	    WHERE
+	        TBL_RS_CAT_BRD.CAT_ID = #catId#
+	    ORDER BY
+	        TBL_RS_CAT_BRD.UPDATEDATE DESC
+	    ]]>
+	</select>
+	
+	<select id="EzResourceDAO.selectBrdFavoriteCategoryList" parameterClass="map" resultClass="int">
+	    SELECT 
+	    	COUNT(*) AS UPDATEDATE
+	    FROM 
+	    	TBL_RS_CAT_BRD
+	    WHERE 
+	    	CAT_ID = #CAT_ID#
+	    AND 
+	    	BRD_ID = #BRD_ID#
+	    AND 
+	    	USER_ID = #USER_ID#
+	</select>
+	
+	<update id="EzResourceDAO.updateFavoriteCategoryBrdYN" parameterClass="map">
+		UPDATE 
+			TBL_RS_FAV_CAT 
+		SET 
+			BRDYN = #brdYn# 
+		WHERE 
+			CAT_ID = #CAT_ID# 
+		AND 
+			COMPANYID = #COMPANY_ID# 
+		AND 
+			TENANT_ID = #TENANT_ID# 
+		AND 
+			USER_ID = #USER_ID#
+	</update>
+	
+	<update id="EzResourceDAO.updateFavoriteCategoryBrdYN2" parameterClass="map">
+		UPDATE 
+			TBL_RS_FAV_CAT 
+		SET 
+			BRDYN = #brdYn# 
+		WHERE 
+			CAT_ID = #CAT_ID# 
+		AND 
+			COMPANYID = #COMPANY_ID# 
+		AND 
+			TENANT_ID = #TENANT_ID# 
+	</update>
+	
+	<update id="EzResourceDAO.moveCategoryToCategory" parameterClass="map">
+		UPDATE 
+			TBL_RS_FAV_CAT 
+		SET 
+			TOP_ID = #TOP_ID#, 
+			UPDATEDATE = SYSTIMESTAMP 
+		WHERE 
+			USER_ID = #USER_ID# 
+		AND 
+			CAT_ID = #CAT_ID#
+	</update>
+	
+	<delete id="EzResourceDAO.deleteChildList" parameterClass="map">
+		DELETE FROM
+			TBL_RS_FAV_CAT
+		WHERE
+			CAT_ID IN (
+				SELECT
+					CAT_ID
+				FROM
+					TBL_RS_FAV_CAT
+				WHERE
+					TOP_ID = #TOP_ID#
+				AND 
+					USER_ID = #USER_ID#
+				AND 
+					COMPANYID = #COMPANY_ID#
+				AND 
+					TENANT_ID = #TENANT_ID#
+		)
+	</delete>
+	
+	<delete id="EzResourceDAO.deleteCatBrd" parameterClass="map">
+		DELETE FROM
+			TBL_RS_CAT_BRD
+		WHERE
+			CAT_ID = #CAT_ID#
+		AND 
+			USER_ID = #USER_ID#
+		AND 
+			COMPANYID = #COMPANY_ID#
+		AND 
+			TENANT_ID = #TENANT_ID#
+	</delete>
+	
+	<select id="EzResourceDAO.selectBrdCategoryCnt" parameterClass="map" resultClass="int">
+		SELECT 
+			COUNT(*) 
+		FROM 
+			TBL_RS_CAT_BRD 
+		WHERE 
+			CAT_ID = #CAT_ID# 
+		AND 
+			BRD_ID = #BRD_ID#
+		AND 
+			USER_ID = #USER_ID# 
+		AND 
+			COMPANYID = #COMPANY_ID#
+		AND 
+			TENANT_ID = #TENANT_ID#
+	</select>
+	
+	<update id="EzResourceDAO.moveBrdCategoryToCategory" parameterClass="map">
+		UPDATE 
+			TBL_RS_CAT_BRD 
+		SET 
+			CAT_ID = #CAT_ID#, 
+			UPDATEDATE = SYSTIMESTAMP
+		WHERE 
+			CAT_ID = #CUR_ID# 
+		AND 
+			BRD_ID = #BRD_ID# 
+		AND 
+			USER_ID = #USER_ID# 
+		AND 
+			COMPANYID = #COMPANY_ID#
+		AND 
+			TENANT_ID = #TENANT_ID#
+	</update>
+	
+	<select id="EzResourceDAO.checkChildYN" parameterClass="map" resultClass="String">
+		SELECT 
+			CAT_ID 
+		FROM 
+			TBL_RS_FAV_CAT 
+		WHERE 
+			TOP_ID = #CAT_ID#
+		AND 
+			USER_ID = #USER_ID#
+		AND 
+			COMPANYID = #COMPANY_ID#
+		AND 
+			TENANT_ID = #TENANT_ID#
+	</select>
+	
+	<select id="EzResourceDAO.delBrdCatList" parameterClass="map" resultClass="String">
+		SELECT 
+			CAT_ID 
+		FROM 
+			TBL_RS_FAV_CAT
+		WHERE
+			 CAT_ID IN(
+				SELECT 
+					CAT_ID 
+				FROM 
+					TBL_RS_CAT_BRD 
+				WHERE
+					BRD_ID = #v_P_Brd_ID#
+				AND 
+					COMPANYID = #v_P_CompanyID#
+				AND 
+					TENANT_ID = #tenantID#
+				)
+			AND BRDYN = 'Y'
+	</select>
+	
+	<select id ="EzResourceDAO.selectBrdCnt" parameterClass="map" resultClass="int">
+		SELECT 
+			COUNT(*) 
+		FROM 
+			TBL_RS_CAT_BRD 
+		WHERE 
+			CAT_ID = #CAT_ID#
+	</select>
+	
+	<delete id="EzResourceDAO.deleteBrdFavoriteCategory" parameterClass="map">
+		DELETE FROM 
+			TBL_RS_CAT_BRD
+		WHERE 
+			CAT_ID = #CAT_ID# 
+		AND 
+			BRD_ID = #BRD_ID# 
+		AND 
+			USER_ID = #USER_ID#
+	</delete>
+	
+	<delete id="EzResourceDAO.delResData_F" parameterClass="map">
+		DELETE FROM 
+			TBL_RS_CAT_BRD
+		WHERE 
+			BRD_ID = #v_P_Brd_ID# 
+		AND 
+			COMPANYID = #v_P_CompanyID# 
+		AND 
+			TENANT_ID = #tenantID#	
+	</delete>
 </sqlMap>

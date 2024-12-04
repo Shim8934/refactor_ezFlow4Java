@@ -909,7 +909,7 @@ function ListView() {
         for (var i = 0; i < oRows.length; i++) {
             var objTr = document.createElement("TR");
             objTr.setAttribute("id", _thisID + "_TR_" + i);
-            objTr.style.cursor = "pointer";
+            objTr.style.cursor = "move"; // [수신자 설정] TO/CC/BCC란 로드 직후 MsgTo/CC/BCCList
 
             objTr.onmouseover = new Function("tr_mouseover(this)");
             objTr.onmouseout = new Function("tr_mouseout(this)");
@@ -1055,7 +1055,7 @@ function ListView() {
     //리스트뷰에 Row 추가
     function AddDataRow(objTr, addXml) {
 
-        objTr.style.cursor = "pointer";
+        objTr.style.cursor = "move"; // [수신자 설정] TO/CC/BCC란으로 이동 후 MsgTo/CC/BCCList
         objTr.onmouseover = new Function("tr_mouseover(this)");
         objTr.onmouseout = new Function("tr_mouseout(this)");
 
@@ -1666,7 +1666,7 @@ try {
 	);
 }
 catch (e)
-{ }
+{console.log(e);}
 String.prototype.trim = function() {
     var str = this.replace(/(\s+$)/g, "");
     return str.replace(/(^\s*)/g, "");

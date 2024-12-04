@@ -7,7 +7,14 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<title>warning</title>
 		<style type="text/css">
-			.warningbox01 { width:540px; margin-top:200px; margin-left:auto; margin-right:auto; border:1px solid #cccaca; background:#e8e8e8;}
+			<c:choose>
+				<c:when test="${pPreviewShow_HOW eq 'W'}">
+					.warningbox01 { width:540px; margin-top:50px; margin-left:auto; margin-right:auto; border:1px solid #cccaca; background:#e8e8e8;}
+				</c:when>
+				<c:otherwise>
+					.warningbox01 { width:540px; margin-top:200px; margin-left:auto; margin-right:auto; border:1px solid #cccaca; background:#e8e8e8;}
+				</c:otherwise>
+			</c:choose>
 			.warningbox02 { width:470px; margin:0 auto;  background:#ffffff; margin:10px; padding:15px 25px 20px 25px;}
 			.warnintxt01 { position:relative ;padding-bottom:10px;}
 			.warningimg { position:absolute; top:0px; left:0px;}

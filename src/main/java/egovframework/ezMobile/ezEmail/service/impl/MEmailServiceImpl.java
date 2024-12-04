@@ -188,6 +188,8 @@ public class MEmailServiceImpl extends EgovAbstractServiceImpl implements MEmail
 			}
 					
 			folder.close(false);
+		} catch (NumberFormatException e) {
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		} finally {
@@ -214,6 +216,8 @@ public class MEmailServiceImpl extends EgovAbstractServiceImpl implements MEmail
 				
 		Folder folder = ia.getFolder(folderId);	
 		return folder.getUnreadMessageCount();
+		} catch (RuntimeException e) { 
+		return -1;		
 		} catch (Exception e) { 
 		return -1;	
 		}  finally {
@@ -277,10 +281,10 @@ public class MEmailServiceImpl extends EgovAbstractServiceImpl implements MEmail
 				malFolderList.add(folder);
 			}
 			
-		} catch (Exception e) {
-			
+		} catch (RuntimeException e) {
 			logger.error(e.getMessage(), e);
-			
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();

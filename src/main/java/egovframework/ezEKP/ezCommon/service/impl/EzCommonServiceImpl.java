@@ -16,6 +16,7 @@ import egovframework.ezEKP.ezCommon.dao.EzCommonDAO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
 import egovframework.ezEKP.ezCommon.vo.CompanyInfoVO;
+import egovframework.ezEKP.ezCommon.vo.TblColumnsInfoVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
@@ -43,6 +44,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.mariadb.jdbc.internal.com.read.dao.ColumnNameMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -955,7 +957,10 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 					m_strHTML = m_strHTML.replace("')", ")");
 				}
 
-				return m_strHTML;
+                // dhlee: 20240718 - 웹취약점 대응
+                m_strHTML = commonUtil.stripScriptTagsAndFunctions(m_strHTML);
+
+                return m_strHTML;
 			}
 		} else {
 
@@ -2706,7 +2711,17 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("TYPE_MYSQL", "INT(11)"); put("TYPE_ORACLE", "NUMBER(11, 0)");
 			put("AFTER", "DEFAULT '0'");
 		}});
-
+        test.add(new HashMap<String, Object>(){{ // 2024-08-01 전인하 - 게시판 > 키워드 기능
+            put("TABLE","TBL_BOARD_BOARDINFO");
+            put("COLUMN", "USEKEYWORD"); // 게시판 키워드 기능 사용여부(Y/N)
+            put("TYPE_MYSQL", "VARCHAR(11)"); put("TYPE_ORACLE", "NVARCHAR2(2)");
+        }});
+        test.add(new HashMap<String, Object>(){{ // 2024-08-01 전인하 - 게시판 > 키워드 기능
+            put("TABLE","TBL_BOARD_ITEM");
+            put("COLUMN", "UPDATERID"); // 게시판 키워드 기능 사용여부(Y/N)
+            put("TYPE_MYSQL", "VARCHAR(80)"); put("TYPE_ORACLE", "NVARCHAR2(80)");
+        }});
+        
 		for (Map<String, Object> map : test) {
 			ezCommonDAO.alterTableAddColumns(map);
         }
@@ -3605,12 +3620,27 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void insertPrvwConfig() throws Exception {
 		ezCommonDAO.insertPrvwConfig();
 	}
-
+	
+	/* 2023-12-05 홍승비 - 전자결재 > 전자결재 서명 데이터 재맵핑 시점 컨피그 추가 */
+	@Override
+	public void insertApprSignRemapApplyTime() throws Exception {
+		List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+		
+		for (TenantVO tenantVO : tenantIdList) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("tenantID", tenantVO.getTenantId());
+			// 2024-10-17 홍승비 - 컨피그 비교 시에만 대문자로 비교하도록 수정 (삽입 시에는 apprSignRemapApplyTime 사용)
+			map.put("property", "APPRSIGNREMAPAPPLYTIME");
+			
+			ezCommonDAO.insertApprSignRemapApplyTime(map);
+		}
+	}
+    
     @Override
     public void insertPermissionBasisDeptYN_Config() throws Exception {
         ezCommonDAO.insertPermissionBasisDeptYN_Config();
     }
-
+    
     @Override
     public void createTblDbLog() {
         ezCommonDAO.createTblDbLog();
@@ -3864,6 +3894,27 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         ezCommonDAO.alterDocAttachNameCol();
     }
 
+	@Override
+	public void addColumnsRetireTblCompareWithUserTbl() throws Exception {
+		logger.debug("addColumnsRetireTblCompareWithUserTbl started");
+		List<TblColumnsInfoVO> columnsList = ezCommonDAO.selectColumnsOnlyExistTblUsermaster();
+		if (!columnsList.isEmpty()) {
+			for (TblColumnsInfoVO columns : columnsList) {
+
+				Map<String, Object> map = new HashMap<>();
+
+				map.put("TABLE","TBL_USERMASTER_RETIRE");
+				map.put("COLUMN", columns.getColumnNm());
+				map.put("TYPE_MYSQL", columns.getColumnType());
+				map.put("TYPE_ORACLE", columns.getColumnType());
+				map.put("AFTER", columns.getIsNullAble() +
+						(columns.getColumnDefault() == null ? "" : " DEFAULT " + columns.getColumnDefault()));
+
+				ezCommonDAO.alterTableAddColumns(map);
+			}
+		}
+	}
+
     public void insertNonUseDocAttachYN() throws Exception {
         List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
 
@@ -4114,7 +4165,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
  			map.put("tenantID", tenantVo.getTenantId());
  			ezCommonDAO.insertDotNetTotalNotificationConfig(map);
  		}
-    	
+    }
+    
+    @Override
+    public void createBoardKeywordTable() throws Exception {
+        ezCommonDAO.createBoardKeywordTable();
     }
     
     @Override
@@ -4321,4 +4376,152 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void createRsScheduleDeptIdColumn() throws Exception {
         ezCommonDAO.createRsScheduleDeptIdColumn();
     } 
+
+    /* 2023-03-30 이가은 - 게시판 > 게시물 댓글 정보 테이블에 답글 작성/수정기능 컬럼 추가 */
+	@Override
+	public void alterTblBoardOneLineChildReply() throws Exception {
+		ezCommonDAO.alterTblBoardOneLineChildReply();
+	}
+    
+    // 2023-11-07 전인하 - 댓글 이모티콘 관련 컬럼 추가    
+    @Override
+    public void insertBoardReplyCommentEmoticon() throws Exception {
+        ezCommonDAO.insertBoardReplyCommentEmoticon();
+    }
+	
+	@Override
+	public void createTblBoardDisLike() throws Exception{
+		ezCommonDAO.createTblBoardDisLike();
+	}
+	
+	@Override
+	public void addBoardDisLikeFlag() throws Exception{
+		ezCommonDAO.addBoardDisLikeFlag();
+	}
+	
+    // 2024-08-07 유길상 - 자원관리 즐겨찾기 카테고리 테이블 추가
+    @Override
+    public void createResourceFavoriteTables() throws Exception {
+    	ezCommonDAO.createTblRsFavCat();
+    	ezCommonDAO.createTblRsCatBrd();
+    }
+    
+    @Override
+    public void addBoardAttachmentFlag() throws Exception {
+        ezCommonDAO.addBoardAttachmentFlag();
+    }
+
+    @Override
+    public void addTblBoardInfoPublicFlag() {
+        ezCommonDAO.addTblBoardInfoPublicFlag();
+    }
+
+    /* 2024-10-21 한태훈 - 게시판 > 전체게시물 리스트헤더 추가 */
+    @Override
+    public void insertAllBoardListOption() throws Exception{
+        List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+
+        for (TenantVO tenantVo : tenantIdList) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("v_TENANTID", tenantVo.getTenantId());
+            ezCommonDAO.insertAllBoardListOption(map);
+        }
+    }
+    
+    /* 2024-10-17 한태훈 - 게시판 > 전체게시물 게시판정보 추가 */
+    @Override
+    public void insertAllBoardInfo() throws Exception{
+        List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+
+        for (TenantVO tenantVo : tenantIdList) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("v_TENANTID", tenantVo.getTenantId());
+            ezCommonDAO.insertAllBoardInfo(map);
+        }
+    }
+    
+	@Override
+	public void addSurveyTotalNotiSentFlag() throws Exception {
+		ezCommonDAO.addSurveyTotalNotiSentFlag();
+	}
+
+    @Override
+    public void createJmochaMailBlocked() throws Exception {
+        ezCommonDAO.createJmochaMailBlocked();
+    }
+    
+    @Override
+    public void insertModuleEditor() throws Exception {
+    	List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+
+    	for (TenantVO tenantVo : tenantIdList) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("v_TENANTID", tenantVo.getTenantId());
+            ezCommonDAO.insertModuleEditor(map);
+        }
+    }
+	
+	@Override
+	public void insertScrapTenantConfig() throws Exception {
+        List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+        for (TenantVO tenantVo : tenantIdList) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("tenantId", tenantVo.getTenantId());
+            map.put("propertyName", "MyBoardScrapFlag");
+            map.put("propertyValue", "TYPE1");
+            map.put("description", "NONE: 사용안함 / TYPE1: 마이게시판 하위 스크랩함 / TYPE2: 게시판 트리 하위 개인화 스크랩함 (default: TYPE1)");
+            map.put("configName", "게시판 스크랩 기능 사용 여부");
+            map.put("configType", "게시판");
+            map.put("regdate", "2023-06-14 00:00:00");
+
+            ezCommonDAO.insertScrapTenantConfig(map);
+        }
+	}
+
+    @Override
+    public void insertScrapTableHeader() throws Exception {
+        List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+        for (TenantVO tenantVo : tenantIdList) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("tenantId", tenantVo.getTenantId());
+            map.put("listType", "S");
+
+            ezCommonDAO.insertScrapTableHeader(map);
+        }
+    }
+	
+	@Override
+	public void createTblBoardScrap() throws Exception {
+		ezCommonDAO.createTblBoardScrap();
+	}
+	
+	@Override
+	public void createTblUserScrapCont() throws Exception {
+		ezCommonDAO.createTblUserScrapCont();
+	}
+	
+	@Override
+	public void createTblUserScrapContList() throws Exception {
+		ezCommonDAO.createTblUserScrapContList();
+	}
+
+    @Override
+    public void createTblBoardCommentAttachments() throws Exception {
+        ezCommonDAO.createTblBoardCommentAttachments();
+    }
+    
+    @Override
+    public void alterAddThumbnailForTPI() throws Exception {
+    	ezCommonDAO.alterAddThumbnailForTPI();
+    }
+    
+    @Override
+    public void alterThumbnailExtForTPI() throws Exception {
+    	ezCommonDAO.alterThumbnailExtForTPI();
+    }
+    
+    @Override
+    public void alterAttachmentsForCBoard() throws Exception {
+    	ezCommonDAO.alterAttachmentsForCBoard();
+    }
 }

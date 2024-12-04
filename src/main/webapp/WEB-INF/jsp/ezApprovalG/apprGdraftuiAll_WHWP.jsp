@@ -373,7 +373,7 @@
 	        
 	        window.onload = function () {
 	            try {
-					if (opener != null) {
+					if (opener != null && opener.getformcont_cross_dialogArguments != null) {
 						parameters = opener.getformcont_cross_dialogArguments[0];
 					}
 
@@ -1504,6 +1504,14 @@
 			var beforeDocSN = "";  // 자동저장 관련 변수, 공백으로 전달
 			function btnSaveServer_onclick() {
 				try {
+					if (!!checkJobTransferStatus &&
+							!checkJobTransferStatus("<c:out value ='${userInfo.id}'/>",
+									"<c:out value ='${userInfo.deptID}'/>",
+									"<c:out value ='${userInfo.jobId}'/>")) {
+						window.close();
+						return;
+					}
+					
 					if (!btnChk()) {
 						return false;
 					}

@@ -1,0 +1,83 @@
+.tj_container *{
+	position: relative;
+}
+
+.tj_container ul{
+	padding-left: 2em;
+	list-style-type: none;
+	width: max-content;
+}
+
+.tj_container > ul:first-of-type{
+	margin: 0;	
+	padding: 3px 0 3px 0;
+	width: 100%;
+}
+
+.tj_container li span.tj_description{
+	cursor: pointer;
+	padding: 2px 5px 2px 5px;
+	display: flex;
+	border-radius: 2px;
+
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+
+	text-align: left;
+}
+
+.tj_container li span.tj_description:hover{
+	background-color: rgb(224, 243, 224);
+}
+
+.tj_container li span.tj_mod_icon {
+	margin-right: 0.5em;
+	display: inline-block;
+	color: rgb(152, 191, 152);
+}
+
+.tj_container li span.tj_icon {
+	margin-right: 0.5em;
+	display: flex;
+}
+
+.tj_container li span.tj_icon span.tj_fileIcon {
+	margin-right: 0.5em;
+}
+
+.tj_container li span.tj_icon span.tj_folderIcon {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.tj_container li span.tj_mod_icon, .tj_container li span.tj_mod_icon *{
+	width: 1em;
+}
+
+.tj_container li span.tj_description.tj_leaf{
+	margin-left: 1.5em;
+	display: flex;
+	/* flex-direction: column; */
+	/* justify-content: center; */
+	justify-content: left;
+}
+
+.tj_container li[disabled=""]{
+	color: #b5b5b5;
+}
+
+.tj_container li[disabled=""]:hover span.tj_description{
+	cursor: default;
+	background-color: inherit;
+}
+
+.tj_container span.tj_description.selected{
+	border: 1px solid rgb(152, 191, 152);
+	box-sizing: border-box !important;
+	background-color: rgb(224, 243, 224);
+}

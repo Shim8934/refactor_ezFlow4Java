@@ -44,7 +44,7 @@
 	            if (CrossYN()) {
 	                manycolor_dialogArguments[1] = SelectColor_Complete;
 	                var OpenWin = window.open("/ezCommon/manyColor.do?refresh5=&type=" + Name, "manyColor", GetOpenWindowfeature(294, 260));
-	                try { OpenWin.focus(); } catch (e) { }
+	                try { OpenWin.focus(); } catch (e) {console.log(e);}
 	            }
 	            else {
 	                var retValue = window.showModalDialog("/ezCommon/manyColor.do?refresh5=&type=" + Name, "", "dialogHeight:260px; dialogWidth:294px; status:no;scroll:no; help:no; edge:sunken");

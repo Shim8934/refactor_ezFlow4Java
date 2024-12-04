@@ -135,6 +135,18 @@
 					<isEqual property="search_keycode" compareValue="quota">
 						((MAILBOXUSAGE / MAILBOXQUOTA) * 100) >= #search_keyword#
 					</isEqual>
+					<isEqual property="search_keycode" compareValue="title">
+						(TITLE LIKE CONCAT('%', #search_keyword#,'%') || TITLE2 LIKE CONCAT('%', #search_keyword#,'%'))
+					</isEqual>
+					<isEqual property="search_keycode" compareValue="extensionAttribute10">
+						(EXTENSIONATTRIBUTE10 LIKE CONCAT('%', #search_keyword#,'%') || EXTENSIONATTRIBUTE102 LIKE CONCAT('%', #search_keyword#,'%'))
+					</isEqual>
+					<isEqual property="search_keycode" compareValue="telephonenumber">
+						TELEPHONENUMBER LIKE CONCAT('%', #search_keyword#,'%')
+					</isEqual>
+					<isEqual property="search_keycode" compareValue="mobile">
+						MOBILE LIKE CONCAT('%', #search_keyword#,'%')
+					</isEqual>
 			</isNotEmpty>
 		</isNotEmpty>
 		<isNotEmpty property="searchStartDate" prepend="AND">
@@ -147,6 +159,20 @@
 	</sql>
 	
 	<!-- 2021-07-12 김은실 - 필요시 변경하여 사용 -->
+<!-- 	<sql id="EzOrganAdminDAO.searchForQuery">
+		<isNotEqual property="searchForAll" compareValue="true" open="and (" close=")">
+			CN <isEqual property="retired" compareValue="false"> NOT </isEqual> IN 
+				(SELECT CN from TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantID#  AND PHYSICALDELIVERYOFFICENAME = #companyId#)
+			<isEqual property="isAnd" compareValue="true"> 
+				AND 
+			</isEqual>
+			<isEqual property="isAnd" compareValue="false"> 
+				OR 
+			</isEqual>
+			CN <isEqual property="stopped" compareValue="false"> NOT </isEqual> IN 
+				(SELECT USER_ID FROM TBL_USER_CONFIG WHERE TENANT_ID = #tenantID# AND PROPERTY_NAME = 'LoginStopUser')
+		</isNotEqual>
+	</sql> -->
 	<sql id="EzOrganAdminDAO.searchForQuery">
 		<isNotEqual property="searchForAll" compareValue="true" open="and (" close=")">
 			CN <isEqual property="retired" compareValue="false"> NOT </isEqual> IN 
@@ -160,8 +186,14 @@
 			CN <isEqual property="stopped" compareValue="false"> NOT </isEqual> IN 
 				(SELECT USER_ID FROM TBL_USER_CONFIG WHERE TENANT_ID = #tenantID# AND PROPERTY_NAME = 'LoginStopUser')
 		</isNotEqual>
+		<!-- 2024-09-06 김승연 공유사서함 조회 플래그 추가 -->
+		<isNotEmpty property="sharedMailBox" prepend="AND">
+			<isEqual property="sharedMailBox" compareValue="false">
+				DEPARTMENT NOT LIKE 'shared_mailbox_%'
+			</isEqual>
+		</isNotEmpty>
 	</sql>
-	
+
 	<sql id="EzOrganAdminDAO.searchQueryForLoginStop">
 		<isNotEmpty property="search_keycode" prepend="and">
 			<isNotEmpty property="search_keyword" >
@@ -667,16 +699,326 @@
 	</procedure> -->
 	
 	<update id="EzOrganAdminDAO.updateProperty" parameterClass="Map">
-		<![CDATA[
-			UPDATE
-				TBL_USERMASTER
-			SET
-				$v_PROPNAME$ = #v_PROPVALUE#
-		]]>
-		<isEqual property="v_PROPNAME" compareValue="EXTENSIONATTRIBUTE15">
-				, UPDATEDT = #nowDate#
+		UPDATE
+			TBL_USERMASTER
+		SET
+		<isEqual property="v_PROPNAME"  compareValue="CN">
+			<![CDATA[
+             	CN = #v_PROPVALUE#
+            ]]>
 		</isEqual>
-		<![CDATA[	
+		<isEqual property="v_PROPNAME"  compareValue="DISPLAYNAME">
+			<![CDATA[
+             	DISPLAYNAME = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="DISPLAYNAME2">
+			<![CDATA[
+             	DISPLAYNAME2 = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="MAIL">
+			<![CDATA[
+             	MAIL = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="MAILNICKNAME">
+			<![CDATA[
+             	MAILNICKNAME = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="UPNNAME">
+			<![CDATA[
+             	UPNNAME = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="DEPARTMENT">
+			<![CDATA[
+             	DEPARTMENT = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="DESCRIPTION">
+			<![CDATA[
+             	DESCRIPTION = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="DESCRIPTION2">
+			<![CDATA[
+             	DESCRIPTION2 = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="DESCRIPTION3">
+			<![CDATA[
+             	DESCRIPTION3 = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="PHYSICALDELIVERYOFFICENAME">
+			<![CDATA[
+             	PHYSICALDELIVERYOFFICENAME = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="COMPANY">
+			<![CDATA[
+             	COMPANY = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="COMPANY2">
+			<![CDATA[
+             	COMPANY2 = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="TITLE">
+			<![CDATA[
+             	TITLE = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="TITLE2">
+			<![CDATA[
+             	TITLE2 = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="TELEPHONENUMBER">
+			<![CDATA[
+             	TELEPHONENUMBER = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="HOMEPHONE">
+			<![CDATA[
+             	HOMEPHONE = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="FACSIMILETELEPHONENUMBER">
+			<![CDATA[
+             	FACSIMILETELEPHONENUMBER = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="MOBILE">
+			<![CDATA[
+             	MOBILE = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="POSTALCODE">
+			<![CDATA[
+             	POSTALCODE = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="STREETADDRESS">
+			<![CDATA[
+             	STREETADDRESS = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="INFO">
+			<![CDATA[
+             	INFO = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE1">
+			<![CDATA[
+             	EXTENSIONATTRIBUTE1 = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE2">
+			<![CDATA[
+             	EXTENSIONATTRIBUTE2 = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE3">
+			<![CDATA[
+             	EXTENSIONATTRIBUTE3 = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE4">
+			<![CDATA[
+             	EXTENSIONATTRIBUTE4 = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE5">
+			<![CDATA[
+             	EXTENSIONATTRIBUTE5 = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE6">
+			<![CDATA[
+             	EXTENSIONATTRIBUTE6 = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE7">
+			<![CDATA[
+             	EXTENSIONATTRIBUTE7 = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE8">
+			<![CDATA[
+             	EXTENSIONATTRIBUTE8 = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE9">
+			<![CDATA[
+             	EXTENSIONATTRIBUTE9 = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE10">
+			<![CDATA[
+             	EXTENSIONATTRIBUTE10 = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE102">
+			<![CDATA[
+             	EXTENSIONATTRIBUTE102 = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE11">
+			<![CDATA[
+             	EXTENSIONATTRIBUTE11 = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE12">
+			<![CDATA[
+             	EXTENSIONATTRIBUTE12 = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE13">
+			<![CDATA[
+             	EXTENSIONATTRIBUTE13 = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE14">
+			<![CDATA[
+             	EXTENSIONATTRIBUTE14 = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="ADSPATH">
+			<![CDATA[
+             	ADSPATH = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="SIPURI">
+			<![CDATA[
+             	SIPURI = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="UPDATEDT">
+			<![CDATA[
+             	UPDATEDT = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="CREATEDT">
+			<![CDATA[
+             	CREATEDT = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="MOBILE_ENABLE">
+			<![CDATA[
+             	MOBILE_ENABLE = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="MOBILE_NOTUSE">
+			<![CDATA[
+             	MOBILE_NOTUSE = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="MOBILE_PIN">
+			<![CDATA[
+             	MOBILE_PIN = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="POSITIONCD">
+			<![CDATA[
+             	POSITIONCD = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="BIRTH">
+			<![CDATA[
+             	BIRTH = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="BIRTHTYPE">
+			<![CDATA[
+             	BIRTHTYPE = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="PASSWORD">
+			<![CDATA[
+             	PASSWORD = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="IPADDRESS">
+			<![CDATA[
+             	IPADDRESS = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="LASTLOGIN">
+			<![CDATA[
+             	LASTLOGIN = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="LOGINCNT">
+			<![CDATA[
+             	LOGINCNT = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="TENANT_ID">
+			<![CDATA[
+             	TENANT_ID = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="MANUAL_FLAG">
+			<![CDATA[
+             	MANUAL_FLAG = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="LISTTYPE">
+			<![CDATA[
+             	LISTTYPE = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="PASSWORD_UPDATEDT">
+			<![CDATA[
+             	PASSWORD_UPDATEDT = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="FURIGANA">
+			<![CDATA[
+             	FURIGANA = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="EXTENSIONPHONE">
+			<![CDATA[
+             	EXTENSIONPHONE = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="OFFICEMOBILE">
+			<![CDATA[
+             	OFFICEMOBILE = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="MAILBOXQUOTA">
+			<![CDATA[
+             	MAILBOXQUOTA = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="MAILBOXUSAGE">
+			<![CDATA[
+             	MAILBOXUSAGE = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="PASSWORD2">
+			<![CDATA[
+            	 PASSWORD2 = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME"  compareValue="PHOTO_UPDATEDT">
+			<![CDATA[
+             	PHOTO_UPDATEDT = #v_PROPVALUE#
+            ]]>
+		</isEqual>
+		<isEqual property="v_PROPNAME" compareValue="EXTENSIONATTRIBUTE15">
+			<![CDATA[
+				EXTENSIONATTRIBUTE15 = #v_PROPVALUE#
+				, UPDATEDT = #nowDate#
+			]]>
+		</isEqual>
+		<![CDATA[
 			WHERE
 				CN = #v_CN#
 			AND
@@ -685,25 +1027,243 @@
 	</update>
 	
 	<update id="EzOrganAdminDAO.updateProperty_U" parameterClass="Map">
-		<![CDATA[
 			UPDATE
 				TBL_DEPTMASTER
 			SET
-				$v_PROPNAME$ = #v_PROPVALUE# 
+				<!--$v_PROPNAME$ = #v_PROPVALUE#-->
+			<isEqual property="v_PROPNAME"  compareValue="CN">
+				<![CDATA[
+					 CN = #v_PROPVALUE#
+				]]>
+			</isEqual>
+			<isEqual property="v_PROPNAME"  compareValue="DISPLAYNAME">
+				<![CDATA[
+					 DISPLAYNAME = #v_PROPVALUE#
+				]]>
+			</isEqual>
+			<isEqual property="v_PROPNAME"  compareValue="DISPLAYNAME2">
+				<![CDATA[
+					 DISPLAYNAME2 = #v_PROPVALUE#
+				]]>
+			</isEqual>
+			<isEqual property="v_PROPNAME"  compareValue="USEFLAG">
+				<![CDATA[
+					 USEFLAG = #v_PROPVALUE#
+				]]>
+			</isEqual>
+			<isEqual property="v_PROPNAME"  compareValue="MAIL">
+				<![CDATA[
+					 MAIL = #v_PROPVALUE#
+				]]>
+			</isEqual>
+			<isEqual property="v_PROPNAME"  compareValue="COMPNM2">
+				<![CDATA[
+					 COMPNM2 = #v_PROPVALUE#
+				]]>
+			</isEqual>
+			<isEqual property="v_PROPNAME"  compareValue="DEPTLEVEL">
+				<![CDATA[
+					 DEPTLEVEL = #v_PROPVALUE#
+				]]>
+			</isEqual>
+			<isEqual property="v_PROPNAME"  compareValue="DEPT_CD_PATH">
+				<![CDATA[
+					 DEPT_CD_PATH = #v_PROPVALUE#
+				]]>
+			</isEqual>
+			<isEqual property="v_PROPNAME"  compareValue="DEPT_NM_PATH">
+				<![CDATA[
+					 DEPT_NM_PATH = #v_PROPVALUE#
+				]]>
+			</isEqual>
+			<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE1">
+				<![CDATA[
+					 EXTENSIONATTRIBUTE1 = #v_PROPVALUE#
+				]]>
+			</isEqual>
+			<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE2">
+				<![CDATA[
+					 EXTENSIONATTRIBUTE2 = #v_PROPVALUE#
+				]]>
+			</isEqual>
+			<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE3">
+				<![CDATA[
+					 EXTENSIONATTRIBUTE3 = #v_PROPVALUE#
+				]]>
+			</isEqual>
+			<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE4">
+				<![CDATA[
+					 EXTENSIONATTRIBUTE4 = #v_PROPVALUE#
+				]]>
+			</isEqual>
+			<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE5">
+				<![CDATA[
+					 EXTENSIONATTRIBUTE5 = #v_PROPVALUE#
+				]]>
+			</isEqual>
+			<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE6">
+				<![CDATA[
+					 EXTENSIONATTRIBUTE6 = #v_PROPVALUE#
+				]]>
+			</isEqual>
+			<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE7">
+				<![CDATA[
+					 EXTENSIONATTRIBUTE7 = #v_PROPVALUE#
+				]]>
+			</isEqual>
+			<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE8">
+				<![CDATA[
+					 EXTENSIONATTRIBUTE8 = #v_PROPVALUE#
+				]]>
+			</isEqual>
+			<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE9">
+				<![CDATA[
+					 EXTENSIONATTRIBUTE9 = #v_PROPVALUE#
+				]]>
+			</isEqual>
+			<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE10">
+				<![CDATA[
+					 EXTENSIONATTRIBUTE10 = #v_PROPVALUE#
+				]]>
+			</isEqual>
+			<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE11">
+				<![CDATA[
+					 EXTENSIONATTRIBUTE11 = #v_PROPVALUE#
+				]]>
+			</isEqual>
+			<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE12">
+				<![CDATA[
+					 EXTENSIONATTRIBUTE12 = #v_PROPVALUE#
+				]]>
+			</isEqual>
+			<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE13">
+				<![CDATA[
+					 EXTENSIONATTRIBUTE13 = #v_PROPVALUE#
+				]]>
+			</isEqual>
+			<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE14">
+				<![CDATA[
+					 EXTENSIONATTRIBUTE14 = #v_PROPVALUE#
+				]]>
+			</isEqual>
+			<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE15">
+				<![CDATA[
+					 EXTENSIONATTRIBUTE15 = #v_PROPVALUE#
+				]]>
+			</isEqual>
+			<isEqual property="v_PROPNAME"  compareValue="ADFLAG">
+				<![CDATA[
+					 ADFLAG = #v_PROPVALUE#
+				]]>
+			</isEqual>
+			<isEqual property="v_PROPNAME"  compareValue="ADSPATH">
+				<![CDATA[
+					 ADSPATH = #v_PROPVALUE#
+				]]>
+			</isEqual>
+			<isEqual property="v_PROPNAME"  compareValue="UPDATEDT">
+				<![CDATA[
+					 UPDATEDT = #v_PROPVALUE#
+				]]>
+			</isEqual>
+			<isEqual property="v_PROPNAME"  compareValue="CREATEDT">
+				<![CDATA[
+					 CREATEDT = #v_PROPVALUE#
+				]]>
+			</isEqual>
+			<isEqual property="v_PROPNAME"  compareValue="TENANT_ID">
+				<![CDATA[
+					 TENANT_ID = #v_PROPVALUE#
+				]]>
+			</isEqual>
+			<isEqual property="v_PROPNAME"  compareValue="MANUAL_FLAG">
+				<![CDATA[
+					 MANUAL_FLAG = #v_PROPVALUE#
+				]]>
+			</isEqual>
 			WHERE
 				CN = #v_CN#
 			AND
 				TENANT_ID = #v_TENANT_ID#	
-		]]>
 	</update>
 	
 	<update id="EzOrganAdminDAO.updateProperty_addJob" parameterClass="Map">
-		<![CDATA[
 			UPDATE
 				TBL_ADDJOBMASTER
 			SET
-				$v_PROPNAME$ = #v_PROPVALUE# 
+				<!--$v_PROPNAME$ = #v_PROPVALUE#-->
+				<isEqual property="v_PROPNAME"  compareValue="CN">
+					<![CDATA[
+						 CN = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="DEPTID">
+					<![CDATA[
+						 DEPTID = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="TITLE">
+					<![CDATA[
+						 TITLE = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="TITLE2">
+					<![CDATA[
+						 TITLE2 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="ROLE">
+					<![CDATA[
+						 ROLE = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="ROLE2">
+					<![CDATA[
+						 ROLE2 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="POSITIONCD">
+					<![CDATA[
+						 POSITIONCD = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="TENANT_ID">
+					<![CDATA[
+						 TENANT_ID = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="ORDERBY">
+					<![CDATA[
+						 ORDERBY = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="JOBID">
+					<![CDATA[
+						 JOBID = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="ROLEID">
+					<![CDATA[
+						 ROLEID = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="PROXY">
+					<![CDATA[
+						 PROXY = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="MANUAL_FLAG">
+					<![CDATA[
+						 MANUAL_FLAG = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="ROLL_INFO">
+					<![CDATA[
+						 ROLL_INFO = #v_PROPVALUE#
+					]]>
+				</isEqual>
 			WHERE
+			<![CDATA[
 				CN = #v_CN#
 			AND
 				TENANT_ID = #v_TENANT_ID#
@@ -718,11 +1278,24 @@
 		]]>
 	</procedure> -->
 	
+	<update id="EzOrganAdminDAO.updateJobTitleOrder" parameterClass="Map">
+	<![CDATA[
+		UPDATE
+			TBL_USER_JOBMASTER
+		SET
+			SORT = #v_SORTORDER#
+		WHERE
+			JOBID = #v_JOBID#
+		  AND
+			TENANT_ID = #v_TENANTID#
+		]]>
+	</update>
+	
 	<insert id="EzOrganAdminDAO.retireDBData_I" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_USERMASTER_RETIRE
               ( CN, DISPLAYNAME, DISPLAYNAME2, MAIL, MAILNICKNAME, UPNNAME, DEPARTMENT, DESCRIPTION, DESCRIPTION2, DESCRIPTION3, PHYSICALDELIVERYOFFICENAME, COMPANY, COMPANY2, TITLE, TITLE2, TELEPHONENUMBER, HOMEPHONE, FACSIMILETELEPHONENUMBER, MOBILE, POSTALCODE, STREETADDRESS, INFO, EXTENSIONATTRIBUTE1, EXTENSIONATTRIBUTE2, EXTENSIONATTRIBUTE3, EXTENSIONATTRIBUTE4, EXTENSIONATTRIBUTE5, EXTENSIONATTRIBUTE6, EXTENSIONATTRIBUTE7, EXTENSIONATTRIBUTE8, EXTENSIONATTRIBUTE9, EXTENSIONATTRIBUTE10, EXTENSIONATTRIBUTE102, EXTENSIONATTRIBUTE11, EXTENSIONATTRIBUTE12, EXTENSIONATTRIBUTE13, EXTENSIONATTRIBUTE14, EXTENSIONATTRIBUTE15, ADSPATH, UPDATEDT, MOBILE_ENABLE, MOBILE_NOTUSE, MOBILE_PIN, SIPURI,PASSWORD,
-                       TENANT_ID )
+                        CREATEDT, TENANT_ID, MAILBOXQUOTA, MAILBOXUSAGE )
               ( SELECT
               		CN ,
                     DisplayName ,
@@ -769,7 +1342,10 @@
                     MOBILE_PIN ,
                     SIPURI ,
                     PASSWORD ,
-                    TENANT_ID
+                    CREATEDT ,
+                    TENANT_ID,
+                    MAILBOXQUOTA ,
+                    MAILBOXUSAGE
                 FROM TBL_USERMASTER 
                 WHERE  CN = #v_CN#
                 AND TENANT_ID = #v_TENANT_ID#
@@ -3318,7 +3894,7 @@
 				AND
 					PHYSICALDELIVERYOFFICENAME = #v_COMPANYID# 
 				AND
-					EXTENSIONATTRIBUTE1 LIKE '%$v_TYPE$%'
+					EXTENSIONATTRIBUTE1 LIKE CONCAT(CONCAT('%', #v_TYPE#), '%')
 				AND 
 					CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)                                                                                                                                                         
 				AND
@@ -3371,7 +3947,7 @@
 				AND
 					D.EXTENSIONATTRIBUTE2 = #v_COMPANYID#
 				AND
-					J.ROLL_INFO LIKE '%$v_TYPE$%'
+					J.ROLL_INFO LIKE CONCAT(CONCAT('%', #v_TYPE#), '%')
 				AND 
 					J.CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)                                                                                                                                                         
 				AND
@@ -3431,7 +4007,7 @@
 			AND
 				U.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID# 
 			AND
-				U.EXTENSIONATTRIBUTE1 LIKE '%$v_TYPE$%'
+				U.EXTENSIONATTRIBUTE1 LIKE CONCAT(CONCAT('%', #v_TYPE#), '%')
 			AND 
 				U.CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)                                                                                                                                                         
 			AND
@@ -3493,7 +4069,7 @@
 			AND
 				D.EXTENSIONATTRIBUTE2 = #v_COMPANYID#
 			AND
-				J.ROLL_INFO LIKE '%$v_TYPE$%'
+				J.ROLL_INFO LIKE CONCAT(CONCAT('%', #v_TYPE#), '%')
 			AND 
 				J.CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)                                                                                                                                                         
 			AND
@@ -3593,7 +4169,8 @@
 		<![CDATA[
 			 INSERT INTO
 			 	TBL_USERMASTER
-           		( CN, DisplayName, DisplayName2, mail, MAILNICKNAME, UPNNAME, Department, Description, Description2, Description3, PhysicalDeliveryOfficeName, Company, Company2, Title, Title2, TelephoneNumber, HomePhone, FACSIMILETELEPHONENUMBER, Mobile, postalcode, streetaddress, info, extensionAttribute1, extensionAttribute2, extensionAttribute3, extensionAttribute4, extensionAttribute5, extensionAttribute6, extensionAttribute7, extensionAttribute8, extensionAttribute9, extensionAttribute10, extensionAttribute102, extensionAttribute11, extensionAttribute12, extensionAttribute13, extensionAttribute14, extensionAttribute15, ADSPath, UpdateDT, Mobile_Enable, Mobile_NotUse, Mobile_PIN, SIPURI ,PASSWORD, TENANT_ID )
+				( CN, DisplayName, DisplayName2, mail, MAILNICKNAME, UPNNAME, Department, Description, Description2, Description3, PhysicalDeliveryOfficeName, Company, Company2, Title, Title2, TelephoneNumber, HomePhone, FACSIMILETELEPHONENUMBER, Mobile, postalcode, streetaddress, info, extensionAttribute1, extensionAttribute2, extensionAttribute3, extensionAttribute4, extensionAttribute5, extensionAttribute6, extensionAttribute7, extensionAttribute8, extensionAttribute9, extensionAttribute10, extensionAttribute102, extensionAttribute11, extensionAttribute12, extensionAttribute13, extensionAttribute14, extensionAttribute15, ADSPath, UpdateDT, Mobile_Enable, Mobile_NotUse, Mobile_PIN, SIPURI ,PASSWORD,
+					CREATEDT, TENANT_ID, MAILBOXQUOTA, MAILBOXUSAGE )
            		( 	SELECT
            				CN ,
                     	DISPLAYNAME ,
@@ -3617,7 +4194,15 @@
 	                    POSTALCODE ,
 	                    STREETADDRESS ,
 	                    INFO ,
-	                    EXTENSIONATTRIBUTE1 ,
+	                    ]]>
+	                    <isNotEmpty property="initPermission">
+							#initPermission# AS EXTENSIONATTRIBUTE1 ,
+	                    </isNotEmpty>
+						<isEmpty property="initPermission">
+		                    (SELECT REPLACE(REPLACE(REPLACE(EXTENSIONATTRIBUTE1, 'g=1', 'g=0'), 'a=1', 'a=0'), 'm=1', 'm=0')
+		                    FROM TBL_USERMASTER WHERE CN = #v_CN# AND TENANT_ID = #v_TENANT_ID#) AS EXTENSIONATTRIBUTE1 ,
+	                    </isEmpty>
+	                    <![CDATA[
 	                    EXTENSIONATTRIBUTE2 ,
 	                    EXTENSIONATTRIBUTE3 ,
 	                    EXTENSIONATTRIBUTE4 ,
@@ -3634,13 +4219,16 @@
 	                    EXTENSIONATTRIBUTE14 ,
 	                    EXTENSIONATTRIBUTE15 ,
 	                    ADSPATH ,
-	                    #nowDate# AS UPDATEDT,
+	                    #timeUTC# AS UPDATEDT,
 	                    MOBILE_ENABLE ,
 	                    MOBILE_NOTUSE ,
 	                    MOBILE_PIN ,
 	                    SIPURI,
 	                    PASSWORD,
-	                    #v_TENANT_ID#
+	                    CREATEDT,
+	                    #v_TENANT_ID#,
+	                    MAILBOXQUOTA ,
+	                    MAILBOXUSAGE
               			FROM
               				TBL_USERMASTER_RETIRE 
               			WHERE
@@ -4379,6 +4967,33 @@
 			TENANT_ID = #v_TENANT_ID#
      </delete>
      
+     <delete id="EzOrganAdminDAO.deleteCompany_D35" parameterClass="Map">
+		DELETE FROM  
+			TBL_PORTAL_TOP_COMPANY 
+		WHERE 
+			COMPANY_ID = #v_CN# 
+		AND 
+			TENANT_ID = #v_TENANT_ID#
+     </delete>
+     
+     <delete id="EzOrganAdminDAO.deleteCompany_D36" parameterClass="Map">
+		DELETE FROM  
+			TBL_SYSTEMCONFIG 
+		WHERE 
+			COMPANY_ID = #v_CN# 
+		AND 
+			TENANT_ID = #v_TENANT_ID#
+     </delete>
+     
+     <delete id="EzOrganAdminDAO.deleteCompany_D37" parameterClass="Map">
+		DELETE FROM  
+			TBL_SYSTEMCONFIG_TYPE 
+		WHERE 
+			COMPANY_ID = #v_CN# 
+		AND 
+			TENANT_ID = #v_TENANT_ID#
+     </delete>
+     
      <delete id="EzOrganAdminDAO.deleteCompanyInfo_IKMS7" parameterClass="Map">
         DELETE FROM
             TBL_BOARD_MYBOARDS    
@@ -4400,6 +5015,7 @@
      </delete>
  
  	 <select id="EzOrganAdminDAO.userList" parameterClass="map" resultClass="OrganUserVO">
+ 	 <isEqual property="useUserMaster" compareValue="true">
 		SELECT 
 			CN,
 			displayName,
@@ -4408,16 +5024,99 @@
 			CAST(mailboxquota AS UNSIGNED) as mailboxquota,
 			CAST(mailboxusage AS UNSIGNED) as mailboxusage,
 			displayName2,
-			description2
+			description2,
+			false as isRetire,
+			title,
+			title2,
+			EXTENSIONATTRIBUTE1,
+			EXTENSIONATTRIBUTE2,
+			EXTENSIONATTRIBUTE3,
+			EXTENSIONATTRIBUTE10,
+			EXTENSIONATTRIBUTE102,
+			TELEPHONENUMBER,
+			MOBILE,
+			COMPANY,
+			COMPANY2
 		FROM 
 	    	TBL_USERMASTER	
         WHERE 
             tenant_id = #tenantID#  AND PHYSICALDELIVERYOFFICENAME = #companyId#
 			<include refid="EzOrganAdminDAO.searchQuery"/>
 			<include refid="EzOrganAdminDAO.searchForQuery"/>
+			<isEqual property="incumbent" compareValue="false">
+				AND CN IN
+				(SELECT USER_ID FROM TBL_USER_CONFIG WHERE TENANT_ID = #tenantID# AND PROPERTY_NAME = 'LoginStopUser')
+			</isEqual>
+			<isEqual property="stopped" compareValue="false">
+				AND CN NOT IN
+				(SELECT USER_ID FROM TBL_USER_CONFIG WHERE TENANT_ID = #tenantID# AND PROPERTY_NAME = 'LoginStopUser')
+			</isEqual>
+		</isEqual>
+		<isEqual property="retired" compareValue="true">
+			<isEqual property="useUserMaster" compareValue="true">
+				UNION
+			</isEqual>
+			SELECT 
+				CN,
+				displayName,
+				department,
+				description,
+				CAST(mailboxquota AS UNSIGNED) as mailboxquota,
+				CAST(mailboxusage AS UNSIGNED) as mailboxusage,
+				displayName2,
+				description2,
+				true as isRetire,
+				title,
+				title2,
+				EXTENSIONATTRIBUTE1,
+				EXTENSIONATTRIBUTE2,
+				EXTENSIONATTRIBUTE3,
+				EXTENSIONATTRIBUTE10,
+				EXTENSIONATTRIBUTE102,
+				TELEPHONENUMBER,
+				MOBILE,
+				COMPANY,
+				COMPANY2
+			FROM 
+		    	TBL_USERMASTER_RETIRE
+	        WHERE 
+	            tenant_id = #tenantID#  AND PHYSICALDELIVERYOFFICENAME = #companyId#
+			<include refid="EzOrganAdminDAO.searchQuery"/>
+			<include refid="EzOrganAdminDAO.searchForQuery"/>
+		</isEqual>
 	    ORDER BY 
 	    <isNotEmpty property="sortColumn">
-	    	$orderbyData$,
+			<!--$orderbyData$,-->
+			<isEqual property="orderbyData" compareValue="displayName ASC">
+				displayName ASC,
+			</isEqual>
+			<isEqual property="orderbyData" compareValue="displayName DESC">
+				displayName DESC,
+			</isEqual>
+			<isEqual property="orderbyData" compareValue="department ASC">
+				department ASC,
+			</isEqual>
+			<isEqual property="orderbyData" compareValue="department DESC">
+				department DESC,
+			</isEqual>
+			<isEqual property="orderbyData" compareValue="mailboxusage/1024 ASC">
+				mailboxusage/1024 ASC,
+			</isEqual>
+			<isEqual property="orderbyData" compareValue="mailboxusage/1024 DESC">
+				mailboxusage/1024 DESC,
+			</isEqual>
+			<isEqual property="orderbyData" compareValue="mailboxquota ASC">
+				mailboxquota ASC,
+			</isEqual>
+			<isEqual property="orderbyData" compareValue="mailboxquota DESC">
+				mailboxquota DESC,
+			</isEqual>
+			<isEqual property="orderbyData" compareValue="(MAILBOXUSAGE/MAILBOXQUOTA)*100 ASC">
+				(MAILBOXUSAGE/MAILBOXQUOTA)*100 ASC,
+			</isEqual>
+			<isEqual property="orderbyData" compareValue="(MAILBOXUSAGE/MAILBOXQUOTA)*100 DESC">
+				(MAILBOXUSAGE/MAILBOXQUOTA)*100 DESC,
+			</isEqual>
 	    </isNotEmpty>
 	    	displayName
 	    <isNotEqual property="v_start" compareValue="-1">
@@ -4427,13 +5126,30 @@
 	</select>
 	
 	<select id="EzOrganAdminDAO.getUserCount" parameterClass="map" resultClass="int">
-		SELECT 	
-			COUNT(CN) 
-		FROM 
-            TBL_USERMASTER 
-		WHERE	tenant_id = #tenantID# AND PHYSICALDELIVERYOFFICENAME = #companyId#
-  		<include refid="EzOrganAdminDAO.searchQuery"/>
-  		<include refid="EzOrganAdminDAO.searchForQuery"/>
+		SELECT SUM(COUNT) AS TOTAL_COUNT
+		FROM (
+		<isEqual property="useUserMaster" compareValue="true">
+			SELECT COUNT(CN) AS COUNT 
+			FROM TBL_USERMASTER 
+			WHERE tenant_id = #tenantID# AND PHYSICALDELIVERYOFFICENAME = #companyId# 
+		<include refid="EzOrganAdminDAO.searchQuery"/>
+		<include refid="EzOrganAdminDAO.searchForQuery"/>
+			<isEqual property="incumbent" compareValue="false">
+				AND CN IN
+				(SELECT USER_ID FROM TBL_USER_CONFIG WHERE TENANT_ID = #tenantID# AND PROPERTY_NAME = 'LoginStopUser')
+			</isEqual>
+			<isEqual property="stopped" compareValue="false">
+				AND CN NOT IN
+				(SELECT USER_ID FROM TBL_USER_CONFIG WHERE TENANT_ID = #tenantID# AND PROPERTY_NAME = 'LoginStopUser')
+			</isEqual>
+		</isEqual>
+		<isEqual property="retired" compareValue="true">
+			<isEqual property="useUserMaster" compareValue="true"> UNION </isEqual>
+				SELECT COUNT(CN) AS COUNT FROM TBL_USERMASTER_RETIRE WHERE tenant_id = #tenantID# AND PHYSICALDELIVERYOFFICENAME = #companyId# 
+			<include refid="EzOrganAdminDAO.searchQuery"/>
+			<include refid="EzOrganAdminDAO.searchForQuery"/>	
+		</isEqual>
+		) AS COUNT_TABLE
 	</select>
  	 
 	<insert id="EzOrganAdminDAO.insertDelUserDBData_I" parameterClass="Map">
@@ -4488,7 +5204,7 @@
                    SIPURI ,
                    PASSWORD ,
                    TENANT_ID
-               FROM TBL_USERMASTER 
+               FROM TBL_USERMASTER_RETIRE
                WHERE  CN = #v_CN#
                AND TENANT_ID = #v_TENANT_ID#
                 )

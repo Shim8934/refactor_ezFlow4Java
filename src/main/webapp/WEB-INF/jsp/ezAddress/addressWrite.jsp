@@ -139,7 +139,7 @@
 			            if (fileName.length > 1000) {
 			                try {
 			                    g_progresswin.close();
-			                } catch (e) { }
+			                } catch (e) {console.log(e);}
 		
 			                alert(g_fileList[i] + " <spring:message code='ezAddress.t331' />");
 			                return;
@@ -152,7 +152,7 @@
 			        catch (e) {
 			            try {
 			                g_progresswin.close();
-			            } catch (e) { }
+			            } catch (e) {console.log(e);}
 		
 			            alert(g_fileList[i] + " <spring:message code='ezAddress.t332' />" + "\n\n" + e.number + " - " + e.description);
 			            return;
@@ -162,7 +162,7 @@
 			    try {
 			        g_progresswin.close();
 			    }
-			    catch (e) { }
+			    catch (e) {console.log(e);}
 			    var attachText = "";
 			    for (var i = 0; i < g_fileList.length - 1; i++) {
 			        var param1 = "file://" + ReplaceText(g_fileList[i], "\\\\", "/");
@@ -184,7 +184,7 @@
 		        try {
 		            g_progresswin.document.Script.fileinfo_change(fileinfo);
 		        }
-		        catch (e) { }
+		        catch (e) {console.log(e);}
 		    }
 		    function attach_Delete() {
 		        var checks = document.getElementById("attachedfileDIV").getElementsByTagName("input");
@@ -348,7 +348,7 @@
 		            		windowOpen.Get_AddressList();
 		            	}
 		            }
-		            catch (e) { }
+		            catch (e) {console.log(e);}
 		
 		            window.close();
 		        }

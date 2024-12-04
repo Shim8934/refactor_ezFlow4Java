@@ -382,24 +382,24 @@
 	                if (szCommand == "move" && szSubCommand == "ViewMailListMove") {
 	                    try {
 	                        window.parent.frames("right").move_on_dragdrop(window[treeviewStr].getvalue(event.nodeIdx, "href"));
-	                    } catch (e) { }
+	                    } catch (e) {console.log(e);}
 	                }
 	                else if (szCommand == "copy" && szSubCommand == "ViewMailListMove") {
 	                    try {
 	                        window.parent.frames("right").copy_on_dragdrop(window[treeviewStr].getvalue(event.nodeIdx, "href"));
-	                    } catch (e) { }
+	                    } catch (e) {console.log(e);}
 	                }
 	            }
 	            else {
 	                if (szCommand == "move" && szSubCommand == "ViewMailListMove") {
 	                    try {
 	                        window.parent.frames("right").document.Script.move_on_dragdrop(window[treeviewStr].getvalue(event.nodeIdx, "href"));
-	                    } catch (e) { }
+	                    } catch (e) {console.log(e);}
 	                }
 	                else if (szCommand == "copy" && szSubCommand == "ViewMailListMove") {
 	                    try {
 	                        window.parent.frames("right").document.Script.copy_on_dragdrop(window[treeviewStr].getvalue(event.nodeIdx, "href"));
-	                    } catch (e) { }
+	                    } catch (e) {console.log(e);}
 	                }
 	            }
 	        }
@@ -449,7 +449,7 @@
 							if (parent.frames["right"] != null){
 								var pageSrc = parent.frames["right"].document.location.toString();
 								if (pageSrc.indexOf("mailList.do") != -1) {
-		                        	try { parent.frames["right"].folderUnreadCount.innerText = " " + unreadcount + " "; } catch (e) { }
+		                        	try { parent.frames["right"].folderUnreadCount.innerText = " " + unreadcount + " "; } catch (e) {console.log(e);}
 			                    }
 		                    }
 	                  	}
@@ -526,7 +526,7 @@
                     				if (pageSrc.indexOf("mailList.do") > -1) {
                                     	parent.frames["right"].MailListRefresh();
             	                    }
-                   				} catch (e) { }
+                   				} catch (e) {console.log(e);}
 	                    		
 	                    		applyEllipsisMailTree();
 	                    	} else {
@@ -547,7 +547,7 @@
 	        }
 	        function check_pop3() {
 	            var OpenWin = window.open("/ezEmail/mailGetPop3.do", "mail_getpop3_cross", GetOpenWindowfeature(460, 375));
-	            try { OpenWin.focus(); } catch (e) { }
+	            try { OpenWin.focus(); } catch (e) {console.log(e);}
 	        }
 	        var mail_foldermanage_Cross_dialogArguments = new Array();
 	        function folder_manage() {
@@ -560,7 +560,7 @@
 	            }
 	            
 	            var OpenWin = window.open(requestUrl, "mail_foldermanage_Cross", GetOpenWindowfeature(570, 500));
-	            try { OpenWin.focus(); } catch (e) { }
+	            try { OpenWin.focus(); } catch (e) {console.log(e);}
 	        }
 	        function folder_manager_after(RtnVal) {
 	            setTimeout(function() {
@@ -660,7 +660,7 @@
 	                }
 	                
 	                window.open(url, "right");
-	            } catch (e) { }
+	            } catch (e) {console.log(e);}
 	            liSelcted();
 	        }
 	        
@@ -673,7 +673,8 @@
 	                //window.open(url, "right");
 	                url = "https://gwspam.ktbizoffice.com/personal/index.php?email=${credentialForBizmekaSpambox}&init=mail";
 	                window.open(url, "_blank", "width=870, height=500");
-	            } catch (e) {	                
+	            } catch (e) {	              
+					console.log(e);  
 	            }	            
 	        }
 	        
@@ -681,6 +682,7 @@
 				try {
 					window.open(spamOutLoginURI, "right");
 				} catch (e) {
+				    console.log(e);
 				}
 			}
 
@@ -701,7 +703,7 @@
 		    
 	        function Open_ReservationManage() {
 	            var OpenWin = window.open("/ezEmail/mailReservation.do", "mail_reservation_cross", GetOpenWindowfeature(501, 350));
-	            try { OpenWin.focus(); } catch (e) { }
+	            try { OpenWin.focus(); } catch (e) {console.log(e);}
 	        }
 	        function Open_Restore() {
 	            var pheight = window.screen.availHeight;
@@ -715,7 +717,7 @@
 	                OpenWin = window.open("/myoffice/ezEmail/mail_restore_deleted.aspx?name=" + encodeURIComponent(name) + "&path=" + encodeURIComponent(path), "mail_restore_deleted", GetOpenWindowfeature(700, 490));
 	            else
 	                OpenWin = window.open("/myoffice/ezEmail/mail_restore_deleted_cross.aspx?name=" + encodeURIComponent(name) + "&path=" + encodeURIComponent(path), "mail_restore_deleted", GetOpenWindowfeature(700, 490));
-	            try { OpenWin.focus(); } catch (e) { }
+	            try { OpenWin.focus(); } catch (e) {console.log(e);}
 	        }
 	        function spam_mail() {
 	            frmSpam.target = "right";
@@ -1088,7 +1090,7 @@
 					if (typeof (parent.frames["right"]) != "undefined") {
 						parent.frames["right"].Window_onunload();
 					}
-				} catch (e) { }
+				} catch (e) {console.log(e);}
 
 				// 메일 페이지로 처음 진입 시 (대 메뉴 "메일" 클릭)
 				// : function selectnode(event)이 두 번 실행되어, 첫번째에는 window.open 실행하지 않도록 함. (왜 두 번 실행되는지는 분석 포기)
@@ -1530,6 +1532,7 @@
 				try {
 					OpenWin.focus();
 				} catch (e) {
+				    console.log(e);
 				}
 			}
 

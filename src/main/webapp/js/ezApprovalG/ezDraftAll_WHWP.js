@@ -889,11 +889,23 @@ function SendDraftMappingSign(ret, maxIdx) {
 	if (FieldExist(pseumyungdatecell)) {
 		PutFieldText(pseumyungdatecell, s);
 		parent.rtnSignInfo.push(pseumyungdatecell);
+		
+		/* 2023-10-06 홍승비 - 서명일자가 TBL_SIGNINFO 테이블에 저장되도록 데이터 추가 (서명일자 필드 존재 시) */
+		signInfo[signCnt] = pseumyungdatecell;
+		parent.SignName[signCnt] = pseumyungdatecell;
+		parent.SignType[signCnt] = "TEXT";
+		parent.SignContent[signCnt] = s;
+		signCnt = signCnt + 1;
     }
 	
-	// 기안자의 결재유형이 대결(strAprType16)이 되는 경우가 있기는 하다. 기안자 하나만 있으면 결재유형으로 이것저것 선택 가능함.
+	// 기안자의 결재유형이 대결(strAprType16)이 되는 경우가 있다. G버전에서는 기안자 하나만 있으면 결재유형으로 대결/전결 등 선택 가능함.
 	if (parent.CurAprType == strAprType16) {
 		if (FieldExist(psigncell)) {
+			// 서명일자칸이 존재하는 경우, 서명칸에는 날짜를 표출하지 않음
+			if (FieldExist(pseumyungdatecell)) {
+			    OpinionText = "";
+			}
+			
 			if (ret != "NAME") {
 				PutFieldText(psigncell, "");
 				PrependFieldText(psigncell, strLang7 + OpinionText);
@@ -916,7 +928,7 @@ function SendDraftMappingSign(ret, maxIdx) {
 				signInfo[signCnt] = psigncell;
 				parent.SignType[signCnt] = "TEXT";
 				parent.SignName[signCnt] = psigncell;
-				parent.SignContent[signCnt] = arr_userinfo[2] + strLang7 + OpinionText;
+				parent.SignContent[signCnt] = strLang7 + OpinionText + arr_userinfo[2];
 				parent.rtnSignInfo.push(psigncell);
 		  		
 		  		signCnt = signCnt + 1;
@@ -948,12 +960,14 @@ function SendDraftMappingSign(ret, maxIdx) {
 	
 	} else {
 		if (FieldExist(psigncell)) {
+			// 서명일자칸이 존재하는 경우, 서명칸에는 날짜를 표출하지 않음
+			if (FieldExist(pseumyungdatecell)) {
+			    OpinionText = "";
+			}
+			
 			if (ret != "NAME") { // 이미지 서명
-				PutFieldText(psigncell, "");	
-				if (FieldExist(pseumyungdatecell)) {
-				    OpinionText = "";
-				}
-
+				PutFieldText(psigncell, "");
+				
 				if (parent.CurAprType == strAprType4) {
                     OpinionText = strLangAprType4 + OpinionText;
 				}
@@ -972,10 +986,6 @@ function SendDraftMappingSign(ret, maxIdx) {
 			  	SingFlag = true;
 			}
 			else {
-			    if (FieldExist(pseumyungdatecell)) {
-			        OpinionText = "";
-			    }
-			    
 			    if (parent.CurAprType == strAprType4) {
 			    	OpinionText = strLangAprType4 + OpinionText;
 			    }
@@ -987,7 +997,7 @@ function SendDraftMappingSign(ret, maxIdx) {
 			    signInfo[signCnt] = psigncell;
 			    parent.SignType[signCnt] = "TEXT";
 			    parent.SignName[signCnt] = psigncell;
-			    parent.SignContent[signCnt] = arr_userinfo[2] + OpinionText;
+			    parent.SignContent[signCnt] = OpinionText + arr_userinfo[2];
 			    parent.rtnSignInfo.push(psigncell);
 			        
 			  	signCnt = signCnt + 1;
@@ -1652,7 +1662,7 @@ function openAaprDocAttachUI() {
 	  aprcabinetattach_cross_dialogArguments[0] = parameter;
       aprcabinetattach_cross_dialogArguments[1] = openAaprDocAttachUI_complete;
       
-	  DivPopUpShow(1050, 520, url);
+	  DivPopUpShow(1050, 560, url);
   } catch(e) {
 	  alert("openAaprDocAttachUI() :: " + e);
   }
@@ -1799,7 +1809,11 @@ function SaveDraftDocInfo_ilban(pState, currIdx)
 	createNodeAndInsertText(xmlpara, objNode, "ITEMNAME2", parent.tempItemName2);
 	
 	createNodeAndInsertText(xmlpara, objNode, "PASSAPRLINE", "N");
-
+	
+	if (currIdx != 1) {
+		createNodeAndInsertText(xmlpara, objNode, "SENDNOTIFLAG", "N");
+	}
+	
 	/*
 	 * 2018-06-14 천성준
 	 * 비전자문서 데이터 세팅 메소드

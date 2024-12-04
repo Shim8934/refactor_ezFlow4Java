@@ -2,35 +2,21 @@
 var emailFlag=false;
 function MailToMe_Onclick() {
     var checked = document.getElementById('toMe').checked;
-    var msgDiv = document.getElementById('MsgToGot');
+    var newElem = PrepareMailTag(0, "email", g_myname, g_myemail, "");
+    var existMe = ItypeOfMailReceiverInUse(newElem);
 
     if (checked) {
-        var existMe = false;
-        for (var i = 0; i < msgDiv.childNodes.length; i++) {
-            if (msgDiv.childNodes[i].childNodes[0].getAttribute("email") && msgDiv.childNodes[i].childNodes[0].getAttribute("email") == g_myemail) {
-                existMe = true;
-            }
-        }
         if (!existMe) {
         	if (!increaseReceiverCount()) {
         		return;
         	}
         	
-            var newElem = PrepareMailTag(0, "email", g_myname, g_myemail, "");
             MsgToGot.appendChild(newElem);
         }
     } else {
-        for (var i = 0; i < msgDiv.childNodes.length; i++) {
-            if (msgDiv.childNodes[i].childNodes[0].getAttribute("email") && msgDiv.childNodes[i].childNodes[0].getAttribute("email") == g_myemail) {
-            	decreaseReceiverCount();
-            	
-            	while (msgDiv.childNodes[i].hasChildNodes()) {
-                    msgDiv.childNodes[i].removeChild(msgDiv.childNodes[i].lastChild);
-                }
-                msgDiv.removeChild(msgDiv.childNodes[i]);
-                i--;
-            }
-        }
+//      if (existMe) {
+            deleteMailUser(g_myemail, existMe);    // existMe = itype
+//      }
     }
 }
 
@@ -570,7 +556,7 @@ function show_progress(fileinfo) {
 function status_change(fileinfo) {
     try {
         g_progresswin.document.Script.fileinfo_change(fileinfo);
-    } catch (e) { }
+    } catch (e) {console.log(e);}
 }
 
 function attach_Delete() {
@@ -650,7 +636,7 @@ function restore_button() {
     try {
         g_progresswin.close();
     }
-    catch (e) { }
+    catch (e) {console.log(e);}
 }
 
 function NotifyResult(filename, attachMode, path) {
@@ -691,8 +677,47 @@ function attach_click(para) {
     ezUtil.UseUTF8 = true;
     ezUtil.ExecuteFile(para, "");
 }
+function Send_onClick_preview() {
+    // 기본 check
+    if (eSubject.value.trim() == "") {
+        alert(strNoSubject);
+        eSubject.focus();
+        return;
+    }
+
+    if (eSubject.value.length > 150) {
+        alert(strLang95);
+        eSubject.focus();
+        return;
+    }
+
+	if (window.dadiframe && dadiframe.isfileup) {
+		alert(strLang86);
+		return;
+	}
+
+	if (document.getElementById("MsgToGot").children.length == 0 &&
+        document.getElementById("MsgCCGot").children.length == 0 &&
+        document.getElementById("MsgBCCGot").children.length == 0) {
+        alert(strLang93);
+        gInvalidAddressArr = null;
+        return;
+    }
+
+	// 미리보기 or 전송
+	if (previewMail == "Y") {
+        previewChk = true;
+        Save_onClick('previewSend');
+    } else if (previewMail == "P" && importantSelect.selectedIndex.toString() == "2") { // 중요도 높음
+        previewChk = true;
+        Save_onClick('previewSend');
+    } else {
+        Send_onClick();
+    }
+}
 
 function Send_onClick() {
+    /* Send_onClick_preview 에서 체크하고 오기때문에 주석
     if (eSubject.value.trim() == "") {
         alert(strLangHSG03); // 2024.04.29 한슬기 : 제목란이 비어있습니다.
         eSubject.focus();
@@ -708,7 +733,7 @@ function Send_onClick() {
 	if (window.dadiframe && dadiframe.isfileup) {
 		alert(strLang86);
 		return;
-	}
+	}*/
 
     NameCertify_onClick(Send_onClick_Complete);
 }
@@ -738,7 +763,7 @@ function Send_onClick_Complete(ReturnValue) {
             
             try {
             	individualmailuserNum = Number(individualmailuser);
-            } catch (e) {}
+            } catch (e) {console.log(e);}
             
             if ((MsgToGot.childNodes.length + MsgCCGot.childNodes.length + MsgBCCGot.childNodes.length) > individualmailuserNum && iseachMail == "true") {
                 if (confirm(strLangKMS04 + individualmailuserNum + strLangKMS05)) {
@@ -755,6 +780,7 @@ function Send_onClick_Complete(ReturnValue) {
             	secureMailParams["securePassword"] = securePassword;
             	secureMailParams["secureReadCount"] = secureReadCount;
             	secureMailParams["secureReadDate"] = secureReadDate;
+                secureMailParams["securePasswordHint"] = securePasswordHint;
             	
             	secureMail_dialogArguments[0] = secureMailParams;
             	secureMail_dialogArguments[1] = secureMail_Complete;
@@ -767,6 +793,7 @@ function Send_onClick_Complete(ReturnValue) {
             
         }
     } catch (e) {
+        console.log(e);
     }
 }
 
@@ -974,6 +1001,7 @@ function Save_onClick_Complete(ReturnValue) {
             	createNodeAndInsertText(xmlDoc, rootNode, "SECUREPASSWORD", secureMailParams["securePassword"]);
             	createNodeAndInsertText(xmlDoc, rootNode, "SECUREREADCOUNT", secureMailParams["secureReadCount"]);
             	createNodeAndInsertText(xmlDoc, rootNode, "SECUREREADDATE", secureMailParams["secureReadDate"]);
+                createNodeAndInsertText(xmlDoc, rootNode, "SECUREPASSWORDHINT", secureMailParams["securePasswordHint"]);
             }
             
             ConvertEmbedPath(xmlDoc, xmlDoc);
@@ -1032,6 +1060,7 @@ function Save_onClick_Complete(ReturnValue) {
             }
         }
     } catch (e) {
+        console.log(e);
     }
 }
 
@@ -1076,6 +1105,7 @@ function event_SaveonClick() {
                 pRtnMessage = xmlResult.childNodes.item(0).childNodes.item(0).textContent;
             }
         } catch (e) {
+            console.log(e);
         }
         
         //메일 발송인 경우
@@ -1115,9 +1145,9 @@ function event_SaveonClick() {
                 	    gInvalidAddressArr = invalidAddressArr;
                 	    
                 		for (var i=0; i<invalidAddressArr.length; i++) {
-                			try { deleteMailUser(invalidAddressArr[i],"0"); } catch (e) {}
-                			try { deleteMailUser(invalidAddressArr[i],"1"); } catch (e) {}
-                			try { deleteMailUser(invalidAddressArr[i],"2"); } catch (e) {}
+                			try { deleteMailUser(invalidAddressArr[i],"0"); } catch (e) {console.log(e);}
+                			try { deleteMailUser(invalidAddressArr[i],"1"); } catch (e) {console.log(e);}
+                			try { deleteMailUser(invalidAddressArr[i],"2"); } catch (e) {console.log(e);}
                 		}
                 		
                 		setTimeout(Send_onClick(), 100);
@@ -1182,6 +1212,10 @@ function event_SaveonClick() {
             	g_apprMail = false;
             	g_apprMailApprover = "";
                 
+                if ("always" === mailSendResult) {
+                    alert(strSendOK);
+                }
+                
                 try {
 //                	window.opener.MailListRefreshByTimeout();
                 	/* 2018-05-07 이소담 - 왼쪽 메뉴의 '메일쓰기'로 '내게쓰기'로 메일을 발신했을때 메일 목록 자동으로 새로고침되도록 개선*/
@@ -1194,7 +1228,7 @@ function event_SaveonClick() {
                 	} else {
                 		window.opener.MailListRefreshByTimeout();
                 	}
-                } catch (e) { }
+                } catch (e) {console.log(e);}
                 
                 window.close();
         	}
@@ -1246,6 +1280,24 @@ function event_SaveonClick() {
                 
         		preMailRead(preview_g_url_forRead);
         	}
+        	// 정상적으로 처리된 경우(메일작성 미리보기의 임시저장인 경우)
+            else if (event_SaveonClick.savemode == "previewSend"){
+                var result = pRtnMessage;
+                var xmlID = "";
+                xmlID = loadXMLString(g_saveHttp.responseText);
+                var xmlItem = xmlID.childNodes.item(0).childNodes;
+
+                if (!CrossYN()) {
+                    preview_g_url = xmlItem.item(1).text;
+                    preview_g_url_forRead = xmlItem.item(2).text + "/" + preview_g_url;
+                }
+                else if (CrossYN()) {
+                    preview_g_url = xmlItem.item(1).textContent;
+                    preview_g_url_forRead = xmlItem.item(2).textContent + "/" + preview_g_url;
+                }
+
+                preMailReadSend(preview_g_url_forRead);
+            }
         	// 정상적으로 처리된 경우(메일 저장 or 자동임시저장인 경우)
         	else {
         		g_bDirty = false;
@@ -1284,7 +1336,7 @@ function event_SaveonClick() {
                 
                 try {
                 	window.opener.MailListRefreshByTimeout();
-                } catch (e) { }
+                } catch (e) {console.log(e);}
         	}
         	
     		/*if (!isAutoSave) {
@@ -1635,38 +1687,52 @@ function GetMailAddresses(name) {
 }
 
 function CheckMailReceiver(newElem) {
+    return Boolean(ItypeOfMailReceiverInUse(newElem));   // itype : '0','1','2' = 문자열 있음 = true.
+}
+function ItypeOfMailReceiverInUse(newElem) {
     var rtnValue = false;
+
+    if (newElem.childNodes[0].getAttribute("email") == g_myemail) {
+        document.getElementById('toMe').checked = true;
+    }
+
     for (co = 0; co < MsgToGot.childNodes.length; co++) {
-        if (MsgToGot.childNodes[co].childNodes[0].nodeName == "#text")
+        var nodeTo = MsgToGot.childNodes[co].childNodes[0];
+
+        if (nodeTo.nodeName == "#text")
             continue;
-        if (newElem.childNodes[0].getAttribute("email") == MsgToGot.childNodes[co].childNodes[0].getAttribute("email") && MsgToGot.childNodes[co].childNodes[0].getAttribute("type") != "mailgroup")
-            return true;
-        else if (newElem.childNodes[0].getAttribute("href") != null && MsgToGot.childNodes[co].childNodes[0].getAttribute("type") == "mailgroup") {
-        	if (newElem.childNodes[0].getAttribute("href").split("|!|")[0] == MsgToGot.childNodes[co].childNodes[0].getAttribute("href").split("|!|")[0]) {
-        		return true;
+        if (newElem.childNodes[0].getAttribute("email") == nodeTo.getAttribute("email") && nodeTo.getAttribute("type") != "mailgroup")
+            rtnValue = nodeTo.getAttribute("itype");
+        else if (newElem.childNodes[0].getAttribute("href") != null && nodeTo.getAttribute("type") == "mailgroup") {
+        	if (newElem.childNodes[0].getAttribute("href").split("|!|")[0] == nodeTo.getAttribute("href").split("|!|")[0]) {
+        		rtnValue = nodeTo.getAttribute("itype");
         	}
         }
         
     }
     for (co = 0; co < MsgCCGot.childNodes.length; co++) {
-        if (MsgCCGot.childNodes[co].childNodes[0].nodeName == "#text")
+        var nodeCC = MsgCCGot.childNodes[co].childNodes[0];
+
+        if (nodeCC.nodeName == "#text")
             continue;
-        if (newElem.childNodes[0].getAttribute("email") == MsgCCGot.childNodes[co].childNodes[0].getAttribute("email") && MsgCCGot.childNodes[co].childNodes[0].getAttribute("type") != "mailgroup")
-            return true;
-        else if (newElem.childNodes[0].getAttribute("href") != null && MsgCCGot.childNodes[co].childNodes[0].getAttribute("type") == "mailgroup") {
-        	if (newElem.childNodes[0].getAttribute("href").split("|!|")[0] == MsgCCGot.childNodes[co].childNodes[0].getAttribute("href").split("|!|")[0]) {
-        		return true;
+        if (newElem.childNodes[0].getAttribute("email") == nodeCC.getAttribute("email") && nodeCC.getAttribute("type") != "mailgroup")
+            rtnValue = nodeCC.getAttribute("itype");
+        else if (newElem.childNodes[0].getAttribute("href") != null && nodeCC.getAttribute("type") == "mailgroup") {
+        	if (newElem.childNodes[0].getAttribute("href").split("|!|")[0] == nodeCC.getAttribute("href").split("|!|")[0]) {
+        		rtnValue = nodeCC.getAttribute("itype");
         	}
         }
     }
     for (co = 0; co < MsgBCCGot.childNodes.length; co++) {
-        if (MsgBCCGot.childNodes[co].childNodes[0].nodeName == "#text")
+        var nodeBCC = MsgBCCGot.childNodes[co].childNodes[0];
+
+        if (nodeBCC.nodeName == "#text")
             continue;
-        if (newElem.childNodes[0].getAttribute("email") == MsgBCCGot.childNodes[co].childNodes[0].getAttribute("email") && MsgBCCGot.childNodes[co].childNodes[0].getAttribute("type") != "mailgroup")
-            return true;
-        else if (newElem.childNodes[0].getAttribute("href") != null && MsgBCCGot.childNodes[co].childNodes[0].getAttribute("type") == "mailgroup") {
-        	if (newElem.childNodes[0].getAttribute("href").split("|!|")[0] == MsgBCCGot.childNodes[co].childNodes[0].getAttribute("href").split("|!|")[0]) {
-        		return true;
+        if (newElem.childNodes[0].getAttribute("email") == nodeBCC.getAttribute("email") && nodeBCC.getAttribute("type") != "mailgroup")
+            rtnValue = nodeBCC.getAttribute("itype");
+        else if (newElem.childNodes[0].getAttribute("href") != null && nodeBCC.getAttribute("type") == "mailgroup") {
+        	if (newElem.childNodes[0].getAttribute("href").split("|!|")[0] == nodeBCC.getAttribute("href").split("|!|")[0]) {
+        		rtnValue = nodeBCC.getAttribute("itype");
         	}
         }
     }
@@ -2285,12 +2351,17 @@ function GetBoardItemInfo_New(pBoardID, pItemID, pRetransType, pFont) {
 //        var XmlBodyATT = createXmlDom();
         var XmlBodyDATA = createXmlDom();
         var tempStr = "";
-        tempStr = ConvertMHTtoHTML(fullPath);
+        var htmlData = "";
+        
+        if (moduleEditor != "HWP" && fullPath.substr(fullPath.length - 3, fullPath.length).toLowerCase() != "hwp") {
+        	tempStr = ConvertMHTtoHTML(fullPath);
 
-        tempXML = loadXMLString(tempStr);
-//        XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
-        XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
-        var htmlData = getNodeText(XmlBodyDATA);
+	        tempXML = loadXMLString(tempStr);
+//      	XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
+	        XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
+	        htmlData = getNodeText(XmlBodyDATA);
+	        htmlData = ReplaceText(htmlData, "<TD class=FIELD", "<TD");
+        }
 
         eSubject.value = getNodeText(SelectNodes(ReturnXML, "NODES/NODE/Title")[0]);
         var PostDate = getNodeText(SelectNodes(ReturnXML, "NODES/NODE/WriteDate")[0]);
@@ -2300,8 +2371,6 @@ function GetBoardItemInfo_New(pBoardID, pItemID, pRetransType, pFont) {
 			         getNodeText(SelectNodes(ReturnXML, "NODES/NODE/WriterCompanyName")[0]) + ")";
 
         if (Sender.indexOf("(,,)") > -1) Sender = Sender.split("(")[0];
-
-        htmlData = ReplaceText(htmlData, "<TD class=FIELD", "<TD");
 
         if (pRetransType != "boardAttach") {
             document.getElementById("bodyValue").innerHTML = "<DIV style='LINE-HEIGHT: 15pt' ><br /><br /><DIV id='MailSign'></div><br /></DIV>" +
@@ -2326,6 +2395,9 @@ function GetBoardItemInfo_New(pBoardID, pItemID, pRetransType, pFont) {
             var filepath = SelectSingleNodeValue(AttachRows[i], "FilePath");
             var filenameTemp = filepath.split('/')[filepath.split('/').length - 1];
             var filename = filenameTemp.substring(filenameTemp.indexOf("_") + 1, filenameTemp.length);
+            if (SelectSingleNodeValue(AttachRows[i], "FileName") != "") {
+            	filename = SelectSingleNodeValue(AttachRows[i], "FileName") + "." + filename.substr(filename.length - 3, filename.length).toLowerCase();
+			}
             var filesize = SelectSingleNodeValue(AttachRows[i], "FileSize2");
 
             pstrXML += "<ROW><CELL><VALUE><![CDATA[" + filename + "]]></VALUE>";
@@ -2389,11 +2461,15 @@ function GetBoardItemInfo_New3(pBoardID, pItemID, pFont) {
 //        var XmlBodyATT = createXmlDom();
         var XmlBodyDATA = createXmlDom();
         var tempStr = "";
-        tempStr = ConvertMHTtoHTML(fullPath);
-        tempXML = loadXMLString(tempStr);
-//        XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
-        XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
-        var htmlData = getNodeText(XmlBodyDATA);
+        var htmlData = "";
+        
+        if (moduleEditor != "HWP" && fullPath.substr(fullPath.length - 3, fullPath.length).toLowerCase() != "hwp") {
+        	tempStr = ConvertMHTtoHTML(fullPath);
+	        tempXML = loadXMLString(tempStr);
+//      	XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
+	        XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
+	        htmlData = getNodeText(XmlBodyDATA);
+        }	
         
         eSubject.value = getNodeText(SelectNodes(ReturnXML, "NODES/NODE/Title")[0]);
         var PostDate = getNodeText(SelectNodes(ReturnXML, "NODES/NODE/StartDate")[0]);
@@ -2409,7 +2485,7 @@ function GetBoardItemInfo_New3(pBoardID, pItemID, pFont) {
         	"<br><br><hr></hr><DIV style='font-family:"+ pFont + "'><B>" + strLang118 + "</B>" + PostDate + "<br><B>" + strLang119 + "</B>" + Sender +
         	"<br><B>" + strLang120 + "</B>" + MakeXMLString(eSubject.value) + "<br><br></DIV>" + htmlData;
 
-        xmlHTTP.open("GET", "/ezCommunity/getItemAttachments.do?itemID=" + encodeURIComponent(pItemID), false);
+        xmlHTTP.open("GET", "/ezCommunity/getItemAttachments.do?itemID=" + encodeURIComponent(pItemID) + "&mode=mail", false);
         xmlHTTP.send();
         var ReturnXML = loadXMLString(xmlHTTP.responseText);
         var AttachRows = SelectNodes(ReturnXML, "NODES/NODE");
@@ -2427,7 +2503,11 @@ function GetBoardItemInfo_New3(pBoardID, pItemID, pFont) {
             
             pstrXML += "<ROW><CELL><VALUE><![CDATA[" + filename + "]]></VALUE>";
             pstrXML += "<DATA1><![CDATA[" + filename + "]]></DATA1>";
-            pstrXML += "<DATA2><![CDATA[" + uploadCommunityPath + "/" + filepath + "]]></DATA2>";
+            if (SelectSingleNodeValue(AttachRows[i], "HwpItem") == "Y") {
+            	pstrXML += "<DATA2><![CDATA[" + filepath + "]]></DATA2>";
+            } else {
+            	pstrXML += "<DATA2><![CDATA[" + uploadCommunityPath + "/" + filepath + "]]></DATA2>";
+            }
             pstrXML += "<DATA3></DATA3>";
             pstrXML += "<DATA4>BOARD</DATA4>";
             pstrXML += "<DATA5>N</DATA5>";
@@ -2504,7 +2584,7 @@ function GetEncodeTextNew(pUrl, pMode) {
         XmlHttp.send(xmlDom);
         return XmlHttp.responseText;
     }
-    catch (e) { }
+    catch (e) {console.log(e);}
 }
 
 function GetEncodeTextNew_LinkedSystem(pUrl) {
@@ -2518,7 +2598,7 @@ function GetEncodeTextNew_LinkedSystem(pUrl) {
         XmlHttp.send(xmlDom);
         return XmlHttp.responseText;
     }
-    catch (e) { }
+    catch (e) {console.log(e);}
 }
 
 function ConvertEmbedImagToXml(xmlDoc, rootNode) {
@@ -2652,8 +2732,10 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
         }        
     }
 
+    var TempText = "";
+
     if (isBigFile) {
-        var TempText = "<div id='_BigAttachListHtml' style='width:100%;'><table width='100%' border='0' cellspacing='0' cellpadding='0' style='font-size:x-small;margin-bottom:10px;'>" +
+        TempText = "<div id='_BigAttachListHtml' style='width:100%;'><table width='100%' border='0' cellspacing='0' cellpadding='0' style='font-size:x-small;margin-bottom:10px;'>" +
                         "<tr>" +
                         "<td colspan='2' style='color:#333;font-weight:bold; padding:0px; margin:0px 0px 1px 0px; height:20px;border-bottom:1px solid #dadada;font-size:12px;'><img src='" + document.location.protocol + "//" + g_servername + "/images/icon_addfile.gif' width='7' height='12' style='margin-right:5px;'>" + strLang245 + "</td>" +
                         "</tr>";
@@ -2674,6 +2756,9 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
                     var strTarget = "target=''";
                     var FileName = getNodeText(GetChildNodes(nodes[i])[2]);
                     FileName = replaceAll(FileName, "&", "&amp;");
+                    FileName = replaceAll(FileName, "<", "&lt;");
+                    FileName = replaceAll(FileName, ">", "&gt;");
+                    FileName = replaceAll(FileName, '"', "&quot;");
                     var fileSize = getNodeText(GetChildNodes(nodes[i])[3]);
                     var fileLocation = getNodeText(GetChildNodes(nodes[i])[4]);
                     var fileDate = fileLocation.split("|!|")[0];
@@ -2728,8 +2813,6 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
         
         TempText += "</div></td></tr></table></div>";
 
-        tempDiv.innerHTML = TempText + tempDiv.innerHTML;
-        
         setBigAttachCountInfo(bigAttachFileArr);
     }
 
@@ -2801,120 +2884,17 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
                 }
             }
         }
-    } catch (e) { }
+    } catch (e) {console.log(e);}
 
-    var BodyHTMLContent = "<style>P {MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm}</style> <div " + defaultFontAndSize + ">" + tempDiv.innerHTML + "</div>";
+    var BodyHTMLContent = "<style>P {MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm}</style> <div " + defaultFontAndSize + ">" + TempText + tempDiv.innerHTML + "</div>";
     
     try {
         // 본문에 <![CDATA[]]> 부분이 있으면 XML 파싱 에러가 발생하여 제거 코드 추가함.
         BodyHTMLContent = ReplaceText(BodyHTMLContent, "<!\\[CDATA\\[", "");
         BodyHTMLContent = ReplaceText(BodyHTMLContent, "\\]\\]>", "");
-    } catch (e) { }
+    } catch (e) {console.log(e);}
     
     bigMakeXmlNode(xmlDoc, rootNode, "HTMLBODY", BodyHTMLContent.replace(regex, " "));
-
-    // 사용되지 않는 부분으로 판단되어 제거함.
-    /*
-    try {
-        tempDiv.innerHTML = ReplaceText(tempDiv.innerHTML, "<BR>", "<P>");
-        tempDiv.innerHTML = ReplaceText(tempDiv.innerHTML, "</DIV>", "</DIV><P>");
-        tempDiv.innerHTML = ReplaceText(tempDiv.innerHTML, "<P>", ";crlf;");
-    } catch (e) { }
-
-    bigMakeXmlNode(xmlDoc, rootNode, "eContentText", tempDiv.innerHTML.replace(regex, " "));
-    */
-}
-
-function ConvertEmbedPath_https(xmlDoc, rootNode) {
-    var tempDiv = "";
-
-    tempDiv = tbContentElement.GetBodyHTML();
-
-    if (BigSizeAttach) {
-        var TempText = "<br><br><br><br><br><FIELDSET style=\"LEFT: 0px; TOP: 1px; width:90%; padding:10px\">";
-        TempText += "<LEGEND><img height=12 hspace=5 src='" + document.location.protocol + "//" + g_servername + "/images/email/mail_004.gif' width=13 vspace=5 align=\"absmiddle\" embedding=\"1\">";
-        TempText += "<span style=\"color:#cc6600; font-size:10pt; font-weight:bold\">" + strLang122 + BigSizeMailAttachDelDay + " " + strLang123 + "</span></LEGEND>";
-
-
-        var tmpattachedfileDIV = attachedfileDIV.all.tags("a");
-        var tmpattacheinput = attachedfileDIV.all.tags("input");
-
-        for (var i = 0 ; i < tmpattachedfileDIV.length ; i++) {
-            if (tmpattacheinput(i).fileBigSizeYN == "Y") {
-                var EmailHref = tmpattacheinput(i).RealHref;
-
-                TempText += "<br><a id='BigSizeFileLink' href='" + EmailHref + "'>" + tmpattachedfileDIV(i).innerText + "</a>";
-            }
-        }
-
-
-        TempText += "</FIELDSET>";
-
-        tempDiv = tempDiv + TempText;
-    }
-
-    var idx = 0; var start = 0; var temp = ""; var end = 0;
-    var oldstart = 0; oldend = 0;
-
-    var tempText = "";
-
-    if (tempDiv.toUpperCase().indexOf("<IMG", start) < 0) {
-        tempText = tempDiv;
-        tempDiv = "";
-    }
-    var splitter = "";
-    while (tempDiv.toUpperCase().indexOf("<IMG", start) >= 0) {
-        start = tempDiv.toUpperCase().indexOf("<IMG", start);
-        end = tempDiv.indexOf(">", start + 4) + 1
-        text = tempDiv.substring(start, end);
-        var srcstart = text.toLowerCase().indexOf("src=", 0);
-        splitter = text.substr(srcstart + 4, 1);
-        var srcend = text.indexOf(splitter, srcstart + 5);
-        var txtsrc = text.substr(srcstart + 5, srcend - (srcstart + 5));
-        if (text.toLowerCase().indexOf("srcorg=") >= 0 && txtsrc.toLowerCase().indexOf(document.location.protocol) == 0) {
-        }
-        else if (text.toLowerCase().indexOf("srcorgembedimage=") >= 0 && text.toLowerCase().indexOf("src=" + splitter + document.location.protocol) >= 0) {
-
-            var embedstart = text.toLowerCase().indexOf("srcorgembedimage=");
-            splitter = text.substr(embedstart + 17, 1);
-            var embedend = text.indexOf(splitter, embedstart + 18);
-
-
-            text = text.substr(0, srcstart + 5) + ReplaceText(text.substr(embedstart + 18, embedend - (embedstart + 18)), "%25", "")
-	        + text.substr(embedend);
-
-        }
-        else if (text.toLowerCase().indexOf("src=" + splitter + "file://") >= 0 || (text.toLowerCase().indexOf("embedding=") >= 0 && text.toLowerCase().indexOf("src=" + splitter + document.location.protocol) >= 0)) {
-
-            if (text.toLowerCase().indexOf("srcorg=") > -1) {
-                var srcorgstart = text.toLowerCase().indexOf("srcorg=", 0);
-                splitter = text.substr(srcorgstart + 7, 1);
-                var srcorgend = text.toLowerCase().indexOf(splitter, srcorgstart + 8);
-                text = text.substring(0, srcorgstart) + text.substring(srcorgend + 1);
-            }
-            var srcstart = text.toLowerCase().indexOf("src=", 0);
-            splitter = text.substr(srcstart + 4, 1);
-            var srcend = text.toLowerCase().indexOf(splitter, srcstart + 5);
-            var textEx = text.substr(srcstart, srcend - srcstart);
-            text = text.substr(0, srcstart + 5) + ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(textEx.substr(textEx.lastIndexOf("/") + 1), "%25", ""), "\\\[", "%5B"), "\\\]", "%5D"), "&", "%26"), "{", "%7B"), "}", "%7D") + text.substr(srcend);
-        }
-        tempText = tempText + tempDiv.substr(oldend, start - oldend) + text;
-        oldstart = start;
-        oldend = end;
-        start = end + 1;
-    }
-
-    if (tempDiv.length > start) {
-        tempText = tempText + tempDiv.substr(start - 1);
-    }
-    MakeXmlNode(xmlDoc, rootNode, "HTMLBODY", tempText);
-    try {
-        tempDiv.innerHTML = ReplaceText(tempDiv, "<BR>", "<P>");
-        tempDiv.innerHTML = ReplaceText(tempDiv, "</DIV>", "</DIV><P>");
-        tempDiv.innerHTML = ReplaceText(tempDiv, "<P>", ";crlf;");
-    } catch (e) { }
-
-    MakeXmlNode(xmlDoc, rootNode, "eContentText", tempText);
 }
 
 function EmbedImageIntoXML(xmlDoc, rootNode) {
@@ -3246,7 +3226,7 @@ function SelectReceiver_Complete(ReturnValue) {
     mail_newreceiverchoose_dialogArguments[0] = receiverData;
     mail_newreceiverchoose_dialogArguments[1] = SelectReceiver_onClick_Complete;
     var OpenWin = window.open("/ezEmail/mailNewReceiverChoose.do?defaultwin=" + SelectReceiver_Complete.szDefaultWind, "mail_foldermanage_Cross", GetOpenWindowfeature(1120, 700));
-    try { OpenWin.focus(); } catch (e) { }
+    try { OpenWin.focus(); } catch (e) {console.log(e);}
 }
 function SelectReceiver_onClick_Complete(pListViewMsgTo, pListViewMsgCC, pListViewMsgBCC) {
     try {
@@ -3254,6 +3234,7 @@ function SelectReceiver_onClick_Complete(pListViewMsgTo, pListViewMsgCC, pListVi
         MsgCCGot.innerHTML = "";
         MsgBCCGot.innerHTML = "";
         receiverCount = 0;
+        document.getElementById('toMe').checked = false;
         
         if (pListViewMsgBCC.getElementsByTagName("TR").length > 1) {
             document.getElementById("BccViewer").childNodes.item(1).src = GroupminImg;
@@ -3270,7 +3251,7 @@ function SelectReceiver_onClick_Complete(pListViewMsgTo, pListViewMsgCC, pListVi
         addReceiverOneListView(0, pListViewMsgTo);
         addReceiverOneListView(1, pListViewMsgCC);
         addReceiverOneListView(2, pListViewMsgBCC);
-    } catch (e) { }
+    } catch (e) {console.log(e);}
 }
 function getReceiverChooseFormat() {
     var retVal = new Array();
@@ -3309,6 +3290,7 @@ function addReceiver(pListViewMsgTo, pListViewMsgCC, pListViewMsgBCC) {
     MsgCCGot.innerHTML = "";
     MsgBCCGot.innerHTML = "";
     receiverCount = 0;
+    document.getElementById('toMe').checked = false;
     
     if (pListViewMsgBCC.getElementsByTagName("TR").length > 1) {
         document.getElementById("BccViewer").childNodes.item(1).src = GroupminImg;
@@ -3635,7 +3617,7 @@ function PrepareMailTag(iWhich, type, name, email, href) {
     	});
     }
     
-    newElem.style.cursor = "pointer";
+    newElem.style.cursor = "move"; // [메일쓰기] TO/CC/BCC란 기입 시 MsgTo/CC/BCCGot
     newElem.setAttribute("iType", iWhich); //newElem.getAttribute("iType") = iWhich;
     newElem.setAttribute("onclick", "NameChange_onClick()");
     newElem.setAttribute("type", type);//newElem.getAttribute("type") = type;
@@ -3721,6 +3703,10 @@ function addReceiverOneListView(iWhich, pListView) {
                 MsgBCCGot.appendChild(newElem);
                 break;
         }
+
+        if (pListView.getElementsByTagName("TR")[nCnt1].getAttribute("DATA2") == g_myemail) {
+            document.getElementById('toMe').checked = true;
+        }
     }
 }
 
@@ -3762,6 +3748,10 @@ function addReceiverFromList(iWhich, receiverlist) {
             case 2:
                 MsgBCCGot.appendChild(newElem);
                 break;
+        }
+
+        if (receiverlist["email"][nCnt1] == g_myemail) {
+            document.getElementById('toMe').checked = true;
         }
     }
 }
@@ -4023,6 +4013,10 @@ function deleteMailUser(email, iWhich, href) {
 
     if(!CrossYN())
         window.event.cancelBubble = true;
+
+    if(g_myemail == email) {
+        document.getElementById('toMe').checked = false;
+    }
 
     switch (iWhich) {
         case "0":
@@ -4439,6 +4433,34 @@ function preMailRead(Href) {
     
     ReadMailOpenNewWin = window.open(pURI, "ReadMailOpenNewWin", feature);
     
+    if (ReadMailOpenNewWin != null) {
+    	window.ReadMailOpenNewWin.focus();
+    }
+}
+
+function preMailReadSend(Href) {
+	if(event_SaveonClick.savemode != 'previewSend' && !previewChk) {return; }
+
+    var pheight = window.screen.availHeight;
+    var conHeight = pheight * 0.8;
+    var pwidth = window.screen.availWidth;
+    var conWidth = pwidth * 0.8;
+    if (conWidth > 890)
+        conWidth = 890;
+    //var pTop = (pheight - conHeight) / 2;
+    //var pLeft = (pwidth - 890) / 2;
+    var pLeft = window.outerWidth / 2 + window.screenX - (conWidth / 2);
+    var pTop = window.outerHeight / 2 + window.screenY - (conHeight / 2);
+    var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
+
+	var pURI = "/ezEmail/mailRead.do?iptURL=" + encodeURIComponent(Href) + "&PNFlag=Y&CONTENTCLASS=PREVIEWSEND";
+
+    if (typeof(shareId) != "undefined" && shareId != "") {
+    	pURI += "&shareId=" + encodeURIComponent(shareId);
+    }
+
+    ReadMailOpenNewWin = window.open(pURI, "ReadMailOpenNewWin", feature);
+
     if (ReadMailOpenNewWin != null) {
     	window.ReadMailOpenNewWin.focus();
     }

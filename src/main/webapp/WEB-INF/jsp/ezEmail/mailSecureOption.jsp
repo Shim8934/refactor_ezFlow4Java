@@ -175,6 +175,7 @@
 	            }
 	            
 	            RetValue["securePassword"] = rsa.encrypt(document.getElementById("securePassword").value);
+				RetValue["securePasswordHint"] = document.getElementById("securePasswordHint").value;
 	            
 	            if (document.getElementById("countUnlimit").checked == true) {
 	            	RetValue["secureReadCount"] = 0;
@@ -248,6 +249,12 @@
 		    <th><spring:message code='ezEmail.lhm61' /></th>
 		    <td><input type="password" id="securePasswordCheck" maxlength="20" /></td>
 		  </tr>
+			<tr>
+				<th><spring:message code='ezEmail.kdh04' /></th>
+				<td><input type="text" id="securePasswordHint" maxlength="20" />
+					<p style="margin: 0 0 0 5px; color: #666; font-size: 10px; display: inline-block;"><spring:message code="ezEmail.kdh05"/></p>
+				</td>
+			</tr>
 		  <tr>
 		    <th><spring:message code='ezEmail.lhm65' /></th>
 		    <td>

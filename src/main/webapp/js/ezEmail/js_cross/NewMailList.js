@@ -809,7 +809,7 @@ function MakeListInfoHTML_SUB(ConentObject) {
             GetListInfo_ContentObject.innerHTML = "";
             if (XmlRows.length == 0) {
                 document.getElementById("contentlist").scrollTop = "0";
-                try { p_ListorderValue = pGroupListClickObject.getAttribute("mode"); } catch (e) { }
+                try { p_ListorderValue = pGroupListClickObject.getAttribute("mode"); } catch (e) {console.log(e);}
                 MailListRefresh();
                 return;
             }
@@ -1148,7 +1148,7 @@ function GetListIevent_ongetxmlcomplete() {
                 try {
                     if (document.getElementById("HeaderAllCheckBox") != null)
                         document.getElementById("HeaderAllCheckBox").checked = false;
-                } catch (e) { }
+                } catch (e) {console.log(e);}
             } else {
             	parent.frames["left"].reloadRetryCount--;
             	
@@ -1213,7 +1213,7 @@ function GetListIevent_ongetxmlcomplete_SUB() {
             if (!importExportMode) {
             	HiddenMailProgress();
             }
-            try { p_ListorderValue = pGroupListClickObject.getAttribute("mode"); } catch (e) { }
+            try { p_ListorderValue = pGroupListClickObject.getAttribute("mode"); } catch (e) {console.log(e);}
             GetList_HTTP_SUB = null;
         }
     }
@@ -1450,6 +1450,7 @@ function goToPageByNum(szNum) {
     var HeaderObject = document.getElementById("MailHeader");
     var ContentObject = document.getElementById("MailList");
     GetListInfo(HeaderObject,ContentObject);
+    $("#contentlistDiv").scrollTop(0);
 }
 function selbeforeBlock() {
     var pageNum = parseInt(document.getElementById("MailList").getAttribute("curPage"));
@@ -2109,7 +2110,35 @@ function event_SublistCheckboxclick(obj) {
     }
     listSubEventCheckbox = true;
 }
+
+function checkBlockedMail(url) {
+    var strQuery = "<URL>" + url + "</URL>";
+    xmlhttp_mailCheckBlock = createXMLHttpRequest();
+    
+    var previewUrl = "/ezEmail/mailPrevShow.do?MSGFLAG=N";
+    
+    if (typeof(shareId) != "undefined" && shareId != "") {
+        previewUrl += "&shareId=" + encodeURIComponent(shareId);
+    }
+    
+    xmlhttp_mailCheckBlock.open("POST", previewUrl, false);
+    xmlhttp_mailCheckBlock.send(strQuery);
+
+    var pBlockedMail = 1;
+    
+    if (xmlhttp_mailCheckBlock.status == 200) {
+        pBlockedMail = getNodeText(SelectNodes(xmlhttp_mailCheckBlock.responseXML, "DATA/BLOCKEDMAIL")[0]);        
+    }
+    
+    return pBlockedMail;
+}
+
 function event_listDBClick(obj) {
+    if (checkBlockedMail(obj.getAttribute("_href")) == '1') {
+        alert(strLangLDH07);
+        return;        
+    }
+    
     callMsgDlg(obj.getAttribute("_contentclass"), obj.getAttribute("_href"), obj.getAttribute("_isdraft"));
     MailList_ChangeStatus(obj);
 }
@@ -2184,7 +2213,7 @@ function event_GrouplistDBClick(obj) {
         	var SubGroupListTarget = document.getElementById(pGroupListClickObject.getAttribute("id") + "sub")
             SubGroupListTarget.style.display = "none";
             SubGroupListTarget.childNodes.item(0).innerHTML = ""
-        } catch (e) { }
+        } catch (e) {console.log(e);}
     }
     pGroupListClickObject = obj;
     var NewDIV = document.createElement("DIV");

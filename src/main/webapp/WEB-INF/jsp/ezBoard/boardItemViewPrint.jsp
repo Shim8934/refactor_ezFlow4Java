@@ -10,6 +10,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezBoard.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezBoard/common.js')}"></script>
 		<style>
 	        .viewbox {
@@ -30,6 +31,10 @@
 			#txtContent h4 {font-size:1em; margin-top:1.33em; margin-bottom:1.33em;}
 			#txtContent h5 {font-size:0.83em; margin-top:1.67em; margin-bottom:1.67em;}
 			#txtContent h6 {font-size:0.67em; margin-top:2.33em; margin-bottom:2.33em;}
+			th.boardItemViewPrint_cssThEn{border-right:none;}
+			td.boardItemViewPrint_cssTdEn{border:1px solid #d2d2d2;}
+			td.boardItemViewPrint_cssTdEn > table .boardComment{border-bottom:1px solid #d2d2d2;}
+			td.boardItemViewPrint_cssTdEn > table .boardComment:last-child{border-bottom:none;}
     	</style>
 		<script>
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
@@ -68,29 +73,38 @@
 			var OneLineReplyFlag = "${oneLineReplyFlag}";
 		    var gubun = "${boardInfo.guBun}";
 		    var AtttributeCount = "${boardAttrCount}";
+		    var reactFlag = "<c:out value='${boardInfo.reactFlag}'/>";
+		    var commentSort = "earliest"; // 댓글 정렬 기준 : earliest(등록순) / latest(최신순)
 		
 		    var myVar;
+		    var pUseEditor = "${use_Editor}";
+	    	var html = "";
+	    	
 		    window.onload = function () {
-		    	var html = "";
-				$.ajax({
-					type : "POST",
-					dataType : "text",
-					async : false,
-					url : "/ezCommon/mhtToHTMLContent.do",
-					data : { type   : "BOARDCONTENT", 
-							 itemID 	 : pItemID,
-							 href   : strContentLocation 
-						   },
-					success: function(result){
-						html = result;
-					}        			
-				});	
-		        var doc = document.getElementById('message').contentWindow.document;
-				doc.open();
-				doc.write(html);
-				doc.close();
-				
-		        if (eOneline == "Y") {
+		    	if (pUseEditor != "HWP") {
+		    		$.ajax({
+						type : "POST",
+						dataType : "text",
+						async : false,
+						url : "/ezCommon/mhtToHTMLContent.do",
+						data : { type   : "BOARDCONTENT", 
+								 itemID 	 : pItemID,
+								 href   : strContentLocation 
+							   },
+						success: function(result){
+							html = result;
+						}        			
+					});	
+			        var doc = document.getElementById('message').contentWindow.document;
+					doc.open();
+					doc.write(html);
+					doc.close();
+					beforePrint();
+		    	}
+		    };
+		    
+		    function beforePrint() {
+		    	if (eOneline == "Y") {
 		            document.getElementById('onelineView').style.display = "";
 		        }
 		        
@@ -117,7 +131,7 @@
 		                extentionAttrDiv.innerText = peoplePickerDisplay(extentionAttrDiv.innerText, userLang);
 		            }
 		        }
-		    };
+		    }
 		
 		    function DocumentComplate() {
 		        if (CrossYN()) {
@@ -215,22 +229,26 @@
 		        window.open("/ezCommon/showPersonInfo.do?id=" + pUserID + "&dept=" + pDeptID, "", feature);
 		    }
 		    function getOneLineReply() {
-		        var xmlhttp = createXMLHttpRequest();
-		        xmlhttp.open("POST", "/ezBoard/readOneLineReply.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&gubun=" + gubun, false);
-		        xmlhttp.send();
-		        var xmldom = createXmlDom();
-		        xmldom = loadXMLString(xmlhttp.responseText);
-		        xmlhttp = null;
-		        var strHTML = "";
-		        var temp;
-		        for (var i = 0; i < xmldom.getElementsByTagName("REPLYID").length; i++) {
-		            temp = i + 1;
-		                strHTML += "<font color=blue>" + temp.toString() + ". " + "<span><font color=blue>" + getNodeText(xmldom.getElementsByTagName("USERNAME").item(i)) + "</font></span>(" + getNodeText(xmldom.getElementsByTagName("WRITEDATE").item(i)).substr(0, 16) + ")" + " : </font>" + getNodeText(xmldom.getElementsByTagName("CONTENT").item(i)) + "<br>";
-		        }
-
-		        if (i == 0)
-		            strHTML = "<spring:message code='ezBoard.t312'/>";
-		        document.getElementById('onelinereplylist').innerHTML = strHTML;
+		        var commentPanel = $('#comment_list_display');
+                $.ajax({
+                    type : "POST",
+                    async : false,
+                    url : "/ezBoard/getBoardComment.do",
+                    dataType : "json",
+                    data : {
+                        itemID : pItemID,
+                        boardID : pBoardID,
+                        gubun : gubun,
+                        sort : commentSort
+                    },
+                    success : function(result) {
+                        var boardCommentList = makeBoardCommentHtml(result, "print");
+                        $("#onelinereplylist").append(boardCommentList); //새 댓글리스트 삽입
+                    },
+                    error : function(jqXHR, textStatus, errorThrown) {
+                        
+                    }
+                });
 		    }
 		    function displaytable() {
 		        if(message.document.body.innerHTML != "")
@@ -247,6 +265,22 @@
 		  	    str = ReplaceText(str, "&amp;", "&");
 		        return str;
 		    }
+		    
+			function Editor_Complete() {
+	        	var URL;
+                URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(strContentLocation);
+                message.Open(URL, "", "", function (res) { FieldsAvailable(res.result) }, null);
+	        }
+	        
+	        function FieldsAvailable(isTrue) {
+	        	if (isTrue) {
+	        		message.GetTextFile("HTML", "", function (data) {
+	        			html = data;
+	        			document.getElementById("txtContent").innerHTML = html;
+	        			beforePrint();
+	        		});
+	        	}
+	        }
 		    
 		</script>
 	</head>
@@ -295,6 +329,28 @@
 							</c:otherwise>
 						</c:choose>
 		        	</tr>
+		        	<c:if test="${(boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK') && not empty boardItem.updateDate}">
+                     <!-- 수정자, 수정일 -->
+                        <tr>
+                            <c:if test="${boardInfo.guBun != '2'}">
+                                <th><spring:message code='ezBoard.updateJIH01' /></th>
+                                <td id="updaterName" style = "white-space:nowrap; padding-right:5px; width: 40%;">
+                                    <div style="vertical-align:middle;width:100%;height:16px;">${boardItem.updaterName}</div>
+                                </td>
+                                <th><spring:message code='ezBoard.updateJIH02' /></th>
+                                <td id="updateDate" style = "white-space:nowrap; padding-right:5px; width: 40%;">
+                                    <div style="vertical-align:middle;width:100%;height:16px;">${boardItem.updateDate.substring(0, 16)}</div>
+                                </td>
+                            </c:if>
+                            <c:if test="${boardInfo.guBun == '2'}">
+                                <th><spring:message code='ezBoard.updateJIH02' /></th>
+                                <td width="100%" id="updateDate" style="WORD-WRAP: break-word;word-break:break-all; line-height:16px;" colspan=5>
+                                    <div style="WIDTH: 100%; vertical-align: middle"><c:out value="${boardItem.updateDate.substring(0, 16)}"/></div>
+                                </td>
+                            </c:if>
+                        </tr>
+                    <!-- 수정자, 수정일 end -->
+                    </c:if>	
 		        	<!-- 확장컬럼 -->
 						<c:if test="${boardAttrCount > 0}">
 							<c:forEach var="boardAttr" items="${boardAttr}">
@@ -335,6 +391,21 @@
 	                  <th><spring:message code='ezBoard.t291'/></th>
 	                  <td id="cTitle" style="WORD-WRAP: break-word;" colspan="6"><c:out value="${boardItem.title}"/></td>
 		            </tr>
+		            <%-- 키워드 --%>
+                     <c:if test='${boardInfo.useKeyword eq "Y"}'>
+                         <tr>
+                             <th><spring:message code="ezApprovalG.t1200" /></th>
+                             <td width="100%" id="cKeyword" style="WORD-WRAP: break-word;word-break:break-all; line-height:16px;" colspan=5>
+                                <div style="WIDTH: 100%; vertical-align: middle">
+                                    <c:if test='${not empty keywordList}'>
+                                        <c:forEach var="keyword" items="${keywordList}">
+                                            <span class="keywordSpanView" id="${keyword.keywordName}">#${keyword.keywordName}</span>
+                                        </c:forEach>
+                                    </c:if>
+                                </div>
+                             </td>
+                         </tr>
+                     </c:if>
 		      </table>
 <!-- 		<table class="layout">  -->
 <!-- 		  <tr>  -->
@@ -396,22 +467,29 @@
 		  <table class="layout" style="margin-top:5px;">
 		  <tr>
 		    <td class="pad1" style="display:none;">
-		        <iframe id="message" name="message" style="height:100%; width:100%" onload ="displaytable()"></iframe>
+		        <c:if test="${use_Editor ne 'HWP'}">
+		        	<iframe id="message" name="message" style="height:100%; width:100%" onload ="displaytable()"></iframe>
+		        </c:if>
+		        <c:if test="${use_Editor eq 'HWP'}">
+	        		<iframe id="message" name="message" src="/ezBoard/WHWPEditor.do" style="height:100%; width:100%"></iframe>
+		        </c:if>
 		    </td>
 		  </tr>
 		    <tr>
 		    <td class="pad1" style="height:100%;">
-		        <div id ="txtContent" class ="viewbox" style="border:1px solid #ddd; margin-left:0px; margin-right:0px;"></div>
+		        <div id ="txtContent" class ="viewbox" style="border:1px solid #d2d2d2; margin-left:0px; margin-right:0px;"></div>
 		    </td> 
 		  </tr>
 		  </table>
 		  <table class="layout" style="margin-top:5px;">
 		      <tr id="onelineView" style="display:none;">
 		        <td style="height:30px">
-		          <table class="file2" style="height:100%;">
+		          <table style="height:100%;">
 		            <tr>
 		              <th class="boardItemViewPrint_cssThEn" style="height:100%; "><spring:message code='ezBoard.jjh06'/></th>
-		              <td class="boardItemViewPrint_cssTdEn" style="height:100%; width:100%; "><div id="onelinereplylist" style="OVERFLOW:visible;  background-color:white; text-align:left"></div></td>
+		              <td class="boardItemViewPrint_cssTdEn" style="height:100%; width:100%; ">
+		                <table id="onelinereplylist" style="OVERFLOW:visible;  background-color:white; text-align:left; width:100%;"></table>
+		              </td>
 		            </tr>
 		          </table>
 		        </td>

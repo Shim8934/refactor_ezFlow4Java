@@ -838,16 +838,17 @@
           </isNotEqual>
      </select>
      
+     <!-- 2024-07-03 홍승비 - SQL Injection 수정 > $ 기호 제거 -->
      <select id="EzPersonalDAO.getShareApprovalList" parameterClass="Map" resultClass="PersonalShareApprovalVO">
 	     <![CDATA[
 	     	SELECT
 				A.OWNERID      				AS OWNERID,
 				A.SHAREUSERID  				AS SHAREUSERID,
-				B.DISPLAYNAME$lang$			AS SHAREUSERNAME,
+				CASE #lang# WHEN '2' THEN B.DISPLAYNAME2 ELSE B.DISPLAYNAME END AS SHAREUSERNAME,
 				A.SHAREDATE 				AS SHAREDATE,
-				B.TITLE$lang$  				AS SHAREUSERTITLE,
+				CASE #lang# WHEN '2' THEN B.TITLE2 ELSE B.TITLE END AS SHAREUSERTITLE,
 				A.SHAREUSERDEPTID   		AS SHAREUSERDEPTID,
-				B.DESCRIPTION$lang$			AS SHAREUSERDEPTNAME,
+				CASE #lang# WHEN '2' THEN B.DESCRIPTION2 ELSE B.DESCRIPTION END AS SHAREUSERDEPTNAME,
 				A.TENANTID     				AS TENANTID
 			FROM
 				TBL_PS_SHAREAPPROVAL A

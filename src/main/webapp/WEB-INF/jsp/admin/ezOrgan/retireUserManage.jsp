@@ -230,7 +230,7 @@
 			        selectdept_cross_dialogArguments[0] = strLang8;
 			        selectdept_cross_dialogArguments[1] = Restore_onclick_Complete;
 			        var OpenWin = window.open("/admin/ezOrgan/selectDept.do", "SelectDept_Cross", GetOpenWindowfeature(302, 390));
-			        try { OpenWin.focus(); } catch (e) { }
+			        try { OpenWin.focus(); } catch (e) {console.log(e);}
 				}
 			}
 			
@@ -258,13 +258,23 @@
 			        	    // } else if (result == "DIFF_COMPANY") {
 			        	    //	alert(strLangLHM01);
 			        	    } else {
-			        	        alert(strLang10);
-			        	    }
-			        	},
-			        	error : function(){
-			        		alert(strLang10);	
-			        	}
-			        });
+								if (result == "EMAIL_ERROR") {
+										alert("<spring:message code='ezOrgan.t269' />");
+									} else if (result == "NO_LICENSE_KEY") {
+										alert("<spring:message code='ezOrgan.x0010' />");
+									} else if (result == "INVALID_LICENSE_KEY") {
+										alert("<spring:message code='ezOrgan.x0011' />");
+									} else if (result == "MAX_USER_REACHED") {
+										alert("<spring:message code='ezOrgan.x0012' />");
+									} else {
+										alert(strLang10);
+								}
+							}
+								},
+								error : function() {
+									alert(strLang10);
+								}
+						});
 
 			        retireUserList();
 			    }
@@ -286,7 +296,7 @@
 		        inputpassword_dialogArguments[0] = length + "<spring:message code='ezOrgan.t40' />";
 		        inputpassword_dialogArguments[1] = mod_password_Complete;
 		        var OpenWin = window.open("/admin/ezOrgan/inputPassword.do?companyId=" + userComId, "InputPassword", GetOpenWindowfeature(467, 192));
-		        try { OpenWin.focus(); } catch (e) { }			    
+		        try { OpenWin.focus(); } catch (e) {console.log(e);}
 			}
 			
 		    function mod_password_Complete(rtnValue) {
@@ -678,9 +688,6 @@
 				<c:if test="${dotNetIntegration != 'YES'}">
 		    		<li><span onClick="Restore_onclick()"><spring:message code='ezOrgan.t312'/></span></li>
 		    	</c:if>		        
-		        <c:if test="${dotNetIntegration != 'YES'}">
-                	<li><span onClick="mod_password()"><spring:message code='ezOrgan.t90'/></span></li>
-                </c:if>
                 <li><span class="icon16 icon16_delete" onClick="Delete_onclick()"></span></li>
                 <li><span class="icon16 icon16_refresh" onClick="reload()"></span></li>
 		  	</ul>

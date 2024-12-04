@@ -179,7 +179,9 @@ public class MOptionServiceImpl extends EgovAbstractServiceImpl implements MOpti
 		map.put("deptID", info.getDeptId());
 		map.put("userID", info.getUserId());
 		map.put("offset", commonUtil.getMinuteUTC(info.getOffSet()));
-		map.put("userIDS", userIDS);
+		
+		/* 2024-07-09 홍승비 - SQL Injection 수정 > 사용자ID 리스트는 문자열 대신 배열로 전달 */
+		map.put("userIDS", userIDS.replace("'", "").replace(" ", "").split(","));
 		map.put("tenantID", info.getTenantId());
 		map.put("companyID", info.getCompanyId());
 		map.put("primary", info.getPrimary());		

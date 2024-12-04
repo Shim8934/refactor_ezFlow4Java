@@ -211,10 +211,18 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.createWebfolderNoInherit(); 				// 권한비상속			
 	    	ezCommonService.createTblAprpreview(); //2020-11-18 정소미 - 전자결재 미리보기 설정 테이블 추가
 	    	ezCommonService.createTblSerialNoRollback(); // 2022-09-21 홍승비 - 전자결재G > 문서 기록물 레코드 중복삽입 시 에러 롤백방지 기록 테이블 추가
+			ezCommonService.addBoardDisLikeFlag(); // 2023-06-14 기민혁 - 게시판 > 싫어요 기능 컬럼 추가  
+			ezCommonService.createTblBoardDisLike(); // 2023-06-14 기민혁 - 게시판 > 싫어요 기능 테이블 생성
+			ezCommonService.insertScrapTenantConfig(); // 2023-06-14 기민혁 - 게시판 > 마이게시판 하위 나의스크랩 사용 Flag
+			ezCommonService.insertScrapTableHeader(); // 2024-06-17 기민혁 - 게시판 > 마이게시판 하위 나의스크랩 테이블 해더 추가
+			ezCommonService.createTblBoardScrap(); // 2023-06-15 기민혁 - 게시판 > 마이게시판 스크랩 테이블 생성
+			ezCommonService.createTblUserScrapCont(); // 2023-06-15 기민혁 - 게시판 > 나의 스크랩함 cont테이블 생성
+			ezCommonService.createTblUserScrapContList(); // 2023-06-15 기민혁 - 게시판 > 나의 스크랩함 list테이블 생성
 	    	ezCommonService.createTblBoardReplyReact();	// 2023-07-27 이가은&임정은 - 댓글 좋아요/싫어요 관련 테이블 및 칼럼 추가
 			ezCommonService.createTblDbLog(); // 2023-12-11 박기범 - DB 로그 테이블 추가
 			ezCommonService.createTblDistributeinfo(); // 2024-08-07 김유진 - 배부이력정보 테이블 추가
 			ezCommonService.createExecutiveTable(); // 2024-08-06 이유정 - 임원일정 테이블 추가
+            ezCommonService.createJmochaMailBlocked(); // 2024-11-14 김승연 - 메일 열람 차단 테이블 추가
 
 			// alter table
 	    	ezCommonService.alterTableAddColumns(); // 2022-01-19 김은실 - alter 재사용 모듈 추가
@@ -240,12 +248,15 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.alterDocAttachNameCol(); // 2024-06-24 민지수 > 전자결재 > 비전자 기록물 > 본문첨부 파일명 컬럼 추가
 			ezCommonService.alterUserThemePagination();
 			ezCommonService.alterTblScheduleForShowtop(); /* 2024-06-17 이주원 - 일정관리 > 상단표시 컬럼 추가 */
+			ezCommonService.addColumnsRetireTblCompareWithUserTbl(); // 2024-07-09 장혜연 - tbl_usermaster에만 존재하는 컬럼을 조회해 tbl_usermaster_retire에 추가
 			ezCommonService.addUserDeptHideFlag(); //2024-07-25 김대현 - 사용자 숨김, 부서 숨김 Flag 컬럼 추가
 			ezCommonService.insertInitMobileTheme(); // 2024-07-12 황인경 > 모바일 포탈 > 포틀릿, 테마, 권한 추가
 			ezCommonService.alterMenuOpenType();	// 2024-07-23 조수빈 - 관리자 > 메뉴 관리 > url 외부 / 내부 모듈 및 새 탭 열기, 새 창 열기 구분
 			ezCommonService.alterSaveFlagForCbShare(); // 2024-06-28 이유정 - 캐비넷 > 캐비넷공유 > 공유자 저장여부 컬럼 추가
 			ezCommonService.addTblFormContainerSN(); /* 2024-07-17 기민혁 - 전자결재 > 양식함 순서 컬럼 추가 */
-			ezCommonService.alterUseColor();	// 2024-08-20 조수빈 - 포탈 설정 > 모드 설정 컬럼 추가
+			ezCommonService.alterAddThumbnailForTPI(); /* 2024-10-28 김우철 - 게시판 > 동영상게시판 > 썸네일 추가 여부 컬럼 추가 */
+			ezCommonService.alterThumbnailExtForTPI(); /* 2024-10-28 김우철 - 게시판 > 동영상게시판 > 썸네일 확장자 컬럼 추가 */
+			ezCommonService.alterAttachmentsForCBoard(); /* 2024-10-18 김우철 - 커뮤니티 > 공지사항 >  첨부 여부 컬럼 추가 */
 
 			// tenant config
 	    	ezCommonService.insertTblTenantConfig(); // 2020-01-28 useMailConfirm 컨피그 추가 >> 2020-04-28 tbl_tenant_config add
@@ -258,6 +269,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.insertApprSatViewerConfig(); // 2021-06-15 심기영 - 전자결재 첨부파일 SAT 뷰어 사용 컨피그 추가
 	    	ezCommonService.insertHWPSecurityConfig(); // 2023-05-31 김우철 - 한글 배포용 문서 저장 관련 테넌트 컨피그 2건 추가
 	    	ezCommonService.insertPrvwConfig(); // 2023-10-27 조수빈 - 전자결재 / 게시판 모듈 미리보기 테넌트 컨피그 2건 추가
+	    	ezCommonService.insertApprSignRemapApplyTime(); // 2023-12-05 홍승비 - 전자결재 > 전자결재 서명 데이터 재맵핑 시점 컨피그 추가
 			ezCommonService.insertPermissionBasisDeptYN_Config(); // 2023-08-16 전인하 - PermissionBasisDeptYN 테넌트 컨피그 추가
 			ezCommonService.insertTenantConfigLangTertiary(); // 2023-11-27 조소정 - 게시판그룹 일본어 버전 생성 위해 LangTertiary 테넌트 컨피그 추가
 			ezCommonService.insertTenantConfigLangQuaternary(); // 2023-11-27 조소정 - 게시판그룹 중국어 버전 생성 위해 LangQuaternary 테넌트 컨피그 추가
@@ -265,6 +277,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.insertUseHideHeaderArea(); // 2024-05-23 김우철 - 헤더 숨기기 기능 사용여부 테넌트 컨피그 추가
 			ezCommonService.insertUseReceiptDeptFileAttach(); // 2024-06-04 김우철 - 부서수신함에서 첨부, 문서첨부 기능 사용여부 테넌트 컨피그 추가
 			ezCommonService.insertNonUseDocAttachYN(); // 2024-07-02 민지수 - 전자결재 > 비전자문서등록 > 본문첨부 기능 사용여부 테넌트 컨피그 추가
+			ezCommonService.insertModuleEditor(); // 2024-09-23 김우철 - 전자결재, 메일을 제외한 에디터 테넌트 컨피그 추가
 
 	    	ezCommonService.insertPortalThemePortletInitdata();
 	    	ezCommonService.updateTaskUrl();
@@ -301,6 +314,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.insertReadingRecordHeader(); // 2024-06-21 김우철 - 전자결재G > 열람문서함 헤더 추가
             ezCommonService.insertPortalPortletSizeTables(); // 2023-11-20 박기범 - 포탈 포틀릿 사이즈 관련 테이블 추가
 			ezCommonService.insertTblPortalTopUser(); // 2024-04-11  TBL_PORTAL_TOP_USER 추가(포탈 top 프레임 타입 설정. 현재는 위, 왼쪽)
+			ezCommonService.alterUseColor();	// 2024-08-20 조수빈 - 포탈 설정 > 모드 설정 컬럼 추가
 			ezCommonService.insertTblPortalTopCompany(); // 2024-05-17 한태훈 - TBL_PORTAL_TOP_COMPANY 추가(포탈 top 프레임 타입 설정. 현재는 위, 왼쪽)
 			ezCommonService.createTblRealTimeNotification(); // 2024-03-28 한태훈 - 통합알림 테이블 추가
 			ezCommonService.addNotiStoragePeriodConfig(); // 2024-03-28 한태훈 - 통합알림 보관기간 tenantConfig 추가
@@ -325,7 +339,17 @@ public class EzOrganAdminController extends EgovFileMngUtil {
             ezCommonService.insertMobileToggleMenus(); // 2024-08-08 조수빈 - 모바일 우측 panel의 기본 toggle menu 데이터 추가
             ezCommonService.updateThemeData(); // 2024-09-02 조수빈 - 테마 변경에 따른 테마 데이터 update
 			ezCommonService.createRsScheduleDeptIdColumn(); // 2024-09-03 박기범  - TBL_RS_SCHEDULE deptid 컬럼 추가
-        } catch (Exception e) {
+	    	ezCommonService.alterTblBoardOneLineChildReply(); // 2023-03-31 이가은 - 게시판 > 게시물 댓글 정보 테이블에 답글 작성/수정기능 컬럼 추가
+			ezCommonService.insertBoardReplyCommentEmoticon(); // 2023-11-07 전인하 - 게시판 > 댓글로 이모티콘 삽입 가능 관련 테이블 컬럼 추가
+			ezCommonService.createBoardKeywordTable(); // 2024-08-23 전인하 - 게시판 > 키워드 기능 개발
+			ezCommonService.createResourceFavoriteTables(); // 2024-08-07 유길상 - 자원관리 즐겨찾기 테이블 추가
+			ezCommonService.addBoardAttachmentFlag(); // 2024-10-23 정지은 - 게시판 > 글 작성 시 파일첨부 가능여부 설정
+	        ezCommonService.addTblBoardInfoPublicFlag(); // 2024-10-21 박기범 - 게시판 공게여부 컬럼추가
+			ezCommonService.insertAllBoardListOption(); // 2024-10-21 한태훈 - 게시판 > 전체게시물 리스트헤더 추가
+	    	ezCommonService.insertAllBoardInfo(); // 2024-10-17 한태훈 - 게시판 > 전체게시물 게시판정보 추가
+			ezCommonService.addSurveyTotalNotiSentFlag(); // 2024-11-15 한태훈 - 전자설문 > 설문 알림 발송 시 알림 발송 유무 확인 플래그 추가
+			ezCommonService.createTblBoardCommentAttachments(); // 2024-10-23 전인하 - 게시판 > 댓글 첨부 테이블 추가
+		} catch (Exception e) {
     		logger.error(e.getMessage(), e);
     	}
     	logger.debug("init ended.");
@@ -1484,7 +1508,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         }
                 
         // UUID로 pass 변경
-        String adminPassword = UUID.randomUUID().toString();
+        //String adminPassword = UUID.randomUUID().toString();
         
         int tenantID = userInfo.getTenantId();
         String offset = userInfo.getOffset();
@@ -1523,11 +1547,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				if (rc != -100) { // updateGroupDel 성공(부모(그룹)나 자식(유저)을 찾지못해도 성공으로 봄.)
 					try {
 						// 로컬 시스템에서 해당 User의 계정을 퇴직처리한다.
-						ezOrganAdminService.retireEntry(cn[i], domain, adminPassword, tenantID, offset);
+						ezOrganAdminService.retireEntry(cn[i], domain, tenantID, offset);
 					} catch (Exception e) { // Exception이 발생하면 복구 처리를 한다.
 						ezEmailUserAdminService.updateGroupAdd(groupAddr, mailAddr);
 						ezEmailUserAdminService.restoreUser(mailAddr);
-						
 						result = "EMAIL_ERROR";
 						break;
 					}					
@@ -1882,6 +1905,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				// 해당 사용자의 메일 템플릿을 모두 제거한다
 	    		rc = ezEmailService.deleteUserMailTemplate(mailAddr, "", "all", realPath, tenantID);
 	    		logger.debug("deleteMailUserTemplate rc=" + rc);
+	    		
+	    		// 메일 자동 전달, 자동분류 설정 삭제
+				rc = ezEmailUserAdminService.removeUserMailSetting(mailAddr);
+				logger.debug("removeUserMailSetting rc=" + rc);
 			}
 			if("OK".equals(result)) {
 				//2023-07-03 장혜연 사용자 변경 히스토리 테이블에 insert  
@@ -2020,7 +2047,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String result = "";
 		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID(), userInfo.getJobId());
 		// 전체관리자가 또는 회사관리자가 아닌데 관리자 권한을 설정하려는 경우엔 CHECKPERMISSION을 반환한다.
-        if (!organAuth.isAuth(AdminAuth.ADMIN_MASTER) && !organAuth.isAuth(AdminAuth.COMPANY_MANAGER)) {
+		// ezSyncServer가 ezFlow를 호출하는 경우엔 loginCookie에 부서 아이디가 없어 부서아아디 체크를 추가함
+        if (userInfo.getDeptID() != null && !userInfo.getDeptID().isEmpty() &&
+				!organAuth.isAuth(AdminAuth.ADMIN_MASTER) && !organAuth.isAuth(AdminAuth.COMPANY_MANAGER)) {
             result = "CHECKPERMISSION";		
 		// 기존 사용자를 수정하는 경우엔 parentCn의 값이 null 혹은 empty string 이다.
         } else if (vo.getParentCn() == null || vo.getParentCn().equals("")) {
@@ -2195,7 +2224,146 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		return result;
 	}
-	
+
+	/**
+	 * 사용자관리 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezOrgan/totalUserList.do", method = RequestMethod.GET)
+	public String totalUserList(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception{
+		logger.debug("totalUserList started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		//관리자 권한 체크
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID(), userInfo.getJobId());
+		if (!organAuth.isAuth(AdminAuth.ADMIN_MASTER) && !organAuth.isAuth(AdminAuth.COMPANY_MANAGER)) {
+			return "cmm/error/adminDenied";
+		}
+
+		String companyID = userInfo.getCompanyID();
+		List<OrganDeptVO> deptList = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+
+		for (int i = 0; i < deptList.size(); i ++) {
+			OrganDeptVO vo = deptList.get(i);
+			if(userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(companyID)){
+				resultList.add(i, vo);
+			}
+		};
+
+
+		model.addAttribute("list", resultList);
+		model.addAttribute("companyID", companyID);
+
+		logger.debug("totalUserList ended.");
+
+		return "admin/ezOrgan/totalUserList";
+	}
+
+	/**
+	 * 사용자관리 - 사용자 목록 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezOrgan/getTotalUserList.do", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
+	@ResponseBody
+	public String getTotalUserList(@CookieValue("loginCookie") String loginCookie,
+			@RequestParam(required = false) String searchType,
+			@RequestParam(required = false) String searchKeyword,
+			Model model,
+			HttpServletRequest request) throws Exception {
+		logger.debug("getTotalUserList started");
+
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+
+		if(userInfo == null){
+			return "cmm/error/adminDenied";
+		}
+
+		String companyID = request.getParameter("companyID");
+		String currPage = request.getParameter("pageNum");
+
+		if(currPage == null || currPage.equals("")){
+			currPage = "1";
+		}
+
+		int maxItemPerPage = 20;
+		int currentPage = Integer.parseInt(currPage);
+		int startRow = Math.multiplyExact(Math.subtractExact(currentPage, 1), maxItemPerPage);
+
+		if(currentPage == -1){
+			startRow = -1;
+		}
+
+		int dbName = globals.getProperty("Globals.DbType").equals("mysql") ? 1 : 2;
+		searchKeyword = commonUtil.getWildcardEscapedString(searchKeyword, dbName);
+
+		boolean [] searchFor = {true, false, false, false};
+
+		List<ArrayList<String>> userList = new ArrayList<ArrayList<String>>();
+
+		List<OrganUserVO> userCnList = ezOrganAdminService.getUserList(Integer.valueOf(userInfo.getTenantId()), startRow, maxItemPerPage, searchType, searchKeyword, companyID, "", "", searchFor);
+		int itemCnt = ezOrganAdminService.getUserCount(userInfo.getTenantId(), searchType, searchKeyword, searchFor, companyID);
+
+		int totalPage = itemCnt / maxItemPerPage;
+
+		if(itemCnt < 1){
+			totalPage = 1;
+		}
+
+		if ((totalPage * maxItemPerPage) != itemCnt && (itemCnt % maxItemPerPage) != 0) {
+			totalPage = totalPage + 1;
+		}
+
+		currentPage = Math.min(currentPage, totalPage);
+
+		boolean primary = userInfo.getPrimary().equals("1");
+
+		StringBuilder result = new StringBuilder("<LISTVIEWDATA>");
+		result.append("<TOTALCNT>" + itemCnt + "</TOTALCNT>");
+		result.append("<TOTALPAGE>" + totalPage + "</TOTALPAGE>");
+		result.append("<CURRPAGE>" + currentPage + "</CURRPAGE>");
+		result.append("<SEARCHTYPE>" + searchType + "</SEARCHTYPE>");
+		result.append("<ROWS>");
+		
+		for(OrganUserVO organUserVO : userCnList){
+			
+			String userID = organUserVO.getCn();
+			String dept = primary ? organUserVO.getDescription() : organUserVO.getDescription2();
+			String displayname = primary ? organUserVO.getDisplayName() : organUserVO.getDisplayName2();
+
+			String title = primary ? organUserVO.getTitle() : organUserVO.getTitle2();
+			String position = primary ? organUserVO.getExtensionAttribute10() : organUserVO.getExtensionAttribute102();
+			String mobile = organUserVO.getMobile();
+			String telephone = organUserVO.getTelephoneNumber();
+			
+			result.append("<ROW>");
+			result.append("<CELL>");
+			result.append("<DATA1><![CDATA[" 				+ Optional.ofNullable(userID).orElse("") 	  + "]]></DATA1>");
+			result.append("<DATA2><![CDATA[" 				+ Optional.ofNullable(displayname).orElse("") + "]]></DATA2>");
+			result.append("<DATA3><![CDATA[" 				+ Optional.ofNullable(dept).orElse("")		  + "]]></DATA3>");
+			result.append("<DATA4><![CDATA[" 				+ Optional.ofNullable(title).orElse("") 	  + "]]></DATA4>");
+			result.append("<DATA5><![CDATA[" 				+ Optional.ofNullable(position).orElse("") 	  + "]]></DATA5>");
+			result.append("<DATA6><![CDATA[" 				+ Optional.ofNullable(mobile).orElse("") 	  + "]]></DATA6>");
+			result.append("<DATA7><![CDATA[" 				+ Optional.ofNullable(telephone).orElse("")	  + "]]></DATA7>");
+			result.append("<CN><![CDATA["					+ organUserVO.getCn()						  + "]]></CN>");
+			result.append("<DEPT><![CDATA["					+ organUserVO.getDepartment()				  + "]]></DEPT>");
+			result.append("<DISPLAYNAME1><![CDATA["  		+ organUserVO.getDisplayName1()				  + "]]></DISPLAYNAME1>");
+			result.append("<DISPLAYNAME2><![CDATA["  		+ organUserVO.getDisplayName2()				  + "]]></DISPLAYNAME2>");
+			result.append("<EXTENSIONATTRIBUTE1><![CDATA[" 	+ organUserVO.getExtensionAttribute1()		  + "]]></EXTENSIONATTRIBUTE1>");
+			result.append("<EXTENSIONATTRIBUTE2><![CDATA[" 	+ organUserVO.getExtensionAttribute2()		  + "]]></EXTENSIONATTRIBUTE2>");
+			result.append("<EXTENSIONATTRIBUTE3><![CDATA[" 	+ organUserVO.getExtensionAttribute3()		  + "]]></EXTENSIONATTRIBUTE3>");
+			result.append("<COMPANYID><![CDATA[" 			+ organUserVO.getPhysicalDeliveryOfficeName() + "]]></COMPANYID>");
+			result.append("</CELL>");
+			result.append("</ROW>");
+		}
+		
+		result.append("</ROWS>");
+		result.append("</LISTVIEWDATA>");
+		
+		
+		logger.debug("getTotalUserList ended");
+
+		return result.toString();
+	}
+
 	@RequestMapping(value = "/admin/ezOrgan/createDefaultMailFolders.do", method = RequestMethod.POST, produces = "text/html;charset=utf-8")
 	@ResponseBody
 	public String createDefaultMailFolders(@CookieValue("loginCookie") String loginCookie, @RequestParam String userEmail, Locale locale) throws Exception{
@@ -3301,6 +3469,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         	
         	return "EMAIL_ERROR";
         }
+        // UUID로 pass 변경
+        String restorePwd = UUID.randomUUID().toString();
         
         int tenantID = userInfo.getTenantId();        
         String cnList = request.getParameter("cn");
@@ -3331,7 +3501,13 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			//	logger.debug("restoreRetireUser ended. result=DIFF_COMPANY");
 			//	return "DIFF_COMPANY";
 			//}
-			
+
+			String checkResult = checkLicenseKey(tenantID, domain);
+
+			if (!checkResult.equals("OK")) {
+				return checkResult;
+			}
+
 			// dhlee
 			String mailAddr = cn[i] + "@" + domain;
 			
@@ -3353,6 +3529,11 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 						// 로컬 시스템에서 해당 User의 복원처리를 수행한다.
 						ezOrganAdminService.restoreRetireEntry(cn[i], deptID, tenantID, offset);
 
+						// 사용자의 mail을 실제 주소로 업데이트 한다.
+						if (ezEmailUserAdminService.checkUserPrimaryMail(mailAddr, tenantID) != 0) {
+							ezOrganAdminService.updateUserMailAddress(cn[i], mailAddr, tenantID);
+						}
+
 						//사용자 변경 히스토리 테이블에 insert
 						UserChangeInfoVO userChangeInfoVO = new UserChangeInfoVO();
 						userChangeInfoVO.setUserId(cn[i]);
@@ -3366,7 +3547,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 						} catch (Exception e) {
 							logger.error(e.getMessage(), e);
 						}
-
+						
+						ezOrganAdminService.setPasswordWithEmailSystem(cn[i], domain, restorePwd, tenantID);
+						
 					} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
 						ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
 						ezEmailUserAdminService.retireUser(mailAddr);
@@ -4179,6 +4362,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String type = request.getParameter("type");
 		String mode = request.getParameter("mode");
 		String companyID = request.getParameter("companyID");
+		String maxSort = request.getParameter("maxSort");
 		
 		int jobCnt = ezOrganAdminService.getTitleListCnt(type, companyID, userInfo.getTenantId());
 		
@@ -4195,6 +4379,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("jobID", jobID);
 		model.addAttribute("primary", primary);
 		model.addAttribute("secondary", secondary);
+		model.addAttribute("maxSort", maxSort);
 
 		logger.debug("jobTitlePopupUI ended.");
 		return "admin/ezOrgan/jobTitlePopupUi";
@@ -4221,12 +4406,13 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String displayName = request.getParameter("displayName1");
 		String displayName2 = request.getParameter("displayName2");
 		String sort = request.getParameter("sort");
+		String maxSort = request.getParameter("maxSort");
 		String useFlag = request.getParameter("useFlag");
 		String companyID = request.getParameter("companyID");
 		
 		String result = "";
 		if (mode.equals("Add")) {
-			result = ezOrganAdminService.setTitle(type, "", displayName, displayName2, useFlag, Integer.parseInt(sort), companyID, userInfo.getTenantId());
+			result = ezOrganAdminService.setTitle(type, "", displayName, displayName2, useFlag, Integer.parseInt(maxSort), companyID, userInfo.getTenantId());
 		} else if (mode.equals("Mod")) {
 			result = ezOrganAdminService.updateTitle(type, jobID, displayName, displayName2, useFlag, Integer.parseInt(sort), companyID, userInfo.getTenantId());
 		}
@@ -4395,6 +4581,39 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		logger.debug("getUserCompanyID ended.");
 		return companyID;
+	}
+
+	/**
+	 * 직함관리 목록 표출 순서 저장하는 메서드
+	 */
+	@RequestMapping(value = "/admin/ezOrgan/saveJobTitleListOrder.do", method = RequestMethod.POST, produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String saveJobTitleListOrder(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("saveJobTitleListOrder started.");
+		String result = "";
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		int tenantID = userInfo.getTenantId();
+		String[] jobIdArray = request.getParameter("jobID").split(",");
+
+		try {
+			for (int i = 0; i < jobIdArray.length; i++) {
+				int jobId = Integer.parseInt(jobIdArray[i]);
+				int order = i + 1;
+				ezOrganAdminService.updateJobTitleOrder(jobId, order, tenantID);
+			}
+			result = "OK"; 
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result = "ERROR";
+		}
+		
+		logger.debug("saveJobTitleListOrder ended.");
+		return result;
 	}
 	
 	@RequestMapping(value="/admin/ezOrgan/getJobOptionInfo.do", method = RequestMethod.POST, produces="application/text; charset=utf8")
@@ -4620,10 +4839,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			extensionAttribute1 = new String[1];
 			extensionAttribute1[0] = "";
 		} else { // 2022-01-25 이사라 - ApprovalFlag G 사용 시 추가권한은 ";"없이 입력되어 오류 발생으로 ";" 추가 함
-			for (int i = 0; i < extensionAttribute1.length; i++) {
-				String lastChk = extensionAttribute1[i];
-				String fullChk = lastChk.substring(lastChk.length() - 1).equals(";") ? lastChk : (lastChk + ";");
-				extensionAttribute1[i] = fullChk;
+			if (extensionAttribute1 != null){
+				for (int i = 0; i < extensionAttribute1.length; i++) {
+					String lastChk = extensionAttribute1[i];
+					String fullChk = lastChk.substring(lastChk.length() - 1).equals(";") ? lastChk : (lastChk + ";");
+					extensionAttribute1[i] = fullChk;
+				}
 			}
 		}
 
@@ -5682,7 +5903,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 //		logger.debug("selectedId: " + selectedId);
 		String isAddJob = request.getParameter("isAddJob") != null ? request.getParameter("isAddJob"): "";
 		String isPermissionsList = request.getParameter("isPermissionsList") != null ? request.getParameter("isPermissionsList") : "";
-
+		String isTotalUserList = request.getParameter("isTotalUserList") != null ? request.getParameter("isTotalUserList") : "";
+		
  		LoginVO userInfo = commonUtil.userInfo(loginCookie);
  		JSONObject result = new JSONObject();
  		String rollInfo = userInfo.getRollInfo();
@@ -5709,14 +5931,43 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				String pDirPath = commonUtil.getUploadPath("upload_ezOrgan.ROOT", tenantId) + commonUtil.separator;
 				pDirPath = realPath + pDirPath + "temp" + commonUtil.separator;
 				excelPath = ezOrganAdminService.createExcelAddJobList(realPath + commonUtil.separator, pDirPath, exportAddJobList, primary, locale);
-
+			// 권한 리스트 요청
 			} else if ("Y".equalsIgnoreCase(isPermissionsList)) {
 				List<OrganUserVO> exportPermissionList = ezOrganAdminService.getExportPermissionsList(primary, companyId, tenantId);
+				String realPath = request.getServletContext().getRealPath("");
+				String pDirPath = commonUtil.getUploadPath("upload_ezOrgan.ROOT", tenantId) + commonUtil.separator;
+				pDirPath = realPath + pDirPath + "temp" + commonUtil.separator;
+				excelPath = ezOrganAdminService.createExcelPermissionsList(realPath + commonUtil.separator, pDirPath, exportPermissionList, primary, locale, isRollC);
+			// 사용자 관리 리스트 요청
+			} else if ("Y".equalsIgnoreCase(isTotalUserList)) {
+				String searchType = request.getParameter("searchType") != null ? request.getParameter("searchType") : "";
+				String searchKeyword = request.getParameter("searchKeyword") != null ? request.getParameter("searchKeyword") : "";
+				String companyIdChk = request.getParameter("companyID");
+				String currPage = request.getParameter("pageNum");
+
+				if (currPage == null || currPage.equals("")) {
+					currPage = "1";
+				}
+
+				int maxItemPerPage = 20;
+				int currentPage = Integer.parseInt(currPage);
+				int startRow = Math.multiplyExact(Math.subtractExact(Integer.parseInt(currPage), 1), maxItemPerPage);
+
+				if (currPage.equals("-1")) {
+					startRow = -1;
+				}
+				int dbName = globals.getProperty("Globals.DbType").equals("mysql") ? 1 : 2;
+				searchKeyword = commonUtil.getWildcardEscapedString(searchKeyword, dbName);
+				
+				boolean [] searchFor = {true, false, false, false};
+				
+				List<OrganUserVO> totalUserList = ezOrganAdminService.getUserList(tenantId, startRow, maxItemPerPage, searchType, searchKeyword, companyIdChk, "", "", searchFor);
 				String realPath              = request.getServletContext().getRealPath("");
 				String pDirPath              = commonUtil.getUploadPath("upload_ezOrgan.ROOT", tenantId) + commonUtil.separator;
 				pDirPath                     = realPath + pDirPath + "temp" + commonUtil.separator;
-				excelPath             = ezOrganAdminService.createExcelPermissionsList(realPath + commonUtil.separator, pDirPath, exportPermissionList, primary, locale, isRollC);
-				//일반사용자 리스트 요청이라면
+				excelPath             = ezOrganAdminService.createExcelTotalUsers(realPath + commonUtil.separator, pDirPath, totalUserList, primary, locale);
+			
+			//일반사용자 리스트 요청이라면	
 			} else {
 				List<OrganUserVO> exportUserlist = ezOrganAdminService.getExportUserList(primary, companyId, tenantId);
 				String realPath              = request.getServletContext().getRealPath("");
@@ -5750,8 +6001,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	public void downloadExcelReport(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("downloadExcelReport start");
 		String fileName     = request.getParameter("fileName") != null ? request.getParameter("fileName") : "";
+		fileName = fileName.replaceAll("[\\r\\n]", "");
 		String serverName   = request.getServerName()     	   != null ? request.getServerName()     	  : "";
 		String userAgent    = request.getHeader("User-Agent")  != null ? request.getHeader("User-Agent")  : "";
+		userAgent = userAgent.replaceAll("[\\r\\n]", "");
 		
 		logger.debug("serverName: " + serverName + " || File Name: " + fileName + " || UserAgent: " + userAgent);
 		

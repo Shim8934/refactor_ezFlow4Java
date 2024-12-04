@@ -1,5 +1,5 @@
 var mainType = {
-	//mail : "Mail",	
+	mail : "Mail",	
 	approval : "Approval",	
 	board : "Board",	
 	schedule : "Schedule",
@@ -14,6 +14,7 @@ var mainType = {
 }
 
 var subType = {
+	mail : {},
 	approval : {
 		arrive : "Document arrival",
 		complete : "Document complete",

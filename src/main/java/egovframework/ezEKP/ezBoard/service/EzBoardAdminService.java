@@ -150,4 +150,14 @@ public interface EzBoardAdminService {
 	public String getUseFormFlag(String boardID, int tenantID) throws Exception;
 
 	List<OrganDeptVO> getListCompanyInBoard(String userID, String primary, int tenantID);
+
+	public void deleteMyBoardData(String type, String boardID, int tenantID) throws Exception;
+
+	public int getBoardItemCnt(String boardID, int tenantId) throws Exception;
+
+	public String saveHWP(String boardID, String formContent, String realPath, int tenantID) throws Exception;
+	
+	void deleteScrapBoard(String boardID) throws Exception;
+
+	void deleteScrapContBoard(String boardID) throws Exception;
 }

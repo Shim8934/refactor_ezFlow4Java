@@ -255,7 +255,7 @@
 	AND
 		ISREAD = #isRead#
 	</isNotEqual>
-	<isNotEmpty property="lastNotiSeq">>
+	<isNotEmpty property="lastNotiSeq">
 	<![CDATA[
 	AND
 		NOTISEQ < #lastNotiSeq#
@@ -895,7 +895,7 @@
 			TBL_NOTI_EMERGENCY_ITEM (NOTIID, WRITERID, NOTITITLE, NOTIBODY, COMPANY_ID, TENANT_ID, WRITEDATE) 
 		VALUES
 			((SELECT
-				NVL(MAX(NOTIID), 0) as notiId
+				NVL(MAX(NOTIID) + 1, 0) as notiId
 			FROM
 				TBL_NOTI_EMERGENCY_ITEM
 			WHERE

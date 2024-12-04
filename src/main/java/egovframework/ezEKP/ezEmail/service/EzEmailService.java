@@ -176,6 +176,11 @@ public interface EzEmailService {
 	public void deleteBigAttachCountInfo(String[] fileIdArr, int tenantId) throws Exception;
 	public int deleteMailDeleteForUser(String pUserEmail) throws Exception;
 
+	public int deleteMailsByMessageIds(String messageIds) throws Exception;
+	public int blockMailsByMessageIds(String messageIds) throws Exception;
+	public int unblockMailsByMessageIds(String messageIds) throws Exception;
+	public int checkBlockedMailByMessageId(String messageId) throws Exception;
+	
 	public void setMailboxProgress(String userKey, String userId, String action, int tenantId, int percent) throws Exception;
 	public int updateMailboxProgress(String userKey, int percent) throws Exception;
 	public int getMailboxProgress(String userKey) throws Exception;
@@ -270,4 +275,6 @@ public interface EzEmailService {
 	public List<Map<String, String>> getApprMailHistorySearchUserCnt(int tenantId, String companyId, String lang, String sDate, String eDate) throws Exception;
 	public void actionTrashMailAllDelete(IMAPAccess ia, String folderId) throws Exception;
 	public void actionMailMoveTrash(IMAPAccess ia, String folderId, String cmd, long[] uids, Locale locale, int tenantID, String userEmail, String domainName) throws Exception;
+	public String encryptSecureValue(String encryptValue, boolean useKlibEncrypt) throws Exception;
+	public String decryptSecureValue(String decryptValue, boolean useKlibEncrypt) throws Exception;
 }

@@ -46,9 +46,11 @@
 		            document.getElementById("add").style.display = "none";
 		            document.getElementById("mod").style.display = "";		            
 	
-		            if (issolar != "1")
+		            if (issolar != "" && issolar != "1") {
 		                document.getElementById("date2").checked = true;
-	
+						document.getElementById("lunarRadio").style.display = "none";
+		            }
+		            
 		            if (isrepeat == "1")
 		                document.getElementById("repeat").checked = true;
 	
@@ -56,9 +58,11 @@
 		                document.getElementById("rest").checked = true;
 		        }
 	            if (holidayType == "s") {
-	                if (issolar != "1")
+	                if (issolar != "" && issolar != "1") {
                         document.getElementById("date2").checked = true;
-
+	                	document.getElementById("lunarRadio").style.display = "none";
+	                }
+	                
                     if (isrepeat == "1")
                         document.getElementById("repeat").checked = true;
 	            	    //$('#repeat').attr('disabled', true);

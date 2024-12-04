@@ -73,7 +73,7 @@ function list3_deleteAll() {
 		listview.LoadFromID("pAPRLINE");
 
 		var pSelectedRow = listview.GetDataRows();
-		if (pSelectedRow.length != 0 && pSelectedRow != null && listview.GetSelectedIndexes().split(',')[0] != -1) {
+		if (pSelectedRow.length != 0 && pSelectedRow != null && pSelectedRow[0].getAttribute("id").indexOf("noItems") < 0 && listview.GetSelectedIndexes().split(',')[0] != -1) {
 			for (var i = 0; i < pSelectedRow.length; i++) {
 				if (pSelectedRow[i].cells[5].innerText == strLang72) {
 					DoDeleteCC(pSelectedRow);

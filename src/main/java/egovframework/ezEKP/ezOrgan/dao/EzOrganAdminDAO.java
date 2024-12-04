@@ -784,6 +784,10 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         update("EzOrganAdminDAO.updateProperty_addJob", map);
 	}
 
+	public void updateJobTitleOrder(Map<String, Object> map) throws Exception{
+		update("EzOrganAdminDAO.updateJobTitleOrder", map);
+	}
+
     /*private void restoreRetireEntryForJMocha(Map<String, Object> map) throws Exception {
         int tenantId = (Integer)map.get("v_TENANT_ID");        
         String userId = (String)map.get("v_CN");
@@ -819,7 +823,8 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     }*/
 	
     private void restoreRetireEntryForLocal(Map<String, Object> map) throws Exception {
-        moveGroupUser_U(map);
+        //moveGroupUser_U(map);
+    	restoreRetireEntry_I(map);
     }
 	
 	public void restoreRetireEntry(Map<String, Object> map) throws Exception{
@@ -1005,6 +1010,10 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	    retireDBDataForJMocha(map);
 	}*/
 	
+	public void retireDBData(Map<String, Object> map) throws Exception {
+		delete("EzOrganAdminDAO.retireDBData", map);
+	}
+	
     private void setAddJobForLocal(Map<String, Object> map) throws Exception {
         delete("EzOrganAdminDAO.setAddJob", map);
     }
@@ -1059,6 +1068,10 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	
 	public void restoreRetireEntry_D (Map<String, Object> map) throws Exception {
 		delete("EzOrganAdminDAO.restoreRetireEntry_D", map);
+	}
+
+	public void restoreRetireEntry_I (Map<String, Object> map) throws Exception {
+		insert("EzOrganAdminDAO.restoreRetireEntry", map);
 	}
 							
 	public void moveGroupUser_U (Map<String, Object> map) throws Exception {
@@ -1208,7 +1221,19 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	public void deleteCompany_D34(Map<String, Object> map) throws Exception {
 		delete("EzOrganAdminDAO.deleteCompany_D34", map);
 	}
-
+	
+	public void deleteCompany_D35(Map<String, Object> map) throws Exception {
+		delete("EzOrganAdminDAO.deleteCompany_D35", map);
+	}
+	
+	public void deleteCompany_D36(Map<String, Object> map) throws Exception {
+		delete("EzOrganAdminDAO.deleteCompany_D36", map);
+	}
+	
+	public void deleteCompany_D37(Map<String, Object> map) throws Exception {
+		delete("EzOrganAdminDAO.deleteCompany_D37", map);
+	}
+	
 	public void deleteCompanyInfo_IKMS7(Map<String, Object> map) throws Exception {
 		delete("EzOrganAdminDAO.deleteCompanyInfo_IKMS7", map);
 	}

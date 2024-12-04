@@ -40,6 +40,8 @@
 <result property="title" 					column="TITLE" />
 <result property="boardID" 					column="BOARDID" />
 <result property="filePath" 				column="FILEPATH" />
+<result property="addThumbnail" 			column="ADDTHUMBNAIL" />
+<result property="thumbnailExt" 			column="THUMBNAILEXT" />
 </resultMap>
 <resultMap class="PortletInfoVO" id="PortletOrderVO">
 <result property="portletId" 				column="PORTLET_ID" />
@@ -116,6 +118,7 @@
 <result property="boardId" 				column="BOARDID" />
 <result property="gubun" 				column="GUBUN" nullValue=""/>
 <result property="writerName2" 			column="WRITERNAME2" />
+<result property="publicFlag" 			column="PUBLICFLAG" />
 </resultMap>
 <resultMap class="PortalUserInfoVO" id="PortalUserInfoVO">
 <result property="userName"				column="USER_NAME"/>
@@ -195,7 +198,7 @@
 		    A.ITEMID,
 		    A.TITLE,
 		    A.WRITEDATE,
-		    A.WRITERNAME$lang$ as WRITERNAME, 
+		    CASE #lang# WHEN '2' THEN A.WRITERNAME2 ELSE A.WRITERNAME END AS WRITERNAME,
 		    A.CONTENT
 		FROM 
 			TBL_BOARD_ITEM AS A
@@ -564,7 +567,7 @@ WHERE
 ORDER BY
 	LINKORDER ASC
 ]]>
-<isEqual property="pageMode" compareValue="PAGE">	
+<isEqual property="pageMode" compareValue="PAGE">
 	LIMIT #limit#
 	OFFSET #offset#
 </isEqual>
@@ -846,7 +849,9 @@ AND
 			A.BOARDID,
 			A.ITEMID,
 			A.TITLE,
-			B.FILEPATH
+			B.FILEPATH,
+			B.ADDTHUMBNAIL,
+			B.THUMBNAILEXT
 		FROM
 			TBL_BOARD_ITEM A
 		INNER JOIN
@@ -1220,13 +1225,13 @@ INSERT INTO TBL_PORTAL_PORTLET_USER (
 <select id="ezNewPortal.getMonthlyBirthdayEmployees" parameterClass="Map" resultMap="PortalUserInfoVO">
 <![CDATA[
 SELECT
-	DISPLAYNAME$lang$ AS USER_NAME, 
+	CASE #lang# WHEN '2' THEN DISPLAYNAME2 ELSE DISPLAYNAME END AS USER_NAME,
 	CN,
-	DESCRIPTION$lang$ AS DEPT_NAME,
+	CASE #lang# WHEN '2' THEN DESCRIPTION2 ELSE DESCRIPTION END AS DEPT_NAME,
 	BIRTH,
 	IF(BIRTHTYPE = 'Y', 1, 0) AS IS_SOLAR,
 	EXTENSIONATTRIBUTE2 AS USER_IMG,
-	TITLE$lang$ AS TITLE
+	CASE #lang# WHEN '2' THEN TITLE2 ELSE TITLE END AS TITLE
 FROM
 	TBL_USERMASTER
 WHERE
@@ -1253,9 +1258,10 @@ WHERE
 <select id="ezNewPortal.getMonthlyBestEmployee" parameterClass="Map" resultMap="BestEmpVO">
 <![CDATA[
 SELECT	
-	IFNULL(B.DISPLAYNAME$lang$, A.DISPLAYNAME$lang$) AS USER_NAME,
-	IFNULL(A.TITLE$lang$, ' ') AS TITLE,
-	A.DESCRIPTION$lang$ AS DEPT_NAME,
+	IFNULL(CASE #lang# WHEN '2' THEN B.DISPLAYNAME2 ELSE B.DISPLAYNAME END,
+		   CASE #lang# WHEN '2' THEN A.DISPLAYNAME2 ELSE A.DISPLAYNAME END) AS USER_NAME,
+	IFNULL(CASE #lang# WHEN '2' THEN A.TITLE2 ELSE A.TITLE END, ' ') AS TITLE,
+	CASE #lang# WHEN '2' THEN A.DESCRIPTION2 ELSE A.DESCRIPTION END AS DEPT_NAME,
 	B.EXTENSIONATTRIBUTE2 AS USER_IMG,
 	A.CN
 FROM
@@ -1680,7 +1686,8 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 			A.startdate,
 			A.ATTACHMENTS,
 			A.CONTENT,
-			C.GUBUN
+			C.GUBUN,
+			A.PUBLICFLAG
 		FROM
 			TBL_BOARD_ITEM A
 		JOIN
@@ -1751,8 +1758,9 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 		]]>
 </select>
 
-<!-- 이효진-->
+	<!-- 2024-07-09 홍승비 - SQL Injection 수정 > $ 기호 제거 -->
 	<!-- 2024-02-28 전인하 - 포탈 > 전자결재 포틀릿 > docstate, functiontype 가공하는 case문 추가(vAprDoingDocList 뷰와 같음)-->
+	<!-- 이효진-->
 	<select id="ezNewPortal.getApprovalDoingList" parameterClass="Map" resultClass="ApprGDocListVO">
 		<![CDATA[
 			SELECT
@@ -1798,8 +1806,11 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 				DOCINFO.tenant_id = #tenantId#
 			AND
 				DOCINFO.companyid = #companyId#
-		  AND (LINEINFO.aprmemberid in ($userIDs$)
-	   ]]>
+		]]>
+			AND (LINEINFO.aprmemberid in
+		  	<iterate property="userIDs" open="(" close=")" conjunction=",">
+				#userIDs[]#
+			</iterate>
 		<isNotEmpty property="proxyList">
 			<iterate property="proxyList">
 				OR (
@@ -1824,7 +1835,12 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 			SELECT
 		        LINEINFO.aprmembersn AS aprmembersn,
 		        LINEINFO.aprstate AS aprstate,
-		        CODEINFO.name$lang$ AS ext1,
+		        CASE #lang#
+	                WHEN '2' THEN CODEINFO.NAME2
+	                WHEN '3' THEN CODEINFO.NAME3
+	                WHEN '4' THEN CODEINFO.NAME4
+	                ELSE CODEINFO.NAME
+	            END AS ext1,
 		        CODEINFO.name2 AS name2,
 		        CODEINFO.name3 AS name3,
 		        CODEINFO.name4 AS name4,
@@ -1985,7 +2001,6 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 	</select>
 	
 	<select id="ezNewPortal.getApprovalDoingListCount" parameterClass="Map" resultClass="Integer">
-		<![CDATA[
 			SELECT
 				COUNT(DISTINCT DOCINFO.docid)
 			FROM
@@ -2011,8 +2026,10 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 			AND 
 				DOCINFO.companyid = #companyId#
 			AND
-				(LINEINFO.aprmemberid in ($userIDs$)
-		]]>
+				(LINEINFO.aprmemberid in
+				<iterate property="userIDs" open="(" close=")" conjunction=",">
+					#userIDs[]#
+				</iterate>
 		<isNotEmpty property="proxyList">
 			<iterate property="proxyList">
 				OR (
@@ -2641,7 +2658,8 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 			A.WRITERNAME2,
 			DATE_ADD(A.STARTDATE, interval +#v_OFFSETMIN# minute) as STARTDATE,
 			A.TITLE,
-			C.GUBUN
+			C.GUBUN,
+			A.PUBLICFLAG
 		FROM
 			TBL_BOARD_ITEM A 
 		JOIN (
@@ -2719,22 +2737,22 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 		TBL_BOARD_ITEM A 
 	JOIN (
 		SELECT
-			BOARDID, 
-			BOARDNAME, 
+			BOARDID,
+			BOARDNAME,
 			BOARDNAME2,
-			BOARDNAME3, 
+			BOARDNAME3,
 			BOARDNAME4,
 			TENANT_ID,
-			COMPANYID 
+			COMPANYID
 		FROM
-			TBL_BOARD_MYBOARDS 
+			TBL_BOARD_MYBOARDS
 		WHERE
 			TENANT_ID = #tenantId#
 		AND
 			(COMPANYID = #companyId# OR COMPANYID = '*')
 		AND
 			USERID = #userId#
-		) B 
+		) B
 		ON
 			A.TENANT_ID = B.TENANT_ID
 		AND
@@ -2746,23 +2764,23 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 		AND
 			A.STARTDATE <= #nowDate#
 		AND
-			A.ENDDATE > #nowDate#					
+			A.ENDDATE > #nowDate#
 		AND (
 			NOT EXISTS (
 				SELECT
-					USERID 
+					USERID
 				FROM
-					TBL_BOARD_ITEM_READ S 
+					TBL_BOARD_ITEM_READ S
 				WHERE
 					S.TENANT_ID = A.TENANT_ID
 				AND
-					S.BOARDID = A.BOARDID 
+					S.BOARDID = A.BOARDID
 				AND
-					S.ITEMID = A.ITEMID 
+					S.ITEMID = A.ITEMID
 				AND
 					S.TENANT_ID = #tenantId#
 				AND
-					S.USERID = #userId# 
+					S.USERID = #userId#
 				AND
 					S.READDATE > DATE_SUB(#nowDate#, INTERVAL 5 DAY)
 				)
@@ -2792,7 +2810,8 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 			A.ITEMID,
 			A.BOARDID,
 			B.GUBUN,
-			A.WRITERNAME2
+			A.WRITERNAME2,
+			A.PUBLICFLAG
 		FROM
 			TBL_BOARD_ITEM A
 		JOIN
@@ -2850,11 +2869,12 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 </select>
 
 <!-- 커뮤니티 포틀릿 -->
+<!-- 2024-07-09 홍승비 - SQL Injection 수정 > $ 기호 제거 -->
 <!-- 2023-05-19 홍승비 - 커뮤니티 포틀릿 표출 시, 퇴사하지 않은 실제 사용자 수를 기준으로 DESC 정렬하도록 수정 -->
 <select id="ezNewPortal.getCommunityList" parameterClass="Map" resultClass="CommunityMyCommunityVO"  remapResults="true">
 <![CDATA[
 	SELECT
-		SUBSTR(C_CLUBNAME$v_LANG$, 1, 18) AS C_CLUBNAME,
+		SUBSTR(CASE #v_LANG# WHEN '2' THEN C_CLUBNAME2 ELSE C_CLUBNAME END, 1, 18) AS C_CLUBNAME,
 		A.C_CLUBNO,
 		C_CLUBGUBUN,
 		C_CLUBDESC,
@@ -2959,52 +2979,84 @@ SELECT c_id,
 ]]>
 </select>
 
+<!-- 2024-07-09 홍승비 - SQL Injection 수정 > $ 기호 제거, 게시판명 다국어 처리 추가 -->
 <select id="ezNewPortal.getPortletList"	parameterClass="Map" resultMap="PortletInfoCompVO">
-<![CDATA[
-SELECT A.PORTLET_ID,
-	   A.PORTLET_CATEGORY,
-	   IF(C.PORTLET_TYPE = 'G' OR C.PORTLET_TYPE = 'MG', 1, 0) AS IS_GENERAL,
-	   A.connection_url as connection_url,
-	   A.PORTLET_ORDER,
-       A.PORTLET_USED AS PORTLET_USED,
-       C.MENU_ID,
-       C.DEFAULT_ORDER,
-       C.PORTLET_URL,
-       A.BOARD_ID,
-       D.BOARDNAME$lang$ AS BOARDNAME,
-       E.MENU_NAME,
-       F.PORTLET_NAME,
-       C.PORTLETCODE,
-       G.MENUCODE,
-       H.CODE AS SYSTEMCONFIG_CODE,
-       H.DESCRIPTION AS SYSTEMCONFIG_DESCRIPTION,
-       NVL(D.GUBUN, -1) AS BOARDGUBUN
-  FROM TBL_PORTAL_PORTLET_COMP A
-  JOIN TBL_PORTAL_PORTLET C
-    ON A.PORTLET_ID = C.PORTLET_ID
-  LEFT JOIN TBL_PORTAL_MENU G
-    ON C.MENU_ID = G.MENU_ID
-  LEFT JOIN TBL_BOARD_BOARDINFO D
-  	ON A.BOARD_ID = D.BOARDID
-  	AND (A.COMPANY_ID = D.COMPANYID OR TRIM(D.COMPANYID) = '' OR D.COMPANYID IS NULL)
-  	AND	A.TENANT_ID = D.TENANT_ID
-  LEFT JOIN TBL_PORTAL_MENU_NAME E
- 	ON	A.menu_id = E.menu_id
- 	AND A.COMPANY_ID = E.COMPANY_ID
- 	AND A.tenant_id = E.tenant_id
- 	AND E.menu_lang = #menuLang#
-  LEFT JOIN TBL_PORTAL_PORTLET_NAME F
- 	ON A.COMPANY_ID = F.COMPANY_ID
- 	AND A.TENANT_ID = F.TENANT_ID
- 	AND A.PORTLET_ID = F.PORTLET_ID
- 	AND F.PORTLET_LANG = #menuLang# 
- LEFT JOIN TBL_SYSTEMCONFIG H
- 	ON A.connection_id = H.CODE
- 	AND A.TENANT_ID = H.TENANT_ID
- 	AND A.COMPANY_ID = H.COMPANY_ID
-  WHERE A.COMPANY_ID = #companyId#
-    AND A.TENANT_ID = #tenantId#
-]]>
+	<![CDATA[
+	SELECT
+		A.PORTLET_ID,
+		A.PORTLET_CATEGORY,
+		IF(C.PORTLET_TYPE = 'G' OR C.PORTLET_TYPE = 'MG', 1, 0) AS IS_GENERAL,
+		C.portlet_url as connection_url,
+		A.PORTLET_ORDER,
+		A.PORTLET_USED AS PORTLET_USED,
+		C.MENU_ID,
+		C.DEFAULT_ORDER,
+		C.PORTLET_URL,
+		A.BOARD_ID,
+		CASE #menuLang#
+		    WHEN 2 THEN D.BOARDNAME2
+		    WHEN 3 THEN D.BOARDNAME3
+		    WHEN 4 THEN D.BOARDNAME4
+		    ELSE D.BOARDNAME
+		END AS BOARDNAME,
+		E.MENU_NAME,
+		F.PORTLET_NAME,
+		C.PORTLETCODE,
+		G.MENUCODE,
+		H.CODE AS SYSTEMCONFIG_CODE,
+        H.DESCRIPTION AS SYSTEMCONFIG_DESCRIPTION,
+		IFNULL(D.GUBUN, -1) AS BOARDGUBUN
+	FROM
+		TBL_PORTAL_PORTLET_COMP A
+	JOIN
+		TBL_PORTAL_PORTLET C
+	ON
+	  	A.PORTLET_ID = C.PORTLET_ID
+	LEFT JOIN
+		TBL_PORTAL_MENU G
+	ON
+		C.MENU_ID = G.MENU_ID
+	LEFT JOIN
+		TBL_BOARD_BOARDINFO D
+	ON
+		A.BOARD_ID = D.BOARDID
+	AND
+		(A.COMPANY_ID = D.COMPANYID OR TRIM(D.COMPANYID) = '' OR D.COMPANYID IS NULL)
+	AND
+		A.TENANT_ID = D.TENANT_ID
+	LEFT JOIN
+		TBL_PORTAL_MENU_NAME E
+	ON
+		A.menu_id = E.menu_id
+	AND
+		A.COMPANY_ID = E.COMPANY_ID
+	AND
+		A.tenant_id = E.tenant_id
+	AND
+		E.menu_lang = #menuLang#
+	LEFT JOIN
+		TBL_PORTAL_PORTLET_NAME F
+	ON
+		A.COMPANY_ID = F.COMPANY_ID
+	AND
+		A.TENANT_ID = F.TENANT_ID
+	AND
+		A.PORTLET_ID = F.PORTLET_ID
+	AND
+		F.PORTLET_LANG = #menuLang#
+	LEFT JOIN
+		TBL_SYSTEMCONFIG H
+	ON
+		A.connection_id = H.CODE
+	AND
+		A.TENANT_ID = H.TENANT_ID
+	AND
+		A.COMPANY_ID = H.COMPANY_ID
+	WHERE
+		A.COMPANY_ID = #companyId#
+	AND
+		A.TENANT_ID = #tenantId#
+	]]>
 	<isEmpty property="portletType">
 	<![CDATA[
 		AND C.portlet_type <> 'MG'
@@ -3017,9 +3069,8 @@ SELECT A.PORTLET_ID,
 		AND C.portlet_type <> 'A'
 	]]>
 	</isNotEmpty>
-	<![CDATA[
-		ORDER BY A.portlet_order
-	]]>
+	ORDER BY
+		A.portlet_order
 </select>
 
 <select id="ezNewPortal.getPortletNameList"	parameterClass="Map" resultMap="PortletNameInfoVO">
@@ -3037,7 +3088,7 @@ SELECT A.PORTLET_ID,
 		AND
 			A.tenant_id = B.tenant_id
 		AND
-			A.portlet_id = B.portlet_id  
+			A.portlet_id = B.portlet_id
 		WHERE
 			A.company_id = #companyId#
 		AND
@@ -3743,9 +3794,9 @@ ORDER BY
 					 AND 
 						S.READDATE > DATE_SUB(#nowDate#, INTERVAL 5 DAY)))
 		ORDER BY
-		$iv_PORDERBYSUB$
+			A.WRITEDATE DESC
 		LIMIT
-		#limit#, #rowCount#
+			#limit#, #rowCount#
 		]]>
 	</select>
 	
@@ -3865,4 +3916,12 @@ ORDER BY
 		VALUES (#userId#, #tenantId#, #companyId#, #useColor#)
 		ON DUPLICATE KEY UPDATE user_id = #userId#, tenant_id = #tenantId#, company_id = #companyId#, USECOLOR = #useColor#
 	</insert>
+
+	<select id="ezNewPortal.getResportletId" resultClass="Integer">
+		SELECT
+			PORTLET_ID
+		FROM TBL_PORTAL_PORTLET
+		WHERE PORTLETCODE = 'resource'
+	</select>
+	
 </sqlMap>

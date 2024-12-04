@@ -266,6 +266,13 @@ var strLang353 = "存在相同域名或电子邮件地址。";
 var strLang354 = "请输入你的域名。";
 var strLang355 = "超大";
 var strLang359 = "已经移动";
+var strLangLDH01 = "이 메일에 대한 열람을 차단하시겠습니까?";
+var strLangLDH02 = "이 메일에 대한 열람차단을 해제하시겠습니까?";
+var strLangLDH03 = "차단되었습니다.";
+var strLangLDH04 = "차단 중 오류가 발생했습니다.";
+var strLangLDH05 = "해제되었습니다.";
+var strLangLDH06 = "해제 중 오류가 발생했습니다.";
+var strLangLDH07 = "관리자에 의해 열람차단된 메일입니다.";
 var strLangLHM01 = "请输入你的域名。";
 var strLangLHM02 = "您没有管理权限。";
 var strLangLHM03 = "列表的ID未指定";
@@ -380,6 +387,13 @@ const strLangOrgFetchError = "获取组织图时发生错误";
 const strLangSelectProxyApproverWarning = "请选择一名指定为代理裁决者";
 
 const strLangTempSaveAttachmentsWarning = "保存时将删除附加文件。您要保存吗？";
+
+var strNoSubject = "主题栏为空。"; 
+var strSendOK = "邮件已成功发送。";
+var strUreadDelChk = "您确定要删除该邮箱中的所有未读邮件吗？"
+var strUreadDelSearch = "您确定要删除搜索结果中的所有未读邮件吗？"
+var strUreadDelPermenant = "删除后邮件无法恢复。\n您确定要永久删除邮箱中的所有未读邮件吗？";
+var strUreadDelSearchPermenant = "删除后邮件无法恢复。\n您确定要永久删除搜索结果中的所有未读邮件吗？";
 
 function GetLocalTime(Offset , pDateTime)
 {

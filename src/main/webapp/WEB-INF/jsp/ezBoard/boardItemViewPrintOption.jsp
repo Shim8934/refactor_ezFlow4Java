@@ -30,7 +30,6 @@
 		        try {
 		            ReturnFunction = parent.boarditemview_cross_print_option_dialogArguments[1];
 		        } catch (e) { }
-		
 		        GetAttachmentCount();
 		        if (oneLineReplyFlag == "1" || oneLineReplyFlag == "2") {
 		            getOneLineReplyCount();
@@ -64,15 +63,30 @@
 		        if (xmldomNodes.length > 0)
 		            eAttach = "true";
 		    }
+		    
+		    // 2024-10-18 전인하 - 게시판 > 게시글 조회 > 게시글 인쇄 > 댓글 수 카운트 함수 사용 시 사용하는 컨트롤러 변경 (게시물 댓글 조회 컨트롤러 하나로 통일)
 		    function getOneLineReplyCount() {
-		        var xmlhttp = createXMLHttpRequest();
-		        xmlhttp.open("POST", "/ezBoard/readOneLineReply.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&gubun=" + gubun, false);
-		        xmlhttp.send();
-		        var xmldom = createXmlDom();
-		        xmldom = loadXMLString(xmlhttp.responseText);
-		        xmlhttp = null;
-		        if (xmldom.getElementsByTagName("REPLYID").length > 0)
-		            eOneline = "true";
+                $.ajax({
+                    type : "POST",
+                    async : false,
+                    url : "/ezBoard/getBoardComment.do",
+                    dataType : "json",
+                    data : {
+                        itemID : pItemID,
+                        boardID : pBoardID,
+                        gubun : gubun
+                    },
+                    success : function(result) { 
+                        var commentCount = parseInt(result.totalCommentCount);
+                        if (commentCount > 0) {
+                            eOneline = "true";
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        alert("<spring:message code='ezCommunity.t1052' />");
+                        console.log(e);
+                    },
+                });
 		    }
 		    function all_click() {
 		        if (eOneline == "true")

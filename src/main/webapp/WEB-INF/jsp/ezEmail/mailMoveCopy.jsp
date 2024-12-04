@@ -48,7 +48,7 @@
                 try {
                     ReturnFunction = opener.mail_movecopy_cross_dialogArguments[1];
                     CancelFunction = opener.mail_movecopy_cross_dialogArguments[2];
-                } catch (e) { }
+                } catch (e) {console.log(e);}
             }
             PostTreeView = new TreeView('PostTreeView', 'PostTreeView');
             PostTreeView.attachEvent('requestdata', requestdata);
@@ -211,6 +211,10 @@
     <table class="content">
         <tr>
             <td class="pos1">
+                <div onclick="toggleTreeNode(false)" class="toggleTreeNode off" id="toggleTreeNode">
+                    <span class="treeNode_toggle_icon"></span>
+                    <spring:message code='ezEmail.kdh06' />
+                </div>
                 <div style="border: 0px solid #ddd; height: 255px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF; padding-left: 4px; padding-top: 5px; width:293px" id="PostTreeView">
                 </div>
             </td>
@@ -219,6 +223,10 @@
     <div class="btnpositionNew">
     	<a class="imgbtn"><span onclick="return btn_Move_onclick()"><spring:message code='ezEmail.t538' /></span></a>
     	<a class="imgbtn"><span onclick="return btn_Copy_onclick()"><spring:message code='ezEmail.t539' /></span></a>
+    </div>
+    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
+    <div style="border:0px solid red;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="MailProgress">
+        <img src="/images/email/progress_img.gif" style="vertical-align:middle;"/>
     </div>
 </body>
 </html>

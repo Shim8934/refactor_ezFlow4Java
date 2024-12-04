@@ -60,6 +60,10 @@
 				margin-left: 3px;
 				margin-right: 3px;
 			}
+			
+			.jquery-modal {
+				text-align: center;
+			}
 	    </style>
 		<script  type="text/javascript">
 			var pBoardID = "<c:out value='${boardID}'/>";
@@ -75,6 +79,7 @@
 		    var Write_FG = "${boardInfo.write_FG}";
 		    var Reply_FG = "${boardInfo.reply_FG}";
 		    var Delete_FG = "${boardInfo.delete_FG}";
+		    var Edit_FG = "${boardInfo.edit_FG}";
 		    var BrdName = "${boardName}";
 		    var BoardGroupAdmin_FG = "${boardInfo.boardGroupAdmin_FG}";
 		    var pSortBy = "<c:out value='${boardInfo.sortBy}'/>";
@@ -124,11 +129,15 @@
 		    var endtime;
 		    var isAllGroupBoard = "${boardInfo.isAllGroupBoard}";
 			var likeFlag = "${boardInfo.likeFlag}";
+			var disLikeFlag = "${boardInfo.disLikeFlag}";
 		    var useNotReadCnt = "${useNotReadCnt}";
 		    var BoardGroupID = "${boardInfo.boardGroupID}";
 		    var stringFnParam = "SortPage"; // 2021-04-27 홍승비 - 문자열인 함수명에 접근하기 위한 변수
 		    var endDateOption = "<c:out value='${endDateOption}'/>" // 2024-05-24 전인하 - 만료게시물 표출여부 확인 플래그
 		    var boardViewType = '1'; // 2024-05-24 전인하 - 기본보기(1) / 안읽은 게시물(2) / 만료게시물(3) 확인 플래그
+		    var isOpenWindow;
+		    var useKeywordFlag = "<c:out value='${useKeyword}'/>"; // 키워드 사용여부 (Y/N)
+		    var myBoardScrapFlag = "<c:out value='${MyBoardScrapFlag}'/>" // 스크랩 테넌트 컨피그 (TYPE1 / TYPE2 /NONE)
 		    
 		    window.onunload = Window_onunload;
 		    var window_onunload_Event = false;
@@ -184,20 +193,6 @@
 		        
 		      	ifrmPreViewW.document.getElementById("ifrmPreViewW_div").style.marginTop = "-2px";
 		    };
-		    
-		    /* 2018-06-14 김민성 - 게시판 검색 레이어 팝업 리사이징 설정 추가 */
-		    $(window).on("resize", function(){
-		    	if (parent.frames['left'] == undefined && parent.frames["BoardEnv_ifrm"] == undefined) {
-		    		var popupX = parent.parent.document.body.clientWidth/2 - (500/2) - 220;
-		    		$("#srarchpopup").css("left", popupX).css("bottom", "66px");
-		    	} else if (parent.frames["BoardEnv_ifrm"] != undefined) {
-		    		var popupX = parent.parent.document.body.clientWidth/2 - (500/2) - 220;
-		    		$("#srarchpopup").css("left", popupX).css("bottom", "26px");
-		    	} else {
-					var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
-					$("#srarchpopup").css("left", popupX);
-		    	}					        	
-	        });
 		    
 		    $(document).ready(function() {
 		    	var clickOutside;
@@ -387,7 +382,8 @@
 							 orderOption : OrderOption,
 							 searchQuery : SQLPARADATA,
 							 type 		 : boardViewType,
-							 likeFlag : likeFlag
+							 likeFlag : likeFlag,
+							 disLikeFlag : disLikeFlag
 							},
 					success: function(xml){
 						getBoardList_after(loadXMLString(xml));
@@ -592,6 +588,10 @@
 	                    TYPE += "CONTENT;";
 	                    DATA += "<CONTENT><![CDATA[" + document.getElementById("txt_keyword").value.replace("'", "''") + "]]></CONTENT>";
 	                }
+                     else if (selectSearch.item(3).selected) {
+                        TYPE += "KEYWORD;";
+                        DATA += "<KEYWORD><![CDATA[" + document.getElementById("txt_keyword").value.replace("'", "''") + "]]></KEYWORD>";
+                     }
 		        }
 		        else {
 		            if (document.getElementById("txtTitle").value != "")		// DocTitle
@@ -615,6 +615,13 @@
 		                TYPE += "ABSTRACT;";
 		                DATA += "<ABSTRACT><![CDATA[" + document.getElementById("txtAbstract").value.replace("'", "''") + "]]></ABSTRACT>";
 		            }
+		            
+		            if (document.getElementById("txtKeyword") != null) { // KEYWORD
+                        if (document.getElementById("txtKeyword").value != "") {
+                             TYPE += "KEYWORD;";
+                             DATA += "<KEYWORD><![CDATA[" + document.getElementById("txtKeyword").value.replace("'", "''") + "]]></KEYWORD>";
+                        }
+                    }
 		
 		            if ($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "")		// StartDate
 		            {
@@ -733,7 +740,7 @@
 		        var pheight = window.screen.availHeight;
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - 720) / 2;
-		        var pLeft = (pwidth - 790) / 2;
+		        var pLeft = (pwidth - 890) / 2;
 		        
 		        for (var i = 0; i < obj.childNodes.length; i++) {
 		        	if (obj.getAttribute("DATA9") != "1" && obj.childNodes[i].style.fontWeight == "bold")
@@ -741,12 +748,19 @@
 		        }
 
 		        if (obj.getAttribute("DATA10") == "4" || obj.getAttribute("DATA10") == "3") {
-		            window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=770,width=790,top=" + pTop + ",left=" + pLeft, "");
+					isOpenWindow = window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=770,width=890,top=" + pTop + ",left=" + pLeft, "");
 		        } else if (obj.getAttribute("DATA10") == "7") {
-					window.open("/ezBoard/boardItemViewMovie.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(obj.getAttribute("DATA1")), "",  "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=679,width=764,top=" + pTop + ",left=" + pLeft, "");
-	            } else {
-		            window.open("/ezBoard/boardItemView.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=790,top=" + pTop + ",left=" + pLeft, "");
-		        }
+					isOpenWindow = window.open("/ezBoard/boardItemViewMovie.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(obj.getAttribute("DATA1")), "",  "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=890,width=764,top=" + pTop + ",left=" + pLeft, "");
+                } else if (obj.getAttribute("gubun") == "2" && BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && obj.getAttribute("publicflag") == "N") {
+                    document.getElementById('openPassword').setAttribute('data-id', obj.getAttribute("DATA2"));
+                    document.getElementById('openPassword').setAttribute('data-board', obj.getAttribute("DATA1"));
+                    $('#openPassword').val('');
+                    $('#chkPass').modal();
+                } else if (obj.getAttribute("publicflag") == "N" && BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && obj.getAttribute("DATA3") != SSUserID) {
+                    alert("<spring:message code='ezBoard.t202' />");
+                } else {
+		            isOpenWindow = window.open("/ezBoard/boardItemView.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=890,top=" + pTop + ",left=" + pLeft, "");
+	            }
 		    }
 		    
 		    /*  2019-04-12 홍승비 - 사용되지 않는 함수 주석처리 */
@@ -1027,7 +1041,7 @@
 		            return;
 		        }
 		
-		        if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && CheckOwnerShip() == false) {
+		        if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && (Edit_FG != "true" || CheckOwnerShip() == false)) {
 		            alert("<spring:message code='ezBoard.t202' />");
 		            return;
 		        }
@@ -1081,7 +1095,8 @@
 		            alert("<spring:message code='ezBoard.t497' />");
 		            return;
 		        }
-		        if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && CheckOwnerShip() == false) {
+				
+		        if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && (Edit_FG != "true" || CheckOwnerShip() == false)) {
 		            alert("<spring:message code='ezBoard.t202' />");
 		            return;
 		        }
@@ -1216,10 +1231,7 @@
 		    		$("<div id='blockTop' class='blockTop' onclick='parent.frames[\"right\"].frames[\"FBoard_ifrm\"].BoardSearchOptionHidden()'></div>").appendTo(parent.parent.frames["right"].document.body);
 		    		
 		    		parent.parent.frames["left"].document.body.style.overflow = "hidden";		    		
-		    				    		
-			    	var popupX = parent.parent.document.body.clientWidth/2 - (500/2) - 220;			    	
-
-			    	$("#srarchpopup").css("left", popupX).css("bottom", "66px");
+					
 			    	$("#srarchpopup").modal();
 			    	
 		        	/* btn_PostDate_Clear();
@@ -1245,18 +1257,14 @@
 		    		$("<div id='blockLeft' class='blockLeft' style='position:fixed; width:100%;height:100%; overflow:hidden;' onclick='parent.frames[\"board_main\"].frames[\"BoardEnv_ifrm\"].BoardSearchOptionHidden()'></div>").appendTo(parent.parent.frames["board_menu"].document.body);
 		    		$("<div id='blockTop' class='blockTop' onclick='parent.frames[\"board_main\"].frames[\"BoardEnv_ifrm\"].BoardSearchOptionHidden()'></div>").appendTo(parent.parent.frames["board_main"].document.body);
 		    		
-		    		parent.parent.frames["board_menu"].document.body.style.overflow = "hidden";		    		
-		    				    		
-			    	var popupX = parent.parent.document.body.clientWidth/2 - (500/2) - 220;			    	
+		    		parent.parent.frames["board_menu"].document.body.style.overflow = "hidden";
 
-			    	$("#srarchpopup").css("left", popupX).css("bottom", "26px");
 			    	$("#srarchpopup").modal();
 		    	}
 		    	else {																				// 일반 게시판 검색
 			    	$("<div id='blockLeft' class='blockLeft' style='position:fixed; width:100%;height:100%; overflow:hidden;' onclick='parent.frames[\"right\"].BoardSearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);
 			    	parent.frames["left"].document.body.style.overflow = "hidden";
-			    	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
-			    	$("#srarchpopup").css("left", popupX);
+					
 			    	$("#srarchpopup").modal();
 		    	}
 		    }
@@ -1276,8 +1284,9 @@
 		    
 		    function search(type) {
 		        if (type == "basic") {
+		            var txtKeywordVal = document.getElementById("txtKeyword") != null ? document.getElementById("txtKeyword").value : "";
 		            if (document.getElementById("txtWriterName").value == "" && document.getElementById("txtTitle").value == "" && document.getElementById("txtAbstract").value == "" && document.getElementById("txtContent").value == ""
-		            		&& $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
+		            		&& txtKeywordVal == "" && $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
 		                alert("<spring:message code='ezBoard.t192' />");
 		                return;
 		            }
@@ -1463,6 +1472,148 @@
                 getBoardList();
 	    	}
 		    
+	    	
+	    	/* 2023-04-06 기민혁 - 좋아요/싫어요 리스트 출력 openWindow 호출 메소드 */
+		    function likeAndDisLikeList() {
+		    	
+		    	var pheight = window.screen.availHeight;
+		        var pwidth = window.screen.availWidth;
+		        var pTop = (pheight - 450) / 2;
+		        var pLeft = (pwidth - 315) / 2;
+		        
+		        var arrList = new Array();
+	            var strItemList = "";
+	            var i = 0;
+	            arrList = strListInfo.split(";");
+	            if(arrList.length == "1"){
+	            	alert("<spring:message code='ezBoard.kmh01'/>");
+	            	return;
+	            } 
+	            
+	            for (i = 0; i < arrList.length - 1; i++) {
+	                strItemList += arrList[i].split(",")[0] + ";";
+	            }
+	            arrList = null;
+		        
+		        GetOpenWindow("/ezBoard/boardLikeAndDisLikeList.do?boardID=" + encodeURIComponent(pBoardID)+ "&itemIDList=" + encodeURIComponent(strItemList), "likeAndDisLikeList", 920, 850);
+		    	
+		    }
+
+		    /* 2023-04-06 기민혁 - itemview창이 열려있을때 미리보기 창이 열려 있으면  미리보기에서 좋아요 싫어요 이미지 및 개수 변경  */
+	    	function refreshLikeAndDisLike(result,checked,gubun) {
+	    		if($("#PreviewRayerH").css("display") == "none" && $("#PreviewRayerW").css("display") == "none"){
+	    			return;
+	    		}else if ($("#PreviewRayerH").css("display") != "none" && $("#PreviewRayerW").css("display") == "none"){
+	    			var refreshLikeAndDisLikeH = document.getElementById("ifrmPreViewH");
+	    			refreshLikeAndDisLikeH.contentWindow.refreshLikeAndDisLike(result,checked,gubun);    			    			
+	    		}else if ($("#PreviewRayerW").css("display") != "none" && $("#PreviewRayerH").css("display") == "none"){
+	    			var refreshLikeAndDisLikeW = document.getElementById("ifrmPreViewW");
+	    			refreshLikeAndDisLikeW.contentWindow.refreshLikeAndDisLike(result,checked,gubun);
+	    		}
+	    	}
+
+	    	/* 2023-04-06 기민혁 - itemview창이 열려있을때 미리보기 에서 좋아요 싫어요 클릭시 itemview 이미지 및 개수 변경  */
+	    	function refreshLikeAndDisLikeOpen(result,checked,gubun) {
+	    		if(isOpenWindow != undefined ){
+	    			isOpenWindow.refreshLikeAndDisLikeOpen(result,checked,gubun);
+	    		}else{
+	    			return;
+	    		}
+	    	}
+			
+			function openAnonymous() {
+				var elementPass = document.getElementById('openPassword');
+				var password = elementPass.value;
+				var pheight = window.screen.availHeight;
+				var pwidth = window.screen.availWidth;
+				var pTop = (pheight - 720) / 2;
+				var pLeft = (pwidth - 890) / 2;
+				var parser = new DOMParser();
+
+				$.ajax({
+					url: "/ezBoard/boardItemView.do?showAdjacent=" + ShowAdjacent
+							+ "&itemID=" + encodeURIComponent(elementPass.getAttribute("data-id"))
+							+ "&boardID=" + encodeURIComponent(elementPass.getAttribute("data-board"))
+							+ "&location=GENERAL",
+					headers: {
+						'Authorization': 'Basic ' + btoa(password)
+					},
+					success: function(response) {
+						$.modal.close();
+						var returnDom = parser.parseFromString(response, "text/xml")
+						if (!returnDom || returnDom.querySelector('title').textContent ==="warning") {
+							alert("<spring:message code='ezBoard.t267' />");
+							return;
+						}
+						var newWindow = window.open("", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=890,top=" + pTop + ",left=" + pLeft);
+						newWindow.document.write(response);
+						newWindow.document.close();
+					},
+					error: function(xhr, status, error) {
+						console.error('Error:', error);
+					}
+				});
+			}
+			
+			/*  2023-05-22 기민혁 - 나의스크랩함 나의스크랩 추가 버튼 클릭시 동작 */
+			function SaveScrapMyBoard() {
+				var arrList = new Array();
+				var strItemList = "";
+				var i = 0;
+				arrList = strListInfo.split(";");
+
+				if (Read_FG != "true") {
+					alert("<spring:message code='ezBoard.t202' />");
+					return;
+				}
+
+				if(arrList.length == "1"){
+					alert("<spring:message code='ezBoard.kmh15'/>");
+					return;
+				}
+
+				for (i = 0; i < arrList.length - 1; i++) {
+					strItemList += arrList[i].split(",")[0] + ";";
+				}
+                
+                if (myBoardScrapFlag == "TYPE1") {
+                    $.ajax({
+                        type : "GET",
+                        dataType : "json",
+                        async : false,
+                        url : "/ezBoard/setScrapItemAll.do",
+                        data : { 
+                                itemIDList  : strItemList,
+                                boardID     : pBoardID
+                                },
+                        success: function(result) {
+                            if (result.status != "error") {
+                                if (result.failCount > 0) {
+                                    var pAlertContent = "<spring:message code='ezBoard.kmh44'/> " + result.failCount + "<spring:message code='ezBoard.kmh45'/>";
+                                    alert(pAlertContent);
+                                } else {
+                                    alert("<spring:message code='ezBoard.kmh47' />");
+                                }
+                            } else {
+                                alert("<spring:message code='ezBoard.kmh46' />");
+                            }
+                        },
+                        error : function(error) {
+                            console.log(error);
+                        }			
+                    });
+                
+                } else if (myBoardScrapFlag == "TYPE2") {
+                    var url = "/ezBoard/selUserScrapCont.do";
+                    ContOpen = GetOpenWindow(url + "?itemID=" + encodeURIComponent(strItemList) + "&boardID=" + encodeURIComponent(pBoardID), "selUserCont", 500, 460, "NO");
+                    try { 
+                        ContOpen.focus()
+                    } catch (e) { 
+                        console.log(e);
+                    }
+				}
+			}
+
 		</script>
 	</head>
 	<c:choose>
@@ -1486,6 +1637,9 @@
 			    			<option value="rad_Writer"><spring:message code='ezBoard.t223'/></option>
 			    			<%-- 2021-12-29 홍승비 - 게시판 간단검색 시 내용검색 옵션 추가 (상세검색 조건과 동일하게 읽기권한 없어도 표출됨) --%>
 			    			<option value="rad_Content"><spring:message code='ezBoard.garm01'/></option>
+                            <c:if test ="${useKeyword eq 'Y'}">
+                                <option value="rad_Keyword"><spring:message code='ezApprovalG.t1200'/></option>
+                            </c:if>
 		    			</select>
 					  <input id="txt_keyword" class="searchinputBox" style="height: 27px;border: 1px solid #cbcbcb;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
 			          <a class="searchBtn nofilter"><img src="/images/bsearch_new2.png" border="0" onClick="search('quick')"></a>
@@ -1501,6 +1655,9 @@
 		    		<option selected value="rad_Subject"><spring:message code='ezBoard.t208'/></option>
 		    		<option value="rad_Writer"><spring:message code='ezBoard.t223'/></option>
 	    			<option value="rad_Content"><spring:message code='ezBoard.garm01'/></option>
+	    			<c:if test ="${useKeyword eq 'Y'}">
+	    			    <option value="rad_Keyword"><spring:message code='ezApprovalG.t1200'/></option>
+	    		    </c:if>
 				  </select>
 				  <input id="txt_keyword" class="searchinputBox" style="height: 27px;border: 1px solid #cbcbcb;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
 		          <a class="searchBtn nofilter"><img src="/images/bsearch_new2.png" border="0" onClick="search('quick')"></a>
@@ -1536,7 +1693,13 @@
 					</div>
 				 </div>
 				<!-- <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
-		        <li id="noti" style="display:none"><span onClick="ChangeNotiOrder()"><spring:message code='ezBoard.t4000' /></span></li> 
+		        <li id="noti" style="display:none"><span onClick="ChangeNotiOrder()"><spring:message code='ezBoard.t4000' /></span></li>
+		        <c:if test="${boardInfo.boardAdmin_FG == true && boardInfo.guBun ne '2' && (boardInfo.likeFlag == 'Y' || boardInfo.disLikeFlag == 'Y')}">
+		        	<li id="likeAndDisLikeBtn" ><span onClick="likeAndDisLikeList()"><spring:message code='ezBoard.kmh09' /></span></li> 
+		        </c:if>
+			    <c:if test="${MyBoardScrapFlag ne 'NONE'}">
+					  <li><span onClick="SaveScrapMyBoard()"><spring:message code='ezBoard.kmh13' /></span></li>
+			    </c:if>
 		        <c:if test="${boardInfo.boardAdmin_FG == true}">
 			        <li id="btn_acl"><span onClick="SetBoardAcl()"><spring:message code='ezBoard.t63' /></span></li> 
 		        </c:if>
@@ -1744,6 +1907,12 @@
 			            <th style="text-align:center"><spring:message code='ezBoard.garm01' /></th>
 			            <td><input type="text" id="txtContent" style="width:100%" value=""></td>
 			        </tr> 
+			        <c:if test ="${useKeyword eq 'Y'}">
+                        <tr>
+                            <th style="text-align:center"><spring:message code='ezApprovalG.t1200' /></th>
+                            <td><input type="text" id="txtKeyword" style="width:100%" value=""></td>
+                        </tr> 
+                    </c:if>
 			         <tr>
 			            <th style="text-align:center"><spring:message code='ezBoard.t209' /></th>
 			            <td><input type="text" id="txtAbstract" style="width:100%" value=""></td>
@@ -1770,6 +1939,34 @@
 			</div>	
 		</div>
 	</div>
+			<div id="chkPass" class="modal" style="display: none;">
+				<div class="popupJQLayer">
+					<div class="title"><spring:message code='ezBoard.t244'/></div>
+					<div class="closeImgBttn">
+						<ul><li><span>
+							<a href="#" rel="modal:close" style="display: block; height: 100px;"></a>
+						</span></li></ul>
+					</div>
+					<label for="openPassword" class="txt" style="margin-top:15px">
+						▒&nbsp;<spring:message code='ezBoard.t245'/>
+					</label>
+					<div style="margin-top:10px">
+						<input type="password" class="textarea" id="openPassword" name="openPassword"
+							   style="WIDTH:100%;height:25px;border:1px solid #ccc">
+					</div>
+					<div style="width: 100%">
+						<div style="text-align:center;">
+							<div class="btnpositionLayer">
+								<a class="imgbtn">
+									<span onclick="openAnonymous()">
+										<spring:message code='ezBoard.t14'/>
+									</span>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 		<%-- </c:otherwise> --%>
 		<%-- </c:choose> --%>
 	</c:if>

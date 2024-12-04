@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezEmail.task;
 
+import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
@@ -92,6 +94,8 @@ public class EzEmailAsync {
 			
 			recallMailByMessageId(addresses, password, messageId, num, locale, isReadDelete);
 			
+		} catch (RuntimeException e) {
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -178,6 +182,8 @@ public class EzEmailAsync {
 				ia.close();
 				ia = null;
 			
+			} catch (NullPointerException e) {
+				logger.error(e.getMessage(), e);
 			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
 			} finally {
@@ -209,6 +215,8 @@ public class EzEmailAsync {
 			String[] timeZoneArr = timeZone.split("\\|");
 			realTimeZone = " ( UTC | " + timeZoneArr[1] + " )";
 			
+		} catch (ParseException e) {
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -264,6 +272,8 @@ public class EzEmailAsync {
 					mailSendSet.add(user);
 				}
 				
+			} catch (NullPointerException e) {
+				logger.error(e.getMessage(), e);
 			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
 			}

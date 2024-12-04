@@ -15,7 +15,7 @@ public interface EzSurveyRestService {
 	public JSONObject getDeptSubNodes(HttpServletRequest request, String userId, String deptId, String level) throws Exception;
 	public JSONObject getDeptMembers(HttpServletRequest request, String userId, String deptId, String currentPage) throws Exception;
 	public JSONObject getUserListType(HttpServletRequest request, String userId) throws Exception;
-	public JSONObject getSearchMember(HttpServletRequest request, String userId, String srchOption, String srchValue, String currentPage) throws Exception;
+	// public JSONObject getSearchMember(HttpServletRequest request, String userId, String srchOption, String srchValue, String currentPage) throws Exception;
 	
 	//User information
 	public JSONObject getUserInformation(HttpServletRequest request, String userId) throws Exception;
@@ -31,7 +31,7 @@ public interface EzSurveyRestService {
 	
 	//Survey item process(check, save, get, delete, change state)
 	public JSONObject saveSurveyItem(HttpServletRequest request, JSONObject surveyItem) throws Exception;
-	public JSONObject getSurveyItems(HttpServletRequest request, String userId, String pageMode, String title, String creatorName, String startDate, String endDate, String column, String order, String srchMode, String srchOption, String listCntSize, String currentPage, int userMode) throws Exception;
+	public JSONObject getSurveyItems(HttpServletRequest request, String userId, String pageMode, String title, String creatorName, String startDate, String endDate, String column, String order, String srchMode, String srchOption, String listCntSize, String currentPage, int userMode, String filterStatus) throws Exception;
 	public JSONObject getSurveyPopupItems(HttpServletRequest request, String id, String mode, String startDate, String endDate) throws Exception;
 	public JSONObject deleteItems(HttpServletRequest request, String userId, List<String> itemList) throws Exception;
 	public JSONObject checkSurveyItems(HttpServletRequest request, String userId) throws Exception;

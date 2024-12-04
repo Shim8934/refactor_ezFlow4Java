@@ -52,43 +52,48 @@ var CabinetNavi = function() {
 			var spanElmt2     = document.createElement("span");
 			var spanElmt3     = document.createElement("span");
 			var spanElmt4     = document.createElement("span");
-			var imgElmt1      = document.createElement("img");
-			var imgElmt2      = document.createElement("img");
-			var imgElmt3      = document.createElement("img");
-			var imgElmt4      = document.createElement("img");
-			
-			spanElmt1.className = _imgClass;
-			spanElmt2.className = _imgClass;
-			spanElmt3.className = _imgClass;
-			spanElmt4.className = _imgClass;
+			var prevClass = " prev";
+			var nextClass = " next";
+			var firstClass = " first";
+			var lastClass = " last";
+            
+			spanElmt1.className = _imgClass + firstClass ;
+			spanElmt2.className = _imgClass + prevClass;
+			spanElmt3.className = _imgClass + nextClass;
+			spanElmt4.className = _imgClass + lastClass;
 			
 			spanElmt1.onclick = function(e) {goToPageByNum(1);};
 			spanElmt2.onclick = function(e) {selbeforeBlock();}
 			spanElmt3.onclick = function(e) {selafterBlock();}
 			spanElmt4.onclick = function(e) {goToPageByNum(_totalPages);};
-			
+            
 			if (_totalPages > _blockSize) {
-				imgElmt2.src = pageNum > _blockSize ? "/images/kr/cm/btn_prev.gif" : "/images/kr/cm/btn_prev01.gif";
-				imgElmt3.src = (_totalPages >= parseInt(((parseInt((pageNum - 1) / _blockSize) + 1) * _blockSize) + 1)) ? "/images/kr/cm/btn_next.gif" : "/images/kr/cm/btn_next01.gif";
+                if (pageNum <= _blockSize) {
+                    spanElmt2.classList.add("disabled");
+                }
+
+                if ((_totalPages < parseInt(((parseInt((pageNum - 1) / _blockSize) + 1) * _blockSize) + 1))) {
+                    spanElmt3.classList.add("disabled");
+                }
 			}
 			else {
-				imgElmt2.src = "/images/kr/cm/btn_prev01.gif";
-				imgElmt3.src = "/images/kr/cm/btn_next01.gif";
+                spanElmt2.classList.add("disabled");
+                spanElmt3.classList.add("disabled");
 			}
 			
 			if (_totalPages > 1) {
-				imgElmt1.src = pageNum != 1           ? "/images/kr/cm/btn_p_prev.gif" : "/images/kr/cm/btn_p_prev01.gif";
-				imgElmt4.src = _totalPages != pageNum ? "/images/kr/cm/btn_n_next.gif" : "/images/kr/cm/btn_n_next01.gif";
+                if (pageNum == 1) {
+                    spanElmt1.classList.add("disabled");
+                }
+                
+                if (_totalPages == pageNum) {
+                    spanElmt4.classList.add("disabled");
+                }
 			}
 			else {
-				imgElmt1.src = "/images/kr/cm/btn_p_prev01.gif";
-				imgElmt4.src = "/images/kr/cm/btn_n_next01.gif";
+                spanElmt1.classList.add("disabled");
+                spanElmt4.classList.add("disabled");
 			}
-			
-			spanElmt1.appendChild(imgElmt1);
-			spanElmt2.appendChild(imgElmt2);
-			spanElmt3.appendChild(imgElmt3);
-			spanElmt4.appendChild(imgElmt4);
 			
 			divElmt.appendChild(spanElmt1);
 			divElmt.appendChild(spanElmt2);

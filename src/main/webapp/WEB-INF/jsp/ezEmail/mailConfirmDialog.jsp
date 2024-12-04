@@ -14,7 +14,7 @@
 	            } catch (e) {
 	                try {
 	                    ReturnFunction = opener.mail_message_cross_dialogArguments[1];
-	                } catch (e) { }
+	                } catch (e) {console.log(e);}
 	            }
 	        }
 	        

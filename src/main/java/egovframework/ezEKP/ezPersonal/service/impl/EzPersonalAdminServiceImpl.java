@@ -1057,12 +1057,12 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		for (int i = 0; i < Integer.parseInt(selectCount); i++) {
 			map.put("v_pAnswer" + (i + 1), doc.getElementsByTagName("ANSWER").item(i).getTextContent());
 		}
-
+		
 		int startPoint = Integer.parseInt(selectCount);
 		StringBuilder sbQuery = new StringBuilder();
 		for (int i = startPoint; i < 10; i++) {
 			map.put("v_pAnswer" + (i + 1), " ");
-			sbQuery.append(i+1);
+			sbQuery.append(i + 1);
 			sbQuery.append(",");
 		}
 
@@ -1089,8 +1089,9 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 				ezPersonalAdminDAO.updatePoll_U2(map);
 			}
 
+			/* 2024-07-03 홍승비 - SQL Injection 수정 > 쿼리에 전달하는 sbQuery 파라미터를 문자열이 아닌 배열로 변경 */
 			// Result 설문 없는것 삭제
-			map.put("sbQuery", sbQuery.toString());
+			map.put("sbQuery", sbQuery.toString().split(","));
 			ezPersonalAdminDAO.updatePoll_Result(map);
 			logger.debug("updatePoll ended");
 			return "OK";

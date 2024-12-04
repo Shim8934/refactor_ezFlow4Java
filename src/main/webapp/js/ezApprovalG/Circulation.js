@@ -117,3 +117,41 @@ function SaveAprLineInfoCC_after(pstrXML) {
         alert("SaveAprLineInfo :: " + e.description);
     }
 }
+
+/* 2024-11-18 홍승비 - 전자결재 G > 일괄접수 시에도 공람 기능이 정상 동작하도록 수정, 전용 함수 분리 */
+function delAprLineInfoCC_receiptAll(pDocIDArr) {
+	try {
+		if (pDocIDArr.length > 0) {
+			for (i = 0; i < pDocIDArr.length; i++) {
+				delAprLineInfoCC_after(pDocIDArr[i]);
+			}
+		}
+    } catch (e) {
+        console.log(e);
+        alert("delAprLineInfoCC_receiptAll :: " + e.description);
+    }
+}
+
+function SaveAprLineInfoCC_receiptAll(pstrXML, pDocIDArr) {
+	try {
+		var result = "";
+		
+		$.ajax({
+			type : "POST",
+			dataType : "text",
+			async : false,
+			url : "/ezApprovalG/gongRamSave_receiptAll.do",
+			data : {
+				docIDArr : pDocIDArr,
+				xmlPara : pstrXML,
+				orgCompanyID : orgCompanyID
+			},
+			success: function(xml) {
+				result = xml; // 정상 완료된 경우 <RESULT>TRUE</RESULT>
+			}
+		});
+    } catch (e) {
+    	console.log(e);
+    	alert("SaveAprLineInfoCC_receiptAll :: " + e.description);
+    }
+}

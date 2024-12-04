@@ -447,7 +447,11 @@
 			                setAttachInfo(pDocID, "APR", lstAttachLink);
 			                GetExchInfo();
 			                getDocInfo();
-			
+			                
+			                /* 2023-12-07 홍승비 - 결재서명 재맵핑 함수 호출 (TBL_SIGNINFO 테이블에 정상적인 서명 데이터가 확정 삽입되는 시점은 테넌트 컨피그로 체크) */
+		                    // 수신문서 > 수신부서 결재 중 반송 > 재기안인 경우에는 수신문서 접수 페이지로 열리므로, 내부기안 페이지에서는 해당 분기 처리하지 않음
+					        message.startRemapAllAprSign_WHWP(pDocID, orgCompanyID);
+		                    
 			                if (pHasOpinionYN == "Y") {
 			                    if (AprState == "<spring:message code='ezApprovalG.t49'/>") {
 			                    	pInformationContent = "<spring:message code='ezApprovalG.t124'/><br> <spring:message code='ezApprovalG.t10'/>";
@@ -1601,6 +1605,14 @@
 			}
 	
 			function btnSaveServer_onclick(AutoSave) {
+				if (!!checkJobTransferStatus &&
+						!checkJobTransferStatus("<c:out value ='${userInfo.id}'/>",
+								"<c:out value ='${userInfo.deptID}'/>",
+								"<c:out value ='${userInfo.jobId}'/>")) {
+					window.close();
+					return;
+				}
+				
 				if(nonElecRec == "Y") {
 			    	return;
 			    }

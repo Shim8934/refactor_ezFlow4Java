@@ -137,6 +137,8 @@ public class EzJournalGWController {
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("G/W JOURNAL [POST /rest/ezjournal/types] ended.");
@@ -170,6 +172,8 @@ public class EzJournalGWController {
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("G/W JOURNAL [DELETE /rest/ezjournal/types] ended.");
@@ -208,6 +212,8 @@ public class EzJournalGWController {
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("G/W JOURNAL [GET /rest/ezjournal/types] ended.");
@@ -240,6 +246,8 @@ public class EzJournalGWController {
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("G/W JOURNAL [PUT /rest/ezjournal/types] ended.");
@@ -286,6 +294,8 @@ public class EzJournalGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		logger.debug("ezJournal G/W journalFormList ended.");
 		
@@ -317,6 +327,8 @@ public class EzJournalGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W insertForm ended.");
@@ -344,10 +356,12 @@ public class EzJournalGWController {
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", "");
-		} catch(Exception e) {
+		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W updateForm ended.");
@@ -380,6 +394,8 @@ public class EzJournalGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W deleteForm ended.");
@@ -427,6 +443,8 @@ public class EzJournalGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W viewForm ended.");
@@ -458,6 +476,8 @@ public class EzJournalGWController {
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W authorsList ended.");
@@ -490,6 +510,8 @@ public class EzJournalGWController {
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W authorDepts ended.");
@@ -520,6 +542,7 @@ public class EzJournalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 			
+			logger.error(e.getMessage(), e);
 		}
 		logger.debug("ezJournal G/W insertAuthorDepts ended.");
 		return result;
@@ -548,6 +571,8 @@ public class EzJournalGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W deleteAuthorDepts ended.");
@@ -570,9 +595,15 @@ public class EzJournalGWController {
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			Map<String, Object> param = new HashMap<String, Object>();
 			
+			/* 2024-07-17 홍승비 - SQL Injection 수정 > 페이징을 위한 startCount, listCnt 값은 정수로 전달하도록 수정 */
 			for (String key : request.getParameterMap().keySet()) {
-				param.put(key, request.getParameter(key));
+				if (key.equalsIgnoreCase("startCount") || key.equalsIgnoreCase("listCnt")) {
+					param.put(key, Integer.parseInt(request.getParameter(key)));
+				} else {
+					param.put(key, request.getParameter(key));
+				}
 			}
+			
 			param.put("tenantId", info.getTenantId());
 			param.put("lang", lang);
 			param.put("offset", commonUtil.getMinuteUTC(info.getOffSet()));
@@ -585,6 +616,8 @@ public class EzJournalGWController {
 			result.put("data", "");
 			result.put("status", "error");
 			result.put("code", 1);
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W journals ended.");
@@ -612,6 +645,8 @@ public class EzJournalGWController {
 			}
 			param.put("tenantId", info.getTenantId());
 			param.put("offset", commonUtil.getMinuteUTC(info.getOffSet()));
+			param.put("lang", commonUtil.getMultiData(info.getLang(), info.getTenantId()));
+			
 			String totalCount = ezJournalService.getTotalListCount(param);
 			
 			result.put("data", totalCount);
@@ -621,6 +656,8 @@ public class EzJournalGWController {
 			result.put("data", "");
 			result.put("status", "error");
 			result.put("code", 1);
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W journals-count ended.");
@@ -654,6 +691,8 @@ public class EzJournalGWController {
 			result.put("data", "");
 			result.put("status", "error");
 			result.put("code", 1);
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W insertJournal ended.");
@@ -692,6 +731,8 @@ public class EzJournalGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W journalsSumContent ended.");
@@ -742,7 +783,7 @@ public class EzJournalGWController {
 					String fileSize = commonUtil.getSizeWithUnit(vo.getFileSize());
 					vo.setFileTransSize(fileSize);
 					
-					fileTotalSizeLong+=vo.getFileSize();
+					fileTotalSizeLong += vo.getFileSize();
 					
 					logger.debug("##fileType: " + vo.getFileType() + ", EncodeFileName: " + vo.getFileEncodeName() + ", transSize: " + vo.getFileTransSize());
 				}
@@ -760,6 +801,7 @@ public class EzJournalGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W viewJournal ended.");
@@ -795,6 +837,8 @@ public class EzJournalGWController {
 			result.put("data", "");
 			result.put("status", "error");
 			result.put("code", 1);
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W updateJournal ended.");
@@ -850,6 +894,8 @@ public class EzJournalGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W deleteJournalList ended.");
@@ -887,6 +933,8 @@ public class EzJournalGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W receiveOKJournal ended.");
@@ -1048,6 +1096,8 @@ public class EzJournalGWController {
 			result.put("data", "");
 			result.put("status", "error");
 			result.put("code", 0);
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W uploadFile ended.");
@@ -1179,6 +1229,8 @@ public class EzJournalGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W deleteFile ended.");
@@ -1284,6 +1336,8 @@ public class EzJournalGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W downloadFile ended.");
@@ -1339,6 +1393,8 @@ public class EzJournalGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W downloadFile ended.");
@@ -1372,6 +1428,8 @@ public class EzJournalGWController {
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W getReceiverList ended.");
@@ -1405,6 +1463,8 @@ public class EzJournalGWController {
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W getReceiverCount ended.");
@@ -1435,6 +1495,8 @@ public class EzJournalGWController {
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W getFavoriteList ended.");
@@ -1466,6 +1528,8 @@ public class EzJournalGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W saveFavorite ended.");
@@ -1498,6 +1562,7 @@ public class EzJournalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W updateFavorite ended.");
@@ -1529,6 +1594,7 @@ public class EzJournalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W deleteFavorite ended.");
@@ -1560,6 +1626,8 @@ public class EzJournalGWController {
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W getFavoriteUserList ended.");
@@ -1592,6 +1660,8 @@ public class EzJournalGWController {
 			result.put("data", "");
 			result.put("status", "error");
 			result.put("code", 1);
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W getReplies ended.");
@@ -1626,6 +1696,8 @@ public class EzJournalGWController {
 			result.put("data", "");
 			result.put("status", "error");
 			result.put("code", 1);
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W saveReply ended.");
@@ -1658,6 +1730,8 @@ public class EzJournalGWController {
 			result.put("data", "");
 			result.put("status", "error");
 			result.put("code", 1);
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W deleteReply ended.");
@@ -1689,6 +1763,8 @@ public class EzJournalGWController {
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W saveOption ended.");
@@ -1710,9 +1786,9 @@ public class EzJournalGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
-			JournalEnvVO journalOpt = ezJournalService.getUserJournalEnv(userId, info.getTenantId());
-			
-			List<DeptViewVO> deptList = ezJournalService.getCheifBoss(userId, info.getTenantId());
+			/* 2024-07-17 홍승비 - SQL Injection 수정 > 알림 메일 발송을 위한 사용자명 다국어 처리 정상 동작하도록 lang 파라미터 추가 */
+			JournalEnvVO journalOpt = ezJournalService.getUserJournalEnv(userId, commonUtil.getMultiData(info.getLang(), info.getTenantId()), info.getTenantId());
+			List<DeptViewVO> deptList = ezJournalService.getCheifBoss(userId, commonUtil.getMultiData(info.getLang(), info.getTenantId()), info.getTenantId());
 			
 			data.put("journalOpt", journalOpt);
 			data.put("deptList", deptList);
@@ -1724,6 +1800,8 @@ public class EzJournalGWController {
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W getOption ended.");
@@ -1753,6 +1831,8 @@ public class EzJournalGWController {
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W getRecvJournalCount ended.");
@@ -1785,6 +1865,8 @@ public class EzJournalGWController {
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W getRecvJournalCount ended.");
@@ -1815,6 +1897,8 @@ public class EzJournalGWController {
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W getRecvJournalCount ended.");
@@ -1845,6 +1929,8 @@ public class EzJournalGWController {
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W checkJournalAuth ended.");
@@ -1880,6 +1966,8 @@ public class EzJournalGWController {
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W getCompanyList ended.");
@@ -1928,6 +2016,8 @@ public class EzJournalGWController {
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W getDeptList ended.");
@@ -1977,6 +2067,8 @@ public class EzJournalGWController {
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W getUserList ended.");

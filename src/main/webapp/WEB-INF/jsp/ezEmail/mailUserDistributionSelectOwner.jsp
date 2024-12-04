@@ -54,6 +54,7 @@
  	                try {
  	                    ReturnFunction = opener.mail_user_distributionOwner_cross_dialogArguments[0];
  	                } catch (e) {
+ 	                    console.log(e);
  	                }
  	            } 
 	     		 

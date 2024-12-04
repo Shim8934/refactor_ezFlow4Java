@@ -384,7 +384,7 @@ function tempInsert(objNodes, DataSDT, DataEDT) {
     pTempData.oPnumber = SelectSingleNodeValue(objNodes, "pnumber");
     pTempData.oOwner_id = SelectSingleNodeValue(objNodes, "owner_id");
     pTempData.oWriter_id = SelectSingleNodeValue(objNodes, "writer_id");
-    pTempData.oSubject = SelectSingleNodeValue(objNodes, "subject");
+    pTempData.oSubject = replaceEntityCodeToStr(SelectSingleNodeValue(objNodes, "subject"));
     pTempData.oInstancetype = SelectSingleNodeValue(objNodes, "instancetype");
     pTempData.oLocation = SelectSingleNodeValue(objNodes, "location");
     pTempData.oDtstart = mfGetUTFIsoDate(DataSDT.getFullYear(), DataSDT.getMonth(), DataSDT.getDate(), DataSDT.getHours(), DataSDT.getMinutes());

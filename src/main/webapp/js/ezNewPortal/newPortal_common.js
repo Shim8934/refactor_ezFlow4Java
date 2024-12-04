@@ -1260,12 +1260,6 @@ function quickMenuOpen(menu) {
 			url = "/ezSchedule/scheduleIndex.do?funCode=2";
 			location = "main";
 			break;
-		/*
-		case "Poll" :
-			url = "/ezQuestion/qstMain.do";
-			location = "main";
-			break;
-		*/
 		case "Survey" :
 			url = "/ezSurvey/surveyMain.do";
 			location = "main";

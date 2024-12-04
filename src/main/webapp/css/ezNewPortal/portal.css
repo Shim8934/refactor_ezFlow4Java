@@ -1402,7 +1402,7 @@ aside{margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:vis
 #theme3Body .birthList li .birthListDL{margin:0px; padding:0px;  overflow:hidden;cursor:pointer;}
 /* #theme3Body .birthList li .birthListDL .birthPic{margin:0px; padding:0px 4px 0px 0px; float:left;}
 #theme3Body .birthList li .birthListDL .birthPic img{border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; border:1px solid #e7e7e7;} */
-#theme3Body .birthList li .birthListDL .birthName{margin:0px; padding:0px; font-size:12px; color:#333; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;}
+#theme3Body .birthList li .birthListDL .birthName{margin:0px; padding:0px; font-size:12px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;}
 #theme3Body .birthList li .birthListDL .birthTeam{margin:0px; padding:0px; font-size:12px; color:#888888; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;}
 #theme3Body .nodata_newBirthday{height:100%; background:none;}
 
@@ -1521,7 +1521,7 @@ aside{margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:vis
 #theme3Body .collaborate{clear:both;}
 #theme3Body .weather{overflow:hidden}
 #theme3Body .weather_mini{background:#fff;}
-#theme3Body .layDIV .error_content{height:100%; background:#ffffff;}
+#theme3Body .layDIV .error_content{}
 
 
 #theme3Body .top_info_area_wrap{width:510px; height:100vh; float:left; background:rgba(255,255,255,0.8); box-shadow:0 3px 6px rgba(0,0,0,0.128); position:relative; transition:width 0.5s ease; position:sticky; top:0; z-index:100;}
@@ -2086,7 +2086,8 @@ div.orbit img{border-radius:5px;}
 .lnb ul.active li.icon_nav_menuset_leftmenu span{display:none;}
 
 .lnb ul li span{display:block; padding:0 5px; font-size:14px; font-weight:500; color:#000; margin-top:8px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; word-wrap:break-word; text-overflow:ellipsis; overflow:hidden}
-.lnb_menu_all{width:456px; height:100%; position:absolute; left:-456px; top:0; background:#fff; overflow:auto;}
+.lnb_menu_all{width:456px; left:-500px; height:100%; position:absolute; top:0; background:#fff; overflow:auto; transition:all 0.2s;}
+.lnb_menu_all.on{transform: translateX(500px);}
 .lnb_menu_setting{height:48px; line-height:48px; background:#F2F3F5;}
 .lnb_menu_setting .menu_set{padding:0 34px;}
 .lnb_menu_setting .menu_set span{display:inline-block; padding-left:16px; background:url(/images/lnb/set_icon.svg) no-repeat 0 center / 12px 12px; color:#2B2B2B; font-size:12px; cursor:pointer; vertical-align:top; font-weight: 500;}
@@ -2450,3 +2451,7 @@ div.orbit img{border-radius:5px;}
 
 .security_icon{display:inline-block; width:16px; height:16px; background:url(/images/email/secureMail/security_icon.svg) no-repeat center / 16px 16px; !important;} 
 .portlet_list li .txt .security_icon{vertical-align:top; margin:2px 5px 0 0; !important;}
+
+/* 게시판 공개 비공개 */
+.board_private{background:url(/images/lock_icon.png) no-repeat center; background-size:contain; width: 16px;height: 16px; display: inline-block;vertical-align: text-bottom;}
+/* 게시판 공개 비공개 */

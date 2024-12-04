@@ -19,6 +19,8 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezOrgan/ListView_list.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezOrgan.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery-ui.min.js')}"></script>
+		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/jquery-ui.css')}" />
 		<link rel="stylesheet" href="${util.addVer('/css/admin.css')}">
 		<script type="text/javascript">
 			var topid = "<c:out value='${topid}'/>";
@@ -353,6 +355,10 @@
 					error : function(jqXHR, textStatus, errorThrown) {
 						alert(error);
 					}
+				});
+				$("#OrganListView").sortable({
+					items: "tr", 
+					opacity: 0.3
 				});
 			}
 

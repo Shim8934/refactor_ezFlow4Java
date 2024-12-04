@@ -403,7 +403,7 @@
                 SPAN_TAG.addEventListener('dragover', event_ondragover_span, false);
                 SPAN_TAG.addEventListener('drop', event_ondrop_span, false);
             } catch (e) {
-
+                console.log(e);
             }
             
             SPAN3.appendChild(SPAN_TAG);
@@ -629,7 +629,7 @@
         element.addEventListener('mouseout', event_onmouseout, false);
         element.addEventListener('beforeunload', event_onbeforeunload, false);
     } catch (e) {
-
+        console.log(e);
     }
     
    
@@ -866,7 +866,7 @@
                 SPAN_TAG.addEventListener('dragover', event_ondragover_span, false);
                 SPAN_TAG.addEventListener('drop', event_ondrop_span, false);
             } catch (e) {
-
+                console.log(e);
             }
             
             SPAN3.appendChild(SPAN_TAG);

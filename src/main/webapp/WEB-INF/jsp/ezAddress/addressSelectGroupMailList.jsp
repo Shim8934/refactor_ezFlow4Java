@@ -23,7 +23,7 @@
 		                Arguments = opener.address_select_groupemaillist_dialogArguments[0];
 		                ReturnFunction = opener.address_select_groupemaillist_dialogArguments[1];
 		                CancelFunction = opener.address_select_groupemaillist_dialogArguments[2];
-		            } catch (e) { }
+		            } catch (e) {console.log(e);}
 		        }
 		        document.getElementById("cmd_ok").focus();
 		    }

@@ -38,6 +38,10 @@ public class SurveyVO {
 	private List<AttachVO> attachList;
 	private int mailFlag;
 	private int popupFlag;
+	private int mailSentFlag;
+	private int totalNotiSentFlag;
+	private String participants; // 참여자수
+	private String participation; // 참여여부 (1, 0)
 	
 	public int getUpdateMode() {
 		return updateMode;
@@ -293,5 +297,38 @@ public class SurveyVO {
 
 	public void setResultViewTarget(JSONArray resultViewTarget) {
 		this.resultViewTarget = resultViewTarget;
+	}
+
+	public int getMailSentFlag() {
+		return mailSentFlag;
+	}
+
+	public void setMailSentFlag(int mailSentFlag) {
+		this.mailSentFlag = mailSentFlag;
+	}
+
+	public int getTotalNotiSentFlag() {
+		return totalNotiSentFlag;
+	}
+
+	public void setTotalNotiSentFlag(int totalNotiSentFlag) {
+		this.totalNotiSentFlag = totalNotiSentFlag;
+	}
+	
+
+	public String getParticipants() {
+		return participants;
+	}
+
+	public void setParticipants(String participants) {
+		this.participants = participants;
+	}
+
+	public String getParticipation() {
+		return participation;
+	}
+
+	public void setParticipation(String participation) {
+		this.participation = participation;
 	}
 }

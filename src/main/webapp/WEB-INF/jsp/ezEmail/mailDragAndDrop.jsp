@@ -322,7 +322,16 @@
 		        
 		      	//첨부파일 드래그 기능 추가. 2020-03-17 홍대표.
 		        setAttachSortable();
-		        
+
+                $(document).mouseup(function(e) {
+                    var element = parent.document.getElementById("layer_menu");
+                    if (element) {
+                        if (element.style.display !== 'none') {
+                            parent.document.getElementById("view_more").classList.remove('on');
+                            element.style.display = 'none';
+                        }
+                    }
+                })
 		    }
 		    
 		    var AttatchReturnValue;

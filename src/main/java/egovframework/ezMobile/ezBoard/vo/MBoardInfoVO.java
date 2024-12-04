@@ -89,6 +89,8 @@ public class MBoardInfoVO {
 	private String	reply_FG;
 	/** 게시물을 삭제할 수 있는지 여부(true/false)*/
 	private String	delete_FG;
+	/** 작성자가 게시물을 수정/이동 할 수 있는지 여부(true/false) 현재는 delete_FG에 종속 됨*/
+	private String	edit_FG;
 	/** 권한을 하위로 상속할 것인지 여부(true/false)*/
 	private String	inherit_FG;
 	/** 게시를 알릴 것인지 여부(true/false)(사용안함)*/
@@ -131,6 +133,12 @@ public class MBoardInfoVO {
 	private String mailFG_Post; // 게시알림
 	private String mailFG_Mod; // 수정알림
 	private String mailFG_Comment; // 댓글알림
+	/** 키워드 기능 사용여부 */
+	private String useKeyword;
+	/** 2024-10-23 정지은 - 첨부파일 사용여부**/
+	private String attachmentFlag;
+	/** 2024-11-12 박기범 - 게시판 공개/비공개 */
+	private String publicFlag = "N";
 	
 	@Override
 	public String toString() {
@@ -391,6 +399,10 @@ public class MBoardInfoVO {
 	}
 	public void setDelete_FG(String delete_FG) {
 		this.delete_FG = delete_FG;
+		this.edit_FG = delete_FG;
+	}
+	public String getEdit_FG() {
+		return delete_FG;
 	}
 	public String getInherit_FG() {
 		return inherit_FG;
@@ -561,5 +573,22 @@ public class MBoardInfoVO {
 	public void setMailFG_Comment(String mailFG_Comment) {
 		this.mailFG_Comment = mailFG_Comment;
 	}
-	
+	public String getUseKeyword() {
+		return useKeyword;
+	}
+	public void setUseKeyword(String useKeywords) {
+		this.useKeyword = useKeywords;
+	}
+	public String getAttachmentFlag() {
+		return attachmentFlag;
+	}
+	public void setAttachmentFlag(String attachmentFlag) {
+		this.attachmentFlag = attachmentFlag;
+	}
+	public String getPublicFlag() {
+		return publicFlag;
+	}
+	public void setPublicFlag(String publicFlag) {
+		this.publicFlag = publicFlag;
+	}
 }

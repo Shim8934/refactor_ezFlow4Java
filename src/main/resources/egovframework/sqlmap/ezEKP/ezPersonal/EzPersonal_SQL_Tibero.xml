@@ -875,16 +875,17 @@
           </isNotEqual>
      </select>
      
+     <!-- 2024-07-03 홍승비 - SQL Injection 수정 > $ 기호 제거, MySQL 쿼리 참고하여 조인 및 검색 조건 수정 (TBL_PS_SHAREAPPROVAL 테이블의 COMPANYID 칼럼 관련 조건 제거) -->
      <select id="EzPersonalDAO.getShareApprovalList" parameterClass="Map" resultClass="PersonalShareApprovalVO">
 	     <![CDATA[
 	     	SELECT
 				A.OWNERID      		 AS OWNERID,
 			    A.SHAREUSERID  		 AS SHAREUSERID,
-			    B.DISPLAYNAME$lang$  AS SHAREUSERNAME,
+			    CASE #lang# WHEN '2' THEN B.DISPLAYNAME2 ELSE B.DISPLAYNAME END AS SHAREUSERNAME,
 			    A.SHAREDATE 		 AS SHAREDATE,
-			    B.TITLE$lang$        AS SHAREUSERTITLE,
+			    CASE #lang# WHEN '2' THEN B.TITLE2 ELSE B.TITLE END AS SHAREUSERTITLE,
 			    B.DEPARTMENT   		 AS SHAREUSERDEPTID,
-			    B.DESCRIPTION$lang$  AS SHAREUSERDEPTNAME,
+			    CASE #lang# WHEN '2' THEN B.DESCRIPTION2 ELSE B.DESCRIPTION END AS SHAREUSERDEPTNAME,
 			    A.TENANTID     		 AS TENANTID
 			FROM
 				TBL_PS_SHAREAPPROVAL A
@@ -893,20 +894,19 @@
 			ON
 				A.TENANTID = B.TENANT_ID
 			AND
-				A.COMPANYID = B.PHYSICALDELIVERYOFFICENAME
-			AND
 				A.SHAREUSERID = B.CN
 			WHERE
 				TENANTID = #tenantID#
 			AND
 				OWNERID = #userID#
 			AND
-				COMPANYID = #companyID#
+				SHAREUSERDEPTID IN (SELECT CN FROM TBL_DEPTMASTER WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE2 = #companyID#)
 			ORDER BY
 				SHAREDATE
 	     ]]>
      </select>
      
+     <!-- 2024-07-03 홍승비 - 전자결재 일반버전 > 공유결재자 설정 > MySQL 테이블과는 다르게 구성된 오라클 테이블에 맞게 삽입 데이터 수정 -->
      <insert id="EzPersonalDAO.insertShareApproval" parameterClass="Map">
      	<![CDATA[
 	   		INSERT INTO 
@@ -914,10 +914,12 @@
 	   		SELECT
 	   			#userID#,
 	   			CN,
-	   			#shareDate#,
+	   			DISPLAYNAME,
+	   			TO_DATE(#shareDate#, 'YYYY-MM-DD HH24:MI:SS'),
+	   			TITLE,
 	   			DEPARTMENT,
-	   			#tenantID#,
-	   			PHYSICALDELIVERYOFFICENAME
+	   			DESCRIPTION,
+	   			#tenantID#
 	   		FROM
 	   			TBL_USERMASTER
 	   		WHERE
@@ -935,8 +937,6 @@
      			TENANTID = #tenantID#
      		AND
      			OWNERID = #userID#
-     		AND
-     			COMPANYID = #companyID#
      	]]>
    		<iterate prepend="AND SHAREUSERID IN" property="shareUserID" open="(" close=")" conjunction=",">
    			#shareUserID[]#
@@ -954,8 +954,6 @@
      		OWNERID = #userID#
      	AND
      		SHAREUSERID = #shareUserID#
-     	AND
-     		COMPANYID = #companyID#
      </select>
 
 	<select id="EzPersonalDAO.getpopupPermitYN" parameterClass="Map" resultClass="Integer">

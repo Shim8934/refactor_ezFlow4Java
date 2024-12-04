@@ -41,7 +41,7 @@ public class EzAttitudeScheduler {
 		
 		List<Map<String, Object>> tenantCompanyIdList = ezAttitudeService.getTenantCompanyId();
 		
-		for ( Map<String, Object> tenantCompanyMap : tenantCompanyIdList) {
+		for (Map<String, Object> tenantCompanyMap : tenantCompanyIdList) {
 			
 			int tenantId = Integer.parseInt(String.valueOf(tenantCompanyMap.get("tenantId")));
 			String companyId = (String)tenantCompanyMap.get("companyId");

@@ -47,6 +47,8 @@ public class POP3Access {
 				properties.put("mail.pop3s.port", port);
 				properties.put("mail.pop3s.connectiontimeout", TIMEOUT);
 				properties.put("mail.pop3s.timeout", TIMEOUT);
+				properties.put("mail.pop3s.disabletop", "true");
+				properties.put("mail.pop3s.disablecapa", "true");
 				
 				Session session = Session.getDefaultInstance(properties);
 				
@@ -101,18 +103,12 @@ public class POP3Access {
 	public boolean checkConnect() {
 		boolean returnValue = false;
 		
-		try {
-			if (getStore() != null) {
-				returnValue = true;
-			} else {
-				returnValue = false;
-			}
-			
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
+		if (getStore() != null) {
+			returnValue = true;
+		} else {
 			returnValue = false;
 		}
-		
+			
 		return returnValue;
 	}
 	

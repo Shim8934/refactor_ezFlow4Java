@@ -49,6 +49,17 @@
 				background-color:#f1f8ff;
 				border:1px solid #6793d8;
 			}
+			.disLikeButton {
+				padding:5px;
+				cursor:pointer;
+				display:inline-block;
+				border:1px solid #c7c7c7;
+			    border-radius:2px;
+			}
+			.disLikeButton:hover {
+				background-color:#ffd9ec;
+				border:1px solid #f44336;
+			}
 		</style>
 		<script type="text/javascript">
 				window.offscreenBuffering = true;
@@ -77,6 +88,7 @@
 				var Write_FG = "${boardInfo.write_FG}";
 				var Reply_FG = "${boardInfo.reply_FG}";
 				var Delete_FG = "${boardInfo.delete_FG}";
+				var Edit_FG = "${boardInfo.edit_FG}";
 				var BoardGroupAdmin_FG = "${boardInfo.boardGroupAdmin_FG}";
 				var g_progresswin;
 				var OneLineReplyFlag = "${oneLineReplyFlag}";
@@ -105,14 +117,44 @@
 		        var isAllGroupBoard = "${boardInfo.isAllGroupBoard}";
 		        var agent = navigator.userAgent.toLowerCase();
 				var reactFlag = "<c:out value='${boardInfo.reactFlag}'/>"; // 2023-07-28 임정은 - 게시판 댓글 좋아요 기능 사용여부
+				/* 2023-04-12 이가은 - 답글 기능을 위한 변수 추가 */
+		        var userInfoName = "${userInfo.displayName1}";
+				var replyOpenFlag = 0;
+				var replyModifyFlag = 0;
+				var replyModifyId = "";
+				var replyTextarea = "";
+				var delParentReply = 0;
+				var delChildReply = 0;
+				var delReplyLevel = "";
+				var parentReplyID = "";
+				var replyModifyArray = new Array(); // 2023-08-09 임정은 - 답글 수정 기능을 위한 배열 추가
+				
+				var useKeyword = "<c:out value='${boardInfo.useKeyword}'/>"; // 키워드 기능 사용 여부 (Y/N)
+				var keywordArr = []; // 키워드 배열
 
 				/* 2023-11-17 홍승비 - 게시물 승인 시 게시알림메일 발송을 위한 그룹사게시판 여부 파라미터 추가 */
 				var isAllGroupBoard = "<c:out value='${boardInfo.isAllGroupBoard}'/>";
+				
+		        var isDisLikeChecked = "<c:out value='${isDisLikeChecked}'/>";
+				var disLikeFlag = "<c:out value='${boardInfo.disLikeFlag}'/>";
+				var disLikeCount = "${boardItem.disLikeCount}";
+				var disLikeCountAfter = 0;
+				var commentSort = "earliest"; // 댓글 정렬 기준 : earliest(등록순) / latest(최신순)
+				
+                var myBoardScrapFlag = "<c:out value='${MyBoardScrapFlag}'/>" // myBoardScrapFlag 테넌트컨피그값 (NONE, TYPE1_(마이게시판하위), TYPE2(스크랩함))
+		        var isScrap = "<c:out value='${isScrap}'/>"; // 이미 스크랩되었는지의 여부 (type1일때)
+			    var scrapContID = "<c:out value='${scrapContID}'/>"; // 개인스크랩함 ID (TYPE2, 스크랩함에서 게시물 조회했을 때 값이 들어옴)
+			 	 
+			    var attachmentFlag = "${boardInfo.attachmentFlag}"; // 게시판 첨부파일 사용여부
+                var attachLimit = "${boardInfo.attachSizeLimit}"; // 개별 첨부파일 limit
+                var attachFileNameMaxLength = Number("${attachFileNameMaxLength}"); // 첨부파일명 글자수 제한 limit
+                var totalFileSize = 0; // 현재 총 첨부파일 사이즈
 				
 		        window.onload = function () {
 		            imageViewInit();
 		            pageimageout();
 		            rsa.setPublic(document.getElementById('publicModulus').value, document.getElementById('publicExponent').value);
+		            makeEmoticonPanel();
 		
 		            // GS 수정(2006.02.10) : 게시알림메일을 다시 게시하는 경우 url link와 게시물 link 기능이 겹치는 문제 수정
 		            AddLinkTarget();
@@ -153,7 +195,7 @@
 		        
 		        $(document).ready(function() {
 					/* 2019-04-05 홍승비 - 좋아요 버튼이 존재한다면 본문 패딩과 height 조절 */
-		            if (likeFlag != null && likeFlag == "Y") {
+		            if ((likeFlag != null && likeFlag == "Y")||(disLikeFlag != null && disLikeFlag == "Y")) {
 						$(".MainContentTD").css({"padding" : "15px 0px 4px 0px", "height" : "47px"});
 						$("#MainContent").css("height", "35px");
 		            }
@@ -434,6 +476,7 @@
 					if (refreshFlag == "Y") {
 						window.opener.getBoardList();
 					}
+					opener.isOpenWindow = undefined;
 			    };
 			    
 				function btnClose_onclick()
@@ -1000,6 +1043,8 @@
 		            params[2] = document.getElementById("title").textContent;
 		            params[3] = document.getElementById("Div2").textContent;
 		            params[5] = isAllGroupBoard;
+                    params[6] = useKeyword;
+                    params[7] = getKeywordListByView();
 		            if (CrossYN()) {
 		                photoalbumedit_dialogArguments[0] = params;
 		                photoalbumedit_dialogArguments[1] = btn_albumEdit_Complete;
@@ -1539,9 +1584,32 @@
 				}
 			  	
 			  	 /* 2019-04-05 홍승비 - 좋아요 버튼 클릭 동작 */
-			    function clickLikeButton() {
+			  	 /* 2023-04-06 기민혁 - 좋아요 버튼 클릭 동작 (수정) */
+			   function clickLikeButton() {
 			    	var mod = "";
-			    	if (isLikeChecked == "Y") {
+
+			    	if(isDisLikeChecked == "Y"){
+			    		mod = "DELETE";
+			    		$.ajax({
+							type : "POST",
+							dataType : "text",
+							async : false,
+							url : "/ezBoard/clickDisLikeMod.do",
+							data : {
+								mod: mod,
+								itemID : pItemID
+							},
+							success: function(result){
+								isDisLikeChecked = result;
+
+								if($("#disLikeDiv").length > 0){
+									updateDisLikeCountImg(isDisLikeChecked);
+								}
+							}
+						});
+			    	}
+			    	
+			    	if (isLikeChecked == "Y" && isDisLikeChecked != "Y") {
 			    		mod = "DELETE";
 			    	} else {
 			    		mod = "INSERT";
@@ -1586,6 +1654,8 @@
 					    	} else {
 					    		document.getElementById("likeButtonImg").src = "/images/like_off.png";
 					    	}
+							try {opener.refreshLikeAndDisLike(result,isLikeChecked,"like");}catch (e) {}
+
 						}
 					});
 				}
@@ -1599,7 +1669,7 @@
 			    	var opnenerHref = window.opener.location.href;
 			    	
 			    	// 댓글의 수가 달라졌고, 부모창의 주소가 게시판인 경우(새게시물 제외)에만 플래그값 변경
-			    	if (((likeCount != likeCountAfter) || (commentCount != nowCommentCount)) && (window.opener.location.href.indexOf("/ezBoard/") > -1) && (window.opener.location.href.indexOf("boardItemList_new") == -1)) {
+			    	if (((likeCount != likeCountAfter) || (disLikeCount != disLikeCountAfter) || (commentCount != nowCommentCount)) && (window.opener.location.href.indexOf("/ezBoard/") > -1) && (window.opener.location.href.indexOf("boardItemList_new") == -1)) {
 			    		refreshFlag = "Y";
 			    	} else {
 			    		refreshFlag = "N";
@@ -1636,6 +1706,200 @@
 					});
 				}
 		        
+			    /* 2023-04-06 기민혁 - 싫어요 버튼 클릭 동작 */
+			    function clickDisLikeButton() {
+			    	var mod = "";
+			    	
+			    	if(isLikeChecked == "Y"){
+			    		mod = "delect";
+			    		$.ajax({
+							type : "POST",
+							dataType : "text",
+							async : false,
+							url : "/ezBoard/clickLikeMod.do",
+							data : {
+								mod: mod,
+								itemID : pItemID
+							},
+							success: function(result){
+								isLikeChecked = result;
+
+								if($("#likeDiv").length > 0){
+									updateLikeCountImg(isLikeChecked);
+								}
+							}
+						});
+			    	}
+			    		
+			    	if (isDisLikeChecked == "Y" && isLikeChecked != "Y") {
+			    		mod = "DELETE";
+			    	} else {
+			    		mod = "INSERT";
+			    	}
+			    	
+			    	$.ajax({
+						type : "POST",
+						dataType : "text",
+						async : false,
+						url : "/ezBoard/clickDisLikeMod.do",
+						data : {
+							mod: mod,
+							itemID : pItemID
+						},
+						success: function(result){
+							isDisLikeChecked = result;
+							updateDisLikeCountImg(isDisLikeChecked);
+						}
+					});
+			    }
+			    
+			    /* 2023-04-06 기민혁 - 싫어요 버튼 이미지 및 좋아요 갯수 업데이트 */
+			    function updateDisLikeCountImg(isDisLikeChecked) {
+			    	$.ajax({
+						type : "GET",
+						dataType : "text",
+						async : false,
+						cache : false,
+						url : "/ezBoard/getDisLikeCount.do",
+						data : {
+							itemID : pItemID
+						},
+						success: function(result){
+							disLikeCountAfter = result;
+							if (parseInt(result) > 0) {
+								document.getElementById("disLikeCountSpan").innerText = "(" + result + ")";
+							} else {
+								document.getElementById("disLikeCountSpan").innerText = "";
+							}
+							if (isDisLikeChecked == "Y") {
+					    		document.getElementById("disLikeButtonImg").src = "/images/disLike_on.png";
+					    	} else {
+					    		document.getElementById("disLikeButtonImg").src = "/images/disLike_off.png";
+					    	}
+							try {opener.refreshLikeAndDisLike(result,isDisLikeChecked,"disLike");}catch (e) {}
+
+						}
+					});
+				}
+			    
+			    /* 2023-04-06 기민혁 - 미리보기 에서  좋아요/싫어요 버튼 클릭시  이미지 및  개수 업데이트 */
+			    function refreshLikeAndDisLikeOpen(result,checked,gubun){
+			    	if(gubun === "disLike"){
+			    		isDisLikeChecked = checked ;
+				    	if (parseInt(result) > 0) {
+							document.getElementById("disLikeCountSpan").innerText = "(" + result + ")";
+						} else {
+							document.getElementById("disLikeCountSpan").innerText = "";
+						}
+						if (isDisLikeChecked == "Y") {
+				    		document.getElementById("disLikeButtonImg").src = "/images/disLike_on.png";
+				    	} else {
+				    		document.getElementById("disLikeButtonImg").src = "/images/disLike_off.png";
+				    	}
+			    	}else if(gubun === "like"){
+			    		isLikeChecked = checked;
+			    		if (parseInt(result) > 0) {
+							document.getElementById("likeCountSpan").innerText = "(" + result + ")";
+						} else {
+							document.getElementById("likeCountSpan").innerText = "";
+						}
+						if (isLikeChecked == "Y") {
+				    		document.getElementById("likeButtonImg").src = "/images/like_on.png";
+				    	} else {
+				    		document.getElementById("likeButtonImg").src = "/images/like_off.png";
+				    	}
+			    	}
+			    };
+
+			    /* 2023-05-03 기민혁 -  스크랩 추가 클릭시 data insert */
+			    function addScrapType1(){
+			    	$.ajax({
+						type : "GET",
+						dataType : "text",
+						async : false,
+						url : "/ezBoard/setScrapItem.do",
+						data : {
+							itemID : pItemID,
+							boardID : pBoardID
+						},
+						success: function(result){
+							if(result == "true"){
+								alert("<spring:message code='ezBoard.t269' />");
+								document.getElementById("addScrapBtn").innerHTML = "<li id ='delScrapBtn'><span onclick='delScrap()''><spring:message code='ezBoard.kmh14'/></span></li>";
+							} else if(result == "false"){
+								alert("<spring:message code='ezBoard.kmh001' />");
+								document.getElementById("addScrapBtn").innerHTML = "<li id ='delScrapBtn'><span onclick='delScrap()''><spring:message code='ezBoard.kmh14'/></span></li>";
+							} else if(result == "error"){
+								alert("<spring:message code='ezBoard.kmh17' />");
+							}
+						}
+					});
+				}
+							
+                function addScrapType2() {
+                    var url = "/ezBoard/selUserScrapCont.do";
+                    ContOpen = GetOpenWindow(url + "?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pBoardID), "selUserCont", 500, 460, "NO");
+                    try { ContOpen.focus() } catch (e) { }
+                }
+                
+                function addScrap() {
+                    if (myBoardScrapFlag == "TYPE1") {
+                        addScrapType1();
+                    } else if (myBoardScrapFlag == "TYPE2") {
+                        addScrapType2();
+                    } else {
+                        alert("오류발생");
+                    }
+                }
+                
+			    
+			function delScrap() {
+		        var pUrl = "";
+		        var pData = new FormData();
+		        var pType;
+		        if (myBoardScrapFlag == "TYPE1") {
+		            pUrl = "/ezBoard/delScrapItem.do";
+		            pData.append("itemID", pItemID);
+		            pData.append("boardID", pBoardID);
+		        } else if (myBoardScrapFlag == "TYPE2") {
+		            pUrl = "/ezBoard/deleteScrapContItemList.do";
+		            pData.append("itemList", pItemID + ";");
+		            pData.append("scrapContID", scrapContID);
+		        } else {
+		            alert("<spring:message code='ezBoard.kmh52' />");
+		            return;
+		        }
+		    	$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : pUrl,
+					data : pData,
+					contentType: false,
+					processData: false,
+                    success: function(result) {
+                        if(result == "true") {	
+                            alert("<spring:message code='ezBoard.kmh18' />");
+                            if (myBoardScrapFlag == "TYPE1") {
+                                document.getElementById("delScrapBtn").innerHTML ="<li id ='addScrapBtn'><span onclick='addScrap()'><spring:message code='ezBoard.kmh13'/></span></li>";
+                            } else if (myBoardScrapFlag == "TYPE2") {
+                                document.getElementById("delScrapBtn").replaceChildren();
+                            } else {
+                                alert("<spring:message code='ezBoard.kmh52' />");
+                                return;
+                            }
+                        
+                            if (window.opener && !window.opener.closed && (window.opener.location.href.indexOf("boardMyScrapList") !== -1 || window.opener.location.href.indexOf("BoardScrapContItemListView") !== -1)) {
+                                window.close();
+                                window.opener.refresh_onclick();
+                            } 
+                        } else {
+                            alert("<spring:message code='ezBoard.kmh17' />");
+                        }
+                    }
+                });
+			}
+			    
 		</script>
 	</head>
 	<body  id="bodyPopup" class="popup" style="overflow:hidden; height:100%;">
@@ -1666,7 +1930,7 @@
 	        					<li ID='btn_One_Line_Reply'><span id="commentCount" onclick='btn_One_Line_Reply_Onclick()'><spring:message code='ezBoard.t81'/>[${commentCount}]</span></li>
 	        				</c:if>
 							<!--		강민수92 end -->
-		        			<c:if test="${boardInfo.boardAdmin_FG =='true' || boardInfo.boardGroupAdmin_FG == 'OK' || boardItem.writerID == userInfo.id}">
+		        			<c:if test="${boardInfo.boardAdmin_FG =='true' || boardInfo.boardGroupAdmin_FG == 'OK' || (boardItem.writerID == userInfo.id && boardInfo.edit_FG == 'true')}">
 			                    <li ID='btn_Reply' ><span onclick='btn_Add_Onclick()'><spring:message code='ezBoard.t1001'/></span></li>
 			                    <li ID='btn_Modify' ><span  onclick="btn_ImgOnclick('Mod')"><spring:message code='ezBoard.t1002'/></span></li>
 			                    <li ID='btn_Delete' ><span  onclick="btn_ImgOnclick('Del')"><spring:message code='ezBoard.t1003'/></span></li>
@@ -1680,6 +1944,20 @@
 		        	<%-- 2024-02-02- 홍승비 - 게시물 승인 > 승인되지 않은 게시물 팝업창에서 캐비넷등록 버튼이 표출되는 오류 수정 (apprFlag값이 'W'인 경우는 승인게시판인데도 승인자가 없는 경우임) --%>
 					<c:if test="${useCabinet == 'YES' && apprFlag != 'N' && apprFlag != 'C' && apprFlag != 'W'}">
 						<li><span onclick="addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
+					</c:if>
+					<c:if test="${MyBoardScrapFlag != 'NONE' && apprFlag != 'N'}">
+						<c:choose>
+							<c:when test="${MyBoardScrapFlag eq 'TYPE1' && isScrap ne 'true'}">
+								<li id ="delScrapBtn"><span onclick="delScrap()"><spring:message code='ezBoard.kmh14'/></span></li>
+							</c:when>
+							<c:when test="${MyBoardScrapFlag eq 'TYPE2' && not empty scrapContID}">
+							    <li id ="addScrapBtn"><span onclick="addScrap()"><spring:message code='ezBoard.kmh13'/></span></li>	
+								<li id ="delScrapBtn"><span onclick="delScrap()"><spring:message code='ezBoard.kmh14'/></span></li>	
+							</c:when>
+							<c:otherwise>
+							    <li id ="addScrapBtn"><span onclick="addScrap()"><spring:message code='ezBoard.kmh13'/></span></li>	
+							</c:otherwise>
+						</c:choose>
 					</c:if>
 		        </ul>
 		      </div>
@@ -1712,6 +1990,35 @@
 		              <th style="width:10%"><spring:message code='ezBoard.t224'/></th>
 		              <td style="width:40%; text-overflow:ellipsis; white-space:nowrap;" id="User_WriteDate">${boardItem.writeDate.substring(0, 16)} </td>
 		            </tr>
+		            <%-- 키워드 --%>
+                    <c:if test='${boardInfo.useKeyword eq "Y"}'>
+                         <tr>
+                             <th><spring:message code="ezApprovalG.t1200" /></th>
+                             <td width="100%" id="cKeyword" style="WORD-WRAP: break-word;word-break:break-all; line-height:16px;" colspan=5>
+                                <div style="WIDTH: 100%; vertical-align: middle">
+                                    <c:if test='${not empty keywordList}'>
+                                        <c:forEach var="keyword" items="${keywordList}">
+                                            <span class="keywordSpan" id="${keyword.keywordName}" onclick="onclickKeyword(event)">#${keyword.keywordName}</span>
+                                        </c:forEach>
+                                    </c:if>
+                                </div>
+                             </td>
+                         </tr>
+                     </c:if>
+                    <c:if test="${(boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK') && not empty boardItem.updateDate}">
+                    <!-- 수정자, 수정일 -->
+                        <tr>
+                            <th style="width:10%;"><spring:message code='ezBoard.updateJIH01' /></th>
+                            <td id="updaterName" style = "white-space:nowrap; padding-right:5px; width: 40%;">
+                                <div style="vertical-align:middle;width:100%;height:16px;">${boardItem.updaterName}</div>
+                            </td>
+                            <th style="width:10%;"><spring:message code='ezBoard.updateJIH02' /></th>
+                            <td id="updateDate" style = "white-space:nowrap; padding-right:5px; width: 40%;">
+                                <div style="vertical-align:middle;width:100%;height:16px;">${boardItem.updateDate.substring(0, 16)}</div>
+                            </td>
+                        </tr>
+                    <!-- 수정자, 수정일 end -->
+                    </c:if>	
 		            <tr>
 		              <th><spring:message code='ezBoard.t291'/></th>
 		              <td id="cTitle" colspan="3">
@@ -1757,20 +2064,43 @@
 		            </td>
 		        </tr>
 			<%-- 2019-04-05 홍승비 - 본문, 사진소개 하단에 좋아요 버튼 추가 --%>
-			<c:if test="${boardInfo.likeFlag != null && boardInfo.likeFlag == 'Y'}">
+			<%-- 2023-04-06 기민혁 - 싫어요 버튼 추가 --%>
+			<c:if test="${boardInfo.likeFlag != null && boardInfo.likeFlag == 'Y' || boardInfo.disLikeFlag != null && boardInfo.disLikeFlag == 'Y'}">
 				<tr>
 					<td style="text-align:center; padding-bottom:8px;" colspan="3">
-					  	<span class="likeButton" style="cursor:pointer; margin-left:-7px;" onclick="clickLikeButton()" title="<spring:message code='ezBoard.hsb10'/>">
-						  	<c:choose>
-						  		<c:when test="${isLikeChecked == 'Y'}">
-						  			<img id="likeButtonImg" src="/images/like_on.png"/>
-						  		</c:when>
-						  		<c:otherwise>
-						  			<img id="likeButtonImg" src="/images/like_off.png"/>
-						  		</c:otherwise>
-						  	</c:choose>
-					  	<span id="likeCountSpan" style="vertical-align:top;"><c:if test="${boardItem.likeCount > 0}"> (<c:out value="${boardItem.likeCount}"/>)</c:if></span>
-					  	</span>
+						<div style="display: flex; justify-content: center; ">
+							<c:if test="${boardInfo.likeFlag != null && boardInfo.likeFlag == 'Y'}">
+								<div id="likeDiv" style="text-align:center; padding:5px 0px 7px 0px; margin-right: 5px;">	
+						  			<span class="likeButton" onclick="clickLikeButton()" title="<spring:message code='ezBoard.hsb10'/>" style="height:20px;">
+							  			<c:choose>
+							  				<c:when test="${isLikeChecked == 'Y'}">
+							  					<img id="likeButtonImg" src="/images/like_on.png"/>
+							  				</c:when>
+							  				<c:otherwise>
+							  					<img id="likeButtonImg" src="/images/like_off.png"/>
+							  				</c:otherwise>
+							  			</c:choose>
+							  				<span id="likeCountSpan" style="vertical-align:top;"><c:if test="${boardItem.likeCount > 0}"> (<c:out value="${boardItem.likeCount}"/>)</c:if></span>
+						  			</span>
+								</div>
+							</c:if>
+			
+							<c:if test="${boardInfo.disLikeFlag != null && boardInfo.disLikeFlag == 'Y'}">
+								<div id="disLikeDiv" style="text-align:center; padding:5px 0px 7px 0px;">	
+						  			<span class="disLikeButton" onclick="clickDisLikeButton()" title="<spring:message code='ezBoard.kmh07'/>" style="height:20px;">
+							  			<c:choose>
+							  				<c:when test="${isDisLikeChecked == 'Y'}">
+							  					<img id="disLikeButtonImg" src="/images/disLike_on.png"/>
+							  				</c:when>
+							  				<c:otherwise>
+							  					<img id="disLikeButtonImg" src="/images/disLike_off.png"/>
+							  				</c:otherwise>
+							  			</c:choose>
+							  				<span id="disLikeCountSpan" style="vertical-align:top;"><c:if test="${boardItem.disLikeCount > 0}"> (<c:out value="${boardItem.disLikeCount}"/>)</c:if></span>
+						  			</span>
+								</div>
+							</c:if>
+                		</div>
 					</td>
 				</tr>
 			</c:if>
@@ -1859,17 +2189,35 @@
 			<%-- 2019-11-05 홍승비 - 하단댓글 영역 추가 --%>
 	        <c:if test="${oneLineReplyFlag == '2'}">
 	        	<div style='height:auto;'>
-					<table class="mainlist" style="width:100%; min-width:745px; margin-top:8px;" >
+					<table class="mainlist emoticonLayerStaticPosition" style="width:100%; min-width:745px; margin-top:8px;" >
 						<tr>
-							<th style="text-align:center; width: 88%; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;">
-								<textarea id="onelinereply" rows="3" style = "resize:none; width:98%" maxlength="600"></textarea>
+							<th style="text-align:center; width: 85%; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;">
+                                <%-- 2023-11-07 전인하 - 게시판 > 이모티콘 아이콘 삽입 --%>
+                                <div class="emoticonRelative">								    
+                                    <img id="_addEmoticon" class="_addEmoticon" src="/images/poll/add_emo_vote.png" onclick="addSticker(this)">
+                                    <textarea id="onelinereply" rows="3" style = "resize:none; width:90%;" maxlength="500"></textarea>
+                                </div>
 							</th>
-							<th style="text-align:center;border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2; border-right:1px solid #e2e2e2;">
-								<a class='imgbtn' style="vertical-align: middle"><span onclick="Save_OneLineReply()"><spring:message code='ezBoard.t321' /></span></a>
+							<th style="text-align:center;border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2; border-right:1px solid #e2e2e2; width:15%">
+								<c:if test='${boardInfo.attachmentFlag eq "Y"}'>
+								    <a class='imgbtn' style="vertical-align: middle"><span onclick="btnfileup('commentFile')"><spring:message code='ezBoard.commentAttach.JIH01' /></span></a><br/>
+								</c:if>
+								<a class='imgbtn' style="vertical-align: middle"><span onclick="Save_OneLineReply(this)"><spring:message code='ezBoard.t321' /></span></a>
 							</th>
 						</tr>
 					</table>
-					<table id="commentList" style="width:100%; min-width:745px; margin-top:2px;table-layout: fixed; overflow:auto;border:1px solid rgb(225,225,225)"></table>
+					<c:if test='${boardInfo.attachmentFlag eq "Y"}'>
+                        <%-- 첨부파일 버튼 --%>
+                        <input id="commentFile" type="file" multiple="multiple" onchange="filechange(event)" style="display:none"/>
+                        <input id="commentListFile" type="file" multiple="multiple" onchange="filechange(event)" style="display:none"/>
+                        <%-- 댓글 첨부 리스트 --%>
+                        <div id="commentAttach"></div>
+					</c:if>
+                    <div class="commentSort">
+                        <span id="earliest" class="checked" onclick="boardCommentSort()"><spring:message code='ezBoard.commentSort.JIH001' /></span>
+                        <span id="latest" onclick="boardCommentSort()"><spring:message code='ezBoard.commentSort.JIH002' /></span>
+                    </div>
+					<table id="commentList" style="width:100%; min-width:745px; margin-top:2px; overflow:auto;border:1px solid rgb(225,225,225)"></table>
 				</div>
 	        </c:if>
 	        <%-- 본문하단 댓글영역 끝 --%>
@@ -1939,5 +2287,31 @@
 				<img id="imgPopup" class="imgPopup">
    			</div>
    		</div>
+
+        <div id = "basePanel">
+            <%-- 2023-11-01 전인하 - 이모티콘 선택 팝업--%>
+            <div id ="_stickerArea">					
+                <div id="emoticonPanel" class="emoticonPanel">
+                    <div id="emoticonGroup" style="display:block;width:100%; height: 45px;background-color: #fff; border-bottom:1px solid #ddd;">
+                        <div style="float:left; display:block;">
+                            <img id="previousEmoticon" src="/images/previous1.png" onclick="showNextGroupSticker(this);">
+                        </div>
+                        <div id="_ePresentors" style="float:left; display:block; ">
+                        </div>
+                        <div style="float: right; display:block;">
+                            <img id="nextEmoticon" src="/images/next1.png" onclick="showNextGroupSticker(this);">
+                        </div>
+                    </div>						
+                    <div id="emoticonList" style="display:inline-block;width:100%; background-color: #fff;">
+                    </div>
+                </div>					
+            </div>
+            
+            <%-- 2023-11-01 전인하 - 선택된 이모티콘 조회 팝업 --%>
+            <div id="uploadedFile" class="uploadedFile">
+                <img id="cancelImg" class="cancelImg" src="/images/close.png" onclick="closeEmoticonPreview();">
+                <img id="previewImage" class="previewImage">
+            </div>            
+        </div>
 	</body>
 </html>

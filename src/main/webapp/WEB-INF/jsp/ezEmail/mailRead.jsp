@@ -64,6 +64,7 @@
 		    var sendPermission = "${sendPermission}";
 		    var managePermission = "${managePermission}";
 		    var mailWritePreview = "${mailWritePreview}"; // 메일 작성 > 미리보기
+		    var mailWritePreviewSend = "${mailWritePreviewSend}"; // 메일 작성 > 발송 전 미리보기
 		    var g_uid = "${uid}";
 		    var countryName = "${countryName}";
 		    var countryIP = "${countryIP}";
@@ -84,12 +85,13 @@
 			    if (useReSend == "YES" && sentItems.toUpperCase() == "TRUE") {
 		    		$('#liReSend').css('display', 'block');
 		   		}
-
-				document.addEventListener('click', function (e) {
-					var clickedElementClass = e.target.className;
-					if (!clickedElementClass.includes('view_more')) {
-						hiddenMoreMenu();
-					}
+				
+				$(parent.document).mouseup(function (e) {
+					hiddenMoreMenu(e);
+				});
+				
+				$(document).mouseup(function (e) {
+					hiddenMoreMenu(e);
 				});
 			    
 			    if (g_notiSSO == "1")
@@ -144,7 +146,7 @@
 		        	btnDelete.style.display = "none";
 		        }
 		        
-		        if (useCountryIP == "YES" && mailWritePreview != "true") {
+		        if (useCountryIP == "YES" && (mailWritePreview != "true" ||  mailWritePreviewSend == "false")) {
 		        	if (useShowSystemCountry == "YES" || (useShowSystemCountry != "YES" && countryCode != systemCountryCode)) {
 			        	
 		        		if (document.getElementById("nationalFlag") != null) {
@@ -162,10 +164,14 @@
 		                opener.refreshUnreadCount();
 		            }
 		        } 
-			    catch (e) { }
+			    catch (e) {console.log(e);}
 			    
 			    if (mailWritePreview == "true") {
 			    	$("#menu > ul:first-child").css("display","none");
+			    	$("#menu > ul:nth-child(2)").css("display", "none");
+			    } else if (mailWritePreviewSend == "true") {
+			        $("#menu > ul:first-child").css("display","none");
+			        $("#menu > ul:nth-child(2)").css("display", "block");
 			    }
 
 				<c:if test="${useMailTag}">
@@ -177,7 +183,7 @@
 					tagAddInput.addEventListener("keydown", function(e) {
 						if (e.keyCode == 13) onEnterPreviewTagInput();
 					});
-					document.querySelector("#tag_add + .imgbtn").addEventListener("click", function(e) { onEnterPreviewTagInput(); });
+					document.querySelector(".input_wrap + .imgbtn").addEventListener("click", function(e) { onEnterPreviewTagInput(); });
 					// 태그 X 버튼 클릭시 삭제
 					$("#tag_view > img").on("click", function() { removeTag(this.previousElementSibling); });
 
@@ -206,10 +212,25 @@
 						},
 						minLength: 2,
 						selectFirst: true,
-						autoFocus: true,
+						// autoFocus: true,
+					});
+
+					tagAddInput.addEventListener("input", function() {
+						var inputWrap = document.getElementById("input_wrap");
+	
+						// 클래스에 "on"이 있으면 제거
+						if (inputWrap.classList.contains("on")) {
+							inputWrap.classList.remove("on");
+						}
 					});
 				</c:if>
 			}
+
+			function send() {
+			    window.opener.Send_onClick();
+			    window.close();
+			}
+
 		    function btnPrint_onClick()
 		    {
 		        var pheight = window.screen.availHeight;
@@ -277,7 +298,7 @@
 			{
 			    var url = document.location.protocol + "//" + document.location.hostname + "/myoffice/ezKMS/kasset/KAssetConvert_Cross.aspx?Mode=new&Flag=email&url=" + encodeURIComponent(g_paramURL);
 			    var OpenWin = window.open(url, "mail_foldermanage_Cross", GetOpenWindowfeature(800, 780));
-			    try { OpenWin.focus(); } catch (e) { }
+			    try { OpenWin.focus(); } catch (e) {console.log(e);}
 			}
 			
 			function OnBtnClose()
@@ -311,7 +332,7 @@
 		        {                 	 
 		            window.open("/myoffice/ezPortal/SSO/SSO_Link.aspx?TYPE=ITSMAPPDOC&DOCTITLE=" + encodeURIComponent(g_itsmtitle) + "&EMAIL=" + encodeURIComponent(ITSMEmail) + "&NAME=" + encodeURIComponent(ITSMName) + "&DEPT=", '', '');
 		        } 
-		        catch(e) {}
+		        catch(e) {console.log(e);}
 			}
 			
 			function SecurityFG()
@@ -451,7 +472,7 @@
 			            var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(355, 600));
 		            }
 		            
-		            try { OpenWin.focus(); } catch (e) { }
+		            try { OpenWin.focus(); } catch (e) {console.log(e);}
 		        }
 		        else {
 		            var wWeight = "355";
@@ -603,10 +624,11 @@
 		    }
 		    
 		    function mailWritePreviewDel() {
-		    	if (mailWritePreview != "true") {return; }
-		    	// 메일 작성 > 미리보기 메일 삭제
-				window.opener.parent.delDrafts(g_uid);
-				window.parent.opener.parent.previewChk = false;
+		    	if (mailWritePreview == "true" || mailWritePreviewSend == "true") {
+                    // 메일 작성 > 미리보기 메일 삭제
+                    window.opener.parent.delDrafts(g_uid);
+                    window.parent.opener.parent.previewChk = false;
+				}
 		    }
 		    
 		    /* 2020-08-31 홍승비 - 메일 커뮤니티 게시판에 게시 기능 추가 */
@@ -616,7 +638,7 @@
 				writeCommboardselect_modal_dialogArguments[1] = NewItemCommu_onclick_Complete; // 커뮤니티 게시판 선택 완료 시의 동작
 	           
 				var OpenWin = window.open("/ezCommunity/communityBoardSelectForMail.do", "communityBoardSelectForMail", GetOpenWindowfeature(355, 600));
-				try { OpenWin.focus(); } catch (e) { }
+				try { OpenWin.focus(); } catch (e) {console.log(e);}
 		    }
 		    
 		    function NewItemCommu_onclick_Complete(ret) {
@@ -659,15 +681,72 @@
 				}
 			}
 			
-			function hiddenMoreMenu() {
+			function hiddenMoreMenu(e) {
 				var element = document.getElementById("layer_menu");
+				var clickedElementClass = e.target.className;
+
 				if (element) {
-					if (element.style.display !== 'none') {
+					if (element.style.display !== 'none' && !clickedElementClass.includes('view_more')) {
 						document.getElementById("view_more").classList.remove('on');
 						element.style.display = 'none';
 					}
 				}
+				var tagLayerElement = document.getElementById("layer_select");
+				if (tagLayerElement) {
+					tagLayerElement.scroll({top:0});
+					var tagLayerStyle = getComputedStyle(tagLayerElement);
+					if (tagLayerStyle.display !== 'none' && !clickedElementClass.includes('input_select_arrow')) {
+						document.getElementById("input_wrap").classList.remove("on");
+					}
+				}
 			}
+
+			function getTagList() {
+				var ulTag = document.getElementById("layer_select");
+				while (ulTag.firstChild) {
+					ulTag.removeChild(ulTag.firstChild);
+				}
+				// if (ulTag.children.length <= 0) {
+					$.ajax({
+						cache: false,
+						async: false,
+						data: { shareId: shareId },
+						url: "/ezEmail/getUserTagList.do",
+						success: function (result) {
+							if (result.status == "error") {
+								alert(strLang321);
+								return;
+							}
+
+							var tags = result.data;
+							window.cacheTags = $.map(tags, function (ul, item) {
+								return ul.name;
+							});
+
+							for (var i = 0; i < window.cacheTags.length; i++) {
+								var li = document.createElement('li');
+								li.textContent = window.cacheTags[i];
+								li.addEventListener('click', function() {
+									document.getElementById("tag_add").value = this.textContent;
+									onEnterPreviewTagInput();
+									
+									var inputWrap = document.getElementById("input_wrap");
+
+									// 클래스에 "on"이 있으면 제거
+									if (inputWrap.classList.contains("on")) {
+										inputWrap.classList.remove("on");
+									}
+									
+									document.getElementById("tag_add").value = "";
+								});
+								ulTag.appendChild(li);
+							}
+							
+						}
+					}); //ajax
+				// } //if
+			}
+			
 	    </script>
 		    
 		<%-- 웹폴더 첨부 레이어팝업을 위한 스크립트 추가--%>
@@ -722,6 +801,10 @@
 								</ul>
 							</li>
 		                </ul>
+		                <ul style="display:none">
+                            <li><span id="" onClick="send()"><spring:message code='ezEmail.t674' /></span></li>
+                            <li><span id="" onClick="OnBtnClose()"><spring:message code='ezEmail.t39' /></span></li>
+                        </ul>
 		            </div>
 		            <div id="close"><ul><li><span onClick="OnBtnClose()"></span></li></ul></div>	
 		        </td> 
@@ -826,8 +909,17 @@
 							<tr>
 								<th><spring:message code='ezEmail.tag' /></th>
 								<td id="tag_td" colspan="4">
-									<input id="tag_add" type="text" maxlength="100" />
-									<a class="imgbtn"><span><spring:message code="ezEmail.tag.user.addbtn" /></span></a>
+									<div class="input_select">
+										<div class="input_wrap" id="input_wrap">
+											<input id="tag_add" type="text" maxlength="100"/>
+											<span class="input_select_arrow" onclick="$('.input_wrap').toggleClass('on');getTagList()"></span>
+										</div>
+										<a class="imgbtn"><span><spring:message code="ezEmail.tag.user.addbtn" /></span></a>
+										<ul class="layer_select" id="layer_select">
+
+										</ul>
+									</div>
+									
 									<div id="tag_view">
 										<c:forEach items="${tags}" var="name">
 											<span>${name}</span><img src="/images/icon/oneline_delete.gif" />

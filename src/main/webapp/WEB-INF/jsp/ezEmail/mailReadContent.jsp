@@ -99,11 +99,11 @@
 			            if (ReadCountCheck=="N") {
 			                parent.opener.refreshUnreadCount();
 			            }
-			        } catch (e) { }
+			        } catch (e) {console.log(e);}
 
 					document.addEventListener('click', function (e) {
 						if (window.parent.hiddenMoreMenu) {
-							parent.hiddenMoreMenu();
+							parent.hiddenMoreMenu(e);
 						}
 					})
 				}

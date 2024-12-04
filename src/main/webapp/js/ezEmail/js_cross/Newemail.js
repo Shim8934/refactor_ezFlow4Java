@@ -312,6 +312,10 @@ function reply_mail_onclick() {
         var pLeft = window.outerWidth / 2 + window.screenX - (conWidth / 2);
         var pTop = window.outerHeight / 2 + window.screenY - (conHeight / 2);
         
+        if (checkBlockedMail(pSelectItem.getAttribute('_href')) == '1') {
+            alert(strLangLDH07);
+            return;        
+        }
         var pURI = "/ezEmail/mailWrite.do?cmd=REPLY&URL=" + encodeURIComponent(pSelectItem.getAttribute('_href'));
         
     	if (typeof(shareId) != "undefined" && shareId != "") {
@@ -355,6 +359,12 @@ function all_reply_mail_onclick() {
             conWidth = minimumWidth;
         var pLeft = window.outerWidth / 2 + window.screenX - (conWidth / 2);
         var pTop = window.outerHeight / 2 + window.screenY - (conHeight / 2);
+        
+        if (checkBlockedMail(pSelectItem.getAttribute('_href')) == '1') {
+            alert(strLangLDH07);
+            return;        
+        }
+        
         var pURI = "/ezEmail/mailWrite.do?cmd=REPLYALL&URL=" + encodeURIComponent(pSelectItem.getAttribute('_href'));
         
         if (typeof(shareId) != "undefined" && shareId != "") {
@@ -397,6 +407,42 @@ function reSend_onClick() {
 
 }
 
+function rewrite_onClick() {
+    if (listContentArry.length == 0 && listSubContentArry.length == 0 && currentFixingId == null) {
+        alert(strLang42);
+    }
+
+    if (listContentArry.length > 1 || listSubContentArry.length > 1) {
+        alert(strLang44);
+        return;
+    } else {
+        var pSelectItem;
+
+        if (listContentArry.length > 0) {
+            pSelectItem = document.getElementById(listContentArry[listContentArry.length - 1])
+        } else if (listSubContentArry.length > 0) {
+            pSelectItem = document.getElementById(listSubContentArry[listSubContentArry.length - 1])
+        } else {
+            pSelectItem = currentFixingId;
+        }
+
+        if (checkBlockedMail(pSelectItem.getAttribute('_href')) == '1') {
+            alert(strLangLDH07);
+            return;        
+        }
+
+        var pURI = "/ezEmail/mailWrite.do?cmd=REWRITE&URL=" + encodeURIComponent(pSelectItem.getAttribute('_href'));
+
+        if (typeof(shareId) != "undefined" && shareId != "") {
+        	pURI += "&shareId=" + encodeURIComponent(shareId);
+    	}
+        
+        var newwin = GetOpenWindow(pURI, "", 890, 840, "yes");
+        newwin.focus();
+    }
+
+}
+
 function transmission_mail_onclick() {
     if (listContentArry.length == 0 && listSubContentArry.length == 0 && currentFixingId == null) {
         alert(strLang42);
@@ -424,6 +470,11 @@ function transmission_mail_onclick() {
         
         var pLeft = window.outerWidth / 2 + window.screenX - (conWidth / 2);
         var pTop = window.outerHeight / 2 + window.screenY - (conHeight / 2);
+        
+        if (checkBlockedMail(pSelectItem.getAttribute('_href')) == '1') {
+            alert(strLangLDH07);
+            return;        
+        }
         
         var pURI = "/ezEmail/mailWrite.do?cmd=FORWARD&URL=" + encodeURIComponent(pSelectItem.getAttribute('_href'));
         
@@ -502,7 +553,7 @@ function move_mail_onclick() {
 	}
 	
     var OpenWin = window.open(requestUrl, "mail_movecopy_cross", GetOpenWindowfeature(322, 380));
-    try { OpenWin.focus(); } catch (e) { }
+    try { OpenWin.focus(); } catch (e) {console.log(e);}
 }
 function move_mail_onclick_Complete(moveUrl) {
     if (typeof (moveUrl) == "undefined")
@@ -659,7 +710,7 @@ function refreshUnreadCount() {
     try {
         if (typeof (window.parent.frames.left) != "undefined")
             parent.frames["left"].get_unreadcount();
-    } catch (e) { }
+    } catch (e) {console.log(e);}
 }
 function deleteWork(bDel) {
     if (listContentArry.length == 0 && listSubContentArry.length == 0) {
@@ -713,6 +764,154 @@ function deleteWork(bDel) {
     }
     Mail_MoveDeletePostSend(cmd, "", szItemID)
 }
+
+function deleteUnreadWork() {
+
+    if (searchMode) {
+        deleteSearchedAndUnreadMail();
+    } else {
+        deleteUnreadMail();
+    }
+}
+
+function deleteUnreadMail() {
+    
+    try {
+        var url = g_moveUrl;
+        var trashBoxURL = pDeleteBoxID;
+        var cmd = "";
+       
+        // 지운편지함의 메일 영구삭제
+        if (url == trashBoxURL) {
+            if (confirm(strUreadDelPermenant)) {
+                cmd = "MAILREALDEL";
+            } else {
+                return;
+            }
+        }
+        // 편지함의 메일 지운편지함으로 이동 
+        else {
+            if (confirm(strUreadDelChk)) {
+                cmd = "MAILDEL";
+            } else {
+                return;
+            }
+        }
+        
+        ShowMailProgress();
+                        
+        $.ajax({
+            cache: false,
+            async: false,
+            method: 'post',
+            url: "/ezEmail/unreadMailDel.do",
+            data: { url: url, cmd: cmd, shareId: encodeURIComponent(shareId) },
+            success: function(result) {
+                if (result === "ok") {
+                    alert(strLang215);
+                } else {
+                    alert(strLang216);
+                }
+            },
+            error: function() {
+                alert(strLang216);
+            },
+            complete : function() {
+                HiddenMailProgress();
+                MailListRefresh();
+            }
+        });
+   } catch (e) {
+       console.log("unread mail delete error");
+   }
+}
+
+function deleteSearchedAndUnreadMail() {
+    var url = g_moveUrl;
+    var trashBoxURL = pDeleteBoxID;
+    var cmd = "";
+   
+    // 지운편지함의 메일 영구삭제
+    if (url == trashBoxURL) {
+        if (!confirm(strUreadDelSearchPermenant)) {
+            return;
+        }
+    }
+    // 편지함의 메일 지운편지함으로 이동 
+    else {
+        if (!confirm(strUreadDelSearch)) {
+            return;
+        }
+    }
+
+	var HeaderObject = document.getElementById("MailHeader");
+    var ContentObject = document.getElementById("MailList");
+    var pOrderyOption = p_ListorderType + " ORDER BY \"" + p_ListOrderby + "\" " + p_ListOrderOption;
+    var attachStatus = "all";
+	var andorStatus = "and";
+	var end = parseInt(document.getElementById("MailList").getAttribute("MaxCount"));
+	var secureMailFilter = document.getElementById("select").value == "SECUREMAIL" ? 1 : 0;
+	var maxCount = parseInt(document.getElementById("MailList").getAttribute("MaxCount"));
+	socketUserkey = mailbox_getUserKey();
+
+	if(mailsearchDetail == "Y"){
+		if(document.querySelector("input[name=attachment]:checked").value != null ){
+			attachStatus = document.querySelector("input[name=attachment]:checked").value;
+		} 
+
+		if(document.querySelector("input[name=andor]:checked").value != null ){
+			andorStatus = document.querySelector("input[name=andor]:checked").value;
+		}
+	}
+
+	var jsonData = {"FOLDERID" : window.tagName ? '' : g_moveUrl,
+					"SORTTYPE" : pOrderyOption,
+					"SEARCH" : SearchKeyword,
+					"KEYWORD" : searchRequiredKeyword,
+					"CATEGORY" : searchRequiredCategory,
+					"START" : "0",
+					"STARTDATE" : startDate,
+					"ENDDATE" : endDate,
+					"ATTACHSTATUS" : attachStatus,
+					"ANDORSTATUS" : andorStatus,
+					"VIEWSELECTINDEX" : document.getElementById("select").selectedIndex.toString(),
+					"END" : end.toString(),
+					"SECUREMAILFILTER" : secureMailFilter.toString(),
+					"TAGNAME" : window.tagName ? tagName : "",
+					"SHAREDID" : shareId,
+					};
+
+ 	ShowMailProgress();
+      
+	$.ajax({
+		cache: false,
+		method: "post",
+		url: "/ezEmail/searchedAndUnreadMailDel.do",
+		data: JSON.stringify(jsonData),
+		contentType : "application/json",
+		complete: function(){
+			HiddenMailProgress();
+		},
+		success: function(result){
+			if (result == "ok") {
+				alert(strLang215);
+			} else {
+				alert(strLang216);
+			}
+		},
+		error: function() {
+			alert(strLang216);
+		},
+		complete : function() {
+        	HiddenMailProgress();
+            MailListRefresh();
+		}
+	});
+
+    GetListInfo_HeaderObject = HeaderObject;
+    GetListInfo_ContentObject = ContentObject;
+}
+
 function delAllFile() {
     if (!confirm(strLang333))
         return;	
@@ -742,7 +941,7 @@ function receiveCheck_onClick() {
 	}
     
     var OpenWin = window.open(requestUrl, "mail_readerlist", GetOpenWindowfeature(620, 500));
-    try { OpenWin.focus(); } catch (e) { }
+    try { OpenWin.focus(); } catch (e) {console.log(e);}
 }
 function ListCount(pCount) {
     document.getElementById("MailList").setAttribute("listpageCount", pCount);
@@ -802,7 +1001,7 @@ function reject_onclick() {
     denial_cross_dialogArguments[0] = params;
     denial_cross_dialogArguments[1] = reject_onclick_Complete;
     var OpenWin = window.open("/ezEmail/mailDenial.do", "denial_cross", GetOpenWindowfeature(450, 314));
-    try { OpenWin.focus(); } catch (e) { }
+    try { OpenWin.focus(); } catch (e) {console.log(e);}
 }
 function reject_onclick_Complete(retVal)
 {
@@ -891,7 +1090,7 @@ function prevShow() {
             xmlhttp_mailPreview.send(strQuery);
         }
 
-    } catch (e) { }
+    } catch (e) {console.log(e);}
 }
 function event_xmlhttp_mailPreview_Complete() {
     if (xmlhttp_mailPreview != null && xmlhttp_mailPreview.readyState == 4) {
@@ -908,6 +1107,7 @@ function event_xmlhttp_mailPreview_Complete() {
             var pSubject = getNodeText(SelectNodes(xmlhttp_mailPreview.responseXML, "DATA/SUBJECT")[0]);
             var pHtml = getNodeText(SelectNodes(xmlhttp_mailPreview.responseXML, "DATA/HTMLDESCRIPTION")[0]);
             var pImportance = getNodeText(SelectNodes(xmlhttp_mailPreview.responseXML, "DATA/IMPORTANCE")[0]);
+            var pBlockedMail = getNodeText(SelectNodes(xmlhttp_mailPreview.responseXML, "DATA/BLOCKEDMAIL")[0]);
             var pSensitivity = getNodeText(SelectNodes(xmlhttp_mailPreview.responseXML, "DATA/SENSITIVITY")[0]);
             var pHasembed = getNodeText(SelectNodes(xmlhttp_mailPreview.responseXML, "DATA/HASEMBEDED")[0]);
             var pItemid = getNodeText(SelectNodes(xmlhttp_mailPreview.responseXML, "DATA/ITEMID")[0]);
@@ -917,6 +1117,11 @@ function event_xmlhttp_mailPreview_Complete() {
             var pMailIP =  getNodeText(SelectNodes(xmlhttp_mailPreview.responseXML, "DATA/COUNTRYIP")[0]);
             var pCountryName =  getNodeText(SelectNodes(xmlhttp_mailPreview.responseXML, "DATA/COUNTRYNAME")[0]);
             var pTags =  getNodeText(SelectNodes(xmlhttp_mailPreview.responseXML, "DATA/TAGS")[0]);
+            
+            if (pBlockedMail == '1') {
+                alert(strLangLDH07);
+                return;
+            }
             
             if (pPreviewShow_HOW == "H") {
                 PrevViewFormH.iptURL.value = pItemid;
@@ -1171,7 +1376,7 @@ function MailList_ChangeStatus(obj) {
         }
         obj.setAttribute("read", "1");
         try{
-            parent.frames["left"].get_unreadcount();}catch(e){}
+            parent.frames["left"].get_unreadcount();}catch(e){console.log(e);}
     }
 }
 function prevShow_Clear() {
@@ -1420,7 +1625,7 @@ function PreviewRayerChange(pGubun) {
         
         if (g_bPrevShow)
             prevShow();
-    } catch (e) { }
+    } catch (e) {console.log(e);}
 }
 
 
@@ -1567,7 +1772,7 @@ function Window_resize() {
                 }
             }
         }            
-    } catch (e) { }
+    } catch (e) {console.log(e);}
 }
 function CustomRandom() {
     var now = new Date();
@@ -2082,7 +2287,7 @@ function toggle_flag() {
             }
         }
     }
-    catch (e) { }
+    catch (e) {console.log(e);}
 }
 function event_toggle_flag_end() {
     if (flagXmlHttp != null && flagXmlHttp.readyState == 4) {
@@ -2231,6 +2436,10 @@ function MailOptionHiddenOutside(e) {
 			MailOptionHidden();
 		}
 	}
+    var clickedElementClass = e.target.className;
+    if (!clickedElementClass.includes('input_select_arrow')) {
+        hiddenMoreMenu();
+    }
 }
 function mailOpenPopup(btn, event) {
 	event.stopPropagation();
@@ -2293,7 +2502,7 @@ function mailConfirm_flag_btn() {
         };
         flagXmlHttp.send(xmlDom);
     }
-    catch (e) { }
+    catch (e) {console.log(e);}
 }
 
 function mailConfirm_line() {
@@ -2376,4 +2585,16 @@ function onChangeTagList() {
 	if (window.leftMenu) {
 		leftMenu.reloadTags();
 	}
+}
+
+function hiddenMoreMenu() {
+    var pageType = pPreviewShow_HOW == "H" ? "_h" : "_w";
+    var tagLayerElement = document.getElementById("layer_select"+pageType);
+    if (tagLayerElement) {
+        tagLayerElement.scroll({top:0});
+        var tagLayerStyle = getComputedStyle(tagLayerElement);
+        if (tagLayerStyle.display !== 'none') {
+            document.getElementById("input_wrap"+pageType).classList.remove("on");
+        }
+    }
 }

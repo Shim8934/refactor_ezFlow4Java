@@ -2,9 +2,11 @@ package egovframework.ezEKP.ezEmail.service.impl;
 
 import java.io.File;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.PrivateKey;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,8 +36,10 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 
+import egovframework.let.utl.fcc.service.KlibUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.codec.binary.Base64;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -126,6 +130,9 @@ public class EzEmailServiceImpl implements EzEmailService {
 	
 	@Resource(name = "jspw")
 	private String jspw;
+	
+    @Autowired
+    private KlibUtil klibUtil;
 
 	@Override
 	public List<MailBlobVO> getOrphanedMailBlobList() throws Exception {
@@ -183,9 +190,14 @@ public class EzEmailServiceImpl implements EzEmailService {
         		mailGeneral.setMailSenderNm((String)obj.get("mailSenderName"));
         		mailGeneral.setPreviewSubTree((String)obj.get("previewSubTree"));
         		mailGeneral.setPreviewMailImage((String)obj.get("previewMailImage"));
+        		mailGeneral.setPreviewMail((String)obj.get("previewMail"));
         		mailGeneral.setTextOption(textOption);
         		mailGeneral.setMailSearchPeriod(mailSearchPeriod);
-        		
+        		mailGeneral.setDefaultCursorPosition((String)obj.get("defaultCursorPosition"));
+        		mailGeneral.setDefaultSeparateSend((String)obj.get("defaultSeparateSend"));
+        		mailGeneral.setMailSendResult((String)obj.get("mailSendResult"));
+				mailGeneral.setEditorFontFamily((String)obj.get("editorFontFamily"));
+				mailGeneral.setEditorFontSize((String)obj.get("editorFontSize"));
         		mailGeneralList.add(mailGeneral);
         	}
         }
@@ -210,8 +222,14 @@ public class EzEmailServiceImpl implements EzEmailService {
 			mailGeneral.setMailSenderNm("");
 			mailGeneral.setPreviewSubTree("N");
 			mailGeneral.setPreviewMailImage("Y");
+			mailGeneral.setPreviewMail("N");
 			mailGeneral.setTextOption(textOption);
 			mailGeneral.setMailSearchPeriod("sixMonth");
+			mailGeneral.setDefaultCursorPosition("recipient");
+			mailGeneral.setDefaultSeparateSend("N");
+			mailGeneral.setMailSearchPeriod("failure");
+			mailGeneral.setEditorFontFamily(null);
+			mailGeneral.setEditorFontSize(null);
 			
 			mailGeneralList.add(mailGeneral);
 		}
@@ -241,8 +259,14 @@ public class EzEmailServiceImpl implements EzEmailService {
 		String previewSubTreeParam = "previewSubTree=" + URLEncoder.encode(mailGeneral.getPreviewSubTree(), "UTF-8");
 		String usePreviewSubTreeParam = "usePreviewSubTree=" + usePreviewSubTree;
 		String previewMailImageParam = "previewMailImage=" + URLEncoder.encode(mailGeneral.getPreviewMailImage(), "UTF-8");
+		String previewMailParam = "previewMail=" + URLEncoder.encode(mailGeneral.getPreviewMail(), "UTF-8");
 		String textOptionParam = "textOption=" + URLEncoder.encode(mailGeneral.getTextOption(), "UTF-8");
 		String mailSearchPeriodParam = "mailSearchPeriod=" + URLEncoder.encode(mailGeneral.getMailSearchPeriod(), "UTF-8");
+		String defaultCursorPositionParam = "defaultCursorPosition=" + URLEncoder.encode(mailGeneral.getDefaultCursorPosition(), "UTF-8");
+		String defaultSeparateSendParam = "defaultSeparateSend=" + URLEncoder.encode(mailGeneral.getDefaultSeparateSend(), "UTF-8");
+		String mailSendResultParam = "mailSendResult=" + URLEncoder.encode(mailGeneral.getMailSendResult(), "UTF-8");
+		String editorFontFamilyParam = "editorFontFamily=" + URLEncoder.encode(mailGeneral.getEditorFontFamily(), "UTF-8");
+		String editorFontSizeParam = "editorFontSize=" + URLEncoder.encode(mailGeneral.getEditorFontSize(), "UTF-8");
 		
 		String modeParam = "mode=";
 		if (mode != null && mode.equals("ALL")) {
@@ -251,8 +275,9 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 		String inputParams = userIdParam + "&" + listCountParam + "&" + refreshIntervalParam + "&" + keepDeleteLengthParam + "&" + previewModeParam
 				+ "&" + previewWListParam + "&" + previewWContentParam + "&" + previewHListParam + "&" + previewHContentParam + "&" + mailSenderNameParam
-				+ "&" + modeParam +"&" + previewSubTreeParam + "&" + usePreviewSubTreeParam + "&" + previewMailImageParam + "&" + textOptionParam
-				+ "&" + mailSearchPeriodParam;
+				+ "&" + modeParam +"&" + previewSubTreeParam + "&" + usePreviewSubTreeParam + "&" + previewMailImageParam + "&" + previewMailParam + "&" + textOptionParam
+				+ "&" + mailSearchPeriodParam + "&" + defaultCursorPositionParam + "&" + defaultSeparateSendParam + "&" + mailSendResultParam + "&" + editorFontFamilyParam + "&" + editorFontSizeParam;
+
 		logger.debug("inputParams=" + inputParams);
 		
 		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/setMailGeneral", inputParams);
@@ -910,31 +935,33 @@ public class EzEmailServiceImpl implements EzEmailService {
 		String prm = egovFileScrty.getPrm();
 		String pre = egovFileScrty.getPre();
 		PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
-		
-		Document doc = commonUtil.convertStringToDocument(pRet);
-		NodeList rows = doc.getElementsByTagName("ROW");
-		
-		for (int i=0; i<rows.getLength(); i++) {
-			NodeList children = rows.item(i).getChildNodes();
-			String server = children.item(0).getTextContent();
-			String port = children.item(1).getTextContent();
-			String id = children.item(2).getTextContent();
-			String deleteYN = children.item(3).getTextContent();
-			String pw = children.item(4).getTextContent();
-			String saveTo = children.item(5).getTextContent();
-			String saveToFolder = children.item(6).getTextContent();
-			String useSsl = children.item(7).getTextContent().equals("true") ? "1" : "0";
-		
-			for (MailPOP3VO vo : pop3List) {
-				if (vo.getPop3Server().toLowerCase().equals(server.toLowerCase())
-						&& EgovFileScrty.decryptRsa(pk, vo.getPop3UserId()).equals(EgovFileScrty.decryptRsa(pk, id))) {
-					id = vo.getPop3UserId();
-					break;
+
+		if (pRet != null){
+			Document doc = commonUtil.convertStringToDocument(pRet);
+			NodeList rows = doc.getElementsByTagName("ROW");
+
+			for (int i=0; i<rows.getLength(); i++) {
+				NodeList children = rows.item(i).getChildNodes();
+				String server = children.item(0).getTextContent();
+				String port = children.item(1).getTextContent();
+				String id = children.item(2).getTextContent();
+				String deleteYN = children.item(3).getTextContent();
+				String pw = children.item(4).getTextContent();
+				String saveTo = children.item(5).getTextContent();
+				String saveToFolder = children.item(6).getTextContent();
+				String useSsl = children.item(7).getTextContent().equals("true") ? "1" : "0";
+
+				for (MailPOP3VO vo : pop3List) {
+					if (vo.getPop3Server().toLowerCase().equals(server.toLowerCase())
+							&& EgovFileScrty.decryptRsa(pk, vo.getPop3UserId()).equals(EgovFileScrty.decryptRsa(pk, id))) {
+						id = vo.getPop3UserId();
+						break;
+					}
 				}
+
+				inputParams += "&pop3Server=" + server + "&pop3Port=" + port + "&pop3UserId=" + id + "&pop3Password=" + pw
+						+ "&saveFolderPath=" + saveTo + "&saveFolderName=" + saveToFolder + "&deleteYN=" + deleteYN + "&sslYN=" + useSsl;
 			}
-			
-			inputParams += "&pop3Server=" + server + "&pop3Port=" + port + "&pop3UserId=" + id + "&pop3Password=" + pw 
-					+ "&saveFolderPath=" + saveTo + "&saveFolderName=" + saveToFolder + "&deleteYN=" + deleteYN + "&sslYN=" + useSsl;
 		}
 		
 		logger.debug("inputParams=" + inputParams);
@@ -1214,6 +1241,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 						ezCommonService.updateUserConfigInfo(tenantId, userId, "userFriendlyEmailAddress", updateAlias);
 					}
 					returnValue = "OK";
+				} catch (IndexOutOfBoundsException ex) {
+					logger.error(ex.getMessage(), ex);
 				} catch (Exception ex) {
 					logger.debug("set primary error!");
 					logger.error(ex.getMessage(), ex);
@@ -1732,9 +1761,9 @@ public class EzEmailServiceImpl implements EzEmailService {
             	ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 						userAccount, password, egovMessageSource, userInfo.getLocale(), ezEmailUtil);
             	
-            	Folder folder = ia.getFolder(mailbox);
-            	
-            	if (folder.exists()) {
+            	Folder folder = ia.getFolder(mailbox != null ? mailbox : "");
+
+            	if (folder != null && folder.exists()) {
             		folder.open(Folder.READ_ONLY);
         			Message message = ((IMAPFolder)folder).getMessageByUID(Long.parseLong(uidStr));
         			
@@ -1760,7 +1789,9 @@ public class EzEmailServiceImpl implements EzEmailService {
         			
         			folder.close(false);
             	}
-            } catch (Exception e) {
+            } catch (MessagingException e) {
+            	logger.error(e.getMessage(), e);
+			} catch (Exception e) {
             	logger.error(e.getMessage(), e);
             } finally {
             	if (ia != null) {
@@ -1768,6 +1799,8 @@ public class EzEmailServiceImpl implements EzEmailService {
             	}
 			}
             
+		} catch (IndexOutOfBoundsException e) {
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -1804,6 +1837,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 				returnValue = false;
 			}
 		
+		} catch (NullPointerException e) {
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			logger.debug(e.getMessage());
 			logger.error(e.getMessage(), e);
@@ -1942,7 +1977,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 	        	
 	        	list.add(map);
 	        }
-	        
+		} catch (MessagingException e) {
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		} finally {
@@ -2188,6 +2224,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 					returnValue = true;
 				}
 			}
+		} catch (UnsupportedEncodingException e) {
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -3640,6 +3678,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 	        if (((String)object.get("resultCode")).equals("OK") && (Long)object.get("reasonCode") == 0) {
 	        	result = (JSONObject)object.get("result");
 	        }
+		} catch (UnsupportedEncodingException e) {
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -3726,6 +3766,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 			if (requestMailboxList != null) {
 				for (int i = 0; i < requestMailboxList.size(); i++) {
 					String mailboxName = (String) requestMailboxList.get(i);
+					mailboxName = mailboxName != null ? mailboxName : "";
 					unreadCountMap.put(mailboxName, ia.getUnreadCount(mailboxName));
 				}
 			}
@@ -3756,6 +3797,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 			resultObject.put("unreadCountMap", unreadCountMap);
 			resultObject.put("totalUnreadCount", totalUnreadCount);
 			resultObject.put("totalUnreadCountInAllAccounts", totalUnreadCountInAllAccounts);
+		} catch (NullPointerException ex) {
+			logger.error(ex.getMessage(), ex);
 		} catch (Exception ex) {
 			logger.error(ex.getMessage(), ex);
 		}
@@ -4579,6 +4622,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 	        if (!object.get("resultCode").equals("OK") || ((Long)object.get("reasonCode")).intValue() != 0) {
 	        	throw new Exception("JGwServer ERROR");
 	        }
+		} catch (ParseException e) {
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			logger.debug("[JGW-SERVER ERROR] deleteMailDeleteForUser.");
 		}
@@ -4587,6 +4632,117 @@ public class EzEmailServiceImpl implements EzEmailService {
         return returnInt;
 	}
 
+	/**
+	 * 2020-09-11 김은실-(빗썸코리아)메일삭제: MessageId들에 일치하는 행 delete
+	 */
+	@Override
+	public int deleteMailsByMessageIds(String messageIds) throws Exception {
+		logger.debug("deleteMailsByMessageIds started. messageIds=" + messageIds);
+
+		int returnInt = -1;
+
+		String inputParams = "messageIds=" + URLEncoder.encode(messageIds, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+
+		String response = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaAccess/deleteMailsByMessageIds", inputParams);
+		logger.debug("strJson=" + response);
+
+		if (response != null) {
+			// String으로 온 Json을: JSONParser를 이용해 JSONObject로 변환해준다.
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+			if (((String)responseObj.get("resultCode")).equals("OK") && (Long)responseObj.get("reasonCode") == 0) {
+				// jgw에서 int로 보내도, Long으로 해석한다.
+				returnInt = ((Long)responseObj.get("resultInt")).intValue();
+			}
+		}
+
+		logger.debug("deleteMailsByMessageIds ended.");
+		return returnInt;
+	}
+
+	@Override
+	public int blockMailsByMessageIds(String messageIds) throws Exception {
+		logger.debug("blockMailsByMessageIds started. messageIds=" + messageIds);
+
+		int returnInt = -1;
+
+		String inputParams = "messageIds=" + URLEncoder.encode(messageIds, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+
+		String response = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaAccess/blockMailsByMessageIds", inputParams);
+		logger.debug("strJson=" + response);
+
+		if (response != null) {
+			// String으로 온 Json을: JSONParser를 이용해 JSONObject로 변환해준다.
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+			if (((String)responseObj.get("resultCode")).equals("OK") && (Long)responseObj.get("reasonCode") == 0) {
+				// jgw에서 int로 보내도, Long으로 해석한다.
+				returnInt = ((Long)responseObj.get("resultInt")).intValue();
+			}
+		}
+
+		logger.debug("blockMailsByMessageIds ended.");
+		return returnInt;
+	}
+
+	@Override
+	public int unblockMailsByMessageIds(String messageIds) throws Exception {
+		logger.debug("unblockMailsByMessageIds started. messageIds=" + messageIds);
+
+		int returnInt = -1;
+
+		String inputParams = "messageIds=" + URLEncoder.encode(messageIds, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+
+		String response = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaAccess/unblockMailsByMessageIds", inputParams);
+		logger.debug("strJson=" + response);
+
+		if (response != null) {
+			// String으로 온 Json을: JSONParser를 이용해 JSONObject로 변환해준다.
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+			if (((String)responseObj.get("resultCode")).equals("OK") && (Long)responseObj.get("reasonCode") == 0) {
+				// jgw에서 int로 보내도, Long으로 해석한다.
+				returnInt = ((Long)responseObj.get("resultInt")).intValue();
+			}
+		}
+
+		logger.debug("unblockMailsByMessageIds ended.");
+		return returnInt;
+	}
+
+	@Override
+	public int checkBlockedMailByMessageId(String messageId) throws Exception {
+		logger.debug("checkBlockedMailByMessageId started. messageId=" + messageId);
+
+		int returnInt = -1;
+
+		String inputParams = "messageId=" + URLEncoder.encode(messageId, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+
+		String response = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaAccess/checkBlockedMailByMessageId", inputParams);
+		logger.debug("strJson=" + response);
+
+		if (response != null) {
+			// String으로 온 Json을: JSONParser를 이용해 JSONObject로 변환해준다.
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+			if (((String)responseObj.get("resultCode")).equals("OK") && (Long)responseObj.get("reasonCode") == 0) {
+				// jgw에서 int로 보내도, Long으로 해석한다.
+				returnInt = ((Long)responseObj.get("resultInt")).intValue();
+			}
+		}
+
+		logger.debug("checkBlockedMailByMessageId ended.");
+		return returnInt;
+	}
+	
 	@Override
 	public void setMailboxProgress(String userKey, String userId, String action, int tenantId, int percent) throws Exception {
 		logger.debug("setMailboxProgress started.");
@@ -4696,6 +4852,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 					resultObj = (JSONObject) responseObj.get("result");
 				}
 			}				
+		}else{
+			resultObj = new JSONObject();
 		}
 
 		logger.debug("getMailOutOfOfficeTemplate ended.");
@@ -4863,6 +5021,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 						FileUtils.copyFile(srcFile, destFile);
 						
 						img.attr("src", mailTemplatePath + "/" + fileName);
+					} catch (IndexOutOfBoundsException e) {
+						logger.error(e.getMessage(), e);
 					} catch (Exception e) {
 						logger.debug("userMailTemplateContent Error.");
 						logger.error(e.getMessage(), e);
@@ -4953,6 +5113,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 				try {
 					File testFile = new File(realPath + mailTemplatePath);
 					FileUtils.deleteDirectory(testFile);
+				} catch (RuntimeException e) {
+					logger.error(e.getMessage(), e);
 				} catch (Exception e) {
 					logger.error(e.getMessage(), e);
 				}
@@ -7201,8 +7363,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 
 	/**
 	 * 승인메일 : (전사) 승인로그 검색 (대기상태 제외) 페이지네이션
-     * @param sdate: 시작날짜 
-     * @param edate: 종료날짜
+     * @param sDate: 시작날짜 
+     * @param eDate: 종료날짜
      * sdate, edate 둘다 없는 경우 전체 검색
      * @param pageStartNum: 페이지 시작점 (1부터, 0넣으면 페이지네이션 사용안함)
      * @param listCount: 한페이지에 출력될 리스트 개수
@@ -7271,8 +7433,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 
 	/**
 	 * 승인메일 : (전사) 승인로그 검색 (대기상태 제외) 전체 개수
-     * @param sdate: 시작날짜 
-     * @param edate: 종료날짜
+     * @param sDate: 시작날짜 
+     * @param eDate: 종료날짜
      * sdate, edate 둘다 없는 경우 전체 검색
 	 */
 	@Override
@@ -7304,8 +7466,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 
 	/**
 	 * 승인메일 : (전사) 승인로그 검색 (대기상태 제외) 사용자 데이터 개수 조회
-     * @param sdate: 시작날짜 
-     * @param edate: 종료날짜
+     * @param sDate: 시작날짜 
+     * @param eDate: 종료날짜
      * sdate, edate 둘다 없는 경우 전체 검색
 	 */
 	@Override
@@ -7368,8 +7530,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 
 	/**
 	 * 승인메일 : (일반) 승인로그 검색 (대기상태 제외)
-     * @param sdate: 시작날짜 
-     * @param edate: 종료날짜
+     * @param sDate: 시작날짜 
+     * @param eDate: 종료날짜
      * sdate, edate 둘다 없는 경우 전체 검색
 	 */
 	@Override
@@ -7436,8 +7598,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 
 	/**
 	 * 승인메일 : (일반) 승인로그 검색 (대기상태 제외) 전체 개수
-     * @param sdate: 시작날짜 
-     * @param edate: 종료날짜
+     * @param sDate: 시작날짜 
+     * @param eDate: 종료날짜
      * sdate, edate 둘다 없는 경우 전체 검색
 	 */
 	@Override
@@ -7469,8 +7631,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 
 	/**
 	 * 승인메일 : (일반) 승인로그 검색 (대기상태 제외) 사용자 데이터 개수 조회
-     * @param sdate: 시작날짜 
-     * @param edate: 종료날짜
+     * @param sDate: 시작날짜 
+     * @param eDate: 종료날짜
      * sdate, edate 둘다 없는 경우 전체 검색
 	 */
 	@Override
@@ -7609,5 +7771,23 @@ public class EzEmailServiceImpl implements EzEmailService {
 		}
 
 		logger.debug("actionMailMoveTrash ended.");
+	}
+
+	public String encryptSecureValue(String encryptValue, boolean useKlibEncrypt) throws Exception {
+		if (useKlibEncrypt) {
+			byte[] encrypt = klibUtil.encrypt(encryptValue.getBytes());
+			return new String(Base64.encodeBase64(encrypt));
+		} else {
+			return egovFileScrty.encryptAES(encryptValue);
+		}
+	}
+
+	public String decryptSecureValue(String decryptValue, boolean useKlibEncrypt) throws Exception {
+		if (useKlibEncrypt) {
+			byte[] decrypt = Base64.decodeBase64(decryptValue.getBytes());
+			return new String(klibUtil.decrypt(decrypt));
+		} else {
+			return egovFileScrty.decryptAES(decryptValue);
+		}
 	}
 }

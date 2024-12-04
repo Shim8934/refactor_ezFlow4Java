@@ -48,6 +48,8 @@ public interface EzOrganAdminService {
 	
 	public void updateProperty(String cn, String column, String number, String pClass, int tenantID) throws Exception;
 
+	public void updateJobTitleOrder(int jobId, int sortOrder, int tenantID) throws Exception;
+	
 	public int companyCheck(String cn, int tenantID) throws Exception;
 	
 	public int companyChildCheck(String cn, int tenantID) throws Exception;
@@ -84,7 +86,7 @@ public interface EzOrganAdminService {
 
 	public String changePasswordWithEmailSystem(String cn, int tenantId, String decryptedOldPassword, String decryptedNewPassword) throws Exception;
 	
-	public void retireEntry(String cn, String domain, String adminPassword, int tenantID, String offset) throws Exception;
+	public void retireEntry(String cn, String domain, int tenantID, String offset) throws Exception;
 
 	public void updateDBData_user(OrganUserVO vo) throws Exception;
 
@@ -108,6 +110,8 @@ public interface EzOrganAdminService {
 			String companyId, String sortColumn, String sortType, boolean[] searchFor) throws Exception;
 	
 	public int getUserCount(int tenantID, String keycode, String keyword, boolean[] searchFor, String companyId) throws Exception;
+	
+	public String createExcelTotalUsers(String realPath, String dirPath, List<OrganUserVO> exportUserlist, String primary, Locale locale) throws Exception;
 	
 	public void updateProperty(String cn, String column, String number, String pClass, int tenantID, String mCondition) throws Exception;
 	
@@ -223,4 +227,6 @@ public interface EzOrganAdminService {
 	public String getEntryAddJobInfo(String cn, String deptId, String jobId, String language, int tenantID, String prop) throws Exception;
 	
 	public void updateAddJobInfo(String cn, String deptId, String jobId, int tenantID, String orderBy, String userTreeFlag) throws Exception;
+
+	public void updateUserMailAddress(String cn, String mailAddress, int tenantID) throws Exception;
 }

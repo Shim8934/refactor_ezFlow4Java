@@ -11,8 +11,6 @@
 	<sqlMap resource="egovframework/sqlmap/ezEKP/ezBoard/EzBoard_SQL_Tibero.xml"/>
 	<!-- 조직도 -->
 	<sqlMap resource="egovframework/sqlmap/ezEKP/ezOrgan/EzOrgan_SQL_Tibero.xml"/>
-	<!-- 설문조사 -->
-	<sqlMap resource="egovframework/sqlmap/ezEKP/ezQuestion/EzQuestion_SQL_Tibero.xml"/>
 	<!-- 투표 -->
     <sqlMap resource="egovframework/sqlmap/ezEKP/ezPoll/EzPoll_SQL_Tibero.xml"/>
 	<!-- 이메일 -->

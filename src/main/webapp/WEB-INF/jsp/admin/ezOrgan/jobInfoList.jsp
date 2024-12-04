@@ -15,6 +15,8 @@
 	<script type="text/javascript" src="${util.addVer('/js/ezOrgan/TreeView.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezOrgan/admin/ListView_list.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery-ui.min.js')}"></script>
+	<link rel="stylesheet" type="text/css" href="${util.addVer('/css/jquery-ui.css')}" />
 	<style>
 		.mainview {margin-top: 5px; width:50%; float:left;}
 		.previewH {margin-top: 5px; width:50%; height: 690px; float:right; overflow: hidden;}
@@ -121,6 +123,11 @@
             listview.DataBind("jobListView");
             
             makeUseSwitch();
+			$("#jobListView").sortable({
+				items: "tbody > tr",
+				opacity: 0.3,
+				cancel: "thead" // 헤더는 drag & drop 되지 않도록 설정
+			});
 		}
 		
 		function job_userList_click() {
@@ -236,6 +243,60 @@
 				}
 			}
 		}
+
+		function MoveUp_onclick(){
+			var listview = new ListView();
+			listview.LoadFromID("lvJobList");
+			listview.RowMoveUp();
+		}
+
+		function MoveDown_onclick(){
+			var listview = new ListView();
+			listview.LoadFromID("lvJobList");
+			listview.RowMoveDown();
+		}
+
+		function MoveConfirm_onclick(){
+			var jobID = "";
+			var sort = "";
+
+			var listview = new ListView();
+			listview.LoadFromID("lvJobList");
+
+			if (listview.GetDataRows().length == 0){
+				return;
+			}
+
+			for (var i = 0 ; i < listview.GetDataRows().length ; i++){
+				jobID += listview.GetDataRows()[i].getAttribute("DATA1"); // jobid
+				sort += listview.GetDataRows()[i].getAttribute("DATA3"); // sort
+
+				if(i != listview.GetDataRows().length -1){
+					jobID += ",";
+					sort +=",";
+				}
+			}
+
+			$.ajax({
+				type: "POST",
+				dataType: "text",
+				url: "/admin/ezOrgan/saveJobTitleListOrder.do",
+				async: false,
+				data: { jobID: jobID, sort: sort },
+				success: function(result) {
+					if (result === "OK") {
+						alert("<spring:message code='ezOrgan.t49' />");
+						job_list();
+						job_userList();
+					} else if (result === "ERROR") {
+						alert("<spring:message code='ezOrgan.t48' />");
+					} 
+				},
+				error: function() {
+					alert("<spring:message code='ezOrgan.t48' />");
+				}
+			});
+		}
 		
 		/* (직위/직책) Row 더블클릭 이벤트 */
 		function job_view() {
@@ -279,8 +340,16 @@
 					return;
 				}
 				
-				var url = "/admin/ezOrgan/jobTitlePopupUI.do?type=" + type + "&mode=" + mode + "&companyID=" + pCompanyID;
+				var maxSort = 0;
+				for (var i = 0; i < jobList.GetDataRows().length; i++) {
+					var sortValue = parseInt(jobList.GetDataRows()[i].getAttribute("DATA3"), 10);
+					if (sortValue > maxSort) {
+						maxSort = sortValue;
+					}
+				}
+				maxSort += 1;
 				
+				var url = "/admin/ezOrgan/jobTitlePopupUI.do?type=" + type + "&mode=" + mode + "&companyID=" + pCompanyID + "&maxSort=" + maxSort;
 				var args = new Array();
 				args[0] = pCompanyNM;
 				args[1] = jobIDList[0];
@@ -288,8 +357,8 @@
 				titleInfo_dialogArguments[0] = args;
 			    titleInfo_dialogArguments[1] = titleInfo_complete;
 			    
-			    var OpenWin = window.open(url, "jobPopupUI", GetOpenWindowfeature(460, 290));
-				try { OpenWin.focus(); } catch (e) { }
+			    var OpenWin = window.open(url, "jobPopupUI", GetOpenWindowfeature(460, 260));
+				try { OpenWin.focus(); } catch (e) {console.log(e);}
 				
 			} else if (mode == "Del") {
 				var length = jobIDList.length;
@@ -373,7 +442,7 @@
 			    userinfo_dialogArguments[1] = info_user_complete;
 			    
 			    var OpenWin = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 440));
-			    try { OpenWin.focus(); } catch (e) { }
+			    try { OpenWin.focus(); } catch (e) {console.log(e);}
 	        }
 		}
 		
@@ -474,7 +543,7 @@
 			var table  = document.getElementById("lvJobList");
 			var length = table.rows.length;
 			for (var i = 1; i < length; i++) {
-				var useTd     = table.rows[i].cells[4];
+				var useTd     = table.rows[i].cells[3];
 				if (!useTd) { break; }
 				
 				var labelElmt = document.createElement("label");
@@ -691,6 +760,13 @@
 		<div class="listview" style="border: 0px;">
 			<div id="jobListView" style="height: 658px; width: 100%; overflow:auto;"></div>
 		</div>
+		<div id="jobListBottom" style="width:100%; float:left; box-sizing: border-box;  border: 1px solid #ddd; ">
+			<div class="moveWrap" style="width:100%; vertical-align:middle; text-align:center; float:right; background-color: #f8f8fa; padding:5px 0px;">
+				<span class="upBtn" id="upBtn" onclick="MoveUp_onclick()"><img src="/images/admin/arrowUp.png"/></span>
+				<span class="downBtn" id="downBtn" onclick="MoveDown_onclick()"><img src="/images/admin/arrowDown.png"/></span>
+				<span class="btnpositionJsp"><a class="imgbtn" id="saveBtn" onclick="MoveConfirm_onclick()"><span><spring:message code='ezOrgan.t104'/></span></a></span>
+			</div>
+		</div>
 	</div>
 	
 	<div id="previewH" class="previewH">
@@ -748,10 +824,6 @@
 			<WIDTH></WIDTH>
 			</HEADER>
 			<HEADER>
-			<NAME><spring:message code='ezOrgan.csj06' /></NAME>
-			<WIDTH></WIDTH>
-			</HEADER>
-			<HEADER>
 			<NAME><spring:message code='ezOrgan.csj05' /></NAME>
 			<WIDTH></WIDTH>
 			</HEADER>
@@ -805,10 +877,6 @@
 			<NAME><spring:message code='ezOrgan.csj17' />(${secondary})</NAME>
 			<WIDTH>100</WIDTH>
 			<STYLE>border-top:0px;</STYLE>
-			</HEADER>
-			<HEADER>
-			<NAME><spring:message code='ezOrgan.csj06' /></NAME>
-			<WIDTH>50</WIDTH>
 			</HEADER>
 			<HEADER>
 			<NAME><spring:message code='ezOrgan.csj05' /></NAME>

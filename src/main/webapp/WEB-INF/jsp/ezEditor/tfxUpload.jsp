@@ -32,24 +32,24 @@
 						}
 	
 						if (strContentType == "flash") {						
-							//parent.insertFlash.setFlash(strLocation);
-							
-							if(parent.insertFlash) {
-								parent.insertFlash.setFlash(strLocation);
-							} else {
-								parent.parent.insertFlash.setFlash(strLocation);
-							}
-							
-						} else if (strContentType == "image") {						
-							//parent.insertImage.setImage(strLocation);
-							
-							if(parent.insertImage) {
-								parent.insertImage.setImage(strLocation);
-							} else {
-								parent.parent.insertImage.setImage(strLocation);	
-							}
-							
-						}
+                            //parent.insertFlash.setFlash(strLocation);
+
+                            if(parent.insertFlash) {
+                                parent.insertFlash.setFlash(strLocation);
+                            } else {
+                                parent.parent.insertFlash.setFlash(strLocation);
+                            }
+
+                        } else if (strContentType == "image") {
+                            //parent.insertImage.setImage(strLocation);
+
+                            if(parent.insertImage) {
+                                parent.insertImage.setImage(strLocation);
+                            } else {
+                                parent.parent.insertImage.setImage(strLocation);
+                            }
+
+                        }
 						
 					} else {
 						

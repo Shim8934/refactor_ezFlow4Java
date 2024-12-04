@@ -19,6 +19,7 @@
 		    var previewSubTree = "${previewSubTree}";
 		    var usePreviewSubTree = "${usePreviewSubTree}";
 		    var dotnetFlag = "<c:out value='${dotnetFlag}'/>";
+			var useEachMailDefault = "${useEachMailDefault}"
 		    
 		    window.onload = function()
 		    {
@@ -106,7 +107,13 @@
 			            ExtName += ExtName == "" ? pOptionValue : "|!-@-!|" + pOptionValue;
 			        }
 			    }
-
+				
+			    // 2024.09.09 한슬기 : 개별발신 기본 여부. 관리자 > 시스템 > 패라메터 > 개별발신 디폴트 사용이 '아니요'일 경우 사용자 설정에 선택된 값을 저장
+			    var defaultSeparateSendVal = "";
+			    if (useEachMailDefault === "NO"){
+			    	defaultSeparateSendVal = document.getElementById("defaultSeparateSend").value;
+			    }
+			    
 				var xmlHTTP = createXMLHttpRequest();
 				var url = "/ezEmail/mailGeneralSave.do?MODE=ALL" ;
 			    var previewSubTreeSlb = $("#previewSubTreeSlb option:selected").val();
@@ -120,8 +127,14 @@
 				                "<PREVIEWHCONTENT>" + document.getElementById("HPreUser").value + "</PREVIEWHCONTENT>" +
 				                "<MAILSENDERNM>" + MakeXMLString(ExtName) + "</MAILSENDERNM>" +
 				                "<PREVIEWMAILIMAGE>" + document.getElementById("previewMailImage").value + "</PREVIEWMAILIMAGE>" +
+				                "<PREVIEWMAIL>" + document.getElementById("previewMail").value + "</PREVIEWMAIL>" +
 				                "<MAILSEARCHPERIOD>" + document.getElementById("searchPeriod").value + "</MAILSEARCHPERIOD>" +
-				                "<TEXTOPTION>" + textOptionVal + "</TEXTOPTION>";
+				                "<TEXTOPTION>" + textOptionVal + "</TEXTOPTION>" + 
+				                "<DEFAULTCURSORPOSITION>"+ document.getElementById("defaultCursorPosition").value + "</DEFAULTCURSORPOSITION>" +
+								"<DEFAULTSEPARATESEND>"+ defaultSeparateSendVal + "</DEFAULTSEPARATESEND>" +
+				                "<MAILSENDRESULT>" + document.getElementById("sendResult").value + "</MAILSENDRESULT>" + 
+								"<EDITORFONTFAMILY>" + document.getElementById("editorFontFamily").value + "</EDITORFONTFAMILY>" +
+								"<EDITORFONTSIZE>" + document.getElementById("editorFontSize").value + "</EDITORFONTSIZE>";
 				
                 if (usePreviewSubTree == "YES") {
                 	sendStr +=  "<PREVIEWSUBTREE>" + previewSubTreeSlb + "</PREVIEWSUBTREE>";
@@ -219,7 +232,7 @@
 				mailSenderNM[1] = senderNMData;
 				mailSenderNM[2] = event_mailSenderNM;
 				var OpenWin = window.open("/ezEmail/mailExtSenderNM.do", "mail_NewInboxRule_cross", GetOpenWindowfeature(500, 392));
-		        try { OpenWin.focus(); } catch (e) { }
+		        try { OpenWin.focus(); } catch (e) {console.log(e);}
 		        
 		        
 			}
@@ -465,6 +478,16 @@
 		  	</td>
 		  </tr>
 		  <tr>
+            <th><spring:message code="ezEmail.preview.before.send"/></th>
+            <td>
+                <select id="previewMail" style="width:100px;">
+                    <option value="N" <c:if test="${previewMail == 'N'}">selected</c:if>><spring:message code='ezEmail.t99000009' /></option>
+                    <option value="P" <c:if test="${previewMail == 'P'}">selected</c:if>><spring:message code='ezEmail.general.priority' /> </option>
+                    <option value="Y" <c:if test="${previewMail == 'Y'}">selected</c:if>><spring:message code='ezEmail.general.all' /></option>
+                </select>
+            </td>
+          </tr>
+		  <tr>
 		      <th><spring:message code="ezEmail.lhm80"/></th>
 		      <td>
 		          <select id="textOptionSlb" style="width:100px;">
@@ -485,6 +508,56 @@
 		          </select>
 		      </td>
 		  </tr>
+		  <!-- 2024.08.06 한슬기 : 메일쓰기화면 커서 위치 설정-->
+		  <tr>
+		      <th><spring:message code="ezEmail.general.defaultCursorPosition"/></th>
+		      <td>
+		          <select id="defaultCursorPosition" style="width:100px;">
+		            <option value=recipient <c:if test="${defaultCursorPosition == 'recipient'}">selected</c:if>><spring:message code='ezEmail.t66' /></option>
+		            <option value=content <c:if test="${defaultCursorPosition == 'content'}">selected</c:if>><spring:message code='ezPersonal.t155' /></option>
+		            <option value=subject <c:if test="${defaultCursorPosition == 'subject'}">selected</c:if>><spring:message code='ezEmail.t98' /></option>
+		          </select>
+		      </td>
+		  </tr>
+		  
+		  <!-- 2024.08.06 한슬기 : 개별발신 기본 여부. 관리자 > 시스템 > 패라메터 > 개별발신 디폴트 사용이 '아니요'일 경우만 보임-->
+		  <c:if test="${useEachMailDefault eq 'NO'}">
+			  <tr>
+			      <th><spring:message code="ezEmail.general.defaultSeparateSend"/></th>
+			      <td>
+			          <select id="defaultSeparateSend" style="width:100px;">
+			            <option value="N" <c:if test="${defaultSeparateSend eq 'N' || defaultSeparateSend == null}">selected</c:if>><spring:message code='ezEmail.t99000009' /></option>
+			            <option value="Y" <c:if test="${defaultSeparateSend eq 'Y'}">selected</c:if>><spring:message code="ezEmail.t808"/></option>
+			          </select>
+			      </td>
+			  </tr>
+		  </c:if>
+		  <tr>
+              <th><spring:message code="ezEmail.send.result"/></th>
+              <td>
+                  <select id="sendResult" style="width:100px;">
+                    <option value=failure <c:if test="${mailSendResult == 'failure'}">selected</c:if>><spring:message code="ezEmail.general.fail" /></option>
+                    <option value=always <c:if test="${mailSendResult == 'always'}">selected</c:if>><spring:message code="ezEmail.general.always" /></option>
+                  </select>
+              </td>
+          </tr>
+		  <c:if test="${primaryLang == '1'}">
+			  <tr>
+				  <th><spring:message code="ezEmail.general.editorFontStyle"/></th>
+				  <td>
+					  <select id="editorFontFamily" style="width:150px;">
+						  <c:forEach var="font" items="${defaultFontFamilyList}">
+							  <option value="${font.trim()}" <c:if test="${editorFontFamily == font}">selected</c:if>>${font.trim()}</option>
+						  </c:forEach>
+					  </select>
+					  <select id="editorFontSize" style="width:100px;">
+						  <c:forEach var="size" items="${defaultFontSizeList}">
+							  <option value="${size}" <c:if test="${editorFontSize == size}">selected</c:if>>${size}</option>
+						  </c:forEach>
+					  </select>
+				  </td>
+			  </tr>
+		  </c:if>
 		</table>
 		<div align="center" style="width:680px;">
 			<div class="btnpositionJsp">

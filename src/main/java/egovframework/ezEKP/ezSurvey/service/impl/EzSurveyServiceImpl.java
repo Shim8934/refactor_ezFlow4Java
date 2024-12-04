@@ -170,6 +170,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		return ezSurveyDAO.getDeptMemberList(map);
 	}
 	
+	/*
 	@Override
 	public int getTotalSearchMembers(String sqlQuery, String srchValue, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
@@ -178,8 +179,8 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		map.put("tenantId",   tenantId);
 		
 		return ezSurveyDAO.getTotalSearchMembers(map);
-	}
-	
+	}*/
+	/*
 	@Override
 	public List<SimpleUserVO> getSearchMemberList(String primary, int startPoint, int listCount, String srchOption, String srchValue, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
@@ -191,7 +192,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		map.put("tenantId",   tenantId);
 		
 		return ezSurveyDAO.getSearchMemberList(map);
-	}
+	}*/
 
 	@Override
 	public List<SimpleUserVO> getSearchMemberListByAttr(String primary, String srchOption, List<String> attrList, int tenantId) throws Exception {
@@ -459,6 +460,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			int requiredFlag       = ((Long)questionObj.get("required")).intValue();
 			int questionType       = ((Long)questionObj.get("type")).intValue();
 			JSONObject questionAtt = (JSONObject)questionObj.get("attach");
+			JSONObject imgTitle = (JSONObject)questionObj.get("imgTitle");
 			JSONArray options      = (JSONArray)questionObj.get("option");
 			
 			if ((options == null || options.size() == 0) && draftMode == 0) {
@@ -538,11 +540,16 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 				saveAttachFile(realPath, questionAtt, maxQuestionId, companyId, tenantId, "question", crrSurveyId, totalAttach);
 			}
 			
+			//Add survey attach list
+			if (imgTitle != null && imgTitle.size() > 0) {
+				saveAttachFile(realPath, imgTitle, maxQuestionId, companyId, tenantId, "title", crrSurveyId, totalAttach);
+				question.setContent("HASIMGTITLE");
+			}
+			
 			//Add question
 			totalQuestions.add(question);
 		}
 		
-		//Add survey attach list
 		if (attchList != null && attchList.size() > 0) {
 			for (int i = 0; i < attchList.size(); i++) {
 				JSONObject surveyAtt = (JSONObject)attchList.get(i);
@@ -687,16 +694,10 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 				}
 			}
 			
-			if (mode == "NEW") {
-				String linkUrl = "/ezSurvey/surveyDetail.do?itemId=" + crrSurveyId;
-		    	String linkUrlMobile = "/mobile/ezSurvey/surveyDetail.do?itemId=" + crrSurveyId + "&mode=all";
-		    	ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientList, "SURVEY", mode, title, "popup", "760", "750", linkUrl, linkUrlMobile, "");
-			}
-			
 			//Send notice mail
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 			Boolean notiMailFlag = mailFlag == 1 && dateFormat.format(new Date()).equals(startDate) && draftMode == 0;
-			
+			Boolean totalNotiFlag = dateFormat.format(new Date()).equals(startDate) && draftMode == 0;
 			if (notiMailFlag) {
 				int mailSentFlag = ezSurveyDAO.getMailSentFlag(survey);
 				
@@ -708,6 +709,21 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 				}
 				
 			}
+			
+			if (totalNotiFlag) {
+				int totalNotiSentFlag = ezSurveyDAO.getTotalNotiSentFlag(survey);
+				
+				if(totalNotiSentFlag == 0) {
+					logger.debug("start send noti");
+					String linkUrl = "/ezSurvey/surveyDetail.do?itemId=" + crrSurveyId;
+			    	String linkUrlMobile = "/mobile/ezSurvey/surveyDetail.do?itemId=" + crrSurveyId + "&mode=all";
+			    	ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientList, "SURVEY", mode, title, "popup", "760", "750", linkUrl, linkUrlMobile, "");
+			    	
+			    	updateTotalNotiSentFlag(crrSurveyId, 1, companyId, tenantId);
+					logger.debug("end send noti");
+				}
+			}
+			
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -763,7 +779,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject getItemsBySearching(String pageMode, int currentPage, int listCntSize, String title, String creatorName, String startDate, String endDate, String sqlQuery, String srchMode, String srchOption, String order, String column, LoginVO userInfo, int userMode) throws Exception {
+	public JSONObject getItemsBySearching(String pageMode, int currentPage, int listCntSize, String title, String creatorName, String startDate, String endDate, String srchMode, String srchOption, String order, String column, LoginVO userInfo, int userMode, String filterStatus) throws Exception {
 		JSONObject result   = new JSONObject();
 		String userId       = userInfo.getId();
 		int tenantId        = userInfo.getTenantId();
@@ -774,17 +790,25 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		int totalItems      = 0;
 		int totalPages      = 0;
 		
+		/* 2024-07-01 홍승비 - SQL Injection 수정 > 정렬 조건에서 $ 기호 제거, 정렬 칼럼(orderCol)과 순차(orderSort) 변수를 분리 */
+		String orderCol = "";
+		String orderSort = "";
 		if (!column.equals("") && !order.equals("")) {
+			orderSort = order;
+			
 			switch(column) {
-				case "at" : sqlQuery = "attach_flag "                                              + order; break;
-				case "cd" : sqlQuery = "create_date "                                              + order; break;
-				case "tt" : sqlQuery = "CAST(SUBSTR(title, 1, 100) AS varchar(100)) "              + order; break;
-				case "ed" : sqlQuery = "end_date "                                                 + order; break;
-				case "ut" : sqlQuery = "participate_flag "                                         + order; break;
-				case "ct" : sqlQuery = primary.equals("1") ? "user_name1 " + order : "user_name2 " + order; break;
-				case "pl" : sqlQuery = "result_public_flag "                                       + order; break;
-				case "an" : sqlQuery = "anonymous_flag "                                           + order; break;
-				default   : sqlQuery = "CAST(SUBSTR(title, 1, 100) AS varchar(100)) "              + order; break;
+				case "at" : orderCol = "attach_flag"; break;
+				case "cd" : orderCol = "create_date"; break;
+                case "surveyId" : orderCol = "SURVEY_ID"; break;
+				case "tt" : orderCol = "title"; break;
+				case "ed" : orderCol = "end_date"; break;
+				case "ut" : orderCol = "participate_flag"; break;
+				case "ct" : orderCol = ("user_name" + primary); break;
+				case "pl" : orderCol = "result_public_flag"; break;
+				case "an" : orderCol = "anonymous_flag"; break;
+                case "participants" : orderCol = "PARTICIPANTS"; break;
+                case "participation" : orderCol = "PARTICIPATION"; break;
+				default   : orderCol = "title"; break;
 			}
 		}
 		
@@ -796,7 +820,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		title       = title.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_");
 		creatorName = creatorName.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_");
 		
-		SurveyItemSearchVO searchVO = new SurveyItemSearchVO(pageMode, listCntSize, tenantId, userId, primary, offsetMinute, title, creatorName, startDate, endDate, sqlQuery, srchMode, srchOption, userMode);
+		SurveyItemSearchVO searchVO = new SurveyItemSearchVO(pageMode, listCntSize, tenantId, userId, primary, offsetMinute, title, creatorName, startDate, endDate, orderCol, orderSort, srchMode, srchOption, userMode);
 		
 		if (pageMode.equals("processing") || pageMode.equals("finish") || pageMode.equals("all")) {
 			List<Long> listReceivedSurvey = getUserReceivedSurveyList(userInfo, 0);
@@ -807,6 +831,8 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			searchVO.setSurveyResultIds(listReceivedResultSurvey);
 			searchVO.setToday(timeUTC);
 		}
+        
+        searchVO.setFilterStatus(filterStatus);
 		
 		totalItems  = ezSurveyDAO.getTotalReceivedSurveyItemsCnt(searchVO);
 		totalPages  = (totalItems + listCntSize - 1) / listCntSize;
@@ -1057,7 +1083,6 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			map.put("questionIds", questionIds);
 			map.put("optionIds"  , optionIds);
 			List<AttachVO> attachs     = ezSurveyDAO.getAllAttachForQsAndOpt(map);
-			
 			//Clone list of attach
 			/* 2023-08-04 한태훈 : 첨부파일 다운로드 시 보안문제로 원본 파일 복사 후 복사된 파일을 다운로드 받을 수 있게 하는 코드이지만, 전자설문 페이지  
 			 열 때마다 파일이 복사되는 문제가 있음.
@@ -1086,7 +1111,8 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 					}
 				}
 			}
-			
+			List<AttachVO> imgTitleList = attachs.stream().filter(a -> a.getTargetType().equals("title")).collect(Collectors.toList());
+			attachs.removeAll(imgTitleList); 
 			//Separate
 			List<AttachVO> qstAttch    = attachs.stream().filter(a -> a.getTargetType().equals("question")).collect(Collectors.toList());
 			attachs.removeAll(qstAttch);
@@ -1097,7 +1123,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 				while (respIter.hasNext()) {
 					ResponseVO response = respIter.next();
 					int qstType     = response.getQuestionType();
-					String checkKey = (qstType == 1 || qstType == 2 || qstType == 9) ? "opt" + response.getOptionId() : "qst" + response.getQuestionLevel();
+					String checkKey = (qstType == 1 || qstType == 2 || qstType == 9 || qstType == 10 || qstType == 11) ? "opt" + response.getOptionId() : "qst" + response.getQuestionLevel();
 					
 					if (mapResponses.containsKey(checkKey)) {
 						mapResponses.get(checkKey).add(response);
@@ -1136,7 +1162,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 				//Add responses
 				if (logicCheck == 2) {
 					int qstType = option.getQuestionType();
-					if (qstType == 1 || qstType == 2 || qstType == 9) {
+					if (qstType == 1 || qstType == 2 || qstType == 9 || qstType == 10 || qstType == 11) {
 						String optKey = "opt" + option.getOptionId();
 						if (mapResponses.containsKey(optKey)) {
 							option.setResponses(mapResponses.get(optKey));
@@ -1163,10 +1189,20 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 					}
 				}
 				
+				ListIterator<AttachVO> imgTitleIter = imgTitleList.listIterator();
+				while (imgTitleIter.hasNext()) {
+					AttachVO imgTitle = imgTitleIter.next();
+					if (imgTitle.getTargetId() == question.getQuestionId()) {
+						question.setContent("");
+						question.setImgTitle(imgTitle);
+						imgTitleIter.remove();
+					}
+				}
+				
 				//Add responses
 				if (logicCheck == 2) {
 					int qstType = question.getType();
-					if (qstType != 1 && qstType != 2 && qstType != 9) {
+					if (qstType != 1 && qstType != 2 && qstType != 9 && qstType != 10 && qstType != 11) {
 						String qstKey = "qst" + question.getLevel();
 						if (mapResponses.containsKey(qstKey)) {
 							question.setResponses(mapResponses.get(qstKey));
@@ -1457,6 +1493,8 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 					case 1:
 					case 2:
 					case 9:
+					case 10:
+					case 11:
 						long optionId = (Long) answerObject.get("optionId");
 						
 						if (answerObject.get("otherFlag") != null && ((Long) answerObject.get("otherFlag")).intValue() == 1) {
@@ -1739,6 +1777,19 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		
 		ezSurveyDAO.updateMailSentFlag(map);
 		logger.debug("updateMailSentFlag ended.");
+	}
+	
+	@Override
+	public void updateTotalNotiSentFlag(long surveyId, int mailSentFlag, String companyId, int tenantId) throws Exception {
+		logger.debug("updateTotalNotiSentFlag started.");
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("surveyId", surveyId);
+		map.put("totalNotiSentFlag", 1);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		
+		ezSurveyDAO.updateTotalNotiSentFlag(map);
+		logger.debug("updateTotalNotiSentFlag ended.");
 	}
 
 	@SuppressWarnings("unchecked")

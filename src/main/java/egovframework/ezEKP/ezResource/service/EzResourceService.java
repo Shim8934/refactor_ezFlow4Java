@@ -8,6 +8,7 @@ import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezResource.vo.ResAdminVO;
 import egovframework.ezEKP.ezResource.vo.ResBrdListVO;
 import egovframework.ezEKP.ezResource.vo.ResBrdVO;
+import egovframework.ezEKP.ezResource.vo.ResFavoriteCategoryVO;
 import egovframework.ezEKP.ezResource.vo.ResGetItemListVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
@@ -21,8 +22,9 @@ import egovframework.let.user.login.vo.LoginVO;
 public interface EzResourceService {
 	
 	public List<ResGetItemListVO> getBrdMainList(String brdID, String companyID, String lang, int tenantID) throws Exception;
-	
-	public List<ResBrdListVO> getBrdList(int topCnt, int brdID, String CompanyID, String ownDeptNm, String ownerNm, String ownerPosition, String brdNm, int tenantID) throws Exception;
+
+	/* 2024-07-05 홍승비 - SQL Injection 수정 > 다국어 칼럼은 쿼리 내부 분기로 처리 */
+	public List<ResBrdListVO> getBrdList(int topCnt, int brdID, String CompanyID, String lang, int tenantID) throws Exception;
 
 	public ResGetScheduleRepetitionVO getRepDateTimes(String ownerID, String companyID, int num, int tenantID) throws Exception;
 	
@@ -117,4 +119,22 @@ public interface EzResourceService {
 	
 	public List<ResOccuVO> getResOccuList(String companyID, int tenantID, String startTime, String endTime, String offset) throws Exception;
 	
+	// 2024-08-23 유길상 - 자원관리 즐겨찾기 기능 추가
+	public void addFavoriteCategory(String catName, String catId, String userID, String companyID, int teanatId) throws Exception;
+
+	public List<ResFavoriteCategoryVO> getFavoriteCategoryList(String catId, String userID) throws Exception;
+
+	public void modFavoriteCategory(String catName, String catId) throws Exception;
+
+	public void delFavoriteCategory(String catId, String userID, String companyID, int tenantID) throws Exception;
+
+	public String addBrdFavoriteCategory(String brdId, String catId, String userID, String companyID, int tenantID) throws Exception;
+
+	public List<ResBrdVO> getFavoriteBrdList(String catId, String companyId, int tenantId) throws Exception;
+
+	public String moveCategory(String userID, String companyID, int tenantID, String catId, String topId) throws Exception;
+
+	public String moveResource(String userID, String companyID, int tenantID, String catId, String brdId, String topId) throws Exception;
+
+	public void delBrdFavoriteCategory(String userId, int tenantId, String companyId, String delBrdId, String delTopId) throws Exception;	
 }

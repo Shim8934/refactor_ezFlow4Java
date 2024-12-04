@@ -63,6 +63,7 @@
 	                try {
 	                    ReturnFunction = opener.sharedMailboxDialogArguments[0];
 	                } catch (e) {
+	                    console.log(e);
 	                }
 	            }
 	            
@@ -608,7 +609,7 @@
 					            	} else {
 					                    window.returnValue = 1;
 					            	}
-			        			} catch(e) {}
+			        			} catch(e) {console.log(e);}
 				            	
 				                window.close();
 			        		} else if (result.resultCode === "NO_PERMISSION")  {
@@ -1129,7 +1130,7 @@
                                 MaxCntNum = MaxCntNum + 1;
                             }
                             
-                            SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+                            SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + (MaxID + 1));
                             listview.AddDataRow(objTr, Resultxml);
                             
                             objTr.childNodes[0].style.whiteSpace = "";

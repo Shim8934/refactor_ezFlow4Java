@@ -2,10 +2,13 @@ package egovframework.ezEKP.ezCommunity.service.impl;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -2328,7 +2331,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		//logger.debug("bName : " + bName + ", primary : " + primary + ", pKeyword : " + pKeyword + ", sRadio : " + sRadio + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_BNAME", bName);
+		map.put("v_BNAME", bName.toUpperCase()); // TBL_C_BOARD(2024-07-16 기준 커뮤니티 공지사항으로 사용되는 테이블), TBL_C_NOTICE, TBL_C_CLUBNOTICE
 		map.put("primary", primary);
 		map.put("v_KEYWORD", pKeyword);
 		map.put("v_S_RADIO", sRadio.toUpperCase());
@@ -2347,7 +2350,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		logger.debug("bbsListGet2 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_BNAME", bName);
+		map.put("v_BNAME", bName.toUpperCase());
 		map.put("primary", primary);
 		map.put("v_KEYWORD", pKeyword);
 		map.put("v_S_RADIO", sRadio.toUpperCase());
@@ -2368,7 +2371,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		//logger.debug("bName : " + bName + ", no : " + no + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_BNAME", bName);
+		map.put("v_BNAME", bName.toUpperCase());
 		map.put("v_NO", no);
 		map.put("tenantID", tenantID);
 		
@@ -2385,7 +2388,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		//logger.debug("bName : " + bName + ", no : " + no + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_BNAME", bName);
+		map.put("v_BNAME", bName.toUpperCase());
 		map.put("v_NO", no);
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("tenantID", tenantID);
@@ -2404,7 +2407,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		//logger.debug("bName : " + bName + ", no : " + no + ", primary : " + primary + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_BNAME", bName);
+		map.put("v_BNAME", bName.toUpperCase());
 		map.put("v_NO", no);
 		map.put("primary", primary);
 		map.put("tenantID", tenantID);
@@ -2422,7 +2425,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		//logger.debug("bName : " + bName + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_BNAME", bName);
+		map.put("v_BNAME", bName.toUpperCase());
 		map.put("tenantID", tenantID);
 		
 		List<CommunityCBoardVO> list = ezCommunityDAO.bbsViewNewGet2(map);
@@ -2438,7 +2441,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		//logger.debug("bName : " + bName + ", itemNo : " + itemNo + ", code : " + code + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_BNAME", bName);
+		map.put("v_BNAME", bName.toUpperCase());
 		map.put("v_NO", itemNo);
 		map.put("v_CODE", code);
 		map.put("tenantID", tenantID);
@@ -2548,14 +2551,17 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 
 	@Override
-	public boolean communityConnCHK(String id, String clubID, String boardID, String rollInfo, int mode, HttpServletResponse response, LoginVO userInfo) throws Exception {
+	public boolean communityConnCHK(String id, String clubID, String boardID, String rollInfo, int mode, HttpServletResponse response, LoginVO userInfo, String type) throws Exception {
 		logger.debug("communityConnCHK started.");
 		//logger.debug("rollInfo = " + rollInfo);
 		String rtnValue = "";
 		boolean result = false;
 
 		if (!commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), userInfo.getRollInfo(), "c")) {
-			rtnValue = getClubCHK(id, clubID, boardID, userInfo.getTenantId());
+			rtnValue = getClubCHK(id, clubID, boardID, userInfo.getTenantId(), type);
+			if (rtnValue.equals("4")) {
+				return result;
+			}
 		} else {
 			rtnValue = "1";
 		}
@@ -2573,7 +2579,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		return result;
 	}
 
-	private String getClubCHK(String id, String clubID, String boardID, int tenantID) throws Exception{
+	private String getClubCHK(String id, String clubID, String boardID, int tenantID, String type) throws Exception{
 		logger.debug("getClubCHK started.");
 		//logger.debug("id : " + id + ", clubID : " + clubID + ", boardID : " + boardID + ", tenantID : " + tenantID);
 		
@@ -2590,6 +2596,10 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		if (temp != 0) {
 			result = "1";
 		} else {
+			if (type != null && type.equals("pop") && temp == 0) {
+				result = "4"; // 공개글이나 가입되지 않은 사람
+				return result;
+			}
 			temp = ezCommunityDAO.getClubCHKGet2(map);
 			
 			if (temp != 0) {
@@ -2993,6 +3003,9 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_pNow", commonUtil.getTodayUTCTime(""));
 		map.put("tenantID", userInfo.getTenantId());
 		
+		/* 2024-07-16 홍승비 - 커뮤니티 팝업홈 > 게시판 검색 시 카운트 쿼리에서 누락된 게시자명 다국어 검색조건 추가 */
+		map.put("v_strLang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
+		
 		int result = ezCommunityDAO.searchItemCount(map);
 		//logger.debug("result=" + result);
 		logger.debug("searchItemCount ended.");
@@ -3149,7 +3162,9 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		String prm = egovFileScrty.getPrm();
     	String pre = egovFileScrty.getPre();
     	String offset = userInfo.getOffset();
-		boolean saveMHTResult = false;
+		boolean saveResult = false;
+		
+		String editor = ezCommonService.getTenantConfig("MODULEEDITOR", userInfo.getTenantId());
 		
 		String dateStr = commonUtil.getTodayUTCTime("");
 		
@@ -3174,7 +3189,11 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		if (pMode.equals("copy")) {
 			pContentLocation = xmlData.getElementsByTagName("CONTENTLOCATION").item(0).getTextContent();
 		} else {
-			pContentLocation = commonUtil.getUploadPath("upload_community.ROOT", userInfo.getTenantId()) + commonUtil.separator + item.getBoardID() + commonUtil.separator + "doc" + commonUtil.separator + item.getItemID() + ".mht";
+			if (!editor.equals("HWP")) {
+				pContentLocation = commonUtil.getUploadPath("upload_community.ROOT", userInfo.getTenantId()) + commonUtil.separator + item.getBoardID() + commonUtil.separator + "doc" + commonUtil.separator + item.getItemID() + ".mht";
+			} else {
+				pContentLocation = commonUtil.getUploadPath("upload_community.ROOT", userInfo.getTenantId()) + commonUtil.separator + item.getBoardID() + commonUtil.separator + "doc" + commonUtil.separator + item.getItemID() + ".hwp";
+			}
 		}
 		
 		item.setContentLocation(pContentLocation);
@@ -3237,10 +3256,17 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		}
 		
 		if (!pMode.equals("copy")) {
-			saveMHTResult = saveMHT(pContent, item.getItemID(), item.getBoardID(), pUploadFilePath, realPath);
-			
-			if (saveMHTResult == false) {
-				return egovMessageSource.getMessage("ezCommunity.lhj04", userInfo.getLocale());
+			if (!editor.equals("HWP")) {
+				saveResult = saveMHT(pContent, item.getItemID(), item.getBoardID(), pUploadFilePath, realPath);
+				
+				if (saveResult == false) {
+					return egovMessageSource.getMessage("ezCommunity.lhj04", userInfo.getLocale());
+				}
+			} else {
+				saveResult = saveHWP(pContent, item.getItemID(), item.getBoardID(), pUploadFilePath, realPath);
+				if (saveResult == false) {
+					return egovMessageSource.getMessage("ezBoard.kwc01", userInfo.getLocale());
+				}
 			}
 		}
 		
@@ -3292,7 +3318,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		}
 		
 		ezCommunityDAO.newItemDel(map);
-		
+
 		if (item.getAttachments().length() > 0) {
 			if (saveAttachmentsInfo(item, pUploadFilePath, realPath, userInfo.getTenantId()) == false) {
 				return egovMessageSource.getMessage("ezCommunity.lhj05", userInfo.getLocale());
@@ -3300,13 +3326,26 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			pHasAttach = "1";
 		} else {
 			pHasAttach = "0";
+			List<CommunityBoardItemAttachmentVO> orgFileList = ezCommunityDAO.getItemAttachmentXML(map);
+			if (orgFileList.size() > 0) {
+				String folder = realPath + pUploadFilePath;
+				for (CommunityBoardItemAttachmentVO itemAttachment : orgFileList) {
+					String strFile = folder + itemAttachment.getFilePath();
+					File file = new File(commonUtil.detectPathTraversal(strFile));
+					
+					if (file.exists()) {
+						file.delete();
+					}
+				}
+			}
+			ezCommunityDAO.newItemDel(map);
 		}
 		
 		return "OK";
 	}
 
 	@Override
-	public String getItemAttachmentXML(String itemID, int tenantID) throws Exception {
+	public String getItemAttachmentXML(String itemID, int tenantID, String realPath, String pMode) throws Exception {
 		logger.debug("getItemAttachmentXML started.");
 		
 		StringBuilder sb = new StringBuilder();
@@ -3315,8 +3354,29 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("tenantID", tenantID);
 		
 		List<CommunityBoardItemAttachmentVO> list = ezCommunityDAO.getItemAttachmentXML(map);
-
+		
+		String useEditor = ezCommonService.getTenantConfig("MODULEEDITOR", tenantID);
+		
 		sb.append("<NODES>");
+		
+		if (useEditor.equals("HWP") && pMode.equals("mail")) {
+			CommunityBoardItemVO item = ezCommunityDAO.getItemXML(map);
+			String contentLocation = item.getContentLocation();
+			String ext = contentLocation.substring(contentLocation.length() - 3, contentLocation.length());
+			if (ext.toUpperCase().equals("HWP")) {
+				File file = new File(realPath + commonUtil.detectPathTraversal(item.getContentLocation()));
+				int fileSize = (int) file.length();
+				sb.append("<NODE>");
+				sb.append("<ItemID>" + item.getItemID() + "</ItemID>");
+				sb.append("<GUID>0</GUID>");
+				sb.append("<FileName>" + commonUtil.cleanValue(item.getTitle()) + "." + ext + "</FileName>");
+				sb.append("<FilePath>" + commonUtil.cleanValue(contentLocation) + "</FilePath>");
+				sb.append("<FileSize>" + getProperSizeDisplay(fileSize) + "</FileSize>");
+				sb.append("<FileSize2>" + fileSize + "</FileSize2>");
+				sb.append("<HwpItem>Y</HwpItem>");
+				sb.append("</NODE>");
+			}
+		}
 		
 		for (CommunityBoardItemAttachmentVO attach : list) {
 			sb.append("<NODE>");
@@ -3547,6 +3607,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		StringBuilder strHTML = new StringBuilder();
 		int iColSpan = 5;
 		
+		// tbl_c_clubpds, tbl_c_clubpds1는 실제로 존재하는 테이블이 아니며, 분기처리를 위해 임의로 사용하는 테이블명임
 		if (bName.equals("tbl_c_clubpds") || bName.equals("tbl_c_clubpds1")) {
 			iColSpan = 6;
 		}
@@ -3651,18 +3712,21 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	public String bbsEditOk(LoginVO userInfo, HttpServletRequest request) throws Exception {
 		logger.debug("bbsEditOk started.");
 		
+		String editor = ezCommonService.getTenantConfig("MODULEEDITOR", userInfo.getTenantId());
 		int myRef = 0, myStep = 0, myLevel = 0, adminCheck = 0;
 		String mode = request.getParameter("mode");
 		String code = request.getParameter("code");
 		String bName = request.getParameter("bName");
 		String no = request.getParameter("no");
 		String textContent = request.getParameter("textContent");
-		String MHTcontent = request.getParameter("content");
+		String content = request.getParameter("content");
 		String title = request.getParameter("title");
-		String attachList = request.getParameter("attachList");
+		String attachList = request.getParameter("attachList"); // 2024-07-11 기준 전달되지 않는 파라미터로 확인
 		String userNm = request.getParameter("userNM");
 		String userNm2 = request.getParameter("userNM2");
 		String realPath = commonUtil.getRealPath(request);
+		String boardID = request.getParameter("boardID");
+		int cNo = 0;
 
 		if (!request.getParameter("ref").equals("")) {
             myRef = Integer.parseInt(request.getParameter("ref"));
@@ -3695,32 +3759,71 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	                strPath = commonUtil.detectPathTraversal(strPath);
 	                //logger.debug("strPath ==== " + strPath);
 
-	                try (PrintWriter pw = new PrintWriter(new File(strPath))) {
-		    		    //pw = new PrintWriter(new File(strPath));
-			    		pw.print(commonUtil.stripScriptTags(MHTcontent));
-			    		pw.flush();
-			    		pw.close();
-	                } catch (FileNotFoundException fnfe) {
-	    				logger.debug("fnfe: {}", fnfe);
-	    			} catch (Exception e) {
-	    				logger.debug("e: {}", e);
-	    			} /*finally {
-	    			    if (os != null) {
-	    					try {
-	    					    os.close();
-	    					} catch (Exception ignore) {
-	    						logger.debug("IGNORED: {}", ignore.getMessage());
-	    					}
-	    			    }
-	    			    
-	    			    if (is != null) {
-	    					try {
-	    					    is.close();
-	    					} catch (Exception ignore) {
-	    						logger.debug("IGNORED: {}", ignore.getMessage());
-	    					}
-	    			    }
-	                }*/
+	                if (!editor.equals("HWP")) {
+	                	try (PrintWriter pw = new PrintWriter(new File(strPath))) {
+			    		    //pw = new PrintWriter(new File(strPath));
+				    		pw.print(commonUtil.stripScriptTags(content));
+				    		pw.flush();
+				    		pw.close();
+		                } catch (FileNotFoundException fnfe) {
+		    				logger.debug("fnfe: {}", fnfe);
+		    			} catch (Exception e) {
+		    				logger.debug("e: {}", e);
+		    			} /*finally {
+		    			    if (os != null) {
+		    					try {
+		    					    os.close();
+		    					} catch (Exception ignore) {
+		    						logger.debug("IGNORED: {}", ignore.getMessage());
+		    					}
+		    			    }
+		    			    
+		    			    if (is != null) {
+		    					try {
+		    					    is.close();
+		    					} catch (Exception ignore) {
+		    						logger.debug("IGNORED: {}", ignore.getMessage());
+		    					}
+		    			    }
+		                }*/
+	                } else {
+	                	InputStream stream = null;
+	            		OutputStream bos = null;
+	            		
+	            		try {
+	            			stream = new ByteArrayInputStream(Base64.decodeBase64(content));
+	            			bos = new FileOutputStream(strPath);
+	            			
+	            			int bytesRead = 0;
+	            			byte[] buffer = new byte[2048];
+	            			
+	            			while ((bytesRead = stream.read(buffer, 0, 2048)) != -1) {
+	            				bos.write(buffer, 0, bytesRead);
+	            			}
+	            		}
+	            		catch (RuntimeException e) {
+	            			throw e;
+	            		}
+	            		catch (Exception e) {
+	            			logger.debug("e: {}", e);
+	            		} finally {
+	            			if (bos != null) {
+	            				try {
+	            					bos.close();
+	            				} catch (Exception ignore) {
+	            						logger.debug("IGNORED: {}", ignore.getMessage());
+	            				}
+	            			}
+	            			
+	            			if (stream != null) {
+	            				try {
+	            					stream.close();
+	            				} catch (Exception ignore) {
+	            					logger.debug("IGNORED: {}", ignore.getMessage());
+	            				}
+	            			}
+	            		}
+	                }
 	        	}
         	}
         } else {
@@ -3736,6 +3839,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         	}
         	
         	number = maxNum + 1;
+        	cNo = number;
         	
         	if (no.equals("")) {
         		myRef = number;
@@ -3755,11 +3859,20 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         	
         	if (strMaxNum == 0){
                 if (code.equals("")) {
-                    fileName = "0000000001.mht";
+                	fileName = "0000000001";
+                	if (!editor.equals("HWP")) {
+                		fileName = fileName + ".mht";
+                	} else {
+                		fileName = fileName + ".hwp"; 
+                	}
                 } else {
-                    fileName = "0000000001" + "(" + code + ").mht";
+                    fileName = "0000000001" + "(" + code + ")";
+                    if (!editor.equals("HWP")) {
+                		fileName = fileName + ".mht";
+                	} else {
+                		fileName = fileName + ".hwp"; 
+                	}
                 }
-                
                 dirPath = realPath + commonUtil.getUploadPath("upload_community.FILEDATA", userInfo.getTenantId()) + commonUtil.separator + getFileFolderName(bName) + commonUtil.separator;
                 strPath = realPath + commonUtil.getUploadPath("upload_community.FILEDATA", userInfo.getTenantId()) + commonUtil.separator + getFileFolderName(bName) + commonUtil.separator +fileName;
             } else {
@@ -3772,7 +3885,11 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
                     strName = strName + "(" + code + ")";
                 }
                 
-                fileName = strName + ".mht";
+                if (!editor.equals("HWP")) {
+                	fileName = strName + ".mht";
+                } else {
+                	fileName = strName + ".hwp";
+                }
                 dirPath = realPath + commonUtil.getUploadPath("upload_community.FILEDATA", userInfo.getTenantId()) + commonUtil.separator + getFileFolderName(bName) + commonUtil.separator;
                 strPath = realPath + commonUtil.getUploadPath("upload_community.FILEDATA", userInfo.getTenantId()) + commonUtil.separator + getFileFolderName(bName) + commonUtil.separator + fileName;
             }
@@ -3788,39 +3905,125 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			String companyID = Optional.ofNullable(request.getParameter("companyID")).orElse(userInfo.getCompanyID());
 			bbsEditOkInsert(bName.toUpperCase(), myRef, newStep, newLevel, attachList, number, textContent, nowDate, fileName, code, companyID, userInfo.getId(), userNm, userNm2, title, maxIdFieldName, no, userInfo.getTenantId());
         	
-        	try (PrintWriter pw = new PrintWriter(new File(strPath))) {
-        		//File dir = new File(commonUtil.detectPathTraversal(dirPath));
-        		
-        		if (!dir.exists()) {
-        			dir.mkdirs();
-        		}
-        		
-	    		//pw = new PrintWriter(new File(strPath));
-	    		pw.print(commonUtil.stripScriptTags(MHTcontent));
-	    		pw.flush();
-	    		pw.close();
-            } catch (FileNotFoundException fnfe) {
- 				logger.debug("fnfe: {}", fnfe);
- 			} catch (Exception e) {
- 				logger.debug("e: {}", e);
- 			} /*finally {
- 			    if (os != null) {
- 					try {
- 					    os.close();
- 					} catch (Exception ignore) {
- 						logger.debug("IGNORED: {}", ignore.getMessage());
- 					}
- 			    }
- 			    
- 			    if (is != null) {
- 					try {
- 					    is.close();
- 					} catch (Exception ignore) {
- 						logger.debug("IGNORED: {}", ignore.getMessage());
- 					}
- 			    }
-        	}*/
+			if (!editor.equals("HWP")) {
+				try (PrintWriter pw = new PrintWriter(new File(strPath))) {
+	        		//File dir = new File(commonUtil.detectPathTraversal(dirPath));
+	        		
+	        		if (!dir.exists()) {
+	        			dir.mkdirs();
+	        		}
+	        		
+		    		//pw = new PrintWriter(new File(strPath));
+		    		pw.print(commonUtil.stripScriptTags(content));
+		    		pw.flush();
+		    		pw.close();
+	            } catch (FileNotFoundException fnfe) {
+	 				logger.debug("fnfe: {}", fnfe);
+	 			} catch (Exception e) {
+	 				logger.debug("e: {}", e);
+	 			} /*finally {
+	 			    if (os != null) {
+	 					try {
+	 					    os.close();
+	 					} catch (Exception ignore) {
+	 						logger.debug("IGNORED: {}", ignore.getMessage());
+	 					}
+	 			    }
+	 			    
+	 			    if (is != null) {
+	 					try {
+	 					    is.close();
+	 					} catch (Exception ignore) {
+	 						logger.debug("IGNORED: {}", ignore.getMessage());
+	 					}
+	 			    }
+	        	}*/
+			} else {
+				InputStream stream = null;
+        		OutputStream bos = null;
+				
+        		try {
+					stream = new ByteArrayInputStream(Base64.decodeBase64(content));
+					bos = new FileOutputStream(strPath);
+					
+					int bytesRead = 0;
+					byte[] buffer = new byte[2048];
+					
+					while ((bytesRead = stream.read(buffer, 0, 2048)) != -1) {
+						bos.write(buffer, 0, bytesRead);
+					}
+				}
+				catch (RuntimeException e) {
+					throw e;
+				}
+				catch (Exception e) {
+					logger.debug("e: {}", e);
+				} finally {
+					if (bos != null) {
+						try {
+							bos.close();
+						} catch (Exception ignore) {
+								logger.debug("IGNORED: {}", ignore.getMessage());
+						}
+					}
+					
+					if (stream != null) {
+						try {
+							stream.close();
+						} catch (Exception ignore) {
+							logger.debug("IGNORED: {}", ignore.getMessage());
+						}
+					}
+				}
+			}
         }
+		
+		String pHasAttach = "";
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		CommunityBoardItemVO item = new CommunityBoardItemVO();
+		map.put("tenantID", userInfo.getTenantId());
+		if (mode.equals("edit")) {
+			item.setItemID(no);
+			map.put("v_pItemID", no);
+		} else {
+			map.put("v_cNo", cNo);
+			int recNo = ezCommunityDAO.getRecentNo(map);
+			item.setItemID(String.valueOf(recNo));
+			map.put("v_pItemID", String.valueOf(recNo));
+		}
+		
+		String uploadFilePath = commonUtil.getUploadPath("upload_community.ROOT", userInfo.getTenantId()) + commonUtil.separator;
+		
+		if (attachList.length() > 0) {
+			item.setAttachments(URLDecoder.decode(attachList, "utf-8"));
+			item.setExtensionAttribute5("");
+			item.setBoardID(boardID);
+			
+			if (saveAttachmentsInfo(item, uploadFilePath, realPath, userInfo.getTenantId()) == false) {
+				return egovMessageSource.getMessage("ezCommunity.lhj05", userInfo.getLocale());
+			}
+			pHasAttach = "1";
+		} else {
+			pHasAttach = "0";
+			List<CommunityBoardItemAttachmentVO> orgFileList = ezCommunityDAO.getItemAttachmentXML(map);
+			if (orgFileList.size() > 0) {
+				String folder = realPath + uploadFilePath;
+				for (CommunityBoardItemAttachmentVO itemAttachment : orgFileList) {
+					String strFile = folder + itemAttachment.getFilePath();
+					File file = new File(commonUtil.detectPathTraversal(strFile));
+					
+					if (file.exists()) {
+						file.delete();
+					}
+				}
+			}
+			ezCommunityDAO.newItemDel(map);
+		}
+		
+		map.put("pHasAttach", pHasAttach);
+		
+		ezCommunityDAO.updateAttachments(map);
 		
 		logger.debug("bbsEditOk ended.");
 		return "OK";
@@ -3852,6 +4055,25 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 					
 					for (int i = 0; i <= strAttachFile.length; i++) {
 						strFile = folder + strAttachFile[i];
+						File file = new File(commonUtil.detectPathTraversal(strFile));
+						
+						if (file.exists()) {
+							file.delete();
+						}
+					}
+				}
+			} else if (bName.equals("tbl_c_board")) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("tenantID", tenantID);
+				map.put("v_pOrgItemID", itemNo);
+				List<CommunityBoardItemAttachmentVO> orgAttachList = ezCommunityDAO.copyItemGet2(map);
+				
+				if (orgAttachList.size() > 0) {
+					String uploadFilePath = commonUtil.getUploadPath("upload_community.ROOT", userInfo.getTenantId()) + commonUtil.separator;
+					folder = commonUtil.getRealPath(request) + uploadFilePath;
+					
+					for (CommunityBoardItemAttachmentVO itemAttachment : orgAttachList) {
+						strFile = folder + itemAttachment.getFilePath();
 						File file = new File(commonUtil.detectPathTraversal(strFile));
 						
 						if (file.exists()) {
@@ -4074,6 +4296,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	public String copyItem(String pOrgItemID, String pOrgBoardID, String pDestItemID, String pDestBoardID, String realPath, LoginVO userInfo) throws Exception {
 		logger.debug("copyItem started");
 
+		String editor = ezCommonService.getTenantConfig("MODULEEDITOR", userInfo.getTenantId());
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pOrgItemID", pOrgItemID);
 		map.put("v_pOrgBoardID", pOrgBoardID);
@@ -4096,7 +4320,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		String pUploadFilePath = realPath + commonUtil.getUploadPath("upload_community.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		
-		copyFiles(pOrgItemID, pOrgBoardID, pDestItemID, pDestBoardID, pUploadFilePath);
+		copyFiles(pOrgItemID, pOrgBoardID, pDestItemID, pDestBoardID, pUploadFilePath, editor);
 		
 		Map<String, Object> map2 = new HashMap<String, Object>();
 		map2.put("v_pOrgItemID", pOrgItemID);
@@ -4896,6 +5120,9 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_pNow", commonUtil.getTodayUTCTime(""));
 		map.put("tenantID", tenantID);
 		
+		/* 2024-07-16 홍승비 - 커뮤니티 팝업홈 > 관리메뉴 > 게시판 검색 시 카운트 쿼리에서 누락된 게시자명 다국어 검색조건 추가 */
+		map.put("v_strLang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
+		
 		int result = ezCommunityDAO.adminSearchItemCount(map);
 		
 		logger.debug("adminSearchItemCount ended.");
@@ -5660,13 +5887,13 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		logger.debug("searchCop started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_searchName", search);
+		map.put("v_searchName", search.toUpperCase()); // C_CLUBNAME, C_CLUBNAME2, C_CLUBDESC
 		map.put("v_searchValue", keyword);
 		map.put("v_pStart", startRow);
 		map.put("mariaStart", startRow - 1);
 		map.put("v_pEnd", endRow);
 		map.put("mariaEnd", endRow - startRow + 1);
-		map.put("v_mode", mode);
+		map.put("v_mode", mode); // SEA (리스트), CNT (카운트)
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
@@ -5806,8 +6033,15 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("tenantID", tenantID);
 		map.put("offset", offset);
 		
-		//logger.debug("psortBY");
-		//logger.debug(pSortBy);
+		/* 2024-07-11 홍승비 - SQL Injection 수정 > 정렬 조건을 쿼리 내부에서 분기처리 하도록 수정 (현재 포토게시판은 리스트 헤더 정렬 기능이 없고, 정렬 조건으로 공백만 전달됨) */
+		if (!pSortBy.equals("")) {
+			String orderCell = pSortBy.split(" ")[0].toUpperCase();
+			String orderSort = pSortBy.split(" ").length > 1 ? pSortBy.split(" ")[1].toUpperCase() : "";
+			
+			map.put("v_orderCell", orderCell); // BOARDNAME, TITLE, WRITERCOMPANYNAME, WRITERDEPTNAME, WRITERNAME, WRITEDATE, ATTACHMENTS, READCOUNT
+			map.put("v_orderSort", orderSort); // "" or DESC
+		}
+		
 		List<CommunityBoardItemVO> itemList = ezCommunityDAO.boardItemListPhotoGet2(map);
 		
 		sb.append("<NODES>");
@@ -6163,7 +6397,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		//logger.debug("bName : " + bName + ", no : " + no + ", code : " + code + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_BNAME", bName);
+		map.put("v_BNAME", bName.toUpperCase());
 		map.put("v_NO", no);
 		map.put("v_CODE", code);
 		map.put("tenantID", tenantID);
@@ -6459,13 +6693,13 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		return strReturn;
 	}
 	
+	/* 2024-07-11 홍승비 - SQL Injection 수정 > 의미없는 칼럼 셀렉트 분기처리 제거 (maxIdFieldName값은 항상 C_NO 칼럼을 전달함) */
 	public int bbsEditOkGet2(String maxIdFieldName, String bName, String code, int tenantID) throws Exception {
 		logger.debug("bbsEditOkGet2 started.");
 		//logger.debug("maxIdFieldName : " + maxIdFieldName + ", bName : " + bName + ", code : " + code + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_MAXIDFIELDNAME", maxIdFieldName);
-		map.put("v_BNAME", bName);	
+		map.put("v_BNAME", bName.toUpperCase());
 		map.put("v_CODE", code);
 		map.put("tenantID", tenantID);
 		
@@ -6481,8 +6715,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		//logger.debug("maxIdFieldName : " + maxIdFieldName + ", bName : " + bName + ", code : " + code + ", strMaxNum : " + maxNum + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_MAXIDFIELDNAME", maxIdFieldName);
-		map.put("v_BNAME", bName);	
+		map.put("v_BNAME", bName.toUpperCase());
 		map.put("v_CODE", code);
 		map.put("v_STRMAXNUM", Integer.toString(maxNum));
 		map.put("tenantID", tenantID);
@@ -6536,6 +6769,15 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_PENDROW", pEndRow);
 		map.put("v_pNow", commonUtil.getTodayUTCTime(""));
 		map.put("tenantID", tenantID);
+		
+		/* 2024-07-11 홍승비 - SQL Injection 수정 > 정렬 조건을 쿼리 내부에서 분기처리 하도록 수정 */
+		if (!pSortBy.equals("")) {
+			String orderCell = pSortBy.split(" ")[0].toUpperCase();
+			String orderSort = pSortBy.split(" ").length > 1 ? pSortBy.split(" ")[1].toUpperCase() : "";
+			
+			map.put("v_orderCell", orderCell); // BOARDNAME, TITLE, WRITERCOMPANYNAME, WRITERDEPTNAME, WRITERNAME, WRITEDATE, ATTACHMENTS, READCOUNT
+			map.put("v_orderSort", orderSort); // "" or DESC
+		}
 		
 		/* 2018-10-02 홍승비 - 게시자의 writerDeptID를 가져오도록 수정 */
 		List<CommunityBoardListVO> list = ezCommunityDAO.boardItemListGet2(map);
@@ -6790,6 +7032,34 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			//String[] attachmentsArr = attachments.split(";");
 			String[] attachmentsArr = attachments.split("\\|"); //baonk added
 			
+			Map<String, Object> map2 = new HashMap<String, Object>();
+			map2.put("v_pItemID", itemID);
+			map2.put("tenantID", tenantID);
+			List<CommunityBoardItemAttachmentVO> orgFileList = ezCommunityDAO.getItemAttachmentXML(map2);
+			if (orgFileList.size() > 0) {
+				String folder = realPath + pUploadFilePath;
+				for (CommunityBoardItemAttachmentVO itemAttachment : orgFileList) {
+					boolean match = false;
+					
+					for (String attach : attachmentsArr) {
+						if (itemAttachment.getFilePath().equals(attach)) {
+							match = true;
+							break;
+						}
+					}
+					if (!match) {
+						String strFile = folder + itemAttachment.getFilePath();
+						File file = new File(commonUtil.detectPathTraversal(strFile));
+						
+						if (file.exists()) {
+							file.delete();
+						}
+					}
+				}
+			}
+			
+			ezCommunityDAO.newItemDel(map2);
+			
 			for (int i = 0; i < attachmentsArr.length; i++) {
 				map = new HashMap<String, Object>();
 				map.put("tenantID", tenantID);
@@ -6810,7 +7080,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 					map.put("itemID", itemID);
 					
 					if (thumbPath.indexOf("tempUploadFile") > -1) {
-						String destThumbFilePath = commonUtil.detectPathTraversal(realPath+ pUploadFilePath  + boardID + commonUtil.separator + "uploadFile" + thumbPath.split(";")[i].replace("tempUploadFile", ""));
+						String destThumbFilePath = commonUtil.detectPathTraversal(realPath + pUploadFilePath  + boardID + commonUtil.separator + "uploadFile" + thumbPath.split(";")[i].replace("tempUploadFile", ""));
 						File destThumbFile = new File(destThumbFilePath);
 						FileUtils.moveFile(thumbnailFile, destThumbFile);
 						map.put("filePath", boardID + commonUtil.separator + "uploadFile" + commonUtil.separator + thumbPath.split(";")[i].replace("tempUploadFile", ""));
@@ -6882,7 +7152,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		//logger.debug("bName : "+ bName + ", title : " + title + ", no : " + no + ", code : " + code + ", attachList : " + attachList + ", textContent : " + textContent);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_BNAME", bName);
+		map.put("v_BNAME", bName.toUpperCase());
 		map.put("v_TITLE", title);
 		map.put("v_NO", no);
 		map.put("v_CODE", code);
@@ -6900,7 +7170,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		//logger.debug("bName : " + bName);		
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_bName", bName);
+		map.put("v_BNAME", bName.toUpperCase());
 		map.put("v_myRef", myRef);
 		map.put("v_myStep", myStep);
 		map.put("v_code", code);
@@ -6911,6 +7181,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		logger.debug("bbsEditOkSet2 ended.");
 	}
 	
+	/* 2024-07-11 홍승비 - SQL Injection 수정 > 의미없는 칼럼 셀렉트 분기처리 제거 (maxIdFieldName값은 항상 C_NO 칼럼을 전달함) */
 	public void bbsEditOkInsert(String bName, int myRef, int newStep, int newLevel, String attachList, int number, String textContent, String nowDate, String fileName, String code, String companyID, String id, String userNm, String userNm2, String title, String maxIdFieldName, String no, int tenantID) throws Exception {
 		logger.debug("bbsEditOkInsert started.");
 /*		logger.debug("bName : " + bName + ", myRef : " + myRef + ", newStep : " + newStep + ", newLevel : " + newLevel + ", attachList : " + attachList + ", number : " + number);
@@ -6918,7 +7189,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		logger.debug(", userNm : " + userNm + ", userNm2 : " + userNm2 + ", title : " + title + ", maxIdFieldName : " + maxIdFieldName + ", tenantID : " + tenantID);
 		*/
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_BNAME", bName);
+		map.put("v_BNAME", bName.toUpperCase());
 		map.put("v_MYREF", myRef);
 		map.put("v_NEWSTEP", newStep);
 		map.put("v_NEWLEVEL", newLevel);
@@ -6933,7 +7204,6 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_USERINFO_DISPLAYNAME1", userNm);
 		map.put("v_USERINFO_DISPLAYNAME2", userNm2);
 		map.put("v_TITLE", title);
-		map.put("v_MAXIDFIELDNAME", maxIdFieldName);
 		map.put("v_NO", no); // TBL_C_BOARD에 등록될 공지사항 답변인 경우, 전달받은 부모 공지사항의 no값이 존재한다면 UPPERNO 칼럼에 기록
 		map.put("tenantID", tenantID);
 		
@@ -6947,7 +7217,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		//logger.debug("bName : " + bName + ", itemNo : " + itemNo + ", code : " + code + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_BNAME", bName);
+		map.put("v_BNAME", bName.toUpperCase());
 		map.put("v_NO", itemNo);
 		map.put("v_CODE", code);
 		map.put("tenantID", tenantID);
@@ -6955,6 +7225,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		logger.debug("bbsDelOkDel started.");
 		
 		ezCommunityDAO.bbsDelOkDel(map);
+		ezCommunityDAO.bbsDelOkDelAttach(map);
 	}
 	
 	public void commMakeOkInsert2(int clubNo, String clubName, String clubName2, String cCateA, String cCateB, String cCateC, String clubType, String clubConfirmType, String intro, int isIn, String logo, String thumb, String bBoardName1, String bBoardName2, String comatt, String code, String bNotiName1, String bNotiName2, String pNewID, int boardNo, String id, String displayName1, String companyName1, String deptName1, String pNewSubID, int openEmail, int openHp, int openComp, int openHouse, int openJob, int openBirth, int openSex, String companyID, int tenantID) throws Exception {
@@ -7403,9 +7674,18 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			logger.debug("adminLogoOkUpdate2 ended.");
 		}*/
 
-	public void copyFiles(String pOrgItemID, String pOrgBoardID, String pDestItemID, String pDestBoardID, String pRef) throws Exception {
-        String orgFilePath = commonUtil.detectPathTraversal(pRef + pOrgBoardID + commonUtil.separator + "doc" + commonUtil.separator + pOrgItemID + ".mht");
-        String destFilePath = commonUtil.detectPathTraversal(pRef + pDestBoardID + commonUtil.separator + "doc" + commonUtil.separator + pDestItemID + ".mht");
+	public void copyFiles(String pOrgItemID, String pOrgBoardID, String pDestItemID, String pDestBoardID, String pRef, String editor) throws Exception {
+        
+		String orgFilePath = "";
+        String destFilePath = "";
+		
+		if (!editor.equals("HWP")) {
+			orgFilePath = commonUtil.detectPathTraversal(pRef + pOrgBoardID + commonUtil.separator + "doc" + commonUtil.separator + pOrgItemID + ".mht");
+			destFilePath = commonUtil.detectPathTraversal(pRef + pDestBoardID + commonUtil.separator + "doc" + commonUtil.separator + pDestItemID + ".mht");
+		} else {
+			orgFilePath = commonUtil.detectPathTraversal(pRef + pOrgBoardID + commonUtil.separator + "doc" + commonUtil.separator + pOrgItemID + ".hwp");
+			destFilePath = commonUtil.detectPathTraversal(pRef + pDestBoardID + commonUtil.separator + "doc" + commonUtil.separator + pDestItemID + ".hwp");
+		}
 
         File destdir = new File(commonUtil.detectPathTraversal(pRef + pDestBoardID));
         if (!destdir.exists()) {
@@ -8031,5 +8311,117 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
                          .replaceAll("\\%7E", "~");
 	 
 	    return result;
+	}
+
+	public List<String> myCommunityAndPublicGet(String id, String companyID, int tenantID) throws Exception {
+		logger.debug("myCommunityAndPublicGet started.");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_USERID", id);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+
+		List<String> list = ezCommunityDAO.myCommunityPopGet(map);
+
+		logger.debug("myCommunityAndPublicGet ended.");
+		return list;
+	}
+
+	@Override
+	public String popularBoardItem(LoginVO userInfo) throws Exception {
+		logger.debug("popularBoardItem started.");
+		
+		StringBuilder rtnVal = new StringBuilder();
+		String userId = userInfo.getId();
+		String companyId = userInfo.getCompanyID();
+		int tenantId = userInfo.getTenantId();
+		
+		List<String> clubNoList = myCommunityAndPublicGet(userId, companyId, tenantId);
+		
+		rtnVal.append("<ITEM><DATA>");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("v_copNo", clubNoList);
+		map.put("v_pNow", commonUtil.getTodayUTCTime(""));
+		map.put("tenantID", tenantId);
+		map.put("offset", commonUtil.getMinuteUTC(userInfo.getOffset()));
+
+		if(clubNoList.size() > 0) {
+			List<CommunityMyCommunityVO> myCommunityList = ezCommunityDAO.myCommunityPopItemGet(map);
+
+			for(CommunityMyCommunityVO myCommunity : myCommunityList) {
+				rtnVal.append(commonUtil.getQueryResult(myCommunity));
+			}
+		}
+		
+		rtnVal.append("</DATA></ITEM>");
+
+		logger.debug("popularBoardItem ended.");
+		return rtnVal.toString();
+	}
+    
+	@Override
+	public boolean saveHWP(String strHTML, String strFileName, String strBoardID, String strFilePath, String realPath) throws Exception {
+		
+		String docPath = "";
+		String filePath = "";
+		boolean ret = true;
+		InputStream stream = null;
+		OutputStream bos = null;
+		
+		try {
+			docPath = realPath + strFilePath;
+			docPath = commonUtil.detectPathTraversal(docPath);
+			strBoardID = commonUtil.detectPathTraversal(strBoardID);
+			
+			if (!new File(docPath + strBoardID).exists()) {
+				File dir1 = new File(docPath + strBoardID + commonUtil.separator + "uploadFile");
+				File dir2 = new File(docPath + strBoardID + commonUtil.separator + "doc");
+				dir1.mkdirs();
+				dir2.mkdirs();
+			}
+			
+			filePath = docPath + strBoardID + commonUtil.separator + "doc" + commonUtil.separator + strFileName + ".hwp";
+			filePath = commonUtil.detectPathTraversal(filePath);
+			
+			if(new File(filePath).exists()) {
+				new File(filePath).delete();
+			}
+			
+			stream = new ByteArrayInputStream(Base64.decodeBase64(strHTML));
+			bos = new FileOutputStream(filePath);
+			
+			int bytesRead = 0;
+			byte[] buffer = new byte[2048];
+			
+			while ((bytesRead = stream.read(buffer, 0, 2048)) != -1) {
+				bos.write(buffer, 0, bytesRead);
+			}
+			
+		} catch (RuntimeException e) {
+			throw e;
+		}
+		catch (Exception e) {
+			ret = false;
+		} finally {
+			if (bos != null) {
+				try {
+					bos.close();
+				} catch (Exception ignore) {
+						logger.debug("IGNORED: {}", ignore.getMessage());
+				}
+			}
+			
+			if (stream != null) {
+				try {
+					stream.close();
+				} catch (Exception ignore) {
+					logger.debug("IGNORED: {}", ignore.getMessage());
+				}
+			}
+		}
+		
+		return ret;
 	}
 }

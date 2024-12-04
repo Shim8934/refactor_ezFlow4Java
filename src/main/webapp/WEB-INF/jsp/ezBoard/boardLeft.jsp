@@ -45,6 +45,8 @@
 	        var items = "<c:out value='${resultCount}'/>";
 	        var rightFrame = "";
 	        var useLeftCnt = "<c:out value='${useLeftCnt}'/>";
+			var realIndexID = "<c:out value='${realIndexID}'/>";
+	        var MyBoardScrapFlag = "<c:out value='${MyBoardScrapFlag}'/>";
 	        
 		    window.onresize = function () {
 		        var menuSize = (parseInt(items) + 2) * 30;
@@ -71,6 +73,28 @@
 		            document.body.style.UserSelect = 'none';
 		        }
 		        
+		        /*2023-05-22 기민혁  나의 스크랩함 트리 표출  */
+		        if(MyBoardScrapFlag == "TYPE2"){
+			        Tree_setconfig();
+		            var xmlDom2 = createXmlDom();
+		            xmlDom2 = loadXMLString("${userScrapCont}");
+		            var treeView = new TreeView();
+		            treeView.SetID("UserScrapContTree");
+		            treeView.SetUseAgency(true); //기본값이 true 여서 삭제 가능
+		            treeView.SetRequestData("UserScrapContRequestData");
+		            treeView.SetNodeClick("UserScrapContNodeClick");
+		            treeView.DataSource(xmlDom2);
+		            treeView.DataBind("divUserScrapContTree");
+	
+			        $(".node_normal").css("width", "145px");    
+					var node = $(".node_normal");
+				
+					for(var i=0; i<node.length; i++) {
+						node[i].setAttribute("TITLE", node[i].innerText);
+						node[i].innerText = node[i].innerText;
+					}
+		        }	
+
 		        /* 2019-09-16 홍승비 - 포탈 상단 게시판 메뉴로 게시판 접근 시, 기본으로 설정한 게시판을 보여주도록 수정 */
 		        if ((Func == null || Func == "") && (subFunc == null || subFunc == "") && (qstId == null || qstId == "") && (RedirectBoardID == null || RedirectBoardID == "") && (RedirectBoardGroupID == null || RedirectBoardGroupID == "")) {
 		        	var canRedirect = setDefaultBoard(); // 전역변수인 RedirectBoardID와 RedirectBoardGroupID 값을 임의로 설정
@@ -89,7 +113,7 @@
 		        
 		        if (Func == "1") {
 		            //WebPartToggle(level1El.item(level1El.length - 2));
-		            Open_Func(1);
+		            //Open_Func(1);
 		        }
 		        else if (Func == "3") {
 		        	//WebPartToggle(level1El.item(level1El.length - 1));
@@ -406,11 +430,14 @@
 				            	rightFrame.src = "/ezBoard/boardItemListMovie.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + gubun;
 				            } else if (gubun == 8) {
 				            	rightFrame.src = "/ezBoard/boardItemViewHomePage.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + gubun;
-				            } else {
+				            } else if (gubun == 10) {
+								return;
+							} else {
 				                if (SelectedBoardID == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
 									rightFrame.src = "/ezBoard/boardItemList_new.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=N";
-				                }
-				                else {
+								} else if (SelectedBoardID == "{ZZZZZZZZ-ZZZZ-ZZZZ-ZZZZ-ZZZZZZZZZZZZ}") {
+									rightFrame.src = "/ezBoard/boardItemList_all.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=E";
+								} else {
 				                	rightFrame.src = "/ezBoard/boardItemList.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + gubun;
 				                }
 				            }
@@ -425,11 +452,14 @@
 			                	window.parent.frames["right"].location.href = "/ezBoard/boardItemListMovie.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + gubun;
 				            } else if (gubun == 8) {
 			                	window.parent.frames["right"].location.href = "/ezBoard/boardItemViewHomePage.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + gubun;
-				            } else {
+				            } else if (gubun == 10) {
+								return;
+							} else {
 			                    if (SelectedBoardID == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
 			                        window.parent.frames["right"].location.href = "/ezBoard/boardItemList_new.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=N";
-			                    }
-			                    else {
+                                } else if (SelectedBoardID == "{ZZZZZZZZ-ZZZZ-ZZZZ-ZZZZ-ZZZZZZZZZZZZ}") {
+                                    window.parent.frames["right"].location.href = "/ezBoard/boardItemList_all.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=E";
+                                } else {
 			                        window.parent.frames["right"].location.href = "/ezBoard/boardItemList.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + gubun;
 			                    }
 			                }
@@ -522,11 +552,14 @@
 			            	rightFrame.src = "/ezBoard/boardItemListMovie.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd;
 			            } else if (chkPhotoBrd == 8) {
 			            	rightFrame.src = "/ezBoard/boardItemViewHomePage.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd;
-			            } else {
+			            } else if (chkPhotoBrd == 10) { // 카테고리 게시판인 경우 동작하지 않음.
+							return;
+						} else {
 			                if (SelectedBoardID == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
 								rightFrame.src = "/ezBoard/boardItemList_new.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=N";
-			                }
-			                else {
+							} else if (SelectedBoardID == "{ZZZZZZZZ-ZZZZ-ZZZZ-ZZZZ-ZZZZZZZZZZZZ}") {
+								rightFrame.src = "/ezBoard/boardItemList_all.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=E";
+							} else {
 			                	rightFrame.src = "/ezBoard/boardItemList.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd;
 			                }
 			            }
@@ -540,11 +573,14 @@
 		                	window.parent.frames["right"].location.href = "/ezBoard/boardItemListMovie.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd;
 			            } else if (chkPhotoBrd == 8) {
 		                	window.parent.frames["right"].location.href = "/ezBoard/boardItemViewHomePage.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd;
-			            } else {
+			            } else if (chkPhotoBrd == 10) {
+                            return;
+						} else {
 			                if (SelectedBoardID == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
 			                    window.parent.frames["right"].location.href = "/ezBoard/boardItemList_new.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=N";
-			                }
-			                else{
+							} else if (SelectedBoardID == "{ZZZZZZZZ-ZZZZ-ZZZZ-ZZZZ-ZZZZZZZZZZZZ}") {
+								window.parent.frames["right"].location.href = "/ezBoard/boardItemList_all.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=E";
+							} else{
 			                    window.parent.frames["right"].location.href = "/ezBoard/boardItemList.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd;
 			                }
 			           }
@@ -578,7 +614,8 @@
 	            
 	            $("h2.on").not($("#myBoardList")).attr("class", "off");
 	            $("#TopBoardsList .lnbUL").attr("class", "off");
-	            
+				$("#scrapUL").attr("class", "lnbUL off");
+				
 	            if ($("#myBoardList").attr("class") == "off") {
 	            	$("#myBoardList").attr("class", "on");
 	            	$("#TreeCtrl_MyBoardTree_ul").attr("class", "lnbUL");
@@ -617,6 +654,7 @@
 	            $("#TopBoardsList .lnbUL").attr("class","off");
             	$("#myBoardList").attr("class","on");
             	$("#TreeCtrl_MyBoardTree_ul").attr("class","lnbUL");
+            	$("#scrapUL").attr("class", "lnbUL off");
 		    }
 		    
 		    function GetMyBoardItem(pRootTreeID) {
@@ -682,8 +720,9 @@
 		            $("#TopBoardsList .lnbUL").attr("class","lnbUL off");
 		            $("#TreeCtrl_MyBoardTree_ul").attr("class","lnbUL off");
  		            // 2023-06-22 황인경 - 디자인 개선 > 게시판 > 좌측메뉴 > 트리구조 LNB 이미지 수정
-		            $("#myBoardList").children().eq(0).attr("class", "sub_iconLNB tree_plus"); 
-		            
+		            $("#myBoardList").children().eq(0).attr("class", "sub_iconLNB tree_plus");
+					$("#scrapUL").attr("class", "lnbUL off");
+					
 		            if (ctr.attr("class") == "off") {
 		            	ctr.attr("class", "on");		            	
 		            	ctrobj.attr("class", "lnbUL");
@@ -755,37 +794,10 @@
 		            treeView.DataBind('TreeCtrl_MyBoardTree');
 		        }
 		    }
-		    function Open_Func(idx) {
-		    	$("h2.on").attr("class", "off");
-		    	$("#TopBoardsList .lnbUL").attr("class","lnbUL off");
-	            $("#TreeCtrl_MyBoardTree_ul").attr("class","lnbUL off");
-				
-				if (typeof window.parent.frames["right"] == "undefined") {
-					if (idx == 1) {
-						rightFrame.src = "/ezQuestion/qstList.do?brdID=5";
-					}
-					else {
-						rightFrame.src = "/ezQuestion/qstStep1.do?brdID=5";
-					}
-				}
-				else {
-			        if (CrossYN()) {
-			            if (idx == 1) {
-			                window.parent.frames["right"].location.href = "/ezQuestion/qstList.do?brdID=5";
-			            }
-			            else {
-			                window.parent.frames["right"].location.href = "/ezQuestion/qstStep1.do?brdID=5";
-			            }
-			        } else {
-			            if (idx == 1)
-			                window.parent.frames["right"].location.href = "/ezQuestion/qstList.do?brdID=5";
-			            else
-							window.parent.frames["right"].location.href = "/ezQuestion/qstStep1.do?brdID=5";
-			            SetTreeviewUnSelect("");
-			        }
-				}
-		    }
-
+		    
+		    /* 2024-08-09 홍승비 - 구버전 전자설문(설문조사) 모듈은 더이상 사용하지 않는 것으로 확인, 관련 함수 Open_Func() 및 URL 호출 제거 */
+		    // 신규 전자설문 모듈은 게시판 모듈과 분리되었음
+		    
 			function Poll_Open(idx) {
 				$("h2.on").attr("class", "off");
 				$("#TopBoardsList .lnbUL").attr("class","lnbUL off");
@@ -907,6 +919,7 @@
 	            $(".tree_arrow_down").attr("class", "sub_iconLNB tree_plus");
 		    	$("#TopBoardsList .lnbUL").attr("class", "lnbUL off");
 	            $("#TreeCtrl_MyBoardTree_ul").attr("class", "lnbUL off");
+				$("#scrapUL").attr("class", "lnbUL off");
 
 	            if (typeof window.parent.frames["right"] == "undefined") {
 					rightFrame.src = "/ezBoard/boardItemList_favorite.do";
@@ -959,6 +972,14 @@
 				} else {
 		        	window.parent.frames["right"].location.href = "/ezBoard/boardConfig.do";
 				}
+		    }
+		    function ScrapBoard() {
+		    	if (typeof window.parent.frames["right"] == "undefined") {
+					rightFrame.src = "/ezBoard/boardMyScrapList.do";
+				} else {
+		        	window.parent.frames["right"].location.href = "/ezBoard/boardMyScrapList.do";
+				}
+				liSelected();
 		    }
 		    function ReservationItem_onclick() {
 		    	if (typeof window.parent.frames["right"] == "undefined") {
@@ -1051,6 +1072,9 @@
 		    
 		    /* 2019-07-08 홍승비 - 게시물 등록, 삭제, 복사, 이동시 좌측메뉴의 선택된 하위게시판 게시물 개수 갱신 함수 추가 */
 		    function refreshItemCnt(pNodeID) {
+				if(pNodeID.indexOf("UserScrapContTree") > -1){
+					return;
+				}
 		       	if (useLeftCnt == "YES") {
 			    	var SelectedBoardID = "";
 			    	if(document.getElementById(pNodeID).id.indexOf("FromTreeView") > -1) {
@@ -1145,8 +1169,135 @@
 		    	$(".tree_arrow_down").attr("class", "sub_iconLNB tree_plus");
 		    	$("#TopBoardsList .lnbUL").attr("class", "lnbUL off");
 	            $("#TreeCtrl_MyBoardTree_ul").attr("class", "lnbUL off");
+				$("#scrapUL").attr("class", "lnbUL off");
 			}
 			
+		    /* 2023-05-22 기민혁 - 나의스크랩함 클릭 이벤트  */
+		    function openScrapFolder(val01) {
+				ScrapTreeViewRefresh();
+	        	if ($("#" + val01 + "H2").attr("class") == "on") {	        	
+	        		$("#" + val01 + "H2").attr("class", "off");
+	        		$("#" + val01 + "UL").attr("class", "lnbUL off");
+					$("#" + val01 + "H2").children().eq(1).attr("class", "sub_iconLNB tree_plus");
+	        	} else {
+					$("h2.on").not($("#myBoardList")).attr("class", "off");
+					$("#TopBoardsList .lnbUL").attr("class", "off");
+	        		$(".lnb H2").attr("class", "off");
+					$("#TreeCtrl_MyBoardTree_ul").attr("class","lnbUL off");
+					$("#myBoardList").children().eq(0).attr("class", "sub_iconLNB tree_plus");
+	        		//$(".lnb UL").not("#search").attr("class", "lnbUL off"); //검색 기능 선택 제외
+					$("#" + val01 + "H2").children().eq(1).attr("class", "sub_iconLNB tree_arrow_down");
+	        		$("#" + val01 + "H2").attr("class", "on")
+	        		$("#" + val01 + "UL").attr("class", "lnbUL");
+	        	}
+	        }
+		    
+		    /* 2023-05-22 기민혁 - 나의스크랩함 config */
+		    function Tree_setconfig() {
+		        var xmlHTTP = createXMLHttpRequest();
+		        xmlHTTP.open("GET", "/xml/ezBoard/boardconttree_config.xml", false);
+		        xmlHTTP.send();
+
+		        if (xmlHTTP.readyState == 4 && xmlHTTP.status == 200) {
+		            var treeView = new TreeView();
+		            treeView.SetConfig(loadXMLString(xmlHTTP.responseText));
+		        }
+		    }
+			
+		    /* 2023-05-22 기민혁 - 나의스크랩함 노드 클릭 이벤트 */
+		    function UserScrapContNodeClick(pNodeID, pNodeNM) {
+		         	var treeNode = new TreeNode();
+		            treeNode.LoadFromID(pNodeID);
+		            nodeIdx = pNodeID;
+		            window.parent.frames.right.location.href = "/ezBoard/getBoardScrapContItemListView.do?scrapContID=" + escape(treeNode.GetNodeData("DATA1")) + "&scrapContTitle=" + encodeURIComponent(treeNode.NodeName);
+		    }
+		    
+		    /* 2023-05-22 기민혁 - 나의 스크랩함 data 호츌 */
+		    function UserScrapContRequestData(pNodeID, pTreeID) {
+	            nodeIdx = pNodeID;
+	            var treeNode = new TreeNode();
+	            treeNode.LoadFromID(pNodeID);
+
+	            var xmlHTTP = createXMLHttpRequest();
+	            var strQuery = "<DATA><USERID>" + SSUserID + "</USERID><ParentScrapContID>" + treeNode.GetNodeData("DATA1") + "</ParentScrapContID><NAME></NAME></DATA>";
+	            xmlHTTP.open("POST", "/ezBoard/getUserScrapContSubTree.do", false);
+	            xmlHTTP.send(strQuery);
+
+	            var treeView = new TreeView();
+	            treeView.LoadFromID(pTreeID);
+	            treeView.AppendChildNodes(loadXMLString(xmlHTTP.responseText).documentElement, pNodeID);
+	            
+	            var node = document.getElementById(pNodeID);
+		        var title2 = node.getElementsByClassName("node_div");
+		        if (title2[0] !=null ) {
+		        	var nodeLevel = title2[0].getAttribute("nodelevel");
+		        }
+		        
+		        if (nodeLevel > 9) {
+		        	nodeLevel = 9;
+		        }
+		        for (var i = 0; i < title2.length; i++) {
+		        	var title3 = title2[i].getElementsByClassName("node_normal");
+		        	//title3[0].setAttribute("TITLE", title3[0].innerHTML); 
+		        	if (title3[0] != null) {
+		        		title3[0].style.width = 145 - 16*(nodeLevel-1) +'px';
+		        	//title3[0].style.textOverflow = 'ellipsis';
+		        	//title3[0].style.overflow = 'hidden';
+		        	// 개인문서함 하위폴더 확장 시, title 속성 부여
+		        		title3[0].title = title3[0].innerText;
+		        	}
+		        }
+	        }
+
+		    /* 2023-05-22 기민혁 - 나의 스크랩함 새로고침 */
+		    function ScrapTreeViewRefresh() {
+	            var xmlHTTP = createXMLHttpRequest();
+	            var strQuery = "<DATA><USERID>" + SSUserID + "</USERID><ParentScrapContID>ROOT</ParentScrapContID><NAME></NAME></DATA>";
+	            xmlHTTP.open("POST", "/ezBoard/getUserScrapContSubTree.do", false);
+	            xmlHTTP.send(strQuery);
+
+	            var xmlDomRet = createXmlDom();
+	            xmlDomRet = loadXMLString(getXmlString(loadXMLString(xmlHTTP.responseText).documentElement));
+
+	            document.getElementById('divUserScrapContTree').innerHTML = '';
+	            var treeView = new TreeView();
+	            treeView.SetID("UserScrapContTree");
+	            treeView.SetUseAgency(true);
+	            treeView.SetRequestData("UserScrapContRequestData");
+	            treeView.SetNodeClick("UserScrapContNodeClick");
+	            treeView.DataSource(xmlDomRet);
+	            treeView.DataBind("divUserScrapContTree");
+	            
+	            $(".node_normal").css("width", "145px");
+ 		          
+				var node = $(".node_normal");
+					
+				for(var i=0; i<node.length; i++) {
+					node[i].setAttribute("TITLE", node[i].innerText);
+				} 
+	        }
+
+			/* 2023-05-22 기민혁 - 나의스크랩함 관리 페이지 호출 */
+		    var mnguserscrapcont_dialogArgument = new Array();
+	        function MngUserOnclick() {
+	            var url = "/ezBoard/mngUserScrapCont.do";
+	            mnguserscrapcont_dialogArgument[0] = "";
+	            mnguserscrapcont_dialogArgument[1] = MngUserOnclick_Complete;
+	            var Opener = GetOpenWindow(url, "MngUserScrapCont", 465, 395, "NO");
+	        }
+	        
+	        function MngUserOnclick_Complete(RtnVal) {
+	            ScrapTreeViewRefresh();
+	        }
+
+			function AllBoard(h2) {
+				if (typeof window.parent.frames["right"] == "undefined") {
+					rightFrame.src = "/ezBoard/boardItemList_all.do?boardID=" + encodeURIComponent("{ZZZZZZZZ-ZZZZ-ZZZZ-ZZZZ-ZZZZZZZZZZZZ}") + "&boardName=" + encodeURIComponent("<spring:message code="ezBoard.allboard.hth01" />") + "&boardType=E&buttonHidden=N";
+				} else {
+					window.parent.frames["right"].location.href = "/ezBoard/boardItemList_all.do?boardID=" + encodeURIComponent("{ZZZZZZZZ-ZZZZ-ZZZZ-ZZZZ-ZZZZZZZZZZZZ}") + "&boardName=" + encodeURIComponent("<spring:message code="ezBoard.allboard.hth01" />") + "&boardType=E&buttonHidden=N";
+				}
+				h2Selected(h2);
+			}
 	    </script>
 	</head>
 	<body class="newLeft">
@@ -1174,12 +1325,18 @@
 				        	<li><span class="list_text" onclick="MyBoard()"><spring:message code="ezBoard.t10032" /></span></li>
 							<li><span class="list_text" onclick="ReservationItem_onclick()"><spring:message code="ezBoard.t229" /></span></li>
 							<li><span class="list_text" onclick="TempBoard()"><spring:message code="ezBoard.t10030" /></span></li>
-				        </ul>
+							<c:if test="${MyBoardScrapFlag eq 'TYPE1'}">
+								<li><span class="list_text" onclick="ScrapBoard()"><spring:message code="ezBoard.kmh12" /></span></li>
+							</c:if>
+						</ul>
 			        </c:if>
+					<h2 class="off">
+						<span class="sub_iconLNB tree_plus"></span><span class="h2Title" id="allBoardList" onclick="AllBoard('allBoardList')"><spring:message code="ezBoard.allboard.hth01" /></span>
+					</h2>
 			        <div id='TopBoardsList'>
 			        	<script type="text/javascript">
 			        		parser = new DOMParser();
-		        		    xmlDoc = parser.parseFromString("${resultXML}","text/xml");
+                            xmlDoc = parser.parseFromString("${resultXML}","text/xml");
 		        			var i = 0;
 		        			$(xmlDoc).find("NODE").each(function(i) {
 		       			        document.write("<h2 class='off'>");
@@ -1214,8 +1371,20 @@
                            	<li><span class="sub_iconLNB tree_board_my"></span><span class="list_text" onclick="MyBoard()"><spring:message code="ezBoard.t10032" /></span></li>
                            	<li><span class="sub_iconLNB tree_board_reservation"></span><span class="list_text" onclick="ReservationItem_onclick()"><spring:message code="ezBoard.t229" /></span></li>
                            	<li><span class="sub_iconLNB tree_outbox"></span><span class="list_text" onclick="TempBoard()"><spring:message code="ezBoard.t10030" /></span></li>
+				        	<c:if test="${MyBoardScrapFlag == 'TYPE1'}">
+								<li><span class="sub_iconLNB tree_task_repeat"></span><span class="list_text" onclick="ScrapBoard()"><spring:message code="ezBoard.kmh12" /></span></li>
+				        	</c:if>
 				        </ul>
 				    </c:if>
+					<c:if test="${MyBoardScrapFlag == 'TYPE2'}">
+						<h2 class="off" id="scrapH2">
+							<span class="sub_iconLNB tree_manage" onclick="MngUserOnclick()"></span>
+							<span class="sub_iconLNB tree_plus"></span><span class="h2Title" onclick="openScrapFolder('scrap')"><spring:message code="ezBoard.kmh12" /></span>
+						</h2>
+						<ul class="lnbUL off" id="scrapUL">
+							<div class="tree onlytree" id="divUserScrapContTree"></div>
+						</ul>
+					</c:if>
 			        <ul class="lnbUL">
                        	<%-- 2023-06-22 황인경 - 디자인 개선 > 게시판 > 좌측메뉴 > '검색' 태그 구조, LNB 이미지 수정 --%>
 						<h2 class="off">

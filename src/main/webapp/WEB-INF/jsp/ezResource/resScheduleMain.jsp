@@ -616,6 +616,25 @@
 			DivPopUpHidden();
 			$(parent.frames["left"].document.getElementById("blockLeft")).remove();
 		}
+		// 2024-08-20 유길상 - 자원관리 즐겨찾기 관리 팝업
+		var fvMangeWindow;
+		function fvManageWindowOpen() {
+			event.stopPropagation();
+			if (fvMangeWindow) {
+				fvMangeWindow.focus();
+			} else {
+				fvMangeWindow = window.open("/ezResource/resFavoriteManage.do?brdId=${resID}", "config", GetOpenWindowfeature(600, 425));
+				fvMangeWindow.focus();
+				var winTimer;
+				winTimer = setInterval(function() {
+		            if (fvMangeWindow.closed !== false) {
+		                clearInterval(winTimer);
+		                fvMangeWindow = null;
+		                parent.frames['left'].location.reload();
+		            }
+		        }, 500);
+			}
+		}
     </script>
 	
 	</head>
@@ -644,6 +663,7 @@
     			<c:if test="${adminCKFlag eq 'Y'}" >
     				<li id="occupancylist"><span onClick="btnOccupancy_list();"><spring:message code='ezResource.kwc03'/></span></li>
     			</c:if>
+    			<li id="fav_manage" onClick="fvManageWindowOpen();"><span><spring:message code='ezResource.resFav.ygs02'/></span></li>
             </ul>
 		</div>
 		<div class="calendar_pagenav" style='left: max(50%, 550px);'>

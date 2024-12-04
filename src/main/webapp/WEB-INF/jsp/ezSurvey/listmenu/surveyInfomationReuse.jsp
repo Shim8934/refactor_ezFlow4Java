@@ -7,7 +7,7 @@
 	<div class="survey-nminfo">
 		<div>
 			<%-- <input id="info-input-ttl" class="info-input-ttl" placeholder="<spring:message code='ezSurvey.t39'/>" value="${survey.title}"> --%>
-			<input id="info-input-ttl" class="info-input-ttl" placeholder="<spring:message code='ezSurvey.t39'/>" value="<c:out value="${survey.title}"/>"> 
+			<input id="info-input-ttl" class="info-input-ttl" maxlength="40" placeholder="<spring:message code='ezSurvey.t39'/>" value="<c:out value="${survey.title}"/>"> 
 		</div>
 		
 		<div class="survey-otherinf">
@@ -125,7 +125,12 @@
 </div>
 
 <div class="survey-infpp-wrap" id="editorWrap">
-	<iframe id="info-input-pp" class="surey-frameeditor" name="info-input-pp" src="/ezEditor/selectEditor.do"></iframe>
+	<c:if test="${editor ne 'HWP'}">
+		<iframe id="info-input-pp" class="surey-frameeditor" name="info-input-pp" src="/ezEditor/selectEditor.do"></iframe>
+	</c:if>
+	<c:if test="${editor eq 'HWP'}">
+		<iframe id="info-input-pp" class="surey-frameeditor" name="info-input-pp" src="/ezBoard/WHWPEditor.do?type=modify"></iframe>
+	</c:if>
 </div>
 
 <div class="survey-bttn-panel">

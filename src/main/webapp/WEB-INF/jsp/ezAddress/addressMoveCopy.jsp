@@ -33,7 +33,7 @@
 	                try {
 	                    ReturnFunction = opener.address_movecopy_dialogArguments[1];
 	                    CancelFunction = opener.address_movecopy_dialogArguments[2];
-	                } catch (e) { }
+	                } catch (e) {console.log(e);}
 	            }
 	            var AddressTreeView = new TreeView('AddressTreeView', 'AddressTreeView');
 	            AddressTreeView.attachEvent('requestdata', requestdata);

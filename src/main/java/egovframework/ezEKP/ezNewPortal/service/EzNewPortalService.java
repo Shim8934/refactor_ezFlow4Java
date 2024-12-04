@@ -293,4 +293,6 @@ public interface EzNewPortalService {
 	public void setUserColorMode(String userId, int tenantId, String companyId, int useColor);
 	
 	public JSONArray getPortalApprovalList(PortletAprInfoVO portletAprInfoVO) throws Exception;
+
+	public int getResportletId() throws Exception;
 }

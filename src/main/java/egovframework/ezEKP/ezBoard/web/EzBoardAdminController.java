@@ -344,7 +344,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		boardPropertyVO.setAccessName(accessName1);
 		boardPropertyVO.setAccessName2(accessName2);
 		boardPropertyVO.setCompanyID(boardGroupPropertyVO.getCompanyID());
-		boardPropertyVO.setTenantID(boardGroupPropertyVO.getTenantID());
+		boardPropertyVO.setTenantID(user.getTenantId());
 		
 		ezBoardAdminService.createBoard(boardPropertyVO);
 
@@ -490,6 +490,12 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		if (boardID.equals(noticeBoardID)) { // 삭제할 게시판과 현재 회사의 공지사항 게시판 ID가 동일하다면 함께 삭제 
 			ezBoardAdminService.deleteNoticeBoard(userInfo.getTenantId(), userInfo.getCompanyID());
 		}
+		
+		/* 스크랩 게시물 삭제 */
+		ezBoardAdminService.deleteScrapBoard(boardID);
+
+		/* 스크랩함 게시물 삭제 */
+		ezBoardAdminService.deleteScrapContBoard(boardID);
 		
 		logger.debug("deleteBoard ended");
 	}
@@ -960,6 +966,9 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 			}
 		}
 		
+		/* 2024-09-10 조소정 - 게시판 > 카테고리 기능 추가 */
+		int boardItemCnt = ezBoardAdminService.getBoardItemCnt(boardID, userInfo.getTenantId());
+		
 		/* 2018-07-26 홍승비 - 다국어 표출 시 lang 대신 primary 조건 사용하도록 수정 */
 		model.addAttribute("model", boardPropertyVO);
 		model.addAttribute("use_multiData", use_multiData);
@@ -976,7 +985,8 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		model.addAttribute("lang_quaternary", lang_quaternary);
 		model.addAttribute("useJapanese", useJapanese);
 		model.addAttribute("useChinese", useChinese);
-
+		model.addAttribute("boardItemCnt", boardItemCnt);
+		
 		logger.debug("boardProperty ended");
 		return "admin/ezBoard/boardProperty";
 	}
@@ -1010,6 +1020,13 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		/* 2020-12-04 박기범 - 탭 게시판 설정 기능 추가*/
 		BoardPropertyVO boardpro = ezBoardService.getBoardProperty(boardPropertyVO.getBoardID(), userInfo.getTenantId());
 		int tabNum = 3; //탭 개수
+		
+		/* 2023-11-08 민지수 - 카테고리게시판으로 게시판 유형을 변경한 경우, 즐겨찾기와 마이게시판 목록에서 해당 게시판 제거 */
+		if (boardpro.getGuBun() != null && boardpro.getGuBun().equals("10")) {
+			ezBoardAdminService.deleteMyBoardData("MyBoards", boardPropertyVO.getBoardID(), userInfo.getTenantId());
+			ezBoardAdminService.deleteMyBoardData("MyBoardTree", boardPropertyVO.getBoardID(), userInfo.getTenantId());
+		}
+		
 		for (int i = 1; i <= tabNum; i++) {
 			String tabBoardMod = request.getParameter("tabBoardMod" + i);
 			String tabBoardCheck = request.getParameter("tabBoardCheck" + i);
@@ -1623,7 +1640,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		model.addAttribute("boardType", boardType);
 		model.addAttribute("parentBoardID", parentBoardID);
 		model.addAttribute("tabID", tabID);		
-		model.addAttribute("use_Editor", ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId()));
+		model.addAttribute("use_Editor", ezCommonService.getTenantConfig("MODULEEDITOR", userInfo.getTenantId()));
 		model.addAttribute("useFormFlag", useFormFlag);
 
 		logger.debug("boardConfig ended");
@@ -1652,7 +1669,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		
 		model.addAttribute("boardID", boardID);
 		model.addAttribute("checkForm", checkForm);
-		model.addAttribute("use_Editor", ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId()));
+		model.addAttribute("use_Editor", ezCommonService.getTenantConfig("MODULEEDITOR", userInfo.getTenantId()));
 
 		logger.debug("boardFormSave ended");
 		return "admin/ezBoard/boardFormSave";
@@ -1671,8 +1688,14 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String boardID = request.getParameter("boardID");
 		String formContent = request.getParameter("formContent");
 		String realPath = commonUtil.getRealPath(request);
+		String editor = ezCommonService.getTenantConfig("MODULEEDITOR", userInfo.getTenantId());
+		String formLocation = "";
 		
-		String formLocation = ezBoardAdminService.saveMHT(boardID, formContent, realPath, userInfo.getTenantId());		
+		if (!editor.equals("HWP")) {
+			formLocation = ezBoardAdminService.saveMHT(boardID, formContent, realPath, userInfo.getTenantId());		
+		} else {
+			formLocation = ezBoardAdminService.saveHWP(boardID, formContent, realPath, userInfo.getTenantId());
+		}
 		
 		ezBoardAdminService.setBoardForm(boardID, formLocation, userInfo.getTenantId());
 

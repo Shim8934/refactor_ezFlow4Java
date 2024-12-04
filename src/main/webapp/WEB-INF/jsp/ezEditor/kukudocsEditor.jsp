@@ -14,10 +14,46 @@
 			var type = '<c:out value="${type}"/>';
 			var height = '<c:out value="${height}"/>';
 			var editorLoadFlag = false;
-			
+
+			window.onload = function () {
+				
+				var element = parent.document.getElementById("layer_menu");
+				if (element) {
+					$(document).mouseup(function () {
+
+						if (element.style.display !== 'none') {
+							parent.document.getElementById("view_more").classList.remove('on');
+							element.style.display = 'none';
+						}
+					})
+				}
+				
+			};
+
 			function Editor_Complete() {
 				editorLoadFlag = true;
 				parent.Editor_Complete();
+				
+				// 2024-10-24 김대현 에디터 부분 클릭시 메일 쓰기창 상단 more list 숨김처리
+				var iframes = document.getElementsByTagName('iframe');
+				var element = parent.document.getElementById("layer_menu");
+				
+				if (element) {
+					for (var i = 0; i < iframes.length; i++) {
+						var iframe = iframes[i];
+						if (iframe.classList && iframe.classList.contains('kk_contentView')) {
+							var iframeDocument = iframe.contentWindow.document;
+							iframeDocument.addEventListener('mouseup', function () {
+								
+								if (element.style.display !== 'none') {
+									parent.document.getElementById("view_more").classList.remove('on');
+									element.style.display = 'none';
+								}
+							});
+							break;
+						}
+					}
+				}
 	        }
 			
 			function SetEditorContent(Data) {
@@ -107,6 +143,10 @@
 	        // 현재 위치에 텍스트 넣는 함수(서명 템플릿 관리>서명 템플릿 추가 및 수정 팝업창에서 사용)
 	        function setCursorAtText(text) {
 	        	kukudocsEditor.InsertTextByFocus(text);
+	        }
+	        
+	        function SetEditorFocus() { // 에디터 textarea에 커서를 위치시킴
+	            kukudocsEditor.SetEditorFocus();
 	        }
 		</script> 
 	</head>

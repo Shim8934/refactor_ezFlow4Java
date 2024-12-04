@@ -1390,6 +1390,14 @@
 			    
 			function btnSaveServer_onclick(AutoSave) {
 			    try {
+					if (!!checkJobTransferStatus &&
+							!checkJobTransferStatus("<c:out value ='${userInfo.id}'/>",
+									"<c:out value ='${userInfo.deptID}'/>",
+									"<c:out value ='${userInfo.jobId}'/>")) {
+						window.close();
+						return;
+					}
+					
 			        if (pDraftFlag == "REDRAFT") {
 			            if (AutoSave == "save") {
 			                AutoSave = "";

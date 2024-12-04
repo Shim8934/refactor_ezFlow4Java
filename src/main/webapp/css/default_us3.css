@@ -861,6 +861,7 @@ form{display:inline;margin:0}
 .listview {background-color:#fff;border:1px solid #ddd;}
 .listview th, .listview td, .listview table{padding:2px;margin:0;border:1px solid #ddd;}
 .listview, .popuplist .listview  table, .popuplist .listview th, .popuplist .listview td,  .content .listview table, .content .listview th, .content .listview td{border:1px solid #ddd;}
+.listview label {-webkit-user-select: none; -moz-user-select: none;-ms-user-select: none; user-select: none;}
 #listview, div .listview {background-color:#fff;border:1px solid #ddd;}
 #listview th, #listview td, #listview table{padding:2px;margin:0;border:1px solid #ddd;}
 #listview, .popuplist #listview  table, .popuplist #listview th, .popuplist #listview td,  .content #listview table, .content #listview th, .content #listview td{border:1px solid #ddd;}
@@ -2321,3 +2322,75 @@ div#txtContent table {margin:auto;}
 /* 20180731_운영자에게 메일 보내기 기능 추가 */
 #left h4{width:155px; margin:0px auto; border:1px solid #e0e0e0; padding:8px 15px; text-align:left; font-weight:normal; background:url('/images/kr/left/icon_adminMail.gif') no-repeat 12px 10px; cursor:pointer;}
 #left h4 span{padding:0px 0px 0px 20px; line-height:18px;}
+
+/* 2023-11-07 전인하 게시판 댓글 이모티콘 삽입 */
+.emoticon {    
+    background-size: 85px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-clip: border-box;
+    transition: background-size 0.2s;
+    -webkit-transition: background-size 0.2s;
+    transition-timing-function: cubic-bezier(.07,1.41,.82,1.41);
+    display: inline-block;
+    width: 105px;
+    height: 105px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.emoticon:hover {
+    background-size: 100px;
+}
+.emoticonPanel{display:none; width:440px; height:356.5px; left: 0px; background-color: #fff; border:1px solid #ddd; z-index:333; white-space: normal;}
+.emoticonPanel.open{display:block;}
+.emoticonPanel.up{top:0px; transform:translateY(-100%); position:absolute}
+.emoticonPanel.down{bottom:0px; transform:translateY(100%); position:absolute}
+#previousEmoticon, #nextEmoticon{width:30px; height:40px; padding-top:3px;}
+
+.uploadedFile {display:none; border:1px solid #ddd; width: 100px; height:100px; float:right; right: 0px; background-color: #4B4B4B;z-index: 222}
+.uploadedFile.open{display:block;}
+.uploadedFile.up{top:0px; transform:translateY(-100%); position:absolute}
+.uploadedFile.down{bottom:0px; transform:translateY(100%); position:absolute}
+.uploadedFile .cancelImg{ position:absolute; top:0px; right:0px; display: block; cursor: pointer; z-index: 2000; height:20px; width:20px;}
+.uploadedFile .previewImage{display: block; position:absolute; max-height:60px; max-width:60px; min-width: 30px; min-width: 30px; top:50%; left:50%; transform: translate(-50%, -50%);}
+
+.emoticonLayerStaticPosition{position:relative}
+.boardComment {position: relative; border-bottom: solid 1px #e2e2e2;}
+#commentListAttach {margin-right: 8px; text-align: right;}
+#commentAttach {margin-right: 8px; text-align: right;}
+a.commentFileSpan:hover {cursor: pointer; text-decoration: underline;}
+.fileDeleteBtn {cursor: pointer; }
+
+._addEmoticon {padding-left: 5px; padding-right: 5px; cursor: pointer;}
+#_addEmoticonRereply {float: left;}
+#_addEmoticon {margin-bottom: 23px;}
+
+/* 2023-12-27 전인하 - 삭제된 댓글 스타일 생성 */
+.deletedComment {
+    display: block;
+    height: 40px;
+    line-height: 40px;
+    vertical-align: middle;
+    font-size: 15px;
+    color: #999;
+    font-weight: 500;
+    text-align: center;
+}
+/* 2024-08-06 전인하 - 게시판 > 키워드 디자인 추가 */
+ .keywordSpan { color: #388CE5; padding: 0px 7px 0px 0px; font-size : 15px;}
+ .keywordSpanView { color: #388CE5; padding: 0px 7px 0px 0px; font-size : 15px;}
+ .keywordSpan:hover {text-decoration: underline; cursor: pointer;}
+ .keywordDeleteBtn { padding-left: 2px; cursor: pointer;}
+ 
+ /* 2024-10-17 전인하 - 게시판 > 댓글 정렬 기준 버튼 추가 */
+ .commentSort {float: left;}
+ .commentSort span { padding: 10px 0px; display: inline-block; }
+ .commentSort span.checked { font-weight: 700; text-decoration: underline; }
+ .commentSort span:hover { font-weight: 700; cursor: pointer; text-decoration: underline; }
+ .commentSort #latest { padding: 10px 0px 10px 10px; }
+ .commentSort #earliest:after { display: inline-block; content: ""; width: 1px; height: 12px; background-color: black; margin-left: 10px; }
+
+/* 게시판 공개 비공개 */
+.board_private{background:url(/images/lock_icon.png) no-repeat center; background-size:contain; width: 16px;height: 16px; display: inline-block;vertical-align: text-bottom;}
+/* 게시판 공개 비공개 */

@@ -21,6 +21,7 @@
 		var type = "<c:out value='${type}'/>";
 		var jobCnt = "<c:out value='${jobCnt}'/>";
 		var companyID = "<c:out value='${companyID}'/>";
+		var maxSort = "<c:out value='${maxSort}'/>";
 		var ReturnFunction;
 		var displayName1, displayName2, code, sort, useFlag;
 		
@@ -30,7 +31,7 @@
 			try {
 	            RetValue = opener.titleInfo_dialogArguments[0];
 	        	ReturnFunction = opener.titleInfo_dialogArguments[1];
-	        } catch(e) {}
+	        } catch(e) {console.log(e);}
 	        
 	        if (RetValue[0] != "") {
 		        document.getElementById("companyName").value = RetValue[0]; 
@@ -117,7 +118,8 @@
             		jobID : jobID,
             		type : type,
             		mode : mode,
-            		sort : sort,
+					sort : sort,
+					maxSort : maxSort,
             		useFlag : useFlag,
             		companyID : companyID,
             		displayName1 : displayName1,
@@ -260,7 +262,7 @@
 				</select>
 			</td>
 		</tr>
-		<tr>
+		<tr style="display: none;">
 			<th><spring:message code='ezOrgan.csj06'/></th>
 			<td colspan="2">
 				<select id="sort">

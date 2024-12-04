@@ -810,8 +810,9 @@
 		        }
 			    function search(type) {
 			        if (type == "basic") {
-			        	if (document.getElementById("txtTitle").value == "" && document.getElementById("txtAbstract").value == ""
-			        			&& $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
+			        	var txtKeywordVal = document.getElementById("txtKeyword") != null ? document.getElementById("txtKeyword").value : "";
+			        	if (document.getElementById("txtTitle").value == "" && document.getElementById("txtAbstract").value == "" && txtKeywordVal == "" 
+			        	    && $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
 			                alert("<spring:message code='ezBoard.t192' />");
 			                return;
 			            }
@@ -853,6 +854,10 @@
 	                    TYPE += "WRITERNAME;";
 	                    DATA += "<WRITERNAME><![CDATA[" + MakeXMLString(document.getElementById("txt_keyword").value) + "]]></WRITERNAME>";
 	                }
+                     else if (selectSearch.item(2).selected) {
+                        TYPE += "KEYWORD;";
+                        DATA += "<KEYWORD><![CDATA[" + document.getElementById("txt_keyword").value.replace("'", "''") + "]]></KEYWORD>";
+                     }
 	            }
 		        else {
 		            if (document.getElementById("txtTitle").value != "")		// DocTitle
@@ -866,6 +871,13 @@
 		                TYPE += "ABSTRACT;";
 		                DATA += "<ABSTRACT><![CDATA[" + document.getElementById("txtAbstract").value + "]]></ABSTRACT>";
 		            }
+		            
+		            if (document.getElementById("txtKeyword") != null) { // KEYWORD
+                        if (document.getElementById("txtKeyword").value != "") {
+                             TYPE += "KEYWORD;";
+                             DATA += "<KEYWORD><![CDATA[" + document.getElementById("txtKeyword").value.replace("'", "''") + "]]></KEYWORD>";
+                        }
+                    }
 		
 		            if ($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "")		// StartDate
 		            {
@@ -978,6 +990,7 @@
 	         	<select id="selectType" class="text" style="width:80px; height:27px; border-color: #c8c8c8;">
 					<option selected value="rad_Subject"><spring:message code='ezBoard.t208'/></option>
 		    		<option value="rad_Writer"><spring:message code='ezBoard.t223'/></option>
+		    		<option value="rad_Keyword"><spring:message code='ezApprovalG.t1200'/></option>
 		    	</select>
 			  <input id="txt_keyword" class="searchinputBox" style="height: 27px;border: 1px solid #cbcbcb;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
 	          <a class="searchBtn nofilter"><img src="/images/bsearch_new2.png" border="0" onClick="search('quick')"></a>
@@ -1112,6 +1125,10 @@
 			            <th style="text-align:center"><spring:message code='ezBoard.t208' /></th>
 			            <td><input type="text" id="txtTitle" style="width:100%" value=""></td>
 			        </tr>  
+                    <tr>
+                        <th style="text-align:center"><spring:message code='ezApprovalG.t1200' /></th>
+                        <td><input type="text" id="txtKeyword" style="width:100%" value=""></td>
+                    </tr> 
 			         <tr>
 			            <th style="text-align:center"><spring:message code='ezBoard.t209' /></th>
 			            <td><input type="text" id="txtAbstract" style="width:100%" value=""></td>

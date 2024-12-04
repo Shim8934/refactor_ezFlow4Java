@@ -132,9 +132,9 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public List<CircularListVO> getCircularList(String memberID, String searchValue, String searchType, String sdate, String edate, int startRow, int endRow, int tenantID, String offset, String orderCell, String orderOption1, String companyID) throws Exception {
+	public List<CircularListVO> getCircularList(String memberID, String searchValue, String searchType, String sdate, String edate, int startRow, int endRow, int tenantID, String offset, String orderCell, String orderOption, String companyID) throws Exception {
 		logger.debug("getCircularList started.");
-		logger.debug("memberID = " + memberID + " || searchValue = " + searchValue + " || searchType =  " + searchType + " || startRow = " + startRow + " || endRow = " + endRow + " || orderCell = " + orderCell + " || orderOption1 = " + orderOption1 + " || tenantID = " + tenantID + " || companyID = " + companyID);
+		logger.debug("memberID = " + memberID + " || searchValue = " + searchValue + " || searchType =  " + searchType + " || startRow = " + startRow + " || endRow = " + endRow + " || orderCell = " + orderCell + " || orderOption = " + orderOption + " || tenantID = " + tenantID + " || companyID = " + companyID);
 		
 		if (!sdate.equals("")) {
 			sdate += " 00:00:00";
@@ -152,7 +152,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("tenantID", tenantID);
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("orderCell", orderCell);
-		map.put("orderOption1", orderOption1);
+		map.put("orderOption", orderOption);
 		map.put("companyID", companyID);
 		
 		List<CircularListVO> list = ezCircularDAO.getCircularList(map);
@@ -999,9 +999,9 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public List<CircularListVO> getCircularCompleteList(String memberID, String searchValue, String searchType, String sdate, String edate, int startRow, int endRow, int tenantID, String offset, String orderCell, String orderOption1, String companyID) throws Exception {
+	public List<CircularListVO> getCircularCompleteList(String memberID, String searchValue, String searchType, String sdate, String edate, int startRow, int endRow, int tenantID, String offset, String orderCell, String orderOption, String companyID) throws Exception {
 		logger.debug("getCircularCompleteList started.");
-		logger.debug("memberID = " + memberID + " || searchValue = " + searchValue + " || searchType = " + searchType + " || startRow = " + startRow + " || endRow = " + endRow + " || orderCell = " + orderCell + " || orderOption1 = " + orderOption1 + " || tenantID = " + tenantID + " || companyID = " + companyID);
+		logger.debug("memberID = " + memberID + " || searchValue = " + searchValue + " || searchType = " + searchType + " || startRow = " + startRow + " || endRow = " + endRow + " || orderCell = " + orderCell + " || orderOption = " + orderOption + " || tenantID = " + tenantID + " || companyID = " + companyID);
 
 		if (!sdate.equals("")) {
 			sdate += " 00:00:00";
@@ -1019,7 +1019,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("tenantID", tenantID);
 		map.put("orderCell", orderCell);
-		map.put("orderOption1", orderOption1);
+		map.put("orderOption", orderOption);
 		map.put("companyID", companyID);
 		
 		List<CircularListVO> list = ezCircularDAO.getCircularCompleteList(map);
@@ -1084,9 +1084,9 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public List<CircularListVO> getCircularTempList(String memberID, String searchValue, String searchType, String sdate, String edate, int startRow, int endRow, String offset, int tenantID, String orderCell, String orderOption1, String companyID) throws Exception {
+	public List<CircularListVO> getCircularTempList(String memberID, String searchValue, String searchType, String sdate, String edate, int startRow, int endRow, String offset, int tenantID, String orderCell, String orderOption, String companyID) throws Exception {
 		logger.debug("getCircularTempList started.");
-		logger.debug("memberID = " + memberID + " || searchValue = " + searchValue + " || searchType =  " + searchType + " || startRow = " + startRow + " || endRow = " + endRow + " || orderCell = " + orderCell + " || orderOption1 = " + orderOption1 + " || tenantID = " + tenantID + " || companyID = " + companyID);
+		logger.debug("memberID = " + memberID + " || searchValue = " + searchValue + " || searchType =  " + searchType + " || startRow = " + startRow + " || endRow = " + endRow + " || orderCell = " + orderCell + " || orderOption = " + orderOption + " || tenantID = " + tenantID + " || companyID = " + companyID);
 		
 		if (!sdate.equals("")) {
 			sdate += " 00:00:00";
@@ -1104,7 +1104,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("tenantID", tenantID);
 		map.put("orderCell", orderCell);
-		map.put("orderOption1", orderOption1);
+		map.put("orderOption", orderOption);
 		map.put("companyID", companyID);
 		
 		List<CircularListVO> list = ezCircularDAO.getCircularTempList(map);
@@ -1142,9 +1142,9 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public List<CircularListVO> getMyCircularList(String memberID, String searchValue, String searchType, String sdate, String edate, int startRow, int endRow, String offset, int tenantID, String orderCell, String orderOption1, String companyID) throws Exception {
+	public List<CircularListVO> getMyCircularList(String memberID, String searchValue, String searchType, String sdate, String edate, int startRow, int endRow, String offset, int tenantID, String orderCell, String orderOption, String companyID) throws Exception {
 		logger.debug("getMyCircularList started.");
-		logger.debug("memberID = " + memberID + " || searchValue = " + searchValue + " || searchType =  " + searchType + " || startRow = " + startRow + " || endRow = " + endRow + " || orderCell = " + orderCell + " || orderOption1 = " + orderOption1 + " || tenantID = " + tenantID + " || companyID = " + companyID);
+		logger.debug("memberID = " + memberID + " || searchValue = " + searchValue + " || searchType =  " + searchType + " || startRow = " + startRow + " || endRow = " + endRow + " || orderCell = " + orderCell + " || orderOption = " + orderOption + " || tenantID = " + tenantID + " || companyID = " + companyID);
 
 		if (!sdate.equals("")) {
 			sdate += " 00:00:00";
@@ -1162,7 +1162,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("tenantID", tenantID);
 		map.put("orderCell", orderCell);
-		map.put("orderOption1", orderOption1);
+		map.put("orderOption", orderOption);
 		map.put("companyID", companyID);
 		
 		List<CircularListVO> list = ezCircularDAO.getMyCircularList(map);
@@ -1260,9 +1260,9 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public List<CircularListVO> getCircularTDList(String memberID, String searchValue, String searchType, int startRow, int endRow, int tenantID, String offset, String orderCell, String orderOption1, String companyID) throws Exception {
+	public List<CircularListVO> getCircularTDList(String memberID, String searchValue, String searchType, int startRow, int endRow, int tenantID, String offset, String orderCell, String orderOption, String companyID) throws Exception {
 		logger.debug("getCircularTDList started.");
-		logger.debug("memberID = " + memberID + " || searchValue = " + searchValue + " || searchType =  " + searchType + " || startRow = " + startRow + " || endRow = " + endRow + " || orderCell = " + orderCell + " || orderOption1 = " + orderOption1 + " || tenantID = " + tenantID + " || companyID = " + companyID);
+		logger.debug("memberID = " + memberID + " || searchValue = " + searchValue + " || searchType =  " + searchType + " || startRow = " + startRow + " || endRow = " + endRow + " || orderCell = " + orderCell + " || orderOption = " + orderOption + " || tenantID = " + tenantID + " || companyID = " + companyID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("memberID", memberID);
@@ -1272,7 +1272,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("rowCount", endRow-(startRow-1));
 		map.put("tenantID", tenantID);
 		map.put("orderCell", orderCell);
-		map.put("orderOption1", orderOption1);
+		map.put("orderOption", orderOption);
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("companyID", companyID);
 		
@@ -1356,9 +1356,9 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public List<CircularListVO> getFolderCircularList(String folderID, String memberID, int startRow, int endRow, String searchValue, String searchType, String sdate, String edate, String offset, int tenantID, String orderCell, String orderOption1, String companyID) throws Exception {
+	public List<CircularListVO> getFolderCircularList(String folderID, String memberID, int startRow, int endRow, String searchValue, String searchType, String sdate, String edate, String offset, int tenantID, String orderCell, String orderOption, String companyID) throws Exception {
 		logger.debug("getFolderCircularList started.");
-		logger.debug("memberID = " + memberID + " || searchValue = " + searchValue + " || searchType =  " + searchType + " || startRow = " + startRow + " || endRow = " + endRow + " || orderCell = " + orderCell + " || orderOption1 = " + orderOption1 + " || tenantID = " + tenantID + " || companyID = " + companyID);
+		logger.debug("memberID = " + memberID + " || searchValue = " + searchValue + " || searchType =  " + searchType + " || startRow = " + startRow + " || endRow = " + endRow + " || orderCell = " + orderCell + " || orderOption = " + orderOption + " || tenantID = " + tenantID + " || companyID = " + companyID);
 		
 		if (!sdate.equals("")) {
 			sdate += " 00:00:00";
@@ -1376,7 +1376,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("edate", edate);
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("orderCell", orderCell);
-		map.put("orderOption1", orderOption1);
+		map.put("orderOption", orderOption);
 		map.put("tenantID", tenantID);
 		map.put("companyID", companyID);
 		

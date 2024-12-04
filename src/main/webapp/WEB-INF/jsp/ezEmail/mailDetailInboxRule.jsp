@@ -42,6 +42,7 @@
             		try {
             			opener.parent.parent.frames["left"].mailbox_treeview_reload();
             		} catch (e) {
+            		    console.log(e);
             		}
             	}
 		    }
@@ -439,7 +440,7 @@
 		            _curCellObj.innerHTML = "<span onclick='getFoldercell(this);' value='" + url + "'><nobr>\"<u>" + name + "" + ((_RuleKind == "MOVE") ? strLang220 : strLang342) + "</u></nobr></span>";
 		            isFolderChanged = mailBoxInfo["isFolderChanged"];
 		        } catch (e) {
-		
+		            console.log(e);
 		        }
 		    }
 		    function getFoldercell(obj) {
@@ -471,7 +472,7 @@
 		            _curCellObj.setAttribute("fordername", name);
 		            _curCellObj.innerHTML = "<span onclick='getFoldercell(this);' value='" + url + "'><nobr>\"<u>" + name + "" + ((_RuleKind == "MOVE") ? strLang220 : strLang342) + "</u></nobr></span>";
 		        } catch (e) {
-		
+		            console.log(e);
 		        }
 		    }
 		    function IsEmail(strEmail) {
@@ -950,7 +951,7 @@
 		        mail_newreceiverchoose_dialogArguments[0] = receiverData;
 		        mail_newreceiverchoose_dialogArguments[1] = addReceiver;
 		        var OpenWin = window.open("/ezEmail/mailNewReceiverChoose.do?defaultwin=&type=" + type + "&RuleKind=" + _RuleKind, "mail_foldermanage_Cross", GetOpenWindowfeature(1120, 720));
-		        try { OpenWin.focus(); } catch (e) { }
+		        try { OpenWin.focus(); } catch (e) {console.log(e);}
 		    }
 		    function addReceiver(pListView) {
 		        var ListData = loadXMLString(pListView);

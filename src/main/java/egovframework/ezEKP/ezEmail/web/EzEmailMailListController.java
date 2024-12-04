@@ -16,6 +16,7 @@ import java.util.Properties;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 import javax.annotation.Resource;
 import javax.mail.Address;
@@ -28,7 +29,9 @@ import javax.mail.UIDFolder;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeUtility;
+import javax.mail.search.FlagTerm;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import egovframework.com.cmm.service.Globals;
 import egovframework.ezEKP.ezEmail.vo.*;
@@ -51,7 +54,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -265,6 +270,9 @@ public class EzEmailMailListController {
 				logger.debug("jgw getTagConfig ended, success={}", jgwResult.succeeded());
 
 				useMailTag &= jgwResult.succeeded() && jgwResult.getResultAsJsonObject().get("enable").getAsBoolean();
+			} catch (RuntimeException e) {
+				logger.error("jgw fetch error", e);
+				useMailTag = false;
 			} catch (Exception e) {
 				logger.error("jgw fetch error", e);
 				useMailTag = false;
@@ -276,11 +284,14 @@ public class EzEmailMailListController {
 		
 		// 2022-11-02 이사라 - [닷넷연동] 메일 가져오기 실행 시 분기처리 필요하여 추가
 		boolean isDotNetIntegration = "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("dotNetIntegration", tenantId));
+		// 안읽은 메일 일괄 삭제
+		String pDeleteBoxID = ezEmailUtil.getTrashFolderId(locale);
 
 		// set model
+		model.addAttribute("pDeleteBoxID", pDeleteBoxID);
 		model.addAttribute("isDotNetIntegration", isDotNetIntegration);
 		model.addAttribute("folderName", folderName);
-		model.addAttribute("url", url);
+		model.addAttribute("url", url.replace("\"","\\\""));
 		model.addAttribute("folderType", folderType);
 		model.addAttribute("isSentItems", isSentItems);
 		model.addAttribute("userLang", userInfo.getLang());
@@ -682,7 +693,13 @@ public class EzEmailMailListController {
 				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 						userEmail, password, egovMessageSource, locale, 40 * 1000, 20 * 1000, ezEmailUtil);
 
-				Folder folder = ia.getFolder(folderId);
+				if (ia == null){
+					throw new Exception("Ia is null");
+				}
+				Folder folder = ia.getFolder(folderId != null ? folderId : "");
+				if (folder == null){
+					throw new Exception("folder is null");
+				}
 				folder.open(Folder.READ_ONLY);
 
 				messages = ezEmailUtil.searchFolder(ia, userEmail, folder, categoryArray, keywordArray, startDateObj, endDateObj, false,
@@ -956,6 +973,8 @@ public class EzEmailMailListController {
 			// skyblue0o0 20180402 : 특정 유니코드 문자 포함 시 xml파싱 에러나서 빈칸으로 치환
 			returnData = sb.toString().replaceAll("[\\u0000-\\u0008\\u000B-\\u000C\\u000E-\\u001F]", " ");
 			
+		} catch (IndexOutOfBoundsException e) {
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		} finally {
@@ -1264,6 +1283,8 @@ public class EzEmailMailListController {
 							
 							sb.append(String.format("<countryName><![CDATA[%s]]></countryName>", countryName));
 							sb.append(String.format("<countryCode><![CDATA[%s]]></countryCode>", countryCode));							
+						} catch (NullPointerException e) {
+							logger.error(e.getMessage(), e);
 						} catch (Exception e) {
 							logger.error(e.getMessage(), e);
 						}
@@ -1342,8 +1363,14 @@ public class EzEmailMailListController {
 			} else {							
 				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 						userEmail, password, egovMessageSource, locale, 40*1000, 20*1000, ezEmailUtil);
-						
-				Folder folder = ia.getFolder(folderId);		
+
+				if (ia == null){
+					throw new Exception("Ia is null");
+				}
+				Folder folder = ia.getFolder(folderId != null ? folderId : "");
+				if (folder == null){
+					throw new Exception("folder is null");
+				}
 				folder.open(Folder.READ_ONLY);
 								
 				messages = ezEmailUtil.searchFolder(ia, userEmail, folder, categoryArray, keywordArray, startDateObj, endDateObj, false, 
@@ -1481,6 +1508,8 @@ public class EzEmailMailListController {
 							sb.append(String.format("<countryName><![CDATA[%s]]></countryName>", countryName));
 							sb.append(String.format("<countryCode><![CDATA[%s]]></countryCode>", countryCode));
 							
+						} catch (MessagingException e) {
+							logger.error(e.getMessage(), e);
 						} catch (Exception e) {
 							logger.error(e.getMessage(), e);
 						}
@@ -1574,6 +1603,8 @@ public class EzEmailMailListController {
 			// skyblue0o0 20180402 : 특정 유니코드 문자 포함 시 xml파싱 에러나서 빈칸으로 치환
 			returnData = sb.toString().replaceAll("[\\u0000-\\u0008\\u000B-\\u000C\\u000E-\\u001F]", " ");
 			
+		} catch (IndexOutOfBoundsException e) {
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		} finally {
@@ -1689,6 +1720,449 @@ public class EzEmailMailListController {
 		
 		return returnData;				
 	}
+
+	/**
+	 * 안읽은 메일 삭제 실행 함수
+	 */
+	@RequestMapping(value="/ezEmail/unreadMailDel.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String unreadMailDel(@CookieValue("loginCookie") String loginCookie,
+								@RequestParam String url,
+								@RequestParam String cmd,
+								@RequestParam String shareId,
+								Locale locale,
+								Model model) throws Exception{
+		logger.debug("unreadMailDel started.");
+
+		String returnValue = "error";
+
+		List<String> userIdnPw = commonUtil.getUserIdAndPassword(loginCookie);
+		String password  = userIdnPw.get(1);
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String userAccount = userInfo.getId() + "@" + domainName;
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+
+		if (useSharedMailbox.equals("YES")) {
+			logger.debug("shareId=" + shareId);
+
+			if (StringUtils.isNotBlank(shareId)) {
+				int permissionType = 4;
+
+				// 편지함 영구삭제 시 삭제 권한 및 관리 권한(5) 확인
+				// 모든 메일 삭제(지운편지함으로 이동), 모든 메일 영구 삭제 시 삭제 권한(1) 확인
+				// 그 외에는 관리 권한(4) 확인
+				if (cmd.equals("DEL")) {
+					permissionType = 5;
+				} else if (cmd.equals("MAILREALDEL") || cmd.equals("MAILDEL")) {
+					permissionType = 1;
+				}
+
+				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, permissionType, userInfo.getTenantId())) {
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("unreadMailDel ended.");
+
+					return "";
+				}
+
+				userAccount = shareId + "@" + domainName;
+			}
+		}
+
+		logger.debug("userId=" + userInfo.getId() + ",userAccount=" + userAccount);
+
+		IMAPAccess ia = null;
+		boolean isNewUserQuotaNeeded = false;
+		boolean isThereUserLevelQuota = false;
+		Double userQuota = 0.0;
+		Double userWarn = 0.0;
+
+		try {
+			switch (cmd) {
+				case "MAILREALDEL": //지운편지함에 있는 안 읽은 메시지 영구삭제
+					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+							userAccount, password, egovMessageSource, locale, ezEmailUtil);
+
+					if (!url.equals("")) {
+						Folder folder = ia.getFolder(url);
+						if (folder.exists()) {
+							folder.open(Folder.READ_WRITE);
+							Message[] unreadMessages = folder.search(new FlagTerm(new Flags(Flags.Flag.SEEN), false));
+							folder.setFlags(unreadMessages, new Flags(Flags.Flag.DELETED), true);
+							folder.close(true);
+							logger.debug(url + " folder is cleaned of unread messages.");
+							returnValue = "ok";
+						}
+					}
+					
+					break;
+					
+				case "MAILDEL":
+					// 특정폴더의 안 읽은 메시지 삭제(지운편지함으로 이동)
+					// 편지함 삭제 및 복사시 timeout 오류 발생으로 시간 수정
+					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+							userAccount, password, egovMessageSource, locale, 600000, 20000, ezEmailUtil);
+
+					if (!url.equals("")) {
+						String trashFolderName = ezEmailUtil.getTrashFolderId(locale);
+						Folder trashFolder = ia.getFolder(trashFolderName);
+						IMAPFolder folder = (IMAPFolder)ia.getFolder(url);
+
+						if (folder.exists() && trashFolder.exists()) {
+							folder.open(Folder.READ_WRITE);
+							Message[] unreadMessages = folder.search(new FlagTerm(new Flags(Flags.Flag.SEEN), false));
+							logger.debug("messageCount:" + unreadMessages.length );
+							if (unreadMessages.length == 0){
+								returnValue = "ok"; // 안 읽은 메일이 없는 경우에는 성공으로 처리 한다.
+								break;
+							}
+
+							String useImapMoveCommand = ezCommonService.getTenantConfig("useImapMoveCommand", userInfo.getTenantId());
+
+							if (useImapMoveCommand.equals("YES")) {
+								folder.moveMessages(unreadMessages, trashFolder);
+							} else {
+								// 지운 편지함으로 보낼 메시지의 크기가 Quota량을 초과하게 되면 Quota를 재조정한다.
+								Double[] adjustQuotaData = ezEmailUtil.adjustUserQuotaForMessageMove(unreadMessages, userAccount, domainName, ia);
+
+								if (adjustQuotaData[0] != null) {
+									isNewUserQuotaNeeded = true;
+
+									userQuota = adjustQuotaData[0];
+									userWarn = adjustQuotaData[1];
+								}
+
+								if (adjustQuotaData[2] != null) {
+									isThereUserLevelQuota = true;
+								}
+
+								folder.copyMessages(unreadMessages, trashFolder);
+								folder.setFlags(unreadMessages, new Flags(Flags.Flag.DELETED), true);
+							}
+
+							folder.close(true);
+							logger.debug(url + " folder's unread message is moved to " + trashFolderName + ".");
+							returnValue = "ok";
+						}
+					}
+
+					break;
+			}
+		} catch (MessagingException e) {
+			returnValue = "error : " + e.getMessage();
+			logger.error(e.getMessage(), e);
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
+
+			// 사용자 Quota를 변경시켰다면 원래 값으로 복원시킨다.			
+			if (isNewUserQuotaNeeded) {
+				if (isThereUserLevelQuota) {
+					ezEmailUtil.setUserQuota(userAccount, String.valueOf(userQuota), String.valueOf(userWarn));
+					// 사용자 레벨 Quota 설정 값이 없었던 경우에는 해당 설정값을 삭제한다.
+				} else {
+					ezEmailUtil.deleteUserQuota(userAccount);
+				}
+			}
+		}
+
+		logger.debug("unreadMailDel ended. returnValue={}", returnValue);
+
+		return returnValue;
+	}
+
+	/**
+	 * 안읽은 검색 메일 삭제 실행 함수
+	 */
+	@RequestMapping(value = "/ezEmail/searchedAndUnreadMailDel.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String searchedAndUnreadMailDel(@CookieValue("loginCookie") String loginCookie,
+										   @RequestBody JSONObject requestObject,
+										   Locale locale,
+										   Model model
+										   ) throws Exception {
+		logger.debug("searchedAndUnreadMailDel started.");
+		logger.debug("requestObject={}", requestObject);
+
+		String returnValue = "";
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String userEmail = userInfo.getId() + "@" + domainName;
+
+		String folderId = (String) requestObject.get("FOLDERID");
+		String inboxName = egovMessageSource.getMessage("ezEmail.t644", locale);
+		folderId = folderId.equals(inboxName) ? "INBOX" : folderId;
+		String sortType = StringUtils.defaultIfBlank((String) requestObject.get("SORTTYPE"), "");
+		String start = StringUtils.defaultIfBlank((String) requestObject.get("START"), "0");
+		String end = StringUtils.defaultIfBlank((String) requestObject.get("END"), "0");
+		String search = StringUtils.defaultIfBlank((String) requestObject.get("SEARCH"), "");
+		String viewSelectIndex = StringUtils.defaultIfBlank((String) requestObject.get("VIEWSELECTINDEX"), "");
+		String useSecureMailFilter = StringUtils.defaultIfBlank((String) requestObject.get("SECUREMAILFILTER"), "");
+		String useCountryIP = ezCommonService.getTenantConfig("useCountryIP", userInfo.getTenantId());
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+		String useRDBOnlyMailList = ezCommonService.getTenantConfig("useRDBOnlyMailList", userInfo.getTenantId());
+		String startDate = (String) requestObject.get("STARTDATE");
+		String endDate = (String) requestObject.get("ENDDATE");
+		String andorStatus = (String) requestObject.get("ANDORSTATUS");
+		String attachStatus = (String) requestObject.get("ATTACHSTATUS");
+		String tagName = StringUtils.defaultIfBlank((String) requestObject.get("TAGNAME"), "");
+		String shareId = "";
+
+		// 검색조건 정리 start
+		List listCategory = (ArrayList) requestObject.get("CATEGORY");
+		List listKeyword = (ArrayList) requestObject.get("KEYWORD");
+		String[] categoryArray = new String[listCategory.size()];
+		String[] keywordArray = new String[listKeyword.size()];
+
+		for (int i = 0; i < listCategory.size(); i++) {
+			categoryArray[i] = (String) listCategory.get(i);
+		}
+
+		for (int i = 0; i < listKeyword.size(); i++) {
+			keywordArray[i] = (String) listKeyword.get(i);
+		}
+
+		if (startDate == null) {
+			return "";
+		}
+
+		if (endDate == null) {
+			return "";
+		}
+
+		SimpleDateFormat sdfForParsing = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		sdfForParsing.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+		Date startDateObj = startDate.equals("") ? null : sdfForParsing.parse(startDate);
+		Date endDateObj = endDate.equals("") ? null	: new Date(sdfForParsing.parse(endDate).getTime() + 60 * 60 * 24 * 1000);
+
+		if (useSharedMailbox.equals("YES")) {
+			shareId = (String) requestObject.get("SHAREDID");
+			logger.debug("shareId=" + shareId);
+
+			if (StringUtils.isNotBlank(shareId)) {
+				
+				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, userInfo.getTenantId())) {
+					logger.debug("searchedAndUnreadMailDel ended. the user - {} cannot access the shareId" , userEmail);
+					return "error";
+				}
+
+				userEmail = shareId + "@" + domainName;
+			}
+		}
+
+		logger.debug("userId=" + userInfo.getId() + ",userEmail=" + userEmail + ",tenantId=" + userInfo.getTenantId()
+				+ ",serverName=" + userInfo.getServerName() + ",folderId=" + folderId + ",sortType=" + sortType
+				+ ",start=" + start + ",end=" + end + ",search=" + search + ",viewSelectIndex=" + viewSelectIndex
+				+ ",useCountryIP=" + useCountryIP + ",useSecureMailFilter=" + useSecureMailFilter);
+
+		boolean isUnreadOnly = true; // 무조건 true로 보냄
+		boolean isImportantOnly = false;
+
+		if (sortType.indexOf("IMPORTANT") >= 0) {
+			isImportantOnly = true;
+		}
+
+		logger.debug("isUnreadOnly=" + isUnreadOnly + ", isImportantOnly=" + isImportantOnly);
+
+		String searchField = "";
+		String searchValue = "";
+
+		int index = search.indexOf("=");
+
+		if (search.indexOf("=") > -1) {
+			searchField = search.substring(0, index);
+			searchValue = search.substring(index + 1);
+		}
+
+		logger.debug("searchField=" + searchField + ",searchValue=" + searchValue);
+
+		String sortTypeSpecifier = null;
+		boolean isAscending = sortType.endsWith("ASC") ? true : false;
+
+		int startNo = Integer.parseInt(start);
+		int endNo = Integer.parseInt(end);
+
+		Map<String, Object> extraMap = new HashMap<String, Object>();
+		extraMap.put("andorStatus", andorStatus);
+		extraMap.put("attachStatus", attachStatus);
+		extraMap.put("useSecureMailFilter", useSecureMailFilter.equals("1"));
+
+		// 2020-07-16 김은실 - (사조그룹)내부·외부필터 내부기준 도메인
+		if (sortType.indexOf("INTERNAL") >= 0 || sortType.indexOf("EXTERNAL") >= 0) {
+			String inexternalFilter = sortType.indexOf("INTERNAL") >= 0 ? "internal" : "external";
+			String mailInnerDomainStr = ezCommonService.getTenantConfig("MailInnerDomain", userInfo.getTenantId());
+
+			extraMap.put("inexternalFilter", inexternalFilter);
+			extraMap.put("mailInnerDomainStr", mailInnerDomainStr.isEmpty() ? domainName : mailInnerDomainStr);
+
+			logger.debug("inexternalFilter=" + inexternalFilter + ", mailInnerDomainStr=" + mailInnerDomainStr);
+		}
+
+		boolean includeContent = false;
+
+		if (viewSelectIndex.equals("1")) {
+			includeContent = true;
+		}
+		// 검색조건 정리 end		
+		
+		List<String> userIdnPw = commonUtil.getUserIdAndPassword(loginCookie);
+		String password  = userIdnPw.get(1);
+
+		IMAPAccess ia = null;
+		boolean isNewUserQuotaNeeded = false;
+		boolean isThereUserLevelQuota = false;
+		Double userQuota = 0.0;
+		Double userWarn = 0.0;
+
+		try {
+			if (!useRDBOnlyMailList.equals("YES")) {
+				logger.debug("searchedAndUnreadMailDel ended. no rdb use error");
+				return "error";
+			}
+
+			// 1. 메일 검색 mailList를 가져 옴
+			List<Map<String, String>> mailList = ezEmailUtil.searchFolderUsingRDBOnly(userEmail, folderId, categoryArray, keywordArray, 
+					startDateObj, endDateObj, false, isUnreadOnly, isImportantOnly, sortTypeSpecifier, isAscending, 
+					startNo, endNo, false, extraMap, userInfo.getTenantId(),	includeContent, tagName);
+			
+			if (mailList.size() == 0) {
+				logger.debug("searchedAndUnreadMailDel ended. ok - no unread mails.");
+				return "ok"; //안 읽은 메일이 없는 경우에는 성공으로 처리 한다.
+			}
+
+			// todo 2024-08-12 - 현 시점의 스펙은 각 메일함에서 안읽은 메일을 삭제하도록 되어있으나, 이후 메일검색에서도 활용할 수 있도록 메일함별로 map을 나눠 for문을 돌면서 삭제하도록 로직 작성
+			// 2. 메일함 : 메일id 로 데이터 정리
+			// 2-1. mailList를 {메일함 : 메일id,id,id} 형태로 만들어 mailMap에 담음
+			Map<String, String> mailMap = new HashMap<>();
+			
+			for (Map<String, String> mail : mailList) {
+				String mailIdInfo = mail.get("MAIL_ID");
+				String mailbox = mailIdInfo.substring(0, mailIdInfo.lastIndexOf("/"));
+				String mailId = mailIdInfo.substring(mailIdInfo.lastIndexOf("/") + 1);
+
+				if (StringUtils.isBlank(mailMap.get(mailbox))) {
+					mailMap.put(mailbox, mailId);
+				} else {
+					String mailIds = mailMap.get(mailbox);
+					mailIds += ("," + mailId);
+					mailMap.put(mailbox, mailIds);
+				}
+			}
+			
+			// 2-2. mailMap를 {메일함 : [메일id,id,id]} 형태로 만들어 urlMap에 담음
+			Map<String, long[]> urlMap = new HashMap<>();
+			
+			for (Map.Entry<String, String> elem : mailMap.entrySet()) {
+				String[] mailIds = elem.getValue().split(",");
+				long[] longMailIds = new long[mailIds.length];
+				
+				for (int i = 0; i < mailIds.length; i++) {
+					longMailIds[i] = Long.parseLong(mailIds[i]);
+				}
+
+				urlMap.put(elem.getKey(), longMailIds);
+			}
+
+			// 3. imap 삭제 로직 start
+			String trashFolderName = ezEmailUtil.getTrashFolderId(locale);
+			
+			// 메일함(folder)을 하나씩 돌면서 메일을 삭제한다.
+			for (String url : urlMap.keySet()) {
+				if (!trashFolderName.equalsIgnoreCase(url)) { // 지운편지함으로 이동
+
+					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+							userEmail, password, egovMessageSource, locale, 600000, 20000, ezEmailUtil);
+	
+					Folder trashFolder = ia.getFolder(trashFolderName);
+					IMAPFolder folder = (IMAPFolder)ia.getFolder(url);
+				
+					if (folder.exists() && trashFolder.exists()) {
+						folder.open(Folder.READ_WRITE);
+						Message[] unreadMessages = folder.getMessagesByUID(urlMap.get(url));
+						logger.debug("messageCount:" + unreadMessages.length);
+						if (unreadMessages.length > 0) {
+							String useImapMoveCommand = ezCommonService.getTenantConfig("useImapMoveCommand", userInfo.getTenantId());
+
+							if (useImapMoveCommand.equals("YES")) {
+								folder.moveMessages(unreadMessages, trashFolder);
+							} else {
+								// 지운 편지함으로 보낼 메시지의 크기가 Quota량을 초과하게 되면 Quota를 재조정한다.
+								Double[] adjustQuotaData = ezEmailUtil.adjustUserQuotaForMessageMove(unreadMessages, userEmail, domainName, ia);
+
+								if (adjustQuotaData[0] != null) {
+									isNewUserQuotaNeeded = true;
+
+									userQuota = adjustQuotaData[0];
+									userWarn = adjustQuotaData[1];
+								}
+
+								if (adjustQuotaData[2] != null) {
+									isThereUserLevelQuota = true;
+								}
+
+								folder.copyMessages(unreadMessages, trashFolder);
+								folder.setFlags(unreadMessages, new Flags(Flags.Flag.DELETED), true);
+							}
+
+							folder.close(true);
+
+							// 사용자 Quota를 변경시켰다면 원래 값으로 복원시킨다.			
+							if (isNewUserQuotaNeeded) {
+								if (isThereUserLevelQuota) {
+									ezEmailUtil.setUserQuota(userEmail, String.valueOf(userQuota), String.valueOf(userWarn));
+									// 사용자 레벨 Quota 설정 값이 없었던 경우에는 해당 설정값을 삭제한다.
+								} else {
+									ezEmailUtil.deleteUserQuota(userEmail);
+								}
+							}
+
+							logger.debug("searchedAndUnreadMailDel ended. {} folder's unread message is moved to {}.", url, trashFolderName);
+							returnValue = "ok";
+						}
+					} else {
+						folder.close(true);
+						
+						logger.debug("searchedAndUnreadMailDel ended. mail folder not exist");
+						returnValue = "error";
+					}
+				} else { // 영구삭제
+					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+							userEmail, password, egovMessageSource, locale, ezEmailUtil);
+
+					IMAPFolder folder = (IMAPFolder)ia.getFolder(url);
+					
+					if (folder.exists()) {
+						folder.open(Folder.READ_WRITE);
+						Message[] unreadMessages = folder.getMessagesByUID(urlMap.get(url));
+						folder.setFlags(unreadMessages, new Flags(Flags.Flag.DELETED), true);
+						folder.close(true);
+						
+						logger.debug("searchedAndUnreadMailDel ended. seached mail deleteed in trash folder.");
+						returnValue = "ok";
+					} else {
+						logger.debug("searchedAndUnreadMailDel ended. trash folder not exist");
+						returnValue = "error";
+					}
+				}
+				
+				ia = null;
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			returnValue = "error";
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
+		}
+
+		logger.debug("searchedAndUnreadMailDel ended.");
+		return returnValue;
+	}
 	
 	/**
 	 * 메일 이동/복사 실행 함수
@@ -1713,7 +2187,7 @@ public class EzEmailMailListController {
 			List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
 			String password = userIdAndPassword.get(1);
 			
-			Document doc = commonUtil.convertStringToDocument(bodyData);
+			Document doc = commonUtil.convertStringToDocument(bodyData != null ? bodyData : "");
 			String cmd = doc.getElementsByTagName("CMD").item(0).getTextContent();
 			String uniqueId = doc.getElementsByTagName("UNIQUEID").item(0).getTextContent();
 			String mfolderId = doc.getElementsByTagName("FOLDERID").item(0).getTextContent();
@@ -1755,45 +2229,53 @@ public class EzEmailMailListController {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 					
-			IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderId);		
-			sourceFolder.open(Folder.READ_WRITE);
-			
-			Message[] messages = sourceFolder.getMessagesByUID(uids);						
-			IMAPFolder movefolder = (IMAPFolder)ia.getFolder(mfolderId);			
-			
-			String useImapMoveCommand = ezCommonService.getTenantConfig("useImapMoveCommand", userInfo.getTenantId());
-			
-			if (useImapMoveCommand.equals("YES")) {			
-				if (cmd.equalsIgnoreCase("MOVE")) {
-					sourceFolder.moveUIDMessages(messages, movefolder);
-				} else {					
-					sourceFolder.copyUIDMessages(messages, movefolder);					
+			if (ia != null){
+				IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderId);
+				if (sourceFolder == null){
+					throw new Exception("SourceFolder is null");
 				}
-			} else {
-				if (cmd.equalsIgnoreCase("MOVE")) {
-					// 이동시킬 메시지의 크기가 Quota량을 초과하게 되면 Quota를 재조정한다.
-					Double[] adjustQuotaData = ezEmailUtil.adjustUserQuotaForMessageMove(messages, userEmail, domainName, ia);
-					
-					if (adjustQuotaData[0] != null) {
-						isNewUserQuotaNeeded = true;
-						
-						userQuota = adjustQuotaData[0];
-						userWarn = adjustQuotaData[1];
+				sourceFolder.open(Folder.READ_WRITE);
+
+				Message[] messages = sourceFolder.getMessagesByUID(uids);
+				IMAPFolder movefolder = (IMAPFolder)ia.getFolder(mfolderId);
+
+				String useImapMoveCommand = ezCommonService.getTenantConfig("useImapMoveCommand", userInfo.getTenantId());
+
+				if (useImapMoveCommand.equals("YES")) {
+					if (cmd.equalsIgnoreCase("MOVE")) {
+						sourceFolder.moveUIDMessages(messages, movefolder);
+					} else {
+						sourceFolder.copyUIDMessages(messages, movefolder);
+					}
+				} else {
+					if (cmd.equalsIgnoreCase("MOVE")) {
+						// 이동시킬 메시지의 크기가 Quota량을 초과하게 되면 Quota를 재조정한다.
+						Double[] adjustQuotaData = ezEmailUtil.adjustUserQuotaForMessageMove(messages, userEmail, domainName, ia);
+
+						if (adjustQuotaData[0] != null) {
+							isNewUserQuotaNeeded = true;
+
+							userQuota = adjustQuotaData[0];
+							userWarn = adjustQuotaData[1];
+						}
+
+						if (adjustQuotaData[2] != null) {
+							isThereUserLevelQuota = true;
+						}
 					}
 
-					if (adjustQuotaData[2] != null) {
-						isThereUserLevelQuota = true;
-					}				
+					sourceFolder.copyUIDMessages(messages, movefolder);
+
+					if (cmd.equalsIgnoreCase("MOVE")) {
+						sourceFolder.setFlags(messages, new Flags(Flags.Flag.DELETED), true);
+					}
 				}
-				
-				sourceFolder.copyUIDMessages(messages, movefolder);
-				
-				if (cmd.equalsIgnoreCase("MOVE")) {
-					sourceFolder.setFlags(messages, new Flags(Flags.Flag.DELETED), true);
-				}									
+
+				sourceFolder.close(true);
 			}
-			
-			sourceFolder.close(true);		
+		} catch (DOMException e) {
+			returnValue = "ERROR : " + e.getMessage();
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			returnValue = "ERROR : " + e.getMessage();
 			logger.error(e.getMessage(), e);
@@ -1859,59 +2341,69 @@ public class EzEmailMailListController {
         }
         
         logger.debug("userId=" + userInfo.getId() + ",userEmail=" + userEmail);
-        
-		Document doc = commonUtil.convertStringToDocument(bodyData);
-		String uniqueId = doc.getElementsByTagName("ITEMID").item(0).getTextContent();	
-		
-		String folderId = null;
-		long[] uids = null;
-		
-		if (uniqueId.endsWith(";")) {
-			uniqueId = uniqueId.substring(0, uniqueId.length() - 1);
-		}
-		
-		String[] folderAndMsgIdArray = uniqueId.split(";");
-		folderId = folderAndMsgIdArray[0].split("/")[0];			
-		uids = new long[folderAndMsgIdArray.length];
-		
-		for (int i = 0; i < folderAndMsgIdArray.length; i++) {
-			String folderAndMsgId = folderAndMsgIdArray[folderAndMsgIdArray.length - i - 1];
-			String msgId = folderAndMsgId.split("/")[1];
-			uids[i] = Long.parseLong(msgId);
-		}	
-		
-		logger.debug("folderId=" + folderId);		
-		
-		IMAPAccess ia = null;
-		
-		try {
-			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale, ezEmailUtil);
-					
-			IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderId);		
-			sourceFolder.open(Folder.READ_WRITE);		
-					
-			Message[] msgs = sourceFolder.getMessagesByUID(uids);
-			
-			for (int i = 0; i < msgs.length; i++) {
-				Message msg = msgs[i];
-				if (msg.isSet(Flags.Flag.FLAGGED)) {
-					msg.setFlag(Flags.Flag.FLAGGED, false);
-					returnData = "DEL";
-				}
-				else {
-					msg.setFlag(Flags.Flag.FLAGGED, true);
-					returnData = "NEW";
-				}
+
+		if (bodyData != null){
+			Document doc = commonUtil.convertStringToDocument(bodyData);
+			String uniqueId = doc.getElementsByTagName("ITEMID").item(0).getTextContent();
+
+			String folderId = null;
+			long[] uids = null;
+
+			if (uniqueId.endsWith(";")) {
+				uniqueId = uniqueId.substring(0, uniqueId.length() - 1);
 			}
-					
-			sourceFolder.close(true);
-		} catch (Exception e) {
-			returnData = "ERROR : " + e.getMessage();
-			logger.error(e.getMessage(), e);
-		} finally {
-			if (ia != null) {
-				ia.close();
+
+			String[] folderAndMsgIdArray = uniqueId.split(";");
+			folderId = folderAndMsgIdArray[0].split("/")[0];
+			uids = new long[folderAndMsgIdArray.length];
+
+			for (int i = 0; i < folderAndMsgIdArray.length; i++) {
+				String folderAndMsgId = folderAndMsgIdArray[folderAndMsgIdArray.length - i - 1];
+				String msgId = folderAndMsgId.split("/")[1];
+				uids[i] = Long.parseLong(msgId);
+			}
+
+			logger.debug("folderId=" + folderId);
+
+			IMAPAccess ia = null;
+
+			try {
+				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+						userEmail, password, egovMessageSource, locale, ezEmailUtil);
+
+				if (ia != null){
+					IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderId);
+					if (sourceFolder == null){
+						throw new Exception("SourceFolder is null");
+					}
+					sourceFolder.open(Folder.READ_WRITE);
+
+					Message[] msgs = sourceFolder.getMessagesByUID(uids);
+
+					for (int i = 0; i < msgs.length; i++) {
+						Message msg = msgs[i];
+						if (msg.isSet(Flags.Flag.FLAGGED)) {
+							msg.setFlag(Flags.Flag.FLAGGED, false);
+							returnData = "DEL";
+						}
+						else {
+							msg.setFlag(Flags.Flag.FLAGGED, true);
+							returnData = "NEW";
+						}
+					}
+
+					sourceFolder.close(true);
+				}
+			} catch (MessagingException e) {
+				returnData = "ERROR : " + e.getMessage();
+				logger.error(e.getMessage(), e);
+			} catch (Exception e) {
+				returnData = "ERROR : " + e.getMessage();
+				logger.error(e.getMessage(), e);
+			} finally {
+				if (ia != null) {
+					ia.close();
+				}
 			}
 		}
 		
@@ -1961,7 +2453,7 @@ public class EzEmailMailListController {
         
         logger.debug("userId=" + userInfo.getId() + ",userEmail=" + userEmail);
         
-		Document doc = commonUtil.convertStringToDocument(bodyData);
+		Document doc = commonUtil.convertStringToDocument(bodyData != null ? bodyData : "");
 		String isRead = doc.getElementsByTagName("ISREAD").item(0).getTextContent();
 		NodeList messageIdList = doc.getElementsByTagName("MESSAGEID");	
 		String firstItem = messageIdList.item(0).getTextContent();
@@ -1982,20 +2474,29 @@ public class EzEmailMailListController {
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, locale, ezEmailUtil);
-					
-			IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderId);		
-			sourceFolder.open(Folder.READ_WRITE);		
-					
-			Message[] msgs = sourceFolder.getMessagesByUID(uids);		
-					
-			if (isRead.equals("TRUE")) {
-				sourceFolder.setFlags(msgs, new Flags(Flags.Flag.SEEN), true);
+
+			if (ia != null){
+				IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderId);
+				if (sourceFolder == null){
+					throw new Exception("SourceFolder is null");
+				}
+				sourceFolder.open(Folder.READ_WRITE);
+
+				Message[] msgs = sourceFolder.getMessagesByUID(uids);
+
+				if (isRead.equals("TRUE")) {
+					sourceFolder.setFlags(msgs, new Flags(Flags.Flag.SEEN), true);
+				}
+				else {
+					sourceFolder.setFlags(msgs, new Flags(Flags.Flag.SEEN), false);
+				}
+
+				sourceFolder.close(true);
 			}
-			else {
-				sourceFolder.setFlags(msgs, new Flags(Flags.Flag.SEEN), false);
-			}
-			
-			sourceFolder.close(true);
+
+		} catch (MessagingException e) {
+			returnData = "<DATA>ERROR</DATA>";
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			returnData = "<DATA>ERROR</DATA>";
 			logger.error(e.getMessage(), e);
@@ -2020,92 +2521,95 @@ public class EzEmailMailListController {
 			@RequestBody String bodyData, Locale locale, Model model) throws Exception {
 		logger.debug("mailGetFromEmail started.");
 		logger.debug("bodyData=" + bodyData);
-		
-		Document xmldom = commonUtil.convertStringToDocument(bodyData);
-		String itemId = xmldom.getElementsByTagName("ITEMID").item(0).getTextContent();
-		
-		long uid = 0;
-		String folderPath = null;
-		if (itemId != null) {
-			int index = itemId.lastIndexOf("/");
-			if (index != -1) {
-				folderPath = itemId.substring(0, index);
-				uid = Long.parseLong(itemId.substring(index + 1));
-			}
-		}
-		
-		if (uid == 0 || folderPath == null || "".equals(folderPath.trim())) {
-			logger.error("cannot get request data");
-			logger.debug("mailGetFromEmail ended.");
-			return "ERROR";
-		}
-		
-		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
-		String password  = userInfo.get(1);
-		
-		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
-        String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
-        String userEmail = loginInfo.getId() + "@" + domainName;
-        String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", loginInfo.getTenantId());
 
-        if (useSharedMailbox.equals("YES")) {
-        	String shareId = request.getParameter("shareId");
-    		logger.debug("shareId=" + shareId);
-            
-            if (shareId != null) {
-    			if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, loginInfo.getTenantId())) {
-    				logger.debug("the user cannot access the shareId.");
-    				logger.debug("mailGetFromEmail ended.");
-    				
-    				return "";
-    			}
-    			
-    			userEmail = shareId + "@" + domainName;
-    		}
-        }
-        
-        logger.debug("userId=" + loginInfo.getId() + ",userEmail=" + userEmail);
-        
-		IMAPAccess ia = null;
 		String resultData = "ERROR";
-		try {
-			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale, ezEmailUtil);
-			Folder folder = ia.getFolder(folderPath);
-			folder.open(Folder.READ_ONLY);
-			Message message = ((IMAPFolder)folder).getMessageByUID(uid);
-			
-			if (message != null) {
-				String name = ezEmailUtil.getFromNameOrAddressOfMessage(message);
-				name = commonUtil.trimDoubleQuotes(name);
+		if (bodyData != null){
+			Document xmldom = commonUtil.convertStringToDocument(bodyData);
+			String itemId = xmldom.getElementsByTagName("ITEMID").item(0).getTextContent();
 
-				String email = ((InternetAddress)message.getFrom()[0]).getAddress();
-				
-				if (name == null || name.trim().equals("")) {
-					name = email;
-					
-					List<String> mailAddrList = ezEmailUtil.mailAddrNameParse(name, email);
-					name = mailAddrList.get(0);
-					email = mailAddrList.get(1);
+			long uid = 0;
+			String folderPath = null;
+			if (itemId != null) {
+				int index = itemId.lastIndexOf("/");
+				if (index != -1) {
+					folderPath = itemId.substring(0, index);
+					uid = Long.parseLong(itemId.substring(index + 1));
 				}
+			}
 
-				// "01099455495 <발신전용>" <01099455495@ktfmms.magicn.com>와 같이 이름안에 <> 기호가 있는 경우
-				// 이름을 감싸는 이중따옴표가 제거된 상태로 처리가 되어 이메일 주소 파싱에 오류가 발생함. 이에 < 기호가 있는 경우
-				// 다시 이중따옴표로 감싸도록 함.
-				if (name.contains("<")) {
-					resultData = "\"" + name + "\"" + " <" + email + ">";
-				} else {
-					resultData = name + " <" + email + ">";
+			if (uid == 0 || folderPath == null || "".equals(folderPath.trim())) {
+				logger.error("cannot get request data");
+				logger.debug("mailGetFromEmail ended.");
+				return "ERROR";
+			}
+
+			List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
+			String password  = userInfo.get(1);
+
+			LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+			String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
+			String userEmail = loginInfo.getId() + "@" + domainName;
+			String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", loginInfo.getTenantId());
+
+			if (useSharedMailbox.equals("YES")) {
+				String shareId = request.getParameter("shareId");
+				logger.debug("shareId=" + shareId);
+				
+				if (shareId != null) {
+					if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, loginInfo.getTenantId())) {
+						logger.debug("the user cannot access the shareId.");
+						logger.debug("mailGetFromEmail ended.");
+						
+						return "";
+					}
+					
+					userEmail = shareId + "@" + domainName;
 				}
 			}
 			
-			folder.close(true);
+			logger.debug("userId=" + loginInfo.getId() + ",userEmail=" + userEmail);
 			
-		} catch (MessagingException e) {
-			logger.error(e.getMessage());
-		} finally {
-			if (ia != null) {
-				ia.close();
+			IMAPAccess ia = null;
+
+			try {
+				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+						userEmail, password, egovMessageSource, locale, ezEmailUtil);
+				Folder folder = ia.getFolder(folderPath);
+				folder.open(Folder.READ_ONLY);
+				Message message = ((IMAPFolder)folder).getMessageByUID(uid);
+				
+				if (message != null) {
+					String name = ezEmailUtil.getFromNameOrAddressOfMessage(message);
+					name = commonUtil.trimDoubleQuotes(name);
+
+					String email = ((InternetAddress)message.getFrom()[0]).getAddress();
+					
+					if (name == null || name.trim().equals("")) {
+						name = email;
+						
+						List<String> mailAddrList = ezEmailUtil.mailAddrNameParse(name, email);
+						name = mailAddrList.get(0);
+						email = mailAddrList.get(1);
+					}
+
+					// "01099455495 <발신전용>" <01099455495@ktfmms.magicn.com>와 같이 이름안에 <> 기호가 있는 경우
+					// 이름을 감싸는 이중따옴표가 제거된 상태로 처리가 되어 이메일 주소 파싱에 오류가 발생함. 이에 < 기호가 있는 경우
+					// 다시 이중따옴표로 감싸도록 함.
+					if (name.contains("<")) {
+						resultData = "\"" + name + "\"" + " <" + email + ">";
+					} else {
+						resultData = name + " <" + email + ">";
+					}
+				}
+				
+				folder.close(true);
+				
+			} catch (MessagingException e) {
+				logger.error(e.getMessage());
+			} finally {
+				if (ia != null) {
+					ia.close();
+				}
 			}
 		}
 		
@@ -2133,7 +2637,7 @@ public class EzEmailMailListController {
 		logger.debug("mailRequestDenial started.");
 		
 		String returnData = "<DATA><![CDATA[ERROR]]></DATA>";
-		Document xmldom = commonUtil.convertStringToDocument(bodyData);
+		Document xmldom = commonUtil.convertStringToDocument(bodyData != null ? bodyData : "");
 		NodeList nodes = xmldom.getElementsByTagName("DENIAL");
 		NodeList shareId = xmldom.getElementsByTagName("SHAREID");
 		
@@ -2227,9 +2731,13 @@ public class EzEmailMailListController {
 	        
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userAccount, password, egovMessageSource, locale, 40*1000, 20*1000, ezEmailUtil);
-			
+			if (ia == null){
+				throw new Exception("Ia is null");
+			}
 			long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
-			
+			if (storageUsageAndLimit == null){
+				throw new Exception("storageUsageAndLimit is null");
+			}
 			double mailboxUsage = storageUsageAndLimit[0]; // in KBs
 			double mailboxQuota = storageUsageAndLimit[1]; // in KBs
 			
@@ -2311,6 +2819,8 @@ public class EzEmailMailListController {
 			
 			returnData = sb.toString();
 		
+		} catch (MessagingException e) {
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		} finally {
@@ -2364,7 +2874,7 @@ public class EzEmailMailListController {
         }
         logger.debug("userId=" + userInfo.getId() + ",userEmail=" + userEmail);
         
-		Document doc = commonUtil.convertStringToDocument(bodyData);
+		Document doc = commonUtil.convertStringToDocument(bodyData != null ? bodyData : "");
 		String uniqueId = doc.getElementsByTagName("ITEMID").item(0).getTextContent();	
 		
 		String folderId = null;
@@ -2392,16 +2902,24 @@ public class EzEmailMailListController {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 					
-			IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderId);		
-			sourceFolder.open(Folder.READ_WRITE);		
-					
-			Message[] msgs = sourceFolder.getMessagesByUID(uids);
-			for (int i = 0; i < msgs.length; i++) {
-				Message msg = msgs[i];
-				ezEmailUtil.setMailConfirmFlag(msg, !ezEmailUtil.hasMailConfirmFlag(msg));
+			if (ia != null){
+				IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderId);
+				if (sourceFolder == null){
+					throw new Exception("SourceFolder is null");
+				}
+				sourceFolder.open(Folder.READ_WRITE);
+
+				Message[] msgs = sourceFolder.getMessagesByUID(uids);
+				for (int i = 0; i < msgs.length; i++) {
+					Message msg = msgs[i];
+					ezEmailUtil.setMailConfirmFlag(msg, !ezEmailUtil.hasMailConfirmFlag(msg));
+				}
+
+				sourceFolder.close(true);
 			}
-					
-			sourceFolder.close(true);
+		} catch (MessagingException e) {
+			returnData = "ERROR : " + e.getMessage();
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			returnData = "ERROR : " + e.getMessage();
 			logger.error(e.getMessage(), e);
@@ -2416,6 +2934,23 @@ public class EzEmailMailListController {
 		
 		return returnData;				
 	}
+
+	/**
+	 * 해킹 메일 신고 내용 작성 팝업
+	 */
+	@RequestMapping(value="/ezEmail/hackingMailReportMessage.do", method=RequestMethod.GET)
+	public String hackingMailReportMessage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+
+		logger.debug("hackingMailReportMessage started");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		model.addAttribute("userInfo", userInfo);
+
+		logger.debug("hackingMailReportMessage ended");
+
+		return "ezEmail/hackingMailReportMessage";
+	}	
 	
 	/**
 	 * 해킹 메일 신고 기능
@@ -2436,9 +2971,10 @@ public class EzEmailMailListController {
 			List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
 			String password = userIdAndPassword.get(1);
 			
-			Document doc = commonUtil.convertStringToDocument(bodyData);
+			Document doc = commonUtil.convertStringToDocument(bodyData != null ? bodyData : "");
 			String cmd = doc.getElementsByTagName("CMD").item(0).getTextContent();
 			String uniqueId = doc.getElementsByTagName("UNIQUEID").item(0).getTextContent();
+			String reportMessage = doc.getElementsByTagName("MESSAGE").item(0).getTextContent();
 			
 			String[] folderAndMsgIdArray = ezEmailUtil.makeFolderAndMsgIdArray(uniqueId);
 			
@@ -2460,26 +2996,34 @@ public class EzEmailMailListController {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 
-			
-			IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderId);		
-			sourceFolder.open(Folder.READ_WRITE);
-			
-			///////////////////////// 해킹의심메일 관리자 계정으로 발송 로직 시작 /////////////////////////
-			InternetAddress from = new InternetAddress();
-	    	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
-	    	from.setAddress(userInfo.getEmail());
+			if (ia != null){
+				IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderId);
+				sourceFolder.open(Folder.READ_WRITE);
 
-			String adminID = ezCommonService.getTenantConfig("HackingAdminID",
-					userInfo.getTenantId());
+				///////////////////////// 해킹의심메일 관리자 계정으로 발송 로직 시작 /////////////////////////
+				InternetAddress from = new InternetAddress();
+				from.setPersonal(userInfo.getDisplayName(), "UTF-8");
+				from.setAddress(userInfo.getEmail());
 
-			OrganUserVO adminVo = ezOrganService.getUserInfo(adminID,
-					userInfo.getLang(), userInfo.getTenantId());
+				String adminID = ezCommonService.getTenantConfig("HackingAdminID",
+						userInfo.getTenantId());
+
+			OrganUserVO adminVo = null;
 
 			// To
 			InternetAddress to = new InternetAddress();
-	    	to.setPersonal(adminVo.getDisplayName(), "UTF-8");
-	    	to.setAddress(adminVo.getMail());
 			
+			if(adminID.contains("@")){
+				to.setPersonal(adminID, "UTF-8");
+				to.setAddress(adminID);
+			}else{
+				adminVo = ezOrganService.getUserInfo(adminID, userInfo.getLang(), userInfo.getTenantId());
+				if(adminVo != null){
+					to.setPersonal(adminVo.getDisplayName(), "UTF-8");
+					to.setAddress(adminVo.getMail());
+				}
+			}
+
 			for (int i = 0; i < uids.length; i++) {
 				Message message = sourceFolder.getMessageByUID(uids[i]);
 
@@ -2507,12 +3051,31 @@ public class EzEmailMailListController {
 				receivedDateStr = commonUtil.getDateStringInUTC(receivedDateStr, userInfo.getOffset(), false);
 				
 				// 내용
-				String content = "";
-		    	content += "<span>" + egovMessageSource.getMessage("ezEmail.t707", locale) + " : " + message.getSubject() + "</span><br>";
-		    	content += "<span>" + egovMessageSource.getMessage("ezEmail.t656", locale) + " : " + fromStr + "</span><br>";
-		    	content += "<span>" + egovMessageSource.getMessage("ezEmail.t657", locale) + " : " + receivedDateStr + "</span><br>";
-		    	content = "<table width='750' cellpadding='0' cellspacing='0' border='0' ><tr align='left'><td>" + content + "</td></tr></table>";
-		    	
+				String content = " <table cellpadding='0' cellspacing='0' style='width:100%;margin:0;padding:0;border-bottom: 1px solid #f3f3f3; padding-bottom: 10px;'>"
+						+ "		<tbody>";
+				content += "<tr><td width='70' style='padding-bottom:9px;font-size:14px;color:#696969; vertical-align: top;'>"
+						+ egovMessageSource.getMessage("ezEmail.t707", locale)
+						+ "</td>"
+						+ "<td style='padding-bottom:9px;font-size:14px; color:#000;'>"
+						+ message.getSubject()
+						+ "</td></tr>";
+				content += " <tr><td width='70' style='padding-bottom:9px;font-size:14px; color:#696969; vertical-align: top;'>"
+						+ egovMessageSource.getMessage("ezEmail.t656", locale)
+						+ "</td>"
+						+ "<td style='padding-bottom:9px;font-size:14px;color:#000;'>"
+						+ fromStr
+						+ "</td></tr>";
+				content += "<tr><td width='70' style='padding-bottom:9px;font-size:14px; color:#696969; vertical-align: top;'>"
+						+ egovMessageSource.getMessage("ezEmail.t657", locale)
+						+ "</td>"
+						+ "<td style='padding-bottom:9px;font-size:14px;color:#000;vertical-align:top'>"
+						+ receivedDateStr
+						+ "</td></tr>";
+				content += "</tbody></table>";
+				content += "<div class='mail_txtArea' style='margin-top: 15px; font-size: 14px;'>"
+						+ reportMessage
+						+ "</div>";
+				
 		    	// 첨부파일
 		    	String fileName = ezEmailUtil.saveFilenameForm(userInfo, locale, message) + ".eml";
 				//fileName = CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), fileName);
@@ -2521,54 +3084,58 @@ public class EzEmailMailListController {
 				ByteArrayInputStream inputStream = null;
 				ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-				String pReadFlag = "Y";
+					String pReadFlag = "Y";
 
-				// 선택 된 해킹 의심 메일이 안읽은 메일이면
-				if (!message.isSet(Flags.Flag.SEEN)) {
-					pReadFlag = "N";
-				}
-
-				try{
-					message.writeTo(outputStream);
-
-					boolean isRead = pReadFlag.equalsIgnoreCase("Y");
-					message.setFlag(Flags.Flag.SEEN, isRead);
-
-					inputStream = new ByteArrayInputStream(outputStream.toByteArray());
-				} catch(IOException e){
-					logger.error(e.getMessage(), e);
-				} finally {
-					if (inputStream != null) {
-						inputStream.close();
+					// 선택 된 해킹 의심 메일이 안읽은 메일이면
+					if (!message.isSet(Flags.Flag.SEEN)) {
+						pReadFlag = "N";
 					}
-					if (outputStream != null) {
-						outputStream.close();
+
+					try{
+						message.writeTo(outputStream);
+
+						boolean isRead = pReadFlag.equalsIgnoreCase("Y");
+						message.setFlag(Flags.Flag.SEEN, isRead);
+
+						inputStream = new ByteArrayInputStream(outputStream.toByteArray());
+					} catch(IOException e){
+						logger.error(e.getMessage(), e);
+					} finally {
+						if (inputStream != null) {
+							inputStream.close();
+						}
+						if (outputStream != null) {
+							outputStream.close();
+						}
 					}
+					
+					ezEmailService.sendMail(userEmail, password, userInfo.getLocale(), from, new InternetAddress[]{to}, null, null, subject, content, false, EmailImportance.NORMAL, fileName, "message/rfc822", inputStream);
+					
 				}
+			
+				///////////////////////// 해킹의심메일 관리자 계정으로 발송 로직 끝 /////////////////////////
 				
-				ezEmailService.sendMail(userEmail, password, userInfo.getLocale(), from, new InternetAddress[]{to}, null, null, subject, content, false, EmailImportance.NORMAL, fileName, "message/rfc822", inputStream);
-		        
-			}
-			
-	        ///////////////////////// 해킹의심메일 관리자 계정으로 발송 로직 끝 /////////////////////////
-	        
-	        
-	        ///////////////////////// 해당 메일을 사용자의 해킹의심메일함으로 이동 시작 /////////////////////////
-			Message[] messages = sourceFolder.getMessagesByUID(uids);						
-			IMAPFolder movefolder = (IMAPFolder)ia.getFolder(ezEmailUtil.getJunkFolderId(userInfo.getLocale()));			
-			
-			String useImapMoveCommand = ezCommonService.getTenantConfig("useImapMoveCommand", userInfo.getTenantId());
-			
-			if (useImapMoveCommand.equals("YES")) {			
-				if (cmd.equalsIgnoreCase("MOVE")) {
-					sourceFolder.moveUIDMessages(messages, movefolder);
-				} else {					
-					sourceFolder.copyUIDMessages(messages, movefolder);					
+				
+				///////////////////////// 해당 메일을 사용자의 해킹의심메일함으로 이동 시작 /////////////////////////
+				Message[] messages = sourceFolder.getMessagesByUID(uids);						
+				IMAPFolder movefolder = (IMAPFolder)ia.getFolder(ezEmailUtil.getJunkFolderId(userInfo.getLocale()));			
+				
+				String useImapMoveCommand = ezCommonService.getTenantConfig("useImapMoveCommand", userInfo.getTenantId());
+				
+				if (useImapMoveCommand.equals("YES")) {			
+					if (cmd.equalsIgnoreCase("MOVE")) {
+						sourceFolder.moveUIDMessages(messages, movefolder);
+					} else {					
+						sourceFolder.copyUIDMessages(messages, movefolder);					
+					}
 				}
+				///////////////////////// 해당 메일을 사용자의 해킹의심메일함으로 이동 끝 /////////////////////////
+				
+				sourceFolder.close(true);		
 			}
-			///////////////////////// 해당 메일을 사용자의 해킹의심메일함으로 이동 끝 /////////////////////////
-			
-			sourceFolder.close(true);		
+		} catch (DOMException e) {
+			returnValue = "ERROR : " + e.getMessage();
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			returnValue = "ERROR : " + e.getMessage();
 			logger.error(e.getMessage(), e);
@@ -2610,18 +3177,23 @@ public class EzEmailMailListController {
 			}
 
 			IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"), userAccount, jspw, egovMessageSource, Locale.KOREAN, ezEmailUtil);
-			Folder mailbox = ia.getFolder(folderPath);
+			if (ia != null){
+				Folder mailbox = ia.getFolder(folderPath);
 
-			if (!mailbox.exists()) {
-				throw new FolderNotFoundException(mailbox, "not exists folder: " + folderPath);
+				if (mailbox == null || !mailbox.exists()) {
+					throw new FolderNotFoundException(mailbox, "not exists folder: " + folderPath);
+				}
+
+				mailbox.open(Folder.READ_WRITE);
+				Message message = ((IMAPFolder) mailbox).getMessageByUID(mailUid);
+				tagName = tagName.trim().replaceAll("\\s", "_");
+				ezEmailUtil.setTagFlag(message, userAccount, tagName, true);
+				mailbox.close(true);
 			}
-
-			mailbox.open(Folder.READ_WRITE);
-			Message message = ((IMAPFolder) mailbox).getMessageByUID(mailUid);
-			tagName = tagName.trim().replaceAll("\\s", "_");
-			ezEmailUtil.setTagFlag(message, userAccount, tagName, true);
-			mailbox.close(true);
 			result = Result.success();
+		} catch (MessagingException e) {
+			logger.error(e.getMessage(), e);
+			result = Result.failure();
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			result = Result.failure();
@@ -2653,6 +3225,9 @@ public class EzEmailMailListController {
 					.exchangeJgwResult();
 			logger.debug("jgw deleteTagFromMail result: {}", deleteResult);
 			result = deleteResult.succeeded() ? Result.success() : Result.failure();
+		} catch (RuntimeException e) {
+			logger.error(e.getMessage(), e);
+			result = Result.failure();
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			result = Result.failure();
@@ -2689,6 +3264,9 @@ public class EzEmailMailListController {
 			//logger.debug("jgw getUserTagFromMail result: {}", jgwResult); // 로그가 너무 많아서 주석처리 함, result값은 jgw서버 로그에서 확인 가능
 			logger.debug("jgw getUserTagFromMail userAccount: {}, jgwResultCode: {}", userAccount, jgwResult.getResultCode());
 			result = jgwResult.succeeded() ? Result.success(jgwResult.getResult()) : Result.failure();
+		} catch (PatternSyntaxException e) {
+			logger.error(e.getMessage(), e);
+			result = Result.failure();	
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			result = Result.failure();

@@ -153,6 +153,16 @@ public class BoardListVO {
 	/** 2023-09-25 민지수 - 공지사항 기간설정 종료날짜 */
 	private String notiEnd;
 	private String thumbnail;
+	/** 2023-04-06 기민혁 - 게시판 싫어요 기능 카운트 추가 */
+	private int disLikeCount;
+    /** 2024-11-29 박기범 - 게시판 공개/비공개 */
+	private String publicFlag = "Y";
+	/** 게시물 수정자 아이디 */
+	private String updaterID;
+	/** 게시물 수정자 이름 */
+	private String updaterName;
+	private String thumbnailExt;
+	private String addThumbnail;
 
 	public int getrNum() {
 		return rNum;
@@ -609,5 +619,47 @@ public class BoardListVO {
 	}
 	public void setThumbnail(String thumbnail) {
 		this.thumbnail = thumbnail;
+	}
+	public int getDisLikeCount() {
+		return disLikeCount;
+	}
+	public void setDisLikeCount(int disLikeCount) {
+		this.disLikeCount = disLikeCount;
+	}
+
+	public String getPublicFlag() {
+		return publicFlag;
+	}
+
+	public void setPublicFlag(String publicFlag) {
+		this.publicFlag = publicFlag;
+	}
+
+	public String getupdaterID() {
+		return updaterID;
+	}
+
+	public void setupdaterID(String updaterID) {
+		this.updaterID = updaterID;
+	}
+
+	public String getupdaterName() {
+		return updaterName;
+	}
+
+	public void setupdaterName(String updaterName) {
+		this.updaterName = updaterName;
+	}
+	public String getThumbnailExt() {
+		return thumbnailExt;
+	}
+	public void setThumbnailExt(String thumbnailExt) {
+		this.thumbnailExt = thumbnailExt;
+	}
+	public String getAddThumbnail() {
+		return addThumbnail;
+	}
+	public void setAddThumbnail(String addThumbnail) {
+		this.addThumbnail = addThumbnail;
 	}
 }

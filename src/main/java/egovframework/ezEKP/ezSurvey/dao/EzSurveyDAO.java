@@ -50,9 +50,10 @@ public class EzSurveyDAO extends EgovAbstractDAO {
 		return (List<SimpleUserVO>)list("EzSurveyDAO.getDeptMemberList", map);
 	}
 	
+	/*
 	public int getTotalSearchMembers(Map<String, Object> map) {
 		return (int)select("EzSurveyDAO.getTotalSearchMembers", map);
-	}
+	}*/
 	
 	public SurveyGeneralVO getUserPreviewConfig(Map<String, Object> map) {
 		return (SurveyGeneralVO)select("EzSurveyDAO.getUserPreviewConfig", map);
@@ -62,9 +63,10 @@ public class EzSurveyDAO extends EgovAbstractDAO {
 		insert("EzSurveyDAO.saveUserConfig", map);
 	}
 	
+	/*
 	public List<SimpleUserVO> getSearchMemberList(Map<String, Object> map) {
 		return (List<SimpleUserVO>)list("EzSurveyDAO.getSearchMemberList", map);
-	}
+	}*/
 
 	public List<SimpleUserVO> getSearchMemberListByAttr(Map<String, Object> map) {
 		return (List<SimpleUserVO>)list("EzSurveyDAO.getSearchMemberListByAttr", map);
@@ -247,8 +249,16 @@ public class EzSurveyDAO extends EgovAbstractDAO {
 		return (int) select("EzSurveyDAO.getMailSentFlag", survey);
 	}
 	
+	public int getTotalNotiSentFlag(SurveyVO survey) {
+		return (int) select("EzSurveyDAO.getTotalNotiSentFlag", survey);
+	}
+	
 	public void updateMailSentFlag(Map<String, Object> map) {
 		update("EzSurveyDAO.updateMailSentFlag", map);
+	}
+	
+	public void updateTotalNotiSentFlag(Map<String, Object> map) {
+		update("EzSurveyDAO.updateTotalNotiSentFlag", map);
 	}
 	
 	public long checkRespondent(Map<String, Object> map) {

@@ -533,7 +533,7 @@
 	                    checkname2_cross_dialogArguments[0] = rgParams;
 	                    checkname2_cross_dialogArguments[1] = deptsearch_click_Complete;
 	                    var OpenWin = window.open("/admin/ezOrgan/checkName2.do", "checkName2_cross", GetOpenWindowfeature(609, 460));
-	                    try { OpenWin.focus(); } catch (e) { }
+	                    try { OpenWin.focus(); } catch (e) {console.log(e);}
 	                } else {
 	                    window.showModalDialog("/admin/ezOrgan/checkName2.do", rgParams, feature);
 	
@@ -570,7 +570,7 @@
 	                            else
 	                                window.dialogArguments["window"].opener.top.organview = loadXMLString(g_xmlHTTP.responseText);
 	                        }
-	                        catch (e) { }
+	                        catch (e) {console.log(e);}
 	                    }
 	
 	                    var treeXML = loadXMLFile("/xml/common/organtree_config2.xml");
@@ -1147,7 +1147,7 @@
 		                        MaxCntNum = MaxCntNum + 1;
 		                    }
 
-		                    SetAttribute(objTr, "id", getlistview.GetSelectedRowID(MaxCntNum).substring(0, getlistview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+		                    SetAttribute(objTr, "id", getlistview.GetSelectedRowID(MaxCntNum).substring(0, getlistview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + (MaxID + 1));
 		                    getlistview.AddDataRow(objTr, Resultxml);
 		
 		                    var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
@@ -1195,7 +1195,7 @@
 		                                MaxCntNum = MaxCntNum + 1;
 		                            }
 
-		                            SetAttribute(objTr, "id", getlistview.GetSelectedRowID(MaxCntNum).substring(0, getlistview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+		                            SetAttribute(objTr, "id", getlistview.GetSelectedRowID(MaxCntNum).substring(0, getlistview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + (MaxID + 1));
 		                            getlistview.AddDataRow(objTr, Resultxml);
 		
 		                            var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
@@ -1245,7 +1245,7 @@
 			                        MaxCntNum = MaxCntNum + 1;
 			                    }
 
-			                    SetAttribute(objTr, "id", getlistview.GetSelectedRowID(MaxCntNum).substring(0, getlistview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+			                    SetAttribute(objTr, "id", getlistview.GetSelectedRowID(MaxCntNum).substring(0, getlistview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + (MaxID + 1));
 			                    getlistview.AddDataRow(objTr, Resultxml);
 			                    var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
 
@@ -1307,7 +1307,7 @@
         	                    	MaxCntNum = MaxCntNum + 1;
         	                    }
 
-        	                    SetAttribute(objTr, "id", getlistview.GetSelectedRowID(MaxCntNum).substring(0, getlistview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+        	                    SetAttribute(objTr, "id", getlistview.GetSelectedRowID(MaxCntNum).substring(0, getlistview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + (MaxID + 1));
         	                    getlistview.AddDataRow(objTr, Resultxml);
 
         	                    var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
@@ -1369,7 +1369,7 @@
     	                        	MaxCntNum = MaxCntNum + 1;
     	                        }
 
-    	                        SetAttribute(objTr, "id", getlistview.GetSelectedRowID(MaxCntNum).substring(0, getlistview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+    	                        SetAttribute(objTr, "id", getlistview.GetSelectedRowID(MaxCntNum).substring(0, getlistview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + (MaxID + 1));
     	                        getlistview.AddDataRow(objTr, Resultxml);
 
     	                        var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
@@ -1657,7 +1657,7 @@
                         MaxCntNum = MaxCntNum + 1;
                     }
 
-                    SetAttribute(objTr, "id", getlistview.GetSelectedRowID(MaxCntNum).substring(0, getlistview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+                    SetAttribute(objTr, "id", getlistview.GetSelectedRowID(MaxCntNum).substring(0, getlistview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + (MaxID + 1));
                     getlistview.AddDataRow(objTr, Resultxml);
 
                     var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
@@ -2187,7 +2187,7 @@
 	                        }
 	                        
 	                        var objTr = listview.AddRow(InitTr.length);
-	                        SetAttribute(objTr, "id", listview.GetSelectedRowID(InitTr.length).substring(0, listview.GetSelectedRowID(InitTr.length).lastIndexOf('_') + 1) + eval(MaxID + 1));
+	                        SetAttribute(objTr, "id", listview.GetSelectedRowID(InitTr.length).substring(0, listview.GetSelectedRowID(InitTr.length).lastIndexOf('_') + 1) + (MaxID + 1));
 	                        listview.AddDataRow(objTr, Resultxml);
 	                       
 	                        var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
@@ -2237,7 +2237,7 @@
 	                        }
 	                        
 	                        var objTr = getlistview.AddRow(InitTr.length);
-	                        SetAttribute(objTr, "id", getlistview.GetSelectedRowID(MaxID).substring(0, getlistview.GetSelectedRowID(MaxID).lastIndexOf('_') + 1) + eval(MaxID + 1));
+	                        SetAttribute(objTr, "id", getlistview.GetSelectedRowID(MaxID).substring(0, getlistview.GetSelectedRowID(MaxID).lastIndexOf('_') + 1) + (MaxID + 1));
 	                        getlistview.AddDataRow(objTr, Resultxml);
 	                        
 	                        var _tdlength = document.getElementById("MsgToList").getElementsByTagName("TD").length;
@@ -2249,7 +2249,7 @@
 	                    
 	                    }
 	                }
-	            } catch (e) { }
+	            } catch (e) {console.log(e);}
 	        }
 	        
 	        function on_keydown() {

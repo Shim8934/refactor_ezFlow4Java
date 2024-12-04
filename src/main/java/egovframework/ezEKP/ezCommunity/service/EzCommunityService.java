@@ -185,7 +185,7 @@ public interface EzCommunityService {
 
 	public String newItem(Document xmlData, String pMode, String realPath, LoginVO userInfo) throws Exception;
 	
-	public String getItemAttachmentXML(String itemID, int tenantID) throws Exception;
+	public String getItemAttachmentXML(String itemID, int tenantID, String realPath, String pMode) throws Exception;
 	
 	public String getReservedItemListXML(String id, int pStartRow, int pEndRow, String pSortBy, String primary, int tenantID, String offset) throws Exception;
 
@@ -326,7 +326,7 @@ public interface EzCommunityService {
 
 	public void joinOkInsert(String companyID, String userID, String userName, String userName2, String companyName, String companyName2, String companyZip, String companyAddress, String deptName, String deptName2, String companyTel, String companyFax, String homeTel, String handPhone, String eMail, String birthDay, String gender, int tenantID) throws Exception;
 
-	public boolean communityConnCHK(String id, String clubID, String boardID, String rollInfo, int mode, HttpServletResponse response, LoginVO userInfo) throws Exception;
+	public boolean communityConnCHK(String id, String clubID, String boardID, String rollInfo, int mode, HttpServletResponse response, LoginVO userInfo, String type) throws Exception;
 
 	public void updateLastDate(String strNow, String code, String id, int tenantID) throws Exception;
 
@@ -389,4 +389,8 @@ public interface EzCommunityService {
 	public boolean checkUserInCommunity(String clubNo, String userID, int tenantID) throws Exception;
 	
 	public String encodeURIComponent(String url) throws Exception; 
+
+	public String popularBoardItem(LoginVO userInfo) throws Exception;
+	
+	public boolean saveHWP(String strHTML, String strFileName, String strBoardID, String strFilePath, String realPath) throws Exception;
 }

@@ -266,6 +266,13 @@ var strLang353 = "Ada domain atau alamat email yang sama.";
 var strLang354 = "Silakan masukkan nama domain."; 
 var strLang355 = "Besar"; 
 var strLang359 = "Pindah selesai."; 
+var strLangLDH01 = "이 메일에 대한 열람을 차단하시겠습니까?";
+var strLangLDH02 = "이 메일에 대한 열람차단을 해제하시겠습니까?";
+var strLangLDH03 = "차단되었습니다.";
+var strLangLDH04 = "차단 중 오류가 발생했습니다.";
+var strLangLDH05 = "해제되었습니다.";
+var strLangLDH06 = "해제 중 오류가 발생했습니다.";
+var strLangLDH07 = "관리자에 의해 열람차단된 메일입니다.";
 var strLangLHM01 = "Silakan masukkan nama domain.";                                                                                                                     
 var strLangLHM02 = "Tidak ada admin.";                                                                                                                                  
 var strLangLHM03 = "Tidak ada ID Daftar yang ditentukan.";                                                                                                              
@@ -374,6 +381,13 @@ const strLangOrgFetchError = "- Terjadi kesalahan saat mengunggah.\\n\\nKesalaha
 const strLangSelectProxyApproverWarning = "Pilih seseorang untuk wakil.";
 
 const strLangTempSaveAttachmentsWarning = "File yang dilampirkan akan dihapus saat disimpan. Apakah Anda ingin menyimpan?";
+
+var strNoSubject = "Kolom subjek kosong."; 
+var strSendOK = "Email telah berhasil dikirim.";
+var strUreadDelChk = "Apakah Anda yakin ingin menghapus semua email yang belum dibaca di kotak masuk ini?"
+var strUreadDelSearch = "Apakah Anda yakin ingin menghapus semua email yang belum dibaca di hasil pencarian?"
+var strUreadDelPermenant = "Setelah dihapus, email tidak dapat dipulihkan.\nApakah Anda yakin ingin menghapus semua email yang belum dibaca secara permanen di kotak masuk?"
+var strUreadDelSearchPermenant = "Setelah dihapus, email tidak dapat dipulihkan.\nApakah Anda yakin ingin menghapus semua email yang belum dibaca secara permanen di hasil pencarian?";
 
 function GetLocalTime(Offset , pDateTime)
 {

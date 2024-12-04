@@ -6,8 +6,18 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.lang.reflect.Field;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Properties;
+import java.util.TimeZone;
+import java.util.UUID;
+import java.util.regex.PatternSyntaxException;
 
 import javax.annotation.Resource;
 import javax.naming.directory.DirContext;
@@ -31,6 +41,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezConn.util.EzConnUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
@@ -77,8 +88,14 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 	@Autowired	
 	private CommonUtil commonUtil;
-	
-    @Autowired
+
+	@Autowired
+	private Properties config;
+
+	@Autowired
+	private EzConnUtil ezConnUtil;
+
+	@Autowired
     private EzCommonService ezCommonService;
     
     @Autowired
@@ -391,7 +408,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_TENANT_ID", tenantID);
 		map.put("v_CN", cn);
 		map.put("v_CLASS", pClass);
-		map.put("v_PROPNAME", column);
+		map.put("v_PROPNAME", column.toUpperCase());
 		map.put("v_PROPVALUE", number);
 		
         // 사원의 경우
@@ -406,6 +423,21 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 		logger.debug("updateProperty ended");
 	}
+	@Override
+	public void updateJobTitleOrder(int jobId, int sortOrder, int tenantID) throws Exception {
+		logger.debug("updateJobTitleOrder started");
+		logger.debug("jobId=" + jobId + ",sortOrder=" + sortOrder + ",tenantID=" + tenantID);
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("v_JOBID", jobId);
+		map.put("v_SORTORDER", sortOrder);
+		map.put("v_TENANTID", tenantID);
+		
+		ezOrganAdminDao.updateJobTitleOrder(map);
+
+		logger.debug("updateJobTitleOrder ended");
+	}
 	
 	@Override
 	public void updateProperty(String cn, String column, String number, String pClass, int tenantID, String deptID) throws Exception {
@@ -417,7 +449,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_TENANT_ID", tenantID);
 		map.put("v_CN", cn);
 		map.put("v_CLASS", pClass);
-		map.put("v_PROPNAME", column);
+		map.put("v_PROPNAME", column.toUpperCase());
 		map.put("v_PROPVALUE", number);
 		map.put("V_DEPTID", deptID);
 		
@@ -573,6 +605,16 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		String mailAddr = cn + "@" + domain;
 		
 		logger.debug("mailAddr=" + mailAddr);
+
+		// 외부메일서버 비밀번호 변경
+		String useMailServer2 = config.getProperty("config.useMailServer2");
+		if ("Y".equalsIgnoreCase(useMailServer2)) {
+			try {
+				updatePasswordForMailServer2(cn, password);
+			} catch (Exception e) {
+				throw new Exception("updatePasswordForMailServer2 failed: " + e.getMessage());
+			}
+		}
 		
 		// 기존 이메일 계정의 Encrypt된 암호를 가져온다.
 		String existingEncryptedPassword = ezEmailUserAdminService.getEncryptedUserPassword(mailAddr);
@@ -613,6 +655,17 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 
 		logger.debug("cn=" + cn + ",domain=" + domain + ",tenantID=" + tenantId);
 
+		// 외부메일서버 비밀번호 변경
+		String useMailServer2 = config.getProperty("config.useMailServer2");
+		if ("Y".equalsIgnoreCase(useMailServer2)) {
+			try {
+				updatePasswordForMailServer2(cn, decryptedNewPassword);
+			} catch (Exception e) {
+				logger.debug("updatePasswordForMailServer2 failed.", e);
+				return "MAILSERVER2_ERROR";
+			}
+		}
+
 		// 이메일 계정의 암호를 새 암호로 설정한다.
 		int rc = ezEmailUserAdminService.checkAndUpdateUserPassword(mailAddr, decryptedOldPassword, decryptedNewPassword);
 
@@ -638,8 +691,28 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		return result;
 	}
 
+	/*	외부 메일 비밀번호 변경 (useMailServer2가 Y인 경우)	*/
+	private void updatePasswordForMailServer2(String cn, String password) throws Exception {
+		logger.debug("updatePasswordForMailServer2 started.");
+
+		String mailServerURL2 = config.getProperty("config.MailServerURL2");
+		String url2 = mailServerURL2 + "/ezConn/changePassword.do";
+
+		String params = String.format("%s:%s", cn, password); // 사용자 ID와 새 비밀번호 연결
+		String encryptedParams = ezConnUtil.encryptAES(params); // AES 암호화 및 Base64 인코딩
+		String inputParams = "id=" + URLEncoder.encode(encryptedParams, "UTF-8"); // URL 인코딩
+		String response = ezEmailUtil.getWebServiceResult(url2, inputParams); // REST API 호출
+
+		if (response == null || !response.equals("OK")) {
+			throw new Exception("Failed to change password for MailServer2. user: " + cn);
+		} else {
+			logger.debug("Successfully changed password for MailServer2. user: " + cn);
+		}
+		logger.debug("updatePasswordForMailServer2 ended.");
+	}
+
 	@Override
-	public void retireEntry(String cn, String domain, String adminPassword, int tenantID, String offset) throws Exception {
+	public void retireEntry(String cn, String domain, int tenantID, String offset) throws Exception {
 	    logger.debug("retireEntry started");
 	    logger.debug("cn=" + cn + ",domain=" + domain + ",tenantID=" + tenantID + ",offset=" + offset);
 	    
@@ -647,7 +720,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 		// 퇴직자의 암호를 현재 관리자의 암호와 동일하게 변경한다.
 		// 이후 과정에서 에러가 발생했을 때 암호를 롤백할 방법이 없는 문제가 있다. 
-		setPasswordWithEmailSystem(cn, domain, adminPassword, tenantID);
+		//setPasswordWithEmailSystem(cn, domain, adminPassword, tenantID);
 		
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date                  = new Date();
@@ -658,7 +731,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("timeUTC", timeUTC);
 		
 	    ezOrganAdminDao.retireDBData_I(map);
-	    /*ezOrganAdminDao.retireDBData(map);*/
+	    // usermaster 정보 삭제
+	    ezOrganAdminDao.retireDBData(map);
+	    // addjobmaster 정보 삭제
 	    ezOrganAdminDao.retireDBData_D3(map);
 	    
 	    /**
@@ -1256,6 +1331,14 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	        
 	        //웹폴더 데이터 삭제 
 	        ezOrganAdminDao.deleteCompany_D34(map);
+	        
+	        // 포탈 > 메뉴 설정 값 삭제 (상단 표출, 좌측 표출)
+	        ezOrganAdminDao.deleteCompany_D35(map);
+	        
+	        // 시스템 > 시스템 컨피그 값 삭제
+	        ezOrganAdminDao.deleteCompany_D36(map);
+	        ezOrganAdminDao.deleteCompany_D37(map);
+	        // 
 		    /**
 		     * Active Directory
 		     * - 부서 정보 삭제
@@ -1635,13 +1718,19 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		params.put("searchForAll", searchFor[0] && searchFor[1] && searchFor[2]);
 		params.put("isAnd", (searchFor[0] && !searchFor[1] && !searchFor[2]) 
 					    || (!searchFor[0] && !(searchFor[1] && searchFor[2])));
+		params.put("useUserMaster", searchFor[0] || searchFor[2]);
+		params.put("incumbent", searchFor[0]);
 		params.put("retired", searchFor[1]);
 		params.put("stopped", searchFor[2]);
+		// 2024-09-06 김승연 공유사서함 조회 플래그 추가
+		if (searchFor.length == 4 ) {
+			params.put("sharedMailBox", searchFor[3]);
+		}
 		
 		String orderByData = "";
 		if(!sortColumn.equals("")){
 			if(sortColumn.equals("persent")){
-				orderByData = " (MAILBOXUSAGE/MAILBOXQUOTA)*100 " + sortType;
+				orderByData = "(MAILBOXUSAGE/MAILBOXQUOTA)*100 " + sortType;
 			}else if (sortColumn.equals("mailboxusage")){
 				orderByData = sortColumn +"/1024 " + sortType;
 			}				
@@ -1676,16 +1765,149 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		params.put("searchForAll", searchFor[0] && searchFor[1] && searchFor[2]);
 		params.put("isAnd", (searchFor[0] && !searchFor[1] && !searchFor[2]) 
 					    || (!searchFor[0] && !(searchFor[1] && searchFor[2])));
+		params.put("useUserMaster", searchFor[0] || searchFor[2]);
+		params.put("incumbent", searchFor[0]);
 		params.put("retired", searchFor[1]);
 		params.put("stopped", searchFor[2]);
 		
+		// 2024-09-06 김승연 공유사서함 조회 플래그 추가
+		if (searchFor.length == 4 ) {
+			params.put("sharedMailBox", searchFor[3]);
+		}
+
 		int userCount = (!searchFor[0] && !searchFor[1] && !searchFor[2])? 0 : ezOrganAdminDao.getUserCount(params);
 		
 		logger.debug("getUserCount ended. userCount=" + userCount);
     	
 		return userCount;
     }	
-    
+    // 사용자 관리 액셀 생성
+	@Override
+	public String createExcelTotalUsers(String realPath, String dirPath, List<OrganUserVO> exportUserlist, String primary, Locale locale) throws Exception {
+		logger.debug("createExcelTotalUsers started.");
+
+		Date date                  = new Date();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		String fileName            = egovMessageSource.getMessage("ezOrgan.ksy02", locale).trim() + "_" + formatter.format(date) + ".xlsx";
+		String filePath            = dirPath + fileName;
+		File file                  = new File(dirPath);
+		File file2                 = new File(filePath);
+
+		// temp 폴더가 없는 경우: 만들거나(mkdir), 폴더 안을 깨끗히 비운다.
+		if (file == null || !file.exists()) {
+			file.mkdirs();
+		}
+		else {
+			FileUtils.cleanDirectory(file);
+		}
+
+		// 같은 이름의 파일이 있을 경우: "파일(2).xlsx"으로 만든다.
+		if (file2.exists()) {
+			int pos         = fileName.lastIndexOf('.');
+			String extend   = fileName.substring(pos + 1);
+			String mainName = fileName.substring(0, pos);
+			int k           = 1;
+			fileName        = mainName + "(" + Integer.toString(k) + ")." + extend;
+			filePath        = dirPath + fileName;
+			file2           = new File(filePath);
+
+			while (file2.exists()) {
+				fileName = mainName + "(" + Integer.toString(++k) + ")." + extend;
+				filePath = dirPath + fileName;
+			}
+		}
+
+		// 엑셀 파일 생성(workbook). 시트 이름은(sheet1): "ezOrgan.ksy02"
+		FileOutputStream fileOut = null;
+		Workbook workbook = new XSSFWorkbook();
+
+		Sheet sheet1 = workbook.createSheet(egovMessageSource.getMessage("ezOrgan.ksy02", locale).trim());
+		sheet1.setDefaultRowHeight((short)500);
+		
+		//Set style
+		CellStyle centerStyle = workbook.createCellStyle();
+		centerStyle.setWrapText(false);
+		centerStyle.setAlignment(CellStyle.ALIGN_CENTER);
+		centerStyle.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+
+		CellStyle centerStyle2 = workbook.createCellStyle();
+		centerStyle2.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+
+		CellStyle centerStyle3 = workbook.createCellStyle();
+		centerStyle3.setAlignment(CellStyle.ALIGN_LEFT);
+		centerStyle3.setIndention((short)3);
+		centerStyle3.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+
+		//sheet1.setColumnWidth(0, 8 * 256);
+
+		//Process first row
+		Row rowhead1 = sheet1.createRow(0);
+		rowhead1.createCell(0).setCellValue(egovMessageSource.getMessage("main.t252",locale) + " " + exportUserlist.size() +
+				egovMessageSource.getMessage("ezSystem.kyj2",locale));
+
+		Row rowhead = sheet1.createRow(1);
+
+		rowhead.createCell(0).setCellValue(egovMessageSource.getMessage("ezSystem.kyj1",locale));
+		rowhead.createCell(1).setCellValue(egovMessageSource.getMessage("ezEmail.lsd04",locale));
+		rowhead.createCell(2).setCellValue(egovMessageSource.getMessage("ezOrgan.t68",locale));
+		rowhead.createCell(3).setCellValue(egovMessageSource.getMessage("ezOrgan.t69", locale).trim());
+		rowhead.createCell(4).setCellValue(egovMessageSource.getMessage("ezOrgan.t1500", locale).trim());
+		rowhead.createCell(5).setCellValue(egovMessageSource.getMessage("ezOrgan.t96", locale).trim());
+		rowhead.createCell(6).setCellValue(egovMessageSource.getMessage("ezOrgan.t95", locale).trim());
+		
+		int i = 2;
+
+		// 액셀 라이브러리가 지원하는 row수: 65536건
+		for (OrganUserVO exportUser : exportUserlist) {
+			Row newRow1 = sheet1.createRow(i);
+
+			newRow1.createCell(0).setCellValue(i -1);
+			newRow1.createCell(1).setCellValue(exportUser.getDisplayName() + "(" + exportUser.getCn() + ")");
+			newRow1.createCell(2).setCellValue(exportUser.getDescription());
+			newRow1.createCell(3).setCellValue(exportUser.getTitle());
+			newRow1.createCell(4).setCellValue(exportUser.getExtensionAttribute10());
+			newRow1.createCell(5).setCellValue(exportUser.getMobile());
+			newRow1.createCell(6).setCellValue(exportUser.getTelephoneNumber());
+
+			newRow1.getCell(0).setCellStyle(centerStyle2);
+			newRow1.getCell(1).setCellStyle(centerStyle2);
+			newRow1.getCell(2).setCellStyle(centerStyle2);
+			newRow1.getCell(3).setCellStyle(centerStyle2);
+			newRow1.getCell(4).setCellStyle(centerStyle2);
+			newRow1.getCell(5).setCellStyle(centerStyle2);
+			newRow1.getCell(6).setCellStyle(centerStyle2);
+
+			i++;
+		}
+
+		sheet1.setColumnWidth(0, ((int)(5 * 1.14388)) * 256);
+		sheet1.setColumnWidth(1, ((int)(20 * 1.14388)) * 256);
+		sheet1.setColumnWidth(2, ((int)(25 * 1.14388)) * 256);
+		sheet1.setColumnWidth(3, ((int)(15 * 1.14388)) * 256);
+		sheet1.setColumnWidth(4, ((int)(15 * 1.14388)) * 256);
+		sheet1.setColumnWidth(5, ((int)(25 * 1.14388)) * 256);
+		sheet1.setColumnWidth(6, ((int)(25 * 1.14388)) * 256);
+
+//		sheet1.autoSizeColumn(0);
+
+		try {
+			fileOut = new FileOutputStream(filePath);
+			workbook.write(fileOut);
+		}
+		catch (Exception e) {
+			throw e;
+		}
+		finally {
+			// 2023-05-16 이사라 : NullPointerException 시큐어코딩
+			//fileOut.close();
+			IOUtils.closeQuietly(fileOut);
+			workbook.close();
+		}
+		logger.debug("createExcelTotalUsers end");
+		
+		return fileName;
+	}
+
 	@Override
 	public String setTitle(String type, String cn, String displayName, String displayName2, String useFlag, int sort, String companyID, int tenantID) throws Exception {
 		logger.debug("setTitle started.");
@@ -1760,7 +1982,6 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				rtnVal.append("<DATA3>" + jobList.get(i).getSort()  + "</DATA3>");
 				rtnVal.append("<DATA4><![CDATA[" + jobList.get(i).getCompanyID() + "]]></DATA4></CELL>");
 				rtnVal.append("<CELL><VALUE><![CDATA[" + jobList.get(i).getDisplayName2() + "]]></VALUE></CELL>");
-				rtnVal.append("<CELL><VALUE>" + jobList.get(i).getSort() + "</VALUE></CELL>");
 				rtnVal.append("<CELL><VALUE>" + jobList.get(i).getUseFlag() + "</VALUE></CELL>");
 				rtnVal.append("</ROW>");
 			}
@@ -1858,6 +2079,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			}
 			
 			rtnVal = "TRUE";
+		} catch (PatternSyntaxException e) {
+			logger.error(e.getMessage(), e);
+			rtnVal = "FALSE";
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			rtnVal = "FALSE";
@@ -3587,7 +3811,8 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			propVO = ezOrganAdminDao.getAddJobPorpValue(map);
 			vo = ezOrganDao.getDeptInfo(map1);
 		} catch (NullPointerException e) {
-			logger.debug("getAddJobPorpValue failed.");
+			logger.error(e.getMessage(), e);
+			//logger.debug("getAddJobPorpValue failed.");
 			return "ERROR";
 		}
 
@@ -3662,7 +3887,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 						propValue = propList[i] + ":" + propValue + "\\";
 						break;
 					default :
-						map.put("v_FIELD", propList[i]);
+						map.put("v_FIELD", propList[i].toUpperCase());
 						propValue = ezOrganDao.getPropertyValue_S4(map);
 						propValue = propValue == null ? "" : propValue;
 						propValue = propList[i] + ":" + propValue + "\\";
@@ -3675,7 +3900,8 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			}
 
 		} catch (Exception e) {
-			logger.debug("getEntryAddJobInfo failed.");
+			logger.error(e.getMessage(), e);
+			//logger.debug("getEntryAddJobInfo failed.");
 			return "ERROR";
 		}
 
@@ -3702,5 +3928,12 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		ezOrganAdminDao.updateAddJobInfo(map);
 		
 		logger.debug("updateDBData_user ended");
+	}
+
+	@Override
+	public void updateUserMailAddress(String cn, String mailAddress, int tenantID) throws Exception {
+		logger.debug("updateUserMailAddress started");
+		ezOrganAdminDao.setUserPrimaryMail(cn, tenantID, mailAddress);
+		logger.debug("updateUserMailAddress ended");
 	}
 }

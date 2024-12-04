@@ -175,5 +175,19 @@ var SurveyMessages = {
 	srtLangHSBEx02 : "Limited extension upload files.",
 	/* 2024-03-26 양지혜 - 게시기간 메시지 추가 */
 	strLangYJH01 : "Posting can be done for up to ",
-	strLangYJH02 : " days."
+	strLangYJH02 : " days.",
+	strScheduleOne : "Schedule (Single Selection)",
+	strScheduleMtp : "Schedule (Multiple Selection)",
+	strScheduleOneDay : "One Day Schedule",
+	strScheduleMtpDay : "Duration Schedule",
+	strScheduleTxt : "Text Input",
+	strScheduleOpt : "You can add up to 20 options.",
+	strDateFormatValidation : "Please enter a valid date in the format yyyy-mm-dd (four-digit year, two-digit month, two-digit day)",
+	strDateTimeValidation : "The start date must be earlier than the end date.",
+	strQuestionImage : "Replace question with an image",
+	strQuestionFileAttach : "Attach a file to the question",
+	strAllowedImageForTitle : "Only png, jpeg, and jpg are allowed.",
+    /* 2024-11-25 박기범 - 리스트 상태값 추가 */
+    strLangPGB01 : "Participation",
+    strLangPGB02 : "non-participation"
 }

@@ -9,12 +9,12 @@
 		<link rel="stylesheet" href="${util.addVer('ezPersonal.e3', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/css/style.css')}" type="text/css">
 		<style>
-			.countryKR{content:url(/images/lang/icon_flag_kr.gif); cursor:pointer}
-			.countryUS{content:url(/images/lang/icon_flag_us.gif); cursor:pointer}
-			.countryJP{content:url(/images/lang/icon_flag_jp.gif); cursor:pointer}
-			.countryCN{content:url(/images/lang/icon_flag_cn.gif); cursor:pointer}
-			.countryVN{content:url(/images/lang/icon_flag_vn.gif); cursor:pointer}
-			.countryID{content:url(/images/lang/icon_flag_id.gif); cursor:pointer}
+			.country1{content:url(/images/lang/icon_flag_kr.gif); cursor:pointer}
+			.country2{content:url(/images/lang/icon_flag_us.gif); cursor:pointer}
+			.country3{content:url(/images/lang/icon_flag_jp.gif); cursor:pointer}
+			.country4{content:url(/images/lang/icon_flag_cn.gif); cursor:pointer}
+			.country5{content:url(/images/lang/icon_flag_vi.gif); cursor:pointer}
+			.country6{content:url(/images/lang/icon_flag_id.gif); cursor:pointer}
 		</style>
 
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -25,11 +25,18 @@
         var primaryLang = "${primaryLang}";
         var flagValue = "${strLang}";
 
+		var useJapanese = "${useJapanese}"
+		var useChinese = "${useChinese}"
+		var useVietnamese = "${useVietnamese}"
+		var useIndonesian = "${useIndonesian}"
+		
 		window.onload = window_onload;
 		function window_onload() {
 			if (TimeZone != "") {
 			    document.getElementById("TimeZone").value = TimeZone;
 			}
+
+			language_form();
 
 			if ('YES' == usePrimaryLangOnly.toUpperCase()) {
 				flagValue = primaryLang;
@@ -40,18 +47,57 @@
 			} else {
 				$("input:radio[id=" + flagValue + "]").prop('checked', true);
 			}
-
 			$("#" + flagValue).checked = true;
 		}
 		
+		function language_form(){
+			var languageTd = document.getElementById("languageTd");
+
+			languageTd.innerHTML += "<input type='radio' id='" + primaryLang + "' name='rad_flag' onclick='flag_onClick(this, \"rad\");' />"
+								 + "<img name='"+ primaryLang + "' class='country" + primaryLang + "' onclick='flag_onClick(this, \"img\");' />";
+			
+			if(primaryLang != 2) {
+				languageTd.innerHTML += "<input type='radio' id='2' name='rad_flag' onclick='flag_onClick(this, \"rad\");' />"
+									 + "<img name='2' class='country2' onclick='flag_onClick(this, \"img\");' />";
+			}
+			if(primaryLang != 1) {
+				languageTd.innerHTML += "<input type='radio' id='1' name='rad_flag' onclick='flag_onClick(this, \"rad\");' />"
+									 + "<img name='1' class='country1' onclick='flag_onClick(this, \"img\");' />";
+			}
+			if(primaryLang != 3 && useJapanese == 'YES') {
+				languageTd.innerHTML += "<input type='radio' id='3' name='rad_flag' onclick='flag_onClick(this, \"rad\");' />"
+									 + "<img name='3' class='country3' onclick='flag_onClick(this, \"img\");' />";
+			}
+			if(primaryLang != 4 && useChinese == 'YES') {
+				languageTd.innerHTML += "<input type='radio' id='4' name='rad_flag' onclick='flag_onClick(this, \"rad\");' />"
+									 + "<img name='4' class='country4' onclick='flag_onClick(this, \"img\");' />";
+			}
+			if(primaryLang != 5 && useVietnamese == 'YES') {
+				languageTd.innerHTML += "<input type='radio' id='5' name='rad_flag' onclick='flag_onClick(this, \"rad\");' />"
+									 + "<img name='5' class='country5' onclick='flag_onClick(this, \"img\");' />";
+			}
+			if(primaryLang != 6 && useIndonesian == 'YES') {
+				languageTd.innerHTML += "<input type='radio' id='6' name='rad_flag' onclick='flag_onClick(this, \"rad\");' />"
+									 + "<img name='6' class='country6' onclick='flag_onClick(this, \"img\");' />";
+			}
+			
+			document.getElementsByClassName("country1")[0] && document.getElementsByClassName("country1")[0].setAttribute("title", "<spring:message code='ezPersonal.s81'/>");
+			document.getElementsByClassName("country2")[0] && document.getElementsByClassName("country2")[0].setAttribute("title", "<spring:message code='ezPersonal.s82'/>");
+			document.getElementsByClassName("country3")[0] && document.getElementsByClassName("country3")[0].setAttribute("title", "<spring:message code='ezPersonal.s84'/>");
+			document.getElementsByClassName("country4")[0] && document.getElementsByClassName("country4")[0].setAttribute("title", "<spring:message code='ezPersonal.s85'/>");
+			document.getElementsByClassName("country5")[0] && document.getElementsByClassName("country5")[0].setAttribute("title", "<spring:message code='ezPersonal.s86'/>");
+			document.getElementsByClassName("country6")[0] && document.getElementsByClassName("country6")[0].setAttribute("title", "<spring:message code='ezPersonal.s87'/>");
+			
+		}
+
 		function save_onclick() {
 			$.ajax({
-	    		type : "POST",
-	    		dataType : "html",
-	    		url : "/ezPersonal/saveUserTimeZone.do",
-	    		async : false,
-	    		data : {
-	    			timeZone : document.getElementById("TimeZone").value,
+				type: "POST",
+				dataType: "html",
+				url: "/ezPersonal/saveUserTimeZone.do",
+				async: false,
+				data: {
+					timeZone: document.getElementById("TimeZone").value,
 	    			lang : flagValue
 	    		},
 	    		success : function(result) {   			
@@ -90,29 +136,7 @@
   			<table class="popuplist">
 				<tr>
       				<th><spring:message code='ezPersonal.s83'/></th>
-      				<td class="languageTd" style="height:40px;">
-						<input type="radio" id="1" name="rad_flag" onclick="flag_onClick(this, 'rad');" />
-						<img name="1" class="countryKR" alt="" title="<spring:message code='ezPersonal.s81'/>"  onclick="flag_onClick(this, 'img');" />
-						<input type="radio" id="2" name="rad_flag" onclick="flag_onClick(this, 'rad');" />
-						<img name="2" class="countryUS" alt="" title="<spring:message code='ezPersonal.s82'/>"  onclick="flag_onClick(this, 'img');" />
-
-						<c:if test="${useJapanese eq 'YES'}">
-							<input type="radio" id="3" name="rad_flag" onclick="flag_onClick(this, 'rad');" />
-							<img name="3" class="countryJP" alt="" title="<spring:message code='ezPersonal.s84'/>"  onclick="flag_onClick(this, 'img');" />
-						</c:if>
-						<c:if test="${useChinese eq 'YES'}">
-							<input type="radio" id="4" name="rad_flag" onclick="flag_onClick(this, 'rad');" />
-							<img name="4" class="countryCN" alt="" title="<spring:message code='ezPersonal.s85'/>"  onclick="flag_onClick(this, 'img');" />
-						</c:if>
-						<c:if test="${useVietnamese eq 'YES'}">
-							<input type="radio" id="5" name="rad_flag" onclick="flag_onClick(this, 'rad');" />
-							<img name="5" class="countryVN" alt="" title="<spring:message code='ezPersonal.s86'/>"  onclick="flag_onClick(this, 'img');" />
-						</c:if>
-						<c:if test="${useIndonesian eq 'YES'}">
-							<input type="radio" id="6" name="rad_flag" onclick="flag_onClick(this, 'rad');" />
-							<img name="6" class="countryID" alt="" title="<spring:message code='ezPersonal.s87'/>"  onclick="flag_onClick(this, 'img');" />
-						</c:if>
-      				</td>
+      				<td class="languageTd" id="languageTd" style="height:40px;"> </td>
     			</tr>
     			<tr>
       				<th><spring:message code='ezPersonal.s4'/></th>

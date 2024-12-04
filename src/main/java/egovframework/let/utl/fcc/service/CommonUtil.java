@@ -310,7 +310,9 @@ public class CommonUtil {
     
     public String stripScriptTagsAndFunctions(String src) {
     	if (src != null && !src.isEmpty()) {
-	        Pattern p = Pattern.compile("<(object|applet|script).*?>|</(object|applet|script).*?>|alert([ ]*?/\\*.*?\\*/[ ]*?)?\\(.*?\\)|confirm([ ]*?/\\*.*?\\*/[ ]*?)?\\(.*?\\)|prompt([ ]*?/\\*.*?\\*/[ ]*?)?\\(.*?\\)|window.*?location",
+			// dhlee: 20240420 - ( 뿐 아니라 ` 기호일 때도 alert 함수가 실행되어 ` 문자도 추가함
+			// dhlee: 20240718 - (가 &#40;로 변경된 경우가 있어 &#40;와 &#41;에 대한 처리를 추가함
+	        Pattern p = Pattern.compile("<(object|applet|script).*?>|</(object|applet|script).*?>|alert([ ]*?/\\*.*?\\*/[ ]*?)?[(`].*?[)`]|alert([ ]*?/\\*.*?\\*/[ ]*?)?&#40;.*?&#41;|confirm([ ]*?/\\*.*?\\*/[ ]*?)?[(`].*?[)`]|confirm([ ]*?/\\*.*?\\*/[ ]*?)?&#40;.*?&#41;|prompt([ ]*?/\\*.*?\\*/[ ]*?)?[(`].*?[)`]|prompt([ ]*?/\\*.*?\\*/[ ]*?)?&#40;.*?&#41;|window.*?location",
 	        				Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 	        Matcher m = p.matcher(src);
 	        src = m.replaceAll("");
@@ -326,7 +328,15 @@ public class CommonUtil {
 
 		return src;
 	}
-    
+
+	public String convertTagSymbols(String src) {
+		if (src != null && !src.isEmpty()) {
+			src = src.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+		}
+
+		return src;
+	}
+
 	public byte[] readBytesFromFile(Path path) throws IOException {
 		String pathStr = path.toString();
 
@@ -594,10 +604,31 @@ public class CommonUtil {
 			return new LoginVO();
 		}
 	}
+
+	public LoginVO checkAdminOld(String loginCookie){
+		try{
+			LoginVO user = userInfo(loginCookie);
+
+			if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1){
+				return null;
+			}else{
+				return user;
+			}
+		}catch(Exception e){
+			return null;
+		}
+	}
 	
 	public LoginVO checkAdmin(String loginCookie){
 		try{
 			LoginVO user = userInfo(loginCookie);
+			
+			// ezSyncServer가 ezFlow를 호출하는 경우엔 loginCookie에 부서 아이디가 없어
+			// 이 경우엔 이전 방식으로 관리자 권한을 체크하도록 함
+			if (user.getDeptID() == null || user.getDeptID().isEmpty()) {
+				return checkAdminOld(loginCookie);
+			}
+			
 			OrganAuth organAuth = makeOrganAuth(user.getId(), user.getTenantId(), user.getDeptID(), user.getJobId());
 	
 			if (organAuth.isAuth(AdminAuth.ADMIN_MASTER)) {
@@ -1087,13 +1118,8 @@ public class CommonUtil {
 		return value;
 	}
 	
-	public String cleanScriptValue(String htmlCode, String type) {
-        if("clean".equals(type)){
-        	//htmlCode = htmlCode.replaceAll("</?script>", "&lt;sciprt&gt;");
-        	htmlCode = stripScriptTagsAndFunctions(htmlCode);
-        }
-		
-		return htmlCode;
+	public String cleanScriptValue(String htmlCode) {
+		return stripScriptTagsAndFunctions(htmlCode);
 	}
 	
 	// 2016.09.06 by kgs: Property value의 값을 변환
@@ -1562,6 +1588,8 @@ public class CommonUtil {
 		html = html.replace("&oslash;", "ø");
 		html = html.replace("&thorn;", "þ");
 		html = html.replace("&amp;", "&");
+		html = html.replace("&#034;", "\"");
+		html = html.replace("&#039;", "'");
 		
 		String result = html;
 		
@@ -3400,8 +3428,11 @@ public class CommonUtil {
 		OrganAuth organAuth = new OrganAuth();
 		
 		// 현재 권한만 체크하도록 변경
+		// jobid가 null이거나, 공백인 경우가 있어 같이 공백 or null 이거나 string equal 인 조건으로 변경 
 		for (OrganUserVO user : allUserinfo) {
-			if (user.getDepartment().equalsIgnoreCase(deptId) && user.getJobID().equalsIgnoreCase(jobId)) {
+			if (user.getDepartment().equalsIgnoreCase(deptId) &&
+					((StringUtils.isBlank(user.getJobID()) && StringUtils.isBlank(jobId)) ||
+					user.getJobID().equalsIgnoreCase(jobId))) {
 				organAuth.addAuth(user.getRoleInfo(), user.getDepartment(), user.getCompanyId());
 				break;
 			}

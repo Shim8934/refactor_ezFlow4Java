@@ -19,7 +19,7 @@
 	function window_onload() {
 		try {
 			ReturnFunction = opener.serUseDisablePopImap_dialogArguments[1];
-		} catch (e) {}
+		} catch (e) {console.log(e);}
 
 		if (returnValue == "NODATA") {
 			// Default '사용'

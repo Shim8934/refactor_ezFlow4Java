@@ -532,7 +532,7 @@
 		            permissions_check_dialogArguments[0] = Params;
 		            permissions_check_dialogArguments[1] = Permissions_Add_Complete;
 		            var OpenWin = window.open("/admin/ezOrgan/permissionsCheck.do?companyID=" + document.getElementById("ListCompany").value + "&DelType="+encodeURI(DelType) + "&type="+encodeURI(type), "Permissions_Check", GetOpenWindowfeature(1000, 620));
-		            try { OpenWin.focus(); } catch (e) { }
+		            try { OpenWin.focus(); } catch (e) {console.log(e);}
 		        } else {
 		            window.showModalDialog("/admin/ezOrgan/permissionsCheck.do?companyID=" + document.getElementById("ListCompany").value + "&DelType="+encodeURI(DelType) + "&type="+encodeURI(type), Params, "dialogHeight:580px; dialogWidth:970px; status:no;scroll:no; help:no; edge:sunken; resizable:no" + GetShowModalPosition(1000, 620));
 		            clearSearchVal();

@@ -43,6 +43,8 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
+import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
 
 /**
  * @Description [Controller] 에디터
@@ -67,7 +69,9 @@ public class EzEditorController extends EgovFileMngUtil {
 	private EzCommonService ezCommonService;
 
 	private static final Logger logger = LoggerFactory.getLogger(EzEditorController.class);
-
+	
+	@Autowired
+	private EzEmailService ezEmailService;
 	/**
 	 * editor 호출 Method
 	 */
@@ -99,6 +103,17 @@ public class EzEditorController extends EgovFileMngUtil {
 			if (!editorFontStyle.equals("")) {
 				defaultFontFamily = editorFontStyle.split("\\|")[0];
 				defaultFontSize = editorFontStyle.split("\\|")[1];
+			}
+			
+			// 사용자가 환경설정에서 설정한 값이 있으면 그 값을 사용하고, 없으면 관리자페이지에서 설정한 값 사용
+			MailGeneralVO mailGeneralVO = ezEmailService.getMailGeneral(userInfo.getTenantId(), userInfo.getId()).get(0);
+			String userFontFamily = mailGeneralVO.getEditorFontFamily();
+			String userFontSize = mailGeneralVO.getEditorFontSize();
+			if (userFontFamily != null && !userFontFamily.isEmpty()) {
+				defaultFontFamily = userFontFamily;
+			}
+			if (userFontSize != null && !userFontSize.isEmpty()) {
+				defaultFontSize = userFontSize;
 			}
 		}
 

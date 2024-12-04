@@ -516,7 +516,7 @@
 					document.getElementById("mailPanel").style.backgroundColor = "";
 		            document.getElementById("iFramePanel").style.display = "none";
 		            document.getElementById("iFrameLayer").src = "/blank.htm";
-		        } catch (e) {}
+		        } catch (e) {console.log(e);}
 		    }
 		    
 		    var inputNameDlg_cross_dialogArguments = new Array();
@@ -656,6 +656,41 @@
 	    			data : {"userKey" : userKey}
 		    	});
 		    }
+		    
+		 	// 2024.08.12 한슬기 : 메일 환경설정 > 편지함관리 > 가져오기 추가
+			function mailbox_attach_import(pwd, tempId, userkey, folderPath, frm) {
+				var encryptPw = (typeof pwd != "undefined") ? pwd : "";
+		    	var path = (typeof tempId != "undefined") ? tempId : "";
+		    	var tempname = "";
+	            socketUserkey = mailbox_getUserKey();
+		        
+				showDim();
+	        	ShowMailProgressNew();
+	        	
+	            if (path != "") {
+	            	ShowPercent(dec);
+	            } else {
+		            ShowPercent(uploading);
+	            }
+	            mailboxProgressFun(true, socketUserkey);
+	  
+	            var requestUrl = "/ezEmail/mailboxImportZip.do?folderPath="
+					+ encodeURIComponent(folderPath) 
+					+ "&userkey=" + encodeURIComponent(socketUserkey)
+					+ "&encryptPw=" + encodeURIComponent(encryptPw)
+					+ "&tempId=" + encodeURIComponent(path);
+		        
+		        if (typeof(shareId) != "undefined" && shareId != "") {
+		        	requestUrl += "&shareId=" + encodeURIComponent(shareId);
+		    	}
+		        
+		        setTimeout(function() {
+		            frm.action = requestUrl;
+		            frm.submit();
+		        }, 100); 
+
+			}
+			// 2024.08.12 한슬기 : 메일 환경설정 > 편지함관리 > 가져오기 추가 end
 		    
 	    </script>
 	    <title><spring:message code='ezEmail.t904' /></title>

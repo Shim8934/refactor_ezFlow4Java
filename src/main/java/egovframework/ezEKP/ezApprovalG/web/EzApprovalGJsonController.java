@@ -170,6 +170,7 @@ public class EzApprovalGJsonController {
         //총페이지 수
         String pageSize = request.getParameter("pageSize");
 
+        /* 2024-03-20 기준, 해당 URL의 호출 시 orderCell과 orderOption은 반드시 공백으로 전달됨. 차후 정렬 적용되도록 수정할 가능성이 있어 코드는 유지함. */
         //정렬 대상 셀
         String orderCell = request.getParameter("orderCell");
         //정렬 옵션
@@ -183,13 +184,16 @@ public class EzApprovalGJsonController {
 
         //일반/공공구분
         String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
-
+        
+        /* 2024-03-20 홍승비 - SQL Injection 제거 > 검색 쿼리를 subQuery 문자열이 아닌 개별 파라미터로 전달 */
+        // 2024-03-20 기준, 관리자 > 전체문서조회(완료문서) 문서목록 기능의 subQuery에 들어갈 수 있는 칼럼은 KEYWORD, ITEMCODE 두 개의 칼럼 뿐임
         // 2021-03-16 키워드 검색을 위한 subQuery
-        String subQuery = request.getParameter("subQuery");
-
-        String result = "";
-
-        Map<String, Object> resultMap =  ezApprovalGJsonService.getAdminSearchDocList(formID,formName, docNumber, docTitle, drafter, approvUser, draftDeptName, draftFrom, draftTo, aprFrom, aprTo, pageSize, pageNum, orderCell, orderOption, companyID, tenantID, lang, offset, approvalFlag, subQuery, locale);
+        //String subQuery = request.getParameter("subQuery");
+        
+        String keyword = request.getParameter("keyword") != null ? request.getParameter("keyword") : "";
+        String itemcode = request.getParameter("itemcode") != null ? request.getParameter("itemcode") : "";
+        
+        Map<String, Object> resultMap =  ezApprovalGJsonService.getAdminSearchDocList(formID, formName, docNumber, docTitle, drafter, approvUser, draftDeptName, draftFrom, draftTo, aprFrom, aprTo, pageSize, pageNum, orderCell, orderOption, companyID, tenantID, lang, offset, approvalFlag, keyword, itemcode, locale);
         
         logger.debug("getStatSearchDocList ended.");
         

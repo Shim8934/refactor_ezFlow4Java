@@ -22,8 +22,9 @@
 		<!-- 수신인란 height 작업 -->
 		<style>
 			.viewtxtScroller {
-				min-height: 16px;
-				max-height: 16px;
+				width:calc(100% - 20px);
+				overflow-y:auto;
+				max-height: 19px;
 				margin-bottom: 3px;
 			}
 			.viewtxtWrapper {
@@ -31,8 +32,7 @@
 				height: 100%;
 			}
 			.viewtxt {
-				display: table-cell;
-				vertical-align: middle;
+				min-height: 16px;
 			}
 			.viewtxt > span {
 				display: inline-block;
@@ -47,7 +47,9 @@
 			}
 			.ui-autocomplete { height: 200px; max-height: 200px; overflow-y: auto; overflow-x: hidden; padding : 0px}
 			#AutoCompleteResults .ui-state-focus { background: #f0f6ff;  border: none }
-			.mailAddressAdd { overflow-y: auto; }
+			.mailAddressAdd { position:relative; }
+			.expnd { position:absolute; right:9px; top:50%; margin-top:-8px; cursor: pointer; content: url(/images/expnd.gif); }
+			.cllps { position:absolute; right:9px; top:50%; margin-top:-8px; cursor: pointer; content: url(/images/cllps.gif); }
 		</style>
 		
 		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
@@ -164,6 +166,8 @@
 	    var uploadCommunityPath = "${uploadCommunityPath}";
 	    var defaultFontAndSize = "${defaultFontAndSize}";
 	    var isCrossBrowser = "${isCrossBrowser}";
+	    var previewMail = "${previewMail}";
+	    var mailSendResult = "${mailSendResult}";
 	    var useSecureMail = "${useSecureMail}";
 	    var isSecureMail = "${isSecureMail}";
 	    var securePassword = "";
@@ -171,6 +175,7 @@
 	    var secureReadDate = "";
 	    var useMailWriteSenderClick = "${useMailWriteSenderClick}"; // 수아 수정
 	    var folderPath = "${drafts}";
+		var securePasswordHint = "";
 
 	    //업무일지 아이디
 	    var journalId = '<c:out value="${journalId}"/>';
@@ -199,6 +204,7 @@
         var previewChk = false;
         var ReadMailOpenNewWin;
         var g_useAdditionalInfo = Boolean(${useAdditionalInfo});
+		var defaultCursorPosition = "${defaultCursorPosition}"; // 메일쓰기창 기본 커서 위치/ recipient: 받는사람, content : 내용
     	
     	// 웹폴더첨부용 변수
         var pickerData = "";
@@ -218,6 +224,9 @@
 		/* 2023-07-04 김우철 - 전자결재 일반버전에서 테넌트 컨피그 useHwpDownSecurity값에 상관없이 대응하기 위한 변수 */
 		var approvalFlag = "<c:out value='${approvalFlag}'/>";
 		var useHWP = "<c:out value='${useHWP}'/>";
+		
+		var moduleEditor = "<c:out value='${moduleEditor}'/>";
+		
 		<% // 승인메일 %>
 		<c:if test="${useApprMail eq 'YES'}">
 		var g_apprMail = false;
@@ -347,13 +356,12 @@
 			    document.getElementById("file1").multiple = false;
 			}
 			
-			if (document.getElementById("eSubject").value == "") {
-			    document.getElementById("MsgTo").focus();
-			}
-			
+// 			if (document.getElementById("eSubject").value == "") {
+// 			    document.getElementById("MsgTo").focus();
+// 			}
+
 			if (g_bodyType == "1") {
 				document.getElementById("plainTextArea").style.display = "";
-				document.getElementById("bodyType").options[1].selected = true;
 	        	document.getElementById("SelMailSign").disabled = true;
 	        	dadiframe.document.getElementById("btnBigFileUpload").style.display = "none";
 	        	document.getElementById("SelMailSign").classList.add("disabled"); // plainTextDisable style
@@ -444,6 +452,33 @@
 			$("textarea").keydown(function(e) {
 				if (e.keyCode == 27) {
 					return false;
+				}
+			});
+
+			$(document).mouseup(function (e) {
+				var clickedElementClass = e.target.className;
+				if (!clickedElementClass.includes('view_more')) {
+					hiddenMoreMenu();
+				}
+			});
+
+			$(window.frames['tbContentElement']).mouseup(function (e) {
+				hiddenMoreMenu(e);
+			});
+
+			// 2024-10-16 김은실 : [표준모듈] 메일쓰기창 To, Cc, Bcc 간 Drag & Drop 구현
+			$("#MsgToGot, #MsgCCGot, #MsgBCCGot").sortable({
+				connectWith: ".viewtxt",
+				// helper, stop 옵션 사용한 이유에 대해서는 commit message 참고 바람.
+				helper: function(event,ui) {
+					var width = parseFloat(window.getComputedStyle(ui.get(0)).width); // 또는, ui.css('width', ui.width() + 1); 가능함.
+				    console.debug("origin width: %s", width); // 개발자도구에서 Default levels → Vervose 변경하면 확인 가능.
+
+				    ui.css('width', Math.ceil(width));
+					return ui;
+				},
+				stop: function(event,ui) {
+					ui.item.css('width', ""); // helper에서 셋팅한 width값이 inline으로 남아있어서 원복함. 하지만 반드시 필요한 절차는 아니다. (ui.width() + 1 하면 반드시 필요한 절차)
 				}
 			});
 		}
@@ -1134,12 +1169,16 @@
 	        g_originalPlainText = document.getElementById("plainTextArea").value;
 	        
 	        setOnclickFunction();
+	        
+			// 2024.10.08 한슬기 :  메일쓰기화면 기본 커서 위치 설정. (recipient : 밭는사람, content : 내용, subject : 제목 / default : recipient)
+			setDefaultCursorPosition();
+	        
 	    }
 	    
 	    /* 2020-09-11 홍승비 - 버튼에서 온클릭 이벤트를 분리하여 업무일지, ezPMS 등의 발송버튼 활성화되지 않는 오류 수정 */
 	    function setOnclickFunction() {
 	        return setTimeout(function () {
-	        	document.getElementById("spanT674").setAttribute("onclick", "Send_onClick()");
+	        	document.getElementById("spanT674").setAttribute("onclick", "Send_onClick_preview()");
 	        	document.getElementById("spanT48").setAttribute("onclick", "Save_onClick('tempsave')");
 	        }, 20);
 	    }
@@ -1174,6 +1213,10 @@
 					"journalId" : journalId
 				},
 				success : function(result) {
+					
+					// 2024.10.08 한슬기 :  메일쓰기화면 기본 커서 위치 설정. (recipient : 밭는사람, content : 내용, subject : 제목 / default : recipient)
+					setDefaultCursorPosition();
+				
 					$("#eSubject").val("<spring:message code='ezJournal.t1' /><spring:message code='ezEmail.t674' /> : "+result.journalTitle);
 					var journalContent = "<p></p><p></p><hr>" + (result.journalContent).replace(/&#39;/gi, "\'");
 					
@@ -2339,6 +2382,7 @@
 				Save_onClick('preview');
 			}
 		}
+
 		function filePickerOpen() {
 	    	filePick.open(pickerData);
 	    }
@@ -2424,6 +2468,61 @@
 	    function mailTemplateSaveBtn() {
 	    	DivPopUpShow(483, 145, "/ezEmail/saveUserMailTemplateMain.do");
 	    }
+
+		function toggleMoreMenu() {
+			document.getElementById("view_more").classList.toggle('on');
+			var element = document.getElementById("layer_menu");
+			if (element) {
+				if (element.style.display === 'none') {
+					element.style.display = '';
+				} else {
+					element.style.display = 'none';
+				}
+			}
+		}
+
+		function hiddenMoreMenu() {
+			var element = document.getElementById("layer_menu");
+			if (element) {
+				if (element.style.display !== 'none') {
+					document.getElementById("view_more").classList.remove('on');
+					element.style.display = 'none';
+				}
+			}
+		}
+	    
+		// 2024.10.08 한슬기 : 메일쓰기화면 기본 커서 위치 설정. (recipient : 밭는사람, content : 내용, subject : 제목 / default : recipient)
+	    function setDefaultCursorPosition(){
+			// 커서를 받는사람에 위치시킴
+			if (defaultCursorPosition == "recipient"){
+				document.getElementById("MsgTo").focus();
+			
+			} else if (defaultCursorPosition == "content") {
+				// 에디터에 커서를 위치시킴
+				message.SetEditorFocus();
+			
+				setTimeout(function() {
+					   message.SetEditorFocus();
+				   }, 50);
+			
+			} else if (defaultCursorPosition == "subject") {
+				var inputValue = document.getElementById("eSubject").value;
+			
+				// 커서가 맨 뒤로 오도록 함
+				document.getElementById("eSubject").focus();
+				document.getElementById("eSubject").value = "";
+				document.getElementById("eSubject").value = inputValue;
+			
+			}
+	    }
+	    
+		// 수신자칸 : 접기, 펼치기 버튼
+	    function changeMode(obj, className) {
+			var mode = { expnd: {switch: 'cllps', height: '55px'},
+						 cllps: {switch: 'expnd', height: '19px'} };
+			obj.className = mode[className].switch;
+			$(obj).siblings('.viewtxtScroller').css('max-height', mode[className].height);
+	    }
 	    </script>
         <c:if test="${isCrossBrowser != true}">
         <script language="javascript" for="EzHTTPTrans" event="AttachAddFile(filename)">  
@@ -2440,13 +2539,9 @@
 	        <tr>
 	            <td style="">
 	                <div id="menu">
-	                    <ul>
+						<ul>
 	                        <li><span id="spanT674"><spring:message code='ezEmail.t674' /></span></li>
 	                        <li><span id="spanT48"><spring:message code='ezEmail.t48' /></span></li>
-	                        <!-- 재은 수정(편지지) -->
-	                        <c:if test="${useLetter == 'YES'}">
-	                        <li><span onclick="Letter_onClick()"><spring:message code='ezEmail.t824' /></span></li>
-	                        </c:if>
 	                        <li  style="display:none"><span onclick="Print_onClick()">
 	                            <spring:message code='ezEmail.t546' /></span></li>
 	                        <!-- <li><span onclick="LoadFormat_onClick()">
@@ -2457,10 +2552,17 @@
 	                            <spring:message code='ezEmail.t353' /></span></li>
 	                        <li><span onclick="mailWritePreview()">
 	                            <spring:message code='ezEmail.t487' /></span></li>
-	                        <li><span onclick="mailTemplateLoadBtn()">
-	                            <spring:message code='ezEmail.kasMailTemplate01' /></span></li>
-	                        <li><span onclick="mailTemplateSaveBtn()">
-	                            <spring:message code='ezEmail.kasMailTemplate02' /></span></li>
+							<li class="view_more" onclick="toggleMoreMenu()"><span class="view_more" id="view_more" style="border: none;"><img class="view_more" src="/images/ImgIcon/view_more.png"></span>
+								<ul class="layer_select" id="layer_menu" style="display: none">
+									<c:if test="${useLetter == 'YES'}">
+										<li><span onclick="Letter_onClick()"><spring:message code='ezEmail.t824' /></span></li>
+									</c:if>
+									<li><span onclick="mailTemplateLoadBtn()">
+										<spring:message code='ezEmail.kasMailTemplate01' /></span></li>
+									<li><span onclick="mailTemplateSaveBtn()">
+										<spring:message code='ezEmail.kasMailTemplate02' /></span></li>
+								</ul>
+							</li>
 	                    </ul>
 	                    <ul style="float:right;margin-right:50px">
 	                    	<%-- <li class="sel securemail" style="background:none; border:none; padding:0px; padding-top:4px; display:none;">
@@ -2581,6 +2683,7 @@
 	                        	<div class="viewtxtScroller">
 	                            	<div id="MsgToGot" class="viewtxt"></div>
 	                            </div>
+	                            <img class="expnd" onclick="changeMode(this, this.className)" align="absmiddle">
 	                        </td>
 	                    </tr>
 	                    <tr id="MsgCC_TR">
@@ -2608,6 +2711,7 @@
 	                        	<div class="viewtxtScroller">
 	                            	<div id="MsgCCGot" class="viewtxt"></div>
 	                            </div>
+	                            <img class="expnd" onclick="changeMode(this, this.className)" align="absmiddle">
 	                        </td>
 	                    </tr>
 	                    <tr id="MsgBCC_TR"  style="display:none;">
@@ -2632,6 +2736,7 @@
 	                        	<div class="viewtxtScroller">
 	                            	<div id="MsgBCCGot" class="viewtxt"></div>
 	                            </div>
+	                            <img class="expnd" onclick="changeMode(this, this.className)" align="absmiddle">
 	                        </td>
 	                    </tr>
 	                    <tr style="height:33px">

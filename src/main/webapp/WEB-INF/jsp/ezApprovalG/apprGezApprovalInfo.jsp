@@ -40,6 +40,8 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
 	    <script src="${util.addVer('/js/Common.js')}" type="text/javascript"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/nonElecRec.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Circulation.js')}"></script>
+	    
 	    <style type="text/css">
 	    	.h2_dot {
 	    		background: url(/images/kr/left/left_dot02.gif) no-repeat 0px 70%;
@@ -336,7 +338,7 @@
                     GetGamsaYesanDeptInfo();
                 }
             
-	            if(approvalFlag == "G") {
+	            if (approvalFlag == "G") {
 		            CheckGubunInit();
 		            
 		         	// 2023-06-12 임정은 - 공람 추가
@@ -1663,9 +1665,7 @@
 						if (useDynamicAprLine == "1" && autoAprLineField.length > 0) {
 							ret[27] = SAPRLINETEMPLETXMLParsing();
 						}
-
-
-		
+						
 		                if (ReturnFunction != null) {
 		                    ReturnFunction(ret);
 		                }
@@ -1676,7 +1676,7 @@
 		                // 일괄접수, 일괄접수자전결일 경우에는 결재정보창 유지
 		                if (receiptFlag == '' || typeof receiptFlag == 'undefined') {
 			                window.close();
-		                } else if (receiptFlag == 'R') {
+		                } else if (receiptFlag == "R") {
 		                	var pAlertContent = "";
 		                	showLoadingProgress();
 		                	setTimeout(function() {
@@ -1688,42 +1688,49 @@
 			     		        if (arrRtnVal[0] == "OK") {
 			     		        	pAlertContent = strLang933 + (Number(arrRtnVal[1])) + strLang934_1 + "<br/>";
 
-			     		            if (arrRtnVal[2] != 0) {
-				     		            pAlertContent += strLang935 + arrRtnVal[2] + strLang934_1;
+									if (arrRtnVal[2] != 0) {
+										pAlertContent += strLang935 + arrRtnVal[2] + strLang934_1;
 									}
-			     		            
-			     		            if (arrRtnVal[3] != 0) {
-			     		            	
-			     		            	if (arrRtnVal[2] != 0) {
-			     		            		pAlertContent += " / ";
-			     		            	}
-			     		                
-			     		            	pAlertContent += strLang936 + arrRtnVal[3] + strLang934_1;
-			     		            }
-
-			     		            if (arrRtnVal[4] != 0) {
-			     		            	
-			     		            	if (arrRtnVal[2] != 0 || arrRtnVal[3] != 0) {
-			     		            		pAlertContent += " / ";
-			     		            	}
-			     		                
-			     		            	pAlertContent += strLang938 + arrRtnVal[4] + strLang934_1;
-			     		            }
-			     		            
-			     		            if (receiptFlag == "R") {
-			     			            pAlertContent += "<br/>" + strLangLGEAR01;
-			     		            } else {
-			     			            pAlertContent += "<br/>" + strLangLGEAR03;
-			     		            }
+									
+									if (arrRtnVal[3] != 0) {
+										if (arrRtnVal[2] != 0) {
+											pAlertContent += " / ";
+										}
+									    
+										pAlertContent += strLang936 + arrRtnVal[3] + strLang934_1;
+									}
+									
+									if (arrRtnVal[4] != 0) {
+										if (arrRtnVal[2] != 0 || arrRtnVal[3] != 0) {
+											pAlertContent += " / ";
+										}
+									    
+										pAlertContent += strLang938 + arrRtnVal[4] + strLang934_1;
+									}
+									  
+									// 불필요한 분기 제거 (이미 receiptFlag == "R" 분기 내부임)
+									pAlertContent += "<br/>" + strLangLGEAR01;
+									
+									/* 2024-11-18 홍승비 - 전자결재 G > 일괄접수 시에도 공람 기능이 정상 동작하도록 수정 (접수기안창 페이지 참고, 일반버전은 접수기안 시 회람 불가능) */
+									if (arrRtnVal[5] != 0) {
+										var gongramDocIDArr = arrRtnVal[5].split(";"); // 실제로 일괄접수가 성공한 문서의 docID 배열
+										
+										if (ret[22] == "noItem") {
+											delAprLineInfoCC_receiptAll(gongramDocIDArr);
+										} else if (ret[22] == "sameItem") {
+										} else {
+											SaveAprLineInfoCC_receiptAll(ret[22], gongramDocIDArr);
+										}
+									}
+									
 			     		        } else {
-			     		        	
 			     		        	if (receiptFlag == "R") {
 			     			            pAlertContent = strLangLGEAR02;
 			     		        	} else {
 			     			            pAlertContent = strLangLGEAR04;
 			     		        	}
 			     		        }
-		     		            
+			     		        
 	     		        		// 2023-08-22 조수빈 - 작업을 완료한 후에는 부서수신함을 리로딩
 				                window.opener.parent.frames[0].convMain('4', '');
 		     		            OpenAlertUI(pAlertContent, window.close);

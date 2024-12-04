@@ -314,7 +314,9 @@
 				switch(questionType) {
 					case 1:
 					case 2:
-					case 9: 
+					case 9:
+					case 10:
+					case 11:
 						checkQuestions(question["option"], question["level"], questionType);
 						break;
 					case 3:
@@ -331,7 +333,7 @@
 			}
 		}
 
-		// 20.05.07 강승구 : 선택형(단일선택, 다중선택, 드롭다운) 질문에 대한 값 세팅처리
+		// 20.05.07 강승구 : 선택형(단일선택, 다중선택, 드롭다운, 일정유형[단일/다중]) 질문에 대한 값 세팅처리
 		function checkQuestions(options, level, type) {
 			var userId = "${user}";
 			
@@ -496,7 +498,7 @@
 			window.addEventListener("resize", function(e) {setBodyHeight();}, false);
 			document.getElementById("surveyInfBttn").onclick = function(e) {toggleSurveyInformation();};
 			
-			// 단일 선택 질문 버튼 클릭 이벤트 (type 1)
+			// 단일 선택 질문 및 일정 단일 질문 버튼 클릭 이벤트 (type 1, type 10)
 			$(".prevQsArea").on("click", ".optRdo", function() {
 				var prId     = parseInt($(this).parents(".prevQsWrapper").attr("id").replace("prevQstn", ""));
 				var logicNum = parseInt($(this).attr("logic"));
@@ -533,7 +535,7 @@
 				
 				toggleQuestionList_New(prId);
 			});
-			// 다중선택 질문 버튼 클릭 이벤트 (type 2)
+			// 다중선택 질문 및 일정 다중 선택 버튼 클릭 이벤트 (type 2, type 11)
 			$(".prevQsArea").on("click", ".optChb", function() {
 				var prId     = parseInt($(this).parents(".prevQsWrapper").attr("id").replace("prevQstn", ""));
 				toggleQuestionList_New(prId);
@@ -713,10 +715,18 @@
 							case 9:
 								getDrdwRespose(id, type);
 								break;
+							case 10:
+								getSingleScheduleRespose(id, type);
+								break;
+							case 11:
+								getMultiScheduleRespose(id, type);
+								break;
 						}
 						
 					}
 					if (responseResult == 'fail') {
+					    // 응답 획득에 실패할 경우, 응답 배열을 초기화 함
+						resposeObj.responses = [];
 						return;
 					}
 				}
@@ -1084,6 +1094,62 @@
 			}
 		}
 		
+		function getSingleScheduleRespose(id, type) {
+			var answerObj  = {};
+			var optionId   = {};
+			var answer     = [];
+			var result     = "success";
+			var wrapper    = $("#prevQstn" + id);
+			var checkedBtn = wrapper.find(".prevQsOpt").find("input[name^=qstn" + id+ "]:checked");
+			var optId      = parseInt(checkedBtn.attr("optionid"));
+			var responseId = parseInt(checkedBtn.attr("responseId"));
+			
+			if (!isNaN(optId)) {
+				optionId['optionId'] = optId;
+				optionId['responseId'] = responseId;
+				answer.push(optionId);
+				answerObj['answers'] = answer;
+				answerObj['type'] = type;
+				answerObj['questionLevel'] = id;
+				resposeObj.responses.push(answerObj);
+			}
+			
+			return result;
+		}
+		
+		function getMultiScheduleRespose(id, type) {
+			var answerObj = {};
+			var answer    = [];
+			var result    = "success";
+			var wrapper   = $("#prevQstn" + id);
+			var checkBox  = wrapper.find(".prevQsOpt").find("input[name^=qstn" + id+ "]");
+			var length    = checkBox.length;
+			
+			for (var i = 0; i < length; i++) {
+				if (checkBox[i].checked == true) {
+					//var optLevel = parseInt(checkBox[i].value);
+					var optId    = parseInt(checkBox[i].getAttribute('optionid'));
+					var responseId = parseInt(checkBox[i].getAttribute('responseId'));
+					var optionId = {};
+					
+					if (!isNaN(optId)) {
+						optionId['optionId'] = optId;
+						optionId['responseId'] = responseId;
+						answer.push(optionId);
+					}
+				}
+			}
+			
+			if (answer.length > 0 && result !== "fail") {
+				answerObj['answers']       = answer;
+				answerObj['type']          = type;
+				answerObj['questionLevel'] = id;
+				resposeObj.responses.push(answerObj);
+			}
+			
+			return result;
+		}
+		
 		function deleteFileConfirm() {
 			var itemArr = [];
 			itemArr.push(surveyId);
@@ -1206,6 +1272,10 @@
 						case 9 : 
 							checkResult = checkDrdwResponse(id);
 							break;
+						case 10:
+						case 11:
+							checkResult = checkScheduleResponse(id);
+							break;
 					}
 				}
 				
@@ -1288,6 +1358,12 @@
 		function checkDrdwResponse(id) {
 			var selectedValue = $("select[name = drdw" + id + "]").val();
 			return selectedValue;
+		}
+		
+		//일정 유형 질문 답변 유무 체크
+		function checkScheduleResponse(id) {
+			var checkedCnt = $("input[name^=qstn" + id + "opt]:checked").length;
+			return checkedCnt;
 		}
 		
 		/* 2021-05-27 전자설문 이미지 확대 개선 */
@@ -1380,7 +1456,7 @@
 				// logic이 0인 경우 설문종료이므로, 자신 이후의 모든 질문을 disabled 처리
 				// logic이 -1이면 분기없음이므로 이후 처리 없음
 				else { // skip == -1
-					if (type == "1") { // 단일선택
+					if (type == "1" || type == "10") { // 단일선택 , 일정 단일 선택
 						// 현재 루프 중인 질문 자기 자신에 대해, 모든 답변이 가질 수 있는 분기를 체크
 						var qstOptions = $(this).find("[name = 'qstn" + qstIdx + "opt'][logic != '-1']"); // 분기가 설정된 세부 라디오 항목이 존재 (예 : qstn1opt)
 						if (qstOptions.length > 0) {
@@ -1445,7 +1521,7 @@
 		var result = false;
 		var qstWrapper = $("#" + qstWrapperID);
 		
-		if (type == "1" || type == "2" || type == "3" || type == "4") { // 단일선택, 다중선택, 행렬(단일/다중)
+		if (type == "1" || type == "2" || type == "3" || type == "4" || type == "10" || type == "11") { // 단일선택, 다중선택, 행렬(단일/다중)
 			if (qstWrapper.find("input:checked").length > 0) {
 				result = true;
 			}
@@ -1507,7 +1583,7 @@
 				var type = $(this).attr("type");
 				
 				// 항목 별 세부분기 > 질문의 유형 별로 응답이 유효한지 체크
-				if (type == "1") { // 단일선택
+				if (type == "1" || type == "10") { // 단일선택
 					if ($(this).find(".optRdo[logic='" + qstLevel + "']:checked").length > 0) {
 						parentResponseExist = true;
 					}
@@ -1545,7 +1621,7 @@
 				$("#mask" + qstLevel).css({"height": height, "width": width, "background-color": "gray", "opacity": "0.3", "position" : "absolute"});
 				
 				// 비활성화한 해당 질문에 응답이 존재하면 없애기 (슬라이드의 경우 값 초기화)
-				if (type == "1" || type == "2" || type == "3" || type == "4") { // 단일선택, 다중선택, 행렬(단일/다중)
+				if (type == "1" || type == "2" || type == "3" || type == "4" || type == "10" || type == "11") { // 단일선택, 다중선택, 행렬(단일/다중), 일정(단일/다중)
 					qstWrapper.find("input").prop("checked", false); // 체크박스 맟 라디오 체크된 값 일괄해제
 				} else if (type == "5") { // 단답형
 					qstWrapper.find("input").val("");
@@ -1594,7 +1670,7 @@
 					$("#mask" + i).css({"height": height, "width": width, "background-color": "gray", "opacity": "0.3", "position" : "absolute"});
 					
 					// 비활성화한 해당 질문에 응답이 존재하면 없애기 (슬라이드의 경우 값 초기화)
-					if (type == "1" || type == "2" || type == "3" || type == "4") { // 단일선택, 다중선택, 행렬(단일/다중)
+					if (type == "1" || type == "2" || type == "3" || type == "4" || type == "10" || type == "11") { // 단일선택, 다중선택, 행렬(단일/다중), 일정(단일/다중) 
 						qstWrapper.find("input").prop("checked", false); // 체크박스 맟 라디오 체크된 값 일괄해제
 					} else if (type == "5") { // 단답형
 						qstWrapper.find("input").val("");
@@ -1619,13 +1695,13 @@
 		var type = qstWrapper.attr("type");
 		var canEnableAll = false; // 모든 설문 활성화 가능한지 1차 체크
 		
-		if (type == "1" || type == "3") { // 단일선택, 행렬(단일)
+		if (type == "1" || type == "3" || type == "10") { // 단일선택, 행렬(단일), 일정 단일
 			// 설문종료 이외에 체크된 값이 있는가?
 			if (qstWrapper.find("input:checked").length > 0) {
 				canEnableAll = true;
 			}
 		}
-		else if (type == "2" || type == "4") { // 다중선택, 행렬(다중)
+		else if (type == "2" || type == "4" || type == "11") { // 다중선택, 행렬(다중), 일정 (다중)
 			// 모든 선택지가 선택 해제되어있는가?
 			if (qstWrapper.find("input:checked").length == 0) {
 				canEnableAll = true;
@@ -1681,7 +1757,7 @@
 						var type = $(this).attr("type");
 						
 						// 질문의 유형 별로 응답이 유효한지 체크 (항목 별 세부분기)
-						if (type == "1") { // 단일선택
+						if (type == "1" || type == "10") { // 단일선택, 일정 단일 선택
 							if ($(this).find(".optRdo[logic='" + i + "']:checked").length > 0) {
 								parentResponseExist = true;
 							}

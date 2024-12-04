@@ -118,6 +118,12 @@ function getMailList(currPage) {
 }
 
 function open_mail(url) {
+
+	if (checkBlockedMail(url) == '1') {
+		alert(strLangLDH07);
+		return;
+	}
+	
 	setTimeout(function(){
 		getMailList(pageNum); 
 	}, 1000);
@@ -139,4 +145,22 @@ function open_mail(url) {
 	
 function Mailmore_btnClick() {
     window.open("/ezEmail/mailMain.do", "main");
+}
+
+function checkBlockedMail(url) {
+	var strQuery = "<URL>" + url + "</URL>";
+	xmlhttp_mailCheckBlock = createXMLHttpRequest();
+
+	var previewUrl = "/ezEmail/mailPrevShow.do?MSGFLAG=N";
+
+	xmlhttp_mailCheckBlock.open("POST", previewUrl, false);
+	xmlhttp_mailCheckBlock.send(strQuery);
+
+	var pBlockedMail = 1;
+
+	if (xmlhttp_mailCheckBlock.status == 200) {
+		pBlockedMail = getNodeText(SelectNodes(xmlhttp_mailCheckBlock.responseXML, "DATA/BLOCKEDMAIL")[0]);
+	}
+
+	return pBlockedMail;
 }

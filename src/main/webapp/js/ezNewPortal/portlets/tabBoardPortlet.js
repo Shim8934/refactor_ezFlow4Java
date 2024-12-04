@@ -167,10 +167,19 @@ var dataAssemblerTabBoard = function(object) {
 	var writeDate = new Date(object.writeDate);
 	var date = today.getDate();
 	today.setDate(date - 1);
+	var portletId = tabBoardPortletObj.portletId;
 	
 	var str = "";
-	str += "<li onclick='openDoc_section3_Type(\"" + object.itemID + "\", \"" + object.guBun + "\", \"" + object.boardID + "\")'>";
-    str += "<span class='txt' title='" + MakeXMLString(object.title) + "' >" + MakeXMLString(object.title) + "</span>";
+	if (object.publicFlag === 'N' && object.guBun === '2') {
+		str += "<li onclick=\"openAnonymousModal('" + portletId + "','" + object.itemID + "','" + object.guBun + "', '" + object.boardID + "',openDoc_section4_Type)\" >";
+	} else {
+		str += "<li onclick='openDoc_section3_Type(\"" + object.itemID + "\", \"" + object.guBun + "\", \"" + object.boardID + "\")'>";
+	}
+    str += "<span class='txt' title='" + MakeXMLString(object.title) + "' >" + MakeXMLString(object.title);
+	if (object.publicFlag === 'N') {
+		str +=  " <div class='board_private'></div>";
+	}
+    str += "</span>";
 
 	str += "<span class='date'>" + object.startDate.substring(5, 16).replace(/-/g, ".") + "</span>";
 
@@ -237,7 +246,7 @@ function allDisplayNone(querySelector) {
 	});
 }
 
-function openDoc_section3_Type(pItemID, pType, oBoardID) {
+function openDoc_section3_Type(pItemID, pType, oBoardID, password) {
     var pheight = window.screen.availHeight;
     var pwidth = window.screen.availWidth;
     var pTop = (pheight - 720) / 2;
@@ -261,11 +270,27 @@ function openDoc_section3_Type(pItemID, pType, oBoardID) {
 	    pLeft = (pwidth - 764) / 2;
         window.open("/ezBoard/boardItemViewMovie.do?showAdjacent=&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(oBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height + ",width=764,top=" + pTop + ",left=" + pLeft, "");
     } else {
-        if (CrossYN()) {
-            window.open("/ezBoard/boardItemView.do?showAdjacent=&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(oBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
-        } else {
-            window.open("/ezBoard/boardItemView.do?showAdjacent=&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(oBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
-        }
+		var parser = new DOMParser();
+
+		$.ajax({
+			url: "/ezBoard/boardItemView.do?showAdjacent=&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(oBoardID),
+			headers: !!password ? {
+				'Authorization': 'Basic ' + btoa(password)
+			} : {},
+			success: function(response) {
+				var returnDom = parser.parseFromString(response, "text/xml")
+				if (!returnDom || returnDom.querySelector('title').textContent ==="warning") {
+					alert(!!password ? strWrongPassword : strLang1132);
+					return;
+				}
+				var newWindow = window.open("", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft);
+				newWindow.document.write(response);
+				newWindow.document.close();
+			},
+			error: function(xhr, status, error) {
+				console.error('Error:', error);
+			}
+		});
     }
 }
 

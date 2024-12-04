@@ -137,7 +137,7 @@
 	        		addHeight += 30;
 	        	}
 	            
-            	document.getElementById("message").style.height = (contentHeight - addHeight) + "PX";
+            	document.getElementById("message").style.height = (contentHeight - addHeight - 10) + "PX";
                 document.getElementById("messagetd").style.height = (contentHeight - addHeight) + "PX";
 	        }
 	        
@@ -960,7 +960,7 @@
 	            </tr>
 	            <tr>
 	                <td class="pad1" style="vertical-align: top; height: 100%" id="messagetd">
-	                    <iframe id="message" style="border: #ddd 1px solid; padding-left: 5px; overflow: auto;width: calc(100% - 7px); padding-top: 6px; height: 370px; background-color: white"></iframe>	                    
+	                    <iframe id="message" style="border: #ddd 1px solid; padding-left: 5px; overflow: auto;width: calc(100% - 7px); padding-top: 6px; height: 350px !important; background-color: white"></iframe>	                    
 	                </td>
 	            </tr>
 	            <tr>

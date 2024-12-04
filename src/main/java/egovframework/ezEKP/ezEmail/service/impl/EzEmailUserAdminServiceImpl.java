@@ -11,6 +11,7 @@ import javax.annotation.Resource;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -589,7 +590,9 @@ public class EzEmailUserAdminServiceImpl implements EzEmailUserAdminService {
 					}					
 				}
 			}						
-		} catch (Exception e) {
+		} catch (ParseException e) {
+			logger.error(e.getMessage(), e);
+        } catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
 		
@@ -621,6 +624,8 @@ public class EzEmailUserAdminServiceImpl implements EzEmailUserAdminService {
 					reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
 				}
 			}	
+		} catch (ParseException e) {
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -772,6 +777,40 @@ public class EzEmailUserAdminServiceImpl implements EzEmailUserAdminService {
 		}
 
 		logger.debug("retireUser ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+
+		return reasonCode;
+	}
+	
+	@Override
+	public int checkUserPrimaryMail(String userEmailAddress, int tenantId) throws Exception {
+		logger.debug("checkUserPrimaryMail started. userEmailAddress=" + userEmailAddress);
+
+		String userIdParam = "userEmailAddress=" + URLEncoder.encode(userEmailAddress, "UTF-8") + "&tenantId="
+				+ URLEncoder.encode(Integer.toString(tenantId), "UTF-8");
+		String inputParams = userIdParam;
+
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/checkUserPrimaryMail";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+		logger.debug("response=" + response);
+
+		String resultCode = "Error";
+		int reasonCode = -100; // 웹서비스로부터 아무런 응답을 받지 못하거나 OK 응답이 오지 않은 경우를 의미
+
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject) jsonParser.parse(response);
+
+			resultCode = (String) responseObj.get("resultCode");
+
+			if (resultCode.equals("OK")) {
+				reasonCode = ((Long) responseObj.get("reasonCode")).intValue();
+			}
+		}
+
+		logger.debug("checkUserPrimaryMail ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
 
 		return reasonCode;
 	}

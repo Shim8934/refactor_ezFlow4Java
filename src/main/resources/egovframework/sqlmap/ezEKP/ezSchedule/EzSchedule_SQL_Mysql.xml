@@ -268,9 +268,9 @@
 	       		
 		]]>
 	</select>
-	<!-- checked -->
+	
+	<!-- 2024-07-05 홍승비 - SQL Injection 수정 > $ 기호 제거 -->
 	<select id="EzScheduleDAO.getScheduleList" parameterClass="Map" resultMap="scheduleListVO">
-		<![CDATA[
 			select 
 				scheduleid,
 				parentid,
@@ -307,7 +307,11 @@
         	from 
         		tbl_schedule a left join tbl_schedulegroup b on a.ownerid = b.groupid
        		where  
-       			(a.ownerid in ($v_INDILIST$)
+       			(a.ownerid IN
+       				<iterate property="v_INDILIST" open="(" close=")" conjunction=",">
+						#v_INDILIST[]#
+					</iterate>
+       		<![CDATA[
             and 
             	(            		
             		(a.startdate >= #v_PSTARTDATE# and a.startdate <= #v_PENDDATE#)
@@ -337,10 +341,13 @@
 						location like concat(concat('%',REPLACE(REPLACE(REPLACE(#v_SEARCHALL#,'\\','\\\\'),'%','\%'),'_','\_')), '%')
 				)
 			</isNotEmpty>
-            <![CDATA[
         	)
         	or  
-       			(a.ownerid in ($v_PIDLIST$)
+       			(a.ownerid IN
+       				<iterate property="v_PIDLIST" open="(" close=")" conjunction=",">
+						#v_PIDLIST[]#
+					</iterate>
+			<![CDATA[
        		and
         		a.companyid = #v_COMPANYID#
         	and 

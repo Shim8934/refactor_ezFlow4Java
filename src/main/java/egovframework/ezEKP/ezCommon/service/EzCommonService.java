@@ -304,7 +304,10 @@ public interface EzCommonService {
 	public void addTblBoardItemTempNoti() throws Exception;
 	
 	public void insertPrvwConfig() throws Exception;
-
+	
+	/* 2023-12-05 홍승비 - 전자결재 > 전자결재 서명 데이터 재맵핑 시점 컨피그 추가 */
+	public void insertApprSignRemapApplyTime() throws Exception;
+	
 	public void insertPermissionBasisDeptYN_Config() throws Exception;
 	
 	void createTblDbLog();
@@ -364,6 +367,8 @@ public interface EzCommonService {
 	public void insertReturnByDesignationUsedConfig() throws Exception;
 
 	public void alterDocAttachNameCol() throws Exception;
+
+	public void addColumnsRetireTblCompareWithUserTbl() throws Exception;
 
 	public void insertNonUseDocAttachYN() throws Exception;
 
@@ -452,4 +457,56 @@ public interface EzCommonService {
 	public void updateThemeData() throws Exception;
 	
 	void createRsScheduleDeptIdColumn() throws Exception;
+
+	/* 2023-03-30 이가은 - 게시판 > 게시물 댓글 정보 테이블에 답글 작성/수정기능 컬럼 추가 */
+	public void alterTblBoardOneLineChildReply() throws Exception;
+
+	// 2023-11-07 전인하 - 댓글 이모티콘 관련 컬럼 추가
+	public void insertBoardReplyCommentEmoticon() throws Exception;
+		
+	public void createTblBoardDisLike() throws Exception;
+	
+	public void addBoardDisLikeFlag() throws Exception;
+	
+
+	public void createBoardKeywordTable() throws Exception;
+	
+	// 2024-08-07 유길상 - 자원관리 즐겨찾기 카테고리 테이블 추가
+	public void createResourceFavoriteTables() throws Exception;
+
+	// 2024-10-23 정지은 - 게시판 > 글 작성 시 파일첨부 가능여부 설정
+	public void addBoardAttachmentFlag() throws Exception;
+	
+	void addTblBoardInfoPublicFlag();
+	
+	/* 2024-10-21 한태훈 - 게시판 > 전체게시물 리스트 헤더 추가 */
+	public void insertAllBoardListOption() throws Exception;
+	/* 2024-10-17 한태훈 - 게시판 > 전체게시물 게시판정보 추가 */
+	public void insertAllBoardInfo() throws Exception;
+
+	public void addSurveyTotalNotiSentFlag() throws Exception;
+
+    // 2024-11-14 김승연 메일 열람 차단 테이블 추가
+    public void createJmochaMailBlocked() throws Exception;
+	
+	public void insertModuleEditor() throws Exception;
+	
+	public void insertScrapTenantConfig() throws Exception;
+	
+	public void insertScrapTableHeader() throws Exception;
+	
+	public void createTblBoardScrap() throws Exception;
+	
+	public void createTblUserScrapCont() throws Exception;
+	
+	public void createTblUserScrapContList() throws Exception;
+
+	// 2024-10-23 전인하 - 게시판 > 댓글 첨부 테이블 추가
+	public void createTblBoardCommentAttachments() throws Exception;
+    
+	public void alterAddThumbnailForTPI() throws Exception;
+	
+	public void alterThumbnailExtForTPI() throws Exception;
+	
+	public void alterAttachmentsForCBoard() throws Exception;
 }

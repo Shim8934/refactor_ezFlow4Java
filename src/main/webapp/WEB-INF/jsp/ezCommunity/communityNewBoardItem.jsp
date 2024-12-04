@@ -109,6 +109,7 @@
 			var mailShareId = "<c:out value = '${mailShareId}'/>";
 			var mailFG_Post = "<c:out value = '${boardInfo.mailFG_Post}'/>"; // 게시알림
 			var mailFG_Mod = "<c:out value = '${boardInfo.mailFG_Mod}'/>"; // 수정알림
+			var editor = "<c:out value = '${editor}'/>";
 			
 			<c:if test="${isCrossBrowser != true}">
 			    var objMHT = new ActiveXObject("MhtFormat.Convert");
@@ -367,10 +368,12 @@
 		    	
 		    	saveFlag == true;
 		    	
-		        if(MHTLoadComplete != "true") {
-		            alert("<spring:message code='ezCommunity.t1138'/>");		
-		            return;
-		        }
+		    	if (editor != "HWP") {
+		    		if(MHTLoadComplete != "true") {
+			            alert("<spring:message code='ezCommunity.t1138'/>");		
+			            return;
+			        }	
+		    	}
 							
 		        var strXML = "";
 		        var newID = "";
@@ -515,30 +518,38 @@
 		            	obj[i].removeAttribute('className');
 		            }
 		        }
-	
-		        if (pDocID != "") {
-		        	message.SetEditorContent(message.GetEditorContent() + "<hr><br/><div contenteditable='false' >" + GetBODY(document.getElementById('docContent')).innerHTML) + "</div>";
-		        }
-
-		        var strBody = message.GetEditorContent();
 		        
-		        /* 2019-04-02 홍승비 - MHT파일 변환 및 저장 시 예외처리 추가 */
-		        try {
-			        if (trim_Cross(strBody) != "" || pDocID == "") {
-			            strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(strBody) + "</BODY>" + "</HTML>");
-			        } else {
-			            if (pDocID == "") {
-			            	strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(strBody) + "</BODY>" + "</HTML>");
-			            } else {
-			                var tempstr = strBody + "<hr><br/>" + GetBODY(document.getElementById('docContent')).innerHTML;
-			                strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(tempstr) + "</BODY>" + "</HTML>");
-			            }
+		        if (editor != "HWP") {
+		        	if (pDocID != "") {
+			        	message.SetEditorContent(message.GetEditorContent() + "<hr><br/><div contenteditable='false' >" + GetBODY(document.getElementById('docContent')).innerHTML) + "</div>";
 			        }
-		        } catch (e) {
-		        	alert("<spring:message code='ezCommunity.lhj04'/>");
-      				return;
+
+			        var strBody = message.GetEditorContent();
+			        
+			        /* 2019-04-02 홍승비 - MHT파일 변환 및 저장 시 예외처리 추가 */
+			        try {
+				        if (trim_Cross(strBody) != "" || pDocID == "") {
+				            strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(strBody) + "</BODY>" + "</HTML>");
+				        } else {
+				            if (pDocID == "") {
+				            	strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(strBody) + "</BODY>" + "</HTML>");
+				            } else {
+				                var tempstr = strBody + "<hr><br/>" + GetBODY(document.getElementById('docContent')).innerHTML;
+				                strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(tempstr) + "</BODY>" + "</HTML>");
+				            }
+				        }
+			        } catch (e) {
+			        	alert("<spring:message code='ezCommunity.lhj04'/>");
+	      				return;
+			        }
+			        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "CONTENT", strBody);
+		        } else {
+		        	hwpHtml = hwpHtml.replace(/&quot;/gi, "\'");
+		        	if (hwpHtml.indexOf("url(\'/") > -1) {
+		        		hwpHtml = hwpHtml.replace("url(\'/", "url(\'");
+	      			}
+		        	createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "CONTENT", hwpHtml.replace(/\r\n/g, "@r!n@"));
 		        }
-		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "CONTENT", strBody);
 		        
 		        if (gubun == "2") {
 		        	createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DOCPASSWORD", rsa.encrypt(document.getElementById('txtPassWord').value));
@@ -825,65 +836,71 @@
             }
 						
             function Editor_Complete() {
-            	if (flag == false) {
-	                flag = true;
-	                
-	                if (pMode == "new" || pModeOld == "loadpc") {
-	                    document.getElementById("txtTitle").focus();
-	                    message.SetEditorContent("");
-	                } else {
-						if (pUrl == "") {
-	                        var fullPath = strContentLocation;
-	                        
-	                        if (pMode == "reply") {
-	                            var htmlData = message.GetEditorContentURL(fullPath);
-	                            htmlData = ReplaceText(htmlData, "class=&quot;FIELD&quot;", "");
-	                            htmlData = ReplaceText(htmlData, "class=FIELD", "");
-	        		            
-	                            htmlData = "<body free>" + htmlData + "</body>";
-	                            
-	                            if (gubun != "2") {
-	                            	var tempWriteDate = strWriteDate;
-	                            	
-	                            	if(strParentWriteDate > strWriteDate) {
-	                            		tempWriteDate = strParentWriteDate;
-	                            	}
-	                            	
-	                            	var replyHeader = "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
-		                        	replyHeader += "<p " + defaultFontAndSize + ">-----<B>[&nbsp;<spring:message code='ezCommunity.t1161' /></B>-----</p>";
-		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezCommunity.t1162' /></B>" + tempWriteDate + "</p>";
-		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezCommunity.t1163' /></B>" + strWriterName + "(" + strWriterTitle + "," + strWriterDeptName + "," + strWriterCompanyName + ")</p>";
-		                        	// 2021-06-22 김은실 - htmlData 이후 => 에디터에 옮겨지면서, 특수문자<>와 영문 혼용 시 태그로 인식함. 특수코드로(&lt; 등) 보내면 -> 에디터에서 알아서 변경하기 때문에, 특수코드로 보내는 것이 나음. 
-		                        	//					에디터에 따라 다를 경우, 경우를 나눠 추가작업을 요망.
-		                        	// replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezCommunity.t885' /></B>" + ConvMakeXMLString("<c:out value = '${item.title}' />") + "</p>";
-		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezCommunity.t885' /></B><c:out value = '${item.title}' /></p>";
-		                        	replyHeader += "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
-		                        	htmlData = replyHeader + htmlData;
-	                            
-	                            } else {
-	                            	var replyHeader = "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
-		                        	replyHeader += "<p " + defaultFontAndSize + ">-----<B>[&nbsp;<spring:message code='ezCommunity.t1161' /></B>-----</p>";
-		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezCommunity.t1162' /></B>" + strWriteDate + "</p>";
-		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezCommunity.t1163' /></B>" + strWriterName + "</p>";
-		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezCommunity.t885' /></B><c:out value = '${item.title}' /></p>";
-		                        	replyHeader += "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
-		                        	htmlData = replyHeader + htmlData;
-	                            }
-	                            
-	                            message.SetEditorContent(htmlData);
-	                        } else {
-	                            message.SetEditorContentURL(fullPath);
-	                        }
-	                    } else {
-	                        if (pDocID == "") {
-	                            if (InsertMailInfo() == -1) {
-	                            	window.close();
-	                            }
-	                        }
-	                    }
-	                }
-	                MHTLoadComplete = "true";
-                }
+            	if (editor != "HWP") {
+            		if (flag == false) {
+    	                flag = true;
+    	                
+    	                if (pMode == "new" || pModeOld == "loadpc") {
+    	                    document.getElementById("txtTitle").focus();
+    	                    message.SetEditorContent("");
+    	                } else {
+    						if (pUrl == "") {
+    	                        var fullPath = strContentLocation;
+    	                        
+    	                        if (pMode == "reply") {
+    	                            var htmlData = message.GetEditorContentURL(fullPath);
+    	                            htmlData = ReplaceText(htmlData, "class=&quot;FIELD&quot;", "");
+    	                            htmlData = ReplaceText(htmlData, "class=FIELD", "");
+    	        		            
+    	                            htmlData = "<body free>" + htmlData + "</body>";
+    	                            
+    	                            if (gubun != "2") {
+    	                            	var tempWriteDate = strWriteDate;
+    	                            	
+    	                            	if(strParentWriteDate > strWriteDate) {
+    	                            		tempWriteDate = strParentWriteDate;
+    	                            	}
+    	                            	
+    	                            	var replyHeader = "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
+    		                        	replyHeader += "<p " + defaultFontAndSize + ">-----<B>[&nbsp;<spring:message code='ezCommunity.t1161' /></B>-----</p>";
+    		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezCommunity.t1162' /></B>" + tempWriteDate + "</p>";
+    		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezCommunity.t1163' /></B>" + strWriterName + "(" + strWriterTitle + "," + strWriterDeptName + "," + strWriterCompanyName + ")</p>";
+    		                        	// 2021-06-22 김은실 - htmlData 이후 => 에디터에 옮겨지면서, 특수문자<>와 영문 혼용 시 태그로 인식함. 특수코드로(&lt; 등) 보내면 -> 에디터에서 알아서 변경하기 때문에, 특수코드로 보내는 것이 나음. 
+    		                        	//					에디터에 따라 다를 경우, 경우를 나눠 추가작업을 요망.
+    		                        	// replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezCommunity.t885' /></B>" + ConvMakeXMLString("<c:out value = '${item.title}' />") + "</p>";
+    		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezCommunity.t885' /></B><c:out value = '${item.title}' /></p>";
+    		                        	replyHeader += "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
+    		                        	htmlData = replyHeader + htmlData;
+    	                            
+    	                            } else {
+    	                            	var replyHeader = "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
+    		                        	replyHeader += "<p " + defaultFontAndSize + ">-----<B>[&nbsp;<spring:message code='ezCommunity.t1161' /></B>-----</p>";
+    		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezCommunity.t1162' /></B>" + strWriteDate + "</p>";
+    		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezCommunity.t1163' /></B>" + strWriterName + "</p>";
+    		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezCommunity.t885' /></B><c:out value = '${item.title}' /></p>";
+    		                        	replyHeader += "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
+    		                        	htmlData = replyHeader + htmlData;
+    	                            }
+    	                            
+    	                            message.SetEditorContent(htmlData);
+    	                        } else {
+    	                            message.SetEditorContentURL(fullPath);
+    	                        }
+    	                    } else {
+    	                        if (pDocID == "") {
+    	                            if (InsertMailInfo() == -1) {
+    	                            	window.close();
+    	                            }
+    	                        }
+    	                    }
+    	                }
+    	                MHTLoadComplete = "true";
+                    }
+            	} else {
+            		var URL;
+                    URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=";
+                    message.Open(URL, "", "", function (res) { FieldsAvailable(res.result) }, null);
+            	}
 			}
 
             function btn_AttachSelect_onclick() {
@@ -970,6 +987,48 @@
 		    		}
 		    	});
 		    }
+	        
+	        function FieldsAvailable(isTrue) {
+	        	if (isTrue) {
+	        		if (pMode == "new") {
+            			message.SetMargin(3000);
+            		}
+	        		message.EditMode(1);
+            		message.SetViewProperties(2, 100);
+		            message.ScrollPosInfo(0, 0);
+		            message.ShowToolBar(true);
+		            message.ShowRibbon(true);
+		            message.FoldRibbon(true);
+		            window.onresize();
+	        	}
+	        }
+	        
+	        window.onresize = function () {
+				var mHeight = document.getElementById("EdtorSize").clientHeight - 5 + "px";
+	       		message.Resize(mHeight);
+		    };
+		    
+		    function SaveItemHWP() {
+		    	GetHTML(before_saveItem);
+		    }
+		    
+		    function GetHTML(callback) {
+                ingFlag = true;
+			    message.GetTextFile("HWP", "", function (data) { ingFlag = false; callback(data); });
+			}
+		    
+		    var hwpHtml = "";
+            function before_saveItem(html, pMode) {
+            	hwpHtml = html;
+            	SaveItem();
+            }
+            
+            function Editor_Modify_Complete() {
+		    	var URL;
+                URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(strContentLocation);
+                message.Open(URL, "", "", function (res) { FieldsAvailable(res.result) }, null);
+		    }
+	        
 		</script>
 
 		<script type="text/javascript" FOR="EzHTTPTrans" EVENT="AttachAddFile(filename)">
@@ -983,7 +1042,12 @@
 					<div id="menu">
 						<ul>
 							<!-- 2018-05-30 구해안 그룹웨어 모듈 '등록','저장후닫기' => '저장'으로 통일  ezCommunity.t155 => t20 -->
-							<li><span onclick="SaveItem();"><spring:message	code='ezCommunity.t20' /></span></li>
+							<c:if test="${editor ne 'HWP'}">
+								<li><span onclick="SaveItem();"><spring:message	code='ezCommunity.t20' /></span></li>
+							</c:if>
+							<c:if test="${editor eq 'HWP'}">
+								<li><span onclick="SaveItemHWP();"><spring:message	code='ezCommunity.t20' /></span></li>
+							</c:if>
 							<!-- 2017-12-27 장진혁 - 미리보기가 필요하지 않아 보임 주석처리함 -->
 							<%-- <li><span onclick="PreviewItem();"><spring:message code='ezCommunity.t1167' /></span></li> --%>
 						</ul>
@@ -1106,9 +1170,16 @@
 			</tr>
 			<tr>
 				<td style="height: 100%; vertical-align: top;" id="EdtorSize">
-					<iframe id="message" class="viewbox" name="message"
+					<c:if test="${editor ne 'HWP'}">
+						<iframe id="message" class="viewbox" name="message"
 						src="/ezEditor/selectEditor.do"
 						style="padding: 0; height: 100%; width: 100%; overflow: auto;margin-top:-1px;"></iframe>
+					</c:if>
+					<c:if test="${editor eq 'HWP'}">
+						<iframe id="message" class="viewbox" name="message"
+						src="/ezCommunity/WHWPEditor.do?type=${pMode}"
+						style="padding: 0; height: 100%; width: 100%; overflow: auto;"></iframe>
+					</c:if>
 				</td>
 			</tr>
 			<tr id="docTR" style="display: none">

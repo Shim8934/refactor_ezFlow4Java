@@ -12,7 +12,7 @@ function showProgress() {
 function hideProgress() {
     try {
         document.getElementById("progressviewerRayer").style.display = "none";
-    } catch (e) {}
+    } catch (e) {console.log(e);}
 }
 
 function ShowMailProgress() {
@@ -904,7 +904,7 @@ function toggle_flag() {
             }
         }
     }
-    catch (e) { }
+    catch (e) {console.log(e);}
 }
 function event_toggle_flag_end() {
     if (flagXmlHttp != null && flagXmlHttp.readyState == 4) {

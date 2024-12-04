@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,6 +26,7 @@ import java.util.TimeZone;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
@@ -179,7 +181,10 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			
 			String useDefaultFoldersForLangOnly = ezCommonService.getTenantConfig("UseDefaultFoldersForLangOnly", loginInfo.getTenantId());
 			boolean isUseDefaultFoldersForLangOnly = useDefaultFoldersForLangOnly.equals("YES") ? true : false;
-			
+
+			if (ia == null){
+				throw new Exception("ia is null");
+			}
 			List<Folder> rootMailFolderList = ia.getTopLevelFolders(true, isUseDefaultFoldersForLangOnly);
 			
 			for (int i = 0, j = 0; i < rootMailFolderList.size(); i++) {
@@ -236,6 +241,9 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 				
 				rootFolderXML.append("></node>");
 			}
+		} catch (MessagingException e) {
+			logger.error("Error get unread message count: " + e.getMessage());
+			logger.error(e.getMessage(), e);	
 		} catch (Exception e) {
 			logger.error("Error get unread message count: " + e.getMessage());
 			logger.error(e.getMessage(), e);
@@ -407,6 +415,9 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 						model.addAttribute("tags", jgwUserTagList.getResult());
 					}
 				}
+			} catch (RuntimeException e) {
+				logger.error("jgw fetch error", e);
+				useMailTag = false;
 			} catch (Exception e) {
 				logger.error("jgw fetch error", e);
 				useMailTag = false;
@@ -458,164 +469,167 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		logger.debug("userId=" + loginInfo.getId() + ",userEmail=" + userEmail);
 		
 		Document doc = commonUtil.convertRequestToDocument(request);
-		String folderName = doc.getElementsByTagName("URL").item(0).getTextContent();
-		String bcount = doc.getElementsByTagName("BCOUNT").item(0).getTextContent();
-		logger.debug("folderName=" + folderName);
-		
-		boolean isSubscribe = true;
-		String folderManamger = request.getParameter("fm");
-		
-		if (folderManamger != null && folderManamger.equals("1")) {
-			isSubscribe = false;
-		}
-		
-		StringBuilder subFolderXML = new StringBuilder();
-		
-		IMAPAccess ia = null;
-		try {
-			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale, ezEmailUtil);
-			List<Folder> subMailFolder = null;
-			
-			if (!folderName.equals("")) {
-				subMailFolder = ia.getSubFolders(folderName, isSubscribe);
-				
-				for (int i = 0; i < subMailFolder.size(); i++) {
-					Folder fd = subMailFolder.get(i);
-					
-					String folderId = fd.getName();
-					String displayName = ezEmailUtil.getDisplayNameFromFolderId(folderId, locale);
-					
-					subFolderXML.append("<node imgidx='1'");
-					
-					if (bcount.equals("-1")) {
-						if (fd.getUnreadMessageCount() > 0) {
-							subFolderXML.append(" caption='" + displayName + "'");
-							subFolderXML.append(" foldercount='" + fd.getUnreadMessageCount() + "'");
-						} else {
-							subFolderXML.append(" caption='" + displayName + "'");
-						}
-					} else {
-						subFolderXML.append(" caption='" + displayName + "'");
-					}
-					
-					subFolderXML.append(" foldername='" + displayName + "'");
-					subFolderXML.append(" orgBoxName='" + i + "'");
-					subFolderXML.append(" fullcaption='_NONE'"); //수정
-					subFolderXML.append(" href='" + fd.getFullName() + "'");
-					
-					if (!isSubscribe) {
-						if (fd.isSubscribed()) {
-							subFolderXML.append(" subscribe='1'");
-						} else {
-							subFolderXML.append(" subscribe='0'");
-						}
-						
-						if (fd.list().length > 0) {
-							subFolderXML.append(" hassub='1'");
-						}
-					} else {
-						if (fd.listSubscribed().length > 0) {
-							subFolderXML.append(" hassub='1'");
-						}
-					}
-					
-					if (bcount.equals("-1")) {
-						if (fd.getUnreadMessageCount() > 0) {
-							subFolderXML.append(" style='font-weight:bold'");
-						}
-					}
-					
-					subFolderXML.append("></node>");
-				}
-			} else {
-				String useDefaultFoldersForLangOnly = ezCommonService.getTenantConfig("UseDefaultFoldersForLangOnly", loginInfo.getTenantId());
-				boolean isUseDefaultFoldersForLangOnly = useDefaultFoldersForLangOnly.equals("YES") ? true : false;
-				
-				subMailFolder = ia.getTopLevelFolders(isSubscribe, isUseDefaultFoldersForLangOnly);
-				
-				for (int i = 0, j = 0; i < subMailFolder.size(); i++) {
-					Folder fd = subMailFolder.get(i);
-					String folderId = fd.getName();
-					String displayName = ezEmailUtil.getDisplayNameFromFolderId(folderId, locale);
-					
-					subFolderXML.append("<node imgidx='1'");
-					
-					if (bcount.equals("-1")) {
-						if (fd.getUnreadMessageCount() > 0) {
-							subFolderXML.append(" caption='" + displayName + "'");
-							subFolderXML.append(" foldercount='" + fd.getUnreadMessageCount() + "'");
-						} else {
-							subFolderXML.append(" caption='" + displayName + "'");
-						}
-					} else {
-						subFolderXML.append(" caption='" + displayName + "'");
-					}
-					
-					subFolderXML.append(" foldername='" + displayName + "'");
+		if (doc != null){
+			String folderName = doc.getElementsByTagName("URL").item(0).getTextContent();
+			String bcount = doc.getElementsByTagName("BCOUNT").item(0).getTextContent();
+			logger.debug("folderName=" + folderName);
 
-					if (folderId.equalsIgnoreCase(ezEmailUtil.getInboxFolderId())) {
-						subFolderXML.append(" orgBoxName='0'");
-						subFolderXML.append(" fullcaption='_INBOX'"); //수정
-					} else if (folderId.equalsIgnoreCase(ezEmailUtil.getSentFolderId(locale))) {
-						subFolderXML.append(" orgBoxName='1'");
-						subFolderXML.append(" fullcaption='_SENT'"); //수정
-					} else if (folderId.equalsIgnoreCase(ezEmailUtil.getDraftsFolderId(locale))) {
-						subFolderXML.append(" orgBoxName='2'");
-						subFolderXML.append(" fullcaption='_DRAFT'"); //수정
-					} else if (folderId.equalsIgnoreCase(ezEmailUtil.getTrashFolderId(locale))) {
-						subFolderXML.append(" orgBoxName='3'");
-						subFolderXML.append(" fullcaption='_DELETE'"); //수정
-					} else if (folderId.equalsIgnoreCase(ezEmailUtil.getPersonalFolderId(locale))) {
-						subFolderXML.append(" orgBoxName='4'");
-						subFolderXML.append(" fullcaption='_PERSONAL'"); //수정
-					} else if (folderId.equalsIgnoreCase(ezEmailUtil.getJunkFolderId(locale))) {
-						subFolderXML.append(" orgBoxName='5'");
-						subFolderXML.append(" fullcaption='_JUNK'"); //수정
-					} else {
-						subFolderXML.append(" orgBoxName='" + ((j++) + 6) + "'");
+			boolean isSubscribe = true;
+			String folderManamger = request.getParameter("fm");
+
+			if (folderManamger != null && folderManamger.equals("1")) {
+				isSubscribe = false;
+			}
+
+			StringBuilder subFolderXML = new StringBuilder();
+
+			IMAPAccess ia = null;
+			try {
+				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+						userEmail, password, egovMessageSource, locale, ezEmailUtil);
+				List<Folder> subMailFolder = null;
+
+				if (!folderName.equals("")) {
+					subMailFolder = ia.getSubFolders(folderName, isSubscribe);
+
+					for (int i = 0; i < subMailFolder.size(); i++) {
+						Folder fd = subMailFolder.get(i);
+
+						String folderId = fd.getName();
+						String displayName = ezEmailUtil.getDisplayNameFromFolderId(folderId, locale);
+
+						subFolderXML.append("<node imgidx='1'");
+
+						if (bcount.equals("-1")) {
+							if (fd.getUnreadMessageCount() > 0) {
+								subFolderXML.append(" caption='" + displayName + "'");
+								subFolderXML.append(" foldercount='" + fd.getUnreadMessageCount() + "'");
+							} else {
+								subFolderXML.append(" caption='" + displayName + "'");
+							}
+						} else {
+							subFolderXML.append(" caption='" + displayName + "'");
+						}
+
+						subFolderXML.append(" foldername='" + displayName + "'");
+						subFolderXML.append(" orgBoxName='" + i + "'");
 						subFolderXML.append(" fullcaption='_NONE'"); //수정
-					}
+						subFolderXML.append(" href='" + fd.getFullName() + "'");
 
-					subFolderXML.append(" href='" + fd.getFullName() + "'");
-					
-					if (!isSubscribe) {
-						if (fd.isSubscribed()) {
-							subFolderXML.append(" subscribe='1'");
+						if (!isSubscribe) {
+							if (fd.isSubscribed()) {
+								subFolderXML.append(" subscribe='1'");
+							} else {
+								subFolderXML.append(" subscribe='0'");
+							}
+
+							if (fd.list().length > 0) {
+								subFolderXML.append(" hassub='1'");
+							}
 						} else {
-							subFolderXML.append(" subscribe='0'");
+							if (fd.listSubscribed().length > 0) {
+								subFolderXML.append(" hassub='1'");
+							}
 						}
-						
-						if (fd.list().length > 0) {
-							subFolderXML.append(" hassub='1'");
+
+						if (bcount.equals("-1")) {
+							if (fd.getUnreadMessageCount() > 0) {
+								subFolderXML.append(" style='font-weight:bold'");
+							}
 						}
-					} else {
-						if (fd.listSubscribed().length > 0) {
-							subFolderXML.append(" hassub='1'");
-						}
+
+						subFolderXML.append("></node>");
 					}
-					
-					if (bcount.equals("-1")) {
-						if (fd.getUnreadMessageCount() > 0) {
-							subFolderXML.append(" style='font-weight:bold'");
+				} else {
+					String useDefaultFoldersForLangOnly = ezCommonService.getTenantConfig("UseDefaultFoldersForLangOnly", loginInfo.getTenantId());
+					boolean isUseDefaultFoldersForLangOnly = useDefaultFoldersForLangOnly.equals("YES") ? true : false;
+
+					subMailFolder = ia.getTopLevelFolders(isSubscribe, isUseDefaultFoldersForLangOnly);
+
+					for (int i = 0, j = 0; i < subMailFolder.size(); i++) {
+						Folder fd = subMailFolder.get(i);
+						String folderId = fd.getName();
+						String displayName = ezEmailUtil.getDisplayNameFromFolderId(folderId, locale);
+
+						subFolderXML.append("<node imgidx='1'");
+
+						if (bcount.equals("-1")) {
+							if (fd.getUnreadMessageCount() > 0) {
+								subFolderXML.append(" caption='" + displayName + "'");
+								subFolderXML.append(" foldercount='" + fd.getUnreadMessageCount() + "'");
+							} else {
+								subFolderXML.append(" caption='" + displayName + "'");
+							}
+						} else {
+							subFolderXML.append(" caption='" + displayName + "'");
 						}
+
+						subFolderXML.append(" foldername='" + displayName + "'");
+
+						if (folderId.equalsIgnoreCase(ezEmailUtil.getInboxFolderId())) {
+							subFolderXML.append(" orgBoxName='0'");
+							subFolderXML.append(" fullcaption='_INBOX'"); //수정
+						} else if (folderId.equalsIgnoreCase(ezEmailUtil.getSentFolderId(locale))) {
+							subFolderXML.append(" orgBoxName='1'");
+							subFolderXML.append(" fullcaption='_SENT'"); //수정
+						} else if (folderId.equalsIgnoreCase(ezEmailUtil.getDraftsFolderId(locale))) {
+							subFolderXML.append(" orgBoxName='2'");
+							subFolderXML.append(" fullcaption='_DRAFT'"); //수정
+						} else if (folderId.equalsIgnoreCase(ezEmailUtil.getTrashFolderId(locale))) {
+							subFolderXML.append(" orgBoxName='3'");
+							subFolderXML.append(" fullcaption='_DELETE'"); //수정
+						} else if (folderId.equalsIgnoreCase(ezEmailUtil.getPersonalFolderId(locale))) {
+							subFolderXML.append(" orgBoxName='4'");
+							subFolderXML.append(" fullcaption='_PERSONAL'"); //수정
+						} else if (folderId.equalsIgnoreCase(ezEmailUtil.getJunkFolderId(locale))) {
+							subFolderXML.append(" orgBoxName='5'");
+							subFolderXML.append(" fullcaption='_JUNK'"); //수정
+						} else {
+							subFolderXML.append(" orgBoxName='" + ((j++) + 6) + "'");
+							subFolderXML.append(" fullcaption='_NONE'"); //수정
+						}
+
+						subFolderXML.append(" href='" + fd.getFullName() + "'");
+
+						if (!isSubscribe) {
+							if (fd.isSubscribed()) {
+								subFolderXML.append(" subscribe='1'");
+							} else {
+								subFolderXML.append(" subscribe='0'");
+							}
+
+							if (fd.list().length > 0) {
+								subFolderXML.append(" hassub='1'");
+							}
+						} else {
+							if (fd.listSubscribed().length > 0) {
+								subFolderXML.append(" hassub='1'");
+							}
+						}
+
+						if (bcount.equals("-1")) {
+							if (fd.getUnreadMessageCount() > 0) {
+								subFolderXML.append(" style='font-weight:bold'");
+							}
+						}
+
+						subFolderXML.append("></node>");
 					}
-					
-					subFolderXML.append("></node>");
+				}
+
+			} catch (MessagingException e) {
+				logger.error(e.getMessage(), e);
+			} finally {
+				if (ia != null) {
+					ia.close();
 				}
 			}
-			
-		} catch (MessagingException e) {
-			logger.error(e.getMessage(), e);
-		} finally {
-			if (ia != null) {
-				ia.close();
-			}
+			logger.debug("getFolderList ended.");
+			return subFolderXML.toString();
+		}else{
+			logger.debug("getFolderList ended.");
+			return null;
 		}
-		
-		logger.debug("getFolderList ended.");
-		
-		return subFolderXML.toString();
 	}
 	
 	/**
@@ -634,52 +648,59 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		String userEmail = loginInfo.getId() + "@" + domainName;
 		
 		Document doc = commonUtil.convertRequestToDocument(request);
-		String folderName = doc.getElementsByTagName("URL").item(0).getTextContent();
-		logger.debug("folderName=" + folderName);
-		
+		String folderName = null;
 		int folderUnreadCount = 0;
 		int totalUnreadCount = 0;
-		
-		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", loginInfo.getTenantId());
 
-		if (useSharedMailbox.equals("YES")) {
-			if (doc.getElementsByTagName("SHAREID").item(0) != null) {
-				String shareId = doc.getElementsByTagName("SHAREID").item(0).getTextContent();
-				logger.debug("shareId=" + shareId);
-				
-				if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, loginInfo.getTenantId())) {
-					logger.debug("the user cannot access the shareId.");
-					logger.debug("getFolderUnreadCount ended.");
-					
-					return "";
+		if (doc != null){
+			folderName = doc.getElementsByTagName("URL").item(0).getTextContent();
+			logger.debug("folderName=" + folderName);
+
+			String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", loginInfo.getTenantId());
+
+			if (useSharedMailbox.equals("YES")) {
+				if (doc.getElementsByTagName("SHAREID").item(0) != null) {
+					String shareId = doc.getElementsByTagName("SHAREID").item(0).getTextContent();
+					logger.debug("shareId=" + shareId);
+
+					if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, loginInfo.getTenantId())) {
+						logger.debug("the user cannot access the shareId.");
+						logger.debug("getFolderUnreadCount ended.");
+
+						return "";
+					}
+
+					userEmail = shareId + "@" + domainName;
 				}
-				
-				userEmail = shareId + "@" + domainName;
 			}
-		}
-		
-		logger.debug("userId=" + loginInfo.getId() + ",userEmail=" + userEmail);
-		
-		IMAPAccess ia = null;
-		
-		try {
-			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale, ezEmailUtil);
-			
-			folderUnreadCount = ia.getUnreadCount(folderName);
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
-		} finally {
-			if (ia != null) {
-				ia.close();
+
+			logger.debug("userId=" + loginInfo.getId() + ",userEmail=" + userEmail);
+
+			IMAPAccess ia = null;
+
+			try {
+				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+						userEmail, password, egovMessageSource, locale, ezEmailUtil);
+
+				if (ia != null){
+					folderUnreadCount = ia.getUnreadCount(folderName);
+				}
+			} catch (RuntimeException e) {
+				logger.error(e.getMessage(), e);
+			} catch (Exception e) {
+				logger.error(e.getMessage(), e);
+			} finally {
+				if (ia != null) {
+					ia.close();
+				}
 			}
+
+			totalUnreadCount = ezEmailService.getTotalUnreadCount(userEmail.split("@")[0], loginInfo.getTenantId());
+
 		}
-		
-		totalUnreadCount = ezEmailService.getTotalUnreadCount(userEmail.split("@")[0], loginInfo.getTenantId());
-		
-		String unreadCountXML =  String.format("<DATA><FOLDERUNREADCOUNT>%d</FOLDERUNREADCOUNT><TOTALUNREADCOUNT>%d</TOTALUNREADCOUNT></DATA>", 
+		String unreadCountXML =  String.format("<DATA><FOLDERUNREADCOUNT>%d</FOLDERUNREADCOUNT><TOTALUNREADCOUNT>%d</TOTALUNREADCOUNT></DATA>",
 				folderUnreadCount, totalUnreadCount);
-		
+
 		logger.debug("getFolderUnreadCount ended.");
 		
 		return unreadCountXML;
@@ -736,12 +757,14 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			JSONObject unreadCountMap = new JSONObject();
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userAccount, password, egovMessageSource, locale, ezEmailUtil);
-			
-			for (int i = 0; i < requestMailboxList.size(); i++) {
-				String mailboxName = (String) requestMailboxList.get(i);
-				unreadCountMap.put(mailboxName, ia.getUnreadCount(mailboxName));
+
+			if (ia != null){
+				for (int i = 0; i < requestMailboxList.size(); i++) {
+					String mailboxName = (String) requestMailboxList.get(i);
+					unreadCountMap.put((mailboxName != null ? mailboxName : ""), ia.getUnreadCount(mailboxName));
+				}
 			}
-						
+
 			int totalUnreadCount = ezEmailService.getTotalUnreadCount(userInfo.getId(), userInfo.getTenantId());
 			int totalUnreadCountInAllAccounts = totalUnreadCount;
 			
@@ -768,6 +791,9 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			resultObject.put("unreadCountMap", unreadCountMap);
 			resultObject.put("totalUnreadCount", totalUnreadCount);
 			resultObject.put("totalUnreadCountInAllAccounts", totalUnreadCountInAllAccounts);
+		} catch (ParseException e) {
+			resultCode = e.getMessage();
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			resultCode = e.getMessage();
 			logger.error(e.getMessage(), e);
@@ -836,38 +862,41 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			try {
 				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 						userEmail, password, egovMessageSource, locale, ezEmailUtil);
-				
-				Folder folder = ia.getFolder(folderId);
-				
-				if (folder == null || !folder.exists()) {
-					logger.error("Folder not found. folderId=" + folderId);
-				} else {
-					folder.open(Folder.READ_WRITE);
-					
-					Message[] messages = new Message[multiFile.size()];
-					
-					for (int i=0; i<multiFile.size(); i++) {
-						try {
-							inputStream = multiFile.get(i).getInputStream();
-							message = sa.readMimeMessage(inputStream);
-							message.setFlag(Flags.Flag.SEEN, true);
-							logger.debug("subject=" + message.getSubject());
-						} finally {
+
+				if (ia != null){
+					Folder folder = ia.getFolder(folderId != null ? folderId : "");
+
+					if (folder == null || !folder.exists()) {
+						logger.error("Folder not found. folderId=" + folderId);
+					} else {
+						folder.open(Folder.READ_WRITE);
+
+						Message[] messages = new Message[multiFile.size()];
+
+						for (int i=0; i<multiFile.size(); i++) {
 							try {
-								inputStream.close();
-							} catch (Exception e) {logger.debug("e.message=" + e.getMessage());} 
+								inputStream = multiFile.get(i).getInputStream();
+								message = sa.readMimeMessage(inputStream);
+								message.setFlag(Flags.Flag.SEEN, true);
+								logger.debug("subject=" + message.getSubject());
+							} finally {
+								try {
+									inputStream.close();
+								} catch (IOException e) {logger.debug("e.message=" + e.getMessage());
+								} catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
+							}
+
+							if (message != null) {
+								messages[i] = message;
+							}
 						}
-						
-						if (message != null) {
-							messages[i] = message;
-						}
+
+						folder.appendMessages(messages);
+						folder.close(true);
+
+						logger.debug("mail import Success. messages size=" + messages.length);
+						strResult = "OK";
 					}
-					
-					folder.appendMessages(messages);
-					folder.close(true);
-					
-					logger.debug("mail import Success. messages size=" + messages.length);
-					strResult = "OK";
 				}
 				
 			} catch (MessagingException e) {
@@ -939,24 +968,26 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, locale, ezEmailUtil);
-			
-			Folder folder = ia.getFolder(folderId);
-			
-			if (folder == null || !folder.exists()) {
-				logger.error("Folder not found. folderId=" + folderId);
-			} else {
-				folder.open(Folder.READ_WRITE);
-				
-				InputStream inputStream = request.getInputStream();
-				MimeMessage message = sa.readMimeMessage(inputStream);
-				inputStream.close();
-				
-				message.setFlag(Flags.Flag.SEEN, true);
-				
-				folder.appendMessages(new Message[]{message});
-				folder.close(true);
-				
-				strResult = "OK";
+
+			if (ia != null){
+				Folder folder = ia.getFolder(folderId != null ? folderId : "");
+
+				if (folder == null || !folder.exists()) {
+					logger.error("Folder not found. folderId=" + folderId);
+				} else {
+					folder.open(Folder.READ_WRITE);
+
+					InputStream inputStream = request.getInputStream();
+					MimeMessage message = sa.readMimeMessage(inputStream);
+					inputStream.close();
+
+					message.setFlag(Flags.Flag.SEEN, true);
+
+					folder.appendMessages(new Message[]{message});
+					folder.close(true);
+
+					strResult = "OK";
+				}
 			}
 			
 		} catch (MessagingException e) {
@@ -1036,22 +1067,25 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 				logger.error("Cannot find file."); 
 				throw new Exception("Cannot find file.");
 			}
-			
-			// 2017.11.21 코린도 - 암호화된 ZIP 파일 가져오기
-			if (useEncryptZipForEmail.equals("YES") && !encryptPw.equals("") && !retryPathId.equals("NONE")) {
-				File sourceFile = new File(tempFileUploadPath + commonUtil.separator + retryPathId + ".zip");
-				String destFolderPath = tempFileUploadPath + commonUtil.separator + retryPathId;
-	
-				ZipFile zipFile = new ZipFile(sourceFile);
-				zipFile.setPassword(encryptPw.toCharArray());
-				zipFile.extractAll(destFolderPath);
-				
-				if (sourceFile.delete()) {
-					logger.debug("encrypted zip file is deleted. path=" + sourceFile.getAbsolutePath());
+
+			if (useEncryptZipForEmail != null && encryptPw != null && retryPathId != null){
+				// 2017.11.21 코린도 - 암호화된 ZIP 파일 가져오기
+				if (useEncryptZipForEmail.equals("YES") && !encryptPw.equals("") && !retryPathId.equals("NONE")) {
+					File sourceFile = new File(commonUtil.detectPathTraversal(tempFileUploadPath + commonUtil.separator + retryPathId + ".zip"));
+					String destFolderPath = tempFileUploadPath + commonUtil.separator + retryPathId;
+
+					ZipFile zipFile = new ZipFile(sourceFile);
+					zipFile.setPassword(encryptPw.toCharArray());
+					zipFile.extractAll(destFolderPath);
+
+					if (sourceFile.delete()) {
+						logger.debug("encrypted zip file is deleted. path=" + sourceFile.getAbsolutePath());
+					}
+
+					zipFilePath = zipFolder(commonUtil.detectPathTraversal(destFolderPath), commonUtil.detectPathTraversal(retryPathId), true);
 				}
-				
-				zipFilePath = zipFolder(destFolderPath, retryPathId, true);
 			}
+
 			
 			// UTF-8로 읽어 에러가 날 경우가 있어 미리 체크한다. 에러가 나면 EUC-KR로 읽도록 한다.
 			// 메일의 갯수를 확인한다.
@@ -1073,6 +1107,35 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 				while (zis1.getNextEntry() != null) {
 					messageCount++;
 				}
+			} catch (IOException e) {
+				// CWE-404 보안 취약점 대응
+				try {
+					charset = Charset.forName("ms949");
+					logger.debug("charset is changed as ms949.");
+				} finally {
+					if (zis1 != null) {
+						try { zis1.closeEntry();
+						} catch (ZipException ex) {logger.debug("e.message=" + ex.getMessage());
+						} catch (Exception ex) {logger.debug("e.message=" + ex.getMessage());}
+						try { zis1.close();
+						} catch (ZipException ex) {logger.debug("e.message=" + ex.getMessage());
+						} catch (Exception ex) {logger.debug("e.message=" + ex.getMessage());}
+					}
+				}	
+				
+				if (zipFilePath != null) {
+					fis = new FileInputStream(zipFilePath);
+				} else {
+					fis = multiFile.get(0).getInputStream();
+				}
+				
+				messageCount = 0;
+				
+				zis1 = new ZipInputStream(fis, charset);
+				
+				while (zis1.getNextEntry() != null) {
+					messageCount++;
+				}
 			} catch (Exception e) {
 				// CWE-404 보안 취약점 대응
 				try {
@@ -1080,8 +1143,12 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 					logger.debug("charset is changed as ms949.");
 				} finally {
 					if (zis1 != null) {
-						try { zis1.closeEntry(); } catch (Exception ex) {logger.debug("e.message=" + ex.getMessage());}
-						try { zis1.close(); } catch (Exception ex) {logger.debug("e.message=" + ex.getMessage());}
+						try { zis1.closeEntry();
+						} catch (ZipException ex) {logger.debug("e.message=" + ex.getMessage());
+						} catch (Exception ex) {logger.debug("e.message=" + ex.getMessage());}
+						try { zis1.close();
+						} catch (ZipException ex) {logger.debug("e.message=" + ex.getMessage());
+						} catch (Exception ex) {logger.debug("e.message=" + ex.getMessage());}
 					}
 				}	
 				
@@ -1100,8 +1167,12 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 				}
 			} finally {
 				if (zis1 != null) {
-					try { zis1.closeEntry(); } catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
-					try { zis1.close(); } catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
+					try { zis1.closeEntry();
+					} catch (ZipException e) {logger.debug("e.message=" + e.getMessage());
+					} catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
+					try { zis1.close(); 
+					} catch (ZipException e) {logger.debug("e.message=" + e.getMessage());
+					} catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
 					
 					zis1 = null;
 				}
@@ -1117,8 +1188,11 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 	
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userAccount, password, egovMessageSource, locale, ezEmailUtil);
-	
-			Folder folder = ia.getFolder(folderPath);
+
+			if (ia == null){
+				throw new Exception("Ia is null");
+			}
+			Folder folder = ia.getFolder(folderPath != null ? folderPath : "");
 	
 			if (folder == null || !folder.exists()) {
 				logger.error("Folder not found. folderPath=" + folderPath);
@@ -1157,6 +1231,14 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 						message.setFlag(Flags.Flag.SEEN, true);
 						messageList.add(message);
 						emlCount ++;
+					} catch (MessagingException e) {
+						logger.error(e.getMessage(), e);
+						String exceptionMessage = e.getMessage();
+						
+						if (exceptionMessage.contains("NO APPEND failed. Save failed.")) {
+							importState = "NO_APPEND";
+							break;
+						}
 					} catch (Exception e) {
 						logger.error(e.getMessage(), e);
 						String exceptionMessage = e.getMessage();
@@ -1216,6 +1298,45 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 				folder.appendMessages(messageList.toArray(new Message[0]));
 				folder.close(true);
 			}
+		} catch (IOException e) {
+			logger.error(e.getMessage(), e);
+			String exceptionMessage = e.getMessage();
+			
+			if (exceptionMessage != null) {
+				
+				if (exceptionMessage.equals("encrypted ZIP entry not supported")) {
+					returnValue = "NOT";
+					
+					if (useEncryptZipForEmail.equals("YES") && CollectionUtils.isNotEmpty(multiFile)) { // 암호화를 사용하면
+						String guid = UUID.randomUUID().toString(); // 새 id를 만들어서
+						File file = new File(tempFileUploadPath + commonUtil.separator + guid + ".zip"); // 파일을 생성하고
+						multiFile.get(0).transferTo(file); // 멀티파일을 파일로 만들어준다. 
+	
+						returnTempId = guid;
+					}
+					
+				} else if (exceptionMessage.endsWith("empty or null password provided for AES Decryptor")) {
+					logger.error("empty or null password provided for AES Decryptor.");
+					returnValue = "NULL";
+					returnTempId = retryPathId;
+				} else if (exceptionMessage.contains("Wrong Password for file")) {
+					logger.error("Wrong Password for file.");
+					returnValue = "DIFF";
+					returnTempId = retryPathId;
+				} else if (exceptionMessage.equals("MALFORMED")) {
+					logger.error("MALFORMED.");
+					returnValue = "ABORT";
+				} else if (exceptionMessage.equals("ZEROEML")) {
+					returnValue = "ZEROEML";
+				} else if (exceptionMessage.equals("NO_APPEND")) {
+					returnValue = "NO_APPEND";
+				} else {
+					returnValue = "ERROR";
+				}
+				
+			} else {
+				returnValue = "ERROR";
+			}
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			String exceptionMessage = e.getMessage();
@@ -1255,15 +1376,20 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			} else {
 				returnValue = "ERROR";
 			}
-			
 		} finally {
 			if (ia != null) {
-				try { ia.close(); } catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
+				try { ia.close(); 
+				} catch (RuntimeException e) {logger.debug("e.message=" + e.getMessage());
+				} catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
 			}
 			
 			if (zis != null) {
-				try { zis.closeEntry(); } catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
-				try { zis.close(); } catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
+				try { zis.closeEntry(); 
+				} catch (ZipException e) {logger.debug("e.message=" + e.getMessage());
+				} catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
+				try { zis.close(); 
+				} catch (IOException e) {logger.debug("e.message=" + e.getMessage());
+				} catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
 			}
 		}
 	
@@ -1339,47 +1465,50 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, locale, ezEmailUtil);
-			
-			Folder folder = ia.getFolder(folderPath);
-			
-			// Chrome에서 message/rfc822 Type으로 내려 보내면
-			// blocked a frame with origin from accessing a cross-origin frame
-			// 오류가 발생해 application/octet-stream으로 변경함.			
-			String mimetype = "application/octet-stream";	
-			response.setContentType(mimetype);
-			
-			if (folder == null || !folder.exists()) {
-				logger.error("Folder not found. folderPath=" + folderPath);
-			} else {
-				folder.open(Folder.READ_ONLY);
-				Message message = ((IMAPFolder)folder).getMessageByUID(uid);
-				
-				if (message == null) {
-					logger.error("Message not found. uid=" + uid);
+
+			if (ia != null){
+
+				Folder folder = ia.getFolder(folderPath != null ? folderPath : "");
+
+				// Chrome에서 message/rfc822 Type으로 내려 보내면
+				// blocked a frame with origin from accessing a cross-origin frame
+				// 오류가 발생해 application/octet-stream으로 변경함.
+				String mimetype = "application/octet-stream";
+				response.setContentType(mimetype);
+
+				if (folder == null || !folder.exists()) {
+					logger.error("Folder not found. folderPath=" + folderPath);
 				} else {
-					String fileName = ezEmailUtil.saveFilenameForm(loginInfo, locale, message) + ".eml";
-					fileName = CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), fileName);
-					logger.debug("fileName=" + fileName);
-					response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
-					
-					OutputStream outputStream = null;
-					
-					try{
-						response.setContentLength(message.getSize());
-						
-						outputStream = response.getOutputStream();
-						message.writeTo(outputStream);
-						
-					} catch(IOException e){
-						logger.debug("e.message=" + e.getMessage());
-					} finally {
-						if (outputStream != null) {
-							outputStream.close();
+					folder.open(Folder.READ_ONLY);
+					Message message = ((IMAPFolder)folder).getMessageByUID(uid);
+
+					if (message == null) {
+						logger.error("Message not found. uid=" + uid);
+					} else {
+						String fileName = ezEmailUtil.saveFilenameForm(loginInfo, locale, message) + ".eml";
+						fileName = CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), fileName);
+						logger.debug("fileName=" + fileName);
+						response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+
+						OutputStream outputStream = null;
+
+						try{
+							response.setContentLength(message.getSize());
+
+							outputStream = response.getOutputStream();
+							message.writeTo(outputStream);
+
+						} catch(IOException e){
+							logger.debug("e.message=" + e.getMessage());
+						} finally {
+							if (outputStream != null) {
+								outputStream.close();
+							}
 						}
 					}
+
+					folder.close(true);
 				}
-				
-				folder.close(true);
 			}
 			
 		} catch (MessagingException e) {
@@ -1614,6 +1743,8 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 				returnValue = mailExportZipExcute(loginCookie, locale, shareId, urlMap, realPath, maxCount, userkey);
 			}
 
+		} catch (RuntimeException e) {
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -1772,6 +1903,8 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 
 		try {
 			returnValue = mailExportZipExcute(loginCookie, locale, shareId, urlMap, realPath, 0, ""); // maxCount와 userkey가 불필요하여 디폴트 값을 넣어 줌
+		} catch (RuntimeException e) {
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -1863,34 +1996,40 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 				ezEmailService.setMailboxProgress(userkey, userInfo.getId(), "EXPORT", userInfo.getTenantId(), 0);
 			}
 
+
+			if (ia == null){
+				throw new Exception("ia is null");
+			}
+
+
 			for (String folderPath : folderList) {
 				String uids = urlMap.get(folderPath)[0];
 				String[] uidArr = uids.split(",");
 				logger.error("uids=" + uids);
-				
-				Folder folder = ia.getFolder(folderPath);
-				
+
+				Folder folder = ia.getFolder(folderPath != null ? folderPath : "");
+
 				if (folder == null || !folder.exists()) {
 					logger.error("Folder not found. folderPath=" + folderPath);
 				} else {
 					folder.open(Folder.READ_ONLY);
-					
+
 					for (String uid : uidArr) {
 						Message message = ((IMAPFolder)folder).getMessageByUID(Long.parseLong(uid));
-						
+
 						if (message == null) {
 							logger.error("Message not found. uid=" + uid);
-							
+
 						} else {
 							String fileName = ezEmailUtil.saveFilenameForm(userInfo, locale, message) + ".eml";
 							fileName = commonUtil.getUniqueFileName(fileName, fileNameMap);
-							
+
 							ZipEntry zipEntry = new ZipEntry(fileName);
 							zos.putNextEntry(zipEntry);
-							
+
 							// message.writeTo 시 읽은 메일이 되므로 읽지 않은 메일이면 읽지않음으로 다시 설정한다.
 							isRead = message.isSet(Flags.Flag.SEEN);
-							
+
 							message.writeTo(zos);
 
 							if (!isRead) {
@@ -1932,7 +2071,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 							currCount = currCount + 1; // 현재 메일 카운트
 						}
 					}
-					
+
 					folder.close(true);
 				}
 			}
@@ -1941,6 +2080,15 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			zos.close();
 			zos = null;
 			
+		} catch (NullPointerException e) {
+			File file = new File(pDirTempPath + ".zip");
+			returnValue = "";
+			
+			if (file.exists()) {
+				file.delete();
+			}
+			
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			File file = new File(pDirTempPath + ".zip");
 			returnValue = "";
@@ -1958,7 +2106,10 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			if (zos != null) {
 				try {
 					zos.close();
+				} catch (ZipException e) {
+					logger.error(e.getMessage(), e);
 				} catch (Exception e) {
+					logger.error(e.getMessage(), e);
 				}
 			}
 		}
@@ -2053,7 +2204,11 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			}
 			
 			zos = new ZipOutputStream(new FileOutputStream(pDirTempPath + ".zip"), Charset.forName(charSet));
-			Folder folder = ia.getFolder(folderPath);
+
+			if (ia == null){
+				throw new Exception("ia is null");
+			}
+			Folder folder = ia.getFolder(folderPath != null ? folderPath : "");
 			
 			if (folder == null || !folder.exists()) {
 				logger.error("Folder not found. folderPath=" + folderPath);
@@ -2153,6 +2308,14 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			if (sessionFlag == true) {
 				returnValue = guid;
 			} 
+		} catch (NullPointerException e) {
+			File file = new File(pDirTempPath + ".zip");
+			
+			if (file.exists()) {
+				file.delete();
+			}
+			
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			File file = new File(pDirTempPath + ".zip");
 			
@@ -2169,7 +2332,10 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			if (zos != null) {
 				try {
 					zos.close();
+				} catch (ZipException e) {
+					logger.error(e.getMessage(), e);
 				} catch (Exception e) {
+					logger.error(e.getMessage(), e);
 				}
 			}
 		}
@@ -2222,8 +2388,8 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		logger.debug("filePath=" + filePath);
 		
 		// 2017.11.21 코린도 - 암호화된 ZIP 파일 내보내기
-		if (!encryptPw.equals("")) {
-			String zipFileName = ezEmailUtil.encryptZipFile(filePath, folderPath, encryptPw);
+		if (!"".equals(encryptPw)) {
+			String zipFileName = ezEmailUtil.encryptZipFile(commonUtil.detectPathTraversal(filePath), commonUtil.detectPathTraversal(folderPath), encryptPw);
 			downFile(request, response, zipFileName, userEmail + ".zip");
 			
 			File secureFile = new File(zipFileName);
@@ -2235,7 +2401,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			downFile(request, response, filePath, userEmail + ".zip");
 		}
 		
-		File zipFile = new File(filePath);
+		File zipFile = new File(commonUtil.detectPathTraversal(filePath));
 		
 		if (zipFile.delete()) {
 			logger.debug("zip file is deleted. path=" + filePath);
@@ -2291,8 +2457,8 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		logger.debug("filePath=" + filePath);
 				
 		// 2017.11.21 코린도 - 암호화된 ZIP 파일 내보내기
-		if (!encryptPw.equals("")) {
-			String zipFileName = ezEmailUtil.encryptZipFile(filePath, folderPath, encryptPw);
+		if (!"".equals(encryptPw)) {
+			String zipFileName = ezEmailUtil.encryptZipFile(commonUtil.detectPathTraversal(filePath), commonUtil.detectPathTraversal(folderPath), encryptPw);
 			//handleMessage(jsonStr, session);
 			downFile(request, response, zipFileName, userEmail + "_" + folderName + ".zip");
 			
@@ -2306,7 +2472,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			downFile(request, response, filePath, userEmail + folderName + ".zip");
 		}
 		
-		File zipFile = new File(filePath);
+		File zipFile = new File(commonUtil.detectPathTraversal(filePath));
 		
 		if (zipFile.delete()) {
 			logger.debug(zipFile.getAbsolutePath() + ".zip file is deleted.");
@@ -2334,13 +2500,13 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		tempId = commonUtil.detectPathTraversal(tempId);
 		String pDirEncZipTempPath = pDirPath + commonUtil.separator + "tempFileUpload" + commonUtil.separator + tempId;
 		
-		File file = new File(pDirTempPath + ".zip");
+		File file = new File(commonUtil.detectPathTraversal(pDirTempPath + ".zip"));
 		
 		if (file.exists()) {
 			file.delete();
 		}
 		
-		File tempFile = new File(pDirEncZipTempPath + ".zip");
+		File tempFile = new File(commonUtil.detectPathTraversal(pDirEncZipTempPath + ".zip"));
 		
 		if (tempFile.exists()) {
 			tempFile.delete();

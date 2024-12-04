@@ -386,7 +386,7 @@
 		            
 		            <tr data-name="mail"><th><spring:message code="ezSystem.x0006"/></th><td><input data-paramId="INDIVIDUALMAILUSER" id="INDIVIDUALMAILUSER" maxlength="3" type="text" value="<c:out value='${configMap.INDIVIDUALMAILUSER}'/>"> (<spring:message code="ezSystem.x0015"/>)</td></tr>
 		            <%-- 2024-01-30 장혜연 메일 개별발신 디폴터 설정 추가 --%>
-		            <tr data-name="mail">
+		            <tr data-name="mail" >
 						<th><spring:message code="ezSystem.hy01"/></th>
 						<td><select data-paramId="useEachMailDefault" id="use_EachMailDefault"><option <c:if test="${configMap.useEachMailDefault == 'YES'}">selected="selected"</c:if> value="YES"><spring:message code="ezQuestion.t103"/></option><option <c:if test="${configMap.useEachMailDefault == null or configMap.useEachMailDefault == 'NO'}">selected="selected"</c:if> value="NO"><spring:message code="ezQuestion.t104"/></option></select></td>
 					</tr>
