@@ -103,7 +103,7 @@
 			    pDocHref = docHref;
 			    pOpinionFlag = opinionFlag;
 			    pListTypeValue = listTypeValue;
-			    if (pListTypeValue == "4")
+			    if (pListTypeValue == "4" || pListTypeValue == "97")
 			        pListSusin = listSusin;
 			
 			    if (pDocHref != "") {

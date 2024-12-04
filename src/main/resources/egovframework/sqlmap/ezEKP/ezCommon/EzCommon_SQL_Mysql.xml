@@ -6377,4 +6377,54 @@
 			(#listOption#, 5, '변경자부서', 	90, 	'TBL_HISTORYDOCINFO', 	'ChangeUserDeptName', 	NULL, NULL, '문서이력리스트', '변경자부서', 'Dept.', 	'変更者部署', '变更者部门',	#tenantId#, #companyId#),
 			(#listOption#, 6, '버전', 		60, 	'TBL_HISTORYDOCINFO', 	'EditVersion',  		NULL, NULL, '문서이력리스트', '변경버전', 	'Version', 	'版本', 		'版本',		#tenantId#, #companyId#)
 	</insert>
+
+	<select id="EzCommonDAO.checkPersonalHideSusinYN" resultClass="String">
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			PROPERTY_NAME = 'PersonalHideSusin'
+	  	AND
+			TENANT_ID = #v_TENANTID#
+	</select>
+
+	<insert id="EzCommonDAO.insertPersonalHideSusinYN">
+		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+		VALUES (#v_TENANTID#, 'PersonalHideSusin', 'Y', '개인수신함 기능 사용여부 / Y:사용, N:사용안함 (default:Y)', '개인수신함 기능 사용여부', '2024-11-26 00:00:00', '전자결재')
+	</insert>
+
+
+	<select id="EzCommonDAO.checkPersonalSusinListOption" parameterClass="Map" resultClass="String">
+		<![CDATA[
+		SELECT
+			COMPANYID
+		FROM
+			TBL_LISTOPTION
+		WHERE
+			LISTTYPE = #listOption#
+	  	AND
+			COMPANYID = #companyId#
+	  	AND
+			TENANT_ID = #tenantId#
+		LIMIT 1
+		]]>
+	</select>
+	
+	<insert id="EzCommonDAO.inserPersonalSusinListOption">
+		INSERT INTO TBL_LISTOPTION 
+		    (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, TENANT_ID, COMPANYID)
+		VALUES
+			(#listOption#, 1, '제목', 	300, 'TBL_APRDOCINFO', 'DocTitle', NULL, NULL, '수신문서처리기', '제목', 'Title', '見出し', '标题', #tenantId#, #companyId#),
+			(#listOption#, 2, '문서상태', 70, 'TBL_APRRECEIPTPROCESSINFO', 'DocState', NULL, NULL, '수신문서처리기', '문서상태', 'Doc. status', '文書区分', '文件状态', #tenantId#, #companyId#),
+			(#listOption#, 3, '결재상태', 70, 'TBL_APRRECEIPTPROCESSINFO', 'AprState', NULL, NULL, '수신문서처리기', '결재상태', 'Approval status', 'ステータス', '批准状态', #tenantId#, #companyId#),
+			(#listOption#, 4, '기안자', 	 70, 'TBL_APRDOCINFO', 'WriterName', NULL, NULL,' 수신문서처리기', '기안자', 'Drafter', '起案者', '起草人', #tenantId#, #companyId#),
+			(#listOption#, 5, '발신부서', 90, 'TBL_APRRECEIPTPROCESSINFO', 'SentDeptName', NULL, NULL, '수신문서처리기', '발신부서', 'Dept. sent', '送信部署', '发送部门', #tenantId#, #companyId#),
+			(#listOption#, 6, '수신자', 	70, 'TBL_APRRECEIPTPROCESSINFO', 'PROCESSORNAME', NULL, NULL, '수신문서처리기', '수신자', 'Receiver', '受信者', '受信者', #tenantId#, #companyId#),
+			(#listOption#, 7, '수신부서', 90, 'TBL_APRRECEIPTPROCESSINFO', 'ReceivedDeptName', NULL, NULL, '수신문서처리기', '도착부서', 'Date received', '受信部署', '收信部门', #tenantId#, #companyId#),
+			(#listOption#, 8, '도착일자', 100, 'TBL_APRRECEIPTPROCESSINFO', 'ProcessDate', NULL, NULL, '수신문서처리기', '도착일자', 'ProcessDate', '到着日付', '接收日', #tenantId#, #companyId#),
+			(#listOption#, 9, '양식명', 	70, 'TBL_APRDOCINFO', 'FormName', NULL, NULL, '수신문서처리기', '양식명', 'Form Name', '様式名', '样式名', #tenantId#, #companyId#),
+			(#listOption#, 10, '첨부', 	30, 'TBL_APRDOCINFO', 'HASATTACHYN', NULL, NULL, '수신문서처리기', '첨부', 'Attach', '添付', '附件', #tenantId#, #companyId#),
+			(#listOption#, 11, '공개',	 30, 'TBL_APRDOCINFO', 'ISPUBLIC', NULL, NULL, '수신문서처리기', '공개', 'Public', '公開', '公开', #tenantId#, #companyId#)
+	</insert>
 </sqlMap>

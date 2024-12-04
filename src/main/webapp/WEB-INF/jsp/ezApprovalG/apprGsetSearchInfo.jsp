@@ -352,7 +352,7 @@
 						}
 					}
 					
-					if (window.opener && opener.pListTypeValue == '4') {
+					if (window.opener && (opener.pListTypeValue == '4' || opener.pListTypeValue == '97')) {
 						 RtnVal[25] = recvfrom;
 						 RtnVal[26] = recvto;
 						 RtnVal[27] = document.getElementById("sendDept").value;

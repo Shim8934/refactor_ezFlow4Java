@@ -307,8 +307,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		
 		String autoSendOfferFlag = ezCommonService.getTenantConfig("autoSendOfferFlag", userInfo.getTenantId());
-		
-		if (approvalFlag.equals("S")) {
+
+		//개인 수신함 사용 여부
+		String personalHideSusin =  ezCommonService.getTenantConfig("PersonalHideSusin", userInfo.getTenantId());
+
+		if(approvalFlag.equals("S")) {
 			String useApprFormCont = ezCommonService.getTenantConfig("useApprFormCont", userInfo.getTenantId());
 			model.addAttribute("useApprFormCont", useApprFormCont);
 			if (useApprFormCont != null && useApprFormCont.equals("YES")) {
@@ -382,6 +385,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("autoSendOfferFlag", autoSendOfferFlag); // 전자결재G 미처리문서함 사용여부
 		model.addAttribute("howToSendOffer", howToSendOffer);
 		model.addAttribute("useDraftAll", useDraftAll);
+		model.addAttribute("personalHideSusin", personalHideSusin);
 		
         logger.debug("apprGLeft Value : listType= " + listType + "containers= " + containers.toString() + "viewLeftCount= " + viewLeftCount);       
         logger.debug("apprGLeft Ended");
@@ -7384,7 +7388,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String type = request.getParameter("type");
 		String searchType = request.getParameter("searchType");
-		if(searchType != null && searchType.equals("4")){
+		if(searchType != null && (searchType.equals("4") || searchType.equals("97"))){
 			searchType = "recDept";
 		}
 		String susinAdmin = "";

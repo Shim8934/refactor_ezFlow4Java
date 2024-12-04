@@ -1732,8 +1732,15 @@
 			     		        }
 			     		        
 	     		        		// 2023-08-22 조수빈 - 작업을 완료한 후에는 부서수신함을 리로딩
-				                window.opener.parent.frames[0].convMain('4', '');
-		     		            OpenAlertUI(pAlertContent, window.close);
+								if (window.opener && window.opener.pListTypeValue) {
+									if (window.opener.pListTypeValue == "97") {
+										window.opener.parent.frames[0].convMain('97', '');
+									} else {
+										window.opener.parent.frames[0].convMain('4', '');
+									}
+								}
+
+								OpenAlertUI(pAlertContent, window.close);
 		     		            
 		                	}, 0);
 		                }

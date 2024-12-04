@@ -3135,4 +3135,24 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			insert("EzCommonDAO.insertEditVersionListOption", map);
 		}
 	}
+
+	// 2024-11-26 기민혁 - 전자결재 > 개인수신함 사용여부 테넌트 컨피그 추가
+	public void insertPersonalHideSusinYN(Map<String, Object> map) {
+		String propertyValue = (String) select("EzCommonDAO.checkPersonalHideSusinYN", map);
+
+		if (propertyValue == null) {
+			logger.debug("PersonalHideSusinYN tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertPersonalHideSusinYN", map);
+		}
+	}
+	
+	// 2024-11-28 기민혁 - 개인 수신함 리스트 해더 추가
+	public void insertPersonalSusinListOption(Map<String, Object> map) {
+		String optionCheck = (String) select("EzCommonDAO.checkPersonalSusinListOption", map);
+		
+		if (optionCheck == null) {
+			logger.debug("PersonalSusinList Header Option doesn't exist. insert data...");
+			insert("EzCommonDAO.inserPersonalSusinListOption", map);
+		}
+	}
 }

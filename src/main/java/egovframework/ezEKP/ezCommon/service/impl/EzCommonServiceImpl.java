@@ -4642,4 +4642,33 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             }
         }
     }
+
+    // 2024-11-26 기민혁 - 전자결재 > 개인수신함 사용여부 테넌트 컨피그 추가
+    @Override
+    public void insertPersonalHideSusinYN() throws Exception {
+        List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+
+        for (TenantVO tenantVo : tenantIdList) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("v_TENANTID", tenantVo.getTenantId());
+            ezCommonDAO.insertPersonalHideSusinYN(map);
+        }
+    }
+
+    // 2024-11-28 기민혁 - 개인 수신함 리스트 해더 추가
+    @Override
+    public void insertPersonalSusinListOption() throws Exception {
+        List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();
+        Map<String, Object> map = new HashMap<String, Object>();
+
+        for (CompanyInfoVO company : companyList) {
+            if (company.getCompanyId() != null) {
+                map.put("companyId", company.getCompanyId());
+                map.put("tenantId", company.getTenantId());
+                map.put("listOption", "P004");
+                
+                ezCommonDAO.insertPersonalSusinListOption(map);
+            }
+        }
+    }
 }

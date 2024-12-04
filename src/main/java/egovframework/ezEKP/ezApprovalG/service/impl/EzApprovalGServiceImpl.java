@@ -12369,7 +12369,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			listString = getListHeader("005", companyID, userLang, tenantID);
 		} else if (mode.endsWith("relay")) {
 		    listString = getListHeader("004", companyID, userLang, tenantID);
-		} else {
+		} else if (mode.endsWith("personal")) {
+            listString = getListHeader("P004", companyID, userLang, tenantID);
+        } else {
 			listString = getListHeader("004", companyID, userLang, tenantID);
 		}
 		
@@ -12428,7 +12430,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				resultXML.append("<CELL>");
 				fieldName = listXML.getElementsByTagName("COLNAME").item(p).getTextContent().toUpperCase();
 				
-				if (fieldName.equals("FORMNAME") || fieldName.equals("SENTDEPTNAME") || fieldName.equals("RECEIVEDDEPTNAME") || fieldName.equals("WRITERNAME")) {
+				if (fieldName.equals("FORMNAME") || fieldName.equals("SENTDEPTNAME") || fieldName.equals("RECEIVEDDEPTNAME") || fieldName.equals("WRITERNAME") || fieldName.equals("PROCESSORNAME")) {
 					fieldName = fieldName + langData;
 				}
 				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();

@@ -335,7 +335,9 @@
 		        else if (pListTypeValue == "11") {
 		        	getDocList();
 		        }
-		        
+				else if (pListTypeValue == "97") {
+					getReceivedDocList();
+				}	
 		        
 		        try {
 		            parent.frames["left"].getAprCount();
@@ -640,7 +642,10 @@
 		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t49"/>', "004");
 		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t66"/>', "006");
 		        	AddOption(sel_status, '<spring:message code="ezApproval.t497"/>', "015");
-		        } else {
+		        } else if (pListTypeValue == "97") {
+					AddOption(sel_status, '<spring:message code="ezApprovalG.garm06"/>', "011");
+					AddOption(sel_status, '<spring:message code="ezApprovalG.t1430"/>', "012");
+				} else {
 		        	$('#sel_status_div').closest("li").hide();
 		        }
 		        
@@ -692,7 +697,7 @@
 		        else if (pListTypeValue == "3") {
 		            getDocList();
 		        }
-		        else if (pListTypeValue == "4" || pListTypeValue == "5") {
+		        else if (pListTypeValue == "4" || pListTypeValue == "5" || pListTypeValue == "97") {
 		            getReceivedDocList();
 		        }
 		        else if (pListTypeValue == "6") {
@@ -731,7 +736,7 @@
 		    	pageNum = 1;
 		        if (pListTypeValue == "1" || pListTypeValue == "2" || pListTypeValue == "3" || pListTypeValue == "11") {
 		            getDocList();
-		        } else if (pListTypeValue == "4") {
+		        } else if (pListTypeValue == "4" || pListTypeValue == "97") {
 		        	getReceivedDocList();
 		        } else if (pListTypeValue == "9") {
 		        	getSendOutDocList();
@@ -830,7 +835,7 @@
 		                }
 		                else
 		                    btnRedraft_onclick();
-		            } else if (pListTypeValue == "4" || pListTypeValue == "5") {
+		            } else if (pListTypeValue == "4" || pListTypeValue == "5" || pListTypeValue == "97") {
 		                if (pSusinManagerFlag == "admin" || pCurSelRow.getAttribute("DATA8") == pUserID) {
 		                    var pDraftFlag;
 		                    var tmpDocState = pCurSelRow.getAttribute("DATA9");
@@ -1236,7 +1241,7 @@
 		        		// 내부결재가 아닌 수신문(011), 합의문(012)의 경우 삭제 불가능, 재기안만 가능함 + 임시보관함의 경우 전부 삭제 가능
 		        		// 부서수신함과 발송의뢰문서(pListTypeValue == "4"/"6")의 경우, 회송된 수신문과 합의문 모두 삭제 가능함 (G버전은 부서수신함에서 회송 시 상태만 변하고 문서는 리스트 상에 남아있음)
 				        if ((pListTypeValue == "21") ||
-				        		((pFunctionType == "004" || pFunctionType == "006" || pFunctionType == "015") && ((pListTypeValue == "4") || (pListTypeValue == "6") || (GetAttribute(pCurSelRow, "DATA9") == "0" && pDocState != "011" && pDocState != "012")))) {
+				        		((pFunctionType == "004" || pFunctionType == "006" || pFunctionType == "015") && ((pListTypeValue == "4" || pListTypeValue == "97") || (pListTypeValue == "6") || (GetAttribute(pCurSelRow, "DATA9") == "0" && pDocState != "011" && pDocState != "012")))) {
 					        if (pListTypeValue == "1" || pListTypeValue == "11" || pListTypeValue == "2") {
 								if (checkAprState(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("DATA12"), pCurSelRow.getAttribute("DATA4"), pCurSelRow.getAttribute("APRMEMBERSN"), pCurSelRow.getAttribute("ORGCOMPANYID"))){
 									alert("<spring:message code='ezApprovalG.bhs23'/>");
@@ -1275,7 +1280,7 @@
 				        }
 		        	}
 		            
-		            if (pListTypeValue == "4") {
+		            if (pListTypeValue == "4" || pListTypeValue == "97") {
 		                getReceivedDocList();
 		            } else if (pListTypeValue == "6") {
 		                getSimsaDocList();
@@ -1569,7 +1574,11 @@
 		    function btnRJunkyulAll_after_complete() {
 		    	listLoading(false);
 	     		window.parent.frames[0].mailPanel_left.style.display = "none";
-	     		window.parent.frames[0].convMain('4', '');
+				 if(pListTypeValue && pListTypeValue == "97"){
+					 window.parent.frames[0].convMain('97', '');
+				 }else{
+					 window.parent.frames[0].convMain('4', '');
+				 }
 		    }
 		    
 		    function btnCabinet_onclick_Complete(rtn) {
@@ -2501,7 +2510,7 @@
 			            	alert("'" + tr.getAttribute("DATA7") + "'부서의 문서입니다. \n'" + tr.getAttribute("DATA7") + "'부서로 겸직변경 후 대장등록해주시기 바랍니다.");
 			            	return;
 			            }
-					} else if (pListTypeValue == "4") {
+					} else if (pListTypeValue == "4" || pListTypeValue == "97") {
 			            if (arr_userinfo[4] != tr.getAttribute("DATA6")) {
 			            	alert("'" + tr.getAttribute("DATA6") + "'부서의 문서입니다. \n'" + tr.getAttribute("DATA6") + "'부서로 겸직변경 후 대장등록해주시기 바랍니다.");
 			            	return;
@@ -2808,7 +2817,7 @@
 		            else if (pListTypeValue == "3") {
 		                getDocList();
 		            }
-		            else if (pListTypeValue == "4" || pListTypeValue == "5") {
+		            else if (pListTypeValue == "4" || pListTypeValue == "5" || pListTypeValue == "97") {
 		                getReceivedDocList();
 		            }
 		            else if (pListTypeValue == "6") {
@@ -3118,7 +3127,7 @@
 		        else if (pListTypeValue == "3") {
 		            getDocList();
 		        }
-		        else if (pListTypeValue == "4" || pListTypeValue == "5") {
+		        else if (pListTypeValue == "4" || pListTypeValue == "5" || pListTypeValue == "97") {
 		            getReceivedDocList();
 		        }
 		        else if (pListTypeValue == "6") {
@@ -3523,7 +3532,7 @@
 			        	</select>  
 		        	</div>
 		        </li>
-		        <c:if test="${fn:length(companyList) gt 1 and listType ne '4' and listType ne '21'}">
+		        <c:if test="${fn:length(companyList) gt 1 and listType ne '4' and listType ne '21' and listType ne '97'}">
 			        <li style="vertical-align: middle; float:right">		        	
 						<select id="selectCompany" onchange="getDocListByCompany();">
 							<option value="">

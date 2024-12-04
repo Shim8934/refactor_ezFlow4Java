@@ -556,6 +556,10 @@
 									parent.frames["right"].passValLeftMenu("24");
 									parent.frames["right"].checkBujaeInfo();
 								}
+								else if (listtype == "97") {
+									parent.frames["right"].passValLeftMenu("97");
+									parent.frames["right"].checkBujaeInfo();
+								}
 				                else {
 				                    parent.frames["right"].passValLeftMenu("1");
 				                    parent.frames["right"].checkBujaeInfo();
@@ -1355,6 +1359,9 @@
                    	<li><span class="list_text" id="APPROVAL21" onclick="setPresentValue('<spring:message code='ezApprovalG.t3000'/>');convMain('21','')"><spring:message code='ezApprovalG.t3000'/><span id=COUNT21></span></span></li>
                    	<c:if test="${hideSusin != 'N'}">
                        	<li><span class="list_text" id="APPROVAL4" onclick="setPresentValue('<spring:message code='ezApprovalG.t1749'/>');convMain('4','')"><spring:message code='ezApprovalG.t1749'/><span id=COUNT4></span></span></li>
+					</c:if>
+					<c:if test="${personalHideSusin == 'Y' && fn:contains(userInfo.rollInfo, 'a=1')}">
+						<li><span class="list_text" id="APPROVAL97" onclick="setPresentValue('<spring:message code='ezApprovalG.PHSKMH01'/>');convMain('97','')"><spring:message code='ezApprovalG.PHSKMH01'/><span id=COUNT97></span></span></li>
 					</c:if>
                    	<c:if test="${approvalFlag == 'S'}">
                        	<li></span><span class="list_text" id="APPROVAL99" onclick="setPresentValue('<spring:message code='ezApprovalG.hyj04'/>');convMain('99','')"><spring:message code='ezApprovalG.hyj04'/><span id="COUNT99"></span></span></li>
