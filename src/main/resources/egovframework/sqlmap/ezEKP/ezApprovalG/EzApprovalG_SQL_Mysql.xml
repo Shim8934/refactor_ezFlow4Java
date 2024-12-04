@@ -23235,7 +23235,9 @@
 		   AND 	
 		   		TENANT_ID = #v_TENANTID#
 		   AND
-		   		COMPANYID = #companyID#)
+		   		COMPANYID = #companyID#
+           AND
+                ATTACHSN = #attachfileSn#)
    </insert>
    
 	<insert id="EzApprovalG.insertTmpAttachInfo" parameterClass="Map">
