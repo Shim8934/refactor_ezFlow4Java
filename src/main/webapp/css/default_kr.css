@@ -4194,7 +4194,7 @@ input#inOffice, input#retired, input#stopped{vertical-align:middle;}
 	vertical-align: middle; 
 }
 
-/* 20241126 */
+/* 20241126 개선 #148590 메일쓰기창 최근 사용 주소 */
 .btn_AutoCompleteResults{display:inline-block; width:24px; height:24px; margin-left:3px; background: url(../images/btn_AutoComplete.png) no-repeat Center center; background-size:16px 16px; border:1px solid #dedede; border-radius:3px; vertical-align:top; cursor:pointer; box-sizing:border-box;}
 .btn_AutoCompleteResults.active{background-image: url(../images/btn_AutoCompleteOn.png); border-color:#388CE5; background-color:#f7fbff;}
 .ui-autocomplete.ui-menu .ui-menu-item a{padding:3px 5px;}
