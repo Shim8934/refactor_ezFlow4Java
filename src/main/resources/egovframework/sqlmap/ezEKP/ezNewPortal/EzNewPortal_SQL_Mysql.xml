@@ -1310,6 +1310,18 @@ AND
 		A.theme_content4 AS theme_content,
 	]]>
 	</isEqual>
+	<isEqual property="lang" compareValue="5">
+	<![CDATA[
+		A.theme_name2 AS theme_name,
+		A.theme_content4 AS theme_content,
+	]]>
+	</isEqual>
+	<isEqual property="lang" compareValue="6">
+	<![CDATA[
+		A.theme_name2 AS theme_name,
+		A.theme_content4 AS theme_content,
+	]]>
+	</isEqual>
 	<![CDATA[
 	    ifnull(D.is_default, 0) as theme_used,
 	    B.theme_default,
@@ -2540,6 +2552,18 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 		]]>
 		</isEqual>
 		<isEqual property="lang" compareValue="4">
+		<![CDATA[
+			B.theme_name2 AS themename,
+			B.theme_content4 AS themecontent,
+		]]>
+		</isEqual>
+		<isEqual property="lang" compareValue="5">
+		<![CDATA[
+			B.theme_name2 AS themename,
+			B.theme_content4 AS themecontent,
+		]]>
+		</isEqual>
+		<isEqual property="lang" compareValue="6">
 		<![CDATA[
 			B.theme_name2 AS themename,
 			B.theme_content4 AS themecontent,

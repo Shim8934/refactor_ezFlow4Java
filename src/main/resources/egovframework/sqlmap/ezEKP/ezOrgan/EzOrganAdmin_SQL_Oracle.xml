@@ -1402,14 +1402,14 @@
       <![CDATA[
     	INSERT INTO 
     		TBL_BOARD_MYBOARDS 
-    			(UserID, BoardID, BoardName, BoardName2, TreeviewNum, tenant_ID, COMPANYID)
+    			(UserID, BoardID, BoardName, BoardName2, BoardName3, BoardName4, TreeviewNum, tenant_ID, COMPANYID)
     		VALUES
       ]]>
 	  <isEqual property="PrimaryLang" compareValue="1" >    		 
-    			('everyone', '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', '새게시물', 'New BoardItem', -1, #tenantID# ,#companyID#)
+    			('everyone', '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', '새게시물', 'New BoardItem', '新着', '新帖', -1, #tenantID# ,#companyID#)
       </isEqual>
       <isNotEqual property="PrimaryLang" compareValue="1" >
-      		  	('everyone', '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', '新着', 'New BoardItem', -1, #tenantID# ,#companyID#)
+      		  	('everyone', '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', '新着', 'New BoardItem', '새게시물', '新帖', -1, #tenantID# ,#companyID#)
       </isNotEqual>
     </insert>
     
