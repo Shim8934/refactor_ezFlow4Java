@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezCommunity.web;
 
 import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -9,14 +10,19 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.security.PrivateKey;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
@@ -24,6 +30,7 @@ import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -5217,6 +5224,105 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		logger.debug("WHWPEditor ended.");
 		return "/ezCommunity/communityWHWPEditor";
+	}
+
+	@RequestMapping(value="/ezCommunity/downloadAttachAll.do", method = RequestMethod.POST, produces="text/plain; charset=UTF-8")
+	@ResponseBody
+	public void downloadAttachAll(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("downloadAttachAll started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String fileNames = request.getParameter("fileNames");
+		String fileNamesUID = request.getParameter("fileNamesUID");
+		String realPath = commonUtil.getRealPath(request);
+		String filePath = commonUtil.getUploadPath("upload_community.ROOT", userInfo.getTenantId()) + commonUtil.separator + request.getParameter("filePath");
+		String uploadFilePath = commonUtil.getUploadPath("upload_community.ROOT", userInfo.getTenantId());
+		String tempFileUploadPath = realPath + uploadFilePath + commonUtil.separator + "tempUploadFile";
+		String guid = UUID.randomUUID().toString();
+		String pDirTempPath = tempFileUploadPath + commonUtil.separator + guid;
+		String fullFilePath = realPath + filePath;
+
+		ZipOutputStream zos = null;
+		String downFileName = "";
+
+		try {
+			File tempFile = new File(pDirTempPath + commonUtil.separator + ".zip");
+
+			if (tempFile.exists()) {
+				tempFile.delete();
+			}
+
+			tempFile = new File(tempFileUploadPath);
+
+			if (!tempFile.exists()) {
+				tempFile.mkdirs();
+			}
+
+			zos = new ZipOutputStream(new FileOutputStream(pDirTempPath + ".zip"), Charset.forName("utf-8"));
+
+			String[] fileNamesArr = fileNames.split(":");
+			String[] fileNamesUIDArr = fileNamesUID.split(":");
+
+			downFileName = fileNamesArr[0] + " " + egovMessageSource.getMessage("ezCircular.t50", userInfo.getLocale()) + " " + (fileNamesArr.length-1) + egovMessageSource.getMessage("ezStatistics.t1067", userInfo.getLocale()) + ".zip";
+
+			Map<String, Integer> fileNameMap = new HashMap<String, Integer>();
+
+			if (fileNamesArr.length != 0) {
+				for (int i = 0; i < fileNamesArr.length; i++) {
+					BufferedInputStream bis = null;
+
+					try {
+						File sourceFile = new File(commonUtil.detectPathTraversal(fullFilePath + fileNamesUIDArr[i]));
+						byte[] fileBytes = commonUtil.readBytesFromFile(sourceFile.toPath());
+
+						if (fileNamesUIDArr[i].endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
+							fileBytes = klibUtil.decrypt(fileBytes);
+						}
+
+						fileNamesArr[i] = commonUtil.getUniqueFileName(fileNamesArr[i], fileNameMap);
+						ZipEntry zentry = new ZipEntry(fileNamesArr[i]);
+						zos.putNextEntry(zentry);
+						zos.write(fileBytes);
+						zos.closeEntry();
+					} catch (IOException e) {
+						logger.error(e.getMessage(), e);
+					} finally {
+						if (bis != null) {
+							try {
+								bis.close();
+							} catch (Exception e) {
+								logger.error(e.getMessage(), e);
+							}
+						}
+					}
+				}
+				zos.flush();
+				zos.close();
+				zos = null;
+
+				File file = new File(pDirTempPath + ".zip");
+
+				if (file.exists()) {
+					downFile(request, response, pDirTempPath + ".zip", downFileName);
+					file.delete();
+				}
+			}
+		} catch (Exception e) {
+			File file = new File(pDirTempPath + ".zip");
+
+			if (file.exists()) {
+				file.delete();
+			}
+		} finally {
+			if (zos != null) {
+				try {
+					zos.close();
+				} catch (Exception e) {
+					logger.error(e.getMessage(), e);
+				}
+			}
+		}
+		logger.debug("downloadAttachAll ended.");
 	}
 	
 }
