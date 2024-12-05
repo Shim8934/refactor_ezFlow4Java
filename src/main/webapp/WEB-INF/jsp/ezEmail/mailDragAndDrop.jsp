@@ -158,7 +158,7 @@
 		        }
 		        
 		       // if (bigFileCheck && alertCnt < 2 && isbigyn == "N") {
-		        if (bigFileCheck && isbigyn == "N" && file.length == 1) {
+		        if (bigFileCheck && isbigyn == "N") {
 		    		// 2018-10-05 재은수정: 일반첨부에서 대용량첨부로 전환될 때 취소 버튼 추가
 		        	var bigFileAttachChk = confirm(strLang77 +window.parent.BigSizeAttachMBSize + "MB" + strLang78 + window.parent._pBigAttachDownloadDay + strLang79);
 		        	
