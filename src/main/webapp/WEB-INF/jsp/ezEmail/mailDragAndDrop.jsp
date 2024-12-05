@@ -884,6 +884,8 @@
 		    }
 		
 		    function filePicker() {
+                isbigyn = (isbigyn === 'Y') ? 'N' : isbigyn;
+                
 		    	window.parent.filePickerOpen();
 		    }
 		</script>
