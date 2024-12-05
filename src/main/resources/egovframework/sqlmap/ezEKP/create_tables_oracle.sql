@@ -645,8 +645,8 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 
   CREATE TABLE "JMOCHA_DEFAULT_QUOTA" 
    (	"DOMAIN_NAME" NVARCHAR2(100), 
-	"MAX_STORAGE" NUMBER(10,5) DEFAULT 0, 
-	"WARN_STORAGE" NUMBER(10,5) DEFAULT 0
+	"MAX_STORAGE" NUMBER(20,5) DEFAULT 0, 
+	"WARN_STORAGE" NUMBER(20,5) DEFAULT 0
    ) ;
 --------------------------------------------------------
 --  DDL for Table JMOCHA_DEPT_MASTER
