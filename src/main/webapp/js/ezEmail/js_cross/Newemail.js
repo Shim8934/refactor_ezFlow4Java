@@ -678,8 +678,12 @@ function Mail_MoveDeletePostSend(Mode, Url, szItemID) {
     xmlhttp_mailMoveDelete.onreadystatechange = event_xmlhttp_mailMoveDelete_Complete;
     event_xmlhttp_mailMoveDelete_Complete.mode = Mode;
     xmlhttp_mailMoveDelete.send(xmlpara);
+    ShowMailProgress();
+    showDim();
 }
 function event_xmlhttp_mailMoveDelete_Complete() {
+    HiddenMailProgress();
+    hiddenDim();
     if (xmlhttp_mailMoveDelete != null && xmlhttp_mailMoveDelete.readyState == 4) {
     	if (xmlhttp_mailMoveDelete.responseText.indexOf("NO COPY processing failed.") > -1) {
     		alert(strLang241);
@@ -2366,6 +2370,33 @@ function HiddenMailProgress() {
     document.getElementById("mailPanel").style.display = "none";
     document.getElementById("MailProgress").style.display = "none";
 }
+function showDim() {
+    CurrentHeight = document.body.clientHeight;
+    CurrenWidth = document.body.clientWidth;
+    document.getElementById("mailPanel").style.display = "block";
+    document.getElementById("mailPanel").style.opacity = 0.5;
+    document.getElementById("mailPanel").style.background = "rgba(0,0,0,0.7)";
+    parent.document.getElementById("left").contentWindow.showProgress();
+
+    if (dotnetFlag.toLowerCase()  == "YES"){
+        if (window.parent.frames["left"].useBottomFrameOnly == "NO") {
+            parent.parent.document.getElementById("topFrame").contentWindow.showProgress();
+        }
+    }
+}
+
+function hiddenDim() {
+    document.getElementById("mailPanel").style.display = "none";
+    document.getElementById("mailPanel").style.backgroundColor = "";
+    parent.document.getElementById("left").contentWindow.hideProgress();
+
+    if (dotnetFlag.toLowerCase()  == "YES"){
+        if (window.parent.frames["left"].useBottomFrameOnly == "NO") {
+            parent.parent.document.getElementById("topFrame").contentWindow.hideProgress();
+        }
+    }
+}
+
 function PreviewMode_ChangeBtn() {
     /*document.getElementById("PreViewNone").setAttribute("src", "/images/kr/cm/btn_noframe.gif");
     document.getElementById("PreViewBottom").setAttribute("src", "/images/kr/cm/btn_bottomframe.gif");
