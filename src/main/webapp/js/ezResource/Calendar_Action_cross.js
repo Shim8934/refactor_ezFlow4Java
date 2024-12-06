@@ -755,7 +755,7 @@ function tableListControl_Week()
                 _span.setAttribute("pnumber", getNodeText(xmldom.getElementsByTagName("pnumber")[j]));
                 _span.setAttribute("owner_id", getNodeText(xmldom.getElementsByTagName("owner_id")[j]));
                 _span.setAttribute("writer_id", getNodeText(xmldom.getElementsByTagName("writer_id")[j]));
-                _span.setAttribute("subject", ConvertEntityReferenceToChar(xmldom.getElementsByTagName("subject")[j].textContent));
+                _span.setAttribute("subject", replaceEntityCodeToStr(ConvertEntityReferenceToChar(xmldom.getElementsByTagName("subject")[j].textContent)));
                 _span.setAttribute("instancetype", getNodeText(xmldom.getElementsByTagName("instancetype")[j]));
                 _span.setAttribute("location", getNodeText(xmldom.getElementsByTagName("location")[j]));
                 _span.setAttribute("dtstart", getNodeText(xmldom.getElementsByTagName("dtstart")[j]));
@@ -903,7 +903,7 @@ function makeTable(xmldom, pNum, dayType) {
     _span.setAttribute("pnumber", getNodeText(xmldom.getElementsByTagName("pnumber")[pNum]));
     _span.setAttribute("owner_id", getNodeText(xmldom.getElementsByTagName("owner_id")[pNum]));
     _span.setAttribute("writer_id", getNodeText(xmldom.getElementsByTagName("writer_id")[pNum]));
-    _span.setAttribute("subject", getNodeText(xmldom.getElementsByTagName("subject")[pNum]));
+    _span.setAttribute("subject", replaceEntityCodeToStr(getNodeText(xmldom.getElementsByTagName("subject")[pNum])));
     _span.setAttribute("instancetype", getNodeText(xmldom.getElementsByTagName("instancetype")[pNum]));
     _span.setAttribute("location", getNodeText(xmldom.getElementsByTagName("location")[pNum]));
     _span.setAttribute("dtstart", getNodeText(xmldom.getElementsByTagName("dtstart")[pNum]));
@@ -1209,7 +1209,7 @@ function tableListControl_today() {
                             document.getElementById(pObjectId + "_" + TCnt).setAttribute("pnumber", getNodeText(xmldom.getElementsByTagName("pnumber")[j]));
                             document.getElementById(pObjectId + "_" + TCnt).setAttribute("owner_id", getNodeText(xmldom.getElementsByTagName("owner_id")[j]));
                             document.getElementById(pObjectId + "_" + TCnt).setAttribute("writer_id", getNodeText(xmldom.getElementsByTagName("writer_id")[j]));
-                            document.getElementById(pObjectId + "_" + TCnt).setAttribute("subject", getNodeText(xmldom.getElementsByTagName("subject")[j]));
+                            document.getElementById(pObjectId + "_" + TCnt).setAttribute("subject", replaceEntityCodeToStr(getNodeText(xmldom.getElementsByTagName("subject")[j])));
                             document.getElementById(pObjectId + "_" + TCnt).setAttribute("instancetype", getNodeText(xmldom.getElementsByTagName("instancetype")[j]));
                             document.getElementById(pObjectId + "_" + TCnt).setAttribute("location", getNodeText(xmldom.getElementsByTagName("location")[j]));
                             document.getElementById(pObjectId + "_" + TCnt).setAttribute("dtstart", getNodeText(xmldom.getElementsByTagName("dtstart")[j]));
@@ -1251,7 +1251,7 @@ function tableListControl_today() {
                     document.getElementById(pObjectId + "_1").setAttribute("pnumber", getNodeText(xmldom.getElementsByTagName("pnumber")[j]));
                     document.getElementById(pObjectId + "_1").setAttribute("owner_id", getNodeText(xmldom.getElementsByTagName("owner_id")[j]));
                     document.getElementById(pObjectId + "_1").setAttribute("writer_id", getNodeText(xmldom.getElementsByTagName("writer_id")[j]));
-                    document.getElementById(pObjectId + "_1").setAttribute("subject", getNodeText(xmldom.getElementsByTagName("subject")[j]));
+                    document.getElementById(pObjectId + "_1").setAttribute("subject", replaceEntityCodeToStr(getNodeText(xmldom.getElementsByTagName("subject")[j])));
                     document.getElementById(pObjectId + "_1").setAttribute("instancetype", getNodeText(xmldom.getElementsByTagName("instancetype")[j]));
                     document.getElementById(pObjectId + "_1").setAttribute("location", getNodeText(xmldom.getElementsByTagName("location")[j]));
                     document.getElementById(pObjectId + "_1").setAttribute("dtstart", getNodeText(xmldom.getElementsByTagName("dtstart")[j]));
