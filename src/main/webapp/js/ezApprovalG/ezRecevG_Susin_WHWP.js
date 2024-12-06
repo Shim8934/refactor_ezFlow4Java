@@ -1716,10 +1716,11 @@ function setBtnEnable() {
 			btnDistribute.style.display = "";
 		} else if (pAprState === "012") {
 			btnAssign.style.display = "";
-			if (pSusinAdmin === "YES") {
-				btnReturn.style.display = "";
-				btnDistribute.style.display = "";
-			}
+			/* 2024-12-06 홍승비 - 수신문 접수 > 지정받은 문서는 수발신담당자 권한에 상관없이 회송/배부가 가능하도록 수정 (MHT와 동일 스펙, 비전자문서도 수신문이므로 포함) */
+			//if (pSusinAdmin === "YES") {
+			btnReturn.style.display = "";
+			btnDistribute.style.display = "";
+			//}
 		} else if (pAprState === "014") {
 			btnReturn.style.display = "";
 			btnAssign.style.display = "";
