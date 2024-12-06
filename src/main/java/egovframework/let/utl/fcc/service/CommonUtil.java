@@ -2288,7 +2288,6 @@ public class CommonUtil {
 			}
 
 			// 0-2. 2023-06-09 이사라 : 패스워드 설정 시 연속숫자, 생일, 전화번호 방지 기능
-
 			boolean checkPasswordNumber = "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("checkPasswordNumber", tenantId));
 
 			if (checkPasswordNumber) {
@@ -2312,7 +2311,15 @@ public class CommonUtil {
 				}
 
 				// 스트림은 한번만 소비할 수 있어서 List로 변환해둠. *참고 https://yeon-kr.tistory.com/192, https://devyoseph.tistory.com/156
-				List<String> propList = propStream.map(prop -> StringUtils.defaultString(prop.replaceAll("\\D", "").trim())).filter(StringUtils::isNotBlank).collect(Collectors.toList());
+				List<String> propList = propStream
+						.map(prop -> StringUtils.defaultString(prop.replaceAll("\\D", "").trim()))
+						.filter(StringUtils::isNotBlank)
+						.collect(Collectors.toList());
+
+				// 휴대폰번호가 "010"으로 시작하는 경우, "010"은 제외하고 비교
+				if (propList.size() > 1 && propList.get(1).startsWith("010")) {
+					propList.set(1, propList.get(1).substring(3));
+				}
 
 				// 패스워드 설정 시 연속숫자, 생일, 전화번호 방지 기능
 				for (int i = 0; i < pwStr.length() - 2; i++) {
