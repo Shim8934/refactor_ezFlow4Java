@@ -6091,20 +6091,12 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	
 	/* 2023-05-03 기민혁 - 나의 스크랩 등록 item 리스트 호출 */
 	@Override
-	public List<HashMap<String, Object>> getMyBoardListItemScrap(LoginVO userInfo, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, ArrayList<String> scrapBoardListView_FG) throws Exception {
+	public List<HashMap<String, Object>> getMyBoardListItemScrap(LoginVO userInfo, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, ArrayList<String> scrapBoardListView_FG, Map<String, String> orderByMap) throws Exception {
 		logger.debug("getMyBoardListItemScrap started");
 
-
-		if (orderOption1.length() > 0) {
-			if (orderOption1.indexOf("WRITEDATE") > -1) {
-				if (orderOption1.indexOf("WRITEDATE DESC") > -1) {
-					orderOption1 = " A.WRITEDATE DESC ";
-				} else {
-					orderOption1 = " A.WRITEDATE ";
-				}
-			}
-		} else {
-			orderOption1 = " E.SCRAPDATE DESC ";
+		if (orderByMap.get("orderByCol") == null || "".equals(orderByMap.get("orderByCol"))) {
+			orderByMap.put("orderByCol", "SCRAPDATE");
+			orderByMap.put("orderByColDesc", "Y");
 		}
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -6120,6 +6112,13 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("rowCount", endRow - (startRow - 1));
 		map.put("limit", startRow - 1);
 		map.put("scrapBoardListView_FG", scrapBoardListView_FG);
+
+		if (orderByMap.get("orderByCol") != null) {
+			map.put("iv_PORDERBYCOL1", orderByMap.get("orderByCol"));
+			if (orderByMap.get("orderByColDesc") != null) {
+				map.put("iv_PORDERBYCOL1DESC", orderByMap.get("orderByColDesc"));
+			}
+		}
 
 		logger.debug("getMyBoardListItemScrap ended");
 		return ezBoardDAO.getMyBoardListItemScrap(map);
@@ -6144,7 +6143,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	
 	/* 2023-05-03 기민혁 - 나의 스크랩 검색 item totalcount */
 	@Override
-	public int getSearchMyBoardItemCountScrap(LoginVO userInfo, BoardVO boardVO, ArrayList<String> scrapBoardListView_FG) throws Exception {
+	public int getSearchMyBoardItemCountScrap(LoginVO userInfo, BoardVO boardVO, ArrayList<String> scrapBoardListView_FG, Map<String, String> searchMap) throws Exception {
 		logger.debug("getSearchMyBoardItemCountScrap started");
 
 		if (boardVO.getSearchQuery().length() > 0) {
@@ -6161,26 +6160,22 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("scrapBoardListView_FG", scrapBoardListView_FG);
 		
+		for (String key : searchMap.keySet()) {
+			map.put(key, searchMap.get(key));
+		}
 		
 		logger.debug("getSearchMyBoardItemCountScrap ended");
 		return ezBoardDAO.getSearchMyBoardItemCountScrap(map);
 	}
-	
+
 	/* 2023-05-03 기민혁 - 나의 스크랩 검색 item 리스트 호출 */
 	@Override
-	public List<HashMap<String, Object>> getSearchMyBoardItemListScrap(BoardListVO boardListVO, BoardVO boardVO, ArrayList<String> scrapBoardListView_FG) throws Exception {
+	public List<HashMap<String, Object>> getSearchMyBoardItemListScrap(BoardListVO boardListVO, BoardVO boardVO, ArrayList<String> scrapBoardListView_FG, Map<String, String> searchMap, Map<String, String> orderByMap) throws Exception {
 		logger.debug("getSearchMyBoardItemListScrap started");
-
-		if (boardListVO.getOrderBySub().length() > 0) {
-			if (boardListVO.getOrderBySub().indexOf("WRITEDATE") > -1) {
-				if (boardListVO.getOrderBySub().indexOf("WRITEDATE DESC") > -1) {
-					boardListVO.setOrderBySub(" A.WRITEDATE DESC ");
-				} else {
-					boardListVO.setOrderBySub(" A.WRITEDATE ");
-				}
-			}
-		} else {
-			boardListVO.setOrderBySub(" S.SCRAPDATE DESC ");
+		
+		if (orderByMap.get("orderByCol") == null || "".equals(orderByMap.get("orderByCol"))) {
+			orderByMap.put("orderByCol", "SCRAPDATE");
+			orderByMap.put("orderByColDesc", "Y");
 		}
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -6200,6 +6195,17 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("rowCount", boardListVO.getEndRow() - (boardListVO.getStartRow() - 1));
 		map.put("limit", boardListVO.getStartRow() - 1);
 		map.put("scrapBoardListView_FG", scrapBoardListView_FG);
+
+		if (orderByMap.get("orderByCol") != null) {
+			map.put("iv_PORDERBYCOL1", orderByMap.get("orderByCol"));
+			if (orderByMap.get("orderByColDesc") != null) {
+				map.put("iv_PORDERBYCOL1DESC", orderByMap.get("orderByColDesc"));
+			}
+		}
+		
+		for (String key : searchMap.keySet()) {
+			map.put(key, searchMap.get(key));
+		}
 		
 		logger.debug("getSearchMyBoardItemListScrap ended");
 		return ezBoardDAO.getSearchMyBoardItemListScrap(map);
@@ -6484,21 +6490,14 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	
 	/* 2023-05-22 기민혁 - 스크랩함 리스트 표출 */
 	@Override
-	public List<HashMap<String, Object>> getScrapContItemList(LoginVO userInfo, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, String scrapContID, ArrayList<String> scrapContBoardListView_FG) throws Exception {
+	public List<HashMap<String, Object>> getScrapContItemList(LoginVO userInfo, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, String scrapContID, ArrayList<String> scrapContBoardListView_FG, Map<String, String> orderByMap) throws Exception {
 		logger.debug("getScrapContItemList started");
-
-		if (orderOption1.length() > 0) {
-			if (orderOption1.indexOf("SCRAPDATE") > -1) {
-				if (orderOption1.indexOf("SCRAPDATE DESC") > -1) {
-					orderOption1 = " E.SCRAPDATE DESC, E.DESCRIPTION DESC + 0 ";
-				} else {
-					orderOption1 = " E.SCRAPDATE, E.DESCRIPTION + 0 ";
-				}
-			}
-		} else {
-			orderOption1 = " E.SCRAPDATE DESC, E.DESCRIPTION + 0 ";
-		}
 		
+		if (orderByMap.get("orderByCol") == null || "".equals(orderByMap.get("orderByCol"))) {
+			orderByMap.put("orderByCol", "SCRAPDATE");
+			orderByMap.put("orderByColDesc", "Y");
+		}
+
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		map.put("v_PUSERID", userInfo.getId());
@@ -6514,13 +6513,20 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("scrapContID", scrapContID);
 		map.put("scrapContBoardListView_FG", scrapContBoardListView_FG);
 
+		if (orderByMap.get("orderByCol") != null) {
+			map.put("iv_PORDERBYCOL1", orderByMap.get("orderByCol"));
+			if (orderByMap.get("orderByColDesc") != null) {
+				map.put("iv_PORDERBYCOL1DESC", orderByMap.get("orderByColDesc"));
+			}
+		}
+		
 		logger.debug("getScrapContItemList ended");
 		return ezBoardDAO.getScrapContItemList(map);
 	}
-	
+
 	/* 2023-05-22 기민혁 - 스크랩함 검색결과 스크랩 item totalcount */
 	@Override
-	public int getSearchScrapContItemListCount(LoginVO userInfo, BoardVO boardVO, ArrayList<String> scrapContBoardListView_FG) throws Exception {
+	public int getSearchScrapContItemListCount(LoginVO userInfo, BoardVO boardVO, ArrayList<String> scrapContBoardListView_FG, Map<String, String> searchMap) throws Exception {
 		logger.debug("getSearchScrapContItemListCount started");
 
 		if (boardVO.getSearchQuery().length() > 0) {
@@ -6537,25 +6543,22 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("scrapContBoardListView_FG", scrapContBoardListView_FG);
 
+		for (String key : searchMap.keySet()) {
+			map.put(key, searchMap.get(key));
+		}
+		
 		logger.debug("getSearchScrapContItemListCount ended");
 		return ezBoardDAO.getSearchScrapContItemListCount(map);
 	}
 	
 	/* 2023-05-22 기민혁 - 나의 스크랩함 검색리스트 표출 */
 	@Override
-	public List<HashMap<String, Object>> getSearchScrapContItemList(BoardListVO boardListVO, BoardVO boardVO, ArrayList<String> scrapContBoardListView_FG) throws Exception {
+	public List<HashMap<String, Object>> getSearchScrapContItemList(BoardListVO boardListVO, BoardVO boardVO, ArrayList<String> scrapContBoardListView_FG, Map<String, String> searchMap, Map<String, String> orderByMap) throws Exception {
 		logger.debug("getSearchScrapContItemList started");
 
-		if (boardListVO.getOrderBySub().length() > 0) {
-			if (boardListVO.getOrderBySub().indexOf("SCRAPDATE") > -1) {
-				if (boardListVO.getOrderBySub().indexOf("SCRAPDATE DESC") > -1) {
-					boardListVO.setOrderBySub(" S.SCRAPDATE DESC, S.DESCRIPTION DESC ");
-				} else {
-					boardListVO.setOrderBySub(" S.SCRAPDATE, S.DESCRIPTION ");
-				}
-			}
-		} else {
-			boardListVO.setOrderBySub(" S.SCRAPDATE DESC, S.DESCRIPTION ");
+		if (orderByMap.get("orderByCol") == null || "".equals(orderByMap.get("orderByCol"))) {
+			orderByMap.put("orderByCol", "SCRAPDATE");
+			orderByMap.put("orderByColDesc", "Y");
 		}
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -6578,6 +6581,17 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_SCRAPCONTID", boardVO.getScrapContID());
 		map.put("scrapContBoardListView_FG", scrapContBoardListView_FG);
 
+		if (orderByMap.get("orderByCol") != null) {
+			map.put("iv_PORDERBYCOL1", orderByMap.get("orderByCol"));
+			if (orderByMap.get("orderByColDesc") != null) {
+				map.put("iv_PORDERBYCOL1DESC", orderByMap.get("orderByColDesc"));
+			}
+		}
+
+		for (String key : searchMap.keySet()) {
+			map.put(key, searchMap.get(key));
+		}
+		
 		logger.debug("getSearchScrapContItemList ended");
 		return ezBoardDAO.getSearchScrapContItemList(map);
 	}
