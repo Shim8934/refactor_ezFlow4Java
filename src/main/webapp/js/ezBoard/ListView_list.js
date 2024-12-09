@@ -1819,11 +1819,15 @@ function downloadBoardFile(downURL, itemRead) {
 }
 
 function selectToDownloadFiles(boardID, itemID, itemRead) {
-	
+    
 	if (Read_FG != "true" || itemRead == "N") {
 		alert(strLang175);
 		return;
 	}
+    
+    if (boardID == null || boardID == "") { // 나의 스크랩
+        boardID = event.target.parentElement.parentElement.getAttribute("data1");
+    }
     
 	var url = "/ezBoard/selectToDownloadFiles.do?boardID=" + javaURLEncode(boardID) + "&itemID=" + javaURLEncode(itemID);
     window.open(url, "", "status=no,help=no,width=580px,height=480px" + GetOpenPosition(580, 480));
