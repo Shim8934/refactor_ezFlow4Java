@@ -2944,4 +2944,29 @@ public class EzAddressController{
 	    
 		logger.debug("addressFormatDownload ended.");
 	}
+
+	/**
+	 * 최근 사용 주소 삭제 실행 함수
+	 */
+	@RequestMapping(value = "/ezAddress/deleteLastSentEmailAddress.do", produces = "application/json; charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public String deleteLastSentEmailAddress(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> requestBody, HttpServletRequest request) throws Exception {
+		logger.debug("deleteLastSentEmailAddress controller started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String cn = StringUtils.defaultIfBlank((String) requestBody.get("shareId"), userInfo.getId());
+		String email = StringUtils.defaultIfBlank((String) requestBody.get("email"), "");
+		String returnValue = "OK";
+
+		try {
+			ezAddressService.deleteLastSentEmailAddress(userInfo.getTenantId(), cn, email);
+	    } catch (DOMException e) {
+	        returnValue = "ERROR";
+		} catch (Exception e) {
+	        returnValue = "ERROR";
+	    }
+
+		logger.debug("deleteLastSentEmailAddress controller ended. returnValue=" + returnValue);
+		return returnValue;
+	}
 }

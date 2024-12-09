@@ -383,6 +383,24 @@ CREATE TABLE `jmocha_address_simple` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `jmocha_address_last_sent`
+--
+
+DROP TABLE IF EXISTS `jmocha_address_last_sent`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `jmocha_address_last_sent` (
+  `SEQUENCE` bigint(20) NOT NULL AUTO_INCREMENT,
+  `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
+  `CN` varchar(80) NOT NULL,
+  `name` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `email` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `sent_date` datetime DEFAULT utc_timestamp,  -- 기본값으로 현재 날짜와 시간 설정 (utc)
+  PRIMARY KEY (`SEQUENCE`) -- 삽입, 삭제가 빈번한 테이블이라, UNIQUE KEY 사용하지 않음. (* UNIQUE: TENANT_ID, CN, email)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `jmocha_alias`
 --
 

@@ -4252,6 +4252,18 @@
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 	</statement>
 	
+	<statement id="EzCommonDAO.createJmochaAddressLastSent">
+		CREATE TABLE jmocha_address_last_sent (
+		  SEQUENCE bigint(20) NOT NULL AUTO_INCREMENT,
+		  TENANT_ID mediumint(5) NOT NULL DEFAULT 0,
+		  CN varchar(80) NOT NULL,
+		  name varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
+		  email varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
+		  sent_date datetime DEFAULT utc_timestamp,
+		  PRIMARY KEY (SEQUENCE)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	</statement>
+
 	<select id="EzCommonDAO.checkTable" resultClass="String" parameterClass="Map">
 		SELECT 
 			#v_COLUMN#
@@ -4260,6 +4272,7 @@
 			<isEqual property="v_TABLE" compareValue="jmocha_appr_user">jmocha_appr_user</isEqual>
 			<isEqual property="v_TABLE" compareValue="jmocha_appr_history">jmocha_appr_history</isEqual>
 			<isEqual property="v_TABLE" compareValue="jmocha_appr_comp_history">jmocha_appr_comp_history</isEqual>
+			<isEqual property="v_TABLE" compareValue="jmocha_address_last_sent">jmocha_address_last_sent</isEqual>
 		LIMIT 1
 	</select>
 

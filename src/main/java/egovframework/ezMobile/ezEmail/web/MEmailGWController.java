@@ -4069,16 +4069,31 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			        pResult = "<RESULT>OK</RESULT>";
 			        pResult += "<MESSAGEID><![CDATA[" + draftUID + "]]></MESSAGEID>";	
 			        
-			        // useAutoSaveMailAddress가 YES일 경우, 외부수신자의 메일주소를 개인주소록에 자동 저장 (코린도)
-					String autoSaveAddress = ezCommonService.getTenantConfig("useAutoSaveMailAddress", info.getTenantId());
-					
-					if (autoSaveAddress.equals("YES")) {
+					if (!cmd.equalsIgnoreCase("SAVE")) {
+						// 2024-11-13 김은실 : 최근 사용 주소 테이블에(jmocha_address_last_sent) insert.
 						try {
-							ezEmailUtil.outerMailInsertAddress(addressCheck,info.getUserId(),info.getTenantId(),
-									userEmail,info.getUserName(),info.getUserName2());
-						} catch (Exception e) {
-							logger.debug("AutoEmailUtil insert fail.");
+							ezAddressService.insertLastSentEmailAddresses(addressCheck, info.getTenantId(), info.getUserId());
+							/* MEmailGWController.java> mMailSend()에는 shareId가 딱히 없음.
+							 * shareId가 있었다면 ezEmailService.checkUserShareId 체크를 했었어야 함. */
+						} catch (NullPointerException e) {
+							logger.debug("insertLastSentEmailAddresses insert fail.");
 							logger.error(e.getMessage(), e);
+						} catch (Exception e) {
+							logger.debug("insertLastSentEmailAddresses insert fail.");
+							logger.error(e.getMessage(), e);
+						}
+
+						// useAutoSaveMailAddress가 YES일 경우, 외부수신자의 메일주소를 개인주소록에 자동 저장 (코린도)
+						String autoSaveAddress = ezCommonService.getTenantConfig("useAutoSaveMailAddress", info.getTenantId());
+
+						if (autoSaveAddress.equals("YES")) {
+							try {
+								ezEmailUtil.outerMailInsertAddress(addressCheck,info.getUserId(),info.getTenantId(),
+										userEmail,info.getUserName(),info.getUserName2());
+							} catch (Exception e) {
+								logger.debug("AutoEmailUtil insert fail.");
+								logger.error(e.getMessage(), e);
+							}
 						}
 					}
 			        
