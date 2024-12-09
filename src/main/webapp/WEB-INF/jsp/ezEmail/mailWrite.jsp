@@ -56,6 +56,7 @@
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.9.1.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/override.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/string_component.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/encode_component.js')}"></script>
@@ -468,18 +469,7 @@
 
 			// 2024-10-16 김은실 : [표준모듈] 메일쓰기창 To, Cc, Bcc 간 Drag & Drop 구현
 			$("#MsgToGot, #MsgCCGot, #MsgBCCGot").sortable({
-				connectWith: ".viewtxt",
-				// helper, stop 옵션 사용한 이유에 대해서는 commit message 참고 바람.
-				helper: function(event,ui) {
-					var width = parseFloat(window.getComputedStyle(ui.get(0)).width); // 또는, ui.css('width', ui.width() + 1); 가능함.
-				    console.debug("origin width: %s", width); // 개발자도구에서 Default levels → Vervose 변경하면 확인 가능.
-
-				    ui.css('width', Math.ceil(width));
-					return ui;
-				},
-				stop: function(event,ui) {
-					ui.item.css('width', ""); // helper에서 셋팅한 width값이 inline으로 남아있어서 원복함. 하지만 반드시 필요한 절차는 아니다. (ui.width() + 1 하면 반드시 필요한 절차)
-				}
+				connectWith: ".viewtxt"
 			});
 		}
 	    
