@@ -1517,6 +1517,9 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		} else {
 			useAprFilePrvw = "0";
 		}
+
+		/* 2024-12-10 기민혁 - 수정버전 변경 기능 사용 여부 */
+		String editVersionYN = ezCommonService.getTenantConfig("EditVertionYN",userInfo.getTenantId());
 		
         model.addAttribute("approvalFlag", approvalFlag);
         model.addAttribute("approvalPWD", approvalPWD);
@@ -1577,6 +1580,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("useReceiveInfoName", ezCommonService.getTenantConfig("useReceiveInfoName", userInfo.getTenantId())); // 수신처에 "장" 붙이는 옵션
 		model.addAttribute("addLastKyulJeYN", addLastKyulJeYN);
 		model.addAttribute("signImageType", signImageType);
+		model.addAttribute("editVersionYN", editVersionYN);
 
 		logger.debug("approvuiWHWP ended");
 		

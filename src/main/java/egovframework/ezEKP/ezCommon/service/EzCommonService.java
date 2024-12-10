@@ -536,4 +536,13 @@ public interface EzCommonService {
 
     // 2024-12-04 기민혁 - 전자결재 > 최근서식 사용여부 테넌트 컨피그 추가
     public void insertResendFormYN() throws Exception;
+    
+    // 2024-12-05 기민혁 - 전자결재 > 본문수정 시 본문버전 변경 기능 사용여부 테넌트 컨피그 추가
+    public void insertEditVertionYN() throws Exception;
+
+    // 2024-12-10 기민혁 - 전자결재 > 수정버전,수정모드 컬럼 추가
+    public void alterEditVersionHistory() throws Exception;
+
+    // 2024-12-10 기민혁 - 수정버전 리스트 해더 생성
+    public void insertEditVersionListOption() throws Exception;
 }

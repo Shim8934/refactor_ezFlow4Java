@@ -4607,4 +4607,39 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             ezCommonDAO.insertResendFormYN(map);
         }
     }
+
+    // 2024-12-05 기민혁 - 전자결재 > 본문수정 시 본문버전 변경 기능 사용여부 테넌트 컨피그 추가
+    @Override
+    public void insertEditVertionYN() throws Exception {
+        List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+
+        for (TenantVO tenantVo : tenantIdList) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("v_TENANTID", tenantVo.getTenantId());
+            ezCommonDAO.insertEditVertionYN(map);
+        }
+    }
+
+    // 2024-12-10 기민혁 - 전자결재 > 수정버전,수정모드 컬럼 추가
+    @Override
+    public void alterEditVersionHistory() throws Exception {
+        ezCommonDAO.alterEditVersionHistory();
+    }
+
+    // 2024-12-10 기민혁 - 수정버전 리스트 해더 생성
+    @Override
+    public void insertEditVersionListOption() throws Exception {
+        List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();
+        Map<String, Object> map = new HashMap<String, Object>();
+
+        for (CompanyInfoVO company : companyList) {
+            if (company.getCompanyId() != null) {
+                map.put("companyId", company.getCompanyId());
+                map.put("tenantId", company.getTenantId());
+                map.put("listOption", "K064");
+
+                ezCommonDAO.insertEditVersionListOption(map);
+            }
+        }
+    }
 }

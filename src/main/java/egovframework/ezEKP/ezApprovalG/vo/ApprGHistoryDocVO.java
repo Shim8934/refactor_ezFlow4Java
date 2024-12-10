@@ -49,6 +49,8 @@ public class ApprGHistoryDocVO {
 	private String readDate;
 	/** 2020-02-25 홍승비 - 편집전문서 URL */
 	private String beforeDocURL;
+	/** 수정 버전*/
+	private String editVersion;
 	
 	public String getDocID() {
 		return docID;
@@ -194,5 +196,10 @@ public class ApprGHistoryDocVO {
 	public void setBeforeDocURL(String beforeDocURL) {
 		this.beforeDocURL = beforeDocURL;
 	}
-
+	public String getEditVersion() {
+		return editVersion;
+	}
+	public void setEditVersion(String editVersion) {
+		this.editVersion = editVersion;
+	}
 }

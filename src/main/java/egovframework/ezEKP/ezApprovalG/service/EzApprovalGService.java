@@ -321,7 +321,7 @@ public interface EzApprovalGService {
     public String transferCabinet(Document xmlDom, int tenantID) throws Exception;
     
 	/* 2020-02-24 홍승비 - 편집 전후 문서를 판단하기 위한 플래그 isBeforeDoc, 편집전문서 파일경로 beforeDocURL 추가 */
-	public String updateHistoryForDoc(String docID, String url, String userID, String userName, String userName2, String userJobTitle, String userJobTitle2, String userDeptID, String userDeptName, String userDeptName2, String isBeforeDoc, String beforeDocURL, LoginVO userInfo)  throws Exception;
+	public String updateHistoryForDoc(String docID, String url, String userID, String userName, String userName2, String userJobTitle, String userJobTitle2, String userDeptID, String userDeptName, String userDeptName2, String isBeforeDoc, String beforeDocURL, LoginVO userInfo, String editMode, String editVersion)  throws Exception;
 
     public String gongRamUpdate(String docID, String userID, String companyID, String lang, int tenantID) throws Exception;
 
@@ -1001,4 +1001,7 @@ public interface EzApprovalGService {
     
     /* 2024-07-11 기민혁 - 전자결재G > 자동 임시저장 문서 확인  */
     public String checkAutoSaveDocId(String docID, String companyID, int tenantId) throws Exception;
+
+    /* 2024-12-10 기민혁 - 전자결재 > 수정 버전 호출 */
+    public String getEditVersion(String docID, String companyID, int tenantID) throws Exception;
 }

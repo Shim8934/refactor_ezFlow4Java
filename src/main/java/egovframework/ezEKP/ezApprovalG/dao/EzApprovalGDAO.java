@@ -4066,4 +4066,8 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public List<ApprGFormVO> getResendFormInfo(Map<String, Object> map) throws Exception{
 		return (List<ApprGFormVO>) list("EzApprovalG.getResendFormInfo", map);
 	}
+	/* 2024-12-10 기민혁 - 전자결재 > 수정 버전 호출 */
+	public String getEditVersion(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getEditVersion", map);
+	}
 }

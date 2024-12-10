@@ -9,7 +9,19 @@
 		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css"> 
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script> 
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
-		
+
+		<style>
+			.editVersionContainer {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				margin-top: 5px;
+				margin-bottom: 0px;
+			}
+			.editVersionContainer label {
+				margin-right: 15px; /* 라벨 간 간격 조절 */
+			}
+		</style>
 		<script type="text/javascript">
 			var RetValue;
 		    var ReturnFunction;
@@ -17,6 +29,7 @@
 		    var type = '${type}';
 		    var formURL = '${formURL}';
 		    var formDocType = '${formDocType}';
+			var editModeYN = '${editModeYN}';
 		    window.onload = function () {
 		        try {
 		            RetValue = parent.ezapropinion_cross_dialogArguments[0];
@@ -61,7 +74,11 @@
 		    	document.getElementById("Submit1").disabled = true;
 		    	
 		        if (ReturnFunction != null) {
-		            ReturnFunction(true, type, formURL, formDocType);
+					if(editModeYN == "Y"){
+						ReturnFunction(true, document.querySelector('input[name="editMode"]:checked').value);
+					}else{
+						ReturnFunction(true, type, formURL, formDocType);
+					}
 		            
 		            if (winFlag) {
 			            window.close();
@@ -94,7 +111,19 @@
 	          <table>
 	            <tr>
 	              <td  class="cimg"></td>
-	              <td  class="ctxt" ><span id="pMessageContent" ></span></td>
+	              <td  class="ctxt" >
+					  <span id="pMessageContent" ></span>
+					  <c:if test="${editModeYN == 'Y'}">
+						   <span id="editVersionArea">
+							  <p class="editVersionContainer">
+								  <input type="radio" id="editMode1" name="editMode" value="1" checked>
+								  <label for="editMode1"><spring:message code='ezApprovalG.EKMH01'/></label>
+								  <input type="radio" id="editMode2" name="editMode" value="2">
+								  <label for="editMode2"><spring:message code='ezApprovalG.EKMH02'/></label>
+							  </p>
+					  		</span>
+					  </c:if>
+				  </td>
 	            </tr>
 	     </table>
 	 	    </div>

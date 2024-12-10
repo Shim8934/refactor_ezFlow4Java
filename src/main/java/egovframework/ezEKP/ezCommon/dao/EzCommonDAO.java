@@ -3104,4 +3104,35 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			insert("EzCommonDAO.insertResendFormYN", map);
 		}
 	}
+
+	// 2024-12-05 기민혁 - 전자결재 > 본문수정 시 본문버전 변경 기능 사용여부 테넌트 컨피그 추가
+	public void insertEditVertionYN(Map<String, Object> map) {
+		String propertyValue = (String) select("EzCommonDAO.checkEditVertionYN", map);
+
+		if (propertyValue == null) {
+			logger.debug("EditVertionYN tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertEditVertionYN", map);
+		}
+	}
+
+	// 2024-12-10 기민혁 - 전자결재 > 수정버전,수정모드 컬럼 추가
+	public void alterEditVersionHistory() {
+		try {
+			select("EzCommonDAO.checkEditVersionHistory");
+		} catch (Exception e) {
+			logger.debug("In TBL_HISTORYDOCINFO doesn't exist checkEditVersionHistory column. creating the column...");
+
+			update("EzCommonDAO.alterEditVersionHistory");
+		}
+	}
+
+	// 2024-12-10 기민혁 - 수정버전 리스트 해더 생성
+	public void insertEditVersionListOption(Map<String, Object> map) {
+		String optionCheck = (String) select("EzCommonDAO.checkEditVersionListOption", map);
+
+		if (optionCheck == null) {
+			logger.debug("EditVersionList Header Option doesn't exist. insert data...");
+			insert("EzCommonDAO.insertEditVersionListOption", map);
+		}
+	}
 }

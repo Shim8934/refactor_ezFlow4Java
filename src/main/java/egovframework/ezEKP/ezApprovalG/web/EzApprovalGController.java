@@ -1851,6 +1851,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			String formDocType = req.getParameter("formDocType");
 			model.addAttribute("formDocType", formDocType);
 		}
+
+		if (req.getParameter("editModeYN") != null) {
+			String editModeYN = req.getParameter("editModeYN");
+			model.addAttribute("editModeYN", editModeYN);
+		}
 		
 		return "ezApprovalG/apprGezAprOpinion";
 	}
@@ -5502,6 +5507,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 	String useHideHeaderArea = ezCommonService.getTenantConfig("useHideHeaderArea", userInfo.getTenantId());
 	 	// 2024-06-11 김우철 - 부서수신함에서 첨부, 문서첨부 기능 사용여부
 	 	String useReceiptDeptFileAttach = ezCommonService.getTenantConfig("useReceiptDeptFileAttach", userInfo.getTenantId());
+	    // 2024-12-10 기민혁 - 본문버전 변경 기능 사용 여부
+	    String editVersionYN = ezCommonService.getTenantConfig("EditVertionYN",userInfo.getTenantId());
 
 		model.addAttribute("useAnnualSusinYN", useAnnualSusinYN);
 	    model.addAttribute("optSignDateFormat", optSignDateFormat);
@@ -5574,6 +5581,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 
 		/* 2024-06-24 양지혜 - 지정반송 사용 여부 */
 		model.addAttribute("useReturnByDesignation", ezCommonService.getTenantConfig("returnByDesignationUsed", userInfo.getTenantId()));
+		
+		model.addAttribute("editVersionYN", editVersionYN);
 
 		logger.debug("approvui ended");
 		
@@ -10795,13 +10804,23 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String userDeptName2 = doc.getElementsByTagName("PUSERDEPTNAME2").item(0).getTextContent();
 		String isBeforeDoc = doc.getElementsByTagName("ISBEFOREDOC").item(0).getTextContent();
 		String beforeDocURL = doc.getElementsByTagName("BEFOREDOCURL").item(0).getTextContent();
+
+		String editVersion = null;
+		if (doc.getElementsByTagName("editVersion").item(0) != null) {
+			editVersion = doc.getElementsByTagName("editVersion").item(0).getTextContent();
+		}
+
+		String editMode = null;
+		if (doc.getElementsByTagName("editMode").item(0) != null) {
+			editMode = doc.getElementsByTagName("editMode").item(0).getTextContent();
+		}
 		
 		if (doc.getElementsByTagName("ORGCOMPANYID").getLength() > 0 && !doc.getElementsByTagName("ORGCOMPANYID").item(0).getTextContent().equals(userInfo.getCompanyID())) {
 			userInfo.setCompanyID(doc.getElementsByTagName("ORGCOMPANYID").item(0).getTextContent());
 		}
 		
 		/* 2020-02-24 홍승비 - 편집 전후 문서를 판단하기 위한 플래그 isBeforeDoc, 편집전문서 파일경로 beforeDocURL 추가 */
-		String result = ezApprovalGService.updateHistoryForDoc(docID, url, userID, userName, userName2, userJobTitle, userJobTitle2, userDeptID, userDeptName, userDeptName2, isBeforeDoc, beforeDocURL, userInfo);
+		String result = ezApprovalGService.updateHistoryForDoc(docID, url, userID, userName, userName2, userJobTitle, userJobTitle2, userDeptID, userDeptName, userDeptName2, isBeforeDoc, beforeDocURL, userInfo, editMode, editVersion);
 		
 		logger.debug("updateDocHistory ended");
 		
@@ -13705,4 +13724,34 @@ public class EzApprovalGController extends EgovFileMngUtil{
 
         return result;
     }
+
+	/* 2024-12-10 기민혁 - 전자결재 > 수정 버전 호출 */
+	@RequestMapping(value = "/ezApprovalG/getEditVersion.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public String getEditVersion(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception {
+		logger.debug("getEditVersion started");
+		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		String docID = request.getParameter("docID");
+		String editMode = request.getParameter("editMode");
+		String editVersion = ezApprovalGService.getEditVersion(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+
+		if(editVersion == null){
+			editVersion = "1.0";
+		}
+
+		String[] editVersionArray = editVersion.split("\\.");
+		int editVersion1Array = Integer.parseInt(editVersionArray[0]);
+		int editVersion2Array = Integer.parseInt(editVersionArray[1]);
+		
+		if(editMode.equals("1")){
+			editVersion1Array += 1;
+			editVersion2Array = 0;
+		}else if(editMode.equals("2")){
+			editVersion2Array += 1;
+		}
+		
+		logger.debug("getEditVersion ended");
+		return editVersion1Array + "." + editVersion2Array;
+	}
 }

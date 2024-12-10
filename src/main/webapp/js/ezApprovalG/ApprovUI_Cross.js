@@ -3264,9 +3264,16 @@ function upDateAprLine() {
     return xmlhttp.responseText
 }
 var ezapropinion_cross_dialogArguments = new Array();
-function OpenInformationUI(pInformationContent, CompleteFunction) {
+function OpenInformationUI(pInformationContent, CompleteFunction, isEditMode) {
     var parameter = pInformationContent;
-    var url = "/ezApprovalG/ezAprOpinion.do";
+
+    var url = "";
+    if(isEditMode && isEditMode == "Y"){
+        var url = "/ezApprovalG/ezAprOpinion.do?editModeYN=Y";
+    }else{
+        var url = "/ezApprovalG/ezAprOpinion.do";
+    }
+    
     if (CrossYN()) {
         ezapropinion_cross_dialogArguments[0] = parameter;
         if (CompleteFunction != undefined)
@@ -3798,7 +3805,10 @@ function UpdateDocHistory(pHtml, isBeforeDoc, beforeDocURL) {
         createNodeAndInsertText(xmlpara, objNode, "ORGCOMPANYID", orgCompanyID);
         createNodeAndInsertText(xmlpara, objNode, "ISBEFOREDOC", isBeforeDoc);
         createNodeAndInsertText(xmlpara, objNode, "BEFOREDOCURL", beforeDocURL);
-        
+        if(editVersionYN && editVersionYN == "Y"){
+            createNodeAndInsertText(xmlpara, objNode, "editVersion", editVersion);
+            createNodeAndInsertText(xmlpara, objNode, "editMode", editMode);
+        }
         xmlhttp.open("POST", "/ezApprovalG/updateDocHistory.do", false);
         xmlhttp.send(xmlpara);
         
