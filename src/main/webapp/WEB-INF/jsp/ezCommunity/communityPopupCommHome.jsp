@@ -956,11 +956,12 @@
 				var leftMenus = document.getElementById("left");
 				var openMenus = leftMenus.getElementsByClassName('on');
 				
-				if (openMenus[i]) {
+				if (openMenus) {
 					for (var i = 0; i < openMenus.length; i++) {
 						if (openMenus[i]) {
 							openMenus[i].click();
-							openMenus[i].className = "off";
+							openMenus[i].classList.add("off");
+							openMenus[i].classList.remove("on");
 						}
 					}
 				}
