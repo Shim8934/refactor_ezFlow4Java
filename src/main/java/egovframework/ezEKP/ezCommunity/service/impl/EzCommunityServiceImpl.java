@@ -2104,10 +2104,10 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
             sb.append("<td>" + commonUtil.cleanValue(outApplication.getUserID().trim()) + "</td>");
             sb.append("<td align=\"center\">" + outApplication.getOutDate().substring(0, 10) + "</td>");
             sb.append("<td align=\"center\">");
-            sb.append("<a href=\"javascript:okno('ok','" + commonUtil.cleanValue(outApplication.getUserID().trim()) + "','" + code + "','" + curPage + "','" + commonUtil.cleanValue(outApplication.getUserName().trim()) + "');\" class=\"imgbtn\"  ><span style=\"width:40px\">" + egovMessageSource.getMessage("ezCommunity.t46", userInfo.getLocale()) + "</span></a>");
+            sb.append("<a class=\"imgbtn\"><span onclick=\"javascript:okno('ok','" + commonUtil.cleanValue(outApplication.getUserID().trim()) + "','" + code + "','" + curPage + "','" + commonUtil.cleanValue(outApplication.getUserName().trim()) + "');\" style=\"width:40px\">" + egovMessageSource.getMessage("ezCommunity.t46", userInfo.getLocale()) + "</span></a>");
             sb.append("</td>");
             sb.append("<td align=\"center\">");
-            sb.append("<a href=\"javascript:okno('no','" + commonUtil.cleanValue(outApplication.getUserID().trim()) + "','" + code + "','" + curPage + "','" + commonUtil.cleanValue(outApplication.getUserName().trim()) + "');\" class=\"imgbtn\"><span style=\"width:40px\">" + egovMessageSource.getMessage("ezCommunity.t552", userInfo.getLocale()) + "</span></a>");
+            sb.append("<a class=\"imgbtn\"><span onclick=\"javascript:okno('no','" + commonUtil.cleanValue(outApplication.getUserID().trim()) + "','" + code + "','" + curPage + "','" + commonUtil.cleanValue(outApplication.getUserName().trim()) + "');\" style=\"width:40px\">" + egovMessageSource.getMessage("ezCommunity.t552", userInfo.getLocale()) + "</span></a>");
             sb.append("</td>");
             sb.append("</tr>");
             sb.append("<tr>");
@@ -5724,8 +5724,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
             sb.append("<td>" + commonUtil.cleanValue(user.getC_ID()) + "</td>");
             sb.append("<td align=\"center\">" + user.getC_inDate().trim().substring(0, 10) + "</td>");
             sb.append("<td align=\"center\">");
-        	sb.append("<a href=\"javascript:okno('ok','" + commonUtil.cleanValue(user.getC_ID().trim()) + "','" + code + "','" + curPage + "','" + commonUtil.cleanValue(user.getUserName().trim()) + "');\" class=\"imgbtn\"><span style=\"width:40px\">" + egovMessageSource.getMessage("ezCommunity.t46", userInfo.getLocale()) + "</span></a>&nbsp;");
-            sb.append("<a href=\"javascript:okno('no','" + commonUtil.cleanValue(user.getC_ID().trim()) + "','" + code + "','" + curPage + "','" + commonUtil.cleanValue(user.getUserName().trim()) + "');\" class=\"imgbtn\"><span style=\"width:40px\">" + egovMessageSource.getMessage("ezCommunity.t552", userInfo.getLocale()) + "</span></a>");
+        	sb.append("<a class=\"imgbtn\"><span onclick=\"javascript:okno('ok','" + commonUtil.cleanValue(user.getC_ID().trim()) + "','" + code + "','" + curPage + "','" + commonUtil.cleanValue(user.getUserName().trim()) + "');\" style=\"width:40px\">" + egovMessageSource.getMessage("ezCommunity.t46", userInfo.getLocale()) + "</span></a>&nbsp;");
+            sb.append("<a class=\"imgbtn\"><span onclick=\"javascript:okno('no','" + commonUtil.cleanValue(user.getC_ID().trim()) + "','" + code + "','" + curPage + "','" + commonUtil.cleanValue(user.getUserName().trim()) + "');\" style=\"width:40px\">" + egovMessageSource.getMessage("ezCommunity.t552", userInfo.getLocale()) + "</span></a>");
             sb.append("</td>");
             sb.append("</tr>");
             
