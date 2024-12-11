@@ -539,7 +539,7 @@ function move_mail_onclick() {
         return;
     }
     
-    mail_movecopy_cross_dialogArguments[1] = move_mail_onclick_Complete;
+    mail_movecopy_cross_dialogArguments[1] = move_mail_onclick_Complete_timer;
     mail_movecopy_cross_dialogArguments[2] = "CLOSE";
     
     var requestUrl = "/ezEmail/mailMoveCopy.do";
@@ -555,6 +555,14 @@ function move_mail_onclick() {
     var OpenWin = window.open(requestUrl, "mail_movecopy_cross", GetOpenWindowfeature(322, 380));
     try { OpenWin.focus(); } catch (e) {console.log(e);}
 }
+
+//2024-12-11 김대현 크롬과 엣지에서 다른창에서 호출시  confirm 함수가 안먹는 현상 발생하여 타이머를 두고 자기 자신이 다시 호출하게 변경
+function move_mail_onclick_Complete_timer(moveUrl) {
+    setTimeout(function() {
+        move_mail_onclick_Complete(moveUrl);
+    }, 100);
+}
+
 function move_mail_onclick_Complete(moveUrl) {
     if (typeof (moveUrl) == "undefined")
         return;
@@ -563,14 +571,21 @@ function move_mail_onclick_Complete(moveUrl) {
 
     if (moveUrl["cmd"] == "MOVE") {
     	var includeSecureMail = false;
+        var isSentmail = false;
     	for (var i = 0; i < listContentArry.length; i++) {
     		if (document.getElementById(listContentArry[i]).getAttribute("securemail") == "1") {
     			includeSecureMail = true;
+                
+                // 2024-12-11 김대현 보낸편지함에 있는 보안메일 일때만 아래 confirm함수를 타야하기 때문에 해당 메일이 현재 보낸편지함에 있는지 확인하는 부분
+                var mailBox = document.getElementById(listContentArry[i]).getAttribute("_href");
+                mailBox = mailBox != null ? mailBox.toLowerCase() : "";
+                isSentmail = /^sent/.test(mailBox);
+                
     	    	break;
     	    }
     	}
-    	
-    	if (includeSecureMail || isOnlyFixingId && currentFixingIdTemp.getAttribute("securemail") == "1") {
+        
+    	if (isSentmail && includeSecureMail || isOnlyFixingId && currentFixingIdTemp.getAttribute("securemail") == "1") {
     		if (!confirm(strLangLHM20)) {
 	    		return;
 	    	}
