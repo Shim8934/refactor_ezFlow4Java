@@ -571,14 +571,21 @@ function move_mail_onclick_Complete(moveUrl) {
 
     if (moveUrl["cmd"] == "MOVE") {
     	var includeSecureMail = false;
+        var isSentmail = false;
     	for (var i = 0; i < listContentArry.length; i++) {
     		if (document.getElementById(listContentArry[i]).getAttribute("securemail") == "1") {
     			includeSecureMail = true;
+                
+                // 2024-12-11 김대현 보낸편지함에 있는 보안메일 일때만 아래 confirm함수를 타야하기 때문에 해당 메일이 현재 보낸편지함에 있는지 확인하는 부분
+                var mailBox = document.getElementById(listContentArry[i]).getAttribute("_href");
+                mailBox = mailBox != null ? mailBox.toLowerCase() : "";
+                isSentmail = /^sent/.test(mailBox);
+                
     	    	break;
     	    }
     	}
-    	
-    	if (includeSecureMail || isOnlyFixingId && currentFixingIdTemp.getAttribute("securemail") == "1") {
+        
+    	if (isSentmail && includeSecureMail || isOnlyFixingId && currentFixingIdTemp.getAttribute("securemail") == "1") {
     		if (!confirm(strLangLHM20)) {
 	    		return;
 	    	}
