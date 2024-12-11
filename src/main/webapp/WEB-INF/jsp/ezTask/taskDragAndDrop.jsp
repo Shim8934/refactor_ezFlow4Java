@@ -310,7 +310,7 @@
             }
 
             function showAttachInnerNotice() {
-                var fileCnt = document.querySelectorAll("#filelist tr[name]").length;
+                var fileCnt = document.querySelectorAll("#filelist tr[data2]").length;
                 if (fileCnt > 0) {
                     document.getElementById("attachInnerNotice").className = "attachInnerNotice_p_off";
                 } else {
