@@ -1463,7 +1463,8 @@
 			function cancleProgress(){
 	        	HiddenMailProgressNew();
 	        	mailboxProgressFun(false);
-	        	webSocket.close();
+	        	// 편지함 가져오기 업로드 도중 취소가 안되는 문제 수정
+	        	//webSocket.close();
 	        	location.reload();
 			}
 			

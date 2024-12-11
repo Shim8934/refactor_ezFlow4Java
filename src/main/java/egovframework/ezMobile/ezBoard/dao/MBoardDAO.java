@@ -274,4 +274,19 @@ public class MBoardDAO extends EgovAbstractDAO {
 	public List<MBoardListVO> getAllBoardItemList(Map<String, Object> map) {
 		return (List<MBoardListVO>) list("MBoardDAO.getAllBoardItemList", map);
 	}
+
+	/* 2023-11-22 기민혁 - 모바일 스크랩 리스트 호출 */
+	public List<MBoardNewListVO> getScrapBoardList(Map<String, Object> map) throws Exception {
+		return (List<MBoardNewListVO>) list("MBoardDAO.getScrapBoardList", map);
+	}
+
+	/* 2023-11-22 기민혁 - 모바일 스크랩 리스트 count */
+	public Integer getScrapBoardListCount(Map<String, Object> map) throws Exception {
+		return (Integer) select("MBoardDAO.getScrapBoardListCount", map);
+	}
+
+	/* 2023-11-22 기민혁 - 모바일 스크랩 리스트 삭제 */
+	public void deleteScrapBoardItem(Map<String, Object> map) throws Exception{
+		delete("MBoardDAO.deleteScrapBoardItem", map);
+	}
 }

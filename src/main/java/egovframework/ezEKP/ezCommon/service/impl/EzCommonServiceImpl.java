@@ -2802,7 +2802,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void createTables() throws Exception {
 		// 생성할 테이블 명
 		String[] tableArr = new String[] 
-				{"jmocha_appr_allowed_domain", "jmocha_appr_user", "jmocha_appr_history", "jmocha_appr_comp_history"};
+				{"jmocha_appr_allowed_domain", "jmocha_appr_user", "jmocha_appr_history", "jmocha_appr_comp_history", "jmocha_address_last_sent"};
 		
 		for (String t : tableArr) {
 			try {
@@ -4411,6 +4411,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         ezCommonDAO.addBoardAttachmentFlag();
     }
 
+    @Override
+    public void addTblBoardInfoPublicFlag() {
+        ezCommonDAO.addTblBoardInfoPublicFlag();
+    }
+
     /* 2024-10-21 한태훈 - 게시판 > 전체게시물 리스트헤더 추가 */
     @Override
     public void insertAllBoardListOption() throws Exception{
@@ -4454,5 +4459,79 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             map.put("v_TENANTID", tenantVo.getTenantId());
             ezCommonDAO.insertModuleEditor(map);
         }
+    }
+	
+	@Override
+	public void insertScrapTenantConfig() throws Exception {
+        List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+        for (TenantVO tenantVo : tenantIdList) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("tenantId", tenantVo.getTenantId());
+            map.put("propertyName", "MyBoardScrapFlag");
+            map.put("propertyValue", "TYPE1");
+            map.put("description", "NONE: 사용안함 / TYPE1: 마이게시판 하위 스크랩함 / TYPE2: 게시판 트리 하위 개인화 스크랩함 (default: TYPE1)");
+            map.put("configName", "게시판 스크랩 기능 사용 여부");
+            map.put("configType", "게시판");
+            map.put("regdate", "2023-06-14 00:00:00");
+
+            ezCommonDAO.insertScrapTenantConfig(map);
+        }
+	}
+
+    @Override
+    public void insertScrapTableHeader() throws Exception {
+        List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+        for (TenantVO tenantVo : tenantIdList) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("tenantId", tenantVo.getTenantId());
+            map.put("listType", "S");
+
+            ezCommonDAO.insertScrapTableHeader(map);
+        }
+    }
+	
+	@Override
+	public void createTblBoardScrap() throws Exception {
+		ezCommonDAO.createTblBoardScrap();
+	}
+	
+	@Override
+	public void createTblUserScrapCont() throws Exception {
+		ezCommonDAO.createTblUserScrapCont();
+	}
+	
+	@Override
+	public void createTblUserScrapContList() throws Exception {
+		ezCommonDAO.createTblUserScrapContList();
+	}
+
+    @Override
+    public void createTblBoardCommentAttachments() throws Exception {
+        ezCommonDAO.createTblBoardCommentAttachments();
+    }
+    
+    @Override
+    public void alterAddThumbnailForTPI() throws Exception {
+    	ezCommonDAO.alterAddThumbnailForTPI();
+    }
+    
+    @Override
+    public void alterThumbnailExtForTPI() throws Exception {
+    	ezCommonDAO.alterThumbnailExtForTPI();
+    }
+    
+    @Override
+    public void alterAttachmentsForCBoard() throws Exception {
+    	ezCommonDAO.alterAttachmentsForCBoard();
+    }
+
+	@Override
+	public void addIsDeleteBlockToSytemConfig() throws Exception {
+		ezCommonDAO.addIsDeleteBlockToSytemConfig();
+	}
+
+    @Override
+    public void addTblCommunityClubguestOnelinereply() throws Exception {
+        ezCommonDAO.addTblCommunityClubguestOnelinereply();
     }
 }

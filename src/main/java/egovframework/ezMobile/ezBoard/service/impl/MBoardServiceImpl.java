@@ -751,6 +751,8 @@ public class MBoardServiceImpl implements MBoardService {
 		} else {
 			map.put("hasAttach", "0");
 		}
+
+		map.put("publicFlag", boardListVO.get("publicFlag"));
 		
 		String tempString = mBoardDAO.getApprFlag(map);
 		
@@ -878,6 +880,7 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("extensionAttribute8", boardListVO.get("extensionAttribute8"));
 		map.put("extensionAttribute9", boardListVO.get("extensionAttribute9"));
 		map.put("extensionAttribute10", boardListVO.get("extensionAttribute10"));
+		map.put("publicFlag", boardListVO.get("publicFlag"));
 		map.put("tenantID", info.getTenantId());
 		map.put("itemID", boardListVO.get("itemID"));
 		/* 2018-07-04 홍승비 - content 칼럼 데이터 저장을 위한 처리 추가 */
@@ -1046,6 +1049,7 @@ public class MBoardServiceImpl implements MBoardService {
 		mBoardDAO.deleteBoardItem(map);
 		mBoardDAO.deleteBoardReply(map);
 		mBoardDAO.deleteBoardItemRead2(map);
+		mBoardDAO.deleteScrapBoardItem(map);
 		
 		mBoardDAO.insertDeleteReservedItem(map);
 		
@@ -1994,4 +1998,84 @@ public class MBoardServiceImpl implements MBoardService {
 	}
 	
 	
+	/* 2023-11-21 기민혁 - 모바일 스크랩 리스트 호출 */
+	@Override
+	public List<MBoardNewListVO> getScrapBoardList(String userID, String deptID, String companyID, int tenantID, String offset,String pSearchText, ArrayList<String> scrapBoardListView_FG) throws Exception {
+		logger.debug("getScrapBoardList started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("userID", userID);
+		map.put("listSize", 50);
+		map.put("offset", commonUtil.getMinuteUTC(offset));
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("deptID", deptID);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		map.put("pSearchText", pSearchText.replace("%", "\\%").replace("_", "\\_"));
+		map.put("scrapBoardListView_FG", scrapBoardListView_FG);
+
+		List<MBoardNewListVO> mScrapBoardList = mBoardDAO.getScrapBoardList(map);
+
+		String nowDate = commonUtil.getTodayUTCTime("");
+		nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
+		for (MBoardNewListVO vo : mScrapBoardList) {
+			if (vo.getWriteDate().toString().compareTo(nowDate) > 0) {
+				vo.setNewItemFlag("Y");
+			} else {
+				vo.setNewItemFlag("N");
+			}
+		}
+
+		logger.debug("getScrapBoardList ended");
+		return mScrapBoardList;
+	}
+
+	/* 2023-11-21 기민혁 - 모바일 스크랩 리스트 count */
+	@Override
+	public Integer getScrapBoardListCount(String userID, String companyID, int tenantID, String pSearchText, ArrayList<String> scrapBoardListView_FG) throws Exception {
+		logger.debug("getScrapBoardListCount started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("userID", userID);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("pSearchText", pSearchText.replace("%", "\\%").replace("_", "\\_"));
+		map.put("scrapBoardListView_FG", scrapBoardListView_FG);
+		
+		logger.debug("getScrapBoardListCount ended");
+		return mBoardDAO.getScrapBoardListCount(map);
+	}
+	
+	@Override
+	public Map<String, ArrayList<String>> getScrapBoardListReadView_FG(MCommonVO info) throws Exception {
+		MBoardInfoVO scrapBoardInfo = new MBoardInfoVO();
+			ArrayList<String> scrapBoardListView_FG = new ArrayList<String>();
+			ArrayList<String> scrapBoardListRead_FG = new ArrayList<String>();
+			List<HashMap<String, Object>> scrapBoardList = ezBoardService.getUserScrapBoardList(info.getUserId(), info.getTenantId());
+			String deptPathCode = info.getUserId() + "," + getDeptPathCode(info.getDeptId(), info.getTenantId());
+			Map<String, ArrayList<String>> result = new HashMap<>();
+		
+			if (scrapBoardList != null && scrapBoardList.size() > 0) {
+				for (HashMap<String, Object> scrapBoard : scrapBoardList) {
+					String checkBoardID = (String) scrapBoard.get("BOARDID");
+					scrapBoardInfo = getBoardProperty(checkBoardID, info.getPrimary(), info.getTenantId(), info.getUserId());
+					scrapBoardInfo = getBoardInfo(scrapBoardInfo, info.getRollInfo(), deptPathCode, info);
+					if (scrapBoardInfo.getListView_FG().equals("true")) {
+						scrapBoardListView_FG.add(checkBoardID);
+					}
+
+					if(scrapBoardInfo.getRead_FG().equals("true")){
+						scrapBoardListRead_FG.add(checkBoardID);
+					}
+					scrapBoardInfo = null;
+				}
+			}
+		result.put("scrapBoardListRead_FG", scrapBoardListRead_FG);
+		result.put("scrapBoardListView_FG", scrapBoardListView_FG);
+		
+		return result;
+	}
 }

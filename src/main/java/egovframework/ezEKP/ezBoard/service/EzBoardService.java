@@ -19,6 +19,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPollConfigVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
+import egovframework.ezEKP.ezBoard.vo.BoardThumbnailVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezBoard.vo.BoardKeywordVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
@@ -139,7 +140,7 @@ public interface EzBoardService {
 	/* 2018-06-26 홍승비 - 승인게시물 표출 조건으로 companyID 추가 */
 	public String apprItem(String userID, String itemList, String pMod, String companyID, int tenantID) throws Exception;
 	
-	public String deleteOneLineReply(String id, String replyID, String guBun, int tenantID) throws Exception;
+	public String deleteOneLineReply(String id, String replyID, String itemID, String guBun, int tenantID) throws Exception;
 	
 	public String checkOneLineOwner(String replyID, String userID, int tenantID) throws Exception;
 	
@@ -274,6 +275,12 @@ public interface EzBoardService {
 	public void deleteReservedBoard(String realPath) throws Exception;
 
 	public void deleteReservedBoardItem(String realPath) throws Exception;
+
+	/* 2023-05-03 기민혁 - 나의 스크랩 삭제 스케줄러 */
+	public void deleteItemsScrap() throws Exception;
+
+	/* 2023-05-22 기민혁 - 스크랩함 삭제 스케줄러 */
+	public void deleteItemsScrapCont() throws Exception;
 
 	public String moveItem(String orgItemIDList, String orgBoardIDList, String destBoardID, LoginVO userInfo, String uploadFilePath, String realPath) throws Exception;
 
@@ -451,9 +458,85 @@ public interface EzBoardService {
 	/* 2024-08-23 전인하 - 게시판 > 게시물ID로 해당 게시물에 속한 키워드 반환 메소드 */
 	public List<BoardKeywordVO> selectBoardKeywordByBoardItem(String itemID, String boardID, int tenantId) throws Exception;
 
+    boolean chkPasswordAnonymous(String itemID, String password, int tenantID);
+
 	public int getAllBoardItemListCount(LoginVO userInfo) throws Exception;
 
 	public List<HashMap<String, Object>> getAllBoardItemList(BoardListVO boardListVO, Map<String, String> orderByMap) throws Exception;
 	
 	public String getContentlocation(String boardID, String itemID, int tenantId) throws Exception;
+	
+	/* 2023-05-03 기민혁 - 나의 스크랩 데이터 등록 */
+	public String setScrapItem(String userID, String itemID, String boardID, String companyID, int tenantID) throws Exception;
+
+	/* 2023-05-03 기민혁 - 나의 스크랩 등록 확인*/
+	public String getScrapItemCount(String userID, String itemID, String boardID, String companyID, int tenantID) throws Exception;
+
+	/* 2023-05-03 기민혁 - 나의 스크랩 목록 다중 해제 메서드*/
+	public String deleteScrapItem(String userID, String itemList, String companyID, int tenantID) throws Exception;
+
+	/* 2023-05-03 기민혁 - 나의 스크랩  해제 메서드*/
+	public String delScrapItem(String userID, String itemID, String boardID, String companyID, int tenantID) throws Exception;
+
+	/* 2023-05-03 기민혁 - 나의 스크랩 등록 item 리스트 호출*/
+	public List<HashMap<String, Object>> getMyBoardListItemScrap(LoginVO userInfo, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, ArrayList<String> scrapBoardListView_FG) throws Exception;
+
+	/* 2023-05-03 기민혁 - 나의 스크랩 item totalcount*/
+	public int getMyBoardTotalItemCountScrap(LoginVO userInfo, ArrayList<String> scrapBoardListView_FG) throws Exception;
+
+	/* 2023-05-03 기민혁 - 나의 스크랩 검색 item totalcount*/
+	public int getSearchMyBoardItemCountScrap(LoginVO userInfo, BoardVO boardVO, ArrayList<String> scrapBoardListView_FG) throws Exception;
+
+	/* 2023-05-03 기민혁 - 나의 스크랩 검색 item 리스트 호출*/
+	public List<HashMap<String, Object>> getSearchMyBoardItemListScrap(BoardListVO boardListVO, BoardVO boardVO, ArrayList<String> scrapBoardListView_FG) throws Exception;
+
+	/* 2023-05-03 기민혁 - 게시물 삭제시 scrap 목록 삭제*/
+	public void deleteBoardScrapItem(String itemList, String companyID, int tenantID) throws Exception;
+
+	/* 2023-05-22 기민혁 - 스크랩함 폴더 data 표출 */
+	public String getUserScrapContTree(String id, String string, String companyID, String lang, int tenantId, Locale locale) throws Exception;
+
+	/* 2023-05-22 기민혁 - 스크랩함 폴더 생성 */
+	public String insUserScrapCont(String ownUserID, String parentScrapContID, String ownUserName, String description, String companyID, String lang, int tenantId) throws Exception;
+
+	/* 2023-05-22 기민혁 - 스크랩함 폴더 변경 */
+	public String updateUserScrapCont(String scrapContID, String ownUserID, String parentScrapContID, String userScrapContName, String description, String companyID, String lang, int tenantId) throws Exception;
+
+	/* 2023-05-22 기민혁 - 스크랩함 폴더 삭제 */
+	public String deleteUserScrapCont(String pScrapContID, String pMode, String companyID, String lang, int tenantId) throws Exception;
+
+	/* 2023-05-22 기민혁 - 스크랩함 중복 스크랩 목록 확인 */
+	public int getOverlapItemCount(String id, String itemListID, String boardID, String userScrapContID, String companyID, int tenantID) throws Exception;
+
+	/* 2023-05-22 기민혁 - 스크랩함에 게시물 데이터 insert */
+	public String setUserScrapContItem(String id, String itemListID, String boardID, String userScrapContID, String companyID, int tenantId) throws Exception;
+
+	/* 2023-05-22 기민혁 - 스크랩함 게시물 스크랩 해제 */
+	public String deleteScrapContItemList(String userID, String itemList, String companyID, int tenantID, String contID) throws Exception;
+
+	/* 2023-05-22 기민혁 - 스크랩함 스크랩 item totalcount */
+	public int getUserScrapContlistCount(LoginVO userInfo, String scrapContID, ArrayList<String> scrapContBoardListView_FG) throws Exception;
+
+	/* 2023-05-22 기민혁 - 스크랩함 리스트 표출 */
+	public List<HashMap<String, Object>> getScrapContItemList(LoginVO userInfo, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, String scrapContID, ArrayList<String> scrapContBoardListView_FG) throws Exception;
+
+	/* 2023-05-22 기민혁 - 스크랩함 검색결과 스크랩 item totalcount */
+	public int getSearchScrapContItemListCount(LoginVO userInfo, BoardVO boardVO, ArrayList<String> scrapContBoardListView_FG) throws Exception;
+
+	/* 2023-05-22 기민혁 - 스크랩함 검색리스트 표출 */
+	public List<HashMap<String, Object>> getSearchScrapContItemList(BoardListVO boardListVO, BoardVO boardVO, ArrayList<String> scrapContBoardListView_FG) throws Exception;
+
+	/* 2023-05-22 기민혁 - 게시물 삭제시 scrapcont 목록 삭제 */
+	public void deleteBoardScrapContItem(String itemList, String companyID, int tenantID) throws Exception;
+
+	public List<HashMap<String, Object>> getUserScrapBoardList(String userID, int tenantID) throws Exception;
+
+	public List<HashMap<String, Object>> getUserScrapContBoardList(LoginVO userInfo, String scrapContID) throws Exception;
+	
+	// 2024-12-30 전인하 - 게시판 게시물 첨부파일저장 실행 
+	public boolean saveCommentAttachment(String strAttachments, String replyID, String strItemID, String strBoardID, String realPath, int tenantID) throws Exception;
+	
+	public List<BoardThumbnailVO> thumbnailViewDB(String itemID, String boardID, int pStartRow, int pEndRow, int tenantID) throws Exception;
+	
+	public void thumbnailUpdate(String imageID, String boardID, int tenantID, String ext, String oFileName, String addThumbnail) throws Exception;
 }

@@ -1406,4 +1406,115 @@ public class EzAddressServiceImpl implements EzAddressService {
 
 		return list;
 	}
+
+	/**
+	 * 최근 사용 주소 get
+	 * @param tenantId
+	 * @param cn	userId or shareId
+	 * @throws Exception
+	 */
+	@Override
+	public List<AddressVO> getLastSentEmailAddresses(int tenantId, String cn) throws Exception {
+		List<AddressVO> list = new ArrayList<AddressVO>();
+
+		String tenantIdParam = "tenantId=" + tenantId;
+		String cnParam = "cn=" + URLEncoder.encode(cn, "UTF-8");
+
+		String inputParams = String.join("&", tenantIdParam, cnParam);
+		logger.debug("inputParams=" + inputParams);
+
+		String strJson = ezEmailUtil.getWebServiceResult(
+				config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/getLastSentEmailAddresses", inputParams);
+		logger.debug("strJson=" + strJson);
+
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject) parser.parse(strJson);
+
+		if (object.get("resultCode").equals("OK") && ((Long) object.get("reasonCode")).intValue() == 0) {
+			JSONArray resultArray = (JSONArray) object.get("result");
+
+			for (int i = 0; i < resultArray.size(); i++) {
+				JSONObject obj = (JSONObject) resultArray.get(i);
+
+				AddressVO vo = new AddressVO();
+				vo.setsName((String) obj.get("name"));
+				vo.setsEmail((String) obj.get("email"));
+				vo.setCreateDate((String) obj.get("sentDate"));
+
+				list.add(vo);
+			}
+		}
+
+		return list;
+	}
+
+	/**
+	 * 메일 전송시 최근 사용 주소 테이블에(jmocha_address_last_sent) insert.
+	 * @param lastSentEmailAddresses	to, cc, bcc 의 주소록에 들어갈 name, address
+	 * @param tenantId
+	 * @param cn	userId or shareId	//또는 userAccount도 있음. (ex. ssdevt_shared@svn1.opensol2014.com)
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public void insertLastSentEmailAddresses(List<Map<String, Object>> lastSentEmailAddresses, int tenantId, String cn) throws Exception {
+		logger.debug("insertLastSentEmailAddresses start.");
+		JSONArray jsonArray = new JSONArray();
+
+		lastSentEmailAddresses.stream()
+				.map(map -> new JSONObject(map))	//생성자가 (), (map) 2개 있으므로 JSONObject::new 가 안됨. (map)만 있었으면 가능.
+				.forEach(jsonArray::add);
+
+		String lastSentEmailAddressesParam = "lastSentEmailAddresses=" + URLEncoder.encode(jsonArray.toJSONString(), "UTF-8");
+		String tenantIdParam = "tenantId=" + tenantId;
+		String cnParam = "cn=" + URLEncoder.encode(cn, "UTF-8");
+
+		String inputParams = String.join("&", lastSentEmailAddressesParam, tenantIdParam, cnParam);
+		logger.debug("inputParams=" + inputParams);
+
+		String strJson = ezEmailUtil.getWebServiceResult(
+				config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/insertLastSentEmailAddresses", inputParams);
+		logger.debug("strJson=" + strJson);
+
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject) parser.parse(strJson);
+
+		if (!object.get("resultCode").equals("OK") || ((Long) object.get("reasonCode")).intValue() != 0) {
+			throw new Exception("Error from JGwServer.");
+		}
+
+		logger.debug("insertLastSentEmailAddresses end.");
+	}
+
+	/**
+	 * 최근 사용 주소 delete.
+	 * @param tenantId
+	 * @param cn	userId or shareId
+	 * @param email
+	 * @throws Exception
+	 */
+	@Override
+	public void deleteLastSentEmailAddress(int tenantId, String cn, String email) throws Exception {
+		logger.debug("deleteLastSentEmailAddress start.");
+
+		String tenantIdParam = "tenantId=" + tenantId;
+		String cnParam = "cn=" + URLEncoder.encode(cn, "UTF-8");
+		String emailParam = "email=" + URLEncoder.encode(email, "UTF-8");
+
+		String inputParams = String.join("&", tenantIdParam, cnParam, emailParam);
+		logger.debug("inputParams=" + inputParams);
+
+		String strJson = ezEmailUtil.getWebServiceResult(
+				config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/deleteLastSentEmailAddress", inputParams);
+		logger.debug("strJson=" + strJson);
+
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject) parser.parse(strJson);
+
+		if (!object.get("resultCode").equals("OK") || ((Long) object.get("reasonCode")).intValue() != 0) {
+			throw new Exception("Error from JGwServer.");
+		}
+
+		logger.debug("deleteLastSentEmailAddress end.");
+	}
 }

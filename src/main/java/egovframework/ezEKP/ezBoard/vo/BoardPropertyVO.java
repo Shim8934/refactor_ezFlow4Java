@@ -162,6 +162,8 @@ public class BoardPropertyVO {
 	/** 2024-10-23 정지은 - 첨부파일 사용여부**/
 	private String attachmentFlag;
 	
+	private String publicFlag = "N";
+	
 	public int getSs_board_maxRows() {
 		return ss_board_maxRows;
 	}
@@ -618,11 +620,15 @@ public class BoardPropertyVO {
 	public void setDisLikeFlag(String disLikeFlag) {
 		this.disLikeFlag = disLikeFlag;
 	}
-
     public String getEdit_FG() {
         return delete_FG;
     }
-    
+    public String getPublicFlag() {
+        return publicFlag;
+    }
+    public void setPublicFlag(String publicFlag) {
+        this.publicFlag = publicFlag;
+    }
 	public String getUseKeyword() {
 		return useKeyword;
 	}

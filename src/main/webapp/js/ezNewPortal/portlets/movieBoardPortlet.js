@@ -92,6 +92,7 @@ var video = document.getElementById("mainVideo");
 var playButton = document.getElementById("playButton");
 var titleDiv = document.getElementById("titleDiv");
 var layDiv = document.getElementById("layDIV");
+var addThumbnailDiv = document.getElementById("addThumbnail");
 function videoHandler(e) {
 	if (e.type == 'playing' ) {
 		// 재생 중 컨트롤 활성화, 버튼이미지+제목 안보임
@@ -116,5 +117,12 @@ if (video != null) {
 }
 
 function moviePlay() {
-	video.play();
+	if (addThumbnailDiv.getAttribute("value") == "Y") {
+		document.getElementById("thumbnail").style.display = "none";
+		video.style.display = "";
+		video.play();
+	} else {
+		video.play();
+	}
+	
 }

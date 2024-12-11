@@ -520,6 +520,7 @@ public class EzSurveyGWController {
 		String order         = request.getParameter("order")       != null ? request.getParameter("order")                         : "";
 		String srchMode      = request.getParameter("srchMode")    != null ? request.getParameter("srchMode")                      : "";
 		String srchOption    = request.getParameter("srchOption")  != null ? request.getParameter("srchOption")                    : "";
+		String filterStatus    = request.getParameter("filterStatus")  != null ? request.getParameter("filterStatus")                    : "";
 		int listCntSize      = request.getParameter("listCntSize") != null ? Integer.parseInt(request.getParameter("listCntSize")) : -1;
 		int currentPage      = request.getParameter("currentPage") != null ? Integer.parseInt(request.getParameter("currentPage")) : -1;
 		int userMode         = request.getParameter("userMode")    != null ? Integer.parseInt(request.getParameter("userMode"))    : -1;
@@ -536,7 +537,7 @@ public class EzSurveyGWController {
 		
 		try {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
-			result = surveyService.getItemsBySearching(pageMode, currentPage, listCntSize, title, creatorName, startDate, endDate, srchMode, srchOption, order, column, userInfo, userMode);
+			result = surveyService.getItemsBySearching(pageMode, currentPage, listCntSize, title, creatorName, startDate, endDate, srchMode, srchOption, order, column, userInfo, userMode, filterStatus);
 		}
 		catch (Exception e) {
 			logger.error(e.getMessage(), e);

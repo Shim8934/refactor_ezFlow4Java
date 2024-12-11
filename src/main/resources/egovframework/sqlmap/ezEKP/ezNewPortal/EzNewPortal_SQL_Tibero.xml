@@ -40,6 +40,8 @@
 <result property="title" 					column="TITLE" />
 <result property="boardID" 					column="BOARDID" />
 <result property="filePath" 				column="FILEPATH" />
+<result property="addThumbnail" 			column="ADDTHUMBNAIL" />
+<result property="thumbnailExt" 			column="THUMBNAILEXT" />
 </resultMap>
 <resultMap class="PortletInfoVO" id="PortletOrderVO">
 <result property="portletId" 				column="PORTLET_ID" />
@@ -116,6 +118,7 @@
 <result property="boardId" 				column="BOARDID" />
 <result property="gubun" 				column="GUBUN" nullValue=""/>
 <result property="writerName2" 			column="WRITERNAME2" />
+<result property="publicFlag" 			column="PUBLICFLAG" />
 </resultMap>
 <resultMap class="PortalUserInfoVO" id="PortalUserInfoVO">
 <result property="userName"				column="USER_NAME"/>
@@ -983,7 +986,9 @@ AND
 			BOARDID,
 			ITEMID,
 			TITLE,
-			FILEPATH
+			FILEPATH,
+			ADDTHUMBNAIL,
+			THUMBNAILEXT
 		FROM (
 				SELECT 
 					INFO.*, ROWNUM AS RNUM
@@ -992,7 +997,9 @@ AND
 						A.BOARDID,
 						A.ITEMID,
 						A.TITLE,
-						B.FILEPATH
+						B.FILEPATH,
+						B.ADDTHUMBNAIL,
+						B.THUMBNAILEXT
 					FROM
 						TBL_BOARD_ITEM A
 					INNER JOIN
@@ -1861,7 +1868,8 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 			startdate,
 			ATTACHMENTS,
 			CONTENT,
-			GUBUN
+			GUBUN,
+			PUBLICFLAG
 		FROM (
 			SELECT 
 				INFO.*, ROWNUM AS RNUM
@@ -1879,7 +1887,8 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 						A.startdate,
 						A.ATTACHMENTS,
 						A.CONTENT,
-						C.GUBUN
+						C.GUBUN,
+						A.PUBLICFLAG
 					FROM
 						TBL_BOARD_ITEM A
 					JOIN 
@@ -2970,7 +2979,9 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 			WRITERNAME2,
 			STARTDATE,
 			TITLE,
-			GUBUN
+			GUBUN,
+			PUBLICFLAG,
+			A.PUBLICFLAG
 		FROM (
 			SELECT
 				INFO.*, ROWNUM AS RNUM
@@ -2990,6 +3001,8 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 						BOARDID, 
 						BOARDNAME, 
 						BOARDNAME2,
+						BOARDNAME3, 
+						BOARDNAME4,
 						TENANT_ID,
 						COMPANYID 
 					FROM
@@ -3066,6 +3079,8 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 			BOARDID, 
 			BOARDNAME, 
 			BOARDNAME2,
+			BOARDNAME3,
+			BOARDNAME4,
 			TENANT_ID,
 			COMPANYID 
 		FROM
@@ -3134,7 +3149,8 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 			ITEMID,
 			BOARDID,
 			GUBUN,
-			WRITERNAME2
+			WRITERNAME2,
+			PUBLICFLAG
 		FROM (
 			SELECT
 				INFO.*, ROWNUM  AS RNUM
@@ -3146,7 +3162,8 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 					A.ITEMID,
 					A.BOARDID,
 					B.GUBUN,
-					A.WRITERNAME2
+					A.WRITERNAME2,
+					A.PUBLICFLAG
 				FROM
 					TBL_BOARD_ITEM A
 				JOIN

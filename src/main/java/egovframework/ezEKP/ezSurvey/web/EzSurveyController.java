@@ -7,10 +7,12 @@ import java.io.PrintWriter;
 import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
@@ -21,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import egovframework.ezEKP.ezSurvey.service.EzSurveyService;
+import egovframework.ezEKP.ezSurvey.vo.SurveyItemSearchVO;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.hssf.util.HSSFColor;
@@ -537,6 +540,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 		String srchMode      = request.getParameter("srchMode")    != null ? request.getParameter("srchMode")    : "";
 		String srchOption    = request.getParameter("srchOption")  != null ? request.getParameter("srchOption")  : "";
 		String listCntSize   = request.getParameter("listCntSize") != null ? request.getParameter("listCntSize") : "";
+		String filterStatus   = request.getParameter("filterStatus") != null ? request.getParameter("filterStatus") : "";
 		JSONObject userObj = surveyRestService.getUserInformation(request, user.getId());
 		int userMode = 0;
 		
@@ -564,7 +568,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 			return resultObj;
 		}
 		
-		resultObj = surveyRestService.getSurveyItems(request, user.getId(), pageMode, title, creatorName, startDate, endDate, column, order, srchMode, srchOption, listCntSize, currentPage, userMode);
+		resultObj = surveyRestService.getSurveyItems(request, user.getId(), pageMode, title, creatorName, startDate, endDate, column, order, srchMode, srchOption, listCntSize, currentPage, userMode, filterStatus);
 		
 		logger.debug("jsonGetSurveyItems end");
 		return resultObj;

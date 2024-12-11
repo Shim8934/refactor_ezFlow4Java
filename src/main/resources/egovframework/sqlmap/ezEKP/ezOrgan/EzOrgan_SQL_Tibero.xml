@@ -684,6 +684,12 @@
 				<isEqual property="v_FIELD"  compareValue="MANUAL_FLAG">
 					MANUAL_FLAG
 				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="DEPTTREEFLAG">
+					DEPTTREEFLAG
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="USEUPPERDEPTBOX">
+					USEUPPERDEPTBOX
+				</isEqual>
 			<![CDATA[
 			FROM
 				TBL_DEPTMASTER

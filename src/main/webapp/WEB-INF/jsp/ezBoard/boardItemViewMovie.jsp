@@ -119,9 +119,21 @@
 				var useKeyword = "<c:out value='${boardInfo.useKeyword}'/>"; // 키워드 기능 사용 여부 (Y/N)
                 var keywordArr = []; // 키워드 배열
                 
+                var myBoardScrapFlag = "<c:out value='${MyBoardScrapFlag}'/>" // myBoardScrapFlag 테넌트컨피그값 (NONE, TYPE1_(마이게시판하위), TYPE2(스크랩함))
+		        var isScrap = "<c:out value='${isScrap}'/>"; // 이미 스크랩되었는지의 여부 (type1일때)
+                var scrapContID = "<c:out value='${scrapContID}'/>"; // 개인스크랩함 ID (TYPE2, 스크랩함에서 게시물 조회했을 때 값이 들어옴)
+
 				/* 2023-11-17 홍승비 - 게시물 승인 시 게시알림메일 발송을 위한 그룹사게시판 여부 파라미터 추가 */
 				var isAllGroupBoard = "<c:out value='${boardInfo.isAllGroupBoard}'/>";
 				var commentSort = "earliest"; // 댓글 정렬 기준 : earliest(등록순) / latest(최신순)
+				
+			    var attachmentFlag = "${boardInfo.attachmentFlag}"; // 게시판 첨부파일 사용여부
+                var attachLimit = "${boardInfo.attachSizeLimit}"; // 개별 첨부파일 limit
+                var attachFileNameMaxLength = Number("${attachFileNameMaxLength}"); // 첨부파일명 글자수 제한 limit
+                var totalFileSize = 0; // 현재 총 첨부파일 사이즈
+				var addThumbnail = "<c:out value='${addThumbnail}'/>";
+				var thumbnailExt = "<c:out value='${thumbnailExt}'/>";
+				var AttachLimit = "${boardInfo.attachSizeLimit}";
 				
 		        window.onload = function () {
 		        	imageViewInit();
@@ -577,7 +589,7 @@
 		            pleft = (pwidth - swidth) / 2;
 		            ptop = (pheight - sheight) / 2;
 		            
-	                window.open("/ezBoard/modifyMovieItem.do?movieID=" + encodeURI(document.getElementById("mainVideo").getAttribute("movieid")) + "&boardID=" + encodeURI(pBoardID) + "&itemID=" + encodeURI(pItemID) + "&page=" + pPage + "&guBun=" + gubun, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=yes,resizable=1,height=" + sheight + ",width=" + swidth + ",top=" + ptop + ",left=" + pleft, "");
+	                window.open("/ezBoard/modifyMovieItem.do?movieID=" + encodeURI(document.getElementById("mainVideo").getAttribute("movieid")) + "&boardID=" + encodeURI(pBoardID) + "&itemID=" + encodeURI(pItemID) + "&page=" + pPage + "&guBun=" + gubun + "&addThumbnail=" + addThumbnail + "&thumbnailExt=" + thumbnailExt, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=yes,resizable=1,height=" + sheight + ",width=" + swidth + ",top=" + ptop + ",left=" + pleft, "");
 				}
 		        
 		        var photoalbumedit_dialogArguments = new Array();
@@ -915,6 +927,189 @@
 			    	}
 			    };
 			    
+			    /* 2023-05-03 기민혁 -  스크랩 추가 클릭시 data insert */
+			    function addScrapType1() {
+			    	$.ajax({
+						type : "GET",
+						dataType : "text",
+						async : false,
+						url : "/ezBoard/setScrapItem.do",
+						data : {
+							itemID : pItemID,
+							boardID : pBoardID
+						},
+						success: function(result){
+							if(result == "true"){
+								alert("<spring:message code='ezBoard.t269' />");
+								document.getElementById("addScrapBtn").innerHTML = "<li id ='delScrapBtn'><span onclick='delScrap()''><spring:message code='ezBoard.kmh14'/></span></li>";
+							} else if(result == "false"){
+								alert("<spring:message code='ezBoard.kmh001' />");
+								document.getElementById("addScrapBtn").innerHTML = "<li id ='delScrapBtn'><span onclick='delScrap()''><spring:message code='ezBoard.kmh14'/></span></li>";
+							} else if(result == "error"){
+								alert("<spring:message code='ezBoard.kmh17' />");
+							}
+						}
+					});
+				}
+				
+                function addScrapType2() {
+                    var url = "/ezBoard/selUserScrapCont.do";
+                    ContOpen = GetOpenWindow(url + "?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pBoardID), "selUserCont", 500, 460, "NO");
+                    try { ContOpen.focus() } catch (e) { }
+                }
+                
+                function addScrap() {
+                    if (myBoardScrapFlag == "TYPE1") {
+                        addScrapType1();
+                    } else if (myBoardScrapFlag == "TYPE2") {
+                        addScrapType2();
+                    } else {
+                        alert("오류발생");
+                    }
+                }
+			    
+			    /* 2023-05-03 기민혁 -  스크랩 해제 클릭시 data delete */
+                function delScrap() {
+                    var pUrl = "";
+                    var pData = new FormData();
+                    var pType;
+                    if (myBoardScrapFlag == "TYPE1") {
+                        pUrl = "/ezBoard/delScrapItem.do";
+                        pData.append("itemID", pItemID);
+                        pData.append("boardID", pBoardID);
+                    } else if (myBoardScrapFlag == "TYPE2") {
+                        pUrl = "/ezBoard/deleteScrapContItemList.do";
+                        pData.append("itemList", pItemID + ";");
+                        pData.append("scrapContID", scrapContID);
+                    } else {
+                        alert("<spring:message code='ezBoard.kmh52' />");
+                        return;
+                    }
+                    $.ajax({
+                        type : "POST",
+                        dataType : "text",
+                        async : false,
+                        url : pUrl,
+                        data : pData,
+                        contentType: false,
+                        processData: false,
+                        success: function(result) {
+                            if(result == "true") {
+                                alert("<spring:message code='ezBoard.kmh18' />");
+                                if (myBoardScrapFlag == "TYPE1") {
+                                    document.getElementById("delScrapBtn").innerHTML ="<li id ='addScrapBtn'><span onclick='addScrap()'><spring:message code='ezBoard.kmh13'/></span></li>";
+                                } else if (myBoardScrapFlag == "TYPE2") {
+                                    document.getElementById("delScrapBtn").replaceChildren();
+                                } else {
+                                    alert("<spring:message code='ezBoard.kmh52' />");
+                                    return;
+                                }
+                                
+                                if (window.opener && !window.opener.closed && (window.opener.location.href.indexOf("boardMyScrapList") !== -1 || window.opener.location.href.indexOf("BoardScrapContItemListView") !== -1)) {
+                                    window.close();
+                                    window.opener.refresh_onclick();
+                                }
+                            } else {
+                                alert("<spring:message code='ezBoard.kmh17' />");
+                            }
+                        }
+                    });
+                }
+
+            function btn_ThumbnailModify() {
+            	var swidth;
+	            var sheight;
+	            var pwidth = window.screen.availWidth;
+	            var pheight = window.screen.availHeight;
+	            var pleft = (pwidth - swidth) / 2;
+	            var ptop = (pheight - sheight) / 2;
+	 	
+           		swidth = 460;
+           		
+	            if (navigator.userAgent.toLowerCase().indexOf("edg") > 0) {
+	            	swidth = 550;
+	            }
+	            
+            	sheight = 380;
+	            pleft = (pwidth - swidth) / 2;
+	            ptop = (pheight - sheight) / 2;
+	            
+                window.open("/ezBoard/modifyThumbnailItem.do?movieID=" + encodeURI(document.getElementById("mainVideo").getAttribute("movieid")) + "&boardID=" + encodeURI(pBoardID) + "&itemID=" + encodeURI(pItemID) + "&page=" + pPage + "&guBun=" + gubun, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=yes,resizable=1,height=" + sheight + ",width=" + swidth + ",top=" + ptop + ",left=" + pleft, "");
+			}
+            
+            function btn_ThumbnailDelete() {
+            	
+            	if (addThumbnail == "Y") {
+            		if (confirm("썸네일을 삭제하시겠습니까?")) {
+            			var thumbnail = makeThumbnail("mainVideo");
+            			var fd2 = new FormData();
+            			var xhr2 = new XMLHttpRequest();
+            			addThumbnail = "N";
+            			fd2.append("thumbnail", thumbnail);
+            			var thumbnailID = moviePath.split("/")[7];
+
+        	            xhr2.open("POST", "/ezBoard/boardMovieThumb.do?thumbnailID=" + encodeURIComponent(thumbnailID) + "&fileLimit=" + AttachLimit + "&addThumbnail=" + addThumbnail, false);
+        	            xhr2.send(fd2);
+        	            
+        	            var thumbnailResult = getNodeText(SelectNodes(loadXMLString(xhr2.responseText), "ROOT/NODES/NODE/THUMBNAILNAME")[0]);
+        	            var thumbnailExt = thumbnailResult.substring(thumbnailResult.lastIndexOf(".") + 1);
+        	            thumbnailPath = "tempUploadFile/" + thumbnailResult;
+        	            var imageName = document.getElementById("mainVideo").title;
+        	            
+        	            var strXML = "";
+                        strXML = "<DATA>";
+                        strXML += "<NODE>";
+                        strXML += "<IMAGEID>" + movieID + "</IMAGEID>"; // 기존 IMAGEID(movieID)를 조건으로 걸어 PHOTO테이블 업데이트
+                        strXML += "<BOARDID>" + pBoardID + "</BOARDID>";
+                        if (thumbnailPath == undefined) {
+                            strXML += "<FILEPATH></FILEPATH>";
+                        }
+                        else {
+        					strXML += "<FILEPATH><![CDATA[" + thumbnailPath + "]]></FILEPATH>";
+                        }
+                        strXML += "<CONTENT></CONTENT>";
+                        strXML += "<MAINFG>Y</MAINFG>";
+                        strXML += "<ITEMID>" + pItemID + "</ITEMID>";
+                        strXML += "<OFILENAME>" + imageName + "</OFILENAME>";
+                        strXML += "<EXT>" + thumbnailExt + "</EXT>";
+                        strXML += "<ADDTHUMBNAIL>" + addThumbnail + "</ADDTHUMBNAIL>";
+                        strXML += "</NODE>";
+                        strXML += "</DATA>";
+                        
+                        var xmlhttp = createXMLHttpRequest();
+                        var xmldom = createXmlDom();
+
+                        xmldom.async = false;
+                        xmldom.preserveWhiteSpace = true;
+                        xmldom = loadXMLString(strXML);
+                        
+                        xmlhttp.open("POST", "/ezBoard/deleteImageItem.do?mod=Mod&gubun=" + gubun + "&modifyThumb=Y", false);
+                        xmlhttp.send(xmldom);
+
+                        if (xmlhttp.responseText == "OK") {
+                            alert("<spring:message code='ezBoard.thumbnail.kwc006'/>" + "\n" + "<spring:message code='ezBoard.thumbnail.kwc007'/>");
+                            
+                            window.opener.getBoardList();
+                        }
+                        else {
+                            alert("<spring:message code='ezBoard.thumbnail.kwc005'/>");
+                        }
+            		}
+            	} else {
+            		alert("등록하신 썸네일이 없습니다.");
+            	}
+            }
+            
+            function makeThumbnail(videoID) {
+			    var canvas = document.createElement("CANVAS");
+			    var video = document.getElementById(videoID);
+			 	// 썸네일 이미지의 크기는 200px * 160px
+			 	canvas.width = 200;
+			 	canvas.height = 160;
+			    canvas.getContext("2d").drawImage(video, 0, 0, 200, 160);
+			    
+			 	return canvas.toDataURL();
+			}
 		</script>
 	</head>
 	<body id="bodyPopup" class="popup">
@@ -930,6 +1125,8 @@
 			                <li><span onClick="Appr_onclick('C')"><spring:message code='ezBoard.t999014'/></span></li>
 			                	<c:if test="${boardItem.writerID == userInfo.id}">
 				                	<li ID='btn_Modify' ><span  onclick="btn_movieMod()"><spring:message code='ezQuestion.t180'/><spring:message code='ezBoard.t316'/></span></li>
+				                	<li ID='btn_Thumbnaildelete' ><span  onclick="btn_ThumbnailDelete()"><spring:message code='ezBoard.thumbnail.kwc001'/><spring:message code='ezBoard.t113'/></span></li>
+				               		<li ID='btn_ThumbnailModify' ><span  onclick="btn_ThumbnailModify()"><spring:message code='ezBoard.thumbnail.kwc001'/><spring:message code='ezBoard.t316'/></span></li>
 				                    <li ID='btn_AllDelete' ><span  onclick="btn_Delete_Onclick()"><spring:message code='ezBoard.t1004'/></span></li>
 				                    <li ID='btn_AlbumModify' ><span  onclick="btn_albumEdit()"><spring:message code='ezBoard.t1005'/></span></li>
 		                    	</c:if>
@@ -945,6 +1142,8 @@
 							<!--		강민수92 end -->
 		        			<c:if test="${boardInfo.boardAdmin_FG =='true' || boardInfo.boardGroupAdmin_FG == 'OK' || (boardItem.writerID == userInfo.id && boardInfo.edit_FG == 'true')}">
 			                    <li ID='btn_Modify' ><span  onclick="btn_movieMod()"><spring:message code='ezQuestion.t180'/><spring:message code='ezBoard.t316'/></span></li>
+			                    <li ID='btn_Thumbnaildelete' ><span  onclick="btn_ThumbnailDelete()"><spring:message code='ezBoard.thumbnail.kwc001'/><spring:message code='ezBoard.t113'/></span></li>
+				                <li ID='btn_ThumbnailModify' ><span  onclick="btn_ThumbnailModify()"><spring:message code='ezBoard.thumbnail.kwc001'/><spring:message code='ezBoard.t316'/></span></li>
 			                    <li ID='btn_AllDelete' ><span  onclick="btn_Delete_Onclick()"><spring:message code='ezBoard.t1004'/></span></li>
 			                    <li ID='btn_AlbumModify' ><span  onclick="btn_albumEdit()"><spring:message code='ezBoard.t1005'/></span></li>
 		        			</c:if>
@@ -952,6 +1151,20 @@
 		                    <li ID='btn_down' ><a id="movieDownload"><span><spring:message code='ezQuestion.t180'/><spring:message code='ezQuestion.t567'/></span></a></li>
 		        		</c:otherwise>
 		        	</c:choose>
+                    <c:if test="${MyBoardScrapFlag != 'NONE' && apprFlag != 'N'}">
+		        		<c:choose>
+                            <c:when test="${MyBoardScrapFlag eq 'TYPE1' && isScrap ne 'true'}">
+                                <li id ="delScrapBtn"><span onclick="delScrap()"><spring:message code='ezBoard.kmh14'/></span></li>
+							</c:when>
+							<c:when test="${MyBoardScrapFlag eq 'TYPE2' && not empty scrapContID}">
+								<li id ="addScrapBtn"><span onclick="addScrap()"><spring:message code='ezBoard.kmh13'/></span></li>
+								<li id ="delScrapBtn"><span onclick="delScrap()"><spring:message code='ezBoard.kmh14'/></span></li>	
+							</c:when>
+							<c:otherwise>
+                                <li id ="addScrapBtn"><span onclick="addScrap()"><spring:message code='ezBoard.kmh13'/></span></li>	
+							</c:otherwise>
+						</c:choose>
+					</c:if>
 		        </ul>
 		      </div>
 		      <div id="close">
@@ -1149,14 +1362,24 @@
                             <%-- 2023-11-07 전인하 - 게시판 > 이모티콘 아이콘 삽입 --%>
                             <div class="emoticonRelative">								    
                                 <img id="_addEmoticon" class="_addEmoticon" src="/images/poll/add_emo_vote.png" onclick="addSticker(this)">
-                                <textarea id="onelinereply" rows="3" style = "resize:none; width:90%;" maxlength="600"></textarea>
+                                <textarea id="onelinereply" rows="3" style = "resize:none; width:90%;" maxlength="500"></textarea>
                             </div>
 						</th>
 						<th style="text-align:center;border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2; border-right:1px solid #e2e2e2;width:15%;">
+                            <c:if test='${boardInfo.attachmentFlag eq "Y"}'>
+							    <a class='imgbtn' style="vertical-align: middle"><span onclick="btnfileup('commentFile')"><spring:message code='ezBoard.commentAttach.JIH01' /></span></a><br/>
+							</c:if>
 							<a class='imgbtn' style="vertical-align: middle"><span onclick="Save_OneLineReply(this)"><spring:message code='ezBoard.t321' /></span></a>
 						</th>
 					</tr>
 				</table>
+				<c:if test='${boardInfo.attachmentFlag eq "Y"}'>
+                    <%-- 첨부파일 버튼 --%>
+                    <input id="commentFile" type="file" multiple="multiple" onchange="filechange(event)" style="display:none"/>
+                    <input id="commentListFile" type="file" multiple="multiple" onchange="filechange(event)" style="display:none"/>
+                    <%-- 댓글 첨부 리스트 --%>
+                    <div id="commentAttach"></div>
+				</c:if>
                 <div class="commentSort">
                     <span id="earliest" class="checked" onclick="boardCommentSort()"><spring:message code='ezBoard.commentSort.JIH001' /></span>
                     <span id="latest" onclick="boardCommentSort()"><spring:message code='ezBoard.commentSort.JIH002' /></span>

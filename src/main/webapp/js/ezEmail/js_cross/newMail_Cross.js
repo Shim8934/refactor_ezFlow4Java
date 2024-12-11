@@ -1378,7 +1378,7 @@ function onblurOnRecipientInputField(value) {
             }
         }, 1);
     } else {
-        if (value != null && value != '') {
+        if (value && value.length > 1) {
             NameCertify_onClick(null);
         }
     }    
@@ -1406,7 +1406,7 @@ function NameCertify_onClick(returnFunction) {
     CompletCancelBtn = false;
     ToTalCompletEmailAddress();
     // 20181127 조진호 - 검색 후에 검색 리스트가 계속 보이는 현상 수정
-    $(".ui-autocomplete").css('display', 'none');
+    $('.ui-autocomplete-input').autocomplete("close");
     return true;
 }
 

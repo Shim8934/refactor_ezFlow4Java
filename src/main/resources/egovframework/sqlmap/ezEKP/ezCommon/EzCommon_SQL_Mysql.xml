@@ -4252,6 +4252,18 @@
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 	</statement>
 	
+	<statement id="EzCommonDAO.createJmochaAddressLastSent">
+		CREATE TABLE jmocha_address_last_sent (
+		  SEQUENCE bigint(20) NOT NULL AUTO_INCREMENT,
+		  TENANT_ID mediumint(5) NOT NULL DEFAULT 0,
+		  CN varchar(80) NOT NULL,
+		  name varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
+		  email varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
+		  sent_date datetime DEFAULT utc_timestamp,
+		  PRIMARY KEY (SEQUENCE)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	</statement>
+
 	<select id="EzCommonDAO.checkTable" resultClass="String" parameterClass="Map">
 		SELECT 
 			#v_COLUMN#
@@ -4260,6 +4272,7 @@
 			<isEqual property="v_TABLE" compareValue="jmocha_appr_user">jmocha_appr_user</isEqual>
 			<isEqual property="v_TABLE" compareValue="jmocha_appr_history">jmocha_appr_history</isEqual>
 			<isEqual property="v_TABLE" compareValue="jmocha_appr_comp_history">jmocha_appr_comp_history</isEqual>
+			<isEqual property="v_TABLE" compareValue="jmocha_address_last_sent">jmocha_address_last_sent</isEqual>
 		LIMIT 1
 	</select>
 
@@ -5787,6 +5800,29 @@
 		ADD
 			ATTACHMENTFLAG CHAR(1) DEFAULT 'Y'
 	</statement>
+
+    <select id="EzCommonDAO.checkTblBoardInfoPublicFlag">
+        SELECT
+            PUBLICFLAG
+        FROM
+            TBL_BOARD_BOARDINFO
+            LIMIT 1
+    </select>
+
+    <statement id="EzCommonDAO.addTblBoardInfoPublicFlag">
+        ALTER TABLE TBL_BOARD_BOARDINFO
+            ADD PUBLICFLAG char(1) default 'N'
+    </statement>
+
+    <statement id="EzCommonDAO.addTblBoardItemPublicFlag">
+        ALTER TABLE TBL_BOARD_ITEM
+            ADD PUBLICFLAG char(1)  default 'Y'
+    </statement>
+
+    <statement id="EzCommonDAO.addTblBoardItemTempPublicFlag">
+        ALTER TABLE TBL_BOARD_ITEM_TEMP
+            ADD PUBLICFLAG char(1) default 'Y'
+    </statement>
 		
     <select id="EzCommonDAO.checkAllBoardListOption" parameterClass="Map" resultClass="String">
         <![CDATA[
@@ -5889,4 +5925,235 @@
         VALUES (#v_TENANTID#, 'MODULEEDITOR', 'KUKUDOCS', 'CK, NAMO, TAGFREE, FORM, POLARIS, DEXT, KUKUDOCS, HWP 중 사용할 에디터를 설정한다. (default: KUKUDOCS)', '전자결재, 메일을 제외한 에디터 타입', '2024-09-23 00:00:00', '일반')
     </insert>
 	
+    <select id="EzCommonDAO.checkScrapTenantConfig" resultClass="String" parameterClass="Map">
+		SELECT
+			property_value
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			property_name = 'MyBoardScrapFlag'
+		AND
+			tenant_id = #tenantId#
+	</select>
+	
+	<insert id="EzCommonDAO.insertScrapTenantConfig" parameterClass="Map">
+		INSERT INTO TBL_TENANT_CONFIG 
+			(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+		VALUES
+			(#tenantId#, #propertyName#, #propertyValue#, #description#, #configName#, #regdate#, #configType#) 
+	</insert>
+
+	<select id="EzCommonDAO.insertScrapTableHeaderCheck" resultClass="String" parameterClass="Map">
+		SELECT 
+		    LISTTYPE
+		FROM 
+		    TBL_BOARD_ITEM_LISTOPTION
+		WHERE
+		    LISTTYPE = #listType#
+	  	AND
+		    TENANT_ID = #tenantId#
+		LIMIT 1
+	</select>
+
+	<insert id="EzCommonDAO.insertScrapTableHeader" parameterClass="Map">
+		INSERT INTO TBL_BOARD_ITEM_LISTOPTION
+			(LISTTYPE, SN, NAME1, NAME2, NAME3, NAME4, COLNAME, WIDTH, VIEW_FG, TENANT_ID)
+		VALUES
+			(#listType#, 0, 'CHECK', 'CHECK', 'CHECK', 'CHECK', 'ITEMID', 20, 'Y', #tenantId#),
+			(#listType#, 1, '첨부', 'Attachments', '添付', '附加', 'ATTACHMENTS', 20, 'Y', #tenantId#),
+			(#listType#, 2, '제목', 'Title', '件名', '标题', 'TITLE', 400, 'Y', #tenantId#),
+			(#listType#, 3, '부서', 'Department', '部署', '部门', 'WRITERDEPTNAME', 100, 'Y', #tenantId#),
+			(#listType#, 4, '게시자', 'Writer', '作成者', '写作者', 'WRITERNAME', 100, 'Y', #tenantId#),
+			(#listType#, 5, '게시일', 'Registered', '掲示日', '发布日期', 'WRITEDATE', 100, 'Y', #tenantId#),
+			(#listType#, 6, '조회수', 'View', 'ヒット数', '查询数', 'READCOUNT', 50, 'Y', #tenantId#)
+	</insert>
+	
+	<select id="EzCommonDAO.checkTblBoardScrap" resultClass="String">
+		<![CDATA[
+			SELECT 
+				ITEMID
+			FROM 
+				TBL_BOARDITEM_SCRAP
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblBoardScrap"> 
+		CREATE TABLE `tbl_boarditem_scrap` (
+		  `USERID` varchar(100) NOT NULL,
+		  `BOARDID` varchar(76) NOT NULL,
+		  `ITEMID` varchar(76) NOT NULL,
+		  `SCRAPDATE` varchar(40) DEFAULT NULL,
+		  `TENANT_ID` mediumint(5) NOT NULL,
+		  `COMPANYID` varchar(20) NOT NULL,
+		  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`USERID`,`BOARDID`,`ITEMID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblUserScrapCont" resultClass="String">
+		<![CDATA[
+			SELECT 
+				USERSCRAPCONTID
+			FROM 
+				TBL_USERSCRAPCONT
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblUserScrapCont"> 
+		CREATE TABLE `tbl_userscrapcont` (
+		  `USERSCRAPCONTID` varchar(20) NOT NULL,
+		  `USERSCRAPCONTNAME` varchar(255) CHARACTER SET utf8mb4 DEFAULT NULL,
+		  `PARENTSCRAPCONTID` varchar(20) DEFAULT NULL,
+		  `DESCRIPTION` varchar(255) DEFAULT NULL,
+		  `USERID` varchar(100) DEFAULT NULL,
+		  `TENANT_ID` mediumint(5) NOT NULL,
+		  `COMPANYID` varchar(20) NOT NULL,
+		  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`USERSCRAPCONTID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblUserScrapContList" resultClass="String">
+		<![CDATA[
+			SELECT 
+				USERSCRAPCONTID
+			FROM 
+				TBL_USERSCRAPCONTLIST
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblUserScrapContList"> 
+		CREATE TABLE `tbl_userscrapcontlist` (
+		  `BOARDID` varchar(76) NOT NULL,
+		  `ITEMID` varchar(76) NOT NULL,
+  		  `USERID` varchar(100) DEFAULT NULL,
+		  `USERSCRAPCONTID` varchar(20) NOT NULL,
+		  `SCRAPDATE` varchar(40) DEFAULT NULL,
+		  `DESCRIPTION` varchar(255) DEFAULT NULL,
+		  `TENANT_ID` mediumint(5) NOT NULL,
+		  `COMPANYID` varchar(20) NOT NULL,
+		  PRIMARY KEY (`TENANT_ID`,`BOARDID`,`USERSCRAPCONTID`,`ITEMID`,`USERID`, `COMPANYID`),
+		  CONSTRAINT `PK_USERSCRAPCONT` FOREIGN KEY (`TENANT_ID`, `COMPANYID`, `USERSCRAPCONTID`) REFERENCES `tbl_userscrapcont` (`TENANT_ID`, `COMPANYID`, `USERSCRAPCONTID`) ON DELETE NO ACTION ON UPDATE NO ACTION
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	</statement>
+
+
+	<select id="EzCommonDAO.chkTblBoardCommentAttachExist">
+		SELECT
+			REPLYID
+		FROM
+			TBL_BOARD_COMMENT_ATTACHMENTS
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createTblBoardCommentAttach">
+		CREATE TABLE TBL_BOARD_COMMENT_ATTACHMENTS (
+			ITEMID varchar(76) NOT NULL COMMENT '게시글 아이디',
+			REPLYID varchar(76) NOT NULL COMMENT '댓글 아이디',
+			SN mediumint(5) NOT NULL COMMENT '첨부파일 순번',
+			FILEPATH varchar(800) DEFAULT NULL COMMENT '첨부파일 저장경로',
+			FILESIZE varchar(100) DEFAULT NULL COMMENT '첨부파일 크기',
+			FILENAME varchar(255) DEFAULT NULL COMMENT '첨부파일 이름',
+			TENANT_ID mediumint(5) NOT NULL COMMENT '테넌트 아이디',
+		  PRIMARY KEY (ITEMID, REPLYID, SN, TENANT_ID)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '게시판 댓글 첨부파일 정보 테이블';
+	</statement>
+	
+    <select id="EzCommonDAO.checkAddThumbnailForTPI" resultClass="String">
+		<![CDATA[
+			SELECT
+				ADDTHUMBNAIL
+			FROM
+				TBL_Photo_ImageItem
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.alterAddThumbnailForTPI">
+		<![CDATA[
+			ALTER TABLE
+				TBL_Photo_ImageItem
+			ADD 
+				ADDTHUMBNAIL VARCHAR(20) DEFAULT NULL
+		]]>
+	</statement>
+	
+	<select id="EzCommonDAO.checkThumbnailExtForTPI" resultClass="String">
+		<![CDATA[
+			SELECT
+				THUMBNAILEXT
+			FROM
+				TBL_Photo_ImageItem
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.alterThumbnailExtForTPI">
+		<![CDATA[
+			ALTER TABLE
+				TBL_Photo_ImageItem
+			ADD 
+				THUMBNAILEXT VARCHAR(20) DEFAULT NULL
+		]]>
+	</statement>
+		
+	<select id="EzCommonDAO.checkAttachmentsForCBoard" resultClass="String">
+		<![CDATA[
+			SELECT
+				ATTACHMENTS
+			FROM
+				TBL_C_BOARD
+			LIMIT 1
+		]]>
+	</select>
+				
+	<statement id="EzCommonDAO.alterAttachmentsForCBoard">
+		<![CDATA[
+			ALTER TABLE
+				TBL_C_BOARD
+			ADD
+				ATTACHMENTS VARCHAR(20) DEFAULT NULL
+		]]>
+    </statement>
+    
+    <select id="EzCommonDAO.checkIsDeleteBlock" resultClass="String">
+        <![CDATA[
+		SELECT
+			ISDELETEBLOCK
+		FROM
+			TBL_SYSTEMCONFIG
+		LIMIT 1
+		]]>
+    </select>
+
+	<statement id="EzCommonDAO.createIsDeleteBlock">
+		ALTER TABLE
+			ISDELETEBLOCK
+		ADD
+		   ISDELETEBLOCK CHAR(1) DEFAULT 'N'
+	</statement>
+
+	<select id="EzCommonDAO.checkTblCommunityClubguestOnelinereply" resultClass="Integer">
+		SELECT
+			count(REPLYID)
+		FROM
+			TBL_C_CLUBGUEST_ONELINEREPLY
+	</select>
+
+	<statement id="EzCommonDAO.createTblCommunityClubguestOnelinereply">
+		CREATE TABLE TBL_C_CLUBGUEST_ONELINEREPLY (
+			ITEMID INT NOT NULL,
+			REPLYID VARCHAR(38) NOT NULL,
+			C_CLUBNO VARCHAR(38) NOT NULL,
+			USERID VARCHAR(50),
+			USERNAME VARCHAR(50),
+			USERNAME2 VARCHAR(50),
+			WRITEDATE DATETIME,
+			CONTENT VARCHAR(300),
+			TENANT_ID INT DEFAULT 0,
+			COMPANYID VARCHAR(80),
+			PRIMARY KEY (`ITEMID`,`REPLYID`,`TENANT_ID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+	</statement>
 </sqlMap>

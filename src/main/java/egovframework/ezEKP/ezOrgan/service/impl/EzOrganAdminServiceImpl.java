@@ -3811,7 +3811,8 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			propVO = ezOrganAdminDao.getAddJobPorpValue(map);
 			vo = ezOrganDao.getDeptInfo(map1);
 		} catch (NullPointerException e) {
-			logger.debug("getAddJobPorpValue failed.");
+			logger.error(e.getMessage(), e);
+			//logger.debug("getAddJobPorpValue failed.");
 			return "ERROR";
 		}
 
@@ -3886,7 +3887,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 						propValue = propList[i] + ":" + propValue + "\\";
 						break;
 					default :
-						map.put("v_FIELD", propList[i]);
+						map.put("v_FIELD", propList[i].toUpperCase());
 						propValue = ezOrganDao.getPropertyValue_S4(map);
 						propValue = propValue == null ? "" : propValue;
 						propValue = propList[i] + ":" + propValue + "\\";
@@ -3899,7 +3900,8 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			}
 
 		} catch (Exception e) {
-			logger.debug("getEntryAddJobInfo failed.");
+			logger.error(e.getMessage(), e);
+			//logger.debug("getEntryAddJobInfo failed.");
 			return "ERROR";
 		}
 

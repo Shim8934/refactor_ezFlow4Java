@@ -53,6 +53,10 @@ public class MBoardNewListVO {
 	private String guBun;
 	/** 앨범소개*/
 	private String mainContent;
+	/** 2024-11-12 박기범 - 게시판 공개/비공개 */
+	private String publicFlag = "Y";
+
+	private String newItemFlag;
 	
 	public String getBoardID() {
 		return boardID;
@@ -210,4 +214,12 @@ public class MBoardNewListVO {
 	public void setMainContent(String mainContent) {
 		this.mainContent = mainContent;
 	}
+	public String getPublicFlag() {
+		return publicFlag;
+	}
+	public void setPublicFlag(String publicFlag) {
+		this.publicFlag = publicFlag;
+	}
+	public String getNewItemFlag() { return newItemFlag; }
+	public void setNewItemFlag(String newItemFlag) { this.newItemFlag = newItemFlag; }
 }

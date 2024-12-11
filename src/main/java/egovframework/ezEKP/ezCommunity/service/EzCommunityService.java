@@ -26,6 +26,7 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityCPollResponseVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityClubVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityMemberInfoVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityOneLineReplyVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityBoardItemAttachmentVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzCommunityService {
@@ -393,4 +394,22 @@ public interface EzCommunityService {
 	public String popularBoardItem(LoginVO userInfo) throws Exception;
 	
 	public boolean saveHWP(String strHTML, String strFileName, String strBoardID, String strFilePath, String realPath) throws Exception;
+
+	public void insertGuestOneLineReply(int itemID, String clubNo, String companyID, int tenantID, String content, LoginVO userInfo) throws Exception;
+
+	public void deleteGuestOneLineReply(String replyId, int tenantID) throws Exception;
+
+	public void modifyGuestOneLineReply(String replyId, String content, int tenantID) throws Exception;
+
+	// 2024-10-17 조수빈 - 커뮤니티 내의 게시글 통합 검색 목록 반환 메소드
+	public String commBoardTotalSearchList(List<Map<String, String>> searchMaps, LoginVO userInfo, String sortBy, String pageNum, String code) throws Exception;
+
+	// 2024-10-17 조수빈 - 커뮤니티 내의 게시글 통합 검색 카운트 반환 메소드
+	public int commuTotalSearchCount(List<Map<String, String>> searchMaps, LoginVO userInfo, String sortBy, String pageNum, String code) throws Exception;
+
+	// 2024-10-17 조수빈 - 커뮤니티 내의 게시글 통합 검색 카운트 반환 메소드
+	public List<CommunityBoardItemAttachmentVO> getItemAttachmentInfo(String itemID, int tenantId) throws Exception;
+
+	// 2024-10-17 조수빈 - 게시판 조회 권한 체크 메소드
+	public String getReadFlag(String boardID, LoginVO userInfo) throws Exception;
 }

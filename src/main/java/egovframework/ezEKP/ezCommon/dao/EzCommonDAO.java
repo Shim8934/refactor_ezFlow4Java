@@ -2161,6 +2161,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			case "jmocha_appr_user": 					queryId = "EzCommonDAO.createJmochaApprUser"; break;
 			case "jmocha_appr_history": 				queryId = "EzCommonDAO.createJmochaApprHistory"; break;
 			case "jmocha_appr_comp_history": 			queryId = "EzCommonDAO.createJmochaApprCompHistory"; break;
+			case "jmocha_address_last_sent": 			queryId = "EzCommonDAO.createJmochaAddressLastSent"; break;
 		}
 		
 		try {
@@ -2845,6 +2846,16 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createTblRsCatBrd");
 		}
 	}
+ 	
+	public void alterCommItemPhotoItemContent() {
+		try {
+			select("EzCommonDAO.checkCommItemPhotoItemContent");
+		} catch (Exception e) {
+			logger.debug("TBL_COMM_ITEM PHOTOITEMCONTENT column doesn't exist. creating the column...");
+	
+			update("EzCommonDAO.alterCommItemPhotoItemContent");
+		}
+	}
 
 	public void addBoardAttachmentFlag() {
 		try {
@@ -2853,6 +2864,17 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			logger.debug("tbl_board_info attachmentFlag doesn't exist. creating the column...");
 
 			update("EzCommonDAO.addBoardAttachmentFlag");
+		}
+	}
+    
+	public void addTblBoardInfoPublicFlag() {
+		try {
+			select("EzCommonDAO.checkTblBoardInfoPublicFlag");
+		} catch (Exception e) {
+			logger.debug("tbl_board_info publicFlag doesn't exist. creating the column...");
+			update("EzCommonDAO.addTblBoardInfoPublicFlag");
+			update("EzCommonDAO.addTblBoardItemPublicFlag");
+			update("EzCommonDAO.addTblBoardItemTempPublicFlag");
 		}
 	}
 	
@@ -2900,6 +2922,109 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		if (propertyValue == null) {
 			logger.debug("ModuleEditor tenant config doesn't exist. insert data...");
 			insert("EzCommonDAO.insertModuleEditor", map);
+		}
+	}
+	
+	public void insertScrapTenantConfig(Map<String, Object> map) throws Exception{
+		String propertyValue = (String) select("EzCommonDAO.checkScrapTenantConfig", map);
+		
+		if (propertyValue == null) {
+			logger.debug("Scrap tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertScrapTenantConfig",map);
+		}
+	}
+
+	public void insertScrapTableHeader(Map<String, Object> map) throws Exception{
+		String propertyValue = (String) select("EzCommonDAO.insertScrapTableHeaderCheck", map);
+
+		if (propertyValue == null) {
+			logger.debug("ScrapTableHeader doesn't exist. insert data...");
+			insert("EzCommonDAO.insertScrapTableHeader",map);
+		}
+	}
+	
+	public void createTblBoardScrap() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblBoardScrap");
+		} catch (Exception e) {
+			logger.debug("tbl_boarditem_scrap doesn't exist. creating the table...");
+
+			update("EzCommonDAO.createTblBoardScrap");
+		}
+	}
+	
+	public void createTblUserScrapCont() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblUserScrapCont");
+		} catch (Exception e) {
+			logger.debug("tbl_userscrapcont doesn't exist. creating the table...");
+
+			update("EzCommonDAO.createTblUserScrapCont");
+		}
+	}
+	
+	public void createTblUserScrapContList() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblUserScrapContList");
+		} catch (Exception e) {
+			logger.debug("tbl_userscrapcontlist doesn't exist. creating the table...");
+
+			update("EzCommonDAO.createTblUserScrapContList");
+		}
+	}
+	public void createTblBoardCommentAttachments() {
+		try {
+			select("EzCommonDAO.chkTblBoardCommentAttachExist");
+		} catch (Exception e) {
+			logger.debug("tbl TBL_BOARD_COMMENT_ATTACHMENTS doesn't exist. creating the tbl...");
+
+			update("EzCommonDAO.createTblBoardCommentAttach");
+		}
+	}
+	
+	public void alterAddThumbnailForTPI() throws Exception {
+		try {
+			select(("EzCommonDAO.checkAddThumbnailForTPI"));
+		} catch (Exception e) {
+			logger.debug("tbl_photo_imageitem addThumbnail column doesn't exist. creating the column...");
+			update("EzCommonDAO.alterAddThumbnailForTPI");
+		}
+	}
+	
+	public void alterThumbnailExtForTPI() throws Exception {
+		try {
+			select(("EzCommonDAO.checkThumbnailExtForTPI"));
+		} catch (Exception e) {
+			logger.debug("tbl_photo_imageitem thumbnailExt column doesn't exist. creating the column...");
+			update("EzCommonDAO.alterThumbnailExtForTPI");
+		}
+	}
+		
+	public void alterAttachmentsForCBoard() throws Exception {
+		try {
+			select(("EzCommonDAO.checkAttachmentsForCBoard"));
+		} catch (Exception e) {
+			logger.debug("tbl_c_board attachments column doesn't exist. creating the column...");
+			update("EzCommonDAO.alterAttachmentsForCBoard");
+		}
+	}
+
+	public void addIsDeleteBlockToSytemConfig() throws Exception {
+		try {
+			select("EzCommonDAO.checkIsDeleteBlock");
+		} catch (Exception e) {
+			logger.debug("tbl_systemconfig isdeleteblock column doesn't exist. creating the column...");
+			update("EzCommonDAO.createIsDeleteBlock");
+		}		
+	}
+
+	public void addTblCommunityClubguestOnelinereply() {
+		try {
+			select("EzCommonDAO.checkTblCommunityClubguestOnelinereply");
+		} catch (Exception e) {
+			logger.debug("In TBL_C_CLUBGUEST_ONELINEREPLY doesn't exist. creating the table...");
+
+			update("EzCommonDAO.createTblCommunityClubguestOnelinereply");
 		}
 	}
 }

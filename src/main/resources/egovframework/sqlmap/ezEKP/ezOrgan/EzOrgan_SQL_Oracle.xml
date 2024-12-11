@@ -378,6 +378,9 @@
 					<isEqual property="v_FIELD"  compareValue="PHOTO_UPDATEDT">
 						PHOTO_UPDATEDT
 					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="USERTREEFLAG">
+						USERTREEFLAG
+					</isEqual>
 				<![CDATA[
 				FROM
 					TBL_USERMASTER
@@ -581,6 +584,9 @@
 				<isEqual property="v_FIELD"  compareValue="PHOTO_UPDATEDT">
 					PHOTO_UPDATEDT
 				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="USERTREEFLAG">
+					USERTREEFLAG
+				</isEqual>
 		<![CDATA[
 			FROM
 				TBL_USERMASTER
@@ -683,6 +689,12 @@
 				</isEqual>
 				<isEqual property="v_FIELD"  compareValue="MANUAL_FLAG">
 					MANUAL_FLAG
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="DEPTTREEFLAG">
+					DEPTTREEFLAG
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="USEUPPERDEPTBOX">
+					USEUPPERDEPTBOX
 				</isEqual>
 			<![CDATA[
 			FROM

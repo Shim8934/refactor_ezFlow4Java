@@ -466,7 +466,9 @@
 					attachmentFlag = "N";
 				}
 				
-				/* 2018-10-18 홍승비 - 게시판'그룹' 이름변경 시 하위게시판처럼 데이터가 업데이트되는 부분 수정 */
+                var publicFlag = $("#publicFlag").is(":checked") ? "Y" : "N" ;
+                
+	            /* 2018-10-18 홍승비 - 게시판'그룹' 이름변경 시 하위게시판처럼 데이터가 업데이트되는 부분 수정 */
 	            $.ajax({
 	            	type : "POST",
 	            	dataType : "text",
@@ -483,7 +485,7 @@
 	            		likeFlag:useBoardLike,disLikeFlag:useBoardDisLike,noticeBoardMod:pNoticeBoardMod,noticeBoardMod:pNoticeBoardMod,
 						tabBoardMod1:ptabBoardMod1,tabBoardMod2:ptabBoardMod2,tabBoardMod3:ptabBoardMod3,
 						mailFG_Post : mailFG_Post, mailFG_Mod : mailFG_Mod, mailFG_Comment : mailFG_Comment,
-						reactFlag:useBoardReplyReact, useKeyword:useKeyword,
+						reactFlag:useBoardReplyReact, useKeyword:useKeyword, publicFlag:publicFlag,
 						tabBoardCheck1:tabBoardCheck1, tabBoardCheck2:tabBoardCheck2, tabBoardCheck3:tabBoardCheck3, 
 						attachmentFlag:attachmentFlag
 	            	},
@@ -1474,6 +1476,27 @@
 	            </td>
 	        </tr>
 		</table>
+		<br>
+		<div style="${style}">
+			<table class="content">
+				<tr>
+					<th style="min-width: 88px;"><spring:message code="ezBoard.private.pgb01"/></th>
+					<td style="padding: 0;">
+						<table style="width: 100%">
+							<tr class="primary">
+								<th><spring:message code="ezBoard.private.pgb02"/></th>
+								<td style="border-bottom:1px solid #ddd;">
+									<input type="checkbox" id="publicFlag" ${model.publicFlag == "Y" ? "checked" : "" }/>
+									<label for="publicFlag">
+										<spring:message code="ezBoard.private.pgb03"/>
+									</label>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</div>
 	    <div class="btnpositionJsp">
 	        <a class="imgbtn" href="javascript:Save()"><span><spring:message code="ezBoard.t98" /></span></a>
 	    </div>

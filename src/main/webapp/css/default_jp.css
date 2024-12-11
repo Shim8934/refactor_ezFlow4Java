@@ -2948,6 +2948,7 @@ h2, #menu span {font-size: 12px;}
 .surveyTbl {width: 100%; text-algin: center;}
 .surveyTbl th {cursor: pointer !important;}
 .surveyTbl .inputTh {width: 20px;}
+.surveyTbl .numTh {width: 40px;}
 .inputTh >img {vertical-align: middle;}
 .surveyTbl .statusTh {width: 80px; text-align: center;}
 .surveyTbl .noTh   {width: 20px; text-align: center;}
@@ -4054,7 +4055,11 @@ popup #menu ul li span.view_more{ display: inline-block; height: 27px; border-ra
 .uploadedFile .previewImage{display: block; position:absolute; max-height:60px; max-width:60px; min-width: 30px; min-width: 30px; top:50%; left:50%; transform: translate(-50%, -50%);}
 
 .emoticonLayerStaticPosition{position:relative}
-.boardComment {position: relative}
+.boardComment {position: relative; border-bottom: solid 1px #e2e2e2;}
+#commentListAttach {margin-right: 8px; text-align: right;}
+#commentAttach {margin-right: 8px; text-align: right;}
+a.commentFileSpan:hover {cursor: pointer; text-decoration: underline;}
+.fileDeleteBtn {cursor: pointer; }
 
 ._addEmoticon {padding-left: 5px; padding-right: 5px; cursor: pointer;}
 #_addEmoticonRereply {float: left;}
@@ -4078,6 +4083,10 @@ popup #menu ul li span.view_more{ display: inline-block; height: 27px; border-ra
 .keywordSpanView { color: #388CE5; padding: 0px 7px 0px 0px; font-size : 15px;}
 .keywordSpan:hover {text-decoration: underline; cursor: pointer;}
 .keywordDeleteBtn { padding-left: 2px; cursor: pointer;}
+
+/* 게시판 공개 비공개 */
+.board_private{background:url(/images/lock_icon.png) no-repeat center; background-size:contain; width: 16px;height: 16px; display: inline-block;vertical-align: text-bottom;}
+/* 게시판 공개 비공개 */
 
 #TreeCtrl_MyFavTree_ul > .lnbUL {
 	padding-top: 0px;
@@ -4144,3 +4153,19 @@ popup #menu ul li span.view_more{ display: inline-block; height: 27px; border-ra
 	display: inline-block;
 	vertical-align: middle;
 }
+
+/* 20241126 개선 #148590 메일쓰기창 최근 사용 주소 */
+.btn_AutoCompleteResults{display:inline-block; width:24px; height:24px; margin-left:3px; background: url(../images/btn_AutoComplete.png) no-repeat Center center; background-size:16px 16px; border:1px solid #dedede; border-radius:3px; vertical-align:top; cursor:pointer; box-sizing:border-box;}
+.btn_AutoCompleteResults.active{background-image: url(../images/btn_AutoCompleteOn.png); border-color:#388CE5; background-color:#f7fbff;}
+.ui-autocomplete.ui-menu .ui-menu-item a{padding:3px 5px;}
+.ui-autocomplete.ui-menu .ui-menu-item a .flex_autocomplete{display:flex; flex-wrap:nowrap; align-items:center;}
+.ui-autocomplete.ui-menu .ui-menu-item a .flex_autocomplete .name{min-width:50px; max-width:200px; padding-right:10px; font-weight:bold; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; box-sizing:border-box;}
+.ui-autocomplete.ui-menu .ui-menu-item a .flex_autocomplete .mail{flex-grow:1; width:calc(100% - 255px); padding-right:10px; color:#444; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; box-sizing:border-box;}
+.ui-autocomplete.ui-menu .ui-menu-item a .flex_autocomplete .date{min-width:45px; width:45px; text-align:left; color:#999; margin-left:auto;}
+.ui-autocomplete.ui-menu .ui-menu-item a .flex_autocomplete .delete{min-width:10px; width:10px; height:10px; background:url(../images/close_xBtn.png) no-repeat; background-size:contain; cursor:pointer; opacity:0.7;}
+.ui-autocomplete.ui-menu .ui-menu-item a .flex_autocomplete .delete:hover{opacity:1;}
+/* //20241126 */
+
+/* 2024-10-28 정지은 - 커뮤니티 > 작성글 보기 */
+ul.user_option_horizontal_list{position: absolute; left: 0px; top: 28px; min-width: 100px; /*max-width: 180px;*/ list-style: none; margin: 0px; padding: 0px 0px; background: #ffffff; border: 1px solid #808080; border-bottom-left-radius: 2px; border-bottom-right-radius: 2px; box-shadow: 2px 2px 10px rgb(0 0 0 / 18%); z-index: 10000; display: block; height: auto !important; overflow: auto !important; max-height: 200px !important;width: auto !important;}
+.user_option_horizontal_list li{float: none !important; height: 28px !important; line-height: 30px; margin: 0px !important; padding: 0px 10px !important; font-size: 12px; color: #444; vertical-align: top; box-sizing: border-box; border: 0px none; border-radius: 0px; background: transparent; box-shadow: none; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; border: none !important;}

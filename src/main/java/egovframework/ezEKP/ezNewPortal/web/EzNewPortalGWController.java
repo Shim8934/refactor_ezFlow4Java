@@ -4006,6 +4006,13 @@ public class EzNewPortalGWController {
 					int startRow  = (currentPage - 1) * photoCount;
 					
 					List<BoardItemVO> photoBoardList = ezNewPortalService.getPhotoBoardPortletInfo(tenantId, boardId, startRow, photoCount, info.getOffset());
+					if (photoBoardList.get(0).getAddThumbnail() != null && photoBoardList.get(0).getAddThumbnail().equals("Y")) {
+						String path = photoBoardList.get(0).getFilePath().substring(0, photoBoardList.get(0).getFilePath().lastIndexOf("/") + 1);
+						String fileName = photoBoardList.get(0).getFilePath().substring(photoBoardList.get(0).getFilePath().lastIndexOf("/") + 1);
+						fileName = "s_" + fileName.substring(0, fileName.lastIndexOf(".")) + "." + photoBoardList.get(0).getThumbnailExt();
+						String thumbnailPath = path + fileName;
+						photoBoardList.get(0).setThumbnailPath(thumbnailPath);
+					}
 					data.put("access", "true");
 					data.put("photoBoardList", photoBoardList);
 					data.put("totalCnt", totalCnt);

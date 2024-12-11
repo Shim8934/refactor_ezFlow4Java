@@ -54,6 +54,10 @@
 	        var pGubun = "${guBun}";
 	        var pNoneActiveX = "YES";
 	        var isAllGroupBoard = "${boardInfo.isAllGroupBoard}";
+	        var addThumbnail = "${addThumbnail}";
+	        var thumbnailExt = "${thumbnailExt}";
+	        var movieUrl = "${movieUrl}";
+	        var isChange = false;
 	        
 	        function window_onload() {
 	            var ua = navigator.userAgent;
@@ -72,6 +76,7 @@
 	        
 	        function MovieTemp_onclick() {
 	        	if (document.form.file1.value != "") {
+	        		isChange = true;
 	        		var fd = new FormData();
 	        		var file1val = document.getElementById("file1").files[0].name;
 	        		var exIndex = file1val.lastIndexOf('.');
@@ -95,6 +100,10 @@
 	        }
 	        
 	        function btn_MovieSave() {
+	        	if (!isChange) {
+	        		alert("<spring:message code ='ezBoard.thumbnail.kwc008'/>");
+	        		return;
+	        	}
 				pFlag = "Y"; // 동영상게시물은 무조건 메인플래그 사용(썸네일 이미지가 하나이므로)
                 var nodes;
                 var rtnMode;
@@ -120,14 +129,16 @@
                     }
                 }
                 
-                // 저장조건체크 이후, 동영상에서 썸네일 추출하여 업로드 (동기적으로 사용하므로 false 처리)
-	            var fd2 = new FormData();
-		        var thumbnail = makeThumbnail("mainVideo");
-		        fd2.append("thumbnail", thumbnail);
-		        
-		        xhr2 = new XMLHttpRequest();
-	            xhr2.open("POST", "/ezBoard/boardMovieThumb.do?thumbnailID=" + encodeURIComponent(movieFileName) + "&fileLimit=" + AttachLimit, false);
-	            xhr2.send(fd2);
+                if (addThumbnail == "N") {
+                	// 저장조건체크 이후, 동영상에서 썸네일 추출하여 업로드 (동기적으로 사용하므로 false 처리)
+    	            var fd2 = new FormData();
+    		        var thumbnail = makeThumbnail("mainVideo");
+    		        fd2.append("thumbnail", thumbnail);
+    		        
+    		        xhr2 = new XMLHttpRequest();
+    	            xhr2.open("POST", "/ezBoard/boardMovieThumb.do?thumbnailID=" + encodeURIComponent(movieFileName) + "&fileLimit=" + AttachLimit + "&isThumbnailUp=" + addThumbnail, false);
+    	            xhr2.send(fd2);
+                }
 	            
                 var strXML = "";
                 strXML = "<DATA>";
@@ -145,6 +156,9 @@
                 strXML += "<MAINFG>" + pFlag + "</MAINFG>";
                 strXML += "<ITEMID>" + pItemID + "</ITEMID>";
                 strXML += "<OFILENAME>" + orgFileName + "</OFILENAME>";
+                strXML += "<ADDTHUMBNAIL>" + addThumbnail + "</ADDTHUMBNAIL>";
+                strXML += "<EXT>" + thumbnailExt + "</EXT>";
+                strXML += "<ORGTHUMB>" + movieUrl.split("/")[7] + "</ORGTHUMB>";
                 strXML += "</NODE>";
                 strXML += "</DATA>";
 
@@ -155,7 +169,7 @@
                 xmldom.preserveWhiteSpace = true;
                 xmldom = loadXMLString(strXML);
 
-                xmlhttp.open("POST", "/ezBoard/deleteImageItem.do?mod=" + pMod + "&gubun=" + pGubun + "&itemID=" + encodeURIComponent(pItemID), false);
+                xmlhttp.open("POST", "/ezBoard/deleteImageItem.do?mod=" + pMod + "&gubun=" + pGubun + "&modifyMovie=Y", false);
                 xmlhttp.send(xmldom);
 
                 if (xmlhttp.responseText == "OK") {
@@ -164,6 +178,7 @@
                     alert("<spring:message code='ezBoard.hsb08'/>");
                     
                     window.opener.window_reload();
+                    window.opener.opener.getBoardList();
                     window.close();
                 }
                 else {
@@ -209,10 +224,10 @@
 		    function makeThumbnail(videoID) {
 			    var canvas = document.createElement("CANVAS");
 			    var video = document.getElementById(videoID);
-			 	// 썸네일 이미지의 크기는 71.4px * 50px
-			 	canvas.width = 71.4;
-			 	canvas.height = 50;
-			    canvas.getContext("2d").drawImage(video, 0, 0, 71.4, 50);
+			 	// 썸네일 이미지의 크기는 200px * 160px
+			 	canvas.width = 200;
+			 	canvas.height = 160;
+			    canvas.getContext("2d").drawImage(video, 0, 0, 200, 160);
 			    
 			 	return canvas.toDataURL();
 			}

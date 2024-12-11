@@ -23,6 +23,8 @@ public class SurveyItemSearchVO {
 	/** 2024-07-11 전인하 - 설문 > 지정공개 대상자 리스트 */
 	private List<Long> surveyResultIds;
 	private int userMode;
+
+	private String filterStatus; // 상태 필터
 	
 	public SurveyItemSearchVO() {}
 	
@@ -193,5 +195,13 @@ public class SurveyItemSearchVO {
 
 	public void setSurveyResultIds(List<Long> surveyResultIds) {
 		this.surveyResultIds = surveyResultIds;
+	}
+
+	public String getFilterStatus() {
+		return filterStatus;
+	}
+
+	public void setFilterStatus(String filterStatus) {
+		this.filterStatus = filterStatus;
 	}
 }

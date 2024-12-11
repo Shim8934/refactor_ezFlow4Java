@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezBoard.vo;
 
+import java.util.List;
+
 public class BoardLineReplyVO {
 	
 	/** 한줄댓글아이디*/
@@ -29,6 +31,14 @@ public class BoardLineReplyVO {
 
 	// 2023-10-30 전인하 - 이모티콘
 	private String imageContent;
+	/** 댓글 첨부파일 리스트 */
+	private List<BoardReplyAttachVO> replyAttach;
+	
+	/** 댓글 첨부 정보를 JOIN으로 받기 위한 DB 맵핑용 변수 */
+	private String fileName;
+	private String fileSize;
+	private String filePath;
+	private String fileSN;
 	
 	public String getReplyID() {
 		return replyID;
@@ -120,5 +130,45 @@ public class BoardLineReplyVO {
 	}
 	public void setImageContent(String imageContent) {
 		this.imageContent = imageContent;
+	}
+
+	public List<BoardReplyAttachVO> getReplyAttach() {
+		return replyAttach;
+	}
+
+	public void setReplyAttach(List<BoardReplyAttachVO> replyAttach) {
+		this.replyAttach = replyAttach;
+	}
+
+	public String getFilePath() {
+		return filePath;
+	}
+
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
+	}
+
+	public String getFileSN() {
+		return fileSN;
+	}
+
+	public void setFileSN(String fileSN) {
+		this.fileSN = fileSN;
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
+	public String getFileSize() {
+		return fileSize;
+	}
+
+	public void setFileSize(String fileSize) {
+		this.fileSize = fileSize;
 	}
 }

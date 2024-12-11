@@ -181,6 +181,7 @@
 			var isOpenWindow;
 			var useKeywordFlag = "<c:out value='${useKeyword}'/>"; // 키워드 사용여부 (Y/N)
 			var boardViewForm = "${boardViewForm}";
+			var myBoardScrapFlag = "<c:out value='${MyBoardScrapFlag}'/>" // 스크랩 테넌트 컨피그 (TYPE1 / TYPE2 /NONE)
 			
 		    window.onresize = Window_resize;
 		    document.onselectstart = function () { return false; };
@@ -481,7 +482,6 @@
 		        MailOptionHidden();
 		    }
 
-
 			function getBoardList_album(xml) {
 				firstFlag = false;
 				var cntNode = SelectSingleNodeNew(xml, "DOCLIST/TOTALCNT");
@@ -532,27 +532,32 @@
 						var imgSrc = GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[0], "DATA5")[0].textContent;
 						var readFlag = GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[0], "DATA8")[0].textContent;
 						var writeDate = GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[0], "DATA8")[0].textContent;
+						var addThumbnail = GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[0], "DATA9")[0].textContent;
+						var thumbnailExt = GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[0], "DATA10")[0].textContent;
 						var Filename = imgSrc.split('/')[7];
-						imgSrc = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + encodeURI(boardID) +
-								"&fileName=s_" + encodeURI(Filename.substring(0, Filename.lastIndexOf(".") + 1) + "png");
+						if (addThumbnail == "Y") {
+							imgSrc = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + encodeURI(boardID) +
+							"&fileName=s_" + encodeURI(Filename.substring(0, Filename.lastIndexOf(".") + 1) + thumbnailExt);
+						} else {
+							imgSrc = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + encodeURI(boardID) +
+							"&fileName=s_" + encodeURI(Filename.substring(0, Filename.lastIndexOf(".") + 1) + "png");	
+						}
 
 						listXML += "<div class='boardAlbumDiv' onclick='selectAlbumDiv(this); ItemPreviewRead_AlbumClick(this);' ondblclick='ItemRead_onclick(this)' data1='" + boardID + "' data2='" + itemID + "'>";
 						listXML += "<p style='position: relative; display: flex; justify-content: center; align-items: center;'>";
 						listXML += "<img class='albumThumbImg' src='" + imgSrc + "'/>";
-						listXML += "<img src='/images/playButton_small.png' style='position: absolute;left: 50%;top: 50%;transform: translate(-50%, -50%);'>";
+						if (addThumbnail != "Y") {
+							listXML += "<img src='/images/playButton_small.png' style='position: absolute;left: 50%;top: 50%;transform: translate(-50%, -50%);'>";
+						}
 						listXML += 	"</p>";
 						listXML += "<div class='infoDiv'>";
 						listXML += "<span style='height:20px; display: flex; justify-content: space-between; align-items: center;'>";
-						if (getColNameIndex(xmlDoc, "READCOUNT") != -1) {
-							listXML += "<img src='/images/icon_preview.png' style='margin-right: 5px;'>";
-							listXML += "<span style='vertical-align:top;'></span>";
-							listXML += GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[getColNameIndex(xmlDoc, "READCOUNT")], "VALUE")[0].textContent;
-						}	
+						listXML += "<img src='/images/icon_preview.png' style='margin-right: 5px;'>";
+						listXML += "<span style='vertical-align:top;'></span>";
+						listXML += GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[getColNameIndex(xmlDoc, "READCOUNT")], "VALUE")[0].textContent;
 						listXML += "</span>";
 						listXML += "<span style='height:20px; display: flex; align-items: center;vertical-align:top;'>";
-						if (getColNameIndex(xmlDoc, "WRITEDATE") != -1) {
-							listXML += GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[getColNameIndex(xmlDoc, "WRITEDATE")], "VALUE")[0].textContent;
-						}
+						listXML += GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[getColNameIndex(xmlDoc, "WRITEDATE")], "VALUE")[0].textContent;
 						listXML += "</span>";
 						listXML += "</div>";
 						listXML += "<p class='topInfoP'><input type='checkbox' id='" + itemID + "," + writerID + ";' onclick='selectAlbumCheckBox(this, event)'>";
@@ -616,9 +621,8 @@
 				}
 				return -1;
 			}
-
-
-			var BlockSize = 10;
+			
+		    var BlockSize = 10;
 		    function td_Create1(strtext) {
 		        document.getElementById("tblPageRayer").innerHTML = strtext;
 		    }
@@ -1319,6 +1323,65 @@
 				})
 			}
 			
+		    /*  2023-05-22 기민혁 - 나의스크랩함 나의스크랩 추가 버튼 클릭시 동작 */
+    	    function SaveScrapMyBoard() {
+    	    	var arrList = new Array();
+	            var strItemList = "";
+	            var i = 0;
+	            arrList = strListInfo.split(";");
+
+				if (Read_FG != "true") {
+					alert("<spring:message code='ezBoard.t202' />");
+					return;
+				}
+
+	            if(arrList.length == "1"){
+	            	alert("<spring:message code='ezBoard.kmh15'/>");
+	            	return;
+	            }
+
+	            for (i = 0; i < arrList.length - 1; i++) {
+		            strItemList += arrList[i].split(",")[0] + ";";
+		        }
+
+                if (myBoardScrapFlag == "TYPE1") {
+                    $.ajax({
+                        type : "GET",
+                        dataType : "json",
+                        async : false,
+                        url : "/ezBoard/setScrapItemAll.do",
+                        data : { 
+                                itemIDList  : strItemList,
+                                boardID     : pBoardID
+                                },
+                        success: function(result) {
+                            if (result.status != "error") {
+                                if (result.failCount > 0) {
+                                    var pAlertContent = "<spring:message code='ezBoard.kmh44'/> " + result.failCount + "<spring:message code='ezBoard.kmh45'/>";
+                                    alert(pAlertContent);
+                                } else {
+                                    alert("<spring:message code='ezBoard.kmh47' />");
+                                }
+                            } else {
+                                alert("<spring:message code='ezBoard.kmh46' />");
+                            }
+                        },
+                        error : function(error) {
+                            console.log(error);
+                        }			
+                    });
+                
+                } else if (myBoardScrapFlag == "TYPE2") {
+                    var url = "/ezBoard/selUserScrapCont.do";
+                    ContOpen = GetOpenWindow(url + "?itemID=" + encodeURIComponent(strItemList) + "&boardID=" + encodeURIComponent(pBoardID), "selUserCont", 500, 460, "NO");
+                    try { 
+                        ContOpen.focus()
+                    } catch (e) { 
+                        console.log(e);
+                    }
+                }
+    	    }
+
 		</script>
 	</head>
 	<c:choose>
@@ -1376,6 +1439,9 @@
 		        <c:if test="${boardInfo.boardAdmin_FG == true && (boardInfo.likeFlag == 'Y' || boardInfo.disLikeFlag == 'Y')}">
 		        	<li id="likeAndDisLikeBtn" ><span onClick="likeAndDisLikeList()"><spring:message code='ezBoard.kmh09' /></span></li> 
 		        </c:if>
+		        <c:if test="${MyBoardScrapFlag ne 'NONE'}">
+		        	<li><span onClick="SaveScrapMyBoard()"><spring:message code='ezBoard.kmh13' /></span></li>
+				</c:if>
 				<div id="right" class="sub_frameIcon" style="float:right">	
 					<div class="sub_frameIconUL" style="width:57px !important">
 					   	<p class="frameIconLI"><span class="icon16 btn_noframe" id="PreViewNone" onclick="PreviewRayerChange('NONE')"></span></p>

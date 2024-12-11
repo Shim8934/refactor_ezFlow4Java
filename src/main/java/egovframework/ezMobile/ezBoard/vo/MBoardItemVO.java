@@ -143,6 +143,8 @@ public class MBoardItemVO {
 	private String notiStart;
 	/** 2023-09-25 민지수 - 공지사항 기간설정 종료날짜 */
 	private String notiEnd;
+	/** 2024-11-12 박기범 - 게시판 공개/비공개 */
+	private String publicFlag = "Y";
 	/** 게시물 수정자 ID */
 	private String updaterID;
 	/** 게시물 수정자 이름 */
@@ -573,6 +575,12 @@ public class MBoardItemVO {
 	}	
 	public void setNotiEnd(String notiEnd) {
 		this.notiEnd = notiEnd;
+	}
+	public String getPublicFlag() {
+		return publicFlag;
+	}
+	public void setPublicFlag(String publicFlag) {
+		this.publicFlag = publicFlag;
 	}
 	public String getUpdaterID() {
 		return updaterID;

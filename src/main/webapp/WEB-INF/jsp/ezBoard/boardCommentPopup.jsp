@@ -90,6 +90,11 @@
 			var parentReplyID = "";
 			var replyModifyArray = new Array(); // 2023-08-09 임정은 - 답글 수정 기능을 위한 배열 추가
 			var commentSort = "earliest"; // 댓글 정렬 기준 : earliest(등록순) / latest(최신순)
+			
+			var attachmentFlag = "${boardInfo.attachmentFlag}"; // 게시판 첨부파일 사용여부(Y/N)
+			var attachLimit = "${boardInfo.attachSizeLimit}"; // 첨부파일 크기 limit
+			var attachFileNameMaxLength = Number("${attachFileNameMaxLength}");// 첨부파일명 글자수 제한 limit
+			var totalFileSize = 0; // 현재 총 첨부파일 사이즈
 
 			$(document).ready(function(){
 				rsa.setPublic(document.getElementById('publicModulus').value, document.getElementById('publicExponent').value);
@@ -136,7 +141,7 @@
                                 <%-- 2023-11-07 전인하 - 게시판 > 이모티콘 아이콘 삽입 --%>
                                 <div class="emoticonRelative">                                       
                                     <img id="_addEmoticon" class="_addEmoticon" src="/images/poll/add_emo_vote.png" onclick="addSticker(this)">
-                                    <textarea id="onelinereply" rows="3" style = "resize:none; width: calc(100% - 45px);" maxlength="600"></textarea>
+                                    <textarea id="onelinereply" rows="3" style = "resize:none; width: calc(100% - 45px);" maxlength="500"></textarea>
                                 </div>
 							</th>
 					</c:when>
@@ -146,7 +151,7 @@
                                 <%-- 2023-11-07 전인하 - 게시판 > 이모티콘 아이콘 삽입 --%>
                                 <div class="emoticonRelative">								    
                                     <img id="_addEmoticon" class="_addEmoticon" src="/images/poll/add_emo_vote.png" onclick="addSticker(this)">
-                                    <textarea id="onelinereply" rows="3" style = "resize:none; width: 90%;" maxlength="600"></textarea>
+                                    <textarea id="onelinereply" rows="3" style = "resize:none; width: 90%;" maxlength="500"></textarea>
                                 </div>
 							</th>
 					</c:otherwise>	
@@ -157,6 +162,9 @@
 					</c:when>
 					<c:otherwise>
 							<th style="text-align:center;border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2; border-right:1px solid #e2e2e2; width:15%;">
+							    <c:if test='${boardInfo.attachmentFlag eq "Y"}'>
+                                    <a class='imgbtn' style="vertical-align: middle"><span onclick="btnfileup('commentFile')"><spring:message code='ezBoard.commentAttach.JIH01' /></span></a><br/>
+                                </c:if>
 								<a class='imgbtn' style="vertical-align: middle"><span onclick="Save_OneLineReply(this)"><spring:message code='ezBoard.t321' /></span></a>
 							</th>
 						</tr>
@@ -169,11 +177,22 @@
 								border-bottom:1px solid #e2e2e2; padding-top:0px; padding-bottom:4px; vertical-align: middle">
 							<span style = "font-weight:normal; display:inline-block; margin-top:2px"><spring:message code='ezBoard.t438' />&nbsp;</span>
 							<span><input type="password" id="txtPassWord" maxlength="20" size="20" />&nbsp;</span>
+							<c:if test='${boardInfo.attachmentFlag eq "Y"}'>
+                                <a class='imgbtn' style="vertical-align: middle"><span onclick="btnfileup('commentFile')"><spring:message code='ezBoard.commentAttach.JIH01' /></span></a>
+                            </c:if>
 							<a class='imgbtn' style="vertical-align: middle"><span id="replySaveBtn" onclick="Save_OneLineReply(this)"><spring:message code='ezBoard.t321' /></span></a>
 						</th>
 					</tr>
 				</c:if>
 			</table>
+			
+            <c:if test='${boardInfo.attachmentFlag eq "Y"}'>
+                <%-- 첨부파일 버튼 --%>
+                <input id="commentFile" type="file" multiple="multiple" onchange="filechange(event)" style="display:none"/>
+                <input id="commentListFile" type="file" multiple="multiple" onchange="filechange(event)" style="display:none"/>
+                <%-- 댓글 첨부 리스트 --%>
+                <div id="commentAttach"></div>
+            </c:if>
             <div class="commentSort">
                 <span id="earliest" class="checked" onclick="boardCommentSort()"><spring:message code='ezBoard.commentSort.JIH001' /></span>
                 <span id="latest" onclick="boardCommentSort()"><spring:message code='ezBoard.commentSort.JIH002' /></span>

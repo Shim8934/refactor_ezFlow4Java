@@ -40,6 +40,8 @@
 <result property="title" 					column="TITLE" />
 <result property="boardID" 					column="BOARDID" />
 <result property="filePath" 				column="FILEPATH" />
+<result property="addThumbnail" 			column="ADDTHUMBNAIL" />
+<result property="thumbnailExt" 			column="THUMBNAILEXT" />
 </resultMap>
 <resultMap class="PortletInfoVO" id="PortletOrderVO">
 <result property="portletId" 				column="PORTLET_ID" />
@@ -116,6 +118,7 @@
 <result property="boardId" 				column="BOARDID" />
 <result property="gubun" 				column="GUBUN" nullValue=""/>
 <result property="writerName2" 			column="WRITERNAME2" />
+<result property="publicFlag" 			column="PUBLICFLAG" />
 </resultMap>
 <resultMap class="PortalUserInfoVO" id="PortalUserInfoVO">
 <result property="userName"				column="USER_NAME"/>
@@ -846,7 +849,9 @@ AND
 			A.BOARDID,
 			A.ITEMID,
 			A.TITLE,
-			B.FILEPATH
+			B.FILEPATH,
+			B.ADDTHUMBNAIL,
+			B.THUMBNAILEXT
 		FROM
 			TBL_BOARD_ITEM A
 		INNER JOIN
@@ -1305,6 +1310,18 @@ AND
 		A.theme_content4 AS theme_content,
 	]]>
 	</isEqual>
+	<isEqual property="lang" compareValue="5">
+	<![CDATA[
+		A.theme_name2 AS theme_name,
+		A.theme_content4 AS theme_content,
+	]]>
+	</isEqual>
+	<isEqual property="lang" compareValue="6">
+	<![CDATA[
+		A.theme_name2 AS theme_name,
+		A.theme_content4 AS theme_content,
+	]]>
+	</isEqual>
 	<![CDATA[
 	    ifnull(D.is_default, 0) as theme_used,
 	    B.theme_default,
@@ -1681,7 +1698,8 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 			A.startdate,
 			A.ATTACHMENTS,
 			A.CONTENT,
-			C.GUBUN
+			C.GUBUN,
+			A.PUBLICFLAG
 		FROM
 			TBL_BOARD_ITEM A
 		JOIN
@@ -2539,6 +2557,18 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 			B.theme_content4 AS themecontent,
 		]]>
 		</isEqual>
+		<isEqual property="lang" compareValue="5">
+		<![CDATA[
+			B.theme_name2 AS themename,
+			B.theme_content4 AS themecontent,
+		]]>
+		</isEqual>
+		<isEqual property="lang" compareValue="6">
+		<![CDATA[
+			B.theme_name2 AS themename,
+			B.theme_content4 AS themecontent,
+		]]>
+		</isEqual>
 		<![CDATA[
 			    A.theme_used AS themeused,
 			    A.theme_default AS themedefault
@@ -2652,7 +2682,8 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 			A.WRITERNAME2,
 			DATE_ADD(A.STARTDATE, interval +#v_OFFSETMIN# minute) as STARTDATE,
 			A.TITLE,
-			C.GUBUN
+			C.GUBUN,
+			A.PUBLICFLAG
 		FROM
 			TBL_BOARD_ITEM A 
 		JOIN (
@@ -2803,7 +2834,8 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 			A.ITEMID,
 			A.BOARDID,
 			B.GUBUN,
-			A.WRITERNAME2
+			A.WRITERNAME2,
+			A.PUBLICFLAG
 		FROM
 			TBL_BOARD_ITEM A
 		JOIN

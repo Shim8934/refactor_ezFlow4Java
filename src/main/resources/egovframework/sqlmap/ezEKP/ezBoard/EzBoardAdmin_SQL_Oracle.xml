@@ -2469,7 +2469,8 @@
 		          	MAILFG_COMMENT = #v_MAILFG_COMMENT#,
 	      			REACTFLAG = #v_REACTFLAG#,
 	      			USEKEYWORD = #v_USEKEYWORD#,
-		          	ATTACHMENTFLAG = #v_ATTACHMENTFLAG#
+		          	ATTACHMENTFLAG = #v_ATTACHMENTFLAG#,
+	      			PUBLICFLAG = #v_PUBLICFLAG#
 	    		WHERE
 	    			TENANT_ID = #v_TENANTID#
 	    		AND  
@@ -2992,4 +2993,16 @@
 				TENANT_ID = #tenantID#
  		]]>
 	</select>
+	
+	<delete id="EzBoardAdminDAO.deleteScrapBoard" parameterClass="String">
+		DELETE
+		FROM TBL_BOARDITEM_SCRAP
+		WHERE BOARDID = #boardID#
+	</delete>
+
+	<delete id="EzBoardAdminDAO.deleteScrapContBoard" parameterClass="String">
+		DELETE
+		FROM TBL_USERSCRAPCONTLIST
+		WHERE BOARDID = #boardID#
+	</delete>
 </sqlMap>

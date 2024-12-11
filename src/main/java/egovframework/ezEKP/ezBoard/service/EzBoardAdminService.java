@@ -156,4 +156,8 @@ public interface EzBoardAdminService {
 	public int getBoardItemCnt(String boardID, int tenantId) throws Exception;
 
 	public String saveHWP(String boardID, String formContent, String realPath, int tenantID) throws Exception;
+	
+	void deleteScrapBoard(String boardID) throws Exception;
+
+	void deleteScrapContBoard(String boardID) throws Exception;
 }

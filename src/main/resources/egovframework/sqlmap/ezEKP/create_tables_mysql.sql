@@ -383,6 +383,24 @@ CREATE TABLE `jmocha_address_simple` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `jmocha_address_last_sent`
+--
+
+DROP TABLE IF EXISTS `jmocha_address_last_sent`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `jmocha_address_last_sent` (
+  `SEQUENCE` bigint(20) NOT NULL AUTO_INCREMENT,
+  `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
+  `CN` varchar(80) NOT NULL,
+  `name` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `email` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `sent_date` datetime DEFAULT utc_timestamp,  -- 기본값으로 현재 날짜와 시간 설정 (utc)
+  PRIMARY KEY (`SEQUENCE`) -- 삽입, 삭제가 빈번한 테이블이라, UNIQUE KEY 사용하지 않음. (* UNIQUE: TENANT_ID, CN, email)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `jmocha_alias`
 --
 
@@ -390,6 +408,20 @@ DROP TABLE IF EXISTS `jmocha_alias`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `jmocha_alias` (
+  `target_address` varchar(100) NOT NULL,
+  `alias_address` varchar(100) NOT NULL,
+  PRIMARY KEY (`target_address`,`alias_address`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `jmocha_alias_retire`
+--
+
+DROP TABLE IF EXISTS `jmocha_alias_retire`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `jmocha_alias_retire` (
   `target_address` varchar(100) NOT NULL,
   `alias_address` varchar(100) NOT NULL,
   PRIMARY KEY (`target_address`,`alias_address`)
@@ -3682,6 +3714,7 @@ CREATE TABLE `tbl_board_boardinfo` (
   `MAILFG_COMMENT` varchar(2) DEFAULT NULL,
   `REACTFLAG` varchar(1) DEFAULT NULL,
   `ATTACHMENTFLAG` char(1) DEFAULT 'Y',
+  `PUBLICFLAG` char(1) DEFAULT 'N',
   PRIMARY KEY (`BOARDID`(255),`TENANT_ID`),
   KEY `idx_companyid` (`COMPANYID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -3844,6 +3877,7 @@ CREATE TABLE `tbl_board_item` (
   `DELFLAG` char(1) DEFAULT NULL,
   `NTSTARTDATE` varchar(40) DEFAULT NULL,
   `NTENDDATE` varchar(40) DEFAULT NULL,
+  `PUBLICFLAG`char(1) DEFAULT 'Y',
   PRIMARY KEY (`TENANT_ID`,`ITEMID`),
   KEY `writedate` (`WRITEDATE`,`PARENTWRITEDATE`),
   KEY `writedate1` (`WRITEDATE`),
@@ -4041,6 +4075,7 @@ CREATE TABLE `tbl_board_item_temp` (
   `EXTENSIONATTRIBUTE9` varchar(500) CHARACTER SET utf8mb4 DEFAULT NULL,
   `EXTENSIONATTRIBUTE10` varchar(500) CHARACTER SET utf8mb4 DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
+  `PUBLICFLAG`char(1) DEFAULT 'Y',
   PRIMARY KEY (`TENANT_ID`,`ITEMID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -15538,6 +15573,7 @@ CREATE TABLE `TBL_SYSTEMCONFIG` (
   `TENANT_ID` mediumint(5) NOT NULL,
   `COMPANY_ID` varchar(80) NOT NULL,
   `TYPECODE` varchar(80) DEFAULT NULL,
+  `ISDELETEBLOCK` CHAR(1) DEFAULT 'N',
   PRIMARY KEY (`CODE`,`TENANT_ID`,`COMPANY_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -15691,3 +15727,35 @@ CREATE TABLE JMOCHA_MAIL_BLOCKED (
     MESSAGE_ID varchar(500) NOT NULL,
      PRIMARY KEY (MESSAGE_ID)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+DROP TABLE IF EXISTS TBL_BOARD_COMMENT_ATTACHMENTS;
+CREATE TABLE TBL_BOARD_COMMENT_ATTACHMENTS (
+  `ITEMID` varchar(76) NOT NULL COMMENT "게시글 아이디",
+  `REPLYID` varchar(76) NOT NULL COMMENT "댓글 아이디",
+  `SN` mediumint(5) NOT NULL COMMENT "첨부파일 순번",
+  `FILEPATH` varchar(800) DEFAULT NULL COMMENT "첨부파일 저장경로",
+  `FILESIZE` varchar(100) DEFAULT NULL COMMENT "첨부파일 크기",
+  `FILENAME` varchar(255) DEFAULT NULL COMMENT "첨부파일 이름",
+  `TENANT_ID` mediumint(5) NOT NULL COMMENT "테넌트 아이디",
+  PRIMARY KEY (`ITEMID`, `REPLYID`, `SN`, `TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT "게시판 댓글 첨부파일 정보 테이블";
+
+--
+-- Table structure for table `TBL_C_CLUBGUEST_ONELINEREPLY`
+--
+DROP TABLE IF EXISTS `TBL_C_CLUBGUEST_ONELINEREPLY`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE TBL_C_CLUBGUEST_ONELINEREPLY (
+    ITEMID INT NOT NULL COMMENT "방명록 아이디",
+    REPLYID VARCHAR(38) NOT NULL COMMENT "방명록 댓글 아이디",
+    C_CLUBNO VARCHAR(38) NOT NULL COMMENT "커뮤니티 아이디",
+    USERID VARCHAR(50) COMMENT "방명록 작성자 아이디",
+    USERNAME VARCHAR(50) COMMENT "방명록 작성자 이름",
+    USERNAME2 VARCHAR(50) COMMENT "방명록 작성자 이름 다국어",
+    WRITEDATE DATETIME COMMENT "방명록 댓글 작성날짜",
+    CONTENT VARCHAR(300) COMMENT "방명록 댓글 내용",
+    TENANT_ID INT DEFAULT 0 COMMENT "테넌트 아이디",
+    COMPANYID VARCHAR(80) COMMENT "회사 아이디",
+    PRIMARY KEY (`ITEMID`,`REPLYID`,`TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT "커뮤니티 방명록 댓글 정보 테이블";

@@ -186,5 +186,8 @@ var SurveyMessages = {
 	strDateTimeValidation : "The start date must be earlier than the end date.",
 	strQuestionImage : "Replace question with an image",
 	strQuestionFileAttach : "Attach a file to the question",
-	strAllowedImageForTitle : "Only png, jpeg, and jpg are allowed."
+	strAllowedImageForTitle : "Only png, jpeg, and jpg are allowed.",
+    /* 2024-11-25 박기범 - 리스트 상태값 추가 */
+    strLangPGB01 : "Participation",
+    strLangPGB02 : "non-participation"
 }

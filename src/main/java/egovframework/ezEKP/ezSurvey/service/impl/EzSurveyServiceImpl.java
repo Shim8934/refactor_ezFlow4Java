@@ -779,7 +779,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject getItemsBySearching(String pageMode, int currentPage, int listCntSize, String title, String creatorName, String startDate, String endDate, String srchMode, String srchOption, String order, String column, LoginVO userInfo, int userMode) throws Exception {
+	public JSONObject getItemsBySearching(String pageMode, int currentPage, int listCntSize, String title, String creatorName, String startDate, String endDate, String srchMode, String srchOption, String order, String column, LoginVO userInfo, int userMode, String filterStatus) throws Exception {
 		JSONObject result   = new JSONObject();
 		String userId       = userInfo.getId();
 		int tenantId        = userInfo.getTenantId();
@@ -799,12 +799,15 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			switch(column) {
 				case "at" : orderCol = "attach_flag"; break;
 				case "cd" : orderCol = "create_date"; break;
+                case "surveyId" : orderCol = "SURVEY_ID"; break;
 				case "tt" : orderCol = "title"; break;
 				case "ed" : orderCol = "end_date"; break;
 				case "ut" : orderCol = "participate_flag"; break;
 				case "ct" : orderCol = ("user_name" + primary); break;
 				case "pl" : orderCol = "result_public_flag"; break;
 				case "an" : orderCol = "anonymous_flag"; break;
+                case "participants" : orderCol = "PARTICIPANTS"; break;
+                case "participation" : orderCol = "PARTICIPATION"; break;
 				default   : orderCol = "title"; break;
 			}
 		}
@@ -828,6 +831,8 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			searchVO.setSurveyResultIds(listReceivedResultSurvey);
 			searchVO.setToday(timeUTC);
 		}
+        
+        searchVO.setFilterStatus(filterStatus);
 		
 		totalItems  = ezSurveyDAO.getTotalReceivedSurveyItemsCnt(searchVO);
 		totalPages  = (totalItems + listCntSize - 1) / listCntSize;

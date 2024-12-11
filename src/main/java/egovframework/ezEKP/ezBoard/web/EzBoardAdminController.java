@@ -491,6 +491,12 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 			ezBoardAdminService.deleteNoticeBoard(userInfo.getTenantId(), userInfo.getCompanyID());
 		}
 		
+		/* 스크랩 게시물 삭제 */
+		ezBoardAdminService.deleteScrapBoard(boardID);
+
+		/* 스크랩함 게시물 삭제 */
+		ezBoardAdminService.deleteScrapContBoard(boardID);
+		
 		logger.debug("deleteBoard ended");
 	}
 
@@ -1016,7 +1022,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		int tabNum = 3; //탭 개수
 		
 		/* 2023-11-08 민지수 - 카테고리게시판으로 게시판 유형을 변경한 경우, 즐겨찾기와 마이게시판 목록에서 해당 게시판 제거 */
-		if (boardpro.getGuBun().equals("10")) {
+		if (boardpro.getGuBun() != null && boardpro.getGuBun().equals("10")) {
 			ezBoardAdminService.deleteMyBoardData("MyBoards", boardPropertyVO.getBoardID(), userInfo.getTenantId());
 			ezBoardAdminService.deleteMyBoardData("MyBoardTree", boardPropertyVO.getBoardID(), userInfo.getTenantId());
 		}

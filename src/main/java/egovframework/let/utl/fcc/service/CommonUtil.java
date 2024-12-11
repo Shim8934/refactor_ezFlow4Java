@@ -1588,6 +1588,8 @@ public class CommonUtil {
 		html = html.replace("&oslash;", "ø");
 		html = html.replace("&thorn;", "þ");
 		html = html.replace("&amp;", "&");
+		html = html.replace("&#034;", "\"");
+		html = html.replace("&#039;", "'");
 		
 		String result = html;
 		

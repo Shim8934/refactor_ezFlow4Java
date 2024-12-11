@@ -1,7 +1,9 @@
 package egovframework.ezMobile.ezBoard.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import org.json.simple.JSONObject;
 
@@ -116,4 +118,12 @@ public interface MBoardService {
 	public int getAllBoardItemListCount(String userId, String companyId, int tenantId) throws Exception;
 
 	List<MBoardListVO> getAllBoardItemList(String userId, String lastDate, String deptId, String companyId, int tenantId, String offSet) throws Exception;
+
+	/* 2023-11-21 기민혁 - 모바일 스크랩 리스트 호출 */
+	List<MBoardNewListVO> getScrapBoardList(String userID, String deptID, String companyID, int tenantID, String offset, String pSearchText, ArrayList<String> scrapBoardListView_FG) throws Exception;
+
+	/* 2023-11-21 기민혁 - 모바일 스크랩 리스트 count */
+	Integer getScrapBoardListCount(String userID, String companyID, int tenantID, String pSearchText, ArrayList<String> scrapBoardListView_FG) throws Exception;
+
+	public Map<String, ArrayList<String>> getScrapBoardListReadView_FG(MCommonVO info) throws Exception;
 }

@@ -82,7 +82,8 @@
 		<result property="totalUser"        column="total_user"          columnIndex="26"/>
 		<result property="mailFlag"         column="mail_flag"           columnIndex="27"/>
 		<result property="popupFlag"        column="popup_flag"          columnIndex="28"/>
-		
+		<result property="participants"        column="participants"          columnIndex="29"/>
+		<result property="participation"        column="participation"          columnIndex="30"/>
 	</resultMap>
 	
 	<!-- AttachVO resultMap -->
@@ -201,8 +202,18 @@
 			response_flag,
 			total_user,
 			mail_flag,
-			popup_flag
+			popup_flag,
+			IFNULL(PARTICIPANTS, 0) AS PARTICIPANTS,
+			IFNULL(PARTICIPATION, 0) AS PARTICIPATION
 		from tbl_survey
+				 LEFT JOIN (SELECT SURVEY_ID                                           SI,
+								   COUNT(DISTINCT USER_ID)                           PARTICIPANTS,
+								   MAX(CASE WHEN USER_ID = #userId# then 1 else 0 end) PARTICIPATION,
+								   COMPANY_ID                                          C_ID,
+								   TENANT_ID                                           T_ID
+							FROM TBL_SURVEY_RESPONDENT
+							GROUP BY SURVEY_ID, COMPANY_ID, TENANT_ID) TSR
+						   ON SURVEY_ID = TSR.SI AND TENANT_ID = TSR.T_ID AND COMPANY_ID = TSR.C_ID
 	</sql>
 	
 	<sql id="surveyItemList">
@@ -216,6 +227,23 @@
 				<isNotEqual property="primary" compareValue="1">user_name2 like concat('%', concat(#creatorName#, '%'))</isNotEqual>
 			</isEqual>
 		</isEqual>
+		<isNotEmpty property="filterStatus">
+			<isNotEqual property="filterStatus" compareValue="ALL" prepend=" and ">
+				<![CDATA[
+				CASE
+					WHEN DRAFT_FLAG = 1
+					   THEN 'TMP'
+					WHEN NOW() < DATE_ADD(START_DATE, INTERVAL #offset# MINUTE)
+					   THEN 'WAIT'
+					WHEN NOW() <= DATE_ADD(END_DATE, INTERVAL #offset# MINUTE)
+					   THEN 'ING'
+					WHEN NOW() > DATE_ADD(END_DATE, INTERVAL #offset# MINUTE)
+					   THEN 'END'
+					ELSE 'END'
+				END  = #filterStatus#
+				]]>
+			</isNotEqual>
+		</isNotEmpty>
 		<isEqual property="searchMode" compareValue="2">
 			<isNotEmpty property="title"       prepend=" and ">title like concat('%', concat(#title#, '%'))</isNotEmpty>
 			<isNotEmpty property="creatorName" prepend=" and ">
@@ -770,7 +798,7 @@
 		<include refid="surveyItemList"/>
 	</select>
 	
-	<select id="EzSurveyDAO.getTotalReceivedSurveyItems" resultMap="surveyVO">
+	<select id="EzSurveyDAO.getTotalReceivedSurveyItems" resultMap="surveyVO" remapResults="true">
 		<include refid="surveySelect"/>
 		<include refid="surveyItemList"/>
 			order by
@@ -779,6 +807,7 @@
 		        <isNotEmpty property="orderCol">
 					<isEqual property="orderCol" compareValue="attach_flag">attach_flag</isEqual>
 					<isEqual property="orderCol" compareValue="create_date">create_date</isEqual>
+					<isEqual property="orderCol" compareValue="SURVEY_ID">SURVEY_ID</isEqual>
 					<isEqual property="orderCol" compareValue="title">CAST(SUBSTR(title, 1, 100) AS varchar(100))</isEqual>
 					<isEqual property="orderCol" compareValue="end_date">end_date</isEqual>
 					<isEqual property="orderCol" compareValue="participate_flag">participate_flag</isEqual>
@@ -786,6 +815,8 @@
 					<isEqual property="orderCol" compareValue="user_name2">user_name2</isEqual>
 					<isEqual property="orderCol" compareValue="result_public_flag">result_public_flag</isEqual>
 					<isEqual property="orderCol" compareValue="anonymous_flag">anonymous_flag</isEqual>
+					<isEqual property="orderCol" compareValue="PARTICIPANTS">PARTICIPANTS</isEqual>
+					<isEqual property="orderCol" compareValue="PARTICIPATION">PARTICIPATION</isEqual>
 					<isEqual property="orderSort" compareValue="DESC">DESC</isEqual>,
 					update_date desc, survey_id desc
 		      	</isNotEmpty>

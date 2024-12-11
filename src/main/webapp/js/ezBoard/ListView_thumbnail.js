@@ -715,21 +715,28 @@ function ListView() {
                     
                     /* 2018-11-06 홍승비 - 동영상게시판인 경우, 썸네일 경로에 s_붙이고 플레이버튼 표시 */
                     if (gubun == 7) {
+                    	var thumbFile = "";
+                    	if (getNodeText(oDatas[8]) == "Y") {
+                    		thumbFile = Filename.substring(0, Filename.lastIndexOf(".") + 1) + getNodeText(oDatas[9]);
+                    	} else {
+                    		thumbFile = Filename.substring(0, Filename.lastIndexOf(".") + 1) + "png";
+                    	}
                     	ImgElement.src = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + encodeURI(getNodeText(oDatas[0])) +
-                    	"&fileName=s_" + encodeURI(Filename.substring(0, Filename.lastIndexOf(".") + 1) + "png");              	
+                    	"&fileName=s_" + encodeURI(thumbFile);              	
                     	ImgElement.style.filter = "brightness(75%)";
                     	
-	                    var ImgElementPlay = document.createElement("IMG");
-	                    ImgElementPlay.src = "/images/playButton_small.png";
-	                    ImgElementPlay.style.position = "absolute";
-	                    ImgElementPlay.style.left = "24px";
-	                    ImgElementPlay.style.top = "13px";
-	                    
 	                    var imgCell = document.createElement("TD");
 	                    imgCell.style.borderBottom = "0px";
 	                    
 	                    ImgDiv.appendChild(ImgElement);
-	                    ImgDiv.appendChild(ImgElementPlay);
+	                    if (getNodeText(oDatas[8]) != "Y") {
+                    		var ImgElementPlay = document.createElement("IMG");
+		                    ImgElementPlay.src = "/images/playButton_small.png";
+		                    ImgElementPlay.style.position = "absolute";
+		                    ImgElementPlay.style.left = "24px";
+		                    ImgElementPlay.style.top = "13px";
+	                    	ImgDiv.appendChild(ImgElementPlay);
+                    	}
 	                    imgCell.appendChild(ImgDiv);
                     }
                     else {

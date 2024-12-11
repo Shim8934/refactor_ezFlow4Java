@@ -477,6 +477,8 @@ public interface EzCommonService {
 	// 2024-10-23 정지은 - 게시판 > 글 작성 시 파일첨부 가능여부 설정
 	public void addBoardAttachmentFlag() throws Exception;
 	
+	void addTblBoardInfoPublicFlag();
+	
 	/* 2024-10-21 한태훈 - 게시판 > 전체게시물 리스트 헤더 추가 */
 	public void insertAllBoardListOption() throws Exception;
 	/* 2024-10-17 한태훈 - 게시판 > 전체게시물 게시판정보 추가 */
@@ -488,4 +490,29 @@ public interface EzCommonService {
     public void createJmochaMailBlocked() throws Exception;
 	
 	public void insertModuleEditor() throws Exception;
+	
+	public void insertScrapTenantConfig() throws Exception;
+	
+	public void insertScrapTableHeader() throws Exception;
+	
+	public void createTblBoardScrap() throws Exception;
+	
+	public void createTblUserScrapCont() throws Exception;
+	
+	public void createTblUserScrapContList() throws Exception;
+
+	// 2024-10-23 전인하 - 게시판 > 댓글 첨부 테이블 추가
+	public void createTblBoardCommentAttachments() throws Exception;
+    
+	public void alterAddThumbnailForTPI() throws Exception;
+	
+	public void alterThumbnailExtForTPI() throws Exception;
+	
+	public void alterAttachmentsForCBoard() throws Exception;
+	
+	// 2024-11-26 한태훈 - 시스템 컨피그 > 삭제 차단 컬럼 추가
+	public void addIsDeleteBlockToSytemConfig() throws Exception;
+
+	// 2024-10-30 황인경 - 커뮤니티 > 방명록 > 댓글 테이블 추가
+	public void addTblCommunityClubguestOnelinereply() throws Exception;
 }
