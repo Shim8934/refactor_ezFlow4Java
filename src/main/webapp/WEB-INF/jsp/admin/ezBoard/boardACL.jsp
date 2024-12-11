@@ -735,7 +735,7 @@
 	            pwidth = parseInt(pwidth) / 2;
 	            pheigth = pheigth - 192;
 	            pwidth = pwidth - 260;
-	            window.open("/admin/ezBoard/boardUnderGroupCopy.do?boardID=" + encodeURIComponent(pBoardID) + "&isAllGroupBoard=${isAllGroupBoard}", "", "height=170,width=458px, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=" + pheigth + ",left = " + pwidth, "");
+	            window.open("/admin/ezBoard/boardUnderGroupCopy.do?boardID=" + encodeURIComponent(pBoardID) + "&isAllGroupBoard=${isAllGroupBoard}", "", "height=170,width=510px, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=" + pheigth + ",left = " + pwidth, "");
 	        }
 	        
 	        /* 2019-09-19 홍승비 - 권한그룹이 추가된 새로운 권한설정 기능 추가 */
