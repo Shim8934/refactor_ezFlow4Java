@@ -5924,7 +5924,7 @@
 	</select>
 	
 	<insert id="EzCommonDAO.insertServername">
-		INSERT INFO TBL_TENANT_SERVERNAME (SERVER_NAME, TENANT_ID)
+		INSERT INTO TBL_TENANT_SERVERNAME (SERVER_NAME, TENANT_ID)
 		VALUES ('127.0.0.1', 0);
 	</insert>
 	
