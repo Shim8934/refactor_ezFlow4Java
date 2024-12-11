@@ -2592,7 +2592,7 @@
 
 				var selRows = DocList.GetSelectedRows();
 				if (selRows.length === 0) {
-					var pAlertContent = "spring:message code='ezApprovalG.t99991'/>";
+					var pAlertContent = "<spring:message code='ezApprovalG.t99991'/>";
 					alert(pAlertContent);
 					return;
 				}
