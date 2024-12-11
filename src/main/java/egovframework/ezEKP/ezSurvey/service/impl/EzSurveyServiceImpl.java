@@ -1917,7 +1917,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			ResultViewPermissionVO var = resultViewList.get(i);
 			JSONObject elem = new JSONObject();
 			elem.put("userId", var.getCn());
-			if (userInfo.getLang() == "1") {
+			if (commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()).equals("1")) {
 				elem.put("userName", var.getCnName());
 			} else {
 				elem.put("userName", var.getCnName2());
