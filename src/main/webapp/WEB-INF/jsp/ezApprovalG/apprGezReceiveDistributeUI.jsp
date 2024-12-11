@@ -607,10 +607,10 @@
 	            }
 	
 	            if (CrossYN()) {
-	                var pAlertContent = "<spring:message code='ezApprovalG.t1361'/>" + "<br>" + "<spring:message code='ezApprovalG.t1362'/>";
+	                var pAlertContent = "<spring:message code='ezApprovalG.t1361'/>" + "<spring:message code='ezApprovalG.t1362'/>";
 	                var Ans = OpenInformationUI(pAlertContent, Complete_AddReceptAll);
 	            } else {
-	                var pAlertContent = "<spring:message code='ezApprovalG.t1361'/>" + "<br>" + "<spring:message code='ezApprovalG.t1362'/>";
+	                var pAlertContent = "<spring:message code='ezApprovalG.t1361'/>" + "<spring:message code='ezApprovalG.t1362'/>";
 	                var Ans = OpenInformationUI(pAlertContent);
 	
 	                if (!Ans) {

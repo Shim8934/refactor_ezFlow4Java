@@ -192,7 +192,7 @@
 	        var pDocSn = "<c:out value ='${docSN}'/>";
 	        var SusinGroupUseFlag = "<c:out value ='${susinGroupUseFlag}'/>";
 	        /* 2015-06-23 추가 - KSK */
-	        var T1361andT1362 = "<spring:message code='ezApprovalG.t1361'/>" + "<br>" + "<spring:message code='ezApprovalG.t1362'/>";
+	        var T1361andT1362 = "<spring:message code='ezApprovalG.t1361'/>" + "<spring:message code='ezApprovalG.t1362'/>";
 	        var SummaryOuterReceiverList = "";
 			var useAddressOpenAPI = "<c:out value ='${useAddressOpenAPI}'/>";
 			var checkdocinfo = false;
