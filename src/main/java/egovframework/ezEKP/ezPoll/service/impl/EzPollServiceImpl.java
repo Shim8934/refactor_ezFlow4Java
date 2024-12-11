@@ -520,7 +520,6 @@ public class EzPollServiceImpl implements EzPollService{
 			String deptID = loginvo.getDeptID();
 			String userID = loginvo.getId();			
 			
-			
 			try {
 				String depPath = ezOrganService.getDeptPath(deptID, tenantID);
 				listOfQuestion = getQuestionsTest(userID, depPath, companyID, deptID, tenantID, searchStr, primary, mode);

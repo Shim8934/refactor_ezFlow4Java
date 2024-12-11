@@ -3234,6 +3234,7 @@ public class EzPollController extends EgovFileMngUtil {
 		String targetDirFullPath = realPath + targetDirPath ;
 		String targetContent = "";
 		List<Map<String, String>> copyFilePathList = new ArrayList<>();
+		
 		// 댓글 이미지일 경우
 		if (folderName.equals("commentImages")) {
 			Map<String, String> copyMap = new HashMap<>();
@@ -3246,11 +3247,13 @@ public class EzPollController extends EgovFileMngUtil {
 			copyFilePathList.add(copyMap);
 			targetContent = targetDirPath + commonUtil.separator + fileName;
 			logger.debug("targetContent : {}", targetContent);
-		// 에디터 이미지일 경우
-		} else {
+		}
+		// 에디터 이미지일 경우 (uploadFile)
+		else {
 			org.jsoup.nodes.Document document = Jsoup.parse(content);
 			Elements elements = document.getElementsByTag("img");
 
+			// 에디터 본문 내부에 이미지가 존재하는 경우, 해당 이미지의 파일경로 변경
 			if (!elements.isEmpty()) {
 				for (org.jsoup.nodes.Element element : elements) {
 					Map<String, String> copyMap = new HashMap<>();
@@ -3262,10 +3265,13 @@ public class EzPollController extends EgovFileMngUtil {
 					element.attr("src", targetDirPath + commonUtil.separator + fileName);
 					copyFilePathList.add(copyMap);
 				}
-				Elements body = document.body().children();
-				targetContent = body.toString();
 			}
+			
+			/* 2024-12-11 홍승비 - 투표 > 에디터 본문 내부에 이미지가 없는 경우, 내용(content)을 저장하지 못하는 오류 분기 수정 */
+			Elements body = document.body().children();
+			targetContent = body.toString();
 		}
+		
 		// path를 바꿔준 최종 내용, 파일을 복사하기 위해 필요한 source와 target Path를 반환
 		PollFilePathVO pollFilePathVO = new PollFilePathVO(targetContent, copyFilePathList, targetDirFullPath);
 		return pollFilePathVO;

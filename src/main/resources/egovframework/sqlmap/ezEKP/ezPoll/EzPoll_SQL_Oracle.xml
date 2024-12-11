@@ -408,14 +408,14 @@
 			AND 
 				SEEN	  = 1
 		]]>			
-    </select> 
-     
+    </select>
+    
+	<!-- 2024-12-11 홍승비 - 투표 리스트 셀렉트 > 실제로 사용하지 않는 컬럼(content, filePath)을 셀렉트하지 않도록 수정, 오라클 쿼리의 CLOB 변환 오류 방지 -->
     <select id="EzPollDAO.getQuestionsTest" resultClass="PollQuestionVO">   
 		<![CDATA[
 			SELECT 
 				a.ID AS qstid,
 				a.TENANT_ID AS tenantid,
-				a.CONTENT AS content,
 				a.MULTI_SELECT AS multiselect,
 				a.CREATE_DATE AS createdate,
 				a.START_DATE AS startdate,
@@ -426,7 +426,6 @@
 				a.CREATOR AS creator,
 				a.CREATOR_NAME1 AS creatorname1,
 				a.CREATOR_NAME2 AS creatorname2,
-				a.FILE_PATH AS filepath,
 				a.RESULT_FIRST AS resultfirst,
 				a.IS_MODIFYING AS ismodifying,
 				a.SET_DATE AS setdate,
@@ -513,15 +512,15 @@
 	        		a.CREATOR_NAME2 LIKE '%' ||#search_str#|| '%'				
 		        ]]>
 			 </isNotEqual>
-		</isEqual>		
-    </select> 
+		</isEqual>
+    </select>
     
-    <select id="EzPollDAO.getAllQuestions" resultClass="PollQuestionVO">   
+    <!-- 2024-12-11 홍승비 - 투표 리스트 셀렉트 > 실제로 사용하지 않는 컬럼(content, filePath)을 셀렉트하지 않도록 수정, 오라클 쿼리의 CLOB 변환 오류 방지 -->
+    <select id="EzPollDAO.getAllQuestions" resultClass="PollQuestionVO">
 		<![CDATA[
 			SELECT DISTINCT
 				a.ID AS qstid,
 				a.TENANT_ID AS tenantid,
-				TO_CHAR(a.CONTENT) AS content,
 				a.MULTI_SELECT AS multiselect,
 				a.CREATE_DATE AS createdate,
 				a.START_DATE AS startdate,
@@ -532,7 +531,6 @@
 				a.CREATOR AS creator,
 				a.CREATOR_NAME1 AS creatorname1,
 				a.CREATOR_NAME2 AS creatorname2,
-				TO_CHAR(a.FILE_PATH) AS filepath,
 				a.RESULT_FIRST AS resultfirst,
 				a.IS_MODIFYING AS ismodifying,
 				a.SET_DATE AS setdate,
@@ -576,8 +574,8 @@
 	        		a.CREATOR_NAME2 LIKE '%' ||#search_str#|| '%'				
 		        ]]>
 			 </isNotEqual>
-		</isEqual>			
-    </select>     
+		</isEqual>
+    </select>
     
     <select id="EzPollDAO.getOwnQuestions" resultMap="pollQuestion">   
 		<![CDATA[
