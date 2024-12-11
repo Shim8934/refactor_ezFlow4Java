@@ -3950,7 +3950,7 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 --------------------------------------------------------
 
   CREATE TABLE "TBL_DELETECABINETINFO" 
-   (	"CABINETID" VARCHAR2(32 BYTE), 
+   (	"CABINETID" VARCHAR2(112 BYTE), 
 	"DELUSERID" VARCHAR2(50 BYTE), 
 	"IPADDRESS" VARCHAR2(50 BYTE), 
 	"COMPANYID" VARCHAR2(45 BYTE), 
