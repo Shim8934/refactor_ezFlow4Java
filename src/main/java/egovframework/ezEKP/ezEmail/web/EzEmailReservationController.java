@@ -198,12 +198,12 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		String bcc = "";
 		String attachCK = "";
 		long uid = 0;
-		String showDisplay = "";
+		// String showDisplay = "";
 		
 		String docHref = "";
 		String reSendFlag = "N";
 		String fileUploadType = "";
-		String strSelectHtml = "";
+		// String strSelectHtml = "";
 		
 		
 		// get user credentials
@@ -358,8 +358,8 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		
 		logger.debug("mailInnerDomain=" + mailInnerDomain + ",useEditor=" + useEditor + ",useSecureMail=" + useSecureMail + ",defaultFontAndSize" + defaultFontAndSize);
 		
-		String senderInfo = userInfo.getCompany() + ", " + userInfo.getDescription() + ", " + userInfo.getTitle();
-		logger.debug("senderInfo=" + senderInfo);
+		// String senderInfo = userInfo.getCompany() + ", " + userInfo.getDescription() + ", " + userInfo.getTitle();
+		// logger.debug("senderInfo=" + senderInfo);
 		
 		//메일 색상 관련 설정
 		String inMailColor = "808080";
@@ -522,9 +522,9 @@ public class EzEmailReservationController extends EgovFileMngUtil {
     			replyReadTime = "0";
     		}
             
-			if (message.getHeader("X-JMocha-EXT-SENDERNAME") != null) {
-				showDisplay = message.getHeader("X-JMocha-EXT-SENDERNAME")[0];
-			}
+			// if (message.getHeader("X-JMocha-EXT-SENDERNAME") != null) {
+				// showDisplay = message.getHeader("X-JMocha-EXT-SENDERNAME")[0];
+			// }
 		}
 		
 		String useFromAddress = ezCommonService.getTenantConfig("Use_FromAddress", loginInfo.getTenantId());
@@ -608,10 +608,10 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		model.addAttribute("bcc", bcc);
 		model.addAttribute("subject", subject);
 		model.addAttribute("encodedSubject", EgovStringUtil.getSpclStrCnvr(subject));
-		model.addAttribute("body", body);
-		model.addAttribute("attachCK", attachCK);
+		model.addAttribute("tempBody", body);
+		model.addAttribute("attach", attachCK);
 		model.addAttribute("pCDOMessageID", pCDOMessageID);
-		model.addAttribute("pReservedSaveTime", pReservedSaveTime);
+		model.addAttribute("delaySendDate", pReservedSaveTime);
 		model.addAttribute("stateName", stateName);
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("mailInnerDomain", mailInnerDomain);
@@ -630,7 +630,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		model.addAttribute("pBigAttachDownloadDay", pBigAttachDownloadDay);
 		model.addAttribute("displayNamePrintable", displayNamePrintable);
 		model.addAttribute("useMultiLangMail", useMultiLangMail);
-		model.addAttribute("cmd", cmd);
+		model.addAttribute("_cmd", cmd);
 		model.addAttribute("cmdOwn", cmdOwn);
 		model.addAttribute("url", url);
 		model.addAttribute("urlOwn", urlOwn);
@@ -640,7 +640,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		model.addAttribute("bodyType", bodyType);
 		model.addAttribute("replySendTime", replySendTime);
 		model.addAttribute("replyReadTime", replyReadTime);
-		model.addAttribute("senderInfo", senderInfo);
+		// model.addAttribute("senderInfo", senderInfo);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("tenantId", loginInfo.getTenantId());
 		model.addAttribute("unread", unread);
@@ -650,8 +650,8 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		model.addAttribute("fileUploadType", fileUploadType);
 		model.addAttribute("pSecurity", pSecurity);
 		model.addAttribute("docHref", docHref);
-		model.addAttribute("strSelectHtml", strSelectHtml);
-		model.addAttribute("showDisplay", showDisplay);
+		// model.addAttribute("strSelectHtml", strSelectHtml);
+		// model.addAttribute("showDisplay", showDisplay);
 		model.addAttribute("serverName", serverName);
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		model.addAttribute("useFromAddress", useFromAddress);
@@ -663,16 +663,18 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		model.addAttribute("fromAddressHtml", fromAddressHtml);
 		model.addAttribute("defaultFontAndSize", defaultFontAndSize);
 		model.addAttribute("useLetter", useLetter);
-		model.addAttribute("draftsFolderName", draftsFolderName);
+		model.addAttribute("drafts", draftsFolderName);
 		model.addAttribute("useMailAddrAutoComplete", useMailAddrAutoComplete); // 20180531 조진호 추가
 		model.addAttribute("mailMaxReceiverCount", mailMaxReceiverCount);
 		model.addAttribute("useAdditionalInfo", useAdditionalInfo);
 		//2023-07-13 김대현 - 예약메일 수정시 대용량첨부파일을 추가하면 저장이 안되는 오류 수정
 		model.addAttribute("bigSizeAttachDownloadLimitCount", bigSizeAttachDownloadLimitCount);
+
+		model.addAttribute("isReserve", true);
 		
         logger.debug("mailEdit ended.");
         
-		return "ezEmail/mailEdit";
+		return "ezEmail/mailWrite";
 	}
 	
 	/**

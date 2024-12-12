@@ -1487,6 +1487,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("useHWP", ezCommonService.getTenantConfig("useHWP", loginInfo.getTenantId()));
 		model.addAttribute("useApprMail", StringUtils.defaultIfBlank(ezCommonService.getTenantConfig("useApprMail", loginInfo.getTenantId()), "NO"));
 		model.addAttribute("moduleEditor", ezCommonService.getTenantConfig("MODULEEDITOR", loginInfo.getTenantId()));
+
+		// 예약발송수정에만 해당
+		model.addAttribute("securePassword", "");
+		model.addAttribute("secureMaxReadCount", 0);
+		model.addAttribute("secureMaxReadDate", "");
+		model.addAttribute("isReserve", false);
 		
 		response.setHeader("X-XSS-Protection", "0");
 		

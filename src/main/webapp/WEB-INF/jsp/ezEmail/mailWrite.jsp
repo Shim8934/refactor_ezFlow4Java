@@ -40,8 +40,8 @@
 			}
 			.viewtxt > span > span {
 				font-size: 12px;
-			}	
-			
+			}
+
 			#menu > ul:nth-child(2) > li {
 				margin: 0 2px !important;
 			}
@@ -51,7 +51,6 @@
 			.expnd { position:absolute; right:9px; top:50%; margin-top:-8px; cursor: pointer; content: url(/images/expnd.gif); }
 			.cllps { position:absolute; right:9px; top:50%; margin-top:-8px; cursor: pointer; content: url(/images/cllps.gif); }
 		</style>
-		
 		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.9.1.js')}"></script>
@@ -74,6 +73,9 @@
 			<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/hwpCtrlApp.js')}"></script>
     		<script type="text/javascript" src="${webHWPUrl}js/webhwpctrl.js"></script>
 	    </c:if>
+		<c:if test="${isReserve}"> <!-- 예약발송수정에만 해당 js -->
+			<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/email.reserved.js')}"></script>
+		</c:if>
 	    <script type="text/javascript">
 	    $(document).ready(function() {
 	    	window.resizeTo(990, window.outerHeight);
@@ -141,8 +143,8 @@
 	    var individualmailuser = "${individualMailUser}";
 	    var pSecurity = "${pSecurity}";
 	    var docHref = '<c:out value="${docHref}"/>';
-	    var isReserve = "NO";
-	    var pCDOMessageId = "";
+	    var isReserve = <c:out value="${isReserve}"/>; // true/false
+	    var pCDOMessageId = '<c:out value="${pCDOMessageID}"/>';
 	    var Add_xmlhttp = "";
 	    var mailsel = "${mailSignSel}";
 	    var mailpath = "";
@@ -172,9 +174,9 @@
 	    var mailSendResult = "${mailSendResult}";
 	    var useSecureMail = "${useSecureMail}";
 	    var isSecureMail = "${isSecureMail}";
-	    var securePassword = "";
-	    var secureReadCount = "0";
-	    var secureReadDate = "";
+	    var securePassword = "${securePassword}";
+	    var secureReadCount = "${secureMaxReadCount}";
+	    var secureReadDate = "${secureMaxReadDate}";
 	    var useMailWriteSenderClick = "${useMailWriteSenderClick}"; // 수아 수정
 	    var folderPath = "${drafts}";
 		var securePasswordHint = "";
@@ -1164,7 +1166,7 @@
 	    function setOnclickFunction() {
 	        return setTimeout(function () {
 	        	document.getElementById("spanT674").setAttribute("onclick", "Send_onClick_preview()");
-	        	document.getElementById("spanT48").setAttribute("onclick", "Save_onClick('tempsave')");
+	        	document.getElementById("spanT48").setAttribute("onclick", isReserve? "ReserverdMail_Save()" : "Save_onClick('tempsave')");
 	        }, 20);
 	    }
 		
@@ -2253,7 +2255,9 @@
 	            <td>
 	                <div id="menu">
 						<ul>
-	                        <li><span id="spanT674"><spring:message code='ezEmail.t674' /></span></li>
+	                        <c:if test="${!isReserve}">
+	                            <li><span id="spanT674"><spring:message code='ezEmail.t674' /></span></li>
+	                        </c:if>
 	                        <li><span id="spanT48"><spring:message code='ezEmail.t48' /></span></li>
 	                        <!-- <li  style="display:none"><span onclick="Print_onClick()">
 	                            <spring:message code='ezEmail.t546' /></span></li> -->
