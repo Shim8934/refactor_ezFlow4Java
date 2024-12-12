@@ -23459,8 +23459,8 @@
 		   		TENANT_ID = #v_TENANTID#
 		  AND
 		  		COMPANYID = #companyID#
-          AND
-                ATTACHFILESN = #attachfileSn#)
+            AND
+             A.ATTACHFILESN = #attachfileSn#)
    </insert>
    
    <insert id="EzApprovalG.insertTmpExpAprLine" parameterClass="Map"> 
