@@ -863,7 +863,7 @@ function ListView() {
                     	var fileExtTypes = fileExt.lastIndexOf('.');
 
                     	if (fileExt.indexOf("MANY") != -1) {
-                    		titleImage = titleImage + "<img src='/images/disk_icon.png' onclick='selectToDownloadFiles(\"" + pBoardID +"\", \"" + SelectSingleNodeValue(oCells[0], "DATA2") +"\", \"" + ITEMREAD_FG +"\")'>";
+                    		titleImage = titleImage + "<img src='/images/disk_icon.png' onclick='selectToDownloadFiles(\"" + SelectSingleNodeValue(oCells[0], "DATA1") + "\", \"" + SelectSingleNodeValue(oCells[0], "DATA2") +"\", \"" + ITEMREAD_FG +"\")'>";
                     	} else if (fileExtTypes !== -1) {
                             var fileExtType = fileExt.slice(fileExtTypes + 1); 
                             if (fileExtType.indexOf("jpg") != -1 || fileExtType.indexOf("jpeg") != -1 || fileExtType.indexOf("bmp") != -1 || fileExtType.indexOf("gif") != -1 || fileExtType.indexOf("png") != -1 || fileExtType.indexOf("tif") != -1 || fileExtType.indexOf("tiff") != -1) {
@@ -1810,7 +1810,7 @@ function getOriginXML(pTagetID)
 
 function downloadBoardFile(downURL, itemRead) {
 	
-    if (Read_FG != "true" || itemRead == "N") {
+    if (itemRead == "N") {
     	alert(strLang175);
         return;
     }
@@ -1820,7 +1820,7 @@ function downloadBoardFile(downURL, itemRead) {
 
 function selectToDownloadFiles(boardID, itemID, itemRead) {
     
-	if (Read_FG != "true" || itemRead == "N") {
+	if (itemRead == "N") {
 		alert(strLang175);
 		return;
 	}
