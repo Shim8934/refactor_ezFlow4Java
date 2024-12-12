@@ -3480,7 +3480,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			}
 			
 			if (boardListVO.getAttachments() != null && !boardListVO.getAttachments().equals("")) {
-				if (!saveAttachmentsInfo(boardListVO.getAttachments(), boardListVO.getItemID(), boardListVO.getBoardID(), boardListVO.getFilePath(), "PHOTO", realPath, userInfo.getTenantId(), boardListVO.getImageNames())) {
+				if (!saveAttachmentsInfo(boardListVO.getAttachments(), boardListVO.getItemID(), boardListVO.getBoardID(), boardListVO.getFilePath(), "PHOTO", realPath, userInfo.getTenantId())) {
 					return egovMessageSource.getMessage("ezCommunity.lhj05", userInfo.getLocale());
 				}
 				
@@ -3516,7 +3516,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	/**
 	 * 게시판 게시물 첨부파일저장 실행 Method
 	 */
-	public boolean saveAttachmentsInfo(String strAttachments, String strItemID, String strBoardID, String strFilePath, String strType, String realPath, int tenantID, String realFileNames) throws Exception {
+	public boolean saveAttachmentsInfo(String strAttachments, String strItemID, String strBoardID, String strFilePath, String strType, String realPath, int tenantID) throws Exception {
 		logger.debug("saveAttachmentsInfo started");
 
 		long fileSize = 0;
@@ -3528,10 +3528,6 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		try {
 			if (!strAttachments.substring(strAttachments.length() - 1).equals("|")) {
 				strAttachments += "|";
-			}
-			
-			if (!realFileNames.equals("") && !realFileNames.substring(realFileNames.length() - 1).equals("|")) {
-				realFileNames += "|";
 			}
 			
 			for (int i = 0; i < strAttachments.split("\\|").length; i++) {
@@ -3576,7 +3572,6 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 					}
 					
 					file = null;
-					fileName = commonUtil.detectPathTraversal(realFileNames.split("\\|")[i]);
 				} else {
 					File file = new File(realPath + commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", tenantID)  + commonUtil.separator + tempAttachmentPath.split("/")[2]);
 					fileSize = file.length();
@@ -3596,9 +3591,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 						
 						file.delete();
 					}
-					
-					fileName = filePath2.replace(strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile", "").substring(40);
 				}
+				
+				fileName = filePath2.replace(strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile", "").substring(40);
 				
 //				// 2018.07.05 - KLIB - ezd 확장자 없애기
 //				if (fileName.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
@@ -4364,8 +4359,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		}
 		
 		if (boardListVO.getAttachments() != null && !boardListVO.getAttachments().equals("")) {
-			String realFileNames = commonUtil.detectPathTraversal(doc.getElementsByTagName("REALFILENAMES").item(0).getTextContent());
-			if (!saveAttachmentsInfo(boardListVO.getAttachments(), boardListVO.getItemID(), boardListVO.getBoardID(), boardListVO.getFilePath(), "BOARD", realPath, userInfo.getTenantId(), realFileNames)) {
+			if (!saveAttachmentsInfo(boardListVO.getAttachments(), boardListVO.getItemID(), boardListVO.getBoardID(), boardListVO.getFilePath(), "BOARD", realPath, userInfo.getTenantId())) {
 				return egovMessageSource.getMessage("ezCommunity.lhj05", userInfo.getLocale());
 			}
 			

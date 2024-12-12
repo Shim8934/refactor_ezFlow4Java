@@ -349,7 +349,6 @@ function AppendFileAttachInfo(ret) {
             if (is_newfile != "DEL") {
                 objTr = document.createElement("TR");
                 objTr.setAttribute("DATA2", ServerFile);
-                objTr.setAttribute("realFileName", unescapeHtml(realFileNM));
                 objTr.setAttribute("NEWFILE", is_newfile);
                 objTr.setAttribute("REALFILESIZE", fileSize);
 				objTr.setAttribute("draggable", true);
@@ -594,15 +593,3 @@ function AttachFileList_Photo()
 }
 
 
-var htmlEntities = {
-	'&amp;': '&',
-	'&#40;': '(',
-	'&#41;': ')',
-	'&#64;': '@',
-};
-
-function unescapeHtml(escapedString) {
-    return escapedString.replace(/&amp;|&#40;|&#41;|&#64;/g, function(match) {
-        return htmlEntities[match];
-    });
-}

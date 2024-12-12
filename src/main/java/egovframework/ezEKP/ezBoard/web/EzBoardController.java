@@ -4695,12 +4695,13 @@ public class EzBoardController extends EgovFileMngUtil{
 		String[] fileLocation = new String[cnt];
 		String[] resultUpload = new String[cnt];
 		String[] sGUID = new String[cnt];
-		String[] sFileTitle = new String[cnt];
-		String[] sExt = new String[cnt];
+		String[] pUploadSN = new String[cnt];
 		String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId());
 		
-		if (cnt == 0) {
-			return "";
+		for (int i = 0; i < cnt; i++) {
+			resultUpload[i] = "false";
+			sGUID[i] = UUID.randomUUID().toString();
+			pUploadSN[i] = "{" + sGUID[i] + "}";
 		}
 		
 		long maxSize = 0;
@@ -4721,6 +4722,10 @@ public class EzBoardController extends EgovFileMngUtil{
 			}
 		}
 		
+//        for (int i = 0; i < cnt; i++) {
+//            pFileName[i] = pFileName[i].replace(";", "%3b").replace("+", "%2b");
+//        }
+		
 		String pDirPath = commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId());
 		pDirPath = realPath + pDirPath;
 		
@@ -4734,45 +4739,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (!file.exists()) {
 			file.mkdirs();
 			file2.mkdirs();
-		}
-		
-		if (multiFile.get(0).getOriginalFilename() != null && StringUtils.isNotBlank(multiFile.get(0).getOriginalFilename())){
-			boolean isEmpty = false;
-			String _pFileName = "";
-
-			// 파일명과 확장자를 구한다.
-			for (int i = 0; i < cnt; i++) {
-				_pFileName = multiFile.get(i).getOriginalFilename();
-
-				// 폴더 경로를 제외한 파일명만을 구한다.
-				if (_pFileName.indexOf(commonUtil.separator) > 0) {
-					_pFileName = _pFileName.split(commonUtil.separator)[_pFileName.split(commonUtil.separator).length - 1];
-				}
-
-				pFileName[i] = _pFileName;
-
-				// 파일 확장자를 구한다.
-				if (pFileName[i].lastIndexOf(".") > -1) {
-					sFileTitle[i] = pFileName[i].substring(0, pFileName[i].lastIndexOf("."));
-					sExt[i] = pFileName[i].substring(pFileName[i].lastIndexOf(".") + 1);
-				} else {
-					sFileTitle[i] = pFileName[i];
-					sExt[i] = "";
-				}
-				
-				if (multiFile.get(i).getSize() == 0) {
-					isEmpty = true;
-				}
-			}
-			
-			if (isEmpty) {
-				return "OVERFLOW";
-			}
-		}
-		
-		for (int i = 0; i < cnt; i++) {
-			resultUpload[i] = "false";
-			sGUID[i] = UUID.randomUUID().toString() + "." + sExt[i];
 		}
 		
 		for (int i = 0; i < cnt; i++) {
@@ -4789,15 +4755,15 @@ public class EzBoardController extends EgovFileMngUtil{
 						resultUpload[i] = "denied";
 					} else {
 						String pAttachPath = realPath + commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", userInfo.getTenantId()) + commonUtil.separator;
-						File fTemp = new File(pAttachPath, sGUID[i]);
+						File fTemp = new File(pAttachPath, pUploadSN[i] + "_" + commonUtil.detectPathTraversal(pFileName[i]));
 						
 						if (!file.exists()) {
 							fTemp.mkdirs();
 						}
 						
-						writeUploadedFile(multiFile.get(i), sGUID[i], pAttachPath);
+						writeUploadedFile(multiFile.get(i), pUploadSN[i] + "_" + pFileName[i], pAttachPath);
 						
-						fileLocation[i] = commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", userInfo.getTenantId()) + commonUtil.separator + sGUID[i];
+						fileLocation[i] = commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", userInfo.getTenantId()) + commonUtil.separator + pUploadSN[i] + "_" + pFileName[i];
 						resultUpload[i] = "true";
 					}
 				}
@@ -4810,9 +4776,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		for (int i = 0; i < cnt; i++) {
 			if (pMode.equals("PHOTO")) {
-				strXML.append("<NODE><PUPLOADSN><![CDATA[" + sGUID[i] + "]]></PUPLOADSN>");
+				strXML.append("<NODE><PUPLOADSN><![CDATA[" + pUploadSN[i] + pFileName[i].substring(pFileName[i].lastIndexOf('.')) + "]]></PUPLOADSN>");
 			} else {
-				strXML.append("<NODE><PUPLOADSN><![CDATA[" + sGUID[i] + "]]></PUPLOADSN>");
+				strXML.append("<NODE><PUPLOADSN><![CDATA[" + pUploadSN[i] + "_" + pFileName[i] + "]]></PUPLOADSN>");
 			}
 			
 			strXML.append("<RESULTUPLOADA><![CDATA[" + resultUpload[i] + "]]></RESULTUPLOADA>");
