@@ -6,7 +6,7 @@
 	<head>
 	    <title><spring:message code='ezEmail.t660' /></title>
 	    <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
-		<link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/css/jquery-ui.css')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('/css/jquery.ui.all.css')}" type="text/css" />
 		<c:if test="${useFromAddress == 'YES'}">
@@ -19,6 +19,7 @@
 			#AutoCompleteResults .ui-state-focus { background: #f0f6ff;  border: none }
 		</style>
 		</c:if>
+		<!-- 수신인란 height 작업 -->
 		<style>
 			.viewtxtScroller {
 				width:calc(100% - 20px);
@@ -69,15 +70,15 @@
 		<script>
 			var g_szAuthor = "";
 			var g_szExchange = "exchange";
-			var g_cmd = '<c:out value="${cmd}"/>';
-		    var Org_cmd = '<c:out value="${cmd}"/>';
+			var g_cmd = '<c:out value="${_cmd}"/>';
+		    var Org_cmd = '<c:out value="${_cmd}"/>';
 			var g_servername = "${serverName}";
 			var g_myemail = "${userInfo.mail}";
 			var g_from = "${userInfo.mail}";
 			var g_szUserID = "${userInfo.cn}";
 			var g_companyID = "${userInfo.physicalDeliveryOfficeName}";
 			var tid = "${tenantId}";
-			var g_senderinfo = "${senderInfo}";
+			// var g_senderinfo = "${senderInfo}";
 			var g_eImportance = "${importance}";
 			var g_bodyType = "${bodyType}";
 			var g_replySendTime = "${replySendTime}";
@@ -95,7 +96,7 @@
 			var g_charset = "utf-8";
 			var g_encoding = "BASE64";
 			var g_font = "<spring:message code='ezEmail.t409' />";
-			var g_showdisplay = "${showDisplay}";
+			// var g_showdisplay = "${showDisplay}";
 			var g_simplemimeencoding = "7bit";
 			var g_simplemime = "0";
 			var g_xmldoc = createXMLHttpRequest();
@@ -130,7 +131,7 @@
 		    var inMailColor = "${inMailColor}";
 		    var outMailColor = "${outMailColor}";
 		    var docHref = "${docHref}";
-		    var pTime= "${pReservedSaveTime}";
+		    // var pTime= "${pReservedSaveTime}";
 		    var isReserve = "YES";
 		    var pCDOMessageId = '<c:out value="${pCDOMessageID}"/>';
 		    var pUse_Editor = "${useEditor}";
@@ -907,7 +908,7 @@
             if(mPath != "")
                 DownloadAttach(mPath);
         </script>
-        </c:if>  
+        </c:if>
 	</head>
 	<body id="parentBody" class="popup" onload="javascript:window_onload()">
 		<div id="main_body">
@@ -935,7 +936,7 @@
                         <option value="2"><spring:message code='ezEmail.t359' /> <spring:message code='ezEmail.t362' /></option>
 		              </select>
 		            </li>
-		            <li style="display:none;" class="sel" style="background:none; border:none; padding:0 5px">${strSelectHtml}</li>&nbsp;&nbsp;
+		            <!-- <li style="display:none;" class="sel" style="background:none; border:none; padding:0 5px">${strSelectHtml}</li>&nbsp;&nbsp; -->
 		            <li class="bar" style="background:none; border:0;padding-left:0;padding-right:0;cursor:default; display:none;"><img src="/images/pbar.gif" align="absmiddle"></li>                        
 		            <li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default;">
                         <img src="/images/pbar.gif"></li> 

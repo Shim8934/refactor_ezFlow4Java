@@ -2749,6 +2749,12 @@ public class EzPollController extends EgovFileMngUtil {
 		model.addAttribute("fromAddressHtml", fromAddressHtml);
 		model.addAttribute("moduleType", "poll");
 		model.addAttribute("useAdditionalInfo", "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useMailWriteRecipientAdditional", loginInfo.getTenantId())));
+
+		// 예약발송수정에만 해당
+		model.addAttribute("securePassword", "");
+		model.addAttribute("secureMaxReadCount", 0);
+		model.addAttribute("secureMaxReadDate", "");
+		model.addAttribute("isReserve", false);
 		
 		response.setHeader("X-XSS-Protection", "0");
 		
