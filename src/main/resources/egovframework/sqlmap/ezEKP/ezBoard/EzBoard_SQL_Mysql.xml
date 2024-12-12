@@ -2806,7 +2806,7 @@
 			AND UPPER(ABSTRACT) like UPPER(CONCAT('%', #v_SEARCH_ABSTRACT#, '%'))
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
-			AND (TOPWRITERID = #v_SEARCH_TOPWRITERID# OR EXTENSIONATTRIBUTE2 = '1')
+			AND (UPPER(TOPWRITERID) = UPPER(#v_SEARCH_TOPWRITERID#) OR EXTENSIONATTRIBUTE2 = '1')
 		</isNotEmpty>
 		<isEqual property="v_useKeywordFlag" compareValue="Y">
 				<isNotEmpty property="v_KEYWORD">
@@ -2824,7 +2824,7 @@
 							AND
 								BK.TENANT_ID = K.TENANT_ID
 							WHERE
-								K.KEYWORDNAME like CONCAT(CONCAT('%', #v_KEYWORD#), '%')
+								UPPER(K.KEYWORDNAME) like UPPER(CONCAT(CONCAT('%', #v_KEYWORD#), '%'))
 							AND
 								BK.BOARDID = #v_PBOARDID#
 							AND
@@ -3110,7 +3110,7 @@
 			AND UPPER(ABSTRACT) like UPPER(CONCAT('%', #v_SEARCH_ABSTRACT#, '%'))
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
-			AND (TOPWRITERID = #v_SEARCH_TOPWRITERID#  OR EXTENSIONATTRIBUTE2 = '1')
+			AND (UPPER(TOPWRITERID) = UPPER(#v_SEARCH_TOPWRITERID#) OR EXTENSIONATTRIBUTE2 = '1')
 		</isNotEmpty>
         <isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
             AND (UPPER(TITLE) like UPPER(CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
@@ -3140,7 +3140,7 @@
 						AND
 							BK.TENANT_ID = K.TENANT_ID
 						WHERE
-							K.KEYWORDNAME like CONCAT(CONCAT('%', #v_KEYWORD#), '%')
+							UPPER(K.KEYWORDNAME) like UPPER(CONCAT(CONCAT('%', #v_KEYWORD#), '%'))
 						AND
 							BK.BOARDID = #v_PBOARDID#
 						AND
@@ -3309,7 +3309,7 @@
 			AND UPPER(ABSTRACT) like UPPER(CONCAT('%', #v_SEARCH_ABSTRACT#, '%'))
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
-			AND (TOPWRITERID = #v_SEARCH_TOPWRITERID#  OR EXTENSIONATTRIBUTE2 = '1')
+			AND (UPPER(TOPWRITERID) = UPPER(#v_SEARCH_TOPWRITERID#) OR EXTENSIONATTRIBUTE2 = '1')
 		</isNotEmpty>
         <isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
             AND (UPPER(TITLE) like UPPER(CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
@@ -3335,7 +3335,7 @@
 					AND
 						BK.TENANT_ID = K.TENANT_ID
 					WHERE
-						K.KEYWORDNAME like CONCAT(CONCAT('%', #v_KEYWORD#), '%')
+						UPPER(K.KEYWORDNAME) like UPPER(CONCAT(CONCAT('%', #v_KEYWORD#), '%'))
 					AND
 						BK.TENANT_ID = #v_TENANTID#
 				)
@@ -3490,7 +3490,7 @@
 			AND UPPER(ABSTRACT) like UPPER(CONCAT('%', #v_SEARCH_ABSTRACT#, '%'))
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
-			AND (TOPWRITERID = #v_SEARCH_TOPWRITERID# OR EXTENSIONATTRIBUTE2 = '1')
+			AND (UPPER(TOPWRITERID) = UPPER(#v_SEARCH_TOPWRITERID#) OR EXTENSIONATTRIBUTE2 = '1')
 		</isNotEmpty>
         <isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
             AND (UPPER(TITLE) like UPPER(CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
@@ -3522,7 +3522,7 @@
 						AND
 							BK.TENANT_ID = K.TENANT_ID
 						WHERE
-							K.KEYWORDNAME like CONCAT(CONCAT('%', #v_KEYWORD#), '%')
+							UPPER(K.KEYWORDNAME) like UPPER(CONCAT(CONCAT('%', #v_KEYWORD#), '%'))
 						AND
 							BK.TENANT_ID = #v_TENANTID#
 					)
@@ -3681,7 +3681,7 @@
 			AND UPPER(ABSTRACT) like UPPER(CONCAT('%', #v_SEARCH_ABSTRACT#, '%'))
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
-			AND (TOPWRITERID = #v_SEARCH_TOPWRITERID# OR EXTENSIONATTRIBUTE2 = '1')
+			AND (UPPER(TOPWRITERID) = UPPER(#v_SEARCH_TOPWRITERID#) OR EXTENSIONATTRIBUTE2 = '1')
 		</isNotEmpty>
         <isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
             AND (UPPER(TITLE) like UPPER(CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
@@ -3713,7 +3713,7 @@
 						AND
 							BK.TENANT_ID = K.TENANT_ID
 						WHERE
-							K.KEYWORDNAME like CONCAT(CONCAT('%', #v_KEYWORD#), '%')
+							UPPER(K.KEYWORDNAME) like UPPER(CONCAT(CONCAT('%', #v_KEYWORD#), '%'))
 						AND
 							BK.TENANT_ID = #v_TENANTID#
 					)
@@ -4839,7 +4839,7 @@
 			AND UPPER(ABSTRACT) like UPPER(CONCAT('%', #v_SEARCH_ABSTRACT#, '%'))
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
-			AND (TOPWRITERID = #v_SEARCH_TOPWRITERID# OR EXTENSIONATTRIBUTE2 = '1')
+			AND (UPPER(TOPWRITERID) = UPPER(#v_SEARCH_TOPWRITERID#) OR EXTENSIONATTRIBUTE2 = '1')
 		</isNotEmpty>
 		<isEqual property="v_useKeywordFlag" compareValue="Y">
 		<isNotEmpty property="v_KEYWORD">
@@ -4857,7 +4857,7 @@
 					AND
 						BK.TENANT_ID = K.TENANT_ID
 					WHERE
-						K.KEYWORDNAME like CONCAT(CONCAT('%', #v_KEYWORD#), '%')
+						UPPER(K.KEYWORDNAME) like UPPER(CONCAT(CONCAT('%', #v_KEYWORD#), '%'))
 					AND
 						BK.BOARDID = #v_pBoardID#
 					AND
@@ -4950,7 +4950,7 @@
 			AND UPPER(ABSTRACT) like UPPER(CONCAT('%', #v_SEARCH_ABSTRACT#, '%'))
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
-			AND (TOPWRITERID = #v_SEARCH_TOPWRITERID#  OR EXTENSIONATTRIBUTE2 = '1')
+			AND (UPPER(TOPWRITERID) = UPPER(#v_SEARCH_TOPWRITERID#) OR EXTENSIONATTRIBUTE2 = '1')
 		</isNotEmpty>
         <isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
             AND (UPPER(TITLE) like UPPER(CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
@@ -4974,7 +4974,7 @@
 					AND
 						BK.TENANT_ID = K.TENANT_ID
 					WHERE
-						K.KEYWORDNAME like CONCAT(CONCAT('%', #v_KEYWORD#), '%')
+						UPPER(K.KEYWORDNAME) like UPPER(CONCAT(CONCAT('%', #v_KEYWORD#), '%'))
 					AND
 						BK.TENANT_ID = #v_TENANTID#
 				)
@@ -5001,13 +5001,13 @@
    			AND
    				WRITERID = #v_PUSERID#
 		<isNotEmpty property="v_SEARCH_TITLE">
-			AND TITLE like CONCAT('%', #v_SEARCH_TITLE#, '%')
+			AND UPPER(TITLE) like UPPER(CONCAT('%', #v_SEARCH_TITLE#, '%'))
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_CONTENT">
-			AND CONTENT like CONCAT('%', #v_SEARCH_CONTENT#, '%')
+			AND UPPER(CONTENT) like UPPER(CONCAT('%', #v_SEARCH_CONTENT#, '%'))
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_WRITERNAME">
-			AND (A.WRITERNAME like CONCAT('%', #v_SEARCH_WRITERNAME#, '%') OR A.WRITERNAME2 like CONCAT('%', #v_SEARCH_WRITERNAME#, '%'))
+			AND (UPPER(A.WRITERNAME) like UPPER(CONCAT('%', #v_SEARCH_WRITERNAME#, '%')) OR UPPER(A.WRITERNAME2) like UPPER(CONCAT('%', #v_SEARCH_WRITERNAME#, '%')))
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_STARTDATE">
 			<![CDATA[AND A.WRITEDATE > #v_SEARCH_STARTDATE#]]>
@@ -5016,15 +5016,15 @@
 			<![CDATA[AND A.WRITEDATE < #v_SEARCH_ENDDATE#]]>
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_ABSTRACT">
-			AND ABSTRACT like CONCAT('%', #v_SEARCH_ABSTRACT#, '%')
+			AND UPPER(ABSTRACT) like UPPER(CONCAT('%', #v_SEARCH_ABSTRACT#, '%'))
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
-			AND (TOPWRITERID = #v_SEARCH_TOPWRITERID#  OR EXTENSIONATTRIBUTE2 = '1')
+			AND (UPPER(TOPWRITERID) = UPPER(#v_SEARCH_TOPWRITERID#) OR EXTENSIONATTRIBUTE2 = '1')
 		</isNotEmpty>
         <isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
-            AND (TITLE like CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%')
+            AND (UPPER(TITLE) like UPPER(CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
             OR
-            CONTENT like CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
+            UPPER(CONTENT) like UPPER(CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%')))
         </isNotEmpty>
 		<isNotEmpty property="v_KEYWORD">
 			<![CDATA[
@@ -5043,7 +5043,7 @@
 					AND
 						BK.TENANT_ID = K.TENANT_ID
 					WHERE
-						K.KEYWORDNAME like CONCAT(CONCAT('%', #v_KEYWORD#), '%')
+						UPPER(K.KEYWORDNAME) like UPPER(CONCAT(CONCAT('%', #v_KEYWORD#), '%'))
 					AND
 						BK.TENANT_ID = #v_TENANTID#
 				)
@@ -5795,7 +5795,7 @@
 			AND UPPER(ABSTRACT) like UPPER(CONCAT('%', #v_SEARCH_ABSTRACT#, '%'))
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
-			AND (TOPWRITERID = #v_SEARCH_TOPWRITERID#  OR EXTENSIONATTRIBUTE2 = '1')
+			AND (UPPER(TOPWRITERID) = UPPER(#v_SEARCH_TOPWRITERID#) OR EXTENSIONATTRIBUTE2 = '1')
 		</isNotEmpty>
         <isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
             AND (UPPER(TITLE) like UPPER(CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
@@ -5820,7 +5820,7 @@
 							AND
 								BK.TENANT_ID = K.TENANT_ID
 							WHERE
-								K.KEYWORDNAME like CONCAT(CONCAT('%', #v_KEYWORD#), '%')
+								UPPER(K.KEYWORDNAME) like UPPER(CONCAT(CONCAT('%', #v_KEYWORD#), '%'))
 							AND
 								BK.TENANT_ID = #v_TENANTID#
 						)
@@ -7406,7 +7406,7 @@
 		 	AND UPPER(ABSTRACT) like UPPER(CONCAT('%', #v_SEARCH_ABSTRACT#, '%'))
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
-		 	AND (TOPWRITERID = #v_SEARCH_TOPWRITERID#  OR EXTENSIONATTRIBUTE2 = '1')
+		 	AND (UPPER(TOPWRITERID) = UPPER(#v_SEARCH_TOPWRITERID#) OR EXTENSIONATTRIBUTE2 = '1')
 		</isNotEmpty>
         <isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
             AND (UPPER(TITLE) like UPPER(CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
@@ -7433,10 +7433,10 @@
 						WHERE
 			]]>
 					<isNotEmpty property="v_KEYWORDCLICK">
-						K.KEYWORDNAME = #v_KEYWORDCLICK#
+						UPPER(K.KEYWORDNAME) = UPPER(#v_KEYWORDCLICK#)
 					</isNotEmpty>
 					<isEmpty property="v_KEYWORDCLICK">
-						K.KEYWORDNAME like CONCAT(CONCAT('%', #v_KEYWORD#), '%')
+						UPPER(K.KEYWORDNAME) like UPPER(CONCAT(CONCAT('%', #v_KEYWORD#), '%'))
 					</isEmpty>
 						AND
 							BK.TENANT_ID = #v_TENANTID#
@@ -7647,7 +7647,7 @@
 			AND UPPER(ABSTRACT) like UPPER(CONCAT('%', #v_SEARCH_ABSTRACT#, '%'))
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
-			AND (TOPWRITERID = #v_SEARCH_TOPWRITERID# OR EXTENSIONATTRIBUTE2 = '1')
+			AND (UPPER(TOPWRITERID) = UPPER(#v_SEARCH_TOPWRITERID#) OR EXTENSIONATTRIBUTE2 = '1')
 		</isNotEmpty>
 		<isNotEmpty property="v_KEYWORD">
 			<![CDATA[
@@ -7668,10 +7668,10 @@
 						WHERE
 			]]>
 						<isNotEmpty property="v_KEYWORDCLICK">
-							K.KEYWORDNAME = #v_KEYWORDCLICK#
+							UPPER(K.KEYWORDNAME) = UPPER(#v_KEYWORDCLICK#)
 						</isNotEmpty>
 						<isEmpty property="v_KEYWORDCLICK">
-							K.KEYWORDNAME like CONCAT(CONCAT('%', #v_KEYWORD#), '%')
+							UPPER(K.KEYWORDNAME) like UPPER(CONCAT(CONCAT('%', #v_KEYWORD#), '%'))
 						</isEmpty>
 						AND
 							BK.TENANT_ID = #v_TENANTID#
@@ -9495,15 +9495,15 @@
 				AND 1 = 0
 			</isEmpty>
 			<isNotEmpty property="v_SEARCH_TITLE">
-				AND A.TITLE like CONCAT('%', #v_SEARCH_TITLE#, '%')
+				AND UPPER(A.TITLE) like UPPER(CONCAT('%', #v_SEARCH_TITLE#, '%'))
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_WRITERNAME">
-				AND (A.WRITERNAME like CONCAT('%', #v_SEARCH_WRITERNAME#, '%') OR A.WRITERNAME2 like CONCAT('%', #v_SEARCH_WRITERNAME#, '%'))
+				AND (UPPER(A.WRITERNAME) like UPPER(CONCAT('%', #v_SEARCH_WRITERNAME#, '%')) OR UPPER(A.WRITERNAME2) like UPPER(CONCAT('%', #v_SEARCH_WRITERNAME#, '%')))
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
-				AND (TITLE like CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%')
+				AND (UPPER(TITLE) like UPPER(CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
 				OR
-				CONTENT like CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%'))
+				UPPER(CONTENT) like UPPER(CONCAT('%', #v_SEARCH_TITLE_AND_CONTENT#, '%')))
 			</isNotEmpty>
 			GROUP BY
 				A.ITEMID, A.TITLE
@@ -10171,10 +10171,10 @@
 				AND 1 = 0
 			</isEmpty>
 			<isNotEmpty property="v_SEARCH_TITLE">
-				AND A.TITLE like CONCAT('%', #v_SEARCH_TITLE#, '%')
+				AND UPPER(A.TITLE) like UPPER(CONCAT('%', #v_SEARCH_TITLE#, '%'))
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_WRITERNAME">
-				AND (A.WRITERNAME like CONCAT('%', #v_SEARCH_WRITERNAME#, '%') OR A.WRITERNAME2 like CONCAT('%', #v_SEARCH_WRITERNAME#, '%'))
+				AND (UPPER(A.WRITERNAME) like UPPER(CONCAT('%', #v_SEARCH_WRITERNAME#, '%')) OR UPPER(A.WRITERNAME2) like UPPER(CONCAT('%', #v_SEARCH_WRITERNAME#, '%')))
 			</isNotEmpty>
 	</select>
 
