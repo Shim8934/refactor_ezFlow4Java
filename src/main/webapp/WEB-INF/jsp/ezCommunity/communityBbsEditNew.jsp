@@ -40,7 +40,8 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezCommunity/AttachMain_CK.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezCommunity/AttachItem_CK.js')}"></script>
-
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
+        <script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery.multipleSortable.js')}"></script>
 		<script type="text/javascript">
 			var iMhtml = null;
 			var objxmlhttp = null;
@@ -78,6 +79,8 @@
 			var AttachLimit = "10";
 			var attachFileNameMaxLength = Number("${attachFileNameMaxLength}");
 			var PhotoBoard = "N";
+			var isfileup = false;
+			var xhr = new XMLHttpRequest();
 			
 			window.onresize = function () {
 				if (useEditor != "HWP") {
@@ -104,6 +107,8 @@
 		            pAttachListXml = MakeAttachList();
 		            AppendFileAttachInfo(pAttachListXml);
 		        }
+				
+				setAttachSortable();
 				
                 window.onresize();
 			}

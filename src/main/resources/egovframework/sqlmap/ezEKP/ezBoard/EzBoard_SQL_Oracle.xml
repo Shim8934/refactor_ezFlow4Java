@@ -8387,7 +8387,6 @@
 	</delete>
 	
 	<select id="EzBoardDAO.getMyBoardListItemScrap" parameterClass="Map" resultClass="HashMap">
-		<![CDATA[
 			SELECT 
 				* 
 			FROM 
@@ -8395,7 +8394,24 @@
 					* 
 				  FROM 
 					( SELECT
-						Row_Number() OVER (ORDER BY $iv_PORDERBYSUB$ ) AS ROWNUM_,
+						Row_Number() OVER (
+						ORDER BY
+							<isEqual property="iv_PORDERBYCOL1" compareValue="SCRAPDATE"> E.SCRAPDATE </isEqual>
+							<isEqual property="iv_PORDERBYCOL1" compareValue="ATTACHMENTS"> A.ATTACHMENTS </isEqual>
+							<isEqual property="iv_PORDERBYCOL1" compareValue="TITLE"> A.TITLE </isEqual>
+							<isEqual property="lang" compareValue="1">
+								<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERDEPTNAME"> A.WRITERDEPTNAME </isEqual>
+								<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERNAME"> A.WRITERNAME </isEqual>
+							</isEqual>
+							<isNotEqual property="lang" compareValue="1">
+								<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERDEPTNAME"> A.WRITERDEPTNAME2 </isEqual>
+								<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERNAME"> A.WRITERNAME2 </isEqual>
+							</isNotEqual>
+							<isEqual property="iv_PORDERBYCOL1" compareValue="WRITEDATE"> A.WRITEDATE </isEqual>
+							<isEqual property="iv_PORDERBYCOL1" compareValue="READCOUNT"> A.READCOUNT </isEqual>
+							<isEqual property="iv_PORDERBYCOL1DESC" compareValue="Y"> DESC </isEqual>
+						) AS ROWNUM_,
+		<![CDATA[
 						A.BOARDID,
 		   				A.ITEMID,
 		   				A.WRITERID,
@@ -8565,7 +8581,6 @@
 					 OR
 					 A.APPRFLAG IS NULL
 				)
-   			$v_PSUBQUERY$
 		]]>
 			<isNotEmpty property="scrapBoardListView_FG">
 				AND B.BOARDID IN
@@ -8574,18 +8589,45 @@
 			<isEmpty property="scrapBoardListView_FG">
 				AND 1 = 0
 			</isEmpty>
+			<isNotEmpty property="v_SEARCH_TITLE">
+				AND A.TITLE like '%' || #v_SEARCH_TITLE# || '%'
+			</isNotEmpty>
+			<isNotEmpty property="v_SEARCH_WRITERNAME">
+				AND (A.WRITERNAME like '%' || #v_SEARCH_WRITERNAME# || '%' OR A.WRITERNAME2 like '%' || #v_SEARCH_WRITERNAME# || '%')
+			</isNotEmpty>
+            <isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
+                AND (TITLE like ('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
+                OR
+                CONTENT like ('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%'))
+            </isNotEmpty>
 	</select>
 	
 	<select id="EzBoardDAO.getSearchMyBoardItemListScrap" parameterClass="Map" resultClass="HashMap">
+			SELECT
+				*
+			FROM
+				( SELECT
+					*
+				  FROM
+					( SELECT
+						Row_Number() OVER (
+						ORDER BY 
+						<isEqual property="iv_PORDERBYCOL1" compareValue="SCRAPDATE"> S.SCRAPDATE </isEqual>
+						<isEqual property="iv_PORDERBYCOL1" compareValue="ATTACHMENTS"> A.ATTACHMENTS </isEqual>
+						<isEqual property="iv_PORDERBYCOL1" compareValue="TITLE"> A.TITLE </isEqual>
+						<isEqual property="lang" compareValue="1">
+							<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERDEPTNAME"> A.WRITERDEPTNAME </isEqual>
+							<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERNAME"> A.WRITERNAME </isEqual>
+						</isEqual>
+						<isNotEqual property="lang" compareValue="1">
+							<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERDEPTNAME"> A.WRITERDEPTNAME2 </isEqual>
+							<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERNAME"> A.WRITERNAME2 </isEqual>
+						</isNotEqual>
+						<isEqual property="iv_PORDERBYCOL1" compareValue="WRITEDATE"> A.WRITEDATE </isEqual>
+						<isEqual property="iv_PORDERBYCOL1" compareValue="READCOUNT"> A.READCOUNT </isEqual>
+						<isEqual property="iv_PORDERBYCOL1DESC" compareValue="Y"> DESC </isEqual>
+						) AS ROWNUM_,
 		<![CDATA[
-			SELECT 
-				* 
-			FROM 
-				( SELECT 
-					* 
-				  FROM 
-					( SELECT 
-						Row_Number() OVER (ORDER BY $iv_PORDERBYSUB$ ) AS ROWNUM_,
 	   					A.BOARDID,
 	   					A.ITEMID,
 	   					A.WRITERID,
@@ -8681,8 +8723,19 @@
 					<isEmpty property="scrapBoardListView_FG">
 						AND 1 = 0
 					</isEmpty>
-					<![CDATA[
-	   				 $v_PSUBQUERY$ ) T1
+					<isNotEmpty property="v_SEARCH_TITLE">
+						AND A.TITLE like '%' || #v_SEARCH_TITLE# || '%'
+					</isNotEmpty>
+					<isNotEmpty property="v_SEARCH_WRITERNAME">
+						AND (A.WRITERNAME like '%' || #v_SEARCH_WRITERNAME# || '%' OR A.WRITERNAME2 like '%' || #v_SEARCH_WRITERNAME# || '%')
+					</isNotEmpty>
+                    <isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
+                        AND (TITLE like ('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
+                        OR
+                        CONTENT like ('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%'))
+                    </isNotEmpty>
+		<![CDATA[		 
+	   				 ) T1
 	   			WHERE
 	   				  ROWNUM_ <= #v_PENDROW# ) T2
    			WHERE 
@@ -8953,7 +9006,6 @@
 	</select>
 
 	<select id="EzBoardDAO.getScrapContItemList" parameterClass="Map" resultClass="HashMap">
-		<![CDATA[
 			 SELECT
 			   *
 			 FROM
@@ -8961,7 +9013,24 @@
 					*
 				  FROM
 					( SELECT
-						Row_Number() OVER (ORDER BY $iv_PORDERBYSUB$ ) AS ROWNUM_,
+						Row_Number() OVER (
+						ORDER BY
+							<isEqual property="iv_PORDERBYCOL1" compareValue="SCRAPDATE"> E.SCRAPDATE </isEqual>
+							<isEqual property="iv_PORDERBYCOL1" compareValue="ATTACHMENTS"> A.ATTACHMENTS </isEqual>
+							<isEqual property="iv_PORDERBYCOL1" compareValue="TITLE"> A.TITLE </isEqual>
+							<isEqual property="lang" compareValue="1">
+								<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERDEPTNAME"> A.WRITERDEPTNAME </isEqual>
+								<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERNAME"> A.WRITERNAME </isEqual>
+							</isEqual>
+							<isNotEqual property="lang" compareValue="1">
+								<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERDEPTNAME"> A.WRITERDEPTNAME2 </isEqual>
+								<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERNAME"> A.WRITERNAME2 </isEqual>
+							</isNotEqual>
+							<isEqual property="iv_PORDERBYCOL1" compareValue="WRITEDATE"> A.WRITEDATE </isEqual>
+							<isEqual property="iv_PORDERBYCOL1" compareValue="READCOUNT"> A.READCOUNT </isEqual>
+							<isEqual property="iv_PORDERBYCOL1DESC" compareValue="Y"> DESC </isEqual>
+						) AS ROWNUM_,
+		<![CDATA[
 						A.BOARDID,
 						A.ITEMID,
 						A.WRITERID,
@@ -9106,10 +9175,15 @@
 			<isEmpty property="scrapContBoardListView_FG">
 				AND 1 = 0
 			</isEmpty>
+			<isNotEmpty property="v_SEARCH_TITLE">
+				AND A.TITLE like '%' || #v_SEARCH_TITLE# || '%'
+			</isNotEmpty>
+			<isNotEmpty property="v_SEARCH_WRITERNAME">
+				AND (A.WRITERNAME like '%' || #v_SEARCH_WRITERNAME# || '%' OR A.WRITERNAME2 like '%' || #v_SEARCH_WRITERNAME# || '%')
+			</isNotEmpty>
 	</select>
 
 	<select id="EzBoardDAO.getSearchScrapContItemList" parameterClass="Map" resultClass="HashMap">
-		<![CDATA[
 			SELECT
 			  *
 			FROM
@@ -9117,7 +9191,24 @@
 					*
 				  FROM
 				    ( SELECT
-						Row_Number() OVER (ORDER BY $iv_PORDERBYSUB$ ) AS ROWNUM_,
+						Row_Number() OVER (
+						ORDER BY
+						<isEqual property="iv_PORDERBYCOL1" compareValue="SCRAPDATE"> S.SCRAPDATE </isEqual>
+						<isEqual property="iv_PORDERBYCOL1" compareValue="ATTACHMENTS"> A.ATTACHMENTS </isEqual>
+						<isEqual property="iv_PORDERBYCOL1" compareValue="TITLE"> A.TITLE </isEqual>
+						<isEqual property="lang" compareValue="1">
+							<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERDEPTNAME"> A.WRITERDEPTNAME </isEqual>
+							<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERNAME"> A.WRITERNAME </isEqual>
+						</isEqual>
+						<isNotEqual property="lang" compareValue="1">
+							<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERDEPTNAME"> A.WRITERDEPTNAME2 </isEqual>
+							<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERNAME"> A.WRITERNAME2 </isEqual>
+						</isNotEqual>
+						<isEqual property="iv_PORDERBYCOL1" compareValue="WRITEDATE"> A.WRITEDATE </isEqual>
+						<isEqual property="iv_PORDERBYCOL1" compareValue="READCOUNT"> A.READCOUNT </isEqual>
+						<isEqual property="iv_PORDERBYCOL1DESC" compareValue="Y"> DESC </isEqual>
+					<![CDATA[
+						) AS ROWNUM_,
 						A.BOARDID,
 						A.ITEMID,
 						A.WRITERID,
@@ -9215,8 +9306,19 @@
 					<isEmpty property="scrapContBoardListView_FG">
 						AND 1 = 0
 					</isEmpty>
+					<isNotEmpty property="v_SEARCH_TITLE">
+						AND A.TITLE like '%' || #v_SEARCH_TITLE# || '%'
+					</isNotEmpty>
+					<isNotEmpty property="v_SEARCH_WRITERNAME">
+						AND (A.WRITERNAME like '%' || #v_SEARCH_WRITERNAME# || '%' OR A.WRITERNAME2 like '%' || #v_SEARCH_WRITERNAME# || '%')
+					</isNotEmpty>
+                    <isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
+                        AND (TITLE like ('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
+                        OR
+                        CONTENT like ('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%'))
+                    </isNotEmpty>
 		<![CDATA[		 
-					$v_PSUBQUERY$) T1
+					) T1
 				WHERE
 					ROWNUM_ <= #v_PENDROW# ) T2
 			WHERE

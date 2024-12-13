@@ -1443,7 +1443,9 @@ function setAttachFileInfo(strXML) {
         var listtable;
 
         listtable = dadiframe.document.getElementById("filelist");
-        dadiframe.document.getElementById("lstAttachLink").appendChild(listtable);
+        var lstAttachLink = dadiframe.document.getElementById("lstAttachLink");
+        lstAttachLink.insertBefore(listtable, lstAttachLink.firstChild);        
+        dadiframe.document.getElementById("attachInnerNotice").className = "attachInnerNotice_p_off";
 
         var extCheck = false;
         for (i = 0; i < SelectNodes(xml, "ROOT/NODES/DATA").length; i++) {
@@ -1459,6 +1461,8 @@ function setAttachFileInfo(strXML) {
                 objTr.setAttribute("DATA", newFileName);//UUID
                 objTr.setAttribute("DATA2", pFileName);//파일명
                 objTr.setAttribute("DATA3", fileSize);//파일사이즈
+                objTr.setAttribute("draggable", true);
+                objTr.setAttribute("_fileIndex", i);
 
                 var objTd = document.createElement("TD");
                 objTd.style.textAlign = "center";

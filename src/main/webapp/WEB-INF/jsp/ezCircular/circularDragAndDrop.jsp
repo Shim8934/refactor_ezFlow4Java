@@ -12,11 +12,26 @@
 			height: 115px;
 			border: 1px solid #d2d2d2;
 			}
+
+            .attachInnerNotice_p_on {
+                text-align: center;
+                margin: 10px 0 0 0;
+            }
+
+            .attachInnerNotice_p_off {
+                display: none;
+            }
+
+            .attachInnerNotice_span {
+                line-height: 55px;.
+            }
 		</style>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezBoard.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-		<script type="text/javascript">
+        <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
+        <script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery.multipleSortable.js')}"></script>
+        <script type="text/javascript">
 		    var lstAttachLink = document.getElementById("lstAttachLink");
 		    var isfileup = false;
 		    var mode = "<c:out value='${mode}'/>";
@@ -127,8 +142,10 @@
 		
 		        oTable.appendChild(objTr);
 		        document.getElementById("lstAttachLink").appendChild(oTable);
-		        
-		        getAttachList();
+                document.getElementById("lstAttachLink").appendChild(getAttachInnerNoticeObject());
+
+                getAttachList();
+                setAttachSortable();
 		    };
 		    
 		    function getAttachList() {
@@ -268,6 +285,7 @@
 	                	alert("<spring:message code='ezCircular.t102'/>");	
 	                }
 				});
+                showAttachInnerNotice();
 		    }
 		
 		    function checkall() {
@@ -325,9 +343,55 @@
 				evt.stopPropagation();
 				evt.preventDefault();
 			}
+
+            function defaultenter(evt) {
+                evt.dataTransfer.dropEffect = "none";
+                evt.stopPropagation();
+                evt.preventDefault();
+            }
+
+            function setAttachSortable() {
+                $("#lstAttachLink").multipleSortable({
+                    items : "tr[data2]",
+                    opacity: 0.3,
+                    start : function(event, elem) {
+                        $("#lstAttachLink tr").removeClass("multiple-sortable-selected");
+                        $("#lstAttachLink tr").removeClass("ui-sortable-helper");
+                    },
+                    click : function(event) {
+                        $("#lstAttachLink tr").removeClass("multiple-sortable-selected");
+                        $("#lstAttachLink tr").removeClass("ui-sortable-helper");
+                    },
+                    stop : function(event, elem) {
+                    }
+                });
+            }
+
+            function getAttachInnerNoticeObject() {
+                var pElem = document.createElement("p");
+                pElem.id = "attachInnerNotice";
+                pElem.className = "attachInnerNotice_p_on";
+
+                var spanElem = document.createElement("span");
+                spanElem.innerText = strLangMJS01;
+                spanElem.className = "attachInnerNotice_span";
+
+                pElem.appendChild(spanElem);
+
+                return pElem;
+            }
+
+            function showAttachInnerNotice() {
+                var fileCnt = document.querySelectorAll("#filelist tr[data]").length;
+                if (fileCnt > 0) {
+                    document.getElementById("attachInnerNotice").className = "attachInnerNotice_p_off";
+                } else {
+                    document.getElementById("attachInnerNotice").className = "attachInnerNotice_p_on";
+                }
+            }
 		</script>
 	</head>  
-	<body style ="width:100%;height:100%;overflow:hidden">   
+	<body ondragover ="defaultenter(event)" ondragenter ="defaultenter(event)" style ="width:100%;height:100%;overflow:hidden">   
         <div style="width:100%;white-space:nowrap;display:inline-block; height: 20px;">
             <div style="float:left">
                 <a class="imgbtn imgbck" onclick="btnfileup()"><span><spring:message code='ezCircular.t96' /></span></a>
@@ -337,7 +401,7 @@
              	<P class="prog_bar"><span id="prog_bar" style="width:0%"></span></P> <span class="prog_num"><strong id ="prog_num">0</strong>%</span>
              </div>
         </div>
-        <div id="lstAttachLink" ondragenter="onDragEnter(event)"  ondragover="onDragOver(event)" ondrop="onDrop(event)" style="overflow:auto;">
+        <div id="lstAttachLink" class="ui-sortable" ondragenter="onDragEnter(event)"  ondragover="onDragOver(event)" ondrop="onDrop(event)" style="overflow:auto;">
         </div>
         <input id="file" type="file" onchange="filechange(event)" multiple style="width:1px;height:1px;display:none;"/>
         <input type="hidden" value="upload" onclick ="fileupload()" />

@@ -13,6 +13,7 @@ import java.util.Optional;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -675,8 +676,8 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			content = content.replace("replace_" + scheme, scheme);
 	        
 			jsonParam.put("content", content);
-			
-			String addDeptSch = jsonParam.get("addDeptSch").toString();
+
+			String addDeptSch = StringUtils.defaultIfBlank(String.valueOf(jsonParam.get("addDeptSch")), "Y") ;
 			String scheduleType = jsonParam.get("scheduleType").toString();
 	        
 	        int resultScheduleID = mScheduleService.insertSchedule(jsonParam, utcStartDate, utcEndDate, info.getTenantId(), realPath, locale, info.getOffSet(), info.getLang()); 

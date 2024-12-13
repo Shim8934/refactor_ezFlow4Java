@@ -1931,6 +1931,8 @@
 								<li id ="addScrapBtn"><span onclick="addScrap()"><spring:message code='ezBoard.kmh13'/></span></li>
 								<li id ="delScrapBtn"><span onclick="delScrap()"><spring:message code='ezBoard.kmh14'/></span></li>	
 							</c:when>
+							<c:when test="${empty MyBoardScrapFlag || MyBoardScrapFlag eq 'NONE'}">
+							</c:when>
 							<c:otherwise>
 							    <li id ="addScrapBtn"><span onclick="addScrap()"><spring:message code='ezBoard.kmh13'/></span></li>	
 							</c:otherwise>

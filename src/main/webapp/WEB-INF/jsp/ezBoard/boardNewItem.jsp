@@ -900,6 +900,7 @@
 		        
 		        if (CrossYN() && pUrl.toLowerCase().indexOf(".hwp") < 0 ) {
 		            if (attachxml != "") {
+						callMoveAttachFileOrder(attachxml);
 		                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ATTACHMENTS", attachxml);
 		            } else {
 		                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ATTACHMENTS", "");
@@ -1301,6 +1302,14 @@
 		        xmlDom = null;
 		    	
 		    }
+			
+			function callMoveAttachFileOrder(attachxml) {
+				var tmpFileList = dadiframe.document.querySelectorAll("#filelist tr[_fileindex]");
+				if(tmpFileList.length > 0) {
+					dadiframe.moveAttachFileOrder(tmpFileList, attachxml);
+				}
+			}
+			
 		    function JSleep() {
 		    	return;
 		    }

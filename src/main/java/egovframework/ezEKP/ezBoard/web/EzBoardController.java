@@ -2014,10 +2014,10 @@ public class EzBoardController extends EgovFileMngUtil{
     		boardListItem = ezBoardService.getMyBoardListItem(userInfo, startRow, endRow, boardCount, orderOption1, orderOption2, orderByMap);
     	} else if(mode.equals("temp")) { // 임시저장 게시물 표출 시 companyID 조건 추가
     		boardListItem = ezBoardService.getMyBoardListItemTemp(userInfo, startRow, endRow, boardCount, orderOption1, orderOption2, orderByMap);
-    	} else if(mode.equals("scrap") && boardVO.getScrapContID() != null){
-			boardListItem = ezBoardService.getScrapContItemList(userInfo, startRow, endRow, boardCount, orderOption1, orderOption2, boardVO.getScrapContID(), scrapContBoardListView_FG);
-    	} else if(mode.equals("scrap")){
-			boardListItem = ezBoardService.getMyBoardListItemScrap(userInfo, startRow, endRow, boardCount, orderOption1, orderOption2, scrapBoardListView_FG);
+    	} else if (mode.equals("scrap") && boardVO.getScrapContID() != null) {
+			boardListItem = ezBoardService.getScrapContItemList(userInfo, startRow, endRow, boardCount, orderOption1, orderOption2, boardVO.getScrapContID(), scrapContBoardListView_FG, orderByMap);
+    	} else if (mode.equals("scrap")) {
+			boardListItem = ezBoardService.getMyBoardListItemScrap(userInfo, startRow, endRow, boardCount, orderOption1, orderOption2, scrapBoardListView_FG, orderByMap);
     	}
     	
     	int dlength = boardListItem.size();
@@ -2718,9 +2718,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		} else if(mode.equals("temp")) {
 			boardCount = ezBoardService.getSearchMyBoardItemCountTemp(userInfo, boardVO, searchMap);
 		} else if(mode.equals("scrap") && boardVO.getScrapContID() != null) {
-			boardCount = ezBoardService.getSearchScrapContItemListCount(userInfo, boardVO, scrapContBoardListView_FG);
+			boardCount = ezBoardService.getSearchScrapContItemListCount(userInfo, boardVO, scrapContBoardListView_FG, searchMap);
 		} else if(mode.equals("scrap")) {
-			boardCount = ezBoardService.getSearchMyBoardItemCountScrap(userInfo, boardVO, scrapBoardListView_FG);
+			boardCount = ezBoardService.getSearchMyBoardItemCountScrap(userInfo, boardVO, scrapBoardListView_FG, searchMap);
 		}
 		
 		/* 2018-10-18 홍승비 - 나의게시물 검색을 위해 companyID 추가 */
@@ -2763,9 +2763,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		} else if(mode.equals("temp")){
 			boardSearchList = ezBoardService.getSearchMyBoardItemListTemp(boardListVO, boardVO, searchMap, orderByMap);
 		} else if(mode.equals("scrap") && boardVO.getScrapContID() != null) {
-			boardSearchList = ezBoardService.getSearchScrapContItemList(boardListVO, boardVO, scrapContBoardListView_FG);
+			boardSearchList = ezBoardService.getSearchScrapContItemList(boardListVO, boardVO, scrapContBoardListView_FG, searchMap, orderByMap);
 		} else if(mode.equals("scrap")){
-    		boardSearchList = ezBoardService.getSearchMyBoardItemListScrap(boardListVO, boardVO, scrapBoardListView_FG);
+    		boardSearchList = ezBoardService.getSearchMyBoardItemListScrap(boardListVO, boardVO, scrapBoardListView_FG, searchMap, orderByMap);
 		}
 		
 		int dlength = boardSearchList.size();

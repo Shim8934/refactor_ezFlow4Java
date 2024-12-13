@@ -87,3 +87,6 @@ var strLang80 = "第二"
 var strLang81 = "第三"
 var strLang82 = "第四"
 var strLang83 = "最后"
+
+// 2024-06-28 민지수 - 업무관리 > 첨부파일 드래그 앤 드롭 안내 메세지 추가
+var strLangMJS01 = "拖曳和拖放可以更改文件的顺序。";
