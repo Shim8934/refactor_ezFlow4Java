@@ -3098,7 +3098,7 @@ public class CommonUtil {
 	/** 2021-12-08 홍승비 - HTML5 지원 웹 동영상 파일 확장자 체크용 공통 메서드 추가 */
 	public boolean checkMovExtension(String fileExt) {
 		boolean result = false;
-		String[] movExts = {"mp4", "ogg", "webm"};
+		String[] movExts = {"mp4", "webm"};
 		
 		if (fileExt != null && ArrayUtils.contains(movExts, fileExt)) {
 			result = true;
