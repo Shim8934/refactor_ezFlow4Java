@@ -9715,6 +9715,10 @@ public class EzBoardController extends EgovFileMngUtil{
 					
 					boardInfo = getBoardInfo(boardSearchList.get(j).get("BOARDID").toString(), userInfo);
 					resultXML.append("<DATA13>" + boardInfo.getRead_FG() +"</DATA13>");
+
+					resultXML.append("<EXT>" + commonUtil.cleanValue(String.valueOf(boardSearchList.get(j).get("EXT"))) + "</EXT>");
+					resultXML.append("<FILEPATH>" + commonUtil.cleanValue(String.valueOf(boardSearchList.get(j).get("FILEPATH"))) + "</FILEPATH>");
+					
 					boardInfo = null;
 					
 				}
