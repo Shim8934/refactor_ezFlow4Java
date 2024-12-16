@@ -6603,7 +6603,7 @@
 
 	<statement id="EzCommonDAO.createIsDeleteBlock">
 		ALTER TABLE
-			ISDELETEBLOCK
+			TBL_SYSTEMCONFIG
 		ADD
 		   ISDELETEBLOCK CHAR(1) DEFAULT 'N'
 	</statement>
