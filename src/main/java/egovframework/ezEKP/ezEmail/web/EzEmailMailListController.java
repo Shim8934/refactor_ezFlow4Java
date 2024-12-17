@@ -291,7 +291,7 @@ public class EzEmailMailListController {
 		model.addAttribute("pDeleteBoxID", pDeleteBoxID);
 		model.addAttribute("isDotNetIntegration", isDotNetIntegration);
 		model.addAttribute("folderName", folderName);
-		model.addAttribute("url", url.replace("\"","\\\""));
+		model.addAttribute("url", url);
 		model.addAttribute("folderType", folderType);
 		model.addAttribute("isSentItems", isSentItems);
 		model.addAttribute("userLang", userInfo.getLang());

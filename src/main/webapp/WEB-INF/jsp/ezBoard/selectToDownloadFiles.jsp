@@ -12,6 +12,7 @@
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('ezBoard.e1', 'msg')}"></script>
     </head>
 	<body class="popup">
 	    <h1><spring:message code='ezBoard.t10025'/></h1>
@@ -64,7 +65,7 @@
 				        <img src='/images/email/mail_006.gif'>
 		    		</c:otherwise>
 		    	    </c:choose>
-		    	    <c:url value="/ezCommunity/getCommunityAttachInfo.do" var="url">
+		    	    <c:url value="/ezBoard/boardAttachDown.do" var="url">
 		    	    	<c:param name="filePath" value="${attach.filePath}"/>
 		    	    	<c:param name="fileName" value="${attach.fileName}"/>
 	    	    	</c:url>
@@ -84,38 +85,38 @@
     <script type="text/javascript">
     
    	var cbx_all = document.getElementById('cbx_all');
-    var selectCheckboxes = document.getElementsByName('fileSelect');
+       var selectCheckboxes = document.getElementsByName('fileSelect');
 
-    // 2024-09-30 조수빈 - 최상단 체크박스 값에 따라 하위의 체크박스들이 일괄 선택/해제 되도록 함
+       // 2024-09-30 조수빈 - 최상단 체크박스 값에 따라 하위의 체크박스들이 일괄 선택/해제 되도록 함
     function checkAll() {
 
-		for (var i = 0; i < selectCheckboxes.length; i++) {
-		    selectCheckboxes[i].checked = cbx_all.checked;
-		}
+           for (var i = 0; i < selectCheckboxes.length; i++) {
+               selectCheckboxes[i].checked = cbx_all.checked;
+           }
     }
     
     // 2024-09-30 조수빈 -하위의 체크박스들이 모두 체크된 경우 최상단 체크박스가 선택 / 하나라도 해제된 경우 최상단 체크박스가 해제되도록 함.
     function checkSelects() {
-		var allChecked = true;
-		
-		for (var i = 0; i < selectCheckboxes.length; i++) {
-			if (!selectCheckboxes[i].checked) {
-				allChecked = false;
-				break;
-			}
-		}
+        var allChecked = true;
 
-		cbx_all.checked = allChecked;
-	}
+           for (var i = 0; i < selectCheckboxes.length; i++) {
+               if (!selectCheckboxes[i].checked) {
+                   allChecked = false;
+                   break;
+               }
+           }
+
+            cbx_all.checked = allChecked;
+    }
     
-	var suffix = 0;	
+    var suffix = 0;	
     
     function btn_OK() {
-		var checks = document.getElementById('lstAttachLink');
-		var checkedFiles = $("#lstAttachLink").find("input:checkbox[name='fileSelect']:checked");
-		var checkedFilesLength = checkedFiles.length;
-		var filePath = ""; // 전체파일경로
-		var filePathTemp = "";
+   		var checks = document.getElementById('lstAttachLink');
+   		var checkedFiles = $("#lstAttachLink").find("input:checkbox[name='fileSelect']:checked");
+           var checkedFilesLength = checkedFiles.length;
+           var filePath = ""; // 전체파일경로
+           var filePathTemp = "";
 		var fileNames = ""; // 파일이름
 		var fileNamesUID = ""; // 파일이름(UID 포함)
 		
@@ -142,7 +143,7 @@
 			}
 			
 			var $frm = $("<form></form>");
-	    	$frm.attr('action', "/ezCommunity/downloadAttachAll.do");
+	    	$frm.attr('action', "/ezBoard/downloadAttachAll.do");
 	    	$frm.attr('method', 'post');
 	    	$frm.appendTo('body');
 	

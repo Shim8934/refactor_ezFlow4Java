@@ -1089,13 +1089,7 @@ function organtreeview(thisobjid, elobjid) {
     				var nodeHtml = "<span id= 'res" + nodeXML.getElementsByTagName('NODE')[k].getElementsByTagName('DATA1')[0].textContent + "'><span><div class='node_div'>";
     				
     				for (var j = 0; j < depth.length; j++) {
-	                    if (depth.charAt(j) == "1") {
-	                        //nodeHtml += ("<img src='" + g_baseImage["dot_continue"] + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
-	                    	nodeHtml += "<span class='sub_iconLNB tree_blank'></span>";
-	                    } else {
-	                        //nodeHtml += ("<img src='" + g_baseImage["space"] + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
-	                        nodeHtml += "<span class='sub_iconLNB tree_blank' id='" + g_toggleid + nodeCount + "'></span>";
-	                    }
+                        nodeHtml += "<span class='sub_iconLNB tree_blank'></span>";
     				}
                 }
             	k++;

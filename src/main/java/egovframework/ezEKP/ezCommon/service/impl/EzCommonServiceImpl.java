@@ -4461,6 +4461,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         }
     }
 	
+    @Override
+    public void insertServername() throws Exception {
+        ezCommonDAO.insertServername();
+    }
+    
 	@Override
 	public void insertScrapTenantConfig() throws Exception {
         List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();

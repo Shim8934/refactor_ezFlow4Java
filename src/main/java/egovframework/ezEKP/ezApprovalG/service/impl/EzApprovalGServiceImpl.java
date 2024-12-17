@@ -14314,7 +14314,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			ezApprovalGDAO.insertTmpReceiptPointInfo(map);
 			ezApprovalGDAO.insertTmpAprOpinionInfo(map);
-			ezApprovalGDAO.insertTmpAprDocAttachInfo(map);
 			ezApprovalGDAO.insertTmpExpAprLine(map);
 			ezApprovalGDAO.insertTmpAprLineInfo(map);
 			ezApprovalGDAO.insertTmpExpAprDocInfo(map);
@@ -14324,7 +14323,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                 map.put("orgDoc", oldDocID);
                 map.put("attachfileSn", aprAttach.getAttachSN());
                 map.put("tmpHref", aprAttach.getAttachHref());
-                ezApprovalGDAO.insertTmpAttachInfo(map);
+                
+                if (strLangFile.equals(aprAttach.getAttachType())) {
+                    ezApprovalGDAO.insertTmpAttachInfo(map);
+                } else if (strLangDocument.equals(aprAttach.getAttachType())) {
+                    ezApprovalGDAO.insertTmpAprDocAttachInfo(map);
+                }
             }
 			
 		} else {
@@ -14350,7 +14354,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 			ezApprovalGDAO.insertTmpReceiptPointInfo(map);
 			ezApprovalGDAO.insertTmpAprOpinionInfo(map);
-			ezApprovalGDAO.insertTmpAprDocAttachInfo(map);
 			ezApprovalGDAO.insertTmpExpAprLine(map);
 			ezApprovalGDAO.insertTmpAprLineInfo(map);
 			
@@ -14371,7 +14374,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                 map.put("orgDoc", oldDocID);
                 map.put("attachfileSn", aprAttach.getAttachSN());
                 map.put("tmpHref", aprAttach.getAttachHref());
-                ezApprovalGDAO.insertTmpAttachInfo(map);
+                
+                if (strLangFile.equals(aprAttach.getAttachType())) {
+                    ezApprovalGDAO.insertTmpAttachInfo(map);
+                } else if (strLangDocument.equals(aprAttach.getAttachType())) {
+                    ezApprovalGDAO.insertTmpAprDocAttachInfo(map);
+                }
             }
 		}
 		

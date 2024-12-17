@@ -24,6 +24,8 @@
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/escapenew.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery.multipleSortable.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/attach_CK.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/webfolderFilePick.js')}"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
@@ -260,6 +262,17 @@
 				
 				//btn_AttachDel.disabled = true; 
 				
+				for (var i = 0; i<4; i++) {
+					var attachHead = document.getElementById("attachList_TH_"+[i]);
+					if (i == 0) {
+						attachHead.setAttribute("width","143px");
+					} else if (i==1) {
+						attachHead.setAttribute("width","435px");
+					} else if (i==2) {
+						attachHead.setAttribute("width","177px");
+					}
+				}
+				
 				// 웹폴더첨부를 위한 파라미터 설정
 				pickerData = {
 						'mode' 		: 'pickup', 		  // pickup: 웹폴더 → 첨부
@@ -271,6 +284,8 @@
 				filetag.addEventListener("click", function(){
 					initialize();
 				});
+				
+				setAttachSortable();
 			}
 			
 			// 파일Size Text처리 함수
@@ -1360,7 +1375,7 @@
 		  <tr>
 		    <td style="text-align:center;">
 		    	<div class="listview" style="min-width:780px;">
-		        	<div id="ATTACH" ondragenter="onDragEnter(event)"  ondragover="onDragOver(event)" ondrop="onDrop(event)" STYLE="overflow-x:hidden;HEIGHT:455px;min-width:780px;margin:auto;"></div>
+		        	<div id="ATTACH" class="ui-sortable" ondragenter="onDragEnter(event)"  ondragover="onDragOver(event)" ondrop="onDrop(event)" STYLE="overflow-x:hidden;HEIGHT:455px;min-width:780px;margin:auto;"></div>
 		      	</div>
 		      	<%-- 2020-11-12 홍승비 - 파일첨부 관련 알림 메세지 영역 --%>
 		      	<div style="text-align:left; line-height:21px;">

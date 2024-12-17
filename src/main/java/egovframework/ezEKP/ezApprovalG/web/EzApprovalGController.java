@@ -3259,7 +3259,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			String oldYear = ezApprovalGService.getDocHrefYear(fileDocID, userInfo.getCompanyID(), userInfo.getTenantId());
 			String upd = dirPath + userInfo.getCompanyID() + commonUtil.separator + "uploadFile" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(fileDocID) + commonUtil.separator;
 			String beforePath = commonUtil.getRealPath(request) + commonUtil.detectPathTraversal(xmlDom.getElementsByTagName("DATA1").item(k).getTextContent());
-			String fileName = beforePath.split("/")[xmlDom.getElementsByTagName("DATA1").item(k).getTextContent().split("/").length - 1];
+			String fileName = Paths.get(beforePath).getFileName().toString();
 			String deleteYN = xmlDom.getElementsByTagName("DELETE").item(k).getTextContent();
 
 			if (!(deleteYN != null && deleteYN.equals("N"))) {

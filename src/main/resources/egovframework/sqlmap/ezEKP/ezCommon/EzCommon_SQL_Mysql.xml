@@ -5925,6 +5925,22 @@
         VALUES (#v_TENANTID#, 'MODULEEDITOR', 'KUKUDOCS', 'CK, NAMO, TAGFREE, FORM, POLARIS, DEXT, KUKUDOCS, HWP 중 사용할 에디터를 설정한다. (default: KUKUDOCS)', '전자결재, 메일을 제외한 에디터 타입', '2024-09-23 00:00:00', '일반')
     </insert>
 	
+	<select id="EzCommonDAO.checkServername" resultClass="String">
+		SELECT 
+		    SERVER_NAME
+		FROM 
+		    TBL_TENANT_SERVERNAME
+		WHERE
+		    SERVER_NAME = '127.0.0.1'
+		AND
+			TENANT_ID = 0
+	</select>
+	
+	<insert id="EzCommonDAO.insertServername">
+		INSERT INTO TBL_TENANT_SERVERNAME (SERVER_NAME, TENANT_ID)
+		VALUES ('127.0.0.1', 0);
+	</insert>
+	
     <select id="EzCommonDAO.checkScrapTenantConfig" resultClass="String" parameterClass="Map">
 		SELECT
 			property_value
@@ -6129,7 +6145,7 @@
 
 	<statement id="EzCommonDAO.createIsDeleteBlock">
 		ALTER TABLE
-			ISDELETEBLOCK
+			TBL_SYSTEMCONFIG
 		ADD
 		   ISDELETEBLOCK CHAR(1) DEFAULT 'N'
 	</statement>

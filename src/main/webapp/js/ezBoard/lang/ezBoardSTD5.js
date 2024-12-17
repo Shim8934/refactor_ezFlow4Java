@@ -97,3 +97,6 @@ var strLangAttachJIH01 = "첨부";
 var strLangAttachJIH02 = "파일명은 ";
 var strLangAttachJIH03 = "자를 넘을 수 없습니다.";
 var strLangAttachJIH04 = "에러가 발생하였습니다.";
+
+// 2024-06-28 민지수 - 게시판 > 첨부파일 드래그 앤 드롭 안내 메세지 추가
+var strLangMJS01 = "Bạn có thể kéo và thả để thêm tệp và thay đổi thứ tự của các tệp đã thêm.";

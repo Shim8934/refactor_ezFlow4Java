@@ -1181,7 +1181,7 @@
 			    	flag = true;
 			    	rtnVal = "<select id='titleSelector' style='width:100%;height:25px;' onchange='jobChange(this)'>";
 			    	for (i = 0; i < oRows.length; i++) {
-			    		if (SelectSingleNodeValue(GetChildNodes(oRows[i])[3],"VALUE") != "N") {
+			    		if (SelectSingleNodeValue(GetChildNodes(oRows[i])[2],"VALUE") != "N") {
 				    		if (flag) {
 // 					    		jobID = SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"VALUE");
 // 					    		jobTitle = SelectSingleNodeValue(GetChildNodes(oRows[i])[1],"VALUE");
@@ -1221,7 +1221,7 @@
 			    	rtnVal = "<select id='roleSelector' style='width:100%;height:25px;' onchange='jobChange(this)'>";
 				    		rtnVal += "<option id='0' nmval='' nmval2=''>(<spring:message code='ezApprovalG.t852' />)</option>";
 			    	for (i = 0; i < oRows.length; i++) {
-			    		if (SelectSingleNodeValue(GetChildNodes(oRows[i])[3],"VALUE") != "N") {
+			    		if (SelectSingleNodeValue(GetChildNodes(oRows[i])[2],"VALUE") != "N") {
 				    		if (flag) {
 // 					    		jobID = SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"VALUE");
 // 					    		jobTitle = SelectSingleNodeValue(GetChildNodes(oRows[i])[1],"VALUE");

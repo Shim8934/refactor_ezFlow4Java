@@ -29,3 +29,8 @@ var strLang28 = "These circulars are not.";
 var strLang29 = "/blank_us.htm";
 var strLang30 = "no circulation.";
 var strLang50 = "No results were found for your search.";
+
+// 2024-06-28 민지수 - 회람판 > 첨부파일 드래그 앤 드롭 안내 메세지 추가
+var strLangMJS01 = "You can drag and drop to add files and change the order of added files.";
+var strLangMJS02 = "Attachment filename"
+var strLangMJS03 = "Filesize"
