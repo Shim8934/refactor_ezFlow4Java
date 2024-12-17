@@ -3419,7 +3419,7 @@ var SurveyCreate     = function() {
 			}
 			
 			if (col.length == 0) {mtrObj["error"] = "strMaxtrix2"; return mtrObj;}
-			if (colSet.size != row.length) {mtrObj["error"] = "strMaxtrix4"; return mtrObj;}
+			if (colSet.size != col.length) {mtrObj["error"] = "strMaxtrix4"; return mtrObj;}
 			Array.prototype.push.apply(option, col);
 		}
 		
