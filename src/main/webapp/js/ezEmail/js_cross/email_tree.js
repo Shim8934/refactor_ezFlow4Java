@@ -288,11 +288,21 @@ function toggleTreeNode(isFolderManager) {
 }
 
 function HiddenMailProgress() {
-	document.getElementById("mailPanel").style.display = "none";
+	var mailPanel = document.getElementById("mailPanel");
+	if (mailPanel) {
+		document.getElementById("mailPanel").style.display="none";
+	} else {
+		document.getElementById("mailPanel_sub").style.display="none";
+	}
 	document.getElementById("MailProgress").style.display = "none";
 }
 function ShowMailProgress() {
-	document.getElementById("mailPanel").style.display='';
+	var mailPanel = document.getElementById("mailPanel");
+	if (mailPanel) {
+		document.getElementById("mailPanel").style.display='';
+	} else {
+		document.getElementById("mailPanel_sub").style.display='';
+	} 
 	document.getElementById("MailProgress").style.top = (document.body.clientHeight / 2) + "px";
 	document.getElementById("MailProgress").style.width = (document.body.clientWidth) + "px";
 	document.getElementById("MailProgress").style.display = '';
