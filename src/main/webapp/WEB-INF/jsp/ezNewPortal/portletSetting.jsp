@@ -10,6 +10,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code='ezNewPortal.t009' /></title>
+		<link href="${util.addVer('/css/default.css')}" rel="stylesheet" type="text/css">
 		<link href="${util.addVer('main.e15', 'msg')}" rel="stylesheet" type="text/css">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/ezNewPortal/portal.css')}" />
 		<link href="${util.addVer('main.portal', 'msg')}" rel="stylesheet" type="text/css">

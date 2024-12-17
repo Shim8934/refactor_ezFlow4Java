@@ -7,6 +7,7 @@
 	<head>
 		<title><spring:message code='ezPortal.t51'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css" />
 		<style>
 	    	.mainlist tr td:first-child {

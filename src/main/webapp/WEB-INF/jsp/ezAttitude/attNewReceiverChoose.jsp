@@ -7,6 +7,7 @@
 	<head>
 	    <title><spring:message code='ezAttitude.t109'/></title>
 	    <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
 	    <link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 	    <style>

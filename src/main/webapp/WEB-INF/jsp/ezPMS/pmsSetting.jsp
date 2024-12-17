@@ -7,7 +7,8 @@
 <html>
 <head>
 <title><spring:message code='ezPMS.t171' /></title>
-<link rel="stylesheet" href="${util.addVer('ezPMS.e1', 'msg')}" type="text/css" />
+<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('ezPMS.e1', 'msg')}" type="text/css" />
 <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css" />
 
 <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>

@@ -11,7 +11,8 @@
 <title><spring:message code='ezPMS.t154' /></title>
 <link rel="stylesheet" href="${util.addVer('/css/ezPMS/default/style.css')}" type="text/css" />
 <link rel="stylesheet" href="${util.addVer('/css/ezPMS/pms.css')}" type="text/css" />
-<link rel="stylesheet" href="${util.addVer('ezPMS.e1', 'msg')}" type="text/css" />
+<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('ezPMS.e1', 'msg')}" type="text/css" />
 <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezPMS/jstree.js')}"></script>

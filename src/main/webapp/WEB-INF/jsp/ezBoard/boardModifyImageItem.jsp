@@ -35,6 +35,7 @@
 	         	vertical-align:middle;
 	         }  
 	    </style>
+        <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
         <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
    	    <c:if test="${!isCrossBrowser}">

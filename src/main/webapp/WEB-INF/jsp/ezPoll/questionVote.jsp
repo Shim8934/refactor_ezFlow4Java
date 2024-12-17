@@ -7,6 +7,7 @@
 	<head>
 		<title><spring:message code='ezPoll.t232' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
 		<link rel="stylesheet" href="${util.addVer('ezPoll.i1', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/css/ezPoll/vote.css')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/css/font-awesome-5.0.10/css/fontawesome-all.css')}">

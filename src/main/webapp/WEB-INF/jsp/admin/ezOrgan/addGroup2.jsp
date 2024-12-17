@@ -5,6 +5,7 @@
 <html>
 	<head>
 	    <title>권한그룹 추가/편집</title>
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
 	    <link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('/js/ezEmail/Controls/ezSearchDatePicker.htc')}" type="text/css">

@@ -7,6 +7,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<title>Create Poll</title>	
 		
+	<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
 	<link rel="stylesheet" href="${util.addVer('ezPoll.i1', 'msg')}" type="text/css">	
 	<link rel="stylesheet" href="${util.addVer('/css/ezPoll/sort.css')}" type="text/css">	
 	<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/timeControls/jquery.timepicker.css')}" />

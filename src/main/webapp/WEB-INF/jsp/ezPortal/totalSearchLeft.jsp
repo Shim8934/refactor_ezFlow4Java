@@ -12,6 +12,7 @@
 	    <script type="text/javascript" src="${util.addVer('/js/TreeView.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
 	    
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
 	   	<link rel="stylesheet" href="${util.addVer('main.e15', 'msg')}" type="text/css">
 	    <link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
 	</head>

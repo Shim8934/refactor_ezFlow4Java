@@ -5,6 +5,7 @@
 	<head>
 		<title><spring:message code='ezStatistics.t1013'/></title>
 		<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('ezStatistics.e2', 'msg')}" type="text/css" />
 		<style>
 			.mainlist tr th {

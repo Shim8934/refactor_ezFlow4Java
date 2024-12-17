@@ -7,6 +7,7 @@
 	<head>
 		<title><spring:message code='ezResource.kwc03'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=uft-8">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
 		<link rel="stylesheet" href="${util.addVer('ezResource.e2', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">

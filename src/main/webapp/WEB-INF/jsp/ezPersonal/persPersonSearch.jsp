@@ -4,6 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('ezPersonal.e3', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">

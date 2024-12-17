@@ -6,7 +6,8 @@
 	<head>
 		<title></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezPersonal.e3', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('ezPersonal.e3', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/jquery-ui.min.css')}"/>
 		<style>
 		.listview, .popuplist .listview table, .popuplist .listview th, .popuplist .listview td, .content .listview table, .content .listview th, .content .listview td {

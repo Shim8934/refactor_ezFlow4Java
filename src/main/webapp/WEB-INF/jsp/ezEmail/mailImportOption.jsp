@@ -5,6 +5,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
 <link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
 <title>Insert title here</title>
 <script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>

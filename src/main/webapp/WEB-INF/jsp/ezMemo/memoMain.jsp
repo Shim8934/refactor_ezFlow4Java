@@ -9,7 +9,8 @@
 	<head>
 		<title></title>		
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="${util.addVer('ezMemo.c1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('ezMemo.c1', 'msg')}" type="text/css" />
 		<link href="${util.addVer('/css/previewmail.css')}" rel="stylesheet" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/jquery-ui.css')}">
 		<link rel="stylesheet" href="${util.addVer('/css/ezMemo/memo.css')}">

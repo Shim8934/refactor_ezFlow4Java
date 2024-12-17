@@ -7,7 +7,8 @@
 	<head>
 		<title>EmployeeofMonth</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezPersonal.e3', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('ezPersonal.e3', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('/css/ezPersonal/slick.css')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/css/ezPersonal/slick-theme.css')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('main.e4', 'msg')}" type="text/css" />

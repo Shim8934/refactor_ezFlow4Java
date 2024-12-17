@@ -7,6 +7,7 @@
 		<title><spring:message code='ezStatistics.t1030'/></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	    <link rel="stylesheet" href="${util.addVer('/js/ezStatistics/js/jquery.jqplot.min.css')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('ezStatistics.e2', 'msg')}" type="text/css" />
 		<style>
 			.tstyle2 td {padding:4px 0px; text-overflow:none}

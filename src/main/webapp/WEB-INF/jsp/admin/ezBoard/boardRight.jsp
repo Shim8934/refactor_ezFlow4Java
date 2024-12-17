@@ -4,6 +4,7 @@
 <html>
 	<head>		
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
 	    <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css" />	    
 		<style type="text/css">
 			.warningbox{margin:240px auto 0px auto; padding:40px 20px 0px 20px; width:685px; height:184px; border:1px solid #d6d6d6; box-sizing:border-box; }

@@ -7,6 +7,7 @@
 		<title><spring:message code='ezEmail.t455' /></title>
         <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
 		<link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
 		<link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
 		<style>
 			.node_normal, .node_selected { width: auto;}

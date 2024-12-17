@@ -5,6 +5,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
 		<link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
 		<link href="${util.addVer('/css/previewmail.css')}" rel="stylesheet" type="text/css">
 		<script type="text/javascript" src="${util.addVer('ezBoard.e1', 'msg')}"></script>

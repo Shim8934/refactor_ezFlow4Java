@@ -6,6 +6,7 @@
 	<head>
 		<title><spring:message code="ezResource.t241" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
 		<link rel="stylesheet" href="${util.addVer('ezResource.e2', 'msg')}" type="text/css" />
 		<link type="text/css" rel="stylesheet" href="${util.addVer('/css/Tab.css')}" />
 		<link type="text/css" rel="stylesheet" href="${util.addVer('/css/olstyle_nonIE.css')}" />

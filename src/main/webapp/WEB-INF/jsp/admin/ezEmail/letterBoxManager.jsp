@@ -5,6 +5,7 @@
 <html style="height: 99%;">
 	<head>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
 	    <link rel="stylesheet" href="${util.addVer('main.e15', 'msg')}" type="text/css" />
 	    <link rel="stylesheet" href="${util.addVer('/css/ezEmail/style.css')}" />
 	    <link rel="stylesheet" href="${util.addVer('/js/dist/themes/default/style.min.css')}" />

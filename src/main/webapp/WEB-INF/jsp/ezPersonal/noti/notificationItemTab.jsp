@@ -41,6 +41,7 @@ private static String makeCheckbox(Finder disableItemFinder, int mainType, int s
 <html>
 <head>
 <meta charset="utf-8">
+<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
 <link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />
 <style>
 body { margin: 0; }

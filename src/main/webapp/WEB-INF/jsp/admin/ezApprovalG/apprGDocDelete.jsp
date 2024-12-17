@@ -5,7 +5,8 @@
 <HTML>
 	<HEAD>
 		<title><spring:message code='ezApprovalG.t1569'/></title>
-		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
 		<link type="text/css" rel="stylesheet" href="${util.addVer('/css/Tab.css')}" />
 	    <script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>

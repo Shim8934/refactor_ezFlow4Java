@@ -4,6 +4,7 @@
 <html ondragover="bodydragover(event)">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
 		<link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
 		<style>
 			#lstAttachLink {

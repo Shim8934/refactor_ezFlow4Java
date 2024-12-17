@@ -7,6 +7,7 @@
 	<head>
 		<title><spring:message code='ezBoard.t282'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
 		<link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/css/previewBoard.css')}" type="text/css">
 		<style type="text/css">

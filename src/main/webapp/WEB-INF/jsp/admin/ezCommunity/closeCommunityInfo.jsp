@@ -7,6 +7,7 @@
 	<head>
 		<title><spring:message code = 'ezCommunity.t1' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
 		<link rel="stylesheet" href="${util.addVer('ezCommunity.i1', 'msg')}" type="text/css">
 	</head>
 	<body class="popup" style="overflow:hidden;">

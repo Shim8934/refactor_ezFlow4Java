@@ -7,6 +7,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code='ezNewPortal.t054' /></title>
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css" />
 		<style type="text/css">
 			.themeThumbnails {width : 350px; height : 200px; border : 1px solid #cecece; margin-top : 15px;}
