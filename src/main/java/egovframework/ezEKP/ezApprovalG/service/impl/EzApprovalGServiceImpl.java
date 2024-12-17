@@ -2260,7 +2260,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String orgDocNumCode = "";
 		String docNumCode = "";
 		String extFileName = "";
-		String docNumZeroCnt = getDocNumZeroCnt(companyID, tenantID); // 문서채번 자릿수 맞추기 위한 목적으로 구현함
+		String docNumZeroCnt = getDocNumZeroCnt(companyID, tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
@@ -2281,12 +2281,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				extFileName = getExtendedFileName(apprGDocListVO.getHref());
 				docNumCode = deptID + getNDigitNum(sn, 6);
 				
-				docNo = commonUtil.htmlUnescape(deptName) + "-" + sn;
-				//docNo = commonUtil.cleanValue(deptName) + "-" + createDocNO(sn , docNumZeroCnt); // 문서채번 자릿수 맞추기 위한 목적으로 구현함
+				/* 2024-12-11 홍승비 - 반송/회송문서 대장등록 시 문서채번 자릿수를 맞춰주도록 수정 (컨피그에 따라 0이 붙도록 완료문서 채번 로직과 통일, 양식상의 문서번호 양식은 고려하지 않음) */
+				docNo = commonUtil.cleanValue(deptName) + "-" + createDocNO(sn, docNumZeroCnt);
 				
 				if (orgDocNumCode == null || orgDocNumCode.trim().equals("") || !gFlag.equals("G")) {
-//					docNo = commonUtil.cleanValue(deptName) + "-" + sn;
-					
 					//2018-10-04 배현상, companyid 병합에 따른 G버전 오류 개선(ORGCOMPANYID 추가)
 					String strXML = "<SIGNINFOS><SIGNINFO><DOCID>" + newDocID + 
 							"</DOCID><SIGNTYPE>TEXT</SIGNTYPE><SIGNNAME>docnumber" + 
@@ -2297,7 +2295,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					
 					rtnVal = updateSignInfo(xmlDom, companyID, "QUERY", tenantID);
 					
-					if(rtnVal.equals("FALSE")){
+					if (rtnVal.equals("FALSE")) {
 						return "<RESULT>FALSE</RESULT>";
 					}
 				} 
