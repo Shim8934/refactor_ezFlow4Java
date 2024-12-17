@@ -479,7 +479,7 @@ function setBtnEnable() {
 		        tempFlag = true;
 
 		    if (tempFlag) { //문서과
-		        btnReqReSend.style.display = "";    //재전송요청
+		        btnReqReSend.style.display = isRelay ? "" : "none";    //재전송요청
 		        btnDistribute.style.display = "";       //배부
 		        btnReDistribute.style.display = "none"; //재배부요청
 		        // 재접수 기능이 아직 없어서 주석처리.

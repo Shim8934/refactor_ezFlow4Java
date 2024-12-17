@@ -1693,7 +1693,7 @@ function setBtnEnable() {
 		if (tempFlag) { //문서과
 			btnAssign.style.display = "";
 			btnDistribute.style.display = "";
-			btnReqReSend.style.display = "";
+			btnReqReSend.style.display = isRelay ? "" : "none";
 			if (pAprState === "014") {
 				btnReqReSend.style.display = "none";
 				btnReDistribute.style.display = "";
