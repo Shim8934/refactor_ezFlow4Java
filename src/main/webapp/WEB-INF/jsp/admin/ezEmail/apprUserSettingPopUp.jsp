@@ -8,7 +8,7 @@
 <head>
     <title><spring:message code="${title}"/></title>
 	<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
-	<link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+	<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
     <link rel="stylesheet" href="${util.addVer('/js/ezEmail/Controls/ezSearchDatePicker.htc')}">
     <link rel="stylesheet" href="${util.addVer('/css/jquery-ui.css')}"/>
     <link rel="stylesheet" href="${util.addVer('/css/jquery.ui.all.css')}"/>

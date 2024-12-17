@@ -2025,7 +2025,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		out.write("<!DOCTYPE html><head>");
 		out.write("<title>" + egovMessageSource.getMessage("ezEmail.t490", locale) + "</title>");
 		out.write("<META HTTP-EQUIV='Content-Type' CONTENT='text/html; charset=utf-8'>");
-		out.write("<link rel='stylesheet' href='" + egovMessageSource.getMessage("ezEmail.c1", locale) + "' type=text/css>");
+		out.write("<link rel='stylesheet' href='/css/default.css' type=text/css>");
+		out.write("<link rel='stylesheet' href='" + egovMessageSource.getMessage("main.default.css", locale) + "' type=text/css>");
 		out.write("<script type='text/javascript' src='/js/mouseeffect.js'></script>"
 				+ "</head>"
 				+ "<body scroll=no class='popup'>");

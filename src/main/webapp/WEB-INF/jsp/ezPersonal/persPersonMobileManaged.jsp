@@ -7,7 +7,7 @@
 		<title><spring:message code = 'ezPersonal.t998' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
-		<link rel="stylesheet" href="${util.addVer('ezPersonal.e3', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
         <style>
 			.mainlist tr th{white-space:normal; word-break:break-all;}
 			.mainlist tr select{max-width:100%;}

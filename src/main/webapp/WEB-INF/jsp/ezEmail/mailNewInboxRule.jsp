@@ -7,7 +7,7 @@
 		<title><spring:message code='ezEmail.t804' /><c:if test="${shareName != null}"> - <c:out value="${shareName}" /></c:if></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
-		<link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<link href="${util.addVer('/js/jquery/jquery.modal.css')}" rel="stylesheet" type="text/css" />
 		<style>
 			#Conitems span { word-break: break-all; }

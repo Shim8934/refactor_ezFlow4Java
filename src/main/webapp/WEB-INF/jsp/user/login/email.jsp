@@ -11,7 +11,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="shortcut icon" href="/images/icon/gilfavicon.ico">
 <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
-<link rel="stylesheet" href="${util.addVer('main.e15', 'msg')}" type="text/css">
+<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 <style>
 body {
 	position: absolute;

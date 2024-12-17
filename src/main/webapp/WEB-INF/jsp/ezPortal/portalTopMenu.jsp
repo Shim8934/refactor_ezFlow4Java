@@ -9,7 +9,7 @@
 		<c:choose>
 			<c:when test="${mode != 'view'}">
 				<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
-		<link rel="stylesheet" href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 			</c:when>
 			<c:otherwise>
 				<link href="${util.addVer('main.e6', 'msg')}" rel="stylesheet" type="text/css">

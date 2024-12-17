@@ -7,7 +7,7 @@
 	<title><spring:message code='email.appr.menu.normal.manager' /></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
-	<link rel="stylesheet" href="${util.addVer('main.e15', 'msg')}" type="text/css" />
+	<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 	<style>
 		#apprManagerUL > li {width: calc(100vw /3.4); min-width: 280px; padding:0 5px; box-sizing:border-box; }
 		.apprManagerUL_listDIV {height:500px; overflow-y:auto; border:1px solid #f0f1f2; }

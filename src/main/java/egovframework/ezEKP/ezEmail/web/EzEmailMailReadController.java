@@ -5072,7 +5072,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						logger.debug("decryptedFile is deleted. fileName=" + decryptedFile.getName());
 					}
 					
-					model.addAttribute("c1", egovMessageSource.getMessage("ezEmail.c1", locale));
+					model.addAttribute("main.default.css", egovMessageSource.getMessage("main.default.css", locale));
 					model.addAttribute("e1", egovMessageSource.getMessage("ezEmail.e1", locale));
 					model.addAttribute("t63", egovMessageSource.getMessage("ezEmail.t63", locale));
 					model.addAttribute("t161", egovMessageSource.getMessage("ezEmail.t161", locale));

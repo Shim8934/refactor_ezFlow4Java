@@ -8,7 +8,7 @@
 		<title></title>
 		<c:if test="${module != 'jounl' && module != 'mjounl' && module !='apprv' && module !='mapprv' && module !='commu' && module !='mcommu'}">
 			<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
-		<link rel="stylesheet" href="${util.addVer('ezCabinet.css', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		</c:if>
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/ezCabinet/cabinet.css')               }">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/previewmail.css')                     }">

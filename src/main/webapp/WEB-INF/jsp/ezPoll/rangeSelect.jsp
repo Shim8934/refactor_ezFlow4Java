@@ -6,7 +6,7 @@
 	<head>
 		<title><spring:message code='ezPoll.t222' /></title>
 		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
-		<link rel="stylesheet" href="${util.addVer('ezPoll.i1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">   
 		<link href="${util.addVer('/css/ezPoll/rangeSelect.css')}" rel="stylesheet" type="text/css">     
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>

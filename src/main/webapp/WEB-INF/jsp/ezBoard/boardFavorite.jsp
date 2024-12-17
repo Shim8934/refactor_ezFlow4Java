@@ -6,7 +6,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
-		<link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
     	<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css" />
     	<%-- 2018-06-25 홍승비 - strLang 사용을 위해 스크립트 추가 --%>
     	<script type="text/javascript" src="${util.addVer('ezBoard.e1', 'msg')}"></script>
