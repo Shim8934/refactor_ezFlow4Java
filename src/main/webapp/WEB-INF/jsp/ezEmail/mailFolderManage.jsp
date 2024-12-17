@@ -115,7 +115,7 @@
 		        
 		        var childxml = get_childXML(PostTreeView.getvalue(PostTreeView.selectedIndex(), "href"), false, false, true);
                 PostTreeView.putchildxml(PostTreeView.selectedIndex(), childxml);
-                
+				LoadAddressTree(PostTreeView.selectedIndex());
 		        EventCheck = true;
 		    }
 		    
