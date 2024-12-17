@@ -23,6 +23,7 @@
 	        var retVal = new Array();
 	        retVal["isFolderChanged"] = false;
 	        var shareId = "${shareId}";
+			var treeconfig = "";
 	        
 	        document.onselectstart = function () {
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -141,7 +142,8 @@
 	            
 	            var childxml = get_childXML(PostTreeView.getvalue(PostTreeView.selectedIndex(), "href"), false, false, false);
                 PostTreeView.putchildxml(PostTreeView.selectedIndex(), childxml);
-                
+
+				LoadAddressTree(PostTreeView.selectedIndex());
                 retVal["isFolderChanged"] = true;
 	        }
 	        
@@ -150,6 +152,12 @@
 	            PostTreeView.source("<tree><nodes>" + get_childXML("", true, false, false) + "</nodes></tree>");
 	            PostTreeView.update();
 	            PostTreeView.toggle(SelectIndex);
+
+				if (typeof getAllSubTree === 'undefined' || getAllSubTree === false) {
+					getAllSubTree = true;
+				}
+				var openTree = document.getElementById('toggleTreeNode')
+				openTree.className = openTree.className.replace('on', 'off');
 	        }
 
 	        function ReplaceText(orgStr, findStr, replaceStr) {
@@ -183,7 +191,7 @@
         	<a class="imgbtn"><span onclick="btn_Select_onclick()"><spring:message code='ezEmail.t38' /></span></a>
         </div>	
 		
-	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
+	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel_sub">&nbsp;</div>
 		<div style="border:0px solid red;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="MailProgress">
 			<img src="/images/email/progress_img.gif" style="vertical-align:middle;"/>
 		</div>
