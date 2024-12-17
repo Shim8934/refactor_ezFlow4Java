@@ -717,14 +717,12 @@ function selFirstRow(Resultxml) {
         //    document.getElementById("tbtnSelContainer").style.display = "none";
         //}
 
+        /* 2024-12-17 홍승비 - 전자결재G > 결재완료문서 리스트 상에서 선택 > 현재 선택한 문서의 ORGDOCID가 존재하지 않더라도 공람정보 버튼을 표출하도록 수정 */
+    	// ORGDOCID가 존재하는 문서(수신문 등) 선택 시에만 공람정보 버튼이 표출되는 오류 수정 (현재 선택한 문서의 DOCID로 공람문서가 존재하는지 여부는 getInnerLineInfo 쿼리에서 체크함)
         if (approvalFlag == "G") {
-	        if (tr.getAttribute("DATA5").trim() != "" && !!document.getElementById("tDocInfo")) {
-	            document.getElementById("tDocInfo").style.display = "";
-	        } else {
-	        	if (!!document.getElementById("tDocInfo")) {
-	        		document.getElementById("tDocInfo").style.display = "none";
-	        	}
-	        }
+        	if (!!document.getElementById("tDocInfo")) {
+        		document.getElementById("tDocInfo").style.display = "";
+        	}
         }
     }
     else {
@@ -921,19 +919,16 @@ function lvtDoclist_SelChange() {
 
     if (oArrRows.length != 0) {
         var tr = oArrRows[0];
-
         oArrRowsid = tr.id;
+        
+        /* 2024-12-17 홍승비 - 전자결재G > 결재완료문서 리스트 상에서 선택 > 현재 선택한 문서의 ORGDOCID가 존재하지 않더라도 공람정보 버튼을 표출하도록 수정 */
+    	// ORGDOCID가 존재하는 문서(수신문 등) 선택 시에만 공람정보 버튼이 표출되는 오류 수정 (현재 선택한 문서의 DOCID로 공람문서가 존재하는지 여부는 getInnerLineInfo 쿼리에서 체크함)
         if (approvalFlag == "G") {
-	        if (tr.getAttribute("DATA5").trim() != "") {
-	        	if(document.getElementById("tDocInfo")) {
-	        		document.getElementById("tDocInfo").style.display = "";
-	        	}
-	        } else {
-	        	if(document.getElementById("tDocInfo")) {
-	        		document.getElementById("tDocInfo").style.display = "none";
-	        	}
-	        }
+			if (!!document.getElementById("tDocInfo")) {
+				document.getElementById("tDocInfo").style.display = "";
+			}
         }
+        
         DocID = tr.getAttribute("DATA1");
         pURL = tr.getAttribute("DATA2");
         WriterID = tr.getAttribute("DATA3");
