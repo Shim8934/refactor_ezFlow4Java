@@ -196,7 +196,7 @@
 	    var ezPMSToUserId = "${pmsToUserId}";
 	    var ezPMSUserIdType = "${pmsUserIdType}";
 	    var ezPMSTaskId = "${pmsTaskId}";
-	    var isMailToMe = "<c:out value='${isMailToMe}'/>";
+	    var isMailToMe = "<c:out value='${isMailToMe}'/>"; // 메일> 내게쓰기로 열었음
 	    var receiverCount = 0;
         var groupAddressCountMap = {};
         var mailMaxReceiverCount = parseInt("${mailMaxReceiverCount}");
@@ -265,7 +265,7 @@
 	        if (pSecurity == "Security") {
 	            pSecurity = "3";
 	        }
-	        if (typeof (document.getElementById("xmpSubject").outerText) != "undefined" && document.getElementById("xmpSubject").outerText != "")
+	        if (document.getElementById("xmpSubject").outerText) // 값이 있으면 true
 	            document.getElementById("eSubject").value = document.getElementById("xmpSubject").outerText;
 	
 	        importantSelect.selectedIndex = g_eImportance;
@@ -511,25 +511,23 @@
 	        obj.onkeydown = function () {
 	            if (parseInt(window.event.keyCode) >= 48 && parseInt(window.event.keyCode) <= 126)
 	                return false;
-	            if (parseInt(window.event.keyCode) == 189 || parseInt(window.event.keyCode) == 187 ||
-	                    parseInt(window.event.keyCode) == 220 || parseInt(window.event.keyCode) == 219 ||
-	                    parseInt(window.event.keyCode) == 221 || parseInt(window.event.keyCode) == 222 ||
-	                    parseInt(window.event.keyCode) == 186 || parseInt(window.event.keyCode) == 188 ||
-	                    parseInt(window.event.keyCode) == 190 || parseInt(window.event.keyCode) == 191 || parseInt(window.event.keyCode) == 32)
+	            if ([189, 187, 220, 219, 221, 222, 186, 188, 190, 191, 32].includes(parseInt(window.event.keyCode)))
 	                return false;
 	        };
 	    }
 	    
-	    function JSleep(sTime) {
-	        var xmlhttp = createXMLHttpRequest();
-	        xmlhttp.open("GET", "remote/userSleep.aspx?time=" + sTime + "&newid=" + g_newid, false);
-	        xmlhttp.send();
-	        xmlhttp = null;
-	    }
+//	    function JSleep(sTime) { // 쓰이지 않는 것으로 보임.
+//	        var xmlhttp = createXMLHttpRequest();
+//	        xmlhttp.open("GET", "remote/userSleep.aspx?time=" + sTime + "&newid=" + g_newid, false);
+//	        xmlhttp.send();
+//	        xmlhttp = null;
+//	    }
 	    var isClosedSave = false;
 	    window.onbeforeunload = function () {
 	        var retVal = "";
-	        if (retVal != "0" && g_url != "" && ("${folderPath}" != "Draft" && g_cmd != "EDIT")) {
+	        // ↑바로 위에서 초기화를 하는데 retVal != "0" 는 항상 true일 수 밖에 없음.
+//	        if (retVal != "0" && g_url != "" && ("${folderPath}" != "Draft" && g_cmd != "EDIT")) {
+	        if (g_url && (isReserve || ("${folderPath}" != "Draft" && g_cmd != "EDIT"))) { // 출처가 임시보관함이면 지우면 안됨.
 	            if (!isDelted) {
 	                delDrafts();
 	            }
@@ -572,14 +570,15 @@
 	        
 	        g_bDirty = false;
 	        
-	        if (retVal == "1" && g_url != "" && ("${folderPath}" != "Draft" && g_cmd != "EDIT")) {
-	            delDrafts();
-	        }
+	        // onbeforeunload 에서 같은 작업을 하니까 굳이 미리 할 필요 없지 않나?
+//	        if (retVal == "1" && g_url != "" && ("${folderPath}" != "Draft" && g_cmd != "EDIT")) {
+//	            delDrafts();
+//	        }
 	        
 	        if (retVal != "2")
 	            window.close();
 	    }
-	    var isDelted = false;
+	    var isDelted = false; // deleted의 오타 추정.
 	    function delDrafts(del_uid) {
 	    	var delDraftsURL = g_url;
 	    	var delDraftsFiledate = filedate;
@@ -607,33 +606,34 @@
 	        xmlhttp = null;
 	        isDelted = true;
 	    }
-	    var PrintEvent = false;
-	    function Print_onClick() {
-	        PrintEvent = true;
-	        document.getElementById("test").innerHTML = message.GetEditorContent();
-	        var obj = document.getElementById("frmPrint");
-	        var objDoc = obj.contentWindow || obj.contentDocument;
-	        objDoc.btnPrint_onClick();
-	    }
-	    var mail_formatlist_cross_dialogArguments = new Array();
-	    function LoadFormat_onClick() {
-	        mail_formatlist_cross_dialogArguments[1] = LoadFormat_onClick_Complete;
-	        mail_formatlist_cross_dialogArguments[2] = DivPopUpHidden;
-	        DivPopUpShow(460, 467, "mail_FormatList_cross.aspx");
-	    }
-	    function LoadFormat_onClick_Complete(strFileName) {
-	        DivPopUpHidden();
-	        if (typeof (strFileName) == "undefined")
-	            return;
-	        var fullPath = "/Email_Formats/" + strFileName;
-	        var xmpMailSign = "";
-	        try {
-	            xmpMailSign = message.CKEDITOR.instances.editor1.document.$.getElementById('MailSign').outerHTML;
-	        } catch (e) {
-	        }
-	        message.SetEditorContentURL_Format(fullPath);
-	        message.SetEditorContent(message.CKEDITOR.instances.editor1.document.$.body.innerHTML + xmpMailSign);
-	    }
+	    // display:none이고, 이후 풀어주는 곳도 없는 것으로 보임.
+//	    var PrintEvent = false;
+//	    function Print_onClick() {
+//	        PrintEvent = true;
+//	        document.getElementById("test").innerHTML = message.GetEditorContent();
+//	        var obj = document.getElementById("frmPrint");
+//	        var objDoc = obj.contentWindow || obj.contentDocument;
+//	        objDoc.btnPrint_onClick();
+//	    }
+//	    var mail_formatlist_cross_dialogArguments = new Array();
+//	    function LoadFormat_onClick() { // mailWrite=주석, mailEdit=display:none 되어 있음. → Letter_onClick()로 대체됨.
+//	        mail_formatlist_cross_dialogArguments[1] = LoadFormat_onClick_Complete;
+//	        mail_formatlist_cross_dialogArguments[2] = DivPopUpHidden;
+//	        DivPopUpShow(460, 467, "mail_FormatList_cross.aspx");
+//	    }
+//	    function LoadFormat_onClick_Complete(strFileName) {
+//	        DivPopUpHidden();
+//	        if (typeof (strFileName) == "undefined")
+//	            return;
+//	        var fullPath = "/Email_Formats/" + strFileName;
+//	        var xmpMailSign = "";
+//	        try {
+//	            xmpMailSign = message.CKEDITOR.instances.editor1.document.$.getElementById('MailSign').outerHTML;
+//	        } catch (e) {
+//	        }
+//	        message.SetEditorContentURL_Format(fullPath);
+//	        message.SetEditorContent(message.CKEDITOR.instances.editor1.document.$.body.innerHTML + xmpMailSign);
+//	    }
 	    function ReplaceText(orgStr, findStr, replaceStr) {
 	        var re = new RegExp(findStr, "gi");
 	        return (orgStr.replace(re, replaceStr));
@@ -790,43 +790,28 @@
                     message.SetEditorContent(message.GetEditorContent() + mailSignDiv);
                 }
             }
-	        switch (SelMailSign.value) {
-	            case "0":
-	                sign = "";
-	                signcom = "";
-	                break;
-	            case "1":
-	                if (navigator.userAgent.indexOf('Firefox') != -1) {
-	                    sign = document.getElementById("xmpMailSign1").innerHTML;
-	                }
-	                else {
-	                    sign = document.getElementById("xmpMailSign1").innerText;
-	                }
-	                break;
-	            case "2":
-	                if (navigator.userAgent.indexOf('Firefox') != -1) {
-	                    sign = document.getElementById("xmpMailSign2").innerHTML;
-	                }
-	                else {
-	                    sign = document.getElementById("xmpMailSign2").innerText;
-	                }
-	                break;
-	            case "3":
-	                if (navigator.userAgent.indexOf('Firefox') != -1) {
-	                    sign = document.getElementById("xmpMailSign3").innerHTML;
-	                }
-	                else {
-	                    sign = document.getElementById("xmpMailSign3").innerText;
-	                }
-	                break;
+
+	        if (SelMailSign.value == "0") {
+	            sign = "";
+	            signcom = "";
 	        }
+	        else { // if (["1", "2", "3"].includes(SelMailSign.value))
+	            if (navigator.userAgent.indexOf('Firefox') != -1) {
+	                sign = document.getElementById("xmpMailSign" + SelMailSign.value).innerHTML;
+	            }
+	            else {
+	                sign = document.getElementById("xmpMailSign" + SelMailSign.value).innerText;
+	            }
+	        }
+
 	        message.EditorElementSetHtml("MailSign", sign);
 	    }
 	
-	    function MailSignLoad() {
-	        SelMailSign.value = "${mailSignSel}";
-	        MailSignSel();
-	    }
+	    // 안쓰임.
+//	    function MailSignLoad() {
+//	        SelMailSign.value = "${mailSignSel}";
+//	        MailSignSel();
+//	    }
 	
 	    function setEachMail() {
 	        if (chkeachmail.checked) {
@@ -947,20 +932,7 @@
 	            		return;
 	            	}
 	            	
-	                switch (iType) {
-	                    case 0:
-	                        MsgToGot.appendChild(newElem);
-	                        break;
-	
-	                    case 1:
-	                        MsgCCGot.appendChild(newElem);
-	                        break;
-	
-	                    case 2:
-	                        MsgBCCGot.appendChild(newElem);
-	                        break;
-	
-	                }
+	                validDIV.appendChild(newElem);
 	            }
 	            formName = "";
 	            g_bDirty = true;
@@ -2278,17 +2250,17 @@
 	<body id="parentBody" class="popup" style="overflow:hidden;">
 	    <table id="normalScreen" class="layout">
 	        <tr>
-	            <td style="">
+	            <td>
 	                <div id="menu">
 						<ul>
 	                        <li><span id="spanT674"><spring:message code='ezEmail.t674' /></span></li>
 	                        <li><span id="spanT48"><spring:message code='ezEmail.t48' /></span></li>
-	                        <li  style="display:none"><span onclick="Print_onClick()">
-	                            <spring:message code='ezEmail.t546' /></span></li>
+	                        <!-- <li  style="display:none"><span onclick="Print_onClick()">
+	                            <spring:message code='ezEmail.t546' /></span></li> -->
 	                        <!-- <li><span onclick="LoadFormat_onClick()">
 	                            <spring:message code='ezEmail.t824' /></span></li> -->
-	                        <li style="display:none;"><span onclick="NameCertify_onClick()">
-	                            <spring:message code='ezEmail.t331' /></span></li>
+	                        <!-- <li style="display:none;"><span onclick="NameCertify_onClick()">
+	                            <spring:message code='ezEmail.t331' /></span></li> -->
 	                        <li><span onclick="Option_onClick()" id="Span1">
 	                            <spring:message code='ezEmail.t353' /></span></li>
 	                        <li><span onclick="mailWritePreview()">
@@ -2320,9 +2292,9 @@
 	                                <option value="2"><spring:message code='ezEmail.t359' /> <spring:message code='ezEmail.t362' /></option>
 	                            </select>
 	                        </li>
-	                        <li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;cursor:default;  display:none;">
+	                        <!-- <li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;cursor:default;  display:none;">
 	                            <img src="/images/pbar.gif">
-	                        </li> 
+	                        </li> -->
 	                        <li class="sel" style="background:none; border:none; padding:0px;">
 	                            <select id="SelMailSign" onchange="MailSignSel()" style="vertical-align:top;">
 	                                <option value='0' selected>
@@ -2335,9 +2307,9 @@
 	                                    <spring:message code='ezEmail.t828' /></option>
 	                            </select>
 	                        </li>
-	                        <li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;cursor:default;  display:none;">
+	                        <!-- <li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;cursor:default;  display:none;">
 	                            <img src="/images/pbar.gif">
-	                        </li> 
+	                        </li> -->
 	                        <%-- <li class="sel" style="background:none; border:none; padding:0px;">
 	                            <select id="bodyType" style="vertical-align:top;" onchange="changeTextOption(this.value);">
 	                                <option value="0" <c:if test="${bodyType == '0'}">selected</c:if>>HTML</option>
@@ -2493,7 +2465,7 @@
 	                <xmp id="xmpCc" style="display: none">${cc}</xmp>
 	                <xmp id="xmpBcc" style="display: none">${bcc}</xmp>
 	                <xmp id="xmpSubject" style="display: none">${subject}</xmp>
-	                <xmp id="test" style="display: none"></xmp>
+	                <!-- <xmp id="test" style="display: none"></xmp> -->
 	                <xmp id="xmpMailSign1" style="display: none">${mailSign1}</xmp>
 	                <xmp id="xmpMailSign2" style="display: none">${mailSign2}</xmp>
 	                <xmp id="xmpMailSign3" style="display: none">${mailSign3}</xmp>
@@ -2523,6 +2495,7 @@
 	                </table>
 	            </td>
 	        </tr>
+		<!-- #dadiframe로 대체된 것 같음.
 	        <tr style="display:none;">
 	        <td style="padding-top: 0px">
 	            <table class="file">
@@ -2533,7 +2506,7 @@
 	                </tr>
 	            </table>
 	        </td>
-	        </tr>
+	        </tr> -->
             <c:if test="${isCrossBrowser == true}">
 	        <tr>
 	            <td style="padding-top: 5px;height:20px;vertical-align:middle;">
@@ -2573,6 +2546,7 @@
             </c:if>
 	    </table>
 	    <div id="AutoCompleteResults"></div>
+	<!-- #loadingLayer로 대체된 것 같음.
 	    <div id="sendScreen" style="display:none;">
 	      <table width="100%" cellspacing="0" cellpadding="0" class="message" style="background-image:url(/images/email/mailsendnoti.gif)">
 	        <tr>
@@ -2588,10 +2562,13 @@
 	              </table>
 	        </tr>
 	      </table>
-	    </div>
+	    </div> -->
+	<!-- Print_onClick와 관련됨.
 	    <iframe id="frmPrint" name="printname" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 5px; height: 5px;display:none"></iframe>
 	    <iframe id="printtest" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 5px; height: 5px;display:none"></iframe>
+		 -->
 	    <input type="hidden" name="eImportant" style="display: none;">
+	<!-- #dadiframe → fileupload() 로 대체된 것 같음.
 	    <iframe name="ifrm" src="about:blank" style="display:none"></iframe>
 	    <form method="post" id="form" name="form" enctype="multipart/form-data" action="/ezEmail/mailInterUploadXCK.do?timestamp=${stateName}" target="ifrm" style="display:none;" >
 	        <input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width:1px; height:1px;" multiple="true" />
@@ -2603,7 +2580,7 @@
 	        <input type="hidden" name="changesize" id="changesize" />
 	        <input type="hidden" name="txtName" id="txtName" />
 	        <input type="hidden" name="endDay" id="endDay" />
-	    </form>
+	    </form> -->
 	    <div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;background:none rgba(0,0,0,0.5);display:none;" id="mailPanel">&nbsp;</div>
 	    <span class="loading_layer" style="z-index:6000;position:absolute;top:50%;left:50%;transform: translate(-50%, -50%);display:none;" id="loadingLayer"><span class="right"><img src="/images/loading/loading.gif" width="24" height="24" ><span id="messageInSending"><spring:message code='ezEmail.t679' /></span><spring:message code='ezEmail.t680' /></span></span>
 	    <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
@@ -2617,7 +2594,7 @@
 	    		document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - $('#infoTable').height() - 160 + "PX";
 	    	}
 	    	
-	    	 // 내게쓰기 버튼 클릭시  checkobx checked 
+	    	 // 메일> 내게쓰기로 열었음
 	    	if (isMailToMe == 'YES') {
 	         	document.getElementById('toMe').checked = 'checked';
 	  	        MailToMe_Onclick();
