@@ -1663,7 +1663,7 @@ function setBtnEnable() {
 		        btnReqReSend.style.display = "none";     //재전송요청
 		        btnDistribute.style.display = "none";     //배부
 		        if (pSusinAdmin == "YES") {   //수발신담당자
-		            btnReDistribute.style.display = ""; //재배부요청
+		            btnReDistribute.style.display = pAprState === "014" ? "" : "none;" //재배부요청
 		            btnAssign.style.display = "";   //지정
 		        }
 		        else {
