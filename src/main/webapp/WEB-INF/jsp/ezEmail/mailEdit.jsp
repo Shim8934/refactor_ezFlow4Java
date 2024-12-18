@@ -335,19 +335,19 @@
 				delDrafts();
 				window.close();
 			}
-			function delDrafts()
-			{
-			    var xmlhttp = createXMLHttpRequest();
-			    var requestUrl = "/ezEmail/delDrafts.do?itemid=" + encodeURIComponent(g_url) + "&delid=" + filedate;
-		        
-		    	if (typeof(shareId) != "undefined" && shareId != "") {
-		    		requestUrl += "&shareId=" + encodeURIComponent(shareId);
-		    	}
-			    
-				xmlhttp.open("GET", requestUrl, false);
-				xmlhttp.send();
-				xmlhttp = null;
-			}
+//			function delDrafts() // 아래서 선언되었으므로 의미없는 함수가 되었음.
+//			{
+//			    var xmlhttp = createXMLHttpRequest();
+//			    var requestUrl = "/ezEmail/delDrafts.do?itemid=" + encodeURIComponent(g_url) + "&delid=" + filedate;
+//		        
+//		    	if (typeof(shareId) != "undefined" && shareId != "") {
+//		    		requestUrl += "&shareId=" + encodeURIComponent(shareId);
+//		    	}
+//			    
+//				xmlhttp.open("GET", requestUrl, false);
+//				xmlhttp.send();
+//				xmlhttp = null;
+//			}
 			var printFrom = "";
 			var printTo = "";
 			var printCC = "";
@@ -357,23 +357,23 @@
 			var printContent = "";
 			
 			
-			function LoadLanguageConfig()
-			{
-			    var xmlhttp = createXMLHttpRequest();
-				xmlhttp.open("GET", "/js/ezEmail/Controls/" + charsetControlFlag +"/language_config.xml", false);
-				xmlhttp.send();
-				g_xmldoc = loadXMLString(xmlhttp.responseText);
-				xmlhttp = null;
+//			function LoadLanguageConfig() // 호출부분 주석됨.
+//			{
+//			    var xmlhttp = createXMLHttpRequest();
+//				xmlhttp.open("GET", "/js/ezEmail/Controls/" + charsetControlFlag +"/language_config.xml", false);
+//				xmlhttp.send();
+//				g_xmldoc = loadXMLString(xmlhttp.responseText);
+//				xmlhttp = null;
+//		
+//				g_charset = getNodeText(g_xmldoc.getElementsByTagName("charset")[0]);
+//				g_encoding = getNodeText(g_xmldoc.getElementsByTagName("content-transfer-encoding")[0]);
+//				g_font = getNodeText(g_xmldoc.getElementsByTagName("font")[0]);
+//				//g_showdisplay = getNodeText(g_xmldoc.getElementsByTagName("show-displayname")[0]);
+//				g_simplemimeencoding = getNodeText(g_xmldoc.getElementsByTagName("simple-mime-content-transfer-encoding")[0]);
+//				g_simplemime = "0";
+//			}
 		
-				g_charset = getNodeText(g_xmldoc.getElementsByTagName("charset")[0]);
-				g_encoding = getNodeText(g_xmldoc.getElementsByTagName("content-transfer-encoding")[0]);
-				g_font = getNodeText(g_xmldoc.getElementsByTagName("font")[0]);
-				//g_showdisplay = getNodeText(g_xmldoc.getElementsByTagName("show-displayname")[0]);
-				g_simplemimeencoding = getNodeText(g_xmldoc.getElementsByTagName("simple-mime-content-transfer-encoding")[0]);
-				g_simplemime = "0";
-			}
-		
-			function LoadFormat_onClick()
+			function LoadFormat_onClick() // 편지지
 			{
 			    var strFileName = window.showModalDialog("mail_FormatList_cross.aspx", "", "dialogHeight:467px; dialogWidth:460px; status:no; help:no; edge:sunken");
 			    if (typeof(strFileName) == "undefined") return;
@@ -639,9 +639,9 @@
 		            console.log(e);
 		        }
 		    }
-		    function DownloadAttach(DownloadUrl) {
-		        AttachDownFrame.location.href = DownloadUrl;
-		    }
+//		    function DownloadAttach(DownloadUrl) { // 중복
+//		        AttachDownFrame.location.href = DownloadUrl;
+//		    }
 		    var DragDropAttachObjetLoading = false;
 		    
 		    function DragObjectComplet() {
@@ -924,7 +924,7 @@
 		            <li style="display:none;"><span onClick="Print_onClick()"><spring:message code='ezEmail.t546' /></span></li>
 		            <li style="display:none;"><span onClick="LoadFormat_onClick()"><spring:message code='ezEmail.t824' /></span></li>
 		            <li style="display:none;"><span onClick="NameCertify_onClick()"><spring:message code='ezEmail.t331' /></span></li>
-		              <li><span onClick="Option_onClick('M')" id="Span1"><spring:message code='ezEmail.t353' /></span></li>
+		              <li><span onClick="Option_onClick('M')" id="Span1"><spring:message code='ezEmail.t353' /></span></li><!-- 'M'이 무쓸모, Option_onClick()임. -->
 		            <li><span onclick="mailWritePreview()"><spring:message code='ezEmail.t487' /></span></li>
 		            <li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default;">
 		                 <img src="/images/pbar.gif" align="absmiddle"></li> 
