@@ -459,7 +459,7 @@ function processRowClick(tr) {
         WriterDeptID = GetAttribute(tr, "DATA11");
         WriterID = GetAttribute(tr, "DATA3");
         publicityYN = GetAttribute(tr, "DATA16");
-        if (!HasRecReadRight(GetAttribute(tr,"DATA16"), GetAttribute(tr,"DATA8"), UserID)) {
+        if (!HasRecReadRight(GetAttribute(tr,"DATA6"), GetAttribute(tr,"DATA8"), UserID)) {
             publicityYN = "N";
         }
         

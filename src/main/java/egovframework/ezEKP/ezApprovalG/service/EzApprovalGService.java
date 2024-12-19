@@ -996,4 +996,6 @@ public interface EzApprovalGService {
     
 	// 2024-09-11 이가은 - 사이트용 포탈 포틀릿 결재문서 url 링크 반환
     public String getRedirectUrl(String docID, String mode, LoginVO userInfo);
+
+	public Map<String, Object> getDocRightInfoForAttachApr(String[] docIdList, String userId, String deptId, String rollInfo, String accessInfo, String approvalFlag, String lang, String companyId, int tenantId) throws Exception;
 }

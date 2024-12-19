@@ -38705,4 +38705,52 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
         return ezApprovalGDAO.getAttachInfoDB(map);
     }
+    
+    /* 2024-12-18 한태훈 - 전자결재G > 첨부기안 > 열람권한 정보로 열람권한 유무 판단하기 */
+    @Override
+    public Map<String, Object> getDocRightInfoForAttachApr(String[] docIdList, String userId, String deptId, String rollInfo, String accessInfo, String approvalFlag, String lang, String companyId, int tenantId) throws Exception {
+    	logger.debug("getDocRightInfoForAttachApr started.");
+    	
+    	Map<String, Object> resultMap = new HashMap<String, Object>();
+    	List<String> noRightDocIds = new ArrayList<String> ();
+    	List<String> hasRightDocIds = new ArrayList<String> ();
+    	List<String> aprlineRightDocIds = new ArrayList<String> ();
+    	for (String docId : docIdList) {
+    		boolean hasReadRight = false;
+    		
+    		if (rollInfo.indexOf("c=1") == -1 && rollInfo.indexOf("m=1") == -1) {
+				String tempPassResult = getAccessYNG(docId, userId, accessInfo, companyId, lang, tenantId, approvalFlag, deptId);
+
+				if (tempPassResult.equals("<RESULT>TRUE</RESULT>")) {
+					hasReadRight = true;
+				}
+    		} else {
+    			hasReadRight = true;
+    		}
+    		
+    		if (!hasReadRight) {
+    			noRightDocIds.add(docId);
+    		} else {
+    			Map<String, Object> map = new HashMap<String, Object>();
+                map.put("docId", docId);
+                map.put("companyId", companyId);
+                map.put("tenantId", tenantId);
+                
+                String publicity = ezApprovalGDAO.getPublicityYN(map);
+                
+                if (publicity.equalsIgnoreCase("N")) {
+                	aprlineRightDocIds.add(docId);
+                } else {
+                	hasRightDocIds.add(docId);
+                }
+    		}
+    	}
+    	
+    	resultMap.put("noRightDocIds", noRightDocIds);
+    	resultMap.put("aprlineRightDocIds", aprlineRightDocIds);
+    	resultMap.put("hasRightDocIds", hasRightDocIds);
+        
+        logger.debug("getDocRightInfoForAttachApr ended.");
+        return resultMap;
+    }
 }
