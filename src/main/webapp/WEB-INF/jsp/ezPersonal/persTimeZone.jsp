@@ -120,9 +120,9 @@
                 flagValue = obj.name;
             }
             else {
-                for (var i = 0; i < 4; i++) {
-                    if (document.getElementsByName('rad_flag')[i].checked == true) {
-                        flagValue = document.getElementsByName('rad_flag')[i].id;
+                for (var radFlag of document.getElementsByName('rad_flag')) {
+                    if (radFlag.checked) {
+                        flagValue = radFlag.id;
                         break;
                     }
                 }
