@@ -955,7 +955,7 @@
 		    		},
 		    		success : function(result) {
 		    			if (result != "") {
-		    				window.open(result);
+		    				window.open(result, '_blank', getOpenWindowfeature(1100, 950));
 		    			} else {
 			    			alert("<spring:message code = 'ezBoard.t181'/>");
 		    			}
