@@ -196,7 +196,65 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		logger.debug("portalReceivedMailPortlet End");
 		return "json";
 	}
-	
+
+	/**
+	 * 포틀릿 - 외부받은메일
+	 */
+	@RequestMapping(value = "/ezNewPortal/receivedMailPortlet2.do", method=RequestMethod.GET)
+	public String receivedMailPortlet2(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+		logger.debug("portalReceivedMailPortlet2 Start");
+
+		String MailServerURL2 = config.getProperty("config.MailServerURL2");
+		model.addAttribute("portletName", req.getParameter("portletName"));
+		model.addAttribute("usedTheme", commonUtil.isIntNumber(req.getParameter("usedTheme"), 1));
+		model.addAttribute("MailServerURL2", MailServerURL2);
+
+
+		logger.debug("portalReceivedMailPortlet2 End");
+		return "/ezNewPortal/portlets/receivedMailPortlet2";
+	}
+
+	/**
+	 * 포틀릿 - 외부받은메일
+	 */
+	@RequestMapping(value = "/ezNewPortal/receivedMailPortletList2.do", method=RequestMethod.GET)
+	public String receivedMailPortletList2(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+		logger.debug("portalReceivedMailPortlet2 Start");
+		model.addAttribute("userInfo", userInfo);
+
+		try {
+			userInfo = commonUtil.userInfo(loginCookie);
+			String url = "/rest/ezPortal/portlets/receivedMail";
+
+			HashMap<String, Object> param = new HashMap<String, Object>();
+			param.put("userId", userInfo.getId());
+			param.put("portletId", req.getParameter("portletId"));
+			param.put("mailCount", req.getParameter("mailCount"));
+			param.put("currPage", req.getParameter("currPage"));
+			String MailServerURL2 = config.getProperty("config.MailServerURL2");
+
+			JSONObject resultBody = commonUtil.getJsonFromRestApi(MailServerURL2, url, param, req, "get", null);
+			String result = resultBody.get("status").toString();
+			if (result.equals("ok")) {
+				JSONObject data = (JSONObject) resultBody.get("data");
+				model.addAttribute("mailList", data.get("mailList"));
+				model.addAttribute("unreadCount", data.get("unreadCount"));
+				model.addAttribute("mailboxQuotaStr", data.get("mailboxQuotaStr"));
+				model.addAttribute("mailboxDetail", data.get("mailboxDetail"));
+				model.addAttribute("mailPercent", data.get("mailPercent"));
+				model.addAttribute("currPage", data.get("currPage"));
+				model.addAttribute("totalCount", data.get("totalCount"));
+				model.addAttribute("MailServerURL2", MailServerURL2);
+			}
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+
+		model.addAttribute("userInfo", userInfo);
+
+		logger.debug("portalReceivedMailPortlet2 End");
+		return "json";
+	}
 	
 	/**
 	 * 포틀릿 - 투표 포틀릿 

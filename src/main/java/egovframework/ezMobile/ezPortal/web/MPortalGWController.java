@@ -722,7 +722,8 @@ public class MPortalGWController extends EgovFileMngUtil {
 			int footerAccessCount = 0;
 			int portalAccessCount = 0;
 			List<String> accessMenuCode = new ArrayList<String>();
-			
+
+			String useMobileMail2 =  config.getProperty("config.useMobileMail2");
 			for (Map.Entry<String, Boolean> menuAccess : menuAccessList.entrySet()) {
 				String menuCode = menuAccess.getKey();
 				boolean access = menuAccess.getValue();
@@ -743,6 +744,15 @@ public class MPortalGWController extends EgovFileMngUtil {
 					
 					dataObject.put(menuCode, access);
 					dataObject.put(menuCode + "Access", access);
+
+					if ("mail".equalsIgnoreCase(menuCode)){
+						if ("Y".equalsIgnoreCase(useMobileMail2)){
+							footerAccessCount = access? footerAccessCount + 1 : footerAccessCount;
+							portalAccessCount = access? portalAccessCount + 1 : portalAccessCount;
+							accessMenuCode.add("mail2");
+						}
+					}
+
 					break;
 				case "survey":
 				case "workspace":
@@ -770,7 +780,8 @@ public class MPortalGWController extends EgovFileMngUtil {
 			dataObject.put("footerAccessCount", footerAccessCount);
 			dataObject.put("accessMenuCode", accessMenuCode);
 			dataObject.put("approvalFlag", approvalFlag);
-			
+			dataObject.put("useMobileMail2", useMobileMail2);
+
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", dataObject);
@@ -1908,5 +1919,55 @@ public class MPortalGWController extends EgovFileMngUtil {
 		}
 		logger.debug("MOBILE G/W getCompanyLogo ended.");
 		return result;
+	}
+
+
+	@RequestMapping(value = "/mobile/ezPortal/mail2Cnt/users/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject portalMail2Cnt(@PathVariable String userId, HttpServletRequest request) throws Exception {
+
+		logger.debug("MOBILE G/W portalMail2Cnt started.");
+		JSONObject result = new JSONObject();
+
+		try {
+			String mailAccess = request.getParameter("mail");
+
+			Map<String, Object> dataObject = new HashMap<String, Object>();
+
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+
+			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
+			Locale locale = new Locale(ld);
+
+			MOptionVO opt = mOptionService.optionInfo(userId, info.getTenantId());
+			if (opt != null && opt.getLang() != null){
+				locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(opt.getLang()));
+			} else {
+				locale = new Locale(commonUtil.getTwoLetterLangFromLangNum("1"));
+			}
+
+			//안읽은메일 리스트 카운트
+			int mailCnt = 0;
+
+			if ("true".equals(mailAccess)) {
+				mailCnt = mEmailService.getMainMailUnreadCount(info, locale);
+				logger.debug("MOBILE G/W portalMail2Cnt mailCnt = " + mailCnt);
+			}
+
+			dataObject.put("mailCnt", mailCnt + "");
+
+			result.put("status", "ok");
+			result.put("data", dataObject);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+
+			result.put("status", "error");
+			result.put("data", "");
+		}
+
+		logger.debug("MOBILE G/W portalMail2Cnt ended.");
+
+		return result;
+
 	}
 }

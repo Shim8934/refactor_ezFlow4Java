@@ -121,6 +121,26 @@ function eventSetting(portletId, themeId, portletCode, isReload) { //포틀릿 �
 			}
 
 			break;
+        case "receivedmail2" : // 메일
+            if (isReload) {
+                getMailList2();
+            } else {
+                url = "/js/ezNewPortal/portlets/receivedMailPortlet2.js";
+
+                $.getScript(url)
+                .done(function(script, textStatus) {
+                    try {
+                        initMailPortletInfo2(portletId);
+                    } catch(err) {
+                        console.log(err);
+                    }
+                })
+                .fail(function(jqxhr, settings, exception) {
+                    console.log(exception);
+                });
+            }
+
+            break;
 		case "notice" : // 공지사항
 			if (isReload) {
 				initNoticePortletInfo(portletId);

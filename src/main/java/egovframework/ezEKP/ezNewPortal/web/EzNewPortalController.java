@@ -511,7 +511,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		String serverTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
 		Calendar cal = Calendar.getInstance();
 		String nowMonth = String.valueOf(cal.get(Calendar.MONTH)+1);
-		
+		String useMailServer2 =  config.getProperty("config.useMailServer2");
+
 		resp.setHeader("Pragma", "no-cache"); //HTTP 1.0 
 		resp.setHeader("Cache-Control", "no-cache"); //HTTP 1.1 
 		resp.setHeader("Cache-Control", "no-store"); //HTTP 1.1 
@@ -570,6 +571,14 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 				if (data.get("useMail").equals("YES")) {
 					// 2023-06-14 한슬기 - 디자인 개선 테마2 > 상단 영역 메일 용량 표시 추가를 위한 메일용량정보(xml)
 					mailCapacityInfo = ezEmailConfigController.mailGetUse(loginCookie, local, model, req);
+
+					if ("Y".equalsIgnoreCase(useMailServer2)){
+						logger.debug("mailCapacityInfo2 Start");
+						String mailCapacityInfo2 = "";
+						req.setAttribute("mail2","y");
+						mailCapacityInfo2 = ezEmailConfigController.mailGetUse(loginCookie, local, model, req);
+						model.addAttribute("mailCapacityInfo2", mailCapacityInfo2);
+					}
 				}
 				
 				if (data.get("useWebfolder").equals("YES")) {
@@ -616,7 +625,12 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		} else {
 			checkBrowser = false;
 		}
-		
+
+		if ("Y".equalsIgnoreCase(useMailServer2)){
+			String MailServerURL2 = config.getProperty("config.MailServerURL2");
+			model.addAttribute("MailServerURL2", MailServerURL2);
+		}
+
 		model.addAttribute("checkBrowser", checkBrowser);
 		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
 		model.addAttribute("companyID", companyId);
@@ -1271,18 +1285,30 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			}
 
 			if (useMail.equals("YES")) {
-				IMAPAccess ia = null;
-				String folderName = "INBOX";
-
 				try {
-					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"), userEmail, password, egovMessageSource, locale, ezEmailUtil);
-					unreadMailCount = ia.getUnreadCount(folderName);
+
+					String url = "/rest/ezPortal/portlets/unreadMailCount";
+
+					HashMap<String, Object> param = new HashMap<String, Object>();
+					param.put("userEmail", userEmail);
+					param.put("password", password);
+					param.put("locale", locale);
+
+					String useMailServer2 =  config.getProperty("config.useMailServer2");
+
+					JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
+					if ("Y".equalsIgnoreCase(useMailServer2)){
+						resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.MailServerURL2"), url, param, request, "get", null);
+					}
+
+					String result2 = resultBody.get("status").toString();
+					if (result2.equals("ok")) {
+						String mailCount = String.valueOf(resultBody.get("unreadMailCount"));
+						unreadMailCount = Integer.parseInt(mailCount);
+						logger.debug("unreadMailCount = " + unreadMailCount);
+					}
 				} catch (Exception e) {
 					logger.debug("e.message=" + e.getMessage());
-				} finally {
-					if (ia != null) {
-						ia.close();
-					}
 				}
 			}
 

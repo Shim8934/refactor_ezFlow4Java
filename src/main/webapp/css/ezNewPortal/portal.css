@@ -147,6 +147,7 @@ article,aside,canvas,details,figcaption,figure, footer,header,hgroup,menu,nav,se
 
 /* 모바일 아이콘*/
 .icon_mail{background:url(/images/mobile/cont/t_mail.svg) no-repeat center; background-size:contain;}
+.icon_outmail{background:url(/images/mobile/cont/t_outmail.svg) no-repeat center; background-size:contain;}
 .icon_employee{background:url(/images/mobile/cont/t_employee.svg) no-repeat center; background-size:contain;}
 .icon_approval{background:url(/images/mobile/cont/t_approval.svg) no-repeat center; background-size:contain;}
 .icon_resource{background:url(/images/mobile/cont/t_resource.svg) no-repeat center; background-size:contain;}

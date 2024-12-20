@@ -16,10 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.WebUtils;
 
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -640,5 +637,46 @@ public class EzConnController {
 		}
 		
 		return resultPage;
+	}
+
+	/**
+	 * 외부메일가는 url반환하기 위한 작업
+	 */
+	@RequestMapping(value="/ezAuth/getSSORedirectUrl.do", method=RequestMethod.GET)
+	@ResponseBody
+	public String getSSORedirectUrl(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) {
+		logger.debug("getSSORedirectUrl started. ");
+
+		String result = "ERROR";
+
+		userInfo = commonUtil.userInfo(loginCookie);
+
+		String redircetDomain = request.getParameter("redirectDomain");
+		String redircetResource = request.getParameter("redirectResource");
+
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+			String nowDate = sdf.format(new Date());
+			String roleInfo = userInfo.getRollInfo();
+			String userType = "user";
+
+			if (roleInfo.indexOf("c=1") != -1 || roleInfo.indexOf("k=1") != -1) {
+				userType = "admin";
+			}
+
+			String authString = userInfo.getDeptID() + ":" + userInfo.getId() + ":" + nowDate + ":" + userType;
+
+			logger.debug("authString=" + authString);
+			result = redircetDomain + "/ezConn/loginWithSSOAuthString.do?id=";
+			result += URLEncoder.encode(ezConnUtil.encryptAES(authString));
+			result += "&redirectUrl=" + redircetResource;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		logger.debug("getSSORedirectUrl ended. result=" + result);
+
+		return result;
 	}
 }

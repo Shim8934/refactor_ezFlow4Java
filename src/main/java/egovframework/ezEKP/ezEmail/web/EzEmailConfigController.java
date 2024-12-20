@@ -487,61 +487,38 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		}
 		
 		logger.debug("userId=" + userInfo.getId() + ",userEmail=" + userEmail);
-		
-		IMAPAccess ia = null;
-		
-		int mailPercent = 0;
-		String mailboxDetail = "";
-		String mailboxQuotaStr = "";
-		
+		String data = "";
 		try {
-			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale, ezEmailUtil);
-					
-			long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
-			if (storageUsageAndLimit == null){
-				throw new Exception("StorageUsageAndLimit is null");
-			}
-			double mailboxUsage = storageUsageAndLimit[0]; // in KBs
-			double mailboxQuota = storageUsageAndLimit[1]; // in KBs
-			
-			// 재은 수정
-			String[] mailUse = ezEmailUtil.getMailUsage(mailboxUsage, mailboxQuota);
-			
-			if (mailUse != null) {
-				mailPercent = Integer.parseInt(mailUse[0]);
-				mailboxDetail = mailUse[1];
-				mailboxQuotaStr = mailUse[2];
-			}
-			
-			logger.debug("mailPercent=" + mailPercent + ",mailboxDetail=" + mailboxDetail + ",mailboxQuotaStr=" + mailboxQuotaStr);		
+			String url = "/rest/ezPortal/portlets/mailGetUse";
+			HashMap<String, Object> param = new HashMap<String, Object>();
+			param.put("userEmail", userEmail);
+			param.put("password", password);
+			param.put("locale", locale);
 
+			String mail2 = "";
+			if (request.getAttribute("mail2")!=null){
+				mail2 = (String) request.getAttribute("mail2");
+			}
+
+			logger.debug("mailGetUse mail2=" + mail2);
+			JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
+			if ("y".equalsIgnoreCase(mail2)){
+				resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.MailServerURL2"), url, param, request, "get", null);
+			}
+
+			String result = resultBody.get("status").toString();
+
+			if (result.equals("ok")) {
+				data = String.valueOf(resultBody.get("data"));
+			}
 		} catch (NumberFormatException e) {
 			logger.debug(e.getMessage());
 			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			logger.debug(e.getMessage());
 			logger.error(e.getMessage(), e);
-		} finally {
-			if (ia != null) {
-				ia.close();
-			}
 		}
-		
-		StringBuilder sb = new StringBuilder("<DATA>");
-		sb.append("<ROW>");
-		sb.append(String.format("<QUOTA>%s</QUOTA>", mailboxQuotaStr));
-		sb.append(String.format("<DETAIL>%s</DETAIL>", mailboxDetail));
-		sb.append(String.format("<PERCENT>%d</PERCENT>", mailPercent));
-		sb.append(String.format("<BAR1>%d</BAR1>", mailPercent * 2));
-		sb.append(String.format("<BAR2>%d</BAR2>", 211 - mailPercent * 2));
-		sb.append("</ROW>");
-		sb.append("</DATA>");
-		
-		logger.debug("returnData=" + sb.toString());
-		logger.debug("mailGetUse ended.");
-		
-		return sb.toString();
+		return data;
 	}
 
 

@@ -274,6 +274,12 @@
 	                <p class="mGraph"><span id="mGraphSpanPortal"></span></p><span class="mGraph_text" id="useMailBoxPortal"></span>
 	            </dd>
 	        </dl>
+	        <%-- <dl class="portlet_title">
+                <dt class="portletText"><spring:message code='ezNewPortal.t015' /></dt>
+                <dd class="mailGraph" id="mailGraphPortal2">
+                    <p class="mGraph"><span id="mGraphSpanPortal2"></span></p><span class="mGraph_text" id="useMailBoxPortal2"></span>
+                </dd>
+            </dl> --%>
 	        </c:if>
 	        <c:if test="${useWebfolder eq 'YES'}">
 	        <dl class="portlet_title">
@@ -1024,6 +1030,7 @@
 		//메뉴 이동(위) --- 권한이 YES일 때만 버튼 동작
 		if (useMail !== "NO") {
 			document.getElementById("NewMail").addEventListener('click', function(){quickMenuOpen('NewMail');}, false);
+			//document.getElementById("NewMail").addEventListener('click', function(){Mailmore_btnClick2('${MailServerURL2}');}, false);
 		}
 		
 		if (useSchedule !== "NO") {
@@ -1160,7 +1167,17 @@
 	        					 + "\/"+GetChildNodes(SelectNodes(mailCapacityInfo, "DATA/ROW")[0])[0].textContent);
 	        mGraphSpanPortal.css('width', GetChildNodes(SelectNodes(mailCapacityInfo, "DATA/ROW")[0])[2].textContent);
 		}
-		
+
+		// var getMailCapacity2 = function() {
+        //     var mailCapacityInfo2 = loadXMLString("${mailCapacityInfo2}");
+        //     var mGraphSpanPortal2 = $("#mGraphSpanPortal2");
+        //     var useMailBoxPortal2 = $("#useMailBoxPortal2");
+        //     useMailBoxPortal2.text(GetChildNodes(SelectNodes(mailCapacityInfo2, "DATA/ROW")[0])[1].textContent
+        //                          + "\/"+GetChildNodes(SelectNodes(mailCapacityInfo2, "DATA/ROW")[0])[0].textContent);
+        //     mGraphSpanPortal2.css('width', GetChildNodes(SelectNodes(mailCapacityInfo2, "DATA/ROW")[0])[2].textContent);
+        // }
+        // getMailCapacity2();
+
 		getMailCapacity();
 		
 		// 2023-06-20 한슬기 - 테마2 > 상단에 웹폴더(개인) 용량 표시 추가 
