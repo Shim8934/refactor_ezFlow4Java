@@ -431,6 +431,8 @@ function event_ItemPreviewRead_photo() {
             
             if (SelectSingleNodeValueNew(xmldom, "DATA") == "NO") {
             	alert(strLang173);
+                document.getElementById("userImgH").src = "/images/kr/main/bestEmployee_pic_none.png";
+                document.getElementById("userImgW").src = "/images/kr/main/bestEmployee_pic_none.png";
             } 
             
             var WriterID = SelectSingleNodeValueNew(xmldom, "NODES/NODE/WriterID");
@@ -461,10 +463,10 @@ function event_ItemPreviewRead_photo() {
                 document.getElementById("Preview_HeaderH").style.display = "none";
             }
             
-            if (document.getElementById("userImgH") != null) {
+            if (document.getElementById("userImgH") != null && UserIMG != "") {
             	document.getElementById("userImgH").src = UserIMG;
             }
-            if (document.getElementById("userImgW") != null) {
+            if (document.getElementById("userImgW") != null && UserIMG != "") {
             	document.getElementById("userImgW").src = UserIMG;
             }
             
@@ -582,11 +584,11 @@ function event_ItemPreviewRead() {
                 document.getElementById("Preview_HeaderH").style.display = "none";
             }
             
-            if (document.getElementById("userImgH") != null) {
-            	document.getElementById("userImgH").src = UserIMG;
+            if (document.getElementById("userImgH") != null && UserIMG != "") {
+                document.getElementById("userImgH").src = UserIMG;
             }
-            if (document.getElementById("userImgW") != null) {
-            	document.getElementById("userImgW").src = UserIMG;
+            if (document.getElementById("userImgW") != null && UserIMG != "") {
+                document.getElementById("userImgW").src = UserIMG;
             }
         }
     }
