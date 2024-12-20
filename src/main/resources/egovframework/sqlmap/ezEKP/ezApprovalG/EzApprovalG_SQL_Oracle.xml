@@ -23408,8 +23408,8 @@
     		SN,
     		ATTACHFILESN , 
     		VIEWORDER , 
-    		ATTACHFILENAME , 
-            #tmpHref# , 
+    		ATTACHFILENAME ,
+            ATTACHFILEHREF ,
     		ATTACHFILESIZE , 
     		ATTACHUSERID , 
     		ATTACHUSERNAME , 
@@ -23432,9 +23432,9 @@
 	    		#v_SN#, 
 	    		ATTACHFILESN , 
 	    		VIEWORDER , 
-	    		ATTACHFILENAME , 
-	    		ATTACHFILEHREF , 
-	    		ATTACHFILESIZE , 
+	    		ATTACHFILENAME ,
+                #tmpHref# ,
+                ATTACHFILESIZE , 
 	    		ATTACHUSERID , 
 	    		ATTACHUSERNAME , 
 	    		ATTACHUSERJOBTITLE , 
@@ -23459,8 +23459,8 @@
 		   		TENANT_ID = #v_TENANTID#
 		  AND
 		  		COMPANYID = #companyID#
-            AND
-             A.ATTACHFILESN = #attachfileSn#)
+          AND
+                ATTACHFILESN = #attachfileSn#)
    </insert>
    
    <insert id="EzApprovalG.insertTmpExpAprLine" parameterClass="Map"> 
