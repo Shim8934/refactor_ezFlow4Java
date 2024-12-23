@@ -237,6 +237,12 @@
 		    	$(window.frames['ifrmPreViewW']).mouseup(function (e) {
 		    		MailOptionHiddenOutside(e);
 		    	});
+
+				document.getElementById('openPassword').addEventListener('keydown', function(event) {
+					if (event.key === 'Enter') { // Enter 키인지 확인
+						openAnonymous(); // openAnonymous 함수 호출
+					}
+				});
 		    });
 		    
 		    var Save_unloadSave = false;
@@ -1524,35 +1530,76 @@
 			function openAnonymous() {
 				var elementPass = document.getElementById('openPassword');
 				var password = elementPass.value;
-				var pheight = window.screen.availHeight;
-				var pwidth = window.screen.availWidth;
-				var pTop = (pheight - 720) / 2;
-				var pLeft = (pwidth - 890) / 2;
-				var parser = new DOMParser();
+				var pboardid = elementPass.getAttribute("data-board");
+				var pitemid =elementPass.getAttribute("data-id");
+						
+				if (g_bPrevShow) {
+					clickPreviweType = "TEXT";
+					if (document.getElementById("previewmail_bar_h") != null)
+						document.getElementById("previewmail_bar_h").style.cursor = "w-resize";
+					xmlhttp = createXMLHttpRequest();
+					if (location.href.toLowerCase().indexOf('temp') > -1)
+						xmlhttp.open("POST", "/ezBoard/getPreviewItem.do?boardID=" + encodeURIComponent(pboardid) + "&itemID=" + encodeURIComponent(pitemid) + "&mode=" + pMode + "&location=TEMP", true);
+					else
+						xmlhttp.open("POST", "/ezBoard/getPreviewItem.do?boardID=" + encodeURIComponent(pboardid) + "&itemID=" + encodeURIComponent(pitemid) + "&mode=" + pMode + "&location=GENERAL", true);
+					xmlhttp.onreadystatechange = event_ItemPreviewRead;
+					xmlhttp.setRequestHeader('Authorization', 'Basic ' + btoa(password));
 
-				$.ajax({
-					url: "/ezBoard/boardItemView.do?showAdjacent=" + ShowAdjacent
-							+ "&itemID=" + encodeURIComponent(elementPass.getAttribute("data-id"))
-							+ "&boardID=" + encodeURIComponent(elementPass.getAttribute("data-board"))
-							+ "&location=GENERAL",
-					headers: {
-						'Authorization': 'Basic ' + btoa(password)
-					},
-					success: function(response) {
-						$.modal.close();
-						var returnDom = parser.parseFromString(response, "text/xml")
-						if (!returnDom || returnDom.querySelector('title').textContent ==="warning") {
-							alert("<spring:message code='ezBoard.t267' />");
-							return;
+					xmlhttp.onload = function() {
+						if (xmlhttp.status === 200) {
+							$.modal.close();
+							var response = xmlhttp.responseText;
+							var parser = new DOMParser();
+							var returnDom = parser.parseFromString(response, "text/xml");
+
+							if (!returnDom || SelectSingleNodeValue(returnDom, "DATA") == "NO") {
+								alert("<spring:message code='ezBoard.t267' />");
+								return;
+							}
+						} else {
+							// 에러 처리
+							alert("요청 실패: " + xmlhttp.status);
 						}
-						var newWindow = window.open("", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=890,top=" + pTop + ",left=" + pLeft);
-						newWindow.document.write(response);
-						newWindow.document.close();
-					},
-					error: function(xhr, status, error) {
-						console.error('Error:', error);
-					}
-				});
+					};
+					
+					xmlhttp.send();
+					xmlhttp2 = createXMLHttpRequest();
+					xmlhttp2.open("POST", "/ezBoard/getItemAttachments.do?itemID=" + encodeURIComponent(pitemid), true);
+					xmlhttp2.onreadystatechange = event_ItemPreviewRead;
+					xmlhttp2.send();
+
+					
+				} else {
+					var pheight = window.screen.availHeight;
+					var pwidth = window.screen.availWidth;
+					var pTop = (pheight - 720) / 2;
+					var pLeft = (pwidth - 790) / 2;
+					var parser = new DOMParser();
+
+					$.ajax({
+						url: "/ezBoard/boardItemView.do?showAdjacent=" + ShowAdjacent
+								+ "&itemID=" + encodeURIComponent(pitemid)
+								+ "&boardID=" + encodeURIComponent(pboardid)
+								+ "&location=GENERAL",
+						headers: {
+							'Authorization': 'Basic ' + btoa(password)
+						},
+						success: function(response) {
+							$.modal.close();
+							var returnDom = parser.parseFromString(response, "text/xml")
+							if (!returnDom || returnDom.querySelector('title').textContent ==="warning") {
+								alert("<spring:message code='ezBoard.t267' />");
+								return;
+							}
+							var newWindow = window.open("", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=790,top=" + pTop + ",left=" + pLeft);
+							newWindow.document.write(response);
+							newWindow.document.close();
+						},
+						error: function(xhr, status, error) {
+							console.error('Error:', error);
+						}
+					});
+				}
 			}
 			
 			/*  2023-05-22 기민혁 - 나의스크랩함 나의스크랩 추가 버튼 클릭시 동작 */
