@@ -1245,6 +1245,8 @@
 
         if (xmlhttp_mailCheckBlock.status == 200) {
             pBlockedMail = getNodeText(SelectNodes(xmlhttp_mailCheckBlock.responseXML, "DATA/BLOCKEDMAIL")[0]);
+        } else {
+            pBlockedMail = -1;
         }
 
         return pBlockedMail;
