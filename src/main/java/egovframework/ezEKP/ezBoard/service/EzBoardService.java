@@ -539,4 +539,10 @@ public interface EzBoardService {
 	public List<BoardThumbnailVO> thumbnailViewDB(String itemID, String boardID, int pStartRow, int pEndRow, int tenantID) throws Exception;
 	
 	public void thumbnailUpdate(String imageID, String boardID, int tenantID, String ext, String oFileName, String addThumbnail) throws Exception;
+
+	/* 2024-09-05 이유정 - 게시판 > 최근게시물 리스트 카운트 메서드 */
+	public int getAllNewItemListCount(LoginVO userInfo) throws Exception;
+
+	/* 2024-09-05 이유정 - 게시판 > 최근게시물 리스트 메서드 */
+	public List<HashMap<String, Object>> getAllNewItemList(BoardListVO boardListVO, Map<String, String> orderByMap) throws Exception;
 }

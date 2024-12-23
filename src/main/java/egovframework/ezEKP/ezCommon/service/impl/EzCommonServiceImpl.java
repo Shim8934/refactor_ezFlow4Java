@@ -4539,4 +4539,38 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void addTblCommunityClubguestOnelinereply() throws Exception {
         ezCommonDAO.addTblCommunityClubguestOnelinereply();
     }
+
+    /* 2024-09-11 이유정 - 게시판 > 최근게시물 리스트헤더 추가 */
+    @Override
+    public void insertBoardItemListOptionAN() throws Exception{
+        List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+
+        for (TenantVO tenantVo : tenantIdList) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("v_TENANTID", tenantVo.getTenantId());
+            ezCommonDAO.insertBoardItemListOptionAN(map);
+        }
+    }
+
+    /* 2024-09-11 이유정 - 게시판 > 최근게시물 게시판정보 추가 */
+    @Override
+    public void insertRecentBoardInfo() throws Exception{
+        List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+
+        for (TenantVO tenantVo : tenantIdList) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("v_TENANTID", tenantVo.getTenantId());
+            ezCommonDAO.insertRecentBoardInfo(map);
+        }
+    }
+    
+    @Override
+    public void addBoardAllNewBoardFlag() throws Exception {
+        ezCommonDAO.addBoardAllNewBoardFlag();
+    }
+
+    @Override
+    public void addBoardAllNewBoardListDate() throws Exception {
+        ezCommonDAO.addBoardAllNewBoardListDate();
+    }
 }

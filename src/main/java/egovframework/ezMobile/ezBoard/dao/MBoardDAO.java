@@ -289,4 +289,14 @@ public class MBoardDAO extends EgovAbstractDAO {
 	public void deleteScrapBoardItem(Map<String, Object> map) throws Exception{
 		delete("MBoardDAO.deleteScrapBoardItem", map);
 	}
+	
+	/* 2024-09-09 이유정 - 모바일 게시판 > 최근게시물 리스트 카운트 쿼리 */
+	public Integer getAllNewBoardListCount(Map<String, Object> map) throws Exception {
+		return (Integer) select("MBoardDAO.getAllNewBoardListCount", map);
+	}
+
+	/* 2024-09-09 이유정 - 모바일 게시판 > 최근게시물 리스트 쿼리 */
+	public List<MBoardNewListVO> getAllNewBoardList(Map<String, Object> map) throws Exception {
+		return (List<MBoardNewListVO>) list("MBoardDAO.getAllNewBoardList", map);
+	}
 }

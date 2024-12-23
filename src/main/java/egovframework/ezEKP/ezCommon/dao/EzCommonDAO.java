@@ -3036,4 +3036,44 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createTblCommunityClubguestOnelinereply");
 		}
 	}
+	
+	/* 2024-09-11 이유정 - 게시판 > 최근게시물 리스트헤더 추가 */
+	public void insertBoardItemListOptionAN(Map<String, Object> map) {
+		String boardItemListOptionAN = (String) select("EzCommonDAO.checkBoardItemListOptionAN", map);
+
+		if (boardItemListOptionAN == null) {
+			logger.debug("BoardItemListOptionAN doesn't exist. insert data...");
+			insert("EzCommonDAO.insertBoardItemListOptionAN", map);
+		}
+	}
+	
+	/* 2024-09-11 이유정 - 게시판 > 최근게시물 게시판정보 추가 */
+	public void insertRecentBoardInfo(Map<String, Object> map) {
+		String recentBoardInfo = (String) select("EzCommonDAO.checkRecentBoardInfo", map);
+
+		if (recentBoardInfo == null) {
+			logger.debug("RecentBoardInfo doesn't exist. insert data...");
+			insert("EzCommonDAO.insertRecentBoardInfo", map);
+		}
+	}
+	
+	public void addBoardAllNewBoardFlag() {
+		try {
+			select("EzCommonDAO.checkBoardAllNewBoardFlag");
+		} catch (Exception e) {
+			logger.debug("tbl_board_info allNewBoardFlag doesn't exist. creating the column...");
+
+			update("EzCommonDAO.addBoardAllNewBoardFlag");
+		}
+	}
+
+	public void addBoardAllNewBoardListDate() {
+		try {
+			select("EzCommonDAO.checkAllNewBoardListDate");
+		} catch (Exception e) {
+			logger.debug("tbl_board_configuration allNewBoardListDate doesn't exist. creating the column...");
+
+			update("EzCommonDAO.addBoardAllNewBoardListDate");
+		}
+	}
 }

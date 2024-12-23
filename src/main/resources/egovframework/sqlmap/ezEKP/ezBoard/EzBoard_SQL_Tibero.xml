@@ -4969,7 +4969,8 @@
 			    PREVIEWWLIST ,
 			 	PREVIEWWCONTENT ,
 			 	PREVIEWHLIST ,
-              	PREVIEWHCONTENT 
+              	PREVIEWHCONTENT,
+				ALLNEWBOARDLISTDATE 
         	FROM 
         	    TBL_BOARD_CONFIGURATION 
        		WHERE  
@@ -5934,7 +5935,8 @@
             	PREVIEWWLIST = #previewWList#,
             	PREVIEWWCONTENT = #previewWContent#,
             	PREVIEWHLIST = #previewHList#,
-            	PREVIEWHCONTENT = #previewHContent#
+            	PREVIEWHCONTENT = #previewHContent#,
+				ALLNEWBOARDLISTDATE = #allNewBoardListDate#
             WHERE  
             	TENANT_ID = #tenantID#
             AND
@@ -5944,10 +5946,10 @@
 	<insert id="EzBoardDAO.setBoardList_Config_I" parameterClass="BoardConfigVO">
 		<![CDATA[
 			INSERT INTO TBL_Board_Configuration ( 
-				USERID,   LISTCOUNT,   PREVIEW,   PREVIEWWLIST,   PREVIEWWCONTENT,   PREVIEWHLIST,   PREVIEWHCONTENT ,   TENANT_ID
+				USERID,   LISTCOUNT,   PREVIEW,   PREVIEWWLIST,   PREVIEWWCONTENT,   PREVIEWHLIST,   PREVIEWHCONTENT, ALLNEWBOARDLISTDATE, TENANT_ID
 			)
           	VALUES ( 
-          		#userId#, #listCount#, #preview#, #previewWList#, #previewWContent#, #previewHList#, #previewHContent# , #tenantID# 
+          		#userId#, #listCount#, #preview#, #previewWList#, #previewWContent#, #previewHList#, #previewHConten#, #allNewBoardListDate#, #tenantID# 
           	)
 		]]>
 	</insert>
@@ -9743,4 +9745,144 @@
      		AND 
      			BoardID = #v_pBoardID#
 	</update>
+
+	<select id="EzBoardDAO.getAllNewItemListCount" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+		SELECT
+			COUNT(A.ITEMID) CNT
+		FROM
+			TBL_Board_Item A
+				INNER JOIN
+			TBL_Board_BoardInfo P
+			ON
+						A.TENANT_ID = P.TENANT_ID
+					AND
+						A.BOARDID = P.BOARDID
+					AND
+						A.TENANT_ID = #v_TENANTID#
+					AND
+						(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(A.WRITERCOMPANYID) = '' OR A.WRITERCOMPANYID IS NULL
+							OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
+					AND
+						(A.APPRFLAG = 'Y'
+							OR A.APPRFLAG IS NULL)
+					AND
+						A.STARTDATE > TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - NVL((SELECT
+																									 ALLNEWBOARDLISTDATE
+																								 FROM
+																									 TBL_BOARD_CONFIGURATION
+																								 WHERE
+																									 userid = #v_pUserID#
+																								   AND
+																									 tenant_id = #v_TENANTID#), 5)
+							, 'YYYY-MM-DD HH24:MI:SS')
+					AND
+						A.STARTDATE <= #nowDate#
+					AND
+						A.ENDDATE > #nowDate#
+					AND
+						P.ALLNEWBOARDFLAG = 'Y'
+		]]>
+	</select>
+
+	<select id="EzBoardDAO.getAllNewItemList" parameterClass="Map" resultClass="HashMap">
+		SELECT
+			*
+		FROM
+			( SELECT
+				*
+				FROM (
+						SELECT
+							Row_Number() OVER (
+								ORDER BY
+								<isEqual property="iv_PORDERBYCOL1" compareValue="BOARDNAME"> P.BOARDNAME </isEqual>
+								<isEqual property="iv_PORDERBYCOL1" compareValue="ITEMID"> A.ITEMID </isEqual>
+								<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERNAME"> A.WRITERNAME </isEqual>
+								<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERDEPTNAME"> A.WRITERDEPTNAME </isEqual>
+								<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERCOMPANYNAME"> A.WRITERCOMPANYNAME </isEqual>
+								<isEqual property="iv_PORDERBYCOL1" compareValue="WRITEDATE"> A.WRITEDATE </isEqual>
+								<isEqual property="iv_PORDERBYCOL1" compareValue="STARTDATE"> A.STARTDATE </isEqual>
+								<isEqual property="iv_PORDERBYCOL1" compareValue="PARENTWRITEDATE"> TO_NUMBER(A.PARENTWRITEDATE) </isEqual>
+								<isEqual property="iv_PORDERBYCOL1" compareValue="TITLE"> A.TITLE </isEqual>
+								<isEqual property="iv_PORDERBYCOL1" compareValue="ATTACHMENTS"> A.ATTACHMENTS </isEqual>
+								<isEqual property="iv_PORDERBYCOL1" compareValue="READCOUNT"> A.READCOUNT </isEqual>
+								<isEqual property="iv_PORDERBYCOL1" compareValue="DOCNO"> A.DOCNO </isEqual>
+								<isEqual property="iv_PORDERBYCOL1DESC" compareValue="Y"> DESC </isEqual>
+								) AS RNUM,
+							A.BOARDID,
+							P.BOARDNAME,
+							A.ITEMID,
+							A.WRITERID,
+							A.WRITERNAME,
+							A.WRITERDEPTNAME,
+							A.WRITERCOMPANYNAME,
+							A.WRITEDATE,
+							A.STARTDATE,
+							A.PARENTWRITEDATE,
+							A.IMPORTANCE,
+							A.TITLE,
+							A.ATTACHMENTS,
+							A.READCOUNT,
+							A.ITEMLEVEL,
+							A.ABSTRACT,
+							P.BOARDNAME2 AS BOARDNAME2,
+							A.WRITERNAME2,
+							A.WRITERDEPTNAME2,
+							A.WRITERCOMPANYNAME2,
+							(SELECT
+								COUNT(*)
+							FROM
+								TBL_Board_OneLineReply
+							WHERE
+								TENANT_ID = A.TENANT_ID
+							  AND
+								ITEMID = A.ItemID) ONELINECNT,
+							A.UPPERITEMIDTREE,
+							A.DOCNO,
+							'' AS NOTICE,
+							P.GUBUN,
+							A.MAINCONTENT,
+							P.BOARDGROUPID
+						FROM
+							TBL_BOARD_ITEM A
+								INNER JOIN
+							TBL_BOARD_BOARDINFO P
+							ON
+									A.TENANT_ID = P.TENANT_ID
+								AND
+									(A.WRITERCOMPANYID = P.COMPANYID OR TRIM(A.WRITERCOMPANYID) = '' OR A.WRITERCOMPANYID IS NULL
+										OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
+								AND
+									A.BOARDID = P.BOARDID
+								AND
+									A.TENANT_ID = #v_TENANTID#
+								AND
+									(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(A.WRITERCOMPANYID) = '' OR A.WRITERCOMPANYID IS NULL
+										OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
+		<![CDATA[
+							    AND
+								    (A.APPRFLAG = 'Y'
+									    OR A.APPRFLAG IS NULL)
+							    AND
+									   A.STARTDATE > TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - NVL((SELECT
+																													ALLNEWBOARDLISTDATE
+																												FROM 
+																													TBL_BOARD_CONFIGURATION 
+																												WHERE 
+																													USERID = #v_PUSERID# 
+																												AND 
+																													TENANT_ID = #v_TENANTID#), 5)
+										, 'YYYY-MM-DD HH24:MI:SS')
+							    AND
+								    A.STARTDATE <= #nowDate#
+							    AND
+								    A.ENDDATE > #nowDate#
+								AND
+									P.ALLNEWBOARDFLAG = 'Y'
+			  WHERE RNUM <= #v_PENDROW# ) T2
+		WHERE
+			RNUM >= #v_PSTARTROW#
+		]]>
+	</select>
+	
 </sqlMap>
