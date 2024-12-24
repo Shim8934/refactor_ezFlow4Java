@@ -103,7 +103,7 @@
 		</script>
 	</head>
 	
-	<body style="margin-left:10px;overflow:hidden;">
+	<body style="margin-left:10px;overflow:hidden;" class="taskConfig">
 		<form method="post" runat="server">
 			<br />
 			<h2 style="font-weight: normal">▒&nbsp;<spring:message code='ezTask.jsh13' /></h2> 

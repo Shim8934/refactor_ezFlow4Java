@@ -1,4 +1,5 @@
-﻿input, label, textarea, select, ul, li, h1, h2, table, th, .page, .point, .box, .box2, .nobox, .leftbody, .message, .mainbody,  .listview2 td,.content td, .file td, .file2 td, .txt, .imgbtn{
+﻿/*
+input, label, textarea, select, ul, li, h1, h2, table, th, .page, .point, .box, .box2, .nobox, .leftbody, .message, .mainbody,  .listview2 td,.content td, .file td, .file2 td, .txt, .imgbtn{
 	font-family:'malgun gothic', 'arial', 'verdana';
 	font-size:12px;
 	color:#393939;
@@ -173,3 +174,22 @@ input:checked + .slider:before{transform:translateX(26px);}
 .resetBtn{line-height:0px;}
 .textUser{width:31%}
 #TreeCtrl_MyFavTree_ul > .lnbUL{padding-left:20px;}
+*/
+
+html{}
+
+/* 메일 */
+.previewmailDL dd.pretext .pretextUL li.preT_list .cblack{min-width:50px; display:inline-block;}
+.tagli > span:first-child{width:50px !important;}
+
+/* 주소록 */
+.address_wordmenu li:first-child{width:auto !important;}
+
+/* 웹폴더 */
+.webfolderListBoxOT .btn_write01{min-height:40px; line-height:1.5; padding:5px;}
+
+/* datepicker */
+.ui-datepicker{width:210px !important;}
+
+/* 업무관리 */
+.taskConfig table.content{width:300px !important;}
