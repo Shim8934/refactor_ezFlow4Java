@@ -193,7 +193,7 @@
 	                                var _li = document.createElement("LI");
 	                                _li.setAttribute("DATA1", BoardId);
 	                                _li.setAttribute("DATA5", BoardType);
-	                                _li.textContent = BoardName;
+	                                _li.textContent = ReplaceHTML(BoardName);
 	                                _li.onclick = function () { Tab1_MouseClick2(this); };
 	                                _li.style.cursor = "pointer";
 	                                _ul.appendChild(_li);
@@ -206,7 +206,7 @@
 	                            }
 	                            else {
 	                                var _li = document.createElement("LI");
-	                                _li.textContent = BoardName;
+	                                _li.textContent = ReplaceHTML(BoardName);
 	                                _li.setAttribute("DATA1", BoardId);
 	                                _li.setAttribute("DATA5", BoardType);
 	                                _li.style.cursor = "pointer";
