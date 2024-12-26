@@ -1015,4 +1015,7 @@ public interface EzApprovalGService {
     
     // 2024-12-27 이가은 - 전자결재 공람완료문서 삭제 로직
     public String gongramDocDelete(String docID, int aprmemberSn, int tenantID, String companyID) throws Exception;
+	
+	// 2024-12-19 이가은 - 전자결재 일괄배부 로직
+    public String setBebuAll(Document xmlDom, String dirPath, String companyID, String lang, int tenantID, String offSet, LoginVO userInfo, String curDocNum) throws Exception;
 }

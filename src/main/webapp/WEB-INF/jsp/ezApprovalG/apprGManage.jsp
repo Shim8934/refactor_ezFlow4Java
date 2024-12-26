@@ -3569,6 +3569,7 @@
 				<li id="tbtnReceiptAll" style="DISPLAY:none"><span id="btnReceiptAll" onclick="return btnReceiptAll_onclick()" ><spring:message code='ezApprovalG.lgeAR01'/></span></li>
 				<li id="tbtnRJunkyulAll" style="DISPLAY:none"><span id="btnRJunkyulAll" onclick="return btnRJunkyulAll_onclick()" ><spring:message code='ezApprovalG.lgeAR02'/></span></li>
 				<li id="tbtnJiJungAll" style="DISPLAY:none"><span id="btnJiJunglAll" onclick="return btnJiJungAll_onclick()" ><spring:message code='ezApprovalG.JKMH01'/></span></li>
+				<li id="tbtnBebuAll" style="DISPLAY:none"><span id="btnBebuAll" onclick="return btnBaeBuAll_onclick()" ><spring:message code='ezApprovalG.bebuAll01'/></span></li>
 				<li id="tbtnRegList" class="approvalG"><span id="btnAddCabinet" onclick="return btnAddCabinet_onclick()" ><spring:message code='ezApprovalG.t933'/></span></li>
 				<li id="tbtnUserInfo" style="DISPLAY:none"><span id="btnUserInfo" onclick="return btnUserInfo_onclick()" ><spring:message code='ezApprovalG.t1741'/></span></li>
 				<li id="tDocInfo"  class="approvalG"><span id="DocInfo" onclick="return GongRamDocInfo()" ><spring:message code='ezApprovalG.t946'/></span></li>		

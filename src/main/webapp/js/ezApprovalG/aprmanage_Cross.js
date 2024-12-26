@@ -2123,11 +2123,13 @@ function setbuttonenable() {
         document.getElementById("tbtnReceiptAll").style.display = "none";
         document.getElementById("tbtnRJunkyulAll").style.display = "none";
         document.getElementById("tbtnJiJungAll").style.display = "none";
+        document.getElementById("tbtnBebuAll").style.display = "none";
     } else if (pListTypeValue == "4" || pListTypeValue == "97") {
     	document.getElementById("tbtnApproveALL").style.display = "none";
     	document.getElementById("tbtnReceiptAll").style.display = "";
     	document.getElementById("tbtnRJunkyulAll").style.display = "";
         document.getElementById("tbtnJiJungAll").style.display = "";
+        document.getElementById("tbtnBebuAll").style.display = "";
     }
     else {
     	// apprGManage.jsp에서 공람버튼의 기본 스타일을 display = "none"으로 수정 (공람할문서 메뉴에서만 표출)
@@ -2138,6 +2140,7 @@ function setbuttonenable() {
         document.getElementById("tbtnReceiptAll").style.display = "none";
         document.getElementById("tbtnRJunkyulAll").style.display = "none";
         document.getElementById("tbtnJiJungAll").style.display = "none";
+        document.getElementById("tbtnBebuAll").style.display = "none";
     }
 
     /*if (pListTypeValue == "8")
@@ -2437,6 +2440,7 @@ function setbuttonenable() {
 	        document.getElementById("tbtnReceiptAll").style.display = "";
 	        document.getElementById("tbtnRJunkyulAll").style.display = "";
             document.getElementById("tbtnJiJungAll").style.display = "";
+	        document.getElementById("tbtnBebuAll").style.display = "";
             
 	        if (pFunctionType == "015") {
 	            // 회송된 문서일 경우 접수버튼 display none 처리
@@ -3466,4 +3470,111 @@ function RemoveGongramDoc(pDocID, pAprmemeberSn) {
         var pAlertContent = strLang872;
         OpenAlertUI(pAlertContent);
     }
+}
+
+var ezreceivedistributeui_cross_dialogArguments = new Array();
+function btnBaeBuAll_onclick() {
+	var DocList = new ListView();
+	DocList.LoadFromID("DocList");
+	
+	var selRows = DocList.GetSelectedRows();
+
+    if (selRows.length == 0) {
+		var pAlertContent = strLang930 + "<br>" + strLang336;
+        OpenAlertUI(pAlertContent);
+        return;
+    } else {
+		OpenInformationUI(ezApproval_allBeabu01 + "<br>" + ezApproval_allBeabu02, btnBaeBuAll_onclick_Complete);
+	}
+}
+
+function btnBaeBuAll_onclick_Complete(rtn) {
+	DivPopUpHidden();
+	
+	var DocList = new ListView();
+	DocList.LoadFromID("DocList");
+	
+	var selRows = DocList.GetSelectedRows();
+	
+	var excludeCnt = 0;	// 일괄배부 제외 대상 문서 갯수
+	
+	for (var i = 0; i < selRows.length; i++) {
+		if (selRows[i].getAttribute("data10") == "015" || selRows[i].getAttribute("data9") == "012") {
+			excludeCnt += 1;
+		}
+		if (pSusinManagerFlag != "admin" && selRows[i].getAttribute("data8") != pUserID) {
+			var pAlertContent = "<spring:message code='ezApprovalG.t1730'/>";
+            OpenInformationUI(pAlertContent);
+			return;
+		}	
+	}
+	
+	if (rtn && selRows.length == excludeCnt) {
+		OpenAlertUI(strLang721);
+		return;
+	}
+	
+	var DocID = "";
+	var DocState = "";
+	var AprState = "";
+	
+	if (rtn) {
+		for (var j = 0; j < selRows.length; j++) {
+		    var targetUrl = selRows[j].getAttribute("data3");
+		    var targetUrlType = (targetUrl.substr(targetUrl.length-3, targetUrl.length)).toUpperCase(); 
+		    if (targetUrlType == "MHT") {
+            	ajaxUrl = "/ezApprovalG/recevGSusin.do";
+            } else if (targetUrlType == "HWP") {
+            	ajaxUrl = "/ezApprovalG/ezRecevGSusinHWP.do";
+            } else if (targetUrlType == "WHWP") {
+            	ajaxUrl = "/ezApprovalG/ezRecevGSusinWHWP.do";
+            }
+            	
+            // 수신문서 열어주는 작업
+            $.ajax({
+            	type : "GET",
+            	dataType : "text",
+            	async : false,
+            	url : ajaxUrl,
+            	data : {
+            		docID : selRows[j].getAttribute("data1"),
+            		uOrgID : selRows[j].getAttribute("data7"),
+            		isReDraft : "",
+            		draftFlag : "SUSIN",
+            		retFlag : "",
+            		isPreview : "Y"
+            	}
+            });
+		
+			DocID += selRows[j].getAttribute("data1");
+			DocState += selRows[j].getAttribute("data9");
+			AprState += selRows[j].getAttribute("data10");
+			if (j != selRows.length - 1) {
+				DocID += ",";
+				DocState += ",";
+				AprState += ",";
+			} 
+		}
+		var parameter = new Array();
+		parameter[0] = DocID;
+		parameter[1] = "1";
+		parameter[2] = arr_userinfo[4];
+		parameter[3] = AprState;
+		parameter[4] = arr_userinfo[4];
+		parameter[5] = DocState;
+	
+		var url = "/ezApprovalG/ezReceiveDistributeUI.do?mode=addAll&pdocid=" + DocID;
+	
+		ezreceivedistributeui_cross_dialogArguments[0] = parameter;
+		ezreceivedistributeui_cross_dialogArguments[1] = receiveDistributeAll_Complete;
+	
+		var OpenWin = window.open(url, "ezReceiveDistributeUI_Cross", GetOpenWindowfeature(800, 600));
+		try { OpenWin.focus(); } catch (e) { }
+	}
+
+}
+
+function receiveDistributeAll_Complete(ret){
+	if (ret == "cancel")
+		window.close();
 }

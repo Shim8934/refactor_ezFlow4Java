@@ -39178,4 +39178,208 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		logger.debug("gongramDocDelete ended");
 		return "TRUE";
 	}
+    
+	@Override
+	public String setBebuAll(Document xmlDom, String dirPath, String companyID, String lang, int tenantID, String offSet, LoginVO userInfo, String curDocNum) throws Exception {
+		logger.debug("setBebuAll started");
+
+		int totalCnt = 0;
+		int successCnt = 0;
+		int failCnt = 0; 
+		int excludeCnt = 0;
+		
+		String docID = xmlDom.getDocumentElement().getAttribute("DocID").trim();
+		String receiveSN = xmlDom.getDocumentElement().getAttribute("ReceiveSN").trim();
+		String sentDeptID = xmlDom.getDocumentElement().getAttribute("SendDeptID").trim();
+		String receiveDeptID = xmlDom.getDocumentElement().getAttribute("ReceivedDeptID").trim();
+		String docState = xmlDom.getDocumentElement().getAttribute("DocState").trim();
+		String aprState = xmlDom.getDocumentElement().getAttribute("AprState").trim();
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
+		
+		//2018-09-05 강민수92 배부시 배부한 사용자 정보 입력하기위해 추가
+		String organUserName = userInfo.getDisplayName();
+		boolean rtnVal = true;
+		
+		NodeList objRows = xmlDom.getDocumentElement().getChildNodes().item(0).getChildNodes();
+		
+		String subSQL = "";
+		String gFlag = getCode2Name("A35", "002", companyID, lang, tenantID).toUpperCase().trim();
+		
+		String[] docIDArr = docID.split(",");
+		String[] docStateArr = docState.split(",");
+		String[] aprStateArr = aprState.split(",");
+		
+		totalCnt = docIDArr.length;
+		
+		for (int i = 0; i < totalCnt; i++) {
+			docID = docIDArr[i];
+			docState = docStateArr[i];
+			aprState = aprStateArr[i];
+			
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("v_TENANTID", tenantID);
+			map.put("v_DOCID", docID);
+			map.put("v_ReceiveSN", receiveSN);
+			map.put("companyID", companyID);
+			map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+			map.put("v_ReceivedDeptID", objRows.item(0).getTextContent());
+			map.put("v_ReceivedDeptName", objRows.item(1).getTextContent());
+			map.put("v_ReceivedDeptName2", objRows.item(2).getTextContent());
+			map.put("v_DocID", docID);
+			map.put("docID", docID);
+			map.put("tenantID", tenantID);
+			
+			// APRSTATE 는 변할 수 있으므로 DB 값으로 최종 체크
+			map.put("v_COL", "FUNCTIONTYPE");
+			String dbState = ezApprovalGDAO.getDocInfoDState(map);
+			
+			if ("012".equals(docState) || "015".equals(dbState)) {
+				excludeCnt += 1;
+				continue;
+			}
+			
+			// 다른 수발신담당자가 결재 처리 했을수도 있으므로 수신부서 다시 체크
+			map.put("v_RECEIVESN", receiveSN);
+			ApprGReceiveDocVO receiveDocInfo = ezApprovalGDAO.getReceiptProInfo(map);
+			if (!receiveDocInfo.getReceivedDeptID().equals(userInfo.getDeptID())) {
+				excludeCnt += 1;
+				continue;
+			}
+			
+	        String orgDocID = ezApprovalGDAO.getOrgDocID(map);
+			
+			if (approvalFlag.equals("G")) {
+				if (!gFlag.equals("G")) {
+					map.put("v_AprState", staASBaeBu);
+					
+					ezApprovalGDAO.insertSetBebuAprReceiptProcessInfo(map);
+					ezApprovalGDAO.updateSetBebuAprReceiptProcessInfo(map);
+					
+					// 수정(2006.06.13) : 배부 시 현재 부서의 결재선 정보는 삭제하도록 수정
+					ezApprovalGDAO.deleteSetBebuExpAprLine(map);
+					ezApprovalGDAO.deleteSetBebuAprLineInfo(map);
+					
+					subSQL = updateDeliveryList(docID, sentDeptID, ezOrganService.getPropertyValue(sentDeptID, "displayName", tenantID), ezOrganService.getPropertyValue(sentDeptID, "displayName2", tenantID), objRows.item(0).getTextContent(),
+							objRows.item(1).getTextContent(), objRows.item(2).getTextContent(), "", "", "", sentDeptID, "", companyID, "QUERY", lang, tenantID, organUserName, orgDocID, docID, "set", userInfo);
+					
+					if (subSQL.equals("<RESULT>TRUE</RESULT>")) {
+						//수신문 반송시 배부하면  의견을 지워주기 위해 추가
+						ezApprovalGDAO.deleteOpinionInfo(map);
+						ezApprovalGDAO.updateOpinionInfo(map);
+						
+						successCnt += 1;
+						continue;
+					} else {
+						failCnt += 1;
+						continue;
+					}
+				} else {
+					for (int k = 0; k < xmlDom.getDocumentElement().getChildNodes().getLength(); k++) {
+						if (k == 0) {
+							map.put("v_AprState", staASBaeBu);
+	                        String[] v_ReceivedDeptIDAry = getDocManageDeptInfo(sentDeptID, tenantID).replace(" ", "").replace("\'", "").split(",");
+	                        map.put("v_ReceivedDeptIDAry", v_ReceivedDeptIDAry);
+	                        
+							ezApprovalGDAO.updateSetBebuAprReceiptProcessInfo2(map);
+							
+							ezApprovalGDAO.deleteSetBebuExpAprLine(map);
+							ezApprovalGDAO.deleteSetBebuAprLineInfo(map);
+							
+							//수신문 반송시 배부하면  의견을 지워주기 위해 추가
+							ezApprovalGDAO.deleteOpinionInfo(map);
+							ezApprovalGDAO.updateOpinionInfo(map);
+							// 첫번째 배부 부서는 기존 수신 정보를 배부 부서로 변경하기 때문에 doBebuDoc 실행 x. doBebuDoc에서는 newDocId를 발급해 해당 docId르 알림 발송중.
+							sendRecvMsg(xmlDom.getDocumentElement().getChildNodes().item(k).getChildNodes().item(0).getTextContent(), docID, "BEBU", companyID, lang, tenantID);
+						} else {
+							subSQL = doBebuDoc(docID, xmlDom.getDocumentElement().getChildNodes().item(k).getChildNodes().item(0).getTextContent(),
+									xmlDom.getDocumentElement().getChildNodes().item(k).getChildNodes().item(1).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(k).getChildNodes().item(2).getTextContent(),
+									dirPath, sentDeptID, companyID, lang, tenantID, offSet, userInfo, orgDocID, docID, "set");
+							
+							if (subSQL.toUpperCase().equals("FALSE")) {
+								failCnt += 1;
+								continue;
+							} 
+						}
+					}
+					
+					subSQL = updateDeliveryList(docID, sentDeptID, ezOrganService.getPropertyValue(sentDeptID, "displayName", tenantID), ezOrganService.getPropertyValue(sentDeptID, "displayName2", tenantID), objRows.item(0).getTextContent(),
+							objRows.item(1).getTextContent(), objRows.item(2).getTextContent(), "", "", "", sentDeptID, "", companyID, "QUERY", lang, tenantID, userInfo.getDisplayName(), orgDocID, docID, "set", userInfo);
+					
+					if (subSQL.equals("<RESULT>FALSE</RESULT>")) {
+						failCnt += 1;
+						continue;
+					} 
+					
+				}
+				//sendRecvMsg(receiveDeptID, docID, "BEBU", companyID, lang, tenantID);
+				successCnt += 1;
+				continue;
+			} else {
+				//수신문 반송시 배부하면  의견을 지워주기 위해 추가
+				ezApprovalGDAO.deleteOpinionInfo(map);
+				ezApprovalGDAO.updateOpinionInfo(map);
+				
+				for (int k = 0; k < xmlDom.getDocumentElement().getChildNodes().getLength(); k++) {
+					subSQL = doBebuDoc(docID, xmlDom.getDocumentElement().getChildNodes().item(k).getChildNodes().item(0).getTextContent(),
+							xmlDom.getDocumentElement().getChildNodes().item(k).getChildNodes().item(1).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(k).getChildNodes().item(2).getTextContent(),
+							dirPath, docState, companyID, lang, tenantID, offSet, userInfo, orgDocID, docID, "set");
+					
+					if (subSQL.toUpperCase().equals("FALSE")) {
+						rtnVal = false;
+					} 
+				}
+				
+				if (rtnVal) {
+					
+					map.put("v_AprState", staASBaeBu);
+					map.put("v_sentDeptID", sentDeptID);
+					map.put("v_USERID", userInfo.getId());
+					map.put("v_USERNAME", userInfo.getDisplayName1());
+					map.put("v_USERNAME2", userInfo.getDisplayName2());
+					map.put("v_USERTITLE", userInfo.getTitle1());
+					map.put("v_USERTITLE2", userInfo.getTitle2());
+					map.put("v_DEPTID", userInfo.getDeptID());
+					map.put("v_DEPTNAME", userInfo.getDeptName1());
+					map.put("v_DEPTNAME2", userInfo.getDeptName2());
+					map.put("v_USERTITLE2", userInfo.getTitle2());
+					map.put("v_DOCSTATE", "024");
+					map.put("v_receiveDeptID", receiveDeptID); 
+					ezApprovalGDAO.updateSetBebuReceiptProcessInfoS(map);
+					
+					ezApprovalGDAO.deleteSetBebuExpAprLine(map);
+					ezApprovalGDAO.deleteSetBebuAprLineInfo(map);
+					
+					ezApprovalGDAO.insertSetBebuLineInfoS(map);
+					ezApprovalGDAO.insertSetBebuExpLineInfoS(map);
+					
+					ezApprovalGDAO.updateSetBebuDocInfoS(map);
+					
+					subSQL = doDocComplete(docID, "", "", "", dirPath, userInfo.getDeptID(), "", companyID, lang, userInfo, curDocNum, "");
+					
+					if (subSQL.toUpperCase().equals("FALSE")) {
+						rtnVal = false;
+					}
+				}
+				
+				if (rtnVal) {
+					subSQL = updateBebu(docID, companyID, userInfo.getDeptID(), tenantID); 
+					if (subSQL.toUpperCase().equals("FALSE")) {
+						successCnt += 1;
+						continue;
+					} 
+				} else {
+					map.put("v_DOCSTATE", "011");
+					ezApprovalGDAO.updateSetBebuDocInfoS(map);
+					logger.debug("setBebuAll ended");
+					failCnt += 1;
+					continue;
+				}
+				
+				logger.debug("setBebuAll ended");
+				successCnt += 1;
+				continue;
+			}
+		}
+		return totalCnt + "/" + successCnt + "/" + failCnt + "/" + excludeCnt;
+	}
 }
