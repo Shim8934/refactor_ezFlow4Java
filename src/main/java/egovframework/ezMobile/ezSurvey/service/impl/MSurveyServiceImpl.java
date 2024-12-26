@@ -254,6 +254,10 @@ public class MSurveyServiceImpl extends EgovFileMngUtil implements MSurveyServic
 		*/
 		survey.setAttachList(surveyAttach);
 		survey.setUserList(listUsers);
+		String strHtml = survey.getPurpose();
+        strHtml = strHtml.replace("/fileroot", "/mobile/ezCommon/mFileDown.do?fileName=*.INLINE.*&filePath=/fileroot");
+		survey.setPurpose(strHtml);
+		
 		result.put("survey", survey);
 		
 		if (mode.equals("normal")) {
