@@ -5938,7 +5938,7 @@
 	
 	<insert id="EzCommonDAO.insertServername">
 		INSERT INTO TBL_TENANT_SERVERNAME (SERVER_NAME, TENANT_ID)
-		VALUES ('127.0.0.1', 0);
+		VALUES ('127.0.0.1', 0)
 	</insert>
 	
     <select id="EzCommonDAO.checkScrapTenantConfig" resultClass="String" parameterClass="Map">

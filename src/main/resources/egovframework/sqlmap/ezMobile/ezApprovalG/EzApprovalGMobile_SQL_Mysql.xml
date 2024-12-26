@@ -2719,7 +2719,6 @@
 	                    WRITERDEPTNAME,
 	                    WRITERJOBTITLE,
 	                </isNotEqual>
-	   				END WRITERJOBTITLE,
 	   				DATE_ADD(DATE_FORMAT(STARTDATE,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) STARTDATE
 				FROM
 					VAPRWILLDOCLIST

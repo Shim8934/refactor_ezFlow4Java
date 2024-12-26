@@ -2958,6 +2958,9 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		Document doc = commonUtil.convertRequestToDocument(request);
 		if (doc != null){
 			url = doc.getElementsByTagName("URL").item(0).getTextContent();
+			
+			url = URLDecoder.decode(url, "UTF-8");
+			
 			logger.debug("url=" + url);
 
 			if(url != null){
