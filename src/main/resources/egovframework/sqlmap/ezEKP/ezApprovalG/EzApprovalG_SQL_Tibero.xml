@@ -36784,4 +36784,28 @@
             TO_NUMBER(SUBSTR(EDITVERSION, INSTR(EDITVERSION, '.') + 1)) DESC
             FETCH FIRST 1 ROWS ONLY;
     </select>
+
+    <select id="EzApprovalG.checkDocReceiveInfo" parameterClass="Map" resultClass="ApprGReceiveDocVO">
+        <![CDATA[
+            SELECT
+                RECEIVESN,
+                DOCID,
+                RECEIVEDDEPTID,
+                DOCSTATE,
+                APRSTATE,
+                PROCESSORID
+            FROM
+                TBL_APRRECEIPTPROCESSINFO
+            WHERE
+                TENANT_ID = #v_TENANTID#
+            AND
+                COMPANYID = #companyID#
+            AND
+                DOCID = #v_DOCID#
+            AND
+                RECEIVESN = #v_RECEIVESN#
+            AND
+                PROCESSYN <> 'Y'
+        ]]>
+    </select>
 </sqlMap>

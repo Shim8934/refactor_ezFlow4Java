@@ -2122,10 +2122,12 @@ function setbuttonenable() {
         document.getElementById("tbtnApproveALL").style.display = "";
         document.getElementById("tbtnReceiptAll").style.display = "none";
         document.getElementById("tbtnRJunkyulAll").style.display = "none";
+        document.getElementById("tbtnJiJungAll").style.display = "none";
     } else if (pListTypeValue == "4" || pListTypeValue == "97") {
     	document.getElementById("tbtnApproveALL").style.display = "none";
     	document.getElementById("tbtnReceiptAll").style.display = "";
     	document.getElementById("tbtnRJunkyulAll").style.display = "";
+        document.getElementById("tbtnJiJungAll").style.display = "";
     }
     else {
     	// apprGManage.jsp에서 공람버튼의 기본 스타일을 display = "none"으로 수정 (공람할문서 메뉴에서만 표출)
@@ -2135,6 +2137,7 @@ function setbuttonenable() {
         document.getElementById("tbtnApproveALL").style.display = "none";
         document.getElementById("tbtnReceiptAll").style.display = "none";
         document.getElementById("tbtnRJunkyulAll").style.display = "none";
+        document.getElementById("tbtnJiJungAll").style.display = "none";
     }
 
     /*if (pListTypeValue == "8")
@@ -2429,7 +2432,8 @@ function setbuttonenable() {
 	        document.getElementById("tbtnReceipt").style.display = "";
 	        document.getElementById("tbtnReceiptAll").style.display = "";
 	        document.getElementById("tbtnRJunkyulAll").style.display = "";
-	        
+            document.getElementById("tbtnJiJungAll").style.display = "";
+            
 	        if (pFunctionType == "015") {
 	            // 회송된 문서일 경우 접수버튼 display none 처리
 	            document.getElementById("tbtnReceipt").style.display = "none";	   	        	

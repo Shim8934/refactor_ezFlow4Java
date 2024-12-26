@@ -4070,4 +4070,9 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public String getEditVersion(Map<String, Object> map) throws Exception {
 		return (String) select("EzApprovalG.getEditVersion", map);
 	}
+
+	/* 2024-12-25 기민혁 - 전자결재 > 일괄 지정 수신 문서 확인 */
+	public ApprGReceiveDocVO checkDocReceiveInfo(Map<String, Object> map) throws Exception {
+		return (ApprGReceiveDocVO) select("EzApprovalG.checkDocReceiveInfo", map);
+	}
 }

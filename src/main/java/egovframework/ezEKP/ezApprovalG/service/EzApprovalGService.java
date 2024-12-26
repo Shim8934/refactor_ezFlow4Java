@@ -14,6 +14,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGOpinionVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGOutOfOfficeInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGProxyVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGReceiveDocVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSusinProcessInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
@@ -1004,4 +1005,7 @@ public interface EzApprovalGService {
 
     /* 2024-12-10 기민혁 - 전자결재 > 수정 버전 호출 */
     public String getEditVersion(String docID, String companyID, int tenantID) throws Exception;
+
+    /* 2024-12-25 기민혁 - 전자결재 > 일괄 지정 수신 문서 확인 */
+    public ApprGReceiveDocVO checkDocReceiveInfo(String companyID, int tenantID, String docID, String receiveSN) throws Exception;
 }
