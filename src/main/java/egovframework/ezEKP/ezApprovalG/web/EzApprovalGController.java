@@ -13950,4 +13950,33 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		return result;
 	}
+	
+	/**
+	 * 전자결재 일괄배부 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/setBebuAll.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public String setBebuAll(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model, @RequestBody String xmlPara) throws Exception{
+		logger.debug("setBebuAll started");
+		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String rtn = "ERR/0/0/0/0";
+		
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		String realPath = commonUtil.getRealPath(request);
+		String dirpath = realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator ;
+		
+		try {
+			String result = ezApprovalGService.setBebuAll(xmlDom, dirpath, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), userInfo, "");
+			String[] resArr = result.split("/");
+			rtn = Integer.parseInt(resArr[0]) > 0 ? "OK/" + result : "ERR/" + result;
+		} catch (Exception e) {
+			logger.debug("setBebuAll error: " + e.getMessage());
+		}
+		
+		logger.debug("setBebuAll ended");
+		
+		return rtn;
+	}
 }
