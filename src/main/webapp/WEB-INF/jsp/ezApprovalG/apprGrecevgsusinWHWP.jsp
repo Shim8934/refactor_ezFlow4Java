@@ -159,7 +159,8 @@
 			var junGyulFlag = "<c:out value = '${junGyulFlag}'/>";
             var passAprLine = "";
             var wAprMemberSN = "1";
-
+			var isRelay = GetRelayDocInfo(); // 중계문서인지의 여부를 true/false로 반환;
+						
 		    function process_AfterOpen() {
 		        try {
 		            if (pFormHref == "") {
@@ -404,7 +405,6 @@
 			        } */
 			    } else {
 			        if (pFormHref == "") {
-			            var isRelay = GetRelayDocInfo();
 			            if (isRelay) {
 			                try {
 			                    if (getNodeText(pRelayDocInfo.getElementsByTagName("isPKI").item(0)) == "Y") {

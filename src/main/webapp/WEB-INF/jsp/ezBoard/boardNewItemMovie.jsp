@@ -534,7 +534,7 @@
 		    
 		    /* 2018-11-05 홍승비 - HTML5 지원 동영상파일 확장자체크 추가 */
 		    function compareExtension(check, extension) {
-	    		var filterExtension = new Array("mp4", "ogg", "webm");
+	    		var filterExtension = new Array("mp4", "webm");
 	    		for (var i = 0; i < filterExtension.length; i++) {
 	        		if (extension.toLowerCase() == filterExtension[i]) {
 	            		check = true;

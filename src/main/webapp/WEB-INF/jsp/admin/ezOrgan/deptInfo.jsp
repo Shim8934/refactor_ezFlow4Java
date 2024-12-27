@@ -133,10 +133,12 @@
 			function Check_ID(pValue, isAdd) {
 				// 인사연동 시 부서 ID에 대문자가 포함되어 있는 경우가 있어, 부서 추가 시에만 대문자를 넣지 못하도록 함.
 				var regex = /^[a-zA-Z0-9\_\-\.]+$/;
-				
-				if (isAdd) {
-					regex = /^[a-z0-9\_\-\.]+$/;
-				}
+
+				/* 2024.09.02 부서와 회사의 경우 대문자 허용
+                   if (isAdd) {
+                       regex = /^[a-z0-9\_\-\.]+$/;
+                   }
+                */
 				
 				return regex.test(pValue);
 			}

@@ -6508,7 +6508,7 @@
      				FROM
      					TBL_USERMASTER
      				WHERE
-     					tenant_id = #tenantID# AND cn = #cn#
+     					tenant_id = #tenantID# AND LOWER(cn) = LOWER(#cn#)
                     AND 
                         CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantID#)          
      				UNION
@@ -6517,17 +6517,17 @@
      				FROM
      					TBL_DEPTMASTER
      				WHERE
-     					tenant_id = #tenantID# AND cn = #cn#
+     					tenant_id = #tenantID# AND LOWER(cn) = LOWER(#cn#)
      				UNION
      				SELECT 
      					cn
      				FROM
      					TBL_USERMASTER_RETIRE
      				WHERE
-     					tenant_id = #tenantID# AND cn = #cn#
+     					tenant_id = #tenantID# AND LOWER(cn) = LOWER(#cn#)
      			 )
       		WHERE  
-      			cn = #cn#
+      			LOWER(cn) = LOWER(#cn#)
 	     ]]>
 	</select>
 	
