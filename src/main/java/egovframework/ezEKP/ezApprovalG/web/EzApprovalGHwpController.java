@@ -2878,6 +2878,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("docID", docID);
 		model.addAttribute("docHref", docHref);
 		model.addAttribute("webHWPUrl", webHWPUrl);
+		model.addAttribute("isHWP", "Y");
 		
 		logger.debug("approvContentAll_WHWP ended.");
 		return "ezApprovalG/apprGapprovuiAllContent_WHWP";
