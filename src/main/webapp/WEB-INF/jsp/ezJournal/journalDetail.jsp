@@ -210,7 +210,7 @@
 						<td>
 							<div id="lstAttachLink" style="OVERFLOW: auto; HEIGHT: 50px; background-color: white; text-align: left">
 								<c:forEach items="${journal.fileList }" var="file">
-									<div style="margin-top: 3px; height: 20px">
+									<div style="margin-top: 3px; height: auto !important;">
 										<c:set var="imagePath" value="/images/file.gif" />
 										<%-- <input type="checkbox" name="fileSelect" value="${file.fileName }"> --%>
 										<!-- 		            			<img src="/images/image.png">  -->
