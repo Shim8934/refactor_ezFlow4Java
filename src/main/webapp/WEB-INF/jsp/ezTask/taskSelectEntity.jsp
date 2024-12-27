@@ -195,7 +195,7 @@
   					event_displayUserList(loadXMLString(xml));
 				},
 				error : function(jqXHR, textStatus, errorThrown) {
-					alert("spring:message code='ezTask.t193' />");
+					alert("<spring:message code='ezTask.t193'/>");
 				}
   			});
 	    	
