@@ -52,7 +52,7 @@ body { height:100%; margin:0;}
 input,button { margin:0; outline:none; color:#4f5964; font-size:1em; line-height:1em; font-family: 'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana';}
 select{font-family: 'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana';}
 textarea { margin:0; outline:none; color:#4f5964; font-size:1em; line-height:1.25em; font-family: 'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana';}
-img { border:0 none; vertical-align:top; }
+img { border:0 none; vertical-align:top;  -webkit-user-drag: none;}
 hr,caption { display:none; }
 strong { font-weight:bold; }
 em { font-style:normal; }
