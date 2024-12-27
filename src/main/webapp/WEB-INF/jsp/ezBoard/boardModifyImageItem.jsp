@@ -483,7 +483,7 @@
 	        </tr>
 	        <tr id="mainimage" style="display:none">
 	            <td>
-	                <input type="checkbox" id="mainFG" /><span><spring:message code='ezBoard.t00003'/></span>
+	                <input type="checkbox" id="mainFG" style="height: 14px !important;"/><span><spring:message code='ezBoard.t00003'/></span>
 	            </td>
 	        </tr>
 	        <tr>
