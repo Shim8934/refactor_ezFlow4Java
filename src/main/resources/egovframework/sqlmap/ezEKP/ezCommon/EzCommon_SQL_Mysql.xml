@@ -6593,5 +6593,34 @@
 			PRIMARY KEY (`GROUPID`,`MEMBERID`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8
 	</statement>
-
+	
+	<select id="EzCommonDAO.checkMemberDeptIdAtScheduleGroupMember" parameterClass="Map" resultClass="String">
+		SELECT
+			MEMBERDEPTID
+		FROM
+			TBL_SCHEDULEGROUPMEMBER
+		LIMIT 1
+	</select>
+	
+	<update id="EzCommonDAO.addMemberDeptIdScheduleGroupMember" parameterClass="Map">
+		ALTER TABLE
+			TBL_SCHEDULEGROUPMEMBER
+		ADD
+			MEMBERDEPTID VARCHAR(100) DEFAULT NULL
+	</update>
+	
+	<select id="EzCommonDAO.checkMemberDeptIdAtScheduleGatherMember" parameterClass="Map" resultClass="String">
+		SELECT
+			MEMBERDEPTID
+		FROM
+			TBL_SCHEDULEGATHERMEMBER
+		LIMIT 1
+	</select>
+	
+	<update id="EzCommonDAO.addMemberDeptIdScheduleGatherMember" parameterClass="Map">
+		ALTER TABLE
+			TBL_SCHEDULEGATHERMEMBER
+		ADD
+			MEMBERDEPTID VARCHAR(100) DEFAULT NULL
+	</update>
 </sqlMap>

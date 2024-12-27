@@ -298,6 +298,7 @@
 	                    data.memberName1 = rtn["name1"][i];
 	                    data.memberName2 = rtn["name2"][i];
 	                    data.writePermission = rtn["writepermission"][i];
+	                    data.memberDeptId = rtn["departmentid"][i];
 	                    
 	                    memberList.push(data);
 		            }
@@ -695,13 +696,14 @@
 	                }
 	            }
 			    
-		    	g_Member = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array(), "writepermission": new Array() };
+		    	g_Member = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array(), "writepermission": new Array(), "departmentid":new Array() };
 		    	
 		    	<c:forEach var="item" items="${memberList}">
 		    		g_Member.id.push( "${item.memberId}");
 		    		g_Member.name.push("${item.memberName}");
 		    		g_Member.name1.push("${item.memberName}");
 		    		g_Member.name2.push("${item.memberName2}");
+		    		g_Member.departmentid.push("${item.department}");
 		    	</c:forEach>
 		    }
 		</script>

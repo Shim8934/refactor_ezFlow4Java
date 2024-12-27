@@ -3244,4 +3244,24 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createTblScheduleGatherMember");
 		}
 	}
+
+	public void addMemberDeptIdScheduleGroupMember() throws Exception {
+		try {
+			select("EzCommonDAO.checkMemberDeptIdAtScheduleGroupMember");
+		} catch (Exception e) {
+			logger.debug("TBL_SCHEDULEGROUPMEMBER MEMBERDEPTID doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addMemberDeptIdScheduleGroupMember");
+		}
+	}
+	
+	public void addMemberDeptIdScheduleGatherMember() throws Exception {
+		try {
+			select("EzCommonDAO.checkMemberDeptIdAtScheduleGatherMember");
+		} catch (Exception e) {
+			logger.debug("TBL_SCHEDULEGATHERMEMBER MEMBERDEPTID doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addMemberDeptIdScheduleGatherMember");
+		}
+	}
 }

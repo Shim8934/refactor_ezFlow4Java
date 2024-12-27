@@ -782,6 +782,7 @@
                     data.memberID = GetAttribute(totalRows[i], "DATA1");
                     data.memberName1 = GetAttribute(totalRows[i], "DATA2");
                     data.memberName2 = GetAttribute(totalRows[i], "DATA3");
+                    data.memberDeptId = GetAttribute(totalRows[i], "DATA10");
 
                     var checkbox = document.getElementById("cb_" + data.memberID);
                     if (checkbox && checkbox.checked) {
@@ -876,7 +877,7 @@
 					data : {
 						search : document.getElementById("search_type").value + "::" + keywordObj.value,
 						cell : "company;description;displayName;title;telephoneNumber;" + document.getElementById("search_type").value,
-						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2",
+						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department",
 						page : CurPage ,
 						type : "user"
 					} ,
@@ -971,6 +972,7 @@
 		                    pparsingXML = pparsingXML + "<DATA7><![CDATA[" + jickwe + "]]></DATA7>";
 		                    pparsingXML = pparsingXML + "<DATA8>" + phone + "</DATA8>";
 		                    pparsingXML = pparsingXML + "<DATA9>" + writePermission + "</DATA9>";
+		                    pparsingXML = pparsingXML + "<DATA10>" + department + "</DATA10>";
 		                    
 /* 		                    if("<c:out value='${userInfo.lang}' />" == "1")
                                 pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + " (" + strDeptNM + ") " + "]]></VALUE></CELL></ROW>";
@@ -1055,6 +1057,7 @@
 		                    pparsingXML = pparsingXML + "<DATA7><![CDATA[" + jickwe + "]]></DATA7>";
 		                    pparsingXML = pparsingXML + "<DATA8>" + phone + "</DATA8>";
 		                    pparsingXML = pparsingXML + "<DATA9>" + writePermission + "</DATA9>";
+		                    pparsingXML = pparsingXML + "<DATA10>" + department + "</DATA10>";
 		                    pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
 		                    pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 		                    Resultxml = loadXMLString(pparsingXML2);
@@ -1154,6 +1157,7 @@
    				            pparsingXML = pparsingXML + "<DATA6><![CDATA[" + getNodeText(xmlRtn.getElementsByTagName("DISPLAYNAME")[i]) + "]]></DATA6>";
    				            pparsingXML = pparsingXML + "<DATA7><![CDATA[" + getNodeText(xmlRtn.getElementsByTagName("TITLE")[i]) + "]]></DATA7>";
    				            pparsingXML = pparsingXML + "<DATA8>" + getNodeText(xmlRtn.getElementsByTagName("TELEPHONENUMBER")[i]) + "</DATA8>";
+   				            pparsingXML = pparsingXML + "<DATA10>" + getNodeText(xmlRtn.getElementsByTagName("CN")[i]) + "</DATA10>";
    				            pparsingXML = pparsingXML + "<VALUE><![CDATA[" + getNodeText(xmlRtn.getElementsByTagName("DISPLAYNAME")[i]) + "]]></VALUE></CELL></ROW>";		// 2018-09-27 김민성 - 부서명 뜨는 부분 삭제
    				            pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
    				            Resultxml = loadXMLString(pparsingXML2);

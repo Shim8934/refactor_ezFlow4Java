@@ -33,7 +33,11 @@ public class ScheduleGroupListVO {
 	private String creatorId;
 	/** 그룹 설명2 */
 	private String description2;
-
+	/** 그룹멤버 부서이름*/
+	private String departmentName;
+	/** 그룹멤버 부서이름2*/
+	private String departmentName2;
+	
 	
 	public String getGroupId() {
 		return groupId;
@@ -131,4 +135,17 @@ public class ScheduleGroupListVO {
 	public void setDescription2(String description2) {
 		this.description2 = description2;
 	}
+	public String getDepartmentName() {
+		return departmentName;
+	}
+	public void setDepartmentName(String departmentName) {
+		this.departmentName = departmentName;
+	}
+	public String getDepartmentName2() {
+		return departmentName2;
+	}
+	public void setDepartmentName2(String departmentName2) {
+		this.departmentName2 = departmentName2;
+	}
+	
 }

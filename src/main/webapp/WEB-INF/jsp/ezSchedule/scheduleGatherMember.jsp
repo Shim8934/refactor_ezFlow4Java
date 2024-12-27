@@ -7,7 +7,8 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code="ezSchedule.ljeGs012" /></title>
-		<link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />			    
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+  		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>		
@@ -52,7 +53,8 @@
 			                var isExist = false;
 
 			                for (var j = 0; j < g_Member.id.length; j++) {
-			                    if (g_Member.id[j] == rtn["id"][i]) {
+			                    if (g_Member.id[j] == rtn["id"][i] &&
+			                    g_Member.departmentid[j] && rtn["departmentid"][i]) {
 		                            isExist = true;
 		                        }
 			                }
@@ -64,6 +66,7 @@
 		                    data.memberName = rtn["name"][i];
 		                    data.memberName1 = rtn["name1"][i];
 		                    data.memberName2 = rtn["name2"][i]; 
+		                    data.memberDeptId = rtn["departmentid"][i]; 
 		                    
 		                    memberList.push(data);
 			            }
@@ -136,12 +139,13 @@
 		            var memberList = new Array();
 	                
 	                OpenWin.focus();	
-	
+					
 		            for (var i = 0; i < rtn["id"].length; i++) {
 		                var isExist = false;
 
 		                for (var j = 0; j < g_Member.id.length; j++) {
-		                    if (g_Member.id[j] == rtn["id"][i]) {
+		                    if (g_Member.id[j] == rtn["id"][i] &&
+		                    g_Member.departmentid[j] == rtn["departmentid"][i]) {
 	                            isExist = true;
 	                        }
 		                }
@@ -153,10 +157,11 @@
 	                    data.memberName = rtn["name"][i];
 	                    data.memberName1 = rtn["name1"][i];
 	                    data.memberName2 = rtn["name2"][i];
+	                    data.memberDeptId = rtn["departmentid"][i];
 	                    
 	                    memberList.push(data);
 		            }
-	
+		            
 	                if (memberList.length > 0) {
 		                $.ajax({
 				    		type : "POST",
@@ -196,21 +201,24 @@
 			            	delMemberList.push(g_Member.id[k]);
 			            }
 		            }
-			        $.ajax({
-			    		type : "POST",
-			    		dataType : "html",
-			    		async : false,
-			    		data : {
-			    			groupID : groupid,
-			    			memberID : delMemberList
-			    		},
-			    		url : "/ezSchedule/scheduleGatherDelMember.do",
-			    		success: function(text){
-					         window.location.reload(false);   			
-			    		},
-			    		error: function(err){
-			    		}
-			        });
+	                
+	                if (delMemberList.length > 0) {
+				        $.ajax({
+				    		type : "POST",
+				    		dataType : "html",
+				    		async : false,
+				    		data : {
+				    			groupID : groupid,
+				    			memberID : delMemberList
+				    		},
+				    		url : "/ezSchedule/scheduleGatherDelMember.do",
+				    		success: function(text){
+						        window.location.reload(false);   			
+				    		},
+				    		error: function(err){
+				    		}
+				        });
+	                }
 		        }
 		    }
 
@@ -309,13 +317,17 @@
 	        	$('#groupname').val(unEscapeHtml2(groupName));
 	        	$('#description').val(unEscapeHtml2(description));
 			    
-		    	g_Member = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array() };
+		    	g_Member = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array(), "departmentid": new Array() };
 		    	
 		    	<c:forEach var="item" items="${memberList}">
 		    		g_Member.id.push( "${item.memberId}");
 		    		g_Member.name.push("${item.memberName}");
 		    		g_Member.name1.push("${item.memberName}");
 		    		g_Member.name2.push("${item.memberName2}");
+		    		
+		    		g_Member.departmentid.push("${item.department}");
+		    		g_Member.deptname.push("${item.departmentName}");
+		    		g_Member.deptname2.push("${item.departmentName2}");
 		    	</c:forEach>
 		    }
 		</script>

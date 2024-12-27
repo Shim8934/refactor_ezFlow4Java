@@ -4751,4 +4751,14 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void createTblScheduleGather() throws Exception {
         ezCommonDAO.createTblScheduleGather();
     }
+
+	@Override
+	public void addMemberDeptIdScheduleGroupMember() throws Exception {
+		ezCommonDAO.addMemberDeptIdScheduleGroupMember();
+	}
+	
+	@Override
+	public void addMemberDeptIdScheduleGatherMember() throws Exception {
+		ezCommonDAO.addMemberDeptIdScheduleGatherMember();
+	}
 }

@@ -499,5 +499,21 @@ public class EzScheduleDAO extends EgovAbstractDAO {
 	public void updateScheduleGather(Map<String, Object> map) throws Exception {
 		insert("EzScheduleDAO.updateScheduleGather", map);
 	}
+	
+	public ScheduleGroupListVO selectScheduleGatherMember(Map<String, Object> map) throws Exception {
+		return (ScheduleGroupListVO) select("EzScheduleDAO.selectScheduleGatherMember", map);
+	}
+
+	public void updateScheduleGatherMember(Map<String, Object> map) throws Exception {
+		update("EzScheduleDAO.updateScheduleGatherMember", map);
+	}
+
+	public ScheduleGroupListVO selectScheduleGroupMember(Map<String, Object> map) throws Exception {
+		return (ScheduleGroupListVO) select("EzScheduleDAO.selectScheduleGroupMember", map);
+	}
+
+	public void updateScheduleGroupMember(Map<String, Object> map) throws Exception {
+		update("EzScheduleDAO.updateScheduleGroupMember", map);
+	}
 }
 

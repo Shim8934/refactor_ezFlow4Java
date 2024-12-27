@@ -99,7 +99,7 @@ public interface EzScheduleService {
 	
 	public void updateAttendantStatus(String scheduleId, String attendantId, String status, int tenantId) throws Exception;	
 
-	public void insertScheduleGroupMember(String groupId, String memberId, String memberName, String memberName2, int tenantId, String writePermission) throws Exception;
+	public void insertScheduleGroupMember(String groupId, String memberId, String memberName, String memberName2, String memberDeptId, int tenantId, String writePermission) throws Exception;
 
 	public void insertScheduleGroup(String gUID, String id, String displayName, String displayName2, String groupName, String description, int tenantId ,String companyID, String groupColor) throws Exception;	
 	
@@ -219,7 +219,7 @@ public interface EzScheduleService {
 	public void insertScheduleGather(String gUID, String id, String displayName, String displayName2, String groupName, String description, int tenantId ,String companyID) throws Exception;
 
 	/* 2023-10-04 임정은 - 모아보기 그룹 추가 시 tbl_schedulegathermember에 insert하는 메서드 / 모아보기 그룹 관리 > 그룹 관리 버튼 > 구성원 추가/편집 버튼 > 구성원 추가 */
-	public void insertScheduleGatherMember(String groupId, String memberId, String memberName, String memberName2, int tenantId) throws Exception;
+	public void insertScheduleGatherMember(String groupId, String memberId, String memberName, String memberName2, String memberDeptId, int tenantId) throws Exception;
 
 	/* 2023-10-04 임정은 - 모아보기 그룹 관리 > 그룹 선택 시 상세 정보 리턴하는 메소드 */
 	public List<ScheduleGroupListVO> getMyGatherMemberList(String groupId, String lang, int tenantId ,String companyID) throws Exception;

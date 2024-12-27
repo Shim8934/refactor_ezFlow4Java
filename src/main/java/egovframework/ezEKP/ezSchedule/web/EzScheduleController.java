@@ -1183,8 +1183,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 			String memberName = (String) obj.get("memberName1");
 			String memberName2 = (String) obj.get("memberName2");
 			String writePermission = (String) obj.get("writePermission");
+			String memberDeptId = (String) obj.get("memberDeptId");
 			
-			ezScheduleService.insertScheduleGroupMember(groupId, memberId, memberName, memberName2, loginVO.getTenantId(), writePermission);
+			ezScheduleService.insertScheduleGroupMember(groupId, memberId, memberName, memberName2, memberDeptId, loginVO.getTenantId(), writePermission);
 			
 			ScheduleGroupListVO scheduleGroup = ezScheduleService.selectScheduleGroupInfo(groupId, loginVO.getTenantId());
 			String groupName = scheduleGroup.getGroupName();
@@ -1342,8 +1343,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 			String memberName = (String) obj.get("memberName1");
 			String memberName2 = (String) obj.get("memberName2");
 			String writePermission = (String) obj.get("writePermission");
+			String memberDeptId = (String) obj.get("memberDeptId");
 			
-			ezScheduleService.insertScheduleGroupMember(gUID, memberId, memberName, memberName2, loginVO.getTenantId(), writePermission);
+			ezScheduleService.insertScheduleGroupMember(gUID, memberId, memberName, memberName2, memberDeptId, loginVO.getTenantId(), writePermission);
 			
 			//KT텔레캅 통합알람 푸쉬 코드
 		    if(dotNetTotalNotification.equalsIgnoreCase("yes")) {
@@ -6050,8 +6052,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 			String memberId = (String)obj.get("memberID");
 			String memberName = (String)obj.get("memberName1");
 			String memberName2 = (String)obj.get("memberName2");
+			String memberDeptId = (String)obj.get("memberDeptId");
 
-			ezScheduleService.insertScheduleGatherMember(gUID, memberId, memberName, memberName2, loginVO.getTenantId());
+			ezScheduleService.insertScheduleGatherMember(gUID, memberId, memberName, memberName2, memberDeptId, loginVO.getTenantId());
 		}
 	}
 
@@ -6171,8 +6174,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 			String memberId = (String) obj.get("memberID");
 			String memberName = (String) obj.get("memberName1");
 			String memberName2 = (String) obj.get("memberName2");
+			String memberDeptId = (String) obj.get("memberDeptId");
 
-			ezScheduleService.insertScheduleGatherMember(groupId, memberId, memberName, memberName2, loginVO.getTenantId());
+			ezScheduleService.insertScheduleGatherMember(groupId, memberId, memberName, memberName2, memberDeptId, loginVO.getTenantId());
 		}
 	}
 

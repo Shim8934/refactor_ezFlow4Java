@@ -7,7 +7,8 @@
 <head>
   <title><spring:message code='ezSchedule.ljeGs003' /></title>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />
+  <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+  <link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
   <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css" />
   <style>
     .mainlist tr td:first-child {
@@ -770,6 +771,7 @@
         data.memberID = GetAttribute(totalRows[i], "DATA1");
         data.memberName1 = GetAttribute(totalRows[i], "DATA2");
         data.memberName2 = GetAttribute(totalRows[i], "DATA3");
+        data.memberDeptId = GetAttribute(totalRows[i], "DATA9");
         memberList.push(data);
       }
 
@@ -855,7 +857,7 @@
         data : {
           search : document.getElementById("search_type").value + "::" + keywordObj.value,
           cell : "company;description;displayName;title;telephoneNumber;" + document.getElementById("search_type").value,
-          prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2",
+          prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department",
           page : CurPage ,
           type : "user"
         } ,
@@ -943,11 +945,12 @@
             pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
             pparsingXML = pparsingXML + "<DATA2><![CDATA[" + strName + "]]></DATA2>";
             pparsingXML = pparsingXML + "<DATA3><![CDATA[" + strName2 + "]]></DATA3>";
-            pparsingXML = pparsingXML + "<DATA4><![CDATA[" + department + "]]></DATA4>";
+            pparsingXML = pparsingXML + "<DATA4><![CDATA[" + strDeptNM + "]]></DATA4>";
             pparsingXML = pparsingXML + "<DATA5><![CDATA[" + strDeptNM2 + "]]></DATA5>";
             pparsingXML = pparsingXML + "<DATA6><![CDATA[" + strName + "]]></DATA6>";
             pparsingXML = pparsingXML + "<DATA7><![CDATA[" + jickwe + "]]></DATA7>";
             pparsingXML = pparsingXML + "<DATA8>" + phone + "</DATA8>";
+            pparsingXML = pparsingXML + "<DATA9><![CDATA[" + department + "]]></DATA9>";
 
 
             /* 		                    if("<c:out value='${userInfo.lang}' />" == "1")
@@ -1103,8 +1106,8 @@
       var chk_Sub = "N";
 
       <%-- 2018-05-07 천성준 - 하위부서포함 체크박스 주석처리 (하위부서 쿼리 에러 관련 주석처리) --%>
-      /* if (document.getElementById('chk_subTree').checked)
-          chk_Sub = "Y"; */
+      /* if (document.getElementById('chk_subTree').checked) {
+          chk_Sub = "Y";} */
 
       $.ajax({
         url : '/ezSchedule/getDeptUserList.do',
@@ -1130,7 +1133,12 @@
             pparsingXML = pparsingXML + "<DATA6><![CDATA[" + getNodeText(xmlRtn.getElementsByTagName("DISPLAYNAME")[i]) + "]]></DATA6>";
             pparsingXML = pparsingXML + "<DATA7><![CDATA[" + getNodeText(xmlRtn.getElementsByTagName("TITLE")[i]) + "]]></DATA7>";
             pparsingXML = pparsingXML + "<DATA8>" + getNodeText(xmlRtn.getElementsByTagName("TELEPHONENUMBER")[i]) + "</DATA8>";
-            pparsingXML = pparsingXML + "<VALUE><![CDATA[" + getNodeText(xmlRtn.getElementsByTagName("DISPLAYNAME")[i]) + "]]></VALUE></CELL></ROW>";		// 2018-09-27 김민성 - 부서명 뜨는 부분 삭제
+            pparsingXML = pparsingXML + "<DATA9>" + nodeIdx.GetNodeData("CN") + "</DATA9>";
+            if (lang == "1") {
+            	pparsingXML = pparsingXML + "<VALUE><![CDATA[" + getNodeText(xmlRtn.getElementsByTagName("DISPLAYNAME")[i]) + "]]></VALUE></CELL></ROW>";
+            } else {
+            	pparsingXML = pparsingXML + "<VALUE><![CDATA[" + getNodeText(xmlRtn.getElementsByTagName("DISPLAYNAME2")[i]) + "]]></VALUE></CELL></ROW>";
+            }
             pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
             Resultxml = loadXMLString(pparsingXML2);
 
@@ -1141,11 +1149,13 @@
             var MaxID = 0;
             var InitTr = listview.GetDataRows();
 
-            if (getNodeText(xmlRtn.getElementsByTagName("CN")[i]) == "<c:out value='${userInfo.id}' />")
-              continue;
-            //else {
-            if (listview.ExistRow("DATA1", getNodeText(xmlRtn.getElementsByTagName("CN")[i])))
-              continue;
+            if (getNodeText(xmlRtn.getElementsByTagName("CN")[i]) == "<c:out value='${userInfo.id}' />") {
+              	continue;
+            }
+            //else {}
+            if (listview.ExistRow("DATA1", getNodeText(xmlRtn.getElementsByTagName("CN")[i]))) {
+            	continue;
+            }
 
             var MaxCntNum = 0;
             for (var j = 0  ; j < InitTr.length  ; j++) {
@@ -1157,15 +1167,16 @@
             }
 
             var objTr = listview.AddRow(InitTr.length);
-            if (MaxCntNum != 0)
-              MaxCntNum = MaxCntNum + 1;
+            if (MaxCntNum != 0) {
+            	MaxCntNum = MaxCntNum + 1;
+            }
             SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
             listview.AddDataRow(objTr, Resultxml);
 
             var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
             for (var y = 0; y < _tdlength; y++) {
-              document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
-              document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
+            	document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
+            	document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
             }
           }
         },

@@ -436,65 +436,36 @@
 
 	<!-- checked -->
 	<select id="EzScheduleDAO.getMyGroupMemberListCnt" parameterClass="map" resultClass="int">
-<!-- 			 select 
-			 	count(*)
-             from (
-	                  select
-	                  	memberid,
-	                  	tenant_id
-                      from
-                      	tbl_schedulegroupmember
-                      where
-                      	groupid = #v_GROUPID#
-                      and
-                      	tenant_id = #v_TENANTID#
-             )a join tbl_usermaster b on a.memberid = b.cn and a.tenant_id = b.tenant_id
-             where
-             	b.tenant_id = #v_TENANTID# -->
 		<![CDATA[
-             select 
-			 	count(distinct memberid)
-             from ( select              		
-                  	groupid,
-                  	memberid,
-                  	membername,
-                  	membername2,
-                  	tenant_id
-                     from 
-                     	tbl_schedulegroupmember 
-                     where  
-                     	tenant_id = #v_TENANTID#	
-             )A join ( SELECT  
-							D.CN, D.DISPLAYNAME, D.COMPANY, D.title, D.MAIL, D.DESCRIPTION , D.DESCRIPTION2, D.department
-							FROM  
-							TBL_USERMASTER D 
-							WHERE  
-							D.TENANT_ID = #v_TENANTID# AND D.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID# 
-							UNION ALL 
-							SELECT  
-							B.cn, B.DISPLAYNAME, C.COMPNM2 as COMPANY, A.title, b.mail, C.DISPLAYNAME AS DESCRIPTION, C.DISPLAYNAME2 AS DESCRIPTION2, A.deptid 
-							FROM  
-							TBL_USERMASTER B  
-							INNER JOIN  
-							TBL_ADDJOBMASTER A  
-							ON  
-							A.CN = B.CN  
-							AND  
-							A.TENANT_ID = B.TENANT_ID        
-							RIGHT JOIN  
-							TBL_DEPTMASTER C 
-							ON  
-							A.DEPTID = C.CN 
-							AND  
-							B.TENANT_ID = C.TENANT_ID    
-							WHERE  
-							A.TENANT_ID = #v_TENANTID# AND C.EXTENSIONATTRIBUTE2 = #v_COMPANYID#) BB 
-            	ON 
-				A.memberid = BB.cn 
+            SELECT
+			 	COUNT(U.MEMBERID)
+			FROM
+				(SELECT
+					A.GROUPID,	
+					A.MEMBERID,
+					B.DISPLAYNAME,
+					B.DISPLAYNAME2,
+					IFNULL(A.MEMBERDEPTID, B.DEPARTMENT) DEPARTMENT,
+					B.MAIL,
+					A.TENANT_ID
+				FROM 
+					TBL_SCHEDULEGROUPMEMBER A
+				INNER JOIN
+					TBL_USERMASTER B
+				ON
+					A.MEMBERID  = B.CN
+				AND
+					A.TENANT_ID = B.TENANT_ID) U
+				INNER JOIN
+				   TBL_DEPTMASTER D
+				ON
+					U.DEPARTMENT = D.CN
+				AND
+				 	U.TENANT_ID = D.TENANT_ID
 				WHERE 
-				A.groupid = #v_GROUPID#
+					U.GROUPID = #v_GROUPID#
 				AND 
-				A.tenant_id = #v_TENANTID#
+					U.TENANT_ID = #v_TENANTID# 
 		]]>
 	</select>
 	<!-- checked -->
@@ -532,138 +503,89 @@
 	<!-- checked -->
 	<select id="EzScheduleDAO.getMyGroupMemberList" parameterClass="map" resultMap="scheduleGroupMemberListVO">
 		<![CDATA[
-			 select 
-			 	A.memberid,
-			 	'' as membername,
-			 	'' as membername2,
-			 	'' as status,
-			 	'' as responsedate,
-             	BB.mail,
-             	BB.department,
-             	case #v_LANG#
-                    when '1' then concat(A.memberName, '(', BB.description, ')')                   
-        			when '2' then concat(A.memberName2, '(', BB.description2, ')')
-                end info  
-             from ( select              		
-                  	groupid,
-                  	memberid,
-                  	membername,
-                  	membername2,
-                  	tenant_id
-                     from 
-                     	tbl_schedulegroupmember 
-                     where  
-                     	tenant_id = #v_TENANTID#	
-             )A join ( SELECT  
-							D.CN, D.DISPLAYNAME, D.COMPANY, D.title, D.MAIL, D.DESCRIPTION , D.DESCRIPTION2, D.department
-							FROM  
-							TBL_USERMASTER D 
-							WHERE  
-							D.TENANT_ID = #v_TENANTID# AND D.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID# 
-							UNION ALL 
-							SELECT  
-							B.cn, B.DISPLAYNAME, C.COMPNM2 as COMPANY, A.title, b.mail, C.DISPLAYNAME AS DESCRIPTION, C.DISPLAYNAME2 AS DESCRIPTION2, A.deptid 
-							FROM  
-							TBL_USERMASTER B  
-							INNER JOIN  
-							TBL_ADDJOBMASTER A  
-							ON  
-							A.CN = B.CN  
-							AND  
-							A.TENANT_ID = B.TENANT_ID        
-							RIGHT JOIN  
-							TBL_DEPTMASTER C 
-							ON  
-							A.DEPTID = C.CN 
-							AND  
-							B.TENANT_ID = C.TENANT_ID    
-							WHERE  
-							A.TENANT_ID = #v_TENANTID# AND C.EXTENSIONATTRIBUTE2 = #v_COMPANYID#) BB 
-            	ON 
-				A.memberid = BB.cn 
+			 SELECT
+			 	U.MEMBERID,
+			 	U.DISPLAYNAME MEMBERNAME,
+			 	U.DISPLAYNAME2 MEMBERNAME2,
+			 	U.MAIL,
+			 	'' AS STATUS,
+			 	'' RESPONSEDATE,
+				U.DEPARTMENT,
+				CASE #v_LANG#
+				WHEN '1' THEN CONCAT(U.DISPLAYNAME, '(', D.DISPLAYNAME, ')')
+				WHEN '2' THEN CONCAT(U.DISPLAYNAME2, '(', D.DISPLAYNAME2, ')')
+				END INFO
+			FROM
+				(SELECT
+					A.GROUPID,	
+					A.MEMBERID,
+					B.DISPLAYNAME,
+					B.DISPLAYNAME2,
+					IFNULL(A.MEMBERDEPTID, B.DEPARTMENT) DEPARTMENT,
+					B.MAIL,
+					A.TENANT_ID
+				FROM 
+					TBL_SCHEDULEGROUPMEMBER A
+				INNER JOIN
+					TBL_USERMASTER B
+				ON
+					A.MEMBERID  = B.CN
+				AND
+					A.TENANT_ID = B.TENANT_ID) U
+				INNER JOIN
+				   TBL_DEPTMASTER D
+				ON
+					U.DEPARTMENT = D.CN
+				AND
+				 	U.TENANT_ID = D.TENANT_ID
 				WHERE 
-				A.groupid = #v_GROUPID#
+					U.GROUPID = #v_GROUPID#
 				AND 
-				A.tenant_id = #v_TENANTID# 
-				GROUP BY memberid
+					U.TENANT_ID = #v_TENANTID# 
 		]]>
 	</select>
 	<!-- checked -->
 	<select id="EzScheduleDAO.getGroupMemberList" parameterClass="map" resultClass="ScheduleGroupListVO">
-<!-- 			 select 
-			 	memberid,
-			 	membername,
-			 	membername2,
-			 	status,			 	
-			 	date_add(responsedate, interval +#v_OFFSETMIN# minute) as responsedate,
-             	'' as mail,
-             	'' as info  
-             from 
-             	tbl_schedulegroupmember
-             where
-             	groupid = #v_GROUPID#
-             and
-             	tenant_id = #v_TENANTID# -->
 		<![CDATA[
-			 select 
-			 	A.memberid,
-			 	E.GROUPNAME,
-			 	E.DESCRIPTION,
-             	A.memberName as membername, 
-	            A.memberName2 as membername2,
-			 	A.status as status,
-			 	date_add(a.responsedate, interval +#v_OFFSETMIN# minute) as responsedate,
-             	'' as mail,
-             	'' as department,
-             	'' as info,
-             	A.writepermission
-             from ( select              		
-                  	groupid,
-                  	memberid,
-                  	membername,
-                  	membername2,
-                  	status,
-                  	responsedate,
-                  	tenant_id,
-                  	writepermission
-                     from 
-                     	tbl_schedulegroupmember 
-                     where  
-                     	tenant_id = #v_TENANTID#	
-             )A join ( SELECT  
-							D.CN, D.DISPLAYNAME, D.COMPANY, D.title, D.MAIL, D.DESCRIPTION , D.DESCRIPTION2, D.department
-							FROM  
-							TBL_USERMASTER D 
-							WHERE  
-							D.TENANT_ID = #v_TENANTID# AND D.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID# 
-							UNION ALL 
-							SELECT  
-							B.cn, B.DISPLAYNAME, C.COMPNM2 as COMPANY, A.title, b.mail, C.DISPLAYNAME AS DESCRIPTION, C.DISPLAYNAME2 AS DESCRIPTION2, A.deptid 
-							FROM  
-							TBL_USERMASTER B  
-							INNER JOIN  
-							TBL_ADDJOBMASTER A  
-							ON  
-							A.CN = B.CN  
-							AND  
-							A.TENANT_ID = B.TENANT_ID        
-							RIGHT JOIN  
-							TBL_DEPTMASTER C 
-							ON  
-							A.DEPTID = C.CN 
-							AND  
-							B.TENANT_ID = C.TENANT_ID    
-							WHERE  
-							A.TENANT_ID = #v_TENANTID# AND C.EXTENSIONATTRIBUTE2 = #v_COMPANYID#) BB 
-            	ON 
-				A.memberid = BB.cn
-				JOIN TBL_SCHEDULEGROUP E
-				ON A.GROUPID = E.GROUPID
-				WHERE 
-				A.groupid = #v_GROUPID#
+			 SELECT 
+			 	U.MEMBERID,
+			 	G.GROUPNAME,
+			 	G.DESCRIPTION,
+             	U.DISPLAYNAME AS MEMBERNAME, 
+	            U.DISPLAYNAME2 AS MEMBERNAME2,
+			 	U.STATUS AS STATUS,
+			 	DATE_ADD(U.RESPONSEDATE, INTERVAL +#v_OFFSETMIN# MINUTE) AS RESPONSEDATE,
+             	U.MAIL AS MAIL,
+             	U.DEPARTMENT AS DEPARTMENT,
+             	'' AS INFO,
+             	U.WRITEPERMISSION
+             FROM (SELECT
+					A.GROUPID,	
+					A.MEMBERID,
+					B.DISPLAYNAME,
+					B.DISPLAYNAME2,
+					IFNULL(A.MEMBERDEPTID, B.DEPARTMENT) DEPARTMENT,
+					B.MAIL,
+					A.RESPONSEDATE,
+					A.STATUS,
+					A.WRITEPERMISSION,
+					A.TENANT_ID
+				FROM 
+					TBL_SCHEDULEGROUPMEMBER A
+				INNER JOIN
+					TBL_USERMASTER B
+				ON
+					A.MEMBERID  = B.CN
+				AND
+					A.TENANT_ID = B.TENANT_ID) U
+				INNER JOIN
+					TBL_SCHEDULEGROUP G
+				ON
+					U.GROUPID = G.GROUPID
+				WHERE
+					U.groupid = #v_GROUPID#
 				AND 
-				A.tenant_id = #v_TENANTID# 
-				GROUP BY memberid
+					U.tenant_id = #v_TENANTID# 
 		]]>
 	</select>
 	<!-- checked -->
@@ -723,17 +645,27 @@
 					end displayname,
 					A.displayname2,
 					case #v_LANG#
-						when '1' then A.description
-						when '2' then A.description2   
+						when '1' then C.DISPLAYNAME
+						when '2' then C.DISPLAYNAME2   
 					end description,
-					A.description2,
+					C.DISPLAYNAME2,
 					A.title ,
 					A.title2 ,
 					A.telephonenumber 
 				FROM
 					TBL_ADDJOBMASTER B
 				JOIN
-					TBL_USERMASTER A ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID
+					TBL_USERMASTER A
+				ON
+					A.CN = B.CN
+				AND
+					A.TENANT_ID = B.TENANT_ID
+				JOIN
+					TBL_DEPTMASTER C
+				ON
+					B.DEPTID = C.CN
+				AND
+					B.TENANT_ID = C.TENANT_ID
 				WHERE
 					B.DEPTID = #v_DEPTID#
 				AND
@@ -1347,9 +1279,9 @@
 	<insert id="EzScheduleDAO.insertScheduleGroupMember" parameterClass="map">
 		<![CDATA[
 			insert into tbl_schedulegroupmember(
-				groupid, 			memberid, 				membername, 			membername2, 			status, 			responsedate,		tenant_id,		writepermission
+				groupid, 			memberid, 				membername, 			membername2, 	memberdeptid,		status, 			responsedate,		tenant_id,		writepermission
 			) values (
-				#v_GROUPID#,		#v_MEMBERID#,			#v_MEMBERNAME#,			#v_MEMBERNAME2#,		0,					utc_timestamp(),	#v_TENANTID#,	#v_WRITEPERMISSION#
+				#v_GROUPID#,		#v_MEMBERID#,			#v_MEMBERNAME#,			#v_MEMBERNAME2#,     #v_MEMBERDEPTID#,		0,					utc_timestamp(),	#v_TENANTID#,	#v_WRITEPERMISSION#
 			)
    		]]>
 	</insert>
@@ -1363,6 +1295,35 @@
 			)
    		]]>
 	</insert>
+	
+	<select id="EzScheduleDAO.selectScheduleGroupMember" parameterClass="map" resultClass="ScheduleGroupListVO">
+		SELECT
+			 GROUPID, MEMBERID, MEMBERNAME, MEMBERNAME2, MEMBERDEPTID, TENANT_ID
+		FROM
+			TBL_SCHEDULEGROUPMEMBER
+		WHERE
+			GROUPID = #v_GROUPID#
+		AND
+			MEMBERID = #v_MEMBERID#
+		AND
+			TENANT_ID = #v_TENANTID#
+	</select>
+	
+	<update id="EzScheduleDAO.updateScheduleGroupMember" parameterClass="map">
+		UPDATE TBL_SCHEDULEGROUPMEMBER
+		SET 
+		    MEMBERNAME = #v_MEMBERNAME#,
+		    MEMBERNAME2 = #v_MEMBERNAME2#,
+		    MEMBERDEPTID = #v_MEMBERDEPTID#,
+		    TENANT_ID = #v_TENANTID#
+		WHERE
+		    GROUPID = #v_GROUPID#
+		AND
+			MEMBERID = #v_MEMBERID#
+		AND
+			TENANT_ID = #v_TENANTID#
+	</update>
+	
 	<!-- checked -->
 	<insert id="EzScheduleDAO.insertScheduleConfig" parameterClass="map">
 		<![CDATA[
@@ -2644,55 +2605,43 @@
 		]]>
 	</select>
 
-	<!-- 2023-09-27 임정은 - 모아보기 그룹 관리 리스트별 멤버 수 리턴하는 메서드 -->
 	<select id="EzScheduleDAO.getMyGatherMemberListCnt" parameterClass="map" resultClass="int">
 		<![CDATA[
-			select
-				count(distinct memberid)
-			from (
-				select
-					groupid, memberid, membername, membername2, tenant_id
-				from
-					tbl_schedulegathermember
-				where
-					tenant_id = #v_TENANTID#
-			) A
-			join
-			(
-				SELECT
-					D.CN, D.DISPLAYNAME, D.COMPANY, D.title, D.MAIL, D.DESCRIPTION , D.DESCRIPTION2, D.department
-				FROM
-					TBL_USERMASTER D
-				WHERE
-					D.TENANT_ID = #v_TENANTID#
-
-				UNION ALL
-
-				SELECT
-					B.cn, B.DISPLAYNAME, C.COMPNM2 as COMPANY, A.title, B.mail, C.DISPLAYNAME AS DESCRIPTION, C.DISPLAYNAME2 AS DESCRIPTION2, A.deptid
-				FROM
-					TBL_USERMASTER B
+			SELECT
+			 	COUNT(U.MEMBERID)
+			FROM
+				(SELECT
+					A.GROUPID,	
+					A.MEMBERID,
+					B.DISPLAYNAME,
+					B.DISPLAYNAME2,
+					IFNULL(A.MEMBERDEPTID, B.DEPARTMENT) DEPARTMENT,
+					B.MAIL,
+					A.TENANT_ID
+				FROM 
+					TBL_SCHEDULEGATHERMEMBER A
 				INNER JOIN
-					TBL_ADDJOBMASTER A
+					TBL_USERMASTER B
 				ON
-					A.CN = B.CN
+					A.MEMBERID  = B.CN
 				AND
-					A.TENANT_ID = B.TENANT_ID
-				RIGHT JOIN
-					TBL_DEPTMASTER C
+					A.TENANT_ID = B.TENANT_ID) U
+				INNER JOIN
+					TBL_SCHEDULEGATHER G
 				ON
-					A.DEPTID = C.CN
+					U.GROUPID = G.GROUPID
 				AND
-					B.TENANT_ID = C.TENANT_ID
-				WHERE
-					A.TENANT_ID = #v_TENANTID#
-			) BB
-			ON
-				A.memberid = BB.cn
-			WHERE
-				A.groupid = #v_GROUPID#
-			AND
-				A.tenant_id = #v_TENANTID#
+					U.TENANT_ID = G.TENANT_ID 
+				INNER JOIN
+				   TBL_DEPTMASTER D
+				ON
+					U.DEPARTMENT = D.CN
+				AND
+				 	U.TENANT_ID = D.TENANT_ID
+				WHERE 
+					U.GROUPID = #v_GROUPID#
+				AND 
+					U.TENANT_ID = #v_TENANTID#
 		]]>
 	</select>
 
@@ -2711,9 +2660,9 @@
 	<insert id="EzScheduleDAO.insertScheduleGatherMember" parameterClass="map">
 		<![CDATA[
 			insert into tbl_schedulegathermember (
-				groupid, memberid, membername, membername2, tenant_id
+				groupid, memberid, membername, membername2, memberdeptid, tenant_id
 			) values (
-				#v_GROUPID#, #v_MEMBERID#, #v_MEMBERNAME#, #v_MEMBERNAME2#,	#v_TENANTID#
+				#v_GROUPID#, #v_MEMBERID#, #v_MEMBERNAME#, #v_MEMBERNAME2#, #v_MEMBERDEPTID#, #v_TENANTID#
 			)
 		]]>
 	</insert>
@@ -2721,63 +2670,51 @@
 	<!-- 2023-10-04 임정은 - 모아보기 그룹 관리 > 그룹 선택 시 상세 정보 리턴하는 메소드 -->
 	<select id="EzScheduleDAO.getMyGatherMemberList" parameterClass="map" resultMap="scheduleGroupMemberListVO">
 		<![CDATA[
-			select
-				A.memberid, A.membername, A.membername2, A.groupname as status, '' as responsedate, BB.mail, BB.department,
-				case #v_LANG#
-					when '1' then concat(A.memberName, '(', BB.description, ')')
-					when '2' then concat(A.memberName2, '(', BB.description2, ')')
-				end info
-			from (
-				select
-					M.groupid, M.memberid, M.membername, M.membername2, M.tenant_id, G.groupname
-				from
-					tbl_schedulegathermember M
-				JOIN
-					tbl_schedulegather G
-				on
-					G.groupid = M.groupid
-				and
-					G.tenant_id = M.tenant_id
-				where
-					M.tenant_id = #v_TENANTID#
-			) A
-			join (
-				SELECT
-					D.CN, D.DISPLAYNAME, D.COMPANY, D.title, D.MAIL, D.DESCRIPTION , D.DESCRIPTION2, D.department
-				FROM
-					TBL_USERMASTER D
-				WHERE
-					D.TENANT_ID = #v_TENANTID#
-
-				UNION ALL
-
-				SELECT
-					B.cn, B.DISPLAYNAME, C.COMPNM2 as COMPANY, A.title, b.mail, C.DISPLAYNAME AS DESCRIPTION, C.DISPLAYNAME2 AS DESCRIPTION2, A.deptid
-				FROM
-					TBL_USERMASTER B
+			 SELECT
+			 	U.MEMBERID,
+			 	U.DISPLAYNAME MEMBERNAME,
+			 	U.DISPLAYNAME2 MEMBERNAME2,
+			 	U.MAIL,
+			 	G.GROUPNAME AS STATUS,
+			 	'' RESPONSEDATE,
+				U.DEPARTMENT,
+				CASE #v_LANG#
+				WHEN '1' THEN CONCAT(U.DISPLAYNAME, '(', D.DISPLAYNAME, ')')
+				WHEN '2' THEN CONCAT(U.DISPLAYNAME2, '(', D.DISPLAYNAME2, ')')
+				END INFO
+			FROM
+				(SELECT
+					A.GROUPID,	
+					A.MEMBERID,
+					B.DISPLAYNAME,
+					B.DISPLAYNAME2,
+					IFNULL(A.MEMBERDEPTID, B.DEPARTMENT) DEPARTMENT,
+					B.MAIL,
+					A.TENANT_ID
+				FROM 
+					TBL_SCHEDULEGATHERMEMBER A
 				INNER JOIN
-					TBL_ADDJOBMASTER A
+					TBL_USERMASTER B
 				ON
-					A.CN = B.CN
+					A.MEMBERID  = B.CN
 				AND
-					A.TENANT_ID = B.TENANT_ID
-				RIGHT JOIN
-					TBL_DEPTMASTER C
+					A.TENANT_ID = B.TENANT_ID) U
+				INNER JOIN
+					TBL_SCHEDULEGATHER G
 				ON
-					A.DEPTID = C.CN
+					U.GROUPID = G.GROUPID
 				AND
-					B.TENANT_ID = C.TENANT_ID
-				WHERE
-					A.TENANT_ID = #v_TENANTID#
-			) BB
-			ON
-				A.memberid = BB.cn
-			WHERE
-				A.groupid = #v_GROUPID#
-			AND
-				A.tenant_id = #v_TENANTID#
-			GROUP BY
-				memberid
+					U.TENANT_ID = G.TENANT_ID 
+				INNER JOIN
+				   TBL_DEPTMASTER D
+				ON
+					U.DEPARTMENT = D.CN
+				AND
+				 	U.TENANT_ID = D.TENANT_ID
+				WHERE 
+					U.GROUPID = #v_GROUPID#
+				AND 
+					U.TENANT_ID = #v_TENANTID# 
 		]]>
 	</select>
 
@@ -2810,90 +2747,47 @@
 			]]>
 		</isNotEmpty>
 	</delete>
-
+	
 	<!-- 2023-10-05 임정은 - 모아보기 그룹 관리 > 그룹 관리 버튼 -->
 	<select id="EzScheduleDAO.getGatherMemberList" parameterClass="map" resultClass="ScheduleGroupListVO">
 		<![CDATA[
-			select
-				A.memberid,
-				E.GROUPNAME,
-				E.DESCRIPTION,
-				A.memberName as membername,
-				A.memberName2 as membername2,
-				A.status as status,
-				date_add(a.responsedate, interval + #v_OFFSETMIN# minute) as responsedate,
-				'' as mail,
-				'' as department,
-				'' as info
-			from (
-				select
-					groupid,
-					memberid,
-					membername,
-					membername2,
-					'' as status,
-					utc_timestamp() as responsedate,
-					tenant_id
-				from
-					tbl_schedulegathermember
-				where
-					tenant_id = #v_TENANTID#
-			) A
-			join (
-				SELECT
-					D.CN,
-					D.DISPLAYNAME,
-					D.COMPANY,
-					D.title,
-					D.MAIL,
-					D.DESCRIPTION,
-					D.DESCRIPTION2,
-					D.department
-				FROM
-					TBL_USERMASTER D
-				WHERE
-					D.TENANT_ID = #v_TENANTID#
-
-				UNION ALL
-
-				SELECT
-					B.cn,
+			SELECT
+				U.MEMBERID,
+				G.GROUPNAME,
+				G.DESCRIPTION,
+				U.DISPLAYNAME MEMBERNAME,
+			 	U.DISPLAYNAME2 MEMBERNAME2,
+				'' as STATUS,
+				DATE_ADD(UTC_TIMESTAMP(), INTERVAL + #v_OFFSETMIN# MINUTE) as RESPONSEDATE,
+				U.MAIL AS MAIL,
+				U.DEPARTMENT
+			FROM 
+				(SELECT
+					A.GROUPID,	
+					A.MEMBERID,
 					B.DISPLAYNAME,
-					C.COMPNM2 as COMPANY,
-					A.title,
-					b.mail,
-					C.DISPLAYNAME AS DESCRIPTION,
-					C.DISPLAYNAME2 AS DESCRIPTION2,
-					A.deptid
-				FROM
-					TBL_USERMASTER B
+					B.DISPLAYNAME2,
+					IFNULL(A.MEMBERDEPTID, B.DEPARTMENT) DEPARTMENT,
+					B.MAIL,
+					A.TENANT_ID
+				FROM 
+					TBL_SCHEDULEGATHERMEMBER A
 				INNER JOIN
-					TBL_ADDJOBMASTER A
+					TBL_USERMASTER B
 				ON
-					A.CN = B.CN
+					A.MEMBERID  = B.CN
 				AND
-					A.TENANT_ID = B.TENANT_ID
-				RIGHT JOIN
-					TBL_DEPTMASTER C
+					A.TENANT_ID = B.TENANT_ID) U
+				INNER JOIN
+					TBL_SCHEDULEGATHER G
 				ON
-					A.DEPTID = C.CN
+					U.GROUPID = G.GROUPID
 				AND
-					B.TENANT_ID = C.TENANT_ID
-				WHERE
-					A.TENANT_ID = #v_TENANTID#
-			) BB
-			ON
-				A.memberid = BB.cn
-			JOIN
-				TBL_SCHEDULEGATHER E
-			ON
-				A.GROUPID = E.GROUPID
-			WHERE
-				A.groupid = #v_GROUPID#
-			AND
-				A.tenant_id = #v_TENANTID#
-			GROUP BY
-				memberid
+					U.TENANT_ID = G.TENANT_ID 
+				WHERE 
+					U.GROUPID = #v_GROUPID#
+				AND 
+					U.TENANT_ID = #v_TENANTID# 
 		]]>
 	</select>
 
@@ -2910,5 +2804,33 @@
 			and
 				tenant_id = #v_TENANTID#
 		]]>
+	</update>
+	
+	<select id="EzScheduleDAO.selectScheduleGatherMember" parameterClass="map" resultClass="ScheduleGroupListVO">
+		SELECT
+			 GROUPID, MEMBERID, MEMBERNAME, MEMBERNAME2, MEMBERDEPTID, TENANT_ID
+		FROM
+			TBL_SCHEDULEGATHERMEMBER
+		WHERE
+			GROUPID = #v_GROUPID#
+		AND
+			MEMBERID = #v_MEMBERID#
+		AND
+			TENANT_ID = #v_TENANTID#
+	</select>
+	
+	<update id="EzScheduleDAO.updateScheduleGatherMember" parameterClass="map">
+		UPDATE TBL_SCHEDULEGATHERMEMBER
+		SET 
+		    MEMBERNAME = #v_MEMBERNAME#,
+		    MEMBERNAME2 = #v_MEMBERNAME2#,
+		    MEMBERDEPTID = #v_MEMBERDEPTID#,
+		    TENANT_ID = #v_TENANTID#
+		WHERE
+		    GROUPID = #v_GROUPID#
+		AND
+			MEMBERID = #v_MEMBERID#
+		AND
+			TENANT_ID = #v_TENANTID#
 	</update>
 </sqlMap>

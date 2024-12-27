@@ -1306,16 +1306,23 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	}
 
 	@Override
-	public void insertScheduleGroupMember(String groupId, String memberId, String memberName, String memberName2, int tenantId, String writePermission) throws Exception {
+	public void insertScheduleGroupMember(String groupId, String memberId, String memberName, String memberName2, String memberDeptId, int tenantId, String writePermission) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_GROUPID", groupId);
 		map.put("v_MEMBERID", memberId);
 		map.put("v_MEMBERNAME", memberName);
 		map.put("v_MEMBERNAME2", memberName2);
+		map.put("v_MEMBERDEPTID", memberDeptId);
 		map.put("v_TENANTID", tenantId);
 		map.put("v_WRITEPERMISSION", writePermission);
 		
-		ezScheduleDAO.insertScheduleGroupMember(map);
+		ScheduleGroupListVO scheduleGroupMember = ezScheduleDAO.selectScheduleGroupMember(map);
+		
+		if (scheduleGroupMember == null) {
+			ezScheduleDAO.insertScheduleGroupMember(map);
+		} else {
+			ezScheduleDAO.updateScheduleGroupMember(map);
+		}
 	}
 
 	@Override
@@ -4354,15 +4361,21 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 
 	/* 2023-10-04 임정은 - 모아보기 그룹 추가 시 tbl_schedulegathermember에 insert하는 메서드 / 모아보기 그룹 관리 > 그룹 관리 버튼 > 구성원 추가/편집 버튼 > 구성원 추가 */
 	@Override
-	public void insertScheduleGatherMember(String groupId, String memberId, String memberName, String memberName2, int tenantId) throws Exception {
+	public void insertScheduleGatherMember(String groupId, String memberId, String memberName, String memberName2, String memberDeptId, int tenantId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_GROUPID", groupId);
 		map.put("v_MEMBERID", memberId);
 		map.put("v_MEMBERNAME", memberName);
 		map.put("v_MEMBERNAME2", memberName2);
+		map.put("v_MEMBERDEPTID", memberDeptId);
 		map.put("v_TENANTID", tenantId);
-
-		ezScheduleDAO.insertScheduleGatherMember(map);
+		ScheduleGroupListVO scheduleGatherMember = ezScheduleDAO.selectScheduleGatherMember(map);
+		
+		if (scheduleGatherMember == null) {
+			ezScheduleDAO.insertScheduleGatherMember(map);
+		} else {
+			ezScheduleDAO.updateScheduleGatherMember(map);
+		}
 	}
 
 	/* 2023-10-04 임정은 - 모아보기 그룹 관리 > 그룹 선택 시 상세 정보 리턴하는 메소드 */

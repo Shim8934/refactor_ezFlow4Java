@@ -7102,5 +7102,36 @@
 			 PRIMARY KEY ("GROUPID", "MEMBERID")
 		)
 	</statement>
-
+	
+	<select id="EzCommonDAO.checkMemberDeptIdAtScheduleGroupMember" parameterClass="Map" resultClass="String">
+		SELECT
+			MEMBERDEPTID
+		FROM
+			TBL_SCHEDULEGROUPMEMBER
+		WHERE
+			ROWNUM = 1
+	</select>
+	
+	<update id="EzCommonDAO.addMemberDeptIdScheduleGroupMember" parameterClass="Map">
+		ALTER TABLE
+			TBL_SCHEDULEGROUPMEMBER
+		ADD
+			MEMBERDEPTID NVARCHAR2(50) DEFAULT NULL
+	</update>
+	
+	<select id="EzCommonDAO.checkMemberDeptIdAtScheduleGatherMember" parameterClass="Map" resultClass="String">
+		SELECT
+			MEMBERDEPTID
+		FROM
+			TBL_SCHEDULEGATHERMEMBER
+		WHERE
+			ROWNUM = 1
+	</select>
+	
+	<update id="EzCommonDAO.addMemberDeptIdScheduleGatherMember" parameterClass="Map">
+		ALTER TABLE
+			TBL_SCHEDULEGATHERMEMBER
+		ADD
+			MEMBERDEPTID NVARCHAR2(50) DEFAULT NULL
+	</update>
 </sqlMap>
