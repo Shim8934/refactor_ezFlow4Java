@@ -216,7 +216,7 @@
 	                }
 	                
 					//2019-09-09 김보미 - 관인생략은 맨 끝자의 한칸 띄고 나타나야함
-	                var sealwidth = (maxwidth - field2.clientWidth) / 2 + field2.clientWidth - getPixel(SealWidth) + 20;
+	                var sealwidth = (maxwidth - chiefwidth) / 2 + chiefwidth - getPixel(SealWidth) + 20;
 	                var field2 = message.GetListItem(fields, "sealwidth");
 	                if (field2)
 	                    field2.width = sealwidth;
