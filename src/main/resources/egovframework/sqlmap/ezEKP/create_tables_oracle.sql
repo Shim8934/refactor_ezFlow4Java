@@ -662,6 +662,17 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 	"MAX_STORAGE" NUMBER(20,5) DEFAULT 0, 
 	"WARN_STORAGE" NUMBER(20,5) DEFAULT 0
    ) ;
+
+--------------------------------------------------------
+--  DDL for Table JMOCHA_COMPANY_QUOTA
+--------------------------------------------------------
+
+CREATE TABLE "JMOCHA_COMPANY_QUOTA"
+(	"DOMAIN_NAME" NVARCHAR2(100),
+    "COMPANY_ID" NVARCHAR2(160),
+    "MAX_STORAGE" NUMBER(20,5) DEFAULT 0,
+    "WARN_STORAGE" NUMBER(20,5) DEFAULT 0
+) ;
 --------------------------------------------------------
 --  DDL for Table JMOCHA_DEPT_MASTER
 --------------------------------------------------------
@@ -9449,6 +9460,12 @@ CREATE TABLE "JMOCHA_APPR_COMP_HISTORY" (
   CREATE UNIQUE INDEX "PK_JMOCHA_DEFAULT_QUOTA" ON "JMOCHA_DEFAULT_QUOTA" ("DOMAIN_NAME") 
   ;
 --------------------------------------------------------
+--  DDL for Index PK_JMOCHA_COMPANY_QUOTA
+--------------------------------------------------------
+CREATE UNIQUE INDEX "PK_JMOCHA_COMPANY_QUOTA" ON "JMOCHA_COMPANY_QUOTA" ("DOMAIN_NAME", "COMPANY_ID")
+;
+
+--------------------------------------------------------
 --  DDL for Index PK_JMOCHA_DEPT_MASTER
 --------------------------------------------------------
 
@@ -13473,6 +13490,14 @@ END;
   ALTER TABLE "JMOCHA_DEFAULT_QUOTA" ADD CONSTRAINT "PK_JMOCHA_DEFAULT_QUOTA" PRIMARY KEY ("DOMAIN_NAME")
   USING INDEX;
   ALTER TABLE "JMOCHA_DEFAULT_QUOTA" MODIFY ("DOMAIN_NAME" NOT NULL ENABLE);
+--------------------------------------------------------
+--  Constraints for Table JMOCHA_COMPANY_QUOTA
+--------------------------------------------------------
+
+ALTER TABLE "JMOCHA_COMPANY_QUOTA" ADD CONSTRAINT "PK_JMOCHA_COMPANY_QUOTA" PRIMARY KEY ("DOMAIN_NAME", "COMPANY_ID")
+    USING INDEX;
+ALTER TABLE "JMOCHA_COMPANY_QUOTA" MODIFY ("DOMAIN_NAME" NOT NULL ENABLE);
+ALTER TABLE "JMOCHA_COMPANY_QUOTA" MODIFY ("COMPANY_ID" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table JMOCHA_DEPT_MASTER
 --------------------------------------------------------

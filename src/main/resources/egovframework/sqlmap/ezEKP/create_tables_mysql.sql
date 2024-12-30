@@ -480,6 +480,18 @@ CREATE TABLE `jmocha_default_quota` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `jmocha_company_quota`
+--
+DROP TABLE IF EXISTS `jmocha_company_quota`;
+CREATE TABLE `jmocha_company_quota` 
+(   `DOMAIN_NAME` varchar(100) NOT NULL,
+    `COMPANY_ID` varchar(160) NOT NULL,
+    `MAX_STORAGE` double DEFAULT 0,
+    `WARN_STORAGE` double DEFAULT 0,
+    PRIMARY KEY (`DOMAIN_NAME`,`COMPANY_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
 -- Table structure for table `jmocha_dept_master`
 --
 

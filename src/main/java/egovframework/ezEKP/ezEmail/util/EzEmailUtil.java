@@ -4312,8 +4312,57 @@ public class EzEmailUtil {
         }                 
         
         return returnedData;
-    }    
-    
+    }
+
+	/**
+	 * 특정 회사의 메일박스 디폴트 용량을 MB단위로 반환한다.
+	 * @param domainName
+	 * @param companyId
+	 * @return
+	 * @throws Exception
+	 */
+	public Double[] getCompanyQuota(String domainName, String companyId) throws Exception {
+		Double returnedData[] = {null, null};
+
+		String param1 = "domainName=" + domainName;
+		String param2 = "companyId=" + companyId;
+		String inputParams =  param1 + "&" + param2;
+		logger.debug("getCompanyQuota inputParams=" + inputParams);
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getCompanyQuota";
+		String response = getWebServiceResult(requestURL, inputParams);
+		logger.debug("getCompanyQuota response=" + response);
+
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = null;
+
+			responseObj = (JSONObject)jsonParser.parse(response);
+			String resultCode = (String)responseObj.get("resultCode");
+			int reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+
+			if (resultCode.equalsIgnoreCase("OK")) {
+				if (reasonCode == 0) {
+					JSONObject result = (JSONObject)responseObj.get("result");
+
+					if (result != null) {
+						String maxStorage = (String)result.get("maxStorage");
+						double maxDouble = Double.parseDouble(maxStorage);
+						returnedData[0] = maxDouble;
+
+						String warnStorage = (String)result.get("warnStorage");
+						double warnDouble = Double.parseDouble(warnStorage);
+						returnedData[1] = warnDouble;
+
+						logger.debug("maxStorage=" + maxStorage + ",warnStorage=" + warnStorage);
+					}
+				} else if (reasonCode == -1) { // 등록된 company quota가 없는 경우 default quota 반환
+					return getDefaultQuota(domainName);
+				}
+			} 
+		}
+
+		return returnedData;
+	}
 	/**
 	 * 특정 메일 도메인에 대한 메일박스 디폴트 용량을 MB단위로 설정한다.
 	 * @param domainName
@@ -4344,8 +4393,42 @@ public class EzEmailUtil {
                 throw new Exception("setDefaultMaxStorage failed");
             }                    
         }                 
-    }    
-    
+    }
+	/**
+	 * 회사별 메일박스 디폴트 용량을 MB단위로 설정한다.
+	 * @param domainName
+	 * @param companyId
+	 * @param maxStorage
+	 * @param warnStorage
+	 * @throws Exception
+	 */
+	public void setCompanyQuota(String domainName, String companyId, String maxStorage, String warnStorage) throws Exception {
+		String param1 = "domainName=" + domainName;
+		String param2 = "companyId=" + companyId;
+		String param3 = "maxStorage=" + maxStorage;
+		String param4 = "warnStorage=" + warnStorage;
+		String inputParams = param1 + "&" + param2 + "&" + param3 + "&" + param4;
+		logger.debug("setCompanyQuota inputParams=" + inputParams);
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/setCompanyQuota";
+
+		String response = getWebServiceResult(requestURL, inputParams);
+
+		logger.debug("setCompanyQuota response=" + response);
+
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = null;
+
+			responseObj = (JSONObject)jsonParser.parse(response);
+			String resultCode = (String)responseObj.get("resultCode");
+			int reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+
+			if (!resultCode.equalsIgnoreCase("OK") || reasonCode != 0) {
+				throw new Exception("setCompanyQuota failed");
+			}
+		}
+	}
+
 	/**
 	 * 특정 사용자에 대한 메일박스 최대 용량을 MB단위로 반환한다.
 	 * @param userEmail
@@ -4391,8 +4474,55 @@ public class EzEmailUtil {
         }                 
         
         return returnedData;
-    }    
-    
+    }
+
+	/**
+	 * 특정 사용자에 대한 메일박스 최대 용량을 MB단위로 반환한다.
+	 * @param userEmail
+	 * @return
+	 */
+	public Double[] getUserRealQuota(String userEmail) throws Exception {
+		Double returnedData[] = {null, null};
+
+		String param1 = "userEmail=" + userEmail;
+		String inputParams = param1;
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getUserRealQuota";
+
+		String response = getWebServiceResult(requestURL, inputParams);
+
+		logger.debug("getUserRealQuota response=" + response);
+
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = null;
+
+			responseObj = (JSONObject)jsonParser.parse(response);
+			String resultCode = (String)responseObj.get("resultCode");
+			int reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+
+			if (resultCode.equalsIgnoreCase("OK")) {
+				if (reasonCode == 0) {
+					JSONObject result = (JSONObject)responseObj.get("result");
+
+					if (result != null) {
+						String maxStorage = (String)result.get("maxStorage");
+						double maxDouble = Double.parseDouble(maxStorage);
+						returnedData[0] = maxDouble;
+
+						String warnStorage = (String)result.get("warnStorage");
+						double warnDouble = Double.parseDouble(warnStorage);
+						returnedData[1] = warnDouble;
+
+						logger.debug("maxStorage=" + maxStorage + ",warnStorage=" + warnStorage);
+					}
+				}
+			}
+		}
+
+		return returnedData;
+	}
+	
     /**
      * 특정 사용자에 대한 메일박스 최대 용량을 MB단위로 설정한다.
      * @param domainName

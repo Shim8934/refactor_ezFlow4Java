@@ -1398,17 +1398,54 @@ public class EzEmailAdminController {
 			return "cmm/error/adminDenied";
 		}
 
-		String domainName = ezCommonService.getTenantConfig("DomainName",
-				auth.getTenantId());
+		int j = 0;
+		String companyId = auth.getCompanyID(); // 로그인한 관리자의 회사아이디
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(auth.getPrimary(), auth.getTenantId());
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 
-		Double[] returnedData = ezEmailUtil.getDefaultQuota(domainName);
+		for (int i = 0; i < list.size(); i++) {
+			OrganDeptVO vo = list.get(i);
 
-		model.addAttribute("defaultMax", returnedData[0] / 1024);
-		model.addAttribute("defaultWarn", returnedData[1] / 1024);
+			if (auth.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(companyId)) {
+				resultList.add(j++, vo);
+			}
+		}
+		model.addAttribute("userCompany", companyId);
+		model.addAttribute("list", resultList);
 
         logger.debug("mailDefaultQuota ended.");
 
 		return "admin/ezEmail/mailDefaultQuota";
+	}
+
+	/**
+	 * 회사별/디폴트 메일박스용량 리턴하는 함수
+	 */
+	@RequestMapping(value = "/admin/ezEmail/getDefaultQuota.do", method = RequestMethod.POST)
+	@ResponseBody
+	public JSONObject getDefaultQuota(
+			@CookieValue("loginCookie") String loginCookie, 
+			HttpServletRequest request) throws Exception {
+		logger.debug("getDefaultQuota started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		
+		String companyId = request.getParameter("companyId");
+		
+		Double[] returnedData;
+		if (companyId.equals("*")) {
+			returnedData = ezEmailUtil.getDefaultQuota(domainName);
+		} else {
+			returnedData = ezEmailUtil.getCompanyQuota(domainName, companyId);
+		}
+		
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("companyMax", returnedData[0] / 1024);
+		jsonObj.put("companyWarn", returnedData[1] / 1024);
+		
+		logger.debug("getDefaultQuota ended.");
+		return jsonObj;
 	}
 
 	/**
@@ -1434,10 +1471,14 @@ public class EzEmailAdminController {
 			String domainName = ezCommonService.getTenantConfig("DomainName", auth.getTenantId());
 
 			Document doc = commonUtil.convertStringToDocument(bodyData != null ? bodyData : "");
+			String companyId = doc.getElementsByTagName("COMPANYID").item(0).getTextContent();
 			String maxStorage = doc.getElementsByTagName("MAXSTORAGE").item(0).getTextContent();
 			String warnStorage = doc.getElementsByTagName("WARNSTORAGE").item(0).getTextContent();
-
-			ezEmailUtil.setDefaultQuota(domainName, maxStorage, warnStorage);
+			if (companyId.equals("*")) {
+				ezEmailUtil.setDefaultQuota(domainName, maxStorage, warnStorage);
+			} else {
+				ezEmailUtil.setCompanyQuota(domainName, companyId, maxStorage, warnStorage);
+			}
 		} catch (DOMException e) {
 			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
