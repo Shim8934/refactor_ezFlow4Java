@@ -581,8 +581,9 @@
 	    
         if (mainType.toLowerCase() == 'mail') {
             var url = (linkUrl.match(/iptURL=([^&]+)/) || [])[1];
-            
-            if (checkBlockedMail(url) == '1') {
+            var shareId = (linkUrl.match(/shareId=([^&]+)/) || [])[1];
+
+            if (checkBlockedMail(url, shareId) == '1') {
                 alert(strLangLDH07);
                 return;
             }
@@ -1226,13 +1227,17 @@
 		searchNoti('first');
 	}
     
-    function checkBlockedMail(url){
+    function checkBlockedMail(url, shareId){
         
         var strQuery = "<URL>" + decodeURIComponent(url) + "</URL>";
         xmlhttp_mailCheckBlock = createXMLHttpRequest();
 
         var previewUrl = "/ezEmail/mailPrevShow.do?MSGFLAG=N";
 
+        if (shareId) {
+            previewUrl += "&shareId=" + shareId;
+        }
+        
         xmlhttp_mailCheckBlock.open("POST", previewUrl, false);
         xmlhttp_mailCheckBlock.send(strQuery);
 
