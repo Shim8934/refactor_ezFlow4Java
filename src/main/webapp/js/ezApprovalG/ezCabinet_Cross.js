@@ -1302,8 +1302,18 @@ function ViewDoc_onclick() {
     var tr = DocList.GetSelectedRows();
     if (tr.length > 0) {
         var selRow = tr[0];
+        
         // 2023-09-05 기록물 등록대장 미리보기 - 배부대장 문서보기 분기처리 추가, 비공개문서에 대한 누락된 분기처리(전체관리자는 비공개문서 열람할 수 있음) 추가
         if (DocList_Flag == "RECORD" || DocList_Flag == "Delivery") {
+        	
+        	/* 2024-12-27 홍승비 - 기록물 배부대장 > 배부한 문서가 삭제된 경우 알러트를 표출하도록 수정 (회송 후 삭제 시 레코드까지 삭제되므로 대응 / 관리자단에서 삭제 시 레코드는 유지됨) */
+        	if (DocList_Flag == "Delivery" && g_uFlag == "m03") {
+        		if (!isDocExists(selRow.getAttribute("DATA1"), "APR") && !isDocExists(selRow.getAttribute("DATA1"), "END")) {
+        			OpenAlertUI(strLangHSBDR01);
+        			return;
+        		}
+        	}
+        	
             var securityApprovalFlag = DocList_Flag == "RECORD" ? trim_Cross(selRow.getAttribute("DATA14")) : trim_Cross(selRow.getAttribute("DATA8"));
             if (securityApprovalFlag != "null" && securityApprovalFlag != "" && securityApprovalFlag >= GetTodayDate()) {
                 if (CheckAprLine(selRow.getAttribute("DATA1")) == "TRUE" || GetUserRole() != "User" ) {
@@ -2214,3 +2224,32 @@ function getLineMode(pDocID) {
     return rtnVal;
 }
 
+/* 2024-12-27 홍승비 - 현재 선택한 문서의 docID로 문서정보 레코드가 존재하는지 확인하는 AJAX 함수 추가 */
+function isDocExists(pDocID, pMode) {
+    var rtnVal = false;
+    
+    try {
+		$.ajax({
+			type : "POST",
+			dataType : "text",
+			async : false,
+			url : "/ezApprovalG/getDocData.do",
+			data : {
+				docID : pDocID,
+				mode : pMode,
+				sel : "ALL"
+			},
+			success: function(xml) {
+				var docXml = loadXMLString(xml);
+				
+				if (SelectSingleNodeValueNew(docXml, "DATA/DOCID").trim() != "") {
+					rtnVal = true;
+				}
+			}
+		});
+	} catch (e) {
+		console.error(e);
+	}
+    
+    return rtnVal;
+}
