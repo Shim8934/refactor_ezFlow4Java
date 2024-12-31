@@ -3379,7 +3379,7 @@
 	                    </div>
 	                </td>
 	                <!-- 2015-06-23 표준모듈:추가 - KSK -->
-	                <td class ="approvalG" style="width: 16px; text-align: center; padding-left: 4px;" >
+	                <td style="width: 16px; text-align: center; padding-left: 4px;" >
 	                    <!-- <div style="display: inline-block; margin:auto; padding-left:2.5px;" id="AddRemoveBTN"> -->
 	                    <div style="display: inline-block; margin:auto;" id="AddRemoveBTN">
 	                        <img src="/images/kr/cm/arr_rright.gif" alt="" width="16px" height="16px" border="0" style="cursor:pointer;" id="imgInsertAll" onclick="return InsertRecAll();">
