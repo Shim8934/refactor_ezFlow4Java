@@ -2915,6 +2915,15 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createJmochaMailBlocked");
 		}
 	}
+
+	public void createJmochaCompanyQuota() throws Exception {
+		try {
+			select("EzCommonDAO.checkJmochaCompanyQuota");
+		} catch (Exception e) {
+			logger.debug("Table JMOCHA_COMPANY_QUOTA doesn't exist. Creating the table...");
+			update("EzCommonDAO.createJmochaCompanyQuota");
+		}
+	}
 	
 	public void insertModuleEditor(Map<String, Object> map) throws Exception {
 		String propertyValue = (String) select("EzCommonDAO.checkModuleEditor", map);
