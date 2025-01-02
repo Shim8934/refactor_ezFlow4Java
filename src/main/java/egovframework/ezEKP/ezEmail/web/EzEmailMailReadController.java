@@ -8,6 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64.Decoder;
 import java.util.Date;
 import java.util.Enumeration;
@@ -1012,22 +1013,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					f.close(true);
 
 						try {
-							JgwResult tagResult = rest.jgw().url("/jMochaEzEmail/getTagList")
-									.formParam("userAccount", userEmail)
-									.formParam("folderPath", folderPath)
-									.formParam("mailUid", uid)
-									.exchangeJgwResult();
-							logger.debug("jgw getTagList result: {}", tagResult);
-
-							if (tagResult.succeeded()) {
-								Spliterator<JsonElement> tagIterator = tagResult.getResultAsJsonElement().getAsJsonArray().spliterator();
-
-								tags = StreamSupport.stream(tagIterator, false)
-										.map(jsonElement -> jsonElement.getAsJsonObject().get("name").getAsString())
-										.toArray(String[]::new);
-							} else {
-								tags = new String[0];
-							}
+							tags = ezEmailUtil.getTagList(userEmail, folderPath, uid);
 						} catch (Exception e) {
 							logger.error("get tag error:", e);
 						}
@@ -3450,20 +3436,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							}
 
 							try {
-								JgwResult tagResult = rest.jgw().url("/jMochaEzEmail/getTagList")
-										.formParam("userAccount", userEmail)
-										.formParam("folderPath", folderPath)
-										.formParam("mailUid", uid)
-										.exchangeJgwResult();
-								logger.debug("jgw getTagList result: {}", tagResult);
-
-								if (tagResult.succeeded()) {
-									Spliterator<JsonElement> tagIterator = tagResult.getResultAsJsonElement().getAsJsonArray().spliterator();
-
-									tags = StreamSupport.stream(tagIterator, false)
-											.map(jsonElement -> jsonElement.getAsJsonObject().get("name").getAsString())
-											.collect(Collectors.joining("|"));
-								}
+								String [] tagList = ezEmailUtil.getTagList(userEmail, folderPath, uid);
+								tags = Arrays.stream(tagList).collect(Collectors.joining("|"));
 							} catch (Exception e) {
 								logger.error("get tag error:", e);
 							}

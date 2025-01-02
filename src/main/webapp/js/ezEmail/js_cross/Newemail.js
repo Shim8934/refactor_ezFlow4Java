@@ -2529,11 +2529,19 @@ function mailConfirm_line() {
 
 function appendTagToPreview(tagName) {
 	var tagContainer = pPreviewShow_HOW == "H" ? document.getElementById("pre_h_tag_view") : document.getElementById("pre_w_tag_view");
-	var tagSpan = document.createElement("span");
-	tagSpan.innerText = tagName;
-	var deleteImg = document.createElement("img");
-	deleteImg.src = "/images/icon/oneline_delete.gif";
-	deleteImg.addEventListener("click", function() {
+    var tagListDiv = document.createElement("div");
+    tagListDiv.className = "tag_list";
+
+    var tagSpan = document.createElement("span");
+    tagSpan.innerText = tagName;
+    tagSpan.className = "tag_name";
+    tagSpan.id = "tag_name";
+
+    var deleteSpan =  document.createElement("span");
+    deleteSpan.className = "tag_del";
+    deleteSpan.id = "tag_del";
+
+    deleteSpan.addEventListener("click", function() {
 		var mailId = Old_Preview_Href.split("/");
 		var folderPath = mailId[0];
 		var mailUid = mailId[1];
@@ -2550,15 +2558,18 @@ function appendTagToPreview(tagName) {
 
 				onChangeTagList();
 				$(tagSpan).remove();
-				$(deleteImg).remove();
+				$(deleteSpan).remove();
+				$(tagListDiv).remove();
 			},
 			error: function() {
 				alert(strLang321);
 			}
 		});
 	});
-	tagContainer.appendChild(tagSpan);
-	tagContainer.appendChild(deleteImg);
+    
+    tagListDiv.appendChild(tagSpan);
+    tagListDiv.appendChild(deleteSpan);
+    tagContainer.appendChild(tagListDiv)
 }
 
 function onEnterPreviewTagInput() {

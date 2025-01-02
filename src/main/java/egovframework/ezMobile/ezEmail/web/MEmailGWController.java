@@ -42,10 +42,13 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
+import java.util.Spliterator;
 import java.util.TimeZone;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
+import java.util.stream.StreamSupport;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
@@ -57,6 +60,7 @@ import javax.mail.FetchProfile;
 import javax.mail.Flags;
 import javax.mail.Flags.Flag;
 import javax.mail.Folder;
+import javax.mail.FolderNotFoundException;
 import javax.mail.Header;
 import javax.mail.Message;
 import javax.mail.Message.RecipientType;
@@ -76,8 +80,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import com.google.gson.JsonElement;
 import egovframework.ezEKP.ezEmail.util.EmailImportance;
+import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
+import egovframework.let.utl.rest.Rest;
 import egovframework.let.utl.rest.Result;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -209,7 +216,11 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 	
 	@Resource(name = "jspw")
     private String jspw;
-		
+
+	@Autowired
+	private Rest rest;
+
+
 	/**
 	 * 모바일 G/W 이메일 [GET] 왼쪽 슬라이드 메뉴에 편지함 목록 조회, 메일 이동 시 편지함 목록 출력
 	 */
@@ -293,6 +304,9 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			boolean useApprMail = commonUtil.checkTenantConfigBool(info.getTenantId(), "useApprMail", "false")
 					? ezEmailUtil.useApprMailPolicy(info.getTenantId(), info.getCompanyId()) : false; // 2024-03-06 이사라 - 승인메일 사용 여부
 			boolean isApprMailApprover = useApprMail ? ezEmailService.checkApprMailApprover(info.getTenantId(), info.getCompanyId(), info.getUserId()) : false;
+
+			// 사용자가 메일 태그를 사용하는지 확인
+			boolean useMailTag = ezEmailUtil.checkUseMailTag(info.getTenantId(),userEmail);
 			
 			JSONObject data = new JSONObject();
 			data.put("mailFolderList", mailFolderList);
@@ -300,6 +314,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			data.put("totalUnreadCount", totalUnreadCount);
 			data.put("useApprMail", useApprMail);
 			data.put("isApprMailApprover", isApprMailApprover);
+			data.put("useMailTag", useMailTag);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -402,6 +417,8 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 					logger.debug("opt: " + opt.toString());
 				}
 				
+				boolean useMailTag = ezEmailUtil.checkUseMailTag(info.getTenantId(),userEmail);
+				
 				shareMailInfo.put("mailFolderList", mailFolderList);
 				shareMailInfo.put("shareId", shareId);
 				shareMailInfo.put("deletePermission", deletePermission);
@@ -410,6 +427,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 				shareMailInfo.put("mail", mail);
 				shareMailInfo.put("compId", compId);
 				shareMailInfo.put("totalUnreadCount", totalUnreadCount);
+				shareMailInfo.put("useMailTag", useMailTag);
 				shareMailInfoList.add(shareMailInfo);
 			}
 			data.put("shareMailInfoList", shareMailInfoList);
@@ -487,7 +505,8 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			@RequestParam(value="filter", required=false) String filter,
 			@RequestParam(value="startDate", required=false) String startDate,
 			@RequestParam(value="endDate", required=false) String endDate,
-			@RequestParam(value="includeSubFolders", required=false) String includeSubFolders) {
+			@RequestParam(value="includeSubFolders", required=false) String includeSubFolders,
+			@RequestParam(value="tagName", required = false) String tagName) {
 		logger.debug("MOBILE G/W MAIL mMailFolderMailList started.");
 		logger.debug("folderId=" + folderId + ",userId=" + userId + ",start=" + start + ",end=" + end);
 		logger.debug("searchField=" + searchField + ",search=" + search  + ",searchPeriod=" + searchPeriod + ",filter=" + filter);
@@ -575,6 +594,10 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			}
 	        
 	        folderId = URLDecoder.decode(folderId, "UTF-8");
+			
+			if (folderId.equalsIgnoreCase("tag")) {
+				folderId = "";
+			}
 	        
 	        logger.debug("userID : " + userId + ",folderId : " + folderId + ",start : " + start 
 	        		+ ",end : " + end + ",search : " + search + ",startDate : " + sd + ",endDate : " + ed); 
@@ -645,7 +668,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 				boolean includeContent = false;
 
 				List<Map<String, String>> mailList = ezEmailUtil.searchFolderUsingRDBOnly(userEmail, folderId, new String[]{searchField}, new String[]{searchValue}, sd, ed, searchSubFolder, 
-						isUnreadOnly, isImportantOnly, "receivedDate", false, startNo, listCount, true, extraMap, info.getTenantId(), includeContent, "");
+						isUnreadOnly, isImportantOnly, "receivedDate", false, startNo, listCount, true, extraMap, info.getTenantId(), includeContent, tagName);
 				
 				totalCount = (int)extraMap.get("totalCount");
 				mailboxMailCount = (int)extraMap.get("mailboxMailCount");
@@ -4309,6 +4332,8 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			boolean isSentItems = false;
 			String pIsCCFg = "Y";
 			String flagged = "0";
+			boolean useMailTag = false;
+			String[] tags = null;
 		
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, locale, ezEmailUtil);
@@ -4650,7 +4675,15 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 					}
 				}
 				
-				f.close(true);				
+				f.close(true);
+				
+				useMailTag = ezEmailUtil.checkUseMailTag(info.getTenantId(),userEmail);
+				
+				try {
+					tags = ezEmailUtil.getTagList(userEmail, folderId, uid);
+				} catch (Exception e) {
+					logger.error("get tag error:", e);
+				}
 			}
 			
 			logger.debug(toMobileStr);
@@ -4682,6 +4715,8 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			mail.put("pnFlag", pnFlag);
 			mail.put("pIsCCFg", pIsCCFg);
 			mail.put("useMobileViewer", useMobileViewer);
+			mail.put("useMailTag",useMailTag);
+			mail.put("tags", tags);
 			
 			if (bodyInfoList != null) { 
 				String htmlBody = bodyInfoList.get(0);
@@ -9147,4 +9182,175 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 		}
 		return result;
 	}
+
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/mobile/ezemail/getTaglist/users/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public Object mMailTagList(HttpServletRequest request, @PathVariable String userId) throws Exception {
+		logger.debug("MOBILE G/W MAIL mMailTagList started.");
+		logger.debug("userId=" + userId);
+
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
+			
+			String userEmail = userId + "@" + ezCommonService.getTenantConfig("DomainName", info.getTenantId());
+
+			Rest.RestBuilder jgwRestBuilder = rest.jgw().url("/jMochaEzEmail/getUserTagList").formParam("userAccount", userEmail);
+
+			JgwResult jgwResult = jgwRestBuilder.exchangeJgwResult();
+			
+			logger.debug("jgw getUserTagFromMail userEmail: {}, jgwResultCode: {}", userEmail, jgwResult.getResultCode());
+
+			JSONObject data = new JSONObject();
+			
+			if (jgwResult.succeeded()) {
+				data.put("tags", jgwResult.getResult());
+			}
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", data);
+		} catch (PatternSyntaxException e) {
+			logger.error(e.getMessage(), e);
+
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+			
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+
+		logger.debug("MOBILE G/W MAIL mMailTagList ended.");
+		return result;
+	}
+
+	@RequestMapping(value="/mobile/ezemail/addTag/users/{userId:.+}", method= RequestMethod.POST, produces="application/json;charset=utf-8")
+	public Object mMailAddTag(HttpServletRequest request, @PathVariable String userId,  @RequestBody JSONObject jsonObject) throws Exception {
+		logger.debug("MOBILE G/W MAIL mMailAddTag started.");
+		String folderPath = "";
+		Long mailUid = 0L;
+		String tagName = "";
+		
+		if (jsonObject.get("folderPath") != null) {
+			folderPath = (String) jsonObject.get("folderPath");
+		}
+
+		if (jsonObject.get("mailUid") != null) {
+			mailUid = Long.parseLong(jsonObject.get("mailUid").toString());
+		}
+
+		if (jsonObject.get("tagName") != null) {
+			tagName = (String) jsonObject.get("tagName");
+		}
+
+		JSONObject result = new JSONObject();
+
+		try {
+
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
+
+			String userAccount = userId + "@" + domainName;
+
+			IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"), userAccount, jspw, egovMessageSource, Locale.KOREAN, ezEmailUtil);
+			if (ia != null){
+				Folder mailbox = ia.getFolder(folderPath);
+
+				if (mailbox == null || !mailbox.exists()) {
+					throw new FolderNotFoundException(mailbox, "not exists folder: " + folderPath);
+				}
+
+				mailbox.open(Folder.READ_WRITE);
+				Message message = ((IMAPFolder) mailbox).getMessageByUID(mailUid);
+				tagName = tagName.trim().replaceAll("\\s", "_");
+				ezEmailUtil.setTagFlag(message, userAccount, tagName, true);
+				mailbox.close(true);
+			}
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+		} catch (MessagingException e) {
+			logger.error(e.getMessage(), e);
+			result.put("status", "error");
+			result.put("code", 1);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result.put("status", "error");
+			result.put("code", 1);
+		}
+		
+		logger.debug("MOBILE G/W MAIL mMailAddTag ended.");
+		return result;
+	}
+
+	@RequestMapping(value="/mobile/ezemail/deleteTag/users/{userId:.+}", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
+	public Object mMailDeleteTag(HttpServletRequest request, @PathVariable String userId,  @RequestBody JSONObject jsonObject) throws Exception {
+		logger.debug("MOBILE G/W MAIL mMailDeleteTag started.");
+		String folderPath = "";
+		Long mailUid = 0L;
+		String tagName = "";
+
+		if (jsonObject.get("folderPath") != null) {
+			folderPath = (String) jsonObject.get("folderPath");
+		}
+
+		if (jsonObject.get("mailUid") != null) {
+			mailUid = Long.parseLong(jsonObject.get("mailUid").toString());
+		}
+
+		if (jsonObject.get("tagName") != null) {
+			tagName = (String) jsonObject.get("tagName");
+		}
+
+		JSONObject result = new JSONObject();
+
+		try {
+
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
+
+			String userAccount = userId + "@" + domainName;
+
+			JgwResult deleteResult = rest.jgw().url("/jMochaEzEmail/deleteTagFromMail")
+					.formParam("userAccount", userAccount)
+					.formParam("folderPath", folderPath)
+					.formParam("mailUid", mailUid)
+					.formParam("tagName", tagName)
+					.exchangeJgwResult();
+			logger.debug("jgw deleteTagFromMail result: {}", deleteResult);
+			
+			if (deleteResult.succeeded()) {
+				result.put("status", "ok");
+				result.put("code", 0);
+				
+			} else {
+				result.put("status", "error");
+				result.put("code", 1);
+			}
+			
+		} catch (MessagingException e) {
+			logger.error(e.getMessage(), e);
+			result.put("status", "error");
+			result.put("code", 1);
+			
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result.put("status", "error");
+			result.put("code", 1);
+		}
+
+		logger.debug("MOBILE G/W MAIL mMailDeleteTag ended.");
+		return result;
+	}
+	
 }
