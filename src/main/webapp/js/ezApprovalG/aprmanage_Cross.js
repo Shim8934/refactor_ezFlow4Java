@@ -1,4 +1,4 @@
-﻿var beforeJob = "0";
+var beforeJob = "0";
 var pDocTypeValue = "000";
 var pageSize = "10";
 var CallPage = "Right";
@@ -151,7 +151,7 @@ function getDocList_after(xml) {
     DocList.SetUrgentFlag(false);
     
     /* 2023-06-19 조소정 - 공람할문서 메뉴(99) 복수 체크박스 추가 */
-    if(pListTypeValue == "1" || pListTypeValue == "4" || pListTypeValue == "99" || pListTypeValue == "24" || pListTypeValue == "97") { // 2020-04-29 : 결재할문서 복수체크박스 추가
+    if(pListTypeValue == "1" || pListTypeValue == "4" || pListTypeValue == "99" || pListTypeValue == "24" || pListTypeValue == "97" || pListTypeValue == "10") { // 2020-04-29 : 결재할문서 복수체크박스 추가
     	DocList.SetCheckBoxFlag(true);
     }
 
@@ -2248,7 +2248,11 @@ function setbuttonenable() {
                 document.getElementById("tbtnLinkDraft").style.display = "none";
                 document.getElementById("tbtnRedraft").style.display = "none";
                 //SwapImage(document.getElementById("btnRedraft"), "dis");
-                document.getElementById("tbtnRemoveDoc").style.display = "none";
+				if (pListTypeValue == "10") {
+	                document.getElementById("tbtnRemoveDoc").style.display = "";
+				} else {
+	                document.getElementById("tbtnRemoveDoc").style.display = "none";
+				}
                 document.getElementById("tbtnApprove").style.display = "none";
                 document.getElementById("tbtnApprove1").style.display = "none";
                 document.getElementById("tbtnApprove2").style.display = "none";
@@ -3412,5 +3416,54 @@ function openOpinionUI_New_Complete_Add(ret) {
         }
     } catch (e) {
         alert("openOpinionUI_New_Complete ::: " + e.description);
+    }
+}
+
+var aprgongramline_cross_dialogArguments = new Array();
+function btnSendAround_onclick() {
+    var DocList = new ListView();
+    DocList.LoadFromID("DocList");
+    var selRow = DocList.GetSelectedRows();
+    if (selRow.length != 0) {
+		var DocID = GetAttribute(selRow[0], "DATA2");
+        var para = new Array();
+        para[0] = DocID;
+        var url = "/ezApprovalG/aprGongRamLine.do?type=END";
+
+        aprgongramline_cross_dialogArguments[0] = para;
+        aprgongramline_cross_dialogArguments[1] = btnSendAround_onclick_Complete;
+
+        var OpenWin = window.open(url, "AprGongRamLine_Cross", GetOpenWindowfeature(1200, 760));
+        try { OpenWin.focus(); } catch (e) { }
+    }
+}
+
+function btnSendAround_onclick_Complete(rtn) {
+    if (rtn == "OK") {
+        var pAlertContent = "<spring:message code='ezApprovalG.t1424'/>";
+        OpenAlertUI(pAlertContent);
+    }
+}
+
+function RemoveGongramDoc(pDocID, pAprmemeberSn) {
+	var result = "FALSE";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/gongramDocDelete.do",
+		data : {
+			docID : pDocID,
+			aprmemberSN : pAprmemeberSn
+		},
+		success: function(res) {
+			result = res;
+		}        			
+	});
+    
+    if (result != "TRUE") {
+        var pAlertContent = strLang872;
+        OpenAlertUI(pAlertContent);
     }
 }

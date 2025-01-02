@@ -39131,4 +39131,25 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         return allowDeptIDs;
     }
 
+	@Override
+	public String gongramDocDelete(String docID, int aprmemberSn, int tenantID, String companyID) throws Exception {
+		
+		logger.debug("gongramDocDelete started");
+		try {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("v_gongRamDocID", docID);
+			map.put("v_TENANTID", tenantID);
+			map.put("companyID", companyID);
+			map.put("v_APRMEMBERSN", aprmemberSn);
+			map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+			
+			ezApprovalGDAO.insertGongramDeleteHistory(map);
+		} catch (Exception e) {
+			logger.debug("gongramDocDelete ended");
+			return "FALSE";
+		}
+		
+		logger.debug("gongramDocDelete ended");
+		return "TRUE";
+	}
 }

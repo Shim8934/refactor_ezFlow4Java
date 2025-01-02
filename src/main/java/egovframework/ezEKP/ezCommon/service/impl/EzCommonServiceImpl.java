@@ -4726,4 +4726,10 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void alterBodyHTMLToConnData() throws Exception {
         ezCommonDAO.alterBodyHTMLToConnData();
     }
+
+    // 2024-12-27 이가은 - 공람완료문서 삭제 히스토리 테이블 생성
+    @Override
+    public void createGongramDeleteHistory() throws Exception {
+        ezCommonDAO.createGongramDeleteHistory();
+    }
 }
