@@ -1182,6 +1182,7 @@ function event_SaveonClick() {
                 g_saveHttp = null;
                 MailStatus = "NO";
             	g_apprMail = false;
+            	g_apprMailType = "";
             	g_apprMailApprover = "";
         	}
         	// 정상적으로 처리된 경우
@@ -1210,6 +1211,7 @@ function event_SaveonClick() {
                 g_saveHttp = null;
                 MailStatus = "NO";
             	g_apprMail = false;
+            	g_apprMailType = "";
             	g_apprMailApprover = "";
                 
                 if ("always" === mailSendResult) {
