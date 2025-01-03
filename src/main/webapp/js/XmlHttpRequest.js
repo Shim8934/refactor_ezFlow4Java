@@ -2371,7 +2371,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var currentUrl = window.location.href;
     if ((currentUrl.includes("ezBoard") || currentUrl.includes("ezResource") || currentUrl.includes("ezSchedule") || 
     currentUrl.includes("ezSurvey") || currentUrl.includes("ezMemo") || currentUrl.includes("ezTask") || 
-    currentUrl.includes("ezPMS") || currentUrl.includes("ezJournal") || currentUrl.includes("ezAttitude"))  && document.getElementById("mainmenu")) {
+    currentUrl.includes("ezPMS") || currentUrl.includes("ezAttitude"))  && document.getElementById("mainmenu")) {
         resizableMenu(currentUrl);
     }
 });
