@@ -967,9 +967,15 @@
 	        	if (!btnChk()) {
 					return false;
 				}
-	        	
-	        	var currIfrm = document.getElementById("ifrm" + currentTabIdx);
-	        	currIfrm.contentWindow.PrintDocument();
+				var formFileLocation = document.getElementById("selForm").value;
+				var currentExt = formFileLocation.substring(formFileLocation.lastIndexOf(".") + 1);
+	        	if (currentExt === "mht") {
+					PrintClick("Cross", pDocID, "ING");
+				} else {
+					var currIfrm = document.getElementById("ifrm" + currentTabIdx);
+					currIfrm.contentWindow.PrintDocument();
+				}
+
 	        }
 	
 	        function btnClose_onclick() {

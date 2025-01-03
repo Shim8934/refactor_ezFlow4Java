@@ -16,6 +16,7 @@
 		    var eopinion = "<c:out value ='${opinion}'/>";
 		    var eAttach = "<c:out value ='${attach}'/>";
 		    var rvalue = new Array();
+			var messageFrame = "";
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
 		            window.focus();
@@ -37,7 +38,12 @@
 		        if (eAttach != "true") {
 		            att.disabled = true;
 		        }
-				var pages = parent.document.getElementById("message").contentWindow.document.getElementById("body").getElementsByClassName("divImg").length;
+				if (parent.draftAllFlag != "undefined" && parent.draftAllFlag == "Y") {
+					messageFrame = parent.document.getElementById("ifrm" + parent.currentTabIdx);
+				} else {
+					messageFrame = parent.document.getElementById("message");
+				}
+				var pages = messageFrame.contentWindow.document.getElementById("body").getElementsByClassName("divImg").length;
 		        if(pages <= 0){
 		        	$("#Submit4").css("display", "none");
 		        }
@@ -146,7 +152,7 @@
 		    }
 		
 		    function only_click() {
-		    	var imgDiv = parent.document.getElementById("message").contentWindow.document.getElementById("body").getElementsByClassName("imgDiv");
+		    	var imgDiv = messageFrame.contentWindow.document.getElementById("body").getElementsByClassName("imgDiv");
 		    	var imgDiv2 = $(imgDiv).nextAll();
 				var imgDiv3 = $(imgDiv).prevAll();
 				$(imgDiv2).css("display", "");
@@ -165,7 +171,7 @@
 		    }
 			
 		    function all_pages() {
-		    	var imgDiv = parent.document.getElementById("message").contentWindow.document.getElementById("body").getElementsByClassName("imgDiv");
+		    	var imgDiv = messageFrame.contentWindow.document.getElementById("body").getElementsByClassName("imgDiv");
 		    	var imgDiv2 = $(imgDiv).nextAll();
 				var imgDiv3 = $(imgDiv).prevAll();
 				$(imgDiv2).css("display", "");
