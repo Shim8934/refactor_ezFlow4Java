@@ -2325,7 +2325,7 @@
 		        }
 		             
 				if (txtDrafter.value.trim() == "") {
-		            alert("<spring:message code='ezApprovalG.t1055'/>");
+		            alert("<spring:message code='ezApprovalG.jje01'/>");
 					viewDocInfoAndFocusNode(txtDrafter);
 
 		            return false;
