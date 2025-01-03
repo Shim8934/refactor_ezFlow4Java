@@ -4166,7 +4166,7 @@ a.commentFileSpan:hover {cursor: pointer; text-decoration: underline;}
 #mainmenu li.view_more .view_icon{}
 #mainmenu li.view_more .view_icon img{vertical-align:middle; margin-bottom:3px;}
 #mainmenu li.view_more .layer_select{display:none; position:absolute; width:auto; height:auto; border:1px solid #D3D3D3; border-radius:3px; background:#fff; padding:0; z-index:1; top:calc(100% + 3px); box-shadow:0 3px 5px rgba(0,0,0,0.16);}
-#mainmenu li.view_more .layer_select li{float:none; margin:0; padding:0 10px; height:25px; line-height:25px; border:none; white-space:nowrap;}
+#mainmenu li.view_more .layer_select li{float:none; margin:0; padding:0 10px; height:30px; line-height:25px; border:none; white-space:nowrap;}
 
 #mainmenu li.view_more.on{border:1px solid #388CE5; background:#f1f8ff;}
 #mainmenu li.view_more.on .layer_select{display:block;}
@@ -4175,3 +4175,5 @@ a.commentFileSpan:hover {cursor: pointer; text-decoration: underline;}
 .tag_list{float:left; height:26px; line-height:26px; padding:0 5px; border-radius:4px; background:#e8eef2; box-sizing:border-box; margin:5px 5px 0 0;}
 .tag_list .tag_name{float:none; display:block; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
 .tag_list .tag_del{float:right; width:16px; height:16px; background:url(../images/tag_del.svg) no-repeat center; margin:5px 0 0 5px; cursor:pointer;}
+
+.originHidden {display: none;}
