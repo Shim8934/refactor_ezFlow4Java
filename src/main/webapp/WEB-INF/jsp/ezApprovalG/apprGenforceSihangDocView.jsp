@@ -311,7 +311,6 @@
 			$.ajax({
 				type : "POST",
 				dataType : "text",
-				async : false,
 				url : "/ezApprovalG/enforceSihangDocSave.do",
 				data : {
 					pMhtBody : mhtBody,
@@ -319,7 +318,10 @@
 				},
 				success: function(text) {
 					result = text;
-				}        			
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
+					console.error("enforceSihangDocSave error:", textStatus, errorThrown);
+				}
 			});
 			
 			return result;
