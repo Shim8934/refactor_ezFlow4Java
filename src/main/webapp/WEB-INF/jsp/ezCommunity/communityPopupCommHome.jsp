@@ -955,12 +955,10 @@
 				var leftMenus = document.getElementById("left");
 				var openMenus = leftMenus.getElementsByClassName('on');
 				
-				if (openMenus[i]) {
-					for (var i = 0; i < openMenus.length; i++) {
-						if (openMenus[i]) {
-							openMenus[i].click();
-							openMenus[i].className = "off";
-						}
+				for (var i = 0; i < openMenus.length; i++) {
+					if (openMenus[i]) {
+						openMenus[i].click();
+						openMenus[i].className = "off";
 					}
 				}
 				
