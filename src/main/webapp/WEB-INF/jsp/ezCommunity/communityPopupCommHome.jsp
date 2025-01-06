@@ -1035,11 +1035,11 @@
          				<h3 id="btn_MemberOut" onclick ="go_menu(this)"><spring:message code='ezCommunity.t1108' /></h3>
          			</c:if>
       			</div>
-				<div style="border: 1px solid #ddd;margin-top: 5px;display: flex;justify-content: center;">
+				<div style="border: 1px solid #ddd;margin-top: 5px;display: flex;justify-content: center; width: 203px;">
 				    <form id="totalSearchForm" method="post" target="rightfrm" action="/ezCommunity/communitySearchResult.do">
 					    <input name="searchType" type="hidden" value="title">
 					    <input name="code" type="hidden" value="<c:out value='${code }'/>">
-					    <input id="searchWord" name="searchWord" type="text" style="margin: 5px 10px;">
+					    <input id="searchWord" name="searchWord" type="text" style="margin: 5px 10px; width: 126px;">
 				    </form>
 				    <span id="totalSearch" onclick="commuTotalSearch()">
 						<spring:message code='ezCommunity.t31'/>
