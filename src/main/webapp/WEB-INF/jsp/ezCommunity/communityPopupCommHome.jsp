@@ -958,12 +958,9 @@
 				if (openMenus) {
 					for (var i = 0; i < openMenus.length; i++) {
 						if (openMenus[i]) {
-							if (openMenus[i].tagName.toLowerCase() == "h2") {
-								openMenus[i].click();
-							} else {
-								openMenus[i].classList.add("off");
-								openMenus[i].classList.remove("on");
-							}
+							openMenus[i].click();
+							openMenus[i].classList.add("off");
+							openMenus[i].classList.remove("on");
 						}
 					}
 				}
