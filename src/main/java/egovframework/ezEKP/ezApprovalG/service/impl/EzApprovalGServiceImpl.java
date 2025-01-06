@@ -15348,21 +15348,43 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						}
 					} else {
 						if (!curAprType.equals(staATByungRyulHyubJo)) {
+                            int userCnt = 0;
+                            int passCnt = 0;
 							while (k < dlength && docXML2.getElementsByTagName("APRTYPE").item(k).getTextContent().equals(staATByungRyulHyubJo)) {
+                                userCnt++;
 								map3.put("v_APRMEMBERSN", docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent());
 								map3.put("v_APRSTATE", staASJinHang);
 								ezApprovalGDAO.updateAprLineInfo(map3);
-								
-								sendMsg(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), "ING", companyID, lang, userInfo.getTenantId());
-								nextMemberId = docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent();
-								nextMemberName = docXML2.getElementsByTagName("APRMEMBERNAME").item(k).getTextContent();
-								nextMemberDeptId = docXML2.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent();
-								if (sendNotiFlag == null || !sendNotiFlag.equals("N")) { // 일괄 기안의 경우 첫번째 문서만 알림을 발송.
-									sendNoti(docID, "", "", nextMemberId, nextMemberName, nextMemberDeptId, "ING", companyID, lang, userInfo.getTenantId());
-								}
+
+                                absentReason = getBujaeInfo(docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), docXML2.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent(), userInfo.getTenantId(), userInfo.getOffset(), userInfo.getCompanyID());
+
+                                if (absentReason.trim().equals("")) {
+                                    sendMsg(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), "ING", companyID, lang, userInfo.getTenantId());
+                                    nextMemberId = docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent();
+                                    nextMemberName = docXML2.getElementsByTagName("APRMEMBERNAME").item(k).getTextContent();
+                                    nextMemberDeptId = docXML2.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent();
+                                    if (sendNotiFlag == null || !sendNotiFlag.equals("N")) { // 일괄 기안의 경우 첫번째 문서만 알림을 발송.
+                                        sendNoti(docID, "", "", nextMemberId, nextMemberName, nextMemberDeptId, "ING", companyID, lang, userInfo.getTenantId());
+                                    }
+                                } else {
+                                    subSQL = setBujaeInfo(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), docXML2.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent(), absentReason, "AST", companyID, lang, userInfo.getTenantId(), userInfo.getLocale(), userInfo.getRealPath(), userInfo.getOffset());
+
+                                    if (subSQL.toUpperCase().equals("FALSE")) {
+                                        rtnVal = false;
+                                        whileFlag = false;
+                                    } else {
+                                        passCnt++;
+                                        map3.put("v_APRSTATE", staASSungIn);
+                                        map3.put("v_REASONDONOTAPPROV", makeXMLString(absentReason));
+
+                                        ezApprovalGDAO.updateAprLineInfo3(map3);
+                                    }
+                                }
 								k += 1;
 							}
-							whileFlag = false;
+                            if(userCnt != passCnt) {
+                                whileFlag = false;
+                            }
 						} else {
 							k += 1;
 						}
