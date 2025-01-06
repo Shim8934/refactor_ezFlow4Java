@@ -1466,7 +1466,7 @@
 	                </table>
 	            </td>        
 	            <td style="text-align:center; padding-left:3px;">
-	                <img src="../../../images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="InsertReceiver()">
+	                <img src="../../../images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="InsertReceiver()"><br>
 	                <img src="../../../images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="DeleteReceiver()">
 	            </td>
 	            <td style="vertical-align:top; padding-top:4px; padding-left:3px;">
