@@ -489,7 +489,7 @@
 	                var protocol = window.location.protocol;
 	                var serverName = window.location.hostname;
 
-	                strAttach = strAttach + "<input type='checkbox' name='fileSelect' value='" + filenameView + "' filepath='"+ filepath +"' filehref=\"/ezCommunity/getCommunityAttachInfo.do?fileName=" + encodeURIComponent(filenameOrg) + "&filePath=" + encodeURIComponent(filepath)  + "\">";
+	                strAttach = strAttach + "<input type='checkbox' name='fileSelect' value='" + filenameView + "' filehref=\"/ezCommunity/getCommunityAttachInfo.do?fileName=" + encodeURIComponent(filenameOrg) + "&filePath=" + encodeURIComponent(filepath)  + "\">";
 	                strAttach = strAttach + "<img src='" + fileImage + "'> <a href=/ezCommunity/getCommunityAttachInfo.do?fileName=" + encodeURIComponent(filenameOrg) + "&filePath=" + encodeURIComponent(filepath) + ">";
 	                strAttach = strAttach + filenameView + "&nbsp;(" + filesize + ")</a><br>";
 	            }
@@ -527,7 +527,21 @@
 	        }
 
 	        function attach_Download_Cross() {
-				AttachAllDownload();
+	            var param = { "href": new Array(), "name": new Array() };
+	            var count = 0;
+
+	            var checks = document.getElementById('lstAttachLink').getElementsByTagName("input");
+
+	            for (var i = 0; i < checks.length; i++) {
+	                if (checks.item(i).checked == true) {
+	                    count++;
+	                }
+	            }
+	            if (count == 0) {
+	                alert("<spring:message code='ezCommunity.t184'/>");
+				    return;
+				}
+	            downloadAll(checks);
 	        }
 
 			var suffix = 0;
@@ -545,45 +559,6 @@
 				}
 				else
 					suffix = 0;
-			}
-
-			/* 2020-01-30 홍승비 - 체크한 파일이 1개 이상인 경우, zip 파일로 다운받는 함수 */
-			function AttachAllDownload() {
-				var checkedFiles = $("#lstAttachLink").find("input:checkbox[name='fileSelect']:checked");
-				var checkedFilesLength = checkedFiles.length;
-				var filePath = ""; // 전체파일경로
-				var filePathTemp = "";
-				var fileNames = ""; // 파일이름
-				var fileNamesUID = ""; // 파일이름(UID 포함)
-
-				if (checkedFilesLength == 1) { // 하나만 저장
-					location.href = checkedFiles[0].getAttribute('filehref');
-				}
-				else if (checkedFilesLength > 1) { // 여러개는 zip으로 저장
-					filePath = GetAttribute(checkedFiles.get(0), "filepath");
-					filePath = filePath.substr(0, filePath.lastIndexOf("/") + 1);
-
-					for (var i = 0; i < checkedFilesLength; i++) {
-						filePathTemp = GetAttribute(checkedFiles.get(i), "filepath"); // 각 파일의 풀경로
-						fileNames += MakeXMLString(checkedFiles.get(i).value) + ":"; // 각 파일의 이름을 :로 이어붙인 것
-						fileNamesUID += MakeXMLString(filePathTemp.substr(filePathTemp.lastIndexOf("/"), filePathTemp.length)) + ":"; // 각 파일의 이름+UID를 :로 이어붙인 것
-					}
-
-					var $frm = $("<form></form>");
-					$frm.attr('action', "/ezCommunity/downloadAttachAll.do");
-					$frm.attr('method', 'post');
-					$frm.appendTo('body');
-
-					param1 = $('<input type="hidden" value="' + filePath + '" name="filePath" />');
-					param2 = $("<input type='hidden' value='" + fileNames + "' name='fileNames' />");
-					param3 = $("<input type='hidden' value='" + fileNamesUID + "' name='fileNamesUID' />");
-
-					$frm.append(param1).append(param2).append(param3);
-					$frm.submit();
-				}
-				else { // 체크된 파일 없음
-					return;
-				}
 			}
 
 	        function MemberInfo_onclick(pUserID) {
