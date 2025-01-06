@@ -699,7 +699,7 @@
 			
 		</script>
 	</head>
-	<body class="mainbody" style="overflow:auto;" marginwidth="0" marginheight="0">
+	<body class="mainbody" style="overflow:auto; min-width: 975px;" marginwidth="0" marginheight="0">
 	    <h1>
 	    	<spring:message code='ezAttitude.t265' />
 	    </h1>

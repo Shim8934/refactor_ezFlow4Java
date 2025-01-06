@@ -638,7 +638,7 @@
         }
     </script>
 </head>
-<body class="mainbody" style="overflow: auto; margin-bottom:0px">
+<body class="mainbody" style="overflow: auto; margin-bottom:0px; min-width: 950px;">
 <h1 id="titleimg">${defaultTitle}</h1>
 <table class="content">
     <tr>
@@ -696,7 +696,7 @@
         </td>
     </tr>
 </table>
-<div class="calendar_pagenav" style="">
+<div class="calendar_pagenav" style="max(50%, 300px)">
     <ul class="contentlayout">
         <li class="contentlayout_left" id="preM"></li>
         <li class="contentlayout_right" id="preN"></li>

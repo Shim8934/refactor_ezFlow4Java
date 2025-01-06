@@ -1416,7 +1416,7 @@
 			}
 	    </script>
 	</head>
-	<body class="mainbody" style="overflow: auto; margin-bottom:0px">
+	<body class="mainbody" style="overflow: auto; margin-bottom:0px; min-width: 950px;">
         <h1 id="titleimg">${defaultTitle}</h1>
         <div id="mainmenu" style="position:fixed">
             <ul class="on">

@@ -2349,7 +2349,7 @@
 			}
 		</script>
 	</head>
-	<body class="mainbody" marginwidth="0" marginheight="0" onselectstart="return false">
+	<body class="mainbody" marginwidth="0" marginheight="0" onselectstart="return false" style="min-width: 950px;">
 		<c:if test="${deptFlag != 'true'}">
 			<h1 id="titleimg"><spring:message code='ezAttitude.t143'/></h1>
 		</c:if>
@@ -2387,7 +2387,7 @@
 			</ul>
 		</div>
 
-		<div class="calendar_pagenav" style="width:180px;margin-left:-89px;">
+		<div class="calendar_pagenav" style="width:180px;margin-left:-89px; left: max(50%, 550px);">
 	        <ul class="contentlayout">
 	            <li class="contentlayout_left" id="preM"></li>
 	            <li class="contentlayout_right" id="preN"></li>

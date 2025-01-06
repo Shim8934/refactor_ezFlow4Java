@@ -2369,7 +2369,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     var currentUrl = window.location.href;
-    if ((currentUrl.includes("ezBoard") || currentUrl.includes("ezResource") || currentUrl.includes("ezSchedule") || 
+    if ((currentUrl.includes("ezBoard") || currentUrl.includes("ezResource") || 
     currentUrl.includes("ezSurvey") || currentUrl.includes("ezMemo") || currentUrl.includes("ezTask") || 
     currentUrl.includes("ezPMS") || currentUrl.includes("ezAttitude"))  && document.getElementById("mainmenu")) {
         resizableMenu(currentUrl);
