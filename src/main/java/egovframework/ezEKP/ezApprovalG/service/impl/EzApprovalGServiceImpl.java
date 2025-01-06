@@ -15892,7 +15892,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 			if (getChamJoLineList.size() > 0) {
 				for (int m = 0; m < getChamJoLineList.size(); m++) {
-					map.put("v_APRSTATE", staASmikyul);
+					map.put("v_APRSTATE", staASDaeGi);
 					
 					ezApprovalGDAO.updateChamJoLineState(map);
 					
