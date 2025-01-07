@@ -492,6 +492,26 @@
 		document.querySelector('input[name=selSecLevel7]').nextSibling.setAttribute('title','법인,단체 또는 개인의 영업상 비밀에 관한 정보로서 공개될 경우 법인 등의 정당한 이익을 해할 우려가 있는 정보'								);
 		document.querySelector('input[name=selSecLevel8]').nextSibling.setAttribute('title','공개될 경우 부동산투기,매점매석 등으로 특정인에게 이익 보는 불이익을 줄 우려가 있는 정보'											);
 	}
+
+    var ezapralert_cross_dialogArguments = new Array();
+    function OpenAlertUI(pAlertContent, CompleteFunction) {
+        var parameter = pAlertContent;
+        var url = "/ezApprovalG/ezAprAlert.do";
+
+        if (CrossYN()) {
+            ezapralert_cross_dialogArguments[0] = parameter;
+            if (CompleteFunction != undefined)
+                ezapralert_cross_dialogArguments[1] = CompleteFunction;
+            else
+                ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
+            DivPopUpShow(330, 205, url);
+        }
+    }
+
+    function OpenAlertUI_Complete() {
+        window.close();
+    }
+    
 </SCRIPT>
 </head>
 <body class="popup">

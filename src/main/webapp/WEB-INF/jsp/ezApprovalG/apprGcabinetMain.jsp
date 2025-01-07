@@ -1313,8 +1313,12 @@
 			                top = (heigth - wHeight) / 2;
 		                } 
 		                if (url != "")
-		                    var ret = window.open(url, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
+		                    var ret = window.open(url, "regRecord", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
 		                    GetRecordList();
+							// left 창에 팝업 창 참조 전달
+							if (parent.left) {
+								parent.left.popupWindow = ret;
+							}
 		            }
 		            else {
 		                var url = "/ezApprovalG/regRecord.do";
