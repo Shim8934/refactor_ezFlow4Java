@@ -3263,7 +3263,9 @@ public class EzResourceController extends EgovFileMngUtil {
 	public Map<String, Object> modFavoriteCategory(@CookieValue("loginCookie") String loginCookie, @RequestParam String catName, @RequestParam String catId) throws Exception {
 		logger.debug("modFavoriteCategory start, catName=" + catName, "catId=" + catId);
 		
-		ezResourceService.modFavoriteCategory(catName, catId);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		ezResourceService.modFavoriteCategory(catName, catId, userInfo.getId());
 		
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("type", "U");
@@ -3340,7 +3342,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		List<ResBrdVO> list = ezResourceService.getFavoriteBrdList(catId, userInfo.getCompanyID(), userInfo.getTenantId());
+		List<ResBrdVO> list = ezResourceService.getFavoriteBrdList(catId, userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getId());
 
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("list", list);

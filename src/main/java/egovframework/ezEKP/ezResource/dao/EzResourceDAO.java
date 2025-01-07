@@ -407,8 +407,8 @@ public class EzResourceDAO extends EgovAbstractDAO {
 		return update("EzResourceDAO.updateFavoriteCategory", map);
 	}
 
-	public void delFavoriteCategory(String catId) throws Exception {
-		delete("EzResourceDAO.delFavoriteCategory", catId);
+	public void delFavoriteCategory(Map<String, Object> map) throws Exception {
+		delete("EzResourceDAO.delFavoriteCategory", map);
 	}
 
 	public void insertBrdFavoriteCategory(Map<String, Object> map) throws Exception {
