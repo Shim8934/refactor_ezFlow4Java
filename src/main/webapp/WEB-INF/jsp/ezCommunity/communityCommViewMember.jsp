@@ -36,8 +36,7 @@
 		    var CurPage = "<c:out value = '${curPage}' />";
 		    var totalPage = "<c:out value = '${totalPage}' />";
 		    var totalCount = "<c:out value = '${keywordCount}' />";
-		    var code = "<c:out value = '${code}' />";
-			var UserLevel = "<c:out value='${userLevel}' />";
+		    var code = "<c:out value = '${code}' />"
 		    document.onselectstart = function () { return false; };
 		    
 		    window.onload =function () {		        
@@ -294,15 +293,5 @@
 		</table>
 		</div>		
 		<div id="tblPageRayer" style="margin-top:10px"></div>
-		<form id="totalSearchForm" method="post" target="rightfrm" action="/ezCommunity/communitySearchResult.do">
-			<input id="searchType" name="searchType" type="hidden" value="writerInfo">
-			<input name="code" type="hidden" value="<c:out value='${code }'/>">
-			<input id="searchWord" type="hidden" name="searchWord" type="text">
-			<input id="postsViewFlag" type="hidden" name="postsViewFlag" type="text" value="Y">
-			<%--<input id="searchWord2" name="searchWord2" type="text" style="margin: 5px 10px;">--%>
-		</form>
-		<div>
-			<jsp:include page="/WEB-INF/jsp/ezCommunity/communityUserOption.jsp"/>
-		</div>
 	</body>
 </html>

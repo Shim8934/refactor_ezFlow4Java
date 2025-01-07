@@ -1830,13 +1830,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 					}
 					
 					// CommunityMemberInfoVO를 수정해서 부서ID를 가져오도록 하자.
-					sb.append("<a href=\"javascript:void(0);\" onclick=\"WriterName_onclick(this, '")
-							.append(user.getC_ID().trim())
-							.append("','")
-							.append(user.getDeptID())
-							.append("');\" valign=\"bottom\" mode=\"off\">")
-							.append(commonUtil.cleanValue(memberInfo.getUserName()))
-							.append("</a></td>");
+					sb.append("<a href=\"javascript:openinfo1('" + code + "','" + user.getC_ID().trim() + "','" + user.getCompanyID() + "','" + user.getDeptID() + "');\" valign=\"bottom\">" + commonUtil.cleanValue(memberInfo.getUserName()) + "</a></td>");
 					// 가입한 당시 겸직한 부서이름(deptName)/또는 겸직하지 않은 상태의 부서이름을 나타낸다. 쿼리 내부에서 다국어 처리한 것(case~primary)임.
 					sb.append("<td>" + commonUtil.cleanValue(user.getDeptName()) + "</td>");
 					sb.append("<td>" + commonUtil.cleanValue(user.getC_ID().trim()) + "</td>");
