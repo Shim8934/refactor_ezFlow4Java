@@ -5972,8 +5972,8 @@
 			(SEQ_TBL_ADMINRECEIPTGROUP_MAIN.CURRVAL,
 			 (SELECT NVL(MAX(subid), 0) + 1 FROM TBL_ADMINRECEIPTGROUP_SUB),
 			 #deptId#,
-			 (SELECT DISPLAYNAME FROM tbl_deptmaster WHERE cn = #deptId#),
-			 (SELECT DISPLAYNAME2 FROM tbl_deptmaster WHERE cn = #deptId#),
+			 (SELECT DISPLAYNAME FROM tbl_deptmaster WHERE cn = #deptId# AND TENANT_ID = #tenantId#),
+			 (SELECT DISPLAYNAME2 FROM tbl_deptmaster WHERE cn = #deptId# AND TENANT_ID = #tenantId#),
 			 #companyId#,
 			 #tenantId#)
 	</insert>
