@@ -529,7 +529,6 @@
 	        function attach_Download_Cross() {
 	            var param = { "href": new Array(), "name": new Array() };
 	            var count = 0;
-
 	            var checks = document.getElementById('lstAttachLink').getElementsByTagName("input");
 
 	            for (var i = 0; i < checks.length; i++) {
@@ -543,23 +542,6 @@
 				}
 	            downloadAll(checks);
 	        }
-
-			var suffix = 0;
-			function downloadAll(checks) {
-	        	checks = checks.getElementsByTagName("input");
-				if (checks.item(suffix)) {
-					if (checks.item(suffix).checked) {
-						location.href = checks.item(suffix++).getAttribute("filehref");
-						setTimeout(function () { downloadAll(checks) }, 1000);
-					}
-					else {
-						suffix++;
-						downloadAll(checks);
-					}
-				}
-				else
-					suffix = 0;
-			}
 
 	        function MemberInfo_onclick(pUserID) {
 	            var feature = "height=290px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
