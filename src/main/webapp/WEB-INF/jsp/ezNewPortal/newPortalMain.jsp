@@ -6,6 +6,7 @@
 	<head>
 		<title>::: ezEKP Java :::</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" id="viewport">
 		<link rel="shortcut icon" href="/images/favicon.ico">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/ezNewPortal/portal.css')}" />
 		<link href="${util.addVer('main.portal', 'msg')}" rel="stylesheet" type="text/css">
@@ -128,6 +129,15 @@
 		    	document.getElementById("reloadLogin").submit();
 		    }
 			
+			document.addEventListener("DOMContentLoaded", function () {
+			   var userAgent = navigator.userAgent.toLowerCase();
+			   var isTabletOrMobile = /ipad|iphone|ipod|android|tablet/i.test(userAgent);
+
+			   var metaTag = document.querySelector('meta[name="viewport"]');
+			   if (isTabletOrMobile) {
+				   metaTag.setAttribute("content", "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no");
+			   }
+		   });
 		</script>
 	</head>
 	<body style="margin:0px 0px 0px 0px;padding: 0px 0px 0px 0px;overflow:hidden;">
