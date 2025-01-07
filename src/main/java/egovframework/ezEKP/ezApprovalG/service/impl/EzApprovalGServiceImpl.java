@@ -22331,8 +22331,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		map.put("v_TENANTID", tenantID);
 		map.put("companyID", companyID);
-		
-		List<ApprGFormVO> apprGFormVOlist = ezApprovalGDAO.getFormInfo(map); 
+        
+        List<ApprGFormVO> apprGFormVOlist = new ArrayList<>();
+        
+        if("RESEND".equals(formContID)){
+            apprGFormVOlist = ezApprovalGDAO.getResendFormInfo(map);
+        }else{
+            apprGFormVOlist = ezApprovalGDAO.getFormInfo(map);
+        }
 				
 		StringBuffer sb = new StringBuffer();
 		sb.append("<DATA>");

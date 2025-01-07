@@ -6280,8 +6280,7 @@
 			ADD
 				ALLNEWBOARDLISTDATE INT(10) DEFAULT 5
 	</statement>
-
-
+    
 	<select id="EzCommonDAO.checkAprAutoSaveConfig" resultClass="String" parameterClass="Map">
 		SELECT
 			property_value
@@ -6299,4 +6298,20 @@
 		VALUES
 			(#tenantId#, #propertyName#, #propertyValue#, #description#, #configName#, #regdate#, #configType#)
 	</insert>
+
+    <select id="EzCommonDAO.checkResendFormYN" resultClass="String">
+        SELECT
+            PROPERTY_VALUE
+        FROM
+            TBL_TENANT_CONFIG
+        WHERE
+            PROPERTY_NAME = 'ResendFormYN'
+        AND
+            TENANT_ID = #v_TENANTID#
+    </select>
+
+    <insert id="EzCommonDAO.insertResendFormYN">
+        INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+        VALUES (#v_TENANTID#, 'ResendFormYN', 'Y', '최근서식 기능 사용여부 / Y:사용, N:사용안함 (default:Y)', '최근서식 기능 사용여부', '2024-12-04 00:00:00', '전자결재')
+    </insert>
 </sqlMap>

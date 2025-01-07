@@ -35669,4 +35669,122 @@
         AND
             DOCSTATE = '015'
     </delete>
+    
+    <select id="EzApprovalG.getResendFormInfo" parameterClass="Map" resultClass="ApprGFormVO">
+        <![CDATA[        
+            SELECT
+                TBL_FORMINFO.*,
+                CASE WHEN O.FORMID IS NOT NULL THEN 'Y' ELSE 'N' END AS OFFICEFLAG
+            FROM
+                TBL_FORMINFO
+            INNER JOIN (
+                SELECT
+                    FORMID,
+                    TENANT_ID,
+                    MAX(STARTDATE) STARTDATE,
+                    COMPANYID
+                FROM
+                    (    
+                    SELECT
+                        TBL_APRDOCINFO.FORMID,
+                        TBL_APRDOCINFO.STARTDATE,
+                        TBL_APRDOCINFO.TENANT_ID,
+                        TBL_APRDOCINFO.COMPANYID
+                    FROM
+                        TBL_APRDOCINFO
+                    WHERE
+                        TBL_APRDOCINFO.WRITERID = #v_USERID#
+                    AND 
+                        TBL_APRDOCINFO.STARTDATE IS NOT NULL
+                    AND 
+                        TBL_APRDOCINFO.TENANT_ID = #v_TENANTID#
+                    AND 
+                        TBL_APRDOCINFO.COMPANYID = #companyID#
+                    UNION ALL
+                    SELECT
+                        TBL_ENDAPRDOCINFO.FORMID,
+                        TBL_ENDAPRDOCINFO.STARTDATE,
+                        TBL_ENDAPRDOCINFO.TENANT_ID,
+                        TBL_ENDAPRDOCINFO.COMPANYID
+                    FROM
+                        TBL_ENDAPRDOCINFO
+                    WHERE
+                        TBL_ENDAPRDOCINFO.WRITERID = #v_USERID#
+                    AND 
+                        TBL_ENDAPRDOCINFO.STARTDATE IS NOT NULL
+                    AND 
+                        TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
+                    AND 
+                        TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
+                    ) AS A
+                GROUP BY FORMID, TENANT_ID, COMPANYID
+            ) AS recendform 
+            ON
+               TBL_FORMINFO.FORMID = RECENDFORM.FORMID
+            AND
+               TBL_FORMINFO.TENANT_ID = RECENDFORM.TENANT_ID
+            AND
+               TBL_FORMINFO.COMPANYID = RECENDFORM.COMPANYID
+            LEFT JOIN
+                TBL_FORM_OFFICE O
+            ON
+                TBL_FORMINFO.FORMID = O.FORMID
+            AND
+                TBL_FORMINFO.TENANT_ID = O.TENANT_ID
+            AND
+                TBL_FORMINFO.COMPANYID = O.COMPANYID
+            WHERE
+                TBL_FORMINFO.FORMCONTID IN (
+                                            SELECT
+                                                FORMCONTID
+                                            FROM
+                                                TBL_FORMCONTUSERGROUP
+                                            WHERE
+                                                TENANT_ID = TBL_FORMINFO.TENANT_ID
+                                            AND
+                                                COMPANYID = TBL_FORMINFO.COMPANYID
+                                            AND
+                                                FORMCONTUSERDEPID = #deptId#
+                                            UNION ALL
+                                            SELECT
+                                                FORMCONTID
+                                            FROM
+                                                TBL_FORMCONTAINER
+                                            WHERE
+                                                TENANT_ID = TBL_FORMINFO.TENANT_ID
+                                            AND
+                                                COMPANYID = TBL_FORMINFO.COMPANYID
+                                            AND
+                                                (FORMCONTOWNDEPID = 'ALL' OR FORMCONTOWNDEPID = #deptId#))
+        ]]>
+        <isNotEqual property="v_FORMKIND" compareValue="000">
+            AND
+            TBL_FORMINFO.FORMDOCTYPE = #v_FORMKIND#
+        </isNotEqual>
+        <isEqual property="v_SEARCHTYPE" compareValue="0">
+            <isEmpty property="v_LANGTYPE">
+                AND
+                TBL_FORMINFO.FORMNAME LIKE CONCAT(CONCAT('%', #v_SEARCHNAME#), '%')
+            </isEmpty>
+            <isNotEmpty property="v_LANGTYPE">
+                AND
+                TBL_FORMINFO.FORMNAME2 LIKE CONCAT(CONCAT('%', #v_SEARCHNAME#), '%')
+            </isNotEmpty>
+        </isEqual>
+        <isEqual property="v_SEARCHTYPE" compareValue="1">
+            AND
+            TBL_FORMINFO.FORMDESCRIPTION LIKE CONCAT(CONCAT('%', #v_SEARCHNAME#), '%')
+        </isEqual>
+        <![CDATA[     
+            AND
+                TBL_FORMINFO.FORMCONNFLAG != 'Y'
+            AND
+                TBL_FORMINFO.TENANT_ID = #v_TENANTID#
+            AND
+                TBL_FORMINFO.COMPANYID = #v_TENANTID#
+            ORDER BY
+                STARTDATE DESC
+            LIMIT 10
+        ]]>
+    </select>
 </sqlMap>

@@ -1085,7 +1085,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String docFileType = "";
 		String useEnforceSihang = ezCommonService.getTenantConfig("UseEnforceSihang", userInfo.getTenantId());
 		String reuseFlag = "";
-		
+		String resendFormYN = ezCommonService.getTenantConfig("ResendFormYN", userInfo.getTenantId());
+
 		if (approvalFlag.equals("S") && useEnforceSihang.equals("YES") && pFormType.equals("004")) {
 			model.addAttribute("onlySihang", "YES");
 		}
@@ -1104,6 +1105,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("docFileType", docFileType);
 		model.addAttribute("ext", ext);
 		model.addAttribute("reuseFlag", reuseFlag);
+		model.addAttribute("resendFormYN", resendFormYN);
 
 		logger.debug("getFormCont ended.");
 		

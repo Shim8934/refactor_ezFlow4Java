@@ -4595,4 +4595,16 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             ezCommonDAO.insertAprAutoSaveConfig(map);
         }
     }
+
+    // 2024-12-04 기민혁 - 전자결재 > 최근서식 사용여부 테넌트 컨피그 추가
+    @Override
+    public void insertResendFormYN() throws Exception {
+        List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+
+        for (TenantVO tenantVo : tenantIdList) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("v_TENANTID", tenantVo.getTenantId());
+            ezCommonDAO.insertResendFormYN(map);
+        }
+    }
 }

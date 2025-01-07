@@ -3094,4 +3094,14 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			insert("EzCommonDAO.insertAprAutoSaveConfig",map);
 		}
 	}
+
+	// 2024-12-04 기민혁 - 전자결재 > 최근서식 사용여부 테넌트 컨피그 추가
+	public void insertResendFormYN(Map<String, Object> map) {
+		String propertyValue = (String) select("EzCommonDAO.checkResendFormYN", map);
+
+		if (propertyValue == null) {
+			logger.debug("ResendFormYN tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertResendFormYN", map);
+		}
+	}
 }

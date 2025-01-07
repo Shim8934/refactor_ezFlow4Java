@@ -4060,4 +4060,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public void deleteTbAprDocInfo(Map<String, Object> map) throws Exception{
 		delete("EzApprovalG.deleteTbAprDocInfo", map);
 	}
+    
+	/* 2024-11-25 기민혁 - 전자결재G > 최근서식 리스트 표출 */
+	@SuppressWarnings("unchecked")
+	public List<ApprGFormVO> getResendFormInfo(Map<String, Object> map) throws Exception{
+		return (List<ApprGFormVO>) list("EzApprovalG.getResendFormInfo", map);
+	}
 }
