@@ -1932,7 +1932,7 @@
 			
 		</script>
 	</head>
-	<body class="mainbody" style="margin:10px 0 0; min-width:1040px; padding:0 10px 10px;">
+	<body class="mainbody" style="margin:20px 0 0; min-width:1040px; padding:0 30px 10px;">
 		<div class="main_community_center">
 			<!-- communitySection01 : banner -->
 		    <div class="community_section01">

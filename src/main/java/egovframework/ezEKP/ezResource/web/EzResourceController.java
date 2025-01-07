@@ -158,6 +158,8 @@ public class EzResourceController extends EgovFileMngUtil {
 		String brdTopPath = "";
 		String pUrl = "";
 		String url = "/ezResource/leftResource.do";
+		String leftFrameWidth = "220";
+		int width = 0;
 		
 		if(req.getParameter("brdID") != null) {
 			brdID = req.getParameter("brdID");
@@ -178,8 +180,21 @@ public class EzResourceController extends EgovFileMngUtil {
 		} else {
 			pUrl = url + "?brdID=" + brdID + "&brdNm=" + brdNm + "&boardGbn=M";
 		}
+
+		if (req.getParameter("__wwidth") != null) {
+			String widthParam = req.getParameter("__wwidth");
+
+			try {
+				width = Integer.parseInt(widthParam);
+
+				leftFrameWidth = width < 1180 ? "0" : "220";
+			} catch (NumberFormatException e) {
+				width = 0;
+			}
+		}
 		
 		model.addAttribute("pUrl", pUrl);
+		model.addAttribute("leftFrameWidth", leftFrameWidth);
 		
 		return "/ezResource/resMain";
 	}

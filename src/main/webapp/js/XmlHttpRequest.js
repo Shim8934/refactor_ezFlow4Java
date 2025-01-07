@@ -1099,6 +1099,94 @@ function DivPopUpHidden_sub() {
         document.getElementById("iFrameLayer_sub").src = "/blank.htm";
     } catch (e) { }
 }
+
+function toggleHideLeftFrameButton() {
+    var frameset = parent.document.getElementById("frameset");
+
+    if (frameset!= null){
+        var leftBtn = document.getElementsByClassName('left_btn')[0];
+
+        if (leftBtn) {
+            if (parent.document.getElementById("frameset").cols == "0,*") {
+                leftBtn.classList.add("on");
+            } else {
+                leftBtn.classList.remove("on");
+            }
+        }
+    }
+}
+
+var isHideLeftFrameButtonPressed = false;
+
+function hideLeftFrame(obj) {
+    if (parent.document.getElementById("frameset") != null) {
+        isHideLeftFrameButtonPressed = !isHideLeftFrameButtonPressed;
+        var colsValue = parent.document.getElementById("frameset").cols;
+
+        if (colsValue == "0,*") {
+            parent.document.getElementById("frameset").cols = "220,*";
+            obj.classList.remove("on");
+        } else {
+            parent.document.getElementById("frameset").cols = "0,*";
+            obj.classList.add("on");
+        }
+    }
+}
+
+function hideLeftFrameOnResize() {
+    if (parent.document.getElementById("frameset") != null) {
+        // hideLeftFrame 함수에 의해 left frame이 숨겨질 때에도
+        // resize 콜백이 실행되어 수동으로 사용자가 버튼을 누른 경우에 대한
+        // 플래그를 둠
+        if (!isHideLeftFrameButtonPressed) {
+            var leftBtn = document.getElementsByClassName('left_btn')[0];
+
+            if (top.innerWidth < 1180) {
+                parent.document.getElementById("frameset").cols = "0,*";
+                leftBtn.classList.add("on");
+            } else {
+                parent.document.getElementById("frameset").cols = "220,*";
+                leftBtn.classList.remove("on");
+            }
+        } else {
+            isHideLeftFrameButtonPressed = false;
+        }
+    }
+}
+
+window.addEventListener("load", function () {
+    if (parent.document.getElementById("frameset") != null) {
+        var rightFrameDoc = window.parent.frames["right"].document;
+
+        var rightFirstChild = rightFrameDoc.body.firstElementChild;
+
+        if (rightFirstChild) {
+            if (rightFirstChild.classList.contains("left_btn")){
+                return;
+            }
+        }
+
+        var leftBtn = rightFrameDoc.createElement("span");
+
+        leftBtn.className = "left_btn";
+
+        leftBtn.addEventListener("click", function() {
+            hideLeftFrame(this);
+        });
+
+        rightFrameDoc.body.insertBefore(leftBtn, rightFirstChild);
+    }
+
+    window.addEventListener("resize", function() {
+        if (window.name === "right") {
+            hideLeftFrameOnResize();
+        }
+    });
+
+});
+
+window.addEventListener("load", toggleHideLeftFrameButton);
+
 // 2002-11-05 >> return 20021105
 function CalToDate(p_strCal) {
     return p_strCal.substr(0, 4) + p_strCal.substr(5, 2) + p_strCal.substr(8, 2);
@@ -2275,3 +2363,20 @@ function adjustLayerAlertPosition(alertElemId) {
     	iframePanel.style.left = alertPostion[1] + "px";
 	}
 }
+
+// 기존의 window.open 메서드를 저장하여 재정의
+const originWindowOpen = window.open;
+
+window.open = function (url, target, features) {
+    var urlObj;
+    if (url.startsWith('/')) {
+        urlObj = new URL(url, window.location.origin);
+    } else if (!url.includes('://')) {
+        var basePath = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
+        urlObj = new URL(basePath + '/' + url, window.location.origin);
+    } else {
+        urlObj = new URL(url);
+    }
+    urlObj.searchParams.set('__wwidth', top.innerWidth);
+    return originWindowOpen.call(window, urlObj.toString(), target, features);
+};
