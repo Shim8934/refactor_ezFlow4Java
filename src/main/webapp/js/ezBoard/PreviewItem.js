@@ -275,7 +275,12 @@ function PreviewRayerChange_photo(pGubun) {
             document.getElementById("PreviewRayerH").style.height = CurrentHeight + "px";
             /* 2018-04-25 홍승비 - 크로스 브라우징 중복 코드 삭제 */
 			document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
-			document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 100) + "px";
+			
+			if (gubun != "4" && gubun != "7") {
+			    document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 100) + "px";
+			} else {
+			    document.getElementById("BoardList_BODY").style.height = "auto";
+			}
 			
 			if (document.getElementById("ifrmPreViewH")) {
 				document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 68) + "px";
