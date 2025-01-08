@@ -95,13 +95,13 @@
 			
 			function fixLayout() {
 				setTimeout(function() {
-					var long = window.innerWidth > window.innerHeight ? window.innerWidth : window.innerHeight;
-					var short = window.innerWidth < window.innerHeight ? window.innerWidth : window.innerHeight;
+					var longSide = window.innerWidth > window.innerHeight ? window.innerWidth : window.innerHeight;
+					var shortSide = window.innerWidth < window.innerHeight ? window.innerWidth : window.innerHeight;
 					
 					if(window.orientation == 0 || window.orientation == 180) {
-						var ratio = long / document.body.clientHeight;
+						var ratio = longSide / document.body.clientHeight;
 					} else if(orientation == 90 || orientation == -90) {
-						var ratio = short / document.body.clientHeight;
+						var ratio = shortSide / document.body.clientHeight;
 					}
 					
 					document.body.style.transformOrigin = 'top left';
