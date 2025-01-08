@@ -2448,7 +2448,7 @@ function resizableMenu(url) {
     
     for (var i = 0; i < btns.length; i++) {
         var btn = btns[i];
-        if (!btn.classList.contains("view_more") && !btn.classList.contains("layer_select") && window.getComputedStyle(btn).display !== "none" && window.getComputedStyle(btn).float !== "right") {
+        if (!btn.classList.contains("view_more") && !btn.classList.contains("layer_select") && window.getComputedStyle(btn).display !== "none" && window.getComputedStyle(btn).float !== "right" && btn.children[0].tagName !== "SELECT") {
             buttons.push(btn);
         }
     }
@@ -2525,4 +2525,24 @@ function resizableMenu(url) {
     });
 
     resizeBtn();
+    
+    var viewMore = null;
+
+    function hideLayer(event) {
+        if (viewMore && !event.target.closest('.view_more')) {
+            viewMore.classList.remove('on');
+        }
+    }
+
+    function setUpHideLayerEvent() {
+        viewMore = document.getElementsByClassName('view_more')[0];
+
+        window.parent.parent.parent.frames['topFrame'].contentWindow.document.getElementById('top')
+                .addEventListener('click', hideLayer);
+        
+        window.parent.frames['left'].document.addEventListener('click', hideLayer);
+
+        document.addEventListener('click', hideLayer);
+    }
+    setUpHideLayerEvent();
 }
