@@ -86,9 +86,28 @@
 		    }
 			
 			window.addEventListener('resize', function() {
-			    document.body.style.width = window.innerWidth+ 'px';
-			    document.body.style.height = window.innerHeight + 'px';
+				fixLayout();
 			});
+			
+			window.addEventListener('orientationchange', function() {
+				fixLayout();
+			});
+			
+			function fixLayout() {
+				setTimeout(function() {
+					var long = window.innerWidth > window.innerHeight ? window.innerWidth : window.innerHeight;
+					var short = window.innerWidth < window.innerHeight ? window.innerWidth : window.innerHeight;
+					
+					if(window.orientation == 0 || window.orientation == 180) {
+						var ratio = long / document.body.clientHeight;
+					} else if(orientation == 90 || orientation == -90) {
+						var ratio = short / document.body.clientHeight;
+					}
+					
+					document.body.style.transformOrigin = 'top left';
+					document.body.style.transform = 'scale('+ratio+')';
+				}, 10);
+			}
 
 		    function Div_Close() {
 		        document.getElementById("popup_layer").style.display = "none";
