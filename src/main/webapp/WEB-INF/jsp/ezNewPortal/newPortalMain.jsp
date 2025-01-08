@@ -81,9 +81,14 @@
 		 	window.onresize = function () {
 		        var MainHeight = document.documentElement.clientHeight - parseInt(topHeight);
 		        document.getElementById("topFrame").style.height = document.documentElement.clientHeight + "px";
-		        document.getElementById("mainFrame").style.height = MainHeight + "px";
+		        document.getElementById("mainFrame").style.height = "calc(100% - 60px)";
 		        //contextMenuRePosition();
 		    }
+			
+			window.addEventListener('resize', function() {
+			    document.body.style.width = window.innerWidth+ 'px';
+			    document.body.style.height = window.innerHeight + 'px';
+			});
 
 		    function Div_Close() {
 		        document.getElementById("popup_layer").style.display = "none";
@@ -134,8 +139,8 @@
 			   var isTabletOrMobile = /ipad|iphone|ipod|android|tablet/i.test(userAgent);
 
 			   var metaTag = document.querySelector('meta[name="viewport"]');
-			   if (isTabletOrMobile) {
-				   metaTag.setAttribute("content", "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no");
+			   if (isTabletOrMobile || navigator.maxTouchPoints > 4) {
+				   metaTag.setAttribute("content", "width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no");
 			   }
 		   });
 		</script>
