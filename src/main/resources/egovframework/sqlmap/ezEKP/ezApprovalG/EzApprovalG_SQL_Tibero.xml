@@ -37014,7 +37014,7 @@
             (sn, DocID, ReceiptDate, OrganID, Organ, Organ2, DocNumber, ManageDeptID, ManageDept, ManageDept2, OrgDocNumCode, DocTitle, ParentDocID, TENANT_ID, COMPANYID, DELIVERYSN, ORGDOCID, TYPE, ORGANUSERNAME, ORGANUSERNAME2)
             (
             SELECT
-                #v_DistributeInfoSN#, #v_DOCID#, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), #v_OrganID#, #v_Organ#, #v_Organ2#, DocNumber, #v_ManageDeptID#, #v_ManageDept#, #v_ManageDept2#, OrgDocNumCode, DocTitle , #v_PARENTDOCID#, #v_TENANTID#, #companyID#, SN, #v_ORGDOCID#, #v_TYPE#, #v_ORGANUSERNAME1#, #v_ORGANUSERNAME2#
+                #v_DistributeInfoSN#, #v_DOCID#, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), #v_OrganID#, #v_Organ#, #v_Organ2#, DocNumber, #v_ManageDeptID#, #v_ManageDept#, #v_ManageDept2#, OrgDocNumCode, DocTitle , #v_PARENTDOCID#, #v_TENANTID#, #companyID#, SN, NVL(#v_ORGDOCID#, #v_DOCID#), #v_TYPE#, #v_ORGANUSERNAME1#, #v_ORGANUSERNAME2#
             FROM
                 TBL_DOCDELIVERY
             WHERE
@@ -37033,7 +37033,7 @@
             (sn, DocID, ReceiptDate, OrganID, Organ, Organ2, DocNumber, ManageDeptID, ManageDept, ManageDept2, OrgDocNumCode, DocTitle, ParentDocID, TENANT_ID, COMPANYID, DELIVERYSN, ORGDOCID, TYPE, ORGANUSERNAME, ORGANUSERNAME2)
             (
             SELECT
-                #v_DistributeInfoSN#, a.DocID, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), #v_OrganID#, #v_Organ#, #v_Organ2#, a.DocNo, #v_ManageDeptID#, #v_ManageDept#, #v_ManageDept2#, b.DocNumCode, a.DocTitle , #v_PARENTDOCID#, #v_TENANTID#, #companyID#, #v_maxSN#, #v_ORGDOCID#, #v_TYPE#, #v_ORGANUSERNAME1#, #v_ORGANUSERNAME2#
+                #v_DistributeInfoSN#, a.DocID, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), #v_OrganID#, #v_Organ#, #v_Organ2#, a.DocNo, #v_ManageDeptID#, #v_ManageDept#, #v_ManageDept2#, b.DocNumCode, a.DocTitle , #v_PARENTDOCID#, #v_TENANTID#, #companyID#, #v_maxSN#, NVL(#v_ORGDOCID#, #v_DOCID#), #v_TYPE#, #v_ORGANUSERNAME1#, #v_ORGANUSERNAME2#
             FROM
                 TBL_APRDOCINFO a
             INNER JOIN

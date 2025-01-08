@@ -36384,7 +36384,7 @@
             (sn, DocID, ReceiptDate, OrganID, Organ, Organ2, DocNumber, ManageDeptID, ManageDept, ManageDept2, OrgDocNumCode, DocTitle, ParentDocID, TENANT_ID, COMPANYID, DELIVERYSN, ORGDOCID, TYPE, ORGANUSERNAME, ORGANUSERNAME2)
             (
             SELECT
-                #v_DistributeInfoSN#, #v_DOCID#, #v_SYSDATE#, #v_OrganID#, #v_Organ#, #v_Organ2#, DocNumber, #v_ManageDeptID#, #v_ManageDept#, #v_ManageDept2#, OrgDocNumCode, DocTitle , #v_PARENTDOCID#, #v_TENANTID#, #companyID#, SN, #v_ORGDOCID#, #v_TYPE#, #v_ORGANUSERNAME1#, #v_ORGANUSERNAME2#
+                #v_DistributeInfoSN#, #v_DOCID#, #v_SYSDATE#, #v_OrganID#, #v_Organ#, #v_Organ2#, DocNumber, #v_ManageDeptID#, #v_ManageDept#, #v_ManageDept2#, OrgDocNumCode, DocTitle , #v_PARENTDOCID#, #v_TENANTID#, #companyID#, SN, IFNULL(#v_ORGDOCID#, #v_DOCID#), #v_TYPE#, #v_ORGANUSERNAME1#, #v_ORGANUSERNAME2#
             FROM
                 TBL_DOCDELIVERY
             WHERE
@@ -36403,7 +36403,7 @@
             (sn, DocID, ReceiptDate, OrganID, Organ, Organ2, DocNumber, ManageDeptID, ManageDept, ManageDept2, OrgDocNumCode, DocTitle, ParentDocID, TENANT_ID, COMPANYID, DELIVERYSN, ORGDOCID, TYPE, ORGANUSERNAME, ORGANUSERNAME2)
             (
             SELECT
-                #v_DistributeInfoSN#, a.DocID, #v_SYSDATE#, #v_OrganID#, #v_Organ#, #v_Organ2#, a.DocNo, #v_ManageDeptID#, #v_ManageDept#, #v_ManageDept2#, b.DocNumCode, a.DocTitle , #v_PARENTDOCID#, #v_TENANTID#, #companyID#, #v_maxSN#, #v_ORGDOCID#, #v_TYPE#, #v_ORGANUSERNAME1#, #v_ORGANUSERNAME2#
+                #v_DistributeInfoSN#, a.DocID, #v_SYSDATE#, #v_OrganID#, #v_Organ#, #v_Organ2#, a.DocNo, #v_ManageDeptID#, #v_ManageDept#, #v_ManageDept2#, b.DocNumCode, a.DocTitle , #v_PARENTDOCID#, #v_TENANTID#, #companyID#, #v_maxSN#, IFNULL(#v_ORGDOCID#, #v_DOCID#), #v_TYPE#, #v_ORGANUSERNAME1#, #v_ORGANUSERNAME2#
             FROM
                 TBL_APRDOCINFO a
             INNER JOIN
