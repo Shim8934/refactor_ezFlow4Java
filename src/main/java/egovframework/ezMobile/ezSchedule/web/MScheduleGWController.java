@@ -1789,9 +1789,8 @@ public class MScheduleGWController extends EgovFileMngUtil {
 					}
 				}
 
-				List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(pidList, dcidList, "", utcStartTime, utcEndTime, startDate, endDate, "", offSetMin, "", info.getTenantId(), info.getCompanyId(), idList, info.getDeptId(), useAnnualScheduleYN);
+				List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(pidList, dcidList, "", utcStartTime, utcEndTime, startDate, endDate, offSetMin, "", "", "", info.getTenantId(), info.getCompanyId(), idList, info.getDeptId(), useAnnualScheduleYN);
 				sb2.append("<DATA>");
-
 				for (int k = 0; k < sList.size(); k++) {
 					ScheduleInfoVO data = sList.get(k);
 					sb2.append(commonUtil.getQueryResult(data));
@@ -1800,7 +1799,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 				sb2.append("</DATA>");
 
 				if (i != mList.size() - 1) {
-					sb2.append(",");
+					sb2.append("\\\\");
 				}
 			}
 			List<ScheduleGroupListVO> gatherList = ezScheduleService.getMyGatherList(userId, info.getTenantId(), info.getCompanyId());
