@@ -2,7 +2,7 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
 <html>
-	<frameset cols="220,*" frameborder="0" border="0" frameSpacing="0">
+	<frameset cols="${leftFrameWidth},*" frameborder="0" border="0" frameSpacing="0" id="frameset">
 		<frame src="/ezApprovalG/apprGLeft.do?listType=${listType}" name="left" marginwidth="0"	marginheight="0" scrolling="auto" frameborder="0" noresize>
 		<frame src="" name="right" marginwidth="0" marginheight="0" scrolling="auto" frameborder="0">
 	</frameset>

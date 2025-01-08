@@ -3016,6 +3016,7 @@
 
 				/* 2022-06-24 홍승비 - 우측 미리보기 영역을 위한 리사이즈 동작 추가 */
 		    	Window_resize();
+		    	adjustLayerAlertPosition("iFramePanel");
 		    };
 		
 		    function ShowMailProgress() {

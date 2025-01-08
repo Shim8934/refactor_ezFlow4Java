@@ -12,14 +12,14 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"> </script>
-		
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<style type="text/css">
 		<!-- datepicker 월 나타내는 selectbox안의 글자가 자꾸 밑으로 내려가는 현상때문에 스타일 줌. -->
 		select {
 			height: auto;
 		}
 		table td {
-			white-space: nowrap;
+			white-space: normal;
 			overflow: hidden;
 			text-overflow: ellipsis;
 		}

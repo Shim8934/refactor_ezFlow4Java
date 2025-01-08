@@ -266,6 +266,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		ezResourceDAO.delResData_U(map);
 		ezResourceDAO.delResData1(map);
 		ezResourceDAO.delResData3(map);
+		ezResourceDAO.delResDataForm(map);
 		
 		/* 2024-08-09 유길상 - 자원 삭제 시 즐겨찾기 정보도 삭제 */
 		List<String> delBrdCatList = ezResourceDAO.delBrdCatList(map);
@@ -2464,7 +2465,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 
 		for (int i=0; i<brdID.split(",").length; i++) {
 			delResData(brdID.split(",")[i], companyID, tenantID);
-			deleteAttachFiles(brdID, realPath, companyID, tenantID);
+			deleteAttachFiles(brdID.split(",")[i], realPath, companyID, tenantID);
 		}
 		return true;
 	}

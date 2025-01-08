@@ -402,6 +402,7 @@
                 if (receiptFlag == '' || typeof receiptFlag == 'undefined') {
                 	if (ReturnFunction != null && (regDocId == null || regDocId == undefined || regDocId == "")) {
     	                ReturnFunction(rtnVal);
+    	                window.close();
     	            } else {
 		                window.close();
     	            }

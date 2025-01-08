@@ -111,16 +111,31 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		String func = "";
 		String subFunc = "";
-
+		String leftFrameWidth = "220";
+		int width = 0;
+		
 		if (req.getParameter("func") != null && !req.getParameter("func").equals("")) {
 			func = req.getParameter("func");	
 		}
 		if (req.getParameter("subFunc") != null && !req.getParameter("subFunc").equals("")) {
 			subFunc = req.getParameter("subFunc");	
 		}
+
+		if (req.getParameter("__wwidth") != null) {
+			String widthParam = req.getParameter("__wwidth");
+
+			try {
+				width = Integer.parseInt(widthParam);
+
+				leftFrameWidth = width < 1180 ? "0" : "220";
+			} catch (NumberFormatException e) {
+				width = 0;
+			}
+		}
 		
 		model.addAttribute("func", func);
 		model.addAttribute("subFunc", subFunc);
+		model.addAttribute("leftFrameWidth", leftFrameWidth);
 		
 		logger.debug("Circularmain ended");
 		
