@@ -212,6 +212,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		String subFunc = "";
 		String qstId = "";
 
+		String leftFrameWidth = "220";
+		int width = 0;
+		
 		if (req.getParameter("func") != null && !req.getParameter("func").equals("")) {
 			func = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("func")));	
 		}
@@ -222,11 +225,24 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (req.getParameter("qstId") != null && !req.getParameter("qstId").equals("")) {
 			qstId = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("qstId")));	
 		}
-		
+
+        if (req.getParameter("__wwidth") != null) {
+            String widthParam = req.getParameter("__wwidth");
+
+            try {
+                width = Integer.parseInt(widthParam);
+
+                leftFrameWidth = width < 1180 ? "0" : "220";
+            } catch (NumberFormatException e) {
+                width = 0;
+            }
+        }
+        
 		model.addAttribute("func", func);
 		model.addAttribute("subFunc", subFunc);	
-		model.addAttribute("qstId", qstId);	
-									
+		model.addAttribute("qstId", qstId);
+		model.addAttribute("leftFrameWidth", leftFrameWidth);
+		
 		logger.debug("boardMain ended");
 
 		return "ezBoard/boardMain";
@@ -240,14 +256,29 @@ public class EzBoardController extends EgovFileMngUtil{
 		logger.debug("boardMainRedirect started");
 
 		String boardID = "";
+		String leftFrameWidth = "220";
+		int width = 0;
 		
 		if (req.getParameter("boardID") != null && !req.getParameter("boardID").equals("")) {
 			boardID = req.getParameter("boardID");	
 		}
 		
 		boardID = boardID.replace("{", "%7B").replace("}", "%7D");
+
+		if (req.getParameter("__wwidth") != null) {
+			String widthParam = req.getParameter("__wwidth");
+
+			try {
+				width = Integer.parseInt(widthParam);
+
+				leftFrameWidth = width < 1180 ? "0" : "220";
+			} catch (NumberFormatException e) {
+				width = 0;
+			}
+		}
 		
 		model.addAttribute("boardID", boardID);
+		model.addAttribute("leftFrameWidth", leftFrameWidth);
 		
 		logger.debug("boardMainRedirect ended");
 		return "ezBoard/boardMainRedirect";

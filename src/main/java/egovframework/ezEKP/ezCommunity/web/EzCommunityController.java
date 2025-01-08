@@ -135,7 +135,29 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 * 커뮤니티 메인화면 호출함수
 	 */
 	@RequestMapping(value="/ezCommunity/communityMain.do", method = RequestMethod.GET)
-	public String  main() {
+	public String  main(HttpServletRequest request, Model model) {
+		
+		logger.debug("communityMain started.");
+
+		String leftFrameWidth = "220";
+		int width = 0;
+
+		if (request.getParameter("__wwidth") != null) {
+			String widthParam = request.getParameter("__wwidth");
+
+			try {
+				width = Integer.parseInt(widthParam);
+
+				leftFrameWidth = width < 1180 ? "0" : "220";
+			} catch (NumberFormatException e) {
+				width = 0;
+			}
+		}
+
+		model.addAttribute("leftFrameWidth", leftFrameWidth);
+		
+		logger.debug("communityMain ended.");
+		
 		return "ezCommunity/communityMain";
 	}
 	

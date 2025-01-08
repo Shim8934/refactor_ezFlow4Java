@@ -347,13 +347,29 @@ public class EzPollController extends EgovFileMngUtil {
 	public String qstMain(HttpServletRequest request, ModelMap model) throws Exception{
 		logger.debug("pollMain Start");
 		String qstId = request.getParameter("qstId");
+		String leftFrameWidth = "220";
+		int width = 0;
 		
 		if (qstId != null) {
 			qstId = commonUtil.detectPathTraversal(qstId);
 			qstId = commonUtil.stripScriptTags(qstId);
 		}
+
+		if (request.getParameter("__wwidth") != null) {
+			String widthParam = request.getParameter("__wwidth");
+
+			try {
+				width = Integer.parseInt(widthParam);
+
+				leftFrameWidth = width < 1180 ? "0" : "220";
+			} catch (NumberFormatException e) {
+				width = 0;
+			}
+		}
 		
 		model.addAttribute("qstId", qstId);
+		model.addAttribute("leftFrameWidth", leftFrameWidth);
+		
 		logger.debug("pollMain End");
 		return "/ezPoll/pollMain";
 	}
