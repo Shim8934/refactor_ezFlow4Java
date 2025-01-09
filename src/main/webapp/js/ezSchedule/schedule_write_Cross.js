@@ -1544,8 +1544,40 @@ function config_repeat_resource() {
     
     schedule_repetition_cross_dialogArguments[0] = g_data;
     schedule_repetition_cross_dialogArguments[1] = config_repeat_resource_Complete;
+	resMaxDate = getMinResourceUseDate();
+    DivPopUpShow(450, 550, "/ezResource/scheduleRepetition.do?resMaxDate=" + resMaxDate);
+}
 
-    DivPopUpShow(450, 550, "/ezResource/scheduleRepetition.do");
+function getMinResourceUseDate() {
+	var resourceArray = g_resource[0];
+
+	return resourceArray.reduce((minDate, item) => {
+		var resourceMaxDate = getResourceMaxDate(item);
+		if (resourceMaxDate !== 0 && (minDate === 0 || resourceMaxDate < minDate)) {
+			minDate = resourceMaxDate;
+		}
+		return minDate;
+	}, 0);
+}
+
+function getResourceMaxDate(item) {
+	var result = 0;
+
+	$.ajax({
+		url: '/ezResource/checkResoruceMaxDate.do',
+		type: 'POST',
+		dataType: 'json',
+		async : false,
+		cache : false,
+		contentType: "application/json",
+		data: JSON.stringify({
+			brdId: item
+		}),
+		success: function(data) {
+			result = data;
+		}
+	});
+	return result;
 }
 
 function config_repeat_resource_Complete(rgParams) {
