@@ -17,7 +17,7 @@
 
 <body class="notiBody">
 
-<div class="urgent_noti notification">
+<div class="urgent_noti notification" style="overflow: auto; height: 100vh">
     <div class="noti_header">
         <h3><spring:message code="ezNotification.hth57"/></h3>
     </div>
