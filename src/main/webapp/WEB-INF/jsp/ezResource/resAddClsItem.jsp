@@ -624,7 +624,7 @@
   			</tr>
   			<tr>
     			<td id="secondRowFirstTd" style="padding-bottom:1px; padding-right:12px; height:100%;">
-    			    <textarea name="Brd_Explain"  id="Brd_Explain" style="margin-top:7px;width: 100%; height: 100%;resize:none;" maxlength="2000"></textarea>
+    			    <textarea name="Brd_Explain"  id="Brd_Explain" style="margin-top:7px;width: 100%; height: 50px;resize:none;" maxlength="2000"></textarea>
                 </td>
   			</tr>
 		</table>
