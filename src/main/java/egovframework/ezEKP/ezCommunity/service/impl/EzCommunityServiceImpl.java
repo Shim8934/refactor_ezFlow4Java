@@ -1830,13 +1830,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 					}
 					
 					// CommunityMemberInfoVO를 수정해서 부서ID를 가져오도록 하자.
-					sb.append("<a href=\"javascript:void(0);\" onclick=\"WriterName_onclick(this, '")
-							.append(user.getC_ID().trim())
-							.append("','")
-							.append(user.getDeptID())
-							.append("');\" valign=\"bottom\" mode=\"off\">")
-							.append(commonUtil.cleanValue(memberInfo.getUserName()))
-							.append("</a></td>");
+					sb.append("<a href=\"javascript:openinfo1('" + code + "','" + user.getC_ID().trim() + "','" + user.getCompanyID() + "','" + user.getDeptID() + "');\" valign=\"bottom\">" + commonUtil.cleanValue(memberInfo.getUserName()) + "</a></td>");
 					// 가입한 당시 겸직한 부서이름(deptName)/또는 겸직하지 않은 상태의 부서이름을 나타낸다. 쿼리 내부에서 다국어 처리한 것(case~primary)임.
 					sb.append("<td>" + commonUtil.cleanValue(user.getDeptName()) + "</td>");
 					sb.append("<td>" + commonUtil.cleanValue(user.getC_ID().trim()) + "</td>");
@@ -6829,8 +6823,6 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				sb.append("<Importance>" + boardList.getImportance() + "</Importance>");
 				sb.append("<Title>" + commonUtil.cleanValue(boardList.getTitle()) + "</Title>");
 				sb.append("<Attachments>" + boardList.getAttachments() + "</Attachments>");
-				sb.append("<EXT>" + commonUtil.cleanValue(boardList.getExt()) + "</EXT>");
-				sb.append("<FILEPATH>" + commonUtil.cleanValue(boardList.getFilePath()) + "</FILEPATH>");
 				sb.append("<ReadCount>" + boardList.getReadCount() + "</ReadCount>");
 				sb.append("<ItemLevel>" + boardList.getItemLevel() + "</ItemLevel>");
 				sb.append("<ReadFlag>" + boardList.getReadFlag() + "</ReadFlag>");
@@ -8535,129 +8527,4 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 
         logger.debug("modifyGuestOneLineReply ended.");
     }
-	
-	@Override
-	public String commBoardTotalSearchList(List<Map<String, String>> searchMaps, LoginVO userInfo, String sortBy, String pageNum, String code) throws Exception {
-		logger.debug("commBoardTotalSearchList started.");
-		
-		String id = userInfo.getId();
-		String offset = userInfo.getOffset();
-		int tenantID = userInfo.getTenantId();
-		int startRow = null != pageNum ? (Integer.parseInt(pageNum) - 1 ) * 10 : 0;
-		int endRow = startRow + 10;
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("primary", userInfo.getPrimary());
-		map.put("v_PUSERID", id);
-		map.put("v_pDeptID", userInfo.getDeptID());
-		map.put("v_pCompanyID", userInfo.getCompanyID());
-		map.put("v_PSORTBY", sortBy == null ? "" : sortBy);
-		map.put("v_pNow", commonUtil.getTodayUTCTime(""));
-		map.put("tenantID", tenantID);
-		map.put("searchMaps", searchMaps);
-		map.put("startRow", startRow);
-		map.put("endRow", endRow);
-		map.put("code", code);
-		
-		/* 2024-07-11 홍승비 - SQL Injection 수정 > 정렬 조건을 쿼리 내부에서 분기처리 하도록 수정 */
-		if (null != sortBy && !sortBy.equals("")) {
-			String orderCell = sortBy.split(" ")[0].toUpperCase();
-			String orderSort = sortBy.split(" ").length > 1 ? sortBy.split(" ")[1].toUpperCase() : "";
-			
-			map.put("v_orderCell", orderCell); // BOARDNAME, TITLE, WRITERCOMPANYNAME, WRITERDEPTNAME, WRITERNAME, WRITEDATE, ATTACHMENTS, READCOUNT
-			map.put("v_orderSort", orderSort); // "" or DESC
-		}
-		
-		List<CommunityBoardListVO> list = ezCommunityDAO.commuTotalSearchList(map);
-		
-		StringBuilder sb = new StringBuilder();
-		sb.append("<NODES>");
-		
-		for (CommunityBoardListVO boardList : list) {
-			sb.append("<NODE>");
-			sb.append("<ItemID>" + boardList.getItemID() + "</ItemID>");
-			sb.append("<WriterID>" + commonUtil.cleanValue(boardList.getWriterID()) + "</WriterID>");
-			sb.append("<WriterName>" + commonUtil.cleanValue(boardList.getWriterName()) + "</WriterName>");
-			sb.append("<WriterDeptID>" + commonUtil.cleanValue(boardList.getWriterDeptID()) + "</WriterDeptID>");
-			sb.append("<WriterDeptName>" + commonUtil.cleanValue(boardList.getWriterDeptName()) + "</WriterDeptName>");
-			sb.append("<WriterCompanyName>" + commonUtil.cleanValue(boardList.getWriterCompanyName()) + "</WriterCompanyName>");
-			sb.append("<WriteDate>" + commonUtil.getDateStringInUTC(boardList.getWriteDate(), offset, false) + "</WriteDate>");
-			sb.append("<BoardID>" + commonUtil.cleanValue(boardList.getBoardID()) + "</BoardID>");
-			sb.append("<BoardName>" + commonUtil.cleanValue(boardList.getBoardName()) + "</BoardName>");
-			sb.append("<Importance>" + boardList.getImportance() + "</Importance>");
-			sb.append("<Title>" + commonUtil.cleanValue(boardList.getTitle()).replace("\\", "\\\\") + "</Title>");
-			sb.append("<ReadCount>" + boardList.getReadCount() + "</ReadCount>");
-			sb.append("<OneLineCnt>" + boardList.getOneLineCnt() + "</OneLineCnt>");
-			sb.append("<Attachments>" + boardList.getAttachments() + "</Attachments>");
-			sb.append("<ItemLevel>" + boardList.getItemLevel() + "</ItemLevel>");
-			sb.append("<Abstract>" + commonUtil.cleanValue(boardList.getAbsTract()) + "</Abstract>");
-			sb.append("<READ_FG>" + commonUtil.cleanValue(boardList.getRead_fg()) + "</READ_FG>");
-			sb.append("<EXT>" + commonUtil.cleanValue(boardList.getExt()) + "</EXT>");
-			sb.append("<FILEPATH>" + commonUtil.cleanValue(boardList.getFilePath()) + "</FILEPATH>");
-			sb.append("<ReadFlag>" + boardList.getReadFlag() + "</ReadFlag>");
-			sb.append("</NODE>");
-		}
-		
-		sb.append("</NODES>");
-		
-		logger.debug("commBoardTotalSearchList ended.");
-		
-		return sb.toString();
-	}
-	
-	@Override
-	public int commuTotalSearchCount(List<Map<String, String>> searchMaps, LoginVO userInfo, String sortBy, String pageNum, String code) throws Exception {
-		logger.debug("commuTotalSearchCount started.");
-		
-		String id = userInfo.getId();
-		int tenantID = userInfo.getTenantId();
-		int startRow = null != pageNum ? (Integer.parseInt(pageNum) - 1 ) * 10 : 0;
-		int endRow = startRow + 10;
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("primary", userInfo.getPrimary());
-		map.put("v_PUSERID", id);
-		map.put("v_pDeptID", userInfo.getDeptID());
-		map.put("v_pCompanyID", userInfo.getCompanyID());
-		map.put("v_pNow", commonUtil.getTodayUTCTime(""));
-		map.put("tenantID", tenantID);
-		map.put("searchMaps", searchMaps);
-		map.put("startRow", startRow);
-		map.put("endRow", endRow);
-		map.put("code", code);
-		
-		int resCnt = ezCommunityDAO.commuTotalSearchCount(map);
-		
-		logger.debug("commuTotalSearchCount ended.");
-		return resCnt;
-	}
-
-	@Override
-	public List<CommunityBoardItemAttachmentVO> getItemAttachmentInfo(String itemID, int tenantId) throws Exception {
-		logger.debug("getItemAttachmentInfo started.");
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_pItemID", itemID);
-		map.put("tenantID", tenantId);
-		
-		List<CommunityBoardItemAttachmentVO> list = ezCommunityDAO.getItemAttachmentXML(map);
-		
-		logger.debug("getItemAttachmentInfo ended.");
-		return list;
-	}
-
-	@Override
-	public String getReadFlag(String boardID, LoginVO userInfo) throws Exception {
-		logger.debug("getReadFlag started.");
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("boardID", boardID);
-		map.put("tenantID", userInfo.getTenantId());
-		map.put("userID", userInfo.getId());
-		map.put("deptID", userInfo.getDeptID());
-		map.put("companyID", userInfo.getCompanyID());
-		
-		logger.debug("getReadFlag ended.");
-		return ezCommunityDAO.getReadFlag(map);
-	}
 }
