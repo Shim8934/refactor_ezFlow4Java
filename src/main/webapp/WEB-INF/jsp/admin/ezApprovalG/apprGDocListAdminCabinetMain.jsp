@@ -665,7 +665,7 @@
 				
 				var selRows = DocList.GetSelectedRows();
 		        if (selRows.length === 0) {
-		            var pAlertContent = "문서를 선택해주십시오.";
+		            var pAlertContent = "<spring:message code='ezApprovalG.t1533'/>";
 		            alert(pAlertContent);
 		            return;
 				}
@@ -1735,7 +1735,7 @@
 				
 				var selRows = DocList.GetSelectedRows();
 		        if (selRows.length === 0) {
-		            var pAlertContent = "문서를 선택해주십시오.";
+		            var pAlertContent = "<spring:message code='ezApprovalG.t1533'/>";
 		            alert(pAlertContent);
 		            return;
 				}

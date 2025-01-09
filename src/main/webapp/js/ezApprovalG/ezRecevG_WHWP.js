@@ -241,8 +241,9 @@ function SendAckForSend(errMsg, type)
     if (type == "req-resend") {
     	if (result == "<RESLUT>TRUE</RESULT>") {
 	        var pAlertContent = strLang725;
-	        OpenAlertUI(pAlertContent);
-	        window.close();
+	        OpenAlertUI(pAlertContent, function() {
+	        	window.close();
+	        });
     	} else {
     		OpenAlertUI("재전송요청에 실패하였습니다.");
     	}

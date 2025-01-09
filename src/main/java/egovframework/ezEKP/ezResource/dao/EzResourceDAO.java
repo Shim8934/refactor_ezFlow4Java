@@ -477,4 +477,8 @@ public class EzResourceDAO extends EgovAbstractDAO {
 	public void updateFavoriteCategoryBrdYN2(Map<String, Object> map) throws Exception {
 		update("EzResourceDAO.updateFavoriteCategoryBrdYN2", map);
 	}
+
+	public void delResDataForm(Map<String, Object> map) throws Exception {
+		delete("EzResourceDAO.delResDataForm", map);
+	}
 }

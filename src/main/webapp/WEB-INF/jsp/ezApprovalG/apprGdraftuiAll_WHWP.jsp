@@ -1930,7 +1930,7 @@
 	    		// 대용량첨부의 자동삭제 기능, 저장만료기한 사용하지 않음
                 var attachGuideText =  "<td align='left' style='width:50%; font-size:11px; font-weight:normal; color:#666666; padding-left:10px; padding-top:0px; padding-bottom:0px; margin:0px; border-bottom:1px solid #dadada;border-left:1px solid #dadada; border-right:none; border-top: none; background:#fffcfa; height:20px; line-height:20px;'>";
                 
-                if(bigSizeAttachDownloadLimitCount > 0) {
+                if (bigSizeAttachDownloadLimitCount > 0) {
                 	attachGuideText += strLangHSBAt06 + " <span style='color:#FF0000 ;'>" + bigSizeAttachDownloadLimitCount + strLangHSBAt09 + "</span> " + strLangHSBAt10;
                 }
                 
@@ -1947,6 +1947,7 @@
                 	 document.getElementById("apprAttachGuideTR").innerHTML = attachGuideText;
                  }
                  else {
+                	 document.getElementById("apprAttachGuideTBL").style.display = "none";
                 	 document.getElementById("apprAttachGuideTR").style.display = "none";
                  }
 	    	}
@@ -2778,7 +2779,7 @@
 	                </table> 
 	                
 	                <%-- 대용량첨부 가이드 메세지 영역 --%>
-	                <table class="file" style="height: 20px;">
+	                <table id="apprAttachGuideTBL" class="file" style="height: 20px;">
 	                    <tr id="apprAttachGuideTR"></tr>
 	                </table>
 	            </td>

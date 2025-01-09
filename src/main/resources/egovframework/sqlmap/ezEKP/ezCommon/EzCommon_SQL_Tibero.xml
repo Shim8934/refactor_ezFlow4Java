@@ -6605,7 +6605,28 @@
 		ADD
 		   ISDELETEBLOCK CHAR(1) DEFAULT 'N'
 	</statement>
-
+    
+    <select id="EzCommonDAO.checkJmochaCompanyQuota">
+		<![CDATA[
+        SELECT
+            COMPANY_ID
+        FROM
+            JMOCHA_COMPANY_QUOTA
+        WHERE
+            ROWNUM = 1
+        ]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createJmochaCompanyQuota">
+        CREATE TABLE JMOCHA_COMPANY_QUOTA
+        ( DOMAIN_NAME NVARCHAR2(100) NOT NULL,
+          COMPANY_ID NVARCHAR2(160) NOT NULL,
+          MAX_STORAGE NUMBER(20,5) DEFAULT 0,
+          WARN_STORAGE NUMBER(20,5) DEFAULT 0,
+          CONSTRAINT PK_JMOCHA_COMPANY_QUOTA PRIMARY KEY (DOMAIN_NAME, COMPANY_ID)
+        )
+    </statement>
+    
 	<select id="EzCommonDAO.checkTblCommunityClubguestOnelinereply" resultClass="Integer">
 		SELECT
 			count(REPLYID)

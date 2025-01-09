@@ -59,6 +59,23 @@ public class EzMemoController {
 	@RequestMapping(value = "/ezMemo/memoMainPage.do", method = RequestMethod.GET)
 	public String memoMainPage(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("memoMainPage started.");
+
+		String leftFrameWidth = "220";
+		int width = 0;
+
+		if (request.getParameter("__wwidth") != null) {
+			String widthParam = request.getParameter("__wwidth");
+
+			try {
+				width = Integer.parseInt(widthParam);
+
+				leftFrameWidth = width < 1180 ? "0" : "220";
+			} catch (NumberFormatException e) {
+				width = 0;
+			}
+		}
+
+		model.addAttribute("leftFrameWidth", leftFrameWidth);
 		
 		logger.debug("memoMainPage ended");
 		return "ezMemo/memoMainPage";

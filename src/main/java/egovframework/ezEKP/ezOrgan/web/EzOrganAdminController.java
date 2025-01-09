@@ -224,6 +224,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.createExecutiveTable(); // 2024-08-06 이유정 - 임원일정 테이블 추가
             ezCommonService.createJmochaMailBlocked(); // 2024-11-14 김승연 - 메일 열람 차단 테이블 추가
 			ezCommonService.addTblCommunityClubguestOnelinereply(); // 2024-10-28 황인경 - 커뮤니티 방명록 댓글 테이블 추가
+			ezCommonService.createJmochaCompanyQuota(); // 2024-12-12 김혜림 - 회사별 메일박스 용량 테이블 추가
 
 			// alter table
 	    	ezCommonService.alterTableAddColumns(); // 2022-01-19 김은실 - alter 재사용 모듈 추가

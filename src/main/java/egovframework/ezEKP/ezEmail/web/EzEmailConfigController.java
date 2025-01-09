@@ -233,8 +233,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 				fontSize = editorFontStyle.split("\\|")[1];
 			}
 		}
-		String editorFontFamily = mailGeneralVO.getEditorFontFamily() == null ? fontFamily : mailGeneralVO.getEditorFontFamily();
-		String editorFontSize = mailGeneralVO.getEditorFontSize() == null ? fontSize : mailGeneralVO.getEditorFontSize();
+		String editorFontFamily = mailGeneralVO.getEditorFontFamily() == null || mailGeneralVO.getEditorFontFamily().trim().isEmpty() ? fontFamily : mailGeneralVO.getEditorFontFamily();
+		String editorFontSize = mailGeneralVO.getEditorFontSize() == null  || mailGeneralVO.getEditorFontSize().trim().isEmpty() ? fontSize : mailGeneralVO.getEditorFontSize();
 		
 		if (dotnetFlag != null) {
 			dotnetFlag = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(dotnetFlag));

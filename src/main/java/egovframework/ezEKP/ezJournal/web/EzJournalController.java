@@ -93,6 +93,24 @@ public class EzJournalController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezJournal/journalMain.do", method = RequestMethod.GET)
 	public String journalMain(HttpServletRequest req, Model model) {
 		logger.debug("journalMain started");
+
+		String leftFrameWidth = "220";
+		int width = 0;
+
+		if (req.getParameter("__wwidth") != null) {
+			String widthParam = req.getParameter("__wwidth");
+
+			try {
+				width = Integer.parseInt(widthParam);
+
+				leftFrameWidth = width < 1180 ? "0" : "220";
+			} catch (NumberFormatException e) {
+				width = 0;
+			}
+		}
+		
+		model.addAttribute("leftFrameWidth", leftFrameWidth);
+		
 		logger.debug("journalMain ended");
 		return "/ezJournal/journalMain";
 	}

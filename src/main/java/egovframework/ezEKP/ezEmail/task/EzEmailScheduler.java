@@ -1316,11 +1316,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
                 String fontStyle = String.format("style='font-family: %s; font-size: %spx;'", fontFamily, 13);
 
                 // user quota info
-                Double[] userQuotaData = ezEmailUtil.getUserQuota(userEmail);
-
-                if (userQuotaData[0] == null) {
-                    userQuotaData = ezEmailUtil.getDefaultQuota(domainName);
-                }
+                Double[] userQuotaData = ezEmailUtil.getUserRealQuota(userEmail);
 
                 IMAPAccess imapAccess = IMAPAccess.getInstance(mailServerAddress, imapPort, userEmail, jspw, egovMessageSource,
                         locale, ezEmailUtil);

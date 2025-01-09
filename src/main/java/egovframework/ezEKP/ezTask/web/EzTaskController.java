@@ -1796,6 +1796,24 @@ public class EzTaskController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezTask/taskIndex.do", method = RequestMethod.GET)
 	public String taskIndex(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, LoginVO loginVO) throws Exception {
 		logger.debug("taskIndex started");
+
+		String leftFrameWidth = "220";
+		int width = 0;
+
+		if (request.getParameter("__wwidth") != null) {
+			String widthParam = request.getParameter("__wwidth");
+
+			try {
+				width = Integer.parseInt(widthParam);
+
+				leftFrameWidth = width < 1180 ? "0" : "220";
+			} catch (NumberFormatException e) {
+				width = 0;
+			}
+		}
+
+		model.addAttribute("leftFrameWidth", leftFrameWidth);
+		
 		logger.debug("taskIndex ended");
 		return "/ezTask/taskIndex";
 	}

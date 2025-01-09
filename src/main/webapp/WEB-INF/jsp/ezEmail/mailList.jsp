@@ -522,7 +522,67 @@
 				});
 
 				$("#input_wrap_h + .imgbtn, #input_wrap_w + .imgbtn").on("click", onEnterPreviewTagInput);
-		    }
+
+				var layerSelect = null;
+				var viewMore = null;
+
+				function hideLayer(event) {
+					if (!event || !event.target) {
+						layerSelect.style.display = 'none';
+						viewMore.classList.remove('on');
+						return;
+					}
+					
+					if (layerSelect && !event.target.closest('.layer_select')) {
+						layerSelect.style.display = 'none'; 
+						viewMore.classList.remove('on');
+					}
+				}
+
+				function showLayer(layer, targetElement) {
+					if (viewMore.classList.contains('on')) {
+						hideLayer();
+						viewMore.classList.remove('on');
+						return;
+					}
+
+					var rect = targetElement.getBoundingClientRect();
+					
+					layer.style.position = 'fixed';
+					layer.style.display = 'block';
+					layer.style.top = rect.bottom + "px";
+					layer.style.left = rect.left + "px";
+					viewMore.classList.add('on'); 
+
+				}
+
+				function setUpLayerToggle() {
+					viewMore = document.querySelector('.view_more');
+					layerSelect = document.querySelector('.layer_select');
+					if (!viewMore || !layerSelect) return;
+
+					window.parent.parent.parent.frames['topFrame'].contentWindow.document.addEventListener('click', hideLayer);
+					
+					window.parent.frames['left'].document.addEventListener('click', hideLayer);
+
+					document.addEventListener('click', hideLayer);
+					
+					Array.from(window.frames).forEach((frame) => {
+						try {
+							frame.document.addEventListener('click', hideLayer);
+						} catch (e) {
+							console.error('frame error :', e);
+						}
+					});
+
+					viewMore.addEventListener('click', (event) => {
+						event.stopPropagation(); 
+						showLayer(layerSelect, viewMore); 
+					});
+				}
+
+				setUpLayerToggle();
+			}
 		    
 		    $(document).ready(function() {
 		    	var clickOutside;
@@ -1937,18 +1997,11 @@
 	          <li id="relayBtn" class="important"><span onClick="transmission_mail_onclick()"><spring:message code="ezEmail.t513" /></span></li>
 	          <!-- <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
 	          <li id="read_stat"><span onClick="Read_StatusChange('R');" ><spring:message code="ezEmail.t99000006" /></span></li>
-	          <li id="unread_stat"><span onClick="Read_StatusChange('U');"><spring:message code="ezEmail.t99000007" /></span></li>
-	          <li onClick="mail_export();" id="EmailPCSave"><span><spring:message code="ezEmail.t378" /></span></li>
-              <li id="importBtn" onClick="mail_import_onclick();"><span><spring:message code="ezEmail.t407" /></span></li>
 	          <li id="moveBtn"><span onClick="move_mail_onclick()"><spring:message code="ezEmail.t482" /></span></li>
 	          <!-- <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
 	          <li id="deleteone"><span onClick="deleteWork(true)"><spring:message code="ezEmail.t156" /></span></li>
 	          <li id="deleteall" style="display:none"><span onClick="delAllFile()"><spring:message code="ezEmail.t514" /></span></li>
 	          <li id="receivecheck" style="display:none" ><span onClick="receiveCheck_onClick()"><spring:message code="ezEmail.t516" />/<spring:message code="ezEmail.t549" /></span></li>
-	          <li id="btnReject" style="display:none"><span onClick="reject_onclick()"><spring:message code="ezEmail.t270" /></span></li>
-	          <c:if test="${useMailConfirm == 'YES'}">
-	          <li onClick="mailConfirm_flag_btn()"><span><spring:message code="ezEmail.ksa13" /></span></li>
-			  </c:if>
 	          <li id="toggle_flag_btn" onClick="toggle_flag();" ><span class="icon16 icon16_star"></span></li>
 	          <li id="trashBtn"><span class="icon16 icon16_delete" onClick="deleteWork(false)"></span></li>
               <li id="trashUnreadBtn" title="<spring:message code="ezEmail.unread.delete" />"><span class="icon16 icon16_unreadMail_del" onClick="deleteUnreadWork()"></span></li>
@@ -1956,6 +2009,18 @@
 	          <c:if test="${useHackingMailReport == 'YES'}">
 			  <li id="hackingMail" title="<spring:message code="ezEmail.zno002" />"><span class="icon16 icon16_spam" onClick="moveHackingMail()"></span></li>		
 			  </c:if>
+			  <li class="view_more">
+				  <span class="view_icon"><img src="/images/ImgIcon/view_more.png"></span>
+				  <ul class="layer_select">
+					  <li id="unread_stat" onClick="Read_StatusChange('U');"><spring:message code="ezEmail.t99000007" /></li>
+					  <li id="EmailPCSave" onClick="mail_export();"><spring:message code="ezEmail.t378" /></li>
+					  <li id="importBtn" onClick="mail_import_onclick();"><spring:message code="ezEmail.t407" /></li>
+					  <li id="btnReject" onClick="reject_onclick()" style="display:none"><spring:message code="ezEmail.t270" /></li>
+					  <c:if test="${useMailConfirm == 'YES'}">
+						  <li onClick="mailConfirm_flag_btn()"><spring:message code="ezEmail.ksa13" /></li>
+					  </c:if>
+				  </ul>
+			  </li>
 	          
 			 <!--  <li id="right">
 	          	<img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onclick="PreviewRayerChange('NONE')">

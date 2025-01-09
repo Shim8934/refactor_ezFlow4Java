@@ -4514,6 +4514,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void createTblBoardCommentAttachments() throws Exception {
         ezCommonDAO.createTblBoardCommentAttachments();
     }
+
+    @Override
+    public void createJmochaCompanyQuota() throws Exception {
+        ezCommonDAO.createJmochaCompanyQuota();
+    }
     
     @Override
     public void alterAddThumbnailForTPI() throws Exception {

@@ -453,15 +453,29 @@
 	    			  },
 	    			  success : function(result){ // sat , kukudocs
 
-	    					  var link = document.createElement("a");
+	    					  /* var link = document.createElement("a");
 
 	    					  link.setAttribute("href",result);
 	    					  link.setAttribute("target","_blink");
-	    					  link.click();
+	    					  link.click(); */
+						window.open(result, '_blank', getOpenWindowfeature(1100, 950));
 
 	    			  }
 	    		  });
 	     	}
+
+			function getOpenWindowfeature(popUpW, popUpH) {
+				var heigth   = window.screen.availHeight;
+				var width    = window.screen.availWidth;
+				var left     = 0;
+				var top      = 0;
+				var pleftpos = parseInt(width) - popUpW;
+				heigth       = parseInt(heigth) - popUpH;
+				left         = pleftpos / 2;
+				top          = heigth / 2;
+				var feature  = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes";
+				return feature;
+			}
 	    </script> 
 	</head>
 

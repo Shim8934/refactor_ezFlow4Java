@@ -6055,6 +6055,26 @@
 	</statement>
 
 
+	<select id="EzCommonDAO.checkJmochaCompanyQuota">
+		<![CDATA[
+		SELECT
+			COMPANY_ID
+		FROM
+			JMOCHA_COMPANY_QUOTA
+				LIMIT 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.createJmochaCompanyQuota">
+		CREATE TABLE JMOCHA_COMPANY_QUOTA (
+				DOMAIN_NAME varchar(100) NOT NULL,
+				COMPANY_ID varchar(160) NOT NULL,
+				MAX_STORAGE double DEFAULT 0,
+				WARN_STORAGE double DEFAULT 0,
+				PRIMARY KEY (DOMAIN_NAME, COMPANY_ID)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+	</statement>
+
 	<select id="EzCommonDAO.chkTblBoardCommentAttachExist">
 		SELECT
 			REPLYID

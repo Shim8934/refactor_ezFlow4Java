@@ -715,11 +715,11 @@ function CalMonthDataBind(oAppointment, oAppointment2) {
             var timeeSplit = oAppointment.odtendDisplay.split(":");
             var timeofStart = timesSplit[0]+ ":" + ((timesSplit[1].length == 1)?("0" + timesSplit[1]):timesSplit[1]); 
             var timeofEnd = timeeSplit[0] + ":" + ((timeeSplit[1].length == 1)?("0" + timeeSplit[1]):timeeSplit[1]); 
-            pSubject.innerHTML = timeofStart + " - " + timeofEnd + "  " + oAppointment.oSubject;		// 2018-07-04 김민성 - 특수문자 태그 적용 안되도록 수정
+            pSubject.innerHTML = timeofStart + " - " + timeofEnd + "  " + ConvertCharToEntityReference(oAppointment.oSubject);		// 2018-07-04 김민성 - 특수문자 태그 적용 안되도록 수정
         }
         else {
             pTime = strLang126;
-            pSubject.innerHTML = oAppointment.oSubject;
+            pSubject.innerHTML = ConvertCharToEntityReference(oAppointment.oSubject);
         }
 
         if (oAppointment.oImportance == 1) {
@@ -753,8 +753,6 @@ function CalMonthDataBind(oAppointment, oAppointment2) {
         oTd.setAttribute("command", "open");
         oTd.setAttribute("ptime", pTime);
         oTd.setAttribute("subject",  ConvertEntityReferenceToChar(oAppointment.oSubject.split("'").join("&apos;")));
-        console.log(ConvertEntityReferenceToChar(oAppointment.oSubject.split("'").join("&apos;")));
-        console.log(ConvertEntityReferenceToChar(oAppointment.oSubject));
         //이벤트변경 - 마우스오버
         //oTd.setAttribute("onclick", "Schedule_onMouseClick(this);showTooltip(this, event, '" + pTime + "', '" + oAppointment.oSubject.split("'").join("&apos;") + "', '" + oAppointment.oApproveFlag + "');");
         //oTd.setAttribute("onmouseover", "TooltipMouseOver(this, \"M\")");
