@@ -71,8 +71,8 @@
             position: absolute;
             top: 0;
             left: 2px;
-            height: 16px;
-            width: 16px;
+            height: 20px;
+            width: 20px;
             background-color: #eee;
             border-radius:3px;
         }
