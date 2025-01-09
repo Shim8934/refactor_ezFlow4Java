@@ -14,6 +14,7 @@ import java.util.Optional;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
 import org.apache.commons.lang3.StringUtils;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import org.json.simple.JSONArray;
@@ -703,6 +704,8 @@ public class MScheduleGWController extends EgovFileMngUtil {
 
 			/* 2021-09-01 홍승비 - 비서인 경우 대상자 정보 추가 (쿼리 내부에서 다국어 처리하여 가져옴) */
 			List<ScheduleSecretaryVO> sList = ezScheduleService.getPublicScheduleSec(userId, primary, info.getTenantId(), info.getCompanyId());
+			List<ScheduleCumulerVO> cList = ezScheduleService.getPublicScheduleCumuler(userId, lang, info.getTenantId(), info.getCompanyId());
+			OrganAuth organAuth = commonUtil.makeOrganAuth(userId, info.getTenantId(), info.getDeptId(), info.getJobId());
 			
 			if (primary.equals("1")) {
 				//개인일정
@@ -716,6 +719,15 @@ public class MScheduleGWController extends EgovFileMngUtil {
 				if (pDeptAdmin.equals("Y")) {
 					//부서일정				
 					sb.append("<option value='2;;" + info.getDeptId() + "'" + ">" + egovMessageSource.getMessage("ezSchedule.t373", locale) + " " + info.getDeptName() + "</option>");
+				}
+
+				for (ScheduleCumulerVO vo : cList) {
+					String deptId = vo.getDeptId();
+					if (info.getDeptId().equals(deptId)) {
+						continue;
+					} else if ("Y".equals(pCompanyAdmin) || organAuth.isAuth(OrganAuth.AdminAuth.DEPT_MANAGER, deptId)){
+						sb.append("<option value='2;;" + deptId + "'"  + ">" + egovMessageSource.getMessage("ezSchedule.t373", locale) + " " + commonUtil.cleanValue(vo.getTitleName()) + "</option>");
+					}
 				}
 				
 				if (pCompanyAdmin.equals("Y")) {
@@ -734,6 +746,15 @@ public class MScheduleGWController extends EgovFileMngUtil {
 				if (pDeptAdmin.equals("Y")) {
 					//부서일정
 					sb.append("<option value='2;;" + info.getDeptId() + "'" + ">" + egovMessageSource.getMessage("ezSchedule.t373", locale) + " " + info.getDeptName2() + "</option>");
+				}
+
+				//겸직일정
+				for (ScheduleCumulerVO vo : cList) {
+					if (info.getDeptId().equals(vo.getDeptId())) {
+						continue;
+					} else {
+						sb.append("<option value='2;;" + vo.getDeptId() + "'"  + ">" + egovMessageSource.getMessage("ezSchedule.t373", locale) + " " + commonUtil.cleanValue(vo.getTitleName()) + "</option>");
+					}
 				}
 				
 				if (pCompanyAdmin.equals("Y")) {
