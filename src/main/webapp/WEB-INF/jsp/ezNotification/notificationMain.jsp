@@ -17,7 +17,7 @@
 	</head>
 
 <body class="notiBody">
-	<div class="notification" onclick="hideFilter()">
+	<div class="notification" onclick="hideFilter()" style="height: 100vh">
         <div class="noti_header">
             <h3><spring:message code="ezNotification.hth01"/></h3>
 			<ul class="noti_btn_list">
@@ -81,7 +81,7 @@
             </ul>
         </div>
 
-        <div class="noti_paging">
+        <div class="noti_paging" style="display: none">
             <span class="prev" onclick="moveNotiPage('down')"></span>
             <span class="page_num notiPage">
                 <input type="text" id="notiCurrentPage" autocomplete="off" value="1" onkeypress="return moveInputPage()">&nbsp;/&nbsp;<span  id="notiTotalPage"></span>
