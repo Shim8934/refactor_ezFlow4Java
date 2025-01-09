@@ -46,7 +46,6 @@
     		var pastDate = "<c:out value='${pastDate}'/>";
     		var UserLevel = window.parent.userLevel;
     		var code = window.parent.code;
-			var postsViewFlag = "<c:out value='${postsViewFlag}'/>";
 
     		function SelectSingleOnlyTitle(node, tagName) {
     		    var strValue = "";
@@ -83,31 +82,8 @@
 	        	
 	        	document.getElementById("totalSearchForm").submit();
 	        }
-			
-			function setPageViewPosts() {
-				var searchAreaDiv = document.getElementsByClassName('searchArea');
-
-				Array.from(searchAreaDiv).forEach(function(item) {
-					item.style.display = "none";
-				});
-				
-				document.getElementById('titleHr').innerText = "<spring:message code='ezCommunity.jje02'/>";
-			}
-			
-			function setPageSearchResult() {
-				var searchAreaDiv = document.getElementsByClassName('searchArea');
-
-				Array.from(searchAreaDiv).forEach(function(item) {
-					item.style.display = "flex";
-				});
-			}
 	        
 	        $(function () {
-				if (postsViewFlag == 'Y') {
-					setPageViewPosts();
-				} else {
-					setPageSearchResult();
-				}
 
 	        	document.getElementById("code").value = code;
     			var xmldoc = loadXMLString('${resList}');
@@ -169,7 +145,7 @@
 					
                    	listXML += "</TD>";
 					listXML += "<TD class='"+ urgency + " " + bClass + "'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterDeptname").trim() + "</TD>";
-                    listXML += "<TD class='"+ urgency + " " + bClass + "'><div style='cursor:pointer' mode='off' onclick='(function(elem){ WriterName_onclick(elem, \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID").trim() + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterDeptID").trim() + "\") })(this)'>" + MakeXMLString(SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterName").trim()) + "</div></TD>";
+                    listXML += "<TD class='"+ urgency + " " + bClass + "'><div style='cursor:pointer' onclick='MemberInfo_onclick(\"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID").trim() + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterDeptID").trim() + "\")'>" + MakeXMLString(SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterName").trim()) + "</div></TD>";
 					listXML += "<TD class='"+ urgency + " " + bClass + "'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriteDate").split(' ')[0] + "</TD>";
 					
 					if (SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Attachments").trim() != "0") {
@@ -333,6 +309,16 @@
     		    GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(code) + "&showAdjacent=&treeCtrl=" + treeCtrl, "", 750, 721);
     		}
 			
+    		function MemberInfo_onclick(pUserID, pDeptID) {
+    			if (UserLevel == "0" || UserLevel == "9") {
+    				alert("<spring:message code='ezCommunity.t431' />");
+    				return;
+    			}
+    					
+    		    var feature = "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
+			    feature = feature + GetOpenPosition(420, 450);
+			    window.open("/ezCommon/showPersonInfo.do?id=" + pUserID + "&dept=" + pDeptID, "", feature);
+			}
     		
     		function SortPage(SortBy) {
     			document.getElementById("sortBy").value = SortBy;
@@ -376,13 +362,13 @@
         
 	</head>
 	<body class = "cmhome_body">
-		<h1 id="titleHr" class="type1_h1"><spring:message code='ezTotalSearch.t0028' /></h1>
+		<h1 class="type1_h1"><spring:message code='ezTotalSearch.t0028' /></h1>
 		<hr/>
 		
-		<div class="searchArea" style = "height:30px; display: none;">
+		<div style = "height:30px;">
 			'<strong><c:out value='${searchWord}'/></strong>'<spring:message code='ezTotalSearch.t0020' /> <strong id="mailBoxInfo"></strong> <spring:message code='ezTotalSearch.t0021' />
 		</div>
-		<div id="searchElem" class="searchArea" style="height:40px; background-color: #f8f8fa; margin-bottom: 10px; display: none; align-items: center;">
+		<div id="searchElem" style="height:40px; background-color: #f8f8fa; margin-bottom: 10px; display: flex; align-items: center;">
 			<form id="totalSearchForm" method="post" target="rightfrm" action="/ezCommunity/communitySearchResult.do">
 				<c:forEach var="type" items="${beforeSearchType}">
 					<input type="hidden" name="beforeSearchType" value="<c:out value='${type }'/>">
@@ -391,10 +377,9 @@
 					<input type="hidden" name="beforeKeyword" value="<c:out value='${keyword }'/>">
 				</c:forEach>
 				<label for="refineInResult"><input type="checkbox" <c:out value='${refineInResult}'/> name="refineInResult" id="refineInResult"><spring:message code='ezCommunity.searchInResult' /></label>
-				<select name="searchType" id="searchType">
+				<select name="searchType">
 					<option value="title"<c:if test="${searchType eq 'title'}">selected</c:if>><spring:message code='ezCommunity.t124' /></option>
 					<option value="writer"<c:if test="${searchType eq 'writer'}">selected</c:if>><spring:message code='ezCommunity.t445' /></option>
-					<option value="writerInfo"<c:if test="${searchType eq 'writerInfo'}">selected</c:if> style="display:none;"><spring:message code='ezCommunity.jje02' /></option>
 				</select>
 				<input type="text" id="searchWord" name="searchWord" value="<c:out value='${searchWord}'/>">
 			    <span id="totalSearch" onclick="commuTotalSearch()">
@@ -403,9 +388,9 @@
 				<input type="hidden" id="sortBy" name="sortBy" value="<c:out value='${pSortBy }'/>">
 				<input type="hidden" id="code" name="code">
 				<input type="hidden" id="pageNum" name="pageNum" value="<c:out value='${pageNum}' />">
-				<input type="hidden" id="postsViewFlag" name="postsViewFlag" value="<c:out value='${postsViewFlag}' />">
 			</form>
 		</div>
+		
 		<div style = "height:370px;">
 			<table  id="tblList" class="cmhomelist" style="width:100%">
 				<tr>
@@ -502,9 +487,6 @@
 			</table>
 		</div>	
 		<div id="tblPageRayer" style="margin-top:10px"></div>
-		<div>
-			<jsp:include page="/WEB-INF/jsp/ezCommunity/communityUserOption.jsp"/>
-		</div>
 		<FONT face="<spring:message code='ezCommunity.t154' />"></FONT>	
 	</body>
 </html>
