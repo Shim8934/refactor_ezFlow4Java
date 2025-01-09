@@ -1044,6 +1044,18 @@ function DivPopUpPosition_Layer(popUpW, popUpH) {
 
 function DivPopUpShow(popUpW, popUpH, URL) {
     try {
+    	
+    	if (navigator.maxTouchPoints > 4) {
+    		
+    		if (popUpW > document.documentElement.clientWidth) {
+    			popUpW = document.documentElement.clientWidth;
+    		}
+    		
+    		if (popUpH > document.documentElement.clientHeight) {
+    			popUpH = document.documentElement.clientHeight;
+    		}
+    	} 
+    	
         var Position = DivPopUpPosition(popUpW, popUpH);
         document.getElementById("iFrameLayer").src = URL;
         document.getElementById("iFramePanel").style.top = Position[0] + "px";

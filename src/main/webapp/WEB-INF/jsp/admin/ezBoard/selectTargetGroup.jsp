@@ -49,6 +49,15 @@
 	    	#MsgToList {
 	    		table-layout : auto;
 	    	}
+	    	
+	    	
+	    	.mobile .organwrap .pictd {
+				width: 99px;
+			}
+			
+			.mobile .organwrap {
+				width: 100%;
+			}
 	    </style>
 	    <script>
 	        var ua = navigator.userAgent.toLowerCase();
@@ -144,6 +153,19 @@
 	            document.getElementById("admin_NO").disabled = true;
 		        document.getElementById("admin_OK").checked = false;
 		        document.getElementById("admin_NO").checked = true;
+		        
+				if (navigator.maxTouchPoints > 4) {
+					// 태블릿 기기이면 높이 조정하여 하단 잘림 방지
+					document.getElementById("tblwrap").style.height = (document.body.clientHeight - 70) + 'px';
+					document.getElementById("tblwrap").style.overflowX = 'hidden';
+					document.getElementById("tblwrap").style.overflowY = 'scroll';
+					
+					document.getElementById("DeptUserImgList").style.width = '';
+					document.getElementById("orglistView").style.width = '';
+					document.getElementById("TreeView").style.width = '';
+					
+					document.getElementById("DeptUserImgList").className += ' mobile';
+		        }
 	        }
 	
 	        function MakeXMLString(pStr) {
@@ -2032,6 +2054,7 @@
                 <li><span onclick="window.close()"></span></li>
             </ul>
         </div>
+        <div id="tblwrap">
 	    <table style="width:100%;margin-top:10px">
 	        <tr>
 	            <td style="vertical-align: top;">
@@ -2227,6 +2250,7 @@
 	            </td>
 	        </tr>
 	    </table>
+	    </div>
 		<div class="btnpositionNew">
 			<a class="imgbtn"><span onclick="confirm_onClick()" ><spring:message code='ezBoard.t48' /></span></a>
 		</div>
