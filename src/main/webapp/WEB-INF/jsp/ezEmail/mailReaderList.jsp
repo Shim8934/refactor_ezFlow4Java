@@ -215,6 +215,11 @@
 	                var ReadDate = SelectSingleNodeValue(XmlRows[i], "READDATE");
 	                var EmailAddress = SelectSingleNodeValue(XmlRows[i], "READEREMAIL");
 	                var CancelStatus = trim_Cross(SelectSingleNodeValue(XmlRows[i], "CANCEL"));
+					
+					if (EmailAddress == '') {
+						continue;
+					}
+					
 	                var TR = document.createElement("TR");
 	                var TD1 = document.createElement("TD");
 	                var TD2 = document.createElement("TD");
