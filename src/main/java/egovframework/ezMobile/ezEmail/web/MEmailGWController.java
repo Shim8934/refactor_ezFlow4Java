@@ -76,6 +76,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
 import egovframework.ezEKP.ezEmail.util.EmailImportance;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.rest.Result;
@@ -209,7 +210,10 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 	
 	@Resource(name = "jspw")
     private String jspw;
-		
+
+	@Resource(name="EzEmailUserAdminService")
+	private EzEmailUserAdminService ezEmailUserAdminService;
+	
 	/**
 	 * 모바일 G/W 이메일 [GET] 왼쪽 슬라이드 메뉴에 편지함 목록 조회, 메일 이동 시 편지함 목록 출력
 	 */
@@ -7485,6 +7489,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
             Long uid = Long.parseLong(messageId);
 
             String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+			String isReadDelete = ezCommonService.getTenantConfig("IS_READ_DELETE", userInfo.getTenantId());
 
             if (useSharedMailbox.equals("YES")) {
                 String shareId = (String) getData.get("shareId");
@@ -7703,6 +7708,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
                     }
                 }
 
+                returnObj.put("isReadDelete", isReadDelete);
                 returnObj.put("subject", message.getSubject());
                 returnObj.put("data", dataArray);
                 returnObj.put("status", "ok");
@@ -7729,6 +7735,173 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 	    return returnObj;
     }
 
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/mobile/ezemail/mailCancel/{messageId}/users/{userId:.+}",
+			method = RequestMethod.POST,
+			produces = "application/json;charset=utf-8")
+	public Object mMailCancel(HttpServletRequest request,
+								@RequestBody JSONObject getData,
+								@PathVariable String messageId,
+								@PathVariable String userId) {
+		logger.debug("MOBILE G/W MAIL mMailCancel started.");
+		
+		logger.debug("userId=" + userId + "getData=" + getData);
+		logger.debug("messageId=" + messageId);
+		
+		JSONObject returnObj = new JSONObject();
+		IMAPAccess ia = null;
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
+			String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+			String userEmail = userInfo.getUserId() + "@" + domainName;
+			String mailId = userInfo.getUserId();
+			String password = jspw;
+			String lang = commonUtil.getTwoLetterLangFromLangNum(userInfo.getLang());
+			Locale locale = new Locale(lang);
+			Long uid = Long.parseLong(messageId);
+			String pGubun = (String) getData.get("pGubun");
+			
+			List<String> cancelMailAddress = (List<String>) getData.get("cancelMailAddress");
+			
+			logger.debug("cancelMailAddress : " + cancelMailAddress);
+			
+			String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+			String isReadDelete = ezCommonService.getTenantConfig("IS_READ_DELETE", userInfo.getTenantId());
+
+			if (useSharedMailbox.equals("YES")) {
+				String shareId = (String) getData.get("shareId");
+				logger.debug("shareId=" + shareId + ", userId=" + userId + ", userInfo.getUserId=" + userInfo.getUserId());
+
+				if (shareId != null && !shareId.equals("")) {
+					if (!ezEmailService.checkUserShareId(userInfo.getUserId(), shareId, 2, userInfo.getTenantId())) {
+						logger.debug("the user cannot access the shareId.");
+						logger.debug("mailGetReceiveList ended.");
+
+						returnObj.put("status", "fail");
+						returnObj.put("code", 1);
+
+						return returnObj;
+					}
+
+					mailId = shareId;
+					userEmail = shareId + "@" + domainName;
+				}
+			}
+
+			logger.debug("userEmail=" + userEmail + ", uid=" + uid);
+
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
+			
+			if (ia == null) {
+				throw new Exception("ia is null");
+			}
+			Folder f = ia.getFolder(ezEmailUtil.getSentFolderId(locale));
+			
+			if(f == null) {
+				throw new Exception("folder is null");
+			}
+			f.open(Folder.READ_ONLY);
+			Message message = ((IMAPFolder) f).getMessageByUID(uid);
+			
+			if (message == null) {
+				logger.debug(egovMessageSource.getMessage("ezEmail.lhm24", locale));
+				logger.debug("mailCancelSend ended.");
+
+				returnObj.put("message", egovMessageSource.getMessage("ezEmail.lhm24", locale));
+				returnObj.put("status", "error");
+				returnObj.put("code", -1);
+
+				return returnObj;
+			}
+			String from = ((InternetAddress)message.getFrom()[0]).getAddress();
+			logger.debug("from=" + from);
+			
+			List<String[]> aliasAddressList = ezEmailService.getAliasAddress(mailId, userInfo.getTenantId());
+
+			boolean isUserFrom = false;
+			for (String[] address : aliasAddressList) {
+				if (address[0].equals(from)) {
+					isUserFrom = true;
+					break;
+				}
+			}
+
+			if (!isUserFrom) {
+				logger.debug(egovMessageSource.getMessage("ezEmail.lhm24", locale));
+				logger.debug("mailCancelSend ended.");
+				
+				returnObj.put("message", egovMessageSource.getMessage("ezEmail.lhm24", locale));
+				returnObj.put("status", "error");
+				returnObj.put("code", -1);
+
+				return returnObj;
+			}
+			
+			// 전체회수인 경우
+			if (pGubun.toLowerCase().equals("all") && cancelMailAddress.size() == 0) {
+				Address[] addresses = message.getAllRecipients();
+				
+				for (Address address : addresses) {
+					cancelMailAddress.add(((InternetAddress)address).getAddress());
+				}
+			}
+			
+			// 내부사용자 확인
+			List<String> innerDomainList = ezEmailUtil.getInnerDomain(userInfo.getTenantId());
+			List<String> innerAddresses = new ArrayList<String>();
+
+			for (String address : cancelMailAddress) {
+				int index = address.indexOf("@");
+				String domain = "";
+
+				if (index > -1) {
+					domain = address.substring(index + 1);
+				}
+
+				for (int i = 0; i < innerDomainList.size(); i++) {
+					if (domain.equals(innerDomainList.get(i))) {
+						innerAddresses.add(address);
+						break;
+					}
+				}
+			}
+
+			// 내부사용자 없을 경우 리턴
+			if (innerAddresses.size() == 0) {
+				logger.debug(egovMessageSource.getMessage("ezEmail.lhm27", locale));
+				logger.debug("mailCancelSend ended.");
+				
+				returnObj.put("message", egovMessageSource.getMessage("ezEmail.lhm27", locale));
+				returnObj.put("status", "error");
+				returnObj.put("code", -1);
+
+				return returnObj;
+			}
+
+			ezEmailUserAdminService.setMailCancelSend(userInfo.getTenantId(), userInfo.getPrimary(), ((MimeMessage)message).getMessageID(), mailId, message.getSubject(), innerAddresses, locale);
+			
+			f.close(true);
+			returnObj.put("message", "success");
+			returnObj.put("status", "ok");
+			returnObj.put("code", 0);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			returnObj.put("status", "fail");
+			returnObj.put("code", 1);
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
+		}
+		
+		logger.debug("MOBILE G/W MAIL mMailCancel ended.");
+		
+		return returnObj;
+	}
+	
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezemail/sign/users/{userId:.+}",
 			method = RequestMethod.GET,
