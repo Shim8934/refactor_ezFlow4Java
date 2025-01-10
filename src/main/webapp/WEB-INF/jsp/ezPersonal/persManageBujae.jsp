@@ -19,6 +19,11 @@
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}">
 		<!-- time picker-->
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/timeControls/jquery.timepicker.css')}" />
+		<style type="text/css">
+			input {
+				width: 144px;
+			}
+		</style>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>
 		<script type="text/javascript">
 			var deptid = "${deptID}";
