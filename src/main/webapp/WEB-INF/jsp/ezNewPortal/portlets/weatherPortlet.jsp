@@ -265,29 +265,29 @@
 			<div class="layDiv">
 				<dl class="portlet_title sortablePortlet">
 					<dt class="portletText" style = "width : 53% !important;"><c:out value='${portletName }'/></dt>
-					<select id = "countryList" class = "selectCountry setWeatherEventHandler">
-						<!-- 한국 -->
-						<option value = '1'><spring:message code = 'weather.nation1' /></option>
-						<!-- 미국 -->
-						<option value = '2'><spring:message code = 'weather.nation2' /></option>
-						<!-- 일본 -->
-						<c:if test = "${ useJP eq 'YES' }">
-						<option value = "${ codeJP }"><spring:message code = 'weather.nation3' /></option>
-						</c:if>
-						<!-- 중국 -->
-						<c:if test = "${ useCN eq 'YES' }">
-						<option value = "${ codeCN }"><spring:message code = 'weather.nation4' /></option>
-						</c:if>
-						<!-- 베트남 -->
-						<c:if test = "${ useVN eq 'YES' }">
-						<option value = "${ codeVN }"><spring:message code = 'weather.nation5' /></option>
-						</c:if>
-						<!-- 인도네시아 -->
-						<c:if test = "${ useID eq 'YES' }">
-						<option value = "${ codeID }"><spring:message code = 'weather.nation6' /></option>
-						</c:if>
-					</select>
 					<dd class="portletPlus">
+						<select id = "countryList" class = "weatherSelect selectCountry setWeatherEventHandler" style="margin-right: 10px;">
+							<!-- 한국 -->
+							<option value = '1'><spring:message code = 'weather.nation1' /></option>
+							<!-- 미국 -->
+							<option value = '2'><spring:message code = 'weather.nation2' /></option>
+							<!-- 일본 -->
+							<c:if test = "${ useJP eq 'YES' }">
+							<option value = "${ codeJP }"><spring:message code = 'weather.nation3' /></option>
+							</c:if>
+							<!-- 중국 -->
+							<c:if test = "${ useCN eq 'YES' }">
+							<option value = "${ codeCN }"><spring:message code = 'weather.nation4' /></option>
+							</c:if>
+							<!-- 베트남 -->
+							<c:if test = "${ useVN eq 'YES' }">
+							<option value = "${ codeVN }"><spring:message code = 'weather.nation5' /></option>
+							</c:if>
+							<!-- 인도네시아 -->
+							<c:if test = "${ useID eq 'YES' }">
+							<option value = "${ codeID }"><spring:message code = 'weather.nation6' /></option>
+							</c:if>
+						</select>
 						<select id="cityList" class="weatherSelect setWeatherEventHandler">
 						</select>
 					</dd>
