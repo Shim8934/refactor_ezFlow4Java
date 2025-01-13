@@ -1478,6 +1478,9 @@
 			        OpenAlertUI(pAlertContent);
 			        JiJungBeBuDisable();
 			    }
+			    else {
+                    OpenAlertUI("<spring:message code='ezApprovalG.t632'/>");
+                }
 			}
 		
 			function btnReAssign_onclick() {
