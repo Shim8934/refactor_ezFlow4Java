@@ -909,6 +909,7 @@
 	        </script>
 		    <script type="text/javascript">
 		        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 395 + "PX";
+				mobileDistinction();
 		    </script>
 	    </form>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
