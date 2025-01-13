@@ -2520,14 +2520,12 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			insert("EzCommonDAO.insertDotNetTotalNotificationConfig", map);
 		}
 	}
-
+	
+	// 2025-01-13 유길상 - 일본어 다국어처리 모두 진행중으로 변경되어 있는 것 수정 진행 추후 삭제 예정
 	public void updateInProcessJpCodeName3() {
-		List<String> codeList= (List<String>) list("EzCommonDAO.selectInProcessJpCodeName3");
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("NAME3","進行中");
-		for (String code : codeList) {
-			map.put("CODE1",code);
-			update("EzCommonDAO.updateInProcessJpCodeName3",map);
+		List<HashMap<String,Object>> codeList= (List<HashMap<String,Object>>) list("EzCommonDAO.selectInProcessJpCodeName3");
+		for (Map<String, Object> code : codeList) {
+			update("EzCommonDAO.updateInProcessJpCodeName3",code);
 		}
 	}
 
