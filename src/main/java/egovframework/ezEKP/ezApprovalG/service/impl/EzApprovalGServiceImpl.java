@@ -27738,6 +27738,26 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
         String[] contIDArr = containerID.replace(" ", "").replace("\'", "").split(",");
 		Document listXML = commonUtil.convertStringToDocument(listString);
+        
+        //문서첨부 리스트헤더와 구분
+        if(!approvalFlag.equals("G") && !searchStatus.equals("DOCATT") && !containerID.equals("ADMIN")){
+            NodeList rowNodes = listXML.getElementsByTagName("ROW");
+            if (rowNodes.getLength() > 0) {
+                Node firstRow = rowNodes.item(0);
+                NodeList childNodes = firstRow.getChildNodes();
+                boolean SNRemove = false;
+                for (int i = 0; i < childNodes.getLength(); i++) {
+                    Node child = childNodes.item(i);
+                    if ("COLNAME".equals(child.getNodeName()) && "SN".equals(child.getTextContent())) {
+                        SNRemove = true;
+                        break;
+                    }
+                }
+                if (SNRemove) {
+                    firstRow.getParentNode().removeChild(firstRow);
+                }
+            }
+        }
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_MULTIDATALANG", strMultiData);
