@@ -35319,4 +35319,16 @@
             COMPANYID = #companyID#
     </delete>
     
+    <select id="EzApprovalG.getPublicityYN" parameterClass="Map" resultClass="String">
+		SELECT
+			PUBLICITYYN 
+		FROM
+			TBL_EXPENDAPRDOCINFO
+		WHERE
+			DOCID = #docId#
+		AND
+			COMPANYID = #companyId#
+		AND
+			TENANT_ID = #tenantId#
+	</select>
 </sqlMap>

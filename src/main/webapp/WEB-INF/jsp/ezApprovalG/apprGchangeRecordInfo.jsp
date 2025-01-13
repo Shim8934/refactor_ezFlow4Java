@@ -380,9 +380,11 @@
             return;
         }
         
-        if (regDate.value.trim() == "" || regTime.value.trim() == "") {
-            alert("<spring:message code='ezApprovalG.t1045'/>");
-            return;
+        if (g_bRecAdmin) {
+            if (regDate.value.trim() == "" || regTime.value.trim() == "") {
+                alert("<spring:message code='ezApprovalG.t1045'/>");
+                return;
+            }
         }
 
         if (ChangeCabinetInfo()) {

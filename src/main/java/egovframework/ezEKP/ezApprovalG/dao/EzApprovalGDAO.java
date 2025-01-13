@@ -4027,4 +4027,9 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public void deleteDistributeInfo(Map<String, Object> map) throws Exception {
 		delete("EzApprovalG.deleteDistributeInfo", map);
 	}
+	
+	/* 2024-12-18 한태훈 - 전자결재G > 열람권한 정보 가져오기 */
+	public String getPublicityYN(Map<String, Object> map) {
+		return (String) select("EzApprovalG.getPublicityYN", map);
+	}
 }

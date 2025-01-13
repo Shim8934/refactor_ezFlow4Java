@@ -310,7 +310,7 @@ function attachFile_Preview(filePath, fileOrgName) {
 		},
 		success : function(result){
 			if (result != "") {
-				window.open(result, '_blank', getOpenWindowfeature(1100, 950));
+				window.open(result, '_blank', GetOpenWindowfeature(1100, 950));
 			} else {
 				alert(strLang223);
 			}

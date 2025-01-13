@@ -2488,32 +2488,91 @@
 				if (!checkIsValidReq(lv)) {
 					return;
 				}
-
-				extractDocID(lv);
-
+				
+				attachedDocList = [];
+				
+				var returnObj = extractDocID(lv);
+				var returnObjStatus = returnObj.status;
+				
+				if (returnObjStatus != null && returnObjStatus == "error") {
+					alert("<spring:message code='ezApprovalG.attachDraft.hth01'/>");
+					return;
+				}
+				
+				var selectedDocList = returnObj.selectedDocList; 
+				var notWriterList = returnObj.notWriterList;
+				var securityDocList = returnObj.securityDocList;
+				var noRightDocList = returnObj.noRightDocList;
+				var aprlineRightDocIds = returnObj.aprlineRightDocList;
+				var separateDocList = returnObj.separateDocList;
+				
+				if (returnObj.successDocIdList.length == 0) {
+					alert("<spring:message code='ezApprovalG.attachDraft.hth02'/>");
+					return;
+				}
+				
+				attachedDocList = returnObj.successDocIdList;
+				
 				if (typeof parent != "undefined") {
 					parent.left.attachedDocList = attachedDocList;
 				}
-
-				if (useDraftAll === "YES") {
-					let draftInfo = [
-						{
-							"msg" : "단건기안",
-							"rtnF" : "attachedDraft_single",
-							"fl" : "parent",
-							"css" : "margin : 0 3px 0 3px;"
-						},
-						{
-							"msg" : "일괄기안",
-							"rtnF" : "attachedDraft_all",
-							"fl" : "parent",
-							"css" : "margin : 0 3px 0 3px;"
-						}
-					];
-
-					OpenAlertUI("<spring:message code = 'ezApprovalG.record.attachedDraftMsg1' />", draftInfo, null, true);
+				
+				if (selectedDocList.length != returnObj.successDocIdList.length) {
+					var exceptDocInfoStr = "";
+					
+					if (notWriterList.length > 0) {
+						exceptDocInfoStr += "<spring:message code='ezApprovalG.attachDraft.hth03'/>" + "(" + notWriterList.length + "<spring:message code='ezApprovalG.attachDraft.hth08'/>" + "), ";
+					}
+					
+					if (securityDocList.length > 0) {
+						exceptDocInfoStr += "<spring:message code='ezApprovalG.attachDraft.hth04'/>" + "(" + securityDocList.length + "<spring:message code='ezApprovalG.attachDraft.hth08'/>" + "), ";
+					}
+					
+					if (noRightDocList.length > 0) {
+						exceptDocInfoStr += "<spring:message code='ezApprovalG.attachDraft.hth05'/>" + "(" + noRightDocList.length + "<spring:message code='ezApprovalG.attachDraft.hth08'/>" + "), ";
+					}
+					
+					if (aprlineRightDocIds.length > 0) {
+						exceptDocInfoStr += "<spring:message code='ezApprovalG.attachDraft.hth06'/>" + "(" + aprlineRightDocIds.length + "<spring:message code='ezApprovalG.attachDraft.hth08'/>" + "), ";
+					}
+					
+					if (separateDocList.length > 0) {
+						exceptDocInfoStr += "<spring:message code='ezApprovalG.attachDraft.hth07'/>" + "(" + separateDocList.length + "<spring:message code='ezApprovalG.attachDraft.hth08'/>" + "), ";
+					}
+					
+					exceptDocInfoStr = exceptDocInfoStr.slice(0, -2);
+					
+					exceptDocInfoStr += "<spring:message code='ezApprovalG.attachDraft.hth09'/>";
+					
+					OpenInformationUI(exceptDocInfoStr, openAttachtDraft);
 				} else {
-					attachedDraft_single();
+					openAttachtDraft(true);
+				}
+				
+			}
+			
+			function openAttachtDraft(rtn) {
+				if (rtn) {
+					if (useDraftAll === "YES") {
+						let draftInfo = [
+							{
+								"msg" : "<spring:message code='ezApprovalG.attachDraft.hth10'/>",
+								"rtnF" : "attachedDraft_single",
+								"fl" : "parent",
+								"css" : "margin : 0 3px 0 3px;"
+							},
+							{
+								"msg" : "<spring:message code='ezApprovalG.attachDraft.hth11'/>",
+								"rtnF" : "attachedDraft_all",
+								"fl" : "parent",
+								"css" : "margin : 0 3px 0 3px;"
+							}
+						];
+
+						OpenAlertUI("<spring:message code = 'ezApprovalG.record.attachedDraftMsg1' />", draftInfo, null, true);
+					} else {
+						attachedDraft_single();
+					}
 				}
 			}
 
@@ -2530,13 +2589,100 @@
 			}
 
 			function extractDocID(lv) {
-				attachedDocList = [];
 				let selectedDocList = lv.GetSelectedRows();
-				let docListCnt = selectedDocList.length;
-
-				for (var cnt = 0; cnt < docListCnt; cnt++) {
-					attachedDocList.push(selectedDocList[cnt].getAttribute("data1"));
+				var returnObj = {};
+				returnObj.selectedDocList = lv.GetSelectedRows();
+				returnObj.notWriterList = [];
+				returnObj.securityDocList = [];
+				returnObj.noRightDocList = [];
+				returnObj.aprlineRightDocList = [];
+				returnObj.separateDocList = [];
+				returnObj.successDocIdList = [];
+				returnObj.status = "ok";
+				// 문서 기안자가 아닌 경우 제외
+				var passedDocInfo1 = [];
+				for (let i = 0; i < selectedDocList.length; i++) {
+					let docId = selectedDocList[i].getAttribute("data1");
+					let writerId = selectedDocList[i].getAttribute("data3");
+					if (writerId != UserID) {
+						returnObj.notWriterList.push(selectedDocList[i]);
+					} else {
+						passedDocInfo1.push(selectedDocList[i]);
+					}
+					
 				}
+				
+				if (passedDocInfo1.length == 0) {
+					return returnObj;
+				}
+				
+				// 분리첨부 문서인 경우 제외
+				var passedDocInfo2 = [];
+				for (let j = 0; j < passedDocInfo1.length; j++) {
+					if (passedDocInfo1[j].getAttribute("DATA8") != "00") { // 문서 내용이 없다면 제외.
+						returnObj.separateDocList.push(passedDocInfo1[j]);
+					} else {
+						passedDocInfo2.push(passedDocInfo1[j]);
+					}
+				}
+				
+				if (passedDocInfo2.length == 0) {
+					return returnObj;
+				}
+				
+				// 보안결재 기간이 지나지 않은 보안결재 문서인 경우 제외
+				var passedDocInfo3 = [];
+				var todayStr = GetTodayDate();
+				for (let k = 0; k < passedDocInfo2.length; k++) {
+					if (passedDocInfo2[k].getAttribute("DATA14") != "" && passedDocInfo2[k].getAttribute("DATA14") >= todayStr) {
+						returnObj.securityDocList.push(passedDocInfo2[k]);					
+					} else {
+						passedDocInfo3.push(passedDocInfo2[k]);
+					}
+				}
+				
+				if (passedDocInfo3.length == 0) {
+					return returnObj;
+				}
+				
+				// 열람권한이 없거나, 열람권한이 결재선 열람으로 되어있는 문서 제외 (열람권한이 없는 경우는 사실상 기안자가 아닌 조건에서 제외됨.)
+				var checkDocRightIds = [];
+				for (let l = 0; l < passedDocInfo3.length; l++) {
+					checkDocRightIds.push(passedDocInfo3[l].getAttribute("DATA1"));
+				}
+				
+				var requestData = {
+					docIdList : checkDocRightIds
+				}
+				
+				var passedDocInfo4 = [];
+				$.ajax({
+				    url: '/ezApprovalG/checkDocRightForAttachApr.do',
+				    type: 'GET',
+				    async:false,
+				    dataType: 'json',
+				    traditional: true,
+				    data: requestData,
+				    success: function(result) {
+				    	if (result.status == "ok") {
+				    		returnObj.noRightDocList = result.noRightDocIds;
+				    		returnObj.aprlineRightDocList = result.aprlineRightDocIds;
+					    	passedDocInfo4 = result.hasRightDocIds;	
+				    	} else {
+				    		returnObj.status = "error";
+				    		return returnObj;
+				    	}
+				    },
+				    error: function(xhr, status, error) {
+				        console.error('Request failed:', error);
+				        returnObj.status = "error";
+			    		return returnObj;
+				    }
+				});
+				
+				returnObj.successDocIdList = passedDocInfo4;
+
+				return returnObj;
 			}
 
 			function attachedDraft_single() {

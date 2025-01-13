@@ -13644,4 +13644,33 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				.header("Vary", "Cookie")
 				.body("success");
 	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/ezApprovalG/checkDocRightForAttachApr.do", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
+	@ResponseBody
+	public JSONObject checkDocRightForAttachApr(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("checkDocRightForAttachApr started");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		JSONObject result = new JSONObject();
+		try {
+			String[] docIdList = request.getParameterValues("docIdList");
+			String accessInfo = ezCommonService.getTenantConfig("UserInfo_ApprovalG_VIEW", userInfo.getTenantId());
+			String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+			Map<String, Object> docRightInfo = ezApprovalGService.getDocRightInfoForAttachApr(docIdList, userInfo.getId(), userInfo.getDeptID(), userInfo.getRollInfo(), accessInfo, approvalFlag, userInfo.getPrimary(), userInfo.getCompanyID(), userInfo.getTenantId());
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("noRightDocIds", docRightInfo.get("noRightDocIds"));
+			result.put("aprlineRightDocIds", docRightInfo.get("aprlineRightDocIds"));
+			result.put("hasRightDocIds", docRightInfo.get("hasRightDocIds"));
+			
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		logger.debug("checkDocRightForAttachApr ended");
+		return result;
+	}
 }

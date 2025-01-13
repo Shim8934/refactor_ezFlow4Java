@@ -540,7 +540,7 @@ var SurveyItem = function() {
 				}
 
 				tdSurveyId.textContent = itemList[i]["surveyId"];
-				tdPeriod.textContent = itemList[i]["startDate"].substring(0, 10) + "~" + endDateStr;
+				tdPeriod.textContent = itemList[i]["startDate"].substring(0, 10) + " ~ " + endDateStr;
 				
 				tdElmt3.textContent  = itemList[i]["title"];
 				tdElmt4.textContent  = itemList[i]["creatorName"];

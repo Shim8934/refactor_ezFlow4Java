@@ -69,7 +69,7 @@
         <c:if test="${isCrossBrowser != true}">
         	<script type="text/javascript" src="${util.addVer('/js/Kaoni_ActiveX.js')}"></script>
         </c:if>
-        <c:if test="${useHWP eq 'YES' and useHwpDownSecurity eq 'Y' and approvalFlag eq 'G' }">
+        <c:if test="${useHWP eq 'YES' and useHwpDownSecurity eq 'Y' and approvalFlag eq 'G'}">
 	    	<script type="text/javascript" src="${webHWPUrl}js/hwpctrlapp/utils/util.js"></script>
 			<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/hwpCtrlApp.js')}"></script>
     		<script type="text/javascript" src="${webHWPUrl}js/webhwpctrl.js"></script>
@@ -245,11 +245,8 @@
         + "</tr></thead></table></li></a>";
 
 	    window.onload = function () {
-	    	
-	    	// useHwpDownSecurity가 Y일 때만 Whwp api 호출. 전자결재 일반버전에서는 useHwpDownSecurity의 값에 상관없이 Whwp api 호출하지 않음.
-        	if (useHWP == "YES" && useHwpDownSecurity == "Y" && approvalFlag == "G") {
-        		HwpCtrl = BuildWebHwpCtrl("hwpctrl", "${webHWPUrl}", function () {isHwpCtrlOpen = true;});
-        	}
+	    	/* 2025-01-08 홍승비 - 전자결재 메일 발송 > 웹한글문서 메일로 전송 시, 웹한글기안기의 로딩 순서를 보장하도록 수정 */
+	    	// (BuildWebHwpCtrl() 함수 호출부를 Editor_Complete() 내부로 변경)
 	    	
 	        if (!CrossYN()) {
 	            document.all.EzHTTPTrans.SetBigLang = "${userLang}" == "1" ? 1 : 0;
@@ -1105,7 +1102,22 @@
 	
 	    /* 2018-12-10 홍승비 - IE에서 게시판, 커뮤니티 게시물 메일발송 시 다국어 폰트 적용 */
 	    var pOrgAttachListXml = "";
+	    var hwpChk = true;
 	    function Editor_Complete() {
+			/* 2025-01-08 홍승비 - 전자결재 메일 발송 > 웹한글문서 메일로 전송 시, 웹한글기안기의 로딩 순서를 보장하도록 수정 */
+			// Editor_Complete() 함수 호출 시점은 iframe 태그 내부 "/ezEditor/selectEditor.do" 페이지의 로딩 시점에 의존함
+			// useHwpDownSecurity가 Y일 때만 Whwp api 호출. 전자결재 일반버전에서는 useHwpDownSecurity의 값에 상관없이 Whwp api 호출하지 않음.
+			<c:if test="${useHWP eq 'YES' and useHwpDownSecurity eq 'Y' and approvalFlag eq 'G'}">
+				if (hwpChk) {
+					// BuildWebHwpCtrl() 함수의 완료 후 콜백으로 다시 Editor_Complete()을 호출하여, 반드시 웹한글기안기 로딩이 끝난 시점에 한번 더 동작하도록 함
+                    HwpCtrl = BuildWebHwpCtrl("hwpctrl", "${webHWPUrl}", function () {
+	                    isHwpCtrlOpen = true;
+	                    hwpChk = false;
+	                    Editor_Complete();}); // Editor_Complete() 함수 내부에서 다시 호출된 Editor_Complete() 함수가 아래의 return 코드 이후 동작을 진행
+                    return; // 반드시 return이 필요 (최초에 호출된 Editor_Complete()를 즉시 종료하기 위함으로, 중복 동작을 방지)
+                }
+			</c:if>
+	        
 	        if (initFlag == false) {
 	            if (Org_cmd == "board") {
 	                GetBoardItemInfo_New('<c:out value="${boardID}"/>', '<c:out value="${itemID}"/>', '<c:out value="${retransType}"/>', g_font);
