@@ -13,7 +13,8 @@
 		<script type="text/javascript" language="javascript">
 			var pBoardID = "<c:out value='${boardID}'/>";
 			var isAllGroupBoard = "${isAllGroupBoard}";
-	    	
+	    	var save_check = false;
+			
 	    	$(document).ready(function(){
 	    		if (navigator.userAgent.indexOf('Firefox') != -1) {
 	                document.getElementById("div1").style.margin = "15px";
@@ -21,6 +22,9 @@
 	    	});
 	    	
 	    	function Save_Acl() {
+				if (save_check) return;
+				save_check = true;
+				
 	    		var objRoot, objNode, radio;
 	            radio = document.getElementsByName("radioAcl");
 
@@ -33,6 +37,7 @@
 	            $.ajax({
 	            	type : "POST",
 	            	dataType : "text",
+					async: false,
 	            	url : "/admin/ezBoard/setUnderBoardAcl.do",
 	            	data : {
 	            		boardID : pBoardID,
@@ -44,6 +49,7 @@
 		                window.close();
 	            	},
 	            	error : function(error){
+						save_check = false;
 	            		alert("Error : " + error);
 	            	}
 	            });
