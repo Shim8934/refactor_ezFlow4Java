@@ -88,6 +88,9 @@
 		    
 			window.onresize = function () {
 				document.getElementById("EdtorSize").style.height = document.body.clientHeight - 340 + "PX";
+				document.getElementById("message").style.height = document.body.clientHeight - 340 + "PX";
+				
+				mobileDistinction();
 			}
 			
 	    	function FieldsAvailable() {
@@ -389,6 +392,16 @@
 		        return str;
 		    }
 		    
+			function mobileDistinction() {
+   				var  userAgent = navigator.userAgent.toLowerCase();
+				
+				if (/iphone|ipod|ipad|android.*mobile/i.test(userAgent) || /tablet|ipad|android/i.test(userAgent) || navigator.maxTouchPoints > 4) {
+					if (window.innerWidth > window.innerHeight) {
+						document.getElementById("EdtorSize").style.height = 436 + "PX";
+						document.getElementById("message").style.height = 436 + "PX";
+					}
+				}
+			}
 		</script>
 	</head>
 	
@@ -543,6 +556,7 @@
 
 		<script type="text/javascript">
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
+			mobileDistinction(); 
 		</script>
 	</body>
 </html>

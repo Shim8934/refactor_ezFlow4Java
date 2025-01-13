@@ -496,6 +496,8 @@
         	
         	// resize시 autoComplete창이 계속 유지되어서 display 처리
         	$('.ui-autocomplete-input').autocomplete("close");
+			
+			mobileDistinction();
 	    }
 	    function KeEventControl(obj) {
 	        useragt = navigator.userAgent.toUpperCase();
@@ -2252,6 +2254,16 @@
 			obj.className = mode[className].switch;
 			$(obj).siblings('.viewtxtScroller').css('max-height', mode[className].height);
 	    }
+		
+		function mobileDistinction() {
+  				var  userAgent = navigator.userAgent.toLowerCase();
+			
+			if (/iphone|ipod|ipad|android.*mobile/i.test(userAgent) || /tablet|ipad|android/i.test(userAgent) || navigator.maxTouchPoints > 4) {
+				if (window.innerWidth > window.innerHeight) {
+					document.getElementById("EdtorSize").style.height = 436 + "PX";
+				}
+			}
+		}
 	    </script>
         <c:if test="${isCrossBrowser != true}">
         <script language="javascript" for="EzHTTPTrans" event="AttachAddFile(filename)">  
