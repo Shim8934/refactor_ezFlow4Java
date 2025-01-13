@@ -56,6 +56,9 @@
 	    	.sub_iconLNB.tree_plus, .sub_iconLNB.tree_minus {
 	    		margin-top : 0px !important;
 	    	} 
+	    	#lvinfofrequencylist{
+	    		border: 1px solid #ddd !important;
+	    	}
 	    </style>
 	    <script type="text/javascript">
 	    	var approvalFlag = "<c:out value ='${approvalFlag}'/>";
@@ -249,6 +252,11 @@
 			var upperDeptName = "<c:out value ='${upperDeptName}'/>";
 
 	        $(function () {
+	        	if (navigator.maxTouchPoints > 4) {
+	        		document.getElementById("tblwrap").style.height = (document.documentElement.clientHeight - 130) + 'px';
+	        		document.getElementById("tblwrap").style.overflowY = 'auto';
+	        	}
+	        	
 	        	if (document.getElementById("AprSecurity").checked){
 	        		$("#idDatepicker").attr('disabled',false);
 	        	} else {
@@ -308,7 +316,9 @@
 	            GetDocInfo(); 
 	            AprTypeXML = loadXMLString(tempAprTypeXML);
 	            ChangeTab(document.getElementById("1tab1"));
+	            
 	            document.getElementById('textUser').focus();            
+	            
 	            if (SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES/APRTYPE")[0] == null) {
 	                document.getElementById("deptaddbtn").style.display = "none";
 	            }
@@ -2986,9 +2996,10 @@
 				</c:if>
 	        </div>
 	    </div>
+	    <div id="tblwrap">
 	    <div id="Approvallist">
 	        <!-- 결재선 -->
-	        <div id="Lineinfo" style="width: 100%; height: 597px;">
+	        <div id="Lineinfo" style="width: 100%;">
 	            <table>
 	                <tr>
 	                    <td style="vertical-align: top">
@@ -3127,13 +3138,13 @@
 	                                  
 	                                        <c:if test="${approvalFlag == 'G' }">
 		                                        <div class="border_gray" style="margin-top:7px">
-		                                        <div id="APRLINE" style="Width: 723px; Height: 488px; overflow: auto; overflow-x:hidden; border: 0; font-size: 9pt; margin: auto; padding-top: 0px;">
+		                                        <div id="APRLINE" style="Width: 723px; Height: 486px; overflow: auto; overflow-x:hidden; border: 0; font-size: 9pt; margin: auto; padding-top: 0px;">
 		                                        </div>
 		                                        </div>
 	                                        </c:if>
 	                                        <c:if test="${approvalFlag == 'S' }">
 		                                        <div class="border_gray" style="margin-top:7px; margin-left:4px;">
-		                                        <div id="APRLINE" style="Width: 717px; Height: 518px; overflow: auto; overflow-x:hidden; border: 0; font-size: 9pt; margin: 0px 1px 1px 1px; padding-top: 0px;">
+		                                        <div id="APRLINE" style="Width: 717px; Height: 515px; overflow: auto; overflow-x:hidden; border: 0; font-size: 9pt; margin: 0px 1px 1px 1px; padding-top: 0px;">
 	                                        	</div>
 	                                        	</div>
                                         	</c:if>
@@ -3590,7 +3601,7 @@
 					                </tr>
 					                <tr>
 					                    <td colspan="2">
-					                        <div class="border_gray">
+					                        <div class="">
 					                            <div id="infofrequencylist" style="border: 0px; HEIGHT: 155px; overflow-x: hidden; overflow-y: auto; margin: 1px 1px 1px 1px; padding-top: 0px;"></div>
 					                        </div>
 					                    </td>
@@ -3605,7 +3616,7 @@
 	    
 	    <!-- 문서정보 -->
 	    <c:if test="${approvalFlag eq 'G' }">
-		    <div id="Docinfo" style="border: 0px solid #dbdbda; width: 100%; height: 597px; display: none; overflow: auto;">		
+		    <div id="Docinfo" style="border: 0px solid #dbdbda; width: 100%; height: 597px; display: none; overflow: auto; padding-bottom: 30px;">		
 		        <h2 class="h2_dot" style="margin-left: 5px;"><spring:message code='ezApprovalG.t1204'/></h2>
 		        <table class="content" style="margin-left: 3px;">
 		            <tr>
@@ -3774,7 +3785,7 @@
 	    </c:if>
 	    
 	    <c:if test="${approvalFlag eq 'S' }">
-	    	<div id="Docinfo" style="width: 1163px; height: 594px; display: none; padding-top:3px">
+	    	<div id="Docinfo" style="width: 1163px; height: 594px; display: none; padding-top:3px; padding-bottom: 30px;">
         		<td style="border: 0px solid red; height: 580px; width: 390px; margin-left: 5px; vertical-align: top">
 		            <h2 class="h2_dot"><spring:message code='ezApproval.t334'/></h2>
 		            <table class="content" style="margin-top:4px">
@@ -3871,7 +3882,7 @@
 	    </c:if>
 	    <c:if test="${approvalFlag eq 'S' }">
 <!-- 	    회람 -->
-	    	<div id="Circulation" style="width: 1110px; height: 597px; display: none;">
+	    	<div id="Circulation" style="width: 1110px; height: 597px; margin-bottom: 5px; display: none;">
         		<table>
 			        <tr>
 			            <td style="vertical-align: top">
@@ -3966,7 +3977,7 @@
 	    </c:if>
 	    <!-- 공람 -->
 	    <c:if test="${approvalFlag eq 'G'}">
-	    	<div id="Circulation" style="width: 1110px; height: 597px; display: none;">
+	    	<div id="Circulation" style="width: 1110px; height: 597px; margin-bottom: 5px; display: none;">
         		<table>
 			        <tr>
 			            <td style="vertical-align: top">
@@ -4073,7 +4084,7 @@
 	    </c:if>
 	    <c:if test="${approvalFlag eq 'G' }">
 			<!-- 비전자문서 정보 -->
-			<div id="NonElecRecInfo" style="width: 100%; height: 597px; display: none;">
+			<div id="NonElecRecInfo" style="width: 100%; height: 597px; margin-bottom: 5px; display: none;">
 				<c:if test="${guBun eq '6'}">
 				<h2 class="h2_dot"><spring:message code='ezApprovalG.t1018'/></h2><!-- 기록물철 정보 -->
 				<table style="width:100%" class="content">
@@ -4264,6 +4275,7 @@
 			    </table>
 			</div>
 		</c:if>
+		</div>
 	    <br />
 	    <div style="text-align: center;" id="orgbtnArea">
 	        <table style="width: 100%">
