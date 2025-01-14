@@ -98,9 +98,9 @@
 					var longSide = window.innerWidth > window.innerHeight ? window.innerWidth : window.innerHeight;
 					var shortSide = window.innerWidth < window.innerHeight ? window.innerWidth : window.innerHeight;
 					
-					if(window.orientation == 0 || window.orientation == 180) {
+					if (window.orientation == 0 || window.orientation == 180) {
 						var ratio = longSide / document.body.clientHeight;
-					} else if(orientation == 90 || orientation == -90) {
+					} else if (window.orientation == 90 || window.orientation == -90) {
 						var ratio = shortSide / document.body.clientHeight;
 					}
 					
