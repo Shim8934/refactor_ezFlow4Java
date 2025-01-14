@@ -3304,7 +3304,7 @@ public class EzEmailMailListController {
 			pageStartNum = pageStartNum > pageMax ? pageMax : pageStartNum;
 			
 			JSONArray array = ezEmailService.getApprMailList(tenantId, companyId, type, userId, lang, pageStartNum,	listCount, domainName);
-			JSONArray array2 = ezEmailService.setUTCtoUserTime(array, userInfo.getOffset());
+			JSONArray array2 = ezEmailService.setUTCtoUserTime(array, userInfo.getOffset(), tenantId);
 			resultArry = ezEmailService.setHref(array2);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
@@ -3367,7 +3367,7 @@ public class EzEmailMailListController {
 			pageStartNum = pageStartNum > pageMax ? pageMax : pageStartNum;
 			
 			JSONArray array = ezEmailService.getApprMailList(tenantId, companyId, type, userId, lang, pageStartNum,	listCount, domainName);
-			JSONArray array2 = ezEmailService.setUTCtoUserTime(array, userInfo.getOffset());
+			JSONArray array2 = ezEmailService.setUTCtoUserTime(array, userInfo.getOffset(), tenantId);
 			JSONArray array3 = ezEmailService.setHref(array2);
 			resultArry = ezEmailService.setStateByLocale(array3, locale);
 		} catch (Exception e) {
@@ -3436,7 +3436,7 @@ public class EzEmailMailListController {
 			pageStartNum = pageStartNum > pageMax ? pageMax : pageStartNum;
 			
 			JSONArray array = ezEmailService.getApprMailList(tenantId, companyId, type, vUserId, lang, pageStartNum, listCount, domainName);
-			JSONArray array2 = ezEmailService.setUTCtoUserTime(array, userInfo.getOffset());
+			JSONArray array2 = ezEmailService.setUTCtoUserTime(array, userInfo.getOffset(),tenantId);
 			JSONArray array3 = ezEmailService.setApprover(array2, locale);
 			resultArry = ezEmailService.setHref(array3);
 		} catch (Exception e) {

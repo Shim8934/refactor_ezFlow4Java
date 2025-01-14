@@ -8298,7 +8298,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 
 			// jgw 서버에서 리스트 받아오기
 			JSONArray array 	= ezEmailService.getApprMailList(tenantId, companyId, type, userCn, lang, start, end, domainName);
-			JSONArray array2 	= ezEmailService.setUTCtoUserTime(array, userInfo.getOffSet());
+			JSONArray array2 	= ezEmailService.setUTCtoUserTime(array, userInfo.getOffSet(), tenantId);
 
 			JSONArray resultArry = new JSONArray();
 			resultArry 			= ezEmailService.setHref(array2);
@@ -8367,7 +8367,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 
 			// jgw 서버에서 리스트 받아오기
 			JSONArray array 	= ezEmailService.getApprMailList(tenantId, companyId, type, userCn, lang, start, end, domainName);
-			JSONArray array2 	= ezEmailService.setUTCtoUserTime(array, userInfo.getOffSet());
+			JSONArray array2 	= ezEmailService.setUTCtoUserTime(array, userInfo.getOffSet(), tenantId);
 			JSONArray array3	= ezEmailService.setHref(array2);
 
 			JSONArray resultArry = new JSONArray();
@@ -8437,7 +8437,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			
 			// jgw 서버에서 리스트 받아오기
 			JSONArray array = ezEmailService.getApprMailList(tenantId, companyId, type, vUserId, lang, start, end, domainName);
-			JSONArray array2 = ezEmailService.setUTCtoUserTime(array, userInfo.getOffSet());
+			JSONArray array2 = ezEmailService.setUTCtoUserTime(array, userInfo.getOffSet(), tenantId);
 			JSONArray array3 = ezEmailService.setApprover(array2, locale);
 
 			JSONArray resultArry = new JSONArray();

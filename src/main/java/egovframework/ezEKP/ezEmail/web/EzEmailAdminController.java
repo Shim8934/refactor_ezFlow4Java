@@ -4254,7 +4254,7 @@ public class EzEmailAdminController {
 
 		try {
 			JSONArray array = ezEmailService.getAdminApprMailList(tenantId, companyId, type, userId, lang, pageStartNum, listCount);
-			JSONArray array2 = ezEmailService.setUTCtoUserTime(array, userInfo.getOffset());
+			JSONArray array2 = ezEmailService.setUTCtoUserTime(array, userInfo.getOffset(), tenantId);
 			JSONArray array3 = ezEmailService.setHref(array2);
 			resultArry = ezEmailService.setStateByLocale(array3, locale);
 
@@ -4318,7 +4318,7 @@ public class EzEmailAdminController {
 		JSONArray logList = new JSONArray();
 		try {
 			JSONArray array = ezEmailService.getAdminCompApprMailList(tenantId, companyId, type, userId, lang, pageStartNum, listCount);
-			JSONArray array2 = ezEmailService.setUTCtoUserTime(array, offset);
+			JSONArray array2 = ezEmailService.setUTCtoUserTime(array, offset, tenantId);
 			JSONArray array3 = ezEmailService.setHref(array2);
 			logList = ezEmailService.setStateByLocale(array3, locale);
 
@@ -4696,7 +4696,7 @@ public class EzEmailAdminController {
 		logger.debug("pageStartNum={}, listCount={}", pageStartNum, listCount);
 
 		// 로그 리스트
-		List<Map<String, String>> logList = new ArrayList<Map<String,String>>();
+		JSONArray logList = new JSONArray();
 		try {
 			logList = ezEmailService.getApprMailHistorySearchList(tenantId, companyId, lang, locale, offset, sDate, eDate, pageStartNum, listCount);
 			pageTotalCount = ezEmailService.getApprMailHistorySearchListCnt(tenantId, companyId, sDate, eDate);
