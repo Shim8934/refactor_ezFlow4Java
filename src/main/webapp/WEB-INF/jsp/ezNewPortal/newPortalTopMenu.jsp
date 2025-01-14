@@ -1893,6 +1893,12 @@
                 	mainFrame.style.position = "relative";
                 }
 			}
+			
+			var userAgent = navigator.userAgent.toLowerCase();
+			
+			if (/iphone|ipod|ipad|android.*mobile/i.test(userAgent) || /tablet|ipad|android/i.test(userAgent) || navigator.maxTouchPoints > 4) {
+				window.parent.fixLayout();
+			}
 		}
 		
 		var lastNotiPollTime = "${lastNotiPollTime}";
