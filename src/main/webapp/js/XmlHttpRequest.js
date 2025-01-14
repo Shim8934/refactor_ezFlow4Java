@@ -1141,7 +1141,7 @@ function hideLeftFrameOnResize() {
         if (!isHideLeftFrameButtonPressed) {
             var leftBtn = document.getElementsByClassName('left_btn')[0];
 
-            if (top.innerWidth < 1180) {
+            if (top.outerWidth < 1180) {
                 parent.document.getElementById("frameset").cols = "0,*";
                 leftBtn.classList.add("on");
             } else {
@@ -2377,6 +2377,6 @@ window.open = function (url, target, features) {
     } else {
         urlObj = new URL(url);
     }
-    urlObj.searchParams.set('__wwidth', top.innerWidth);
+    urlObj.searchParams.set('__wwidth', top.outerWidth);
     return originWindowOpen.call(window, urlObj.toString(), target, features);
 };
