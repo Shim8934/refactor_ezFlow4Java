@@ -255,12 +255,12 @@
 	            row += "</CELL>"
 	            row += "<CELL>";
 	            row += "<VALUE><![CDATA[";
-	            row += getNodeText(selRow.cells[2]);
+	            row += getNodeText(selRow.cells[4]);
 	            row += "]]></VALUE>";
 	            row += "</CELL>";
 	            row += "<CELL>";
 	            row += "<VALUE><![CDATA[";
-	            row += getNodeText(selRow.cells[3]);
+	            row += getNodeText(selRow.cells[5]);
 	            row += "]]></VALUE>";
 	            row += "</CELL>";
 	            row += "</ROW>";
