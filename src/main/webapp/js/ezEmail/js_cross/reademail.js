@@ -1400,7 +1400,8 @@ function removeTag(span) {
 			}
 
 			$(span.nextElementSibling).remove();
-			$(span).remove();
+            $(span.parentNode).remove();
+            $(span).remove();
 		},
 		error: function() {
 			alert(strLang321);
@@ -1410,13 +1411,23 @@ function removeTag(span) {
 
 function appendTag(tagName) {
 	var tagContainer = document.getElementById("tag_view");
+    var tagListDiv = document.createElement("div");
+    tagListDiv.className = "tag_list";
+    
 	var tagSpan = document.createElement("span");
 	tagSpan.innerText = tagName;
-	var deleteImg = document.createElement("img");
-	deleteImg.src = "/images/icon/oneline_delete.gif";
-	deleteImg.addEventListener("click", function() { removeTag(tagSpan); });
-	tagContainer.appendChild(tagSpan);
-	tagContainer.appendChild(deleteImg);
+    tagSpan.className = "tag_name";
+    tagSpan.id = "tag_name";
+    
+    var deleteSpan =  document.createElement("span");
+    deleteSpan.className = "tag_del";
+    deleteSpan.id = "tag_del";
+    
+    deleteSpan.addEventListener("click", function() { removeTag(tagSpan); });
+
+    tagListDiv.appendChild(deleteSpan);
+    tagListDiv.appendChild(tagSpan);
+    tagContainer.appendChild(tagListDiv)
 }
 
 function onEnterPreviewTagInput() {

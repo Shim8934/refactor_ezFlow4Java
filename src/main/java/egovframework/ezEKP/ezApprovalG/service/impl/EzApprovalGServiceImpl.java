@@ -9774,6 +9774,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         if (doc.getElementsByTagName("DOCNUM").item(0) != null && doc.getElementsByTagName("DOCNUM").item(0).getTextContent().length() > 0) {
             recordListVO.setDocNum(makeSearchField(doc.getElementsByTagName("DOCNUM").item(0).getTextContent().replace("\\", "\\\\")));
         }
+
+        if (doc.getElementsByTagName("SELSENDSTATUS").item(0) != null && doc.getElementsByTagName("SELSENDSTATUS").item(0).getTextContent().length() > 0) {
+            recordListVO.setSelSendStatus(makeSearchField(doc.getElementsByTagName("SELSENDSTATUS").item(0).getTextContent()));
+        }
         
         if (recordListVO.isUsePublicFlag()) {
         	String userSecurityCode = ezOrganService.getPropertyValue(recordListVO.getUserID(), "extensionAttribute6", tenantID);
@@ -9879,6 +9883,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         listCountMap.put("nowDate", recordListVO.getNowDate());
         listCountMap.put("relayFormID", recordListVO.getRelayFormID());
         listCountMap.put("joinEndReceiptPointInfo", recordListVO.getJoinEndReceiptPointInfo());
+        listCountMap.put("selSendStatus", recordListVO.getSelSendStatus());
         int docCnt = ezApprovalGDAO.getRecordListCount(listCountMap);
         
 		resultXML.append("<DOCLIST>");
@@ -33871,7 +33876,27 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		String relayFormID = config.getProperty("Relay_FormID", "");
 		map.put("v_RELAYFORMID", relayFormID);
-		
+
+        boolean usePublicFlag = true;
+        if (getIsUse("A22", "001", companyID, "1", tenantID).equals("1")) {
+            usePublicFlag = true; //보안등급 사용여부
+        } else {
+            usePublicFlag = false;
+        }
+
+        map.put("usePublicFlag", usePublicFlag);
+        if (usePublicFlag) {
+            String userSecurityCode = ezOrganService.getPropertyValue(userID, "extensionAttribute6", tenantID);
+
+            if (userSecurityCode == null || userSecurityCode.equals(" ") || userSecurityCode.equals("")) {
+                userSecurityCode = "0";
+            }
+            map.put("userSecurityCode", userSecurityCode);
+
+            String tempIsUse = getIsUse("A22", "005", companyID, "1", tenantID);
+            map.put("isUse", tempIsUse);
+        }
+        
 		Map<String, Object> result = ezApprovalGDAO.getLeftDocCountNew(map); 
 		
 		StringBuffer sb = new StringBuffer();

@@ -23,11 +23,17 @@ function SendOffer(pUserID)
 		temppUserID = pUserID;
 		temppDocID = pDocID;
 		rtnVal = SendOfferCheck(pDocID, pUserID);
-		if (rtnVal == "NORECEIPT")
-		    return;
-
-		if (!rtnVal)
-		    return;
+		if (rtnVal == "NORECEIPT") 
+			return;
+		
+		if (!rtnVal){
+			if(selSendStatusFlag && selSendStatusFlag == "N"){
+				selSendStatus = "N"
+				GetRecordList();
+				parent.frames["left"].getAprCount();
+			}
+			return;
+		}
 		
 		OpenSendOfferUI();
 	}
@@ -110,7 +116,24 @@ function SendOffer_Complete(ret) {
 
             UndoUpdateProcessYN(pDocID);
         }
-    }
+
+		var selSendStatus = "";
+		var selSendStatusElement = document.getElementById("selSendStatus");
+		if (selSendStatusElement && selSendStatusElement.style.display == "") {
+			selSendStatus = selSendStatusElement.value;
+
+			var deptSelectBox = g_sFlag === "m02" ? "rec_underDept2" : "rec_underDept";
+			var deptSelectBoxCheck = document.getElementById(deptSelectBox);
+			if ((deptSelectBoxCheck && GetSelectVal(deptSelectBox) != "default") || (!deptSelectBoxCheck && underDeptFlag === "TRUE")) {
+				selSendStatus = "";
+			}
+			GetRecordList();
+		} else if (typeof(selSendStatusFlag) != "undefined" && selSendStatusFlag == "N") {
+			selSendStatus = "N"
+			GetRecordList();
+			parent.frames["left"].getAprCount();
+		}
+	}
     else {
         UndoUpdateProcessYN(pDocID);
 

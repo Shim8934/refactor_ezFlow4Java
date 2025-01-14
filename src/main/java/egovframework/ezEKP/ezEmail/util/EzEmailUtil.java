@@ -42,6 +42,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.Spliterator;
 import java.util.TimeZone;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -49,6 +50,7 @@ import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
+import java.util.stream.StreamSupport;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
@@ -87,6 +89,7 @@ import javax.mail.util.ByteArrayDataSource;
 import javax.servlet.ServletContext;
 import javax.xml.bind.DatatypeConverter;
 
+import com.google.gson.JsonElement;
 import egovframework.let.utl.fcc.service.KlibUtil;
 import net.lingala.zip4j.exception.ZipException;
 import org.apache.commons.codec.binary.Base64;
@@ -7597,5 +7600,62 @@ public class EzEmailUtil {
 			rowNum2++;
 		}
 	}
+
+	/**
+	 *  사용자가 메일 태그를 사용하는지 확인
+	 * @param tenantId
+	 * @param userEmail
+	 * @return
+	 * @throws Exception
+	 */
+	public boolean checkUseMailTag(int tenantId,String userEmail) throws Exception {
+
+		// 메일 태그를 사용중인지 확인
+		boolean result = "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useMailTag", tenantId));
+		
+		// 메일 태그를 사용한다면 사용자가 기능을 활성화 했는지 확인
+		if (result) {
+			try {
+				logger.debug("jgw getTagConfig started.");
+
+				JgwResult jgwResult = rest.jgw().url("/jMochaEzEmail/getTagConfig").formParam("userAccount", userEmail).exchangeJgwResult();
+				logger.debug("jgw getTagConfig ended, success={}", jgwResult.succeeded());
+
+				result &= jgwResult.succeeded() && jgwResult.getResultAsJsonObject().get("enable").getAsBoolean();
+			} catch (RuntimeException e) {
+				logger.error("jgw fetch error", e);
+				result = false;
+			} catch (Exception e) {
+				logger.error("jgw fetch error", e);
+				result = false;
+			}
+		}
+		
+		return result;
+	}
+	
+	public String[] getTagList(String userEmail, String folderId, long uid) throws Exception {
+		String[] tags = null;
+		
+		JgwResult tagResult = rest.jgw().url("/jMochaEzEmail/getTagList")
+				.formParam("userAccount", userEmail)
+				.formParam("folderPath", folderId)
+				.formParam("mailUid", uid)
+				.exchangeJgwResult();
+		logger.debug("jgw getTagList result: {}", tagResult);
+
+		if (tagResult.succeeded()) {
+			Spliterator<JsonElement> tagIterator = tagResult.getResultAsJsonElement().getAsJsonArray().spliterator();
+
+			tags = StreamSupport.stream(tagIterator, false)
+					.map(jsonElement -> jsonElement.getAsJsonObject().get("name").getAsString())
+                    .toArray(String[]::new);
+		} else {
+			tags = new String[0];
+		}
+		
+		return tags;
+	}
+	
 }
 

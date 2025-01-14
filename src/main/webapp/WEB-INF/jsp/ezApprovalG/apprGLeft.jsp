@@ -412,6 +412,9 @@
 		                case "readingRecord" : 
 		                	DocManageMain(pthis.id);
 		                	break;
+						case "m96":
+							DocManageMain(pthis.id);
+							break;	
 		                default:
 		                    break;
 		            }
@@ -1103,7 +1106,11 @@
 		        try {
 		            if (PresentOpen != "DOCMANAGE" && sFlag != "readingRecord") {
 		                PresentOpen = "DOCMANAGE";
-		                window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
+						if(sFlag == "m96"){
+							window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=m01&selSendStatus=N";
+						}else{
+							window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
+						}
 		            }
 		            else {
 		                window.parent.frames["right"].g_uFlag = sFlag;
@@ -1148,6 +1155,9 @@
 							case "m14":
 		                        window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
 								break;
+							case "m96":
+								window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=m01&selSendStatus=N";
+								break;	
 							case "readingRecord" : 
 								window.parent.frames.right.document.location.href = "/ezApprovalG/readingRecord.do";
 								break;
@@ -1351,7 +1361,8 @@
 						<c:if test="${relayShowFlag eq 'Y' || howToSendOffer eq '1'}">
 							<li class="approvalG"><span class="list_text" id="APPROVAL6" onclick="setPresentValue('<spring:message code='ezApprovalG.kbh05'/>');convMain('6');"><spring:message code='ezApprovalG.kbh05'/><span id="COUNT6"></span></span></li>
 						</c:if>
-                   	</c:if>
+						<li><span class="list_text" id="m96" onclick="Open_Func(this); getAprCount();"><spring:message code='ezApprovalG.KMHG03'/><span id="COUNT96"></span></span></li>
+					</c:if>
 					<c:if test="${userSendOut == 'YES'}">
                        	<li class="approvalG"><span class="list_text" id="APPROVAL7" onclick="setPresentValue('<spring:message code='ezApprovalG.t1752'/>');convMain('7','')"><spring:message code='ezApprovalG.t1752'/><span id=COUNT7></span></span></li>
                        	<li class="approvalG"><span class="list_text" id="APPROVAL8" onclick="setPresentValue('<spring:message code='ezApprovalG.t1275'/>');convMain('8','')"><spring:message code='ezApprovalG.t1275'/></span></li>

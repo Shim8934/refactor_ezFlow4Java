@@ -6066,6 +6066,18 @@
 				   AND
 				   		TBL_RECORD.RECORDID = R.RECORDID
 			 </isEqual>
+             <isNotEmpty property="selSendStatus">
+                    Inner Join
+                        TBL_ENDRECEIPTPOINTINFO 
+                    ON
+                        TBL_ENDRECEIPTPOINTINFO.TENANT_ID  = TBL_RECORD.TENANT_ID
+                    AND
+                        TBL_ENDRECEIPTPOINTINFO.DOCID  = TBL_RECORD.DOCID
+                    AND
+                        TBL_ENDRECEIPTPOINTINFO.COMPANYID = TBL_RECORD.COMPANYID
+                    AND
+                        TBL_ENDRECEIPTPOINTINFO.DOCID IS NOT NULL
+             </isNotEmpty>    
 				   Inner Join
 				   		( Select 
 				   				ProcessDeptCode, 
@@ -6345,6 +6357,29 @@
                         AND 
                           TBL_ENDRECEIPTPOINTINFO.EXTRECEPTYN = 'Y'
                 </isEqual>
+                <isNotEmpty property="selSendStatus" prepend="AND">
+                            TBL_ENDAPRDOCINFO.DOCTYPE = '001'
+					    AND
+                            TBL_ENDRECEIPTPOINTINFO.EXTRECEPTYN = 'Y'
+                        AND
+					        TBL_ENDAPRDOCINFO.WRITERID = #userID#
+					    AND
+                            TBL_SEPERATEATTACH.SeperateAttachNo = '00'
+					    AND
+                            TBL_RECORD.RejectFlag = '0'
+                    <isEqual property="selSendStatus" compareValue="N" prepend="AND">
+                        TBL_ENDRECEIPTPOINTINFO.PROCESSYN IN ('N','T')
+					</isEqual>
+                    <isEqual property="selSendStatus" compareValue="O" prepend="AND">
+                        TBL_ENDRECEIPTPOINTINFO.PROCESSYN = 'O'
+                    </isEqual>
+                    <isEqual property="selSendStatus" compareValue="S" prepend="AND">
+                        TBL_ENDRECEIPTPOINTINFO.PROCESSYN NOT IN ('N', 'O', 'B', 'T')
+                    </isEqual>
+                    <isEqual property="selSendStatus" compareValue="B" prepend="AND">
+                        TBL_ENDRECEIPTPOINTINFO.PROCESSYN = 'B'
+                    </isEqual>
+                </isNotEmpty>	
 				<isNotEmpty property="recDeptCode" prepend="AND">
 						TBL_RECORD.ProcessDeptCode = #recDeptCode#
 				</isNotEmpty>						
@@ -13100,6 +13135,18 @@
 		AND
 			TBL_RECORD.RECORDID = R.RECORDID
   		</isEqual>
+        <isNotEmpty property="selSendStatus">
+        Inner Join
+            TBL_ENDRECEIPTPOINTINFO
+        ON
+            TBL_ENDRECEIPTPOINTINFO.TENANT_ID  = TBL_RECORD.TENANT_ID
+        AND
+            TBL_ENDRECEIPTPOINTINFO.DOCID  = TBL_RECORD.DOCID
+        AND
+            TBL_ENDRECEIPTPOINTINFO.COMPANYID = TBL_RECORD.COMPANYID
+        AND
+            TBL_ENDRECEIPTPOINTINFO.DOCID IS NOT NULL
+        </isNotEmpty>	    
         Inner Join
 	        ( Select
 		        ProcessDeptCode,
@@ -13376,6 +13423,29 @@
 	    AND
 	    	TBL_ENDRECEIPTPOINTINFO.EXTRECEPTYN = 'Y'
 	</isEqual>
+        <isNotEmpty property="selSendStatus" prepend="AND">
+                TBL_ENDAPRDOCINFO.DOCTYPE = '001'
+            AND
+                TBL_ENDRECEIPTPOINTINFO.EXTRECEPTYN = 'Y'
+            AND
+                TBL_ENDAPRDOCINFO.WRITERID = #userID#
+            AND
+                TBL_SEPERATEATTACH.SeperateAttachNo = '00'
+            AND
+                TBL_RECORD.RejectFlag = '0'
+            <isEqual property="selSendStatus" compareValue="N" prepend="AND">
+                TBL_ENDRECEIPTPOINTINFO.PROCESSYN IN ('N','T')
+            </isEqual>
+            <isEqual property="selSendStatus" compareValue="O" prepend="AND">
+                TBL_ENDRECEIPTPOINTINFO.PROCESSYN = 'O'
+            </isEqual>
+            <isEqual property="selSendStatus" compareValue="S" prepend="AND">
+                TBL_ENDRECEIPTPOINTINFO.PROCESSYN NOT IN ('N', 'O', 'B', 'T')
+            </isEqual>
+            <isEqual property="selSendStatus" compareValue="B" prepend="AND">
+                TBL_ENDRECEIPTPOINTINFO.PROCESSYN = 'B'
+            </isEqual>
+        </isNotEmpty>	
 	<isNotEmpty property="recDeptCode" prepend="AND">
 	    	TBL_RECORD.ProcessDeptCode = #recDeptCode#
 	</isNotEmpty>
@@ -32136,7 +32206,181 @@
 			AND 
 			    C.PROCESSYN = 'N' 
 			]]>
-		    ) AS 'countUntreated' <!-- 미처리문서함 -->
+		    ) AS 'countUntreated', <!-- 미처리문서함 -->
+            (
+            SELECT
+            COUNT(DISTINCT  TBL_RECORD.RecordID,
+                            TBL_SEPERATEATTACH.SeperateAttachNo)
+            FROM
+                TBL_RECORD
+            Left Join
+                TBL_ENDAPRDOCINFO
+            On
+                TBL_RECORD.TENANT_ID = TBL_ENDAPRDOCINFO.TENANT_ID
+            AND
+                TBL_RECORD.DocID = TBL_ENDAPRDOCINFO.DocID
+            AND
+                TBL_RECORD.COMPANYID = TBL_ENDAPRDOCINFO.COMPANYID
+            LEFT JOIN
+                TBL_ENDAPRDOCINFO ENDDOCNO
+            ON
+                TBL_ENDAPRDOCINFO.ORGDOCID = ENDDOCNO.DOCID
+            Inner Join
+                TBL_SEPERATEATTACH
+            On
+                TBL_RECORD.TENANT_ID = TBL_SEPERATEATTACH.TENANT_ID
+            AND
+                TBL_RECORD.COMPANYID = TBL_SEPERATEATTACH.COMPANYID
+            AND
+                TBL_RECORD.RecordID = TBL_SEPERATEATTACH.RecordID
+            <isEqual property="usePublicFlag" compareValue="true">
+                Left Join
+                    TBL_EXPENDAPRDOCINFO
+                On
+                    TBL_RECORD.TENANT_ID = TBL_EXPENDAPRDOCINFO.TENANT_ID
+                AND
+                    TBL_RECORD.COMPANYID = TBL_EXPENDAPRDOCINFO.COMPANYID
+                AND
+                    TBL_RECORD.DocID = TBL_EXPENDAPRDOCINFO.DocID
+            </isEqual>
+        <![CDATA[    
+		    LEFT JOIN
+                TBL_ENDAPRLINEINFO
+            ON
+                TBL_ENDAPRLINEINFO.TENANT_ID = TBL_RECORD.TENANT_ID
+            AND
+                TBL_ENDAPRLINEINFO.DOCID = TBL_RECORD.DOCID
+            AND
+                TBL_ENDAPRLINEINFO.COMPANYID = TBL_RECORD.COMPANYID
+            Inner Join
+                TBL_ENDRECEIPTPOINTINFO
+            ON
+                TBL_ENDRECEIPTPOINTINFO.TENANT_ID  = TBL_RECORD.TENANT_ID
+            AND
+                TBL_ENDRECEIPTPOINTINFO.DOCID  = TBL_RECORD.DOCID
+            AND
+                TBL_ENDRECEIPTPOINTINFO.COMPANYID = TBL_RECORD.COMPANYID
+            AND
+                TBL_ENDRECEIPTPOINTINFO.DOCID IS NOT NULL
+            Inner Join
+                ( Select
+                    ProcessDeptCode,
+                    ProcessDeptName,
+                    ProcessDeptName2,
+                    TaskCode,
+                    TaskName,
+                    TaskName2,
+                    VolumeNo,
+                    CabinetID,
+                    TCabinetID,
+                    TBL_CABINET.CabinetClassNo,
+                    DisplayEndDate,
+                    DisplayReason,
+                    ConfirmFlag,
+                    ProductionYear,
+                    RegSerialNo,
+                    DisplayRecFlag,
+                    ExTransYear,
+                    TransDelayReason,
+                    TransDelayFlag,
+                    OwnerDeptID,
+                    OwnerTask,
+                    TerminateFlag,
+                    ExpirationYear,
+                    KeepingPeriod ,
+                    TBL_CABINETCLASS.TENANT_ID,
+                    TBL_CABINETCLASS.COMPANYID
+                FROM
+                    TBL_CABINETCLASS
+                INNER JOIN
+                    TBL_CABINET
+                ON
+                    TBL_CABINETCLASS.TENANT_ID = TBL_CABINET.TENANT_ID
+                AND
+                    TBL_CABINETCLASS.COMPANYID = TBL_CABINET.COMPANYID
+                AND
+                    TBL_CABINETCLASS.CabinetClassNo = TBL_CABINET.CabinetClassNo
+                WHERE
+                    TBL_CABINET.DelFlag = '0' 
+		        AND 
+		            TBL_CABINETCLASS.DelFlag = '0' 
+		        AND
+                    NOT (TBL_CABINET.CabinetTransferFlag = '2' And ConfirmFlag = '0')
+                AND
+		            OwnerDeptID = #v_DEPTID# ) TBL_CABINET 
+		    ON
+                TBL_SEPERATEATTACH.TENANT_ID = TBL_CABINET.TENANT_ID
+            AND 
+		        TBL_SEPERATEATTACH.COMPANYID = TBL_CABINET.COMPANYID
+            AND 
+		        TBL_SEPERATEATTACH.CabinetID = TBL_CABINET.CabinetID
+            WHERE
+                TBL_RECORD.TENANT_ID = #v_TENANTID#
+            AND 
+		        TBL_RECORD.COMPANYID = #companyID#
+            AND 
+		        TBL_RECORD.DelFlag = '0'
+            AND 
+		        TBL_SEPERATEATTACH.DelFlag = '0'
+            AND 
+		        TBL_ENDAPRDOCINFO.DOCTYPE = '001'
+            AND 
+		        TBL_ENDRECEIPTPOINTINFO.EXTRECEPTYN = 'Y'
+            AND 
+		        TBL_ENDAPRDOCINFO.WRITERID = #v_USERID#
+            AND 
+		        TBL_SEPERATEATTACH.SeperateAttachNo = '00'
+            AND 
+		        TBL_RECORD.RejectFlag = '0'
+            AND 
+		        TBL_ENDRECEIPTPOINTINFO.PROCESSYN IN ('N','T')
+            AND 
+		        TBL_RECORD.RegisterDate >= STR_TO_DATE(#v_STARTDATE#,'%Y-%m-%d %H:%i:%s')
+            AND 
+		        TBL_RECORD.RegisterDate <= STR_TO_DATE(#v_ENDDATE#, '%Y-%m-%d %H:%i:%s')
+            ]]>
+            <isEqual property="isUse" compareValue="1" prepend="AND">
+            <![CDATA[
+                ( TBL_EXPENDAPRDOCINFO.SecurityCode >= #userSecurityCode#
+                    or TBL_EXPENDAPRDOCINFO.SecurityCode is null
+            OR (
+                SELECT
+                    'Y'
+                FROM
+                    dual
+                WHERE
+                    0 < (
+                        SELECT
+                            COUNT(DocID)
+                        FROM
+                            TBL_ENDAPRLINEINFO
+                        WHERE
+                            TENANT_ID = #v_TENANTID#
+                        AND
+		                    COMPANYID = #companyID#
+                        AND
+		                    DocID = TBL_RECORD.DocID
+                        AND
+		                    AprMemberID = #v_USERID# )
+                        OR TBL_RECORD.DocID = NULL ) = 'Y' )
+            AND
+		        TBL_RECORD.TENANT_ID = #v_TENANTID#
+            AND 
+		        TBL_RECORD.COMPANYID = #companyID#
+            ]]>
+            </isEqual>
+            <isNotEqual property="isUse" compareValue="1" prepend="AND">
+                    ( TBL_EXPENDAPRDOCINFO.SecurityCode >= #userSecurityCode#
+                OR
+                    TBL_EXPENDAPRDOCINFO.SecurityCode IS NULL )
+                AND
+                    TBL_RECORD.TENANT_ID= #v_TENANTID#
+                AND
+                    TBL_RECORD.COMPANYID= #companyID#
+            </isNotEqual>
+            AND 
+		        TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL    
+            )AS 'count96'
 		FROM (
 			SELECT
 				Z.DOCID,

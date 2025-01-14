@@ -1029,8 +1029,21 @@
 	        
 	        window.onresize = function () {
 				var mHeight = document.getElementById("EdtorSize").clientHeight - 5 + "px";
-	       		message.Resize(mHeight);
-		    };
+								
+				if (gubun != "2") {
+					document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 335 + "PX";
+					document.getElementById("message").style.height = document.documentElement.clientHeight - 335 + "PX";
+				} else {
+					document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 365 + "PX";
+					document.getElementById("message").style.height = document.documentElement.clientHeight - 365 + "PX";
+				}
+
+				if (editor == "HWP") {
+					message.Resize(mHeight);
+				}
+
+				mobileDistinction();
+			};
 		    
 		    function SaveItemHWP() {
 		    	GetHTML(before_saveItem);
@@ -1283,6 +1296,19 @@
 	    	<c:if test="${boardInfo.gubun == '2'}">
 	            document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 365 + "PX";
 	    	</c:if>
+			
+			function mobileDistinction() {
+   				var  userAgent = navigator.userAgent.toLowerCase();
+				
+				if (/iphone|ipod|ipad|android.*mobile/i.test(userAgent) || /tablet|ipad|android/i.test(userAgent) || navigator.maxTouchPoints > 4) {
+					if (window.innerWidth > window.innerHeight) {
+						document.getElementById("EdtorSize").style.height = 436 + "PX";
+						document.getElementById("message").style.height = 436 + "PX";
+					}
+				}
+			}
+			
+			mobileDistinction();
 		</script>
 
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0, 0, 0, 0.7); display: none;"	id="mailPanel">&nbsp;</div>
