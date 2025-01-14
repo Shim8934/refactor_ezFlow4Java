@@ -982,7 +982,7 @@
                         pData.append("itemList", pItemID + ";");
                         pData.append("scrapContID", scrapContID);
                     } else {
-                        alert("<spring:message code='ezBoard.kmh52' />");
+                        alert("<spring:message code='ezBoard.kmhScrap52' />");
                         return;
                     }
                     $.ajax({
@@ -1001,7 +1001,7 @@
                                 } else if (myBoardScrapFlag == "TYPE2") {
                                     document.getElementById("delScrapBtn").replaceChildren();
                                 } else {
-                                    alert("<spring:message code='ezBoard.kmh52' />");
+                                    alert("<spring:message code='ezBoard.kmhScrap52' />");
                                     return;
                                 }
                                 
