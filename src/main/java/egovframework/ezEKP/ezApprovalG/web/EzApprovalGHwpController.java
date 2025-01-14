@@ -1587,6 +1587,17 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("addLastKyulJeYN", addLastKyulJeYN);
 		model.addAttribute("signImageType", signImageType);
 
+		/* 상위부서문서함 사용 시 관련 정보 같이 전달 */
+		String upperDeptCode = "";
+		String upperDeptName = "";
+		Map<String, String> upDeptInfo = ezApprovalGService.getUpperDeptInfo(userInfo.getDeptID(), userInfo.getTenantId());
+		if (upDeptInfo.get("USEUPPERDEPTBOX") != null && upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) {
+			upperDeptCode = upDeptInfo.get("upperDeptCode");
+			upperDeptName = upDeptInfo.get("upperDeptName");
+		}
+		model.addAttribute("upperDeptCode", upperDeptCode);
+		model.addAttribute("upperDeptName", upperDeptName);
+
 		logger.debug("approvuiWHWP ended");
 		
 		return "/ezApprovalG/apprGapprovuiWHWP";
