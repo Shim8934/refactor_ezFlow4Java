@@ -176,11 +176,19 @@ input:checked + .slider:before{transform:translateX(26px);}
 #TreeCtrl_MyFavTree_ul > .lnbUL{padding-left:20px;}
 */
 
-html{}
+html{font-family: 'Microsoft YaHei UI', 'Microsoft JhengHei UI', 'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana' !important;}
+input, label, textarea, select, ul, li, h1, h2, table, th, .page, .point, .box, .box2, .nobox, .leftbody, .message, .mainbody,  .listview2 td,.content td, .file td, .file2 td, .txt, .imgbtn{
+    font-family: 'Microsoft YaHei UI', 'Microsoft JhengHei UI', 'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana' !important;
+}
+p, strong, h3, div, a, span, table, th, td {
+    font-family: 'Microsoft YaHei UI', 'Microsoft JhengHei UI', 'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana' !important;
+}
 
 /* 메일 */
 .previewmailDL dd.pretext .pretextUL li.preT_list .cblack{min-width:50px; display:inline-block;}
 .tagli > span:first-child{width:50px !important;}
+.tag_normal{width:154px !important;}
+#popServer1, #popServer2, #popServer3{width:180px !important;}
 
 /* 주소록 */
 .address_wordmenu li:first-child{width:auto !important;}
@@ -193,3 +201,6 @@ html{}
 
 /* 업무관리 */
 .taskConfig table.content{width:300px !important;}
+
+/* 사다리게임 */
+#startButton > div > span:nth-child(2){display:block !important;}
