@@ -610,7 +610,20 @@ function GetRecordList() {
         if (typeof underDeptFlag !== "undefined" && underDeptFlag === "TRUE" && GetSelectVal("rec_underDept") != "default") {
             tempDeptID = GetSelectVal("rec_underDept");
         }
+        
+        var selSendStatus = "";
+        var selSendStatusElement = document.getElementById("selSendStatus");
+        if (selSendStatusElement && selSendStatusElement.style.display == "") {
+            selSendStatus = selSendStatusElement.value;
 
+            var deptSelectBox = g_sFlag === "m02" ? "rec_underDept2" : "rec_underDept";
+            var deptSelectBoxCheck = document.getElementById(deptSelectBox);
+            if ((deptSelectBoxCheck && GetSelectVal(deptSelectBox) != "default") || (!deptSelectBoxCheck && underDeptFlag === "TRUE")) {
+                selSendStatus = "";
+            }
+        } else if (typeof(selSendStatusFlag) != "undefined" && selSendStatusFlag == "N") {
+            selSendStatus = "N"
+        }
         // if (checkRecordAll()) {
         //  checkRecordAll : 기존 소스를 찾을 수 없어 임시 주석처리
         //     tempDeptID = "ALL";
@@ -619,10 +632,10 @@ function GetRecordList() {
         /* 2022-07-20 홍승비 - 기록물철등록부 > 기록물철 선택 후 기록물보기로 진입한 경우, 선택한 기록물철의 생산 년도를 기준으로 표출 (검색조건 없을 시의 기본 표출) */
         if (typeof(isCabinetToRecordFirst) != "undefined" && isCabinetToRecordFirst == true && typeof(g_sFlag) != "undefined" && g_sFlag == "m02") { // 기록물철등록부의 g_sFlag는 'm02'
         	// 생산년도의 01월 01일부터 12월 31일까지를 검색 범위로 설정
-        	g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE>" + cabProduceY + "-01-01 00:00:00.001</SREGDATE><EREGDATE>" + cabProduceY + "-12-31 23:59:59.999</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
+        	g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE>" + cabProduceY + "-01-01 00:00:00.001</SREGDATE><EREGDATE>" + cabProduceY + "-12-31 23:59:59.999</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE><SELSENDSTATUS>" + selSendStatus + "</SELSENDSTATUS></SEARCHPARAM>";
         }
         else {
-        	g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + " 00:00:00.001</SREGDATE><EREGDATE>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59.999</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";        	
+        	g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + " 00:00:00.001</SREGDATE><EREGDATE>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59.999</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE><SELSENDSTATUS>" + selSendStatus + "</SELSENDSTATUS></SEARCHPARAM>";        	
         }
     } else if (g_isSearching) {
     	var searchParamXml = loadXMLString(g_RecSearchParamXml);
@@ -845,6 +858,10 @@ function GetRecordListXml() {
     createNodeAndInsertText(xmlpara, objNode, "PAGESIZE", PageSize);
     createNodeAndInsertText(xmlpara, objNode, "PAGENO", curpage);
     createNodeAndInsertText(xmlpara, objNode, "ORDERBY", g_OrderBy);
+    if(typeof(selSendStatusFlag) != "undefined" && selSendStatusFlag == "N"){
+        createNodeAndInsertText(xmlpara, objNode, "SELSENDSTATUS", selSendStatusFlag);
+    }
+    
     /**
      *  g_RecSearchParamXml 사용자가 입력한 검색조건
      *  입력한 검색 조건을 XML에 추가
@@ -1666,6 +1683,10 @@ function btnSearchRec_onclick_Complete(rtnVal) {
     }
     if (document.getElementById("rec_underDept") != null) {
         $('#rec_underDept').val("default");
+    }
+
+    if (document.getElementById("selSendStatus") != null) {
+        $('#selSendStatus').val("");
     }
 }
 
