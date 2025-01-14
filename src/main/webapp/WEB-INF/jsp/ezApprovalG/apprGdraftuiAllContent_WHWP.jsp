@@ -802,10 +802,16 @@
 	        	 
 	    		copyAprLine(); // 결재선정보 복사
 	    		
-	    		 if (parent.titleOptionFlag == true) { // 제목
-	    			var mainDocTitle = ifrm1.contentWindow.GetFieldText("doctitle");
+				if (parent.titleOptionFlag == true) { // 제목
+					var mainDocTitle = ifrm1.contentWindow.GetFieldText("doctitle");
 	    			PutFieldText("doctitle", mainDocTitle);
-	    		}
+				}
+
+				if (FieldExist("publication")) {
+					var publication = ifrm1.contentWindow.GetFieldText("publication");
+					PutFieldText("publication", publication);
+				}
+				
 	    		
 	    		if (parent.seperateAttachOptionFlag == true) { // 분리첨부
 	    			// 단, 해당 분리첨부 내용이 공백이 아닌 경우에만 복사함
