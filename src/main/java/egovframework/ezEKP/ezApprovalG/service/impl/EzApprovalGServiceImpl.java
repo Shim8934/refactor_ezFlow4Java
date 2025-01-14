@@ -17029,8 +17029,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		if (docXML.getElementsByTagName("DOCNO").getLength() > 0) {
 			String docSN = docXML.getElementsByTagName("DOCNUMCODE").item(0).getTextContent().trim();
 			
-            // 여기여기임
-            // docSN이 recordID 만드는 데에 사용됨
 			//2018-08-27 강민수92 수신접수 최종 일괄결재시 임시로 recordid에 cabinetSN들어가게 수정
 			if (docSN.equals("undefined")) {
 				logger.debug("docSN is undefined");
@@ -17647,7 +17645,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		} else {
 			try {
 				// 기록물 테이블(TBL_RECORD)에 입력
-                // 여기다. 중복키 삽입 문제가 일어나고, 아마 기록물번호 떄문인 것 같음
 				ezApprovalGDAO.insertRecord(map);
 			} catch (DataIntegrityViolationException e) { // 중복 삽입 시의 예외 catch (중복삽입 이외의 경우 문서번호 롤백을 진행)
 				logger.error(e.getMessage(), e);
