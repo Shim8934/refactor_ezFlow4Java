@@ -1425,8 +1425,8 @@ function appendTag(tagName) {
     
     deleteSpan.addEventListener("click", function() { removeTag(tagSpan); });
 
-    tagListDiv.appendChild(tagSpan);
     tagListDiv.appendChild(deleteSpan);
+    tagListDiv.appendChild(tagSpan);
     tagContainer.appendChild(tagListDiv)
 }
 

@@ -2566,9 +2566,9 @@ function appendTagToPreview(tagName) {
 			}
 		});
 	});
-    
-    tagListDiv.appendChild(tagSpan);
+
     tagListDiv.appendChild(deleteSpan);
+    tagListDiv.appendChild(tagSpan);
     tagContainer.appendChild(tagListDiv)
 }
 
