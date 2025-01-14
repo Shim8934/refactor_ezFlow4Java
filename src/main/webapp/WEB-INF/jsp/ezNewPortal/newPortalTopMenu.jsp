@@ -1441,6 +1441,12 @@
 				document.getElementsByTagName("body")[0].style.backgroundColor = "";
 				topFrame.style.position = "";
 			}
+
+			var userAgent = navigator.userAgent.toLowerCase();
+
+			if (/iphone|ipod|ipad|android.*mobile/i.test(userAgent) || /tablet|ipad|android/i.test(userAgent) || navigator.maxTouchPoints > 4) {
+				window.parent.fixLayout();
+			}
 		}
 		
 		var notice_all_close = function () {
