@@ -30392,11 +30392,11 @@
 		WHERE
 			DOCSTATE = '015'
 		AND
-			TENANT_ID = #v_tenantID#
+			TENANT_ID = #v_TENANTID#
 		AND
-			COMPANYID = #v_companyID#
+			COMPANYID = #companyID#
 		AND
-			ORGDOCID = #v_docID#
+			ORGDOCID = #v_TMPDOCID#
 	</select>
 	
 	<select id="EzApprovalG.checkGongRamLineCount" parameterClass="Map" resultClass="int">
@@ -35331,4 +35331,98 @@
 		AND
 			TENANT_ID = #tenantId#
 	</select>
+
+    <delete id="EzApprovalG.delAprMakeTmp2Ing12" parameterClass="Map" >
+        DELETE FROM
+            TBL_HISTORYATTACHINFO
+        WHERE
+            TENANT_ID = #v_TENANTID#
+        AND
+            COMPANYID = #companyID#
+        AND
+            DOCID = #v_PDOCID#
+    </delete>
+
+    <select id="EzApprovalG.checkAutoSaveDocId" parameterClass="Map" resultClass="int" remapResults="true">
+        SELECT
+            COUNT(*)
+        FROM
+            TBL_APRDOCINFO
+        WHERE
+            TENANT_ID = #v_TENANTID#
+        AND
+            COMPANYID = #v_COMPANYID#
+        AND
+            DOCID = #v_DOCID#
+    </select>
+
+    <delete id="EzApprovalG.aprDeleteDocInfo15" parameterClass="map">
+        DELETE FROM
+            TBL_APRLINEINFO
+        WHERE
+            TENANT_ID = #v_TENANTID#
+        AND
+            COMPANYID = #companyID#
+        AND
+            APRTYPE = '015'
+        AND
+            DOCID = (
+                SELECT
+                    DOCID
+                FROM
+                    TBL_APRDOCINFO
+                WHERE
+                    TENANT_ID = #v_TENANTID#
+                AND
+                    COMPANYID = #companyID#
+                AND
+                    ORGDOCID = #v_GDocID#
+            )
+    </delete>
+
+    <delete id="EzApprovalG.aprDeleteDocInfo16" parameterClass="map">
+        DELETE FROM
+            TBL_EXPAPRLINE
+        WHERE
+            TENANT_ID = #v_TENANTID#
+        AND
+            COMPANYID = #companyID#
+        AND
+            DOCID = (
+                SELECT
+                    DOCID
+                FROM
+                    TBL_APRDOCINFO
+                WHERE
+                    TENANT_ID = #v_TENANTID#
+                AND
+                    COMPANYID = #companyID#
+                AND
+                    ORGDOCID = #v_GDocID#
+            )
+    </delete>
+
+    <delete id="EzApprovalG.aprDeleteDocInfo17" parameterClass="map">
+        DELETE FROM
+            TBL_APRDOCINFO
+        WHERE
+            ORGDOCID = #v_GDocID#
+        AND
+            TENANT_ID = #v_TENANTID#
+        AND
+            COMPANYID = #companyID#
+    </delete>
+
+    <delete id="EzApprovalG.deleteTbAprDocInfo" parameterClass="Map">
+        DELETE FROM
+            TBL_APRDOCINFO
+        WHERE
+            TENANT_ID = #v_TENANTID#
+        AND
+            DOCID = #v_DOCID#
+        AND
+            COMPANYID = #companyID#
+        AND
+            DOCSTATE = '015'
+    </delete>
 </sqlMap>

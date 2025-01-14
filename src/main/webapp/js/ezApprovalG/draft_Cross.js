@@ -4296,6 +4296,11 @@ function SaveTMPFile(AutoSave) {
     else {
     	docID = pDocID
     }
+    
+    if(AutoSave == "autosave" && createAutoDoc == "Y"){
+        docID = autopDocID;
+    }
+    
 	var data = {
 		docID : docID,
         formId : pFormID,
@@ -4330,12 +4335,23 @@ function SaveTMPDocInfo(AutoSave) {
         var xmlpara = createXmlDom();
         var xmlhttp = createXMLHttpRequest();
         var objNode;
+
+        var pAutoTmpDocTitle = trim(message.GetDocTitle());
         createNodeInsert(xmlpara, objNode, "PARAMETER");
 
-        if(Saveflag) 
-        	createNodeAndInsertText(xmlpara, objNode, "DOCID", newpDocID);
-        else
-        	createNodeAndInsertText(xmlpara, objNode, "DOCID", pDocID);
+        if(Saveflag) {
+            if(AutoSave == "autosave" && createAutoDoc == "Y"){
+                createNodeAndInsertText(xmlpara, objNode, "DOCID", autopDocID);
+            }else{
+                createNodeAndInsertText(xmlpara, objNode, "DOCID", newpDocID);
+            }
+        }else {
+            if(AutoSave == "autosave" && createAutoDoc == "Y"){
+                createNodeAndInsertText(xmlpara, objNode, "DOCID", autopDocID);
+            }else{
+                createNodeAndInsertText(xmlpara, objNode, "DOCID", pDocID);
+            }
+        }
         createNodeAndInsertText(xmlpara, objNode, "FORMID", pFormID);
         if (pDraftFlag == "SUSIN" || pDraftFlag == "HAPYUI")
             createNodeAndInsertText(xmlpara, objNode, "ORGDOCID", pOrgDocID);
@@ -4357,7 +4373,11 @@ function SaveTMPDocInfo(AutoSave) {
         createNodeAndInsertText(xmlpara, objNode, "HREF", "/document/doc/" + pDocID + ".htm");
 
         if (AutoSave != "") {
-            createNodeAndInsertText(xmlpara, objNode, "DOCTITLE", message.GetDocTitle());
+            if(pAutoTmpDocTitle != "") {
+                createNodeAndInsertText(xmlpara, objNode, "DOCTITLE", message.GetDocTitle());
+            }else{
+                createNodeAndInsertText(xmlpara, objNode, "DOCTITLE", strLang1133);
+            }
         }
         else {
             createNodeAndInsertText(xmlpara, objNode, "DOCTITLE", strLang1133);
@@ -4439,7 +4459,15 @@ function SaveTMPDocInfo(AutoSave) {
         	createNodeAndInsertText(xmlpara, objNode, "saveFlag", Saveflag);
         	createNodeAndInsertText(xmlpara, objNode, "oldDocID", pDocID);
         }
+        
+        if (AutoSave == "autosave" && createAutoDoc == "Y"){
+            createNodeAndInsertText(xmlpara, objNode, "autopDocSN", autopDocSN);
+            createNodeAndInsertText(xmlpara, objNode, "autoSaveFlag", "Y");
+        }
 
+        if (AutoSave == "autosave"){
+            createNodeAndInsertText(xmlpara, objNode, "FautoSaveFlag", AutoSave);
+        }
         xmlhttp.open("POST", "/ezApprovalG/doDraft.do", false);
         xmlhttp.send(xmlpara);
         

@@ -1369,6 +1369,17 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		// 2024-05-23 김우철 - 헤더 숨기기 기능 사용 여부
 		String useHideHeaderArea = ezCommonService.getTenantConfig("useHideHeaderArea", userInfo.getTenantId());
 
+		// 2024-07-04 기민혁 - 자동 임시저장
+		String autoSaveFlag =  ezCommonService.getUserConfigInfo(userInfo.getTenantId(), userInfo.getId(), "autoSave");
+		String autoSaveFlag2 = ezCommonService.getTenantConfig("AprAutoSaveFlag", userInfo.getTenantId());
+		if(approvalFlag.equals("G") && autoSaveFlag2.equals("YES")){
+			if(autoSaveFlag.equals("")){
+				autoSaveFlag = "0";
+			}
+		}else{
+			autoSaveFlag = "0";
+		}
+		
 		model.addAttribute("useAnnualSusinYN", useAnnualSusinYN);
 		model.addAttribute("beforeDocID", beforeDocID);
 		model.addAttribute("isUsed", isUsed);
@@ -1449,6 +1460,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 
 		model.addAttribute("useHideHeaderArea", useHideHeaderArea);
 
+		model.addAttribute("useAutoSaveTime", autoSaveFlag);
 		logger.debug("draftui ended.");
 
 		return "ezApprovalG/apprGDraftui";
@@ -10299,7 +10311,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String docID = request.getParameter("tmpDocID");
 		String userID = docID.split("@")[0];
 		String sn = docID.split("@")[1];
-		String result = ezApprovalGService.makeTmp2IngDocInfo(userID, sn, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), "");
+		String result = ezApprovalGService.makeTmp2IngDocInfo(userID, sn, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), "", "", "");
 		
 		logger.debug("makeTmp2Ing ended");
 
@@ -12536,7 +12548,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 2022-01-18 홍승비 - 전자결재G 일괄기안그룹 임시저장을 위한 GROUPDOCSN 리턴
 	 */
-	@RequestMapping(value = "/ezApprovalG/getMaxTmpGroupDocSN.do", produces = "text/xml;charset=utf-8", method = RequestMethod.GET)
+	@RequestMapping(value = {"/ezApprovalG/getMaxTmpGroupDocSN.do", "/ezApprovalG/getMaxTMPDocSN.do"}, produces = "text/xml;charset=utf-8", method = RequestMethod.GET)
 	@ResponseBody
 	public String getMaxTmpGroupDocSN(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception {
 		logger.debug("getMaxTmpGroupDocSN started");
@@ -13673,4 +13685,22 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		logger.debug("checkDocRightForAttachApr ended");
 		return result;
 	}
+
+    /**
+     * 2024-07-11 기민혁 - 전자결재G > 자동 임시저장 문서 확인
+     */
+    @RequestMapping(value = "/ezApprovalG/checkAutoSaveDocId.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
+    @ResponseBody
+    public String checkAutoSaveDocId(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+        logger.debug("checkAutoSaveDocId started");
+
+        userInfo = commonUtil.aprUserInfo(loginCookie);
+        String docID = request.getParameter("docID");
+
+        String result = ezApprovalGService.checkAutoSaveDocId(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+
+        logger.debug("checkAutoSaveDocId ended");
+
+        return result;
+    }
 }

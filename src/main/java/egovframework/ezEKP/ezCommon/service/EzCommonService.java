@@ -532,4 +532,6 @@ public interface EzCommonService {
 	// 2024-10-22 정지은 - 게시판 > 게시물의 최근 게시물 일자 설정
 	public void addBoardAllNewBoardListDate() throws Exception;
 
+    public void createTblAprAutoSaveConfig() throws Exception;
+
 }

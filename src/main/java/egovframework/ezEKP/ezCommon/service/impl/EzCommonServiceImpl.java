@@ -4578,4 +4578,21 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void addBoardAllNewBoardListDate() throws Exception {
         ezCommonDAO.addBoardAllNewBoardListDate();
     }
+
+    @Override
+    public void createTblAprAutoSaveConfig() throws Exception {
+        List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+        for (TenantVO tenantVo : tenantIdList) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("tenantId", tenantVo.getTenantId());
+            map.put("propertyName", "AprAutoSaveFlag");
+            map.put("propertyValue", "YES");
+            map.put("description", "YES: 사용 NO: 사용안함 (default: YES)");
+            map.put("configName", "전자결재 G 자동 임시저장 사용 여부");
+            map.put("configType", "전자결재G");
+            map.put("regdate", "2024-07-10 00:00:00");
+
+            ezCommonDAO.insertAprAutoSaveConfig(map);
+        }
+    }
 }

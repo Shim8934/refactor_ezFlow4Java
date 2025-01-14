@@ -1277,7 +1277,18 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		} else {
 			useAprFilePrvw = "0";
 		}
-				
+
+		// 2024-07-04 기민혁 - 자동 임시저장
+		String autoSaveFlag =  ezCommonService.getUserConfigInfo(userInfo.getTenantId(), userInfo.getId(), "autoSave");
+		String autoSaveFlag2 = ezCommonService.getTenantConfig("AprAutoSaveFlag", userInfo.getTenantId());
+		if(approvalFlag.equals("G") && autoSaveFlag2.equals("YES")){
+			if(autoSaveFlag.equals("")){
+				autoSaveFlag = "0";
+			}
+		}else{
+			autoSaveFlag = "0";
+		}
+		
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("hwpToolbar", hwpToolbar);
 		model.addAttribute("approvalPWD", approvalPWD);
@@ -1342,6 +1353,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("tenantID",userInfo.getTenantId());
 		model.addAttribute("junGyulFlag", junGyulFlag);
 		model.addAttribute("draftJunGyulFlag", draftJunGyulFlag);
+		model.addAttribute("useAutoSaveTime", autoSaveFlag);
 		
 		logger.debug("draftuiWHWP ended. formPath:" + formPath);
 		

@@ -231,9 +231,11 @@ public class EzPersonalController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String useShareApproval = ezCommonService.getTenantConfig("useShareApproval", userInfo.getTenantId());
+		String autoSaveFlag = ezCommonService.getTenantConfig("AprAutoSaveFlag", userInfo.getTenantId());
 		
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("useShareApproval", useShareApproval);
+		model.addAttribute("autoSaveFlag", autoSaveFlag);
 		
 		logger.debug("ezApprovalConfig ended");
 		return "ezPersonal/persEzApprovalConfig";
@@ -2566,5 +2568,47 @@ public class EzPersonalController extends EgovFileMngUtil {
 			return "false";
 		}
 		return "true";
+	}
+
+	/**
+	 * 공유결재자 설정 화면 호출 Method
+	 */
+	@RequestMapping(value = "/ezPersonal/manageAutoSave.do", method = RequestMethod.GET)
+	public String manageAutoSave(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req, Locale locale) throws Exception {
+		logger.debug("manageAutoSave started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+
+		String autoSaveFlag =  ezCommonService.getUserConfigInfo(userInfo.getTenantId(), userInfo.getId(), "autoSave");
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("autoSaveFlag", autoSaveFlag);
+		
+		logger.debug("manageAutoSave ended");
+		
+		return "/ezPersonal/persManageAutoSave";
+	}
+
+	/**
+	 * 공유결재자 추가 Method
+	 */
+	@RequestMapping(value = "/ezPersonal/addAutoSave.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String addAutoSave(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
+		logger.debug("addAutoSave started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+
+		String autoSaveTime = req.getParameter("autoSaveTime");
+		String getPropertyValue = ezCommonService.getUserConfigInfo(userInfo.getTenantId(), userInfo.getId(), "autoSave");
+
+		if (!getPropertyValue.equals("")) {
+			ezCommonService.updateUserConfigInfo(userInfo.getTenantId(), userInfo.getId(), "autoSave", autoSaveTime);
+		} else {
+			ezCommonService.insertUserConfigInfo(userInfo.getTenantId(), userInfo.getId(), "autoSave", autoSaveTime);
+		}
+
+		logger.debug("addAutoSave ended");
+		return "OK";
 	}
 }

@@ -6281,4 +6281,22 @@
 				ALLNEWBOARDLISTDATE INT(10) DEFAULT 5
 	</statement>
 
+
+	<select id="EzCommonDAO.checkAprAutoSaveConfig" resultClass="String" parameterClass="Map">
+		SELECT
+			property_value
+		FROM
+			tbl_tenant_config
+		WHERE
+			property_name = 'AprAutoSaveFlag'
+	  	AND
+			tenant_id = #tenantId#
+	</select>
+
+	<insert id="EzCommonDAO.insertAprAutoSaveConfig" parameterClass="Map">
+		INSERT INTO TBL_TENANT_CONFIG
+			(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+		VALUES
+			(#tenantId#, #propertyName#, #propertyValue#, #description#, #configName#, #regdate#, #configType#)
+	</insert>
 </sqlMap>
