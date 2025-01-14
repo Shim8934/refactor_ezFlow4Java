@@ -185,7 +185,7 @@
 					});
 					document.querySelector(".input_wrap + .imgbtn").addEventListener("click", function(e) { onEnterPreviewTagInput(); });
 					// 태그 X 버튼 클릭시 삭제
-					$("#tag_view > img").on("click", function() { removeTag(this.previousElementSibling); });
+					$(".tag_del").on("click", function() { removeTag(this.nextElementSibling); });
 
 					// 태그 추가 시 자동완성
 					$(tagAddInput).autocomplete({
@@ -920,7 +920,10 @@
 									
 									<div id="tag_view">
 										<c:forEach items="${tags}" var="name">
-											<span>${name}</span><img src="/images/icon/oneline_delete.gif" />
+											<div class="tag_list">
+												<span class="tag_del" id="tag_del"></span>
+												<span class="tag_name" id="tag_name">${name}</span>
+											</div>
 										</c:forEach>
 									</div>
 								</td>
