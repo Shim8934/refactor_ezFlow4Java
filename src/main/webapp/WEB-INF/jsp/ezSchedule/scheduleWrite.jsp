@@ -236,6 +236,7 @@
 		        switch (pSelectTab) {
 		            case "schedule1":
 		                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 395 + "PX";
+						mobileDistinction();
 		                break;
 		            case "schedule2":
 		                if (document.getElementById("receiverTr1").style.display == "none" && document.getElementById("HolderEdit2").style.display == "none") {
@@ -245,9 +246,11 @@
 						} else {
                             document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 365 + "PX";
                         }
+						mobileDistinction();
 		                break;
 		            case "schedule3":
 		                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 335 + "PX";
+						mobileDistinction();
 		                break;
 		        }
 		    }
@@ -624,6 +627,15 @@
 	        	}
 	        }
 	        
+			function mobileDistinction() {
+   				var  userAgent = navigator.userAgent.toLowerCase();
+				
+				if (/iphone|ipod|ipad|android.*mobile/i.test(userAgent) || /tablet|ipad|android/i.test(userAgent) || navigator.maxTouchPoints > 4) {
+					if (window.innerWidth > window.innerHeight) {
+						document.getElementById("EdtorSize").style.height = 436 + "PX";
+					}
+				}
+			}
 	    </script>
 	</head>
 
@@ -897,6 +909,7 @@
 	        </script>
 		    <script type="text/javascript">
 		        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 395 + "PX";
+				mobileDistinction();
 		    </script>
 	    </form>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>

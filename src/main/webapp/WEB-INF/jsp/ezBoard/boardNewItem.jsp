@@ -369,6 +369,7 @@
 					var mHeight = document.getElementById("EdtorSize").clientHeight - 16 + "px";
 		       		message.Resize(mHeight);
 				}
+				mobileDistinction();
 		    };
 
 		    function resizeMessageFrame () {
@@ -383,6 +384,7 @@
 		                } else if (pUrl.toLowerCase().indexOf(".hwp") < 0) { 
 		        	        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 320 + "PX";
 		                }
+						mobileDistinction();
 		                break;
 		            case "MailEnv_div3":
 		                {
@@ -402,21 +404,25 @@
 				        	        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 320 + "PX";
 		                    	}
 		                    }
+							mobileDistinction();
 		                    break;
 		                }
 		            default:
 		            	if (pUrl.toLowerCase().indexOf(".hwp") < 0) 
 		                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 320 + "PX";
+						mobileDistinction();
 		                break;
 		        }
 				/* 2024-08-26 김유진 - 사용된 확장컬럼 높이 고려하여 에디터 높이 설정 */
 				if (pAttributeYN == "Y" && document.getElementById("tab01")) {
 					document.getElementById("EdtorSize").style.height = parseInt(document.getElementById("EdtorSize").style.height, 10) + ("${boardInfo.guBun}" == "2" ? 90 : 60) - document.getElementById("tab01").parentElement.clientHeight + "PX";
+					mobileDistinction();
 				}
 
 				if ("<c:out value='${boardInfo.attachmentFlag}'/>" != "Y") {
 					var beforeEditorSize = document.getElementById("EdtorSize").style.height;
 					document.getElementById("EdtorSize").style.height = parseInt(beforeEditorSize, 10) + 145 + "PX";
+					mobileDistinction();
 				}
 				
 		        var editorW = (document.documentElement.clientWidth - 20) + "PX";
@@ -2020,6 +2026,7 @@
 		                } else if (pUrl.toLowerCase().indexOf(".hwp") < 0) { 
 		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 320 + "PX";
 		                }
+						mobileDistinction();
 		                break;
 		            case "MailEnv_div3":
 		                document.getElementById("tab01").style.display = "none";
@@ -2040,16 +2047,19 @@
 		                    } else if (pUrl.toLowerCase().indexOf(".hwp") < 0) { 
 			                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 320 + "PX";
 		                    }
+							mobileDistinction();
 		                }
 		        }
 				/* 2024-08-26 김유진 - 사용된 확장컬럼 높이 고려하여 에디터 높이 설정 */
 				if (pAttributeYN == "Y" && document.getElementById("tab01")) {
 					document.getElementById("EdtorSize").style.height = parseInt(document.getElementById("EdtorSize").style.height, 10) + ("${boardInfo.guBun}" == "2" ? 90 : 60) - document.getElementById("tab01").parentElement.clientHeight + "PX";
+					mobileDistinction();
 				}
 
 				if ("<c:out value='${boardInfo.attachmentFlag}'/>" != "Y") {
 					var beforeEditorSize = document.getElementById("EdtorSize").style.height;
 					document.getElementById("EdtorSize").style.height = parseInt(beforeEditorSize, 10) + 145 + "PX";
+					mobileDistinction();
 				}
 				
                 var editorW = (document.documentElement.clientWidth - 20) + "PX";
@@ -2838,6 +2848,7 @@
             function onresizeHWP() {
 	       		var mHeight = document.getElementById("EdtorSize").clientHeight - 6 + "px";
 	       		message.Resize(mHeight);
+				mobileDistinction();
 	        }
             
             var ingFlag = false;
@@ -2883,6 +2894,15 @@
 				message.SetCloneData(formData, "", "HWP");
             }
 	        
+            function mobileDistinction() {
+                    var  userAgent = navigator.userAgent.toLowerCase();
+                
+                if (/iphone|ipod|ipad|android.*mobile/i.test(userAgent) || /tablet|ipad|android/i.test(userAgent) || navigator.maxTouchPoints > 4) {
+                    if (window.innerWidth > window.innerHeight) {
+                        document.getElementById("EdtorSize").style.height = 436 + "PX";
+                    }
+                }
+            }
 	    </script>
 	    <c:if test="${!isCrossBrowser}">
 	   		<script type="text/javascript" FOR="EzHTTPTrans" EVENT="AttachAddFile(filename)">
@@ -3421,5 +3441,7 @@
 			var beforeEditorSize = document.getElementById("EdtorSize").style.height;
 			document.getElementById("EdtorSize").style.height = parseInt(beforeEditorSize, 10) + 145 + "PX";
 		}
+		
+		mobileDistinction();
 	</script>
 </html>

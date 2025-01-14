@@ -599,6 +599,26 @@
 					window.close();
 				}
 			}
+			
+			function mobileDistinction() {
+				var  userAgent = navigator.userAgent.toLowerCase();
+				
+				if (/iphone|ipod|ipad|android.*mobile/i.test(userAgent) || /tablet|ipad|android/i.test(userAgent) || navigator.maxTouchPoints > 4) {
+					if (window.innerWidth > window.innerHeight) {
+						document.getElementById("EdtorSize").style.height = 436 + "PX";
+						document.getElementById("Iframe1").style.height = 436 + "PX";
+					} else {
+						document.getElementById("EdtorSize").style.height = "100%";
+						document.getElementById("Iframe1").style.height = "98%";
+					}
+				}
+			}
+		
+			window.addEventListener('resize', function() {
+				mobileDistinction();
+			});
+	
+			mobileDistinction();
 	    </script>
 	</head>
 	<body class="popup" style="height: 99%;" ondragover="bodydragover(event)">
@@ -733,6 +753,8 @@
     			}
     		});
 		}
+		
+			mobileDistinction();
 		</script>
 	</body>
 </html>
