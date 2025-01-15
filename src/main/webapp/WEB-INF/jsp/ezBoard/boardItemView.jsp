@@ -2,7 +2,7 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>  
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
 <!DOCTYPE html>
-<html style="height:100%">
+<html>
 	<head>
 		<title><spring:message code='ezBoard.t293' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
@@ -448,7 +448,7 @@
 						}
 					}
 				} else { // 댓글을 사용하지 않거나 레이어 팝업인 경우
-					replyOffsetH = -18;
+					replyOffsetH = -30;
 				}
 				
 		        if (pAttributeYN == "Y") {
