@@ -49,7 +49,7 @@ public interface EzEmailService {
 	public List<MailDeleteVO> getMailDeleteList() throws Exception;
 	public List<MailReservationVO> getMailReserved(int tenantId, String pUserId) throws Exception;
 	public List<MailReservationVO> getMailReserved2() throws Exception;
-	public String setMailReserved(int tenantId, String pMessageId, String pSubject, String pSendDate, String pUserId, String isReserve) throws Exception;
+	public String setMailReserved(int tenantId, String pMessageId, String pSubject, String pSendDate, String mailId, String sender, String isReserve) throws Exception;
 	public void deleteMailReserved(String pMessageId) throws Exception;
 	public String getMailReservedTime(String pMessageId) throws Exception;
 	public List<MailReadVO> getMailReadList(int tenantId, String pUserId, String pMessageId) throws Exception;

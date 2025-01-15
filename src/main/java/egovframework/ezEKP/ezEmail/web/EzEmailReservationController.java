@@ -10,6 +10,7 @@ import java.util.Locale;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,17 +70,21 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		logger.debug("mailReservation started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		String shareId = request.getParameter("shareId");
+		String mailId = StringUtils.isBlank(shareId)? userInfo.getId() : shareId;
 		
 		String draftUrl = "";
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String noneActiveX = "YES";
 		
-		List<MailReservationVO> list = ezEmailService.getMailReserved(userInfo.getTenantId(), userInfo.getId());
+		List<MailReservationVO> list = ezEmailService.getMailReserved(userInfo.getTenantId(), mailId);
 		
 		for (MailReservationVO vo : list) {
 			vo.setSendDate(commonUtil.getDateStringInUTC(vo.getSendDate(), userInfo.getOffset(), false));
 		}
 		
+		model.addAttribute("shareId", shareId);
 		model.addAttribute("draftUrl", draftUrl);
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("noneActiveX", noneActiveX);

@@ -3347,7 +3347,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	    		        	message.setHeader("X-JMocha-Secure-Mail-ServerName", serverName);
 		            	}
 			        	
-			        	doDelaySend(userInfo.getTenantId(), message, isReserve, reservedId, subject, delaySendTimeUTC, userId, realPath);
+			        	doDelaySend(userInfo.getTenantId(), message, isReserve, reservedId, subject, delaySendTimeUTC, mailId, userId, realPath);
 			        	
 			            //임시보관함에서 삭제
 			            Message draftMessage = ((IMAPFolder)draftFolder).getMessageByUID(draftUID);
@@ -5389,7 +5389,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	/**
 	 * 메일 예약발송 처리 함수
 	 */
-	private void doDelaySend(int tenantId, Message message, String isReserve, String reservedId, String subject, String sendDate, String userId, String realPath) throws Exception {
+	private void doDelaySend(int tenantId, Message message, String isReserve, String reservedId, String subject, String sendDate, String mailId, String userId, String realPath) throws Exception {
 		logger.debug("isReserve : " + isReserve);
 		logger.debug("subject : " + subject);
 		logger.debug("sendDate : " + sendDate);
@@ -5397,7 +5397,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		String messageId = commonUtil.detectPathTraversal(reservedId);
 		
-		messageId = ezEmailService.setMailReserved(tenantId, messageId, subject, sendDate, userId, isReserve);
+		messageId = ezEmailService.setMailReserved(tenantId, messageId, subject, sendDate, mailId, userId, isReserve);
 		
 		File f = null;
 		
