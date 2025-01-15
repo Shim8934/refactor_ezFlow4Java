@@ -2638,13 +2638,13 @@ public class CommonUtil {
 	}
 	
 	//2020-01-22 유은정 메뉴코드로 메뉴 권한 체크
-	public Map<String, Boolean> checkMenuAccess(List<String> menuCodeList, String companyId, int tenantId, String lang, String userId, String deptId) {
+	public Map<String, Boolean> checkMenuAccess(List<String> menuCodeList, String companyId, int tenantId, String lang, String userId, String deptId, String type) {
 		logger.debug("checkMenuAccess started.");
 		logger.debug("[checkMenuAccess param] menuCodeList : " + menuCodeList.toString() + ", companyId : " + companyId + ", tenantId : " + tenantId + ", lang : " + lang + ", userId : " + userId + ", deptId : " + deptId);
 		Map<String, Boolean> menuAccessList = new LinkedHashMap<String, Boolean>();
 		
 		try {
-			List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(companyId, tenantId, lang, userId, deptId);
+			List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(companyId, tenantId, lang, userId, deptId, type);
 			
 			menuCodeList.forEach(menuCode -> {
 				boolean menuAccess = false;
@@ -2658,13 +2658,13 @@ public class CommonUtil {
     				} else if(menuCode.equals("mail") || menuCode.equals("address")) {		// 메일, 주소록
 						String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", tenantId);
 						menuAccess = useExternalMailServer.equals("NO");
-    				} else if (menuCode.equals("board")) { //게시판
+    				} else if (menuCode.equals("board") || menuCode.equals("mBoard")) {//게시판
 						String useBoard = ezCommonService.getTenantConfig("useBoard", tenantId);
 						menuAccess = useBoard.equals("YES");
-    				} else if (menuCode.equals("schedule")) { //일정
+    				} else if (menuCode.equals("schedule") || menuCode.equals("mSchedule")) {//일정
 						String useSchedule = ezCommonService.getTenantConfig("useSchedule", tenantId);
 						menuAccess = useSchedule.equals("YES");
-    				} else if (menuCode.equals("resource")) { //자원
+    				} else if (menuCode.equals("resource") || menuCode.equals("mResource")) {//자원
 						String useResource = ezCommonService.getTenantConfig("useResource", tenantId);
 						menuAccess = useResource.equals("YES");
     				} else if (menuCode.equals("community")) {
@@ -2676,10 +2676,10 @@ public class CommonUtil {
                     } else if (menuCode.equals("memo")) {
                         String useMemo = ezCommonService.getTenantConfig("useMemo", tenantId);
                         menuAccess = useMemo.equals("YES");
-                    } else if (menuCode.equals("survey")) {
+                    } else if (menuCode.equals("survey") || menuCode.equals("mSurvey")) {
                         String useSurvey = ezCommonService.getTenantConfig("useSurvey", tenantId);
                         menuAccess = useSurvey.equals("YES");
-                    } else if (menuCode.equals("webfolder")) {
+                    } else if (menuCode.equals("webfolder") || menuCode.equals("mWebfolder")) {
                         String useWebfolder = ezCommonService.getTenantConfig("useWebfolder", tenantId);
                         menuAccess = useWebfolder.equals("YES");
                     } else if (menuCode.equals("journal")) {

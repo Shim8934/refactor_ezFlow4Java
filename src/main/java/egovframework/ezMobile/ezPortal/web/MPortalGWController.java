@@ -735,7 +735,9 @@ public class MPortalGWController extends EgovFileMngUtil {
 			String[] menuCodeArr = menuCodeStr.split(",");
 			ArrayList<String> menuCodeList =  new ArrayList<>(Arrays.asList(menuCodeArr));
 			
-			Map<String, Boolean> menuAccessList = commonUtil.checkMenuAccess(menuCodeList, companyId, tenantId, lang, userId, deptId);
+			String type = "mobile";
+			
+			Map<String, Boolean> menuAccessList = commonUtil.checkMenuAccess(menuCodeList, companyId, tenantId, lang, userId, deptId, type);
 			List<MenuInfoVO> mobileMenuList = mOptionService.getMobileMenuList(userInfoMap);
 			int footerAccessCount = 0;
 			int portalAccessCount = 0;

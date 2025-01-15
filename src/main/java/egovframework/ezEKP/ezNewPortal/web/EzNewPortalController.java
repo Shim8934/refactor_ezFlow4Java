@@ -1268,7 +1268,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			userInfo = commonUtil.userInfo(loginCookie);
 			
 			// 메뉴 권한
-			List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(companyID, tenantID, lang, userID, deptID);
+			List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(companyID, tenantID, lang, userID, deptID, "");
 			String useBoard = ezCommonService.getTenantConfig("useBoard", tenantID);
 			String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", tenantID);
 			String useApproval = "";

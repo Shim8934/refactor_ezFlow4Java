@@ -522,7 +522,7 @@ public class EzNewPortalGWController {
 
 			// 2. 메뉴에 권한이 있는지 ================ 수정하기 start
 			
-			List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(companyId, tenantId, portletLang, userId, deptId);
+			List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(companyId, tenantId, portletLang, userId, deptId, "");
 			
 			boolean isUseQuestionAuth = false;
 			boolean isUseSurveyAuth = false;
@@ -925,7 +925,7 @@ public class EzNewPortalGWController {
 			/**
 			 * 2) 메인메뉴 및 서브메뉴 - 권한체크 - user 순서가 없을 경우 회사 순서로 진행
 			 */
-			List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(companyId, tenantId, langType, userId, deptId);
+			List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(companyId, tenantId, langType, userId, deptId, "");
 			
 			//tenant config가 NO인 경우 사용자 메뉴 순서에서도 나오면 안됨
 			//컨피그 : useQuestion(전자설문), useSurvey(전자설문 리뉴얼), useMemo(메모), useLadder(사다리게임), useCabinet(캐비닛), 
@@ -1206,7 +1206,7 @@ public class EzNewPortalGWController {
 			ezNewPortalService.updateUserMenuOrder(companyId, info.getTenantId(), userId, jObj);
 			
 			// 리스트 다시 받아서 출력
-			List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(companyId, tenantId, langType, userId, deptId);
+			List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(companyId, tenantId, langType, userId, deptId, "");
 			// List<MenuInfoVO> compMenuList = new ArrayList<MenuInfoVO>();
 //			List<MenuInfoVO> resultMenuList = new ArrayList<MenuInfoVO>();
 //			for (MenuInfoVO mVO : userMenuList) {
@@ -1390,7 +1390,7 @@ public class EzNewPortalGWController {
 			
 			ezNewPortalService.deleteUserMenuOrder(companyId, info.getTenantId(), userId);
 			// 초기화 하면 회사에서 지정한 메뉴 순서로 출력
-			List<MenuInfoVO> compMenuList = ezNewPortalService.getUserMenuList(companyId, tenantId, langType, userId, deptId);
+			List<MenuInfoVO> compMenuList = ezNewPortalService.getUserMenuList(companyId, tenantId, langType, userId, deptId, "");
 			
 			//tenant config가 NO인 경우 사용자 메뉴 순서에서도 나오면 안됨
 			//컨피그 : useQuestion(전자설문), useMemo(메모), useLadder(사다리게임), useCabinet(캐비닛), 
@@ -4797,7 +4797,7 @@ public class EzNewPortalGWController {
 			}
 			
 			if (useAttitude2.equals("YES")) {
-				List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(info.getCompanyId(), info.getTenantId(), info.getLang(), userId, info.getDeptId());
+				List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(info.getCompanyId(), info.getTenantId(), info.getLang(), userId, info.getDeptId(), "");
 				
 				for (MenuInfoVO mVO : menuList) {
 					if (mVO.getMenuCode() != null && mVO.getMenuCode().equals("attitude") && useAttitude2.equals("YES")) {
@@ -4895,7 +4895,7 @@ public class EzNewPortalGWController {
 				useCircular = "YES";
 			}
 			
-			List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(companyId, tenantId, portletLang, userId, deptId);
+			List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(companyId, tenantId, portletLang, userId, deptId, "");
 			
 //			boolean isUseQuestionAuth = false;
 			boolean isUseSurveyAuth = false;
@@ -5994,7 +5994,7 @@ public class EzNewPortalGWController {
 			String companyId = userInfo.getCompanyID();
 			String lang = userInfo.getLang();
 			
-			Map<String, Boolean> menuAccess = commonUtil.checkMenuAccess(menuCodeList, companyId, tenantId, lang, userId, deptId);
+			Map<String, Boolean> menuAccess = commonUtil.checkMenuAccess(menuCodeList, companyId, tenantId, lang, userId, deptId, "");
 			
 			result.put("status", "ok");
 			result.put("code", 0);
