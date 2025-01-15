@@ -4032,4 +4032,32 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public String getPublicityYN(Map<String, Object> map) {
 		return (String) select("EzApprovalG.getPublicityYN", map);
 	}
+
+	public String getGongRamId(Map<String, Object> map){
+		return (String) select("EzApprovalG.getGongRamId", map);
+	}
+
+	public void delAprMakeTmp2Ing12(Map<String, Object> map) throws Exception{
+		delete("EzApprovalG.delAprMakeTmp2Ing12", map);
+	}
+
+	public int checkAutoSaveDocId(Map<String, Object> map) throws Exception{
+		return (int) select("EzApprovalG.checkAutoSaveDocId", map);
+	}
+
+	public void aprDeleteDocInfo15(Map<String, Object> map) throws Exception{
+		delete("EzApprovalG.aprDeleteDocInfo15", map);
+	}
+
+	public void aprDeleteDocInfo16(Map<String, Object> map) throws Exception{
+		delete("EzApprovalG.aprDeleteDocInfo16", map);
+	}
+
+	public void aprDeleteDocInfo17(Map<String, Object> map) throws Exception{
+		delete("EzApprovalG.aprDeleteDocInfo17", map);
+	}
+
+	public void deleteTbAprDocInfo(Map<String, Object> map) throws Exception{
+		delete("EzApprovalG.deleteTbAprDocInfo", map);
+	}
 }

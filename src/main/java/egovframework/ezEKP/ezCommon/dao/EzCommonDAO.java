@@ -3085,4 +3085,13 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.addBoardAllNewBoardListDate");
 		}
 	}
+
+	public void insertAprAutoSaveConfig(Map<String, Object> map) throws Exception{
+		String propertyValue = (String) select("EzCommonDAO.checkAprAutoSaveConfig",map);
+
+		if (propertyValue == null) {
+			logger.debug("AprAutoSaveConfig doesn't exist. insert data...");
+			insert("EzCommonDAO.insertAprAutoSaveConfig",map);
+		}
+	}
 }

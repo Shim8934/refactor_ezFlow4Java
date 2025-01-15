@@ -289,6 +289,8 @@
 						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 380 + "PX";
 					}
 				}
+				
+				mobileDistinction();
 			}
       
 			function attach_Add() {
@@ -641,6 +643,15 @@
 		        return str;
 		    }
 		    
+			function mobileDistinction() {
+   				var  userAgent = navigator.userAgent.toLowerCase();
+				
+				if (/iphone|ipod|ipad|android.*mobile/i.test(userAgent) || /tablet|ipad|android/i.test(userAgent) || navigator.maxTouchPoints > 4) {
+					if (window.innerWidth > window.innerHeight) {
+						document.getElementById("EdtorSize").style.height = 436 + "PX";
+					}
+				}
+			}
 		</script>
 	</head>
 	<body class="popup" style="overflow: hidden;">
@@ -1182,6 +1193,8 @@
 						} 
 					}
 				}
+				
+				mobileDistinction(); 
 			</script>
 		</div>
 	</body>

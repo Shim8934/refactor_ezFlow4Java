@@ -359,7 +359,7 @@ public interface EzApprovalGService {
 
     public String gongRamSaveEnd(Document xmlDom, String dirPath, String companyID, String lang, int tenantID, String offSet) throws Exception;
 
-    public String makeTmp2IngDocInfo(String userID, String sn, String companyID, String lang, int tenantID, String docID) throws Exception;
+    public String makeTmp2IngDocInfo(String userID, String sn, String companyID, String lang, int tenantID, String docID, String orgDocID, String updateFlag) throws Exception;
 
     public String checkAprLine(String docID, String mode, String userID, String companyID, int tenantID) throws Exception;
 
@@ -998,4 +998,7 @@ public interface EzApprovalGService {
     public String getRedirectUrl(String docID, String mode, LoginVO userInfo);
 
 	public Map<String, Object> getDocRightInfoForAttachApr(String[] docIdList, String userId, String deptId, String rollInfo, String accessInfo, String approvalFlag, String lang, String companyId, int tenantId) throws Exception;
+    
+    /* 2024-07-11 기민혁 - 전자결재G > 자동 임시저장 문서 확인  */
+    public String checkAutoSaveDocId(String docID, String companyID, int tenantId) throws Exception;
 }

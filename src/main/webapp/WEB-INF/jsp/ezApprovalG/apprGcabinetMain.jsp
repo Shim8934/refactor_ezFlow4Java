@@ -29,7 +29,7 @@
 	        }
 	        
 	        #recordRight.selectUnderDept {
-	            max-width: 350px;
+	            max-width: 450px;
 	        }
 	        
 	    </style>
@@ -140,6 +140,8 @@
 				var useDraftAll = "${ useDraftAll }";
 				var attachedDocList;
 
+				var selSendStatusFlag = "${selSendStatus}";
+
 		        document.onselectstart = function () { return false; };
 		
 		        window.onload = function () {
@@ -219,6 +221,28 @@
                             deptSelectBox.appendChild(newOption);
                         }
                     }
+					// 2024-07-11 기민혁 - 기록물대장 > 발송의뢰 샐렉트 박스 사용
+					var selSendStatusCheck = document.getElementById("selSendStatus");
+					var rec_underDeptCheck = document.getElementById("rec_underDept");
+					if (g_sFlag === "m01" && selSendStatusFlag == "N") {
+						if(selSendStatusCheck){
+							document.getElementById("selSendStatus").style.display = 'none';
+							document.getElementById("selSendStatus").closest('li').style.display ='none';
+						}
+						if(rec_underDeptCheck){
+							document.getElementById("rec_underDept").style.display = 'none';
+							document.getElementById("rec_underDept").closest('li').style.display ='none';
+						}
+					}else if(g_sFlag === "m01" && selSendStatusFlag != "N"){
+						if(selSendStatusCheck){
+							document.getElementById("selSendStatus").style.display = '';
+							document.getElementById("selSendStatus").closest('li').style.display ='';
+						}
+						if(rec_underDeptCheck){
+							document.getElementById("rec_underDept").style.display = '';
+							document.getElementById("rec_underDept").closest('li').style.display ='';
+						}
+					}
 		            settingResize();
 		            Window_resize();
 		        };
@@ -325,7 +349,20 @@
                             tempDeptID = GetSelectVal(deptSelectBox);
                         }
                     }
-                    
+
+					var selSendStatus = "";
+					var selSendStatusElement = document.getElementById("selSendStatus");
+					if (selSendStatusElement && selSendStatusElement.style.display == "") {
+						selSendStatus = selSendStatusElement.value;
+
+						var deptSelectBox = g_sFlag === "m02" ? "rec_underDept2" : "rec_underDept";
+						var deptSelectBoxCheck = document.getElementById(deptSelectBox);
+						if ((deptSelectBoxCheck && GetSelectVal(deptSelectBox) != "default") || (!deptSelectBoxCheck && underDeptFlag === "TRUE")) {
+							selSendStatus = "";
+						}
+					} else if(selSendStatusFlag == "N"){
+						selSendStatus = "N";
+					}
 
 		            if (GetSelectVal("rec_year") != "ALL" || GetSelectVal("cab_year") != "ALL" || GetSelectVal("del_year") != "ALL") {
 		
@@ -337,7 +374,7 @@
 		                    GetCaninetList();
 		                }
 		                else if (DocList_Flag == "RECORD") {
-							g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE>" + selectYear + "-01-01 00:00:00</SREGDATE><EREGDATE>" + selectYear + "-12-31 23:59:59</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
+							g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE>" + selectYear + "-01-01 00:00:00</SREGDATE><EREGDATE>" + selectYear + "-12-31 23:59:59</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE><SELSENDSTATUS>" + selSendStatus + "</SELSENDSTATUS></SEARCHPARAM>";
 		                    GetRecordList();
 		                }
 		                else {
@@ -371,7 +408,7 @@
 		                    GetCaninetList();
 		                }
 		                else if (DocList_Flag == "RECORD") {
-		                    g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + " 00:00:00</SREGDATE><EREGDATE>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
+		                    g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + " 00:00:00</SREGDATE><EREGDATE>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE><SELSENDSTATUS>" + selSendStatus + "</SELSENDSTATUS></SEARCHPARAM>";
 		                    GetRecordList();
 		                }
 		                else {
@@ -1278,7 +1315,11 @@
 		    }
 		
 		    function RecordList_onclick() {
-		        document.getElementById("imgTitle").innerHTML = "<spring:message code='ezApprovalG.t552'/>";
+				if(selSendStatusFlag == "N"){
+					document.getElementById("imgTitle").innerHTML = "<spring:message code='ezApprovalG.KMHG03'/>";
+				}else{
+					document.getElementById("imgTitle").innerHTML = "<spring:message code='ezApprovalG.t552'/>";
+				}
 		        document.getElementById("imgTitle").style.display = "";
 		        SwapSubMenuDisplay("1");
 		        InitGlobals("RECORD", "0", "1");
@@ -2138,6 +2179,20 @@
 		            return;
 		        }
 
+				var selSendStatus = "";
+				var selSendStatusElement = document.getElementById("selSendStatus");
+				if (selSendStatusElement && selSendStatusElement.style.display == "") {
+					selSendStatus = selSendStatusElement.value;
+
+					var deptSelectBox = g_sFlag === "m02" ? "rec_underDept2" : "rec_underDept";
+					var deptSelectBoxCheck = document.getElementById(deptSelectBox);
+					if ((deptSelectBoxCheck && GetSelectVal(deptSelectBox) != "default") || (!deptSelectBoxCheck && underDeptFlag === "TRUE")) {
+						selSendStatus = "";
+					}
+				}else if(selSendStatusFlag == "N"){
+					selSendStatus = "N";
+				}
+				
 				var tempDeptID = DeptID;
 				// 하위부서 선택시 서브메뉴가 사라지기 때문에 하위부서를 선택했을 경우에도 분기를 탈 수 있도록 조건 추가해줌.
 		        if (document.getElementById("trRecSubMenu").style.display == "" || (underDeptFlag === "TRUE" && document.getElementById("recordRight").style.display == "")) {
@@ -2153,21 +2208,21 @@
 		            
 		            if (radiosearch.value == "rad_Subject") {
 						if (selectYear == "ALL") {
-							g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE><![CDATA[" + document.getElementById("txt_keyword").value + "]]></TITLE><REGTYPE></REGTYPE><SREGDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + " 00:00:00.001</SREGDATE><EREGDATE>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59.999</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE><DOCNUM></DOCNUM></SEARCHPARAM>";
+							g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE><![CDATA[" + document.getElementById("txt_keyword").value + "]]></TITLE><REGTYPE></REGTYPE><SREGDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + " 00:00:00.001</SREGDATE><EREGDATE>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59.999</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE><DOCNUM></DOCNUM><SELSENDSTATUS>" + selSendStatus + "</SELSENDSTATUS></SEARCHPARAM>";
 						} else {
-							g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE><![CDATA[" + document.getElementById("txt_keyword").value + "]]></TITLE><REGTYPE></REGTYPE><SREGDATE>" + selectYear + "-01-01 00:00:00.001</SREGDATE><EREGDATE>" + selectYear + "-12-31 23:59:59.999</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE><DOCNUM></DOCNUM></SEARCHPARAM>";
+							g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE><![CDATA[" + document.getElementById("txt_keyword").value + "]]></TITLE><REGTYPE></REGTYPE><SREGDATE>" + selectYear + "-01-01 00:00:00.001</SREGDATE><EREGDATE>" + selectYear + "-12-31 23:59:59.999</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE><DOCNUM></DOCNUM><SELSENDSTATUS>" + selSendStatus + "</SELSENDSTATUS></SEARCHPARAM>";
 						}
 		            } else if (radiosearch.value == "rad_Writer") {
 						if (selectYear == "ALL") {
-							g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + " 00:00:00.001</SREGDATE><EREGDATE>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59.999</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER><![CDATA[" + document.getElementById("txt_keyword").value + "]]></DRAFTER><CABTITLE></CABTITLE><DOCNUM></DOCNUM></SEARCHPARAM>";
+							g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + " 00:00:00.001</SREGDATE><EREGDATE>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59.999</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER><![CDATA[" + document.getElementById("txt_keyword").value + "]]></DRAFTER><CABTITLE></CABTITLE><DOCNUM></DOCNUM><SELSENDSTATUS>" + selSendStatus + "</SELSENDSTATUS></SEARCHPARAM>";
 						} else {
-							g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE>" + selectYear + "-01-01 00:00:00.001</SREGDATE><EREGDATE>" + selectYear + "-12-31 23:59:59.999</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER><![CDATA[" + document.getElementById("txt_keyword").value + "]]></DRAFTER><CABTITLE></CABTITLE><DOCNUM></DOCNUM></SEARCHPARAM>";
+							g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE>" + selectYear + "-01-01 00:00:00.001</SREGDATE><EREGDATE>" + selectYear + "-12-31 23:59:59.999</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER><![CDATA[" + document.getElementById("txt_keyword").value + "]]></DRAFTER><CABTITLE></CABTITLE><DOCNUM></DOCNUM><SELSENDSTATUS>" + selSendStatus + "</SELSENDSTATUS></SEARCHPARAM>";
 						}
 		            } else if (radiosearch.value == "rad_DocNum") {
 						if (selectYear == "ALL") {
-							g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + " 00:00:00.001</SREGDATE><EREGDATE>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59.999</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE><DOCNUM><![CDATA[" + document.getElementById("txt_keyword").value + "]]></DOCNUM></SEARCHPARAM>";
+							g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + " 00:00:00.001</SREGDATE><EREGDATE>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59.999</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE><DOCNUM><![CDATA[" + document.getElementById("txt_keyword").value + "]]></DOCNUM><SELSENDSTATUS>" + selSendStatus + "</SELSENDSTATUS></SEARCHPARAM>";
 						} else {
-							g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE>" + selectYear + "-01-01 00:00:00.001</SREGDATE><EREGDATE>" + selectYear + "-12-31 23:59:59.999</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE><DOCNUM><![CDATA[" + document.getElementById("txt_keyword").value + "]]></DOCNUM></SEARCHPARAM>";
+							g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE>" + selectYear + "-01-01 00:00:00.001</SREGDATE><EREGDATE>" + selectYear + "-12-31 23:59:59.999</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE><DOCNUM><![CDATA[" + document.getElementById("txt_keyword").value + "]]></DOCNUM><SELSENDSTATUS>" + selSendStatus + "</SELSENDSTATUS></SEARCHPARAM>";
 						}
 					}
 		            
@@ -2707,10 +2762,25 @@
                     if (underDeptFlag == "TRUE" && GetSelectVal("rec_underDept") != "default") {
                         document.getElementById("trRecSubMenu").style.display = 'none';
                         document.getElementById("recordRight").classList.remove('selectUnderDept');
-                    } else {
+						if (g_sFlag == "m01"){
+							var element = document.getElementById("selSendStatus");
+							if (element) {
+								element.style.display = 'none';
+								element.closest('li').style.display = 'none';
+								element.value = '';
+							}
+						}
+					} else {
                         document.getElementById("trRecSubMenu").style.display = '';
                         document.getElementById("recordRight").classList.add('selectUnderDept');
-                    }
+						if (g_sFlag == "m01"){
+							var element = document.getElementById("selSendStatus");
+							if (element && selSendStatusFlag != "N") {
+								element.style.display = '';
+								element.closest('li').style.display = '';
+							}
+						}
+					}
                 } else if (g_sFlag == "m02") {
                     if (underDeptFlag === "TRUE" && GetSelectVal("rec_underDept2") != "default") {
                         document.getElementById("tdRegCabinet").style.display = 'none';
@@ -2868,6 +2938,16 @@
                             </select>
                         </li>
                     </c:if>	
+					<%-- 2024-07-11 기민혁 - 기록물대장 > 발송 의뢰 드롭다운 --%>
+					<li style="vertical-align: middle; float:right; display: none">
+						<select id="selSendStatus" name="selSendStatus" style="max-width:150px; display: none" onchange="onSelect_Year(this);">
+							<option value><spring:message code='ezApprovalG.KMHG04'/></option>
+							<option value="N" ><spring:message code='ezApprovalG.KMHG05'/></option>
+							<option value="O" ><spring:message code='ezApprovalG.t1422'/></option>
+							<option value="S" ><spring:message code='ezApproval.t854'/></option>
+							<option value="B" ><spring:message code='ezApproval.t57'/></option>
+						</select>
+					</li>
 	            <li style="vertical-align: middle; float:right">
 	                <select id="rec_year" name="rec_year" style="width:75px;" onchange="onSelect_Year(this);">
 	                    <option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option>

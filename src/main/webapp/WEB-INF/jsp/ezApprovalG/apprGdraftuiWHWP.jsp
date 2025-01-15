@@ -136,7 +136,7 @@
 	        var AprLineArea = 0;
 	        var DocSN = "<c:out value ='${docSN}'/>";
 	        var AutoSave = "save";
-	        var Saveflag = false;
+	        var Saveflag = true;
 	        var pUse_Editor = "<c:out value ='${useEditor}'/>";
 	        var tempSecurity = "";
 	        var tempKeep = "";
@@ -196,6 +196,15 @@
 			var pTenantID = "<c:out value='${userInfo.tenantId}'/>";
             var junGyulFlag = "<c:out value = '${junGyulFlag}'/>";
 			var draftJunGyulFlag = "<c:out value ='${draftJunGyulFlag}'/>"; // 일반버전 서명 remapping 시 전결문자 표출 확인용 (0 : 미표출 / 1 : 표출, default)
+
+			// 자동 임시저장
+			var timer;
+			var pSaveTime = "<c:out value ='${useAutoSaveTime}'/>";
+			var pSaveInterval = parseInt(pSaveTime) * 1000;
+			var DraftStatus = "NO";
+			var autopDocID = "";
+			var autopDocSN = "";
+			var createAutoDoc = "N"
 
 	        window.onload = function () {
 	            try {
@@ -361,6 +370,17 @@
 	                if(DraftFlag === 'DRAFT') {
 	                	$("#btnSave").css('display', 'none');
 	                }
+
+					//2024.07.04 자동 임시저장 기능 추가
+					if (document.getElementById("btnSaveServer").style.display != "none" && approvalFlag == "G" && pSaveInterval != 0) { // 임시저장이 가능한 문서일때만 저장되도록 추가
+						if (timer) {
+							clearInterval(timer);
+						}
+						if (pSaveInterval > 0) {
+							timer = setInterval(Draft_AutoSave, pSaveInterval);
+						}
+					}
+					
 	            } catch (e) {
 	                alert("ezdraftui_whwp.FieldsAvailable()::" + e);
 	            }
@@ -1018,6 +1038,10 @@
 		        if (ListType == "21") {
 		            RemoveTmpDoc(DocSN);
 		        }
+
+				if (autopDocSN != "") {
+					RemoveTmpDoc(autopDocSN);
+				}
 		      //2019.02.21 유은정 : 포탈개인화 결재리스트에서 포틀릿 정보 가져오는 매서드 추가
 		        if (parent.opener != null && typeof(parent.opener.getApprovalList) != 'unknown' && parent.opener.getApprovalList != undefined) {
 		        	parent.opener.clearAbsence(true);
@@ -2097,6 +2121,90 @@
 
                 return result == "FALSE" ? true : false;
             }
+
+			function Draft_AutoSave() {
+				try{
+					//상신중일때는 저장안되도록 추가
+					if (DraftStatus == "ING") {
+						return;
+					}
+
+					if (autopDocID != "") {
+						$.ajax({
+							type : "POST",
+							dataType : "text",
+							async : false,
+							url : "/ezApprovalG/checkAutoSaveDocId.do",
+							data : {
+								docID : autopDocID
+							},
+							success: function(result){
+								if(result != "TRUE"){
+									autopDocSN = "";
+									autopDocID = "";
+									createAutoDoc = "N";
+								}
+							}
+						});
+					}
+
+					if (autopDocSN == "") {
+						autopDocSN = GetMaxTMPDocSN();
+					}
+
+					if (autopDocSN != "") {
+						DraftStatus = "ING";
+						var AutoSave2 = "autosave";
+
+						if(Saveflag && autopDocID == "") {
+							newpDocID = createNewDoc();
+							autopDocID = newpDocID;
+						}
+						message.GetTextFile("HWP", "", function (data) { exSaveTMPFile2(data, AutoSave2) });
+					}
+				}
+				catch(e)
+				{
+					DraftStatus = "NO"; //2024.02.06 자동저장관련 추가
+				}
+
+			}
+
+			function exSaveTMPFile2(html, AutoSave) {
+				var rtnVal = SaveTMPFile(html);
+				if (rtnVal == "TRUE") {
+					rtnVal = SaveTMPDocInfo(AutoSave, Saveflag);
+					if (rtnVal == "TRUE") {
+						draftFlag = "true";
+						Saveflag = true;
+						createAutoDoc = "Y";
+						DraftStatus = "NO"; //2024.02.06 자동저장관련 추가
+					}
+				} 
+			}
+
+			// 자동 임시저장
+			function GetMaxTMPDocSN() {
+				var ret = "";
+
+				$.ajax({
+					type : "GET",
+					dataType : "text",
+					async : false,
+					url : "/ezApprovalG/getMaxTMPDocSN.do", // userInfo만 사용하므로 데이터는 전달할 필요 없음
+					success: function(result) {
+						if (result == "error") {
+							var pAlertContent = strLang217;
+							OpenAlertUI(pAlertContent);
+							return false;
+						} else {
+							ret = result;
+						}
+					}, error : function () {} // 서버단에서 예외처리함. result를 error로 반환하므로 success에서 체크
+				});
+
+				return ret;
+			}
 	    </script>
 	</head>
 	<body class="popup">
