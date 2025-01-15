@@ -1582,7 +1582,7 @@
 			                else
 			                    ret[8] = "N";
 		                } else {
-			                ret[7] = SelectSingleNodeValueNew(docinfo, "PARAMETER/psecuritylevel");
+			                ret[7] = RSecurity.value;
 			                ret[8] = SelectSingleNodeValueNew(docinfo, "PARAMETER/pUrgentFlag");
 			                ret[16] = SelectSingleNodeValueNew(docinfo, "PARAMETER/pkeeperiod");
 			                ret[17] = SelectSingleNodeValueNew(docinfo, "PARAMETER/tbItemName");
@@ -3695,7 +3695,7 @@
 		                    <select id="selSecLevel" name="select" style="WIDTH: 85px">
 		                        ${securityNode3}
 		                    </select>
-		                </td>
+						</td>
 		            </tr>
 					<tr style="display:none">
 						<th><spring:message code='ezApprovalG.t979'/></th>
@@ -3871,7 +3871,11 @@
 		                    <td>
 		                        <table class="popuplist" style="width: auto;">
 		                            <tr>
-		                                <td style="width: auto; padding-left: 4px; padding-bottom: 4px">${securityNode3}</td>
+		                                <td style="width: auto; padding-left: 4px; padding-bottom: 4px">
+											<select id="RSecurity" name="RSecurity" style="WIDTH: 85px">
+												${securityNode3}
+											</select>
+										</td>
 		                            </tr>
 		                        </table>
 		

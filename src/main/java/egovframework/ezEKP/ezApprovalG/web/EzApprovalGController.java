@@ -1877,7 +1877,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("upperDeptCode", upperDeptCode);
 		model.addAttribute("upperDeptName", upperDeptName);
 
-		logger.debug("ezApprovalInfo ended.");
+//		logger.debug("ezApprovalInfo ended.");
 		
 		return "ezApprovalG/apprGezApprovalInfo";
 	}

@@ -32,10 +32,10 @@ import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import egovframework.let.utl.rest.JgwResult;
 import egovframework.let.utl.rest.Result;
 import egovframework.ezEKP.ezOrgan.service.impl.EzOrganAdminServiceImpl;
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import org.apache.commons.lang3.BooleanUtils;
 import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
 import egovframework.ezEKP.ezOrgan.vo.OrganAuth.AdminAuth;
@@ -155,6 +155,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 
 	@Autowired
 	private Rest rest;
+
+	@Resource(name = "EzApprovalGService")
+	private EzApprovalGService ezApprovalGService;
 
     @PostConstruct
 	public void init() throws Exception {
@@ -1391,7 +1394,13 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("userPrimary", userInfo.getPrimary());
 		model.addAttribute("useOnlyInnerMail", useOnlyInnerMail);
 		model.addAttribute("useOrganHideFlag", useOrganHideFlag);
-				
+
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		String securityNode3 = ezApprovalGService.getSecurityType("", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
+
+		model.addAttribute("securityNode3", securityNode3);
+		model.addAttribute("approvalFlag", approvalFlag);
+
 		logger.debug("userInfo ended");
 		
 		return "admin/ezOrgan/userInfo";

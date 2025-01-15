@@ -36,20 +36,21 @@
 	    	var jobTitleID, jobTitleName, jobTitleName2;
 	    	var jobPositionID, jobPositionName, jobPositionName2;
 	    	var primaryLang = "${primaryLang}";
-	    	
+	    	var approvalFlag = "${approvalFlag}";
+
 			$(document).ready(function(){
 				var toYear = new Date().getFullYear();
 				var sYear = parseInt(toYear-90);
 				var eYear = parseInt(toYear+10);
-				
+
 				if (primaryLang == '3') {
 					window.resizeTo(850, 540);
 				}
-				
+
 				$("#txtBirth").datepicker({
 			        changeMonth: true,
 			        changeYear: true,
-			        yearRange: sYear+":"+eYear,  
+			        yearRange: sYear+":"+eYear,
 			        //autoSize: true,
 			        showOn: "button",
 			        buttonImage: "/images/ImgIcon/calendar-month.png",
@@ -63,12 +64,12 @@
 			    else {
 			        $("#txtBirth").datepicker('setDate', getBirthDay);
 			    }
-			    
+
 			    var monthMsg = "<spring:message code='ezSchedule.t110' />";
-			    var monthStr = monthMsg.split(";");		    
+			    var monthStr = monthMsg.split(";");
 			    var dayMsg = "<spring:message code='ezSchedule.t108' />";
 			    var dayStr = dayMsg.split(";");
-			    
+
 			    $(function () {
 			        $.datepicker.regional["<spring:message code='main.t0619' />"] = {
 			        	closeText: "<spring:message code='main.t3' />",
@@ -90,8 +91,8 @@
 			            showMonthAfterYear: true
 			        };
 			        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
-			    });			    
-			    
+			    });
+
 				try {
 	                ReturnFunction = opener.userinfo_dialogArguments[1];
 	                RetValue = opener.userinfo_dialogArguments[0];
@@ -125,7 +126,7 @@
 		                KeEventControl(document.getElementById("HomePhone"));
 		                KeEventControl(document.getElementById("Mobile"));
 		                KeEventControl(document.getElementById("SocialNum"));
-		                KeEventControl(document.getElementById("SecurityLevel"));
+		                KeEventControl(document.getElementById("RSecurity"));
 		                KeEventControl(document.getElementById("UserID"));
 		                KeEventControl(document.getElementById("SortNum"));
 		            }
@@ -144,6 +145,7 @@
 					document.getElementById("CompanyName").value = RetValue[6];
 		            
 		            getJobInfoInit();
+					document.getElementById("RSecurity").value = '';
 		            
 		        } else {
 		            OrgUserID = RetValue[2];
@@ -226,15 +228,17 @@
 			                
 			                titleChange();
 			                positionChange();
-			                
+
 			                if (SelectSingleNodeValueNew(xmlDom, "DATA/BIRTHTYPE").trim() == "Y" || SelectSingleNodeValueNew(xmlDom, "DATA/BIRTHTYPE").trim() == ""){
 			                    document.getElementById("birth_S").checked = true;
 			                }else{
 			                    document.getElementById("birth_N").checked = true;
 			                }
 			                var AclList = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE1").toLowerCase().trim();
-			                document.getElementById("SecurityLevel").value = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE6").trim();
-			                
+
+							document.getElementById("RSecurity").value = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE6").trim();
+
+
 			                for (var i = 1; i < 13; i++) {
 			                    try {
 			                        if (AclList.indexOf(document.getElementById("Check" + i).value + "=1") > -1){
@@ -423,11 +427,19 @@
 // 		            alert("<spring:message code='ezOrgan.t263' /><,> <spring:message code='ezOrgan.t260' />");
 // 		            return;
 // 		        }
-		        if (trim(SecurityLevel.value) != "" && parseInt(SecurityLevel.value) != SecurityLevel.value) {
-		            alert("<spring:message code='ezOrgan.t265' />");
-		            return;
-		        }
-		        
+
+                var securityNode = null;
+                var securityValue = null;
+
+				securityNode = document.querySelector("#RSecurity");
+
+                securityValue = securityNode.value;
+
+                if (trim(securityValue) != "" && parseInt(securityValue) != securityValue) {
+                    alert("<spring:message code='ezOrgan.t265' />");
+                    return;
+                }
+
 		        if (!SortNum.value.match(/^\d*$/)) {
 		        	alert("<spring:message code='ezOrgan.t226' />: <spring:message code='ezEmail.t99000066'/>");
 					return;
@@ -489,7 +501,7 @@
 					url : "/admin/ezOrgan/saveUserInfo.do",
 					async : true,
 					data : {parentCn : DeptID, cn : document.getElementById("UserID").value, displayName : UserName.value, displayName2 : UserName2.value, password : Password.value,
-						    mailNickName : mailNickName, title : jobTitleName, title2 : jobTitleName2, extensionAttribute15 : SortNum.value, extensionAttribute6 : SecurityLevel.value,
+						    mailNickName : mailNickName, title : jobTitleName, title2 : jobTitleName2, extensionAttribute15 : SortNum.value, extensionAttribute6 : securityValue,
 						    extensionAttribute14 : SocialNum.value, extensionAttribute10 : jobPositionName, extensionAttribute102 : jobPositionName2, telephoneNumber : PhoneNumber.value,
 						    homePhone : HomePhone.value, facsimileTelephoneNumber : FaxNum.value, mobile : Mobile.value, postalCode : ZipCode.value, streetAddress : HomeAddr.value,
 						    birthType : birthtype, birth : document.getElementById("txtBirth").value, manualFlag : "Y", extensionAttribute7 : jobTitleID, extensionAttribute8 : jobPositionID ,
@@ -918,7 +930,10 @@
 	        <tr>
 	            <th style="width: 71px; text-align:center"><spring:message code='ezOrgan.t284' /></th>
 	            <td style="width: 240px;">
-	                <input id="SecurityLevel" style="width: 100%" maxlength="50"/>
+					<select id="RSecurity"  style="width: 100%" maxlength="50">
+						<option value=""><spring:message code='ezOrgan.ygs01'/></option>
+						${securityNode3}12312213
+					</select>
 	            </td>
 	            <th style="width: 71px; text-align:center"><spring:message code='ezOrgan.t226' /></th>
 	            <td style="width: 240px;">

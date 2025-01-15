@@ -1112,38 +1112,39 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		//보안등급으로 권한 체크(사용자정보에 있는 등급으로 권한 체크함)
 		if ((publicityFlag.equals("ALL") || (publicityFlag.equals("DEPT") && rtnVal)) && mode.substring(1, 2).equals("Y")) {
-			String userSecurityCode = ezOrganService.getPropertyValue(userID, "extensionAttribute6", tenantID);
-			
+ 			String userSecurityCode = ezOrganService.getPropertyValue(userID, "extensionAttribute6", tenantID);
+
 			if (userSecurityCode == null || userSecurityCode.trim().equals("")) {
 				userSecurityCode = "0";
-				map.put("v_FLAG", "005");
-				logger.debug("getAccessYNG Param : v_DOCID =" + docID + " v_TENANTID =" + tenantID + " v_USERID=" + userID + " v_FLAG=" +  "005");
+            }
+            map.put("v_FLAG", "005");
+            logger.debug("getAccessYNG Param : v_DOCID =" + docID + " v_TENANTID =" + tenantID + " v_USERID=" + userID + " v_FLAG=" +  "005");
 
-				String docSecurityCode = makeListField(ezApprovalGDAO.getAccessYNG(map));
-				logger.debug("getAccessYNG Value : docSecurityCode =" + docSecurityCode);
+            String docSecurityCode = makeListField(ezApprovalGDAO.getAccessYNG(map));
+            logger.debug("getAccessYNG Value : docSecurityCode =" + docSecurityCode);
 
-				if (docSecurityCode.trim().equals("")) {
-					docSecurityCode = "999";
-				}
-				
-				if (Integer.parseInt(userSecurityCode) <= Integer.parseInt(docSecurityCode)) {
-					rtnVal = true;
-				} else {
-					rtnVal = false;
-				}
-				
-				if (getIsUse("A22", "005", companyID, lang, tenantID).equals("1")) {
-					map.put("v_FLAG", "002");
-					logger.debug("getAccessYNG Param : v_DOCID =" + docID + " v_TENANTID =" + tenantID + " v_USERID=" + userID + " v_FLAG=" +  "002");
+            if (docSecurityCode.trim().equals("")) {
+                docSecurityCode = "999";
+            }
 
-					String isLineInfo = makeListField(ezApprovalGDAO.getAccessYNG(map));
-					logger.debug("getAccessYNG Value : isLineInfo =" + isLineInfo);
+            if (Integer.parseInt(userSecurityCode) <= Integer.parseInt(docSecurityCode)) {
+                rtnVal = true;
+            } else {
+                rtnVal = false;
+            }
 
-					if (isLineInfo.equals("Y")) {
-						rtnVal = true;
-					}
-				}
-			}
+            if (getIsUse("A22", "005", companyID, lang, tenantID).equals("1")) {
+                map.put("v_FLAG", "002");
+                logger.debug("getAccessYNG Param : v_DOCID =" + docID + " v_TENANTID =" + tenantID + " v_USERID=" + userID + " v_FLAG=" +  "002");
+
+                String isLineInfo = makeListField(ezApprovalGDAO.getAccessYNG(map));
+                logger.debug("getAccessYNG Value : isLineInfo =" + isLineInfo);
+
+                if (isLineInfo.equals("Y")) {
+                    rtnVal = true;
+                }
+            }
+
 		}
 		
 		//열람권한으로 권한 체크
@@ -3010,27 +3011,16 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		int dlength = docXML.getElementsByTagName("ROW").getLength();
 		
-		if (approvalFlag.equals("S")) {
-			rtnXML.append("<div style='padding-top:5px'>");
-		}
-		
 		for (int k = 0; k < dlength; k++) {
 			String[] colOption = docXML.getElementsByTagName("NAME").item(k).getTextContent().split(";");
 			
-			if (approvalFlag.equals("G")) {
-				if (colOption[2].equals(selected)) {
-					rtnXML.append("<OPTION value=" + colOption[2] + " selected>" + colOption[1] + "</OPTION>");
-				} else {
-					rtnXML.append("<OPTION value=" + colOption[2] + ">" + colOption[1] + "</OPTION>");
-				}
-			} else {
-				rtnXML.append("<input type='radio' id='RSecurity' name='RSecurity' style='height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;' value='" + colOption[2] + "' value2='" + colOption[1] + "' >&nbsp;<span>" + colOption[1] + "</span>&nbsp;&nbsp;");
-			}
+            if (colOption[2].equals(selected)) {
+                rtnXML.append("<OPTION value=" + colOption[2] + " selected>" + colOption[1] + "</OPTION>");
+            } else {
+                rtnXML.append("<OPTION value=" + colOption[2] + ">" + colOption[1] + "</OPTION>");
+            }
 		}
 		
-		if (approvalFlag.equals("S")) {
-			rtnXML.append("</div>");
-		}
 
 		logger.debug("getSecurityType ended");
 		

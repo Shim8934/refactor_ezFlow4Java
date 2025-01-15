@@ -241,15 +241,11 @@ function getdocinfolist(i) {
     else
         document.getElementById("urgent").checked = false;
 
-    var temptRSecurity = document.getElementsByName("RSecurity");
+    var temptRSecurity = document.querySelector("#RSecurity");
     var temptRKeeptype = document.getElementsByName("RKeeptype");
     var temptisPublic = document.getElementsByName("isPublic");
-
-    for (Cnt = 0; Cnt < temptRSecurity.length; Cnt++) {
-        if (psecuritylevel == temptRSecurity[Cnt].value) {
-            temptRSecurity[Cnt].checked = true; break;
-        }
-    }
+    temptRSecurity.value = psecuritylevel;
+         
     for (Cnt = 0; Cnt < temptRKeeptype.length; Cnt++) {
         if (pkeeperiod == temptRKeeptype[Cnt].value) {
             temptRKeeptype[Cnt].checked = true; break;
