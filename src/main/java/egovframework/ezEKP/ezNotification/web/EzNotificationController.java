@@ -68,9 +68,30 @@ public class EzNotificationController {
 		logger.debug("notificationMain started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		model.addAttribute("deptID", userInfo.getDeptID());
-		model.addAttribute("userID", userInfo.getId());
 		
+		// 통합알림 > 검색조건 > 알림 종류 > 접근가능한 메뉴만 표출함. (공지알림, 기타는 항상 표출)
+		String userID = userInfo.getId();
+		String deptID = userInfo.getDeptID();
+		String companyID = userInfo.getCompanyID();
+		String jobID = userInfo.getJobId();
+		String url = "/rest/ezPortal/menus/users/" + userID;
+
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("userId", userID);
+		paramMap.put("deptId", deptID);
+		paramMap.put("companyId", companyID);
+		paramMap.put("jobId", jobID);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.notificationGWServerURL"), url, paramMap, request, "get", null);
+		String status = resultBody.get("status").toString();
+
+		if (status.equals("ok")) {
+			JSONObject resultData = (JSONObject) resultBody.get("data");
+			model.addAttribute("menuList", resultData.get("menuList"));
+		}
+
+		model.addAttribute("userID", userID);
+		model.addAttribute("deptID", deptID);
+
 		logger.debug("notificationMain ended");
 		
 		return "/ezNotification/notificationMain";
