@@ -893,7 +893,8 @@ DROP TABLE IF EXISTS `jmocha_mail_reserve`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `jmocha_mail_reserve` (
   `MESSAGE_ID` varchar(50) NOT NULL,
-  `USER_ID` varchar(100) DEFAULT NULL,
+  `USER_ID` varchar(100) DEFAULT NULL, -- userAccount (mailId@domainName)
+  `SENDER` varchar(80) DEFAULT NULL, -- userId
   `SUBJECT` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `SEND_DATE` datetime DEFAULT NULL,
   PRIMARY KEY (`MESSAGE_ID`),

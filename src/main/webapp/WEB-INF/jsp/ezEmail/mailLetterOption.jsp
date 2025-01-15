@@ -156,13 +156,8 @@
 		        } else {
 		            document.getElementById("Stimepicker").disabled = true;
 		            $("#Sdatepicker").datepicker('disable');
-		        }	
-		        
-		        if (shareId == "") {
-		        	//document.getElementById("reserveTitle").style.display = "";
-		        	document.getElementById("reserveTable").style.display = "";
 		        }
-		        
+
 		        if (individualMailUser > 0) {
 					if (rgParams["EachMail"] == "true") {
 			            document.getElementById("eachMailSend").checked = true;
@@ -386,7 +381,7 @@
 		<%-- <h2 style="margin-top:10px" id="etcLang"><spring:message code='ezEmail.t748' /></h2> --%>
 		<h2 style="margin-top:10px" id="etcLang"><spring:message code='ezEmail.t373' /></h2>
 		<table width="100%" class="content">
-			<tr id="reserveTable" class="content" style="display:none;border-top:none;width:100%;">
+			<tr class="content" style="border-top:none;width:100%;">
 				<td>
 					<input type="checkbox" value="1" id="deliverySend" style="margin-top: 6px;" onclick="ReservedSend(this);">
 					<span style="vertical-align:middle;"> <spring:message code='ezEmail.t374' /> </span>

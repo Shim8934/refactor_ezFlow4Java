@@ -611,7 +611,8 @@ public class EzEmailServiceImpl implements EzEmailService {
         		
         		vo.setMessageId((String)obj.get("messageId"));
         		vo.setConnUrl((String)obj.get("userId"));
-        		
+        		vo.setSender((String)obj.get("sender"));
+
         		list.add(vo);
         	}
         }
@@ -621,10 +622,9 @@ public class EzEmailServiceImpl implements EzEmailService {
 	}
 	
 	@Override
-	public String setMailReserved(int tenantId, String pMessageId, String pSubject, String pSendDate, String pUserId, String isReserve) throws Exception {
+	public String setMailReserved(int tenantId, String pMessageId, String pSubject, String pSendDate, String mailId, String sender, String isReserve) throws Exception {
 		logger.debug("setMailReserved started.");
-		logger.debug("tenantId=" + tenantId + ",pMessageId=" + pMessageId + ",pSubject=" + pSubject + ",pSendDate=" + pSendDate + ",pUserId=" + pUserId + ",isReserve=" + isReserve);
-		
+		logger.debug("tenantId={}, pMessageId={}, pSubject={}, pSendDate={}, mailId={}, sender={}, isReserve={}", tenantId, pMessageId, pSubject, pSendDate, mailId, sender, isReserve);
 		if (!isReserve.equalsIgnoreCase("YES")) {
 			pMessageId = UUID.randomUUID().toString();
 		}
@@ -632,11 +632,12 @@ public class EzEmailServiceImpl implements EzEmailService {
 		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
 		
 		String messageIdParam = "messageId=" + URLEncoder.encode(pMessageId, "UTF-8");
-		String userIdParam = "userId=" + URLEncoder.encode(pUserId + "@" + domainName, "UTF-8");
+		String userIdParam = "userId=" + URLEncoder.encode(mailId + "@" + domainName, "UTF-8");
+		String senderParam = "sender=" + URLEncoder.encode(sender, "UTF-8");
 		String subjectParam = "subject=" + URLEncoder.encode(pSubject, "UTF-8");
 		String sendDateParam = "sendDate=" + URLEncoder.encode(pSendDate, "UTF-8");
-		
-		String inputParams = messageIdParam + "&" + userIdParam + "&" + subjectParam + "&" + sendDateParam;
+
+		String inputParams = String.join("&", messageIdParam, userIdParam, senderParam, subjectParam, sendDateParam);
 		logger.debug("inputParams=" + inputParams);
 		
 		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/setMailReserved", inputParams);

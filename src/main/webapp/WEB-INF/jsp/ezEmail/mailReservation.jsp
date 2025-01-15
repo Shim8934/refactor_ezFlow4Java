@@ -17,6 +17,7 @@
 		</style>
 		
 		<script>
+			var shareId = "${shareId}";
 			var g_bDelete = false;
 			var g_drafturl = "${draftUrl}";
             var g_bHardDelete = "0";
@@ -71,6 +72,7 @@
 		    		pHeight = 111;
 		    	} else {
 		    		pUrl = "/ezEmail/mailWrite.do?cmd=RESERVE&messageid=" + encodeURIComponent(pMessageID);
+					pUrl += shareId? "&shareId=" + encodeURIComponent(shareId) : "";
 		    		pWidth = 890;
 		    		pHeight = 840;
 		    	}

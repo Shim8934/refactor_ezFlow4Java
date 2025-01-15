@@ -2041,6 +2041,13 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("AFTER", "DEFAULT 'Y'");
 		}});
 
+		// JMOCHA_MAIL_RESERVE
+		test.add(new HashMap<String, Object>(){{ // 2025-01-14 김은실: 예약메일 공유사서함 추가.
+			put("TABLE","JMOCHA_MAIL_RESERVE");
+			put("COLUMN", "SENDER");
+			put("TYPE_MYSQL", "VARCHAR(80)"); put("TYPE_ORACLE", "NVARCHAR2(80)");
+		}});
+
 		// TBL_ADDJOBMASTER
 		test.add(new HashMap<String, Object>(){{ // 2018-08-30 commit 2910f2a7
 			put("TABLE","TBL_ADDJOBMASTER");

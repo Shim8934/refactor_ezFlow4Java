@@ -935,8 +935,9 @@ CREATE TABLE "JMOCHA_COMPANY_QUOTA"
 
   CREATE TABLE "JMOCHA_MAIL_RESERVE" 
    (	"MESSAGE_ID" NVARCHAR2(50), 
-	"USER_ID" NVARCHAR2(100), 
-	"SUBJECT" NVARCHAR2(200), 
+	"USER_ID" NVARCHAR2(100),  -- userAccount (mailId@domainName)
+	"SENDER" NVARCHAR2(80),  -- userId
+	"SUBJECT" NVARCHAR2(200),
 	"SEND_DATE" DATE
    ) ;
 --------------------------------------------------------
