@@ -32965,7 +32965,7 @@
 					AND
 						D.COMPANYID = E.COMPANYID
 					WHERE
-						L.APRTYPE = '007'
+                        L.APRTYPE IN ('007', '040')
 				    AND 
 				    	L.APRSTATE = '002'
 				    AND 

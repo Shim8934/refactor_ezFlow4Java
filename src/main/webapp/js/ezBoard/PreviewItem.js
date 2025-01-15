@@ -410,6 +410,13 @@ function ItemPreviewRead(obj) {
         xmlhttp2.onreadystatechange = event_ItemPreviewRead;
         xmlhttp2.send();
     }
+
+    if (obj.getAttribute("gubun") == "2" && BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && obj.getAttribute("publicflag") == "N") {
+        document.getElementById('openPassword').setAttribute('data-id', obj.getAttribute("DATA2"));
+        document.getElementById('openPassword').setAttribute('data-board', obj.getAttribute("DATA1"));
+        $('#openPassword').val('');
+        $('#chkPass').modal();
+    }
 }
 var ItemID;
 var WriterID;
@@ -525,7 +532,9 @@ function event_ItemPreviewRead() {
             }
      
             if (SelectSingleNodeValue(xmlhttp.responseXML, "DATA") == "NO") {
-            	alert(strLang173);
+                if (!g_bPrevShow) { //미리보기 아닐 때만 alert
+            	    alert(strLang173);
+                }    
             	document.querySelector('#PreH_sub_subject').textContent = "";
             	document.querySelector('#PreH_MailReceiver').textContent = "";
             	document.querySelector('#PreH_date').textContent = "";

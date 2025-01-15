@@ -92,6 +92,7 @@
 		    var userTitle = "<c:out value = '${userInfo.title}'/>";
 		    var useDraftAll = "<c:out value = '${useDraftAll}'/>";
             var attachedDocList;
+			var popupWindow;
 		    
 		    $(function () {
 		      	if(approvalFlag == "G") {
@@ -1186,7 +1187,11 @@
 		
 		            if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9")
 		                pListTypeValue = "1";
-		
+
+					if (typeof onUserChange === "function") {
+						onUserChange();
+					}
+					
 		            parent.frames["left"].location.href = "/ezApprovalG/apprGLeft.do?listType=" + pListTypeValue;
 		        }
 		    }
@@ -1290,6 +1295,12 @@
 					console.log(e);
 				}
 			}
+
+			onUserChange = () => {
+				if (popupWindow && !popupWindow.closed) {;
+					popupWindow.OpenAlertUI("<spring:message code='ezApprovalG.jje02'/>");
+				}
+			};
 		</script>
 	</head>
 	<body ondragstart="return false" onselectstart="return false" class="newLeft">

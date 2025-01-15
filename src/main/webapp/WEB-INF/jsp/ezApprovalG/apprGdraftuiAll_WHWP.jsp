@@ -967,9 +967,15 @@
 	        	if (!btnChk()) {
 					return false;
 				}
-	        	
-	        	var currIfrm = document.getElementById("ifrm" + currentTabIdx);
-	        	currIfrm.contentWindow.PrintDocument();
+				var formFileLocation = document.getElementById("selForm").value;
+				var currentExt = formFileLocation.substring(formFileLocation.lastIndexOf(".") + 1);
+	        	if (currentExt === "mht") {
+					PrintClick("Cross", pDocID, "ING");
+				} else {
+					var currIfrm = document.getElementById("ifrm" + currentTabIdx);
+					currIfrm.contentWindow.PrintDocument();
+				}
+
 	        }
 	
 	        function btnClose_onclick() {
@@ -1023,7 +1029,7 @@
 			    try {
 			    	// 모든 안의 양식을 돌며 체크하되, 공개여부 필드의 존재를 확인한다.
 			    	viewTabNum = $("dl.tab_menu dt").length;
-			    	for (var i = 1; i < viewTabNum; i++) { // 1안부터 시작
+			    	for (var i = 1; i <= viewTabNum; i++) { // 1안부터 시작
 			    		var ifrm = document.getElementById("ifrm" + i);
 				        if (!ifrm.contentWindow.FieldExist("publication")) { // 공개여부 필드가 양식에 없다면 다음 루프로 이동
 				            continue;
@@ -1047,8 +1053,8 @@
 						    PublicText = "<spring:message code='ezApprovalG.t46'/>" + getPublicLevel(PublicLevel);
 				        } else {
 						    PublicText = " ";
-						    ifrm.contentWindow.PutFieldText("publication", PublicText);
 				        }
+						ifrm.contentWindow.PutFieldText("publication", PublicText);
 			    	}
 				} catch (e) {
 				    alert("ezdraftui_hwp.setPublicFlag()  ::  " + e);

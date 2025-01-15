@@ -2043,7 +2043,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		} else {
 			startRow = ((personalCount * (boardVO.getPageNum() - 1))) + 1;
 			endRow = personalCount * boardVO.getPageNum();
-			
+
 			if (endRow < 0) {
 				endRow = 0;
 			}
@@ -7796,8 +7796,13 @@ public class EzBoardController extends EgovFileMngUtil{
 		boardID = request.getParameter("boardID"); 		
 		mode = request.getParameter("mode");
 		
-		if (!accessCheck(boardID, itemID, location, userInfo, "")) {
-			return "<DATA>NO</DATA>";
+		if(!mode.equals("storage")){
+			String authorization = request.getHeader("Authorization");
+			String password = StringUtils.isNotBlank(authorization) ? new String(java.util.Base64.getDecoder().decode(StringUtils.removeStart(authorization, "Basic").trim())) : "";
+
+			if (!accessCheck(boardID, itemID, location, userInfo, password)) {
+				return "<DATA>NO</DATA>";
+			}
 		}
 		
 		String retXML = "";

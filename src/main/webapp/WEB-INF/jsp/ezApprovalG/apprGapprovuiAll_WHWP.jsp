@@ -84,7 +84,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/attachG.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/getDocAttach_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/escapenew.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/appandbody.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/appandbody_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
         <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/html2canvas.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/nonElecRec.js')}"></script>
@@ -1503,8 +1503,14 @@
 			    }
 	
 			    function btnPrint_onclick() {
-			    	var currIfrm = document.getElementById("ifrm" + currentTabIdx);
-		        	currIfrm.contentWindow.PrintDocument();
+					var formFileLocation = pDocHrefAry[currentTabIdx];
+					var currentExt = formFileLocation.substring(formFileLocation.lastIndexOf(".") + 1);
+					if (currentExt === "mht") {
+						PrintClick("Cross", pDocID, "ING");
+					} else {
+						var currIfrm = document.getElementById("ifrm" + currentTabIdx);
+						currIfrm.contentWindow.PrintDocument();
+					}
 			    }
 			
 			    function btnClose_onclick() {
