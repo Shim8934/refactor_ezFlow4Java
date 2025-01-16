@@ -1,13 +1,22 @@
 package egovframework.ezEKP.ezEmail.service.impl;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.security.PrivateKey;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.Set;
 import java.util.TimeZone;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -25,7 +34,9 @@ import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.MimeUtility;
 import javax.servlet.http.HttpServletRequest;
 
+import egovframework.ezEKP.ezPoll.service.EzPollService;
 import org.apache.commons.lang3.StringUtils;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,11 +60,15 @@ import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 import egovframework.ezEKP.ezEmail.vo.MailWriteMessageVO;
 import egovframework.ezEKP.ezEmail.vo.MailWriteOptionsVO;
 import egovframework.ezEKP.ezEmail.vo.MailWriteProcessVO;
+import egovframework.ezEKP.ezPoll.vo.PollEmailSimpleUser;
+import egovframework.ezEKP.ezPoll.vo.PollUserAnswerVO;
+import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
+import egovframework.let.utl.sim.service.EgovFileScrty;
 
 /**
  * 반환값 사용식 함수가 아닌, in-place 변경식 함수로 진행되고 있다.
@@ -84,8 +99,61 @@ public class EzEmailWriteServiceImpl implements EzEmailWriteService {
 	@Resource(name = "EzCommonService")
     private EzCommonService ezCommonService;
 
+    @Resource(name="loginService")
+    private LoginService loginService;
+
+    @Resource(name = "EzPollService")
+    private EzPollService ezPollService;
+
+    @Resource(name="crypto")
+    private EgovFileScrty egovFileScrty;
+
     @Resource(name="egovMessageSource")
     private EgovMessageSource egovMessageSource;
+
+    /**
+     * RESERVE: 예약발송 수정 유효성 검사
+     */
+    @Override
+    public String isValidReserve(HttpServletRequest request, MailWriteProcessVO writevo, LoginVO loginInfo) throws Exception {
+        String messageId = StringUtils.defaultIfBlank(request.getParameter("messageid"), ""); // pCDOMessageID
+
+        if (StringUtils.isBlank(messageId)) { //messageId parameter가 비어있는 경우
+            return "ezEmail.lhm06";
+        }
+
+        messageId = commonUtil.detectPathTraversal(messageId);
+        String delaySendDate = ezEmailService.getMailReservedTime(messageId); // pReservedSaveTime
+
+        //utc에서 timezone으로 시간변경
+        delaySendDate = commonUtil.getDateStringInUTC(delaySendDate, loginInfo.getOffset(), false);
+
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MINUTE, 30);
+        Date currentTime = cal.getTime();
+
+        SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        Date reservedSaveTime = transFormat.parse(delaySendDate);
+
+        //예약발송 시간 30분 전에는 수정 불가
+        if (reservedSaveTime.before(currentTime)) {
+            return "ezEmail.lhm07";
+        }
+
+        //eml파일 읽기
+        String realPath = commonUtil.getRealPath(request);
+        String pDirPath = commonUtil.getUploadPath("upload_mail.RESERVED_MAIL_PATH", loginInfo.getTenantId());
+        pDirPath = realPath + commonUtil.separator + pDirPath;
+        File emlFile = new File(pDirPath + commonUtil.separator + messageId + ".eml");
+
+        if (!emlFile.exists()) { //eml파일이 저장소에 없는 경우
+            return "ezEmail.lhm06";
+        }
+
+        // messageId(cdoMessageID), delaySendDate, emlFile, folderPath, hasOrigin
+        writevo.setReservation(messageId, delaySendDate, emlFile);
+        return null;
+    }
 
     /**
      * 일반
@@ -157,11 +225,13 @@ public class EzEmailWriteServiceImpl implements EzEmailWriteService {
     public void loadFromOrigin(MailWriteProcessVO writevo, LoginVO loginInfo, String userAccount, String password, Locale locale) {
         MailWriteMessageVO messagevo = writevo.getMailWriteMessageVO();
         WriteType writetype = writevo.getWriteType();
+        File emlFile = writevo.getEmlFile();
 
         Map<String, Object> extraMap = writevo.getExtraMap();
         String folderPath = writevo.getFolderPath();
         long uid = writevo.getUid();
         boolean isReply = writetype.isReply();
+        boolean isReserve = writetype.isReserve();
 
         Consumer<IMAPAccess> callback = ia -> {
             try {
@@ -169,15 +239,29 @@ public class EzEmailWriteServiceImpl implements EzEmailWriteService {
                 orgFolder.open(Folder.READ_ONLY);
 
                 // retrieve the specified message.
-                Message orgMessage = ((IMAPFolder)orgFolder).getMessageByUID(uid);
+                Message orgMessage = null;
+                boolean isValid = false;
 
-                if (orgMessage != null) {
+                if (isReserve) {
+                    isValid = emlFile != null;
+                } else {
+                    orgMessage = ((IMAPFolder)orgFolder).getMessageByUID(uid);
+                    isValid = orgMessage != null;
+                }
+
+                if (isValid) {
                     Message savedMessage = null; // 임시보관함에 저장
 
                     // (savedMessage)
-                    if (writetype.useSaveDrafts()) { // isResend, isReply, FORWARD
-                        savedMessage = getMessageToSave(writetype, orgMessage, userAccount, password);
-                        setContent(writetype, orgMessage, savedMessage);
+                    if (writetype.useSaveDrafts()) { // isResend, isReply, FORWARD, RESERVE
+                        savedMessage = getMessageToSave(writetype, orgMessage, userAccount, password, emlFile);
+
+                        if (isReserve) {
+                            orgMessage = savedMessage; // orgMessage가 없으므로.
+                        } else {
+                            setContent(writetype, orgMessage, savedMessage);
+                        }
+
                         savedMessage.setFlag(Flags.Flag.SEEN, true);
                         saveInDraft(ia, savedMessage, writevo);
                     }
@@ -227,7 +311,7 @@ public class EzEmailWriteServiceImpl implements EzEmailWriteService {
 
                     // mail option
                     if (writetype.isEdit()) {
-                        setMailOption(orgMessage, messagevo);
+                        setMailOption(orgMessage, messagevo, isReserve);
                     }
 
                     if (writetype.useUnread()) { // RESEND_IN_SENT
@@ -241,6 +325,14 @@ public class EzEmailWriteServiceImpl implements EzEmailWriteService {
 
                 orgFolder.close(true);
 
+                /* 이게 필요한가..? (예약발송수정에 있었음.)
+                @SuppressWarnings("unchecked")
+                Enumeration<Header> headers = message.getAllHeaders();
+                while (headers.hasMoreElements()) {
+                Header h = (Header) headers.nextElement();
+                logger.debug("@@"+h.getName() + ": " + h.getValue());
+                }
+                */
             } catch (Exception e) {
                 if (e.getMessage().indexOf("NO APPEND failed.") > -1) {
                     messagevo.setOverQuota(true);
@@ -253,7 +345,7 @@ public class EzEmailWriteServiceImpl implements EzEmailWriteService {
         ezEmailUtil.useIMAPAccessWithCallback(callback, userAccount, password, locale);
     }
 
-    private Message getMessageToSave(WriteType writetype, Message orgMessage, String userAccount, String password) throws MessagingException {
+    private Message getMessageToSave(WriteType writetype, Message orgMessage, String userAccount, String password, File emlFile) throws Exception {
         Message messageToSave = null;
 
         // isReply, FORWARD
@@ -273,11 +365,31 @@ public class EzEmailWriteServiceImpl implements EzEmailWriteService {
             // ANSWERED flag needs to be cleared since the above reply method sets it.
             orgMessage.setFlag(Flags.Flag.ANSWERED, false);
 
-        // RESEND_IN_SENT
         } else {
             SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
                     userAccount, password);
-            messageToSave = sa.createMimeMessage();
+
+            // RESEND_IN_SENT
+            if (writetype.isResend()) {
+                messageToSave = sa.createMimeMessage();
+            }
+
+            // RESERVE
+            if (writetype.isReserve()) {
+                FileInputStream fis = null;
+
+                try {
+                    fis = new FileInputStream(emlFile);
+                    messageToSave = sa.readMimeMessage(fis); // MimeMessage
+                } catch (IOException e) {
+                    logger.error("IOException has occurred");
+                    logger.error(e.getMessage(), e);
+                } finally {
+                    if (fis != null) {
+                        fis.close();
+                    }
+                }
+            }
         }
 
         return messageToSave;
@@ -362,6 +474,7 @@ public class EzEmailWriteServiceImpl implements EzEmailWriteService {
         } // else: 재작성시 메세지에서 수신인을 뽑아내어 넣어준다.
 
         Address[] addresses = null;
+        String to = "";
 
         // TO
         if (writetype.isReply()) {
@@ -370,7 +483,12 @@ public class EzEmailWriteServiceImpl implements EzEmailWriteService {
             addresses = orgMessage.getRecipients(Message.RecipientType.TO);
         }
 
-        String to = getAddresses(writetype, addresses, orgMessage, "From", "To");
+        if (writetype.isReserve()) { // 문제없으면.. From까지 다 체크하던지 통일했으면 좋겠는데
+            to = getAddresses(writetype, addresses, orgMessage, "To");
+        } else {
+            to = getAddresses(writetype, addresses, orgMessage, "From", "To");
+        }
+
         messagevo.setTo(to); // 은실사원1 <eunsil1@svn1.opensol2014.com>
 
         // CC : replyMessage와 orgMessage가 동일
@@ -383,8 +501,14 @@ public class EzEmailWriteServiceImpl implements EzEmailWriteService {
 
         // BCC
         addresses = orgMessage.getRecipients(Message.RecipientType.BCC);
+        String bcc = "";
 
-        String bcc = ezEmailUtil.getStringListOfAddresses(addresses, true);
+        if (writetype.isReserve()) { // 문제없으면.. 다 사용하던지 통일했으면 좋겠는데
+            bcc = getAddresses(writetype, addresses, orgMessage, "Bcc");
+        } else {
+            bcc = ezEmailUtil.getStringListOfAddresses(addresses, true);
+        }
+
         messagevo.setBcc(bcc);
     }
 
@@ -472,7 +596,7 @@ public class EzEmailWriteServiceImpl implements EzEmailWriteService {
         String[] headerArray = null;
         boolean isPureAscii = true;
 
-        if (writetype.useCheckForAscii()) { // isResend(), isReply()
+        if (writetype.useCheckForAscii()) { // isResend(), isReply(), isReserve()
             String[] headers = Arrays.stream(headerKeys)
                 .map(key -> {
                     String header = "";
@@ -660,7 +784,7 @@ public class EzEmailWriteServiceImpl implements EzEmailWriteService {
         return attach;
     }
 
-    private void setMailOption(Message orgMessage, MailWriteMessageVO messagevo) throws MessagingException {
+    private void setMailOption(Message orgMessage, MailWriteMessageVO messagevo, boolean isReserve) throws MessagingException {
         logger.debug("EDIT MODE : set mail option start");
 
         //set importance
@@ -687,6 +811,23 @@ public class EzEmailWriteServiceImpl implements EzEmailWriteService {
         if (orgMessage.getHeader("X-JMocha-Secure-Mail") != null) {
             String isSecureMail = orgMessage.getHeader("X-JMocha-Secure-Mail")[0];
             messagevo.setIsSecureMail(isSecureMail);
+            
+            if (isReserve) {
+                String securePassword = orgMessage.getHeader("X-JMocha-Secure-Mail-Password")[0];
+    			String secureReadCount = orgMessage.getHeader("X-JMocha-Secure-Mail-ReadCount")[0];
+    			String secureReadDate = orgMessage.getHeader("X-JMocha-Secure-Mail-ReadDate")[0];
+				
+    			// 암호화되어있는 securePassword 복호화
+    			String prm = egovFileScrty.getPrm();
+            	String pre = egovFileScrty.getPre();
+            	PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
+            	securePassword = EgovFileScrty.decryptRsa(pk, securePassword);
+    			
+				logger.debug("securePassword=" + securePassword + ",secureReadCount=" + secureReadCount + ",secureReadDate=" + secureReadDate);
+                messagevo.setSecurePassword(securePassword);
+                messagevo.setSecureMaxReadCount(secureReadCount);
+                messagevo.setSecureMaxReadDate(secureReadDate);
+    		}
         }
 
         if (orgMessage.getHeader("Return-Receipt-To") != null) {
@@ -1022,6 +1163,12 @@ public class EzEmailWriteServiceImpl implements EzEmailWriteService {
 //				String orderCell = request.getParameter("orderCell");
 //				String orderOption = request.getParameter("orderOption");
 				break;
+
+            // 투표
+            case POLL:
+                String to = getToForPoll(request, options, loginInfo); // set options
+                writevo.setTo(to); // setTo를 하긴 하지만, POLL은 origin message를 사욯하지 않기 때문에, 바뀔 우려가 현재까진 없다.
+                break;
         }
     }
 
@@ -1065,6 +1212,186 @@ public class EzEmailWriteServiceImpl implements EzEmailWriteService {
 
         logger.debug("defaultFontAndSize=" + defaultFontAndSize);
         return defaultFontAndSize;
+    }
+
+    // POLL (투표)
+    private String getToForPoll(HttpServletRequest request, MailWriteOptionsVO options, LoginVO loginInfo) throws Exception{
+        String userPrimary = loginInfo.getPrimary();
+        int tenantId = loginInfo.getTenantId();
+
+        ObjectMapper om = new ObjectMapper();
+        String type = StringUtils.defaultString(request.getParameter("type"));
+        String folderDate = EgovDateUtil.getToday("");
+        String pollSendType = "";
+        String to = "";
+
+        // in case of only one user
+        if (type.equals("one")) {
+            String userID = StringUtils.defaultString(request.getParameter("userId"));
+            LoginVO receivedUser = loginService.selectReceiver(userID, tenantId);
+            PollEmailSimpleUser simpleUserVO = new PollEmailSimpleUser();
+            simpleUserVO.setEmail(receivedUser.getEmail());
+
+            if (userPrimary.equals("1")) {
+                simpleUserVO.setUserName(receivedUser.getDisplayName1());
+            }
+            else {
+                simpleUserVO.setUserName(receivedUser.getDisplayName2());
+            }
+
+            to = om.writeValueAsString(simpleUserVO);
+            pollSendType = "one";
+        }
+        else if (type.equals("group")) {
+            String state = request.getParameter("state") == null ? "" : request.getParameter("state");
+            int qstId = Integer.parseInt(request.getParameter("qstId"));
+            List<PollEmailSimpleUser> listSimpleUser = new ArrayList<PollEmailSimpleUser>();
+
+            switch (state) {
+                case "voted":
+                    int optId =	Integer.parseInt(request.getParameter("optId"));
+                    listSimpleUser = getListSimpleUsers(qstId, optId, tenantId, userPrimary);
+                    break;
+                case "seen":
+                    listSimpleUser = getListSimpleUsers(loginInfo, qstId, tenantId, userPrimary, 1);
+                    break;
+                case "unseen":
+                    listSimpleUser = getListSimpleUsers(loginInfo, qstId, tenantId, userPrimary, 0);
+                    break;
+                case "notjoin":
+                    listSimpleUser = getListSimpleUsers(loginInfo, qstId, tenantId, userPrimary);
+                    break;
+            }
+
+            to = om.writeValueAsString(listSimpleUser);
+            pollSendType = "list";
+        }
+
+        options.setModuleType("poll");
+        options.setFolderDate(folderDate);
+        options.setPollSendType(pollSendType);
+
+        return to;
+    }
+
+    private List<PollEmailSimpleUser> getListSimpleUsers(int qstId, int optId, int tenantId, String userPrimary) throws Exception {
+        List<PollEmailSimpleUser> listSimpleUser = new ArrayList<PollEmailSimpleUser>();
+        List<PollUserAnswerVO> listOfVotedUsersForAnswer = ezPollService.getListVotedUsersForAnswer(optId, qstId, tenantId);
+
+        for (PollUserAnswerVO userAnswer: listOfVotedUsersForAnswer) {
+            LoginVO receivedUser = loginService.selectReceiver(userAnswer.getUserId(), tenantId);
+            PollEmailSimpleUser simpleUserVO = new PollEmailSimpleUser();
+            simpleUserVO.setEmail(receivedUser.getEmail());
+
+            if (userPrimary.equals("1")) {
+                simpleUserVO.setUserName(receivedUser.getDisplayName1());
+            }
+            else {
+                simpleUserVO.setUserName(receivedUser.getDisplayName2());
+            }
+
+            listSimpleUser.add(simpleUserVO);
+        }
+
+        return listSimpleUser;
+    }
+
+    private List<PollEmailSimpleUser> getListSimpleUsers(LoginVO loginVO, int qstId, int tenantId, String userPrimary, int mode) throws Exception {
+        List<PollEmailSimpleUser> listSimpleUser = new ArrayList<PollEmailSimpleUser>();
+        List<LoginVO> listofSeenUsers = new ArrayList<LoginVO>();
+        //Get all of seen users
+        List<String> listOfSeenUsers = ezPollService.getNumberOfSeenUsers(qstId, tenantId);
+
+        for (String _userID : listOfSeenUsers) {
+            LoginVO user = loginService.selectReceiver(_userID, tenantId);
+            listofSeenUsers.add(user);
+        }
+
+        if (mode == 0) {
+            //Get all related users for this question
+            Set<LoginVO> setOfUserIds = new HashSet<LoginVO>();
+            ezPollService.getAllUserForQuestion(loginVO, qstId, setOfUserIds);
+            List<LoginVO> listofUnseenUsers = new ArrayList<LoginVO>(setOfUserIds);
+
+            listofUnseenUsers.removeAll(listofSeenUsers);
+
+            for (LoginVO receivedUser: listofUnseenUsers) {
+                PollEmailSimpleUser simpleUserVO = new PollEmailSimpleUser();
+                simpleUserVO.setEmail(receivedUser.getEmail());
+
+                if (userPrimary.equals("1")) {
+                    simpleUserVO.setUserName(receivedUser.getDisplayName1());
+                }
+                else {
+                    simpleUserVO.setUserName(receivedUser.getDisplayName2());
+                }
+
+                listSimpleUser.add(simpleUserVO);
+            }
+        }
+        else {
+            for (LoginVO receivedUser: listofSeenUsers) {
+                PollEmailSimpleUser simpleUserVO = new PollEmailSimpleUser();
+                simpleUserVO.setEmail(receivedUser.getEmail());
+
+                if (userPrimary.equals("1")) {
+                    simpleUserVO.setUserName(receivedUser.getDisplayName1());
+                }
+                else {
+                    simpleUserVO.setUserName(receivedUser.getDisplayName2());
+                }
+
+                listSimpleUser.add(simpleUserVO);
+            }
+        }
+
+        return listSimpleUser;
+    }
+
+    private List<PollEmailSimpleUser> getListSimpleUsers(LoginVO loginVO, int qstId, int tenantId, String userPrimary) throws Exception {
+        List<PollEmailSimpleUser> listSimpleUser = new ArrayList<PollEmailSimpleUser>();
+        //Get all users for this question
+        Set<LoginVO> setOfUserIds = new HashSet<LoginVO>();
+        ezPollService.getAllUserForQuestion(loginVO, qstId, setOfUserIds);
+        List<LoginVO> listOfUnvotedUsers = new ArrayList<LoginVO>(setOfUserIds);
+
+        //Get list of users and their answers
+        List<PollUserAnswerVO> listOfPollUserAndAnswer = ezPollService.getPollUserAndAnswer(qstId, tenantId);
+
+        //Get list of voted users
+        List<String> listOfAnsweredUsers = new ArrayList<String>();
+
+        for (PollUserAnswerVO pollUserAndAnswer : listOfPollUserAndAnswer) {
+            if (!listOfAnsweredUsers.contains(pollUserAndAnswer.getUserId())) {
+                listOfAnsweredUsers.add(pollUserAndAnswer.getUserId());
+            }
+        }
+
+        Iterator<LoginVO> iterator = listOfUnvotedUsers.iterator();
+
+        while (iterator.hasNext()) {
+            LoginVO user = iterator.next();
+
+            if (listOfAnsweredUsers.contains(user.getId())) {
+                iterator.remove();
+            }
+        }
+
+        for (LoginVO receivedUser: listOfUnvotedUsers) {
+            PollEmailSimpleUser simpleUserVO = new PollEmailSimpleUser();
+            simpleUserVO.setEmail(receivedUser.getEmail());
+
+            if (userPrimary.equals("1")) {
+                simpleUserVO.setUserName(receivedUser.getDisplayName1());
+            }
+            else {
+                simpleUserVO.setUserName(receivedUser.getDisplayName2());
+            }
+
+            listSimpleUser.add(simpleUserVO);
+        }
+
+        return listSimpleUser;
     }
 
     /**

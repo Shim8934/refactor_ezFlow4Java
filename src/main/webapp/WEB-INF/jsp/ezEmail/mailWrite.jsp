@@ -73,7 +73,7 @@
 			<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/hwpCtrlApp.js')}"></script>
     		<script type="text/javascript" src="${options.webHWPUrl}js/webhwpctrl.js"></script>
 	    </c:if>
-		<c:if test="${writetype == WriteType.RESERVE}"> <!-- 예약발송수정에만 해당 js -->
+		<c:if test="${writetype.isReserve()}"> <!-- 예약발송수정에만 해당 js -->
 			<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/email.reserved.js')}"></script>
 		</c:if>
 	    <script type="text/javascript">
@@ -91,11 +91,12 @@
 		var writetype = {
 			isEdit: <c:out value="${writetype.isEdit()}"/>, // true/false
 			isResend: <c:out value="${writetype.isResend()}"/>, // var g_ReSendFlag = "${writetype == WriteType.RESEND_IN_SENT? 'Y' : 'N'}";
+			isReserve: <c:out value="${writetype.isReserve()}"/>,
 			useSaveDrafts: <c:out value="${writetype.useSaveDrafts()}"/>,
 			useReplyMessage: <c:out value="${writetype.useReplyMessage()}"/>,
 			useAppendAttach: <c:out value="${writetype.useAppendAttach()}"/>
 		};
-		var isReserve = <c:out value="${isReserve}"/>; // true/false
+		var isReserve = writetype.isReserve? "YES" : "NO"; // newMail_Cross.js> Save_onClick_Complete 에서 사용해서..
 		// loginInfo
 		var g_servername = "${loginInfo.serverName}";
 	    var tid = "${loginInfo.tenantId}";
@@ -1177,8 +1178,12 @@
 	    /* 2020-09-11 홍승비 - 버튼에서 온클릭 이벤트를 분리하여 업무일지, ezPMS 등의 발송버튼 활성화되지 않는 오류 수정 */
 	    function setOnclickFunction() {
 	        return setTimeout(function () {
-	        	document.getElementById("spanT674").setAttribute("onclick", "Send_onClick_preview()");
-	        	document.getElementById("spanT48").setAttribute("onclick", isReserve? "ReserverdMail_Save()" : "Save_onClick('tempsave')");
+				if (writetype.isReserve) { // 예약발송수정
+					document.getElementById("spanT48").setAttribute("onclick", "ReserverdMail_Save()");
+				} else {
+					document.getElementById("spanT674").setAttribute("onclick", "Send_onClick_preview()"); // 발송
+					document.getElementById("spanT48").setAttribute("onclick", "Save_onClick('tempsave')"); // 저장
+				}
 	        }, 20);
 	    }
 		
@@ -2267,7 +2272,7 @@
 	            <td>
 	                <div id="menu">
 						<ul>
-	                        <c:if test="${writetype != WriteType.RESERVE}">
+	                        <c:if test="${!writetype.isReserve()}">
 	                            <li><span id="spanT674"><spring:message code='ezEmail.t674' /></span></li>
 	                        </c:if>
 	                        <li><span id="spanT48"><spring:message code='ezEmail.t48' /></span></li>
