@@ -2126,7 +2126,7 @@ public class EzBoardController extends EgovFileMngUtil{
 					}
 					resultXML.append("<ITEMREAD_FG>" + (accessCheck((String)boardListItem.get(j).get("BOARDID"), (String)boardListItem.get(j).get("ITEMID"),
 							"GENERAL", userInfo, "") ? "Y" : "N") + "</ITEMREAD_FG>");
-						
+					resultXML.append("<PUBLICFLAG>").append(boardListItem.get(j).get("PUBLICFLAG")).append("</PUBLICFLAG>");	
     			}
     			
     			resultXML.append("</CELL>");
@@ -2908,6 +2908,7 @@ public class EzBoardController extends EgovFileMngUtil{
 							resultXML.append("<DATA13>" + "N" + "</DATA13>");
 						}
 					}
+					resultXML.append("<PUBLICFLAG>").append(boardSearchList.get(j).get("PUBLICFLAG")).append("</PUBLICFLAG>");
 				}
 				
 				resultXML.append("</CELL>");
