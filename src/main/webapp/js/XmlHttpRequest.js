@@ -2478,7 +2478,7 @@ function resizableMenu(url) {
         
         if (url !== "undefined" && url !== null && url !== undefined) {
             moreButtonWidth = remainingWidth * 0.6;
-            if (url.indexOf("admin") !== -1) {
+            if (url.indexOf("/admin/") !== -1) {
                 moreButtonWidth = remainingWidth * 0.8;
             } else if (url.indexOf("ezBoard") !== -1) {
                 moreButtonWidth = remainingWidth * 0.5;
