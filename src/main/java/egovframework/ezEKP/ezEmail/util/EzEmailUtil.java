@@ -693,49 +693,7 @@ public class EzEmailUtil {
 	 * returns a comma separated string list containing the passed-in addresses. 
 	 */
 	public String getStringListOfAddresses(Address[] addresses, boolean isPureAscii) {
-		String stringList = "";
-		
-		if (addresses != null) {
-			StringBuilder addressBuilder = new StringBuilder();
-			for (Address address : addresses) {
-				String addressStr = ((InternetAddress)address).getAddress(); // email address part				
-				String name = ((InternetAddress)address).getPersonal(); // name part
-				
-				if (name != null) {
-					try {
-						// if the name contains Non-Ascii characters(violating the standard), 
-						// try to decode it by examining the characters.
-						if (!isPureAscii) {
-							byte[] rawBytes = name.getBytes("iso-8859-1");
-							
-							name = decodeNonAsciiBytes(rawBytes);
-						}
-						else {						
-							name = MimeUtility.decodeText(name);
-						}
-					} catch (UnsupportedEncodingException e) {
-						logger.debug("e.message=" + e.getMessage());
-					}
-					
-					if (name != null) {
-						// 료비에서 수신한 메일 중 \(backslash)" 가 문자열 내부에 포함되는 경우가 있어 추가함.
-						// 예) =?iso-2022-jp?B?Im1hLXgtOTMyQGRvY29tby5uZS5qcCI=?=<ma-x-932@docomo.ne.jp>
-						name = name.replace("\\\"", "");
-					}					
-					
-					addressBuilder.append(name + " <" + addressStr + ">");							
-				}
-				else {
-					addressBuilder.append(addressStr + " <" + addressStr + ">");
-				}
-				
-				addressBuilder.append(",");
-			}
-			stringList = addressBuilder.toString();
-			stringList = stringList.substring(0, stringList.length() - 1);
-		}
-		
-		return stringList;
+		return getStringListOfAddresses(addresses, null, isPureAscii);
 	}
 	
 	public String getStringListOfAddresses(Address[] addresses, String[] recipientHeaderArray, boolean isPureAscii) {
@@ -2324,16 +2282,21 @@ public class EzEmailUtil {
         return resultList;
     }
 
+	/** password default : _jmocha_101 */
+	public void useIMAPAccessWithCallback(Consumer<IMAPAccess> callback, String userAccount, Locale locale) {
+		useIMAPAccessWithCallback(callback, userAccount, commonUtil.getMailPassword(), locale); // _jmocha_101
+	}
+
     /**
      * IMAPAccess를 생성해주는 Util.
      * : folder.close()전에야 MimeBodyPart를 이용한 수행이 가능.
      * @param callback : (folder를 이용할 작업을 할 ) callback함수를 매개변수로 전해주면 된다.
      * @param userAccount : getUserAccount()로 구해주면 됨. (extraMap를 callback함수에서 써야 할 수 있으므로, 해당 함수에서 통합하지 않았다. //getMailMessage()에서 extraMap필요.)
+     * @param password : 특정 password 전달 시에는 해당 password로 수행, 그 외 default 는 위에 오버로딩 되어 있음.
      * ex) EzWebfolderUtil.addListMailAttachArray()를 참고 바람.
      */
-	public void useIMAPAccessWithCallback(Consumer<IMAPAccess> callback, String userAccount, Locale locale) {
+	public void useIMAPAccessWithCallback(Consumer<IMAPAccess> callback, String userAccount, String password, Locale locale) {
 		logger.debug("useIMAPAccessWithCallback started. userAccount={}, locale={}", userAccount, locale);
-		String password = commonUtil.getMailPassword(); // _jmocha_101
 		IMAPAccess ia = null;
 
 		try {
@@ -3766,26 +3729,7 @@ public class EzEmailUtil {
 	}
 	
 	public boolean copyAllPartsInMultipart(Part src, Multipart dest) throws MessagingException, IOException {
-		if (src.isMimeType("multipart/*")) {
-			Multipart mp = (Multipart)src.getContent();
-			int count = mp.getCount();
-			
-			for (int i = 0; i < count; i++) {
-				BodyPart p = mp.getBodyPart(i);
-				
-				// 코린도에서 수신된 메일 중 multipart/mixed 파트 안에 multipart/mixed 파트가
-				// 또 들어 있는 경우가 있어 추가함.
-				if (p.isMimeType("multipart/mixed")) {
-					copyAllPartsInMultipart(p, dest);
-				} else {
-					dest.addBodyPart(p);
-				}
-			}
-			
-			return true;
-		} 
-		
-		return false;
+		return copyAllPartsInMultipart(src, dest, false);
 	}
 	
 	public boolean copyAllPartsInMultipart(Part src, Multipart dest, boolean convertInlineImageToAttachment) throws MessagingException, IOException {
