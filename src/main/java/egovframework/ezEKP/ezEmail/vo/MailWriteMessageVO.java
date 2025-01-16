@@ -28,11 +28,11 @@ public class MailWriteMessageVO {
 	private String isEach = "FALSE"; // 개별발신 (개별발신 기본 사용 여부)
 	private String defaultFontAndSize; // 에디터 기본 폰트 및 크기
 
-	private String unread = "0"; // SMTP flag
+	private String unread = "0"; // SMTP flag (poll은 빈값으로 넘김.)
 	private String importance = "1"; // X-Priority Header (중요도)
 	private String replyReadTime = "1"; // Disposition-Notification-To Header
 	private String replySendTime = "0"; // Return-Receipt-To Header
-	private String delaySendDate = ""; // 예약발송 시간 (예약발송수정에만 해당)
+	private String delaySendDate = ""; // 예약발송 시간 (예약발송수정에만 해당) pReservedSaveTime
 
 	private boolean overQuota = false; // origin mail 작업 중 에러
 

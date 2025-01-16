@@ -2580,7 +2580,7 @@
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - conHeight) / 2;
 		        var pLeft = (pwidth - 890) / 2;
-		        window.open("/ezPoll/mailWrite.do?type=group&state=voted&qstId=" + pQstID + "&optId=" + pOptID, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no,resizable=1" + feature);		       
+		        window.open("/ezEmail/mailWrite.do?cmd=POLL&type=group&state=voted&qstId=" + pQstID + "&optId=" + pOptID, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no,resizable=1" + feature);		       
 		    }
 		    
 		    //이모티콘 패널이 아닌 영역을 선택하면 패널이 닫힘

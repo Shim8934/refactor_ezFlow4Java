@@ -14,10 +14,12 @@ public enum WriteType {
 	// 메일쓰기 (default: ""=NEW)
 	  NEW             ()
 
-	// 임시보관함	:EDIT_IN_DRAFTS 가 아닌 EDIT도 있을까..?
+	// 임시보관함	:EDIT_IN_DRAFTS, RESERVE 경우가 아닌 EDIT도 있을까..?
 	, EDIT            (Category.EDIT, 	null)
 	// EDIT && folderPath 임시보관함
 	, EDIT_IN_DRAFTS  (Category.EDIT, 	null)
+	// EDIT && !cdoMessageID
+	, RESERVE         (Category.EDIT, 	null)
 
 	// 재작성	:보낸편지함이 아닌 경우도 있을까..?
 	, RESEND          (Category.RESEND,null)
@@ -54,6 +56,8 @@ public enum WriteType {
 	, ATTITUDE        (Category.ATTITUDE)
 	// 근태관리 미입력자 메일발송
 	, ATTITUDEABSENTED(Category.ATTITUDE)
+	// 투표
+	, POLL            (Category.POLL)
 // 아직 이 값으로는 받는 부분 없음
 //	, DOCSENDDOC
 //	, ACCESSNO
@@ -65,7 +69,7 @@ public enum WriteType {
 
 	private enum Category {
 		EDIT, RESEND, REPLY, FORWARD
-		, BOARD, COMMUNITY, DOCSEND, JOURNAL, EZPMS, ATTITUDE;
+		, BOARD, COMMUNITY, DOCSEND, JOURNAL, EZPMS, ATTITUDE, POLL;
 
 		// 기존 메일을 사용하는 타입.
 		public boolean useLoadFromOrigin() {
@@ -104,7 +108,7 @@ public enum WriteType {
 		 * : mailWrite.jsp> window.onbeforeunload> delDrafts(); 메일쓰기 창 닫을 시, 임시보관했던 메일 삭제 해줘야 함.
 		 */
 		public boolean useSaveDrafts() {
-			return EnumSet.of(RESEND, REPLY, FORWARD).contains(this);
+			return EnumSet.of(RESEND, REPLY, FORWARD).contains(this); // 아래서 RESERVE 추가할거임.
 		}
 
 		// 본문설정 무시 여부: 20190708 조진호 - 결재, 게시판, 커뮤니티에서 메일로 발송 시에는 textOption 무시
@@ -163,13 +167,13 @@ public enum WriteType {
 	}
 	// isPureAscii 사용할것인지
 	public boolean useCheckForAscii() {
-		return isResend() || isReply();
+		return isResend() || isReply() || isReserve(); // 문제없으면.. 다 체크하던지 통일했으면 좋겠는데
 	}
 
 	// getter
 	public boolean useLoadFromOrigin() {
 		// return category.useLoadFromOrigin();
-		return EnumSet.of(EDIT_IN_DRAFTS, RESEND_IN_SENT, REPLY, REPLYALL, FORWARD).contains(this); // 기존코드에서 왜 임시보관함, 보낸편지함으로 한정했을까?
+		return EnumSet.of(EDIT_IN_DRAFTS, RESERVE, RESEND_IN_SENT, REPLY, REPLYALL, FORWARD).contains(this); // 기존코드에서 왜 임시보관함, 보낸편지함으로 한정했을까?
 	}
 	public boolean useOriginalMessage() {
 		return category != null && category.useOriginalMessage();
@@ -184,7 +188,7 @@ public enum WriteType {
 		return category != null && category.useAppendAttach();
 	}
 	public boolean useSaveDrafts() {
-		return category != null && category.useSaveDrafts();
+		return category != null && category.useSaveDrafts() || isReserve();
 	}
 	public boolean ignoreTextOption() {
 		return category != null && category.ignoreTextOption();
@@ -201,6 +205,9 @@ public enum WriteType {
 	}
 	public boolean isReply() { // 회신
 		return category == Category.REPLY;
+	}
+	public boolean isReserve() { // 예약발송관리 수정
+		return this == RESERVE;
 	}
 	public boolean isDotNet() { // 닷넷
 		return EnumSet.of(BOARDDOTNET, COMMUNITYDOTNET, DOCSENDDOTNET).contains(this);

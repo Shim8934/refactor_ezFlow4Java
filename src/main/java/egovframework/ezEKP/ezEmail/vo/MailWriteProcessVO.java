@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezEmail.vo;
 
+import java.io.File;
 import java.util.HashMap;
 
 import egovframework.ezEKP.ezEmail.type.WriteType;
@@ -53,6 +54,7 @@ public class MailWriteProcessVO {
 	private String mailId;
 	private String reciverName; // for RESEND_IN_SENT
 	private HashMap<String, Object> extraMap = new HashMap<>(); // shareId
+	private File emlFile; // for RESERVE
 
 	// vo
 	public void setMailWriteMessageVO(MailWriteMessageVO mailWriteMessageVO) {
@@ -103,8 +105,18 @@ public class MailWriteProcessVO {
 		mailWriteMessageVO.setTo(to);
 	}
 	public void setDraftUID(long draftUID) {
+		if (writetype.isReserve()) {
+			this.uid = draftUID;
+		}
+
 		String url = String.valueOf(draftUID);
 		mailWriteMessageVO.setUrl(url);
+//		mailWriteMessageVO.setUrlOwn(url);
+		/**
+		 * urlOwn은 = "Drafts/url(uid)" 이어야 함.
+		 * 기존 코드는 urlOwn을 url(uid)값으로 넘겨주고 있었음. (var gg_url)
+		 * but [발송]하지 않으니 쓰임이 없었음, urlOwn 세팅하는 과정 생략함.
+		 */
 	}
 
 	// setter getter
@@ -123,6 +135,10 @@ public class MailWriteProcessVO {
 				break;
 			case "EDIT_IN_DRAFTS":
 				this.writetype = WriteType.EDIT_IN_DRAFTS;
+				break;
+			case "RESERVE":
+				this.cmdOwn = "EDIT"; // for 기존 코드 유지 (cmd)
+				this.writetype = WriteType.RESERVE;
 				break;
 			case "RESEND":
 				this.writetype = WriteType.RESEND;
@@ -175,6 +191,10 @@ public class MailWriteProcessVO {
 			case "ATTITUDEABSENTED":
 				this.writetype = WriteType.ATTITUDEABSENTED;
 				break;
+			case "POLL":
+				this.cmdOwn = ""; // for 기존 코드 유지 (cmd)
+				this.writetype = WriteType.POLL;
+				break;
 /* 아직 이 값으로는 받는 부분 없음
 			case "DOCSENDDOC":
 				this.writetype = WriteType.DOCSENDDOC;
@@ -201,7 +221,7 @@ public class MailWriteProcessVO {
 	}
 	public void setCmd(String cmd) {
 		/**
-		 * cmdOwn: 들어온 그대로 보존해서 model에 전달.
+		 * cmdOwn: 들어온 그대로 보존해서 model에 전달. (for 기존 코드 유지: RESERVE→EDIT, POLL→"")
 		 * writetype로 대체하려면 front, send controller 까지 다 수정해야함.
 		 */
 		this.cmdOwn = cmd;
@@ -267,6 +287,19 @@ public class MailWriteProcessVO {
 	}
 	public HashMap<String, Object> getExtraMap() {
 		return extraMap;
+	}
+	public void setEmlFile(File emlFile) {
+		this.emlFile = emlFile;
+	}
+	public File getEmlFile() {
+		return emlFile;
+	}
+	public void setReservation(String messageId, String delaySendDate, File emlFile) {
+		mailWriteMessageVO.setCdoMessageID(messageId);
+		mailWriteMessageVO.setDelaySendDate(delaySendDate);
+		setEmlFile(emlFile);
+		setFolderPath(draftsFolderName);
+		setHasOrigin(true);
 	}
 
 	// function

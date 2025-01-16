@@ -98,6 +98,7 @@ public class MailWriteOptionsVO {
 
 	// poll
 	private String pollSendType;
+	private String folderDate;
 
 	public void setIsMailToMe(String isMailToMe) {
 		this.isMailToMe = isMailToMe;
@@ -568,6 +569,13 @@ public class MailWriteOptionsVO {
 		return pollSendType;
 	}
 
+	public void setFolderDate(String folderDate) {
+		this.folderDate = folderDate;
+	}
+	public String getFolderDate() {
+		return folderDate;
+	}
+
 	@Override
 	public String toString() {
 		return "MailWriteOptionsVO [isMailToMe=" + isMailToMe + ", isCrossBrowser=" + isCrossBrowser + ", postType="
@@ -597,6 +605,6 @@ public class MailWriteOptionsVO {
 				+ ", companyId=" + companyId + ", searchUserName=" + searchUserName + ", searchDeptName="
 				+ searchDeptName + ", searchTitle=" + searchTitle + ", searchDeptId=" + searchDeptId
 				+ ", searchStartDate=" + searchStartDate + ", searchEndDate=" + searchEndDate + ", pollSendType="
-				+ pollSendType + "]";
+				+ pollSendType + ", folderDate=" + folderDate + "]";
 	}
 }

@@ -197,12 +197,28 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		// retrieve the Drafts folder name
 		String draftsFolderName = ezEmailUtil.getDraftsFolderId(locale);
 		writevo.setDraftsFolderName(draftsFolderName);
+		boolean hasScript = false;
+
+		// 예약발송 수정
+		if ("RESERVE".equals(cmd)) {
+			String errMsgCode = ezEmailWriteService.isValidReserve(request, writevo, loginInfo);
+
+			if (errMsgCode != null) {
+				model.addAttribute("pMessage", egovMessageSource.getMessage(errMsgCode, locale));
+				logger.debug(egovMessageSource.getMessage(errMsgCode, locale));
+				logger.debug("mailEdit ended.");
+				return "ezEmail/mailMessage";
+			}
 
 		// 일반
-		ezEmailWriteService.setGeneral(request, writevo, locale);
+		} else {
+			ezEmailWriteService.setGeneral(request, writevo, locale);
+			hasScript = commonUtil.hasStripScriptTagsAndFunctions(writevo.getMsgto());
+		}
+
 		writevo.setWriteType();
 
-		if (!writevo.isValid() || commonUtil.hasStripScriptTagsAndFunctions(writevo.getMsgto())) {
+		if (!writevo.isValid() || hasScript) {
 			return egovMessageSource.getMessage("ezEmail.lhm17", locale);
 		}
 
@@ -258,6 +274,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("writetype", writevo.getWriteType());
 		model.addAttribute("cmdOwn", writevo.getCmdOwn());
 		model.addAttribute("drafts", draftsFolderName); // var folderPath 사용, 일반첨부 시 임시 저장을 위함.
+		// poll(투표)는 drafts를 빈값으로 넘김.
 
 		model.addAttribute("message", writevo.getMailWriteMessageVO());
 		model.addAttribute("options", writevo.getMailWriteOptionsVO());

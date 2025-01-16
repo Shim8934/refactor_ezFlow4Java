@@ -70,7 +70,7 @@
 		    		pWidth = 380;
 		    		pHeight = 111;
 		    	} else {
-		    		pUrl = "/ezEmail/mailEdit.do?cmd=EDIT&messageid=" + encodeURIComponent(pMessageID);
+		    		pUrl = "/ezEmail/mailWrite.do?cmd=RESERVE&messageid=" + encodeURIComponent(pMessageID);
 		    		pWidth = 890;
 		    		pHeight = 840;
 		    	}
