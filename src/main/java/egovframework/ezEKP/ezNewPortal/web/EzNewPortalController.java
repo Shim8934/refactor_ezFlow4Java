@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
+import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
 import egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO;
@@ -118,6 +119,9 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	@Resource(name = "jspw")
 	private String jspw;
 	
+	@Autowired
+	private EzEmailService ezEmailService;
+
 	/**
 	 * 유은정
 	 */
@@ -1293,29 +1297,9 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 
 			if (useMail.equals("YES")) {
 				try {
-
-					String url = "/rest/ezPortal/portlets/unreadMailCount";
-
-					HashMap<String, Object> param = new HashMap<String, Object>();
-					param.put("userEmail", userEmail);
-					param.put("password", password);
-					param.put("locale", locale);
-
-					String useMailServer2 =  config.getProperty("config.useMailServer2");
-
-					JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
-					if ("Y".equalsIgnoreCase(useMailServer2)){
-						resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.MailServerURL2"), url, param, request, "get", null);
-					}
-
-					String result2 = resultBody.get("status").toString();
-					if (result2.equals("ok")) {
-						String mailCount = String.valueOf(resultBody.get("unreadMailCount"));
-						unreadMailCount = Integer.parseInt(mailCount);
-						logger.debug("unreadMailCount = " + unreadMailCount);
-					}
+					unreadMailCount = (int) ezEmailService.getUnreadCountAll(null, userID, locale, tenantID).get("totalUnreadCountInAllAccounts");
 				} catch (Exception e) {
-					logger.debug("e.message=" + e.getMessage());
+					logger.error(e.getMessage(), e);
 				}
 			}
 
