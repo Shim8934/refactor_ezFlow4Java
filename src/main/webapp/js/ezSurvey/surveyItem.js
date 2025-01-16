@@ -1020,10 +1020,20 @@ var SurveyItem = function() {
 			}
 		});
 	}
+    
+    function moreBtnResize() {
+       var srchBttn2        = document.querySelector(".layer_select .searchBttn2");
+       var delBttn2         = document.querySelector(".layer_select .deleteBttn2");
+       var analysisBttn2    = document.querySelector(".layer_select .analysisBttn2");
+       if (srchBttn2)       {srchBttn2.firstElementChild.onclick        = function(e) {toggleSearchPanel()     ;};}
+       if (delBttn2)        {delBttn2.firstElementChild.onclick         = function(e) {deleteFileConfirm()     ;};}
+       if (analysisBttn2)   {analysisBttn2.firstElementChild.onclick    = function(e) {analysisSurveyConfirm() ;};}
+    }
 	
 	return {
 		start      : initEvents,
 		reload     : refreshAllFrames,
-		getContent : getIframeContent
+		getContent : getIframeContent,
+		btnResize : moreBtnResize
 	};
 }();

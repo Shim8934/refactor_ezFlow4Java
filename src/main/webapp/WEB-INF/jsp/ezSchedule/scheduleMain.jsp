@@ -1421,8 +1421,8 @@
         <div id="mainmenu" style="position:fixed">
             <ul class="on">
             	<li class="important"><span id="pn_img" onClick="WriteSchedule()"><spring:message code='ezSchedule.t214'/></span></li>
-            	<li><span class="icon16 icon16_print" onClick="PrintSchedule()"></span></li>
-              	<li><span class="icon16 icon16_refresh" onClick="RefreshView()"></span></li>
+            	<li onClick="PrintSchedule()"><span class="icon16 icon16_print switchIcon"></span><span class="iconTexts"><spring:message code='ezSchedule.t217'/></span></li>
+              	<li onClick="RefreshView()"><span class="icon16 icon16_refresh switchIcon"></span><span class="iconTexts"><spring:message code='ezSchedule.t218'/></span></li>
             </ul>
 		</div>
 		<div style="display: flex; width: 100%; justify-content: center;">
@@ -1435,7 +1435,7 @@
 		        </ul>
 		    </div>
 	    </div>
-	    <div class="mainmenuTab" style="margin-top: 5px;">
+	    <div class="mainmenuTab" style="margin-top: 5px; position: unset;">
 	        <ul class="mainmenuTabUL">
 	            <li id="dayView" class="${defaultView == '0' ? 'on' : 'off' }"><span onclick='ViewChange("DAY");'><spring:message code='ezSchedule.t140'/></span></li><li id="weekView" class="${defaultView == '1' ? 'on' : 'off' }"><span onclick='ViewChange("WEEK");'><spring:message code='ezSchedule.t141'/></span></li><li id="monView" class="${defaultView == '2' ? 'on' : 'off' }"><span onclick='ViewChange("MONTH");'><spring:message code='ezSchedule.t142'/></span></li>
 	        </ul>

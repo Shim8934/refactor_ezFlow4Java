@@ -943,9 +943,9 @@
         <div id="mainmenu">
         <ul id="tb_Parent">
 		    <li id="reply"><span onClick="get_excelAtt_list()"><spring:message code='ezAttitude.t145'/></span></li>
-		    <li id="search"><span class="icon16 icon16_search" onClick="search_popup()"></span></li>
-		    <li onClick="attList_del()"><span class="icon16 icon16_delete"></span></li>
-	        <li onClick="att_search('refresh')"><span class="icon16 icon16_refresh"></span></li>
+		    <li id="search" onClick="search_popup()"><span class="icon16 icon16_search switchIcon"></span><span class="iconTexts"><spring:message code='ezAttitude.t121'/></span></li>
+		    <li onClick="attList_del()"><span class="icon16 icon16_delete switchIcon"></span><span class="iconTexts"><spring:message code='ezAttitude.t164'/></span></li>
+	        <li onClick="att_search('refresh')"><span class="icon16 icon16_refresh switchIcon"></span><span class="iconTexts"><spring:message code='ezAttitude.t122'/></span></li>
 			<li id="right" style="margin-right:5px">
 				<span style="float:right;font-weight:normal;color:black;border: none;box-shadow:none;">
 					<input name="searchCheck" id="Radio1" type="radio" value="all" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio1">&nbsp;<spring:message code='ezAttitude.t124'/></label>

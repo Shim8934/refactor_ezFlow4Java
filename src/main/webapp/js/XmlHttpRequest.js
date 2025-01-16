@@ -2517,6 +2517,10 @@ function resizableMenu(url) {
         } else {
             moreButton.style.display = "none";
         }
+        
+        if (url.includes("ezSurvey")) {
+            SurveyItem.btnResize();
+        }
     }
 
     window.addEventListener("resize", function () {
