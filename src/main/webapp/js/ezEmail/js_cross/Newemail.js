@@ -695,6 +695,7 @@ function Mail_MoveDeletePostSend(Mode, Url, szItemID) {
     xmlhttp_mailMoveDelete.send(xmlpara);
 }
 function event_xmlhttp_mailMoveDelete_Complete() {
+    hideDelAllProgress();
     if (xmlhttp_mailMoveDelete != null && xmlhttp_mailMoveDelete.readyState == 4) {
     	if (xmlhttp_mailMoveDelete.responseText.indexOf("NO COPY processing failed.") > -1) {
     		alert(strLang241);
@@ -930,6 +931,7 @@ function deleteSearchedAndUnreadMail() {
 function delAllFile() {
     if (!confirm(strLang333))
         return;	
+    showDelAllProgress();
     Mail_MoveDeletePostSend("ALL", "", g_moveUrl);
 }
 function receiveCheck_onClick() {
@@ -2381,6 +2383,24 @@ function HiddenMailProgress() {
     document.getElementById("mailPanel").style.display = "none";
     document.getElementById("MailProgress").style.display = "none";
 }
+
+function showDelAllProgress() {
+    document.getElementById("mailPanel").style.display = "block";
+    document.getElementById("mailPanel").style.opacity = 0.5;
+    document.getElementById("mailPanel").style.background = "rgba(0,0,0,0.7)";
+    document.getElementById("MailProgress").style.top = "400px";
+    document.getElementById("MailProgress").style.left = (CurrenWidth / 2) - 100 + "px";
+    document.getElementById("MailProgress").style.display = "";
+    parent.document.getElementById("left").contentWindow.showProgress();
+}
+
+function hideDelAllProgress() {
+    document.getElementById("mailPanel").style.display = "none";
+    document.getElementById("mailPanel").style.backgroundColor = "";
+    document.getElementById("MailProgress").style.display = "none";
+    parent.document.getElementById("left").contentWindow.hideProgress();
+}
+
 function PreviewMode_ChangeBtn() {
     /*document.getElementById("PreViewNone").setAttribute("src", "/images/kr/cm/btn_noframe.gif");
     document.getElementById("PreViewBottom").setAttribute("src", "/images/kr/cm/btn_bottomframe.gif");
