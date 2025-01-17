@@ -5741,7 +5741,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			}
 									
 			String[] messageIds = message.getHeader("Message-ID");
-			String[] mdnHeaders = message.getHeader("Disposition-Notification-To");
+			String[] mdnHeaders = message.getHeader("X-JMocha-Disp-Noti-To");
 			
 			if (messageIds != null && mdnHeaders != null) {				
 				logger.debug("Sending an MDN...");
