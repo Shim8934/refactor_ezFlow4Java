@@ -5764,6 +5764,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				MultipartReport mpr = new MultipartReport("This is a Read Receipt.", dn);
 				replyMessage.setContent(mpr);		
 				replyMessage.setFrom(new InternetAddress(myEmailAddress, myName, "UTF-8"));
+				replyMessage.setRecipient(RecipientType.TO, new InternetAddress(mdnHeaders[0], "", "UTF-8"));
 										
 				sa.sendMessageWithNewTransport(replyMessage);
 				
