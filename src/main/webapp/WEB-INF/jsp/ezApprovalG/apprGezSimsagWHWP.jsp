@@ -1034,7 +1034,8 @@
 		    		data : {
 		    			fontFamily : "",
 		    			fontSize : "",
-		    			content : text
+		    			content : text,
+		    			docType : "WHWP"
 		    		},
 		    		success: function(xml){
 		    			result = loadXMLString(xml);

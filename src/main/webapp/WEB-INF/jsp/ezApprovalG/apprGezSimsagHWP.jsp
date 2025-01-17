@@ -749,7 +749,8 @@
 		    		data : {
 		    			fontFamily : "",
 		    			fontSize : "",
-		    			content : text
+		    			content : text,
+		    			docType : "HWP"
 		    		},
 		    		success: function(xml){
 		    			result = loadXMLString(xml);

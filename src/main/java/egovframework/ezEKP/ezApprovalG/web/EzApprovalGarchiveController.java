@@ -2484,9 +2484,10 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
         String fontFamily = request.getParameter("fontFamily");
 		String fontSize = request.getParameter("fontSize"); 
 		String content = request.getParameter("content");
+		String docType = request.getParameter("docType");
 
 		String result = "";
-		if("YES".equals(useHWP)) {
+		if("YES".equals(useHWP) && !"MHT".equals(docType)) {
 			result = ezApprovalGService.startXmlConvertHwp(content, fontFamily, fontSize, userInfo);
 		} else {
 			result = ezApprovalGService.startXmlConvert(content, fontFamily, fontSize, userInfo);
