@@ -1641,6 +1641,7 @@ function tr_unselectedAll(pTableID) {
         }
         objTr = null;
     }
+    checkboxBtnShowCtl();
 }
 
 //컨트롤 혹은 쉬프트 키를 이용한 멀티 선택 함수
@@ -1915,13 +1916,21 @@ function SelectCheckBox(pTableID, pRowSN, event) {
 function checkboxBtnShowCtl() {
 	var DocList = new ListView();
     DocList.LoadFromID("DocList");
+    
+    // 체크박스 컨트롤 동작은 DocList 리스트뷰에 체크박스가 존재할 때에만 작동
+    if (document.querySelectorAll('#DocList td:first-child input[type="checkbox"]').length == 0) {
+        return;
+    }
+    
     var oArrRows = DocList.GetSelectedRows();
     
     // 2023-03-07 한태훈 - 기록물등록대장에서도 사용하기 위해서 내용 추가. 
 	if (typeof g_sFlag != "undefined") {
 		if (g_sFlag == "m01" || g_sFlag == "docShare") { // 기록물 등록 대장 or 부서공유함일 경우.
-			if (oArrRows.length == 1) {
-				lvtDoclist_SelChange();
+			if (oArrRows.length <= 1) {
+                // 선택된 row가 있을 경우 그 row, 아닐 경우 맨 첫번째 row를 기준으로 상단 메뉴버튼 표출여부를 컨트롤
+                var selRowTemp = oArrRows.length == 1 ? oArrRows[0] : document.querySelector("#DocList tbody tr:first-child");
+                ChkCabRoleInfo(selRowTemp);
 			} else if (oArrRows.length > 1) {
 				document.getElementById("tdichange_Rec").style.display = "none";
 				document.getElementById("tdichangeS_Rec").style.display = "none";
@@ -1950,7 +1959,7 @@ function checkboxBtnShowCtl() {
     var isRedraftShow = true;
     var pFunctionType = "";
     var pDocState = "";
-    if (oArrRows.length > 0) {
+    if (oArrRows.length >= 0) {
     	for (var i = 0; i < oArrRows.length; i++) {
     		pFunctionType = GetAttribute(oArrRows[i], "DATA10"); // DATA10 = APRSTATE(FUNCTIONTYPE)
     		pDocState = GetAttribute(oArrRows[i], "DATA12"); // DATA9 = 수신문 관련 플래그, DATA12 = DOCSTATE
@@ -1980,7 +1989,7 @@ function checkboxBtnShowCtl() {
     	} else {
     		document.getElementById("tbtnRemoveDoc").style.display = "none";
     	}
-    	if (isRedraftShow == true) {
+    	if (isRedraftShow == true && oArrRows.length == 1) {
     		if (pListTypeValue != 4 && pListTypeValue != '97') {
     			document.getElementById("tbtnRedraft").style.display = "";
     		}
@@ -1994,7 +2003,7 @@ function checkboxBtnShowCtl() {
 		//document.getElementById("tbtnApprove1").style.display = "";
     	document.getElementById("tbtnGongRam").style.display = "none";
     	
-    	if(oArrRows.length == 1) {
+    	if(oArrRows.length <= 1) {
     		document.getElementById("tbtnViewDoc").style.display = "";
         	document.getElementById("tbtnTotalSave").style.display = "";
         	if (isDelShow == false && isRedraftShow == false) {
