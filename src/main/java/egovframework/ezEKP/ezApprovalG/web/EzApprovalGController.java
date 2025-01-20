@@ -322,6 +322,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		//개인 수신함 사용 여부
 		String personalHideSusin =  ezCommonService.getTenantConfig("PersonalHideSusin", userInfo.getTenantId());
 
+		//개인문서함 사용 여부
+		String useUserCont =  ezCommonService.getTenantConfig("useUserCont", userInfo.getTenantId());
+		model.addAttribute("useUserCont", useUserCont);
+		if ("YES".equals(useUserCont)) {
+			userCont = ezApprovalGService.getUserContTree(userInfo.getId(), "ROOT", userInfo.getDeptName(), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getLocale());
+			model.addAttribute("userCont", userCont);
+		}
+        
 		if(approvalFlag.equals("S")) {
 			String useApprFormCont = ezCommonService.getTenantConfig("useApprFormCont", userInfo.getTenantId());
 			model.addAttribute("useApprFormCont", useApprFormCont);
@@ -337,8 +345,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				List<ApprGTaskVO> taskItemList = ezApprovalGService.getCodeContainer(userInfo.getTenantId(), userInfo.getCompanyID(), userInfo.getDeptID(), commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()), approvalFlag, userInfo.getLang());
 				model.addAttribute("taskItemList", taskItemList);
 			}
-			
-			userCont = ezApprovalGService.getUserContTree(userInfo.getId(), "ROOT", userInfo.getDeptName(), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getLocale());
 			 
 			List<ApprGContInfoVO> apprContInfoVOs2 = ezApprovalGService.getSpecialContTree(userInfo);
 
@@ -365,7 +371,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			model.addAttribute("specialContTreeList", apprContInfoVOs2);
 			model.addAttribute("specialContTreeCount", apprContInfoVOs2.size());
 			model.addAttribute("subContCount", subContCount);
-			model.addAttribute("userCont", userCont);
 		} else {
 			List<KEDSharedUserInfo> deptShareList = ezApprovalGService.getShareList(userInfo.getId(), userInfo.getDeptID(), "D", userInfo.getLang(), userInfo.getTenantId());
 			List<KEDSharedUserInfo> userShareList = ezApprovalGService.getShareList(userInfo.getId(), userInfo.getDeptID(), "U", userInfo.getLang(), userInfo.getTenantId());
@@ -8300,6 +8305,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("previewInfo", previewInfo);
 		model.addAttribute("useAprPreview", useAprPreview);
 		model.addAttribute("useReceiveInfoName", ezCommonService.getTenantConfig("useReceiveInfoName", userInfo.getTenantId()));
+		model.addAttribute("useUserCont", ezCommonService.getTenantConfig("useUserCont", userInfo.getTenantId()));
 		
  		logger.debug("getContainerInfo ended");
 		

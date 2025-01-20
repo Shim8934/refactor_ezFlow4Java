@@ -195,7 +195,7 @@
 		            var nowmonth = nowDate.substring(5,7);
 		            var nowday = nowDate.substring(8,10);       
 	                
-					if(approvalFlag == "G") {
+					if(approvalFlag == "G" && LoadSquery != "usercontlist") {
 		                for (var i = 0; i < 25; i++) {
 		                    condition[i] = "";
 		                }
@@ -483,7 +483,7 @@
 	        var SelYearFlag = false;
 	        function onSelect_Year() {
 	            SelYearFlag = true;
-	            if(approvalFlag == 'G') {
+	            if(approvalFlag == 'G' && LoadSquery != "usercontlist") {
 					selectYear = GetSelectVal("sel_year");
 		            if (selectYear != "ALL") {
 		                condition[9] = selectYear;
@@ -668,7 +668,7 @@
 				var nowmonth = nowDate.substring(5,7);
 				var nowday = nowDate.substring(8,10);
 	    	   
-				if (approvalFlag == "G") {
+				if (approvalFlag == "G" && LoadSquery != "usercontlist") {
 					if (condition[3] == "" && condition[9] == "" && condition[15] == "") {
 	    			   	condition[9] = (nowyear-1);
 						condition[10] = nowmonth;
@@ -2020,7 +2020,13 @@
 	            	<li id="tbtnExcelAll"><span id="btnExcelAll" onclick="return btnExcel_onclick(1)"><spring:message code='ezApprovalG.t1527'/></span></li>		            
 		            <!-- <li id="tbar2" style="background: none; padding-right: 2px; display: none;"><img src="/images/i_bar.gif"></li> -->
 		            <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
+					<c:if test ="${useUserCont == 'YES'}">
+						<li id=tbtnRegUserCont><span id=btnRegUserCont onClick ="return btnRegUserCont_onclick()" ><spring:message code='ezApproval.t589'/></span></li>
+					</c:if>
 		            <li id="tSearchCondi"><span class="icon16 icon16_search" id="SearchCondi" onclick="return SearchCondi_onclick()"></span></li>
+					<c:if test ="${sQuery == 'usercontlist'}">
+						<li id=tbtnRemoveDoc><span class="icon16 icon16_delete" id=btnRemoveDoc onClick ="return btnRemoveDoc_onclick()"></span></li>
+					</c:if>	
 		            <!-- <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li> -->
 	            </c:if>
 				<c:if test="${null eq sQuery || sQuery eq '' }">

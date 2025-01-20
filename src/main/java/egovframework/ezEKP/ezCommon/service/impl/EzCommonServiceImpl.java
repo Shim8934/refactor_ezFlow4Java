@@ -2025,6 +2025,15 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             put("description","메뉴 관련 통계 집계, 및 사용 여부 (default:YES)");
             put("config_type","포탈");
         }});
+        
+        test.add(new HashMap<String, Object>(){{
+            put("confName","useUserCont");
+            put("property_value","YES");
+            put("config_name","전자결재 개인문서함 사용 여부");
+            put("regdate","2025-01-20 00:00:00");
+            put("description","전자결재 개인문서함 사용 여부. YES: 개인문서함 사용, NO: 개인문서함 사용하지 않음 (default : YES)");
+            put("config_type","전자결재");
+        }});
 
         test.add(new HashMap<String, Object>(){{
             put("confName","zipEncMenu");
