@@ -122,7 +122,7 @@
         	}            
     	</script>
 	</head>
-		<body style="margin-left: 10px; margin-right: 10px;">
+		<body style="margin-left: 10px; margin-right: 10px;" class="boardGeneral">
 			<br/>	
     		<span class="txt">▒ <spring:message code="ezBoard.t0007" /></span>
         	<br />    

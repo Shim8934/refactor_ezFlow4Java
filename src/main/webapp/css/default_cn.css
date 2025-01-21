@@ -190,6 +190,9 @@ p, strong, h3, div, a, span, table, th, td {
 .tag_normal{width:154px !important;}
 #popServer1, #popServer2, #popServer3{width:180px !important;}
 
+/* 게시판 */
+.boardGeneral .content{width:670px !important;}
+
 /* 주소록 */
 .address_wordmenu li:first-child{width:auto !important;}
 
