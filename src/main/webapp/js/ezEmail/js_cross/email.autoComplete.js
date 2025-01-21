@@ -82,11 +82,6 @@ function setupAutocomplete(selector, iType, element) {
             }
         },
         minLength : 0,
-        /*
-         * [주소 자동 완성]이 생기기 전에 select하여 [최근 사용 주소]가 선택되어버리는 경우가 빈번해 불편을 느낀다면,
-         * 첫번째 자동선택(autoFocus 옵션)을 제거하는 방법이 있다.
-         */
-        autoFocus: true,
         select : function(event, ui) {
             var addressType = "email";
             var href = ""
