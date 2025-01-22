@@ -39,8 +39,6 @@ import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.dao.EzCommonDAO;
-import egovframework.ezEKP.ezOrgan.dao.EzOrganAdminDAO;
-import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezSystem.dao.EzSystemAdminDAO;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
 import egovframework.ezEKP.ezSystem.util.EzSystemUtil;
@@ -115,7 +113,7 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 					// continue; 2022-10-20 이사라 - PackageType 값이 동일하면 for문을 빠져나가는 오류로 주석처리
 				} else {
 					// 바뀌었을때 새로운 packageType으로 디비 메뉴 맞춰줘야하는 것 추가
-					updateNewPortalMenuByPackageType(newPackageType, tenantID, companyID);
+					//updateNewPortalMenuByPackageType(newPackageType, tenantID, companyID);
 				}
 			}
 

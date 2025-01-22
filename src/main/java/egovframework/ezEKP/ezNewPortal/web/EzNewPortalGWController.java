@@ -1089,6 +1089,7 @@ public class EzNewPortalGWController {
 			
 			if (packageType.equals(CommonUtil.PT_MAIL)) {
 				menuList.removeIf(vo -> (vo.getMenuCode() != null && !vo.getMenuCode().equals("mail") && !vo.getMenuCode().equals("address")));
+				menuList.removeIf(vo -> ("A".equalsIgnoreCase(vo.getMenuType())));
 			}
 			
 			data.put("menuList", menuList);

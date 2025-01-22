@@ -444,7 +444,7 @@
 				str += '<ul class="util">';
 				//str += '<ul class="util"><li id="listSwitch" style="display: flex;align-items: center;">';
 				if ('${packageType}' === 'mail' && '${lastLogin}' != '') {	// 20200326 조진호 - 패키지 타입이 메일 일 때 최종 접속 로그인 시간과 ip를 탑메뉴 상단에 표시
-					str += '<li><span style="font-family: 돋움; font-size: 13px; font-weight: bold; color: #333; display: inline-block; margin-right: 10px;margin-top: 20px;" title="' + '<spring:message code="ezSystem.x0025" />(<spring:message code="ezSystem.x0024" />)' + '">' + '${lastLogin} (' + '${loginIP})' + '</span></li>';
+					str += '<li><span style="font-family: 돋움; font-size: 13px; font-weight: bold; color: #333; display: inline-block; margin-top: 23px; width: 111px;" title="' + '<spring:message code="ezSystem.x0025" />(<spring:message code="ezSystem.x0024" />)' + '">' + '${lastLogin} (' + '${loginIP})' + '</span></li>';
 				}
 								
 				if ('${useUtilTalk}' === 'YES') str += '<li><span class="icon_topmenu util_messenger" id="util_messenger" title="' + '<spring:message code="ezNewPortal.kje01" />' + '"></span></li>'; // 메신저 다운로드 추가

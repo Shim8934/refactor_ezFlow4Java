@@ -186,7 +186,10 @@ public class MOptionGWController extends EgovFileMngUtil {
 			String lang = jsonObject.get("lang").toString();
 			String mainType = jsonObject.get("mainType").toString();
 			String listCnt = jsonObject.get("listCnt").toString();
-			String useSecurity = jsonObject.get("useSecurity").toString();
+			String useSecurity = "";
+			if (jsonObject.get("useSecurity") != null){
+				useSecurity = jsonObject.get("useSecurity").toString();
+			}
 
 			// 사용자 정보
 			String serverName = request.getHeader("x-user-host");
@@ -223,7 +226,7 @@ public class MOptionGWController extends EgovFileMngUtil {
 			JSONArray jsonArray = new JSONArray();
 			
 			int themeId = 4; // 모바일 테마
-			
+
 			if (portletVO instanceof ArrayList) {
 				ArrayList<LinkedHashMap<String, Object>> portletJsonList = (ArrayList<LinkedHashMap<String, Object>>) portletVO;
 

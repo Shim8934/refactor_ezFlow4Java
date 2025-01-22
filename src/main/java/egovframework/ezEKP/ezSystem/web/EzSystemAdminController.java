@@ -268,6 +268,9 @@ public class EzSystemAdminController {
 		model.addAttribute("systemDomain", systemDomain);
 		model.addAttribute("notiPollingInterval", notiPollingInterval);
 
+		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
+		model.addAttribute("packageType", packageType);
+
 		logger.debug("systemMainMenu ended");
 		
 		return "/ezSystem/systemMainMenu";
