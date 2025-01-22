@@ -31,7 +31,13 @@
 	        #recordRight.selectUnderDept {
 	            max-width: 450px;
 	        }
-	        
+
+			#mainmenu ul#trRecSubMenu {
+				overflow: visible;
+				height: auto;
+				min-width: 550px;
+			}
+			
 	    </style>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />

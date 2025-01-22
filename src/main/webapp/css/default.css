@@ -468,7 +468,7 @@ form{display:inline;margin:0}
 #mainmenu li, #mainmenu li.off{
 	display: block;
     float: left;
-    margin: 0px 3px 0px 0px;
+    margin: 0px 3px 3px 0px;
 	padding:0px 0px;
     cursor: pointer;
     /*line-height: 27px; 제거*/
