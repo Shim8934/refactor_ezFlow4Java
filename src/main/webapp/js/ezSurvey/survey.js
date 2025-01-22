@@ -1834,6 +1834,10 @@ var SurveyCreate     = function() {
 				pf = checkLogicNum(id, qstn, type);
 				result = pf == "success" ? addSltLogic(id, qstn) : ""; 
 				break;
+			case 2 :
+				pf = checkLogicNum(id, qstn, type);
+				result = pf == "success" ? addSltLogic(id, qstn) : ""; 
+				break;
 			case 7:
 				result = addSlidLogic(id, qstn);
 				break;
@@ -1842,6 +1846,10 @@ var SurveyCreate     = function() {
 				result = pf == "success" ? addDrdwLogic(id, qstn) : "";
 				break;
 			case 10:
+				pf = checkLogicNum(id, qstn, type);
+				result = pf == "success" ? addScheduleLogic(id, qstn) : ""; 
+				break;
+			case 11:
 				pf = checkLogicNum(id, qstn, type);
 				result = pf == "success" ? addScheduleLogic(id, qstn) : ""; 
 				break;
@@ -1906,6 +1914,9 @@ var SurveyCreate     = function() {
 			case 1 :
 				showSltLogicForm(id, qstn);
 				break;
+			case 2 :
+				showSltLogicForm(id, qstn);
+				break;
 			case 7:
 				showSlidLogicForm(id, qstn);
 				break;
@@ -1913,6 +1924,9 @@ var SurveyCreate     = function() {
 				showDrdwLogicForm(id, qstn);
 				break;
 			case 10:
+				showScheduleLogicForm(id, qstn);
+				break;
+			case 11:
 				showScheduleLogicForm(id, qstn);
 				break;
 			}
@@ -1933,7 +1947,7 @@ var SurveyCreate     = function() {
 			var qstn = qstnList[id - 1];
 			
 			// 로직 삭제, ui 변경
-			if (type == 1 || type == 10) {
+			if ([1, 2, 10, 11].includes(type)) {
 				var opt = prevWrapper.find(".opt");
 				var optLength = opt.length;
 				
@@ -3805,7 +3819,7 @@ var SurveyCreate     = function() {
 			qstnHeader += "<li id='delSkip" + qstId + "' class='off delSkip'><span class='survey_icon logicDel'></span></li>";
 			qstnHeader += "</ul>";
 			
-			if (qstnType == 1 || qstnType == 7 || qstnType == 9 || qstnType == 10) {
+			if ([1, 2, 4, 7, 9, 10, 11].includes(qstnType)) {
 				var addLogic = $("<li id='addLogic" + qstId + "' class='off addLogic'><span class='survey_icon logicShuffle'></span></li>");
 				frstBtnGrp.append(addLogic);
 				
@@ -3880,6 +3894,9 @@ var SurveyCreate     = function() {
 		case 1 :
 			sltLogicForm(prevWrapper, htmlOption, thisQstn, id);
 			break;
+		case 2 :
+			sltLogicForm(prevWrapper, htmlOption, thisQstn, id);
+			break;
 		case 7 :
 			slidLogicForm(prevWrapper, htmlOption, thisQstn, id);
 			break;
@@ -3887,6 +3904,9 @@ var SurveyCreate     = function() {
 			drdwLogicForm(prevWrapper, htmlOption, thisQstn, id);
 			break;
 		case 10 :
+			scheduleLogicForm(prevWrapper, htmlOption, thisQstn, id);
+			break;
+		case 11 :
 			scheduleLogicForm(prevWrapper, htmlOption, thisQstn, id);
 			break;
 		}
@@ -4463,7 +4483,7 @@ var SurveyCreate     = function() {
 		var result    = "";
 		var emptyCount = 0;
 		
-		if (type == 1 || type == 2 || type == 10) {
+		if (type == 1 || type == 2 || type == 10 || type == 11) {
 			opt       = wrapper.find(".opt");
 			optLength = opt.length;
 		}
