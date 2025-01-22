@@ -1107,8 +1107,86 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		ezSystemAdminDAO.updateAdminIPBand(params);
 		
 		logger.debug("updateAdminIPBand ended.");
-	} 
-	
+	}
+
+	@Override
+	public int isExistSystemAdminIPBand(String ipNo) throws Exception {
+		logger.debug("isExistSystemAdminIPBand started.");
+		logger.debug("ipNo=" + ipNo);
+
+		String[] ipNoList = ipNo.split(",");
+		List<String> list = new ArrayList<String>();
+
+		for (int i = 0; i < ipNoList.length; i++) {
+			list.add(ipNoList[i]);
+		}
+
+		int isExist = ezSystemAdminDAO.isExistSystemAdminIPBand(list);
+
+		logger.debug("isExistSystemAdminIPBand ended.");
+
+		return isExist;
+	}
+
+	@Override
+	public String isExistSystemAccess(String deleteList, String type, String useIPAccess, int tenantID) throws Exception {
+		logger.debug("isExistSystemAccess started.");
+		logger.debug("useIPAccess=" + useIPAccess +", deleteList="+deleteList);
+
+		if ("YES".equalsIgnoreCase(useIPAccess)){
+			List<String> userList = getAllAccessListCom(tenantID);
+			String countryCodeList = getAccessCountryList(tenantID);
+			List<IPBandVO> ipList = getAllIPBand(tenantID);
+			int accessIp = 0;
+			for(int i = 0; i < ipList.size(); i++) {
+				if ("YES".equalsIgnoreCase(ipList.get(i).getAccess())){
+					accessIp += 1;
+				}
+			}
+			boolean existCountryList = "".equalsIgnoreCase(countryCodeList) ? false : true;
+			boolean existIdList = userList.size() == 0 ? false : true;
+			boolean existIpList = accessIp == 0 ? false : true;
+
+			if ("id".equalsIgnoreCase(type)){
+				String [] deleteCodeArr = deleteList.isEmpty() ? new String[0] : deleteList.split(",");
+				if (deleteCodeArr.length == userList.size()){ //지우려는 거랑 현재 목록 숫자 같은경우
+					existIdList = false;
+				}
+			} else if ("ip".equalsIgnoreCase(type)) {
+				String [] deleteCodeArr = deleteList.isEmpty() ? new String[0] : deleteList.split(",");
+				for (int i = 0; i < ipList.size(); i++) {
+					for (int j = 0; j < deleteCodeArr.length; j++) {
+						if (ipList.get(i).getIpNo().equalsIgnoreCase(deleteCodeArr[j])){
+							ipList.remove(i);
+						}
+					}
+				}
+				int remainAccessIp = 0;
+				for(int i = 0; i < ipList.size(); i++) {
+					if ("YES".equalsIgnoreCase(ipList.get(i).getAccess())){
+						remainAccessIp += 1;
+					}
+				}
+				if (remainAccessIp == 0){ //지우고 남은 것중에 허용ip 수가 0인경우
+					existIpList = false;
+				}
+			} else {
+				String [] deleteCodeArr = deleteList.isEmpty() ? new String[0] : deleteList.split(";");
+				if (deleteCodeArr.length == 0){ //국가의 경우 전체 목록을 가져오므로 해당 목록이 0인 경우 false
+					existCountryList = false;
+				} //국가가 목록이 추가되는 순간은 다른 목록(ip,id)들이 있어서 굳이 true로 변환 안해도 됨
+			}
+
+			if (!existIdList && !existCountryList && !existIpList){
+				return "setAccess";
+			}
+		}
+
+		logger.debug("isExistSystemAccess ended.");
+
+		return "success";
+	}
+
 	@Override
 	public void deleteAdminIPBand(String ipNo) throws Exception {
 		logger.debug("deleteIPBand started.");

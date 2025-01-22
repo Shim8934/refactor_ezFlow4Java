@@ -165,7 +165,11 @@ public class EzSystemAdminDAO extends EgovAbstractDAO {
 	public void updateAdminIPBand(Map<String, Object> map) throws Exception {
 		update("EzSystemAdminDAO.updateAdminIPBand", map);
 	}
-	
+
+	public Integer isExistSystemAdminIPBand(List<String> ipNoList) throws Exception {
+		return (Integer) select ("EzSystemAdminDAO.isExistSystemAdminIPBand", ipNoList);
+	}
+
 	public void deleteAdminIPBand(List<String> ipNoList) throws Exception {
 		delete ("EzSystemAdminDAO.deleteAdminIPBand", ipNoList);
 	}

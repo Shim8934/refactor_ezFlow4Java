@@ -182,22 +182,44 @@
 			if (!document.getElementById("ipRadio0").checked) {
 				allowResult = true;
 			}
-			
-			$.ajax({
-				type : "POST",
-				url : "/ezSystem/setUseAdminIPAccess.do?allowResult=" + allowResult,
-				cache : false,
-				error : function(data) {
-					alert("<spring:message code='ezCommunity.t283'/>");
-				},
-				success : function(data) {
-					if (data == "OK") {
-						alert("<spring:message code='ezCommunity.t282'/>");
-					} else if (data == "adminFail") {
-		     			alert("<spring:message code='ezSystem.jje7' />");
-					}
-				}
-			});
+
+            $.ajax({
+                type : "POST",
+                url : "/ezSystem/getAdminAccessIPBand.do",
+                cache : false,
+                error : function(data) {
+                    console.log(data);
+                    alert("<spring:message code='ezCommunity.t283'/>");
+                },
+                success : function(data) {
+                    var accessLength = 0;
+                    for (var i = 0; i < data.length; i++) {
+                        if(data[i].access == 'YES'){
+                            accessLength += 1;
+                        }
+                    }
+                    if(allowResult == true && accessLength == 0){
+                        alert("<spring:message code='ezSystem.yja02' />");
+                    } else {
+                        $.ajax({
+                            type : "POST",
+                            url : "/ezSystem/setUseAdminIPAccess.do?allowResult=" + allowResult,
+                            cache : false,
+                            error : function(data) {
+                                alert("<spring:message code='ezCommunity.t283'/>");
+                            },
+                            success : function(data) {
+                                if (data == "OK") {
+                                    alert("<spring:message code='ezCommunity.t282'/>");
+                                } else if (data == "adminFail") {
+                                    alert("<spring:message code='ezSystem.jje7' />");
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+
 		}
      	
 		function cancleBtn() {
