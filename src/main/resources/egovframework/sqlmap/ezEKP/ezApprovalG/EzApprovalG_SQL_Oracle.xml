@@ -36467,7 +36467,7 @@
                     ORDER BY
                         RESENDSTARTDATE DESC NULLS LAST
                 )
-            WHERE ROWNUM <= 10
+            WHERE ROWNUM <= 5
         ]]>
     </select>
 
