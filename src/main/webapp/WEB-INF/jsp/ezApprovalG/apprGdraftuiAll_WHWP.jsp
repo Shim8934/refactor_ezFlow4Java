@@ -418,10 +418,30 @@
 	                div.ondragenter = div.ondragover = function (e) {
 	                    return false;
 	                }
-	                div.ondrop = function (e) {
-	                    alert("드래그 앤 드랍 기능을 이용할 수 없습니다.\n[첨부] 메뉴를 이용해 주시기 바랍니다.");
-	                    return false;
-	                }
+	                
+		            div.ondrop = function (e) {
+		                alert("<spring:message code='ezApprovalG.pjj30'/>");
+		                return false;
+		            }
+		            
+                    var div2 = document.getElementById('lstAttachLinkDoc');
+                    div2.ondragenter = div.ondragover = function (e) {
+		                return false;
+		            }
+		            
+		            div2.ondrop = function (e) {
+		                alert("<spring:message code='ezApprovalG.noDrag.jih01'/>");
+		                return false;
+		            }
+		            
+		            var html = document.getElementsByTagName('html')[0];
+		            html.ondragover = function (e) {
+		            	if (e.target.id == 'lstAttachLink' || e.target.id == 'lstAttachLinkDoc') { return false; }
+		            	
+		            	e.dataTransfer.dropEffect = "none";
+				        e.stopPropagation();
+				        e.preventDefault();
+		            }	
 	            } catch (e) {
 	                alert("apprGdraftuiAllContent_WHWP.jsp > dragNdrapNo()::" + e.description);
 	            }

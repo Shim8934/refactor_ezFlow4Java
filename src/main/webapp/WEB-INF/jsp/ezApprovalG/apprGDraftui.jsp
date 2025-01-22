@@ -254,12 +254,10 @@
 				setAttachGuideText();
 			};
 
-			function dragNdrapNo()
-		    {
+			function dragNdrapNo() {
 		        try{
 		            var div = document.getElementById('lstAttachLink');
-		            div.ondragenter = div.ondragover = function (e) 
-		            {
+		            div.ondragenter = div.ondragover = function (e) {
 		                return false;
 		            }
 		            div.ondrop = function (e) {
@@ -267,18 +265,25 @@
 		                return false;
 		            }
 		            
+                    var div2 = document.getElementById('lstAttachLinkDoc');
+                    div2.ondragenter = div.ondragover = function (e) {
+		                return false;
+		            }
+		            div2.ondrop = function (e) {
+		                alert("<spring:message code='ezApprovalG.noDrag.jih01'/>");
+		                return false;
+		            }
+		            
 		            var html = document.getElementsByTagName('html')[0];
 		            html.ondragover = function (e) {
-		            	if (e.target.id == 'lstAttachLink') { return false; }
+		            	if (e.target.id == 'lstAttachLink' || e.target.id == 'lstAttachLinkDoc') { return false; }
 		            	
 		            	e.dataTransfer.dropEffect = "none";
 				        e.stopPropagation();
 				        e.preventDefault();
-		            }
-		            
-		        }
-		        catch(e)
-		        {
+		            }	            
+		        } catch(e) {
+		            alert("ezdraftui.dragNdrapNo()::" + e.description);
 		        }
 		    }
 		    var noFieldsAvailable = false;
