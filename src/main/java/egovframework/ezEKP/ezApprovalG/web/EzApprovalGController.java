@@ -15,6 +15,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovAttachVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGOpinionVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGReceiveDocVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSusinProcessInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
@@ -6769,6 +6770,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String susinAdmin = "";
 		String serverName = userInfo.getServerName();
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		String mode = request.getParameter("mode") != null ? request.getParameter("mode") : "";
 		
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("a=1") > -1) {
 			susinAdmin = "YES";
@@ -6780,6 +6782,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("serverName", serverName);
 		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("mode", mode);
 		
 		logger.debug("ezReceiveAssignUI ended.");
 		
@@ -13757,5 +13760,81 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		logger.debug("getEditVersion ended");
 		return editVersion1Array + "." + editVersion2Array;
+	}
+    
+	/* 2024-12-25 기민혁 - 전자결재 > 일괄 지정 등록  */
+	@RequestMapping(value = "/ezApprovalG/setJijungALL.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public String setJijungALL(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("setJijungALL started.");
+
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		String result = "" ;
+		String docIDs = request.getParameter("docID");
+		String receiveSNs = request.getParameter("receiveSN");
+		String processorID = request.getParameter("processorID");
+		String processorName = request.getParameter("processorName");
+		String processorJobTitle = request.getParameter("processorJobTitle");
+		String receivedDeptID = request.getParameter("receivedDeptID");
+		String receivedDeptName = request.getParameter("receivedDeptName");
+		String processorName2 = request.getParameter("processorName2");
+		String processorJobTitle2 = request.getParameter("processorJobTitle2");
+		String receivedDeptName2 = request.getParameter("receivedDeptName2");
+		String susinAdmin = "NO";
+		
+		// a=1은 수발신담당자
+		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("a=1") > -1) {
+			susinAdmin = "YES";
+		} else {
+			susinAdmin = "NO";
+		}
+
+		String[] docIDsplitArray = docIDs.split(",");
+		String[] receiveSNsplitArray = receiveSNs.split(",");
+
+		int tResult = docIDsplitArray.length; //총 개수
+		int yResult = 0; //성공 개수
+		int nResult = 0; //제외 개수
+		int eResult = 0; //오류 개수
+		String susinCheck = "N";
+		
+		if (tResult > 0) {
+			for (int i = 0; i < docIDsplitArray.length; i++) {
+				try{
+					ApprGReceiveDocVO checkDocReceiveInfo = ezApprovalGService.checkDocReceiveInfo(userInfo.getCompanyID(), userInfo.getTenantId(),docIDsplitArray[i],receiveSNsplitArray[i]);
+	
+					if(checkDocReceiveInfo != null && (checkDocReceiveInfo.getDocState().equals("011") || checkDocReceiveInfo.getDocState().equals("013")) && !checkDocReceiveInfo.getAprState().equals("015") && !checkDocReceiveInfo.getAprState().equals("013")){ //수신테이블에 데이터가 있고 docstate가 수신(011),시행(013) 이면서 aprstate가 회송(015), 접수(013)이 아닐경우 일괄 기안 진행
+						if((checkDocReceiveInfo.getAprState().equals("011") || checkDocReceiveInfo.getAprState().equals("012") || checkDocReceiveInfo.getAprState().equals("014")) &&
+								 susinAdmin.equals("YES") && (checkDocReceiveInfo.getProcessorID() == null || checkDocReceiveInfo.getProcessorID().isEmpty() || checkDocReceiveInfo.getProcessorID().trim().equals(userInfo.getId()))) {
+							//수발신 담당자 일때 도착(011),지정(012),배부(014) 의 경우 
+							susinCheck = "Y";
+						} else if((checkDocReceiveInfo.getAprState().equals("011") || checkDocReceiveInfo.getAprState().equals("012")) &&
+								 susinAdmin.equals("NO") && (checkDocReceiveInfo.getProcessorID() != null && !checkDocReceiveInfo.getProcessorID().isEmpty() && checkDocReceiveInfo.getProcessorID().trim().equals(userInfo.getId()))) {
+							//수발신 담당자가 아닐때 도착(011),지정(012) 의 경우  
+							susinCheck = "Y";
+						} else {
+							susinCheck = "N";
+						}
+					} else {
+						susinCheck = "N";
+					}
+	
+					if(susinCheck.equals("Y")){
+						result = ezApprovalGService.setJijung(checkDocReceiveInfo.getDocID(), checkDocReceiveInfo.getReceiveSN(), processorID, processorName, processorJobTitle, receivedDeptID, receivedDeptName, checkDocReceiveInfo.getAprState(), processorName2, processorJobTitle2, receivedDeptName2, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+						yResult ++;
+					}else {
+						nResult++;
+						continue;
+					}
+
+				} catch ( Exception e){
+					eResult++;
+					logger.error("setJijungALL error = {}", e);
+				}
+			}
+			
+		}
+		logger.debug("setJijungALL ended.");
+		return tResult + "/" + yResult + "/" + nResult + "/" + eResult;
 	}
 }

@@ -38975,4 +38975,21 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         logger.debug("getEditVersion ended.");
         return ezApprovalGDAO.getEditVersion(map);
     }
+    
+    /* 2024-12-25 기민혁 - 전자결재 > 일괄 지정 수신 문서 확인 */
+    @Override
+    public ApprGReceiveDocVO checkDocReceiveInfo(String companyID, int tenantID, String docID, String receiveSN) throws Exception {
+        logger.debug("checkDocReceiveInfo started");
+
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("companyID", companyID);
+        map.put("v_TENANTID",tenantID);
+        map.put("v_DOCID", docID);
+        map.put("v_RECEIVESN", receiveSN);
+        ApprGReceiveDocVO checkDocReceiveInfo = ezApprovalGDAO.checkDocReceiveInfo(map);
+        
+        logger.debug("checkDocReceiveInfo ended");
+        return checkDocReceiveInfo;
+    }
+
 }
