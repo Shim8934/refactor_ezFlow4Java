@@ -49,6 +49,9 @@
 <script type="text/javascript">
 var board_alertArguments = new Array();
 var portletCode = "<c:out value="${portletCode}"/>"
+var portletBoardId = "<c:out value="${portletBoardId}"/>"
+var portletBoardGroupID = "<c:out value="${portletBoardGroupID}"/>"
+var findBoard = false;
 
 $(function(){
 	$("#close").on("click", function(){
@@ -56,7 +59,72 @@ $(function(){
 	});
 	
 	eventSetting();
+
+	/* 2025-01-23 김유진 - 게시판그룹명 > div -> li 기존 게시판 id 찾기 */
+	if (portletBoardId !== "" && portletBoardGroupID !== "" ) {
+		var h2s = document.getElementById("TopBoards").getElementsByClassName("boardTop");
+		for (var i = 0 ; i < h2s.length ; i++) {
+			if (h2s[i].getAttribute("data1") == portletBoardGroupID) {
+				LoadTreeViewByPath(h2s[i], portletBoardId, portletBoardGroupID);
+			}
+		}
+		return;
+	}
 });
+
+function LoadTreeViewByPath(pObjSpan, pBoardID, pBoardGroupID) {
+	pObjSpan.click();
+	setTimeout(function() {
+		divId = pObjSpan.getAttribute("id").replace("board", "boardSub");
+		var lis = document.getElementById(divId).getElementsByClassName("jstree-node");
+	
+		var cnt = lis.length;
+		for (var i = 0; i < cnt; i++) {
+			if (findBoard) {
+				break;
+			}
+			
+			if (portletBoardId === lis[i].getAttribute("id")) {
+				document.getElementById(portletBoardId + "_anchor").click();
+				findBoard = true;
+				break;
+			}
+			else {
+				// 하위 게시판들에서 기존 게시판 id 찾기
+				clickUntilLeaf(lis[i]);
+			}
+		}
+	}, 900);
+}
+
+function clickUntilLeaf(node) {
+	if (!node.classList.contains("jstree-leaf")) {
+		var jstreeOcl = node.querySelector("i.jstree-ocl");
+		if (jstreeOcl) {
+			jstreeOcl.click();
+			var childNodes = node.querySelectorAll("ul > li");
+			for (var i = 0; i < childNodes.length; i++) {
+				if (findBoard) {
+					break;
+				}
+				if (portletBoardId === childNodes[i].getAttribute("id")) {
+					if (document.getElementById(portletBoardId + "_anchor")) {
+						document.getElementById(portletBoardId + "_anchor").click();
+					}
+					findBoard = true;
+					break;
+				} else {
+					// 하위 게시판들에서 기존 게시판 id 찾기
+					clickUntilLeaf(childNodes[i]);
+					// 열려있어야 하위 폴더트리 사용 가능, 다 사용 후 닫아주기
+					if (!findBoard && i === childNodes.length-1) {
+						jstreeOcl.click();
+					}
+				}
+			}
+		}
+	}
+}
 
 var eventSetting = function() {
 	$("#selBoard").on("click", selectBoard);

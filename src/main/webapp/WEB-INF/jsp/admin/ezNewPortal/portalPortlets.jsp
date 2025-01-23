@@ -363,8 +363,14 @@
 	 		var companiesObj = document.getElementById("ListCompany");
 			var companyId = companiesObj.options[companiesObj.selectedIndex].value;
 			var portletCode = "";
+			var portletBoardId = "";
 			if (portletId != null) {
 				portletCode = document.getElementById("portlet" + portletId).getAttribute("data3");
+			}
+			if (document.getElementById("portletBoard" + portletId) == null) {
+				portletBoardId = document.getElementById("newPortletBoard").getAttribute("data1") == null ? "" : document.getElementById("newPortletBoard").getAttribute("data1");
+			} else {
+				portletBoardId = document.getElementById("portletBoard" + portletId).getAttribute("data1") == "null" ? "" : document.getElementById("portletBoard" + portletId).getAttribute("data1");
 			}
 			
 	        var wWeight = "355";
@@ -376,7 +382,7 @@
 	        var left = (width - wWeight) / 2;
 	        var top = (heigth - wHeight) / 2;
 	        
-	        window.open("/admin/ezNewPortal/openBoardTree.do?portletId=" + portletId + "&companyId=" + companyId + "&code=" + portletCode, "",
+	        window.open("/admin/ezNewPortal/openBoardTree.do?portletId=" + portletId + "&companyId=" + companyId + "&code=" + portletCode + "&portletBoardId=" + portletBoardId, "",
 	            "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 		}
 		  

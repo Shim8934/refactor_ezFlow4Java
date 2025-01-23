@@ -25,6 +25,7 @@ import javax.mail.UIDFolder;
 import javax.servlet.http.HttpServletRequest;
 
 import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
+import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezNewPortal.vo.ConnectPortletDTO;
 import egovframework.ezEKP.ezNewPortal.vo.DeptViewVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalTopVO;
@@ -3217,6 +3218,8 @@ public class EzNewPortalGWController {
 			int tenantId = info.getTenantId();
 			String parentBoardId = request.getParameter("parentBoardId");
 			String lang = commonUtil.getLangData(info.getLang());
+			String portletBoardId = request.getParameter("portletBoardId");
+			String portletBoardGroupID = "";
 			
 			List<PortalBoardTreeVO> boardTree = ezNewPortalService.getBoardTree(parentBoardId, companyId, tenantId);
 			
@@ -3246,13 +3249,20 @@ public class EzNewPortalGWController {
 				boardTree.set(i, boardInfo);
 			}
 			
+			if (portletBoardId != null && !"".equals(portletBoardId)) {
+				List<BoardVO> portletBoardGroupIDList = ezBoardService.getLeft_BoardSTD(portletBoardId, tenantId);
+				portletBoardGroupID = portletBoardGroupIDList == null || portletBoardGroupIDList.isEmpty() ? "" : portletBoardGroupIDList.get(0).getBoardGroupId();
+			}
+			
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", boardTree);
+			result.put("portletBoardGroupID", portletBoardGroupID);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
+			result.put("portletBoardGroupID", "");
 		}
 		logger.debug("ezNewPortal G/W getBoardTree ended.");
 		return result;
