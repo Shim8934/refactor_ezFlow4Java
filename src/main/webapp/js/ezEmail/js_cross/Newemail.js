@@ -1337,7 +1337,7 @@ function event_xmlhttp_mailPreview_Complete() {
 					document.getElementById("pre_h_tag_add").value = "";
 					document.getElementById("pre_h_tag_view").innerHTML = "";
 					if (pTags) {
-						pTags.split("|").forEach(function(tagName) { appendTagToPreview(tagName); });
+						pTags.split("|").forEach(function(tagName) { appendTag(tagName,"pre_h_tag_view"); });
 					}
 				}
             } else {
@@ -1370,7 +1370,7 @@ function event_xmlhttp_mailPreview_Complete() {
 					document.getElementById("pre_w_tag_add").value = "";
 					document.getElementById("pre_w_tag_view").innerHTML = "";
 					if (pTags) {
-						pTags.split("|").forEach(function(tagName) { appendTagToPreview(tagName); });
+						pTags.split("|").forEach(function(tagName) { appendTag(tagName,"pre_w_tag_view"); });
 					}
 				}
             }
@@ -2544,93 +2544,6 @@ function mailConfirm_line() {
 	listContentArry.forEach(function(val, key) {
 		$("#"+val).toggleClass("mail_confirm");
 	});
-}
-
-function appendTagToPreview(tagName) {
-	var tagContainer = pPreviewShow_HOW == "H" ? document.getElementById("pre_h_tag_view") : document.getElementById("pre_w_tag_view");
-    var tagListDiv = document.createElement("div");
-    tagListDiv.className = "tag_list";
-
-    var tagSpan = document.createElement("span");
-    tagSpan.innerText = tagName;
-    tagSpan.className = "tag_name";
-    tagSpan.id = "tag_name";
-
-    var deleteSpan =  document.createElement("span");
-    deleteSpan.className = "tag_del";
-    deleteSpan.id = "tag_del";
-
-    deleteSpan.addEventListener("click", function() {
-		var mailId = Old_Preview_Href.split("/");
-		var folderPath = mailId[0];
-		var mailUid = mailId[1];
-		$.ajax({
-			cache: false,
-			method: "post",
-			url: "/ezEmail/deleteMailTag.do",
-			data: { folderPath: folderPath, mailUid: mailUid, tagName: tagName },
-			success: function(result) {
-				if (result.status == "error") {
-					alert(strLang321);
-					return;
-				}
-
-				onChangeTagList();
-				$(tagSpan).remove();
-				$(deleteSpan).remove();
-				$(tagListDiv).remove();
-			},
-			error: function() {
-				alert(strLang321);
-			}
-		});
-	});
-
-    tagListDiv.appendChild(deleteSpan);
-    tagListDiv.appendChild(tagSpan);
-    tagContainer.appendChild(tagListDiv)
-}
-
-function onEnterPreviewTagInput() {
-	var idPrefix = pPreviewShow_HOW == "H" ? "pre_h_tag_" : "pre_w_tag_";
-	var tagInput = document.getElementById(idPrefix + "add");
-	var tagName = tagInput.value.trim();
-	if (tagName.length <= 0) return;
-	if ($.grep(document.querySelectorAll("#" + idPrefix + "view > span"), function(span) { return span.innerText == tagName }).length > 0) {
-		alert(strLangTagAlreadyUse);
-		return;
-	}
-
-	var mailId = Old_Preview_Href.split("/");
-	var folderPath = mailId[0];
-	var mailUid = mailId[1];
-	$.ajax({
-		cache: false,
-		async: false,
-		method: 'post',
-		url: "/ezEmail/addMailTag.do",
-		data: { folderPath: folderPath, mailUid: mailUid, tagName: tagName, shareId: shareId },
-		success: function(result) {
-			if (result.status == "error") {
-				alert(strLang321);
-				return;
-			}
-
-			onChangeTagList();
-			appendTagToPreview(tagName);
-			tagInput.value = "";
-		},
-		error: function() {
-			alert(strLang321);
-		}
-	});
-}
-
-function onChangeTagList() {
-	window.cacheTags = null;
-	if (window.leftMenu) {
-		leftMenu.reloadTags();
-	}
 }
 
 function hiddenMoreMenu() {

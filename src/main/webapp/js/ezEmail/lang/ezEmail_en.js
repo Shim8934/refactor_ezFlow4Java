@@ -395,6 +395,9 @@ var strUreadDelSearch = "Do you want to delete all unread emails among the searc
 var strUreadDelPermenant = "Once deleted, the emails cannot be recovered.\nDo you want to permanently delete all unread emails in the mailbox?";
 var strUreadDelSearchPermenant = "Once deleted, the emails cannot be recovered.\nDo you want to permanently delete all unread emails among the search results?";
 
+const strLangTagLimit = "You can register up to 5 tags.";
+const strLangTagadd = "Add tags to mail :";
+
 function GetLocalTime(Offset , pDateTime)
 {
     if (pDateTime == "")

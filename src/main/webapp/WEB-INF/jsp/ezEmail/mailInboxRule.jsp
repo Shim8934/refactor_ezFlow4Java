@@ -120,7 +120,7 @@
                                         _actval += "|!|0";
                                         actfcnt++;
                                     }
-                                    else if (curkind == "REDIRECTION" || curkind == "FORWARD" || curkind == "IMPORTANCE") {
+                                    else if (curkind == "REDIRECTION" || curkind == "FORWARD" || curkind == "IMPORTANCE" || curkind == "TAG") {
                                         _act += "|!|" + curkind;
                                         _actval += "|!|" + actPath.getElementsByTagName("VALUES").item(j).textContent;
                                     }
@@ -233,7 +233,7 @@
                                         _actval += "|!|0";
                                         actfcnt++;
                                     }
-                                    else if (curkind == "REDIRECTION" || curkind == "FORWARD" || curkind == "IMPORTANCE") {
+                                    else if (curkind == "REDIRECTION" || curkind == "FORWARD" || curkind == "IMPORTANCE"  || curkind == "TAG") {
                                         _act += "|!|" + curkind;
                                         _actval += "|!|" + actPath.getElementsByTagName("VALUES").item(j).text;
                                     }
@@ -406,54 +406,66 @@
 		        var isNONE = false;
 		        for (var i = 0; i < act.length; i++) {
 		            switch (act[i]) {
-		                case "MOVE":
-		                    _act += "<div><img src='/images/ImgIcon/dot.gif' align='absmiddle' hspace='5'>\"<span style='color:red;'>" + actfnm[fcnt] + "</span>\" " + strLang213 + "</div>";
-		                    fcnt++;
-		                    break;
-		                case "COPY":
-		                    _act += "<div><img src='/images/ImgIcon/dot.gif' align='absmiddle' hspace='5'>\"<span style='color:red;'>" + actfnm[fcnt] + "</span>" + strLang342 + "</div>";
-		                    fcnt++;
-		                    break;
-		                case "READ":
-		                    _act += "<div><img src='/images/ImgIcon/dot.gif' align='absmiddle' hspace='5'><span style='color:red;'>" + strLang341 + "</span></div>";
-		                    break;
-		                case "DELETE":
-		                    _act += "<div><img src='/images/ImgIcon/dot.gif' align='absmiddle' hspace='5'><span style='color:red;'>" + strLang212 + "</span></div>";
-		                    break;
-		                case "FORWARD":
-		                    if (actval[i].indexOf(" </o=") == -1) {
-		                        _act += "<div><span><img src='/images/ImgIcon/dot.gif' align='absmiddle' hspace='5'>" + strLang344 + " </span><br/>\"<span style='color:red;'>" +
-		                     MakeXMLString(actval[i].replace(/;/g, "_replacesemiconlon_")).replace(/_replacesemiconlon_/g, "</span>\"<br/>\"<span style='color:red;'>") + "</span>\"</div>";
-		                    }
-		                    else {
-		                        _act += "<div><span><img src='/images/ImgIcon/dot.gif' align='absmiddle' hspace='5'>" + strLang344 + " </span><br/>\"<span style='color:red;'>" +
-		                     MakeXMLString(actval[i].substring(0, actval[i].indexOf(" </o="))) + "</span>\"</div>";
-		                    }
-		                    break;
-		                case "REDIRECTION":
-		                    if (actval[i].indexOf(" </o=") == -1) {
-		                        _act += "<div><span><img src='/images/ImgIcon/dot.gif' align='absmiddle' hspace='5'>" + strLang345 + " </span><br/>\"<span style='color:red;'>" +
-		                     MakeXMLString(actval[i].replace(/;/g, "_replacesemiconlon_")).replace(/_replacesemiconlon_/g, "</span>\"<br/>\"<span style='color:red;'>") + "</span>\"</div>";
-		                    }
-		                    else {
-		                        _act += "<div><span><img src='/images/ImgIcon/dot.gif' align='absmiddle' hspace='5'>" + strLang345 + " </span><br/>\"<span style='color:red;'>" +
-		                     MakeXMLString(actval[i].substring(0, actval[i].indexOf(" </o="))) + "</span>\"</div>";
-		                    }
-		                    break;
-		                case "IMPORTANCE":
-		                    _act += "<div><img src='/images/ImgIcon/dot.gif' align='absmiddle' hspace='5'>" + strLang343;
-		                    switch (actval[i]) {
-		                        case "LOW":
-		                            _act += "<span style='color:red;'>" + strLang346 + "</span></div>";
-		                            break;
-		                        case "NORMAL":
-		                            _act += "<span style='color:red;'>" + strLang347 + "</span></div>";
-		                            break;
-		                        case "HIGH":
-		                            _act += "<span style='color:red;'>" + strLang348 + "</span></div>";
-		                            break;
-		                    }
-		                    break;
+						case "MOVE":
+							_act += "<div><img src='/images/ImgIcon/dot.gif' align='absmiddle' hspace='5'>\"<span style='color:red;'>" + actfnm[fcnt] + "</span>\" " + strLang213 + "</div>";
+							fcnt++;
+							break;
+						case "COPY":
+							_act += "<div><img src='/images/ImgIcon/dot.gif' align='absmiddle' hspace='5'>\"<span style='color:red;'>" + actfnm[fcnt] + "</span>" + strLang342 + "</div>";
+							fcnt++;
+							break;
+						case "READ":
+							_act += "<div><img src='/images/ImgIcon/dot.gif' align='absmiddle' hspace='5'><span style='color:red;'>" + strLang341 + "</span></div>";
+							break;
+						case "DELETE":
+							_act += "<div><img src='/images/ImgIcon/dot.gif' align='absmiddle' hspace='5'><span style='color:red;'>" + strLang212 + "</span></div>";
+							break;
+						case "FORWARD":
+							if (actval[i].indexOf(" </o=") == -1) {
+								_act += "<div><span><img src='/images/ImgIcon/dot.gif' align='absmiddle' hspace='5'>" + strLang344 + " </span><br/>\"<span style='color:red;'>" +
+										MakeXMLString(actval[i].replace(/;/g, "_replacesemiconlon_")).replace(/_replacesemiconlon_/g, "</span>\"<br/>\"<span style='color:red;'>") + "</span>\"</div>";
+							} else {
+								_act += "<div><span><img src='/images/ImgIcon/dot.gif' align='absmiddle' hspace='5'>" + strLang344 + " </span><br/>\"<span style='color:red;'>" +
+										MakeXMLString(actval[i].substring(0, actval[i].indexOf(" </o="))) + "</span>\"</div>";
+							}
+							break;
+						case "REDIRECTION":
+							if (actval[i].indexOf(" </o=") == -1) {
+								_act += "<div><span><img src='/images/ImgIcon/dot.gif' align='absmiddle' hspace='5'>" + strLang345 + " </span><br/>\"<span style='color:red;'>" +
+										MakeXMLString(actval[i].replace(/;/g, "_replacesemiconlon_")).replace(/_replacesemiconlon_/g, "</span>\"<br/>\"<span style='color:red;'>") + "</span>\"</div>";
+							} else {
+								_act += "<div><span><img src='/images/ImgIcon/dot.gif' align='absmiddle' hspace='5'>" + strLang345 + " </span><br/>\"<span style='color:red;'>" +
+										MakeXMLString(actval[i].substring(0, actval[i].indexOf(" </o="))) + "</span>\"</div>";
+							}
+							break;
+						case "IMPORTANCE":
+							_act += "<div><img src='/images/ImgIcon/dot.gif' align='absmiddle' hspace='5'>" + strLang343;
+							switch (actval[i]) {
+								case "LOW":
+									_act += "<span style='color:red;'>" + strLang346 + "</span></div>";
+									break;
+								case "NORMAL":
+									_act += "<span style='color:red;'>" + strLang347 + "</span></div>";
+									break;
+								case "HIGH":
+									_act += "<span style='color:red;'>" + strLang348 + "</span></div>";
+									break;
+							}
+							break;
+						case "TAG":
+							_act += "<div><span><img src='/images/ImgIcon/dot.gif' align='absmiddle' hspace='5'>" + strLangTagadd + " </span><br/>";
+							
+							let actList = actval[i].split(";");
+							for (let i = 0; i < actList.length; i++) {
+								let act = actList[i];
+								_act += "\"<span style='color:red;'>" + MakeXMLString(act) + "</span>\"";
+								
+								if (i < actList.length - 1) {
+									_act += " ," + "</br>";
+								}
+							}
+							_act += "</div>";
+							break;
 		                case "NONE":
 		                    //_html = "<span style='color:red;'>" + strLang242 + "</span>";
 		                    isNONE = true;

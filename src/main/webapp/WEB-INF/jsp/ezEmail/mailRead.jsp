@@ -24,6 +24,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/reademail.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/string_component.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/leftmenu-util.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/email_tag.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
 		<script type="text/javascript">	
 		    var g_paramURL = "${url}";
@@ -700,52 +701,6 @@
 						document.getElementById("input_wrap").classList.remove("on");
 					}
 				}
-			}
-
-			function getTagList() {
-				var ulTag = document.getElementById("layer_select");
-				while (ulTag.firstChild) {
-					ulTag.removeChild(ulTag.firstChild);
-				}
-				// if (ulTag.children.length <= 0) {
-					$.ajax({
-						cache: false,
-						async: false,
-						data: { shareId: shareId },
-						url: "/ezEmail/getUserTagList.do",
-						success: function (result) {
-							if (result.status == "error") {
-								alert(strLang321);
-								return;
-							}
-
-							var tags = result.data;
-							window.cacheTags = $.map(tags, function (ul, item) {
-								return ul.name;
-							});
-
-							for (var i = 0; i < window.cacheTags.length; i++) {
-								var li = document.createElement('li');
-								li.textContent = window.cacheTags[i];
-								li.addEventListener('click', function() {
-									document.getElementById("tag_add").value = this.textContent;
-									onEnterPreviewTagInput();
-									
-									var inputWrap = document.getElementById("input_wrap");
-
-									// 클래스에 "on"이 있으면 제거
-									if (inputWrap.classList.contains("on")) {
-										inputWrap.classList.remove("on");
-									}
-									
-									document.getElementById("tag_add").value = "";
-								});
-								ulTag.appendChild(li);
-							}
-							
-						}
-					}); //ajax
-				// } //if
 			}
 			
 	    </script>

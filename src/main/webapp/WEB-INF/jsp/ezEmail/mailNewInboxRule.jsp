@@ -9,8 +9,12 @@
 		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
 		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<link href="${util.addVer('/js/jquery/jquery.modal.css')}" rel="stylesheet" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/jquery-ui.css')}" type="text/css">
 		<style>
 			#Conitems span { word-break: break-all; }
+			.ui-autocomplete {
+				z-index: 9999; 
+			}
 		</style>
 		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/encode_component.js')}"></script>
@@ -21,6 +25,9 @@
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/ListView_list.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/input-util.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/email_tag.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
 		<script type="text/javascript" >
 			var isFolderChanged = false;
 		    var ReturnFunction;
@@ -33,7 +40,81 @@
 		        ConArea.innerHTML += "<span style='margin-bottom:10px; display:inline-block;'>" + inboxRuleCon.innerHTML + "</span>";
 		        ActArea.innerHTML += "<span style='margin-bottom:10px; display:inline-block;'>" + inboxRuleAct.innerHTML + "</span>";
 		        ExptArea.innerHTML += "<span style='margin-bottom:10px; display:inline-block;'>" + inboxRuleExpt.innerHTML + "</span>";
-		    }
+
+				$(document).mouseup(function (e) {
+					var clickedElementClass = e.target.className;
+					if (!clickedElementClass.includes('input_select_arrow')) {
+						hiddenMoreMenu();
+					}
+				});
+				
+				var tagAddInput = document.getElementById("tag_add");
+				// 태그 입력 시 특수문자 입력 못하도록 함
+				inputUtil.makeNotAllowTyping(tagAddInput, /[!@#$%^&()\\\/:*?"<>|'`]/g);
+				inputUtil.makeReplaceTyping(tagAddInput, /\s/g, '_');
+				// 엔터 시 태그로 추가되도록 함
+				tagAddInput.addEventListener("keydown", function (e) {
+					if (e.keyCode == 13) addTag();
+				});
+				document.querySelector(".input_wrap + .imgbtn").addEventListener("click", function (e) {
+                    addTag();
+				});
+				// 태그 X 버튼 클릭시 삭제
+				$(".tag_del").on("click", function () {
+					removeTag(this.nextElementSibling);
+				});
+
+				// 태그 추가 시 자동완성
+				$(tagAddInput).autocomplete({
+					source: function (request, response) {
+						if (!window.cacheTags) {
+							$.ajax({
+								cache: false,
+								async: false,
+								url: "/ezEmail/getUserTagList.do",
+								success: function (result) {
+									if (result.status == "error") {
+										alert(strLang321);
+										return;
+									}
+									var tags = result.data;
+									window.cacheTags = $.map(tags, function (ul, item) {
+										return ul.name;
+									});
+								}
+							});
+						}
+
+						response($.grep(window.cacheTags, function (tag) {
+							return tag.indexOf(request.term) > -1;
+						}));
+					},
+					minLength: 2,
+					selectFirst: true,
+				});
+
+				tagAddInput.addEventListener("input", function () {
+					var inputWrap = document.getElementById("input_wrap");
+
+					// 클래스에 "on"이 있으면 제거
+					if (inputWrap.classList.contains("on")) {
+						inputWrap.classList.remove("on");
+					}
+				});
+
+				function hiddenMoreMenu() {
+					var tagLayerElement = document.getElementById("layer_select");
+					if (tagLayerElement) {
+						tagLayerElement.scroll({top:0});
+						var tagLayerStyle = getComputedStyle(tagLayerElement);
+						if (tagLayerStyle.display !== 'none') {
+							document.getElementById("input_wrap").classList.remove("on");
+						}
+					}
+				}
+				
+		    } //onload end
+			
 		    window.onunload = function () {
 		    	if (isFolderChanged) {
             		try {
@@ -149,6 +230,12 @@
 		                _curCellObj.nextSibling.nextSibling.style.display = "";
 		                _curCellObj.style.width = "auto";
 		                break;
+					case "TAG":
+						_curCellObj.innerHTML = "";
+						_curCellObj.setAttribute("RuleKind", "TAG");
+						$("#inboxRuleAddTag").modal({escapeClose: false, clickClose: false});
+						document.getElementById("inboxRuleAddTag").style.width = "auto";
+						break;
 		        }
 		
 		        if (obj.value != "IMPORTANCE")
@@ -686,6 +773,8 @@
 		            case "SUBJECTORBODY":
 		                inboxRuleConbtn1comment.innerHTML = "▒ " + strLang338 + "";
 		                break;
+					case "TAG":
+						break;
 		        }
 		    }
 		    function New_InboxRule() {
@@ -892,6 +981,7 @@
 			<option value="COPY"><spring:message code='ezEmail.t838' /></option>
 			<option value="READ"><spring:message code='ezEmail.t839' /></option>
 			<option value="IMPORTANCE"><spring:message code='ezEmail.t840' /></option>
+			<option value="TAG"><spring:message code='ezEmail.kdh08' /></option>
 			<!-- <option value="FORWARD"><spring:message code='ezEmail.t841' /></option> -->
 		</select><span id="ActS" name="ActS" style="display:inline-block;width:230px;height:20px;border:0px solid #dbdbda;margin-left:8px;margin-top:0px;text-overflow:ellipsis; overflow:hidden;cursor:pointer;vertical-align:middle;color:#6495ED;font-weight:bold;"></span>
 		<select id="ImportanceSel" name="ImportanceSel" class="mailRule_select" onchange="ImSelect(this)" style="width:auto; display:none;">
@@ -936,13 +1026,48 @@
 				</tr>
 			</table>
 			<div style="border:1px solid #dddddd; margin:10px 10px 10px 10px; padding:10px 10px 10px 10px; background-color:#f2f2f2;">
-				<div id="Conitems" name="Conitems" style="font-family:<spring:message code='main.t246' />;border:1px solid #dbdbda;width:435px;height:200px;overflow-y:auto;overflow-x:hidden;text-overflow:ellipsis;background-color:#ffffff;">
+				<div id="Conitems" name="Conitems" style="font-family:<spring:message code='main.t246' />;border:1px solid #dbdbda;width:auto;height:200px;overflow-y:auto;overflow-x:hidden;text-overflow:ellipsis;background-color:#ffffff;">
 				</div>
 			</div>
 			<div class="btnpositionLayer">
 				<a class="imgbtn"><span onClick="pop_confirm();"><spring:message code='ezEmail.t38' /></span></a>
 			</div>
 		</div>	
+	</div>
+	<div id="inboxRuleAddTag" name="inboxRuleAddTag" style="display:none; position: fixed;  transform: translate(-50%, -50%); top: 50%; left: 50%">
+		<div class="popupJQLayer" style="padding-top:6px">
+			<div class="title" style="overflow:hidden; text-overflow:ellipsis; width:450px;"><spring:message code="ezEmail.t124" /></div>
+			<div id="close">
+				<ul>
+					<li><span onclick="tag_cancel()"></span></li>
+				</ul>
+			</div>
+			<span style="width:100%; height:30px; margin:0 10px 0 10px;" class="txt" id="inboxRuleAddTagcomment1" name="inboxRuleAddTagcomment1"><spring:message code="ezEmail.kdh07" /></span>
+			
+			<table style="width:100%;border:0;border-collapse:collapse; border-spacing:0;padding:0px; margin:0 10px 0 10px;" >
+				<tr class="tag_td">
+					<td id="tag_td" colspan="4" style="padding: 10px 0 10px 0">
+						<div class="input_select">
+							<div class="input_wrap" id="input_wrap">
+								<input id="tag_add" type="text" maxlength="100" />
+								<span class="input_select_arrow" onclick="$('.input_wrap').toggleClass('on');getTagList_Rule()"></span>
+							</div>
+							<a class="imgbtn"><span><spring:message code="ezEmail.tag.user.addbtn" /></span></a>
+							<ul class="layer_select" id="layer_select">
+	
+							</ul>
+						</div>
+					</td>
+				</tr>
+			</table>
+			<div style="font-family:<spring:message code='main.t246' />;border:1px solid #dbdbda;width:435px;height:170px;overflow-y:auto;overflow-x:hidden;text-overflow:ellipsis;background-color:#ffffff; padding: 10px 10px 10px 10px; margin:0 10px 0 10px;">
+					<div id="tag_view" name="tag_view">
+					</div>
+			</div>
+			<div class="btnpositionLayer">
+				<a class="imgbtn"><span onClick="tag_confirm();"><spring:message code='ezEmail.t38' /></span></a>
+			</div>
+		</div>
 	</div>
 	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 	<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

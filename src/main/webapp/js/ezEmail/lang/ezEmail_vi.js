@@ -388,6 +388,9 @@ var strUreadDelSearch = "Bạn có chắc chắn muốn xóa tất cả email ch
 var strUreadDelPermenant = "Khi xóa, email sẽ không thể khôi phục.\nBạn có chắc chắn muốn xóa vĩnh viễn tất cả email chưa đọc trong hộp thư không?";
 var strUreadDelSearchPermenant = "Khi xóa, email sẽ không thể khôi phục.\nBạn có chắc chắn muốn xóa vĩnh viễn tất cả email chưa đọc trong kết quả tìm kiếm không?";
 
+const strLangTagLimit = "Bạn có thể đăng ký tối đa 5 thẻ.";
+const strLangTagadd = "메일에 태그 추가 :";
+
 function GetLocalTime(Offset , pDateTime)
 {
     if (pDateTime == "")

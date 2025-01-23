@@ -1487,7 +1487,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 					//DELETE, READ, IMPORTANCE, REDIRECTION, FORWARD, MOVE, COPY
 					//SKIP : ASSIGNCATE, NONE, FORWARDATTACH, SENDSMS, SERVREPLY
 					if (obj.get("kind").toString().equalsIgnoreCase("DELETE") || obj.get("kind").toString().equalsIgnoreCase("REDIRECTION")
-							|| obj.get("kind").toString().equalsIgnoreCase("FORWARD")) {
+							|| obj.get("kind").toString().equalsIgnoreCase("FORWARD") || obj.get("kind").toString().equalsIgnoreCase("TAG")) {
 						Element kind = doc.createElement("KIND");
 						kind.appendChild(doc.createCDATASection(obj.get("kind").toString().toUpperCase()));
 						tAction.appendChild(kind);

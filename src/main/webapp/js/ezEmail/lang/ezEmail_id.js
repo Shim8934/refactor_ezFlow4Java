@@ -389,6 +389,9 @@ var strUreadDelSearch = "Apakah Anda yakin ingin menghapus semua email yang belu
 var strUreadDelPermenant = "Setelah dihapus, email tidak dapat dipulihkan.\nApakah Anda yakin ingin menghapus semua email yang belum dibaca secara permanen di kotak masuk?"
 var strUreadDelSearchPermenant = "Setelah dihapus, email tidak dapat dipulihkan.\nApakah Anda yakin ingin menghapus semua email yang belum dibaca secara permanen di hasil pencarian?";
 
+const strLangTagLimit = "Anda dapat mendaftar hingga 5 tag.";
+const strLangTagadd = "메일에 태그 추가 :";
+
 function GetLocalTime(Offset , pDateTime)
 {
     if (pDateTime == "")
