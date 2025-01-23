@@ -547,4 +547,10 @@ public interface EzCommonService {
 
     // 2024-12-10 기민혁 - 수정버전 리스트 해더 생성
     public void insertEditVersionListOption() throws Exception;
+
+	// 2024-11-26 기민혁 - 전자결재 > 개인수신함 사용여부 테넌트 컨피그 추가
+	public void insertPersonalHideSusinYN() throws Exception;
+
+	// 2024-11-28 기민혁 - 개인 수신함 리스트 해더 추가
+	public void insertPersonalSusinListOption() throws Exception;
 }

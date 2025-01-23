@@ -1961,7 +1961,7 @@ function checkboxBtnShowCtl() {
     			// 내부결재가 아닌 수신문(011), 합의문(012)의 경우 삭제 불가능, 재기안 가능 (현재 체크박스가 결재할문서에만 존재하므로, 부서수신함 등의 다른 문서함은 고려하지 않음)
 				// 2024-04-18 조수빈 - 부서수신함의 삭제버튼 제어 (일괄접수 / 일괄접수자전결로 체크박스 추가됨) 
     			if ((GetAttribute(oArrRows[i], "DATA9") == "0" && pDocState != "011" && pDocState != "012") 
-    					|| (pListTypeValue == '4' && pDocState != "011" && pDocState != "012")) {
+    					|| ((pListTypeValue == '4' || pListTypeValue == '97') && pDocState != "011" && pDocState != "012")) {
 					isDelShow = isDelShow == true ? true : false;
 				} else {
     				isDelShow = false;
@@ -1979,7 +1979,7 @@ function checkboxBtnShowCtl() {
     		document.getElementById("tbtnRemoveDoc").style.display = "none";
     	}
     	if (isRedraftShow == true) {
-    		if (pListTypeValue != 4) {
+    		if (pListTypeValue != 4 && pListTypeValue != '97') {
     			document.getElementById("tbtnRedraft").style.display = "";
     		}
     	} else {
@@ -1996,9 +1996,9 @@ function checkboxBtnShowCtl() {
     		document.getElementById("tbtnViewDoc").style.display = "";
         	document.getElementById("tbtnTotalSave").style.display = "";
         	if (isDelShow == false && isRedraftShow == false) {
-        		if (pListTypeValue != "4") {
+        		if (pListTypeValue != "4" && pListTypeValue != "97") {
         			document.getElementById("tbtnApprove").style.display = "";
-        		} else if (pListTypeValue == "4") {
+        		} else if (pListTypeValue == "4" || pListTypeValue == "97") {
         			document.getElementById("tbtnReceipt").style.display = "";
         			
         			if (approvalFlag == "G"){

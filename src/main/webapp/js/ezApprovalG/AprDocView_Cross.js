@@ -59,7 +59,7 @@ function LoadpzFormDocInfo() {
 
     pListTypeValue = ListTypeValue;
 
-    if (pListTypeValue == "4")
+    if (pListTypeValue == "4" || pListTypeValue == "97")
         pListSusin = ListSusin;
 
     if (pDocHref != "") {

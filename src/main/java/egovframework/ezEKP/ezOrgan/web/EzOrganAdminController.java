@@ -285,6 +285,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.insertServername(); // 2024-12-02 김승연 - servername에 127.0.0.1 값 추가
 			ezCommonService.insertResendFormYN(); // 2024-12-04 기민혁 - 전자결재 > 최근서식 사용여부 테넌트 컨피그 추가
 			ezCommonService.insertEditVertionYN(); // 2024-12-05 기민혁 - 전자결재 > 본문수정 시 본문버전 변경 기능 사용여부 테넌트 컨피그 추가
+			ezCommonService.insertPersonalHideSusinYN(); // 2024-11-26 기민혁 - 전자결재 > 개인수신함 사용여부 테넌트 컨피그 추가
 
 	    	ezCommonService.insertPortalThemePortletInitdata();
 	    	ezCommonService.updateTaskUrl();
@@ -363,6 +364,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.addBoardAllNewBoardListDate(); // 2024-10-22 정지은 - 게시판 > 게시물의 최근 게시물 일자 설정
 			ezCommonService.alterEditVersionHistory(); // 2024-12-10 기민혁 - 전자결재 > 수정버전,수정모드 컬럼 추가
 			ezCommonService.insertEditVersionListOption(); // 2024-12-10 기민혁 - 수정버전 리스트 해더 생성
+			ezCommonService.insertPersonalSusinListOption(); // 2024-11-28 기민혁 - 개인 수신함 리스트 해더 추가
 		} catch (Exception e) {
     		logger.error(e.getMessage(), e);
     	}
