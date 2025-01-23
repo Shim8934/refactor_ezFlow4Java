@@ -33,3 +33,6 @@ article,aside,canvas,details,footer,header,hgroup,menu,nav,section,summary,addre
 @keyframes bounce {0%, 100% {transform: translateY(0);}
 				   50% {transform: translateY(-10px);}}
 
+/*모바일 기기 미등록시 알림문구 출력 화면 */
+.fido .chkbutton {  background:#3E94C9; border-radius:8px; padding:25px 0px 25px; box-sizing:border-box; }
+.fido .chkbutton .tit { display:block; text-align:center; color:#fff ; font-size:17px; font-weight:bold; cursor: pointer; }

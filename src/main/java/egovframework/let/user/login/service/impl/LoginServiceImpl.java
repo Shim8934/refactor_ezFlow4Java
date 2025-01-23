@@ -713,5 +713,16 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
         return String.valueOf(result);
 
     }
-    
+
+	@Override
+	public boolean userDeviceCnt(String cn) throws Exception {
+		logger.debug("userDeviceChk started");
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("CN", cn);
+		
+		boolean result = loginDAO.userDeviceCnt(map) > 0;
+		return result;
+	}
+
 }

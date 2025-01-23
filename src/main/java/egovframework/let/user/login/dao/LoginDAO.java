@@ -268,5 +268,7 @@ public class LoginDAO extends EgovAbstractDAO {
 	public int updateLogincnt (LoginVO vo) throws Exception {
 		return update("loginDAO.updateLogincnt", vo);
 	}
-
+	public int userDeviceCnt(Map<String, Object> map) throws Exception {
+		return (int)select("loginDAO.userDeviceCnt", map);
+	}
 }

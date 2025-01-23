@@ -124,4 +124,5 @@ public interface LoginService {
 	
 	public String setPasswordByCertification(String sabun, String certificationNum, String password, LoginVO loginVO) throws Exception;
 
+	boolean userDeviceCnt(String cn) throws Exception;
 }

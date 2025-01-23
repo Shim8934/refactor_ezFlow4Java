@@ -316,9 +316,10 @@ public class LoginController {
 		}
 
 		// 2023-11-21 이사라 : [TFA] FIDO 인증
-		boolean useFido = "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useFidoSession", tenantId));
+		boolean useFido = "YES".equalsIgnoreCase(ezCommonService.getCompanyConfig(tenantId, companyId, "useFidoSession"));
 		boolean isFidoAuth = StringUtils.isNotBlank(loginVO.getFidoSessionId()); // fido인증을 완료한 후 로그인 진행하는 경우를 구분하기 위함
 		boolean passedFidoAuthentication =  false;
+		boolean userDeviceChk = loginService.userDeviceCnt(loginVO.getId());
 
 		if (isFidoAuth) {
 			FidoAuthenticationVO fidoVo = loginService.getFidoSession(loginVO.getFidoSessionId());
@@ -733,40 +734,46 @@ public class LoginController {
 					} else if (useFido && !passedFidoAuthentication) {
 						//logger.debug("useFido in : {}", useFido); // 운영시 주석 처리
 
-						// fido session 생성하여 tbl에 넣기
-						String fidoSessionId = UUID.randomUUID().toString();
-						FidoAuthenticationVO fidoVO = new FidoAuthenticationVO();
-
-						fidoVO.setFidoSessionId(fidoSessionId);
-						fidoVO.setId(loginVO.getId());
-						fidoVO.setIp(ClientUtil.getClientIP(request));
-						fidoVO.setStatus("requesting");
-
-						loginService.setFidoSession(fidoVO);
-
-						// jgw-server 에 talk_tblnotification 넣어서 push 메시지 전달
-						String linkUrl = "/mobile/user/login/mFidoAuthentication.do?" + "fidoSessionId=" + fidoSessionId + "&encryptId=" + loginVO.getEncryptID() + "&encryptPass=" + loginVO.getEncryptPass();
-
-						boolean insertTalkNotification = ezEmailService.addEzTalkNotification(
-								loginVO.getId(),
-								egovMessageSource.getMessage("main.fido010", locale),
-								egovMessageSource.getMessage("main.fido011", locale),
-								"23", "", linkUrl);
-
-						if (!insertTalkNotification) {
-							logger.debug("useFido but insertTalkNotification failed, id={}", loginVO.getId());
-							return "forward:/user/login/login.do";
+						if (userDeviceChk) {
+							// fido session 생성하여 tbl에 넣기
+							String fidoSessionId = UUID.randomUUID().toString();
+							FidoAuthenticationVO fidoVO = new FidoAuthenticationVO();
+	
+							fidoVO.setFidoSessionId(fidoSessionId);
+							fidoVO.setId(loginVO.getId());
+							fidoVO.setIp(ClientUtil.getClientIP(request));
+							fidoVO.setStatus("requesting");
+	
+							loginService.setFidoSession(fidoVO);
+	
+							// jgw-server 에 talk_tblnotification 넣어서 push 메시지 전달
+							String linkUrl = "/mobile/user/login/mFidoAuthentication.do?" + "fidoSessionId=" + fidoSessionId + "&encryptId=" + loginVO.getEncryptID() + "&encryptPass=" + loginVO.getEncryptPass();
+	
+							boolean insertTalkNotification = ezEmailService.addEzTalkNotification(
+									loginVO.getId(),
+									egovMessageSource.getMessage("main.fido010", locale),
+									egovMessageSource.getMessage("main.fido011", locale),
+									"23", "", linkUrl);
+	
+							if (!insertTalkNotification) {
+								logger.debug("useFido but insertTalkNotification failed, id={}", loginVO.getId());
+								return "forward:/user/login/login.do";
+							}
+	
+							// Fido 인증요청 화면 호출 + 필요한 parameter 전달
+							String timeLimit = ezCommonService.getTenantConfig("fidoTimeLimit", tenantId);
+							
+	
+							model.addAttribute("timeLimit", timeLimit);
+							model.addAttribute("fidoSessionId", fidoSessionId);
+							model.addAttribute("encryptId", loginVO.getEncryptID());
+							model.addAttribute("encryptPassword", loginVO.getEncryptPass());
+	
+							return "user/login/fidoAuthentication";
+						} else {
+							// 모바일 기기 등록 안내 화면 호출
+							return "user/login/deviceRegisterNotice";
 						}
-
-						// Fido 인증요청 화면 호출 + 필요한 parameter 전달
-						String timeLimit = ezCommonService.getTenantConfig("fidoTimeLimit", tenantId);
-
-						model.addAttribute("timeLimit", timeLimit);
-						model.addAttribute("fidoSessionId", fidoSessionId);
-						model.addAttribute("encryptId", loginVO.getEncryptID());
-						model.addAttribute("encryptPassword", loginVO.getEncryptPass());
-
-						return "user/login/fidoAuthentication";
 					} else {
     					String ip = ClientUtil.getClientIP(request);		
     					loginVO.setIp(ip);

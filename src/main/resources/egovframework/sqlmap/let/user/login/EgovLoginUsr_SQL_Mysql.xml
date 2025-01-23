@@ -862,4 +862,15 @@
 		]]>
 	</update>
 	
+	<select id="loginDAO.userDeviceCnt" resultClass="int">
+		<![CDATA[
+			SELECT
+			    COUNT(USERID)
+			FROM
+			    TBL_DEV_MASTER
+			WHERE
+			    USERID = #CN#
+		]]>
+	</select>
+	
 </sqlMap>
