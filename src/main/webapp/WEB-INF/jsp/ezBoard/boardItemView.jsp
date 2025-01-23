@@ -1086,9 +1086,10 @@
 		    var boarditemview_cross_print_option_dialogArguments = new Array();
 		    var url = window.location.href;
 		    function btn_Print_Onclick() {
-		        if (CrossYN()) {
-		            url = window.location.href;
-		            url = url.replace(".do", "PrintOption.do");
+				var url = "/ezBoard/boardItemViewPrintOption.do?boardID=" + pBoardID + "&itemID=" + pItemID;
+				if (CrossYN()) {
+		            //url = window.location.href;
+		            //url = url.replace(".do", "PrintOption.do");
 		            boarditemview_cross_print_option_dialogArguments[1] = btn_Print_Onclick_Complete;
 		            DivPopUpShow(380, 200, url);
 		            //var OpenWin = window.open(url, "boarditemview_print_option", GetOpenWindowfeature(380, 200));
@@ -1096,8 +1097,8 @@
 		        }
 		        else {
 		            var parameter = "";
-		            url = window.location.href;
-		            url = url.replace(".do", "PrintOption.do");
+		            //url = window.location.href;
+		            //url = url.replace(".do", "PrintOption.do");
 		            var feature = "status:no;dialogWidth:380px;dialogHeight:200px;help:no;";
 		            feature = feature + GetShowModalPosition(380, 200);
 		            var RtnVal = window.showModalDialog(url, parameter, feature);
@@ -1110,7 +1111,8 @@
 		    }
 		    function btn_Print_Onclick_Complete(RtnVal) {
 		        if (RtnVal[0] != "0" && RtnVal[1] != "0") {
-		            url = url.replace("PrintOption.do", "Print.do");
+					var url = "/ezBoard/boardItemViewPrint.do?boardID=" + pBoardID + "&itemID=" + pItemID;
+					//url = url.replace("PrintOption.do", "Print.do");
 		            url = url + "&oneLine=" + RtnVal[0] + "&attach=" + RtnVal[1];
 		            window.open(url, "", getOpenWindowfeature(840, 700));
 		        }
