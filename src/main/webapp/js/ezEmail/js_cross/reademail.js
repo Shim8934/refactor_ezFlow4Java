@@ -1434,7 +1434,7 @@ function onEnterPreviewTagInput() {
 	var tagInput = document.getElementById("tag_add");
 	var tagName = tagInput.value.trim();
 	if (tagName.length <= 0) return;
-	if ($.grep(document.querySelectorAll("#tag_view > span"), function(span) { return span.innerText == tagName }).length > 0) {
+	if ($.grep(document.querySelectorAll("#tag_view > div > span"), function(span) { return span.innerText == tagName }).length > 0) {
 		alert(strLangTagAlreadyUse);
 		return;
 	}

@@ -2596,7 +2596,7 @@ function onEnterPreviewTagInput() {
 	var tagInput = document.getElementById(idPrefix + "add");
 	var tagName = tagInput.value.trim();
 	if (tagName.length <= 0) return;
-	if ($.grep(document.querySelectorAll("#" + idPrefix + "view > span"), function(span) { return span.innerText == tagName }).length > 0) {
+	if ($.grep(document.querySelectorAll("#" + idPrefix + "view > div > span"), function(span) { return span.innerText == tagName }).length > 0) {
 		alert(strLangTagAlreadyUse);
 		return;
 	}
