@@ -717,7 +717,7 @@ function ListView() {
             }
             
             // 2020-02-18 천성준 - 결재문서리스트 의견표시여부
-            if (_thisID == "DocList" && typeof(approvalFlag) != "undefined" && approvalFlag == "S") {
+            if (_thisID == "DocList" && typeof(approvalFlag) != "undefined") {
             	if (showOpinionImg) {
             		colCount++;
             	}
