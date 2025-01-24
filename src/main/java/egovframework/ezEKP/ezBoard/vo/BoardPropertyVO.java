@@ -165,6 +165,8 @@ public class BoardPropertyVO {
 	private String publicFlag = "N";
 	/** 2024-10-22 정지은 - 최근게시물 사용여부**/
 	private String allNewBoardFlag;
+	/** 2025-01-21 임정은 - 게시자명선택 사용여부 플래그 **/
+	private String writerFlag;
 	
 	public int getSs_board_maxRows() {
 		return ss_board_maxRows;
@@ -651,5 +653,11 @@ public class BoardPropertyVO {
 
 	public void setAllNewBoardFlag(String allNewBoardFlag) {
 		this.allNewBoardFlag = allNewBoardFlag;
+	}
+	public String getWriterFlag() {
+		return writerFlag;
+	}
+	public void setWriterFlag(String writerFlag) {
+		this.writerFlag = writerFlag;
 	}
 }

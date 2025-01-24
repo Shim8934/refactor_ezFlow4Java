@@ -98,6 +98,8 @@
 	        var isAllGroupBoard = "<c:out value='${boardInfo.isAllGroupBoard}'/>";
 		    var useKeywordFlag = "<c:out value='${useKeyword}'/>"; // 키워드 사용여부 (Y/N)
 		    var keywordArr = []; // 키워드 배열
+			var writerFlag = "${boardInfo.writerFlag}"; // 2025-01-21 임정은 - 게시판 게시물 게시자명선택 사용여부 플래그
+			var writerNameType = parseInt("<c:out value='${boardListVO.writerNameType}'/>"); // 2025-01-21 임정은 - 게시자명선택 타입 (0 : 이름, 1 : 부서명)
 	        
 	        window.onload = function (){
 	            var ua = navigator.userAgent;
@@ -125,6 +127,14 @@
                         keywordArr.push(keywordSpanArr[i].id);
                     }
                 }
+
+				if (!isNaN(writerNameType) && typeof writerNameType != "undefined" && writerNameType != '' && writerFlag == 'Y') {
+					document.getElementById("writerFlag").options[writerNameType].selected = true;
+					if (writerNameType == 1) {
+						document.getElementById('chkUseDept').checked = true;
+						chkUseDept_onclick();
+					}
+				}
 	        };
 	        
 	        /* 2018-08-08 홍승비 - 썸네일+포토게시물 등록창 세로길이 리사이즈 추가 */
@@ -480,7 +490,13 @@
 	
 	            strXML += "<BOARDID>" + pBoardID + "</BOARDID>";
 	            strXML += "<WRITERID>" + SSUserID + "</WRITERID>";
-	            strXML += "<WRITERNAME>" + MakeXMLString(SSUserName) + "</WRITERNAME>";
+				if ('Y' == writerFlag) {
+					var flagwriterName = $('#writerFlag').val().toString().split(":");
+					strXML += "<WRITERNAME>" + MakeXMLString(flagwriterName[0]) + "</WRITERNAME>";
+					strXML += "<WRITERNAMETYPE>" + MakeXMLString(flagwriterName[1]) + "</WRITERNAMETYPE>";
+				} else {
+					strXML += "<WRITERNAME>" + MakeXMLString(SSUserName) + "</WRITERNAME>";
+				}
 	            strXML += "<WRITERNAME2>" + MakeXMLString(SSUserName2) + "</WRITERNAME2>";
 	            strXML += "<DEPTID>" + SSDeptID + "</DEPTID>";
 	            strXML += "<DEPTNAME>" + MakeXMLString(SSDeptName) + "</DEPTNAME>";
@@ -1041,6 +1057,15 @@
 				});
 			}
 			
+			function chkUseDept_onclick() {
+				if (chkUseDept.checked) { // 팀/부서로 표시
+					spUseDept.innerHTML = "${userInfo.lang}" == "1" ? SSDeptName : SSDeptName2;
+					document.getElementById("writerFlag").selectedIndex = 1;
+				} else { // 이름으로 표시
+					spUseDept.innerHTML = "${userInfo.lang}" == "1" ? SSUserName : SSUserName2;
+					document.getElementById("writerFlag").selectedIndex = 0;
+				}
+			}
 	    </script>
 	    <c:if test="${!isCrossBrowser}">
 		    <script type="text/javascript" FOR="EzHTTPTrans" EVENT="AttachAddFile(filename)">
@@ -1075,9 +1100,19 @@
 	      <table border="0" cellspacing="0" cellpadding="0" class="content" style="table-layout:fixed;">
 	        <tr>
 	          <th style="width:100px;"><spring:message code='ezBoard.t142'/></th>
-	          <td style="width:70%" id="tdBoardName">${boardName}</td>
-	          <th style="width:80px; text-align:center"><spring:message code='ezBoard.t223'/></th>
-	          <td style="width:120px; text-align:center">${displayName}</td>
+	          <td style="width:45%" id="tdBoardName">${boardName}</td>
+	          <th style="width:100px; text-align:center"><spring:message code='ezBoard.t223'/></th>
+	          <td style="width:47%;">
+				  <span id="spUseDept">${boardListVO.writerName}</span>
+				  <c:if test="${'Y' == boardInfo.writerFlag}">
+					  <input type="checkbox" id="chkUseDept" style="margin-left: 0px !important;" onclick="chkUseDept_onclick()">
+					  <select id="writerFlag" style="display: none;">
+						  <option value="<c:out value='${writerOption.N }:0' />"></option>
+						  <option value="<c:out value='${writerOption.T }:1' />"></option>
+						  <option value="<c:out value='${writerOption.D }:2' />"></option>
+					  </select>
+				  </c:if>
+			  </td>
 	        </tr>
             <!-- 키워드 시작 -->
             <c:if test="${not empty useKeyword && useKeyword eq 'Y'}">

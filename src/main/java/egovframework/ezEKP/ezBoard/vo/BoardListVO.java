@@ -165,7 +165,8 @@ public class BoardListVO {
 	private String addThumbnail;
 	// 2024-10-04 조수빈 - 예약게시물에서 파일명 사용하기 위해 추가
 	private String fileName;
-
+	/** 2025-01-21 임정은 - 게시자명선택 타입 (0 : 이름, 1 : 부서명) */
+	private String writerNameType;
 	public int getrNum() {
 		return rNum;
 	}
@@ -670,5 +671,6 @@ public class BoardListVO {
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
 	}
-	
+	public String getWriterNameType() { return writerNameType; }
+	public void setWriterNameType(String writerNameType) { this.writerNameType = writerNameType; }
 }

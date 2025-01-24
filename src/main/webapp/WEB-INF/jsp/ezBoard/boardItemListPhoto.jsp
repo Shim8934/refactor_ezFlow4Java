@@ -131,6 +131,7 @@
 		    var isOpenWindow;
             var useKeywordFlag = "<c:out value='${useKeyword}'/>"; // 키워드 사용여부 (Y/N)
             var myBoardScrapFlag = "<c:out value='${MyBoardScrapFlag}'/>" // 스크랩 테넌트 컨피그 (TYPE1 / TYPE2 /NONE)
+			var SSDeptID = "<c:out value='${userInfo.deptID}'/>";
 		    
 		    window.onresize = Window_resize;
 		    document.onselectstart = function () { return false; };
@@ -759,12 +760,19 @@
 		        var i = 0;
 		
 		        arrList = strListInfo.split(";");
-		        for (i = 0; i < arrList.length - 1; i++) {
-		            if (arrList[i].split(",")[1] != SSUserID) {
-		                arrList = null;
-		                return false;
-		            }
-		        }
+				for (i = 0; i < arrList.length - 1; i++) {
+					if (arrList[i].split(",")[3] == '1') {
+						if (arrList[i].split(",")[2] != SSDeptID) {
+							arrList = null;
+							return false;
+						}
+					} else {
+						if (arrList[i].split(",")[1] != SSUserID) {
+							arrList = null;
+							return false;
+						}
+					}
+				}
 		        arrList = null;
 		        return true;
 		    }

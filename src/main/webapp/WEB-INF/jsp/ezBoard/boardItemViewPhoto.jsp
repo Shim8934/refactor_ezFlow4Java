@@ -150,6 +150,10 @@
                 var attachLimit = "${boardInfo.attachSizeLimit}"; // 개별 첨부파일 limit
                 var attachFileNameMaxLength = Number("${attachFileNameMaxLength}"); // 첨부파일명 글자수 제한 limit
                 var totalFileSize = 0; // 현재 총 첨부파일 사이즈
+
+				var writerNameType = "<c:out value='${boardItem.writerNameType}'/>"; // 2025-01-21 임정은 - 게시자명선택 타입 (0 : 이름, 1 : 부서명)
+				var strWriterDeptID = "${boardItem.writerDeptID}";
+				var SSDeptID = "<c:out value='${userInfo.deptID}'/>";
 				
 		        window.onload = function () {
 		            imageViewInit();
@@ -323,7 +327,7 @@
 					}
 		
 					//게시판관리자 또는 게시판그룹관리자 또는 게시물작성자가 아니면 지울 수 없다
-				    if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && strWriterID != SSUserID) {
+				    if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && strWriterID != SSUserID && !(writerNameType == '1' && strWriterDeptID == SSDeptID)) {
 			            alert("<spring:message code='ezBoard.t265'/>");
 			            // GS 수정(2006.02.10) : 익명게시판인 경우 게시물 삭제 시 암호가 맞아도 삭제가 안되는 문제 수정 (return의 위치가 잘못되었음)
 			            return;
@@ -1931,7 +1935,7 @@
 	        					<li ID='btn_One_Line_Reply'><span id="commentCount" onclick='btn_One_Line_Reply_Onclick()'><spring:message code='ezBoard.t81'/>[${commentCount}]</span></li>
 	        				</c:if>
 							<!--		강민수92 end -->
-		        			<c:if test="${boardInfo.boardAdmin_FG =='true' || boardInfo.boardGroupAdmin_FG == 'OK' || (boardItem.writerID == userInfo.id && boardInfo.edit_FG == 'true')}">
+		        			<c:if test="${boardInfo.boardAdmin_FG =='true' || boardInfo.boardGroupAdmin_FG == 'OK' || (boardItem.writerID == userInfo.id && boardInfo.edit_FG == 'true') || (boardItem.writerNameType == '1' && boardItem.writerDeptID == userInfo.deptID)}">
 			                    <li ID='btn_Reply' ><span onclick='btn_Add_Onclick()'><spring:message code='ezBoard.t1001'/></span></li>
 			                    <li ID='btn_Modify' ><span  onclick="btn_ImgOnclick('Mod')"><spring:message code='ezBoard.t1002'/></span></li>
 			                    <li ID='btn_Delete' ><span  onclick="btn_ImgOnclick('Del')"><spring:message code='ezBoard.t1003'/></span></li>

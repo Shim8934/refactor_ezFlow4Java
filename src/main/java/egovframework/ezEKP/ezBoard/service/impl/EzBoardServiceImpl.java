@@ -84,9 +84,11 @@ import egovframework.ezEKP.ezBoard.vo.BoardUserScrapContListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardUserScrapContVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -128,6 +130,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	
 	@Autowired
 	private KlibUtil klibUtil;
+	
+	@Resource(name = "EzOrganDAO")
+	private EzOrganDAO ezOrganDAO;
 
 	private static final Logger logger = LoggerFactory.getLogger(EzBoardServiceImpl.class);
 
@@ -3470,6 +3475,12 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			} else {
 				boardListVO.setGuBun("");
 			}
+
+			if (null != doc.getElementsByTagName("WRITERNAMETYPE").item(0) && null != doc.getElementsByTagName("WRITERNAMETYPE").item(0).getTextContent()) {
+				boardListVO.setWriterNameType(doc.getElementsByTagName("WRITERNAMETYPE").item(0).getTextContent());
+			} else {
+				boardListVO.setWriterNameType("");
+			}
 			
 			if (mode.equals("modify")) {
 				brdUpdateItem(boardListVO, "PHOTO");
@@ -3737,21 +3748,21 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 					}
 				}
 			} else {
-					BoardListVO boardListVO = getItemInfo(mode, itemList.split(";")[0].split(",")[0], userInfo.getLang(), userInfo.getTenantId());
-					boardID = boardListVO.getBoardID();
-					
-					if (!boardInfo.getDelete_FG().equals("true")) {
-						if (!boardInfo.getBoardAdmin_FG().equals("true")) {
-							if (!boardInfo.getBoardGroupAdmin_FG().equals("OK")) {
-								return "NO";
-							}
-						} else {
-							if (!boardInfo.getBoardGroupAdmin_FG().equals("OK")) {
-								return "NO";
-							}
+				BoardListVO boardListVO = getItemInfo(mode, itemList.split(";")[0].split(",")[0], userInfo.getLang(), userInfo.getTenantId());
+				boardID = boardListVO.getBoardID();
+
+				if (!boardInfo.getDelete_FG().equals("true")) {
+					if (!boardInfo.getBoardAdmin_FG().equals("true")) {
+						if (!boardInfo.getBoardGroupAdmin_FG().equals("OK")) {
+							return "NO";
+						}
+					} else {
+						if (!boardInfo.getBoardGroupAdmin_FG().equals("OK")) {
+							return "NO";
 						}
 					}
 				}
+			}
 			
 			for (int i = 0; i < itemListArray.length; i++) {
 				//중복제거 구문
@@ -4173,6 +4184,13 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		boardListVO.setWriterCompanyID(doc.getElementsByTagName("COMPANYID").item(0).getTextContent());
 		boardListVO.setWriterCompanyName(doc.getElementsByTagName("COMPANYNAME").item(0).getTextContent());
 		boardListVO.setWriterCompanyName2(doc.getElementsByTagName("COMPANYNAME2").item(0).getTextContent());
+		
+		if (null != doc.getElementsByTagName("WRITERNAMETYPE").item(0) && null != doc.getElementsByTagName("WRITERNAMETYPE").item(0).getTextContent()) {
+			boardListVO.setWriterNameType(doc.getElementsByTagName("WRITERNAMETYPE").item(0).getTextContent());
+		} else {
+			boardListVO.setWriterNameType("");
+		}
+		
 		boardListVO.setWriteDate(commonUtil.getTodayUTCTime(""));
 		boardListVO.setImportance(doc.getElementsByTagName("IMPORTANCE").item(0).getTextContent());
 		boardListVO.setTitle(doc.getElementsByTagName("TITLE").item(0).getTextContent());
@@ -6928,5 +6946,17 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		logger.debug("getAllNewItemList ended");
 		return ezBoardDAO.getAllNewItemList(map);
+	}
+
+	@Override
+	public Map<String, Object> getWriterOption(LoginVO userInfo) throws Exception {
+		logger.debug("getWriterOption started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_TENANT_ID", userInfo.getTenantId());
+		map.put("v_CN", userInfo.getId());
+
+		logger.debug("getWriterOption ended");
+		return ezOrganDAO.getUserInfoMap(map);
 	}
 }

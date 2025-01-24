@@ -53,7 +53,7 @@
 			var pBoardID = "${boardID}";
 		    var pBoardName = "${boardInfo.boardName}";
 		    var strWriterID = "${boardItem.writerID}";
-		    var strWriterDeptID = "${boardItem.writerDeptID} ";
+		    var strWriterDeptID = "${boardItem.writerDeptID}";
 		    var strWriterName = ConvMakeXMLString("<c:out value='${boardItem.writerName}'/>"); // 익명게시판의 게시자명 특문처리 대응
 		    var strWriterDeptName = "${boardItem.writerDeptName}";
 		    var strWriterCompanyName = "${boardItem.writerCompanyName}";
@@ -112,6 +112,8 @@
             var myBoardScrapFlag = "<c:out value='${MyBoardScrapFlag}'/>" // myBoardScrapFlag 테넌트컨피그값 (NONE, TYPE1_(마이게시판하위), TYPE2(스크랩함))
 			var isScrap = "<c:out value='${isScrap}'/>"; // 이미 스크랩되었는지의 여부 (type1일때)
 			var scrapContID = "<c:out value='${scrapContID}'/>"; // 개인스크랩함 ID (TYPE2, 스크랩함에서 게시물 조회했을 때만 값이 삽입되는 변수)
+			var writerNameType = "<c:out value='${boardItem.writerNameType}'/>"; // 2025-01-21 임정은 - 게시자명선택 타입 (0 : 이름, 1 : 부서명)
+			var SSDeptID = "<c:out value='${userInfo.deptID}'/>";
 
 		    // 수정 수아 재은	    
 		    var nowZoom = 100;
@@ -520,7 +522,7 @@
 		            alert("<spring:message code='ezBoard.t265' />");
 		            return;
 		        }
-		        if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && strWriterID != SSUserID) {
+		        if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && strWriterID != SSUserID && !(writerNameType == '1' && strWriterDeptID == SSDeptID)) {
 		            if (gubun == "2") {
 		                if (CrossYN()) {
 		                    checkpassword_dialogArguments[1] = btn_Delete_Onclick_Complete;
@@ -1849,7 +1851,7 @@
 		        		<c:when test="${apprFlag == 'N'}">
 		        			<li><span onClick="Appr_onclick('Y')"><spring:message code='ezBoard.t999005' /></span></li>
 		                    <li><span onClick="Appr_onclick('C')"><spring:message code='ezBoard.t999014' /></span></li>
-		                    	<c:if test="${boardItem.writerID == userInfo.id}">
+		                    	<c:if test="${boardItem.writerID == userInfo.id || (boardItem.writerNameType == '1' && boardItem.writerDeptID == userInfo.deptID)}">
 			                        <li ID='btn_Modify'><span onclick='btn_Modify_Onclick()'><spring:message code='ezBoard.t316' /></span></li>
 			                        <li ID='btn_Delete'><span class="icon16 popup_icon16_delete" onclick='btn_Delete_Onclick()'></span></li>
 		                    	</c:if>
@@ -1882,7 +1884,7 @@
 			                        <li ID='btn_Mail' ><span class="icon16 popup_icon16_mail_gray" onclick='mail_boarditem()' ></span></li>
 			                        </c:if>
 			        			</c:when>
-			        			<c:when test="${boardItem.writerID == userInfo.id || boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK'}">
+			        			<c:when test="${boardItem.writerID == userInfo.id || boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK' || (boardItem.writerNameType == '1' && boardItem.writerDeptID == userInfo.deptID)}">
 		        					<!--		강민수92	   -->
 			        				<c:if test = "${boardPropertyVO.oneLineReply == '1'}">
 			        					<li ID='btn_One_Line_Reply'><span id="commentCount" onclick='btn_One_Line_Reply_Onclick()'><spring:message code='ezBoard.t81' />[${commentCount}]</span></li>

@@ -466,4 +466,8 @@ public class EzOrganDAO extends EgovAbstractDAO {
 	public List<OrganUserVO> getRetireUserMail(int tenantId) throws Exception {
 		return (List<OrganUserVO>) list("EzOrganDAO.getRetireUserMail", tenantId);
 	}
+
+	public Map<String, Object> getUserInfoMap(Map<String, Object> map) {
+		return (Map<String, Object>) select("EzOrganDAO.getUserInfoMap", map);
+	}
 }

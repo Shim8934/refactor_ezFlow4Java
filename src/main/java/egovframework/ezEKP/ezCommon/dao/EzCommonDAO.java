@@ -3196,4 +3196,34 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createGongramDeleteHistory");
 		}
 	}
+
+	public void alterBoardInfoWriterFlag() {
+		try {
+			select("EzCommonDAO.checkBoardInfoWriterFlag");
+		} catch (Exception e) {
+			logger.debug("tbl_board_boardinfo writerflag doesn't exist. creating the column...");
+
+			update("EzCommonDAO.alterBoardInfoWriteFlag");
+		}
+	}
+
+	public void alterBoardItemWriterNameType() {
+		try {
+			select("EzCommonDAO.checkBoardItemWriterNameType");
+		} catch (Exception e) {
+			logger.debug("tbl_board_item writerNameType doesn't exist. creating the column...");
+
+			update("EzCommonDAO.addBoardItemWriterNameType");
+		}
+	}
+
+    public void alterBoardItemTempWriterNameType() {
+		try {
+			select("EzCommonDAO.checkBoardItemTempWriterNameType");
+		} catch (Exception e) {
+			logger.debug("tbl_board_item_temp writerNameType doesn't exist. creating the column...");
+
+			update("EzCommonDAO.addBoardItemTempWriterNameType");
+		}
+    }
 }

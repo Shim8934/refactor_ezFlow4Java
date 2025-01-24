@@ -176,6 +176,9 @@
 			var editor = "${editor}";
 			var formPath = "";
 
+			var writerFlag = "${boardInfo.writerFlag}"; // 2025-01-21 임정은 - 게시판 게시물 게시자명선택 사용여부 플래그
+			var writerNameType = parseInt("<c:out value='${boardListVO.writerNameType}'/>"); // 2025-01-21 임정은 - 게시자명선택 타입 (0 : 이름, 1 : 부서명)
+
 		    window.onload = function () {
 		    	
 		    	// useHwpDownSecurity가 Y일 때만 Whwp api 호출. 전자결재 일반버전에서는 useHwpDownSecurity의 값에 상관없이 Whwp api 호출하지 않음.
@@ -355,6 +358,12 @@
 				}
 
 			    FirstFlag = false;
+
+				if (writerFlag == 'Y' && !isNaN(writerNameType)) {
+					if (writerNameType == 1) document.getElementById('chkUseDept').checked = true;
+					chkUseDept_onclick();
+				}
+				
 			    try {
 			        if (document.getElementById("txtTitle").value == "")
 			            if (OpenWin == null)
@@ -863,7 +872,19 @@
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "BOARDID", pBoardID);
 		        if (gubun != "2") {
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERID", SSUserID);
-		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME", MakeXMLString(SSUserName));
+					if ('Y' == writerFlag) {
+						var tmpWriterName = spUseDept.innerText.trim(); // 현재 게시물 작성자명
+						if (pMode == "modify" && strWriterName == tmpWriterName) { // 수정 시 변경사항 없다면 기존 게시물 정보로 저장
+							createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME", "<c:out value='${boardListVO.writerName}'/>");
+							createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAMETYPE", "<c:out value='${boardListVO.writerNameType}'/>");
+						} else {
+							var flagwriterName = $('#writerFlag').val().toString().split(":");
+							createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME", MakeXMLString(flagwriterName[0]));
+							createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAMETYPE", MakeXMLString(flagwriterName[1]));
+						}
+					} else {
+						createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME", MakeXMLString(SSUserName));
+					}
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME2", MakeXMLString(SSUserName2));
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DEPTID", SSDeptID);
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DEPTNAME", MakeXMLString(SSDeptName));
@@ -977,9 +998,14 @@
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE2", "");
 		        }
 
-		        if (gubun != "2") {
-		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE3", strUserRank);
-		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE32", strUserRank2);
+				if (gubun != "2") {
+					if ('Y' == writerFlag && chkUseDept.checked) {
+						createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE3", SSDeptName);
+						createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE32", SSDeptName2);
+					} else {
+						createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE3", strUserRank);
+						createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE32", strUserRank2);
+					}
 		            if (gubun != "3") {
 		                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE4", strUserPhone);
 		            }
@@ -1437,8 +1463,18 @@
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - 720) / 2;
 		        var pLeft = (pwidth - 765) / 2;
+				var pWriterNameType = "";
+				
+				if (writerFlag == "Y") {
+					if (chkUseDept.checked) {
+						pWriterNameType = "1";
+					} else {
+						pWriterNameType = "0";
+					}
+				}
+				
 		        if (gubun != "2")
-		            window.open("/ezBoard/boardItemPreView.do?guBun=" + gubun + "&boardID=" + encodeURIComponent(pBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=0,height=720,width=744,top=" + pTop + ",left=" + pLeft, "");
+		            window.open("/ezBoard/boardItemPreView.do?guBun=" + gubun + "&boardID=" + encodeURIComponent(pBoardID) + "&writerNameType=" + pWriterNameType, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=0,height=720,width=744,top=" + pTop + ",left=" + pLeft, "");
 		        else {
 		            var ua = navigator.userAgent;
 		            if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
@@ -2904,6 +2940,16 @@
                     }
                 }
             }
+
+			function chkUseDept_onclick() {
+				if (chkUseDept.checked) { // 팀/부서로 표시
+					spUseDept.innerHTML = "${userInfo.lang}" == "1" ? SSDeptName : SSDeptName2;
+					document.getElementById("writerFlag").selectedIndex = 1;
+				} else { // 이름으로 표시
+					spUseDept.innerHTML = "${userInfo.lang}" == "1" ? SSUserName : SSUserName2;
+					document.getElementById("writerFlag").selectedIndex = 0;
+				}
+			}
 	    </script>
 	    <c:if test="${!isCrossBrowser}">
 	   		<script type="text/javascript" FOR="EzHTTPTrans" EVENT="AttachAddFile(filename)">
@@ -3057,6 +3103,25 @@
 								</span>
 							</td>
 						</tr>
+						<c:if test="${'Y' == boardInfo.writerFlag}">
+							<tr class="td_style">
+								<th><spring:message code='ezBoard.t223' /></th>
+								<td colspan="3">
+									<span id="spUseDept">
+										<c:choose>
+											<c:when test="${mode == 'new'}">${userInfo.displayName}</c:when>
+											<c:otherwise>${boardListVO.writerName}</c:otherwise>
+										</c:choose>
+									</span>
+									<input type="checkbox" id="chkUseDept" style="margin-left: 0px !important;" onclick="chkUseDept_onclick()">
+									<select id="writerFlag" style="display: none;">
+										<option value="<c:out value='${writerOption.N }:0' />"></option>
+										<option value="<c:out value='${writerOption.T }:1' />"></option>
+										<option value="<c:out value='${writerOption.D }:2' />"></option>
+									</select>
+								</td>
+							</tr>
+						</c:if>
              			<!-- 추가 항목이 있을 경우 -->
              			<c:forEach var="boardAttributeVO" items="${boardAttributeListVO}" step="1" varStatus="status">
              				<tr>

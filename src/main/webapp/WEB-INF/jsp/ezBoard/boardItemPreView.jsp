@@ -48,7 +48,8 @@
 		        var pUse_Editor = "${useEditor}";
 		        var Title = window.opener.document.getElementById('txtTitle').value;
 		        var Content = window.opener.document.getElementById('message').contentWindow.GetEditorContent();
-		
+				var writerNameType = "<c:out value = '${writerNameType}'/>"; // 2025-01-21 임정은 - 게시자명선택 타입 (0 : 이름, 1 : 부서명)
+				
 		        if (gubun != 3) {
 		        	if (CrossYN()) {
 			            var _tempList = document.createElement("table");
@@ -119,7 +120,11 @@
 		        	}
 		        }
 		        if (gubun != "2") {
-		        	document.getElementById('WriteUserNM').innerHTML = WriterName;
+					if (writerNameType == "1") {
+						document.getElementById('WriteUserNM').innerHTML = WriterDeptName;
+					} else {
+						document.getElementById('WriteUserNM').innerHTML = WriterName;
+					}
 		        } else { // 익명게시판의 게시자명 특문처리 대응
 		        	document.getElementById('WriteUserNM').innerText = window.opener.document.getElementById('txtNickName').value;
 		        }
@@ -140,7 +145,11 @@
 		        document.getElementById('EndDate').innerHTML = pEndDate;
 		        if (gubun != 2) {
 		            document.getElementById('User_DeptNM').innerHTML = MakeXMLString(WriterDeptName);
-		            document.getElementById('User_JobTitle').innerHTML = WriterTitle;
+					if (writerNameType == "1") {
+						document.getElementById('User_JobTitle').innerHTML = WriterDeptName;
+					} else {
+		            	document.getElementById('User_JobTitle').innerHTML = WriterTitle;
+					}
 		            document.getElementById('Telephone').innerHTML = WriterPhone;
 		        }
 		        document.getElementById('txtTitle').innerHTML = MakeXMLString(Title);

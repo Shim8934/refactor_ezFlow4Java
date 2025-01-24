@@ -545,4 +545,6 @@ public interface EzBoardService {
 
 	/* 2024-09-05 이유정 - 게시판 > 최근게시물 리스트 메서드 */
 	public List<HashMap<String, Object>> getAllNewItemList(BoardListVO boardListVO, Map<String, String> orderByMap) throws Exception;
+	
+	public Map<String, Object> getWriterOption(LoginVO userInfo) throws Exception;
 }

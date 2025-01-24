@@ -4740,4 +4740,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void createGongramDeleteHistory() throws Exception {
         ezCommonDAO.createGongramDeleteHistory();
     }
+
+    @Override
+    public void addBoardWriterFlagAndWriterNameType() throws Exception {
+        ezCommonDAO.alterBoardInfoWriterFlag(); // tbl_board_boardInfo 테이블 writerFlag 컬럼 추가
+        ezCommonDAO.alterBoardItemWriterNameType(); // tbl_board_item 테이블 writerNameType 컬럼 추가
+        ezCommonDAO.alterBoardItemTempWriterNameType(); // tbl_board_item_temp 테이블 writerNameType 컬럼 추가
+    }
 }

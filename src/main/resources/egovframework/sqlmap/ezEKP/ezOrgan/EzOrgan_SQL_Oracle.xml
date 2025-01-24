@@ -4072,4 +4072,32 @@
         SELECT MAIL FROM
             TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#
     </select>
+
+	<select id="EzOrganDAO.getUserInfoMap" parameterClass="Map" resultClass="HashMap">
+		SELECT
+			U.DISPLAYNAME AS N
+			 , D.DISPLAYNAME AS T
+			 , (
+				SELECT
+					D2.DISPLAYNAME
+				FROM
+					TBL_DEPTMASTER D2
+				WHERE
+					D2.CN = D.EXTENSIONATTRIBUTE1
+		  		AND
+					D2.TENANT_ID = #v_TENANT_ID#
+			) AS D
+		FROM
+			TBL_USERMASTER U
+		JOIN
+			TBL_DEPTMASTER D
+		ON
+			U.DEPARTMENT = D.CN
+		AND
+			U.TENANT_ID = D.TENANT_ID
+		WHERE
+			U.CN = #v_CN#
+	  	AND
+			U.TENANT_ID = #v_TENANT_ID#
+	</select>
 </sqlMap>
