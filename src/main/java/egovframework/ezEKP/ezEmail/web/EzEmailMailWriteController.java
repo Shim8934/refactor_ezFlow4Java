@@ -3278,9 +3278,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 							// and some mailers (Daum, etc) may not understand it.			        
 							encodedFileName = MimeUtility.fold(0, encodedFileName);
 							messageBodyPart.setHeader("Content-Disposition", "attachment;\r\n filename=\"" + encodedFileName + "\"");
-
-							// 첨부파일 Content-Type의 디폴트는 application/octet-stream로 설정한다.
-							String contentType = "application/octet-stream";
+							
+							String contentType = null;
 
 							// 첨부파일의 Content-Type을 구한다.
 							BufferedInputStream stream = null;
@@ -3305,6 +3304,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 								}
 							}
 
+							if (contentType == null) {
+								// 첨부파일 Content-Type의 디폴트는 application/octet-stream로 설정한다.
+								contentType = "application/octet-stream";
+							}
+							
 							messageBodyPart.setHeader("Content-Type", contentType);
 
 							// Multipart에 첨부파일 Part를 삽입한다.
