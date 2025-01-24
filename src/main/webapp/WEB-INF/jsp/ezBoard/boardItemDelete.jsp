@@ -174,7 +174,7 @@
 	        </tr>
 	        <tr>
 	            <td>
-	                <div class="layout" style="padding-top:10px;padding-bottom:10px;overflow-y:scroll;height:410px;" id="allImageList">
+	                <div class="layout" style="padding-top:10px;padding-bottom:5px;overflow-y:auto;height:410px;" id="allImageList">
 	                	<c:set var="result" value="${fn:split(listImages, '|')}"/>
 	                	<c:set var="imageID" value="${fn:split(imageID, ';')}"/>
 	                	<c:set var="content" value="${fn:split(imageContent, ';')}"/>
