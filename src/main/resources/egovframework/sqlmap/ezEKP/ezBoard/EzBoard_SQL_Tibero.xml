@@ -8566,6 +8566,8 @@
 						   A.IMPORTANCE,
 						   A.TITLE,
 						   A.ATTACHMENTS,
+						   EXT,
+						   FILEPATH,
 						   A.READCOUNT,
 						   A.ITEMLEVEL,
 						   A.ABSTRACT,
@@ -8611,6 +8613,29 @@
 									   A.STARTDATE <= #nowDate#
 								   AND
 									   A.ENDDATE > #nowDate# 
+					   LEFT OUTER JOIN (
+							SELECT
+								CASE
+									WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+									WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILENAME))
+									ELSE 'MANY'
+								END AS EXT,
+								CASE
+									WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+									WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILEPATH))
+									ELSE 'MANY'
+								END AS FILEPATH,
+								TENANT_ID,
+								itemid
+							FROM TBL_BOARD_ITEM_ATTACHMENTS
+							GROUP BY
+								ITEMID,
+								TENANT_ID 
+						) F 
+						ON
+							A.ITEMID = F.ITEMID
+						AND
+							A.TENANT_ID = F.TENANT_ID
 									   ) T1
 			  WHERE RNUM <= #v_PENDROW# ) T2
 		WHERE
