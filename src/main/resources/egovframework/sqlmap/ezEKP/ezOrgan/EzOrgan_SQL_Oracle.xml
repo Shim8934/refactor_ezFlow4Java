@@ -696,6 +696,12 @@
 				<isEqual property="v_FIELD"  compareValue="USEUPPERDEPTBOX">
 					USEUPPERDEPTBOX
 				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="DEPTTREEFLAG">
+					DEPTTREEFLAG
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="USEUPPERDEPTBOX">
+					USEUPPERDEPTBOX
+				</isEqual>
 			<![CDATA[
 			FROM
 				TBL_DEPTMASTER
@@ -1556,7 +1562,8 @@
 		            UPDATEDT ,
 		            'dept' TYPE ,
 		            TENANT_ID as tenantId,
-	            	DEPTTREEFLAG
+	            	DEPTTREEFLAG,
+		            USEUPPERDEPTBOX
 				FROM
 		        	TBL_DEPTMASTER 
 		       WHERE
@@ -3481,7 +3488,9 @@
 	            adspath ,
 	            updatedt ,
 	            'dept' type,
-				deptTreeFlag  
+				deptTreeFlag,
+				deptlevel,
+				useupperdeptbox
 			FROM 
 				TBL_DEPTMASTER 
 			WHERE  

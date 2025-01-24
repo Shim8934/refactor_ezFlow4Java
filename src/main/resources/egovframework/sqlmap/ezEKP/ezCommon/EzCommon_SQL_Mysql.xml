@@ -6449,4 +6449,19 @@
 			(#listOption#, 10, '첨부', 	30, 'TBL_APRDOCINFO', 'HASATTACHYN', NULL, NULL, '수신문서처리기', '첨부', 'Attach', '添付', '附件', #tenantId#, #companyId#),
 			(#listOption#, 11, '공개',	 30, 'TBL_APRDOCINFO', 'ISPUBLIC', NULL, NULL, '수신문서처리기', '공개', 'Public', '公開', '公开', #tenantId#, #companyId#)
 	</insert>
+
+	<select id="EzCommonDAO.checkUseUpperDeptBox" resultClass="String">
+		SELECT
+			USEUPPERDEPTBOX
+		FROM
+			TBL_DEPTMASTER
+		LIMIT 1
+	</select>
+
+	<statement id="EzCommonDAO.alterUseUpperDeptBox">
+		ALTER TABLE
+			TBL_DEPTMASTER
+		ADD
+			USEUPPERDEPTBOX varchar(4) DEFAULT 'N' COMMENT '상위부서문서함 사용 여부'
+    </statement>
 </sqlMap>

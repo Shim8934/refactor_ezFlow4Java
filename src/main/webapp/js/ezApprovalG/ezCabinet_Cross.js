@@ -362,8 +362,8 @@ function SetMenuBtn(sbtnname, sbtnstyle) {
     if (document.getElementById(sbtnname) != null)
         document.getElementById(sbtnname).style.display = sbtnstyle;
 }
-function isDrafter(writerID, writerDeptID) {
-    return writerID === arr_userinfo[1] && writerDeptID === arr_userinfo[4];
+function isDrafter(writerID, writerDeptID) { // 발송의뢰 표출 조건 상위부서 확인하도록 함. 
+    return writerID === arr_userinfo[1] && (writerDeptID === arr_userinfo[4] || writerDeptID === upperDeptCode);
 }
 
 function IsUserDeptRec() {

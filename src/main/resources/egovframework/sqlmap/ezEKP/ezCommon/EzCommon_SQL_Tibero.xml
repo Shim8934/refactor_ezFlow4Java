@@ -6943,4 +6943,20 @@
 			FROM DUAL
 		]]>
    	</insert>
+
+	<select id="EzCommonDAO.checkUseUpperDeptBox" resultClass="String">
+		SELECT
+			USEUPPERDEPTBOX
+		FROM
+			TBL_DEPTMASTER
+		WHERE
+			ROWNUM = 1
+	</select>
+
+	<statement id="EzCommonDAO.alterUseUpperDeptBox">
+		ALTER TABLE
+			TBL_DEPTMASTER
+		ADD
+			USEUPPERDEPTBOX varchar(4) DEFAULT 'N'
+	</statement>
 </sqlMap>

@@ -102,6 +102,9 @@ public class ApprGRecordListVO {
 	
 	private String selSendStatus;
 	
+	/* 상위부서아이디 */
+	private String upperDeptCode;
+
 	public int getTenantID() {
 		return tenantID;
 	}
@@ -429,4 +432,12 @@ public class ApprGRecordListVO {
 	
 	public void setSelSendStatus(String selSendStatus) { this.selSendStatus = selSendStatus; }
 	
+	
+	public String getupperDeptCode() {
+		return upperDeptCode;
+	}
+	
+	public void setupperDeptCode(String upperDeptCode) {
+		this.upperDeptCode = upperDeptCode;
+	}
 }

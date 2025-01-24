@@ -123,6 +123,10 @@
 
 			var isRelay = GetRelayDocInfo(); // 중계문서인지의 여부를 true/false로 반환;
 
+			/* 2024-07-18 양지혜 - 상위부서문서함 관련 */
+			var upperDeptCode = "<c:out value ='${upperDeptCode}'/>";
+			var allowDeptIDs = "<c:out value ='${allowDeptIDs}'/>"
+
 		    function process_AfterOpen() {
 		        try {
 		            if (pFormHref == "") {

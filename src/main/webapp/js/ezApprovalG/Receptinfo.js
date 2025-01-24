@@ -261,8 +261,10 @@ function event_TreeViewinitialize_tree2() {
 }
 //#############################################################################################################################################수신처 조직도 트리뷰 클릭 이벤트 
 var nodeIdx;
+var useupperdeptbox;
 function TreeViewNodeClick2(pNodeID, pNodeNM) {
     nodeIdx = pNodeID;
+    useupperdeptbox = document.getElementById(pNodeID).getAttribute("useupperdeptbox");
 
     var treeNode = new TreeNode();
     treeNode.LoadFromID(nodeIdx);
@@ -283,6 +285,7 @@ function RequestData2(pNodeID, pTreeID) {
 
     var treeView = new TreeView();
     treeView.LoadFromID(pTreeID);
+    treeView.SetUseSusinColor4AprG(true); // 하위트리 오픈 시, 색 적용 안되는 문제 수정
     treeView.AppendChildNodes(xmlHTTP.responseXML.documentElement, pNodeID);
 }
 //#############################################################################################################################################수신처 조직도 사용자 가져오기 
@@ -486,8 +489,8 @@ function AprDeptAdd_onclick(Type) {
                 }
             	/* 2023-03-09 홍승비 - 전자결재G > 결재문서를 수신하지 않는 부서의 소속 사원은 수신자로 지정 불가능하도록 수정 */
             	var userDeptID = pCurSelRow[0].getAttribute("DATA3");
-            	
-            	if (GetEntryInfo(userDeptID) == "N") { // 결재문서를 수신하지 않는 부서 체크
+                /* 2024-07-17 양지혜 - 전자결재G > 상위부서문서함 사용 부서의 사원은 수신자로 지정 가능하도록 함 */
+            	if (GetEntryInfo(userDeptID) == "N" && useupperdeptbox === "N") { // 결재문서를 수신하지 않는 부서 체크
             		OpenAlertUI(strLang1105);
             	}
             	else { // 수신자 중복부서 체크

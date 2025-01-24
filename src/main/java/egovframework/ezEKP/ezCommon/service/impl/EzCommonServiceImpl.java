@@ -4700,4 +4700,10 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             }
         }
     }
+
+    /* 2024-07-05 양지혜 - 전자결재 > 상위부서문서함 사용여부 컬럼 추가 */
+    @Override
+    public void alterUseUpperDeptBox() throws Exception {
+        ezCommonDAO.alterUseUpperDeptBox();
+    }
 }

@@ -194,6 +194,10 @@
 			// 수정후 히스토리 및 문서 저장 시 오류로 인해 전역변수로 변경함
 			var beforeDocURL;
 			
+			/* 2024-07-18 양지혜 - 상위부서문서함 관련 */
+			var upperDeptCode = "<c:out value ='${upperDeptCode}'/>";
+			var upperDeptName = "<c:out value ='${upperDeptName}'/>";
+
 		    function getNextDocList() {
 		        NextDocID = "";
 		        if (selectedDocID != "") {

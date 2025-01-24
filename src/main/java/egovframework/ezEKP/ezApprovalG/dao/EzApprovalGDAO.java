@@ -4075,4 +4075,12 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public ApprGReceiveDocVO checkDocReceiveInfo(Map<String, Object> map) throws Exception {
 		return (ApprGReceiveDocVO) select("EzApprovalG.checkDocReceiveInfo", map);
 	}
+	
+	public Map<String, String> getUpperDeptInfo(Map<String, Object> map) throws Exception {
+		return (Map<String, String>) select("EzApprovalG.getUpperDeptInfo", map);
+	}
+
+	public List<String> getSameDeptBoxUseID(Map<String, Object> map) throws Exception {
+		return (List<String>) list("EzApprovalG.getSameDeptBoxUseID", map);
+	}
 }

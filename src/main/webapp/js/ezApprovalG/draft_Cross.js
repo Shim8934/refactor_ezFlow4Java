@@ -2442,6 +2442,12 @@ function SetAutoPropertyValue() {
         hapyuiCount = 0;
         SignCount = 0;
         gamsaCount = 0;
+        
+        var pDeptName = arr_userinfo[5];
+        if (typeof upperDeptName !== "undefined" && upperDeptName !== "") {
+            pDeptName = upperDeptName;
+        }
+        
         for (var i = 0 ; i < fields.length ; i++) {
             var field = fields[i];
 
@@ -2500,7 +2506,7 @@ function SetAutoPropertyValue() {
                         break;
 
                     case "department":
-                        field.textContent = arr_userinfo[5];
+                        field.textContent = pDeptName;
                         break;
 
                     case "parantdept":
@@ -2990,7 +2996,12 @@ function SaveDraftDocInfo_ilban(pState) {
         createNodeAndInsertText(xmlpara, objNode, "ORGHTML", "");
         createNodeAndInsertText(xmlpara, objNode, "PUSERID", arr_userinfo[1]);
         createNodeAndInsertText(xmlpara, objNode, "PUSERNAME", arr_userinfo[2]);
-        createNodeAndInsertText(xmlpara, objNode, "PDEPTID", arr_userinfo[4]);
+
+        var pDeptID = arr_userinfo[4];
+        if (typeof upperDeptCode !== "undefined" && upperDeptCode !== "") {
+            pDeptID = upperDeptCode;
+        }        
+        createNodeAndInsertText(xmlpara, objNode, "PDEPTID", pDeptID);
 
         createNodeAndInsertText(xmlpara, objNode, "SECURITY", tempSecurity);
         createNodeAndInsertText(xmlpara, objNode, "KEEPPERIOD", tempKeep);
@@ -3880,6 +3891,15 @@ function getDeptSymbol(DeptID, DeptName) {
 			}        			
 		});
 	} else {
+        if (typeof upperDeptCode !== "undefined" && upperDeptCode !== "") {
+            DeptID = upperDeptCode;
+            
+            /* 2024-11-07 홍승비 - 전자결재 > 상위부서문서함 관련 변수 체크 추가 */
+            if (typeof upperDeptName !== "undefined" && upperDeptName !== "") {
+            	DeptName = upperDeptName;
+            }
+        }
+        
 		$.ajax({
 			type : "POST",
 			dataType : "text",

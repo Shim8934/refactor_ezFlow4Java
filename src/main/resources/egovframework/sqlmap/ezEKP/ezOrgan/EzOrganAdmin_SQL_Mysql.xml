@@ -4612,8 +4612,9 @@
 		<isNotNull property="extensionAttribute12" prepend=","> <![CDATA[extensionattribute12 = #extensionAttribute12#]]></isNotNull>
 		<isNotNull property="extensionAttribute13" prepend=","> <![CDATA[extensionattribute13 = #extensionAttribute13#]]></isNotNull>
 		<isNotNull property="extensionAttribute14" prepend=","> <![CDATA[extensionattribute14 = #extensionAttribute14#]]></isNotNull>
-		<isNotNull property="extensionAttribute15" prepend=","> <![CDATA[extensionattribute15 = #extensionAttribute15#]]></isNotNull>   	
+		<isNotNull property="extensionAttribute15" prepend=","> <![CDATA[extensionattribute15 = #extensionAttribute15#]]></isNotNull>
 		<isNotNull property="deptTreeFlag" prepend=","> <![CDATA[deptTreeFlag = #deptTreeFlag#]]></isNotNull>   	
+		<isNotNull property="useUpperDeptBox" prepend=","> <![CDATA[useUpperDeptBox = #useUpperDeptBox#]]></isNotNull>
    		<![CDATA[     			
       		WHERE  
       			cn = #cn#

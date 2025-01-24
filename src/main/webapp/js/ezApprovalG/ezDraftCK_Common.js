@@ -374,6 +374,16 @@ function getDeptSymbol(DeptID, DeptName) {
     var xmlhttp = createXMLHttpRequest();
     var xmlRtn = createXmlDom();
     var objNode;
+
+    if (typeof upperDeptCode !== "undefined" && upperDeptCode !== "") {
+        DeptID = upperDeptCode;
+        
+        /* 2024-11-07 홍승비 - 전자결재 > 상위부서문서함 관련 변수 체크 추가 */
+        if (typeof upperDeptName !== "undefined" && upperDeptName !== "") {
+        	DeptName = upperDeptName;
+        }
+    }
+    
     createNodeInsert(xmlpara, objNode, "DATA");
     createNodeAndInsertText(xmlpara, objNode, "CN", DeptID);
     createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute6");

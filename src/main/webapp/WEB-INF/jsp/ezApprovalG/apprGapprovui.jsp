@@ -210,6 +210,10 @@
 
 			// 2024-06-24 양지혜 - 지정반송 기능 사용여부
 			var useReturnByDesignation = "<c:out value ='${useReturnByDesignation}'/>";
+			
+			/* 2024-07-18 양지혜 - 상위부서문서함 관련 */
+			var upperDeptCode = "<c:out value ='${upperDeptCode}'/>";
+			var upperDeptName = "<c:out value ='${upperDeptName}'/>";
 	        
 			// 2024-12-10 기민혁 - 수정버전 변경 기능 사용여부
 			var editVersionYN = "<c:out value ='${editVersionYN}'/>";
@@ -443,7 +447,7 @@
 		            getDocInfo();
 		            setAttachInfo(pDocID, "APR", lstAttachLink);
 		            GetExchInfo();
-		            DeptSymbol = getDeptSymbol(arr_userinfo[4], replaceEntityCodeToStr(arr_userinfo[5]));
+					DeptSymbol = getDeptSymbol(arr_userinfo[4], replaceEntityCodeToStr(arr_userinfo[5]));
 		            
 			    	if (nonElecRec == "Y") {
 				        getNonElecInfoSusinInit();

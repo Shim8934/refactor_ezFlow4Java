@@ -180,8 +180,9 @@
 	                var pAlertContent = "<spring:message code='ezApprovalG.t425'/>";
 	                OpenAlertUI(pAlertContent);
 	            }
-	            else {
-	                if (trim_Cross(pCurSelRow[0].getAttribute("DATA3")) == InitTreeVal) {
+	            else { // G버전
+	                if (trim_Cross(pCurSelRow[0].getAttribute("DATA3")) == InitTreeVal 
+							|| checkIdInList(trim_Cross(pCurSelRow[0].getAttribute("DATA3")))) { // 상위부서문서함 사용중인 부서인지 확인
 	                    var RtnVal = setReceiveAssign(pCurSelRow);
 	                    if (RtnVal == "TRUE") {
 	                        if (ReturnFunction != null) {
@@ -219,6 +220,18 @@
 	    	
 	        try {
 	        	var result = "";
+
+				/* 2024-07-18 양지혜 - 상위부서문서함을 사용하고 있는 부서원 지정 처리 */
+				// 기본 : 선택한 사용자의 부서정보
+				var receivedDeptID = trim_Cross(pCurSelRow[0].getAttribute("DATA3"));
+				var receivedDeptName = trim_Cross(pCurSelRow[0].getAttribute("DATA12"));
+				if (parent.upperDeptCode !== "") { // 현재부서가 상위부서문서함 사용 : 상위부서정보로 진행
+					receivedDeptID = parent.upperDeptCode;
+					receivedDeptName = parent.upperDeptName;
+				} else if (parent.upperDeptCode === "" && parent.allowDeptIDs !== "") { // 현재부서를 상위부서문서함으로 사용 : 현재부서(상위부서) 정보로 진행
+					receivedDeptID = arr_userinfo[4];
+					receivedDeptName = arr_userinfo[5];
+				}
 	        	
 	            $.ajax({
 	        		type : "POST",
@@ -231,8 +244,8 @@
 	        			processorID : trim_Cross(pCurSelRow[0].getAttribute("DATA2")),
 	        			processorName : trim_Cross(pCurSelRow[0].getAttribute("DATA8")),
 	        			processorJobTitle : trim_Cross(pCurSelRow[0].getAttribute("DATA10")),
-	        			receivedDeptID : trim_Cross(pCurSelRow[0].getAttribute("DATA3")),
-	        			receivedDeptName : trim_Cross(pCurSelRow[0].getAttribute("DATA12")),
+	        			receivedDeptID : receivedDeptID,
+	        			receivedDeptName : receivedDeptName,
 	        			docState : pAprSate,
 	        			processorName2 : trim_Cross(pCurSelRow[0].getAttribute("DATA9")),
 	        			processorJobTitle2 : trim_Cross(pCurSelRow[0].getAttribute("DATA11")),
@@ -442,6 +455,15 @@
 			}
 		} catch (ErrMsg) {
 			alert(ErrMsg.description);
+		}
+	}
+
+	function checkIdInList (checkID) {
+		if (typeof parent.allowDeptIDs === "undefined") {
+			return false;
+		} else {
+			var idList = parent.allowDeptIDs.split(";").filter(id => id !== '');
+			return idList.includes(checkID);
 		}
 	}
 	</script>

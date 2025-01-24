@@ -295,6 +295,7 @@ function GetDocDeliveryList(g_DeliverySearchParamXml) {
     createNodeAndInsertText(xmlpara, objNode, "pOrderOption", OrderOption);
     createNodeAndInsertText(xmlpara, objNode, "pQuery", "");	
     createNodeAndInsertText(xmlpara, objNode, "ISDOCPRINT", "FALSE");
+    createNodeAndInsertText(xmlpara, objNode, "UPPERDEPTCODE", upperDeptCode);
     if (g_DeliverySearchParamXml != "" && g_DeliverySearchParamXml != undefined) {
         createNodeAndInsertText(xmlpara, objNode, "search", "1");
         var oSParam = loadXMLString(g_DeliverySearchParamXml);

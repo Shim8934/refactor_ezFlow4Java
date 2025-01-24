@@ -142,6 +142,10 @@
 
 				var selSendStatusFlag = "${selSendStatus}";
 
+				/* 2024-07-18 양지혜 - 상위부서문서함 관련 */
+				var upperDeptCode = "<c:out value ='${upperDeptCode}'/>";
+				var upperDeptName = "<c:out value ='${upperDeptName}'/>";
+
 		        document.onselectstart = function () { return false; };
 		
 		        window.onload = function () {

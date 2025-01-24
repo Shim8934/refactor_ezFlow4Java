@@ -181,7 +181,7 @@ public interface EzApprovalGService {
 
     public String getListInfoXml(String listFlag, String listType, String companyID, String lang, LoginVO userInfo) throws Exception;
 
-    public String getRecordList(Document doc, String lang, int tenantID, String offset) throws Exception;
+    public String getRecordList(Document doc, String lang, int tenantID, String offset, String deptID) throws Exception;
 
     public String getCodeInfo(String companyID, String lang, int tenantID) throws Exception;
 
@@ -203,7 +203,7 @@ public interface EzApprovalGService {
 
     public String getEA5Value(String msg, int tenantID, String companyID) throws Exception;
 
-    public String getMyTaskCode(String userID, String deptID, String companyID, String lang, int tenantID) throws Exception;
+    public String getMyTaskCode(String userID, String deptID, String companyID, String lang, int tenantID, String upperDeptCode) throws Exception;
 
     public String setMyTaskCode(String userID, String deptID, String cabinetID, String taskCode, String type, String companyID, int tenantID) throws Exception;
 
@@ -396,7 +396,7 @@ public interface EzApprovalGService {
 
     public String changeRecordInfo(Document xmlDom, String lang, String offset, int tenantID) throws Exception;
 
-    public String getDeliveryList(String p_DeptID, String pPageSize, String pPageNum, String pOrderCell, String pOrderOption, String pQuery, String companyID, String lang, String deptcode, String deptcode2, String title, String sregdate, String eregdate, String debenturer, String isdocprint, String extReceptYN, LoginVO userInfo) throws Exception;
+    public String getDeliveryList(String p_DeptID, String pPageSize, String pPageNum, String pOrderCell, String pOrderOption, String pQuery, String companyID, String lang, String deptcode, String deptcode2, String title, String sregdate, String eregdate, String debenturer, String isdocprint, String extReceptYN, LoginVO userInfo, String upperDeptCode) throws Exception;
 
     public String getNewID(String companyID, int tenantID) throws Exception;
 
@@ -1008,4 +1008,8 @@ public interface EzApprovalGService {
 
     /* 2024-12-25 기민혁 - 전자결재 > 일괄 지정 수신 문서 확인 */
     public ApprGReceiveDocVO checkDocReceiveInfo(String companyID, int tenantID, String docID, String receiveSN) throws Exception;
+
+    public Map<String, String> getUpperDeptInfo(String pDeptID, int tenantId) throws Exception;
+
+    public String getSameDeptBoxUseID(String deptID, int tenantId) throws Exception;
 }

@@ -1114,6 +1114,15 @@ function getDraftUserInfo()
 function getDeptSymbol(DeptID, DeptName)
 {
 	var result = "";
+
+    if (typeof upperDeptCode !== "undefined" && upperDeptCode !== "") {
+        DeptID = upperDeptCode;
+        
+        /* 2024-11-07 홍승비 - 전자결재 > 상위부서문서함 관련 변수 체크 추가 */
+        if (typeof upperDeptName !== "undefined" && upperDeptName !== "") {
+        	DeptName = upperDeptName;
+        }
+    }
 	
 	$.ajax({
 		type : "POST",
@@ -1121,7 +1130,7 @@ function getDeptSymbol(DeptID, DeptName)
 		async : false,
 		url : "/ezOrgan/getADInfos.do",
 		data : {
-			cn : DeptID,
+            cn : DeptID,
 			prop : "extensionAttribute6",
 			cate  : "group"
 		},

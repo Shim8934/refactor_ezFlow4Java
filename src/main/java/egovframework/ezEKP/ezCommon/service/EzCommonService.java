@@ -553,4 +553,7 @@ public interface EzCommonService {
 
 	// 2024-11-28 기민혁 - 개인 수신함 리스트 해더 추가
 	public void insertPersonalSusinListOption() throws Exception;
+
+	/* 2024-07-05 양지혜 - 전자결재 > 상위부서문서함 사용여부 컬럼 추가 */
+	public void alterUseUpperDeptBox() throws Exception;
 }

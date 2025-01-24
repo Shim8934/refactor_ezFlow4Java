@@ -217,6 +217,10 @@
 			var autopDocSN = "";
 			var createAutoDoc = "N"
 			
+			/* 2024-07-18 양지혜 - 상위부서문서함 관련 */
+			var upperDeptCode = "<c:out value ='${upperDeptCode}'/>";
+			var upperDeptName = "<c:out value ='${upperDeptName}'/>";
+			
 		    window.onload = function ()
 		    {
 		    	if(officeFlag == 'Y'){
@@ -685,7 +689,7 @@
 				} else if (deptCheckFlag == "4") {
 					alert(strLanggarm02 + " '" + replaceEntityCodeToStr(arr_userinfo[5]) + "'" + strLanggarm05);
 					return;
-				} else if (deptCheckFlag == "2") {
+				} else if (deptCheckFlag == "2" && upperDeptCode == "") {
 					alert("타부서의 철정보로 설정되어있습니다. \n'" + replaceEntityCodeToStr(arr_userinfo[5]) + "'부서의 철로 변경해주시기바랍니다.");
 					return;
 				}
@@ -804,7 +808,7 @@
 				            }
 				            
 				            if (nonElecRec != "Y") {
-					            if (cabinetID.substring(0, arr_userinfo[4].length).toLowerCase() != arr_userinfo[4].toLowerCase()) {
+					            if (cabinetID.substring(0, arr_userinfo[4].length).toLowerCase() != arr_userinfo[4].toLowerCase() && upperDeptCode == "") { // 상위부서문서함 사용 > 타 부서 기록물철 사용 가능
 					                var pAlertContent = "<spring:message code='ezApprovalG.t135'/>" + "<br>" + "<spring:message code='ezApprovalG.t136'/>";
 					                OpenAlertUI(pAlertContent);
 					                return;

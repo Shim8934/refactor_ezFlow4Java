@@ -81,6 +81,8 @@ public class ApprGCabinetListVO {
 	private String limitCheck = "0";
 	private Map<String, String> extraColMap;
 	private String transferFlag;
+	/* 2024-07-18 양지혜 - 상위부서아이디 */
+	private String upperDeptCode;
 	
 	public int getTenantID() {
 		return tenantID;
@@ -335,5 +337,11 @@ public class ApprGCabinetListVO {
 	}
 	public void setTransferFlag(String transferFlag) {
 		this.transferFlag = transferFlag;
+	}
+	public String getUpperDeptCode() {
+		return upperDeptCode;
+	}
+	public void setUpperDeptCode(String upperDeptCode) {
+		this.upperDeptCode = upperDeptCode;
 	}
 }

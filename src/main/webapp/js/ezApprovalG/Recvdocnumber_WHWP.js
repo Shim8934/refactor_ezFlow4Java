@@ -92,6 +92,16 @@ function getRecvDocNumber(pDeptID, docNumZeroCnt) {
         name = "receiptnumber";
 
         if (approvalFlag =='G') {
+            var deptName = arr_userinfo[5];
+            if (typeof upperDeptCode !== "undefined" && upperDeptCode !== "") {
+                pDeptID = upperDeptCode;
+            
+            /* 2024-11-07 홍승비 - 전자결재 > 상위부서문서함 관련 변수 체크 추가 */
+            if (typeof upperDeptName !== "undefined" && upperDeptName !== "") {
+                deptName = upperDeptName;
+            }
+        }
+        
             if (LastSignSN == 1 || useReceiveDocNo != 'NO' || pDraftFlag == "HAPYUI") {
                 $.ajax({
                     type : "POST",
@@ -109,7 +119,7 @@ function getRecvDocNumber(pDeptID, docNumZeroCnt) {
                 });
 
                 if (!message.FieldExist(name)) {
-                    var DeptSymbol = getDeptSymbol(arr_userinfo[4], arr_userinfo[5]);
+                var DeptSymbol = getDeptSymbol(pDeptID, deptName);
                     var SN = getNodeText(GetChildNodes(result)[0]);
 
                     //2019-01-08 천성준 - 접수번호 채번 시, 채번길이 설정이 안먹혀서 주석
@@ -235,6 +245,11 @@ function rollbackDocNumber(pDeptID, pPrefix, pDocID) {
         }
 
         var result = "";
+
+        if (typeof upperDeptCode !== "undefined" && upperDeptCode !== "") {
+            pDeptID = upperDeptCode;
+        }
+        
     	$.ajax({
     		type : "POST",
     		dataType : "text",
@@ -297,6 +312,15 @@ function SaveFile() {
 
 function getDeptSymbol(DeptID, DeptName) {
 var result = "";
+
+    if (typeof upperDeptCode !== "undefined" && upperDeptCode !== "") {
+        DeptID = upperDeptCode;
+        
+        /* 2024-11-07 홍승비 - 전자결재 > 상위부서문서함 관련 변수 체크 추가 */
+        if (typeof upperDeptName !== "undefined" && upperDeptName !== "") {
+        	DeptName = upperDeptName;
+        }
+    }
 	
 	$.ajax({
 		type : "POST",
