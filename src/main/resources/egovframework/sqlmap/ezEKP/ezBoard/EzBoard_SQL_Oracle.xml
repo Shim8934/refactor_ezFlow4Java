@@ -8572,6 +8572,8 @@
 						   A.IMPORTANCE,
 						   A.TITLE,
 						   A.ATTACHMENTS,
+							EXT,
+							FILEPATH,
 						   A.READCOUNT,
 						   A.ITEMLEVEL,
 						   A.ABSTRACT,
@@ -8604,7 +8606,30 @@
 										   OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
 								   AND
 									   A.BOARDID = P.BOARDID
-								   AND
+									LEFT OUTER JOIN (
+										SELECT
+											CASE
+												WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+												WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILENAME))
+												ELSE 'MANY'
+											END AS EXT,
+											CASE
+												WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+												WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILEPATH))
+												ELSE 'MANY'
+											END AS FILEPATH,
+											TENANT_ID,
+											itemid
+										FROM TBL_BOARD_ITEM_ATTACHMENTS
+										GROUP BY
+											ITEMID,
+											TENANT_ID 
+										) F 
+									ON
+										A.ITEMID = F.ITEMID
+									AND
+										A.TENANT_ID = F.TENANT_ID
+									WHERE
 									   A.TENANT_ID = #v_TENANTID#
 								   AND
 									   (A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(A.WRITERCOMPANYID) = '' OR A.WRITERCOMPANYID IS NULL
@@ -9940,7 +9965,6 @@
 										   OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
 								   AND
 									   A.BOARDID = P.BOARDID
-								   AND
                                    LEFT OUTER JOIN (
                                         SELECT
                                             CASE
