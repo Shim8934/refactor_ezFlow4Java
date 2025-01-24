@@ -6960,4 +6960,19 @@
 		ADD
 			USEUPPERDEPTBOX varchar(4) DEFAULT 'N'
 	</statement>
+	
+	<select id="EzCommonDAO.checkBodyHTMLToConnData" resultClass="String">
+		<![CDATA[
+		SELECT
+			BODYHTML
+		FROM
+			TBL_CONNDATA
+		WHERE
+			ROWNUM = 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.changeBodyHTMLToConnData">
+		ALTER TABLE TBL_CONNDATA RENAME COLUMN BODYXML TO BODYHTML
+	</statement>
 </sqlMap>

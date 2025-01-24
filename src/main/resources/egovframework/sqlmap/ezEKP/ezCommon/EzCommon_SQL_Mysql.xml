@@ -6464,4 +6464,18 @@
 		ADD
 			USEUPPERDEPTBOX varchar(4) DEFAULT 'N' COMMENT '상위부서문서함 사용 여부'
     </statement>
+	
+	<select id="EzCommonDAO.checkBodyHTMLToConnData" resultClass="String">
+		<![CDATA[
+		SELECT
+			BODYHTML
+		FROM
+			TBL_CONNDATA
+		LIMIT 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.changeBodyHTMLToConnData">
+		ALTER TABLE TBL_CONNDATA CHANGE COLUMN BODYXML BODYHTML longtext
+	</statement>
 </sqlMap>

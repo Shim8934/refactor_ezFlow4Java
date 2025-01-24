@@ -366,6 +366,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.alterEditVersionHistory(); // 2024-12-10 기민혁 - 전자결재 > 수정버전,수정모드 컬럼 추가
 			ezCommonService.insertEditVersionListOption(); // 2024-12-10 기민혁 - 수정버전 리스트 해더 생성
 			ezCommonService.insertPersonalSusinListOption(); // 2024-11-28 기민혁 - 개인 수신함 리스트 해더 추가
+			ezCommonService.alterBodyHTMLToConnData(); // 2025-01-24 이가은 - 전자결재 > 연동테이블 컬럼명 변경
 		} catch (Exception e) {
     		logger.error(e.getMessage(), e);
     	}

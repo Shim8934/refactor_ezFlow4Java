@@ -535,6 +535,8 @@ public interface EzCommonService {
 	public void addBoardAllNewBoardListDate() throws Exception;
 
     public void createTblAprAutoSaveConfig() throws Exception;
+	
+	public void alterBodyHTMLToConnData() throws Exception;
 
     // 2024-12-04 기민혁 - 전자결재 > 최근서식 사용여부 테넌트 컨피그 추가
     public void insertResendFormYN() throws Exception;
