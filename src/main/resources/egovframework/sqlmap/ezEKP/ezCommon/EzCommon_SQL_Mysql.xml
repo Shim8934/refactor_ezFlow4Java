@@ -6449,4 +6449,18 @@
 			(#listOption#, 10, '첨부', 	30, 'TBL_APRDOCINFO', 'HASATTACHYN', NULL, NULL, '수신문서처리기', '첨부', 'Attach', '添付', '附件', #tenantId#, #companyId#),
 			(#listOption#, 11, '공개',	 30, 'TBL_APRDOCINFO', 'ISPUBLIC', NULL, NULL, '수신문서처리기', '공개', 'Public', '公開', '公开', #tenantId#, #companyId#)
 	</insert>
+	
+	<select id="EzCommonDAO.checkBodyHTMLToConnData" resultClass="String">
+		<![CDATA[
+		SELECT
+			BODYHTML
+		FROM
+			TBL_CONNDATA
+		LIMIT 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.changeBodyHTMLToConnData">
+		ALTER TABLE TBL_CONNDATA CHANGE COLUMN BODYXML BODYHTML longtext
+	</statement>
 </sqlMap>

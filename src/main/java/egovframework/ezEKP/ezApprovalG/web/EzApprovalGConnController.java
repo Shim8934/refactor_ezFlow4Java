@@ -4,6 +4,7 @@ import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.user.login.web.LoginController;
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
@@ -333,5 +335,90 @@ public class EzApprovalGConnController {
                 .build();
 
         return uriComponents.toUriString();
+    }
+
+    @RequestMapping(value = "/ezConn/insertApprGate.do", method = RequestMethod.POST)
+    public String insertApprGate(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+        logger.debug("insertApprGate started");
+
+        String serverName = request.getServerName();
+        int tenantId = loginService.getTenantId(serverName);
+
+        String userId = request.getParameter("userId");
+        String deptId = request.getParameter("deptId");
+        String keyId = request.getParameter("keyId");
+        String formCode = request.getParameter("formCode");
+        String bodyHtml = request.getParameter("bodyHtml");
+        String title = request.getParameter("title");
+
+        // loginVO 생성
+        LoginVO paramUserInfo = new LoginVO();
+        paramUserInfo.setId(userId);
+        paramUserInfo.setTenantId(tenantId);
+        paramUserInfo.setDn("NOPASSWORD");
+
+        LoginVO userInfo = loginService.selectUser(paramUserInfo);
+
+        Map<String, Object> connData = ezApprovalGConnService.getConnData(keyId, formCode);
+
+        if(connData == null) {
+            ezApprovalGConnService.registConnData(keyId, userId, deptId, title, formCode, bodyHtml);
+        }
+
+        connData = ezApprovalGConnService.getConnData(keyId, formCode);
+
+        String docId = null;
+        if(connData != null)
+            docId = (String) connData.get("DOCID");
+
+        String companyId = userInfo.getCompanyID();
+
+        String uiFlag = ezApprovalGConnService.getDocUiFlag(docId, userInfo.getTenantId(), companyId);
+
+        logger.info("### uiFlag = " + uiFlag);
+        if("redraft".equals(uiFlag)) {
+            uiFlag = "draft";
+        }else if("draft".equals(uiFlag)) {
+            connData.put("DOCID", null);
+        }
+        
+        String redirectUrl;
+        if ("draft".equals(uiFlag)) {
+            redirectUrl = getDraftUrl(connData, userInfo);
+        } else if ("apr".equals(uiFlag)) {
+            redirectUrl = getAprUrl(connData, userInfo);
+        } else if ("end".equals(uiFlag)) {
+            redirectUrl = getEndUrl(connData, userInfo);
+        } else {
+            return "cmm/error/accessBlock";
+        }
+
+        // 로그인쿠키 생성
+        Cookie[] cookies = request.getCookies();
+        boolean useDbSession = "YES".equalsIgnoreCase(config.getProperty("config.UseDbSession"));
+
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (useDbSession || cookie.getName().equalsIgnoreCase("loginCookie")) {
+                    loginService.deleteSession(cookie.getValue());
+                }
+
+                if (!"JSESSIONID".equalsIgnoreCase(cookie.getName())) { // JSESSIONID는 지우지 않음 (이중화 시 JSESSIONID 쿠키를 사용)
+                    cookie.setMaxAge(0);
+                    cookie.setPath("/");
+                    response.addCookie(cookie);
+                }
+            }
+        }
+
+        loginController.createLoginCookie(userId, "", "", tenantId, request, response, deptId, companyId);
+        
+        model.addAttribute("redUrl", redirectUrl);
+
+        logger.info("### redirect url = " + redirectUrl);
+        
+        logger.debug("insertApprGate ended");
+       
+        return "ezApprovalG/conn/connRedirect";
     }
 }

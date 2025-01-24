@@ -2745,6 +2745,21 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             put("COLUMN", "UPDATERID"); // 게시판 키워드 기능 사용여부(Y/N)
             put("TYPE_MYSQL", "VARCHAR(80)"); put("TYPE_ORACLE", "NVARCHAR2(80)");
         }});
+        test.add(new HashMap<String, Object>(){{ //2025-01-24 이가은 전자결재 > 연동테이블 컬럼 추가
+            put("TABLE","TBL_CONNDATA");
+            put("COLUMN", "USERID");    // 기안자 ID
+            put("TYPE_MYSQL", "VARCHAR(400)"); put("TYPE_ORACLE", "VARCHAR2(100)");
+        }});
+        test.add(new HashMap<String, Object>(){{ //2025-01-24 이가은 전자결재 > 연동테이블 컬럼 추가
+            put("TABLE","TBL_CONNDATA");
+            put("COLUMN", "DEPTID");    // 기안자 부서ID
+            put("TYPE_MYSQL", "VARCHAR(400)"); put("TYPE_ORACLE", "VARCHAR2(100)");
+        }});
+        test.add(new HashMap<String, Object>(){{ //2025-01-24 이가은 전자결재 > 연동테이블 컬럼 추가
+            put("TABLE","TBL_CONNDATA");
+            put("COLUMN", "TITLE");     // 문서제목
+            put("TYPE_MYSQL", "VARCHAR(1020)"); put("TYPE_ORACLE", "NVARCHAR2(510)");
+        }});
         
 		for (Map<String, Object> map : test) {
 			ezCommonDAO.alterTableAddColumns(map);
@@ -4699,5 +4714,10 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
                 ezCommonDAO.insertPersonalSusinListOption(map);
             }
         }
+    }
+    
+    @Override
+    public void alterBodyHTMLToConnData() throws Exception {
+        ezCommonDAO.alterBodyHTMLToConnData();
     }
 }

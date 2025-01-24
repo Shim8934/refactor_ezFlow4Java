@@ -3165,4 +3165,14 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			insert("EzCommonDAO.inserPersonalSusinListOption", map);
 		}
 	}
+	
+	public void alterBodyHTMLToConnData() {
+		try {
+			select(("EzCommonDAO.checkBodyHTMLToConnData"));
+		} catch (Exception e) {
+			logger.debug("TBL_CONNDATA BODYHTML column doesn't exist. changing the column...");
+
+			update("EzCommonDAO.changeBodyHTMLToConnData");
+		}
+	}
 }
