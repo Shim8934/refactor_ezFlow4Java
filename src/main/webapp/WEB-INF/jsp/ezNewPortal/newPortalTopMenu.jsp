@@ -385,11 +385,11 @@
 				//str += '<nav id="topNav" class="topNavCls" tyle="max-width:1102px;">';
 				str += '<nav id="topNav" class="topNavCls">';
 				str += '<ul class="navUL" id="mainMenuList">';
-				str += '</ul>';		
+				str += '</ul>';
 				str += '</nav>';
 				str += '</li>';
 				str += '</ul>';
-				
+
 			return str;
 		}
 		
@@ -2019,7 +2019,7 @@
 			$(".lnb_list li").removeClass("on");
 			$(".navUL li").removeClass("on");
 		}
-		
+
 		</script>
 		<iframe name="AttachDownFrame" id="AttachDownFrame" width=0 height=0 frameborder=0 marginheight=0 marginwidth=0 scrolling=no style="display:none"></iframe>	
 	</body>
