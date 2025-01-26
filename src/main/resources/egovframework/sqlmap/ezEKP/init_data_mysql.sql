@@ -320,7 +320,7 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_V
 
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'switchUserCompany', '포탈 유저 회사 변경 기능', 'N', '유저의 사간 겸직 변경 허용 여부. Y:허용 그외: 불가', '2023-11-03 00:00:00', '포탈');
 
---- 메일 개별발신 티폴트 사용여부 옵션 추가
+-- 메일 개별발신 티폴트 사용여부 옵션 추가
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'useEachMailDefault', '메일 개별발신 디폴트 사용여부 ', 'NO', '시스템 > 패러메터 > 개별발신 디폴트 사용  메일쓰기 시 개별발신 사용을 디폴트로 설정한다. 사용 : YES , 사용안함 : NO (default : NO)', '2024-01-31 00:00:00', '메일');
 
 -- 누락된 컨피그 추가 (문서24 관련)
@@ -497,7 +497,7 @@ INSERT INTO   TBL_CONTAINERTODOCSTATE  (ContainerTypeID,  DocumentState, COMPANY
 INSERT INTO   TBL_CONTAINERTODOCSTATE  (ContainerTypeID,  DocumentState, COMPANYID, TENANT_ID) VALUES (N'700', N'031','Top',@tenant_id_value);
 INSERT INTO   TBL_CONTAINERTODOCSTATE  (ContainerTypeID,  DocumentState, COMPANYID, TENANT_ID) VALUES (N'700', N'032','Top',@tenant_id_value);
 
-------------------------------------------
+-- ----------------------------------------
 -- TENANT_ID 추가시 TENANT_ID 수정해서 INSERT
 -- -- ---------------------------------------
 

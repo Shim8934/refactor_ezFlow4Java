@@ -299,7 +299,7 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_V
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'permissionBasisDeptYN', '조직도 권한부여 기준 설정', 'N', '조직도 > 권한 설정 시 Y: 사용자/겸직부서를 기준으로 권한을 부여한다 // N: 사용자만을 기준으로 권한을 부여한다.(Default: N)', TO_DATE('2023-08-16 00:00:00', 'yyyy-mm-dd hh24:mi:ss'), '조직도');
 
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useSecondaryLang', '제2 외국어 기본으로 사용여부', 'NO', '메일 부재설정회신, 용량 경고 메일 등 primarylang이 아닌 무조건 외국어 사용해야하는 컨피그(기본값:no)', TO_DATE('2023-08-03 00:00:00', 'yyyy-mm-dd hh24:mi:ss'), '메일');
---- 메일 개별발신 티폴트 사용여부 옵션 추가
+-- 메일 개별발신 티폴트 사용여부 옵션 추가
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useEachMailDefault', '메일 개별발신 디폴트 사용여부 ', 'NO', '시스템 > 패러메터 > 개별발신 디폴트 사용  메일쓰기 시 개별발신 사용을 디폴트로 설정한다. 사용 : YES , 사용안함 : NO (default : NO)', TO_DATE('2024-06-13 00:00:00', 'yyyy-mm-dd hh24:mi:ss'), '메일');
 
 -- 전자결재 재기안 시 반송의견 유지여부 컨피그 추가 (관련 기능은 2020년 4월에 추가됨)
@@ -525,9 +525,9 @@ INSERT INTO   TBL_TASKMIDDLECATEGORY  (MCategoryCode,  Name,  Description,  Cate
 INSERT INTO   TBL_TASKMIDDLECATEGORY  (MCategoryCode,  Name,  Description,  CategoryCode,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'cc000001', N'인사관리', N'인사관리', N'ZA000001', NULL, N'인사관리_Eng','Top',0);
 INSERT INTO   TBL_TASKMIDDLECATEGORY  (MCategoryCode,  Name,  Description,  CategoryCode,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'ZZ000022', N'에너지용', N'에너지용', N'ZZ000002', NULL, N'에너지용_Eng','Top',0);
 
-------------------------------------------
+-- ----------------------------------------
 -- TENANT_ID 추가시 TENANT_ID 수정해서 INSERT
--------------------------------------------
+-- -----------------------------------------
 
 INSERT INTO    TBL_FORMPROPERTY  (SN, CODE,  ID,  NAME,  DESCRIPTION,  UPPERCODE, COMPANYID, TENANT_ID) VALUES (1, SYS_GUID (), 'processinfo', 'F0001', '문서정보', 'ROOT','Top',0);
 INSERT INTO    TBL_FORMPROPERTY  (SN, CODE,  ID,  NAME,  DESCRIPTION,  UPPERCODE, COMPANYID, TENANT_ID) VALUES (2, SYS_GUID (),'headcampaign', 'F0002', '머리표제', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='processinfo' AND TENANT_ID = 0 AND COMPANYID = 'Top'),'Top',0);
@@ -1931,7 +1931,7 @@ Insert into TBL_CIRCULAR_LISTOPTION (LISTTYPE,SN,NAME1,NAME2,NAME3,NAME4,COLNAME
 Insert into TBL_CIRCULAR_LISTOPTION (LISTTYPE,SN,NAME1,NAME2,NAME3,NAME4,COLNAME,WIDTH,TENANTID) VALUES ('T',7,'확인','CONFIRM','確認',NULL,'CONFIRM',55,0);
 Insert into TBL_CIRCULAR_LISTOPTION (LISTTYPE,SN,NAME1,NAME2,NAME3,NAME4,COLNAME,WIDTH,TENANTID) VALUES ('T',8,'상태','STATUS','ステータス',NULL,'STATUS',75,0);
 
--------------------------- 업무일지 ---------------------------------
+-- ------------------------ 업무일지 ---------------------------------
 Insert into tbl_journal_form_type (type_id,company_id,tenant_id) values ('ezJournal.t05','Top',0);
 Insert into tbl_journal_form_type (type_id,company_id,tenant_id) values ('ezJournal.t06','Top',0);
 Insert into tbl_journal_form_type (type_id,company_id,tenant_id) values ('ezJournal.t07','Top',0);
