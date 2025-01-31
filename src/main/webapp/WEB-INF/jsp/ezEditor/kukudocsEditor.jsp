@@ -229,7 +229,7 @@
 	            defaultTableWidth : 700,
 	            customMagicLineStyle : 'background-color:#888;',
 	            customAlignMenu : customAlignMenu,
-	            useMenuBar : true,
+	            useMenuBar : false,
 	            useHTMLMode : useHTMLMode,
 	            useTextMode : false,
 	            usePreviewMode : false,
