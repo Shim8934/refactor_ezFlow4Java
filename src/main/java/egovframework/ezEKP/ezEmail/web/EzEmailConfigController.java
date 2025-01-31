@@ -835,7 +835,12 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 				String fontFamily = editorFontStyle.split("\\|")[0];
 				String fontSize = editorFontStyle.split("\\|")[1];
 				
-				defaultFontAndSize = "style='font-size:" + fontSize + ";font-family:" + fontFamily + "'";
+				// 사용자가 메일환경설정에서 설정한 에디터 폰트 값이 있으면 그 값을 사용하고, 없으면 관리자페이지에서 설정한 에디터 폰트 사용
+				MailGeneralVO mailGeneralVO = ezEmailService.getMailGeneral(userInfo.getTenantId(), userInfo.getId()).get(0);
+				String editorFontFamily = mailGeneralVO.getEditorFontFamily() == null || mailGeneralVO.getEditorFontFamily().trim().isEmpty()? fontFamily : mailGeneralVO.getEditorFontFamily();
+				String editorFontSize = mailGeneralVO.getEditorFontSize() == null || mailGeneralVO.getEditorFontSize().trim().isEmpty()? fontSize : mailGeneralVO.getEditorFontSize();
+				
+				defaultFontAndSize = "style='font-size:" + editorFontSize + ";font-family:" + editorFontFamily + "'";
 			}
 		}
 		
