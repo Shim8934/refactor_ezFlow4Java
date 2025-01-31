@@ -24,7 +24,6 @@
     "title": "設定",
     "pageTitleLabel": "ページタイトル",
     "encodingLabel": "ページエンコーディング",
-    "encodingLabelDri": "인코딩 직접입력",
     "encodingTypes": {
       "utf-8": "Unicode（UTF-8）",
       "euc-kr": "韓国語（EUC）",
@@ -408,8 +407,6 @@
     "image_alt": "画像の説明",
     "image_width": "幅",
     "image_height": "高さ",
-    "image_org_width": "원본 너비",
-    "image_org_height": "원본 높이",
     "image_margin_left": "左余白",
     "image_margin_right": "右マージン",
     "image_margin_top": "上マージン",
@@ -657,6 +654,7 @@
     "calculate_horizontal_avg" : "水平線の平均",
     "calculate_vertical_avg" : "縦線の平均",
     "cell_size": "セルサイズ調整",
+    "cell_horizo​​ntal_size": "等しい幅",
     "cell_vertical_size": "等しい高さ",
     "cell_both_size": "等しい幅/高さ",
     "table_to_text": "テーブルをテキストに変換する"
