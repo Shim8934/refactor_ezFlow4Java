@@ -47,6 +47,7 @@ UPDATE jmocha_user_distribution_mem SET DOMAIN_NAME = REPLACE(DOMAIN_NAME, 'old.
 UPDATE jmocha_user_mail_template SET user_id = REPLACE(user_id, 'old.kaoni.com', 'new.kaoni.com');
 UPDATE jmocha_user_quota SET user_id = REPLACE(user_id, 'old.kaoni.com', 'new.kaoni.com');
 UPDATE tbl_tenant_config SET PROPERTY_VALUE = REPLACE(PROPERTY_VALUE, 'old.kaoni.com', 'new.kaoni.com');
+UPDATE tbl_company_config SET PROPERTY_VALUE = REPLACE(PROPERTY_VALUE, 'old.kaoni.com', 'new.kaoni.com');
 UPDATE tbl_deptmaster SET MAIL = REPLACE(MAIL, 'old.kaoni.com', 'new.kaoni.com');
 UPDATE tbl_usermaster SET MAIL = REPLACE(MAIL, 'old.kaoni.com', 'new.kaoni.com');
 UPDATE tbl_usermaster SET UPNNAME = REPLACE(UPNNAME, 'old.kaoni.com', 'new.kaoni.com');
