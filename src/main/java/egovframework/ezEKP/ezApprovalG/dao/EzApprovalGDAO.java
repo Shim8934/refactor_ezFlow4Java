@@ -4083,8 +4083,4 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public List<String> getSameDeptBoxUseID(Map<String, Object> map) throws Exception {
 		return (List<String>) list("EzApprovalG.getSameDeptBoxUseID", map);
 	}
-	/* 2024-12-27 이가은 - 전자결재 > 공람완료문서 삭제기능 */
-	public void insertGongramDeleteHistory(Map<String, Object> map) throws Exception {
-		insert("EzApprovalG.insertGongramDeleteHistory", map);
-	}
 }

@@ -13930,24 +13930,4 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		logger.debug("setJijungALL ended.");
 		return tResult + "/" + yResult + "/" + nResult + "/" + eResult;
 	}
-	
-	/**
-	 * 전자결재 공람완료문서 삭제 Method
-	 */
-	@RequestMapping(value = "/ezApprovalG/gongramDocDelete.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
-	@ResponseBody
-	public String gongramDocDelete(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
-		logger.debug("gongramDocDelete started");
-		String result = "";
-		
-		userInfo = commonUtil.aprUserInfo(loginCookie);
-		String docID = request.getParameter("docID");
-		String aprmemberSN = request.getParameter("aprmemberSN");
-		
-		result = ezApprovalGService.gongramDocDelete(docID, Integer.parseInt(aprmemberSN), userInfo.getTenantId(), userInfo.getCompanyID());
-		
-		logger.debug("gongramDocDelete ended");
-		
-		return result;
-	}
 }

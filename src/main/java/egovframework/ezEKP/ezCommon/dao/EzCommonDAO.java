@@ -3186,14 +3186,4 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.changeBodyHTMLToConnData");
 		}
 	}
-	
-	// 2024-12-27 이가은 - 공람완료문서 삭제 히스토리 테이블 생성
-	public void createGongramDeleteHistory() {
-		try {
-			select("EzCommonDAO.checkGongramDeleteHistory");
-		} catch (Exception e) {
-			logger.debug("createGongramDeleteHistory doesn't exist. creating the table...");
-			update("EzCommonDAO.createGongramDeleteHistory");
-		}
-	}
 }
