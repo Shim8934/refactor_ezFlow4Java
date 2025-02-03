@@ -78,3 +78,5 @@ input#inOffice, input#retired, input#stopped{vertical-align:middle;}
 .approverSettingPopUp .searchDiv{display:flex;}
 .approverSettingPopUp .searchDiv select{width:auto !important; margin-right:5px !important; padding-right:20px !important;}
 .approverSettingPopUp .searchDiv .searchInputDiv{flex:1;}
+
+.apprRejectPopUp > p{margin-top:0; color:#333;}

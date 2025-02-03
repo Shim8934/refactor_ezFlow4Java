@@ -9,7 +9,7 @@
 	<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
 	<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 </head>
-<body class="popup">
+<body class="popup apprRejectPopUp">
 	<h1 style="margin-bottom:0px;"><spring:message code='email.appr.reject' /></h1>
 	<div id="close">
 		<ul>
