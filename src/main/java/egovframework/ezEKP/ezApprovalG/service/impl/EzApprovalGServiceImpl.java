@@ -4474,6 +4474,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TENANTID", tenantID);
 		map.put("v_APRDEPTSN", aprDeptSN);
         map.put("approvalFlag", ezCommonService.getTenantConfig("ApprovalFlag", tenantID));
+
+        String permissionBasisDeptYN = ezCommonService.getTenantConfig("permissionBasisDeptYN", tenantID);
+        map.put("permissionBasisDeptYN", permissionBasisDeptYN);
 		
 		List<ApprGReceiptVO> apprGReceiptVOList = ezApprovalGDAO.addToAprDept(map);
 		
