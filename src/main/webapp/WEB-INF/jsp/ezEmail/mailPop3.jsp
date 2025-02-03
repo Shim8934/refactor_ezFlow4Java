@@ -471,7 +471,7 @@
 		<c:set var="tableWidth" value="720" />
 		</c:otherwise>
 		</c:choose>
-	<body onload="javascript:window_onload()" style="margin-left:10px;margin-right:10px;">
+	<body onload="javascript:window_onload()" style="margin-left:10px;margin-right:10px;" class="mailPop3">
 		<br>
 		<div class="txt" style="margin-bottom:25px">
 			<div>▒ <spring:message code='ezEmail.t239' /></div> 

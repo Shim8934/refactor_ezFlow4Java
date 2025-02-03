@@ -88,3 +88,6 @@ table, th, td{font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, s
 .IDcontainer .list_text{padding-left:25px}
 .textUser{width:31%}
 #TreeCtrl_MyFavTree_ul > .lnbUL{padding-left:20px;}
+
+/* 메일 */
+.mailPop3 table.content{width:770px !important;}
