@@ -7900,14 +7900,19 @@ public class EzBoardController extends EgovFileMngUtil{
 		String boardID = request.getParameter("boardID");
 		String likeCount = request.getParameter("likeCount");
 		String disLikeCount = request.getParameter("disLikeCount");
-		
+		String tempLocation = request.getParameter("tempLocation");
+
 		if (OneLineReplyFlag == null) {
 			OneLineReplyFlag = "";
 		}
 		
+		if(tempLocation == null){
+			tempLocation = "N";
+		}
+		
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
 		
-		if (boardID == null || boardID.equals("") || !boardInfo.getRead_FG().equals("true")) {
+		if (!tempLocation.equals("Y") && (boardID == null || boardID.equals("") || !boardInfo.getRead_FG().equals("true"))) {
 			model.addAttribute("pPreviewShow_HOW", "W");
         	return "main/warning";
         }

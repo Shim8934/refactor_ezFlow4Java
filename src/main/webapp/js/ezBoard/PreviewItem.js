@@ -584,13 +584,21 @@ function event_ItemPreviewRead() {
             if (pPreviewShow_HOW.trim() == "W") {
                 document.getElementById("Preview_HeaderW").style.display = "";
                 document.getElementById("Preview_HeaderH").style.display = "none";
-                document.getElementById("ifrmPreViewW").src = "/ezBoard/boardItemPreviewContent.do?itemID=" + encodeURIComponent(ItemID) + "&boardID=" + encodeURIComponent(BoardID) + "&likeCount=" + LikeCount + "&disLikeCount=" + DisLikeCount + "&OneLineReplyFlag=" + OneLineReplyFlag;
+                if(typeof tempLocation !== "undefined" && tempLocation == "Y"){
+                    document.getElementById("ifrmPreViewW").src = "/ezBoard/boardItemPreviewContent.do?itemID=" + encodeURIComponent(ItemID) + "&boardID=" + encodeURIComponent(BoardID) + "&likeCount=" + LikeCount + "&disLikeCount=" + DisLikeCount + "&OneLineReplyFlag=" + OneLineReplyFlag + "&tempLocation=" + tempLocation;
+                }else{
+                    document.getElementById("ifrmPreViewW").src = "/ezBoard/boardItemPreviewContent.do?itemID=" + encodeURIComponent(ItemID) + "&boardID=" + encodeURIComponent(BoardID) + "&likeCount=" + LikeCount + "&disLikeCount=" + DisLikeCount + "&OneLineReplyFlag=" + OneLineReplyFlag;
+                }
                 document.getElementById('ifrmPreViewW').style.display = "";
             }
             else if (pPreviewShow_HOW.trim() == "H") {
                 document.getElementById("Preview_HeaderW").style.display = "none";
                 document.getElementById("Preview_HeaderH").style.display = "";
-                document.getElementById("ifrmPreViewH").src = "/ezBoard/boardItemPreviewContent.do?itemID=" + encodeURIComponent(ItemID) + "&boardID=" + encodeURIComponent(BoardID) + "&likeCount=" + LikeCount + "&disLikeCount=" + DisLikeCount + "&OneLineReplyFlag=" + OneLineReplyFlag;
+                if(typeof tempLocation !== "undefined" && tempLocation == "Y"){
+                    document.getElementById("ifrmPreViewH").src = "/ezBoard/boardItemPreviewContent.do?itemID=" + encodeURIComponent(ItemID) + "&boardID=" + encodeURIComponent(BoardID) + "&likeCount=" + LikeCount + "&disLikeCount=" + DisLikeCount + "&OneLineReplyFlag=" + OneLineReplyFlag + "&tempLocation=" + tempLocation;
+                }else {
+                    document.getElementById("ifrmPreViewH").src = "/ezBoard/boardItemPreviewContent.do?itemID=" + encodeURIComponent(ItemID) + "&boardID=" + encodeURIComponent(BoardID) + "&likeCount=" + LikeCount + "&disLikeCount=" + DisLikeCount + "&OneLineReplyFlag=" + OneLineReplyFlag;
+                }
                 document.getElementById('ifrmPreViewH').style.display = "";
             }
             else {
