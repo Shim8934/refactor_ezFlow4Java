@@ -1,4 +1,4 @@
-﻿//컨트롤키나 쉬프트 키가 눌려졌음을 체크하는 FLAG
+﻿﻿//컨트롤키나 쉬프트 키가 눌려졌음을 체크하는 FLAG
 var PressCtrlKey = false;
 var PressShiftKey = false;
 //모질라 계열의 브라우저에서는 event.ctrlKey 등이 작동하지 않는다.
@@ -1967,7 +1967,9 @@ function checkboxBtnShowCtl() {
     				isDelShow = false;
     			}
     			isRedraftShow = oArrRows.length == 1 ? true : false;
-    		} else {
+    		} else if (pDocState == "015" && pListTypeValue == "10") {
+				isDelShow = true;
+			} else {
     			isDelShow = false;
     			isRedraftShow = false;
     		}

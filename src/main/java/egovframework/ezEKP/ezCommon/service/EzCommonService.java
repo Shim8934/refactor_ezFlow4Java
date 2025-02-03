@@ -558,4 +558,7 @@ public interface EzCommonService {
 
 	/* 2024-07-05 양지혜 - 전자결재 > 상위부서문서함 사용여부 컬럼 추가 */
 	public void alterUseUpperDeptBox() throws Exception;
+	
+	// 2024-12-27 이가은 - 공람완료문서 삭제 히스토리 테이블 생성
+	public void createGongramDeleteHistory() throws Exception;
 }
