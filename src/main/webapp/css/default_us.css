@@ -80,3 +80,8 @@ input#inOffice, input#retired, input#stopped{vertical-align:middle;}
 .approverSettingPopUp .searchDiv .searchInputDiv{flex:1;}
 
 .apprRejectPopUp > p{margin-top:0; color:#333;}
+
+
+/* 투표 */
+.voteInfoDiv ul{width:250px !important;}
+.voteIconImg_li_info{width:100% !important;}

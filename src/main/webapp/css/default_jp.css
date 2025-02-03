@@ -89,5 +89,11 @@ table, th, td{font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, s
 .textUser{width:31%}
 #TreeCtrl_MyFavTree_ul > .lnbUL{padding-left:20px;}
 
+
 /* 메일 */
 .mailPop3 table.content{width:770px !important;}
+
+
+/* 투표 */
+.voteInfoDiv ul{width:250px !important;}
+.voteIconImg_li_info{width:100% !important;}
