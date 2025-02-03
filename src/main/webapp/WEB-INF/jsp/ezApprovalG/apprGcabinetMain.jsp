@@ -35,7 +35,7 @@
 			#mainmenu ul#trRecSubMenu {
 				overflow: visible;
 				height: auto;
-				min-width: 550px;
+				min-width: 600px;
 			}
 			
 	    </style>
