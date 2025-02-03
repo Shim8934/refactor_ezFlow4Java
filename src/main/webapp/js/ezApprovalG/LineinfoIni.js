@@ -45,6 +45,7 @@ function ChangeLineTab(divname) {
     if (divname == "Organ") {
         document.getElementById("OrganLineTab").style.display = "";
         document.getElementById("TempLineTab").style.display = "none";
+		document.getElementById("AddRemoveBTN2").style.display = "";
         internalTab = true;
     } else {
         if(!Lineinfoini2)
@@ -54,6 +55,7 @@ function ChangeLineTab(divname) {
         }
         document.getElementById("OrganLineTab").style.display = "none";
         document.getElementById("TempLineTab").style.display = "";
+		document.getElementById("AddRemoveBTN2").style.display = "none";
     }
 }
 
