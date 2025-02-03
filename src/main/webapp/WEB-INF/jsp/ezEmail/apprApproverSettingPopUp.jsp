@@ -21,7 +21,7 @@
 		.selected {background: #DBE1E7; }
 	</style>
 </head>
-<body class="popup">
+<body class="popup approverSettingPopUp">
 	<h1>
 		<spring:message code='email.appr.approver.specify' /> <% // 발송 승인자 지정 %>
 	</h1>

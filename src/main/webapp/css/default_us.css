@@ -72,3 +72,9 @@ input#inOffice, input#retired, input#stopped{vertical-align:middle;}
 .calendar_pagenav .spanText{margin-top:-4px;}
 #ownerInput.us{width:calc(100% - 80px) !important;}
 .textUser{width:22%;}
+
+
+/* 메일 */
+.approverSettingPopUp .searchDiv{display:flex;}
+.approverSettingPopUp .searchDiv select{width:auto !important; margin-right:5px !important; padding-right:20px !important;}
+.approverSettingPopUp .searchDiv .searchInputDiv{flex:1;}
