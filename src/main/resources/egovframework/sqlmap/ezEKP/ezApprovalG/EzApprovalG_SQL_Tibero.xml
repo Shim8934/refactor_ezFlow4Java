@@ -5271,8 +5271,7 @@
 		     AND
                  B.CN IS NULL
              AND
-                 (Z.DEPTID IS NOT NULL OR A.APRMEMBERID != '')
-		     ORDER BY 
+                 (Z.DEPTID IS NOT NULL OR A.APRMEMBERID != '' OR EXTRECEPTYN = 'Y')
             <isEqual property="approvalFlag" compareValue="G">
                 AND
                     D.EXTENSIONATTRIBUTE11 = 'Y'

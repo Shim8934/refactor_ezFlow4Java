@@ -394,7 +394,7 @@ function btn_AprDeptTempletAdd_onclick()
             if (TempListLen[i].getAttribute("RETIRECHK") == "Y") {
                 RetireList.push(TempListLen[i].querySelector("td:nth-child(2)").textContent);
             }
-            if (TempListLen[i].children[1] && TempListLen[i].children[1].textContent == '') {
+            if (ListViewLen[0].getAttribute("DATA3") != "Y" && TempListLen[i].children[1] && TempListLen[i].children[1].textContent == '') {
                 if (!isReceiverChk(TempListLen[i].getAttribute("data1"))) {
                     ReceiverlessList.push(TempListLen[i].getAttribute("DATA10"));
                 }
