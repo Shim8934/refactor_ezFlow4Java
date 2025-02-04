@@ -88,3 +88,4 @@ input#inOffice, input#retired, input#stopped{vertical-align:middle;}
 
 /* 환경설정 */
 .taskConfig .content{width:300px !important;}
+.pmsSetting .content{width:500px !important;}

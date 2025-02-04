@@ -133,7 +133,7 @@ function restoreColor(statusId) {
 }
 </style>
 </head>
-<body class="mainbody">
+<body class="mainbody pmsSetting">
     <h1><spring:message code='ezPMS.t171' /></h1>
     <div class="portlet_tabpart01" style="margin-bottom: 10px">
 	   <div class="portlet_tabpart01_top" id="tab1">
