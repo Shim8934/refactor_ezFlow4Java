@@ -640,7 +640,7 @@
 	    </script>
 	</head>
 
-	<body class="popup" style="overflow:hidden;">
+	<body class="popup scheduleWrite" style="overflow:hidden;">
 	    <form method="post">
 	        <div id="main_body">
 	            <table id="normalScreen" class="layout">
