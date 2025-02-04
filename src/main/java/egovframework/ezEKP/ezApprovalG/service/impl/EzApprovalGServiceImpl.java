@@ -27402,7 +27402,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			for (i=0; i<hlength; i++) {
 				FieldName = listXML.getElementsByTagName("COLNAME").item(i).getTextContent().toUpperCase();
 
-                if (FieldName.toUpperCase().equals("COMPANYNAME") && lang.equals("2")) {
+                if (FieldName.toUpperCase().equals("COMPANYNAME") && strMultiData.equals("2")) {
                     FieldName = "COMPANYNAME2";
                 }
 				//2019-03-28 천성준 - 기안 > 문서첨부 > 문서리스트에서 보여줄 데이터만 보이게 필요없는건 빼는로직 추가(추후 문서첨부 로직 재개발 예정)
