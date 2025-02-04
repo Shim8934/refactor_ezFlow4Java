@@ -8,7 +8,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>mealPlan</title>
 	<style type="text/css">
-		.mealPlanlist th, td{
+		.mealPlanlist th, .mealPlanlist td{
 			border: 1px solid #dedede;
 		}
 		.mealPlanlist th {
