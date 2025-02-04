@@ -4172,6 +4172,6 @@ a.commentFileSpan:hover {cursor: pointer; text-decoration: underline;}
 #mainmenu li.view_more.on .layer_select{display:block;}
 
 /* 2024-12-19 김대현 - 웹 메일 태그 html 수정 */
-.tag_list{float:left; height:26px; line-height:26px; padding:0 5px; border-radius:4px; max-width:200px; background:#e8eef2; box-sizing:border-box; margin:5px 5px 0 0;}
+.tag_list{float:left; height:26px; line-height:26px; padding:0 5px; border-radius:4px; background:#e8eef2; box-sizing:border-box; margin:5px 5px 0 0;}
 .tag_list .tag_name{float:none; display:block; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
 .tag_list .tag_del{float:right; width:16px; height:16px; background:url(../images/tag_del.svg) no-repeat center; margin:5px 0 0 5px; cursor:pointer;}

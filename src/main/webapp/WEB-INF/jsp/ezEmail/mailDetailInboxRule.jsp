@@ -916,11 +916,17 @@
 		        if (document.getElementsByName("ActS").length == 1) {
 		            alert(strLang232); return;
 		        }
-		        else {
-		            if (document.getElementById("ActS").getAttribute("RuleKind") == null) {
-		                alert(strLang232); return;
-		            }
-		        }
+				else {
+					let actS = document.getElementsByName("ActS").item(0);
+					let ruleKind = actS.getAttribute("RuleKind");
+					let value = actS.getAttribute("value");
+
+					if (ruleKind == null || (ruleKind !== "DELETE" && ruleKind !== "READ" && (value === null || value === ''))) {
+						alert(strLang232);
+						return;
+					}
+				}
+				
 		        var XmlDom = createXmlDom();
 		        var Xmlhttp = createXMLHttpRequest();
 		        var objRoot, objRow, objRow2, objRow3, objNode, objRowRow, objRow2Row, objRow3Row, objRows;
