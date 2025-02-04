@@ -81,7 +81,6 @@ table, th, td{font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, s
 .portlet_tabnew01_top p span{line-height:26px !important;}
 .content input{margin-top:0px;}
 .searchinputBox{height:27px !important;}
-#lstAttachLink{height:112px !important;}
 #TreeView, #TreeView2, #TreeView3, #TreeViewCC{padding:6px 8px; box-sizing:border-box;}
 .resetBtn{line-height:0px;}
 .IDcontainer > input[type="checkbox"]{display:none;}
@@ -101,4 +100,4 @@ table, th, td{font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, s
 
 /* 일정관리 */
 .scheduleWrite .hasDatepicker{width:90px !important;}
-.scheduleWrite .ui-timepicker-input{width:50px !important;}
+.scheduleWrite .ui-timepicker-input{width:50  px !important;}
