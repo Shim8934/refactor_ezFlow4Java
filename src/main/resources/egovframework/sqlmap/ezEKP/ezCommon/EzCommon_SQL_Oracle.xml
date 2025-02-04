@@ -7020,7 +7020,8 @@
 			WRITERFLAG
 		FROM
 			TBL_BOARD_BOARDINFO
-		LIMIT 1
+		WHERE
+		    ROWNUM = 1
 	</select>
 	<statement id="EzCommonDAO.alterBoardInfoWriteFlag">
 		ALTER TABLE
@@ -7034,7 +7035,8 @@
 			WRITERNAMETYPE
 		FROM
 			TBL_BOARD_ITEM
-		LIMIT 1
+		WHERE
+			ROWNUM = 1
 	</select>
 	<statement id="EzCommonDAO.addBoardItemWriterNameType">
 		ALTER TABLE
@@ -7048,7 +7050,8 @@
 			WRITERNAMETYPE
 		FROM
 			TBL_BOARD_ITEM_TEMP
-		LIMIT 1
+		WHERE
+			ROWNUM = 1
 	</select>
 	<statement id="EzCommonDAO.addBoardItemTempWriterNameType">
 		ALTER TABLE
