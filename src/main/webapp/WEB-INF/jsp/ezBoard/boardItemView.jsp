@@ -264,6 +264,7 @@
 		            addheight = 0;
 		            if("${boardAttrCount}" > 0){
 						addheight = AtttributeCount * 30;
+						document.getElementById("bodyPopup").style.marginRight = "1px";
 		            }
 		            
 		            // 2024-07-31 전인하 - 게시판 > 확장컬럼 > peoplePicker 타입, textArea 타입 출력값 가공
@@ -289,6 +290,7 @@
  		            if (OneLineReplyFlag == "2") {
  		            	document.getElementById("bodyPopup").style.overflowX = "hidden";
  		            	document.getElementById("bodyPopup").style.overflowY = "auto";
+ 		            	document.getElementById("bodyPopup").style.marginRight = "1px";
  		            	getBoardComment();
  		            }
 		            

@@ -1741,15 +1741,55 @@ var refreshPortlet = function(useQuestion, useCircular, useMail, useApproval, us
 }
 
 // 포탈에서 게시판 팝업 오픈 용
-var openBoard = function (pItemID, pType, oBoardID) {
-	var screenH = window.screen.availHeight;
-	var screenW = window.screen.availWidth;
-	var height = 789;
-	var width = 790;
+var openBoard = function (pItemID, pType, oBoardID, password) {
+	var pheight = window.screen.availHeight;
+	var pwidth = window.screen.availWidth;
+	var pTop = (pheight - 720) / 2;
+	var pLeft = (pwidth - 765) / 2;
 
-	var pTop = 50 + (window.screenY || 0);
-	var pLeft = 50 + (window.screenX || 0);
+	/* 2018-09-19 홍승비 - 포탈 포틀릿에서 포토/썸네일게시물 보기 시 창 크기 수정 */
+	if (pType == "3" || pType == "4") {
+		if (navigator.userAgent.toLowerCase().indexOf("chrome") != -1) {
+			var height = 789;
+		} else {
+			var height = 785;
+		}
 
-	window.open("/ezBoard/boardView.do?showAdjacent=&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(oBoardID), "",
-		"toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height + ",width=" + width + ",top=" + pTop + ",left=" + pLeft);
+		pTop = (pheight - 789) / 2;
+		pLeft = (pwidth - 826) / 2;
+
+		window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(oBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height + ",width=826,top=" + pTop + ",left=" + pLeft, "");
+	} else if (pType == "7") {
+		var height = 679;
+		pTop = (pheight - 679) / 2;
+		pLeft = (pwidth - 764) / 2;
+		window.open("/ezBoard/boardItemViewMovie.do?showAdjacent=&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(oBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height + ",width=764,top=" + pTop + ",left=" + pLeft, "");
+	} else {
+		var parser = new DOMParser();
+		var normalHeight = 720;
+		var normalWidth = 765;
+		pTop = (pheight - normalHeight) / 2;
+		pLeft = (pwidth - normalWidth) / 2;
+
+		$.ajax({
+			url: "/ezBoard/boardItemView.do?showAdjacent=&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(oBoardID),
+			headers: !!password ? {
+				'Authorization': 'Basic ' + btoa(password)
+			} : {},
+			success: function(response) {
+				var returnDom = parser.parseFromString(response, "text/xml")
+				if (!returnDom || returnDom.querySelector('title').textContent ==="warning") {
+					alert(!!password ? strWrongPassword : strLang1132);
+					return;
+				}
+				var newWindow = window.open("", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + normalHeight + ",width=" + normalWidth + ",top=" + pTop + ",left=" + pLeft);
+				newWindow.document.write("<html> <head> <style> html, body { margin: 0; padding: 0; height: 100%; overflow-y: scroll; } </style> </head> <body> </body> </html>");
+				newWindow.document.write(response);
+				newWindow.document.close();
+			},
+			error: function(xhr, status, error) {
+				console.error('Error:', error);
+			}
+		});
+	}
 }
