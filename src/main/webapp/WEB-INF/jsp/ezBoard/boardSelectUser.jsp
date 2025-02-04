@@ -106,7 +106,7 @@
 	            }
                 
                 createNodeAndInsertText(xmlpara, objNode, "PROP", "");
-				createNodeAndInsertText(xmlpara, objNode, "ADMINCHK", "true");
+				createNodeAndInsertText(xmlpara, objNode, "ADMINCHK", "false");
 				// createNodeAndInsertText(xmlpara, objNode, "DISPLAYTRASHDEPT", "true");
 	            xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
 	            xmlHTTP.send(xmlpara);

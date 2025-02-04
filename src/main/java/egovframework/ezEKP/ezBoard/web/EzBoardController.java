@@ -11728,17 +11728,13 @@ public class EzBoardController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezBoard/boardSelectUser.do", method = RequestMethod.GET)
 	public String personalPopupUser(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("personalPopupUser started");
-		// 관리자 권한체크
-		LoginVO auth = commonUtil.checkAdmin(loginCookie);
-		if (auth == null) {
-			return "cmm/error/adminDenied";
-		}
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
-		String deptID = auth.getDeptID();
+		String deptID = userInfo.getDeptID();
 		String cn = request.getParameter("cn") == null ? "" : request.getParameter("cn");
 		String textName = request.getParameter("name") == null ? "" : request.getParameter("name");
 		String companyId = request.getParameter("companyId");
-		String lang = auth.getLang();
+		String lang = userInfo.getLang();
 		String columnName = request.getParameter("columnName") == null ? "" : request.getParameter("columnName");
 
 		model.addAttribute("columnName", columnName);
@@ -11746,7 +11742,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("cn", cn);
 		model.addAttribute("textName", textName);
 		model.addAttribute("companyId", companyId);
-		model.addAttribute("dept", auth.getDeptID());
+		model.addAttribute("dept", userInfo.getDeptID());
 		model.addAttribute("lang", lang);
 
 		logger.debug("personalPopupUser ended");
