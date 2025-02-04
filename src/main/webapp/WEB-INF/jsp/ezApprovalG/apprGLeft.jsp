@@ -1328,7 +1328,7 @@
 			}
 
 			onUserChange = () => {
-				if (popupWindow && !popupWindow.closed) {;
+				if (popupWindow && !popupWindow.closed) {
 					popupWindow.OpenAlertUI("<spring:message code='ezApprovalG.jje02'/>");
 				}
 			};
