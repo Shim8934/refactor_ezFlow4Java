@@ -3819,7 +3819,7 @@ var SurveyCreate     = function() {
 			qstnHeader += "<li id='delSkip" + qstId + "' class='off delSkip'><span class='survey_icon logicDel'></span></li>";
 			qstnHeader += "</ul>";
 			
-			if ([1, 2, 4, 7, 9, 10, 11].includes(qstnType)) {
+			if ([1, 2, 7, 9, 10, 11].includes(qstnType)) {
 				var addLogic = $("<li id='addLogic" + qstId + "' class='off addLogic'><span class='survey_icon logicShuffle'></span></li>");
 				frstBtnGrp.append(addLogic);
 				
