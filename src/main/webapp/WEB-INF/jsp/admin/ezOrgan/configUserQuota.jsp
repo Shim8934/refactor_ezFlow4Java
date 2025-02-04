@@ -110,16 +110,17 @@
         	alert("<spring:message code='ezOrgan.t174' />");
         	var url = window.opener.document.location.href;
         	var arrUrl = url.split(window.location.protocol + "//" + window.location.host);
-        		
-        		if(arrUrl[1]=="/admin/ezEmail/mailQuotaList.do"){
+            var urlPath = arrUrl[1].split("?")[0]; 
+
+            if(urlPath=="/admin/ezEmail/mailQuotaList.do"){	
         			
-        			opener.location.href = "javascript:reload()";
-        			window.close();
+                opener.location.href = "javascript:reload()";
+                window.close();
         		
-        		} else {
-        			
-        			window.close();
-        		}
+            } else {
+                
+                window.close();
+            }
         }
     }	
 
