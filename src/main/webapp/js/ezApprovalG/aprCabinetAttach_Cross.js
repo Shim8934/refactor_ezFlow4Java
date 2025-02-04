@@ -476,7 +476,7 @@ function makePageSelPageCA() {
     strtext = "<div class='pagenavi'>";
     PagingHTML += strtext;
     if (totalPage > 1 && pageNum != 1) {
-        strtext = "<span class='btnimg first'><a onclick= 'return goToPageByNumCA(1)'>";
+        strtext = "<span onclick= 'return goToPageByNumCA(1)' class='btnimg first'><a>";
         strtext = strtext + "</a></span>";
         PagingHTML += strtext;
     } else {
