@@ -398,10 +398,14 @@
 	</select>
 	
 	<select id="EzBoardDAO.getBoardName" parameterClass="Map" resultClass="String">
-		<isEqual property="v_PRIMARY" compareValue="1">
 			<![CDATA[
 				SELECT 
-					BOARDNAME 
+					CASE WHEN (
+							(CASE WHEN #v_LANG# = '1' THEN BOARDNAME WHEN #v_LANG# = '2' THEN BOARDNAME2 WHEN #v_LANG# = '3' THEN BOARDNAME3 WHEN #v_LANG# = '4' THEN BOARDNAME4 ELSE BOARDNAME END) = '' OR
+							(CASE WHEN #v_LANG# = '1' THEN BOARDNAME WHEN #v_LANG# = '2' THEN BOARDNAME2 WHEN #v_LANG# = '3' THEN BOARDNAME3 WHEN #v_LANG# = '4' THEN BOARDNAME4 ELSE BOARDNAME END) IS NULL
+						) THEN BOARDNAME
+						ELSE (CASE WHEN #v_LANG# = '1' THEN BOARDNAME WHEN #v_LANG# = '2' THEN BOARDNAME2 WHEN #v_LANG# = '3' THEN BOARDNAME3 WHEN #v_LANG# = '4' THEN BOARDNAME4 ELSE BOARDNAME END)
+					END BOARDNAME 
 				FROM 
 					TBL_Board_BoardInfo
 				WHERE  
@@ -409,23 +413,6 @@
 				AND
 					BOARDID = #v_BOARDGROUPID#
 			]]>
-		</isEqual>
-		<isNotEqual property="v_PRIMARY" compareValue="1">
-			<![CDATA[
-				SELECT 
-					CASE
-						WHEN (BOARDNAME2 = '' OR BOARDNAME2 IS NULL)
-						THEN BOARDNAME
-						ELSE BOARDNAME2
-					END BOARDNAME
-				FROM 
-					TBL_Board_BoardInfo
-				WHERE  
-					TENANT_ID = #v_TENANTID#
-				AND
-					BOARDID = #v_BOARDGROUPID#
-			]]>
-		</isNotEqual>
 	</select>
 	
 	<select id="EzBoardDAO.getListHeader" parameterClass="Map" resultClass="BoardListHeaderVO">

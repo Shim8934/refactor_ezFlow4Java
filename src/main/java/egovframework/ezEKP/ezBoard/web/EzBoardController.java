@@ -827,7 +827,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String boardIdList = boardIdListBld.toString();
 		boardIdListCount = boardIdList.split(";").length;
 		
-		rtv = ezBoardService.get_parentBoardName(boardIdList.trim(), boardIdListCount, userInfo.getPrimary(), userInfo.getTenantId(), userInfo.getLocale());
+		rtv = ezBoardService.get_parentBoardName(boardIdList.trim(), boardIdListCount, userInfo.getLang(), userInfo.getTenantId(), userInfo.getLocale());
 		
 		logger.debug("parentBoardName ended");
 		return "<DATA><TOPBOARDLIST>" + commonUtil.cleanValue(rtv) + "</TOPBOARDLIST></DATA>";

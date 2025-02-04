@@ -192,12 +192,12 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	}
 
 	@Override
-	public String get_parentBoardName(String boardIdList, int boardIdListCount, String primary, int tenantID, Locale locale) throws Exception {
+	public String get_parentBoardName(String boardIdList, int boardIdListCount, String lang, int tenantID, Locale locale) throws Exception {
 		logger.debug("get_parentBoardName started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		map.put("v_PRIMARY", primary);
+		map.put("v_LANG", lang);
 		map.put("v_TENANTID", tenantID);
 		
 		String[] boardIDs      = boardIdList.split(";");

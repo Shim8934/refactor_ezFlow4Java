@@ -60,11 +60,7 @@
                     	if (getNodeText(listdom.getElementsByTagName("BOARDID")[i]) == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
 							strHTML += "<td style='width:60%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;'><spring:message code='ezBoard.t480'/></td>";
                     	} else {
-	        	            if (strPrimary == "1") {
-								strHTML += "<td style='width:60%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;'>" + escapeHtml(getNodeText(listdom.getElementsByTagName("BOARDNAME")[i])) + "</td>";
-	        	            } else {
-		           		        strHTML += "<td style='width:60%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;'>" + escapeHtml(getNodeText(listdom.getElementsByTagName("BOARDNAME2")[i])) + "</td>";
-	        	            }
+							strHTML += "<td style='width:60%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;'>" + escapeHtml(getNodeText(listdom.getElementsByTagName("BOARDNAME")[i])) + "</td>";
                     	}
                     	strHTML += "<td style='width:28%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;'>" + parentBoardName[i] + "</td>";
                     	strHTML += "</tr>";
