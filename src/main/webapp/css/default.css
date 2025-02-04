@@ -3797,6 +3797,7 @@ tr.mail_confirm > td:not(:nth-child(-n+5)):before{content:" "; position:absolute
 .lnbUL li{padding: 0px 6px 0px 6px; margin: 0px 20px 0 37px;}
 .tree_manage {background-position: -311px 0px; margin: 7px 0px 0px 0px;}
 .lnb h2 .h2Title{padding-left: 3px;}
+.lnb h2 .list_text{white-space:nowrap; text-overflow:ellipsis; overflow:hidden; float:none; display:block;}
 .lnbUL li .list_text{padding: 0px 0px 0px 0px; height: 26px; ;line-height: 26px;}
 .lnbUL{padding: 0px 0px 17px 0px;}
 .tree_plus{margin: 3px 0px 0px 0px;}
