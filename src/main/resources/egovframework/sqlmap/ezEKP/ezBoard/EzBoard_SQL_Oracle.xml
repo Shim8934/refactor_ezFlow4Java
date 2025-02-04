@@ -10137,7 +10137,7 @@
 		FROM
 				TBL_MEAL_PLAN
 		WHERE
-				MEALDATE BETWEEN to_date(#startDate#) AND to_date(#startDate#) + 4
+				MEALDATE BETWEEN to_date(#startDate#, 'YYYY-MM-DD') AND to_date(#startDate#, 'YYYY-MM-DD') + 4
 		AND
 				COMPANYID = #companyID#
 		AND
@@ -10185,7 +10185,7 @@
 		FROM
 				TBL_MEAL_PLAN
 		WHERE
-				MEALDATE = #date#
+				MEALDATE = TO_DATE(#date#, 'YYYY-MM-DD')
 		AND
 				COMPANYID = #companyID#
 		AND
