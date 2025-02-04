@@ -2274,7 +2274,7 @@
         </script>
         </c:if>
 	</head>
-	<body id="parentBody" class="popup" style="overflow:hidden;">
+	<body id="parentBody" class="popup mailWrite" style="overflow:hidden;">
 	    <table id="normalScreen" class="layout">
 	        <tr>
 	            <td>
@@ -2539,7 +2539,7 @@
             <c:if test="${options.isCrossBrowser == true}">
 	        <tr>
 	            <td style="padding-top: 5px;height:20px;vertical-align:middle;">
-	                <img src="/images/i_notice.gif" style="vertical-align: middle;padding-left:1px" /><span style="color:#3a76c3;height:18px;display:inline-block;margin-left:5px">${options.attachWarning}</span>
+	                <img src="/images/i_notice.gif" style="vertical-align: middle;padding-left:1px" /><span class="noti_txt" style="color:#3a76c3;height:18px;display:inline-block;margin-left:5px">${options.attachWarning}</span>
 	                <c:choose>
 	                	<c:when test="${shareId != null and shareId != ''}">
 	                		<iframe id="dadiframe" name="dadiframe" style="width:100%;border:0px" src="/ezEmail/dragAndDrop.do?shareId=<c:out value='${shareId}'/>"></iframe>
