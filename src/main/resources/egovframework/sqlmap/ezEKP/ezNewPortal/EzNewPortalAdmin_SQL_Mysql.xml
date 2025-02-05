@@ -395,6 +395,12 @@
 		<isEqual property="menuType" compareValue="MA" prepend=",">
 				icon_url = #iconUrl#
 		</isEqual>
+		<isEqual property="menuType" compareValue="G" prepend=",">
+				icon_url = #iconUrl#
+		</isEqual>
+		<isEqual property="menuType" compareValue="MG" prepend=",">
+				icon_url = #iconUrl#
+		</isEqual>
 			WHERE
 				menu_id = #menuId#
 	</update>
