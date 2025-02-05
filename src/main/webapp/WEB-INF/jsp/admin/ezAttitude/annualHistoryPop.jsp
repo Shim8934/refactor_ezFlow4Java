@@ -26,6 +26,7 @@
 	    		overflow : hidden;
 	    		text-overflow : ellipsis;
 	    		text-align:center;
+				word-break:keep-all;
 	    	}
 	    	.mainlist tr th.borderLeft {
 	    		border-left: 1px solid #e2e3e6;
