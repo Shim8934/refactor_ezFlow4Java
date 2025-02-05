@@ -47,13 +47,7 @@
 	                alert("<spring:message code='ezEmail.t349' />");
 	                return;
 	            }
-	            var szCheckPermit = szInput;
-	            szCheckPermit = ReplaceText(szInput, "=", "");
-	
-	            if (szInput != szCheckPermit) {
-	                alert("<spring:message code='ezEmail.t351' />");
-	                return;
-	            }
+
 	            ReturnFunction(txt_FolderName.value);
 	        }
 	        function btn_cancel_onclick() {
