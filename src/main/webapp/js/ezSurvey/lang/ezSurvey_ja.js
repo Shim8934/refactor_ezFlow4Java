@@ -188,6 +188,6 @@ var SurveyMessages = {
 	strQuestionFileAttach : "질문에 파일 첨부",
 	strAllowedImageForTitle : "png, jpeg, jpg만 허용가능합니다.",
     /* 2024-11-25 박기범 - 리스트 상태값 추가 */
-    strLangPGB01 : "참여",
-	strLangPGB02 : "미참여"
+    strLangPGB01 : "strLangPGB01",
+	strLangPGB02 : "未参加"
 }
