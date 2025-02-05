@@ -1513,7 +1513,7 @@ function makeWindowPosition(width, height) {
 }
 
 function openAttendChk() {
-	var height = 300;
+	var height = 470;
 	var width = 800;
 	var feature = makeWindowPosition(width, height);
     
