@@ -2793,7 +2793,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        // 추적(수신확인)
 		        logger.debug("replyReadTime=" + replyReadTime);
 		        if (replyReadTime.equals("1") || replyReadTime.equals("2")) {
-		        	message.setHeader("Disposition-Notification-To", ((InternetAddress)message.getFrom()[0]).getAddress());
+		        	//message.setHeader("X-JMocha-Disp-Noti-To", ((InternetAddress)message.getFrom()[0]).getAddress());
+		        	message.setHeader("X-JMocha-Disp-Noti-To", userAccount); // mdn은 사용자의 real address로 입력
 		        }
 		        
 		        // 추적(외부 수신확인)

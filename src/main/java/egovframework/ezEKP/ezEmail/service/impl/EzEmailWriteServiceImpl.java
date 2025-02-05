@@ -834,7 +834,7 @@ public class EzEmailWriteServiceImpl implements EzEmailWriteService {
             messagevo.setReplySendTime("1");
         }
 
-        if (orgMessage.getHeader("Disposition-Notification-To") == null) {
+        if (orgMessage.getHeader("X-JMocha-Disp-Noti-To") == null) {
             messagevo.setReplyReadTime("0");
         }
 

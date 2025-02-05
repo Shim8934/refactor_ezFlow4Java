@@ -5741,7 +5741,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			}
 									
 			String[] messageIds = message.getHeader("Message-ID");
-			String[] mdnHeaders = message.getHeader("Disposition-Notification-To");
+			String[] mdnHeaders = message.getHeader("X-JMocha-Disp-Noti-To");
 			
 			if (messageIds != null && mdnHeaders != null) {				
 				logger.debug("Sending an MDN...");
@@ -5764,6 +5764,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				MultipartReport mpr = new MultipartReport("This is a Read Receipt.", dn);
 				replyMessage.setContent(mpr);		
 				replyMessage.setFrom(new InternetAddress(myEmailAddress, myName, "UTF-8"));
+				replyMessage.setRecipient(RecipientType.TO, new InternetAddress(mdnHeaders[0], "", "UTF-8"));
 										
 				sa.sendMessageWithNewTransport(replyMessage);
 				
