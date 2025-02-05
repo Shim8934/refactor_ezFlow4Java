@@ -727,6 +727,8 @@
 					A.ENDDATE,
 					A.TITLE,
 					A.ATTACHMENTS,
+                    FILENAME,
+                    FILEPATH,
 					A.IMPORTANCE,
 					B.BOARDID,
 					CASE WHEN (
@@ -756,6 +758,28 @@
 					A.TENANT_ID = B.TENANT_ID
 				AND
 					A.BOARDID = B.BOARDID
+                LEFT OUTER JOIN (
+                    SELECT
+                        CASE
+                            WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+                            WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILENAME))
+                            ELSE 'MANY'
+                        END AS FILENAME,
+                        CASE
+                            WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+                            WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILEPATH))
+                            ELSE 'MANY'
+                        END AS FILEPATH,
+                        TENANT_ID,
+                        itemid
+                    FROM TBL_BOARD_ITEM_ATTACHMENTS
+                    GROUP BY
+                        ITEMID,
+                        TENANT_ID 
+                ) F ON
+                    A.ITEMID = F.ITEMID
+                AND 
+                    A.TENANT_ID = F.TENANT_ID
 				WHERE
 			   		A.TENANT_ID = #v_TENANTID#
 				AND
@@ -1285,6 +1309,8 @@
 					A.IMPORTANCE,
 					A.TITLE,
 					A.ATTACHMENTS,
+                    EXT,
+                    FILEPATH,
 					A.READCOUNT,
 					A.ITEMLEVEL,
 					A.ABSTRACT,
@@ -1369,7 +1395,28 @@
 						 AND
 						 	S.USERID = #v_PUSERID#
 						 AND
-						 	S.READDATE > TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5))) T1
+						 	S.READDATE > TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5))
+						LEFT OUTER JOIN (
+							SELECT 	
+								CASE
+									WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+									WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILENAME))
+									ELSE 'MANY'
+								END AS EXT,
+								CASE
+									WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+									WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILEPATH))
+									ELSE 'MANY'
+								END AS FILEPATH,
+								TENANT_ID,
+								itemid
+								FROM TBL_BOARD_ITEM_ATTACHMENTS
+							GROUP BY
+								ITEMID,
+								TENANT_ID ) F ON
+							    A.ITEMID = F.ITEMID
+							AND 
+							    A.TENANT_ID = F.TENANT_ID ) T1
 			WHERE
 				RNUM <= #v_PENDROW#) T2
 		WHERE 
@@ -1421,6 +1468,8 @@
 					A.TITLE,
 					A.READCOUNT,
 					A.ATTACHMENTS,
+                    EXT,
+                    FILEPATH,
 					A.ITEMLEVEL,
 					A.ABSTRACT,
 					CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
@@ -1488,6 +1537,28 @@
 					A.TENANT_ID = L.TENANT_ID
 				AND
 					A.ITEMID = L.ITEMID
+                LEFT OUTER JOIN (
+                    SELECT
+                        CASE
+                            WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+                            WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILENAME))
+                            ELSE 'MANY'
+                        END AS EXT,
+                        CASE
+                            WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+                            WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILEPATH))
+                            ELSE 'MANY'
+                        END AS FILEPATH,
+                            TENANT_ID,
+                            itemid
+                        FROM
+                            TBL_BOARD_ITEM_ATTACHMENTS
+                        GROUP BY
+                            ITEMID,
+                            TENANT_ID ) F ON
+                    A.ITEMID = F.ITEMID
+                AND 
+                    A.TENANT_ID = F.TENANT_ID
 				LEFT OUTER JOIN
 					(SELECT
 						COUNT(K.ITEMID) as DISLIKECOUNT,
@@ -1589,6 +1660,8 @@
 					A.TITLE,
 					A.READCOUNT,
 					A.ATTACHMENTS,
+                    EXT,
+                    FILEPATH,
 					A.ITEMLEVEL,
 					A.ABSTRACT,
 					CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
@@ -1646,6 +1719,27 @@
 					A.TENANT_ID = L.TENANT_ID
                 AND
                     A.ITEMID = L.ITEMID
+                LEFT OUTER JOIN (
+                    SELECT
+                        CASE
+                            WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+                            WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILENAME))
+                            ELSE 'MANY'
+                        END AS EXT,
+                        CASE
+                            WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+                            WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILEPATH))
+                            ELSE 'MANY'
+                        END AS FILEPATH,
+                            TENANT_ID,
+                            itemid
+                        FROM TBL_BOARD_ITEM_ATTACHMENTS
+                        GROUP BY
+                            ITEMID,
+                            TENANT_ID ) F ON
+                        A.ITEMID = F.ITEMID
+                    AND 
+                        A.TENANT_ID = F.TENANT_ID
                 LEFT OUTER JOIN
 					(SELECT
 						COUNT(K.ITEMID) as DISLIKECOUNT,
@@ -1729,6 +1823,8 @@
 		                A.TITLE ,
 		                A.READCOUNT ,
 		                A.ATTACHMENTS ,
+						EXT,
+						FILEPATH,
 		                A.ITEMLEVEL ,
 		                A.ABSTRACT ,
 		                '0' READFLAG  ,
@@ -1791,8 +1887,28 @@
 	        	      	A.PUBLICFLAG
 		              FROM 
 		              	TBL_Board_Item A
+        			  LEFT OUTER JOIN (
+							SELECT 	
+								CASE
+									WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+									WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILENAME))
+									ELSE 'MANY'
+								END AS EXT,
+								CASE
+									WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+									WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILEPATH))
+									ELSE 'MANY'
+								END AS FILEPATH,
+								TENANT_ID,
+								itemid
+								FROM TBL_BOARD_ITEM_ATTACHMENTS
+							GROUP BY
+								ITEMID,
+								TENANT_ID ) F ON
+							A.ITEMID = F.ITEMID
+							AND A.TENANT_ID = F.TENANT_ID
 		              WHERE  
-		              	TENANT_ID = #v_TENANTID#
+		              	A.TENANT_ID = #v_TENANTID#
 		              AND
 		              	BOARDID = #v_PBOARDID#
 		              AND 
@@ -1848,6 +1964,8 @@
 		                    A.TITLE,
 		                    A.READCOUNT,
 		                    A.ATTACHMENTS,
+                            EXT,
+							FILEPATH,
 		                    A.ITEMLEVEL,
 		                    A.ABSTRACT,
 		                    '0' READFLAG,
@@ -1886,6 +2004,26 @@
 							A.TENANT_ID = B.TENANT_ID
 						AND
 							A.BoardID = B.BoardID
+						LEFT OUTER JOIN (
+							SELECT 	
+								CASE
+									WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+									WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILENAME))
+									ELSE 'MANY'
+								END AS EXT,
+								CASE
+									WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+									WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILEPATH))
+									ELSE 'MANY'
+								END AS FILEPATH,
+								TENANT_ID,
+								itemid
+								FROM TBL_BOARD_ITEM_ATTACHMENTS
+							GROUP BY
+								ITEMID,
+								TENANT_ID ) F ON
+							A.ITEMID = F.ITEMID
+							AND A.TENANT_ID = F.TENANT_ID
 				        WHERE
 				        	A.TENANT_ID = #v_TENANTID#
 				        AND
@@ -1926,6 +2064,8 @@
                     A.TITLE,
                     A.READCOUNT,
                     A.ATTACHMENTS,
+                    EXT,
+					FILEPATH,
                     A.ITEMLEVEL,
                     A.ABSTRACT,
                     '0' READFLAG,
@@ -1962,6 +2102,26 @@
                 	A.TENANT_ID = B.TENANT_ID
                 AND
                 	A.BoardID = B.BoardID
+				LEFT OUTER JOIN (
+					SELECT 	
+						CASE
+							WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+							WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILENAME))
+							ELSE 'MANY'
+						END AS EXT,
+						CASE
+							WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+							WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILEPATH))
+							ELSE 'MANY'
+						END AS FILEPATH,
+						TENANT_ID,
+						itemid
+						FROM TBL_BOARD_ITEM_ATTACHMENTS
+					GROUP BY
+						ITEMID,
+						TENANT_ID ) F ON
+					A.ITEMID = F.ITEMID
+					AND A.TENANT_ID = F.TENANT_ID
              	WHERE  
              		A.TENANT_ID = #v_TENANTID#
              	AND
@@ -2023,6 +2183,8 @@
 					A.TITLE,
 					A.READCOUNT,
 					A.ATTACHMENTS,
+                    EXT,
+                    FILEPATH,
 					A.ITEMLEVEL,
 					A.ABSTRACT,
 					CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
@@ -2079,6 +2241,26 @@
 					A.TENANT_ID = D.TENANT_ID
 				AND
 					A.ITEMID = D.ITEMID
+                LEFT OUTER JOIN (
+                    SELECT
+                        CASE
+                            WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+                            WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILENAME))
+                            ELSE 'MANY'
+                        END AS EXT,
+                        CASE
+                            WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+                            WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILEPATH))
+                            ELSE 'MANY'
+                        END AS FILEPATH,
+                            TENANT_ID,
+                            itemid
+                        FROM TBL_BOARD_ITEM_ATTACHMENTS
+                        GROUP BY
+                            ITEMID,
+                            TENANT_ID ) F ON
+                    A.ITEMID = F.ITEMID
+                AND A.TENANT_ID = F.TENANT_ID
 				WHERE
 				  	A.TENANT_ID = #v_TENANTID#
 				AND
@@ -2142,6 +2324,8 @@
 					A.TITLE,
 					A.READCOUNT,
 					A.ATTACHMENTS,
+                    EXT,
+                    FILEPATH,
 					A.ITEMLEVEL,
 					A.ABSTRACT,
 					CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
@@ -2196,6 +2380,26 @@
 					A.TENANT_ID = D.TENANT_ID
 				AND
 					A.ITEMID = D.ITEMID
+                LEFT OUTER JOIN (
+                    SELECT
+                    CASE
+                        WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+                        WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILENAME))
+                        ELSE 'MANY'
+                    END AS EXT,
+                    CASE
+                    WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+                    WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILEPATH))
+                    ELSE 'MANY'
+                    END AS FILEPATH,
+                    TENANT_ID,
+                    itemid
+                    FROM TBL_BOARD_ITEM_ATTACHMENTS
+                    GROUP BY
+                    ITEMID,
+                    TENANT_ID ) F ON
+                    A.ITEMID = F.ITEMID
+                AND A.TENANT_ID = F.TENANT_ID
 				WHERE
 					A.TENANT_ID = #v_TENANTID#
 				AND
@@ -2255,6 +2459,8 @@
 					A.TITLE,
 					A.READCOUNT,
 					A.ATTACHMENTS,
+                    EXT,
+                    FILEPATH,
 					A.ITEMLEVEL,
 					A.ABSTRACT,
 					CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
@@ -2312,6 +2518,26 @@
 					TBL_BOARD_APPRLIST APPR
 				ON 
 					A.BOARDID = APPR.BOARDID
+                LEFT OUTER JOIN (
+                    SELECT
+                    CASE
+                        WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+                        WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILENAME))
+                        ELSE 'MANY'
+                    END AS EXT,
+                    CASE
+                        WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+                        WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILEPATH))
+                        ELSE 'MANY'
+                    END AS FILEPATH,
+                        TENANT_ID,
+                        itemid
+                    FROM TBL_BOARD_ITEM_ATTACHMENTS
+                    GROUP BY
+                        ITEMID,
+                        TENANT_ID ) F ON
+                    A.ITEMID = F.ITEMID
+                AND A.TENANT_ID = F.TENANT_ID
 				WHERE
 					A.TENANT_ID = #v_TENANTID#
 				AND
@@ -3559,7 +3785,7 @@
 	            A.COPIEDITEM ,
 	            A.EXTENSIONATTRIBUTE1 ,
 	            A.EXTENSIONATTRIBUTE2 ,
-	            CASE WHEN #lang# = '2' THEN EXTENSIONATTRIBUTE32 ELSE EXTENSIONATTRIBUTE3 END AS EXTENSIONATTRIBUTE3,
+	            CASE WHEN #lang# = '2' THEN A.EXTENSIONATTRIBUTE32 ELSE A.EXTENSIONATTRIBUTE3 END AS EXTENSIONATTRIBUTE3,
 	            A.EXTENSIONATTRIBUTE4 ,
 	            A.EXTENSIONATTRIBUTE5 ,
 	            A.MAINCONTENT ,
@@ -3601,7 +3827,8 @@
 				 	K.ITEMID = A.ItemID) as DISLIKECOUNT,
 	            B.ONELINEREPLY,
 				A.PUBLICFLAG AS PUBLICFLAG,
-	            CASE WHEN #lang# = '2' THEN C.DISPLAYNAME2 ELSE C.DISPLAYNAME END AS UPDATERNAME
+	            CASE WHEN #lang# = '2' THEN C.DISPLAYNAME2 ELSE C.DISPLAYNAME END AS UPDATERNAME,
+	            A.UPDATEDATE
 	        FROM
 	        	TBL_Board_Item A
             JOIN
@@ -3619,7 +3846,7 @@
        		WHERE
        			A.TENANT_ID = #v_TENANTID#
        		AND
-       			ItemID = #v_pItemID#
+       			A.ItemID = #v_pItemID#
 		]]>
 	</select>
 	
@@ -4747,7 +4974,8 @@
 			    PREVIEWWLIST ,
 			 	PREVIEWWCONTENT ,
 			 	PREVIEWHLIST ,
-              	PREVIEWHCONTENT 
+              	PREVIEWHCONTENT,
+				ALLNEWBOARDLISTDATE
         	FROM 
         	    TBL_BOARD_CONFIGURATION 
        		WHERE  
@@ -5714,7 +5942,8 @@
             	PREVIEWWLIST = #previewWList#,
             	PREVIEWWCONTENT = #previewWContent#,
             	PREVIEWHLIST = #previewHList#,
-            	PREVIEWHCONTENT = #previewHContent#
+				PREVIEWHCONTENT = #previewHContent#,
+				ALLNEWBOARDLISTDATE = #allNewBoardListDate#
             WHERE  
             	TENANT_ID = #tenantID#
             AND
@@ -5724,10 +5953,10 @@
 	<insert id="EzBoardDAO.setBoardList_Config_I" parameterClass="BoardConfigVO">
 		<![CDATA[
 			INSERT INTO TBL_Board_Configuration ( 
-				USERID,   LISTCOUNT,   PREVIEW,   PREVIEWWLIST,   PREVIEWWCONTENT,   PREVIEWHLIST,   PREVIEWHCONTENT ,   TENANT_ID
+				USERID,   LISTCOUNT,   PREVIEW,   PREVIEWWLIST,   PREVIEWWCONTENT,   PREVIEWHLIST,   PREVIEWHCONTENT, ALLNEWBOARDLISTDATE, TENANT_ID
 			)
           	VALUES ( 
-          		#userId#, #listCount#, #preview#, #previewWList#, #previewWContent#, #previewHList#, #previewHContent# , #tenantID# 
+          		#userId#, #listCount#, #preview#, #previewWList#, #previewWContent#, #previewHList#, #previewHContent#, #allNewBoardListDate#, #tenantID# 
           	)
 		]]>
 	</insert>
@@ -6759,6 +6988,26 @@
 					(I.COMPANYID = #v_pCompanyID# OR TRIM(I.COMPANYID ) = '' OR I.COMPANYID IS NULL)
 				AND
 					A.BOARDID = I.BOARDID
+				LEFT OUTER JOIN (
+					SELECT
+						CASE
+							WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+							WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILENAME))
+							ELSE 'MANY'
+						END AS EXT,
+						CASE
+							WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+							WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILEPATH))
+							ELSE 'MANY'
+						END AS FILEPATH,
+						TENANT_ID,
+						itemid
+					FROM TBL_BOARD_ITEM_ATTACHMENTS
+					GROUP BY
+						ITEMID,
+						TENANT_ID ) F ON
+					A.ITEMID = F.ITEMID
+				AND A.TENANT_ID = F.TENANT_ID
 				WHERE 
 			<isEqual property="v_PSUBFLAG" compareValue="A">
 				(1=1)
@@ -7564,7 +7813,7 @@
 			WHERE
 				(A.COMPANYID = #v_COMPANYID#
 			OR
-				TRIM(A.COMPANYID) = ''
+				TRIM(A.COMPANYID) IS NULL
 			OR
 				A.COMPANYID IS NULL)
 			AND
@@ -8387,7 +8636,6 @@
 	</delete>
 	
 	<select id="EzBoardDAO.getMyBoardListItemScrap" parameterClass="Map" resultClass="HashMap">
-		<![CDATA[
 			SELECT 
 				* 
 			FROM 
@@ -8395,7 +8643,24 @@
 					* 
 				  FROM 
 					( SELECT
-						Row_Number() OVER (ORDER BY $iv_PORDERBYSUB$ ) AS ROWNUM_,
+						Row_Number() OVER (
+						ORDER BY
+							<isEqual property="iv_PORDERBYCOL1" compareValue="SCRAPDATE"> E.SCRAPDATE </isEqual>
+							<isEqual property="iv_PORDERBYCOL1" compareValue="ATTACHMENTS"> A.ATTACHMENTS </isEqual>
+							<isEqual property="iv_PORDERBYCOL1" compareValue="TITLE"> A.TITLE </isEqual>
+							<isEqual property="lang" compareValue="1">
+								<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERDEPTNAME"> A.WRITERDEPTNAME </isEqual>
+								<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERNAME"> A.WRITERNAME </isEqual>
+							</isEqual>
+							<isNotEqual property="lang" compareValue="1">
+								<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERDEPTNAME"> A.WRITERDEPTNAME2 </isEqual>
+								<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERNAME"> A.WRITERNAME2 </isEqual>
+							</isNotEqual>
+							<isEqual property="iv_PORDERBYCOL1" compareValue="WRITEDATE"> A.WRITEDATE </isEqual>
+							<isEqual property="iv_PORDERBYCOL1" compareValue="READCOUNT"> A.READCOUNT </isEqual>
+							<isEqual property="iv_PORDERBYCOL1DESC" compareValue="Y"> DESC </isEqual>
+						) AS ROWNUM_,
+		<![CDATA[
 						A.BOARDID,
 		   				A.ITEMID,
 		   				A.WRITERID,
@@ -8409,6 +8674,8 @@
 		   				A.TITLE,
 		   				A.READCOUNT,
 		   				A.ATTACHMENTS,
+						EXT,
+						FILEPATH,
 		   				A.ITEMLEVEL,
 		   				A.ABSTRACT,
 		   				CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
@@ -8468,6 +8735,26 @@
 	   				  	A.TENANT_ID = D.TENANT_ID
 	   				AND
 	   				  	A.ITEMID = D.ITEMID
+					LEFT OUTER JOIN (
+						SELECT 	
+							CASE
+								WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+								WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILENAME))
+								ELSE 'MANY'
+							END AS EXT,
+							CASE
+								WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+								WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILEPATH))
+								ELSE 'MANY'
+							END AS FILEPATH,
+							TENANT_ID,
+							itemid
+							FROM TBL_BOARD_ITEM_ATTACHMENTS
+						GROUP BY
+							ITEMID,
+							TENANT_ID ) F ON
+						A.ITEMID = F.ITEMID
+						AND A.TENANT_ID = F.TENANT_ID
 	   				WHERE
 	   				  	A.TENANT_ID = #v_TENANTID#
 	   				AND
@@ -8565,7 +8852,6 @@
 					 OR
 					 A.APPRFLAG IS NULL
 				)
-   			$v_PSUBQUERY$
 		]]>
 			<isNotEmpty property="scrapBoardListView_FG">
 				AND B.BOARDID IN
@@ -8574,18 +8860,45 @@
 			<isEmpty property="scrapBoardListView_FG">
 				AND 1 = 0
 			</isEmpty>
+			<isNotEmpty property="v_SEARCH_TITLE">
+				AND A.TITLE like '%' || #v_SEARCH_TITLE# || '%'
+			</isNotEmpty>
+			<isNotEmpty property="v_SEARCH_WRITERNAME">
+				AND (A.WRITERNAME like '%' || #v_SEARCH_WRITERNAME# || '%' OR A.WRITERNAME2 like '%' || #v_SEARCH_WRITERNAME# || '%')
+			</isNotEmpty>
+            <isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
+                AND (TITLE like ('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
+                OR
+                CONTENT like ('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%'))
+            </isNotEmpty>
 	</select>
 	
 	<select id="EzBoardDAO.getSearchMyBoardItemListScrap" parameterClass="Map" resultClass="HashMap">
+			SELECT
+				*
+			FROM
+				( SELECT
+					*
+				  FROM
+					( SELECT
+						Row_Number() OVER (
+						ORDER BY 
+						<isEqual property="iv_PORDERBYCOL1" compareValue="SCRAPDATE"> S.SCRAPDATE </isEqual>
+						<isEqual property="iv_PORDERBYCOL1" compareValue="ATTACHMENTS"> A.ATTACHMENTS </isEqual>
+						<isEqual property="iv_PORDERBYCOL1" compareValue="TITLE"> A.TITLE </isEqual>
+						<isEqual property="lang" compareValue="1">
+							<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERDEPTNAME"> A.WRITERDEPTNAME </isEqual>
+							<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERNAME"> A.WRITERNAME </isEqual>
+						</isEqual>
+						<isNotEqual property="lang" compareValue="1">
+							<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERDEPTNAME"> A.WRITERDEPTNAME2 </isEqual>
+							<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERNAME"> A.WRITERNAME2 </isEqual>
+						</isNotEqual>
+						<isEqual property="iv_PORDERBYCOL1" compareValue="WRITEDATE"> A.WRITEDATE </isEqual>
+						<isEqual property="iv_PORDERBYCOL1" compareValue="READCOUNT"> A.READCOUNT </isEqual>
+						<isEqual property="iv_PORDERBYCOL1DESC" compareValue="Y"> DESC </isEqual>
+						) AS ROWNUM_,
 		<![CDATA[
-			SELECT 
-				* 
-			FROM 
-				( SELECT 
-					* 
-				  FROM 
-					( SELECT 
-						Row_Number() OVER (ORDER BY $iv_PORDERBYSUB$ ) AS ROWNUM_,
 	   					A.BOARDID,
 	   					A.ITEMID,
 	   					A.WRITERID,
@@ -8681,8 +8994,19 @@
 					<isEmpty property="scrapBoardListView_FG">
 						AND 1 = 0
 					</isEmpty>
-					<![CDATA[
-	   				 $v_PSUBQUERY$ ) T1
+					<isNotEmpty property="v_SEARCH_TITLE">
+						AND A.TITLE like '%' || #v_SEARCH_TITLE# || '%'
+					</isNotEmpty>
+					<isNotEmpty property="v_SEARCH_WRITERNAME">
+						AND (A.WRITERNAME like '%' || #v_SEARCH_WRITERNAME# || '%' OR A.WRITERNAME2 like '%' || #v_SEARCH_WRITERNAME# || '%')
+					</isNotEmpty>
+                    <isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
+                        AND (TITLE like ('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
+                        OR
+                        CONTENT like ('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%'))
+                    </isNotEmpty>
+		<![CDATA[		 
+	   				 ) T1
 	   			WHERE
 	   				  ROWNUM_ <= #v_PENDROW# ) T2
    			WHERE 
@@ -8953,7 +9277,6 @@
 	</select>
 
 	<select id="EzBoardDAO.getScrapContItemList" parameterClass="Map" resultClass="HashMap">
-		<![CDATA[
 			 SELECT
 			   *
 			 FROM
@@ -8961,7 +9284,24 @@
 					*
 				  FROM
 					( SELECT
-						Row_Number() OVER (ORDER BY $iv_PORDERBYSUB$ ) AS ROWNUM_,
+						Row_Number() OVER (
+						ORDER BY
+							<isEqual property="iv_PORDERBYCOL1" compareValue="SCRAPDATE"> E.SCRAPDATE </isEqual>
+							<isEqual property="iv_PORDERBYCOL1" compareValue="ATTACHMENTS"> A.ATTACHMENTS </isEqual>
+							<isEqual property="iv_PORDERBYCOL1" compareValue="TITLE"> A.TITLE </isEqual>
+							<isEqual property="lang" compareValue="1">
+								<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERDEPTNAME"> A.WRITERDEPTNAME </isEqual>
+								<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERNAME"> A.WRITERNAME </isEqual>
+							</isEqual>
+							<isNotEqual property="lang" compareValue="1">
+								<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERDEPTNAME"> A.WRITERDEPTNAME2 </isEqual>
+								<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERNAME"> A.WRITERNAME2 </isEqual>
+							</isNotEqual>
+							<isEqual property="iv_PORDERBYCOL1" compareValue="WRITEDATE"> A.WRITEDATE </isEqual>
+							<isEqual property="iv_PORDERBYCOL1" compareValue="READCOUNT"> A.READCOUNT </isEqual>
+							<isEqual property="iv_PORDERBYCOL1DESC" compareValue="Y"> DESC </isEqual>
+						) AS ROWNUM_,
+		<![CDATA[
 						A.BOARDID,
 						A.ITEMID,
 						A.WRITERID,
@@ -8975,6 +9315,8 @@
 						A.TITLE,
 						A.READCOUNT,
 						A.ATTACHMENTS,
+						EXT,
+						FILEPATH,
 						A.ITEMLEVEL,
 						A.ABSTRACT,
 						CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
@@ -9034,6 +9376,26 @@
   				 	 	A.TENANT_ID = D.TENANT_ID
   				    AND
   					  	A.ITEMID = D.ITEMID
+					LEFT OUTER JOIN (
+						SELECT 	
+							CASE
+								WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+								WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILENAME))
+								ELSE 'MANY'
+							END AS EXT,
+							CASE
+								WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+								WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILEPATH))
+								ELSE 'MANY'
+							END AS FILEPATH,
+							TENANT_ID,
+							itemid
+							FROM TBL_BOARD_ITEM_ATTACHMENTS
+						GROUP BY
+							ITEMID,
+							TENANT_ID ) F ON
+					A.ITEMID = F.ITEMID
+					AND A.TENANT_ID = F.TENANT_ID
   				    WHERE
   					  	A.TENANT_ID = #v_TENANTID#
   				    AND
@@ -9106,10 +9468,15 @@
 			<isEmpty property="scrapContBoardListView_FG">
 				AND 1 = 0
 			</isEmpty>
+			<isNotEmpty property="v_SEARCH_TITLE">
+				AND A.TITLE like '%' || #v_SEARCH_TITLE# || '%'
+			</isNotEmpty>
+			<isNotEmpty property="v_SEARCH_WRITERNAME">
+				AND (A.WRITERNAME like '%' || #v_SEARCH_WRITERNAME# || '%' OR A.WRITERNAME2 like '%' || #v_SEARCH_WRITERNAME# || '%')
+			</isNotEmpty>
 	</select>
 
 	<select id="EzBoardDAO.getSearchScrapContItemList" parameterClass="Map" resultClass="HashMap">
-		<![CDATA[
 			SELECT
 			  *
 			FROM
@@ -9117,7 +9484,24 @@
 					*
 				  FROM
 				    ( SELECT
-						Row_Number() OVER (ORDER BY $iv_PORDERBYSUB$ ) AS ROWNUM_,
+						Row_Number() OVER (
+						ORDER BY
+						<isEqual property="iv_PORDERBYCOL1" compareValue="SCRAPDATE"> S.SCRAPDATE </isEqual>
+						<isEqual property="iv_PORDERBYCOL1" compareValue="ATTACHMENTS"> A.ATTACHMENTS </isEqual>
+						<isEqual property="iv_PORDERBYCOL1" compareValue="TITLE"> A.TITLE </isEqual>
+						<isEqual property="lang" compareValue="1">
+							<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERDEPTNAME"> A.WRITERDEPTNAME </isEqual>
+							<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERNAME"> A.WRITERNAME </isEqual>
+						</isEqual>
+						<isNotEqual property="lang" compareValue="1">
+							<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERDEPTNAME"> A.WRITERDEPTNAME2 </isEqual>
+							<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERNAME"> A.WRITERNAME2 </isEqual>
+						</isNotEqual>
+						<isEqual property="iv_PORDERBYCOL1" compareValue="WRITEDATE"> A.WRITEDATE </isEqual>
+						<isEqual property="iv_PORDERBYCOL1" compareValue="READCOUNT"> A.READCOUNT </isEqual>
+						<isEqual property="iv_PORDERBYCOL1DESC" compareValue="Y"> DESC </isEqual>
+					<![CDATA[
+						) AS ROWNUM_,
 						A.BOARDID,
 						A.ITEMID,
 						A.WRITERID,
@@ -9215,8 +9599,19 @@
 					<isEmpty property="scrapContBoardListView_FG">
 						AND 1 = 0
 					</isEmpty>
+					<isNotEmpty property="v_SEARCH_TITLE">
+						AND A.TITLE like '%' || #v_SEARCH_TITLE# || '%'
+					</isNotEmpty>
+					<isNotEmpty property="v_SEARCH_WRITERNAME">
+						AND (A.WRITERNAME like '%' || #v_SEARCH_WRITERNAME# || '%' OR A.WRITERNAME2 like '%' || #v_SEARCH_WRITERNAME# || '%')
+					</isNotEmpty>
+                    <isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
+                        AND (TITLE like ('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
+                        OR
+                        CONTENT like ('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%'))
+                    </isNotEmpty>
 		<![CDATA[		 
-					$v_PSUBQUERY$) T1
+					) T1
 				WHERE
 					ROWNUM_ <= #v_PENDROW# ) T2
 			WHERE
@@ -9362,4 +9757,143 @@
      		AND 
      			BoardID = #v_pBoardID#
 	</update>
+
+	<select id="EzBoardDAO.getAllNewItemListCount" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+		SELECT
+			COUNT(A.ITEMID) CNT
+		FROM
+			TBL_Board_Item A
+				INNER JOIN
+			TBL_Board_BoardInfo P
+			ON
+						A.TENANT_ID = P.TENANT_ID
+					AND
+						A.BOARDID = P.BOARDID
+					AND
+						A.TENANT_ID = #v_TENANTID#
+					AND
+						(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(A.WRITERCOMPANYID) = '' OR A.WRITERCOMPANYID IS NULL
+							OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
+					AND
+						(A.APPRFLAG = 'Y'
+							OR A.APPRFLAG IS NULL)
+					AND
+						A.STARTDATE > TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - NVL((SELECT
+																									 ALLNEWBOARDLISTDATE
+																								 FROM 
+																									 TBL_BOARD_CONFIGURATION 
+																								 WHERE 
+																									 userid = #v_pUserID# 
+																								 AND 
+																									 tenant_id = #v_TENANTID#), 5)
+						, 'YYYY-MM-DD HH24:MI:SS')
+					AND
+						A.STARTDATE <= #nowDate#
+					AND
+						A.ENDDATE > #nowDate#
+					AND
+						P.ALLNEWBOARDFLAG = 'Y'
+		]]>
+	</select>
+
+	<select id="EzBoardDAO.getAllNewItemList" parameterClass="Map" resultClass="HashMap">
+		SELECT
+			*
+		FROM
+			( SELECT
+				  *
+			  FROM (
+					   SELECT
+						   Row_Number() OVER (			   
+						   		ORDER BY 
+								<isEqual property="iv_PORDERBYCOL1" compareValue="BOARDNAME"> P.BOARDNAME </isEqual>
+								<isEqual property="iv_PORDERBYCOL1" compareValue="ITEMID"> A.ITEMID </isEqual>
+								<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERNAME"> A.WRITERNAME </isEqual>
+								<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERDEPTNAME"> A.WRITERDEPTNAME </isEqual>
+								<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERCOMPANYNAME"> A.WRITERCOMPANYNAME </isEqual>
+								<isEqual property="iv_PORDERBYCOL1" compareValue="WRITEDATE"> A.WRITEDATE </isEqual>
+								<isEqual property="iv_PORDERBYCOL1" compareValue="STARTDATE"> A.STARTDATE </isEqual>
+								<isEqual property="iv_PORDERBYCOL1" compareValue="PARENTWRITEDATE"> TO_NUMBER(A.PARENTWRITEDATE) </isEqual>
+								<isEqual property="iv_PORDERBYCOL1" compareValue="TITLE"> A.TITLE </isEqual>
+								<isEqual property="iv_PORDERBYCOL1" compareValue="ATTACHMENTS"> A.ATTACHMENTS </isEqual>
+								<isEqual property="iv_PORDERBYCOL1" compareValue="READCOUNT"> A.READCOUNT </isEqual>
+								<isEqual property="iv_PORDERBYCOL1" compareValue="DOCNO"> A.DOCNO </isEqual> 
+								<isEqual property="iv_PORDERBYCOL1DESC" compareValue="Y"> DESC </isEqual>
+						   		) AS RNUM,			   		
+						   A.BOARDID,
+						   P.BOARDNAME,
+						   A.ITEMID,
+						   A.WRITERID,
+						   A.WRITERNAME,
+						   A.WRITERDEPTNAME,
+						   A.WRITERCOMPANYNAME,
+						   A.WRITEDATE,
+						   A.STARTDATE,
+						   A.PARENTWRITEDATE,
+						   A.IMPORTANCE,
+						   A.TITLE,
+						   A.ATTACHMENTS,
+						   A.READCOUNT,
+						   A.ITEMLEVEL,
+						   A.ABSTRACT,
+						   P.BOARDNAME2 AS BOARDNAME2,
+						   A.WRITERNAME2,
+						   A.WRITERDEPTNAME2,
+						   A.WRITERCOMPANYNAME2,
+						   (SELECT
+								COUNT(*)
+							FROM
+								TBL_Board_OneLineReply
+							WHERE
+								TENANT_ID = A.TENANT_ID
+							  AND
+								ITEMID = A.ItemID) ONELINECNT,
+						   A.UPPERITEMIDTREE,
+						   A.DOCNO,
+						   '' AS NOTICE,
+						   P.GUBUN,
+						   A.MAINCONTENT,
+						   P.BOARDGROUPID
+					   FROM
+						   TBL_BOARD_ITEM A
+							   INNER JOIN
+						   TBL_BOARD_BOARDINFO P
+						   ON
+									   A.TENANT_ID = P.TENANT_ID
+								   AND
+									   (A.WRITERCOMPANYID = P.COMPANYID OR TRIM(A.WRITERCOMPANYID) = '' OR A.WRITERCOMPANYID IS NULL
+										   OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
+								   AND
+									   A.BOARDID = P.BOARDID
+								   AND
+									   A.TENANT_ID = #v_TENANTID#
+								   AND
+									   (A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(A.WRITERCOMPANYID) = '' OR A.WRITERCOMPANYID IS NULL
+										   OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
+		<![CDATA[
+								   AND
+									   (A.APPRFLAG = 'Y'
+										   OR A.APPRFLAG IS NULL)
+								   AND
+									   A.STARTDATE > TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - NVL((SELECT
+																													ALLNEWBOARDLISTDATE
+																												FROM 
+																													TBL_BOARD_CONFIGURATION 
+																												WHERE 
+																													USERID = #v_PUSERID# 
+																												AND 
+																													TENANT_ID = #v_TENANTID#), 5)
+										, 'YYYY-MM-DD HH24:MI:SS')
+								   AND
+									   A.STARTDATE <= #nowDate#
+								   AND
+									   A.ENDDATE > #nowDate#
+								   AND
+									   P.ALLNEWBOARDFLAG = 'Y' ) T1
+			  WHERE RNUM <= #v_PENDROW# ) T2
+		WHERE
+			RNUM >= #v_PSTARTROW#
+		]]>
+	</select>
 </sqlMap>

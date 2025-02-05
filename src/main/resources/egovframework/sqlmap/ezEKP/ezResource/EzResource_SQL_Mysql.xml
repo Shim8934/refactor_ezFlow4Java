@@ -1106,6 +1106,17 @@
 		]]>
 	</delete>
 	
+	<delete id="EzResourceDAO.delResDataForm" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_RS_SCHEDULEFORM
+			WHERE
+				RESID = #v_P_Brd_ID#
+			AND
+				TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
 	<update id="EzResourceDAO.modifyResData" parameterClass="Map">
 		<![CDATA[
 			UPDATE
@@ -2465,6 +2476,8 @@
 				A.TENANT_ID = #tenant_id#
 			AND
 				A.BRD_COMPANY = #brd_company#
+			AND
+				A.APPROVEFLAG != 2
 		]]>
 	</select>
 
@@ -2670,13 +2683,17 @@
 		CAT_NAME = #CAT_NAME# 
 	WHERE 
 		CAT_ID = #CAT_ID#
+	AND
+		USER_ID = #USER_ID#
 	</update>
 	
-	<delete id="EzResourceDAO.delFavoriteCategory" parameterClass="String">
+	<delete id="EzResourceDAO.delFavoriteCategory" parameterClass="map">
 		DELETE FROM 
 			TBL_RS_FAV_CAT 
 		WHERE 
-			CAT_ID = #catId# 
+			CAT_ID = #CAT_ID#
+		AND
+			USER_ID = #USER_ID# 
 	</delete>
 	
 	<insert id="EzResourceDAO.insertBrdFavoriteCategory"  parameterClass="map">
@@ -2703,6 +2720,8 @@
 			TBL_RS_BRD.OWNERPOSITION,
 			TBL_RS_BRD.OWNERPOSITION2,
 			TBL_RS_BRD.OWNERCALL,
+			RES_MAX_DATE ,
+           	RES_MAX_USER_CNT,
 			IFNULL(RESLOCATION, ' ') RESLOCATION,
 			CONCAT(SUBSTR(MAKEDATE, 1, 4), '-', SUBSTR(MAKEDATE, 5, 2), '-', SUBSTR(MAKEDATE, 7, 2)) MAKEDATE,
 			IFNULL(APPROVEFLAG, '0') APPROVEFLAG,
@@ -2721,6 +2740,8 @@
 			TBL_RS_BRD.TENANT_ID = TBL_RS_CAT_BRD.TENANT_ID
 		WHERE
 			TBL_RS_CAT_BRD.CAT_ID = #catId#
+		AND
+			TBL_RS_CAT_BRD.USER_ID = #userID#
 		ORDER BY
 			TBL_RS_CAT_BRD.UPDATEDATE DESC
 		]]>

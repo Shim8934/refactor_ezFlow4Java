@@ -52,6 +52,9 @@ public interface EzAddressService {
 	public List<SimpleAddressVO> getSimpleAddress(int tenantId, String userId) throws Exception;
 	public void setSimpleAddress(int tenantId, String pUserId, String pMailList) throws Exception;
 	public int removeUserAddress(String userEmailAddress) throws Exception;
+	public List<AddressVO> getLastSentEmailAddresses(int tenantId, String cn) throws Exception;
+	public void insertLastSentEmailAddresses(List<Map<String, Object>> lastSentEmailAddresses, int tenantId, String cn) throws Exception;
+	public void deleteLastSentEmailAddress(int tenantId, String cn, String email) throws Exception;
 	
 	public Map<String, Object> getAddressZipCodeList(String pSido, String pKeyword, int pPage) throws Exception;
 }

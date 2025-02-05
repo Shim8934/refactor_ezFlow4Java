@@ -216,6 +216,8 @@ public interface EzCommonService {
 
 	void addTblUserMultiLoginMobileFlagColumn() throws Exception;
 	
+	void createTblFidoSession() throws Exception;
+	
 	public void createMailTemplateSequence() throws Exception;
 
 	public void createJmochaMailboxProgress() throws Exception;
@@ -491,6 +493,8 @@ public interface EzCommonService {
 	
 	public void insertModuleEditor() throws Exception;
 	
+	public void insertServername() throws Exception;
+	
 	public void insertScrapTenantConfig() throws Exception;
 	
 	public void insertScrapTableHeader() throws Exception;
@@ -501,6 +505,9 @@ public interface EzCommonService {
 	
 	public void createTblUserScrapContList() throws Exception;
 
+	// 2024-12-12 김혜림 회사별 메일박스 용량 테이블 추가
+	public void createJmochaCompanyQuota() throws Exception;
+	
 	// 2024-10-23 전인하 - 게시판 > 댓글 첨부 테이블 추가
 	public void createTblBoardCommentAttachments() throws Exception;
     
@@ -509,4 +516,49 @@ public interface EzCommonService {
 	public void alterThumbnailExtForTPI() throws Exception;
 	
 	public void alterAttachmentsForCBoard() throws Exception;
+	
+	// 2024-11-26 한태훈 - 시스템 컨피그 > 삭제 차단 컬럼 추가
+	public void addIsDeleteBlockToSytemConfig() throws Exception;
+
+	// 2024-10-30 황인경 - 커뮤니티 > 방명록 > 댓글 테이블 추가
+	public void addTblCommunityClubguestOnelinereply() throws Exception;
+
+	/* 2024-09-11 이유정 - 게시판 > 최근게시물 리스트헤더 추가 */
+	public void insertBoardItemListOptionAN() throws Exception;
+
+	/* 2024-09-11 이유정 - 게시판 > 최근게시물 게시판정보 추가 */
+	public void insertRecentBoardInfo() throws Exception;
+
+	// 2024-10-22 정지은 - 게시판 > 게시물의 최근 게시물 포함 여부 설정(게시판 설정)
+	public void addBoardAllNewBoardFlag() throws Exception;
+	// 2024-10-22 정지은 - 게시판 > 게시물의 최근 게시물 일자 설정
+	public void addBoardAllNewBoardListDate() throws Exception;
+
+    public void createTblAprAutoSaveConfig() throws Exception;
+	
+	public void alterBodyHTMLToConnData() throws Exception;
+
+    // 2024-12-04 기민혁 - 전자결재 > 최근서식 사용여부 테넌트 컨피그 추가
+    public void insertResendFormYN() throws Exception;
+    
+    // 2024-12-05 기민혁 - 전자결재 > 본문수정 시 본문버전 변경 기능 사용여부 테넌트 컨피그 추가
+    public void insertEditVertionYN() throws Exception;
+
+    // 2024-12-10 기민혁 - 전자결재 > 수정버전,수정모드 컬럼 추가
+    public void alterEditVersionHistory() throws Exception;
+
+    // 2024-12-10 기민혁 - 수정버전 리스트 해더 생성
+    public void insertEditVersionListOption() throws Exception;
+
+	// 2024-11-26 기민혁 - 전자결재 > 개인수신함 사용여부 테넌트 컨피그 추가
+	public void insertPersonalHideSusinYN() throws Exception;
+
+	// 2024-11-28 기민혁 - 개인 수신함 리스트 해더 추가
+	public void insertPersonalSusinListOption() throws Exception;
+
+	/* 2024-07-05 양지혜 - 전자결재 > 상위부서문서함 사용여부 컬럼 추가 */
+	public void alterUseUpperDeptBox() throws Exception;
+	
+	// 2024-12-27 이가은 - 공람완료문서 삭제 히스토리 테이블 생성
+	public void createGongramDeleteHistory() throws Exception;
 }

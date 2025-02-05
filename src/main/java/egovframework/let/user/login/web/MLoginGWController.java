@@ -4,6 +4,10 @@ import java.security.PrivateKey;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -49,6 +53,7 @@ import egovframework.ezEKP.ezSystem.vo.IPBandVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MOptionVO;
 import egovframework.let.user.login.service.LoginService;
+import egovframework.let.user.login.vo.FidoAuthenticationVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.user.login.vo.SessionVO;
 import egovframework.let.utl.fcc.service.ClientUtil;
@@ -527,7 +532,6 @@ public class MLoginGWController {
 						// diff 는 로그인 과정 3번째 순서로 미룸. 비밀번호 변경 권한을 갖기 위해서는 otp 인증까지 마쳐야하기 때문이다.
 						logger.debug("{} User Login : verifyingUser success.", uid);
 						break verifyingUser;
-
                 	} else {
                 		// 2021-12-29 이사라 : 접속로그 실패 저장
 						resultVO.setForInsertLog(ip, agent, os, browser, tenantId, "N");
@@ -979,7 +983,86 @@ public class MLoginGWController {
 
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
+			result.put("status", "error");
+			return result;
+		}
+	}
 
+	@SuppressWarnings("unchecked")
+	@GetMapping(value = "/mobile/ezUser/fidoAuthentication/fidoSession/{fidoSessionId}", produces = "application/json;charset=utf-8")
+	public JSONObject fidoAuthentication(HttpServletRequest request, @PathVariable String fidoSessionId, Locale locale) throws Exception {
+		logger.debug("============= Fido Authenticate : {} =============", fidoSessionId);
+		JSONObject result = new JSONObject();
+      	String serverName = request.getHeader("x-user-host");
+		int tenantId = loginService.getTenantId(serverName);
+		
+
+		try {
+			FidoAuthenticationVO vo = loginService.getFidoSession(fidoSessionId);
+
+			String fidoStatus = vo.getStatus();
+			String createTime = vo.getCreatTime().split("\\.")[0];
+			String ip = vo.getIp();
+			int timeLimit = Integer.parseInt(ezCommonService.getTenantConfig("FidoTimeLimit", tenantId));
+
+			if ("requesting".equalsIgnoreCase(fidoStatus)) { // requesting 밖에 값이 올 수 없음
+				// 유효한 요청인지 확인
+				ZonedDateTime utcNow = ZonedDateTime.now(ZoneOffset.UTC); // 현재 UTC 시간
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+				ZonedDateTime createTimePlusTimeLimit = ZonedDateTime.parse(createTime, formatter.withZone(ZoneOffset.UTC)).plus(timeLimit, ChronoUnit.MINUTES);
+
+				if (!createTimePlusTimeLimit.isAfter(utcNow)) { // 만료 됨
+					logger.debug("fidoAuthentication 만료된 시간 입니다.");
+					fidoStatus = "expired";
+				}
+
+			} else { // requesting 이외의 값이 올 수 없으나 예외 처리 함
+				ip = ""; // ip or time이 빈 값으로 넘어오면 데스트탑에서 다시 요청해달라고 toast를 띄우기 때문에 ip를 빈문자열로 처리
+			}
+
+			result.put("status", "ok");
+			result.put("ip", ip);
+			result.put("time", createTime);
+			result.put("fidoStatus", fidoStatus);
+
+			logger.debug("ip : {}, time : {}", ip, vo.getCreatTime());
+
+			return result;
+
+		} catch (Exception e) {
+			logger.debug(e.getMessage(), e);
+			result.put("status", "error");
+
+			return result;
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@GetMapping("/mobile/ezUser/fidoAuthentication/fidoSession/{fidoSessionId}/status/{fidoStatus}")
+	public JSONObject setfidoAuthenticationStatus(@PathVariable String fidoSessionId, @PathVariable String fidoStatus) throws Exception {
+		logger.debug("setfidoAuthenticationStatus  fidoSessionId:{}, fidoStatus:{}", fidoSessionId, fidoStatus); // fidoStatus : approved, rejected, failed
+
+		JSONObject result = new JSONObject();
+
+		try {
+			FidoAuthenticationVO resultVO = loginService.getFidoSession(fidoSessionId);
+
+			if ("requesting".equalsIgnoreCase(resultVO.getStatus())) {
+				FidoAuthenticationVO vo = new FidoAuthenticationVO();
+				vo.setFidoSessionId(fidoSessionId);
+				vo.setStatus(fidoStatus);
+
+				// fidoSessionId에 해당하는 status를 반영
+				loginService.updateFidoStatus(vo); 
+				// DB에 저장된 status를 리턴해주기 위해 resultVO에 set
+				resultVO.setStatus(fidoStatus);
+			}
+
+			result.put("status", resultVO.getStatus());
+			return result;
+
+		} catch (Exception e) {
+			logger.debug(e.getMessage(), e);
 			result.put("status", "error");
 			return result;
 		}

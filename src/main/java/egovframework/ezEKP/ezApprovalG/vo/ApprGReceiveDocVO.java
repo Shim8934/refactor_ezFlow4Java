@@ -65,6 +65,10 @@ public class ApprGReceiveDocVO {
 	private String seperateAttachXml;
 	/* 기안자ID */
 	private String writerId;
+	/* 진행자 이름 */
+	private String processorName;
+	/* 진행자 이름 2*/
+	private String processorName2;
 
 	
 	public String getCompanyID() {
@@ -259,6 +263,16 @@ public class ApprGReceiveDocVO {
 	public void setWriterId(String writerId) {
 		this.writerId = writerId;
 	}
-	
-	
+	public String getProcessorName() { 
+		return processorName; 
+	}
+	public void setProcessorName(String processorName) { 
+		this.processorName = processorName; 
+	}
+	public String getProcessorName2() { 
+		return processorName2; 
+	}
+	public void setProcessorName2(String processorName2) {
+		this.processorName2 = processorName2;
+	}
 }

@@ -6147,8 +6147,8 @@
 			(LAST_INSERT_ID(),
 			 (SELECT MAX(subid) + 1 FROM TBL_ADMINRECEIPTGROUP_SUB AS T1),
 			 #deptId#,
-			 (SELECT DISPLAYNAME FROM tbl_deptmaster WHERE cn = #deptId#),
-			 (SELECT DISPLAYNAME2 FROM tbl_deptmaster WHERE cn = #deptId#),
+			 (SELECT DISPLAYNAME FROM TBL_DEPTMASTER WHERE CN = #deptId# AND TENANT_ID = #tenantId#),
+			 (SELECT DISPLAYNAME2 FROM TBL_DEPTMASTER WHERE CN = #deptId# AND TENANT_ID = #tenantId#),
 			 #companyId#,
 			 #tenantId#)
 	</insert>

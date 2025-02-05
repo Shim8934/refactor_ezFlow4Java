@@ -326,6 +326,19 @@ function AppendFileAttachInfo(ret) {
         oTable.appendChild(objTr);
         dadiframe.document.getElementById("lstAttachLink").appendChild(oTable);
 
+		var objP = document.createElement("p");
+		objP.id = "attachInnerNotice";
+		objP.className = "attachInnerNotice_p_off";
+
+		var objSpan = document.createElement("span");
+		objSpan.innerText = strLangMJS01;
+		objSpan.className = "attachInnerNotice_span";
+
+		objP.appendChild(objSpan);
+
+		dadiframe.document.getElementById("lstAttachLink").appendChild(objP);
+		
+
         for (var i = 0; i < objAttachNodes.length; i++) {
             var realFileNM = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]);
             var ServerFile = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[2]);
@@ -338,6 +351,8 @@ function AppendFileAttachInfo(ret) {
                 objTr.setAttribute("DATA2", ServerFile);
                 objTr.setAttribute("NEWFILE", is_newfile);
                 objTr.setAttribute("REALFILESIZE", fileSize);
+				objTr.setAttribute("draggable", true);
+				objTr.setAttribute("_fileIndex", i);
 
                 var objTd = document.createElement("TD");
                 objTd.style.textAlign = "center";

@@ -37,6 +37,7 @@ import javax.mail.search.ReceivedDateTerm;
 import javax.mail.search.SearchTerm;
 import javax.servlet.ServletContext;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -439,28 +440,30 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 		boolean retryFlag = false;
 		
 		for (int i = 0; i < list.size(); i++) {
-			MailReservationVO vo = list.get(i);
-			
-			logger.debug("messageId=" + vo.getMessageId());
-			logger.debug("userAccount=" + vo.getConnUrl());
-			
 			IMAPAccess ia = null;
 			FileInputStream fis = null;
 			File f = null;
 			File encryptedFile = null; // 보안메일 관련 파일 변수
-			String userAccount = vo.getConnUrl();
 			MimeMessage message = null;
 			Locale locale = null;
 			String offset = null;
-			
+
+			MailReservationVO vo = list.get(i);
+			String messageId = vo.getMessageId();
+			String userAccount = vo.getConnUrl();
+			String userId = vo.getSender();
+
+			String[] emailArr = userAccount.split("@");
+			String mailId = emailArr[0];
+			String domainName = emailArr[1];
+			userId = StringUtils.isBlank(userId)? mailId : userId;
+			logger.debug("messageId={}, userAccount={}, userId(sender)={}, mailId={}", messageId, userAccount, userId, mailId);
+
 			try {
 				
 				String password = jspw;
 	
 				String realPath = commonUtil.getRealPath(servletContext);
-				
-				String userId = userAccount.split("@")[0];
-				String domainName = userAccount.split("@")[1];
 				
 				int tenantId = ezCommonService.getTenantIdByDomainName(domainName);
 				String lang = ezCommonService.selectUserGetLang(userId, tenantId);
@@ -472,8 +475,8 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 				String pDirPath = commonUtil.getUploadPath("upload_mail.RESERVED_MAIL_PATH", tenantId);
 				pDirPath = realPath + pDirPath;
 	
-				f = new File(pDirPath + commonUtil.separator + vo.getMessageId() + ".eml");
-				logger.debug("filePath=" + pDirPath + commonUtil.separator + vo.getMessageId() + ".eml");
+				f = new File(pDirPath + commonUtil.separator + messageId + ".eml");
+				logger.debug("filePath=" + pDirPath + commonUtil.separator + messageId + ".eml");
 								
 				if (f.exists()) {
 					fis = new FileInputStream(f);
@@ -540,7 +543,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
                         securePassword = ezEmailService.encryptSecureValue(securePassword, useKlibEncrypt);
 
                         // save secure mail info and get secureId
-                        int secureId = ezEmailService.setMailSecure(tenantId, userId, securePassword, Integer.parseInt(secureReadCount), secureReadDate);
+                        int secureId = ezEmailService.setMailSecure(tenantId, mailId, securePassword, Integer.parseInt(secureReadCount), secureReadDate);
 
                         if (secureId == 0) {
                             throw new Exception("INSERTSECUREMAILFAIL");
@@ -676,7 +679,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 						logger.debug("Succeed in saving a message in sent folder.");
 	                    
 	            		// 보낸편지함에 저장한 메일의 uid를 저장한다.
-		            	String result = ezEmailService.updateMailSecure(tenantId, userId, secureId, folder.getFullName() + "/" + sentFolderMessageUID);
+		            	String result = ezEmailService.updateMailSecure(tenantId, mailId, secureId, folder.getFullName() + "/" + sentFolderMessageUID);
 			        	
 			        	if (!result.equals("OK")) {
 			        		throw new Exception("UPDATESECUREMAILFAIL");
@@ -867,7 +870,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
                 }
 
                 //DB에서 메일 예약발송 정보 삭제.
-                ezEmailService.deleteMailReserved(vo.getMessageId());
+                ezEmailService.deleteMailReserved(messageId);
                 logger.debug("Succeed in deleting data from DB.");
 
                 retryFlag = false;
@@ -904,7 +907,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
                     }
 
                     //DB에서 메일 예약발송 정보 삭제.
-                    ezEmailService.deleteMailReserved(vo.getMessageId());
+                    ezEmailService.deleteMailReserved(messageId);
 
                     retryFlag = false;
                 }
@@ -941,7 +944,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 					}
 					
 					//DB에서 메일 예약발송 정보 삭제.
-					ezEmailService.deleteMailReserved(vo.getMessageId());
+					ezEmailService.deleteMailReserved(messageId);
 					
 					retryFlag = false;					
 				}				
@@ -1316,11 +1319,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
                 String fontStyle = String.format("style='font-family: %s; font-size: %spx;'", fontFamily, 13);
 
                 // user quota info
-                Double[] userQuotaData = ezEmailUtil.getUserQuota(userEmail);
-
-                if (userQuotaData[0] == null) {
-                    userQuotaData = ezEmailUtil.getDefaultQuota(domainName);
-                }
+                Double[] userQuotaData = ezEmailUtil.getUserRealQuota(userEmail);
 
                 IMAPAccess imapAccess = IMAPAccess.getInstance(mailServerAddress, imapPort, userEmail, jspw, egovMessageSource,
                         locale, ezEmailUtil);

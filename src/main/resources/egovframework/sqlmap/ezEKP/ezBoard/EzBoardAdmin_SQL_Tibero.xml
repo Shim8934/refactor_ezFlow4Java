@@ -98,7 +98,7 @@
             <isEqual property="v_STRLANG" compareValue=""> RESULT </isEqual>
 			<isEqual property="v_STRLANG" compareValue="2"> RESULT2 </isEqual>
 			<isEqual property="v_STRLANG" compareValue="3"> RESULT3 </isEqual>
-			<isNotEqual property="v_STRLANG" compareValue="4"> RESULT4 </isNotEqual>
+			<isEqual property="v_STRLANG" compareValue="4"> RESULT4 </isEqual>
          FROM 
             TBL_Board_TreeCache 
          WHERE 
@@ -2470,7 +2470,8 @@
 	      			REACTFLAG = #v_REACTFLAG#,
 	      			USEKEYWORD = #v_USEKEYWORD#,
 		          	ATTACHMENTFLAG = #v_ATTACHMENTFLAG#,
-	      			PUBLICFLAG = #v_PUBLICFLAG#
+	      			PUBLICFLAG = #v_PUBLICFLAG#,
+		          	ALLNEWBOARDFLAG = #v_ALLNEWBOARDFLAG#
 	    		WHERE
 	    			TENANT_ID = #v_TENANTID#
 	    		AND  

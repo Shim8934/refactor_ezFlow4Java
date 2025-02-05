@@ -288,7 +288,7 @@ function ItemPreviewRead(obj, page) {
 				pre_openApprovUI();
 			else
 				pre_btnRedraft_onclick();
-		} else if (pListTypeValue == "4") {
+		} else if (pListTypeValue == "4" || pListTypeValue == "97") {
 			if (pSusinManagerFlag == "admin" || selobj.getAttribute("DATA8") == pUserID) {
 				var pDraftFlag;
 				var tmpDocState = selobj.getAttribute("DATA9");
@@ -451,7 +451,7 @@ function pre_openViewDocInfo(type) {
     pArgument[0] = DocID;
     pArgument[1] = formURL;
 
-    if (pListTypeValue == "4") {
+    if (pListTypeValue == "4" || pListTypeValue == "97") {
         pArgument[2] = GetAttribute(tr, "DATA5");
         pArgument[3] = "VIEW";
         pArgument[4] = pSusinManagerFlag;

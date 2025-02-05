@@ -40,7 +40,7 @@ import egovframework.ezEKP.ezOrgan.vo.OrganLoginStopUserVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezSystem.vo.PermissionInfoVO;
 import egovframework.let.user.login.vo.LoginVO;
-import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 
 @SuppressWarnings("unused")
 @Repository("EzOrganAdminDAO")
@@ -1232,6 +1232,14 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	
 	public void deleteCompany_D37(Map<String, Object> map) throws Exception {
 		delete("EzOrganAdminDAO.deleteCompany_D37", map);
+	}
+	
+	public void deleteCompany_D38(Map<String, Object> map) throws Exception {
+		delete("EzOrganAdminDAO.deleteCompany_D38", map);
+	}
+	
+	public void deleteCompany_D39(Map<String, Object> map) throws Exception {
+		delete("EzOrganAdminDAO.deleteCompany_D39", map);
 	}
 	
 	public void deleteCompanyInfo_IKMS7(Map<String, Object> map) throws Exception {

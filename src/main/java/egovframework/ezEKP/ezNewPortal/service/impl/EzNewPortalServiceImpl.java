@@ -141,7 +141,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	// public List<BoardListVO> getNoticePortletList(String companyId, int tenantId, int limit, String offset, String lang) throws Exception {
 	public List<BoardListVO> getNoticePortletList(String companyId, int tenantId, String offset, String lang, int currentPage, int listCntSize, int portletId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
+		String nowDate = commonUtil.getTodayUTCTime("");
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 //		map.put("limit", limit);
@@ -797,7 +797,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	public List<BoardItemVO> getPhotoBoardPortletInfo(int tenantId, String boardId, int startRow, int photoCount, String offset) throws Exception {
 		logger.debug("[Serivce] getPhotoBoardPortletInfo Started");
 		Map<String, Object> map = new HashMap<String, Object>();
-		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
+		String nowDate = commonUtil.getTodayUTCTime("");
 		map.put("tenantId", tenantId);
 		map.put("boardId", boardId);
 		map.put("startRow", startRow);
@@ -812,7 +812,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	public int getPhotoBoardPortletTotalCnt(int tenantId, String boardId, String offset) throws Exception {
 		logger.debug("[Serivce] getPhotoBoardPortletTotalCnt Started");
 		Map<String, Object> map = new HashMap<String, Object>();
-		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
+		String nowDate = commonUtil.getTodayUTCTime("");
 		map.put("tenantId", tenantId);
 		map.put("boardId", boardId);
 		map.put("nowDate", nowDate);
@@ -1816,7 +1816,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	public List<BoardListVO> getBoardPortletInfo(String userId, int tenantId, String boardId, int itemCount, String companyId, String offset, boolean isQnANormal, int startRow) throws Exception {
 		logger.debug("getBoardPortletInfo started.");
 		Map<String, Object> map = new HashMap<String, Object>();
-		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
+		String nowDate = commonUtil.getTodayUTCTime("");
 		map.put("boardId", boardId);
 		map.put("itemCount", itemCount);
 		map.put("tenantId", tenantId);
@@ -1834,7 +1834,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	public int getBoardPortletTotalCnt(String userId, int tenantId, String boardId, String companyId, String offset, boolean isQnANormal) throws Exception {
 		logger.debug("getBoardPortletInfo started.");
 		Map<String, Object> map = new HashMap<String, Object>();
-		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
+		String nowDate = commonUtil.getTodayUTCTime("");
 		map.put("boardId", boardId);
 		map.put("tenantId", tenantId);
 		map.put("nowDate", nowDate);
@@ -2789,7 +2789,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	public List<FavoriteBoardVO> getFavItemList(String boardId, int tenantId, String companyId, int startRow, int limit, String offset) throws Exception {
 		logger.debug("getFavItemList started.");
 		Map<String, Object> map = new HashMap<String, Object>();
-		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
+		String nowDate = commonUtil.getTodayUTCTime("");
 		map.put("boardId", boardId);
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
@@ -2809,7 +2809,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	public int getFavItemListCnt(String boardId, int tenantId, String companyId, String offset) throws Exception {
 		logger.debug("getFavItemList started.");
 		Map<String, Object> map = new HashMap<String, Object>();
-		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
+		String nowDate = commonUtil.getTodayUTCTime("");
 		map.put("boardId", boardId);
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);

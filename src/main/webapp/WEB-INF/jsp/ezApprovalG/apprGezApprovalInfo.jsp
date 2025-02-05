@@ -192,7 +192,7 @@
 	        var pDocSn = "<c:out value ='${docSN}'/>";
 	        var SusinGroupUseFlag = "<c:out value ='${susinGroupUseFlag}'/>";
 	        /* 2015-06-23 추가 - KSK */
-	        var T1361andT1362 = "<spring:message code='ezApprovalG.t1361'/>" + "<br>" + "<spring:message code='ezApprovalG.t1362'/>";
+	        var T1361andT1362 = "<spring:message code='ezApprovalG.t1361'/>" + "<spring:message code='ezApprovalG.t1362'/>";
 	        var SummaryOuterReceiverList = "";
 			var useAddressOpenAPI = "<c:out value ='${useAddressOpenAPI}'/>";
 			var checkdocinfo = false;
@@ -242,7 +242,11 @@
 
             var isfileup = false;
 			var convertedImgInfo;
-	        
+
+			/* 2024-07-18 양지혜 - 상위부서문서함 관련 */
+			var upperDeptCode = "<c:out value ='${upperDeptCode}'/>";
+			var upperDeptName = "<c:out value ='${upperDeptName}'/>";
+
 	        $(function () {
 	        	if (document.getElementById("AprSecurity").checked){
 	        		$("#idDatepicker").attr('disabled',false);
@@ -1732,8 +1736,15 @@
 			     		        }
 			     		        
 	     		        		// 2023-08-22 조수빈 - 작업을 완료한 후에는 부서수신함을 리로딩
-				                window.opener.parent.frames[0].convMain('4', '');
-		     		            OpenAlertUI(pAlertContent, window.close);
+								if (window.opener && window.opener.pListTypeValue) {
+									if (window.opener.pListTypeValue == "97") {
+										window.opener.parent.frames[0].convMain('97', '');
+									} else {
+										window.opener.parent.frames[0].convMain('4', '');
+									}
+								}
+
+								OpenAlertUI(pAlertContent, window.close);
 		     		            
 		                	}, 0);
 		                }
@@ -2325,7 +2336,7 @@
 		        }
 		             
 				if (txtDrafter.value.trim() == "") {
-		            alert("<spring:message code='ezApprovalG.t1055'/>");
+		            alert("<spring:message code='ezApprovalG.jje01'/>");
 					viewDocInfoAndFocusNode(txtDrafter);
 
 		            return false;
@@ -3379,7 +3390,7 @@
 	                    </div>
 	                </td>
 	                <!-- 2015-06-23 표준모듈:추가 - KSK -->
-	                <td class ="approvalG" style="width: 16px; text-align: center; padding-left: 4px;" >
+	                <td style="width: 16px; text-align: center; padding-left: 4px;" >
 	                    <!-- <div style="display: inline-block; margin:auto; padding-left:2.5px;" id="AddRemoveBTN"> -->
 	                    <div style="display: inline-block; margin:auto;" id="AddRemoveBTN">
 	                        <img src="/images/kr/cm/arr_rright.gif" alt="" width="16px" height="16px" border="0" style="cursor:pointer;" id="imgInsertAll" onclick="return InsertRecAll();">

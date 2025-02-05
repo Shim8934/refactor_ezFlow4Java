@@ -1395,7 +1395,7 @@ function SetAutoPropertyValue(frameNum) {
 
 				case "chief" :        
 					if (SendName != "")
-						PutFieldText(Fields[i], SendName + "장");
+						PutFieldText(Fields[i], SendName + strLang93);
 					break;
 			}
 		} else {

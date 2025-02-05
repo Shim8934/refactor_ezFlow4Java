@@ -3,8 +3,9 @@ package egovframework.ezEKP.ezApprovalG.dao;
 import org.apache.commons.collections.map.HashedMap;
 import org.springframework.stereotype.Repository;
 
-import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Repository("EzApprovalGConnDAO")
@@ -47,5 +48,9 @@ public class EzApprovalGConnDAO extends EgovAbstractDAO {
         }};
 
         return (String) select("ezApprovalGConn.getFormXslt", param);
+    }
+    
+    public void registConnData(Map<String, Object> map) throws Exception {
+        insert("EzApprovalGConnDAO.registConnData", map);
     }
 }

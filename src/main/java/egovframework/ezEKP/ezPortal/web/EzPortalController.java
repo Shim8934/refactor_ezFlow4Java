@@ -76,6 +76,8 @@ public class EzPortalController extends EgovFileMngUtil {
 		String url = "";
 		String funCode = "";
 		String topMenuID = "";
+		String leftFrameWidth = "220";
+		int width = 0;
 		
 		usePortal = ezCommonService.getTenantConfig("Use_Portal", userInfo.getTenantId());
 		
@@ -92,11 +94,24 @@ public class EzPortalController extends EgovFileMngUtil {
 		} else {
 			url = "/ezPersonal/leftEnvironment.do?topMenuID="+topMenuID;
 		}
+
+		if (req.getParameter("__wwidth") != null) {
+			String widthParam = req.getParameter("__wwidth");
+
+			try {
+				width = Integer.parseInt(widthParam);
+
+				leftFrameWidth = width < 1180 ? "0" : "220";
+			} catch (NumberFormatException e) {
+				width = 0;
+			}
+		}
 		
 		model.addAttribute("usePortal", usePortal);
 		model.addAttribute("url", url);
 		model.addAttribute("topMenuID", topMenuID);
-
+		model.addAttribute("leftFrameWidth", leftFrameWidth);
+		
 		logger.debug("environmentMain ended");
 		return "/ezPortal/portalEnvironmentMain";
 	}

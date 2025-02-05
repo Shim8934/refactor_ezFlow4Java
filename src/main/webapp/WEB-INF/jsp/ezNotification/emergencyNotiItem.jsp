@@ -27,13 +27,13 @@
 	        <ul class="emergency_info">
 	        	<c:choose>
 	        		<c:when test="${not empty emergencyNotiItem.writerPhoto}">
-	            		<li class="info_img"><img src='<c:out value='${emergencyNotiItem.writerPhoto}'/>'></li>
+	            		<li class="info_img" onclick="show_personinfo('${emergencyNotiItem.writerId}')"><img src='<c:out value='${emergencyNotiItem.writerPhoto}'/>'></li>
 	            	</c:when>
 	        		<c:otherwise>
-	            		<li class="info_img"><img src='/images/ezNewPortal/info_pic_none.png'></li>
+	            		<li class="info_img" onclick="show_personinfo('${emergencyNotiItem.writerId}')"><img src='/images/ezNewPortal/info_pic_none.png'></li>
 	        		</c:otherwise>
 	        	</c:choose>
-	            <li class="info_name"><c:out value='${emergencyNotiItem.writerName}'/><span>(<c:out value='${emergencyNotiItem.writerDeptName}'/>)</span></li>
+	            <li class="info_name" onclick="show_personinfo('${emergencyNotiItem.writerId}')"><c:out value='${emergencyNotiItem.writerName}'/><span>(<c:out value='${emergencyNotiItem.writerDeptName}'/>)</span></li>
 	            <li class="info_date"><c:out value='${fn:substring(emergencyNotiItem.writeDate, 0, 16)}'/></li>
 	        </ul>
 	        <div class="emergency_detail">
@@ -111,6 +111,12 @@
 			}
 		});
 	}
+	
+	function show_personinfo(userid) {
+        var feature = GetOpenPosition(420, 450);
+        window.open("/ezCommon/showPersonInfo.do?id=" + userid, "",
+		    "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+    }
 	</script>
 	
 </html>

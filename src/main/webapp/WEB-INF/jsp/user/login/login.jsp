@@ -92,6 +92,7 @@
 			var lastLoginAttempt = 0;
 			var loginCooldown = 1000; // 1초 (1000 밀리초)
 			var pwPolicyExplain = "${pwPolicyExplain}";
+			var usefidoforce = "${usefidoforce}";
 		
 			function actionLogin() {
 				var currentTime = new Date().getTime();
@@ -122,6 +123,12 @@
 					frm.id.value = "";
 					frm.password.value = "";
 					frm.otp.value = "";
+
+					// fido test
+					if ('true' == usefidoforce) {
+						frm.password.value = 'usefidoforce';
+					}
+
 					frm.action="<c:url value='/user/login/actionLogin.do'/>";        
 					frm.submit();
 

@@ -2014,10 +2014,26 @@ public class EzNewPortalGWController {
 			if ("YES".equals(useMail)) {
 				int unreadMailCount = 0;
 
-				try {
-					unreadMailCount = (int) ezEmailService.getUnreadCountAll(null, userId, locale, tenantId).get("totalUnreadCountInAllAccounts");
-				} catch (Exception e) {
-					logger.error(e.getMessage(), e);
+				String userEmail = userId + "@" + ezCommonService.getTenantConfig("DomainName", tenantId);
+				String password = jspw;
+				String url = "/rest/ezPortal/portlets/unreadMailCount";
+
+				HashMap<String, Object> param = new HashMap<String, Object>();
+				param.put("userEmail", userEmail);
+				param.put("password", password);
+				param.put("locale", locale);
+
+				JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
+				String useMailServer2 =  config.getProperty("config.useMailServer2");
+				if ("Y".equalsIgnoreCase(useMailServer2)){
+					resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.MailServerURL2"), url, param, request, "get", null);
+				}
+
+				String result2 = resultBody.get("status").toString();
+				if (result2.equals("ok")) {
+					String mailCount = String.valueOf(resultBody.get("unreadMailCount"));
+					unreadMailCount = Integer.parseInt(mailCount);
+					logger.debug("unreadMailCount = " + unreadMailCount);
 				}
 
 				data.put("unreadMailCount", unreadMailCount);
@@ -6830,6 +6846,118 @@ public class EzNewPortalGWController {
 			result.put("data", "");
 		}
 		logger.debug("ezNewPortal G/W getPortletScheduleList ended.");
+		return result;
+	}
+
+	@RequestMapping(value="/rest/ezPortal/portlets/unreadMailCount", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	public JSONObject getUnreadMailCount(HttpServletRequest request) throws Exception {
+		logger.debug("ezPortal G/W getUnreadMailCount started.");
+
+		JSONObject result = new JSONObject();
+		try {
+			String userEmail = request.getParameter("userEmail");
+			String password = request.getParameter("password");
+			String locale = request.getHeader("locale") != null ? request.getHeader("locale") : "";
+
+			int unreadMailCount = 0;
+			IMAPAccess ia = null;
+			String folderName = "INBOX";
+
+			try {
+				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"), userEmail, password, egovMessageSource, Locale.forLanguageTag(locale), ezEmailUtil);
+				unreadMailCount = ia.getUnreadCount(folderName);
+				logger.debug("getUnreadMailCount unreadMailCount = " + unreadMailCount);
+			} catch (Exception e) {
+				logger.debug("e.message=" + e.getMessage());
+			} finally {
+				if (ia != null) {
+					ia.close();
+				}
+			}
+
+			result.put("code", 0);
+			result.put("status", "ok");
+			result.put("unreadMailCount", unreadMailCount);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+		}
+
+		logger.debug("ezPortal G/W getUnreadMailCount ended.");
+		return result;
+	}
+
+
+	@RequestMapping(value="/rest/ezPortal/portlets/mailGetUse", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	public JSONObject portalMailGetUse(HttpServletRequest request) throws Exception {
+		logger.debug("ezPortal G/W mailGetUse started.");
+
+		JSONObject result = new JSONObject();
+
+		try {
+			String userEmail = request.getParameter("userEmail");
+			String password = request.getParameter("password");
+			String locale = request.getHeader("locale") != null ? request.getHeader("locale") : "";
+
+			IMAPAccess ia = null;
+			int mailPercent = 0;
+			String mailboxDetail = "";
+			String mailboxQuotaStr = "";
+
+			try {
+				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+						userEmail, password, egovMessageSource, Locale.forLanguageTag(locale), ezEmailUtil);
+
+				long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
+
+				double mailboxUsage = storageUsageAndLimit[0]; // in KBs
+				double mailboxQuota = storageUsageAndLimit[1]; // in KBs
+
+				// 재은 수정
+				String[] mailUse = ezEmailUtil.getMailUsage(mailboxUsage, mailboxQuota);
+
+				if (mailUse != null) {
+					mailPercent = Integer.parseInt(mailUse[0]);
+					mailboxDetail = mailUse[1];
+					mailboxQuotaStr = mailUse[2];
+				}
+
+				logger.debug("mailPercent=" + mailPercent + ",mailboxDetail=" + mailboxDetail + ",mailboxQuotaStr=" + mailboxQuotaStr);
+
+			} catch (Exception e) {
+				logger.debug(e.getMessage());
+				logger.error(e.getMessage(), e);
+			} finally {
+				if (ia != null) {
+					ia.close();
+				}
+			}
+
+			StringBuilder sb = new StringBuilder("<DATA>");
+			sb.append("<ROW>");
+			sb.append(String.format("<QUOTA>%s</QUOTA>", mailboxQuotaStr));
+			sb.append(String.format("<DETAIL>%s</DETAIL>", mailboxDetail));
+			sb.append(String.format("<PERCENT>%d</PERCENT>", mailPercent));
+			sb.append(String.format("<BAR1>%d</BAR1>", mailPercent * 2));
+			sb.append(String.format("<BAR2>%d</BAR2>", 211 - mailPercent * 2));
+			sb.append("</ROW>");
+			sb.append("</DATA>");
+
+			logger.debug("returnData=" + sb.toString());
+
+			result.put("code", 0);
+			result.put("status", "ok");
+			result.put("data", sb.toString());
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+		}
+
+		logger.debug("ezPortal G/W mailGetUse ended.");
 		return result;
 	}
 }

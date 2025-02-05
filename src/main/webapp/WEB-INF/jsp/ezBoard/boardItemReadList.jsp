@@ -148,7 +148,7 @@
 		            	var htmlContent = "<tr><td style='text-align:center'>" + msg +"</td></tr>";
 		            	$("#lvBoardList").html(htmlContent);
 		            	
-		            	$("#lvBoardList").css("height", "335px");
+		            	$("#lvBoardList").css("height", "305px");
 		            }
 		        }
 		        catch (e) {

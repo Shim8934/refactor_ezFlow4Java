@@ -307,19 +307,34 @@ public class CommonUtil {
 				
 		return src;		
 	}
+
+    public Matcher getMatcherForStripScriptTagsAndFunctions(String src) {
+		// dhlee: 20240420 - ( 뿐 아니라 ` 기호일 때도 alert 함수가 실행되어 ` 문자도 추가함
+		// dhlee: 20240718 - (가 &#40;로 변경된 경우가 있어 &#40;와 &#41;에 대한 처리를 추가함
+		Pattern p = Pattern.compile("<(object|applet|script).*?>|</(object|applet|script).*?>|alert([ ]*?/\\*.*?\\*/[ ]*?)?[(`].*?[)`]|alert([ ]*?/\\*.*?\\*/[ ]*?)?&#40;.*?&#41;|confirm([ ]*?/\\*.*?\\*/[ ]*?)?[(`].*?[)`]|confirm([ ]*?/\\*.*?\\*/[ ]*?)?&#40;.*?&#41;|prompt([ ]*?/\\*.*?\\*/[ ]*?)?[(`].*?[)`]|prompt([ ]*?/\\*.*?\\*/[ ]*?)?&#40;.*?&#41;|window.*?location",
+						Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+		return p.matcher(src);
+	}
     
-    public String stripScriptTagsAndFunctions(String src) {
-    	if (src != null && !src.isEmpty()) {
-			// dhlee: 20240420 - ( 뿐 아니라 ` 기호일 때도 alert 함수가 실행되어 ` 문자도 추가함
-			// dhlee: 20240718 - (가 &#40;로 변경된 경우가 있어 &#40;와 &#41;에 대한 처리를 추가함
-	        Pattern p = Pattern.compile("<(object|applet|script).*?>|</(object|applet|script).*?>|alert([ ]*?/\\*.*?\\*/[ ]*?)?[(`].*?[)`]|alert([ ]*?/\\*.*?\\*/[ ]*?)?&#40;.*?&#41;|confirm([ ]*?/\\*.*?\\*/[ ]*?)?[(`].*?[)`]|confirm([ ]*?/\\*.*?\\*/[ ]*?)?&#40;.*?&#41;|prompt([ ]*?/\\*.*?\\*/[ ]*?)?[(`].*?[)`]|prompt([ ]*?/\\*.*?\\*/[ ]*?)?&#40;.*?&#41;|window.*?location",
-	        				Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
-	        Matcher m = p.matcher(src);
+	public String stripScriptTagsAndFunctions(String src) {
+		if (src != null && !src.isEmpty()) {
+			Matcher m = getMatcherForStripScriptTagsAndFunctions(src);
 	        src = m.replaceAll("");
     	}
 
         return src;
     }
+
+    public boolean hasStripScriptTagsAndFunctions(String src) {
+		Matcher m = getMatcherForStripScriptTagsAndFunctions(src);
+		boolean result = m.matches();
+
+		if (result) {
+			logger.debug("src={}", src);
+		}
+
+		return result;
+	}
 
 	public String stripTagSymbols(String src) {
 		if (src != null && !src.isEmpty()) {
@@ -2288,7 +2303,6 @@ public class CommonUtil {
 			}
 
 			// 0-2. 2023-06-09 이사라 : 패스워드 설정 시 연속숫자, 생일, 전화번호 방지 기능
-
 			boolean checkPasswordNumber = "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("checkPasswordNumber", tenantId));
 
 			if (checkPasswordNumber) {
@@ -2312,7 +2326,15 @@ public class CommonUtil {
 				}
 
 				// 스트림은 한번만 소비할 수 있어서 List로 변환해둠. *참고 https://yeon-kr.tistory.com/192, https://devyoseph.tistory.com/156
-				List<String> propList = propStream.map(prop -> StringUtils.defaultString(prop.replaceAll("\\D", "").trim())).filter(StringUtils::isNotBlank).collect(Collectors.toList());
+				List<String> propList = propStream
+						.map(prop -> StringUtils.defaultString(prop.replaceAll("\\D", "").trim()))
+						.filter(StringUtils::isNotBlank)
+						.collect(Collectors.toList());
+
+				// 휴대폰번호가 "010"으로 시작하는 경우, "010"은 제외하고 비교
+				if (propList.size() > 1 && propList.get(1).startsWith("010")) {
+					propList.set(1, propList.get(1).substring(3));
+				}
 
 				// 패스워드 설정 시 연속숫자, 생일, 전화번호 방지 기능
 				for (int i = 0; i < pwStr.length() - 2; i++) {
@@ -3091,7 +3113,7 @@ public class CommonUtil {
 	/** 2021-12-08 홍승비 - HTML5 지원 웹 동영상 파일 확장자 체크용 공통 메서드 추가 */
 	public boolean checkMovExtension(String fileExt) {
 		boolean result = false;
-		String[] movExts = {"mp4", "ogg", "webm"};
+		String[] movExts = {"mp4", "webm"};
 		
 		if (fileExt != null && ArrayUtils.contains(movExts, fileExt)) {
 			result = true;

@@ -268,28 +268,28 @@ function attach_Add(ocx_file) {
 function bigattach_Add(ocx_file) {
     do_Attach_Add(ocx_file, true);
 }
+// fileupload() 로 대체된 것 같음.
+// function btn_AttachAdd_onclick() {
 
-function btn_AttachAdd_onclick() {
+//     if (document.form.file1.value != "") {
 
-    if (document.form.file1.value != "") {
+//         var AttachLimit = 1096;
+//         var newid = g_newid;
+//         document.getElementById("maxsize").value = FtotSizeAttachSize;
+//         document.getElementById("cnt").value = document.getElementById("form").file1.files.length;
+//         document.getElementById("newid").value = newid;
+//         document.getElementById("bigmaxsize").value = FtotBigSizeAttachSize;
+//         document.getElementById("changesize").value = FBigSizeAttachSize;
+//         document.getElementById("txtName").value = filedate;
+//         document.getElementById("endDay").value = BigSizeMailAttachDelDay;
 
-        var AttachLimit = 1096;
-        var newid = g_newid;
-        document.getElementById("maxsize").value = FtotSizeAttachSize;
-        document.getElementById("cnt").value = document.getElementById("form").file1.files.length;
-        document.getElementById("newid").value = newid;
-        document.getElementById("bigmaxsize").value = FtotBigSizeAttachSize;
-        document.getElementById("changesize").value = FBigSizeAttachSize;
-        document.getElementById("txtName").value = filedate;
-        document.getElementById("endDay").value = BigSizeMailAttachDelDay;
-
-        var frm = document.getElementById('form');
-        frm.submit();
-    }
-    else {
-        alert(strLangLHM07);
-    }
-}
+//         var frm = document.getElementById('form');
+//         frm.submit();
+//     }
+//     else {
+//         alert(strLangLHM07);
+//     }
+// }
 
 function AttachFileInfo(resultXML) {
     var xml = loadXMLString(resultXML);
@@ -1182,6 +1182,7 @@ function event_SaveonClick() {
                 g_saveHttp = null;
                 MailStatus = "NO";
             	g_apprMail = false;
+            	g_apprMailType = "";
             	g_apprMailApprover = "";
         	}
         	// 정상적으로 처리된 경우
@@ -1210,6 +1211,7 @@ function event_SaveonClick() {
                 g_saveHttp = null;
                 MailStatus = "NO";
             	g_apprMail = false;
+            	g_apprMailType = "";
             	g_apprMailApprover = "";
                 
                 if ("always" === mailSendResult) {
@@ -1378,7 +1380,7 @@ function onblurOnRecipientInputField(value) {
             }
         }, 1);
     } else {
-        if (value != null && value != '') {
+        if (value && value.length > 1) {
             NameCertify_onClick(null);
         }
     }    
@@ -1406,7 +1408,7 @@ function NameCertify_onClick(returnFunction) {
     CompletCancelBtn = false;
     ToTalCompletEmailAddress();
     // 20181127 조진호 - 검색 후에 검색 리스트가 계속 보이는 현상 수정
-    $(".ui-autocomplete").css('display', 'none');
+    $('.ui-autocomplete-input').autocomplete("close");
     return true;
 }
 

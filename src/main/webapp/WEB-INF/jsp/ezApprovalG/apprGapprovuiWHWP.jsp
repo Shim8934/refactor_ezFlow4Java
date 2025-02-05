@@ -184,6 +184,19 @@
 		  	//회람
 			var type = "ING";
 			var pGongRamDocID = "";
+			
+			// 2024-12-10 기민혁 - 수정버전 변경 기능 사용여부
+			var editVersionYN = "<c:out value ='${editVersionYN}'/>";
+			// 2024-12-10 기민혁 - 수정버전
+			var editVersion = "";
+			// 2024-12-10 기민혁 - 수정버전 모드
+			var editMode = "";
+			// 수정후 히스토리 및 문서 저장 시 오류로 인해 전역변수로 변경함
+			var beforeDocURL;
+			
+			/* 2024-07-18 양지혜 - 상위부서문서함 관련 */
+			var upperDeptCode = "<c:out value ='${upperDeptCode}'/>";
+			var upperDeptName = "<c:out value ='${upperDeptName}'/>";
 
 		    function getNextDocList() {
 		        NextDocID = "";
@@ -470,10 +483,11 @@
 		    	
 		    	/*  2023-02-08 홍승비 - WHWP 문서의 편집모드 적용 후 수정이력 비교 기능을 위해 isBeforeDoc, beforeDocURL 파라미터 추가 */
 		    	// MHT 문서와는 다르게 편집모드 적용 시 수정이력이 *바로 반영되지 않으므로* 주의 (2023-02-09 기준, 필요 시 차후 동일 스펙으로 수정 가능)
-		        if (FirstHtml != "") {
-					var beforeDocURL = UpdateDocHistory(FirstHtml, "Y", ""); // 수정전 문서 이력저장
-					UpdateDocHistory(SaveHtml, "N", beforeDocURL); // 수정후 문서 이력저장
-		        }
+				// 2023-08-24 강동주 - MHT 문서와는 마찬가지로 편집모드 적용 시 수정이력을 *바로 반영*하도록 수정함
+//				if (FirstHtml != "") {
+//					var beforeDocURL = UpdateDocHistory(FirstHtml, "Y", ""); // 수정전 문서 이력저장
+//					UpdateDocHistory(SaveHtml, "N", beforeDocURL); // 수정후 문서 이력저장
+//		        }
 		        
 		        if (mode == "1") {
 		            if (allFlag == "1" || allFlag == "2") {
@@ -1398,7 +1412,13 @@
 							return;
 						}
 			            var pInformationContent = "<spring:message code='ezApprovalG.t43'/>";
-				        var Ans = OpenInformationUI(pInformationContent, btnEdit_onclick_Complete);
+						
+						var Ans = "";
+						if(editVersionYN && editVersionYN == "Y"){
+							Ans = OpenInformationUI(pInformationContent, btnEdit_onclick_Complete, "Y");
+						}else{
+							Ans = OpenInformationUI(pInformationContent, btnEdit_onclick_Complete);
+						}
 			        }
 			    }
 			    
@@ -1406,16 +1426,37 @@
 		            beforeHwp = hwpBody;
 		        }
 			    
-			    function btnEdit_onclick_Complete(Ans) {
+			    function btnEdit_onclick_Complete(Ans, PeditMode) {
 			    	DivPopUpHidden();
 			    
 			    	message.EditMode(3);
 			        setNodeText(btnEdit.childNodes[0], "<spring:message code='ezApprovalG.t44'/>");
 		
 				    if (Ans) {
-				        if (FirstHtml == "") {
-				            FirstHtml = beforeHwp;
-				        }
+						FirstHtml = beforeHwp;
+
+						if(editVersionYN && editVersionYN == "Y"){
+							editMode = PeditMode;
+							$.ajax({
+								type : "POST",
+								dataType: "text",
+								async : false,
+								url : "/ezApprovalG/getEditVersion.do",
+								data : {
+									docID : pDocID,
+									editMode : editMode
+								},
+								success: function(result){
+									editVersion = result;
+								}
+							});
+						}
+						
+						// 수정 후 바로 문서 save
+						GetHTML(before_SaveFile2);// 수정후 문서 이력 및 파일 저장 스택 마지막임.
+						beforeDocURL = UpdateDocHistory(FirstHtml, "Y", ""); // 수정전 문서 이력저장
+// 						UpdateDocHistory(SaveHtml, "N", beforeDocURL);
+						
 				        message.EditMode(0);
 				    	modeflag = true;
 				    	chkBtnConfirm("2");
@@ -2101,7 +2142,7 @@
                     if (getNodeText(dataNodes[1]).indexOf(preSusinGroupStr) == 0 || useReceiveInfoName == "0") {
                         createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "NAME", SelectSingleNodeValue(dataNodes[1], "VALUE").trim());
                     } else {
-                        createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "NAME", SelectSingleNodeValue(dataNodes[1], "VALUE").trim() + (SelectSingleNodeValue(dataNodes[2], "VALUE").trim() == "" ? "장" : ""));
+                        createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "NAME", SelectSingleNodeValue(dataNodes[1], "VALUE").trim() + (SelectSingleNodeValue(dataNodes[2], "VALUE").trim() == "" ? strLang93 : ""));
                     }
                     createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "DEPTID", SelectSingleNodeValue(dataNodes[0], "DATA1").trim());
                     createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "DEPTNAME", SelectSingleNodeValue(dataNodes[0], "DATA2").trim());

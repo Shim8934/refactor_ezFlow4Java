@@ -104,4 +104,12 @@ public interface EzSystemAdminService {
 	public void insertSystemConfigType(String typeCode, String typeName, String typeName2, String description, String writerId, String writerName, String writerName2, int tenantId, String companyId) throws Exception;
 	public void updateSystemConfigType(String typeCode, String typeName, String typeName2, String description, String writerId, String writerName, String writerName2, int tenantId, String companyId) throws Exception;
 	public void disableDeleteSystemConfig(String sCode, String companyID, int tenantId) throws Exception;
+
+	List<IPBandVO> getFidoAuthenticList(int tenantID, String companyId) throws Exception;
+	int getFidoAuthenticInfo(int tenantID, String companyId, String ipAddress) throws Exception;
+	IPBandVO getSystemFidoIPBand(String ipNo) throws Exception;
+	void insertFidoIPBand(int tenantID, String companyId, String ipAddress, String access, String explanation) throws Exception;
+	void updateFidoIPBand(String ipNo, String ipAddress, String access, String explanation) throws Exception;
+	void deleteFidoIPBand(String ipNo) throws Exception;
+	public String insertDefaultPwPolicy(int tenantID, String companyID) throws Exception; // 암호 정책 설정 추가
 }

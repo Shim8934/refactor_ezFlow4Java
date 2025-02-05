@@ -96,6 +96,7 @@
      			var PreviewWContent = document.getElementById("WPreUser").value;
      			var PreviewHList = document.getElementById("HListUser").value;
      			var PreviewHContent = document.getElementById("HPreUser").value;
+     			var allNewBoardListDate = document.getElementById("allNewBoardListDate").value;
      		
      			$.ajax({
      				url : '/ezBoard/board_generallist_save.do',
@@ -107,7 +108,8 @@
      					previewWList : PreviewWList,
      					previewWContent : PreviewWContent,
      					previewHList : PreviewHList,
-     					previewHContent : PreviewHContent	
+     					previewHContent : PreviewHContent,
+						allNewBoardListDate : allNewBoardListDate
      				} ,
 	     			success : function(data, textStatus, jqXHR) {
 	     				alert('<spring:message code="ezEmail.t42" />');
@@ -270,6 +272,16 @@
                      			 </c:choose>
                 		</td>
             	</tr>
+				<tr>
+					<th><spring:message code="ezBoard.lyj01" /></th>
+					<td>
+						<select id="allNewBoardListDate" name="pAllNewBoardListDate" style="WIDTH: 100px">
+							<option value='5' <c:if test="${boardListConfig.allNewBoardListDate eq '5'}">selected</c:if>>5</option>
+							<option value='10' <c:if test="${boardListConfig.allNewBoardListDate eq '10'}">selected</c:if>>10</option>
+						</select>
+						<spring:message code="ezBoard.t158"/>
+					</td>
+				</tr>
         	</table>
     		<div class="btnpositionJsp" style="width:623px;">      
         		<a class="imgbtn" onclick="Change_Click()"><span><spring:message code="ezBoard.t98" /></span></a>

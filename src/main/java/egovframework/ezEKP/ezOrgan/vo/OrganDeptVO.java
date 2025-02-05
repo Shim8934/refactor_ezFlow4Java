@@ -79,6 +79,9 @@ public class OrganDeptVO {
 	//부서 숨김 처리
 	private String deptTreeFlag;
 
+	/* 상위부서문서함 사용 여부 (Y/N) */
+	private String useUpperDeptBox;
+
 	public String getCn() {
 		return cn;
 	}
@@ -304,5 +307,11 @@ public class OrganDeptVO {
 
 	public void setDeptTreeFlag(String deptTreeFlag) {
 		this.deptTreeFlag = deptTreeFlag;
+	}
+	public String getUseUpperDeptBox() {
+		return useUpperDeptBox;
+	}
+	public void setUseUpperDeptBox(String useUpperDeptBox) {
+		this.useUpperDeptBox = useUpperDeptBox;
 	}
 }

@@ -59,7 +59,10 @@
 	        if (opener) {
 	        	receiptFlag = opener.receiptFlag;
 	        }
-	        
+
+			/* 2024-07-18 양지혜 - 상위부서문서함 관련 */
+			var upperDeptCode = "<c:out value ='${upperDeptCode}'/>";
+
 	        window.onload = function () {
 	            try {
 	                RetValue = parent.selectcabinet_cross_dialogArguments[0];
@@ -402,6 +405,7 @@
                 if (receiptFlag == '' || typeof receiptFlag == 'undefined') {
                 	if (ReturnFunction != null && (regDocId == null || regDocId == undefined || regDocId == "")) {
     	                ReturnFunction(rtnVal);
+    	                window.close();
     	            } else {
 		                window.close();
     	            }
@@ -449,7 +453,13 @@
 	     		        }
 	     		        
      		        	// 2023-08-22 조수빈 - 작업을 완료한 후에는 부서수신함을 리로딩
-		                window.opener.parent.frames[0].convMain('4', '');
+						if (window.opener && window.opener.pListTypeValue) {
+							if (window.opener.pListTypeValue == "97") {
+								window.opener.parent.frames[0].convMain('97', '');
+							} else {
+								window.opener.parent.frames[0].convMain('4', '');
+							}
+						}
 	     		        OpenAlertUIDiv(pAlertContent, window.close);
 	     		        
                 	},0);

@@ -939,31 +939,33 @@
 	<select id="EzResourceDAO.getBrdList" parameterClass="Map" resultMap="resBrdListVO">
 		<![CDATA[
 			SELECT
-				ATTACH_SIZE, BRD_ACCESS, BRD_COMPANY, BRD_COUNT,
-                BRD_EXPLAIN, BRD_GB, BRD_GROUP, BRD_ID, BRD_LEVEL,
-                CASE #v_lang# WHEN '2' THEN BRD_NM2 ELSE BRD_NM END AS BRD_NM,
-                BRD_POSTTERM, BRD_REF, BRD_STEP, BRD_UPPER, BRD_URL,
-                SUBSTR(MAKEDATE, 1, 4) || '-' || SUBSTR(MAKEDATE, 5, 2) || '-' || SUBSTR(MAKEDATE, 7, 2) MAKEDATE, OWNDEPTID,
-                CASE #v_lang# WHEN '2' THEN OWNDEPTNM2 ELSE OWNDEPTNM END AS OWNDEPTNM,
-                OWNERCALL,
-                OWNERID,
-                CASE #v_lang# WHEN '2' THEN OWNERNM2 ELSE OWNERNM END AS OWNERNM,
-                CASE #v_lang# WHEN '2' THEN OWNERPOSITION2 ELSE OWNERPOSITION END AS OWNERPOSITION,
-                REPLY_MAIL_FG, RESLOCATION, APPROVEFLAG
-			FROM
-				TBL_RS_BRD  
+				*
+			FROM (
+					SELECT
+						ATTACH_SIZE, BRD_ACCESS, BRD_COMPANY, BRD_COUNT,
+						BRD_EXPLAIN, BRD_GB, BRD_GROUP, BRD_ID, BRD_LEVEL,
+						CASE #v_lang# WHEN '2' THEN BRD_NM2 ELSE BRD_NM END AS BRD_NM,
+						BRD_POSTTERM, BRD_REF, BRD_STEP, BRD_UPPER, BRD_URL,
+						SUBSTR(MAKEDATE, 1, 4) || '-' || SUBSTR(MAKEDATE, 5, 2) || '-' || SUBSTR(MAKEDATE, 7, 2) MAKEDATE, OWNDEPTID,
+						CASE #v_lang# WHEN '2' THEN OWNDEPTNM2 ELSE OWNDEPTNM END AS OWNDEPTNM,
+						OWNERCALL,
+						OWNERID,
+						CASE #v_lang# WHEN '2' THEN OWNERNM2 ELSE OWNERNM END AS OWNERNM,
+						CASE #v_lang# WHEN '2' THEN OWNERPOSITION2 ELSE OWNERPOSITION END AS OWNERPOSITION,
+						REPLY_MAIL_FG, RESLOCATION, APPROVEFLAG
+					FROM
+						TBL_RS_BRD  
+					WHERE
+						BRD_UPPER = #v_PBRDID#
+					AND
+						BRD_GB = '2' 
+					AND
+						BRD_COMPANY = #v_PCOMPANYID#
+					AND
+						TENANT_ID = #tenantID#
+				)
 			WHERE
-				BRD_UPPER = #v_PBRDID#
-			AND
-				BRD_GB = '2' 
-			AND
 				ROWNUM <= #v_PTOPCNT#
-			AND
-				BRD_COMPANY = #v_PCOMPANYID#
-			AND
-				TENANT_ID = #tenantID#
-			ORDER BY
-				BRD_STEP	
 		]]>
 	</select>
 	
@@ -1086,6 +1088,17 @@
    				OWNERID = #v_P_Brd_ID#
    			AND 
 				COMPANYID = #v_P_CompanyID#
+			AND
+				TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<delete id="EzResourceDAO.delResDataForm" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_RS_SCHEDULEFORM
+			WHERE
+				RESID = #v_P_Brd_ID#
 			AND
 				TENANT_ID = #tenantID#	
 		]]>
@@ -1274,11 +1287,11 @@
 				A.PNUM, 
 				A.COMPANYID, 
 				A.WRITERID,
-				CASE #v_LANG#
+				CASE #v_lang#
 					WHEN '1' THEN NVL(D.DISPLAYNAME, U.DESCRIPTION)
 					ELSE NVL(D.DISPLAYNAME2, U.DESCRIPTION2)
 					END DEPTNM,
-				CASE #v_LANG#
+				CASE #v_lang#
 					WHEN '1' THEN U.DISPLAYNAME
 					ELSE U.DISPLAYNAME2
 					END OWNERNM,
@@ -2596,6 +2609,8 @@
 				A.TENANT_ID = #tenant_id#
 			AND
 				A.BRD_COMPANY = #brd_company#
+			AND
+				A.APPROVEFLAG != 2
 		]]>
 	</select>
 

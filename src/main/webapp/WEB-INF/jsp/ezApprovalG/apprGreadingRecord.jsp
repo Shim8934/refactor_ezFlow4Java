@@ -134,6 +134,7 @@
 
 				var useDraftAll = "${ useDraftAll }";
 				var attachedDocList;
+		        var useReceiveInfoName = "<c:out value ='${useReceiveInfoName}'/>"; // 수신처 뒤에 "장"을 붙이는지 여부 (0 : 안붙임 / 1 : 붙임 / 2: 상위부서 + 수신처장)
 
 		        document.onselectstart = function () { return false; };
 		

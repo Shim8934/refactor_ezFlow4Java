@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import egovframework.ezEKP.ezResource.vo.ResGetClsAclListVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
 import egovframework.ezEKP.ezResource.vo.ResGetSubClsListVO;
-import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzResourceAdminDAO")
 public class EzResourceAdminDAO extends EgovAbstractDAO {

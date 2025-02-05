@@ -7,6 +7,7 @@
 <meta charset="utf-8">
 <link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />
 <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
+<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 <style>iframe { margin-top: 10px; width: 100%; border: none; }</style>
 <title></title>
 </head>

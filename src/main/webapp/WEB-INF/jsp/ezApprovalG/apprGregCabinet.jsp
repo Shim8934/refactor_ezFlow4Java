@@ -54,6 +54,11 @@
 	    arr_userinfo[15]  = "<c:out value = '${userInfo.deptName1}'/>";
 	    arr_userinfo[16]  = "<c:out value = '${userInfo.deptName2}'/>";
 	    var UserLang = "${userInfo.lang}";
+
+		/* 2024-07-18 양지혜 - 상위부서문서함 관련 */
+		var upperDeptCode = "<c:out value = '${upperDeptCode}'/>";
+		var upperDeptName = "<c:out value = '${upperDeptName}'/>";
+
 	    var rtnVal = new Array();
 	     window.onload = function (){
 	        var ua = navigator.userAgent;
@@ -90,9 +95,8 @@
 	        pOwnerID = arr_userinfo[1];
 	        pOwnerName = arr_userinfo[2];
 	        txtOwner.value = pOwnerName;
-	
-	        g_DeptCode = arr_userinfo[4];
-	        g_DeptName = arr_userinfo[5];
+	        g_DeptCode = upperDeptCode === "" ? arr_userinfo[4] : upperDeptCode;
+	        g_DeptName = upperDeptName === "" ? arr_userinfo[5] : upperDeptName;
 	
 	        InitCode();
 	        InitCategorySelection();

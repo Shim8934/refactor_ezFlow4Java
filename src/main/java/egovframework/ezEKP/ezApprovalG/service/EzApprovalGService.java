@@ -14,6 +14,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGOpinionVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGOutOfOfficeInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGProxyVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGReceiveDocVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSusinProcessInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
@@ -180,7 +181,7 @@ public interface EzApprovalGService {
 
     public String getListInfoXml(String listFlag, String listType, String companyID, String lang, LoginVO userInfo) throws Exception;
 
-    public String getRecordList(Document doc, String lang, int tenantID, String offset) throws Exception;
+    public String getRecordList(Document doc, String lang, int tenantID, String offset, String deptID) throws Exception;
 
     public String getCodeInfo(String companyID, String lang, int tenantID) throws Exception;
 
@@ -202,7 +203,7 @@ public interface EzApprovalGService {
 
     public String getEA5Value(String msg, int tenantID, String companyID) throws Exception;
 
-    public String getMyTaskCode(String userID, String deptID, String companyID, String lang, int tenantID) throws Exception;
+    public String getMyTaskCode(String userID, String deptID, String companyID, String lang, int tenantID, String upperDeptCode) throws Exception;
 
     public String setMyTaskCode(String userID, String deptID, String cabinetID, String taskCode, String type, String companyID, int tenantID) throws Exception;
 
@@ -321,7 +322,7 @@ public interface EzApprovalGService {
     public String transferCabinet(Document xmlDom, int tenantID) throws Exception;
     
 	/* 2020-02-24 홍승비 - 편집 전후 문서를 판단하기 위한 플래그 isBeforeDoc, 편집전문서 파일경로 beforeDocURL 추가 */
-	public String updateHistoryForDoc(String docID, String url, String userID, String userName, String userName2, String userJobTitle, String userJobTitle2, String userDeptID, String userDeptName, String userDeptName2, String isBeforeDoc, String beforeDocURL, LoginVO userInfo)  throws Exception;
+	public String updateHistoryForDoc(String docID, String url, String userID, String userName, String userName2, String userJobTitle, String userJobTitle2, String userDeptID, String userDeptName, String userDeptName2, String isBeforeDoc, String beforeDocURL, LoginVO userInfo, String editMode, String editVersion)  throws Exception;
 
     public String gongRamUpdate(String docID, String userID, String companyID, String lang, int tenantID) throws Exception;
 
@@ -359,7 +360,7 @@ public interface EzApprovalGService {
 
     public String gongRamSaveEnd(Document xmlDom, String dirPath, String companyID, String lang, int tenantID, String offSet) throws Exception;
 
-    public String makeTmp2IngDocInfo(String userID, String sn, String companyID, String lang, int tenantID, String docID) throws Exception;
+    public String makeTmp2IngDocInfo(String userID, String sn, String companyID, String lang, int tenantID, String docID, String orgDocID, String updateFlag) throws Exception;
 
     public String checkAprLine(String docID, String mode, String userID, String companyID, int tenantID) throws Exception;
 
@@ -395,7 +396,7 @@ public interface EzApprovalGService {
 
     public String changeRecordInfo(Document xmlDom, String lang, String offset, int tenantID) throws Exception;
 
-    public String getDeliveryList(String p_DeptID, String pPageSize, String pPageNum, String pOrderCell, String pOrderOption, String pQuery, String companyID, String lang, String deptcode, String deptcode2, String title, String sregdate, String eregdate, String debenturer, String isdocprint, String extReceptYN, LoginVO userInfo) throws Exception;
+    public String getDeliveryList(String p_DeptID, String pPageSize, String pPageNum, String pOrderCell, String pOrderOption, String pQuery, String companyID, String lang, String deptcode, String deptcode2, String title, String sregdate, String eregdate, String debenturer, String isdocprint, String extReceptYN, LoginVO userInfo, String upperDeptCode) throws Exception;
 
     public String getNewID(String companyID, int tenantID) throws Exception;
 
@@ -996,4 +997,22 @@ public interface EzApprovalGService {
     
 	// 2024-09-11 이가은 - 사이트용 포탈 포틀릿 결재문서 url 링크 반환
     public String getRedirectUrl(String docID, String mode, LoginVO userInfo);
+
+	public Map<String, Object> getDocRightInfoForAttachApr(String[] docIdList, String userId, String deptId, String rollInfo, String accessInfo, String approvalFlag, String lang, String companyId, int tenantId) throws Exception;
+    
+    /* 2024-07-11 기민혁 - 전자결재G > 자동 임시저장 문서 확인  */
+    public String checkAutoSaveDocId(String docID, String companyID, int tenantId) throws Exception;
+
+    /* 2024-12-10 기민혁 - 전자결재 > 수정 버전 호출 */
+    public String getEditVersion(String docID, String companyID, int tenantID) throws Exception;
+
+    /* 2024-12-25 기민혁 - 전자결재 > 일괄 지정 수신 문서 확인 */
+    public ApprGReceiveDocVO checkDocReceiveInfo(String companyID, int tenantID, String docID, String receiveSN) throws Exception;
+
+    public Map<String, String> getUpperDeptInfo(String pDeptID, int tenantId) throws Exception;
+
+    public String getSameDeptBoxUseID(String deptID, int tenantId) throws Exception;
+    
+    // 2024-12-27 이가은 - 전자결재 공람완료문서 삭제 로직
+    public String gongramDocDelete(String docID, int aprmemberSn, int tenantID, String companyID) throws Exception;
 }

@@ -157,6 +157,11 @@
 
 			var type = "ING"; // 2023-07-24 임정은 - 공람 추가
 
+			/* 2024-07-18 양지혜 - 상위부서문서함 관련 */
+			var upperDeptCode = "<c:out value ='${upperDeptCode}'/>";
+			var upperDeptName = "<c:out value ='${upperDeptName}'/>";
+			var allowDeptIDs = "<c:out value ='${allowDeptIDs}'/>"
+
 		    $(document).ready(function(){
 				if (approvalFlag == 'S') {
 					$(".approvalS").show();
@@ -489,7 +494,7 @@
 		    	} else if (deptCheckFlag == "4") {
 		    		alert(strLanggarm06 + " '" + "'" + strLanggarm08);
 		    		return;
-		    	} else if (deptCheckFlag == "2") {
+		    	} else if (deptCheckFlag == "2" && upperDeptCode == "") {
 					alert("타부서의 철정보로 설정되어있습니다. \n'" + arr_userinfo[5] + "'부서의 철로 변경해주시기바랍니다.");
 					return;
 				}
@@ -1002,7 +1007,7 @@
 		    	} else if (deptCheckFlag == "4") {
 		    		alert(strLanggarm06 + " '" + "'" + strLanggarm08);
 		    		return;
-		    	} else if (deptCheckFlag == "2") {
+		    	} else if (deptCheckFlag == "2" && upperDeptCode == "") {
 					alert("타부서의 철정보로 설정되어있습니다. \n'" + arr_userinfo[5] + "'부서의 철로 변경해주시기바랍니다.");
 					return;
 				}
@@ -1093,7 +1098,7 @@
 		    	} else if (deptCheckFlag == "4") {
 		    		alert(strLanggarm06 + " '" + "'" + strLanggarm08);
 		    		return;
-		    	} else if (deptCheckFlag == "2") {
+		    	} else if (deptCheckFlag == "2" && upperDeptCode == "") {
 					alert("타부서의 철정보로 설정되어있습니다. \n'" + arr_userinfo[5] + "'부서의 철로 변경해주시기바랍니다.");
 					return;
 				}	
@@ -1274,7 +1279,7 @@
 		    	} else if (deptCheckFlag == "4") {
 		    		alert(strLanggarm06 + " '" + "'" + strLanggarm08);
 		    		return;
-		    	} else if (deptCheckFlag == "2") {
+		    	} else if (deptCheckFlag == "2" && upperDeptCode == "") {
 					alert("타부서의 철정보로 설정되어있습니다. \n'" + arr_userinfo[5] + "'부서의 철로 변경해주시기바랍니다.");
 					return;
 				}	
@@ -1550,6 +1555,11 @@
 		    function getDocRecevState() {
 		        try {
 					var result = "FALSE";
+
+					var pDeptID = arr_userinfo[4];
+					if (typeof upperDeptCode !== "undefined" && upperDeptCode !== "") {
+						pDeptID = upperDeptCode;
+					}
 		        	
 		        	$.ajax({
 		        		type : "POST",
@@ -1558,7 +1568,7 @@
 		        		url : "/ezApprovalG/getDocState.do",
 		        		data : {
 		        			docID : pDocID,
-		        			deptID: arr_userinfo[4]
+		        			deptID: pDeptID
 		        		},
 		        		success: function(text){
 		        			result = text;

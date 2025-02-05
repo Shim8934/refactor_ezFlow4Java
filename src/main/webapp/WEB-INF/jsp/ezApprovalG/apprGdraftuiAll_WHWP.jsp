@@ -334,6 +334,10 @@
 			var parameters;
 			var attachedDocList;
 
+			/* 2024-07-18 양지혜 - 상위부서문서함 관련 */
+			var orgCompanyID_ = "<c:out value = '${orgCompanyID}'/>";
+			var upperDeptCode = "<c:out value ='${upperDeptCode}'/>";
+
     		// 일괄기안문서를 재기안하는 경우, 기존 문서와 양식 등의 정보를 배열에 부여
     		$(document).ready(function() {
                 pDraftFlag = DraftFlag; // 모든 문서 공통이므로 ready 시 바로 부여
@@ -418,10 +422,30 @@
 	                div.ondragenter = div.ondragover = function (e) {
 	                    return false;
 	                }
-	                div.ondrop = function (e) {
-	                    alert("드래그 앤 드랍 기능을 이용할 수 없습니다.\n[첨부] 메뉴를 이용해 주시기 바랍니다.");
-	                    return false;
-	                }
+	                
+		            div.ondrop = function (e) {
+		                alert("<spring:message code='ezApprovalG.pjj30'/>");
+		                return false;
+		            }
+		            
+                    var div2 = document.getElementById('lstAttachLinkDoc');
+                    div2.ondragenter = div.ondragover = function (e) {
+		                return false;
+		            }
+		            
+		            div2.ondrop = function (e) {
+		                alert("<spring:message code='ezApprovalG.noDrag.jih01'/>");
+		                return false;
+		            }
+		            
+		            var html = document.getElementsByTagName('html')[0];
+		            html.ondragover = function (e) {
+		            	if (e.target.id == 'lstAttachLink' || e.target.id == 'lstAttachLinkDoc') { return false; }
+		            	
+		            	e.dataTransfer.dropEffect = "none";
+				        e.stopPropagation();
+				        e.preventDefault();
+		            }	
 	            } catch (e) {
 	                alert("apprGdraftuiAllContent_WHWP.jsp > dragNdrapNo()::" + e.description);
 	            }
@@ -520,7 +544,7 @@
 				} else if (deptCheckFlag == "4") {
 					alert("기안창의 부서정보가 '" + arr_userinfo[5] + "'부서로 되어있습니다. \n사용자의 부서가 변경되거나 겸직이 삭제되었으니 기안창을 새로 띄워주시기바랍니다.");
 					return;
-				} else if (deptCheckFlag == "2") {
+				} else if (deptCheckFlag == "2" && upperDeptCode == "") {
 					alert("타부서의 철정보로 설정되어있습니다. \n'" + arr_userinfo[5] + "'부서의 철로 변경해주시기바랍니다.");
 					return;
 				}	
@@ -967,9 +991,15 @@
 	        	if (!btnChk()) {
 					return false;
 				}
-	        	
-	        	var currIfrm = document.getElementById("ifrm" + currentTabIdx);
-	        	currIfrm.contentWindow.PrintDocument();
+				var formFileLocation = document.getElementById("selForm").value;
+				var currentExt = formFileLocation.substring(formFileLocation.lastIndexOf(".") + 1);
+	        	if (currentExt === "mht") {
+					PrintClick("Cross", pDocID, "ING");
+				} else {
+					var currIfrm = document.getElementById("ifrm" + currentTabIdx);
+					currIfrm.contentWindow.PrintDocument();
+				}
+
 	        }
 	
 	        function btnClose_onclick() {
@@ -1023,7 +1053,7 @@
 			    try {
 			    	// 모든 안의 양식을 돌며 체크하되, 공개여부 필드의 존재를 확인한다.
 			    	viewTabNum = $("dl.tab_menu dt").length;
-			    	for (var i = 1; i < viewTabNum; i++) { // 1안부터 시작
+			    	for (var i = 1; i <= viewTabNum; i++) { // 1안부터 시작
 			    		var ifrm = document.getElementById("ifrm" + i);
 				        if (!ifrm.contentWindow.FieldExist("publication")) { // 공개여부 필드가 양식에 없다면 다음 루프로 이동
 				            continue;
@@ -1047,8 +1077,8 @@
 						    PublicText = "<spring:message code='ezApprovalG.t46'/>" + getPublicLevel(PublicLevel);
 				        } else {
 						    PublicText = " ";
-						    ifrm.contentWindow.PutFieldText("publication", PublicText);
 				        }
+						ifrm.contentWindow.PutFieldText("publication", PublicText);
 			    	}
 				} catch (e) {
 				    alert("ezdraftui_hwp.setPublicFlag()  ::  " + e);
@@ -1930,7 +1960,7 @@
 	    		// 대용량첨부의 자동삭제 기능, 저장만료기한 사용하지 않음
                 var attachGuideText =  "<td align='left' style='width:50%; font-size:11px; font-weight:normal; color:#666666; padding-left:10px; padding-top:0px; padding-bottom:0px; margin:0px; border-bottom:1px solid #dadada;border-left:1px solid #dadada; border-right:none; border-top: none; background:#fffcfa; height:20px; line-height:20px;'>";
                 
-                if(bigSizeAttachDownloadLimitCount > 0) {
+                if (bigSizeAttachDownloadLimitCount > 0) {
                 	attachGuideText += strLangHSBAt06 + " <span style='color:#FF0000 ;'>" + bigSizeAttachDownloadLimitCount + strLangHSBAt09 + "</span> " + strLangHSBAt10;
                 }
                 
@@ -1947,6 +1977,7 @@
                 	 document.getElementById("apprAttachGuideTR").innerHTML = attachGuideText;
                  }
                  else {
+                	 document.getElementById("apprAttachGuideTBL").style.display = "none";
                 	 document.getElementById("apprAttachGuideTR").style.display = "none";
                  }
 	    	}
@@ -2778,7 +2809,7 @@
 	                </table> 
 	                
 	                <%-- 대용량첨부 가이드 메세지 영역 --%>
-	                <table class="file" style="height: 20px;">
+	                <table id="apprAttachGuideTBL" class="file" style="height: 20px;">
 	                    <tr id="apprAttachGuideTR"></tr>
 	                </table>
 	            </td>

@@ -205,6 +205,8 @@ public class EzScheduleController extends EgovFileMngUtil {
 		
 		String funCode = "";	// 업무관리 or 일정관리(3)
 		String subCode = "";
+		String leftFrameWidth = "220";
+		int width = 0;
 		
         if (request.getParameter("funCode") != null) {
             funCode = request.getParameter("funCode");
@@ -217,9 +219,22 @@ public class EzScheduleController extends EgovFileMngUtil {
         } else {
         	subCode = "1";
         }
+
+		if (request.getParameter("__wwidth") != null) {
+			String widthParam = request.getParameter("__wwidth");
+
+			try {
+				width = Integer.parseInt(widthParam);
+
+				leftFrameWidth = width < 1180 ? "0" : "220";
+			} catch (NumberFormatException e) {
+				width = 0;
+			}
+		}
         
 		model.addAttribute("funCode", commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(funCode)));
 		model.addAttribute("subCode", subCode);		
+		model.addAttribute("leftFrameWidth", leftFrameWidth);	
 		
 		return "/ezSchedule/scheduleIndex";
 	}
@@ -4666,7 +4681,8 @@ public class EzScheduleController extends EgovFileMngUtil {
 			}
 			else {
 				//일정데이터 수정
-				ezScheduleService.updateDragSchedule(dragId, loginVO.getId(), loginVO.getDisplayName1(), loginVO.getDisplayName2(), utcStartTime, utcEndTime, tenantId, companyId, info.getDateType(), info.getRepetition(),info.getTitle());
+				ezScheduleService.updateDragSchedule(dragId, loginVO.getId(), loginVO.getDisplayName1(), loginVO.getDisplayName2(), utcStartTime, utcEndTime, tenantId, companyId, info.getDateType(), info.getRepetition(), info.getTitle());
+				ezScheduleService.sendInviteModNotiForDrag(request, dragId, info, startDate, endDate, loginVO, loginCookie);
 			}
 		}
 		

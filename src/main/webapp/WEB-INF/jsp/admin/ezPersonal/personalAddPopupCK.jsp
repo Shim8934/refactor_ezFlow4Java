@@ -392,7 +392,7 @@
 							}
 
 							try {
-								window.opener.company_change();
+								window.opener.changeCompany();
 								if(flag === "mod") {
 									// 수정사항 반영
 									window.opener.showPreview(2, itemseq);

@@ -93,6 +93,9 @@ public class ApprGFormVO {
 	
 	/** 2022-01-07 홍승비 - 전자결재G 일괄기안 옵션 추가 */
 	private String formDraftAllFlag;
+
+	/* 2024-11-25 기민혁 - 전자결재G > 최근서식 시간 */
+	private String resendStartDate;
 	
 	public String getPassAprLineFlag() {
 		return passAprLineFlag;
@@ -435,4 +438,7 @@ public class ApprGFormVO {
 		this.formDraftAllFlag = formDraftAllFlag;
 	}
 
+	public String getResendStartDate() { return resendStartDate; }
+
+	public void setResendStartDate(String resendStartDate) { this.resendStartDate = resendStartDate; }
 }

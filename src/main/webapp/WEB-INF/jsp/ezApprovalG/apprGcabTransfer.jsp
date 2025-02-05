@@ -36,6 +36,7 @@
             var adminFlag = "<c:out value ='${adminFlag}'/>"; // 2024-06-12 전인하 - 관리자 여부 판별 플래그
             var listHeaderString = "${listHeaderString}"; // 2024-06-12 전인하 - 리스트헤더 정보
 			var deptCabFlag = "N";
+			var upperDeptCode = "<c:out value ='${upperDeptCode}'/>"; // 2024-07-18 양지혜 - 상위부서문서함 사용 관련
 			
 	        document.onselectstart = function () { return false; };
 	        window.onload = function () {

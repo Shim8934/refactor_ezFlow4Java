@@ -479,16 +479,16 @@ public interface EzBoardService {
 	public String delScrapItem(String userID, String itemID, String boardID, String companyID, int tenantID) throws Exception;
 
 	/* 2023-05-03 기민혁 - 나의 스크랩 등록 item 리스트 호출*/
-	public List<HashMap<String, Object>> getMyBoardListItemScrap(LoginVO userInfo, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, ArrayList<String> scrapBoardListView_FG) throws Exception;
+	public List<HashMap<String, Object>> getMyBoardListItemScrap(LoginVO userInfo, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, ArrayList<String> scrapBoardListView_FG, Map<String, String> orderByMap) throws Exception;
 
 	/* 2023-05-03 기민혁 - 나의 스크랩 item totalcount*/
 	public int getMyBoardTotalItemCountScrap(LoginVO userInfo, ArrayList<String> scrapBoardListView_FG) throws Exception;
 
 	/* 2023-05-03 기민혁 - 나의 스크랩 검색 item totalcount*/
-	public int getSearchMyBoardItemCountScrap(LoginVO userInfo, BoardVO boardVO, ArrayList<String> scrapBoardListView_FG) throws Exception;
+	public int getSearchMyBoardItemCountScrap(LoginVO userInfo, BoardVO boardVO, ArrayList<String> scrapBoardListView_FG, Map<String, String> searchMap) throws Exception;
 
 	/* 2023-05-03 기민혁 - 나의 스크랩 검색 item 리스트 호출*/
-	public List<HashMap<String, Object>> getSearchMyBoardItemListScrap(BoardListVO boardListVO, BoardVO boardVO, ArrayList<String> scrapBoardListView_FG) throws Exception;
+	public List<HashMap<String, Object>> getSearchMyBoardItemListScrap(BoardListVO boardListVO, BoardVO boardVO, ArrayList<String> scrapBoardListView_FG, Map<String, String> searchMap, Map<String, String> orderByMap) throws Exception;
 
 	/* 2023-05-03 기민혁 - 게시물 삭제시 scrap 목록 삭제*/
 	public void deleteBoardScrapItem(String itemList, String companyID, int tenantID) throws Exception;
@@ -518,13 +518,13 @@ public interface EzBoardService {
 	public int getUserScrapContlistCount(LoginVO userInfo, String scrapContID, ArrayList<String> scrapContBoardListView_FG) throws Exception;
 
 	/* 2023-05-22 기민혁 - 스크랩함 리스트 표출 */
-	public List<HashMap<String, Object>> getScrapContItemList(LoginVO userInfo, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, String scrapContID, ArrayList<String> scrapContBoardListView_FG) throws Exception;
+	public List<HashMap<String, Object>> getScrapContItemList(LoginVO userInfo, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, String scrapContID, ArrayList<String> scrapContBoardListView_FG, Map<String, String> orderByMap) throws Exception;
 
 	/* 2023-05-22 기민혁 - 스크랩함 검색결과 스크랩 item totalcount */
-	public int getSearchScrapContItemListCount(LoginVO userInfo, BoardVO boardVO, ArrayList<String> scrapContBoardListView_FG) throws Exception;
+	public int getSearchScrapContItemListCount(LoginVO userInfo, BoardVO boardVO, ArrayList<String> scrapContBoardListView_FG, Map<String, String> searchMap) throws Exception;
 
 	/* 2023-05-22 기민혁 - 스크랩함 검색리스트 표출 */
-	public List<HashMap<String, Object>> getSearchScrapContItemList(BoardListVO boardListVO, BoardVO boardVO, ArrayList<String> scrapContBoardListView_FG) throws Exception;
+	public List<HashMap<String, Object>> getSearchScrapContItemList(BoardListVO boardListVO, BoardVO boardVO, ArrayList<String> scrapContBoardListView_FG, Map<String, String> searchMap, Map<String, String> orderByMap) throws Exception;
 
 	/* 2023-05-22 기민혁 - 게시물 삭제시 scrapcont 목록 삭제 */
 	public void deleteBoardScrapContItem(String itemList, String companyID, int tenantID) throws Exception;
@@ -539,4 +539,10 @@ public interface EzBoardService {
 	public List<BoardThumbnailVO> thumbnailViewDB(String itemID, String boardID, int pStartRow, int pEndRow, int tenantID) throws Exception;
 	
 	public void thumbnailUpdate(String imageID, String boardID, int tenantID, String ext, String oFileName, String addThumbnail) throws Exception;
+
+	/* 2024-09-05 이유정 - 게시판 > 최근게시물 리스트 카운트 메서드 */
+	public int getAllNewItemListCount(LoginVO userInfo) throws Exception;
+
+	/* 2024-09-05 이유정 - 게시판 > 최근게시물 리스트 메서드 */
+	public List<HashMap<String, Object>> getAllNewItemList(BoardListVO boardListVO, Map<String, String> orderByMap) throws Exception;
 }

@@ -19,7 +19,7 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalNotiDisableItemVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalShareApprovalVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
-import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzPersonalDAO")
 public class EzPersonalDAO extends EgovAbstractDAO {

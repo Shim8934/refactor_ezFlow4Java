@@ -33,7 +33,7 @@
 		var companyId = "${companyId}";
 		
 		window.onload = function() {
-			$("#tbContentElement").attr("src", "/ezEditor/selectEditor.do?type=MAILSIGNATURE");
+			$("#tbContentElement").attr("src", "/ezEditor/selectEditor.do?type=SIGNATURETEMPLATE");
 			var titleTxt = "<spring:message code='ezBoard.t602'/>";
 			
 			if (type == "modify") {
@@ -257,7 +257,7 @@
 				
 				<div style="height: 570px;">
 				<div class="leLetterEditer" style="height:490px;">
-					<iframe id="tbContentElement" class="viewbox" src="/ezEditor/selectEditor.do?type=MAILSIGNATURE" name="message" style="padding:0; height:100%; width:70%;float:left; overflow:auto;"></iframe>
+					<iframe id="tbContentElement" class="viewbox" src="/ezEditor/selectEditor.do?type=SIGNATURETEMPLATE" name="message" style="padding:0; height:100%; width:70%;float:left; overflow:auto;"></iframe>
 					<div style="margin-left:10px; float:left; height:100%; width:280px;">
 						<table class="content" style="width:100%; border:none;">
 							<thead id="inputInfoHeader">

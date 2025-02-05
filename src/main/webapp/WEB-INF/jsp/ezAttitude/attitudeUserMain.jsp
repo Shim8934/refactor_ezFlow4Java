@@ -1713,13 +1713,39 @@
 			/**
 			* [부서근태현황] 권한에따라 버튼 보이기 유무
 			*/
-			function authBtn() {
+			function authBtn() { // 권한이 없을 때
 				if ($("#authDeptList option:selected").attr("authType") == "" || $("#authDeptList option:selected").attr("authType") == null || $("#authDeptList option:selected").attr("authType") == "R") {
-					$("#btnAbsentedList").css("display","none");
-					$("#btnExcelDown").css("display","none");
-				} else {
-					$("#btnAbsentedList").css("display","");
-					$("#btnExcelDown").css("display","");
+					if ($("#btnAbsentedList")) {
+						$("#btnAbsentedList").remove();
+						$("#btnExcelDown").remove();
+					}
+				} else { // 권한이 있을 때
+					if (!$("#btnAbsentedList")) { // 이미 버튼이 있을때
+						var absentedList = $("<li>", { id: "btnAbsentedList" }).append(
+							$("<span>", {
+								on: {
+									click: function () {
+										popupAbsentedList();
+									}
+								}
+							}).append(
+								$("<spring\\:message>", { code: "ezAttitude.t6" })
+							)
+						);
+						var excelDown = $("<li>", { id: "btnExcelDown" }).append(
+							$("<span>", {
+								on: {
+									click: function () {
+										excelDown();
+									}
+								}
+							}).append(
+								$("<spring\\:message>", { code: "ezAttitude.t145" })
+							)
+						);
+						$("#mainmenu .on").append(absentedList);
+						$("#mainmenu .on").append(excelDown);
+					}
 				}
 			}
 			

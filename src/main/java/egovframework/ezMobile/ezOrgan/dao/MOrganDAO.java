@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import egovframework.ezMobile.ezOrgan.vo.MOrganListVO;
 import egovframework.ezMobile.ezOrgan.vo.MPersonListVO;
-import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("MOrganDAO")
 public class MOrganDAO extends EgovAbstractDAO {

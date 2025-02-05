@@ -43,6 +43,7 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -60,6 +61,7 @@ import de.taimos.totp.TOTP;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService.Device;
+import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
 import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
@@ -68,6 +70,7 @@ import egovframework.ezEKP.ezSystem.vo.AccessIdVO;
 import egovframework.ezEKP.ezSystem.vo.CountryVO;
 import egovframework.ezEKP.ezSystem.vo.IPBandVO;
 import egovframework.let.user.login.service.LoginService;
+import egovframework.let.user.login.vo.FidoAuthenticationVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.user.login.vo.SessionVO;
 import egovframework.let.utl.fcc.service.ClientUtil;
@@ -114,6 +117,9 @@ public class LoginController {
     
     @Resource(name="EzSystemAdminService")
 	private EzSystemAdminService ezSystemAdminService;
+
+    @Autowired
+	private EzEmailService ezEmailService;
         
     /** CRYPTO */
     @Resource(name="crypto") 
@@ -142,7 +148,7 @@ public class LoginController {
 	 */
     
     @RequestMapping(value="/user/login/login.do", method={RequestMethod.GET, RequestMethod.POST})
-	public String loginView(HttpServletRequest request,	HttpServletResponse response, ModelMap model, Locale locale) throws Exception {
+	public String loginView(HttpServletRequest request,	HttpServletResponse response, ModelMap model, Locale locale, @RequestParam(required = false) String usefidoforce) throws Exception {
         String serverName = request.getServerName();
         int tenantId = loginService.getTenantId(serverName);
         // 2023-03-27 이사라 : [TFA] 2-factor 인증 사용 여부 체크하여, otp입력란 표출 여부 결정
@@ -219,6 +225,13 @@ public class LoginController {
     	
     	String usePasswordReset = ezCommonService.getTenantConfig("usePasswordReset", tenantId);
     	
+		// fido test
+		model.addAttribute("usefidoforce", "false");
+
+		if (StringUtils.isNotBlank(usefidoforce)) {
+			model.addAttribute("usefidoforce", "true");
+		}
+
 		model.addAttribute("publicModulus", pbm);
 		model.addAttribute("publicExponent", "10001");
 		model.addAttribute("logoUrl", logo);
@@ -288,7 +301,6 @@ public class LoginController {
 		boolean useOTP = "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useOTP", tenantId));
 		boolean hasOTP = false;
 		boolean isRightOTP = true;
-		//model.addAttribute("useOTP", useOTP);
 		
 		// 비밀번호 '다음에 변경하기'는 이미 로그인 정보(OTP포함) 인증을 마친 상태에서 나타나기 때문에
 		// useOTP를 false로 하여 Id와 password로 로그인 되도록 함
@@ -302,6 +314,20 @@ public class LoginController {
 			// OTP를 등록한 사용자인지 체크
 			hasOTP = loginService.searchOtpKey(loginVO);
 		}
+
+		// 2023-11-21 이사라 : [TFA] FIDO 인증
+		//boolean useFido = "YES".equalsIgnoreCase(ezCommonService.getCompanyConfig(tenantId, companyId, "useFidoSession"));
+		boolean useFido = false;
+		boolean isFidoAuth = StringUtils.isNotBlank(loginVO.getFidoSessionId()); // fido인증을 완료한 후 로그인 진행하는 경우를 구분하기 위함
+		boolean passedFidoAuthentication =  false;
+		boolean userDeviceChk = loginService.userDeviceCnt(loginVO.getId());
+
+		if (isFidoAuth) {
+			FidoAuthenticationVO fidoVo = loginService.getFidoSession(loginVO.getFidoSessionId());
+			passedFidoAuthentication = loginVO.getId().equals(fidoVo.getId()); // 대소문자까지 일치
+		}
+
+		logger.debug("passedFidoAuthentication : {}", passedFidoAuthentication);
 
 		// 사용자 ID & 사원번호 자체가 발견되지 않는 경우
 		if (resultVO == null || resultVO.getId() == null || resultVO.getId().equals("")) {
@@ -344,7 +370,11 @@ public class LoginController {
 					
 			// 로그인 후 IP 주소 체크
         	boolean ipAddressChk = ipAccessCheck(resultVO);
-        	logger.debug("ipAddressChk=" + ipAddressChk);
+			useFido = fidoNotAccessIpCheck(resultVO);
+			if (!useFido && "usefidoforce".equalsIgnoreCase(loginVO.getPassword())) { // fido test를 위한 코드 - useFido가 이미 true라면 if문을 굳이 실행할 이유가 없기때문에 !useFido로 한정 함
+				useFido = true;
+			}
+			logger.debug("useFido : {}, ipAddressChk : {}", useFido, ipAddressChk);
         	
         	// 2018.10.22 이석화 추가 - useSession row 유무 확인
     		useSession = ezCommonService.getTenantConfig("useSession", tenantId);
@@ -530,7 +560,7 @@ public class LoginController {
 				String ezSessionId = createLoginCookie(_uid, rpwd, _pwd, tenantId, request, response, deptId, companyId);
 
 				String sessionCode = getSessionId(request, ezSessionId);
-				logger.debug("Login sessionCode : {} masteradminLogin = ", _uid, sessionCode);
+				logger.debug("Login sessionCode : {} masteradminLogin : {}", _uid, sessionCode);
 	        	
         		//접속 로그정보 저장
         		resultVO.setIp(ClientUtil.getClientIP(request));
@@ -702,7 +732,49 @@ public class LoginController {
     	        		model.addAttribute("pwPolicyExplain", pwPolicyExplain);
     					
     		        	return "forward:/user/login/login.do";
-    				} else {			
+					} else if (useFido && !passedFidoAuthentication) {
+						//logger.debug("useFido in : {}", useFido); // 운영시 주석 처리
+
+						if (userDeviceChk) {
+							// fido session 생성하여 tbl에 넣기
+							String fidoSessionId = UUID.randomUUID().toString();
+							FidoAuthenticationVO fidoVO = new FidoAuthenticationVO();
+	
+							fidoVO.setFidoSessionId(fidoSessionId);
+							fidoVO.setId(loginVO.getId());
+							fidoVO.setIp(ClientUtil.getClientIP(request));
+							fidoVO.setStatus("requesting");
+	
+							loginService.setFidoSession(fidoVO);
+	
+							// jgw-server 에 talk_tblnotification 넣어서 push 메시지 전달
+							String linkUrl = "/mobile/user/login/mFidoAuthentication.do?" + "fidoSessionId=" + fidoSessionId + "&encryptId=" + loginVO.getEncryptID() + "&encryptPass=" + loginVO.getEncryptPass();
+	
+							boolean insertTalkNotification = ezEmailService.addEzTalkNotification(
+									loginVO.getId(),
+									egovMessageSource.getMessage("main.fido010", locale),
+									egovMessageSource.getMessage("main.fido011", locale),
+									"23", "", linkUrl);
+	
+							if (!insertTalkNotification) {
+								logger.debug("useFido but insertTalkNotification failed, id={}", loginVO.getId());
+								return "forward:/user/login/login.do";
+							}
+	
+							// Fido 인증요청 화면 호출 + 필요한 parameter 전달
+							String timeLimit = ezCommonService.getTenantConfig("FidoTimeLimit", tenantId);
+	
+							model.addAttribute("timeLimit", timeLimit);
+							model.addAttribute("fidoSessionId", fidoSessionId);
+							model.addAttribute("encryptId", loginVO.getEncryptID());
+							model.addAttribute("encryptPassword", loginVO.getEncryptPass());
+	
+							return "user/login/fidoAuthentication";
+						} else {
+							// 모바일 기기 등록 안내 화면 호출
+							return "user/login/deviceRegisterNotice";
+						}
+					} else {
     					String ip = ClientUtil.getClientIP(request);		
     					loginVO.setIp(ip);
     					
@@ -713,7 +785,7 @@ public class LoginController {
 						String ezSessionId = createLoginCookie(_uid, rpwd, _pwd, tenantId, request, response, deptId, companyId);
 
 						String sessionCode = getSessionId(request, ezSessionId);
-						logger.debug("Login sessionCode : {} user = ", _uid, sessionCode);
+						logger.debug("Login sessionCode : {} user : {} ", _uid, sessionCode);
     		        	
     					//접속 로그정보 저장
     					resultVO.setIp(ip);
@@ -1119,7 +1191,98 @@ public class LoginController {
         	return returnValue;
     	}
     }
-    
+	
+	public boolean fidoNotAccessIpCheck(LoginVO loginVO) throws Exception {
+		logger.debug("ipAccessCheck start");
+		try {
+			boolean returnValue = false;
+
+			int tenantId = loginVO.getTenantId();
+			String companyId = loginVO.getCompanyID();
+			String useFido = Optional.ofNullable(ezCommonService.getCompanyConfig(tenantId, companyId, "useFidoSession")).orElseGet(() -> "NO");
+			
+			logger.debug("useFido=" + useFido);
+
+			if (useFido.equalsIgnoreCase("NO")) {
+				return false;
+			} else if (useFido.equalsIgnoreCase("YES")) {
+				String clientIP[] = loginVO.getIp().split("\\.");
+
+				List<IPBandVO> notAccessFidoIpList = ezSystemAdminService.getFidoAuthenticList(tenantId, companyId);
+
+				if (notAccessFidoIpList != null && notAccessFidoIpList.size() != 0) {
+					String ipBandAddr = "";
+					String getAccess = "NO";
+					int checkCnt = 0;
+					boolean checkIp = ezSystemAdminService.getFidoAuthenticInfo(tenantId, companyId, loginVO.getIp()) > 0;
+					
+					for (IPBandVO ipBandVo : notAccessFidoIpList) {
+						ipBandAddr = ipBandVo.getIpAddress();
+						getAccess = ipBandVo.getAccess();
+						logger.debug("ipBandAddr=" + ipBandAddr + ", getAccess=" + getAccess);
+
+						String ipListIp[] = ipBandAddr.split("\\."); // *(대역)이 있을 수도 있으니 하나하나 검사해야됨
+						for (int j = 0; j < clientIP.length; j++) {
+							if (ipListIp[j].equals("*") || ipListIp[j].equals(clientIP[j])) {
+								checkCnt++;
+							}
+						}
+
+						logger.debug("checkCnt : {}, checkIp : {} ", checkCnt, checkIp);
+						if (checkCnt == 4) {
+							if (checkIp && getAccess.equals("YES")) {
+								returnValue = false;
+								break;
+							} else if (!checkIp) {
+								returnValue = true;
+								break;
+							}
+						}	else if (checkCnt < 4) {
+							returnValue = true;
+						} 
+						checkCnt = 0;
+					} // for_end
+				} else {
+					returnValue = true;
+				} // notAccessFidoIpList if_end
+			}
+
+			logger.debug("returnValue=" + returnValue);
+			return returnValue;
+		} catch(Exception e) {
+			logger.error(e.getMessage(), e);
+			return false;
+		}
+	}
+	
+	@ResponseBody
+	@PostMapping(value = "/user/login/getFidoSessionStatus.do")
+	public String getFidoSessionStatus(@RequestParam String fidoSessionId) throws Exception {
+		logger.debug("checkFidoAuthentication started");
+
+		FidoAuthenticationVO vo = loginService.getFidoSession(fidoSessionId);
+
+		logger.debug("checkFidoAuthentication ended : {}", vo.getStatus());
+
+		return vo.getStatus();
+	}
+
+	@ResponseBody
+	@PostMapping(value = "/user/login/expireFidoSession.do")
+	public String expireFidoSession(@RequestParam String fidoSessionId) throws Exception {
+		logger.debug("expireFidoSession started");
+
+		FidoAuthenticationVO vo = new FidoAuthenticationVO();
+		vo.setFidoSessionId(fidoSessionId);
+		vo.setStatus("expired");
+
+		loginService.updateFidoStatus(vo);
+
+		logger.debug("expireFidoSession ended : {}", vo.getStatus());
+
+		return vo.getStatus();
+	}
+
     // 2023-03-22 이사라 : [TFA] OTP 번호 확인을 위해 호출
 	public String getTOTPCode(String otpKey) {
 		Base32 base32 = new Base32();

@@ -92,6 +92,7 @@
 		    var userTitle = "<c:out value = '${userInfo.title}'/>";
 		    var useDraftAll = "<c:out value = '${useDraftAll}'/>";
             var attachedDocList;
+			var popupWindow;
 		    
 		    $(function () {
 		      	if(approvalFlag == "G") {
@@ -412,6 +413,9 @@
 		                case "readingRecord" : 
 		                	DocManageMain(pthis.id);
 		                	break;
+						case "m96":
+							DocManageMain(pthis.id);
+							break;	
 		                default:
 		                    break;
 		            }
@@ -550,6 +554,10 @@
 				                }
 								else if (listtype == "24") {
 									parent.frames["right"].passValLeftMenu("24");
+									parent.frames["right"].checkBujaeInfo();
+								}
+								else if (listtype == "97") {
+									parent.frames["right"].passValLeftMenu("97");
 									parent.frames["right"].checkBujaeInfo();
 								}
 				                else {
@@ -1103,7 +1111,11 @@
 		        try {
 		            if (PresentOpen != "DOCMANAGE" && sFlag != "readingRecord") {
 		                PresentOpen = "DOCMANAGE";
-		                window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
+						if(sFlag == "m96"){
+							window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=m01&selSendStatus=N";
+						}else{
+							window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
+						}
 		            }
 		            else {
 		                window.parent.frames["right"].g_uFlag = sFlag;
@@ -1148,6 +1160,9 @@
 							case "m14":
 		                        window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
 								break;
+							case "m96":
+								window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=m01&selSendStatus=N";
+								break;	
 							case "readingRecord" : 
 								window.parent.frames.right.document.location.href = "/ezApprovalG/readingRecord.do";
 								break;
@@ -1176,7 +1191,11 @@
 		
 		            if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9")
 		                pListTypeValue = "1";
-		
+
+					if (typeof onUserChange === "function") {
+						onUserChange();
+					}
+					
 		            parent.frames["left"].location.href = "/ezApprovalG/apprGLeft.do?listType=" + pListTypeValue;
 		        }
 		    }
@@ -1280,6 +1299,12 @@
 					console.log(e);
 				}
 			}
+
+			onUserChange = () => {
+				if (popupWindow && !popupWindow.closed) {;
+					popupWindow.OpenAlertUI("<spring:message code='ezApprovalG.jje02'/>");
+				}
+			};
 		</script>
 	</head>
 	<body ondragstart="return false" onselectstart="return false" class="newLeft">
@@ -1335,6 +1360,9 @@
                    	<c:if test="${hideSusin != 'N'}">
                        	<li><span class="list_text" id="APPROVAL4" onclick="setPresentValue('<spring:message code='ezApprovalG.t1749'/>');convMain('4','')"><spring:message code='ezApprovalG.t1749'/><span id=COUNT4></span></span></li>
 					</c:if>
+					<c:if test="${personalHideSusin == 'Y' && fn:contains(userInfo.rollInfo, 'a=1')}">
+						<li><span class="list_text" id="APPROVAL97" onclick="setPresentValue('<spring:message code='ezApprovalG.PHSKMH01'/>');convMain('97','')"><spring:message code='ezApprovalG.PHSKMH01'/><span id=COUNT97></span></span></li>
+					</c:if>
                    	<c:if test="${approvalFlag == 'S'}">
                        	<li></span><span class="list_text" id="APPROVAL99" onclick="setPresentValue('<spring:message code='ezApprovalG.hyj04'/>');convMain('99','')"><spring:message code='ezApprovalG.hyj04'/><span id="COUNT99"></span></span></li>
 					</c:if>
@@ -1351,7 +1379,8 @@
 						<c:if test="${relayShowFlag eq 'Y' || howToSendOffer eq '1'}">
 							<li class="approvalG"><span class="list_text" id="APPROVAL6" onclick="setPresentValue('<spring:message code='ezApprovalG.kbh05'/>');convMain('6');"><spring:message code='ezApprovalG.kbh05'/><span id="COUNT6"></span></span></li>
 						</c:if>
-                   	</c:if>
+						<li><span class="list_text" id="m96" onclick="Open_Func(this); getAprCount();"><spring:message code='ezApprovalG.KMHG03'/><span id="COUNT96"></span></span></li>
+					</c:if>
 					<c:if test="${userSendOut == 'YES'}">
                        	<li class="approvalG"><span class="list_text" id="APPROVAL7" onclick="setPresentValue('<spring:message code='ezApprovalG.t1752'/>');convMain('7','')"><spring:message code='ezApprovalG.t1752'/><span id=COUNT7></span></span></li>
                        	<li class="approvalG"><span class="list_text" id="APPROVAL8" onclick="setPresentValue('<spring:message code='ezApprovalG.t1275'/>');convMain('8','')"><spring:message code='ezApprovalG.t1275'/></span></li>

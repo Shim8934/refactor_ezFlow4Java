@@ -481,8 +481,26 @@ public class EzAttitudeController {
 	 * attitude Main
 	 */
 	@RequestMapping(value = "/ezAttitude/attitudeMain.do", method = RequestMethod.GET)
-	public String attitudeMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	public String attitudeMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("/ezAttitude/attitudeMain started");
+
+		String leftFrameWidth = "220";
+		int width = 0;
+
+		if (request.getParameter("__wwidth") != null) {
+			String widthParam = request.getParameter("__wwidth");
+
+			try {
+				width = Integer.parseInt(widthParam);
+
+				leftFrameWidth = width < 1180 ? "0" : "220";
+			} catch (NumberFormatException e) {
+				width = 0;
+			}
+		}
+		
+		model.addAttribute("leftFrameWidth", leftFrameWidth);
+		
 		logger.debug("/ezAttitude/attitudeMain ended");
 		return "/ezAttitude/attitudeMain";
 	}

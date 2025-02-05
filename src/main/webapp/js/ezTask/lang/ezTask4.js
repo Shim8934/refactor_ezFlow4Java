@@ -1,9 +1,9 @@
 var strLang1 = "上午"
 var strLang2 = "下午"
 var strLang3 = "1月;2月;3月;4月;5月;6月;7月;8月;9月;10月;11月;12月"
-var strLang4 = "星期日;星期一;星期二，星期三，星期四，星期五，星期六"
-var strLang5 = "周日;周一，周二，周三，周四，周五，周六"
-var strLang6 = "周一，周二，周三，周四，周五，周六，周日"
+var strLang4 = "星期日;星期一;星期二;星期三;星期四;星期五;星期六"
+var strLang5 = "周日;周一;周二;周三;周四;周五;周六"
+var strLang6 = "周一;周二;周三;周四;周五;周六;周日"
 var strLang7 = "(没有标题)"
 var strLang8 = "要保存修改过的内容吗？"
 var strLang9 = "请输入标题"
@@ -87,3 +87,6 @@ var strLang80 = "第二"
 var strLang81 = "第三"
 var strLang82 = "第四"
 var strLang83 = "最后"
+
+// 2024-06-28 민지수 - 업무관리 > 첨부파일 드래그 앤 드롭 안내 메세지 추가
+var strLangMJS01 = "拖曳和拖放可以更改文件的顺序。";

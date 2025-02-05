@@ -53,7 +53,7 @@ import egovframework.ezEKP.ezResource.vo.ResSelectFormIDVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
-import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service("EzResourceService")
 public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements EzResourceService{
@@ -266,6 +266,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		ezResourceDAO.delResData_U(map);
 		ezResourceDAO.delResData1(map);
 		ezResourceDAO.delResData3(map);
+		ezResourceDAO.delResDataForm(map);
 		
 		/* 2024-08-09 유길상 - 자원 삭제 시 즐겨찾기 정보도 삭제 */
 		List<String> delBrdCatList = ezResourceDAO.delBrdCatList(map);
@@ -2464,7 +2465,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 
 		for (int i=0; i<brdID.split(",").length; i++) {
 			delResData(brdID.split(",")[i], companyID, tenantID);
-			deleteAttachFiles(brdID, realPath, companyID, tenantID);
+			deleteAttachFiles(brdID.split(",")[i], realPath, companyID, tenantID);
 		}
 		return true;
 	}
@@ -4678,12 +4679,13 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	 * 즐겨찾기 카테고리 수정
 	 */
 	@Override
-	public void modFavoriteCategory(String catName, String catId) throws Exception {
+	public void modFavoriteCategory(String catName, String catId, String userID) throws Exception {
 		logger.debug("modFavoriteCategory start");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("CAT_ID", catId);
 		map.put("CAT_NAME", catName);
+		map.put("USER_ID", userID);
 		ezResourceDAO.updateFavoriteCategory(map);
 		
 		logger.debug("modFavoriteCategory end");
@@ -4696,14 +4698,15 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	public void delFavoriteCategory(String catId, String userID, String companyID, int tenantID) throws Exception {
 		logger.debug("delFavoriteCategory start");
 		
-		ezResourceDAO.delFavoriteCategory(catId);
-		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("TOP_ID", catId);
 		map.put("USER_ID", userID);
 		map.put("TENANT_ID", tenantID);
 		map.put("COMPANY_ID", companyID);
 		map.put("CAT_ID", catId);
+		
+		ezResourceDAO.delFavoriteCategory(map);
+		
 		
 		// 삭제할 카테고리 하위 카테고리 목록 조회
 		List<String> childeCatIdList = ezResourceDAO.checkChildYN(map);
@@ -4779,12 +4782,13 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	 * 즐겨찾기 카테고리(분류) 자원 목록 조회 메서드
 	 */
 	@Override
-	public List<ResBrdVO> getFavoriteBrdList(String catId, String companyId, int tenantId) throws Exception {
+	public List<ResBrdVO> getFavoriteBrdList(String catId, String companyId, int tenantId, String userID) throws Exception {
 		logger.debug("getFavoriteBrdList start");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("catId", catId);
 		map.put("companyId", companyId);
+		map.put("userID", userID);
 		map.put("tenantId", tenantId);
 		
 		List<ResBrdVO> favoriteBrdList = ezResourceDAO.selectFavoriteBrdList(map);

@@ -14,7 +14,7 @@ import egovframework.ezMobile.ezBoard.vo.MBoardListHeaderVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardListVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardNewListVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardTreeVO;
-import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("MBoardDAO")
 public class MBoardDAO extends EgovAbstractDAO {
@@ -288,5 +288,15 @@ public class MBoardDAO extends EgovAbstractDAO {
 	/* 2023-11-22 기민혁 - 모바일 스크랩 리스트 삭제 */
 	public void deleteScrapBoardItem(Map<String, Object> map) throws Exception{
 		delete("MBoardDAO.deleteScrapBoardItem", map);
+	}
+	
+	/* 2024-09-09 이유정 - 모바일 게시판 > 최근게시물 리스트 카운트 쿼리 */
+	public Integer getAllNewBoardListCount(Map<String, Object> map) throws Exception {
+		return (Integer) select("MBoardDAO.getAllNewBoardListCount", map);
+	}
+
+	/* 2024-09-09 이유정 - 모바일 게시판 > 최근게시물 리스트 쿼리 */
+	public List<MBoardNewListVO> getAllNewBoardList(Map<String, Object> map) throws Exception {
+		return (List<MBoardNewListVO>) list("MBoardDAO.getAllNewBoardList", map);
 	}
 }

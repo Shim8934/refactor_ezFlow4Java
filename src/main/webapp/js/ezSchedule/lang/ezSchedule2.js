@@ -230,3 +230,6 @@ var ezSchedule_csj1 = "Writable";
 
 /* 2024-08-06 이유정 - 임원일정 메세지 추가 */
 var strLang151_2 = "Executives";
+
+// 2024-06-28 민지수 - 일정 > 첨부파일 드래그 앤 드롭 안내 메세지 추가
+var strLangMJS01 = "You can drag and drop to add files and change the order of added files.";

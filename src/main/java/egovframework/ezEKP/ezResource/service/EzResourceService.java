@@ -124,13 +124,13 @@ public interface EzResourceService {
 
 	public List<ResFavoriteCategoryVO> getFavoriteCategoryList(String catId, String userID) throws Exception;
 
-	public void modFavoriteCategory(String catName, String catId) throws Exception;
+	public void modFavoriteCategory(String catName, String catId, String userID) throws Exception;
 
 	public void delFavoriteCategory(String catId, String userID, String companyID, int tenantID) throws Exception;
 
 	public String addBrdFavoriteCategory(String brdId, String catId, String userID, String companyID, int tenantID) throws Exception;
 
-	public List<ResBrdVO> getFavoriteBrdList(String catId, String companyId, int tenantId) throws Exception;
+	public List<ResBrdVO> getFavoriteBrdList(String catId, String companyId, int tenantId, String userID) throws Exception;
 
 	public String moveCategory(String userID, String companyID, int tenantID, String catId, String topId) throws Exception;
 

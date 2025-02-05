@@ -168,7 +168,8 @@
 		    var pLimitRange = "";
 		    var pPageNum = "";
 		    var cabinetID = "";
-		    var TaskCode = "";
+		    var TaskCode = "";	    
+		    var useReceiveInfoName = "<c:out value ='${useReceiveInfoName}'/>"; // 수신처 뒤에 "장"을 붙이는지 여부 (0 : 안붙임 / 1 : 붙임 / 2: 상위부서 + 수신처장)
 
 		    document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -335,7 +336,9 @@
 		        else if (pListTypeValue == "11") {
 		        	getDocList();
 		        }
-		        
+				else if (pListTypeValue == "97") {
+					getReceivedDocList();
+				}	
 		        
 		        try {
 		            parent.frames["left"].getAprCount();
@@ -640,7 +643,10 @@
 		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t49"/>', "004");
 		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t66"/>', "006");
 		        	AddOption(sel_status, '<spring:message code="ezApproval.t497"/>', "015");
-		        } else {
+		        } else if (pListTypeValue == "97") {
+					AddOption(sel_status, '<spring:message code="ezApprovalG.garm06"/>', "011");
+					AddOption(sel_status, '<spring:message code="ezApprovalG.t1430"/>', "012");
+				} else {
 		        	$('#sel_status_div').closest("li").hide();
 		        }
 		        
@@ -692,7 +698,7 @@
 		        else if (pListTypeValue == "3") {
 		            getDocList();
 		        }
-		        else if (pListTypeValue == "4" || pListTypeValue == "5") {
+		        else if (pListTypeValue == "4" || pListTypeValue == "5" || pListTypeValue == "97") {
 		            getReceivedDocList();
 		        }
 		        else if (pListTypeValue == "6") {
@@ -731,7 +737,7 @@
 		    	pageNum = 1;
 		        if (pListTypeValue == "1" || pListTypeValue == "2" || pListTypeValue == "3" || pListTypeValue == "11") {
 		            getDocList();
-		        } else if (pListTypeValue == "4") {
+		        } else if (pListTypeValue == "4" || pListTypeValue == "97") {
 		        	getReceivedDocList();
 		        } else if (pListTypeValue == "9") {
 		        	getSendOutDocList();
@@ -830,7 +836,7 @@
 		                }
 		                else
 		                    btnRedraft_onclick();
-		            } else if (pListTypeValue == "4" || pListTypeValue == "5") {
+		            } else if (pListTypeValue == "4" || pListTypeValue == "5" || pListTypeValue == "97") {
 		                if (pSusinManagerFlag == "admin" || pCurSelRow.getAttribute("DATA8") == pUserID) {
 		                    var pDraftFlag;
 		                    var tmpDocState = pCurSelRow.getAttribute("DATA9");
@@ -1235,8 +1241,8 @@
 		        		
 		        		// 내부결재가 아닌 수신문(011), 합의문(012)의 경우 삭제 불가능, 재기안만 가능함 + 임시보관함의 경우 전부 삭제 가능
 		        		// 부서수신함과 발송의뢰문서(pListTypeValue == "4"/"6")의 경우, 회송된 수신문과 합의문 모두 삭제 가능함 (G버전은 부서수신함에서 회송 시 상태만 변하고 문서는 리스트 상에 남아있음)
-				        if ((pListTypeValue == "21") ||
-				        		((pFunctionType == "004" || pFunctionType == "006" || pFunctionType == "015") && ((pListTypeValue == "4") || (pListTypeValue == "6") || (GetAttribute(pCurSelRow, "DATA9") == "0" && pDocState != "011" && pDocState != "012")))) {
+				        if ((pListTypeValue == "21") || (pListTypeValue == "10") ||
+				        		((pFunctionType == "004" || pFunctionType == "006" || pFunctionType == "015") && ((pListTypeValue == "4" || pListTypeValue == "97") || (pListTypeValue == "6") || (GetAttribute(pCurSelRow, "DATA9") == "0" && pDocState != "011" && pDocState != "012")))) {
 					        if (pListTypeValue == "1" || pListTypeValue == "11" || pListTypeValue == "2") {
 								if (checkAprState(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("DATA12"), pCurSelRow.getAttribute("DATA4"), pCurSelRow.getAttribute("APRMEMBERSN"), pCurSelRow.getAttribute("ORGCOMPANYID"))){
 									alert("<spring:message code='ezApprovalG.bhs23'/>");
@@ -1268,14 +1274,16 @@
 			                else {
 					            if (pListTypeValue == "21") {  //[한양대] 추가 사항 (서버 임시저장하기)
 					                RemoveTmpDoc(pCurSelRow.getAttribute("DATA1"));
-					            } else {
+					            } else if (pListTypeValue == "10") {	// 공람완료문서 삭제기능
+									RemoveGongramDoc(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("aprmembersn"));
+								} else {
 					                RemoveDoc(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("orgcompanyid"));
 					            }
 			                }
 				        }
 		        	}
 		            
-		            if (pListTypeValue == "4") {
+		            if (pListTypeValue == "4" || pListTypeValue == "97") {
 		                getReceivedDocList();
 		            } else if (pListTypeValue == "6") {
 		                getSimsaDocList();
@@ -1569,7 +1577,11 @@
 		    function btnRJunkyulAll_after_complete() {
 		    	listLoading(false);
 	     		window.parent.frames[0].mailPanel_left.style.display = "none";
-	     		window.parent.frames[0].convMain('4', '');
+				 if(pListTypeValue && pListTypeValue == "97"){
+					 window.parent.frames[0].convMain('97', '');
+				 }else{
+					 window.parent.frames[0].convMain('4', '');
+				 }
 		    }
 		    
 		    function btnCabinet_onclick_Complete(rtn) {
@@ -2501,7 +2513,7 @@
 			            	alert("'" + tr.getAttribute("DATA7") + "'부서의 문서입니다. \n'" + tr.getAttribute("DATA7") + "'부서로 겸직변경 후 대장등록해주시기 바랍니다.");
 			            	return;
 			            }
-					} else if (pListTypeValue == "4") {
+					} else if (pListTypeValue == "4" || pListTypeValue == "97") {
 			            if (arr_userinfo[4] != tr.getAttribute("DATA6")) {
 			            	alert("'" + tr.getAttribute("DATA6") + "'부서의 문서입니다. \n'" + tr.getAttribute("DATA6") + "'부서로 겸직변경 후 대장등록해주시기 바랍니다.");
 			            	return;
@@ -2808,7 +2820,7 @@
 		            else if (pListTypeValue == "3") {
 		                getDocList();
 		            }
-		            else if (pListTypeValue == "4" || pListTypeValue == "5") {
+		            else if (pListTypeValue == "4" || pListTypeValue == "5" || pListTypeValue == "97") {
 		                getReceivedDocList();
 		            }
 		            else if (pListTypeValue == "6") {
@@ -3016,6 +3028,7 @@
 
 				/* 2022-06-24 홍승비 - 우측 미리보기 영역을 위한 리사이즈 동작 추가 */
 		    	Window_resize();
+		    	adjustLayerAlertPosition("iFramePanel");
 		    };
 		
 		    function ShowMailProgress() {
@@ -3117,7 +3130,7 @@
 		        else if (pListTypeValue == "3") {
 		            getDocList();
 		        }
-		        else if (pListTypeValue == "4" || pListTypeValue == "5") {
+		        else if (pListTypeValue == "4" || pListTypeValue == "5" || pListTypeValue == "97") {
 		            getReceivedDocList();
 		        }
 		        else if (pListTypeValue == "6") {
@@ -3453,6 +3466,76 @@
 					DivPopUpHidden();
 				}
 			}
+            
+			var ezreceivejijungall_cross_dialogArguments = new Array();
+			function btnJiJungAll_onclick() {
+				var DocList = new ListView();
+				DocList.LoadFromID("DocList");
+				var selRows = DocList.GetSelectedRows();
+
+				if (selRows.length == 0) {
+					var pAlertContent = strLang930 + "<br>" + strLang336;
+					OpenAlertUI(pAlertContent);
+					return;
+				} else{
+					OpenInformationUI(strLangKMH01, btnJiJungAll_onclick_Complete);
+				}
+			}
+
+			function btnJiJungAll_onclick_Complete(rtn) {
+				if(rtn) {
+					DivPopUpHidden();
+					var DocList = new ListView();
+					DocList.LoadFromID("DocList");
+					var selRows = DocList.GetSelectedRows();
+
+					var progressCount = selRows.length;
+					var excludeCount = 0;
+
+					var JDocID = "";
+					var JSusinSN = "";
+					var JAprState = "";
+					var JDocState = "";
+					var JOrgCompanyID = "";
+
+					for (var i = 0; i < progressCount; i++) {
+						if ((selRows[i].getAttribute("data1") == null || selRows[i].getAttribute("data1") === undefined || selRows[i].getAttribute("data1").trim() === "") || (selRows[i].getAttribute("data2") == null || selRows[i].getAttribute("data2") === undefined || selRows[i].getAttribute("data2").trim() === "")) {
+							OpenAlertUI(strLang721);
+							return; 
+						}
+						
+						JDocID += selRows[i].getAttribute("data1") + ",";
+						JSusinSN += selRows[i].getAttribute("data2") + ",";
+						JAprState += selRows[i].getAttribute("data10") && selRows[i].getAttribute("data10").trim() !== "" ? selRows[i].getAttribute("data10") + "," : "[Nodata],";
+						JDocState += selRows[i].getAttribute("data9") && selRows[i].getAttribute("data9").trim() !== "" ? selRows[i].getAttribute("data9") + "," : "[Nodata],";
+						JOrgCompanyID += selRows[i].getAttribute("orgcompanyid") && selRows[i].getAttribute("orgcompanyid").trim() !== "" ? selRows[i].getAttribute("orgcompanyid") + "," : "[Nodata],";
+						
+						if (selRows[i].getAttribute("data10") == "015" || selRows[i].getAttribute("data9") == "012") {
+							excludeCount++;
+						}
+					}
+
+					if (excludeCount == progressCount) {
+						OpenAlertUI(strLang721);
+						return;
+					}
+
+					var parameter = new Array();
+					parameter[0] = JDocID;
+					parameter[1] = JSusinSN;
+					parameter[2] = JAprState;
+					parameter[3] = JDocState;
+					parameter[4] = "";
+					parameter[5] = JOrgCompanyID;
+					ezreceivejijungall_cross_dialogArguments[0] = parameter;
+
+					DivPopUpHidden();
+					OpenPopupWin = window.open("/ezApprovalG/ezReceiveAssignUI.do?mode=ALL", "", GetOpenWindowfeature(800, 620));
+					try { OpenPopupWin.focus(); } catch (e) { }
+				} else {
+					DivPopUpHidden();
+				}
+			}
 			
 		</script>
 	</head>
@@ -3484,6 +3567,7 @@
 				<li id="tbtnSimsa" style="DISPLAY:none"><span id="btnSimsa" onclick="return btnSimsa_onclick()" ><spring:message code='ezApprovalG.t214'/></span></li>
 				<li id="tbtnReceiptAll" style="DISPLAY:none"><span id="btnReceiptAll" onclick="return btnReceiptAll_onclick()" ><spring:message code='ezApprovalG.lgeAR01'/></span></li>
 				<li id="tbtnRJunkyulAll" style="DISPLAY:none"><span id="btnRJunkyulAll" onclick="return btnRJunkyulAll_onclick()" ><spring:message code='ezApprovalG.lgeAR02'/></span></li>
+				<li id="tbtnJiJungAll" style="DISPLAY:none"><span id="btnJiJunglAll" onclick="return btnJiJungAll_onclick()" ><spring:message code='ezApprovalG.JKMH01'/></span></li>
 				<li id="tbtnRegList" class="approvalG"><span id="btnAddCabinet" onclick="return btnAddCabinet_onclick()" ><spring:message code='ezApprovalG.t933'/></span></li>
 				<li id="tbtnUserInfo" style="DISPLAY:none"><span id="btnUserInfo" onclick="return btnUserInfo_onclick()" ><spring:message code='ezApprovalG.t1741'/></span></li>
 				<li id="tDocInfo"  class="approvalG"><span id="DocInfo" onclick="return GongRamDocInfo()" ><spring:message code='ezApprovalG.t946'/></span></li>		
@@ -3522,7 +3606,7 @@
 			        	</select>  
 		        	</div>
 		        </li>
-		        <c:if test="${fn:length(companyList) gt 1 and listType ne '4' and listType ne '21'}">
+		        <c:if test="${fn:length(companyList) gt 1 and listType ne '4' and listType ne '21' and listType ne '97'}">
 			        <li style="vertical-align: middle; float:right">		        	
 						<select id="selectCompany" onchange="getDocListByCompany();">
 							<option value="">

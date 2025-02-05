@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezCommunity.vo.CommunityCComCloseVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityClubVO;
-import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzCommunityAdminDAO")
 public class EzCommunityAdminDAO extends EgovAbstractDAO {

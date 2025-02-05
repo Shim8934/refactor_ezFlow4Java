@@ -1866,7 +1866,7 @@
 		            pData.append("itemList", pItemID + ";");
 		            pData.append("scrapContID", scrapContID);
 		        } else {
-		            alert("<spring:message code='ezBoard.kmh52' />");
+		            alert("<spring:message code='ezBoard.kmhScrap52' />");
 		            return;
 		        }
 		    	$.ajax({
@@ -1885,7 +1885,7 @@
                             } else if (myBoardScrapFlag == "TYPE2") {
                                 document.getElementById("delScrapBtn").replaceChildren();
                             } else {
-                                alert("<spring:message code='ezBoard.kmh52' />");
+                                alert("<spring:message code='ezBoard.kmhScrap52' />");
                                 return;
                             }
                         
@@ -1953,6 +1953,8 @@
 							<c:when test="${MyBoardScrapFlag eq 'TYPE2' && not empty scrapContID}">
 							    <li id ="addScrapBtn"><span onclick="addScrap()"><spring:message code='ezBoard.kmh13'/></span></li>	
 								<li id ="delScrapBtn"><span onclick="delScrap()"><spring:message code='ezBoard.kmh14'/></span></li>	
+							</c:when>
+							<c:when test="${empty MyBoardScrapFlag || MyBoardScrapFlag eq 'NONE'}">
 							</c:when>
 							<c:otherwise>
 							    <li id ="addScrapBtn"><span onclick="addScrap()"><spring:message code='ezBoard.kmh13'/></span></li>	

@@ -36,8 +36,10 @@
 		    var RetValue;
 		    var ReturnFunction;
 		    var reuseFlag = "<c:out value='${reuseFlag}'/>";
+			var resendFormYN = "<c:out value='${resendFormYN}'/>";
 		    window.onload = function () {
-		        Get_Favoritelist();
+				Get_Resendlist();
+				Get_Favoritelist();
 		
 		        DocFileType = DocFileType.toLowerCase();
 		        Tree_setconfig();
@@ -89,8 +91,9 @@
 		        if (TreeIdx != "") {
 		            if (pSelectTab == "favoritelist") {
 		                Get_Favoritelist();
-		            }
-		            else {
+					} else if(pSelectTab == "resendformlist"){
+						Get_Resendlist();
+					} else {
 		                var ID = treeNode.GetNodeData("DATA1");
 		                var KIND = document.getElementById('FromList').value;
 		                GetFormInfo(ID, KIND);
@@ -134,17 +137,24 @@
 		
 		    function lvtForm_onSel_Changed() {
 		        var listview = new ListView();
-		        if (pSelectTab == "favoritelist")
-		            listview.LoadFromID("lvtFavForm");
-		        else
-		            listview.LoadFromID("lvtForm");
-		        var oArrRows = listview.GetSelectedRows();
+					if (pSelectTab == "favoritelist") {
+						listview.LoadFromID("lvtFavForm");
+					} else if(pSelectTab == "resendformlist"){
+						listview.LoadFromID("lvtResendForm");
+					} else {
+						listview.LoadFromID("lvtForm");
+					}
+					
+				var oArrRows = listview.GetSelectedRows();
 		        var tr = oArrRows[0];
 		        if (tr) {
-		            if (pSelectTab == "favoritelist")
-		                document.getElementById('descrip2').innerHTML = tr.getAttribute("DATA2");
-		            else
-		                document.getElementById('descrip').innerHTML = tr.getAttribute("DATA2");
+					if (pSelectTab == "favoritelist") {
+						document.getElementById('descrip2').innerHTML = tr.getAttribute("DATA2");
+					} else if(pSelectTab == "resendformlist"){
+						document.getElementById('descrip3').innerHTML = tr.getAttribute("DATA2");
+					} else {
+						document.getElementById('descrip').innerHTML = tr.getAttribute("DATA2");
+					}
 		        }
 		    }
 		    function lvtForm_onSel_Click() {
@@ -159,7 +169,9 @@
 		        var listview = new ListView();
 		        if (pSelectTab == "favoritelist") {
 		            listview.LoadFromID("lvtFavForm");
-		        } else {
+		        } else if(pSelectTab == "resendformlist"){
+					listview.LoadFromID("lvtResendForm");
+				} else {
 		            listview.LoadFromID("lvtForm");
 		        }
 		        var oArrRows = listview.GetSelectedRows();
@@ -238,9 +250,23 @@
 		    function btnAddForm_onclick(type) {
 		        var listView = new ListView();
 		        var listView2 = new ListView();
-		        if (type == "2")
-		            listView.LoadFromID("lvtFavForm");
-		        else {
+		        if (type == "2") {
+					listView.LoadFromID("lvtFavForm");
+				} else if(type == "3"){
+					listView.LoadFromID("lvtResendForm");
+					listView2.LoadFromID("lvtFavForm");
+
+					var FavList = listView2.GetDataRows();
+
+					if(GetAttribute(FavList[0], "id").indexOf("noItems") < 0) {
+						for (var i = 0; i < FavList.length; i++) {
+							if (GetAttribute(FavList[i], "DATA1") == GetAttribute(listView.GetSelectedRows()[0], "DATA1")) {
+								OpenAlertUI("<spring:message code='ezApprovalG.t20001'/>");
+								return;
+							}
+						}
+					}
+				} else {
 		            listView.LoadFromID("lvtForm");
 		            listView2.LoadFromID("lvtFavForm");
 		            
@@ -338,6 +364,8 @@
 					// 2021-04-09 박기범 - #76321 즐겨찾기 탭 누를시 양식종류 옵션 적용되지 않던 오류
 					if (pSelectTab == "favoritelist") {
 						Get_Favoritelist();
+					} else if(pSelectTab == "resendformlist"){
+						Get_Resendlist();
 					}
 		        }
 		    }
@@ -360,37 +388,47 @@
 		    }
 		
 		    var pSelectTab = "favoritelist";
-		    var tempFromList;
-		    var tempFromList2;
+		    var tempFromList = 0; //양식리스트
+		    var tempFromList2 = 0; //즐겨찾기
+			var tempFromList3 = 0; //최근서신
 		    function ChangeTab(obj) {
-		        pSelectTab = obj.getAttribute("divname");
-		    	if (typeof(tempFromList) == "undefined" || typeof(tempFromList2) == "undefined" ) {
-		    		if(pSelectTab == 'favoritelist'){
-						tempFromList = document.getElementById("FromList").selectedIndex;
-						tempFromList2 = 0;
-					} else if(pSelectTab == 'formlist'){
-						tempFromList = 0;
-						tempFromList2 = document.getElementById("FromList").selectedIndex;
-					}
-		    	}
-
+				if(pSelectTab == 'favoritelist'){
+					tempFromList2 = document.getElementById("FromList").selectedIndex;
+				} else if(pSelectTab == 'formlist'){
+					tempFromList = document.getElementById("FromList").selectedIndex;
+				} else if(pSelectTab == 'resendformlist'){
+					tempFromList3 = document.getElementById("FromList").selectedIndex;
+				}
+		    	
+				pSelectTab = obj.getAttribute("divname");
 		        switch (pSelectTab) {
 		            case "favoritelist":
-		                tempFromList = document.getElementById("FromList").selectedIndex;
 		                document.getElementById("FromList").selectedIndex = tempFromList2;
 		                document.getElementById("favoritetable").style.display = "";
 		                document.getElementById("formtable").style.display = "none";
-		                document.getElementById("delfav").style.display = "";
+						document.getElementById("resendTable").style.display = "none";
+						document.getElementById("delfav").style.display = "";
 		                document.getElementById("addfav").style.display = "none";
+						document.getElementById("addfav2").style.display = "none";
 		                break;
 		            case "formlist":
-		                tempFromList2 = document.getElementById("FromList").selectedIndex;
 		                document.getElementById("FromList").selectedIndex = tempFromList;
 		                document.getElementById("favoritetable").style.display = "none";
 		                document.getElementById("formtable").style.display = "";
+						document.getElementById("resendTable").style.display = "none";
 		                document.getElementById("delfav").style.display = "none";
 		                document.getElementById("addfav").style.display = "";
+						document.getElementById("addfav2").style.display = "none";
 		                break;
+					case "resendformlist":
+						document.getElementById("FromList").selectedIndex = tempFromList3;
+						document.getElementById("favoritetable").style.display = "none";
+						document.getElementById("formtable").style.display = "none";
+						document.getElementById("resendTable").style.display = "";
+						document.getElementById("delfav").style.display = "none";
+						document.getElementById("addfav").style.display = "none";
+						document.getElementById("addfav2").style.display = "";
+						break;
 		        }
 		    }
 
@@ -460,8 +498,9 @@
 		        document.getElementById('forminfo').value = "";
 		        if (pSelectTab == "favoritelist") {
 		            Get_Favoritelist();
-		        }
-		        else {
+		        } else if(pSelectTab == "resendformlist"){
+					Get_Resendlist();
+				} else {
 		            var treeNode = new TreeNode();
 		            treeNode.LoadFromID(TreeIdx);
 		            ID = treeNode.GetNodeData("DATA1");
@@ -486,8 +525,9 @@
 		
 		            if (pSelectTab == "favoritelist") {
 		                Get_Favoritelist('1');
-		            }
-		            else {
+		            } else if(pSelectTab == "resendformlist"){
+						Get_Resendlist('1');
+					} else {
 		                var ID = treeNode.GetNodeData("DATA1");
 		                var KIND = document.getElementById('FromList').value;
 		                var searchtype = document.getElementById('searchoption').selectedIndex;
@@ -501,6 +541,58 @@
 		            }
 		        }
 		    }
+
+			function Get_Resendlist(type) {
+				if(resendFormYN != "Y"){
+					return;
+				}else{
+					document.getElementById("1tab3").style.display = "";
+				}
+				
+				var _searchType = "";
+				var _searchName = "";
+				var xmlRtn = "";
+
+				if (type == "1") {
+					_searchType = document.getElementById('searchoption').selectedIndex;
+					_searchName = document.getElementById('forminfo').value;
+				}
+
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezApprovalG/getForm.do",
+					data : {
+						id : "RESEND",
+						kind  : document.getElementById('FromList').value,
+						searchType : _searchType,
+						searchName : _searchName
+					},
+					success: function(xml){
+						xmlRtn = loadXMLString(xml);
+					}
+				});
+
+				document.getElementById('divlvtResendForm').innerHTML = "";
+				document.getElementById('descrip3').innerHTML = "";
+
+				var listview = new ListView();
+				listview.SetID("lvtResendForm");
+				listview.SetMulSelectable(false);
+				listview.SetRowOnClick("lvtForm_onSel_Changed");
+				listview.SetRowOnDblClick("lvtForm_onSel_DBclick");
+				listview.DataSource(xmlRtn);
+				listview.DataBind("divlvtResendForm");
+
+				var selRow = listview.GetSelectedRows();
+				var tr = selRow[0];
+
+				if (tr) {
+					listview.SetSelectFlag(true);
+					document.getElementById('descrip3').innerHTML = tr.getAttribute("DATA2");
+				}
+			}
 		</script>
 		<style type="text/css">
 			.sub_iconLNB.tree_plus, .sub_iconLNB.tree_minus {
@@ -557,10 +649,12 @@
 	        <div class="portlet_tabpart01_top" id="tab1">
 	            <p><span id="1tab1" divname="favoritelist"><spring:message code='ezApprovalG.G0001'/></span></p>
 	            <p><span id="1tab2" divname="formlist"><spring:message code='ezApprovalG.t1537'/></span></p>
-	            <div style="float: right; padding-top: 1.5px;"> 
+				<p><span id="1tab3" divname="resendformlist" style="display:none;"><spring:message code='ezApprovalG.resendKMH01'/></span></p>
+				<div style="float: right; padding-top: 1.5px;"> 
 	                <a id="addfav" class="imgbtn imgbck" style="display:none;"><span onclick="return btnAddForm_onclick('1')"><spring:message code='ezApprovalG.t00002'/></span></a>
+	                <a id="addfav2" class="imgbtn imgbck" style="display:none;"><span onclick="return btnAddForm_onclick('3')"><spring:message code='ezApprovalG.t00002'/></span></a>
 	                <a id="delfav" class="imgbtn imgbck"><span onclick="return btnAddForm_onclick('2')"><spring:message code='ezApprovalG.t00003'/></span></a>
-	            </div>
+				</div>
 	        </div>
 	    </div>
 	    <table id="favoritetable" style="margin-top: 5px; width: 697px;">
@@ -605,6 +699,25 @@
 	            </td>
 	        </tr>
 	    </table>
+		<table id="resendTable" style="margin-top: 5px; width: 697px; display: none;">
+			<tr>
+				<td style="vertical-align: top;">
+					<div class="border_gray" style="border-bottom: 0px">
+						<div id="divlvtResendForm" style="border: 0; WIDTH: 100%; HEIGHT: 354px; overflow:auto; padding: 0px"></div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td style="vertical-align: top;">
+					<table class="content">
+						<tr>
+							<th><spring:message code='ezApprovalG.t1543'/></th>
+							<td id="descrip3" style="width: 95%">&nbsp;</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
 		<div class="btnposition btnpositionNew" >
 		  <a class="imgbtn"><span onClick="return btnOK_onclick()" ><spring:message code='ezApprovalG.t20'/></span></a>
 		  <a class="imgbtn"><span onClick="return btncancel_onclick()" ><spring:message code='ezApprovalG.t119'/></span></a>

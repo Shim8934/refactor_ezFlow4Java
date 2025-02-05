@@ -173,6 +173,10 @@
 	        var formAprOption = "<c:out value='${formAprOption}'/>";
 	        var passAprLine = "";
 	        var useWebHWP = "<c:out value ='${useWebHWP}'/>";
+
+			/* 2024-07-18 양지혜 - 상위부서문서함 관련 */
+			var upperDeptCode = "<c:out value ='${upperDeptCode}'/>";
+			var upperDeptName = "<c:out value ='${upperDeptName}'/>";
 	        
 	        var gpGubun;
 			//부서감사 관련 2020-01-14 홍대표
@@ -248,15 +252,33 @@
 	        }
 	
 	        function dragNdrapNo() {
-	            try {
-	                var div = document.getElementById('lstAttachLink');
-	                div.ondragenter = div.ondragover = function (e) {
-	                    return false;
-	                }
-	                div.ondrop = function (e) {
-	                    alert("드래그 앤 드랍 기능을 이용할 수 없습니다.\n[첨부] 메뉴를 이용해 주시기 바랍니다.");
-	                    return false;
-	                }
+		        try{
+		            var div = document.getElementById('lstAttachLink');
+		            div.ondragenter = div.ondragover = function (e) {
+		                return false;
+		            }
+		            div.ondrop = function (e) {
+		                alert("<spring:message code='ezApprovalG.pjj30'/>");
+		                return false;
+		            }
+		            
+                    var div2 = document.getElementById('lstAttachLinkDoc');
+                    div2.ondragenter = div.ondragover = function (e) {
+		                return false;
+		            }
+		            div2.ondrop = function (e) {
+		                alert("<spring:message code='ezApprovalG.noDrag.jih01'/>");
+		                return false;
+		            }
+		            
+		            var html = document.getElementsByTagName('html')[0];
+		            html.ondragover = function (e) {
+		            	if (e.target.id == 'lstAttachLink' || e.target.id == 'lstAttachLinkDoc') { return false; }
+		            	
+		            	e.dataTransfer.dropEffect = "none";
+				        e.stopPropagation();
+				        e.preventDefault();
+		            }
 	            } catch (e) {
 	                alert("ezdraftui_hwp.dragNdrapNo()::" + e.description);
 	            }

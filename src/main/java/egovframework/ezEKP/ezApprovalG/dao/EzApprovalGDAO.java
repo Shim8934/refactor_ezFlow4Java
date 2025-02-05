@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO;
 import egovframework.let.user.login.vo.LoginVO;
-import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzApprovalGDAO")
 public class EzApprovalGDAO extends EgovAbstractDAO {
@@ -4026,5 +4026,65 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	/* 2024-08-07 김유진 - 전자결재G > 배부정보 삭제 */
 	public void deleteDistributeInfo(Map<String, Object> map) throws Exception {
 		delete("EzApprovalG.deleteDistributeInfo", map);
+	}
+	
+	/* 2024-12-18 한태훈 - 전자결재G > 열람권한 정보 가져오기 */
+	public String getPublicityYN(Map<String, Object> map) {
+		return (String) select("EzApprovalG.getPublicityYN", map);
+	}
+
+	public String getGongRamId(Map<String, Object> map){
+		return (String) select("EzApprovalG.getGongRamId", map);
+	}
+
+	public void delAprMakeTmp2Ing12(Map<String, Object> map) throws Exception{
+		delete("EzApprovalG.delAprMakeTmp2Ing12", map);
+	}
+
+	public int checkAutoSaveDocId(Map<String, Object> map) throws Exception{
+		return (int) select("EzApprovalG.checkAutoSaveDocId", map);
+	}
+
+	public void aprDeleteDocInfo15(Map<String, Object> map) throws Exception{
+		delete("EzApprovalG.aprDeleteDocInfo15", map);
+	}
+
+	public void aprDeleteDocInfo16(Map<String, Object> map) throws Exception{
+		delete("EzApprovalG.aprDeleteDocInfo16", map);
+	}
+
+	public void aprDeleteDocInfo17(Map<String, Object> map) throws Exception{
+		delete("EzApprovalG.aprDeleteDocInfo17", map);
+	}
+
+	public void deleteTbAprDocInfo(Map<String, Object> map) throws Exception{
+		delete("EzApprovalG.deleteTbAprDocInfo", map);
+	}
+    
+	/* 2024-11-25 기민혁 - 전자결재G > 최근서식 리스트 표출 */
+	@SuppressWarnings("unchecked")
+	public List<ApprGFormVO> getResendFormInfo(Map<String, Object> map) throws Exception{
+		return (List<ApprGFormVO>) list("EzApprovalG.getResendFormInfo", map);
+	}
+	/* 2024-12-10 기민혁 - 전자결재 > 수정 버전 호출 */
+	public String getEditVersion(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getEditVersion", map);
+	}
+
+	/* 2024-12-25 기민혁 - 전자결재 > 일괄 지정 수신 문서 확인 */
+	public ApprGReceiveDocVO checkDocReceiveInfo(Map<String, Object> map) throws Exception {
+		return (ApprGReceiveDocVO) select("EzApprovalG.checkDocReceiveInfo", map);
+	}
+	
+	public Map<String, String> getUpperDeptInfo(Map<String, Object> map) throws Exception {
+		return (Map<String, String>) select("EzApprovalG.getUpperDeptInfo", map);
+	}
+
+	public List<String> getSameDeptBoxUseID(Map<String, Object> map) throws Exception {
+		return (List<String>) list("EzApprovalG.getSameDeptBoxUseID", map);
+	}
+	/* 2024-12-27 이가은 - 전자결재 > 공람완료문서 삭제기능 */
+	public void insertGongramDeleteHistory(Map<String, Object> map) throws Exception {
+		insert("EzApprovalG.insertGongramDeleteHistory", map);
 	}
 }

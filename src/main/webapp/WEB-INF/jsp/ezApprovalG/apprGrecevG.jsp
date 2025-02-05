@@ -121,6 +121,12 @@
 			// 문서정보 조회시 사용됨.
 			var orgCompanyID_ = "<c:out value = '${orgCompanyID}'/>";
 
+			var isRelay = GetRelayDocInfo(); // 중계문서인지의 여부를 true/false로 반환;
+
+			/* 2024-07-18 양지혜 - 상위부서문서함 관련 */
+			var upperDeptCode = "<c:out value ='${upperDeptCode}'/>";
+			var allowDeptIDs = "<c:out value ='${allowDeptIDs}'/>"
+
 		    function process_AfterOpen() {
 		        try {
 		            if (pFormHref == "") {
@@ -199,7 +205,6 @@
 		    }
 		
 		    function FieldsAvailable() {
-	            var isRelay = GetRelayDocInfo();
 	            if (isRelay) {
 	            	document.getElementById("btnReqReSend").style.display = ""; 
 	            }

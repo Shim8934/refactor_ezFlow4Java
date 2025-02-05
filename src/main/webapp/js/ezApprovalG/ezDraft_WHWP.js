@@ -1286,6 +1286,11 @@ function SetAutoPropertyValue() {
 	SignCount = 0;
 	gamsaCount = 0;
 
+    var pDeptName = arr_userinfo[5];
+    if (typeof upperDeptName !== "undefined" && upperDeptName !== "") {
+        pDeptName = upperDeptName;
+    }
+
 	var Fields = message.GetFieldList(0, 1);
 	
 	for (i = 0 ; i < Fields.length ; i ++) {
@@ -1351,7 +1356,7 @@ function SetAutoPropertyValue() {
 					message.PutFieldText(Fields[i], getNodeText(objNodes.item(4)));
 					break;													
 				case "department" :		  	
-					message.PutFieldText(Fields[i], arr_userinfo[5]);
+					message.PutFieldText(Fields[i], pDeptName);
 					break;												
 				case "parantdept" :       
 					message.PutFieldText(Fields[i], getNodeText(objNodes.item(3)));
@@ -1418,7 +1423,7 @@ function SetAutoPropertyValue() {
 
 				case "chief" :        
 					if (SendName != "")
-						message.PutFieldText(Fields[i], SendName + "장");
+						message.PutFieldText(Fields[i], SendName + strLang93);
 					break;
 			}
 		} else {
@@ -2158,6 +2163,10 @@ function SaveTMPFile(html) {
     else {
     	docID = pDocID
     }
+
+    if(AutoSave == "autosave" && createAutoDoc == "Y"){
+        docID = autopDocID;
+    }
     
 	var data = {
 		docID : docID,
@@ -2188,12 +2197,23 @@ function SaveTMPDocInfo(AutoSave, Saveflag, pState, phtml) {
         var xmlhttp = createXMLHttpRequest();
 
         var objNode;
+        
+        var pAutoTmpDocTitle = trim(message.GetFieldText("doctitle"));
         createNodeInsert(xmlpara, objNode, "PARAMETER");
 
-        if(Saveflag) 
-        	createNodeAndInsertText(xmlpara, objNode, "DOCID", newpDocID);
-        else
-        	createNodeAndInsertText(xmlpara, objNode, "DOCID", pDocID);
+        if(Saveflag) {
+            if(AutoSave == "autosave" && createAutoDoc == "Y"){
+                createNodeAndInsertText(xmlpara, objNode, "DOCID", autopDocID);
+            }else {
+                createNodeAndInsertText(xmlpara, objNode, "DOCID", newpDocID);
+            }
+        }else {
+            if(AutoSave == "autosave" && createAutoDoc == "Y"){
+                createNodeAndInsertText(xmlpara, objNode, "DOCID", autopDocID);
+            }else {
+                createNodeAndInsertText(xmlpara, objNode, "DOCID", pDocID);
+            }
+        }
         createNodeAndInsertText(xmlpara, objNode, "FORMID", pFormID);
         if (pDraftFlag == "SUSIN" || pDraftFlag == "HAPYUI")
             createNodeAndInsertText(xmlpara, objNode, "ORGDOCID", pOrgDocID);
@@ -2215,11 +2235,15 @@ function SaveTMPDocInfo(AutoSave, Saveflag, pState, phtml) {
         createNodeAndInsertText(xmlpara, objNode, "HREF", "/document/doc/" + pDocID + ".htm");
 
 
-        if (message.FieldExist("doctitle"))
-            createNodeAndInsertText(xmlpara, objNode, "DOCTITLE", message.GetFieldText("doctitle"));
-        else
+        if (message.FieldExist("doctitle")) {
+            if(pAutoTmpDocTitle != "") {
+                createNodeAndInsertText(xmlpara, objNode, "DOCTITLE", message.GetFieldText("doctitle"));
+            }else{
+                createNodeAndInsertText(xmlpara, objNode, "DOCTITLE", strLang1133);
+            }
+        }else {
             createNodeAndInsertText(xmlpara, objNode, "DOCTITLE", "");
-
+        }
         var field
         if (message.FieldExist("docnumber"))
             field = message.GetFieldText("docnumber");
@@ -2287,6 +2311,14 @@ function SaveTMPDocInfo(AutoSave, Saveflag, pState, phtml) {
         	createNodeAndInsertText(xmlpara, objNode, "oldDocID", pDocID);
         }
         
+        if (AutoSave == "autosave" && createAutoDoc == "Y"){
+            createNodeAndInsertText(xmlpara, objNode, "autoSaveFlag", "Y");
+            createNodeAndInsertText(xmlpara, objNode, "autopDocSN", autopDocSN);
+        }
+
+        if (AutoSave == "autosave"){
+            createNodeAndInsertText(xmlpara, objNode, "FautoSaveFlag", AutoSave);
+        }
         xmlhttp.open("POST", "/ezApprovalG/doDraftHWP.do", false);
         xmlhttp.send(xmlpara);
 

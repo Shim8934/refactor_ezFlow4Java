@@ -6,6 +6,7 @@
 	<head>
 		<title>::: ezEKP Java :::</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" id="viewport">
 		<link rel="shortcut icon" href="/images/favicon.ico">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/ezNewPortal/portal.css')}" />
 		<link href="${util.addVer('main.portal', 'msg')}" rel="stylesheet" type="text/css">
@@ -80,9 +81,33 @@
 		 	window.onresize = function () {
 		        var MainHeight = document.documentElement.clientHeight - parseInt(topHeight);
 		        document.getElementById("topFrame").style.height = document.documentElement.clientHeight + "px";
-		        document.getElementById("mainFrame").style.height = MainHeight + "px";
+		        document.getElementById("mainFrame").style.height = "calc(100% - 60px)";
 		        //contextMenuRePosition();
 		    }
+			
+			window.addEventListener('resize', function() {
+				fixLayout();
+			});
+			
+			window.addEventListener('orientationchange', function() {
+				fixLayout();
+			});
+			
+			function fixLayout() {
+				setTimeout(function() {
+					var longSide = window.innerWidth > window.innerHeight ? window.innerWidth : window.innerHeight;
+					var shortSide = window.innerWidth < window.innerHeight ? window.innerWidth : window.innerHeight;
+					
+					if (window.orientation == 0 || window.orientation == 180) {
+						var ratio = longSide / document.body.clientHeight;
+					} else if (window.orientation == 90 || window.orientation == -90) {
+						var ratio = shortSide / document.body.clientHeight;
+					}
+					
+					document.body.style.transformOrigin = 'top left';
+					document.body.style.transform = 'scale('+ratio+')';
+				}, 10);
+			}
 
 		    function Div_Close() {
 		        document.getElementById("popup_layer").style.display = "none";
@@ -128,6 +153,15 @@
 		    	document.getElementById("reloadLogin").submit();
 		    }
 			
+			document.addEventListener("DOMContentLoaded", function () {
+			   var userAgent = navigator.userAgent.toLowerCase();
+			   var isTabletOrMobile = /ipad|iphone|ipod|android|tablet/i.test(userAgent);
+
+			   var metaTag = document.querySelector('meta[name="viewport"]');
+			   if (isTabletOrMobile || navigator.maxTouchPoints > 4) {
+				   metaTag.setAttribute("content", "width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no");
+			   }
+		   });
 		</script>
 	</head>
 	<body style="margin:0px 0px 0px 0px;padding: 0px 0px 0px 0px;overflow:hidden;">

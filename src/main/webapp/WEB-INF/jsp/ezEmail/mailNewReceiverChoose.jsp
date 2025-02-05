@@ -236,7 +236,7 @@
 	                document.getElementById("ListMsgTo").setAttribute("rowspan", "3");
 	                document.getElementById("ListMsgCC").style.display = "none";
 	                document.getElementById("ListMsgBCC").style.display = "none";
-	                document.getElementById("ListViewMsgTo").style.height = "510px";
+	                document.getElementById("ListViewMsgTo").style.height = "477px";
 	                SelectReceiverWindow(ToTitle, ListViewMsgTo);
 	            }
 	            else if (type == "rule") {
@@ -754,7 +754,7 @@
 	            ListViewTD.style.display = "none";
 	            ListViewDLTD.style.display = "none";
 	            ListViewSharedMailboxTD.style.display = "none";
-	            ListViewINPUT.style.display = "block";
+	            ListViewINPUT.style.display = "";
 	            dlmember.style.display = "none";
 	            sharedMailboxMember.style.display = "none";
 	            AddrSearch.style.display = "none";
@@ -4742,11 +4742,11 @@
 	                    </tr>
 	                    <tr>
 	                        <td>
-	                            <div id="AddressTreeView" style="overflow-x: auto; overflow-y: auto; width: 221px; height: 472px;  border: 1px solid #ddd; background-color: #FFFFFF; margin-top: 3px;padding-top:5px;border-right:0px;"></div>
+	                            <div id="AddressTreeView" style="overflow-x: auto; overflow-y: auto; width: 221px; height: 472px;  border: 1px solid #ddd; background-color: #FFFFFF; padding-top:5px;border-right:0px;"></div>
 	                        </td>
 	                        <td></td>
 	                        <td style="vertical-align: top; width: 100%;">
-	                            <div style="margin-top: 3px; vertical-align: middle; border: 1px solid #ddd; border-bottom: 0px; height: 23px; padding-top: 7px; padding-left: 5px;">
+	                            <div style="vertical-align: middle; border: 1px solid #ddd; border-bottom: 0px; height: 23px; padding-top: 7px; padding-left: 5px;">
 	                                <img src="" align="absmiddle" hspace="2" style="cursor: pointer; margin-right:0px;" />
 	                                <span id="addressFolderName" style="font-weight: normal;"></span>
 	                                &nbsp;<span id="addressFolderCnt" class='txt_color'></span>
@@ -4804,7 +4804,7 @@
 	                                    </table>
 	                                </div>
 	                            </div>
-	                            <div style="width: 100%; height: 477px; overflow: auto; background-color: #ffffff; margin-top: 3px;" id="ListViewDL" class="border_gray" data-type="dist">
+	                            <div style="width: 100%; height: 474px; overflow: auto; background-color: #ffffff; margin-top: 3px;" id="ListViewDL" class="border_gray" data-type="dist">
 	                            </div>
 	                        </td>
 	                    </tr>
@@ -4824,15 +4824,15 @@
 	                                    </table>
 	                                </div>
 	                            </div>
-	                            <div style="width: 100%; height: 477px; overflow: auto; background-color: #ffffff; margin-top: 3px;" id="ListViewSharedMailbox" class="border_gray" data-type="shared">
+	                            <div style="width: 100%; height: 474px; overflow: auto; background-color: #ffffff; margin-top: 3px;" id="ListViewSharedMailbox" class="border_gray" data-type="shared">
 	                            </div>
 	                        </td>
 	                    </tr>
 	                </table>
-	                <table id="ListViewINPUT" style="display: none">
+	                <table id="ListViewINPUT" style="width: 100%; display: none">
 	                    <tr>
 	                        <td>
-	                            <div id="ManualView" style="HEIGHT: 504px; width: 667px;" class="box">
+	                            <div id="ManualView" style="HEIGHT: 507px;" class="box">
 	                                <table class="content" style="margin:5px">
 	                                    <tr>
 	                                        <th><spring:message code='ezEmail.t31' /></th>

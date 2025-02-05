@@ -1974,4 +1974,78 @@
 				COMPANY_ID = #companyId#
 		]]>
 	</update>
+	
+	<select id="EzSystemAdminDAO.getFidoAuthenticList" resultClass="IPBandVO">
+		<![CDATA[
+			SELECT
+				IPNO,
+				IPADDRESS,
+				ALLOW_ACCESS AS "ACCESS",
+				EXPLANATION
+			FROM
+				TBL_NOT_ACCESS_FIDO_IP
+			WHERE
+				TENANT_ID = #tenantID#
+		  	AND
+				COMPANYID = #companyId#
+		]]>
+	</select>
+
+	<select id="EzSystemAdminDAO.getFidoAuthenticInfo" resultClass="int">
+		<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM
+				TBL_NOT_ACCESS_FIDO_IP
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyId#
+			AND
+				IPADDRESS = #ipAddress#
+			AND
+				ALLOW_ACCESS = 'YES'
+		]]>
+	</select>
+
+	<select id="EzSystemAdminDAO.getSystemFidoIPBand" resultClass="IPBandVO">
+		<![CDATA[
+			SELECT
+				IPADDRESS,
+				ALLOW_ACCESS AS "ACCESS",
+				EXPLANATION
+			FROM
+				TBL_NOT_ACCESS_FIDO_IP
+			WHERE
+				IPNO=#ipNo#
+		]]>
+	</select>
+
+	<insert id="EzSystemAdminDAO.insertFidoIPBand">
+		<![CDATA[
+			INSERT INTO
+				TBL_NOT_ACCESS_FIDO_IP 
+			VALUES (SEQ_TBL_NOT_ACCESS_FIDO_IP.NEXTVAL, #tenantID#, #companyId#, #ipAddress#, #access# , #explanation#)
+		]]>
+	</insert>
+
+	<update id="EzSystemAdminDAO.updateFidoIPBand">
+		<![CDATA[
+		UPDATE
+			TBL_NOT_ACCESS_FIDO_IP
+		SET
+			IPADDRESS=#ipAddress#,
+			ALLOW_ACCESS=#access#,
+			EXPLANATION=#explanation#
+		WHERE
+			IPNO=#ipNo#
+		]]>
+	</update>
+
+	<delete id="EzSystemAdminDAO.deleteFidoIPBand" parameterClass="java.util.List">
+		<![CDATA[
+			DELETE FROM
+				TBL_NOT_ACCESS_FIDO_IP
+		]]> <iterate prepend="WHERE IPNO IN" open="(" close=")" conjunction=",">#ipNoList[]#</iterate>
+	</delete>
 </sqlMap>

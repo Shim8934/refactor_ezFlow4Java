@@ -63,12 +63,12 @@
 	            		</div>
 	        		</c:when>
 	        		<c:otherwise>
-	        			<div class="presentTime">
+	        			<div class="presentTime" style="float: none; width: auto;">
 	               		 	<p class="timeTxt"><span id="ptlTimeFlow"></span>
 	                		<span class="timeAM">AM</span>
 	                		<span class="timePM">PM</span></p>
 	            		</div>
-	            		<div class="main_time">
+	            		<div class="main_time" style="display: none;">
 	            			<dl class="timeCheckIn out" id="ptlInAttiBtn" type="A01" datetype="2" onclick="ptlCheckHoliday(this, '<c:out value="${usedTheme}"/>')">
 <!-- 	                		<dt><img src="/images/ezNewPortal/theme3Img/main_time_icon.png"></dt> -->
 	                			<dd><spring:message code='ezNewPortal.t013' /></dd>

@@ -57,7 +57,7 @@ function CalendarMiniView(pTagetID) {
         }
         
         mImg.setAttribute("border", "0");
-        mImg.setAttribute("onclick", "preMonth()");
+        mSpan.setAttribute("onclick", "preMonth()");
         mSpan.appendChild(mImg);
         mTd1.appendChild(mSpan);
         
@@ -163,7 +163,7 @@ function CalendarMiniView(pTagetID) {
         	mImg.setAttribute("src", "/images/ezNewPortal/calender_next.png");///
         }
         mImg.setAttribute("border", "0");
-        mImg.setAttribute("onclick", "nextMonth()");
+        mSpan.setAttribute("onclick", "nextMonth()");
         mSpan.appendChild(mImg);
         mTd3.appendChild(mSpan);
 

@@ -105,15 +105,18 @@ public class EzEditorController extends EgovFileMngUtil {
 				defaultFontSize = editorFontStyle.split("\\|")[1];
 			}
 			
-			// 사용자가 환경설정에서 설정한 값이 있으면 그 값을 사용하고, 없으면 관리자페이지에서 설정한 값 사용
-			MailGeneralVO mailGeneralVO = ezEmailService.getMailGeneral(userInfo.getTenantId(), userInfo.getId()).get(0);
-			String userFontFamily = mailGeneralVO.getEditorFontFamily();
-			String userFontSize = mailGeneralVO.getEditorFontSize();
-			if (userFontFamily != null && !userFontFamily.isEmpty()) {
-				defaultFontFamily = userFontFamily;
-			}
-			if (userFontSize != null && !userFontSize.isEmpty()) {
-				defaultFontSize = userFontSize;
+			// 사용자가 메일환경설정에서 설정한 값이 있으면 그 값을 사용하고, 없으면 관리자페이지에서 설정한 값 사용
+			// 메일쓰기, 메일예약발송, 메일부재중설정, 메일서명관리(사용자단)에만 적용되도록 수정
+			if (type != null && (type.equals("MAILWRITE") || type.equals("MAILOUTOFOFFICE") || type.equals("MAILSIGNATURE"))) {
+				MailGeneralVO mailGeneralVO = ezEmailService.getMailGeneral(userInfo.getTenantId(), userInfo.getId()).get(0);
+				String userFontFamily = mailGeneralVO.getEditorFontFamily();
+				String userFontSize = mailGeneralVO.getEditorFontSize();
+				if (userFontFamily != null && !userFontFamily.isEmpty()) {
+					defaultFontFamily = userFontFamily;
+				}
+				if (userFontSize != null && !userFontSize.isEmpty()) {
+					defaultFontSize = userFontSize;
+				}
 			}
 		}
 
@@ -250,7 +253,7 @@ public class EzEditorController extends EgovFileMngUtil {
 		String filePath = "";
 
 		logger.debug("type:" + type);
-		if (type.equals("MAILSIGNATURE")) { // 메일 서명 이미지 저장경로
+		if (type.equals("MAILSIGNATURE") || type.equals("SIGNATURETEMPLATE")) { // 메일 서명 이미지 저장경로
 			filePath = commonUtil.getUploadPath("upload_mail.SIGNIMGS", userInfo.getTenantId());
 		} else if (type.equals("MAILLETTER")) {
 			filePath = commonUtil.getUploadPath("upload_mail.LETTER", userInfo.getTenantId());
@@ -407,7 +410,7 @@ public class EzEditorController extends EgovFileMngUtil {
 		String fileName = UUID.randomUUID() + "." + fileType;
 		String filePath = "";
 
-		if (type.equals("MAILSIGNATURE")) { // 메일 서명 이미지 저장경로
+		if (type.equals("MAILSIGNATURE") || type.equals("SIGNATURETEMPLATE")) { // 메일 서명 이미지 저장경로
 			filePath = commonUtil.getUploadPath("upload_mail.SIGNIMGS", userInfo.getTenantId());
 			filePath = filePath + commonUtil.separator + today;
 		} else if (type.equals("MAILLETTER")) { // 편지지 등록, 수정때의 업로드
@@ -468,7 +471,7 @@ public class EzEditorController extends EgovFileMngUtil {
 		String fileName = UUID.randomUUID() + "." + fileType;
 		String filePath = "";
 
-		if (type.equals("MAILSIGNATURE")) { // 메일 서명 이미지 저장경로
+		if (type.equals("MAILSIGNATURE") || type.equals("SIGNATURETEMPLATE")) { // 메일 서명 이미지 저장경로
 			filePath = commonUtil.getUploadPath("upload_mail.SIGNIMGS", userInfo.getTenantId());
 		}
 		/* 2023-12-18 홍승비 - 자원관리 > 자원예약(포틀릿 포함) / 자원양식 등록 > 파일이 아닌 DB에 본문과 이미지 경로가 저장되므로, 임시 저장경로가 아닌 자원관리 저장경로 사용 */
@@ -572,7 +575,7 @@ public class EzEditorController extends EgovFileMngUtil {
 			String fileName = UUID.randomUUID() + "." + fileType;
 			String filePath = "";
 
-			if (type.equals("MAILSIGNATURE")) { // 메일 서명 이미지 저장경로
+			if (type.equals("MAILSIGNATURE") || type.equals("SIGNATURETEMPLATE")) { // 메일 서명 이미지 저장경로
 				filePath = commonUtil.getUploadPath("upload_mail.SIGNIMGS", userInfo.getTenantId());
 			}
 			/* 2023-12-18 홍승비 - 자원관리 > 자원예약(포틀릿 포함) / 자원양식 등록 > 파일이 아닌 DB에 본문과 이미지 경로가 저장되므로, 임시 저장경로가 아닌 자원관리 저장경로 사용 */
@@ -710,7 +713,7 @@ public class EzEditorController extends EgovFileMngUtil {
 					result = "invalid_size";
 				} else {
 					String filePath = "";
-					if (type.equals("MAILSIGNATURE")) { // 메일 서명 저장경로로 이미지 저장
+					if (type.equals("MAILSIGNATURE") || type.equals("SIGNATURETEMPLATE")) { // 메일 서명 저장경로로 이미지 저장
 						filePath = commonUtil.getUploadPath("upload_mail.SIGNIMGS", userInfo.getTenantId());
 					} else if (type.equals("MAILLETTER")) {
 						// userInfo tenantId -> 회사의 tenantId로 변경하기 (수아)
@@ -858,7 +861,7 @@ public class EzEditorController extends EgovFileMngUtil {
 					try {
 						String filePath = "";
 
-						if (type.equals("MAILSIGNATURE")) { // 메일 서명 저장경로로 이미지 저장
+						if (type.equals("MAILSIGNATURE") || type.equals("SIGNATURETEMPLATE")) { // 메일 서명 저장경로로 이미지 저장
 							filePath = commonUtil.getUploadPath("upload_mail.SIGNIMGS", userInfo.getTenantId());
 						}
 						/* 2023-12-18 홍승비 - 자원관리 > 자원예약(포틀릿 포함) / 자원양식 등록 > 파일이 아닌 DB에 본문과 이미지 경로가 저장되므로, 임시 저장경로가 아닌 자원관리 저장경로 사용 */
@@ -922,7 +925,7 @@ public class EzEditorController extends EgovFileMngUtil {
 				
 				String filePath = commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId());
 
-				if (type.equals("MAILSIGNATURE")) { // 메일 서명 저장경로로 이미지 저장
+				if (type.equals("MAILSIGNATURE") || type.equals("SIGNATURETEMPLATE")) { // 메일 서명 저장경로로 이미지 저장
 					filePath = commonUtil.getUploadPath("upload_mail.SIGNIMGS", userInfo.getTenantId());
 				}
 				/* 2023-12-18 홍승비 - 자원관리 > 자원예약(포틀릿 포함) / 자원양식 등록 > 파일이 아닌 DB에 본문과 이미지 경로가 저장되므로, 임시 저장경로가 아닌 자원관리 저장경로 사용 */

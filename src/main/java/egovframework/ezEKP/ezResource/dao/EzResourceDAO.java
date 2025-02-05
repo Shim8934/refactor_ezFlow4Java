@@ -20,7 +20,7 @@ import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
 import egovframework.ezEKP.ezResource.vo.ResGetSendMailToUserVO;
 import egovframework.ezEKP.ezResource.vo.ResOccuVO;
 import egovframework.ezEKP.ezResource.vo.ResSelectFormIDVO;
-import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzResourceDAO")
 public class EzResourceDAO extends EgovAbstractDAO {
@@ -407,8 +407,8 @@ public class EzResourceDAO extends EgovAbstractDAO {
 		return update("EzResourceDAO.updateFavoriteCategory", map);
 	}
 
-	public void delFavoriteCategory(String catId) throws Exception {
-		delete("EzResourceDAO.delFavoriteCategory", catId);
+	public void delFavoriteCategory(Map<String, Object> map) throws Exception {
+		delete("EzResourceDAO.delFavoriteCategory", map);
 	}
 
 	public void insertBrdFavoriteCategory(Map<String, Object> map) throws Exception {
@@ -476,5 +476,9 @@ public class EzResourceDAO extends EgovAbstractDAO {
 
 	public void updateFavoriteCategoryBrdYN2(Map<String, Object> map) throws Exception {
 		update("EzResourceDAO.updateFavoriteCategoryBrdYN2", map);
+	}
+
+	public void delResDataForm(Map<String, Object> map) throws Exception {
+		delete("EzResourceDAO.delResDataForm", map);
 	}
 }

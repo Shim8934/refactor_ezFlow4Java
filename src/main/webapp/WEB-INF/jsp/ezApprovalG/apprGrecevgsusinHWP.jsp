@@ -131,6 +131,8 @@
 			
 			//문서유통 재배부요청 처리하기 위해 추가. 2020-05-14 홍대표.
 			var pSusinAdmin = "<c:out value = '${pSusinAdmin}'/>";
+			
+			var isRelay = GetRelayDocInfo(); // 중계문서인지의 여부를 true/false로 반환;
 		    
 		    function process_AfterOpen() {
 		        try {
@@ -312,7 +314,6 @@
 			        }
 			        
 			        //2019-02-28 중계문서일경우 재전송요청 뜨게 수정
-			        var isRelay = GetRelayDocInfo();
 			        if (isRelay) {
 			        	document.getElementById("btnReqReSend").style.display = "";
 // 	                    document.getElementById("btnReqReturn").style.display = "";
@@ -378,7 +379,6 @@
 			        }
 			    } else {
 			        if (pFormHref == "") {
-			            var isRelay = GetRelayDocInfo();
 			            if (isRelay) {
 			                try {
 			                	/* 재발송기능 display:none처리 2018-08-25 */
@@ -452,14 +452,7 @@
 			
 			            if (pDocType == "001") {
 			                btnReturn.style.display = "none";
-			
-			                var NewIsRelay = GetRelayDocInfo();
-			                if (NewIsRelay) {
-			                	/* 재발송기능 display:none처리 */
-			                    btnReqReSend.style.display = "";
-			                } else {
-			                    btnReqReSend.style.display = "none";
-			                }
+                            btnReqReSend.style.display = isRelay ? "" : "none";
 			
 			                if (pAprState == "011") {
 			                    btnDistribute.style.display = "";
@@ -494,13 +487,7 @@
 	        	            }
 	                    	
 	                        btnReturn.style.display = "none";
-
-	                        var NewIsRelay = GetRelayDocInfo();
-	                        if (NewIsRelay) {
-	                            btnReqReSend.style.display = "";
-	                        } else {
-	                            btnReqReSend.style.display = "none";
-	                        }
+                            btnReqReSend.style.display = isRelay ? "" : "none";
 
 	                        if (pAprState == "011") {
 	                            btnDistribute.style.display = "";

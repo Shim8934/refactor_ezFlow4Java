@@ -383,6 +383,24 @@ CREATE TABLE `jmocha_address_simple` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `jmocha_address_last_sent`
+--
+
+DROP TABLE IF EXISTS `jmocha_address_last_sent`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `jmocha_address_last_sent` (
+  `SEQUENCE` bigint(20) NOT NULL AUTO_INCREMENT,
+  `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
+  `CN` varchar(80) NOT NULL,
+  `name` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `email` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `sent_date` datetime DEFAULT utc_timestamp,  -- 기본값으로 현재 날짜와 시간 설정 (utc)
+  PRIMARY KEY (`SEQUENCE`) -- 삽입, 삭제가 빈번한 테이블이라, UNIQUE KEY 사용하지 않음. (* UNIQUE: TENANT_ID, CN, email)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `jmocha_alias`
 --
 
@@ -460,6 +478,18 @@ CREATE TABLE `jmocha_default_quota` (
   PRIMARY KEY (`DOMAIN_NAME`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `jmocha_company_quota`
+--
+DROP TABLE IF EXISTS `jmocha_company_quota`;
+CREATE TABLE `jmocha_company_quota` 
+(   `DOMAIN_NAME` varchar(100) NOT NULL,
+    `COMPANY_ID` varchar(160) NOT NULL,
+    `MAX_STORAGE` double DEFAULT 0,
+    `WARN_STORAGE` double DEFAULT 0,
+    PRIMARY KEY (`DOMAIN_NAME`,`COMPANY_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `jmocha_dept_master`
@@ -863,7 +893,8 @@ DROP TABLE IF EXISTS `jmocha_mail_reserve`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `jmocha_mail_reserve` (
   `MESSAGE_ID` varchar(50) NOT NULL,
-  `USER_ID` varchar(100) DEFAULT NULL,
+  `USER_ID` varchar(100) DEFAULT NULL, -- userAccount (mailId@domainName)
+  `SENDER` varchar(80) DEFAULT NULL, -- userId
   `SUBJECT` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `SEND_DATE` datetime DEFAULT NULL,
   PRIMARY KEY (`MESSAGE_ID`),
@@ -3697,6 +3728,7 @@ CREATE TABLE `tbl_board_boardinfo` (
   `REACTFLAG` varchar(1) DEFAULT NULL,
   `ATTACHMENTFLAG` char(1) DEFAULT 'Y',
   `PUBLICFLAG` char(1) DEFAULT 'N',
+  `ALLNEWBOARDFLAG` char(1) DEFAULT 'Y',
   PRIMARY KEY (`BOARDID`(255),`TENANT_ID`),
   KEY `idx_companyid` (`COMPANYID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -3769,6 +3801,7 @@ CREATE TABLE `tbl_board_configuration` (
   `PREVIEWWCONTENT` bigint(10) DEFAULT 0,
   `PREVIEWHLIST` bigint(10) DEFAULT 0,
   `PREVIEWHCONTENT` bigint(10) DEFAULT 0,
+  `ALLNEWBOARDLISTDATE` int(10) DEFAULT 5,
   `TENANT_ID` mediumint(5) NOT NULL,
   PRIMARY KEY (`TENANT_ID`,`USERID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -5721,13 +5754,15 @@ DROP TABLE IF EXISTS `tbl_conndata`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_conndata` (
-  `KEYID` varchar(50) NOT NULL COMMENT 'ERP Key 값',
+  `KEYID` varchar(50) NOT NULL COMMENT '연동 Key 값',
   `FORMID` varchar(10) NOT NULL COMMENT '연동 양식ID',
-  `BODYXML` longtext DEFAULT NULL COMMENT '본문 XML',
+  `USERID` varchar(400) NOT NULL COMMNET '기안자 ID',
+  `DEPTID` varchar(400) NOT NULL COMMENT '기안자 부서ID',
+  `TITLE` varchar(1020) NOT NULL COMMENT '문서제목',
+  `BODYHTML` longtext DEFAULT NULL COMMENT '본문 HTML',
   `STATUS` varchar(10) DEFAULT NULL COMMENT 'W:대기\nD:기안\nE:완료\nR:반송',
   `DOCID` varchar(20) DEFAULT NULL COMMENT '문서ID',
-  `UPDATEDATE` datetime DEFAULT NULL COMMENT '업데이트 일자',
-  `UPDATEID` varchar(20) DEFAULT NULL COMMENT '업데이트 주체',
+  `UPDATEDATE` datetime DEFAULT NULL COMMENT '업데이트 일자'
   PRIMARY KEY (`KEYID`,`FORMID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -5749,6 +5784,34 @@ CREATE TABLE TBL_SESSION (
 	PRIMARY KEY (`SESSION_ID`),
 	KEY `IDX_SESSION_LAST_TIME` (`SESSION_ID`,`LAST_ACCESS_TIME`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Table structure for table `TBL_FIDO_SESSION`
+--
+DROP TABLE IF EXISTS  `TBL_FIDO_SESSION`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `TBL_FIDO_SESSION` (
+  `FIDO_SESSION_ID` varchar(50) NOT NULL,
+  `USER_ID` varchar(80) NOT NULL,
+  `CREATE_TIME` DATETIME NOT NULL,
+  `ACCESS_IP` varchar(100) NOT NULL,
+  `STATUS` varchar(50) NOT NULL,
+  PRIMARY KEY (`FIDO_SESSION_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS  `TBL_NOT_ACCESS_FIDO_IP`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `TBL_NOT_ACCESS_FIDO_IP` (
+  `IPNO` int(11) NOT NULL AUTO_INCREMENT,
+  `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
+  `COMPANYID` varchar(200) DEFAULT NULL,
+  `IPADDRESS` varchar(100) NOT NULL,
+  `ALLOW_ACCESS` varchar(10) DEFAULT 'NO',
+  `EXPLANATION` varchar(200) DEFAULT NULL,
+  PRIMARY KEY (`IPNO`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `tbl_connection_info`
@@ -9084,7 +9147,7 @@ CREATE TABLE `tbl_portal_menu_auth` (
   `access_YN` int(11) DEFAULT NULL COMMENT '접근 가능(1), 접근 불가(0)',
   `user_type` int(11) DEFAULT NULL COMMENT '사용자(U), 부서(D)',
   `sn` int(11) DEFAULT 0,
-  `subdept_permitted` varchar(4) DEFAULT 'N',
+  `subdept_permitted` varchar(4) DEFAULT 'Y',
   PRIMARY KEY (`menu_id`,`company_id`,`tenant_id`,`user_id`),
   CONSTRAINT `FK_tbl_portal_menu_auth_menu_id_tbl_portal_menu_menu_id` FOREIGN KEY (`menu_id`) REFERENCES `tbl_portal_menu` (`menu_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='메뉴권한 설정 테이블';
@@ -9184,7 +9247,7 @@ CREATE TABLE `tbl_portal_portlet_auth` (
   `access_YN` int(11) DEFAULT NULL COMMENT '접근 가능(1), 접근 불가(0)',
   `user_type` int(11) DEFAULT NULL COMMENT '사용자(U), 부서(D)',
   `sn` int(11) DEFAULT 0,
-  `subdept_permitted` varchar(4) DEFAULT 'N',
+  `subdept_permitted` varchar(4) DEFAULT 'Y',
   PRIMARY KEY (`portlet_id`,`company_id`,`tenant_id`,`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -9304,7 +9367,7 @@ CREATE TABLE `tbl_portal_theme_auth` (
   `access_YN` int(11) DEFAULT NULL COMMENT '접근 가능(1), 접근 불가(0)',
   `user_type` int(11) DEFAULT NULL COMMENT '사용자(U), 부서(D)',
   `sn` int(11) DEFAULT 0,
-  `subdept_permitted` varchar(4) DEFAULT 'N',
+  `subdept_permitted` varchar(4) DEFAULT 'Y',
   PRIMARY KEY (`theme_id`,`company_id`,`tenant_id`,`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -15555,6 +15618,7 @@ CREATE TABLE `TBL_SYSTEMCONFIG` (
   `TENANT_ID` mediumint(5) NOT NULL,
   `COMPANY_ID` varchar(80) NOT NULL,
   `TYPECODE` varchar(80) DEFAULT NULL,
+  `ISDELETEBLOCK` CHAR(1) DEFAULT 'N',
   PRIMARY KEY (`CODE`,`TENANT_ID`,`COMPANY_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -15720,3 +15784,53 @@ CREATE TABLE TBL_BOARD_COMMENT_ATTACHMENTS (
   `TENANT_ID` mediumint(5) NOT NULL COMMENT "테넌트 아이디",
   PRIMARY KEY (`ITEMID`, `REPLYID`, `SN`, `TENANT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT "게시판 댓글 첨부파일 정보 테이블";
+
+--
+-- Table structure for table `TBL_C_CLUBGUEST_ONELINEREPLY`
+--
+DROP TABLE IF EXISTS `TBL_C_CLUBGUEST_ONELINEREPLY`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE TBL_C_CLUBGUEST_ONELINEREPLY (
+    ITEMID INT NOT NULL COMMENT "방명록 아이디",
+    REPLYID VARCHAR(38) NOT NULL COMMENT "방명록 댓글 아이디",
+    C_CLUBNO VARCHAR(38) NOT NULL COMMENT "커뮤니티 아이디",
+    USERID VARCHAR(50) COMMENT "방명록 작성자 아이디",
+    USERNAME VARCHAR(50) COMMENT "방명록 작성자 이름",
+    USERNAME2 VARCHAR(50) COMMENT "방명록 작성자 이름 다국어",
+    WRITEDATE DATETIME COMMENT "방명록 댓글 작성날짜",
+    CONTENT VARCHAR(300) COMMENT "방명록 댓글 내용",
+    TENANT_ID INT DEFAULT 0 COMMENT "테넌트 아이디",
+    COMPANYID VARCHAR(80) COMMENT "회사 아이디",
+    PRIMARY KEY (`ITEMID`,`REPLYID`,`TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT "커뮤니티 방명록 댓글 정보 테이블";
+
+DROP TABLE IF EXISTS `tbl_gongramdeletehistory`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_gongramdeletehistory` (
+	`DOCID` varchar(80) NOT NULL,
+	`APRMEMBERSN` bigint(10) NOT NULL,
+	`APRTYPE` varchar(12) DEFAULT NULL,
+	`APRSTATE` varchar(12) DEFAULT NULL,
+	`APRMEMBERID` varchar(400) DEFAULT NULL,
+	`APRMEMBERISDEPTYN` varchar(4) DEFAULT NULL,
+	`APRMEMBERNAME` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+	`APRMEMBERJOBTITLE` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+	`APRMEMBERDEPTID` varchar(400) DEFAULT NULL,
+	`APRMEMBERDEPTNAME` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+	`APRMEMBERLDAPPATH` varchar(400) DEFAULT NULL,
+	`RECEIVEDDATE` datetime DEFAULT NULL,
+	`PROCESSDATE` datetime DEFAULT NULL,
+	`DELETEDATE` datetime DEFAULT NULL,
+	`REASONDONOTAPPROV` varchar(1020) DEFAULT NULL,
+	`ISPROPOSERYN` varchar(4) DEFAULT NULL,
+	`ISBRIEFUSERYN` varchar(4) DEFAULT NULL,
+	`APRMEMBERNAME2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+	`APRMEMBERJOBTITLE2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+	`APRMEMBERDEPTNAME2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+	`TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
+	`COMPANYID` varchar(20) NOT NULL,
+	PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`DOCID`,`APRMEMBERID`),
+	KEY `tbl_gongramdeletehistory_IDX` (`DOCID`, `APRMEMBERID`, `TENANT_ID`, `COMPANYID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

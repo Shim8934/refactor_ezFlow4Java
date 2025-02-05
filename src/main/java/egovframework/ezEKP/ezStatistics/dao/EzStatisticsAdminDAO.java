@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import egovframework.ezEKP.ezStatistics.vo.StatApprVO;
 import egovframework.ezEKP.ezStatistics.vo.StatConnVO;
 import egovframework.ezEKP.ezStatistics.vo.StatDailyDocCountLogVO;
-import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzStatisticsAdminDAO")
 public class EzStatisticsAdminDAO extends EgovAbstractDAO{

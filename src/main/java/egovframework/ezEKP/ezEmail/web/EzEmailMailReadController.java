@@ -8,6 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64.Decoder;
 import java.util.Date;
 import java.util.Enumeration;
@@ -36,6 +37,7 @@ import javax.mail.FetchProfile;
 import javax.mail.Flags;
 import javax.mail.Flags.Flag;
 import javax.mail.Folder;
+import javax.mail.Header;
 import javax.mail.Message;
 import javax.mail.Message.RecipientType;
 import javax.mail.MessagingException;
@@ -53,6 +55,7 @@ import com.google.gson.JsonElement;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.PrefixFileFilter;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONObject;
@@ -1012,22 +1015,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					f.close(true);
 
 						try {
-							JgwResult tagResult = rest.jgw().url("/jMochaEzEmail/getTagList")
-									.formParam("userAccount", userEmail)
-									.formParam("folderPath", folderPath)
-									.formParam("mailUid", uid)
-									.exchangeJgwResult();
-							logger.debug("jgw getTagList result: {}", tagResult);
-
-							if (tagResult.succeeded()) {
-								Spliterator<JsonElement> tagIterator = tagResult.getResultAsJsonElement().getAsJsonArray().spliterator();
-
-								tags = StreamSupport.stream(tagIterator, false)
-										.map(jsonElement -> jsonElement.getAsJsonObject().get("name").getAsString())
-										.toArray(String[]::new);
-							} else {
-								tags = new String[0];
-							}
+							tags = ezEmailUtil.getTagList(userEmail, folderPath, uid);
 						} catch (Exception e) {
 							logger.error("get tag error:", e);
 						}
@@ -2386,6 +2374,52 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		
 		logger.debug("downloadAttachAll ended.");
 	}
+
+	/**
+	 * Part의 Content-Type을 지정된 Content-Type으로 변경한 Part를 반환한다.
+	 * @param p
+	 * @return
+	 * @throws MessagingException
+	 * @throws IOException
+	 */
+	public Part getBodyPartWithNewContentType(Part p, String newContentType) throws MessagingException, IOException {
+		logger.debug("getBodyPartWithNewContentType started. newContentType={}", newContentType);
+		
+		MimeBodyPart newBodyPart = (MimeBodyPart)p;
+
+		String[] contentTypeHeaders = p.getHeader("Content-Type");
+
+		if (contentTypeHeaders != null && contentTypeHeaders.length > 0) {
+			InternetHeaders newHeaders = new InternetHeaders();
+
+			@SuppressWarnings("unchecked")
+			Enumeration<Header> enumerator = p.getAllHeaders();
+
+			// 해당 파트의 헤더들을 읽는다.
+			while (enumerator.hasMoreElements()) {
+				Header h = enumerator.nextElement();
+				String hValue = h.getValue();
+
+				if (h.getName().equalsIgnoreCase("Content-Type")) {
+					hValue = newContentType;
+
+					logger.debug("new Content-Type={}", hValue);
+				}
+
+				newHeaders.addHeader(h.getName(), hValue);
+			}
+
+			// 해당 파트의 body 데이터를 읽는다.
+			byte[] bytes = IOUtils.toByteArray(newBodyPart.getRawInputStream());
+
+			// 해당 파트의 헤더와 body 데이터를 동일하게 갖는 파트 객체를 생성한다.
+			newBodyPart = new MimeBodyPart(newHeaders, bytes);
+		}
+
+		logger.debug("getBodyPartWithNewContentType ended.");
+		
+		return newBodyPart;
+	}
 	
 	/**
 	 * 메일 첨부파일 다운로드 실행 함수
@@ -2503,8 +2537,25 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						// Chrome에서 message/rfc822 Type으로 내려 보내면
 						// blocked a frame with origin from accessing a cross-origin frame
 						// 오류가 발생해 추가함.
-						if (partContentType.equalsIgnoreCase("message/rfc822")) {
+						if (partContentType.toLowerCase().startsWith("message/rfc822")) {
 							partContentType = "application/octet-stream";
+							
+							String[] contentTransferEncodingHeader = part.getHeader("Content-Transfer-Encoding");
+							
+							if (contentTransferEncodingHeader != null && contentTransferEncodingHeader.length > 0) {
+								String contentTransferEncoding = contentTransferEncodingHeader[0];
+
+								logger.debug("contentTransferEncoding={}", contentTransferEncoding);
+								
+								// Content-Type이 message/rfc822이고 Content-Transfer-Encoding이 base64일 때
+								// JavaMail API에서 자동으로 base64 디코딩을 하지 않고 다운로드되는 문제가 있어
+								// Content-Type을 application/octet-stream으로 변경함. 변경하면 base64 디코딩이
+								// 자동으로 수행됨.
+								// ezEKP-docs/eml/base64로 인코딩된 eml 첨부파일.eml 참고
+								if ("base64".equalsIgnoreCase(contentTransferEncoding)) {
+									part = getBodyPartWithNewContentType(part, partContentType);
+								}
+							}
 						}
 						
 						response.setContentType(partContentType);
@@ -2958,6 +3009,9 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		Document doc = commonUtil.convertRequestToDocument(request);
 		if (doc != null){
 			url = doc.getElementsByTagName("URL").item(0).getTextContent();
+			
+			url = URLDecoder.decode(url, "UTF-8");
+			
 			logger.debug("url=" + url);
 
 			if(url != null){
@@ -3450,20 +3504,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							}
 
 							try {
-								JgwResult tagResult = rest.jgw().url("/jMochaEzEmail/getTagList")
-										.formParam("userAccount", userEmail)
-										.formParam("folderPath", folderPath)
-										.formParam("mailUid", uid)
-										.exchangeJgwResult();
-								logger.debug("jgw getTagList result: {}", tagResult);
-
-								if (tagResult.succeeded()) {
-									Spliterator<JsonElement> tagIterator = tagResult.getResultAsJsonElement().getAsJsonArray().spliterator();
-
-									tags = StreamSupport.stream(tagIterator, false)
-											.map(jsonElement -> jsonElement.getAsJsonObject().get("name").getAsString())
-											.collect(Collectors.joining("|"));
-								}
+								String [] tagList = ezEmailUtil.getTagList(userEmail, folderPath, uid);
+								tags = Arrays.stream(tagList).collect(Collectors.joining("|"));
 							} catch (Exception e) {
 								logger.error("get tag error:", e);
 							}

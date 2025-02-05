@@ -701,8 +701,10 @@
 		    	window.open(url, "right");
 		    }
 		    
-	        function Open_ReservationManage() {
-	            var OpenWin = window.open("/ezEmail/mailReservation.do", "mail_reservation_cross", GetOpenWindowfeature(501, 350));
+	        function Open_ReservationManage(shareId) {
+				var requestUrl = "/ezEmail/mailReservation.do";
+				requestUrl += shareId? "?shareId=" + encodeURIComponent(shareId) : "";
+	            var OpenWin = window.open(requestUrl, "mail_reservation_cross", GetOpenWindowfeature(501, 350));
 	            try { OpenWin.focus(); } catch (e) {console.log(e);}
 	        }
 	        function Open_Restore() {
@@ -1757,6 +1759,9 @@
 			        	<ul class="lnbUL off" id="ul_${shareInfo.shareId}">
 			        		<div class="tree" id="shareTreeView_${shareInfo.shareId}" oncontextmenu="event_folderMenu(event); return false;" onclick="HiddenFolderMenu();"></div>
 			        		<li onclick="Open_Search();"><span class="list_text"><spring:message code="ezEmail.t641" /></span></li>
+			        		<c:if test="${shareInfo.sendPermission eq 'Y'}">
+								<li onclick="Open_ReservationManage('${shareInfo.shareId}')"><span class="list_text"><spring:message code="ezEmail.t605" /></span></li>
+			        		</c:if>
 			        		<c:if test="${shareInfo.managePermission eq 'Y'}">
 			        			<li onclick="mail_Config('${shareInfo.shareId}')"><span class="list_text"><spring:message code="ezEmail.t99000044" /></span></li>
 			        		</c:if>

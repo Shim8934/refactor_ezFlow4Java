@@ -1402,14 +1402,14 @@
       <![CDATA[
     	INSERT INTO 
     		TBL_BOARD_MYBOARDS 
-    			(UserID, BoardID, BoardName, BoardName2, TreeviewNum, tenant_ID, COMPANYID)
+    			(UserID, BoardID, BoardName, BoardName2, BoardName3, BoardName4, TreeviewNum, tenant_ID, COMPANYID)
     		VALUES
       ]]>
 	  <isEqual property="PrimaryLang" compareValue="1" >    		 
-    			('everyone', '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', '새게시물', 'New BoardItem', -1, #tenantID# ,#companyID#)
+    			('everyone', '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', '새게시물', 'New BoardItem', '新着', '新帖', -1, #tenantID# ,#companyID#)
       </isEqual>
       <isNotEqual property="PrimaryLang" compareValue="1" >
-      		  	('everyone', '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', '新着', 'New BoardItem', -1, #tenantID# ,#companyID#)
+      		  	('everyone', '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', '新着', 'New BoardItem', '새게시물', '新帖', -1, #tenantID# ,#companyID#)
       </isNotEqual>
     </insert>
     
@@ -2960,6 +2960,8 @@
 			VALUES ('096',4,'단위업무명',140,null,null,null,null,'기록물철리스트','단위업무명','TaskName','単位業務名','单位商业名',#tenantID#, #companyID#)
 			INTO TBL_LISTOPTION (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID)
 			VALUES ('096',5,'이름',140,null,null,null,null,'기록물철리스트','이름','Name','綴じ名','名稱',#tenantID#, #companyID#)
+			INTO TBL_LISTOPTION (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID)
+			VALUES ('096',6,'형태',100,null,null,null,null,'기록물철리스트','형태','Rectype','形態','表',#tenantID#, #companyID#)
 			INTO TBL_LISTOPTION (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID)
 			VALUES ('096',7,'연번',50,null,null,null,null,'기록물철리스트','연번','NO.','連番','序列号',#tenantID#, #companyID#)
 			INTO TBL_LISTOPTION (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID)
@@ -6506,7 +6508,7 @@
      				FROM
      					TBL_USERMASTER
      				WHERE
-     					tenant_id = #tenantID# AND cn = #cn#
+     					tenant_id = #tenantID# AND LOWER(cn) = LOWER(#cn#)
                     AND 
                         CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantID#)          
      				UNION
@@ -6515,17 +6517,17 @@
      				FROM
      					TBL_DEPTMASTER
      				WHERE
-     					tenant_id = #tenantID# AND cn = #cn#
+     					tenant_id = #tenantID# AND LOWER(cn) = LOWER(#cn#)
      				UNION
      				SELECT 
      					cn
      				FROM
      					TBL_USERMASTER_RETIRE
      				WHERE
-     					tenant_id = #tenantID# AND cn = #cn#
+     					tenant_id = #tenantID# AND LOWER(cn) = LOWER(#cn#)
      			 )
       		WHERE  
-      			cn = #cn#
+      			LOWER(cn) = LOWER(#cn#)
 	     ]]>
 	</select>
 	
@@ -6602,6 +6604,7 @@
 		<isNotNull property="extensionAttribute14" prepend=","> <![CDATA[extensionattribute14 = #extensionAttribute14#]]></isNotNull>
 		<isNotNull property="extensionAttribute15" prepend=","> <![CDATA[extensionattribute15 = #extensionAttribute15#]]></isNotNull>
 		<isNotNull property="deptTreeFlag" prepend=","> <![CDATA[deptTreeFlag = #deptTreeFlag#]]></isNotNull>
+		<isNotNull property="useUpperDeptBox" prepend=","> <![CDATA[useUpperDeptBox = #useUpperDeptBox#]]></isNotNull>
    		<![CDATA[     			
       		WHERE  
       			cn = #cn#
@@ -6980,6 +6983,24 @@
 		AND 
 			TENANT_ID = #v_TENANT_ID#
      </delete>
+     
+     <delete id="EzOrganAdminDAO.deleteCompany_D38" parameterClass="Map">
+		DELETE FROM  
+			TBL_PASSWORD_POLICY 
+		WHERE 
+			COMPANY_ID = #v_CN# 
+		AND 
+			TENANT_ID = #v_TENANT_ID#
+     </delete>
+
+     <delete id="EzOrganAdminDAO.deleteCompany_D39" parameterClass="Map">
+		DELETE FROM  
+			TBL_PASSWORD_POLICY_PATTERN
+		WHERE 
+			COMPANY_ID = #v_CN# 
+		AND 
+			TENANT_ID = #v_TENANT_ID#
+     </delete>   
 
  	<delete id="EzOrganAdminDAO.deleteCompanyInfo_IKMS7" parameterClass="Map">
         DELETE FROM

@@ -84,7 +84,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/attachG.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/getDocAttach_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/escapenew.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/appandbody.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/appandbody_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
         <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/html2canvas.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/nonElecRec.js')}"></script>
@@ -1503,8 +1503,14 @@
 			    }
 	
 			    function btnPrint_onclick() {
-			    	var currIfrm = document.getElementById("ifrm" + currentTabIdx);
-		        	currIfrm.contentWindow.PrintDocument();
+					var formFileLocation = pDocHrefAry[currentTabIdx];
+					var currentExt = formFileLocation.substring(formFileLocation.lastIndexOf(".") + 1);
+					if (currentExt === "mht") {
+						PrintClick("Cross", pDocID, "ING");
+					} else {
+						var currIfrm = document.getElementById("ifrm" + currentTabIdx);
+						currIfrm.contentWindow.PrintDocument();
+					}
 			    }
 			
 			    function btnClose_onclick() {
@@ -1537,10 +1543,11 @@
 			    }
 			
 			    function btnMail_onclick() {
-			        if(document.getElementById("ifrm" + currentTabIdx).contentWindow.isHWP == "Y")
+			    	/* 2024-12-27 홍승비 - MHT 양식의 일괄기안 기능이 추가되며 발생한 사이드 이펙트 수정 (WHWP 문서의 메일발송 오류 수정) */
+			        if (document.getElementById("ifrm" + currentTabIdx).contentWindow.isHWP == "Y") {
     			    	window.open("/ezEmail/mailWrite.do?docHref=" + pDocHrefAry[currentTabIdx] + "&cmd=docsend&docID=" + pDocIDAry[currentTabIdx] + "&TARGET=APPROVALG", "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-                    else{
-                        var imgUrl="";
+			        } else {
+                        var imgUrl = "";
                         html2canvas(document.getElementById("ifrm" + currentTabIdx).contentWindow.document.getElementById("div_Content")).then(function(canvas) {
                             $.ajax({
                                 type:"POST",

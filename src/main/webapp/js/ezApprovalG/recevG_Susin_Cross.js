@@ -2225,7 +2225,7 @@ function btnAddSepAttach_onclick() {
 	} else if (deptCheckFlag == "4") {
 		alert(strLanggarm06 + " '" + "'" + strLanggarm08);
 		return;
-	} else if (deptCheckFlag == "2") {
+	} else if (deptCheckFlag == "2" && upperDeptCode == "") {
 		alert("타부서의 철정보로 설정되어있습니다. \n'" + arr_userinfo[5] + "'부서의 철로 변경해주시기바랍니다.");
 		return;
 	}

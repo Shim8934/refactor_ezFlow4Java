@@ -7,7 +7,10 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import org.apache.commons.lang3.StringUtils;
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +58,9 @@ public class EzOrganController {
 	
 	@Resource(name = "loginService")
     private LoginService loginService;
+	
+	@Autowired
+	private EzOrganAdminService ezOrganAdminService;
 	
 	/**
 	 * 지정된 부서가 선택된 형태의 조직도 트리를 XML 형식으로 반환한다.
@@ -711,5 +717,31 @@ public class EzOrganController {
         
         logger.debug("getJobMasterMemberList ended");
 		return memInfo;	
+	}
+	
+	@RequestMapping(value = "/ezOrgan/getUpperDeptName.do", method = RequestMethod.GET)
+	@ResponseBody
+	public JSONObject getUpperDeptName(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("getJobMasterMemberList started");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String deptID = request.getParameter("deptID");
+		JSONObject json = new JSONObject();
+		
+
+		if (StringUtils.isNotBlank(deptID)) {
+			String upperDeptName = "";
+			OrganDeptVO organDeptVO = ezOrganService.getDeptInfo(deptID, userInfo.getPrimary(), userInfo.getTenantId());
+			OrganDeptVO upperDept = ezOrganAdminService.getDeptDisplayNm(organDeptVO.getExtensionAttribute1(), userInfo.getTenantId());
+			if (upperDept != null) {
+				upperDeptName = userInfo.getLang().equals("2") ? upperDept.getDisplayName2() : upperDept.getDisplayName();
+				json.put("upperDeptName", upperDeptName);
+				json.put("upperDeptName1", upperDept.getDisplayName());
+				json.put("upperDeptName2", upperDept.getDisplayName2());
+			}
+		}
+
+		logger.debug("getJobMasterMemberList ended");
+		return json;
 	}
 }

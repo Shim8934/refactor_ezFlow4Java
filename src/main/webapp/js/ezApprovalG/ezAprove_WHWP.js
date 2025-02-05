@@ -740,6 +740,16 @@ function before_SaveFile(html) {
 	SaveFile();
 }
 
+/* 2023-10-24 강동주 - 한글양식 편집모드 사용후 즉시 저장에 사용되는 메서드. */
+function before_SaveFile2(html) {
+	SaveHtml = html;
+
+	if(SaveHtml != "")
+		UpdateDocHistory(SaveHtml, "N", beforeDocURL);
+
+	SaveFile();
+}
+
 var aprattach_dialogArguments = new Array();
 function openFileAttachUI() {
 	var parameter = pDocID;
@@ -2175,6 +2185,10 @@ function UpdateDocHistory(pHtml, isBeforeDoc, beforeDocURL) {
         createNodeAndInsertText(xmlpara, objNode, "ORGCOMPANYID", orgCompanyID);
         createNodeAndInsertText(xmlpara, objNode, "ISBEFOREDOC", isBeforeDoc);
         createNodeAndInsertText(xmlpara, objNode, "BEFOREDOCURL", beforeDocURL);
+		if(editVersionYN && editVersionYN == "Y"){
+			createNodeAndInsertText(xmlpara, objNode, "editVersion", editVersion);
+			createNodeAndInsertText(xmlpara, objNode, "editMode", editMode);
+		}
         
         xmlhttp.open("POST", "/ezApprovalG/updateDocHistory.do", false);
         xmlhttp.send(xmlpara);

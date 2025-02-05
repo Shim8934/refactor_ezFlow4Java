@@ -42,6 +42,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.Spliterator;
 import java.util.TimeZone;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -49,6 +50,7 @@ import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
+import java.util.stream.StreamSupport;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
@@ -87,8 +89,8 @@ import javax.mail.util.ByteArrayDataSource;
 import javax.servlet.ServletContext;
 import javax.xml.bind.DatatypeConverter;
 
+import com.google.gson.JsonElement;
 import egovframework.let.utl.fcc.service.KlibUtil;
-import net.lingala.zip4j.exception.ZipException;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
@@ -147,10 +149,6 @@ import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.Attendee;
 import net.fortuna.ical4j.model.property.RRule;
-//import egovframework.let.utl.fcc.service.MyException;
-import net.lingala.zip4j.core.ZipFile;
-import net.lingala.zip4j.model.ZipParameters;
-import net.lingala.zip4j.util.Zip4jConstants;
 
 /** 
  * @Description [Utility] 메일 관련 유틸리티
@@ -690,49 +688,7 @@ public class EzEmailUtil {
 	 * returns a comma separated string list containing the passed-in addresses. 
 	 */
 	public String getStringListOfAddresses(Address[] addresses, boolean isPureAscii) {
-		String stringList = "";
-		
-		if (addresses != null) {
-			StringBuilder addressBuilder = new StringBuilder();
-			for (Address address : addresses) {
-				String addressStr = ((InternetAddress)address).getAddress(); // email address part				
-				String name = ((InternetAddress)address).getPersonal(); // name part
-				
-				if (name != null) {
-					try {
-						// if the name contains Non-Ascii characters(violating the standard), 
-						// try to decode it by examining the characters.
-						if (!isPureAscii) {
-							byte[] rawBytes = name.getBytes("iso-8859-1");
-							
-							name = decodeNonAsciiBytes(rawBytes);
-						}
-						else {						
-							name = MimeUtility.decodeText(name);
-						}
-					} catch (UnsupportedEncodingException e) {
-						logger.debug("e.message=" + e.getMessage());
-					}
-					
-					if (name != null) {
-						// 료비에서 수신한 메일 중 \(backslash)" 가 문자열 내부에 포함되는 경우가 있어 추가함.
-						// 예) =?iso-2022-jp?B?Im1hLXgtOTMyQGRvY29tby5uZS5qcCI=?=<ma-x-932@docomo.ne.jp>
-						name = name.replace("\\\"", "");
-					}					
-					
-					addressBuilder.append(name + " <" + addressStr + ">");							
-				}
-				else {
-					addressBuilder.append(addressStr + " <" + addressStr + ">");
-				}
-				
-				addressBuilder.append(",");
-			}
-			stringList = addressBuilder.toString();
-			stringList = stringList.substring(0, stringList.length() - 1);
-		}
-		
-		return stringList;
+		return getStringListOfAddresses(addresses, null, isPureAscii);
 	}
 	
 	public String getStringListOfAddresses(Address[] addresses, String[] recipientHeaderArray, boolean isPureAscii) {
@@ -2321,16 +2277,21 @@ public class EzEmailUtil {
         return resultList;
     }
 
+	/** password default : _jmocha_101 */
+	public void useIMAPAccessWithCallback(Consumer<IMAPAccess> callback, String userAccount, Locale locale) {
+		useIMAPAccessWithCallback(callback, userAccount, commonUtil.getMailPassword(), locale); // _jmocha_101
+	}
+
     /**
      * IMAPAccess를 생성해주는 Util.
      * : folder.close()전에야 MimeBodyPart를 이용한 수행이 가능.
      * @param callback : (folder를 이용할 작업을 할 ) callback함수를 매개변수로 전해주면 된다.
      * @param userAccount : getUserAccount()로 구해주면 됨. (extraMap를 callback함수에서 써야 할 수 있으므로, 해당 함수에서 통합하지 않았다. //getMailMessage()에서 extraMap필요.)
+     * @param password : 특정 password 전달 시에는 해당 password로 수행, 그 외 default 는 위에 오버로딩 되어 있음.
      * ex) EzWebfolderUtil.addListMailAttachArray()를 참고 바람.
      */
-	public void useIMAPAccessWithCallback(Consumer<IMAPAccess> callback, String userAccount, Locale locale) {
+	public void useIMAPAccessWithCallback(Consumer<IMAPAccess> callback, String userAccount, String password, Locale locale) {
 		logger.debug("useIMAPAccessWithCallback started. userAccount={}, locale={}", userAccount, locale);
-		String password = commonUtil.getMailPassword(); // _jmocha_101
 		IMAPAccess ia = null;
 
 		try {
@@ -3763,26 +3724,7 @@ public class EzEmailUtil {
 	}
 	
 	public boolean copyAllPartsInMultipart(Part src, Multipart dest) throws MessagingException, IOException {
-		if (src.isMimeType("multipart/*")) {
-			Multipart mp = (Multipart)src.getContent();
-			int count = mp.getCount();
-			
-			for (int i = 0; i < count; i++) {
-				BodyPart p = mp.getBodyPart(i);
-				
-				// 코린도에서 수신된 메일 중 multipart/mixed 파트 안에 multipart/mixed 파트가
-				// 또 들어 있는 경우가 있어 추가함.
-				if (p.isMimeType("multipart/mixed")) {
-					copyAllPartsInMultipart(p, dest);
-				} else {
-					dest.addBodyPart(p);
-				}
-			}
-			
-			return true;
-		} 
-		
-		return false;
+		return copyAllPartsInMultipart(src, dest, false);
 	}
 	
 	public boolean copyAllPartsInMultipart(Part src, Multipart dest, boolean convertInlineImageToAttachment) throws MessagingException, IOException {
@@ -4312,8 +4254,57 @@ public class EzEmailUtil {
         }                 
         
         return returnedData;
-    }    
-    
+    }
+
+	/**
+	 * 특정 회사의 메일박스 디폴트 용량을 MB단위로 반환한다.
+	 * @param domainName
+	 * @param companyId
+	 * @return
+	 * @throws Exception
+	 */
+	public Double[] getCompanyQuota(String domainName, String companyId) throws Exception {
+		Double returnedData[] = {null, null};
+
+		String param1 = "domainName=" + domainName;
+		String param2 = "companyId=" + companyId;
+		String inputParams =  param1 + "&" + param2;
+		logger.debug("getCompanyQuota inputParams=" + inputParams);
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getCompanyQuota";
+		String response = getWebServiceResult(requestURL, inputParams);
+		logger.debug("getCompanyQuota response=" + response);
+
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = null;
+
+			responseObj = (JSONObject)jsonParser.parse(response);
+			String resultCode = (String)responseObj.get("resultCode");
+			int reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+
+			if (resultCode.equalsIgnoreCase("OK")) {
+				if (reasonCode == 0) {
+					JSONObject result = (JSONObject)responseObj.get("result");
+
+					if (result != null) {
+						String maxStorage = (String)result.get("maxStorage");
+						double maxDouble = Double.parseDouble(maxStorage);
+						returnedData[0] = maxDouble;
+
+						String warnStorage = (String)result.get("warnStorage");
+						double warnDouble = Double.parseDouble(warnStorage);
+						returnedData[1] = warnDouble;
+
+						logger.debug("maxStorage=" + maxStorage + ",warnStorage=" + warnStorage);
+					}
+				} else if (reasonCode == -1) { // 등록된 company quota가 없는 경우 default quota 반환
+					return getDefaultQuota(domainName);
+				}
+			} 
+		}
+
+		return returnedData;
+	}
 	/**
 	 * 특정 메일 도메인에 대한 메일박스 디폴트 용량을 MB단위로 설정한다.
 	 * @param domainName
@@ -4344,8 +4335,42 @@ public class EzEmailUtil {
                 throw new Exception("setDefaultMaxStorage failed");
             }                    
         }                 
-    }    
-    
+    }
+	/**
+	 * 회사별 메일박스 디폴트 용량을 MB단위로 설정한다.
+	 * @param domainName
+	 * @param companyId
+	 * @param maxStorage
+	 * @param warnStorage
+	 * @throws Exception
+	 */
+	public void setCompanyQuota(String domainName, String companyId, String maxStorage, String warnStorage) throws Exception {
+		String param1 = "domainName=" + domainName;
+		String param2 = "companyId=" + companyId;
+		String param3 = "maxStorage=" + maxStorage;
+		String param4 = "warnStorage=" + warnStorage;
+		String inputParams = param1 + "&" + param2 + "&" + param3 + "&" + param4;
+		logger.debug("setCompanyQuota inputParams=" + inputParams);
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/setCompanyQuota";
+
+		String response = getWebServiceResult(requestURL, inputParams);
+
+		logger.debug("setCompanyQuota response=" + response);
+
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = null;
+
+			responseObj = (JSONObject)jsonParser.parse(response);
+			String resultCode = (String)responseObj.get("resultCode");
+			int reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+
+			if (!resultCode.equalsIgnoreCase("OK") || reasonCode != 0) {
+				throw new Exception("setCompanyQuota failed");
+			}
+		}
+	}
+
 	/**
 	 * 특정 사용자에 대한 메일박스 최대 용량을 MB단위로 반환한다.
 	 * @param userEmail
@@ -4391,8 +4416,55 @@ public class EzEmailUtil {
         }                 
         
         return returnedData;
-    }    
-    
+    }
+
+	/**
+	 * 특정 사용자에 대한 메일박스 최대 용량을 MB단위로 반환한다.
+	 * @param userEmail
+	 * @return
+	 */
+	public Double[] getUserRealQuota(String userEmail) throws Exception {
+		Double returnedData[] = {null, null};
+
+		String param1 = "userEmail=" + userEmail;
+		String inputParams = param1;
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getUserRealQuota";
+
+		String response = getWebServiceResult(requestURL, inputParams);
+
+		logger.debug("getUserRealQuota response=" + response);
+
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = null;
+
+			responseObj = (JSONObject)jsonParser.parse(response);
+			String resultCode = (String)responseObj.get("resultCode");
+			int reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+
+			if (resultCode.equalsIgnoreCase("OK")) {
+				if (reasonCode == 0) {
+					JSONObject result = (JSONObject)responseObj.get("result");
+
+					if (result != null) {
+						String maxStorage = (String)result.get("maxStorage");
+						double maxDouble = Double.parseDouble(maxStorage);
+						returnedData[0] = maxDouble;
+
+						String warnStorage = (String)result.get("warnStorage");
+						double warnDouble = Double.parseDouble(warnStorage);
+						returnedData[1] = warnDouble;
+
+						logger.debug("maxStorage=" + maxStorage + ",warnStorage=" + warnStorage);
+					}
+				}
+			}
+		}
+
+		return returnedData;
+	}
+	
     /**
      * 특정 사용자에 대한 메일박스 최대 용량을 MB단위로 설정한다.
      * @param domainName
@@ -5328,6 +5400,11 @@ public class EzEmailUtil {
 	
 	// 암호화된 zip파일에 파일들을 넣는 메서드
 	public String encryptZipFile(String filePath, String folderPath, String pwd) throws IOException {
+		String zipFileName = filePath + "_secure.zip";
+
+		// CVE 보안 취약점 처리 시 zip4j 라이브러리를 기존 1.3.2에서 2.11.5로 업데이트 했을 때 기존 클래스 파일을 찾지 못해 사용하지 않는
+		// 기능이어서 일단 주석 처리함
+		/*
 		unzip(new FileInputStream(filePath), new File(folderPath), "UTF-8");
 		
 		File zipFile = new File(filePath);
@@ -5335,8 +5412,6 @@ public class EzEmailUtil {
 		if (zipFile.delete()) {
 			logger.debug(filePath + ".zip file is deleted.");
 		}
-		
-		String zipFileName = filePath + "_secure.zip";
 		
 		try {
 			File dir = new File(folderPath);
@@ -5382,6 +5457,7 @@ public class EzEmailUtil {
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
+		 */
 		
 		return zipFileName;
 	}
@@ -7467,5 +7543,62 @@ public class EzEmailUtil {
 			rowNum2++;
 		}
 	}
+
+	/**
+	 *  사용자가 메일 태그를 사용하는지 확인
+	 * @param tenantId
+	 * @param userEmail
+	 * @return
+	 * @throws Exception
+	 */
+	public boolean checkUseMailTag(int tenantId,String userEmail) throws Exception {
+
+		// 메일 태그를 사용중인지 확인
+		boolean result = "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useMailTag", tenantId));
+		
+		// 메일 태그를 사용한다면 사용자가 기능을 활성화 했는지 확인
+		if (result) {
+			try {
+				logger.debug("jgw getTagConfig started.");
+
+				JgwResult jgwResult = rest.jgw().url("/jMochaEzEmail/getTagConfig").formParam("userAccount", userEmail).exchangeJgwResult();
+				logger.debug("jgw getTagConfig ended, success={}", jgwResult.succeeded());
+
+				result &= jgwResult.succeeded() && jgwResult.getResultAsJsonObject().get("enable").getAsBoolean();
+			} catch (RuntimeException e) {
+				logger.error("jgw fetch error", e);
+				result = false;
+			} catch (Exception e) {
+				logger.error("jgw fetch error", e);
+				result = false;
+			}
+		}
+		
+		return result;
+	}
+	
+	public String[] getTagList(String userEmail, String folderId, long uid) throws Exception {
+		String[] tags = null;
+		
+		JgwResult tagResult = rest.jgw().url("/jMochaEzEmail/getTagList")
+				.formParam("userAccount", userEmail)
+				.formParam("folderPath", folderId)
+				.formParam("mailUid", uid)
+				.exchangeJgwResult();
+		logger.debug("jgw getTagList result: {}", tagResult);
+
+		if (tagResult.succeeded()) {
+			Spliterator<JsonElement> tagIterator = tagResult.getResultAsJsonElement().getAsJsonArray().spliterator();
+
+			tags = StreamSupport.stream(tagIterator, false)
+					.map(jsonElement -> jsonElement.getAsJsonObject().get("name").getAsString())
+                    .toArray(String[]::new);
+		} else {
+			tags = new String[0];
+		}
+		
+		return tags;
+	}
+	
 }
 

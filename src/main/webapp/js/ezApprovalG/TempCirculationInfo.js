@@ -198,7 +198,14 @@ function SetGongRamList(pstrXML) {
                 strRows += "</CELL><CELL>";
                 strRows += "<VALUE>" + MakeXMLString(preDeptName) + "</VALUE>";
                 strRows += "</CELL><CELL>";
-                strRows += "<VALUE>" + strLangAprType17 + "</VALUE>";
+                
+                /* 2024-12-04 홍승비 - 전자결재G > 공람자 즐겨찾기 적용 > 회람 및 공람 메세지 분기처리 추가 */
+                if (approvalFlag == "G") {
+                	strRows += "<VALUE>" + strLangDocState15 + "</VALUE>";
+				} else {
+					strRows += "<VALUE>" + strLangAprType17 + "</VALUE>";
+				}
+                
                 strRows += "</CELL><CELL>";
                 strRows += "<VALUE>" + strLang72 + "</VALUE>";
                 strRows += "</CELL><CELL><VALUE></VALUE></CELL></ROW>";

@@ -82,7 +82,7 @@ import egovframework.let.utl.rest.JgwResult;
 import egovframework.let.utl.rest.Rest;
 import egovframework.let.utl.rest.Result;
 import egovframework.let.utl.sim.service.EgovFileScrty;
-import egovframework.rte.fdl.string.EgovStringUtil;
+import org.egovframe.rte.fdl.string.EgovStringUtil;
 
 /**
  * @Description [Controller] 메일 환경설정
@@ -233,8 +233,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 				fontSize = editorFontStyle.split("\\|")[1];
 			}
 		}
-		String editorFontFamily = mailGeneralVO.getEditorFontFamily() == null ? fontFamily : mailGeneralVO.getEditorFontFamily();
-		String editorFontSize = mailGeneralVO.getEditorFontSize() == null ? fontSize : mailGeneralVO.getEditorFontSize();
+		String editorFontFamily = mailGeneralVO.getEditorFontFamily() == null || mailGeneralVO.getEditorFontFamily().trim().isEmpty() ? fontFamily : mailGeneralVO.getEditorFontFamily();
+		String editorFontSize = mailGeneralVO.getEditorFontSize() == null  || mailGeneralVO.getEditorFontSize().trim().isEmpty() ? fontSize : mailGeneralVO.getEditorFontSize();
 		
 		if (dotnetFlag != null) {
 			dotnetFlag = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(dotnetFlag));
@@ -487,61 +487,38 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		}
 		
 		logger.debug("userId=" + userInfo.getId() + ",userEmail=" + userEmail);
-		
-		IMAPAccess ia = null;
-		
-		int mailPercent = 0;
-		String mailboxDetail = "";
-		String mailboxQuotaStr = "";
-		
+		String data = "";
 		try {
-			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale, ezEmailUtil);
-					
-			long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
-			if (storageUsageAndLimit == null){
-				throw new Exception("StorageUsageAndLimit is null");
-			}
-			double mailboxUsage = storageUsageAndLimit[0]; // in KBs
-			double mailboxQuota = storageUsageAndLimit[1]; // in KBs
-			
-			// 재은 수정
-			String[] mailUse = ezEmailUtil.getMailUsage(mailboxUsage, mailboxQuota);
-			
-			if (mailUse != null) {
-				mailPercent = Integer.parseInt(mailUse[0]);
-				mailboxDetail = mailUse[1];
-				mailboxQuotaStr = mailUse[2];
-			}
-			
-			logger.debug("mailPercent=" + mailPercent + ",mailboxDetail=" + mailboxDetail + ",mailboxQuotaStr=" + mailboxQuotaStr);		
+			String url = "/rest/ezPortal/portlets/mailGetUse";
+			HashMap<String, Object> param = new HashMap<String, Object>();
+			param.put("userEmail", userEmail);
+			param.put("password", password);
+			param.put("locale", locale);
 
+			String mail2 = "";
+			if (request.getAttribute("mail2")!=null){
+				mail2 = (String) request.getAttribute("mail2");
+			}
+
+			logger.debug("mailGetUse mail2=" + mail2);
+			JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
+			if ("y".equalsIgnoreCase(mail2)){
+				resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.MailServerURL2"), url, param, request, "get", null);
+			}
+
+			String result = resultBody.get("status").toString();
+
+			if (result.equals("ok")) {
+				data = String.valueOf(resultBody.get("data"));
+			}
 		} catch (NumberFormatException e) {
 			logger.debug(e.getMessage());
 			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			logger.debug(e.getMessage());
 			logger.error(e.getMessage(), e);
-		} finally {
-			if (ia != null) {
-				ia.close();
-			}
 		}
-		
-		StringBuilder sb = new StringBuilder("<DATA>");
-		sb.append("<ROW>");
-		sb.append(String.format("<QUOTA>%s</QUOTA>", mailboxQuotaStr));
-		sb.append(String.format("<DETAIL>%s</DETAIL>", mailboxDetail));
-		sb.append(String.format("<PERCENT>%d</PERCENT>", mailPercent));
-		sb.append(String.format("<BAR1>%d</BAR1>", mailPercent * 2));
-		sb.append(String.format("<BAR2>%d</BAR2>", 211 - mailPercent * 2));
-		sb.append("</ROW>");
-		sb.append("</DATA>");
-		
-		logger.debug("returnData=" + sb.toString());
-		logger.debug("mailGetUse ended.");
-		
-		return sb.toString();
+		return data;
 	}
 
 
@@ -858,7 +835,12 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 				String fontFamily = editorFontStyle.split("\\|")[0];
 				String fontSize = editorFontStyle.split("\\|")[1];
 				
-				defaultFontAndSize = "style='font-size:" + fontSize + ";font-family:" + fontFamily + "'";
+				// 사용자가 메일환경설정에서 설정한 에디터 폰트 값이 있으면 그 값을 사용하고, 없으면 관리자페이지에서 설정한 에디터 폰트 사용
+				MailGeneralVO mailGeneralVO = ezEmailService.getMailGeneral(userInfo.getTenantId(), userInfo.getId()).get(0);
+				String editorFontFamily = mailGeneralVO.getEditorFontFamily() == null || mailGeneralVO.getEditorFontFamily().trim().isEmpty()? fontFamily : mailGeneralVO.getEditorFontFamily();
+				String editorFontSize = mailGeneralVO.getEditorFontSize() == null || mailGeneralVO.getEditorFontSize().trim().isEmpty()? fontSize : mailGeneralVO.getEditorFontSize();
+				
+				defaultFontAndSize = "style='font-size:" + editorFontSize + ";font-family:" + editorFontFamily + "'";
 			}
 		}
 		
@@ -2529,7 +2511,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 					String dlName = commonUtil.cleanValue(dlVo.getName());
 					String dlExplaination = commonUtil.cleanValue(dlVo.getExplaination());
 					String dlMail = commonUtil.cleanValue(dlVo.getMail());
-					String dlOwnerName = commonUtil.cleanValue(ownerInfo.getDisplayName());
+					String dlOwnerName = (ownerInfo != null) ? commonUtil.cleanValue(ownerInfo.getDisplayName()) : "";
 					
 					// commonUtil.cleanValue()
 					if (showDLListType.equals("setting")) { // 메일 환경설정

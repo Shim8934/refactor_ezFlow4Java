@@ -83,6 +83,7 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityClubVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityMemberInfoVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityMyCommunityVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityOneLineReplyVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityCClubGuestReplyVO;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezNotification.service.EzNotificationService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
@@ -91,11 +92,12 @@ import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
 import egovframework.ezEKP.ezPersonal.type.NotiPlatform;
 import egovframework.ezEKP.ezPersonal.type.NotiType;
+import egovframework.ezEKP.ezConn.util.EzConnUtil;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
-import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service("EzCommunityService")
 public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements EzCommunityService{
@@ -132,6 +134,9 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	@Autowired
 	private EzPersonalService ezPersonalService;
 	
+	@Autowired
+	private EzConnUtil ezConnUtil;
+
 	private static final Logger logger = LoggerFactory.getLogger(EzCommunityServiceImpl.class);
 	
 	/* 2018-06-21 홍승비 - 자신이 가입한 커뮤니티 리스트 좌측표출 companyID 조건 추가 */
@@ -2966,7 +2971,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				sb.append("<WriterCompanyName>" + commonUtil.cleanValue(boardList.getWriterCompanyName()) + "</WriterCompanyName>");
 				sb.append("<WriteDate>" + commonUtil.getDateStringInUTC(boardList.getWriteDate(), offset, false) + "</WriteDate>");
 				sb.append("<Importance>" + boardList.getImportance() + "</Importance>");
-				sb.append("<Title>" + commonUtil.cleanValue(boardList.getTitle()) + "</Title>");
+				sb.append("<Title>" + commonUtil.cleanValue(boardList.getTitle()).replace("\\", "\\\\") + "</Title>");
 				
 				if (boardList.getAttachments().equals("")) {
 					sb.append("<Attachments></Attachments>");
@@ -4127,6 +4132,25 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	        	
 	        	sb.append("<C_NO>" + item.getC_No() + "</C_NO>");
 	        	sb.append("<C_CLUBNO>" + item.getC_clubNo() + "</C_CLUBNO>");
+
+				// 2024-10-30 황인경 - 커뮤니티 > 방명록 > 댓글 표출
+				int replyCnt = chkClubguestOnelinereply(item.getNo(), commonUtil.cleanValue(item.getCompanyID()), userInfo.getTenantId(), item.getC_clubNo());
+				if (replyCnt > 0) {
+					sb.append("<C_REPLY>");
+					List<CommunityCClubGuestReplyVO> replyList = getGuestOneLineReply(item.getNo(), userInfo.getTenantId(), userInfo.getCompanyID(), item.getC_clubNo());
+					for (int j = 0; j < replyCnt; j++){
+						sb.append("<ROW2>");
+						sb.append("<ITEMID>" + replyList.get(j).getItemId() + "</ITEMID>");
+						sb.append("<RUSERID>" +  ezConnUtil.encryptAES(replyList.get(j).getUserId()) + "</RUSERID>");
+						sb.append("<RUSERNAME>" + replyList.get(j).getUserName() + "</RUSERNAME>");
+						sb.append("<RUSERNAME2>" + replyList.get(j).getUserName2() + "</RUSERNAME2>");
+						sb.append("<WRITEDATE>" + commonUtil.getDateStringInUTC(replyList.get(j).getWriteDate(), userInfo.getOffset(), false) + "</WRITEDATE>");
+						sb.append("<RCONTENT><![CDATA[" + commonUtil.cleanValue(replyList.get(j).getContent()).replaceAll("\n", "<br>").replaceAll("\\\\", "&#92;") + "]]>" + "</RCONTENT>");
+						sb.append("<REPLYID>" + replyList.get(j).getReplyId() + "</REPLYID>");
+						sb.append("</ROW2>");
+					}
+					sb.append("</C_REPLY>");
+				}
 	        	sb.append("</ROW>");
         	}
         }
@@ -8424,4 +8448,83 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		return ret;
 	}
+    
+    // 2024-10-30 황인경 - 커뮤니티 > 방명록 > 댓글 유무
+    public int chkClubguestOnelinereply(int itemID, String companyID, int tenantID, String clubNo) throws Exception{
+        logger.debug("chkClubguestOnelinereply started.");
+
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("itemID", itemID);
+        map.put("companyID", companyID);
+        map.put("tenantID", tenantID);
+        map.put("clubNo", clubNo);
+
+        int cnt = ezCommunityDAO.chkGuestReplyCnt(map);
+        logger.debug("chkClubguestOnelinereply ended.");
+        return cnt;
+    }
+
+    public List<CommunityCClubGuestReplyVO> getGuestOneLineReply(int itemId, int tenantID, String companyID, String clubNo) throws Exception {
+        logger.debug("getGuestOneLineReply started.");
+
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("itemId", itemId);
+        map.put("companyID", companyID);
+        map.put("tenantID", tenantID);
+        map.put("clubNo", clubNo);
+
+        List<CommunityCClubGuestReplyVO> list = ezCommunityDAO.getGuestOneLineReply(map);
+
+        logger.debug("getGuestOneLineReply ended.");
+        return list;
+    };
+
+    @Override
+    public void insertGuestOneLineReply(int itemID, String clubNo, String companyID, int tenantID, String content, LoginVO userInfo) throws Exception {
+        logger.debug("insertGuestOneLineReply started.");
+
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("itemID", itemID);
+        map.put("companyID", companyID);
+        map.put("tenantID", tenantID);
+        map.put("clubNo", clubNo);
+        map.put("content", content);
+        map.put("v_pNow", commonUtil.getTodayUTCTime(""));
+        map.put("userName", userInfo.getDisplayName());
+        map.put("userName2", userInfo.getDisplayName2());
+        map.put("userId", userInfo.getId());
+        map.put("replyId", "{" + UUID.randomUUID().toString() + "}");
+
+        ezCommunityDAO.insertGuestOneLineReply(map);
+
+        logger.debug("insertGuestOneLineReply ended.");
+    }
+
+    @Override
+    public void deleteGuestOneLineReply(String replyId, int tenantID) throws Exception {
+        logger.debug("deleteGuestOneLineReply started.");
+
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("replyId", replyId);
+        map.put("tenantID", tenantID);
+
+        ezCommunityDAO.deleteGuestOneLineReply(map);
+
+        logger.debug("deleteGuestOneLineReply ended.");
+    }
+
+    @Override
+    public void modifyGuestOneLineReply(String replyId, String content, int tenantID) throws Exception {
+        logger.debug("modifyGuestOneLineReply started.");
+
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("replyId", replyId);
+        map.put("tenantID", tenantID);
+        map.put("content", content);
+        map.put("v_pNow", commonUtil.getTodayUTCTime(""));
+
+        ezCommunityDAO.modifyGuestOneLineReply(map);
+
+        logger.debug("modifyGuestOneLineReply ended.");
+    }
 }

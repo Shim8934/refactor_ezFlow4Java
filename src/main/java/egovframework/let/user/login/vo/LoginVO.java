@@ -41,6 +41,8 @@ public class LoginVO implements Serializable {
 	private String passwordCnsr;
 	/** otp */
 	private String otp;
+	/** fidoSessionId */
+	private String fidoSessionId;
 	/** 사용자구분 */
 	private String userSe;
 	/** 조직(부서)ID */
@@ -178,6 +180,12 @@ public class LoginVO implements Serializable {
 		setForInsertLog(null, agent, os, browser, tenantId, status);
 	}
 
+	public String getFidoSessionId() {
+		return fidoSessionId;
+	}
+	public void setFidoSessionId(String fidoSessionId) {
+		this.fidoSessionId = fidoSessionId;
+	}
 	public String getOtp() {
 		return otp;
 	}

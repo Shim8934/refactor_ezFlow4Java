@@ -185,7 +185,7 @@
 					});
 					document.querySelector(".input_wrap + .imgbtn").addEventListener("click", function(e) { onEnterPreviewTagInput(); });
 					// 태그 X 버튼 클릭시 삭제
-					$("#tag_view > img").on("click", function() { removeTag(this.previousElementSibling); });
+					$(".tag_del").on("click", function() { removeTag(this.nextElementSibling); });
 
 					// 태그 추가 시 자동완성
 					$(tagAddInput).autocomplete({
@@ -855,13 +855,11 @@
 		                        <span id="LabelReceiveDate">${dateStr}</span> 
 		                        </div>
 		                    </td>
-		                    <td nowrap class="pos2" id="btnInsertAddr">
-		                    	<c:if test="${mailWritePreview != true}">
+		                    <td nowrap class="pos2" id="btnInsertAddr" <c:if test="${mailWritePreview == true || mailWritePreviewSend == true}">style="display:none"</c:if>>
 			                    	<a style="margin-right:5px;"><span onClick="func_addaddr()" id="btn_addaddr"><img title="<spring:message code='ezEmail.t554' />" src="/images/email/icon_address_add.png" style="border:0px" /></span></a>
 		                    		<c:if test="${(shareId == null) || (shareId ne '' && managePermission eq 'Y')}">
 		                    			<a style="margin-right:5px;"><span onClick="func_reject()" id="btn_reject"><img title="<spring:message code='ezEmail.t270' />" src="/images/email/icon_mail_refusal.png" style="border:0px" /></span></a>
 			                    	</c:if>
-			                    </c:if>
 		                    </td>
 		                </tr>
 		                <tr>
@@ -922,7 +920,10 @@
 									
 									<div id="tag_view">
 										<c:forEach items="${tags}" var="name">
-											<span>${name}</span><img src="/images/icon/oneline_delete.gif" />
+											<div class="tag_list">
+												<span class="tag_del" id="tag_del"></span>
+												<span class="tag_name" id="tag_name">${name}</span>
+											</div>
 										</c:forEach>
 									</div>
 								</td>

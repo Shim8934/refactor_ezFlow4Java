@@ -2,6 +2,9 @@ package egovframework.ezEKP.ezApprovalG.service.impl;
 
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import org.apache.commons.collections4.map.HashedMap;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +15,10 @@ import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGConnDAO;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGConnService;
 import org.w3c.dom.Document;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -122,11 +129,14 @@ public class EzApprovalGConnServiceImpl extends EgovFileMngUtil implements EzApp
          * </PARAMETER>
          * */
         String formXslt = ezApprovalGConnDao.getFormXslt(connFormCode, userInfo.getTenantId(), userInfo.getCompanyID());
-        String bodyHtml = commonUtil.convertXsltToHtml(formXslt, body);
+        
+        if (!"".equals(formXslt) && formXslt != null) {
+            String bodyHtml = commonUtil.convertXsltToHtml(formXslt, body);
 
-        retParam = "<PARAMETER>"
-                + "<BODYHTML HTML=\"Y\"><![CDATA[" + bodyHtml + "]]></BODYHTML>"
-                + "</PARAMETER>";
+            retParam = "<PARAMETER>"
+                    + "<BODYHTML HTML=\"Y\"><![CDATA[" + bodyHtml + "]]></BODYHTML>"
+                    + "</PARAMETER>";
+        }
         
         /**
          * 연동테이블에서 본문 데이터를 html로 받아서 연동 하는 경우
@@ -216,5 +226,23 @@ public class EzApprovalGConnServiceImpl extends EgovFileMngUtil implements EzApp
         logger.debug("updateStatus ended");
 
         return "<RETURNDATA RESULT=\"true\"></RETURNDATA>";
+    }
+
+    @Override
+    public void registConnData(String keyId, String userId, String deptId, String title, String formCode, String bodyHtml) throws Exception {
+        logger.debug("registConnData started");
+        String nowDate = commonUtil.getTodayUTCTime("");
+
+        Map<String, Object> map = new HashedMap<>();
+        map.put("KEYID", keyId);
+        map.put("USERID", userId);
+        map.put("DEPTID", deptId);
+        map.put("TITLE", title);
+        map.put("FORMID", formCode);
+        map.put("BODYHTML", bodyHtml);
+        map.put("v_SYSDATE", nowDate);
+
+        ezApprovalGConnDao.registConnData(map);
+        logger.debug("registConnData ended");
     }
 }

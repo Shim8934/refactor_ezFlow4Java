@@ -39,7 +39,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
-import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 import static egovframework.ezEKP.ezOrgan.vo.OrganAuth.*;
 
@@ -713,7 +713,8 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_USEKEYWORD", boardPropertyVO.getUseKeyword());
 		map.put("v_ATTACHMENTFLAG", boardPropertyVO.getAttachmentFlag());
         map.put("v_PUBLICFLAG", boardPropertyVO.getPublicFlag());
-		
+		map.put("v_ALLNEWBOARDFLAG", boardPropertyVO.getAllNewBoardFlag());
+
 		/* 2018-10-18 홍승비 - 게시판'그룹' 이름변경 시 하위게시판처럼 데이터가 업데이트되는 부분 수정 */
 		if (boardPropertyVO.getParentBoardID().equals("top")) {
 			isBoardGroup = "Y";

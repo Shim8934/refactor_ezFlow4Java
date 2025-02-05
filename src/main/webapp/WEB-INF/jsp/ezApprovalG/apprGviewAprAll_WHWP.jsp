@@ -80,7 +80,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/attachG.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/conn_WHWP.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/escapenew.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/appandbody.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/appandbody_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
 	    <script type="text/javascript">
@@ -217,7 +217,7 @@
 			    pDocHref = docHref;
 			    pOpinionFlag = opinionFlag;
 			    pListTypeValue = listTypeValue;
-			    if (pListTypeValue == "4") {
+			    if (pListTypeValue == "4" || pListTypeValue == "97") {
 					pListSusin = listSusin;
 				}
 			    
@@ -248,8 +248,14 @@
 			}
 	
 			function btnPrint_onclick() {
-				var currIfrm = document.getElementById("ifrm" + currentTabIdx);
-	        	currIfrm.contentWindow.PrintDocument();
+				var formFileLocation = pDocHrefAry[currentTabIdx];
+				var currentExt = formFileLocation.substring(formFileLocation.lastIndexOf(".") + 1);
+				if (currentExt === "mht") {
+					PrintClick("Cross", pDocID, "ING");
+				} else {
+					var currIfrm = document.getElementById("ifrm" + currentTabIdx);
+					currIfrm.contentWindow.PrintDocument();
+				}
 			}
 			
 			function btnClose_onclick() {

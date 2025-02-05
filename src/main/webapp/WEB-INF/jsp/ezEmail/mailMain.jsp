@@ -12,7 +12,7 @@
 	</head>
 	<frameset rows="0,*" frameborder="0" border="0">
 		<frame src="about:blank" name="white" marginwidth="0" marginheight="0" scrolling="no" frameborder="0">
-	    <frameset cols="220,*" frameborder="0" border="0">
+		<frameset cols="${leftFrameWidth},*" frameborder="0" border="0" id="frameset">
             <c:choose>
             	<c:when test="${funCode eq '2'}">
 		    		<frame src="/ezEmail/mailLeft.do?funCode=2" id="left" name="left" marginwidth="0" marginheight="0" scrolling="auto" frameborder="0" noresize>

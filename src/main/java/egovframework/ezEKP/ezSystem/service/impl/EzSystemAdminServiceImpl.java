@@ -896,6 +896,48 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		return 0;
 	}
 	
+	// 2024.10.14 한슬기 : 회사생성시 암호정책 디폴트값 설정 (암호패턴 사용, 영문 대/소문자 패턴구분안함, 3개패턴 사용, 8글자 이상)
+	@Override
+	public String insertDefaultPwPolicy(int tenantID, String companyID) throws Exception {
+		String result = "ERROR";
+		PasswordPolicyVO pwPolicyVO = new PasswordPolicyVO();
+		pwPolicyVO.setTenantId(tenantID);
+		pwPolicyVO.setCompanyId(companyID);
+		pwPolicyVO.setEngCharType("N");
+		pwPolicyVO.setUseCapitalLetter("Y");
+		pwPolicyVO.setUseSmallLetter("Y");
+		pwPolicyVO.setUseNumber("Y");
+		pwPolicyVO.setUseSpecial("Y");
+		
+		logger.debug("insertPwPolicy. pwPolicyVO={}", pwPolicyVO);
+		ezSystemAdminDAO.insertPwPolicy(pwPolicyVO);
+		
+		// 패턴 -> 영문 대/소문자, 숫자, 특수문자
+		int patternNumber = 0; // 패턴사용시 글자수 제한(사용안함)
+		int settingNumber = 8; // 패턴사용시 글자수 제한(8글자 이상)
+		int pattrernCount = 3; // 사용패턴갯수
+		
+		Map<String, Object> patternMap = new HashMap<>();
+		for (int i = 1; i <= pattrernCount; i++) {
+			if (i == pattrernCount) {
+				patternNumber = settingNumber;
+			}
+			// tbl_password_policy_pattern
+			patternMap.put("tenantId", tenantID);
+			patternMap.put("companyId", companyID);
+			patternMap.put("settingCnt", i); // number_of_char
+			patternMap.put("settingNumber", patternNumber); // use_pattern_count
+			
+			logger.debug("insertPwPolicyPattern. patternMap=" + patternMap.toString());
+			ezSystemAdminDAO.insertPwPolicyPattern(patternMap);
+			
+		}
+		
+		result = "OK";
+		
+		return result;
+	}
+	
 	// companyConfig 저장
 	@Override
 	public void updateCompanyConfigParam(int tenantID, List<Map<String, String>> list, String companyID) throws Exception {
@@ -1825,6 +1867,94 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		map.put("companyId", companyID);
 		
 		ezSystemAdminDAO.disableDeleteSystemConfig(map);
+	}
+
+	@Override
+	public List<IPBandVO> getFidoAuthenticList(int tenantID, String companyId) throws Exception {
+		logger.debug("getFidoAuthenticList started. tenantID : {},  companyId : {}", tenantID, companyId);
+
+		Map<String, Object> map = new HashMap<>();
+		map.put("tenantID", tenantID);
+		map.put("companyId", companyId);
+
+		List<IPBandVO> list = ezSystemAdminDAO.getFidoAuthenticList(map);
+
+		logger.debug("getFidoAuthenticList ended.");
+		return list;
+	}
+	
+	public int getFidoAuthenticInfo(int tenantID, String companyId, String ipAddress) throws Exception {
+		logger.debug("getFidoAuthenticInfo started. tenantID : {} companyId : {} ipAddress : {}" + tenantID, companyId, ipAddress);
+
+		Map<String,Object> map = new HashMap<>();
+		map.put("tenantID", tenantID);
+		map.put("companyId", companyId);
+		map.put("ipAddress", ipAddress);
+
+		logger.debug("getFidoAuthenticInfo ended.");
+		return ezSystemAdminDAO.getFidoAuthenticInfo(map);
+		
+	}
+	
+	@Override
+	public IPBandVO getSystemFidoIPBand(String ipNo) throws Exception {
+		logger.debug("getSystemFidoIPBand started.");
+		logger.debug("ipNo=" + ipNo);
+
+		IPBandVO ipBand = ezSystemAdminDAO.getSystemFidoIPBand(ipNo);
+
+		logger.debug("getSystemFidoIPBand ended.");
+
+		return ipBand;
+	}
+	
+	@Override
+	public void insertFidoIPBand(int tenantID, String companyId, String ipAddress, String access, String explanation) throws Exception {
+		logger.debug("inserFidoIPBand started.");
+		logger.debug("tenantID=" + tenantID + ", companyId=" + companyId + ", ipAddress=" + ipAddress +  ", access=" + access + " explanation=" + explanation);
+
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("tenantID", tenantID);
+		params.put("companyId", companyId);
+		params.put("access", access);
+		params.put("ipAddress", ipAddress);
+		params.put("explanation", explanation);
+
+		ezSystemAdminDAO.insertFidoIPBand(params);
+
+		logger.debug("inserFidoIPBand ended.");
+	}
+	
+	@Override
+	public void updateFidoIPBand(String ipNo, String ipAddress, String access, String explanation) throws Exception {
+		logger.debug("updateFidoIPBand started.");
+		logger.debug("ipNo=" + ipNo + ", ipAddress=" + ipAddress +  ", access=" + access + ", explanation=" + explanation);
+
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("ipNo", ipNo);
+		params.put("ipAddress", ipAddress);
+		params.put("access", access);
+		params.put("explanation", explanation);
+
+		ezSystemAdminDAO.updateFidoIPBand(params);
+
+	}
+	
+	@Override
+	public void deleteFidoIPBand(String ipNo) throws Exception {
+		logger.debug("deleteFidoIPBand started.");
+		logger.debug("ipNo=" + ipNo);
+
+		String[] ipNoList = ipNo.split(",");
+		List<String> list = new ArrayList<String>();
+
+		for (int i = 0; i < ipNoList.length; i++) {
+			list.add(ipNoList[i]);
+		}
+
+		ezSystemAdminDAO.deleteFidoIPBand(list);
+
+		logger.debug("deleteFidoIPBand ended.");
 	}
 
 }

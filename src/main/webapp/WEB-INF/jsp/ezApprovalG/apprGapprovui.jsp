@@ -210,8 +210,19 @@
 
 			// 2024-06-24 양지혜 - 지정반송 기능 사용여부
 			var useReturnByDesignation = "<c:out value ='${useReturnByDesignation}'/>";
+			
+			/* 2024-07-18 양지혜 - 상위부서문서함 관련 */
+			var upperDeptCode = "<c:out value ='${upperDeptCode}'/>";
+			var upperDeptName = "<c:out value ='${upperDeptName}'/>";
 	        
-		    window.onload = function () {
+			// 2024-12-10 기민혁 - 수정버전 변경 기능 사용여부
+			var editVersionYN = "<c:out value ='${editVersionYN}'/>";
+			// 2024-12-10 기민혁 - 수정버전 
+			var editVersion = "";
+			// 2024-12-10 기민혁 - 수정버전 모드
+			var editMode = "";
+			
+			window.onload = function () {
 		        if (allFlag == "2") {
 		            selectedDocID = window.opener.selectedDocIDS;
 		        }
@@ -436,7 +447,7 @@
 		            getDocInfo();
 		            setAttachInfo(pDocID, "APR", lstAttachLink);
 		            GetExchInfo();
-		            DeptSymbol = getDeptSymbol(arr_userinfo[4], replaceEntityCodeToStr(arr_userinfo[5]));
+					DeptSymbol = getDeptSymbol(arr_userinfo[4], replaceEntityCodeToStr(arr_userinfo[5]));
 		            
 			    	if (nonElecRec == "Y") {
 				        getNonElecInfoSusinInit();
@@ -2032,10 +2043,15 @@
 		        }
 		        else { // 편집모드 내부에서 '저장'
 		            var pInformationContent = "<spring:message code='ezApprovalG.t43'/>";
-		            OpenInformationUI(pInformationContent, btnEdit_onclick_Complete);
+					
+					if(editVersionYN && editVersionYN == "Y"){
+						OpenInformationUI(pInformationContent, btnEdit_onclick_Complete, "Y");
+					}else{
+						OpenInformationUI(pInformationContent, btnEdit_onclick_Complete);
+					}
 		        }
 		    }
-		    function btnEdit_onclick_Complete(Ans) {
+		    function btnEdit_onclick_Complete(Ans, PeditMode) {
 		        DivPopUpHidden();
 		        
 		        if (checkAprState()) {
@@ -2059,7 +2075,25 @@
 		            }
 		            /* 2020-03-03 홍승비 - 화면 종료 없이 계속 편집 > 저장해도 정상적으로 수정이력을 저장하도록 수정 */
 					FirstHtml = beforeHtml;
-		            
+
+					if(editVersionYN && editVersionYN == "Y"){
+						
+						editMode = PeditMode;
+						$.ajax({
+							type : "POST",
+							dataType: "text",
+							async : false,
+							url : "/ezApprovalG/getEditVersion.do",
+							data : {
+								docID : pDocID,
+								editMode : editMode
+							},
+							success: function(result){
+								editVersion = result;
+							}
+						});
+					}
+					
 		            /* 2020-02-24 홍승비 - 편집모드 > 저장 > 즉시 편집 전&후의 html과 수정이력을 저장하도록 수정 */
 		            message.SetEditable(false);
 		            headerAction("open");

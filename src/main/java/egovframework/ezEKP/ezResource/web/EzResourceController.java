@@ -158,6 +158,8 @@ public class EzResourceController extends EgovFileMngUtil {
 		String brdTopPath = "";
 		String pUrl = "";
 		String url = "/ezResource/leftResource.do";
+		String leftFrameWidth = "220";
+		int width = 0;
 		
 		if(req.getParameter("brdID") != null) {
 			brdID = req.getParameter("brdID");
@@ -178,8 +180,21 @@ public class EzResourceController extends EgovFileMngUtil {
 		} else {
 			pUrl = url + "?brdID=" + brdID + "&brdNm=" + brdNm + "&boardGbn=M";
 		}
+
+		if (req.getParameter("__wwidth") != null) {
+			String widthParam = req.getParameter("__wwidth");
+
+			try {
+				width = Integer.parseInt(widthParam);
+
+				leftFrameWidth = width < 1180 ? "0" : "220";
+			} catch (NumberFormatException e) {
+				width = 0;
+			}
+		}
 		
 		model.addAttribute("pUrl", pUrl);
+		model.addAttribute("leftFrameWidth", leftFrameWidth);
 		
 		return "/ezResource/resMain";
 	}
@@ -3248,7 +3263,9 @@ public class EzResourceController extends EgovFileMngUtil {
 	public Map<String, Object> modFavoriteCategory(@CookieValue("loginCookie") String loginCookie, @RequestParam String catName, @RequestParam String catId) throws Exception {
 		logger.debug("modFavoriteCategory start, catName=" + catName, "catId=" + catId);
 		
-		ezResourceService.modFavoriteCategory(catName, catId);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		ezResourceService.modFavoriteCategory(catName, catId, userInfo.getId());
 		
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("type", "U");
@@ -3325,7 +3342,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		List<ResBrdVO> list = ezResourceService.getFavoriteBrdList(catId, userInfo.getCompanyID(), userInfo.getTenantId());
+		List<ResBrdVO> list = ezResourceService.getFavoriteBrdList(catId, userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getId());
 
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("list", list);

@@ -1544,8 +1544,40 @@ function config_repeat_resource() {
     
     schedule_repetition_cross_dialogArguments[0] = g_data;
     schedule_repetition_cross_dialogArguments[1] = config_repeat_resource_Complete;
+	resMaxDate = getMinResourceUseDate();
+    DivPopUpShow(450, 550, "/ezResource/scheduleRepetition.do?resMaxDate=" + resMaxDate);
+}
 
-    DivPopUpShow(450, 550, "/ezResource/scheduleRepetition.do");
+function getMinResourceUseDate() {
+	var resourceArray = g_resource[0];
+
+	return resourceArray.reduce((minDate, item) => {
+		var resourceMaxDate = getResourceMaxDate(item);
+		if (resourceMaxDate !== 0 && (minDate === 0 || resourceMaxDate < minDate)) {
+			minDate = resourceMaxDate;
+		}
+		return minDate;
+	}, 0);
+}
+
+function getResourceMaxDate(item) {
+	var result = 0;
+
+	$.ajax({
+		url: '/ezResource/checkResoruceMaxDate.do',
+		type: 'POST',
+		dataType: 'json',
+		async : false,
+		cache : false,
+		contentType: "application/json",
+		data: JSON.stringify({
+			brdId: item
+		}),
+		success: function(data) {
+			result = data;
+		}
+	});
+	return result;
 }
 
 function config_repeat_resource_Complete(rgParams) {
@@ -1982,7 +2014,9 @@ function setAttachFileInfo(strXML) {
         var listtable;
 
         listtable = dadiframe.document.getElementById("filelist");
-        dadiframe.document.getElementById("lstAttachLink").appendChild(listtable);
+		var lstAttachLink = dadiframe.document.getElementById("lstAttachLink");
+		lstAttachLink.insertBefore(listtable, lstAttachLink.firstChild);
+		dadiframe.document.getElementById("attachInnerNotice").className = "attachInnerNotice_p_off";
 
         var extCheck = false;
         for (i = 0; i < SelectNodes(xml, "ROOT/NODES/DATA").length; i++) {
@@ -1993,6 +2027,7 @@ function setAttachFileInfo(strXML) {
                 objTr = document.createElement("TR");
                 objTr.setAttribute("fileinfo", fileinfo);
                 objTr.setAttribute("attid", attid);
+				objTr.setAttribute("draggable", true);
 
                 var objTd = document.createElement("TD");
                 objTd.style.textAlign = "center";

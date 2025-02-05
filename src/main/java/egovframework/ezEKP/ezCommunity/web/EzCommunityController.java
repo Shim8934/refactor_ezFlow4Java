@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezCommunity.web;
 
 import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -9,14 +10,19 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.security.PrivateKey;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
@@ -24,6 +30,7 @@ import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,6 +80,7 @@ import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
+import egovframework.ezEKP.ezConn.util.EzConnUtil;
 
 /** 
  * @Description [Controller] 커뮤니티
@@ -118,13 +126,38 @@ public class EzCommunityController extends EgovFileMngUtil{
 	@Autowired
 	EzPersonalService ezPersonalService;
 	
+	@Autowired
+	EzConnUtil ezConnUtil;
+	
 	private static final Logger logger = LoggerFactory.getLogger(EzCommunityController.class);
 	
 	/**
 	 * 커뮤니티 메인화면 호출함수
 	 */
 	@RequestMapping(value="/ezCommunity/communityMain.do", method = RequestMethod.GET)
-	public String  main() {
+	public String  main(HttpServletRequest request, Model model) {
+		
+		logger.debug("communityMain started.");
+
+		String leftFrameWidth = "220";
+		int width = 0;
+
+		if (request.getParameter("__wwidth") != null) {
+			String widthParam = request.getParameter("__wwidth");
+
+			try {
+				width = Integer.parseInt(widthParam);
+
+				leftFrameWidth = width < 1180 ? "0" : "220";
+			} catch (NumberFormatException e) {
+				width = 0;
+			}
+		}
+
+		model.addAttribute("leftFrameWidth", leftFrameWidth);
+		
+		logger.debug("communityMain ended.");
+		
 		return "ezCommunity/communityMain";
 	}
 	
@@ -2044,6 +2077,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("strXML" , strXML);
 		model.addAttribute("disable" , false);
 		model.addAttribute("multiData", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
+		model.addAttribute("chkId" ,  ezConnUtil.encryptAES(userInfo.getId()));
 		
 		logger.debug("guestOne ended.");
 		
@@ -5218,6 +5252,156 @@ public class EzCommunityController extends EgovFileMngUtil{
 		logger.debug("WHWPEditor ended.");
 		return "/ezCommunity/communityWHWPEditor";
 	}
+
+	@RequestMapping(value="/ezCommunity/downloadAttachAll.do", method = RequestMethod.POST, produces="text/plain; charset=UTF-8")
+	@ResponseBody
+	public void downloadAttachAll(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("downloadAttachAll started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String fileNames = request.getParameter("fileNames");
+		String fileNamesUID = request.getParameter("fileNamesUID");
+		String realPath = commonUtil.getRealPath(request);
+		String filePath = commonUtil.getUploadPath("upload_community.ROOT", userInfo.getTenantId()) + commonUtil.separator + request.getParameter("filePath");
+		String uploadFilePath = commonUtil.getUploadPath("upload_community.ROOT", userInfo.getTenantId());
+		String tempFileUploadPath = realPath + uploadFilePath + commonUtil.separator + "tempUploadFile";
+		String guid = UUID.randomUUID().toString();
+		String pDirTempPath = tempFileUploadPath + commonUtil.separator + guid;
+		String fullFilePath = realPath + filePath;
+
+		ZipOutputStream zos = null;
+		String downFileName = "";
+
+		try {
+			File tempFile = new File(pDirTempPath + commonUtil.separator + ".zip");
+
+			if (tempFile.exists()) {
+				tempFile.delete();
+			}
+
+			tempFile = new File(tempFileUploadPath);
+
+			if (!tempFile.exists()) {
+				tempFile.mkdirs();
+			}
+
+			zos = new ZipOutputStream(new FileOutputStream(pDirTempPath + ".zip"), Charset.forName("utf-8"));
+
+			String[] fileNamesArr = fileNames.split(":");
+			String[] fileNamesUIDArr = fileNamesUID.split(":");
+
+			downFileName = fileNamesArr[0] + " " + egovMessageSource.getMessage("ezCircular.t50", userInfo.getLocale()) + " " + (fileNamesArr.length-1) + egovMessageSource.getMessage("ezStatistics.t1067", userInfo.getLocale()) + ".zip";
+
+			Map<String, Integer> fileNameMap = new HashMap<String, Integer>();
+
+			if (fileNamesArr.length != 0) {
+				for (int i = 0; i < fileNamesArr.length; i++) {
+					BufferedInputStream bis = null;
+
+					try {
+						File sourceFile = new File(commonUtil.detectPathTraversal(fullFilePath + fileNamesUIDArr[i]));
+						byte[] fileBytes = commonUtil.readBytesFromFile(sourceFile.toPath());
+
+						if (fileNamesUIDArr[i].endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
+							fileBytes = klibUtil.decrypt(fileBytes);
+						}
+
+						fileNamesArr[i] = commonUtil.getUniqueFileName(fileNamesArr[i], fileNameMap);
+						ZipEntry zentry = new ZipEntry(fileNamesArr[i]);
+						zos.putNextEntry(zentry);
+						zos.write(fileBytes);
+						zos.closeEntry();
+					} catch (IOException e) {
+						logger.error(e.getMessage(), e);
+					} finally {
+						if (bis != null) {
+							try {
+								bis.close();
+							} catch (Exception e) {
+								logger.error(e.getMessage(), e);
+							}
+						}
+					}
+				}
+				zos.flush();
+				zos.close();
+				zos = null;
+
+				File file = new File(pDirTempPath + ".zip");
+
+				if (file.exists()) {
+					downFile(request, response, pDirTempPath + ".zip", downFileName);
+					file.delete();
+				}
+			}
+		} catch (Exception e) {
+			File file = new File(pDirTempPath + ".zip");
+
+			if (file.exists()) {
+				file.delete();
+			}
+		} finally {
+			if (zos != null) {
+				try {
+					zos.close();
+				} catch (Exception e) {
+					logger.error(e.getMessage(), e);
+				}
+			}
+		}
+		logger.debug("downloadAttachAll ended.");
+	}
 	
+    // 2024-10-30 황인경 - 커뮤니티 > 방명록 > 댓글 추가
+    @RequestMapping(value = "/ezCommunity/guestOneLineReply.do", method = RequestMethod.POST)
+    @ResponseBody
+    public String guestOneLineReply(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+        logger.debug("guestOneLineReply started.");
+
+        LoginVO userInfo = commonUtil.userInfo(loginCookie);
+        String result = "error";
+        try {
+            String cNoStr = request.getParameter("c_no");
+            int cNo = Integer.parseInt(cNoStr);
+
+            String code = request.getParameter("code");
+            String memo = URLDecoder.decode(request.getParameter("memo"), "utf-8");
+
+            ezCommunityService.insertGuestOneLineReply(cNo, code, userInfo.getCompanyID(), userInfo.getTenantId(), memo, userInfo);
+
+            result = "success";
+        } catch (Exception e) {
+            logger.debug("e: {}", e);
+        }
+
+        logger.debug("guestOneLineReply ended.");
+
+        return result;
+    }
+
+    // 2024-10-30 황인경 - 커뮤니티 > 방명록 > 댓글 삭제
+    @RequestMapping(value = "/ezCommunity/deleteGuestOneLineReply.do", method = RequestMethod.POST)
+    @ResponseBody
+    public void deleteGuestOneLineReply(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+        logger.debug("deleteGuestOneLineReply started.");
+        LoginVO userInfo = commonUtil.userInfo(loginCookie);
+        String replyNo = request.getParameter("replyNo");
+
+        ezCommunityService.deleteGuestOneLineReply(replyNo, userInfo.getTenantId());
+        logger.debug("deleteGuestOneLineReply ended.");
+    }
+
+    // 2024-10-30 황인경 - 커뮤니티 > 방명록 > 댓글 수정
+    @RequestMapping(value = "/ezCommunity/modifyGuestOneLineReply.do", method = RequestMethod.POST)
+    @ResponseBody
+    public void modifyGuestOneLineReply(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+        logger.debug("modifyGuestOneLineReply started.");
+        LoginVO userInfo = commonUtil.userInfo(loginCookie);
+        String replyNo = request.getParameter("replyNo");
+        String content = URLDecoder.decode(request.getParameter("content"), "utf-8");
+
+        ezCommunityService.modifyGuestOneLineReply(replyNo, content, userInfo.getTenantId());
+        logger.debug("modifyGuestOneLineReply ended.");
+    }
 }
 

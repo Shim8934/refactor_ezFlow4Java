@@ -955,7 +955,7 @@
 		    		},
 		    		success : function(result) {
 		    			if (result != "") {
-		    				window.open(result);
+		    				window.open(result, '_blank', getOpenWindowfeature(1100, 950));
 		    			} else {
 			    			alert("<spring:message code = 'ezBoard.t181'/>");
 		    			}
@@ -1103,8 +1103,7 @@
 		        if (RtnVal[0] != "0" && RtnVal[1] != "0") {
 		            url = url.replace("PrintOption.do", "Print.do");
 		            url = url + "&oneLine=" + RtnVal[0] + "&attach=" + RtnVal[1];
-		            var feature = GetOpenPosition(840, 700);
-		            window.open(url, "", "height=700px, width=840px, location=0, menubar=0, toolbar=1, resizable=1, scrollbars=1" + feature);
+		            window.open(url, "", getOpenWindowfeature(840, 700));
 		        }
 		    }
 		    
@@ -1792,7 +1791,7 @@
 		            pData.append("itemList", pItemID + ";");
 		            pData.append("scrapContID", scrapContID);
 		        } else {
-		            alert("<spring:message code='ezBoard.kmh52' />");
+		            alert("<spring:message code='ezBoard.kmhScrap52' />");
 		            return;
 		        }
 		    	$.ajax({
@@ -1812,7 +1811,7 @@
 							} else if (myBoardScrapFlag == "TYPE2") {
 							    document.getElementById("delScrapBtn").replaceChildren();
 							} else {
-								alert("<spring:message code='ezBoard.kmh52' />");
+								alert("<spring:message code='ezBoard.kmhScrap52' />");
 		                        return;
 							}
 							
@@ -1930,6 +1929,8 @@
 							<c:when test="${MyBoardScrapFlag eq 'TYPE2' && not empty scrapContID}">
 								<li id ="addScrapBtn"><span onclick="addScrap()"><spring:message code='ezBoard.kmh13'/></span></li>
 								<li id ="delScrapBtn"><span onclick="delScrap()"><spring:message code='ezBoard.kmh14'/></span></li>	
+							</c:when>
+							<c:when test="${empty MyBoardScrapFlag || MyBoardScrapFlag eq 'NONE'}">
 							</c:when>
 							<c:otherwise>
 							    <li id ="addScrapBtn"><span onclick="addScrap()"><spring:message code='ezBoard.kmh13'/></span></li>	

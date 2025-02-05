@@ -163,6 +163,8 @@ public class BoardListVO {
 	private String updaterName;
 	private String thumbnailExt;
 	private String addThumbnail;
+	// 2024-10-04 조수빈 - 예약게시물에서 파일명 사용하기 위해 추가
+	private String fileName;
 
 	public int getrNum() {
 		return rNum;
@@ -662,4 +664,11 @@ public class BoardListVO {
 	public void setAddThumbnail(String addThumbnail) {
 		this.addThumbnail = addThumbnail;
 	}
+	public String getFileName() {
+		return fileName;
+	}
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+	
 }

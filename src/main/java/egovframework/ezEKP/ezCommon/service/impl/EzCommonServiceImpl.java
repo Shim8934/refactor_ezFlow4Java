@@ -1891,6 +1891,30 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("description","주소록 가져오기 시 기존주소록 중복체크 사용여부(default: YES)");
 			put("config_type","주소록");
 		}});
+        test.add(new HashMap<String, Object>(){{
+            put("confName","FidoStoragePeriod"); // property_name
+            put("property_value","30");
+            put("config_name","FIDO Session 보관기간");
+            put("regdate","2023-11-23 00:00:00");
+            put("description","2중인증 FIDO Session 보관기간으로 일-day 단위(default: 30)");
+            put("config_type","로그인");
+        }});
+        test.add(new HashMap<String, Object>(){{
+            put("confName","FidoTimeLimit"); // property_name
+            put("property_value","1");
+            put("config_name","FIDO인증 시간");
+            put("regdate","2023-11-23 00:00:00");
+            put("description","FIDO인증 시간으로 분-minute 단위(default: 1)");
+            put("config_type","일반");
+        }});
+        test.add(new HashMap<String, Object>(){{
+            put("confName","useFidoAccessMenu"); // property_name
+            put("property_value","NO");
+            put("config_name","FIDO인증 관리 화면");
+            put("regdate","2023-11-23 00:00:00");
+            put("description","FIDO인증 관리 화면 여부(default: NO)");
+            put("config_type","일반");
+        }});
 		test.add(new HashMap<String, Object>(){{
 			put("confName","useJapanese");
 			put("property_value","YES");
@@ -2015,6 +2039,13 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("COLUMN", "PREVIEW_MAIL_IMAGE");
 			put("TYPE_MYSQL", "VARCHAR(10)"); put("TYPE_ORACLE", "VARCHAR(10)");
 			put("AFTER", "DEFAULT 'Y'");
+		}});
+
+		// JMOCHA_MAIL_RESERVE
+		test.add(new HashMap<String, Object>(){{ // 2025-01-14 김은실: 예약메일 공유사서함 추가.
+			put("TABLE","JMOCHA_MAIL_RESERVE");
+			put("COLUMN", "SENDER");
+			put("TYPE_MYSQL", "VARCHAR(80)"); put("TYPE_ORACLE", "NVARCHAR2(80)");
 		}});
 
 		// TBL_ADDJOBMASTER
@@ -2721,6 +2752,21 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             put("COLUMN", "UPDATERID"); // 게시판 키워드 기능 사용여부(Y/N)
             put("TYPE_MYSQL", "VARCHAR(80)"); put("TYPE_ORACLE", "NVARCHAR2(80)");
         }});
+        test.add(new HashMap<String, Object>(){{ //2025-01-24 이가은 전자결재 > 연동테이블 컬럼 추가
+            put("TABLE","TBL_CONNDATA");
+            put("COLUMN", "USERID");    // 기안자 ID
+            put("TYPE_MYSQL", "VARCHAR(400)"); put("TYPE_ORACLE", "VARCHAR2(100)");
+        }});
+        test.add(new HashMap<String, Object>(){{ //2025-01-24 이가은 전자결재 > 연동테이블 컬럼 추가
+            put("TABLE","TBL_CONNDATA");
+            put("COLUMN", "DEPTID");    // 기안자 부서ID
+            put("TYPE_MYSQL", "VARCHAR(400)"); put("TYPE_ORACLE", "VARCHAR2(100)");
+        }});
+        test.add(new HashMap<String, Object>(){{ //2025-01-24 이가은 전자결재 > 연동테이블 컬럼 추가
+            put("TABLE","TBL_CONNDATA");
+            put("COLUMN", "TITLE");     // 문서제목
+            put("TYPE_MYSQL", "VARCHAR(1020)"); put("TYPE_ORACLE", "NVARCHAR2(510)");
+        }});
         
 		for (Map<String, Object> map : test) {
 			ezCommonDAO.alterTableAddColumns(map);
@@ -2763,7 +2809,8 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		List<Map<String, String>> list = new ArrayList<Map<String,String>>();
 		list.add(new HashMap<String, String>(){{ put("name","ExpirePassPeriod"); put("value","0"); }});
 		list.add(new HashMap<String, String>(){{ put("name","MaxAllowedCountOfLoginFail"); put("value","0"); }});
-		list.add(new HashMap<String, String>(){{ put("name","UsePasswordPatternPolicy"); put("value","NO"); }});
+		// 2024.10.14 한슬기 : 암호정책 디폴트값 설정 (암호패턴 사용, 영문 대/소문자 패턴구분안함, 3개패턴 사용, 8글자 이상)
+		list.add(new HashMap<String, String>(){{ put("name","UsePasswordPatternPolicy"); put("value","YES"); }});
 		// 2021-11-09 이사라 : 가장 최근 사용한 암호 재사용
 		list.add(new HashMap<String, String>(){{ put("name","useChkPrevPwd"); put("value","NO"); }});
 		     
@@ -2802,7 +2849,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void createTables() throws Exception {
 		// 생성할 테이블 명
 		String[] tableArr = new String[] 
-				{"jmocha_appr_allowed_domain", "jmocha_appr_user", "jmocha_appr_history", "jmocha_appr_comp_history"};
+				{"jmocha_appr_allowed_domain", "jmocha_appr_user", "jmocha_appr_history", "jmocha_appr_comp_history", "jmocha_address_last_sent"};
 		
 		for (String t : tableArr) {
 			try {
@@ -3208,6 +3255,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	@Override
 	public void addTblUserMultiLoginMobileFlagColumn() throws Exception {
 		ezCommonDAO.addTblUserMultiLoginMobileFlagColumn();
+	}
+
+	@Override
+	public void createTblFidoSession() throws Exception {
+		ezCommonDAO.createTblFidoSession();
 	}
 
 	@Override
@@ -4461,6 +4513,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         }
     }
 	
+    @Override
+    public void insertServername() throws Exception {
+        ezCommonDAO.insertServername();
+    }
+    
 	@Override
 	public void insertScrapTenantConfig() throws Exception {
         List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
@@ -4509,6 +4566,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void createTblBoardCommentAttachments() throws Exception {
         ezCommonDAO.createTblBoardCommentAttachments();
     }
+
+    @Override
+    public void createJmochaCompanyQuota() throws Exception {
+        ezCommonDAO.createJmochaCompanyQuota();
+    }
     
     @Override
     public void alterAddThumbnailForTPI() throws Exception {
@@ -4523,5 +4585,159 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     @Override
     public void alterAttachmentsForCBoard() throws Exception {
     	ezCommonDAO.alterAttachmentsForCBoard();
+    }
+
+	@Override
+	public void addIsDeleteBlockToSytemConfig() throws Exception {
+		ezCommonDAO.addIsDeleteBlockToSytemConfig();
+	}
+
+    @Override
+    public void addTblCommunityClubguestOnelinereply() throws Exception {
+        ezCommonDAO.addTblCommunityClubguestOnelinereply();
+    }
+
+    /* 2024-09-11 이유정 - 게시판 > 최근게시물 리스트헤더 추가 */
+    @Override
+    public void insertBoardItemListOptionAN() throws Exception{
+        List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+
+        for (TenantVO tenantVo : tenantIdList) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("v_TENANTID", tenantVo.getTenantId());
+            ezCommonDAO.insertBoardItemListOptionAN(map);
+        }
+    }
+
+    /* 2024-09-11 이유정 - 게시판 > 최근게시물 게시판정보 추가 */
+    @Override
+    public void insertRecentBoardInfo() throws Exception{
+        List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+
+        for (TenantVO tenantVo : tenantIdList) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("v_TENANTID", tenantVo.getTenantId());
+            ezCommonDAO.insertRecentBoardInfo(map);
+        }
+    }
+    
+    @Override
+    public void addBoardAllNewBoardFlag() throws Exception {
+        ezCommonDAO.addBoardAllNewBoardFlag();
+    }
+
+    @Override
+    public void addBoardAllNewBoardListDate() throws Exception {
+        ezCommonDAO.addBoardAllNewBoardListDate();
+    }
+
+    @Override
+    public void createTblAprAutoSaveConfig() throws Exception {
+        List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+        for (TenantVO tenantVo : tenantIdList) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("tenantId", tenantVo.getTenantId());
+            map.put("propertyName", "AprAutoSaveFlag");
+            map.put("propertyValue", "YES");
+            map.put("description", "YES: 사용 NO: 사용안함 (default: YES)");
+            map.put("configName", "전자결재 G 자동 임시저장 사용 여부");
+            map.put("configType", "전자결재G");
+            map.put("regdate", "2024-07-10 00:00:00");
+
+            ezCommonDAO.insertAprAutoSaveConfig(map);
+        }
+    }
+
+    // 2024-12-04 기민혁 - 전자결재 > 최근서식 사용여부 테넌트 컨피그 추가
+    @Override
+    public void insertResendFormYN() throws Exception {
+        List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+
+        for (TenantVO tenantVo : tenantIdList) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("v_TENANTID", tenantVo.getTenantId());
+            ezCommonDAO.insertResendFormYN(map);
+        }
+    }
+
+    // 2024-12-05 기민혁 - 전자결재 > 본문수정 시 본문버전 변경 기능 사용여부 테넌트 컨피그 추가
+    @Override
+    public void insertEditVertionYN() throws Exception {
+        List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+
+        for (TenantVO tenantVo : tenantIdList) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("v_TENANTID", tenantVo.getTenantId());
+            ezCommonDAO.insertEditVertionYN(map);
+        }
+    }
+
+    // 2024-12-10 기민혁 - 전자결재 > 수정버전,수정모드 컬럼 추가
+    @Override
+    public void alterEditVersionHistory() throws Exception {
+        ezCommonDAO.alterEditVersionHistory();
+    }
+
+    // 2024-12-10 기민혁 - 수정버전 리스트 해더 생성
+    @Override
+    public void insertEditVersionListOption() throws Exception {
+        List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();
+        Map<String, Object> map = new HashMap<String, Object>();
+
+        for (CompanyInfoVO company : companyList) {
+            if (company.getCompanyId() != null) {
+                map.put("companyId", company.getCompanyId());
+                map.put("tenantId", company.getTenantId());
+                map.put("listOption", "K064");
+
+                ezCommonDAO.insertEditVersionListOption(map);
+            }
+        }
+    }
+
+    // 2024-11-26 기민혁 - 전자결재 > 개인수신함 사용여부 테넌트 컨피그 추가
+    @Override
+    public void insertPersonalHideSusinYN() throws Exception {
+        List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+
+        for (TenantVO tenantVo : tenantIdList) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("v_TENANTID", tenantVo.getTenantId());
+            ezCommonDAO.insertPersonalHideSusinYN(map);
+        }
+    }
+
+    // 2024-11-28 기민혁 - 개인 수신함 리스트 해더 추가
+    @Override
+    public void insertPersonalSusinListOption() throws Exception {
+        List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();
+        Map<String, Object> map = new HashMap<String, Object>();
+
+        for (CompanyInfoVO company : companyList) {
+            if (company.getCompanyId() != null) {
+                map.put("companyId", company.getCompanyId());
+                map.put("tenantId", company.getTenantId());
+                map.put("listOption", "P004");
+                
+                ezCommonDAO.insertPersonalSusinListOption(map);
+            }
+        }
+    }
+
+    /* 2024-07-05 양지혜 - 전자결재 > 상위부서문서함 사용여부 컬럼 추가 */
+    @Override
+    public void alterUseUpperDeptBox() throws Exception {
+        ezCommonDAO.alterUseUpperDeptBox();
+    }
+    
+    @Override
+    public void alterBodyHTMLToConnData() throws Exception {
+        ezCommonDAO.alterBodyHTMLToConnData();
+    }
+
+    // 2024-12-27 이가은 - 공람완료문서 삭제 히스토리 테이블 생성
+    @Override
+    public void createGongramDeleteHistory() throws Exception {
+        ezCommonDAO.createGongramDeleteHistory();
     }
 }

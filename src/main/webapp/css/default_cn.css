@@ -357,7 +357,8 @@ form{display:inline;margin:0}
 .left_tasktime{background:url(/images/left/left_tasktime.jpg) left top repeat ;width:170px; height: 40px;}
 .left_circular{height:52px; background:#0470e4;}
 .left_circular span{background:url(/images/kr/left/left_circular.png) no-repeat left center ; display:inline-block; height:50px; line-height:48px; font-weight:normal; color:#fff; margin:0px 0px 0px 16px; padding:0px 0px 0px 33px; text-align:center; font-family:Malgun Gothic; font-size:20px;}
-
+.left_btn{border: 1px solid #DDE2EA; position:fixed;left: 0;top: 5px;width:20px;height: 40px; z-index: 1000;border-radius: 0 4px 4px 0;border-left: 0;cursor: pointer;background: url(/images/left_btn.png) no-repeat center #fff;}
+.left_btn.on{background-image:url(/images/left_btn_on.png);}
 
 .tasktime { background: url(/images/main/time_bg.gif) no-repeat left top; 
 	width:232px; height:58px; margin:0; border-top:2px solid #efefef}
@@ -381,7 +382,7 @@ form{display:inline;margin:0}
 .mainbody h1 {
 	font-size:17px;
 	font-weight:bold;
-	padding-left:2px;
+	padding-left:20px;
 	margin:15px 0px 14px;
 	left:7px;
 	color:#333;
@@ -2576,6 +2577,7 @@ div#txtContent table {margin:auto;}
 .btn_bottomframe{background-position:-26px -78px !important; width:16px; height:16px; display:inline-block !important; margin: 0px 0px 0px 0px !important; cursor:pointer;} /* icon16 프레임분활 하단 */
 .btn_leftframe{background-position:-52px -78px !important; width:16px; height:16px; display:inline-block !important; margin: 0px 0px 0px 0px !important; cursor:pointer;} /* icon16 프레임분활 왼쪽 */
 .btn_arrow_down{background-position:-78px -78px !important; width:16px; height:16px; display:inline-block !important; margin: 0px 0px 0px 0px !important; cursor:pointer;} /* icon16 프레임분활 아래화살표 */
+.icon16_unreadMail_del {background-position: -106px -103px !important; width: 20px; height: 22px; display: inline-block; margin: 5px 0px 0px 0px; cursor: pointer;} /* icon16 안 읽은 메일 삭제 아이콘 */
 
 /* icon16 popup */
 .popup_icon16_delete{background-position:8px 6px !important; width:16px; height:16px; display:inline-block; margin: 0px; cursor:pointer; background-color: white !important;} /* icon16 삭제아이콘 */
@@ -2696,7 +2698,7 @@ input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transfo
 .toastArea { padding : 10px; position : absolute; background : rgba(0, 0, 0, 0.33); display : block; color : #ffffff; font-size: 12px; border-radius: 3px;}
 
 /* community */
-.main_community_center{float:left; width:calc(100% - 249px); }
+.main_community_center{float:left; width:calc(100% - 259px); }
 .main_community_right{float:right; width:240px;/*right width는 고정값*/ margin:0px;}
 
 .community_section01{height:82px; margin:0px 0px 20px 0px; padding:0px; background:url(../images/kr/community/bannerbgleft.png) #3d8fea left top no-repeat;}
@@ -2935,7 +2937,7 @@ h2, #menu span {font-size: 12px;}
 .surveyTbl .statusTh {width: 80px; text-align: center;}
 .surveyTbl .noTh   {width: 20px; text-align: center;}
 .surveyTbl .ttlTh  {width: 60%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
-.surveyTbl .createTh {width: 15%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
+.surveyTbl .createTh {width: 15%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: center;}
 .surveyTbl .endDateTh {width: 15%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: center;}
 .surveyTbl .anoynmTh, .surveyTbl .publicTh, .surveyTbl .targetTh {width: 80px; text-align: center;}
 .surveyTbl .statisTh {width: 40px;}
@@ -3917,3 +3919,24 @@ a.commentFileSpan:hover {cursor: pointer; text-decoration: underline;}
 	display: inline-block;
 	vertical-align: middle;
 }
+
+/* 20241126 개선 #148590 메일쓰기창 최근 사용 주소 */
+.btn_AutoCompleteResults{display:inline-block; width:24px; height:24px; margin-left:3px; background: url(../images/btn_AutoComplete.png) no-repeat Center center; background-size:16px 16px; border:1px solid #dedede; border-radius:3px; vertical-align:top; cursor:pointer; box-sizing:border-box;}
+.btn_AutoCompleteResults.active{background-image: url(../images/btn_AutoCompleteOn.png); border-color:#388CE5; background-color:#f7fbff;}
+.ui-autocomplete.ui-menu .ui-menu-item a{padding:3px 5px;}
+.ui-autocomplete.ui-menu .ui-menu-item a .flex_autocomplete{display:flex; flex-wrap:nowrap; align-items:center;}
+.ui-autocomplete.ui-menu .ui-menu-item a .flex_autocomplete .name{min-width:50px; max-width:200px; padding-right:10px; font-weight:bold; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; box-sizing:border-box;}
+.ui-autocomplete.ui-menu .ui-menu-item a .flex_autocomplete .mail{flex-grow:1; width:calc(100% - 255px); padding-right:10px; color:#444; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; box-sizing:border-box;}
+.ui-autocomplete.ui-menu .ui-menu-item a .flex_autocomplete .date{min-width:45px; width:45px; text-align:left; color:#999; margin-left:auto;}
+.ui-autocomplete.ui-menu .ui-menu-item a .flex_autocomplete .delete{min-width:10px; width:10px; height:10px; background:url(../images/close_xBtn.png) no-repeat; background-size:contain; cursor:pointer; opacity:0.7;}
+.ui-autocomplete.ui-menu .ui-menu-item a .flex_autocomplete .delete:hover{opacity:1;}
+/* //20241126 */
+
+/* 2025-01-06 김승연 mainmenu ... 버튼 */
+#mainmenu li.view_more{position:relative;}
+#mainmenu li.view_more .view_icon{}
+#mainmenu li.view_more .view_icon img{vertical-align:middle; margin-bottom:3px;}
+#mainmenu li.view_more .layer_select{display:none; position:absolute; width:auto; height:auto; border:1px solid #D3D3D3; border-radius:3px; background:#fff; padding:0; z-index:1; top:calc(100% + 3px); box-shadow:0 3px 5px rgba(0,0,0,0.16);}
+#mainmenu li.view_more .layer_select li{float:none; margin:0; padding:0 10px; height:25px; line-height:25px; border:none; white-space:nowrap;}
+#mainmenu li.view_more.on{border:1px solid #388CE5; background:#f1f8ff;}
+#mainmenu li.view_more.on .layer_select{display:block;}

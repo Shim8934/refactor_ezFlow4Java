@@ -410,6 +410,13 @@ function ItemPreviewRead(obj) {
         xmlhttp2.onreadystatechange = event_ItemPreviewRead;
         xmlhttp2.send();
     }
+
+    if (obj.getAttribute("gubun") == "2" && BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && obj.getAttribute("publicflag") == "N") {
+        document.getElementById('openPassword').setAttribute('data-id', obj.getAttribute("DATA2"));
+        document.getElementById('openPassword').setAttribute('data-board', obj.getAttribute("DATA1"));
+        $('#openPassword').val('');
+        $('#chkPass').modal();
+    }
 }
 var ItemID;
 var WriterID;
@@ -431,6 +438,8 @@ function event_ItemPreviewRead_photo() {
             
             if (SelectSingleNodeValueNew(xmldom, "DATA") == "NO") {
             	alert(strLang173);
+                document.getElementById("userImgH").src = "/images/kr/main/bestEmployee_pic_none.png";
+                document.getElementById("userImgW").src = "/images/kr/main/bestEmployee_pic_none.png";
             } 
             
             var WriterID = SelectSingleNodeValueNew(xmldom, "NODES/NODE/WriterID");
@@ -461,10 +470,10 @@ function event_ItemPreviewRead_photo() {
                 document.getElementById("Preview_HeaderH").style.display = "none";
             }
             
-            if (document.getElementById("userImgH") != null) {
+            if (document.getElementById("userImgH") != null && UserIMG != "") {
             	document.getElementById("userImgH").src = UserIMG;
             }
-            if (document.getElementById("userImgW") != null) {
+            if (document.getElementById("userImgW") != null && UserIMG != "") {
             	document.getElementById("userImgW").src = UserIMG;
             }
             
@@ -523,7 +532,9 @@ function event_ItemPreviewRead() {
             }
      
             if (SelectSingleNodeValue(xmlhttp.responseXML, "DATA") == "NO") {
-            	alert(strLang173);
+                if (!g_bPrevShow) { //미리보기 아닐 때만 alert
+            	    alert(strLang173);
+                }    
             	document.querySelector('#PreH_sub_subject').textContent = "";
             	document.querySelector('#PreH_MailReceiver').textContent = "";
             	document.querySelector('#PreH_date').textContent = "";
@@ -582,11 +593,11 @@ function event_ItemPreviewRead() {
                 document.getElementById("Preview_HeaderH").style.display = "none";
             }
             
-            if (document.getElementById("userImgH") != null) {
-            	document.getElementById("userImgH").src = UserIMG;
+            if (document.getElementById("userImgH") != null && UserIMG != "") {
+                document.getElementById("userImgH").src = UserIMG;
             }
-            if (document.getElementById("userImgW") != null) {
-            	document.getElementById("userImgW").src = UserIMG;
+            if (document.getElementById("userImgW") != null && UserIMG != "") {
+                document.getElementById("userImgW").src = UserIMG;
             }
         }
     }

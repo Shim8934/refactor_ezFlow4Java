@@ -14,7 +14,9 @@ function PrintClick(Type, DocID, Mode) {
             return;
 
     var bodycontent = "";
-    if (Type == "FormProc") {
+    if (typeof draftAllFlag != "undefined" && draftAllFlag == "Y")
+        bodycontent = document.getElementById("ifrm" + currentTabIdx).contentWindow.Get_EditorBodyHTML() + rtnVal;
+    else if (Type == "FormProc") {
         bodycontent = pzFormProc.Editor.DOM.body.innerHTML + rtnVal;
     }
     else if (Type == "Cross") {
@@ -299,7 +301,9 @@ function OpenQuestionUI_Complete(ret) {
     }
     
     var bodycontent = "";
-    if (tempType == "FormProc")
+    if (typeof draftAllFlag != "undefined" && draftAllFlag == "Y")
+        bodycontent = document.getElementById("ifrm" + currentTabIdx).contentWindow.Get_EditorBodyHTML() + rtnVal;
+    else if (tempType == "FormProc")
         bodycontent = pzFormProc.Editor.DOM.body.innerHTML + rtnVal;
     else if (tempType == "Cross")
         bodycontent = message.Get_EditorBodyHTML() + rtnVal;

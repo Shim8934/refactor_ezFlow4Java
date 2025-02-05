@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!DOCTYPE html>
 <html>
@@ -30,10 +31,10 @@
 	    <script language="javascript" type="text/javascript">
 	    	var HwpCtrl;
 	    	var useWebHWP = parent.useWebHWP;
-	    	var frameNum = "${frameNum}"; // 프레임 번호
+	    	var frameNum = "<c:out value ='${frameNum}'/>"; // 프레임 번호
 	    	var ListType = parent.ListType; // 임시저장 등 분기처리를 위한 ListType
-	    	var docID = "${docID}"; // 재기안시 문서 id
-	    	var docHref = "${docHref}"; // 사실상 양식의 formHref임
+	    	var docID = "<c:out value ='${docID}'/>"; // 재기안시 문서 id
+	    	var docHref = "<c:out value ='${docHref}'/>"; // 사실상 양식의 formHref임
 	    	var formID = ""; // 양식 ID
 	    	var pUserID = "";
 	    	var pingUserID = parent.pingUserID;
@@ -75,6 +76,9 @@
 			/* 2023-04-20 홍승비 - 일괄기안된 문서는 모든 안에 대해 결재선이 동일하므로, 부모창의 값을 자식 프레임에서 그대로 사용 */
 			var pModeForAllDocInfo = "APR";
 			var pModeForAllAttachInfo = "APR";
+			
+			/* 2024-12-27 홍승비 - MHT 양식의 일괄기안 기능이 추가되며 발생한 사이드 이펙트 수정 (isHWP 변수 추가, 항상 Y) */
+			var isHWP = "<c:out value ='${isHWP}'/>";
 	    
 	    	$(document).ready(function() {
 	    		pDocHref = parent.pDocHrefAry[frameNum];

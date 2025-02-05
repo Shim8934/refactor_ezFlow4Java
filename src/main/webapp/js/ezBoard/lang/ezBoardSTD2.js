@@ -97,3 +97,6 @@ var strLangAttachJIH01 = "Attach";
 var strLangAttachJIH02 = "File name cannot exceed ";
 var strLangAttachJIH03 = " characters.";
 var strLangAttachJIH04 = "An error has occurred.";
+
+// 2024-06-28 민지수 - 게시판 > 첨부파일 드래그 앤 드롭 안내 메세지 추가
+var strLangMJS01 = "You can drag and drop to add files and change the order of added files.";

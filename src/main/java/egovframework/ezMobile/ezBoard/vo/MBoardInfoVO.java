@@ -139,6 +139,8 @@ public class MBoardInfoVO {
 	private String attachmentFlag;
 	/** 2024-11-12 박기범 - 게시판 공개/비공개 */
 	private String publicFlag = "N";
+	/** 2024-10-22 정지은 - 최근게시물 사용여부**/
+	private String allNewBoardFlag;
 	
 	@Override
 	public String toString() {
@@ -590,5 +592,11 @@ public class MBoardInfoVO {
 	}
 	public void setPublicFlag(String publicFlag) {
 		this.publicFlag = publicFlag;
+	}
+	public String getAllNewBoardFlag() {
+		return allNewBoardFlag;
+	}
+	public void setAllNewBoardFlag(String allNewBoardFlag) {
+		this.allNewBoardFlag = allNewBoardFlag;
 	}
 }

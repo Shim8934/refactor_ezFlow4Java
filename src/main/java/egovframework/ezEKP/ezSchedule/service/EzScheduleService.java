@@ -206,5 +206,6 @@ public interface EzScheduleService {
 	public void updateAllDaySTimeForReminder(String allDaySTimeForReminder, int tenantId) throws Exception;
 
 	public void updateScheduleWritePermission(String groupId, List<Map<String, String>> memberList, int tenantId) throws Exception;
-
+	// 2024-11-19 한태훈 - 일정관리 > 초대 일정 드래그로 수정 시 메일 및 알림 발송 메서드
+	public void sendInviteModNotiForDrag(HttpServletRequest request, String dragId, ScheduleInfoVO beforeSche, String startDate, String endDate, LoginVO loginVO, String loginCookie) throws Exception;
 }

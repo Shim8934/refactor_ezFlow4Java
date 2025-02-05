@@ -1,6 +1,6 @@
 package egovframework.com.cmm.service.impl;
 
-import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 
 import javax.annotation.Resource;
 

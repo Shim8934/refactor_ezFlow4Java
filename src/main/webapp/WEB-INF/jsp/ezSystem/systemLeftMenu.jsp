@@ -96,6 +96,9 @@
 			case "SYSTEMCONFIG":
 				parent.frames[1].location.href = "/admin/ezSystem/systemConfigList.do";
 				break;
+			case "FIDOMANAGER":
+				parent.frames[1].location.href = "/admin/ezSystem/fidoAuthenticationManager.do";
+				break;
 	    }
 	    
     }
@@ -157,6 +160,9 @@
 	            <c:if test="${cChk == '1' }">
 	            <h2><span id="ADMINIPMANAGER" style="display:inline-block;width:100%;" onClick="menu_change('ADMINIPMANAGER')" ><spring:message code='ezSystem.ksa08'/></span></h2>
 	            </c:if>
+				<c:if test="${useFidoAccessMenu == 'YES' }">						
+					<h2><span id="FIDOMANAGER" style="display:inline-block;width:100%;" onClick="menu_change('FIDOMANAGER')" ><spring:message code='ezSystem.fido012'/></span></h2>
+				</c:if>		
 	            <c:if test="${useIPAccessMenu == 'YES'}">
 	            	<h2><span id="IPMANAGER" style="display:inline-block;width:100%;" onClick="menu_change('IPMANAGER')" ><spring:message code='ezSystem.ksa02'/></span></h2>
 	            </c:if>
