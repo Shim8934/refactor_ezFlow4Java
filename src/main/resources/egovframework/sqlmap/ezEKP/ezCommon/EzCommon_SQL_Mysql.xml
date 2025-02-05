@@ -5500,9 +5500,9 @@
 	<insert id="EzCommonDAO.insertCompanyMobileMenuNames"  parameterClass="Map">
 		INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME)
 		VALUES
-			(#menuId#, 1, #companyId#, #tenantId#, '받은메일'),
-			(#menuId#, 2, #companyId#, #tenantId#, 'Received Mail'),
-			(#menuId#, 3, #companyId#, #tenantId#, '受信メール'),
+			(#menuId#, 1, #companyId#, #tenantId#, '메일'),
+			(#menuId#, 2, #companyId#, #tenantId#, 'Mail'),
+			(#menuId#, 3, #companyId#, #tenantId#, 'メール'),
 			(#menuId#, 4, #companyId#, #tenantId#, '收件箱'),
 			(#menuId#, 5, #companyId#, #tenantId#, 'Hộp Thư Đến'),
 			(#menuId#, 6, #companyId#, #tenantId#, 'Surat Masuk'),

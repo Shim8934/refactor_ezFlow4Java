@@ -5861,11 +5861,11 @@
 	<insert id="EzCommonDAO.insertCompanyMobileMenuNames"  parameterClass="Map">
 		INSERT ALL
 			INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME)
-				VALUES (#menuId#, 1, #companyId#, #tenantId#, '받은메일')
+				VALUES (#menuId#, 1, #companyId#, #tenantId#, '메일')
 			INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME)
-				VALUES (#menuId#, 2, #companyId#, #tenantId#, 'Received Mail')
+				VALUES (#menuId#, 2, #companyId#, #tenantId#, 'Mail')
 			INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME)
-				VALUES (#menuId#, 3, #companyId#, #tenantId#, '受信メール')
+				VALUES (#menuId#, 3, #companyId#, #tenantId#, 'メール')
 			INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME)
 				VALUES (#menuId#, 4, #companyId#, #tenantId#, '收件箱')
 			INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME)
