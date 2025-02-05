@@ -873,19 +873,14 @@
 		        if (gubun != "2") {
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERID", SSUserID);
 					if ('Y' == writerFlag) {
-						var tmpWriterName = spUseDept.innerText.trim(); // 현재 게시물 작성자명
-						if (pMode == "modify" && strWriterName == tmpWriterName) { // 수정 시 변경사항 없다면 기존 게시물 정보로 저장
-							createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME", "<c:out value='${boardListVO.writerName}'/>");
-							createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAMETYPE", "<c:out value='${boardListVO.writerNameType}'/>");
-						} else {
-							var flagwriterName = $('#writerFlag').val().toString().split(":");
-							createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME", MakeXMLString(flagwriterName[0]));
-							createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAMETYPE", MakeXMLString(flagwriterName[1]));
-						}
+						var flagwriterName = $('#writerFlag').val().toString().split(":");
+						createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME", MakeXMLString(flagwriterName[0]));
+						createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME2", MakeXMLString(flagwriterName[1]));
+						createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAMETYPE", MakeXMLString(flagwriterName[2]));
 					} else {
 						createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME", MakeXMLString(SSUserName));
+						createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME2", MakeXMLString(SSUserName2));
 					}
-		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME2", MakeXMLString(SSUserName2));
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DEPTID", SSDeptID);
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DEPTNAME", MakeXMLString(SSDeptName));
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DEPTNAME2", MakeXMLString(SSDeptName2));
@@ -3115,9 +3110,9 @@
 									</span>
 									<input type="checkbox" id="chkUseDept" style="margin-left: 0px !important;" onclick="chkUseDept_onclick()">
 									<select id="writerFlag" style="display: none;">
-										<option value="<c:out value='${writerOption.N }:0' />"></option>
-										<option value="<c:out value='${writerOption.T }:1' />"></option>
-										<option value="<c:out value='${writerOption.D }:2' />"></option>
+										<option value="<c:out value='${writerOption.N}:${writerOption.N2}:0' />"></option>
+										<option value="<c:out value='${writerOption.T}:${writerOption.T2}:1' />"></option>
+										<option value="<c:out value='${writerOption.D}:${writerOption.D2}:2' />"></option>
 									</select>
 								</td>
 							</tr>

@@ -4076,17 +4076,29 @@
 	<select id="EzOrganDAO.getUserInfoMap" parameterClass="Map" resultClass="HashMap">
 		SELECT
 			U.DISPLAYNAME AS N
-			 , D.DISPLAYNAME AS T
-			 , (
+			, U.DISPLAYNAME2 AS N2
+			, D.DISPLAYNAME AS T
+			, D.DISPLAYNAME2 AS T2
+			, (
 				SELECT
 					D2.DISPLAYNAME
 				FROM
 					TBL_DEPTMASTER D2
 				WHERE
 					D2.CN = D.EXTENSIONATTRIBUTE1
-		  		AND
+				AND
 					D2.TENANT_ID = #v_TENANT_ID#
 			) AS D
+			, (
+				SELECT
+					D2.DISPLAYNAME2
+				FROM
+					TBL_DEPTMASTER D2
+				WHERE
+					D2.CN = D.EXTENSIONATTRIBUTE1
+				AND
+					D2.TENANT_ID = #v_TENANT_ID#
+			) AS D2
 		FROM
 			TBL_USERMASTER U
 		JOIN
@@ -4097,7 +4109,7 @@
 			U.TENANT_ID = D.TENANT_ID
 		WHERE
 			U.CN = #v_CN#
-	  	AND
+		AND
 			U.TENANT_ID = #v_TENANT_ID#
 	</select>
 </sqlMap>
