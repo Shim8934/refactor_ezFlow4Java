@@ -239,7 +239,7 @@
 				strXML += "<COMPANYNAME>" + MakeXMLString(SSCompanyName) + "</COMPANYNAME>";
 				strXML += "<COMPANYNAME2>" + MakeXMLString(SSCompanyName2) + "</COMPANYNAME2>";
 	            strXML += "<IMPORTANCE>" + importance + "</IMPORTANCE>";
-			    strXML += "<TITLE>" + MakeXMLString(txtTitle.value) + "</TITLE>";
+			    strXML += "<TITLE>" + MakeXMLString(txtTitle.value.replace(/[\t\n\r]+/g, ' ').trim()) + "</TITLE>";
 			    strXML += "<STARTDATE>" + pStartDate + "</STARTDATE>";
 			    strXML += "<ENDDATE>" + pEndDate + "</ENDDATE>";
 			    strXML += "<ABSTRACT></ABSTRACT>";
