@@ -252,10 +252,18 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		
 		String[] senderList = pMailSenderNM.split("\\|!\\-@\\-!\\|");
 		for (int i=0; i<senderList.length; i++) {
-			if (i == 0) {
-				mailSendObject += "<option value='" + senderList[i] + "' selected>" + senderList[i] + "</option>";
+			if (!(pMailSenderNM.indexOf("___") < 0)){
+				if (senderList[i].startsWith("___")){
+					mailSendObject += "<option value='" + senderList[i] + "' selected>" + senderList[i].substring(3) + " (default)</option>";
+				} else {
+					mailSendObject += "<option value='" + senderList[i] + "'>" + senderList[i] + "</option>";
+				}
 			} else {
-				mailSendObject += "<option value='" + senderList[i] + "'>" + senderList[i] + "</option>";
+				if (i == 0){
+					mailSendObject += "<option value='" + senderList[i] + "' selected>" + senderList[i] + "</option>";
+				} else {
+					mailSendObject += "<option value='" + senderList[i] + "'>" + senderList[i] + "</option>";
+				}
 			}
 		}
 		

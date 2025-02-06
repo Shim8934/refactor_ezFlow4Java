@@ -923,7 +923,11 @@ public class EzEmailWriteServiceImpl implements EzEmailWriteService {
 			String[] senderList = pMailSenderNM.split("\\|!\\-@\\-!\\|");
 
 			 for (String pSenderNM : senderList) {
-				 mailSendObject += "<option value='" + pSenderNM + "'>" + pSenderNM + "</option>";
+                 if (pSenderNM.startsWith("___")){
+                     mailSendObject += "<option value='" + pSenderNM.substring(3) + "' selected>" + pSenderNM.substring(3) + "</option>";
+                 } else {
+                     mailSendObject += "<option value='" + pSenderNM + "'>" + pSenderNM + "</option>";
+                 }
 			 }
 		}
         general.setMailSenderNm(mailSendObject);

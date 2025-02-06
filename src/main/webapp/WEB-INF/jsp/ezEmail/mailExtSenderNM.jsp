@@ -134,6 +134,31 @@
 	        Conitems.innerHTML = "";
 	        window.close();
 		}
+
+		function setDefault(){
+            if (_popObj != null) {
+                removeDefault();
+
+                _popObj.setAttribute('value','___'+_popObj.getAttribute('value'));
+                _popObj.textContent = _popObj.textContent + ' (default)'
+                //_popObj.outerHTML = ;
+                return;
+            }
+		}
+
+		function removeDefault(){
+    		$("div[value]").each(function() {
+                var value = $(this).attr("value");
+
+                if (value.startsWith("___")) {
+                    var newValue = value.substring(3); // "___" 제거
+                    $(this).attr("value", newValue);
+                    var newText = $(this).text().replace(" (default)", ""); // " (default)" 제거
+                    $(this).text(newText);
+                }
+            });
+
+		}
 		</script>
 	</head>
 	<body style="background-color:#ffffff;">
@@ -165,7 +190,9 @@
 				</div>
 			</div>
 			<div class="btnpositionLayer">
-				<a class="imgbtn"><span onClick="pop_confirm();"><spring:message code='ezEmail.t38' /></span></a>
+				<a class="imgbtn"><span onClick="setDefault();"><spring:message code='ezEmail.yja002' /> </span></a>
+				<a class="imgbtn"><span onClick="removeDefault();"><spring:message code='ezEmail.yja003' /></span></a>
+				<a class="imgbtn"><span onClick="pop_confirm();"><spring:message code='main.sp09' /></span></a>
 			</div>
 		</div>	
 	</div>
