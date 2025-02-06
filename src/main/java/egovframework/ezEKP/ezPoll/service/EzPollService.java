@@ -120,6 +120,8 @@ public interface EzPollService {
 	
 	public void getAllMemberOfDept(List<LoginVO> list, String deptId, int tenantID) throws Exception;
 	
+	public void getAllUserForQuestion(LoginVO loginVO, int questionID, Set<LoginVO> set) throws Exception;
+
 	public List<PollUserVO> getAllUsersForQst(int tenantId, int qstId) throws Exception;
 	
 	public List<LoginVO> getQstAllUsers(int tenantId, int qstId) throws Exception;

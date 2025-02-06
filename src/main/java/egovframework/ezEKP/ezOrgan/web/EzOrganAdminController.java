@@ -367,6 +367,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.insertEditVersionListOption(); // 2024-12-10 기민혁 - 수정버전 리스트 해더 생성
 			ezCommonService.insertPersonalSusinListOption(); // 2024-11-28 기민혁 - 개인 수신함 리스트 해더 추가
 			ezCommonService.alterBodyHTMLToConnData(); // 2025-01-24 이가은 - 전자결재 > 연동테이블 컬럼명 변경
+			ezCommonService.createGongramDeleteHistory(); // 2024-12-27 이가은 - 공람완료문서 삭제 히스토리 테이블 생성
 		} catch (Exception e) {
     		logger.error(e.getMessage(), e);
     	}
@@ -694,6 +695,13 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 							if (!operatorId.equals("")) {
 								ezCommonService.insertCompanyConfig(tenantID, cn, operatorMailIdPropertyName, operatorId);
 							} 
+							
+							// 2024.10.14 한슬기 : 암호정책 디폴트값 설정 (암호패턴 사용, 영문 대/소문자 패턴구분안함, 3개패턴 사용, 8글자 이상)
+							String defaultPwPolicyResult = ezSystemAdminService.insertDefaultPwPolicy(tenantID, cn);
+							if (!"OK".equals(defaultPwPolicyResult)) {
+								result = "PWPOLICY_ERROR";
+							}
+							
 							
 							int reasonCode = ezEmailService.saveCompanyMultiDomain(tenantID, cn, selectDomain, selectDomain);
 							logger.debug("reasonCode=" + reasonCode);

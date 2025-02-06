@@ -2041,6 +2041,13 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("AFTER", "DEFAULT 'Y'");
 		}});
 
+		// JMOCHA_MAIL_RESERVE
+		test.add(new HashMap<String, Object>(){{ // 2025-01-14 김은실: 예약메일 공유사서함 추가.
+			put("TABLE","JMOCHA_MAIL_RESERVE");
+			put("COLUMN", "SENDER");
+			put("TYPE_MYSQL", "VARCHAR(80)"); put("TYPE_ORACLE", "NVARCHAR2(80)");
+		}});
+
 		// TBL_ADDJOBMASTER
 		test.add(new HashMap<String, Object>(){{ // 2018-08-30 commit 2910f2a7
 			put("TABLE","TBL_ADDJOBMASTER");
@@ -2802,7 +2809,8 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		List<Map<String, String>> list = new ArrayList<Map<String,String>>();
 		list.add(new HashMap<String, String>(){{ put("name","ExpirePassPeriod"); put("value","0"); }});
 		list.add(new HashMap<String, String>(){{ put("name","MaxAllowedCountOfLoginFail"); put("value","0"); }});
-		list.add(new HashMap<String, String>(){{ put("name","UsePasswordPatternPolicy"); put("value","NO"); }});
+		// 2024.10.14 한슬기 : 암호정책 디폴트값 설정 (암호패턴 사용, 영문 대/소문자 패턴구분안함, 3개패턴 사용, 8글자 이상)
+		list.add(new HashMap<String, String>(){{ put("name","UsePasswordPatternPolicy"); put("value","YES"); }});
 		// 2021-11-09 이사라 : 가장 최근 사용한 암호 재사용
 		list.add(new HashMap<String, String>(){{ put("name","useChkPrevPwd"); put("value","NO"); }});
 		     
@@ -4725,5 +4733,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     @Override
     public void alterBodyHTMLToConnData() throws Exception {
         ezCommonDAO.alterBodyHTMLToConnData();
+    }
+
+    // 2024-12-27 이가은 - 공람완료문서 삭제 히스토리 테이블 생성
+    @Override
+    public void createGongramDeleteHistory() throws Exception {
+        ezCommonDAO.createGongramDeleteHistory();
     }
 }

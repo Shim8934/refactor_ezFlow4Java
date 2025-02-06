@@ -1,7 +1,7 @@
 /* 테넌트 도메인 변경 스크립트 */
 /* jmocha_mail_tag, jmocha_mail_tag_config의 james_user에 대한 FK를 제거후 변경하고 다시 FK 재설정 함 */
 ALTER TABLE jmocha_mail_tag DROP CONSTRAINT jmocha_mail_tag_fk;
-ALTER TABLE jmocha_mail_tag ADD CONSTRAINT jmocha_mail_tag_fk FOREIGN KEY (user_name) REFERENCES james_user(USER_NAME) ON DELETE CASCADE;
+ALTER TABLE jmocha_mail_tag_config DROP CONSTRAINT jmocha_mail_tag_config_fk;
 UPDATE james_domain SET DOMAIN_NAME = REPLACE(DOMAIN_NAME, 'old.kaoni.com', 'new.kaoni.com');
 UPDATE james_mailbox SET USER_NAME = REPLACE(USER_NAME, 'old.kaoni.com', 'new.kaoni.com');
 UPDATE james_recipient_rewrite SET DOMAIN_NAME = REPLACE(DOMAIN_NAME, 'old.kaoni.com', 'new.kaoni.com');
@@ -55,5 +55,5 @@ UPDATE tbl_usermaster_retire SET MAIL = REPLACE(MAIL, 'old.kaoni.com', 'new.kaon
 UPDATE tbl_usermaster_retire SET UPNNAME = REPLACE(UPNNAME, 'old.kaoni.com', 'new.kaoni.com');
 UPDATE tbl_usermaster_delete SET MAIL = REPLACE(MAIL, 'old.kaoni.com', 'new.kaoni.com');
 UPDATE tbl_usermaster_delete SET UPNNAME = REPLACE(UPNNAME, 'old.kaoni.com', 'new.kaoni.com');
-ALTER TABLE jmocha_mail_tag_config DROP CONSTRAINT jmocha_mail_tag_config_fk;
+ALTER TABLE jmocha_mail_tag ADD CONSTRAINT jmocha_mail_tag_fk FOREIGN KEY (user_name) REFERENCES james_user(USER_NAME) ON DELETE CASCADE;
 ALTER TABLE jmocha_mail_tag_config ADD CONSTRAINT jmocha_mail_tag_config_fk FOREIGN KEY (user_name) REFERENCES james_user(USER_NAME) ON DELETE CASCADE;

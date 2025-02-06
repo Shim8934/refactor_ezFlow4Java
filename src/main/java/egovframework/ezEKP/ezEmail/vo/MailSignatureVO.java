@@ -1,16 +1,22 @@
 package egovframework.ezEKP.ezEmail.vo;
 
+import java.util.Arrays;
+
 public class MailSignatureVO {
-	private String useFlag;
-	private String content1;
-	private String content2;
-	private String content3;
-	
+	private String useFlag = "0"; // default
+	private String content1 = "";
+	private String content2 = "";
+	private String content3 = "";
+
 	public String getUseFlag() {
 		return useFlag;
 	}
 	public void setUseFlag(String useFlag) {
-		this.useFlag = useFlag;
+		useFlag = useFlag.trim();
+
+		if (Arrays.asList("0", "1", "2", "3").contains(useFlag)) { // content{n} 늘어나면 추가해줄것.
+			this.useFlag = useFlag;
+		}
 	}
 	public String getContent1() {
 		return content1;

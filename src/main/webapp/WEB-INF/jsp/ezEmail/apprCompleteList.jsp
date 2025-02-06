@@ -67,7 +67,7 @@
 				<tbody>
 					<c:if test="${empty resultArry}">
 				        <tr>
-				            <td colspan="6" style="text-align:center;"><spring:message code='ezEmail.ls014' /></td>
+				            <td colspan="7" style="text-align:center;"><spring:message code='ezEmail.ls014' /></td>
 				        </tr>
 				    </c:if>
 					<c:forEach var="appr" items="${resultArry}" varStatus="status">

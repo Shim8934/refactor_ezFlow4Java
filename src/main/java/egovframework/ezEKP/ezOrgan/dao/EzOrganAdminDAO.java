@@ -1234,6 +1234,14 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 		delete("EzOrganAdminDAO.deleteCompany_D37", map);
 	}
 	
+	public void deleteCompany_D38(Map<String, Object> map) throws Exception {
+		delete("EzOrganAdminDAO.deleteCompany_D38", map);
+	}
+	
+	public void deleteCompany_D39(Map<String, Object> map) throws Exception {
+		delete("EzOrganAdminDAO.deleteCompany_D39", map);
+	}
+	
 	public void deleteCompanyInfo_IKMS7(Map<String, Object> map) throws Exception {
 		delete("EzOrganAdminDAO.deleteCompanyInfo_IKMS7", map);
 	}

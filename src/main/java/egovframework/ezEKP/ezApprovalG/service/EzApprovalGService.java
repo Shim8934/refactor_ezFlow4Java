@@ -1012,4 +1012,7 @@ public interface EzApprovalGService {
     public Map<String, String> getUpperDeptInfo(String pDeptID, int tenantId) throws Exception;
 
     public String getSameDeptBoxUseID(String deptID, int tenantId) throws Exception;
+    
+    // 2024-12-27 이가은 - 전자결재 공람완료문서 삭제 로직
+    public String gongramDocDelete(String docID, int aprmemberSn, int tenantID, String companyID) throws Exception;
 }

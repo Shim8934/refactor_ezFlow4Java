@@ -17,6 +17,7 @@
 		</style>
 		
 		<script>
+			var shareId = "${shareId}";
 			var g_bDelete = false;
 			var g_drafturl = "${draftUrl}";
             var g_bHardDelete = "0";
@@ -70,7 +71,8 @@
 		    		pWidth = 380;
 		    		pHeight = 111;
 		    	} else {
-		    		pUrl = "/ezEmail/mailEdit.do?cmd=EDIT&messageid=" + encodeURIComponent(pMessageID);
+		    		pUrl = "/ezEmail/mailWrite.do?cmd=RESERVE&messageid=" + encodeURIComponent(pMessageID);
+					pUrl += shareId? "&shareId=" + encodeURIComponent(shareId) : "";
 		    		pWidth = 890;
 		    		pHeight = 840;
 		    	}

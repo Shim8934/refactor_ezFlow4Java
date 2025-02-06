@@ -268,28 +268,28 @@ function attach_Add(ocx_file) {
 function bigattach_Add(ocx_file) {
     do_Attach_Add(ocx_file, true);
 }
+// fileupload() 로 대체된 것 같음.
+// function btn_AttachAdd_onclick() {
 
-function btn_AttachAdd_onclick() {
+//     if (document.form.file1.value != "") {
 
-    if (document.form.file1.value != "") {
+//         var AttachLimit = 1096;
+//         var newid = g_newid;
+//         document.getElementById("maxsize").value = FtotSizeAttachSize;
+//         document.getElementById("cnt").value = document.getElementById("form").file1.files.length;
+//         document.getElementById("newid").value = newid;
+//         document.getElementById("bigmaxsize").value = FtotBigSizeAttachSize;
+//         document.getElementById("changesize").value = FBigSizeAttachSize;
+//         document.getElementById("txtName").value = filedate;
+//         document.getElementById("endDay").value = BigSizeMailAttachDelDay;
 
-        var AttachLimit = 1096;
-        var newid = g_newid;
-        document.getElementById("maxsize").value = FtotSizeAttachSize;
-        document.getElementById("cnt").value = document.getElementById("form").file1.files.length;
-        document.getElementById("newid").value = newid;
-        document.getElementById("bigmaxsize").value = FtotBigSizeAttachSize;
-        document.getElementById("changesize").value = FBigSizeAttachSize;
-        document.getElementById("txtName").value = filedate;
-        document.getElementById("endDay").value = BigSizeMailAttachDelDay;
-
-        var frm = document.getElementById('form');
-        frm.submit();
-    }
-    else {
-        alert(strLangLHM07);
-    }
-}
+//         var frm = document.getElementById('form');
+//         frm.submit();
+//     }
+//     else {
+//         alert(strLangLHM07);
+//     }
+// }
 
 function AttachFileInfo(resultXML) {
     var xml = loadXMLString(resultXML);

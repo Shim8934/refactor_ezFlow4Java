@@ -832,6 +832,35 @@ public class EzPollServiceImpl implements EzPollService{
 		}		
 	}
 
+	@Override
+	public void getAllUserForQuestion(LoginVO loginVO, int questionID, Set<LoginVO> set) throws Exception {
+		//Check if this question is for all members
+		int target = checkTargetOfQst(questionID, loginVO.getTenantId());
+		List<LoginVO> list = new ArrayList<LoginVO>();
+
+		if (target == 0) {
+			list = loginService.selectAllMemberOfCompany(loginVO.getCompanyID(), loginVO.getTenantId());
+		}
+		else {
+			List<String> departIdList = getListOfUserIdForQst(questionID, loginVO.getTenantId(), "dept");
+
+			for (String deptId : departIdList) {
+				getAllMemberOfDept(list, deptId, loginVO.getTenantId());
+			}
+
+			List<String> userIdList = getListOfUserIdForQst(questionID, loginVO.getTenantId(), "user");
+
+			for (String _userID : userIdList) {
+				LoginVO user = loginService.selectReceiver(_userID, loginVO.getTenantId());
+				if(user != null){
+					list.add(user);
+				}
+			}
+		}
+
+		set.addAll(list);
+	}
+
 	//tbl_vote_user_and_question 의 모든 유저 정보를 가져옴.
 	@Override
 	public List<PollUserVO> getAllUsersForQst(int tenantId, int qstId) throws Exception {

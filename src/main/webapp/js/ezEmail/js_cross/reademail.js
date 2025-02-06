@@ -41,7 +41,13 @@ function get_mail(flag) {
             }
         }
         catch (e) {
-            alert(e.description);
+            if (flag == "prev") {
+                alert(strLang184);
+            } else if(flag == "next"){
+                alert(strLang185);
+            } else{
+                alert(e.description);
+            }
             self.close();
         }
         m_bPrevNext = false;
@@ -88,7 +94,7 @@ function ReSend(pURL, pEmail, pReader) {
 	if (typeof(shareId) != "undefined" && shareId != "") {
 		requestUrl += "&shareId=" + encodeURIComponent(shareId);
 	}
-    
+
     window.open(requestUrl, "", feature);
     
 }
