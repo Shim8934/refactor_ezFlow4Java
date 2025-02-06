@@ -785,7 +785,8 @@
 					        ezapprovalinfo_dialogArguments[0] = parameter;
 					        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
 						    
-					       	var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + gpGubun + "&orgCompanyID=" + orgCompanyID + "&docType=" + pDocType + "&ext=" + "hwp", "ezApprovalInfo", GetOpenWindowfeature(1144, 750));
+					       	var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + gpGubun + "&orgCompanyID=" + orgCompanyID + "&docType=" + pDocType + "&ext=" + "hwp", 
+									"ezApprovalInfo-" + windowUuid, GetOpenWindowfeature(1144, 750));
 					       	try { OpenWin.focus(); } catch (e) { }
 
 			            }

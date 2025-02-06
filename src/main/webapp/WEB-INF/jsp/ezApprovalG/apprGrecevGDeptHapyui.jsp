@@ -9,6 +9,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
+		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -143,6 +144,9 @@
 			/* 2024-07-18 양지혜 - 상위부서문서함 관련 */
 			var upperDeptCode = "<c:out value ='${upperDeptCode}'/>";
 			var upperDeptName = "<c:out value ='${upperDeptName}'/>";
+			
+			// 창마다 고유한 id 지정용
+			var windowUuid = getRandomId();
 
 			window.onload = function () {
 				// 일반첨부, 대용량첨부파일 관련 가이드 메세지 추가
@@ -924,7 +928,7 @@
 		        ezapprovalinfo_dialogArguments[0] = parameter;
 		        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;		
 		
-		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&docType=" + pDocType, "ezApprovalInfo", GetOpenWindowfeature(1210, 750));
+		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&docType=" + pDocType, "ezApprovalInfo-" + windowUuid, GetOpenWindowfeature(1210, 750));
 
 		        try { OpenWin.focus(); } catch (e) { }
 		    }

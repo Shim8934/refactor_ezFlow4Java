@@ -75,7 +75,8 @@
     			margin-inline-end: 0px;
 			}
 		</style>
-		
+
+		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -338,6 +339,9 @@
 			/* 2024-07-18 양지혜 - 상위부서문서함 관련 */
 			var orgCompanyID_ = "<c:out value = '${orgCompanyID}'/>";
 			var upperDeptCode = "<c:out value ='${upperDeptCode}'/>";
+
+			// 창마다 고유한 id 지정용
+			var windowUuid = getRandomId();
 
     		// 일괄기안문서를 재기안하는 경우, 기존 문서와 양식 등의 정보를 배열에 부여
     		$(document).ready(function() {
@@ -1354,7 +1358,7 @@
 	                ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
 			
 	                var url = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun +"&docType=" + pDocType + "&ext=" + "hwp" + "&formID=" + pFormID + "&draftAllFlag=Y";
-			        var ret = window.open(url, '', 'height=750,width=1210,scrollbars=no' + GetOpenPosition(1210, 750));
+			        var ret = window.open(url, "ezApprovalInfo-" + windowUuid, 'height=750,width=1210,scrollbars=no' + GetOpenPosition(1210, 750));
 			    } catch (e) {
 			        alert("ezdraftui_hwp.btnApprovalInfo()::" + e);
 			    }

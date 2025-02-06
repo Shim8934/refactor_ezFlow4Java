@@ -18,6 +18,7 @@
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
+		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -210,6 +211,9 @@
 			/* 2024-07-18 양지혜 - 상위부서문서함 관련 */
 			var upperDeptCode = "<c:out value ='${upperDeptCode}'/>";
 			var upperDeptName = "<c:out value ='${upperDeptName}'/>";
+
+			// 창마다 고유한 id 지정용
+			var windowUuid = getRandomId();
 			
 	        window.onload = function () {
 	            try {
@@ -1504,7 +1508,7 @@
 			        //var feature = "status:no;dialogWidth:1140px;dialogHeight:750px;help:no;scroll:no;edge:sunken;";
 			        //var ret = window.showModalDialog(url, parameter, feature);
 			        // var ret = window.open(url, '', 'height=750,width=1210,scrollbars=no' + GetOpenPosition(1210, 750));
-			        var ret = window.open(url, '', GetOpenWindowfeature(1210, 750));
+			        var ret = window.open(url, "ezApprovalInfo-" + windowUuid, GetOpenWindowfeature(1210, 750));
 
 			    } catch (e) {
 			        alert("ezdraftui_hwp.btnApprovalInfo()::" + e);

@@ -8,6 +8,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
+		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -130,6 +131,9 @@
 			
 			/* 2023-11-03 홍승비 - G버전에서는 부서합의문서 접수 시에도 기안자의 대결/전결이 가능하므로, 기안자의 결재유형 체크 변수 추가 */
 			var CurAprType = "";
+
+			// 창마다 고유한 id 지정용
+			var windowUuid = getRandomId();
 			
 			window.onload = function () {
 				if (DraftFlag == 'REDRAFT') {
@@ -1053,7 +1057,7 @@
 		        ezapprovalinfo_dialogArguments[0] = parameter;
 		        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;		
 		
-		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&docType=" + pDocType, "ezApprovalInfo", GetOpenWindowfeature(1210, 750));
+		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&docType=" + pDocType, "ezApprovalInfo-" + windowUuid, GetOpenWindowfeature(1210, 750));
 
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
