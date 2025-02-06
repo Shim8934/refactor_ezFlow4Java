@@ -5755,13 +5755,13 @@ DROP TABLE IF EXISTS `tbl_conndata`;
 CREATE TABLE `tbl_conndata` (
   `KEYID` varchar(50) NOT NULL COMMENT '연동 Key 값',
   `FORMID` varchar(10) NOT NULL COMMENT '연동 양식ID',
-  `USERID` varchar(400) NOT NULL COMMNET '기안자 ID',
+  `USERID` varchar(400) NOT NULL COMMENT '기안자 ID',
   `DEPTID` varchar(400) NOT NULL COMMENT '기안자 부서ID',
   `TITLE` varchar(1020) NOT NULL COMMENT '문서제목',
   `BODYHTML` longtext DEFAULT NULL COMMENT '본문 HTML',
   `STATUS` varchar(10) DEFAULT NULL COMMENT 'W:대기\nD:기안\nE:완료\nR:반송',
   `DOCID` varchar(20) DEFAULT NULL COMMENT '문서ID',
-  `UPDATEDATE` datetime DEFAULT NULL COMMENT '업데이트 일자'
+  `UPDATEDATE` datetime DEFAULT NULL COMMENT '업데이트 일자',
   PRIMARY KEY (`KEYID`,`FORMID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
