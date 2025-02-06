@@ -146,6 +146,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		model.addAttribute("useLeftCnt", useLeftCnt);
 		model.addAttribute("userCompany", companyID);
 //		model.addAttribute("listCompany", listCompanyBoard);
+		model.addAttribute("useMealPlan", ezCommonService.getTenantConfig("useMealPlan", user.getTenantId()));
 
 		logger.debug("boardLeft ended");
 		return "admin/ezBoard/boardLeft";

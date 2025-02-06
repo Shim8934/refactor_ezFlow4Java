@@ -81,6 +81,9 @@
 				},
 				beforeShow : function() {
 					setTimeout("applyWeeklyHighlight()", 100);
+				},
+				onChangeMonthYear: function(year, month, inst) {
+			        setTimeout("applyWeeklyHighlight()", 100);
 				}
 			});
 			
@@ -102,11 +105,11 @@
 					
 					$(this).mouseover(function() {
 						$(this).find('a').css({
-							'background': '#ffffcc',
+							'background': '#1e90ff',
 							'border' : '1px solid #dddddd'
 						});
 						$(this).find('a').removeClass('ui-state-default');
-						$(this).css('background', '#ffffcc');
+						$(this).css('background', '#1e90ff');
 					});
 					
 					$(this).mouseout(function() {
@@ -153,7 +156,7 @@
 					mealTable.getElementsByTagName('tr')[2].getElementsByTagName('td')[a].innerText = mealDataList[a].bCourse;
 					mealTable.getElementsByTagName('tr')[3].getElementsByTagName('td')[a].innerText = mealDataList[a].saladBar;
 					mealTable.getElementsByTagName('tr')[4].getElementsByTagName('td')[a].innerText = mealDataList[a].dessert;
-					mealTable.getElementsByTagName('tr')[5].getElementsByTagName('td')[a].innerText = mealDataList[a].totalCal;
+					mealTable.getElementsByTagName('tr')[5].getElementsByTagName('td')[a].innerText = mealDataList[a].totalCal == 0 ? "" : mealDataList[a].totalCal;
 				} else {
 					mealTable.getElementsByTagName('tr')[0].getElementsByTagName('th')[a + 1].innerText = formatDate(startDate);
 					mealTable.getElementsByTagName('tr')[1].getElementsByTagName('td')[a].innerText = "";

@@ -292,7 +292,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.insertResendFormYN(); // 2024-12-04 기민혁 - 전자결재 > 최근서식 사용여부 테넌트 컨피그 추가
 			ezCommonService.insertEditVertionYN(); // 2024-12-05 기민혁 - 전자결재 > 본문수정 시 본문버전 변경 기능 사용여부 테넌트 컨피그 추가
 			ezCommonService.insertPersonalHideSusinYN(); // 2024-11-26 기민혁 - 전자결재 > 개인수신함 사용여부 테넌트 컨피그 추가
-
+			ezCommonService.insertMealPlanTenantConfig(); // 2025-02-05 조수빈 - 식단 사용 여부 컨피그 추가
+			
 	    	ezCommonService.insertPortalThemePortletInitdata();
 	    	ezCommonService.updateTaskUrl();
 	    	ezCommonService.updateListOptionData(); //2019-03-06 천성준 - 전자결재 회람수신함 관련 리스트헤더 데이터 임시 업데이트문

@@ -4794,4 +4794,14 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void createMealPlanTable() throws Exception {
 		ezCommonDAO.createMealPlanTable();
 	}
+
+	@Override
+	public void insertMealPlanTenantConfig() throws Exception {
+		List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+		
+		for (TenantVO tenantVo : tenantIdList) {
+			
+			ezCommonDAO.insertMealPlanTenantConfig(tenantVo.getTenantId());
+		}
+	}
 }

@@ -23,12 +23,20 @@ function getMealData() {
 				document.getElementById("totalCalData").innerText = data.totalCal;
 			} else if (response.RTNVALUE == "NO_MENU"){
 				document.getElementById("mealPlanTable").style.display = "none";
+				document.getElementById("noMealPlanDd").innerText = messages.strLang1;
+				document.getElementById("noMealPlanDl").style.display = "";
+			} else {
+				document.getElementById("mealPlanTable").style.display = "none";
+				document.getElementById("noMealPlanDd").innerText = messages.strLang2;
 				document.getElementById("noMealPlanDl").style.display = "";
 			}
 		},
 		error: function(xhr, status, error) {
 			console.log("Status: " + status);
 			console.log("Error: " + error);
+			document.getElementById("mealPlanTable").style.display = "none";
+			document.getElementById("noMealPlanDd").innerText = messages.strLang2;
+			document.getElementById("noMealPlanDl").style.display = "";
 		}
 	});
 }
