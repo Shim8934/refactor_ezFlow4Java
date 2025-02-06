@@ -318,7 +318,7 @@
 						} else if (logoType == "P") {
 							document.getElementById("imgTop").querySelectorAll(".updateLogoBtn")[0].querySelector("span").textContent = "<spring:message code='ezNewPortal.t058' />";
 							document.getElementById("imgTop").querySelectorAll(".deleteLogoBtn")[0].style.display = "none";
-	    					logoUrl = "/files/upload_portal/Top/Logo/logo.gif";
+	    					logoUrl = "/files/upload_portal/Top/Logo/logo.png";
 	    					document.getElementsByClassName("portalLogo")[0].querySelector(".logoIcon").querySelector("img").src = logoUrl;
 	    				} else if (logoType == "D") {
 							document.getElementById("imgDark").querySelectorAll(".updateLogoBtn")[0].querySelector("span").textContent = "<spring:message code='ezNewPortal.t058' />";
