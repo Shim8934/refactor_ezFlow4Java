@@ -1435,9 +1435,11 @@
 	                           	<span class="sub_iconLNB tree_plus"></span><span id="apprboardH2" class="h2Title" onclick="Apprboard('apprboardH2')"><spring:message code="ezBoard.t999001" /><span id="applyCount">(${applyCount})</span>
 	                        </h2>
                     	</c:if>
+						<c:if test="${useMealPlan == 'YES'}">
 						<h2 id="mealPlan" onclick="goMealPlanTable()">
 							<span class="h2Title"><spring:message code='ezMealPlan.jsb001' /></span>
 						</h2>
+						</c:if>
 			        </ul>
 				</div>
 			</div>

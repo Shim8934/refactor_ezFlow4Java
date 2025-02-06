@@ -7220,4 +7220,22 @@
 		    CONSTRAINT TBL_MEAL_PLAN_PK PRIMARY KEY (MEALDATE, COMPANYID, TENANT_ID)
 		)
 	</statement>
+	
+	<select id="EzCommonDAO.checkUseMealPlan" parameterClass="Integer" resultClass="String">
+		SELECT
+			property_value
+		FROM
+			tbl_tenant_config
+		WHERE
+			property_name = 'useMealPlan'
+		AND
+			tenant_id = #tenantId#
+	</select>
+	
+	<insert id="EzCommonDAO.insertUseMealPlan" parameterClass="Integer">
+		INSERT INTO TBL_TENANT_CONFIG
+			(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+		VALUES
+			(#tenantId#, 'useMealPlan', 'YES', '식단 사용 여부', '식단 사용 여부', '2025-02-05', '게시판')
+	</insert>
 </sqlMap>

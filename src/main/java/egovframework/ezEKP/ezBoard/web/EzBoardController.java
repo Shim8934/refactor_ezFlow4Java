@@ -433,6 +433,7 @@ public class EzBoardController extends EgovFileMngUtil{
         modelMap.addAttribute("useLeftCnt", useLeftCnt);
         modelMap.addAttribute("MyBoardScrapFlag", ezCommonService.getTenantConfig("MyBoardScrapFlag", tenantID));
         modelMap.addAttribute("userScrapCont", userScrapCont);
+		modelMap.addAttribute("useMealPlan", ezCommonService.getTenantConfig("useMealPlan", userInfo.getTenantId()));
         
 		logger.debug("boardLeft ended");
 
@@ -13304,6 +13305,18 @@ public class EzBoardController extends EgovFileMngUtil{
 		map.put("tenantID", tenantID);
 
 		try {
+			// 식단 사용 여부 확인
+			if (!"YES".equals(ezCommonService.getTenantConfig("useMealPlan", tenantID))) {
+				logger.error("restMenuList error : MealPlan not used.");
+				
+				returnJson.put("RTNVALUE", "NOT_USED");
+				
+				logger.debug("restMenuList result : " + returnJson);
+				logger.debug("restMenuList ended");
+				
+				return returnJson;
+			}
+			
 			returnJson = ezBoardService.getMenuSchedule(map, returnJson);
 		} catch (Exception e) {
 			logger.error("restMenuList exception : " + e.getMessage());

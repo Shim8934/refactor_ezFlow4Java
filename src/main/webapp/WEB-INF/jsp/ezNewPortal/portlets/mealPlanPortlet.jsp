@@ -44,7 +44,7 @@
         		<dt>
         			<img src="/images/kr/main/noData_sIcon.png" style="width: auto; height: auto;">
         		</dt>
-        		<dd><spring:message code='main.t00026' /></dd>
+				<dd id="noMealPlanDd"><spring:message code='main.t00026' /></dd>
         	</dl>
         	<div class="mealPlanlist" id="mealPlan_Portlet_List">
 				<table id="mealPlanTable" style="border-collapse: collapse;	width: 100%">

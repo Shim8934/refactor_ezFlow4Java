@@ -499,9 +499,11 @@
 	        <div class="adminListBox" style="overflow:hidden; padding-right: 0;">
 	        	<div class="lnb_lay">
 		        	<div id="TopBoard"></div>
+					<c:if test="${useMealPlan == 'YES'}">
 		        	<h2 id="mealPlan" onclick="manageMealPlan()">
 						<span class="h2Title"><spring:message code='ezMealPlan.jsb001' /></span>
 					</h2>
+					</c:if>
 		        	<ul class="lnbUL">
                        	<li><span class="list_text" onclick="OpenRightMenu(1)"><spring:message code="ezBoard.t122" /></span></li>
                        	<li><span class="list_text" onclick="OpenRightMenu(6)"><spring:message code="ezBoard.t60" /></span></li>

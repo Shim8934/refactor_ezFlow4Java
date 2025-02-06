@@ -5708,7 +5708,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				vo.setbCourse("");
 				vo.setSaladBar("");
 				vo.setDessert("");
-				vo.setTotalCal("");
+				vo.setTotalCal(0);
 				
 				resList.add(vo);
 			}

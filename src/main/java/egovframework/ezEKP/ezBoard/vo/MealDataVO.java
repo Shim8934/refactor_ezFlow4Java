@@ -12,7 +12,7 @@ public class MealDataVO {
 	// 후식
 	private String dessert;
 	// 총열량
-	private String totalCal;
+	private int totalCal;
 	// 회사 ID
 	private String companyID;
 	// 테넌트ID
@@ -48,10 +48,10 @@ public class MealDataVO {
 	public void setDessert(String dessert) {
 		this.dessert = dessert;
 	}
-	public String getTotalCal() {
+	public int getTotalCal() {
 		return totalCal;
 	}
-	public void setTotalCal(String totalCal) {
+	public void setTotalCal(int totalCal) {
 		this.totalCal = totalCal;
 	}
 	public String getCompanyID() {

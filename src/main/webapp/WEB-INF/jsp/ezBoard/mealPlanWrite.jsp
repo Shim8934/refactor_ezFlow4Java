@@ -88,6 +88,9 @@
 				},
 				beforeShow : function() {
 					setTimeout("applyWeeklyHighlight()", 100);
+				},
+				onChangeMonthYear: function(year, month, inst) {
+			        setTimeout("applyWeeklyHighlight()", 100);
 				}
 			});
 			
@@ -134,24 +137,30 @@
 				
 				if (formatDate(startDate) == mealDataList[a].mealDate){
 					mealTable.getElementsByTagName('tr')[0].getElementsByTagName('th')[a + 1].innerText = mealDataList[a].mealDate;
-					mealTable.getElementsByTagName('tr')[1].getElementsByTagName('td')[a].innerHTML = "<textarea>" + mealDataList[a].aCourse + "</textarea>";
-					mealTable.getElementsByTagName('tr')[2].getElementsByTagName('td')[a].innerHTML = "<textarea>" + mealDataList[a].bCourse + "</textarea>";
-					mealTable.getElementsByTagName('tr')[3].getElementsByTagName('td')[a].innerHTML = "<textarea>" + mealDataList[a].saladBar + "</textarea>";
-					mealTable.getElementsByTagName('tr')[4].getElementsByTagName('td')[a].innerHTML = "<textarea>" + mealDataList[a].dessert + "</textarea>";
-					mealTable.getElementsByTagName('tr')[5].getElementsByTagName('td')[a].innerHTML = "<textarea>" + mealDataList[a].totalCal + "</textarea>";
+					mealTable.getElementsByTagName('tr')[1].getElementsByTagName('td')[a].innerHTML = "<textarea maxlength='100'>" + mealDataList[a].aCourse + "</textarea>";
+					mealTable.getElementsByTagName('tr')[2].getElementsByTagName('td')[a].innerHTML = "<textarea maxlength='100'>" + mealDataList[a].bCourse + "</textarea>";
+					mealTable.getElementsByTagName('tr')[3].getElementsByTagName('td')[a].innerHTML = "<textarea maxlength='100'>" + mealDataList[a].saladBar + "</textarea>";
+					mealTable.getElementsByTagName('tr')[4].getElementsByTagName('td')[a].innerHTML = "<textarea maxlength='100'>" + mealDataList[a].dessert + "</textarea>";
+					mealTable.getElementsByTagName('tr')[5].getElementsByTagName('td')[a].innerHTML = "<textarea class='number-only' maxlength='10'>" + (mealDataList[a].totalCal == 0 ? "" : mealDataList[a].totalCal) + "</textarea>";
 				} else {
 					mealTable.getElementsByTagName('tr')[0].getElementsByTagName('th')[a + 1].innerText = formatDate(startDate);
-					mealTable.getElementsByTagName('tr')[1].getElementsByTagName('td')[a].innerHTML = "<textarea></textarea>";
-					mealTable.getElementsByTagName('tr')[2].getElementsByTagName('td')[a].innerHTML = "<textarea></textarea>";
-					mealTable.getElementsByTagName('tr')[3].getElementsByTagName('td')[a].innerHTML = "<textarea></textarea>";
-					mealTable.getElementsByTagName('tr')[4].getElementsByTagName('td')[a].innerHTML = "<textarea></textarea>";
-					mealTable.getElementsByTagName('tr')[5].getElementsByTagName('td')[a].innerHTML = "<textarea></textarea>";
+					mealTable.getElementsByTagName('tr')[1].getElementsByTagName('td')[a].innerHTML = "<textarea maxlength='100'></textarea>";
+					mealTable.getElementsByTagName('tr')[2].getElementsByTagName('td')[a].innerHTML = "<textarea maxlength='100'></textarea>";
+					mealTable.getElementsByTagName('tr')[3].getElementsByTagName('td')[a].innerHTML = "<textarea maxlength='100'></textarea>";
+					mealTable.getElementsByTagName('tr')[4].getElementsByTagName('td')[a].innerHTML = "<textarea maxlength='100'></textarea>";
+					mealTable.getElementsByTagName('tr')[5].getElementsByTagName('td')[a].innerHTML = "<textarea class='number-only' maxlength='10'></textarea>";
 				}
 				
 				startDate.setDate(startDate.getDate() + 1);
 			}
 			
+			var numberOnlys = document.querySelectorAll('.number-only');
 			
+			numberOnlys.forEach(function(field) {
+				field.addEventListener('input', function(e) {
+					e.target.value = e.target.value.replace(/[^0-9]/g, '');
+				})
+			})
 		}
 		
 		function preWeek() {
@@ -189,11 +198,11 @@
 					
 					$(this).mouseover(function() {
 						$(this).find('a').css({
-							'background': '#ffffcc',
+							'background': '#1e90ff',
 							'border' : '1px solid #dddddd'
 						});
 						$(this).find('a').removeClass('ui-state-default');
-						$(this).css('background', '#ffffcc');
+						$(this).css('background', '#1e90ff');
 					});
 					
 					$(this).mouseout(function() {
