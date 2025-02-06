@@ -1422,6 +1422,8 @@ public class EzEmailUtil {
 			// appendPreviewImage까지- filename의 변경이 없고, 여러번 수행되고 있으므로 변수 생성하여 사용하도록 함.
 			String filename_spclStr = this.getSpclStrCnvr2(filename); // 네 경우 모두 사용
 			String aitem = "";
+			
+			String folderPath_URLEnc = URLEncoder.encode(folderPath,"UTF-8").replace("+", "%20");
 			if (forPrint) {
 				pAttachListHtml += "<span style='cursor:pointer;'><img src='/images/icon_adddownload.gif' width='16' height='16' style='vertical-align:middle'></span>";
 				pAttachListHtml += "<span><span title='" + filename_spclStr + " (" + strSize + ")" + "' class='attachFileName' onmouseover=this.style.color='#164aad' onmouseout=this.style.color='black' style='cursor:pointer' >";
@@ -1448,8 +1450,6 @@ public class EzEmailUtil {
 				pAttachListHtml += " <span onclick=\"javascript:mailFileDown('" + aitem + "');\"><span title='" + filename_spclStr + " (" + strSize + ")" + "' class='attachFileName' onmouseover=this.style.color='#164aad' onmouseout=this.style.color='black' style='cursor:pointer' >" + filename_spclStr + " (" + strSize + ")</span></span>";
 				pAttachListHtml += " </p>";
 			} else {
-				String filename_egovSpclStr = EgovStringUtil.getSpclStrCnvr2(filename);
-				String folderPath_URLEnc = URLEncoder.encode(folderPath,"UTF-8").replace("+", "%20");
 
 				aitem = "/ezEmail/downloadAttach.do?mode=Attach&folderPath="+folderPath_URLEnc+"&uid="+uid+"&filename="+URLEncoder.encode(filename,"UTF-8")+"&index="+bodyPartIndex + "&order=" + order + "&depth=" + depth;
 				
@@ -1457,11 +1457,11 @@ public class EzEmailUtil {
 					aitem += "&shareId=" + URLEncoder.encode(shareId, "UTF-8");
 				}
 				
-				pAttachListHtml += " <li><span onclick=\"DownloadAttach('" + aitem + "');\" _filehref='" + aitem + "' _filesize='" + size + "' _filename=\"" + filename_egovSpclStr + "\" id='MailAttachDownloadItems' name='MailAttachDownloadItems' style='cursor:pointer;' class='imgSpan' ><img src='/images/icon_adddownload.gif' width='16' height='16' style='vertical-align: top;'></span>";
+				pAttachListHtml += " <li><span onclick=\"DownloadAttach('" + aitem + "');\" _filehref='" + aitem + "' _filesize='" + size + "' _filename=\"" + filename_spclStr + "\" id='MailAttachDownloadItems' name='MailAttachDownloadItems' style='cursor:pointer;' class='imgSpan' ><img src='/images/icon_adddownload.gif' width='16' height='16' style='vertical-align: top;'></span>";
 
 				// 2023-04-18 김은실 - 메일 & 웹폴더 연계 기능
 				if (useWebfolder) {
-					String webfolderCommonSpan = " <span onclick=\"webfolderUpload_open(this);\" title='" + egovMessageSource.getMessage("ezWebFolder.kes065", locale) + "' _filesize='" + (int) size + "' _filetype='" + part.getContentType().toLowerCase() + "' _filename=\"" + filename_egovSpclStr + "\" _folderPath=\"" + folderPath + "\" _uid='" + uid + "' _index='" + bodyPartIndex + "' id='MailAttachDownloadItems_webfolder' name='MailAttachDownloadItems_webfolder' style='cursor:pointer;'";
+					String webfolderCommonSpan = " <span onclick=\"webfolderUpload_open(this);\" title='" + egovMessageSource.getMessage("ezWebFolder.kes065", locale) + "' _filesize='" + (int) size + "' _filetype='" + part.getContentType().toLowerCase() + "' _filename=\"" + filename_spclStr + "\" _folderPath=\"" + folderPath + "\" _uid='" + uid + "' _index='" + bodyPartIndex + "' id='MailAttachDownloadItems_webfolder' name='MailAttachDownloadItems_webfolder' style='cursor:pointer;'";
 					String webfolderCommonImg = "<img src='/images/icon_adddownload_webfolder.gif' width='16' height='16'";
 
 					pAttachListHtml += webfolderCommonSpan + " class='imgSpan' >" + webfolderCommonImg + " style='vertical-align: top;'></span>";
@@ -1469,7 +1469,7 @@ public class EzEmailUtil {
 
 				pAttachListHtml += " <span onclick=\"DownloadAttach('" + aitem + "');\"><span title=\"" + filename_spclStr + " (" + strSize + ")" + "\" class='attachFileName' onmouseover=this.style.color='#164aad' onmouseout=this.style.color='black' style='cursor:pointer' >" + filename_spclStr + " (" + strSize + ")</span></span>";
 				if (useImageConvertServer != null && !useImageConvertServer.equalsIgnoreCase("0")) {
-					pAttachListHtml += " <span class='icon_rbtn2' style='right: 30px;' title='" + egovMessageSource.getMessage("ezEmail.t487", locale) + "' fileid='" + bodyPartIndex + "' onclick=\"AttachFile_Preview('" + folderPath_URLEnc + "','" + uid + "','" + bodyPartIndex + "','" + filename_egovSpclStr + "');\"><img src='/images/icon_preview.png' width='16' height='16' style='vertical-align: top'></span>";
+					pAttachListHtml += " <span class='icon_rbtn2' style='right: 30px;' title='" + egovMessageSource.getMessage("ezEmail.t487", locale) + "' fileid='" + bodyPartIndex + "' onclick=\"AttachFile_Preview('" + folderPath_URLEnc + "','" + uid + "','" + bodyPartIndex + "','" + filename_spclStr + "');\"><img src='/images/icon_preview.png' width='16' height='16' style='vertical-align: top'></span>";
 				}
 
 				if (!"drafts".equalsIgnoreCase(folderPath)) {
@@ -1484,8 +1484,12 @@ public class EzEmailUtil {
 						break appendPreviewImage;
 					}
 				}
-
-				previewImageListHtml += " <div><p class=imageArea><a target=_blank href='" + aitem + "&readStatus=Y"+ "'>";
+				
+				if (useImageConvertServer != null && !useImageConvertServer.equalsIgnoreCase("0")) {
+					previewImageListHtml += " <div><p class=imageArea><a onclick=\"AttachFile_Preview('" + folderPath_URLEnc + "','" + uid + "','" + bodyPartIndex + "','" + filename_spclStr + "');\">";
+				} else {
+					previewImageListHtml += " <div><p class=imageArea><a target=_blank href='" + aitem + "&readStatus=Y"+ "'>";
+				}
 				previewImageListHtml += " <img src='" + aitem + "' _filesize='" + size + "' _filename='" + EgovStringUtil.getSpclStrCnvr2(filename) + "' style='cursor:pointer;'></a></p>";
 				previewImageListHtml += " <p onclick=\"DownloadAttach('" + aitem + "');\"><span title='" + filename_spclStr + " (" + strSize + ")" + "' class='attachImageeName' onmouseover=this.style.color='#164aad' onmouseout=this.style.color='black' style='cursor:pointer' >" + filename_spclStr + " (" + strSize + ")</p></div>";
 			}
