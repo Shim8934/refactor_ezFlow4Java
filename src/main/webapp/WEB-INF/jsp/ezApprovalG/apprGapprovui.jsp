@@ -2444,10 +2444,10 @@
 		    	    if (field) {
 		    	        if (field.style.display == "none" || action == "open") {
 		    	        	field.style.display = "";
-		    	            document.getElementById("headerHide").innerHTML = "헤더 숨기기";
+		    	            document.getElementById("headerHide").innerHTML = ezApproval_headerHide01;
 		    	        } else {
 		    	            field.style.display = "none";
-		    	            document.getElementById("headerHide").innerHTML = "헤더 펼치기";
+		    	            document.getElementById("headerHide").innerHTML = ezApproval_headerHide02;
 		    	        }
 		    	    }
 	    		}

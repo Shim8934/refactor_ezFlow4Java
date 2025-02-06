@@ -1183,3 +1183,7 @@ var strLangKWC02 = "양식이 삭제되어 재사용 할 수 없습니다.";
 var strLangHSBDR01 = "該当の配布文書は削除された文書です。閲覧できません。";
 
 var strLangKMH01 = "一括指定を進めますか？<br> 決裁状態が回送の文書、文書状態が合意の文書は対象外となります。";
+
+/* 전자결재 헤더 숨기기 기능 */
+var ezApproval_headerHide01 = "ヘッダー隠す";
+var ezApproval_headerHide02 = "ヘッダー開く";
