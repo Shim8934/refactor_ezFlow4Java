@@ -286,7 +286,7 @@
 		                }
 		            }
 		            for (var i = 0; i < Conitems.childNodes.length; i++) {
-		                if (inboxRuleCon1.value == Conitems.childNodes.item(i).value) {
+						if (inboxRuleCon1.value == Conitems.childNodes.item(i).textContent) {
 		                    if (confirm(strLang221)) {
 		                        inboxRuleCon1.focus();
 		                        return;
@@ -304,12 +304,12 @@
 		            if (ischeck) {
 		                if (ConCellRow != null) {
 							ConCellRow.setAttribute("value",inboxRuleValue);
-							ConCellRow.firstChild.innerText = inboxRuleValue;
+							ConCellRow.firstChild.innerText = inboxRuleCon1.value;
 		                    inputBtn.textContent = strLang239;
 		                    ConCellRow = null;
 		                }
 		                else {
-							Conitems.innerHTML += createCellRow(inboxRuleValue, inboxRuleValue);
+							Conitems.innerHTML += createCellRow(inboxRuleValue,inboxRuleCon1.value);
 		                }
 		            }
 		            else {
@@ -329,10 +329,10 @@
 		        if (value.length > 0) {
 		            if (checkRulekind(rulekind) && value.split("<").length > 1) {
 						var mailaddress = value.split("<")[1].replace(">", "");
-						Conitems.innerHTML += createCellRow(mailaddress, MakeXMLString(value));
+						Conitems.innerHTML += createCellRow(mailaddress, escapeHtml(value));
 		            }
 		            else {
-						Conitems.innerHTML += createCellRow(value, value);
+						Conitems.innerHTML += createCellRow(escapeHtml(value), value);
 		            }
 		        }
 		    }
@@ -367,7 +367,8 @@
 		    var ConCellRow=null;
 		    function pop_modify(obj) {
 		        ConCellRow = obj;
-		        inboxRuleCon1.value = obj.getAttribute("value");
+				let objValue = obj.getAttribute("value");
+		        inboxRuleCon1.value = unEscapeHtml(objValue);
 		        inboxRuleCon1.focus();
 		        document.getElementById("inputBtn").textContent = strLang240;
 		    }
@@ -725,7 +726,8 @@
 		            curKind = document.getElementsByName("ConS").item(i).getAttribute("RuleKind");
 		            objRows = createNodeAndAppandNode(XmlDom, objRow, objRows, "ROW");
 		            createNodeAndAppandNodeText(XmlDom, objRows, objRowRow, "CONKIND", curKind);
-		            createNodeAndAppandNodeText(XmlDom, objRows, objRowRow, "CONVALUE", document.getElementsByName("ConS").item(i).getAttribute("value"));
+					let convalue = document.getElementsByName("ConS").item(i).getAttribute("value");
+		            createNodeAndAppandNodeText(XmlDom, objRows, objRowRow, "CONVALUE", unEscapeHtml(convalue));
 		        }
 		        // ACTION NODE
 		        objRow2 = createNodeAndAppandNode(XmlDom, objNode, objRow2, "ACTION");
@@ -759,7 +761,8 @@
 		            curKind = document.getElementsByName("ExptS").item(i).getAttribute("RuleKind");
 		            objRows = createNodeAndAppandNode(XmlDom, objRow3, objRows, "ROW");
 		            createNodeAndAppandNodeText(XmlDom, objRows, objRow3Row, "EXPTKIND", curKind);
-		            createNodeAndAppandNodeText(XmlDom, objRows, objRow3Row, "EXPTVALUE", document.getElementsByName("ExptS").item(i).getAttribute("value"));
+					let exptvale= document.getElementsByName("ExptS").item(i).getAttribute("value");
+		            createNodeAndAppandNodeText(XmlDom, objRows, objRow3Row, "EXPTVALUE", unEscapeHtml(exptvale));
 		        }
 				
 		        var requestUrl = "/ezEmail/mailSetInboxRule.do?mode=NEW";
@@ -818,13 +821,17 @@
 		
 		        return pRtnVal;
 		    }
+			
 		    function MakeXMLString(pStr) {
-		        pStr = ReplaceText(pStr, "&", "&amp;");
-		        pStr = ReplaceText(pStr, "<", "&lt;");
-		        pStr = ReplaceText(pStr, ">", "&gt;");
-		        return pStr;
-		    }
-		    function open_userinfo(cn) {
+				pStr = ReplaceText(pStr, "&", "&amp;");
+				pStr = ReplaceText(pStr, "<", "&lt;");
+				pStr = ReplaceText(pStr, ">", "&gt;");
+				pStr = ReplaceText(pStr, "'", "&apos;");
+				pStr = ReplaceText(pStr, "\"", "&quot;");
+				return pStr;
+			}
+			
+			function open_userinfo(cn) {
 		        var feature = "height=500px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
 		        feature = feature + GetOpenPosition(420, 450);
 		        window.open("/ezCommon/showPersonInfo.do?id=" + cn, "", feature);

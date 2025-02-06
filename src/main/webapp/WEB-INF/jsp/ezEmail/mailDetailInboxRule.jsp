@@ -19,6 +19,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/ListView_list.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
 		<script type="text/javascript" >
 		    var _OpenerObject;
 		    var RuleItemID;
@@ -509,8 +510,8 @@
 		                }
 		            }
 		            for (var i = 0; i < Conitems.children.length; i++) {
-		                if (inboxRuleCon1.value == Conitems.children.item(i).value) {
-		                    if (confirm(strLang221 = '')) {
+		                if (inboxRuleCon1.value == Conitems.children.item(i).textContent) {
+		                    if (confirm(strLang221)) {
 		                        inboxRuleCon1.focus();
 		                        return;
 		                    }
@@ -523,15 +524,16 @@
 		                    }
 		                }
 		            }
+					var inboxRuleValue = escapeHtml(inboxRuleCon1.value);
 		            if (ischeck) {
 		                if (ConCellRow != null) {
-							ConCellRow.setAttribute('value', inboxRuleCon1.value);
-							ConCellRow.firstChild.innerText = inboxRuleCon1.value;
+							ConCellRow.setAttribute('value', inboxRuleValue);
+							ConCellRow.firstChild.innerText = inboxRuleValue;
 		                    inputBtn.textContent = strLang239;
 		                    ConCellRow = null;
 		                }
 		                else {
-							Conitems.innerHTML += createCellRow(inboxRuleCon1.value, inboxRuleCon1.value);
+							Conitems.innerHTML += createCellRow(inboxRuleValue,inboxRuleCon1.value);
 		                }
 		            }
 		            else {
@@ -548,10 +550,10 @@
 		        if (value.length > 0) {
 		            if (checkRuleKind(RuleKind) && value.split("<").length > 1) {
 						var mailaddress = value.split("<")[1].replace(">", "");
-						Conitems.innerHTML += createCellRow(mailaddress, MakeXMLString(value));
+						Conitems.innerHTML += createCellRow(mailaddress, escapeHtml(value));
 					}
 		            else {
-						Conitems.innerHTML += createCellRow(value, value);
+						Conitems.innerHTML += createCellRow(escapeHtml(value), value);
 		            }
 		        }
 		    }
@@ -586,7 +588,8 @@
 		    var ConCellRow = null;
 		    function pop_modify(obj) {
 		        ConCellRow = obj;
-		        inboxRuleCon1.value = obj.getAttribute("value");
+				let objValue = obj.getAttribute("value");
+				inboxRuleCon1.value = unEscapeHtml(objValue);
 		        inboxRuleCon1.focus();        
 		        document.getElementById("inputBtn").textContent = strLang240;
 		    }
@@ -835,7 +838,8 @@
 		            curKind = document.getElementsByName("ConS").item(i).getAttribute("RuleKind");
 		            objRows = createNodeAndAppandNode(XmlDom, objRow, objRows, "ROW");
 		            createNodeAndAppandNodeText(XmlDom, objRows, objRowRow, "CONKIND", curKind);
-		            createNodeAndAppandNodeText(XmlDom, objRows, objRowRow, "CONVALUE", document.getElementsByName("ConS").item(i).getAttribute("value"));
+					let convalue = document.getElementsByName("ConS").item(i).getAttribute("value");
+					createNodeAndAppandNodeText(XmlDom, objRows, objRowRow, "CONVALUE", unEscapeHtml(convalue));
 		        }
 		
 		        // ACTION NODE
@@ -870,7 +874,8 @@
 		            curKind = document.getElementsByName("ExptS").item(i).getAttribute("RuleKind");
 		            objRows = createNodeAndAppandNode(XmlDom, objRow3, objRows, "ROW");
 		            createNodeAndAppandNodeText(XmlDom, objRows, objRow3Row, "EXPTKIND", curKind);
-		            createNodeAndAppandNodeText(XmlDom, objRows, objRow3Row, "EXPTVALUE", document.getElementsByName("ExptS").item(i).getAttribute("value"));
+					let exptvale= document.getElementsByName("ExptS").item(i).getAttribute("value");
+					createNodeAndAppandNodeText(XmlDom, objRows, objRow3Row, "EXPTVALUE", unEscapeHtml(exptvale));
 		        }
 		
 		        /*
@@ -1012,12 +1017,16 @@
 						break;
 		        }
 		    }
-		    function MakeXMLString(pStr) {
-		        pStr = ReplaceText(pStr, "&", "&amp;");
-		        pStr = ReplaceText(pStr, "<", "&lt;");
-		        pStr = ReplaceText(pStr, ">", "&gt;");
-		        return pStr;
-		    }
+
+			function MakeXMLString(pStr) {
+				pStr = ReplaceText(pStr, "&", "&amp;");
+				pStr = ReplaceText(pStr, "<", "&lt;");
+				pStr = ReplaceText(pStr, ">", "&gt;");
+				pStr = ReplaceText(pStr, "'", "&apos;");
+				pStr = ReplaceText(pStr, "\"", "&quot;");
+				return pStr;
+			}
+			
 		    window.onselect = function ()
 		    { }
 		</script>
