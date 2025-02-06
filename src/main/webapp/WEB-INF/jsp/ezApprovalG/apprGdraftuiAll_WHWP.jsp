@@ -567,6 +567,8 @@
 				pDocNumCodeAry = [""]; // 각 안 별 문서번호 저장 배열 초기화
 				pDocNumSnAry = [""]; // 각 안 별 문서번호 숫자부분(tempNumString) 저장 배열 초기화
 				
+				beforeSendDraft();
+				
 				// 결재올림 이전의 결재정보 체크 (결재선, 문서제목, 수신처 정상여부 등 판별) 동작은 루프를 돌면서 비동기적으로 진행한다.
 				// 단, 암호체크 및 서명선택 동작은 단 한번만 동작하도록 한다. (모든 체크가 끝난 뒤, 카운트를 확인하여 호출)
 				for (var i = 1; i <= docMaxTabNumForDraft; i++) {
@@ -589,8 +591,47 @@
 			    	GetHTML2(sendDraft, i, docMaxTabNumForDraft); // 웹한글 비동기 함수에 호환되도록 반드시 인덱스 사용
 				}
 	        }
-	        
-	        function sendDraft(strClone, currIdx, maxIdx) {
+
+			// 2025-02-06 박기범 - #154451 -> 일괄 기안 전에 웹한글 내부함수 GetTextFile 실행시, 
+			// display none 되어있는 창은 마우스 클릭이 툴바가 없는 것을 기준으로 클릭되는 버그가 생김. 웹한글 내부함수에서 
+			// 클릭 이벤트를 생성시 디스플레이된 스크롤바의 높이를 측정하여 부여하는것으로 추측됨.
+			// 현재 활성화된 창 외에 diplay를 잠시 복구한뒤 과정이 모두 끝나고 다시 감춤(리사이즈시 문제 방지)
+			function beforeSendDraft() {
+				var curTab = document.getElementById("tab" + currentTabIdx);
+				var cont = document.querySelector("#container > .tab_container");
+				// 현재 창 높이로 고정.
+				cont.style.height = curTab.offsetHeight + 'px';
+				cont.style.overflow = 'hidden';
+				// 현재 선택된 탭을 제일 위쪽 위치로 고정
+				cont.style.display = 'flex';
+				cont.style.flexDirection = 'column';
+				curTab.style.order = 1;
+				cntGetTextFile = 0;
+				// 다른 창들을 감춰진 아래쪽 영역에 표출
+				for (var i = 1; i <= docMaxTabNumForDraft; i++) {
+					var targetTab = document.getElementById("tab" + i);
+					targetTab.style.display = 'block';
+					if (currentTabIdx != i) {
+						targetTab.style.order = 2;
+					}
+				}
+			}
+			
+			var cntGetTextFile = 0;
+			function afterGetTextFileInSendDraft(currIdx) {
+				cntGetTextFile++;
+				if (currentTabIdx != currIdx) {
+					// GetTextFile가 완료된 탭은 다시 감춤
+					document.getElementById("tab" + currIdx).style.display = "none";
+				}
+				if (docMaxTabNumForDraft == cntGetTextFile) {
+					// 모든 GetTextFile가 실행되면 컨테이너 높이 원복. 원복하지 않으면 창크기변경시 컨테이너가 변하지 않음.
+					document.querySelector("#container > .tab_container").style.height = '';
+				}
+			}
+
+			function sendDraft(strClone, currIdx, maxIdx) {
+				afterGetTextFileInSendDraft(currIdx);
 	        	var currIfrm = document.getElementById("ifrm" + currIdx); // 각 안별 웹한글기안기 iframe을 사용
 	        	var strBytes = parseInt(getByteLength(strClone));
 		    	var rtnAttachXML = loadXMLString(sendDraftResultAry[currIdx]);
