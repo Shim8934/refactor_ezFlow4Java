@@ -215,7 +215,7 @@
 		<article class="weather box_shadow">
 			<div class="layDiv">
 				<dl class="portlet_title sortablePortlet">
-		        	<dt class="portletText"><c:out value='${portletName }'/></dt>
+		        	<dt class="portletText" style = "width : 100px !important;"><c:out value='${portletName }'/></dt>
 		            <dd class="portletPlus">
 		            	<select id="cityList" class="weatherSelect">
 		                </select>
