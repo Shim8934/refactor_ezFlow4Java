@@ -269,7 +269,7 @@ public class EzEmailWriteServiceImpl implements EzEmailWriteService {
                     // (orgMessage)
                     // from
                     Address fromAddress = getForm(orgMessage);
-                    if (fromAddress != null && writetype.isEdit()) {
+                    if (fromAddress != null && (writetype.isEdit() || writetype.isResend())) {
                         String from = ((InternetAddress) fromAddress).getAddress();
                         writevo.setFrom(from); // eunsil1@svn1.opensol2014.com
                     }
@@ -476,6 +476,9 @@ public class EzEmailWriteServiceImpl implements EzEmailWriteService {
         Address[] addresses = null;
         String to = "";
 
+        //(전체)회신, 재작성 시 수신자에 본인이 들어가지 않게 하기 위해 본인 주소는 제거하나 
+        // 예약메일은 기능 상 제거하면 안되기 때문에 isReply, isReserve를 확인하여 분기처리
+
         // TO
         if (writetype.isReply()) {
             addresses = getRecipientsTOFromReply(writetype, orgMessage, replyMessage);
@@ -483,7 +486,7 @@ public class EzEmailWriteServiceImpl implements EzEmailWriteService {
             addresses = orgMessage.getRecipients(Message.RecipientType.TO);
         }
 
-        if (writetype.isReserve()) { // 문제없으면.. From까지 다 체크하던지 통일했으면 좋겠는데
+        if (writetype.isReserve()) {
             to = getAddresses(writetype, addresses, orgMessage, "To");
         } else {
             to = getAddresses(writetype, addresses, orgMessage, "From", "To");
@@ -494,7 +497,7 @@ public class EzEmailWriteServiceImpl implements EzEmailWriteService {
         // CC : replyMessage와 orgMessage가 동일
         addresses = orgMessage.getRecipients(Message.RecipientType.CC);
 
-        if (addresses != null) { // 꼭 필요한가?
+        if (addresses != null) {
             String cc = getAddresses(writetype, addresses, orgMessage, "Cc");
             messagevo.setCc(cc);
         }
@@ -503,7 +506,7 @@ public class EzEmailWriteServiceImpl implements EzEmailWriteService {
         addresses = orgMessage.getRecipients(Message.RecipientType.BCC);
         String bcc = "";
 
-        if (writetype.isReserve()) { // 문제없으면.. 다 사용하던지 통일했으면 좋겠는데
+        if (writetype.isReserve()) {
             bcc = getAddresses(writetype, addresses, orgMessage, "Bcc");
         } else {
             bcc = ezEmailUtil.getStringListOfAddresses(addresses, true);
@@ -589,7 +592,8 @@ public class EzEmailWriteServiceImpl implements EzEmailWriteService {
     }
 
     private Address getForm(Message orgMessage) throws MessagingException {
-        return (orgMessage.getFrom() != null && orgMessage.getFrom()[0] != null)? orgMessage.getFrom()[0] : null;
+        Address[] fromArray = orgMessage.getFrom();
+        return (fromArray != null && fromArray[0] != null)? fromArray[0] : null;
     }
 
     private String getAddresses(WriteType writetype, Address[] addresses, Message orgMessage, String... headerKeys) {
