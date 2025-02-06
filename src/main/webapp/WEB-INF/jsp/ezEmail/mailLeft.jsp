@@ -445,11 +445,13 @@
 	                        // 2023-06-23 황인경 - 디자인 개선 > 메일 > 좌측 메뉴 > 카운트 괄호 추가
 							window[treeviewStr].putcaption(window[treeviewStr].selectedIndex(), caption + "(" + unreadcount + ")");
 	                    }
-						if (typeof parent.frames["right"] != "undefined") {
-							if (parent.frames["right"] != null){
-								var pageSrc = parent.frames["right"].document.location.toString();
+
+						var rightFrame = parent.frames["right"];
+                        if (rightFrame != "undefined" && typeof rightFrame.folderUnreadCount !== 'undefined') {
+                            if (rightFrame != null){
+                                var pageSrc = rightFrame.document.location.toString();
 								if (pageSrc.indexOf("mailList.do") != -1) {
-		                        	try { parent.frames["right"].folderUnreadCount.innerText = " " + unreadcount + " "; } catch (e) {console.log(e);}
+                                    try { rightFrame.folderUnreadCount.innerText = " " + unreadcount + " "; } catch (e) {console.log(e);}
 			                    }
 		                    }
 	                  	}
