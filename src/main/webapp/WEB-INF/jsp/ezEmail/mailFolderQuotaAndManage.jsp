@@ -121,7 +121,7 @@
 				    			+ "<a class='imgbtn imgbck mr3' style='margin-left:3px'><span style='text-align:center;' onclick=folderIdSelect('"+mailbox+"');delete_mail_onclick();><spring:message code='ezEmail.pyy09' /></span></a>"
 				    			+ "<a class='imgbtn imgbck mr3' style='margin-left:3px'><span style='text-align:center;' onclick=folderIdSelect('"+mailbox+"');folder_ReadChange('R');><spring:message code='ezEmail.jyh01' /></span></a></td></tr>";
 			    		} else {
-				    		_html += "<td style='width:100%; text-overflow:ellipsis; overflow:hidden;'>" 
+							_html += "<td style='width:100%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;'>"
 				    			+ "<a class='imgbtn imgbck mr3' style='margin-left:3px'><span style='text-align:center;' onclick=folderIdSelect('"+mailbox+"');mailbox_exportUp();><spring:message code='ezEmail.kyj04' /></span></a>"
 				    			+ "<a class='imgbtn imgbck mr3' style='margin-left:3px'><span style='text-align:center;' onclick=folderIdSelect('"+mailbox+"');mail_import_onclick();><spring:message code='ezEmail.kyj05' /></span></a>" // 메일 가져오기
 				    			+ "<a class='imgbtn imgbck mr3' style='margin-left:3px'><span style='text-align:center;' onclick=folderIdSelect('"+mailbox+"');add_onclickUp();><spring:message code='ezEmail.t308' /></span></a>"
