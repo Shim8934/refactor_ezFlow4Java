@@ -127,10 +127,10 @@ nav .navUL li.on{color:#003497;}
 .info_btn .info_logout:hover{background:#989CA6;}
 
 
-#theme1Body .portlet_title .portletPlus.plus{background-image:url(../../images/ezNewPortal/skin/blue/portlet_Plus1.png); margin-right:0; margin-left:10px;}
-#theme2Body .portlet_title .portletPlus.plus{background-image:url(../../images/ezNewPortal/skin/blue/portlet_Plus2.png); margin-right:0; margin-left:10px;}
+#theme1Body .portlet_title .portletPlus.plus, #theme1Body .portlet_tab_plus .portletPlus.plus {background-image:url(../../images/ezNewPortal/skin/blue/portlet_Plus1.png); margin-right:0; margin-left:10px;}
+#theme2Body .portlet_title .portletPlus.plus, #theme2Body .portlet_tab_plus .portletPlus.plus {background-image:url(../../images/ezNewPortal/skin/blue/portlet_Plus2.png); margin-right:0; margin-left:10px;}
+#theme3Body .portlet_title .portletPlus.plus, #theme3Body .portlet_tab_plus .portletPlus.plus {background-image:url(../../images/ezNewPortal/skin/blue/portlet_Plus3.png);}
 #theme2Body .sec1Layout_btm_left .portlet_title .portletPlus.plus{margin-right:12px;}
-#theme3Body .portlet_title .portletPlus.plus{background-image:url(../../images/ezNewPortal/skin/blue/portlet_Plus3.png);}
 
 #theme1Body .portlet_title .portletPlus.setting{background-image:url(../../images/ezNewPortal/skin/blue/portlet_setting1.png); margin-right:0; margin-left:10px;}
 #theme2Body .portlet_title .portletPlus.setting{background-image:url(../../images/ezNewPortal/skin/blue/portlet_setting2.png); margin-right:0; margin-left:10px;}
