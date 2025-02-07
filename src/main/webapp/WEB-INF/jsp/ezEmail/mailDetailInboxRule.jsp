@@ -537,6 +537,7 @@
 		            _curCellObj.setAttribute("RuleKind", _RuleKind);
 		            _curCellObj.setAttribute("url", url);
 		            _curCellObj.setAttribute("fordername", name);
+					_curCellObj.setAttribute("value", url);
 		            _curCellObj.innerHTML = "<span onclick='getFoldercell(this);' value='" + url + "'><nobr>\"<u>" + name + "" + ((_RuleKind == "MOVE") ? strLang220 : strLang342) + "</u></nobr></span>";
 		            isFolderChanged = mailBoxInfo["isFolderChanged"];
 		        } catch (e) {
@@ -570,6 +571,7 @@
 		            //mail_selectfolder_cross_dialogArguments[2].parentNode.setAttribute("RuleKind", "MOVE");
 		            _curCellObj.setAttribute("url", url);
 		            _curCellObj.setAttribute("fordername", name);
+					_curCellObj.setAttribute("value", url);
 		            _curCellObj.innerHTML = "<span onclick='getFoldercell(this);' value='" + url + "'><nobr>\"<u>" + name + "" + ((_RuleKind == "MOVE") ? strLang220 : strLang342) + "</u></nobr></span>";
 		        } catch (e) {
 		            console.log(e);
