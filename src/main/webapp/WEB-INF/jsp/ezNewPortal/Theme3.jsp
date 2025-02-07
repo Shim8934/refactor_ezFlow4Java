@@ -703,11 +703,14 @@
 	            slide.appendChild(divText);
 	            var textNode = document.createTextNode(board.title);
 	            divText.appendChild(textNode);
-
-	            slide.addEventListener("click", function (event) {
-	                openBoard(board.itemID, board.guBun, board.boardID);
-	            });
 	        }
+
+			wrapper.addEventListener("click", function (event) {
+				if (!event.target.closest('.swiper-slide')) return;
+				var index = event.target.closest('.swiper-slide').getAttribute('data-swiper-slide-index');
+				openBoard(bList[index].itemID,bList[index].guBun,bList[index].boardID);
+			});
+			
 	        makeSwiperByTopMenu();
 	    }
 
