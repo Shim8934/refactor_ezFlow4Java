@@ -528,7 +528,7 @@
 		            if (ischeck) {
 		                if (ConCellRow != null) {
 							ConCellRow.setAttribute('value', inboxRuleValue);
-							ConCellRow.firstChild.innerText = inboxRuleValue;
+							ConCellRow.firstChild.innerText = inboxRuleCon1.value;
 		                    inputBtn.textContent = strLang239;
 		                    ConCellRow = null;
 		                }
