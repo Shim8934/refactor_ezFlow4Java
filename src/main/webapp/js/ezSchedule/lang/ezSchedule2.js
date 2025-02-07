@@ -233,3 +233,7 @@ var strLang151_2 = "Executives";
 
 // 2024-06-28 민지수 - 일정 > 첨부파일 드래그 앤 드롭 안내 메세지 추가
 var strLangMJS01 = "You can drag and drop to add files and change the order of added files.";
+
+/* 2025-02-07 기민혁 - 반복자원 체크 메세지 추가 */
+var strLangKMH1 = "This resource does not allow repeat reservations.";
+var strLangKMH2 = "An error has occurred.";

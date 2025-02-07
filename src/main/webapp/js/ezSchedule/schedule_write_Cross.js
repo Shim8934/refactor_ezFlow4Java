@@ -1487,6 +1487,38 @@ function config_repeat_resource() {
         alert(strLang109);
         return;
     }
+
+	var check = false;
+	$.ajax({
+		type : "GET",
+		async : false,
+		data : {"resIDArray" : g_resource[0]},
+		url : "/ezResource/repeatFlagCheck.do",
+		success : function(result) {
+			if(result.repeatResult == "false"){
+				check = true;
+				var repeatCheckList = result.repeatCheckList;
+				var repeatCheckName = [];
+				
+				if (repeatCheckList && repeatCheckList.length > 0) {
+					for (var i = 0; i < repeatCheckList.length; i++) {
+						var checkIndex = g_resource[0].indexOf(repeatCheckList[i]);
+						repeatCheckName.push(g_resource[1][checkIndex]);
+					}
+				}
+				alert("[" + repeatCheckName.join(", ") + "] " + strLangKMH1);
+				
+			}else if(result.repeatResult == "error"){
+				check = true;
+				alert(strLangKMH2);
+			}
+		},
+		error : function(){}
+	});
+	
+	if(check){
+		return;
+	}
     
     g_data["REPETITION"] = repetition;
 
