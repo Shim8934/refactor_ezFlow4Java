@@ -17,6 +17,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -498,7 +499,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 				String from = ((InternetAddress)message.getFrom()[0]).getAddress();
 				logger.debug("from=" + from);
 
-				List<String[]> aliasAddressList = ezEmailService.getAliasAddress(mailId, loginInfo.getTenantId());
+				List<String[]> aliasAddressList = ezEmailService.getAliasAddress(mailId, loginInfo.getTenantId(), "YES", "NO");
 
 				boolean isUserFrom = false;
 				for (String[] address : aliasAddressList) {

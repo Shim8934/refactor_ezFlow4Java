@@ -1891,13 +1891,15 @@ public class EzEmailServiceImpl implements EzEmailService {
 	}
 	
 	@Override
-	public List<String[]> getAliasAddress(String userId, int tenantId) throws Exception {
+	public List<String[]> getAliasAddress(String userId, int tenantId, String useFromAddress, String useDistributionSender) throws Exception {
 		logger.debug("getAliasAddress started. userId=" + userId);
 		
 		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
 		String userAccount = userId + "@" + domainName;
 				
-		String inputParams = "userId=" + URLEncoder.encode(userAccount, "UTF-8");
+		String inputParams = "userId=" + URLEncoder.encode(userAccount, "UTF-8")
+				+ "&useFromAddress=" + URLEncoder.encode(useFromAddress, "UTF-8")
+				+ "&useDistributionSender=" + URLEncoder.encode(useDistributionSender, "UTF-8");
 		logger.debug("inputParams=" + inputParams);
 
 		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getAliasAddress";
@@ -1922,7 +1924,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 					
 					for (int i=0; i<resultArray.size(); i++) {
 						JSONObject obj = (JSONObject)resultArray.get(i);
-						aliasAddressList.add(new String[] {(String)obj.get("address"), (String)obj.get("type")});
+						aliasAddressList.add(new String[] {obj.get("address").toString().trim(), obj.get("type").toString().trim(), obj.get("name").toString().trim()});
 					}
 				}
 			}

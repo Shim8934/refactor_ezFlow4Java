@@ -1722,11 +1722,12 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			}
 			
 			String useFromAddress = ezCommonService.getTenantConfig("Use_FromAddress", info.getTenantId());
+			String useDistributionSender = StringUtils.defaultIfBlank(ezCommonService.getCompanyConfig(info.getTenantId(), info.getCompanyId(), "useDistributionSender"), "NO");
 			String fromAddressHtml = "";
 			
 			if (useFromAddress != null) {
-				if (useFromAddress.equals("YES")) {
-					List<String[]> fromAddressList = ezEmailService.getAliasAddress(info.getUserId(), info.getTenantId());
+				if ("YES".equalsIgnoreCase(useFromAddress) || "YES".equalsIgnoreCase(useDistributionSender)) {
+					List<String[]> fromAddressList = ezEmailService.getAliasAddress(info.getUserId(), info.getTenantId(), useFromAddress, useDistributionSender);
 					
 					if (fromAddressList.size() < 2) {
 						useFromAddress = "NO";
@@ -7852,8 +7853,8 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			}
 			String from = ((InternetAddress)message.getFrom()[0]).getAddress();
 			logger.debug("from=" + from);
-			
-			List<String[]> aliasAddressList = ezEmailService.getAliasAddress(mailId, userInfo.getTenantId());
+
+			List<String[]> aliasAddressList = ezEmailService.getAliasAddress(mailId, userInfo.getTenantId(), "YES", "NO");
 
 			boolean isUserFrom = false;
 			for (String[] address : aliasAddressList) {

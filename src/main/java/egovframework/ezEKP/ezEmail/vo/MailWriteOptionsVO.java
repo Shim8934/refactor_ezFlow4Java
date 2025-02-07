@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezEmail.vo;
 
+import java.util.List;
+
 public class MailWriteOptionsVO {
 	private String isMailToMe; // 내게쓰기
 	private boolean isCrossBrowser; // browser
@@ -7,8 +9,9 @@ public class MailWriteOptionsVO {
 	private String useMultiLangMail = "1"; // 안쓰임??
 
 	// from
-	private String useFromAddress; // 발신인 주소 선택 사용여부
-	private String fromAddressHtml;
+	private String useFromAddress; // alias 발신인 주소 선택 사용여부
+	private String useDistributionSender; // 공용배포그룹 발신인 주소 선택 사용여부
+	private List<String[]> fromAddressList;
 
 	// 보안메일
 	private String useSecureMail; // 보안메일 사용여부
@@ -135,11 +138,18 @@ public class MailWriteOptionsVO {
 		return useFromAddress;
 	}
 
-	public void setFromAddressHtml(String fromAddressHtml) {
-		this.fromAddressHtml = fromAddressHtml;
+	public void setUseDistributionSender(String useDistributionSender) {
+		this.useDistributionSender = useDistributionSender;
 	}
-	public String getFromAddressHtml() {
-		return fromAddressHtml;
+	public String getUseDistributionSender() {
+		return useDistributionSender;
+	}
+
+	public void setFromAddressList(List<String[]> fromAddressList) {
+		this.fromAddressList = fromAddressList;
+	}
+	public List<String[]> getFromAddressList() {
+		return fromAddressList;
 	}
 
 	public void setUseSecureMail(String useSecureMail) {
@@ -579,8 +589,8 @@ public class MailWriteOptionsVO {
 	@Override
 	public String toString() {
 		return "MailWriteOptionsVO [isMailToMe=" + isMailToMe + ", isCrossBrowser=" + isCrossBrowser + ", postType="
-				+ postType + ", useMultiLangMail=" + useMultiLangMail + ", useFromAddress=" + useFromAddress
-				+ ", fromAddressHtml=" + fromAddressHtml + ", useSecureMail=" + useSecureMail + ", security=" + security
+				+ postType + ", useMultiLangMail=" + useMultiLangMail + ", useFromAddress=" + useFromAddress + ", useDistributionSender=" + useDistributionSender
+				+ ", fromAddressList=" + fromAddressList + ", useSecureMail=" + useSecureMail + ", security=" + security
 				+ ", newWindowId=" + newWindowId + ", stateName=" + stateName + ", uploadCommonPath=" + uploadCommonPath
 				+ ", uploadCommunityPath=" + uploadCommunityPath + ", charsetCheck=" + charsetCheck
 				+ ", fileUploadType=" + fileUploadType + ", mailAttachLimit=" + mailAttachLimit

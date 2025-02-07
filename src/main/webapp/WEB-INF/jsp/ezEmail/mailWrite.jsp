@@ -105,8 +105,10 @@
 	    var isPrimary = "${loginInfo.primary}";
 		// userInfo
 	    var g_myname = "${userInfo.displayName}";
+	    var g_sendername = "${userInfo.displayName}";
 	    var g_myemail = "${userInfo.mail}";
 	    var g_from = "${userInfo.mail}";
+	    var from = "${from}";
 	    var g_szUserID = "${userInfo.mailNickName}";
 	    var g_companyID = "${userInfo.physicalDeliveryOfficeName}";
 	    var g_senderinfo = "${userInfo.company}" + ", " + "${userInfo.description}" + ", " + "${userInfo.title}";
@@ -1491,7 +1493,11 @@
 	    }
 		
 	    function fromAddressChange(val) {
-	    	g_from = val;
+	    	//g_from = val;
+	    	const lastIndex = val.lastIndexOf("||;");
+            
+            g_sendername = lastIndex == 0 ? g_myname : val.substring(0, lastIndex);
+            g_from = val.substring(lastIndex + 3).trim();
 	    }
 	    	    
 	    function GetDocumentInfo_DotNet(DocID, DocHref, ImagCnt, Target, docType) {
@@ -2370,15 +2376,19 @@
 	        <tr>
 	            <td>
 	                <table id="infoTable" class="popuplist" style="width:100%">
-	                	<c:if test="${shareId == null and options.useFromAddress == 'YES'}">
+	                	<c:if test="${shareId == null and (options.useFromAddress == 'YES' or options.useDistributionSender == 'YES')}">
 		                	<tr id="MsgFrom_TR">
 		                		<th style="text-align: center;">
 		                        	<span style="width: 50px;"><spring:message code='ezEmail.lhm30' /></span>
 		                        </th>
 		                        <td colspan="3">
-		                        	<div class="selectbox">
-		                        		${options.fromAddressHtml}
-		                        	</div>
+		                        	<select id="fromAddressList" onchange="fromAddressChange(this.value);">
+                                        <c:forEach var="alias" items="${fromAddressList}">
+                                            <option value="${alias[2]}||;${alias[0]}" ${alias[0].equals(from) ? 'selected="selected"' : ''}>
+                                                ${alias[2]} ${alias[0]}
+                                            </option>
+                                        </c:forEach>
+                                    </select>
 		                        </td>
 		                	</tr>
 	                	</c:if>
