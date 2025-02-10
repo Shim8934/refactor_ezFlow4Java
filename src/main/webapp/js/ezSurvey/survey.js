@@ -202,7 +202,7 @@ var SurveyCreate     = function() {
 	function saveDraftSurvey() {
 		//Check survey information
 		returnObj = checkStep1();
-		if (returnObj["error"]) {return returnObj;}
+		if (returnObj["error"]) {alert(returnObj["error"]); return;}
 		surveyObj["draft"] = 1;
 		
 		$.ajax({
@@ -548,13 +548,10 @@ var SurveyCreate     = function() {
 		
 		var userList   = surveyObj["infor"]["users"];
 		var userResultList = surveyObj["infor"]["resultViewTarget"]; // 설문결과 지정조회 대상자
-//		ppContent      = replaceAll(ppContent, '<p style="font-family:맑은 고딕;font-size:12px;"><br></p>', '');
-		ppContent      = replaceAll(ppContent, '<p style="font-size:13px;font-family:맑은 고딕"><br></p>', '');
 		var ttlValue   = replaceAll(surveyTtl.value, " ", "");
 		var today = getToday();
 		
 		if (!ttlValue)     {returnObj["error"] = SurveyMessages.strTitle  ; surveyTtl.value = ""; surveyTtl.focus(); return returnObj;}
-		if (!ppContent)    {returnObj["error"] = SurveyMessages.strPurpose; surveyPp.focus() ; return returnObj;}
 		if (!sDate)        {returnObj["error"] = SurveyMessages.strSvDate3; return returnObj;}
 		if (!eDate)        {returnObj["error"] = SurveyMessages.strSvDate2; return returnObj;}
 		if (sDate < today) {returnObj["error"] = SurveyMessages.strSvDate4; return returnObj;}
