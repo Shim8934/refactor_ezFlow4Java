@@ -2517,7 +2517,7 @@
 			  	<td>
 					  <div id="headerTab" style="width:90%; height:27px; margin:0 auto; border-bottom: solid 1px #eaeaea; box-sizing: border-box;">
 					  	<div id="headerMenu" style="width:80px; height:100%; cursor:pointer; text-align:center" onclick="headerAction()">
-					  		<span id="headerHide" style="color:#8f8e93; font-size:14px;">헤더 숨기기</span>
+					  		<span id="headerHide" style="color:#8f8e93; font-size:14px;"><spring:message code='ezApproval.headerHide01'/></span>
 					  	</div>
 					  </div>
 			  	</td>
