@@ -259,6 +259,7 @@
 		                    ActObj.nextSibling.setAttribute("url", spltActFid[ActFcnt]);
 		                    ActObj.nextSibling.setAttribute("fordername", spltActFnm[ActFcnt]);
 		                    ActObj.nextSibling.setAttribute("RuleKind", spltAct[i]);
+		                    ActObj.nextSibling.setAttribute("value", spltActFid[ActFcnt]);
 		                    ActFcnt++;
 		                    break;
 		                case "DELETE":
@@ -282,6 +283,7 @@
 		                    ActObj.nextSibling.setAttribute("url", spltActFid[ActFcnt]);
 		                    ActObj.nextSibling.setAttribute("fordername", spltActFnm[ActFcnt]);
 		                    ActObj.nextSibling.setAttribute("RuleKind", spltAct[i]);
+							ActObj.nextSibling.setAttribute("value", spltActFid[ActFcnt]);
 		                    ActFcnt++;
 		                    break;
 		                case "READ":
@@ -314,6 +316,7 @@
 						case "TAG":
 							ActObj.selectedIndex = 7;
 							ActObj.item(7).checked = true;
+							ActObj.nextSibling.setAttribute("value", spltActVal[i]);
 
 							const tagList = spltActVal[i].split(";");
 							let tagStr = "";
