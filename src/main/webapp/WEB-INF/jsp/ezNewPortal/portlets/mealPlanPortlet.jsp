@@ -7,14 +7,6 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>mealPlan</title>
-	<style type="text/css">
-		.mealPlanlist th, .mealPlanlist td{
-			border: 1px solid #dedede;
-		}
-		.mealPlanlist th {
-			width: 30%
-		}
-	</style>
 </head>
 <script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/mealPlanPortlet.js')}"></script>
 <script type="text/javascript">
@@ -47,42 +39,36 @@
 				<dd id="noMealPlanDd"><spring:message code='main.t00026' /></dd>
         	</dl>
         	<div class="mealPlanlist" id="mealPlan_Portlet_List">
-				<table id="mealPlanTable" style="border-collapse: collapse;	width: 100%">
-					<tr id="aCourseRow">
-						<th>
-							<spring:message code='ezMealPlan.jsb002' />
-						</th>
-						<td id="aCourseData">
-						</td>
-					</tr>
-					<tr id="bCourseRow">
-						<th>
-							<spring:message code='ezMealPlan.jsb003' />
-						</th>
-						<td id="bCourseData">
-						</td>
-					</tr>
-					<tr id="saladBarRow">
-						<th>
-							<spring:message code='ezMealPlan.jsb004' />
-						</th>
-						<td id="saladBarData">
-						</td>
-					</tr>
-					<tr id="dessertRow">
-						<th>
-							<spring:message code='ezMealPlan.jsb005' />
-						</th>
-						<td id="dessertData">
-						</td>
-					</tr>
-					<tr id="totalCalRow">
-						<th>
-							<spring:message code='ezMealPlan.jsb006' />
-						</th>
-						<td id="totalCalData">
-						</td>
-					</tr>
+				<table id="mealPlanTable" class="mealTable">
+					<colgroup>
+						<col width="26%">
+						<col width="48%">
+						<col width="26%">
+					</colgroup>
+					<tbody>
+						<tr>
+							<th>코스</th>
+							<th>메뉴</th>
+							<th><spring:message code='ezMealPlan.jsb006' /></th>
+						</tr>
+						<tr id="aCourseRow">
+							<td class="aCourse"><spring:message code='ezMealPlan.jsb002' /></td>
+							<td class="aCourse" id="aCourseData"></td>
+							<td class="totalCal" id="totalCalData" rowspan="4"></td>
+						</tr>
+						<tr id="bCourseRow">
+							<td class="bCourse"><spring:message code='ezMealPlan.jsb003' /></td>
+							<td class="bCourse" id="bCourseData"></td>
+						</tr>
+						<tr id="saladBarRow">
+							<td><spring:message code='ezMealPlan.jsb004' /></td>
+							<td id="saladBarData"></td>
+						</tr>
+						<tr id="dessertRow">
+							<td><spring:message code='ezMealPlan.jsb005' /></td>
+							<td id="dessertData"></td>
+						</tr>
+					</tbody>
 				</table>
         	</div>
     	</div>

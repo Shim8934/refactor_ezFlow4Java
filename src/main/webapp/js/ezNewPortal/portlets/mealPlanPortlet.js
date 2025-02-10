@@ -20,7 +20,7 @@ function getMealData() {
 				document.getElementById("bCourseData").innerText = data.bCourse;
 				document.getElementById("saladBarData").innerText = data.saladBar;
 				document.getElementById("dessertData").innerText = data.dessert;
-				document.getElementById("totalCalData").innerText = data.totalCal;
+				document.getElementById("totalCalData").innerText = data.totalCal + " Kcal";
 			} else if (response.RTNVALUE == "NO_MENU"){
 				document.getElementById("mealPlanTable").style.display = "none";
 				document.getElementById("noMealPlanDd").innerText = messages.strLang1;
