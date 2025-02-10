@@ -168,6 +168,10 @@ var dataAssemblerTabBoard = function(object) {
 	var date = today.getDate();
 	today.setDate(date - 1);
 	var portletId = tabBoardPortletObj.portletId;
+
+	var startDate = object.startDate;
+	startDate = startDate.replace("-","/");
+	var writeDate = new Date(startDate);
 	
 	var str = "";
 	if (object.publicFlag === 'N' && object.guBun === '2') {
@@ -175,6 +179,11 @@ var dataAssemblerTabBoard = function(object) {
 	} else {
 		str += "<li onclick='openDoc_section3_Type(\"" + object.itemID + "\", \"" + object.guBun + "\", \"" + object.boardID + "\")'>";
 	}
+
+	if (today < writeDate) {
+		str += "<span class='boardNew'>N</span>";
+	}
+	
     str += "<span class='txt' title='" + MakeXMLString(object.title) + "' >" + MakeXMLString(object.title);
 	if (object.publicFlag === 'N') {
 		str +=  " <div class='board_private'></div>";
