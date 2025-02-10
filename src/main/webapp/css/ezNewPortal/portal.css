@@ -8,43 +8,43 @@
 	font-style: normal;
 	font-weight: 100;
 	src: url(../fonts/NotoSansKr/woff/NotoSansKR-Thin.woff) format('woff'),
-	  url(../fonts/NotoSansKr/otf/NotoSansKR-Thin.otf) format('opentype');
-  }
-  @font-face {
+	url(../fonts/NotoSansKr/otf/NotoSansKR-Thin.otf) format('opentype');
+}
+@font-face {
 	font-family: 'Noto Sans KR';
 	font-style: normal;
 	font-weight: 300;
 	src: url(../fonts/NotoSansKr/woff/NotoSansKR-Light.woff) format('woff'),
-	  url(../fonts/NotoSansKr/otf/NotoSansKR-Light.otf) format('opentype');
-  }
-  @font-face {
-	 font-family: 'Noto Sans KR';
-	 font-style: normal;
-	 font-weight: 400;
-	 src: url(../fonts/NotoSansKr/woff/NotoSansKR-Regular.woff) format('woff'),
-	  url(../fonts/NotoSansKr/otf/NotoSansKR-Regular.otf) format('opentype');
-   }
-  @font-face {
-	 font-family: 'Noto Sans KR';
-	 font-style: normal;
-	 font-weight: 500;
-	 src: url(../fonts/NotoSansKr/woff/NotoSansKR-Medium.woff) format('woff'),
-	  url(../fonts/NotoSansKr/otf/NotoSansKR-Medium.otf) format('opentype');
-   }
-  @font-face {
-	 font-family: 'Noto Sans KR';
-	 font-style: normal;
-	 font-weight: 700;
-	 src: url(../fonts/NotoSansKr/woff/NotoSansKR-Bold.woff) format('woff'),
-	  url(../fonts/NotoSansKr/otf/NotoSansKR-Bold.otf) format('opentype');
-   }
-  @font-face {
-	 font-family: 'Noto Sans KR';
-	 font-style: normal;
-	 font-weight: 900;
-	 src: url(../fonts/NotoSansKr/woff/NotoSansKR-Black.woff) format('woff'),
-	  url(../fonts/NotoSansKr/otf/NotoSansKR-Black.otf) format('opentype');
-   }
+	url(../fonts/NotoSansKr/otf/NotoSansKR-Light.otf) format('opentype');
+}
+@font-face {
+	font-family: 'Noto Sans KR';
+	font-style: normal;
+	font-weight: 400;
+	src: url(../fonts/NotoSansKr/woff/NotoSansKR-Regular.woff) format('woff'),
+	url(../fonts/NotoSansKr/otf/NotoSansKR-Regular.otf) format('opentype');
+}
+@font-face {
+	font-family: 'Noto Sans KR';
+	font-style: normal;
+	font-weight: 500;
+	src: url(../fonts/NotoSansKr/woff/NotoSansKR-Medium.woff) format('woff'),
+	url(../fonts/NotoSansKr/otf/NotoSansKR-Medium.otf) format('opentype');
+}
+@font-face {
+	font-family: 'Noto Sans KR';
+	font-style: normal;
+	font-weight: 700;
+	src: url(../fonts/NotoSansKr/woff/NotoSansKR-Bold.woff) format('woff'),
+	url(../fonts/NotoSansKr/otf/NotoSansKR-Bold.otf) format('opentype');
+}
+@font-face {
+	font-family: 'Noto Sans KR';
+	font-style: normal;
+	font-weight: 900;
+	src: url(../fonts/NotoSansKr/woff/NotoSansKR-Black.woff) format('woff'),
+	url(../fonts/NotoSansKr/otf/NotoSansKR-Black.otf) format('opentype');
+}
 
 /* base */
 html { height:100%; font-family: 'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana'; }
@@ -63,7 +63,7 @@ address { font-style:normal; }
 article {  }
 article:after { clear:both; display:block; content:''; }
 article,aside,canvas,details,figcaption,figure, footer,header,hgroup,menu,nav,section,summary {
-    display:block;
+	display:block;
 }
 #mainFrame{background-color:white}
 
@@ -75,28 +75,28 @@ article,aside,canvas,details,figcaption,figure, footer,header,hgroup,menu,nav,se
 
 /* 수직 */
 .scrollbox-play-light .scrollbox .scrollbar-v{
-    position:absolute; top:0; right:0; width:11px;
-    /*background:url(http://siteweb.co.kr/script/img/view_scrollbar_bg.gif) repeat-y top center;*/
-    cursor:pointer;
+	position:absolute; top:0; right:0; width:11px;
+	/*background:url(http://siteweb.co.kr/script/img/view_scrollbar_bg.gif) repeat-y top center;*/
+	cursor:pointer;
 }/* 스크롤판의 높이를 동적으로 변경 */
 
 
 .scrollbox-play-light .scrollbox .scrollbar-v .button-up{
-    position:absolute; top:0; left:0;
-    background:url(/images/kr/main/scrollbar_arrow_up_w.gif) no-repeat;
-    width:11px; height:8px;
+	position:absolute; top:0; left:0;
+	background:url(/images/kr/main/scrollbar_arrow_up_w.gif) no-repeat;
+	width:11px; height:8px;
 }
 
 .scrollbox-play-light .scrollbox .scrollbar-v .button-down{
-    position:absolute; bottom:0; left:0;
-    background:url(/images/kr/main/scrollbar_arrow_down_w.gif) no-repeat;
-    width:11px; height:8px;
+	position:absolute; bottom:0; left:0;
+	background:url(/images/kr/main/scrollbar_arrow_down_w.gif) no-repeat;
+	width:11px; height:8px;
 }
 
 .scrollbox-play-light .scrollbox .scrollbar-v .thumb-v{
-    position:absolute;
-    background:url(/images/kr/main/scrollbar_ball_w.gif) no-repeat;
-    height:11px; overflow:hidden;
+	position:absolute;
+	background:url(/images/kr/main/scrollbar_ball_w.gif) no-repeat;
+	height:11px; overflow:hidden;
 }
 
 
@@ -287,7 +287,7 @@ nav > .countBox .hidden_nav_count_off{position:absolute; right:0px; top:6px; dis
 .portlet_title .portletRefresh{margin:17px 10px 0 0; float:right; overflow:hidden; cursor:pointer; line-height:normal;}
 .sortablePortlet:hover{cursor :move;}
 /* photoboard 클래스가 있을 경우 text너비 변경 */
- .portlet_title.photo_board .portletText{width:calc(100% - 160px);}
+.portlet_title.photo_board .portletText{width:calc(100% - 160px);}
 /* schedule포틀릿과 weather 포틀릿도 너비 변경 */
 .portlet_title.portlet_schedule .portletText, .weather .portlet_title .portletText{width:auto;}
 /* mail 포틀릿 너비 변경 */
@@ -1691,8 +1691,8 @@ input, label, textarea, ul, li, h1, h2, table, th, .page, .point, .box, .box2, .
 	ime-mode:active;
 }
 input{
-    box-sizing:border-box;
-    -moz-box-sizing:border-box;
+	box-sizing:border-box;
+	-moz-box-sizing:border-box;
 	border:1px solid #dedede;
 }
 
@@ -1757,26 +1757,26 @@ nav .navUL li:hover:after{width:50%; transition:all 0.2s ease;}
 
 /* 테스트 스크롤바 */
 *::-webkit-scrollbar{
-    width:12px;
-    height:12px;
+	width:12px;
+	height:12px;
 }
 
 *::-webkit-scrollbar-thumb{
-    background:#dedede;
-    border-radius:8px;
-    background-clip:padding-box;
-    border:2px solid transparent;
+	background:#dedede;
+	border-radius:8px;
+	background-clip:padding-box;
+	border:2px solid transparent;
 }
 
 *::-webkit-scrollbar-track{
-    background:#f1f1f1;
-    border-radius:8px;
-    background-clip:padding-box;
-    border:2px solid transparent;
+	background:#f1f1f1;
+	border-radius:8px;
+	background-clip:padding-box;
+	border:2px solid transparent;
 }
 
 .full_menu_toggleDL > dt > span{
-    margin-top:17px;
+	margin-top:17px;
 }
 
 /* 2023-06-01 홍승비 - 홈 > 포틀릿 > 즐겨찾기(새게시물) 포틀릿 > 우측 + 버튼의 위치 조정 (게시판명에 밀려 하단으로 내려가지 않도록 고정) */
@@ -2452,7 +2452,7 @@ div.orbit img{border-radius:5px;}
 
 .webFolder_portlet .fileListWrapper.empty{padding-top:0px;}
 
-.security_icon{display:inline-block; width:16px; height:16px; background:url(/images/email/secureMail/security_icon.svg) no-repeat center / 16px 16px; !important;} 
+.security_icon{display:inline-block; width:16px; height:16px; background:url(/images/email/secureMail/security_icon.svg) no-repeat center / 16px 16px; !important;}
 .portlet_list li .txt .security_icon{vertical-align:top; margin:2px 5px 0 0; !important;}
 
 /* 게시판 공개 비공개 */
@@ -2460,10 +2460,18 @@ div.orbit img{border-radius:5px;}
 /* 게시판 공개 비공개 */
 
 
-.mealPlan_contents{padding:10px 0 0; overflow-y:hidden !important; height:calc(100% - 53px); box-sizing:border-box;}
-.mealPlanlist{margin:0px; padding:0px 20px; list-style:none; clear:both; overflow-y:auto; height:calc(100% - 10px);}
+.mealPlan_contents{padding:0; overflow-y:hidden !important; height:calc(100% - 53px); box-sizing:border-box;}
+.mealPlanlist{margin:0px; padding:0px 20px; list-style:none; clear:both; overflow-y:auto; height:calc(100% - 20px);}
 .mealPlan_portlet .portlet_title .portletText{width:130px;}
 .mealPlan_portlet .mealPlan_calendal{margin:0px; padding:12px 12px 0px 10px; float:right; overflow:hidden; position:relative; line-height:normal;}
 .mealPlan_portlet .mealPlan_calendal .DatePicker_class{height:30px; margin:0px; width:110px; text-align:center; vertical-align:top; border:1px solid #E2E2E2; border-radius:6px;}
 .mealPlan_portlet input{box-sizing:border-box; border:1px solid #dedede; font-size:13px; color:#444; text-decoration:none; outline:none;}
 .mealPlan_portlet .mealPlan_calendal img{position:absolute; right:18px; top:19px; margin:0px 0px 0px 0px; padding:0px 0px 0px 0px; cursor:pointer;}
+
+.mealTable{table-layout:fixed; width:100%; height:100%; border-collapse:collapse;}
+.mealTable th{height:40px; border-top:1px solid #E6E6E6; border-bottom:1px solid #E6E6E6; background:#EBF2FA; color:#000; font-size:14px; font-weight:500; text-align:left; padding:0 12px;}
+.mealTable th:last-child{text-align:center; padding:0 5px;}
+.mealTable td{height:36px; padding:0 12px; color:#000; font-size:13px; border-bottom:1px solid #E6E6E6; border-right:1px solid #E6E6E6;}
+.mealTable td.totalCal{border-right:none; text-align:center; padding:0 5px; color:#388CE5; font-size:14px; font-weight:500;}
+.mealTable td.aCourse{background:#F2FAEB;}
+.mealTable td.bCourse{background:#FAF3EB;}
