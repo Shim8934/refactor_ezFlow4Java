@@ -83,66 +83,68 @@
 				<li id="t2" class="on"><spring:message code='ezPortal.t134' /></li>
 			</ul>
 		</section>
-		<section class="set-frame" style="display:none;">
-			<h3><spring:message code='ezPortal.t990022' /></h3>
-			<ul class="form_set theme" id="themeSet">
-				<li class="default select">
-					<span class="form_image"></span>
-					<span class="form_name"><spring:message code='ezPortal.defaultTheme' /></span>
-				</li>
-				<li class="shortcut">
-					<span class="form_image"></span>
-					<span class="form_name"><spring:message code='ezPortal.shortcutTheme' /></span>
-				</li>
-				<li class="separation">
-					<span class="form_image"></span>
-					<span class="form_name"><spring:message code='ezPortal.separationTheme' /></span>
-				</li>
-			</ul>
-			<h3>모드</h3>
-			<ul class="form_set mode default" id="modeSet">
-				<li class="white select">
-					<span class="form_image"></span>
-					<span class="form_name">White</span>
-				</li>
-				<li class="blue">
-					<span class="form_image"></span>
-					<span class="form_name">Blue</span>
-				</li>
-				<li class="red">
-					<span class="form_image"></span>
-					<span class="form_name">Red</span>
-				</li>
-				<li class="dark">
-					<span class="form_image"></span>
-					<span class="form_name">Dark Mode</span>
-				</li>
-			</ul>
-			<h3><spring:message code='ezNewPortal.topMenu.hth03' /></h3>
-			<ul class="form_set menu default" id="menuSet">
-				<li class="top select">
-					<span class="form_image"></span>
-					<span class="form_name"><spring:message code='ezNewPortal.topMenu.hth11' /></span>
-				</li>
-				<li class="left">
-					<span class="form_image"></span>
-					<span class="form_name"><spring:message code='ezNewPortal.topMenu.hth12' /></span>
-				</li>
-			</ul>
-		</section>
-		<section class="set-portlet" id="set-portlet">
-			<h3 id="fixPortletText"><spring:message code='ezPortal.fixedPortlet' /></h3>
-			<div class="ui-portlet-list" id="fixBoardList"></div>
-			<h3><spring:message code='ezPortal.t134' />
-				<div class="cont_slide_check">
-					<label>
-						<input id="pagingSetting" type="checkbox"><spring:message code='ezNewPortal.usePaging' />
-					</label>
-				</div>
-			</h3>
-			<div class="ui-portlet-list portlet-scroll" id="portletList"></div>
-		</section>
-		<div class="btnpositionLayer" style="margin:20px 0px 0px">
+		<div style="height: calc(100% - 160px);overflow-y: auto;">
+			<section class="set-frame" style="display:none;">
+				<h3><spring:message code='ezPortal.t990022' /></h3>
+				<ul class="form_set theme" id="themeSet">
+					<li class="default select">
+						<span class="form_image"></span>
+						<span class="form_name"><spring:message code='ezPortal.defaultTheme' /></span>
+					</li>
+					<li class="shortcut">
+						<span class="form_image"></span>
+						<span class="form_name"><spring:message code='ezPortal.shortcutTheme' /></span>
+					</li>
+					<li class="separation">
+						<span class="form_image"></span>
+						<span class="form_name"><spring:message code='ezPortal.separationTheme' /></span>
+					</li>
+				</ul>
+				<h3>모드</h3>
+				<ul class="form_set mode default" id="modeSet">
+					<li class="white select">
+						<span class="form_image"></span>
+						<span class="form_name">White</span>
+					</li>
+					<li class="blue">
+						<span class="form_image"></span>
+						<span class="form_name">Blue</span>
+					</li>
+					<li class="red">
+						<span class="form_image"></span>
+						<span class="form_name">Red</span>
+					</li>
+					<li class="dark">
+						<span class="form_image"></span>
+						<span class="form_name">Dark Mode</span>
+					</li>
+				</ul>
+				<h3><spring:message code='ezNewPortal.topMenu.hth03' /></h3>
+				<ul class="form_set menu default" id="menuSet">
+					<li class="top select">
+						<span class="form_image"></span>
+						<span class="form_name"><spring:message code='ezNewPortal.topMenu.hth11' /></span>
+					</li>
+					<li class="left">
+						<span class="form_image"></span>
+						<span class="form_name"><spring:message code='ezNewPortal.topMenu.hth12' /></span>
+					</li>
+				</ul>
+			</section>
+			<section class="set-portlet" id="set-portlet">
+				<h3 id="fixPortletText"><spring:message code='ezPortal.fixedPortlet' /></h3>
+				<div class="ui-portlet-list" id="fixBoardList"></div>
+				<h3><spring:message code='ezPortal.t134' />
+					<div class="cont_slide_check">
+						<label>
+							<input id="pagingSetting" type="checkbox"><spring:message code='ezNewPortal.usePaging' />
+						</label>
+					</div>
+				</h3>
+				<div class="ui-portlet-list portlet-scroll" id="portletList"></div>
+			</section>
+		</div>
+		<div class="btnpositionLayer" style="margin:20px 0px 0px;">
 			<a class="imgbtn">
 				<span id="saveBtn"><spring:message code='ezNewPortal.t002' /></span>
 			</a>
