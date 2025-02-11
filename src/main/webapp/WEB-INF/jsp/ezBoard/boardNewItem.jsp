@@ -1034,9 +1034,9 @@
 			        var strBody = message.GetEditorContent();
 			        
 			        if (pDocID != "" && pUrl.toLowerCase().indexOf(".mht") > -1) {
-			        	strBody = message.GetEditorContent() + "<hr><br/><div contenteditable='false' >" + GetBODY(document.getElementById('docContent')).innerHTML + "</div>";
+			        	strBody = message.GetEditorContent() + "<hr><div contenteditable='false' >" + GetBODY(document.getElementById('docContent')).innerHTML + "</div>";
 			        } else {
-			        	strBody = message.GetEditorContent() + "<br/><div contenteditable='false' >" + GetBODY(document.getElementById('docContent')).innerHTML + "</div>";
+			        	strBody = message.GetEditorContent() + "<div contenteditable='false' >" + GetBODY(document.getElementById('docContent')).innerHTML + "</div>";
 			        }
 			        
 			        // 게시물 내용을 db에 넣기 위한 변수 2018-04-06 강민수92
