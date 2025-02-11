@@ -25,6 +25,7 @@
 		#ppContent h4 {font-size:1em; margin-top:1.33em; margin-bottom:1.33em;}
 		#ppContent h5 {font-size:0.83em; margin-top:1.67em; margin-bottom:1.67em;}
 		#ppContent h6 {font-size:0.67em; margin-top:2.33em; margin-bottom:2.33em;}
+		#ppContent img {height:auto !important;}
 	</style>
 		
 	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js'   )}"></script>
