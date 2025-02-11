@@ -36729,6 +36729,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 		String notiSubType;
 		NotiType notiType;
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
+		
+		// 2025-02-11 조수빈 - S버전에서 회람이 아닌 공람으로 잘못 입력되는 케이스가 있어 분기 처리 (voc #154887)
+		if (approvalFlag.equals("S") && mode.toUpperCase().equals("GONGRAM")) {
+			mode = "CIRCULATION";
+		}
+		
 		switch (mode.toUpperCase()) {
 		case "ING" :
             notiSubType = "arrive";
