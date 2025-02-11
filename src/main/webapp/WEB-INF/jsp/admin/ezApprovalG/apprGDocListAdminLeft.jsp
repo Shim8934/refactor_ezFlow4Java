@@ -1497,10 +1497,10 @@
 		        </c:if>
 		        <c:if test="${approvalFlag eq 'G'}">
 		        	<h2 class="off" id="readingRecordH2" style="display:none;">
-		        		<span class="sub_iconLNB tree_plus"></span><span class="h2Title" id="readingRecord" onclick="openFolder('readingRecord'), Open_Func(this)">열람문서함</span>
+		        		<span class="sub_iconLNB tree_plus"></span><span class="h2Title" id="readingRecord" onclick="openFolder('readingRecord'), Open_Func(this)"><spring:message code='ezApprovalG.kwc001'/></span>
 			        </h2>
 		        	<h2 class="on" id="recordCabinetH2">
-		        		<span class="sub_iconLNB tree_plus"></span><span class="h2Title" onclick="openFolder('recordCabinet')">기록물대장</span>
+		        		<span class="sub_iconLNB tree_plus"></span><span class="h2Title" onclick="openFolder('recordCabinet')"><spring:message code='ezApprovalG.LeftMenu01'/></span>
 			        </h2>
 			        <ul class="lnbUL" id="recordCabinetUL">
 			        	<li class="on"><span class="list_text" id="m01" onclick="Open_Func(this)"><spring:message code='ezApprovalG.t552'/></span></li>
@@ -1508,16 +1508,16 @@
 			        </ul>
 			        <c:if test="${fn:contains(userInfo.rollInfo, 'm=1') || fn:contains(userInfo.rollInfo, 'w=1') || fn:contains(userInfo.rollInfo, 'c=1')}">
 				        <h2 class="off" id="manageCabinetH2" style="display:none;">
-			        		<span class="sub_iconLNB tree_plus"></span><span class="h2Title" onclick="openFolder('manageCabinet')">기록물관리</span>
+			        		<span class="sub_iconLNB tree_plus"></span><span class="h2Title" onclick="openFolder('manageCabinet')"><spring:message code='ezApprovalG.LeftMenu02'/></span>
 				        </h2>
 				        <ul class="lnbUL off" id="manageCabinetUL" style="display:none;">
-				        	<li><span class="list_text" id="m07" onclick="Open_Func(this)">종료연기신청</span></li>
+				        	<li><span class="list_text" id="m07" onclick="Open_Func(this)"><spring:message code='ezApprovalG.t907'/></span></li>
 				        	<li><span class="list_text" id="m08" onclick="Open_Func(this)"><spring:message code='ezApprovalG.t908'/></span></li>
 				        	 <c:if test="${fn:contains(userInfo.rollInfo, 'm=1') || fn:contains(userInfo.rollInfo, 'c=1')}">
 					        	<li><span class="list_text" id="m09" onclick="Open_Func(this)"><spring:message code='ezApprovalG.t909'/></span></li>
 					        	<li><span class="list_text" id="admin_sub01" onclick="Menu_Click(this)"><spring:message code='ezApprovalG.t717'/></span></li>
 					        	<li><span class="list_text" id="admin_sub02" onclick="Menu_Click(this)"><spring:message code='ezApprovalG.t1754'/></span></li>
-					        	<li><span class="list_text" id="admin_sub03" onclick="Menu_Click(this)">종료연기승인</span></li>
+					        	<li><span class="list_text" id="admin_sub03" onclick="Menu_Click(this)"><spring:message code='ezApprovalG.LeftMenu03'/></span></li>
 					        	<li><span class="list_text" id="admin_sub04" onclick="Menu_Click(this)"><spring:message code='ezApprovalG.t520'/></span></li>
 								<li>
 									<span class = "list_text" id = "m15" onclick = "Open_Func(this)">
@@ -1608,7 +1608,7 @@
 				<%-- <c:if test="${useOpenGov == 'YES'}">
 					<c:if test="${fn:contains(userInfo.rollInfo, 'c=1') || fn:contains(userInfo.rollInfo, 'k=1') || fn:contains(userInfo.rollInfo, 'q=1')}">
 						<h2 class="off" id="openGovH2">
-							<span class="sub_iconLNB tree_plus"></span><span class="h2Title" id="openGov" onClick="Menu_Click(this)">원문공개문서함</span>
+							<span class="sub_iconLNB tree_plus"></span><span class="h2Title" id="openGov" onClick="Menu_Click(this)"><spring:message code='ezApprovalG.LeftMenu04'/></span>
 						</h2>
 					</c:if>
 				</c:if>--%>

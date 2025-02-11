@@ -251,7 +251,7 @@
 				</c:if>
 				<h2 style="display:none;"><span style="display:inline-block;width:100%;" onClick="goPage('sendout')">발송현황</span></h2>	
 				<c:if test="${useOpenGov == 'YES'}">
-					<h2><span style="display:inline-block;width:100%;" onClick="goPage(16)">원문공개문서함</span></h2>				
+					<h2><span style="display:inline-block;width:100%;" onClick="goPage(16)"><spring:message code='ezApprovalG.LeftMenu04'/></span></h2>				
 				</c:if>
 				<%-- 2020-05-14 홍승비 - 전자결재 첨부파일 개수제한 설정메뉴 추가 --%>
 				<h2><span style="display:inline-block;width:100%;" onClick="goPage('attachLimit')"><spring:message code='ezApprovalG.hsbAL01'/></span><ul></ul></h2>
