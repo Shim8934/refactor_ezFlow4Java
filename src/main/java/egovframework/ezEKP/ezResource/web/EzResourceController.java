@@ -1858,7 +1858,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("timeDisplay", timeDisplay);
 		model.addAttribute("writerID", writerID);
 		model.addAttribute("deptNm", deptNm);
-		model.addAttribute("title", title.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\"", "&quot;").replaceAll("'", "&apos;").replaceAll("\\\\", "&#92;"));
+		model.addAttribute("title", title.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\"", "&quot;").replaceAll("'", "&apos;"));
 		model.addAttribute("allDay", allDay);
 		model.addAttribute("entryList", entryList);
 		model.addAttribute("startDateTime", startDateTime);
