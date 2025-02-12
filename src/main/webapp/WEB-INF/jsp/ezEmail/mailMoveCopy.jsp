@@ -209,14 +209,14 @@
             <li><span onclick="Window_Close();"></span></li>
         </ul>
     </div>
-    <table class="content">
+    <table class="content" style="height: 100%; width: 100%;">
         <tr>
             <td class="pos1">
                 <div onclick="toggleTreeNode(false)" class="toggleTreeNode off" id="toggleTreeNode">
                     <span class="treeNode_toggle_icon"></span>
                     <spring:message code='ezEmail.kdh06' />
                 </div>
-                <div style="border: 0px solid #ddd; height: 255px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF; padding-left: 4px; padding-top: 5px; width:293px" id="PostTreeView">
+                <div style="border: 0px solid #ddd; min-height: 550px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF; padding-left: 4px; padding-top: 5px;" id="PostTreeView">
                 </div>
             </td>
         </tr>

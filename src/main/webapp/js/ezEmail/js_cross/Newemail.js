@@ -552,7 +552,7 @@ function move_mail_onclick() {
 		currentFixingIdTemp = currentFixingId;
 	}
 	
-    var OpenWin = window.open(requestUrl, "mail_movecopy_cross", GetOpenWindowfeature(322, 380));
+    var OpenWin = window.open(requestUrl, "mail_movecopy_cross", GetOpenWindowfeature(500, 700));
     try { OpenWin.focus(); } catch (e) {console.log(e);}
 }
 
