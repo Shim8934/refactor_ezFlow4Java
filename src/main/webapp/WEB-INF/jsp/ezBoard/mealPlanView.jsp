@@ -206,17 +206,25 @@
 		
 		</script>
 	</head>
-	<body class="mainbody" style="height:100%;">
+	<body class="mainbody meal" style="height:calc(100% - 15px);">
 		<h1>
 			<spring:message code='ezMealPlan.jsb001' />
 		</h1>
 		<div class="calendar_pagenav">
+			<c:if test="${isAdmin eq 'true'}">
+				<div id="mainmenu">
+					<ul>
+						<li>
+							<span onclick="editMealPlan()"><spring:message code='ezMealPlan.jsb011' /></span></li>
+					</ul>
+				</div>
+			</c:if>
 	        <ul class="contentlayout">
 	            <li class="contentlayout_left" id="preM"><span class="icon16 calendarleft" onclick="preWeek()"></span></li>
 	            <li class="contentlayout_right" id="preN"><span class="icon16 calendarright" onclick="nextWeek()"></span></li>
 	            <li class="contentlayout_none">
-	            	<span style="display: flex; justify-content: center;">
-	            		<span class="spanText" id="viewSchedule" style="color: black;"></span>
+	            	<span class="meal_plan_date">
+	            		<span class="spanText" id="viewSchedule"></span>
 	            		<input type="hidden" id="weekPicker" onchange="setMealTable()">
 	            	</span>
 	            </li>
@@ -283,12 +291,6 @@
 			</tr>
 	    </table>
 		<c:if test="${isAdmin eq 'true'}">
-			<div id="mainmenu" style="float: right; margin-top: 10px;">
-	            <ul>
-	                <li style="margin-right: 0px">
-	                	<span onclick="editMealPlan()"><spring:message code='ezMealPlan.jsb011' /></span></li>
-	            </ul>
-        	</div>
         	<form  id="goWrite" action="/ezBoard/mealPlanWrite.do" method="post">
         		<input type="hidden" name="startDate" id="startDate">
         		<input type="hidden" name="selectDate" id="selectDate">

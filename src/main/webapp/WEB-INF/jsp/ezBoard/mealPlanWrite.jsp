@@ -20,6 +20,8 @@
 				width: -webkit-fill-available;
 				height: -webkit-fill-available;
 				resize: none;
+				border:1px solid #fff;
+				vertical-align:top;
 			}
 		</style>
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}"/>
@@ -253,17 +255,28 @@
 		}
 		</script>
 	</head>
-	<body class="mainbody" style="height:100%;">
+	<body class="mainbody meal" style="height:calc(100% - 15px);">
 		<h1>
 			<spring:message code='ezMealPlan.jsb001' />
 		</h1>
 		<div class="calendar_pagenav">
+			<div id="mainmenu">
+				<ul>
+					<li>
+						<span onclick="goView()"><spring:message code='ezMealPlan.jsb009' /></span>
+					</li>
+					<li>
+						<span onclick="saveMealPlan()"><spring:message code='ezMealPlan.jsb010' /></span>
+					</li>
+				</ul>
+			</div>
+
 	        <ul class="contentlayout">
 	            <li class="contentlayout_left" id="preM"><span class="icon16 calendarleft" onclick="preWeek()"></span></li>
 	            <li class="contentlayout_right" id="preN"><span class="icon16 calendarright" onclick="nextWeek()"></span></li>
 	            <li class="contentlayout_none">
-	            	<span style="display: flex; justify-content: center;">
-	            		<span class="spanText" id="viewSchedule" style="color: black;"></span>
+	            	<span class="meal_plan_date">
+	            		<span class="spanText" id="viewSchedule"></span>
 	            		<input type="hidden" id="weekPicker" onchange="setMealTable()">
 	            	</span>
 	            </li>
@@ -329,15 +342,5 @@
 				<td></td>
 			</tr>
 	    </table>
-		<div id="mainmenu" style="float: right; margin-top: 10px;">
-            <ul>
-                <li>
-                	<span onclick="goView()"><spring:message code='ezMealPlan.jsb009' /></span>
-                </li>
-                <li style="margin-right: 0px">
-                	<span onclick="saveMealPlan()"><spring:message code='ezMealPlan.jsb010' /></span>
-                </li>
-            </ul>
-       	</div>
 </body>
 </html>
