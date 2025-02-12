@@ -6225,14 +6225,17 @@ public class EzEmailUtil {
     /**
      * smtp server info
      */
-    public SMTPAccess getSMTPServer(String userAccount, String userPw, int tenantId) {
-    	return getSMTPServer(userAccount, userPw, tenantId, true);
-    }
-    
+ 	public SMTPAccess getSMTPServer(String userAccount, String userPw, String primary, int tenantId) {
+		return getSMTPServer(userAccount, userPw, primary, tenantId, true);
+	}
     /**
      * smtp server info
      */
-    public SMTPAccess getSMTPServer(String userAccount, String userPw, int tenantId, boolean usingAuth) {
+	public SMTPAccess getSMTPServer(String userAccount, String userPw, int tenantId, boolean usingAuth) {
+		return getSMTPServer(userAccount, userPw, "", tenantId, true);
+	}
+
+	public SMTPAccess getSMTPServer(String userAccount, String userPw, String primary, int tenantId, boolean usingAuth) {
     	logger.debug("getSMTPServer started.");
     	
     	String smtpMailServer = "";
@@ -6274,21 +6277,22 @@ public class EzEmailUtil {
 					}
 				} // externalMailServerAddr if end
 			}
-			
-			logger.debug("smtpMailServer=" + smtpMailServer + ", smtpMailServerPort=" + smtpMailServerPort + ", usingAuth=" + usingAuth);
+
+			logger.debug("smtpMailServer={}, smtpMailServerPort={}, usingAuth={}, smtpUserId={}, primary={}", smtpMailServer, smtpMailServerPort, usingAuth, smtpUserId, primary);
+
 			if (usingAuth) {
-				reSMTPAccess = SMTPAccess.getInstance(smtpMailServer, smtpMailServerPort, smtpUserId, smtpUserPw);
+				reSMTPAccess = SMTPAccess.getInstance(smtpMailServer, smtpMailServerPort, smtpUserId, smtpUserPw, primary);
 			} else {
-				reSMTPAccess = SMTPAccess.getNotAuthInstance(smtpMailServer, smtpMailServerPort, smtpUserId, smtpUserPw);
+				reSMTPAccess = SMTPAccess.getNotAuthInstance(smtpMailServer, smtpMailServerPort, smtpUserId, smtpUserPw, primary);
 			}
 		} catch (DataAccessException e) {
 			logger.error(e.getMessage(), e);
 
-			reSMTPAccess = SMTPAccess.getInstance(smtpMailServer, smtpMailServerPort, userAccount, userPw);
+			reSMTPAccess = SMTPAccess.getInstance(smtpMailServer, smtpMailServerPort, userAccount, userPw, primary);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			
-			reSMTPAccess = SMTPAccess.getInstance(smtpMailServer, smtpMailServerPort, userAccount, userPw);
+			reSMTPAccess = SMTPAccess.getInstance(smtpMailServer, smtpMailServerPort, userAccount, userPw, primary);
 		}
     	logger.debug("getSMTPServer ended.");
     	return reSMTPAccess;

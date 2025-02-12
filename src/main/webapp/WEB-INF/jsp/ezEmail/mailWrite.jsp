@@ -2382,7 +2382,7 @@
 		                        	<span style="width: 50px;"><spring:message code='ezEmail.lhm30' /></span>
 		                        </th>
 		                        <td colspan="3">
-		                        	<select id="fromAddressList" onchange="fromAddressChange(this.value);">
+		                        	<select id="fromAddressList" style="width: 100%" onchange="fromAddressChange(this.value);">
                                         <c:forEach var="alias" items="${fromAddressList}">
                                             <option value="${alias[2]}||;${alias[0]}" ${alias[0].equals(from) ? 'selected="selected"' : ''}>
                                                 ${alias[2]} ${alias[0]}

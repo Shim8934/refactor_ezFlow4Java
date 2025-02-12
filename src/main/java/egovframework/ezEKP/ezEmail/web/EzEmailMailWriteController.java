@@ -2529,7 +2529,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		/*SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
 				userAccount, password);*/
-		SMTPAccess sa = ezEmailUtil.getSMTPServer(userAccount, password, userInfo.getTenantId());
+		SMTPAccess sa = ezEmailUtil.getSMTPServer(userAccount, password, userInfo.getEmail(), userInfo.getTenantId());
 		
 		String pResult = null;
 		IMAPAccess ia = null;
@@ -5964,7 +5964,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		if (uid != 0) {
 			SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
-					userEmail, password);
+					userEmail, password, loginInfo.getEmail());
 			
 			IMAPAccess ia = null;
 			try {

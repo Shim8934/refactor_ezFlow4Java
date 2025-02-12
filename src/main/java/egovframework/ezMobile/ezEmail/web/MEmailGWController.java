@@ -1294,7 +1294,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 		        	} else if (folderPath.equals(sentFolderName) && cmd.equals("RESEND") && !msgto.equals("")) {
 		        		//임시보관함에 메시지 임시저장
 		        		SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
-		        				userEmail, password);
+		        				userEmail, password, info.getEmail());
 		        		MimeMessage resendMessage = sa.createMimeMessage();
 		        		
 		        		resendMessage.setFlag(Flags.Flag.SEEN, true);
@@ -2670,7 +2670,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 				// 일반 첨부 파일이 있는 경우
 				if (hasAttachFile) {
 					SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
-							userEmail, password);
+							userEmail, password, info.getEmail());
 					
 					// 첨부파일들을 추가하여 임시 보관함에 저장할 메시지를 생성한다.
 					newMessage = sa.createMimeMessage();
@@ -2922,7 +2922,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 
 				if (rows != null && rows.item(0) != null) {
 					SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
-							userEmail, password);
+							userEmail, password, info.getEmail());
 
 					IMAPAccess ia = null;
 					try {
@@ -3272,7 +3272,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			}
 			
 			SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
-					userEmail, password);
+					userEmail, password, info.getEmail());
 		
 			String pResult = null;
 			IMAPAccess ia = null;
@@ -4670,7 +4670,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 							OrganUserVO userVO = ezOrganAdminService.getUserInfo(info.getUserId(), info.getLang(), info.getTenantId());
 							
 							SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
-									userEmail, password);
+									userEmail, password, info.getEmail());
 							
 							ezEmailMailReadController.processAutoMDN(sa, message, userEmail, userVO.getDisplayName(), info.getTenantId());
 						} else {
@@ -9081,7 +9081,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 							OrganUserVO userVO = ezOrganAdminService.getUserInfo(info.getUserId(), info.getLang(), info.getTenantId());
 							
 							SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
-									userEmail, password);
+									userEmail, password, info.getEmail());
 							
 							ezEmailMailReadController.processAutoMDN(sa, message, userEmail, userVO.getDisplayName(), info.getTenantId());
 						} else {
