@@ -4254,12 +4254,20 @@ a.commentFileSpan:hover {cursor: pointer; text-decoration: underline;}
 
 /* 게시판 - 식단 */
 .meal .calendar_pagenav{width:100%; margin:0; display:flex; justify-content:center; align-items:center; position:relative; left:0; top:0; height:31px;}
-.meal #mainmenu{position:absolute; left:0; margin:0 !important;}
-.meal #mainmenu ul{margin:0 !important;}
-.meal #mainmenu ul li{margin:0 3px 0 0;}
-.meal #mainmenu ul li:last-child{margin:0;}
+.meal .meal_btn{position:absolute; left:0; margin:0; padding:0; list-style:none;}
+.meal .meal_btn li{float:left; margin:0 3px 0 0; border:1px solid #cecece; padding:0; cursor:pointer; height:29px; color:#393939; border-radius:3px;}
+.meal .meal_btn li:last-child{margin:0;}
+.meal .meal_btn li:hover{color:#0470E4; border:1px solid #388CE5;}
+.meal .meal_btn li span{display:block; padding:0 9px; font-size:13px; line-height:29px; box-sizing:border-box;}
 
 .meal .contentlayout_left{margin-right:5px;}
 .meal .contentlayout_right{margin-left:5px;}
 .meal .meal_plan_date{display:flex; justify-content:center; align-items:center;}
 .meal .meal_plan_date img{margin:0 0 0 5px !important;}
+
+/* 일정 모아보기 */
+.schedule_list_date{display:flex; justify-content:center; align-items:center; width:100%;}
+.schedule_list_date span{color:#000; font-size:18px; font-weight:bold;}
+.schedule_list_date .date_arr{width:16px; height:16px; background-repeat:no-repeat; background-position:center; cursor:pointer;}
+.schedule_list_date .date_arr.date_prev{background-image:url(../images/date_prev.png); margin-right:65px;}
+.schedule_list_date .date_arr.date_next{background-image:url(../images/date_next.png); margin-left:65px;}

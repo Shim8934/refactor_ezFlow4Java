@@ -261,16 +261,14 @@
 			<spring:message code='ezMealPlan.jsb001' />
 		</h1>
 		<div class="calendar_pagenav">
-			<div id="mainmenu">
-				<ul>
-					<li>
-						<span onclick="goView()"><spring:message code='ezMealPlan.jsb009' /></span>
-					</li>
-					<li>
-						<span onclick="saveMealPlan()"><spring:message code='ezMealPlan.jsb010' /></span>
-					</li>
-				</ul>
-			</div>
+			<ul class="meal_btn">
+				<li>
+					<span onclick="goView()"><spring:message code='ezMealPlan.jsb009' /></span>
+				</li>
+				<li>
+					<span onclick="saveMealPlan()"><spring:message code='ezMealPlan.jsb010' /></span>
+				</li>
+			</ul>
 
 	        <ul class="contentlayout">
 	            <li class="contentlayout_left" id="preM"><span class="icon16 calendarleft" onclick="preWeek()"></span></li>
