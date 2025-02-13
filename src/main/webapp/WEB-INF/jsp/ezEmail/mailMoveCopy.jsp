@@ -216,7 +216,7 @@
                     <span class="treeNode_toggle_icon"></span>
                     <spring:message code='ezEmail.kdh06' />
                 </div>
-                <div style="border: 0px solid #ddd; min-height: 550px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF; padding-left: 4px; padding-top: 5px;" id="PostTreeView">
+                <div style="border: 0px solid #ddd; min-height: 520px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF; padding-left: 4px; padding-top: 5px; padding-bottom: 30px;" id="PostTreeView">
                 </div>
             </td>
         </tr>
