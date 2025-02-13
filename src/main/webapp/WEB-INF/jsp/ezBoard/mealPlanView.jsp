@@ -213,12 +213,11 @@
 		</h1>
 		<div class="calendar_pagenav">
 			<c:if test="${isAdmin eq 'true'}">
-				<div id="mainmenu">
-					<ul>
-						<li>
-							<span onclick="editMealPlan()"><spring:message code='ezMealPlan.jsb011' /></span></li>
-					</ul>
-				</div>
+				<ul class="meal_btn">
+					<li>
+						<span onclick="editMealPlan()"><spring:message code='ezMealPlan.jsb011' /></span>
+					</li>
+				</ul>
 			</c:if>
 	        <ul class="contentlayout">
 	            <li class="contentlayout_left" id="preM"><span class="icon16 calendarleft" onclick="preWeek()"></span></li>
