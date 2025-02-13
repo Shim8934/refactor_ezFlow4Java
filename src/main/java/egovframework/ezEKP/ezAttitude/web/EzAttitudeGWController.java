@@ -1743,11 +1743,11 @@ public class EzAttitudeGWController {
 			String serverName = request.getHeader("x-user-host");
 			String companyId = request.getParameter("companyId");
 			String isAllDept = request.getParameter("isAllDept");
-			
+			String lang = request.getParameter("lang") == null ? "1" : request.getParameter("lang");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
 			// 현재 사용자가 아닌 해당 근태권한자의 primary 언어값을 전달하고 있으므로 주의 (수정 필요)
-			List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), companyId, userId, isAllDept, info.getPrimary());
+			List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), companyId, userId, isAllDept, lang);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
