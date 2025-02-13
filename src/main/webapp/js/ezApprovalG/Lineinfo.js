@@ -309,6 +309,12 @@ function APRLINEATTENDADDFunction(pCurSelectedRow, Mode) {
 			var pAlertContent = strLang250 + "<br> " + strLang251;
 			OpenAlertUI(pAlertContent);	  
 		}
+	} else if (Mode == "DEPT") {
+		if (GetEntryInfo(pCurSelectedRow.GetNodeData("CN")) == "N") {
+			var pAlertContent = strLang1105;
+			OpenAlertUI(pAlertContent);
+			return;
+		}
 	}
     
     var p_PrevAprStat = "";

@@ -45,6 +45,9 @@
         	var requestData = displayTrashDeptStr ? "RequestDataContainsTrashDept" : "RequestData";
         	treeView.SetID("FromTreeView");
         	treeView.SetUseAgency(true);
+			if ($("#1tab1").attr("class") == "tabon") {
+				treeView.SetUseSusinColor4AprG(true);
+			}
         	treeView.SetRequestData(requestData);
         	treeView.SetNodeClick("TreeViewNodeClick");
         	treeView.DataSource(xmlDom);
@@ -108,7 +111,9 @@ function GetDeptSubTreeInfo(deptID, TreeIdx, displayTrashDept) {
 
     var treeView = new TreeView();      //미리 생성된 TreeView의 ID로 TreeView 개체 생성
     treeView.LoadFromID("FromTreeView");
-
+	if ($("#1tab1").attr("class") == "tabon") {
+		treeView.SetUseSusinColor4AprG(true);
+	}
     treeView.AppendChildNodes(xmlRtn.documentElement, TreeIdx);
 }
 
