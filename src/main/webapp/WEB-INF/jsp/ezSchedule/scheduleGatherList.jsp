@@ -74,7 +74,7 @@
 	
 		        var Para = RetValue;
 		        var entries;
-				document.getElementById("groupName").innerText = "▪ " + Para["groupName"].toString();
+				document.getElementById("groupName").innerText = Para["groupName"].toString();
 	
 		        if (typeof (Para) != "undefined" && Para != null) {
 		            s_date = Para["startTime"];
@@ -293,7 +293,7 @@
    								{
    									for( var n = 0 ; n < GetChildNodes(objTrNode).length ; n++ )
    									{
-   										GetChildNodes(objTrNode)[n].style.backgroundColor="#D4B96C";
+   										GetChildNodes(objTrNode)[n].style.backgroundColor="rgba(61,143,234,0.8)";
    									}
    									
    									titleStr += "[<spring:message code='ezSchedule.t128' />] ";
@@ -338,7 +338,7 @@
    									
    									for(var j= start; j < end; j++)
    									{
-   									    GetChildNodes(objTrNode)[j].style.backgroundColor="#D4B96C";
+   									    GetChildNodes(objTrNode)[j].style.backgroundColor="rgba(61,143,234,0.8)";
    									}
    									
    									titleStr += "[" + ChangeTime(s_hour, s_minute) + "~" + ChangeTime(e_hour, e_minute) + "] ";
@@ -419,88 +419,130 @@
 		            }
 		        return elements;
 		    }
+
+
+
+			document.addEventListener("DOMContentLoaded",function(){
+				// 테이블 뒤 라인 생성용 테이블
+				var bgTable = document.querySelector(".entryList_bg");
+
+				var addTr = document.createElement("tr");
+				for(var i = 0; i < 49; i++){
+					var addTh = document.createElement("th");
+					addTr.appendChild(addTh);
+				}
+				bgTable.appendChild(addTr);
+
+				var addTr2 = document.createElement("tr");
+				for(var j = 0; j < 49; j++){
+					var addTd = document.createElement("td");
+					addTr2.appendChild(addTd);
+				}
+				bgTable.appendChild(addTr2);
+
+
+				// 일정표 max-height 계산식
+				var windowHeight = $(window).height();
+				var groupInfoHeight = $(".schedule_group_info").outerHeight(true) || 0;
+				var h1Height = $("h1").outerHeight(true) || 0;
+				var dateHeight = $(".schedule_list_date").outerHeight(true) || 0;
+				var tableHeight = windowHeight - (groupInfoHeight + h1Height + dateHeight + 40);
+
+				document.querySelector(".entry_wrap").style.maxHeight = tableHeight + "px";
+			})
+
+			window.addEventListener("resize",function(){
+				// 일정표 리사이징시 높이 계산 - 첫 로딩때 계산과 동일
+				var windowHeight = $(window).height();
+				var groupInfoHeight = $(".schedule_group_info").outerHeight(true) || 0;
+				var h1Height = $("h1").outerHeight(true) || 0;
+				var dateHeight = $(".schedule_list_date").outerHeight(true) || 0;
+				var tableHeight = windowHeight - (groupInfoHeight + h1Height + dateHeight + 40);
+
+				document.querySelector(".entry_wrap").style.maxHeight = tableHeight + "px";
+			})
 		</script>
 	</head>
 	
 	<body class="mainbody" onload="javascript:window_onload()">
 		<h1><spring:message code='ezSchedule.ljeGs001' /></h1>
-		<h2 id="groupName" style="font-size:14px; padding-left:10px;"></h2>
+		<div class="schedule_list_date">
+			<span class="date_arr date_prev" onClick="dateMove_onClick( '-1' )"></span>
+			<span id="currDate"></span>
+			<span class="date_arr date_next" onclick="dateMove_onClick( '1' )"></span>
+		</div>
+		<div class="schedule_group_info">
+			<h2 id="groupName"></h2><span class="info_txt">일정있음</span>
+		</div>
+
 		<br/>
-		<table class="nobox">
+		<table class="nobox" style="width:100%;">
 	    	<tr>
 	       		<td>
-		   			<table style="padding-top:5px; border:0px; text-align:center; padding:0px; border-collapse:collapse; border-spacing:0px; width:100%">
-						<tr>
-	        				<td style="text-align:center">
-	            			<img onClick="dateMove_onClick( '-1' )" style="cursor:pointer; width:13px; height:13px;" src="/images/etc/calendar_prev.gif">
-	            			<span id="currDate"></span>
-	            			<img onClick="dateMove_onClick( '1' )" style="cursor:pointer; width:13px; height:13px;" src="/images/etc/calendar_next.gif"></td>							
-	   				 	</tr>
-					</table>
-					<table style="margin-bottom:2px; width:663px; border:0px; padding:0px; border-collapse:collapse;border-spacing:0px">
-						<tr>
-							<td valign="top"><img src="/images/i_timetable.gif" style="width:672px; height:33px"></td>
-						</tr>
-					</table>
-	       			<div style="BORDER: #ddd 1px solid; overflow-x: hidden; overflow-Y: scroll; WIDTH: 670px; HEIGHT: 260px; BACKGROUND-IMAGE:  url(/images/i_timetable_bg.gif);">
-	         			<table style="width:650px; border:0px; text-align:left; padding:0px; border-collapse:collapse; border-spacing:0px">
+	       			<div class="entry_wrap">
+	         			<table>
 	           				<tr>
 	             				<td>
-	             					<div style ="background-color:none;BORDER:#FFFFFF 0px solid;OVERFLOW:hidden;TEXT-ALIGN:left;HEIGHT:100%;">
-	                 					<table style="border-collapse:collapse;border-spacing:0px; width:650px; border:0px" id="entryList">
+	             					<div class="entryDiv" style ="background-color:none;BORDER:#FFFFFF 0px solid;OVERFLOW:hidden;TEXT-ALIGN:left;HEIGHT:100%;">
+										<table class="entryList_bg"></table>	<!-- 테이블 배경 라인 -->
+	                 					<table id="entryList" class="entryList">
+											<tr>
+												<th></th><th><span>AM</span>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th>
+												<th><span>PM</span>12</th><th>13</th><th>14</th><th>15</th><th>16</th><th>17</th><th>18</th><th>19</th><th>20</th><th>21</th><th>22</th><th>23</th>
+											</tr>
 	                   						<tr>
-	                     						<td style="PADDING-TOP:2px;word-break: break-all;BACKGROUND-COLOR:#f8f8f8;border-collapse:collapse;border-bottom: solid 1px #ddd; width:102px; height:25px; text-align:center" id="" deptid=""></td>
-	                     						<td style="padding-left:9px;border-collapse:collapse; border-bottom: solid 1px #dadada" >
-	                        						<table style="border:0px; padding:0px; border-collapse:collapse; border-spacing:0px" >
+	                     						<td class="entry_name" id="" deptid=""></td>
+	                     						<td class="entry_schedule" colspan="24">
+	                        						<table style="border:0px; padding:0px; border-collapse:collapse; border-spacing:0px; width:100%;" >
 	                         							<tr>
-	                           								<td style="BACKGROUND-COLOR: #f8f8f8; height:11px; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
-															<td style="BACKGROUND-COLOR: #f8f8f8; width:11px"></td>
+															<td style="height:16px;"></td>
+															<td style="height:16px;"></td>
+															<td style="height:16px;"></td>
+															<td style="height:16px;"></td>
+															<td style="height:16px;"></td>
+															<td style="height:16px;"></td>
+															<td style="height:16px;"></td>
+															<td style="height:16px;"></td>
+															<td style="height:16px;"></td>
+															<td style="height:16px;"></td>
+															<td style="height:16px;"></td>
+															<td style="height:16px;"></td>
+															<td style="height:16px;"></td>
+															<td style="height:16px;"></td>
+															<td style="height:16px;"></td>
+															<td style="height:16px;"></td>
+															<td style="height:16px;"></td>
+															<td style="height:16px;"></td>
+															<td style="height:16px;"></td>
+															<td style="height:16px;"></td>
+															<td style="height:16px;"></td>
+															<td style="height:16px;"></td>
+															<td style="height:16px;"></td>
+															<td style="height:16px;"></td>
+															<td style="height:16px;"></td>
+															<td style="height:16px;"></td>
+															<td style="height:16px;"></td>
+															<td style="height:16px;"></td>
+															<td style="height:16px;"></td>
+															<td style="height:16px;"></td>
+															<td style="height:16px;"></td>
+															<td style="height:16px;"></td>
+															<td style="height:16px;"></td>
+															<td style="height:16px;"></td>
+															<td style="height:16px;"></td>
+															<td style="height:16px;"></td>
+															<td style="height:16px;"></td>
+															<td style="height:16px;"></td>
+															<td style="height:16px;"></td>
+															<td style="height:16px;"></td>
+															<td style="height:16px;"></td>
+															<td style="height:16px;"></td>
+															<td style="height:16px;"></td>
+															<td style="height:16px;"></td>
+															<td style="height:16px;"></td>
+															<td style="height:16px;"></td>
+															<td style="height:16px;"></td>
+															<td style="height:16px;"></td>
 	                        							 </tr>
 	                     							</table>
 	                     						</td>
@@ -512,9 +554,6 @@
 	         			</table>
 	       			</div>
 	       		</td>
-	     	</tr>
-	     	<tr>
-	     		<td style="width:60px;text-align:right;"><img <spring:message code='ezSchedule.i1' /> /></td>
 	     	</tr>
 		</table>	
 	</body>
