@@ -7,7 +7,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>::: ezEKP Java :::</title>
+<title>::: ezFlow Java :::</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <link href="../../css/fido.css" rel="stylesheet" type="text/css">
 	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
