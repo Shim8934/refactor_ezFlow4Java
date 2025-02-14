@@ -202,10 +202,10 @@ public interface EzNewPortalService {
 	// 2024-07-10 조수빈 - 다국어 사용 여부 판단 로직 추가 위해 수정함. 
 	public List<PortletNameInfoVO> getPortletNameList(String companyId, int tenantId, int portletId) throws Exception;
 	public void setWeather() throws Exception;
-	public Map<String, Object> getWeather(String cityCode, int primary);
-	public List<WeatherVO> getCityList(int primaryLang);
+	public Map<String, Object> getWeather(String cityCode, int primary, String countryCode);
+	public List<WeatherVO> getCityList(int primaryLang, String countryCode);
 	public String getUserCityCode(String id, int tenantId) throws Exception;
-	public void setUserCityCode(String id, int tenantId, String cityCode);
+	public void setUserCityCode(String id, int tenantId, String cityCode, String countryCode);
 	
 	/**
 	 * 김보미
@@ -295,4 +295,10 @@ public interface EzNewPortalService {
 	public JSONArray getPortalApprovalList(PortletAprInfoVO portletAprInfoVO) throws Exception;
 
 	public int getResportletId() throws Exception;
+
+	public String getCountryCode(String userID, int tenantID) throws Exception;
+
+	public String getUserLocalLang(String userID, int tenantID) throws Exception;
+
+	public String getFirstCityCode(String countryCode) throws Exception;
 }
