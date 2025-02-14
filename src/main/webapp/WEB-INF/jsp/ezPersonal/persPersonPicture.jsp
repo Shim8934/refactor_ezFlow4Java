@@ -17,6 +17,11 @@
 	        window.onload = function () {
 	            try {
 	                ReturnFunction = opener.personpicture_cross_dialogArguments[1];
+	                
+	                // 2025-02-14 조수빈 - 기존 등록된 이미지 나타나지 않는 결함 수정 (#154694)
+	                if (window.opener.document.getElementById('myimg')) {
+		                document.getElementById('preview').src = window.opener.document.getElementById('myimg').src;
+	                }
 	            } catch (e) {
 	            }
 	        }
