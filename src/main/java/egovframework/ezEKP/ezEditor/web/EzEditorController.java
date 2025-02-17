@@ -94,10 +94,10 @@ public class EzEditorController extends EgovFileMngUtil {
 		String useHTMLMode = ezCommonService.getTenantConfig("USE_HTMLMODE", userInfo.getTenantId());
 
 		String defaultFontFamily = egovMessageSource.getMessage("main.t246", userInfo.getLocale());
-		String defaultFontSize = "13px";
+		String defaultFontSize = "10pt";
 
-		// 사용자 언어가 한국어이고 editorFontStyle값이 있을 경우 editorFontStyle값 적용
-		if (userInfo.getLang().equals("1") && requestURL.indexOf("selectApprovalEditor.do") == -1) {
+		// editorFontStyle값이 있을 경우 editorFontStyle값 적용
+		if (requestURL.indexOf("selectApprovalEditor.do") == -1) {
 			String editorFontStyle = ezCommonService.getTenantConfig("editorFontStyle", userInfo.getTenantId());
 
 			if (!editorFontStyle.equals("")) {
