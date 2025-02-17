@@ -329,12 +329,15 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							logger.debug("message=" + message);
 		
 							String[] messageIds = message.getHeader("Message-ID");
-							logger.debug("Message-ID=" + messageIds[0]);
-		
-							int blockedMail = ezEmailService.checkBlockedMailByMessageId(messageIds[0]);
-						
-							if (blockedMail == 1) {
-								return "ezEmail/blockedMail";
+
+							if (messageIds != null) {
+								logger.debug("Message-ID=" + messageIds[0]);
+
+								int blockedMail = ezEmailService.checkBlockedMailByMessageId(messageIds[0]);
+
+								if (blockedMail == 1) {
+									return "ezEmail/blockedMail";
+								}
 							}
 						}
 					}
@@ -3099,12 +3102,14 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							logger.debug("message=" + message);
 
 							String[] messageIds = message.getHeader("Message-ID");
-							
-							logger.debug("Message-ID=" + messageIds[0]);
-							blockedMail = ezEmailService.checkBlockedMailByMessageId(messageIds[0]);
 
-							if (blockedMail == 1) {
-								emptyFlag = true;
+							if (messageIds != null) {
+								logger.debug("Message-ID=" + messageIds[0]);
+								blockedMail = ezEmailService.checkBlockedMailByMessageId(messageIds[0]);
+
+								if (blockedMail == 1) {
+									emptyFlag = true;
+								}
 							}
 						} else {
 							logger.error("Message not found. uid=" + uid);
