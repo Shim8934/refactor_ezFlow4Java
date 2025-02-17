@@ -76,6 +76,7 @@ public class EzCabinetController {
 			model.addAttribute("percent"      , capacity.get("usedRate"));
 			model.addAttribute("totalCapacity", capacity.get("totalCapacity"));
 			model.addAttribute("useVolume"    , getFileSize(Long.parseLong((String)capacity.get("totalUsed"))));
+			model.addAttribute("UserLang", commonUtil.getMultiData(user.getLang(), user.getTenantId()));
 		}
 		
 		logger.debug("jspGetCabinetLeft ended");
