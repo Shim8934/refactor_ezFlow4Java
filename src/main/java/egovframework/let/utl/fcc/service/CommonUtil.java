@@ -1378,12 +1378,28 @@ public class CommonUtil {
 		return returnValue;
 	}
 	
-	public String getLangNumFromTwoLetterLang(String twoLetterLang) {
+	public String getLangNumFromTwoLetterLang(String twoLetterLang, int tenantId) {
 		String returnValue = "";
 		
 		if (twoLetterLang == null) {
 			logger.error("twoLetterLang is null.");
 			return null;
+		}
+
+		String useJapanese = "";
+		String useChinese = "";
+		String useVietnamese = "";
+		String useIndonesian = "";
+		
+		try {
+			useJapanese = ezCommonService.getTenantConfig("useJapanese", tenantId);
+			useChinese = ezCommonService.getTenantConfig("useChinese", tenantId);
+			useVietnamese = ezCommonService.getTenantConfig("useVietnamese", tenantId);
+			useIndonesian = ezCommonService.getTenantConfig("useIndonesian", tenantId);
+		} catch (DataAccessException e) {
+			logger.error(e.getMessage(), e);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
 		}
 		
 		// 2018-02-28 skyblue0o0 : 중국어(zh)는 아직 지원하지 않으므로 주석처리
@@ -1392,14 +1408,14 @@ public class CommonUtil {
 			returnValue = "1";
 		} else if (twoLetterLang.equalsIgnoreCase("en")) {
 			returnValue = "2";
-		} else if (twoLetterLang.equalsIgnoreCase("ja")) {
+		} else if (twoLetterLang.equalsIgnoreCase("ja") && "YES".equalsIgnoreCase(useJapanese)) {
 			returnValue = "3";
-		} else if (twoLetterLang.equalsIgnoreCase("zh")) {
+		} else if (twoLetterLang.equalsIgnoreCase("zh") && "YES".equalsIgnoreCase(useChinese)) {
 			returnValue = "4";
-		} else if (twoLetterLang.equalsIgnoreCase("vi")) {
+		} else if (twoLetterLang.equalsIgnoreCase("vi") && "YES".equalsIgnoreCase(useVietnamese)) {
 			returnValue = "5";
-		} else if (twoLetterLang.equalsIgnoreCase("id")) {
-			returnValue = "6";
+		} else if (twoLetterLang.equalsIgnoreCase("id") && "YES".equalsIgnoreCase(useIndonesian)) {
+			returnValue = "6"; 
 		} else {
 			logger.error("Invalid twoLetterLang.");
 		}

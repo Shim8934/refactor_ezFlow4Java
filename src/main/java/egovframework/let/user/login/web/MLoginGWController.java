@@ -700,7 +700,7 @@ public class MLoginGWController {
 						returnValue = commonUtil.getTwoLetterLangFromLangNum(primaryLang);
 					}
 
-					lang = commonUtil.getLangNumFromTwoLetterLang(returnValue);
+					lang = commonUtil.getLangNumFromTwoLetterLang(returnValue, tenantId);
 
 					// 브라우저 언어가 한국어/일본어가 아닐 경우 시스템 언어로 설정(영어/중국어 추후 지원)
 					if (lang.equals("")) {
@@ -711,6 +711,8 @@ public class MLoginGWController {
 						if ("YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useSecondaryLang", tenantId))) {
 							lang = "2";
 						}
+
+						returnValue = commonUtil.getTwoLetterLangFromLangNum(lang);						
 					}
 
 					timeZone = ezCommonService.getTenantConfig("PrimaryTimeZone", tenantId);
@@ -751,11 +753,17 @@ public class MLoginGWController {
 						pcLang = commonUtil.getTwoLetterLangFromLangNum(primaryLang);
 					}
 
-					pcLang = commonUtil.getLangNumFromTwoLetterLang(pcLang);
+					pcLang = commonUtil.getLangNumFromTwoLetterLang(pcLang, tenantId);
 
 					// 브라우저 언어가 한국어/일본어가 아닐 경우 시스템 언어로 설정(영어/중국어 추후 지원)
 					if (pcLang.equals("")) {
 						pcLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
+
+						// useSecondaryLang 설정이 YES일 때는 PrimaryLang이 영어가 아닌 경우에도 기본적으로 엉어를 사용하는 환경을
+						// 의미하므로 디폴트 언어 설정을 영어로 설정함.
+						if ("YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useSecondaryLang", tenantId))) {
+							pcLang = "2";
+						}
 					}
 
 					String primaryTimeZone = ezCommonService.getTenantConfig("PrimaryTimeZone", tenantId);
@@ -1484,7 +1492,7 @@ public class MLoginGWController {
 						returnValue = commonUtil.getTwoLetterLangFromLangNum(primaryLang);
 					}
 					
-					lang = commonUtil.getLangNumFromTwoLetterLang(returnValue);
+					lang = commonUtil.getLangNumFromTwoLetterLang(returnValue, tenantId);
 					
 					//브라우저 언어가 한국어/일본어가 아닐 경우 시스템 언어로 설정(영어/중국어 추후 지원)
 					if (lang.equals("")) {						
