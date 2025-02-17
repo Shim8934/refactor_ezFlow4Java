@@ -13,6 +13,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
 		<script type="text/javascript">
 		    var Xmlhttp = null;
 		    var sortRuleNameStatNum = 0;
@@ -156,7 +157,7 @@
                                 _expt = _expt.substring(3, _expt.length);
                                 _exptval = _exptval.substring(3, _exptval.length);
         
-                                _html += "<tr _itemid='" + _itemid + "' _name='" + MakeXMLString(_name).replace(/\'/g, "&#039;") + "' _priority='" + _priority + "' _con='" + _con + "' _conval='" + _conval + "' _act='" + _act + "' _actfid='" + _actfid + "'  _actfnm='" + _actfnm + "' _actval='" + _actval + "' _expt='" + _expt + "' _exptval='" + _exptval + "'  onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_click(this);' ondblclick='event_dbclick(this);'>";
+                                _html += "<tr _itemid='" + _itemid + "' _name='" + MakeXMLString(_name).replace(/\'/g, "&#039;") + "' _priority='" + _priority + "' _con='" + _con + "' _conval='" + escapeHtml(_conval) + "' _act='" + _act + "' _actfid='" + _actfid + "'  _actfnm='" + _actfnm + "' _actval='" + _actval + "' _expt='" + _expt + "' _exptval='" + escapeHtml(_exptval) + "'  onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_click(this);' ondblclick='event_dbclick(this);'>";
 //                                 alert("itemid='" + _itemid + "' _name='" + MakeXMLString(_name).replace(/\'/g, "&#039;") + "' _priority='" + _priority + "' _con='" + _con + "' _conval='" + _conval + "' _act='" + _act + "' _actfid='" + _actfid + "'  _actfnm='" + _actfnm + "' _actval='" + _actval + "' _expt='" + _expt + "' _exptval='" + _exptval + "'");
                                 
                                 if (_act.indexOf("NONE") != -1) {
@@ -787,12 +788,15 @@
 		             }
 		         }
 		     }
-		     function MakeXMLString(pStr) {
-		         pStr = ReplaceText(pStr, "&", "&amp;");
-		         pStr = ReplaceText(pStr, "<", "&lt;");
-		         pStr = ReplaceText(pStr, ">", "&gt;");
-		         return pStr;
-		     }
+			
+			 function MakeXMLString(pStr) {
+				pStr = ReplaceText(pStr, "&", "&amp;");
+				pStr = ReplaceText(pStr, "<", "&lt;");
+				pStr = ReplaceText(pStr, ">", "&gt;");
+				pStr = ReplaceText(pStr, "'", "&apos;");
+				pStr = ReplaceText(pStr, "\"", "&quot;");
+				return pStr;
+			}
 		     
 			function sortRuleName(td) {
 				sortRuleNameStatNum = sortRuleNameStatNum == 2 ? 0 : sortRuleNameStatNum+1;

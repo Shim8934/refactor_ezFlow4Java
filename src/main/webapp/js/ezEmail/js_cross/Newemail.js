@@ -2127,7 +2127,7 @@ function ContextMenuHidden() {
 	    $("#searchButton").css("display", "none");   
 	    document.getElementsByName("keyword")[0].disabled = false;
 	    document.getElementById("searchCheck").disabled = false;
-	    document.getElementById("searchCheck").style.backgroundColor="rgb(248 248 248)";
+	    document.getElementById("searchCheck").style.backgroundColor="rgb(255,255,255)";
     }
 }
 function PopUpPreMail() {
