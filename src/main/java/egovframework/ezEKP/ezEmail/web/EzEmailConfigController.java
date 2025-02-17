@@ -225,7 +225,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		List<String> defaultFontSizeList = Arrays.asList("8pt,9pt,10pt,11pt,12pt,13pt,14pt,16pt,18pt,20pt,24pt,30pt,36pt,54pt,72pt".split(","));
 
 		String fontFamily = egovMessageSource.getMessage("main.t246", locale);
-		String fontSize = "13pt";
+		String fontSize = "10pt";
 		if (primaryLang.equals("1")) {
 			String editorFontStyle = ezCommonService.getTenantConfig("editorFontStyle", userInfo.getTenantId());
 			if (!editorFontStyle.equals("")) {

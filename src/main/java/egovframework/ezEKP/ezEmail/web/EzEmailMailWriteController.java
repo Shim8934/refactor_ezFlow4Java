@@ -377,7 +377,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String mailInnerDomain = ezCommonService.getTenantConfig("MailInnerDomain", loginInfo.getTenantId());
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", loginInfo.getTenantId());
 		String useSecureMail = ezCommonService.getTenantConfig("USE_SECUREMAIL", loginInfo.getTenantId());
-		String defaultFontAndSize = "style='font-size:13px;font-family:" + egovMessageSource.getMessage("main.t246", locale) + "'";
 		String useReSend = ezCommonService.getTenantConfig("useReSend", loginInfo.getTenantId());
 		
 		
@@ -429,27 +428,20 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
  		String pAutoSaveTime = mailGeneralVO.getKeepDeleteLength() == null ? "0" : mailGeneralVO.getKeepDeleteLength();
  		String pMailSenderNM = EgovStringUtil.isEmpty(mailGeneralVO.getMailSenderNm()) ? userInfo.getDisplayName2() : mailGeneralVO.getMailSenderNm();
  		String mailSendObject = "<option value='NONE'>" + egovMessageSource.getMessage("ezEmail.t99000032", locale) + "</option>";
-		String userFontFamily = mailGeneralVO.getEditorFontFamily();
-		String userFontSize = mailGeneralVO.getEditorFontSize();
-
-		//사용자 언어가 한국어이고 editorFontStyle값이 있을 경우 editorFontStyle값 적용
-		if (loginInfo.getLang().equals("1")) {
-			String editorFontStyle = ezCommonService.getTenantConfig("editorFontStyle", loginInfo.getTenantId());
-
-			if (!editorFontStyle.equals("")) {
-				String fontFamily = editorFontStyle.split("\\|")[0];
-				String fontSize = editorFontStyle.split("\\|")[1];
-
-				// 사용자가 환경설정에서 설정한 값이 있으면 그 값을 사용하고, 없으면 관리자페이지에서 설정한 값 사용
-				if (userFontFamily != null && !userFontFamily.isEmpty()) {
-					fontFamily = userFontFamily;
-				}
-				if (userFontSize != null && !userFontSize.isEmpty()) {
-					fontSize = userFontSize;
-				}
-				defaultFontAndSize = "style='font-size:" + fontSize + ";font-family:" + fontFamily + "'";
-			}
+		String fontFamily = egovMessageSource.getMessage("main.t246", locale);
+		String fontSize = "10pt";
+		
+		// 사용자가 환경설정에서 설정한 에디터 폰트 및 크기가 있으면 그 값을 사용하고, 없으면 관리자페이지에서 설정한 값 사용
+		String editorFontStyle = ezCommonService.getTenantConfig("editorFontStyle", loginInfo.getTenantId());
+		if (StringUtils.isNotBlank(editorFontStyle)) {
+			fontFamily = editorFontStyle.split("\\|")[0];
+			fontSize = editorFontStyle.split("\\|")[1];
 		}
+		
+		fontFamily = StringUtils.defaultIfBlank(mailGeneralVO.getEditorFontFamily(), fontFamily);
+		fontSize = StringUtils.defaultIfBlank(mailGeneralVO.getEditorFontSize(), fontSize);
+		
+		String defaultFontAndSize = "style='font-size:" + fontSize + ";font-family:" + fontFamily + "'";
 
 		logger.debug("mailInnerDomain=" + mailInnerDomain + ",useEditor=" + useEditor + ",useSecureMail=" + useSecureMail + ",defaultFontAndSize=" + defaultFontAndSize);
 		 
