@@ -3836,6 +3836,7 @@ public class EzSystemAdminController {
 			return "cmm/error/adminDenied";
 		}
 		model.addAttribute("isAdmin", user.getRollInfo().indexOf("c=1") > -1);
+		model.addAttribute("lang", user.getLang());
 		
 		logger.debug("systemConfigList ended.");
 		

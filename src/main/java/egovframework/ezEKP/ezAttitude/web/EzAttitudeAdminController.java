@@ -1478,7 +1478,8 @@ public class EzAttitudeAdminController {
 	@RequestMapping(value = "/admin/ezAttitude/saveAttitudeAuth.do", method = RequestMethod.GET)
 	public String saveAttitudeAuth(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("saveAttitudeAuth started.");
-		
+
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String userId = request.getParameter("userId");
 		String userName = request.getParameter("userName");
 		String companyId = request.getParameter("companyId");
@@ -1496,7 +1497,8 @@ public class EzAttitudeAdminController {
 			UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 					.queryParam("companyId", companyId)
 					.queryParam("isAllDept", isAllDept)
-					.queryParam("userId", userId);
+					.queryParam("userId", userId)
+					.queryParam("lang", userInfo.getLang());
 			
 			RestTemplate rest = new RestTemplate();
 			
