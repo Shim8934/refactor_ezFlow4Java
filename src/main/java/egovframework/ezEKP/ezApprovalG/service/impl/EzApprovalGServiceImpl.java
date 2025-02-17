@@ -14918,9 +14918,17 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		 
 		if (apprGAprLineVOList.size() < 1) {
-			if (passAprLine != null && passAprLine.equals("Y")) {
+            
+            Map<String, String> upDeptInfo = getUpperDeptInfo(deptID, userInfo.getTenantId());
+			
+            if (passAprLine != null && passAprLine.equals("Y")) {
 				apprGAprLineVOList = ezApprovalGDAO.doApproveLineInfoForCancelToPassAprLine(map);
-			} else {
+			} else if (upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) { //상위부서 문서함 사용중인 부서가 부서합의에서 최종결재일 때
+                ArrayList<String> list = new ArrayList<>();
+                list.add(upDeptInfo.get("upperDeptCode"));
+                map.put("v_DEPTID2", list);
+                apprGAprLineVOList = ezApprovalGDAO.doApproveLineInfo(map);
+            } else {
 				ingFlag = "END";
 				map.put("v_MODE", ingFlag);
 				apprGAprLineVOList = ezApprovalGDAO.doApproveLineInfo(map);
