@@ -177,7 +177,7 @@
 		                listNode.title = "";
 	
 		                for (j = 0 ; j < GetChildNodes(listNode).length ; j++) {
-		                    GetChildNodes(listNode)[j].style.backgroundColor = "#f8f8f8";
+		                    GetChildNodes(listNode)[j].style.backgroundColor = "";
 		                    GetChildNodes(listNode)[j].style.paddingTop = "2";
 		                }	
 		                DisplayScheduleList(listNode, userID)
@@ -446,7 +446,7 @@
 				var groupInfoHeight = $(".schedule_group_info").outerHeight(true) || 0;
 				var h1Height = $("h1").outerHeight(true) || 0;
 				var dateHeight = $(".schedule_list_date").outerHeight(true) || 0;
-				var tableHeight = windowHeight - (groupInfoHeight + h1Height + dateHeight + 40);
+				var tableHeight = windowHeight - (groupInfoHeight + h1Height + dateHeight + 30);
 
 				document.querySelector(".entry_wrap").style.maxHeight = tableHeight + "px";
 			})
@@ -474,8 +474,6 @@
 		<div class="schedule_group_info">
 			<h2 id="groupName"></h2><span class="info_txt">일정있음</span>
 		</div>
-
-		<br/>
 		<table class="nobox" style="width:100%;">
 	    	<tr>
 	       		<td>
@@ -483,7 +481,7 @@
 	         			<table>
 	           				<tr>
 	             				<td>
-	             					<div class="entryDiv" style ="background-color:none;BORDER:#FFFFFF 0px solid;OVERFLOW:hidden;TEXT-ALIGN:left;HEIGHT:100%;">
+	             					<div class="entryDiv">
 										<table class="entryList_bg"></table>	<!-- 테이블 배경 라인 -->
 	                 					<table id="entryList" class="entryList">
 											<tr>
