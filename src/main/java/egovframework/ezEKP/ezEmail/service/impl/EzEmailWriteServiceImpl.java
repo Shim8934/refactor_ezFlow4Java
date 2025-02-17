@@ -294,6 +294,7 @@ public class EzEmailWriteServiceImpl implements EzEmailWriteService {
 
                         if (!isReply) { // FORWARD
                             // replyMessage의 첨부 파일 구성이 orgMessage와 다르게 될 수 있기 때문에 다시 첨부파일 정보를 구하도록 한다.
+                            attachedFileList.clear();;
                             ezEmailUtil.getBodyInfo(savedMessage, folderPath, uid, -1, attachedFileList, locale, extraMap);
                         }
                     }
