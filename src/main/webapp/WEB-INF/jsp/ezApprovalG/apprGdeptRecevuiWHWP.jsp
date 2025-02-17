@@ -1152,5 +1152,6 @@
 		<div style="width: 200px; height: 50px; border: 0px solid red; text-align: center; vertical-align: middle; display: none; z-index: 9000; position: absolute;" id="loadingLayer">
 	        <img src="/images/email/progress_img.gif" style="vertical-align: middle;" />
 	    </div>
+		<div id="RECEIPTDEPTID" style="display: none"></div>
 	</body>
 </html>
