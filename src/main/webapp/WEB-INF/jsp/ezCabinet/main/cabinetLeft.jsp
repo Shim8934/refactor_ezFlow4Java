@@ -72,6 +72,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezCabinet/cabinetTree.js')         }"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
 		<script type="text/javascript">
+			var UserLang =  "<c:out value = '${UserLang} '/>";
 			var CabUserLeft = function() {
 				var cabinetTree = new CabinetTree();
 				var relatedTree = new CabinetTree();

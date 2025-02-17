@@ -1030,7 +1030,7 @@
 				},
 				async: true,
 				success: function(result) {
-					alert("저장하였습니다.");
+					alert("<spring:message code='ezPortal.t121'/>");
 				},
 				error: function (xhr, status, e){
 					

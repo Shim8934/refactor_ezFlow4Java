@@ -9,7 +9,11 @@ function InitCodeSelectBox(nodeXml, objSel) {
     if (nodeXml) {
         for (i = 0; i < nodeXml.length; i++) {
             strValue = getNodeText(GetChildNodes(nodeXml[i])[0]);
-            strText = getNodeText(GetChildNodes(nodeXml[i])[1]);
+            if (typeof(UserLang) != 'undefined' && UserLang != '1' && getNodeText(GetChildNodes(nodeXml[i])[2]) != null && getNodeText(GetChildNodes(nodeXml[i])[2]) != undefined && getNodeText(GetChildNodes(nodeXml[i])[2]).trim() !== '') {
+                strText = getNodeText(GetChildNodes(nodeXml[i])[2]);
+            } else {
+                strText = getNodeText(GetChildNodes(nodeXml[i])[1]);
+            }
 
             selOption[i] = new Option(strText, strValue);
             selOption[i].id = strValue;

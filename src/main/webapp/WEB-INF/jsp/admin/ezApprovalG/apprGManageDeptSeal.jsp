@@ -28,7 +28,8 @@
 	        var pUserName = "<c:out value = '${userInfo.displayName1}' />";
 	        var pUserName2 = "<c:out value = '${userInfo.displayName2}' />";
 	        var pDeptID = "<c:out value = '${userInfo.deptID}' />";
-	        var parameter = new Array();
+			var pLang = "<c:out value = '${userInfo.lang}' />";
+			var parameter = new Array();
 	        var listview = new ListView();
 	
 	        $(document).ready(function(){
@@ -222,7 +223,11 @@
 	        function btnAdd_onclick() {
 	            var parameter = new Array();
 	            parameter[0] = pUserID;
-	            parameter[1] = pUserName;
+				if(pLang == "1"){
+					parameter[1] = pUserName;
+				}else{
+					parameter[1] = pUserName2;
+				}
 	            parameter[2] = pDeptID;
 	            parameter[3] = $("#ListCompany option:selected").val();
 	
