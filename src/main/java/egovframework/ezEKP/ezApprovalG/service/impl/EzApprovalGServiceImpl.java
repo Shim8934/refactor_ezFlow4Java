@@ -10797,6 +10797,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
         map.put("upperDeptCode", upperDeptCode);
+        map.put("lang", commonUtil.getMultiData(lang, tenantID));
 		
 		/* 2023-01-03 홍승비 - 전자결재G > 기산월을 체크하는 회계연도 조건을 미리 만들어서 전달하도록 수정 (쿼리 상에서 년-월 조건 분리된 부분 제거) */
 		// 사용자에게 표출되는 기록물철의 종료연도는 현재 기준으로 계산된 회계년도보다 크거나 같아야 함
