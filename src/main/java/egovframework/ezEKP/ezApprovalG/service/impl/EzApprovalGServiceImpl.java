@@ -37425,7 +37425,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						} else {
 							// 채번하지 않는 경우 
 							docNO = description + "-";
-							setHwpText("receiptnumber", docNO, hwpFile); // 혹시 이게 문제를 일으키나? 접수자 이후 최종결재자 존재 시 채번이 원문서+수신문서번호로 연달아서 되는 현상이 있는것 같은데...
+							setHwpText("receiptnumber", docNO, hwpFile);
 							strXML.getElementsByTagName("DOCNO").item(0).setTextContent(docNO);
 						}
 					}
@@ -38023,7 +38023,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						}
 					}
 					
-
 					String tempDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
 					// 2023-09-18 조수빈 - 서명일자
 					String lastCnt = tempDate.substring(5, 7) + "." + tempDate.substring(8, 10);
@@ -38044,17 +38043,17 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							strSign = signAdd + "sign" + lastSignNum;
 							strSeumyungDate = signAdd + "seumyungdate" + lastSignNum;
 						} else {
-							/* 2024-11-29 홍승비 - 전자결재 (일반, G) > 일괄 접수자전결 시에도 "전결" 문구가 들어가도록 수정 (표준 스펙) */
-							// 전결자 표시 여부에 따라 전결인 경우 텍스트 추가
-							// 서명일자칸이 존재하지 않는 경우, 서명 상단 "전결" 또는 "대결" 문구 우측에 공백없이 서명일자를 붙여 표기
-							if (aprType.equals("004") && ezCommonService.getTenantConfig("draftJunGyulFlag", userInfo.getTenantId()).equals("1")) { // 전결
-								addBeforeSignText = messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale());
-							} else if (aprType.equals("016")) { // 대결
-								addBeforeSignText = messageSource.getMessage("ezApprovalG.t26", userInfo.getLocale());
-							}
-							
 							strSign = signAdd + "sign1";
 							strSeumyungDate = signAdd + "seumyungdate1";
+						}
+						
+						/* 2024-11-29 홍승비 - 전자결재 (일반, G) > 일괄 접수자전결 시에도 "전결" 문구가 들어가도록 수정 (표준 스펙) / 2025-02-18 홍승비 - 공통 분기처리 추가수정 */
+						// 전결자 표시 여부에 따라 전결인 경우 텍스트 추가
+						// 서명일자칸이 존재하지 않는 경우, 서명 상단 "전결" 또는 "대결" 문구 우측에 공백없이 서명일자를 붙여 표기
+						if (aprType.equals("004") && ezCommonService.getTenantConfig("draftJunGyulFlag", userInfo.getTenantId()).equals("1")) { // 전결
+							addBeforeSignText = messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale());
+						} else if (aprType.equals("016")) { // 대결
+							addBeforeSignText = messageSource.getMessage("ezApprovalG.t26", userInfo.getLocale());
 						}
 						
 						/* 2024-11-27 홍승비 - 서명일자칸이 존재하지 않는 경우, 최종결재자의 서명일자는 서명칸 내부에 함께 들어가며 서명의 상단에 위치 */
@@ -38115,7 +38114,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		                resultXML.append("<SIGNINFO>");
 		                resultXML.append("<DOCID>" + docID + "</DOCID>");
 		                resultXML.append("<SIGNTYPE>" + "HTML" + "</SIGNTYPE>");
-		                resultXML.append("<SIGNNAME>" + "1sign1" + "</SIGNNAME>"); // signAdd 값이 1로 고정된 상태
+		                resultXML.append("<SIGNNAME>" + strSign + "</SIGNNAME>"); // signAdd 값이 1로 고정된 상태
 		                resultXML.append("<CONTENT>" + commonUtil.cleanValue(signText) + "</CONTENT>");
 		                resultXML.append("</SIGNINFO>");
 		            }
@@ -38123,7 +38122,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		                resultXML.append("<SIGNINFO>");
 		                resultXML.append("<DOCID>" + docID + "</DOCID>");
 		                resultXML.append("<SIGNTYPE>" + "TEXT" + "</SIGNTYPE>");
-		                resultXML.append("<SIGNNAME>" + "1seumyungdate1" + "</SIGNNAME>");
+		                resultXML.append("<SIGNNAME>" + strSeumyungDate + "</SIGNNAME>");
 		                resultXML.append("<CONTENT>" + commonUtil.cleanValue(lastCnt) + "</CONTENT>");
 		                resultXML.append("</SIGNINFO>");
 		            }
