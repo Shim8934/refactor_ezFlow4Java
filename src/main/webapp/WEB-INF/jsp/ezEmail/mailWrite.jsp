@@ -147,7 +147,6 @@
 		// options
 		var g_ePostType = "${options.postType}";
 	    var useMultiLangMail = "${options.useMultiLangMail}";
-	    var g_charsetCheck = "${options.charsetCheck}";
 	    var BigSizeAttachLimitCount = "${options.bigSizeAttachLimitCount}";
 	    var BigSizeAttachDownloadLimitCount = "${options.bigSizeAttachDownloadLimitCount}";
 	    var BigSizeAttachMBSize = "${options.bigSizeMailAttachLimit}";
@@ -374,12 +373,6 @@
 	        Subject_ReApply();  
             window.onresize();
 	        g_bDirty = false;
-	        
-	        if (g_charsetCheck == "0") {
-	            if (confirm("<spring:message code='ezEmail.t665' />")) {
-	                location.href = location.href + "&attach=1";
-	            }
-	        }        
 	        
 	        if (writetype.useAppendAttach && document.getElementById("AttachXmlList").innerHTML.trim() != "") {
 	            AddAttachFileInfoXmlParsing(document.getElementById("AttachXmlList").innerHTML, true);
