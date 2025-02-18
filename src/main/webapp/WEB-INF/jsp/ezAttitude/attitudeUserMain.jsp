@@ -2676,7 +2676,7 @@
 			</div>
 		</div>
 		<!-- NO,일시,내용 - 외출,조퇴,결근,휴가유형들  -->
- 		<div id="contentPopup" class="popupwrap1" style="display:none;margin-bottom:50px;<c:if test="${deptFlag == 'true'}">max-width:600px;</c:if><c:if test="${deptFlag != 'true'}">max-width:500px;</c:if>">
+ 		<div id="contentPopup" class="popupwrap1" style="display:none;margin-bottom:50px;<c:if test="${deptFlag == 'true'}">max-width:600px;</c:if><c:if test="${deptFlag != 'true'}">max-width:550px;</c:if>">
 			<div class="popupJQLayer">
 				<div id="contentPopup_title" class="title"><spring:message code='ezAttitude.t141'/></div>
 				<div id="close">
