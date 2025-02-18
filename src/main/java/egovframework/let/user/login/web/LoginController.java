@@ -1367,7 +1367,7 @@ public class LoginController {
 		    	twoLetterLang = commonUtil.getTwoLetterLangFromLangNum(primaryLang);
 		    }
 			
-		    lang = commonUtil.getLangNumFromTwoLetterLang(twoLetterLang);
+		    lang = commonUtil.getLangNumFromTwoLetterLang(twoLetterLang, tenantId);
 		    
 		    //브라우저 언어가 한국어/영어/일본어/인도네시아어가 아닐 경우 시스템 언어로 설정
 		    if (lang.equals("")) {						
@@ -1378,6 +1378,8 @@ public class LoginController {
 				if ("YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useSecondaryLang", tenantId))) {
 					lang = "2";
 				}
+				
+				twoLetterLang = commonUtil.getTwoLetterLangFromLangNum(lang);
 			}
 			
 		    String primaryTimeZone = ezCommonService.getTenantConfig("PrimaryTimeZone", tenantId);

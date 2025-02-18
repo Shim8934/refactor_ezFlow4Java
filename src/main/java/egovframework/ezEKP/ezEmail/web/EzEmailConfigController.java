@@ -225,7 +225,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		List<String> defaultFontSizeList = Arrays.asList("8pt,9pt,10pt,11pt,12pt,13pt,14pt,16pt,18pt,20pt,24pt,30pt,36pt,54pt,72pt".split(","));
 
 		String fontFamily = egovMessageSource.getMessage("main.t246", locale);
-		String fontSize = "13pt";
+		String fontSize = "10pt";
 		if (primaryLang.equals("1")) {
 			String editorFontStyle = ezCommonService.getTenantConfig("editorFontStyle", userInfo.getTenantId());
 			if (!editorFontStyle.equals("")) {
@@ -252,10 +252,18 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		
 		String[] senderList = pMailSenderNM.split("\\|!\\-@\\-!\\|");
 		for (int i=0; i<senderList.length; i++) {
-			if (i == 0) {
-				mailSendObject += "<option value='" + senderList[i] + "' selected>" + senderList[i] + "</option>";
+			if (!(pMailSenderNM.indexOf("___") < 0)){
+				if (senderList[i].startsWith("___")){
+					mailSendObject += "<option value='" + senderList[i] + "' selected>" + senderList[i].substring(3) + " (default)</option>";
+				} else {
+					mailSendObject += "<option value='" + senderList[i] + "'>" + senderList[i] + "</option>";
+				}
 			} else {
-				mailSendObject += "<option value='" + senderList[i] + "'>" + senderList[i] + "</option>";
+				if (i == 0){
+					mailSendObject += "<option value='" + senderList[i] + "' selected>" + senderList[i] + "</option>";
+				} else {
+					mailSendObject += "<option value='" + senderList[i] + "'>" + senderList[i] + "</option>";
+				}
 			}
 		}
 		
@@ -1479,7 +1487,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 					//DELETE, READ, IMPORTANCE, REDIRECTION, FORWARD, MOVE, COPY
 					//SKIP : ASSIGNCATE, NONE, FORWARDATTACH, SENDSMS, SERVREPLY
 					if (obj.get("kind").toString().equalsIgnoreCase("DELETE") || obj.get("kind").toString().equalsIgnoreCase("REDIRECTION")
-							|| obj.get("kind").toString().equalsIgnoreCase("FORWARD")) {
+							|| obj.get("kind").toString().equalsIgnoreCase("FORWARD") || obj.get("kind").toString().equalsIgnoreCase("TAG")) {
 						Element kind = doc.createElement("KIND");
 						kind.appendChild(doc.createCDATASection(obj.get("kind").toString().toUpperCase()));
 						tAction.appendChild(kind);
@@ -2017,7 +2025,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		out.write("<!DOCTYPE html><head>");
 		out.write("<title>" + egovMessageSource.getMessage("ezEmail.t490", locale) + "</title>");
 		out.write("<META HTTP-EQUIV='Content-Type' CONTENT='text/html; charset=utf-8'>");
-		out.write("<link rel='stylesheet' href='" + egovMessageSource.getMessage("ezEmail.c1", locale) + "' type=text/css>");
+		out.write("<link rel='stylesheet' href='/css/default.css' type=text/css>");
+		out.write("<link rel='stylesheet' href='" + egovMessageSource.getMessage("main.default.css", locale) + "' type=text/css>");
 		out.write("<script type='text/javascript' src='/js/mouseeffect.js'></script>"
 				+ "</head>"
 				+ "<body scroll=no class='popup'>");

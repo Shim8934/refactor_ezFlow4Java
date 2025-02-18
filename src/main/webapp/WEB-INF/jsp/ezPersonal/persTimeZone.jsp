@@ -6,7 +6,8 @@
 	<head>
 	    <title>TimeZone</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-		<link rel="stylesheet" href="${util.addVer('ezPersonal.e3', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('/css/style.css')}" type="text/css">
 		<style>
 			.country1{content:url(/images/lang/icon_flag_kr.gif); cursor:pointer}
@@ -102,6 +103,8 @@
 	    		},
 	    		success : function(result) {   			
 	    			 if (result == "OK") {
+	    				 updateWeatherUser(flagValue); //언어 변경에 따른 사용자별 날씨 포틀릿 변경
+	    				 
 	    				 alert("<spring:message code='ezPersonal.t191'/>");
 	    				 window.parent.parent.location = window.parent.parent.location.href;
 	    			} 
@@ -119,13 +122,25 @@
                 flagValue = obj.name;
             }
             else {
-                for (var i = 0; i < 4; i++) {
-                    if (document.getElementsByName('rad_flag')[i].checked == true) {
-                        flagValue = document.getElementsByName('rad_flag')[i].id;
+                for (var radFlag of document.getElementsByName('rad_flag')) {
+                    if (radFlag.checked) {
+                        flagValue = radFlag.id;
                         break;
                     }
                 }
             }
+        }
+        
+        function updateWeatherUser(countryCode) {
+        	$.ajax({
+	    		type : "GET",
+	    		url : "/ezNewPortal/weatherPortletChange.do",
+	    		async : false,
+	    		data : {
+	    			cityCode : "none",
+	    			countryCode : countryCode
+	    		}
+	    	});
         }
 
 		</script> 

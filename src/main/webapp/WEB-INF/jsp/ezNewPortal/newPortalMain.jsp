@@ -10,7 +10,6 @@
 		<link rel="shortcut icon" href="/images/favicon.ico">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/ezNewPortal/portal.css')}" />
 		<link href="${util.addVer('main.portal', 'msg')}" rel="stylesheet" type="text/css">
-<%-- 		<link rel="stylesheet" href="${util.addVer('ezMemo.c1', 'msg')}" type="text/css"> --%>
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/jquery-ui.css')}">
 		<link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
 		<link rel="stylesheet" href="${util.addVer('/css/ezMemo/memo.css')}">

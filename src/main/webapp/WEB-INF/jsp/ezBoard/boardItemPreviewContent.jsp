@@ -5,7 +5,8 @@
 <html>
 	<head>
 	    <title></title>
-	    <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+	    <link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 	    <link href="${util.addVer('/css/previewmail.css')}" rel="stylesheet" type="text/css">
 	    <style type="text/css">
 	    	.list {

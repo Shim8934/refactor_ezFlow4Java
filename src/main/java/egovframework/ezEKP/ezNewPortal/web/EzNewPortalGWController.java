@@ -25,6 +25,7 @@ import javax.mail.UIDFolder;
 import javax.servlet.http.HttpServletRequest;
 
 import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
+import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezNewPortal.vo.ConnectPortletDTO;
 import egovframework.ezEKP.ezNewPortal.vo.DeptViewVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalTopVO;
@@ -3217,6 +3218,8 @@ public class EzNewPortalGWController {
 			int tenantId = info.getTenantId();
 			String parentBoardId = request.getParameter("parentBoardId");
 			String lang = commonUtil.getLangData(info.getLang());
+			String portletBoardId = request.getParameter("portletBoardId");
+			String portletBoardGroupID = "";
 			
 			List<PortalBoardTreeVO> boardTree = ezNewPortalService.getBoardTree(parentBoardId, companyId, tenantId);
 			
@@ -3246,13 +3249,20 @@ public class EzNewPortalGWController {
 				boardTree.set(i, boardInfo);
 			}
 			
+			if (portletBoardId != null && !"".equals(portletBoardId)) {
+				List<BoardVO> portletBoardGroupIDList = ezBoardService.getLeft_BoardSTD(portletBoardId, tenantId);
+				portletBoardGroupID = portletBoardGroupIDList == null || portletBoardGroupIDList.isEmpty() ? "" : portletBoardGroupIDList.get(0).getBoardGroupId();
+			}
+			
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", boardTree);
+			result.put("portletBoardGroupID", portletBoardGroupID);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
+			result.put("portletBoardGroupID", "");
 		}
 		logger.debug("ezNewPortal G/W getBoardTree ended.");
 		return result;
@@ -4490,25 +4500,37 @@ public class EzNewPortalGWController {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
 			LoginVO info = commonUtil.getUserForGw(userId, serverName);
-			
-			String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", info.getTenantId());
-			int primLang = Integer.parseInt(primaryLang);
-			
+			int tenantID = info.getTenantId();
+			int userLocalLang = Integer.parseInt(ezNewPortalService.getUserLocalLang(userId, tenantID));
+			String countryCode = request.getParameter("countryCode") == null ?
+								 (
+									 ezNewPortalService.getCountryCode(userId, tenantID) != null && !ezNewPortalService.getCountryCode(userId, tenantID).isEmpty() ?
+									 ezNewPortalService.getCountryCode(userId, tenantID) :
+									 String.valueOf(userLocalLang)
+								 ) :
+								 request.getParameter("countryCode");
 			String cityCode = request.getParameter("cityCode");
 			
 			if (cityCode == null || cityCode.equals("")) {
-				cityCode = ezNewPortalService.getUserCityCode(info.getId(), info.getTenantId());
+				cityCode = ezNewPortalService.getUserCityCode(info.getId(), tenantID);
+
 				if (cityCode == null || cityCode.equals("")) {
 					cityCode = "none";
 				}
 			} else {
-				ezNewPortalService.setUserCityCode(info.getId(), info.getTenantId(), cityCode);
+				ezNewPortalService.setUserCityCode(info.getId(), tenantID, cityCode, countryCode);
+
+				if (cityCode.equals("none")) {
+					cityCode = ezNewPortalService.getFirstCityCode(countryCode);
+				}
+				
+				ezNewPortalService.setUserCityCode(info.getId(), tenantID, cityCode, countryCode);
 			}
 			
 			JSONObject data = new JSONObject();
-			
-			Map<String, Object> resultMap = ezNewPortalService.getWeather(cityCode, primLang);
-			List<WeatherVO> cityList = ezNewPortalService.getCityList(primLang);
+			Map<String, Object> resultMap = ezNewPortalService.getWeather(cityCode, userLocalLang, countryCode);
+			List<WeatherVO> cityList = ezNewPortalService.getCityList(userLocalLang, countryCode);
+
 			data.put("lang", info.getLang());
 			data.put("cityList", cityList);
 			
@@ -4521,7 +4543,8 @@ public class EzNewPortalGWController {
 			data.put("currentWeather", resultMap.get("CURRENTWEATHER"));
 			data.put("todayWeather", resultMap.get("TODAYWEATHER"));
 			data.put("cityCode", resultMap.get("CITYCODE"));
-			
+			data.put("countryCode", countryCode);
+
 			String[] todayArr = resultMap.get("TODAYWEATHER").toString().split("!");
 			
 			String todayHours = "";

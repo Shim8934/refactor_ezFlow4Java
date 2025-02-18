@@ -643,29 +643,33 @@ var listExcelDown = function(params) {
 };
 
 function escapeHtml(text) {
+    text = text ?? "";
     var map = {
         '&': '&amp;',
         '<': '&lt;',
         '>': '&gt;',
         '"': '&quot;',
         '"': '&#034;',
-        "'": '&#039;'
+        "'": '&#039;',
+        "'": '&apos;'
     };
 
     return text.replace(/[&<>"']/g, function(m) { return map[m]; });
 }
 
 function unEscapeHtml(text) {
+    text = text ?? "";
     var map = {
         '&amp;' : '&',
         '&lt;' : '<',
         '&gt;' : '>',
         '&quot;' : '"',
         '&#034;' : '"',
-        '&#039;' : "'"
+        '&#039;' : "'",
+        '&apos;' : "'"
     };
 
-    return text.replace(/&amp;|&lt;|&gt;|&quot;|&#034;|&#039;/g, function(m) { return map[m]; });
+    return text.replace(/&amp;|&lt;|&gt;|&quot;|&#034;|&#039;|&apos;/g, function(m) { return map[m]; });
 }
 
 function adjustFontSizeToFitWidth(node, desiredWidth, desiredHeight) {
@@ -954,3 +958,16 @@ function htmlParser(text) {
     return dom.body.textContent;
 }
 
+
+
+function getRandomId() {
+    if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+        return crypto.randomUUID();
+    }
+
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        const r = Math.random() * 16 | 0;
+        const v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+}

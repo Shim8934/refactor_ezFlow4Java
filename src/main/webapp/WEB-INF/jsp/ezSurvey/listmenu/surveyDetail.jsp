@@ -8,7 +8,8 @@
 <head>
 	<title><spring:message code="ezSurvey.t01"/></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<link rel="stylesheet" type="text/css" href="${util.addVer('ezSurvey.css', 'msg')                      }">
+	<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 	<link rel="stylesheet" type="text/css" href="${util.addVer('/css/jquery-ui.css')                       }">
 	<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
 	<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/dateControls/demos.css')        }">
@@ -1456,9 +1457,9 @@
 				// logic이 0인 경우 설문종료이므로, 자신 이후의 모든 질문을 disabled 처리
 				// logic이 -1이면 분기없음이므로 이후 처리 없음
 				else { // skip == -1
-					if (type == "1" || type == "10") { // 단일선택 , 일정 단일 선택
+					if (type == "1" || type == "2" || type == "10" || type == "11") { // 단일선택 , 다중선택, 일정 단일 선택, 일정 다중 선택
 						// 현재 루프 중인 질문 자기 자신에 대해, 모든 답변이 가질 수 있는 분기를 체크
-						var qstOptions = $(this).find("[name = 'qstn" + qstIdx + "opt'][logic != '-1']"); // 분기가 설정된 세부 라디오 항목이 존재 (예 : qstn1opt)
+						var qstOptions = $(this).find("[name = 'qstn" + qstIdx + "opt'][logic != '-1']"); // 분기가 설정된 세부 항목이 존재 (예 : qstn1opt)
 						if (qstOptions.length > 0) {
 							qstOptions.each (function(index, element) {
 								if ($(this).attr("logic") != "0") { // 해당 목표 분기 비활성화 또는 활성화
@@ -1587,6 +1588,10 @@
 					if ($(this).find(".optRdo[logic='" + qstLevel + "']:checked").length > 0) {
 						parentResponseExist = true;
 					}
+                } else if (type == "2" || type == "11") { // 다중선택
+					if ($(this).find(".optChb[logic='" + qstLevel + "']:checked").length > 0) {
+						parentResponseExist = true;
+					}  
 				} else if (type == "7") { // 슬라이드
 					var sliderVal = $(this).find("slider-range").val();
 					var sliderLogicPoint = $(this).find("slider-output").attr("logicpoint");
@@ -1700,8 +1705,12 @@
 			if (qstWrapper.find("input:checked").length > 0) {
 				canEnableAll = true;
 			}
-		}
-		else if (type == "2" || type == "4" || type == "11") { // 다중선택, 행렬(다중), 일정 (다중)
+		} else if (type == "2" || type == "11") { // 다중선택, 일정 (다중)
+			// 설문종료 값이 체크되어 있는가?
+			if (qstWrapper.find("input[logic='0']:checked").length == 0) {
+				canEnableAll = true;
+			}
+		} else if (type == "4") { //  행렬(다중)
 			// 모든 선택지가 선택 해제되어있는가?
 			if (qstWrapper.find("input:checked").length == 0) {
 				canEnableAll = true;
@@ -1759,6 +1768,10 @@
 						// 질문의 유형 별로 응답이 유효한지 체크 (항목 별 세부분기)
 						if (type == "1" || type == "10") { // 단일선택, 일정 단일 선택
 							if ($(this).find(".optRdo[logic='" + i + "']:checked").length > 0) {
+								parentResponseExist = true;
+							}
+						} else if (type == "2" || type == "11") { // 다중선택
+							if ($(this).find(".optChb[logic='" + i + "']:checked").length > 0) {
 								parentResponseExist = true;
 							}
 						} else if (type == "7") { // 슬라이드

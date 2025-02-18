@@ -4,7 +4,8 @@
 <html style="height:97%">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link href="${util.addVer('/css/help.css')}" rel="stylesheet" type="text/css">
 		<style type="text/css">
 			.warningbox01 { width:490px; margin-top:200px; margin-left:220px; border:1px solid #cccaca; background:#e8e8e8;font-family:malgun gothic, Dotum,Verdana, Arial, Helvetica, sans-serif;}

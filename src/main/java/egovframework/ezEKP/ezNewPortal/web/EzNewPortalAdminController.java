@@ -820,21 +820,26 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 			//게시판이 top인 목록 가져오기
 			String userId = userInfo.getId();
 			String companyId = request.getParameter("companyId");
+			String portletBoardId = request.getParameter("portletBoardId");
 			
 			Map<String, Object> param = new HashMap<String, Object>();
 			param.put("parentBoardId", "top");
 			param.put("userId", userId);
+			param.put("portletBoardId", portletBoardId);
 			
 			String url = "/rest/admin/ezPortal/boards/tree/companies/" + companyId;
 			
 			JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "get", null);
 			String result = resultBody.get("status").toString();
+			String portletBoardGroupID = resultBody.get("portletBoardGroupID").toString();
 			
 			if (result.equals("ok")) {
 				model.addAttribute("boardList", resultBody.get("data"));
 				model.addAttribute("companyId", companyId);
 				model.addAttribute("portletId", request.getParameter("portletId"));
 				model.addAttribute("portletCode", request.getParameter("code"));
+				model.addAttribute("portletBoardId", portletBoardId);
+				model.addAttribute("portletBoardGroupID", portletBoardGroupID);
 			}
 			
 			logger.debug("openBoardTree ended.");

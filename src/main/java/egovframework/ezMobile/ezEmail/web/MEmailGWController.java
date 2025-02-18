@@ -2164,7 +2164,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 
 		if (StringUtils.isNotBlank(acceptLanguage)) {
 			twoLetterLang = acceptLanguage.substring(0, 2);
-			lang = commonUtil.getLangNumFromTwoLetterLang(twoLetterLang);
+			lang = commonUtil.getLangNumFromTwoLetterLang(twoLetterLang, tenantId);
 		}
 
 		// 브라우저 언어가 표준지원 언어가 아닐 경우 시스템 언어로 설정

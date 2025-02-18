@@ -17,7 +17,8 @@
 		<link rel="stylesheet" href="${util.addVer('/css/ezPMS/gantt/gantt.css')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('/css/ezPMS/gantt/ganttPrint.css')}" type="text/css" media="print"/>
 		<!-- default.css는 우선 순위때문에 css 중에서 가장 아래줄에 있어야 함. -->
-		<link rel="stylesheet" href="${util.addVer('ezPMS.e1', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>

@@ -86,8 +86,8 @@ var SurveyMessages = {
 	strSlider10  : "カウントを200以下の自然数に設定する。",
 	strOptErr    : "選択肢を2つ以上入力してください。",
 	strOptErr1   : "重複した値は使用できません。",
-	strMaxtrix1  : "行を1つ以上入力してください。",
-	strMaxtrix2  : "列を1つ以上入力してください。",
+	strMaxtrix1  : "行を2つ以上入力してください。",
+	strMaxtrix2  : "列を2つ以上入力してください。",
 	strMaxtrix3  : "行の内容は重複した値を使用できません。",
 	strMaxtrix4  : "列の内容は重複した値を使用できません。",
 	//strOnlyImage : "이미지 파일만 허용됩니다.",
@@ -188,6 +188,6 @@ var SurveyMessages = {
 	strQuestionFileAttach : "질문에 파일 첨부",
 	strAllowedImageForTitle : "png, jpeg, jpg만 허용가능합니다.",
     /* 2024-11-25 박기범 - 리스트 상태값 추가 */
-    strLangPGB01 : "참여",
-	strLangPGB02 : "미참여"
+    strLangPGB01 : "strLangPGB01",
+	strLangPGB02 : "未参加"
 }

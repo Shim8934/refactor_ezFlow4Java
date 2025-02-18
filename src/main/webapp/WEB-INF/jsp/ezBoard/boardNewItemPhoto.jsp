@@ -17,7 +17,8 @@
 	         	resize:none;
 	         }
 	     </style>
-	    <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+	    <link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
    	    <c:if test="${!isCrossBrowser}">
@@ -67,6 +68,7 @@
 	        var isAllGroupBoard = "${boardInfo.isAllGroupBoard}";
 		    var useKeywordFlag = "<c:out value='${useKeyword}'/>"; // 키워드 사용여부 (Y/N)
 		    var keywordArr = []; // 키워드 배열
+			var writerFlag = "${boardInfo.writerFlag}"; // 2025-01-21 임정은 - 게시판 게시물 게시자명선택 사용여부 플래그
 	        
 	        function window_onload() {
 	            var ua = navigator.userAgent;
@@ -328,8 +330,15 @@
 			    // 수정(2008.03.19) : 사용자 정보가 누락되는 경우 체크하는 부분 추가
 	
 				strXML += "<WRITERID>" + SSUserID + "</WRITERID>";
-				strXML += "<WRITERNAME>" + MakeXMLString(SSUserName) + "</WRITERNAME>";
-				strXML += "<WRITERNAME2>" + MakeXMLString(SSUserName2) + "</WRITERNAME2>";
+				if ('Y' == writerFlag) {
+					var flagwriterName = $('#writerFlag').val().toString().split(":");
+					strXML += "<WRITERNAME>" + MakeXMLString(flagwriterName[0]) + "</WRITERNAME>";
+					strXML += "<WRITERNAME2>" + MakeXMLString(flagwriterName[1]) + "</WRITERNAME2>";
+					strXML += "<WRITERNAMETYPE>" + MakeXMLString(flagwriterName[2]) + "</WRITERNAMETYPE>";
+				} else {
+					strXML += "<WRITERNAME>" + MakeXMLString(SSUserName) + "</WRITERNAME>";
+					strXML += "<WRITERNAME2>" + MakeXMLString(SSUserName2) + "</WRITERNAME2>";
+				}
 				strXML += "<DEPTID>" + SSDeptID + "</DEPTID>";
 				strXML += "<DEPTNAME>" + MakeXMLString(SSDeptName) + "</DEPTNAME>";
 				strXML += "<DEPTNAME2>" + MakeXMLString(SSDeptName2) + "</DEPTNAME2>";
@@ -337,7 +346,7 @@
 				strXML += "<COMPANYNAME>" + MakeXMLString(SSCompanyName) + "</COMPANYNAME>";
 				strXML += "<COMPANYNAME2>" + MakeXMLString(SSCompanyName2) + "</COMPANYNAME2>";
 	            strXML += "<IMPORTANCE>" + importance + "</IMPORTANCE>";
-			    strXML += "<TITLE>" + MakeXMLString(txtTitle.value) + "</TITLE>";
+			    strXML += "<TITLE>" + MakeXMLString(txtTitle.value.replace(/[\t\n\r]+/g, ' ').trim()) + "</TITLE>";
 			    strXML += "<STARTDATE>" + pStartDate + "</STARTDATE>";
 			    strXML += "<ENDDATE>" + pEndDate + "</ENDDATE>";
 			    strXML += "<ABSTRACT>" + MakeXMLString(txtAbstract.value) + "</ABSTRACT>";
@@ -349,8 +358,15 @@
 			    //확장 필드(필요에 따라 추가)
 			    strXML += "<EXTENSIONATTRIBUTE1></EXTENSIONATTRIBUTE1>";
 			    strXML += "<EXTENSIONATTRIBUTE2></EXTENSIONATTRIBUTE2>";
-				strXML += "<EXTENSIONATTRIBUTE3>" + strUserRank + "</EXTENSIONATTRIBUTE3>";	//직급으로 사용
-				strXML += "<EXTENSIONATTRIBUTE32>" + strUserRank2 + "</EXTENSIONATTRIBUTE32>";	//직급으로 사용
+
+				if ('Y' == writerFlag && chkUseDept.checked) {
+					strXML += "<EXTENSIONATTRIBUTE3>" + SSDeptName + "</EXTENSIONATTRIBUTE3>";
+					strXML += "<EXTENSIONATTRIBUTE32>" + SSDeptName2 + "</EXTENSIONATTRIBUTE32>";
+				} else {
+					strXML += "<EXTENSIONATTRIBUTE3>" + strUserRank + "</EXTENSIONATTRIBUTE3>";	//직급으로 사용
+					strXML += "<EXTENSIONATTRIBUTE32>" + strUserRank2 + "</EXTENSIONATTRIBUTE32>";	//직급으로 사용
+				}
+
 				strXML += "<EXTENSIONATTRIBUTE4>" + MakeXMLString(txtPhotoFile.value) + "</EXTENSIONATTRIBUTE4>";//이미지명으로 사용함
 			    strXML += "<EXTENSIONATTRIBUTE5>" + MakeXMLString(GetSmallUrl()) + "</EXTENSIONATTRIBUTE5>";
 			    
@@ -845,7 +861,16 @@
 					}
 				});
 	        }
-	        
+
+			function chkUseDept_onclick() {
+				if (chkUseDept.checked) { // 팀/부서로 표시
+					spUseDept.innerHTML = "${userInfo.lang}" == "1" ? SSDeptName : SSDeptName2;
+					document.getElementById("writerFlag").selectedIndex = 1;
+				} else { // 이름으로 표시
+					spUseDept.innerHTML = "${userInfo.lang}" == "1" ? SSUserName : SSUserName2;
+					document.getElementById("writerFlag").selectedIndex = 0;
+				}
+			}
 	    </script>
 	</head>
 	<c:if test="${!isCrossBrowser}">
@@ -889,7 +914,7 @@
 	          		</c:otherwise>
 	          	</c:choose>
 	          </th>
-	          <td style="width:70%" id="tdBoardName">
+	          <td style="width:45%" id="tdBoardName">
 	          	<c:choose>
 	          		<c:when test="${boardType != 'SELECT'}">
 	          			${boardName}
@@ -906,8 +931,18 @@
 	          		</c:otherwise>
 	          	</c:choose>
 	          </td>
-	          <th style="width:80px; text-align:center"><spring:message code='ezBoard.t223'/></th>
-	          <td style="width:120px; text-align:center">${userID}</td>
+	          <th style="width:100px; text-align:center"><spring:message code='ezBoard.t223'/></th>
+	          <td style="width:47%;">
+				  <span id="spUseDept">${userInfo.displayName}</span>
+				  <c:if test="${'Y' == boardInfo.writerFlag}">
+					  <input type="checkbox" id="chkUseDept" style="margin-left: 0px !important;" onclick="chkUseDept_onclick()">
+					  <select id="writerFlag" style="display: none;">
+						  <option value="<c:out value='${writerOption.N}:${writerOption.N2}:0' />"></option>
+						  <option value="<c:out value='${writerOption.T}:${writerOption.T2}:1' />"></option>
+						  <option value="<c:out value='${writerOption.D}:${writerOption.D2}:2' />"></option>
+					  </select>
+				  </c:if>
+			  </td>
 	        </tr>
             <!-- 키워드 시작 -->
             <c:if test="${not empty useKeyword && useKeyword eq 'Y'}">

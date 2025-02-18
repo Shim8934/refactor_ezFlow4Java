@@ -395,6 +395,9 @@ var strUreadDelSearch = "검색된 메일 중에서 안 읽은 메일을 모두 
 var strUreadDelPermenant = "삭제 시 메일은 복구할 수 없습니다.\n편지함에 있는 안 읽은 메일을 모두 영구 삭제하시겠습니까?";
 var strUreadDelSearchPermenant = "삭제 시 메일은 복구할 수 없습니다.\n검색된 메일 중에서 안 읽은 메일을 모두 영구 삭제하시겠습니까?";
 
+const strLangTagLimit = "태그 등록은 5개까지 가능합니다.";
+const strLangTagadd = "메일에 태그 추가 :";
+
 function GetLocalTime(Offset , pDateTime)
 {
     if (pDateTime == "")

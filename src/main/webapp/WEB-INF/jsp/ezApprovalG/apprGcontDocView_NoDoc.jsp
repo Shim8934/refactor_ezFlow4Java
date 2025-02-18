@@ -7,7 +7,8 @@
 		<title><spring:message code='ezApprovalG.t9993'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<meta http-equiv="Content-Type" content="text/html; charset=euc-kr">
-		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<style> 
 			.IMG_BTN { behavior:url("/js/ezApprovalG/ImgBtn.htc") }
 			<%-- 2021-10-26 홍승비 - 수기 기록물 정보창 내부에서 첨부파일의 체크박스 숨김처리 --%>

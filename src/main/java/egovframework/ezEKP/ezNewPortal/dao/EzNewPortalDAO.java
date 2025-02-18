@@ -603,10 +603,11 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	public List<String> getWeatherKeyList(int size) {
 		return (List<String>) list("ezNewPortal.getWeatherKeyList", size);
 	}
-
+	
 	@SuppressWarnings("unchecked")
-	public List<String> getCityCodeList(String primaryLang) {
-		return (List<String>) list("ezNewPortal.getCityCodeList", primaryLang);
+	public List<String> getCityCodeList(List<String> primaryLangList) {
+		// TODO Auto-generated method stub
+		return (List<String>) list("ezNewPortal.getCityCodeList", primaryLangList);
 	}
 
 	public void setCurrentWeather(Map<String, Object> map) {
@@ -623,8 +624,13 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<WeatherVO> getCityList(int primaryLang) {
-		return (List<WeatherVO>) list("ezNewPortal.getCityList", primaryLang);
+	public List<WeatherVO> getCityList(int primaryLang, String countryCode) {
+		HashMap<String, String> map = new HashMap() {{
+			put("primaryLang", primaryLang);
+			put("countryCode", countryCode);
+		}};
+
+		return (List<WeatherVO>) list("ezNewPortal.getCityList", map);
 	}
 
 	public String getUserCityCode(Map<String, Object> map) {
@@ -830,4 +836,26 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 		return (int) select("ezNewPortal.getResportletId");
 	}
 	
+
+	public String getCountryCode(String userID, int tenantID) throws Exception {
+		HashMap<String, String> map = new HashMap() {{
+			put("userID", userID);
+			put("tenantID", tenantID);
+		}};
+
+		return (String)select("ezNewPortal.getCountryCode", map);
+	}
+
+	public String getUserLocalLang(String userID, int tenantID) throws Exception {
+		HashMap<String, String> map = new HashMap() {{
+			put("userID", userID);
+			put("tenantID", tenantID);
+		}};
+
+		return (String)select("ezNewPortal.getUserLocalLang", map);
+	}
+
+	public String getFirstCityCode(String countryCode) throws Exception {
+		return (String)select("ezNewPortal.getFirstCityCode", countryCode);
+	}
 }

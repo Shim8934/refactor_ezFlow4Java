@@ -677,7 +677,11 @@ function ListView() {
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "ITEMID") {
                     var _TDCheckBox_Sub = document.createElement("INPUT");
                     _TDCheckBox_Sub.type = "checkbox";
-                    _TDCheckBox_Sub.id = strValue + "," + getNodeText(oDatas[2]) + ";";
+
+                    // 게시물 리스트 체크박스 id에 writerDeptId, writerNameType 추가
+                    var _TDCheckBox_writerDeptId = getNodeText(oDatas.find(node => node.tagName === "WRITERDEPTID"));
+                    var _TDCheckBox_writerNameType = getNodeText(oDatas.find(node => node.tagName === "WRITERNAMETYPE"));
+                    _TDCheckBox_Sub.id = strValue + "," + getNodeText(oDatas[2]) + "," + _TDCheckBox_writerDeptId + "," + _TDCheckBox_writerNameType + ";";
                     _TDCheckBox_Sub.style.margin = "0px";
                     _TDCheckBox_Sub.style.padding = "0px";
                     _TDCheckBox_Sub.style.width = "13px";

@@ -7,7 +7,8 @@
 	<head>
 	    <title><spring:message code='ezBoard.t1003'/></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
-	    <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+	    <link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript">
@@ -173,7 +174,7 @@
 	        </tr>
 	        <tr>
 	            <td>
-	                <div class="layout" style="padding-top:10px;padding-bottom:10px;overflow-y:scroll;height:410px;" id="allImageList">
+	                <div class="layout" style="padding-top:10px;padding-bottom:5px;overflow-y:auto;height:410px;" id="allImageList">
 	                	<c:set var="result" value="${fn:split(listImages, '|')}"/>
 	                	<c:set var="imageID" value="${fn:split(imageID, ';')}"/>
 	                	<c:set var="content" value="${fn:split(imageContent, ';')}"/>

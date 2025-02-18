@@ -292,8 +292,9 @@ public class EzEmailWriteServiceImpl implements EzEmailWriteService {
                     if (writetype.useReplyMessage()) { // REPLY, REPLYALL, FORWARD
                         bodyValue = getBodyChanged(orgMessage, bodyValue, messagevo.getDefaultFontAndSize(), loginInfo.getOffset(), locale);
 
-                        if (!isReply) { // FORWARD
+                        if (!isReply && attachedFileList.size() > 0) { // FORWARD
                             // replyMessage의 첨부 파일 구성이 orgMessage와 다르게 될 수 있기 때문에 다시 첨부파일 정보를 구하도록 한다.
+                            attachedFileList.clear();
                             ezEmailUtil.getBodyInfo(savedMessage, folderPath, uid, -1, attachedFileList, locale, extraMap);
                         }
                     }
@@ -923,7 +924,11 @@ public class EzEmailWriteServiceImpl implements EzEmailWriteService {
 			String[] senderList = pMailSenderNM.split("\\|!\\-@\\-!\\|");
 
 			 for (String pSenderNM : senderList) {
-				 mailSendObject += "<option value='" + pSenderNM + "'>" + pSenderNM + "</option>";
+                 if (pSenderNM.startsWith("___")){
+                     mailSendObject += "<option value='" + pSenderNM.substring(3) + "' selected>" + pSenderNM.substring(3) + "</option>";
+                 } else {
+                     mailSendObject += "<option value='" + pSenderNM + "'>" + pSenderNM + "</option>";
+                 }
 			 }
 		}
         general.setMailSenderNm(mailSendObject);
@@ -1196,20 +1201,22 @@ public class EzEmailWriteServiceImpl implements EzEmailWriteService {
     }
 
     private String getDefaultFontAndSize(MailGeneralVO general, String userLang, int tenantId, Locale locale) throws Exception {
-        String defaultFontAndSize = "style='font-size:13px;font-family:" + egovMessageSource.getMessage("main.t246", locale) + "'";
 
-        //사용자 언어가 한국어이고 editorFontStyle값이 있을 경우 editorFontStyle값 적용
-        if ("1".equals(userLang)) {
-            String editorFontStyle = ezCommonService.getTenantConfig("editorFontStyle", tenantId);
-
-            if (StringUtils.isNotBlank(editorFontStyle)) {
-                // 사용자가 환경설정에서 설정한 값이 있으면 그 값을 사용하고, 없으면 관리자페이지에서 설정한 값 사용
-                String fontFamily = StringUtils.defaultIfBlank(general.getEditorFontFamily(), editorFontStyle.split("\\|")[0]);
-                String fontSize = StringUtils.defaultIfBlank(general.getEditorFontSize(), editorFontStyle.split("\\|")[1]);
-                defaultFontAndSize = "style='font-size:" + fontSize + ";font-family:" + fontFamily + "'";
-            }
+        String fontFamily = egovMessageSource.getMessage("main.t246", locale);
+        String fontSize = "10pt";
+        
+        // 사용자가 환경설정에서 설정한 에디터 폰트 및 크기가 있으면 그 값을 사용하고, 없으면 관리자페이지에서 설정한 값 사용
+        String editorFontStyle = ezCommonService.getTenantConfig("editorFontStyle", tenantId);
+        if (StringUtils.isNotBlank(editorFontStyle)) {
+            fontFamily = editorFontStyle.split("\\|")[0];
+            fontSize = editorFontStyle.split("\\|")[1];
         }
-
+        
+        fontFamily = StringUtils.defaultIfBlank(general.getEditorFontFamily(), fontFamily);
+        fontSize = StringUtils.defaultIfBlank(general.getEditorFontSize(), fontSize);
+        
+        String defaultFontAndSize = "style='font-size:" + fontSize + ";font-family:" + fontFamily + "'";
+        
         logger.debug("defaultFontAndSize=" + defaultFontAndSize);
         return defaultFontAndSize;
     }

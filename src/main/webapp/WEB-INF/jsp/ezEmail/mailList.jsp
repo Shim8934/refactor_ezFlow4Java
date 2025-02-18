@@ -7,7 +7,8 @@
 	<head>
 		<title><spring:message code="ezEmail.t177"/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/previewmail.css')}">
 		<link href="${util.addVer('/js/jquery/jquery.modal.css')}" rel="stylesheet" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('/css/jquery-ui.css')}" type="text/css">
@@ -32,6 +33,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/leftmenu-util.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.modal.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/email_tag.js')}"></script>
 		<script type="text/javascript">
 		    var g_bdraft = false;
 		    var g_moveUrl = "<c:out value='${url}' escapeXml='false'/>";
@@ -482,7 +484,7 @@
 
 				// 미리보기에서 태그 인풋 엔터시 추가
 				$("#pre_h_tag_add, #pre_w_tag_add").on("keydown", function(e) {
-					if (e.keyCode == 13) onEnterPreviewTagInput();
+					if (e.keyCode == 13) onEnterPreviewTagInput_previewShow();
 				}).each(function(i, element) {
 					inputUtil.makeNotAllowTyping(element, /[!@#$%^&()\\\/:*?"<>|'`]/g);
 					inputUtil.makeReplaceTyping(element, /\s/g, '_');
@@ -521,7 +523,7 @@
 					}
 				});
 
-				$("#input_wrap_h + .imgbtn, #input_wrap_w + .imgbtn").on("click", onEnterPreviewTagInput);
+				$("#input_wrap_h + .imgbtn, #input_wrap_w + .imgbtn").on("click", onEnterPreviewTagInput_previewShow);
 
 				var layerSelect = null;
 				var viewMore = null;
@@ -1673,7 +1675,7 @@
 				    $("#searchButton").css("display", "none");   
 				    document.getElementsByName("keyword")[0].disabled = false;
 				    document.getElementById("searchCheck").disabled = false;
-				    document.getElementById("searchCheck").style.backgroundColor="rgb(248 248 248)";
+				    document.getElementById("searchCheck").style.backgroundColor="rgb(255,255,255)";
 				} 
 			}
 			function doLayerPopup() {
@@ -1761,54 +1763,6 @@
 	    			data : {"userKey" : userKey}
 		    	});
 		    }
-
-			function getTagList(type) {
-				var ulTag = document.getElementById("layer_select_"+type);
-				while (ulTag.firstChild) {
-					ulTag.removeChild(ulTag.firstChild);
-				}
-				// if (ulTag.children.length <= 0) {
-				$.ajax({
-					cache: false,
-					async: false,
-					data: { shareId: shareId },
-					url: "/ezEmail/getUserTagList.do",
-					success: function (result) {
-						if (result.status == "error") {
-							alert(strLang321);
-							return;
-						}
-
-						var tags = result.data;
-						window.cacheTags = $.map(tags, function (ul, item) {
-							return ul.name;
-						});
-
-						for (var i = 0; i < window.cacheTags.length; i++) {
-							var li = document.createElement('li');
-							li.textContent = window.cacheTags[i];
-							li.addEventListener('click', function() {
-								var pageType = pPreviewShow_HOW == "H" ? "pre_h_" : "pre_w_";
-								
-								document.getElementById(pageType+ "tag_add").value = this.textContent;
-								onEnterPreviewTagInput();
-
-								var inputWrap = document.getElementById("input_wrap_"+type);
-
-								// 클래스에 "on"이 있으면 제거
-								if (inputWrap.classList.contains("on")) {
-									inputWrap.classList.remove("on");
-								}
-
-								document.getElementById(pageType+ "tag_add").value = "";
-							});
-							ulTag.appendChild(li);
-						}
-
-					}
-				}); //ajax
-				// } //if
-			}
 			
 		</script>	
 		<style>

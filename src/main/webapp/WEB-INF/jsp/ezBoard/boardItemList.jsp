@@ -5,7 +5,8 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<link href="${util.addVer('/css/previewmail.css')}" rel="stylesheet" type="text/css">
 		<script type="text/javascript" src="${util.addVer('ezBoard.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -138,6 +139,7 @@
 		    var isOpenWindow;
 		    var useKeywordFlag = "<c:out value='${useKeyword}'/>"; // 키워드 사용여부 (Y/N)
 		    var myBoardScrapFlag = "<c:out value='${MyBoardScrapFlag}'/>" // 스크랩 테넌트 컨피그 (TYPE1 / TYPE2 /NONE)
+			var SSDeptID = "<c:out value='${userInfo.deptID}'/>";
 		    
 		    window.onunload = Window_onunload;
 		    var window_onunload_Event = false;
@@ -998,17 +1000,25 @@
 		    }
 		    
 		    /* 2018-10-17 홍승비 - 작성자 ID의 '일부'가 SSUserID와 완벽하게 일치하면 참으로 리턴되는 문제 수정 */
+			/* 2025-01-17 임정은 - writerNameType에 따라 userId 또는 deptId를 비교하도록 추가 */
 		    function CheckOwnerShip() {
 		        var arrList = new Array();
 		        var i = 0;
 		
 		        arrList = strListInfo.split(";");
-		        for (i = 0; i < arrList.length - 1; i++) {
-		            if (arrList[i].split(",")[1] != SSUserID) {
-		                arrList = null;
-		                return false;
-		            }
-		        }
+				for (i = 0; i < arrList.length - 1; i++) {
+					if (arrList[i].split(",")[3] == '1') {
+						if (arrList[i].split(",")[2] != SSDeptID) {
+							arrList = null;
+							return false;
+						}
+					} else {
+						if (arrList[i].split(",")[1] != SSUserID) {
+							arrList = null;
+							return false;
+						}
+					}
+				}
 		        arrList = null;
 		        return true;
 		    }

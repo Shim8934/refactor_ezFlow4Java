@@ -9,7 +9,8 @@
             <spring:message code='ezApprovalG.HSBDa01'/>
 	    </title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	    <link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 	    <style>
 			.contentlist_layout {
     			padding: 0px 15px;
@@ -74,7 +75,8 @@
     			margin-inline-end: 0px;
 			}
 		</style>
-		
+
+		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -338,6 +340,9 @@
 			var orgCompanyID_ = "<c:out value = '${orgCompanyID}'/>";
 			var upperDeptCode = "<c:out value ='${upperDeptCode}'/>";
 
+			// 창마다 고유한 id 지정용
+			var windowUuid = getRandomId();
+
     		// 일괄기안문서를 재기안하는 경우, 기존 문서와 양식 등의 정보를 배열에 부여
     		$(document).ready(function() {
                 pDraftFlag = DraftFlag; // 모든 문서 공통이므로 ready 시 바로 부여
@@ -562,6 +567,8 @@
 				pDocNumCodeAry = [""]; // 각 안 별 문서번호 저장 배열 초기화
 				pDocNumSnAry = [""]; // 각 안 별 문서번호 숫자부분(tempNumString) 저장 배열 초기화
 				
+				beforeSendDraft();
+				
 				// 결재올림 이전의 결재정보 체크 (결재선, 문서제목, 수신처 정상여부 등 판별) 동작은 루프를 돌면서 비동기적으로 진행한다.
 				// 단, 암호체크 및 서명선택 동작은 단 한번만 동작하도록 한다. (모든 체크가 끝난 뒤, 카운트를 확인하여 호출)
 				for (var i = 1; i <= docMaxTabNumForDraft; i++) {
@@ -584,8 +591,47 @@
 			    	GetHTML2(sendDraft, i, docMaxTabNumForDraft); // 웹한글 비동기 함수에 호환되도록 반드시 인덱스 사용
 				}
 	        }
-	        
-	        function sendDraft(strClone, currIdx, maxIdx) {
+
+			// 2025-02-06 박기범 - #154451 -> 일괄 기안 전에 웹한글 내부함수 GetTextFile 실행시, 
+			// display none 되어있는 창은 마우스 클릭이 툴바가 없는 것을 기준으로 클릭되는 버그가 생김. 웹한글 내부함수에서 
+			// 클릭 이벤트를 생성시 디스플레이된 스크롤바의 높이를 측정하여 부여하는것으로 추측됨.
+			// 현재 활성화된 창 외에 diplay를 잠시 복구한뒤 과정이 모두 끝나고 다시 감춤(리사이즈시 문제 방지)
+			function beforeSendDraft() {
+				var curTab = document.getElementById("tab" + currentTabIdx);
+				var cont = document.querySelector("#container > .tab_container");
+				// 현재 창 높이로 고정.
+				cont.style.height = curTab.offsetHeight + 'px';
+				cont.style.overflow = 'hidden';
+				// 현재 선택된 탭을 제일 위쪽 위치로 고정
+				cont.style.display = 'flex';
+				cont.style.flexDirection = 'column';
+				curTab.style.order = 1;
+				cntGetTextFile = 0;
+				// 다른 창들을 감춰진 아래쪽 영역에 표출
+				for (var i = 1; i <= docMaxTabNumForDraft; i++) {
+					var targetTab = document.getElementById("tab" + i);
+					targetTab.style.display = 'block';
+					if (currentTabIdx != i) {
+						targetTab.style.order = 2;
+					}
+				}
+			}
+			
+			var cntGetTextFile = 0;
+			function afterGetTextFileInSendDraft(currIdx) {
+				cntGetTextFile++;
+				if (currentTabIdx != currIdx) {
+					// GetTextFile가 완료된 탭은 다시 감춤
+					document.getElementById("tab" + currIdx).style.display = "none";
+				}
+				if (docMaxTabNumForDraft == cntGetTextFile) {
+					// 모든 GetTextFile가 실행되면 컨테이너 높이 원복. 원복하지 않으면 창크기변경시 컨테이너가 변하지 않음.
+					document.querySelector("#container > .tab_container").style.height = '';
+				}
+			}
+
+			function sendDraft(strClone, currIdx, maxIdx) {
+				afterGetTextFileInSendDraft(currIdx);
 	        	var currIfrm = document.getElementById("ifrm" + currIdx); // 각 안별 웹한글기안기 iframe을 사용
 	        	var strBytes = parseInt(getByteLength(strClone));
 		    	var rtnAttachXML = loadXMLString(sendDraftResultAry[currIdx]);
@@ -1353,7 +1399,7 @@
 	                ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
 			
 	                var url = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun +"&docType=" + pDocType + "&ext=" + "hwp" + "&formID=" + pFormID + "&draftAllFlag=Y";
-			        var ret = window.open(url, '', 'height=750,width=1210,scrollbars=no' + GetOpenPosition(1210, 750));
+			        var ret = window.open(url, "ezApprovalInfo-" + windowUuid, 'height=750,width=1210,scrollbars=no' + GetOpenPosition(1210, 750));
 			    } catch (e) {
 			        alert("ezdraftui_hwp.btnApprovalInfo()::" + e);
 			    }

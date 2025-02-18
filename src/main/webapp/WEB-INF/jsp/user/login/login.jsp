@@ -11,7 +11,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<link rel="shortcut icon" href="/images/favicon.ico">
 		<link href="${util.addVer('/css/login.css')}" rel="stylesheet" type="text/css" />
-<%-- 		<link rel="stylesheet" href="${util.addVer('main.e15', 'msg')}" type="text/css"> --%>
+<%-- 		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css"> --%>
 		<link href="${util.addVer('/js/jquery/jquery.modal.css')}" rel="stylesheet" type="text/css" />
 		<style>
 			.blocker {

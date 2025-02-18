@@ -6511,4 +6511,46 @@
 			KEY `tbl_gongramdeletehistory_IDX` (`DOCID`, `APRMEMBERSN`, `TENANT_ID`, `COMPANYID`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
 	</statement>
+
+	<select id="EzCommonDAO.checkBoardInfoWriterFlag" resultClass="String">
+		SELECT
+			WRITERFLAG
+		FROM
+			TBL_BOARD_BOARDINFO
+		LIMIT 1
+    </select>
+	<statement id="EzCommonDAO.alterBoardInfoWriteFlag">
+		ALTER TABLE
+			TBL_BOARD_BOARDINFO
+		ADD
+			WRITERFLAG VARCHAR(2) DEFAULT 'N'
+	</statement>
+
+	<select id="EzCommonDAO.checkBoardItemWriterNameType" resultClass="String">
+		SELECT
+			WRITERNAMETYPE
+		FROM
+			TBL_BOARD_ITEM
+		LIMIT 1
+	</select>
+	<statement id="EzCommonDAO.addBoardItemWriterNameType">
+		ALTER TABLE
+			TBL_BOARD_ITEM
+		ADD
+			WRITERNAMETYPE VARCHAR(2) DEFAULT NULL
+	</statement>
+
+	<select id="EzCommonDAO.checkBoardItemTempWriterNameType" resultClass="String">
+		SELECT
+			WRITERNAMETYPE
+		FROM
+			TBL_BOARD_ITEM_TEMP
+		LIMIT 1
+	</select>
+	<statement id="EzCommonDAO.addBoardItemTempWriterNameType">
+		ALTER TABLE
+			TBL_BOARD_ITEM_TEMP
+		ADD
+			WRITERNAMETYPE VARCHAR(2) DEFAULT NULL
+	</statement>
 </sqlMap>

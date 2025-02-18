@@ -561,4 +561,6 @@ public interface EzCommonService {
 	
 	// 2024-12-27 이가은 - 공람완료문서 삭제 히스토리 테이블 생성
 	public void createGongramDeleteHistory() throws Exception;
+
+	public void addBoardWriterFlagAndWriterNameType() throws Exception;
 }

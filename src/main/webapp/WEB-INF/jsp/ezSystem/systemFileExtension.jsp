@@ -6,7 +6,7 @@
     <head>
     <title></title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <link rel="stylesheet" href="/css/default_kr.css" type="text/css">
+    <link rel="stylesheet" href="/css/default.css" type="text/css">
     <link rel="stylesheet" href="/css/fileExtension.css" type="text/css">
     <link href="${util.addVer('/js/jquery/jquery.modal.css')}" rel="stylesheet" type="text/css" />
     <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>

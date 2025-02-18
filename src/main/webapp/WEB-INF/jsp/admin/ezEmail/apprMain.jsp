@@ -6,7 +6,8 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<title><spring:message code='email.appr.menu.normal'/></title>
-    <link rel="stylesheet" href="${util.addVer('main.e15', 'msg')}" type="text/css" />
+    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+    <link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
     <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">	
 </head>
 <body class="mainbody" style="height: 95%;">

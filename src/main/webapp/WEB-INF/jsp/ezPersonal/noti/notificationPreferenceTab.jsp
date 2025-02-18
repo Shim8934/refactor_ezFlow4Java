@@ -5,7 +5,8 @@
 <html>
 <head>
 <meta charset="utf-8">
-<link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />
+<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 <style>
 label { position:absolute; top: 0; right: 0; bottom: 0; left: 0;}
 .content { width: 100%; table-layout: fixed; }

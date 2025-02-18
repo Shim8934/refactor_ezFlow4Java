@@ -860,7 +860,34 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		param.put("userId", userInfo.getId());
 		param.put("tenantId", userInfo.getTenantId());
 		String url = "/rest/ezPortal/portlets/weather";
-		
+
+		/*
+			한국			-
+			미국			- 뉴욕(5128638) 댈러스(5186266) 덴버(5186794) 로스앤젤레스(5368361) 맨해튼(5664535) 보스턴(4930956) 브롱크스(5110253) 브루클린(5110302) 산호세(5392171) 샌디에이고(4726311)
+						  샌안토니오(4171771) 시카고(4887398) 애틀랜타(4883772) 오스틴(5016884) 워싱턴 D.C.(4140963) 콜롬버스(4188985) 퀸스(5133268) 피닉스(4905873) 필라델피아(5131095) 휴스턴(5194369)
+
+
+			일본			- 도쿄 오사카 오카야마 니가타 나고야 나가모 교토 카고시마 히로시마 후쿠오카 마츠야마 후쿠시마 사포로 아오모리 아사이
+
+
+			중국			- 광저우(1809858) 구이양(1809461) 난닝(1799869) 난징(1799962) 난창(1800163) 란저우(1804430) 베이징(1816670) 상하이(1796236) 선양(2034937) 스자좡(1795268) 지난(1805753) 창사(1815549) 창춘(1815771) 청두(1815286)
+			 			  충칭(1814906) 쿤밍(1804651) 푸저우(1810821) 하얼빈(2037013) 항저우(1808926) 허페이(1808722)
+
+
+			베트남		- 깐토(1586203) 꾸이년(1568574) 냐짱(1572151) 다낭(1905468) 바비(8201616) 비엔호아(1587923) 하노이(1581130) 하이퐁(1581298) 호찌민(1566083) 후에(1580240)
+
+
+			인도네시아	- 덴파사르(1645528) 드폭(8144495) 마카사르(1622786) 메단(1214520) 바탐(8144723) 반다르람풍(1624917) 반둥(1650357) 반자르마신(1650213) 보고르(7780016) 수라바야(8018250) 스마랑(1627896)
+			 			  암본(1651531) 자카르타(1642911) 잠비(1642858) 탕에랑(1625084) 팔렘방(1633070)
+
+
+			TBL_WEATHER
+			  PRIMARYLANG : 날씨 포틀릿에서 현재 selectBox에 선택된 국가에 대한 설정 분기로 사용
+
+			TBL_WEATHER_CITY
+			  USERLOCALLANG : 사용자 설정 언어로 해당 국가의 지역 이름을 번역하여 보여주기 위해 사용
+		*/
+
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, req, "get", null);
 		String result = resultBody.get("status").toString();
 		
@@ -870,6 +897,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 			model.addAttribute("cityList", data.get("cityList"));
 			//sn이 아니라 cityCode 가 와야함
 			model.addAttribute("cityCode", data.get("cityCode"));
+			model.addAttribute("countryCode", data.get("countryCode"));
 			model.addAttribute("displayName", data.get("displayName"));
 			model.addAttribute("currentWeather", data.get("currentWeather"));
 			model.addAttribute("todayWeather", data.get("todayWeather"));
@@ -877,8 +905,21 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		}
 		model.addAttribute("portletName", req.getParameter("portletName"));
 		model.addAttribute("userInfo", userInfo);
-		
-		
+
+		String useJP = ezCommonService.getTenantConfig("useJapanese", userInfo.getTenantId());
+		String useCN = ezCommonService.getTenantConfig("useChinese", userInfo.getTenantId());
+		String useVN = ezCommonService.getTenantConfig("useVietnamese", userInfo.getTenantId());
+		String useID = ezCommonService.getTenantConfig("useIndonesian", userInfo.getTenantId());
+
+		model.addAttribute("useJP", useJP);
+		model.addAttribute("useCN", useCN);
+		model.addAttribute("useVN", useVN);
+		model.addAttribute("useID", useID);
+		model.addAttribute("codeJP", useJP.equals("YES") ? "3" : "");
+		model.addAttribute("codeCN", useCN.equals("YES") ? "4" : "");
+		model.addAttribute("codeVN", useVN.equals("YES") ? "5" : "");
+		model.addAttribute("codeID", useID.equals("YES") ? "6" : "");
+
 		logger.debug("portalWeatherePortlet End");
 		
 		return "/ezNewPortal/portlets/weatherPortlet";
@@ -897,10 +938,12 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		
 		String cityCode = req.getParameter("cityCode");
+		String countryCode = req.getParameter("countryCode");
 		
 		param.put("userId", userInfo.getId());
 		param.put("tenantId", userInfo.getTenantId());
 		param.put("cityCode", cityCode);
+		param.put("countryCode", countryCode);
 		String url = "/rest/ezPortal/portlets/weather";
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, req, "get", null);

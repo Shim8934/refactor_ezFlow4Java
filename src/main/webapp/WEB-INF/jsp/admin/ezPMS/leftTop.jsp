@@ -7,7 +7,8 @@
 	<head>
 		<title>left_Top</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-		<link rel="stylesheet" href="${util.addVer('ezPMS.e1', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript">
@@ -30,10 +31,10 @@
 			}    
 		</script>
 	</head>
-	<body class="leftbody" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0"> 
+	<body class="leftbody admin_pms_left" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 		<div id="left">
 			
-			<div class="left_admin" title="<spring:message code="ezPMS.t8"/>">&nbsp;<spring:message code="ezPMS.t8" /></div>
+			<div class="left_admin" title="<spring:message code="ezPMS.t8"/>"><spring:message code="ezPMS.t8" /></div>
 			
 				<h2 class="project_admin"><span onClick="goPage(1)" style="display:inline-block;width:100%;"><spring:message code="ezPMS.t235" /></span><ul></ul></h2>	
 		</div>

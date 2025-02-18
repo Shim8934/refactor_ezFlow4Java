@@ -7,7 +7,8 @@
 	<head> 
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
         <link rel="stylesheet" href="${util.addVer('/css/olstyle_nonIE.css')}" type="text/css" />
-        <link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />
+        <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
         <link rel="stylesheet" href="${util.addVer('/css/ezSchedule/Calendar_cross.css')}" type="text/css" />  
         <link href="${util.addVer('/js/jquery/jquery.modal.css')}" rel="stylesheet" type="text/css" />
         <script type="text/javascript">
@@ -1417,22 +1418,24 @@
 	</head>
 	<body class="mainbody" style="overflow: auto; margin-bottom:0px">
         <h1 id="titleimg">${defaultTitle}</h1>
-        <div id="mainmenu">
+        <div id="mainmenu" style="position:fixed">
             <ul class="on">
             	<li class="important"><span id="pn_img" onClick="WriteSchedule()"><spring:message code='ezSchedule.t214'/></span></li>
             	<li><span class="icon16 icon16_print" onClick="PrintSchedule()"></span></li>
               	<li><span class="icon16 icon16_refresh" onClick="RefreshView()"></span></li>
             </ul>
 		</div>
-		<div class="calendar_pagenav">
-	        <ul class="contentlayout">
-	            <li class="contentlayout_left" id="preM"></li>
-	            <li class="contentlayout_right" id="preN"></li>
-	            <li class="contentlayout_none"><span class="spanText" id="calTitle"></span>
-	            </li>
-	        </ul>
+		<div style="display: flex; width: 100%; justify-content: center;">
+			<div class="calendar_pagenav" style="position:relative; margin-left: 0px; left: 0px; top: 0px">
+		        <ul class="contentlayout">
+		            <li class="contentlayout_left" id="preM"></li>
+		            <li class="contentlayout_right" id="preN"></li>
+		            <li class="contentlayout_none"><span class="spanText" id="calTitle"></span>
+		            </li>
+		        </ul>
+		    </div>
 	    </div>
-	    <div class="mainmenuTab">
+	    <div class="mainmenuTab" style="margin-top: 5px;">
 	        <ul class="mainmenuTabUL">
 	            <li id="dayView" class="${defaultView == '0' ? 'on' : 'off' }"><span onclick='ViewChange("DAY");'><spring:message code='ezSchedule.t140'/></span></li><li id="weekView" class="${defaultView == '1' ? 'on' : 'off' }"><span onclick='ViewChange("WEEK");'><spring:message code='ezSchedule.t141'/></span></li><li id="monView" class="${defaultView == '2' ? 'on' : 'off' }"><span onclick='ViewChange("MONTH");'><spring:message code='ezSchedule.t142'/></span></li>
 	        </ul>

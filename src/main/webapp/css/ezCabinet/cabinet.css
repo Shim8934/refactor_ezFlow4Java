@@ -45,8 +45,6 @@
 .cabTtlInf {font-weight: normal; color: #666;}
 .cabTtlInf >span {color: #017BEC !important; font-weight: bold !important;}
 .searchForm >select {width: 80px; height: 27px; border-color: #c8c8c8;}
-.searchForm >input {height: 27px; border: 1px solid #cbcbcb; border-right: 0px;}
-.searchForm >a {position: absolute; right: -19px; top: -2px;}
 
 .compSelect {margin: 10px 0px;}
 .compSelect >span {font-size: 12px; display:inline-block; vertical-align: middle;}

@@ -8,7 +8,8 @@
 	<head>
 		<title><spring:message code='ezBoard.t338'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<script type="text/javascript">
 			var	Access_FG = "${boardInfo.access_FG}";
 			var	BoardAdmin_FG = "${boardInfo.boardMin_FG}";

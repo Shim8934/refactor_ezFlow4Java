@@ -7013,4 +7013,49 @@
 			CONSTRAINT PK_TBL_GONGRAMDELETEHISTORY PRIMARY KEY (DOCID, APRMEMBERID, TENANT_ID, COMPANYID)
 		)
 	</statement>
+
+	<select id="EzCommonDAO.checkBoardInfoWriterFlag" resultClass="String">
+		SELECT
+			WRITERFLAG
+		FROM
+			TBL_BOARD_BOARDINFO
+		WHERE
+			ROWNUM = 1
+	</select>
+	<statement id="EzCommonDAO.alterBoardInfoWriteFlag">
+		ALTER TABLE
+			TBL_BOARD_BOARDINFO
+		ADD
+			WRITERFLAG NCHAR(1) DEFAULT 'N'
+	</statement>
+
+	<select id="EzCommonDAO.checkBoardItemWriterNameType" resultClass="String">
+		SELECT
+			WRITERNAMETYPE
+		FROM
+			TBL_BOARD_ITEM
+		WHERE
+			ROWNUM = 1
+	</select>
+	<statement id="EzCommonDAO.addBoardItemWriterNameType">
+		ALTER TABLE
+			TBL_BOARD_ITEM
+		ADD
+			WRITERNAMETYPE NCHAR(1) DEFAULT NULL
+	</statement>
+
+	<select id="EzCommonDAO.checkBoardItemTempWriterNameType" resultClass="String">
+		SELECT
+			WRITERNAMETYPE
+		FROM
+			TBL_BOARD_ITEM_TEMP
+		WHERE
+			ROWNUM = 1
+	</select>
+	<statement id="EzCommonDAO.addBoardItemTempWriterNameType">
+		ALTER TABLE
+			TBL_BOARD_ITEM_TEMP
+		ADD
+			WRITERNAMETYPE NCHAR(1) DEFAULT NULL
+	</statement>
 </sqlMap>

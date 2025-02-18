@@ -7,7 +7,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title><spring:message code='ezBoard.khj1' /></title>
 <link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
-<link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
+<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 <style>
 	.node_div span {
 		max-width:365px;

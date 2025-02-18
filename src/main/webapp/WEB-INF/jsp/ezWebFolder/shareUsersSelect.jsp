@@ -6,7 +6,8 @@
 	<head>
 		<c:if test="${type eq 'NEW'}"><title><spring:message code='ezWebFolder.t323' /></title></c:if>
 		<c:if test="${type ne 'NEW'}"><title><spring:message code='ezWebFolder.t217' /></title></c:if>
-		<link rel="stylesheet" href="${util.addVer('ezWebFolder.i1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('ezWebFolder.e1', 'msg')}"></script>
 		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/css/ezWebFolder/webfolder.css')}" type="text/css">

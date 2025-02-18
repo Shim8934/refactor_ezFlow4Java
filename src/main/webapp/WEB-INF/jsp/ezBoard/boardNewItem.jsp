@@ -17,7 +17,8 @@
 			</c:otherwise>
 		</c:choose>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	    <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+	    <link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 	    <style>
             .peopleSelectBtn {
@@ -174,6 +175,9 @@
 			
 			var editor = "${editor}";
 			var formPath = "";
+
+			var writerFlag = "${boardInfo.writerFlag}"; // 2025-01-21 임정은 - 게시판 게시물 게시자명선택 사용여부 플래그
+			var writerNameType = parseInt("<c:out value='${boardListVO.writerNameType}'/>"); // 2025-01-21 임정은 - 게시자명선택 타입 (0 : 이름, 1 : 부서명)
 
 		    window.onload = function () {
 		    	
@@ -354,6 +358,12 @@
 				}
 
 			    FirstFlag = false;
+
+				if (writerFlag == 'Y' && !isNaN(writerNameType)) {
+					if (writerNameType == 1) document.getElementById('chkUseDept').checked = true;
+					chkUseDept_onclick();
+				}
+				
 			    try {
 			        if (document.getElementById("txtTitle").value == "")
 			            if (OpenWin == null)
@@ -862,8 +872,15 @@
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "BOARDID", pBoardID);
 		        if (gubun != "2") {
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERID", SSUserID);
-		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME", MakeXMLString(SSUserName));
-		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME2", MakeXMLString(SSUserName2));
+					if ('Y' == writerFlag) {
+						var flagwriterName = $('#writerFlag').val().toString().split(":");
+						createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME", MakeXMLString(flagwriterName[0]));
+						createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME2", MakeXMLString(flagwriterName[1]));
+						createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAMETYPE", MakeXMLString(flagwriterName[2]));
+					} else {
+						createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME", MakeXMLString(SSUserName));
+						createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME2", MakeXMLString(SSUserName2));
+					}
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DEPTID", SSDeptID);
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DEPTNAME", MakeXMLString(SSDeptName));
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DEPTNAME2", MakeXMLString(SSDeptName2));
@@ -899,7 +916,7 @@
 				createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "RSVCANCEL", isReservedCancel);
 		        
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "IMPORTANCE", importance);
-		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "TITLE", document.getElementById("txtTitle").value);
+		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "TITLE", document.getElementById("txtTitle").value.replace(/[\t\n\r]+/g, ' ').trim());
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "STARTDATE", pStartDate);
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ENDDATE", pEndDate);
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ABSTRACT", document.getElementById("txtAbstract").value);
@@ -976,9 +993,14 @@
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE2", "");
 		        }
 
-		        if (gubun != "2") {
-		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE3", strUserRank);
-		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE32", strUserRank2);
+				if (gubun != "2") {
+					if ('Y' == writerFlag && chkUseDept.checked) {
+						createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE3", SSDeptName);
+						createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE32", SSDeptName2);
+					} else {
+						createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE3", strUserRank);
+						createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE32", strUserRank2);
+					}
 		            if (gubun != "3") {
 		                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE4", strUserPhone);
 		            }
@@ -1436,8 +1458,18 @@
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - 720) / 2;
 		        var pLeft = (pwidth - 765) / 2;
+				var pWriterNameType = "";
+				
+				if (writerFlag == "Y") {
+					if (chkUseDept.checked) {
+						pWriterNameType = "1";
+					} else {
+						pWriterNameType = "0";
+					}
+				}
+				
 		        if (gubun != "2")
-		            window.open("/ezBoard/boardItemPreView.do?guBun=" + gubun + "&boardID=" + encodeURIComponent(pBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=0,height=720,width=744,top=" + pTop + ",left=" + pLeft, "");
+		            window.open("/ezBoard/boardItemPreView.do?guBun=" + gubun + "&boardID=" + encodeURIComponent(pBoardID) + "&writerNameType=" + pWriterNameType, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=0,height=720,width=744,top=" + pTop + ",left=" + pLeft, "");
 		        else {
 		            var ua = navigator.userAgent;
 		            if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
@@ -2903,6 +2935,16 @@
                     }
                 }
             }
+
+			function chkUseDept_onclick() {
+				if (chkUseDept.checked) { // 팀/부서로 표시
+					spUseDept.innerHTML = "${userInfo.lang}" == "1" ? SSDeptName : SSDeptName2;
+					document.getElementById("writerFlag").selectedIndex = 1;
+				} else { // 이름으로 표시
+					spUseDept.innerHTML = "${userInfo.lang}" == "1" ? SSUserName : SSUserName2;
+					document.getElementById("writerFlag").selectedIndex = 0;
+				}
+			}
 	    </script>
 	    <c:if test="${!isCrossBrowser}">
 	   		<script type="text/javascript" FOR="EzHTTPTrans" EVENT="AttachAddFile(filename)">
@@ -3056,6 +3098,25 @@
 								</span>
 							</td>
 						</tr>
+						<c:if test="${'Y' == boardInfo.writerFlag}">
+							<tr class="td_style">
+								<th><spring:message code='ezBoard.t223' /></th>
+								<td colspan="3">
+									<span id="spUseDept">
+										<c:choose>
+											<c:when test="${mode == 'new'}">${userInfo.displayName}</c:when>
+											<c:otherwise>${boardListVO.writerName}</c:otherwise>
+										</c:choose>
+									</span>
+									<input type="checkbox" id="chkUseDept" style="margin-left: 0px !important;" onclick="chkUseDept_onclick()">
+									<select id="writerFlag" style="display: none;">
+										<option value="<c:out value='${writerOption.N}:${writerOption.N2}:0' />"></option>
+										<option value="<c:out value='${writerOption.T}:${writerOption.T2}:1' />"></option>
+										<option value="<c:out value='${writerOption.D}:${writerOption.D2}:2' />"></option>
+									</select>
+								</td>
+							</tr>
+						</c:if>
              			<!-- 추가 항목이 있을 경우 -->
              			<c:forEach var="boardAttributeVO" items="${boardAttributeListVO}" step="1" varStatus="status">
              				<tr>

@@ -6,7 +6,8 @@
 	<head>
 		<title><spring:message code='ezBoard.t293' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
-		<link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -52,7 +53,7 @@
 			var pBoardID = "${boardID}";
 		    var pBoardName = "${boardInfo.boardName}";
 		    var strWriterID = "${boardItem.writerID}";
-		    var strWriterDeptID = "${boardItem.writerDeptID} ";
+		    var strWriterDeptID = "${boardItem.writerDeptID}";
 		    var strWriterName = ConvMakeXMLString("<c:out value='${boardItem.writerName}'/>"); // 익명게시판의 게시자명 특문처리 대응
 		    var strWriterDeptName = "${boardItem.writerDeptName}";
 		    var strWriterCompanyName = "${boardItem.writerCompanyName}";
@@ -111,6 +112,8 @@
             var myBoardScrapFlag = "<c:out value='${MyBoardScrapFlag}'/>" // myBoardScrapFlag 테넌트컨피그값 (NONE, TYPE1_(마이게시판하위), TYPE2(스크랩함))
 			var isScrap = "<c:out value='${isScrap}'/>"; // 이미 스크랩되었는지의 여부 (type1일때)
 			var scrapContID = "<c:out value='${scrapContID}'/>"; // 개인스크랩함 ID (TYPE2, 스크랩함에서 게시물 조회했을 때만 값이 삽입되는 변수)
+			var writerNameType = "<c:out value='${boardItem.writerNameType}'/>"; // 2025-01-21 임정은 - 게시자명선택 타입 (0 : 이름, 1 : 부서명)
+			var SSDeptID = "<c:out value='${userInfo.deptID}'/>";
 
 		    // 수정 수아 재은	    
 		    var nowZoom = 100;
@@ -222,11 +225,17 @@
 							Bigger(doc);
 						}
 						
+						/* 2024-12-17 김은실 - default.css 추가 */
+						var cssLink0 = document.createElement("link");
+						cssLink0.href = "${util.addVer('/css/default.css')}";
+						cssLink0.rel = "stylesheet";
+						cssLink0.type = "text/css";
+
 						/* 2020-07-10 홍승비 - 게시물 본문 내부에도 기본적인 css가 적용되도록 수정 */
-						var cssLink = document.createElement("link");
-						cssLink.href = "${util.addVer('ezBoard.i1', 'msg')}";
-						cssLink.rel = "stylesheet";
-						cssLink.type = "text/css";
+						var cssLink1 = document.createElement("link");
+						cssLink1.href = "${util.addVer('main.default.css', 'msg')}";
+						cssLink1.rel = "stylesheet";
+						cssLink1.type = "text/css";
 						
 						/* 2021-09-02 홍승비 - 게시물 본문 내부의 헤딩 태그(h1, h2...)의 스타일은 default.css가 아닌 기본적인 브라우저의 user-agent 속성을 사용하도록 수정 (글자 자체의 인라인 속성이 있다면 해당 속성이 우선 적용됨) */
 						// chrome의 경우 각 속성 revert로 간단히 처리가 가능하나, IE에서 해당 속성을 지원하지 않아 각 폰트 사이즈와 마진을 명시함
@@ -239,7 +248,7 @@
 						cssHeading += " .contentDiv h6 {font-size:0.67em; margin-top:2.33em; margin-bottom:2.33em;}";
 						cssHeading += "</style>";
 						
-						$("#message").contents().find("head").append(cssLink).append(cssHeading);
+						$("#message").contents().find("head").append(cssLink0).append(cssLink1).append(cssHeading);
 						$("#message").contents().find("body").css("word-wrap", "break-word");
 						
 						rsa.setPublic(document.getElementById('publicModulus').value, document.getElementById('publicExponent').value);
@@ -513,7 +522,7 @@
 		            alert("<spring:message code='ezBoard.t265' />");
 		            return;
 		        }
-		        if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && strWriterID != SSUserID) {
+		        if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && strWriterID != SSUserID && !(writerNameType == '1' && strWriterDeptID == SSDeptID)) {
 		            if (gubun == "2") {
 		                if (CrossYN()) {
 		                    checkpassword_dialogArguments[1] = btn_Delete_Onclick_Complete;
@@ -738,7 +747,7 @@
 				}
 	            
 		        //익명게시판
-		        if (gubun == "2" && BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK") {
+		        if (gubun == "2") {
 		            if (CrossYN()) {
 		                checkpassword_dialogArguments = new Array();
 		                checkpassword_dialogArguments[1] = btn_Modify_Onclick_Complete;
@@ -1842,7 +1851,7 @@
 		        		<c:when test="${apprFlag == 'N'}">
 		        			<li><span onClick="Appr_onclick('Y')"><spring:message code='ezBoard.t999005' /></span></li>
 		                    <li><span onClick="Appr_onclick('C')"><spring:message code='ezBoard.t999014' /></span></li>
-		                    	<c:if test="${boardItem.writerID == userInfo.id}">
+		                    	<c:if test="${boardItem.writerID == userInfo.id || (boardItem.writerNameType == '1' && boardItem.writerDeptID == userInfo.deptID)}">
 			                        <li ID='btn_Modify'><span onclick='btn_Modify_Onclick()'><spring:message code='ezBoard.t316' /></span></li>
 			                        <li ID='btn_Delete'><span class="icon16 popup_icon16_delete" onclick='btn_Delete_Onclick()'></span></li>
 		                    	</c:if>
@@ -1875,7 +1884,7 @@
 			                        <li ID='btn_Mail' ><span class="icon16 popup_icon16_mail_gray" onclick='mail_boarditem()' ></span></li>
 			                        </c:if>
 			        			</c:when>
-			        			<c:when test="${boardItem.writerID == userInfo.id || boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK'}">
+			        			<c:when test="${boardItem.writerID == userInfo.id || boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK' || (boardItem.writerNameType == '1' && boardItem.writerDeptID == userInfo.deptID)}">
 		        					<!--		강민수92	   -->
 			        				<c:if test = "${boardPropertyVO.oneLineReply == '1'}">
 			        					<li ID='btn_One_Line_Reply'><span id="commentCount" onclick='btn_One_Line_Reply_Onclick()'><spring:message code='ezBoard.t81' />[${commentCount}]</span></li>

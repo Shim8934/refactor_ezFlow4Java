@@ -7,7 +7,8 @@
 <html>
 <head>
 <title><spring:message code='ezPMS.t171' /></title>
-<link rel="stylesheet" href="${util.addVer('ezPMS.e1', 'msg')}" type="text/css" />
+<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css" />
 
 <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -132,7 +133,7 @@ function restoreColor(statusId) {
 }
 </style>
 </head>
-<body class="mainbody">
+<body class="mainbody pmsSetting">
     <h1><spring:message code='ezPMS.t171' /></h1>
     <div class="portlet_tabpart01" style="margin-bottom: 10px">
 	   <div class="portlet_tabpart01_top" id="tab1">

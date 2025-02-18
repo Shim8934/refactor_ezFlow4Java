@@ -7,7 +7,8 @@
 	<head>
 		<title><spring:message code="ezResource.t171"/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezResource.e2', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('ezResource.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezResource/Schedule_cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -118,7 +119,7 @@
 	        	if (cmd == "mod") {
 	        		/* 2018-07-10 김민성 - 자원 수정시 특수문자 처리 */
 	            	document.getElementById("importance1").value = "${importance}";
-					document.getElementById("title").value = ConvMakeXMLString("<c:out value='${title}' escapeXml='false'/>");
+					document.getElementById("title").value = ConvMakeXMLString(ReplaceHTML('<c:out value="${title}" escapeXml="false"/>'));
 	            	document.getElementById("loc").value = ConvMakeXMLString("<c:out value='${loc}'/>");
 	            	
 	            	if(allDay == "1") {

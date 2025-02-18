@@ -8,7 +8,8 @@
 		<title><spring:message code='ezApprovalG.t1'/></title>
 		<meta http-equiv="Content-Type" content="text/html;" charset="utf-8" />
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/jquery-ui.css')}">
-		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery-ui.min.js')}"></script>
@@ -2443,10 +2444,10 @@
 		    	    if (field) {
 		    	        if (field.style.display == "none" || action == "open") {
 		    	        	field.style.display = "";
-		    	            document.getElementById("headerHide").innerHTML = "헤더 숨기기";
+		    	            document.getElementById("headerHide").innerHTML = ezApproval_headerHide01;
 		    	        } else {
 		    	            field.style.display = "none";
-		    	            document.getElementById("headerHide").innerHTML = "헤더 펼치기";
+		    	            document.getElementById("headerHide").innerHTML = ezApproval_headerHide02;
 		    	        }
 		    	    }
 	    		}

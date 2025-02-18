@@ -87,16 +87,16 @@ var strLangLGE06 = "匿名";
 var strLangLGE07 = "このコメントは作者によって削除されました。";
 
 /* 2024-08-26 전인하 - 게시판 > 키워드 > 특문입력제한 */
-var strLangKeywordJIH01 = "역슬래시, 작은따옴표, 큰따옴표, 부등호기호, 해시기호(#)를 입력할 수 없습니다."
-var strLangKeywordJIH02 = "오류가 발생하였습니다."
-var strLangKeywordJIH03 = "해당 게시물을 그룹웨어에서 접근하지 않았거나, 해당 게시물을 접근한 그룹웨어 페이지에 변경사항이 발생하여 키워드를 검색할 수 없습니다."
-var strLangKeywordJIH04 = "보고 있는 게시물 팝업을 닫겠습니까?"
-var strLangKeywordJIH05 = "게시물 혹은 메일 보기 팝업을 통하여 열람한 게시글, 관리자 화면을 통하여 열람한 게시글에서는 키워드를 검색할 수 없습니다.";
+var strLangKeywordJIH01 = "バックスラッシュ、シングルクォーテーション、ダブルクォーテーション、不等号記号、ハッシュ記号(＃)は入力できません。"
+var strLangKeywordJIH02 = "エラーが発生しました。"
+var strLangKeywordJIH03 = "該当の投稿はグループウェアからアクセスされていないか、アクセスしたグループウェアのページに変更が発生したため、キーワードを検索できません。"
+var strLangKeywordJIH04 = "見ている投稿のポップアップを閉じますか？"
+var strLangKeywordJIH05 = "投稿またはメール閲覧ポップアップを通じて閲覧した投稿、管理者画面を通じて閲覧した投稿では、キーワード検索できません。";
 
-var strLangAttachJIH01 = "첨부";
-var strLangAttachJIH02 = "파일명은 ";
-var strLangAttachJIH03 = "자를 넘을 수 없습니다.";
-var strLangAttachJIH04 = "에러가 발생하였습니다.";
+var strLangAttachJIH01 = "添付";
+var strLangAttachJIH02 = "ファイル名は";
+var strLangAttachJIH03 = "文字数を超えることはできません。";
+var strLangAttachJIH04 = "エラーが発生しました。";
 
 // 2024-06-28 민지수 - 게시판 > 첨부파일 드래그 앤 드롭 안내 메세지 추가
 var strLangMJS01 = "Drag＆Dropでファイルを追加および追加したファイルの並び順を変更できます。";

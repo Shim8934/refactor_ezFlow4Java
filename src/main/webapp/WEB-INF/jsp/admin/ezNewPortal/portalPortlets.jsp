@@ -7,7 +7,8 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title><spring:message code='ezNewPortal.t056' /></title>
-	<link rel="stylesheet"  href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css">
+	<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 	<link rel="stylesheet" type="text/css" href="${util.addVer('/css/ezNewPortal/portal.css')}" />
 	<link href="${util.addVer('main.portal', 'msg')}" rel="stylesheet" type="text/css">
 	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -362,8 +363,14 @@
 	 		var companiesObj = document.getElementById("ListCompany");
 			var companyId = companiesObj.options[companiesObj.selectedIndex].value;
 			var portletCode = "";
+			var portletBoardId = "";
 			if (portletId != null) {
 				portletCode = document.getElementById("portlet" + portletId).getAttribute("data3");
+			}
+			if (document.getElementById("portletBoard" + portletId) == null) {
+				portletBoardId = document.getElementById("newPortletBoard").getAttribute("data1") == null ? "" : document.getElementById("newPortletBoard").getAttribute("data1");
+			} else {
+				portletBoardId = document.getElementById("portletBoard" + portletId).getAttribute("data1") == "null" ? "" : document.getElementById("portletBoard" + portletId).getAttribute("data1");
 			}
 			
 	        var wWeight = "355";
@@ -375,7 +382,7 @@
 	        var left = (width - wWeight) / 2;
 	        var top = (heigth - wHeight) / 2;
 	        
-	        window.open("/admin/ezNewPortal/openBoardTree.do?portletId=" + portletId + "&companyId=" + companyId + "&code=" + portletCode, "",
+	        window.open("/admin/ezNewPortal/openBoardTree.do?portletId=" + portletId + "&companyId=" + companyId + "&code=" + portletCode + "&portletBoardId=" + portletBoardId, "",
 	            "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 		}
 		  

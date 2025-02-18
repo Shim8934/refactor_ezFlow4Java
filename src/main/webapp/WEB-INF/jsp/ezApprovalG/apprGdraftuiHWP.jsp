@@ -16,7 +16,9 @@
 		</c:choose>
 	    </title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	    <link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
+		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -181,6 +183,9 @@
 	        var gpGubun;
 			//부서감사 관련 2020-01-14 홍대표
 			var deptgamsaCount = 0;
+
+			// 창마다 고유한 id 지정용
+			var windowUuid = getRandomId();
 	        
 	        window.onload = function () {
 	            try {
@@ -1297,7 +1302,7 @@
 			        if (isUsed == "reuse") {
 			        	OpenUrl +=  "&isUsed=" + isUsed + "&beforeDocID=" +beforeDocID
 			        }
-			        var OpenWin = window.open(OpenUrl , "ezApprovalInfo", GetOpenWindowfeature(1144, 750));
+			        var OpenWin = window.open(OpenUrl , "ezApprovalInfo-" + windowUuid, GetOpenWindowfeature(1144, 750));
 			        
 			        try { OpenWin.focus(); } catch (e) { }
 			        

@@ -128,6 +128,8 @@ var SurveyFile = function() {
 			var canvasElmt    = document.createElement("canvas");
 			var canvasSize    = fileElmt ? 80 : 40;
 			
+			canvasElmt.style.height = "50px";
+			
 			divChildElmt1.className = "attImgAva";
 			divChildElmt1.appendChild(canvasElmt);
 			divMainElmt.className   = "attDivFile";
@@ -180,11 +182,12 @@ var SurveyFile = function() {
 			fd.append("fileToUpload", fileItem);
 			
 			var ctx       = canvasElmt.getContext("2d");
-			var cw        = ctx.canvas.width;
-			var ch        = ctx.canvas.height;
+			var cw        = "150";
+			var ch        = "150";
 			
 			ctx.fillStyle = fillColor;
-			ctx.fillText("0%", cw * 0.5 - lineWidth, ch * 0.5 + 3, cw);
+			ctx.font = '50px Arial';
+			ctx.fillText("0%", cw * 0.5 - lineWidth, ch * 0.5 + 13);
 			
 			$.ajax({
 				url : "/ezSurvey/uploadAttachFile.do",
@@ -214,7 +217,8 @@ var SurveyFile = function() {
 							ctx.fillStyle   = fillColor;
 							ctx.strokeStyle = fillColor;
 							ctx.textAlign   = "center";
-							ctx.fillText(percent + "%", cw * 0.5, ch * 0.5 + 3, cw);
+							ctx.font = '50px Arial';
+							ctx.fillText(percent + "%", cw * 0.5, ch * 0.5 + 13);
 							ctx.beginPath();
 							ctx.arc(ch * 0.5, cw * 0.5, cw * 0.5 - 2, start, diff/lineWidth + start, false);
 							ctx.stroke();

@@ -827,7 +827,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String boardIdList = boardIdListBld.toString();
 		boardIdListCount = boardIdList.split(";").length;
 		
-		rtv = ezBoardService.get_parentBoardName(boardIdList.trim(), boardIdListCount, userInfo.getPrimary(), userInfo.getTenantId(), userInfo.getLocale());
+		rtv = ezBoardService.get_parentBoardName(boardIdList.trim(), boardIdListCount, userInfo.getLang(), userInfo.getTenantId(), userInfo.getLocale());
 		
 		logger.debug("parentBoardName ended");
 		return "<DATA><TOPBOARDLIST>" + commonUtil.cleanValue(rtv) + "</TOPBOARDLIST></DATA>";
@@ -1325,6 +1325,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardInfo.setUseKeyword(strProp.getUseKeyword()); // useKeywordFlag 플래그 추가
 			boardInfo.setAttachmentFlag(strProp.getAttachmentFlag()); // 첨부파일 플래그 추가
             boardInfo.setPublicFlag(strProp.getPublicFlag()); // 게시물 공개여부 선택
+			boardInfo.setWriterFlag(strProp.getWriterFlag());
 
 			/* 2018-10-17 홍승비 - 게시판의 그룹게시판이 구분값 99인지 확인하여 게시판 boardInfo에 isAllGroupBoard값 셋팅 */
 			String boardGroupID = strProp.getBoardGroupID();
@@ -2585,6 +2586,8 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<PUBLICFLAG>").append(boardThumbnailList.get(j).get("PUBLICFLAG")).append("</PUBLICFLAG>");
 					resultXML.append("<ITEMREAD_FG>" + (accessCheck((String)boardThumbnailList.get(j).get("BOARDID"), (String)boardThumbnailList.get(j).get("ITEMID"), 
 									"GENERAL", userInfo, "") ? "Y" : "N") + "</ITEMREAD_FG>");
+					resultXML.append("<WRITERDEPTID>" + boardThumbnailList.get(j).get("WRITERDEPTID") + "</WRITERDEPTID>");
+					resultXML.append("<WRITERNAMETYPE>" + boardThumbnailList.get(j).get("WRITERNAMETYPE") + "</WRITERNAMETYPE>");
 				}
 				
 				resultXML.append("</CELL>");
@@ -3615,6 +3618,8 @@ public class EzBoardController extends EgovFileMngUtil{
 						resultXML.append("<FILEPATH>" +  commonUtil.cleanValue((String)noticeList.get(k).get("FILEPATH"))  + "</FILEPATH>");
 						resultXML.append("<ITEMREAD_FG>" + (accessCheck((String)noticeList.get(k).get("BOARDID"), (String)noticeList.get(k).get("ITEMID"),
 								"GENERAL", userInfo, "") ? "Y" : "N") + "</ITEMREAD_FG>");
+						resultXML.append("<WRITERDEPTID>" + noticeList.get(k).get("WRITERDEPTID") + "</WRITERDEPTID>");
+						resultXML.append("<WRITERNAMETYPE>" + noticeList.get(k).get("WRITERNAMETYPE") + "</WRITERNAMETYPE>");
 					}
 					resultXML.append("</CELL>");
 				}
@@ -3735,6 +3740,8 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<PUBLICFLAG>").append(boardListItem.get(j).get("PUBLICFLAG")).append("</PUBLICFLAG>");
 					resultXML.append("<ITEMREAD_FG>" + (accessCheck((String)boardListItem.get(j).get("BOARDID"), (String)boardListItem.get(j).get("ITEMID"),
 							"GENERAL", userInfo, "") ? "Y" : "N") + "</ITEMREAD_FG>");
+					resultXML.append("<WRITERDEPTID>" + boardListItem.get(j).get("WRITERDEPTID") + "</WRITERDEPTID>");
+					resultXML.append("<WRITERNAMETYPE>" + boardListItem.get(j).get("WRITERNAMETYPE") + "</WRITERNAMETYPE>");
 				}
 				resultXML.append("</CELL>");
 			}
@@ -4481,8 +4488,11 @@ public class EzBoardController extends EgovFileMngUtil{
 					return "main/warning";
 				}
 				// 해당 게시판에 관리자 권한이 없으면서 다른 사용자의 게시물을 수정하려는 경우 오류 페이지 리턴
-				else if ((boardInfo.getBoardAdmin_FG() == null || (boardInfo.getBoardAdmin_FG() != null && boardInfo.getBoardAdmin_FG().equals("false"))) &&
-						!boardListVO.getWriterID().equals(userInfo.getId())) {
+				/* 2025-01-21 임정은 - 부서명으로 작성된 게시물의 경우(writerNameType이 1인 경우) 사용자의 deptID와 게시물의 writerDeptID를 비교 */
+				else if ((boardInfo.getBoardAdmin_FG() == null || (boardInfo.getBoardAdmin_FG() != null && boardInfo.getBoardAdmin_FG().equals("false")))
+						&& !boardListVO.getWriterID().equals(userInfo.getId())
+						&& !("1".equals(boardListVO.getWriterNameType()) && boardListVO.getWriterDeptID().equals(userInfo.getDeptID()))
+				) {
 					return "main/warning";
 				}
 			}
@@ -4627,6 +4637,10 @@ public class EzBoardController extends EgovFileMngUtil{
 			keywordListForModify = ezBoardService.selectBoardKeywordByBoardItem(itemID, boardID, userInfo.getTenantId());
 		}
 		
+		if (mode.equals("reply")) { // 답변 시 writerNameType 리셋
+			boardListVO.setWriterNameType("0");
+		}
+		
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("boardListVO", boardListVO);
 		model.addAttribute("boardAttributeListVO", boardAttributeListVO);
@@ -4667,7 +4681,10 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("boardName", boardName);
 		model.addAttribute("useKeyword", useKeyword);
 		model.addAttribute("keywordListForModify", keywordListForModify);
-
+		if ("Y".equals(boardInfo.getWriterFlag())) {
+			model.addAttribute("writerOption", ezBoardService.getWriterOption(userInfo));
+		}
+		
 		logger.debug("newBoardItem ended");
 		return requestURL;
 	}
@@ -5975,6 +5992,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String useEditor = ezCommonService.getTenantConfig("MODULEEDITOR", userInfo.getTenantId());
 		String extenLang = "1";
 		String strNow = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
+		String writerNameType = request.getParameter("writerNameType");
 		
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
 		
@@ -6004,6 +6022,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("extenLang", extenLang);
 		model.addAttribute("strNow", strNow);
 		model.addAttribute("boardAttributeListVO", boardAttributeListVO);
+		model.addAttribute("writerNameType", writerNameType);
 
 		logger.debug("boardItemPreView ended");
 		return "ezBoard/boardItemPreView";
@@ -6678,6 +6697,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		model.addAttribute("boardName", boardName);
 		model.addAttribute("useKeyword", boardInfo.getUseKeyword());
+		if ("Y".equals(boardInfo.getWriterFlag())) {
+			model.addAttribute("writerOption", ezBoardService.getWriterOption(userInfo));
+		}
 
 		logger.debug("newBoardItemPhoto ended");
 		return "ezBoard/boardNewItemPhoto";
@@ -10188,6 +10210,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("boardName", boardName);
 		model.addAttribute("useKeyword", boardInfo.getUseKeyword());
+		if ("Y".equals(boardInfo.getWriterFlag())) {
+			model.addAttribute("writerOption", ezBoardService.getWriterOption(userInfo));
+		}
 
 		logger.debug("newBoardItemMovie ended");
 		return "ezBoard/boardNewItemMovie";
@@ -11728,17 +11753,13 @@ public class EzBoardController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezBoard/boardSelectUser.do", method = RequestMethod.GET)
 	public String personalPopupUser(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("personalPopupUser started");
-		// 관리자 권한체크
-		LoginVO auth = commonUtil.checkAdmin(loginCookie);
-		if (auth == null) {
-			return "cmm/error/adminDenied";
-		}
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
-		String deptID = auth.getDeptID();
+		String deptID = userInfo.getDeptID();
 		String cn = request.getParameter("cn") == null ? "" : request.getParameter("cn");
 		String textName = request.getParameter("name") == null ? "" : request.getParameter("name");
 		String companyId = request.getParameter("companyId");
-		String lang = auth.getLang();
+		String lang = userInfo.getLang();
 		String columnName = request.getParameter("columnName") == null ? "" : request.getParameter("columnName");
 
 		model.addAttribute("columnName", columnName);
@@ -11746,7 +11767,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("cn", cn);
 		model.addAttribute("textName", textName);
 		model.addAttribute("companyId", companyId);
-		model.addAttribute("dept", auth.getDeptID());
+		model.addAttribute("dept", userInfo.getDeptID());
 		model.addAttribute("lang", lang);
 
 		logger.debug("personalPopupUser ended");

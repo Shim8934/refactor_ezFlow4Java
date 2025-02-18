@@ -1044,6 +1044,18 @@ function DivPopUpPosition_Layer(popUpW, popUpH) {
 
 function DivPopUpShow(popUpW, popUpH, URL) {
     try {
+    	
+    	if (navigator.maxTouchPoints > 4) {
+    		
+    		if (popUpW > document.documentElement.clientWidth) {
+    			popUpW = document.documentElement.clientWidth;
+    		}
+    		
+    		if (popUpH > document.documentElement.clientHeight) {
+    			popUpH = document.documentElement.clientHeight;
+    		}
+    	} 
+    	
         var Position = DivPopUpPosition(popUpW, popUpH);
         document.getElementById("iFrameLayer").src = URL;
         document.getElementById("iFramePanel").style.top = Position[0] + "px";
@@ -2350,6 +2362,11 @@ function setColorMode() {
 
 document.addEventListener('DOMContentLoaded', function() {
     setColorMode();
+    
+    // 2025-01-08 조수빈 - 태블릿에서 조회 시 팝업이 잘리는 현상 임시 조치
+    if (navigator.maxTouchPoints > 4 && document.body.classList.contains('popup')) {
+        document.body.style.overflow = '';
+    }
 });
 
 // 2024-11-21 한태훈 > resize시 dim처리된 layer판넬 위에 표출 되는 알림창의 위치 가운데로 재설정

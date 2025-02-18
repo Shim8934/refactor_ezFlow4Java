@@ -6,7 +6,8 @@
 	<head>
 		<title><spring:message code="ezResource.t142"/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezResource.e2', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezResource.e1', 'msg')}"></script>
@@ -592,7 +593,7 @@
   			</tr>
   			<tr>
     			<td style="padding-bottom:1px; height:100%; padding-right:12px;">
-        			<textarea name="Brd_Explain" id="Brd_Explain" style="width: 100%; height: 100%;resize:none" maxlength="2000"><c:out value='${brdExplain}' /></textarea>
+        			<textarea name="Brd_Explain" id="Brd_Explain" style="width: 100%; height: 50px;resize:none" maxlength="2000"><c:out value='${brdExplain}' /></textarea>
     			</td>
   			</tr>
 		</table>

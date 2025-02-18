@@ -329,12 +329,15 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							logger.debug("message=" + message);
 		
 							String[] messageIds = message.getHeader("Message-ID");
-							logger.debug("Message-ID=" + messageIds[0]);
-		
-							int blockedMail = ezEmailService.checkBlockedMailByMessageId(messageIds[0]);
-						
-							if (blockedMail == 1) {
-								return "ezEmail/blockedMail";
+
+							if (messageIds != null) {
+								logger.debug("Message-ID=" + messageIds[0]);
+
+								int blockedMail = ezEmailService.checkBlockedMailByMessageId(messageIds[0]);
+
+								if (blockedMail == 1) {
+									return "ezEmail/blockedMail";
+								}
 							}
 						}
 					}
@@ -2640,7 +2643,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 
 		if (StringUtils.isNotBlank(acceptLanguage)) {
 			twoLetterLang = acceptLanguage.substring(0, 2);
-			lang = commonUtil.getLangNumFromTwoLetterLang(twoLetterLang);
+			lang = commonUtil.getLangNumFromTwoLetterLang(twoLetterLang, tenantId);
 		}
 
 		// 브라우저 언어가 표준지원 언어가 아닐 경우 시스템 언어로 설정
@@ -3099,12 +3102,14 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							logger.debug("message=" + message);
 
 							String[] messageIds = message.getHeader("Message-ID");
-							
-							logger.debug("Message-ID=" + messageIds[0]);
-							blockedMail = ezEmailService.checkBlockedMailByMessageId(messageIds[0]);
 
-							if (blockedMail == 1) {
-								emptyFlag = true;
+							if (messageIds != null) {
+								logger.debug("Message-ID=" + messageIds[0]);
+								blockedMail = ezEmailService.checkBlockedMailByMessageId(messageIds[0]);
+
+								if (blockedMail == 1) {
+									emptyFlag = true;
+								}
 							}
 						} else {
 							logger.error("Message not found. uid=" + uid);
@@ -5072,7 +5077,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						logger.debug("decryptedFile is deleted. fileName=" + decryptedFile.getName());
 					}
 					
-					model.addAttribute("c1", egovMessageSource.getMessage("ezEmail.c1", locale));
+					model.addAttribute("main.default.css", egovMessageSource.getMessage("main.default.css", locale));
 					model.addAttribute("e1", egovMessageSource.getMessage("ezEmail.e1", locale));
 					model.addAttribute("t63", egovMessageSource.getMessage("ezEmail.t63", locale));
 					model.addAttribute("t161", egovMessageSource.getMessage("ezEmail.t161", locale));

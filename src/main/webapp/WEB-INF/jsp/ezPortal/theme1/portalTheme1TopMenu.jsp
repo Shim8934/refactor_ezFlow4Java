@@ -10,7 +10,8 @@
 		<!-- 관리자 -->
 		<c:choose>
 			<c:when test="${mode != 'view'}">
-				<link href="${util.addVer('ezPortal.i2', 'msg')}" rel="stylesheet" type="text/css">
+				<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 			</c:when>
 			<c:otherwise>
 				<link href="${util.addVer('/css/theme01.css')}" rel="stylesheet" type="text/css">

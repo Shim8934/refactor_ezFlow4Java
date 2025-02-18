@@ -6,7 +6,8 @@
 	<head>
 		<title>mail_general</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
         <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
         <script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
         <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -225,7 +226,9 @@
 				for (var i = 0; i < document.getElementById("ExtSenderNM").childNodes.length; i++) {
 			        if (document.getElementById("ExtSenderNM").childNodes.item(i).nodeName == "OPTION") {
 			            var pOptionValue = document.getElementById("ExtSenderNM").childNodes.item(i).value;
-			            Conitems.innerHTML += "<div style='font-family:" + "<spring:message code='main.t246' />" + ";font-size:small;height:18px;line-height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;padding:1px;' ondblclick='pop_modify(this);' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + pOptionValue + "'><nobr>" + pOptionValue + "</nobr><div>";
+			            var pOptionText = document.getElementById("ExtSenderNM").childNodes.item(i).textContent;
+			            // if(pOptionValue.startsWith("___")) pOptionText += " (default)";
+			            Conitems.innerHTML += "<div style='font-family:" + "<spring:message code='main.t246' />" + ";font-size:small;height:18px;line-height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;padding:1px;' ondblclick='pop_modify(this);' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + pOptionValue + "'><nobr>" + pOptionText + "</nobr><div>";
 			        }
 			    }  
 	            senderNMData = Conitems.innerHTML;
@@ -332,7 +335,8 @@
 			    for (var i = 0; i < Conitems.childNodes.length; i++) {
 			        if (Conitems.childNodes.item(i).nodeName == "DIV") {
 			            var _NewOption = document.createElement("OPTION");
-			            _NewOption.value = Conitems.childNodes.item(i).innerText;
+			            _NewOption.value = Conitems.childNodes.item(i).getAttribute("value");
+			            if(_NewOption.value.startsWith("___")) _NewOption.selected = true;
 			            _NewOption.innerHTML = Conitems.childNodes.item(i).innerText;
 			            document.getElementById("ExtSenderNM").appendChild(_NewOption);
 			        }

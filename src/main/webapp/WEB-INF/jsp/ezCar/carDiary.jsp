@@ -43,8 +43,8 @@ textarea {
 	src="${util.addVer('/js/ezResource/Schedule_cross.js')}"></script>
 <script type="text/javascript"
 	src="${util.addVer('/js/rsa/pidcrypt_util.js')}"></script>
-<link rel="stylesheet" href="${util.addVer('ezResource.e2', 'msg')}"
-	type="text/css" />
+<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 <script type="text/javascript"
 	src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 <script type="text/javascript"

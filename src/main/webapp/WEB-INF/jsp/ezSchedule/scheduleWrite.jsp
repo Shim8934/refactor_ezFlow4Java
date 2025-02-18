@@ -17,7 +17,8 @@
 			</c:otherwise>
 		</c:choose>
 		
-		<link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
         <link rel="stylesheet" href="${util.addVer('/css/ezSchedule/Tab.css')}" type="text/css" />
         <link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}" type="text/css" >
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}" type="text/css" >
@@ -639,7 +640,7 @@
 	    </script>
 	</head>
 
-	<body class="popup" style="overflow:hidden;">
+	<body class="popup scheduleWrite" style="overflow:hidden;">
 	    <form method="post">
 	        <div id="main_body">
 	            <table id="normalScreen" class="layout">

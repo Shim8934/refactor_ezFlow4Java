@@ -714,7 +714,8 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_ATTACHMENTFLAG", boardPropertyVO.getAttachmentFlag());
         map.put("v_PUBLICFLAG", boardPropertyVO.getPublicFlag());
 		map.put("v_ALLNEWBOARDFLAG", boardPropertyVO.getAllNewBoardFlag());
-
+		map.put("v_WRITERFLAG", boardPropertyVO.getWriterFlag());
+		
 		/* 2018-10-18 홍승비 - 게시판'그룹' 이름변경 시 하위게시판처럼 데이터가 업데이트되는 부분 수정 */
 		if (boardPropertyVO.getParentBoardID().equals("top")) {
 			isBoardGroup = "Y";

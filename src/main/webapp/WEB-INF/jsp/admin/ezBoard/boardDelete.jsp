@@ -6,7 +6,8 @@
 	<head>
 		<title><spring:message code="ezBoard.jjh03" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	    <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css" />	    
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+	    <link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />	    
 	    <style type="text/css">
 			.warningbox{margin:240px auto 0px auto; padding:40px 20px 0px 20px; font-family:Meiryo UI; width:625px; height:184px; border:1px solid #d6d6d6; box-sizing:border-box;}
 			.warningbox .warningimg{margin:0px; padding:3px 0px 0px 40px; float:left;}
