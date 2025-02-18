@@ -757,6 +757,7 @@ CREATE TABLE `jmocha_mail_general` (
   `DEFAULT_CURSOR_POSITION` VARCHAR(50) DEFAULT NULL,
   `MAIL_SEARCH_PERIOD` varchar(10) DEFAULT NULL,
   `SELF_CC_OPTION` varchar(10) DEFAULT 'none',
+  `FORWARD_AS` VARCHAR(50) DEFAULT 'inline',
   PRIMARY KEY (`USER_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;

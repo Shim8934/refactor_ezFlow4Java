@@ -747,7 +747,8 @@
 				createNodeAndInsertText(xmlpara, objNode, "EDITORFONTFAMILY", "${mailGeneral.editorFontFamily}");
 				createNodeAndInsertText(xmlpara, objNode, "EDITORFONTSIZE", "${mailGeneral.editorFontSize}");
 				createNodeAndInsertText(xmlpara, objNode, "SELFCCOPTION", "${mailGeneral.selfCcOption}");
-	            
+				createNodeAndInsertText(xmlpara, objNode, "FORWARDAS", "${mailGeneral.forwardAs}");
+
 	            xmlhttp.open("POST", "/ezEmail/mailGeneralSave.do", true);
 	            xmlhttp.onreadystatechange = function() {
 		        	if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {

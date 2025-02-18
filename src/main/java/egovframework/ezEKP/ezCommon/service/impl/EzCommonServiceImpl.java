@@ -2322,6 +2322,18 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
 			put("TYPE_MYSQL", "VARCHAR(10)"); put("TYPE_ORACLE", "VARCHAR(10)");
 			put("AFTER", "DEFAULT 'Y'");
 		}});
+		test.add(new HashMap<String, Object>(){{ // 2025.02.11 한슬기 - [국립암센터] 나를 항상 참조에 포함
+			put("TABLE","JMOCHA_MAIL_GENERAL");
+			put("COLUMN", "SELF_CC_OPTION");
+			put("TYPE_MYSQL", "VARCHAR(10)"); put("TYPE_ORACLE", "VARCHAR2(10)");
+			put("AFTER", "DEFAULT 'none'");
+		}});
+		test.add(new HashMap<String, Object>(){{ // 2025-02-12 김은실 - [국립암센터] 메일 전달 방식 추가
+			put("TABLE","JMOCHA_MAIL_GENERAL");
+			put("COLUMN", "FORWARD_AS");
+			put("TYPE_MYSQL", "VARCHAR(50)"); put("TYPE_ORACLE", "VARCHAR2(50)");
+			put("AFTER", "DEFAULT 'inline'");
+		}});
 
 		// JMOCHA_MAIL_RESERVE
 		test.add(new HashMap<String, Object>(){{ // 2025-01-14 김은실: 예약메일 공유사서함 추가.
