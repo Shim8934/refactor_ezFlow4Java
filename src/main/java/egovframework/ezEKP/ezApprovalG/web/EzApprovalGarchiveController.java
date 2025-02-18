@@ -2408,7 +2408,10 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		logger.debug("aprDeptName started");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("approvalFlag", approvalFlag);
 		
 		logger.debug("aprDeptName ended");
 		return "/ezApprovalG/apprGaprDeptName";
