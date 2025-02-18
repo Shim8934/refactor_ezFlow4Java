@@ -859,7 +859,9 @@ function SaveApproveInfo(pApproveFlag) {
     		}
 //    	}
     } else {
-        if (approvalFlag == 'G' && pDraftFlag == "SUSIN" && useReceiveDocNo == 'NO') {
+    	/* 2025-02-18 홍승비 - 전자결재 G > useReceiveDocNo 플래그에 관계없이 수신문의 접수번호를 문서번호로 사용하도록 수정 */
+		// useReceiveDocNo가 YES인 경우, 최종결재 시점이 아닌 수신문 접수 시점에 접수번호를 미리 채번함
+        if (approvalFlag == 'G' && pDraftFlag == "SUSIN") {
             if (message.FieldExist("receiptnumber")) {
                 createNodeAndInsertText(xmlpara, objNode, "DOCNO", message.GetFieldText("receiptnumber"));
             } else if (message.FieldExist("docnumber")) {
@@ -872,14 +874,15 @@ function SaveApproveInfo(pApproveFlag) {
                 createNodeAndInsertText(xmlpara, objNode, "DOCNO", "");
             }
         } else {
-            if (message.FieldExist("docnumber"))
+            if (message.FieldExist("docnumber")) {
                 createNodeAndInsertText(xmlpara, objNode, "DOCNO", message.GetFieldText("docnumber"));
-            else if (message.FieldExist("be_docnumber"))
+            } else if (message.FieldExist("be_docnumber")) {
                 createNodeAndInsertText(xmlpara, objNode, "DOCNO", message.GetFieldText("be_docnumber"));
-            else if (message.FieldExist("deptshortedname"))
+            } else if (message.FieldExist("deptshortedname")) {
                 createNodeAndInsertText(xmlpara, objNode, "DOCNO", message.GetFieldText("deptshortedname"));
-            else
+            } else {
                 createNodeAndInsertText(xmlpara, objNode, "DOCNO", "");
+            }
         }
 	}
 
