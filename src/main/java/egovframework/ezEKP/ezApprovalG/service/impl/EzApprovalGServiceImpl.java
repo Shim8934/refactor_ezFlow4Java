@@ -14916,6 +14916,17 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                 }
             }
 		}
+
+        // 상위부서문서함 사용 부서 부서합의 내 최종결재 시
+        if (apprGAprLineVOList.size() < 1 && approvalFlag.equals("G")) {
+            Map<String, String> upDeptInfo = getUpperDeptInfo(deptID, userInfo.getTenantId());
+            if (upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) { //상위부서 문서함 사용중인 부서가 부서합의에서 최종결재일 때
+                ArrayList<String> list = new ArrayList<>();
+                list.add(upDeptInfo.get("upperDeptCode"));
+                map.put("v_DEPTID2", list);
+                apprGAprLineVOList = ezApprovalGDAO.doApproveLineInfo(map);
+            }
+        }
 		 
 		if (apprGAprLineVOList.size() < 1) {
 			if (passAprLine != null && passAprLine.equals("Y")) {
