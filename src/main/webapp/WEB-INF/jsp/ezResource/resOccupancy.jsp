@@ -257,7 +257,7 @@
       	</div>
       	<div class="btnposition btnpositionNew">
       		<a class="imgbtn">
-      			<span id="btn_close" onClick="return close_onclick()">닫기</span>
+      			<span id="btn_close" onClick="return close_onclick()"><spring:message code="main.t3"/></span>
       		</a>
       	</div>
       	<form id="formAgent" name="formAgent" method="POST" target="saveExcel" action="/ezResource/excelExportOut.do">
