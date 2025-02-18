@@ -55,7 +55,7 @@
                 B.updateStatus,
                 A.title,
                 A.memberid,
-                A.membername,
+                CASE WHEN #lang# = '1' THEN A.membername ELSE A.membername2 END AS membername,
                 TO_CHAR(TO_DATE(A.regdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') AS regdate,
                 B.status AS confirmstatus,
                 NVL(TO_CHAR(TO_DATE(B.confirmdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), ' ') AS confirmdate,
@@ -130,10 +130,18 @@
         	</isEqual>
         	
         	<isEqual property="searchType" compareValue="writer">
-	        	<![CDATA[
-	        		AND
-	        			A.membername LIKE '%'||#searchValue#||'%'
-	        	]]>
+				<isEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername LIKE '%'||#searchValue#||'%'
+					]]>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername2 LIKE '%'||#searchValue#||'%'
+	        		]]>
+				</isNotEqual>
         	</isEqual>
         </isNotEqual>
 		
@@ -221,10 +229,18 @@
         	</isEqual>
         	
         	<isEqual property="searchType" compareValue="writer">
-	        	<![CDATA[
-	        		AND
-	        			A.membername LIKE '%'||#searchValue#||'%'
-	        	]]>
+				<isEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername LIKE '%'||#searchValue#||'%'
+					]]>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername2 LIKE '%'||#searchValue#||'%'
+	        		]]>
+				</isNotEqual>
         	</isEqual>
         </isNotEqual>
         
@@ -251,7 +267,7 @@
                 TO_CHAR(TO_DATE(A.enddate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') AS enddate,
                 A."option",
                 A."content",
-                A.memberName,
+				CASE WHEN #lang# = '1' THEN A.membername ELSE A.membername2 END AS membername,
                 NVL(C.confirmcount, '0') AS confirmcount,
 				D.confirmtotalcount,
 				B.status confirmstatus,
@@ -532,7 +548,7 @@
 				A.status,
 				A.title,
 				A.memberid,
-				A.membername,
+				CASE WHEN #lang# = '1' THEN A.membername ELSE A.membername2 END AS membername,
 				TO_CHAR(TO_DATE(A.regdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') AS regdate,
 				B.status AS confirmstatus,
 				NVL(TO_CHAR(TO_DATE(B.confirmdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), ' ') AS confirmdate,
@@ -609,10 +625,18 @@
 	        	]]>
         	</isEqual>
         	<isEqual property="searchType" compareValue="writer">
-	        	<![CDATA[
-	        		AND
-	        			A.membername LIKE '%'||#searchValue#||'%'
-	        	]]>
+				<isEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername LIKE '%'||#searchValue#||'%'
+					]]>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername2 LIKE '%'||#searchValue#||'%'
+	        		]]>
+				</isNotEqual>
         	</isEqual>
         </isNotEqual>
         
@@ -694,10 +718,18 @@
         	</isEqual>
         	
         	<isEqual property="searchType" compareValue="writer">
-	        	<![CDATA[
-	        		AND
-	        			A.membername LIKE '%'||#searchValue#||'%'
-	        	]]>
+				<isEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername LIKE '%'||#searchValue#||'%'
+					]]>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername2 LIKE '%'||#searchValue#||'%'
+	        		]]>
+				</isNotEqual>
         	</isEqual>
         </isNotEqual>
         
@@ -744,10 +776,18 @@
         	</isEqual>
         	
         	<isEqual property="searchType" compareValue="writer">
-	        	<![CDATA[
-	        		AND
-	        			A.membername LIKE '%'||#searchValue#||'%'
-	        	]]>
+				<isEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername LIKE '%'||#searchValue#||'%'
+					]]>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername2 LIKE '%'||#searchValue#||'%'
+	        		]]>
+				</isNotEqual>
         	</isEqual>
         </isNotEqual>
         
@@ -774,7 +814,7 @@
                 A.status,
                 A.title,
                 A.memberid,
-                A.membername,
+                CASE WHEN #lang# = '1' THEN A.membername ELSE A.membername2 END AS membername,
                 B.status AS confirmstatus,
                 TO_CHAR(TO_DATE(A.regdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') AS regdate,
                 NVL(TO_CHAR(TO_DATE(B.confirmdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), ' ') AS confirmdate,
@@ -845,10 +885,18 @@
 	        	]]>
         	</isEqual>
         	<isEqual property="searchType" compareValue="writer">
-	        	<![CDATA[
-	        		AND
-	        			A.membername LIKE '%'||#searchValue#||'%'
-	        	]]>
+				<isEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+	        				A.membername LIKE '%'||#searchValue#||'%'
+					]]>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+	        				A.membername2 LIKE '%'||#searchValue#||'%'
+					]]>
+				</isNotEqual>
         	</isEqual>
         </isNotEqual>
         
@@ -950,10 +998,18 @@
 	        	]]>
         	</isEqual>
         	<isEqual property="searchType" compareValue="writer">
-	        	<![CDATA[
-	        		AND
-	        			A.membername LIKE '%'||#searchValue#||'%'
-	        	]]>
+				<isEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+	        				A.membername LIKE '%'||#searchValue#||'%'
+					]]>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername2 LIKE '%'||#searchValue#||'%'
+					]]>
+				</isNotEqual>
         	</isEqual>
 		</isNotEqual>
 		
@@ -980,7 +1036,7 @@
 				A.status,
 				A.title,
 				A.memberid,
-				A.membername,
+				CASE WHEN #lang# = '1' THEN A.membername ELSE A.membername2 END AS membername,
 				TO_CHAR(TO_DATE(A.regdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') AS regdate,
 				B.status AS confirmstatus,
 				NVL(TO_CHAR(TO_DATE(B.confirmdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), ' ') AS confirmdate,
@@ -1054,10 +1110,18 @@
 	        	]]>
         	</isEqual>
         	<isEqual property="searchType" compareValue="writer">
-	        	<![CDATA[
-	        		AND
-	        			A.membername LIKE '%'||#searchValue#||'%'
-	        	]]>
+				<isEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+	        				A.membername LIKE '%'||#searchValue#||'%'
+					]]>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+	        				A.membername2 LIKE '%'||#searchValue#||'%'
+					]]>
+				</isNotEqual>
         	</isEqual>
         </isNotEqual>
         
@@ -1138,7 +1202,7 @@
                 A.status,
                 A.title,
                 A.memberid,
-                A.membername,
+                CASE WHEN #lang# = '1' THEN A.membername ELSE A.membername2 END AS membername,
                 NVL(TO_CHAR(TO_DATE(A.regdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), ' ') AS regdate,
                 B.status AS confirmstatus,
                 NVL(TO_CHAR(TO_DATE(B.confirmdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), ' ') AS confirmdate,
@@ -1211,10 +1275,18 @@
         	</isEqual>
         	
         	<isEqual property="searchType" compareValue="writer">
-	        	<![CDATA[
-	        		AND
-	        			A.membername LIKE '%'||#searchValue#||'%'
-	        	]]>
+				<isEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+	        				A.membername LIKE '%'||#searchValue#||'%'
+					]]>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+	        				A.membername2 LIKE '%'||#searchValue#||'%'
+					]]>
+				</isNotEqual>
         	</isEqual>
         </isNotEqual>
            <!--  GROUP BY
@@ -1281,10 +1353,18 @@
 	        	]]>
         	</isEqual>
         	<isEqual property="searchType" compareValue="writer">
-	        	<![CDATA[
-	        		AND
-	        			A.membername LIKE '%'||#searchValue#||'%'
-	        	]]>
+				<isEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+	        				A.membername LIKE '%'||#searchValue#||'%'
+					]]>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+	        				A.membername2 LIKE '%'||#searchValue#||'%'
+					]]>
+				</isNotEqual>
         	</isEqual>
         </isNotEqual>
     </select>
@@ -1328,10 +1408,18 @@
         	</isEqual>
         	
         	<isEqual property="searchType" compareValue="writer">
-	        	<![CDATA[
-	        			A.membername LIKE '%'||#searchValue#||'%'
-	        		AND
-	        	]]>
+				<isEqual property="lang" compareValue="1">
+					<![CDATA[
+	        				A.membername LIKE '%'||#searchValue#||'%'
+						AND
+					]]>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+					<![CDATA[
+	        				A.membername2 LIKE '%'||#searchValue#||'%'
+						AND
+					]]>
+				</isNotEqual>
         	</isEqual>
         </isNotEqual>
         
@@ -1364,7 +1452,7 @@
 				A.status,
 				A.title,
 				A.memberid,
-				A.membername,
+                CASE WHEN #lang# = '1' THEN A.membername ELSE A.membername2 END AS membername,
 				NVL(TO_CHAR(TO_DATE(A.regdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), ' ') AS regdate,
 				d.status as confirmstatus,
 				NVL(TO_CHAR(TO_DATE(D.confirmdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), ' ') AS confirmdate,
@@ -1443,10 +1531,18 @@
 	        	]]>
         	</isEqual>
         	<isEqual property="searchType" compareValue="writer">
-	        	<![CDATA[
-	        			A.membername LIKE '%'||#searchValue#||'%'
-	        		AND
-	        	]]>
+				<isEqual property="lang" compareValue="1">
+					<![CDATA[
+	        				A.membername LIKE '%'||#searchValue#||'%'
+						AND
+					]]>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+					<![CDATA[
+	        				A.membername2 LIKE '%'||#searchValue#||'%'
+						AND	
+					]]>
+				</isNotEqual>
         	</isEqual>
         </isNotEqual>
         

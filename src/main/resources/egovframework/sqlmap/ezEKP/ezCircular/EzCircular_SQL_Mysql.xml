@@ -51,7 +51,7 @@
                 B.updateStatus,
                 A.title,
                 A.memberid,
-                A.membername,
+                CASE WHEN #lang# = '1' THEN A.membername ELSE A.membername2 END AS membername,
                 DATE_ADD(DATE_FORMAT(A.regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS regdate,
                 B.status AS confirmstatus,
                 IFNULL(DATE_ADD(DATE_FORMAT(B.confirmdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS confirmdate,
@@ -126,10 +126,18 @@
         	</isEqual>
         	
         	<isEqual property="searchType" compareValue="writer">
-	        	<![CDATA[
-	        		AND
-	        			A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
-	        	]]>
+				<isEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+					]]>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername2 LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+					]]>
+				</isNotEqual>
         	</isEqual>
         </isNotEqual>
 		
@@ -212,10 +220,18 @@
         	</isEqual>
         	
         	<isEqual property="searchType" compareValue="writer">
-	        	<![CDATA[
-	        		AND
-	        			A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
-	        	]]>
+				<isEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+					]]>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername2 LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+					]]>
+				</isNotEqual>
         	</isEqual>
         </isNotEqual>
         
@@ -242,7 +258,7 @@
                 DATE_ADD(DATE_FORMAT(A.enddate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS enddate,
                 A.option,
                 A.content,
-                A.memberName,
+				CASE WHEN #lang# = '1' THEN A.membername ELSE A.membername2 END AS membername,
                 IFNULL(C.confirmcount, '0') AS confirmcount,
 				D.confirmtotalcount,
 				B.status confirmstatus,
@@ -502,7 +518,7 @@
 				A.status,
 				A.title,
 				A.memberid,
-				A.membername,
+				CASE WHEN #lang# = '1' THEN A.membername ELSE A.membername2 END AS membername,
 				DATE_ADD(DATE_FORMAT(A.regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS regdate,
 				B.status AS confirmstatus,
 				IFNULL(DATE_ADD(DATE_FORMAT(B.confirmdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS confirmdate,
@@ -578,10 +594,18 @@
 	        	]]>
         	</isEqual>
         	<isEqual property="searchType" compareValue="writer">
-	        	<![CDATA[
-	        		AND
-	        			A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
-	        	]]>
+				<isEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+					]]>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername2 LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+					]]>
+				</isNotEqual>
         	</isEqual>
         </isNotEqual>
         
@@ -656,10 +680,18 @@
         	</isEqual>
         	
         	<isEqual property="searchType" compareValue="writer">
-	        	<![CDATA[
-	        		AND
-	        			A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
-	        	]]>
+				<isEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+					]]>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername2 LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+					]]>
+				</isNotEqual>
         	</isEqual>
         </isNotEqual>
         
@@ -708,10 +740,18 @@
         	</isEqual>
         	
         	<isEqual property="searchType" compareValue="writer">
-	        	<![CDATA[
-	        		AND
-	        			A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
-	        	]]>
+				<isEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+					]]>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername2 LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+					]]>
+				</isNotEqual>
         	</isEqual>
         </isNotEqual>
         
@@ -734,7 +774,7 @@
                 A.status,
                 A.title,
                 A.memberid,
-                A.membername,
+                CASE WHEN #lang# = '1' THEN A.membername ELSE A.membername2 END AS membername,
                 B.status AS confirmstatus,
                 DATE_ADD(DATE_FORMAT(A.regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS regdate,
                 IFNULL(DATE_ADD(DATE_FORMAT(B.confirmdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS confirmdate,
@@ -803,10 +843,18 @@
 	        	]]>
         	</isEqual>
         	<isEqual property="searchType" compareValue="writer">
-	        	<![CDATA[
-	        		AND
-	        			A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
-	        	]]>
+				<isEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+					]]>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername2 LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+					]]>
+				</isNotEqual>
         	</isEqual>
         </isNotEqual>
         
@@ -905,10 +953,18 @@
 	        	]]>
         	</isEqual>
         	<isEqual property="searchType" compareValue="writer">
-	        	<![CDATA[
-	        		AND
-	        			A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
-	        	]]>
+				<isEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+					]]>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+					<![CDATA[
+							AND
+								A.membername2 LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+						]]>
+				</isNotEqual>
         	</isEqual>
 		</isNotEqual>
 		
@@ -931,7 +987,7 @@
 				A.status,
 				A.title,
 				A.memberid,
-				A.membername,
+				CASE WHEN #lang# = '1' THEN A.membername ELSE A.membername2 END AS membername,
 				DATE_ADD(DATE_FORMAT(A.regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS regdate,
 				B.status AS confirmstatus,
 				IFNULL(DATE_ADD(DATE_FORMAT(B.confirmdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS confirmdate,
@@ -1005,10 +1061,18 @@
 	        	]]>
         	</isEqual>
         	<isEqual property="searchType" compareValue="writer">
-	        	<![CDATA[
-	        		AND
-	        			A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
-	        	]]>
+				<isEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+					]]>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername2 LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+					]]>
+				</isNotEqual>
         	</isEqual>
         </isNotEqual>
         
@@ -1078,7 +1142,7 @@
                 A.status,
                 A.title,
                 A.memberid,
-                A.membername,
+                CASE WHEN #lang# = '1' THEN A.membername ELSE A.membername2 END AS membername,
                 IFNULL(DATE_ADD(DATE_FORMAT(A.regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS regdate,
                 B.status AS confirmstatus,
                 IFNULL(DATE_ADD(DATE_FORMAT(B.confirmdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS confirmdate,
@@ -1151,10 +1215,18 @@
         	</isEqual>
         	
         	<isEqual property="searchType" compareValue="writer">
-	        	<![CDATA[
-	        		AND
-	        			A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
-	        	]]>
+				<isEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+					]]>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername2 LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+					]]>
+				</isNotEqual>
         	</isEqual>
         </isNotEqual>
         
@@ -1219,10 +1291,18 @@
 	        	]]>
         	</isEqual>
         	<isEqual property="searchType" compareValue="writer">
-	        	<![CDATA[
-	        		AND
-	        			A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
-	        	]]>
+				<isEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+					]]>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername2 LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+					]]>
+				</isNotEqual>
         	</isEqual>
         </isNotEqual>
     </select>
@@ -1266,10 +1346,18 @@
         	</isEqual>
         	
         	<isEqual property="searchType" compareValue="writer">
-	        	<![CDATA[
-	        			A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
-	        		AND
-	        	]]>
+				<isEqual property="lang" compareValue="1">
+					<![CDATA[
+							A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+						AND
+					]]>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+					<![CDATA[
+							A.membername2 LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+						AND
+					]]>
+				</isNotEqual>
         	</isEqual>
         </isNotEqual>
         
@@ -1298,7 +1386,7 @@
 				A.status,
 				A.title,
 				A.memberid,
-				A.membername,
+                CASE WHEN #lang# = '1' THEN A.membername ELSE A.membername2 END AS membername,
 				IFNULL(DATE_ADD(DATE_FORMAT(A.regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS regdate,
 				d.status as confirmstatus,
 				IFNULL(DATE_ADD(DATE_FORMAT(D.confirmdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS confirmdate,
@@ -1375,10 +1463,18 @@
 	        	]]>
         	</isEqual>
         	<isEqual property="searchType" compareValue="writer">
-	        	<![CDATA[
-	        			A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
-	        		AND
-	        	]]>
+				<isEqual property="lang" compareValue="1">
+					<![CDATA[
+							A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+						AND
+					]]>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+					<![CDATA[
+							A.membername2 LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+						AND	
+					]]>
+				</isNotEqual>
         	</isEqual>
         </isNotEqual>
         
