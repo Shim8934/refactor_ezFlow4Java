@@ -6620,7 +6620,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         boolean signSaveFlag = false;
         
         /* 2023-10-04 홍승비 - 양식상에 저장되는 서명일자는 UTC 시간이 아닌 결재자의 타임존 시간으로 저장 (웹과 동일 스펙, MM.dd 형식) */
-        String signDateMD = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("MM.dd"), userInfo.getOffset(), false);
+        // 2025-02-19 조수빈 - ParseException으로 utc 기준 일자가 저장되는 결함 수정
+     	String utcTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
+     	String signDateMD = utcTime.substring(5, 7) + "." + utcTime.substring(8, 10);
         
 		try {
 			// 부재자 설정인 경우 proxySign = '代'
@@ -7607,7 +7609,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		boolean isJKAprTypeAfterDK = false; // 전자결재 G > 대결자(016) 이후의 전결자(004)가 존재하는 경우, 해당 플래그를 true로 한다.
 		
 		/* 2023-10-04 홍승비 - 양식상에 저장되는 서명일자는 UTC 시간이 아닌 결재자의 타임존 시간으로 저장 (웹과 동일 스펙, MM.dd 형식) */
-        String signDateMD = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("MM.dd"), userInfo.getOffset(), false);
+		// 2025-02-19 조수빈 - ParseException으로 utc 기준 일자가 저장되는 결함 수정
+		String utcTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
+        String signDateMD = utcTime.substring(5, 7) + "." + utcTime.substring(8, 10);
         
 		// 부재자 설정인 경우 proxySign = '代'
 		if (!userID.equals(orgUID)) {
@@ -16734,7 +16738,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String cabinetSN = "";
 		
 		/* 2023-10-04 홍승비 - 양식상에 저장되는 서명일자는 UTC 시간이 아닌 결재자의 타임존 시간으로 저장 (웹과 동일 스펙, MM.dd 형식) */
-        String signDateMD = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("MM.dd"), userInfo.getOffset(), false);
+		// 2025-02-19 조수빈 - ParseException으로 utc 기준 일자가 저장되는 결함 수정
+		String utcTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
+		String signDateMD = utcTime.substring(5, 7) + "." + utcTime.substring(8, 10);
         
         /* 2023-11-07 홍승비 - 합의결재 완료 시 이미지 서명을 원문서에 맵핑하는 경우, DB의 tbl_signinfo 테이블에는 이미지 서명 파일의 경로(+ 대결,전결 + 컨피그에 따라 결재자명까지)를 저장 */
         String imgSignCont = ""; // MHT에서 사용, 이미지 서명과 기타 데이터를 HTML로 맵핑하기 위해 사용
