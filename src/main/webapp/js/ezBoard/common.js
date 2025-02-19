@@ -1618,7 +1618,8 @@ function saveRating(selectedRating) {
 				alert(strLangLHR003);
 				// 총점 및 평균 점수를 UI에 업데이트
 				$("#totalRaters").text(result.totalRaters);
-				$("#avgScore").text(result.averageScore);
+				// $("#avgScore").text(result.averageScore);
+				$("#avgScore").html("<b>" + result.averageScore + "</b>점");
 				rating = selectedRating; // 성공적으로 업데이트된 별점을 현재 상태로 업데이트
 			} else {
 				alert("<spring:message code = 'ezBoard.t181'/>");

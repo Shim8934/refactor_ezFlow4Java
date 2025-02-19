@@ -4215,12 +4215,16 @@ a.commentFileSpan:hover {cursor: pointer; text-decoration: underline;}
 .entryList_bg tr td{border:1px solid #DEDEDE; border-bottom:none; box-sizing:border-box;}
 .entryList_bg tr td:nth-child(2n){border-right:1px dotted rgba(218,218,218,0.67);}
 .entryList_bg tr td:first-child{background:#F8F8F8;}
-
+		
 /* 별점 평가하기 */
-#ratingContainer {text-align:center; padding:5px 0px 7px 0px;}
-#ratingContainer .ratingButton { text-align: center;  padding:0px 5px 0px 10px;}
-#ratingContainer input[type=radio] { display: none;}
-#ratingContainer label { font-size: x-large; color: transparent; text-shadow: 0 0 0 #f0f0f0; vertical-align: bottom; }
-#ratingContainer label img { cursor:pointer }
-#avgScore::before {content: ' '; display: inline-block; background:url(/images/ImgIcon/icon-flag.gif); width:15px; height:15px; vertical-align:middle; padding-right: 3px;}
-#ratingContainer .imgbtn {cursor:pointer;vertical-align:middle; display:inline-block; padding-bottom:1.6px;}
+#ratingContainer.rating_div{display:flex; justify-content:center; align-items:center;}
+#ratingContainer.rating_div > div span{color:#666; font-size:13px;}
+#ratingContainer.rating_div > div span b{color:#000; font-weight:bold;}
+#ratingContainer.rating_div #avgScore::before{display:none;}
+
+#ratingContainer.rating_div .ratingButton{padding:0 10px;}
+#ratingContainer.rating_div label{display:inline-block; height:36px;}
+#ratingContainer.rating_div label img{vertical-align:top; margin-top:10px;}
+
+#ratingContainer.rating_div .imgbtn{height:25px; line-height:23px; border:1px solid #E2E2E2; border-radius:3px; box-sizing:border-box; padding:0 12px;}
+#ratingContainer.rating_div .imgbtn span{padding:0; height:auto; font-size:13px; line-height:23px;}

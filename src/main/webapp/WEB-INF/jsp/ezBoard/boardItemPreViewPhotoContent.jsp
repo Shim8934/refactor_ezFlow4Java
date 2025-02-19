@@ -1223,9 +1223,9 @@
                             <c:if test="${not empty boardInfo.starRatingFlag && boardInfo.starRatingFlag == 'Y'}">
                                 <tr>
                                     <td style="text-align:center; padding-bottom:8px;" colspan="3">
-                                       <div id="ratingContainer" onclick="clickRatingButton()">
+                           <div id="ratingContainer" class="rating_div" onclick="clickRatingButton()">
                                             <div>
-                                                <span id="avgScore">${itemStarRating.averageScore}</span>
+									<span id="avgScore"><b>${itemStarRating.averageScore}</b>점</span>
                                                 <span>(<span id="totalRaters">${itemStarRating.totalRaters}</span><spring:message code='ezBoard.lhr003'/>)</span>
                                             </div>
                                             <span class="ratingButton" title="<spring:message code='ezBoard.lhr001'/>">
