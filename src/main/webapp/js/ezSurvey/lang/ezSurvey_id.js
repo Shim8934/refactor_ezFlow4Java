@@ -84,7 +84,7 @@ var SurveyMessages = {
 	strSlider8   : "Minimum",
 	strSlider9   : "Maximum",
 	strSlider10  : "Tetapkan hitungan ke angka alami 200 atau kurang.",
-	trSlider11  : "Count",
+	strSlider11  : "개수",
 	strOptErr    : "At least two views are required.",
 	strOptErr1   : "Nilai yang sama tidak dapat digunakan.",
 	strMaxtrix1  : "At least two rows are required.",
