@@ -1071,10 +1071,12 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		String deleteUnreadStr = request.getParameter("unread") == null ? "" : request.getParameter("unread");
 		int deleteUnread = deleteUnreadStr.equals("") ? 0 : Integer.parseInt(deleteUnreadStr);
 		String folderName = request.getParameter("foldername") == null ? "" : request.getParameter("foldername");
-				
+
+		String autoDeletionOption = request.getParameter("autoDeletionOption" ) == null ? "" : request.getParameter("autoDeletionOption");
+
 		logger.debug("path=" + path + ",expireTime=" + expireTime
-				 + ",deleteUnread=" + deleteUnread + ",folderName=" + folderName);
-		
+				 + ",deleteUnread=" + deleteUnread + ",folderName=" + folderName + ",autoDeletionOption=" + autoDeletionOption);
+
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
@@ -1099,8 +1101,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 				}
 			} 
 		}
-		
-		ezEmailService.setMailDelete(userInfo.getTenantId(), userId, path, expireTime, deleteUnread, folderName);
+		// 2025.02.18 한슬기 : 편지함 메일 자동삭제 방식 선택옵션(지운편지함으로이동(default) : trash / 영구삭제 : permanently) 파라미터(autoDeletionOption) 추가
+		ezEmailService.setMailDelete(userInfo.getTenantId(), userId, path, expireTime, deleteUnread, folderName, autoDeletionOption);
 		
 		logger.debug("mailAutoDeleteAdd ended. redirect to /ezEmail/mailAutoDelete.do");
 		return "redirect:/ezEmail/mailAutoDelete.do";
