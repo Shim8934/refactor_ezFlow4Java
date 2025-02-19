@@ -43,7 +43,7 @@ public interface EzEmailService {
 	public MailColorVO getMailColor(int tenantId) throws Exception;
 	public void setMailColor(int pTenantId, String pImportanceColor, String pInColor, String pOutColor) throws Exception;
 	public List<MailDeleteVO> getMailDelete(int tenantId, String userId) throws Exception;
-	public void setMailDelete(int tenantId, String pUserID, String pPath, int pExpireTime, int pDeleteUnread, String pFolderName) throws Exception;
+	public void setMailDelete(int tenantId, String pUserID, String pPath, int pExpireTime, int pDeleteUnread, String pFolderName, String pAutoDeletionOption) throws Exception;
 	public void deleteMailDelete(int tenantId, String pUserID, String pFolderPath) throws Exception;
 	public List<MailBlobVO> getOrphanedMailBlobList() throws Exception;
 	public List<MailDeletedIdVO> getMailDeletedIdList() throws Exception;
