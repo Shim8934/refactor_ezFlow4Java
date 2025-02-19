@@ -1184,3 +1184,5 @@ var strLangKWC02 = "양식이 삭제되어 재사용 할 수 없습니다.";
 var strLangHSBDR01 = "해당 배부문서는 삭제된 문서입니다. 열람이 불가능합니다.";
 
 var strLangKMH01 = "일괄지정을 진행하시겠습니까?<br>결재상태가 회송인 문서, 문서상태가 합의인 문서는 대상에서 제외됩니다.";
+
+var strLangJJE01 = "The department does not receive approval documents.\nIt is excluded from favorites."

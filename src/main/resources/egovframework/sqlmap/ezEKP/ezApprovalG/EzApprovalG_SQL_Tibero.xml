@@ -4761,6 +4761,14 @@
                      A.APRMEMBERID = B.CN
                 AND
                      A.TENANT_ID = B.TENANT_ID
+                <isEqual property="approvalFlag" compareValue="G">	     
+                    LEFT OUTER JOIN
+                         TBL_DEPTMASTER
+                    ON
+                         A.APRMEMBERID = TBL_DEPTMASTER.CN
+                    AND
+                         A.TENANT_ID = TBL_DEPTMASTER.TENANT_ID	
+                </isEqual>       
 		        WHERE  
 		        	 USERID = #v_USERID#
 		        AND 
@@ -4770,9 +4778,13 @@
 		        AND 
 		        	 A.TENANT_ID = #v_TENANTID#
 	        	AND
-        		 	 COMPANYID = #companyID#
+        		 	 A.COMPANYID = #companyID#
 		        AND
                      B.CN IS NULL
+                <isEqual property="approvalFlag" compareValue="G">
+                    AND
+                         (TBL_DEPTMASTER.CN IS NULL OR TBL_DEPTMASTER.EXTENSIONATTRIBUTE11 = 'Y')
+                </isEqual> 
 		        ORDER BY 
 		        	 APRMEMBERSN DESC
 	</select>
@@ -4964,8 +4976,6 @@
              ON
                  A.APRMEMBERDEPTID = D.CN
              AND
-                 A.APRMEMBERDEPTNAME = D.DISPLAYNAME
-             AND
                  A.TENANT_ID = D.TENANT_ID
              LEFT OUTER JOIN
                  TBL_USERMASTER_RETIRE B
@@ -4987,7 +4997,11 @@
                 (D.DEPT_CD_PATH NOT LIKE '%trash_dept_%' OR D.DEPT_CD_PATH IS NULL)
 		     AND
                  B.CN IS NULL
-		     ORDER BY 
+            <isEqual property="approvalFlag" compareValue="G">
+                AND
+                    D.EXTENSIONATTRIBUTE11 = 'Y'
+            </isEqual>
+            ORDER BY 
 		     	 APRDEPTMEMBERSN DESC
 	</select>
 	

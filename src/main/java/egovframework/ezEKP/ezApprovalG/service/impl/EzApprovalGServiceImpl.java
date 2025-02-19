@@ -4459,6 +4459,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_USERID", userID);
 		map.put("v_TENANTID", tenantID);
 		map.put("v_APRDEPTSN", aprDeptSN);
+        map.put("approvalFlag", ezCommonService.getTenantConfig("ApprovalFlag", tenantID));
 		
 		List<ApprGReceiptVO> apprGReceiptVOList = ezApprovalGDAO.addToAprDept(map);
 		
@@ -22252,6 +22253,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_APRLINESN", aprSN);
 		map.put("v_TENANTID", tenantID);
 		map.put("companyID", companyID);
+        map.put("approvalFlag", ezCommonService.getTenantConfig("ApprovalFlag", tenantID));
 		
 		List<ApprGAprLineVO> apprGAprLineVOList = ezApprovalGDAO.addToAprLineDB(map);
 		

@@ -368,6 +368,7 @@ function btn_AprDeptTempletAdd_onclick()
     var CheckAprTrashDept;
     var TrashList = [];
     var RetireList = [];
+    var NonReceivingDeptList = [];
     var Templist = new ListView();
     Templist.LoadFromID("lvRecSaveDetail");
     var TempListLen = Templist.GetDataRows();
@@ -392,12 +393,18 @@ function btn_AprDeptTempletAdd_onclick()
             if (TempListLen[i].getAttribute("RETIRECHK") == "Y") {
                 RetireList.push(TempListLen[i].querySelector("td:nth-child(2)").textContent);
             }
+            if (approvalFlag === "G" && GetEntryInfo(TempListLen[i].getAttribute("DATA1")) !== "Y") {
+                NonReceivingDeptList.push(TempListLen[i].getAttribute("DATA10"));
+            }
         }
         if (TrashList.length > 0){
             alert("[" + TrashList.join(",") + "]" + " 부서는 폐지되었습니다. 즐겨찾기 적용에서 제외됩니다.");
         }
         if (RetireList.length > 0) {
             alert("[" + RetireList.join(",") + "] 는 퇴직자입니다.\n즐겨찾기 적용에서 제외됩니다.");
+        }
+        if (NonReceivingDeptList.length > 0) {
+            alert("[" + NonReceivingDeptList.join(",") + "] " + strLangJJE01);
         }
 
         AddToAprDeptFromAprDeptTemplet(p_CheckAprDeptTempletSN);
