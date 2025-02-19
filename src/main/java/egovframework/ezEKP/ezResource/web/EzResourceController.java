@@ -809,7 +809,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		
 		// 2018-10-30 김민성 - 자원 멀티관리자 데이터 처리
 		String[] ownerList = resBrd.getOwnerID().split(",");
-		List<OrganUserVO> ownerInfoList = ezResourceService.getOwnerInfo(ownerList, userInfo.getTenantId(), userInfo.getCompanyID());
+		List<OrganUserVO> ownerInfoList = ezResourceService.getOwnerInfo(ownerList, userInfo.getTenantId(), userInfo.getCompanyID(), userInfo.getLang());
 		
 		strBrdID = resBrd.getBrdID();
 		strBrdExplain = resBrd.getBrdExplain();
@@ -940,7 +940,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			// 2018-10-24 김민성 - 자원관리 관리자 조회
 			String[] ownerList = resBrd.getOwnerID().split(",");
 			if(ownerList.length != 0) {
-				ownerListVO = ezResourceService.getOwnerInfo(ownerList, userInfo.getTenantId(), userInfo.getCompanyID());
+				ownerListVO = ezResourceService.getOwnerInfo(ownerList, userInfo.getTenantId(), userInfo.getCompanyID(), userInfo.getLang());
 				
 				JSONArray jArray = new JSONArray();
 
@@ -1235,7 +1235,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		ResBrdVO resBrd = ezResourceService.getBrd(Integer.parseInt(resID), userInfo.getCompanyID(), userInfo.getTenantId());
 		String[] ownerList = resBrd.getOwnerID().split(",");
 		
-		List<OrganUserVO> ownerListVO = ezResourceService.getOwnerInfo(ownerList, userInfo.getTenantId(), userInfo.getCompanyID());
+		List<OrganUserVO> ownerListVO = ezResourceService.getOwnerInfo(ownerList, userInfo.getTenantId(), userInfo.getCompanyID(), userInfo.getLang());
 		
 		resBrd.setOwnerID(ownerList[0]);
 		

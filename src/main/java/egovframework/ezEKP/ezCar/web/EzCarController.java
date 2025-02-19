@@ -855,7 +855,7 @@ public class EzCarController extends EgovFileMngUtil {
          
          // 2018-10-30 김민성 - 자원 멀티관리자 데이터 처리
          String[] ownerList = carBrd.getOwnerID().split(",");
-         List<OrganUserVO> ownerInfoList = ezResourceService.getOwnerInfo(ownerList, userInfo.getTenantId(), userInfo.getCompanyID());
+         List<OrganUserVO> ownerInfoList = ezResourceService.getOwnerInfo(ownerList, userInfo.getTenantId(), userInfo.getCompanyID(), userInfo.getLang());
          car_nm = carBrd.getCar_nm();
          strBrdID = carBrd.getCarID();
          strOwnDeptID = carBrd.getOwnDeptID();
@@ -949,7 +949,7 @@ public class EzCarController extends EgovFileMngUtil {
             // 2018-10-24 김민성 - 자원관리 관리자 조회
             String[] ownerList = carBrd.getOwnerID().split(",");
             if(ownerList.length != 0) {
-               ownerListVO = ezResourceService.getOwnerInfo(ownerList, userInfo.getTenantId(), userInfo.getCompanyID());
+               ownerListVO = ezResourceService.getOwnerInfo(ownerList, userInfo.getTenantId(), userInfo.getCompanyID(), userInfo.getLang());
                
                JSONArray jArray = new JSONArray();
 
@@ -1113,7 +1113,7 @@ public class EzCarController extends EgovFileMngUtil {
 	         
 	         // 2018-10-30 김민성 - 자원 멀티관리자 데이터 처리
 	         String[] ownerList = carBrd.getOwnerID().split(",");
-	         List<OrganUserVO> ownerInfoList = ezResourceService.getOwnerInfo(ownerList, userInfo.getTenantId(), userInfo.getCompanyID());
+	         List<OrganUserVO> ownerInfoList = ezResourceService.getOwnerInfo(ownerList, userInfo.getTenantId(), userInfo.getCompanyID(), userInfo.getLang());
 	         car_nm = carBrd.getCar_nm();
 	         strBrdID = carBrd.getCarID();
 	         strOwnDeptID = carBrd.getOwnDeptID();
@@ -1262,7 +1262,7 @@ public class EzCarController extends EgovFileMngUtil {
 			
 			String[] ownerList = carBrd.getOwnerID().split(",");
 			
-			List<OrganUserVO> ownerInfoList = ezResourceService.getOwnerInfo(ownerList, userInfo.getTenantId(), userInfo.getCompanyID());
+			List<OrganUserVO> ownerInfoList = ezResourceService.getOwnerInfo(ownerList, userInfo.getTenantId(), userInfo.getCompanyID(), userInfo.getLang());
 			for(int i=0; i<ownerInfoList.size(); i++){ //관리자 이름 받아오기
 				        	 ownerName += ownerInfoList.get(i).getDisplayName() + ',';
 			}
@@ -1313,7 +1313,7 @@ public class EzCarController extends EgovFileMngUtil {
 			CarBrdVO carBrd = ezCarService.getBrd(Integer.parseInt(carID), userInfo.getCompanyID(), userInfo.getTenantId());
 			String[] ownerList = carBrd.getOwnerID().split(",");
 			
-			List<OrganUserVO> ownerInfoList = ezResourceService.getOwnerInfo(ownerList, userInfo.getTenantId(), userInfo.getCompanyID());
+			List<OrganUserVO> ownerInfoList = ezResourceService.getOwnerInfo(ownerList, userInfo.getTenantId(), userInfo.getCompanyID(), userInfo.getLang());
 			
 			for(int i=0; i<ownerInfoList.size(); i++){ //관리자 이름 받아오기
 				        	 ownerName += ownerInfoList.get(i).getDisplayName() + ',';
@@ -1532,7 +1532,7 @@ public class EzCarController extends EgovFileMngUtil {
 				
 				String[] ownerList = carBrd.getOwnerID().split(",");
 				
-				List<OrganUserVO> ownerInfoList = ezResourceService.getOwnerInfo(ownerList, userInfo.getTenantId(), userInfo.getCompanyID());
+				List<OrganUserVO> ownerInfoList = ezResourceService.getOwnerInfo(ownerList, userInfo.getTenantId(), userInfo.getCompanyID(), userInfo.getLang());
 				for(int i=0; i<ownerInfoList.size(); i++){ // 관리자 이름 받아오기
 					        	 ownerName += ownerInfoList.get(i).getDisplayName() + ',';
 				}

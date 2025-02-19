@@ -4063,7 +4063,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return returnList2;
 	}
 	
-	public List<OrganUserVO> getOwnerInfo(String[] ownerList, int tenantID, String companyID) throws Exception {
+	public List<OrganUserVO> getOwnerInfo(String[] ownerList, int tenantID, String companyID, String lang) throws Exception {
 		logger.debug("getOwnerInfo started");
 		
 		Map<String,Object> map = new HashMap<String, Object>();
@@ -4071,6 +4071,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("tenantID", tenantID);
 		map.put("companyID", companyID);
 		map.put("ownerID", ownerList[0]);
+		map.put("lang", lang);
 		
 		logger.debug("getOwnerInfo ended");
 		return ezResourceDAO.getOwnerInfo(map);

@@ -91,7 +91,7 @@ public interface EzResourceService {
 	
 	public String getDeptID(String writerID, String deptNm, int tenantID, String companyID) throws Exception;
 
-	public List<OrganUserVO> getOwnerInfo(String[] ownerList, int tenantID, String companyID) throws Exception;
+	public List<OrganUserVO> getOwnerInfo(String[] ownerList, int tenantID, String companyID, String lang) throws Exception;
 	
 	public void changeResourceOrder(String selectedResourceId, String targetResourceId, int tenantId,String companyID,String upperResourceId) throws Exception;
 	
