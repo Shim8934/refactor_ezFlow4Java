@@ -19275,7 +19275,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String signContent = messageSource.getMessage("ezApprovalG." + absentReason, locale); // 서명칸에 삽입할 부재사유 텍스트
 		
 		/* 2023-10-04 홍승비 - 양식상에 저장되는 서명일자는 UTC 시간이 아닌 결재자의 타임존 시간으로 저장 (웹과 동일 스펙, MM.dd 형식) */
-		String signDateMD = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("MM.dd"), offset, false);
+		// 2025-02-19 조수빈 - ParseException으로 utc 기준 일자가 저장되는 결함 수정
+		String utcTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
+		String signDateMD = utcTime.substring(5, 7) + "." + utcTime.substring(8, 10);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
