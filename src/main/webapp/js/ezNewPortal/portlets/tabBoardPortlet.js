@@ -193,7 +193,7 @@ var dataAssemblerTabBoard = function(object) {
 	str += "<span class='date'>" + object.startDate.substring(5, 16).replace(/-/g, ".") + "</span>";
 
 	// 2023-07-31 황인경 - 포탈 > 탭게시판 포틀릿 > 게시글 작성자 다국어 처리 
-	if (portletLang == "2") {
+	if (portletLang != "1") {
 		str += "<span class='name'>" + object.writerName2 + "</span>";
 	} else {
 		str += "<span class='name'>" + object.writerName + "</span>";

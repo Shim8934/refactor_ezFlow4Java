@@ -113,7 +113,11 @@ function getBoardList(data, portletId) {
 			}
 			boardHTML += "</span>";
 			boardHTML += "<span class='date'>" + startDate.substring(5, 16).replace("-",".") + "</span>";
-			boardHTML += "<span class='name'>" + item.writerName + "</span>";
+			if(typeof portletLang != "undefined" && portletLang != "1" ){
+				boardHTML += "<span class='name'>" + item.writerName2 + "</span>";
+			}else{
+				boardHTML += "<span class='name'>" + item.writerName + "</span>";
+			}
 			boardHTML += "</li>";
 		}
 	} else {
@@ -179,7 +183,11 @@ function getBoardListAType(data, portletId) {
 			var spanName = document.createElement('span');
 			spanName.classList.add('name');
 			contSub.appendChild(spanName);
-			textNode = document.createTextNode(!!item.writerName ? item.writerName : '');
+			if(typeof portletLang != "undefined" && portletLang != "1" ){
+				textNode = document.createTextNode(!!item.writerName2 ? item.writerName2 : '');
+			}else{
+				textNode = document.createTextNode(!!item.writerName ? item.writerName : '');
+			}
 			spanName.appendChild(textNode);
 			var spanDay = document.createElement('span');
 			spanDay.classList.add('day');
@@ -282,7 +290,11 @@ function getBoardListBType(data, portletId) {
 			var spanName = document.createElement('span');
 			spanName.classList.add('name');
 			contSub.appendChild(spanName);
-			textNode = document.createTextNode(!!item.writerName ? item.writerName : '');
+			if(typeof portletLang != "undefined" && portletLang != "1" ){
+				textNode = document.createTextNode(!!item.writerName2 ? item.writerName2 : '');
+			}else{
+				textNode = document.createTextNode(!!item.writerName ? item.writerName : '');
+			}
 			spanName.appendChild(textNode);
 			var spanDay = document.createElement('span');
 			spanDay.classList.add('day');
