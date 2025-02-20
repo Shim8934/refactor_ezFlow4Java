@@ -1846,7 +1846,10 @@ public class EzAddressController{
 				} else if (vo.getOwnerId().equals(userInfo.getCompanyID())) {
 					folderType = "C";
 				}
-				
+
+				String sType = vo.getsType();
+				String sEmail = sType.equals("G") ? egovMessageSource.getMessage("ezBoard.t18", userInfo.getLocale()) : commonUtil.cleanValue(vo.getsEmail());
+
 				sb.append("<ROW>");
 				sb.append("<FOLDERID>" + vo.getFolderId() + "</FOLDERID>");
 				sb.append("<FOLDERTYPE>" + folderType + "</FOLDERTYPE>");
@@ -1859,8 +1862,8 @@ public class EzAddressController{
 				sb.append("<SCOMPANY>" + commonUtil.cleanValue(vo.getsCompany()) + "</SCOMPANY>");
 				sb.append("<SCOMPANYPHONE>" + commonUtil.cleanValue(vo.getsCompanyPhone()) + "</SCOMPANYPHONE>");
 				sb.append("<SMOBILE>" + commonUtil.cleanValue(vo.getsMobile()) + "</SMOBILE>");
-				sb.append("<SEMAIL>" + commonUtil.cleanValue(vo.getsEmail()) + "</SEMAIL>");
-				sb.append("<STYPE>" + vo.getsType() + "</STYPE>");
+				sb.append("<SEMAIL>" + sEmail + "</SEMAIL>");
+				sb.append("<STYPE>" + sType + "</STYPE>");
 				sb.append("</ROW>");
 			}
 			
