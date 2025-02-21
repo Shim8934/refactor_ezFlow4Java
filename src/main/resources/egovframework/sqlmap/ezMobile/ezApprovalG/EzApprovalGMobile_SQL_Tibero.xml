@@ -3630,7 +3630,6 @@
 					APRMEMBERDEPTID,
 					DOCSTATE,
 					DOCTITLE,
-					APRMEMBERSN,
 				<isEqual property="lang" compareValue="2">
 					CASE
 	   					WHEN (WRITERNAME2 = '' OR WRITERNAME2 IS NULL) THEN WRITERNAME
@@ -3650,6 +3649,7 @@
 					WRITERDEPTNAME,
 					WRITERJOBTITLE
 				</isNotEqual>
+	   				APRMEMBERSN
 				FROM
 					VAPRDOINGDOCLIST
 				WHERE
