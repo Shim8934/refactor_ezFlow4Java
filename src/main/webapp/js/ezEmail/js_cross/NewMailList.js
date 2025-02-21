@@ -1446,11 +1446,17 @@ function BasicViewHeaderChange(pGubun, pFolderType) {
     GetListInfo(HeaderObject, ContentObject);
 }
 function goToPageByNum(szNum) {
-    document.getElementById("MailList").setAttribute("curPage", szNum)
+    var currentScrollTop = document.getElementById("contentlistDiv").scrollTop;
+    var currentPage = document.getElementById("MailList").getAttribute("curPage");
+    document.getElementById("MailList").setAttribute("curPage", szNum); 
     var HeaderObject = document.getElementById("MailHeader");
     var ContentObject = document.getElementById("MailList");
     GetListInfo(HeaderObject,ContentObject);
-    $("#contentlistDiv").scrollTop(0);
+    if (currentPage != document.getElementById("MailList").getAttribute("curPage")) {
+        $("#contentlistDiv").scrollTop(0); 
+    } else {
+        $("#contentlistDiv").scrollTop(currentScrollTop);
+    }
 }
 function selbeforeBlock() {
     var pageNum = parseInt(document.getElementById("MailList").getAttribute("curPage"));
