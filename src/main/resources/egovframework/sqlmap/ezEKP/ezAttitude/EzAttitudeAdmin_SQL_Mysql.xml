@@ -953,7 +953,7 @@
 		<![CDATA[
 		SELECT * FROM (
 			SELECT
-				CASE #primary# WHEN '2' THEN D.DISPLAYNAME2 ELSE D.DISPLAYNAME END AS deptName,
+				CASE #lang# WHEN '1' THEN D.DISPLAYNAME ELSE D.DISPLAYNAME2 END AS deptName,
 				D.CN AS deptId,
 				'no' AS mine,
 				A.AUTH_TYPE AS authType
@@ -971,7 +971,7 @@
 				A.TENANT_ID = #tenantId#
 			UNION
 			SELECT
-				CASE #primary# WHEN '2' THEN D.DISPLAYNAME2 ELSE D.DISPLAYNAME END AS deptName,
+				CASE #lang# WHEN '1' THEN D.DISPLAYNAME ELSE D.DISPLAYNAME2 END AS deptName,
 				D.CN AS deptId,
 				'yes' AS mine,
 				'' AS authType
@@ -989,7 +989,7 @@
 				U.TENANT_ID = #tenantId#
 			UNION
 			SELECT
-				CASE #primary# WHEN '2' THEN D.DISPLAYNAME2 ELSE D.DISPLAYNAME END AS deptName,
+				CASE #lang# WHEN '1' THEN D.DISPLAYNAME ELSE D.DISPLAYNAME2 END AS deptName,
 				D.CN AS deptId,
 				'yes' AS mine,
 				'' AS authType
@@ -1305,7 +1305,7 @@
 	<select id="ezAttitudeAdminDAO.getCompanyDeptList" parameterClass="Map" resultClass="AttitudeAuthorVO">
 		SELECT
 			CN AS deptId,
-			CASE #primary# WHEN '2' THEN DISPLAYNAME2 ELSE DISPLAYNAME END AS deptName
+			CASE #lang# WHEN '1' THEN DISPLAYNAME ELSE DISPLAYNAME2 END AS deptName
 		<isNotEmpty prepend="," property="isAllDept">
 			'M' AS authType
 		</isNotEmpty>

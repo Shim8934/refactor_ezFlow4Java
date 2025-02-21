@@ -34,7 +34,12 @@
 	            		<li class="info_img" onclick="show_personinfo('${emergencyNotiItem.writerId}')"><img src='/images/ezNewPortal/info_pic_none.png'></li>
 	        		</c:otherwise>
 	        	</c:choose>
-	            <li class="info_name" onclick="show_personinfo('${emergencyNotiItem.writerId}')"><c:out value='${emergencyNotiItem.writerName}'/><span>(<c:out value='${emergencyNotiItem.writerDeptName}'/>)</span></li>
+				<c:if test="${lang eq '1'}">
+					<li class="info_name" onclick="show_personinfo('${emergencyNotiItem.writerId}')"><c:out value='${emergencyNotiItem.writerName}'/><span>(<c:out value='${emergencyNotiItem.writerDeptName}'/>)</span></li>
+				</c:if>
+				<c:if test="${lang ne '1'}">
+					<li class="info_name" onclick="show_personinfo('${emergencyNotiItem.writerId}')"><c:out value='${emergencyNotiItem.writerName2}'/><span>(<c:out value='${emergencyNotiItem.writerDeptName2}'/>)</span></li>
+				</c:if>
 	            <li class="info_date"><c:out value='${fn:substring(emergencyNotiItem.writeDate, 0, 16)}'/></li>
 	        </ul>
 	        <div class="emergency_detail">

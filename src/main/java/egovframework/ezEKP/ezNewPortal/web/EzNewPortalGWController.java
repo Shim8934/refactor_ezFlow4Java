@@ -900,7 +900,7 @@ public class EzNewPortalGWController {
 				if (themeColor == 3) {
 					logoUrl = "/images/ezNewPortal/skin/dark/logo_white.png";
 				} else {
-					logoUrl = "/files/upload_portal/Top/Logo/logo.gif";	
+					logoUrl = "/files/upload_portal/Top/Logo/logo.png";	
 				}
 			} else {
 				logoUrl = commonUtil.getUploadPath("upload_newPortal.ROOT", tenantId) + commonUtil.separator + "uploadFile" + commonUtil.separator + logoUrl;
@@ -3318,7 +3318,7 @@ public class EzNewPortalGWController {
 			}
 			
 			if (portalLogoUrl == null || portalLogoUrl.equals("")) {
-				portalLogoUrl = "/files/upload_portal/Top/Logo/logo.gif";
+				portalLogoUrl = "/files/upload_portal/Top/Logo/logo.png";
 				portalLogoUrlDefault = true;
 			} else {
 				portalLogoUrl = commonUtil.getUploadPath("upload_newPortal.ROOT", tenantId) + commonUtil.separator + "uploadFile" + commonUtil.separator + portalLogoUrl;

@@ -1080,7 +1080,8 @@ aside{margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:vis
 .weather_title .weatherPresent dt img{width:90px;}
 .weather_title .weatherPresent dd span:nth-child(1){display:block; font-size:18px; font-weight:400;}
 .weather_title .weatherPresent dd span:nth-child(2){display:block; font-size:26px; font-weight:500;}
-
+.portlet_title .portletPlus #countryList { width : 80px; }
+.portlet_title .portletPlus #cityList { width : 125px; }
 
 /* ============ theme2 =========== */
 

@@ -546,6 +546,10 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			if (includeSubFolders == null) {
 				includeSubFolders = "";
 			}
+
+			if (tagName == null) {
+				tagName = "";
+			}
 			
 			folderId = URLDecoder.decode(folderId, "UTF-8");
 			

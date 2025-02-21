@@ -693,7 +693,7 @@ function makeXML(newDocID) {
 	var Nodes = eNodes.selectNodes("foot/sendinfo");
 	//한글기안기 심볼, 로고 이미지 경로 하드코딩 추후 유동적으로 사용할 수 있도록 수정필요 2019-11-25 홍대표.
 	//로고와 심볼 파일을 ex) fileroot/0/files/upload_approvalG\Top/ 에 위치시킴
-	SetDocumentElement(HwpCtrl, "logourl", "logo.gif");
+	SetDocumentElement(HwpCtrl, "logourl", "logo.png");
     if (HwpCtrl.CheckFieldExist("logo")) {
 		logoName = GetDocumentElement(HwpCtrl, "logourl");
 		

@@ -189,7 +189,11 @@ function CabinetTree() {
 		imgElmt2.src       = level > 0 ? _nodeImg : _rootImg;
 		
 		var spanDeptName         = document.createElement("span");
-		spanDeptName.textContent = list[_nodeName];
+		if (typeof(UserLang) != 'undefined' && UserLang != '1' && UserLang.trim() != ""){
+			spanDeptName.textContent = list[_nodeName + "2"];
+		}else {
+			spanDeptName.textContent = list[_nodeName];
+		}
 		spanDeptName.className   = "list_text";
 		spanDeptName.setAttribute("role", list[_nodeId]);
 		

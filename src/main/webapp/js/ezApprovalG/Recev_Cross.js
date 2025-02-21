@@ -1838,7 +1838,7 @@ function SaveDraftDocInfo() {
         		data : {
         			orgDocID : pOrgDocID,
         			docID    : pDocID,
-        			deptID   : arr_userinfo[4]
+        			deptID   : RECEIPTDEPTID.innerText
         		},
         		success: function(xml){
         			result = xml;
@@ -2098,7 +2098,12 @@ function SaveDraftDocInfo() {
 	
             pOrgDocID = getNodeText(GetElementsByTagName(result, "ORGDOCID")[0]);
             var doctitle = getNodeText(GetElementsByTagName(result, "DOCTITLE")[0]);
-	
+
+            if (CrossYN()) {
+                RECEIPTDEPTID.textContent = getNodeText(GetElementsByTagName(result, "RECEIPTDEPTID")[0]);
+            } else {
+                RECEIPTDEPTID.innerText = getNodeText(GetElementsByTagName(result, "RECEIPTDEPTID")[0]);
+            }
 	   
             switch (pDraftFlag)
             {

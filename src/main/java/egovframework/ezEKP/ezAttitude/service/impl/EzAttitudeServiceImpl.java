@@ -1923,7 +1923,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 	@Override
 	public List<AttitudeAuthorVO> getAttitudeAuthDeptList(int tenantId, String companyId,
-			String userId, String isAllDept, String primary) throws Exception {
+			String userId, String isAllDept, String lang) throws Exception {
 		logger.debug("getAttitudeAuthDeptList started");
 		
 		List<AttitudeAuthorVO> list = new ArrayList<AttitudeAuthorVO>();
@@ -1933,10 +1933,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("userId", userId);
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
-		if (primary.equals("1")) {
-			primary = "";
-		}
-		map.put("primary", primary);
+		map.put("lang", lang);
 		
 		if (!isAllDept.equals("Y")) {
 			list = ezAttitudeDAO.getAttitudeAuthDeptList(map);

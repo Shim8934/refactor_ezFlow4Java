@@ -7,7 +7,7 @@
 <!DOCTYPE html>
 <html>
 	<head> 
-		<title>::: ezEKP Java :::</title>
+		<title>::: ezFlow Java :::</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<link rel="shortcut icon" href="/images/favicon.ico">
 		<link href="${util.addVer('/css/login.css')}" rel="stylesheet" type="text/css" />

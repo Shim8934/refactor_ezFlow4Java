@@ -4459,6 +4459,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_USERID", userID);
 		map.put("v_TENANTID", tenantID);
 		map.put("v_APRDEPTSN", aprDeptSN);
+        map.put("approvalFlag", ezCommonService.getTenantConfig("ApprovalFlag", tenantID));
 		
 		List<ApprGReceiptVO> apprGReceiptVOList = ezApprovalGDAO.addToAprDept(map);
 		
@@ -6619,7 +6620,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         boolean signSaveFlag = false;
         
         /* 2023-10-04 홍승비 - 양식상에 저장되는 서명일자는 UTC 시간이 아닌 결재자의 타임존 시간으로 저장 (웹과 동일 스펙, MM.dd 형식) */
-        String signDateMD = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("MM.dd"), userInfo.getOffset(), false);
+        // 2025-02-19 조수빈 - ParseException으로 utc 기준 일자가 저장되는 결함 수정
+     	String utcTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
+     	String signDateMD = utcTime.substring(5, 7) + "." + utcTime.substring(8, 10);
         
 		try {
 			// 부재자 설정인 경우 proxySign = '代'
@@ -7606,7 +7609,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		boolean isJKAprTypeAfterDK = false; // 전자결재 G > 대결자(016) 이후의 전결자(004)가 존재하는 경우, 해당 플래그를 true로 한다.
 		
 		/* 2023-10-04 홍승비 - 양식상에 저장되는 서명일자는 UTC 시간이 아닌 결재자의 타임존 시간으로 저장 (웹과 동일 스펙, MM.dd 형식) */
-        String signDateMD = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("MM.dd"), userInfo.getOffset(), false);
+		// 2025-02-19 조수빈 - ParseException으로 utc 기준 일자가 저장되는 결함 수정
+		String utcTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
+        String signDateMD = utcTime.substring(5, 7) + "." + utcTime.substring(8, 10);
         
 		// 부재자 설정인 경우 proxySign = '代'
 		if (!userID.equals(orgUID)) {
@@ -10797,6 +10802,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
         map.put("upperDeptCode", upperDeptCode);
+        map.put("lang", commonUtil.getMultiData(lang, tenantID));
 		
 		/* 2023-01-03 홍승비 - 전자결재G > 기산월을 체크하는 회계연도 조건을 미리 만들어서 전달하도록 수정 (쿼리 상에서 년-월 조건 분리된 부분 제거) */
 		// 사용자에게 표출되는 기록물철의 종료연도는 현재 기준으로 계산된 회계년도보다 크거나 같아야 함
@@ -14914,6 +14920,17 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                 }
             }
 		}
+
+        // 상위부서문서함 사용 부서 부서합의 내 최종결재 시
+        if (apprGAprLineVOList.size() < 1 && approvalFlag.equals("G")) {
+            Map<String, String> upDeptInfo = getUpperDeptInfo(deptID, userInfo.getTenantId());
+            if (upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) { //상위부서 문서함 사용중인 부서가 부서합의에서 최종결재일 때
+                ArrayList<String> list = new ArrayList<>();
+                list.add(upDeptInfo.get("upperDeptCode"));
+                map.put("v_DEPTID2", list);
+                apprGAprLineVOList = ezApprovalGDAO.doApproveLineInfo(map);
+            }
+        }
 		 
 		if (apprGAprLineVOList.size() < 1) {
 			if (passAprLine != null && passAprLine.equals("Y")) {
@@ -16720,7 +16737,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String cabinetSN = "";
 		
 		/* 2023-10-04 홍승비 - 양식상에 저장되는 서명일자는 UTC 시간이 아닌 결재자의 타임존 시간으로 저장 (웹과 동일 스펙, MM.dd 형식) */
-        String signDateMD = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("MM.dd"), userInfo.getOffset(), false);
+		// 2025-02-19 조수빈 - ParseException으로 utc 기준 일자가 저장되는 결함 수정
+		String utcTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
+		String signDateMD = utcTime.substring(5, 7) + "." + utcTime.substring(8, 10);
         
         /* 2023-11-07 홍승비 - 합의결재 완료 시 이미지 서명을 원문서에 맵핑하는 경우, DB의 tbl_signinfo 테이블에는 이미지 서명 파일의 경로(+ 대결,전결 + 컨피그에 따라 결재자명까지)를 저장 */
         String imgSignCont = ""; // MHT에서 사용, 이미지 서명과 기타 데이터를 HTML로 맵핑하기 위해 사용
@@ -22239,6 +22258,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_APRLINESN", aprSN);
 		map.put("v_TENANTID", tenantID);
 		map.put("companyID", companyID);
+        map.put("approvalFlag", ezCommonService.getTenantConfig("ApprovalFlag", tenantID));
 		
 		List<ApprGAprLineVO> apprGAprLineVOList = ezApprovalGDAO.addToAprLineDB(map);
 		
