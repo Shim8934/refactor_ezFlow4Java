@@ -1,6 +1,6 @@
 var memoMessages = {
 	strLangMemo4 : "削除してよろしいですか？",
-	strLangMemo5 : "OK",
+	strLangMemo5 : "確認",
 	strLangMemo6 : "キャンセル",
 	strLangMemo7 : "データが存在しません",
 	strLangMemo9 : "すべてのメモ",
