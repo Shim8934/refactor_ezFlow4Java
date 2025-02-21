@@ -141,7 +141,7 @@ function restoreColor(statusId) {
 	   </div>
 	</div>
     <div id="contentArea" style="overflow:auto;">
-    	<table class="content" style="width:400px;margin-left:15px;">
+    	<table class="content" style="width:430px;margin-left:15px;">
 		       <tr>
 					<th><spring:message code='ezPMS.t173' /></th>
 					<td>
@@ -157,7 +157,7 @@ function restoreColor(statusId) {
             	<tr>
                 	<th><spring:message code='ezPMS.t174' /></th>
                		<td>
-               			<select id="defaultStatus" style="width: 120px">
+               			<select id="defaultStatus" style="width: 150px">
                				<option value="A"><spring:message code='ezPMS.t271' /></option>
                				<option value="P"><spring:message code='ezPMS.t258' /></option>
                				<option value="W"><spring:message code='ezPMS.t260' /></option>
