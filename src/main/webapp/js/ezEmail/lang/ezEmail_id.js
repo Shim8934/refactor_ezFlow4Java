@@ -314,6 +314,7 @@ var strLangLS02 = "Tidak ada surat yang dipilih. \nAnda yakin ingin menyimpan se
 var strLangLS03 = "Semua email di kotak surat tersebut akan diunduh sebagai satu file zip terkompresi.\nIni mungkin memakan waktu lama. Apakah Anda ingin melanjutkan?"
 var strLangLS04 = ".";
 var strLangLS05 = "';' cannot be contained."
+var strLangAllmailSaveAlert = "선택된 메일이 없습니다. \n메일을 선택하거나 메일 검색 후 저장해 주세요."
 
 /* 2018-07-03 홍승비 - 승인게시물, 커뮤니티 답변메일 companyID 관련 처리*/
 var strLangHSB01 = "Pos ini dapat dilihat di ";

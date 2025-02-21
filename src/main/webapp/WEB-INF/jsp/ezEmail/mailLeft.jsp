@@ -54,6 +54,16 @@
 			var useSpamSniper = '<c:out value="${useSpamSniper}"/>';
 			var shareCryptResult = "";
 			var configFlag = "false";
+			var shareInfoList = [
+                                <c:forEach items="${shareInfoList}" var="info" varStatus="status">
+                                    {
+                                        shareId: '${info.shareId}',
+                                        deletePermission: '${info.deletePermission}',
+                                        sendPermission: '${info.sendPermission}',
+                                        managePermission: '${info.managePermission}'
+                                    }<c:if test="${!status.last}">,</c:if>
+                                </c:forEach>
+                                ];
 	      	
 	        document.onselectstart = function () { return false; };
 	        window.onresize = function () {
@@ -334,7 +344,7 @@
 	            if (subCode != "1" && subCode != "") {
 	                PostTreeView.select(subCode);
 	            } else {
-	                PostTreeView.select(1);
+	                PostTreeView.select(2); // inbox를 defualt로 셀렉트
 	            }
 	            
 	            <c:if test="${not withoutNodeSelect}">
@@ -437,12 +447,13 @@
             		var unreadcount = getNodeText(SelectNodes(xmlHTTP_Unread.responseXML, "FOLDERUNREADCOUNT")[0]);
             		var totalUnreadCount = getNodeText(SelectNodes(xmlHTTP_Unread.responseXML, "TOTALUNREADCOUNT")[0]);
 	                var caption = window[treeviewStr].getvalue(window[treeviewStr].selectedIndex(), "foldername");
+	                var href = window[treeviewStr].getvalue(window[treeviewStr].selectedIndex(), "href");
 	
 	                if (get_unreadend_2010.href == window[treeviewStr].getvalue(window[treeviewStr].selectedIndex(), "href")) {
 	                    if (unreadcount == "0") {
 	                    	window[treeviewStr].putcaption(window[treeviewStr].selectedIndex(), caption);
 	                        //window[treeviewStr].putstyle(window[treeviewStr].selectedIndex(), "font-weight : ''");
-	                    } else {
+	                    } else if ("allMail" != href) {
 	                        // 2023-06-23 황인경 - 디자인 개선 > 메일 > 좌측 메뉴 > 카운트 괄호 추가
 							window[treeviewStr].putcaption(window[treeviewStr].selectedIndex(), caption + "(" + unreadcount + ")");
 	                    }
@@ -574,7 +585,7 @@
 		            	window[treeviewStr].update();
 		                
 		                if (window[treeviewStr].selectedIndex() == -1) {
-		                	window[treeviewStr].select(1);
+		                	window[treeviewStr].select(2);
 		                }
 		                
 						// openRightFrameDefault()가능?
@@ -760,7 +771,7 @@
 				}
 				
 	        	detailView();
-	        	window[treeviewStr].select(1);
+	        	window[treeviewStr].select(2);
 	        	openFolder();
 	        	openTagFolder("on");
 	        }
@@ -834,6 +845,14 @@
 
  			function event_folderMenu(event) {
  				event.preventDefault();
+ 				
+ 				// 전체메일인 경우 실행하지 않는다.
+                var nodeIdx = window[treeviewStr].selectedIndex();
+                var folderPath = window[treeviewStr].getvalue(nodeIdx, "href");
+                
+                if ("allMail" == folderPath) {
+                    return;
+                }
  				
 		    	if (!event) event = window.event;
 		        var EventMouseX = event.clientX;
@@ -1154,7 +1173,7 @@
 			        var nodeTreeXml = xmlHTTP.responseText.replace("<DATA>", "").replace("</DATA>", "");
 			        LoadEmailTree2(nodeTreeXml);
 			    } else {
-			    	window[treeviewStr].select(1);
+			    	window[treeviewStr].select(2);
 			    }
 			    
 			    HiddenFolderMenu();
@@ -1206,7 +1225,7 @@
 			    shareTreeView.config(treeconfig);
 			    shareTreeView.source("<tree><nodes>" + RootShareFolderXML + "</nodes></tree>");
 			    shareTreeView.update();
-			    shareTreeView.select(1);
+			    shareTreeView.select(2);
 			    
 			    selectnode();
 			    previewSubTreeCall();

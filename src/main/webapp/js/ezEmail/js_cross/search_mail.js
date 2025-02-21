@@ -191,14 +191,15 @@ function start_search() {
     var sMailFolder = TrimText(select2.value);
     ShowMailProgress();
     if(listType == "mailList"){	
-    	searchRecurMail2(sMailFolder, startDate, endDate);
+    	//searchRecurMail2(sMailFolder, startDate, endDate);
+    	searchRecurMail(sMailFolder, startDate, endDate, true);
     } else {
-    	searchRecurMail(sMailFolder, startDate, endDate);
+    	searchRecurMail(sMailFolder, startDate, endDate, false);
     }
     
 }
 
-function searchRecurMail(sMailFolder, startDate, endDate) {
+function searchRecurMail(sMailFolder, startDate, endDate, isMailList) {
     var pageNum = parseInt(document.getElementById("resultTD").getAttribute("curPage"));
     var startIndex = listSize * (pageNum - 1);
     
@@ -243,7 +244,7 @@ function searchRecurMail(sMailFolder, startDate, endDate) {
     createNodeAndInsertText(xmlDOM, objNode, "STARTINDEX", startIndex);
     createNodeAndInsertText(xmlDOM, objNode, "LISTCOUNT", listSize);
 
-	if (window.tagName) {
+	if (isMailList && window.tagName) {
 		createNodeAndInsertText(xmlDOM, objNode, "TAGNAME", tagName);
 	}
 
@@ -257,7 +258,7 @@ function searchRecurMail(sMailFolder, startDate, endDate) {
     g_searchHttp.onreadystatechange = event_searchRecurMail;
     g_searchHttp.send(xmlDOM);
 }
-
+/* 2025-02-17 - searchRecurMail와 TAGNAME 부분 외 동일하기 때문에 불필요한 코드 중복으로 주석처리
 function searchRecurMail2(sMailFolder, startDate, endDate) {
 	var pageNum = parseInt(document.getElementById("MailList").getAttribute("curPage"));
 	var startIndex = listSize * (pageNum - 1);
@@ -312,7 +313,7 @@ function searchRecurMail2(sMailFolder, startDate, endDate) {
 	g_searchHttp.open("POST", requestUrl, true);
 	g_searchHttp.onreadystatechange = event_searchRecurMail;
 	g_searchHttp.send(xmlDOM);
-}
+}*/
 
 var resultTable = null;
 var recordCount = 0;

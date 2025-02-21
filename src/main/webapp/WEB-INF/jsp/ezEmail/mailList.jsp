@@ -312,6 +312,10 @@
 		        CurrenWidth = document.body.clientWidth;
 		        
 		        switch (g_foldertype) {
+		            case "allMail":
+		                trashUnreadBtn.style.display = 'none';
+		                importBtn.style.display = 'none';
+		                break;
 		            case "sent":
 		                receivecheck.style.display = "";
 		                reply.style.display = 'none';
@@ -1967,7 +1971,7 @@
 				  <span class="view_icon"><img src="/images/ImgIcon/view_more.png"></span>
 				  <ul class="layer_select">
 					  <li id="unread_stat" onClick="Read_StatusChange('U');"><spring:message code="ezEmail.t99000007" /></li>
-					  <li id="EmailPCSave" onClick="mail_export();"><spring:message code="ezEmail.t378" /></li>
+					  <li id="EmailPCSave" onClick="g_moveUrl === 'allMail' ? mail_export_exec(true) : mail_export()"><spring:message code="ezEmail.t378" /></li>
 					  <li id="importBtn" onClick="mail_import_onclick();"><spring:message code="ezEmail.t407" /></li>
 					  <li id="btnReject" onClick="reject_onclick()" style="display:none"><spring:message code="ezEmail.t270" /></li>
 					  <c:if test="${useMailConfirm == 'YES'}">

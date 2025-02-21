@@ -1897,8 +1897,11 @@ function callMsgDlgAppr(href) {
 }
 
 var PcSaveArrayList = new Array();
+function mail_export() { // 전체메일 구분하기 위해 함수 분리
+    mail_export_exec(false);
+}
 
-function mail_export() {
+function mail_export_exec(isAllMail) {
 	var type = "MAIL";
 	
 	if (listContentArry.length == 0 && listSubContentArry.length == 0 && searchMode) {
@@ -1917,7 +1920,7 @@ function mail_export() {
 		        }
 			}
 		}
-	} else if (listContentArry.length == 0 && listSubContentArry.length == 0) {
+	} else if (listContentArry.length == 0 && listSubContentArry.length == 0 && !isAllMail) {
         if (!confirm(strLangLS01)) {
         	return;
         } else {
@@ -1938,6 +1941,11 @@ function mail_export() {
         
         for (var i = 0; i < listSubContentArry.length; i++) {
             PcSaveArrayList[PcSaveArrayList.length] = document.getElementById(listSubContentArry[i]);
+        }
+        
+        if (PcSaveArrayList.length === 0 && isAllMail) {
+            alert(strLangAllmailSaveAlert);
+            return;
         }
 
 		if (useEncryptZipForEmail == "YES") {
