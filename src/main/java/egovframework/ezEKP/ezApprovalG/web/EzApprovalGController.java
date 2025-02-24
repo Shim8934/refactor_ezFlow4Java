@@ -17,6 +17,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGOpinionVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGReceiveDocVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGSummaryVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSusinProcessInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.ezEKP.ezApprovalG.vo.KEDSharedUserInfo;
@@ -64,6 +65,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
+import org.apache.logging.log4j.util.Strings;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -13949,5 +13951,91 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		logger.debug("gongramDocDelete ended");
 		
 		return result;
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/apprGSummaryEdit.do", method = RequestMethod.GET)
+	public String apprGSummaryEdit(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("apprGSummaryEdit started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String docID = request.getParameter("docID");
+		
+		ApprGSummaryVO summary = ezApprovalGService.getSummaryDB(docID, userInfo.getCompanyID(), userInfo.getTenantId(), "APR");
+		String mode = Strings.isNotBlank(summary.getSummary()) ? "edit" : "new";
+		
+		model.addAttribute("summary", summary);
+		model.addAttribute("mode", mode);
+		
+		logger.debug("apprGSummaryEdit ended");
+		return "ezApprovalG/apprGSummaryEdit";
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/apprGSummaryView.do", method = RequestMethod.GET)
+	public String apprGSummaryView(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("apprGSummaryView started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String docID = request.getParameter("docID");
+		String mode = request.getParameter("mode");
+		
+		ApprGSummaryVO summary = ezApprovalGService.getSummaryDB(docID, userInfo.getCompanyID(), userInfo.getTenantId(), mode);
+		
+		model.addAttribute("summary", summary);
+		logger.debug("apprGSummaryView ended");
+		return "ezApprovalG/apprGSummaryView";
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/saveApprGSummary.do", method = RequestMethod.PUT)
+	public String saveApprGSummary(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("saveApprGSummary started");
+		
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+			String docID = request.getParameter("docID");
+			String summary = request.getParameter("summary");
+			String summaryMht = request.getParameter("summaryMht");
+			ApprGSummaryVO summaryVO = new ApprGSummaryVO(docID, userInfo.getCompanyID(), userInfo.getTenantId(), summary, "");
+			
+			String path = ezApprovalGService.saveSummaryFileContent(summaryVO, summaryMht, "APR");
+			summaryVO.setSummaryPath(path);
+			ezApprovalGService.saveSummaryDB(summaryVO, "APR");
+			
+			model.addAttribute("status", "success");
+			model.addAttribute("path", path);
+ 
+		logger.debug("saveApprGSummary ended.");
+		return "json";
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/printApprGSummary.do", method = RequestMethod.GET)
+	public String printApprGSummary(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("apprGSummaryView started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String docID = request.getParameter("docID");
+		String mode = request.getParameter("mode");
+		
+		String docName = ezApprovalGService.getDocInfo(docID, mode, "DOCTITLE", userInfo, userInfo.getCompanyID(), userInfo.getTenantId(), "", "");
+		ApprGSummaryVO summary = ezApprovalGService.getSummaryDB(docID, userInfo.getCompanyID(), userInfo.getTenantId(), mode);
+		
+		model.addAttribute("summary", summary);
+		model.addAttribute("docName", docName);
+		
+		logger.debug("apprGSummaryView ended");
+		return "ezApprovalG/apprGSummaryPrint";
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/printContentApprGSummary.do", method = RequestMethod.GET)
+	@ResponseBody
+	public String printContentApprGSummary(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("apprGSummaryView started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String docID = request.getParameter("docID");
+		String mode = request.getParameter("mode");
+		
+		ApprGSummaryVO summary = ezApprovalGService.getSummaryDB(docID, userInfo.getCompanyID(), userInfo.getTenantId(), mode);
+		
+		logger.debug("apprGSummaryView ended");
+		return summary.getSummaryPath();
 	}
 }

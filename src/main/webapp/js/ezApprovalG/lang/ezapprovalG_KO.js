@@ -1188,3 +1188,10 @@ var strLangKMH01 = "일괄지정을 진행하시겠습니까?<br>결재상태가
 /* 전자결재 헤더 숨기기 기능 */
 var ezApproval_headerHide01 = "헤더 숨기기";
 var ezApproval_headerHide02 = "헤더 펼치기";
+
+/* 전자결재 요약전 에디터 기능 */
+var strLangJIH_Summary01 = "요약전 저장이 완료되었습니다.";
+var strLangJIH_Summary02 = "내용이 비어있는 요약전을 저장할 수 없습니다.";
+var strLangJIH_Summary03 = "잘못된 접근입니다.";
+var strLangJIH_Summary04 = "요약전을 불러올 수 없습니다.";
+var strLangJIH_Summary05 = "요약전 정보";

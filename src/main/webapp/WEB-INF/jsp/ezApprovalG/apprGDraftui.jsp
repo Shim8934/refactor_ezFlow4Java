@@ -39,6 +39,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Circulation.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/nonElecRec.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Office.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/apprGSummary.js')}"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
 		    var FormHref	=	"<c:out value ='${formURL}'/>";
 		    var DraftFlag	=	"<c:out value ='${draftFlag}'/>";
@@ -2493,6 +2494,7 @@
 							</c:when>
 							<c:otherwise>
 				                <li id="btntotaldocinfo"><span onClick="return btnApprovalInfo('1')" ><spring:message code='ezApprovalG.t1742'/></span></li>        
+				                <li id="btnSummary"><span onclick="return btnSummaryEdit()"><spring:message code='ezApprovalG.t1203'/></span></li> <%-- 요약전 --%>
 				                <span style="display:none"><li id="btnSetAprLine"><span  onClick="return btnSetAprLine_onclick()"><spring:message code='ezApprovalG.t153'/></span></li></span>
 				                <span style="display:none"><li id="btnSetReceivLine"><span  onClick="return btnSetReceivLine_onclick()" ><spring:message code='ezApprovalG.t154'/></span></li></span>
 				                <span style="display:none"><li id="btnSetTaskCode"><span  onClick="btnSetTaskCode_onclick()" ><spring:message code='ezApprovalG.t9994'/></span></li></span>

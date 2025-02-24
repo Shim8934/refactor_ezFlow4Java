@@ -44,11 +44,11 @@
 	        if(approvalFlag == "G") {
         		$(".approvalG").css("display","");
         		$(".approval").css("display","none");
-        		$("#summary_txta").css("width", "398px").css("height", "82px");
+        		// $("#summary_txta").css("width", "398px").css("height", "82px");
         	} else {
         		$(".approvalG").css("display","none");
         		$(".approval").css("display","");
-        		$("#summary_txta").css("width", "398px").css("height", "200px");
+        		// $("#summary_txta").css("width", "398px").css("height", "200px");
         	}
 	        
 	        setDocInfo();
@@ -148,9 +148,11 @@
 	    		if (securityApproval != "") {
 	    			$("#securityApproval_span").text(securityApproval);
 	    		}
+	    		/*
 	    		if ($("#summary_txta").text().trim() == "") {
  	    			$("#summary_txta").attr("disabled", true);
 	    		}
+	    		*/
 	    	} else {
 	    		if (taskCode != "" && itemName != "") {
 	    			$("#taskCode_span").text(taskCode + "(" + replaceEntityCodeToStr(itemName) + ")");
@@ -173,9 +175,11 @@
 	    		if (storagePeriod != "") {
 	    			$("#storagePeriod_span").text(storagePeriod);
 	    		}
+	    		/*
 	    		if ($("#summary_txta").text().trim() == "") {
  	    			$("#summary_txta").attr("disabled", true);
 	    		}
+	    		*/
 	    	}
 	    }
 	    
@@ -269,7 +273,9 @@
 				</td>
 			</tr>
 		</table>
-		<h2><spring:message code='ezApprovalG.t1203'/></h2>
-		<textarea id="summary_txta" style="resize:none;" readonly="readonly"><c:out value="${summary}"/></textarea>
+		<%--
+		    <h2><spring:message code='ezApprovalG.t1203'/></h2>
+		    <textarea id="summary_txta" style="resize:none;" readonly="readonly"><c:out value="${summary}"/></textarea>
+        --%>
 	</body>
 </html>

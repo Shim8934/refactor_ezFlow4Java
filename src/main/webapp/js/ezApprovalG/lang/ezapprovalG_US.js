@@ -1188,3 +1188,10 @@ var strLangKMH01 = "일괄지정을 진행하시겠습니까?<br>결재상태가
 /* 전자결재 헤더 숨기기 기능 */
 var ezApproval_headerHide01 = "hide header";
 var ezApproval_headerHide02 = "show header";
+
+/* 요약전 에디터 기능 */
+var strLangJIH_Summary01 = "The summary has been successfully saved.";
+var strLangJIH_Summary02 = "You cannot save an empty summary.";
+var strLangJIH_Summary03 = "Invalid access.";
+var strLangJIH_Summary04 = "Unable to load the summary.";
+var strLangJIH_Summary05 = "Summary Info"

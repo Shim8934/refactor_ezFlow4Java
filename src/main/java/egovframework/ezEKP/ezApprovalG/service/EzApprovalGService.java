@@ -16,6 +16,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGOutOfOfficeInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGProxyVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGReceiveDocVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGSummaryVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSusinProcessInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO;
@@ -1015,4 +1016,16 @@ public interface EzApprovalGService {
     
     // 2024-12-27 이가은 - 전자결재 공람완료문서 삭제 로직
     public String gongramDocDelete(String docID, int aprmemberSn, int tenantID, String companyID) throws Exception;
+
+    public ApprGSummaryVO getSummaryDB(String docID, String companyID, int tenantID, String mode) throws Exception;
+    
+    public String getSummaryFileContent(ApprGSummaryVO summary) throws Exception;
+    
+    public void saveSummaryDB(ApprGSummaryVO summary, String mode) throws Exception;
+    
+    public String saveSummaryFileContent(ApprGSummaryVO summary, String summaryMhtStr, String mode) throws Exception;
+    
+    public void deleteSummaryFile(String docID, String companyID, int tenantID) throws Exception;
+    
+    public String copySummary(ApprGSummaryVO summary, String newDocID, String mode) throws Exception;
 }

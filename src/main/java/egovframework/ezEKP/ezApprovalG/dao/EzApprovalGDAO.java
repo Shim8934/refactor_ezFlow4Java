@@ -4087,4 +4087,12 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public void insertGongramDeleteHistory(Map<String, Object> map) throws Exception {
 		insert("EzApprovalG.insertGongramDeleteHistory", map);
 	}
+
+    public ApprGSummaryVO getSummary(Map<String, Object> map) throws Exception {
+		return (ApprGSummaryVO) select("EzApprovalG.getSummary", map);
+    }
+
+	public void saveSummary(ApprGSummaryVO summary) throws Exception {
+		update("EzApprovalG.saveSummary", summary);
+	}
 }

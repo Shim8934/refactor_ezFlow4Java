@@ -23,6 +23,7 @@ import java.nio.file.Files;
 import java.nio.file.Path; 
 import java.nio.file.Paths; 
 import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime; 
@@ -94,6 +95,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.util.Strings;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject; 
 import org.json.simple.parser.JSONParser; 
@@ -766,6 +768,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	   	map.put("receiptCompanyID", companyID);
 
 	   	ezApprovalGDAO.copyOpinionsFromOrgDoc2(map);
+           
+        ApprGSummaryVO summary = getSummaryDB(orgDocID, companyID, tenantID, "END");
+        if (Strings.isNotBlank(summary.getSummary())) {
+            copySummary(summary, docID, "APR");
+        }
 
 	   	result = "<RESULT>TRUE</RESULT>";
 		
@@ -2787,11 +2794,16 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TENANTID", tenantID);
 		
 		String href = ezApprovalGDAO.getTmpHref(map);
+        ApprGSummaryVO summary = null;
 		
 		map.put("href", href);
 		
 		ArrayList<String> docList = ezApprovalGDAO.getTmpDocList(map);
-		for (String s : docList) {
+		for (int i=0; i<docList.size(); i++) {
+            String s = docList.get(i);
+            if (i == 0) {
+                summary = getSummaryDB(s, companyID, tenantID, "APR");
+            }
 			map.put("v_DocID", s);
 			//기존 임시저장문서 지우기
 			ezApprovalGDAO.aprDeleteDocInfo(map);
@@ -2803,6 +2815,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			ezApprovalGDAO.aprDeleteDocInfo7(map);
 			ezApprovalGDAO.aprDeleteDocInfo8(map);
 			ezApprovalGDAO.aprDeleteDocInfo9(map);
+            deleteSummaryFile(s, companyID, tenantID);
 
 			// 원문정보공개 데이터의 경우, 따로 임시저장용 테이블이 존재하지 않기 때문에 해당 값을 지우면 임시저장 반복 시 해당 데이터에 접근하지 못하게 된다. 따라서 기존 원문정보공개 정보는 지우지 않도록 한다.
 			// 또한 2022-01-26 현재 기준으로 임시저장 시 기존 문서는 지우지 않고 유지하는 것이 스펙이므로, 필요하지 않은 동작이다.
@@ -2830,6 +2843,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         ezApprovalGDAO.aprMakeTmp2Ing7(map);
         // 문서 정보
         ezApprovalGDAO.aprMakeTmp2Ing8(map);
+        // 요약전 정보
+        if (summary != null && Strings.isNotBlank(summary.getSummary())) {
+            copySummary(summary, docID, "APR");
+        }
 
         try {
             if(!updateFlag.equals("Y")) {
@@ -3835,6 +3852,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			ezApprovalGDAO.aprDeleteDocInfo7(map);
 			ezApprovalGDAO.aprDeleteDocInfo8(map);
 			ezApprovalGDAO.aprDeleteDocInfo9(map);
+            deleteSummaryFile(docID, companyID, tenantID);
 			
 			gongramDocID = gongRamDocInfo(docID, companyID, tenantID);
 			
@@ -11411,6 +11429,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			ezApprovalGDAO.aprDeleteDocInfo7(map);
 			ezApprovalGDAO.aprDeleteDocInfo8(map);
 			ezApprovalGDAO.aprDeleteDocInfo9(map);
+            deleteSummaryFile(s, companyID, tenantID);
 		}
 		
 		ezApprovalGDAO.deleteTmpDocInfo(map);
@@ -14428,6 +14447,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         String sep = commonUtil.separator;
         List<ApprGAttachInfoVO> listAprAttach = getListAprAttach(oldDocID, "APR", commonUtil.getMultiData(lang, tenantID), strLangFile, strLangDocument, "", companyID, tenantID);
         String docYear = getDocHrefYear(docID, companyID, tenantID);
+        ApprGSummaryVO summary = getSummaryDB(oldDocID, companyID, tenantID, "APR");
 
         // 2024-11-05 박기범 : 일괄기안시는 첨부파일을 미리 저장하여 임시저장시 중복되는 파일명이 생김. 
         // 다른 프로세스의 경우도 첨부파일을 먼저 저장하는 경우가 있을수 있으므로, 임시 첨부 저장을 별도 폴더로 분류 && 중복될시 파일명 UUID로 처리함.
@@ -14555,6 +14575,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                 }
             }
 		}
+        if (Strings.isNotBlank(summary.getSummary())) {
+            copySummary(summary, docID, "APR");
+        }
 		
 		logger.debug("makeTmpDocInfo ended.");
 		
@@ -18020,7 +18043,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				String targetPath = dirPath + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + getDocDir(docID) + commonUtil.separator + docID + "." + extFileName;
 				
 				rtnVal = copyFile(source, targetPath, dirPath + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + getDocDir(docID));
-				// 파일 복사에 성공하면 완료문서 관련 테이블에 데이터 입력.
+				ApprGSummaryVO summary = getSummaryDB(docID, companyID, tenantID, "APR");
+                
+                // 파일 복사에 성공하면 완료문서 관련 테이블에 데이터 입력.
 				if (rtnVal) {
                     File file = new File(commonUtil.detectPathTraversal(targetPath));
                     String fileSize = "";
@@ -20333,6 +20358,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 		}
 		
+        /*
 		if (docXML.getElementsByTagName("SUMMARY").item(0) != null) {
 			tempValue = docXML.getElementsByTagName("SUMMARY").item(0).getTextContent();
 			
@@ -20347,6 +20373,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				}
 			}
 		}
+		*/
 		
 		if (docXML.getElementsByTagName("SECURITYAPPROVAL").item(0) != null) {
 			tempValue = docXML.getElementsByTagName("SECURITYAPPROVAL").item(0).getTextContent().trim();
@@ -31040,6 +31067,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					ezApprovalGDAO.aprDeleteDocInfo7(map);
 					ezApprovalGDAO.aprDeleteDocInfo8(map);
 					ezApprovalGDAO.aprDeleteDocInfo9(map);
+                    deleteSummaryFile(docID, companyID, tenantID);
 				}
 				
 			} else {
@@ -33466,6 +33494,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		            ezApprovalGDAO.aprDeleteDocInfo7(map);
 		            ezApprovalGDAO.aprDeleteDocInfo8(map);
 		            ezApprovalGDAO.aprDeleteDocInfo9(map);
+                    deleteSummaryFile(duplRebebuDocID, companyID, tenantId);
 		        }
 		    }
 		}
@@ -37072,6 +37101,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                     ezApprovalGDAO.aprDeleteDocInfo7(map);
                     ezApprovalGDAO.aprDeleteDocInfo8(map);
                     ezApprovalGDAO.aprDeleteDocInfo9(map);
+                    deleteSummaryFile(docID, companyID, tenantId);
                 } else {
                     ezApprovalGDAO.deleteGongRamSaveExpAprLine(map);
                     ezApprovalGDAO.deleteGongRamSaveAprLineInfo(map);
@@ -39152,4 +39182,112 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		logger.debug("gongramDocDelete ended");
 		return "TRUE";
 	}
+
+    @Override
+    public ApprGSummaryVO getSummaryDB(String docID, String companyID, int tenantID, String mode) throws Exception {
+        logger.debug("getSummaryDB started");
+        
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("docID", docID);
+        map.put("tenantID", tenantID);
+        map.put("companyID", companyID);
+        map.put("mode", mode);
+        
+        logger.debug("getSummaryDB ended");
+        return ezApprovalGDAO.getSummary(map);
+    }
+
+    @Override
+    public String getSummaryFileContent(ApprGSummaryVO summary) throws Exception {
+        logger.debug("getSummaryFileContent started");
+        
+        SummaryPath path = new SummaryPath(summary.getDocID(), summary.getCompanyID(), summary.getTenantID());
+        byte[] fileBytes = loadFile(path.getFileFullPath());
+        
+        logger.debug("getSummaryFileContent ended");
+        return new String(fileBytes, "UTF-8");
+    }
+    
+    @Override
+    public void saveSummaryDB(ApprGSummaryVO summary, String mode) throws Exception {
+        logger.debug("saveSummaryDB started");
+        
+        summary.setMode(mode);
+        ezApprovalGDAO.saveSummary(summary);
+        
+        logger.debug("saveSummaryDB ended");
+    }
+
+    @Override
+    public String saveSummaryFileContent(ApprGSummaryVO summary, String summaryMhtStr, String mode) throws Exception {
+       logger.debug("saveSummaryFileContent started");
+       
+        String status = "";
+        SummaryPath path = new SummaryPath(summary.getDocID(), summary.getCompanyID(), summary.getTenantID());
+        
+        // 파일 저장
+        Files.createDirectories(Paths.get(path.getDirFullPath()));
+        Files.write(Paths.get(path.getFileFullPath()), summaryMhtStr.getBytes("UTF-8"), StandardOpenOption.CREATE);
+        
+        logger.debug("saveSummaryFileContent ended");
+        return path.getFilePath();
+    }
+    
+    @Override
+    public void deleteSummaryFile(String docID, String companyID, int tenantID) throws Exception {
+        logger.debug("deleteSummaryFile started");
+        
+        SummaryPath path = new SummaryPath(docID, companyID, tenantID);
+        
+        File summaryFile = new File(path.getFileFullPath());
+        if (summaryFile.exists()) {
+            summaryFile.delete();
+        }
+        
+        logger.debug("deleteSummaryFile ended");
+    }
+    
+    @Override
+    public String copySummary(ApprGSummaryVO summary, String newDocID, String mode) throws Exception {
+        logger.debug("copySummary started");
+        
+        try {
+            ApprGSummaryVO newSummary = new ApprGSummaryVO(newDocID, summary.getCompanyID(), summary.getTenantID(), summary.getSummary(), summary.getSummaryPath());
+            String summaryContentMht = getSummaryFileContent(summary);
+            
+            // 복사 이전/이후 문서번호가 다를 경우 문서파일 복사 작업 수행
+            if (!summary.getDocID().equals(newSummary.getDocID())) {
+                String dirPath = saveSummaryFileContent(newSummary, summaryContentMht, mode);
+                newSummary.setSummaryPath(dirPath);
+            }
+            
+            saveSummaryDB(newSummary, mode);
+            
+            logger.debug("copySummary ended");
+            return "success";
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            logger.debug("copySummary error");
+            return "error";
+        }
+    }
+    
+    private class SummaryPath {
+        private final String fileName;
+        private final String dirPath;
+        private final String realPath;
+        
+        SummaryPath(String docID, String companyID, int tenantID) throws Exception {
+            String pRealPath = commonUtil.getRealPath(servletContext);
+            String pDirPath = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + companyID + commonUtil.separator + "uploadSummary" + commonUtil.separator;
+            this.fileName = commonUtil.detectPathTraversal(docID + ".mht");
+            this.dirPath = commonUtil.detectPathTraversal(pDirPath);
+            this.realPath = commonUtil.detectPathTraversal(pRealPath);
+        }
+        
+        private String getDirPath() { return dirPath; }
+        private String getDirFullPath() { return realPath + dirPath; }
+        private String getFilePath() { return dirPath + fileName; };
+        private String getFileFullPath() { return realPath + dirPath + fileName; }
+    }
 }

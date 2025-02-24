@@ -62,6 +62,7 @@
 		            rvalue[1] = "N";
 		
 		        rvalue[2] = "Y";
+		        rvalue[3] = "Y";
 		
 		        if (ReturnFunction != null) {
 		            ReturnFunction(rvalue);
@@ -93,8 +94,13 @@
 		            rvalue[2] = "Y";
 		        else
 		            rvalue[2] = "N";
+		            
+                if (summary.checked == true)
+		            rvalue[3] = "Y";
+		        else
+		            rvalue[3] = "N";
 		
-		        if (opi.checked != true && att.checked != true && line.checked != true) {
+		        if (opi.checked != true && att.checked != true && line.checked != true && summary.checked != true) {
 		            if (CrossYN()) {
 		                OpenInformationUI(strLang1001);
 		                return;
@@ -233,6 +239,8 @@
 			<td><span id="ext2"><spring:message code='ezApprovalG.t10021'/></span></td> </tr>
 			<tr><th ><input id='line' name='line' type='checkbox'></th>
 			<td><span id="ext3"><spring:message code='ezApprovalG.t10022'/></span></td> </tr>
+            <tr><th ><input id='summary' name='summary' type='checkbox'></th>
+			<td><span id="ext3"><spring:message code='ezApprovalG.summary01'/></span></td> </tr>
 		</table>
 		<div class="btnposition btnpositionNew">
 		    <a id="Submit1" class="imgbtn" onClick="return all_click()"><span><spring:message code='ezApprovalG.t10023'/></span></a>

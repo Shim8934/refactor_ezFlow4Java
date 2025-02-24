@@ -4175,3 +4175,8 @@ a.commentFileSpan:hover {cursor: pointer; text-decoration: underline;}
 .tag_list{float:left; height:26px; line-height:26px; padding:0 5px; border-radius:4px; max-width:200px; background:#e8eef2; box-sizing:border-box; margin:5px 5px 0 0;}
 .tag_list .tag_name{float:none; display:block; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
 .tag_list .tag_del{float:right; width:16px; height:16px; background:url(../images/tag_del.svg) no-repeat center; margin:5px 0 0 5px; cursor:pointer;}
+
+/* 2025-02-24 전인하 - 요약전 */
+.summaryPrintBtn {width:32px!important; border:1px solid #CECECE; border-radius:3px; color:#333; margin-right:5px;}
+.summaryPrintTtl {height:30px; margin-top:10px}
+.summaryPrintContent {border:1px solid #333; padding:0px 10px;}

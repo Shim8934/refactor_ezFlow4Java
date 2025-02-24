@@ -25,6 +25,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Circulation.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/nonElecRec.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Circulation.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/apprGSummary.js')}"></script>
 	    <script type="text/javascript">
 	        var OrgAprUserID = "<c:out value ='${orgAprUserID}'/>";
 	        var OrgAprUserName = "<c:out value ='${orgAprUserName}'/>";
@@ -2221,6 +2222,7 @@
 	                            <li id="btnSetTaskCode"><span onclick="btnSetTaskCode_onclick()"><spring:message code='ezApprovalG.t9994'/></span></li>
 	                        </span>
 	                        <li id="btntotaldocinfo"><span onclick="return btnApprovalInfo()"><spring:message code='ezApprovalG.t1742'/></span></li>
+	                        <li id="btnSummary"><span onclick="return btnSummaryEdit()"><spring:message code='ezApprovalG.t1203'/></span></li> <%-- 요약전 --%>
 	                        <li id="btnJunKyul" style="display: none"><span onclick="return btnJunKyul_onclick()"><spring:message code='ezApprovalG.t25'/></span></li>
 	                        <span style="display: none">
 	                            <li id="btnModAprLine"><span onclick="return btnModAprLine_onclick()"><spring:message code='ezApprovalG.t52'/></span></li>
