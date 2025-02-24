@@ -59,7 +59,24 @@
 	    	#lvinfofrequencylist{
 	    		border: 1px solid #ddd !important;
 	    	}
-	    </style>
+
+			<c:if test="${userInfo.lang == '3'}">
+				.popuplist tr td {
+					display: flex;
+					align-items: center; 
+				}
+	r
+				.popuplist input {
+					vertical-align: middle; 
+				}
+	
+				.popuplist span {
+					vertical-align: middle;
+					line-height: 21px;
+				}
+			</c:if>
+
+		</style>
 	    <script type="text/javascript">
 	    	var approvalFlag = "<c:out value ='${approvalFlag}'/>";
 	        var OrderCell = "";
