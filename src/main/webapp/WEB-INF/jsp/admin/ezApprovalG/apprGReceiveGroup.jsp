@@ -332,7 +332,7 @@
 		            return;
 		        }
 
-		        var pAlertContent = "<spring:message code='ezApprovalG.t1361'/>";
+		        var pAlertContent = "<br>" + "<spring:message code='ezApprovalG.t1361'/>" + "<br>";
 		        var Ans = OpenInformationUI(pAlertContent);
 		    }
 		    
