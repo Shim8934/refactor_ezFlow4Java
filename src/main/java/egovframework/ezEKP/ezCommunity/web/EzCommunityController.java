@@ -5439,6 +5439,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 			beforeSearchType.clear();
 			beforeKeyword.clear();
 			
+			beforeSearchType.add(searchType);
+			beforeKeyword.add(searchWord);
+			
 			HashMap<String, String> searchMap = new HashMap<>();
 			searchMap.put("searchType", searchType);
 			searchMap.put("searchWord", searchWord);
