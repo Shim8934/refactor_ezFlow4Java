@@ -1450,11 +1450,11 @@
                 </tr>
                 <c:if test="${useEditor == 'WebHWP' && formID eq null}">
                 <tr>
-                    <th style="width:100px; text-align:center">한글파일</th>
+                    <th style="width:100px; text-align:center"><spring:message code = 'ezApprovalG.KMH10' /></th>
                     <td style="width:40%;" colspan="7">
                     	<input type="text" readonly="" id="tbFilename" name="tbFilename" style="width: 350px;">
                     	<a class="imgbtn imgbck" style="margin-top:1px;">
-        					<span onclick="btnfileup()">본문첨부</span>
+        					<span onclick="btnfileup()"><spring:message code = 'ezApprovalG.nonElecAt03' /></span>
         				</a>
                     </td>
                 </tr>
