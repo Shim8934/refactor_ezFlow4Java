@@ -26,6 +26,7 @@
          var g_DeptID   = "${userInfo.deptID}";
          var g_DeptPath   = "${userInfo.deptPathCode}";
          var pCompanyID    = "${userInfo.companyID}";
+         var pLang    = "${userInfo.lang}";
          var g_AccessCode = "${accessCode}"; 
          var g_ServerName = "${serverName}";
          var selectNo = "${selectNo}";
@@ -450,7 +451,11 @@
       function mappingResourcePortlet(id, name, name2){
 		if (boolfirstlist) {
 			var xmlString = "<LISTVIEWDATA><ROWS>";
-			xmlString += "<ROW><CELL><VALUE>" + name + "</VALUE><CN>" + id + "</CN><NAME>" + name2 + "</NAME></CELL></ROW>";
+            if(typeof(pLang) != "undefined" && pLang != "1"){
+                xmlString += "<ROW><CELL><VALUE>" + name2 + "</VALUE><CN>" + id + "</CN><NAME>" + name2 + "</NAME></CELL></ROW>";
+            }else{
+                xmlString += "<ROW><CELL><VALUE>" + name + "</VALUE><CN>" + id + "</CN><NAME>" + name + "</NAME></CELL></ROW>";
+            }
 			xmlString += "</ROWS></LISTVIEWDATA>";
 			var emptyxml = createXmlDom();
 			emptyxml = loadXMLString(xmlString);

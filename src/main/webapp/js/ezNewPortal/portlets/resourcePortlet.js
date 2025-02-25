@@ -103,7 +103,11 @@ function mappingResourcePortlet(vo){
 	else { spanImg.setAttribute("class", "sub_iconLNB tree_resource_no");}
 	spanTxt.setAttribute("class", "resource_list_text");
 	spanTxt.addEventListener('click', function(event) {reserveInfoPopup(vo.brdID)});
-	spanTxt.textContent = vo.brdNm;
+	if(typeof(userLang2) != "undefined" && userLang2 != "1"){
+		spanTxt.textContent = vo.brdNm2;
+	}else{
+		spanTxt.textContent = vo.brdNm;
+	}
 	if(cnt==1) { // 예약이 없을 경우 
 		p = makeEmptyList(vo.brdID);
 		dd.appendChild(p);
