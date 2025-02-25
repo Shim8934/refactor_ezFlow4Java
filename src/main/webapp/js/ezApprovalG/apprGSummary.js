@@ -7,17 +7,17 @@ function btnSummaryEdit() {
     }
 }
         
-function btnSummaryEdit_Complete(ret) {
-    switch (ret.status) {
+function btnSummaryEdit_Complete(status) {
+    switch (status) {
         case "success":
-            alert(strLangJIH_Summary02);
+            alert(strLangJIH_Summary01);
             DivPopUpHidden();
             break;
         case "cancel":
             DivPopUpHidden();
             break;
         case "noData":
-            alert(strLangJIH_Summary03);
+            alert(strLangJIH_Summary02);
             break;
         default:
             alert(strLang199);

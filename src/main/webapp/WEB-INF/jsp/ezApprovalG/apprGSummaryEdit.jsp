@@ -67,7 +67,7 @@
                 }
               
 		        $.ajax({
-		    		type : "PUT",
+		    		type : "POST",
 		    		dataType : "json",
 		    		async : false,
 		    		url : "/ezApprovalG/saveApprGSummary.do",

@@ -2803,6 +2803,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
             String s = docList.get(i);
             if (i == 0) {
                 summary = getSummaryDB(s, companyID, tenantID, "APR");
+                // 요약전 정보
+                if (summary != null && Strings.isNotBlank(summary.getSummary())) {
+                    copySummary(summary, docID, "APR");
+                }
             }
 			map.put("v_DocID", s);
 			//기존 임시저장문서 지우기
@@ -2843,10 +2847,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         ezApprovalGDAO.aprMakeTmp2Ing7(map);
         // 문서 정보
         ezApprovalGDAO.aprMakeTmp2Ing8(map);
-        // 요약전 정보
-        if (summary != null && Strings.isNotBlank(summary.getSummary())) {
-            copySummary(summary, docID, "APR");
-        }
 
         try {
             if(!updateFlag.equals("Y")) {
@@ -3852,7 +3852,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			ezApprovalGDAO.aprDeleteDocInfo7(map);
 			ezApprovalGDAO.aprDeleteDocInfo8(map);
 			ezApprovalGDAO.aprDeleteDocInfo9(map);
-            deleteSummaryFile(docID, companyID, tenantID);
 			
 			gongramDocID = gongRamDocInfo(docID, companyID, tenantID);
 			
@@ -33483,6 +33482,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		        
 		        for (int i = 1, ilen = duplRebebuDoc.size(); i < ilen; i++) {
 		            String duplRebebuDocID = duplRebebuDoc.get(i);
+                    if (i == 1) {
+                        ApprGSummaryVO summary = getSummaryDB(duplRebebuDocID, userInfo.getCompanyID(), userInfo.getTenantId(), "APR");
+                        if (summary != null && Strings.isNotBlank(summary.getSummary())) {
+                            copySummary(summary, docID, "APR");
+                        }
+                    }
 		            
 		            map.put("v_DUPLDOCID", duplRebebuDocID);
 		            ezApprovalGDAO.insertMoveRebebuOpinion(map);

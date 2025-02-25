@@ -13985,7 +13985,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return "ezApprovalG/apprGSummaryView";
 	}
 	
-	@RequestMapping(value = "/ezApprovalG/saveApprGSummary.do", method = RequestMethod.PUT)
+	@RequestMapping(value = "/ezApprovalG/saveApprGSummary.do", method = RequestMethod.POST)
 	public String saveApprGSummary(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("saveApprGSummary started");
 		
