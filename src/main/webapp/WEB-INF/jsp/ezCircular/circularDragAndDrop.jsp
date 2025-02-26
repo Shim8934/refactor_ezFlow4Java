@@ -205,6 +205,13 @@
 		        var pBoardID = window.parent.pBoardID;
 		        var strRet = "";
 		        var fileList = "";
+		        var checkedFileCnt = $("input[name='fileSelect']:checked").length;
+		        
+		        if (checkedFileCnt <= 0) {
+					alert("<spring:message code='ezJournal.t163'/>");
+		        	return;
+		        }
+		        
 
 				//2018-07-06 김보미 - 파일부분 수정
 // 		        for (var i = 1; i < filecnt; i++) {
