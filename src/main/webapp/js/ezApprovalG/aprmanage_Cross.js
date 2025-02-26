@@ -2497,6 +2497,8 @@ function setbuttonenable() {
         document.getElementById("tbtnDraft").style.display = "none";
         document.getElementById("tbtnRedraft").style.display = "none";
         document.getElementById("tbtnReceipt").style.display = "none";
+        document.getElementById("tbtnJiJungAll").style.display = "none";
+        document.getElementById("tbtnBebuAll").style.display = "none";
     } else if (assignChk == "Y" && (pListTypeValue == "2" || pListTypeValue == "3")) {
         document.getElementById("tbtnDraft").style.display = "";
     }
