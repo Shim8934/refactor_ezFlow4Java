@@ -1091,7 +1091,7 @@
 		    var boarditemview_cross_print_option_dialogArguments = new Array();
 		    var url = window.location.href;
 		    function btn_Print_Onclick() {
-				var url = "/ezBoard/boardItemViewPrintOption.do?boardID=" + pBoardID + "&itemID=" + pItemID;
+				var url = "/ezBoard/boardItemViewPrintOption.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID);
 				if (CrossYN()) {
 		            //url = window.location.href;
 		            //url = url.replace(".do", "PrintOption.do");
