@@ -7,10 +7,12 @@ function btnSummaryEdit() {
     }
 }
         
-function btnSummaryEdit_Complete(status) {
-    switch (status) {
+function btnSummaryEdit_Complete(rtn) {
+    switch (rtn.status) {
         case "success":
             alert(strLangJIH_Summary01);
+            pSummery = rtn.summary;
+            pSummaryPath = rtn.summaryPath;
             DivPopUpHidden();
             break;
         case "cancel":

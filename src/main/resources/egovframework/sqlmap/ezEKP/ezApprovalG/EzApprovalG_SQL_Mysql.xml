@@ -16747,7 +16747,7 @@
 	<insert id="EzApprovalG.aprMakeTmp2Ing7" parameterClass="Map">
 		INSERT INTO 
 			TBL_EXPAPRDOCINFO
-     	( DocID, SECURITYCODE, STORAGEPERIOD, KEYWORD, FORMNAME, COMPANYID, ITEMCODE, ITEMNAME, URGENTAPPROVAL, SECURITYAPPROVAL, TEMPATTRIBUTE, STATUS, SPECIALRECORDCODE, PUBLICITYCODE, LIMITRANGE, PAGENUM, CABINETID, TASKCODE, DOCNUMCODE, ORGDOCNUMCODE, SEPERATEATTACHXML, SUMMARY, FormName2, ItemName2, TENANT_ID, PUBLICITYYN, FORMVERSION)
+     	( DocID, SECURITYCODE, STORAGEPERIOD, KEYWORD, FORMNAME, COMPANYID, ITEMCODE, ITEMNAME, URGENTAPPROVAL, SECURITYAPPROVAL, TEMPATTRIBUTE, STATUS, SPECIALRECORDCODE, PUBLICITYCODE, LIMITRANGE, PAGENUM, CABINETID, TASKCODE, DOCNUMCODE, ORGDOCNUMCODE, SEPERATEATTACHXML, SUMMARY, SUMMARYPATH, FormName2, ItemName2, TENANT_ID, PUBLICITYYN, FORMVERSION)
      	( SELECT 
      		  #v_PDOCID# ,
               SECURITYCODE ,
@@ -16771,6 +16771,7 @@
               ORGDOCNUMCODE ,
               SEPERATEATTACHXML ,
               SUMMARY ,
+              SUMMARYPATH,
               FormName2 ,
               ItemName2 ,
 	          TENANT_ID ,
@@ -22889,17 +22890,17 @@
 			, SeperateAttachXML = #v_SEPERATEATTACHXML#
 		</isNotEqual>
 		</isNotEmpty>
-		
-       <!--
+       
 		<isNotEmpty property="v_SUMMARY">
 		<isEqual property="v_FIRSTFLAG17" compareValue="true">
 			 Summary = #v_SUMMARY#
+             , SummaryPath = #v_SUMMARYPATH#
 		</isEqual>
 		<isNotEqual property="v_FIRSTFLAG17" compareValue="true">
 			, Summary = #v_SUMMARY#
+            , SummaryPath = #v_SUMMARYPATH#
 		</isNotEqual>
 		</isNotEmpty>
-		-->
 		
 		<isNotEmpty property="v_SECURITYAPPROVAL">
 		<isEqual property="v_FIRSTFLAG18" compareValue="true">
@@ -23732,7 +23733,12 @@
    
    <insert id="EzApprovalG.insertTmpExpAprDocInfo" parameterClass="Map">  
    		INSERT INTO 
-   			TBL_TMPEXPAPRDOCINFO
+   			TBL_TMPEXPAPRDOCINFO (
+            OWNERID, SN, SECURITYCODE, STORAGEPERIOD, KEYWORD, FORMNAME, COMPANYID, ITEMCODE, ITEMNAME, 
+			URGENTAPPROVAL, SECURITYAPPROVAL, TEMPATTRIBUTE, STATUS, SPECIALRECORDCODE, PUBLICITYCODE, LIMITRANGE, 
+			PAGENUM, CABINETID, TASKCODE, DOCNUMCODE, ORGDOCNUMCODE, SEPERATEATTACHXML, SUMMARY, 
+			FormName2, ItemName2, TENANT_ID, PUBLICITYYN, FORMVERSION, SUMMARYPATH
+        )
 		( SELECT 
 			#v_USERID#, 
 			#v_SN#, 
@@ -23761,7 +23767,8 @@
 			ItemName2 , 
 			TENANT_ID ,
 			PUBLICITYYN,
-			FORMVERSION
+			FORMVERSION,
+            SUMMARYPATH
 		  FROM 
 		  	TBL_EXPAPRDOCINFO A
 		  WHERE  
@@ -25334,12 +25341,13 @@
     	<isNotEmpty property="v_SeperateAttachXML">
     		, SeperateAttachXML = #v_SeperateAttachXML#
     	</isNotEmpty>
-    	
-        <!--
+        
     	<isNotEmpty property="v_Summary">
     		, Summary = #v_Summary#
     	</isNotEmpty>
-    	-->
+        <isNotEmpty property="v_SummaryPath">
+    		, SummaryPath = #v_SummaryPath#
+    	</isNotEmpty>
     	
     	<isNotEmpty property="v_SecurityApproval">
     		, SecurityApproval = #v_SecurityApproval#

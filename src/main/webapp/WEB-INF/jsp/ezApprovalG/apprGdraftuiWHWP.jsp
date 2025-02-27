@@ -124,6 +124,7 @@
 	        var CurAprType = "";
 	        var NextAprType = "";
 		    var pSummery = "", pSpecialRecordCode = "", pPublicityCode = "", pPublicityYN = "";
+		    var pSummaryPath = "";
 	        var pLimitRange = "", pPageNum = "1";
 	        var cabinetID = "";
 	        var TaskCode = "";

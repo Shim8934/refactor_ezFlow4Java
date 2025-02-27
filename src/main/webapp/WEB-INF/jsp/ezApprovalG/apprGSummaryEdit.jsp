@@ -15,7 +15,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript">
             var returnFunction;
-            var returnValue;
+            var returnValue = new Object();
             var mode = "<c:out value='${mode}'/>"// new/edit
             var docID = "<c:out value='${summary.docID}'/>";
             var summaryPath = "<c:out value='${summary.summaryPath}'/>"; // 요약전 mht 파일 경로
@@ -43,7 +43,7 @@
 			}
             
             function btn_SummaryCancel_onclick() {
-                returnValue = "cancel";
+                returnValue.status = "cancel";
                 returnFunction(returnValue);
             }
             
@@ -51,7 +51,9 @@
                 var status = saveSummaryFile();
                 
                 console.log("status: " + status);
-                returnValue = status;
+                returnValue.status = status;
+                returnValue.summary = summaryContent;
+                returnValue.summaryPath = summaryPath;
                 returnFunction(returnValue);
             }
             
@@ -79,6 +81,7 @@
 		    		success: function(result) {
 		    			if (result.status === "success" && !!result.path) {
 		    			    ret = "success";
+		    			    summaryPath = result.path;
 		    			} else {
 		    			    console.log("saveSummaryFile no result.path error");
 		    			    ret = "error";

@@ -2801,12 +2801,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		ArrayList<String> docList = ezApprovalGDAO.getTmpDocList(map);
 		for (int i=0; i<docList.size(); i++) {
             String s = docList.get(i);
-            if (i == 0) {
-                summary = getSummaryDB(s, companyID, tenantID, "APR");
-                // 요약전 정보
-                if (summary != null && Strings.isNotBlank(summary.getSummary())) {
-                    copySummary(summary, docID, "APR");
-                }
+            summary = getSummaryDB(s, companyID, tenantID, "APR");
+            // 요약전 정보
+            if (summary != null && Strings.isNotBlank(summary.getSummary())) {
+                copySummary(summary, docID, "APR");
             }
 			map.put("v_DocID", s);
 			//기존 임시저장문서 지우기
@@ -2819,7 +2817,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			ezApprovalGDAO.aprDeleteDocInfo7(map);
 			ezApprovalGDAO.aprDeleteDocInfo8(map);
 			ezApprovalGDAO.aprDeleteDocInfo9(map);
-            deleteSummaryFile(s, companyID, tenantID);
 
 			// 원문정보공개 데이터의 경우, 따로 임시저장용 테이블이 존재하지 않기 때문에 해당 값을 지우면 임시저장 반복 시 해당 데이터에 접근하지 못하게 된다. 따라서 기존 원문정보공개 정보는 지우지 않도록 한다.
 			// 또한 2022-01-26 현재 기준으로 임시저장 시 기존 문서는 지우지 않고 유지하는 것이 스펙이므로, 필요하지 않은 동작이다.
@@ -20356,10 +20353,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				}
 			}
 		}
-		
-        /*
+        
 		if (docXML.getElementsByTagName("SUMMARY").item(0) != null) {
 			tempValue = docXML.getElementsByTagName("SUMMARY").item(0).getTextContent();
+            String summaryPathVal = docXML.getElementsByTagName("SUMMARYPATH").item(0).getTextContent();
 			
 			if (!tempValue.trim().equals("")) {
 				if (firstFlag) {
@@ -20371,8 +20368,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					map.put("v_FIRSTFLAG17", firstFlag);
 				}
 			}
+            if (Strings.isNotBlank(summaryPathVal)) {
+                map.put("v_SUMMARYPATH", summaryPathVal);
+            }
 		}
-		*/
 		
 		if (docXML.getElementsByTagName("SECURITYAPPROVAL").item(0) != null) {
 			tempValue = docXML.getElementsByTagName("SECURITYAPPROVAL").item(0).getTextContent().trim();
