@@ -1076,7 +1076,6 @@
 		        if (document.getElementById('message').contentWindow.document.getElementById('attitude_annual_conn')) {
 		        	document.getElementById('message').contentWindow.document.getElementById('iframe_content').contentWindow.attitude_annual_conn("annual", "0");
 		        }
-		        
 		        window.close();
 		    }
 	
@@ -2001,10 +2000,38 @@
 						});
 						return;
 					}
+					
+					if (pDraftFlag == "DRAFT") {
+                        var connUrl = new URL(window.location.href);
+                        var connParams = new URLSearchParams(connUrl.search);
+                        
+                        var connAttachCheck = connParams.get("connAttachCheck");
+                        var messageStr = "";
+                    
+                        if (connAttachCheck != null && connAttachCheck != "") {
+                            if (connAttachCheck != "TRUE") {
+                                if (connAttachCheck == "ZERO_SIZE") {
+                                    messageStr = "<spring:message code='ezApprovalG.connAttach01'/>";
+                                } else if (connAttachCheck == "EXT_ERROR") {
+                                    messageStr = "<spring:message code='ezApprovalG.connAttach02'/>";
+                                } else if (connAttachCheck == "OVER_CNT") {
+                                    messageStr = "<spring:message code='ezApprovalG.connAttach03'/>";
+                                } else if (connAttachCheck == "OVER_SIZE") {
+                                    messageStr = "<spring:message code='ezApprovalG.connAttach04'/>";
+                                } else {
+                                    messageStr = "<spring:message code='ezApprovalG.connAttach05'/>";
+                                }
+                                
+                                messageStr += "<spring:message code='ezApprovalG.connAttach06'/>";
+                                OpenAlertUI(messageStr, window.close);
+                            }
+                        }
+                    }
 
 					document.querySelector("#btnSaveServer").style.display = "none";
 
 					setConnDefaultKey(pDraftFlag);
+					if (pDraftFlag == "DRAFT") insertInitConnAttach();
 
 					if (ConnExist(["conn;processidx;INIT", "conn;processtime;DRAFT", "query;qtype;UA"]) || ConnExist(["conn;processidx;INIT", "conn;processtime;DRAFT", "query;qtype;UA_EX"])) {
 						document.querySelector("#btnConn").style.display = "";

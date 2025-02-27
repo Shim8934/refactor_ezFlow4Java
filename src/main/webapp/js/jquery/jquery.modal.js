@@ -143,7 +143,11 @@
         $(document).off('keydown.modal');
         
         if (parent.frames["right"]) {        	
-        	parent.frames["right"].document.body.style.overflow = "hidden";
+            if (parent.frames["right"].location.href.includes("connTestManage")) {
+        	    parent.frames["right"].document.body.style.overflow = "";
+            } else {
+        	    parent.frames["right"].document.body.style.overflow = "hidden";
+            }
         }
       }
     },

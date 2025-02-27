@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.w3c.dom.Document;
@@ -28,10 +29,14 @@ import org.w3c.dom.Document;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
@@ -114,11 +119,11 @@ public class EzApprovalGConnController {
         logger.debug("### uiFlag = " + uiFlag);
         String redirectUrl;
         if ("draft".equals(uiFlag)) {
-            redirectUrl = getDraftUrl(connData, userInfo);
+            redirectUrl = ezApprovalGConnService.getDraftUrl(connData, userInfo);
         } else if ("apr".equals(uiFlag)) {
-            redirectUrl = getAprUrl(connData, userInfo);
+            redirectUrl = ezApprovalGConnService.getAprUrl(connData, userInfo);
         } else if ("end".equals(uiFlag)) {
-            redirectUrl = getEndUrl(connData, userInfo);
+            redirectUrl = ezApprovalGConnService.getEndUrl(connData, userInfo);
         } else {
             return "cmm/error/accessBlock";
         }
@@ -198,147 +203,8 @@ public class EzApprovalGConnController {
         return retStr;
     }
 
-    private String getDraftUrl(Map<String, Object> connData, LoginVO userInfo) throws Exception {
-        String keyId = (String) connData.get("KEYID");
-        String formCode = (String) connData.get("FORMCODE");
-        
-        String formInfoStr = ezApprovalGService.getFormInfoDetail(formCode, userInfo.getCompanyID(), userInfo.getTenantId());
-        Document formInfo = commonUtil.convertStringToDocument(formInfoStr);
-
-        String formUrl = formInfo.getElementsByTagName("FORMFILELOCATION").item(0).getTextContent().trim();
-        String formDocType = formInfo.getElementsByTagName("FORMDOCTYPE").item(0).getTextContent().trim();
-
-        String path = "";
-        MultiValueMap queryParam = new LinkedMultiValueMap();
-        if (formUrl.endsWith(".mht")) {
-            path = "/ezApprovalG/draftui.do";
-            queryParam.set("formURL", formUrl);
-            queryParam.set("draftFlag", "DRAFT");
-            queryParam.set("formDocType", formDocType);
-            queryParam.set("susinSN", "0");
-            queryParam.set("docState", "");
-            queryParam.set("listType", "1");
-            queryParam.set("aprState", "");
-            queryParam.set("isTmpDoc", "");
-            queryParam.set("officeFlag", "N");
-            queryParam.set("connKey", keyId);
-            queryParam.set("connFormCode", formCode);
-        } else if (formUrl.endsWith(".hwp")) {
-            path = "/ezApprovalG/draftuiWHWP.do";
-            queryParam.set("formURL", formUrl);
-            queryParam.set("draftFlag", "DRAFT");
-            queryParam.set("formDocType", formDocType);
-            queryParam.set("susinSN", "0");
-            queryParam.set("docState", "");
-            queryParam.set("listType", "1");
-            queryParam.set("aprState", "");
-            queryParam.set("isTmpDoc", "");
-            queryParam.set("connKey", keyId);
-            queryParam.set("connFormCode", formCode);
-        } else {
-            throw new Exception();
-        }
-
-        return makeUrl(path, queryParam);
-    }
-
-    private String getAprUrl(Map<String, Object> connData, LoginVO userInfo) throws Exception {
-        String docId = (String) connData.get("DOCID");
-
-        String docInfoStr = ezApprovalGService.getDocInfo(docId, "APR", "ALL", userInfo, userInfo.getCompanyID(), userInfo.getTenantId(), "", "");
-        Document docInfo = commonUtil.convertStringToDocument(docInfoStr);
-
-        String docHref = docInfo.getElementsByTagName("HREF").item(0).getTextContent().trim();
-        String opinionFlag = docInfo.getElementsByTagName("HASOPINIONYN").item(0).getTextContent().trim();
-        String docState = docInfo.getElementsByTagName("DOCSTATE").item(0).getTextContent().trim();
-
-        String path = "";
-        MultiValueMap queryParam = new LinkedMultiValueMap();
-        if (docHref.endsWith(".mht")) {
-            path = "/ezApprovalG/aprDocView.do";
-            queryParam.set("docID", docId);
-            queryParam.set("docHref", docHref);
-            queryParam.set("opinionFlag", opinionFlag);
-            queryParam.set("docState", docState);
-            queryParam.set("listSusin", "");
-            queryParam.set("oDoc", "");
-            queryParam.set("isOpinion", "OPINION_SHOW");
-            queryParam.set("listType", "1");
-            queryParam.set("CallBackType", "");
-            queryParam.set("ext", docHref.substring(docHref.lastIndexOf(".") + 1));
-            queryParam.set("orgCompanyID", userInfo.getCompanyID());
-        } else if (docHref.endsWith(".hwp")) {
-            path = "/ezApprovalG/ezviewAprWHWP.do";
-            queryParam.set("docID", docId);
-            queryParam.set("docHref", docHref);
-            queryParam.set("opinionFlag", opinionFlag);
-            queryParam.set("docState", docState);
-            queryParam.set("listSusin", "");
-            queryParam.set("oDoc", "");
-            queryParam.set("isOpinion", "OPINION_SHOW");
-            queryParam.set("listType", "1");
-            queryParam.set("CallBackType", "");
-            queryParam.set("ext", docHref.substring(docHref.lastIndexOf(".") + 1));
-            queryParam.set("orgCompanyID", userInfo.getCompanyID());
-        } else {
-            throw new Exception();
-        }
-
-        return makeUrl(path, queryParam);
-    }
-
-    private String getEndUrl(Map<String, Object> connData, LoginVO userInfo) throws Exception {
-        String docId = (String) connData.get("DOCID");
-        String formCode = (String) connData.get("FORMCODE");
-
-        String docInfoStr = ezApprovalGService.getDocInfo(docId, "END", "ALL", userInfo, userInfo.getCompanyID(), userInfo.getTenantId(), "", "");
-        Document docInfo = commonUtil.convertStringToDocument(docInfoStr);
-
-        String docHref = docInfo.getElementsByTagName("HREF").item(0).getTextContent().trim();
-        String docState = docInfo.getElementsByTagName("DOCSTATE").item(0).getTextContent().trim();
-        String orgDocId = docInfo.getElementsByTagName("ORGDOCID").item(0).getTextContent().trim();
-
-        String tempDocHref = docHref;
-        if (tempDocHref.endsWith(".ezd")) {
-            tempDocHref = tempDocHref.replace(".ezd", "");
-        }
-
-        String path = "";
-        MultiValueMap queryParam = new LinkedMultiValueMap();
-        if (tempDocHref.endsWith(".mht")) {
-            path = "/ezApprovalG/contDocView.do";
-            queryParam.set("docID", docId);
-            queryParam.set("docHref", docHref);
-            queryParam.set("formID", formCode);
-            queryParam.set("orgDocID", orgDocId);
-            queryParam.set("docState", docState);
-            queryParam.set("orgCompanyID", userInfo.getCompanyID());
-        } else if (tempDocHref.endsWith(".hwp")) {
-            path = "/ezApprovalG/ezViewEnd_WHWP.do";
-            queryParam.set("docID", docId);
-            queryParam.set("docHref", docHref);
-            queryParam.set("formID", formCode);
-            queryParam.set("orgDocID", orgDocId);
-            queryParam.set("docState", docState);
-            queryParam.set("orgCompanyID", userInfo.getCompanyID());
-        } else {
-            throw new Exception();
-        }
-
-        return makeUrl(path, queryParam);
-    }
-
-    private String makeUrl(String path, MultiValueMap queryParam) throws Exception {
-        UriComponents uriComponents = UriComponentsBuilder.newInstance()
-                .path(path)
-                .queryParams(queryParam)
-                .build();
-
-        return uriComponents.toUriString();
-    }
-
     @RequestMapping(value = "/ezConn/insertApprGate.do", method = RequestMethod.POST)
-    public String insertApprGate(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+    public String insertApprGate(HttpServletRequest request, @RequestParam(value = "files", required = false) List<MultipartFile> files, HttpServletResponse response, Model model) throws Exception {
         logger.debug("insertApprGate started");
 
         String serverName = request.getServerName();
@@ -381,14 +247,60 @@ public class EzApprovalGConnController {
         }else if("draft".equals(uiFlag)) {
             connData.put("DOCID", null);
         }
-        
+
+        // 첨부파일 정보 및 파일 데이터 삭제
+        if ("draft".equals(uiFlag))
+            ezApprovalGConnService.deleteConnAttachData(keyId, "1");
+
+        if ("draft".equals(uiFlag) && files != null) {
+            if (!files.isEmpty() && files.get(0).getSize() > 0) {
+                String dirPath = commonUtil.getUploadPath("upload_approvalG.CONNATTACH", tenantId) + commonUtil.separator + keyId;
+
+                File fileDir = new File(commonUtil.getRealPath(request) + dirPath);
+                if (!fileDir.exists()) {
+                    if (!fileDir.mkdirs()) {
+                        throw new IOException("Failed to create directory: " + dirPath);
+                    }
+                }
+
+                // 첨부파일 체크
+                String fileCheckVal = ezApprovalGConnService.checkFileAttach(files, userInfo.getTenantId());
+
+                if ("TRUE".equals(fileCheckVal)) {
+                    for (int i = 0; i < files.size(); i++) {
+                        MultipartFile file = files.get(i);
+                        if (!file.isEmpty()) {
+                            try {
+                                byte[] bytes = file.getBytes();
+
+                                String fileName = file.getOriginalFilename();
+                                String filePath = commonUtil.getRealPath(request) + dirPath + commonUtil.separator + fileName;
+                                long fileSize = file.getSize();
+                                int fileSn = i + 1;
+
+                                File connAttach = new File(filePath);
+                                try (FileOutputStream fos = new FileOutputStream(connAttach)) {
+                                    fos.write(bytes);
+                                }
+                                ezApprovalGConnService.insertConnAttachData(keyId, fileSn, fileName, dirPath + commonUtil.separator + fileName, fileSize, userId);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }
+                logger.debug("insertApprGate keyId: " + keyId + " fileCheck: " + fileCheckVal);
+                connData.put("fileCheck", fileCheckVal);
+            }
+        }
+
         String redirectUrl;
         if ("draft".equals(uiFlag)) {
-            redirectUrl = getDraftUrl(connData, userInfo);
+            redirectUrl = ezApprovalGConnService.getDraftUrl(connData, userInfo);
         } else if ("apr".equals(uiFlag)) {
-            redirectUrl = getAprUrl(connData, userInfo);
+            redirectUrl = ezApprovalGConnService.getAprUrl(connData, userInfo);
         } else if ("end".equals(uiFlag)) {
-            redirectUrl = getEndUrl(connData, userInfo);
+            redirectUrl = ezApprovalGConnService.getEndUrl(connData, userInfo);
         } else {
             return "cmm/error/accessBlock";
         }
@@ -420,5 +332,90 @@ public class EzApprovalGConnController {
         logger.debug("insertApprGate ended");
        
         return "ezApprovalG/conn/connRedirect";
+    }
+
+    @RequestMapping(value = "/ezConn/insertInitConnAttach.do", method = RequestMethod.POST)
+    @ResponseBody
+    public void insertInitConnAttach(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception{
+        logger.debug("insertInitConnAttach started.");
+
+        LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+        
+        String connKey = request.getParameter("connKey");
+        String docID = request.getParameter("docID");
+        
+        List<Map<String, Object>> connnAttachList = ezApprovalGConnService.getConnAttachData(connKey);
+        
+        if (!connnAttachList.isEmpty())
+            ezApprovalGConnService.initConnAttachFileInfo(docID, userInfo, connnAttachList);
+        
+        logger.debug("insertInitConnAttach ended.");
+    }
+
+    @RequestMapping(value = "/ezConn/insertAprAttach.do", method = RequestMethod.POST)
+    @ResponseBody
+    public JSONObject insertAprAttach(HttpServletRequest request, @RequestParam("files") List<MultipartFile> files) throws Exception{
+        logger.debug("insertAprAttach started.");
+
+        JSONObject result = new JSONObject();
+
+        String serverName = request.getServerName();
+        int tenantId = loginService.getTenantId(serverName);
+        
+        String keyId = request.getParameter("keyId");
+        String userId = request.getParameter("userId");
+        
+        if (keyId == null || userId == null) {
+            result.put("code", "error");
+            result.put("message", "PARAM ERROR");
+            
+            return result;
+        }
+
+        try {
+            if (!files.isEmpty() && files.get(0).getSize() > 0) {
+                String dirPath = commonUtil.getUploadPath("upload_approvalG.CONNATTACH", tenantId) + commonUtil.separator + keyId;
+
+                File fileDir = new File(commonUtil.getRealPath(request) + dirPath);
+                if (!fileDir.exists()) {
+                    if (!fileDir.mkdirs()) {
+                        throw new IOException("Failed to create directory: " + dirPath);
+                    }
+                }
+
+                for (int i = 0; i < files.size(); i++) {
+                    MultipartFile file = files.get(i);
+                    if (!file.isEmpty()) {
+                        try {
+                            byte[] bytes = file.getBytes();
+
+                            String fileName = file.getOriginalFilename();
+                            String filePath = commonUtil.getRealPath(request) + dirPath + commonUtil.separator + fileName;
+                            long fileSize = file.getSize();
+                            int fileSn = i + 1;
+
+                            File connAttach = new File(filePath);
+                            try (FileOutputStream fos = new FileOutputStream(connAttach)) {
+                                fos.write(bytes);
+                            }
+                            ezApprovalGConnService.insertConnAttachData(keyId, fileSn, fileName, dirPath + commonUtil.separator + fileName, fileSize, userId);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+
+                        }
+                    }
+                }
+            }
+            result.put("code", "ok");
+            result.put("message", "");
+        } catch (Exception e) {
+            result.put("code", "error");
+            result.put("message", "FILE ERROR");
+            throw new RuntimeException(e);
+        }
+
+        logger.debug("insertAprAttach ended.");
+        
+        return result;
     }
 }

@@ -127,6 +127,10 @@
 					case "autoRegCabinet":
 						url = "/admin/ezApprovalG/registerCabinetSemiAutoManage.do";
 						break;
+					/* 2025-02-28 이가은 - 전자결재 > 결재연동 테스트 메뉴 추가 */
+					case "approvalConn":
+					    url = "/admin/ezApprovalG/connTestManage.do";
+					    break;
 				}
 				
 				window.open(url,"right");
@@ -264,6 +268,8 @@
 				<c:if test="${approvalFlag == 'G' && useRegisterCabinetSemiAuto == 'YES'}">
 					<h2><span style="display:inline-block;width:100%;" onClick="goPage('autoRegCabinet')"><spring:message code='ezApprovalG.HSBAC01'/></span></h2>
 				</c:if>
+				<%-- 2025-02-28 이가은 - 전자결재 > 연동 테스트 메뉴 추가 --%>
+                <h2><span style="display:inline-block;width:100%;" onClick="goPage('approvalConn')"><spring:message code='ezApprovalG.connTest01'/></span></h2>
 			</div>
 		</div>
 	</body>
