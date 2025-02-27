@@ -3168,8 +3168,8 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		String result = ezNewPortalDAO.isUseEzWorkspace(map);
 		
-		if(result != null) {
-			if(result.equalsIgnoreCase("0")) {
+		if (result != null) {
+			if (result.equalsIgnoreCase("0")) {
 				return "NO";
 			}
 			return "YES";
@@ -3178,15 +3178,15 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		String deptPath = ezOrganService.getDeptPath(deptId, tenantId);
 		String[] deptArr = deptPath.split(",");
 		
-		for(int i=deptArr.length; i > 0; i--) {
+		for (int i=deptArr.length; i > 0; i--) {
 			map.put("userId", deptArr[i-1]);
 
 			// 존재하지 않으면 다음 for문 진행
 			// 존재하면 true, false 체크해서 처리.
 			result = ezNewPortalDAO.isUseEzWorkspace(map);
 			
-			if(result != null) {
-				if(result.equalsIgnoreCase("0")) {
+			if (result != null) {
+				if (result.equalsIgnoreCase("0")) {
 					return "NO";
 				}
 				return "YES";

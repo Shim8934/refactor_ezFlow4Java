@@ -3758,6 +3758,7 @@ ORDER BY
 	</iterate>
 </select>
 
+<!-- 2025-02-27 홍승비 - 포탈 > 협업 메뉴 사용 여부 판별 시 URL이 아닌 메뉴코드를 사용하도록 수정 -->
 <select id="ezNewPortal.isUseEzWorkspace" parameterClass="Map" resultClass="String">
 <![CDATA[
 	SELECT 
@@ -3783,7 +3784,7 @@ ORDER BY
 	AND
 		tbl_portal_menu_comp.company_id = #companyId#
 	AND
-		tbl_portal_menu.menu_url like '%ezWorkspace%'
+		tbl_portal_menu.menucode = 'workspace'
 	AND
 		tbl_portal_menu_auth.user_id = #userId#
 ]]>    

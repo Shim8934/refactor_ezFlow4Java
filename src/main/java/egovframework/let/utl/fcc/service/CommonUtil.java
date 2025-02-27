@@ -2622,26 +2622,19 @@ public class CommonUtil {
 				try {
     				if (menuCode.equals("workspace")) {//협업
 						String useEzWorkspace = ezNewPortalService.isUseEzWorkspace(companyId, tenantId, userId, deptId);
-						List<MenuInfoVO> menuFilter = menuList.stream().filter(menuInfo -> menuInfo.getMenuUrl().contains("ezWorkspace"))
-								.collect(Collectors.toList());
 						
-						if (useEzWorkspace.equals("NO")) {
-							menuAccess = false;
-						} else {
-							if (menuFilter.size() > 0) {
-								menuAccess = true;
-							}
-						}
+						/* 2025-02-27 홍승비 - 포탈 > 협업 메뉴 사용 여부 판별 시 URL이 아닌 메뉴코드를 사용하도록 수정 (쿼리에서 판별) */
+						menuAccess = useEzWorkspace.equals("YES");
     				} else if(menuCode.equals("mail") || menuCode.equals("address")) {		// 메일, 주소록
 						String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", tenantId);
 						menuAccess = useExternalMailServer.equals("NO");
-    				} else if (menuCode.equals("board")) {//게시판
+    				} else if (menuCode.equals("board")) { //게시판
 						String useBoard = ezCommonService.getTenantConfig("useBoard", tenantId);
 						menuAccess = useBoard.equals("YES");
-    				} else if (menuCode.equals("schedule")) {//일정
+    				} else if (menuCode.equals("schedule")) { //일정
 						String useSchedule = ezCommonService.getTenantConfig("useSchedule", tenantId);
 						menuAccess = useSchedule.equals("YES");
-    				} else if (menuCode.equals("resource")) {//자원
+    				} else if (menuCode.equals("resource")) { //자원
 						String useResource = ezCommonService.getTenantConfig("useResource", tenantId);
 						menuAccess = useResource.equals("YES");
     				} else if (menuCode.equals("community")) {
