@@ -1698,7 +1698,8 @@
                                 <option value="rad_Keyword"><spring:message code='ezApprovalG.t1200'/></option>
                             </c:if>
 		    			</select>
-					  <input id="txt_keyword" class="searchinputBox" style="height: 27px;border: 1px solid #cbcbcb;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
+					  <input id="txt_keyword" class="searchinputBox" style="height: 27px;border: 1px solid #cbcbcb;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/>
+					  <input type="text" name="dummy" autocomplete="on" style="width: 0; margin: 0; padding: 0; border: none;">
 			          <a class="searchBtn nofilter"><img src="/images/bsearch_new2.png" border="0" onClick="search('quick')"></a>
 			        </span>
 				</h1>
@@ -1764,16 +1765,16 @@
 		        <%-- 2020-06-15 홍승비 - 즐겨찾기 여부에 따라 별모양 아이콘 스타일 수정 --%>
 		        <c:choose>
 					<c:when test="${isMyBoard == 'YES'}">
-			        	<li><span class="icon16 icon16_star" id="myBoardIconSpan" onClick="AddToMyBoards()"></span></li>
+			        	<li onClick="AddToMyBoards()"><span class="icon16 icon16_star switchIcon" id="myBoardIconSpan"></span><span class="iconTexts"><spring:message code='ezBoard.t10051'/></span></li>
 					</c:when>
 					<c:otherwise>
-			        	<li><span class="no_yellowStar" id="myBoardIconSpan" onClick="AddToMyBoards()"></span></li>
+			        	<li onClick="AddToMyBoards()"><span class="no_yellowStar switchIcon" id="myBoardIconSpan"></span><span class="iconTexts"><spring:message code='ezBoard.t10051'/></span></li>
 			        </c:otherwise>
 		        </c:choose>
 		        
-		        <li><span class="icon16 icon16_search" id="SearchOption" mode="off" onClick="doLayerPopup(this)"></span></li>
-		        <li><span class="icon16 icon16_delete" onClick="DeleteItem_onclick()"></span></li>
-		        <li><span class="icon16 icon16_refresh" onClick="refresh_onclick()"></span></li>
+		        <li onClick="doLayerPopup(this)"><span class="icon16 icon16_search switchIcon" id="SearchOption" mode="off"></span><span class="iconTexts"><spring:message code='ezBoard.t188'/></span></li>
+		        <li onClick="DeleteItem_onclick()"><span class="icon16 icon16_delete switchIcon"></span><span class="iconTexts"><spring:message code='ezBoard.t113'/></span></li>
+		        <li onClick="refresh_onclick()"><span class="icon16 icon16_refresh switchIcon"></span><span class="iconTexts"><spring:message code='ezBoard.t205'/></span></li>
 			  </ul>
 			</div>
 			<script type="text/javascript">

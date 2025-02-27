@@ -273,10 +273,10 @@ nav > .countBox .hidden_nav_count_off{position:absolute; right:0px; top:6px; dis
 .portlet_title .portletText{margin:0px; padding:0px 0px 0px 20px; font-size:16px; color:#333; font-weight:bold; letter-spacing:-1px; float:left; overflow:hidden; width:calc(100% - 90px); text-overflow:ellipsis; white-space:nowrap; box-sizing:border-box;}
 .portlet_title .portletPlus{margin:12px 12px 0 0; float:right; overflow:hidden; cursor:pointer; line-height:normal;}
 .portlet_title .portletPlus.plus{width:30px; height:30px; background-repeat:no-repeat; background-position:center;}
-#theme1Body .portlet_title .portletPlus.plus{background-image:url(../../images/ezNewPortal/portlet_Plus1.png);}
-#theme2Body .portlet_title .portletPlus.plus{background-image:url(../../images/ezNewPortal/portlet_Plus2.png);}
+#theme1Body .portlet_title .portletPlus.plus, #theme1Body .portlet_tab_plus .portletPlus.plus {background-image:url(../../images/ezNewPortal/portlet_Plus1.png);}
+#theme2Body .portlet_title .portletPlus.plus, #theme2Body .portlet_tab_plus .portletPlus.plus {background-image:url(../../images/ezNewPortal/portlet_Plus2.png);}
+#theme3Body .portlet_title .portletPlus.plus, #theme3Body .portlet_tab_plus .portletPlus.plus {background-image:url(../../images/ezNewPortal/portlet_Plus3.png);}
 #theme2Body .sec1Layout_btm_left .portlet_title .portletPlus.plus{background-image:url(../../images/ezNewPortal/portlet_Plus2_t2.png);}
-#theme3Body .portlet_title .portletPlus.plus{background-image:url(../../images/ezNewPortal/portlet_Plus3.png);}
 
 
 .portlet_title .portletPlus.setting{width:30px; height:30px; background-repeat:no-repeat; background-position:center;}
@@ -1080,7 +1080,8 @@ aside{margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:vis
 .weather_title .weatherPresent dt img{width:90px;}
 .weather_title .weatherPresent dd span:nth-child(1){display:block; font-size:18px; font-weight:400;}
 .weather_title .weatherPresent dd span:nth-child(2){display:block; font-size:26px; font-weight:500;}
-
+.portlet_title .portletPlus #countryList { width : 80px; }
+.portlet_title .portletPlus #cityList { width : 125px; }
 
 /* ============ theme2 =========== */
 
@@ -2177,7 +2178,7 @@ div.orbit img{border-radius:5px;}
 .portlet .board_Atype .portlet_list li dl dd{float:left; width:calc(100% - 145px); margin:0; padding:0;}
 .portlet .board_Atype .portlet_list li dl dd > span{display:block; line-height:normal;}
 .portlet .board_Atype .portlet_list li dl dd .title{color:#333333; font-size:14px; font-weight:bold; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; margin-bottom:4px;}
-.portlet .board_Atype .portlet_list li dl dd .cont{min-height:34px; line-height:17px; color:#333; display:-webkit-box; word-wrap:break-word; -webkit-line-clamp:2; -webkit-box-orient:vertical; text-overflow:ellipsis; overflow:hidden; white-space:normal; margin-bottom:4px;}
+.portlet .board_Atype .portlet_list li dl dd .cont{min-height:30px; line-height:17px; color:#333; display:-webkit-box; word-wrap:break-word; -webkit-line-clamp:2; -webkit-box-orient:vertical; text-overflow:ellipsis; overflow:hidden; white-space:normal; margin-bottom:4px;}
 .portlet .board_Atype .portlet_list li dl dd .name{float:none; width:auto; vertical-align:top; padding:0; color:#838383; display:inline-block;}
 .portlet .board_Atype .portlet_list li dl dd .name:after{content:""; display:inline-block; width:1px; height:10px; background:#D5D5D5; margin:5px 9px 0; vertical-align:top;}
 .portlet .board_Atype .portlet_list li dl dd .day{float:none; color:#838383;}

@@ -339,7 +339,7 @@
 		    	</c:if>
 		    	
 	        	<!-- 포탈 -->
-	        	<c:if test="${usePortal == 'YES'}">
+	        	<c:if test="${usePortal eq 'YES' and packageType ne 'mail'}">
 		    	<tr class="menuTit" data-MenuName="portal"><th><spring:message code="ezSystem.x0042" /></th></tr>
 				<tr data-name="portal">
 					<th><spring:message code="ezSystem.yej01" /></th>
@@ -413,7 +413,7 @@
 			    		<td><select data-paramId="useMailConfirm" id="use_MailConfirm"><option <c:if test="${configMap.useMailConfirm == 'YES'}">selected="selected"</c:if> value="YES"><spring:message code="ezQuestion.t103"/></option><option <c:if test="${configMap.useMailConfirm == null or configMap.useMailConfirm == 'NO'}">selected="selected"</c:if> value="NO"><spring:message code="ezQuestion.t104"/></option></select></td>
 			    	</tr>
 		    	</c:if>
-		    	<c:if test="${dotNetIntegration ne 'YES'}">
+		    	<c:if test="${dotNetIntegration ne 'YES' and packageType ne 'mail'}">
 			    	<%-- 2020-11-12 홍승비 - 전자결재 대용량첨부 관리자 설정 추가 --%>
 			    	<tr class="menuTit" data-MenuName="approval"><th><spring:message code="main.t25" /></th></tr>
 		        	<tr data-name="approval"><th><spring:message code="ezSystem.HSBAppr00"/></th><td><input data-paramId="ApprTotalAttachLimit" id="ApprTotalAttachLimit" maxlength="4" type="text" value="<c:out value='${configMap.ApprTotalAttachLimit}'/>"> (<spring:message code="ezSystem.x0011"/>, <spring:message code="ezSystem.x0014"/>)</td></tr>          

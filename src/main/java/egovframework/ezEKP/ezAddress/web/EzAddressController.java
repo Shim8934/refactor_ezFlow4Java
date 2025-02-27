@@ -258,7 +258,7 @@ public class EzAddressController{
 			deptAdmin = "Y";
 		}
 		
-		if (organAuth.isAuth(AdminAuth.COMPANY_MANAGER, userInfo.getCompanyID())) {
+		if (organAuth.isAuth(AdminAuth.COMPANY_MANAGER, userInfo.getCompanyID()) || organAuth.isAuth(AdminAuth.ADMIN_MASTER)) {
 			compAdmin = "Y";
 			deptAdmin = "Y";
 		}
@@ -427,7 +427,7 @@ public class EzAddressController{
 			deptAdmin = "Y";
 		}
 
-		if (organAuth.isAuth(AdminAuth.COMPANY_MANAGER, userInfo.getCompanyID())) {
+		if (organAuth.isAuth(AdminAuth.COMPANY_MANAGER, userInfo.getCompanyID()) || organAuth.isAuth(AdminAuth.ADMIN_MASTER)) {
 			compAdmin = "Y";
 			deptAdmin = "Y";
 		}		

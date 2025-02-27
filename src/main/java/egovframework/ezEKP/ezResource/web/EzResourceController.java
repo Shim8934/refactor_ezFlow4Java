@@ -3434,4 +3434,39 @@ public class EzResourceController extends EgovFileMngUtil {
 	public String resFavoriteMove() throws Exception {
 		return "/ezResource/resFavoriteMove";
 	}
+
+    /**
+     * 자원반복설정 값 확인 
+     */
+    @RequestMapping(value = "/ezResource/repeatFlagCheck.do", method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String, Object> repeatFlagCheck(HttpServletRequest request, LoginVO userInfo, @CookieValue("loginCookie") String loginCookie) throws Exception {
+        logger.debug("repeatFlagCheck start");
+        userInfo = commonUtil.userInfo(loginCookie);
+        String[] resIDArray = request.getParameterValues("resIDArray[]");
+        List<String> repeatCheckList = new ArrayList<>();
+        String repeatResult = "true";
+
+        try{
+            if (resIDArray != null && resIDArray.length > 0){
+                for (String resID : resIDArray) {
+                    String brdRepeatFlag = ezResourceService.getBrdRepeatFlag(Integer.parseInt(resID), userInfo.getCompanyID(), userInfo.getTenantId());
+                    if (!brdRepeatFlag.equals("1")) {
+                        repeatCheckList.add(resID);
+                        repeatResult = "false";
+                    }
+                }
+            }
+        }catch(Exception e){
+            logger.error(e.getMessage(), e);
+            repeatResult = "error";
+        }
+
+        Map<String, Object> result = new HashMap<String, Object>();
+        result.put("repeatCheckList", repeatCheckList);
+        result.put("repeatResult", repeatResult);
+
+        logger.debug("repeatFlagCheck end");
+        return result;
+    }
 }

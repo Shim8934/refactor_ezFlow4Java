@@ -201,6 +201,11 @@
 			url : "/ezSystem/saveAccessCountryList.do",
 			data : { "saveList" : countryAccessList.join(";")},
 			success : function(data) {
+			    if (data == "setAccess") {
+                    alert("<spring:message code='ezSystem.yja05'/>");
+                    getAccessCountryList();
+                    return;
+                }
 				if (data == "PERMISSION_ERROR") {
 					alert("<spring:message code='ezTask.t1' />");
 				} else {

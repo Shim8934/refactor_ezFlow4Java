@@ -1087,8 +1087,8 @@
 			<li id="appr"><span onClick="modApprove()"><spring:message code='ezAttitude.kje02'/></span></li>
         	<li id="ret"><span onClick="modReturn()"><spring:message code='ezAttitude.kje03'/></span></li>
 	        <li id="reply"><span onClick="get_excelAtt_list()"><spring:message code='ezAttitude.t145'/></span></li>
-	        <li id="search"><span class="icon16 icon16_search" onClick="search_popup()"></span></li>
-        	<li onClick="att_search('refresh')"><span class="icon16 icon16_refresh"></span></li>
+	        <li id="search" onClick="search_popup()"><span class="icon16 icon16_search switchIcon"></span><span class="iconTexts"><spring:message code='ezAttitude.t121'/></span></li>
+        	<li onClick="att_search('refresh')"><span class="icon16 icon16_refresh switchIcon"></span><span class="iconTexts"><spring:message code='ezAttitude.t122'/></span></li>
 			<li>
 				<select id="writerDept_search" onchange="dept_change()" style="height:28px;">
 					<option value="ALL" selected><spring:message code='ezAttitude.t124'/></option>

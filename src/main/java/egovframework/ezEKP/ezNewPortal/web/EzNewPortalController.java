@@ -184,6 +184,9 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		model.addAttribute("userDeptId", userInfo.getDeptID());
 		model.addAttribute("useWebHWP", useWebHWP);
 
+		String useMobileMailOnly = ezCommonService.getTenantConfig("useMobileMailOnly", userInfo.getTenantId());
+		model.addAttribute("useMobileMailOnly", useMobileMailOnly);
+
 		logger.debug("returnUrl : " + returnUrl);
 		logger.debug("portalMain End");
 		return "/ezNewPortal/newPortalMain";

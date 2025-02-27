@@ -767,8 +767,7 @@
                 // 부모창이 아닌 각 안 내부(apprGdraftuiAllContent_WHWP.jsp)에서 이 함수를 불러야 한다.
                 currIfrm.contentWindow.setDrafterAddress();
                 
-                /* 2020-03-31 홍승비 - 재기안 시 반송의견 유지여부 컨피그 추가 */
-                if (pDraftFlag == "REDRAFT" && useRedraftOpinionKeep != "YES") {
+                if (pDraftFlag == "REDRAFT") {
                 	delOpinionInfoForDraftAll(currIdx);
                 	pHasOpinionYNAry[currIdx] = chkOpinionInfoExist(currIdx); // 의견삭제 후 의견갯수 카운트하여 플래그 변경
                 }

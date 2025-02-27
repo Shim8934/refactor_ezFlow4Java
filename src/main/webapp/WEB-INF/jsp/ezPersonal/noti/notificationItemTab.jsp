@@ -92,6 +92,7 @@ tr[data-target='.approval'], tr.approval { display: none; }
 			<th><%=makeCheckbox(disableItemFinder, 1, 0, 3)%></th>
 			<th><%=makeCheckbox(disableItemFinder, 1, 0, 4)%></th>
 		</tr>
+		<c:if test="${packageType ne 'mail'}">
 		<tr class="collapsible" data-target=".approval">
 			<th><spring:message code='ezPersonal.noti.item.approval' /></th>
 			<th><%=makeMasterCheckbox(disableItemFinder, 2, 1, 6)%></th>
@@ -401,7 +402,7 @@ tr[data-target='.approval'], tr.approval { display: none; }
 	        <td><%=makeCheckbox(disableItemFinder, 10, 2, 3)%></td>
 	        <td><%=makeCheckbox(disableItemFinder, 10, 2, 4)%></td>
 		</tr>
-		
+		</c:if>
 	</table>
 	<div class="btnpositionJsp">
 		<a class="imgbtn" id="save"><span><spring:message code='ezPersonal.t34' /></span></a>

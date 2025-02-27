@@ -24,6 +24,7 @@
 		    var pUserName1 = "<c:out value = '${userInfo.displayName1}' />";
 		    var pUserName2 = "<c:out value = '${userInfo.displayName2}' />";
 		    var pCompanyID = "<c:out value = '${userInfo.companyID}' />";
+		    var pLang = "<c:out value = '${userInfo.lang}' />";
 		    var parameter = new Array();
 		    var listview = new ListView();
 		    var OrderCell = "";
@@ -223,7 +224,11 @@
 		    function btnAdd_onclick() {
 		        var parameter = new Array();
 		        parameter[0] = pUserID;
-		        parameter[1] = pUserName;
+				if(pLang == "1"){
+					parameter[1] = pUserName;
+				}else{
+					parameter[1] = pUserName2;
+				}
 		        parameter[2] = pCompanyID;
 		        
 		        if (CrossYN()) {

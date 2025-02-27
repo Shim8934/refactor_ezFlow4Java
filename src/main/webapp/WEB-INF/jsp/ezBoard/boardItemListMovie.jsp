@@ -1467,16 +1467,16 @@
 				<%-- 2020-06-15 홍승비 - 즐겨찾기 여부에 따라 별모양 아이콘 스타일 수정 --%>
 		        <c:choose>
 					<c:when test="${isMyBoard == 'YES'}">
-			        	<li><span class="icon16 icon16_star" id="myBoardIconSpan" onClick="AddToMyBoards()"></span></li>
+			        	<li onClick="AddToMyBoards()"><span class="icon16 icon16_star switchIcon" id="myBoardIconSpan"></span><span class="iconTexts"><spring:message code='ezBoard.t10051'/></span></li>
 					</c:when>
 					<c:otherwise>
-			        	<li><span class="no_yellowStar" id="myBoardIconSpan" onClick="AddToMyBoards()"></span></li>
+			        	<li onClick="AddToMyBoards()"><span class="no_yellowStar switchIcon" id="myBoardIconSpan"></span><span class="iconTexts" onClick="AddToMyBoards()"><spring:message code='ezBoard.t10051'/></span></li>
 			        </c:otherwise>
 		        </c:choose>
 		        
-		        <li><span class="icon16 icon16_search" id="SearchOption" mode="off" onClick="doLayerPopup(this)"></span></li>
-		        <li><span class="icon16 icon16_delete" onClick="DeleteItem_onclick()"></span></li>
-		        <li><span class="icon16 icon16_refresh" onClick="refresh_onclick()"></span></li>
+		        <li onClick="doLayerPopup(this)"><span class="icon16 icon16_search switchIcon" id="SearchOption" mode="off"></span><span class="iconTexts"><spring:message code='ezBoard.t188'/></span></li>
+		        <li onClick="DeleteItem_onclick()"><span class="icon16 icon16_delete switchIcon"></span><span class="iconTexts"><spring:message code='ezBoard.t113'/></span></li>
+		        <li onClick="refresh_onclick()"><span class="icon16 icon16_refresh switchIcon"></span><span class="iconTexts"><spring:message code='ezBoard.t205'/></span></li>
 				<li>
 					<select id="boardViewSelect" style="padding-left:4px;" onchange="selectBoardView(this)">
 						<option value="thumbnail"><spring:message code='ezBoard.hsbal01' /></option>

@@ -4801,6 +4801,14 @@
                  A.APRMEMBERID = B.CN
             AND
                  A.TENANT_ID = B.TENANT_ID
+            <isEqual property="approvalFlag" compareValue="G">	     
+                LEFT OUTER JOIN
+                     TBL_DEPTMASTER
+                ON
+                     A.APRMEMBERID = TBL_DEPTMASTER.CN
+                AND
+                     A.TENANT_ID = TBL_DEPTMASTER.TENANT_ID
+            </isEqual>
 	        WHERE  
 	        	 USERID = #v_USERID#
 	        AND 
@@ -4810,9 +4818,13 @@
 	        AND 
 	        	 A.TENANT_ID = #v_TENANTID#
 	        AND
-        		 COMPANYID = #companyID#
+        		 A.COMPANYID = #companyID#
 	        AND
                  B.CN IS NULL
+            <isEqual property="approvalFlag" compareValue="G">  
+                AND
+                     (TBL_DEPTMASTER.CN IS NULL OR TBL_DEPTMASTER.EXTENSIONATTRIBUTE11 = 'Y')
+            </isEqual>
 	        ORDER BY
 	        	 APRMEMBERSN DESC
 	</select>
@@ -5004,8 +5016,6 @@
             ON
                 A.APRMEMBERDEPTID = D.CN
             AND
-                A.APRMEMBERDEPTNAME = D.DISPLAYNAME
-            AND
                 A.TENANT_ID = D.TENANT_ID
             LEFT OUTER JOIN
                 TBL_USERMASTER_RETIRE B
@@ -5027,6 +5037,10 @@
 		        (D.DEPT_CD_PATH NOT LIKE '%trash_dept_%' OR D.DEPT_CD_PATH IS NULL)
 		    AND
 		        B.CN IS NULL
+            <isEqual property="approvalFlag" compareValue="G">
+                AND
+                    D.EXTENSIONATTRIBUTE11 = 'Y'
+            </isEqual>		    
 		    ORDER BY
 		     	APRDEPTMEMBERSN DESC
 	</select>
@@ -5271,6 +5285,7 @@
 		    VTASKCLASS.KEEPINGMETHOD,
 		    VTASKCLASS.KEEPINGPLACE,
 		    VTASKCLASS.SCNAME,
+		    VTASKCLASS.SCNAME2,
 		    VTASKCLASS.SUBCATEGORYCODE
 		FROM
 		    (SELECT 
@@ -5288,6 +5303,7 @@
 		            KEEPINGMETHOD,
 		            KEEPINGPLACE,
 		            SCNAME,
+		            SCNAME2,
 		            SUBCATEGORYCODE,
 		            TENANT_ID,
 		            COMPANYID
@@ -6928,8 +6944,9 @@
 				TBL_CABINETCLASS.TaskCode ,
 				TBL_CABINET.CabinetClassNo ,
 				TBL_CABINETCLASS.OwnerID ,
-				TBL_CABINETCLASS.Title ,
-				TBL_CABINETCLASS.Title2 ,
+				CASE WHEN (#lang# = '' OR #lang# IS NULL) THEN TBL_CABINETCLASS.Title
+                     ELSE TBL_CABINETCLASS.Title2
+                END AS Title,
 				VTASKCLASS.KEEPINGPERIOD , 
 				VTASKCLASS.TEMPFLAG ,
 				VTASKCLASS.DISPLAYRECFLAG ,
@@ -6939,9 +6956,12 @@
 				VTASKCLASS.SC3 ,
 				VTASKCLASS.KEEPINGMETHOD ,
 				VTASKCLASS.KEEPINGPLACE ,
-				VTASKCLASS.TASKNAME ,
-				VTASKCLASS.TASKNAME2 ,
-				VTASKCLASS.SCName ,
+				CASE WHEN (#lang# = '' OR #lang# IS NULL) THEN VTASKCLASS.TASKNAME
+                     ELSE VTASKCLASS.TASKNAME2
+                END AS TASKNAME,
+				CASE WHEN (#lang# = '' OR #lang# IS NULL) THEN VTASKCLASS.SCName
+                     ELSE VTASKCLASS.SCName2
+                END AS SCName,
 				VTASKCLASS.SubCategoryCode ,
 				TBL_CABINETCLASS.RecTypeCode ,
 				TBL_CABINETCLASS.RegSerialNo ,
@@ -28272,9 +28292,15 @@
 				tenant_id = #tenantID#
 			AND
 				docid= #docID#
+		]]>
+		<isEqual property="opinionType" compareValue="100">
+			AND
+				(opiniongb = '002' OR opiniongb = '003')
+		</isEqual>
+		<isNotEqual property="opinionType" compareValue="100">
 			AND
 				opiniongb = #opinionType#
-		]]>
+		</isNotEqual>
 	</delete>
 	
 	<delete id="EzApprovalG.OpinionDel2" parameterClass="Map">

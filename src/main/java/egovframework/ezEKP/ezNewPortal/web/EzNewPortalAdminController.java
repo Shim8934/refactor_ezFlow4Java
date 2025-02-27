@@ -1049,6 +1049,8 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
         String sGUID = "";
         String pUploadSN = "";        
         String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId());
+		// 2025-01-17 전인하 - 로고를 저장할 시 전자결재 폴더에도 따로 로고 저장; 유통문서 발송 시 로고로 사용함
+		String dirPathForApr = realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID();
         
         sGUID = UUID.randomUUID().toString();
         pUploadSN = "{" + sGUID + "}";
@@ -1084,6 +1086,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		// dhlee : 20220527 - 파일 업로드 시 .으로 끝나는 파일(예: .jsp.)이 무조건 업로드 허용되는 문제 수정
         if ((!extend.isEmpty() && useExtension.toLowerCase().indexOf(extend.toLowerCase()) != -1) || useExtension.equals("*")) {           	
 			writeUploadedFile(multiFile, newFileName, pDirPath + "uploadFile");
+			writeUploadedFile(multiFile, "logo.gif", dirPathForApr);
 			
 			String originUrl = "/rest/admin/ezPortal/logos/companies/" + companyId;
 			JSONObject originResult = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), originUrl, null, request, "patch", json);

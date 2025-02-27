@@ -1105,6 +1105,13 @@ function prevShow() {
             xmlhttp_mailPreview.open("POST", previewUrl, true);
             xmlhttp_mailPreview.onreadystatechange = event_xmlhttp_mailPreview_Complete;
             xmlhttp_mailPreview.send(strQuery);
+            
+            if (pPreviewShow_HOW == "H") {
+                window.frames['ifrmPreViewH'].document.write("");
+            }
+            else {
+                window.frames['ifrmPreViewW'].document.write("");
+            }            
         }
 
     } catch (e) {console.log(e);}

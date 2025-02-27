@@ -5824,7 +5824,7 @@
 			INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode)
 				VALUES ((#menuId# + 4), '/mobile/ezBoard/boardItemList.do?boardID={FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', 'MG', 'iconCommon icon_notice', (SELECT MAX(A.default_order) + 5 FROM TBL_PORTAL_MENU A), 'mBoard')
 			INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode)
-				VALUES ((#menuId# + 5), '/mobile/ezAddress/addressList.do?pSearchTarget=personal&pFolderName=개인주소록', 'MG', 'iconCommon icon_address', (SELECT MAX(A.default_order) + 6 FROM TBL_PORTAL_MENU A), 'mAddress')
+				VALUES ((#menuId# + 5), '/mobile/ezAddress/addressList.do?pSearchTarget=personal', 'MG', 'iconCommon icon_address', (SELECT MAX(A.default_order) + 6 FROM TBL_PORTAL_MENU A), 'mAddress')
 			INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode)
 				VALUES ((#menuId# + 6), '/mobile/ezSchedule/mScheduleList.do', 'MG', 'iconCommon icon_schedule', (SELECT MAX(A.default_order) + 7 FROM TBL_PORTAL_MENU A), 'mSchedule')
 			INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode)
@@ -5861,11 +5861,11 @@
 	<insert id="EzCommonDAO.insertCompanyMobileMenuNames"  parameterClass="Map">
 		INSERT ALL
 			INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME)
-				VALUES (#menuId#, 1, #companyId#, #tenantId#, '받은메일')
+				VALUES (#menuId#, 1, #companyId#, #tenantId#, '메일')
 			INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME)
-				VALUES (#menuId#, 2, #companyId#, #tenantId#, 'Received Mail')
+				VALUES (#menuId#, 2, #companyId#, #tenantId#, 'Mail')
 			INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME)
-				VALUES (#menuId#, 3, #companyId#, #tenantId#, '受信メール')
+				VALUES (#menuId#, 3, #companyId#, #tenantId#, 'メール')
 			INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME)
 				VALUES (#menuId#, 4, #companyId#, #tenantId#, '收件箱')
 			INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME)
@@ -6468,7 +6468,7 @@
 	</select>
 
 	<statement id="EzCommonDAO.createTblBoardScrap">
-		CREATE TABLE "EZEKP2017"."TBL_BOARDITEM_SCRAP" (
+		CREATE TABLE TBL_BOARDITEM_SCRAP (
 		   "USERID" VARCHAR2(100) NOT NULL ENABLE,
 		   "BOARDID" VARCHAR2(76) NOT NULL ENABLE,
 		   "ITEMID" VARCHAR2(76) NOT NULL ENABLE,
@@ -6491,7 +6491,7 @@
 	</select>
 
 	<statement id="EzCommonDAO.createTblUserScrapCont">
-		CREATE TABLE "EZEKP2017"."TBL_USERSCRAPCONT" (
+		CREATE TABLE TBL_USERSCRAPCONT (
 			 "USERSCRAPCONTID" VARCHAR2(20 BYTE) NOT NULL ENABLE,
 			 "USERSCRAPCONTNAME" VARCHAR2(255 BYTE),
 			 "PARENTSCRAPCONTID" VARCHAR2(20 BYTE),
@@ -6515,7 +6515,7 @@
 	</select>
 
 	<statement id="EzCommonDAO.createTblUserScrapContList">
-		CREATE TABLE "EZEKP2017"."TBL_USERSCRAPCONTLIST" (
+		CREATE TABLE TBL_USERSCRAPCONTLIST (
 			 "BOARDID" VARCHAR2(76) NOT NULL ENABLE,
 			 "ITEMID" VARCHAR2(76) NOT NULL ENABLE,
 			 "USERID" VARCHAR2(100) NOT NULL ENABLE,

@@ -268,6 +268,9 @@ public class EzSystemAdminController {
 		model.addAttribute("systemDomain", systemDomain);
 		model.addAttribute("notiPollingInterval", notiPollingInterval);
 
+		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
+		model.addAttribute("packageType", packageType);
+
 		logger.debug("systemMainMenu ended");
 		
 		return "/ezSystem/systemMainMenu";
@@ -1064,6 +1067,8 @@ public class EzSystemAdminController {
 		String useIPAccess = ezCommonService.getTenantConfig("useIPAccess", userInfo.getTenantId());
 
 		model.addAttribute("useIPAccess", useIPAccess);
+		model.addAttribute("rollInfo", userInfo.getRollInfo());
+
 		logger.debug("systemIPManager ended");
 		 
 		return "/ezSystem/systemIPManager";
@@ -1148,8 +1153,16 @@ public class EzSystemAdminController {
 		
 		String saveCountryList = request.getParameter("saveList");
 		logger.debug("saveCountryList=" + saveCountryList);
-		
-		ezSystemAdminService.setAccessCountry(userInfo.getTenantId(), saveCountryList);
+
+		int tenantID = userInfo.getTenantId();
+
+		String useIPAccess = ezCommonService.getTenantConfig("useIPAccess", tenantID);
+		result = ezSystemAdminService.isExistSystemAccess(saveCountryList, "country", useIPAccess, tenantID);
+
+		if ("success".equalsIgnoreCase(result)){
+			ezSystemAdminService.setAccessCountry(userInfo.getTenantId(), saveCountryList);
+			logger.debug("setAccessCountry success");
+		}
 		
 		logger.debug("saveAccessCountryList ended");
 		return result;
@@ -1180,6 +1193,7 @@ public class EzSystemAdminController {
 	}
 	
 	@RequestMapping(value="/ezSystem/setUseIPAccess.do", method=RequestMethod.POST)
+	@ResponseBody
 	public String setUseIPAccess(@CookieValue("loginCookie") String loginCookie, Model model, String allowResult) throws Exception {
 		logger.debug("setUseIPAccess started");
 		
@@ -1194,6 +1208,22 @@ public class EzSystemAdminController {
 
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
+		}
+
+		if (allowResult.equalsIgnoreCase("YES")){
+			List<String> userList = ezSystemAdminService.getAllAccessListCom(userInfo.getTenantId());
+			String countryCodeList = ezSystemAdminService.getAccessCountryList(userInfo.getTenantId());
+			List<IPBandVO> ipList = ezSystemAdminService.getAllIPBand(userInfo.getTenantId());
+			int accessIp = 0;
+			for(int i = 0; i < ipList.size(); i++) {
+				if ("YES".equalsIgnoreCase(ipList.get(i).getAccess())){
+					accessIp += 1;
+				}
+			}
+
+			if (userList.size() == 0 && "".equalsIgnoreCase(countryCodeList) && accessIp ==0){
+				return "setAccess";
+			}
 		}
 
 		ezSystemAdminService.updateSystemIPAllow(allowResult, userInfo.getTenantId());
@@ -1270,13 +1300,24 @@ public class EzSystemAdminController {
 	
 	@ResponseBody
 	@RequestMapping(value="/ezSystem/deleteIPBand.do", method=RequestMethod.POST)
-	public void deleteIPBand(@CookieValue("loginCookie") String loginCookie, Model model, String ipNo) throws Exception {
+	public String deleteIPBand(@CookieValue("loginCookie") String loginCookie, Model model, String ipNo) throws Exception {
 		logger.debug("deleteIPBand started");
 		logger.debug("ipNo=" + ipNo);
-		
-		ezSystemAdminService.deleteIPBand(ipNo);
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		int tenantID = userInfo.getTenantId();
+
+		String useIPAccess = ezCommonService.getTenantConfig("useIPAccess", tenantID);
+		String result = ezSystemAdminService.isExistSystemAccess(ipNo, "ip", useIPAccess, tenantID);
+
+		if ("success".equalsIgnoreCase(result)){
+			ezSystemAdminService.deleteIPBand(ipNo);
+			logger.debug("deleteIPBand success");
+		}
 		
 		logger.debug("deleteIPBand ended");
+
+		return result;
 	}
 	
 	
@@ -1450,12 +1491,22 @@ public class EzSystemAdminController {
 	
 	@ResponseBody
 	@RequestMapping(value="/ezSystem/deleteAccessList.do", method=RequestMethod.POST)
-	public void deleteAccessList(@CookieValue("loginCookie") String loginCookie, Model model, String accessNo) throws Exception {
+	public String deleteAccessList(@CookieValue("loginCookie") String loginCookie, Model model, String accessNo) throws Exception {
 		logger.debug("deleteAccessList started. accessNo=" + accessNo);
-		
-		ezSystemAdminService.deleteAccessId(accessNo);
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		int tenantID = userInfo.getTenantId();
+
+		String useIPAccess = ezCommonService.getTenantConfig("useIPAccess", tenantID);
+		String result = ezSystemAdminService.isExistSystemAccess(accessNo, "id", useIPAccess, tenantID);
+
+		if ("success".equalsIgnoreCase(result)){
+			ezSystemAdminService.deleteAccessId(accessNo);
+			logger.debug("deleteAccessList success");
+		}
 		
 		logger.debug("deleteAccessList ended");
+		return result;
 	}
 	
 	@RequestMapping(value="/ezSystem/systemAddAccessList.do", method=RequestMethod.GET)
@@ -1750,7 +1801,7 @@ public class EzSystemAdminController {
 			
 			returnJsonArr.add(obj);
 		}
-		
+
 		logger.debug("returnJsonArr=" + returnJsonArr.toJSONString());
 		logger.debug("getAdminAccessIPBand ended");
 		return ResponseEntity.ok().body(returnJsonArr);
@@ -1792,14 +1843,23 @@ public class EzSystemAdminController {
 
 	// 관리자 IP제한 - ip 삭제
 	@ResponseBody
-	@RequestMapping(value="/ezSystem/deleteAdminIPBand.do", method=RequestMethod.POST)
-	public void deleteAdminIPBand(@CookieValue("loginCookie") String loginCookie, Model model, String ipNo) throws Exception {
+	@RequestMapping(value="/ezSystem/deleteAdminIPBand.do", method=RequestMethod.POST, produces="text/plain")
+	public String deleteAdminIPBand(@CookieValue("loginCookie") String loginCookie, Model model, String ipNo) throws Exception {
 		logger.debug("deleteAdminIPBand started");
 		logger.debug("ipNo=" + ipNo);
-		
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		int tenantID = userInfo.getTenantId();
+		String useAdminIpAccess = ezCommonService.getTenantConfig("useAdminIPAccess", tenantID);
+
+		int isExist = ezSystemAdminService.isExistSystemAdminIPBand(ipNo);
+		if ("YES".equalsIgnoreCase(useAdminIpAccess) && (0==isExist)) {
+			return "noExist";
+		}
+
 		ezSystemAdminService.deleteAdminIPBand(ipNo);
 		
-		logger.debug("deleteAdminIPBand ended");
+		return "OK";
 	}
 
 	/**
@@ -3836,6 +3896,7 @@ public class EzSystemAdminController {
 			return "cmm/error/adminDenied";
 		}
 		model.addAttribute("isAdmin", user.getRollInfo().indexOf("c=1") > -1);
+		model.addAttribute("lang", user.getLang());
 		
 		logger.debug("systemConfigList ended.");
 		

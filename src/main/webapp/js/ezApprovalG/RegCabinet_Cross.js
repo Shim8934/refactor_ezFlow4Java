@@ -129,13 +129,18 @@ function RegisterCabinet() {
         arrDisplayInfo[0] = "";
         arrDisplayInfo[1] = "";
     }
-
+    if (typeof upperDeptCode === "undefined" || upperDeptCode === "") {
+        upperDeptCode = parent.upperDeptCode || arr_userinfo[4];
+    }
+    if (typeof upperDeptName === "undefined" || upperDeptName === "") {
+        upperDeptName = parent.upperDeptName || arr_userinfo[15];
+    }
+    
     var xmlpara = createXmlDom();   
     var objRoot, objNode, scinfo, catalognode, cataloginfo, objSC, objSCNode;
     objRoot = createNodeInsert(xmlpara, objRoot, "PARAMETERS"); 
-    /* 2025-02-06 홍승비 - 기록물철 등록 시 상위부서 정보가 없는 경우 undefined 예외처리 추가 (결재정보창 > 기록물철탭 > 철생성으로 등록하는 경우) */
-    objNode = createNodeAndAppandNodeText(xmlpara, objRoot, objNode, "DEPTCODE", typeof upperDeptCode === 'undefined' || !upperDeptCode ? arr_userinfo[4] : upperDeptCode);
-    objNode = createNodeAndAppandNodeText(xmlpara, objRoot, objNode, "DEPTNAME", typeof upperDeptName === 'undefined' || !upperDeptName ? arr_userinfo[15] : upperDeptName);
+    objNode = createNodeAndAppandNodeText(xmlpara, objRoot, objNode, "DEPTCODE", upperDeptCode);
+    objNode = createNodeAndAppandNodeText(xmlpara, objRoot, objNode, "DEPTNAME", upperDeptName);
     objNode = createNodeAndAppandNodeText(xmlpara, objRoot, objNode, "DEPTNAME2", arr_userinfo[16]);
     objNode = createNodeAndAppandNodeText(xmlpara, objRoot, objNode, "TASKCODE", arrTask[0]);
     objNode = createNodeAndAppandNodeText(xmlpara, objRoot, objNode, "TASKNAME", arrTask[6]);

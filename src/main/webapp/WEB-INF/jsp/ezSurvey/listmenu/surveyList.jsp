@@ -43,9 +43,9 @@
 					<c:when test="${mode != 'draft'}">
 						<li id="modifyBttn"><a><span><spring:message code='ezSurvey.t78'/></span></a></li>
 						<c:if test="${reuseFlag == 1}"><li id="reuseBttn" ><a><span><spring:message code='ezSurvey.t22'/></span></a></li></c:if>
-						<li id="analysisBttn" ><a><span><spring:message code='ezSurvey.t110'/></span></a></li>
-						<li id="searchBttn"><a><span class="icon16 icon16_search"></span></a></li>
-						<li id="deleteBttn"><a><span class="icon16 icon16_delete"></span></a></li>
+						<li id="analysisBttn" class="analysisBttn2" ><a><span><spring:message code='ezSurvey.t110'/></span></a></li>
+						<li id="searchBttn" class="searchBttn2"><a><span class="icon16 icon16_search switchIcon"></span><span class="iconTexts"><spring:message code='ezSurvey.t20'/></span></a></li>
+						<li id="deleteBttn" class="deleteBttn2"><a><span class="icon16 icon16_delete switchIcon"></span><span class="iconTexts"><spring:message code='ezSurvey.t21'/></span></a></li>
 						<div class="sub_frameIcon" style="float: right;">
                             <select name="filterStatus" id="filterStatus" class="select_filter"></select>
 							<div class="sub_frameIconUL">
@@ -60,8 +60,8 @@
 					</c:when>
 					<c:otherwise>
 						<li id="modifyBttn"><a><span><spring:message code='ezSurvey.t78'/></span></a></li>
-						<li id="searchBttn"><a><span class="icon16 icon16_search"></span></a></li>
-						<li id="deleteBttn"><a><span class="icon16 icon16_delete"></span></a></li>
+						<li id="searchBttn" class="searchBttn2"><a><span class="icon16 icon16_search"></span></a></li>
+						<li id="deleteBttn" class="deleteBttn2"><a><span class="icon16 icon16_delete"></span></a></li>
 						<div class="sub_frameIcon" style="float: right;">
 							<div class="sub_frameIconUL02">
 								<p class="frameIconLI"><span role="off" class="icon16 btn_arrow_down" id="sltView"></span></p>
@@ -240,6 +240,7 @@
                 optionEnd.value = 'END';
                 optionEnd.innerText = SurveyMessages.strFinish;
                 filterStatus.appendChild(optionEnd);
+				SurveyItem.btnResize();
 			}
 			</script>
 	</body>

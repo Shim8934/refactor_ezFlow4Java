@@ -13,14 +13,22 @@
 	    <script type="text/javascript">
 	    	var Tab1_SelectID = "";
 			var useIPAccess = "${useIPAccess}";
-	    	
+	    	var rollInfo = "${rollInfo}";
+
 	        window.onload = function () {
 	        	if (useIPAccess === "NO") {
 					document.getElementById("ipRadio0").checked = true;
 				} else {
 					document.getElementById("ipRadio1").checked = true;
 				}
-	        	
+                if (rollInfo.indexOf("c=1") == -1) {
+                    var btnList = $("body [id^=btn]");
+
+                    for (var i = 0; i < btnList.length; i++) {
+                        btnList[i].onclick = function() { alert("<spring:message code='ezSystem.jje7' />"); return; };
+                    }
+                }
+
 	        	Tab_init_select(document.getElementById("tagsub1"));
 	        	Tab1_NewTabIni("tab1");
 	        };
@@ -163,7 +171,11 @@
 						console.log(data);
 						alert("<spring:message code='ezCommunity.t283'/>");
 					},
-					complete : function(data) {
+					success : function(data) {
+					    if(data == "setAccess"){
+					        alert("<spring:message code='ezSystem.yja03' />");
+					        return;
+					    }
 						alert("<spring:message code='ezCommunity.t282'/>");
 						
 						if (useIPAccess == "NO") {

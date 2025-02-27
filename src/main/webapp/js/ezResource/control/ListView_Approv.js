@@ -690,7 +690,7 @@ function ListView() {
                 	oText = document.createTextNode(returnStatus);
                 }
                 else
-                    oText = document.createTextNode(strValue);
+                    oText = document.createTextNode(ConvertEntityReferenceToChar(strValue));
 
                 var objTd = document.createElement("TD");
 

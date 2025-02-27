@@ -56,6 +56,9 @@ public interface EzSystemAdminService {
 	public void insertAdminIPBand(int tenantID, String ipAddress, String access, String explanation) throws Exception;
 	public IPBandVO getSystemAdminIPBand(String ipNo) throws Exception;
 	public void updateAdminIPBand(String ipNo, String ipAddress, String access, String explanation) throws Exception;
+
+	public int isExistSystemAdminIPBand(String ipNo) throws Exception;
+	public String isExistSystemAccess(String deleteList, String type, String useIPAccess, int tenantID) throws Exception;
 	public void deleteAdminIPBand(String ipNo) throws Exception;
 	public Map<String, Object> getPwPolicy(int tenantId, String companyId) throws Exception;
 	public void updateCompanyConfigParam(int tenantID, List<Map<String, String>> list, String companyID) throws Exception;

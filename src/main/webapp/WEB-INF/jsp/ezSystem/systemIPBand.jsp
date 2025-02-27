@@ -203,7 +203,11 @@
 					error : function(data) {
 						alert("<spring:message code='ezSystem.jje11'/>");
 					},
-					complete : function(data) {
+					success : function(data) {
+					    if (data == "setAccess") {
+                            alert("<spring:message code='ezSystem.yja05'/>");
+                            return;
+                        }
 						alert("<spring:message code='ezAttitude.t161'/>");
 						IPBandListRemove();
 						getIPList_http();

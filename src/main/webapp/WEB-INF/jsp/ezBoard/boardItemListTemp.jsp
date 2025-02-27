@@ -84,6 +84,7 @@
 		        var pNoneActiveX = "YES";
 		        var strListInfo = "";
 		        var g_bPrevShow = false;
+				var tempLocation = "Y";
 		        // 2024-10-04 조수빈 - 마이게시판, 게시물 승인 화면의 경우 게시판 id가 없어 오류가 발생하여 추가
             	var pBoardID = "";
             	var Read_FG = 'true';
@@ -1003,9 +1004,9 @@
 	    <div id="mainmenu">
 	        <ul>
 	            <li class="important"><span onClick="NewItem_onclick()"><spring:message code='ezBoard.hsbJP02'/></span></li>
-	            <li><span class="icon16 icon16_search" id="SearchOption" mode="off" onClick="doLayerPopup(this)"></span></li>
-	            <li><span class="icon16 icon16_delete" onClick="DeleteItem_onclick()"></span></li>
-	            <li><span class="icon16 icon16_refresh" onClick="refresh_onclick()"></span></li>
+	            <li onClick="doLayerPopup(this)"><span class="icon16 icon16_search switchIcon" id="SearchOption" mode="off"></span><span class="iconTexts"><spring:message code='ezBoard.t188'/></span></li>
+	            <li onClick="DeleteItem_onclick()"><span class="icon16 icon16_delete switchIcon"></span><span class="iconTexts"><spring:message code='ezBoard.t113'/></span></li>
+	            <li onClick="refresh_onclick()"><span class="icon16 icon16_refresh switchIcon"></span><span class="iconTexts"><spring:message code='ezBoard.t205'/></span></li>
 	            <!-- <li id="right">
 	            	<img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onclick="PreviewRayerChange('NONE')">
 	            	<img src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20" class="btnimg" id="PreViewBottom" onclick="PreviewRayerChange('W')">

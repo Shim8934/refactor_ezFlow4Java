@@ -494,7 +494,7 @@
 			}
 		</script>
 	</head>
-	<body class="mainbody" style="overflow-y:hidden; ovverflow-x: scroll; min-width: 600px; padding-right: 6px;">
+	<body class="mainbody" style="overflow-y:hidden; ovverflow-x: scroll; min-width: 600px; padding-right: 6px; min-width: 950px;">
 		<!-- 2018-07-13 김민성 - 자원명 길 경우 ellipsis -->
 		<h1 style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;"><c:out value='${brdNm}'/><span id="TitleInfo"></span></h1>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	

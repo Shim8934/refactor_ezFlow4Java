@@ -3462,7 +3462,7 @@ public class EzEmailMailListController {
 	 * 승인메일 :
 	 * 신청 취소
 	 */
-	@RequestMapping(value="/ezEmail/appr/setCancel.do", method=RequestMethod.POST)
+	@RequestMapping(value="/ezEmail/appr/setCancel.do", method=RequestMethod.POST, produces="text/plain")
 	@ResponseBody
 	public String apprSetCancel(@CookieValue("loginCookie") String loginCookie, @RequestParam("href") String encryptedHref) throws Exception {
 		logger.debug("apprSetCancel started.");

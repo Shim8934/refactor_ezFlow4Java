@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>::: ezEKP Java :::</title>
+		<title>::: ezFlow Java :::</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta name="viewport" id="viewport">
 		<link rel="shortcut icon" href="/images/favicon.ico">
@@ -185,61 +185,62 @@
 		</div>
 		<div id="popupArea"><div id="noticePopupLayer"></div></div>
 		<div id="noticePopupArea"></div>
-  		<div id="contextMenuBlock" class="contextMenuBlock" <c:if test="${useContextmenu eq 'NO'}">style="display:none" </c:if>>
-			<div id="contextMenuBtn" class="contextMenuBtn" style="display: block;">
-				<div class="contextMenu"></div>
-				
-			</div>
-			<div id="popupMenuBtn" class="popupMenuBtn" style="display: block;">
-				<div id="quickMenuBtn" class="quickMenuBtn">
-					<span class="quickMenuTop_memo"><img src="/images/ezNewPortal/quick01.png"></span>
-					<span class="quickMenuMiddle_memo"><img src="/images/ezNewPortal/quick02.png"><img src="/images/ezNewPortal/quick03.png"></span>
-					<span class="quickMenuBottom_memo"><img src="/images/ezNewPortal/quick04.png"><img src="/images/ezNewPortal/quick04.png"></span>
-				</div>
-			</div>			
-		</div>
-		
- 		<!-- memo note -->
-		<div id="noteBlock" class="noteBlock">
-			<!-- 메모 레이어 -->
-			<div id="layer-popup" class="memo_wrap layerControl" style="visibility :hidden;">
-				<div class="memo_header_wrapper">
-					<input type="hidden" id="layerFlag" value="layer" />
-				 	<div class="memo_header">
-				     	<ul class="memoHeaderUL">
-				         	<li class="memoSelect">
-				            	<select id="memoFolderList"></select>
-				            </li>
-							<li class="memoClose memoIcon30"></li>
-			                <li class="memoExpand_s memoIcon30" id="controllable" style="display:none;"></li>
-			                <li class="memoExpand memoIcon30" id="fullScreen"></li>
-			                <li class="memoPlus memoIcon30" id="addMemo"></li>
-				         </ul>
-				     </div>
-			     </div>
-			     
-			     <div class="memoListBox" id="mLBox" style="overflow:hidden;">
-			     	<div class="memo_main" id="memoMain"></div>
-			     </div>
-				 
-			     <div class="memobgBar">
-			     	<div id="slider-range"></div>
-			     </div>
-			</div>
-			
-			<!-- 큰 메모 -->
-			<div id="detailMemo">
-		        <div class="bigTop" id='dMWrapper'>
-		            <dl class="memoTit" id='dMHeader'>
-		                <dt class="mtitText" id="dMTime"></dt>
-		                <dd class="memoIcon memoX" id='closeMemo'></dd>
-		            </dl>
-			        <textarea id="dMContents" style="padding:5px;"></textarea>
-			        <div class="bigBottom_left" id='bottomLeft'></div>
-			        <div class="bigBottom_right" id='bottomRight'></div>
-		        </div>
+		<c:if test="${useMobileMailOnly != 'YES'}">
+  		    <div id="contextMenuBlock" class="contextMenuBlock" <c:if test="${useContextmenu eq 'NO'}">style="display:none" </c:if>>
+               <div id="contextMenuBtn" class="contextMenuBtn" style="display: block;">
+                   <div class="contextMenu"></div>
+
+               </div>
+                <div id="popupMenuBtn" class="popupMenuBtn" style="display: block;">
+                    <div id="quickMenuBtn" class="quickMenuBtn">
+                        <span class="quickMenuTop_memo"><img src="/images/ezNewPortal/quick01.png"></span>
+                        <span class="quickMenuMiddle_memo"><img src="/images/ezNewPortal/quick02.png"><img src="/images/ezNewPortal/quick03.png"></span>
+                        <span class="quickMenuBottom_memo"><img src="/images/ezNewPortal/quick04.png"><img src="/images/ezNewPortal/quick04.png"></span>
+                    </div>
+                </div>
 		    </div>
-		    
+
+            <!-- memo note -->
+            <div id="noteBlock" class="noteBlock">
+                <!-- 메모 레이어 -->
+                <div id="layer-popup" class="memo_wrap layerControl" style="visibility :hidden;">
+                    <div class="memo_header_wrapper">
+                        <input type="hidden" id="layerFlag" value="layer" />
+                        <div class="memo_header">
+                            <ul class="memoHeaderUL">
+                                <li class="memoSelect">
+                                    <select id="memoFolderList"></select>
+                                </li>
+                                <li class="memoClose memoIcon30"></li>
+                                <li class="memoExpand_s memoIcon30" id="controllable" style="display:none;"></li>
+                                <li class="memoExpand memoIcon30" id="fullScreen"></li>
+                                <li class="memoPlus memoIcon30" id="addMemo"></li>
+                             </ul>
+                         </div>
+                     </div>
+
+                     <div class="memoListBox" id="mLBox" style="overflow:hidden;">
+                        <div class="memo_main" id="memoMain"></div>
+                     </div>
+
+                     <div class="memobgBar">
+                        <div id="slider-range"></div>
+                     </div>
+                </div>
+
+                <!-- 큰 메모 -->
+                <div id="detailMemo">
+                    <div class="bigTop" id='dMWrapper'>
+                        <dl class="memoTit" id='dMHeader'>
+                            <dt class="mtitText" id="dMTime"></dt>
+                            <dd class="memoIcon memoX" id='closeMemo'></dd>
+                        </dl>
+                        <textarea id="dMContents" style="padding:5px;"></textarea>
+                        <div class="bigBottom_left" id='bottomLeft'></div>
+                        <div class="bigBottom_right" id='bottomRight'></div>
+                    </div>
+                </div>
+		    </c:if>
 			<%-- <div id="open-memo" class="memoBtn" style="display: none;"><span><spring:message code='ezMemo.t001'/></span></div> --%>
 		</div>
 	</body>

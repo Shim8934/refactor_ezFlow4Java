@@ -250,7 +250,7 @@ public interface EzBoardService {
 
 	public String newItemPhoto(Document doc, String mode, String realPath, LoginVO userInfo, String mainImageID) throws Exception;
 
-	public boolean saveAttachmentsInfo(String attachments, String itemID, String boardID, String filePath, String strType, String realPath, int tenantID) throws Exception;
+	public boolean saveAttachmentsInfo(String attachments, String itemID, String boardID, String filePath, String strType, String realPath, int tenantID, String realFileNames) throws Exception;
 
 	public boolean saveMHT(String mainContent, String itemID, String boardID, String filePath, String string, String realPath) throws Exception;
 
@@ -547,4 +547,10 @@ public interface EzBoardService {
 	public List<HashMap<String, Object>> getAllNewItemList(BoardListVO boardListVO, Map<String, String> orderByMap) throws Exception;
 	
 	public Map<String, Object> getWriterOption(LoginVO userInfo) throws Exception;
+
+	// 2024-10-24 조수빈 - 같은 리스트 형이나, 데이터를 저장하는 테이블이 달라 일반게시판과 포토게시판 조회 메소드를 분리함
+	public List<HashMap<String, Object>> getPhotoBoardListItem(String boardId, String id, int startRow, int endRow,
+			int boardCount, String orderOption1, String orderOption2, Map<String, String> orderByMap, String type, int tenantId, String boardType) throws Exception;
+
+	public List<BoardAttachVO> brdGetPhotoItemAttachmentInfo(String pItemID, int tenantID) throws Exception;
 }

@@ -253,6 +253,10 @@
 						alert("<spring:message code='ezSystem.jje11'/>");
 					},
 					success : function(data) {
+					    if(data=="noExist"){
+					        alert("<spring:message code='ezSystem.yja04'/>");
+					        return;
+					    }
 						alert("<spring:message code='ezAttitude.t161'/>");
 						IPBandListRemove();
 						getIPList_http();

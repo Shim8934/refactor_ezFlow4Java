@@ -954,8 +954,8 @@
 				<ul>
 					<li class="important"><span onclick="addAtt();"><spring:message code='ezAttitude.t51'/></span></li>
 		      		<li><span onclick="exportExcel();"><spring:message code='ezAttitude.t145' /></span></li>
-		      		<li><span class="icon16 icon16_search" onclick="searchPopup();"></span></li>
-					<li onclick="refresh();"><span class="icon16 icon16_refresh"></span></li>
+		      		<li onclick="searchPopup();"><span class="icon16 icon16_search switchIcon"></span><span class="iconTexts"><spring:message code='ezAttitude.t121'/></span></li>
+					<li onclick="refresh();"><span class="icon16 icon16_refresh switchIcon"></span><span class="iconTexts"><spring:message code='ezAttitude.t122'/></span></li>
 					<li>						
 		      			<select name="ListDept" id="ListDept" onchange="dept_change()" style="padding-right:40px; width:100%; height:28px;">
 		      				<option value="ALL" selected><spring:message code='ezAttitude.t124'/></option>

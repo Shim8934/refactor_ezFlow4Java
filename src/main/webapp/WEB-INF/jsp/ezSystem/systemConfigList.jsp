@@ -33,7 +33,8 @@
 			var BlockSize = 10;
 			var isAdmin = ${isAdmin};
 			var type = "";
-
+			var lang = ${lang};
+			
 			document.onselectstart = function () {
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
 	                return false;
@@ -568,7 +569,13 @@
 				    	configSelect.appendChild(allOption);
 						for (var i = 0; i < xmlRows.length; i++) {
 							var typeCode = xmlRows[i].getElementsByTagName("CELL")[0].getElementsByTagName("VALUE")[0].textContent;
-							var typeName = xmlRows[i].getElementsByTagName("CELL")[1].getElementsByTagName("VALUE")[0].textContent;
+							var typeName = "";
+							if(lang == "1"){
+								typeName = xmlRows[i].getElementsByTagName("CELL")[1].getElementsByTagName("VALUE")[0].textContent;
+							} else {
+								typeName = xmlRows[i].getElementsByTagName("CELL")[2].getElementsByTagName("VALUE")[0].textContent;
+							}
+							
 							var optionElement = document.createElement("option");
 							optionElement.value = typeCode;
 		                    optionElement.text = typeName;

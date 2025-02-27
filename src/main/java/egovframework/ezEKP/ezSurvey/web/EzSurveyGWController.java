@@ -483,7 +483,8 @@ public class EzSurveyGWController {
 			int userFlag            = (users == null || users.size() == 0) ? 0 : 1;
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 			
-			if (title.equals("") || purpose.equals("") || startDate.equals("") || endDate.equals("") || format.parse(startDate).compareTo(format.parse(endDate)) > 0 || publicFlag == -1 || anonymousFlag == -1 || multipleFlag == -1 || (publicFlag == 1 && publicDays == -1)) {
+			// 2025-02-10 조수빈 - 설문 목적은 필수 값에서 제외하기로 했음
+			if (title.equals("") || startDate.equals("") || endDate.equals("") || format.parse(startDate).compareTo(format.parse(endDate)) > 0 || publicFlag == -1 || anonymousFlag == -1 || multipleFlag == -1 || (publicFlag == 1 && publicDays == -1)) {
 				logger.debug("Parameter error!");
 				result.put("status", "error");
 				result.put("code", 1);

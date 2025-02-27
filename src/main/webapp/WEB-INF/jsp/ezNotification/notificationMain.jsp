@@ -996,7 +996,7 @@
 	        	}
 	        }
 	        else {
-				var isGroupDoc = checkIsGroupDoc(encodeURI(DocID), orgCompanyID);
+				var isGroupDoc = checkIsGroupDoc(p_docID, orgCompanyID);
         		
         		if (isGroupDoc == "Y") { // 일괄기안 문서를 여는 경우 (결재진행문서, 기안한문서 메뉴에서 접근 시 지원)
         			openLocation = "/ezApprovalG/ezviewAprAll_WHWP.do";
@@ -1245,6 +1245,8 @@
 
         if (xmlhttp_mailCheckBlock.status == 200) {
             pBlockedMail = getNodeText(SelectNodes(xmlhttp_mailCheckBlock.responseXML, "DATA/BLOCKEDMAIL")[0]);
+        } else {
+            pBlockedMail = -1;
         }
 
         return pBlockedMail;

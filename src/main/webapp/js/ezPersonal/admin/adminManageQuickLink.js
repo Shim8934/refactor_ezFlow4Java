@@ -620,7 +620,7 @@ function makePermissionsList(value, xmlFalg) {
 		listTD.style.paddingBottom = "0px";
 		listTD.style.paddingTop = "0px";
 		
-		if (userLang == "2" && SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME2") != "") {
+		if (userLang != "1" && SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME2") != "") {
 			listTDText = accessName2;
 		}
 

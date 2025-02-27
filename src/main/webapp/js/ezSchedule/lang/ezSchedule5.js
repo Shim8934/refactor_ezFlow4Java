@@ -229,3 +229,7 @@ var strLang151_2 = "Giám đốc điều hành";
 
 // 2024-06-28 민지수 - 일정 > 첨부파일 드래그 앤 드롭 안내 메세지 추가
 var strLangMJS01 = "Bạn có thể kéo và thả để thêm tệp và thay đổi thứ tự của các tệp đã thêm.";
+
+/* 2025-02-07 기민혁 - 반복자원 체크 메세지 추가 */
+var strLangKMH1 = "Tài nguyên này không cho phép đặt chỗ lặp lại.";
+var strLangKMH2 = "Đã xảy ra lỗi";

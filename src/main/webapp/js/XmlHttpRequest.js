@@ -2367,6 +2367,13 @@ document.addEventListener('DOMContentLoaded', function() {
     if (navigator.maxTouchPoints > 4 && document.body.classList.contains('popup')) {
         document.body.style.overflow = '';
     }
+    
+    var currentUrl = window.location.href;
+    if ((currentUrl.includes("ezBoard") || currentUrl.includes("ezResource") || 
+    currentUrl.includes("ezSurvey") || currentUrl.includes("ezMemo") || currentUrl.includes("ezTask") || 
+    currentUrl.includes("ezPMS") || currentUrl.includes("ezAttitude"))  && document.getElementById("mainmenu")) {
+        resizableMenu(currentUrl);
+    }
 });
 
 // 2024-11-21 한태훈 > resize시 dim처리된 layer판넬 위에 표출 되는 알림창의 위치 가운데로 재설정
@@ -2397,3 +2404,149 @@ window.open = function (url, target, features) {
     urlObj.searchParams.set('__wwidth', top.outerWidth);
     return originWindowOpen.call(window, urlObj.toString(), target, features);
 };
+
+// 2025-01-02 황인경 > 게시판, 자원관리, 일정관리, 업무일지, 근태관리, 전자설문, 투표, 회람판, 메모 resize에 따른 more 버튼 표출
+function resizableMenu(url) {
+    var mainmenu = document.getElementById("mainmenu");
+    var buttonContainer = mainmenu.querySelector("ul");
+
+    var existingMoreBtn = document.getElementById("moreBoardIcon");
+    if (existingMoreBtn) {
+        existingMoreBtn.remove();
+    }
+
+    var createMoreBtnLi = document.createElement("li");
+    var createMoreBtnSpan = document.createElement("span");
+    var createMoreBtnImg = document.createElement("img");
+    var createMoreBtnUl = document.createElement("ul");
+    
+    createMoreBtnLi.id = "moreBoardIcon";
+    createMoreBtnLi.classList = "view_more";
+    createMoreBtnSpan.classList = "view_icon";
+    createMoreBtnSpan.setAttribute("onclick", "this.parentNode.classList.toggle('on')");
+    createMoreBtnImg.src = "/images/ImgIcon/view_more.png";
+    createMoreBtnUl.classList = "layer_select";
+    buttonContainer.style.overflow = "unset";
+    
+    if (url !== "undefined" && url !== null && url !== undefined && url.indexOf("ezAttitude") !== -1) {
+        if (url.indexOf("attitudeUserAnnual.do") === -1 && url.indexOf("attitudeManage.do") === -1) { // ... 이 위로 붙는 페이지 css 변경
+            createMoreBtnSpan.style.paddingTop = "13px";
+        }
+    }
+    
+    createMoreBtnSpan.appendChild(createMoreBtnImg);
+    createMoreBtnLi.appendChild(createMoreBtnSpan);
+    createMoreBtnLi.appendChild(createMoreBtnUl);
+    buttonContainer.appendChild(createMoreBtnLi);
+    
+    var moreButton = createMoreBtnLi;
+    var dropdownMenu = createMoreBtnUl;
+    var buttons = [];
+    var hiddenButtons = [];
+    var timer = null;
+    var btns = buttonContainer.querySelectorAll("li");
+    
+    for (var i = 0; i < btns.length; i++) {
+        var btn = btns[i];
+        if (!btn.classList.contains("view_more") && !btn.classList.contains("layer_select") && window.getComputedStyle(btn).display !== "none" && window.getComputedStyle(btn).float !== "right" && btn.children[0].tagName !== "SELECT") {
+            buttons.push(btn);
+        }
+    }
+
+    function resizeBtn() {
+        var mainMenuWidth = buttonContainer.offsetWidth;
+    
+        var rightSectionWidth = 0;
+        var rightDiv = document.querySelector("#right"); // 프레임 아이콘
+        
+        if (rightDiv) {
+            rightSectionWidth += rightDiv.offsetWidth;
+        }
+    
+        var floatRightButtons = document.querySelectorAll("li[style*='float: right']");
+        floatRightButtons.forEach(function (li) {
+            rightSectionWidth += li.offsetWidth;
+        });
+    
+        var remainingWidth = mainMenuWidth - rightSectionWidth;
+    
+        var moreButtonWidth;
+        var urlMapping = { // 관리자 페이지의 영역이 더 좁아 비율 상이
+            "admin": 0.8,
+            "ezBoard": 0.5
+        };
+        
+        if (url !== "undefined" && url !== null && url !== undefined) {
+            moreButtonWidth = remainingWidth * 0.6;
+            if (url.indexOf("/admin/") !== -1) {
+                moreButtonWidth = remainingWidth * 0.8;
+            } else if (url.indexOf("ezBoard") !== -1) {
+                moreButtonWidth = remainingWidth * 0.5;
+            }
+        } else {
+            moreButtonWidth = remainingWidth * 0.6;
+        }
+        
+        var mainMenuWidthCal = remainingWidth - moreButtonWidth;
+        var totalWidth = 0;
+    
+        hiddenButtons = [];
+        buttons.forEach(function (btn) {
+            btn.style.display = "block";
+        });
+    
+        buttons.forEach(function (button) {
+            totalWidth += button.offsetWidth;
+    
+            if (totalWidth > mainMenuWidthCal) {
+                hiddenButtons.push(button);
+                button.style.display = "none";
+            }
+        });
+    
+        dropdownMenu.innerHTML = "";
+    
+        if (hiddenButtons.length > 0) {
+            moreButton.style.display = "block"; 
+    
+            hiddenButtons.forEach(function (btn) {
+                var clone = btn.cloneNode(true);
+                clone.style.display = "";
+                dropdownMenu.appendChild(clone);
+            });
+        } else {
+            moreButton.style.display = "none";
+        }
+        
+        if (url.includes("ezSurvey")) {
+            SurveyItem.btnResize();
+        }
+    }
+
+    window.addEventListener("resize", function () {
+        clearTimeout(timer);
+        timer = setTimeout(resizeBtn, 100); // 딜레이를 주지 않으면 버튼 내려감 
+    });
+
+    resizeBtn();
+    
+    var viewMore = null;
+
+    function hideLayer(event) {
+        if (viewMore && !event.target.closest('.view_more')) {
+            viewMore.classList.remove('on');
+        }
+    }
+
+    function setUpHideLayerEvent() {
+        viewMore = document.getElementsByClassName('view_more')[0];
+
+        window.parent.parent.parent.frames['topFrame'].contentWindow.document.getElementById('top')
+                .addEventListener('click', hideLayer);
+        
+        window.parent.frames['left'].document.addEventListener('click', hideLayer);
+
+        document.addEventListener('click', hideLayer);
+    }
+    setUpHideLayerEvent();
+}

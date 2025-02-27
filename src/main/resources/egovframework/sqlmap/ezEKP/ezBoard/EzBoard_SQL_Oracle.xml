@@ -1530,6 +1530,7 @@
 					A.TENANT_ID = L.TENANT_ID
 				AND
 					A.ITEMID = L.ITEMID
+			<isNotEqual property="bType" compareValue="3">
                 LEFT OUTER JOIN (
                     SELECT
                         CASE
@@ -1552,6 +1553,29 @@
                     A.ITEMID = F.ITEMID
                 AND 
                     A.TENANT_ID = F.TENANT_ID
+			</isNotEqual>
+			<isEqual property="bType" compareValue="3">
+				LEFT OUTER JOIN (
+					SELECT
+					CASE
+						WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+						WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(IMAGENAME))
+						ELSE 'MANY'
+					END AS EXT,
+					CASE
+						WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+						WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILEPATH))
+						ELSE 'MANY'
+					END AS FILEPATH,
+					TENANT_ID,
+					itemid
+					FROM TBL_PHOTO_IMAGEITEM
+					GROUP BY
+						ITEMID,
+					TENANT_ID ) F ON
+				A.ITEMID = F.ITEMID
+				AND A.TENANT_ID = F.TENANT_ID
+			</isEqual>
 				LEFT OUTER JOIN
 					(SELECT
 						COUNT(K.ITEMID) as DISLIKECOUNT,
@@ -1882,6 +1906,8 @@
 						NVL(A.WRITERNAMETYPE, '') as WRITERNAMETYPE
 		              FROM 
 		              	TBL_Board_Item A
+	        		]]>
+	        		<isNotEqual property="bType" compareValue="3">
         			  LEFT OUTER JOIN (
 							SELECT 	
 								CASE
@@ -1902,6 +1928,30 @@
 								TENANT_ID ) F ON
 							A.ITEMID = F.ITEMID
 							AND A.TENANT_ID = F.TENANT_ID
+					</isNotEqual>
+	        		<isEqual property="bType" compareValue="3">
+        			  LEFT OUTER JOIN (
+							SELECT
+								CASE
+									WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+									WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(IMAGENAME))
+									ELSE 'MANY'
+								END AS EXT,
+								CASE
+									WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+									WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILEPATH))
+									ELSE 'MANY'
+								END AS FILEPATH,
+								TENANT_ID,
+								itemid
+								FROM TBL_PHOTO_IMAGEITEM
+							GROUP BY
+								ITEMID,
+								TENANT_ID ) F ON
+							A.ITEMID = F.ITEMID
+							AND A.TENANT_ID = F.TENANT_ID
+					</isEqual>
+	        		<![CDATA[
 		              WHERE  
 		              	A.TENANT_ID = #v_TENANTID#
 		              AND
@@ -4995,6 +5045,22 @@
 	       		itemid = #itemID#
 	       	ORDER BY
 	       		TO_NUMBER(GUID)
+       	]]>
+	</select>
+	
+	<select id="EzBoardDAO.brdGetPhotoItemAttachmentInfo" parameterClass="Map" resultClass="BoardAttachVO">
+		<![CDATA[
+			SELECT
+				IMAGENAME AS FILENAME,
+				FILEPATH
+	        FROM
+	        	TBL_PHOTO_IMAGEITEM
+	       	WHERE
+	       		tenant_id = #tenantID#
+	       	AND
+	       		itemid = #itemID#
+	       	ORDER BY
+				IMAGEID ASC
        	]]>
 	</select>
 	
@@ -8704,7 +8770,8 @@
 						END BOARDNAME,
 		   				B.GUBUN  AS GUBUN,
 		   			    '' AS NOTICE,
-						A.APPRFLAG AS APPRFLAG
+						A.APPRFLAG AS APPRFLAG,
+						A.PUBLICFLAG
 	   				FROM
 	   				  	TBL_BOARD_ITEM A
 	   				INNER JOIN
@@ -8940,7 +9007,8 @@
 							ELSE (CASE WHEN #lang# = '1' THEN I.BOARDNAME WHEN #lang# = '2' THEN I.BOARDNAME2 WHEN #lang# = '3' THEN I.BOARDNAME3 WHEN #lang# = '4' THEN I.BOARDNAME4 ELSE I.BOARDNAME END)
 						END BOARDNAME,	   					
 					    I.GUBUN AS GUBUN,
-						A.APPRFLAG AS APPRFLAG
+						A.APPRFLAG AS APPRFLAG,
+					    A.PUBLICFLAG
 	   				 FROM 
 	   					TBL_BOARD_ITEM A
 	   				 INNER JOIN
@@ -9345,7 +9413,8 @@
 						END BOARDNAME,
 						B.GUBUN  AS GUBUN,
 						'' AS NOTICE,
-						A.APPRFLAG AS APPRFLAG
+						A.APPRFLAG AS APPRFLAG,
+					    A.PUBLICFLAG
    			        FROM
    			  			TBL_BOARD_ITEM A
    				    INNER JOIN
@@ -9543,7 +9612,8 @@
 							ELSE (CASE WHEN #lang# = '1' THEN I.BOARDNAME WHEN #lang# = '2' THEN I.BOARDNAME2 WHEN #lang# = '3' THEN I.BOARDNAME3 WHEN #lang# = '4' THEN I.BOARDNAME4 ELSE I.BOARDNAME END)
 						END BOARDNAME,	   							
 				        I.GUBUN AS GUBUN,
-						A.APPRFLAG AS APPRFLAG
+						A.APPRFLAG AS APPRFLAG,
+						A.PUBLICFLAG
 					FROM
 						TBL_BOARD_ITEM A
 					INNER JOIN
