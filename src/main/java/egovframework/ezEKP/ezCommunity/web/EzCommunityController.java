@@ -298,21 +298,15 @@ public class EzCommunityController extends EgovFileMngUtil{
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String browser = ClientUtil.getClientInfo(request, "browser");
 		boolean isCrossBrowser = browser.equals("IE9") ? false : true;
-		String langPrimary="", langSecondary="", userInfoDisplayName = "";
+		String langPrimary="", langSecondary="";
 		
 		langPrimary = ezCommonService.getTenantConfig("LangPrimary"+userInfo.getLang(), userInfo.getTenantId());
 		langSecondary = ezCommonService.getTenantConfig("LangSecondary"+userInfo.getLang(), userInfo.getTenantId());
 		
-		if (userInfo.getLang().equals("2")) {
-			userInfoDisplayName = userInfo.getDisplayName2();
-		} else {
-			userInfoDisplayName = userInfo.getDisplayName1();
-		}
-		
 		model.addAttribute("langPrimary", langPrimary);
 		model.addAttribute("langSecondary", langSecondary);
 		model.addAttribute("lang", userInfo.getLang());
-		model.addAttribute("userInfoDisplayName", userInfoDisplayName);
+		model.addAttribute("userInfoDisplayName", userInfo.getLang().equals("1") ?  userInfo.getDisplayName1() : userInfo.getDisplayName2());
 		model.addAttribute("idSpanValue", ezCommunityService.getCategory("", "", "", userInfo));
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		
