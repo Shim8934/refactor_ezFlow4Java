@@ -1766,8 +1766,25 @@
 					success: function(result){
 						if(result == "true"){
 							alert("<spring:message code='ezBoard.t269' />");
-							document.getElementById("addScrapBtn").innerHTML = "<li id ='delScrapBtn'><span onclick='delScrap()''><spring:message code='ezBoard.kmh14'/></span></li>";
-						} else if(result == "false"){
+							var addScrapBtn = document.getElementById('addScrapBtn');
+								addScrapBtn.id = 'delScrapBtn';
+							var spanElement = addScrapBtn.querySelector('span');
+								spanElement.onclick = delScrap
+								spanElement.setAttribute("onclick", "delScrap();");
+								spanElement.innerText = "<spring:message code='ezBoard.kmh14'/>";
+							
+							var layerSelect = document.getElementById('moreBoardIcon');
+							if (layerSelect) {
+								var addScrapBtn2 = layerSelect.querySelector('li#addScrapBtn');
+								if (addScrapBtn2) {
+									addScrapBtn2.id = 'delScrapBtn';
+									var spanElement2 = addScrapBtn2.querySelector('span');
+									spanElement2.onclick = delScrap
+									spanElement2.setAttribute("onclick", "delScrap();");
+									spanElement2.innerText = "<spring:message code='ezBoard.kmh14'/>";
+								}
+							}
+						} else if (result == "false") {
 							alert("<spring:message code='ezBoard.kmh001' />");
 							document.getElementById("addScrapBtn").innerHTML = "<li id ='delScrapBtn'><span onclick='delScrap()''><spring:message code='ezBoard.kmh14'/></span></li>";
 						} else if(result == "error"){
@@ -1823,7 +1840,24 @@
 							alert("<spring:message code='ezBoard.kmh18' />");
 							
 							if (myBoardScrapFlag == "TYPE1") {
-							    document.getElementById("delScrapBtn").innerHTML ="<li id ='addScrapBtn'><span onclick='addScrap()'><spring:message code='ezBoard.kmh13'/></span></li>";
+								var delScrapBtn = document.getElementById('delScrapBtn');
+									delScrapBtn.id = 'addScrapBtn';
+								var spanElement = delScrapBtn.querySelector('span');
+									spanElement.onclick = addScrap;
+									spanElement.setAttribute("onclick", "addScrap();");
+									spanElement.innerText = "<spring:message code='ezBoard.kmh13'/>";
+
+								var layerSelect = document.getElementById('moreBoardIcon');
+								if (layerSelect) {
+									var delScrapBtn2 = layerSelect.querySelector('li#delScrapBtn');
+									if (delScrapBtn2) {
+										delScrapBtn2.id = 'addScrapBtn';
+										var spanElement2 = delScrapBtn2.querySelector('span');
+										spanElement2.onclick = addScrap
+										spanElement2.setAttribute("onclick", "addScrap();");
+										spanElement2.innerText = "<spring:message code='ezBoard.kmh13'/>";
+									}
+								}
 							} else if (myBoardScrapFlag == "TYPE2") {
 							    document.getElementById("delScrapBtn").replaceChildren();
 							} else {
@@ -1853,14 +1887,14 @@
 		        	<c:choose>
 		        		<c:when test="${pReservedItem == 'true'}">
 		        			<li ID='btn_Modify'><span onclick='btn_Modify_Onclick()'><spring:message code='ezBoard.t316' /></span></li>
-		                    <li ID='btn_Delete'><span class="icon16 popup_icon16_delete" onclick='btn_Delete_Onclick()'></span></li>
+		                    <li ID='btn_Delete' onclick='btn_Delete_Onclick()'><span class="icon16 popup_icon16_delete switchIcon"></span><span class="iconTexts"><spring:message code='ezBoard.t113' /></span></li>
 		        		</c:when>
 		        		<c:when test="${apprFlag == 'N'}">
 		        			<li><span onClick="Appr_onclick('Y')"><spring:message code='ezBoard.t999005' /></span></li>
 		                    <li><span onClick="Appr_onclick('C')"><spring:message code='ezBoard.t999014' /></span></li>
 		                    	<c:if test="${boardItem.writerID == userInfo.id || (boardItem.writerNameType == '1' && boardItem.writerDeptID == userInfo.deptID)}">
 			                        <li ID='btn_Modify'><span onclick='btn_Modify_Onclick()'><spring:message code='ezBoard.t316' /></span></li>
-			                        <li ID='btn_Delete'><span class="icon16 popup_icon16_delete" onclick='btn_Delete_Onclick()'></span></li>
+			                        <li ID='btn_Delete' onclick='btn_Delete_Onclick()'><span class="icon16 popup_icon16_delete switchIcon"></span><span class="iconTexts"><spring:message code='ezBoard.t113' /></span></li>
 		                    	</c:if>
 		        		</c:when>
 		        		<c:when test="${apprFlag == 'C'}">
@@ -1868,7 +1902,7 @@
 		        		</c:when>
 		        		<c:when test="${apprFlag == 'W'}">
 		        			<li ID='btn_Modify'><span onclick='btn_Modify_Onclick()'><spring:message code='ezBoard.t316' /></span></li>
-		                    <li ID='btn_Delete'><span class="icon16 popup_icon16_delete" onclick='btn_Delete_Onclick()'></span></li>
+		                    <li ID='btn_Delete' onclick='btn_Delete_Onclick()'><span class="icon16 popup_icon16_delete switchIcon"></span><span class="iconTexts"><spring:message code='ezBoard.t113' /></span></li>
 		        		</c:when>
 		        		<c:otherwise>
 		        			<c:choose>
@@ -1885,10 +1919,10 @@
 				                        <li ID='btn_Copy'><span onclick='btn_Copy_Onclick()' ><spring:message code='ezBoard.t274' /></span></li>
 							            <li ID='btn_Move'><span onClick="btn_Move_Onclick()"><spring:message code='ezBoard.t134' /></span></li>
                         			</c:if>
-			        				<li ID='btn_Delete'><span class="icon16 popup_icon16_delete" onclick='btn_Delete_Onclick()'></span></li>
-			                        <li ID='btn_Print'><span class="icon16 popup_icon16_print" onclick='btn_Print_Onclick()'></span></li>
+			        				<li ID='btn_Delete' onclick='btn_Delete_Onclick()'><span class="icon16 popup_icon16_delete switchIcon"></span><span class="iconTexts"><spring:message code='ezBoard.t113' /></span></li>
+			                        <li ID='btn_Print' onclick='btn_Print_Onclick()'><span class="icon16 popup_icon16_print switchIcon"></span><span class="iconTexts"><spring:message code='main.t73'/></span></li>
 			                        <c:if test="${useExternalMailServer eq 'NO' }">
-			                        <li ID='btn_Mail' ><span class="icon16 popup_icon16_mail_gray" onclick='mail_boarditem()' ></span></li>
+			                        <li ID='btn_Mail' onclick='mail_boarditem()'><span class="icon16 popup_icon16_mail_gray switchIcon"></span><span class="iconTexts"><spring:message code='ezEmail.t177'/></span></li>
 			                        </c:if>
 			        			</c:when>
 			        			<c:when test="${boardItem.writerID == userInfo.id || boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK' || (boardItem.writerNameType == '1' && boardItem.writerDeptID == userInfo.deptID)}">
@@ -1905,10 +1939,10 @@
 										<li ID='btn_Move'><span onClick="btn_Move_Onclick()"><spring:message code='ezBoard.t134' /></span></li>
 			                        	<li ID='btn_Reader'><span onclick='ReaderList()' ><spring:message code='ezBoard.t320' /></span></li>
 			                    	</c:if>
-			                    	<li ID='btn_Delete'><span class="icon16 popup_icon16_delete" onclick='btn_Delete_Onclick()'></span></li>
-		                        	<li ID='btn_Print'><span class="icon16 popup_icon16_print" onclick='btn_Print_Onclick()'></span></li>
+			                    	<li ID='btn_Delete' onclick='btn_Delete_Onclick()'><span class="icon16 popup_icon16_delete switchIcon"></span><span class="iconTexts"><spring:message code='ezBoard.t113' /></span></li>
+		                        	<li ID='btn_Print' onclick='btn_Print_Onclick()'><span class="icon16 popup_icon16_print switchIcon"></span><span class="iconTexts"><spring:message code='main.t73'/></span></li>
 		                        	<c:if test="${useExternalMailServer eq 'NO' }">
-		                        	<li ID='btn_Mail' ><span class="icon16 popup_icon16_mail_gray" onclick='mail_boarditem()' ></span></li>
+		                        	<li ID='btn_Mail' onclick='mail_boarditem()' ><span class="icon16 popup_icon16_mail_gray switchIcon"></span><span class="iconTexts"><spring:message code='ezEmail.t177'/></span></li>
 		                        	</c:if>
 			        			</c:when>
 			        			<c:otherwise>
@@ -1919,8 +1953,8 @@
 									<!--		강민수92 end -->			        				
 			                        <li ID='btn_Reply'><span onclick='btn_Reply_Onclick()'><spring:message code='ezBoard.t88' /></span></li>
 			                        <li ID='btn_Read' ><span onclick='ReaderList()' ><spring:message code='ezBoard.t320' /></span></li>
-			                        <li ID='btn_Print'><span class="icon16 popup_icon16_print" onclick='btn_Print_Onclick()'></span></li>
-			                        <li ID='btn_Mail' style="display:none;"><span class="icon16 popup_icon16_mail_gray" onclick='mail_boarditem()' ></span></li>
+			                        <li ID='btn_Print' onclick='btn_Print_Onclick()'><span class="icon16 popup_icon16_print switchIcon" ></span><span class="iconTexts"><spring:message code='main.t73'/></span></li>
+			                        <li ID='btn_Mail' style="display:none;" onclick='mail_boarditem()' ><span class="icon16 popup_icon16_mail_gray switchIcon" ></span><span class="iconTexts"><spring:message code='ezEmail.t177'/></span></li>
 			        			</c:otherwise>
 		        			</c:choose>
 		        		</c:otherwise>

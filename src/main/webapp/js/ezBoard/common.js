@@ -1648,3 +1648,134 @@ function restoreRating() {
 	});
 }
 // 별점 평가하기 끝
+
+document.addEventListener('DOMContentLoaded', function() {
+    var currentUrl = window.location.href;
+    if (document.getElementById("menu") && (currentUrl.includes("boardItemView") || currentUrl.includes("newPortalPortalPage")) ) {
+        resizableMenuItem(currentUrl);
+    }
+});
+
+function resizableMenuItem(url) {
+    var mainmenu = document.getElementById("menu");
+    var buttonContainer = mainmenu.querySelector("ul");
+
+    var existingMoreBtn = document.getElementById("moreBoardIcon");
+    if (existingMoreBtn) {
+        existingMoreBtn.remove();
+    }
+
+    var createMoreBtnLi = document.createElement("li");
+    var createMoreBtnSpan = document.createElement("span");
+    var createMoreBtnImg = document.createElement("img");
+    var createMoreBtnUl = document.createElement("ul");
+
+    createMoreBtnLi.id = "moreBoardIcon";
+    createMoreBtnLi.classList = "view_moreboarditem";
+    createMoreBtnSpan.classList = "view_icon";
+    createMoreBtnSpan.setAttribute("onclick", "this.parentNode.classList.toggle('on')");
+    createMoreBtnImg.src = "/images/ImgIcon/view_more.png";
+    createMoreBtnUl.classList = "layer_select";
+    buttonContainer.style.overflow = "unset";
+
+    createMoreBtnSpan.appendChild(createMoreBtnImg);
+    createMoreBtnLi.appendChild(createMoreBtnSpan);
+    createMoreBtnLi.appendChild(createMoreBtnUl);
+    buttonContainer.appendChild(createMoreBtnLi);
+
+    var moreButton = createMoreBtnLi;
+    var dropdownMenu = createMoreBtnUl;
+    var buttons = [];
+    var hiddenButtons = [];
+    var timer = null;
+    var btns = buttonContainer.querySelectorAll("li");
+
+    for (var i = 0; i < btns.length; i++) {
+        var btn = btns[i];
+        if (!btn.classList.contains("view_moreboarditem") && !btn.classList.contains("layer_select") && window.getComputedStyle(btn).display !== "none" && window.getComputedStyle(btn).float !== "right" && btn.children[0].tagName !== "SELECT") {
+            buttons.push(btn);
+        }
+    }
+
+    function resizeBtn() {
+        var mainMenuWidth = document.querySelector("#bodyPopup").offsetWidth + 100;
+		
+        var rightSectionWidth = 0;
+        var rightDiv = document.querySelector("#close");
+
+        if (rightDiv) {
+            rightSectionWidth += rightDiv.offsetWidth;
+        }
+		var remainingWidth = mainMenuWidth - rightSectionWidth;
+		
+		var moreButtonWidth = remainingWidth * 0.5;
+
+		var mainMenuWidthCal = remainingWidth - moreButtonWidth;
+        var totalWidth = 0;
+
+        hiddenButtons = [];
+        buttons.forEach(function (btn) {
+            btn.style.display = "block";
+        });
+
+        buttons.forEach(function (button) {
+            totalWidth += button.offsetWidth;
+
+            if (totalWidth > mainMenuWidthCal) {
+                hiddenButtons.push(button);
+                button.style.display = "none";
+            }
+        });
+
+        dropdownMenu.innerHTML = "";
+
+        if (hiddenButtons.length > 0) {
+            moreButton.style.display = "block";
+
+            hiddenButtons.forEach(function (btn) {
+                var clone = btn.cloneNode(true);
+                clone.style.display = "";
+                dropdownMenu.appendChild(clone);
+            });
+        } else {
+            moreButton.style.display = "none";
+        }
+
+    }
+
+    window.addEventListener("resize", function () {
+        var currentUrl = window.location.href;
+        if (document.getElementById("menu") && (currentUrl.includes("boardItemView") || currentUrl.includes("newPortalPortalPage")) ) {
+            clearTimeout(timer);
+            timer = setTimeout(resizeBtn, 10);
+        }
+    });
+
+    resizeBtn();
+
+    var viewMore = null;
+
+    function hideLayerItem(event) {
+        if (viewMore && !event.target.closest('.view_moreboarditem')) {
+            viewMore.classList.remove('on');
+        }
+    }
+
+    function setUpHideLayerEventItem() {
+        viewMore = document.getElementsByClassName('view_moreboarditem')[0];
+
+        var bodyPopup = document.getElementById('bodyPopup');
+
+        bodyPopup.addEventListener('click', hideLayerItem);
+
+        var iframeBody = bodyPopup.querySelector('iframe');
+        if (iframeBody) {
+            iframeBody.addEventListener('load', function() {
+                var iframeDocument = iframeBody.contentDocument || iframeBody.contentWindow.document;
+
+                iframeDocument.addEventListener('click', hideLayerItem);
+            });
+        }
+    }
+    setUpHideLayerEventItem();
+}

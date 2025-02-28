@@ -4228,3 +4228,18 @@ a.commentFileSpan:hover {cursor: pointer; text-decoration: underline;}
 
 #ratingContainer.rating_div .imgbtn{height:25px; line-height:23px; border:1px solid #E2E2E2; border-radius:3px; box-sizing:border-box; padding:0 12px;}
 #ratingContainer.rating_div .imgbtn span{padding:0; height:auto; font-size:13px; line-height:23px;}
+
+#menu li.view_moreboarditem{position:relative;}
+#menu li.view_moreboarditem .view_icon{}
+#menu li.view_moreboarditem .view_icon img{vertical-align:middle; margin-bottom:3px;}
+#menu li.view_moreboarditem .layer_select{display:none; position:absolute; width:auto; height:auto; border:1px solid #D3D3D3; border-radius:3px; background:#fff; padding:0; z-index:1; top:calc(100% + 3px); box-shadow:0 3px 5px rgba(0,0,0,0.16);}
+#menu li.view_moreboarditem .layer_select li{float:none; margin:0; padding:0 10px; height:30px; line-height:25px; border:none; white-space:nowrap;}
+
+#menu li.view_moreboarditem.on{background:#f1f8ff;}
+#menu li.view_moreboarditem.on .layer_select{display:block;}
+#menu li.view_moreboarditem span{color: #0A0A0A;}
+
+#menu li span.iconTexts {display: none;}
+#moreBoardIcon .layer_select .icon16.switchIcon {display: none;}
+#moreBoardIcon .layer_select .iconTexts {display: block;}
+

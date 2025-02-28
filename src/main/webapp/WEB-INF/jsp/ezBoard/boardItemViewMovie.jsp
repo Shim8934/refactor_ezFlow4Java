@@ -948,7 +948,24 @@
 						success: function(result){
 							if(result == "true"){
 								alert("<spring:message code='ezBoard.t269' />");
-								document.getElementById("addScrapBtn").innerHTML = "<li id ='delScrapBtn'><span onclick='delScrap()''><spring:message code='ezBoard.kmh14'/></span></li>";
+								var addScrapBtn = document.getElementById('addScrapBtn');
+									addScrapBtn.id = 'delScrapBtn';
+								var spanElement = addScrapBtn.querySelector('span');
+									spanElement.onclick = delScrap
+									spanElement.setAttribute("onclick", "delScrap();");
+									spanElement.innerText = "<spring:message code='ezBoard.kmh14'/>";
+
+								var layerSelect = document.getElementById('moreBoardIcon');
+								if (layerSelect) {
+									var addScrapBtn2 = layerSelect.querySelector('li#addScrapBtn');
+									if (addScrapBtn2) {
+										addScrapBtn2.id = 'delScrapBtn';
+										var spanElement2 = addScrapBtn2.querySelector('span');
+											spanElement2.onclick = delScrap
+											spanElement2.setAttribute("onclick", "delScrap();");
+											spanElement2.innerText = "<spring:message code='ezBoard.kmh14'/>";
+									}
+								}
 							} else if(result == "false"){
 								alert("<spring:message code='ezBoard.kmh001' />");
 								document.getElementById("addScrapBtn").innerHTML = "<li id ='delScrapBtn'><span onclick='delScrap()''><spring:message code='ezBoard.kmh14'/></span></li>";
@@ -1004,7 +1021,24 @@
                             if(result == "true") {
                                 alert("<spring:message code='ezBoard.kmh18' />");
                                 if (myBoardScrapFlag == "TYPE1") {
-                                    document.getElementById("delScrapBtn").innerHTML ="<li id ='addScrapBtn'><span onclick='addScrap()'><spring:message code='ezBoard.kmh13'/></span></li>";
+									var delScrapBtn = document.getElementById('delScrapBtn');
+										delScrapBtn.id = 'addScrapBtn';
+									var spanElement = delScrapBtn.querySelector('span');
+										spanElement.onclick = addScrap;
+										spanElement.setAttribute("onclick", "addScrap();");
+										spanElement.innerText = "<spring:message code='ezBoard.kmh13'/>";
+
+									var layerSelect = document.getElementById('moreBoardIcon');
+									if (layerSelect) {
+										var delScrapBtn2 = layerSelect.querySelector('li#delScrapBtn');
+										if (delScrapBtn2) {
+											delScrapBtn2.id = 'addScrapBtn';
+											var spanElement2 = delScrapBtn2.querySelector('span');
+												spanElement2.onclick = addScrap
+												spanElement2.setAttribute("onclick", "addScrap();");
+												spanElement2.innerText = "<spring:message code='ezBoard.kmh13'/>";
+										}
+									}
                                 } else if (myBoardScrapFlag == "TYPE2") {
                                     document.getElementById("delScrapBtn").replaceChildren();
                                 } else {
