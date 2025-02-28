@@ -232,7 +232,6 @@ public class MailWriteProcessVO {
 	}
 	public void setCmd(String cmd) {
 		this.cmd = cmd;
-		setWriteType(); // writetype 업데이트
 	}
 	public void setCmdWithFolderName(String sentFolderName) {
 		if (folderPath.equalsIgnoreCase(draftsFolderName) && "EDIT".equals(cmd)) {
@@ -240,6 +239,16 @@ public class MailWriteProcessVO {
 		} else if (folderPath.equalsIgnoreCase(sentFolderName) && "RESEND".equals(cmd)) {
 			cmd = "RESEND_IN_SENT";
 		}
+	}
+	// FORWARD_AS_ATTACH로 변경하는 로직
+	public boolean setCmdForForwardAsAttach() {
+		boolean doChange = "FORWARD".equalsIgnoreCase(cmdOwn); // FORWARD일때만
+
+		if (doChange) {
+			cmd = "FORWARD_AS_ATTACH";
+		}
+
+		return doChange;
 	}
 	public String getCmdOwn() {
 		return cmdOwn;

@@ -171,7 +171,7 @@ public class EzEmailWriteServiceImpl extends EgovAbstractServiceImpl implements 
         writevo.setUrlOwn(urlOwn); // folderPath/uid (ex. "INBOX/4", "INBOX/4<sep>SENT/4<sep>INBOX/5")
 
         if (urlOwn.contains("<sep>")) {
-            writevo.setCmd("FORWARD_AS_ATTACH");
+            writevo.setCmdForForwardAsAttach();
             urlOwn = urlOwn.split("<sep>")[0];
         }
 
@@ -988,8 +988,9 @@ public class EzEmailWriteServiceImpl extends EgovAbstractServiceImpl implements 
          * forwardAs: DB에 있는 값 그대로 사용하면 되고, MailGeneralVO 객체 생성 시 초기화가 "inline"이므로 후처리는 필요없다.
          * 대신 cmd는 FORWARD_AS_ATTACH로 기능하도록 바꿔줘야함.
          */
-        if ("attach".equals(general.getForwardAs())) {
-            writevo.setCmd("FORWARD_AS_ATTACH");
+        if ("attach".equals(general.getForwardAs()) && writevo.setCmdForForwardAsAttach()) {
+            writevo.setWriteType(); // FORWARD_AS_ATTACH 로 변경했다면, writetype 업데이트.
+            logger.debug("WriteType=" + writevo.getWriteType());
         }
 
         writevo.setMailGeneralVO(general);

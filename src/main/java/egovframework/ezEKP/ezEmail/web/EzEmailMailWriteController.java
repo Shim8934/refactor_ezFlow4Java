@@ -239,6 +239,7 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 		}
 
 		writevo.setWriteType();
+		logger.debug("WriteType=" + writevo.getWriteType());
 
 		if (!writevo.isValid() || hasScript) {
 			return egovMessageSource.getMessage("ezEmail.lhm17", locale);
