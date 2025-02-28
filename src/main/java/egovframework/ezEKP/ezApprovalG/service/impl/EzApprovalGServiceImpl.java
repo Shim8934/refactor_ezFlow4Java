@@ -20354,23 +20354,21 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 		}
         
-		if (docXML.getElementsByTagName("SUMMARY").item(0) != null) {
+		if (docXML.getElementsByTagName("SUMMARY").item(0) != null && docXML.getElementsByTagName("SUMMARYPATH").item(0) != null) {
 			tempValue = docXML.getElementsByTagName("SUMMARY").item(0).getTextContent();
-            String summaryPathVal = docXML.getElementsByTagName("SUMMARYPATH").item(0).getTextContent();
-			
-			if (!tempValue.trim().equals("")) {
+            String tempValue2 = docXML.getElementsByTagName("SUMMARYPATH").item(0).getTextContent();
+			if (!tempValue.trim().equals("") && !tempValue2.trim().equals("")) {
 				if (firstFlag) {
 					map.put("v_SUMMARY", tempValue);
+                    map.put("v_SUMMARYPATH", tempValue2);
 					map.put("v_FIRSTFLAG17", firstFlag);
 					firstFlag = false;
 				} else {
 					map.put("v_SUMMARY", tempValue);
+                    map.put("v_SUMMARYPATH", tempValue2);
 					map.put("v_FIRSTFLAG17", firstFlag);
 				}
 			}
-            if (Strings.isNotBlank(summaryPathVal)) {
-                map.put("v_SUMMARYPATH", summaryPathVal);
-            }
 		}
 		
 		if (docXML.getElementsByTagName("SECURITYAPPROVAL").item(0) != null) {
