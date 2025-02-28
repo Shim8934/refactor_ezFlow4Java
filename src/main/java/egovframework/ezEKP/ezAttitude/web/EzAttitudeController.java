@@ -3102,7 +3102,7 @@ public class EzAttitudeController {
 			if (reqType.equals("check")) {
 	//			근태조회엑셀
 				// 2024-03-12 조수빈 - 파일명 다국어 처리 (한국어의 경우 'YYYY-MM-DD_근태입력관리')
-				pFileName = EgovDateUtil.getToday("-") + "_" + egovMessageSource.getMessage("ezAttitude.t5", locale);
+				pFileName = EgovDateUtil.getToday("-") + "_" + egovMessageSource.getMessage("ezAttitude.t5", locale).replaceAll(" ", "_");
 				
 				//header
 				row.createCell(0).setCellValue("NO.");
