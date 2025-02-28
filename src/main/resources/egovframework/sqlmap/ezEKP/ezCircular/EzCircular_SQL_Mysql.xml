@@ -1592,6 +1592,7 @@
 					circularcomment,
 					memberid,
 					membername,
+					membername2,
 					DATE_ADD(DATE_FORMAT(regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS regdate,
 					status,
 					tenantid
@@ -1626,6 +1627,7 @@
 					A.circularcomment,
 					A.memberid,
 					A.membername,
+					membername2,
 					DATE_ADD(DATE_FORMAT(A.regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS regdate,
 					A.status,
 					B.status AS confirmStatus,

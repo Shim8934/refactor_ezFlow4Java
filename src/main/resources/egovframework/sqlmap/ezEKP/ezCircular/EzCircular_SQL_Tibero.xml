@@ -1668,6 +1668,7 @@
 					circularcomment,
 					memberid,
 					membername,
+					membername2,
 					TO_CHAR(TO_DATE(regdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') AS regdate,
 					status,
 					tenantid
@@ -1702,6 +1703,7 @@
 					A.circularcomment,
 					A.memberid,
 					A.membername,
+					membername2,
 					TO_CHAR(TO_DATE(A.regdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') AS regdate,
 					A.status,
 					B.status AS confirmStatus,

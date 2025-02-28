@@ -12,6 +12,8 @@ function getCircularComment() {
 			searchValue : $("#searchValue").val()
 		},
 		success : function(result) {
+			var lang = result.userInfo.lang;
+			
 			if (commentType == 'totalComment') {
 				circularUserList = "<colgroup><col width='20%' /><col width='62%' /><col width='18%' /></colgroup>";
 				
@@ -21,9 +23,9 @@ function getCircularComment() {
 					circularUserList += "<th style='border-top:0px;border-bottom:1px solid #e2e2e2;border-right:0px;border-left:0px;text-align:left;background-color:white;'>";
 					
 					if (vo.status == 1) {
-						circularUserList += "<img src='/images/ImgIcon/msg-rd.png' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
+						circularUserList += "<img src='/images/ImgIcon/msg-rd.png' style='vertical-align:middle;'/>&nbsp;" + (lang == 1 ? vo.memberName : vo.memberName2) + "&nbsp;";
 					} else {
-						circularUserList += "<img src='/images/ImgIcon/msg-unrd.png' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
+						circularUserList += "<img src='/images/ImgIcon/msg-unrd.png' style='vertical-align:middle;'/>&nbsp;" + (lang == 1 ? vo.memberName : vo.memberName2) + "&nbsp;";
 					}
 					
 					if (status == 0 && (option == 1 || option == 3)) {
@@ -52,7 +54,7 @@ function getCircularComment() {
 				
 				commentList.forEach(function(vo, index) {
 					circularCommentList  = "<tr class='circularComment' circularUserID='" + vo.circularUserID + "' memberID='" + vo.memberID + "' circularCommentID='" + vo.circularCommentID + "' circularCommentStatus='" + vo.status + "' style='height:40px;text-align:left;border:1px solid #e2e2e2; background-color:#fafafa;'>";
-					circularCommentList += "<td style='padding-left:3px'>&nbsp;&nbsp;<img src='/images/ImgIcon/commentRe.gif' style='vertical-align:middle; margin-bottom:9px'/>&nbsp;" + vo.memberName + "</td>";
+					circularCommentList += "<td style='padding-left:3px'>&nbsp;&nbsp;<img src='/images/ImgIcon/commentRe.gif' style='vertical-align:middle; margin-bottom:9px'/>&nbsp;" + (lang == 1 ? vo.memberName : vo.memberName2) + "</td>";
 					circularCommentList += "<td style='text-align:left;vertical-align:middle;padding:10px;white-space:pre-wrap;'>" + vo.circularComment + "&nbsp;&nbsp;";
 					
 					if (vo.memberID == userInfoID && vo.status == 0) {
@@ -111,9 +113,9 @@ function getCircularComment() {
 					circularCommentList += "<td style='padding:10px;border-top:0px;border-bottom:1px solid #e2e2e2;border-right:0px;border-left:0px;text-align:left;background-color:white;'>";
 					
 					if (vo.confirmStatus == 1) {
-						circularCommentList += "<img src='/images/ImgIcon/msg-rd.png' style='vertical-align:middle;'/>&nbsp;" + vo.memberName;
+						circularCommentList += "<img src='/images/ImgIcon/msg-rd.png' style='vertical-align:middle;'/>&nbsp;" + (lang == 1 ? vo.memberName : vo.memberName2);
 					} else if (vo.confirmStatus == 0) {
-						circularCommentList += "<img src='/images/ImgIcon/msg-unrd.png' style='vertical-align:middle;'/>&nbsp;" + vo.memberName;
+						circularCommentList += "<img src='/images/ImgIcon/msg-unrd.png' style='vertical-align:middle;'/>&nbsp;" + (lang == 1 ? vo.memberName : vo.memberName2);
 					}
 					
 					circularCommentList += "</td>";
