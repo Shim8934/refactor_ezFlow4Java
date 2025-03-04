@@ -18039,7 +18039,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				String targetPath = dirPath + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + getDocDir(docID) + commonUtil.separator + docID + "." + extFileName;
 				
 				rtnVal = copyFile(source, targetPath, dirPath + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + getDocDir(docID));
-				ApprGSummaryVO summary = getSummaryDB(docID, companyID, tenantID, "APR");
                 
                 // 파일 복사에 성공하면 완료문서 관련 테이블에 데이터 입력.
 				if (rtnVal) {

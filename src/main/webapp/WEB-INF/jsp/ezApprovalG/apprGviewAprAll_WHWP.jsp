@@ -84,6 +84,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/appandbody_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/apprGSummary.js')}"></script>
 	    <script type="text/javascript">
 	        var docID = "<c:out value='${docID}'/>";
 	        var docHref = "<c:out value='${docHref}'/>";
@@ -961,6 +962,7 @@
 							<%--<li id="tbtnReturn" style="display: none;"><span onclick="return btnReturn_onclick()"><spring:message code='ezApprovalG.t1434'/></span></li>--%>
 	                        <li id="btnOpinion"><span onclick="return btnOpinion_onclick()"><spring:message code='ezApprovalG.t55'/></span></li>
 	                        <li id="btnDocInfo"><span onclick="return btnDocInfo_onclick()"><spring:message code='ezApprovalG.t54'/></span></li>
+	                        <li id="btnSummary"><span onclick="return btnSummaryView()"><spring:message code='ezApprovalG.t1203'/></span></li> <%-- 요약전 --%>
 	                        <li id="btnhistory"><span onclick="btnhistory_onclick()"><spring:message code='ezApprovalG.t61'/></span></li>
 	                        <%-- 일괄기안문서는 결재진행 도중 문서저장 불가능 --%>
 	                        <li id="tbtnTotalSave" style="display: none"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
