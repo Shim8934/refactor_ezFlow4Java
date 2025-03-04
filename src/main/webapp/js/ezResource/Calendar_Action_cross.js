@@ -797,27 +797,62 @@ function tableListControl_Week()
                 selObj.appendChild(_table);
             }
             else {
+                var startcheck = weekdatename.indexOf(s_weekDateSet);
+                var endcheck = weekdatename.indexOf(e_weekDateSet);
+                if(DefaultView != 0){
+                    if(startcheck != -1){
+                        startcheck = startcheck + 1;
+                    }
+                    if(endcheck != -1){
+                        endcheck = endcheck + 1;
+                    }
+                }
                 if (weekdatename[0] <= s_weekDateSet && e_weekDateSet <= weekdatename[6]) {
                     var startCnt = getNodeText(xmldom.getElementsByTagName("dsDaytype")[j]);
                     var endCnt = getNodeText(xmldom.getElementsByTagName("deDaytype")[j]);
                     var endCnt2 = endCnt;
                     if (endCnt == 0) endCnt2 = 7;
                     for (var i = startCnt; i <= endCnt2; i++) {
-                        if (endCnt == 0 && i == 7)
-                            makeTable(xmldom, j, endCnt);
-                        else
-                            makeTable(xmldom, j, i);
+                        if (endCnt == 0 && i == 7) {
+                            if(startcheck == i){
+                                makeTable(xmldom, j, endCnt, "S");
+                            }else if(endcheck == i){
+                                makeTable(xmldom, j, endCnt, "E");
+                            }else{
+                                makeTable(xmldom, j, endCnt, "N");
+                            }
+                        }else {
+                            if(startcheck == i){
+                                makeTable(xmldom, j, i, "S");
+                            }else if(endcheck == i){
+                                makeTable(xmldom, j, i, "E");
+                            }else{
+                                makeTable(xmldom, j, i, "N");
+                            }
+                        }
                     }
                 }
                 else if (s_weekDateSet < weekdatename[0] && e_weekDateSet <= weekdatename[6]) {
                     var endCnt = getNodeText(xmldom.getElementsByTagName("deDaytype")[j]);
                     if (DefaultView == 0) { //일요일 시작
                     	for (var i = endCnt; 0 <= i; i--) {
-                    		makeTable(xmldom, j, i);
+                            if(startcheck == i){
+                                makeTable(xmldom, j, i, "S");
+                            }else if(endcheck == i){
+                                makeTable(xmldom, j, i, "E");
+                            }else{
+                                makeTable(xmldom, j, i, "N");
+                            }
                     	}
                     } else { // 월요일 시작
 	                    for (var i = endCnt; 0 < i; i--) {
-	                    	makeTable(xmldom, j, i);
+                            if(startcheck == i){
+                                makeTable(xmldom, j, i, "S");
+                            }else if(endcheck == i){
+                                makeTable(xmldom, j, i, "E");
+                            }else{
+                                makeTable(xmldom, j, i, "N");
+                            }
 	                    }
                     }
                 }
@@ -825,24 +860,48 @@ function tableListControl_Week()
                     var startCnt = getNodeText(xmldom.getElementsByTagName("dsDaytype")[j]);
                     if (DefaultView == 0) { //일요일 시작
                     	for (var i = startCnt; i < 7; i++) {
-                    		makeTable(xmldom, j, i);
+                            if(startcheck == i){
+                                makeTable(xmldom, j, i, "S");    
+                            }else if(endcheck == i){
+                                makeTable(xmldom, j, i, "E");   
+                            }else{
+                                makeTable(xmldom, j, i, "N");
+                            }
                     	}
                     } else {
 	                    for (var i = startCnt; i < 8; i++) {
 	                        if (i == 7 || i == 0) {
 	                        	if (DefaultView == 1) { // 월요일 시작
-	                        		makeTable(xmldom, j, 0);
+                                    if(startcheck == i){
+                                        makeTable(xmldom, j, 0, "S");
+                                    }else if(endcheck == i){
+                                        makeTable(xmldom, j, 0, "E");
+                                    }else{
+                                        makeTable(xmldom, j, 0, "N");
+                                    }
 	                        	}
 	                        	break;
 	                        } else {
-	                        	makeTable(xmldom, j, i);
+                                if(startcheck == i){
+                                    makeTable(xmldom, j, i, "S");
+                                }else if(endcheck == i){
+                                    makeTable(xmldom, j, i, "E");
+                                }else{
+                                    makeTable(xmldom, j, i, "N");
+                                }
 	                        }
 	                    }
                     }
                 }
                 else {
                     for (var i = 0; i < 7; i++) {
-                        makeTable(xmldom, j, i);
+                        if(startcheck == i){
+                            makeTable(xmldom, j, i, "S");
+                        }else if(endcheck == i){
+                            makeTable(xmldom, j, i, "E");
+                        }else{
+                            makeTable(xmldom, j, i, "N");
+                        }
                     }
                 }
             }
@@ -853,7 +912,7 @@ function tableListControl_Week()
     }
     
 }
-function makeTable(xmldom, pNum, dayType) {
+function makeTable(xmldom, pNum, dayType, checkout) {
     var selObj = document.getElementById("Week_" + getNodeText(xmldom.getElementsByTagName("owner_id")[pNum]) + "_" + dayType);
 
     var approveflag_name = "";
@@ -887,7 +946,15 @@ function makeTable(xmldom, pNum, dayType) {
 
     _td = document.createElement("TD");
     _span.style.color = "#0090d0";
-    setNodeText(_span,Content_Sp_Start[0] + ":" + Content_Sp_Start[1] + " - " + Content_Sp_End[0] + ":" + Content_Sp_End[1]);
+    if(typeof checkout != "undefined" && checkout == "S"){
+        setNodeText(_span,Content_Sp_Start[0] + ":" + Content_Sp_Start[1] + " - " + "23" + ":" + "59");
+    }else if(typeof checkout != "undefined" && checkout == "E"){
+        setNodeText(_span,"00" + ":" + "00" + " - " + Content_Sp_End[0] + ":" + Content_Sp_End[1]);
+    }else if(typeof checkout != "undefined" && checkout == "N"){
+        setNodeText(_span,"00" + ":" + "00" + " - " + "23" + ":" + "59");
+    }else{
+        setNodeText(_span,Content_Sp_Start[0] + ":" + Content_Sp_Start[1] + " - " + Content_Sp_End[0] + ":" + Content_Sp_End[1]);
+    }
     _td.appendChild(_span);
     _tr.appendChild(_td);
     _table.appendChild(_tr);
