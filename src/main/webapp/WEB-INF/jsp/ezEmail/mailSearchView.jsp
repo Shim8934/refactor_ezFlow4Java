@@ -527,7 +527,7 @@
 			            mail_movecopy_cross_dialogArguments[1] = move_mail_onclick_Complete;
 			            mail_movecopy_cross_dialogArguments[2] = "CLOSE";
 			            
-			            var OpenWin = window.open(requestUrl, "mail_movecopy_cross", GetOpenWindowfeature(320, 375));
+			            var OpenWin = window.open(requestUrl, "mail_movecopy_cross", GetOpenWindowfeature(500, 700));
 			            try { OpenWin.focus(); } catch (e) {console.log(e);}
 			        }
 			        else {
