@@ -150,7 +150,7 @@
 			// 월 ~ 금 5일 고정 
 			for (var a = 0; a < 5; a++) {
 				
-				if (formatDate(startDate) == mealDataList[a].mealDate){
+				if (mealDataList[a] && (formatDate(startDate) == mealDataList[a].mealDate)) {
 					mealTable.getElementsByTagName('tr')[0].getElementsByTagName('th')[a + 1].innerText = mealDataList[a].mealDate;
 					mealTable.getElementsByTagName('tr')[1].getElementsByTagName('td')[a].innerText = mealDataList[a].aCourse;
 					mealTable.getElementsByTagName('tr')[2].getElementsByTagName('td')[a].innerText = mealDataList[a].bCourse;
