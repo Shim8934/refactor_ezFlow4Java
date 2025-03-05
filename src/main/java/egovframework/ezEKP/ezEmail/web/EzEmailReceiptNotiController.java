@@ -3,12 +3,10 @@ package egovframework.ezEKP.ezEmail.web;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.mail.Address;
@@ -306,8 +304,6 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 						tempMailList.add(email);
 					}
 				}
-
-				Set<String> tempMailSet = new HashSet<>(tempMailList);
 				
 				// readList
 				for (MailReadVO vo : readList) {
@@ -318,7 +314,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 						realEmailAddress = aliasAddressMap.get(realEmailAddress);
 					}
 
-					if (!tempMailSet.contains(realEmailAddress)) {
+					if (!tempMailList.contains(realEmailAddress)) {
 						String readerEmail = vo.getReaderEmail();
 						String readerName = vo.getReaderName();
 
@@ -352,7 +348,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 
 				// cancelList
 				for (MailCancelVO vo : cancelList) {
-					if (!tempMailSet.contains(vo.getReaderEmail())) {
+					if (!tempMailList.contains(vo.getReaderEmail())) {
 						String readerEmail = vo.getReaderEmail();
 						String readerName = vo.getReaderName() == null ? readerEmail : vo.getReaderName();
 						String primaryEmail = vo.getPrimaryEmail();
