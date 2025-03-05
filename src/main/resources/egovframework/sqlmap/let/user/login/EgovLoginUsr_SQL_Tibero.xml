@@ -37,9 +37,10 @@
         <result property="userFileUrl"          column="userFileUrl"                columnIndex="23"/>
         <result property="sabun"              	column="sabun"                		columnIndex="24"/>
 		<result property="password_updatedt"    column="password_updatedt"			columnIndex="25"/>
-		<result property="extensionattribute5"	column="extensionattribute5"		columnIndex="26"/>
-		<result property="jobId"				column="jobId"						columnIndex="27"/>
-		<result property="roleId"				column="roleId"						columnIndex="28"/>
+		<result property="mobile"              	column="mobile"                		columnIndex="26"/>
+		<result property="extensionattribute5"	column="extensionattribute5"		columnIndex="27"/>
+		<result property="jobId"				column="jobId"						columnIndex="28"/>
+		<result property="roleId"				column="roleId"						columnIndex="29"/>
 	</resultMap>	
 
 	<resultMap id="session" class="egovframework.let.user.login.vo.SessionVO">
@@ -102,7 +103,8 @@
 	                extensionattribute4 as gyumJik,
 	                extensionattribute2 as userFileUrl,
 	                extensionattribute14 as sabun,
-	                password_updatedt,
+					password_updatedt,
+					mobile,
 					extensionattribute5,
 					EXTENSIONATTRIBUTE7  as jobId,
 					EXTENSIONATTRIBUTE8  as roleId
@@ -153,6 +155,7 @@
 					u.extensionattribute2 as userFileUrl,
 					u.extensionattribute14 as sabun,
 					u.password_updatedt,
+					u.mobile,
 					u.extensionattribute5,
 					CAST(B.JOBID AS NVARCHAR2(200)) as jobId,
 					CAST(B.ROLEID AS NVARCHAR2(200)) as roleId
@@ -203,7 +206,8 @@
 	                extensionattribute4 as gyumJik,
 	                extensionattribute2 as userFileUrl,
 	                extensionattribute14 as sabun,
-	                password_updatedt,
+					password_updatedt,
+					mobile,
 	                extensionattribute5,
 					EXTENSIONATTRIBUTE7  as jobId,
 					EXTENSIONATTRIBUTE8  as roleId
@@ -254,6 +258,7 @@
 					u.extensionattribute2 as userFileUrl,
 					u.extensionattribute14 as sabun,
 					u.password_updatedt,
+					u.mobile
 					u.extensionattribute5,
 					CAST(B.JOBID AS NVARCHAR2(200)) as jobId,
 					CAST(B.ROLEID AS NVARCHAR2(200)) as roleId
