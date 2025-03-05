@@ -5726,6 +5726,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			
 			return "true";
 		} catch (Exception e) {
+			logger.debug(e.getMessage());
 			return "false";
 		}
 	}
