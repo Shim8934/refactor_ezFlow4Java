@@ -139,7 +139,7 @@
 			// 월 ~ 금 5일 고정 
 			for (var a = 0; a < 5; a++) {
 				
-				if (formatDate(startDate) == mealDataList[a].mealDate){
+				if (mealDataList[a] && (formatDate(startDate) == mealDataList[a].mealDate)) {
 					mealTable.getElementsByTagName('tr')[0].getElementsByTagName('th')[a + 1].innerText = mealDataList[a].mealDate;
 					mealTable.getElementsByTagName('tr')[1].getElementsByTagName('td')[a].innerHTML = "<textarea maxlength='100'>" + (mealDataList[a].aCourse != null ? mealDataList[a].aCourse : '') + "</textarea>";
 					mealTable.getElementsByTagName('tr')[2].getElementsByTagName('td')[a].innerHTML = "<textarea maxlength='100'>" + (mealDataList[a].bCourse != null ?  mealDataList[a].bCourse : '') + "</textarea>";

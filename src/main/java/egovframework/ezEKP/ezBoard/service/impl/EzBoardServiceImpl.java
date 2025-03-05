@@ -7110,13 +7110,17 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		MealDataVO lunch = ezBoardDAO.getTodayLunch(map);
 
-		if ((null != lunch.getaCourse() && !"".equals(lunch.getaCourse()))
-			|| (null != lunch.getbCourse() && !"".equals(lunch.getbCourse()))
-			|| (null != lunch.getSaladBar() && !"".equals(lunch.getSaladBar()))
-			|| (null != lunch.getDessert() && !"".equals(lunch.getDessert()))
+		if (lunch != null) {
+			if ((null != lunch.getaCourse() && !"".equals(lunch.getaCourse()))
+				|| (null != lunch.getbCourse() && !"".equals(lunch.getbCourse()))
+				|| (null != lunch.getSaladBar() && !"".equals(lunch.getSaladBar()))
+				|| (null != lunch.getDessert() && !"".equals(lunch.getDessert()))
 			) {
-			returnJson.put("RTNVALUE", "OK");
-			returnJson.put("lunch", lunch);
+				returnJson.put("RTNVALUE", "OK");
+				returnJson.put("lunch", lunch);
+			} else {
+				returnJson.put("RTNVALUE", "NO_MENU");
+			}
 		} else {
 			returnJson.put("RTNVALUE", "NO_MENU");
 		}
