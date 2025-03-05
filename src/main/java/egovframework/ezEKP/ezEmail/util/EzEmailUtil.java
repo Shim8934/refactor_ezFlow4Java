@@ -329,6 +329,8 @@ public class EzEmailUtil {
 		if (useStandardFolderId != null && useStandardFolderId.equals("YES")) {								
 			if (folderId.equals("INBOX") || folderId.startsWith("INBOX.")) {
 				displayName = folderId.replaceFirst("INBOX", egovMessageSource.getMessage("ezEmail.t644", locale));
+			} else if ("ALLMAIL".equalsIgnoreCase(folderId)) {
+				displayName = folderId.replace("ALLMAIL", egovMessageSource.getMessage("email.allmail", locale));
 			} else if (folderId.equals("Sent") || folderId.startsWith("Sent.")) {
 				displayName = folderId.replaceFirst("Sent", egovMessageSource.getMessage("ezEmail.t645", locale));
 			} else if (folderId.equals("Drafts") || folderId.startsWith("Drafts.")) {
@@ -357,6 +359,8 @@ public class EzEmailUtil {
 		if (useStandardFolderId != null && useStandardFolderId.equals("YES")) {	
 			if (displayName.equals(egovMessageSource.getMessage("ezEmail.t644", locale))) {
 				folderId = "INBOX";
+			} else if (displayName.equals(egovMessageSource.getMessage("email.allmail", locale))) {
+				folderId = "ALLMAIL";
 			} else if (displayName.equals(egovMessageSource.getMessage("ezEmail.t645", locale))) {
 				folderId = "Sent";
 			} else if (displayName.equals(egovMessageSource.getMessage("ezEmail.t646", locale))) {

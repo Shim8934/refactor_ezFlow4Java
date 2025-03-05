@@ -386,6 +386,8 @@ function MakeListInfoHTML(ConentObject) {
 	                            } else {
 	                            	p_Subject = "<div id = \"subject\"style=\" cursor:pointer; max-width:85%; display:inline-block;overflow:hidden; text-overflow: ellipsis;\">" + "<span style='color: #999;'>" + p_mailBoxName + "</span>" + p_Subject + "</div>&nbsp;&nbsp;<img class='mailpopupicon' src=\"/images/email/popup_icon.gif\" width=\"12px\"  onclick = \"mailOpenPopup(this, event)\" />";
 	                            }
+                            } else {
+                                p_Subject = "<span style='color: #999;'>" + p_mailBoxName + "</span>" + p_Subject
                             }
                             
                             _TDColum.innerHTML = p_Subject;
