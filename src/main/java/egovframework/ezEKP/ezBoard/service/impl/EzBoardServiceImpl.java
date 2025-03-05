@@ -7093,6 +7093,38 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		return ezBoardDAO.getBoardListItem(map);
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public JSONObject getMenuSchedule(Map<String, Object> map, JSONObject returnJson) throws Exception {
+
+		SimpleDateFormat orgDateFormat = new SimpleDateFormat("yyyy.MM.dd");
+		SimpleDateFormat newDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		String orgStartDate = (String) map.get("date");
+
+		if (orgStartDate == null || "".equals(orgStartDate)) { // 값이 없으면 오늘 날짜 지정
+			orgStartDate = orgDateFormat.format(new Date());
+		}
+
+		orgStartDate = newDateFormat.format(orgDateFormat.parse(orgStartDate));
+		map.put("startDate", orgStartDate);
+		
+		MealDataVO lunch = ezBoardDAO.getTodayLunch(map);
+
+		if ((null != lunch.getaCourse() && !"".equals(lunch.getaCourse()))
+			|| (null != lunch.getbCourse() && !"".equals(lunch.getbCourse()))
+			|| (null != lunch.getSaladBar() && !"".equals(lunch.getSaladBar()))
+			|| (null != lunch.getDessert() && !"".equals(lunch.getDessert()))
+			) {
+			returnJson.put("RTNVALUE", "OK");
+			returnJson.put("lunch", lunch);
+		} else {
+			returnJson.put("RTNVALUE", "NO_MENU");
+		}
+
+		return returnJson;
+
+	}
+
 	@Override
 	public void insertItemStarRating(String itemID, String userID, String rating, int tenantID, String companyID, String ratingDate) throws Exception {
 		logger.debug("insertItemStarRating started");
@@ -7280,33 +7312,5 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		result.put("averageScore", updateAverageScore);
 		
 		return result;
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public JSONObject getMenuSchedule(Map<String, Object> map, JSONObject returnJson) throws Exception {
-
-		SimpleDateFormat orgDateFormat = new SimpleDateFormat("yyyy.MM.dd");
-		SimpleDateFormat newDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		String orgStartDate = (String) map.get("date");
-
-		if (orgStartDate == null || "".equals(orgStartDate)) { // 값이 없으면 오늘 날짜 지정
-			orgStartDate = orgDateFormat.format(new Date());
-		}
-
-		orgStartDate = newDateFormat.format(orgDateFormat.parse(orgStartDate));
-		map.put("startDate", orgStartDate);
-		
-		MealDataVO lunch = ezBoardDAO.getTodayLunch(map);
-
-		if (lunch != null) {
-			returnJson.put("RTNVALUE", "OK");
-			returnJson.put("lunch", lunch);
-		} else {
-			returnJson.put("RTNVALUE", "NO_MENU");
-		}
-
-		return returnJson;
-
 	}
 }
