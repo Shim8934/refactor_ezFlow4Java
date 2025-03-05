@@ -97,9 +97,8 @@
 	        			var customWidth = 170 - (14 * imgCnt);
 	        			$(element).css("width", customWidth+"px");
 	        			$(element).css("text-align", "justify");
-	        			$(element).attr("title", title);	
 	        		}
-							
+					$(element).attr("title", title);
 	        	});
 	        }	        
 	        

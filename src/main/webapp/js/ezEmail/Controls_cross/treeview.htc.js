@@ -850,7 +850,9 @@
             if (GetAttribute(childNode, "title") != null) {
             	if (mydepth != "1") {
             		SPAN_TAG.setAttribute("title", GetAttribute(childNode, "caption"));
-            	}
+            	} else if (typeof window !== "undefined" && window.location && window.location.href && window.location.href.includes("addressFolderManage.do")) {
+                    SPAN_TAG.setAttribute("title", GetAttribute(childNode, "caption"));
+                }
             }
             
             
