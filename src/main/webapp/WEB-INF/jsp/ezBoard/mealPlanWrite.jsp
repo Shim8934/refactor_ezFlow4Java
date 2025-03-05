@@ -136,14 +136,15 @@
 			var mealTable = document.getElementById("mealCal");
 			
 			// 월요일부터 하루씩 해당하는 일자가 있는지 비교하고, 해당 일자가 없으면 반복문을 빠져나가고 데이터가 있으면 테이블을 채우는 반복문 실행
-			for (var a = 0; a < mealDataList.length; a++) {
+			// 월 ~ 금 5일 고정 
+			for (var a = 0; a < 5; a++) {
 				
 				if (formatDate(startDate) == mealDataList[a].mealDate){
 					mealTable.getElementsByTagName('tr')[0].getElementsByTagName('th')[a + 1].innerText = mealDataList[a].mealDate;
-					mealTable.getElementsByTagName('tr')[1].getElementsByTagName('td')[a].innerHTML = "<textarea maxlength='100'>" + mealDataList[a].aCourse + "</textarea>";
-					mealTable.getElementsByTagName('tr')[2].getElementsByTagName('td')[a].innerHTML = "<textarea maxlength='100'>" + mealDataList[a].bCourse + "</textarea>";
-					mealTable.getElementsByTagName('tr')[3].getElementsByTagName('td')[a].innerHTML = "<textarea maxlength='100'>" + mealDataList[a].saladBar + "</textarea>";
-					mealTable.getElementsByTagName('tr')[4].getElementsByTagName('td')[a].innerHTML = "<textarea maxlength='100'>" + mealDataList[a].dessert + "</textarea>";
+					mealTable.getElementsByTagName('tr')[1].getElementsByTagName('td')[a].innerHTML = "<textarea maxlength='100'>" + (mealDataList[a].aCourse != null ? mealDataList[a].aCourse : '') + "</textarea>";
+					mealTable.getElementsByTagName('tr')[2].getElementsByTagName('td')[a].innerHTML = "<textarea maxlength='100'>" + (mealDataList[a].bCourse != null ?  mealDataList[a].bCourse : '') + "</textarea>";
+					mealTable.getElementsByTagName('tr')[3].getElementsByTagName('td')[a].innerHTML = "<textarea maxlength='100'>" + (mealDataList[a].saladBar != null ? mealDataList[a].saladBar : '') + "</textarea>";
+					mealTable.getElementsByTagName('tr')[4].getElementsByTagName('td')[a].innerHTML = "<textarea maxlength='100'>" + (mealDataList[a].dessert != null ? mealDataList[a].dessert : '') + "</textarea>";
 					mealTable.getElementsByTagName('tr')[5].getElementsByTagName('td')[a].innerHTML = "<textarea class='number-only' maxlength='10'>" + (mealDataList[a].totalCal == 0 ? "" : mealDataList[a].totalCal) + "</textarea>";
 				} else {
 					mealTable.getElementsByTagName('tr')[0].getElementsByTagName('th')[a + 1].innerText = formatDate(startDate);
@@ -204,14 +205,12 @@
 							'background': '#1e90ff',
 							'border' : '1px solid #dddddd'
 						});
-						$(this).find('a').removeClass('ui-state-default');
 						$(this).css('background', '#1e90ff');
 					});
 					
 					$(this).mouseout(function() {
 						$(this).css('background', '#ffffff');
 						$(this).find('a').css('background', '');
-						$(this).find('a').addClass('ui-state-default');
 					});
 				}
 			});

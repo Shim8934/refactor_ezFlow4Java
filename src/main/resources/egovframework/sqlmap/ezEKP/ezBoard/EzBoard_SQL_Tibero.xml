@@ -9984,6 +9984,74 @@
 		]]>
 	</select>
 
+	<select id="EzBoardDAO.getMealPlanList" parameterClass="Map" resultClass="MealDataVO">
+		SELECT
+				TO_CHAR(MEALDATE, 'YYYY-MM-DD') AS MEALDATE,
+				NVL(ACOURSE, '') AS ACOURSE,
+				NVL(BCOURSE, '') AS BCOURSE,
+				NVL(SALADBAR, '') AS SALADBAR,
+				NVL(DESSERT, '') AS DESSERT,
+				NVL(TOTALCAL, '') AS TOTALCAL
+		FROM
+				TBL_MEAL_PLAN
+		WHERE
+				MEALDATE BETWEEN to_date(#startDate#, 'YYYY-MM-DD') AND to_date(#startDate#, 'YYYY-MM-DD') + 4
+		AND
+				COMPANYID = #companyID#
+		AND
+				TENANT_ID = #tenantID#
+		ORDER BY
+				MEALDATE ASC
+	</select>
+	
+	<insert id="EzBoardDAO.saveMealplan" parameterClass="MealDataVO">
+		MERGE INTO TBL_MEAL_PLAN target
+		USING (
+				SELECT
+					TO_DATE(#mealDate#, 'YYYY-MM-DD') AS MEALDATE,
+					#aCourse# AS ACOURSE,
+					#bCourse# AS BCOURSE,
+					#saladBar# AS SALADBAR,
+					#dessert# AS DESSERT,
+					#totalCal# AS TOTALCAL,
+					#companyID# AS COMPANYID,
+					#tenantID# AS TENANT_ID
+				FROM dual) source
+		ON (TO_DATE(target.MEALDATE, 'YYYY-MM-DD') = TO_DATE(source.MEALDATE, 'YYYY-MM-DD')
+			AND target.COMPANYID = source.COMPANYID
+			AND target.TENANT_ID = source.TENANT_ID)
+		WHEN MATCHED THEN
+			UPDATE SET
+				target.ACOURSE = source.ACOURSE,
+				target.BCOURSE = source.BCOURSE,
+				target.SALADBAR = source.SALADBAR,
+				target.DESSERT = source.DESSERT,
+				target.TOTALCAL = source.TOTALCAL
+		WHEN NOT MATCHED THEN
+			INSERT (MEALDATE, ACOURSE, BCOURSE, SALADBAR, DESSERT, TOTALCAL, COMPANYID, TENANT_ID)
+			VALUES (TO_DATE(source.MEALDATE, 'YYYY-MM-DD'), source.ACOURSE, source.BCOURSE, source.SALADBAR, source.DESSERT, source.TOTALCAL, source.COMPANYID, source.TENANT_ID)
+	</insert>
+
+	<select id="EzBoardDAO.getTodayLunch" parameterClass="Map" resultClass="MealDataVO">
+		SELECT
+				TO_CHAR(MEALDATE, 'YYYY-MM-DD') AS MEALDATE,
+				NVL(ACOURSE, '') AS ACOURSE,
+				NVL(BCOURSE, '') AS BCOURSE,
+				NVL(SALADBAR, '') AS SALADBAR,
+				NVL(DESSERT, '') AS DESSERT,
+				NVL(TOTALCAL, '') AS TOTALCAL
+		FROM
+				TBL_MEAL_PLAN
+		WHERE
+				MEALDATE = TO_DATE(#date#, 'YYYY-MM-DD')
+		AND
+				COMPANYID = #companyID#
+		AND
+				TENANT_ID = #tenantID#
+		ORDER BY
+				MEALDATE ASC
+	</select>
+	
 	<!-- 2024-10-02 이혜림 - 별점 추가하는 쿼리 -->
 	<insert id="EzBoardDAO.insertItemStarRating" parameterClass="Map">
 		<![CDATA[
@@ -10090,73 +10158,5 @@
 			AND 
 				S.TENANT_ID = #v_TENANTID#
 		]]>
-	</select>
-
-	<select id="EzBoardDAO.getMealPlanList" parameterClass="Map" resultClass="MealDataVO">
-		SELECT
-				TO_CHAR(MEALDATE, 'YYYY-MM-DD') AS MEALDATE,
-				NVL(ACOURSE, '') AS ACOURSE,
-				NVL(BCOURSE, '') AS BCOURSE,
-				NVL(SALADBAR, '') AS SALADBAR,
-				NVL(DESSERT, '') AS DESSERT,
-				NVL(TOTALCAL, '') AS TOTALCAL
-		FROM
-				TBL_MEAL_PLAN
-		WHERE
-				MEALDATE BETWEEN to_date(#startDate#, 'YYYY-MM-DD') AND to_date(#startDate#, 'YYYY-MM-DD') + 4
-		AND
-				COMPANYID = #companyID#
-		AND
-				TENANT_ID = #tenantID#
-		ORDER BY
-				MEALDATE ASC
-	</select>
-	
-	<insert id="EzBoardDAO.saveMealplan" parameterClass="MealDataVO">
-		MERGE INTO TBL_MEAL_PLAN target
-		USING (
-				SELECT
-					#mealDate# AS MEALDATE,
-					#aCourse# AS ACOURSE,
-					#bCourse# AS BCOURSE,
-					#saladBar# AS SALADBAR,
-					#dessert# AS DESSERT,
-					#totalCal# AS TOTALCAL,
-					#companyID# AS COMPANYID,
-					#tenantID# AS TENANT_ID
-				FROM dual) source
-		ON (target.MEALDATE = source.MEALDATE
-			AND target.COMPANYID = source.COMPANYID
-			AND target.TENANT_ID = source.TENANT_ID)
-		WHEN MATCHED THEN
-			UPDATE SET
-				target.ACOURSE = source.ACOURSE,
-				target.BCOURSE = source.BCOURSE,
-				target.SALADBAR = source.SALADBAR,
-				target.DESSERT = source.DESSERT,
-				target.TOTALCAL = source.TOTALCAL
-		WHEN NOT MATCHED THEN
-			INSERT (MEALDATE, ACOURSE, BCOURSE, SALADBAR, DESSERT, TOTALCAL, COMPANYID, TENANT_ID)
-			VALUES (source.MEALDATE, source.ACOURSE, source.BCOURSE, source.SALADBAR, source.DESSERT, source.TOTALCAL, source.COMPANYID, source.TENANT_ID)
-	</insert>
-
-	<select id="EzBoardDAO.getTodayLunch" parameterClass="Map" resultClass="MealDataVO">
-		SELECT
-				TO_CHAR(MEALDATE, 'YYYY-MM-DD') AS MEALDATE,
-				NVL(ACOURSE, '') AS ACOURSE,
-				NVL(BCOURSE, '') AS BCOURSE,
-				NVL(SALADBAR, '') AS SALADBAR,
-				NVL(DESSERT, '') AS DESSERT,
-				NVL(TOTALCAL, '') AS TOTALCAL
-		FROM
-				TBL_MEAL_PLAN
-		WHERE
-				MEALDATE = TO_DATE(#date#, 'YYYY-MM-DD')
-		AND
-				COMPANYID = #companyID#
-		AND
-				TENANT_ID = #tenantID#
-		ORDER BY
-				MEALDATE ASC
 	</select>
 </sqlMap>

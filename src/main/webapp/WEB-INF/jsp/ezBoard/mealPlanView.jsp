@@ -109,14 +109,12 @@
 							'background': '#1e90ff',
 							'border' : '1px solid #dddddd'
 						});
-						$(this).find('a').removeClass('ui-state-default');
 						$(this).css('background', '#1e90ff');
 					});
 					
 					$(this).mouseout(function() {
 						$(this).css('background', '#ffffff');
 						$(this).find('a').css('background', '');
-						$(this).find('a').addClass('ui-state-default');
 					});
 				}
 			});
@@ -149,7 +147,8 @@
 			var mealTable = document.getElementById("mealCal");
 			
 			// 월요일부터 하루씩 해당하는 일자가 있는지 비교하고, 해당 일자가 없으면 반복문을 빠져나가고 데이터가 있으면 테이블을 채우는 반복문 실행
-			for (var a = 0; a < mealDataList.length; a++) {
+			// 월 ~ 금 5일 고정 
+			for (var a = 0; a < 5; a++) {
 				
 				if (formatDate(startDate) == mealDataList[a].mealDate){
 					mealTable.getElementsByTagName('tr')[0].getElementsByTagName('th')[a + 1].innerText = mealDataList[a].mealDate;
