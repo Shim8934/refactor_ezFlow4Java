@@ -2717,7 +2717,7 @@
 	    <div style="width: 8px; height:738px; background-color: #808080; position: absolute; z-index: 10000; display: none;" id="ResizeBarH"></div>
 	    <%-- 좌측 리스트 영역 --%>
 	    <span id="MailListRayer" style="border: 0px solid blue; vertical-align: top; overflow: hidden; display: inline-block;">
-	    <div id="divList" class="div_scroll" style="width: 100%; height: 375px; overflow: AUTO; margin-bottom:10px;">
+	    <div id="divList" class="div_scroll" style="width: 100%; height: 480px; overflow: AUTO; margin-bottom:10px;">
 	        <div id="lvtDoclist"></div>
 	    </div>
 	    <div id="tblPageRayer"></div>

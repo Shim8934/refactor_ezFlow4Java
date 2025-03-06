@@ -2068,7 +2068,7 @@
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none; z-index: 5000;" id="ResizeBarPanel"></div>
 	    <div style="width: 8px; height: 738px; background-color: #808080; position: absolute; z-index: 10000; display: none;" id="ResizeBarH"></div>
 	   	<span id="MailListRayer" style="border: 0px solid blue; vertical-align: top; overflow: hidden; display: inline-block;">
-		    <div class="div_scroll" style="width:100%;HEIGHT:395px; overflow:AUTO; margin-bottom:10px;" id="divList">
+		    <div class="div_scroll" style="width:100%;HEIGHT:480px; overflow:AUTO; margin-bottom:10px;" id="divList">
 		        <div id="lvtDoclist"></div>
 		    </div>
 		    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none; z-index: 5000;" id="loadingPanel" onclick="ContextMenuHidden();"></div>
@@ -2100,7 +2100,7 @@
 				  	</div>	
 				</div>
 		
-		        <div style="WIDTH:100%;HEIGHT:241px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
+		        <div style="WIDTH:100%;HEIGHT:171px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
 		            <div id="lvtDetail" style="border: 0;"></div>
 		        </div>
 		    </div>
@@ -2108,7 +2108,7 @@
 		
 		<%-- 전자결재 우측 미리보기 영역 --%>
 		<div id="PreviewRayerH" style="border:0px; width:500px; height:100%; overflow:hidden; vertical-align:top; display:none; margin-left:-5px;">
-	        <div class="previewmail_bar_h" id="previewmail_bar_h" onmousedown="PreviewH_onMouserDown(event);" style="cursor: w-resize; display: inline-block; height:738px;">
+	        <div class="previewmail_bar_h" id="previewmail_bar_h" onmousedown="PreviewH_onMouserDown(event);" style="cursor: w-resize; display: inline-block; height:753px;">
 	            <p class="hbar_dotted">
 	                <img src="/images/prevview_hbar_dotted.gif">
 	            </p>

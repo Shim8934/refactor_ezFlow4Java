@@ -454,7 +454,7 @@ function InitGlobals(ListFlag, ListType, MenuType) {
         try {
             if (trSubInfoTab) {
                 document.getElementById("trSubInfoTab").style.display = "";
-                document.getElementById("divList").style.height = "375px";
+                document.getElementById("divList").style.height = "474px";
                 //PageSize = 10;
                 Block_Size = 10;
             }
