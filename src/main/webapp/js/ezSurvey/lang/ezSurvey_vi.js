@@ -80,6 +80,7 @@ var SurveyMessages = {
     strSlider8: "Tối thiểu",
     strSlider9: "Tối đa",
     strSlider10: "Đặt số đếm thành số tự nhiên từ 200 trở xuống.",
+    strSlider11  : "개수",
     strOptErr: "Cần ít nhất hai chế độ xem.",
 	strOptErr1   : "Không thể sử dụng giá trị trùng lặp.",
     strMaxtrix1: "Cần ít nhất hai hàng.",

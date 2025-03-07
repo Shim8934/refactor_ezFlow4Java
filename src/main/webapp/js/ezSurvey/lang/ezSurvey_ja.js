@@ -84,6 +84,7 @@ var SurveyMessages = {
 	strSlider8   : "最小値",
 	strSlider9   : "最大値",
 	strSlider10  : "カウントを200以下の自然数に設定する。",
+	strSlider11  : "개수",
 	strOptErr    : "選択肢を2つ以上入力してください。",
 	strOptErr1   : "重複した値は使用できません。",
 	strMaxtrix1  : "行を2つ以上入力してください。",

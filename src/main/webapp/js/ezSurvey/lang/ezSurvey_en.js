@@ -84,6 +84,7 @@ var SurveyMessages = {
 	strSlider8   : "Minimum",
 	strSlider9   : "Maximum",
 	strSlider10  : "Set the count to a natural number of 200 or less.",
+	strSlider11  : "Count",
 	strOptErr    : "At least two views are required.",
 	strOptErr1   : "Duplicate values ​​are not allowed.",
 	strMaxtrix1  : "At least two rows are required.",

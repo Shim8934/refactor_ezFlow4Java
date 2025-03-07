@@ -84,6 +84,7 @@ var SurveyMessages = {
 	strSlider8 :  "最低",
 	strSlider9 :  "最大",
 	strSlider10 : "将计数设置为 200 或以下的自然数。",
+	strSlider11  : "개수",
 	strOptErr : "至少需要两个意见。",
 	strOptErr1   : "不能使用重复的值。",
 	strMaxtrix1 : "至少需要两行。",

@@ -84,6 +84,7 @@ var SurveyMessages = {
 	strSlider8   : "최소값",
 	strSlider9   : "최대값",
 	strSlider10  : "개수를 200 이하의 자연수로 설정해 주세요.",
+	strSlider11  : "개수",
 	strOptErr    : "최소 2개의 보기가 필요합니다.",
 	strOptErr1   : "중복된 값은 사용할 수 없습니다.",
 	strMaxtrix1  : "최소 2개의 행이 필요합니다.",
