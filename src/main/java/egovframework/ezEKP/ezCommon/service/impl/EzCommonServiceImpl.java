@@ -4747,4 +4747,18 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         ezCommonDAO.alterBoardItemWriterNameType(); // tbl_board_item 테이블 writerNameType 컬럼 추가
         ezCommonDAO.alterBoardItemTempWriterNameType(); // tbl_board_item_temp 테이블 writerNameType 컬럼 추가
     }
+    @Override
+    public void createTblScheduleGather() throws Exception {
+        ezCommonDAO.createTblScheduleGather();
+    }
+
+	@Override
+	public void addMemberDeptIdScheduleGroupMember() throws Exception {
+		ezCommonDAO.addMemberDeptIdScheduleGroupMember();
+	}
+	
+	@Override
+	public void addMemberDeptIdScheduleGatherMember() throws Exception {
+		ezCommonDAO.addMemberDeptIdScheduleGatherMember();
+	}
 }

@@ -573,6 +573,10 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			
 			String chkSchedulePublic = ezCommonService.getTenantConfig("chkSchedulePublic", info.getTenantId());
 			
+			// 2023-10-06 임정은 - 모바일 일정관리 > 일정 모아보기 추가
+			List<ScheduleGroupListVO> gatherList = ezScheduleService.getMyGatherList(userId, info.getTenantId(), info.getCompanyId());
+			result.put("gatherList", gatherList);
+
 			result.put("status", "ok");
 			result.put("code", 0);			
 			if ("groupList".equals(mode)) {
@@ -1729,6 +1733,94 @@ public class MScheduleGWController extends EgovFileMngUtil {
 		
 		logger.debug("MOBILE G/W SCHEDULE [POST /mobile/ezSchedule/scheduleInvitationStatus/{userId:.+} ended.");
 		
+		return result;
+	}
+	
+	/**
+	 * 2023-10-10 임정은 - 모바일 G/W 일정관리 > 일정 모아보기 > 그룹 선택 시 정보 가져오기
+	 */
+	@RequestMapping(value="/mobile/ezschedule/gathered-schedule", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject mScheduleGatherList(HttpServletRequest request) throws Exception {
+		logger.debug("MOBILE G/W SCHEDULE [GET /mobile/ezschedule/gathered-schedule] started.");
+
+		JSONObject result = new JSONObject();
+
+		try {
+			Map<String, Object> dataObject = new HashMap<String, Object>();
+
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+			String groupId = request.getParameter("groupId");
+			String startDate = request.getParameter("startDate") + " 00:00:00";
+			String endDate = request.getParameter("endDate") + " 23:59:59";
+
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			String utcStartTime = commonUtil.getDateStringInUTC(startDate, info.getOffSet(), true);
+			String utcEndTime = commonUtil.getDateStringInUTC(endDate, info.getOffSet(), true);
+			String offSetMin = commonUtil.getMinuteUTC(info.getOffSet());
+			String useAnnualScheduleYN = ezCommonService.getTenantConfig("useAnnualScheduleYN", info.getTenantId());
+
+			List<ScheduleGroupListVO> mList = ezScheduleService.getMyGatherMemberList(groupId, info.getPrimary(), info.getTenantId(), info.getCompanyId());
+
+			StringBuilder sb1 = new StringBuilder("<DATA>");
+			StringBuilder sb2 = new StringBuilder();
+
+			for (int i = 0; i < mList.size(); i++) {
+				sb1.append(commonUtil.getQueryResult(mList.get(i)));
+			}
+			sb1.append("</DATA>");
+
+			for (int i = 0; i < mList.size(); i++) {
+				String idList = mList.get(i).getMemberId();
+				String DeptID = ezScheduleService.getCumDeptId(idList, info.getTenantId(), info.getCompanyId());
+				String CompanyID = info.getCompanyId();
+				String pidList = "'" + idList + "'";
+
+				String dcidList = "'" + DeptID + "'" + ",'" + CompanyID + "'";
+				List<ScheduleGroupListVO> gList = ezScheduleService.getScheduleGroupList(idList, info.getTenantId() ,info.getCompanyId());
+				for (int j = 0; j < gList.size(); j++) {
+					if (j == 0) {
+						dcidList += ",";
+					}
+					dcidList += "'" + gList.get(j).getGroupId() + "'";
+
+					if (j != gList.size() - 1) {
+						dcidList += ",";
+					}
+				}
+
+				List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(pidList, dcidList, "", utcStartTime, utcEndTime, startDate, endDate, offSetMin, "", "", "", info.getTenantId(), info.getCompanyId(), idList, info.getDeptId(), useAnnualScheduleYN);
+				sb2.append("<DATA>");
+				for (int k = 0; k < sList.size(); k++) {
+					ScheduleInfoVO data = sList.get(k);
+					sb2.append(commonUtil.getQueryResult(data));
+				}
+
+				sb2.append("</DATA>");
+
+				if (i != mList.size() - 1) {
+					sb2.append("\\\\");
+				}
+			}
+			List<ScheduleGroupListVO> gatherList = ezScheduleService.getMyGatherList(userId, info.getTenantId(), info.getCompanyId());
+
+			dataObject.put("xmlResult", sb1.toString());
+			dataObject.put("xmlArray", sb2.toString());
+			dataObject.put("gatherList", gatherList);
+			dataObject.put("groupName", mList.get(0).getStatus());
+
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", dataObject);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+			logger.error(e.getMessage(), e);
+		}
+
+		logger.debug("MOBILE G/W SCHEDULE [GET /mobile/ezschedule/gathered-schedule] ended.");
+
 		return result;
 	}
 }

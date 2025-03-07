@@ -298,6 +298,7 @@
 	                    data.memberName1 = rtn["name1"][i];
 	                    data.memberName2 = rtn["name2"][i];
 	                    data.writePermission = rtn["writepermission"][i];
+	                    data.memberDeptId = rtn["departmentid"][i];
 	                    
 	                    memberList.push(data);
 		            }
@@ -476,21 +477,17 @@
 		    }
 		    
 		    function check_length(chkstr, maxlength, fieldname) {
-		        var length = 0;
-		        var i;
+				var length = 0;
+				var i;
 
-		        for (i = 0; i < chkstr.length; i++)
-		            if (chkstr.charCodeAt(i) > 256)
-		                length = length + 2;
-		            else
-		                length++;
+				length = chkstr.length;
 
-		        if (length > maxlength) {
-		            alert(fieldname + "<spring:message code='ezSchedule.t200' />" + maxlength + "<spring:message code='ezSchedule.t201' />");
-		            return false
-		        }
+				if (length > maxlength) {
+					alert(fieldname + "<spring:message code='ezSchedule.t200' /> " + maxlength + "<spring:message code='ezSchedule.t201' />");
+					return false;
+				}
 
-		        return true;
+				return true;
 		    }
 		    
 		    function cancel_onclick() {
@@ -651,24 +648,42 @@
 		        });
 		    }
 		    	
-		    function unEscapeHtml(text) {
-		        var map = {
-		            '&amp;' : '&',
-		            '&lt;' : '<',
-		            '&gt;' : '>',
-		            '&#034;' : '"',
-		            '&#039;' : "'"
+			var beforeText = '';
+			function unEscapeHtml(text) {
+				beforeText = text;
+
+				var map = {
+					'&amp;' : '&',
+					'&lt;' : '<',
+					'&gt;' : '>',
+					'&#034;' : '"',
+					'&#039;' : "'",
+					'&#92;' : '\\'
 		        };
 
-		        return text.replace(/&amp;|&lt;|&gt;|&#034;|&#039;/g, function(m) { return map[m]; });
+				return text.replace(/&amp;|&lt;|&gt;|&#034;|&#039;|&#92;/g, function(m) {
+					return map[m];
+				});
+			}
+
+			function unEscapeHtml2(text) {
+				beforeText = text;
+				var afterText = unEscapeHtml(beforeText);
+
+				while (beforeText != afterText) {
+					afterText = unEscapeHtml(afterText);
+				}
+
+				beforeText = '';
+				return afterText;
 		    }	
 		    
 		    //2018-08-10 김보미 - 추가
 		    window.onload = function () {
 		    	var groupName = "<c:out value='${groupName}' />";
 	    	    var description = "<c:out value='${description}' />";
-	        	$('#groupname').val(unEscapeHtml(groupName));
-	        	$('#description').val(unEscapeHtml(description));
+	        	$('#groupname').val(unEscapeHtml2(groupName));
+	        	$('#description').val(unEscapeHtml2(description));
 	        	
 	        	<%-- 2024-07-18 조소정 - 일정관리 > 그룹 관리 창에서 작성 권한 여부 표출 --%>
 		        var checks = document.getElementsByName("memberaccess");
@@ -681,13 +696,14 @@
 	                }
 	            }
 			    
-		    	g_Member = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array(), "writepermission": new Array() };
+		    	g_Member = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array(), "writepermission": new Array(), "departmentid":new Array() };
 		    	
 		    	<c:forEach var="item" items="${memberList}">
 		    		g_Member.id.push( "${item.memberId}");
 		    		g_Member.name.push("${item.memberName}");
 		    		g_Member.name1.push("${item.memberName}");
 		    		g_Member.name2.push("${item.memberName2}");
+		    		g_Member.departmentid.push("${item.department}");
 		    	</c:forEach>
 		    }
 		</script>

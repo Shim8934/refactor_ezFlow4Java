@@ -6553,4 +6553,74 @@
 		ADD
 			WRITERNAMETYPE VARCHAR(2) DEFAULT NULL
 	</statement>
+	<!-- 2023-09-27 임정은 - 일정관리 > 일정 모아보기 그룹 테이블 추가 -->
+	<select id="EzCommonDAO.checkTblScheduleGather">
+		SELECT
+			GROUPID
+		FROM
+			TBL_SCHEDULEGATHER
+		LIMIT 1
+	</select>
+	<statement id="EzCommonDAO.createTblScheduleGather">
+		CREATE TABLE `tbl_schedulegather` (
+			`GROUPID` varchar(100) NOT NULL,
+			`GROUPNAME` varchar(100) CHARACTER SET utf8mb4 NOT NULL,
+			`CREATORID` varchar(100) DEFAULT NULL,
+			`CREATORNAME` varchar(100) CHARACTER SET utf8mb4 NOT NULL,
+			`CREATORNAME2` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
+			`DESCRIPTION` varchar(500) CHARACTER SET utf8mb4 NOT NULL,
+			`CREATEDATE` datetime DEFAULT NULL,
+			`TENANT_ID` mediumint(5) NOT NULL,
+			`companyid` varchar(40) DEFAULT NULL,
+			PRIMARY KEY (`GROUPID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8
+	</statement>
+
+	<select id="EzCommonDAO.checkTblScheduleGatherMember">
+		SELECT
+			GROUPID
+		FROM
+			TBL_SCHEDULEGATHERMEMBER
+		LIMIT 1
+	</select>
+	<statement id="EzCommonDAO.createTblScheduleGatherMember">
+		CREATE TABLE `tbl_schedulegathermember` (
+			`GROUPID` varchar(100) NOT NULL,
+			`MEMBERID` varchar(100) NOT NULL,
+			`MEMBERNAME` varchar(100) CHARACTER SET utf8mb4 NOT NULL,
+			`MEMBERNAME2` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
+			`TENANT_ID` mediumint(5) NOT NULL,
+			PRIMARY KEY (`GROUPID`,`MEMBERID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8
+	</statement>
+	
+	<select id="EzCommonDAO.checkMemberDeptIdAtScheduleGroupMember" parameterClass="Map" resultClass="String">
+		SELECT
+			MEMBERDEPTID
+		FROM
+			TBL_SCHEDULEGROUPMEMBER
+		LIMIT 1
+	</select>
+	
+	<update id="EzCommonDAO.addMemberDeptIdScheduleGroupMember" parameterClass="Map">
+		ALTER TABLE
+			TBL_SCHEDULEGROUPMEMBER
+		ADD
+			MEMBERDEPTID VARCHAR(100) DEFAULT NULL
+	</update>
+	
+	<select id="EzCommonDAO.checkMemberDeptIdAtScheduleGatherMember" parameterClass="Map" resultClass="String">
+		SELECT
+			MEMBERDEPTID
+		FROM
+			TBL_SCHEDULEGATHERMEMBER
+		LIMIT 1
+	</select>
+	
+	<update id="EzCommonDAO.addMemberDeptIdScheduleGatherMember" parameterClass="Map">
+		ALTER TABLE
+			TBL_SCHEDULEGATHERMEMBER
+		ADD
+			MEMBERDEPTID VARCHAR(100) DEFAULT NULL
+	</update>
 </sqlMap>

@@ -227,6 +227,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.addTblCommunityClubguestOnelinereply(); // 2024-10-28 황인경 - 커뮤니티 방명록 댓글 테이블 추가
 			ezCommonService.createJmochaCompanyQuota(); // 2024-12-12 김혜림 - 회사별 메일박스 용량 테이블 추가
             ezCommonService.createTblAprAutoSaveConfig(); // 2024-07-10 기민혁 - 전자결재G > 자동 임시저장 컨피그 추가
+			ezCommonService.createTblScheduleGather(); // 2023-09-27 임정은 - 일정관리 > 일정 모아보기 그룹 테이블 추가
 
 			// alter table
 	    	ezCommonService.alterTableAddColumns(); // 2022-01-19 김은실 - alter 재사용 모듈 추가
@@ -369,6 +370,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.insertPersonalSusinListOption(); // 2024-11-28 기민혁 - 개인 수신함 리스트 해더 추가
 			ezCommonService.alterBodyHTMLToConnData(); // 2025-01-24 이가은 - 전자결재 > 연동테이블 컬럼명 변경
 			ezCommonService.createGongramDeleteHistory(); // 2024-12-27 이가은 - 공람완료문서 삭제 히스토리 테이블 생성
+			ezCommonService.addMemberDeptIdScheduleGroupMember(); // 2024-12-27 한태훈 - 일정관리 > 일정 그룹 테이블에 부서컬럼 추가
+			ezCommonService.addMemberDeptIdScheduleGatherMember(); // 2024-12-27 한태훈 - 일정관리 > 일정 모아보기 그룹 테이블에 부서컬럼 추가
 		} catch (Exception e) {
     		logger.error(e.getMessage(), e);
     	}

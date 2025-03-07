@@ -3226,4 +3226,42 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.addBoardItemTempWriterNameType");
 		}
     }
+
+	// 2023-09-27 임정은 - 일정관리 > 일정 모아보기 그룹 테이블 추가
+	public void createTblScheduleGather() {
+		try {
+			select("EzCommonDAO.checkTblScheduleGather");
+		} catch (Exception e) {
+			logger.debug("tbl_schedulegather doesn't exist. creating the table...");
+
+			update("EzCommonDAO.createTblScheduleGather");
+		}
+		try {
+			select("EzCommonDAO.checkTblScheduleGatherMember");
+		} catch (Exception e) {
+			logger.debug("tbl_schedulegathermember doesn't exist. creating the table...");
+
+			update("EzCommonDAO.createTblScheduleGatherMember");
+		}
+	}
+
+	public void addMemberDeptIdScheduleGroupMember() throws Exception {
+		try {
+			select("EzCommonDAO.checkMemberDeptIdAtScheduleGroupMember");
+		} catch (Exception e) {
+			logger.debug("TBL_SCHEDULEGROUPMEMBER MEMBERDEPTID doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addMemberDeptIdScheduleGroupMember");
+		}
+	}
+	
+	public void addMemberDeptIdScheduleGatherMember() throws Exception {
+		try {
+			select("EzCommonDAO.checkMemberDeptIdAtScheduleGatherMember");
+		} catch (Exception e) {
+			logger.debug("TBL_SCHEDULEGATHERMEMBER MEMBERDEPTID doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addMemberDeptIdScheduleGatherMember");
+		}
+	}
 }

@@ -314,6 +314,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 
 	    String useGoogleCalendar = ezCommonService.getTenantConfig("useGoogleCalendar", loginVO.getTenantId());
 	    String isGoogleSync = useGoogleCalendar.equals("YES") ? isGoogleSync(loginVO) : "N";
+		List<ScheduleGroupListVO> gatherList = ezScheduleService.getMyGatherList(loginVO.getId(), loginVO.getTenantId(), loginVO.getCompanyID()); // 2023-10-11 임정은 - 일정 모아보기 그룹 리스트 추가
 
 		model.addAttribute("isGoogleSync", isGoogleSync);
 		model.addAttribute("loginVO", loginVO);
@@ -328,6 +329,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		model.addAttribute("lang", loginVO.getLang());
 		model.addAttribute("userOffset", userOffset);
 		model.addAttribute("useWorkspaceSchedule", useWorkspaceSchedule);
+		model.addAttribute("gatherList", gatherList);
 
 		return "/ezSchedule/scheduleLeft";
 	}
@@ -1007,8 +1009,8 @@ public class EzScheduleController extends EgovFileMngUtil {
 		model.addAttribute("groupID", groupID);
 		model.addAttribute("groupColor", groupColor);
 		model.addAttribute("memberList", mList);
-		model.addAttribute("groupName", mList.get(0).getGroupName());
-		model.addAttribute("description",mList.get(0).getDescription());
+		model.addAttribute("groupName", mList.get(0).getGroupName().replace("\\", "&#92;"));
+		model.addAttribute("description",mList.get(0).getDescription().replace("\\", "&#92;"));
 		
 		return "/ezSchedule/scheduleGroupMember";
 	}
@@ -1181,8 +1183,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 			String memberName = (String) obj.get("memberName1");
 			String memberName2 = (String) obj.get("memberName2");
 			String writePermission = (String) obj.get("writePermission");
+			String memberDeptId = (String) obj.get("memberDeptId");
 			
-			ezScheduleService.insertScheduleGroupMember(groupId, memberId, memberName, memberName2, loginVO.getTenantId(), writePermission);
+			ezScheduleService.insertScheduleGroupMember(groupId, memberId, memberName, memberName2, memberDeptId, loginVO.getTenantId(), writePermission);
 			
 			ScheduleGroupListVO scheduleGroup = ezScheduleService.selectScheduleGroupInfo(groupId, loginVO.getTenantId());
 			String groupName = scheduleGroup.getGroupName();
@@ -1340,8 +1343,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 			String memberName = (String) obj.get("memberName1");
 			String memberName2 = (String) obj.get("memberName2");
 			String writePermission = (String) obj.get("writePermission");
+			String memberDeptId = (String) obj.get("memberDeptId");
 			
-			ezScheduleService.insertScheduleGroupMember(gUID, memberId, memberName, memberName2, loginVO.getTenantId(), writePermission);
+			ezScheduleService.insertScheduleGroupMember(gUID, memberId, memberName, memberName2, memberDeptId, loginVO.getTenantId(), writePermission);
 			
 			//KT텔레캅 통합알람 푸쉬 코드
 		    if(dotNetTotalNotification.equalsIgnoreCase("yes")) {
@@ -5945,4 +5949,264 @@ public class EzScheduleController extends EgovFileMngUtil {
 		return "/ezSchedule/schedulePrintCalendar";
 	}
 
+	/**
+	 * 2023-09-27 임정은 - 일정 모아보기 메인화면
+	 */
+	@RequestMapping(value="/ezSchedule/scheduleGatherMain.do", method = RequestMethod.GET)
+	public String scheduleGatherMain(@CookieValue("loginCookie") String loginCookie, Model model, LoginSimpleVO loginSimpleVO) throws Exception {
+		logger.debug("============ scheduleGatherMain started ============");
+
+		return "/ezSchedule/scheduleGatherMain";
+	}
+
+	/**
+	 * 2023-09-27 임정은 - 모아보기 그룹 관리 그리드 리스트
+	 */
+	@RequestMapping(value="/ezSchedule/scheduleGatherList.do", method = RequestMethod.GET, produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String scheduleGatherList(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO) throws Exception {
+		logger.debug("============ scheduleGatherList started ============");
+
+		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
+		List<ScheduleGroupListVO> myList = ezScheduleService.getMyGatherList(loginSimpleVO.getId(), loginSimpleVO.getTenantId(),loginSimpleVO.getCompanyID());
+
+		StringBuilder result = new StringBuilder("<LISTVIEWDATA>");
+		result.append("<HEADERS><HEADER><NAME>CHECK</NAME><WIDTH>10%</WIDTH></HEADER>");
+		result.append("<HEADER><NAME>" + msg.getMessage("ezSchedule.t159", loginSimpleVO.getLocale()) + "</NAME><WIDTH>60%</WIDTH></HEADER>");
+		result.append("<HEADER><NAME>" + msg.getMessage("ezSchedule.t00002", loginSimpleVO.getLocale()) + "</NAME><WIDTH>40%</WIDTH></HEADER></HEADERS>");
+		result.append("<ROWS>");
+
+		for (int i = 0; i < myList.size(); i++) {
+			ScheduleGroupListVO data = myList.get(i);
+
+			result.append("<ROW>");
+			result.append("<CELL>");
+			result.append("<VALUE>CHECK</VALUE>");
+			result.append("<DATA1>" + data.getGroupId() + "</DATA1>");
+			result.append("<DATA2><![CDATA[" + data.getDescription() + "]]></DATA2>");
+			result.append("</CELL>");
+			result.append("<CELL>");
+
+			int myMemberListCnt = ezScheduleService.getMyGatherMemberCnt(data.getGroupId(), loginSimpleVO.getLang(), loginSimpleVO.getTenantId(), loginSimpleVO.getCompanyID());
+			String cDate = commonUtil.getDateStringInUTC(data.getCreateDate(),loginSimpleVO.getOffset(),false).substring(0,10);
+
+			if (myMemberListCnt > 1) {
+				result.append("<VALUE><![CDATA[" + data.getGroupName() + " (" + myMemberListCnt + msg.getMessage("ezSchedule.hik01", loginSimpleVO.getLocale()) + ")" + "]]></VALUE>");
+			} else {
+				result.append("<VALUE><![CDATA[" + data.getGroupName() + " (" + myMemberListCnt + msg.getMessage("ezSchedule.t00003", loginSimpleVO.getLocale()) + ")" + "]]></VALUE>");
+			}
+
+			result.append("</CELL>");
+			result.append("<CELL>");
+			result.append("<VALUE>" + cDate + "</VALUE>");
+			result.append("</CELL>");
+			result.append("</ROW>");
+		}
+		result.append("</ROWS>");
+		result.append("</LISTVIEWDATA>");
+
+		return result.toString();
+	}
+
+	/**
+	 * 2023-10-04 임정은 - 모아보기 그룹 관리 > 그룹 추가 팝업
+	 */
+	@RequestMapping(value="/ezSchedule/scheduleGatherWrite.do", method = RequestMethod.GET)
+	public String scheduleGatherWrite(@CookieValue("loginCookie") String loginCookie, Model model, LoginVO loginVO) throws Exception {
+		logger.debug("============ scheduleGatherWrite started ============");
+
+		loginVO = commonUtil.userInfo(loginCookie);
+		String use_ocs = ezCommonService.getTenantConfig("USE_OCS", loginVO.getTenantId());
+
+		model.addAttribute("use_ocs", use_ocs);
+		model.addAttribute("userInfo", loginVO);
+
+		return "/ezSchedule/scheduleGatherWrite";
+	}
+
+	/**
+	 * 2023-10-04 임정은 - 모아보기 그룹 관리 > 그룹 추가 팝업 > 확인 버튼
+	 */
+	@RequestMapping(value="/ezSchedule/scheduleGatherSave.do", method = RequestMethod.POST)
+	@ResponseBody
+	public void scheduleGatherSave(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO loginVO) throws Exception {
+		logger.debug("============ scheduleGatherSave started ============");
+
+		loginVO = commonUtil.userInfo(loginCookie);
+
+		String gUID = UUID.randomUUID().toString().toUpperCase();
+		String groupName = request.getParameter("groupName");
+		String description = request.getParameter("description");
+		String displayName = request.getParameter("displayName");
+		String displayName2 = request.getParameter("displayName2");
+		String memberList = request.getParameter("memberList");
+
+		ezScheduleService.insertScheduleGather(gUID, loginVO.getId(), displayName, displayName2, groupName, description, loginVO.getTenantId() ,loginVO.getCompanyID());
+
+		JSONParser parser = new JSONParser();
+		JSONArray jsonArray = (JSONArray)parser.parse(memberList);
+
+		for (int i = 0; i < jsonArray.size(); i++) {
+			JSONObject obj = (JSONObject)jsonArray.get(i);
+
+			String memberId = (String)obj.get("memberID");
+			String memberName = (String)obj.get("memberName1");
+			String memberName2 = (String)obj.get("memberName2");
+			String memberDeptId = (String)obj.get("memberDeptId");
+
+			ezScheduleService.insertScheduleGatherMember(gUID, memberId, memberName, memberName2, memberDeptId, loginVO.getTenantId());
+		}
+	}
+
+	/**
+	 * 2023-10-04 임정은 - 모아보기 그룹 관리 > 그룹 선택 시 상세 정보 리턴하는 메소드
+	 */
+	@RequestMapping(value="/ezSchedule/getGatherDetail.do", method = RequestMethod.GET, produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String getGatherDetail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO loginVO) throws Exception {
+		logger.debug("============ getGatherDetail started ============");
+
+		loginVO = commonUtil.userInfo(loginCookie);
+		String gID = request.getParameter("groupID");
+
+		List<ScheduleGroupListVO> gList = ezScheduleService.getMyGatherMemberList(gID, loginVO.getPrimary(), loginVO.getTenantId(), loginVO.getCompanyID());
+
+		StringBuilder sb = new StringBuilder("<DATA>");
+		for (int j = 0; j < gList.size(); j++) {
+			sb.append(commonUtil.getQueryResult(gList.get(j)));
+		}
+		sb.append("</DATA>");
+
+		return sb.toString();
+	}
+
+	/**
+	 * 2023-10-04 임정은 - 모아보기 그룹 관리 > 그룹 선택 후 삭제 버튼
+	 */
+	@RequestMapping(value="/ezSchedule/scheduleGatherDelete.do", method = RequestMethod.POST)
+	@ResponseBody
+	public void scheduleGatherDelete(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, LoginSimpleVO loginSimpleVO) throws Exception {
+		logger.debug("============ scheduleGatherDelete started ============");
+
+		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
+
+		String groupID = request.getParameter("groupID");
+		String gIDs[] = groupID.split(";");
+
+		for (int i = 0; i < gIDs.length; i++) {
+			ezScheduleService.deleteScheduleGather(gIDs[i], loginSimpleVO.getTenantId(), "");
+		}
+	}
+
+	/**
+	 * 2023-10-04 임정은 - 모아보기 그룹 관리 > 그룹 관리 버튼
+	 */
+	@RequestMapping(value="/ezSchedule/scheduleGatherMember.do", method = RequestMethod.GET)
+	public String scheduleGatherMember(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, LoginVO loginVO) throws Exception {
+		logger.debug("============ scheduleGatherMember started ============");
+
+		loginVO = commonUtil.userInfo(loginCookie);
+
+		String groupID = request.getParameter("groupID");
+		String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());
+
+		List<ScheduleGroupListVO> mList = ezScheduleService.getGatherMemberList(groupID, loginVO.getPrimary(), loginVO.getTenantId(), offSetMin, loginVO.getCompanyID());
+
+		String primaryData = "";
+		if (commonUtil.getPrimaryData(loginVO.getLang(), loginVO.getTenantId()).equals("1")) {
+			primaryData = "1";
+		} else {
+			primaryData = "2";
+		}
+
+		model.addAttribute("primaryData", primaryData);
+		model.addAttribute("userInfo", loginVO);
+		model.addAttribute("loginUserId", loginVO.getId());
+		model.addAttribute("loginUserName",loginVO.getDisplayName());
+		model.addAttribute("loginUserName2", loginVO.getDisplayName2());
+		model.addAttribute("loginUserRoll",loginVO.getRollInfo());
+		model.addAttribute("groupID", groupID);
+		model.addAttribute("memberList", mList);
+		model.addAttribute("groupName", mList.get(0).getGroupName().replace("\\", "&#92;"));
+		model.addAttribute("description",mList.get(0).getDescription().replace("\\", "&#92;"));
+
+		return "/ezSchedule/scheduleGatherMember";
+	}
+
+	/**
+	 * 2023-10-05 임정은 - 모아보기 그룹 관리 > 그룹 관리 버튼 > 그룹명, 설명 수정 후 저장 버튼
+	 */
+	@RequestMapping(value="/ezSchedule/scheduleGatherModify.do", method = RequestMethod.POST)
+	@ResponseBody
+	public void scheduleGatherModify(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO loginVO) throws Exception {
+		logger.debug("============ scheduleModifyGather started ============");
+
+		loginVO = commonUtil.userInfo(loginCookie);
+
+		String groupId = request.getParameter("groupId");
+		String groupName = request.getParameter("groupName");
+		String description = request.getParameter("description");
+
+		ezScheduleService.updateScheduleGather(groupId, loginVO.getId(), groupName, description, loginVO.getTenantId());
+	}
+
+	/**
+	 * 2023-10-05 임정은 - 모아보기 그룹 관리 > 그룹 관리 버튼 > 구성원 추가/편집 버튼 > 구성원 추가
+	 */
+	@RequestMapping(value = "/ezSchedule/scheduleGatherAddMember.do", method = RequestMethod.POST, produces = "text/html;charset=UTF-8")
+	@ResponseBody
+	public void scheduleGatherAddMember(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO loginVO) throws Exception {
+		logger.debug("============ scheduleGatherAddMember started ============");
+
+		loginVO = commonUtil.userInfo(loginCookie);
+
+		String groupId = request.getParameter("groupID");
+		String memberList = request.getParameter("memberList");
+		String displayName = request.getParameter("displayName");
+		String displayName2 = request.getParameter("displayName2");
+
+		JSONParser parser = new JSONParser();
+		JSONArray jsonArray = (JSONArray)parser.parse(memberList);
+
+		for (int i = 0; i < jsonArray.size(); i++) {
+			JSONObject obj = (JSONObject) jsonArray.get(i);
+
+			String memberId = (String) obj.get("memberID");
+			String memberName = (String) obj.get("memberName1");
+			String memberName2 = (String) obj.get("memberName2");
+			String memberDeptId = (String) obj.get("memberDeptId");
+
+			ezScheduleService.insertScheduleGatherMember(groupId, memberId, memberName, memberName2, memberDeptId, loginVO.getTenantId());
+		}
+	}
+
+	/**
+	 * 2023-10-05 임정은 - 모아보기 그룹 관리 > 그룹 관리 버튼 > 구성원 추가/편집 버튼 > 구성원 삭제
+	 */
+	@RequestMapping(value="/ezSchedule/scheduleGatherDelMember.do", method = RequestMethod.POST)
+	@ResponseBody
+	public void scheduleGatherDelMember(@RequestParam(value="memberID[]") String[] member, @CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginSimpleVO loginSimpleVO) throws Exception {
+		logger.debug("============ scheduleGatherDelMember started ============");
+
+		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
+		String groupID = request.getParameter("groupID");
+
+		for (int i = 0; i < member.length; i++) {
+			ezScheduleService.deleteScheduleGather(groupID, loginSimpleVO.getTenantId(), member[i]);
+		}
+	}
+
+	/**
+	 * 2023-10-06 임정은 - 모아보기 그룹 선택 시 일정 리스트 표출
+	 */
+	@RequestMapping(value="/ezSchedule/scheduleShowGatherList.do", method = RequestMethod.GET)
+	public String scheduleShowGatherList(@CookieValue("loginCookie") String loginCookie, Model model, LoginSimpleVO loginSimpleVO) throws Exception {
+		logger.debug("============ scheduleShowGatherList started ============");
+
+		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
+
+		model.addAttribute("userInfo", loginSimpleVO);
+
+		return "/ezSchedule/scheduleGatherList";
+	}
 }
