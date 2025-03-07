@@ -1398,7 +1398,7 @@ var SurveyCreate     = function() {
 		var imgQuestionList = $("<div class='imgQuestionList'></div>");
 		var imgQstUl        = $("<ul class='imgQstUl'></ul>");
 		var imgQuestionFile = $("<input type='file' class='imgQuestionFile' accept='/*'/>");
-		var changeQstTextBtn = $("<input type='button' class='changeQstText' value='질문 이미지 삭제'/>");
+		var changeQstTextBtn = $("<input type='button' class='changeQstText' value='" + SurveyMessages.strQuestionImageDel + "'/>");
 		if (qstImgTitle) {
 			imgQuestionInfo.removeClass("noImg");
 			imgQstUl.append(makeImgTitle(question.imgTitle));
