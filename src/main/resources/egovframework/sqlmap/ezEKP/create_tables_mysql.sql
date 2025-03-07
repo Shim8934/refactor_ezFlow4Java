@@ -15916,13 +15916,3 @@ CREATE TABLE `tbl_gongramdeletehistory` (
 	PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`DOCID`,`APRMEMBERID`),
 	KEY `tbl_gongramdeletehistory_IDX` (`DOCID`, `APRMEMBERID`, `TENANT_ID`, `COMPANYID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE TBL_WEATHER_CITY (
-    /*
-        2024.04.09 박문송
-         - 사용자 언어 설정에 따라 해당 언어로 지역 이름이 보이도록 하기 위한 테이블
-    */
-    CITYCODE VARCHAR(20),
-    DISPLAYCITYNAME VARCHAR(50),
-    USERLOCALLANG VARCHAR(10)
-);
