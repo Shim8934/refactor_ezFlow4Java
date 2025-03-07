@@ -7038,9 +7038,16 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						strDeptID = drafterDept;
 						strDeptName = drafterDeptName;
 					}
-					
-					String ret = getCabinetNum(strDeptID, "", companyID, docID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
-					
+
+                    /* 상위부서의 부서문서함을 가져오도록 함 */
+                    String ret = "";
+                    Map<String, String> upDeptInfo = getUpperDeptInfo(strDeptID, userInfo.getTenantId());
+                    if (upDeptInfo.get("USEUPPERDEPTBOX") != null && upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) {
+                        ret = getCabinetNum(upDeptInfo.get("upperDeptCode"), "", companyID, docID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
+                    }else{
+                        ret = getCabinetNum(strDeptID, "", companyID, docID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
+                    }
+                    
 					logger.debug("serialNum = " + ret);
 					
 					docNumFlag = true;
@@ -7212,7 +7219,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			if ((totalLineSN == Integer.parseInt(signNum.trim()) || isJKAprTypeAfterDK == true) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007") && result.equals("A")) {
 				Document paramXML = commonUtil.convertStringToDocument(docResult);
 				String docNumCode = paramXML.getElementsByTagName("WRITERDEPTID").item(0).getTextContent();
-				
+
+                Map<String, String> upDeptInfo = getUpperDeptInfo(docNumCode, userInfo.getTenantId());
+                if (upDeptInfo.get("USEUPPERDEPTBOX") != null && upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) {
+                    docNumCode = upDeptInfo.get("upperDeptCode");
+                }
+                
 				if (aprStateSign.equals("011")) {
 					paramXML.getElementsByTagName("DOCNUMCODE").item(0).setTextContent("");
 					paramXML.getElementsByTagName("ORGDOCNUMCODE").item(0).setTextContent("");
@@ -8046,8 +8058,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					return "Link ERROR";
 				}
 
-                String ret = getCabinetNum(strDeptID, "", companyID, docID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
-				
+                /* 상위부서의 부서문서함을 가져오도록 함 */
+                String ret = "";
+                Map<String, String> upDeptInfo = getUpperDeptInfo(strDeptID, userInfo.getTenantId());
+                if (upDeptInfo.get("USEUPPERDEPTBOX") != null && upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) {
+                    ret = getCabinetNum(upDeptInfo.get("upperDeptCode"), "", companyID, docID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
+                }else{
+                    ret = getCabinetNum(strDeptID, "", companyID, docID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
+                }
+                
 				logger.debug("serialNum = " + ret);
 				
 				docNumFlag = true;
@@ -8248,7 +8267,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		if ((totalLineSN == Integer.parseInt(signNum.trim()) || isJKAprTypeAfterDK == true) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007") && result.equals("A")) {
 			Document paramXML = commonUtil.convertStringToDocument(docResult);
 			String docNumCode = paramXML.getElementsByTagName("WRITERDEPTID").item(0).getTextContent();
-			
+
+            Map<String, String> upDeptInfo = getUpperDeptInfo(docNumCode, userInfo.getTenantId());
+            if (upDeptInfo.get("USEUPPERDEPTBOX") != null && upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) {
+                docNumCode = upDeptInfo.get("upperDeptCode");
+            }
+            
 			if (aprStateSign.equals("011")) {
 			    if (approvalFlag.equals("S")) {
 			        paramXML.getElementsByTagName("DOCNUMCODE").item(0).setTextContent("");
