@@ -6765,6 +6765,8 @@
 					)
 				)
 		</isNotEmpty>
+		GROUP BY
+            A.ITEMID, A.TITLE
 		ORDER BY
 		<isEqual property="iv_PORDERBYCOL1" compareValue="ITEMID"> A.ITEMID </isEqual>
 		<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERNAME"> A.WRITERNAME </isEqual>
