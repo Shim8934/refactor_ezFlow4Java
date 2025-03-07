@@ -231,7 +231,7 @@
 	                TR.setAttribute("_mailaddress", EmailAddress);
 	                TD1.style.width = "14px";
 
-	                if ((ReadDate == "UNREAD" || isReadDelete == "YES") && CancelStatus == "") {
+					if((ReadDate =="UNREAD" && CancelStatus == "") || (isReadDelete == "YES" && (CancelStatus == "" || CancelStatus == 2))) {
 	                    var TD1_Sub = document.createElement("INPUT");
 	                    TD1_Sub.type = "checkbox";
 	                    TD1_Sub.style.margin = "0px";

@@ -2294,7 +2294,7 @@
 	                            <spring:message code='ezEmail.t353' /></span></li>
 	                        <li><span onclick="mailWritePreview()">
 	                            <spring:message code='ezEmail.t487' /></span></li>
-							<li class="view_more" onclick="toggleMoreMenu()"><span class="view_more" id="view_more" style="border: none;"><img class="view_more" src="/images/ImgIcon/view_more.png"></span>
+							<li class="view_more" onclick="toggleMoreMenu()"><span class="view_more" id="view_more"><img class="view_more" src="/images/ImgIcon/view_more.png"></span>
 								<ul class="layer_select" id="layer_menu" style="display: none">
 									<c:if test="${options.useLetter == 'YES'}">
 										<li><span onclick="Letter_onClick()"><spring:message code='ezEmail.t824' /></span></li>
