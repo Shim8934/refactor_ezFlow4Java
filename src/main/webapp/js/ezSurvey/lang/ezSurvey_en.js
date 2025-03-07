@@ -185,6 +185,7 @@ var SurveyMessages = {
 	strDateFormatValidation : "Please enter a valid date in the format yyyy-mm-dd (four-digit year, two-digit month, two-digit day)",
 	strDateTimeValidation : "The start date must be earlier than the end date.",
 	strQuestionImage : "Replace question with an image",
+	strQuestionImageDel : "question image delete",
 	strQuestionFileAttach : "Attach a file to the question",
 	strAllowedImageForTitle : "Only png, jpeg, and jpg are allowed.",
     /* 2024-11-25 박기범 - 리스트 상태값 추가 */
