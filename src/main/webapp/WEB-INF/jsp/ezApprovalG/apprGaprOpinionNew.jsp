@@ -233,7 +233,7 @@
 			opinionPopup_cross_dialogArguments[0] = parameter;
 			opinionPopup_cross_dialogArguments[1] = opinionPopup_complete;
 
-			if (designationUsed == 'NO' || parameter[3] == "N") {
+			if (designationUsed == 'NO' || parameter[3] == "N" || parameter[3] == null) {
 				DivPopUpShow(510, 380, "/ezApprovalG/aprOpinionPopup.do");
 			} else {
 				DivPopUpShow(510, 500, "/ezApprovalG/aprOpinionPopup.do?docID=" + pDocID);

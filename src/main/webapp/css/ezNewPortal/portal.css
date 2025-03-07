@@ -2178,7 +2178,7 @@ div.orbit img{border-radius:5px;}
 .portlet .board_Atype .portlet_list li dl dd{float:left; width:calc(100% - 145px); margin:0; padding:0;}
 .portlet .board_Atype .portlet_list li dl dd > span{display:block; line-height:normal;}
 .portlet .board_Atype .portlet_list li dl dd .title{color:#333333; font-size:14px; font-weight:bold; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; margin-bottom:4px;}
-.portlet .board_Atype .portlet_list li dl dd .cont{min-height:30px; line-height:17px; color:#333; display:-webkit-box; word-wrap:break-word; -webkit-line-clamp:2; -webkit-box-orient:vertical; text-overflow:ellipsis; overflow:hidden; white-space:normal; margin-bottom:4px;}
+.portlet .board_Atype .portlet_list li dl dd .cont{min-height:30px; line-height:17px; color:#333; display:-webkit-box; word-wrap:break-word; -webkit-line-clamp:2; -webkit-box-orient:vertical; text-overflow:ellipsis; overflow:hidden; white-space:normal; margin-bottom:2px;}
 .portlet .board_Atype .portlet_list li dl dd .name{float:none; width:auto; vertical-align:top; padding:0; color:#838383; display:inline-block;}
 .portlet .board_Atype .portlet_list li dl dd .name:after{content:""; display:inline-block; width:1px; height:10px; background:#D5D5D5; margin:5px 9px 0; vertical-align:top;}
 .portlet .board_Atype .portlet_list li dl dd .day{float:none; color:#838383;}
