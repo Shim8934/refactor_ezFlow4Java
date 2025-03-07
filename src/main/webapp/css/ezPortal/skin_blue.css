@@ -241,6 +241,8 @@ nav .navUL li.on{color:#003497;}
 #mainmenu li:hover{background-color:#EEF4FE !important; border-color:#3A67BE !important; color:#003497 !important;}
 #mainmenu li.important:hover{background-color:#EEF4FE !important;}
 
+#mainmenu li.view_more.on{border:1px solid #3A67BE!important; background:#EEF4FE!important;}
+
 .imgbtn:hover{background-color:#EEF4FE !important; border-color:#3A67BE !important; color:#003497 !important;}
 .btnpositionNew a.imgbtn:hover{background-color:#EEF4FE !important; border-color:#3A67BE !important; color:#003497 !important;}
 
@@ -262,7 +264,8 @@ nav .navUL li.on{color:#003497;}
 
 .popup_noti_content table .ctxt{background-image:url(../../images/ezNewPortal/skin/blue/icon_notification01.png);}
 
-#menu li span:hover{background-color:#DAE8FF !important; border-color:#3A67BE; color:#003497;}
+#menu li span:hover{background-color:#DAE8FF !important; border-color:#3A67BE !important; color:#003497;}
+.popup #menu ul li span.view_more.on{ display: inline-block; height: 27px; border-radius: 3px; padding: 0px 9px; background: #DAE8FF !important; border: 1px solid #3A67BE !important;}
 
 .portlet_tabpart02_top p .tabover{color:#003497; border-color:#003497;}
 .portlet_tabpart02_top p .tabon{color:#003497; border-color:#003497;}

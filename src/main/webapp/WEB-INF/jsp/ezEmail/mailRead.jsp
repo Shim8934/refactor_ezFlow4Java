@@ -736,7 +736,7 @@
 			                    <li id="iprev"><span id="btnpre" onclick="get_mail('prev')" style="padding-top:0px;"><img src="/images/ImgIcon/prev.gif" alt="<spring:message code='ezEmail.t1000' />"  /></span></li>
 			                    <li id="inext" ><span id="btnnext" onclick="get_mail('next')" style="padding-top:0px;"><img src="/images/ImgIcon/next.gif" alt="<spring:message code='ezEmail.t1001' />" /></span></li>
 		                    </c:if>
-							<li class="view_more" onclick="toggleMoreMenu()"><span class="view_more" id="view_more" style="border: none;"><img class="view_more" src="/images/ImgIcon/view_more.png"></span>
+							<li class="view_more" onclick="toggleMoreMenu()"><span class="view_more" id="view_more"><img class="view_more" src="/images/ImgIcon/view_more.png"></span>
 								<ul class="layer_select" id="layer_menu" style="display: none">
 									<c:if test="${packageType != 'mail'}">
 										<li id="BoardItem"><span id="btnBoard" onClick="NewItem_onclick()"><spring:message code="ezEmail.t548" /></span></li>

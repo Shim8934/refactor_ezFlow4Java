@@ -3952,13 +3952,13 @@ input#inOffice, input#retired, input#stopped{vertical-align:middle;}
 .contents_searchCategory dl dt.searchinput input{height: 34px !important;}
 
 /* 20240517 메일보기 상단바 디자인수정 */
-.popup #menu ul li span.view_more{ display: inline-block; height: 27px; border-radius: 3px; padding: 0px 9px; background: #fff !important; border: 1px solid #CECECE !important;}
-.popup #menu ul li span.view_more:hover{color: #0470E4; background: #f7fbff !important; border: 1px solid #388CE5 !important;}
-.popup #menu ul li span.view_more.on{ display: inline-block; height: 27px; border-radius: 3px; padding: 0px 9px; background: #F8F9FB; border: 1px solid #388CE5 !important;}
+.popup #menu ul li span.view_more{ display: inline-block; height: 27px; border-radius: 3px; padding: 0px 9px;}
+/*.popup #menu ul li span.view_more:hover{color: #0470E4; background: #f7fbff !important; border: 1px solid #388CE5 !important;}*/
+.popup #menu ul li span.view_more.on{ display: inline-block; height: 27px; border-radius: 3px; padding: 0px 9px; background: #F8F9FB; border: 1px solid #388CE5;}
 
 .popup #menu ul.layer_select{border: 1px solid #D3D3D3; border-radius: 3px; background: #fff; padding: 5px 0px; z-index: 10; position: relative;}
 .popup #menu ul.layer_select li{float: none; margin: 0px;}
-.popup #menu ul.layer_select li:hover span{background: #F8F9FB; color: #0470E4;}
+.popup #menu ul.layer_select li:hover span{background: #F8F9FB;}
 .popup #menu ul.layer_select li span{border: none; display: block;}
 .popup #menu ul.layer_select{margin-left: -33px; top: 6px;}
 /* //20240517 메일보기 상단바 디자인수정 */
