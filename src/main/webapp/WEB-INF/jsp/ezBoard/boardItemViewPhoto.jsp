@@ -2175,7 +2175,7 @@
 <!-- 			        <tr> -->
 <%-- 			            <th><spring:message code='ezBoard.t486'/></th> --%>
 <!-- 			            <td class="pos1"><input id="onelinereply" style="WIDTH: 100%" type="text" maxLength="100" onKeyDown="OneLineReply_onkeydown(event)"></td> -->
-<%-- 			            <td class="pos2"><a class="imgbtn"><span onClick="Save_OneLineReply(event)"><spring:message code='ezBoard.t321'/></span></a></td> --%>
+<%-- 			            <td class="pos2"><a class="imgbtn"><span onClick="Save_OneLineReply(event)"><spring:message code='ezBoard.t98'/></span></a></td> --%>
 <!-- 			        </tr> -->
 <!-- 			        <tr> -->
 <!-- 			            <td style="height:100px" colspan="4"> -->
@@ -2232,7 +2232,7 @@
 								<c:if test='${boardInfo.attachmentFlag eq "Y"}'>
 								    <a class='imgbtn' style="vertical-align: middle"><span onclick="btnfileup('commentFile')"><spring:message code='ezBoard.commentAttach.JIH01' /></span></a><br/>
 								</c:if>
-								<a class='imgbtn' style="vertical-align: middle"><span onclick="Save_OneLineReply(this)"><spring:message code='ezBoard.t321' /></span></a>
+								<a class='imgbtn' style="vertical-align: middle"><span onclick="Save_OneLineReply(this)"><spring:message code='ezBoard.t98' /></span></a>
 							</th>
 						</tr>
 					</table>

@@ -2965,7 +2965,7 @@
 	                    	<c:if test="${editor ne 'HWP'}">
 	                    		<c:choose>
 	                    		<c:when test="${mode == 'temp'}">
-	                    		<!-- 2018-05-30 구해안 그룹웨어 모듈 '등록','저장후닫기' => '저장'으로 통일  ezBoard.t321 => t98 -->
+	                    		<!-- 2018-05-30 구해안 그룹웨어 모듈 '등록','저장후닫기' => '저장'으로 통일  ezBoard.t98 => t98 -->
 			                        <li><span onclick="SaveItem('save');"><spring:message code='ezBoard.t98' /></span></li>
 	                    		</c:when>
 	                    		<c:otherwise>
@@ -2983,7 +2983,7 @@
 	                    	<c:if test="${editor eq 'HWP'}">
 	                    		<c:choose>
 	                    		<c:when test="${mode == 'temp'}">
-	                    		<!-- 2018-05-30 구해안 그룹웨어 모듈 '등록','저장후닫기' => '저장'으로 통일  ezBoard.t321 => t98 -->
+	                    		<!-- 2018-05-30 구해안 그룹웨어 모듈 '등록','저장후닫기' => '저장'으로 통일  ezBoard.t98 => t98 -->
 			                        <li><span onclick="SaveItemHWP('save');"><spring:message code='ezBoard.t98' /></span></li>
 	                    		</c:when>
 	                    		<c:otherwise>
