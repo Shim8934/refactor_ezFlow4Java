@@ -954,7 +954,7 @@
 		        	} else {
 		        		if(bigSizeApprAttachLimit == "0"){
 		        			hideLoadingProgress();
-		        			alert("일반첨부파일은 총" + apprAttachLimit + "MB까지 가능합니다.");
+		        			alert("normal Approval attach can be up to " + apprAttachLimit + "MB.");
 		        			return false;
 						} else {
 							bigFileCheck = confirm(strLangHSBAt13 + apprAttachLimit + "MB" + strLangHSBAt14);
