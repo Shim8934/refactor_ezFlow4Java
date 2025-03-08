@@ -170,10 +170,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 
 	@Autowired
 	private EzEmailUtil ezEmailUtil;
-
-	@Resource(name = "EzScheduleService")
-	private EzScheduleService ezScheduleService;
-
+	
 	@Resource(name="EzResourceService")
 	private EzResourceService ezResourceService;
 	
