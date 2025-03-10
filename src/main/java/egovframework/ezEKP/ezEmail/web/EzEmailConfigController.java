@@ -221,7 +221,19 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		String useEachMailDefault = ezCommonService.getTenantConfig("useEachMailDefault", userInfo.getTenantId()) == null ? "NO" : ezCommonService.getTenantConfig("useEachMailDefault", userInfo.getTenantId()); // 메일 개별발신 디폴트 사용 여부(YES: 개별발송 사용, NO: 사용안함)
 		String mailSendResult = mailGeneralVO.getMailSendResult() == null ? "failure" : mailGeneralVO.getMailSendResult();
 		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
+		String lang = userInfo.getLang();
 		List<String> defaultFontFamilyList = Arrays.asList(egovMessageSource.getMessage("main.t0620", Locale.KOREA).split(";"));
+		if (lang.equals("2")) {
+			defaultFontFamilyList = Arrays.asList(egovMessageSource.getMessage("main.t0620", Locale.ENGLISH).split(";"));
+		} else if (lang.equals("3")) {
+			defaultFontFamilyList = Arrays.asList(egovMessageSource.getMessage("main.t0620", Locale.JAPAN).split(";"));
+		} else if (lang.equals("4")) {
+			defaultFontFamilyList = Arrays.asList(egovMessageSource.getMessage("main.t0620", Locale.CHINA).split(";"));
+		} else if (lang.equals("5")) {
+			defaultFontFamilyList = Arrays.asList(egovMessageSource.getMessage("main.t0620", new Locale("vi", "VN")).split(";"));
+		} else if (lang.equals("6")) {
+			defaultFontFamilyList = Arrays.asList(egovMessageSource.getMessage("main.t0620", new Locale("id", "ID")).split(";"));
+		}
 		List<String> defaultFontSizeList = Arrays.asList("8pt,9pt,10pt,11pt,12pt,13pt,14pt,16pt,18pt,20pt,24pt,30pt,36pt,54pt,72pt".split(","));
 
 		String fontFamily = egovMessageSource.getMessage("main.t246", locale);
