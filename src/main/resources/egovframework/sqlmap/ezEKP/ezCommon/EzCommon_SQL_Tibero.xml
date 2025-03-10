@@ -7058,4 +7058,79 @@
 		ADD
 			WRITERNAMETYPE NCHAR(1) DEFAULT NULL
 	</statement>
+
+	<!-- 2023-09-27 임정은 - 일정관리 > 일정 모아보기 그룹 테이블 추가 -->
+	<select id="EzCommonDAO.checkTblScheduleGather">
+		SELECT
+			GROUPID
+		FROM
+			TBL_SCHEDULEGATHER
+		WHERE
+			ROWNUM = 1
+	</select>
+	<statement id="EzCommonDAO.createTblScheduleGather">
+		CREATE TABLE TBL_SCHEDULEGATHER (
+			"GROUPID" NVARCHAR2(50) NOT NULL ENABLE,
+			"GROUPNAME" NVARCHAR2(50) NOT NULL ENABLE,
+			"CREATORID" NVARCHAR2(50),
+			"CREATORNAME" NVARCHAR2(50) NOT NULL ENABLE,
+			"CREATORNAME2" NVARCHAR2(50),
+			"DESCRIPTION" NVARCHAR2(250) NOT NULL ENABLE,
+			"CREATEDATE" DATE,
+			"TENANT_ID" NUMBER(5,0) NOT NULL ENABLE,
+			"COMPANYID" VARCHAR2(40),
+			PRIMARY KEY ("GROUPID")
+		)
+	</statement>
+
+	<select id="EzCommonDAO.checkTblScheduleGatherMember">
+		SELECT
+			GROUPID
+		FROM
+			TBL_SCHEDULEGATHERMEMBER
+		WHERE
+			ROWNUM = 1
+	</select>
+	<statement id="EzCommonDAO.createTblScheduleGatherMember">
+		CREATE TABLE TBL_SCHEDULEGATHERMEMBER	(
+			 "GROUPID" NVARCHAR2(50) NOT NULL ENABLE,
+			 "MEMBERID" NVARCHAR2(50) NOT NULL ENABLE,
+			 "MEMBERNAME" NVARCHAR2(50) NOT NULL ENABLE,
+			 "MEMBERNAME2" NVARCHAR2(50),
+			 "TENANT_ID" NUMBER(5,0) NOT NULL ENABLE,
+			 PRIMARY KEY ("GROUPID", "MEMBERID")
+		)
+	</statement>
+		
+	<select id="EzCommonDAO.checkMemberDeptIdAtScheduleGroupMember" parameterClass="Map" resultClass="String">
+		SELECT
+			MEMBERDEPTID
+		FROM
+			TBL_SCHEDULEGROUPMEMBER
+		WHERE
+			ROWNUM = 1
+	</select>
+	
+	<update id="EzCommonDAO.addMemberDeptIdScheduleGroupMember" parameterClass="Map">
+		ALTER TABLE
+			TBL_SCHEDULEGROUPMEMBER
+		ADD
+			MEMBERDEPTID NVARCHAR2(50) DEFAULT NULL
+	</update>
+	
+	<select id="EzCommonDAO.checkMemberDeptIdAtScheduleGatherMember" parameterClass="Map" resultClass="String">
+		SELECT
+			MEMBERDEPTID
+		FROM
+			TBL_SCHEDULEGATHERMEMBER
+		WHERE
+			ROWNUM = 1
+	</select>
+	
+	<update id="EzCommonDAO.addMemberDeptIdScheduleGatherMember" parameterClass="Map">
+		ALTER TABLE
+			TBL_SCHEDULEGATHERMEMBER
+		ADD
+			MEMBERDEPTID NVARCHAR2(50) DEFAULT NULL
+	</update>
 </sqlMap>

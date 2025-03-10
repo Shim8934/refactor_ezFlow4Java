@@ -1082,7 +1082,7 @@ public class CommonUtil {
 	}
 		
 	public String getMultiData(String lang, int tenantID) throws Exception{
-		if (!lang.equals(ezCommonService.getTenantConfig("PrimaryLang", tenantID))) {
+		if (lang != null && !lang.equals(ezCommonService.getTenantConfig("PrimaryLang", tenantID))) {
 			return "2";
 		} else {
 			return "";

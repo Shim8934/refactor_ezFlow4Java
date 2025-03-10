@@ -17,7 +17,7 @@
 		<style type="text/css">
 			body {background-color : white;}
 			.ui-sortable{ margin:0px; padding:0px;}
-			.menu, .menuAdd {cursor:pointer; vertical-align:top;display : inline-block;width : 100px; border : 1px solid #d9d9d9; margin :10px 5px 0px 0px; height:122px}
+			.menu, .menuAdd {cursor:pointer; vertical-align:top;display : inline-block;width : 100px; border : 1px solid #d9d9d9; margin :10px 4px 0px 0px; height:122px}
 			#menuAdd {border : 1px dashed #aaaaaa;}
 			.menu dl dt, .menuAdd dl dt {text-align : center;display : block;height : 42px;margin : 0px;	padding : 0px;}
 			.menu dl dt{height:auto;}

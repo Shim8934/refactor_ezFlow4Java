@@ -4185,3 +4185,33 @@ a.commentFileSpan:hover {cursor: pointer; text-decoration: underline;}
 #moreBoardIcon .layer_select .iconTexts {display: block;}
 
 .tooltip-bttns .survey_atchBtn {float:right; display: flex;}
+
+/* 일정 모아보기 */
+.schedule_list_date{display:flex; justify-content:center; align-items:center; width:100%;}
+.schedule_list_date span{color:#000; font-size:18px; font-weight:bold;}
+.schedule_list_date .date_arr{width:16px; height:16px; background-repeat:no-repeat; background-position:center; cursor:pointer;}
+.schedule_list_date .date_arr.date_prev{background-image:url(../images/date_prev.png); margin-right:65px;}
+.schedule_list_date .date_arr.date_next{background-image:url(../images/date_next.png); margin-left:65px;}
+
+.schedule_group_info{display:flex; width:100%; justify-content:space-between; align-items:center; margin-bottom:7px;}
+.schedule_group_info h2{margin:0; padding:0; color:#333; font-size:15px; font-weight:bold;}
+.schedule_group_info .info_txt{position:relative; color:#333; font-size:13px;}
+.schedule_group_info .info_txt:before{content:""; display:inline-block; width:14px; height:14px; background:rgba(61,143,234,0.8); vertical-align:top; margin:3px 5px 0 0;}
+
+.entry_wrap{overflow-y:auto; width:100%;}
+.entry_wrap > table{}
+.entryDiv{position:relative;}
+.entryList{table-layout:fixed; width:100%;}
+.entryList tr th{border:none; background:none; height:34px; box-sizing:border-box; padding:0 5px; font-size:13px; color:#2F2F2F; font-weight:bold; text-align:left;}
+.entryList tr th:first-child{width:145px;}
+.entryList tr th span{color:#868686; font-size:10px; font-weight:bold; margin-right:2px;}
+.entryList > tbody > tr > td{height:34px; border-bottom:1px solid #DEDEDE;}
+.entryList > tbody > tr > td:first-child{color:#656565; font-size:13px; text-align:center;}
+
+.entryList_bg{position:absolute; left:0; top:0; width:100%; height:100%; z-index:-1;}
+.entryList_bg tr th{border:1px solid #C8CCD0; border-left:none; background:#E4E8EC; height:34px; padding:0; box-sizing:border-box;}
+.entryList_bg tr th:nth-child(2n){border-right:none;}
+.entryList_bg tr th:first-child{width:144px; border-left:1px solid #C8CCD0;}
+.entryList_bg tr td{border:1px solid #DEDEDE; border-bottom:none; box-sizing:border-box;}
+.entryList_bg tr td:nth-child(2n){border-right:1px dotted rgba(218,218,218,0.67);}
+.entryList_bg tr td:first-child{background:#F8F8F8;}

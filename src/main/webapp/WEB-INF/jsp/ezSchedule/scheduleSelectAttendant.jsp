@@ -163,10 +163,13 @@
 	            	treeView.DataSource(xmlTree);
 	            	treeView.DataBind("TreeView");
 	            	
-	                if (type == "group") {
+	                if (type == "group") { // group : 일정 그룹
 	                    document.getElementById("ToTitleStr").textContent = "<spring:message code='ezSchedule.t00001' />";
 	                    document.getElementById("btnAddUser").querySelector("span").textContent = "<spring:message code='ezSchedule.groupSchedule.csj01' />";	// 2023-09-06 조소정 - 참석자 일정조회 버튼 활성화
-	                }
+	                } else if (type == "gather") { // gather : 일정 모아보기 그룹
+						document.getElementById("ToTitleStr").textContent = "<spring:message code='ezSchedule.t00001' />";
+						document.getElementById("btnAddUser").style.display = "none";
+					}
 	            }
 	            catch (ErrMsg) {
 	                alert(" TreeViewinitialize : " + ErrMsg.description);
@@ -193,20 +196,28 @@
 	                var strName2;
 	                var strDeptName1;
 	                var strDeptName2;
-	
+					var departmentid;
+					
 	                strName = RetValue["name"][i];
 	                strId = RetValue["id"][i];
 	                strName1 = RetValue["name1"][i];
 	                strName2 = RetValue["name2"][i];
 	                strDeptName1 = RetValue["deptname"][i];
 	                strDeptName2 = RetValue["deptname2"][i];
-	
+	                if (RetValue["departmentid"]) {
+		                departmentid = RetValue["departmentid"][i];
+	                }
+	                
 	                pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
 	                pparsingXML = pparsingXML + "<DATA2><![CDATA[" + strName1 + "]]></DATA2>";
 	                pparsingXML = pparsingXML + "<DATA3><![CDATA[" + strName2 + "]]></DATA3>";
 	                pparsingXML = pparsingXML + "<DATA4><![CDATA[" + strDeptName1 + "]]></DATA4>";
 	                pparsingXML = pparsingXML + "<DATA5><![CDATA[" + strDeptName2 + "]]></DATA5>";
 	                pparsingXML = pparsingXML + "<DATA6><![CDATA[" + strName + "]]></DATA6>";
+	                if (departmentid) {
+		                pparsingXML = pparsingXML + "<DATA10><![CDATA[" + departmentid + "]]></DATA10>";
+	                }
+	                
 	                if(lang == "1") {
 	                	pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName1 + "]]></VALUE></CELL></ROW>";
 	                }
@@ -383,7 +394,7 @@
   					data : {
   						deptID : tempDeptID ,
   						cell : "company;description;displayName;title;telephoneNumber",
-  						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2",
+  						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department",
   						page : CurPage ,
   						type : "user"
   					} ,
@@ -622,13 +633,14 @@
 	            if (listContentArry != "") {
 	                for (var i = 0; i < listContentArry.length; i++) {
 	                    var strId = document.getElementById(listContentArry[i]).getAttribute("_data2");
-                        var strName = document.getElementById(listContentArry[i]).getAttribute("_data10");
+                        var strName = document.getElementById(listContentArry[i]).getAttribute("_data11");
 	                    var strDeptNM = document.getElementById(listContentArry[i]).getAttribute("_data5");
 	                    var strEmail = document.getElementById(listContentArry[i]).getAttribute("_data3");
-	                    var strName2 = document.getElementById(listContentArry[i]).getAttribute("_data11");
-	                    var strDeptNM2 = document.getElementById(listContentArry[i]).getAttribute("_data13");
-	                    var jickwe = document.getElementById(listContentArry[i]).getAttribute("_data14");
+	                    var strName2 = document.getElementById(listContentArry[i]).getAttribute("_data12");
+	                    var strDeptNM2 = document.getElementById(listContentArry[i]).getAttribute("_data14");
+	                    var jickwe = document.getElementById(listContentArry[i]).getAttribute("_data6");
 	                    var phone = document.getElementById(listContentArry[i]).getAttribute("_data8");
+	                    var department = document.getElementById(listContentArry[i]).getAttribute("_data10");
 	                    var writePermission = "Y"; // 기본값을 'Y'로 설정
 
 	                    var listid = "MsgToList";
@@ -668,6 +680,7 @@
 	                        pparsingXML = pparsingXML + "<DATA7><![CDATA[" + jickwe + "]]></DATA7>";
 	                        pparsingXML = pparsingXML + "<DATA8>" + phone + "</DATA8>";
 	                        pparsingXML = pparsingXML + "<DATA9>" + writePermission + "</DATA9>";
+	                        pparsingXML = pparsingXML + "<DATA10>" + department + "</DATA10>";
 	                        if(lang == "1") {
 	                        	pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
 	                        }
@@ -1090,7 +1103,7 @@
 					data : {
 						search : document.getElementById("search_type").value + "::" + keyword.value,
 						cell : "company;description;displayName;title;telephoneNumber;" + document.getElementById("search_type").value,
-						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2",
+						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department",
 						page : CurPage ,
 						type : "user"
 					} ,
@@ -1150,7 +1163,7 @@
 			}
 		    var rtn;
 		    function btnok_onclick() {
-		        rtn = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array(), "writepermission": new Array() };
+		        rtn = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array(), "writepermission": new Array(), "departmentid" : new Array() };
 		
 		        var listid = "MsgToList";
 		        var selList = new ListView();
@@ -1184,6 +1197,7 @@
 		            } else {
 		                rtn["writepermission"][i] = "Y"; // 기본값 설정
 		            }
+		            rtn["departmentid"][i] = GetAttribute(totalRows[i], "DATA10");
 		        }
 		        
 		        if (!CrossYN()) {
@@ -1384,7 +1398,14 @@
    				            pparsingXML = pparsingXML + "<DATA6><![CDATA[" + getNodeText(xmlRtn.getElementsByTagName("DISPLAYNAME")[i]) + "]]></DATA6>";
    				            pparsingXML = pparsingXML + "<DATA7><![CDATA[" + getNodeText(xmlRtn.getElementsByTagName("TITLE")[i]) + "]]></DATA7>";
    				            pparsingXML = pparsingXML + "<DATA8>" + getNodeText(xmlRtn.getElementsByTagName("TELEPHONENUMBER")[i]) + "</DATA8>";
-   				            pparsingXML = pparsingXML + "<VALUE><![CDATA[" + getNodeText(xmlRtn.getElementsByTagName("DISPLAYNAME")[i]) + "]]></VALUE></CELL></ROW>";		// 2018-09-27 김민성 - 부서명 뜨는 부분 삭제
+	   				        pparsingXML = pparsingXML + "<DATA10>" + nodeIdx.GetNodeData("CN") + "</DATA10>";
+	   			            
+	   				        if (lang == "1") {
+	   			            	pparsingXML = pparsingXML + "<VALUE><![CDATA[" + getNodeText(xmlRtn.getElementsByTagName("DISPLAYNAME")[i]) + "]]></VALUE></CELL></ROW>";
+	   			            } else {
+	   			            	pparsingXML = pparsingXML + "<VALUE><![CDATA[" + getNodeText(xmlRtn.getElementsByTagName("DISPLAYNAME2")[i]) + "]]></VALUE></CELL></ROW>";
+	   			            }
+	   			            
    				            pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
    				            Resultxml = loadXMLString(pparsingXML2);
 

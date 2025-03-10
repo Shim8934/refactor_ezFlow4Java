@@ -1306,16 +1306,23 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	}
 
 	@Override
-	public void insertScheduleGroupMember(String groupId, String memberId, String memberName, String memberName2, int tenantId, String writePermission) throws Exception {
+	public void insertScheduleGroupMember(String groupId, String memberId, String memberName, String memberName2, String memberDeptId, int tenantId, String writePermission) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_GROUPID", groupId);
 		map.put("v_MEMBERID", memberId);
 		map.put("v_MEMBERNAME", memberName);
 		map.put("v_MEMBERNAME2", memberName2);
+		map.put("v_MEMBERDEPTID", memberDeptId);
 		map.put("v_TENANTID", tenantId);
 		map.put("v_WRITEPERMISSION", writePermission);
 		
-		ezScheduleDAO.insertScheduleGroupMember(map);
+		ScheduleGroupListVO scheduleGroupMember = ezScheduleDAO.selectScheduleGroupMember(map);
+		
+		if (scheduleGroupMember == null) {
+			ezScheduleDAO.insertScheduleGroupMember(map);
+		} else {
+			ezScheduleDAO.updateScheduleGroupMember(map);
+		}
 	}
 
 	@Override
@@ -4308,5 +4315,124 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		logger.debug("checkExecutiveUsage ended. result = " + usage);
 		return usage;
 	}
+	
+	/* 2023-09-27 임정은 - 모아보기 그룹 관리 리스트 리턴하는 메서드 */
+	@Override
+	public List<ScheduleGroupListVO> getMyGatherList(String userID, int tenantID, String companyID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_USERID", userID);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_COMPANYID", companyID);
+
+		List<ScheduleGroupListVO> gList = ezScheduleDAO.getMyGatherList(map);
+
+		return gList;
+	}
+
+	/* 2023-09-27 임정은 - 모아보기 그룹 관리 리스트별 멤버 수 리턴하는 메서드 */
+	@Override
+	public int getMyGatherMemberCnt(String groupId, String lang, int tenantId, String companyID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_GROUPID", groupId);
+		map.put("v_LANG", lang);
+		map.put("v_TENANTID", tenantId);
+		map.put("v_COMPANYID", companyID);
+
+		int cnt = ezScheduleDAO.getMyGatherMemberCnt(map);
+
+		return cnt;
+	}
+
+	/* 2023-10-04 임정은 - 모아보기 그룹 추가 시 tbl_schedulegather에 insert하는 메서드 */
+	@Override
+	public void insertScheduleGather(String gUID, String id, String displayName,	String displayName2, String groupName, String description, int tenantId, String companyID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_GUID", gUID);
+		map.put("v_USERID", id);
+		map.put("v_DISPLAYNAME", displayName);
+		map.put("v_DISPLAYNAME2", displayName2);
+		map.put("v_GROUPNAME", groupName);
+		map.put("v_DESCRIPTION", description);
+		map.put("v_TENANTID", tenantId);
+		map.put("v_COMPANYID", companyID);
+
+		ezScheduleDAO.insertScheduleGather(map);
+	}
+
+	/* 2023-10-04 임정은 - 모아보기 그룹 추가 시 tbl_schedulegathermember에 insert하는 메서드 / 모아보기 그룹 관리 > 그룹 관리 버튼 > 구성원 추가/편집 버튼 > 구성원 추가 */
+	@Override
+	public void insertScheduleGatherMember(String groupId, String memberId, String memberName, String memberName2, String memberDeptId, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_GROUPID", groupId);
+		map.put("v_MEMBERID", memberId);
+		map.put("v_MEMBERNAME", memberName);
+		map.put("v_MEMBERNAME2", memberName2);
+		map.put("v_MEMBERDEPTID", memberDeptId);
+		map.put("v_TENANTID", tenantId);
+		ScheduleGroupListVO scheduleGatherMember = ezScheduleDAO.selectScheduleGatherMember(map);
+		
+		if (scheduleGatherMember == null) {
+			ezScheduleDAO.insertScheduleGatherMember(map);
+		} else {
+			ezScheduleDAO.updateScheduleGatherMember(map);
+		}
+	}
+
+	/* 2023-10-04 임정은 - 모아보기 그룹 관리 > 그룹 선택 시 상세 정보 리턴하는 메소드 */
+	public List<ScheduleGroupListVO> getMyGatherMemberList(String groupId, String lang, int tenantId, String companyID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_GROUPID", groupId);
+		map.put("v_LANG", lang);
+		map.put("v_TENANTID", tenantId);
+		map.put("v_COMPANYID", companyID);
+
+		List<ScheduleGroupListVO> gList = ezScheduleDAO.getMyGatherMemberList(map);
+
+		return gList;
+	}
+
+	/* 2023-10-04 임정은 - 모아보기 그룹 관리 > 그룹 선택 후 삭제 버튼 */
+	@Override
+	public void deleteScheduleGather(String groupId, int tenantId, String memberId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_GROUPID", groupId);
+		map.put("v_TENANTID", tenantId);
+
+		if ("".equals(memberId)) {
+			ezScheduleDAO.deleteScheduleGather(map);
+		} else {
+			map.put("v_MEMBERID", memberId);
+		}
+		ezScheduleDAO.deleteScheduleGatherMember(map);
+	}
+
+	/* 2023-10-04 임정은 - 모아보기 그룹 관리 > 그룹 관리 버튼 */
+	@Override
+	public List<ScheduleGroupListVO> getGatherMemberList(String groupID, String lang, int tenantId, String offSetMin, String companyID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_GROUPID", groupID);
+		map.put("v_LANG", lang);
+		map.put("v_TENANTID", tenantId);
+		map.put("v_OFFSETMIN", offSetMin);
+		map.put("v_COMPANYID", companyID);
+
+		List<ScheduleGroupListVO> gList = ezScheduleDAO.getGatherMemberList(map);
+
+		return gList;
+	}
+
+	/* 2023-10-05 임정은 - 모아보기 그룹 관리 > 그룹 관리 버튼 > 그룹명, 설명 수정 후 저장 버튼 */
+	@Override
+	public void updateScheduleGather(String groupId, String id, String groupName, String description, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_GUID", groupId);
+		map.put("v_USERID", id);
+		map.put("v_GROUPNAME", groupName);
+		map.put("v_DESCRIPTION", description);
+		map.put("v_TENANTID", tenantId);
+
+		ezScheduleDAO.updateScheduleGather(map);
+	}
+
 }
 

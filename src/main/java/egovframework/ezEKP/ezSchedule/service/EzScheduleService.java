@@ -99,7 +99,7 @@ public interface EzScheduleService {
 	
 	public void updateAttendantStatus(String scheduleId, String attendantId, String status, int tenantId) throws Exception;	
 
-	public void insertScheduleGroupMember(String groupId, String memberId, String memberName, String memberName2, int tenantId, String writePermission) throws Exception;
+	public void insertScheduleGroupMember(String groupId, String memberId, String memberName, String memberName2, String memberDeptId, int tenantId, String writePermission) throws Exception;
 
 	public void insertScheduleGroup(String gUID, String id, String displayName, String displayName2, String groupName, String description, int tenantId ,String companyID, String groupColor) throws Exception;	
 	
@@ -208,4 +208,29 @@ public interface EzScheduleService {
 	public void updateScheduleWritePermission(String groupId, List<Map<String, String>> memberList, int tenantId) throws Exception;
 	// 2024-11-19 한태훈 - 일정관리 > 초대 일정 드래그로 수정 시 메일 및 알림 발송 메서드
 	public void sendInviteModNotiForDrag(HttpServletRequest request, String dragId, ScheduleInfoVO beforeSche, String startDate, String endDate, LoginVO loginVO, String loginCookie) throws Exception;
+	
+	/* 2023-09-27 임정은 - 모아보기 그룹 관리 리스트 리턴하는 메서드 */
+	public List<ScheduleGroupListVO> getMyGatherList(String userId, int tenantId ,String companyID) throws Exception;
+
+	/* 2023-09-27 임정은 - 모아보기 그룹 관리 리스트별 멤버 수 리턴하는 메서드 */
+	public int getMyGatherMemberCnt(String groupId, String lang, int tenantId ,String companyID) throws Exception;
+
+	/* 2023-10-04 임정은 - 모아보기 그룹 추가 시 tbl_schedulegather에 insert하는 메서드 */
+	public void insertScheduleGather(String gUID, String id, String displayName, String displayName2, String groupName, String description, int tenantId ,String companyID) throws Exception;
+
+	/* 2023-10-04 임정은 - 모아보기 그룹 추가 시 tbl_schedulegathermember에 insert하는 메서드 / 모아보기 그룹 관리 > 그룹 관리 버튼 > 구성원 추가/편집 버튼 > 구성원 추가 */
+	public void insertScheduleGatherMember(String groupId, String memberId, String memberName, String memberName2, String memberDeptId, int tenantId) throws Exception;
+
+	/* 2023-10-04 임정은 - 모아보기 그룹 관리 > 그룹 선택 시 상세 정보 리턴하는 메소드 */
+	public List<ScheduleGroupListVO> getMyGatherMemberList(String groupId, String lang, int tenantId ,String companyID) throws Exception;
+
+	/* 2023-10-04 임정은 - 모아보기 그룹 관리 > 그룹 선택 후 삭제 버튼 */
+	public void deleteScheduleGather(String groupId, int tenantId, String memberId) throws Exception;
+
+	/* 2023-10-04 임정은 - 모아보기 그룹 관리 > 그룹 관리 버튼 */
+	public List<ScheduleGroupListVO> getGatherMemberList(String groupId, String lang, int tenantId, String offSetMin, String companyID) throws Exception;
+
+	/* 2023-10-05 임정은 - 모아보기 그룹 관리 > 그룹 관리 버튼 > 그룹명, 설명 수정 후 저장 버튼 */
+	public void updateScheduleGather(String groupId,String id, String groupName, String description, int tenantId) throws Exception;
+
 }
