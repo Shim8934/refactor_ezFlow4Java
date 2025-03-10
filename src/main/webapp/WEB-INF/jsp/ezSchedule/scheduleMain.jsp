@@ -1418,7 +1418,7 @@
 	</head>
 	<body class="mainbody" style="overflow: auto; margin-bottom:0px; min-width: 950px;">
         <h1 id="titleimg">${defaultTitle}</h1>
-        <div id="mainmenu" style="position:fixed">
+        <div id="mainmenu" style="position:absolute;">
             <ul class="on">
             	<li class="important"><span id="pn_img" onClick="WriteSchedule()"><spring:message code='ezSchedule.t214'/></span></li>
             	<li onClick="PrintSchedule()"><span class="icon16 icon16_print switchIcon"></span><span class="iconTexts"><spring:message code='ezSchedule.t217'/></span></li>
