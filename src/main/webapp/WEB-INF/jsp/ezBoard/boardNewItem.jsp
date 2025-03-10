@@ -429,8 +429,8 @@
 		        }
 				/* 2024-08-26 김유진 - 사용된 확장컬럼 높이 고려하여 에디터 높이 설정 */
 				if (pAttributeYN == "Y" && document.getElementById("tab01")) {
-					document.getElementById("EdtorSize").style.height = parseInt(document.getElementById("EdtorSize").style.height, 10) + ("${boardInfo.guBun}" == "2" ? 90 : 60) - document.getElementById("tab01").parentElement.clientHeight + "PX";
-					mobileDistinction();
+					document.getElementById("EdtorSize").style.height = '100%'
+                    mobileDistinction();
 				}
 
 				if ("<c:out value='${boardInfo.attachmentFlag}'/>" != "Y") {
@@ -2108,8 +2108,8 @@
 		        }
 				/* 2024-08-26 김유진 - 사용된 확장컬럼 높이 고려하여 에디터 높이 설정 */
 				if (pAttributeYN == "Y" && document.getElementById("tab01")) {
-					document.getElementById("EdtorSize").style.height = parseInt(document.getElementById("EdtorSize").style.height, 10) + ("${boardInfo.guBun}" == "2" ? 90 : 60) - document.getElementById("tab01").parentElement.clientHeight + "PX";
-					mobileDistinction();
+					document.getElementById("EdtorSize").style.height = '100%'
+                    mobileDistinction();
 				}
 
 				if ("<c:out value='${boardInfo.attachmentFlag}'/>" != "Y") {
@@ -3517,9 +3517,7 @@
 	    }
 		/* 2024-08-26 김유진 - 사용된 확장컬럼 높이 고려하여 에디터 높이 설정 */
 		if (pAttributeYN == "Y" && document.getElementById("tab01")) {
-			var tabHeight = "${boardInfo.guBun}" == "2" ? 90 : 60;
-			var editorHeight = parseInt(document.getElementById("EdtorSize").style.height, 10) + tabHeight - document.getElementById("tab01").parentElement.clientHeight;
-			document.getElementById("EdtorSize").style.height = (editorHeight > 200 ? editorHeight : 200 ) + "PX";
+		    document.getElementById("EdtorSize").style.height = '100%'
 		}
 		
 		if ("<c:out value='${boardInfo.attachmentFlag}'/>" != "Y") {
