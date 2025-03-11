@@ -73,8 +73,8 @@
 	    <div id="left" class="lnb" style="overflow: auto">
 		    <div class="admin_left_title" title="<spring:message code='main.t10011' />"><spring:message code='ezNotification.hth01' /></div>
 		    <div class="adminListBox" style="overflow:hidden; padding-right: 0;">
-	            <h2 class="on"><span id="NOTISETTING" style="display:inline-block;width:100%;" onClick="menu_change('NOTISETTING')" ><spring:message code='ezNotification.hth21' /></span></h2>
-	            <h2><span id="EMERGENCYNOTI" style="display:inline-block;width:100%;" onClick="menu_change('EMERGENCYNOTI')" ><spring:message code='ezNotification.hth57' /></span></h2>
+	            <h2 class="on"><span class="h2Title" id="NOTISETTING" style="display:inline-block;width:100%;" onClick="menu_change('NOTISETTING')" ><spring:message code='ezNotification.hth21' /></span></h2>
+	            <h2><span class="h2Title" id="EMERGENCYNOTI" style="display:inline-block;width:100%;" onClick="menu_change('EMERGENCYNOTI')" ><spring:message code='ezNotification.hth57' /></span></h2>
 			</div>
       	</div>
     </body>
