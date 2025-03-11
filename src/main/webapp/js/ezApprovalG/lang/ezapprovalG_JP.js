@@ -1208,3 +1208,6 @@ var strLangHIH_signDraw01 = "서명을 작성한 뒤 결재해주세요.";
 /* 2025-05-12 김수연 aprmanage_Cross.js 하드코딩 수정 */
 var strLangAssignedList = "指定リスト";
 var strLangDeptInbox = "部署受信文書";
+
+var strLangAtachHIK_01 = "일반첨부파일은 총_JP"; 
+var strLangAtachHIK_02 = "MB까지 가능합니다._JP"; 

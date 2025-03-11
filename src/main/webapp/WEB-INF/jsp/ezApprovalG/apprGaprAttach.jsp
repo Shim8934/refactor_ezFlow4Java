@@ -954,7 +954,7 @@
 		        	} else {
 		        		if(bigSizeApprAttachLimit == "0"){
 		        			hideLoadingProgress();
-		        			alert("normal Approval attach can be up to " + apprAttachLimit + "MB.");
+		        			alert(strLangAtachHIK_01 + apprAttachLimit + strLangAtachHIK_02);
 		        			return false;
 						} else {
 							bigFileCheck = confirm(strLangHSBAt13 + apprAttachLimit + "MB" + strLangHSBAt14);

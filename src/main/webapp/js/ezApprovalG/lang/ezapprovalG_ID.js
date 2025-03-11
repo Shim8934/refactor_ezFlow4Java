@@ -1,4 +1,4 @@
-﻿﻿// ApprovUI\ApprovUI.js
+﻿// ApprovUI\ApprovUI.js
 var strLang2 = "Agreement"
 var strLang3 = "Cooperation"
 var strLang4 = "Returning"
@@ -1209,3 +1209,6 @@ var strLangHIH_signDraw01 = "서명을 작성한 뒤 결재해주세요.";
 /* 2025-05-12 김수연 aprmanage_Cross.js 하드코딩 수정 */
 var strLangAssignedList = "Daftar yang ditunjuk";
 var strLangDeptInbox = "Dept. receipt folder";
+
+var strLangAtachHIK_01 = "일반첨부파일은 총_ID"; 
+var strLangAtachHIK_02 = "MB까지 가능합니다._ID"; 

@@ -1,4 +1,4 @@
-﻿﻿﻿// ApprovUI\ApprovUI.js
+﻿// ApprovUI\ApprovUI.js
 var strLang2 = "Agreement"
 var strLang3 = "Cooperation"
 var strLang4 = "Returning"
@@ -1208,3 +1208,6 @@ var strLangHIH_signDraw01 = "Please sign and then approve.";
 /* 2025-05-12 김수연 aprmanage_Cross.js 하드코딩 수정 */
 var strLangAssignedList = "Assignment list";
 var strLangDeptInbox = "Dept. receipt folder";
+
+var strLangAtachHIK_01 = "Approval attach can be up to "; 
+var strLangAtachHIK_02 = "MB."; 
