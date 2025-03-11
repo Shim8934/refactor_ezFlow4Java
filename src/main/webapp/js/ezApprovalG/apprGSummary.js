@@ -57,3 +57,21 @@ function btnSummaryPrint_onclick() {
     feature = feature + GetOpenPosition(800, 500);
     window.open(url, "", feature);
 }
+
+function copySummaryForReuse(orgDocID, docID) {
+     var result = "";
+    $.ajax({
+        type : "POST",
+        dataType : "text",
+        async : false,
+        url : "/ezApprovalG/apprGCopyForReuse.do",
+        data : {
+            orgDocID : orgDocID,
+            docID : docID
+        },
+        success: function(text){
+            result = text;
+        }
+    });
+    return result;
+}

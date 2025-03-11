@@ -628,6 +628,7 @@
 				                	if( apprReuseConfig != '1' ){
 			                			getDocInfo();
 				                		setAttachInfo(pDocID, "APR", lstAttachLink);
+                                        copySummaryForReuse(beforeDocID, pDocID)
 				                	}
 				                	
 				                	if ($("#message").contents().find("#autoLine") != null && $("#message").contents().find("#RecvautoAprLine") != null) {

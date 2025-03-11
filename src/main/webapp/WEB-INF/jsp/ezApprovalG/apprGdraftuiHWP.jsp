@@ -508,6 +508,14 @@
 			                    }
 			                    pDocID = createNewDoc();
 			                }
+			                
+			                if (isUsed == "reuse") {
+                                if (apprReuseConfig != '1') {
+                                    getDocInfo();
+                                    setAttachInfo(pDocID, "APR", lstAttachLink);
+                                    copySummaryForReuse(beforeDocID, pDocID);
+                                }
+                            }
 			            }
 					}
 				} catch (e) {
