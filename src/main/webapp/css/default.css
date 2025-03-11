@@ -4248,3 +4248,5 @@ a.commentFileSpan:hover {cursor: pointer; text-decoration: underline;}
 .summaryPrintBtn {width:32px!important; border:1px solid #CECECE; border-radius:3px; color:#333; margin-right:5px;}
 .summaryPrintTtl {height:30px; margin-top:10px}
 .summaryPrintContent {border:1px solid #333; padding:0px 10px;}
+
+.sub_iconLNB.multiLang {margin-top : 4px; margin-right: 2px;}

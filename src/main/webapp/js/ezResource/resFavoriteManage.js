@@ -1,4 +1,6 @@
 getFavoriteList();
+var lang = $("#userLang").val();
+
 function getFavoriteList(topId) {
     if (!topId) {
         topId = "";
@@ -114,11 +116,21 @@ function getMainTreeUI(catList, treeMain) {
                     classStr = "tree_resource_standard";
                 }
                 brdIcon.classList.add(classStr);
+                
+                if (lang && lang != 1) {
+                     brdIcon.classList.add("multiLang");
+                }
+                
                 brdIcon.style.cursor = "pointer";
                 brdDivTag.appendChild(brdIcon);
 
                 var brdNode = document.createElement("span");
-                brdNode.innerHTML = brdList[j]["brdNm"];
+                
+                if (!lang) {
+                    lang = "";
+                } 
+                
+                brdNode.innerHTML = brdList[j]["brdNm" + lang];
                 brdNode.classList.add("node_normal");
                 brdNode.classList.add("brd_node");
                 brdNode.style.cursor = "pointer";
