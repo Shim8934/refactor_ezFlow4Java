@@ -627,98 +627,100 @@
                 <li><span onclick="return btncancel_onclick()"></span></li>
             </ul>
         </div>
-	    <table class="content" style="width:697px;">
-		    <tr>
-			    <th><spring:message code='ezApprovalG.t1540'/></th>
-			    <td style="border-right-color:white">
-			    	<select name="select" onChange="return select_onchange()" id="FromList" style="height:24px">
-					    ${docType}
-				    </select>
-			    </td>
-	            <td style="white-space: nowrap">
-	                <select id="searchoption" style="height:24px">
-	                    <option value="1"><spring:message code='ezApprovalG.t442'/></option>
-	                    <option value="2"><spring:message code='ezApprovalG.t598'/></option>
-	                </select>
-	                <input id="forminfo" onkeypress="search_press(event)" type="text" style="vertical-align: baseline;" />
-	                <a class="imgbtn imgbck" onclick="searchform()" style="margin-top:1px"><span><spring:message code='ezApprovalG.t111'/></span></a>
-	                <a class="imgbtn imgbck" onclick="reset()" style="margin-top:1px"><span><spring:message code='ezApprovalG.t1301'/></span></a>
-	            </td>
-		    </tr>
-	    </table>
-	        <div class="portlet_tabpart01" style="margin-top: 12px; width: 697px">
-	        <div class="portlet_tabpart01_top" id="tab1">
-	            <p><span id="1tab1" divname="favoritelist"><spring:message code='ezApprovalG.G0001'/></span></p>
-	            <p><span id="1tab2" divname="formlist"><spring:message code='ezApprovalG.t1537'/></span></p>
-				<p><span id="1tab3" divname="resendformlist" style="display:none;"><spring:message code='ezApprovalG.resendKMH01'/></span></p>
-				<div style="float: right; padding-top: 1.5px;"> 
-	                <a id="addfav" class="imgbtn imgbck" style="display:none;"><span onclick="return btnAddForm_onclick('1')"><spring:message code='ezApprovalG.t00002'/></span></a>
-	                <a id="addfav2" class="imgbtn imgbck" style="display:none;"><span onclick="return btnAddForm_onclick('3')"><spring:message code='ezApprovalG.t00002'/></span></a>
-	                <a id="delfav" class="imgbtn imgbck"><span onclick="return btnAddForm_onclick('2')"><spring:message code='ezApprovalG.t00003'/></span></a>
-				</div>
-	        </div>
-	    </div>
-	    <table id="favoritetable" style="margin-top: 5px; width: 697px;">
-	        <tr>
-	            <td style="vertical-align: top;">
-	                <div class="border_gray" style="border-bottom: 0px">
-	                    <div id="divlvtFavForm" style="border: 0; WIDTH: 100%; HEIGHT: 354px; overflow:auto; padding: 0px"></div>
-	                </div>
-	            </td>
-	        </tr>
-	        <tr>
-	            <td style="vertical-align: top;">
-	                <table class="content">
-	                    <tr>
-	                        <th><spring:message code='ezApprovalG.t1543'/></th>
-	                        <td id="descrip2" style="width: 95%">&nbsp;</td>
-	                    </tr>
-	                </table>
-	            </td>
-	        </tr>
-	    </table>
-	    <table id="formtable" style="margin-top: 5px;width: 697px;display:none">
-	        <tr>
-	            <td rowspan="2" style="vertical-align: top;">
-	                <div id="TreeView" style="height: 384px; width: 280px; overflow-x: auto; overflow-y: auto; BORDER: #ddd 1px solid; BACKGROUND-COLOR: #ffffff; padding: 4px,6px,6px,4px"></div>
-	            </td> 
-	            <td style="padding-left: 5px; vertical-align: top;">
-	                <div class="border_gray" style="border-bottom: 0px; width:408px;"> 
-	                    <!-- 기존 class="listview" -->
-	                    <div id="divlvtForm" style="BORDER: 0; WIDTH: 407px; HEIGHT: 353px; margin:auto; overflow-y: auto; overflow-x: hidden;"></div>
-	                </div>
-	            </td>
-	        </tr>
-	        <tr>
-	            <td style="padding-left: 5px; vertical-align: top;">
-	                <table class="content">
-	                    <tr>
-	                        <th><spring:message code='ezApprovalG.t1543'/></th>
-	                        <td id="descrip" style="width: 95%;">&nbsp;</td>
-	                    </tr>
-	                </table>
-	            </td>
-	        </tr>
-	    </table>
-		<table id="resendTable" style="margin-top: 5px; width: 697px; display: none;">
-			<tr>
-				<td style="vertical-align: top;">
-					<div class="border_gray" style="border-bottom: 0px">
-						<div id="divlvtResendForm" style="border: 0; WIDTH: 100%; HEIGHT: 354px; overflow:auto; padding: 0px"></div>
+        <div style="margin-bottom: 50px;">
+		    <table class="content" style="width:697px;">
+			    <tr>
+				    <th><spring:message code='ezApprovalG.t1540'/></th>
+				    <td style="border-right-color:white">
+				    	<select name="select" onChange="return select_onchange()" id="FromList" style="height:24px">
+						    ${docType}
+					    </select>
+				    </td>
+		            <td style="white-space: nowrap">
+		                <select id="searchoption" style="height:24px">
+		                    <option value="1"><spring:message code='ezApprovalG.t442'/></option>
+		                    <option value="2"><spring:message code='ezApprovalG.t598'/></option>
+		                </select>
+		                <input id="forminfo" onkeypress="search_press(event)" type="text" style="vertical-align: baseline;" />
+		                <a class="imgbtn imgbck" onclick="searchform()" style="margin-top:1px"><span><spring:message code='ezApprovalG.t111'/></span></a>
+		                <a class="imgbtn imgbck" onclick="reset()" style="margin-top:1px"><span><spring:message code='ezApprovalG.t1301'/></span></a>
+		            </td>
+			    </tr>
+		    </table>
+		        <div class="portlet_tabpart01" style="margin-top: 12px; width: 697px">
+		        <div class="portlet_tabpart01_top" id="tab1">
+		            <p><span id="1tab1" divname="favoritelist"><spring:message code='ezApprovalG.G0001'/></span></p>
+		            <p><span id="1tab2" divname="formlist"><spring:message code='ezApprovalG.t1537'/></span></p>
+					<p><span id="1tab3" divname="resendformlist" style="display:none;"><spring:message code='ezApprovalG.resendKMH01'/></span></p>
+					<div style="float: right; padding-top: 1.5px;"> 
+		                <a id="addfav" class="imgbtn imgbck" style="display:none;"><span onclick="return btnAddForm_onclick('1')"><spring:message code='ezApprovalG.t00002'/></span></a>
+		                <a id="addfav2" class="imgbtn imgbck" style="display:none;"><span onclick="return btnAddForm_onclick('3')"><spring:message code='ezApprovalG.t00002'/></span></a>
+		                <a id="delfav" class="imgbtn imgbck"><span onclick="return btnAddForm_onclick('2')"><spring:message code='ezApprovalG.t00003'/></span></a>
 					</div>
-				</td>
-			</tr>
-			<tr>
-				<td style="vertical-align: top;">
-					<table class="content">
-						<tr>
-							<th><spring:message code='ezApprovalG.t1543'/></th>
-							<td id="descrip3" style="width: 95%">&nbsp;</td>
-						</tr>
-					</table>
-				</td>
-			</tr>
-		</table>
+		        </div>
+		    </div>
+		    <table id="favoritetable" style="margin-top: 5px; width: 697px;">
+		        <tr>
+		            <td style="vertical-align: top;">
+		                <div class="border_gray" style="border-bottom: 0px">
+		                    <div id="divlvtFavForm" style="border: 0; WIDTH: 100%; HEIGHT: 354px; overflow:auto; padding: 0px"></div>
+		                </div>
+		            </td>
+		        </tr>
+		        <tr>
+		            <td style="vertical-align: top;">
+		                <table class="content">
+		                    <tr>
+		                        <th><spring:message code='ezApprovalG.t1543'/></th>
+		                        <td id="descrip2" style="width: 95%">&nbsp;</td>
+		                    </tr>
+		                </table>
+		            </td>
+		        </tr>
+		    </table>
+		    <table id="formtable" style="margin-top: 5px;width: 697px;display:none">
+		        <tr>
+		            <td rowspan="2" style="vertical-align: top;">
+		                <div id="TreeView" style="height: 384px; width: 280px; overflow-x: auto; overflow-y: auto; BORDER: #ddd 1px solid; BACKGROUND-COLOR: #ffffff; padding: 4px,6px,6px,4px"></div>
+		            </td> 
+		            <td style="padding-left: 5px; vertical-align: top;">
+		                <div class="border_gray" style="border-bottom: 0px; width:408px;"> 
+		                    <!-- 기존 class="listview" -->
+		                    <div id="divlvtForm" style="BORDER: 0; WIDTH: 407px; HEIGHT: 353px; margin:auto; overflow-y: auto; overflow-x: hidden;"></div>
+		                </div>
+		            </td>
+		        </tr>
+		        <tr>
+		            <td style="padding-left: 5px; vertical-align: top;">
+		                <table class="content">
+		                    <tr>
+		                        <th><spring:message code='ezApprovalG.t1543'/></th>
+		                        <td id="descrip" style="width: 95%;">&nbsp;</td>
+		                    </tr>
+		                </table>
+		            </td>
+		        </tr>
+		    </table>
+			<table id="resendTable" style="margin-top: 5px; width: 697px; display: none;">
+				<tr>
+					<td style="vertical-align: top;">
+						<div class="border_gray" style="border-bottom: 0px">
+							<div id="divlvtResendForm" style="border: 0; WIDTH: 100%; HEIGHT: 354px; overflow:auto; padding: 0px"></div>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td style="vertical-align: top;">
+						<table class="content">
+							<tr>
+								<th><spring:message code='ezApprovalG.t1543'/></th>
+								<td id="descrip3" style="width: 95%">&nbsp;</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</div>
 		<div class="btnposition btnpositionNew" >
 		  <a class="imgbtn"><span onClick="return btnOK_onclick()" ><spring:message code='ezApprovalG.t20'/></span></a>
 		  <a class="imgbtn"><span onClick="return btncancel_onclick()" ><spring:message code='ezApprovalG.t119'/></span></a>
