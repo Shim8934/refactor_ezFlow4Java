@@ -69,9 +69,26 @@
 	            window_resize();
 	        }
 	        window.onresize = window_resize;
+	        
 	        function window_resize() {
-	            document.getElementById("MailEnv_ifrm").style.height = (document.documentElement.clientHeight - 120) + "PX";
-	        }
+				var titleH = parseFloat(window.getComputedStyle(document.getElementById("confTitle")).marginTop);
+				titleH += parseFloat(window.getComputedStyle(document.getElementById("confTitle")).marginBottom);
+				titleH += document.getElementById("confTitle").clientHeight;
+				var tabH = document.getElementById("tab1").clientHeight;
+				var pTags = document.getElementById("tab1").querySelectorAll('p');
+				var totalWidthP = 0 ;
+				
+				for (var i = 0; i < pTags.length; i++) {
+					totalWidthP += pTags[i].getBoundingClientRect().width;
+				}
+				
+				if (totalWidthP > document.body.clientWidth) {
+					tabH += 28;
+					}
+				
+				document.getElementById("MailEnv_ifrm").style.height = (document.documentElement.clientHeight - titleH - tabH - 15) + "PX";
+				}
+			
 	        function ChangeTab(obj) {
 	            var pSelectTab = obj.getAttribute("divname");
 	            switch (pSelectTab) {
@@ -699,7 +716,7 @@
 	<body class="mainbody" style="min-width: 835px">
 		<c:choose>
 			<c:when test="${flag eq 'email'}">
-		    	<h1><spring:message code='ezEmail.t904' /><c:if test="${shareName != null}"> - <c:out value="${shareName}" /></c:if></h1>
+				<h1 id="confTitle"><spring:message code='ezEmail.t904' /><c:if test="${shareName != null}"> - <c:out value="${shareName}" /></c:if></h1>
 		    </c:when>
 		    <c:otherwise>
 				<h1><spring:message code='ezAddress.hyh001' /></h1>
