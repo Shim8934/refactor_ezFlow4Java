@@ -19,7 +19,7 @@
 				.imgbtn{ display: none; }
 				.btnposition { display: none; }
 				input[type=checkbox] {display: none;}
-				
+				#contentlist { height: auto !important; }
 			}
 			
 		</style>
