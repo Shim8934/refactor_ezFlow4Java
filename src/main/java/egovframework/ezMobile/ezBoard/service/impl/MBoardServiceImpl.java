@@ -744,7 +744,7 @@ public class MBoardServiceImpl implements MBoardService {
 		
 		//첨부파일 저장
 		if (boardListVO.get("attachments") != null && !boardListVO.get("attachments").equals("")) {
-			if (!saveAttachmentsInfo(boardListVO.get("attachments").toString(), boardListVO.get("itemID").toString(), boardListVO.get("boardID").toString(), filePath, "BOARD", realPath, info.getTenantId())) {
+			if (!saveAttachmentsInfo(boardListVO.get("attachments").toString(), boardListVO.get("itemID").toString(), boardListVO.get("boardID").toString(), filePath, "BOARD", realPath, info.getTenantId(), boardListVO.get("realFileNames").toString())) {
 				//return egovMessageSource.getMessage("ezCommunity.lhj05", locale);
 			}
 			map.put("hasAttach", "1");
@@ -768,7 +768,7 @@ public class MBoardServiceImpl implements MBoardService {
 	/**
 	 * 게시판 게시물 첨부파일저장 실행 Method
 	 */
-	public boolean saveAttachmentsInfo(String strAttachments, String strItemID, String strBoardID, String strFilePath, String strType, String realPath, int tenantID) throws Exception{
+	public boolean saveAttachmentsInfo(String strAttachments, String strItemID, String strBoardID, String strFilePath, String strType, String realPath, int tenantID, String realFileNames) throws Exception{
 		logger.debug("saveAttachmentsInfo started");
 		
         long fileSize = 0;
@@ -781,6 +781,10 @@ public class MBoardServiceImpl implements MBoardService {
         	if (!strAttachments.substring(strAttachments.length() - 1).equals("|")) {
         		strAttachments += "|";
         	}
+
+			if (!realFileNames.substring(realFileNames.length() - 1).equals("|")) {
+				realFileNames += "|";
+			}
         	
         	for (int i = 0; i < strAttachments.split("\\|").length; i++) {
         		if (strType.equals("BOARD")) {
@@ -806,7 +810,8 @@ public class MBoardServiceImpl implements MBoardService {
         				filePath2 = strFilePath + commonUtil.separator + strAttachments.split("\\|")[i];
         			}
         			file = null;
-        		} else {
+					fileName = commonUtil.detectPathTraversal(realFileNames.split("\\|")[i]);
+				} else {
         			File file = new File(realPath + commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", tenantID)  + commonUtil.separator + strAttachments.split("\\|")[i].split("/")[2]);
         			fileSize = file.length();
         			
@@ -819,9 +824,10 @@ public class MBoardServiceImpl implements MBoardService {
         				file.delete();
         			}
         			file = null;
-        		}
+					fileName = commonUtil.detectPathTraversal(realFileNames.split("\\|")[i]);
+				}
         		
-        		fileName = filePath2.replace(strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile", "").substring(40);
+        		//fileName = filePath2.replace(strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile", "").substring(40);
         		
         		saveAttachInfo(strItemID, i, filePath2, fileSize, fileName, tenantID);
         	}
@@ -916,7 +922,7 @@ public class MBoardServiceImpl implements MBoardService {
 		
 		//첨부파일 저장
 		if (boardListVO.get("attachments") != null && !boardListVO.get("attachments").equals("")) {
-			if (!saveAttachmentsInfo(boardListVO.get("attachments").toString(), boardListVO.get("itemID").toString(), boardListVO.get("boardID").toString(), filePath, "BOARD", realPath, info.getTenantId())) {
+			if (!saveAttachmentsInfo(boardListVO.get("attachments").toString(), boardListVO.get("itemID").toString(), boardListVO.get("boardID").toString(), filePath, "BOARD", realPath, info.getTenantId(), boardListVO.get("realFileNames").toString())) {
 				//return egovMessageSource.getMessage("ezCommunity.lhj05", locale);
 			}
 			map.put("hasAttach", "1");
