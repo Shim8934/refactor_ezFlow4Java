@@ -1576,8 +1576,8 @@ function clickRatingButton() {
 		if (radio.checked) {
 			for (let i = 0; i <= index; i++) {
 				let label = radios[i].nextElementSibling;
-				if (label && label.querySelector('img')) {
-					label.querySelector('img').src = '/images/ImgIcon/icon-flag.gif';
+				if (label) {
+					label.src = '/images/ImgIcon/icon-flag.gif';
 				}
 			}
 		}
@@ -1619,7 +1619,7 @@ function saveRating(selectedRating) {
 				// 총점 및 평균 점수를 UI에 업데이트
 				$("#totalRaters").text(result.totalRaters);
 				// $("#avgScore").text(result.averageScore);
-				$("#avgScore").html("<b>" + result.averageScore + "</b>점");
+				$("#avgScore b").html(result.averageScore);
 				rating = selectedRating; // 성공적으로 업데이트된 별점을 현재 상태로 업데이트
 			} else {
 				alert("<spring:message code = 'ezBoard.t181'/>");

@@ -1223,16 +1223,18 @@
                             <c:if test="${not empty boardInfo.starRatingFlag && boardInfo.starRatingFlag == 'Y'}">
                                 <tr>
                                     <td style="text-align:center; padding-bottom:8px;" colspan="3">
-                           <div id="ratingContainer" class="rating_div" onclick="clickRatingButton()">
+                                        <div id="ratingContainer" class="rating_div" onclick="clickRatingButton()">
                                             <div>
-									<span id="avgScore"><b>${itemStarRating.averageScore}</b>점</span>
+                                                <span id="avgScore"><b>${itemStarRating.averageScore}</b><spring:message code='ezBoard.lhr004'/></span>
                                                 <span>(<span id="totalRaters">${itemStarRating.totalRaters}</span><spring:message code='ezBoard.lhr003'/>)</span>
                                             </div>
                                             <span class="ratingButton" title="<spring:message code='ezBoard.lhr001'/>">
                                             <c:forEach var="i" begin="1" end="5">
                                                 <c:set var="srcIconFlag" value="${itemStarRating.rating >= i}" />
-                                                <input type="radio" name="reviewStar" value="${i}" id="rate${i}" checked = "${srcIconFlag}"/>
-                                                <label for="rate${i}"><img draggable="false" src="/images/ImgIcon/${srcIconFlag ? 'icon-flag.gif' : 'view-flag.gif'}"/></label>
+                                                <label for="rate${i}">
+                                                    <input type="radio" name="reviewStar" value="${i}" id="rate${i}" <c:if test="${itemStarRating.rating == i}"> checked </c:if> />
+                                                    <img draggable="false" src="/images/ImgIcon/${srcIconFlag ? 'icon-flag.gif' : 'view-flag.gif'}"/>
+                                                </label>
                                             </c:forEach>
                                             </span>
                                             <a class="imgbtn"><span onclick="clickSaveRatingButton()"><spring:message code='ezBoard.lhr001'/></span></a>
