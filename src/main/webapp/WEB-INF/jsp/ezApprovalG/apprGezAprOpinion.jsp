@@ -51,6 +51,14 @@
 		        if (MACSAFARIYN()) {
 		            window.resizeTo(330, 251);
 		        }
+		        
+		     	// 2025-03-12 조수빈 - 다국어의 경우 메세지가 길어져 하단의 버튼이 밀리는 결함 발생.
+	            var thisFrame = window.parent.document.getElementById("iFrameLayer");
+	            
+	            // 현재의 iframe 높이가 내부의 높이보다 작을 때 맞추도록 분기처리
+	            if (thisFrame && parseFloat(thisFrame.style.height) < document.body.clientHeight) {
+	            	window.parent.document.getElementById("iFrameLayer").style.height = document.body.clientHeight + 'px';
+	            }
 		    };
 		    
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
