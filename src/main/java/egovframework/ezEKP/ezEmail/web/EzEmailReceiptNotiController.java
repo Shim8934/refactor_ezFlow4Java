@@ -304,7 +304,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 						tempMailList.add(email);
 					}
 				}
-
+				
 				// readList
 				for (MailReadVO vo : readList) {
 					String realEmailAddress = vo.getReaderEmail();
@@ -351,7 +351,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 					if (!tempMailList.contains(vo.getReaderEmail())) {
 						String readerEmail = vo.getReaderEmail();
 						String readerName = vo.getReaderName() == null ? readerEmail : vo.getReaderName();
-
+						String primaryEmail = vo.getPrimaryEmail();
 						String status = "";
 
 						if (vo.getStatus() != null && !vo.getStatus().equals("")) {
@@ -364,27 +364,16 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 
 						// 회사별 이메일 도메인명이 설정되어 있으면 Account 이메일 주소 대신에 Primary 이메일 주소로 표시한다.
 						if (!companyDomainName.isEmpty()) {
-				        	String emailId = null;
-
-			        		int atSignIndex = readerEmail.indexOf("@");
-
-			        		if (atSignIndex != -1) {
-			        			emailId = readerEmail.substring(0, atSignIndex);
-
-			        			OrganUserVO readerInfo = ezOrganAdminService.getUserInfo(emailId, loginInfo.getPrimary(), loginInfo.getTenantId());
-
-			        			if (readerInfo != null && readerInfo.getMail() != null) {
-			        				readerEmail = readerInfo.getMail();
-			        			}
-			        		}
+							if (primaryEmail != null && !primaryEmail.isEmpty()) {
+								readerEmail = primaryEmail;
+							}
 						}
-
-						unreadSb.append("<ROW>");
-						unreadSb.append("<READEREMAIL><![CDATA[" + readerEmail + "]]></READEREMAIL>");
-						unreadSb.append("<READERNAME><![CDATA[" + readerName + "]]></READERNAME>");
-						unreadSb.append("<READDATE><![CDATA[UNREAD]]></READDATE>");
-						unreadSb.append("<CANCEL><![CDATA[" + status + "]]></CANCEL>");
-						unreadSb.append("</ROW>");
+						unreadSb.append("<ROW>")
+								.append("<READEREMAIL><![CDATA[").append(readerEmail).append("]]></READEREMAIL>")
+								.append("<READERNAME><![CDATA[").append(readerName).append("]]></READERNAME>")
+								.append("<READDATE><![CDATA[UNREAD]]></READDATE>")
+								.append("<CANCEL><![CDATA[").append(status).append("]]></CANCEL>")
+								.append("</ROW>");
 					}
 				}
 
@@ -438,7 +427,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 		String userAccount = loginInfo.getId() + "@" + domainName;
 		String mailId = loginInfo.getId();
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", loginInfo.getTenantId());
-
+		String pGubun = request.getParameter("gubun");
 		if (useSharedMailbox.equals("YES")) {
 			String shareId = request.getParameter("shareId");
 			logger.debug("shareId=" + shareId);
@@ -562,7 +551,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 				String messageId = ((MimeMessage)message).getMessageID();
 				String subject = message.getSubject();
 
-				ezEmailUserAdminService.setMailCancelSend(loginInfo.getTenantId(), loginInfo.getPrimary(), messageId, mailId, subject, innerAddresses, locale);
+				ezEmailUserAdminService.setMailCancelSend(loginInfo.getTenantId(), loginInfo.getPrimary(), messageId, mailId, subject, innerAddresses, locale, pGubun);
 
 				folder.close(true);
 			}

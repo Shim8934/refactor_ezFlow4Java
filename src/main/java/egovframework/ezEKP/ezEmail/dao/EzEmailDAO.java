@@ -266,4 +266,8 @@ public class EzEmailDAO extends EgovAbstractDAO {
 	public int checkApprMailApprover(Map<String, Object> map) {
 		return (int) select("EzEmailDAO.checkApprMailApprover", map);
 	}
+	
+	public void cancelMailByMailUid(MailDeletedIdVO mailDeletedIdVO) {
+		delete("EzEmailDAO.cancelMailByMailUid", mailDeletedIdVO);
+	}
 }

@@ -7709,9 +7709,9 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
                         JSONObject recpJson = new JSONObject();
                         String readerEmail = vo.getReaderEmail();
                         String readerName = vo.getReaderName() == null ? readerEmail : vo.getReaderName();
-
+						String primaryEmail = vo.getPrimaryEmail();
                         String status = "";
-
+						
                         if (vo.getStatus() != null && !vo.getStatus().equals("")) {
                             status = vo.getStatus();
                         } else {
@@ -7721,21 +7721,11 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
                         logger.debug("canceled email readerEmail=" + readerEmail);
 
                         // 회사별 이메일 도메인명이 설정되어 있으면 Account 이메일 주소 대신에 Primary 이메일 주소로 표시한다.
-                        if (!companyDomainName.isEmpty()) {
-                            String emailId = null;
-
-                            int atSignIndex = readerEmail.indexOf("@");
-
-                            if (atSignIndex != -1) {
-                                emailId = readerEmail.substring(0, atSignIndex);
-
-                                OrganUserVO readerInfo = ezOrganAdminService.getUserInfo(emailId, userInfo.getPrimary(), userInfo.getTenantId());
-
-                                if (readerInfo != null && readerInfo.getMail() != null) {
-                                    readerEmail = readerInfo.getMail();
-                                }
-                            }
-                        }
+						if (!companyDomainName.isEmpty()) {
+							if (primaryEmail != null && !primaryEmail.isEmpty()) {
+								readerEmail = primaryEmail;
+							}
+						}
 
                         recpJson.put("email", readerEmail);
                         recpJson.put("name", readerName);
@@ -7918,8 +7908,10 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 
 				return returnObj;
 			}
-
-			ezEmailUserAdminService.setMailCancelSend(userInfo.getTenantId(), userInfo.getPrimary(), ((MimeMessage)message).getMessageID(), mailId, message.getSubject(), innerAddresses, locale);
+	
+			String pEachCancel = !pGubun.toLowerCase().equals("all") ? "EACH" : "ALL";
+			
+			ezEmailUserAdminService.setMailCancelSend(userInfo.getTenantId(), userInfo.getPrimary(), ((MimeMessage)message).getMessageID(), mailId, message.getSubject(), innerAddresses, locale, pEachCancel);
 			
 			f.close(true);
 			returnObj.put("message", "success");

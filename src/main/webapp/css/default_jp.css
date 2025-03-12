@@ -92,6 +92,7 @@ table, th, td{font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, s
 /* 메일 */
 .mailPop3 table.content{width:770px !important;}
 
+.searchinputBox{ width: 260px !important; }
 
 /* 투표 */
 .voteInfoDiv ul{width:250px !important;}

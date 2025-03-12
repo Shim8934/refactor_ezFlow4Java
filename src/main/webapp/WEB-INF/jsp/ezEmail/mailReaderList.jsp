@@ -89,13 +89,14 @@
 	                }
 	            }
 	            
-	            var requestUrl = "/ezEmail/mailCancelSend.do";
+	            var requestUrl = "/ezEmail/mailCancelSend.do" + "?gubun=" + encodeURIComponent(pGubun);
 	            
 	        	if (typeof(shareId) != "undefined" && shareId != "") {
-	        		requestUrl += "?shareId=" + encodeURIComponent(shareId);
+	        		requestUrl += "&shareId=" + encodeURIComponent(shareId);
 	        	}
 	            
-	            g_xmlHttp.open("POST", requestUrl, false);
+	            g_xmlHttp.open("POST", requestUrl, true);
+				showDim();
 	            g_xmlHttp.onreadystatechange = mail_cancelsend_after;
 	            g_xmlHttp.send(xmlDom);
 	        }
@@ -131,6 +132,7 @@
 	        var MailReceiverListXML;
 
 	        function Get_MailReceiverList() {
+				showDim();
 	            document.getElementById("HeaderAllCheckBox").checked = false;
 	            MailReceiverListXML = null;
 	            xmlhttp_MailReceiverList = null;
@@ -202,23 +204,33 @@
 	        function MakeListInfoHTML(pGubun) {
 	            document.getElementById("HeaderAllCheckBox").checked = false;
 	            var GetListInfo_ContentObject = document.getElementById("MailList");
-	            while (GetListInfo_ContentObject.childNodes.length > 0) {
-	                GetListInfo_ContentObject.removeChild(GetListInfo_ContentObject.childNodes.item(0));
-	            }
+	            // while (GetListInfo_ContentObject.childNodes.length > 0) {
+	            //     GetListInfo_ContentObject.removeChild(GetListInfo_ContentObject.childNodes.item(0));
+	            // }
 
+				GetListInfo_ContentObject.innerHTML = "";
+
+				var fragment = document.createDocumentFragment();
+				
 	            var XmlRows = SelectNodes(MailReceiverListXML, "DATA/ROW");
 	            XmlRows = sortNode(XmlRows, "READDATE", "UNREAD", "DESC"); // READDATE 컬럼 기준 UNREAD가 아닌것 정렬 (내림차순으로)
 	            
 	            var Subject = getNodeText(SelectNodes(MailReceiverListXML, "DATA/SUBJECT")[0]);
 	            document.title = "<spring:message code='ezEmail.t566' />" + "( " + Subject + " )";
-	
-	            for (var i = 0; i < XmlRows.length; i++) {
-	                var ReadDate = SelectSingleNodeValue(XmlRows[i], "READDATE");
-	                var EmailAddress = SelectSingleNodeValue(XmlRows[i], "READEREMAIL");
-	                var CancelStatus = trim_Cross(SelectSingleNodeValue(XmlRows[i], "CANCEL"));
-					
-					if (EmailAddress == '') {
-						continue;
+				
+				var XmlRowsArray = Array.from(XmlRows);
+				
+				var readerList =  XmlRowsArray.map(row => ({
+					ReadDate: SelectSingleNodeValue(row, "READDATE"),
+					EmailAddress: SelectSingleNodeValue(row, "READEREMAIL"),
+					CancelStatus: trim_Cross(SelectSingleNodeValue(row, "CANCEL")),
+	                // 2024.05.24 한슬기 : 수신자이름 사용하기위해 변경
+					readerName: ReplaceText(SelectSingleNodeValue(row, "READERNAME"), "&", "&amp;")
+				}));
+
+				readerList.forEach(reader => {
+					if (reader.EmailAddress == '') {
+						return;
 					}
 					
 	                var TR = document.createElement("TR");
@@ -228,10 +240,10 @@
 	                var TD4 = document.createElement("TD");
 	                var TD5 = document.createElement("TD");
 	
-	                TR.setAttribute("_mailaddress", EmailAddress);
+	                TR.setAttribute("_mailaddress", reader.EmailAddress);
 	                TD1.style.width = "14px";
 
-					if((ReadDate =="UNREAD" && CancelStatus == "") || (isReadDelete == "YES" && (CancelStatus == "" || CancelStatus == 2))) {
+					if((reader.ReadDate =="UNREAD" && reader.CancelStatus == "") || (isReadDelete == "YES" && (reader.CancelStatus == "" || reader.CancelStatus == 2))) {
 	                    var TD1_Sub = document.createElement("INPUT");
 	                    TD1_Sub.type = "checkbox";
 	                    TD1_Sub.style.margin = "0px";
@@ -241,40 +253,39 @@
 	                    TD1.appendChild(TD1_Sub);
 	                }
 	                //TD2.innerHTML = ReplaceText(SelectSingleNodeValue(XmlRows[i], "READERNAME"), "&", "&amp;");
-	                // 2024.05.24 한슬기 : 수신자이름 사용하기위해 변경
-					var readerName = ReplaceText(SelectSingleNodeValue(XmlRows[i], "READERNAME"), "&", "&amp;");
-					TD2.innerHTML = readerName;
+					
+					TD2.innerHTML = reader.readerName;
 					
 	                TD2.style.width = "92px";
 	                TD2.style.overflow = "hidden";
 	                TD2.style.textOverflow = "ellipsis";
 	                TD2.style.whiteSpace = "nowrap";
-	                TD3.innerHTML = EmailAddress
+	                TD3.innerHTML = reader.EmailAddress
 	                TD3.style.width = "212px";
 	                TD3.style.overflow = "hidden";
 	                TD3.style.textOverflow = "ellipsis";
 	                TD3.style.whiteSpace = "nowrap";
 
-	                if (ReadDate == "UNREAD" || (CancelStatus != "" && CancelStatus != "2")) {
+	                if (reader.ReadDate == "UNREAD" || (reader.CancelStatus != "" && reader.CancelStatus != "2")) {
 	                    TD4_ATag = document.createElement("A");
 	                    TD4_ATag.className = "imgbtn";
 	                    TD4_Span = document.createElement("SPAN");
 	                    TD4_Span.innerHTML = "<spring:message code='ezEmail.t569' />";
-	                    TD4_Span.setAttribute("EMAIL", EmailAddress);
-	                    TD4_Span.setAttribute("READERNAME", readerName); // 수신자 이름
+	                    TD4_Span.setAttribute("EMAIL", reader.EmailAddress);
+	                    TD4_Span.setAttribute("READERNAME", reader.readerName); // 수신자 이름
 	                    TD4_Span.onclick = function () { ReSend(this); };
 	                    TD4_ATag.appendChild(TD4_Span);
 	                    TD4.appendChild(TD4_ATag);
 	                }
 	                else {
-	                    TD4.innerHTML = ReadDate;
+	                    TD4.innerHTML = reader.ReadDate;
 	                }
 
 	                TD4.style.width = "142px";
 	                TD4.style.overflow = "hidden";
 	                TD4.style.textOverflow = "ellipsis";
 	                TD4.style.whiteSpace = "nowrap";
-	                TD5.innerHTML = CancelStatus == "" ? "" : CancelStatus == "0" ? strLang325 : CancelStatus == "1" ? strLang326 : CancelStatus == "2" ? strLang327 : CancelStatus == "3" ? strLang328 : "";
+	                TD5.innerHTML = reader.CancelStatus == "" ? "" : reader.CancelStatus == "0" ? strLang325 : reader.CancelStatus == "1" ? strLang326 : reader.CancelStatus == "2" ? strLang327 : reader.CancelStatus == "3" ? strLang328 : "";
 	                TD5.style.width = "80px";
 	                TR.appendChild(TD1);
 	                TR.appendChild(TD2);
@@ -283,19 +294,21 @@
 	                TR.appendChild(TD5);
 
 	                if (pGubun == "ALL") {
-	                    GetListInfo_ContentObject.appendChild(TR);
+						fragment.appendChild(TR);
 	                }
-	                else if (pGubun == "READ" && ReadDate != "UNREAD") {
-	                    GetListInfo_ContentObject.appendChild(TR);
+	                else if (pGubun == "READ" && reader.ReadDate != "UNREAD") {
+						fragment.appendChild(TR);
 	                }
-	                else if (pGubun == "UNREAD" && ReadDate == "UNREAD") {
-	                    GetListInfo_ContentObject.appendChild(TR);
+	                else if (pGubun == "UNREAD" && reader.ReadDate == "UNREAD") {
+						fragment.appendChild(TR);
 	                }
-	                else if (pGubun == "CANCEL" && CancelStatus != "") {
-	                    GetListInfo_ContentObject.appendChild(TR);
+	                else if (pGubun == "CANCEL" && reader.CancelStatus != "") {
+						fragment.appendChild(TR);
 	                }
-	            }
+	            });
 
+				GetListInfo_ContentObject.appendChild(fragment);
+				
 	            if ($("#contentlist").height() < $("#MailList").height()){
 	            	if ($("#Table1 tbody tr th#scrollTh").length < 1) {
 	            		$("#Table1 tbody tr").append('<th id="scrollTh" style="width:10px"></th>');	
@@ -311,6 +324,7 @@
 	            		$("#Table1 tbody tr th:nth-child(3)").width(212)
 	            	}
 	            }
+				hideDim();
 	        }
 
 	        function event_listCheckboxclick(obj) {
@@ -355,6 +369,17 @@
 	        window.onresize = function(){
 	        	// resizeTo(docWidth, docHeight);
 	        }
+			
+			function showDim(){
+				document.getElementById('dimPanel').style.display = 'flex';
+				document.getElementById('MailProgress').style.display = '';
+			}
+			
+			function hideDim(){
+				document.getElementById('dimPanel').style.display = 'none';
+				document.getElementById('MailProgress').style.display = 'none';
+			}
+			
 	    </script>
 	</head>
 	<body scroll="no" class="popup">
@@ -406,6 +431,11 @@
 			    <a class="imgbtn" onClick="Window_Print()" ><span><spring:message code='ezEmail.t546' /></span></a>
 			</div>
 	    </form>
+		<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:5000;display:none;background:rgba(0,0,0,0.5);align-items: center;justify-content: center;" id="dimPanel">
+			<div style="height:50px;border:0px solid red;text-align:center;vertical-align:middle;display:none;z-index:9000;position:relative;" id="MailProgress">
+				<img src="/images/email/progress_img.gif" style="vertical-align:middle;"/>
+			</div>
+		</div>
 	    <script type="text/javascript">
 	        selToggleList(document.getElementById("menu"), "ul", "li", "0");
 	        Tab1_NewTabIni("tab1");
