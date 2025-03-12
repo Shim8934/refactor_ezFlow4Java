@@ -80,6 +80,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
 import com.google.gson.JsonElement;
 import egovframework.ezEKP.ezEmail.util.EmailImportance;
@@ -1721,9 +1722,39 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 				orgFolder.close(true);
 			}
 			
-			String useFromAddress = ezCommonService.getTenantConfig("Use_FromAddress", info.getTenantId());
+			// 발신가능한 메일주소 리스트
+			String useFromAddress = StringUtils.defaultIfBlank(ezCommonService.getTenantConfig("Use_FromAddress", info.getTenantId()), "NO");
 			String useDistributionSender = StringUtils.defaultIfBlank(ezCommonService.getCompanyConfig(info.getTenantId(), info.getCompanyId(), "useDistributionSender"), "NO");
-			String fromAddressHtml = "";
+			JSONArray jsonList = new JSONArray();
+
+			if ("YES".equalsIgnoreCase(useFromAddress) || "YES".equalsIgnoreCase(useDistributionSender)) {
+				List<String[]> fromAddressList = ezEmailService.getAliasAddress(info.getUserId(), info.getTenantId(), useFromAddress, useDistributionSender);
+
+				// 공용배포그룹주소 사용만 YES인 경우에는 primary mail 주소를 jgw에서 가져오지 않기 때문에 추가 함
+				if ("NO".equalsIgnoreCase(useFromAddress) && "YES".equalsIgnoreCase(useDistributionSender)) {
+					fromAddressList.add(0, new String[]{info.getEmail(),"",""});
+				}
+
+				// 모바일에서 primary로 select할 수 있도록 type 값 변경 : primary, alias
+				for (String[] address : fromAddressList) {
+					if (info.getEmail().trim().equals(address[0])) {
+						address[1] = "p"; //primary
+					} else {
+						address[1] = "a"; //alias
+					}
+				}
+
+				// jsonList에 key:value 형태로 입력
+				for (String[] address : fromAddressList) {
+					JSONObject json = new JSONObject();
+					json.put("email", address[0]);
+					json.put("type", address[1]);
+					json.put("name", address[2]);
+					jsonList.add(json);
+				}
+			}
+			
+			/*String fromAddressHtml = "";
 			
 			if (useFromAddress != null) {
 				if ("YES".equalsIgnoreCase(useFromAddress) || "YES".equalsIgnoreCase(useDistributionSender)) {
@@ -1764,7 +1795,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 				}
 			} else {
 				useFromAddress = "NO";
-			}
+			}*/
 			
 			String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", info.getTenantId());
 			
@@ -1801,6 +1832,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 
 			JSONObject data = new JSONObject();
 	        data.put("fromEmail",fromEmail);
+	        data.put("fromAddressList",jsonList);
 			data.put("to", to);
 			data.put("cc", cc);
 			data.put("bcc", bcc);
@@ -1822,7 +1854,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			data.put("newWindowId", newWindowId);
 			data.put("serverName", serverName);
 			data.put("useFromAddress", useFromAddress);
-			data.put("fromAddressHtml", fromAddressHtml);
+			//data.put("fromAddressHtml", fromAddressHtml);
 			data.put("mailAttachLimit", mailAttachLimit);
 			data.put("useOnlyInnerMail", useOnlyInnerMail);
 			data.put("useReceiptExternal", useReceiptExternal);
@@ -7854,7 +7886,10 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			String from = ((InternetAddress)message.getFrom()[0]).getAddress();
 			logger.debug("from=" + from);
 
-			List<String[]> aliasAddressList = ezEmailService.getAliasAddress(mailId, userInfo.getTenantId(), "YES", "NO");
+			String useFromAddress = StringUtils.defaultIfBlank(ezCommonService.getTenantConfig("Use_FromAddress", userInfo.getTenantId()), "NO");
+			String useDistributionSender = StringUtils.defaultIfBlank(ezCommonService.getCompanyConfig(userInfo.getTenantId(), userInfo.getCompanyId(), "useDistributionSender"), "NO");
+
+			List<String[]> aliasAddressList = ezEmailService.getAliasAddress(mailId, userInfo.getTenantId(), useFromAddress, useDistributionSender);
 
 			boolean isUserFrom = false;
 			for (String[] address : aliasAddressList) {
