@@ -10043,7 +10043,7 @@
 		MERGE INTO TBL_MEAL_PLAN target
 		USING (
 				SELECT
-					TO_DATE(#mealDate#, 'YYYY-MM-DD') AS MEALDATE,
+					#mealDate# AS MEALDATE,
 					#aCourse# AS ACOURSE,
 					#bCourse# AS BCOURSE,
 					#saladBar# AS SALADBAR,
@@ -10052,7 +10052,7 @@
 					#companyID# AS COMPANYID,
 					#tenantID# AS TENANT_ID
 				FROM dual) source
-		ON (TO_DATE(target.MEALDATE, 'YYYY-MM-DD') = TO_DATE(source.MEALDATE, 'YYYY-MM-DD')
+		ON (target.MEALDATE = source.MEALDATE
 			AND target.COMPANYID = source.COMPANYID
 			AND target.TENANT_ID = source.TENANT_ID)
 		WHEN MATCHED THEN
@@ -10064,7 +10064,7 @@
 				target.TOTALCAL = source.TOTALCAL
 		WHEN NOT MATCHED THEN
 			INSERT (MEALDATE, ACOURSE, BCOURSE, SALADBAR, DESSERT, TOTALCAL, COMPANYID, TENANT_ID)
-			VALUES (TO_DATE(source.MEALDATE, 'YYYY-MM-DD'), source.ACOURSE, source.BCOURSE, source.SALADBAR, source.DESSERT, source.TOTALCAL, source.COMPANYID, source.TENANT_ID)
+			VALUES (source.MEALDATE, source.ACOURSE, source.BCOURSE, source.SALADBAR, source.DESSERT, source.TOTALCAL, source.COMPANYID, source.TENANT_ID)
 	</insert>
 
 	<select id="EzBoardDAO.getTodayLunch" parameterClass="Map" resultClass="MealDataVO">
