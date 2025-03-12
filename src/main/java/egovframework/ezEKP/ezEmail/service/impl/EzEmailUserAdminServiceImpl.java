@@ -704,7 +704,7 @@ public class EzEmailUserAdminServiceImpl implements EzEmailUserAdminService {
 	}
 	
 	@Override
-	public void setMailCancelSend(int tenantId, String primary, String pMessageId, String pUserId, String pSubject, List<String> pInnerAddresses, Locale locale) throws Exception {
+	public void setMailCancelSend(int tenantId, String primary, String pMessageId, String pUserId, String pSubject, List<String> pInnerAddresses, Locale locale, String eachCancel) throws Exception {
 		logger.debug("setMailCancelSend started.");
 		logger.debug("tenantId=" + tenantId + ",primary=" + primary + ",pMessageId=" + pMessageId + ",pUserId=" + pUserId + ",pSubject=" + pSubject);
 		
@@ -741,7 +741,7 @@ public class EzEmailUserAdminServiceImpl implements EzEmailUserAdminService {
 		
 		//회수처리 함수 호출(비동기)
 		if (recallIdx != null && !recallIdx.equals("") && !recallIdx.equals("0")) {
-			ezEmailAsync.cancelMailDelete(recallIdx, tenantId, locale);
+			ezEmailAsync.cancelMailDelete(recallIdx, tenantId, locale, pUserId, eachCancel, recallIdx);
 		} else {
 			throw new Exception("Cannot get recallIdx. So, cannot call cancelMailDelete method(Async).");
 		}

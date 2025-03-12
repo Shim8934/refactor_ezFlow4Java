@@ -879,6 +879,7 @@ CREATE TABLE `jmocha_mail_recall_detail` (
   `status` int(11) DEFAULT NULL,
   `del_date` datetime DEFAULT NULL,
   `receiver_name` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `receiver_primary_email` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`recall_idx`,`receiver_email`),
   CONSTRAINT `recall_foreign_key` FOREIGN KEY (`recall_idx`) REFERENCES `jmocha_mail_recall` (`recall_idx`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

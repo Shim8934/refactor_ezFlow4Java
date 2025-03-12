@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezEmail.task;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -19,6 +20,7 @@ import javax.mail.internet.InternetAddress;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,8 +71,8 @@ public class EzEmailAsync {
 	@Resource(name = "jspw")
 	private String jspw;
 
-	@Async
-	public void cancelMailDelete(String num, int tenantID, Locale locale) {
+//	@Async
+	public void cancelMailDelete(String num, int tenantID, Locale locale, String senderId, String eachCancelStr, String recallIdx) {
 		logger.debug("cancelMailDelete async methoed started.");
 		logger.debug("num=" + num);
 		
@@ -82,9 +84,8 @@ public class EzEmailAsync {
 				return;
 			}
 			
-			String password = jspw;
 			List<String> addresses = ezEmailService.getMailReceiveAddress(num);
-						
+			boolean eachCancel = "EACH".equalsIgnoreCase(eachCancelStr);
 			String isReadDeleteStr = ezCommonService.getTenantConfig("IS_READ_DELETE", tenantID);
 			boolean isReadDelete = false;
 
@@ -92,7 +93,7 @@ public class EzEmailAsync {
 				isReadDelete = true;
 			}
 			
-			recallMailByMessageId(addresses, password, messageId, num, locale, isReadDelete);
+			recallMailByMessageId(addresses, senderId, messageId, tenantID, num, locale, isReadDelete, eachCancel, recallIdx);
 			
 		} catch (RuntimeException e) {
 			logger.error(e.getMessage(), e);
@@ -103,95 +104,97 @@ public class EzEmailAsync {
 		logger.debug("cancelMailDelete async methoed ended.");
 	}
 	
-	private void recallMailByMessageId(List<String> recallMailList, String password, String messageId, String num, Locale locale, boolean isReadDelete) {
-		IMAPAccess ia = null;
-		JSONObject recallMailInfo = null;
-		String senderEmail = null;
-		JSONArray mailList = null;
-		JSONObject mailInfo = null;
-		String folderName = null;
-		long mailUid = 0;
+	private void recallMailByMessageId(List<String> recallMailList, String senderId, String messageId, int tenantId, String num, Locale locale, boolean isReadDelete, boolean eachCancel, String recallIdx) throws Exception {
+		logger.debug("recallMailByMessageId started.");
 		
-		String senderSentMailBoxName = ezEmailUtil.getSentFolderId(locale);
-		String senderDraftMailBoxName = ezEmailUtil.getDraftsFolderId(locale);
-		
-		for (String address : recallMailList) {
-			try {
-				int jobCode = 3; // jobCode (1:발견후 삭제, 2:발견하였으나 읽은 메일, 3:발견하지 못함)
+		try {
+			String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
+			String senderEmail = senderId + "@" + domainName;
+			if (eachCancel) { // 개별 회수
+				JSONObject recallMailInfo = null;
+				JSONArray mailList = null;
+				JSONObject mailInfo = null;
+				String folderName = null;
+				long mailUid = 0;
+				long mailBoxId = 0;
+				long mailIsSeen = 0;
 				
-				recallMailInfo = ezEmailService.recallMailByMessageId(address, messageId);
+				String senderSentMailBoxName = ezEmailUtil.getSentFolderId(locale);
+				String senderDraftMailBoxName = ezEmailUtil.getDraftsFolderId(locale);
 				
-				if (recallMailInfo == null) {
-					logger.debug("Get recallMailInfo failed. Move to the next user...");
-					continue;
-				}
-				
-				senderEmail = (String) recallMailInfo.get("senderEmail");
-				mailList = (JSONArray) recallMailInfo.get("mailList");
-				
-				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"),
-						config.getProperty("config.IMAPPort"), address, password, egovMessageSource, locale, ezEmailUtil);
-					        	
-				for (int i = 0; i < mailList.size(); i++) {
-					mailInfo = (JSONObject) mailList.get(i);
-					folderName = (String) mailInfo.get("mailboxName");
-					mailUid = (long) mailInfo.get("mailUid");
-					
-					if (senderEmail.equals(address) && (folderName.equals(senderDraftMailBoxName) || folderName.equals(senderSentMailBoxName))) {
-						logger.debug("This mailbox is sender mailbox Draft or Sent.");
+				for (String address : recallMailList) {
+					int jobCode = 3; // jobCode (1:발견후 삭제, 2:발견하였으나 읽은 메일, 3:발견하지 못함)
+
+					recallMailInfo = ezEmailService.recallMailByMessageId(address, messageId);
+
+					if (recallMailInfo == null) {
+						logger.debug("Get recallMailInfo failed. Move to the next user...");
 						continue;
 					}
-					
-					Folder folder = ia.getFolder(folderName);
-					
-					try {
-						if (folder.exists()) {
-							folder.open(Folder.READ_WRITE);
-							Message message = ((IMAPFolder)folder).getMessageByUID(mailUid);
+					mailList = (JSONArray) recallMailInfo.get("mailList");
+					for (int i = 0; i < mailList.size(); i++) {
+						try {
+							mailInfo = (JSONObject) mailList.get(i);
+							folderName = (String) mailInfo.get("mailboxName");
+							mailUid = (long) mailInfo.get("mailUid");
+							mailBoxId = (long) mailInfo.get("mailBoxId");
+							mailIsSeen = (long) mailInfo.get("mailIsSeen");
 							
+							if (senderEmail.equals(address) && (folderName.equals(senderDraftMailBoxName) || folderName.equals(senderSentMailBoxName))) {
+								logger.debug("This mailbox is sender mailbox Draft or Sent.");
+								continue;
+							}
 							// 사용자가 메일을 복사하여 같은 메일이 여러개 있고 isReadDelete가 true일 경우(읽어도 회수)
 							// 읽은 메일은 회수하지 않고, 읽지 않은 메일은 모두 회수한다.
 							// 읽은 메일이 하나라도 있을 경우 읽음으로 처리한다.
-							if (message.isSet(Flags.Flag.SEEN)) {               // 사용자가 메일을 읽었을 경우
-								if (isReadDelete) {                             // 읽어도 회수할 경우
-									message.setFlag(Flags.Flag.DELETED, true);  // 메일 삭제
-									jobCode = 1;                                // 회수 처리
-								} else {                                        // 읽은 메일 회수하지 않을 경우
-									jobCode = 2;                                // 읽음 처리
+							if (mailIsSeen == 1) {               								// 사용자가 메일을 읽었을 경우
+								if (isReadDelete) {                             				// 읽어도 회수할 경우
+									ezEmailService.cancelMailByMailUid(mailUid, mailBoxId);  	// 메일 삭제
+									jobCode = 1;                                				// 회수 처리
+								} else {                                        				// 읽은 메일 회수하지 않을 경우
+									jobCode = 2;                                				// 읽음 처리
 								}
-							} else {                                            // 사용자가 메일을 읽지 않았을 경우
-								message.setFlag(Flags.Flag.DELETED, true);      // 메일 삭제
-								
-								if (jobCode != 2) {                             // 읽음 처리가 안되었을 경우
-									jobCode = 1;                                // 회수 처리
+							} else {                                           					// 사용자가 메일을 읽지 않았을 경우
+								ezEmailService.cancelMailByMailUid(mailUid, mailBoxId);     	// 메일 삭제
+
+								if (jobCode != 2) {                             				// 읽음 처리가 안되었을 경우
+									jobCode = 1;                                				// 회수 처리
 								}
 							}
-							
-							folder.close(true);
+						} catch (NullPointerException e) {
+							logger.error(e.getMessage(), e);
+							continue;
+						} catch (Exception e) {
+							logger.error(e.getMessage(), e);
+							continue;
 						}
-					} catch (MessagingException e) {
-						logger.error(e.getMessage(), e);
-						logger.debug("mail Flags update error. so move the next mailbox.");
-						continue;
 					}
+					ezEmailService.updateMailReceiveDetailInfo(num, new String[] {address, String.valueOf(jobCode)});
 				}
-				
-				logger.debug("address=" + address + ",jobCode=" + jobCode + ",messageId=" + messageId + ",num=" + num);
-				ezEmailService.updateMailReceiveDetailInfo(num, new String[] {address, String.valueOf(jobCode)});
-				
-				ia.close();
-				ia = null;
+			} else { // 전체 회수
+				try {
+					String inputParams = "targetAddress=" +  URLEncoder.encode(senderEmail, "UTF-8")
+									   + "&messageId=" + URLEncoder.encode(messageId, "UTF-8")
+									   + "&tenantId=" + tenantId
+									   + "&recallIdx=" + URLEncoder.encode(recallIdx, "UTF-8");
+					
+					logger.debug("inputParams=" + inputParams);
 			
-			} catch (NullPointerException e) {
-				logger.error(e.getMessage(), e);
-			} catch (Exception e) {
-				logger.error(e.getMessage(), e);
-			} finally {
-				if (ia != null) {
-					ia.close();
+					String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/cancelMailByMessageId", inputParams);
+					logger.debug("strJson=" + strJson);
+					
+					JSONParser parser = new JSONParser();
+					JSONObject object = (JSONObject)parser.parse(strJson);
+				} catch (UnsupportedEncodingException e) {
+					logger.error(e.getMessage(), e);
+				} catch (Exception e) {
+					logger.error(e.getMessage(), e);
 				}
 			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
 		}
+		logger.debug("recallMailByMessageId ended.");
 	}
 	
 	@Async

@@ -766,6 +766,7 @@ public class EzEmailServiceImpl implements EzEmailService {
         		mailCancelVO.setReaderEmail((String)obj.get("receiverEmail"));
         		mailCancelVO.setReaderName((String)obj.get("receiverName"));
         		mailCancelVO.setStatus((String)obj.get("status"));
+        		mailCancelVO.setPrimaryEmail((String)obj.get("primaryEmail"));
         		
 				cancelList.add(mailCancelVO);
         	}
@@ -3689,6 +3690,20 @@ public class EzEmailServiceImpl implements EzEmailService {
         return result;
 	}
 
+	@Override
+	public void cancelMailByMailUid(Long mailUid, Long mailboxId) throws Exception {
+		logger.debug("cancelMailByMessageId started.");
+
+		MailDeletedIdVO deletedIdVO = new MailDeletedIdVO();
+		
+		deletedIdVO.setMailUid(mailUid);
+		deletedIdVO.setMailBoxId(mailboxId);
+
+		ezEmailDAO.cancelMailByMailUid(deletedIdVO);
+		
+		logger.debug("cancelMailByMessageId ended.");
+	}
+	
 	/**
 	 * 전체 안읽은 메일 개수 가져오기
 	 */

@@ -391,4 +391,13 @@
 				TENANT_ID = #tenantId#
 		]]>
 	</select>
+
+	<delete id="EzEmailDAO.cancelMailByMailUid" parameterClass="MailDeletedIdVO">
+		<![CDATA[
+			DELETE FROM
+				JAMES_MAIL
+			WHERE MAILBOX_ID = #mailBoxId#
+			  AND MAIL_UID = #mailUid#
+		]]>
+	</delete>
 </sqlMap>
