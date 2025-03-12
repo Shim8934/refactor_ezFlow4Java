@@ -83,6 +83,7 @@ input#inOffice, input#retired, input#stopped{vertical-align:middle;}
 
 .mailWrite .noti_txt{letter-spacing:-0.4px;}
 
+.searchinputBox{width: 250px !important;}
 
 /* 투표 */
 .voteInfoDiv ul{width:250px !important;}
