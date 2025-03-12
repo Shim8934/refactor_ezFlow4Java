@@ -1649,8 +1649,9 @@ public class EzAttitudeController {
 		      
 		String pFileName = "";
 		String strDate = EgovDateUtil.getToday("-");
-		// 2024-03-12 조수빈 - 파일명 다국어 처리 (한국어의 경우 'YYYY-MM-DD_수정신청관리')
-		pFileName = strDate + "_" + egovMessageSource.getMessage("ezAttitude.t7", userInfo.getLocale());
+		// 2025-02-20 조수빈 - #155515 근태관리 > [엑셀다운로드] 시 파일명 수정 필요
+		String saveFileName = request.getParameter("saveFileName");
+		pFileName = strDate + "_" + null == saveFileName || saveFileName.equals("") ? egovMessageSource.getMessage("ezAttitude.t1", userInfo.getLocale()) : saveFileName;
 		  
 		String StrAnalysisDate = request.getParameter("saveExcelData").trim().replaceAll("&nbsp;", "").replaceAll("\r\n", "").replaceAll("\n", "").replaceAll("\t", "");
 		Document analysisData = commonUtil.convertStringToDocument(StrAnalysisDate);

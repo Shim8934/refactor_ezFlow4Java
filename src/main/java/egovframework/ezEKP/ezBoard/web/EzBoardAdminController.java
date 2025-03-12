@@ -1202,6 +1202,8 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String pAccessLevel = request.getParameter("accessLevel");
 		String primary = userInfo.getPrimary(); // 사용하지 않는 userLang 변수 제거, primary로 대체
 		String isAllGroupBoard = "";
+		// 2025-02-10 조수빈 - voc #154032 처리를 위해 전체, 게시, 회사 관리자인 경우에만 권한전파 및 권한복사 버튼 표출하기 위한 변수
+		String isBoardAdmin = "NO";
 		
 		BoardPropertyVO boardProperty = ezBoardService.getBoardProperty(boardID, userInfo.getTenantId());
 
@@ -1283,6 +1285,18 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		
 		String result = sb.toString().replace("null", "");
 		
+		String rollInfo = userInfo.getRollInfo();
+		// 전체관리자
+		boolean isAllAdmin = commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), rollInfo, "c");
+		// 게시관리자
+		boolean isCompanyAdmin = commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), rollInfo, "n");
+		// 회사관리자
+		boolean isPostAdmin = commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), rollInfo, "k");
+		
+		if (isAllAdmin || isCompanyAdmin || isPostAdmin) {
+			isBoardAdmin = "YES";
+		}
+		
 		model.addAttribute("boardID", boardID);
 		model.addAttribute("parentBoardID", parentBoardID);
 		model.addAttribute("primary", primary);
@@ -1294,6 +1308,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		model.addAttribute("boardName", boardName);
 		model.addAttribute("strList", result);
 		model.addAttribute("isAllGroupBoard", isAllGroupBoard);
+		model.addAttribute("isBoardAdmin", isBoardAdmin);
 
 		logger.debug("boardACL ended");
 		return "admin/ezBoard/boardACL";

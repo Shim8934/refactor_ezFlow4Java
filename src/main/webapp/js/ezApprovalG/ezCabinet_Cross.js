@@ -1456,7 +1456,7 @@ function ViewDoc_onclick_Complete(Rtn) {
 	                openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=" + encodeURI(selRow.getAttribute("DATA5")) + "&orgDocID=";
 	            }
              }
-	            openwindow(openLocation, "", 880, 570);
+	            openwindow(openLocation, "cabinet", 880, 570);
          }
      }
 }

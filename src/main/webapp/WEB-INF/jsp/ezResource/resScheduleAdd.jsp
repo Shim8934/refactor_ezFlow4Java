@@ -216,13 +216,13 @@
 		    }
 			
 		    window.onresize = function () {
-		    	if(cmd == "add") {
-		   	    	 document.getElementById("Iframe1").style.height = document.documentElement.clientHeight - 240 + "PX";
-		    	}
-		    	else {
-		    		document.getElementById("Iframe1").style.height = document.documentElement.clientHeight - 220 + "PX";
-		    	}
 				mobileDistinction();
+				
+				var editorFrame = document.getElementById('Iframe1');
+				var editorTd = document.getElementById('EdtorSize');
+				
+				editorFrame.style.height = editorTd.style.height;
+				
 	    	}
 		    
 		    window.onunload = function () {

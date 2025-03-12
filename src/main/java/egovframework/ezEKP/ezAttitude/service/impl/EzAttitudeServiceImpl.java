@@ -3454,12 +3454,19 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		}
 		map.put("lang", lang);
 		map.put("offset", offset);
-		map.put("startPoint", Integer.valueOf(startPoint));
-		map.put("endPoint", Integer.valueOf(endPoint));
+		
+		if (startPoint != null) {
+			map.put("startPoint", Integer.parseInt(startPoint));
+		}
+		if (endPoint != null) {
+			map.put("endPoint", Integer.parseInt(endPoint));
+		}
+		
 		map.put("type", type);
+		
 		if (startPoint != null && endPoint != null && !startPoint.equals("") && !endPoint.equals("")) {
-			map.put("startRow", Integer.valueOf(startPoint) + 1);
-			map.put("endRow", Integer.valueOf(startPoint) + Integer.valueOf(endPoint));
+			map.put("startRow", Integer.parseInt(startPoint) + 1);
+			map.put("endRow", Integer.parseInt(startPoint) + Integer.parseInt(endPoint));
 		}
 		
 		if (adminFlag.equals("false")) {

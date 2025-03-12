@@ -933,9 +933,13 @@
                 <!-- <li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li> -->
             <%-- 2019-01-22 홍승비 - 그룹사게시판 -> 권한설정기능 표출, 권한복사 숨김 --%>
 			<c:if test="${isAllGroupBoard != 'Y'}">
+			<c:if test="${isBoardAdmin == 'YES'}">
             	<li><span onclick="AclCopy()"><spring:message code='ezBoard.t604'/></span></li>
 			</c:if>
+			</c:if>
+			<c:if test="${isBoardAdmin == 'YES'}">
             	<li><span onclick="UnderBoardCopy()"><spring:message code='ezBoard.t605'/></span></li>
+			</c:if>
             	<li><span onclick="DeleteACL('type')"><spring:message code='ezBoard.t603'/></span></li>
             	<li><span onclick="DeleteACL('one')"><spring:message code='ezBoard.t89'/></span></li>
             	<!-- <li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li> -->

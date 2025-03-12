@@ -434,6 +434,13 @@
 			    	ajaxRunning = false;
 			    },
 			    success : function(json){
+			    	
+			    	// 2025-02-20 조수빈 - 다운로드할 내용 없을 경우 동작이 없어 분기 추가
+			    	if (json.list.length < 1) {
+			    		alert('<spring:message code="ezAttitude.t56"/>');
+			    		return;
+			    	}
+			    	
 			    	getAttList_after(json, true);
 			    },
 				complete : function() {
@@ -1058,6 +1065,7 @@
 		</div>
 		
 		<form id="formAgent" name="formAgent" method="POST" target="saveExcel" action="/ezAttitude/saticGetXlsAtt.do">
+	        <input type="hidden" id="saveFileName" name="saveFileName" value="<spring:message code = 'ezAttitude.t166' />"/>
 	        <input type="hidden" id="saveExcelData" name="saveExcelData" value=""/>
 	        <input type="hidden" id="userAgent" name="userAgent" value=""/>
 	    </form>

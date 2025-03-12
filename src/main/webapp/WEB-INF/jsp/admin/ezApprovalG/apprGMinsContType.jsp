@@ -95,8 +95,8 @@
 					</div>
 				</td>
 				<td style="text-align:center;width:30px;">
-					<img src="/images/arr_right.gif" width="16" height="16" id="formIns" onClick="DocTypeIns_onclick()" /><br/>
-					<img src="/images/arr_left.gif" width="16" height="16" id="formDel" onClick="DocTypeDel_onclick()" />
+					<img src="/images/arr_right.gif" width="16" height="16" id="formIns" style="cursor: pointer;" onClick="DocTypeIns_onclick()" /><br/>
+					<img src="/images/arr_left.gif" width="16" height="16" id="formDel" style="cursor: pointer;" onClick="DocTypeDel_onclick()" />
 				</td>
 				<td style="vertical-align:top;">
 					<div class="listview">

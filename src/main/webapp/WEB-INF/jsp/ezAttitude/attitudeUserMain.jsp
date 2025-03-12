@@ -2503,6 +2503,12 @@
 		
 
 		<form id="formAgent" name="formAgent" method="POST" target="saveExcel" action="/ezAttitude/saticGetXlsAtt.do">
+		<c:if test="${deptFlag != 'true'}">
+	        <input type="hidden" id="saveFileName" name="saveFileName" value="<spring:message code='ezAttitude.t143'/>"/>
+		</c:if>
+		<c:if test="${deptFlag == 'true'}">
+	        <input type="hidden" id="saveFileName" name="saveFileName" value="<spring:message code='ezAttitude.t144'/>"/>
+		</c:if>
 	        <input type="hidden" id="saveExcelData" name="saveExcelData" value=""/>
 	        <input type="hidden" id="userAgent" name="userAgent" value=""/>
 	    </form>
