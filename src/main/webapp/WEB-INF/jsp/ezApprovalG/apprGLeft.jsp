@@ -1518,7 +1518,7 @@
 				          	<c:forEach var="deptShare" items="${deptShareList}" varStatus="status">				          	
 								<i id="imgNode_DeptShare_${status.index}" class="sub_iconLNB tree_plus" border="0" onclick="treeicon_toggle('DeptShare_${status.index}', 'UserContTree', UserContRequestData, 'imgNode_DeptShare_${status.index}');" style="width: 18px;height: 18px;cursor: pointer;margin-left: 23px;"></i>
 <%-- 								<img id="subImgNode_DeptShare_${status.index}" border="0" src="/images/OrganTree_cross/fldr.gif" style="width: 18px; height: 18px;" class="mCS_img_loaded"> --%>
-								<span id="spn_DeptShare_${status.index}" class="node_normal" style="cursor: pointer; width: 135px;" title='<c:out value="${deptShare.shareName}"></c:out>'><c:out value="${deptShare.shareName}"></c:out></span>
+								<span id="spn_DeptShare_${status.index}" class="node_normal" onclick="treeicon_toggle('DeptShare_${status.index}', 'UserContTree', UserContRequestData, 'imgNode_DeptShare_${status.index}');" style="cursor: pointer; width: 135px;" title='<c:out value="${deptShare.shareName}"></c:out>'><c:out value="${deptShare.shareName}"></c:out></span>
 								<div id="DeptShare_${status.index}_sub" style="display:none;">
 									<c:if test="${fn:length(shareUsersItemList) > 0}">
 										<c:forEach items="${shareUsersItemList}" var="shareUsersItemListMap">
