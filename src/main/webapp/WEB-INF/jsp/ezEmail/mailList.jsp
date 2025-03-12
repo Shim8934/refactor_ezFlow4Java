@@ -1600,7 +1600,7 @@
 			function moveHackingMail() {
 
 				if (listContentArry.length < 1) {
-					alert("<spring:message code='ezEmail.zno001' />");
+					alert(strLang42);
 					return;
 				}
 
