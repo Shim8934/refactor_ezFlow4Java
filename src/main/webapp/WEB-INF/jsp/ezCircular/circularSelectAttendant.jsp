@@ -762,10 +762,10 @@
 		        	   if (listContentArry != "") {
 	 		                for (var i = 0; i < listContentArry.length; i++) {
 	 		                	strId = document.getElementById(listContentArry[i]).getAttribute("_data2");
-	 		                    strName = document.getElementById(listContentArry[i]).getAttribute("_data4");
+	 		                    strName = document.getElementById(listContentArry[i]).getAttribute("_data11");
 	 		                    strDeptNM = document.getElementById(listContentArry[i]).getAttribute("_data5");
 	 		                    strEmail = document.getElementById(listContentArry[i]).getAttribute("_data3");
-	 		                    strName2 = document.getElementById(listContentArry[i]).getAttribute("_data11");
+	 		                    strName2 = document.getElementById(listContentArry[i]).getAttribute("_data12");
 	 		                    strDeptNM2 = document.getElementById(listContentArry[i]).getAttribute("_data13");
 	 		                    jickwe = document.getElementById(listContentArry[i]).getAttribute("_data14");
 	 		                    phone = document.getElementById(listContentArry[i]).getAttribute("_data8");
@@ -796,7 +796,7 @@
 	 		                        pparsingXML = pparsingXML + "<DATA6><![CDATA[" + strName + "]]></DATA6>";
 	 		                        pparsingXML = pparsingXML + "<DATA7><![CDATA[" + jickwe + "]]></DATA7>";
 	 		                        pparsingXML = pparsingXML + "<DATA8>" + phone + "</DATA8>";
-	 		                        pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
+	 		                        pparsingXML = pparsingXML + "<VALUE><![CDATA[" + (lang == 1 ? strName : strName2) + "]]></VALUE></CELL></ROW>";
 	 		                        pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 	 		                        Resultxml = loadXMLString(pparsingXML2);
 	 		
@@ -838,7 +838,7 @@
 										"_data2");
 								strName = document.getElementById(
 										listContentArry[i]).getAttribute(
-										"_data4");
+										"_data11");
 								strDeptNM = document.getElementById(
 										listContentArry[i]).getAttribute(
 										"_data5");
@@ -847,7 +847,7 @@
 										"_data3");
 								strName2 = document.getElementById(
 										listContentArry[i]).getAttribute(
-										"_data11");
+										"_data12");
 								strDeptNM2 = document.getElementById(
 										listContentArry[i]).getAttribute(
 										"_data13");
@@ -900,7 +900,7 @@
 									pparsingXML = pparsingXML + "<DATA8>"
 											+ phone + "</DATA8>";
 									pparsingXML = pparsingXML
-											+ "<VALUE><![CDATA[" + strName
+											+ "<VALUE><![CDATA[" + (lang == 1 ? strName : strName2)
 											+ "]]></VALUE></CELL></ROW>";
 									pparsingXML2 = pparsingXML2 + pparsingXML
 											+ "</ROWS></LISTVIEWDATA2>";
@@ -960,12 +960,12 @@
 							}
 						} else {
 							strId = p_ListOrderObject.getAttribute("_data2");
-							strName = p_ListOrderObject.getAttribute("_data4");
+							strName = p_ListOrderObject.getAttribute("_data11");
 							strDeptNM = p_ListOrderObject
 									.getAttribute("_data5");
 							strEmail = p_ListOrderObject.getAttribute("_data3");
 							strName2 = p_ListOrderObject
-									.getAttribute("_data11");
+									.getAttribute("_data12");
 							strDeptNM2 = p_ListOrderObject
 									.getAttribute("_data13");
 							jickwe = p_ListOrderObject.getAttribute("_data14");
@@ -1605,7 +1605,7 @@
 
 				for (var i = 0; i < totalLen; i++) {
 					rtn["id"][i] = GetAttribute(totalRows[i], "DATA1");
-					rtn["name"][i] = GetAttribute(totalRows[i], "DATA2");
+					rtn["name"][i] = GetAttribute(totalRows[i], (lang == 1 ? "DATA2" : "DATA3"));
 					rtn["name1"][i] = GetAttribute(totalRows[i], "DATA2");
 					rtn["name2"][i] = GetAttribute(totalRows[i], "DATA3");
 					rtn["deptname"][i] = GetAttribute(totalRows[i], "DATA4");

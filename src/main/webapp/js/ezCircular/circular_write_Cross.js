@@ -412,13 +412,13 @@ function manage_attendant_Complete(rtn) {
         
         for (var i = 0; i < rtn["id"].length; i++) {
             if (i == 0) {
-            	document.getElementById("receiverlist").innerHTML = rtn["name"][i];
+            	document.getElementById("receiverlist").innerHTML = rtn["name1"][i];
             	document.getElementById("receiverID").innerHTML = rtn["id"][i];
-            	document.getElementById("receiverlist2").innerHTML = rtn["name1"][i];
+            	document.getElementById("receiverlist2").innerHTML = rtn["name2"][i];
             } else {
-            	document.getElementById("receiverlist").innerHTML += ", " + rtn["name"][i];
+            	document.getElementById("receiverlist").innerHTML += ", " + rtn["name1"][i];
             	document.getElementById("receiverID").innerHTML += ", " + rtn["id"][i];
-            	document.getElementById("receiverlist2").innerHTML += ", " + rtn["name1"][i];
+            	document.getElementById("receiverlist2").innerHTML += ", " + rtn["name2"][i];
             }
 
             g_attendant["name"][i] = rtn["name"][i];
