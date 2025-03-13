@@ -28,6 +28,7 @@
 		</style>
 		<script>
 			var useColor = '<c:out value="${useColor}"/>';
+			var packageType = '<c:out value="${packageType}"/>';
 			// UI 스킨 작업용
 			function skin(skinId){
 				var skinLink = "";
@@ -114,7 +115,7 @@
 			<ul id="mainMenuListLeft">
 			</ul>
 			<div class="lnb_menu_all" id="menuAllContainer">
-	            <div class="lnb_menu_setting" id="menuSettingElem">
+	            <div class="lnb_menu_setting" id="menuSettingElem"<c:if test="${packageType eq 'mail'}"> style = "display:none"</c:if>>
 	                <div class="menu_set" id="editBtn">
 	                    <p><spring:message code="ezNewPortal.topMenu.hth09" /></p>
 	                </div>
@@ -444,7 +445,7 @@
 				str += '<ul class="util">';
 				//str += '<ul class="util"><li id="listSwitch" style="display: flex;align-items: center;">';
 				if ('${packageType}' === 'mail' && '${lastLogin}' != '') {	// 20200326 조진호 - 패키지 타입이 메일 일 때 최종 접속 로그인 시간과 ip를 탑메뉴 상단에 표시
-					str += '<li><span style="font-family: 돋움; font-size: 13px; font-weight: bold; color: #333; display: inline-block; margin-top: 23px; width: 111px;" title="' + '<spring:message code="ezSystem.x0025" />(<spring:message code="ezSystem.x0024" />)' + '">' + '${lastLogin} (' + '${loginIP})' + '</span></li>';
+					str += '<li><span style="font-family: 돋움; font-size: 13px; font-weight: bold; color: #333; display: inline-block; margin-top: 17px; width: 111px;" title="' + '<spring:message code="ezSystem.x0025" />(<spring:message code="ezSystem.x0024" />)' + '">' + '${lastLogin} (' + '${loginIP})' + '</span></li>';
 				}
 								
 				if ('${useUtilTalk}' === 'YES') str += '<li><span class="icon_topmenu util_messenger" id="util_messenger" title="' + '<spring:message code="ezNewPortal.kje01" />' + '"></span></li>'; // 메신저 다운로드 추가
@@ -668,17 +669,19 @@
 				
 				menuCount++;
 			}
-			
-			//  메뉴 개수가 8개보다 작아서 메뉴정렬 버튼이 표출되지 않는 경우, 마지막에 버튼 추가
-			if (menuList.length <= maxMenuCount) {
-				var menuResetBtn = document.createElement('li');
-				var menuResetBtnSpan = document.createElement('span');
-				menuResetBtnSpan.textContent = '<spring:message code="ezNewPortal.topMenu.hth08" />';
-				menuResetBtn.appendChild(menuResetBtnSpan);
-				menuResetBtn.setAttribute("id", "menuResetting");
-				menuResetBtn.classList.add("icon_nav_menuset_leftmenu");
-				menuResetBtn.addEventListener('click', menuReset);
-				document.getElementById('menuListAll').appendChild(menuResetBtn);
+
+			if(packageType != 'mail'){
+			    //  메뉴 개수가 8개보다 작아서 메뉴정렬 버튼이 표출되지 않는 경우, 마지막에 버튼 추가
+                if (menuList.length <= maxMenuCount) {
+                    var menuResetBtn = document.createElement('li');
+                    var menuResetBtnSpan = document.createElement('span');
+                    menuResetBtnSpan.textContent = '<spring:message code="ezNewPortal.topMenu.hth08" />';
+                    menuResetBtn.appendChild(menuResetBtnSpan);
+                    menuResetBtn.setAttribute("id", "menuResetting");
+                    menuResetBtn.classList.add("icon_nav_menuset_leftmenu");
+                    menuResetBtn.addEventListener('click', menuReset);
+                    document.getElementById('menuListAll').appendChild(menuResetBtn);
+                }
 			}
 		}
 		
