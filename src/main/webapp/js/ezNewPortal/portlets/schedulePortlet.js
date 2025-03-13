@@ -274,20 +274,27 @@ function getRedirectScheduleDetailUrl(id, date, repeatCount, callTypeId, bMobile
 function getWorkspaceUrl() {
     var result = "";
 
-    if (typeof (WorkspaceUrl) != "undefined")
+    if (typeof (WorkspaceUrl) != "undefined") {
         result = WorkspaceUrl;
-
+    }
+    
     return result;
 }
 
 // 협업 웹응용프로그램 경로
 function getWorkspaceAppPath() {
-    var result = "/ezWorkspace";    // 자바
+    var result = "/";    // 자바
+    
+    /* 2025-03-13 홍승비 - 협업 모듈에 고정된 하드코딩 문자열 제거 (ezWorkspace), 테넌트 컨피그 workspaceAppPath로 협업 웹응용프로그램 경로를 분리하여 사용 ("/" 또는 "/ezWork" 등) */
+    if (typeof (workspaceAppPath) != "undefined") {
+        result = workspaceAppPath;
+    }
 
     // 모바일 외부서버에서 접속 시 내부 서버를 통해 데이터를 처리하도록 Mobile 컨트롤러 경로를 붙여준다.
-    if (typeof (g_bMobileExtra) != "undefined" && g_bMobileExtra === true)
+    if (typeof (g_bMobileExtra) != "undefined" && g_bMobileExtra === true) {
         result = result + "/Mobile";
-
+    }
+    
     return result;
 }                                                                                                                                                                                                                                                                                     
 

@@ -711,7 +711,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		}
 		
 	    // 협업 일정 가져오기
-	    if(useWorkspaceSchedule.equalsIgnoreCase("yes")) {
+	    if (useWorkspaceSchedule.equalsIgnoreCase("yes")) {
 	    	String[] sDate = orgStartDate.split("-");
 			String sMon = (sDate[1].length() == 1 ? "0" + sDate[1] : sDate[1]);
 			String sDay = (sDate[2].length() == 1 ? "0" + sDate[2] : sDate[2]);
@@ -730,18 +730,19 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 			/* 2025-04-11 전인하 - ezWork 협업을 위해 검색키워드 지정 (전체검색일 경우 키워드 넘김, 상세검색일 경우 제목 넘김. */
 			String ezWorkSearchKeyword = Strings.isBlank(searchAll) && !Strings.isNotBlank(searchTitle) ? searchTitle : searchAll;
 	        
-			String domain = workspaceHostUrl + "/ezWorkspace/api/GroupwareApi/post/scheduleread/";
+			/* 2025-03-13 홍승비 - 협업 모듈에 고정된 하드코딩 문자열 제거 (ezWorkspace), 테넌트 컨피그 workspaceAppPath로 협업 웹응용프로그램 경로를 분리하여 사용 ("/" 또는 "/ezWork" 등) */
+			String domain = workspaceHostUrl + workspaceAppPath + "/api/GroupwareApi/post/scheduleread/";
 	    	String params = "userAccountId=" + URLEncoder.encode(userID, "UTF-8") + "&startDate=" + URLEncoder.encode(startDate, "UTF-8") 
 	    						+ "&endDate=" + URLEncoder.encode(endDate, "UTF-8") + "&searchTerm=" + ezWorkSearchKeyword + "&bMobile=" + URLEncoder.encode("false", "UTF-8");
 	    	String workspaceScheduleLists = ezEmailUtil.getWebServiceResult(domain, params);
 	    	
-	    	if(workspaceScheduleLists != null && !workspaceScheduleLists.equals("")) {
+	    	if (workspaceScheduleLists != null && !workspaceScheduleLists.equals("")) {
 		    	JSONParser jsonparser = new JSONParser();
 		    	JSONArray jsonarray = (JSONArray)jsonparser.parse(workspaceScheduleLists);
 		    	
 		    	logger.debug("data.length = " + jsonarray.size());
 		    	
-		    	for(int i=0; i<jsonarray.size(); i++) {
+		    	for (int i=0; i<jsonarray.size(); i++) {
 		    		ScheduleInfoVO sVo = new ScheduleInfoVO();
 		    		JSONObject jsonobject = (JSONObject)jsonarray.get(i);
 		    		

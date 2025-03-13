@@ -389,6 +389,8 @@
  	var theme2 = true;
  	var WorkspaceUrl = "${workspaceHostUrl}"; // 협업이 그룹웨어와 별도의 Url로 서비스 되는 경우에만 설정
     var workspaceContextRootUrl = "${workspaceContextRootUrl}";
+    /* 2025-03-13 홍승비 - 협업 모듈에 고정된 하드코딩 문자열 제거 (ezWorkspace), 테넌트 컨피그 workspaceAppPath로 협업 웹응용프로그램 경로를 분리하여 사용 ("/" 또는 "/ezWork" 등) */
+    var workspaceAppPath = "${workspaceAppPath}";
     var userLang = "<c:out value='${userLang}'/>";
     var userLang2 = "<c:out value='${userLang2}'/>";
 	var usePortletSize = "<c:out value='${usePortletSize}'/>" === "Y";
@@ -1236,8 +1238,8 @@
 </script>
 <!-- 협업 시작-->
 <c:if test="${useEzWorkspace}">
-    <script type="text/javascript" src="${workspaceContextRootUrl}/ezWorkspace/Scripts/moment.min.js"></script>
-    <script type="text/javascript" src="${workspaceContextRootUrl}/ezWorkspace/Scripts/Groupwareapi.js"></script>
+    <script type="text/javascript" src="${workspaceContextRootUrl}/Scripts/moment.min.js"></script>
+    <script type="text/javascript" src="${workspaceContextRootUrl}/Scripts/Groupwareapi.js"></script>
     <script type="text/javascript">
 	    var g_UserID = "${userId}"; // GW 사용자 Id, 가온누리 Java버전엔 이미 선언되어 있음
 	    /* var WorkspaceUrl = "${workspaceHostUrl}"; // 협업이 그룹웨어와 별도의 Url로 서비스 되는 경우에만 설정
