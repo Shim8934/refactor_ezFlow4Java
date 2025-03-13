@@ -730,7 +730,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 			/* 2025-04-11 전인하 - ezWork 협업을 위해 검색키워드 지정 (전체검색일 경우 키워드 넘김, 상세검색일 경우 제목 넘김. */
 			String ezWorkSearchKeyword = Strings.isBlank(searchAll) && !Strings.isNotBlank(searchTitle) ? searchTitle : searchAll;
 	        
-			/* 2025-03-13 홍승비 - 협업 모듈에 고정된 하드코딩 문자열 제거 (ezWorkspace), 테넌트 컨피그 workspaceAppPath로 협업 웹응용프로그램 경로를 분리하여 사용 ("/" 또는 "/ezWork" 등) */
+			/* 2025-03-13 홍승비 - 협업 모듈에 고정된 하드코딩 문자열 제거 (ezWorkspace), 테넌트 컨피그 workspaceAppPath로 협업 웹응용프로그램 경로를 분리하여 사용 ("" 또는 "/ezWork" 등) */
 			String domain = workspaceHostUrl + workspaceAppPath + "/api/GroupwareApi/post/scheduleread/";
 	    	String params = "userAccountId=" + URLEncoder.encode(userID, "UTF-8") + "&startDate=" + URLEncoder.encode(startDate, "UTF-8") 
 	    						+ "&endDate=" + URLEncoder.encode(endDate, "UTF-8") + "&searchTerm=" + ezWorkSearchKeyword + "&bMobile=" + URLEncoder.encode("false", "UTF-8");

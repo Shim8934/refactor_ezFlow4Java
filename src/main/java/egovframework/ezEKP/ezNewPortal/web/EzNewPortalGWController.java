@@ -633,7 +633,7 @@ public class EzNewPortalGWController {
 				String workspaceHostUrl = ezCommonService.getTenantConfig("workspaceHostUrl", tenantId);
 				String workspaceContextRootUrl = ezCommonService.getTenantConfig("workspaceContextRootUrl", tenantId);
 				
-				/* 2025-03-13 홍승비 - 협업 모듈에 고정된 하드코딩 문자열 제거 (ezWorkspace), 테넌트 컨피그 workspaceAppPath로 협업 웹응용프로그램 경로를 분리하여 사용 ("/" 또는 "/ezWork" 등) */
+				/* 2025-03-13 홍승비 - 협업 모듈에 고정된 하드코딩 문자열 제거 (ezWorkspace), 테넌트 컨피그 workspaceAppPath로 협업 웹응용프로그램 경로를 분리하여 사용 ("" 또는 "/ezWork" 등) */
 				String workspaceAppPath = ezCommonService.getTenantConfig("workspaceAppPath", tenantId);
 				
 				data.put("workspaceHostUrl", workspaceHostUrl);
