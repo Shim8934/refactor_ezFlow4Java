@@ -175,7 +175,7 @@ var dataAssemblerTabBoard = function(object) {
 	
 	var str = "";
 	if (object.publicFlag === 'N' && object.guBun === '2') {
-		str += "<li onclick=\"openAnonymousModal('" + portletId + "','" + object.itemID + "','" + object.guBun + "', '" + object.boardID + "',openDoc_section4_Type)\" >";
+		str += "<li onclick=\"openAnonymousModal('" + portletId + "','" + object.itemID + "','" + object.guBun + "', '" + object.boardID + "',openDoc_section3_Type)\" >";
 	} else {
 		str += "<li onclick='openDoc_section3_Type(\"" + object.itemID + "\", \"" + object.guBun + "\", \"" + object.boardID + "\")'>";
 	}
@@ -256,51 +256,7 @@ function allDisplayNone(querySelector) {
 }
 
 function openDoc_section3_Type(pItemID, pType, oBoardID, password) {
-    var pheight = window.screen.availHeight;
-    var pwidth = window.screen.availWidth;
-    var pTop = (pheight - 720) / 2;
-    var pLeft = (pwidth - 765) / 2;
-    
-    /* 2018-09-19 홍승비 - 포탈 포틀릿에서 포토/썸네일게시물 보기 시 창 크기 수정 */
-    if (pType == "3" || pType == "4") {
-	    if (navigator.userAgent.toLowerCase().indexOf("chrome") != -1) {
-			var height = 789;
-		} else {
-			var height = 785;
-		}
-	    
-		pTop = (pheight - 789) / 2;
-		pLeft = (pwidth - 826) / 2;
-
-        window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(oBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height + ",width=826,top=" + pTop + ",left=" + pLeft, "");
-    } else if (pType == "7") {
-	    var height = 679;
-	    pTop = (pheight - 679) / 2;
-	    pLeft = (pwidth - 764) / 2;
-        window.open("/ezBoard/boardItemViewMovie.do?showAdjacent=&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(oBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height + ",width=764,top=" + pTop + ",left=" + pLeft, "");
-    } else {
-		var parser = new DOMParser();
-
-		$.ajax({
-			url: "/ezBoard/boardItemView.do?showAdjacent=&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(oBoardID),
-			headers: !!password ? {
-				'Authorization': 'Basic ' + btoa(password)
-			} : {},
-			success: function(response) {
-				var returnDom = parser.parseFromString(response, "text/xml")
-				if (!returnDom || returnDom.querySelector('title').textContent ==="warning") {
-					alert(!!password ? strWrongPassword : strLang1132);
-					return;
-				}
-				var newWindow = window.open("", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft);
-				newWindow.document.write(response);
-				newWindow.document.close();
-			},
-			error: function(xhr, status, error) {
-				console.error('Error:', error);
-			}
-		});
-    }
+	openBoard(pItemID, pType, oBoardID, password);
 }
 
 function tabBoardPlus() {
