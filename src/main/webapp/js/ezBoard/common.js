@@ -1678,6 +1678,10 @@ function resizableMenuItem(url) {
     createMoreBtnUl.classList = "layer_select";
     buttonContainer.style.overflow = "unset";
 
+	if(url.includes("newPortalPortalPage")){
+		createMoreBtnImg.style.marginTop = "10px";
+	}
+	
     createMoreBtnSpan.appendChild(createMoreBtnImg);
     createMoreBtnLi.appendChild(createMoreBtnSpan);
     createMoreBtnLi.appendChild(createMoreBtnUl);
