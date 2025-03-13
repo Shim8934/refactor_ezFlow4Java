@@ -3133,6 +3133,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			
 			resultXML.append("<NODE>");
 			resultXML.append("<ItemID>" + boardItemVO.getItemID() + "</ItemID>");
+			resultXML.append("<FileName>" + commonUtil.cleanValue(boardItemTitle + fileExtension) + "</FileName>");
 			resultXML.append("<FilePath>" + commonUtil.cleanValue(newFilePath) + "</FilePath>");
 			resultXML.append("<FileSize>" + getProperSizeDisplay(mhtSize) + "</FileSize>");
 			resultXML.append("<FileSize2>" + mhtSize + "</FileSize2>");
@@ -3141,9 +3142,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		for (int k = 0; k < boardAttachVOs.size(); k++) {
 			String filePath = boardAttachVOs.get(k).getFilePath();
-			String newFilePath = filePath.split("/")[filePath.split("/").length - 1];
-			newFilePath = commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", boardItemVO.getTenantID()) +
-					commonUtil.separator + "{" + UUID.randomUUID().toString() + "}" + newFilePath.substring(newFilePath.indexOf("_"));
+			String fileExtension = boardAttachVOs.get(k).getFilePath().substring(boardAttachVOs.get(k).getFilePath().lastIndexOf("."));
+			String newFilePath = commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", boardItemVO.getTenantID()) + commonUtil.separator + "{" + UUID.randomUUID().toString() + "}" + fileExtension;
+			
 			newFilePath = commonUtil.detectPathTraversal(newFilePath);
 			FileUtils.copyFile(new File(commonUtil.detectPathTraversal(boardItemVO.getFilePath()) + filePath), new File(boardItemVO.getFilePath() + newFilePath));
 			
@@ -3152,6 +3153,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			resultXML.append("<FilePath>" + commonUtil.cleanValue(newFilePath) + "</FilePath>");
 			resultXML.append("<FileSize>" + getProperSizeDisplay(Long.parseLong(boardAttachVOs.get(k).getFileSize())) + "</FileSize>");
 			resultXML.append("<FileSize2>" + boardAttachVOs.get(k).getFileSize() + "</FileSize2>");
+			resultXML.append("<FileName>" + boardAttachVOs.get(k).getFileName() + "</FileName>");
 			resultXML.append("</NODE>");
 		}
 		
@@ -3218,6 +3220,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			resultXML.append("<FilePath>" + commonUtil.cleanValue(boardAttachVOs.get(k).getFilePath()) + "</FilePath>");
 			resultXML.append("<FileSize>" + getProperSizeDisplay(Long.parseLong(boardAttachVOs.get(k).getFileSize())) + "</FileSize>");
 			resultXML.append("<FileSize2>" + boardAttachVOs.get(k).getFileSize() + "</FileSize2>");
+			resultXML.append("<FileName>" + boardAttachVOs.get(k).getFileName() + "</FileName>");
 			resultXML.append("</NODE>");
 		}
 		

@@ -5232,9 +5232,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		for (int i = 0; i < boardAttachVOList.size(); i++) {
 			String pFilePath = boardAttachVOList.get(i).getFilePath();
-			String newFilePath = pFilePath.split("/")[pFilePath.split("/").length - 1];
-			
-			newFilePath = "tempUploadFile" + commonUtil.separator + "{" + UUID.randomUUID() + "}" + newFilePath.substring(newFilePath.indexOf("_"), newFilePath.length());
+			String fileExtension = boardAttachVOList.get(i).getFilePath().substring(boardAttachVOList.get(i).getFilePath().lastIndexOf("."));
+			String newFilePath = "tempUploadFile" + commonUtil.separator + "{" + UUID.randomUUID() + "}" + fileExtension;
 			
 			File file = new File(commonUtil.detectPathTraversal(filePath + commonUtil.separator + pFilePath));
 			File fileMove = new File(commonUtil.detectPathTraversal(filePath + commonUtil.getUploadPath("upload_board.ROOT", tenantID) + commonUtil.separator + commonUtil.detectPathTraversal(newFilePath)));

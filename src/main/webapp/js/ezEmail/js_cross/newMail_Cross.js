@@ -2396,10 +2396,7 @@ function GetBoardItemInfo_New(pBoardID, pItemID, pRetransType, pFont) {
         for (var i = 0; i < AttachRows.length; i++) {
             var filepath = SelectSingleNodeValue(AttachRows[i], "FilePath");
             var filenameTemp = filepath.split('/')[filepath.split('/').length - 1];
-            var filename = filenameTemp.substring(filenameTemp.indexOf("_") + 1, filenameTemp.length);
-            if (SelectSingleNodeValue(AttachRows[i], "FileName") != "") {
-            	filename = SelectSingleNodeValue(AttachRows[i], "FileName") + "." + filename.substr(filename.length - 3, filename.length).toLowerCase();
-			}
+            var filename = SelectSingleNodeValue(AttachRows[i], "FileName");
             var filesize = SelectSingleNodeValue(AttachRows[i], "FileSize2");
 
             pstrXML += "<ROW><CELL><VALUE><![CDATA[" + filename + "]]></VALUE>";
