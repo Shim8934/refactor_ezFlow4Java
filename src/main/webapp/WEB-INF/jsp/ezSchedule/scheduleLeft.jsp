@@ -33,8 +33,6 @@
 	        /* 2018-08-03 김보미 - 그룹명이 길 경우 처리 */
 	        .IDcontainer { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-family: Malgun Gothic, malgun gothic; font-size: 13px; padding-top: 0px; padding-left:0px; margin: 0px; }
 	
-	        .IDcontainer span { font-family: Malgun Gothic, malgun gothic; }
-	
 	        /* 2018-08-03 김보미 - 클릭시마다 앞의 체크박스 ui 틀어지는 현상 막기 */
 	        .IDcontainer .checkSelect { display: none; }
 	
