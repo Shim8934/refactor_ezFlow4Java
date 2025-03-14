@@ -1109,6 +1109,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 		IMAPAccess ia = null;
 		
 		try {
+			String orgFromEmail = "";
 			String from = "";
 			String to = "";
 			String cc = "";
@@ -1245,6 +1246,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 		        	if (folderPath.equals(draftsFolderName) && cmd.equals("EDIT")) {		        		
 		        		if (orgMessage.getFrom() != null && orgMessage.getFrom()[0] != null) {
 		        			from = ((InternetAddress)orgMessage.getFrom()[0]).getAddress();
+							orgFromEmail = from;
 		        		}
 		        		
 						// retrieve the TO addresses from the message.
@@ -1341,11 +1343,13 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 								to = ezEmailUtil.getStringListOfAddresses(new Address[]{address}, true);
 								break;
 		        			} else {
-                                // 재작성시 메세지에서 수신인을 뽑아내어 넣어준다.
+                                // 재작성시 메세지에서 발신인, 수신인을 뽑아내어 넣어준다.
                                 if (msgto.equals("")) {
                                     addresses = orgMessage.getRecipients(Message.RecipientType.TO);
                                     String[] rawHeaders = orgMessage.getHeader("From");
                                     String rawHeader = rawHeaders != null ? rawHeaders[0] : "";
+									orgFromEmail = rawHeader;
+
                                     boolean isPureAscii = ezEmailUtil.isPureAscii(rawHeader);
 
                                     if (isPureAscii) {
@@ -1831,6 +1835,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			signValue = convertFilerootToMobileDownloadURL(signValue);
 
 			JSONObject data = new JSONObject();
+	        data.put("orgFromEmail",orgFromEmail);
 	        data.put("fromEmail",fromEmail);
 	        data.put("fromAddressList",jsonList);
 			data.put("to", to);
