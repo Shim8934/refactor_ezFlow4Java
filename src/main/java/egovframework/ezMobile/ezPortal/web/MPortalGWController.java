@@ -1872,8 +1872,8 @@ public class MPortalGWController extends EgovFileMngUtil {
 		return result;
 	}
 	
-	@RequestMapping(value = "/mobile/ezPortal/logos/companies/{companyId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public JSONObject getCompanyLogo(HttpServletRequest request, @PathVariable String companyId) throws Exception {
+	@RequestMapping(value = "/mobile/ezPortal/logos/companies/{companyId:.+}/type/{logoType:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getCompanyLogo(HttpServletRequest request, @PathVariable String companyId, @PathVariable String logoType) throws Exception {
 		logger.debug("MOBILE G/W getCompanyLogo Start");
 		
 		JSONObject result = new JSONObject();
@@ -1898,8 +1898,10 @@ public class MPortalGWController extends EgovFileMngUtil {
 			boolean portalLogoUrlDefault = true;
 
 			//로그인 가져오기
-			if (companyId != null) {
-				portalLogoUrl = ezNewPortalService.getPortalLogoInfo(companyId, tenantId, "P");
+			if (companyId != null && logoType.equals("MP")) {
+				portalLogoUrl = ezNewPortalService.getPortalLogoInfo(companyId, tenantId, "MP");
+			} else {
+				portalLogoUrl = ezNewPortalService.getPortalLogoInfo(null, tenantId, "ML");
 			}
 
 			if (portalLogoUrl == null || portalLogoUrl.equals("")) {

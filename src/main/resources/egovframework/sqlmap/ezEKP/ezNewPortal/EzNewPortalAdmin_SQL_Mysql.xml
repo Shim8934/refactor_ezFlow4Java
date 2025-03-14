@@ -780,6 +780,26 @@
 				logo_url = #logoUrl#
 		]]>
 		</isEqual>
+		<isEqual property="logoType" compareValue="ML">
+		<![CDATA[
+			INSERT INTO TBL_PORTAL_LOGO
+				(company_id, tenant_id, logo_type, logo_url)
+			VALUES
+				(#tenantId#, #tenantId#, #logoType#, #logoUrl#)
+			ON DUPLICATE KEY UPDATE
+				logo_url = #logoUrl#
+		]]>
+		</isEqual>
+		<isEqual property="logoType" compareValue="MP">
+		<![CDATA[
+			INSERT INTO TBL_PORTAL_LOGO
+				(company_id, tenant_id, logo_type, logo_url)
+			VALUES
+				(#companyId#, #tenantId#, #logoType#, #logoUrl#)
+			ON DUPLICATE KEY UPDATE
+				logo_url = #logoUrl#
+		]]>
+		</isEqual>
 	</update>
 	
 	<select id="ezNewPortal.getCompanyLogoList" parameterClass="Map" resultClass="PortalLogoVO">
@@ -893,10 +913,18 @@
 	]]>
 	</isEqual>
 	<isNotEqual property="logoType" compareValue="L">
-	<![CDATA[
-		AND
-			company_id = #companyId#
-	]]>
+		<isEqual property="logoType" compareValue="ML">
+		<![CDATA[
+			AND
+				company_id = #tenantId#
+		]]>
+		</isEqual>
+		<isNotEqual property="logoType" compareValue="ML">
+		<![CDATA[
+			AND
+				company_id = #companyId#
+		]]>
+		</isNotEqual>
 	</isNotEqual>
 	</delete>
 	
