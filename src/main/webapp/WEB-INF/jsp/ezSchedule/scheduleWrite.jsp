@@ -722,7 +722,7 @@
 	                                    </tr>
 	                                    <tr id="periodblockTR">
 	                                        <th><spring:message code='ezSchedule.t368'/></th>
-	                                        <td id="periodblockTD" <c:if test="${scheduleId != ''}">style="width:85%;"</c:if>>
+	                                        <td id="periodblockTD" <c:if test="${scheduleId != ''}">style="width:80%;"</c:if>>
 	                                        	<span id="periodblock">
 	                                            	<input name="checkbox" type="checkbox" id="alldaycheck" onclick="allday_change()" value="1">
 	                                            	<spring:message code='ezSchedule.t369'/>
