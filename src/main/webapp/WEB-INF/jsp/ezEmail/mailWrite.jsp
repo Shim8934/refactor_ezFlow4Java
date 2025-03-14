@@ -264,6 +264,12 @@
         + "</tr></thead></table></li></a>";
 
 	    window.onload = function () {
+	        // alias, 공용배포그룹 주소로 재전송 시 실제 sender 값 설정
+	        if (["RESEND", "EDIT"].some(cmd => g_cmd.includes(cmd)) && g_from != from) {
+	            var fromAddressElem = document.getElementById("fromAddressList").value;
+	            fromAddressChange(fromAddressElem);
+	        }
+
 	    	/* 2025-01-08 홍승비 - 전자결재 메일 발송 > 웹한글문서 메일로 전송 시, 웹한글기안기의 로딩 순서를 보장하도록 수정 */
 	    	// (BuildWebHwpCtrl() 함수 호출부를 Editor_Complete() 내부로 변경)
 	    	
