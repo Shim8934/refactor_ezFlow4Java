@@ -2299,7 +2299,7 @@ function SaveTMPDocInfo(AutoSave, Saveflag, pState, phtml) {
             createNodeAndInsertText(xmlpara, objNode, "SEPERATEATTACHXML", GetSepAttParamXml(g_SepAttachLVXml));
 
         createNodeAndInsertText(xmlpara, objNode, "SUMMARY", pSummery);
-        createNodeAndInsertText(xmlpara, objNode, "SUMMARYPATH", pSummeryPath);
+        createNodeAndInsertText(xmlpara, objNode, "SUMMARYPATH", pSummaryPath);
         createNodeAndInsertText(xmlpara, objNode, "SECURITYAPPROVAL", tempSecurityDate);
         createNodeAndInsertText(xmlpara, objNode, "WRITERNAME2", arr_userinfo[12]);
         createNodeAndInsertText(xmlpara, objNode, "WRITERJOBTITLE2", arr_userinfo[14]);
