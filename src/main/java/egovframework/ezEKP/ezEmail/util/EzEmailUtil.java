@@ -3503,6 +3503,40 @@ public class EzEmailUtil {
 						newBodyPart = new MimeBodyPart(newHeaders, bytes);
 					}
 				}
+			// Content-Type: pdf; name="=?UTF-8?B?7Jew6rWs6rCc67Cc6rO87KCcIOuzgOqyvSDsmpTssq3shJwyLnBkZg==?="
+			// Content-Disposition: attachment;
+			// filename="=?UTF-8?B?7Jew6rWs6rCc67Cc6rO87KCcIOuzgOqyvSDsmpTssq3shJwyLnBkZg==?="
+			// Content-Transfer-Encoding: base64
+			// Content-ID: <f_m8cfbdqm0>
+			// 위 예와 같이 Content-Type이 mainType이 없이 subType만 있는 경우가 있어 추가함
+			} else if (!contentType.contains("/")) {
+				logger.debug("Content-Type has no slash. Content-Type={}", contentType);
+
+				InternetHeaders newHeaders = new InternetHeaders();
+
+				@SuppressWarnings("unchecked")
+				Enumeration<Header> enumerator = p.getAllHeaders();
+
+				// 해당 파트의 헤더들을 읽는다.
+				while (enumerator.hasMoreElements()) {
+					Header h = enumerator.nextElement();
+					String hValue = h.getValue();
+
+					if (h.getName().equalsIgnoreCase("Content-Type")) {
+						// mainType은 application으로 가정함
+						hValue = "application/" + hValue;
+
+						logger.debug("new Content-Type={}", hValue);
+					}
+
+					newHeaders.addHeader(h.getName(), hValue);
+				}
+
+				// 해당 파트의 body 데이터를 읽는다.
+				byte[] bytes = IOUtils.toByteArray(newBodyPart.getRawInputStream());
+
+				// 해당 파트의 헤더와 body 데이터를 동일하게 갖는 파트 객체를 생성한다.
+				newBodyPart = new MimeBodyPart(newHeaders, bytes);				
 			}
 		}
 
@@ -3544,6 +3578,7 @@ public class EzEmailUtil {
 					// 료비에서 온 메일 중에 related 파트안에 인라인으로 첨부파일이 있는 메일이 있어 이 경우
 					// Forward시 첨부되도록 하기 위해 || p.isMimeType("application/*") 조건을 추가함.
 					if (((MimePart)p).getContentID() != null
+							&& !p.isMimeType("text/plain")
 							|| (includeAttachment 
 									&& ((p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)) 
 											|| (p.isMimeType("application/*"))))) {
@@ -3567,7 +3602,8 @@ public class EzEmailUtil {
 				}
 
 				// dhlee : 20221125 - multipart/mixed 안에 인라인 이미지 파트가 있는 메일이 있어 추가함.
-				if (((MimePart)p).getContentID() != null) {
+				if (((MimePart)p).getContentID() != null
+						&& !p.isMimeType("text/plain")) {
 					isAdded = true;
 				}
 			}
@@ -3578,6 +3614,14 @@ public class EzEmailUtil {
 		// related 파트안에 mixed 파트가 있고 첨부파일이 있는 메일.eml 참고
 		} else if (src instanceof BodyPart) {
 			if (((MimePart)src).getContentID() != null // dhlee : 20221125 - multipart/mixed 안에 인라인 이미지 파트가 있는 메일이 있어 추가함.
+					// Content-Type: pdf; name="=?UTF-8?B?7Jew6rWs6rCc67Cc6rO87KCcIOuzgOqyvSDsmpTssq3shJwyLnBkZg==?="
+					// Content-Disposition: attachment;
+					// filename="=?UTF-8?B?7Jew6rWs6rCc67Cc6rO87KCcIOuzgOqyvSDsmpTssq3shJwyLnBkZg==?="
+					// Content-Transfer-Encoding: base64
+					// Content-ID: <f_m8cfbdqm0>
+					// 위 예와 같이 Content-Type이 비정상적인 경우 text/plain으로 인식되어 Content-ID가 있더라도
+					// 비정상적인 타입일 경우엔 제외하기 위해 조건을 추가함
+					&& !src.isMimeType("text/plain")
 					|| (includeAttachment
 							&& (src.getDisposition() != null && src.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)
 									|| src.isMimeType("application/*")))) {
