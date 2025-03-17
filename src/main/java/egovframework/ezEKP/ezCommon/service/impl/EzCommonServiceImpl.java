@@ -8459,4 +8459,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		
 		logger.debug("createUserScheduleTypeConfigTable ended");
 	}
+    
+	@Override
+	public String getMobileLang(String userID, int tenantID) throws Exception {
+		return ezCommonDAO.getMobileLang(userID, tenantID);
+	}
 }

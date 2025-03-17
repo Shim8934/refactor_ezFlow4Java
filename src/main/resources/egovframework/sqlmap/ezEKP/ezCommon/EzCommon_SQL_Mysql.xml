@@ -7093,4 +7093,15 @@
 		    PRIMARY KEY (USERID, COMPANYID, TENANT_ID, SCHEDULETYPE, RELATEDID)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
     </statement>
+    
+	<select id="EzCommonDAO.getMobileLang" parameterClass="Map" resultClass="String">
+		SELECT
+	    		a.LANG
+		FROM
+			TBL_USERMOBILEINFO a RIGHT JOIN TBL_USERMASTER b ON a.USERID = b.CN AND a.TENANT_ID = b.TENANT_ID
+		WHERE
+			b.CN = #userID#
+		AND
+			b.TENANT_ID = #tenantID#
+	</select>
 </sqlMap>
