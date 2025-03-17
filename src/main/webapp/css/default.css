@@ -64,7 +64,7 @@ input, label, textarea, select, ul, li, h1, h2, table, th, .page, .point, .box, 
 	ime-mode:active;
 }
 
-p, strong, h3, div, a, span, table, th, td {
+p, strong, h3, div, a, span, table, th, td, dt {
 	font-family: 'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana';
 }
 
