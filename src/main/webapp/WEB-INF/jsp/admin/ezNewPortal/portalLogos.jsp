@@ -317,7 +317,7 @@
     			
     			var request = new XMLHttpRequest();
     
-    			if (ext == "jpeg" || ext == "jpg" || ext == "png" || ext == "bmp" || ext == "gif") {
+    			if (ext == "jpeg" || ext == "jpg" || ext == "png" || ext == "bmp" || ext == "gif" || ext == "svg") {
     				/* 2021-12-09 홍승비 - 로고 이미지 업로드 시 서버단에서도 이미지 확장자 체크 진행 */
     				if (checkImgExtension(ext) == "UPLOAD_EXT_ERROR") {
     					alert("<spring:message code ='ezAttitude.t260' />"); // 허용하지 않는 확장자입니다.
@@ -367,7 +367,7 @@
 	    				document.getElementById("imgFile").value = "";
 	    			}
     			} else {
-    				alert("<spring:message code = 'ezCommunity.lhj03' /> (jpg, png, bmp, jpeg, gif)");
+    				alert("<spring:message code = 'ezCommunity.lhj03' /> (jpg, png, bmp, jpeg, gif, svg)");
     				return false;
     			}
 			}
