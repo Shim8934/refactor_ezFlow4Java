@@ -140,6 +140,7 @@
 		            DeptID = RetValue[0];	
 		            document.getElementById('btn_PhotoAdd').style.display = "none";
 		            document.getElementById('btn_PhotoDel').style.display = "none";
+		            document.getElementById('btn_PasswordReset').style.display = "none";
 					document.getElementById("CompanyName").value = RetValue[6];
 		            
 		            getJobInfoInit();
@@ -764,6 +765,44 @@
 					return false;
 				}
 			}
+
+			function passwordReset() {
+				var getBirth = document.getElementById("txtBirth");
+
+				if(getBirth!= null) {
+					var newPassword = getBirth.value.replace(/-/g, '');
+					var data = document.getElementById("UserID").value;
+
+					$.ajax({
+						type: "POST",
+						dataType: "xml",
+						url: "/admin/ezOrgan/changePassword.do",
+						async: false,
+						data: {password: newPassword, cn: data},
+						success: function (result) {
+							$.ajax({
+								type: "POST",
+								dataType: "xml",
+								url: "/admin/ezOrgan/loginCntReset.do",
+								async: false,
+								data: {password: newPassword, cn: data},
+								success: function (result) {
+									alert("<spring:message code='ezOrgan.hyh02' />");
+								},
+								error: function () {
+									alert("<spring:message code='ezOrgan.t41' />");
+								}
+							});
+
+						},
+						error: function () {
+							alert("<spring:message code='ezOrgan.t41' />");
+						}
+					});
+				} else {
+					alert("<spring:message code='ezOrgan.khj004' />");
+				}
+			}
 	    </script>
 	</head>
 	<body class="popup">
@@ -772,6 +811,7 @@
 	            <li><span onclick="OK_Click()"><spring:message code='ezOrgan.t167' /></span></li>
 	            <li id="btn_PhotoAdd"><span onclick="btnPhoto_onclick()"><spring:message code='ezOrgan.t281' /></span></li>
 	            <li id="btn_PhotoDel"><span onclick="deleteImg()"><spring:message code='ezOrgan.t282' /></span></li>
+	            <li id="btn_PasswordReset"><span onclick="passwordReset()"><spring:message code='ezOrgan.khj003' /></span></li>
 	        </ul>
 	    </div>
 	    <div id="close">

@@ -432,6 +432,31 @@ public class EzConnController {
 		logger.debug("changePassword ended. result=" + result);
 		return result;
 	}
+
+	@RequestMapping("/ezConn/changeLoginCnt.do")
+	@ResponseBody
+	public String changeLoginCnt(HttpServletRequest request, HttpServletResponse response) {
+		logger.debug("changeLoginCnt started.");
+		String result = "ERROR";
+
+		try {
+			String id = request.getParameter("id");
+			id = ezConnUtil.decryptAES(id);
+			logger.debug("id=" + id);
+
+			String cn = id.split(":")[0];
+			int tenantID = 0;
+
+			ezOrganAdminService.resetLoginCnt(cn, tenantID);
+
+			result = "OK";
+		} catch (Exception e) {
+			result = "ERROR";
+		}
+
+		logger.debug("changeLoginCnt ended. result=" + result);
+		return result;
+	}
 	
 	/**
 	 * 자체 방식 SSO를 위한 암호화된 인증 스트링을 반환한다. 암호화된 인증 스트링을 전달 받은

@@ -33,6 +33,7 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import egovframework.ezEKP.ezOrgan.service.impl.EzOrganAdminServiceImpl;
 import org.apache.commons.lang3.BooleanUtils;
 import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
 import egovframework.ezEKP.ezOrgan.vo.OrganAuth.AdminAuth;
@@ -6296,5 +6297,28 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		logger.debug("getCompanys ended.");
 
 		return "json";
+	}
+
+	@RequestMapping(value = "/admin/ezOrgan/loginCntReset.do", method=RequestMethod.POST)
+	@ResponseBody
+	public void loginCntReset(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("loginCntReset started.");
+
+	String cn = request.getParameter("cn");
+
+		logger.debug("cn=" + request.getParameter("cn"));
+
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+
+		if (userInfo == null) {
+			throw new Exception("loginCntReset failed.");
+		}
+
+		int tenantID = userInfo.getTenantId();
+
+		logger.debug("tenantID=" + tenantID);
+		ezOrganAdminService.resetLoginCnt(cn, tenantID);
+
+		logger.debug("loginCntReset ended.");
 	}
 }

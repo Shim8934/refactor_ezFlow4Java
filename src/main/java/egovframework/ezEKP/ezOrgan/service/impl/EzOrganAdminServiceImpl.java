@@ -611,6 +611,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		if ("Y".equalsIgnoreCase(useMailServer2)) {
 			try {
 				updatePasswordForMailServer2(cn, password);
+				updateLoginCntForMailServer2(cn, password);
 			} catch (Exception e) {
 				throw new Exception("updatePasswordForMailServer2 failed: " + e.getMessage());
 			}
@@ -711,6 +712,26 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		logger.debug("updatePasswordForMailServer2 ended.");
 	}
 
+	/*	외부 메일 LoginCnt 0으로 reset (useMailServer2가 Y인 경우)	*/
+	private void updateLoginCntForMailServer2(String cn, String password) throws Exception {
+		logger.debug("updateLoginCntForMailServer2 started.");
+
+		String mailServerURL2 = config.getProperty("config.MailServerURL2");
+		String url2 = mailServerURL2 + "/ezConn/changeLoginCnt.do";
+
+		String params = String.format("%s:%s", cn, password); // 사용자 ID와 새 비밀번호 연결
+		String encryptedParams = ezConnUtil.encryptAES(params); // AES 암호화 및 Base64 인코딩
+		String inputParams = "id=" + URLEncoder.encode(encryptedParams, "UTF-8"); // URL 인코딩
+		String response = ezEmailUtil.getWebServiceResult(url2, inputParams); // REST API 호출
+
+		if (response == null || !response.equals("OK")) {
+			throw new Exception("Failed to change updateLoginCntForMailServer2 for MailServer2. user: " + cn);
+		} else {
+			logger.debug("Successfully changed updateLoginCntForMailServer2 for MailServer2. user: " + cn);
+		}
+		logger.debug("updateLoginCntForMailServer2 ended.");
+	}
+	
 	@Override
 	public void retireEntry(String cn, String domain, int tenantID, String offset) throws Exception {
 	    logger.debug("retireEntry started");
@@ -3940,5 +3961,18 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		logger.debug("updateUserMailAddress started");
 		ezOrganAdminDao.setUserPrimaryMail(cn, tenantID, mailAddress);
 		logger.debug("updateUserMailAddress ended");
+	}
+
+	public void resetLoginCnt(String cn, int tenantID) throws Exception {
+		logger.debug("resetLoginCnt started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("v_CN", cn);
+		map.put("v_TENANTID", tenantID);
+
+		ezOrganAdminDao.resetLoginCnt(map);
+
+		logger.debug("resetLoginCnt ended");
 	}
 }

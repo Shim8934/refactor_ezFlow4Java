@@ -2428,4 +2428,8 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 		insert("EzOrganAdminDAO.insertMobileMenuAuthForNewComp", map);
 		insert("EzOrganAdminDAO.insertMobileMenuNameForNewComp", map);
 	}
+
+	public void resetLoginCnt(Map<String, Object> map) throws Exception {
+		update("EzOrganAdminDAO.updateResetLoginCnt", map);
+	}
 }

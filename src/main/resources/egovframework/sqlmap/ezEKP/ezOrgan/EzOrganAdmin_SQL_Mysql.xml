@@ -6906,5 +6906,18 @@
 		AND TBL_PORTAL_MENU_NAME.TENANT_ID = #tenantID#
 	]]>
 	</insert>
+
+	<update id="EzOrganAdminDAO.updateResetLoginCnt" parameterClass="map">
+		<![CDATA[
+		UPDATE
+			TBL_USERMASTER
+		SET
+			LOGINCNT = 0
+		WHERE
+			CN = #v_CN#
+		AND
+			TENANT_ID = #v_TENANTID#
+		]]>
+	</update>
 	
 </sqlMap>

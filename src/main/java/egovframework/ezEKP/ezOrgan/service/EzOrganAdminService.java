@@ -229,4 +229,6 @@ public interface EzOrganAdminService {
 	public void updateAddJobInfo(String cn, String deptId, String jobId, int tenantID, String orderBy, String userTreeFlag) throws Exception;
 
 	public void updateUserMailAddress(String cn, String mailAddress, int tenantID) throws Exception;
+	
+	public void resetLoginCnt(String cn, int tenantID) throws Exception;
 }
