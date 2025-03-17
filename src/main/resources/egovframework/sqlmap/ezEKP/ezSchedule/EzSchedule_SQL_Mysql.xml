@@ -347,6 +347,10 @@
 						location like concat(concat('%', #v_SEARCHALL#), '%')
 				)
 			</isNotEmpty>
+			<isEqual property="v_PFILTER" compareValue="ISPUBLIC">
+				AND 
+					a.ispublic = 'Y'
+			</isEqual>
         	)
         	or  
        			(a.ownerid IN
@@ -415,6 +419,10 @@
 						location like concat(concat('%', #v_SEARCHALL#), '%')
 				)
 			</isNotEmpty>
+			<isEqual property="v_PFILTER" compareValue="ISPUBLIC">
+				AND
+					a.ispublic = 'Y'
+			</isEqual>
 			)
           order by a.startdate asc
 	</select>
