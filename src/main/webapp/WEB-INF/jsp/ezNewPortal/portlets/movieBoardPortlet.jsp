@@ -77,7 +77,7 @@
 							<div style="position:relative; width:100%;">
 								<c:choose>
 									<c:when test="${movie.addThumbnail eq 'Y'}">
-										<img id="thumbnail" style="width:100%; height:100%;" src="${movie.thumbnailPath}">
+										<img id="thumbnail" style="width:100%; height:100%;" class="handle-movie" src="${movie.thumbnailPath}">
 										<video style="width:100%; height:100%; display:none;" id="mainVideo" class="handle-movie" src="${movie.filePath}" data1="${movie.boardID}" data2="${movie.itemID}" preload="metadata"/>
 									</c:when>
 									
