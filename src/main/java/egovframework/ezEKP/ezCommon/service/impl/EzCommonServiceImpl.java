@@ -4853,4 +4853,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void inserExtLargeFilesever() {
         ezCommonDAO.inserExtLargeFilesever();
     }
+    
+	@Override
+	public String getMobileLang(String userID, int tenantID) throws Exception {
+		return ezCommonDAO.getMobileLang(userID, tenantID);
+	}
 }

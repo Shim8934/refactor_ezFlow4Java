@@ -3401,4 +3401,12 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 
+	public String getMobileLang(String userID, int tenantID)  throws Exception{
+		Map<String, Object> map = new HashMap<String, Object>();
+    	
+    	map.put("userID", userID);
+    	map.put("tenantID", tenantID);
+    	
+        return (String) select("EzCommonDAO.getMobileLang", map);
+	}
 }

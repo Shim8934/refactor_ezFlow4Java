@@ -589,4 +589,5 @@ public interface EzCommonService {
 
 	public void inserExtLargeFilesever() throws Exception;
 
+	public String getMobileLang(String nextUserID, int tenantID) throws Exception;
 }
