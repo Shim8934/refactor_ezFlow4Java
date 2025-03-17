@@ -464,7 +464,12 @@
 			boolfirstlist = false;
 		} else {
 			var emptyxml = createXmlDom();
-			emptyxml = loadXMLString("<ROW><CELL><VALUE>" + name + "</VALUE><CN>" + id + "</CN><NAME>" + name2 + "</NAME></CELL></ROW>");
+            if(typeof(pLang) != "undefined" && pLang != "1"){
+				emptyxml = loadXMLString("<ROW><CELL><VALUE>" + name2 + "</VALUE><CN>" + id + "</CN><NAME>" + name2 + "</NAME></CELL></ROW>");
+                xmlString += "<ROW><CELL><VALUE>" + name2 + "</VALUE><CN>" + id + "</CN><NAME>" + name2 + "</NAME></CELL></ROW>";
+            }else{
+				emptyxml = loadXMLString("<ROW><CELL><VALUE>" + name + "</VALUE><CN>" + id + "</CN><NAME>" + name + "</NAME></CELL></ROW>");
+            }
 			pListView.AddRow(emptyxml);
 			pListView.make();
 		}
