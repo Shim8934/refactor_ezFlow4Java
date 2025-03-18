@@ -431,6 +431,11 @@ function ListView() {
                     oTable.width = "100%";
             }
 
+            var targetTr = oTBody.querySelector('#DocList_TR_noItems');
+            if (oTable.id == "DocList" && targetTr) {
+               oTable.style.tableLayout = "auto";
+            }
+            
             objElm.appendChild(oTable);
 
             //2020-04-27 : 드래그앤드랍 추가
