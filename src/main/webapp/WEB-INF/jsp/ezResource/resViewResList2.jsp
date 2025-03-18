@@ -27,7 +27,9 @@
 				color:#2f2f2f;height: 32px;background:#e4e8ec;border: 1px solid #c8ccd0;padding:0;margin:0;
 				
 			}
-			
+			.mainmenuTab {
+				margin : 0px 15px 11px 15px;
+			}
 		</style>
 		<script type="text/javascript" src="${util.addVer('ezResource.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
