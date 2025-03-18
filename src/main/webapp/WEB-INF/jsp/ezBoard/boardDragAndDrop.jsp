@@ -211,6 +211,7 @@
 		        var filecnt = document.getElementById("filelist").childNodes.length;
 		        var pBoardID = window.parent.pBoardID;
 		        var strRet = "";
+                var fileNamesStr = "";
 		        var checkedFileCnt = $("input[name='fileSelect']:checked").length; // 실제로 삭제하기 위해 체크된 파일 갯수
 		        
 		        if (checkedFileCnt <= 0) {
@@ -243,7 +244,7 @@
 		        filecnt = document.getElementById("filelist").childNodes.length;
 		        for (var i = 1; i < filecnt; i++) {
 		            var filepath = document.getElementById("filelist").childNodes[i].getAttribute("DATA2");
-		            var realFileName = document.getElementById("filelist").childNodes[i + 1].getAttribute("REALFILENAME");
+		            var realFileName = document.getElementById("filelist").childNodes[i].getAttribute("REALFILENAME");
 		            
 		            if (filepath.indexOf(pBoardID) != -1) {
 		                strRet += filepath + "|";

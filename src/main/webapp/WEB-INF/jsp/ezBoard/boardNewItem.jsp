@@ -613,6 +613,7 @@
 		            str += "<DATA4></DATA4>";
 		            str += "<DATA5>Y</DATA5>";
 		            str += "<DATA6>" + MakeXMLString(SelectSingleNodeValue(xmldomNodes[i], "FileSize2")) + "</DATA6>";
+					str += "<realFileNM><![CDATA[" + filename + "]]></realFileNM>";
 		            str += "</CELL>";
 		            str += "<CELL><VALUE></VALUE>";
 		            str += "</CELL></ROW>";
