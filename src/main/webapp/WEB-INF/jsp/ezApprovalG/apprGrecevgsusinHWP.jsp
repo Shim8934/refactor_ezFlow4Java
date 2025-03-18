@@ -1698,7 +1698,7 @@
 			
 			function btnDel_onclick() {
 				if (nonElecRec == "Y") {
-					if (confirm("삭제하시겠습니까 ?")) {
+					if (confirm(strLang962)) {
 						RemoveSusinNonElecRecDoc(pDocID);
 					}
 				}

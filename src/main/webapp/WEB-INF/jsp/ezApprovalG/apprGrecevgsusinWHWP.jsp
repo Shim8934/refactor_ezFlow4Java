@@ -2166,7 +2166,7 @@
 							</c:choose>
 							<c:choose>
 								<c:when test="${isNonElecRec eq 'Y'}">
-									<li id="btnDel"><span onclick="return btnDel_onclick()">삭제</span></li>
+									<li id="btnDel"><span onclick="return btnDel_onclick()"><spring:message code='ezApprovalG.t266'/></span></li>
 									<li id="btnReturn" style="display: none"><span onclick="return btnReturn_onclick()"><spring:message code='ezApprovalG.t1434'/></span></li>
 								</c:when>
 								<c:otherwise>

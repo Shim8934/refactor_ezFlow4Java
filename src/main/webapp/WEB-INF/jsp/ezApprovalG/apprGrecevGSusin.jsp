@@ -2020,7 +2020,18 @@
 		    	    }	    			
 	    		}
 	    	}
-		    
+			
+	<c:choose>
+		<c:when test="${isNonElecRec eq 'Y'}">
+			function btnDel_onclick() {
+				if (nonElecRec == "Y") {
+					if (confirm(strLang962)) {
+						RemoveSusinNonElecRecDoc(pDocID);
+					}
+				}
+			}
+		</c:when>
+	</c:choose>
 		</script>
 	</head>
 	<body class="popup" style="height:100%;">
@@ -2049,6 +2060,11 @@
 					<li id="btnDistribute"><span  onClick="return btnDistribute_onclick()"><spring:message code='ezApprovalG.t1432'/></span></li>
 					<li id="btnReturn"><span  onClick="return btnReturn_onclick()"><spring:message code='ezApprovalG.t1434'/></span></li>
 					<li id="btnEdit"><span  onClick="return btnEdit_onclick()"><spring:message code='ezApprovalG.t44'/></span></li>
+			<c:choose>
+				<c:when test="${isNonElecRec eq 'Y'}">
+					<li id="btnDel"><span onclick="return btnDel_onclick()"><spring:message code='ezApprovalG.t266'/></span></li>
+				</c:when>
+			</c:choose>
 					<li id="btnPrint"><span class="icon16 popup_icon16_print" onClick="return btnPrint_onclick()"></span></li>
 					<li id="btnConn" style="display:none"><span  onClick="return btnConn_onclick()"  ><spring:message code='ezApprovalG.t157'/></span></li>
 					<c:if test="${useExternalMailServer == 'NO'}">
