@@ -3311,4 +3311,13 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			insert("EzCommonDAO.insertUseMealPlan", tenantId);
 		}
 	}
+
+	public void insertMealPlanBoardInfo(int tenantId) throws Exception{
+		String propertyValue = (String) select("EzCommonDAO.checkHasMealPlanBoard", tenantId);
+		
+		if (propertyValue == null) {
+			logger.debug("MealPlanBoard doesn't exist. insert data...");
+			insert("EzCommonDAO.insertMealPlanBoard", tenantId);
+		}
+	}
 }
