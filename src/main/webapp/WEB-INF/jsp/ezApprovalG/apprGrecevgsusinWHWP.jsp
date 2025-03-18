@@ -542,6 +542,7 @@
 		        if(useExternalMailServer == "NO") {
 			    	$("#btnMail").css("display","");
 			    }
+			    message.FreeUndoHistory();
 			}
 		
 			function btnSetAprLine_onclick() {

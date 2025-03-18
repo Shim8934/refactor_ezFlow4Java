@@ -459,6 +459,7 @@
 			        OpenAlertUI(pAlertContent);
 			        message.Clear();
 		        }
+		        message.FreeUndoHistory();
 		    }
 	
 		    function CheckOpinionYN() {

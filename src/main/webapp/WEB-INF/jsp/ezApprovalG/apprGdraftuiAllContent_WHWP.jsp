@@ -251,6 +251,7 @@
 	                    OpenAlertUI(pAlertContent);
 	                    Clear();
 	                }
+	                message.FreeUndoHistory();
  	            } catch (e) {
  	            	console.log(e);
 	                alert("apprGdraftuiAllContent_WHWP.FieldsAvailable()  ::  " + e.description);

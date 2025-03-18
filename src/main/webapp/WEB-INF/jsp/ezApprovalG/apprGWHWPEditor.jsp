@@ -136,6 +136,10 @@
 	        function Clear() {
 	            HwpCtrl.Clear(1);
 	        }
+	        
+            function FreeUndoHistory() {
+			    HwpCtrl.FreeUndoHistory();
+            }
 
 	        function EditMode(option) {
 	            HwpCtrl.EditMode = option;

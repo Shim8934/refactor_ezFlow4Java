@@ -409,7 +409,7 @@
 							timer = setInterval(Draft_AutoSave, pSaveInterval);
 						}
 					}
-					
+					message.FreeUndoHistory();
 	            } catch (e) {
 	                alert("ezdraftui_whwp.FieldsAvailable()::" + e);
 	            }
