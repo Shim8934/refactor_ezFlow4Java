@@ -5059,6 +5059,7 @@ public class EzNewPortalGWController {
 				data.put("boardList", boardList);
 				data.put("boardListTotalCnt", boardListTotalCnt);
 				data.put("currentPage", currentPage);
+				data.put("boardPortletLang", portletLang);
 			}
 
 			result.put("status", "ok");

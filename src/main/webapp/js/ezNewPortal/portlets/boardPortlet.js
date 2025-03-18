@@ -5,6 +5,7 @@ if (typeof boardOb === "undefined") {
 
 var BTN_NEXT = "nextBtn"
 var BTN_PREV = "preBtn"
+var boardPortletLang = "";
 
 function makeBoardList(portletId, fileName, count, type, currentPage) {
     var boardHTML = "";
@@ -23,6 +24,8 @@ function makeBoardList(portletId, fileName, count, type, currentPage) {
 			var boardList = result.boardList;
 			var boardListTotalCnt = result.boardListTotalCnt;
 			var currentPage = result.currentPage;
+            boardPortletLang = result.boardPortletLang;
+            
 			if (access == "true") {
 				if ("a" === type) {
 					getBoardListAType(result.boardList, portletId);
@@ -113,7 +116,7 @@ function getBoardList(data, portletId) {
 			}
 			boardHTML += "</span>";
 			boardHTML += "<span class='date'>" + startDate.substring(5, 16).replace("-",".") + "</span>";
-			if(typeof portletLang != "undefined" && portletLang != "1" ){
+			if(typeof boardPortletLang != "undefined" && boardPortletLang != "1" && boardPortletLang != ""){
 				boardHTML += "<span class='name'>" + item.writerName2 + "</span>";
 			}else{
 				boardHTML += "<span class='name'>" + item.writerName + "</span>";
@@ -183,7 +186,7 @@ function getBoardListAType(data, portletId) {
 			var spanName = document.createElement('span');
 			spanName.classList.add('name');
 			contSub.appendChild(spanName);
-			if(typeof portletLang != "undefined" && portletLang != "1" ){
+			if(typeof boardPortletLang != "undefined" && boardPortletLang != "1" && boardPortletLang != ""){
 				textNode = document.createTextNode(!!item.writerName2 ? item.writerName2 : '');
 			}else{
 				textNode = document.createTextNode(!!item.writerName ? item.writerName : '');
@@ -290,7 +293,7 @@ function getBoardListBType(data, portletId) {
 			var spanName = document.createElement('span');
 			spanName.classList.add('name');
 			contSub.appendChild(spanName);
-			if(typeof portletLang != "undefined" && portletLang != "1" ){
+			if(typeof boardPortletLang != "undefined" && boardPortletLang != "1" && boardPortletLang != ""){
 				textNode = document.createTextNode(!!item.writerName2 ? item.writerName2 : '');
 			}else{
 				textNode = document.createTextNode(!!item.writerName ? item.writerName : '');
