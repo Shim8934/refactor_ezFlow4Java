@@ -2185,6 +2185,7 @@ function setbuttonenable() {
                 document.getElementById("tbtnRemoveDoc").style.display = "none";			
                 document.getElementById("tbtnSimsa").style.display = "none";
             }
+            document.getElementById("tbtnDraft").style.display = "";
         } else if (pListTypeValue == "7") {
             document.getElementById("tbtnReceipt").style.display = "";
             document.getElementById("tbtnNonElecRec").style.display = "none";
