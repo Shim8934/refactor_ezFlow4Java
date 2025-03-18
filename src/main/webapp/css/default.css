@@ -3300,7 +3300,7 @@ input::-ms-clear {display: none;}
 .quesBacgr {margin: 0px auto;}
 .quesBacgr ul {list-style: none;}
 .quesBacgr .qstnForm {width:calc(100% - 40px); height:50%; padding:10px 20px;}
-.qstnWrapper {width:calc(100% - 2px); margin:0px 0px 10px 0px; padding:0px; border:1px solid #ddd; min-width: 630px;}
+.qstnWrapper {width:calc(100% - 2px); margin:0px 0px 10px 0px; padding:0px; border:1px solid #ddd; min-width: 630px; background: white;}
 .qstnForm {padding:10px 20px;}
 
 /* question and option attach part */
