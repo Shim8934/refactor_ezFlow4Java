@@ -44,7 +44,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -138,6 +140,134 @@ public class EzEmailAdminController {
 	/**
 	 * 공용배포그룹관리 화면 호출 함수
 	 */
+	@GetMapping(value = { "/admin/ezEmail/mailDistributionMain.do" })
+	public String mailDistributionMain(
+			@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("mailDistributionMain started.");
+
+		// 관리자 권한체크
+		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		if (auth == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(
+				auth.getPrimary(), auth.getTenantId());
+
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+
+		for (int i = 0 ; i < list.size() ; i++) {
+			OrganDeptVO vo = list.get(i);
+
+			if (auth.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(auth.getCompanyID())) {
+				resultList.add(vo);
+			}
+		}
+
+		model.addAttribute("list", resultList);
+		model.addAttribute("companyId", auth.getCompanyID()); // default로 사용자의 회사 선택
+
+		logger.debug("mailDistributionMain ended.");
+
+		return "admin/ezEmail/mailDistributionMain";
+	}
+
+	/**
+	 * 공용배포그룹관리 목록관리 화면 호출 함수
+	 */
+	@GetMapping(value = { "/admin/ezEmail/mailDistributionList.do" })
+	public String mailDistributionList(
+			@CookieValue("loginCookie") String loginCookie, Locale locale, @RequestParam String companyId, Model model) throws Exception {
+		logger.debug("mailDistributionList started.");
+
+		// 관리자 권한체크
+		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		if (auth == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		model.addAttribute("companyId", companyId);
+		model.addAttribute("useOcs", config.getProperty("config.USE_OCS"));
+
+		logger.debug("mailDistributionList ended.");
+
+		return "admin/ezEmail/mailDistributionList";
+	}
+
+	/**
+	 * 공용배포그룹관리 발송설정 호출 함수
+	 */
+	@GetMapping(value = { "/admin/ezEmail/mailDistributionSender.do" })
+	public String mailDistributionSender(
+			@CookieValue("loginCookie") String loginCookie, Locale locale, @RequestParam String companyId,
+			Model model, HttpServletRequest request) throws Exception {
+		logger.debug("mailDistributionSender started.");
+
+		// 관리자 권한체크
+		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		if (auth == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		String useDistributionSender = ezCommonService.getCompanyConfig(auth.getTenantId(), companyId, "useDistributionSender");  // YES:NO
+
+		model.addAttribute("useDistributionSender", useDistributionSender);
+		model.addAttribute("companyId", companyId);
+
+		logger.debug("mailDistributionSender ended.");
+
+		return "admin/ezEmail/mailDistributionSender";
+	}
+
+	/**
+	 * 공용배포그룹관리 발송설정 저장 함수
+	 */
+	@PostMapping(value = { "/admin/ezEmail/mailDistributionSenderSave.do" })
+	@ResponseBody
+	public String mailDistributionSenderSave(
+			@CookieValue("loginCookie") String loginCookie,	@RequestParam String companyId, @RequestParam String configUpdate) {
+		logger.debug("mailDistributionSenderSave started. companyId={}, configUpdate={}", companyId, configUpdate);
+
+		// 관리자 권한체크
+		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		if (auth == null) {
+			logger.debug("mailDistributionSenderSave ended. companyId={}, rollError", companyId);
+			return "rollError";
+		}
+
+		// 로그인쿠키의 회사id와 전달 받은 회사id 비교 (표준적용 시 전체관리자 모드 고려필요)
+		if (!auth.getCompanyID().equalsIgnoreCase(StringUtils.defaultString(companyId))) {
+			logger.debug("mailDistributionSenderSave ended. companyId={}, compError", companyId);
+			return "compError";
+		}
+
+		try {
+			String useDistributionSender = ezCommonService.getCompanyConfig(auth.getTenantId(), companyId, "useDistributionSender");  // YES:NO
+
+			// company config 새로 저장
+			if (StringUtils.isBlank(useDistributionSender)) {
+				ezCommonService.insertCompanyConfig(auth.getTenantId(), companyId, "useDistributionSender", configUpdate);
+				logger.debug("mailDistributionSenderSave ended. companyId={}, ok", companyId);
+				return "ok";
+			}
+
+			// DB 저장 값과 configUpdate가 다른 경우에만 저장
+			if (!useDistributionSender.equalsIgnoreCase(configUpdate)) {
+				ezCommonService.updateCompanyConfig(auth.getTenantId(), companyId, "useDistributionSender", configUpdate.toUpperCase());
+			}
+
+			logger.debug("mailDistributionSenderSave ended. companyId={}, ok", companyId);
+			return "ok";
+
+		} catch (Exception e) {
+			logger.debug(e.getMessage(), e);
+			return "error";
+		}
+	}
+	
+	/**
+	 * 공용배포그룹관리 화면 호출 함수
+	 
 	@RequestMapping(value = "/admin/ezEmail/mailDistributionList.do", method = RequestMethod.GET)
 	public String mailDistributionList(
 			@CookieValue("loginCookie") String loginCookie, Locale locale,
@@ -170,7 +300,7 @@ public class EzEmailAdminController {
 		logger.debug("mailDistributionList ended.");
 
 		return "admin/ezEmail/mailDistributionList";
-	}
+	}*/
 
 	/**
 	 * 공용배포그룹 정보 호출 함수
@@ -4124,7 +4254,7 @@ public class EzEmailAdminController {
 
 		try {
 			JSONArray array = ezEmailService.getAdminApprMailList(tenantId, companyId, type, userId, lang, pageStartNum, listCount);
-			JSONArray array2 = ezEmailService.setUTCtoUserTime(array, userInfo.getOffset());
+			JSONArray array2 = ezEmailService.setUTCtoUserTime(array, userInfo.getOffset(), tenantId);
 			JSONArray array3 = ezEmailService.setHref(array2);
 			resultArry = ezEmailService.setStateByLocale(array3, locale);
 
@@ -4188,7 +4318,7 @@ public class EzEmailAdminController {
 		JSONArray logList = new JSONArray();
 		try {
 			JSONArray array = ezEmailService.getAdminCompApprMailList(tenantId, companyId, type, userId, lang, pageStartNum, listCount);
-			JSONArray array2 = ezEmailService.setUTCtoUserTime(array, offset);
+			JSONArray array2 = ezEmailService.setUTCtoUserTime(array, offset, tenantId);
 			JSONArray array3 = ezEmailService.setHref(array2);
 			logList = ezEmailService.setStateByLocale(array3, locale);
 
@@ -4566,7 +4696,7 @@ public class EzEmailAdminController {
 		logger.debug("pageStartNum={}, listCount={}", pageStartNum, listCount);
 
 		// 로그 리스트
-		List<Map<String, String>> logList = new ArrayList<Map<String,String>>();
+		JSONArray logList = new JSONArray();
 		try {
 			logList = ezEmailService.getApprMailHistorySearchList(tenantId, companyId, lang, locale, offset, sDate, eDate, pageStartNum, listCount);
 			pageTotalCount = ezEmailService.getApprMailHistorySearchListCnt(tenantId, companyId, sDate, eDate);

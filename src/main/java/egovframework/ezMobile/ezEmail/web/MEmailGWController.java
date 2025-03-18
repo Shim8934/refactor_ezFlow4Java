@@ -80,6 +80,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
 import com.google.gson.JsonElement;
 import egovframework.ezEKP.ezEmail.util.EmailImportance;
@@ -1112,6 +1113,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 		IMAPAccess ia = null;
 		
 		try {
+			String orgFromEmail = "";
 			String from = "";
 			String to = "";
 			String cc = "";
@@ -1248,6 +1250,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 		        	if (folderPath.equals(draftsFolderName) && cmd.equals("EDIT")) {		        		
 		        		if (orgMessage.getFrom() != null && orgMessage.getFrom()[0] != null) {
 		        			from = ((InternetAddress)orgMessage.getFrom()[0]).getAddress();
+							orgFromEmail = from;
 		        		}
 		        		
 						// retrieve the TO addresses from the message.
@@ -1298,7 +1301,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 		        	} else if (folderPath.equals(sentFolderName) && cmd.equals("RESEND") && !msgto.equals("")) {
 		        		//임시보관함에 메시지 임시저장
 		        		SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
-		        				userEmail, password);
+		        				userEmail, password, info.getEmail());
 		        		MimeMessage resendMessage = sa.createMimeMessage();
 		        		
 		        		resendMessage.setFlag(Flags.Flag.SEEN, true);
@@ -1344,11 +1347,13 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 								to = ezEmailUtil.getStringListOfAddresses(new Address[]{address}, true);
 								break;
 		        			} else {
-                                // 재작성시 메세지에서 수신인을 뽑아내어 넣어준다.
+                                // 재작성시 메세지에서 발신인, 수신인을 뽑아내어 넣어준다.
                                 if (msgto.equals("")) {
                                     addresses = orgMessage.getRecipients(Message.RecipientType.TO);
                                     String[] rawHeaders = orgMessage.getHeader("From");
                                     String rawHeader = rawHeaders != null ? rawHeaders[0] : "";
+									orgFromEmail = rawHeader;
+
                                     boolean isPureAscii = ezEmailUtil.isPureAscii(rawHeader);
 
                                     if (isPureAscii) {
@@ -1725,12 +1730,43 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 				orgFolder.close(true);
 			}
 			
-			String useFromAddress = ezCommonService.getTenantConfig("Use_FromAddress", info.getTenantId());
-			String fromAddressHtml = "";
+			// 발신가능한 메일주소 리스트
+			String useFromAddress = StringUtils.defaultIfBlank(ezCommonService.getTenantConfig("Use_FromAddress", info.getTenantId()), "NO");
+			String useDistributionSender = StringUtils.defaultIfBlank(ezCommonService.getCompanyConfig(info.getTenantId(), info.getCompanyId(), "useDistributionSender"), "NO");
+			JSONArray jsonList = new JSONArray();
+
+			if ("YES".equalsIgnoreCase(useFromAddress) || "YES".equalsIgnoreCase(useDistributionSender)) {
+				List<String[]> fromAddressList = ezEmailService.getAliasAddress(info.getUserId(), info.getTenantId(), useFromAddress, useDistributionSender);
+
+				// 공용배포그룹주소 사용만 YES인 경우에는 primary mail 주소를 jgw에서 가져오지 않기 때문에 추가 함
+				if ("NO".equalsIgnoreCase(useFromAddress) && "YES".equalsIgnoreCase(useDistributionSender)) {
+					fromAddressList.add(0, new String[]{info.getEmail(),"",""});
+				}
+
+				// 모바일에서 primary로 select할 수 있도록 type 값 변경 : primary, alias
+				for (String[] address : fromAddressList) {
+					if (info.getEmail().trim().equals(address[0])) {
+						address[1] = "p"; //primary
+					} else {
+						address[1] = "a"; //alias
+					}
+				}
+
+				// jsonList에 key:value 형태로 입력
+				for (String[] address : fromAddressList) {
+					JSONObject json = new JSONObject();
+					json.put("email", address[0]);
+					json.put("type", address[1]);
+					json.put("name", address[2]);
+					jsonList.add(json);
+				}
+			}
+			
+			/*String fromAddressHtml = "";
 			
 			if (useFromAddress != null) {
-				if (useFromAddress.equals("YES")) {
-					List<String[]> fromAddressList = ezEmailService.getAliasAddress(info.getUserId(), info.getTenantId());
+				if ("YES".equalsIgnoreCase(useFromAddress) || "YES".equalsIgnoreCase(useDistributionSender)) {
+					List<String[]> fromAddressList = ezEmailService.getAliasAddress(info.getUserId(), info.getTenantId(), useFromAddress, useDistributionSender);
 					
 					if (fromAddressList.size() < 2) {
 						useFromAddress = "NO";
@@ -1767,7 +1803,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 				}
 			} else {
 				useFromAddress = "NO";
-			}
+			}*/
 			
 			String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", info.getTenantId());
 			
@@ -1803,7 +1839,9 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			signValue = convertFilerootToMobileDownloadURL(signValue);
 
 			JSONObject data = new JSONObject();
+	        data.put("orgFromEmail",orgFromEmail);
 	        data.put("fromEmail",fromEmail);
+	        data.put("fromAddressList",jsonList);
 			data.put("to", to);
 			data.put("cc", cc);
 			data.put("bcc", bcc);
@@ -1825,7 +1863,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			data.put("newWindowId", newWindowId);
 			data.put("serverName", serverName);
 			data.put("useFromAddress", useFromAddress);
-			data.put("fromAddressHtml", fromAddressHtml);
+			//data.put("fromAddressHtml", fromAddressHtml);
 			data.put("mailAttachLimit", mailAttachLimit);
 			data.put("useOnlyInnerMail", useOnlyInnerMail);
 			data.put("useReceiptExternal", useReceiptExternal);
@@ -2673,7 +2711,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 				// 일반 첨부 파일이 있는 경우
 				if (hasAttachFile) {
 					SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
-							userEmail, password);
+							userEmail, password, info.getEmail());
 					
 					// 첨부파일들을 추가하여 임시 보관함에 저장할 메시지를 생성한다.
 					newMessage = sa.createMimeMessage();
@@ -2925,7 +2963,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 
 				if (rows != null && rows.item(0) != null) {
 					SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
-							userEmail, password);
+							userEmail, password, info.getEmail());
 
 					IMAPAccess ia = null;
 					try {
@@ -3275,7 +3313,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			}
 			
 			SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
-					userEmail, password);
+					userEmail, password, info.getEmail());
 		
 			String pResult = null;
 			IMAPAccess ia = null;
@@ -4673,7 +4711,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 							OrganUserVO userVO = ezOrganAdminService.getUserInfo(info.getUserId(), info.getLang(), info.getTenantId());
 							
 							SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
-									userEmail, password);
+									userEmail, password, info.getEmail());
 							
 							ezEmailMailReadController.processAutoMDN(sa, message, userEmail, userVO.getDisplayName(), info.getTenantId());
 						} else {
@@ -7846,8 +7884,11 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			}
 			String from = ((InternetAddress)message.getFrom()[0]).getAddress();
 			logger.debug("from=" + from);
-			
-			List<String[]> aliasAddressList = ezEmailService.getAliasAddress(mailId, userInfo.getTenantId());
+
+			String useFromAddress = StringUtils.defaultIfBlank(ezCommonService.getTenantConfig("Use_FromAddress", userInfo.getTenantId()), "NO");
+			String useDistributionSender = StringUtils.defaultIfBlank(ezCommonService.getCompanyConfig(userInfo.getTenantId(), userInfo.getCompanyId(), "useDistributionSender"), "NO");
+
+			List<String[]> aliasAddressList = ezEmailService.getAliasAddress(mailId, userInfo.getTenantId(), useFromAddress, useDistributionSender);
 
 			boolean isUserFrom = false;
 			for (String[] address : aliasAddressList) {
@@ -8258,7 +8299,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 
 			// jgw 서버에서 리스트 받아오기
 			JSONArray array 	= ezEmailService.getApprMailList(tenantId, companyId, type, userCn, lang, start, end, domainName);
-			JSONArray array2 	= ezEmailService.setUTCtoUserTime(array, userInfo.getOffSet());
+			JSONArray array2 	= ezEmailService.setUTCtoUserTime(array, userInfo.getOffSet(), tenantId);
 
 			JSONArray resultArry = new JSONArray();
 			resultArry 			= ezEmailService.setHref(array2);
@@ -8327,7 +8368,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 
 			// jgw 서버에서 리스트 받아오기
 			JSONArray array 	= ezEmailService.getApprMailList(tenantId, companyId, type, userCn, lang, start, end, domainName);
-			JSONArray array2 	= ezEmailService.setUTCtoUserTime(array, userInfo.getOffSet());
+			JSONArray array2 	= ezEmailService.setUTCtoUserTime(array, userInfo.getOffSet(), tenantId);
 			JSONArray array3	= ezEmailService.setHref(array2);
 
 			JSONArray resultArry = new JSONArray();
@@ -8397,7 +8438,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			
 			// jgw 서버에서 리스트 받아오기
 			JSONArray array = ezEmailService.getApprMailList(tenantId, companyId, type, vUserId, lang, start, end, domainName);
-			JSONArray array2 = ezEmailService.setUTCtoUserTime(array, userInfo.getOffSet());
+			JSONArray array2 = ezEmailService.setUTCtoUserTime(array, userInfo.getOffSet(), tenantId);
 			JSONArray array3 = ezEmailService.setApprover(array2, locale);
 
 			JSONArray resultArry = new JSONArray();
@@ -9076,7 +9117,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 							OrganUserVO userVO = ezOrganAdminService.getUserInfo(info.getUserId(), info.getLang(), info.getTenantId());
 							
 							SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
-									userEmail, password);
+									userEmail, password, info.getEmail());
 							
 							ezEmailMailReadController.processAutoMDN(sa, message, userEmail, userVO.getDisplayName(), info.getTenantId());
 						} else {

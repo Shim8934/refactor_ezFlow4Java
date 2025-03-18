@@ -17,6 +17,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -483,11 +484,14 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 					return egovMessageSource.getMessage("ezEmail.lhm23", locale);
 				}
 
-				// 메시지의 sender가 user의 계정(또는 user의 alias mail)인지 검사
-				String from = ((InternetAddress)message.getFrom()[0]).getAddress();
+				// 메시지의 sender가 user의 계정(또는 user의 alias mail)인지 검사 > 아래 real address로 변경하여 주석처리
+				//String from = ((InternetAddress)message.getFrom()[0]).getAddress();
+				
+				// 사용자의 real address인 X-JMocha-Disp-Noti-To 헤더 값으로 처리
+				String from =  message.getHeader("X-JMocha-Disp-Noti-To")[0];
 				logger.debug("from=" + from);
 
-				List<String[]> aliasAddressList = ezEmailService.getAliasAddress(mailId, loginInfo.getTenantId());
+				List<String[]> aliasAddressList = ezEmailService.getAliasAddress(mailId, loginInfo.getTenantId(), "YES", "NO");
 
 				boolean isUserFrom = false;
 				for (String[] address : aliasAddressList) {

@@ -123,6 +123,9 @@ public class EzEmailServiceImpl implements EzEmailService {
 	private EzEmailDAO ezEmailDAO;
 
 	@Autowired
+	private EzEmailService ezEmailService;
+
+	@Autowired
 	private EzOrganAdminService ezOrganAdminService;
 
 	@Autowired
@@ -1892,13 +1895,15 @@ public class EzEmailServiceImpl implements EzEmailService {
 	}
 	
 	@Override
-	public List<String[]> getAliasAddress(String userId, int tenantId) throws Exception {
+	public List<String[]> getAliasAddress(String userId, int tenantId, String useFromAddress, String useDistributionSender) throws Exception {
 		logger.debug("getAliasAddress started. userId=" + userId);
 		
 		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
 		String userAccount = userId + "@" + domainName;
 				
-		String inputParams = "userId=" + URLEncoder.encode(userAccount, "UTF-8");
+		String inputParams = "userId=" + URLEncoder.encode(userAccount, "UTF-8")
+				+ "&useFromAddress=" + URLEncoder.encode(useFromAddress, "UTF-8")
+				+ "&useDistributionSender=" + URLEncoder.encode(useDistributionSender, "UTF-8");
 		logger.debug("inputParams=" + inputParams);
 
 		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getAliasAddress";
@@ -1923,7 +1928,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 					
 					for (int i=0; i<resultArray.size(); i++) {
 						JSONObject obj = (JSONObject)resultArray.get(i);
-						aliasAddressList.add(new String[] {(String)obj.get("address"), (String)obj.get("type")});
+						aliasAddressList.add(new String[] {obj.get("address").toString().trim(), obj.get("type").toString().trim(), obj.get("name").toString().trim()});
 					}
 				}
 			}
@@ -5378,10 +5383,11 @@ public class EzEmailServiceImpl implements EzEmailService {
 	/**
 	 * 승인메일 : UTC -> 사용자 timeZone으로 변경하는 api 
 	 * 작성일시 - writeDate, 승인일시 - updatedt
+	 * 2025-01-14 메일주소 real -> primary로 변경 추가
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONArray setUTCtoUserTime(JSONArray array, String offset) throws Exception {
+	public JSONArray setUTCtoUserTime(JSONArray array, String offset, int tenantId) throws Exception {
 		JSONArray resultArry = new JSONArray();
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -5394,6 +5400,10 @@ public class EzEmailServiceImpl implements EzEmailService {
 			String writeDateStr = sdf.format(writeDate);
 			writeDateStr = commonUtil.getDateStringInUTC(writeDateStr, offset, false);
 			obj.put("writeDate", writeDateStr);
+
+			String senderId = obj.get("senderEmail").toString().split("@")[0];
+			OrganUserVO senderVO = ezOrganAdminService.getUserInfo(senderId, "1", tenantId); // 신청자의 primary 메일주소만 필요하기 때문에 lang 값 1로 픽스 함
+			obj.put("senderEmail", senderVO.getMail());
 
 			// 승인완료된 경우에만 updatedt가 있음
 			if (obj.get("updatedt") != null) {
@@ -7413,10 +7423,17 @@ public class EzEmailServiceImpl implements EzEmailService {
         	for (int i=0; i<resultArray.size(); i++) {
         		JSONObject obj = (JSONObject)resultArray.get(i);
         		
+				// UTC -> 사용자 설정 시간
         		String writeDate = sdf.format(sdf.parse((String)obj.get("writeDate")));
-        				writeDate = commonUtil.getDateStringInUTC(writeDate, offset, false);
-        		String updatedt = sdf.format(sdf.parse((String)obj.get("updatedt")));
-        			updatedt = commonUtil.getDateStringInUTC(updatedt, offset, false);
+				String updatedt = sdf.format(sdf.parse((String)obj.get("updatedt")));
+
+				writeDate = commonUtil.getDateStringInUTC(writeDate, offset, false);
+        		updatedt = commonUtil.getDateStringInUTC(updatedt, offset, false);
+
+				// primary 주소로 수정
+				String senderId = obj.get("senderEmail").toString().split("@")[0];
+				OrganUserVO senderVO = ezOrganAdminService.getUserInfo(senderId, "1", tenantId); // 신청자의 primary 메일주소만 필요하기 때문에 lang 값 1로 픽스 함
+				obj.put("senderEmail", senderVO.getMail());
 
         		Map<String, String> resultMap = new HashMap<String, String>();
         		
@@ -7529,7 +7546,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 	 * 승인메일 : (일반) 승인로그 전체 리스트 조회 (대기상태 제외)
 	 */
 	@Override
-	public List<Map<String, String>> getApprMailHistorySearchList(int tenantId, String companyId, String lang, Locale locale, String offset) throws Exception {
+	public JSONArray getApprMailHistorySearchList(int tenantId, String companyId, String lang, Locale locale, String offset) throws Exception {
 		return getApprMailHistorySearchList(tenantId, companyId, lang, locale, offset, null, null);
 	}
 
@@ -7540,7 +7557,7 @@ public class EzEmailServiceImpl implements EzEmailService {
      * sdate, edate 둘다 없는 경우 전체 검색
 	 */
 	@Override
-	public List<Map<String, String>> getApprMailHistorySearchList(int tenantId, String companyId, String lang, Locale locale, String offset, String sDate, String eDate) throws Exception {
+	public JSONArray getApprMailHistorySearchList(int tenantId, String companyId, String lang, Locale locale, String offset, String sDate, String eDate) throws Exception {
 		return getApprMailHistorySearchList(tenantId, companyId, lang, locale, offset, sDate, eDate, 0, 0);
 	}
 
@@ -7551,11 +7568,9 @@ public class EzEmailServiceImpl implements EzEmailService {
      * sdate, edate 둘다 없는 경우 전체 검색
 	 */
 	@Override
-	public List<Map<String, String>> getApprMailHistorySearchList(int tenantId, String companyId, String lang, Locale locale, String offset, String sDate, String eDate, int pageStartNum, int listCount) throws Exception {
-
-		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
-		
-		List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+	public JSONArray getApprMailHistorySearchList(int tenantId, String companyId, String lang, Locale locale, String offset, String sDate, String eDate, int pageStartNum, int listCount) throws Exception {
+		//List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+		JSONArray resultArray = new JSONArray();
 		
 		String inputParams = "tenantId=" + tenantId + "&companyId=" + companyId + "&lang=" + lang + "&pageStartNum=" + pageStartNum + "&listCount=" + listCount;
 		if (sDate != null && eDate != null) {
@@ -7571,9 +7586,10 @@ public class EzEmailServiceImpl implements EzEmailService {
 		JSONObject object = (JSONObject)parser.parse(response);
 		
 		if (object.get("resultCode").equals("OK") && ((Long)object.get("reasonCode")).intValue() == 0) {
-        	JSONArray resultArray = (JSONArray)object.get("result");
+        	JSONArray array = (JSONArray)object.get("result");
+			resultArray = ezEmailService.setUTCtoUserTime(array, offset, tenantId);
 
-    		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    		/*SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         	
         	for (int i=0; i<resultArray.size(); i++) {
         		JSONObject obj = (JSONObject)resultArray.get(i);
@@ -7604,12 +7620,12 @@ public class EzEmailServiceImpl implements EzEmailService {
                 resultMap.put("href",  			setHref((String)obj.get("userId"), (String)obj.get("mailUID")) );
         		
         		list.add(resultMap);
-        	}
+        	}*/
 		} else {
 			throw new Exception("JGwServer ERROR");
 		}
 		
-		return list;
+		return resultArray;
 	}
 
 	/**
