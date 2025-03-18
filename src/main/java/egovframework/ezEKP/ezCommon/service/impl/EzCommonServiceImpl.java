@@ -4802,6 +4802,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		for (TenantVO tenantVo : tenantIdList) {
 			
 			ezCommonDAO.insertMealPlanTenantConfig(tenantVo.getTenantId());
+			ezCommonDAO.insertMealPlanBoardInfo(tenantVo.getTenantId());
 		}
 	}
 }

@@ -7231,10 +7231,28 @@
 			tenant_id = #tenantId#
 	</select>
 	
+	<select id="EzCommonDAO.checkHasMealPlanBoard" parameterClass="Integer" resultClass="String">
+		SELECT
+			count(*)
+		FROM
+			tbl_board_boardinfo
+		WHERE
+			boardid = '{MMMMMMMM-MMMM-MMMM-MMMM-MMMMMMMMMMMM}'
+		AND
+			tenant_id = #tenantId#
+	</select>
+	
 	<insert id="EzCommonDAO.insertUseMealPlan" parameterClass="Integer">
 		INSERT INTO TBL_TENANT_CONFIG
 			(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
 		VALUES
 			(#tenantId#, 'useMealPlan', 'YES', '식단 사용 여부', '식단 사용 여부', '2025-02-05', '게시판')
+	</insert>
+	
+	<insert id="EzCommonDAO.insertMealPlanBoard" parameterClass="Integer">
+		INSERT INTO TBL_BOARD_BOARDINFO
+				(BOARDID, BOARDNAME, BOARDNAME2, BOARDNAME3, BOARDNAME4, TREEVIEWORDER, BOARDLEVEL, PARENTBOARDID, BOARDDESCRIPTION, ITEMEXPIRES, ATTACHSIZELIMIT, REPLYNOTIFY, BOARDGROUPID, ALERTPOSTITEM, GUBUN, URL, DELETEAFTER, BOARDCOLOR, BOARDNO, PORTLET, TENANT_ID, COMPANYID)
+		VALUES
+		    ('{MMMMMMMM-MMMM-MMMM-MMMM-MMMMMMMMMMMM}', '식단', 'MealPlan', '献立表', '菜单',  -2, 0, 'None', NULL, 0, NULL, 0, NULL, 0, 0, NULL, 0, NULL, 0, 'N', #v_TENANTID#, 'Top')
 	</insert>
 </sqlMap>
