@@ -2944,7 +2944,7 @@
 					<%-- 2024-06-07 전인하 - 기록물대장 > 하위부서 선택 드롭다운 --%>
                     <c:if test="${underDeptFlag eq 'TRUE'}">
                         <li style="vertical-align: middle; float:right">
-                            <select id="rec_underDept" name="rec_underDept" style="max-width:300px;" onchange="onSelect_Year(this);">
+                            <select id="rec_underDept" name="rec_underDept" style="max-width:200px;" onchange="onSelect_Year(this);">
                                 <option value="default" selected><spring:message code='ezApprovalG.underDept.jih001'/></option>
                             </select>
                         </li>
