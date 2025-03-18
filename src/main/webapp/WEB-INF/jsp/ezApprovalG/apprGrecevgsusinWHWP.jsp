@@ -356,6 +356,8 @@
 			
 			        getReceiveDocInfo();
 			        
+                	document.getElementById("btnAddSepAttach").style.display = "";
+                	
 			        if (nonElecRec == "Y") {
 				        getNonElecInfoSusinInit();
 	                	document.getElementById("btnAddSepAttach").style.display = "none";
