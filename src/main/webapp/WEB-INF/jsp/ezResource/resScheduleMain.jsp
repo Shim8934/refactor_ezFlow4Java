@@ -55,6 +55,9 @@
 			  cursor: pointer;
 			  text-align: center;
 			}		
+			.mainmenuTab {
+				margin : 0px 15px 11px 15px;
+			}
 		</style>
 		<script type="text/javascript">
 		var timeZoneStr = "${timeZoneStr}";
