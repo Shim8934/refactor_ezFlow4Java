@@ -2767,7 +2767,30 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             put("COLUMN", "TITLE");     // 문서제목
             put("TYPE_MYSQL", "VARCHAR(1020)"); put("TYPE_ORACLE", "NVARCHAR2(510)");
         }});
-        
+        // 2025-02-19 전인하 - 요약전 mht 파일 저장 기능 추가 _ 진행중 문서
+		test.add(new HashMap<String, Object>(){{ 
+			put("TABLE","TBL_EXPAPRDOCINFO");
+			put("COLUMN", "SUMMARYPATH");
+			put("TYPE_MYSQL", "VARCHAR(140)"); put("TYPE_ORACLE", "NVARCHAR2(140)");
+			put("AFTER_MYSQL", "DEFAULT NULL COMMENT '요약전 mht파일이 저장되는 경로정보'"); 
+            put("AFTER_ORACLE", "DEFAULT NULL");
+		}});
+        // 2025-02-19 전인하 - 요약전 mht 파일 저장 기능 추가 _ 완료 문서
+		test.add(new HashMap<String, Object>(){{ 
+			put("TABLE","TBL_EXPENDAPRDOCINFO");
+			put("COLUMN", "SUMMARYPATH");
+			put("TYPE_MYSQL", "VARCHAR(140)"); put("TYPE_ORACLE", "NVARCHAR2(140)");
+			put("AFTER_MYSQL", "DEFAULT NULL COMMENT '요약전 mht파일이 저장되는 경로정보'"); 
+            put("AFTER_ORACLE", "DEFAULT NULL");
+		}});
+        // 2025-02-19 전인하 - 요약전 mht 파일 저장 기능 추가 _ 진행중 문서
+		test.add(new HashMap<String, Object>(){{ 
+			put("TABLE","TBL_TMPEXPAPRDOCINFO");
+			put("COLUMN", "SUMMARYPATH");
+			put("TYPE_MYSQL", "VARCHAR(140)"); put("TYPE_ORACLE", "NVARCHAR2(140)");
+			put("AFTER_MYSQL", "DEFAULT NULL COMMENT '요약전 mht파일이 저장되는 경로정보'"); 
+            put("AFTER_ORACLE", "DEFAULT NULL");
+		}});
 		for (Map<String, Object> map : test) {
 			ezCommonDAO.alterTableAddColumns(map);
         }

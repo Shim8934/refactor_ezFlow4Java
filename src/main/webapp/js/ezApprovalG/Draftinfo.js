@@ -222,7 +222,7 @@ function MakeDocInfo() {
     createNodeAndInsertText(xmlpara, objNode, "tbItemName2", document.getElementById("tbItemName2").value);
     createNodeAndInsertText(xmlpara, objNode, "pkeeperiodvaltemp", pkeeperiodvaltemp);
     createNodeAndInsertText(xmlpara, objNode, "DOCID", pDocID);
-    createNodeAndInsertText(xmlpara, objNode, "SUMMARY", document.getElementById("taSummery").value);
+    // createNodeAndInsertText(xmlpara, objNode, "SUMMARY", document.getElementById("taSummery").value);
     
     return xmlpara;
 }
@@ -265,10 +265,8 @@ function getdocinfolist(i) {
     document.getElementById("tbItemCode").value = pItemCode;
     document.getElementById("tbItemName").value = pItemName;
     document.getElementById("tbItemName2").value = pItemName2;
-
-    //요약을 넣어야됨
-    document.getElementById("taSummery").value = vSummery;
-//    GetExtraDocInfo();
+    // document.getElementById("taSummery").value = vSummery;
+    //    GetExtraDocInfo();
     // 2023-08-24 조수빈 - 문서옵션의 키워드에 기존 값이 없을 경우 undifined로 출력되는 문제 처리를 위해 변경.
     document.querySelector("input[name=keyword]").value = pkeyword ? pkeyword : "";
 }

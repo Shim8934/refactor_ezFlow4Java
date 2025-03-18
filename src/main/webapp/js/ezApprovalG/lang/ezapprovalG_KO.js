@@ -1194,3 +1194,10 @@ var ezApproval_headerHide02 = "헤더 펼치기";
 /* 2024-12-23 이가은 - 전자결재 일괄배부 기능 추가 */
 var ezApproval_allBeabu01 = "일괄배부를 진행하시겠습니까?";
 var ezApproval_allBeabu02 = "합의문이나 회송된 문서는 대상에서 제외됩니다.";
+
+/* 전자결재 요약전 에디터 기능 */
+var strLangJIH_Summary01 = "요약전 저장이 완료되었습니다.";
+var strLangJIH_Summary02 = "내용이 비어있는 요약전을 저장할 수 없습니다.";
+var strLangJIH_Summary03 = "잘못된 접근입니다.";
+var strLangJIH_Summary04 = "요약전을 불러올 수 없습니다.";
+var strLangJIH_Summary05 = "요약전 정보";

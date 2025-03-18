@@ -1577,7 +1577,7 @@
 			                ret[19] = SelectSingleNodeValueNew(docinfo, "PARAMETER/psecuritylevelvaltemp");
 			                ret[20] = SelectSingleNodeValueNew(docinfo, "PARAMETER/pkeeperiodvaltemp");
 		                }
-		                ret[9] = document.getElementById("taSummery").value;
+		                // ret[9] = document.getElementById("taSummery").value;
 
 		                if (approvalFlag == "G") {
 			                ret[10] = getdocdisplay();
@@ -2030,7 +2030,7 @@
 		        SummaryFlag = false;
 		        var rtnVal = new Array();
 		        initdatepicker();
-		        document.getElementById("taSummery").value = "";
+		        // document.getElementById("taSummery").value = "";
 
 		        if (vSecurity.trim() == "" || vSecurity.trim() == "999")
 		            document.getElementById("selSecLevel").options[0].selected = true;
@@ -2041,7 +2041,7 @@
 		            document.getElementById("AprUrgency").checked = true;
 		        else
 		            document.getElementById("AprUrgency").checked = false;
-		        if (vSummery.trim() != "") document.getElementById("taSummery").value = vSummery;
+		        // if (vSummery.trim() != "") document.getElementById("taSummery").value = vSummery;
 
 		        if (vdocdisplay.trim() != "")
 		            setdocdisplay(vdocdisplay);
@@ -2104,7 +2104,7 @@
 		        else
 		            rtnVal[1] = "N";
 
-		        rtnVal[2] = document.getElementById("taSummery").value;
+		        // rtnVal[2] = document.getElementById("taSummery").value;
 		        rtnVal[3] = getdocdisplay();
 		        rtnVal[4] = getPublicFlag();
 
@@ -2170,9 +2170,7 @@
 	                    document.getElementById("tbItemCode").value = pItemCode;
 	                    document.getElementById("tbItemName").value = pItemName;
 	                    document.getElementById("tbItemName2").value = pItemName2;
-
-						//요약 넣어야됨
-						document.getElementById("taSummery").value = vSummery;
+						// document.getElementById("taSummery").value = vSummery;
 	                }
 	            }
 	        }
@@ -3702,7 +3700,7 @@
 						</td>
 					</tr>
 				</table>
-				<h2 class="h2_dot" style="margin-left: 5px;">대민공개</h2>
+				<h2 class="h2_dot" style="margin-left: 5px; margin-top: 15px;">대민공개</h2>
 				<table class="content" style="margin-left: 3px;">
 		            <tr>
 		                <th><spring:message code='ezApprovalG.kes06'/> &nbsp;&nbsp;&nbsp;</th>
@@ -3795,9 +3793,10 @@
 		                </td>
 		            </tr>					
 				</table>
-
-		        <h2 class="h2_dot"><spring:message code='ezApprovalG.t1203'/></h2>
-		        <textarea id="taSummery" name="taSummery" style="HEIGHT: 120px; WIDTH: 99.7%; resize:none; box-sizing: border-box; -moz-box-sizing: border-box; margin-left:3px;"></textarea>
+				<%--
+		            <h2 class="h2_dot"><spring:message code='ezApprovalG.t1203'/></h2>
+		            <textarea id="taSummery" name="taSummery" style="HEIGHT: 120px; WIDTH: 99.7%; resize:none; box-sizing: border-box; -moz-box-sizing: border-box; margin-left:3px;"></textarea>
+                --%>
 		    </div>
 	    </c:if>
 	    
@@ -3884,15 +3883,13 @@
 		                    <td colspan="2">
 		                        <h2 class="h2_dot"><spring:message code='ezApproval.t339'/></h2>
 		                    </td>
-		                </tr> --%>
+		                </tr>
 		                <tr>
 		                	<th><spring:message code='ezApproval.t339'/></th>
 		                    <td>		                    	
-		                        <!-- <div class="nobox"> -->
 		                            <textarea id="taSummery" name="taSummery" style="HEIGHT: 345px; WIDTH: 99.7%; resize:none; box-sizing: border-box; -moz-box-sizing: border-box; margin: 2px 2px 2px 2px"></textarea>
-		                        <!-- </div> -->
 		                    </td>
-		                </tr>
+		                </tr> --%>
 		            </table>
 		        </td>
 		    </div>

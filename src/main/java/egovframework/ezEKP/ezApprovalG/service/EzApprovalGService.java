@@ -16,6 +16,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGOutOfOfficeInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGProxyVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGReceiveDocVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGSummaryVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSusinProcessInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO;
@@ -1018,4 +1019,16 @@ public interface EzApprovalGService {
 	
 	// 2024-12-19 이가은 - 전자결재 일괄배부 로직
     public String setBebuAll(Document xmlDom, String dirPath, String companyID, String lang, int tenantID, String offSet, LoginVO userInfo, String curDocNum) throws Exception;
+
+    public ApprGSummaryVO getSummaryDB(String docID, String companyID, int tenantID, String mode) throws Exception;
+    
+    public String getSummaryFileContent(ApprGSummaryVO summary) throws Exception;
+    
+    public void saveSummaryDB(ApprGSummaryVO summary, String mode) throws Exception;
+    
+    public String saveSummaryFileContent(ApprGSummaryVO summary, String summaryMhtStr, String mode) throws Exception;
+    
+    public void deleteSummaryFile(String docID, String companyID, int tenantID) throws Exception;
+    
+    public String copySummary(ApprGSummaryVO summary, String newDocID, String mode) throws Exception;
 }

@@ -205,6 +205,36 @@ function addLineInfo(DocID, pFlag) {
     return rtnString;
 }
 
+function summaryForPrint(DocID, pFlag) {
+    var rowidx, rtnString, colidx;
+    var result = "";
+    
+	if (pFlag.toUpperCase() == "APR" || pFlag.toUpperCase() == "ING") {
+		pFlag = "APR";
+	} else {
+		pFlag = "END";
+	}
+	
+	$.ajax({
+		type : "GET",
+		async : false,
+		url : "/ezApprovalG/printContentApprGSummary.do",
+		data : {
+			docID : DocID,
+			mode  : pFlag
+		},
+		success: function(xml){
+            var path = xml;
+            
+            var summaryContentHtml = ConvertMHTtoHTML(path);
+            var tempXML = loadXMLString(summaryContentHtml);
+            var XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
+            result = getNodeText(XmlBodyDATA);
+		}        			
+	});
+    return "<TR><TD>" + result + "</TD></TR>";
+}
+
 var temptextOpi;
 var temptextAttatch;
 var tempDocID;
@@ -246,6 +276,12 @@ function getdetail(DocID, pFlag) {
         rtnVal = rtnVal + addLineInfo(DocID, pFlag);
         rtnVal = rtnVal + "</table>";
     }
+    if (ret[3] == "Y") {
+        rtnVal = rtnVal + "<table style='font-family:" + strLangHSBPR01 + "; font-size:9pt; BORDER-COLLAPSE: collapse; width:625px ; margin-left:11px'>";
+        rtnVal = rtnVal + "<TR><TD style='height:30px; padding-top:10px' colspan='7'><P>" + "▶ " + strLang1149 + " ◀" + "</P></TD></TR>";
+        rtnVal = rtnVal + summaryForPrint(DocID, pFlag); // 요약전정보 추출
+        rtnVal = rtnVal + "</table>";
+    }
 
     return rtnVal;
 }
@@ -254,7 +290,7 @@ var ezprtquestion_cross_dialogArguments = new Array();
 /**
  * [인쇄]
  * 범위 옵션 화면 출력
- * ex) 의견정보, 첨부정보, 결재선정보
+ * ex) 의견정보, 첨부정보, 결재선정보, 요약전정보
  * */
 function OpenQuestionUI() {
     var parameter = "";
@@ -297,6 +333,12 @@ function OpenQuestionUI_Complete(ret) {
         rtnVal = rtnVal + "<table style='font-family:" + strLangHSBPR01 + "; font-size:9pt; BORDER-COLLAPSE: collapse; width:625px ; margin-left:11px'>";
         rtnVal = rtnVal + "<TR><TD style='height:30px; padding-top:10px' colspan='7'><P>" + "▶ " + strLang1149 + " ◀" + "</P></TD></TR>";
         rtnVal = rtnVal + addLineInfo(tempDocID, temppFlag);
+        rtnVal = rtnVal + "</table>";
+    }
+    if (ret[3] == "Y") {
+        rtnVal = rtnVal + "<table style='font-family:" + strLangHSBPR01 + "; font-size:9pt; BORDER-COLLAPSE: collapse; width:625px ; margin-left:11px'>";
+        rtnVal = rtnVal + "<TR><TD style='height:30px; padding-top:10px' colspan='7'><P>" + "▶ " + strLangJIH_Summary05 + " ◀" + "</P></TD></TR>";
+        rtnVal = rtnVal + summaryForPrint(tempDocID, temppFlag);// 요약전정보 추출
         rtnVal = rtnVal + "</table>";
     }
     

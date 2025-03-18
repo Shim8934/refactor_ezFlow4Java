@@ -2343,6 +2343,7 @@ function SaveTMPDocInfo(Saveflag, idx) {
         }
         
         createNodeAndInsertText(xmlpara, objNode, "SUMMARY", parent.pSummery);
+        createNodeAndInsertText(xmlpara, objNode, "SUMMARYPATH", parent.pSummaryPath);
         createNodeAndInsertText(xmlpara, objNode, "SECURITYAPPROVAL", parent.tempSecurityDate);
         createNodeAndInsertText(xmlpara, objNode, "WRITERNAME2", arr_userinfo[12]);
         createNodeAndInsertText(xmlpara, objNode, "WRITERJOBTITLE2", arr_userinfo[14]);
