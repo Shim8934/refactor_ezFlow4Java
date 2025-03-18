@@ -3609,6 +3609,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 					}
 					
 					file = null;
+					if(realFileNames == null || realFileNames.isEmpty()){
+						fileName = filePath2.replace(strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile", "").substring(40);
+					}
 				} else { // strType : PHOTO
 					File file = new File(realPath + commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", tenantID)  + commonUtil.separator + tempAttachmentPath.split("/")[2]);
 					fileSize = file.length();
@@ -3629,8 +3632,10 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 						file.delete();
 					}
 				}
-				
-				fileName = commonUtil.detectPathTraversal(realFileNames.split("\\|")[i]);
+
+				if(realFileNames != null && !realFileNames.isEmpty()){
+					fileName = commonUtil.detectPathTraversal(realFileNames.split("\\|")[i]);
+				}
 //				// 2018.07.05 - KLIB - ezd 확장자 없애기
 //				if (fileName.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
 //					fileName = fileName.substring(0, fileName.lastIndexOf("."));
