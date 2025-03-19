@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezBoard.web;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URLDecoder;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -22,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -2022,5 +2024,146 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 	}
 	
 //////////////////////////////////////관리자단 게시판 트리캐시 일괄생성 코드 완료 //////////////////////////////////////
+
+	/**
+	 * 인사연동 > 부서생성 - 해당 API 호출 시 부서게시판 하위에 부서게시판 생성 로직
+	 */
+	@RequestMapping(value = "/ezConn/ezBoard/makeDeptBoard.do", method = RequestMethod.POST)
+	@ResponseBody
+	public JSONObject makeDeptBoard(HttpServletRequest request) throws Exception {
+		logger.debug("makeDeptBoard started");
+
+		JSONObject result;
+		Map<String, Object> resultMap = new HashMap<>();
+		String[] deptArr;
+		
+		String tenant = request.getParameter("tenantID");
+		String deptID = request.getParameter("deptID"); // 부서아이디 (구분자 ,)
+		String companyID = request.getParameter("companyID");
+		
+		if (StringUtils.isBlank(tenant) || StringUtils.isBlank(deptID) || StringUtils.isBlank(companyID)) {
+			resultMap.put("status", "error");
+			resultMap.put("message", "PARAM_ERROR");
+
+			result = new JSONObject(resultMap);
+			return result;
+		} else {
+			int tenantID = Integer.parseInt(tenant);
+			deptArr = deptID.split(",");
+
+			LoginVO user = new LoginVO();
+			user.setLang("");
+
+			// API 호출 시 부서게시판 {BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB} 이 존재하는지 확인 없으면 생성
+			String deptBoardID = "{BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB}";
+			BoardPropertyVO deptBoardProperty = ezBoardService.getBoardProperty(deptBoardID, tenantID);
+			BoardPropertyVO boardPropertyVO = new BoardPropertyVO();
+
+			if (deptBoardProperty == null) {
+				try {
+					boardPropertyVO.setBoardGroupName("부서게시판");
+					boardPropertyVO.setBoardGroupName2("Dept BoardItem");
+					boardPropertyVO.setBoardGroupName3("部署掲示板");
+					boardPropertyVO.setBoardGroupName4("部门公告板");
+					boardPropertyVO.setAccessID("NONE");
+					boardPropertyVO.setCompanyID(companyID);
+					boardPropertyVO.setTenantID(tenantID);
+					boardPropertyVO.setLoginVO(user);
+					boardPropertyVO.setBoardGroupID(deptBoardID);
+					boardPropertyVO.setGuBun("0");
+					ezBoardAdminService.createBoardGroup(boardPropertyVO);
+				} catch (SQLException e) {
+					logger.error(e.getMessage());
+					resultMap.put("status", "error");
+					resultMap.put("message", "CREATE_GROUP_ERROR");
+					result = new JSONObject(resultMap);
+					return result;
+				}
+			}
+			
+			List<Map<String, Object>> addDeptlist = new ArrayList<>();
+			for (String deptCn : deptArr) {
+				try {
+					BoardPropertyVO boardPropertyVO2 = new BoardPropertyVO();
+					OrganDeptVO deptInfo = ezOrganAdminService.getDeptDisplayNm(deptCn, tenantID);
+
+					if (deptInfo == null) {
+						resultMap.put("status", "error");
+						resultMap.put("message", "DEPT_ERROR");
+
+						result = new JSONObject(resultMap);
+						return result;
+					}
+					
+					String boardID = "{" + ezBoardAdminService.getNewGuid() + "}";
+
+					boardPropertyVO2.setBoardID(boardID);
+					boardPropertyVO2.setBoardName(deptInfo.getDisplayName());
+					boardPropertyVO2.setBoardName2(deptInfo.getDisplayName2());
+					boardPropertyVO2.setBoardName3(deptInfo.getDisplayName2());
+					boardPropertyVO2.setBoardName4(deptInfo.getDisplayName2());
+					boardPropertyVO2.setAccessID(deptCn);
+					boardPropertyVO2.setAccessName(deptInfo.getDisplayName());
+					boardPropertyVO2.setAccessName2(deptInfo.getDisplayName2());
+					boardPropertyVO2.setCompanyID(companyID);
+					boardPropertyVO2.setTenantID(tenantID);
+					boardPropertyVO2.setParentBoardID(deptBoardID);
+					boardPropertyVO2.setBoardGroupID(deptBoardID);
+					boardPropertyVO2.setType("DEPT");
+					boardPropertyVO.setGuBun("0");
+
+					ezBoardAdminService.createBoard(boardPropertyVO2);
+					Map<String, Object> map = new HashMap<>();
+					map.put("boardID", boardID);
+					map.put("accessID", deptCn);
+					addDeptlist.add(map);
+				} catch (SQLException e) {
+					logger.error(e.getMessage());
+					resultMap.put("status", "error");
+					resultMap.put("message", "CREATE_BOARD_ERROR");
+					result = new JSONObject(resultMap);
+					return result;
+				}
+			}
+
+			for (Map<String, Object> info : addDeptlist) {
+				List<BoardPropertyVO> accessList = ezBoardAdminService.getBoardAccessList((String) info.get("boardID"), "N", companyID, tenantID);
+				for (BoardPropertyVO access : accessList) {
+					if ((access.getAccessID()).equals(info.get("accessID"))) {
+						
+						Map<String, Object> map = new HashMap<>();
+						map.put("v_COMPANYID", companyID);
+						map.put("v_TENANTID", tenantID);
+						map.put("v_pBoardID", info.get("boardID"));
+						map.put("v_pAccessID", access.getAccessID());
+						map.put("v_pAccessName", access.getAccessName());
+						map.put("v_pParentBoardID",	access.getParentBoardID());
+						map.put("v_pInherit", access.getInherit_FG());
+						map.put("v_pAdmin", "false");
+						map.put("v_pAccess", access.getAccess_());
+						map.put("v_pListView", access.getListView_FG());
+						map.put("v_pRead", access.getRead_FG());
+						map.put("v_pWrite", access.getWrite_FG());
+						map.put("v_pReply", access.getReply_FG());
+						map.put("v_pDelete", access.getDelete_FG());
+						map.put("v_pPostNotice", access.getPostNotice());
+						map.put("v_pAccessName2", access.getAccessName2());
+						map.put("v_pBoardGroupACL", access.getBoardGroupACL());
+						map.put("isAllGroupBoard", access.getIsAllGroupBoard());
+						map.put("v_pType", "DEPT");
+
+						// 상위 그룹게시판 (부서게시판) 권한 하위게시판 따라가도록 설정
+						ezBoardAdminService.saveACL(map);
+					}
+				}
+			}
+		}
+		
+		logger.debug("makeDeptBoard ended");
+		resultMap.put("status", "ok");
+		resultMap.put("message", "SUCCESS");
+		result = new JSONObject(resultMap);
+		return result;
+	}
 	
 }
