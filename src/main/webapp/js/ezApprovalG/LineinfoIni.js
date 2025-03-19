@@ -1247,7 +1247,7 @@ function AddDraftUserFirst() {
     	}
     }
     pparsingXML += "</CELL><CELL>";
-    pparsingXML += "<VALUE>" + strLangAprState1 + "</VALUE>";
+    pparsingXML += "<VALUE>" + strLangAprState2 + "</VALUE>";
     pparsingXML += "</CELL><CELL></CELL></ROW></ROWS></LISTVIEWDATA>";
     return pparsingXML;
 }
