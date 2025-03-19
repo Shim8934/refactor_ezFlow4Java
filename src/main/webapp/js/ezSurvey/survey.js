@@ -3159,8 +3159,8 @@ var SurveyCreate     = function() {
 		
 		divTools.appendChild(atchBtnUl);
 		divHeader.appendChild(divQsContent);
+		divHeader.appendChild(moveBttn);
 		divHeader.appendChild(divTools);
-		divPanel.appendChild(moveBttn);
 		divPanel.appendChild(divHeader);
 		
 		if (qstnAtt) {

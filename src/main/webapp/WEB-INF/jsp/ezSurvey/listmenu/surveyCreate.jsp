@@ -3,7 +3,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
 <!DOCTYPE html>
-<html>
+<html style="height: 100%; overflow: hidden;">
 	<head>
 		<title><spring:message code="ezSurvey.t34"/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -49,7 +49,7 @@
 		</script>
 	</head>
 	
-	<body class="mainbody srvey">
+	<body class="mainbody srvey" style="height: calc(100% - 15px);overflow: hidden;">
 		<h1><spring:message code='ezSurvey.t34'/></h1>
 		
 		<div class="surveyBtn">
@@ -75,8 +75,8 @@
 			<div class="draft-survey" id="draftBttn"><span><spring:message code='ezSurvey.t111'/></span></div>
 		</div>
 		
-		<div id="bodyPanel">
-			<div id="tab1" class="select-tab">
+		<div id="bodyPanel" style="height: calc(100% - 110px); overflow-y: hidden;">
+			<div id="tab1" class="select-tab" style="overflow-y: auto; height: 100%;">
 				<c:choose>
 					<c:when test="${not empty survey}">
 						<jsp:include page="/WEB-INF/jsp/ezSurvey/listmenu/surveyInfomationReuse.jsp"></jsp:include>
@@ -86,13 +86,13 @@
 					</c:otherwise>
 				</c:choose>
 			</div>
-			<div id="tab2" class="hidden-tab">
+			<div id="tab2" class="hidden-tab" style="overflow-y: auto; height: 100%;">
 				<jsp:include page="/WEB-INF/jsp/ezSurvey/listmenu/surveyQuestion.jsp"></jsp:include>
 			</div>
-			<div id="tab3" class="hidden-tab">
+			<div id="tab3" class="hidden-tab" style="overflow-y: auto; height: 100%;">
 				<jsp:include page="/WEB-INF/jsp/ezSurvey/listmenu/surveyLogic.jsp"></jsp:include>
 			</div>
-			<div id="tab4" class="hidden-tab">
+			<div id="tab4" class="hidden-tab" style="overflow-y: auto; height: 100%;">
 				<jsp:include page="/WEB-INF/jsp/ezSurvey/listmenu/surveyPreview.jsp"></jsp:include>
 			</div>
 		</div>
