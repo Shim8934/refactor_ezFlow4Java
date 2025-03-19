@@ -635,7 +635,7 @@
 		            document.getElementById("mainimages").style.display = "none";
 		            document.getElementById("mainimages").src = mainfilename;
 		            document.getElementById("mainimages").name = imagefilename.name;
-		            document.getElementById("MainContent").innerHTML = MakeXMLString(imagefilename.title);
+		            document.getElementById("MainContent").innerHTML = MakeXMLString(imagefilename.title.replaceAll("&apos;", "'"));
 		            //document.getElementById("MainContent").innerHTML = MakeXMLString(imageContentArray[index].title);
 		
 		            imageloding();
@@ -969,7 +969,7 @@
 		            for(var i = 0; i < ImageCount; i++)
 		            {
 		                var imgSrc = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + encodeURI(pBoardID) + "&fileName=" + encodeURI(result[i].split('/')[7]);
-		                document.getElementById("viewboxlist").innerHTML += "<img src='" + imgSrc + "' style='border:0' title='" + MakeXMLString(imagecontet[i]) + "' id='image" + i + "' name='" + imageid[i] + "' style='cursor:pointer;' onclick='ImageMain(this)' onmouseover='imagemouseover(this)' onmouseout='imagemouseout(this)'/>";
+		                document.getElementById("viewboxlist").innerHTML += "<img src='" + imgSrc + "' style='border:0' title='" + MakeXMLString(imagecontet[i].replaceAll("'" , "&apos;")) + "' id='image" + i + "' name='" + imageid[i] + "' style='cursor:pointer;' onclick='ImageMain(this)' onmouseover='imagemouseover(this)' onmouseout='imagemouseout(this)'/>";
 		                if (CrossYN())
 		                    document.getElementById("image" + i).style.opacity = "0.35";
 		                else
