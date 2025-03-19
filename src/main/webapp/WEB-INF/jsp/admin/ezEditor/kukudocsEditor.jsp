@@ -74,6 +74,8 @@
 
 	        function CellCheckField(a, b) {
 	            if (parent.Attribute_Write != undefined) {
+                	parent.Attribute_Write("");
+                	
 	                var selectE = kukudocsEditor.GetCurrentElement("TD");
 	
 	                if (Array.isArray(selectE)) {
@@ -85,6 +87,7 @@
 	                if (selectE != null && selectE.tagName == "TD") {
 	                    parent.Attribute_Write(GetAttribute(selectE, "id"));
 	                }
+	                
 	            }
 	        }
 			

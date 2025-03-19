@@ -42,6 +42,7 @@
 		
 		    function dext_mouse_event(type, event, currElem) {
 		        if (type == "mousedown" && parent.Attribute_Write != undefined) {
+		        	parent.Attribute_Write("");
 		            var parentTag = currElem;
 		            if (parentTag.tagName == "TD") {
 		                parent.Attribute_Write(GetAttribute(parentTag, "id"));
