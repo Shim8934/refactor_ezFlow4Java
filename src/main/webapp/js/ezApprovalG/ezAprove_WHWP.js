@@ -2198,8 +2198,9 @@ function UpdateDocHistory(pHtml, isBeforeDoc, beforeDocURL) {
         
         if (xmlhttp != null && xmlhttp.readyState == 4) {
          	 if (xmlhttp.status == 200) {
-         		returnURL = xmlhttp.responseText;
-         	 } else {
+				returnURL = xmlhttp.responseText;
+				snapshotCode = getSnapshotCode();
+			 } else {
          		 var pAlertContent = strLang89;
                 OpenAlertUI(pAlertContent);
          	 }
