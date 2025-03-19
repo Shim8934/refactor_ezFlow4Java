@@ -38,6 +38,7 @@
 			) ttn
 		LEFT JOIN tbl_dev_master tdm
 		ON ttn.userid = tdm.userid
+		and ttn.tenantid = tdm.tenantid
 	</select>
 
 	<delete id="MTalkDao.deleteNotifications">

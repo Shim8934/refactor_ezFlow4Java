@@ -3175,7 +3175,28 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.alterUseUpperDeptBox");
 		}
 	}
-	
+
+	/* 2025-03-10 유지아 - 톡알림 테이블 tenantId추가 */
+	public void alterTalkNotiTenant() {
+		try {
+			select(("EzCommonDAO.checkTalkNotiTenant"));
+		} catch (Exception e) {
+			logger.debug("talk_tblnotification tenantId column doesn't exist. creating the column...");
+
+			update("EzCommonDAO.alterTalkNotiTenant");
+		}
+	}
+
+	public void alterServerNameMain() {
+		try {
+			select(("EzCommonDAO.checkServerNameMain"));
+		} catch (Exception e) {
+			logger.debug("tbl_tenant_servername mainyn column doesn't exist. creating the column...");
+
+			update("EzCommonDAO.alterServerNameMain");
+		}
+	}
+
 	public void alterBodyHTMLToConnData() {
 		try {
 			select(("EzCommonDAO.checkBodyHTMLToConnData"));
@@ -3354,4 +3375,14 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createTblStatMenuDeptMonth");
 		}
 	}
+
+	public void insertUseSaasYN() {
+		String propertyValue = (String) select("EzCommonDAO.checkUseSaasYN");
+
+		if (propertyValue == null) {
+			logger.debug("useSaasYN doesn't exist. insert data...");
+			insert("EzCommonDAO.insertUseSaasYN");
+		}
+	}
+
 }

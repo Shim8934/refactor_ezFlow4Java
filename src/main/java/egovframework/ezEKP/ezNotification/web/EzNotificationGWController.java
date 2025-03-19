@@ -253,6 +253,12 @@ public class EzNotificationGWController {
 					}
 					
 					if (useMobilePushCompany && useMobilePushUser && !mainType.equals("MAIL")) {
+						String useSaas = ezCommonService.getTenantConfig("useSaas", info.getTenantId());
+						if ("Y".equalsIgnoreCase(useSaas)){
+							String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
+							recipientId = new StringBuilder(recipientId).append("@").append(domainName).toString();
+						}
+
 						boolean mobilePushSuccess = ezEmailService.addEzTalkNotification(recipientId, senderName, pushNotiContent, mainTypeForMobilePush, subTypeForMobilePush, linkUrlMobile);
 						
 						if (mobilePushSuccess) {

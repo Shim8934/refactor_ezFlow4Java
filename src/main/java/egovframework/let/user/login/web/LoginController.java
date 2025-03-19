@@ -753,9 +753,16 @@ public class LoginController {
 	
 							// jgw-server 에 talk_tblnotification 넣어서 push 메시지 전달
 							String linkUrl = "/mobile/user/login/mFidoAuthentication.do?" + "fidoSessionId=" + fidoSessionId + "&encryptId=" + loginVO.getEncryptID() + "&encryptPass=" + loginVO.getEncryptPass();
-	
+
+							String userId = loginVO.getId();
+							String useSaas = ezCommonService.getTenantConfig("useSaas", tenantId);
+							if ("Y".equalsIgnoreCase(useSaas)){
+								String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
+								userId = new StringBuilder(loginVO.getId()).append("@").append(domainName).toString();
+							}
+
 							boolean insertTalkNotification = ezEmailService.addEzTalkNotification(
-									loginVO.getId(),
+									userId,
 									egovMessageSource.getMessage("main.fido010", locale),
 									egovMessageSource.getMessage("main.fido011", locale),
 									"23", "", linkUrl);

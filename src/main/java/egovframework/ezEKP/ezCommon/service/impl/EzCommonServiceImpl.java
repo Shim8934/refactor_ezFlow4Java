@@ -4776,7 +4776,17 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void alterUseUpperDeptBox() throws Exception {
         ezCommonDAO.alterUseUpperDeptBox();
     }
-    
+
+    /* 2025-03-10 유지아 - 톡알림 테이블 tenantId추가 */
+    @Override
+    public void alterTalkNotiTenant() throws Exception {
+        ezCommonDAO.alterTalkNotiTenant();
+    }
+    @Override
+    public void alterServerNameMain() throws Exception {
+        ezCommonDAO.alterServerNameMain();
+    }
+
     @Override
     public void alterBodyHTMLToConnData() throws Exception {
         ezCommonDAO.alterBodyHTMLToConnData();
@@ -4833,5 +4843,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     @Override
     public void createTblStatMenu() {
         ezCommonDAO.createTblStatMenu();
+    }
+
+    public void insertUseSaasYN() {
+        ezCommonDAO.insertUseSaasYN();
     }
 }

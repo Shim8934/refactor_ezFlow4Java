@@ -2067,6 +2067,7 @@ CREATE TABLE `talk_tblnotification` (
   `EtcData` varchar(200) DEFAULT NULL,
   `LinkURL` varchar(512) DEFAULT NULL,
   `ShowMsg` varchar(128) DEFAULT NULL,
+  `TenantId` mediumint(5) NOT NULL,
   PRIMARY KEY (`ItemSeq`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -12554,6 +12555,7 @@ DROP TABLE IF EXISTS `tbl_tenant_servername`;
 CREATE TABLE `tbl_tenant_servername` (
   `SERVER_NAME` varchar(400) NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
+  `MAINYN` varchar(10) DEFAULT 'N',
   PRIMARY KEY (`SERVER_NAME`(255)),
   KEY `FK_TBL_TENANT_SERVERNAME_idx` (`TENANT_ID`),
   CONSTRAINT `FK_TBL_TENANT_SERVERNAME` FOREIGN KEY (`TENANT_ID`) REFERENCES `tbl_tenant` (`TENANT_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION
@@ -15246,6 +15248,280 @@ FROM
             a.TITLE) USER) v
 WHERE
 	v.TYPE = 'ADDJOB';
+
+-- ezTalk 뷰 제공시 멀티테넌트를 지원을 위해 tenant_id 같이 붙여서 넘기도록 수정
+-- -- V_USERMASTER
+-- CREATE OR REPLACE VIEW V_USERMASTER AS
+-- SELECT
+--	v.USER_ID AS USER_ID,
+--    v.EMP_NO AS EMP_NO,
+--	v.NAME AS NAME,
+--	v.NAME2 AS NAME2,
+--	v.EMAIL AS EMAIL,
+--	v.DEPT_ID AS DEPT_ID,
+--	v.DEPT_NAME AS DEPT_NAME,
+--	v.DEPT_NAME2 AS DEPT_NAME2,
+--	v.TITLE AS TITLE,
+--	v.TITLE2 AS TITLE2,
+--	v.ROLE AS ROLE,
+--	v.ROLE2 AS ROLE2,
+--	v.POSITION AS POSITION,
+--	v.POSITION2 AS POSITION2,
+--	v.TEL AS TEL,
+--	v.MOBILE AS MOBILE,
+--	v.PROFILE_IMAGE AS PROFILE_IMAGE,
+--	v.JOB AS JOB,
+--	v.COMP_ID AS COMP_ID,
+--	v.COMP_NAME AS COMP_NAME,
+--	v.COMP_NAME2 AS COMP_NAME2,
+--	v.ORDER_BY AS ORDER_BY,
+--	v.UPDATE_DATE AS UPDATE_DATE,
+--	v.PHOTO_UPDATEDT AS PHOTO_UPDATEDT,
+--	v.TENANT_ID AS TENANT_ID,
+--	v.TYPE AS TYPE,
+--	v.SORT_NUM AS SORT_NUM,
+--    ts.SERVER_NAME AS HOSTNAME
+-- FROM
+--	(
+--	SELECT
+--		USER.USER_ID AS USER_ID,
+--        USER.EMP_NO AS EMP_NO,
+--		USER.NAME AS NAME,
+--		USER.NAME2 AS NAME2,
+--		USER.EMAIL AS EMAIL,
+--		USER.DEPT_ID AS DEPT_ID,
+--		USER.DEPT_NAME AS DEPT_NAME,
+--		USER.DEPT_NAME2 AS DEPT_NAME2,
+--		USER.TITLE AS TITLE,
+--		USER.TITLE2 AS TITLE2,
+--		USER.ROLE AS ROLE,
+--        USER.ROLE2 AS ROLE2,
+--		USER.POSITION AS POSITION,
+--		USER.POSITION2 AS POSITION2,
+--		USER.TEL AS TEL,
+--		USER.MOBILE AS MOBILE,
+--		USER.PROFILE_IMAGE AS PROFILE_IMAGE,
+--		USER.JOB AS JOB,
+--		USER.COMP_ID AS COMP_ID,
+--		USER.COMP_NAME AS COMP_NAME,
+--		USER.COMP_NAME2 AS COMP_NAME2,
+--		USER.ORDER_BY AS ORDER_BY,
+--		USER.UPDATE_DATE AS UPDATE_DATE,
+--		USER.PHOTO_UPDATEDT AS PHOTO_UPDATEDT,
+--		USER.TENANT_ID AS TENANT_ID,
+--		USER.TYPE AS TYPE,
+--		ROW_NUMBER() OVER ( PARTITION BY USER.DEPT_ID
+--	ORDER BY
+--		USER.ORDER_BY,
+--		USER.NAME) - 1 AS SORT_NUM
+--	FROM
+--		(
+--		SELECT
+--			concat(a.CN, '@', a.TENANT_ID) AS USER_ID,
+--            a.EXTENSIONATTRIBUTE14 AS EMP_NO,
+--			a.DISPLAYNAME AS NAME,
+--			a.DISPLAYNAME2 AS NAME2,
+--			a.MAIL AS EMAIL,
+--			concat(a.DEPARTMENT, '@', a.TENANT_ID) AS DEPT_ID,
+--			a.DESCRIPTION AS DEPT_NAME,
+--			a.DESCRIPTION2 AS DEPT_NAME2,
+--			a.EXTENSIONATTRIBUTE10 AS TITLE,
+--			a.EXTENSIONATTRIBUTE102 AS TITLE2,
+--			a.EXTENSIONATTRIBUTE10 AS ROLE,
+--            a.EXTENSIONATTRIBUTE102 AS ROLE2,
+--			a.TITLE AS POSITION,
+--			a.TITLE2 AS POSITION2,
+--			a.TELEPHONENUMBER AS TEL,
+--			a.MOBILE AS MOBILE,
+--			a.EXTENSIONATTRIBUTE2 AS PROFILE_IMAGE,
+--			a.INFO AS JOB,
+--			concat(a.PHYSICALDELIVERYOFFICENAME, '@', a.TENANT_ID) AS COMP_ID,
+--			a.COMPANY AS COMP_NAME,
+--			a.COMPANY2 AS COMP_NAME2,
+--			IF(a.EXTENSIONATTRIBUTE15 <> '',
+--			CAST(a.EXTENSIONATTRIBUTE15 AS unsigned),
+--			0) AS ORDER_BY,
+--			a.UPDATEDT AS UPDATE_DATE,
+--			a.PHOTO_UPDATEDT AS PHOTO_UPDATEDT,
+--			a.TENANT_ID AS TENANT_ID,
+--			'USER' AS TYPE
+--		FROM
+--			(tbl_usermaster a
+--		LEFT JOIN tbl_usermaster_retire b ON
+--			(a.CN = b.CN
+--			AND a.TENANT_ID = b.TENANT_ID))
+--		WHERE
+--			b.CN IS NULL
+--			AND a.DEPARTMENT NOT LIKE '%shared_mailbox_%'
+--			AND a.CN <> 'masteradmin'
+--	UNION ALL
+--		SELECT
+--			concat(a.CN, '@', b.TENANT_ID) AS USER_ID,
+--            b.EXTENSIONATTRIBUTE14 AS EMP_NO,
+--			b.DISPLAYNAME AS NAME,
+--			b.DISPLAYNAME2 AS NAME2,
+--			b.MAIL AS EMAIL,
+--			concat(a.DEPTID, '@', b.TENANT_ID) AS DEPT_ID,
+--			b.DESCRIPTION AS DEPT_NAME,
+--			b.DESCRIPTION2 AS DEPT_NAME2,
+--			a.POSITIONCD AS TITLE,
+--			a.POSITIONCD AS TITLE2,
+--            b.EXTENSIONATTRIBUTE10 AS ROLE,
+--            b.EXTENSIONATTRIBUTE102 AS ROLE2,
+--			a.TITLE AS POSITION,
+--			a.TITLE2 AS POSITION2,
+--			b.TELEPHONENUMBER AS TEL,
+--			b.MOBILE AS MOBILE,
+--			b.EXTENSIONATTRIBUTE2 AS PROFILE_IMAGE,
+--			b.INFO AS JOB,
+--			concat(b.PHYSICALDELIVERYOFFICENAME, '@', b.TENANT_ID) AS COMP_ID,
+--			b.COMPANY AS COMP_NAME,
+--			b.COMPANY2 AS COMP_NAME2,
+--			IF(a.ORDERBY <> '',
+--			CAST(a.ORDERBY AS unsigned),
+--			0) AS ORDER_BY,
+--			b.UPDATEDT AS UPDATE_DATE,
+--			b.PHOTO_UPDATEDT AS PHOTO_UPDATEDT,
+--			b.TENANT_ID AS TENANT_ID,
+--			'ADDJOB' AS TYPE
+--		FROM
+--			(tbl_addjobmaster a
+--		JOIN tbl_usermaster b ON
+--			(a.CN = b.CN
+--			AND a.TENANT_ID = b.TENANT_ID))
+--        ) USER) v
+--    LEFT JOIN tbl_tenant_servername ts
+--        ON v.TENANT_ID = ts.TENANT_ID
+--        AND ts.MAINYN = 'Y'
+-- WHERE
+--	v.TYPE = 'USER';
+--
+-- -- V_DEPTMASTER
+-- CREATE OR REPLACE VIEW V_DEPTMASTER AS
+--    SELECT
+--        concat(tbl_deptmaster.CN, '@', tbl_deptmaster.TENANT_ID) AS DEPT_ID,
+--        tbl_deptmaster.DISPLAYNAME AS NAME,
+--        tbl_deptmaster.DISPLAYNAME2 AS NAME2,
+--        tbl_deptmaster.MAIL AS EMAIL,
+--        case when tbl_deptmaster.EXTENSIONATTRIBUTE1 = 'Top' then 'Top'
+--        else concat(tbl_deptmaster.EXTENSIONATTRIBUTE1, '@', tbl_deptmaster.TENANT_ID)
+--        end as PARENT_ID,
+--        REGEXP_REPLACE(tbl_deptmaster.DEPT_CD_PATH, '([^,]+)', CONCAT('\\1@', tbl_deptmaster.TENANT_ID)) AS DEPT_CD_PATH,
+--        concat(tbl_deptmaster.EXTENSIONATTRIBUTE2, '@', tbl_deptmaster.TENANT_ID) AS COMP_ID,
+--        tbl_deptmaster.EXTENSIONATTRIBUTE3 AS COMP_NAME,
+--        tbl_deptmaster.COMPNM2 AS COMP_NAME2,
+--        IF(tbl_deptmaster.EXTENSIONATTRIBUTE15 <> '',
+--            CAST(tbl_deptmaster.EXTENSIONATTRIBUTE15 AS UNSIGNED),
+--            0) AS ORDER_BY,
+--        tbl_deptmaster.USEFLAG AS USEFLAG,
+--        tbl_deptmaster.UPDATEDT AS UPDATEDT,
+--        tbl_deptmaster.TENANT_ID AS TENANT_ID,
+--        tbl_tenant_servername.server_name AS HOSTNAME
+--    FROM
+--        tbl_deptmaster
+--    LEFT JOIN tbl_tenant_servername
+--        ON tbl_deptmaster.TENANT_ID = tbl_tenant_servername.TENANT_ID
+--        AND tbl_tenant_servername.MAINYN = 'Y'
+--    WHERE
+--        tbl_deptmaster.CN NOT LIKE '%shared_mailbox_%'
+--            AND tbl_deptmaster.CN NOT LIKE '%trash_dept_%'
+--            AND tbl_deptmaster.CN <> 'Top'
+--            AND tbl_deptmaster.DEPT_CD_PATH NOT LIKE '%trash_dept_%';
+
+-- -- V_ADDJOBMASTER
+-- CREATE OR REPLACE VIEW V_ADDJOBMASTER AS
+-- SELECT
+--	v.USER_ID AS USER_ID,
+--    v.EMP_NO AS EMP_NO,
+--	v.NAME AS NAME,
+--	v.DEPT_ID AS DEPT_ID,
+--	v.COMP_ID AS COMP_ID,
+--	v.POSITION AS POSITION,
+--	v.POSITION2 AS POSITION2,
+--	v.ROLE AS ROLE,
+--    v.ROLE2 AS ROLE2,
+--	v.ORDER_BY AS ORDER_BY,
+--	v.UPDATEDT AS UPDATEDT,
+--	v.TENANT_ID AS TENANT_ID,
+--	v.TYPE AS TYPE,
+--	v.SORT_NUM AS SORT_NUM,
+--    ts.SERVER_NAME AS HOSTNAME
+-- FROM
+--	(
+--	SELECT
+--		USER.USER_ID AS USER_ID,
+--        USER.EMP_NO AS EMP_NO,
+--		USER.NAME AS NAME,
+--		USER.DEPT_ID AS DEPT_ID,
+--		USER.COMP_ID AS COMP_ID,
+--		USER.POSITION AS POSITION,
+--		USER.POSITION2 AS POSITION2,
+--		USER.ROLE AS ROLE,
+--        USER.ROLE2 AS ROLE2,
+--		USER.ORDER_BY AS ORDER_BY,
+--		USER.UPDATEDT AS UPDATEDT,
+--		USER.TENANT_ID AS TENANT_ID,
+--		USER.TYPE AS TYPE,
+--		ROW_NUMBER() OVER ( PARTITION BY USER.DEPT_ID
+--	ORDER BY
+--		USER.ORDER_BY,
+--		USER.NAME) - 1 AS SORT_NUM
+--	FROM
+--		(
+--		SELECT
+--			concat(a.CN, '@', a.TENANT_ID) AS USER_ID,
+--            a.EXTENSIONATTRIBUTE14 AS EMP_NO,
+--			a.DISPLAYNAME AS NAME,
+--			concat(a.DEPARTMENT, '@', a.TENANT_ID) AS DEPT_ID,
+--			concat(a.PHYSICALDELIVERYOFFICENAME, '@', a.TENANT_ID) AS COMP_ID,
+--			a.TITLE AS POSITION,
+--			a.TITLE2 AS POSITION2,
+--            a.EXTENSIONATTRIBUTE10 AS ROLE,
+--            a.EXTENSIONATTRIBUTE102 AS ROLE2,
+--			IF(a.EXTENSIONATTRIBUTE15 <> '',
+--			CAST(a.EXTENSIONATTRIBUTE15 AS unsigned),
+--			0) AS ORDER_BY,
+--			a.UPDATEDT AS UPDATEDT,
+--			a.TENANT_ID AS TENANT_ID,
+--			'USER' AS TYPE
+--		FROM
+--			(tbl_usermaster a
+--		LEFT JOIN tbl_usermaster_retire b ON
+--			(a.CN = b.CN
+--			AND a.TENANT_ID = b.TENANT_ID))
+--		WHERE
+--			b.CN IS NULL
+--			AND a.DEPARTMENT NOT LIKE '%shared_mailbox_%'
+--			AND a.CN <> 'masteradmin'
+--	UNION ALL
+--		SELECT
+--			concat(a.CN, '@', a.TENANT_ID) AS USER_ID,
+--            b.EXTENSIONATTRIBUTE14 AS EMP_NO,
+--			b.DISPLAYNAME AS NAME,
+--			concat(a.DEPTID, '@', a.TENANT_ID) AS DEPT_ID,
+--			concat(b.PHYSICALDELIVERYOFFICENAME, '@', b.TENANT_ID) AS COMP_ID,
+--			a.TITLE AS POSITION,
+--			a.TITLE2 AS POSITION2,
+--			a.ROLE AS ROLE,
+--            a.ROLE2 AS ROLE2,
+--			MIN(IF(a.ORDERBY <> '', CAST(a.ORDERBY AS unsigned),0)) AS ORDER_BY,
+--			current_timestamp() AS UPDATEDT,
+--			a.TENANT_ID AS TENANT_ID,
+--			'ADDJOB' AS TYPE
+--		FROM
+--			(tbl_addjobmaster a
+--		JOIN tbl_usermaster b ON
+--			(a.CN = b.CN
+--			AND a.TENANT_ID = b.TENANT_ID))
+--		GROUP BY
+--            a.CN,
+--            a.DEPTID,
+--            a.TITLE) USER) v
+--    LEFT JOIN tbl_tenant_servername ts
+--        ON v.TENANT_ID = ts.TENANT_ID
+--        AND ts.MAINYN = 'Y'
+-- WHERE
+--	v.TYPE = 'ADDJOB';
 
 -- G_USERMASTER
 CREATE OR REPLACE VIEW G_USERMASTER AS

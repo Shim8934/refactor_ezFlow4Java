@@ -19784,10 +19784,21 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 			// useEzTalkNotification이 YES일 때는 ezTalk으로 결재 알림을 보낸다.
 			if (useEzTalkNotification.equals("YES")) {
-				String linkUrl = "/mobile/ezApprovalG/mApproveDoc.do?"
-						+ "pDocID=" + docID + "&pType=" + mode.toUpperCase() + "&pAprMemberSN=2&pMode=APR&companyID=" + companyID; // pAprMemberSN, pMode 파라메터가 확실치 않음. 
-				ezEmailService.addEzTalkNotification(nextUserID, notyStr, docTitle, String.valueOf(notiType.mainType()), String.valueOf(notiType.subType()), linkUrl);
-			}
+
+                String useSaas = ezCommonService.getTenantConfig("useSaas", tenantID);
+                if ("Y".equalsIgnoreCase(useSaas)){
+                    String linkUrl = "/mobile/ezApprovalG/mApproveDoc.do?"
+                            + "pDocID=" + docID + "&pType=" + mode.toUpperCase() + "&pAprMemberSN=2&pMode=APR&companyID=" + companyID; // pAprMemberSN, pMode 파라메터가 확실치 않음.
+                    String domainName = ezCommonService.getTenantConfig("DomainName", tenantID);
+                    String userEmail = new StringBuilder(nextUserID).append("@").append(domainName).toString();
+                    ezEmailService.addEzTalkNotification(userEmail, notyStr, docTitle, String.valueOf(notiType.mainType()), String.valueOf(notiType.subType()), linkUrl);
+                } else {
+                    String linkUrl = "/mobile/ezApprovalG/mApproveDoc.do?"
+                            + "pDocID=" + docID + "&pType=" + mode.toUpperCase() + "&pAprMemberSN=2&pMode=APR&companyID=" + companyID; // pAprMemberSN, pMode 파라메터가 확실치 않음.
+                    ezEmailService.addEzTalkNotification(nextUserID, notyStr, docTitle, String.valueOf(notiType.mainType()), String.valueOf(notiType.subType()), linkUrl);
+                }
+            }
+
 		}
 		logger.debug("sendMsg ended");
 
@@ -33892,10 +33903,21 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					String subject = isPassLine
 							? messageSource.getMessage("ezApprovalG.garm09", userInfo.getLocale()) // 기결재통과
 							: getCode2Name("L06", "002", userInfo.getCompanyID(), userInfo.getLang(), tenantID); // 문서도착
-					String linkUrl = "/mobile/ezApprovalG/mApproveDoc.do?"
-							+ "pDocID=" + docID + "&pType=" + mode.toUpperCase() + "&pAprMemberSN=" + aprSn + "&pMode=" + mode.toUpperCase() + "&companyID=" + orgCompanyID; // pMode 파라메터가 확실치 않음. 
-					boolean result = ezEmailService.addEzTalkNotification(targetUserID, subject, doctitle, String.valueOf(notiType.mainType()), String.valueOf(notiType.subType()), linkUrl);
-					logger.debug("noti send result: {}", result);
+                    String useSaas = ezCommonService.getTenantConfig("useSaas", tenantID);
+                    if ("Y".equalsIgnoreCase(useSaas)){
+                        String linkUrl = "/mobile/ezApprovalG/mApproveDoc.do?"
+                                + "pDocID=" + docID + "&pType=" + mode.toUpperCase() + "&pAprMemberSN=" + aprSn + "&pMode=" + mode.toUpperCase() + "&companyID=" + orgCompanyID; // pMode 파라메터가 확실치 않음.
+                        String domainName = ezCommonService.getTenantConfig("DomainName", tenantID);
+                        String userEmail = new StringBuilder(targetUserID).append("@").append(domainName).toString();
+                        boolean result = ezEmailService.addEzTalkNotification(userEmail, subject, doctitle, String.valueOf(notiType.mainType()), String.valueOf(notiType.subType()), linkUrl);
+                        logger.debug("useSaas noti send result: {}", result);
+                    } else {
+                        String linkUrl = "/mobile/ezApprovalG/mApproveDoc.do?"
+                                + "pDocID=" + docID + "&pType=" + mode.toUpperCase() + "&pAprMemberSN=" + aprSn + "&pMode=" + mode.toUpperCase() + "&companyID=" + orgCompanyID; // pMode 파라메터가 확실치 않음.
+                        boolean result = ezEmailService.addEzTalkNotification(targetUserID, subject, doctitle, String.valueOf(notiType.mainType()), String.valueOf(notiType.subType()), linkUrl);
+                        logger.debug("noti send result: {}", result);
+                    }
+
 				}
 
 				// 통합알림 추가

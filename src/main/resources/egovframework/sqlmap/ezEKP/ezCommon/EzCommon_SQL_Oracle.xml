@@ -6964,7 +6964,39 @@
 		ADD
 			USEUPPERDEPTBOX varchar(4) DEFAULT 'N'
 	</statement>
-	
+
+	<select id="EzCommonDAO.checkTalkNotiTenant" resultClass="String">
+		select
+			TenantId
+		from
+			talk_tblnotification
+		WHERE
+			ROWNUM = 1
+	</select>
+
+	<statement id="EzCommonDAO.alterTalkNotiTenant">
+		ALTER TABLE
+			talk_tblnotification
+		ADD
+			TenantId NUMBER(5,0)
+	</statement>
+
+	<select id="EzCommonDAO.checkServerNameMain" resultClass="String">
+		SELECT
+		MAINYN
+		FROM
+		TBL_TENANT_SERVERNAME
+		WHERE
+		ROWNUM = 1
+	</select>
+
+	<statement id="EzCommonDAO.alterServerNameMain">
+		ALTER TABLE
+		TBL_TENANT_SERVERNAME
+		ADD
+		MAINYN VARCHAR2(10) DEFAULT 'N'
+	</statement>
+
 	<select id="EzCommonDAO.checkBodyHTMLToConnData" resultClass="String">
 		<![CDATA[
 		SELECT
@@ -7374,4 +7406,21 @@
 			CONSTRAINT PK_TBL_STAT_MENU_DEPT_MONTH PRIMARY KEY (TENANT_ID, COMPANY_ID, DEPT_ID, MENU_ID, TIME_CODE)
 		)
 	</statement>
+
+	<select id="EzCommonDAO.checkUseSaasYN" resultClass="String">
+		SELECT
+		PROPERTY_VALUE
+		FROM
+		TBL_TENANT_CONFIG
+		WHERE
+		PROPERTY_NAME = 'useSaas'
+		AND
+		TENANT_ID = 0
+	</select>
+
+	<insert id="EzCommonDAO.insertUseSaasYN">
+		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
+		VALUES (0, 'useSaas', '톡 모바일 푸시 알림 테넌트에 따른 구분 사용 여부', 'N', '톡서버에 푸시 알림 보낼때 테넌트 아이디 붙여서 넘길지 말지 사용 여부(default:N)', TO_DATE('2025-05-21 00:00:00', 'yyyy-mm-dd hh24:mi:ss'), '포탈')
+	</insert>
+
 </sqlMap>
