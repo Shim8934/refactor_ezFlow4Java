@@ -4848,4 +4848,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void insertUseSaasYN() {
         ezCommonDAO.insertUseSaasYN();
     }
+
+    @Override
+    public void inserExtLargeFilesever() {
+        ezCommonDAO.inserExtLargeFilesever();
+    }
 }

@@ -3385,4 +3385,20 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 
+	public void inserExtLargeFilesever() {
+		String propertyValue = (String) select("EzCommonDAO.checkUseExtLargeFilesever");
+
+		if (propertyValue == null) {
+			logger.debug("useExternalLargeFileServer doesn't exist. insert data...");
+			insert("EzCommonDAO.inserUseExtLargeFilesever");
+		}
+
+		String propertyValue2 = (String) select("EzCommonDAO.checkExtLargeFileseverUrl");
+
+		if (propertyValue2 == null) {
+			logger.debug("externalFileServerUrl doesn't exist. insert data...");
+			insert("EzCommonDAO.inserExtLargeFileseverUrl");
+		}
+	}
+
 }

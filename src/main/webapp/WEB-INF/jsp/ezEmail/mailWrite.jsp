@@ -1063,9 +1063,10 @@
 		            }
 		            
 		            var filelist = SelectNodes(xmlDoc, "DATA/FILELIST/FILE");
+		            var serverName = "${serverName}"
 	        	    var scheme = document.location.protocol + "//" + document.location.hostname;
-	        	    
-	                if (document.location.port != "80") {
+
+                    if (document.location.port != "80") {
 	                	scheme += ":" + document.location.port;
 	                }
 		            

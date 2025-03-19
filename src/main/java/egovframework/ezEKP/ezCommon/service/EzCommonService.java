@@ -587,4 +587,6 @@ public interface EzCommonService {
 
 	public void insertUseSaasYN() throws Exception;
 
+	public void inserExtLargeFilesever() throws Exception;
+
 }

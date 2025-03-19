@@ -90,8 +90,16 @@ import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -99,6 +107,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.*;
@@ -613,7 +622,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
                     resultUpload[i] = "denied";
                 } else {
 					// Multipart 형식으로 업로드된 파일을 복사한다.
-                    writeUploadedFile(multiFile.get(i), sGUID[i], pDirTempPath);
+                    //writeUploadedFile(multiFile.get(i), sGUID[i], pDirTempPath);
+					multiFile.get(i).transferTo(new File(pDirTempPath, sGUID[i]));
                     fileLocation[i] = pDirTempPath + commonUtil.separator + sGUID[i];
                     resultUpload[i] = "true";
                 }
@@ -630,6 +640,32 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
                 }
                 strXML2 += "<PBIGFILEUPLOAD><![CDATA[" + pBigFileUpload + "]]></PBIGFILEUPLOAD>";
                 strXML2 += "</NODE>";
+
+				String useExternalLargeFileServer = ezCommonService.getTenantConfig("useExternalLargeFileServer", userInfo.getTenantId());
+				// external large file server http upload
+				if ("Y".equalsIgnoreCase(useExternalLargeFileServer) && pBigFileUpload.equals("Y") ) {
+
+					File bigAttachFile = new File(pDirTempPath, sGUID[i]);
+					HttpHeaders headers = new HttpHeaders();
+					headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+					//headers.add("Cookie", "loginCookie=\"" + loginCookie + '"');
+
+					MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+					body.add("file", new FileSystemResource(bigAttachFile));
+					body.add("saveFileName", sGUID[i]);
+					body.add("originalFileName", new String(pFileName[i].getBytes("UTF-8"), "ISO-8859-1"));
+					body.add("uploadPath", pDirTempPath);
+
+					HttpEntity<MultiValueMap<String, Object>> entity = new HttpEntity<>(body, headers);
+
+					String externalFileServerUrl = ezCommonService.getTenantConfig("externalFileServerUrl", userInfo.getTenantId());
+
+					RestTemplate restTemplate = new RestTemplate();
+					((SimpleClientHttpRequestFactory) restTemplate.getRequestFactory())
+							.setBufferRequestBody(false);
+					restTemplate.exchange(externalFileServerUrl + "/rest/ezEmail/uploadAttachCommon.do", HttpMethod.POST, entity, String.class);
+
+				}
             }
 
             pDirTempPath = "";
@@ -4425,6 +4461,27 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						}
 
 						nodeList.item(i).getParentNode().removeChild(nodeList.item(i));
+
+						String useExternalLargeFileServer = ezCommonService.getTenantConfig("useExternalLargeFileServer", userInfo.getTenantId());
+
+						if ("Y".equalsIgnoreCase(useExternalLargeFileServer)){
+							logger.debug("useExternalLargeFileServer Y.");
+							HttpHeaders headers = new HttpHeaders();
+							headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+							MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+							body.add("filePath", pRealFilePath);
+
+							HttpEntity<MultiValueMap<String, Object>> entity = new HttpEntity<>(body, headers);
+
+							//String uploadServerURL = ezCommonService.getTenantConfig("externalLargeFileServerURL", userInfo.getTenantId());
+							String externalFileServerUrl = ezCommonService.getTenantConfig("externalFileServerUrl", userInfo.getTenantId());
+							logger.debug("externalFileServerUrl = " + externalFileServerUrl);
+							RestTemplate restTemplate = new RestTemplate();
+							restTemplate.exchange(externalFileServerUrl + "/rest/ezEmail/deleteAttachCommon.do", HttpMethod.POST, entity, String.class);
+
+						}
+
 					}
 				}
 			}

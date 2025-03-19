@@ -5,6 +5,8 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -70,12 +72,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -2744,7 +2743,92 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		
 		logger.debug("downloadAttachCommon ended.");
 	}
-	
+	/**
+	 * 메일 대용량 첨부파일 업로드 함수  (largeFileServerOnlyMode)
+	 */
+	@RequestMapping(value = "/rest/ezEmail/uploadAttachCommon.do", method = RequestMethod.POST, consumes = "multipart/form-data")
+	@ResponseBody
+	public String uploadAttachCommon(HttpServletRequest request, HttpServletResponse response,
+									 @RequestParam("file") MultipartFile file) throws Exception {
+		logger.debug("uploadAttachCommon started.");
+/*
+		if (commonUtil.userInfo(loginCookie) == null) {
+			response.sendError(504, "ERROR");
+			return "ERROR";
+		}*/
+
+		String saveFileName = commonUtil.detectPathTraversal(orElse(request.getParameter("saveFileName"), ""));
+		String originalFileName = commonUtil.detectPathTraversal(orElse(request.getParameter("originalFileName"), ""));
+		String uploadPath = commonUtil.detectPathTraversal(orElse(request.getParameter("uploadPath"), ""));
+
+		originalFileName = new String(originalFileName.getBytes("ISO-8859-1"), "UTF-8");
+
+		try {
+			logger.debug("saveFileName={}, originalFileName={}, uploadPath={}", saveFileName, originalFileName, uploadPath);
+
+			uploadPath = commonUtil.getRealPath(request) + uploadPath.substring(uploadPath.indexOf("/fileroot/"), uploadPath.length());
+			logger.debug("localization uploadPath: {}", uploadPath);
+			File uploadFolder = new File(uploadPath);
+
+			if (!uploadFolder.exists()) {
+				uploadFolder.mkdirs();
+			}
+
+			String encodedFileName = Base64.encodeBase64String(originalFileName.getBytes("UTF-8"));
+
+			Files.write(Paths.get(uploadPath, saveFileName + "__.txt"), encodedFileName.getBytes("ISO-8859-1"));
+			file.transferTo(new File(uploadPath, saveFileName));
+		} catch (Exception e) {
+			logger.error("File upload failed", e);
+			return "ERROR";
+		}
+
+		logger.debug("uploadAttachCommon ended.");
+		return "OK";
+	}
+
+	/**
+	 * 메일 대용량 첨부파일 삭제 함수 (largeFileServerOnlyMode)
+	 */
+	@RequestMapping(value = "/rest/ezEmail/deleteAttachCommon.do", method = RequestMethod.POST, consumes = "multipart/form-data")
+	@ResponseBody
+	public String deleteAttachCommon(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("deleteAttachCommon started.");
+
+/*		if (commonUtil.userInfo(loginCookie) == null) {
+			response.sendError(504, "ERROR");
+			return "ERROR";
+		}*/
+
+		String filePath = commonUtil.detectPathTraversal(orElse(request.getParameter("filePath"), ""));
+
+		try {
+			logger.debug("filePath={}", filePath);
+
+			filePath = commonUtil.getRealPath(request) + filePath.substring(filePath.indexOf("/fileroot/"), filePath.length());
+			logger.debug("localization filePath: {}", filePath);
+			File file = new File(filePath);
+
+			if (file.exists()) {
+				file.delete();
+				new File(filePath + "__.txt").delete();
+			}
+		} catch (Exception e) {
+			logger.error("deleteAttachCommon failed", e);
+			return "ERROR";
+		}
+
+		logger.debug("deleteAttachCommon ended.");
+		return "OK";
+	}
+
+	public <T> T orElse(T obj, T other) {
+		if (obj == null) {
+			return other;
+		}
+
+		return obj;
+	}
 	/**
 	 * 메일 인라인 이미지 읽어오기 실행 함수
 	 */
