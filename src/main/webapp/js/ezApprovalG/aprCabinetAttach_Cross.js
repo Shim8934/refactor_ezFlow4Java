@@ -498,7 +498,7 @@ function makePageSelPageCA() {
     }
     else {
         strtext = "<span class='btnimg prev disabled'>";
-        strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif' /></span>";
+        strtext = strtext + "</span>";
         PagingHTML += strtext;
     }
     var MaxNum;
