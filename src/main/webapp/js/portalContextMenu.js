@@ -600,26 +600,59 @@ var handleMemoFlag = function () {
 
 
 var setContextMenuEvent = function () {
-	$('#contextMenuBtn').draggable({
-		containment : "#contextMenuBlock",
-		scroll: false, 
+	var contextMenuBtn = $('#contextMenuBtn');
+
+	contextMenuBtn.draggable({
+		containment: "#contextMenuBlock",
+		scroll: false,
 		start: function () {
-			handleContextMenuBlock(true);	
+			handleContextMenuBlock(true);
 		},
-		stop: function() {
+		stop: function () {
 			setContextMenuGadgetPosition();
 			getContextMenuPosition();
 			handleContextMenuBlock(false);
-		},
+		}
 	});
-	
-	var contextMenuBtn = document.getElementById('contextMenuBtn');
-	
-	contextMenuBtn.addEventListener('click', function (event) {
+
+	contextMenuBtn.on("touchstart", function (event) {
+		var touch = event.originalEvent.touches[0];
+		var simulatedEvent = new MouseEvent("mousedown", {
+			bubbles: true,
+			cancelable: true,
+			clientX: touch.clientX,
+			clientY: touch.clientY
+		});
+		event.target.dispatchEvent(simulatedEvent);
+		event.preventDefault();
+	});
+
+	contextMenuBtn.on("touchmove", function (event) {
+		var touch = event.originalEvent.touches[0];
+		var simulatedEvent = new MouseEvent("mousemove", {
+			bubbles: true,
+			cancelable: true,
+			clientX: touch.clientX,
+			clientY: touch.clientY
+		});
+		event.target.dispatchEvent(simulatedEvent);
+		event.preventDefault();
+	});
+
+	contextMenuBtn.on("touchend", function (event) {
+		var simulatedEvent = new MouseEvent("mouseup", {
+			bubbles: true,
+			cancelable: true
+		});
+		event.target.dispatchEvent(simulatedEvent);
+		event.preventDefault();
+	});
+
+	document.getElementById('contextMenuBtn').addEventListener('click', function () {
 		setQuickMenuBtn();
 		checkContextMenuPosition();
-	});	
-}
+	});
+};
 
 var handleContextMenuBlock = function (type) {
 	var contextMenuBlock = document.getElementById('contextMenuBlock');
