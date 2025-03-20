@@ -277,7 +277,7 @@ public class EzNotificationServiceImpl implements EzNotificationService {
 	
 	// 2024-03-28 한태훈 - 통합알림 > 모바일 리스트 가져오기
 	@Override
-	public List<NotificationVO> getSearchNotiListForMobile(String userId, Integer lastNotiSeq, int rowCount, String isRead, String notiFilter, String keyWord, int tenantId, String companyId, String offSet) throws Exception {
+	public List<NotificationVO> getSearchNotiListForMobile(String userId, Integer lastNotiSeq, int rowCount, String isRead, String notiFilter, String keyWord, int tenantId, String companyId, String offSet, String lang) throws Exception {
 		logger.debug("getSearchNotiListForMobile started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -291,6 +291,7 @@ public class EzNotificationServiceImpl implements EzNotificationService {
 		map.put("offSet", offSet);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
+		map.put("lang", lang);
 		
 		List<NotificationVO> notiList =  ezNotificationDAO.getSearchNotiListForMobile(map);
 		

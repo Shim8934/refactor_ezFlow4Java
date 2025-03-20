@@ -195,7 +195,7 @@
 		SUBTYPE AS subType,
 		NOTICONTENT AS notiContent,
 		SENDERID AS senderId,
-		SENDERNAME AS senderName,
+		CASE #lang# WHEN '2' THEN U.DISPLAYNAME2 ELSE U.DISPLAYNAME END AS senderName,
 		DATE_ADD(REGDATE, INTERVAL #offSet# MINUTE) AS regDate,
 		ISREAD AS isRead,
 		CASE
@@ -210,14 +210,20 @@
 		VIEWTYPE AS viewType,
 		VIEWWIDTH AS viewWidth,
 		VIEWHEIGHT AS viewHeight,
-		TENANT_ID AS tenantId,
+		N.TENANT_ID AS tenantId,
 		COMPANYID AS companyId
 	FROM
-		TBL_REALTIME_NOTIFICATION
+		TBL_REALTIME_NOTIFICATION N
+	INNER JOIN
+		TBL_USERMASTER U
+	ON
+		N.SENDERID = U.CN 
+	AND
+		N.TENANT_ID  = U.TENANT_ID 
 	WHERE
 		USERID = #userId#
 	AND
-   		TENANT_ID = #tenantId#
+		N.TENANT_ID = #tenantId#
    	AND
    		COMPANYID = #companyId#
    	AND

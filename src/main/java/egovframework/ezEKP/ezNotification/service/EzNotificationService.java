@@ -38,7 +38,7 @@ public interface EzNotificationService {
 	public String sendNoti(String senderId, String senderName, List<Map<String, Object>> recipient, String mainType, String subType, String notiContent, String viewType, String viewWidth, String viewHeight, String linkUrl, String linkUrlMobile, String etcData) throws Exception;
 	
 	// 2024-03-28 한태훈 - 통합알림 > 모바일 리스트 가져오기
-	public List<NotificationVO> getSearchNotiListForMobile(String userId, Integer lastNotiSeq, int rowCount, String isRead, String notiFilter, String keyWord, int tenantId, String companyId, String offSet) throws Exception;
+	public List<NotificationVO> getSearchNotiListForMobile(String userId, Integer lastNotiSeq, int rowCount, String isRead, String notiFilter, String keyWord, int tenantId, String companyId, String offSet, String lang) throws Exception;
 
 	// 2024-03-28 한태훈 관리자 - 알림 > 보관설정 알림 기간 업데이트 
 	public void updateStoragePeriod(String storagePeriod, int tenantId) throws Exception;

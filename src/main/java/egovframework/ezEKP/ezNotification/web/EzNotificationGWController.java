@@ -473,7 +473,7 @@ public class EzNotificationGWController {
 			int totalListCnt = ezNotificationService.getTotalSearchNotiListCnt(userId, mode, isRead, notiFilter, keyWord, info.getCompanyId(), info.getTenantId());
 			mode = "NOTREAD";
 			int notReadListCnt = ezNotificationService.getTotalSearchNotiListCnt(userId, mode, isRead, notiFilter, keyWord, info.getCompanyId(), info.getTenantId());
-			List<NotificationVO> notiList = ezNotificationService.getSearchNotiListForMobile(userId, lastNotiSeq, rowCount, isRead, notiFilter, keyWord, info.getTenantId(), info.getCompanyId(), commonUtil.getMinuteUTC(info.getOffSet()));
+			List<NotificationVO> notiList = ezNotificationService.getSearchNotiListForMobile(userId, lastNotiSeq, rowCount, isRead, notiFilter, keyWord, info.getTenantId(), info.getCompanyId(), commonUtil.getMinuteUTC(info.getOffSet()), info.getLang());
 			
 			if (!notiList.isEmpty()) {
 				for (NotificationVO noti : notiList) {
