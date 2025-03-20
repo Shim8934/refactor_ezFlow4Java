@@ -2565,7 +2565,7 @@ function SReAprLineSingMapping(ret) {
         }
 
 		/* 2020-07-27 홍승비 - 서명필드만 존재하는 경우, 서명+결재자명 필드가 함께 존재하는 경우, 슬래시 이미지의 표출분기 수정 */
-		field = message.GetListItem(fields, SusinSN + "sign" + sIdx);
+//		field = message.GetListItem(fields, SusinSN + "sign" + sIdx);
 		if (message.FieldExist(SusinSN + "sign" + sIdx)) {
 			// 서명필드만 존재
 			if (!message.FieldExist(SusinSN + "seumyung" + sIdx)) {
