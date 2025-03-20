@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.security.SecureRandom;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -474,11 +475,17 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		if (boardPropertyVO.getGuBun().equals("99")) {
 			map.put("isAllGroupBoard", "Y");
 		}
+
+		boolean accessSave = true;
+		if (boardPropertyVO.getAccessID() != null) {
+			if ("NONE".equals(boardPropertyVO.getAccessID())) accessSave = false;
+		}
 		
 		ezBoardAdminDAO.createBoardGroup(map);
 		
 		/* 2019-01-22 홍승비 - 그룹사게시판(그룹) 생성 시, 최상위 회사(Top)에만 '접근'권한을 부여한다. */
-		ezBoardAdminDAO.createBoardGroup2(map);
+		if (accessSave)
+			ezBoardAdminDAO.createBoardGroup2(map);
 		
 		trunkBoard(boardPropertyVO.getTenantID());
 
@@ -506,6 +513,9 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		
 		/* 2018-10-15 홍승비 - 게시판그룹의 그룹사게시판 여부를 체크하여 하위게시판 등록하도록 수정 */
 		map.put("isAllGroupBoard", boardPropertyVO.getIsAllGroupBoard());
+		
+		String type = (boardPropertyVO.getType() != null && "DEPT".equals(boardPropertyVO.getType())) ? "DEPT" : "PERSON";
+		map.put("v_TYPE", type);
 		
 		ezBoardAdminDAO.createBoard_I(map);
 		
@@ -1520,6 +1530,22 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 	public void deleteScrapContBoard(String boardID) throws Exception {
 		ezBoardAdminDAO.deleteScrapContBoard(boardID);
 	}
+
+	@Override
+	public String getNewGuid() throws Exception {
+		logger.debug("getNewGuid started.");
+
+		String result = randomHexPart() + randomHexPart() + "-" + randomHexPart() + "-" + randomHexPart() + "-" + randomHexPart() + "-" + randomHexPart() + randomHexPart() + randomHexPart();
+				
+		logger.debug("getNewGuid ended. GUID = " + result);
+		return result;
+	}
 	
-	
+	public String randomHexPart() throws Exception {
+		SecureRandom secureRandom = new SecureRandom();
+		int randomValue = secureRandom.nextInt(0x10000);
+		
+		return String.format("%04x", randomValue);
+	}
+
 }

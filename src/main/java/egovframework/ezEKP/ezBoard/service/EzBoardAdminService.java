@@ -160,4 +160,6 @@ public interface EzBoardAdminService {
 	void deleteScrapBoard(String boardID) throws Exception;
 
 	void deleteScrapContBoard(String boardID) throws Exception;
+	
+	public String getNewGuid() throws Exception;
 }
