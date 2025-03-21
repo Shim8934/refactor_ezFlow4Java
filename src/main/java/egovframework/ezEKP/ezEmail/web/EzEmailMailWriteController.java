@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezEmail.web;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -18,7 +19,12 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.security.PrivateKey;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -32,10 +38,12 @@ import java.util.IllegalFormatException;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.UUID;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -64,7 +72,13 @@ import javax.mail.internet.MimeUtility;
 import javax.mail.util.ByteArrayDataSource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathFactory;
 
+import egovframework.let.utl.rest.Result;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -79,6 +93,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -6400,5 +6415,441 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 
 		logger.debug("apprApproverSettingPopUp ended.");
 		return "ezEmail/apprApproverSettingPopUp";
+	}
+
+	@PostMapping("/ezEmail/convertAttachNormalToBig.do")
+	@ResponseBody
+	public Result convertAttachNormalToBig(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> requestBody, HttpServletRequest request) throws Exception {
+		try {
+			LoginVO user = commonUtil.userInfo(loginCookie);
+			int tenantId = user.getTenantId();
+			Long mailUid = Optional.ofNullable(requestBody.get("mailUid")).map(Object::toString).filter(StringUtils::isNotBlank).map(Long::parseLong).orElse(null);
+			String statusUid = (String) requestBody.get("statusUid");
+			String itemUid = (String) requestBody.get("itemUid");
+			String shareId = (String) requestBody.get("shareId");
+			String fileName = (String) requestBody.get("fileName");
+			Integer fileIndex = Optional.ofNullable(requestBody.get("fileIndex")).map(Object::toString).filter(StringUtils::isNotBlank).map(Integer::parseInt).orElse(null);
+			String previousOriginAttachXml = (String) requestBody.get("previousOriginAttachXml");
+
+			String domainName = ezCommonService.getTenantConfig("DomainName", user.getTenantId());
+			String userEmail = user.getId() + "@" + domainName;
+			String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", user.getTenantId());
+
+			if ("YES".equalsIgnoreCase(useSharedMailbox)) {
+				logger.debug("shareId={}", shareId);
+
+				if (StringUtils.isNotBlank(shareId)) {
+					if (!ezEmailService.checkUserShareId(user.getId(), shareId, user.getTenantId())) {
+						logger.debug("the user cannot access the shareId.");
+						logger.debug("convertAttachType ended.");
+
+						return Result.failure(2, "the user cannot access the shareId");
+					}
+
+					userEmail = shareId + "@" + domainName;
+				}
+			}
+
+			logger.debug("userId={}, userEmail={}", user.getId(), userEmail);
+
+			String password = commonUtil.getUserIdAndPassword(loginCookie).get(1);
+			SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"), userEmail, password);
+
+			try (IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					userEmail, password, egovMessageSource, user.getLocale(), ezEmailUtil);
+				 Folder folder = ia.getFolder(ezEmailUtil.getDraftsFolderId(user.getLocale()))
+			) {
+				if (folder == null) {
+					logger.error("IMAP Folder is null");
+					return Result.failure(3, "IMAP Folder is null");
+				}
+
+				folder.open(Folder.READ_WRITE);
+				Message oldMessage = mailUid == null ? null : ((IMAPFolder) folder).getMessageByUID(mailUid);
+
+				String uploadMailDir = commonUtil.getUploadPath("upload_mail.ROOT", tenantId);
+				String largeFileDir = "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useSeparatedLargeFileFolder", tenantId))
+						? "largeFile"
+						: "";
+
+				MimeMessage newMessage = sa.createMimeMessage();
+				Multipart multipart = new MimeMultipart();
+
+				Multipart mp = (Multipart) oldMessage.getContent();
+				int count = mp.getCount();
+				BodyPart p = null, targetAttachPart = null;
+				int nonAttachCount = 0;
+
+				// 첨부파일 파트 이전에 존재하는 파트들의 갯수를 구한다.
+				// 이 로직이 제대로 동작하려면 첨부파일들이 모두 메시지의 뒷부분에 연속으로 위치하여야 한다.
+				for (int i = 0; i < count; i++) {
+					p = mp.getBodyPart(i);
+
+					if (p.getDisposition() == null) {
+						nonAttachCount++;
+					} else {
+						break;
+					}
+				}
+
+				for (int i = 0; i < count; i++) {
+					p = mp.getBodyPart(i);
+
+					// 파일의 index가 nonAttachCount 만큼 뒤로 밀렸으므로 i - nonAttachCount과 비교하여 파일을 삭제한다.
+					if (p.getDisposition() != null
+							&& p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)) {
+						if (i - nonAttachCount == fileIndex) {
+							targetAttachPart = p;
+						} else {
+							multipart.addBodyPart(p);
+						}
+					}
+				}
+
+				@SuppressWarnings("unchecked")
+				Enumeration<Header> e = oldMessage.getAllHeaders();
+				while (e.hasMoreElements()) {
+					Header header = e.nextElement();
+					newMessage.setHeader(header.getName(), header.getValue());
+				}
+
+				Long newMessageUid;
+
+				if (multipart.getCount() == 0) {
+					newMessageUid = null;
+				} else {
+					newMessage.setContent(multipart);
+					newMessage.setFlag(Flags.Flag.SEEN, true);
+					AppendUID[] uids = ((IMAPFolder) folder).appendUIDMessages(new Message[]{newMessage});
+					newMessageUid = uids[0].uid;
+				}
+
+				oldMessage.setFlag(Flags.Flag.DELETED, true);
+
+				String statusXmlFileName = commonUtil.detectPathTraversal(statusUid);
+				Path xmlFile = Paths.get(commonUtil.getRealPath(request), commonUtil.getUploadPath("upload_mail.ROOT", tenantId), "templist", statusXmlFileName + ".txt");
+				XPath xPath = XPathFactory.newInstance().newXPath();
+				Document xmlDom = null;
+				Node itemNode = null;
+
+				if (Files.exists(xmlFile)) {
+					StringBuilder strXml = new StringBuilder();
+					try (InputStreamReader isr = new InputStreamReader(Files.newInputStream(xmlFile))) {
+						int read = 0;
+						while ((read = isr.read()) != -1) {
+							strXml.append((char) read);
+						}
+					}
+
+					String oldXmlContent = strXml.toString();
+					xmlDom = commonUtil.convertStringToDocument(oldXmlContent);
+					itemNode = (Node) xPath.evaluate("//NODE[PUPLOADSN = '" + itemUid + "']", xmlDom, XPathConstants.NODE);
+				}
+
+				String bigDateDir = EgovDateUtil.getToday("");
+
+				if (itemNode == null) {
+					// XML에 없는 경우 itemUid를 새로 부여
+					itemUid = UUID.randomUUID() + fileName.substring(fileName.lastIndexOf('.'));
+					Node nodesElem;
+
+					// xml이 없는 경우 새로 생성
+					if (xmlDom == null) {
+						xmlDom = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+						nodesElem = xmlDom.appendChild(xmlDom.createElement("ROOT"))
+								.appendChild(xmlDom.createElement("NODES"));
+					} else {
+						nodesElem = xmlDom.getElementsByTagName("NODES").item(0);
+					}
+
+					// NODE 태그 구성
+					Node nodeElem = nodesElem.appendChild(xmlDom.createElement("NODE"));
+					nodeElem.appendChild(xmlDom.createElement("PUPLOADSN"))
+							.appendChild(xmlDom.createCDATASection(itemUid));
+					nodeElem.appendChild(xmlDom.createElement("RESULTUPLOADA"))
+							.appendChild(xmlDom.createCDATASection("true"));
+					nodeElem.appendChild(xmlDom.createElement("PFILENAME"))
+							.appendChild(xmlDom.createCDATASection(fileName));
+					nodeElem.appendChild(xmlDom.createElement("FILESIZE"))
+							.appendChild(xmlDom.createCDATASection(String.valueOf(targetAttachPart.getSize())));
+					nodeElem.appendChild(xmlDom.createElement("FILELOCATION"))
+							.appendChild(xmlDom.createCDATASection(bigDateDir + "|!|" + itemUid));
+					nodeElem.appendChild(xmlDom.createElement("PBIGFILEUPLOAD"))
+							.appendChild(xmlDom.createCDATASection("Y"));
+				} else {
+					((Node) xPath.evaluate("PBIGFILEUPLOAD", itemNode, XPathConstants.NODE)).setTextContent("Y");
+					((Node) xPath.evaluate("FILELOCATION", itemNode, XPathConstants.NODE)).setTextContent(bigDateDir + "|!|" + itemUid);
+				}
+
+				Path largeFilePath = Paths.get(commonUtil.getRealPath(request), uploadMailDir, largeFileDir, bigDateDir, itemUid);
+				Path largeNameFilePath = largeFilePath.resolveSibling(itemUid + "__.txt");
+
+				Files.createDirectories(largeFilePath.getParent());
+				Files.copy(targetAttachPart.getInputStream(), largeFilePath);
+
+				try (FileOutputStream fos = new FileOutputStream(largeNameFilePath.toFile())) {
+					String base64EncodedName = Base64.encodeBase64String(commonUtil.normalizeFileName(fileName).getBytes(StandardCharsets.UTF_8));
+					fos.write(base64EncodedName.getBytes(StandardCharsets.ISO_8859_1));
+				}
+
+				String newXmlContent = commonUtil.convertDocumentToString(xmlDom);
+
+				try (BufferedWriter writer = Files.newBufferedWriter(xmlFile, Charset.defaultCharset(),
+						StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
+					writer.write(newXmlContent);
+					String crlf = System.getProperty("line.separator");
+					writer.write(crlf);
+					writer.write(crlf);
+				}
+
+				Map<String, Object> result = new HashMap<>();
+				result.put("uid", newMessageUid == null ? "" : newMessageUid);
+				result.put("bigDateDir", bigDateDir);
+				result.put("itemUid", itemUid);
+
+				return Result.success(result);
+			}
+		} catch (Exception e) {
+			logger.error("error:", e);
+			return Result.failure();
+		}
+	}
+
+	@PostMapping("/ezEmail/convertAttachBigToNormal.do")
+	@ResponseBody
+	public Result convertAttachBigToNormal(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> requestBody, HttpServletRequest request) throws Exception {
+		try {
+			LoginVO user = commonUtil.userInfo(loginCookie);
+			int tenantId = user.getTenantId();
+			Long mailUid = Optional.ofNullable(requestBody.get("mailUid")).map(Object::toString).filter(StringUtils::isNotBlank).map(Long::parseLong).orElse(null);
+			String statusUid = (String) requestBody.get("statusUid");
+			String itemUid = (String) requestBody.get("itemUid");
+			String shareId = (String) requestBody.get("shareId");
+
+			String statusXmlFileName = commonUtil.detectPathTraversal(statusUid);
+			Path xmlFile = Paths.get(commonUtil.getRealPath(request), commonUtil.getUploadPath("upload_mail.ROOT", tenantId), "templist", statusXmlFileName + ".txt");
+			Document xmlDom;
+
+			if (!Files.exists(xmlFile)) {
+				logger.error("does not exist xml={}", xmlFile);
+				return Result.failure(1, "does not exist xml=" + xmlFile);
+			}
+
+			StringBuilder strXml = new StringBuilder();
+			try (InputStreamReader isr = new InputStreamReader(Files.newInputStream(xmlFile))) {
+				int read = 0;
+				while ((read = isr.read()) != -1) {
+					strXml.append((char) read);
+				}
+			}
+
+			String oldXmlContent = strXml.toString();
+			xmlDom = commonUtil.convertStringToDocument(oldXmlContent);
+
+			XPath xPath = XPathFactory.newInstance().newXPath();
+			Node itemNode = (Node) xPath.evaluate("//NODE[PUPLOADSN = '" + itemUid + "']", xmlDom, XPathConstants.NODE);
+
+			if (itemNode == null) {
+				throw new IllegalArgumentException("No attachment node matches the item uid: " + itemUid);
+			}
+
+			Node bigFlagNode = (Node) xPath.evaluate("PBIGFILEUPLOAD", itemNode, XPathConstants.NODE);
+
+			if ("N".equalsIgnoreCase(bigFlagNode.getTextContent())) {
+				logger.warn("Does not match big flag. is already a large or normal attachment.");
+				return Result.failure(1, "Does not match big flag");
+			}
+
+			String domainName = ezCommonService.getTenantConfig("DomainName", user.getTenantId());
+			String userEmail = user.getId() + "@" + domainName;
+			String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", user.getTenantId());
+
+			if ("YES".equalsIgnoreCase(useSharedMailbox)) {
+				logger.debug("shareId={}", shareId);
+
+				if (StringUtils.isNotBlank(shareId)) {
+					if (!ezEmailService.checkUserShareId(user.getId(), shareId, user.getTenantId())) {
+						logger.debug("the user cannot access the shareId.");
+						logger.debug("convertAttachType ended.");
+
+						return Result.failure(2, "the user cannot access the shareId");
+					}
+
+					userEmail = shareId + "@" + domainName;
+				}
+			}
+
+			logger.debug("userId={}, userEmail={}", user.getId(), userEmail);
+
+			String password = commonUtil.getUserIdAndPassword(loginCookie).get(1);
+			SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"), userEmail, password);
+			Long newMessageUid = null;
+			String fileName = null;
+
+			try (IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					userEmail, password, egovMessageSource, user.getLocale(), ezEmailUtil);
+				 Folder folder = ia.getFolder(ezEmailUtil.getDraftsFolderId(user.getLocale()))
+			) {
+				if (folder == null) {
+					logger.error("IMAP Folder is null");
+					return Result.failure(3, "IMAP Folder is null");
+				}
+
+				folder.open(Folder.READ_WRITE);
+				Message oldMessage = mailUid == null ? null : ((IMAPFolder) folder).getMessageByUID(mailUid);
+
+				fileName = (String) xPath.evaluate("PFILENAME", itemNode, XPathConstants.STRING);
+				Node fileLocationNode = (Node) xPath.evaluate("FILELOCATION", itemNode, XPathConstants.NODE);
+				String uploadMailDir = commonUtil.getUploadPath("upload_mail.ROOT", tenantId);
+				String largeFileDir = "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useSeparatedLargeFileFolder", tenantId))
+						? "largeFile"
+						: "";
+
+				String[] fileLocations = fileLocationNode.getTextContent().split("\\|!\\|");
+				String dateDir = fileLocations[0];
+				String fileUidName = fileLocations[1];
+
+				Path largeFilePath = Paths.get(commonUtil.getRealPath(request), uploadMailDir, largeFileDir, dateDir, fileUidName);
+
+				if (!Files.exists(largeFilePath)) {
+					logger.error("Not found large file: {}", largeFilePath);
+					return Result.failure(5, "Not found large file: " + largeFilePath);
+				}
+
+				MimeMessage newMessage = sa.createMimeMessage();
+				Multipart multipart = new MimeMultipart();
+
+				if (oldMessage != null) {
+					// 기존 메시지가 Multipart인 경우 처리
+					if (oldMessage.getContent() instanceof Multipart) {
+						Multipart mp = (Multipart) oldMessage.getContent();
+						int count = mp.getCount();
+						BodyPart p = null;
+
+						// 임시 보관함에 있는 메시지가 multipart/related일 때는 새롭게 related 파트로 구성한 다음
+						// 새 메시지의 서브 파트로 추가한다.
+						if (oldMessage.isMimeType("multipart/related")) {
+							logger.debug("oldMessage is multipart/related");
+
+							Multipart relatedPart = new MimeMultipart("related");
+
+							for (int i = 0; i < count; i++) {
+								p = mp.getBodyPart(i);
+
+								// 코린도에서 수신한 메일 중 multipart/related 안에 첨부 파일이 있는 경우가 있어
+								// 해당 첨부 파일을 multipart/mixed 파트로 옮기도록 한다.
+								if (p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)) {
+									multipart.addBodyPart(p);
+								} else {
+									relatedPart.addBodyPart(p);
+								}
+							}
+
+							// relatedPart에 속한 파트가 하나도 없는 경우 삽입하면 메시지가
+							// 정상적으로 생성되지 않는다.
+							if (relatedPart.getCount() > 0) {
+								MimeBodyPart wrap = new MimeBodyPart();
+								wrap.setContent(relatedPart);
+								multipart.addBodyPart(wrap, 0);
+							}
+						} else if (oldMessage.isMimeType("multipart/alternative")) {
+							logger.debug("oldMessage is multipart/alternative");
+
+							Multipart alternativePart = new MimeMultipart("alternative");
+
+							for (int i = 0; i < count; i++) {
+								p = mp.getBodyPart(i);
+								alternativePart.addBodyPart(p);
+							}
+
+							MimeBodyPart wrap = new MimeBodyPart();
+							wrap.setContent(alternativePart);
+							multipart.addBodyPart(wrap, 0);
+						} else {
+							for (int i = 0; i < count; i++) {
+								p = mp.getBodyPart(i);
+								multipart.addBodyPart(p);
+							}
+						}
+					}
+
+					// 기존 메시지의 모든 헤더를 적용한다.
+					@SuppressWarnings("unchecked")
+					Enumeration<Header> headers = oldMessage.getAllHeaders();
+
+					while (headers.hasMoreElements()) {
+						Header header = headers.nextElement();
+						newMessage.setHeader(header.getName(), header.getValue());
+					}
+
+					// 기존 메시지를 제거한다.
+					oldMessage.setFlag(Flags.Flag.DELETED, true);
+				}
+
+				BodyPart messageBodyPart = new MimeBodyPart();
+				FileDataSource source = new FileDataSource(largeFilePath.toFile());
+				messageBodyPart.setDataHandler(new DataHandler(source));
+
+				String nfcFilename = commonUtil.normalizeFileName(fileName);
+				String encodedFileName = MimeUtility.fold(0, MimeUtility.encodeText(nfcFilename, "UTF-8", "B"));
+				messageBodyPart.setHeader("Content-Disposition", "attachment;\r\n filename=\"" + encodedFileName + "\"");
+
+				String contentType = null;
+
+				// 첨부파일의 Content-Type을 구한다.
+				try (BufferedInputStream bis = new BufferedInputStream(Files.newInputStream(largeFilePath))) {
+					contentType = URLConnection.guessContentTypeFromStream(bis);
+					if (contentType == null) {
+						contentType = Files.probeContentType(largeFilePath);
+					} else {
+						String path = largeFilePath.toString();
+						if (path.lastIndexOf(".") > 0 && path.substring(path.lastIndexOf(".")).equalsIgnoreCase(".eml")) {
+							contentType = "message/rfc822";
+						}
+					}
+
+					if (contentType == null) {
+						// 첨부파일 Content-Type의 디폴트는 application/octet-stream로 설정한다.
+						contentType = "application/octet-stream";
+					}
+				} catch (Exception ex) {
+					logger.error("get Content-Type error:", ex);
+					return Result.failure(5, "get Content-Type error");
+				}
+
+				messageBodyPart.setHeader("Content-Type", contentType);
+				// Multipart에 첨부파일 Part를 삽입한다.
+				multipart.addBodyPart(messageBodyPart);
+				newMessage.setContent(multipart);
+				newMessage.setFlag(Flags.Flag.SEEN, true);
+				AppendUID[] uids = ((IMAPFolder) folder).appendUIDMessages(new Message[]{newMessage});
+				newMessageUid = uids[0].uid;
+
+				Path largeNameFilePath = largeFilePath.resolveSibling(fileUidName + "__.txt");
+				Files.delete(largeNameFilePath);
+				Files.delete(largeFilePath);
+
+				bigFlagNode.setTextContent("N");
+				fileLocationNode.setTextContent(fileUidName);
+			}
+
+			String newXmlContent = commonUtil.convertDocumentToString(xmlDom);
+
+			try (BufferedWriter writer = Files.newBufferedWriter(xmlFile, Charset.defaultCharset(), StandardOpenOption.TRUNCATE_EXISTING)) {
+				writer.write(newXmlContent);
+				String crlf = System.getProperty("line.separator");
+				writer.write(crlf);
+				writer.write(crlf);
+			}
+
+			Map<String, Object> result = new HashMap<>();
+			result.put("uid", newMessageUid);
+			result.put("fileName", fileName);
+
+			return Result.success(result);
+		} catch (Exception e) {
+			logger.error("error:", e);
+			return Result.failure();
+		}
 	}
 }

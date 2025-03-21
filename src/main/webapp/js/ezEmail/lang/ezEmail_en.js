@@ -398,6 +398,9 @@ var strUreadDelSearchPermenant = "Once deleted, the emails cannot be recovered.\
 const strLangTagLimit = "You can register up to 5 tags.";
 const strLangTagadd = "Add tags to mail :";
 
+const strLangChangeButton = "Switch";
+const strLangChangeLimit = "Cannot switch because the attachment size exceeds the limit.";
+
 function GetLocalTime(Offset , pDateTime)
 {
     if (pDateTime == "")

@@ -391,6 +391,9 @@ var strUreadDelSearchPermenant = "Khi xóa, email sẽ không thể khôi phục
 const strLangTagLimit = "Bạn có thể đăng ký tối đa 5 thẻ.";
 const strLangTagadd = "메일에 태그 추가 :";
 
+const strLangChangeButton = "Switch";
+const strLangChangeLimit = "Cannot switch because the attachment size exceeds the limit.";
+
 function GetLocalTime(Offset , pDateTime)
 {
     if (pDateTime == "")

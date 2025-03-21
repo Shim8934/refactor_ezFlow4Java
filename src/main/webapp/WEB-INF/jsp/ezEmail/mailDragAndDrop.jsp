@@ -293,21 +293,21 @@
 		        objTr.appendChild(objTh);
 		
 		        var objTh2 = document.createElement("TH");
-		        objTh2.style.width = "87%";
+		        objTh2.style.width = "calc(100% - 257px)";
 		        setNodeText(objTh2, "<spring:message code='ezEmail.t725' />");
 		        objTr.appendChild(objTh2);
 		
 		        var objTh3 = document.createElement("TH");
 		        setNodeText(objTh3, "<spring:message code='ezEmail.t726' />");
-		        objTh3.style.width = "13%";
+		        objTh3.style.width = "118px";
 		        objTr.appendChild(objTh3);
 		        
 		        if (window.parent.totBigSizeAttachMBSize > 0) {
-		        	objTh2.style.width = "67%";
+		        	objTh2.style.width = "calc(100% - 387px)";
 		        	
 		        	var objTh4 = document.createElement("TH");
 			        setNodeText(objTh4, "<spring:message code='ezEmail.sjw04' />");
-			        objTh4.style.width = "20%";
+			        objTh4.style.width = "230px";
 			        objTr.appendChild(objTh4);
 		        }
 		        

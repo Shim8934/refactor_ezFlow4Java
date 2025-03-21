@@ -392,6 +392,9 @@ var strUreadDelSearchPermenant = "Setelah dihapus, email tidak dapat dipulihkan.
 const strLangTagLimit = "Anda dapat mendaftar hingga 5 tag.";
 const strLangTagadd = "메일에 태그 추가 :";
 
+const strLangChangeButton = "Switch";
+const strLangChangeLimit = "Cannot switch because the attachment size exceeds the limit.";
+
 function GetLocalTime(Offset , pDateTime)
 {
     if (pDateTime == "")

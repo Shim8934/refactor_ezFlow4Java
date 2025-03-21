@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezEmail.logic;
 
+import java.io.Closeable;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.text.Collator;
@@ -41,7 +42,7 @@ import com.sun.mail.util.MailSSLSocketFactory;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 
-public class IMAPAccess {
+public class IMAPAccess implements Closeable {
 
     private static final Logger logger = LoggerFactory.getLogger(IMAPAccess.class);
     
@@ -236,6 +237,7 @@ public class IMAPAccess {
 		return apprStore;
 	}
 
+	@Override
 	public void close() {
 		try {
 			if(store != null){
