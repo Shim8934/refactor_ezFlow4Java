@@ -91,6 +91,7 @@ import javax.xml.bind.DatatypeConverter;
 
 import com.google.gson.JsonElement;
 import egovframework.let.utl.fcc.service.KlibUtil;
+import net.fortuna.ical4j.util.CompatibilityHints;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
@@ -149,6 +150,10 @@ import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.Attendee;
 import net.fortuna.ical4j.model.property.RRule;
+
+import static net.fortuna.ical4j.util.CompatibilityHints.KEY_RELAXED_PARSING;
+import static net.fortuna.ical4j.util.CompatibilityHints.KEY_RELAXED_UNFOLDING;
+import static net.fortuna.ical4j.util.CompatibilityHints.KEY_RELAXED_VALIDATION;
 
 /** 
  * @Description [Utility] 메일 관련 유틸리티
@@ -6632,8 +6637,12 @@ public class EzEmailUtil {
     	try {
     		if (!part.isMimeType("text/calendar")) { throw new Exception("IS_NOT_text/calendar"); }
         	
-        	is = getContentInputStream(part); 
-        	
+        	is = getContentInputStream(part);
+
+			CompatibilityHints.setHintEnabled(KEY_RELAXED_UNFOLDING, true);
+			CompatibilityHints.setHintEnabled(KEY_RELAXED_PARSING, true);
+			CompatibilityHints.setHintEnabled(KEY_RELAXED_VALIDATION, true);
+			
     		CalendarBuilder cb = new CalendarBuilder();
     		net.fortuna.ical4j.model.Calendar cal = cb.build(is);
     		
