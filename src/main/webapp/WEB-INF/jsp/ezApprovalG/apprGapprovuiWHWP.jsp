@@ -1584,7 +1584,20 @@
 			    }
 			
 			    function btnMail_onclick() {
-			    	window.open("/ezEmail/mailWrite.do?docHref=" + pDocHref + "&cmd=docsend&docID=" + pDocID + "&TARGET=APPROVALG", "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+					var pheight = window.screen.availHeight;
+					var conHeight = pheight * 0.8;
+					var pwidth = window.screen.availWidth;
+					var conWidth = pwidth * 0.8;
+					if (conWidth > 890)
+						conWidth = 890;
+					var pTop = (pheight - conHeight) / 2;
+					var pLeft = (pwidth - 890) / 2;
+					var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1";
+					
+					var requestUrl = "/ezEmail/mailWrite.do?docHref=" + pDocHref + "&cmd=docsend&docID=" + pDocID + "&TARGET=APPROVALG";
+		
+					window.open(requestUrl, "", feature);
+			    	// window.open("/ezEmail/mailWrite.do?docHref=" + pDocHref + "&cmd=docsend&docID=" + pDocID + "&TARGET=APPROVALG", "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
 			    }
 			    
 			    var tempSecurity = "";
