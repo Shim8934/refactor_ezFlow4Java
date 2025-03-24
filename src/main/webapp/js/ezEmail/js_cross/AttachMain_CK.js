@@ -468,7 +468,7 @@ function appendAttachChangeButton(parentElement, isBig) {
             const bigAttachTrArray = Array.from(attachDocument.querySelectorAll("#filelist tr[_big='Y']"));
 
             // 대용량 첨부 제한 개수 넘는지 확인
-            if (BigSizeAttachLimitCount > 0 && BigSizeAttachLimitCount >= bigAttachTrArray.length) {
+            if (BigSizeAttachLimitCount > 0 && BigSizeAttachLimitCount <= bigAttachTrArray.length) {
                 alert(strLangHDP03.replace("{0}", BigSizeAttachLimitCount));
                 return;
             }
