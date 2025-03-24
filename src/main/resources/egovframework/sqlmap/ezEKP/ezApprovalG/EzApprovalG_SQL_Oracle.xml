@@ -10316,7 +10316,7 @@
 									FORMID = #v_FORMID#
 							   	</isNotEmpty>
 								<isNotEmpty property="v_FORMNAME" prepend="AND">
-								    (FORMNAME LIKE '%' || #v_FORMNAME# || '%' OR FORMNAME2 LIKE '%' || #v_FORMNAME# || '%')
+								    (FORMNAME LIKE '%' || #v_FORMNAME# || '%' OR FORMNAME2 LIKE '%' || #v_FORMNAME# || '%' ESCAPE '\')
 								</isNotEmpty>
 							   	<isNotEmpty property="v_STARTDATE1" prepend="AND">
 									<![CDATA[ STARTDATE >= TO_DATE(#v_STARTDATE1#,'YYYY-MM-DD HH24:MI:SS') ]]>
@@ -10418,10 +10418,10 @@
 								   	</isNotEmpty>
 							   	</isEqual>
 							   	<isNotEmpty property="v_KEYWORD" prepend="AND">
-                                    KEYWORD LIKE '%' || #v_KEYWORD# || '%'
+                                    KEYWORD LIKE '%' || #v_KEYWORD# || '%' ESCAPE '\'
                                 </isNotEmpty>
                                 <isNotEmpty property="v_containerFormName" prepend="AND">
-								    TBL_EXPENDAPRDOCINFO.FORMNAME = #v_containerFormName#
+								    TBL_EXPENDAPRDOCINFO.FORMNAME = #v_containerFormName# ESCAPE '\'
 								</isNotEmpty>
 								<isNotEmpty property="v_containerTaskCode" prepend="AND">
 						            TBL_EXPENDAPRDOCINFO.TASKCODE = #v_containerTaskCode#
@@ -15272,10 +15272,10 @@
 	   		 	FORMID = #v_FORMID#
 	   		</isNotEmpty>
 			<isNotEmpty property="v_FORMNAME" prepend="AND">
-				(FORMNAME LIKE '%' || #v_FORMNAME# || '%' OR FORMNAME2 LIKE '%' || #v_FORMNAME# || '%')
+				(FORMNAME LIKE '%' || #v_FORMNAME# || '%' OR FORMNAME2 LIKE '%' || #v_FORMNAME# || '%' ESCAPE '\')
 			</isNotEmpty>
             <isNotEmpty property="v_KEYWORD" prepend="AND">
-                KEYWORD LIKE '%' || #v_KEYWORD# || '%'
+                KEYWORD LIKE '%' || #v_KEYWORD# || '%' ESCAPE '\'
             </isNotEmpty>
 	   		<isNotEmpty property="v_STARTDATE1" prepend="AND"> 
 	   		<![CDATA[ STARTDATE >= TO_DATE(#v_STARTDATE1#, 'YYYY-MM-DD HH24:MI:SS') ]]>
@@ -15396,10 +15396,10 @@
 		   		</isNotEqual>
 	   		</isNotEmpty>
 	   		<isNotEmpty property="v_KEYWORD" prepend="AND">
-		    	KEYWORD LIKE '%' || #v_KEYWORD# || '%'
+		    	KEYWORD LIKE '%' || #v_KEYWORD# || '%' ESCAPE '\'
 			</isNotEmpty>
 			<isNotEmpty property="v_containerFormName" prepend="AND">
-			    TBL_EXPENDAPRDOCINFO.FORMNAME = #v_containerFormName#
+			    TBL_EXPENDAPRDOCINFO.FORMNAME = #v_containerFormName# ESCAPE '\'
 			</isNotEmpty>
 			<isNotEmpty property="v_containerTaskCode" prepend="AND">
 	            TBL_EXPENDAPRDOCINFO.TASKCODE = #v_containerTaskCode#

@@ -190,9 +190,6 @@ function GetDocSearch() {
             if (typeof (condition[i]) == "undefined") {
                 createNodeAndInsertText(xmlpara, objNode, "Param" + i, "");
             } else {
-                if (i == 1) {
-                    condition[1] = condition[1].replace(/\\/g, "\\\\");
-                }
                 createNodeAndInsertText(xmlpara, objNode, "Param" + i, condition[i]);
             }
         }
@@ -250,9 +247,6 @@ function GetDocSearch() {
 	        if (typeof(condition[i]) == "undefined") {
                 createNodeAndInsertText(xmlpara, objNode, "Param" + i, "");
             } else {
-                if (i == 1) {
-                    condition[1] = condition[1].replace(/\\/g, "\\\\");
-                }
                 createNodeAndInsertText(xmlpara, objNode, "Param" + i, condition[i]);
             }
 	    }

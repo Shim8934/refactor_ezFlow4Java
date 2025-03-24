@@ -2945,7 +2945,6 @@
 
 				    if (condition[1] != "" && condition[1] !== undefined) {
 				        TYPE += "DOCTITLE;"
-						condition[1] = condition[1].replace(/\\/g, "\\\\");
 				        DATA += "<DOCTITLE>" + condition[1] + "</DOCTITLE>";
 				    }
 
@@ -3272,7 +3271,7 @@
 		    }
 		    
 		    function replaceCond(condStr){//검색조건 수정(% _ ' 추가)
-		    	return condStr.toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/%/g, "\\%").replace(/'/g, "\\'").replace(/_/g, "\\_");
+		    	return condStr.toString().replace(/\\/g, "\\\\").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/%/g, "\\%").replace(/'/g, "\\'").replace(/_/g, "\\_");
 		    }
 		    
 		    function getDocListByCompany(){
