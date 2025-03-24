@@ -2903,4 +2903,71 @@
 		AND
 			RELATEDID = #relatedId#
 	</select>
+	
+	<select id="EzScheduleDAO.getPublicExceSchedule" parameterClass="map" resultClass="egovframework.ezEKP.ezSchedule.vo.ScheSecretaryVO">
+		<![CDATA[
+			SELECT
+				USERID,
+				USERNAME,
+				USERNAME2
+			FROM
+				TBL_SECRETARY
+			WHERE
+				SECRETARYID = #userID#
+			AND
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+		]]>
+	</select>
+	
+	<select id="EzScheduleDAO.getShareScheduleDept" parameterClass="map" resultClass="egovframework.ezEKP.ezSchedule.vo.ScheDeptVO">
+		<![CDATA[
+			SELECT
+				DEPARTMENTCN AS DEPTID,
+				DEPARTMENTNAME AS DEPTNAME,
+				DEPARTMENTNAME2 AS DEPTNAME2
+			FROM
+				TBL_SCHEDULE_PUBLIC_DEPT
+			WHERE
+				USERCN = #userID#
+			AND
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+		]]>
+	</select>
+	
+	<select id="EzScheduleDAO.getAddJobSchedule" parameterClass="map" resultClass="egovframework.ezEKP.ezSchedule.vo.ScheDeptVO">
+		<![CDATA[
+		SELECT
+			DEPARTMENT AS DEPTID,
+			U.DESCRIPTION AS deptName,
+			U.DESCRIPTION2 AS deptName2
+		FROM
+			TBL_USERMASTER U
+		WHERE
+			U.CN = #userID#
+		AND
+			U.TENANT_ID = #tenantID#
+		AND
+			PHYSICALDELIVERYOFFICENAME = #companyID#
+		UNION ALL
+		SELECT
+			DEPTID,
+			B.DISPLAYNAME AS DEPTNAME,
+			B.DISPLAYNAME2 AS DEPTNAME2
+		FROM
+			TBL_ADDJOBMASTER A
+		JOIN
+			TBL_DEPTMASTER B ON A.DEPTID = B.CN AND A.TENANT_ID = B.TENANT_ID
+		WHERE
+			A.CN = #userID#
+		AND
+			A.TENANT_ID = #tenantID#
+		AND
+			B.EXTENSIONATTRIBUTE2 = #companyID#
+		]]>
+	</select>
+	
 </sqlMap>

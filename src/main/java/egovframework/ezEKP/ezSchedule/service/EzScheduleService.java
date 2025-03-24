@@ -12,7 +12,9 @@ import org.w3c.dom.NodeList;
 
 import egovframework.ezEKP.ezSchedule.vo.AttachListVO;
 import egovframework.ezEKP.ezSchedule.vo.AttendantListVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheDeptVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheGetHolidayVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheSecretaryVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleConfigVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleCumulerVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleDeptVO;
@@ -246,4 +248,8 @@ public interface EzScheduleService {
 	public String saveIsTagChecked(String userID, String scheduleType, String relatedID, String isChecked, int tenantID, String companyID);
 
 	public String getUserScheduleTypeColor(String userId, String companyId, int tenantId, String scheduleType, String relatedId);
+	
+	public List<ScheSecretaryVO> getPublicExceSchedule(Map<String, Object> param) throws Exception;
+	public List<ScheDeptVO> getShareScheduleDept(Map<String, Object> param) throws Exception;
+	public List<ScheDeptVO> getAddJobSchedule(Map<String, Object> param) throws Exception;
 }

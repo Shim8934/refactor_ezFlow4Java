@@ -59,7 +59,9 @@ import egovframework.ezEKP.ezSchedule.dao.EzScheduleDAO;
 import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
 import egovframework.ezEKP.ezSchedule.vo.AttachListVO;
 import egovframework.ezEKP.ezSchedule.vo.AttendantListVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheDeptVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheGetHolidayVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheSecretaryVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleConfigVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleCumulerVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleDeptVO;
@@ -4556,5 +4558,37 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		
 		return ezScheduleDAO.getUserScheduleTypeColor(param);
 	}
-}
+	
+	@Override
+	public List<ScheSecretaryVO> getPublicExceSchedule(Map<String, Object> param) throws Exception {
+		logger.debug("getPublicExceSchedule started.");
+		
+		List<ScheSecretaryVO> result = ezScheduleDAO.getPublicExceSchedule(param);
+		
+		logger.debug("getPublicExceSchedule ended.");
+		
+		return result;
+	}
 
+	@Override
+	public List<ScheDeptVO> getShareScheduleDept(Map<String, Object> param) throws Exception {
+		logger.debug("getShareScheduleDept started.");
+		
+		List<ScheDeptVO> result = ezScheduleDAO.getShareScheduleDept(param);
+		
+		logger.debug("getShareScheduleDept ended.");
+		
+		return result;
+	}
+
+	@Override
+	public List<ScheDeptVO> getAddJobSchedule(Map<String, Object> param) throws Exception {
+		logger.debug("getAddJobSchedule started.");
+		
+		List<ScheDeptVO> result = ezScheduleDAO.getAddJobSchedule(param);
+		
+		logger.debug("getAddJobSchedule ended.");
+		
+		return result;
+	}
+}
