@@ -185,7 +185,7 @@
 		        pSealHeight = $("#tbSealHeight").val();
 		
 		        if (pSealWidth == "" || pSealHeight == "" || pSealPath == "") {
-		            var pInformationString = "<spring:message code = 'ezApprovalG.t1260' />";
+		            var pInformationString = "<spring:message code = 'ezApprovalG.pgb13' />";
 		            OpenAlertUI(pInformationString);
 		            return;
 		        }
