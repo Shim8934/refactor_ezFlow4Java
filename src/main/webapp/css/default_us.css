@@ -1,4 +1,4 @@
-﻿table, th, .page, .point, .box, .box2, .nobox, .leftbody, .message, .mainbody,  .listview2 td,.content td, .file td, .file2 td, .txt, .imgbtn{
+table, th, .page, .point, .box, .box2, .nobox, .leftbody, .message, .mainbody,  .listview2 td,.content td, .file td, .file2 td, .txt, .imgbtn{
     font-size:12px;
     color:#393939;
 }
@@ -20,7 +20,7 @@ a{color:#393939;}
 .headpanel .crust{width:200px;}
 .headpanel .crust a.crumb{padding:0;}
 .imgbtnSurvey{box-shadow:0px 2px 0px 0px rgba(0, 0, 0, 0.1); border:1px solid #c3c3c3; height:28px;}
-.quesDiv .qstnRow .dd-container .dd-options{width:555px;}
+.quesDiv .qstnRow .dd-container .dd-options{display:none; list-style:none; overflow:auto; position:absolute; right:-1px; top: 44px; width:795px !important; z-index:2000; margin:0px 0px 0px 0px; padding:0; background:#fff; border:solid 1px #c7c7c7; border-bottom:none;}
 .quesDiv .qstnRow .dd-container .dd-selected-text{font-size:13px;}
 .prevQsWrapper .skipArea .skipSelect{width:135px;}
 .mainmenuTabUL_left li{line-height:19px;}
