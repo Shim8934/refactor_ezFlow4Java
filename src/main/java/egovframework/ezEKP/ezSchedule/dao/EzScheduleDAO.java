@@ -9,7 +9,9 @@ import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
 import egovframework.ezEKP.ezSchedule.vo.AttachListVO;
 import egovframework.ezEKP.ezSchedule.vo.AttendantListVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheDeptVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheGetHolidayVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheSecretaryVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleConfigVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleCumulerVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleDeptVO;
@@ -515,5 +517,19 @@ public class EzScheduleDAO extends EgovAbstractDAO {
 	public void updateScheduleGroupMember(Map<String, Object> map) throws Exception {
 		update("EzScheduleDAO.updateScheduleGroupMember", map);
 	}
-}
+	
+	@SuppressWarnings("unchecked")
+	public List<ScheSecretaryVO> getPublicExceSchedule(Map<String, Object> param) {
+		return (List<ScheSecretaryVO>) list("EzScheduleDAO.getPublicExceSchedule", param);
+	}
 
+	@SuppressWarnings("unchecked")
+	public List<ScheDeptVO> getShareScheduleDept(Map<String, Object> param) {
+		return (List<ScheDeptVO>) list("EzScheduleDAO.getShareScheduleDept", param);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ScheDeptVO> getAddJobSchedule(Map<String, Object> param) {
+		return (List<ScheDeptVO>) list("EzScheduleDAO.getAddJobSchedule", param);
+	}
+}

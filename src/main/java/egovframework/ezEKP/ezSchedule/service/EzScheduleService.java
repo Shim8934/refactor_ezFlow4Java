@@ -11,7 +11,9 @@ import org.w3c.dom.NodeList;
 
 import egovframework.ezEKP.ezSchedule.vo.AttachListVO;
 import egovframework.ezEKP.ezSchedule.vo.AttendantListVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheDeptVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheGetHolidayVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheSecretaryVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleConfigVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleCumulerVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleDeptVO;
@@ -233,4 +235,7 @@ public interface EzScheduleService {
 	/* 2023-10-05 임정은 - 모아보기 그룹 관리 > 그룹 관리 버튼 > 그룹명, 설명 수정 후 저장 버튼 */
 	public void updateScheduleGather(String groupId,String id, String groupName, String description, int tenantId) throws Exception;
 
+	public List<ScheSecretaryVO> getPublicExceSchedule(Map<String, Object> param) throws Exception;
+	public List<ScheDeptVO> getShareScheduleDept(Map<String, Object> param) throws Exception;
+	public List<ScheDeptVO> getAddJobSchedule(Map<String, Object> param) throws Exception;
 }

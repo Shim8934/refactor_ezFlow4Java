@@ -217,17 +217,11 @@ function save_schedule(pageFrom)
 
     if (scheduleid == "")
 	{
-        ownerid = document.getElementById("ListOwnerID").options[document.getElementById("ListOwnerID").selectedIndex].value;
-		ownerid = ownerid.split(";;")[1];
+        var selectRow = document.getElementById("ListOwnerID").options[document.getElementById("ListOwnerID").selectedIndex].value;
+		ownerid = selectRow.split(";;")[1];
 
-	    ownername = getNodeText(document.getElementById("ListOwnerID").options[document.getElementById("ListOwnerID").selectedIndex]);
-
-	    if (ownername.indexOf("-") > -1)
-	        ownername = ownername.split(" - ")[1];
-	    else if (ownername.indexOf("]") > -1)
-	        ownername = ownername.split("]")[1];	    
-	    
-        ownername2 = ownername;
+	    ownername = selectRow.split(";;")[2];
+        ownername2 = selectRow.split(";;")[3];
     }
 	var xmlHTTP = createXMLHttpRequest();
 	var xmlDom = createXmlDom();    
