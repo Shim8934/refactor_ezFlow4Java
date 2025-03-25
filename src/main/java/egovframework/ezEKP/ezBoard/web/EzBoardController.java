@@ -4629,6 +4629,13 @@ public class EzBoardController extends EgovFileMngUtil{
 			displayName = userInfo.getDisplayName2();
 		}
 		
+		String deptName = "";
+		if (userInfo.getPrimary().equals("1")) {
+			deptName = userInfo.getDeptName1();
+		} else {
+			deptName = userInfo.getDeptName2();
+		}
+		
 		String useHwpDownSecurity = ezCommonService.getTenantConfig("useHwpDownSecurity", userInfo.getTenantId());
 		String webHWPUrl = ezCommonService.getTenantConfig("webHWPUrl", userInfo.getTenantId());
 		String HwpSecurityNum = "";
@@ -4680,6 +4687,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("defaultFontAndSize", defaultFontAndSize);
 		model.addAttribute("orgCompanyID", orgCompanyID);
 		model.addAttribute("displayName", displayName);
+		model.addAttribute("deptName", deptName);
 		model.addAttribute("useHwpDownSecurity", useHwpDownSecurity);
 		model.addAttribute("webHWPUrl", webHWPUrl);
 		model.addAttribute("HwpSecurityNum", HwpSecurityNum);
@@ -6726,6 +6734,20 @@ public class EzBoardController extends EgovFileMngUtil{
 		} else if (userLang.equals("4") && boardInfo.getBoardName4() != null && !boardInfo.getBoardName4().isEmpty()) {
 			boardName = boardInfo.getBoardName4();
 		}
+		
+		String displayName = "";
+		if (userInfo.getPrimary().equals("1")) {
+			displayName = userInfo.getDisplayName1();
+		} else {
+			displayName = userInfo.getDisplayName2();
+		}
+		
+		String deptName = "";
+		if (userInfo.getPrimary().equals("1")) {
+			deptName = userInfo.getDeptName1();
+		} else {
+			deptName = userInfo.getDeptName2();
+		}
 
 		model.addAttribute("userID", userID);
 		model.addAttribute("userEditor", userEditor);
@@ -6739,6 +6761,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		model.addAttribute("boardName", boardName);
 		model.addAttribute("useKeyword", boardInfo.getUseKeyword());
+		model.addAttribute("displayName", displayName);
+		model.addAttribute("deptName", deptName);
 		if ("Y".equals(boardInfo.getWriterFlag())) {
 			model.addAttribute("writerOption", ezBoardService.getWriterOption(userInfo));
 		}
@@ -10245,6 +10269,20 @@ public class EzBoardController extends EgovFileMngUtil{
 		} else if (userLang.equals("4") && boardInfo.getBoardName4() != null && !boardInfo.getBoardName4().isEmpty()) {
 			boardName = boardInfo.getBoardName4();
 		}
+		
+		String displayName = "";
+		if (userInfo.getPrimary().equals("1")) {
+			displayName = userInfo.getDisplayName1();
+		} else {
+			displayName = userInfo.getDisplayName2();
+		}
+		
+		String deptName = "";
+		if (userInfo.getPrimary().equals("1")) {
+			deptName = userInfo.getDeptName1();
+		} else {
+			deptName = userInfo.getDeptName2();
+		}
 
 		model.addAttribute("userID", userID);
 		model.addAttribute("userEditor", userEditor);
@@ -10257,6 +10295,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("boardName", boardName);
 		model.addAttribute("useKeyword", boardInfo.getUseKeyword());
+		model.addAttribute("displayName",displayName);
+		model.addAttribute("deptName", deptName);
 		if ("Y".equals(boardInfo.getWriterFlag())) {
 			model.addAttribute("writerOption", ezBoardService.getWriterOption(userInfo));
 		}

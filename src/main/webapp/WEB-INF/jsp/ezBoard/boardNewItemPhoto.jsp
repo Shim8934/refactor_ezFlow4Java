@@ -864,10 +864,10 @@
 
 			function chkUseDept_onclick() {
 				if (chkUseDept.checked) { // 팀/부서로 표시
-					spUseDept.innerHTML = "${userInfo.lang}" == "1" ? SSDeptName : SSDeptName2;
+					spUseDept.innerHTML = "${deptName}";
 					document.getElementById("writerFlag").selectedIndex = 1;
 				} else { // 이름으로 표시
-					spUseDept.innerHTML = "${userInfo.lang}" == "1" ? SSUserName : SSUserName2;
+					spUseDept.innerHTML = "${displayName}";
 					document.getElementById("writerFlag").selectedIndex = 0;
 				}
 			}
