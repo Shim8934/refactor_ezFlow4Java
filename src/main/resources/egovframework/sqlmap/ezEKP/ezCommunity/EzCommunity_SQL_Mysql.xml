@@ -602,10 +602,14 @@
 				TBL_C_CLUBUSER B
 			ON
 				A.c_clubno = B.c_clubno
+			AND
+				A.tenant_id = B.tenant_id
 			JOIN
 				TBL_COMM_BOARDINFO C
 			ON
 				A.c_clubno = C.c_clubno
+			AND
+				A.tenant_id = C.tenant_id
 			WHERE
 				boardid = #v_PBOARDID#
 			AND
