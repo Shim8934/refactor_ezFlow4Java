@@ -67,7 +67,7 @@ tr.mail { display: none; }
 tr[data-target='.approval'], tr.approval { display: none; }
 </c:if>
 <c:if test="${not usePassAprLine}">
-<%-- 결재를 사용하지 않는다면 결재 tr을 숨김 --%>
+<%-- 기결재통과를 사용하지 않는다면 결재통과알림 tr을 숨김 --%>
 tr.approval.passAprLine { display: none; }
 </c:if>
 </style>
