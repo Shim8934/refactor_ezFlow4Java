@@ -70,6 +70,10 @@ tr[data-target='.approval'], tr.approval { display: none; }
 <%-- 기결재통과를 사용하지 않는다면 결재통과알림 tr을 숨김 --%>
 tr.approval.passAprLine { display: none; }
 </c:if>
+<c:if test="${not useBallotSystem}">
+<%-- 투표를 사용하지 않는다면 투표 tr을 숨김 --%>
+tr[data-target='.poll'], tr.poll { display: none; }
+</c:if>
 </style>
 <title></title>
 </head>
