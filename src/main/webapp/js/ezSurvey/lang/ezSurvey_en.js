@@ -189,5 +189,6 @@ var SurveyMessages = {
 	strAllowedImageForTitle : "Only png, jpeg, and jpg are allowed.",
     /* 2024-11-25 박기범 - 리스트 상태값 추가 */
     strLangPGB01 : "Participation",
-    strLangPGB02 : "non-participation"
+    strLangPGB02 : "non-participation",
+    strNumber : "Type"
 }

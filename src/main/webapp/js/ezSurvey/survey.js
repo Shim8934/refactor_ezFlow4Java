@@ -2538,7 +2538,7 @@ var SurveyCreate     = function() {
 		var sliderUnit = $("<div class='silder-unit'></div>");
 		var unitTxt    = $("<span class='slider-span'>" + SurveyMessages.strSlider7 + "</span>");
 		var unitInput  = $("<input type='input' class='slider-input' value='" + unit  + "'/>");
-		var cntTxt    = $("<span class='slider-span'>개수</span>");
+		var cntTxt    = $("<span class='slider-span'>" + SurveyMessages.strNumber  +"</span>");
 		var cnt = (highest - lowest) / unit;
 		cnt = !!cnt ? cnt : 1;
 		var cntInput  = $("<input type='input' class='slider-cnt' value='" + cnt  + "'/>");
