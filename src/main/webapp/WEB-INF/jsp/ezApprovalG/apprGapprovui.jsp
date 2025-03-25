@@ -223,6 +223,9 @@
 			var editVersion = "";
 			// 2024-12-10 기민혁 - 수정버전 모드
 			var editMode = "";
+
+            // 2025-02-18 박기범 - 프론트에서 문서 편집시, 문서를 오픈한 이후로 다른 문서/결재진행 변화가 있었는지 체크하기 위한 코드
+            var snapshotCode = "<c:out value ='${snapshotCode}'/>";
 			
 			window.onload = function () {
 		        if (allFlag == "2") {
@@ -2028,6 +2031,17 @@
 	    			}
 	    			return;
 	    		}
+				
+				if (getSnapshotCode() !== snapshotCode) {
+					alert("<spring:message code='ezApprovalG.edit.pgb01'/>");
+					if (allFlag == "1") {
+						LoadNextDocument("\n" + "<spring:message code='ezApprovalG.t4'/>");
+					} else {
+						window.returnValue = "CLOSE";
+					}
+					return;
+				}
+				
 		        if (modeflag) { // 편집모드 진입
 		            modeflag = false;
 		            chkBtnConfirm("1");
@@ -2066,6 +2080,16 @@
 	    			}
 	    			return;
 	    		}
+				
+				if (getSnapshotCode() !== snapshotCode) {
+					alert("<spring:message code='ezApprovalG.edit.pgb01'/>");
+					if (allFlag == "1") {
+						LoadNextDocument("\n" + "<spring:message code='ezApprovalG.t4'/>");
+					} else {
+						window.returnValue = "CLOSE";
+					}
+					return;
+				}
 		        
 		        if (Ans) {
 			        var mustField = message.getMustFieldsInsert("<c:out value ='${userInfo.lang}'/>");
@@ -2109,6 +2133,7 @@
 		            
 			        btnEdit.childNodes[0].textContent = "<spring:message code='ezApprovalG.t44'/>";
 			        editedFlag = true;
+					snapshotCode = getSnapshotCode();
 		        }
 		        else { // 저장 > 취소
 		            message.Set_EditorInputBodyHTML(modifiOrgBody);

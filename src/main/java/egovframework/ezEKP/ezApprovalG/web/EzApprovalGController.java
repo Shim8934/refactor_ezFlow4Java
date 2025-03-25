@@ -5630,6 +5630,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		model.addAttribute("editVersionYN", editVersionYN);
 
+		// 2025-02-18 박기범 - 프론트에서 문서 편집시, 문서를 오픈한 이후로 다른 문서/결재진행 변화가 있었는지 체크하기 위한 코드
+		model.addAttribute("snapshotCode", ezApprovalGService.getDocumentSnapshotCode(userInfo.getTenantId(), userInfo.getCompanyID(), docID));
+		
 		logger.debug("approvui ended");
 		
 		return "ezApprovalG/apprGapprovui";
@@ -14083,5 +14086,18 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		logger.debug("apprGSummaryEdit ended");
 		return result;
+	}
+	
+	@GetMapping(value = "/ezApprovalG/getDocumentSnapshotCode.do")
+	@ResponseBody
+	public String getDocumentSnapshotCode(@CookieValue("loginCookie") String loginCookie, @RequestParam String docID) {
+		String code = "";
+		try {
+			LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+			code = ezApprovalGService.getDocumentSnapshotCode(userInfo.getTenantId(), userInfo.getCompanyID(), docID);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+		return code;
 	}
 }

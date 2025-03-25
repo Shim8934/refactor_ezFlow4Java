@@ -4567,3 +4567,20 @@ function signDel(returnUserSN) {
         }
     }
 }
+
+// 2025-02-18 박기범 - 프론트에서 문서 편집시, 문서를 오픈한 이후로 다른 문서/결재진행 변화가 있었는지 체크하기 위한 코드
+function getSnapshotCode() {
+    var snapshotCode = "";
+    $.ajax({
+        method : "GET",
+        url : "/ezApprovalG/getDocumentSnapshotCode.do",
+        async: false,
+        data : {
+            docID: pDocID
+        },
+        success : function(code){
+            snapshotCode = code;
+        }
+    });
+    return snapshotCode;
+}

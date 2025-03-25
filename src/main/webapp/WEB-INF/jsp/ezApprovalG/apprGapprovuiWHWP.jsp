@@ -200,6 +200,9 @@
 			var upperDeptCode = "<c:out value ='${upperDeptCode}'/>";
 			var upperDeptName = "<c:out value ='${upperDeptName}'/>";
 
+            // 2025-02-18 박기범 - 프론트에서 문서 편집시, 문서를 오픈한 이후로 다른 문서/결재진행 변화가 있었는지 체크하기 위한 코드
+            var snapshotCode = "<c:out value ='${snapshotCode}'/>";
+            
 		    function getNextDocList() {
 		        NextDocID = "";
 		        if (selectedDocID != "") {
@@ -1392,6 +1395,17 @@
                             return;
                         }
                     }
+
+					if (getSnapshotCode() !== snapshotCode) {
+						alert("<spring:message code='ezApprovalG.edit.pgb01'/>");
+						if (allFlag == "1") {
+							LoadNextDocument("\n" + "<spring:message code='ezApprovalG.t4'/>");
+						} else {
+							window.returnValue = "CLOSE";
+						}
+						return;
+					}
+					
 			        if (modeflag) {
 			            modeflag = false;
 			            chkBtnConfirm("1");
@@ -1430,6 +1444,16 @@
 		        }
 			    
 			    function btnEdit_onclick_Complete(Ans, PeditMode) {
+					if (getSnapshotCode() !== snapshotCode) {
+						alert("<spring:message code='ezApprovalG.edit.pgb01'/>");
+						if (allFlag == "1") {
+							LoadNextDocument("\n" + "<spring:message code='ezApprovalG.t4'/>");
+						} else {
+							window.returnValue = "CLOSE";
+						}
+						return;
+					}
+					
 			    	DivPopUpHidden();
 			    
 			    	message.EditMode(3);
@@ -1463,6 +1487,7 @@
 				        message.EditMode(0);
 				    	modeflag = true;
 				    	chkBtnConfirm("2");
+						snapshotCode = getSnapshotCode(); 
 				    } else {
 		                SetHTML(beforeHwp, btnEdit_Cancel_Complete)
 		            } 

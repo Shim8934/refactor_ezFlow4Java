@@ -39438,6 +39438,32 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return totalCnt + "/" + successCnt + "/" + failCnt + "/" + excludeCnt;
 	}
 
+	@Override
+	public String getDocumentSnapshotCode(int tenantId, String companyId, String docId) throws Exception {
+		Map<String, Object> map = new HashMap<>();
+		map.put("v_DOCID", docId);
+		map.put("companyID", companyId);
+		map.put("v_TENANTID", tenantId);
+
+		int sn = ezApprovalGDAO.historyDocInfoCount(map);
+
+		map.put("v_MODE", "APR");
+		map.put("v_ORDEROPTION", "APRMEMBERSN");
+
+		List<ApprGAprLineVO> apprGAprLineVOList = ezApprovalGDAO.getLineInfo(map);
+		StringBuilder code = new StringBuilder();
+		code.append(sn);
+
+		for (ApprGAprLineVO apprGAprLineVO : apprGAprLineVOList) {
+			code.append("-")
+					.append(apprGAprLineVO.getAprMemberSN())
+					.append("_")
+					.append(apprGAprLineVO.getAprState());
+		}
+
+		return code.toString();
+	}
+	
     @Override
     public ApprGSummaryVO getSummaryDB(String docID, String companyID, int tenantID, String mode) throws Exception {
         logger.debug("getSummaryDB started");
