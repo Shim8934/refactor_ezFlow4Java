@@ -396,7 +396,7 @@ var strUreadDelPermenant = "削除するとメールは復元できません。\
 var strUreadDelSearchPermenant = "削除するとメールは復元できません。\n検索結果の中から未読メールをすべて完全に削除しますか？";
 
 const strLangTagLimit = "タグは最大5つまで登録できます。";
-const strLangTagadd = "메일에 태그 추가 :";
+const strLangTagadd = "メールにタグ追加 :";
 
 function GetLocalTime(Offset , pDateTime)
 {
