@@ -412,4 +412,6 @@ public interface EzCommunityService {
 
 	// 2024-10-17 조수빈 - 게시판 조회 권한 체크 메소드
 	public String getReadFlag(String boardID, LoginVO userInfo) throws Exception;
+	
+	public String getClubNameLocalization(String userLang, CommunityClubVO clubVO) throws Exception;
 }

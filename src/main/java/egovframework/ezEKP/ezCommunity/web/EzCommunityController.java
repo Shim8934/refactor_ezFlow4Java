@@ -4787,6 +4787,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		int tenantID = userInfo.getTenantId();
 		
 		CommunityClubVO clubVO = ezCommunityService.adminNoticeMailOkGet1(code, tenantID);
+		String clubName = ezCommunityService.getClubNameLocalization(userInfo.getLang(), clubVO);
 		
 		if (clubVO.getC_SysopID() != null) {
 			List<CommunityClubVO> list = ezCommunityService.adminNoticeMailOkGet2(code, tenantID);
@@ -4831,7 +4832,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 				String linkUrl = "/ezCommunity/checkCommHome.do?communityCD=" + code;
 	        	String linkUrlMobile = "";
 	        	String notiSubType = "NOTICE";
-				String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientList, "COMMUNITY", notiSubType, clubVO.getC_ClubName() + " - 상세 내용은  메일함에서 확인 필요", "popup", "1300", "900", linkUrl, linkUrlMobile, "");
+				String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientList, "COMMUNITY", notiSubType, clubName + " - " + egovMessageSource.getMessage("ezCommunity.noti01", userInfo.getLocale()), "popup", "1300", "900", linkUrl, linkUrlMobile, "");
 				logger.debug("community " +  notiSubType + " noti status : " + notiStatus);
 			}
 			

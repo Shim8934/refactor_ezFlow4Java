@@ -44,6 +44,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8653,5 +8654,14 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		logger.debug("getReadFlag ended.");
 		return ezCommunityDAO.getReadFlag(map);
+	}
+
+	@Override
+	public String getClubNameLocalization(String userLang, CommunityClubVO clubVO) throws Exception {
+		String clubName = clubVO.getC_ClubName();
+		if (Strings.isNotBlank(userLang) && !"1".equals(userLang)) {
+			clubName = clubVO.getC_ClubName2();
+		}
+		return clubName;
 	}
 }
