@@ -969,11 +969,7 @@
                             if (AttachfilenameN1 < 0) {
                                 Attachfilename = encodeURIComponent(tr.cells[1].innerText + AttachUrlA2);
                             } else {
-                            	if (AttachUrlA2 == "mht") { // 마침표가 붙지 않은 확장자를 사용
-		                            Attachfilename = encodeURIComponent(tr.cells[1].innerText + AttachUrlA2);
-	                        	} else {
-		                            Attachfilename = encodeURIComponent(tr.cells[1].innerText);
-	                        	}
+	                            Attachfilename = encodeURIComponent(tr.cells[1].innerText);
                             }
 
                             if (AttachUrl != "null") {
