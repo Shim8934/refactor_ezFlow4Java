@@ -1131,6 +1131,14 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	    			inputRead.close();
 	    		}
 	    	}
+		} else {
+			try (OutputStreamWriter outWrite = new OutputStreamWriter(Files.newOutputStream(f.toPath()))) {
+				outWrite.write(sb.toString());
+				String crlf = System.getProperty("line.separator");
+				outWrite.append(crlf).append(crlf);
+			} catch (Exception e) {
+				logger.error(e.getMessage(), e);
+			}
 		}
 		
 		logger.debug("mailInterUploadCopy ended.");
