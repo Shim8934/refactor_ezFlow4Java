@@ -3138,7 +3138,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			
 			resultXML.append("<NODE>");
 			resultXML.append("<ItemID>" + boardItemVO.getItemID() + "</ItemID>");
-			resultXML.append("<FileName>" + commonUtil.cleanValue(boardItemTitle + fileExtension) + "</FileName>");
+			resultXML.append("<FileName><![CDATA[" + commonUtil.cleanValue(boardItemTitle + fileExtension) + "]]></FileName>");
 			resultXML.append("<FilePath>" + commonUtil.cleanValue(newFilePath) + "</FilePath>");
 			resultXML.append("<FileSize>" + getProperSizeDisplay(mhtSize) + "</FileSize>");
 			resultXML.append("<FileSize2>" + mhtSize + "</FileSize2>");
@@ -3158,7 +3158,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			resultXML.append("<FilePath>" + commonUtil.cleanValue(newFilePath) + "</FilePath>");
 			resultXML.append("<FileSize>" + getProperSizeDisplay(Long.parseLong(boardAttachVOs.get(k).getFileSize())) + "</FileSize>");
 			resultXML.append("<FileSize2>" + boardAttachVOs.get(k).getFileSize() + "</FileSize2>");
-			resultXML.append("<FileName>" + boardAttachVOs.get(k).getFileName() + "</FileName>");
+			resultXML.append("<FileName><![CDATA[" + boardAttachVOs.get(k).getFileName() + "]]></FileName>");
 			resultXML.append("</NODE>");
 		}
 		
@@ -3214,7 +3214,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			resultXML.append("<FilePath>" + commonUtil.cleanValue(boardContent.getContentLocation()) + "</FilePath>");
 			resultXML.append("<FileSize>" + getProperSizeDisplay(fileSize) + "</FileSize>");
 			resultXML.append("<FileSize2>" + fileSize + "</FileSize2>");
-			resultXML.append("<FileName>" + boardContent.getTitle() + "</FileName>");
+			resultXML.append("<FileName><![CDATA[" + boardContent.getTitle() + "]]></FileName>");
 			resultXML.append("</NODE>");
 		}
 		
@@ -3225,7 +3225,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			resultXML.append("<FilePath>" + commonUtil.cleanValue(boardAttachVOs.get(k).getFilePath()) + "</FilePath>");
 			resultXML.append("<FileSize>" + getProperSizeDisplay(Long.parseLong(boardAttachVOs.get(k).getFileSize())) + "</FileSize>");
 			resultXML.append("<FileSize2>" + boardAttachVOs.get(k).getFileSize() + "</FileSize2>");
-			resultXML.append("<FileName>" + boardAttachVOs.get(k).getFileName() + "</FileName>");
+			resultXML.append("<FileName><![CDATA[" + boardAttachVOs.get(k).getFileName() + "]]></FileName>");
 			resultXML.append("</NODE>");
 		}
 		
