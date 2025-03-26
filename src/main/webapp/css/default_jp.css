@@ -101,3 +101,5 @@ table, th, td{font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, s
 /* 일정관리 */
 .scheduleWrite .hasDatepicker{width:90px !important;}
 .scheduleWrite .ui-timepicker-input{width:50  px !important;}
+
+.boardTxtURL {width: 70%;}

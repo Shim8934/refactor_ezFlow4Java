@@ -4185,3 +4185,5 @@ a.commentFileSpan:hover {cursor: pointer; text-decoration: underline;}
 #moreBoardIcon .layer_select .iconTexts {display: block;}
 
 .tooltip-bttns .survey_atchBtn {float:right; display: flex;}
+
+.boardTxtURL {width: 73%;margin-left: 1.5px;margin-bottom: 1px;}
