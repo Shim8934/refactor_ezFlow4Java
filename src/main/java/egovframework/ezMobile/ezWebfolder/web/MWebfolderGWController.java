@@ -44,7 +44,8 @@ public class MWebfolderGWController {
 	public Result getFileList(HttpServletRequest request,
 			@PathVariable String userId, @PathVariable String pageType, @RequestParam(defaultValue = "") String folderId,
 			@RequestParam int page, @RequestParam int size, @RequestParam int offset,
-			@RequestParam(defaultValue = "") String search, @RequestParam(defaultValue = "") String filter) {
+			@RequestParam(defaultValue = "") String search, @RequestParam(defaultValue = "") String filter, 
+		    @RequestParam(required = false) String lang) {
 		logger.debug("MOBILE G/W WEBFOLDER [GET /mobile/ezwebfolder/users/{userId}/files/{pageType}] started.");
 		logger.debug("userId: {}, pageType: {}, folderId: {}", userId, pageType, folderId);
 
@@ -53,6 +54,8 @@ public class MWebfolderGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO common = mOptionService.commonInfoWeb(serverName, userId);
+
+			if (lang != null) common.setLang(lang);
 
 			MWebfolderFetchInfo fetchInfo = new MWebfolderFetchInfo();
 			fetchInfo.setServerName(serverName);
