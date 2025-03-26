@@ -2338,7 +2338,7 @@ function getCookie(name) {
 
 function setColorMode() {
 	
-	if (window.location.href.indexOf('admin') > 0 && window.location.href.indexOf('adminPage.do?initFlag=4') == -1 && window.location.href.indexOf('adminPage.do?initFlag=0') == -1) {
+	if (window.location.href.indexOf('/admin/') > 0) {
 		return;
 	}
 	
