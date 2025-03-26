@@ -469,6 +469,14 @@ public class EzNewPortalGWController {
 			data.put("fixedPortletList", fixedPortletList);
 			data.put("portletOrder", portletOrder);
 
+			
+			if (!"1".equals(portletLang) && !"2".equals(portletLang)) {
+				List<PortletInfoVO> helpPortlet = portletOrder.stream()
+				.filter(vo -> vo.getPortletId() == 12)
+				.collect(Collectors.toList());
+				portletOrder.removeAll(helpPortlet);
+			}
+			
 			// 회사의 슬라이더 이미지 가져오기
 			List<PersonalSliderImageVO> sliderList = ezPersonalService.getSilderList(companyId, "USER", null, tenantId);
 
@@ -1745,6 +1753,13 @@ public class EzNewPortalGWController {
 			
 			if (useInternet.equals("NO")) {
 				portletList.removeIf(vo -> (vo.getPortletCode() != null && vo.getPortletCode().equals("weather")));
+			}
+			
+			if (!"1".equals(portletLang) && !"2".equals(portletLang)) {
+				List<PortletInfoVO> helpPortlet = portletList.stream()
+				.filter(vo -> vo.getPortletId() == 12)
+				.collect(Collectors.toList());
+				portletList.removeAll(helpPortlet);
 			}
 			
 			data.put("portletList", portletList);

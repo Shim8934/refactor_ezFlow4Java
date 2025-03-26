@@ -541,7 +541,13 @@
 						// 2020-12-08 박기범 - data3에 portletCode 추가
 						listHTML += "<li class='portlet col' id='portlet" + portletId + "' data1='" + defaultOrder
 								+ "' data2='" + menuId + "' data3='" + portletCode + "' data-general=" + result[i].general
-								+ " data-url='" + ReplaceText(ReplaceText(ConvertCharToEntityReference(result[i].portletUrl), '\"', "&#39;"), "\'", "&#34;") + "'>";
+								+ " data-url='" + ReplaceText(ReplaceText(ConvertCharToEntityReference(result[i].portletUrl), '\"', "&#39;"), "\'", "&#34;");
+						
+						if (lang != 1 && lang != 2 && portletId == 12) {
+							listHTML +=  "' style='display:none'>";
+						} else {
+							listHTML +=  "'>";
+						}
 						
 						if (usePrimaryLangOnly == "YES") {
 							listHTML += "<div class='portlet-header'><div class='portlet_header_name'>" + ConvertCharToEntityReference(portletNameList[0].portletName) + "</div>";
