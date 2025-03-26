@@ -6543,7 +6543,14 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 
 					String oldXmlContent = strXml.toString();
 					xmlDom = commonUtil.convertStringToDocument(oldXmlContent);
-					itemNode = (Node) xPath.evaluate("//NODE[PUPLOADSN = '" + itemUid + "']", xmlDom, XPathConstants.NODE);
+					NodeList nodeList = (NodeList) xPath.evaluate("//NODE[PUPLOADSN]", xmlDom, XPathConstants.NODESET);
+
+					for (int i = 0; i < nodeList.getLength(); i++) {
+						if (nodeList.item(i).getTextContent().equals(itemUid)) {
+							itemNode = nodeList.item(i);
+							break;
+						}
+					}
 				}
 
 				String bigDateDir = EgovDateUtil.getToday("");
