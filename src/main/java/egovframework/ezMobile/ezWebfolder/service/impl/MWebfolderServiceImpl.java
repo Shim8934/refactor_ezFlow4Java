@@ -280,6 +280,7 @@ public class MWebfolderServiceImpl implements MWebfolderService {
 		webfolderResult.setFileCount(countInfo.get("fileCount").intValue());
 		webfolderResult.setTotalPages(countInfo.get("totalPage").intValue());
 		webfolderResult.setFolderCount(countInfo.get("folderCount").intValue());
+		Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(user.getLang()));
 		webfolderResult.setFolderName(egovMessageSource.getMessage(folderNameMessageKey,
 				new Locale(commonUtil.getTwoLetterLangFromLangNum(user.getLang()))));
 
