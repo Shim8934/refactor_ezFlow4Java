@@ -47,7 +47,8 @@
 		<div class="admin_quicklink">
 			<ul id="mainlist"></ul>
 		</div>	
-		
+		<input type="hidden" id="quickUserLang" value="<c:out value='${userLang}'/>">
+		<input type="hidden" id="quickUserPrimanry" value="<c:out value='${userPrimanryLang}'/>">
 		<!-- 빠른 링크 추가 영역 -->
 		<xml id="listviewheader" style="display: none;"></xml>
 		<iframe name="ifrm" src="about:blank" style="display: none;"></iframe>
