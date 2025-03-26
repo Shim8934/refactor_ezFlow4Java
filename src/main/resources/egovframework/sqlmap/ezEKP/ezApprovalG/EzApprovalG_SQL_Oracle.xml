@@ -14995,6 +14995,7 @@
        			TBL_RECORD_TEMP.PROCESSDEPTCODE = TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID
 	      	WHERE 
 	      		TBL_APRRECEIPTPROCESSINFO.PROCESSYN <> 'Y'
+   			]]>
 	      	AND 
 	      		((
                     <isNotEqual property="assignChk" compareValue="Y">
@@ -15013,7 +15014,6 @@
 	      		TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
 			AND
 	      		TBL_APRRECEIPTPROCESSINFO.COMPANYID = #companyID#
-	      			]]>
 	     <isEqual property="v_SUSINADMIN" compareValue="Y">
              OR
              (TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN
