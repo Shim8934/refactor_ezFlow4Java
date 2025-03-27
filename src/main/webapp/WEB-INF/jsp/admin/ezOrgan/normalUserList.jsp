@@ -50,6 +50,7 @@
 	    			var html = "";
 
                     var lang = res.lang;
+					var primary = res.primary;
    					if (res.itemCnt < 1) {
    						html += "<tr><td colspan=\"6\" style=\"text-align:center;\">" + "<spring:message code='ezOrgan.hdp25' />" + "</td></tr>";
   					} else {
@@ -59,7 +60,7 @@
    							var result;
    								
    							var cn = user.cn;
-   							if(lang=="1"){
+   							if(primary=="1"){
    							    var userName = user.displayName;
    							    var deptName = user.description;
    							    var companyName = user.company;
