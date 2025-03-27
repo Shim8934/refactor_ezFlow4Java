@@ -1750,7 +1750,15 @@ function SaveApproveInfo(pApproveFlag) {
         	if (field) {
         		createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field));
         	} else {
-        		var field = message.GetListItem(fields, "docnumber");
+        		/* 2025-02-18 홍승비 - 전자결재 G > useReceiveDocNo 플래그에 관계없이 수신문의 접수번호를 문서번호로 사용하도록 수정 */
+        		// useReceiveDocNo가 YES인 경우, 최종결재 시점이 아닌 수신문 접수 시점에 접수번호를 미리 채번함
+        		var field = "";
+        		if (approvalFlag == 'G' && pDraftFlag == "SUSIN") {
+        			field = message.GetListItem(fields, "receiptnumber");
+        		} else {
+        			field = message.GetListItem(fields, "docnumber");
+        		}
+        		
         		if (field) {
         			createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field));
         		} else {

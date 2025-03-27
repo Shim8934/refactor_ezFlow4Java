@@ -3691,14 +3691,14 @@ DROP TABLE IF EXISTS `tbl_board_boardinfo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_board_boardinfo` (
-  `BOARDID` varchar(510) NOT NULL,
+  `BOARDID` varchar(76) NOT NULL,
   `BOARDNAME` varchar(510) CHARACTER SET utf8mb4 DEFAULT NULL,
   `BOARDNAME2` varchar(510) CHARACTER SET utf8mb4 DEFAULT NULL,
   `BOARDNAME3` varchar(510) CHARACTER SET utf8mb4 DEFAULT NULL,
   `BOARDNAME4` varchar(510) CHARACTER SET utf8mb4 DEFAULT NULL,
   `TREEVIEWORDER` int(11) DEFAULT NULL,
   `BOARDLEVEL` int(11) DEFAULT NULL,
-  `PARENTBOARDID` varchar(510) DEFAULT NULL,
+  `PARENTBOARDID` varchar(76) DEFAULT NULL,
   `BOARDDESCRIPTION` varchar(510) CHARACTER SET utf8mb4 DEFAULT NULL,
   `ITEMEXPIRES` int(11) DEFAULT NULL,
   `ATTACHSIZELIMIT` varchar(510) DEFAULT NULL,
@@ -3731,8 +3731,8 @@ CREATE TABLE `tbl_board_boardinfo` (
   `PUBLICFLAG` char(1) DEFAULT 'N',
   `ALLNEWBOARDFLAG` char(1) DEFAULT 'Y',
   `WRITERFLAG` varchar(2) DEFAULT 'N',
-  `STARRATINGFLAG` varchar(1) DEFAULT NULL
-  PRIMARY KEY (`BOARDID`(255),`TENANT_ID`),
+  `STARRATINGFLAG` varchar(1) DEFAULT NULL,
+  PRIMARY KEY (`BOARDID`,`TENANT_ID`),
   KEY `idx_companyid` (`COMPANYID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;

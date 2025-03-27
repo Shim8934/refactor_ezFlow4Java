@@ -7081,8 +7081,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					}
 				}
 				
+                /* 2025-01-21 홍승비 - 전자결재 일반버전 > 수신문의 최종결재 시, 접수번호를 채번하지 않으며 원문서의 문서번호를 그대로 사용한다. (수신문의 접수번호는 G버전에서만 사용 / 일반버전에서는 접수번호 필드를 공백으로 유지) */
 				/** 수신 일괄결재시 채번 */
-				if (useReceiveDocNo.equals("NO") && (totalLineSN == Integer.parseInt(signNum.trim()) || isJKAprTypeAfterDK == true) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007") && aprStateSign.equals("011")) {
+				if (approvalFlag.equals("G") && useReceiveDocNo.equals("NO") && (totalLineSN == Integer.parseInt(signNum.trim()) || isJKAprTypeAfterDK == true) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007") && aprStateSign.equals("011")) {
 					strDeptID = receiveDept;
 					strDeptName = receiveDeptName;
 
@@ -22039,7 +22040,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_DOCID", docID);
 		map.put("v_FLAG", flag);
 		map.put("v_TENANTID", tenantID);
-		logger.debug("aprAttachMail Param: v_DOCID=" + docID + "v_FLAG=" + "v_TENANTID=" + tenantID); 
+		logger.debug("aprAttachMail Param: v_DOCID=" + docID + ", v_FLAG=" + flag + ", v_TENANTID=" + tenantID); 
 		
 		List<ApprGAttachInfoVO> apprGAttachInfoVOList = ezApprovalGDAO.aprAttachMail(map);
 		
@@ -37299,7 +37300,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		// 2023-10-04 조수빈 - 정상 (TRUE)/ 다른 노드에서 처리 (DONE)/ 실패를 구분하기 위한 변수 (ERROR).
 		String resultStr = "TRUE";
-				
+		
+		/* 2024-12-04 홍승비 - 일괄접수 시 전자결재 일반버전과 G버전 동작 구분 강화 */
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		
 		try {
 			String receiveRet = getReceivedDocInfo(userInfo, docID, companyID, strLang, userInfo.getTenantId(), userInfo.getOffset());
 			Document aprXML = commonUtil.convertStringToDocument(receiveRet);
@@ -37471,66 +37475,77 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					}
 				}
 				
-				// 접수번호 필드가 없는 경우 예외 발생
-				if (!findHwpField("receiptnumber", hwpFile)) {
+				// 접수번호 필드가 없는 경우 예외 발생 (일반버전의 경우 수신문의 접수번호를 채번하지 않으며, 원문서의 문서번호를 그대로 사용함)
+				if (approvalFlag.equals("G") && !findHwpField("receiptnumber", hwpFile)) {
 					throw new IllegalArgumentException("Doc does not have 'receiptnumber' field.");
 				}
 				
-				// 접수번호 채번 - useReceiveDocNo가 YES이면 접수할 때 NO이면 최종 결재 시
-				if ((useReceiveDocNo.equals("NO") && totalLineSN == 1) || (!useReceiveDocNo.equals("NO"))) {
+				/* 2025-01-08 홍승비 - 전자결재 일반버전에서도 웹한글 기능을 사용 가능하게 개선되었으므로, 전자결재 일반/G 버전에 맞춰 수신문 접수번호를 부여 */
+				if ((findHwpField("receiptnumber", hwpFile) == true && approvalFlag.equals("G")) || (!"".equals(getHwpText("docnumber", hwpFile)) && approvalFlag.equals("S"))) {
 					
-					String ret = getCabinetNum(receiveDept, "", companyID, docID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
-					docNumFlag = true;
-					Document docXML = commonUtil.convertStringToDocument(ret);
-					cabinetSN = docXML.getElementsByTagName("RESULT").item(0).getTextContent();
-					
-					if (!ret.equals("")) {
-						if (aprType.equals("018") || aprType.equals("001") || aprType.equals("004") || aprType.equals("016")) {
+					// 접수번호는 G버전에서만 채번
+					if (approvalFlag.equals("G")) {
+						// 접수번호 채번 - useReceiveDocNo 컨피그가 YES : 접수/편철/전결 시 채번, NO : 최종 결재/편철/전결 시 채번
+						if ((useReceiveDocNo.equals("NO") && totalLineSN == 1) || useReceiveDocNo.equals("YES")) {
 							
-							if (!excuteInfoHwp("DOCNUM_BEFORE", "SUSIN", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId())) {
-								throw new RuntimeException("Conn Error.");
-							}
-						}
-						
-						docNO = description + "-" + createDocNO(cabinetSN , docNumZeroCnt);
-						setHwpText("receiptnumber", docNO, hwpFile);
-						strXML.getElementsByTagName("DOCNO").item(0).setTextContent(docNO);
-						retNum = getNDigitNum(cabinetSN, 6);
-						
-						if (aprType.equals("018") || aprType.equals("001") || aprType.equals("004") || aprType.equals("016")) {
+							String ret = getCabinetNum(receiveDept, "", companyID, docID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
+							docNumFlag = true;
+							Document docXML = commonUtil.convertStringToDocument(ret);
+							cabinetSN = docXML.getElementsByTagName("RESULT").item(0).getTextContent();
 							
-							if (!excuteInfoHwp("DOCNUM_AFTER", "SUSIN", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId())) {
-								throw new RuntimeException("Conn Error.");
+							if (!ret.equals("")) {
+								if (aprType.equals("018") || aprType.equals("001") || aprType.equals("004") || aprType.equals("016")) {
+									
+									if (!excuteInfoHwp("DOCNUM_BEFORE", "SUSIN", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId())) {
+										throw new RuntimeException("Conn Error.");
+									}
+								}
+								
+								docNO = description + "-" + createDocNO(cabinetSN , docNumZeroCnt);
+								setHwpText("receiptnumber", docNO, hwpFile);
+								strXML.getElementsByTagName("DOCNO").item(0).setTextContent(docNO);
+								retNum = getNDigitNum(cabinetSN, 6);
+								
+								if (aprType.equals("018") || aprType.equals("001") || aprType.equals("004") || aprType.equals("016")) {
+									
+									if (!excuteInfoHwp("DOCNUM_AFTER", "SUSIN", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId())) {
+										throw new RuntimeException("Conn Error.");
+									}
+								}
 							}
+						} else {
+							// 채번하지 않는 경우 
+							docNO = description + "-";
+							setHwpText("receiptnumber", docNO, hwpFile);
+							strXML.getElementsByTagName("DOCNO").item(0).setTextContent(docNO);
 						}
 					}
-				} else {
-					// 채번하지 않는 경우 
-					docNO = description + "-";
-					setHwpText("receiptnumber", docNO, hwpFile);
-					strXML.getElementsByTagName("DOCNO").item(0).setTextContent(docNO);
+					// 일반버전에서는 원문서의 문서번호를 수신문이 그대로 가져감
+					else {
+						strXML.getElementsByTagName("DOCNO").item(0).setTextContent(getHwpText("docnumber", hwpFile));
+					}
+					
+					// 접수일자는 접수하는 시점에서 해당 필드에 값이 세팅 됨
+					if (findHwpField("receiptdate", hwpFile)) {
+						setHwpText("receiptdate", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(0, 10).replace("-", "."), hwpFile);
+					}
+					
+					tempHwp = new File(commonUtil.detectPathTraversal(formURL)).getParentFile() + commonUtil.separator + docID + "_backup.hwp";
+					FileUtils.copyFile(new File(commonUtil.detectPathTraversal(formURL)), new File(commonUtil.detectPathTraversal(tempHwp)));
+					
+					if ((totalLineSN == Integer.parseInt(signNum.trim())) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004"))) {
+						linkCheck = excuteInfoHwp("LAST_SIGN_BEFORE", "SUSIN", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
+					} else {
+						linkCheck = excuteInfoHwp("MIDDLE_SIGN_BEFORE", "SUSIN", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
+					}
+					
+					if (!linkCheck) {
+						throw new RuntimeException("Conn Error.");
+					}
+					
+					HWPWriter.toFile(hwpFile, formURL);
+					hwpSaveFlag = true;
 				}
-				
-				// 접수일자는 접수하는 시점에서 해당 필드에 값이 세팅 됨
-				if (findHwpField("receiptdate", hwpFile)) {
-					setHwpText("receiptdate", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(0, 10).replace("-", "."), hwpFile);
-				}
-				
-				tempHwp = new File(commonUtil.detectPathTraversal(formURL)).getParentFile() + commonUtil.separator + docID + "_backup.hwp";
-				FileUtils.copyFile(new File(commonUtil.detectPathTraversal(formURL)), new File(commonUtil.detectPathTraversal(tempHwp)));
-				
-				if ((totalLineSN == Integer.parseInt(signNum.trim())) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004"))) {
-					linkCheck = excuteInfoHwp("LAST_SIGN_BEFORE", "SUSIN", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
-				} else {
-					linkCheck = excuteInfoHwp("MIDDLE_SIGN_BEFORE", "SUSIN", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
-				}
-				
-				if (!linkCheck) {
-					throw new RuntimeException("Conn Error.");
-				}
-				
-				HWPWriter.toFile(hwpFile, formURL);
-				hwpSaveFlag = true;
 			}
 			
 			// 결재 이력 업데이트
@@ -37586,16 +37601,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			docResult = "<PARAMETER>" + docResult + "</PARAMETER>";
 			Document paramXML = commonUtil.convertStringToDocument(docResult);
 			
-			if ((totalLineSN == Integer.parseInt(signNum.trim())) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004"))) {
+			/* 2024-12-04 홍승비 - useReceiveDocNo가 YES인 경우, 최종결재가 아니더라도 접수번호를 채번함 (접수/편철/전결 시 채번) */
+			if (((totalLineSN == Integer.parseInt(signNum.trim())) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004"))) || useReceiveDocNo.equals("YES")) {
 				String docNumCode = paramXML.getElementsByTagName("WRITERDEPTID").item(0).getTextContent();
 				strXML.getElementsByTagName("DOCNUMCODE").item(0).setTextContent("");
 				strXML.getElementsByTagName("ORGDOCNUMCODE").item(0).setTextContent("");
 				
-				if (useReceiveDocNo.equals("NO")) {
-					strXML.getElementsByTagName("DOCNUMCODE").item(0).setTextContent(docNumCode + retNum);
-				}
+				strXML.getElementsByTagName("DOCNUMCODE").item(0).setTextContent(docNumCode + retNum);
 			}
-
+			
 			// 문서 정보 설정은 개별적으로 기안 부서의 설정 값이 저장되도록 처리.
 			strXML.getElementsByTagName("WRITERNAME2").item(0).setTextContent(paramXML.getElementsByTagName("WRITERNAME2").item(0).getTextContent());
 			strXML.getElementsByTagName("WRITERJOBTITLE2").item(0).setTextContent(paramXML.getElementsByTagName("WRITERJOBTITLE2").item(0).getTextContent());
@@ -38100,7 +38114,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						}
 					}
 					
-
 					String tempDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
 					// 2023-09-18 조수빈 - 서명일자
 					String lastCnt = tempDate.substring(5, 7) + "." + tempDate.substring(8, 10);
@@ -38121,17 +38134,17 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							strSign = signAdd + "sign" + lastSignNum;
 							strSeumyungDate = signAdd + "seumyungdate" + lastSignNum;
 						} else {
-							/* 2024-11-29 홍승비 - 전자결재 (일반, G) > 일괄 접수자전결 시에도 "전결" 문구가 들어가도록 수정 (표준 스펙) */
-							// 전결자 표시 여부에 따라 전결인 경우 텍스트 추가
-							// 서명일자칸이 존재하지 않는 경우, 서명 상단 "전결" 또는 "대결" 문구 우측에 공백없이 서명일자를 붙여 표기
-							if (aprType.equals("004") && ezCommonService.getTenantConfig("draftJunGyulFlag", userInfo.getTenantId()).equals("1")) { // 전결
-								addBeforeSignText = messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale());
-							} else if (aprType.equals("016")) { // 대결
-								addBeforeSignText = messageSource.getMessage("ezApprovalG.t26", userInfo.getLocale());
-							}
-							
 							strSign = signAdd + "sign1";
 							strSeumyungDate = signAdd + "seumyungdate1";
+						}
+						
+						/* 2024-11-29 홍승비 - 전자결재 (일반, G) > 일괄 접수자전결 시에도 "전결" 문구가 들어가도록 수정 (표준 스펙) / 2025-02-18 홍승비 - 공통 분기처리 추가수정 */
+						// 전결자 표시 여부에 따라 전결인 경우 텍스트 추가
+						// 서명일자칸이 존재하지 않는 경우, 서명 상단 "전결" 또는 "대결" 문구 우측에 공백없이 서명일자를 붙여 표기
+						if (aprType.equals("004") && ezCommonService.getTenantConfig("draftJunGyulFlag", userInfo.getTenantId()).equals("1")) { // 전결
+							addBeforeSignText = messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale());
+						} else if (aprType.equals("016")) { // 대결
+							addBeforeSignText = messageSource.getMessage("ezApprovalG.t26", userInfo.getLocale());
 						}
 						
 						/* 2024-11-27 홍승비 - 서명일자칸이 존재하지 않는 경우, 최종결재자의 서명일자는 서명칸 내부에 함께 들어가며 서명의 상단에 위치 */
@@ -38192,7 +38205,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		                resultXML.append("<SIGNINFO>");
 		                resultXML.append("<DOCID>" + docID + "</DOCID>");
 		                resultXML.append("<SIGNTYPE>" + "HTML" + "</SIGNTYPE>");
-		                resultXML.append("<SIGNNAME>" + "1sign1" + "</SIGNNAME>"); // signAdd 값이 1로 고정된 상태
+		                resultXML.append("<SIGNNAME>" + strSign + "</SIGNNAME>"); // signAdd 값이 1로 고정된 상태
 		                resultXML.append("<CONTENT>" + commonUtil.cleanValue(signText) + "</CONTENT>");
 		                resultXML.append("</SIGNINFO>");
 		            }
@@ -38200,7 +38213,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		                resultXML.append("<SIGNINFO>");
 		                resultXML.append("<DOCID>" + docID + "</DOCID>");
 		                resultXML.append("<SIGNTYPE>" + "TEXT" + "</SIGNTYPE>");
-		                resultXML.append("<SIGNNAME>" + "1seumyungdate1" + "</SIGNNAME>");
+		                resultXML.append("<SIGNNAME>" + strSeumyungDate + "</SIGNNAME>");
 		                resultXML.append("<CONTENT>" + commonUtil.cleanValue(lastCnt) + "</CONTENT>");
 		                resultXML.append("</SIGNINFO>");
 		            }
@@ -38262,8 +38275,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						
 						docNO = receiptFormat;
 						
-						// 접수번호 채번 - useReceiveDocNo가 YES이면 접수할 때 NO이면 최종 결재 시
-						if ((useReceiveDocNo.equals("NO") && totalLineSN == 1) || (!useReceiveDocNo.equals("NO"))) {
+						// 접수번호 채번 - useReceiveDocNo 컨피그가 YES : 접수/편철/전결 시 채번, NO : 최종 결재/편철/전결 시 채번
+						if ((useReceiveDocNo.equals("NO") && totalLineSN == 1) || useReceiveDocNo.equals("YES")) {
 							String ret = getCabinetNum(receiveDept, "", companyID, docID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
 							docNumFlag = true;
 							Document docXML = commonUtil.convertStringToDocument(ret);
@@ -38279,13 +38292,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 								}
 
 								docNO += createDocNO(cabinetSN , docNumZeroCnt);
-
-								if (approvalFlag.equals("G")) {
-									receiptNumber.text(docNO);
-								} else {
-									docNumber.text(docNO);
-								}
-
+								receiptNumber.text(docNO);
 								strXML.getElementsByTagName("DOCNO").item(0).setTextContent(docNO);
 
 								if (doc.getElementById("receiptdate") != null) {
@@ -38419,14 +38426,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			docResult = "<PARAMETER>" + docResult + "</PARAMETER>";
 			Document paramXML = commonUtil.convertStringToDocument(docResult);
 			
-			if ((totalLineSN == Integer.parseInt(signNum.trim())) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004"))) {
+			/* 2025-01-08 홍승비 - useReceiveDocNo가 YES인 경우, 최종결재가 아니더라도 접수번호를 채번함 (접수/편철/전결 시 채번) */
+			if (((totalLineSN == Integer.parseInt(signNum.trim())) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004"))) || useReceiveDocNo.equals("YES")) {
 				String docNumCode = paramXML.getElementsByTagName("WRITERDEPTID").item(0).getTextContent();
 				strXML.getElementsByTagName("DOCNUMCODE").item(0).setTextContent("");
 				strXML.getElementsByTagName("ORGDOCNUMCODE").item(0).setTextContent("");
 				
-				if (useReceiveDocNo.equals("NO")) {
-					strXML.getElementsByTagName("DOCNUMCODE").item(0).setTextContent(docNumCode + retNum);
-				}
+				strXML.getElementsByTagName("DOCNUMCODE").item(0).setTextContent(docNumCode + retNum);
 			}
 			
 			// 문서 정보 설정은 개별적으로 기안 부서의 설정 값이 저장되도록 처리.
