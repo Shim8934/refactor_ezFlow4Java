@@ -8,7 +8,7 @@ span{font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif
 table, th, td{font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 .btn, .btnposition input{font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 .left_pims span, .left_board span, .left_appr span, .left_resource span, .left_cop span, .left_webfolder span, .left_env span, .left_circular span{font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
-#mainmenu li span, #mainmenu li span.off{font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; line-height:30px;}
+#mainmenu li span, #mainmenu li span.off{font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; line-height:30px; width: 150px !important;}
 .left_admin{font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 .tstyle1, .tstyle3{font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 .mainlist{font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
