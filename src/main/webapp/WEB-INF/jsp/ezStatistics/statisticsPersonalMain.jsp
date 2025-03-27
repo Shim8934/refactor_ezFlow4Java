@@ -354,7 +354,7 @@
             <td>
                 <div id="mainmenu" style="height: 31px;margin:3px 0px !important">
                     <ul>
-                        <li><span style="<c:if test='${userInfo.getLang() eq "1"}'>width: 110px;</c:if> <c:if test='${userInfo.getLang() ne "1"}'>height: 28px; width: 180px;</c:if> text-align:center;background-color: white" onclick="return btnexportexcel_onclick()"><spring:message code='ezStatistics.t1003'/></span></li>
+                        <li><span style="width: 110px;text-align:center;background-color: white" onclick="return btnexportexcel_onclick()"><spring:message code='ezStatistics.t1003'/></span></li>
                     </ul>
                 </div>
             </td>
