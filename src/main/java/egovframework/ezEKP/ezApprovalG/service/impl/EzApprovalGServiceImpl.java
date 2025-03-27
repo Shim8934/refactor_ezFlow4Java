@@ -39331,23 +39331,26 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         
         Map<String, String> upDeptInfo = ezApprovalGDAO.getUpperDeptInfo(map);
         
-        if (upDeptInfo.get("USEUPPERDEPTBOX") != null && upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) {
-            String upDeptUseUpperCheck = "Y";
-            String upperDeptCode = upDeptInfo.get("EXTENSIONATTRIBUTE1");
+        if (upDeptInfo == null) {
+            return new HashMap<String, String>();
+        } else {
+            if (upDeptInfo.get("USEUPPERDEPTBOX") != null && upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) {
+                String upDeptUseUpperCheck = "Y";
+                String upperDeptCode = upDeptInfo.get("EXTENSIONATTRIBUTE1");
             
-            while (upDeptUseUpperCheck.equals("Y")) {
-                map.put("pDeptID", upperDeptCode);
-                Map<String, String> tmpInfo = ezApprovalGDAO.getUpperDeptInfo(map);
-                upDeptInfo.put("upperDeptName", tmpInfo.get("DISPLAYNAME"));
-                if (tmpInfo.get("USEUPPERDEPTBOX").equals("Y")) {
-                    upperDeptCode = tmpInfo.get("EXTENSIONATTRIBUTE1");
-                } else {
-                    upDeptUseUpperCheck = "N";
-                    upDeptInfo.put("upperDeptCode", upperDeptCode);
+                while (upDeptUseUpperCheck.equals("Y")) {
+                    map.put("pDeptID", upperDeptCode);
+                    Map<String, String> tmpInfo = ezApprovalGDAO.getUpperDeptInfo(map);
+                    upDeptInfo.put("upperDeptName", tmpInfo.get("DISPLAYNAME"));
+                    if (tmpInfo.get("USEUPPERDEPTBOX").equals("Y")) {
+                        upperDeptCode = tmpInfo.get("EXTENSIONATTRIBUTE1");
+                    } else {
+                        upDeptUseUpperCheck = "N";
+                        upDeptInfo.put("upperDeptCode", upperDeptCode);
+                    }
                 }
             }
         }
-        
         logger.debug("getUpperDeptInfo ended");
         return upDeptInfo;
     }
