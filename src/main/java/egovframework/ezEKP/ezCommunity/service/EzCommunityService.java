@@ -414,4 +414,6 @@ public interface EzCommunityService {
 	public String getReadFlag(String boardID, LoginVO userInfo) throws Exception;
 	
 	public String getClubNameLocalization(String userLang, CommunityClubVO clubVO) throws Exception;
+
+	public String getClubBoardNameLocalization(String userLang, CommunityBoardPropertyVO clubBoardVO) throws Exception;
 }
