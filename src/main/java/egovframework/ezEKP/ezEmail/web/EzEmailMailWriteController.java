@@ -6561,11 +6561,27 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					}
 				}
 
-				String bigDateDir = EgovDateUtil.getToday("");
-
 				if (itemNode == null) {
 					// XML에 없는 경우 itemUid를 새로 부여
 					itemUid = UUID.randomUUID() + fileName.substring(fileName.lastIndexOf('.'));
+				}
+
+				String bigDateDir = EgovDateUtil.getToday("");
+
+				Path largeFilePath = Paths.get(commonUtil.getRealPath(request), uploadMailDir, largeFileDir, bigDateDir, itemUid);
+				Path largeNameFilePath = largeFilePath.resolveSibling(itemUid + "__.txt");
+
+				Files.createDirectories(largeFilePath.getParent());
+				Files.copy(targetAttachPart.getInputStream(), largeFilePath);
+
+				try (FileOutputStream fos = new FileOutputStream(largeNameFilePath.toFile())) {
+					String base64EncodedName = Base64.encodeBase64String(commonUtil.normalizeFileName(fileName).getBytes(StandardCharsets.UTF_8));
+					fos.write(base64EncodedName.getBytes(StandardCharsets.ISO_8859_1));
+				}
+
+				long fileSize = Files.size(largeFilePath);
+
+				if (itemNode == null) {
 					Node nodesElem;
 
 					// xml이 없는 경우 새로 생성
@@ -6586,7 +6602,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					nodeElem.appendChild(xmlDom.createElement("PFILENAME"))
 							.appendChild(xmlDom.createCDATASection(fileName));
 					nodeElem.appendChild(xmlDom.createElement("FILESIZE"))
-							.appendChild(xmlDom.createCDATASection(String.valueOf(targetAttachPart.getSize())));
+							.appendChild(xmlDom.createCDATASection(String.valueOf(fileSize)));
 					nodeElem.appendChild(xmlDom.createElement("FILELOCATION"))
 							.appendChild(xmlDom.createCDATASection(bigDateDir + "|!|" + itemUid));
 					nodeElem.appendChild(xmlDom.createElement("PBIGFILEUPLOAD"))
@@ -6594,17 +6610,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				} else {
 					((Node) xPath.evaluate("PBIGFILEUPLOAD", itemNode, XPathConstants.NODE)).setTextContent("Y");
 					((Node) xPath.evaluate("FILELOCATION", itemNode, XPathConstants.NODE)).setTextContent(bigDateDir + "|!|" + itemUid);
-				}
-
-				Path largeFilePath = Paths.get(commonUtil.getRealPath(request), uploadMailDir, largeFileDir, bigDateDir, itemUid);
-				Path largeNameFilePath = largeFilePath.resolveSibling(itemUid + "__.txt");
-
-				Files.createDirectories(largeFilePath.getParent());
-				Files.copy(targetAttachPart.getInputStream(), largeFilePath);
-
-				try (FileOutputStream fos = new FileOutputStream(largeNameFilePath.toFile())) {
-					String base64EncodedName = Base64.encodeBase64String(commonUtil.normalizeFileName(fileName).getBytes(StandardCharsets.UTF_8));
-					fos.write(base64EncodedName.getBytes(StandardCharsets.ISO_8859_1));
 				}
 
 				String newXmlContent = commonUtil.convertDocumentToString(xmlDom);
