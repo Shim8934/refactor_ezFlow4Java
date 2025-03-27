@@ -5667,7 +5667,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("searchKeyword", searchKeyword);
 		model.addAttribute("searchKeycode", searchKeycode);
 		model.addAttribute("lang",lang);
-
+		model.addAttribute("primary", userInfo.getPrimary());
 		logger.debug("getLoginStopUserList ended.");
 
 		return "json";
