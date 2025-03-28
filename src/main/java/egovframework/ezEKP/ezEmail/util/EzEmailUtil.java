@@ -5382,11 +5382,11 @@ public class EzEmailUtil {
 	}
 
 	/**
-	 * 본문안에 따로 style태그가 들어가는 경우 sytle class= 를 찾아서 삭제하는 로직추가
+	 * 본문안에 따로 style태그가 들어가는 경우 style태그를 찾아서 삭제하는 로직추가
 	 */
 	private String styleClassTagsReplace(String str) {
 
-		Pattern p = Pattern.compile("<style\\s+class=[\"'][^\"']*[\"'][\\s\\S]*?</style>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+		Pattern p = Pattern.compile("<style[^>]*>[\\s\\S]*?</style>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 		Matcher m = p.matcher(str);
 		
 		str = m.replaceAll("");
