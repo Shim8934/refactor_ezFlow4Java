@@ -2216,20 +2216,20 @@ public class EzAddressController{
 		CSVWriter csvWriter = null;
 		
 		try {
-			String charset = "euc-kr";
+//			String charset = "euc-kr";
+//			
+//			if (userInfo.getLang().equals("3")) {
+//				charset = "shift-jis";
+//			}
+//			
+//			if (format.equals("googleCSV")) {
+//				charset = "utf-8";
+//			}
+//			
+//			logger.debug("charset=" + charset);
 			
-			if (userInfo.getLang().equals("3")) {
-				charset = "shift-jis";
-			}
-			
-			if (format.equals("googleCSV")) {
-				charset = "utf-8";
-			}
-			
-			logger.debug("charset=" + charset);
-			
-			writer = new OutputStreamWriter(response.getOutputStream(), charset);
-			
+			writer = new OutputStreamWriter(response.getOutputStream(), "UTF-8");
+			writer.write('\uFEFF');
 			csvWriter = new CSVWriter(writer, CSVWriter.DEFAULT_SEPARATOR, CSVWriter.DEFAULT_QUOTE_CHARACTER, CSVWriter.DEFAULT_ESCAPE_CHARACTER, "\r\n");
 			
 	        String[] headerArray = egovMessageSource.getMessage("ezAddress." + format, locale).split(";");
