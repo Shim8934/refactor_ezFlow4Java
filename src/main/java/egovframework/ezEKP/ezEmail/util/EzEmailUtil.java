@@ -3584,6 +3584,7 @@ public class EzEmailUtil {
 					// Forward시 첨부되도록 하기 위해 || p.isMimeType("application/*") 조건을 추가함.
 					if (((MimePart)p).getContentID() != null
 							&& !p.isMimeType("text/plain")
+							&& !p.isMimeType("application/*")
 							|| (includeAttachment 
 									&& ((p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)) 
 											|| (p.isMimeType("application/*"))))) {
@@ -3608,7 +3609,8 @@ public class EzEmailUtil {
 
 				// dhlee : 20221125 - multipart/mixed 안에 인라인 이미지 파트가 있는 메일이 있어 추가함.
 				if (((MimePart)p).getContentID() != null
-						&& !p.isMimeType("text/plain")) {
+						&& !p.isMimeType("text/plain")
+						&& !p.isMimeType("application/*")) {
 					isAdded = true;
 				}
 			}
@@ -3627,6 +3629,14 @@ public class EzEmailUtil {
 					// 위 예와 같이 Content-Type이 비정상적인 경우 text/plain으로 인식되어 Content-ID가 있더라도
 					// 비정상적인 타입일 경우엔 제외하기 위해 조건을 추가함
 					&& !src.isMimeType("text/plain")
+					// Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document;  name="2025-03-24-TSB157-SG17-ISED-Response to Circ 003-CAN.docx"
+					// Content-Transfer-Encoding: base64
+					// Content-Description: 2025-03-24-TSB157-SG17-ISED-Response to Circ 003-CAN.docx
+					// Content-Disposition: attachment;    filename="2025-03-24-TSB157-SG17-ISED-Response to Circ 003-CAN.docx";   size=45845; creation-date="Tue, 25 Mar 2025 14:09:59 GMT";  modification-date="Tue, 25 Mar 2025 14:09:59 GMT"
+					// Content-ID: <E95C17A570064B4D9A1872F7F507C9D0@sct-15-20-7719-20-msonline-outlook-0b924.templateTenant>
+					// 위 예와 같이 Content-ID가 있으면서 첨부 파일인 경우가 있어 application/* 타입인 경우는 제외하는 조건을 추가함
+					// 제외 조건을 Content-Disposition: attachment로 하지 않는 이유는 Inline Image이지만 attachment로 잘못 되어 있는 경우도 있는 것으로 보이기 때문
+					&& !src.isMimeType("application/*")
 					|| (includeAttachment
 							&& (src.getDisposition() != null && src.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)
 									|| src.isMimeType("application/*")))) {
