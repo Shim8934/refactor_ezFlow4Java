@@ -3119,7 +3119,7 @@
 	    		(16, 6, #companyID#, #tenantID#, 'LadderGame'),
 	    		(17, 1, #companyID#, #tenantID#, '업무관리'),
 	    		(17, 2, #companyID#, #tenantID#, 'Tasks'),
-	    		(17, 3, #companyID#, #tenantID#, 'To Do管理'),
+	    		(17, 3, #companyID#, #tenantID#, 'タスク管理'),
 	    		(17, 4, #companyID#, #tenantID#, '工作管理'),
 	    		(17, 5, #companyID#, #tenantID#, 'Tasks'),
 	    		(17, 6, #companyID#, #tenantID#, 'Tasks'),
