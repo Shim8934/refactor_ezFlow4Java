@@ -1490,7 +1490,7 @@
 		        var AttachRows = SelectNodes(pAttachListXml, "LISTVIEWDATA/ROWS/ROW")
 		
 		        if (AttachRows.length > 0) {
-		            AppendFileAttachInfo(pAttachListXml);
+		            // AppendFileAttachInfo(pAttachListXml);
 		            dadiframe.fileupload2(pAttachListXml);
 		        }
 	        }
