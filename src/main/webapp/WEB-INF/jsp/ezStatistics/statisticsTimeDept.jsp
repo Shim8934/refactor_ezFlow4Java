@@ -478,7 +478,7 @@
 	                </span>
 	            </td>
 	            <td>
-	                <div id="mainmenu" style="float: right; height: 28px;margin:3px 0px !important">
+	                <div id="mainmenu" style="float: right; height: 31px;margin:3px 0px !important">
 	                    <ul>
 	                        <li><span class="btnexportexcel" style="width: 110px;text-align:center;background-color: white" onclick="return btnexportexcel_onclick()"><spring:message code='ezStatistics.t1003'/></span></li>
 	                    </ul>
