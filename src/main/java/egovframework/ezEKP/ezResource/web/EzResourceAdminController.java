@@ -439,8 +439,13 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 			String memberNam2 = xmlRet.getElementsByTagName("NODE").item(i).getChildNodes().item(5).getTextContent();
 
 			//2023-08-16 이주원 - 언어설정에 따른 권한대상 텍스트
+			String lang = "1";
+			if (commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()) != null){
+				lang = commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId());
+			};
+			
 			if (accessLvl.equals("1")) {
-				if (userInfo.getLang().equals("1")){
+				if ("1".equals(lang)){
 					strVal = memberNam + " - (" + egovMessageSource.getMessage("ezResource.t115", locale);
 				} else {
 					strVal = memberNam2 + " - (" + egovMessageSource.getMessage("ezResource.t115", locale);
@@ -449,7 +454,7 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 				optAdmLvl = "checked";
 				optUserLvl = "";
 			} else if (accessLvl.equals("2")) {
-				if (userInfo.getLang().equals("1")){
+				if ("1".equals(lang)){
 					strVal = memberNam + " - (" + egovMessageSource.getMessage("ezResource.t116", locale);
 				} else {
 					strVal = memberNam2 + " - (" + egovMessageSource.getMessage("ezResource.t116", locale);
