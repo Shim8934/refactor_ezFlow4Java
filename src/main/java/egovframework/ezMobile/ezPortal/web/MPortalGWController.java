@@ -814,7 +814,9 @@ public class MPortalGWController extends EgovFileMngUtil {
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			
 			int tenantId = info.getTenantId();
-			String lang = info.getLang();
+			String userLang = info.getLang();
+			
+			String lang = commonUtil.getPrimaryData(userLang, tenantId);
 			
 			List<OrganUserVO> addJobList = new ArrayList<OrganUserVO>();
 			
