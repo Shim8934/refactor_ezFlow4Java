@@ -4222,7 +4222,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				Document resultXML = commonUtil.convertStringToDocument(strXML);
 				
 				if (resultXML.getElementsByTagName("HREF").item(0) != null && !resultXML.getElementsByTagName("HREF").item(0).getTextContent().trim().equals("")) {
-					docHref = resultXML.getDocumentElement().getTextContent();
+					docHref = resultXML.getElementsByTagName("HREF").item(0).getTextContent();
 				}
 			}
 			

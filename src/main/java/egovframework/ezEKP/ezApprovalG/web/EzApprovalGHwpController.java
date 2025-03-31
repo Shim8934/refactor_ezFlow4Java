@@ -423,7 +423,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		
 		if (resultXML.getElementsByTagName("HASOPINIONYN").getLength() > 0) {
 			if (resultXML.getElementsByTagName("HASOPINIONYN").item(0) != null && !resultXML.getElementsByTagName("HASOPINIONYN").item(0).getTextContent().trim().equals("")) {
-				hasOpinionYN = resultXML.getDocumentElement().getTextContent();
+				hasOpinionYN = resultXML.getElementsByTagName("HASOPINIONYN").item(0).getTextContent();
 			}
 		}
 		
@@ -1869,13 +1869,13 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		
 		if (resultXML.getElementsByTagName("HASOPINIONYN").getLength() > 0) {
 			if (resultXML.getElementsByTagName("HASOPINIONYN").item(0) != null && !resultXML.getElementsByTagName("HASOPINIONYN").item(0).getTextContent().trim().equals("")) {
-				hasOpinionYN = resultXML.getDocumentElement().getTextContent();
+				hasOpinionYN = resultXML.getElementsByTagName("HASOPINIONYN").item(0).getTextContent();
 			}
 		}
 
 		if (resultXML.getElementsByTagName("FORMID").getLength() > 0) {
 			if (resultXML.getElementsByTagName("FORMID").item(0) != null && !resultXML.getElementsByTagName("FORMID").item(0).getTextContent().trim().equals("")) {
-				formID = resultXML.getDocumentElement().getTextContent();
+				formID = resultXML.getElementsByTagName("FORMID").item(0).getTextContent();
 			}
 		}
 		
@@ -3012,7 +3012,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		
 		if (resultXML.getElementsByTagName("HASOPINIONYN").getLength() > 0) {
 			if (resultXML.getElementsByTagName("HASOPINIONYN").item(0) != null && !resultXML.getElementsByTagName("HASOPINIONYN").item(0).getTextContent().trim().equals("")) {
-				hasOpinionYN = resultXML.getDocumentElement().getTextContent();
+				hasOpinionYN = resultXML.getElementsByTagName("HASOPINIONYN").item(0).getTextContent();
 			}
 		}
 		
