@@ -692,8 +692,9 @@
 					<span id="disLikeCountSpan" style="vertical-align:top;"><c:if test="${disLikeCount > 0}"> (<c:out value="${disLikeCount}"/>)</c:if></span>
 					</span>
 				</div>
-			</c:if>
-			
+            </div>
+            </c:if>
+            	
             <%-- 2024-09-24 이혜림 - 본문 하단, 첨부파일/한줄댓글 상단에 별점 평가하기 추가 --%>
             <c:if test="${not empty boardInfo.starRatingFlag && boardInfo.starRatingFlag == 'Y'}">
             <div id="ratingContainer" class="rating_div" onclick="clickRatingButton()">
@@ -713,7 +714,6 @@
                     <a class="imgbtn"><span onclick="clickSaveRatingButton()"><spring:message code='ezBoard.lhr001'/></span></a>
                 </div>
             </c:if>
-		</div>
 			
 		<%-- 2019-11-06 홍승비 - 하단댓글 영역 추가 --%>
         <c:if test="${OneLineReplyFlag == '2'}">
