@@ -770,7 +770,7 @@
 				var getBirth = document.getElementById("txtBirth").value;
 
 				if(getBirth.length != 0) {
-					var newPassword = getBirth.value.replace(/-/g, '');
+					var newPassword = getBirth.replace(/-/g, '');
 					var data = document.getElementById("UserID").value;
 
 					$.ajax({
