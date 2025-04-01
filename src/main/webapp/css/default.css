@@ -4224,6 +4224,7 @@ a.commentFileSpan:hover {cursor: pointer; text-decoration: underline;}
 
 #ratingContainer.rating_div .ratingButton{padding:0 10px;}
 #ratingContainer.rating_div label{display:inline-block; height:36px;}
+#ratingContainer.rating_div label input {display:none;}
 #ratingContainer.rating_div label img{vertical-align:top; margin-top:10px;}
 
 #ratingContainer.rating_div .imgbtn{height:25px; line-height:23px; border:1px solid #E2E2E2; border-radius:3px; box-sizing:border-box; padding:0 12px;}
