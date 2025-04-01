@@ -9100,8 +9100,7 @@
 	      		AND
 	      			TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
 	      		AND
-	      			TBL_APRRECEIPTPROCESSINFO.COMPANYID = #companyID#	      			
-	      	]]>
+	      			TBL_APRRECEIPTPROCESSINFO.COMPANYID = #companyID#
 	      	<isEqual property="v_SUSINADMIN" compareValue="Y">
 	      		OR 
 	      			(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN

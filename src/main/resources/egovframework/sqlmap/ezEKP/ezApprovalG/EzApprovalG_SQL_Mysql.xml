@@ -9160,6 +9160,7 @@
 	      			TBL_APRDOCINFO.WRITERNAME,
 	      			TBL_APRDOCINFO.WRITERNAME2,
 					TBL_APRDOCINFO.FORMID
+                ]]>
 			    <isEqual property="assignChk" compareValue="Y">
 				    , TBL_APRRECEIPTPROCESSINFO.PROCESSORNAME as PROCESSORNAME
                 </isEqual>
