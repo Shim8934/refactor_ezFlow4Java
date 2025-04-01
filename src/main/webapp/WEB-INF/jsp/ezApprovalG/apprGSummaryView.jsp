@@ -21,7 +21,6 @@
             
             window.onload = function () {
                 try {
-                    debugger;
                     var summaryContentHtml = ConvertMHTtoHTML(summaryPath);
                     var tempXML = loadXMLString(summaryContentHtml);
                     var XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
