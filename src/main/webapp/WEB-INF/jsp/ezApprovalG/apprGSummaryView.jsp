@@ -21,11 +21,12 @@
             
             window.onload = function () {
                 try {
+                    debugger;
                     var summaryContentHtml = ConvertMHTtoHTML(summaryPath);
                     var tempXML = loadXMLString(summaryContentHtml);
                     var XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
                     var htmlData = getNodeText(XmlBodyDATA);
-                    document.querySelector('#txtContent').innerHTML = replaceEntityCodeToStr(htmlData);
+                    document.querySelector('#txtContent').innerHTML = htmlData;
                 } catch (e) {
                     console.log(e);
                     document.querySelector('#txtContent').innerHTML = "<p>" + strLangJIH_Summary04 + "</p>";

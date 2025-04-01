@@ -31,7 +31,7 @@
                     var tempXML = loadXMLString(summaryContentHtml);
                     var XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
                     var htmlData = getNodeText(XmlBodyDATA);
-                    document.querySelector('#summaryContent').innerHTML = replaceEntityCodeToStr(htmlData);
+                    document.querySelector('#summaryContent').innerHTML = htmlData;
                 } catch(e) {
                     console.log(e);
                     document.querySelector('#summaryContent').innerHTML = "<p>" + strLangJIH_Summary04 + "</p>";
