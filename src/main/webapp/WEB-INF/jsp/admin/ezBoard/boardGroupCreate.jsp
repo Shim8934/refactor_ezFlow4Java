@@ -103,7 +103,7 @@
 			            		<th><c:out value='${lang_secondary}' /></th>
 			            		<td><input type="text" name="textfield" id="txtNewGroupName2" style="width:100%" maxlength=20></td>
 			          		</tr>
-			          		<c:if test="${useJapanese == 'YES'}">
+			          		<c:if test="${useJapanese == 'YES' && lang_primary ne lang_tertiary}">
 				          		<tr class="primary">
 				            		<th><c:out value='${lang_tertiary}' /></th>
 				            		<td><input type="text" name="textfield" id="txtNewGroupName3" style="width:100%" maxlength=20></td>

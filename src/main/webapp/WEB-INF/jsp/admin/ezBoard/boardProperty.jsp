@@ -1136,7 +1136,7 @@
 		                        <th><c:out value='${lang_secondary}' /></th>
 		                        <td style="border-bottom:1px solid #ddd;"><c:out value='${model.boardName2}' /></td>
 		                    </tr>
-		                    <c:if test="${useJapanese == 'YES'}">
+		                    <c:if test="${useJapanese == 'YES'&& lang_primary ne lang_tertiary}">
 			                    <tr class="primary">
 			                        <th><c:out value='${lang_tertiary}' /></th>
 			                        <td style="border-bottom:1px solid #ddd;"><c:out value='${model.boardName3}' /></td>
@@ -1175,7 +1175,7 @@
 		                            <input type="text" id="txtBoardName2" style="width: 100%" value="<c:out value='${model.boardName2}' />" maxlength="20" />
 		                        </td>
 		                    </tr>
-			          		<c:if test="${useJapanese == 'YES'}">
+			          		<c:if test="${useJapanese == 'YES' && lang_primary ne lang_tertiary}">
 			                    <tr class="primary">
 			                        <th><c:out value='${lang_tertiary}' /></th>
 			                        <td style="border-bottom:1px solid #ddd;">
