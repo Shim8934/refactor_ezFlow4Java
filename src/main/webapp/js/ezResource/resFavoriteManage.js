@@ -1,5 +1,5 @@
 getFavoriteList();
-var lang = $("#userLang").val();
+
 
 function getFavoriteList(topId) {
     if (!topId) {
@@ -105,6 +105,7 @@ function getMainTreeUI(catList, treeMain) {
         success: function (jsonObj) {
             var brdList = jsonObj.list;
             var divTag = document.createElement("div");
+            var lang = jsonObj.userLang;
 
             // 자원 추가
             for (var j = 0; j < brdList.length; j++) {
@@ -125,10 +126,6 @@ function getMainTreeUI(catList, treeMain) {
                 brdDivTag.appendChild(brdIcon);
 
                 var brdNode = document.createElement("span");
-                
-                if (!lang) {
-                    lang = "";
-                } 
                 
                 brdNode.innerHTML = brdList[j]["brdNm" + lang];
                 brdNode.classList.add("node_normal");

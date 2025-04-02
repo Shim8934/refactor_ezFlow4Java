@@ -78,7 +78,6 @@
 		<iframe src="<spring:message code='main.kms4' />"
 			style="border: none;" id="iFrameLayer"></iframe>
 	</div>
-	<input type="hidden" id="userLang" value="${lang}">
 	<script type="text/javascript"
 		src="${util.addVer('/js/ezResource/resFavoriteManage.js')}"></script>
 </body>

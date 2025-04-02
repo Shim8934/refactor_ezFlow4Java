@@ -125,6 +125,7 @@ function getMainTreeUI(catList, treeMain) {
         success: function (jsonObj) {
             var brdList = jsonObj.list;
             var divTag = document.createElement("div");
+            var lang = jsonObj.userLang;
 
             // 자원 추가
             for (var j = 0; j < brdList.length; j++) {
@@ -140,7 +141,7 @@ function getMainTreeUI(catList, treeMain) {
                 brdDivTag.appendChild(brdIcon);
 
                 var brdNode = document.createElement("span");
-                brdNode.innerHTML = brdList[j]['brdNm'];
+                brdNode.innerHTML = brdList[j]['brdNm' + lang];
                 brdNode.classList.add("node_normal");
                 brdNode.style.cursor = 'pointer';
                 brdNode.dataset.id = brdList[j].brdID;
