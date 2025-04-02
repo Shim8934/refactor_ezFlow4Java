@@ -1970,7 +1970,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		}
 
         String htmlBody = bodyInfoList.get(0);
-        Pattern p = Pattern.compile("<base\\s+href.*?>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+        Pattern p = Pattern.compile("<base\\s+.*?href.*?>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 		Matcher m = p.matcher(htmlBody);
 		htmlBody = m.replaceAll("");
 
@@ -3825,7 +3825,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		
         // 2023-05-16 이사라 : NullPointerException 시큐어코딩
         String htmlBody = CollectionUtils.isNotEmpty(bodyInfoList) ? bodyInfoList.get(0) : "";
-        Pattern p = Pattern.compile("<base\\s+href.*?>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+        Pattern p = Pattern.compile("<base\\s+.*?href.*?>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 		Matcher m = p.matcher(htmlBody);
 		htmlBody = m.replaceAll("");
         		
