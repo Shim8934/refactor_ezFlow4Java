@@ -34,7 +34,7 @@
 		<script type="text/javascript">
 		    var OrderCell = "";
 		    var companyID = "<c:out value = '${userInfo.companyID}' />";
-		    var langType = "<c:out value = '${userInfo.lang}' />";
+		    var langType = "<c:out value = '${userInfo.primary}' />";
 		    var primary = "<c:out value = '${userInfo.primary}' />";
 		    var approvalFlag = "<c:out value = '${approvalFlag}' />";
 		    var listview = new ListView();
