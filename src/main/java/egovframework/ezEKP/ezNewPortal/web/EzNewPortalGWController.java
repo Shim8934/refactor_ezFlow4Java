@@ -234,10 +234,10 @@ public class EzNewPortalGWController {
 			int tenantId = info.getTenantId();
 			String portletLang = info.getLang();
 			String deptPath = ezOrganService.getDeptPath(deptId, tenantId);
-			
+			String userLang = commonUtil.getPrimaryData(info.getLang(), info.getTenantId());
 			String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", info.getTenantId());
 			logger.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId + ", portletLang : " + portletLang + ", deptPath : " + deptPath);
-			Optional<OrganUserVO> userInfo = ezOrganService.getUserInfo(tenantId, userId, companyId, deptId, jobId, portletLang);
+			Optional<OrganUserVO> userInfo = ezOrganService.getUserInfo(tenantId, userId, companyId, deptId, jobId, userLang);
 
 			if (!userInfo.isPresent()) {
 				throw new Exception("There are no query result about user matching the given conditions.");

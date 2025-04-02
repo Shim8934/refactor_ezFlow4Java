@@ -1038,13 +1038,14 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		logger.debug("portalUserInfoPortlet Start");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String lang = commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId());
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
 		param.put("deptId", userInfo.getDeptID());
 		param.put("companyId", userInfo.getCompanyID());
 		param.put("jobId", userInfo.getJobId());
-		param.put("lang", userInfo.getLang());
+		param.put("lang", lang);
 		
 		
 		String url = "/rest/ezportal/portlets/userinfomations";
