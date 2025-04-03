@@ -401,8 +401,8 @@
 		   	    				html += "	<td>" + i.senderName + " (" + i.senderEmail + ")" 	+ "</td>";
 	   	    				}
 	   	    				
-	   	    				html += "	<td style='width:100%;overflow:hidden;text-overflow:ellipsis;' title='"+i.subject+"'>";
-	   	    				html += "		<nobr>" + i.subject + "</nobr>";
+	   	    				html += "	<td style='width:100%;overflow:hidden;text-overflow:ellipsis;' title='"+escapeHtml(i.subject)+"'>";
+	   	    				html += "		<nobr>" + escapeHtml(i.subject) + "</nobr>";
 	   	    				html += "   </td>";
 	   	    				
 	   	    				if (attStrArr.length > 1) {
@@ -461,7 +461,16 @@
 			}
     	});
     }
-
+	function escapeHtml(text) {
+		var map = {
+			'&': '&amp;',
+			'<': '&lt;',
+			'>': '&gt;',
+			'"': '&quot;',
+			"'": '&#039;'
+		};
+		return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+	}
   	//**/ 엑셀내려받기 버튼 클릭시 이벤트 호출
     function excelExport() {
 		var pageNo = "-1";
