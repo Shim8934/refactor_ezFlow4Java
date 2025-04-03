@@ -2439,6 +2439,7 @@ public class EzSystemAdminController {
 		boolean useWebfolder	= ezCommonService.getTenantConfig("useWebfolder" ,tenantId).equalsIgnoreCase("YES");
 		boolean useBoard		= !ezCommonService.getTenantConfig("useBoard" ,tenantId).equalsIgnoreCase("NO");
 		boolean useSurvey		= !ezCommonService.getTenantConfig("useSurvey" ,tenantId).equalsIgnoreCase("NO");
+		boolean useSchedule		= ezCommonService.getTenantConfig("useSchedule" ,tenantId).equalsIgnoreCase("YES");
 		String packageType		= commonUtil.getPackageType(tenantId);
 
 		model.addAttribute("approvalFlag", approvalFlag);
@@ -2451,6 +2452,7 @@ public class EzSystemAdminController {
 		model.addAttribute("list", adminCompanyList);
 		model.addAttribute("companyId", companyId);
 		model.addAttribute("isMasterAdmin", isMasterAdmin);
+		model.addAttribute("useSchedule", useSchedule); // 일정관리 모듈 사용여부(사용 : true)
 
 		logger.debug("ended permissionChangeHist controller.");
 

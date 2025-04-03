@@ -497,6 +497,7 @@
 					case 'wf'	: adminTypeVal = '<spring:message code="ezOrgan.t303"/>'; break; <!--웹폴더관리자-->
 					case 'e='	: adminTypeVal = '<spring:message code="ezOrgan.kbm01"/>'; break; <!--근태관리자-->
 					case 's='	: adminTypeVal = '<spring:message code="ezOrgan.t9904"/>'; break; <!--준법지원인-->
+					case 'v='	: adminTypeVal = '<spring:message code="ezOrgan.lhr01"/>'; break; <!--일정관리자-->
 				}
 				return adminTypeVal;
 			}
@@ -601,6 +602,10 @@
 								</c:if>
 									<option value="e"<c:if test="${!use_attitude}">style="display:none;"</c:if>><spring:message code="ezOrgan.kbm01"></spring:message></option>
 									<option value="s"<c:if test="${approvalFlag == 'S'}">style="display:none;"</c:if>><spring:message code="ezOrgan.t9904"></spring:message></option>
+							</c:if>
+							<!-- 2025.04.03 한슬기 : 일정관리자옵션 추가 -->
+							<c:if test="${useSchedule}">
+								<option value="v"><spring:message code="ezOrgan.lhr01"></spring:message></option>
 							</c:if>
 						</select>	&nbsp;
 						<spring:message code="ezStatistics.t1062"></spring:message> : &nbsp;
