@@ -1145,10 +1145,10 @@ function GetListIevent_ongetxmlcomplete() {
                         return;
                     }
                 }
-                try {
-                    if (document.getElementById("HeaderAllCheckBox") != null)
-                        document.getElementById("HeaderAllCheckBox").checked = false;
-                } catch (e) {console.log(e);}
+                // try {
+                //     if (document.getElementById("HeaderAllCheckBox") != null)
+                //         document.getElementById("HeaderAllCheckBox").checked = false;
+                // } catch (e) {console.log(e);}
             } else {
             	parent.frames["left"].reloadRetryCount--;
             	
@@ -1454,6 +1454,10 @@ function goToPageByNum(szNum) {
     GetListInfo(HeaderObject,ContentObject);
     if (currentPage != document.getElementById("MailList").getAttribute("curPage")) {
         $("#contentlistDiv").scrollTop(0); 
+        try {
+            if (document.getElementById("HeaderAllCheckBox") != null)
+                document.getElementById("HeaderAllCheckBox").checked = false;
+        } catch (e) {console.log(e);}
     } else {
         $("#contentlistDiv").scrollTop(currentScrollTop);
     }

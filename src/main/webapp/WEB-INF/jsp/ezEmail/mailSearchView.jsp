@@ -867,6 +867,10 @@
 						document.getElementById(listContentArry[listContentArry.length - i]).style.background = m_strColorDefault;
 					}
 				}
+				try {
+					if (document.getElementById("Checkbox1") != null)
+						document.getElementById("Checkbox1").checked = false;
+				} catch (e) {console.log(e);}
 			}
 		
 			function mailExport_start(pwd) {

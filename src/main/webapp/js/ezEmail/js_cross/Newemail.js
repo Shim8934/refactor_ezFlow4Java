@@ -529,6 +529,10 @@ function Read_StatusChange(pGubun) {
             document.getElementById(listContentArry[listContentArry.length - i]).children[0].children[0].checked = false;
         }
     }
+    try {
+        if (document.getElementById("HeaderAllCheckBox") != null)
+            document.getElementById("HeaderAllCheckBox").checked = false;
+    } catch (e) {console.log(e);}
     
     MailListRefresh();
 }
@@ -626,6 +630,10 @@ function move_mail_onclick_Complete(moveUrl) {
                 document.getElementById(listContentArry[listContentArry.length - i]).children[0].children[0].checked = false;
             }
         }
+        try {
+            if (document.getElementById("HeaderAllCheckBox") != null)
+                document.getElementById("HeaderAllCheckBox").checked = false;
+        } catch (e) {console.log(e);}
         
         MailListRefresh();
     }
@@ -1953,6 +1961,10 @@ function mail_export() {
             document.getElementById(listContentArry[listContentArry.length - i]).children[0].children[0].checked = false;
         }
     }
+    try {
+        if (document.getElementById("HeaderAllCheckBox") != null)
+            document.getElementById("HeaderAllCheckBox").checked = false;
+    } catch (e) {console.log(e);}
     
     MailListRefresh();
     
@@ -2310,6 +2322,10 @@ function toggle_flag(obj) {
                     document.getElementById(listContentArry[listContentArry.length - i]).children[0].children[0].checked = false;
                 }
             }
+            try {
+                if (document.getElementById("HeaderAllCheckBox") != null)
+                    document.getElementById("HeaderAllCheckBox").checked = false;
+            } catch (e) {console.log(e);}
         }
     }
     catch (e) {console.log(e);}
