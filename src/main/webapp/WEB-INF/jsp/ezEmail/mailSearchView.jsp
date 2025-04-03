@@ -860,6 +860,13 @@
                         }
                     }
 				}
+				// 20200428 조진호 - 메일 리스트에서 체크박스를 이용한 행위 뒤 체크박스가 풀리도록 추가
+				if (listContentArry.length > 0) {
+					for (var i = 1; i <= listContentArry.length; i++) {
+						document.getElementById(listContentArry[listContentArry.length - i]).children[0].children[0].checked = false;
+						document.getElementById(listContentArry[listContentArry.length - i]).style.background = m_strColorDefault;
+					}
+				}
 			}
 		
 			function mailExport_start(pwd) {

@@ -1360,11 +1360,11 @@ function MailListRefresh() {
     
     if (p_ListorderValue != "SENT" && p_ListorderValue != "SUBJECT") {
     	// 20200428 조진호 - 메일 리스트에서 체크박스를 이용한 행위 뒤 체크박스가 풀리도록 추가
-        if (listContentArry.length > 0) {
-            for (var i = 1; i <= listContentArry.length; i++) {
-                document.getElementById(listContentArry[listContentArry.length - i]).children[0].children[0].checked = false;
-            }
-        }
+        // if (listContentArry.length > 0) {
+        //     for (var i = 1; i <= listContentArry.length; i++) {
+        //         document.getElementById(listContentArry[listContentArry.length - i]).children[0].children[0].checked = false;
+        //     }
+        // }
     	
     	goToPageByNum(MailList.getAttribute("curPage"));
     }
@@ -1398,11 +1398,11 @@ function MailListRefresh() {
             var ContentObject = document.getElementById("GroupSubList");
             
             // 20200428 조진호 - 메일 리스트에서 체크박스를 이용한 행위 뒤 체크박스가 풀리도록 추가
-            if (listContentArry.length > 0) {
-                for (var i = 1; i <= listContentArry.length; i++) {
-                    document.getElementById(listContentArry[listContentArry.length - i]).children[0].children[0].checked = false;
-                }
-            }
+            // if (listContentArry.length > 0) {
+            //     for (var i = 1; i <= listContentArry.length; i++) {
+            //         document.getElementById(listContentArry[listContentArry.length - i]).children[0].children[0].checked = false;
+            //     }
+            // }
             
             listSubContentArry = new Array();
             listContentArry = new Array();
