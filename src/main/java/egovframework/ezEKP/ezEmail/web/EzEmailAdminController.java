@@ -1688,6 +1688,10 @@ public class EzEmailAdminController {
 			startRow = -1;
 		}
 		
+		if (searchFor != null) {
+			searchFor[1] = false;
+		}
+		
 		// 전체사용자 검색후 update보다 검색된 사용자만 update하도록 수정
 		// List<OrganUserVO> vo = ezOrganAdminService.getAllUserCnList(tenantID);
 		List<OrganUserVO> vo = ezOrganAdminService.getUserList(userInfo.getTenantId(), startRow, 
@@ -1935,8 +1939,8 @@ public class EzEmailAdminController {
 				quaList.add(1, displayname);
 				quaList.add(2, department);
 
-				String mailboxUsage = String.valueOf(Long.parseLong(organUser.getMailboxUsage()) / 1024);
-				String mailboxQuota = String.valueOf(Long.parseLong(organUser.getMailboxQuota()) / 1024);
+				String mailboxUsage = String.valueOf(organUser.getMailboxUsage() != null ? Long.parseLong(organUser.getMailboxUsage()) / 1024 : 0);
+				String mailboxQuota = String.valueOf(organUser.getMailboxQuota() != null ? Long.parseLong(organUser.getMailboxQuota()) / 1024 : 0);
 
 				quaList.add(3, mailboxUsage);
 				quaList.add(4, mailboxQuota);
