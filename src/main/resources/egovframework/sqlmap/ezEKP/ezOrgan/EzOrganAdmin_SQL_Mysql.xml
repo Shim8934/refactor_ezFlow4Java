@@ -2001,7 +2001,7 @@
 			('SA04','0  ','결재처리상태','결재처리상태','결재처리상태',null,null,'0', #companyID#,#tenantID#),
             ('SA04','000','미결','Not approved','未決','未決','1','기안처리하지 않은 문서', #companyID#,#tenantID#),
             ('SA04','001','대기','Waiting','待機','待机', '1','대기',#companyID#,#tenantID#),
-            ('SA04','002','진행','In progress','进行中','进行中', '1','진행',#companyID#,#tenantID#),
+            ('SA04','002','진행','In progress','进行','进行', '1','진행',#companyID#,#tenantID#),
             ('SA04','003','승인','Approved','決裁','审批', '1','승인',#companyID#,#tenantID#),
             ('SA04','004','반송','Rejected','差し戻し','退回', '1','반송',#companyID#,#tenantID#),
             ('SA04','005','보류','Hold','保留','保存', '1','보류',#companyID#,#tenantID#),
