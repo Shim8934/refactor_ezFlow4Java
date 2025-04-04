@@ -492,25 +492,27 @@ public class EzEmailWriteServiceImpl implements EzEmailWriteService {
 
         messagevo.setTo(to); // 은실사원1 <eunsil1@svn1.opensol2014.com>
 
-        // CC : replyMessage와 orgMessage가 동일
-        addresses = orgMessage.getRecipients(Message.RecipientType.CC);
+        if (writetype != WriteType.REPLY) {
+            // CC : replyMessage와 orgMessage가 동일
+            addresses = orgMessage.getRecipients(Message.RecipientType.CC);
 
-        if (addresses != null) { // 꼭 필요한가?
-            String cc = getAddresses(writetype, addresses, orgMessage, "Cc");
-            messagevo.setCc(cc);
+            if (addresses != null) { // 꼭 필요한가?
+                String cc = getAddresses(writetype, addresses, orgMessage, "Cc");
+                messagevo.setCc(cc);
+            }
+
+            // BCC
+            addresses = orgMessage.getRecipients(Message.RecipientType.BCC);
+            String bcc = "";
+
+            if (writetype.isReserve()) { // 문제없으면.. 다 사용하던지 통일했으면 좋겠는데
+                bcc = getAddresses(writetype, addresses, orgMessage, "Bcc");
+            } else {
+                bcc = ezEmailUtil.getStringListOfAddresses(addresses, true);
+            }
+
+            messagevo.setBcc(bcc);
         }
-
-        // BCC
-        addresses = orgMessage.getRecipients(Message.RecipientType.BCC);
-        String bcc = "";
-
-        if (writetype.isReserve()) { // 문제없으면.. 다 사용하던지 통일했으면 좋겠는데
-            bcc = getAddresses(writetype, addresses, orgMessage, "Bcc");
-        } else {
-            bcc = ezEmailUtil.getStringListOfAddresses(addresses, true);
-        }
-
-        messagevo.setBcc(bcc);
     }
 
     /**
