@@ -458,7 +458,7 @@
 		            ScrollPosSet = HwpCtrl.ScrollPosInfo;
 		            ScrollPosSet.SetItem("HorzPos", 0);
 		            ScrollPosSet.SetItem("VertPos", 0);
-		            HwpCtrl.ScrollPosInfo = ScrollPosSet;/
+		            HwpCtrl.ScrollPosInfo = ScrollPosSet;
 					setTimeout(function() {
 						ScrollPosInfo(0, 0);
 					}, 100);
