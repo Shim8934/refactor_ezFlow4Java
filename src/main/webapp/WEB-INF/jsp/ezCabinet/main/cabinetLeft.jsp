@@ -147,7 +147,7 @@
 						$("#" + obj).children().eq(0).attr("class", "sub_iconLNB tree_arrow_down");
 					}
 
- 					/*var leftDivElmt = document.getElementById("left");
+ 					/*var leftDivElmt = document.getElementById("leftFrame");
 					var h2Elmt      = leftDivElmt.querySelectorAll("h2");
 					var ulElmt      = leftDivElmt.querySelectorAll("ul");
 					

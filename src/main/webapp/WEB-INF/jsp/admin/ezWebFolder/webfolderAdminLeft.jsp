@@ -14,6 +14,9 @@
 	    <script type="text/javascript" src="${util.addVer('/js/ezWebFolder/adminTree.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
 	    <style>
+			html {
+                overflow: hidden;
+			}
 	    	.mCSB_inside > .mCSB_container {
 	    		margin-right:10px;
 	    	}

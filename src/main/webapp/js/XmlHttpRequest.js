@@ -1,4 +1,4 @@
-﻿﻿/* XMLHttpRequest객체를 생성합니다. */ 
+﻿/* XMLHttpRequest객체를 생성합니다. */ 
 function createXMLHttpRequest() {
     var oXmlRequest;
     try {
@@ -1112,65 +1112,55 @@ function DivPopUpHidden_sub() {
     } catch (e) { }
 }
 
-function toggleHideLeftFrameButton() {
-    var frameset = parent.document.getElementById("frameset");
-
-    if (frameset!= null){
-        var leftBtn = document.getElementsByClassName('left_btn')[0];
-
-        if (leftBtn) {
-            if (parent.document.getElementById("frameset").cols == "0,*") {
-                leftBtn.classList.add("on");
-            } else {
-                leftBtn.classList.remove("on");
-            }
-        }
-    }
-}
-
-var isHideLeftFrameButtonPressed = false;
-
+var hidingFrame = false;
+var resizeTimer = null;
+var clickDebounceTime = 500;
 function hideLeftFrame(obj) {
     if (window.location.href.includes('admin')) return;
-    if (parent.document.getElementById("frameset") != null) {
-        isHideLeftFrameButtonPressed = !isHideLeftFrameButtonPressed;
-        var colsValue = parent.document.getElementById("frameset").cols;
-
-        if (colsValue == "0,*") {
-            parent.document.getElementById("frameset").cols = "220,*";
+    var frame = parent.document.getElementById("left");
+    if (!!frame) {
+        hidingFrame = true;
+        
+        if (obj.classList.contains('on')) {
+            frame.style.width = '220px';
             obj.classList.remove("on");
         } else {
-            parent.document.getElementById("frameset").cols = "0,*";
+            frame.style.width = '0';
             obj.classList.add("on");
         }
+        
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function() {
+            hidingFrame = false;
+        }, clickDebounceTime);
     }
 }
 
 function hideLeftFrameOnResize() {
     if (window.location.href.includes('admin')) return;
-    if (parent.document.getElementById("frameset") != null) {
+    if (parent.document.querySelector("#left.fold") != null) {
         // hideLeftFrame 함수에 의해 left frame이 숨겨질 때에도
         // resize 콜백이 실행되어 수동으로 사용자가 버튼을 누른 경우에 대한
         // 플래그를 둠
-        if (!isHideLeftFrameButtonPressed) {
-            var leftBtn = document.getElementsByClassName('left_btn')[0];
-
+        if (hidingFrame) return;
+        var leftBtn = document.getElementsByClassName('left_btn')[0];
+        var leftFrame = parent.frames["left"].document
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function() {
             if (top.outerWidth < 1180) {
-                parent.document.getElementById("frameset").cols = "0,*";
+                leftFrame.style.width = '0';
                 leftBtn.classList.add("on");
             } else {
-                parent.document.getElementById("frameset").cols = "220,*";
+                leftFrame.style.width = '220px';
                 leftBtn.classList.remove("on");
             }
-        } else {
-            isHideLeftFrameButtonPressed = false;
-        }
+        }, 150);
     }
 }
 
 window.addEventListener("load", function () {
-    if (parent.document.getElementById("frameset") != null) {
-        var rightFrameDoc = window.parent.frames["right"].document;
+    if (parent.document.querySelector("#left.fold") != null) {
+        var rightFrameDoc = window.parent.document.getElementById("right").contentDocument;
 
         var rightFirstChild = rightFrameDoc.body.firstElementChild;
 
@@ -1199,7 +1189,19 @@ window.addEventListener("load", function () {
 
 });
 
-window.addEventListener("load", toggleHideLeftFrameButton);
+function modalPopUp(popupId) {
+    $(popupId).modal();
+
+    $(popupId).css("visibility", "hidden");
+
+    var popupX = window.innerWidth / 2 - $(popupId)[0].clientWidth / 2 - 20
+
+    $(popupId).css("left", popupX);
+
+    $(popupId).css("visibility", "");
+}
+
+// window.addEventListener("load", toggleHideLeftFrameButton);
 
 // 2002-11-05 >> return 20021105
 function CalToDate(p_strCal) {
