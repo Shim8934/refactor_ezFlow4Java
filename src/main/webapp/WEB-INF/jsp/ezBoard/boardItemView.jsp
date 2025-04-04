@@ -457,7 +457,7 @@
 				// 댓글 높이 계산 끝
 				
 				var contentHeight;
-				contentHeight = document.documentElement.clientHeight - 266 - addheight + replyOffsetH;
+				contentHeight = document.documentElement.clientHeight - 276 - addheight + replyOffsetH;
 				
                 if (gubun == "2") { // 익명게시판일 경우
 				    contentHeight += 18;
