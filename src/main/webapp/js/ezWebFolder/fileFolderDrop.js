@@ -36,17 +36,23 @@ function onDrop(evt) {
 			fileupload_check(evt);
 		} else {
 			var length = evt.dataTransfer.items.length;
-			
+			var hasDirectory = false;
+
 		    for (var i = 0; i < length; i++) {
 		    	var entry = evt.dataTransfer.items[i].webkitGetAsEntry();
-		    	
-		    	if (entry.isFile) {
-					fileupload_check(evt);
-		    	} else if (entry.isDirectory) {
-		    		alert(messages.strLangDragNDrop);
-		      		return;
-		    	}
+
+				// 2025.04.07 한슬기 : drag&drop으로 파일을 여러 개 업로드시 fileupload_check(evt)가 여러 번 실행되는 문제로 인해 기존 로직 수정
+				if(entry && entry.isDirectory){
+					hasDirectory = true;
+					break;
+				}
+
 		  	}
+			if(hasDirectory){
+				alert(messages.strLangDragNDrop);
+				return;
+			}
+			fileupload_check(evt);
 		}
 	} else {
 		fileupload_check(evt);
@@ -239,7 +245,7 @@ function realUpload() {
 	var dragZone = document.getElementById("dragDropArea");
 	var height   = dragZone.clientHeight;
 	dragZone.style.height = height - 34 + "px";
-	uploadIng = true; 
+	uploadIng = true;
 	
 	$.ajax({
 		url : "/ezWebFolder/uploadFile.do",
