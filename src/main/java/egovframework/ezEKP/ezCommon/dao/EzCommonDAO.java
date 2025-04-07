@@ -3433,4 +3433,25 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.insertAnnualJournalListLang", map6);
 		}
 	}
+	
+	public void alterScheduleDefaultViewCheck() {
+		try {
+			select("EzCommonDAO.checkScheduleDefaultViewCheck");
+		} catch (Exception e) {
+			logger.debug("tbl_scheduleconfig defaultviewcheck doesn't exist. creating the column...");
+
+			update("EzCommonDAO.addScheduleDefaultViewCheck");
+		}
+		
+	}
+
+	public void createUserScheduleTypeConfigTable() {
+		try {
+			select("EzCommonDAO.checkUserScheduleTypeConfigTable");
+		} catch (Exception e) {
+			logger.debug("TBL_USER_SCHEDULE_TYPE_CONFIG doesn't exist. creating the table...");
+
+			update("EzCommonDAO.createUserScheduleTypeConfigTable");
+		}
+	}
 }

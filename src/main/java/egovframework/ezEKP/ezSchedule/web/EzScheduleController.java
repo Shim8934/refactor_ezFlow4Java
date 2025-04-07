@@ -58,6 +58,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.services.calendar.model.Event;
 import com.ibm.icu.util.Calendar;
@@ -100,6 +101,7 @@ import egovframework.ezEKP.ezSchedule.vo.ScheduleOwnerInfoVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleReceiveListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleSecretaryVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleTokenInfoVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleTypeConfigVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -319,6 +321,17 @@ public class EzScheduleController extends EgovFileMngUtil {
 	    String useGoogleCalendar = ezCommonService.getTenantConfig("useGoogleCalendar", loginVO.getTenantId());
 	    String isGoogleSync = useGoogleCalendar.equals("YES") ? isGoogleSync(loginVO) : "N";
 		List<ScheduleGroupListVO> gatherList = ezScheduleService.getMyGatherList(loginVO.getId(), loginVO.getTenantId(), loginVO.getCompanyID()); // 2023-10-11 임정은 - 일정 모아보기 그룹 리스트 추가
+	    
+	    // 2025-04-21 조수빈 - 기본 일정 요소별 사용자 설정값
+	    List<ScheduleTypeConfigVO> personalScheConfigList = ezScheduleService.getUserScheduleTypeConfig(userID, companyID, tenantID);
+	    ObjectMapper objectMapper = new ObjectMapper();
+	    String jsonPersonalScheConfigList = "";
+	    
+	    try {
+			jsonPersonalScheConfigList = objectMapper.writeValueAsString(personalScheConfigList);
+		} catch (Exception e) {
+			logger.debug(e.getMessage());
+		}
 
 		model.addAttribute("isGoogleSync", isGoogleSync);
 		model.addAttribute("loginVO", loginVO);
@@ -334,6 +347,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		model.addAttribute("userOffset", userOffset);
 		model.addAttribute("useWorkspaceSchedule", useWorkspaceSchedule);
 		model.addAttribute("gatherList", gatherList);
+		model.addAttribute("jsonPersonalScheConfigList", jsonPersonalScheConfigList);
 
 		return "/ezSchedule/scheduleLeft";
 	}
@@ -840,6 +854,15 @@ public class EzScheduleController extends EgovFileMngUtil {
         
       	/* 2025-03-13 홍승비 - 협업 모듈에 고정된 하드코딩 문자열 제거 (ezWorkspace), 테넌트 컨피그 workspaceAppPath로 협업 웹응용프로그램 경로를 분리하여 사용 ("" 또는 "/ezWork" 등) */
 		String workspaceAppPath = ezCommonService.getTenantConfig("workspaceAppPath", loginVO.getTenantId());
+		List<ScheduleTypeConfigVO> personalScheConfigList = ezScheduleService.getUserScheduleTypeConfig(userID, companyID, tenantID);
+		ObjectMapper objectMapper = new ObjectMapper();
+		String jsonPersonalScheConfigList = "";
+	    
+		try {
+			jsonPersonalScheConfigList = objectMapper.writeValueAsString(personalScheConfigList);
+		} catch (Exception e) {
+			logger.debug(e.getMessage());
+		}
 		
         model.addAttribute("userInfo",		loginVO);
         model.addAttribute("pOffset",		pOffset);
@@ -865,6 +888,7 @@ public class EzScheduleController extends EgovFileMngUtil {
         model.addAttribute("useAnnualScheduleYN", useAnnualScheduleYN);
         model.addAttribute("workspaceHostUrl", workspaceHostUrl);
         model.addAttribute("workspaceAppPath", workspaceAppPath);
+        model.addAttribute("jsonPersonalScheConfigList", jsonPersonalScheConfigList);
         
 		return "/ezSchedule/scheduleMain";
 	}
@@ -1814,6 +1838,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		String companyID = loginVO.getCompanyID();
 		
 		scheduleConfigVO = ezScheduleService.getScheduleConfig(userID, tenantID);
+		List<ScheduleCumulerVO> pubScheCumulerVO = ezScheduleService.getPublicScheduleCumuler(userID, loginVO.getLang(), tenantID, companyID);
 		List<ScheduleSecretaryVO> sList = ezScheduleService.getSecretaryList(userID, tenantID, companyID);
 		List<OrganUserVO> oList = new ArrayList<OrganUserVO>();
 		
@@ -1828,11 +1853,24 @@ public class EzScheduleController extends EgovFileMngUtil {
 			oList.add(i,organUserVO);
 		}
 		
+		List<ScheduleTypeConfigVO> personalScheConfigList = ezScheduleService.getUserScheduleTypeConfig(userID, companyID, tenantID);
+		ObjectMapper objectMapper = new ObjectMapper();
+		String jsonPersonalScheConfigList = "";
+		
+		try {
+			jsonPersonalScheConfigList = objectMapper.writeValueAsString(personalScheConfigList);
+		} catch (Exception e) {
+			logger.debug(e.getMessage());
+		}
+		
 		model.addAttribute("selectList", oList);
 		model.addAttribute("scheduleConfigVO", scheduleConfigVO);
 		model.addAttribute("displayName1", loginVO.getDisplayName1());
 		model.addAttribute("displayName2", loginVO.getDisplayName2());
+		model.addAttribute("loginVO", loginVO);
 		model.addAttribute("lang", loginVO.getPrimary());
+		model.addAttribute("scheCum", pubScheCumulerVO);
+		model.addAttribute("jsonPersonalScheConfigList", jsonPersonalScheConfigList);
 		
 		return "/ezSchedule/scheduleConfig";
 	}
@@ -1860,14 +1898,32 @@ public class EzScheduleController extends EgovFileMngUtil {
 		String displayName2 = request.getParameter("DISPLAYNAME2");
 		String listSecretary = request.getParameter("LISTSECRETARY");
 		String reminderTime = request.getParameter("REMINDERTIME");
-
+		String defaultViewCheckBox = request.getParameter("DEFAULTVIEWCHECKBOX");
+		String tagColorList = request.getParameter("tagColorList");
+		
+		if (defaultViewCheckBox.equals("false")) {
+			defaultViewCheckBox = "N";
+		} else {
+			defaultViewCheckBox = "Y";
+		}
+		
 		JSONParser parser = new JSONParser();
 		JSONArray jsonArray = (JSONArray)parser.parse(listSecretary);
-				
+
+		ObjectMapper mapper = new ObjectMapper();
+		List<ScheduleTypeConfigVO> tagColors = mapper.readValue(tagColorList, new TypeReference<List<ScheduleTypeConfigVO>>() {});
+		
+		// 기본 사용자 정보 세팅
+		for (ScheduleTypeConfigVO vo : tagColors) {
+			vo.setUserId(loginSimpleVO.getId());
+			vo.setCompanyId(loginSimpleVO.getCompanyID());
+			vo.setTenantId(loginSimpleVO.getTenantId());
+		}
+		
 		/*//기존 환경설정 정보 삭제
 		ezScheduleService.deleteScheduleConfig(userID, tenantID); */
-		//새로운 환경설정 정보 등록
-		ezScheduleService.insertScheduleConfig(userID, defaultView, startDay, startTime, endTime, autoDelete, tenantID, reminderTime);
+		//새로운 환경설정 정보 등록 / 업데이트
+		ezScheduleService.insertScheduleConfig(userID, defaultView, startDay, startTime, endTime, autoDelete, tenantID, reminderTime, defaultViewCheckBox, tagColors);
 		//기존 비서정보 삭제
 		ezScheduleService.deleteSecretary(userID, tenantID, companyID);
 		
@@ -6235,5 +6291,61 @@ public class EzScheduleController extends EgovFileMngUtil {
 		model.addAttribute("userInfo", loginSimpleVO);
 
 		return "/ezSchedule/scheduleGatherList";
+	}
+	
+	// 권기혁 - 일정 VIEW Status DB Set
+	@RequestMapping(value = "/ezSchedule/scheduleSetViewStatus.do", method = RequestMethod.POST, produces="text/xml;charset=utf-8")
+	@ResponseBody
+	public void scheduleSetViewStatus(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	    logger.debug("scheduleSetViewStatus started");
+	    
+	    loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
+		// USER 정보
+		String userId = loginSimpleVO.getId();
+		int tenantId = loginSimpleVO.getTenantId();
+		//상태값
+		String status = request.getParameter("STATUS");
+		ScheduleConfigVO schConfVO = ezScheduleService.getScheduleConfig(userId, tenantId);
+		
+		if (schConfVO.getDefaultViewCheck().equals("N")) {
+			if ("MONTH".equals(status)) {
+				status = "2";
+			} else if ("WEEK".equals(status)) {
+				status = "1";
+			} else {
+				status = "0";
+			}
+			
+			//상태값 DB 저장
+			ezScheduleService.setScheduleViewStatus(userId, tenantId, status);
+		}
+		
+		logger.debug("scheduleSetViewStatus ended");
+	}
+	
+	/* 모든, 개인, 부서 일정 색상선택 popup 표출 */
+	@RequestMapping(value = "/ezSchedule/scheduleSelectColor.do", method = RequestMethod.GET)
+	public String selectColor(HttpServletRequest request, Model model) throws Exception {
+		logger.debug("============ selectGroupColor started ============");
+		
+		model.addAttribute("type", request.getParameter("type"));
+		model.addAttribute("relatedID", request.getParameter("relatedID"));
+		model.addAttribute("color", request.getParameter("color"));
+		
+		logger.debug("selectGroupColor ended");
+		return "/ezSchedule/scheduleSelectColor";
+	}
+	
+	// 2025-04-23 조수빈 - 개인의 일정 항목별 체크 여부 저장 메소드
+	@RequestMapping(value = "/ezSchedule/saveIsTagChecked.do", method = RequestMethod.POST, produces = "text/plain; charset=UTF-8")
+	@ResponseBody
+	public String saveIsTagChecked(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, String scheduleType, String relatedID, String isChecked) throws Exception {
+		logger.debug("saveIsTagChecked started");
+		
+		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+		String result = ezScheduleService.saveIsTagChecked(loginVO.getId(), scheduleType, relatedID, isChecked, loginVO.getTenantId(), loginVO.getCompanyID());
+		
+		logger.debug("saveIsTagChecked ended");
+		return result;
 	}
 }

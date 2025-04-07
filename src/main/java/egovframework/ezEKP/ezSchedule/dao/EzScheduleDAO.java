@@ -23,6 +23,7 @@ import egovframework.ezEKP.ezSchedule.vo.ScheduleReceiveListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleReminderVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleSecretaryVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleTokenInfoVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleTypeConfigVO;
 import egovframework.let.user.login.vo.LoginVO;
 import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -521,6 +522,27 @@ public class EzScheduleDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<ScheSecretaryVO> getPublicExceSchedule(Map<String, Object> param) {
 		return (List<ScheSecretaryVO>) list("EzScheduleDAO.getPublicExceSchedule", param);
+	}
+	
+	public void setScheduleViewStatus(Map<String, Object> map) {
+		insert("EzScheduleDAO.setScheduleViewStatus", map);		
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ScheduleTypeConfigVO> getUserScheduleTypeConfig(Map<String, Object> param) throws Exception {
+		return (List<ScheduleTypeConfigVO>) list("EzScheduleDAO.getUserscheduleTypeConfig", param);
+	}
+
+	public void saveIsTagChecked(Map<String, Object> param) {
+		update("EzScheduleDAO.saveIsTagChecked", param);
+	}
+
+	public void upsertUserScheTagColor(ScheduleTypeConfigVO vo) {
+		update("EzScheduleDAO.upsertUserScheTagColor", vo);
+	}
+
+	public String getUserScheduleTypeColor(Map<String, Object> param) {
+		return (String) select("EzScheduleDAO.getUserScheduleTypeColor", param);
 	}
 
 	@SuppressWarnings("unchecked")

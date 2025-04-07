@@ -18,6 +18,7 @@ import java.util.UUID;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,7 +48,6 @@ import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.KoreanLunarCalendar;
-import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service("MScheduleService")
 public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MScheduleService{
@@ -807,7 +807,7 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 				}
 				
 				list.get(i).setHolidayDate(String.format("%04d-%02d-%02d", lunarCalendar.getSolarYear(), lunarCalendar.getSolarMonth(), lunarCalendar.getSolarDay()) + " 00:00:00.0");
-				list.get(i).setCalendarDay(String.format("%04d/%02d/%02d", lunarCalendar.getSolarYear(), lunarCalendar.getSolarMonth(), lunarCalendar.getSolarDay()));
+				list.get(i).setCalendarDay(String.format("%04d-%02d-%02d", lunarCalendar.getSolarYear(), lunarCalendar.getSolarMonth(), lunarCalendar.getSolarDay()));
 			} else {
 				// 반복 휴일일정이면서 양력일경우
 				if (list.get(i).getIsRepeat() == 1) {
@@ -826,10 +826,10 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 				        calendar.add(Calendar.DAY_OF_MONTH, daysToAdd);
 				        
 				        list.get(i).setHolidayDate(String.format("%04d-%02d-%02d", targetYear, holidayMonth, calendar.get(Calendar.DAY_OF_MONTH)) + " 00:00:00.0");
-				        list.get(i).setCalendarDay(String.format("%04d/%02d/%02d", targetYear, holidayMonth, calendar.get(Calendar.DAY_OF_MONTH)));
+				        list.get(i).setCalendarDay(String.format("%04d-%02d-%02d", targetYear, holidayMonth, calendar.get(Calendar.DAY_OF_MONTH)));
 					} else {
 						list.get(i).setHolidayDate(String.format("%04d-%02d-%02d", targetYear, month, day) + " 00:00:00.0");
-						list.get(i).setCalendarDay(String.format("%04d/%02d/%02d", targetYear, month, day));
+						list.get(i).setCalendarDay(String.format("%04d-%02d-%02d", targetYear, month, day));
 					}
 				}
 			}

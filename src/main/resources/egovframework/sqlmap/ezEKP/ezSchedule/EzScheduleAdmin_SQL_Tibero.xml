@@ -410,7 +410,7 @@
                 HOLIDAYNAME2 = #v_HOLIDAYNAME2#,
                 HOLIDAYFLAG = #v_HOLIDAYFLAG#,
                 HOLIDAYDATE = #v_HOLIDAYDATE#,
-                HOLIDAYREPEAT = #v_HOLIDAYREPEAT#,
+                HOLIDAYDATE = TO_DATE(#v_HOLIDAYDATE#, 'YYYY-MM-DD'),
                 ISSOLAR = #v_ISSOLAR#,
                 ISREPEAT = #v_ISREPEAT#,
                 ISREST = #v_ISREST#,

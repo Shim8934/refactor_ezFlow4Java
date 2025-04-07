@@ -38,6 +38,7 @@
 		<result property="endTime"			column="ENDTIME"			columnIndex="4"/>
 		<result property="isAutoDelete"		column="AUTODELETE"			columnIndex="5"/>
 		<result property="reminderTime"		column="REMINDERTIME"		columnIndex="5"/>
+		<result property="defaultViewCheck"	column="DEFAULTVIEWCHECK"	columnIndex="6"/>
 	</resultMap>
 	
 	<resultMap class="ScheduleInfoVO" id="scheduleListVO">
@@ -192,7 +193,8 @@
              	starttime,
              	endtime,
              	autodelete,
-             	remindertime 
+             	remindertime,
+             	defaultviewcheck
         	from 
         		tbl_scheduleconfig 
        		where  
@@ -302,8 +304,12 @@
 				contentpath,
 				b.groupname,
 				a.companyid,
-				b.groupcolor,
-	            showtop
+				CASE WHEN SCHEDULETYPE = 1 THEN 'rgb(1, 138, 249)'
+					 WHEN SCHEDULETYPE = 2 THEN 'rgb(1, 179, 63)'
+					 WHEN SCHEDULETYPE = 3 THEN 'rgb(254, 28, 113)'
+					 WHEN SCHEDULETYPE = 7 THEN b.groupcolor
+					 ELSE 'rgb(233, 222, 19)' END AS GROUPCOLOR,
+				showtop
         	from 
         		tbl_schedule a left join tbl_schedulegroup b on a.ownerid = b.groupid
        		where  
@@ -1328,9 +1334,9 @@
 	<insert id="EzScheduleDAO.insertScheduleConfig" parameterClass="map">
 		<![CDATA[
 			insert into tbl_scheduleconfig(
-				userid, 			defaultview, 			startday, 				starttime, 				endtime, 			autodelete,			tenant_id, remindertime		
+				userid, 			defaultview, 			startday, 				starttime, 				endtime, 			autodelete,			tenant_id, remindertime	, defaultviewcheck
 			) values (
-				#v_USERID#,			#v_DEFAULTVIEW#,		#v_STARTDAY#,			#v_STARTTIME#,			#v_ENDTIME#,		 #v_AUTODELETE#,		#v_TENANTID#, #v_REMINDERTIME#
+				#v_USERID#,			#v_DEFAULTVIEW#,		#v_STARTDAY#,			#v_STARTTIME#,			#v_ENDTIME#,		 #v_AUTODELETE#,		#v_TENANTID#, #v_REMINDERTIME#, #v_DEFAULTVIEWCHECKBOX#
 			)
    		]]>
 	</insert>
@@ -1449,7 +1455,8 @@
 				starttime = #v_STARTTIME#,
 				endtime = #v_ENDTIME#,
 				autodelete = #v_AUTODELETE#,
-				remindertime = #v_REMINDERTIME#
+				remindertime = #v_REMINDERTIME#,
+				defaultviewcheck = #v_DEFAULTVIEWCHECKBOX#
 	   		where  
 	   			userid = #v_USERID#
 	   		and	
@@ -2020,8 +2027,12 @@
 				contentpath,
 				b.groupname,
 				a.companyid,
-				b.groupcolor,
-	            showtop
+				CASE WHEN SCHEDULETYPE = 1 THEN 'rgb(1, 138, 249)'
+					 WHEN SCHEDULETYPE = 2 THEN 'rgb(1, 179, 63)'
+					 WHEN SCHEDULETYPE = 3 THEN 'rgb(254, 28, 113)'
+					 WHEN SCHEDULETYPE = 7 THEN b.groupcolor
+					 ELSE 'rgb(233, 222, 19)' END AS GROUPCOLOR,
+				showtop
         	from
         		tbl_schedule a left join tbl_schedulegroup b on a.ownerid = b.groupid
        		where
@@ -2587,6 +2598,7 @@
 		  AND TENANT_ID = #v_TENANTID#
 		  AND CN = #v_USERID#
 	</select>
+	
 	<!-- 2023-09-27 임정은 - 모아보기 그룹 관리 리스트 리턴하는 메서드 -->
 	<select id="EzScheduleDAO.getMyGatherList" parameterClass="map" resultClass="ScheduleGroupListVO">
 		<![CDATA[
@@ -2900,4 +2912,69 @@
 		]]>
 	</select>
 	
+	<update id="EzScheduleDAO.setScheduleViewStatus" parameterClass="Map">
+		UPDATE 
+			tbl_scheduleconfig 
+		SET 
+			DEFAULTVIEW= #status#
+		WHERE 
+			USERID= #userId#
+		AND
+			tenant_id= #tenantId#
+	
+	</update>
+	
+	<select id="EzScheduleDAO.getUserscheduleTypeConfig"  parameterClass="Map" resultClass="egovframework.ezEKP.ezSchedule.vo.ScheduleTypeConfigVO">
+		SELECT
+			USERID,
+			SCHEDULETYPE,
+			RELATEDID,
+			TAGCOLOR,
+			ISCHECKED,
+			TENANT_ID,
+			COMPANYID
+		FROM
+			TBL_USER_SCHEDULE_TYPE_CONFIG
+		WHERE
+			USERID = #userID#
+		AND
+			COMPANYID = #companyID#
+		AND
+			TENANT_ID = #tenantID#
+	</select>
+	
+	<update id="EzScheduleDAO.saveIsTagChecked" parameterClass="Map">
+		INSERT INTO TBL_USER_SCHEDULE_TYPE_CONFIG
+			(USERID, SCHEDULETYPE, RELATEDID, ISCHECKED, TENANT_ID, COMPANYID)
+		VALUES
+			(#userID#, #scheduleType#, #relatedID#, #isChecked#, #tenantID#, #companyID#)
+		ON DUPLICATE KEY UPDATE
+			ISCHECKED = VALUES(ISCHECKED)
+	</update>
+	
+	<update id="EzScheduleDAO.upsertUserScheTagColor" parameterClass="egovframework.ezEKP.ezSchedule.vo.ScheduleTypeConfigVO">
+		INSERT INTO TBL_USER_SCHEDULE_TYPE_CONFIG
+			(USERID, SCHEDULETYPE, RELATEDID, TAGCOLOR, TENANT_ID, COMPANYID)
+		VALUES
+			(#userId#, #scheduleType#, #relatedId#, #tagColor#, #tenantId#, #companyId#)
+		ON DUPLICATE KEY UPDATE
+			TAGCOLOR = VALUES(TAGCOLOR)
+	</update>
+	
+	<select id="EzScheduleDAO.getUserScheduleTypeColor"  parameterClass="Map" resultClass="String">
+		SELECT
+			TAGCOLOR
+		FROM
+			TBL_USER_SCHEDULE_TYPE_CONFIG
+		WHERE
+			USERID = #userID#
+		AND
+			COMPANYID = #companyID#
+		AND
+			TENANT_ID = #tenantID#
+		AND
+			SCHEDULETYPE = #scheduleType#
+		AND
+			RELATEDID = #relatedId#
+	</select>
 </sqlMap>

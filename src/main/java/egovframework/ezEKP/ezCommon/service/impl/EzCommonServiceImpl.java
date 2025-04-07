@@ -8449,4 +8449,19 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
                 "\t\t\t\t</p>");
         ezCommonDAO.insertJournalListLang(map1, map2, map3, map4, map5, map6); 
     }
+    
+	@Override
+	public void alterScheduleDefaultViewCheck() throws Exception {
+		ezCommonDAO.alterScheduleDefaultViewCheck();		
+	}
+
+	// 2025-04-21 조수빈 - 기본 일정요소(개인, 부서, 회사일정)에 대한 사용자별 설정(색상, 체크 여부 등) 저장 테이블 생성
+	@Override
+	public void createUserScheduleTypeConfigTable() throws Exception {
+		logger.debug("createUserScheduleTypeConfigTable started");
+		
+		ezCommonDAO.createUserScheduleTypeConfigTable();
+		
+		logger.debug("createUserScheduleTypeConfigTable ended");
+	}
 }
