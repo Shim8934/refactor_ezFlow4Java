@@ -8211,7 +8211,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         	recipientMap.put("cn", uvo.getCn());
         	notiRecipientList.add(recipientMap);
         	
-			String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientList , "COMMUNITY", notiSubType, boardInfo.getBoardName() + " - " + itemVO.getTitle(), "popup", "750", "721", linkUrl, linkUrlMobile, "");
+			String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientList , "COMMUNITY", notiSubType, boardName + " - " + itemVO.getTitle(), "popup", "750", "721", linkUrl, linkUrlMobile, "");
 			logger.debug("community " +  notiSubType + " noti status : " + notiStatus);
 			
 		}
@@ -8663,7 +8663,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	@Override
 	public String getClubNameLocalization(String userLang, CommunityClubVO clubVO) throws Exception {
 		String clubName = clubVO.getC_ClubName();
-		if (Strings.isNotBlank(userLang) && !"1".equals(userLang)) {
+		if (Strings.isNotBlank(userLang) && !"1".equals(userLang) && Strings.isNotBlank(clubVO.getC_ClubName2())) {
 			clubName = clubVO.getC_ClubName2();
 		}
 		return clubName;
@@ -8673,7 +8673,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	public String getClubBoardNameLocalization(String userLang, CommunityBoardPropertyVO clubBoardVO) throws Exception {
 		String boardName = clubBoardVO.getBoardName();
 		
-		if (Strings.isNotBlank(userLang) && !"1".equals(userLang)) {
+		if (Strings.isNotBlank(userLang) && !"1".equals(userLang) && Strings.isNotBlank(clubBoardVO.getBoardName2())) {
 			boardName = clubBoardVO.getBoardName2();
 		}
 		return boardName;
