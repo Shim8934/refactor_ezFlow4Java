@@ -497,36 +497,22 @@ public class MScheduleGWController extends EgovFileMngUtil {
 								vo.setParentId("collaboration:" + jsonobject.get("ItemPostId").toString());
 								vo.setOwnerId(jsonobject.get("ItemUserAccountId").toString());
 								vo.setOwnerName(jsonobject.get("ItemUserName").toString());
-								vo.setOwnerName2("");
-								vo.setCreatorId("");
 								vo.setCreatorName(jsonobject.get("ItemUserName").toString());
-								vo.setCreatorName2("");
 								// 협업의 api에 createdate가 없기 때문에 updatedate = createdate로 취급
 								vo.setCreateDate(jsonobject.get("ItemUpdateDate").toString().replace("T", " "));
-								vo.setModifierId("");
-								vo.setModifierName("");
-								vo.setModifierName2("");
-								vo.setModifyDate("");
 								// 협업의 타입은 4로 고정됨.
 								vo.setScheduleType("4");
 								vo.setImportance((Integer.parseInt(jsonobject.get("ItemImportance").toString()) + 1) + "");
-								vo.setHasAttendant("");
-								vo.setHasAttach("");
-								vo.setHasComment("");
-								vo.setIsReadOnly("");
 								// 협업에 없는 기능으로 연구소에서 default Y로 요청함.
 								vo.setIsPublic("Y");
 								vo.setDateType(jsonobject.get("ItemDateType").toString());
 								vo.setStartDate(jsonobject.get("ItemStartDate").toString().replace("T", " "));
 								vo.setEndDate(jsonobject.get("ItemEndDate").toString().replace("T", " "));
 								vo.setRepetition(jsonobject.get("ItemRepetition").toString());
-								vo.setRepetitionDel("");
 								vo.setTitle(jsonobject.get("ItemPostTitle").toString());
 								vo.setLocation(jsonobject.get("ItemLocation").toString());
 								vo.setContent(jsonobject.get("ItemContents").toString());
-								vo.setContentPath("");
 								vo.setRepeatCount(Integer.parseInt(jsonobject.get("ItemRepeatCount").toString()));
-								vo.setScheduleFlag("");
 								// 협업에 없는 기능으로 연구소에서 default N로 요청함.
 								vo.setShowTop("N");
 								
@@ -562,13 +548,13 @@ public class MScheduleGWController extends EgovFileMngUtil {
 				logger.debug("mhtToHtml: " + mhtToHtml);			
 				Document doc = Jsoup.parse(mhtToHtml);	        
 				Elements elems = doc.select("[src]");
-				String scheduleAppURL = ezCommonService.getTenantConfig("scheduleAppUrl", tenantId);
 				
 				if (elems.size() > 0) {
 					for (Element element : elems) {
-						element.attr("src", scheduleAppURL + "/mobile/ezCommon/mFileDown.do?filePath=" + element.attr("src"));
+						element.attr("src", "/mobile/ezCommon/mFileDown.do?filePath=" + element.attr("src") + "&fileName=*.INLINE.*");
 					}
 				}
+				
 				String bodyHTML = doc.getElementsByTag("BODY").html();
 				vo.setContent(bodyHTML);
 				
@@ -988,7 +974,6 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			content = content.replace("replace_" + scheme, scheme);
 	        
 			jsonParam.put("content", content);
-			String scheduleType = jsonParam.get("scheduleType").toString();
 	        
 	        int resultScheduleID = mScheduleService.insertSchedule(jsonParam, utcStartDate, utcEndDate, info.getTenantId(), realPath, locale, info.getOffSet(), info.getLang()); 
 	        

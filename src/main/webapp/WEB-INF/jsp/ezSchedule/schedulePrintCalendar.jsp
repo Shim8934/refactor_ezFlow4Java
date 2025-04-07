@@ -79,6 +79,8 @@
 		    var typeCal = "<c:out value='${typeCal}'/>";
 		    var pStartDate = "<c:out value='${pStartDate}'/>";
 		    var pEndDate = "<c:out value='${pEndDate}'/>";
+		    var jsonPersonalScheConfigList = "<c:out value='${jsonPersonalScheConfigList}'/>";
+		    var personalScheConfigList = JSON.parse(decodeHtml(jsonPersonalScheConfigList));
 		    
 		    /* 2020-05-18 협업-일정 연동 관련 추가 */
 		    var WorkspaceUrl = "<c:out value='${workspaceHostUrl}'/>";     // 협업이 그룹웨어와 별도의 Url로 서비스 되는 경우에만 설정

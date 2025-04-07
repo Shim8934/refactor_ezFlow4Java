@@ -42,8 +42,6 @@
 			var defaultviewcheck = "<c:out value='${scheduleConfigVO.defaultViewCheck}'/>";
 			var jsonPersonalScheConfigList = "<c:out value='${jsonPersonalScheConfigList}'/>";
 			
-			
-			
 		    document.onselectstart = function () { return false; };
 		    window.onload = function () {
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -183,7 +181,7 @@
 		    		url : "/ezSchedule/scheduleSaveConfig.do",
 		    		success: function(text){
 		    			alert("<spring:message code='ezSchedule.t137' />");		    
-		    			parent.parent.frames['left'].location.reload();
+		    			parent.parent.frames['left'].location = "/ezSchedule/scheduleLeft.do?funCode=11";
 		    		},
 		    		error: function(err){
 		    			alert("<spring:message code='ezSchedule.t136' />");
@@ -239,30 +237,6 @@
 		        }
 		    }
 			
-
-			// 권기혁 - 실습
-		 	function DivPopUpShow_personal(popUpW, popUpH, type, URL) {
-				try {
-					document.getElementById("iFrameLayer").src = URL;
-					document.getElementById("iFramePanel").style.top = 10;
-					document.getElementById("iFramePanel").style.left = 10;
-					document.getElementById("iFramePanel").style.height = popUpH + "px";
-					document.getElementById("iFrameLayer").style.width = popUpW + "px";
-					document.getElementById("iFrameLayer").style.height = popUpH + "px";
-
-					try {
-						if (typeof(window.parent.frames.left) == "object") {
-							window.parent.frames.left.document.getElementById("mailPanel_left").style.display = "";
-						}
-					} catch(e) {}
-					
-					document.getElementById("mailPanel").style.display = "";
-					document.getElementById("iFramePanel").style.display = "";
-				} catch (e) {}
-
-				return document.getElementById("iFrameLayer");
-			}
-			
 			//개인 일정 색상 선택(실습)
 			function select_personalcolor(type, relatedID) {
 		    	var selector = "div[data-schedule-type='" + type + "']";
@@ -271,15 +245,21 @@
 		    		selector += "[data-related-id='" + relatedID + "']";
 		    	}
 				
-				var	color = document.querySelector(selector).innerHTML;
-				DivPopUpShow_personal(360, 370, type,"/ezSchedule/scheduleSelectColor.do?type="+ type + "&relatedID=" + encodeURIComponent(relatedID) + "&color=" + encodeURIComponent(color));
+				var color = document.querySelector(selector).nextElementSibling.innerText;
+				document.getElementById("iFrameLayer").src = "/ezSchedule/scheduleSelectColor.do?type="+ type + "&relatedID=" + encodeURIComponent(relatedID) + "&color=" + encodeURIComponent(color);
+				document.getElementById("iFramePanel").style.top = "10px";
+				document.getElementById("iFramePanel").style.left = "530px";
+				document.getElementById("iFramePanel").style.height = "300px";
+				document.getElementById("iFrameLayer").style.width = "360px";
+				document.getElementById("iFrameLayer").style.height = "300px";
+				document.getElementById("iFramePanel").style.display = "";
 			}
 		</script>
 	</head>
 	<body style="margin-left:10px">
 		<form method="post">
 		<br />   
-			<table class="content" style="width:450px;">
+			<table class="content" style="width:500px;">
 		    	<tr>
 		      		<th><spring:message code='ezSchedule.t139' /></th>
 		      		<td>
@@ -408,18 +388,18 @@
 			    </tr>
 			    <tr>  
    			    	<!--<th><spring:message code='ezSchedule.hth01' /></th>-->
-			    	<th>개인 일정 색상</th>
+			    	<th><spring:message code='ezSchedule.color01' /></th>
 			    	<td>
-			    		<div class="tagColor" style="background:rgb(1, 138, 249);" data-schedule-type="1" data-related-id="<c:out value='${loginVO.id}'/>"></div>
-			      		<div class="tagText"></div>
+			    		<div class="tagColor" style="background:#018AF9;" data-schedule-type="1" data-related-id="<c:out value='${loginVO.id}'/>"></div>
+			      		<div class="tagText">#018AF9</div>
 			    		<a class="imgbtn" onclick="select_personalcolor('1', '<c:out value='${loginVO.id}'/>')" style="float: left;"><span ><spring:message code='ezSchedule.csj02' /></span></a>
 			    	</td>
 			    </tr>
 			    <tr>
-			    	<th>부서 일정 색상</th>
+			    	<th><spring:message code='ezSchedule.color02' /></th>
 			    	<td>
-			    		<div class="tagColor" style="background-color:rgb(1, 179, 63);" data-schedule-type="2" data-related-id="<c:out value='${loginVO.deptID}'/>"></div>
-			      		<div class="tagText"></div>
+			    		<div class="tagColor" style="background-color:#01B33F;" data-schedule-type="2" data-related-id="<c:out value='${loginVO.deptID}'/>"></div>
+						<div class="tagText">#01B33F</div>
 			    		<a class="imgbtn" onclick="select_personalcolor('2', '<c:out value='${loginVO.deptID}'/>')" style="float: left;"><span ><spring:message code='ezSchedule.csj02' /></span></a>
 			    	</td>
 			    </tr>
@@ -427,10 +407,10 @@
 					<c:forEach var="cum" items="${scheCum}">
 						<c:if test="${cum.deptId ne loginVO.deptID}">
 							<tr>
-						    	<th>부서 일정 색상-${cum.titleName}</th>
+						    	<th><spring:message code='ezSchedule.color02' />-${cum.titleName}</th>
 						    	<td>
-						    		<div class="tagColor" style="background-color:rgb(1, 179, 63);" data-schedule-type="2" data-related-id="<c:out value='${cum.deptId}'/>"></div>
-						      		<div class="tagText"></div>
+						    		<div class="tagColor" style="background-color:#01B33F;" data-schedule-type="2" data-related-id="<c:out value='${cum.deptId}'/>"></div>
+									<div class="tagText">#01B33F</div>
 						    		<a class="imgbtn" onclick="select_personalcolor('2', '${cum.deptId}')" style="float: left;"><span ><spring:message code='ezSchedule.csj02' /></span></a>
 						    	</td>
 						    </tr>
@@ -438,10 +418,10 @@
 					</c:forEach>
 				</c:if>
 			    <tr>
-			    	<th>회사 일정 색상</th>
+			    	<th><spring:message code='ezSchedule.color03' /></th>
 			    	<td>
-			    		<div class="tagColor" style="background:rgb(254, 28, 113);" data-schedule-type="3" data-related-id="<c:out value='${loginVO.companyID}'/>"></div>
-			      		<div class="tagText"></div>
+			    		<div class="tagColor" style="background:#FE1C71;" data-schedule-type="3" data-related-id="<c:out value='${loginVO.companyID}'/>"></div>
+			      		<div class="tagText">#FE1C71</div>
 			      		<a class="imgbtn" onclick="select_personalcolor('3','<c:out value='${loginVO.companyID}'/>')" style="float: left;"><span ><spring:message code='ezSchedule.csj02' /></span></a>
 			    	</td>
 			    </tr>
@@ -462,7 +442,7 @@
 		    	<%-- <a class="imgbtn" onClick="window.location.reload(false)"><span><spring:message code='ezSchedule.t5' /></span></a> --%>
 		  	</div>
 		</form>
-		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0); display: none;" id="mailPanel">&nbsp;</div>
+		<div style="width: 100%; height: calc(100% - 85px); position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0); display: none;" id="mailPanel">&nbsp;</div>
 	    <div class="layerpopup" style="z-index: 2000; position: absolute; display: none;" id="iFramePanel">
 	        <iframe src="<spring:message code='main.kms4' />" style="border: 3px solid black;" id="iFrameLayer"></iframe>
 	    </div>

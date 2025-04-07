@@ -304,8 +304,12 @@
 				contentpath,
 				b.groupname,
 				a.companyid,
-				b.groupcolor,
-	            showtop
+				CASE WHEN SCHEDULETYPE = 1 THEN 'rgb(1, 138, 249)'
+					 WHEN SCHEDULETYPE = 2 THEN 'rgb(1, 179, 63)'
+					 WHEN SCHEDULETYPE = 3 THEN 'rgb(254, 28, 113)'
+					 WHEN SCHEDULETYPE = 7 THEN b.groupcolor
+					 ELSE 'rgb(233, 222, 19)' END AS GROUPCOLOR,
+				showtop
         	from 
         		tbl_schedule a left join tbl_schedulegroup b on a.ownerid = b.groupid
        		where  
@@ -2023,8 +2027,12 @@
 				contentpath,
 				b.groupname,
 				a.companyid,
-				b.groupcolor,
-	            showtop
+				CASE WHEN SCHEDULETYPE = 1 THEN 'rgb(1, 138, 249)'
+					 WHEN SCHEDULETYPE = 2 THEN 'rgb(1, 179, 63)'
+					 WHEN SCHEDULETYPE = 3 THEN 'rgb(254, 28, 113)'
+					 WHEN SCHEDULETYPE = 7 THEN b.groupcolor
+					 ELSE 'rgb(233, 222, 19)' END AS GROUPCOLOR,
+				showtop
         	from
         		tbl_schedule a left join tbl_schedulegroup b on a.ownerid = b.groupid
        		where

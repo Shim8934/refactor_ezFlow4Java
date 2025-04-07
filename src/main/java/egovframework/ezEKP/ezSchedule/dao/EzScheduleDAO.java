@@ -539,7 +539,7 @@ public class EzScheduleDAO extends EgovAbstractDAO {
 	public String getUserScheduleTypeColor(Map<String, Object> param) {
 		return (String) select("EzScheduleDAO.getUserScheduleTypeColor", param);
 	}
-}
+	
 	@SuppressWarnings("unchecked")
 	public List<ScheSecretaryVO> getPublicExceSchedule(Map<String, Object> param) {
 		return (List<ScheSecretaryVO>) list("EzScheduleDAO.getPublicExceSchedule", param);

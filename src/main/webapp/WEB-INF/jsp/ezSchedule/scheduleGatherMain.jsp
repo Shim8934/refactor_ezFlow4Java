@@ -183,7 +183,7 @@
       if (typeof (rtn) != "undefined") {
         getGroupList();
       }
-      parent.frames["left"].gatherRefresh(); // 2023-10-04 임정은 - 모아보기그룹 추가 시 left 메뉴 refresh
+      parent.parent.frames["left"].gatherRefresh(); // 2023-10-04 임정은 - 모아보기그룹 추가 시 left 메뉴 refresh
     }
 
     function del_group() {
@@ -221,12 +221,11 @@
         }
       });
 
-      parent.frames["left"].gatherRefresh(); // 2023-10-04 임정은 - 모아보기그룹 삭제 시 left 메뉴 refresh
+      parent.parent.frames["left"].gatherRefresh(); // 2023-10-04 임정은 - 모아보기그룹 삭제 시 left 메뉴 refresh
     }
   </script>
 </head>
 <body class="mainbody">
-  <h1><spring:message code='ezSchedule.ljeGs002' /></h1>
   <div id="mainmenu" style="margin-top:20px">
     <ul>
       <li class="important"><span onClick="add_group()"><spring:message code='ezSchedule.shb07' /></span></li>

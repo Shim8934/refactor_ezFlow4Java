@@ -7574,6 +7574,18 @@
 			form_status = 'basic' ]]>
 	</update>
 	
+	
+	<select id="EzCommonDAO.checkScheduleDefaultViewCheck" resultClass="String">
+		<![CDATA[
+			SELECT
+				DEFAULTVIEWCHECK
+			FROM
+				TBL_SCHEDULECONFIG
+			WHERE
+				ROWNUM = 1
+		]]>
+	</select>
+	
 	<statement id="EzCommonDAO.addScheduleDefaultViewCheck">
 		ALTER TABLE
 		TBL_SCHEDULECONFIG

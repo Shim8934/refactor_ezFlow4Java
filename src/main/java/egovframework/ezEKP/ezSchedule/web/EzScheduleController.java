@@ -854,7 +854,6 @@ public class EzScheduleController extends EgovFileMngUtil {
         
       	/* 2025-03-13 홍승비 - 협업 모듈에 고정된 하드코딩 문자열 제거 (ezWorkspace), 테넌트 컨피그 workspaceAppPath로 협업 웹응용프로그램 경로를 분리하여 사용 ("" 또는 "/ezWork" 등) */
 		String workspaceAppPath = ezCommonService.getTenantConfig("workspaceAppPath", loginVO.getTenantId());
-		
 		List<ScheduleTypeConfigVO> personalScheConfigList = ezScheduleService.getUserScheduleTypeConfig(userID, companyID, tenantID);
 		ObjectMapper objectMapper = new ObjectMapper();
 		String jsonPersonalScheConfigList = "";
@@ -5649,6 +5648,17 @@ public class EzScheduleController extends EgovFileMngUtil {
 				data.setGroupColor("#e9de13");
 			}
 		}
+		
+	    // 2025-04-21 조수빈 - 기본 일정 요소별 사용자 설정값
+	    List<ScheduleTypeConfigVO> personalScheConfigList = ezScheduleService.getUserScheduleTypeConfig(loginVO.getId(), loginVO.getCompanyID(), tenantID);
+	    ObjectMapper objectMapper = new ObjectMapper();
+	    String jsonPersonalScheConfigList = "";
+	    
+	    try {
+			jsonPersonalScheConfigList = objectMapper.writeValueAsString(personalScheConfigList);
+		} catch (Exception e) {
+			logger.debug(e.getMessage());
+		}
 
 		model.addAttribute("userInfo",		loginVO);
 		model.addAttribute("pOffset",		pOffset);
@@ -5667,6 +5677,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		model.addAttribute("resultDeptName", SearchDeptName);
 		model.addAttribute("resultDeptID", SearchDeptId);
 		model.addAttribute("groupList", groupList);
+		model.addAttribute("jsonPersonalScheConfigList", jsonPersonalScheConfigList);
 
 		return "/ezSchedule/scheduleUserCalendarSearch";
 	}
@@ -5999,6 +6010,17 @@ public class EzScheduleController extends EgovFileMngUtil {
 		
 		/* 2025-03-13 홍승비 - 협업 모듈에 고정된 하드코딩 문자열 제거 (ezWorkspace), 테넌트 컨피그 workspaceAppPath로 협업 웹응용프로그램 경로를 분리하여 사용 ("" 또는 "/ezWork" 등) */
 		String workspaceAppPath = ezCommonService.getTenantConfig("workspaceAppPath", loginVO.getTenantId());
+		
+	    // 2025-04-21 조수빈 - 기본 일정 요소별 사용자 설정값
+	    List<ScheduleTypeConfigVO> personalScheConfigList = ezScheduleService.getUserScheduleTypeConfig(userID, companyID, tenantID);
+	    ObjectMapper objectMapper = new ObjectMapper();
+	    String jsonPersonalScheConfigList = "";
+	    
+	    try {
+			jsonPersonalScheConfigList = objectMapper.writeValueAsString(personalScheConfigList);
+		} catch (Exception e) {
+			logger.debug(e.getMessage());
+		}
 
 		model.addAttribute("userInfo",		loginVO);
 		model.addAttribute("pOffset",		pOffset);
@@ -6029,6 +6051,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		//model.addAttribute("sDate",		sDate);
 		model.addAttribute("pStartDate",	startDate);
 		model.addAttribute("pEndDate",		endDate);
+		model.addAttribute("jsonPersonalScheConfigList", jsonPersonalScheConfigList);
 
 		return "/ezSchedule/schedulePrintCalendar";
 	}

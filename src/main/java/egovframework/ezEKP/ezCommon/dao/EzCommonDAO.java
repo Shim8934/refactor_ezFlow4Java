@@ -3434,7 +3434,6 @@ public class EzCommonDAO extends EgovAbstractDAO {
 
 			update("EzCommonDAO.addScheduleDefaultViewCheck");
 		}
-		
 	}
 
 	public void createUserScheduleTypeConfigTable() {

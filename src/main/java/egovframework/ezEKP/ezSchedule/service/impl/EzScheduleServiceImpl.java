@@ -716,20 +716,15 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		try {
 			// 협업 일정 가져오기
 			if(useWorkspaceSchedule.equalsIgnoreCase("yes")) {
-				String[] sDate = orgStartDate.split(" ");
-				String startDate = sDate[0];
-				String[] eDate = orgEndDate.split(" ");
-				String endDate = eDate[0];
 				String workspaceHostUrl = ezCommonService.getTenantConfig("workspaceHostUrl", tenantId);
 				String workspaceAppPath = ezCommonService.getTenantConfig("workspaceAppPath", tenantId);
 			
 				/* 2025-04-11 전인하 - ezWork 협업을 위해 검색키워드 지정 (전체검색일 경우 키워드 넘김, 상세검색일 경우 제목 넘김. */
 				String ezWorkSearchKeyword = Strings.isBlank(searchAll) && !Strings.isNotBlank(searchTitle) ? searchTitle : searchAll;
-				
 				/* 2025-03-13 홍승비 - 협업 모듈에 고정된 하드코딩 문자열 제거 (ezWorkspace), 테넌트 컨피그 workspaceAppPath로 협업 웹응용프로그램 경로를 분리하여 사용 ("" 또는 "/ezWork" 등) */
 				String domain = workspaceHostUrl+ workspaceAppPath + "/api/GroupwareApi/post/scheduleread/";
-				String params = "userAccountId=" + URLEncoder.encode(userID, "UTF-8") + "&startDate=" + URLEncoder.encode(startDate, "UTF-8")
-						+ "&endDate=" + URLEncoder.encode(endDate, "UTF-8") + "&searchTerm=" + ezWorkSearchKeyword + "&bMobile=" + URLEncoder.encode("false", "UTF-8");
+				String params = "userAccountId=" + URLEncoder.encode(userID, "UTF-8") + "&startDate=" + URLEncoder.encode(orgStartDate, "UTF-8")
+						+ "&endDate=" + URLEncoder.encode(orgEndDate, "UTF-8") + "&searchTerm=" + ezWorkSearchKeyword + "&bMobile=" + URLEncoder.encode("false", "UTF-8");
 				String workspaceScheduleLists = ezEmailUtil.getWebServiceResult(domain, params);
 
 				if(workspaceScheduleLists != null && !workspaceScheduleLists.equals("")) {
@@ -742,51 +737,27 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 						ScheduleInfoVO sVo = new ScheduleInfoVO();
 						JSONObject jsonobject = (JSONObject)jsonarray.get(i);
 
+						// 협업에 없는 값들의 경우 null로 반환되기 때문에 ""로 설정해주는 작업 진행
 						sVo.setScheduleId("collaboration:" + jsonobject.get("ItemId"));
 						sVo.setParentId("collaboration:" + jsonobject.get("ItemPostId").toString());
 						sVo.setOwnerId(jsonobject.get("ItemUserAccountId").toString());
 						sVo.setOwnerName(jsonobject.get("ItemUserName").toString());
-						sVo.setOwnerName2("");
-						sVo.setCreatorId("");
 						sVo.setCreatorName(jsonobject.get("ItemUserName").toString());
-						sVo.setCreatorName2("");
 						// 협업의 api에 createdate가 없기 때문에 updatedate = createdate로 취급
 						sVo.setCreateDate(jsonobject.get("ItemUpdateDate").toString().replace("T", " "));
-						sVo.setModifierId("");
-						sVo.setModifierName("");
-						sVo.setModifierName2("");
-						sVo.setModifyDate("");
 						// 협업의 타입은 4로 고정됨.
 						sVo.setScheduleType("4");
 						sVo.setImportance((Integer.parseInt(jsonobject.get("ItemImportance").toString()) + 1) + "");
-						sVo.setHasAttendant("");
-						sVo.setHasAttach("");
-						sVo.setHasComment("");
-						sVo.setIsReadOnly("");
 						// 협업에 없는 기능으로 연구소에서 default Y로 요청함.
 						sVo.setIsPublic("Y");
 						sVo.setDateType(jsonobject.get("ItemDateType").toString());
 						sVo.setStartDate(jsonobject.get("ItemStartDate").toString().replace("T", " "));
 						sVo.setEndDate(jsonobject.get("ItemEndDate").toString().replace("T", " "));
 						sVo.setRepetition(jsonobject.get("ItemRepetition").toString());
-						sVo.setRepetitionDel("");
 						sVo.setTitle(jsonobject.get("ItemPostTitle").toString());
 						sVo.setLocation(jsonobject.get("ItemLocation").toString());
 						sVo.setContent(jsonobject.get("ItemContents").toString());
-						sVo.setContentPath("");
-						sVo.setGroupName("");
-						sVo.setCompanyid("");
 						sVo.setRepeatCount(Integer.parseInt(jsonobject.get("ItemRepeatCount").toString()));
-						sVo.setRealEndDate("");
-						sVo.setCompleteFG("");
-						sVo.setIsAllRep("");
-						sVo.setRepStartDate("");
-						sVo.setScheduleFlag("");
-						sVo.setGoogleId("");
-						sVo.isRepetitionChanged();
-						sVo.setRepetitionDelIds("");
-						sVo.setGoogleRecurringEventId("");
-						sVo.setGoogleOriginalStartTime("");
 						sVo.setRepeatedScheduleOffset(0);
 						sVo.setGroupColor("rgb(63, 81, 181)");
 						// 협업에 없는 기능으로 연구소에서 default N로 요청함.
@@ -4591,4 +4562,5 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		
 		return result;
 	}
+
 }

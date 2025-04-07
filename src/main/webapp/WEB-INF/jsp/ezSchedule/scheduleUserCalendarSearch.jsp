@@ -108,6 +108,8 @@
         var resultDeptName = "<c:out value='${resultDeptName}'/>";
         var resultDeptID = "<c:out value='${resultDeptID}'/>";
         var chk_usersearch = "UserSearch";
+        var jsonPersonalScheConfigList = "<c:out value='${jsonPersonalScheConfigList}'/>";
+        var personalScheConfigList = JSON.parse(decodeHtml(jsonPersonalScheConfigList));
 
         window.onload = function () {
             if (navigator.userAgent.indexOf('Firefox') != -1) {
