@@ -58,58 +58,99 @@ function CalViewSource(chk_str) {
 
 //2018-06-19 구해안 이동할때 css 적용하는 함수 제작
 function chk_scheduleCSS() {
-	if(typeCal == 0){		
-		$("input[name=chk_schedule]",parent.frames["left"].document).each(function(index){
+	if (typeCal == 0) {
+		
+		$("input[name=chk_schedule]", parent.frames["left"].document).each(function (index) {
 			var chk_eachVal1 = $(this).val();
-			var chk_type=$(this).data("schedule-type");
+			var chk_type = $(this).data("schedule-type");
 			
-			$('.td_list td[ownerid = "'+chk_eachVal1+'"][scheduletype = "'+chk_type+'"]').each(function(index, value){
-				$(value).addClass('chk_noneDisplay');
-			});
+			if (chk_type == "10" || chk_type == "1" || chk_type == "4") {
+				$('.td_list td[scheduletype = "' + chk_type + '"]').each(function (index, value) {
+					$(value).addClass('chk_noneDisplay');
+				});
+			} else {
+				$('.td_list td[ownerid = "' + chk_eachVal1 + '"][scheduletype = "' + chk_type + '"]').each(function (index, value) {
+					$(value).addClass('chk_noneDisplay');
+				});
+			}
 		});
-		$("input[name=chk_schedule]:checked",parent.frames["left"].document).each(function(index) {
+		
+		$("input[name=chk_schedule]:checked", parent.frames["left"].document).each(function (index) {
 			var test = $(this).val();
-			var chk_type=$(this).data("schedule-type");
+			var chk_type = $(this).data("schedule-type");
 			
-			$('.td_list td[ownerid = "'+test+'"][scheduletype = "'+chk_type+'"]').each(function(index, value){
-				$(value).removeClass('chk_noneDisplay');
-			});
-		});					
-	}else if(typeCal == 1) {
-		$("input[name=chk_schedule]",parent.frames["left"].document).each(function(index){
+			if (chk_type == "10" || chk_type == "1" || chk_type == "4") {
+				$('.td_list td[scheduletype = "' + chk_type + '"]').each(function (index, value) {
+					$(value).removeClass('chk_noneDisplay');
+				});
+			} else {
+				$('.td_list td[ownerid = "' + test + '"][scheduletype = "' + chk_type + '"]').each(function (index, value) {
+					$(value).removeClass('chk_noneDisplay');
+				});
+			}
+		});
+	} else if (typeCal == 1) {
+		
+		$("input[name=chk_schedule]", parent.frames["left"].document).each(function (index) {
 			var chk_eachVal1 = $(this).val();
-			var chk_type=$(this).data("schedule-type");
+			var chk_type = $(this).data("schedule-type");
 			
-			$('div[ownerid = "'+chk_eachVal1+'"][scheduletype = "'+chk_type+'"]').each(function(index, value){
-				$(value).addClass('chk_noneDisplay');
-			});			
+			if (chk_type == "10" || chk_type == "1" || chk_type == "4") {
+				$('div[scheduletype = "' + chk_type + '"]').each(function (index, value) {
+					$(value).addClass('chk_noneDisplay');
+				});
+			} else {
+				$('div[ownerid = "' + chk_eachVal1 + '"][scheduletype = "' + chk_type + '"]').each(function (index, value) {
+					$(value).addClass('chk_noneDisplay');
+				});
+			}
 		});
-		$("input[name=chk_schedule]:checked",parent.frames["left"].document).each(function(index) {
+		
+		$("input[name=chk_schedule]:checked", parent.frames["left"].document).each(function (index) {
 			var test = $(this).val();
-			var chk_type=$(this).data("schedule-type");
+			var chk_type = $(this).data("schedule-type");
 			
-			$('div[ownerid = "'+test+'"][scheduletype = "'+chk_type+'"]').each(function(index, value){
-				$(value).removeClass('chk_noneDisplay');
-			});			
-		});	
-	}else{
-		$("input[name=chk_schedule]",parent.frames["left"].document).each(function(index){
+			if (chk_type == "10" || chk_type == "1" || chk_type == "4") {
+				$('div[scheduletype = "' + chk_type + '"]').each(function (index, value) {
+					$(value).removeClass('chk_noneDisplay');
+				});
+			} else {
+				$('div[ownerid = "'+test+'"][scheduletype = "' + chk_type + '"]').each(function (index, value) {
+					$(value).removeClass('chk_noneDisplay');
+				});
+			}
+		});
+	} else {
+		$("input[name=chk_schedule]", parent.frames["left"].document).each(function (index) {
 			var chk_eachVal1 = $(this).val();
-			var chk_type=$(this).data("schedule-type");
+			var chk_type = $(this).data("schedule-type");
 			
-			$('div[ownerid = "'+chk_eachVal1+'"][scheduletype = "'+chk_type+'"]').each(function(index, value){
-				$(value).addClass('chk_noneDisplay');
-			});			
+			if (chk_type == "10" || chk_type == "1" || chk_type == "4") {
+				$('div[scheduletype = "' + chk_type + '"]').each(function (index, value) {
+					$(value).addClass('chk_noneDisplay');
+				});
+			} else {
+				$('div[ownerid = "' + chk_eachVal1 + '"][scheduletype = "' + chk_type + '"]').each(function (index, value) {
+					$(value).addClass('chk_noneDisplay');
+				});
+			}
 		});
-		$("input[name=chk_schedule]:checked",parent.frames["left"].document).each(function(index) {
+		
+		$("input[name=chk_schedule]:checked", parent.frames["left"].document).each(function (index) {
 			var test = $(this).val();
-			var chk_type=$(this).data("schedule-type");
+			var chk_type = $(this).data("schedule-type");
 			
-			$('div[ownerid = "'+test+'"][scheduletype = "'+chk_type+'"]').each(function(index, value){
-				$(value).removeClass('chk_noneDisplay');
-			});			
-		});	
-	}			
+			if (chk_type == "10" || chk_type == "1" || chk_type == "4") {
+				$('div[scheduletype = "' + chk_type + '"]').each(function (index, value) {
+					$(value).removeClass('chk_noneDisplay');
+				});
+			} else {
+				$('div[ownerid = "' + test + '"][scheduletype = "' + chk_type + '"]').each(function (index, value) {
+					$(value).removeClass('chk_noneDisplay');
+				});
+			}
+		});
+	}
 }
 
 function sDataTemp() {
@@ -760,10 +801,30 @@ function CalMonthDataBind(oAppointment) {
         if (oAppointment.ScheduleType == 3) {
             oTd.className = "company";
             oSpan.className = "company";
+			
+			var tagConf = personalScheConfigList.find(function(elem) {
+				return elem.scheduleType == 3
+			});
+			
+			if (tagConf.tagColor) {
+				oSpan.style.backgroundColor = tagConf.tagColor;
+				oSpan.style.border = "1px solid " + tagConf.tagColor;
+            }
         }
         else if (oAppointment.ScheduleType == 1 || oAppointment.ScheduleType == 5 || oAppointment.ScheduleType == 9) {
             oTd.className = "individual";
             oSpan.className = "individual";
+            
+			if (oAppointment.ScheduleType == 1) {
+				var tagConf = personalScheConfigList.find(function(elem) {
+					return elem.scheduleType == 1
+				});
+				
+				if (tagConf.tagColor) {
+					oSpan.style.backgroundColor = tagConf.tagColor;
+					oSpan.style.border = "1px solid " + tagConf.tagColor;
+				}
+			}
         }
         else if (oAppointment.ScheduleType == 6) {
             oTd.className = "individual";
@@ -792,6 +853,17 @@ function CalMonthDataBind(oAppointment) {
         } else {
             oTd.className = "department";
             oSpan.className = "department";
+			
+			if (oAppointment.ScheduleType == 2) {
+				var tagConf = personalScheConfigList.find(function(elem) {
+					return (elem.scheduleType == 2) && (oAppointment.OwnerID == elem.relatedId)
+				});
+				
+				if (tagConf.tagColor) {
+					oSpan.style.backgroundColor = tagConf.tagColor;
+					oSpan.style.border = "1px solid " + tagConf.tagColor;
+				}
+			}
         }
         
         /* 2021-09-07 홍승비 - 일정관리 월보기 시 각 일정제목에 말줄임표 적용 */
@@ -969,10 +1041,30 @@ function CalWeekDataBind(oAppointment, order) {
 
             oDiv.className = "calendar_data_company";
             oSpan.className = "company";
+            
+			var tagConf = personalScheConfigList.find(function(elem) {
+				return elem.scheduleType == 3
+			});
+			
+			if (tagConf.tagColor) {
+				oSpan.style.backgroundColor = tagConf.tagColor;
+				oSpan.style.border = "1px solid " + tagConf.tagColor;
+            }
         }
         else if (oAppointment.ScheduleType == 1 || oAppointment.ScheduleType == 5 || oAppointment.ScheduleType == 9) {
             oDiv.className = "calendar_data_individual";
             oSpan.className = "individual";
+            
+			if (oAppointment.ScheduleType == 1) {
+				var tagConf = personalScheConfigList.find(function(elem) {
+					return elem.scheduleType == 1
+				});
+				
+				if (tagConf.tagColor) {
+					oSpan.style.backgroundColor = tagConf.tagColor;
+					oSpan.style.border = "1px solid " + tagConf.tagColor;
+				}
+			}
         }
         else if (oAppointment.ScheduleType == 6) {
             oDiv.className = "calendar_data_individual";
@@ -1001,6 +1093,17 @@ function CalWeekDataBind(oAppointment, order) {
         } else {
             oDiv.className = "calendar_data_department";
             oSpan.className = "department";
+			
+			if (oAppointment.ScheduleType == 2) {
+				var tagConf = personalScheConfigList.find(function(elem) {
+					return (elem.scheduleType == 2) && (oAppointment.OwnerID == elem.relatedId)
+				});
+				
+				if (tagConf.tagColor) {
+					oSpan.style.backgroundColor = tagConf.tagColor;
+					oSpan.style.border = "1px solid " + tagConf.tagColor;
+				}
+			}
         }
         
         for (var i = 0; i < publicIds.length; i++) {
@@ -1431,10 +1534,30 @@ function CalDayDataBind(oAppointment, order) {
 
             oDiv.className = "calendar_data_company";
             oSpan.className = "company";
+			
+			var tagConf = personalScheConfigList.find(function(elem) {
+				return elem.scheduleType == 3
+			});
+			
+			if (tagConf.tagColor) {
+				oSpan.style.backgroundColor = tagConf.tagColor;
+				oSpan.style.border = "1px solid " + tagConf.tagColor;
+            }
         }
         else if (oAppointment.ScheduleType == 1 || oAppointment.ScheduleType == 5 || oAppointment.ScheduleType == 9) {
             oDiv.className = "calendar_data_individual";
             oSpan.className = "individual";
+            
+			if (oAppointment.ScheduleType == 1) {
+				var tagConf = personalScheConfigList.find(function(elem) {
+					return elem.scheduleType == 1
+				});
+				
+				if (tagConf.tagColor) {
+					oSpan.style.backgroundColor = tagConf.tagColor;
+					oSpan.style.border = "1px solid " + tagConf.tagColor;
+				}
+			}
         }
         else if (oAppointment.ScheduleType == 6) {
             oDiv.className = "calendar_data_individual";
@@ -1463,6 +1586,17 @@ function CalDayDataBind(oAppointment, order) {
         } else {
             oDiv.className = "calendar_data_department";
             oSpan.className = "department";
+			
+			if (oAppointment.ScheduleType == 2) {
+				var tagConf = personalScheConfigList.find(function(elem) {
+					return (elem.scheduleType == 2) && (oAppointment.OwnerID == elem.relatedId)
+				});
+				
+				if (tagConf.tagColor) {
+					oSpan.style.backgroundColor = tagConf.tagColor;
+					oSpan.style.border = "1px solid " + tagConf.tagColor;
+				}
+			}
         }
         
         for (var i = 0; i < publicIds.length; i++) {

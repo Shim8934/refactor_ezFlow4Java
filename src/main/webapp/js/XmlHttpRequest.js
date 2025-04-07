@@ -2553,3 +2553,29 @@ function resizableMenu(url) {
     }
     setUpHideLayerEvent();
 }
+
+function decodeHtml(str) {
+    // HTML 문자 엔티티 변환
+    var entities = {
+        "lt": "<",
+        "gt": ">",
+        "amp": "&",
+        "quot": "\"",
+        "apos": "'",
+        "nbsp": " ",
+        // 추가적인 HTML 엔티티가 필요하면 여기에 추가
+    };
+
+    // 문자 이름 엔티티를 변환
+    str = str.replace(/&(\w+);/g, function(match, entity) {
+        return entities[entity] || match;  // entities에서 변환이 가능하면 변환, 아니면 원본 그대로
+    })
+	.replace(/&#(\d+);/g, function(match, num) {
+        return String.fromCharCode(num);
+    })
+	.replace(/&#x([0-9A-Fa-f]+);/g, function(match, num) {
+        return String.fromCharCode(parseInt(num, 16));
+    });
+
+    return str;
+}

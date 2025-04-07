@@ -19,6 +19,7 @@ import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -224,16 +225,23 @@ public class MScheduleGWController extends EgovFileMngUtil {
 								JSONObject jsonobject = (JSONObject)jsonarray.get(i);
 
 								sVo.setDateType(jsonobject.get("ItemDateType").toString());
+								sVo.setGroupColor("rgb(63, 81, 181)");
 								sVo.setScheduleType("4");
 								sVo.setScheduleId("collaboration:" + jsonobject.get("ItemId").toString());
 								sVo.setParentId("collaboration:" + jsonobject.get("ItemPostId").toString());
 								sVo.setStartDate(jsonobject.get("ItemStartDate").toString().replace("T", " "));
 								sVo.setEndDate(jsonobject.get("ItemEndDate").toString().replace("T", " "));
+								// 협업의 api에 createdate가 없기 때문에 updatedate = createdate로 취급
+								sVo.setCreateDate(jsonobject.get("ItemUpdateDate").toString().replace("T", " "));
 								sVo.setCreatorName(jsonobject.get("ItemUserName").toString());
 								sVo.setTitle(jsonobject.get("ItemPostTitle").toString());
 								sVo.setOwnerId(jsonobject.get("ItemUserAccountId").toString());
 								sVo.setOwnerName(jsonobject.get("ItemUserName").toString());
 								sVo.setRepeatCount(Integer.parseInt(jsonobject.get("ItemRepeatCount").toString()));
+								// 협업에 없는 기능으로 연구소에서 default Y로 요청함.
+								sVo.setIsPublic("Y");
+								// 협업에 없는 기능으로 연구소에서 default N로 요청함.
+								sVo.setShowTop("N");
 
 								int importance = Integer.parseInt(jsonobject.get("ItemImportance").toString()) + 1;
 								sVo.setImportance(importance + "");
@@ -411,11 +419,126 @@ public class MScheduleGWController extends EgovFileMngUtil {
 		    		vo.setContent(googleContent);
 				} else {
 					result.put("status", "error");
-					result.put("code", 1);			
+					result.put("code", 1);
 					result.put("data", "");
 				}
 				
 				dataObject.put("scheduleInfo", vo);
+			} else if (null != scheduleId && scheduleId.startsWith("collaboration:")) {
+				// 협업 일정 정보
+				String selectedDate = request.getParameter("selectedDate");
+				String cScheduleID = scheduleId.substring(14);
+				
+				if (null == selectedDate) {
+					// 선택일이 없는 경우 일정 리스트 범위를 제한할 수 없기 때문에 Exception 발생 시켜 예외 처리
+					throw new NullPointerException("startDate or endDate is Null.");
+					
+				} else if (selectedDate.length() != 10) {
+					// 시작일과 종료일의 형식이 잘못된 경우도 예외 처리.
+					throw new IllegalArgumentException("Invalid startDate or endDate value.");
+				}
+				
+				logger.debug("selectedDate: {}, collaboration ScheduleID: {}", selectedDate, cScheduleID);
+				
+				try {
+					// 해당 일자에 맞는 협업의 일정 리스트 API 조회하기
+					String workspaceHostUrl = ezCommonService.getTenantConfig("workspaceHostUrl", info.getTenantId());
+					String domain = workspaceHostUrl + "/ezWorkspace/api/GroupwareApi/post/scheduleread/";
+					String params = "userAccountId=" + URLEncoder.encode(request.getParameter("userId"), "UTF-8")
+									+ "&startDate=" + URLEncoder.encode(selectedDate + " 00:00:00", "UTF-8")
+									+ "&endDate=" + URLEncoder.encode(selectedDate + " 23:59:59", "UTF-8");
+					String workspaceScheduleLists = ezEmailUtil.getWebServiceResult(domain, params);
+					
+					if (workspaceScheduleLists != null && !workspaceScheduleLists.equals("")) {
+						
+						JSONParser jsonparser = new JSONParser();
+						JSONArray jsonArray = new JSONArray();
+						
+						try {
+							jsonArray = (JSONArray)jsonparser.parse(workspaceScheduleLists);
+							
+						} catch (ParseException e) {
+							// parse 중 에러나 혹은 그 외 에러 발생 시 처리
+							logger.debug("ParseException: {}", e.getMessage());
+							logger.debug("Invalid JSON format. received string: {}", workspaceScheduleLists);
+							
+							result.put("status", "error");
+							result.put("code", 1);
+							result.put("data", "parse Error. returned data: " + workspaceScheduleLists);
+							
+							return result;
+							
+						} catch (Exception e) {
+							logger.debug("Exception: {}", e.getMessage());
+							logger.debug("received string: {}", workspaceScheduleLists);
+							
+							result.put("status", "error");
+							result.put("code", 1);
+							result.put("data", "");
+							
+							return result;
+						}
+						
+						// for문 돌려서 cScheduleID와 일치하는 일정 정보 반환하기
+						for (Object obj : jsonArray) {
+							JSONObject jsonobject = (JSONObject) obj;
+							
+							logger.debug("collaboration scheduleID: {}", jsonobject.get("ItemId").toString());
+							
+							// 하나의 날짜에는 하나의 ItemId만 존재함. (반복 일정의 경우 여러 날짜에 하나의 ItemId가 존재 가능) 
+							if (null != jsonobject.get("ItemId") && jsonobject.get("ItemId").toString().equals(cScheduleID)) {
+								
+								vo.setScheduleId("collaboration:" + jsonobject.get("ItemId"));
+								vo.setParentId("collaboration:" + jsonobject.get("ItemPostId").toString());
+								vo.setOwnerId(jsonobject.get("ItemUserAccountId").toString());
+								vo.setOwnerName(jsonobject.get("ItemUserName").toString());
+								vo.setOwnerName2("");
+								vo.setCreatorId("");
+								vo.setCreatorName(jsonobject.get("ItemUserName").toString());
+								vo.setCreatorName2("");
+								// 협업의 api에 createdate가 없기 때문에 updatedate = createdate로 취급
+								vo.setCreateDate(jsonobject.get("ItemUpdateDate").toString().replace("T", " "));
+								vo.setModifierId("");
+								vo.setModifierName("");
+								vo.setModifierName2("");
+								vo.setModifyDate("");
+								// 협업의 타입은 4로 고정됨.
+								vo.setScheduleType("4");
+								vo.setImportance((Integer.parseInt(jsonobject.get("ItemImportance").toString()) + 1) + "");
+								vo.setHasAttendant("");
+								vo.setHasAttach("");
+								vo.setHasComment("");
+								vo.setIsReadOnly("");
+								// 협업에 없는 기능으로 연구소에서 default Y로 요청함.
+								vo.setIsPublic("Y");
+								vo.setDateType(jsonobject.get("ItemDateType").toString());
+								vo.setStartDate(jsonobject.get("ItemStartDate").toString().replace("T", " "));
+								vo.setEndDate(jsonobject.get("ItemEndDate").toString().replace("T", " "));
+								vo.setRepetition(jsonobject.get("ItemRepetition").toString());
+								vo.setRepetitionDel("");
+								vo.setTitle(jsonobject.get("ItemPostTitle").toString());
+								vo.setLocation(jsonobject.get("ItemLocation").toString());
+								vo.setContent(jsonobject.get("ItemContents").toString());
+								vo.setContentPath("");
+								vo.setRepeatCount(Integer.parseInt(jsonobject.get("ItemRepeatCount").toString()));
+								vo.setScheduleFlag("");
+								// 협업에 없는 기능으로 연구소에서 default N로 요청함.
+								vo.setShowTop("N");
+								vo.setIsAddDeptSchedule("");
+								
+								dataObject.put("scheduleInfo", vo);
+							}
+						}
+					}
+				} catch (Exception e) {
+					logger.debug("Exception: {}", e.getMessage());
+					
+					result.put("status", "error");
+					result.put("code", 1);
+					result.put("data", "");
+					
+					return result;
+				}
 			} else {
 				//일정 정보
 				vo = mScheduleService.scheduleInfo(scheduleId, offSetMin, tenantId);
@@ -1620,7 +1743,8 @@ public class MScheduleGWController extends EgovFileMngUtil {
 		    typeList.add(allSchedule);
 		    
 		    Map<String, Object> personalSchedule = new HashMap<String, Object>();
-		    personalSchedule.put("typeColor", "rgb(1, 138, 249)");
+		    String personalColor = ezScheduleService.getUserScheduleTypeColor(userId, info.getCompanyId(), info.getTenantId(), "1", userId);
+		    personalSchedule.put("typeColor", (null == personalColor || "".equals(personalColor)) ? "rgb(1, 138, 249)" : personalColor);
 		    personalSchedule.put("typeName", "개인일정");
 		    personalSchedule.put("scheduleType", "1");
 		    personalSchedule.put("ownerId", userId);
@@ -1636,7 +1760,8 @@ public class MScheduleGWController extends EgovFileMngUtil {
 		    if ("Y".equals(isGoogleSync)) typeList.add(googleSchedule);
 		    
 		    Map<String, Object> deptSchedule = new HashMap<String, Object>();
-		    deptSchedule.put("typeColor", "rgb(1, 179, 63)");
+		    String deptColor = ezScheduleService.getUserScheduleTypeColor(userId, info.getCompanyId(), info.getTenantId(), "2", info.getDeptId());
+		    deptSchedule.put("typeColor", (null == deptColor || "".equals(deptColor)) ? "rgb(1, 179, 63)" : deptColor);
 		    deptSchedule.put("typeName", "부서일정");
 		    deptSchedule.put("scheduleType", "2");
 		    deptSchedule.put("ownerId", info.getDeptId());
@@ -1657,11 +1782,13 @@ public class MScheduleGWController extends EgovFileMngUtil {
 					pubScheDeptVO2.add(vo);
 				}
 			
+			// 사용자의 본/겸직 부서
 			if (pubScheCumulerVO.size() > 0) {
 				for (int i = 0; i < pubScheCumulerVO.size(); i++) {
 					if (!info.getDeptId().equals(pubScheCumulerVO.get(i).getDeptId())) {
 						Map<String, Object> scheCumSchedule = new HashMap<String, Object>();
-						scheCumSchedule.put("typeColor", "rgb(1, 179, 63)");
+						String addDeptColor = ezScheduleService.getUserScheduleTypeColor(userId, info.getCompanyId(), info.getTenantId(), "2", pubScheCumulerVO.get(i).getDeptId());
+						scheCumSchedule.put("typeColor", (null == addDeptColor || "".equals(addDeptColor)) ? "rgb(1, 179, 63)" : addDeptColor);
 						scheCumSchedule.put("typeName", "부서일정 -" + pubScheCumulerVO.get(i).getTitleName());
 						scheCumSchedule.put("scheduleType", "2");
 						scheCumSchedule.put("ownerId", pubScheCumulerVO.get(i).getDeptId());
@@ -1672,10 +1799,12 @@ public class MScheduleGWController extends EgovFileMngUtil {
 				}
 			}
 			
+			// 일정 공개 부서 (사용자의 본/겸직 부서에 해당하지 않는)
 			if (pubScheDeptVO2.size() > 0) {
 				for (int i = 0; i < pubScheDeptVO2.size(); i++) {
 					Map<String, Object> scheDeptSchedule = new HashMap<String, Object>();
-					scheDeptSchedule.put("typeColor", "rgb(1, 179, 63)");
+					String pubDeptColor = ezScheduleService.getUserScheduleTypeColor(userId, info.getCompanyId(), info.getTenantId(), "2", pubScheDeptVO2.get(i).getDeptId());
+					scheDeptSchedule.put("typeColor", (null == pubDeptColor || "".equals(pubDeptColor)) ? "#b200ff" : pubDeptColor);
 					scheDeptSchedule.put("typeName", "부서일정 -" + pubScheDeptVO2.get(i).getDeptName());
 					scheDeptSchedule.put("scheduleType", "2");
 					scheDeptSchedule.put("ownerId", pubScheDeptVO2.get(i).getDeptId());
@@ -1686,7 +1815,8 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			}
 			
 		    Map<String, Object> companySchedule = new HashMap<String, Object>();
-		    companySchedule.put("typeColor", "rgb(254, 28, 113)");
+		    String compColor = ezScheduleService.getUserScheduleTypeColor(userId, info.getCompanyId(), info.getTenantId(), "3", info.getCompanyId());
+		    companySchedule.put("typeColor", (null == compColor || "".equals(compColor)) ? "rgb(254, 28, 113)" : compColor);
 		    companySchedule.put("typeName", "회사일정");
 		    companySchedule.put("scheduleType", "3");
 		    companySchedule.put("ownerId", info.getCompanyId());
@@ -2069,6 +2199,17 @@ public class MScheduleGWController extends EgovFileMngUtil {
 		}
 		
 		List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(indiList, pidList, "", utcStartTime, utcEndTime, startDate, endDate, offSetMin, searchTitle, searchLocation, searchAll, userInfo.getTenantId(), companyID, userInfo.getId(), userInfo.getDeptID(), useAnnualScheduleYN);		
+		
+		// 2025-05-12 조수빈 - 개인, 부서, 회사인 경우 개인 설정 색상 조회 및 설정
+		for (ScheduleInfoVO vo : sList) {
+			if (vo.getScheduleType().equals("1")
+				|| vo.getScheduleType().equals("2")
+				|| vo.getScheduleType().equals("3")
+				) {
+				String tagColor = ezScheduleService.getUserScheduleTypeColor(userID, companyID, tenantID, vo.getScheduleType(), vo.getOwnerId());
+				vo.setGroupColor(tagColor);
+			}
+		}
 		
 		/* 2021-11-26 홍승비 - 일정 리스트 데이터를 전달받아 일정완료 데이터를 추가 가공하여 리턴 */
 		sList = ezScheduleService.applyScheduleCompleteData(sList, userInfo.getOffset(), userInfo.getTenantId(), companyID);

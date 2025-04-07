@@ -272,7 +272,7 @@
 		</script>
 	</head>
 	<body class="mainbody">		
-	    <h1><spring:message code='ezSchedule.t252' /></h1><br /><br />
+		<br/>
 	    <div class="txt">▒ <spring:message code='ezSchedule.t00005' /></div>
 	    <div class="txt" style="margin-top:3px">▒ <spring:message code='ezSchedule.t00006' /></div>
 	    <div class="txt" style="margin-top:3px">▒ <spring:message code='ezSchedule.t00007' /></div>

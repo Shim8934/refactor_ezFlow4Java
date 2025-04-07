@@ -65,8 +65,9 @@
 			var sStartDate;
 			var sEndDate;
 			var typeCal;
-			var isCalendarView = true;
+// 			var isCalendarView = true;
 			var useWorkspaceSchedule = "<c:out value='${useWorkspaceSchedule}'/>";
+			var jsonPersonalScheConfigList = "<c:out value='${jsonPersonalScheConfigList}'/>";
 			
 			//2018-06-08 구해안 left checkbox checkall			
 			function chk_all(){
@@ -85,7 +86,6 @@
 			        chk_DisplayChange();
 			        chk_DisplayChange2();
 			    }
-			    liSelected();
 			}
 			function FindByAttributeValue(attribute, value, element_type)    {
 				element_type = element_type || "*";
@@ -100,177 +100,129 @@
 			
 			//2018-06-18 구해안 checkbox에 대한 css 변환 함수
 			function chk_DisplayChange() {
-				if (isCalendarView) {
-					var chk_str =  "";
-					var chk_total = $("input[name=chk_schedule]:checked").length;
-					var chk_fullLength = $("input[name=chk_schedule]").length;
-	
-					if (typeCal == 0) {		
-						$("input[name=chk_schedule]").each(function(index){
-							var chk_eachVal1 = $(this).val();
-							var chk_type=$(this).data("schedule-type")
+				
+// 				if (!isCalendarView) {
+// 					isCalendarView = true;
+// 					window.open("/ezSchedule/scheduleMain.do?funCode=2", "right");
+// 				}
+				
+				var chk_str =  "";
+				var chk_total = $("input[name=chk_schedule]:checked").length;
+				var chk_fullLength = $("input[name=chk_schedule]").length;
 
-							if (chk_type == "10" || chk_type == "1") {
-								$('.td_list td[scheduletype = "' + chk_type + '"]', parent.frames["right"].document).each(function (index, value) {
-									$(value).addClass('chk_noneDisplay');
-								});
-							} else {
-								$('.td_list td[ownerid = "' + chk_eachVal1 + '"][scheduletype = "' + chk_type + '"]', parent.frames["right"].document).each(function (index, value) {
-									$(value).addClass('chk_noneDisplay');
-								});
-							}
-						});
-						$("input[name=chk_schedule]:checked").each(function(index) {
-							var test = $(this).val();
-							var chk_type = $(this).data("schedule-type");
+				if (typeCal == 0) {
+					$("input[name=chk_schedule]").each(function(index){
+						var chk_eachVal1 = $(this).val();
+						var chk_type = $(this).data("schedule-type")
+
+						if (chk_type == "10" || chk_type == "1" || chk_type == "4") {
 							
-							if (chk_type == "10" || chk_type == "1") {
-								$('.td_list td[scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
-									$(value).removeClass('chk_noneDisplay');
-								});
-							} else {
-								$('.td_list td[ownerid = "' + test + '"][scheduletype = "' + chk_type + '"]', parent.frames["right"].document).each(function (index, value) {
-									$(value).removeClass('chk_noneDisplay');
-								});
-							}
-						});					
-					} else if (typeCal == 1) {
-						$("input[name=chk_schedule]").each(function(index){
-							var chk_eachVal1 = $(this).val();
-							var chk_type = $(this).data("schedule-type");
-
-							if (chk_type == "10" || chk_type == "1") {
-								$('div[scheduletype = "' + chk_type + '"]', parent.frames["right"].document).each(function (index, value) {
-									$(value).addClass('chk_noneDisplay');
-								});
-							} else {
-								$('div[ownerid = "' + chk_eachVal1 + '"][scheduletype = "' + chk_type + '"]', parent.frames["right"].document).each(function (index, value) {
-									$(value).addClass('chk_noneDisplay');
-								});
-							}
-						});
-						$("input[name=chk_schedule]:checked").each(function(index) {
-							var test = $(this).val();
-							var chk_type = $(this).data("schedule-type");
-
-							if (chk_type == "10" || chk_type == "1") {
-								$('div[scheduletype = "' + chk_type + '"]', parent.frames["right"].document).each(function (index, value) {
-									$(value).removeClass('chk_noneDisplay');
-								});
-							} else {
-								$('div[ownerid = "' + test + '"][scheduletype = "' + chk_type + '"]', parent.frames["right"].document).each(function (index, value) {
-									$(value).removeClass('chk_noneDisplay');
-								});
-							}
-						});	
-					} else {
-						$("input[name=chk_schedule]").each(function(index){
-							var chk_eachVal1 = $(this).val();
-							var chk_type = $(this).data("schedule-type");
-
-							if (chk_type == "10" || chk_type == "1") {
-								$('div[scheduletype = "' + chk_type + '"]', parent.frames["right"].document).each(function (index, value) {
-									$(value).addClass('chk_noneDisplay');
-								});
-							} else {
-								$('div[ownerid = "' + chk_eachVal1 + '"][scheduletype = "' + chk_type + '"]', parent.frames["right"].document).each(function (index, value) {
-									$(value).addClass('chk_noneDisplay');
-								});
-							}
-						});
-						$("input[name=chk_schedule]:checked").each(function(index) {
-							var test = $(this).val();
-							var chk_type = $(this).data("schedule-type");
-
-							if (chk_type == "10" || chk_type == "1") {
-								$('div[scheduletype = "' + chk_type + '"]', parent.frames["right"].document).each(function (index, value) {
-									$(value).removeClass('chk_noneDisplay');
-								});
-							} else {
-								$('div[ownerid = "' + test + '"][scheduletype = "' + chk_type + '"]', parent.frames["right"].document).each(function (index, value) {
-									$(value).removeClass('chk_noneDisplay');
-								});
-							}
-						});	
-					}
+							$('.td_list td[scheduletype = "' + chk_type + '"]', parent.frames["right"].document).each(function (index, value) {
+								$(value).addClass('chk_noneDisplay');
+							});
+						} else {
+							
+							$('.td_list td[ownerid = "' + chk_eachVal1 + '"][scheduletype = "' + chk_type + '"]', parent.frames["right"].document).each(function (index, value) {
+								$(value).addClass('chk_noneDisplay');
+							});
+						}
+					});
 					
-					if(chk_total > 0 && chk_total < chk_fullLength) {
-						$('#select-all').prop('checked',false);					
-					} else if(chk_total == chk_fullLength) {
-						$('#select-all').prop('checked',true);	
-					} else if(chk_total == 0){
-						chk_str += $('#select-all').val();
-					}
+					$("input[name=chk_schedule]:checked").each(function(index) {
+						var test = $(this).val();
+						var chk_type = $(this).data("schedule-type");
+						
+						if (chk_type == "10" || chk_type == "1" || chk_type == "4") {
+							
+							$('.td_list td[scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
+								$(value).removeClass('chk_noneDisplay');
+							});
+						} else {
+							
+							$('.td_list td[ownerid = "' + test + '"][scheduletype = "' + chk_type + '"]', parent.frames["right"].document).each(function (index, value) {
+								$(value).removeClass('chk_noneDisplay');
+							});
+						}
+					});
+				} else if (typeCal == 1) {
+					
+					$("input[name=chk_schedule]").each(function(index){
+						var chk_eachVal1 = $(this).val();
+						var chk_type = $(this).data("schedule-type");
+
+						if (chk_type == "10" || chk_type == "1" || chk_type == "4") {
+							
+							$('div[scheduletype = "' + chk_type + '"]', parent.frames["right"].document).each(function (index, value) {
+								$(value).addClass('chk_noneDisplay');
+							});
+						} else {
+							
+							$('div[ownerid = "' + chk_eachVal1 + '"][scheduletype = "' + chk_type + '"]', parent.frames["right"].document).each(function (index, value) {
+								$(value).addClass('chk_noneDisplay');
+							});
+						}
+					});
+					
+					$("input[name=chk_schedule]:checked").each(function(index) {
+						var test = $(this).val();
+						var chk_type = $(this).data("schedule-type");
+
+						if (chk_type == "10" || chk_type == "1" || chk_type == "4") {
+							
+							$('div[scheduletype = "' + chk_type + '"]', parent.frames["right"].document).each(function (index, value) {
+								$(value).removeClass('chk_noneDisplay');
+							});
+						} else {
+							
+							$('div[ownerid = "' + test + '"][scheduletype = "' + chk_type + '"]', parent.frames["right"].document).each(function (index, value) {
+								$(value).removeClass('chk_noneDisplay');
+							});
+						}
+					});
 				} else {
-					isCalendarView = true;
-					window.open("/ezSchedule/scheduleMain.do?funCode=2", "right");
 					
-					var chk_str =  "";
-					var chk_total = $("input[name=chk_schedule]:checked").length;
-					var chk_fullLength = $("input[name=chk_schedule]").length;
-	
-					if (typeCal == 0) {		
-						$("input[name=chk_schedule]").each(function(index){
-							var chk_eachVal1 = $(this).val();
-							var chk_type=$(this).data("schedule-type")
+					$("input[name=chk_schedule]").each(function(index){
+						var chk_eachVal1 = $(this).val();
+						var chk_type = $(this).data("schedule-type");
+
+						if (chk_type == "10" || chk_type == "1" || chk_type == "4") {
 							
-							$('.td_list td[ownerid = "'+chk_eachVal1+'"][scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){							
+							$('div[scheduletype = "' + chk_type + '"]', parent.frames["right"].document).each(function (index, value) {
 								$(value).addClass('chk_noneDisplay');
 							});
-						});
-						$("input[name=chk_schedule]:checked").each(function(index) {
-							var test = $(this).val();
-							var chk_type = $(this).data("schedule-type");
+						} else {
 							
-							$('.td_list td[ownerid = "'+test+'"][scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
-								$(value).removeClass('chk_noneDisplay');
-							});
-						});					
-					} else if (typeCal == 1) {
-						$("input[name=chk_schedule]").each(function(index){
-							var chk_eachVal1 = $(this).val();
-							var chk_type = $(this).data("schedule-type");
-							
-							$('div[ownerid = "'+chk_eachVal1+'"][scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
+							$('div[ownerid = "' + chk_eachVal1 + '"][scheduletype = "' + chk_type + '"]', parent.frames["right"].document).each(function (index, value) {
 								$(value).addClass('chk_noneDisplay');
 							});
-						});
-						$("input[name=chk_schedule]:checked").each(function(index) {
-							var test = $(this).val();
-							var chk_type = $(this).data("schedule-type");
-							
-							$('div[ownerid = "'+test+'"][scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
-								$(value).removeClass('chk_noneDisplay');
-							});
-						});	
-					} else {
-						$("input[name=chk_schedule]").each(function(index){
-							var chk_eachVal1 = $(this).val();
-							var chk_type = $(this).data("schedule-type");
-							
-							$('div[ownerid = "'+chk_eachVal1+'"][scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
-								$(value).addClass('chk_noneDisplay');
-							});
-						});
-						$("input[name=chk_schedule]:checked").each(function(index) {
-							var test = $(this).val();
-							var chk_type = $(this).data("schedule-type");
-							
-							$('div[ownerid = "'+test+'"][scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
-								$(value).removeClass('chk_noneDisplay');
-							});						
-						});	
-					}
+						}
+					});
 					
-					if(chk_total > 0 && chk_total < chk_fullLength) {
-						$('#select-all').prop('checked',false);					
-					} else if(chk_total == chk_fullLength) {
-						$('#select-all').prop('checked',true);	
-					} else if(chk_total == 0){
-						chk_str += $('#select-all').val();
-					}
+					$("input[name=chk_schedule]:checked").each(function(index) {
+						var test = $(this).val();
+						var chk_type = $(this).data("schedule-type");
+
+						if (chk_type == "10" || chk_type == "1" || chk_type == "4") {
+							
+							$('div[scheduletype = "' + chk_type + '"]', parent.frames["right"].document).each(function (index, value) {
+								$(value).removeClass('chk_noneDisplay');
+							});
+						} else {
+							
+							$('div[ownerid = "' + test + '"][scheduletype = "' + chk_type + '"]', parent.frames["right"].document).each(function (index, value) {
+								$(value).removeClass('chk_noneDisplay');
+							});
+						}
+					});
 				}
-				liSelected();
+				
+				if(chk_total > 0 && chk_total < chk_fullLength) {
+					$('#select-all').prop('checked',false);
+				} else if(chk_total == chk_fullLength) {
+					$('#select-all').prop('checked',true);
+				} else if(chk_total == 0){
+					chk_str += $('#select-all').val();
+				}
 			}
 			
 			//2018-06-08 구해안 left checkbox 함수
@@ -335,7 +287,11 @@
 	            } else {
 	                DefaultView = 0;
 	            }
-
+				
+	            var personalScheConfigList = JSON.parse(decodeHtml(jsonPersonalScheConfigList));
+				
+	            setUserScheduleTypeConfig(personalScheConfigList);
+	            
 	            if (navigator.userAgent.indexOf('Firefox') != -1) {
 	                document.body.style.MozUserSelect = 'none';
 	                document.body.style.WebkitUserSelect = 'none';
@@ -412,36 +368,23 @@
 	        }
 	        
 		    function Function_Flag(v_data, subfolder) {
-		        v_data = parseInt(v_data);
+		    	v_data = parseInt(v_data);
 		        _funCode = v_data;
 
 		        switch (v_data) {
 		            case 2:		// Schedule		            
 		                window.open("/ezSchedule/scheduleMain.do", "right");
+		                openFolder();
 		                break;
 
 		            case 3:		// Task
 		                window.open("/ezTask/taskMain.do", "right");
 		                break;
 
-		            case 5:		// schedule group management 
-		            	$('.checkSelect').each(function() {
-				            $(this).prop('checked',false);			            
-				        });
-		            	isCalendarView = false;
-		            	$('#select-all').prop('checked',false);
-		                window.open("/ezSchedule/scheduleManageGroup.do", "right");
-						//liSelected();
-		                break;
-
 		            case 6:		// schedule search
-		            	$('.checkSelect').each(function() {
-				            $(this).prop('checked',false);			            
-				            liSelected();
-				        });
-		            	isCalendarView = false;
-		            	$('#select-all').prop('checked',false);
-		                window.open("/ezSchedule/scheduleSearch.do", "right");
+// 		            	isCalendarView = false;
+		                window.open("/ezSchedule/scheduleSearch.do", "right")
+		                openFolder();
 		                break;
 
 		            case 7:		// Search Task
@@ -449,39 +392,26 @@
 		                break;
 
 		            case 10:	// Search public search
-		            	$('.checkSelect').each(function() {
-				            $(this).prop('checked',false);			            
-				        });
-		            	isCalendarView = false;
-		            	$('#select-all').prop('checked',false);
+// 		            	isCalendarView = false;
 		                window.open("/ezSchedule/schedulePublicSearch.do", "right");
-		                liSelected();
+		                openFolder();
 		                break;
-		            case 11:		// Search public calendar
-		            	$('.checkSelect').each(function() {
-				            $(this).prop('checked',false);			            
-				        });
-		            	isCalendarView = false;
-		            	$('#select-all').prop('checked',false);
-		                window.open("/ezSchedule/scheduleConfigMain.do?flag=schedule", "right");
-		                break;
-					case 12:		// Search User Calendar
-						$('.checkSelect').each(function() {
-							$(this).prop('checked',false);
-						});
-						isCalendarView = false;
-						$('#select-all').prop('checked',false);
-						liSelected();
-						window.open("/ezSchedule/scheduleUserCalendarSearch.do", "right");
-						break;
+		                
+					case 5:		// schedule group management
+		            case 11:	// 일정관리 환경설정
 					case 13:	// 일정 모아보기, Gathering Schedule
-						$('.checkSelect').each(function() {
-							$(this).prop('checked',false);
-						});
-						isCalendarView = false;
-						$('#select-all').prop('checked',false);
-						window.open("/ezSchedule/scheduleGatherMain.do", "right")
-						//liSelected();
+// 		            	isCalendarView = false;
+		                window.open("/ezSchedule/scheduleConfigMain.do?flag=schedule", "right");
+		                
+						$("h2.on").attr("class", "off");
+						$(".lnbUL").attr("class", "lnbUL off");
+						$(".tree_arrow_down").attr("class", "sub_iconLNB tree_plus");
+		                break;
+		                
+					case 12:		// Search User Calendar
+// 						isCalendarView = false;
+						window.open("/ezSchedule/scheduleUserCalendarSearch.do", "right");
+		                openFolder();
 						break;
 		        }
 		    }
@@ -522,40 +452,22 @@
 	        } 
 	        
 	        function chk_DisplayChange2(obj) {
-	        	if (isCalendarView) {
-	        		var chk_str =  "";
-					var chk_total = $("input[name=chk_schedule]:checked").length;
-					var chk_fullLength = $("input[name=chk_schedule]").length;
-	
-	        		var chk_type = 4;//$("input[name=chk_schedule]").data("schedule-type");
-	        		if (typeCal == 0) {
-	        			$('.td_list td[scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){							
-							$(value).toggleClass('chk_noneDisplay');
-						});
-	        		} else {
-	        			$('div[scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
-							$(value).toggleClass('chk_noneDisplay');
-						});
-	        		}
-	        	} else {
-					isCalendarView = true;
-					window.open("/ezSchedule/scheduleMain.do?funCode=2", "right");
-					
-					var chk_str =  "";
-					var chk_total = $("input[name=chk_schedule]:checked").length;
-					var chk_fullLength = $("input[name=chk_schedule]").length;
-					
-					var chk_type = 4;//$("input[name=chk_schedule]").data("schedule-type");
-	        		if (typeCal == 0) {
-	        			$('.td_list td[scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){							
-							$(value).toggleClass('chk_noneDisplay');
-						});
-	        		} else {
-	        			$('div[scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
-							$(value).toggleClass('chk_noneDisplay');
-						});
-	        		}
-	        	}
+        		var chk_str =  "";
+				var chk_total = $("input[name=chk_schedule]:checked").length;
+				var chk_fullLength = $("input[name=chk_schedule]").length;
+
+        		var chk_type = 4;//$
+        		if (typeCal == 0) {
+        			
+        			$('.td_list td[scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){							
+						$(value).toggleClass('chk_noneDisplay');
+					});
+        		} else {
+        			
+        			$('div[scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
+						$(value).toggleClass('chk_noneDisplay');
+					});
+        		}
 	        	
 	        	if(chk_total > 0 && chk_total < chk_fullLength) {
 					$('#select-all').prop('checked',false);					
@@ -564,19 +476,6 @@
 				} else if(chk_total == 0){
 					chk_str += $('#select-all').val();
 				}
-	        }
-
-	        // 2023-06-30 황인경 - 디자인 개선 > 일정관리 > 좌측메뉴 > 일정검색, 공개일정검색 선택 항목 클래스 제어
-	        function liSelected() {
-	        	$(".list_text.node_selected").removeClass("node_selected");
-
-	        	var liSelected = $(event.target);
-
-	            if (liSelected.prop("tagName") == "LI") {
-	            	liSelected.children().addClass("node_selected");
-	            } else {
-	            	liSelected.addClass("node_selected");
-	            }
 	        }
 
 			/* 2023-10-05 임정은 - 모아보기 그룹 클릭 이벤트 추가 (기존 참석자 초대 버튼 이벤트 참고 및 수정) */
@@ -652,7 +551,7 @@
 			function openFolder() {
 				var h2Title;
 
-				if ($(event.target).context.classList.contains('doNotOpen')) {
+				if (event.type == 'load') {
 					return;
 				}
 
@@ -661,19 +560,95 @@
 				} else {
 					h2Title = $(event.target).parent();
 				}
+				
+				$("h2.on").attr("class", "off");
+				$(".lnbUL").attr("class", "lnbUL off");
+				h2Title.attr("class", "on");
+				h2Title.next().removeClass("off");
+				$(".tree_arrow_down").attr("class", "sub_iconLNB tree_plus");
+				h2Title.children().eq(0).attr("class", "sub_iconLNB tree_arrow_down");
+			}
+			
+			// 2025-04-21 조수빈 - 사용자의 설정에 따라 기본 일정 설정 내용 및 일정 조회 체크 여부 값을 세팅함
+			// personalScheConfigList는 json형태로 수정한 list객체
+			function setUserScheduleTypeConfig(personalScheConfigList) {
+				
+				if (personalScheConfigList.length > 0) {
+					
+					for (var i = 0; i < personalScheConfigList.length; i++) {
+						try {
+							var config = personalScheConfigList[i];
+							var scheduleType = (config.scheduleType !== undefined) ? config.scheduleType : 1;
+							var relatedId = (config.relatedId !== undefined) ? config.relatedId : config.userId;
+							var tagColor = (config.tagColor !== undefined) ? config.tagColor : null;
+							var isChecked = (config.isChecked !== undefined) ? config.isChecked : false;
 
-				if (h2Title.hasClass("on")) {
-					h2Title.attr("class", "off");
-					h2Title.next().addClass("off");
-					h2Title.children().eq(0).attr("class", "sub_iconLNB tree_plus");
-				} else {
-					$("h2.on").attr("class", "off");
-					$(".lnbUL").attr("class", "lnbUL off");
-					h2Title.attr("class", "on");
-					h2Title.next().removeClass("off");
-					$(".tree_arrow_down").attr("class", "sub_iconLNB tree_plus");
-					h2Title.children().eq(0).attr("class", "sub_iconLNB tree_arrow_down");
+							// 기본 셀렉터 구성
+							var selector = "input[type='checkbox'][data-schedule-type='" + scheduleType + "']";
+
+							// scheduleType이 1(개인), 4(협업)가 아닌 경우에는 relatedID가 필요함
+							if (scheduleType !== 1 && scheduleType !== 4) {
+								selector += "[value='" + relatedId + "']";
+							}
+
+							var targetElem = document.querySelector(selector);
+
+							if (!targetElem) {
+								// 일치하는 일정 요소가 없다 = 삭제 대상 ? 삭제 array 만들어야 하나
+								// (겸직 해제됨 || 일정그룹에서 제외됨 || 공개부서가 없어짐)
+								continue;
+							}
+
+							// 스타일 적용
+							if ((scheduleType === 1 || scheduleType === 2 || scheduleType === 3 || scheduleType === 4)
+								&& tagColor && targetElem.nextElementSibling
+							) {
+								targetElem.nextElementSibling.style.backgroundColor = tagColor;
+							} else if (scheduleType !== 7 && scheduleType !== 10 && tagColor) {
+								targetElem.style.backgroundColor = tagColor;
+							}
+
+							// 체크 여부 설정
+							targetElem.checked = (isChecked == 1);
+						} catch (e) {
+							console.log("Error at index", i, e);
+        					continue;
+						}
+					}
 				}
+
+				// 값 세팅이 모두 끝난 뒤 체크 박스 상태가 달라질 때마다 해당 상태를 저장할 함수를 이벤트 등록하기
+				var scheBoxs = document.querySelectorAll("input[name='chk_schedule']");
+
+				for (var i = 0; i < scheBoxs.length; i++) {
+					scheBoxs[i].addEventListener('change', function(event) {
+						saveIsTagChecked(event.target);
+						// 전체 체크박스 체크/해제 되었을 때 ''.select-all' 이 놈이 체크/해제 되도록 하기
+					});
+				}
+			}
+			
+			function saveIsTagChecked(target) {
+				
+		        $.ajax({
+		            type: "POST",
+		            url: "/ezSchedule/saveIsTagChecked.do",
+		            data: {
+		            	scheduleType : target.dataset.scheduleType,
+		            	relatedID : target.value,
+		            	isChecked : (target.checked ? 1 : 0)
+		            },
+		            success: function(res) {
+		            	if (res == "FALSE") {
+			            	console.log("method saveIsTagChecked() return 'false'");
+			            	target.checked = !target.checked; 
+		            	}
+		            },
+		            error: function(e) {
+		            	console.log("Error occurred while executing method saveIsTagChecked(): " + e);
+		            	target.checked = !target.checked; 
+		            }
+		        });
 			}
 		</script>
 	</head>
@@ -692,14 +667,11 @@
 	        </div>
         	<div class="scheduleListBox" style="overflow:hidden; padding-right: 0;">
 		        <%-- 2023-06-23 황인경 - 디자인 개선 > 일정관리 > 좌측메뉴 > 최상위 '일정관리' 메뉴 표시 추가 --%>
-	        	<h2 class="on" onclick="openFolder()">
-			            <span class="sub_iconLNB tree_arrow_down"></span><span class="h2Title" id="" onclick="('')"><spring:message code='ezSchedule.t1010'/></span>
+	        	<h2 class="on">
+			            <span class="sub_iconLNB tree_arrow_down"></span><span class="h2Title" id="" onclick="Function_Flag(2)"><spring:message code='ezSchedule.t1010'/></span>
 		        </h2>
 		        <ul class="lnbUL">
 		        	<li>
-			    		<%-- 2018-07-11 구해안 left 체크박스 label에 title 삽입 --%>
-			    		<%-- 2023-06-23 황인경 - 디자인 개선 > 일정관리 > 좌측메뉴 > LNB 이미지 삭제 --%>
-			    		<span class="sub_iconLNB tree_manage" onClick="Function_Flag(5)" style="pointer-events:auto"></span>
 			    		<label class="IDcontainer" onchange="chk_all()">
 							<input type="checkbox" checked="checked" name="select-all" id="select-all" value="chkAllFalse" style="left:0px">
 					  		<span class="checkmark mr5" style="background:rgb(125, 125, 125); margin-top: 7px;"></span>
@@ -735,7 +707,7 @@
 					</c:if>
 					<li>
 						<label class="IDcontainer" onchange="chk_DisplayChange()">
-							<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="2" value="${loginVO.deptID}" class="checkSelect">
+							<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="2" value="${loginVO.deptID}" isSharedDept='N' class="checkSelect">
 						  	<span class="checkmark mr5" style="background:rgb(1, 179, 63); margin-top: 7px;"></span>
 						  	<span class="list_text"><spring:message code='ezSchedule.t222'/></span>
 						</label>
@@ -745,7 +717,7 @@
 							<c:if test="${cum.deptId ne loginVO.deptID}">
 								<li>
 									<label class="IDcontainer" onchange="chk_DisplayChange()">
-										<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="2" value="${cum.deptId }" class="checkSelect">
+										<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="2" value="${cum.deptId }" isSharedDept='N' class="checkSelect">
 									  	<span class="checkmark mr5" style="background-color:rgb(1, 179, 63); margin-top: 7px;"></span>
 									  	<span class="list_text" title="${cum.titleName }"><spring:message code='ezSchedule.t373'/>${cum.titleName }</span>
 									</label>
@@ -757,7 +729,7 @@
 						<c:forEach var="dep" items="${scheDept}">
 							<li>
 								<label class="IDcontainer" onchange="chk_DisplayChange()">
-							  		<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="2" value="${dep.deptId }" class="checkSelect">
+							  		<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="2" value="${dep.deptId }" isSharedDept='Y' class="checkSelect">
 							  		<span class="checkmark mr5" style="background-color:#b200ff; margin-top: 7px;"></span>
 							  		<span class="list_text" title="${dep.deptName }"><spring:message code='ezSchedule.t373'/>${dep.deptName }</span>
 								</label>
@@ -826,6 +798,15 @@
 	            	<li><span class="sub_iconLNB tree_search"></span><span class="list_text" onClick="Function_Flag(6)"><spring:message code='ezSchedule.t1018'/></span></li>
     	        	<li><span class="sub_iconLNB tree_pims_search_open"></span><span class="list_text" onClick="Function_Flag(10)"><spring:message code='ezSchedule.t1021'/></span></li>
 	 		    </ul> --%>
+				<h2 class="off">
+					<span class="sub_iconLNB tree_plus"></span><span class="h2Title" id="" onclick="Function_Flag(6)"><spring:message code='ezSchedule.t1018'/></span>
+				</h2>
+				<h2 class="off">
+					<span class="sub_iconLNB tree_plus"></span><span class="h2Title" id="" onclick="Function_Flag(10)"><spring:message code='ezSchedule.t1021'/></span>
+				</h2>
+				<h2 class="off">
+					<span class="sub_iconLNB tree_plus"></span><span class="h2Title" id="" onclick="Function_Flag(12)"><spring:message code='ezSchedule.kmh01'/></span>
+				</h2>
 	        </div>
 	    </div>
 	    

@@ -5920,6 +5920,7 @@
 		ADD
 			TOTALNOTI_SENT_FLAG tinyint(4) DEFAULT 0
 	</statement>
+	
     <select id="EzCommonDAO.checkJmochaMailBlocked">
 		<![CDATA[
         SELECT
@@ -7055,4 +7056,41 @@
 		AND 
 			form_status = 'basic' ]]>
 	</update>
+	
+	<select id="EzCommonDAO.checkScheduleDefaultViewCheck" resultClass="String">
+		<![CDATA[
+			SELECT
+				DEFAULTVIEWCHECK
+			FROM
+				TBL_SCHEDULECONFIG
+			LIMIT 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.addScheduleDefaultViewCheck">
+		ALTER TABLE
+		TBL_SCHEDULECONFIG
+		ADD
+		DEFAULTVIEWCHECK VARCHAR(2) DEFAULT 'N'
+	</statement>
+	
+	<select id="EzCommonDAO.checkUserScheduleTypeConfigTable" resultClass="String">
+		SELECT
+			USERID
+		FROM
+			TBL_USER_SCHEDULE_TYPE_CONFIG
+		LIMIT 1
+	</select>
+
+	<statement id="EzCommonDAO.createUserScheduleTypeConfigTable">
+		CREATE TABLE TBL_USER_SCHEDULE_TYPE_CONFIG (
+		    USERID         VARCHAR(80)       NOT NULL,
+		    SCHEDULETYPE   MEDIUMINT(5)      NOT NULL,
+		    RELATEDID      VARCHAR(100)      NOT NULL,
+		    TAGCOLOR       VARCHAR(10),
+		    ISCHECKED      VARCHAR(2)        NOT NULL DEFAULT '1',
+		    TENANT_ID      MEDIUMINT(5)      NOT NULL,
+		    COMPANYID      VARCHAR(80)       NOT NULL,
+		    PRIMARY KEY (USERID, COMPANYID, TENANT_ID, SCHEDULETYPE, RELATEDID)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+    </statement>
 </sqlMap>

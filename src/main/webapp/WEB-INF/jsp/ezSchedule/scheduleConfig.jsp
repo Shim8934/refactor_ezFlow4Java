@@ -9,9 +9,28 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />		
 		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
 		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
+		<style type="text/css">
+			.tagColor {
+				width: 20px;
+				height: 20px;
+				float: left;
+				margin-top: 1.5px;
+				margin-left: 2px;
+			}
+			
+			.tagText {
+				width: 60px;
+				height: 20px;
+				float: left;
+				margin-top: 3px;
+				margin-left: 5px;
+				font-size: 13px;
+			}
+		</style>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>		
+		<script type="text/javascript" src="${util.addVer('/js/ezSchedule/schedule_write_Cross.js')}"></script>	
 	    <script type="text/javascript">
 		    var defaultview = "<c:out value='${scheduleConfigVO.defaultView}'/>";
 			var startday = "<c:out value='${scheduleConfigVO.startDay}'/>";
@@ -20,6 +39,10 @@
 			var autodelete = "<c:out value='${scheduleConfigVO.isAutoDelete}'/>";
 			var reminderTime = "<c:out value='${scheduleConfigVO.reminderTime}'/>";
 			var primary = "<c:out value='${lang}'/>";
+			var defaultviewcheck = "<c:out value='${scheduleConfigVO.defaultViewCheck}'/>";
+			var jsonPersonalScheConfigList = "<c:out value='${jsonPersonalScheConfigList}'/>";
+			
+			
 			
 		    document.onselectstart = function () { return false; };
 		    window.onload = function () {
@@ -45,7 +68,43 @@
 		        if (reminderTime != "") {
 		        	document.getElementById("reminderTime").value = reminderTime;
 		        }
-		    }
+		        
+		        if (defaultviewcheck != "N") {
+		        	$('#defaultViewCheckBox').attr('checked', 'checked');
+		        }
+		        
+		        var personalScheConfigList = JSON.parse(decodeHtml(jsonPersonalScheConfigList));
+		        
+				for (var i = 0; i < personalScheConfigList.length; i++) {
+					try {
+						var config = personalScheConfigList[i];
+						var scheduleType = (config.scheduleType !== undefined) ? config.scheduleType : 1;
+						var relatedId = (config.relatedId !== undefined) ? config.relatedId : config.userId;
+						var tagColor = (config.tagColor !== undefined) ? config.tagColor : null;
+
+						// 기본 셀렉터 구성 (색상 태그, 색상 텍스트)
+						var selector = "div[data-schedule-type='" + scheduleType + "']";
+
+						// scheduleType이 1(개인), 4(협업)가 아닌 경우에는 relatedID가 필요함
+				    	if (scheduleType !== 1 && scheduleType !== 4) {
+				    		selector += "[data-related-id='" + relatedId + "']";
+				    	}
+
+						var targetElem = document.querySelector(selector);
+
+						if (!targetElem) {
+							continue;
+						}
+
+						targetElem.style.backgroundColor = tagColor;
+						targetElem.nextElementSibling && (targetElem.nextElementSibling.innerHTML = tagColor);
+
+					} catch (e) {
+						console.log("Error at index", i, e);
+    					continue;
+					}
+				}
+			}
 					
 		    function CheckDeleteClick() {
 		        if (document.getElementById("CheckDelete").checked == true) {
@@ -81,6 +140,19 @@
                     count++;
 		        }		        
 		        
+		        // 2025-04-28 조수빈 - 사용자의 일정 요소 색상 정보
+		        var tagColorList = new Array();
+		        var tagElems = document.querySelectorAll(".tagColor");
+		        
+		        for (var i = 0; i < tagElems.length; i++) {
+		        	var data = new Object();
+		        	data.scheduleType = tagElems[i].dataset.scheduleType;
+		        	data.relatedId = tagElems[i].dataset.relatedId;
+		        	data.tagColor = tagElems[i].nextElementSibling.innerHTML;
+		        	
+		        	tagColorList.push(data);
+		        }
+		        
 		        $.ajax({
 		    		type : "POST",
 		    		dataType : "html",				    		
@@ -94,17 +166,19 @@
 		    			DISPLAYNAME : "<c:out value='${displayName1}'/>",
 		    			DISPLAYNAME2 : "<c:out value='${displayName2}'/>",
 		    			LISTSECRETARY : JSON.stringify(listSecretary),
-		    			REMINDERTIME : document.getElementById("reminderTime").value
+		    			REMINDERTIME : document.getElementById("reminderTime").value,
+		    			DEFAULTVIEWCHECKBOX : $("#defaultViewCheckBox").is(':checked'),
+		    			tagColorList : JSON.stringify(tagColorList)
 		    		},
 		    		url : "/ezSchedule/scheduleSaveConfig.do",
 		    		success: function(text){
-		    			alert("<spring:message code='ezSchedule.t137' />");		    			
+		    			alert("<spring:message code='ezSchedule.t137' />");		    
+		    			parent.parent.frames['left'].location.reload();
 		    		},
 		    		error: function(err){
 		    			alert("<spring:message code='ezSchedule.t136' />");
 		    		}
 		        });		
-	
 		        try {
 		            if (parent.parent.frames["left"].CalendarMini != undefined)		            	
 		                parent.parent.frames["left"].location = "/ezSchedule/scheduleLeft.do?funCode=11";		            	    	
@@ -154,6 +228,42 @@
 		            }
 		        }
 		    }
+			
+
+			// 권기혁 - 실습
+		 	function DivPopUpShow_personal(popUpW, popUpH, type, URL) {
+				try {
+					document.getElementById("iFrameLayer").src = URL;
+					document.getElementById("iFramePanel").style.top = 10;
+					document.getElementById("iFramePanel").style.left = 10;
+					document.getElementById("iFramePanel").style.height = popUpH + "px";
+					document.getElementById("iFrameLayer").style.width = popUpW + "px";
+					document.getElementById("iFrameLayer").style.height = popUpH + "px";
+
+					try {
+						if (typeof(window.parent.frames.left) == "object") {
+							window.parent.frames.left.document.getElementById("mailPanel_left").style.display = "";
+						}
+					} catch(e) {}
+					
+					document.getElementById("mailPanel").style.display = "";
+					document.getElementById("iFramePanel").style.display = "";
+				} catch (e) {}
+
+				return document.getElementById("iFrameLayer");
+			}
+			
+			//개인 일정 색상 선택(실습)
+			function select_personalcolor(type, relatedID) {
+		    	var selector = "div[data-schedule-type='" + type + "']";
+		    	
+		    	if (type !== 1 && type !== 4) {
+		    		selector += "[data-related-id='" + relatedID + "']";
+		    	}
+				
+				var	color = document.querySelector(selector).innerHTML;
+				DivPopUpShow_personal(360, 370, type,"/ezSchedule/scheduleSelectColor.do?type="+ type + "&relatedID=" + encodeURIComponent(relatedID) + "&color=" + encodeURIComponent(color));
+			}
 		</script>
 	</head>
 	<body style="margin-left:10px">
@@ -168,6 +278,7 @@
 		          			<option value="1"><spring:message code='ezSchedule.t141' /></option>
 		          			<option value="2" selected><spring:message code='ezSchedule.t142' /></option>
 		        		</select>
+		      			<input type="checkbox" id="defaultViewCheckBox" name="defaultViewCheckBox"><spring:message code="ezSchedule.t402" /></input>
 		      		</td>
 		    	</tr>
 		    	<tr>
@@ -285,7 +396,46 @@
 			    		</select>
 			    	</td>
 			    </tr>
-		    	<tr style="display:none">
+			    <tr>  
+   			    	<!--<th><spring:message code='ezSchedule.hth01' /></th>-->
+			    	<th>개인 일정 색상</th>
+			    	<td>
+			    		<div class="tagColor" style="background:rgb(1, 138, 249);" data-schedule-type="1" data-related-id="<c:out value='${loginVO.id}'/>"></div>
+			      		<div class="tagText"></div>
+			    		<a class="imgbtn" onclick="select_personalcolor('1', '<c:out value='${loginVO.id}'/>')" style="float: left;"><span ><spring:message code='ezSchedule.csj02' /></span></a>
+			    	</td>
+			    </tr>
+			    <tr>
+			    	<th>부서 일정 색상</th>
+			    	<td>
+			    		<div class="tagColor" style="background-color:rgb(1, 179, 63);" data-schedule-type="2" data-related-id="<c:out value='${loginVO.deptID}'/>"></div>
+			      		<div class="tagText"></div>
+			    		<a class="imgbtn" onclick="select_personalcolor('2', '<c:out value='${loginVO.deptID}'/>')" style="float: left;"><span ><spring:message code='ezSchedule.csj02' /></span></a>
+			    	</td>
+			    </tr>
+				<c:if test='${!empty scheCum}'>
+					<c:forEach var="cum" items="${scheCum}">
+						<c:if test="${cum.deptId ne loginVO.deptID}">
+							<tr>
+						    	<th>부서 일정 색상-${cum.titleName}</th>
+						    	<td>
+						    		<div class="tagColor" style="background-color:rgb(1, 179, 63);" data-schedule-type="2" data-related-id="<c:out value='${cum.deptId}'/>"></div>
+						      		<div class="tagText"></div>
+						    		<a class="imgbtn" onclick="select_personalcolor('2', '${cum.deptId}')" style="float: left;"><span ><spring:message code='ezSchedule.csj02' /></span></a>
+						    	</td>
+						    </tr>
+						</c:if>
+					</c:forEach>
+				</c:if>
+			    <tr>
+			    	<th>회사 일정 색상</th>
+			    	<td>
+			    		<div class="tagColor" style="background:rgb(254, 28, 113);" data-schedule-type="3" data-related-id="<c:out value='${loginVO.companyID}'/>"></div>
+			      		<div class="tagText"></div>
+			      		<a class="imgbtn" onclick="select_personalcolor('3','<c:out value='${loginVO.companyID}'/>')" style="float: left;"><span ><spring:message code='ezSchedule.csj02' /></span></a>
+			    	</td>
+			    </tr>
+		    	<tr style="display:none"> 
 		      		<th><spring:message code='ezSchedule.t154' /></th>
 		      		<td>
 		      			<input type="text" name="TextDelete" id="TextDelete" value="" size="8" readonly ="true" />
@@ -302,5 +452,9 @@
 		    	<%-- <a class="imgbtn" onClick="window.location.reload(false)"><span><spring:message code='ezSchedule.t5' /></span></a> --%>
 		  	</div>
 		</form>
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0); display: none;" id="mailPanel">&nbsp;</div>
+	    <div class="layerpopup" style="z-index: 2000; position: absolute; display: none;" id="iFramePanel">
+	        <iframe src="<spring:message code='main.kms4' />" style="border: 3px solid black;" id="iFrameLayer"></iframe>
+	    </div>
 	</body>
 </html>

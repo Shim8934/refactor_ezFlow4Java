@@ -16,9 +16,19 @@ public class ScheduleConfigVO {
 	/** 미리알림시간 */
 	private int reminderTime;
 	
+	// 월 / 주 / 일 보기 고정 사용 여부
+	private String defaultViewCheck;
+
+	public String getDefaultViewCheck() {
+		return defaultViewCheck;
+	}
+	public void setDefaultViewCheck(String defaultViewCheck) {
+		this.defaultViewCheck = defaultViewCheck;
+	}
 	public int getDefaultView() {
 		return defaultView;
 	}
+	
 	public void setDefaultView(int defaultView) {
 		this.defaultView = defaultView;
 	}
@@ -58,5 +68,5 @@ public class ScheduleConfigVO {
 	public void setReminderTime(int reminderTime) {
 		this.reminderTime = reminderTime;
 	}
-
+	
 }
