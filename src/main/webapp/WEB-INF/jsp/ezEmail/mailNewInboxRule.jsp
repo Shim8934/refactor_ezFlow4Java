@@ -1068,7 +1068,7 @@
 					</td>
 				</tr>
 			</table>
-			<div style="font-family:<spring:message code='main.t246' />;border:1px solid #dbdbda;width:435px;height:170px;overflow-y:auto;overflow-x:hidden;text-overflow:ellipsis;background-color:#ffffff; padding: 10px 10px 10px 10px; margin:0 10px 0 10px;">
+			<div style="font-family:<spring:message code='main.t246' />;border:1px solid #dbdbda;width:435px;height:170px;overflow-y:auto;overflow-x:auto;text-overflow:ellipsis;background-color:#ffffff; padding: 10px 10px 10px 10px; margin:0 10px 0 10px;">
 					<div id="tag_view" name="tag_view">
 					</div>
 			</div>

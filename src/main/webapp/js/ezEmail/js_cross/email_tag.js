@@ -51,17 +51,19 @@ function appendTag(tagName, containerId) {
     var tagContainer = document.getElementById(containerId);
     var tagListDiv = document.createElement("div");
     tagListDiv.className = "tag_list";
+    tagListDiv.style.display = "flex";
 
     var tagSpan = document.createElement("span");
     tagSpan.innerText = tagName;
     tagSpan.className = "tag_name";
+    tagSpan.style.flex = "1";
 
     var deleteSpan = document.createElement("span");
     deleteSpan.className = "tag_del";
     deleteSpan.addEventListener("click", function() { removeTag(tagSpan); });
 
-    tagListDiv.appendChild(deleteSpan);
     tagListDiv.appendChild(tagSpan);
+    tagListDiv.appendChild(deleteSpan);
     tagContainer.appendChild(tagListDiv);
 }
 
