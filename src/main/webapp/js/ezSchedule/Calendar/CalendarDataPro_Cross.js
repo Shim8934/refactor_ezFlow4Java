@@ -802,9 +802,10 @@ function CalMonthDataBind(oAppointment) {
             oTd.className = "company";
             oSpan.className = "company";
 			
-			var tagConf = personalScheConfigList.find(function(elem) {
+            var tagConf = (personalScheConfigList && Array.isArray(personalScheConfigList))
+            				? personalScheConfigList.find(function(elem) {
 				return elem.scheduleType == 3
-			});
+			}) : null;
 			
 			if (tagConf && tagConf.tagColor) {
 				oSpan.style.backgroundColor = tagConf.tagColor;
@@ -816,9 +817,10 @@ function CalMonthDataBind(oAppointment) {
             oSpan.className = "individual";
             
 			if (oAppointment.ScheduleType == 1) {
-				var tagConf = personalScheConfigList.find(function(elem) {
+				var tagConf = (personalScheConfigList && Array.isArray(personalScheConfigList))
+				  				? personalScheConfigList.find(function(elem) {
 					return elem.scheduleType == 1
-				});
+				}) : null;
 				
 				if (tagConf && tagConf.tagColor) {
 					oSpan.style.backgroundColor = tagConf.tagColor;
@@ -855,9 +857,10 @@ function CalMonthDataBind(oAppointment) {
             oSpan.className = "department";
 			
 			if (oAppointment.ScheduleType == 2) {
-				var tagConf = personalScheConfigList.find(function(elem) {
+				var tagConf = (personalScheConfigList && Array.isArray(personalScheConfigList))
+				  				? personalScheConfigList.find(function(elem) {
 					return (elem.scheduleType == 2) && (oAppointment.OwnerID == elem.relatedId)
-				});
+				}) : null;
 				
 				if (tagConf && tagConf.tagColor) {
 					oSpan.style.backgroundColor = tagConf.tagColor;
@@ -1042,9 +1045,10 @@ function CalWeekDataBind(oAppointment, order) {
             oDiv.className = "calendar_data_company";
             oSpan.className = "company";
             
-			var tagConf = personalScheConfigList.find(function(elem) {
+            var tagConf = (personalScheConfigList && Array.isArray(personalScheConfigList))
+            				? personalScheConfigList.find(function(elem) {
 				return elem.scheduleType == 3
-			});
+			}) : null;
 			
 			if (tagConf && tagConf.tagColor) {
 				oSpan.style.backgroundColor = tagConf.tagColor;
@@ -1056,9 +1060,10 @@ function CalWeekDataBind(oAppointment, order) {
             oSpan.className = "individual";
             
 			if (oAppointment.ScheduleType == 1) {
-				var tagConf = personalScheConfigList.find(function(elem) {
+				var tagConf = (personalScheConfigList && Array.isArray(personalScheConfigList))
+				  				? personalScheConfigList.find(function(elem) {
 					return elem.scheduleType == 1
-				});
+				}) : null;
 				
 				if (tagConf && tagConf.tagColor) {
 					oSpan.style.backgroundColor = tagConf.tagColor;
@@ -1095,9 +1100,10 @@ function CalWeekDataBind(oAppointment, order) {
             oSpan.className = "department";
 			
 			if (oAppointment.ScheduleType == 2) {
-				var tagConf = personalScheConfigList.find(function(elem) {
+				var tagConf = (personalScheConfigList && Array.isArray(personalScheConfigList))
+				  				? personalScheConfigList.find(function(elem) {
 					return (elem.scheduleType == 2) && (oAppointment.OwnerID == elem.relatedId)
-				});
+				}) : null;
 				
 				if (tagConf && tagConf.tagColor) {
 					oSpan.style.backgroundColor = tagConf.tagColor;
@@ -1535,9 +1541,10 @@ function CalDayDataBind(oAppointment, order) {
             oDiv.className = "calendar_data_company";
             oSpan.className = "company";
 			
-			var tagConf = personalScheConfigList.find(function(elem) {
+            var tagConf = (personalScheConfigList && Array.isArray(personalScheConfigList))
+            				? personalScheConfigList.find(function(elem) {
 				return elem.scheduleType == 3
-			});
+			}) : null;
 			
 			if (tagConf && tagConf.tagColor) {
 				oSpan.style.backgroundColor = tagConf.tagColor;
@@ -1549,9 +1556,10 @@ function CalDayDataBind(oAppointment, order) {
             oSpan.className = "individual";
             
 			if (oAppointment.ScheduleType == 1) {
-				var tagConf = personalScheConfigList.find(function(elem) {
+				var tagConf = (personalScheConfigList && Array.isArray(personalScheConfigList))
+				  				? personalScheConfigList.find(function(elem) {
 					return elem.scheduleType == 1
-				});
+				}) : null;
 				
 				if (tagConf && tagConf.tagColor) {
 					oSpan.style.backgroundColor = tagConf.tagColor;
@@ -1588,9 +1596,10 @@ function CalDayDataBind(oAppointment, order) {
             oSpan.className = "department";
 			
 			if (oAppointment.ScheduleType == 2) {
-				var tagConf = personalScheConfigList.find(function(elem) {
+				var tagConf = (personalScheConfigList && Array.isArray(personalScheConfigList))
+				  				? personalScheConfigList.find(function(elem) {
 					return (elem.scheduleType == 2) && (oAppointment.OwnerID == elem.relatedId)
-				});
+				}) : null;
 				
 				if (tagConf && tagConf.tagColor) {
 					oSpan.style.backgroundColor = tagConf.tagColor;
