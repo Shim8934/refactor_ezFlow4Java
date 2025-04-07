@@ -2,8 +2,10 @@ package egovframework.ezEKP.ezEmail.logic;
 
 import java.io.InputStream;
 import java.security.GeneralSecurityException;
+import java.util.Optional;
 import java.util.Properties;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,24 +26,39 @@ public class SMTPAccess {
 	private String port;
 	private String userName;
 	private String password;
+	private String primary;
 	private boolean usingAuth = true;
 	private Session session;
 	private final int TIMEOUT = 20000;
+
+	private SMTPAccess(String host, String port, String userName, String password, String primary, boolean usingAuth) {
+		this.host = host;
+		this.port = port;
+		this.userName = userName;
+		this.password = password;
+		this.primary = primary;
+		this.usingAuth = usingAuth;
+	}
 	
 	private SMTPAccess(String host, String port, String userName, String password, boolean usingAuth) {
 		this.host = host;
 		this.port = port;
 		this.userName = userName;
 		this.password = password;
+		this.primary = userName;
 		this.usingAuth = usingAuth;
 	}
 	
-	public static SMTPAccess getNotAuthInstance(String host, String port, String username, String password) {
-		return new SMTPAccess(host, port, username, password, false);
+	public static SMTPAccess getNotAuthInstance(String host, String port, String username, String password, String primary) {
+		return new SMTPAccess(host, port, username, password, primary, false);
 	}
 	
 	public static SMTPAccess getInstance(String host, String port, String username, String password) {
 		return new SMTPAccess(host, port, username, password, true);
+	}
+
+	public static SMTPAccess getInstance(String host, String port, String username, String password, String primary) {
+		return new SMTPAccess(host, port, username, password, primary,true);
 	}
 	
 	private Session getSession(){
@@ -54,6 +71,9 @@ public class SMTPAccess {
 		    props.put("mail.smtp.starttls.enable", "false");
 		    props.put("mail.smtp.host", host);
 		    props.put("mail.smtp.port", port);
+			Optional.ofNullable(primary)
+					.filter(StringUtils::isNotBlank)
+					.ifPresent(mail -> props.put("mail.smtp.from", mail));
 		    
 		    if (port.equals("465")) {
 		    	MailSSLSocketFactory sf = new MailSSLSocketFactory();

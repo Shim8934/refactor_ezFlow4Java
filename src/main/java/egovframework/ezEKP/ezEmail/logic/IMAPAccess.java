@@ -512,6 +512,27 @@ public class IMAPAccess implements Closeable {
 		}
 		return totalCount;
 	}
+
+	// 전체메일 - [받은편지함 + 하위, 개인편지함 + 하위] 모든 메일함
+	public List<String> getAllFolderNames() {
+		List<String> folderNames = new ArrayList<>();
+
+		try {
+			Folder[] folders = getStore().getDefaultFolder().list("*");
+
+			for (Folder folder : folders) {
+				String folderName = folder.getFullName();
+
+				if (folderName.startsWith("INBOX") || folderName.startsWith("Personal folder")) {
+					folderNames.add(folderName);
+				}
+			}
+		} catch (MessagingException e) {
+			logger.error("Error get all folder names: " + e.getMessage());
+		}
+
+		return folderNames;
+	}
 	
 	public Folder getFolder(String folderName) {
 		Folder folder = null;

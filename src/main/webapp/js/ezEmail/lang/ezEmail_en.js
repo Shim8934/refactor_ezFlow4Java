@@ -314,6 +314,7 @@ var strLangLS02 = "No mail selected. \nAre you sure you want to save all retriev
 var strLangLS03 = "The search results will be downloaded as a single zip file. \nThis process may take a while. Do you want to proceed?"
 var strLangLS04 = ".";
 var strLangLS05 = "';' cannot be contained."
+var strLangAllmailSaveAlert = "No emails selected. \nPlease select emails or search before saving."
 
 /* 2018-07-03 홍승비 - 승인게시물, 커뮤니티 답변메일 companyID 관련 처리*/
 var strLangHSB01 = "This post can be viewed on ";

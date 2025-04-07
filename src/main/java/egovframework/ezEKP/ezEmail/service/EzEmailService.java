@@ -79,7 +79,7 @@ public interface EzEmailService {
 	public String mailContentDownload(String loginCookie, String url, String realPath) throws Exception;
 	public boolean checkMailQuota(LoginVO userInfo, String password) throws Exception;
 	public int getMaxMessageSize(int tenantId) throws Exception;
-	public List<String[]> getAliasAddress(String userId, int tenantId) throws Exception;
+	List<String[]> getAliasAddress(String userId, int tenantId, String useFromAddress, String useDistributionSender) throws Exception;
 	public List<Map<String, String>> getMailListT(LoginVO userInfo, String password, String dateTime, int count) throws Exception;
 	public List<MailDistributionVO> getDistributionList(String companyId, int tenantId) throws Exception;
 	public List<MailDistributionVO> getDistributionSearchList(String companyId, int tenantId, String searchValue) throws Exception;
@@ -214,7 +214,7 @@ public interface EzEmailService {
 	int getAdminApprMailListCount(int tenantId, String companyId, String type, String id) throws Exception;
 	JSONArray getApprMailList(int tenantId, String companyId, String type, String id, String lang, int pageStartNum, int listCount, String domainName) throws Exception;
 	int getApprMailListCount(int tenantId, String companyId, String type, String id) throws Exception;
-	JSONArray setUTCtoUserTime(JSONArray array, String offset) throws Exception;
+	JSONArray setUTCtoUserTime(JSONArray array, String offset, int tenantId) throws Exception;
 	JSONArray setApprover(JSONArray array, Locale locale) throws Exception;
 	JSONArray setHref(JSONArray array) throws Exception;
 	String setHref(String senderId, String mailUID) throws Exception;
@@ -269,13 +269,13 @@ public interface EzEmailService {
 	public List<Map<String, String>> getApprCompMailHistorySearchList(int tenantId, String companyId, String lang, Locale locale, String offset, String sDate, String eDate, int pageStartNum, int listCount) throws Exception;
 	public int getApprCompMailHistorySearchListCnt(int tenantId, String companyId, String sDate, String eDate) throws Exception;
 	public List<Map<String, String>> getApprCompMailHistorySearchUserCnt(int tenantId, String companyId, String lang, String sDate, String eDate) throws Exception;
-	public List<Map<String, String>> getApprMailHistorySearchList(int tenantId, String companyId, String lang, Locale locale, String offset) throws Exception;
-	public List<Map<String, String>> getApprMailHistorySearchList(int tenantId, String companyId, String lang, Locale locale, String offset, String sDate, String eDate) throws Exception;
-	public List<Map<String, String>> getApprMailHistorySearchList(int tenantId, String companyId, String lang, Locale locale, String offset, String sDate, String eDate, int pageStartNum, int listCount) throws Exception;
+	public JSONArray getApprMailHistorySearchList(int tenantId, String companyId, String lang, Locale locale, String offset) throws Exception;
+	public JSONArray getApprMailHistorySearchList(int tenantId, String companyId, String lang, Locale locale, String offset, String sDate, String eDate) throws Exception;
+	public JSONArray getApprMailHistorySearchList(int tenantId, String companyId, String lang, Locale locale, String offset, String sDate, String eDate, int pageStartNum, int listCount) throws Exception;
 	public int getApprMailHistorySearchListCnt(int tenantId, String companyId, String sDate, String eDate) throws Exception;
 	public List<Map<String, String>> getApprMailHistorySearchUserCnt(int tenantId, String companyId, String lang, String sDate, String eDate) throws Exception;
 	public void actionTrashMailAllDelete(IMAPAccess ia, String folderId) throws Exception;
-	public void actionMailMoveTrash(IMAPAccess ia, String folderId, String cmd, long[] uids, Locale locale, int tenantID, String userEmail, String domainName) throws Exception;
+	public void actionMailMoveTrash(IMAPAccess ia, Map<String, long[]> folderUids, String cmd, Locale locale, int tenantID, String userEmail, String domainName) throws Exception;
 	public String encryptSecureValue(String encryptValue, boolean useKlibEncrypt) throws Exception;
 	public String decryptSecureValue(String decryptValue, boolean useKlibEncrypt) throws Exception;
 }

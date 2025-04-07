@@ -677,40 +677,12 @@
             var SPAN2 = document.createElement("SPAN");
             SPAN2.style.display = "block";
             var SPAN3 = document.createElement("DIV");
-            /*if (CrossYN())
-            {
-                SPAN3.style.height = "20px";
-                SPAN3.style.overflowY = "hidden";
-                SPAN3.style.whiteSpace = "nowrap";
-                SPAN3.style.display = "inline-block";
-            }
-            else {
-                SPAN3.style.height = "18px";
-                SPAN3.style.overflowY = "hidden";
-                SPAN3.style.whiteSpace = "nowrap";
-                SPAN3.style.display = "inline-block";
-            }*/
             SPAN3.setAttribute("class", "node_div");
             
             for (var j = 0; j < depth.length; j++) {
             	var imgSpan = document.createElement("SPAN");
                 imgSpan.setAttribute("class", "sub_iconLNB tree_blank");
                 SPAN3.appendChild(imgSpan);	
-                /*var IMG_TAG = document.createElement("IMG");
-                if (depth.charAt(j) == "1") {
-                    IMG_TAG.setAttribute("src", g_baseImage["dot_continue"]);
-                    IMG_TAG.setAttribute("width", g_imageWidth);
-                    IMG_TAG.setAttribute("height", g_imageHeight);
-                }
-                else {
-                    IMG_TAG.setAttribute("src", g_baseImage["space"]);
-                    IMG_TAG.setAttribute("width", g_imageWidth);
-                    IMG_TAG.setAttribute("height", g_imageHeight);
-                }
-
-                SPAN3.appendChild(IMG_TAG);
-                IMG_TAG = null;
-                */
             }
 
             var bParent = (GetChildNodes(childNode).length > 0) ? true : false;
@@ -723,12 +695,10 @@
             	var imgSpan = document.createElement("SPAN");
             	
                 if (!bEndNode) {                	
-                    //IMG_TAG.setAttribute("src", g_baseImage["plus_normal"]);
                 	imgSpan.setAttribute("class", "sub_iconLNB tree_plus");
                     mydepth += "1";                    
                 }
                 else {
-                    //IMG_TAG.setAttribute("src", g_baseImage["plus_end"]);
                 	imgSpan.setAttribute("class", "sub_iconLNB tree_plus");
                     mydepth += "0";                    
                 }
@@ -736,28 +706,17 @@
                 imgSpan.setAttribute("id", g_toggleid + g_nodeCount);
                 imgSpan.setAttribute("name", g_toggleid + g_nodeCount);
 
-                //SPAN3.appendChild(IMG_TAG);
                 SPAN3.appendChild(imgSpan);
                 IMG_TAG = null;
             }
             else {
                 if (!bEndNode) {
-                    //IMG_TAG.setAttribute("src", g_baseImage["dot_normal"]);
                     mydepth += "1";
                 }
                 else {
-                    //IMG_TAG.setAttribute("src", g_baseImage["dot_end"]);
                     mydepth += "0";
                 }
 
-                /*IMG_TAG.setAttribute("id", g_toggleid + g_nodeCount);
-                IMG_TAG.setAttribute("name", g_toggleid + g_nodeCount);
-                IMG_TAG.setAttribute("width", g_imageWidth);
-                IMG_TAG.setAttribute("height", g_imageHeight);*/
-                
-                //SPAN3.appendChild(IMG_TAG);
-                //IMG_TAG = null;
-                
                 var imgSpan = document.createElement("SPAN");
                 imgSpan.setAttribute("class", "sub_iconLNB tree_blank");
                 imgSpan.setAttribute("id", g_toggleid + g_nodeCount);
@@ -771,6 +730,11 @@
             var _tempStatus;
             
             switch (_foldername) {
+                case '_ALLMAIL':
+                    spanClass = "sub_iconLNB";
+                    spanId = "allMail";
+                    _tempStatus = "Y";
+                    break;
                 case '_INBOX':
                     // 2023-06-22 황인경 - 디자인 개선 > 메일 > 좌측메뉴 > 트리구조 LNB 이미지 삭제
                     spanClass = "sub_iconLNB";
@@ -819,20 +783,6 @@
             imgSpan2.setAttribute("id", spanId);
             SPAN3.appendChild(imgSpan2);
             
-/*          var IMG_TAG = document.createElement("IMG");
-            IMG_TAG.setAttribute("id", g_imageid + g_nodeCount);
-            IMG_TAG.setAttribute("name", g_imageid + g_nodeCount);
-            IMG_TAG.setAttribute("src", _imgsrc);
-            
-            if (_tempStatus == "Y") {
-            	IMG_TAG.setAttribute("width", "16");
-            	IMG_TAG.setAttribute("height", "16");
-            } else {
-            	IMG_TAG.setAttribute("width", g_imageWidth);
-            	IMG_TAG.setAttribute("height", g_imageHeight);
-            }
-
-            SPAN3.appendChild(IMG_TAG);*/
             IMG_TAG = null;
 
             var SPAN_TAG = document.createElement("SPAN");
@@ -840,13 +790,6 @@
             SPAN_TAG.setAttribute("name", g_nodeid + g_nodeCount);
             SPAN_TAG.setAttribute("class", g_baseClass["normal"]);
             
-            /*if (GetAttribute(childNode, "style") != null) {
-                SPAN_TAG.setAttribute("style", "display:inline-block;" + GetAttribute(childNode, "style"));
-            }
-            else {
-                SPAN_TAG.setAttribute("style", "display:inline-block;");
-            }
-*/
             if (GetAttribute(childNode, "title") != null) {
             	if (mydepth != "1") {
             		SPAN_TAG.setAttribute("title", GetAttribute(childNode, "caption"));
@@ -882,15 +825,6 @@
 			            
 			            SPAN3.appendChild(SPAN_TAG_MNG);
 	            	}
-	            } else if (_foldername == "_SENT") {
-	            	/*if (useMailReceiveScreen == "YES") {
-			            var SPAN_TAG_MNG = document.createElement("SPAN");
-			            SPAN_TAG_MNG.setAttribute("class", "confirmation");
-			            SPAN_TAG_MNG.setAttribute("onclick", "reception_check()");
-			            SPAN_TAG_MNG.innerHTML = receiveText;
-			            
-			            SPAN3.appendChild(SPAN_TAG_MNG);
-	            	}*/
 	            }
 	            
 	            if (g_nodeid + g_nodeCount == "AddressTreeView_node_1") {
@@ -925,11 +859,6 @@
             g_nodeArray["depth"][g_nodeCount] = mydepth;
 
             SPAN1.appendChild(SPAN2);
-            
-            /*if (g_nodeid + g_nodeCount == "AddressTreeView_node_1") {
-            	alert(g_nodeid + g_nodeCount)
-            	alert($("#"+g_nodeid + g_nodeCount).closest("div").length);
-            }*/
         }
 
         return SPAN1;

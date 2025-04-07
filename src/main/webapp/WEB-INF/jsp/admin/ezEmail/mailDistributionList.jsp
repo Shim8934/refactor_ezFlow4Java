@@ -29,7 +29,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript">
-			var companyId = "${userCompany}";
+			var companyId = "${companyId}";
 			var searchFlag = false;
 			
 			document.onselectstart = function () {
@@ -39,11 +39,11 @@
 		            return true;
 		    };
 		    window.onload = function () {
-		        if (document.all("ListCompany") != null && document.all("ListCompany").length == 0)
+		        <%--if (document.all("ListCompany") != null && document.all("ListCompany").length == 0)
 		            alert("<spring:message code='ezEmail.t49' />");
-		        else {
+		        else {--%>
 		            company_change();
-		        }
+		        <%--}--%>
 		        
 		        var searchInput = $("#searchInputWrap input");
 		        var searchBtn = $("#searchInputWrap .imgbtn");
@@ -51,7 +51,7 @@
 		        searchInput.width(searchInputW + "px");
 		    }
 		    function company_change() {
-		    	companyId = document.all("ListCompany") == null ? companyId : document.all("ListCompany").value;
+		    	//companyId = document.all("ListCompany") == null ? companyId : document.all("ListCompany").value;
 		    	document.getElementsByClassName("shared_boxesTable")[0].style.display = "none";
 		
 		        var xmlDom = createXmlDom();
@@ -111,7 +111,7 @@
 		        var objNode = "";
 		        createNodeInsert(xmlDom, objNode, "DATA");
 		        createNodeAndInsertText(xmlDom, objNode, "CN", GetAttribute(listview.GetSelectedRows()[0], "DATA1"));
-		        createNodeAndInsertText(xmlDom, objNode, "COMPID", document.all("ListCompany").value);
+		        createNodeAndInsertText(xmlDom, objNode, "COMPID", companyId);
 		        xmlHTTP.open("POST", "/admin/ezEmail/mailViewDistributionList.do", true);
 		        xmlHTTP.onreadystatechange = getDistributionMember_after;
 		        xmlHTTP.send(xmlDom);
@@ -353,7 +353,7 @@
 			}
 
 			function excelExport() {
-				companyId = document.all("ListCompany") == null ? companyId : document.getElementById("ListCompany").value;
+				//companyId = document.all("ListCompany") == null ? companyId : document.getElementById("ListCompany").value;
 				var dvGroupListObj = $("[id^='lvUserList_TR_']").get();
 				var dvGroupList = new Array();
 
@@ -371,7 +371,7 @@
 			}
 		</script>
 	</head>
-	<body class="mainbody">
+	<body class="">
 	<iframe id=saveExcel name=saveExcel style="display:none"></iframe>
 	<xml id="listviewheader" style="display:none">
 	  <LISTVIEWDATA>
@@ -384,7 +384,7 @@
 	  </LISTVIEWDATA>
 	</xml>
 	<form id="Form1" method="post">
-		<h1>
+		<%--<h1>
 			<spring:message code='ezEmail.t58' />
 			<span class="title_bar"><img src="/images/name_bar.gif"></span>
 			
@@ -393,7 +393,7 @@
 	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 	            	</c:forEach>	      		
 	      	</select>
-		</h1>
+		</h1>--%>
 		<div id="mainmenu">
 			<ul>
 				<li class="important"><span onClick="add_dl()"><spring:message code='ezEmail.t60' /></span></li>

@@ -14,5 +14,5 @@ public interface EzEmailWriteService {
     public boolean isValidShareId(MailWriteProcessVO writevo, String loginId, String shareId, int tenantId) throws Exception;
     public void loadFromOrigin(MailWriteProcessVO writevo, LoginVO loginInfo, String userAccount, String password, Locale locale);
     public void setDefaultMailOptions(HttpServletRequest request, MailWriteProcessVO writevo, LoginVO loginInfo, String userName2, Locale locale) throws Exception;
-    public void setOverwriteMailOptions(MailWriteProcessVO writevo, String userMail, int tenantId) throws Exception;
+    public void setOverwriteMailOptions(MailWriteProcessVO writevo, String userMail, int tenantId, String company) throws Exception;
 }

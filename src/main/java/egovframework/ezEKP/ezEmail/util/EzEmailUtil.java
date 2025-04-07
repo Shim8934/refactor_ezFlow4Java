@@ -238,6 +238,40 @@ public class EzEmailUtil {
 		return bodyPath;
 	}
 	
+	public Map<String, long[]> getFolderIdUid(String[] folderAndMsgIdArray) {
+		Map<String, long[]> folderIdUids = new HashMap<>();
+
+		for (String folderAndMsgId : folderAndMsgIdArray) {
+			int delimiterIndex = folderAndMsgId.lastIndexOf("/");
+			String folderId = folderAndMsgId.substring(0, delimiterIndex);
+			long msgId = Long.parseLong(folderAndMsgId.substring(delimiterIndex + 1));
+
+			// folderUids에 folderId가 없으면 새 배열 생성 (초기 크기는 folderAndMsgIdArray의 길이로 설정)
+			long[] uidArray = folderIdUids.computeIfAbsent(folderId, k -> new long[folderAndMsgIdArray.length]);
+
+			// 배열에 값 추가
+			int index = 0;
+			while (index < uidArray.length && uidArray[index] != 0) {
+				index++;
+			}
+			if (index < uidArray.length) {
+				uidArray[index] = msgId;
+			}
+		}
+
+		// 배열의 실제 사용된 크기로 잘라내기
+		for (Map.Entry<String, long[]> entry : folderIdUids.entrySet()) {
+			long[] uidArray = entry.getValue();
+			int actualSize = 0;
+			while (actualSize < uidArray.length && uidArray[actualSize] != 0) {
+				actualSize++;
+			}
+			entry.setValue(Arrays.copyOf(uidArray, actualSize));
+		}
+		
+		return folderIdUids;
+	}
+	
 	public String getInboxFolderId() {
 		return "INBOX";
 	}
@@ -300,6 +334,8 @@ public class EzEmailUtil {
 		if (useStandardFolderId != null && useStandardFolderId.equals("YES")) {								
 			if (folderId.equals("INBOX") || folderId.startsWith("INBOX.")) {
 				displayName = folderId.replaceFirst("INBOX", egovMessageSource.getMessage("ezEmail.t644", locale));
+			} else if ("ALLMAIL".equalsIgnoreCase(folderId)) {
+				displayName = folderId.replace("ALLMAIL", egovMessageSource.getMessage("email.allmail", locale));
 			} else if (folderId.equals("Sent") || folderId.startsWith("Sent.")) {
 				displayName = folderId.replaceFirst("Sent", egovMessageSource.getMessage("ezEmail.t645", locale));
 			} else if (folderId.equals("Drafts") || folderId.startsWith("Drafts.")) {
@@ -328,6 +364,8 @@ public class EzEmailUtil {
 		if (useStandardFolderId != null && useStandardFolderId.equals("YES")) {	
 			if (displayName.equals(egovMessageSource.getMessage("ezEmail.t644", locale))) {
 				folderId = "INBOX";
+			} else if (displayName.equals(egovMessageSource.getMessage("email.allmail", locale))) {
+				folderId = "ALLMAIL";
 			} else if (displayName.equals(egovMessageSource.getMessage("ezEmail.t645", locale))) {
 				folderId = "Sent";
 			} else if (displayName.equals(egovMessageSource.getMessage("ezEmail.t646", locale))) {
@@ -3195,7 +3233,7 @@ public class EzEmailUtil {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
 		String userAccountParam = "userAccount=" + URLEncoder.encode(userAccount, "UTF-8");
-		String folderPathParam = "folderPath=" + URLEncoder.encode(folderPath, "UTF-8");
+		//String folderPathParam = "folderPath=" + URLEncoder.encode(folderPath, "UTF-8");
 		String startDateParam = "startDate=" + URLEncoder.encode(startDate == null ? "" : sdf.format(startDate), "UTF-8");
 		String endDateParam = "endDate=" + URLEncoder.encode(endDate == null ? "" : sdf.format(endDate), "UTF-8");
 		String isUnreadOnlyParam = "isUnreadOnly=" + isUnreadOnly;
@@ -3230,6 +3268,19 @@ public class EzEmailUtil {
 		}
 		
 		String includeContentParam = "includeContent=" + includeContent;
+
+		String folderPathParam = "";
+		// 전체메일에서 받은편지함과 개인편지함으로 국한되어 하드코딩할 수 있으나, 확장성을 위해 ////로 split하여 처리
+		// 기존의 단일 folderPath 검색 시에는 folderPath를 그대로 이용하고
+		// 여러 편지함을 검색하는 경우에는 folderPaths로 s를 붙여서 넘기며, jgw서버에서 String배열로 받는다.
+		if (folderPath.contains("////")) {
+			String[] folderPaths = folderPath.split("////");
+			for ( int i= 0 ; i < folderPaths.length ; i++ ) {
+				folderPathParam += "&folderPaths=" + URLEncoder.encode(folderPaths[i], "UTF-8");
+			}
+		} else {
+			folderPathParam = "folderPath=" + URLEncoder.encode(folderPath, "UTF-8");
+		}
 		
 		String searchFieldParam = "";
 		String searchValueParam = "";
@@ -6288,14 +6339,17 @@ public class EzEmailUtil {
     /**
      * smtp server info
      */
-    public SMTPAccess getSMTPServer(String userAccount, String userPw, int tenantId) {
-    	return getSMTPServer(userAccount, userPw, tenantId, true);
-    }
-    
+ 	public SMTPAccess getSMTPServer(String userAccount, String userPw, String primary, int tenantId) {
+		return getSMTPServer(userAccount, userPw, primary, tenantId, true);
+	}
     /**
      * smtp server info
      */
-    public SMTPAccess getSMTPServer(String userAccount, String userPw, int tenantId, boolean usingAuth) {
+	public SMTPAccess getSMTPServer(String userAccount, String userPw, int tenantId, boolean usingAuth) {
+		return getSMTPServer(userAccount, userPw, "", tenantId, true);
+	}
+
+	public SMTPAccess getSMTPServer(String userAccount, String userPw, String primary, int tenantId, boolean usingAuth) {
     	logger.debug("getSMTPServer started.");
     	
     	String smtpMailServer = "";
@@ -6337,21 +6391,22 @@ public class EzEmailUtil {
 					}
 				} // externalMailServerAddr if end
 			}
-			
-			logger.debug("smtpMailServer=" + smtpMailServer + ", smtpMailServerPort=" + smtpMailServerPort + ", usingAuth=" + usingAuth);
+
+			logger.debug("smtpMailServer={}, smtpMailServerPort={}, usingAuth={}, smtpUserId={}, primary={}", smtpMailServer, smtpMailServerPort, usingAuth, smtpUserId, primary);
+
 			if (usingAuth) {
-				reSMTPAccess = SMTPAccess.getInstance(smtpMailServer, smtpMailServerPort, smtpUserId, smtpUserPw);
+				reSMTPAccess = SMTPAccess.getInstance(smtpMailServer, smtpMailServerPort, smtpUserId, smtpUserPw, primary);
 			} else {
-				reSMTPAccess = SMTPAccess.getNotAuthInstance(smtpMailServer, smtpMailServerPort, smtpUserId, smtpUserPw);
+				reSMTPAccess = SMTPAccess.getNotAuthInstance(smtpMailServer, smtpMailServerPort, smtpUserId, smtpUserPw, primary);
 			}
 		} catch (DataAccessException e) {
 			logger.error(e.getMessage(), e);
 
-			reSMTPAccess = SMTPAccess.getInstance(smtpMailServer, smtpMailServerPort, userAccount, userPw);
+			reSMTPAccess = SMTPAccess.getInstance(smtpMailServer, smtpMailServerPort, userAccount, userPw, primary);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			
-			reSMTPAccess = SMTPAccess.getInstance(smtpMailServer, smtpMailServerPort, userAccount, userPw);
+			reSMTPAccess = SMTPAccess.getInstance(smtpMailServer, smtpMailServerPort, userAccount, userPw, primary);
 		}
     	logger.debug("getSMTPServer ended.");
     	return reSMTPAccess;

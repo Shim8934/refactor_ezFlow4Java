@@ -258,20 +258,21 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 
 		OrganUserVO userInfo = ezOrganAdminService.getUserInfo(writevo.getMailId(), loginInfo.getPrimary(), loginInfo.getTenantId());
 
-		// 2. set options: default
+		// 2. set options: 사용자의 설정에 따른 메일쓰기 정보를 세팅 함
 		ezEmailWriteService.setDefaultMailOptions(request, writevo, loginInfo, userInfo.getDisplayName2(), locale);
 
 		// make mail top level folders: 사용자계정 생성 직후, mail top level folders가 없을 수도 있다. 에러방지.
 		ezEmailUtil.useIMAPAccessWithCallback(IMAPAccess::makeTopLevelFolders, userAccount, password, locale);
 
-        // 3. load from origin message : 기존 메일을 가져와야 하는 경우
-        if (writevo.hasOrigin()) {
+		// 3. set options: 추가적으로 테넌트나 회사의 옵션으로 강제 변경하는 정보가 있는 경우 반영
+		ezEmailWriteService.setOverwriteMailOptions(writevo, userInfo.getMail(), loginInfo.getTenantId(), userInfo.getPhysicalDeliveryOfficeName());
+
+		// 4. load from origin message : 임시저장메일, 회신, 전달, 재사용 등 기존 메일의 정보를 세팅함
+		if (writevo.hasOrigin()) {
 			writevo.setReciverName(request.getParameter("reciverName")); // for RESEND_IN_SENT
 			ezEmailWriteService.loadFromOrigin(writevo, loginInfo, userAccount, password, locale);
 		}
 
-		// 4. set options: overwrite
-		ezEmailWriteService.setOverwriteMailOptions(writevo, userInfo.getMail(), loginInfo.getTenantId());
 	// PROCESS END
 
 		/**
@@ -292,6 +293,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		// poll(투표)는 drafts를 빈값으로 넘김.
 
 		model.addAttribute("message", writevo.getMailWriteMessageVO());
+		model.addAttribute("from", writevo.getFrom());
+		model.addAttribute("fromAddressList", writevo.getMailWriteOptionsVO().getFromAddressList());
 		model.addAttribute("options", writevo.getMailWriteOptionsVO());
 		model.addAttribute("general", writevo.getMailGeneralVO());
 		model.addAttribute("sign", writevo.getMailSignatureVO());
@@ -2549,7 +2552,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		/*SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
 				userAccount, password);*/
-		SMTPAccess sa = ezEmailUtil.getSMTPServer(userAccount, password, userInfo.getTenantId());
+		SMTPAccess sa = ezEmailUtil.getSMTPServer(userAccount, password, userInfo.getEmail(), userInfo.getTenantId());
 		
 		String pResult = null;
 		IMAPAccess ia = null;
@@ -5984,7 +5987,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		if (uid != 0) {
 			SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
-					userEmail, password);
+					userEmail, password, loginInfo.getEmail());
 			
 			IMAPAccess ia = null;
 			try {

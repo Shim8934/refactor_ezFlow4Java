@@ -269,7 +269,7 @@ public class EzEmailWriteServiceImpl implements EzEmailWriteService {
                     // (orgMessage)
                     // from
                     Address fromAddress = getForm(orgMessage);
-                    if (fromAddress != null && writetype.isEdit()) {
+                    if (fromAddress != null && (writetype.isEdit() || writetype.isResend())) {
                         String from = ((InternetAddress) fromAddress).getAddress();
                         writevo.setFrom(from); // eunsil1@svn1.opensol2014.com
                     }
@@ -477,6 +477,9 @@ public class EzEmailWriteServiceImpl implements EzEmailWriteService {
         Address[] addresses = null;
         String to = "";
 
+        //(전체)회신, 재작성 시 수신자에 본인이 들어가지 않게 하기 위해 본인 주소는 제거하나 
+        // 예약메일은 기능 상 제거하면 안되기 때문에 isReply, isReserve를 확인하여 분기처리
+
         // TO
         if (writetype.isReply()) {
             addresses = getRecipientsTOFromReply(writetype, orgMessage, replyMessage);
@@ -484,7 +487,7 @@ public class EzEmailWriteServiceImpl implements EzEmailWriteService {
             addresses = orgMessage.getRecipients(Message.RecipientType.TO);
         }
 
-        if (writetype.isReserve()) { // 문제없으면.. From까지 다 체크하던지 통일했으면 좋겠는데
+        if (writetype.isReserve()) {
             to = getAddresses(writetype, addresses, orgMessage, "To");
         } else {
             to = getAddresses(writetype, addresses, orgMessage, "From", "To");
@@ -592,7 +595,8 @@ public class EzEmailWriteServiceImpl implements EzEmailWriteService {
     }
 
     private Address getForm(Message orgMessage) throws MessagingException {
-        return (orgMessage.getFrom() != null && orgMessage.getFrom()[0] != null)? orgMessage.getFrom()[0] : null;
+        Address[] fromArray = orgMessage.getFrom();
+        return (fromArray != null && fromArray[0] != null)? fromArray[0] : null;
     }
 
     private String getAddresses(WriteType writetype, Address[] addresses, Message orgMessage, String... headerKeys) {
@@ -1408,21 +1412,34 @@ public class EzEmailWriteServiceImpl implements EzEmailWriteService {
      * 추후 필요한 값이 많아지면, String userMail, int tenantId 대신 LoginVO loginVO, OrganUserVO userInfo 해도 됨.
      */
     @Override
-    public void setOverwriteMailOptions(MailWriteProcessVO writevo, String userMail, int tenantId) throws Exception {
-        // from
-        setFromAddressHtml(writevo, userMail, tenantId);
+    public void setOverwriteMailOptions(MailWriteProcessVO writevo, String userMail, int tenantId, String companyId) throws Exception {
+        // from Address list - alias메일주소, 공용배포그룹주소
+        String useFromAddress = StringUtils.defaultIfBlank(ezCommonService.getTenantConfig("Use_FromAddress", tenantId), "NO");
+        String useDistributionSender = StringUtils.defaultIfBlank(ezCommonService.getCompanyConfig(tenantId, companyId, "useDistributionSender"), "NO");
+
+        if ("YES".equalsIgnoreCase(useFromAddress) || "YES".equalsIgnoreCase(useDistributionSender)) {
+            setFromAddress(writevo, userMail, tenantId, companyId, useFromAddress, useDistributionSender);
+        }
     }
 
-    private void setFromAddressHtml(MailWriteProcessVO writevo, String userMail, int tenantId) throws Exception {
-        String fromAddressHtml = "";
-        String useFromAddress = StringUtils.defaultIfBlank(ezCommonService.getTenantConfig("Use_FromAddress", tenantId), "NO");
+    private void setFromAddress(MailWriteProcessVO writevo, String userMail, int tenantId, String companyId, String useFromAddress, String useDistributionSender) throws Exception {
+        //String fromAddressHtml = "";
+        List<String[]> fromAddressList = new ArrayList<>();
+        MailWriteOptionsVO options = writevo.getMailWriteOptionsVO();
+        
+        fromAddressList = ezEmailService.getAliasAddress(writevo.getMailId(), tenantId, useFromAddress, useDistributionSender);
+        
+        // 공용배포그룹주소 사용만 YES인 경우에는 primary mail 주소를 jgw에서 가져오지 않기 때문에 추가 함
+        if ("NO".equalsIgnoreCase(useFromAddress) && "YES".equalsIgnoreCase(useDistributionSender)) {
+            fromAddressList.add(0, new String[]{userMail,"",""});
+        }
 
-        if ("YES".equalsIgnoreCase(useFromAddress)) {
-            List<String[]> fromAddressList = ezEmailService.getAliasAddress(writevo.getMailId(), tenantId);
-
-            if (fromAddressList.size() < 2) {
-                useFromAddress = "NO";
-            } else {
+        if (fromAddressList.size() < 2) {
+            useFromAddress = "NO";
+            useDistributionSender = "NO";
+        } 
+            /* html을 backend에서 만들어 보내지 않고 frontend에서 처리하는 방식으로 변경하여 주석 처리 함
+            else {
                 StringBuilder sb = new StringBuilder();
                 sb.append("<select id='ex_select' onchange='fromAddressChange(this.value)'>");
 
@@ -1452,11 +1469,12 @@ public class EzEmailWriteServiceImpl implements EzEmailWriteService {
                 sb.append("<label for='ex_select'>" + from + "</label>"); // from: 여기서 사용하고 끝.
 
                 fromAddressHtml = sb.toString();
-            }
-        }
+            }*/
 
-        MailWriteOptionsVO options = writevo.getMailWriteOptionsVO();
         options.setUseFromAddress(useFromAddress);
-        options.setFromAddressHtml(fromAddressHtml);
+        options.setUseDistributionSender(useDistributionSender);
+        options.setFromAddressList(fromAddressList);
+        writevo.setFrom(userMail);
+        
     }
 }

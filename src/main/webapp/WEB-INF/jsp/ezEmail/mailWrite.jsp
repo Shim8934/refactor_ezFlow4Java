@@ -106,8 +106,10 @@
 	    var isPrimary = "${loginInfo.primary}";
 		// userInfo
 	    var g_myname = "${userInfo.displayName}";
+	    var g_sendername = "${userInfo.displayName}";
 	    var g_myemail = "${userInfo.mail}";
 	    var g_from = "${userInfo.mail}";
+	    var from = "${from}";
 	    var g_szUserID = "${userInfo.mailNickName}";
 	    var g_companyID = "${userInfo.physicalDeliveryOfficeName}";
 	    var g_senderinfo = "${userInfo.company}" + ", " + "${userInfo.description}" + ", " + "${userInfo.title}";
@@ -263,6 +265,12 @@
         + "</tr></thead></table></li></a>";
 
 	    window.onload = function () {
+	        // alias, 공용배포그룹 주소로 재전송 시 실제 sender 값 설정
+	        if (["RESEND", "EDIT"].some(cmd => g_cmd.includes(cmd)) && g_from != from) {
+	            var fromAddressElem = document.getElementById("fromAddressList").value;
+	            fromAddressChange(fromAddressElem);
+	        }
+
 	    	/* 2025-01-08 홍승비 - 전자결재 메일 발송 > 웹한글문서 메일로 전송 시, 웹한글기안기의 로딩 순서를 보장하도록 수정 */
 	    	// (BuildWebHwpCtrl() 함수 호출부를 Editor_Complete() 내부로 변경)
 	    	
@@ -1501,7 +1509,11 @@
 	    }
 		
 	    function fromAddressChange(val) {
-	    	g_from = val;
+	    	//g_from = val;
+	    	const lastIndex = val.lastIndexOf("||;");
+            
+            g_sendername = lastIndex == 0 ? g_myname : val.substring(0, lastIndex);
+            g_from = val.substring(lastIndex + 3).trim();
 	    }
 	    	    
 	    function GetDocumentInfo_DotNet(DocID, DocHref, ImagCnt, Target, docType) {
@@ -2380,15 +2392,19 @@
 	        <tr>
 	            <td>
 	                <table id="infoTable" class="popuplist" style="width:100%">
-	                	<c:if test="${shareId == null and options.useFromAddress == 'YES'}">
+	                	<c:if test="${shareId == null and (options.useFromAddress == 'YES' or options.useDistributionSender == 'YES')}">
 		                	<tr id="MsgFrom_TR">
 		                		<th style="text-align: center;">
 		                        	<span style="width: 50px;"><spring:message code='ezEmail.lhm30' /></span>
 		                        </th>
 		                        <td colspan="3">
-		                        	<div class="selectbox">
-		                        		${options.fromAddressHtml}
-		                        	</div>
+		                        	<select id="fromAddressList" style="width: 100%" onchange="fromAddressChange(this.value);">
+                                        <c:forEach var="alias" items="${fromAddressList}">
+                                            <option value="${alias[2]}||;${alias[0]}" ${alias[0].equals(from) ? 'selected="selected"' : ''}>
+                                                ${alias[2]} ${alias[0]}
+                                            </option>
+                                        </c:forEach>
+                                    </select>
 		                        </td>
 		                	</tr>
 	                	</c:if>

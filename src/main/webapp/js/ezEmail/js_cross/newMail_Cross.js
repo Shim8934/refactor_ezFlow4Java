@@ -951,7 +951,7 @@ function Save_onClick_Complete(ReturnValue) {
                 createNodeAndInsertText(xmlDoc, rootNode, "TEXTBODY", document.getElementById("plainTextArea").value);
             else
                 createNodeAndInsertText(xmlDoc, rootNode, "TEXTBODY", message.GetEditorTextContent().replace(regex, " "));
-            createNodeAndInsertText(xmlDoc, rootNode, "FROM", "\"" + g_myname + "\" <" + g_from + ">");
+            createNodeAndInsertText(xmlDoc, rootNode, "FROM", "\"" + g_sendername + "\" <" + g_from + ">");
             createNodeAndInsertText(xmlDoc, rootNode, "SENSITIVITY", m_rgParams4PostOption["postType"]);
             createNodeAndInsertText(xmlDoc, rootNode, "REPLYSENDTIME", m_rgParams4PostOption["replySendTime"]);
             createNodeAndInsertText(xmlDoc, rootNode, "REPLYREADTIME", m_rgParams4PostOption["replyReadTime"]);

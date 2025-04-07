@@ -279,13 +279,6 @@
 		    		$('#liReSend').css('display', 'block');
 		    	}
 		    	
-		    	// 2024-08-13 안읽은 메일 일괄삭제 기능은 태그 지원 안함
-		    	// 태그는 기본적으로 읽은 메일이며, 중요도 높은 메일로 본 기능과 연관성이 매우 낮음
-		    	// 하지만 스팩 변경의 경우를 대비하여 function과 backend에는 코드 남겨둠
-		    	if (g_foldertype === "tag") {
-		    	    document.getElementById("trashUnreadBtn").style.display = "none";
-		    	}
-		    	
 		    	if (g_moveUrl == 'receiveChk') {
 		    		document.getElementById("reply").style.display = "none";
 		    		document.getElementById("replyMenu").style.display = "none";
@@ -312,6 +305,10 @@
 		        CurrenWidth = document.body.clientWidth;
 		        
 		        switch (g_foldertype) {
+		            case "allMail":
+		                trashUnreadBtn.style.display = 'none';
+		                importBtn.style.display = 'none';
+		                break;
 		            case "sent":
 		                receivecheck.style.display = "";
 		                reply.style.display = 'none';
@@ -344,6 +341,11 @@
 		            	break;
 					case "tag":
 						p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFileTagTable.xml";
+						// 2024-08-13 안읽은 메일 일괄삭제 기능은 태그 지원 안함
+                        // 태그는 기본적으로 읽은 메일이며, 중요도 높은 메일로 본 기능과 연관성이 매우 낮음
+                        // 하지만 스팩 변경의 경우를 대비하여 function과 backend에는 코드 남겨둠
+						document.getElementById("trashUnreadBtn").style.display = "none";
+						importBtn.style.display = 'none';
 						break;
 		        }
 		        
@@ -1967,7 +1969,7 @@
 				  <span class="view_icon"><img src="/images/ImgIcon/view_more.png"></span>
 				  <ul class="layer_select">
 					  <li id="unread_stat" onClick="Read_StatusChange('U');"><spring:message code="ezEmail.t99000007" /></li>
-					  <li id="EmailPCSave" onClick="mail_export();"><spring:message code="ezEmail.t378" /></li>
+					  <li id="EmailPCSave" onClick="g_moveUrl === 'allMail' ? mail_export_exec(true) : mail_export()"><spring:message code="ezEmail.t378" /></li>
 					  <li id="importBtn" onClick="mail_import_onclick();"><spring:message code="ezEmail.t407" /></li>
 					  <li id="btnReject" onClick="reject_onclick()" style="display:none"><spring:message code="ezEmail.t270" /></li>
 					  <c:if test="${useMailConfirm == 'YES'}">

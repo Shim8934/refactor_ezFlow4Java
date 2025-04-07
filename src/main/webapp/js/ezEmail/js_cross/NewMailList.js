@@ -226,6 +226,7 @@ function MakeListInfoHTML(ConentObject) {
                 var p_Attach = SelectSingleNodeValue(XmlRows[Cnt], "attach");
                 var p_Sender = SelectSingleNodeValue(XmlRows[Cnt], "sender");
                 var p_Msgto = SelectSingleNodeValue(XmlRows[Cnt], "msgto");
+                var p_mailBoxName = SelectSingleNodeValue(XmlRows[Cnt], "mailBoxName") ? "[" + SelectSingleNodeValue(XmlRows[Cnt], "mailBoxName") + "] " : "";
                 var p_Subject = SelectSingleNodeValue(XmlRows[Cnt], "subject");
                 var p_ReceiveDT = SelectSingleNodeValue(XmlRows[Cnt], "receivedt");
                 var p_Size = SelectSingleNodeValue(XmlRows[Cnt], "size");
@@ -381,10 +382,12 @@ function MakeListInfoHTML(ConentObject) {
 
                             if (useMailNewWindow == "YES") {
                             	if (g_bdraft == true) {
-	                            	p_Subject = p_Subject
+	                            	p_Subject = "<span style='color: #999;'>" + p_mailBoxName + "</span>" + p_Subject
 	                            } else {
-	                            	p_Subject = "<div id = \"subject\"style=\" cursor:pointer; max-width:85%; display:inline-block;overflow:hidden; text-overflow: ellipsis;\">" + p_Subject + "</div>&nbsp;&nbsp;<img class='mailpopupicon' src=\"/images/email/popup_icon.gif\" width=\"12px\"  onclick = \"mailOpenPopup(this, event)\" />";
+	                            	p_Subject = "<div id = \"subject\"style=\" cursor:pointer; max-width:85%; display:inline-block;overflow:hidden; text-overflow: ellipsis;\">" + "<span style='color: #999;'>" + p_mailBoxName + "</span>" + p_Subject + "</div>&nbsp;&nbsp;<img class='mailpopupicon' src=\"/images/email/popup_icon.gif\" width=\"12px\"  onclick = \"mailOpenPopup(this, event)\" />";
 	                            }
+                            } else {
+                                p_Subject = "<span style='color: #999;'>" + p_mailBoxName + "</span>" + p_Subject
                             }
                             
                             _TDColum.innerHTML = p_Subject;

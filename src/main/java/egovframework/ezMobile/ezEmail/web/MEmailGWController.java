@@ -80,6 +80,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
 import com.google.gson.JsonElement;
 import egovframework.ezEKP.ezEmail.util.EmailImportance;
@@ -259,7 +260,20 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			Locale locale = new Locale(ld);
 			
 			logger.debug("locale : ," + locale.getDisplayLanguage());
-			
+
+			// 전체메일
+			if (StringUtils.isBlank(folderId)) {
+				JSONObject folderAll = new JSONObject();
+				String displayName = egovMessageSource.getMessage("email.allmail", locale);
+
+				folderAll.put("name", displayName);
+				folderAll.put("fullName", "ALLMAIL");
+				folderAll.put("unReadCount", "");
+				folderAll.put("hasSub", false);
+
+				mailFolderList.add(folderAll);
+			}
+			// 편지함
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 			
@@ -386,6 +400,18 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 				String useDefaultFoldersForLangOnly = ezCommonService.getTenantConfig("UseDefaultFoldersForLangOnly", info.getTenantId());
 				boolean isUseDefaultFoldersForLangOnly = useDefaultFoldersForLangOnly.equals("YES") ? true : false;
 
+				// 전체메일
+				JSONObject folderAll = new JSONObject();
+				String displayNameAll = egovMessageSource.getMessage("email.allmail", locale);
+
+				folderAll.put("name", displayNameAll);
+				folderAll.put("fullName", "ALLMAIL");
+				folderAll.put("unReadCount", "");
+				folderAll.put("hasSub", false);
+
+				mailFolderList.add(folderAll);
+				
+				// 편지함
 				if (ia != null){
 					subMailFolder = ia.getTopLevelFolders(true, isUseDefaultFoldersForLangOnly);
 
@@ -672,8 +698,9 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 				int mailboxMailCount = 0;
 				int mailboxUnreadMailCount = 0;				
 				boolean includeContent = false;
+				String folderIdParam = "ALLMAIL".equalsIgnoreCase(folderId) ? "INBOX////Personal folder" : folderId; // 전체메일은 받은편지함과 그 하위, 개인편지함과 그 하위의 모든 메일함에서 메일을 가져온다.
 
-				List<Map<String, String>> mailList = ezEmailUtil.searchFolderUsingRDBOnly(userEmail, folderId, new String[]{searchField}, new String[]{searchValue}, sd, ed, searchSubFolder, 
+				List<Map<String, String>> mailList = ezEmailUtil.searchFolderUsingRDBOnly(userEmail, folderIdParam, new String[]{searchField}, new String[]{searchValue}, sd, ed, searchSubFolder, 
 						isUnreadOnly, isImportantOnly, "receivedDate", false, startNo, listCount, true, extraMap, info.getTenantId(), includeContent, tagName);
 				
 				totalCount = (int)extraMap.get("totalCount");
@@ -691,6 +718,12 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 					messageJson.put("href", mailId);
 					messageJson.put("folderId", mailIdArr[0]);
 					messageJson.put("messageId", mailIdArr[1]);
+					
+					// 각 메일별로 편지함 이름을 담는다.
+					String folderNameEach = mailIdArr[0].matches(".*\\..*")
+							? mailIdArr[0].split("\\.")[mailIdArr[0].split("\\.").length - 1]
+							: ezEmailUtil.getDisplayNameFromFolderId(mailIdArr[0], locale);
+					messageJson.put("folderName", folderNameEach);
 
 					// importance
 					int importance = 1;
@@ -1112,6 +1145,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 		IMAPAccess ia = null;
 		
 		try {
+			String orgFromEmail = "";
 			String from = "";
 			String to = "";
 			String cc = "";
@@ -1248,6 +1282,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 		        	if (folderPath.equals(draftsFolderName) && cmd.equals("EDIT")) {		        		
 		        		if (orgMessage.getFrom() != null && orgMessage.getFrom()[0] != null) {
 		        			from = ((InternetAddress)orgMessage.getFrom()[0]).getAddress();
+							orgFromEmail = from;
 		        		}
 		        		
 						// retrieve the TO addresses from the message.
@@ -1298,7 +1333,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 		        	} else if (folderPath.equals(sentFolderName) && cmd.equals("RESEND") && !msgto.equals("")) {
 		        		//임시보관함에 메시지 임시저장
 		        		SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
-		        				userEmail, password);
+		        				userEmail, password, info.getEmail());
 		        		MimeMessage resendMessage = sa.createMimeMessage();
 		        		
 		        		resendMessage.setFlag(Flags.Flag.SEEN, true);
@@ -1344,11 +1379,13 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 								to = ezEmailUtil.getStringListOfAddresses(new Address[]{address}, true);
 								break;
 		        			} else {
-                                // 재작성시 메세지에서 수신인을 뽑아내어 넣어준다.
+                                // 재작성시 메세지에서 발신인, 수신인을 뽑아내어 넣어준다.
                                 if (msgto.equals("")) {
                                     addresses = orgMessage.getRecipients(Message.RecipientType.TO);
                                     String[] rawHeaders = orgMessage.getHeader("From");
                                     String rawHeader = rawHeaders != null ? rawHeaders[0] : "";
+									orgFromEmail = rawHeader;
+
                                     boolean isPureAscii = ezEmailUtil.isPureAscii(rawHeader);
 
                                     if (isPureAscii) {
@@ -1725,12 +1762,43 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 				orgFolder.close(true);
 			}
 			
-			String useFromAddress = ezCommonService.getTenantConfig("Use_FromAddress", info.getTenantId());
-			String fromAddressHtml = "";
+			// 발신가능한 메일주소 리스트
+			String useFromAddress = StringUtils.defaultIfBlank(ezCommonService.getTenantConfig("Use_FromAddress", info.getTenantId()), "NO");
+			String useDistributionSender = StringUtils.defaultIfBlank(ezCommonService.getCompanyConfig(info.getTenantId(), info.getCompanyId(), "useDistributionSender"), "NO");
+			JSONArray jsonList = new JSONArray();
+
+			if ("YES".equalsIgnoreCase(useFromAddress) || "YES".equalsIgnoreCase(useDistributionSender)) {
+				List<String[]> fromAddressList = ezEmailService.getAliasAddress(info.getUserId(), info.getTenantId(), useFromAddress, useDistributionSender);
+
+				// 공용배포그룹주소 사용만 YES인 경우에는 primary mail 주소를 jgw에서 가져오지 않기 때문에 추가 함
+				if ("NO".equalsIgnoreCase(useFromAddress) && "YES".equalsIgnoreCase(useDistributionSender)) {
+					fromAddressList.add(0, new String[]{info.getEmail(),"",""});
+				}
+
+				// 모바일에서 primary로 select할 수 있도록 type 값 변경 : primary, alias
+				for (String[] address : fromAddressList) {
+					if (info.getEmail().trim().equals(address[0])) {
+						address[1] = "p"; //primary
+					} else {
+						address[1] = "a"; //alias
+					}
+				}
+
+				// jsonList에 key:value 형태로 입력
+				for (String[] address : fromAddressList) {
+					JSONObject json = new JSONObject();
+					json.put("email", address[0]);
+					json.put("type", address[1]);
+					json.put("name", address[2]);
+					jsonList.add(json);
+				}
+			}
+			
+			/*String fromAddressHtml = "";
 			
 			if (useFromAddress != null) {
-				if (useFromAddress.equals("YES")) {
-					List<String[]> fromAddressList = ezEmailService.getAliasAddress(info.getUserId(), info.getTenantId());
+				if ("YES".equalsIgnoreCase(useFromAddress) || "YES".equalsIgnoreCase(useDistributionSender)) {
+					List<String[]> fromAddressList = ezEmailService.getAliasAddress(info.getUserId(), info.getTenantId(), useFromAddress, useDistributionSender);
 					
 					if (fromAddressList.size() < 2) {
 						useFromAddress = "NO";
@@ -1767,7 +1835,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 				}
 			} else {
 				useFromAddress = "NO";
-			}
+			}*/
 			
 			String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", info.getTenantId());
 			
@@ -1803,7 +1871,9 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			signValue = convertFilerootToMobileDownloadURL(signValue);
 
 			JSONObject data = new JSONObject();
+	        data.put("orgFromEmail",orgFromEmail);
 	        data.put("fromEmail",fromEmail);
+	        data.put("fromAddressList",jsonList);
 			data.put("to", to);
 			data.put("cc", cc);
 			data.put("bcc", bcc);
@@ -1825,7 +1895,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			data.put("newWindowId", newWindowId);
 			data.put("serverName", serverName);
 			data.put("useFromAddress", useFromAddress);
-			data.put("fromAddressHtml", fromAddressHtml);
+			//data.put("fromAddressHtml", fromAddressHtml);
 			data.put("mailAttachLimit", mailAttachLimit);
 			data.put("useOnlyInnerMail", useOnlyInnerMail);
 			data.put("useReceiptExternal", useReceiptExternal);
@@ -2673,7 +2743,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 				// 일반 첨부 파일이 있는 경우
 				if (hasAttachFile) {
 					SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
-							userEmail, password);
+							userEmail, password, info.getEmail());
 					
 					// 첨부파일들을 추가하여 임시 보관함에 저장할 메시지를 생성한다.
 					newMessage = sa.createMimeMessage();
@@ -2925,7 +2995,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 
 				if (rows != null && rows.item(0) != null) {
 					SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
-							userEmail, password);
+							userEmail, password, info.getEmail());
 
 					IMAPAccess ia = null;
 					try {
@@ -3275,7 +3345,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			}
 			
 			SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
-					userEmail, password);
+					userEmail, password, info.getEmail());
 		
 			String pResult = null;
 			IMAPAccess ia = null;
@@ -4673,7 +4743,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 							OrganUserVO userVO = ezOrganAdminService.getUserInfo(info.getUserId(), info.getLang(), info.getTenantId());
 							
 							SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
-									userEmail, password);
+									userEmail, password, info.getEmail());
 							
 							ezEmailMailReadController.processAutoMDN(sa, message, userEmail, userVO.getDisplayName(), info.getTenantId());
 						} else {
@@ -5136,17 +5206,21 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 	 * 모바일 G/W 이메일 [PUT] 읽은 상태 변경
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezemail/folders/{folderId}/mails/{messageId}/users/{userId:.+}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
-	public Object mMailStatusChange(HttpServletRequest request, @PathVariable String folderId, @PathVariable String messageId, @PathVariable String userId,
+	@RequestMapping(value="/mobile/ezemail/users/{userId:.+}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public Object mMailStatusChange(HttpServletRequest request, @PathVariable String userId,
 			@RequestBody JSONObject jsonobject) throws Exception {
-		logger.debug("MOBILE G/W MAIL mMailStatusChange started.");
-		logger.debug("folderId=" + folderId + ",messageId=" + messageId + ",userId=" + userId);
+		logger.debug("MOBILE G/W MAIL mMailStatusChange started. userId={}", userId);
 		
 		JSONObject result = new JSONObject();
 		
 		IMAPAccess ia = null;
 		
-		try {			
+		try {
+			String messageId = (String) jsonobject.get("mails");
+			String[] folderAndMsgIdArray = messageId.split(",");
+			Map<String, long[]> folderIdUids = ezEmailUtil.getFolderIdUid(folderAndMsgIdArray);
+			
+			/* 전체메일 - 다중편지함 지원으로 ezEmailUtil.getFolderIdUid 사용, 아래 주석
 			String uniqueId =  messageId;
 						
 			String[] MsgIdArray = uniqueId.split(",");		
@@ -5154,7 +5228,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			
 			for (int i = 0; i < MsgIdArray.length; i++) {
 				uids[i] = Long.parseLong(MsgIdArray[i]);
-			}
+			}*/
 		
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
@@ -5170,25 +5244,28 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			String isRead = (String) jsonobject.get("isRead");
 			//TRUE면 읽은 상태로  FALSE면 읽지 않은 상태로 변경.			
 	
-			logger.debug("folderId=" + folderId);		
+			//logger.debug("folderId=" + folderId);		
 								
 			try {
 				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 						userEmail, password, egovMessageSource, locale, ezEmailUtil);
 
 				if (ia != null){
-					IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderId);
-					sourceFolder.open(Folder.READ_WRITE);
+					for (String folderId : folderIdUids.keySet()) {
+						long[] uids = folderIdUids.get(folderId);
+						IMAPFolder sourceFolder = (IMAPFolder) ia.getFolder(folderId);
+						sourceFolder.open(Folder.READ_WRITE);
 
-					Message[] msgs = sourceFolder.getMessagesByUID(uids);
+						Message[] msgs = sourceFolder.getMessagesByUID(uids);
 
-					if (isRead.equals("TRUE")) {
-						sourceFolder.setFlags(msgs, new Flags(Flags.Flag.SEEN), true);
-					} else {
-						sourceFolder.setFlags(msgs, new Flags(Flags.Flag.SEEN), false);
+						if (isRead.equals("TRUE")) {
+							sourceFolder.setFlags(msgs, new Flags(Flags.Flag.SEEN), true);
+						} else {
+							sourceFolder.setFlags(msgs, new Flags(Flags.Flag.SEEN), false);
+						}
+
+						sourceFolder.close(true);
 					}
-
-					sourceFolder.close(true);
 				}
 				
 				result.put("status", "ok");
@@ -5219,10 +5296,9 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 	 * @return 
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezemail/folders/{folderId}/mails/{messageId}/users/{userId:.+}", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
-	public Object mMailDelete(HttpServletRequest request, @PathVariable String folderId, @PathVariable String messageId, @PathVariable String userId) throws Exception {
-		logger.debug("MOBILE G/W MAIL mMailDelete started.");
-		logger.debug("folderId=" + folderId + ",messageId=" + messageId + ",userId=" + userId);
+	@RequestMapping(value="/mobile/ezemail/users/{userId:.+}/delete", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
+	public Object mMailDelete(HttpServletRequest request, @PathVariable String userId, @RequestBody JSONObject jsonObject) throws Exception {
+		logger.debug("MOBILE G/W MAIL mMailDelete started. userId={}", userId);
 			
 		JSONObject result = new JSONObject();
 		
@@ -5230,7 +5306,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 		
 		// get user credentials
 		try {			
-			folderId = URLDecoder.decode(folderId, "UTF-8");
+			//folderId = URLDecoder.decode(folderId, "UTF-8");
 			
 			boolean permanentlyDelete = false;
 
@@ -5239,52 +5315,67 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
 			String userEmail = info.getUserId() + "@" + domainName;
 			String password = jspw;
+			String mailId = "";
 		
 			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
 			Locale locale = new Locale(ld);
 			
-			if (folderId.equals(ezEmailUtil.getTrashFolderId(locale))) {
+			/*if (folderId.equals(ezEmailUtil.getTrashFolderId(locale))) {
 				permanentlyDelete = true;
+			}*/
+
+			if (jsonObject.get("mails") != null) {
+				mailId = (String) jsonObject.get("mails");
 			}
 			
-			String[] MsgIdArray = messageId.split(",");		
+			String[] folderAndMsgIdArray = mailId.split(",");
+			Map<String, long[]> folderIdUids = ezEmailUtil.getFolderIdUid(folderAndMsgIdArray);
+			
+			/*String[] MsgIdArray = messageId.split(",");		
 			long[] uids = new long[MsgIdArray.length];
 			
 			for (int i = 0; i < MsgIdArray.length; i++) {
 				uids[i] = Long.parseLong(MsgIdArray[i]);
 			}
 		
-			logger.debug("folderId=" + folderId);
+			logger.debug("folderId=" + folderId);*/
 
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 						
-			if (ia != null){
-				IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderId);
-				sourceFolder.open(Folder.READ_WRITE);
+			if (ia != null) {
+				for (String folderId : folderIdUids.keySet()) {
+					long[] uids = folderIdUids.get(folderId);
+					IMAPFolder sourceFolder = (IMAPFolder) ia.getFolder(folderId);
+					sourceFolder.open(Folder.READ_WRITE);
 
-				Message[] deleteMsgs = null;
+					if (folderId.equals(ezEmailUtil.getTrashFolderId(locale))) {
+						permanentlyDelete = true;
+					}
 
-				deleteMsgs = sourceFolder.getMessagesByUID(uids);
+					Message[] deleteMsgs = null;
 
-				String useImapMoveCommand = ezCommonService.getTenantConfig("useImapMoveCommand", info.getTenantId());
-				IMAPFolder deletedFolder = (IMAPFolder)ia.getFolder(ezEmailUtil.getTrashFolderId(locale));
+					deleteMsgs = sourceFolder.getMessagesByUID(uids);
 
-				if (useImapMoveCommand.equals("YES")) {
-					if (!permanentlyDelete) {
-						sourceFolder.moveUIDMessages(deleteMsgs, deletedFolder);
+					String useImapMoveCommand = ezCommonService.getTenantConfig("useImapMoveCommand", info.getTenantId());
+					IMAPFolder deletedFolder = (IMAPFolder) ia.getFolder(ezEmailUtil.getTrashFolderId(locale));
+
+					if (useImapMoveCommand.equals("YES")) {
+						if (!permanentlyDelete) {
+							sourceFolder.moveUIDMessages(deleteMsgs, deletedFolder);
+						} else {
+							sourceFolder.setFlags(deleteMsgs, new Flags(Flags.Flag.DELETED), true);
+						}
 					} else {
+						if (!permanentlyDelete) {
+							sourceFolder.copyUIDMessages(deleteMsgs, deletedFolder);
+						}
+
 						sourceFolder.setFlags(deleteMsgs, new Flags(Flags.Flag.DELETED), true);
 					}
-				} else {
-					if (!permanentlyDelete) {
-						sourceFolder.copyUIDMessages(deleteMsgs, deletedFolder);
-					}
 
-					sourceFolder.setFlags(deleteMsgs, new Flags(Flags.Flag.DELETED), true);
+					sourceFolder.close(true);
 				}
-
-				sourceFolder.close(true);
 			}
 							
 			result.put("status", "ok");
@@ -5313,16 +5404,16 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezemail/reportHackingMail/folders/{folderId}/mails/{messageId}/users/{userId:.+}", method= RequestMethod.POST, produces="application/json;charset=utf-8")
-	public Object reportHackingMail(HttpServletRequest request, @RequestBody Map<String, String> requestBody, @PathVariable String folderId, @PathVariable String messageId, @PathVariable String userId) throws Exception {
-		logger.debug("MOBILE G/W MAIL reportHackingMail started.");
+	@RequestMapping(value="/mobile/ezemail/reportHackingMail/users/{userId:.+}", method= RequestMethod.POST, produces="application/json;charset=utf-8")
+	public Object reportHackingMail(HttpServletRequest request, @RequestBody Map<String, String> requestBody, @PathVariable String userId) throws Exception {
+		logger.debug("MOBILE G/W MAIL reportHackingMail started. userId={}", userId);
 		
-		logger.debug("folderId=" + folderId + ",messageId=" + messageId + ",userId=" + userId);
+		//logger.debug("folderId=" + folderId + ",messageId=" + messageId + ",userId=" + userId);
 		JSONObject result = new JSONObject();
 		IMAPAccess ia = null;
 
 		try {
-			folderId = URLDecoder.decode(folderId, "UTF-8");
+			//folderId = URLDecoder.decode(folderId, "UTF-8");
 			
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
@@ -5334,165 +5425,173 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			Locale locale = new Locale(ld);
 			
 			String reportMessage = (String) Optional.ofNullable(requestBody.get("reportMessage")).orElse((""));
-			
+			String mailId = (String) Optional.ofNullable(requestBody.get("mailId")).orElse((""));
+
+			String[] folderAndMsgIdArray = mailId.split(",");
+			Map<String, long[]> folderIdUids = ezEmailUtil.getFolderIdUid(folderAndMsgIdArray);
+
+			/* 전체메일 - 다중편지함 지원으로 ezEmailUtil.getFolderIdUid 사용, 아래 주석
 			String[] MsgIdArray = messageId.split(",");
 			long[] uids = new long[MsgIdArray.length];
 
 			for (int i = 0; i < MsgIdArray.length; i++) {
 				uids[i] = Long.parseLong(MsgIdArray[i]);
-			}
+			}*/
 			
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 
 			if (ia != null) {
-				IMAPFolder sourceFolder = (IMAPFolder) ia.getFolder(folderId);
-				sourceFolder.open(Folder.READ_WRITE);
-				
-				//관리자 계정으로 발송 로직 시작
-				//From 
-				InternetAddress from = new InternetAddress();
-				from.setPersonal(info.getUserName(), "UTF-8");
-				from.setAddress(info.getEmail());
-				
-				String adminID = ezCommonService.getTenantConfig("HackingAdminID", info.getTenantId());
-				
-				String adminIDAddress = null;
-				String adminIDDomain = null;
-				OrganUserVO adminVO = null;
-				
-				//To
-				InternetAddress to = new InternetAddress();
-				
-				if (adminID.contains("@")) {
-					to.setPersonal(adminID, "UTF-8");
-					to.setAddress(adminID);
-				} else {
-					adminVO = ezOrganService.getUserInfo(adminID, info.getLang(), info.getTenantId());
-					if(adminVO != null){
-						to.setPersonal(adminVO.getDisplayName(), "UTF-8");
-						to.setAddress(adminVO.getMail());
-					}
-				}
-				
-				for (int i = 0; i < uids.length; i++) {
-					Message message = sourceFolder.getMessageByUID(uids[i]);
-					
-					String subject = "[" + egovMessageSource.getMessage("ezEmail.zno000", locale) + "]" + message.getSubject();
-					
-					//해킹 의심메일 송신자
-					Address[] arrFroms = message.getFrom();
-					String fromStr = ((InternetAddress)arrFroms[0]).getAddress();
-					
-					//해킹 의심메일 수신일
-					Date receivedDate = message.getReceivedDate();
-					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-					sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-					String receivedDateStr = sdf.format(receivedDate);
-					receivedDateStr = commonUtil.getDateStringInUTC(receivedDateStr, info.getOffSet(), false);
+				for (String folderId : folderIdUids.keySet()) {
+					long[] uids = folderIdUids.get(folderId);
+					IMAPFolder sourceFolder = (IMAPFolder) ia.getFolder(folderId);
+					sourceFolder.open(Folder.READ_WRITE);
 
-					String content = " <table cellpadding='0' cellspacing='0' style='width:100%;margin:0;padding:0;border-bottom: 1px solid #f3f3f3; padding-bottom: 10px;'>"
-							+ "		<tbody>";
-					content += "<tr><td width='70' style='padding-bottom:9px;font-size:14px;color:#696969; vertical-align: top;'>"
-							+ egovMessageSource.getMessage("ezEmail.t707", locale)
-							+ "</td>"
-							+ "<td style='padding-bottom:9px;font-size:14px; color:#000;'>"
-							+ message.getSubject()
-							+ "</td></tr>";
-					content += " <tr><td width='70' style='padding-bottom:9px;font-size:14px; color:#696969; vertical-align: top;'>"
-							+ egovMessageSource.getMessage("ezEmail.t656", locale)
-							+ "</td>"
-							+ "<td style='padding-bottom:9px;font-size:14px;color:#000;'>"
-							+ fromStr
-							+ "</td></tr>";
-					content += "<tr><td width='70' style='padding-bottom:9px;font-size:14px; color:#696969; vertical-align: top;'>"
-							+ egovMessageSource.getMessage("ezEmail.t657", locale)
-							+ "</td>"
-							+ "<td style='padding-bottom:9px;font-size:14px;color:#000;vertical-align:top'>"
-							+ receivedDateStr
-							+ "</td></tr>";
-					content += "</tbody></table>";
-					content += "<div class='mail_txtArea' style='margin-top: 15px; font-size: 14px;'>"
-							+ reportMessage
-							+ "</div>";
-					
-					// 해킹의심메일 .eml 첨부
-					String mailSubject = ezEmailUtil.getSubject(message);
+					//관리자 계정으로 발송 로직 시작
+					//From 
+					InternetAddress from = new InternetAddress();
+					from.setPersonal(info.getUserName(), "UTF-8");
+					from.setAddress(info.getEmail());
 
-					if (mailSubject.trim().equals("")) {
-						mailSubject = egovMessageSource.getMessage("ezEmail.kms03", locale);
-					}
+					String adminID = ezCommonService.getTenantConfig("HackingAdminID", info.getTenantId());
 
-					String senderAddress = ezEmailUtil.getFromEmailAddressOfMessage(message);
+					String adminIDAddress = null;
+					String adminIDDomain = null;
+					OrganUserVO adminVO = null;
 
-					if  (senderAddress.trim().equals("")) {
-						senderAddress = egovMessageSource.getMessage("ezQuestion.t56", locale);
-					}
+					//To
+					InternetAddress to = new InternetAddress();
 
-					String senderName = ezEmailUtil.getFromNameOrAddressOfMessage(message);
-
-					if (senderName.trim().equals("")) {
-						senderName = egovMessageSource.getMessage("ezQuestion.t56", locale);
-					}
-
-					Date sentDate = message.getSentDate();
-					String dateStrExceptTime = "";
-
-					if (sentDate == null) {
-						dateStrExceptTime = egovMessageSource.getMessage("ezQuestion.t56", locale);
+					if (adminID.contains("@")) {
+						to.setPersonal(adminID, "UTF-8");
+						to.setAddress(adminID);
 					} else {
+						adminVO = ezOrganService.getUserInfo(adminID, info.getLang(), info.getTenantId());
+						if (adminVO != null) {
+							to.setPersonal(adminVO.getDisplayName(), "UTF-8");
+							to.setAddress(adminVO.getMail());
+						}
+					}
+
+					for (int i = 0; i < uids.length; i++) {
+						Message message = sourceFolder.getMessageByUID(uids[i]);
+
+						String subject = "[" + egovMessageSource.getMessage("ezEmail.zno000", locale) + "]" + message.getSubject();
+
+						//해킹 의심메일 송신자
+						Address[] arrFroms = message.getFrom();
+						String fromStr = ((InternetAddress) arrFroms[0]).getAddress();
+
+						//해킹 의심메일 수신일
+						Date receivedDate = message.getReceivedDate();
+						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 						sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-						String sentDateStr = sdf.format(sentDate);
-						sentDateStr = commonUtil.getDateStringInUTC(sentDateStr, info.getOffSet(), false);
-						dateStrExceptTime = sentDateStr.substring(0, 10);
-					}
-					senderName = senderName.replaceAll("[\\\\/:*?\"<>|]", "_").replaceAll("[\\t\\r\\n\\v\\f\\u00a0]", "");
-					mailSubject = subject.replaceAll("[\\\\/:*?\"<>|]", "_").replaceAll("[\\t\\r\\n\\v\\f\\u00a0]", "");
-					String fileName = dateStrExceptTime + "_" + senderName + "_[" + senderAddress + "]_" + mailSubject + ".eml" ;
-					
-					ByteArrayInputStream inputStream = null;
-					ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+						String receivedDateStr = sdf.format(receivedDate);
+						receivedDateStr = commonUtil.getDateStringInUTC(receivedDateStr, info.getOffSet(), false);
 
-					String pReadFlag = "Y";
+						String content = " <table cellpadding='0' cellspacing='0' style='width:100%;margin:0;padding:0;border-bottom: 1px solid #f3f3f3; padding-bottom: 10px;'>"
+								+ "		<tbody>";
+						content += "<tr><td width='70' style='padding-bottom:9px;font-size:14px;color:#696969; vertical-align: top;'>"
+								+ egovMessageSource.getMessage("ezEmail.t707", locale)
+								+ "</td>"
+								+ "<td style='padding-bottom:9px;font-size:14px; color:#000;'>"
+								+ message.getSubject()
+								+ "</td></tr>";
+						content += " <tr><td width='70' style='padding-bottom:9px;font-size:14px; color:#696969; vertical-align: top;'>"
+								+ egovMessageSource.getMessage("ezEmail.t656", locale)
+								+ "</td>"
+								+ "<td style='padding-bottom:9px;font-size:14px;color:#000;'>"
+								+ fromStr
+								+ "</td></tr>";
+						content += "<tr><td width='70' style='padding-bottom:9px;font-size:14px; color:#696969; vertical-align: top;'>"
+								+ egovMessageSource.getMessage("ezEmail.t657", locale)
+								+ "</td>"
+								+ "<td style='padding-bottom:9px;font-size:14px;color:#000;vertical-align:top'>"
+								+ receivedDateStr
+								+ "</td></tr>";
+						content += "</tbody></table>";
+						content += "<div class='mail_txtArea' style='margin-top: 15px; font-size: 14px;'>"
+								+ reportMessage
+								+ "</div>";
 
-					// 선택 된 해킹 의심 메일이 안읽은 메일이면
-					if (!message.isSet(Flags.Flag.SEEN)) {
-						pReadFlag = "N";
-					}
+						// 해킹의심메일 .eml 첨부
+						String mailSubject = ezEmailUtil.getSubject(message);
 
-					try{
-						message.writeTo(outputStream);
-
-						boolean isRead = pReadFlag.equalsIgnoreCase("Y");
-						message.setFlag(Flags.Flag.SEEN, isRead);
-
-						inputStream = new ByteArrayInputStream(outputStream.toByteArray());
-					} catch(IOException e){
-						logger.error(e.getMessage(), e);
-					} finally {
-						if (inputStream != null) {
-							inputStream.close();
+						if (mailSubject.trim().equals("")) {
+							mailSubject = egovMessageSource.getMessage("ezEmail.kms03", locale);
 						}
-						if (outputStream != null) {
-							outputStream.close();
-						}
-					}
-					
-					ezEmailService.sendMail(userEmail, password, info.getLocale(), from,  new InternetAddress[]{to}, null, null, subject, content, false, EmailImportance.NORMAL, fileName, "message/rfc822", inputStream);
-					
-				}
-				// 해킹의심메일 관리자 계정으로 발송 로직 끝
-				
-				// 해당 메일을 사용자의 정크메일 함으로 이동
-				Message [] messages = sourceFolder.getMessagesByUID(uids);
-				IMAPFolder moveFolder = (IMAPFolder)ia.getFolder(ezEmailUtil.getJunkFolderId(info.getLocale()));
-				
-				String useImapMoveCommand = ezCommonService.getTenantConfig("useImapMoveCommand", info.getTenantId());
 
-				if (useImapMoveCommand.equals("YES")) {
-					sourceFolder.moveUIDMessages(messages, moveFolder);
+						String senderAddress = ezEmailUtil.getFromEmailAddressOfMessage(message);
+
+						if (senderAddress.trim().equals("")) {
+							senderAddress = egovMessageSource.getMessage("ezQuestion.t56", locale);
+						}
+
+						String senderName = ezEmailUtil.getFromNameOrAddressOfMessage(message);
+
+						if (senderName.trim().equals("")) {
+							senderName = egovMessageSource.getMessage("ezQuestion.t56", locale);
+						}
+
+						Date sentDate = message.getSentDate();
+						String dateStrExceptTime = "";
+
+						if (sentDate == null) {
+							dateStrExceptTime = egovMessageSource.getMessage("ezQuestion.t56", locale);
+						} else {
+							sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+							String sentDateStr = sdf.format(sentDate);
+							sentDateStr = commonUtil.getDateStringInUTC(sentDateStr, info.getOffSet(), false);
+							dateStrExceptTime = sentDateStr.substring(0, 10);
+						}
+						senderName = senderName.replaceAll("[\\\\/:*?\"<>|]", "_").replaceAll("[\\t\\r\\n\\v\\f\\u00a0]", "");
+						mailSubject = subject.replaceAll("[\\\\/:*?\"<>|]", "_").replaceAll("[\\t\\r\\n\\v\\f\\u00a0]", "");
+						String fileName = dateStrExceptTime + "_" + senderName + "_[" + senderAddress + "]_" + mailSubject + ".eml";
+
+						ByteArrayInputStream inputStream = null;
+						ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+						String pReadFlag = "Y";
+
+						// 선택 된 해킹 의심 메일이 안읽은 메일이면
+						if (!message.isSet(Flags.Flag.SEEN)) {
+							pReadFlag = "N";
+						}
+
+						try {
+							message.writeTo(outputStream);
+
+							boolean isRead = pReadFlag.equalsIgnoreCase("Y");
+							message.setFlag(Flags.Flag.SEEN, isRead);
+
+							inputStream = new ByteArrayInputStream(outputStream.toByteArray());
+						} catch (IOException e) {
+							logger.error(e.getMessage(), e);
+						} finally {
+							if (inputStream != null) {
+								inputStream.close();
+							}
+							if (outputStream != null) {
+								outputStream.close();
+							}
+						}
+
+						ezEmailService.sendMail(userEmail, password, info.getLocale(), from, new InternetAddress[]{to}, null, null, subject, content, false, EmailImportance.NORMAL, fileName, "message/rfc822", inputStream);
+
+					}
+					// 해킹의심메일 관리자 계정으로 발송 로직 끝
+
+					// 해당 메일을 사용자의 정크메일 함으로 이동
+					Message[] messages = sourceFolder.getMessagesByUID(uids);
+					IMAPFolder moveFolder = (IMAPFolder) ia.getFolder(ezEmailUtil.getJunkFolderId(info.getLocale()));
+
+					String useImapMoveCommand = ezCommonService.getTenantConfig("useImapMoveCommand", info.getTenantId());
+
+					if (useImapMoveCommand.equals("YES")) {
+						sourceFolder.moveUIDMessages(messages, moveFolder);
+					}
+					sourceFolder.close(true);
 				}
-				sourceFolder.close(true);
 			}
 			
 			result.put("status", "ok");
@@ -6251,10 +6350,9 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 	 * 메일 책갈피 지정 실행 함수
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezemail/folders/{folderId}/mails/{messageId}/users/{userId:.+}/setFlag", method= RequestMethod.POST, produces="application/json;charset=utf-8")
-	public Object mailSetFlag(HttpServletRequest request, @PathVariable String folderId, @PathVariable String messageId, @PathVariable String userId, @RequestBody JSONObject jsonObject) throws Exception {
-		logger.debug("MOBILE G/W MAIL mailSetFlag started.");
-		logger.debug("folderId=" + folderId + ",messageId=" + messageId + ",userId=" + userId);
+	@RequestMapping(value="/mobile/ezemail/users/{userId:.+}/setFlag", method= RequestMethod.POST, produces="application/json;charset=utf-8")
+	public Object mailSetFlag(HttpServletRequest request, @PathVariable String userId, @RequestBody JSONObject jsonObject) throws Exception {
+		logger.debug("MOBILE G/W MAIL mailSetFlag started. userId={}", userId);
 
 		String returnData = "";
 		
@@ -6263,9 +6361,14 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 	    IMAPAccess ia = null;
 	     
 	    String setCmd = "toggle";
+		String mailId = "";
 		
 		if (jsonObject.get("setCmd") != null) {
 			setCmd = (String) jsonObject.get("setCmd");
+		}
+
+		if (jsonObject.get("mails") != null) {
+			mailId = (String) jsonObject.get("mails");
 		}
 	    
 		try {
@@ -6277,10 +6380,13 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
 			Locale locale = new Locale(ld);
 			
-			logger.debug("userEmail=" + userEmail);
+			logger.debug("mailSetFlag userEmail={}, mailId={}", userEmail, mailId);
 			
-			String uniqueId = messageId;	
+			String uniqueId = mailId;
+			String[] folderAndMsgIdArray = uniqueId.split(",");
+			Map<String, long[]> folderIdUids = ezEmailUtil.getFolderIdUid(folderAndMsgIdArray);
 			
+			/* 전체메일 - 다중편지함 지원으로 ezEmailUtil.getFolderIdUid 사용, 아래 주석
 			long[] uids = null;
 			
 			if (uniqueId.endsWith(",")) {
@@ -6296,38 +6402,41 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 				uids[i] = Long.parseLong(msgId);
 			}
 			
-			logger.debug("folderId=" + folderId + "uniqueId=" + uniqueId);		
+			logger.debug("folderId=" + folderId + "uniqueId=" + uniqueId);	*/	
 
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 				userEmail, password, egovMessageSource, locale, ezEmailUtil);
 				
-			if (ia != null){
-				IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderId);
-				sourceFolder.open(Folder.READ_WRITE);
+			if (ia != null) {
+				for (String folderId : folderIdUids.keySet()) {
+					long[] uids = folderIdUids.get(folderId);
+					IMAPFolder sourceFolder = (IMAPFolder) ia.getFolder(folderId);
+					sourceFolder.open(Folder.READ_WRITE);
 
-				Message[] msgs = sourceFolder.getMessagesByUID(uids);
+					Message[] msgs = sourceFolder.getMessagesByUID(uids);
 
-				for (int i = 0; i < msgs.length; i++) {
-					Message msg = msgs[i];
+					for (int i = 0; i < msgs.length; i++) {
+						Message msg = msgs[i];
 
-					if (setCmd.equals("toggle")) {
-						if (msg.isSet(Flags.Flag.FLAGGED)) {
-							msg.setFlag(Flags.Flag.FLAGGED, false);
-							returnData = "DEL";
-						} else {
+						if (setCmd.equals("toggle")) {
+							if (msg.isSet(Flags.Flag.FLAGGED)) {
+								msg.setFlag(Flags.Flag.FLAGGED, false);
+								returnData = "DEL";
+							} else {
+								msg.setFlag(Flags.Flag.FLAGGED, true);
+								returnData = "NEW";
+							}
+						} else if (setCmd.equals("set")) {
 							msg.setFlag(Flags.Flag.FLAGGED, true);
 							returnData = "NEW";
+						} else if (setCmd.equals("reset")) {
+							msg.setFlag(Flags.Flag.FLAGGED, false);
+							returnData = "DEL";
 						}
-					} else if (setCmd.equals("set")) {
-						msg.setFlag(Flags.Flag.FLAGGED, true);
-						returnData = "NEW";
-					} else if (setCmd.equals("reset")) {
-						msg.setFlag(Flags.Flag.FLAGGED, false);
-						returnData = "DEL";
 					}
-				}
 
-				sourceFolder.close(true);
+					sourceFolder.close(true);
+				}
 			}
 			
 			result.put("status", "ok");
@@ -7846,8 +7955,11 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			}
 			String from = ((InternetAddress)message.getFrom()[0]).getAddress();
 			logger.debug("from=" + from);
-			
-			List<String[]> aliasAddressList = ezEmailService.getAliasAddress(mailId, userInfo.getTenantId());
+
+			String useFromAddress = StringUtils.defaultIfBlank(ezCommonService.getTenantConfig("Use_FromAddress", userInfo.getTenantId()), "NO");
+			String useDistributionSender = StringUtils.defaultIfBlank(ezCommonService.getCompanyConfig(userInfo.getTenantId(), userInfo.getCompanyId(), "useDistributionSender"), "NO");
+
+			List<String[]> aliasAddressList = ezEmailService.getAliasAddress(mailId, userInfo.getTenantId(), useFromAddress, useDistributionSender);
 
 			boolean isUserFrom = false;
 			for (String[] address : aliasAddressList) {
@@ -8258,7 +8370,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 
 			// jgw 서버에서 리스트 받아오기
 			JSONArray array 	= ezEmailService.getApprMailList(tenantId, companyId, type, userCn, lang, start, end, domainName);
-			JSONArray array2 	= ezEmailService.setUTCtoUserTime(array, userInfo.getOffSet());
+			JSONArray array2 	= ezEmailService.setUTCtoUserTime(array, userInfo.getOffSet(), tenantId);
 
 			JSONArray resultArry = new JSONArray();
 			resultArry 			= ezEmailService.setHref(array2);
@@ -8327,7 +8439,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 
 			// jgw 서버에서 리스트 받아오기
 			JSONArray array 	= ezEmailService.getApprMailList(tenantId, companyId, type, userCn, lang, start, end, domainName);
-			JSONArray array2 	= ezEmailService.setUTCtoUserTime(array, userInfo.getOffSet());
+			JSONArray array2 	= ezEmailService.setUTCtoUserTime(array, userInfo.getOffSet(), tenantId);
 			JSONArray array3	= ezEmailService.setHref(array2);
 
 			JSONArray resultArry = new JSONArray();
@@ -8397,7 +8509,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			
 			// jgw 서버에서 리스트 받아오기
 			JSONArray array = ezEmailService.getApprMailList(tenantId, companyId, type, vUserId, lang, start, end, domainName);
-			JSONArray array2 = ezEmailService.setUTCtoUserTime(array, userInfo.getOffSet());
+			JSONArray array2 = ezEmailService.setUTCtoUserTime(array, userInfo.getOffSet(), tenantId);
 			JSONArray array3 = ezEmailService.setApprover(array2, locale);
 
 			JSONArray resultArry = new JSONArray();
@@ -9076,7 +9188,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 							OrganUserVO userVO = ezOrganAdminService.getUserInfo(info.getUserId(), info.getLang(), info.getTenantId());
 							
 							SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
-									userEmail, password);
+									userEmail, password, info.getEmail());
 							
 							ezEmailMailReadController.processAutoMDN(sa, message, userEmail, userVO.getDisplayName(), info.getTenantId());
 						} else {

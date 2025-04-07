@@ -46,7 +46,8 @@
 				switch(idx){
 
 					case 2:
-						url = "/admin/ezEmail/mailDistributionList.do";
+						//url = "/admin/ezEmail/mailDistributionList.do";
+						url = "/admin/ezEmail/mailDistributionMain.do";
 						break;
 					case 3:
 						url = "/admin/ezEmail/mailDefaultQuota.do" ;

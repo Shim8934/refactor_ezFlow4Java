@@ -171,6 +171,24 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		StringBuilder rootFolderXML = new StringBuilder();
 		StringBuilder rootAddressXML = new StringBuilder();
 		
+		// 전체메일
+		try {
+			String displayName = egovMessageSource.getMessage("email.allmail", locale);
+
+			rootFolderXML.append("<node imgidx='1'");
+			rootFolderXML.append(" caption='" + displayName + "'");
+			rootFolderXML.append(" foldername='" + displayName + "'");
+			rootFolderXML.append(" orgBoxName='0'");
+			rootFolderXML.append(" fullcaption='_ALLMAIL'");
+			rootFolderXML.append(" href='allMail'");
+			rootFolderXML.append(" style='font-weight:bold'");
+
+			rootFolderXML.append("></node>");
+		} catch (Exception e) {
+			logger.error("Error get unread message count: " + e.getMessage());
+			logger.error(e.getMessage(), e);
+		}
+		
 		IMAPAccess ia = null;
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
@@ -204,25 +222,25 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 				rootFolderXML.append(" foldername='" + displayName + "'");
 
 				if (folderId.equalsIgnoreCase(ezEmailUtil.getInboxFolderId())) {
-					rootFolderXML.append(" orgBoxName='0'");
+					rootFolderXML.append(" orgBoxName='1'");
 					rootFolderXML.append(" fullcaption='_INBOX'"); //수정
 				} else if (folderId.equalsIgnoreCase(ezEmailUtil.getSentFolderId(locale))) {
-					rootFolderXML.append(" orgBoxName='1'");
+					rootFolderXML.append(" orgBoxName='2'");
 					rootFolderXML.append(" fullcaption='_SENT'"); //수정
 				} else if (folderId.equalsIgnoreCase(ezEmailUtil.getDraftsFolderId(locale))) {
-					rootFolderXML.append(" orgBoxName='2'");
+					rootFolderXML.append(" orgBoxName='3'");
 					rootFolderXML.append(" fullcaption='_DRAFT'"); //수정
 				} else if (folderId.equalsIgnoreCase(ezEmailUtil.getTrashFolderId(locale))) {
-					rootFolderXML.append(" orgBoxName='3'");
+					rootFolderXML.append(" orgBoxName='4'");
 					rootFolderXML.append(" fullcaption='_DELETE'"); //수정
 				} else if (folderId.equalsIgnoreCase(ezEmailUtil.getPersonalFolderId(locale))) {
-					rootFolderXML.append(" orgBoxName='4'");
+					rootFolderXML.append(" orgBoxName='5'");
 					rootFolderXML.append(" fullcaption='_PERSONAL'"); //수정
 				} else if (folderId.equalsIgnoreCase(ezEmailUtil.getJunkFolderId(locale))) {
-					rootFolderXML.append(" orgBoxName='5'");
+					rootFolderXML.append(" orgBoxName='6'");
 					rootFolderXML.append(" fullcaption='_JUNK'"); //수정
 				} else {
-					rootFolderXML.append(" orgBoxName='" + ((j++) + 6) + "'");
+					rootFolderXML.append(" orgBoxName='" + ((j++) + 7) + "'");
 					rootFolderXML.append(" fullcaption='_NONE'"); //수정
 				}
 
@@ -446,6 +464,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
 		String userEmail = loginInfo.getId() + "@" + domainName;
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", loginInfo.getTenantId());
+		String accountId = loginInfo.getId();
 
 		if (useSharedMailbox.equals("YES")) {
 			String shareId = request.getParameter("shareId");
@@ -458,7 +477,8 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 					
 					return "";
 				}
-				
+
+				accountId = shareId;
 				userEmail = shareId + "@" + domainName;
 			}
 		}
@@ -538,6 +558,24 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 						subFolderXML.append("></node>");
 					}
 				} else {
+					if (isSubscribe) {
+						// 전체메일
+						try {
+							String displayName = egovMessageSource.getMessage("email.allmail", locale);
+							subFolderXML.append("<node imgidx='1'");
+							subFolderXML.append(" caption='" + displayName + "'");
+							subFolderXML.append(" foldername='" + displayName + "'");
+							subFolderXML.append(" orgBoxName='0'");
+							subFolderXML.append(" fullcaption='_ALLMAIL'");
+							subFolderXML.append(" href='allMail'");
+
+							subFolderXML.append("></node>");
+						} catch (Exception e) {
+							logger.error("Error get unread message count: " + e.getMessage());
+							logger.error(e.getMessage(), e);
+						}
+					}
+
 					String useDefaultFoldersForLangOnly = ezCommonService.getTenantConfig("UseDefaultFoldersForLangOnly", loginInfo.getTenantId());
 					boolean isUseDefaultFoldersForLangOnly = useDefaultFoldersForLangOnly.equals("YES") ? true : false;
 
@@ -564,25 +602,25 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 						subFolderXML.append(" foldername='" + displayName + "'");
 
 						if (folderId.equalsIgnoreCase(ezEmailUtil.getInboxFolderId())) {
-							subFolderXML.append(" orgBoxName='0'");
+							subFolderXML.append(" orgBoxName='1'");
 							subFolderXML.append(" fullcaption='_INBOX'"); //수정
 						} else if (folderId.equalsIgnoreCase(ezEmailUtil.getSentFolderId(locale))) {
-							subFolderXML.append(" orgBoxName='1'");
+							subFolderXML.append(" orgBoxName='2'");
 							subFolderXML.append(" fullcaption='_SENT'"); //수정
 						} else if (folderId.equalsIgnoreCase(ezEmailUtil.getDraftsFolderId(locale))) {
-							subFolderXML.append(" orgBoxName='2'");
+							subFolderXML.append(" orgBoxName='3'");
 							subFolderXML.append(" fullcaption='_DRAFT'"); //수정
 						} else if (folderId.equalsIgnoreCase(ezEmailUtil.getTrashFolderId(locale))) {
-							subFolderXML.append(" orgBoxName='3'");
+							subFolderXML.append(" orgBoxName='4'");
 							subFolderXML.append(" fullcaption='_DELETE'"); //수정
 						} else if (folderId.equalsIgnoreCase(ezEmailUtil.getPersonalFolderId(locale))) {
-							subFolderXML.append(" orgBoxName='4'");
+							subFolderXML.append(" orgBoxName='5'");
 							subFolderXML.append(" fullcaption='_PERSONAL'"); //수정
 						} else if (folderId.equalsIgnoreCase(ezEmailUtil.getJunkFolderId(locale))) {
-							subFolderXML.append(" orgBoxName='5'");
+							subFolderXML.append(" orgBoxName='6'");
 							subFolderXML.append(" fullcaption='_JUNK'"); //수정
 						} else {
-							subFolderXML.append(" orgBoxName='" + ((j++) + 6) + "'");
+							subFolderXML.append(" orgBoxName='" + ((j++) + 7) + "'");
 							subFolderXML.append(" fullcaption='_NONE'"); //수정
 						}
 
@@ -679,8 +717,14 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 						userEmail, password, egovMessageSource, locale, ezEmailUtil);
 
-				if (ia != null){
+				if (ia != null && !"allMail".equalsIgnoreCase(folderName)){
 					folderUnreadCount = ia.getUnreadCount(folderName);
+				} else if (ia != null) { // allMail - 전체메일
+					List<String> folderNames = ia.getAllFolderNames();
+					
+					for (String name : folderNames) {
+						folderUnreadCount += ia.getUnreadCount(name);
+					}
 				}
 			} catch (RuntimeException e) {
 				logger.error(e.getMessage(), e);
@@ -1537,6 +1581,8 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		String folderId = (String) requestObject.get("FOLDERID");
 		String inboxName = egovMessageSource.getMessage("ezEmail.t644", locale);
 		folderId = folderId.equals(inboxName) ? "INBOX" : folderId;
+		boolean isAllMail = "allMail".equalsIgnoreCase(folderId);
+		folderId =  isAllMail ? "INBOX////Personal folder" : folderId; // 전체메일은 받은편지함과 그 하위, 개인편지함과 그 하위의 모든 메일함에서 메일을 가져온다.
 		String sortType = StringUtils.defaultIfBlank((String) requestObject.get("SORTTYPE"), "");
 		String start = StringUtils.defaultIfBlank((String) requestObject.get("START"), "0");
 		String end = StringUtils.defaultIfBlank((String) requestObject.get("END"), "0");
@@ -1699,7 +1745,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 				}
 
 				List<Map<String, String>> mailList = ezEmailUtil.searchFolderUsingRDBOnly(userEmail, folderId,
-						categoryArray, keywordArray, startDateObj, endDateObj, false, isUnreadOnly, isImportantOnly,
+						categoryArray, keywordArray, startDateObj, endDateObj, isAllMail, isUnreadOnly, isImportantOnly,
 						sortTypeSpecifier, isAscending, startNo, endNo, false, extraMap, userInfo.getTenantId(),
 						includeContent, tagName);
 
