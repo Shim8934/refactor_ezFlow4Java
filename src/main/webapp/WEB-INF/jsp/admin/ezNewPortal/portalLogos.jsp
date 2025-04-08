@@ -321,6 +321,7 @@
     				/* 2021-12-09 홍승비 - 로고 이미지 업로드 시 서버단에서도 이미지 확장자 체크 진행 */
     				if (checkImgExtension(ext) == "UPLOAD_EXT_ERROR") {
     					alert("<spring:message code ='ezAttitude.t260' />"); // 허용하지 않는 확장자입니다.
+						document.getElementById("imgFile").value = "";
     					return false;
     				}
     				
@@ -332,6 +333,7 @@
 	    	
 	    				if (result == "rejected") {
 	    					alert("<spring:message code='ezNewPortal.t068' />");
+							document.getElementById("imgFile").value = "";
 	    					return;
 	    				}
 	    				
@@ -368,6 +370,7 @@
 	    			}
     			} else {
     				alert("<spring:message code = 'ezCommunity.lhj03' /> (jpg, png, bmp, jpeg, gif, svg)");
+					document.getElementById("imgFile").value = "";
     				return false;
     			}
 			}
