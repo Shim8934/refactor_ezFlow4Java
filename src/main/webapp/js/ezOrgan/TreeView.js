@@ -651,7 +651,9 @@ function treeicon_toggle(pNodeID, pTreeID, callbackFunc, pNodeIconID) {
         callbackFunc(pNodeID, pTreeID);
 }
 
+window.currentListMode = "dept"; // dept: 트리뷰에서 부서 선택해서 보이는 리스트일 때, search: 검색 결과로 나타난 리스트일 때
 function node_select(pNodeID, pNodeNM, pTreeID, callbackFunc) {
+    window.currentListMode = "dept";
     var treeDiv = document.getElementById(pTreeID);
     var preSelectID = GetAttribute(treeDiv, "SELECTNODEID");
 

@@ -199,6 +199,7 @@
 			var totalUserCount = "";
 			var pSeach = false;
 			function displayUserList(DeptID){
+				console.log("currentListMode  00  >> " + window.currentListMode);
 				var cellContent;
 				var typeContent;
 
@@ -836,6 +837,7 @@
 			var searchWord = "";
 			var searchType = "";
 			function search_click(){
+				window.currentListMode = "search";
 				pageNum = 1;
 				pSeach = true;
 				if ($.trim(keyword.value) == ""){
@@ -1307,14 +1309,16 @@
 							clearInterval(checkChildClosed);
 							
 							alert("<spring:message code='ezOrgan.t11' />");
-							displayUserList(cn);
+
+							// currentListMode가 "search"면 검색 결과 리스트를, "dept"면 선택된 부서 기준 리스트를 다시 보여 주기
+							if (window.currentListMode === "search") {
+								search_click();
+							} else {
+								displayUserList(cn);
+							}
 						}
 					
 					}, 100);
-
-		            if (trim(document.getElementById("keyword").value) != "") {
-		                search_click();
-		            }
 		        }
 		    }
 		    
