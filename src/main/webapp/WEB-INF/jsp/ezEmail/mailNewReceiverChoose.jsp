@@ -2055,7 +2055,11 @@
 		                MainTable.style.marginRight = "auto";
 		                var M_TR = document.createElement("TR");
 		                M_TR.setAttribute("id", "MailUserlist_" + i);
-		                M_TR.style.cursor = "move"; // [수신자 설정] 사원명함보기란 DeptUserImgList
+						if ("${cursorType}" === "p" ) {
+							M_TR.style.cursor = "pointer"; // 메일 환경설정 > 도착한메일 전달 > 메일계정설정 커서 설정(image)
+						} else {
+							M_TR.style.cursor = "move"; // [수신자 설정] 사원명함보기란 DeptUserImgList
+						}
 		                M_TR.onmouseover = function () { event_listMover(this); };
 		                M_TR.onmouseout = function () { event_listMout(this); };
 		                M_TR.onclick = function () { event_listclick(this); };
@@ -2174,7 +2178,11 @@
 		            else {
 		                var M_TR = document.createElement("TR");
 		                M_TR.setAttribute("id", "MailUserlist_" + i);
-		                M_TR.style.cursor = "move"; // [수신자 설정] 사원리스트란 orglistView (text)
+						if ("${cursorType}" === "p" ) {
+							M_TR.style.cursor = "pointer"; // 메일 환경설정 > 도착한메일 전달 > 메일계정설정 커서 설정(text)
+						} else {
+							M_TR.style.cursor = "move"; // [수신자 설정] 사원리스트란 orglistView (text)
+						}
 		                M_TR.onmouseover = function () { event_listMover(this); };
 		                M_TR.onmouseout = function () { event_listMout(this); };
 		                M_TR.onclick = function () { event_listclick(this); };

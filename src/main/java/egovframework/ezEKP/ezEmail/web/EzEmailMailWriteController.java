@@ -4791,7 +4791,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		if (mailMaxReceiverCount.equals("")) {
 			mailMaxReceiverCount = "200";
 		}
-		
+		String cursorType = request.getParameter("cursorType") == null ? "" : request.getParameter("cursorType"); // 커서타입을 지정해주기 위해 cursorType 추가(p:pointer)
+
 		model.addAttribute("defaultWin", defaultWin);
 		model.addAttribute("type", type);
 		model.addAttribute("ruleKind", ruleKind);
@@ -4802,6 +4803,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("primaryLang", primaryLang);
 		model.addAttribute("useUserDefinedDL", useUserDefinedDL);
 		model.addAttribute("useOrgListCheckBox", useOrgListCheckBox);
+		model.addAttribute("cursorType", cursorType);
 		
 		String useShowAllCompanies = ezCommonService.getTenantConfig("useShowAllCompanies", userInfo.getTenantId());
 		model.addAttribute("useShowAllCompanies", useShowAllCompanies);

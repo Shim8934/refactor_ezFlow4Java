@@ -175,13 +175,14 @@
 	        function SelectReceiver_onClick() {
 	            var type = "auto";
 	            var receiverData = new Array();
+				var cursorType = "p"; // 커서 타입을 pointer로 지정해주기 위해 파라미터 추가
 	            
 	            receiverData["addReceiver"] = addReceiver;
 	            receiverData["window"] = this;
 	            mail_newreceiverchoose_dialogArguments[0] = receiverData;
 	            mail_newreceiverchoose_dialogArguments[1] = addReceiver;
 	            
-	            var OpenWin = window.open("/ezEmail/mailNewReceiverChoose.do?defaultwin=&type=" + type + "&rulekind=" + "", "mail_foldermanage_Cross", GetOpenWindowfeature(1120, 700));
+	            var OpenWin = window.open("/ezEmail/mailNewReceiverChoose.do?defaultwin=&type=" + type + "&rulekind=" + "" + "&cursorType=" + cursorType, "mail_foldermanage_Cross", GetOpenWindowfeature(1120, 700));
 	            try { OpenWin.focus(); } catch (e) {console.log(e);}
 	        }
 	
