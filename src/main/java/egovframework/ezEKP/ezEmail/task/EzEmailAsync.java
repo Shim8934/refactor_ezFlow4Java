@@ -216,8 +216,8 @@ public class EzEmailAsync {
 			String timeZone = ezCommonService.selectUserGetTimeZone(survey.getCreatorId(), survey.getTenantId());
 			System.out.println("timezone" + timeZone);
 			String[] timeZoneArr = timeZone.split("\\|");
-			realTimeZone = " ( UTC | " + timeZoneArr[1] + " )";
-			
+			realTimeZone = " ( " + timeZoneArr[1] + " )"; // 표준 표기법에 따라 UTC제거
+
 		} catch (ParseException e) {
 			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
