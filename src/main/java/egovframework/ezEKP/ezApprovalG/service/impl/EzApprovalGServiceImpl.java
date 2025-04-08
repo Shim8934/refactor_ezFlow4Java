@@ -9955,6 +9955,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         listCountMap.put("relayFormID", recordListVO.getRelayFormID());
         listCountMap.put("joinEndReceiptPointInfo", recordListVO.getJoinEndReceiptPointInfo());
         listCountMap.put("selSendStatus", recordListVO.getSelSendStatus());
+        listCountMap.put("formID", recordListVO.getFormID());
         int docCnt = ezApprovalGDAO.getRecordListCount(listCountMap);
         
 		resultXML.append("<DOCLIST>");
@@ -22493,17 +22494,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_LANGTYPE", strMultiData);
 		map.put("v_SEARCHTYPE", searchType);
 		map.put("deptId", deptId);
-
-		if(globals.getProperty("Globals.DbType").equals("mysql")){
-			if (searchName.equals("_")) {
-				map.put("v_SEARCHNAME", "\"" + searchName);
-			} else {
-				map.put("v_SEARCHNAME", searchName);
-			}
-		} else { 
-			map.put("v_SEARCHNAME", searchName);
-		}
-		
+        map.put("v_SEARCHNAME", searchName);
 		map.put("v_TENANTID", tenantID);
 		map.put("companyID", companyID);
         

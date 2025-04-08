@@ -9,6 +9,9 @@ function GetFormInfo(ID, KIND, searchtype, searchname) {
     if (searchname == undefined) {
     	searchname = "";
     }
+    
+    searchname = searchname.replace(/\\/g, "\\\\").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/%/g, "\\%").replace(/'/g, "\\'").replace(/_/g, "\\_");
+
 
     $.ajax({
 		type : "POST",
