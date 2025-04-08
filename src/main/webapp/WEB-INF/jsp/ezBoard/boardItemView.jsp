@@ -457,7 +457,7 @@
 				// 댓글 높이 계산 끝
 				
 				var contentHeight;
-				contentHeight = document.documentElement.clientHeight - 276 - addheight + replyOffsetH;
+				contentHeight = document.documentElement.clientHeight - 305 - addheight + replyOffsetH;
 				
                 if (gubun == "2") { // 익명게시판일 경우
 				    contentHeight += 18;
@@ -467,7 +467,7 @@
 				    contentHeight -= 28;
 				}
 				
-				if ((BoardAdmin_FG == 'true' || BoardGroupAdmin_FG == 'OK') && updateDate != null) { // 수정일 컬럼 존재할 경우
+				if ((BoardAdmin_FG == 'true' || BoardGroupAdmin_FG == 'OK') && updateDate && updateDate.length != 0) { // 수정일 컬럼 존재할 경우
 				    contentHeight -= 28;
 				}
 				
