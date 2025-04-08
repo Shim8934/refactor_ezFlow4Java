@@ -588,7 +588,7 @@
 	    		createNodeAndInsertText(xmlDom, objNode, "IMPORTANCE", document.getElementById("importance1").value);
 	    		createNodeAndInsertText(xmlDom, objNode, "ISPUBLIC", "N");
 	    		createNodeAndInsertText(xmlDom, objNode, "REPETITION", repetition);
-				createNodeAndInsertText(xmlDom, objNode, "TITLE", ConvertCharToEntityReference(document.getElementById("title").value));
+				createNodeAndInsertText(xmlDom, objNode, "TITLE", document.getElementById("title").value);
 	    		createNodeAndInsertText(xmlDom, objNode, "LOCATION", "");
 	    		createNodeAndInsertText(xmlDom, objNode, "CONTENTPATH", "");
 	    		
