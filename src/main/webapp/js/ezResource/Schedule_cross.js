@@ -385,7 +385,7 @@ function show_repetition_info() {
 	switch (szType) {
 		case "4":
 			var selType = getNodeText(SelectNodes(xmlinDoc, "recurrence/selType")[0]);
-			repetition = selType;
+			repetition = "0";
 			if(selType == "0") {			// 매일마다
 				var interval = getNodeText(SelectNodes(xmlinDoc, "recurrence/interval")[0]);
 				
@@ -397,7 +397,7 @@ function show_repetition_info() {
 				}
 				repetition += "|" + interval;
 			}
-			else {
+			else {			// 매일반복(평일)
 				repeatinfo += "" + strLang551;
 				repetition += "|0" ;
 			}
