@@ -182,7 +182,8 @@ public class MOptionGWController extends EgovFileMngUtil {
 		try {
 			// 1. 변수
 			// 환경설정
-			String timeZone = jsonObject.get("timeZone").toString();
+			//String timeZone = jsonObject.get("timeZone").toString();
+			String timeZone = jsonObject.get("timeZone") == null ? "" : jsonObject.get("timeZone").toString().trim();
 			String lang = jsonObject.get("lang").toString();
 			String mainType = jsonObject.get("mainType").toString();
 			String listCnt = jsonObject.get("listCnt").toString();

@@ -357,7 +357,11 @@
 			UPDATE TBL_USERMOBILEINFO
 			SET 
 				LANG = #lang#	
-				,TIMEZONE = #timeZone#
+		]]>
+		<isNotEmpty property = "timeZone">
+			,TIMEZONE = #timeZone#
+		</isNotEmpty>
+		<![CDATA[
 				,MAINTYPE = #mainType#
 				,LISTCNT = #listCnt#					
 				,USESECURITY = #useSecurity#	
