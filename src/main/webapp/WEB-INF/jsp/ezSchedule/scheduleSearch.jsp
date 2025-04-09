@@ -154,7 +154,7 @@
 		        	alert("<spring:message code='ezResource.dateChk' />");
 		        	return;
 		        }		        
-		        window.location.href = "/ezSchedule/scheduleSearch.do?sdate=" + sdate + "&edate=" + edate + "&filter=" + encodeURIComponent(filter) + "&pAll=" + all + "&pTitle=" + title + "&pLocation=" + location;
+		        window.location.href = "/ezSchedule/scheduleSearch.do?sdate=" + sdate + "&edate=" + edate + "&filter=" + encodeURIComponent(filter) + "&pAll=" + encodeURIComponent(all) + "&pTitle=" + encodeURIComponent(title) + "&pLocation=" + encodeURIComponent(location);
 		        
 		    }
 		

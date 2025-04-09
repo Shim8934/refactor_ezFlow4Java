@@ -342,17 +342,17 @@
 			<!-- 2024-06-27 전인하 - 일정 > 일정검색 > 전체검색, 지역검색 추가 -->
 			<isNotEmpty property="v_SEARCHTITLE">
 				AND
-					a.title like concat(concat('%',REPLACE(REPLACE(REPLACE(#v_SEARCHTITLE#,'\\','\\\\'),'%','\%'),'_','\_')),'%')
+					a.title like concat(concat('%', #v_SEARCHTITLE#), '%') ESCAPE '\'
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCHLOCATION">
 				AND
-					location like concat(concat('%',REPLACE(REPLACE(REPLACE(#v_SEARCHLOCATION#,'\\','\\\\'),'%','\%'),'_','\_')),'%')
+					location like concat(concat('%', #v_SEARCHLOCATION#), '%') ESCAPE '\'
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCHALL">
 				AND (
-						a.title like concat(concat('%',REPLACE(REPLACE(REPLACE(#v_SEARCHALL#,'\\','\\\\'),'%','\%'),'_','\_')),'%')
+						a.title like concat(concat('%', #v_SEARCHALL#), '%') ESCAPE '\'
 					OR
-						location like concat(concat('%',REPLACE(REPLACE(REPLACE(#v_SEARCHALL#,'\\','\\\\'),'%','\%'),'_','\_')),'%')
+						location like concat(concat('%', #v_SEARCHALL#), '%') ESCAPE '\'
 				)
 			</isNotEmpty>
             )
@@ -410,17 +410,17 @@
 			<!-- 2024-06-27 전인하 - 일정 > 일정검색 > 전체검색, 지역검색 추가 -->
 			<isNotEmpty property="v_SEARCHTITLE">
 				AND
-					a.title like concat(concat('%',REPLACE(REPLACE(REPLACE(#v_SEARCHTITLE#,'\\','\\\\'),'%','\%'),'_','\_')),'%')
+					a.title like concat(concat('%', #v_SEARCHTITLE#), '%') ESCAPE '\'
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCHLOCATION">
 				AND
-					location like concat(concat('%',REPLACE(REPLACE(REPLACE(#v_SEARCHLOCATION#,'\\','\\\\'),'%','\%'),'_','\_')),'%')
+					location like concat(concat('%', #v_SEARCHLOCATION#), '%') ESCAPE '\'
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCHALL">
 				AND (
-						a.title like concat(concat('%',REPLACE(REPLACE(REPLACE(#v_SEARCHALL#,'\\','\\\\'),'%','\%'),'_','\_')),'%')
+						a.title like concat(concat('%', #v_SEARCHALL#), '%') ESCAPE '\'
 					OR
-						location like concat(concat('%',REPLACE(REPLACE(REPLACE(#v_SEARCHALL#,'\\','\\\\'),'%','\%'),'_','\_')),'%')
+						location like concat(concat('%', #v_SEARCHALL#), '%') ESCAPE '\'
 				)
 			</isNotEmpty>
         	) ) C
@@ -2061,7 +2061,7 @@
 		<isNotEmpty property="v_SEARCHTITLE">
 			<![CDATA[
             and
-            	A.title like '%'|| (REPLACE(REPLACE(#v_SEARCHTITLE#,'%','\%'),'_','\_')) ||'%'
+            	A.title like '%'|| #v_SEARCHTITLE# ||'%' ESCAPE ESCAPE '\'
             ]]>
 		</isNotEmpty>
 		<![CDATA[
@@ -2121,7 +2121,7 @@
 		<isNotEmpty property="v_SEARCHTITLE">
 			<![CDATA[
             and
-            	A.title like '%'|| (REPLACE(REPLACE(#v_SEARCHTITLE#,'%','\%'),'_','\_')) ||'%'
+            	A.title like '%'|| #v_SEARCHTITLE# ||'%' ESCAPE ESCAPE '\'
             ]]>
 		</isNotEmpty>
 		) ) C

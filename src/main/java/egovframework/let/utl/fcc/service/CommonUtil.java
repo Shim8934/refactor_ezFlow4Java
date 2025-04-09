@@ -106,6 +106,7 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.logging.log4j.util.Strings;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -3507,5 +3508,24 @@ public class CommonUtil {
 			url = serverUrl + url;
 		}
 		return url;
+	}
+	
+	// 이스케이프용 문자 백슬래시(\) 삽입
+	// 오라클에서 특수문자 검색을 가능케 할 때 사용함
+	public String insertEscapeCharBackslash(String str) {
+		if (Strings.isBlank(str)) {
+			return str;
+		}
+		str.replace("%", "\\%")
+                    .replace("_", "\\_")
+                    .replace("&", "\\&")
+                    .replace("|", "\\|")
+                    .replace("'", "\\'")
+                    .replace("\"", "\\\"")
+                    .replace("\\", "\\\\")
+                    .replace("#", "\\#")
+                    .replace(";", "\\;");
+		
+		return str;
 	}
 }
