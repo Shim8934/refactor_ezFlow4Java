@@ -2464,7 +2464,7 @@ public class CommonUtil {
             }
 
             // 4. 특수문자 사용
-            bSpecialChar = Pattern.compile("[~!@#$%^&*()=+|\\/:;?\"<>']").matcher(pwStr).find();
+            bSpecialChar = Pattern.compile("[-_~!@#$%^&*()=+\\/:;?\"<>']").matcher(pwStr).find();
             if (useSpecial != null && useSpecial.equalsIgnoreCase("N")) {
                 if (bSpecialChar){
         			logger.debug("commonUtil. checkPwPolicy ended. (useSpecial)");
