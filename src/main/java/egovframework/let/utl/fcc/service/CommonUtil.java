@@ -2513,8 +2513,8 @@ public class CommonUtil {
 		String sResult = "";
 		String patternContent = "";
 		int patternCount = 0;
-		String patternContentTemp = "<p>▒ " + egovMessageSource.getMessage("ezSystem.ksaPwPolicy36", locale) + " : ${str}</p>";
-		String patternContentTemp2 = "<br/> <span>&nbsp;&nbsp;&nbsp; > ${str}</span>";
+		String patternContentTemp = "<div>▒ " + egovMessageSource.getMessage("ezSystem.ksaPwPolicy36", locale) + " : ${str}</div>";
+		String patternContentTemp2 = "<span>${str}</span>";
 		
 		// 1. 암호 정책관리 사용 여부 확인
 		String usePasswordPatternPolicy = ezCommonService.getCompanyConfig(tenantId, companyId, "UsePasswordPatternPolicy");
@@ -2578,25 +2578,29 @@ public class CommonUtil {
             	patternContent += (patternCount + 1) + ". " + egovMessageSource.getMessage("ezSystem.ksaPwPolicy18", locale);
             	patternCount += 1;
             }
-            
+			patternContent += "</div><div style='gap:5px;color:#777'>";
             // 5. 패턴 사용 수, 글자수 확인
             if (pwPolicyPattern != null && pwPolicyPattern.size() > 0) {
         		String patternMsg1 = egovMessageSource.getMessage("ezSystem.ksaPwPolicy19", locale);
-            	for (Map<String, Object> pwPattern : pwPolicyPattern) {
-            		int patternCnt = Integer.parseInt(String.valueOf(pwPattern.get("USE_PATTERN_COUNT")));
-            		int numberOfChar = Integer.parseInt(String.valueOf(pwPattern.get("NUMBER_OF_CHAR")));
+				for (int i = 0; i < pwPolicyPattern.size(); i++) {
+					int patternCnt = Integer.parseInt(String.valueOf(pwPolicyPattern.get(i).get("USE_PATTERN_COUNT")));
+					int numberOfChar = Integer.parseInt(String.valueOf(pwPolicyPattern.get(i).get("NUMBER_OF_CHAR")));
 
             		String patternMsgTemp = patternMsg1.replace("{0}", Integer.toString(patternCnt)) + " ";
             		
             		if (numberOfChar <= 0) {
             			patternMsgTemp += egovMessageSource.getMessage("ezSystem.ksaPwPolicy21", locale);
             		} else {
-            			patternMsgTemp += numberOfChar + egovMessageSource.getMessage("ezSystem.ksaPwPolicy26", locale);
+            			patternMsgTemp += numberOfChar + " " + egovMessageSource.getMessage("ezSystem.ksaPwPolicy26", locale) + " ";
             		}
             		
             		patternContent += patternContentTemp2.replace("${str}", patternMsgTemp);
+					if (i != pwPolicyPattern.size() - 1) {
+						patternContent += "<span>&nbsp;/&nbsp;</span>";
+					}
             	} // for end.
             }
+			patternContent += "</div>";
             
             if (!patternContent.equals("")) {
             	sResult = patternContentTemp.replace("${str}", patternContent);
