@@ -542,7 +542,7 @@
     		<c:if test="${ezOffice365Auth == 'NO' && userManualFlag eq 'Y'}">
     		<h2><spring:message code='ezPersonal.t185'/></h2>
     		<div>▒ <spring:message code='ezPersonal.t186'/></div>
-    		<div style="margin-top:3px">${pwPolicyExplain }</div> 		
+    		<div style="font-size:13px;margin-top:3px;">${pwPolicyExplain }</div> 		
     		<table class="content" style="margin-top:5px;width:50%">
         		<!-- 표준모듈 (2007.02.21) 수정 -->
         		<tr>

@@ -1195,13 +1195,23 @@
 				args[4] = treeNode.GetNodeData("EXTENSIONATTRIBUTE2");
 				args[5] = "";
 				args[6] = (args[0] == 'Top' || treeNode.GetNodeData("EXTENSIONATTRIBUTE1") == 'Top') ? args[1] : treeNode.GetNodeData("EXTENSIONATTRIBUTE3");
-				
+				args[7] = ""
+				$.ajax({
+					type : "POST",
+					url : "/admin/ezSystem/getPasswordPolicyExplain.do",
+					data:{"companyId":(args[2] !== "" ? args[2] : args[4])},
+					async : false,
+					success : function(data) {
+						console.log(data);
+						args[8] = data.pwPolicyExplain;
+					}
+				});
 				//2016-04-19 장진혁과장 -- Cross 버전 사용으로 주석 처리
 				//if (CrossYN()) {
 			    userinfo_dialogArguments[0] = args;
 			    userinfo_dialogArguments[1] = add_user_Complete;
 			    //var OpenWin = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 440));
-			    OpenWin_add_user = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 440));
+			    OpenWin_add_user = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 470));
 			    try { OpenWin_add_user.focus(); } catch (e) { }
 				/* }else{
 				    var rtnValue;
@@ -1277,7 +1287,7 @@
 					var jobId = listview.GetSelectedRows()[0].getAttribute("DATA5");
 					OpenWin_info_user = window.open("/admin/ezOrgan/addJobInfo.do?selectDeptId=" + encodeURIComponent(args[6]) +"&jobId="+encodeURIComponent(jobId), "AddJobInfo", GetOpenWindowfeature(830, 440));
 				} else {
-					OpenWin_info_user = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 440));
+					OpenWin_info_user = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 470));
 				}
 				try { OpenWin_info_user.focus(); } catch (e) { }
 

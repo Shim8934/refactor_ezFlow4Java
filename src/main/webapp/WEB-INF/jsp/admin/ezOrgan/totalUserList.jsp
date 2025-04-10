@@ -245,7 +245,7 @@
 			userinfo_dialogArguments[0] = args;
 			userinfo_dialogArguments[1] = user_info_Complete;
 
-			OpenWin_info_user = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 440));
+			OpenWin_info_user = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 470));
 			try { OpenWin_info_user.focus(); } catch (e) { }
 
 		}

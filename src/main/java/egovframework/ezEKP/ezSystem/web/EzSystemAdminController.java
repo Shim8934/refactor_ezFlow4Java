@@ -1940,6 +1940,33 @@ public class EzSystemAdminController {
 		logger.debug("getPasswordPolicy ended.");
 		return returnMap;
 	}
+
+	/**
+	 * 회사별 암호 정책 문구
+	 */
+	@RequestMapping(value = "/admin/ezSystem/getPasswordPolicyExplain.do", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> getPasswordPolicyExplain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getPasswordPolicyExplain started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String companyId = userInfo.getCompanyID();
+		Map<String, Object> returnMap = new HashMap<String, Object>();
+
+		String reCompanyId = request.getParameter("companyId");
+		if (reCompanyId != null && !reCompanyId.equals("")) {
+			companyId = reCompanyId;
+		}
+		logger.debug("tenantId=" + userInfo.getTenantId() + ", companyId=" + companyId);
+		
+		String pwPolicyExplain = commonUtil.getPwPolicyExplain(companyId, userInfo.getTenantId(), userInfo.getLocale());
+		
+		returnMap.put("pwPolicyExplain", pwPolicyExplain);
+		
+		logger.debug("getPasswordPolicyExplain ended.");
+		
+		return returnMap;
+	}
 	
 	/**
 	 * 암호 정책 저장

@@ -247,6 +247,9 @@
 						}
 		            });
 		        }
+				if (RetValue[8] != "" && typeof RetValue[8] != "undefined") {
+					document.getElementById('pwPolicyExplain').innerHTML = RetValue[8];
+				}
 		        if (locale != 'ko') {
 		        	$(".onlyUseKo").css("display", "none");
 		        }
@@ -781,7 +784,8 @@
 	    </div>
 
 	    <div style="margin-top:4px;margin-bottom:2px"><span style="color:red;"><spring:message code='ezOrgan.t00018' /></span></div>
-	    <table id="Tbl_UserInfo" class="content" style="width:800px">
+		<div id='pwPolicyExplain' style="font-size:13px;margin-top: 3px;"></div>
+		<table id="Tbl_UserInfo" class="content" style="width:800px">
 	        <tr>
 	            <td rowspan="<c:out value="${primaryLang eq '3' ? 7 : 6}" />" id="UserPhotoDiv" style="width:119px; height:180px; text-align:center; min-width:119px;">
 	                <b><spring:message code='ezOrgan.t272' /></b> 
