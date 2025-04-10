@@ -598,10 +598,11 @@ var htmlEntities = {
 	'&#40;': '(',
 	'&#41;': ')',
 	'&#64;': '@',
+	'&#39;': '\'', 
 };
 
 function unescapeHtml(escapedString) {
-    return escapedString.replace(/&amp;|&#40;|&#41;|&#64;/g, function(match) {
-        return htmlEntities[match];
-    });
+	return escapedString.replace(/&amp;|&#40;|&#41;|&#64;|&#39;/g, function(match) {
+		return htmlEntities[match];
+	});
 }
