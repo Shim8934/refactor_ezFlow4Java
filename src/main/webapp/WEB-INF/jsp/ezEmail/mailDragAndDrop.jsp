@@ -35,7 +35,19 @@
 		    var lstAttachLink = document.getElementById("lstAttachLink");
 		    var attachFileNameMaxLength = Number("${attachFileNameMaxLength}");
 		    var status = 0; // 일반-대용량 첨부파일 구분 상태값  
-		    
+            
+            $(document).ready(function () {
+                if ($("#lstAttachLink").length > 0) {
+                    $("#lstAttachLink").on("change", "input[type='checkbox'][name='fileSelect']", function () {
+                        if ($("#lstAttachLink input[name='fileSelect']:checked").length !== $("#lstAttachLink input[name='fileSelect']").length) {
+                            document.getElementById("checkboxall").checked = false;
+                        } else {
+                            document.getElementById("checkboxall").checked = true;
+                        }
+                    });
+                }
+            });
+            
 		    function onDragEnter(evt) {
 		        evt.dataTransfer.dropEffect = "copy";
 		        evt.stopPropagation();
@@ -595,6 +607,7 @@
 		        }
 		        
 		        showAttachInnerNotice();
+                document.getElementById("checkboxall").checked = false;
 		    }
 			
 		    function checkall() {
@@ -663,7 +676,7 @@
 		        xhr.send(fd);
 		        document.getElementById('progdiv').style.display = "inline-block";
 		    }
-		
+            
 		    var xhr2 = new XMLHttpRequest();
 		    function fileupload2(fileXml,purl) {
 		    	isfileup = true;
