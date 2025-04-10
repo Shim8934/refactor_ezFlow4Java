@@ -291,6 +291,11 @@ public class EzSurveyController extends EgovFileMngUtil {
 		model.addAttribute("editor", ezSurveyService.checkTenantConfig("MODULEEDITOR", user.getTenantId()));
 		
 		model.addAttribute("companyId", user.getCompanyID());
+		String maxPeriod = ezSurveyService.checkTenantConfig("SurveyPostingMaxPeriod", user.getTenantId());
+		if (maxPeriod == null || maxPeriod.equals("")) {
+			maxPeriod = "999";
+		}
+		model.addAttribute("maxPeriod", maxPeriod);
 		
 		logger.debug("jspGetModifySurveyPage ended");
 		return "ezSurvey/listmenu/surveyCreate";
