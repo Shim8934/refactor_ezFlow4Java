@@ -6320,32 +6320,14 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		logger.debug("folderId : {}, mailId : {}, fileName : {}, fileIndex : {}", folderId, mailId, fileName, fileIndex);
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-
-		String gwServerUrl = config.getProperty("config.mobileGwServerURL");		
-		String url = gwServerUrl + "/mobile/ezemail/folders/" + folderId + "/mails/" + mailId + "/attach/" + fileIndex + "/users/" + userInfo.getId();
-
+		
 		OutputStream output = null;
-							
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("x-user-host", request.getServerName());
+		Map<String, Object> result = mailFileDown(userInfo, folderId, mailId, fileIndex, fileName, userInfo.getId());
+
+		Map<String, Object> data = (Map<String, Object>) result.get("data");
 		
-		HttpEntity<?> entity = new HttpEntity<>(headers);
-		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("filename", fileName);
-		
-		RestTemplate rest = new RestTemplate();
-		
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-		
-		JSONParser jp = new JSONParser();
-	
-		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
-	
-		JSONObject data = (JSONObject) resultBody.get("data");
 		String filename = (String) data.get("filename");
-		String bytes = (String) data.get("bytes");
+		byte[] bytes = (byte[]) data.get("bytes");
 		output = response.getOutputStream();
 		
 		try {
@@ -6379,7 +6361,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				File file = new File(commonUtil.detectPathTraversal(filePath + commonUtil.separator + md5FileName));
 				// CWE-404 보안 취약점 대응
 				try (FileOutputStream fos = new FileOutputStream(file)) {
-					fos.write(decoder.decode(bytes));
+					fos.write(bytes);
 				}
 				
 				filePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId()) 
@@ -6399,9 +6381,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							"&fileext=" + URLEncoder.encode(fileExt, "UTF-8").replace("+", "%20") +
 							"&viewerselect=image" +
 							"&userid=" + userInfo.getId()).getBytes());
-			} else {
-				
-				
 			}
 			
 		} catch (UnsupportedEncodingException e) {
@@ -6413,9 +6392,126 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			output.close();
 		}
 		
-		
-		
-
 		logger.debug("attachFilePreview ended.");
+	}
+	
+	public Map<String, Object> mailFileDown(LoginVO info, String folderId, String messageId, String index, String filename, String userId) throws Exception{
+
+		InputStream input = null;
+		IMAPAccess ia = null;
+		Map<String, Object> result = new HashMap<>();
+
+		try {
+			String userEmail = info.getEmail();
+			String password = jspw;
+			String useMobileViewer = ezCommonService.getTenantConfig("useMobileViewer", info.getTenantId());
+			String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", info.getTenantId());
+
+			logger.debug("userEmail=" + userEmail);
+
+			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
+			Locale locale = new Locale(ld);
+			
+			String folderPath = folderId;
+			String strUid = messageId;
+			long uid = strUid != null ? Long.parseLong(strUid) : 0;
+
+			logger.debug("folderPath=" + folderPath + ",uid=" + uid + ",filename=" + filename);
+
+			if (folderPath == null || strUid == null || filename == null) {
+				logger.debug("downloadAttach illegal arguments.");
+
+				result.put("status", "error");
+				result.put("code", 1);
+				result.put("data", "");
+
+				return result;
+			}
+
+			String strIndex = index;
+			int intIndex = -1;
+
+			if (strIndex != null) {
+				intIndex = Integer.parseInt(strIndex);
+			}
+			int order = 0;
+			int depth = 0;
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
+
+			Folder f = ia.getFolder(folderPath);
+
+			if (f == null || !f.exists()) {
+				logger.error("Folder not found. folderPath=" + folderPath);
+			} else {
+				f.open(Folder.READ_ONLY);
+				Message message = null;
+
+				if (f.isOpen() && f instanceof IMAPFolder) {
+					message = ((IMAPFolder)f).getMessageByUID(uid);
+				}
+
+				if (message == null) {
+					logger.error("Message not found. uid=" + uid);
+
+					result.put("status", "error");
+					result.put("code", 1);
+					result.put("data", "");
+				} else {
+					Part part = null;
+
+					if (intIndex == -1) {
+						part = message;
+					} else {
+						part = ezEmailUtil.getAttachPart(message, intIndex, order, depth);
+					}
+					if (part == null) {
+						logger.error("AttachPart not found. AttachPartIndex=" + index);
+					} else {
+						try {
+							input = part.getInputStream();
+
+							byte[] bytes = IOUtils.toByteArray(input);
+
+							Map<String, Object> data = new HashMap<>();
+
+							data.put("bytes", bytes);
+							data.put("filename",filename);
+							data.put("filetype",part.getContentType());
+							data.put("useMobileViewer", useMobileViewer);
+
+							result.put("status", "ok");
+							result.put("code", 0);
+							result.put("data", data);
+						} catch(Exception e) {
+							logger.error(e.getMessage(), e);
+
+							result.put("status", "error");
+							result.put("code", 1);
+							result.put("data", "");
+						} finally {
+							if (ia != null) {
+								ia.close();
+							}
+
+							if (input != null) {
+								try { input.close(); } catch (IOException e) {logger.debug("e.message=" + e.getMessage());}
+							}
+						}
+					}
+				}
+			}
+		} catch (MessagingException e) {
+			logger.error(e.getMessage(), e);
+
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
+		}
+		return result;
 	}
 }
