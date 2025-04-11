@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.util.Strings;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -724,10 +725,14 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 			String endDate = eDate[0] + "-" + eMon + "-" + eDay;
 			
 			String workspaceHostUrl = ezCommonService.getTenantConfig("workspaceHostUrl", tenantId);
+			String workspaceAppPath = ezCommonService.getTenantConfig("workspaceAppPath", tenantId);
+			
+			/* 2025-04-11 전인하 - ezWork 협업을 위해 검색키워드 지정 (전체검색일 경우 키워드 넘김, 상세검색일 경우 제목 넘김. */
+			String ezWorkSearchKeyword = Strings.isBlank(searchAll) && !Strings.isNotBlank(searchTitle) ? searchTitle : searchAll;
 	        
 			String domain = workspaceHostUrl + "/ezWorkspace/api/GroupwareApi/post/scheduleread/";
 	    	String params = "userAccountId=" + URLEncoder.encode(userID, "UTF-8") + "&startDate=" + URLEncoder.encode(startDate, "UTF-8") 
-	    						+ "&endDate=" + URLEncoder.encode(endDate, "UTF-8") + "&searchTerm=" + "&bMobile=" + URLEncoder.encode("false", "UTF-8");
+	    						+ "&endDate=" + URLEncoder.encode(endDate, "UTF-8") + "&searchTerm=" + ezWorkSearchKeyword + "&bMobile=" + URLEncoder.encode("false", "UTF-8");
 	    	String workspaceScheduleLists = ezEmailUtil.getWebServiceResult(domain, params);
 	    	
 	    	if(workspaceScheduleLists != null && !workspaceScheduleLists.equals("")) {
