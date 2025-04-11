@@ -346,12 +346,12 @@
 	            var pwidth = window.screen.availWidth;
 	            var conWidth = pwidth * 0.8;
 	            
-	            if (conWidth > 890) {
-	                conWidth = 890;
+	            if (conWidth > 1200) {
+	                conWidth = 1200;
 	            }
 	            
 	            var pTop = (pheight - conHeight) / 2;
-	            var pLeft = (pwidth - 890) / 2;
+	            var pLeft = (pwidth - 1200) / 2;
 	            var oForm = document.createElement("FORM");
 	            oForm.name = "fomAction";
 	            oForm.method = "POST";
@@ -378,7 +378,7 @@
 	        	}
 	            
 	            var newwin = window.open(pURI, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() 
-                		+ ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+                		+ ", height = " + conHeight + "px, width = 1200px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
                 newwin.focus();
 	        }
 	        

@@ -212,15 +212,13 @@
 	            if (typeof (RetValue["tagMsgCC"]) != "undefined") {
 	                if (msgCCDisplay.checked == true) {
 	                    RetValue["tagMsgCC"].style.display = "block";
-	                    RetValue["tagMsgCCu"].style.display = "block";
-	
+
 	                    if (typeof (RetValue["tagMsgCC2"]) != "undefined" && RetValue["tagMsgCC2"] != null)
 	                        RetValue["tagMsgCC2"].style.display = "block";
 	                }
 	                else {
 	                    RetValue["tagMsgCC"].style.display = "none";
-	                    RetValue["tagMsgCCu"].style.display = "none";
-	
+
 	                    if (typeof (RetValue["tagMsgCC2"]) != "undefined" && RetValue["tagMsgCC2"] != null)
 	                        RetValue["tagMsgCC2"].style.display = "none";
 	                }
@@ -232,15 +230,13 @@
 	            if (typeof (RetValue["tagMsgBCC"]) != "undefined") {
 	                if (msgBCCDisplay.checked == true) {
 	                    RetValue["tagMsgBCC"].style.display = "block";
-	                    RetValue["tagMsgBCCu"].style.display = "block";
-	
+
 	                    if (typeof (RetValue["tagMsgBCC2"]) != "undefined" && RetValue["tagMsgBCC2"] != null)
 	                        RetValue["tagMsgBCC2"].style.display = "block";
 	                }
 	                else {
 	                    RetValue["tagMsgBCC"].style.display = "none";
-	                    RetValue["tagMsgBCCu"].style.display = "none";
-	
+
 	                    if (typeof (RetValue["tagMsgBCC2"]) != "undefined" && RetValue["tagMsgBCC2"] != null)
 	                        RetValue["tagMsgBCC2"].style.display = "none";
 	                }

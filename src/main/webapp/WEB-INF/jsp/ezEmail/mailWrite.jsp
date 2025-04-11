@@ -22,12 +22,6 @@
 		</c:if>
 		<!-- 수신인란 height 작업 -->
 		<style>
-			.viewtxtScroller {
-				width:calc(100% - 20px);
-				overflow-y:auto;
-				max-height: 19px;
-				margin-bottom: 3px;
-			}
 			.viewtxtWrapper {
 				display: table;
 				height: 100%;
@@ -37,20 +31,29 @@
 			}
 			.viewtxt > span {
 				display: inline-block;
-				padding-right: 5px;
 			}
 			.viewtxt > span > span {
 				font-size: 12px;
+				display: inline-block;
+				white-space: nowrap;
+				max-width: 300px;
+				overflow: clip;
+				text-overflow: ellipsis;
 			}
 
 			#menu > ul:nth-child(2) > li {
 				margin: 0 2px !important;
 			}
-			.ui-autocomplete { height: 200px; max-height: 200px; overflow-y: auto; overflow-x: hidden; padding : 0px}
+			.ui-autocomplete { height: 200px; max-height: 200px; overflow-y: auto; overflow-x: hidden; padding : 0}
 			#AutoCompleteResults .ui-state-focus { background: #f0f6ff;  border: none }
-			.mailAddressAdd { position:relative; }
-			.expnd { position:absolute; right:9px; top:50%; margin-top:-8px; cursor: pointer; content: url(/images/expnd.gif); }
-			.cllps { position:absolute; right:9px; top:50%; margin-top:-8px; cursor: pointer; content: url(/images/cllps.gif); }
+			img.expnd { position:absolute; right:12px; top:5px; cursor: pointer; content: url(/images/expnd.gif); }
+			img.cllps { position:absolute; right:12px; top:5px; cursor: pointer; content: url(/images/cllps.gif); }
+			#MsgTo, #MsgCC, #MsgBCC {height: 23px !important; width: calc(100% - 27px); min-width: 200px; border: none; ime-mode: active; flex: 1; order: 1; }
+			.viewtxt { display: flex !important; flex-wrap: wrap; gap: 3px 5px; padding-block: 1px; position: relative; padding-right: 20px; }
+			.viewtxtScroller .viewtxt { max-height: 153px; }
+			.viewtxtScroller.close .viewtxt { max-height: 50px; }
+			.viewtxtScroller.close.scroll img.expnd, .viewtxtScroller.close.scroll img.cllps { right: 15px; }
+			.sortable-ghost { opacity: 0.5; }
 		</style>
 		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -62,6 +65,8 @@
 	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/encode_component.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/newMail_Cross.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/email.address.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/Sortable.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/input-util.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/AttachMain_CK.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/AttachItem_CK.js')}"></script>
@@ -79,10 +84,6 @@
 			<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/email.reserved.js')}"></script>
 		</c:if>
 	    <script type="text/javascript">
-	    $(document).ready(function() {
-	    	window.resizeTo(990, window.outerHeight);
-        });
-
 		window.addEventListener('beforeunload', function () {
 			sessionStorage.removeItem('zipPassword');
 		});
@@ -314,9 +315,7 @@
 	        m_rgParams4PostOption["showMsgCC"] = true;
 	        m_rgParams4PostOption["showMsgBCC"] = true;
 	        m_rgParams4PostOption["tagMsgCC"] = MsgCC_TR;
-	        m_rgParams4PostOption["tagMsgCCu"] = MsgCC_TRu;
 	        m_rgParams4PostOption["tagMsgBCC"] = MsgBCC_TR;
-	        m_rgParams4PostOption["tagMsgBCCu"] = MsgBCC_TRu;
 	        m_rgParams4PostOption["bodyType"] = g_bodyType;
 	        m_rgParams4PostOption["EachMail"] = iseachMail;
 	        m_rgParams4PostOption["isSecureMail"] = isSecureMail;
@@ -369,7 +368,6 @@
 	            addReceiverFromList(2, splitAddr);
 	            $('#BccViewer').find('img').attr('src', GroupminImg);
 			    $('#BccViewer').attr("status","on");
-			    document.getElementById("MsgBCC_TRu").style.display = "";
 			    document.getElementById("MsgBCC_TR").style.display = "";
 	        }
 	        
@@ -425,7 +423,7 @@
             // 수신인란 스크롤 UX 개선
             
             // viewtxtScroll elements (수신, 참조, 숨은참조 총 3개)
-            var viewtxtScrollers = $(".viewtxtScroller");
+            var viewtxtScrollers = $(".viewtxt");
             
             // viewtxtScroll 각각의 element에 이전 스크롤 위치를 저장
             viewtxtScrollers.each(function(index) {
@@ -435,12 +433,22 @@
             // jquery scrollTop API를 이용한 스크롱이면 true, 아니면 false
             var scrollTopFlag = false;
             // 스크롤 단위
-            var scrollFixedSpeed = 16;
-            
+            var scrollFixedSpeed = 26;
+			let lastUserInputAt = 0;
+			window.addEventListener('wheel', () => { lastUserInputAt = performance.now(); }, { passive: true });
+			// $('#MsgTo, #MsgCC #MsgBCC').on('focus', () => scrollTopFlag = true);
+
             viewtxtScrollers.on("scroll", function(event) {
             	// 이벤트 발생 주체
             	var jqueryElement = $(this);
             	var domElement = jqueryElement[0];
+				const now = performance.now();
+
+				if (now - lastUserInputAt > 50) {
+					domElement.previousScrollPos = jqueryElement.scrollTop();
+					return;
+				}
+
             	// 이벤트 밸생 후 현재 스크롤 위치
             	var currentScrollPos = jqueryElement.scrollTop();
             	
@@ -476,6 +484,23 @@
             	currentScrollPos = jqueryElement.scrollTop();
             	domElement.previousScrollPos = currentScrollPos;
             });
+
+			// 스크롤바 생기면 cllps 이미지 위치 조정
+			const scrollerResizeObserver = new ResizeObserver(scrollers => {
+				for (const observerEntity of scrollers) {
+					const scroller = observerEntity.target;
+					if (scroller.clientHeight < scroller.scrollHeight) {
+						scroller.parentElement.classList.add('scroll');
+					} else {
+						scroller.parentElement.classList.remove('scroll');
+					}
+				}
+				window.onresize();
+			});
+
+			viewtxtScrollers.each(function() {
+				scrollerResizeObserver.observe($(this)[0]);
+			});
             
             if (attitudeIncludeMe) {
  	         	document.getElementById('toMe').checked = 'checked';
@@ -506,17 +531,38 @@
 				hiddenMoreMenu(e);
 			});
 
-			// 2024-10-16 김은실 : [표준모듈] 메일쓰기창 To, Cc, Bcc 간 Drag & Drop 구현
-			$("#MsgToGot, #MsgCCGot, #MsgBCCGot").sortable({
-				connectWith: ".viewtxt",
-				stop: function(event, ui) {
-					const destWrapper = ui.item[0].parentElement;
-					const span = ui.item[0].querySelector('[email]');
-					const iWhich = destWrapper === MsgToGot ? '0' : destWrapper === MsgCCGot ? '1' : '2';
-					span.setAttribute('itype', iWhich);
-					ui.item[0].querySelector('img[onclick^=deleteMailUser]').setAttribute('onclick', `deleteMailUser("\${span.getAttribute('email')}", "\${iWhich}")`);
+			const sortableOptions = {
+				group: 'mailRecipient',
+				draggable: '.rcpt-wrapper:not(.edit)',
+				ghostClass: 'sortable-ghost',
+				onEnd: event => {
+					if (event.from === event.to) {
+						return;
+					}
+
+					const iWhich = event.to === MsgToGot ? '0' : event.to === MsgCCGot ? '1' : '2';
+					event.item.querySelector('[itype]').setAttribute('itype', iWhich);
+
+					if (event.item.querySelector('[type]').getAttribute('type') === 'mailgroup') {
+						const groupDeleteImg = event.item.querySelector('img[onclick^=deleteMailUser]');
+
+						if (groupDeleteImg) {
+							const email = event.item.querySelector('[email]').getAttribute('email');
+							const href = event.item.querySelector('[href]').getAttribute('href');
+							groupDeleteImg.setAttribute('onclick', `deleteMailUser("\${email}", "\${iWhich}", "\${href}")`);
+						}
+					} else {
+						const userDeleteImg = event.item.querySelector('img[onclick^=onClickRcptDeleteIcon]');
+
+						if (userDeleteImg) {
+							userDeleteImg.setAttribute('onclick', `onClickRcptDeleteIcon(event, "\${iWhich}")`);
+						}
+					}
 				}
-			});
+			};
+			Sortable.create(MsgToGot, sortableOptions);
+			Sortable.create(MsgCCGot, sortableOptions);
+			Sortable.create(MsgBCCGot, sortableOptions);
 
             var selectName = document.getElementById("mailSenderName");
             var selectedOption = selectName.options[selectName.selectedIndex];
@@ -1455,13 +1501,11 @@
 	    function MailBCCView(obj) {
 	        if (obj.getAttribute("status") == "off") {
 	            obj.childNodes.item(1).src = GroupminImg;
-	            document.getElementById("MsgBCC_TRu").style.display = "";
 	            document.getElementById("MsgBCC_TR").style.display = "";
 	            obj.setAttribute("status", "on");
 	        }
 	        else {
 	            obj.childNodes.item(1).src = GroupplusImg;
-	            document.getElementById("MsgBCC_TRu").style.display = "none";
 	            document.getElementById("MsgBCC_TR").style.display = "none";
 	            obj.setAttribute("status", "off");
 	        }
@@ -2315,14 +2359,21 @@
 			
 			}
 	    }
-	    
+
 		// 수신자칸 : 접기, 펼치기 버튼
-	    function changeMode(obj, className) {
-			var mode = { expnd: {switch: 'cllps', height: '55px'},
-						 cllps: {switch: 'expnd', height: '19px'} };
-			obj.className = mode[className].switch;
-			$(obj).siblings('.viewtxtScroller').css('max-height', mode[className].height);
-	    }
+		function changeMode(event) {
+			event.preventDefault();
+			event.stopPropagation();
+			const scroller = event.currentTarget.parentElement;
+
+			if (event.currentTarget.classList.contains('expnd')) {
+				event.currentTarget.classList.replace('expnd', 'cllps');
+				scroller.classList.remove('close');
+			} else {
+				event.currentTarget.classList.replace('cllps', 'expnd');
+				scroller.classList.add('close');
+			}
+		}
 		
 		function mobileDistinction() {
   				var  userAgent = navigator.userAgent.toLowerCase();
@@ -2457,7 +2508,7 @@
 	        </tr>
 	        <tr>
 	            <td>
-	                <table id="infoTable" class="popuplist" style="width:100%">
+	                <table id="infoTable" class="popuplist input-table" style="width:100%">
 	                	<c:if test="${shareId == null and (options.useFromAddress == 'YES' or options.useDistributionSender == 'YES')}">
 		                	<tr id="MsgFrom_TR">
 		                		<th style="text-align: center;">
@@ -2485,83 +2536,77 @@
 		                	</tr>
 	                	</c:if>
 	                    <tr id="MsgTo_TR">
-	                        <th rowspan="2" style="width:1%">
+	                        <th>
 	                            <a class="imgbtn"><span onclick="SelectReceiver_onClick('To')" style="width: 50px; text-align: center;">
 	                                <spring:message code='ezEmail.t66' /></span></a>
-	                            <div style="font-weight:normal; "><INPUT id="toMe" onclick="MailToMe_Onclick();" value="" type="checkbox" name="toMe" style="vertical-align: middle"/>
-	                            <label for="toMe" style="margin-left:-3px;margin-top:1px; cursor:pointer" ><spring:message code='ezEmail.t99000010' /></label></div>
+	                            <div style="display: inline-block; font-weight:normal; "><INPUT id="toMe" onclick="MailToMe_Onclick();" value="" type="checkbox" name="toMe" style="margin:0 0 0 3px; vertical-align: top;"/>
+	                            <label for="toMe" style="vertical-align: top; cursor:pointer; line-height: 24px;" ><spring:message code='ezEmail.t99000010' /></label></div>
 	                        </th>
-	                        <td style="width: 76%">
-								<input type="text" name="MsgTo" id="MsgTo" class="width100percent" onkeypress="return on_keydown(event)" onblur="onblurOnRecipientInputField(this.value)" tabindex="1" style="width: calc(100% - 27px); ime-mode: active;"><span class="btn_AutoCompleteResults"></span>
+	                        <td style="width: 100%; border-right: none;">
+								<div class="viewtxtScroller close">
+									<label id="MsgToGot" class="viewtxt">
+										<input type="text" name="MsgTo" id="MsgTo" class="width100percent" onkeydown="return on_keydown(event)" onblur="onblurOnRecipientInputField(this.value)" tabindex="1"/>
+									</label>
+									<img class="expnd" onclick="changeMode(event);" align="absmiddle">
+								</div>
+								<span class="btn_AutoCompleteResults"></span>
 	                        </td>
-	                        <td style="width: 1%; border-left: #ffffff 1px solid;">
+	                        <td style="width: 1%; border-left: none; border-right: none; padding: 7px 0; text-align: right;">
 	                            <select id="SelectToAddress" style="width: 106px;height:24px" onchange="simple_select('TO',this)">
 	                            </select>
 	                        </td>
-	                        <td style="width: 1%; border-left: #ffffff 1px solid;">
+	                        <td style="width: 1%; border-left: none;">
 	                            <a class="imgbtn imgbck"><span onclick="new_Address()">
 	                                <spring:message code='ezEmail.t832' /></span></a>
-	                        </td>
-	                    </tr>
-	                    <tr>
-	                        <td colspan="3" class="mailAddressAdd">
-	                        	<div class="viewtxtScroller">
-	                            	<div id="MsgToGot" class="viewtxt"></div>
-	                            </div>
-	                            <img class="expnd" onclick="changeMode(this, this.className)" align="absmiddle">
 	                        </td>
 	                    </tr>
 	                    <tr id="MsgCC_TR">
-	                        <th rowspan="2">
-	                            <a class="imgbtn"><span onclick="SelectReceiver_onClick('CC')" style="width: 50px; text-align: center;"> 
+	                        <th>
+	                            <a class="imgbtn"><span onclick="SelectReceiver_onClick('CC')" style="width: 50px; text-align: center;">
 	                                <spring:message code='ezEmail.t594' /></span></a>
-	                            <div onclick="MailBCCView(this);" style="cursor:pointer;" status="off" id="BccViewer">
-	                            <img src="/images/ImgIcon/groupplus.gif" align="absmiddle"/><span><spring:message code='ezEmail.t562' /></span>
+	                            <div onclick="MailBCCView(this);" style="cursor:pointer;display:inline-block;" status="off" id="BccViewer">
+	                            <img src="/images/ImgIcon/groupplus.gif" align="absmiddle"/><span style="vertical-align: middle; cursor:pointer;"><spring:message code='ezEmail.t562' /></span>
 	                            </div>
 	                        </th>
-	                        <td style="width: 76%">
-								<input type="text" name="MsgCC" id="MsgCC" class="width100percent" onkeypress="return on_keydown(event)" onblur="onblurOnRecipientInputField(this.value)" tabindex="2" style="width: calc(100% - 27px); ime-mode: active;"><span class="btn_AutoCompleteResults"></span>
+	                        <td style="width: 100%; border-right:none;">
+								<div class="viewtxtScroller close">
+									<label id="MsgCCGot" class="viewtxt">
+										<input type="text" name="MsgCC" id="MsgCC" class="width100percent" onkeydown="return on_keydown(event)" onblur="onblurOnRecipientInputField(this.value)" tabindex="2"/>
+									</label>
+									<img class="expnd" onclick="changeMode(event);" align="absmiddle">
+								</div>
+								<span class="btn_AutoCompleteResults"></span>
 	                        </td>
-	                        <td style="width: 100px; border-left: #ffffff 1px solid;">
+	                        <td style="width: 1%; border-left:none; border-right: none; padding: 7px 0; text-align: right;">
 	                            <select id="SelectCcAddress" style="width: 106px;height:24px" onchange="simple_select('CC',this)">
 	                            </select>
-	                        </td>
-	                        <td style="width: 200px; border-left: #ffffff 1px solid;">
+							</td>
+							<td style="width: 1%; border-left: none;">
 	                            <a class="imgbtn imgbck"><span onclick="new_Address()">
 	                                <spring:message code='ezEmail.t832' /></span></a>
-	                        </td>
-	                    </tr>
-	                    <tr id="MsgCC_TRu">
-	                        <td colspan="3" class="mailAddressAdd">
-	                        	<div class="viewtxtScroller">
-	                            	<div id="MsgCCGot" class="viewtxt"></div>
-	                            </div>
-	                            <img class="expnd" onclick="changeMode(this, this.className)" align="absmiddle">
 	                        </td>
 	                    </tr>
 	                    <tr id="MsgBCC_TR"  style="display:none;">
-	                        <th rowspan="2">
+	                        <th >
 	                            <a class="imgbtn"><span onclick="SelectReceiver_onClick('BCC')" style="width: 50px; text-align: center;">
 	                                <spring:message code='ezEmail.t562' /></span></a>
 	                        </th>
-	                        <td>
-								<input type="text" name="MsgBCC" id="MsgBCC" class="width100percent" onkeypress="return on_keydown(event)" onblur="onblurOnRecipientInputField(this.value)" tabindex="3" style="width: calc(100% - 27px); ime-mode: active;"><span class="btn_AutoCompleteResults"></span>
+	                        <td style="width: 100%; border-right:none;">
+								<div class="viewtxtScroller close">
+									<label id="MsgBCCGot" class="viewtxt">
+										<input type="text" name="MsgBCC" id="MsgBCC" class="width100percent" onkeydown="return on_keydown(event)" onblur="onblurOnRecipientInputField(this.value)" tabindex="3"/>
+									</label>
+									<img class="expnd" onclick="changeMode(event);" align="absmiddle">
+								</div>
+								<span class="btn_AutoCompleteResults"></span>
 	                        </td>
-	                        <td style="width: 100px; border-left: #ffffff 1px solid;">
+	                        <td style="width: 1%; border-left:none; border-right: none; padding: 7px 0; text-align: right;">
 	                            <select id="SelectBCCAddress" style="width: 106px;height:24px" onchange="simple_select('BCC',this)">
 	                            </select>
-	                        </td>
-	                        <td style="width: 200px; border-left: #ffffff 1px solid;">
+							</td>
+							<td style="width: 1%; border-left: none;">
 	                            <a class="imgbtn imgbck"><span onclick="new_Address()">
 	                                <spring:message code='ezEmail.t832' /></span></a>
-	                        </td>
-	                    </tr>
-	                    <tr id="MsgBCC_TRu" style="display:none;">
-	                        <td colspan="3" class="mailAddressAdd">
-	                        	<div class="viewtxtScroller">
-	                            	<div id="MsgBCCGot" class="viewtxt"></div>
-	                            </div>
-	                            <img class="expnd" onclick="changeMode(this, this.className)" align="absmiddle">
 	                        </td>
 	                    </tr>
 	                    <tr style="height:33px">
@@ -2569,7 +2614,7 @@
 	                            <spring:message code='ezEmail.t98' />
 	                        </th>
 	                        <td colspan="3" style="border-bottom:0px;">
-	                            <input id="eSubject" name="eSubject" onkeyup="Subject_ReApply()" type="text" value="${message.encodedSubject}" tabindex="4" style="width: 100%;margin-top:-2px">
+	                            <input id="eSubject" name="eSubject" onkeyup="Subject_ReApply()" type="text" value="${message.encodedSubject}" tabindex="4" style="width: 100%;">
 	                        </td>
 	                    </tr>
 	                </table>

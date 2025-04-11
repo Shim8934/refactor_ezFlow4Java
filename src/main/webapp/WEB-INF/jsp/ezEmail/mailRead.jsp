@@ -592,7 +592,7 @@
 		        	pURI += "&shareId=" + encodeURIComponent(shareId);
 		    	}
 		        
-		        var newwin = GetOpenWindow(pURI, "", 890, 840, "yes");
+		        var newwin = GetOpenWindow(pURI, "", 1200, 840, "yes");
 		        newwin.focus();
 		    }
 		    

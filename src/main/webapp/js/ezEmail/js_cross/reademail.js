@@ -1,6 +1,6 @@
 var m_bPrevNext = false;
 var real_href = "";
-var minimumWidth = 890;
+var minimumWidth = 1200;
 
 function get_mail(flag) {
     var Flag;
@@ -60,7 +60,7 @@ function ReSend(pURL, pEmail) {
     var pwidth = window.screen.availWidth;
     var pTop = (pheight - conHeight) / 2;
     var pLeft = (pwidth - minimumWidth) / 2;
-    var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no,resizable=1";
+    var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 1200px, status = no, toolbar=no, menubar=no,location=no,resizable=1";
     
     var requestUrl = "/ezEmail/mailWrite.do?url=" + encodeURIComponent(pURL) + "&cmd=RESEND&msgto=" + encodeURIComponent(pEmail);
     
@@ -87,7 +87,7 @@ function ReSend(pURL, pEmail, pReader) {
     var pwidth = window.screen.availWidth;
     var pTop = (pheight - conHeight) / 2;
     var pLeft = (pwidth - minimumWidth) / 2;
-    var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no,resizable=1";
+    var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 1200px, status = no, toolbar=no, menubar=no,location=no,resizable=1";
     
     var requestUrl = "/ezEmail/mailWrite.do?url=" + encodeURIComponent(pURL) + "&cmd=RESEND&msgto=" + encodeURIComponent(pEmail) + "&reciverName=" + encodeURIComponent(pReader);
     
@@ -758,8 +758,8 @@ function write_mail(userinfo) {
     var conHeight = pheight * 0.8;
     var pwidth = window.screen.availWidth;
     var pTop = (pheight - conHeight) / 2;
-    var pLeft = (pwidth - 890) / 2;
-    var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
+    var pLeft = (pwidth - 1200) / 2;
+    var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 1200px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
 
     if (pUse_Editor == "")
         window.open('mail_write_Cross.aspx' + "?MsgTo=" + userinfo + '&cmd=NEW', "", feature);

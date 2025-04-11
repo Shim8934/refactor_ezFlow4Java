@@ -47,7 +47,7 @@ function forward_mail_call(selectItems, shareId) {
     var pLeft = window.outerWidth / 2 + window.screenX - (conWidth / 2);
     var pTop = window.outerHeight / 2 + window.screenY - (conHeight / 2);
 
-    var newwin = window.open(pURI, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+    var newwin = window.open(pURI, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 1200px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
     newwin.focus();
 
     return true;

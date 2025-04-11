@@ -1,21 +1,23 @@
 ﻿var regex = /[\u0000-\u0008\u000B-\u000C\u000E-\u001F]/g;
 var emailFlag=false;
 function MailToMe_Onclick() {
-    var checked = document.getElementById('toMe').checked;
-    var msgDiv = document.getElementById('MsgToGot');
+    const checked = document.getElementById('toMe').checked;
+    const msgDiv = document.getElementById('MsgToGot');
+    const spanArray = msgDiv.querySelectorAll("span.rcpt");
 
     if (checked) {
         var existMe = false;
-        for (var i = 0; i < msgDiv.childNodes.length; i++) {
-            if (msgDiv.childNodes[i].childNodes[0].getAttribute("email") && msgDiv.childNodes[i].childNodes[0].getAttribute("email") == g_myemail) {
+        for (const span of spanArray) {
+            if (span.getAttribute("email") && span.getAttribute("email") === g_myemail) {
                 existMe = true;
             }
         }
+
         if (!existMe) {
-        	if (!increaseReceiverCount()) {
-        		return;
-        	}
-        	
+            if (!increaseReceiverCount()) {
+                return;
+            }
+
             var newElem = PrepareMailTag(0, "email", g_myname, g_myemail, "");
             MsgToGot.appendChild(newElem);
 
@@ -32,15 +34,10 @@ function MailToMe_Onclick() {
 
         }
     } else {
-        for (var i = 0; i < msgDiv.childNodes.length; i++) {
-            if (msgDiv.childNodes[i].childNodes[0].getAttribute("email") && msgDiv.childNodes[i].childNodes[0].getAttribute("email") == g_myemail) {
-            	decreaseReceiverCount();
-            	
-            	while (msgDiv.childNodes[i].hasChildNodes()) {
-                    msgDiv.childNodes[i].removeChild(msgDiv.childNodes[i].lastChild);
-                }
-                msgDiv.removeChild(msgDiv.childNodes[i]);
-                i--;
+        for (const span of spanArray) {
+            if (span.getAttribute("email") && span.getAttribute("email") === g_myemail) {
+                decreaseReceiverCount();
+                msgDiv.removeChild(span.parentElement);
             }
         }
     }
@@ -770,9 +767,9 @@ function Send_onClick_Complete(ReturnValue) {
     try {
         if (ReturnValue) {
             try {
-                if (document.getElementById("MsgToGot").childNodes[0].childNodes.length == 0 &&
-                    document.getElementById("MsgCCGot").childNodes[0].childNodes.length == 0 &&
-                    document.getElementById("MsgBCCGot").childNodes[0].childNodes.length == 0) {
+                if (document.getElementById("MsgToGot").querySelectorAll("span.rcpt").length === 0 &&
+                    document.getElementById("MsgCCGot").querySelectorAll("span.rcpt").length === 0 &&
+                    document.getElementById("MsgBCCGot").querySelectorAll("span.rcpt").length === 0) {
                     alert(strLang93);
                     gInvalidAddressArr = null;
                     return;
@@ -1097,7 +1094,7 @@ function Save_onClick_Complete(ReturnValue) {
         // 자동 저장 도중 Exception이 발생한 경우 MailStatus가 SEND로 유지되어 발송 버튼을
         // 눌러도 반응이 없는 문제 수정
         MailStatus = "NO";
-        isAutoSave = false;        
+        isAutoSave = false;
     }
 }
 
@@ -1391,18 +1388,50 @@ function event_SaveonClick() {
 }
 
 function on_keydown(e) {
-    if (window.event) {
-        if (window.event.keyCode == "13") {
+    const isEnter = (window.event && window.event.keyCode == "13") || (e.which && e.which == 13);
+
+    if (isEnter) {
+        const $menu = $(e.currentTarget).autocomplete("widget");
+
+        if (!$menu.is(":visible") || $menu.find(".ui-state-active, .ui-state-focus").length === 0) {
             NameCertify_onClick(null);
             return;
         }
     }
 
-    if (e.which) {
-        if (e.which == 13) {
-            NameCertify_onClick(null);
+    if (window.event) {
+        if (window.event.keyCode == "8") {
+            deleteRcptEvent(window.event);
             return;
         }
+    }
+
+    if (e.which) {
+        if (e.which === 8) {
+            deleteRcptEvent(e);
+        }
+    }
+}
+
+/** @param event {KeyboardEvent} */
+function deleteRcptEvent(event) {
+    if (event.currentTarget.value.length > 0 || event.repeat) {
+        return;
+    }
+
+    const targetGot = event.currentTarget === MsgTo
+        ? MsgToGot : event.currentTarget === MsgCC
+            ? MsgCCGot : MsgBCCGot;
+
+    targetGot.querySelector(".rcpt-wrapper:last-child")?.focus();
+}
+
+/** @param event {KeyboardEvent} */
+function onDeleteKeyRcpt(event) {
+    if (event.which === 8 && !event.repeat) {
+        const inputElement = event.currentTarget.parentElement.querySelector("input");
+        event.currentTarget.querySelector("img:last-child")?.click();
+        setTimeout(() => inputElement.focus(), 10);
     }
 }
 
@@ -1726,42 +1755,19 @@ function GetMailAddresses(name) {
 }
 
 function CheckMailReceiver(newElem) {
-    var rtnValue = false;
-    for (co = 0; co < MsgToGot.childNodes.length; co++) {
-        if (MsgToGot.childNodes[co].childNodes[0].nodeName == "#text")
-            continue;
-        if (newElem.childNodes[0].getAttribute("email") == MsgToGot.childNodes[co].childNodes[0].getAttribute("email") && MsgToGot.childNodes[co].childNodes[0].getAttribute("type") != "mailgroup")
-            return true;
-        else if (newElem.childNodes[0].getAttribute("href") != null && MsgToGot.childNodes[co].childNodes[0].getAttribute("type") == "mailgroup") {
-        	if (newElem.childNodes[0].getAttribute("href").split("|!|")[0] == MsgToGot.childNodes[co].childNodes[0].getAttribute("href").split("|!|")[0]) {
-        		return true;
-        	}
-        }
-        
-    }
-    for (co = 0; co < MsgCCGot.childNodes.length; co++) {
-        if (MsgCCGot.childNodes[co].childNodes[0].nodeName == "#text")
-            continue;
-        if (newElem.childNodes[0].getAttribute("email") == MsgCCGot.childNodes[co].childNodes[0].getAttribute("email") && MsgCCGot.childNodes[co].childNodes[0].getAttribute("type") != "mailgroup")
-            return true;
-        else if (newElem.childNodes[0].getAttribute("href") != null && MsgCCGot.childNodes[co].childNodes[0].getAttribute("type") == "mailgroup") {
-        	if (newElem.childNodes[0].getAttribute("href").split("|!|")[0] == MsgCCGot.childNodes[co].childNodes[0].getAttribute("href").split("|!|")[0]) {
-        		return true;
-        	}
-        }
-    }
-    for (co = 0; co < MsgBCCGot.childNodes.length; co++) {
-        if (MsgBCCGot.childNodes[co].childNodes[0].nodeName == "#text")
-            continue;
-        if (newElem.childNodes[0].getAttribute("email") == MsgBCCGot.childNodes[co].childNodes[0].getAttribute("email") && MsgBCCGot.childNodes[co].childNodes[0].getAttribute("type") != "mailgroup")
-            return true;
-        else if (newElem.childNodes[0].getAttribute("href") != null && MsgBCCGot.childNodes[co].childNodes[0].getAttribute("type") == "mailgroup") {
-        	if (newElem.childNodes[0].getAttribute("href").split("|!|")[0] == MsgBCCGot.childNodes[co].childNodes[0].getAttribute("href").split("|!|")[0]) {
-        		return true;
-        	}
-        }
-    }
-    return rtnValue
+    return Array.from(MsgToGot.querySelectorAll("span[email]"))
+        .concat(Array.from(MsgCCGot.querySelectorAll("span[email]")))
+        .concat(Array.from(MsgBCCGot.querySelectorAll("span[email]")))
+        .some(rcptElem => {
+            if (newElem.childNodes[0].getAttribute("email") == rcptElem.getAttribute("email") && rcptElem.getAttribute("type") != "mailgroup")
+                return true;
+            else if (newElem.childNodes[0].getAttribute("href") != null && rcptElem.getAttribute("type") == "mailgroup") {
+                if (newElem.childNodes[0].getAttribute("href").split("|!|")[0] == rcptElem.getAttribute("href").split("|!|")[0]) {
+                    return true;
+                }
+            }
+            return false;
+        });
 }
 
 var checkname_cross_dialogArguments = new Array();
@@ -3252,14 +3258,13 @@ function SelectReceiver_Complete(ReturnValue) {
 }
 function SelectReceiver_onClick_Complete(pListViewMsgTo, pListViewMsgCC, pListViewMsgBCC) {
     try {
-        MsgToGot.innerHTML = "";
-        MsgCCGot.innerHTML = "";
-        MsgBCCGot.innerHTML = "";
+        for (const nameSpan of document.querySelectorAll("span.rcpt")) {
+            nameSpan.parentElement.parentElement.removeChild(nameSpan.parentElement);
+        }
         receiverCount = 0;
         
         if (pListViewMsgBCC.getElementsByTagName("TR").length > 1) {
             document.getElementById("BccViewer").childNodes.item(1).src = GroupminImg;
-            document.getElementById("MsgBCC_TRu").style.display = "";
             document.getElementById("MsgBCC_TR").style.display = "";
             document.getElementById("BccViewer").setAttribute("status", "on");
             
@@ -3290,20 +3295,12 @@ function getJustOneReceiverChooseFormat(receiverCol, receiver) {
     receiver["email"] = new Array();
     receiver["href"] = new Array();
 
-    var cnt = 0;
-    for (var i = 0; i < receiverCol.childNodes.length; i++) {
-
-        if (receiverCol.childNodes.item(i).nodeType == "1") {
-
-            var childElem = receiverCol.childNodes.item(i).childNodes[0];
-
-            receiver["type"][cnt] = childElem.getAttribute("type");
-            receiver["name"][cnt] = childElem.getAttribute("name").replace("&quot", '"');
-            receiver["email"][cnt] = childElem.getAttribute("email");
-            receiver["href"][cnt] = childElem.getAttribute("href");
-            cnt++;
-        }
-    }
+    receiverCol.querySelectorAll("span.rcpt").forEach((spanName, i) => {
+        receiver["type"][i] = spanName.getAttribute("type");
+        receiver["name"][i] = spanName.getAttribute("name").replace("&quot", '"');
+        receiver["email"][i] = spanName.getAttribute("email");
+        receiver["href"][i] = spanName.getAttribute("href");
+    });
 }
 
 function addReceiver(pListViewMsgTo, pListViewMsgCC, pListViewMsgBCC) {
@@ -3314,7 +3311,6 @@ function addReceiver(pListViewMsgTo, pListViewMsgCC, pListViewMsgBCC) {
     
     if (pListViewMsgBCC.getElementsByTagName("TR").length > 1) {
         document.getElementById("BccViewer").childNodes.item(1).src = GroupminImg;
-        document.getElementById("MsgBCC_TRu").style.display = "";
         document.getElementById("MsgBCC_TR").style.display = "";
         document.getElementById("BccViewer").setAttribute("status", "on");
     }
@@ -3345,7 +3341,9 @@ function checkDLexist(groupName) {
         return result;
 }
 var mail_select_dlmember_cross_dialogArguments = new Array();
-function NameChange_onClick() {
+function NameChange_onClick(event) {
+    // label 선택으로 최근사용주소 뜨는 현상 방지
+    event.preventDefault();
     g_bDirty = true;
     var count;
     var length;
@@ -3485,9 +3483,10 @@ function GetAddrFormat(receiveCol) {
 function GetAddrFormatForSend(receiveCol) {
     var retAddr = "";
 
-    for (var i = 0; i < receiveCol.childNodes.length; i++) {
-        if (receiveCol.childNodes.item(i).childNodes[0].nodeName != "#text") {
-            var childElem = receiveCol.childNodes.item(i).childNodes[0];
+    const rcptList = receiveCol.querySelectorAll("span.rcpt");
+    for (const childElem of rcptList) {
+        //if (receiveCol.childNodes.item(i).childNodes[0].nodeName != "#text") {
+            // var childElem = receiveCol.childNodes.item(i).childNodes[0];
 
             switch (childElem.getAttribute("type")) {
                 case "email":
@@ -3517,7 +3516,7 @@ function GetAddrFormatForSend(receiveCol) {
                     retAddr += GetGroupEmail(childElem.getAttribute("href"));
                     break;
             }
-        }
+        //}
     }
 
     if (ReplaceText(retAddr, " ", "") != "") {
@@ -3608,6 +3607,10 @@ function GetGroupEmail(pAddressId) {
 function PrepareMailTag(iWhich, type, name, email, href) {
     var TopSpan = document.createElement("span");
     var newElem = document.createElement("span");
+    TopSpan.classList.add("rcpt-wrapper");
+    TopSpan.tabIndex = 0;
+    TopSpan.onkeydown = onDeleteKeyRcpt;
+    newElem.classList.add("rcpt");
     // 앞 뒤로 따옴표 제거
     name = name.replace(/^["']/, "").replace(/["']$/, "");
     email = email.replace(/^["']/, "").replace(/["']$/, "");
@@ -3624,11 +3627,13 @@ function PrepareMailTag(iWhich, type, name, email, href) {
     			var targetElem = document.querySelector("#infoTable span[itype='" + iWhich + "'][email='" + email + "']");
     			
     			if (type == "mailgroup") {
-    				newElem.innerHTML = "<u title=\"" + strLang126 + "\" alt=\"" + strLang126 + "\" >" + name + additionalInfo + "</u>; ";
-    				newElem.parentElement.innerHTML += "<img src='/images/icon/oneline_delete.gif' onclick='deleteMailUser(\"" + type + "\",\"" + iWhich + "\",\"" + href + "\")' style='width:10px;height:10px;cursor:pointer;'/>";
+                    newElem.appendChild(createRcptUElement(strLang126, name + additionalInfo));
+                    TopSpan.innerHTML += "<img src='/images/ImgIcon/mail_close.svg' onclick='deleteMailUser(\"" + type + "\",\"" + iWhich + "\",\"" + href + "\")' style='width:10px;height:10px;cursor:pointer; margin: 0 0 0 6px;'/>";
     			} else {
-    				newElem.innerHTML = "<u title=\"" + email + "\" alt=\"" + email + "\" >" + name + additionalInfo + "</u>; ";
-    				newElem.parentElement.innerHTML += "<img src='/images/icon/oneline_delete.gif' onclick='deleteMailUser(\"" + email + "\",\"" + iWhich + "\")' style='width:10px;height:10px;cursor:pointer;'/>";
+                    if (TopSpan.dataset.innerDomain === "true") {
+                        newElem.appendChild(createRcptUElement(email, name + additionalInfo));
+                        TopSpan.innerHTML += "<img src='/images/ImgIcon/mail_close.svg' onclick='onClickRcptDeleteIcon(event, \"" + iWhich + "\")' style='width:10px;height:10px;cursor:pointer; margin: 0 0 0 6px;'/>";
+                    }
     			}
     		},
     		error	: function(error) {
@@ -3639,7 +3644,7 @@ function PrepareMailTag(iWhich, type, name, email, href) {
     
     newElem.style.cursor = "move"; // [메일쓰기] TO/CC/BCC란 기입 시 MsgTo/CC/BCCGot
     newElem.setAttribute("iType", iWhich); //newElem.getAttribute("iType") = iWhich;
-    newElem.setAttribute("onclick", "NameChange_onClick()");
+    newElem.setAttribute("onclick", "NameChange_onClick(event)");
     newElem.setAttribute("type", type);//newElem.getAttribute("type") = type;
     newElem.setAttribute("name", name);//newElem.getAttribute("name") = name;	
     newElem.setAttribute("email", email);// newElem.getAttribute("email") = email;
@@ -3652,8 +3657,8 @@ function PrepareMailTag(iWhich, type, name, email, href) {
         TopSpan.appendChild(newElem);
         
         if (!g_useAdditionalInfo) {
-        	newElem.innerHTML = "<u title=\"" + strLang126 + "\" alt=\"" + strLang126 + "\" >" + name + "</u>; ";
-        	TopSpan.innerHTML += "<img src='/images/icon/oneline_delete.gif' onclick='deleteMailUser(\"" + type + "\",\"" + iWhich + "\",\"" + href + "\")' style='width:10px;height:10px;cursor:pointer;'/>";
+            newElem.appendChild(createRcptUElement(strLang126, name));
+            TopSpan.innerHTML += "<img src='/images/ImgIcon/mail_close.svg' onclick='deleteMailUser(\"" + type + "\",\"" + iWhich + "\",\"" + href + "\")' style='width:10px;height:10px;cursor:pointer; margin: 0 0 0 6px;'/>";
         }
     } else {
     	var innerDomainList = InnerDomain.toLowerCase().split(';');
@@ -3672,17 +3677,25 @@ function PrepareMailTag(iWhich, type, name, email, href) {
     	} else {
     		newElem.style.color = outMailColor;
     	}
-        
-        
+
+        TopSpan.dataset.innerDomain = isInnerDmain;
         TopSpan.appendChild(newElem);
         
-        if (!g_useAdditionalInfo) {
-        	newElem.innerHTML = "<u title=\"" + email + "\" alt=\"" + email + "\" >" + name + "</u>; ";
-        	TopSpan.innerHTML += "<img src='/images/icon/oneline_delete.gif' onclick='deleteMailUser(\"" + email + "\",\"" + iWhich + "\")' style='width:10px;height:10px;cursor:pointer;'/>";
+        if (!g_useAdditionalInfo || !isInnerDmain) {
+            newElem.appendChild(createRcptUElement(email, `${name} <${email}>`));
+            TopSpan.innerHTML += "<img src='/images/ImgIcon/mail_edit.svg' onclick='editMailUser(event)' style='width:10px;height: 10px;cursor:pointer; margin: 0 6px 0 6px;'/>";
+            TopSpan.innerHTML += "<img src='/images/ImgIcon/mail_close.svg' onclick='onClickRcptDeleteIcon(event, \"" + iWhich + "\")' style='width:10px;height: 10px;cursor:pointer;'/>";
         }
     }
 
     return TopSpan;
+}
+
+function createRcptUElement(email, textContent) {
+    const uElem = document.createElement('U');
+    uElem.title = email;
+    uElem.textContent = textContent;
+    return uElem;
 }
 
 function addReceiverOneListView(iWhich, pListView) {
@@ -3967,56 +3980,91 @@ function Set_sendflag() {
     }
 }
 
+function editMailUser(event) {
+    const rcptWrapper = event.currentTarget.parentElement;
+
+    const input = document.createElement("input");
+    input.type = "text";
+    input.setAttribute("style", `width: ${rcptWrapper.scrollWidth - 20}px; height: 100% !important; padding-left: 0;`);
+
+    const rcptSpan = rcptWrapper.querySelector("span.rcpt");
+    input.value = `${rcptSpan.getAttribute("name")} <${rcptSpan.getAttribute("email")}>`;
+
+    rcptWrapper.classList.add("edit");
+    rcptWrapper.appendChild(input);
+
+    setTimeout(() => {
+        input.focus();
+        const blurEvent = e => {
+            const changeValue = e.currentTarget.value;
+            const regexMatch = changeValue.match(/^([^<>]+)\s*<([A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,})>$/);
+
+            if (regexMatch) {
+                const alias = regexMatch[1].trim();
+                const email = regexMatch[2].trim();
+                const textElem = rcptSpan.querySelector("u");
+                textElem.title = email;
+                textElem.setAttribute("alt", email);
+                textElem.textContent = `${alias} <${email}>`;
+                rcptSpan.setAttribute("name", alias);
+                rcptSpan.setAttribute("email", email);
+
+                const innerDomainList = InnerDomain.toLowerCase().split(';');
+                const emailDomain = email.split('@')[1].toLowerCase();
+                let isInnerDomain = false;
+
+                for (let i = 0; i < innerDomainList.length; i++) {
+                    if (emailDomain === innerDomainList[i]) {
+                        isInnerDomain = true;
+                        break;
+                    }
+                }
+
+                if (isInnerDomain) {
+                    rcptSpan.style.color = inMailColor;
+                } else {
+                    rcptSpan.style.color = outMailColor;
+                }
+
+                rcptSpan.dataset.innerDomain = isInnerDomain;
+            } else {
+                alert(strLangRcptEditError);
+            }
+
+            rcptWrapper.classList.remove("edit");
+            rcptWrapper.removeChild(e.currentTarget);
+        };
+        input.addEventListener("blur", blurEvent);
+        inputUtil.addOnEnterEvent(input, e => e.currentTarget.blur());
+    }, 10);
+}
+
+function onClickRcptDeleteIcon(event, iWhich) {
+    event.stopPropagation();
+    event.preventDefault();
+    const rcptElem = event.currentTarget.parentElement.querySelector("span.rcpt");
+    const email = rcptElem.getAttribute("email");
+    deleteMailUser(email, iWhich);
+}
+
 function deleteMailUser(email, iWhich, href) {
 
     if(!CrossYN())
         window.event.cancelBubble = true;
 
-    switch (iWhich) {
-        case "0":
-            for (var i = 0; i < MsgToGot.children.length; i++) {
-            	if (email == "mailgroup" && GetChildNodes(GetChildNodes(MsgToGot)[i])[0].getAttribute("href") == href) {
-            		decreaseReceiverCount(email, href);
-                	MsgToGot.removeChild(GetChildNodes(MsgToGot)[i]);
-                	
-                	return;
-        		} else if (GetChildNodes(GetChildNodes(MsgToGot)[i])[0].getAttribute("email") == email) {
-        			decreaseReceiverCount();
-        			MsgToGot.removeChild(GetChildNodes(MsgToGot)[i]);
-        			
-                    return;
-                }
-            }
+    const spanWrapper = iWhich === "0" ? MsgToGot : iWhich === "1" ? MsgCCGot : MsgBCCGot;
+    const spanTextArray = spanWrapper.querySelectorAll("span.rcpt");
 
-        case "1":
-            for (var j = 0; j < MsgCCGot.children.length; j++) {
-            	if (email == "mailgroup" && GetChildNodes(GetChildNodes(MsgCCGot)[j])[0].getAttribute("href") == href) {
-            		decreaseReceiverCount(email, href);
-                	MsgCCGot.removeChild(GetChildNodes(MsgCCGot)[j]);
-                	
-                	return;
-        		} else if (GetChildNodes(GetChildNodes(MsgCCGot)[j])[0].getAttribute("email") == email) {
-        			decreaseReceiverCount();
-                	MsgCCGot.removeChild(GetChildNodes(MsgCCGot)[j]);
-                	
-                	return;
-                }
-            }
-
-        case "2":
-            for (var k = 0; k < MsgBCCGot.children.length; k++) {
-            	if (email == "mailgroup" && GetChildNodes(GetChildNodes(MsgBCCGot)[k])[0].getAttribute("href") == href) {
-            		decreaseReceiverCount(email, href);
-                	MsgBCCGot.removeChild(GetChildNodes(MsgBCCGot)[k]);
-                	
-                	return;
-        		} else if (GetChildNodes(GetChildNodes(MsgBCCGot)[k])[0].getAttribute("email") == email) {
-        			decreaseReceiverCount();
-                	MsgBCCGot.removeChild(GetChildNodes(MsgBCCGot)[k]);
-                	
-                	return;
-                }
-            }
+    for (const span of spanTextArray) {
+        if (email === "mailgroup" && span.getAttribute("href") === href) {
+            decreaseReceiverCount(email, href);
+            spanWrapper.removeChild(span.parentElement);
+            return;
+        } else if (span.getAttribute("email") === email) {
+            decreaseReceiverCount();
+            spanWrapper.removeChild(span.parentElement);
+            return;
+        }
     }
 }
 

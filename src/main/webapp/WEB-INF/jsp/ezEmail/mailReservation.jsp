@@ -79,7 +79,7 @@
                         } else {
                             pUrl = "/ezEmail/mailWrite.do?cmd=RESERVE&messageid=" + encodeURIComponent(pMessageID);
                             pUrl += shareId? "&shareId=" + encodeURIComponent(shareId) : "";
-                            pWidth = 890;
+                            pWidth = 1200;
                             pHeight = 840;
                         }
 

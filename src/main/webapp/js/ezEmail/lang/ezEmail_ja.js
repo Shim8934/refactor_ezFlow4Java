@@ -408,6 +408,8 @@ const strLangChangeLimit = "Cannot switch because the attachment size exceeds th
 const strLangKeepMoveCantUseSentBox = '보낸편지함으로는 계속이동 할 수 없습니다.';
 const strLangKeepMoveNoFromHeader = '보낸이가 비어있는 메일은 계속이동 할 수 없습니다.';
 
+const strLangRcptEditError = "입력된 값이 메일 주소 형식이 아닙니다.\n예) 홍길동 <hongkildong@kaoni.com> 와 같은 형식으로 입력해주세요.";
+
 function GetLocalTime(Offset , pDateTime)
 {
     if (pDateTime == "")

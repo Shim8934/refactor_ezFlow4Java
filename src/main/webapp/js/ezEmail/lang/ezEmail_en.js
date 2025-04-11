@@ -408,6 +408,8 @@ const strLangChangeLimit = "Cannot switch because the attachment size exceeds th
 const strLangKeepMoveCantUseSentBox = 'Emails cannot be continuously moved to the Sent folder.';
 const strLangKeepMoveNoFromHeader = 'Emails without a sender cannot be continuously moved.';
 
+const strLangRcptEditError = "The entered value is not in a valid email format.\nPlease enter it in the format: Hong Gil-dong <hongkildong@kaoni.com>";
+
 function GetLocalTime(Offset , pDateTime)
 {
     if (pDateTime == "")

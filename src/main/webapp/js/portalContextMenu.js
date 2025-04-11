@@ -216,7 +216,7 @@ var handleQuickMenuOpen = function (menu) {
 	var pwidth = window.screen.availWidth;
 	var conWidth = pwidth * 0.8;			
 			
-	if (conWidth > 890) conWidth = 890;
+	if (conWidth > 1200) conWidth = 1200;
 		        
 	// var pTop = (pheight - conHeight) / 2;
 	// var pLeft = (pwidth - 890) / 2;			
