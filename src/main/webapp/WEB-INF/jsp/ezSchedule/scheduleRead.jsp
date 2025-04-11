@@ -338,7 +338,7 @@
 		                    }
 	                    } catch (e) {console.log(e);}
 	                    
-		                if (window.opener.reload != undefined)
+		                if (window.opener && window.opener.reload != undefined)
 		                    window.opener.reload();
 		                window.close();
 					},
@@ -391,7 +391,7 @@
 		                    }
 	                    } catch (e) {console.log(e);}
 	                    
-		                if (window.opener.reload != undefined)
+		                if (window.opener && window.opener.reload != undefined)
 		                    window.opener.reload();
 		                window.close();
 					},
