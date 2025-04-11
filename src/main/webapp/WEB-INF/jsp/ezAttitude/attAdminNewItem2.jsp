@@ -258,6 +258,8 @@
 							$("#region").siblings("th").text("<spring:message code='ezAttitude.t47'/>");
 							$("#mobile").siblings("th").text("<spring:message code='ezOrgan.t285'/>");
 							$("#bizsub").siblings("th").text("<spring:message code='ezAttitude.t311'/>");
+							$("#bizsub").siblings("th").text("<spring:message code='ezAttitude.t311'/>");
+							document.querySelector('#periodblock input[type="checkbox"]').nextSibling.nodeValue = "<spring:message code='ezAttitude.t333'/>";
 						}
 						editorResize();
 					}

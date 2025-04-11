@@ -21,6 +21,12 @@
 		height: "762px"
 	}
 </script>
+	<c:if test="${userlang ne '1'}">
+		<style type="text/css">
+			.section2 {padding: 15px 15px 55px 15px;}
+			
+		</style>
+	</c:if>
 <c:choose>
 	<c:when test="${editor eq 'DEXT'}">
 		<script type="text/javascript" src="${util.addVer('/js/ezEditor/dext5Editor/js/dext5editor.js')}"></script>
@@ -704,7 +710,7 @@
 </head>
 <body>
 	<ul class="contentlayout">
-		<li class="contentlayout_right" style="width: 285px; padding-left: 10px;">
+		<li class="contentlayout_right" style="width: 258px; padding-left: 5px;">
 			<!-- reform -->
 			<!-- 최적화사이즈widht285px  가변가능-widht변경가능 -->
 			<div id="reform">

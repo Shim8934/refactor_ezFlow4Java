@@ -598,11 +598,21 @@ function makePermissionsList(value, xmlFalg) {
 	listview.SetHeightFree(true);
 	listview.DataBind("AccessList");
 	var xmldomNode = SelectNodes(xmldom, "NODES/NODE");
+    var primary = $("#quickUserPrimanry").val();
 	
 	for (var i = 0; i < xmldomNode.length; i++) {
 		var accessId =  SelectSingleNodeValue(xmldomNode[i], "ACCESSID");
-		var accessName =  SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME");
-		var accessName2 =  SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME2");
+		var accessName = ""
+        var accessName2 = ""
+        
+        if (primary == 1) {
+            accessName = SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME");
+            accessName2 = SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME2");
+        } else {
+            accessName = SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME2");
+            accessName2 = SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME");
+        }
+        
 		var userType =  SelectSingleNodeValue(xmldomNode[i], "USERTYPE");
 		var accessYN =  SelectSingleNodeValue(xmldomNode[i], "PERMISSIONS");
 		var subdeptPermitted =  SelectSingleNodeValue(xmldomNode[i], "SUBDEPTPERMITTED");
@@ -620,9 +630,9 @@ function makePermissionsList(value, xmlFalg) {
 		listTD.style.paddingBottom = "0px";
 		listTD.style.paddingTop = "0px";
 		
-		if (userLang != "1" && SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME2") != "") {
-			listTDText = accessName2;
-		}
+		// if (userLang != "1" && SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME2") != "") {
+		// 	listTDText = accessName2;
+		// }
 
 		listTD.setAttribute("DATA", accessName);
 		listTD.setAttribute("DATA1", accessName2);

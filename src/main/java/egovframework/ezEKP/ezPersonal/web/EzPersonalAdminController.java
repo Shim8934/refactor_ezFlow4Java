@@ -335,6 +335,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		logger.debug("manageQuickLink started");
 
 		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		if (auth == null) {
 			return "cmm/error/adminDenied";
@@ -357,10 +358,13 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			}
 		}
 
+		String userLang = commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId());
+		
 		model.addAttribute("host", auth.getServerName());
 		model.addAttribute("lang", auth.getLang());
 		model.addAttribute("list", resultList);
 		model.addAttribute("companyId", companyId);
+		model.addAttribute("userPrimanryLang", userLang);
 
 		logger.debug("manageQuickLink ended");
 		return "admin/ezPersonal/personalManageQuickLink";

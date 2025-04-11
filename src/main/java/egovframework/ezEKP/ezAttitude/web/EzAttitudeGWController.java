@@ -1499,7 +1499,12 @@ public class EzAttitudeGWController {
 				searchDeptId = "";
 			}
 			
-			JSONObject data = ezAttitudeService.getAttitudeAbsentedList(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, searchDeptId, pageNum, listSize, orderCell, orderOption, duplicated, info.getLang(), info.getOffSet(), companyId, info.getTenantId(), deptIdList, info.getPrimary());
+			String lang = "1";
+			if (commonUtil.getPrimaryData(info.getLang(), info.getTenantId()) != null) {
+				lang = commonUtil.getPrimaryData(info.getLang(), info.getTenantId());
+			}
+			
+			JSONObject data = ezAttitudeService.getAttitudeAbsentedList(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, searchDeptId, pageNum, listSize, orderCell, orderOption, duplicated, lang, info.getOffSet(), companyId, info.getTenantId(), deptIdList, info.getPrimary());
 			
 			result.put("status", "ok");
 			result.put("code", 0);

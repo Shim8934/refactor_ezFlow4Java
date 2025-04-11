@@ -1038,13 +1038,14 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		logger.debug("portalUserInfoPortlet Start");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String lang = commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId());
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
 		param.put("deptId", userInfo.getDeptID());
 		param.put("companyId", userInfo.getCompanyID());
 		param.put("jobId", userInfo.getJobId());
-		param.put("lang", userInfo.getLang());
+		param.put("lang", lang);
 		
 		
 		String url = "/rest/ezportal/portlets/userinfomations";
@@ -1501,31 +1502,70 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	 */
 	@GetMapping(value = "/ezNewPortal/sampleChartPortlet.do")
 	@ResponseBody
-	public List<List<ChartVO>> sampleChartPortlet() throws Exception {
+	public List<List<ChartVO>> sampleChartPortlet(@CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("sampleChartPortlet Start");
+				
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		int lang = 1;
+		if (userInfo.getLang() != null && !"".equals(userInfo.getLang()) && !"1".equals(userInfo.getLang())) {
+			lang = Integer.parseInt(userInfo.getLang());
+			if (lang > 3) {
+				lang = 2; // 영어, 일본어 외 언어 일 경우 추가
+			}
+		}
+		
+		String[] calendar = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+		String[][] documentLang = {{"Insend", "Outside"},{"内部文書", "外部文書"}}; // 영어 일본어
+		
 		List<List<ChartVO>> wholeList = new ArrayList<>();
 		List<ChartVO> list = new ArrayList<>();
 		SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
-		for (int i = 1; i <= 12; i++) {
-			ChartVO vo = new ChartVO.ChartVOBuilder(i + "월", random.nextInt(50000))
-					.groupTitle("대내문서")
-					.build();
-			list.add(vo);
-		}
-		for (int i = 1; i <= 12; i++) {
-			ChartVO vo = new ChartVO.ChartVOBuilder(i + "월", random.nextInt(50000))
-					.groupTitle("대외문서")
-					.build();
-			list.add(vo);
-		}
-		wholeList.add(list);
+		if (lang == 1) {
+            for (int i = 1; i <= 12; i++) {
+                ChartVO vo = new ChartVO.ChartVOBuilder(i + "월", random.nextInt(50000))
+                        .groupTitle("대내문서")
+                        .build();
+                list.add(vo);
+            }
+            for (int i = 1; i <= 12; i++) {
+                ChartVO vo = new ChartVO.ChartVOBuilder(i + "월", random.nextInt(50000))
+                        .groupTitle("대외문서")
+                        .build();
+                list.add(vo);
+            }
+		    wholeList.add(list);
 
-		List<ChartVO> list2 = new ArrayList<>();
-		for (int i = 0; i <= 2; i++) {
-			list2.add(new ChartVO.ChartVOBuilder(i + "번", random.nextInt(3000)).build());
-		}
-		wholeList.add(list2);
+			List<ChartVO> list2 = new ArrayList<>();
+			for (int i = 0; i <= 2; i++) {
+				list2.add(new ChartVO.ChartVOBuilder(i + "번", random.nextInt(3000)).build());
+			}
+			wholeList.add(list2);
+		} else {
+			String title1 = documentLang[lang-2][0];
+			String title2 = documentLang[lang-2][1];
+			
+			for (int i = 0; i < 12; i++) {
+				ChartVO vo = new ChartVO.ChartVOBuilder(calendar[i], random.nextInt(50000))
+						.groupTitle(title1)
+						.build();
+				list.add(vo);
+			}
+			for (int i = 0; i < 12; i++) {
+				ChartVO vo = new ChartVO.ChartVOBuilder(calendar[i], random.nextInt(50000))
+						.groupTitle(title2)
+						.build();
+				list.add(vo);
+			}
+			wholeList.add(list);
 
+			List<ChartVO> list2 = new ArrayList<>();
+			for (int i = 0; i <= 2; i++) {
+				list2.add(new ChartVO.ChartVOBuilder(i + "", random.nextInt(3000)).build());
+			}
+			wholeList.add(list2);
+		}
+		
 		logger.debug("sampleChartPortlet End");
 		return wholeList;
 	}

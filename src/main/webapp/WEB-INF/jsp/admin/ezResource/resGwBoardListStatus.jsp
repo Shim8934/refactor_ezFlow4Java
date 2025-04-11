@@ -52,13 +52,11 @@
 		.node_div {cursor:pointer;}
 		
 		.node_selected {
-		    font-size: 14px;
 		    height: 26px;
 		    line-height: 26px;
 		    color: #0470E4;
 		    display: inline-block;
 		    padding: 0px 0px 0px 3px;
-		    font-family: 'Noto Sans KR', sans-serif;
 		    cursor: pointer;
 		    width: 76%;
 		    white-space: nowrap;
@@ -68,6 +66,20 @@
 		    font-weight: bold;
 		    text-decoration: underline !important;
 		}
+		
+		.node_normal {
+		    height: 26px;
+		    line-height: 26px;
+		    display: inline-block;
+		    padding: 0px 0px 0px 3px;
+		    cursor: pointer;
+		    width: 76%;
+		    white-space: nowrap;
+		    text-overflow: ellipsis;
+		    overflow: hidden;
+		    box-sizing: border-box;
+		}
+		
 	    </style>
 		<script type="text/javascript" id="clientEventHandlersJS" >
 			var pUserID		= "<c:out value='${userInfo.id}'/>";

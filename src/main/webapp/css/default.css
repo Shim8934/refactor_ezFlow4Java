@@ -4270,3 +4270,5 @@ a.commentFileSpan:hover {cursor: pointer; text-decoration: underline;}
 .schedule_list_date .date_arr{width:16px; height:16px; background-repeat:no-repeat; background-position:center; cursor:pointer;}
 .schedule_list_date .date_arr.date_prev{background-image:url(../images/date_prev.png); margin-right:65px;}
 .schedule_list_date .date_arr.date_next{background-image:url(../images/date_next.png); margin-left:65px;}
+
+.boardTxtURL {width: 73%;margin-left: 1.5px;margin-bottom: 1px;}

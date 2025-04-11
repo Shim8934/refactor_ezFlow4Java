@@ -808,10 +808,11 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			sb.append("<NODE><EXPANDED>FALSE</EXPANDED>");
 			sb.append("<ISLEAF>" + isLeaf + "</ISLEAF>");
 			//2023-07-31 이주원 -  pollTitle 다국어_en 적용하기 위해 추가
-			if (userInfo.getLang().equals("2")) {
-				sb.append("<VALUE>" + commonUtil.cleanValue(vo.getName2()) + "</VALUE>");
-			}else {
+			String lang = commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId());
+			if ("1".equals(lang)) {
 				sb.append("<VALUE>" + commonUtil.cleanValue(vo.getName()) + "</VALUE>");
+			} else {
+				sb.append("<VALUE>" + commonUtil.cleanValue(vo.getName2()) + "</VALUE>");
 			}
 
 			sb.append("<VALUE2>" + commonUtil.cleanValue(vo.getName2()) + "</VALUE2>");

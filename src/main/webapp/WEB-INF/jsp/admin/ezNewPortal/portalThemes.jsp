@@ -986,7 +986,7 @@
 						});
 
 						listHTML += "</div>";
-						listHTML += "<div class='bottomBtn'><a class='btnA updateThemePortletBtn'>저장</a></div>";
+						listHTML += "<div class='bottomBtn'><a class='btnA updateThemePortletBtn'><spring:message code='ezOrgan.t167' /></a></div>";
 						listHTML += "</div>";
 						listHTML += "</div>";
 

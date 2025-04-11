@@ -45,7 +45,7 @@ table, th, td{font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, s
 .headpanel .crust{width:200px;}
 .left-Th{width:95px !important;}
 .imgbtnSurvey{box-shadow:0px 2px 0px 0px rgba(0, 0, 0, 0.1); border:1px solid #c3c3c3; height:28px;}
-.quesDiv .qstnRow .dd-container .dd-options{width:555px !important;}
+.quesDiv .qstnRow .dd-container .dd-options{width:580px !important;}
 .survey_qsbtn li{width:80px;}
 .searchinputBox{height:260px;}
 .mainmenuTabUL_left li{line-height:19px;}
@@ -105,7 +105,7 @@ table, th, td{font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, s
 
 /* 일정관리 */
 .scheduleWrite .hasDatepicker{width:90px !important;}
-.scheduleWrite .ui-timepicker-input{width:50  px !important;}
+.scheduleWrite .ui-timepicker-input{width:50px !important;}
 
 @font-face {
 	font-family: 'Meiryo UI';
@@ -113,3 +113,6 @@ table, th, td{font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, s
 	unicode-range: U+007E; /* 틸드(~)의 유니코드 범위 */
 	font-weight: normal; /* 볼드처리 방지 */
 }
+
+.boardTxtURL {width: 70%;}
+.qstnWrapper .quesDiv .fileAttTooltip {width: 160px;}

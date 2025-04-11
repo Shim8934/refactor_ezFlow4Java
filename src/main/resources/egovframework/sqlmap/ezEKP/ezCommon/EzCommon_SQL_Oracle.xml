@@ -5328,7 +5328,7 @@
 	</insert>
 
 	<select id="EzCommonDAO.selectInProcessJpCodeName3" resultClass="String">
-		SELECT CODE1 FROM TBL_CODELIST WHERE NAME = '진행' AND NAME3 != '進行中'
+		SELECT * FROM TBL_CODELIST WHERE NAME3 = '進行中'
 	</select>
 	
 	<update id="EzCommonDAO.updateInProcessJpCodeName3" parameterClass="Map">

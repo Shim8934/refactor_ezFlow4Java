@@ -1155,7 +1155,7 @@
 		                        <th><c:out value='${lang_secondary}' /></th>
 		                        <td style="border-bottom:1px solid #ddd;"><c:out value='${model.boardName2}' /></td>
 		                    </tr>
-		                    <c:if test="${useJapanese == 'YES'}">
+		                    <c:if test="${useJapanese == 'YES'&& lang_primary ne lang_tertiary}">
 			                    <tr class="primary">
 			                        <th><c:out value='${lang_tertiary}' /></th>
 			                        <td style="border-bottom:1px solid #ddd;"><c:out value='${model.boardName3}' /></td>
@@ -1194,7 +1194,7 @@
 		                            <input type="text" id="txtBoardName2" style="width: 100%" value="<c:out value='${model.boardName2}' />" maxlength="20" />
 		                        </td>
 		                    </tr>
-			          		<c:if test="${useJapanese == 'YES'}">
+			          		<c:if test="${useJapanese == 'YES' && lang_primary ne lang_tertiary}">
 			                    <tr class="primary">
 			                        <th><c:out value='${lang_tertiary}' /></th>
 			                        <td style="border-bottom:1px solid #ddd;">
@@ -1351,7 +1351,7 @@
 	                	URL <spring:message code="ezBoard.t185"/>
 	                </c:if>
 	                 <%-- URL 필드를 게시판 구분 필드로 이동 --%>
-	                 <input type="text" id="txtURL" style="width: 73%;margin-left: 1.5px;margin-bottom: 1px;" value="<c:out value='${model.url}' />" />
+	                 <input type="text" class="boardTxtURL" id="txtURL" value="<c:out value='${model.url}' />" />
 					
 					<%-- 2018-07-13 홍승비 - 홈페이지게시판 구분 추가 --%>
 	                <c:if test="${model.guBun == '8' }">

@@ -3173,7 +3173,7 @@ public class EzAttitudeController {
 							if(attitudeList.get(i).getTypeId().equals("A01")) { //출근
 								avo.setStartDate(attitudeList.get(i).getStartDate().split("\\.")[0]);
 							}else if(attitudeList.get(i).getTypeId().equals("A02")) { //지각
-								avo.setStartDate(attitudeList.get(i).getStartDate().split("\\.")[0] + " (" + egovMessageSource.getMessage("ezAttitude.t113") + ")");
+								avo.setStartDate(attitudeList.get(i).getStartDate().split("\\.")[0] + " (" + egovMessageSource.getMessage("ezAttitude.t113", locale) + ")");
 							}else if(attitudeList.get(i).getTypeId().equals("A03")) { //퇴근
 								avo.setEndDate(attitudeList.get(i).getStartDate().split("\\.")[0]);
 							}else if(attitudeList.get(i).getTypeId().equals("A25")) { //전일퇴근
@@ -3181,7 +3181,7 @@ public class EzAttitudeController {
 								String dayAfter = commonUtil.getDayAfter(startDate[0]);
 								avo.setEndDate(dayAfter + " " + startDate[1].split("\\.")[0]);
 							}else if(attitudeList.get(i).getTypeId().equals("A08")) { //조퇴
-								avo.setEndDate(attitudeList.get(i).getStartDate().split("\\.")[0] + " (" + egovMessageSource.getMessage("ezAttitude.t114") + ")");
+								avo.setEndDate(attitudeList.get(i).getStartDate().split("\\.")[0] + " (" + egovMessageSource.getMessage("ezAttitude.t114", locale) + ")");
 							}else if(attitudeList.get(i).getTypeId().equals("A07")) { //휴근
 								String date = avo.getWorkingHoliday() == null ? attitudeList.get(i).getStartDate().split("\\.")[0] + " ~ " + attitudeList.get(i).getEndDate() : avo.getWorkingHoliday() + "\r\n" + attitudeList.get(i).getStartDate().split("\\.")[0] + " ~ " + attitudeList.get(i).getEndDate();
 								avo.setWorkingHoliday(date);
@@ -3234,7 +3234,7 @@ public class EzAttitudeController {
 							if(attitudeList.get(i).getTypeId().equals("A01")) { //출근
 								avo.setStartDate(attitudeList.get(i).getStartDate().split("\\.")[0]);
 							}else if(attitudeList.get(i).getTypeId().equals("A02")) { //지각
-								avo.setStartDate(attitudeList.get(i).getStartDate().split("\\.")[0] + " (" + egovMessageSource.getMessage("ezAttitude.t113") + ")");
+								avo.setStartDate(attitudeList.get(i).getStartDate().split("\\.")[0] + " (" + egovMessageSource.getMessage("ezAttitude.t113", locale) + ")");
 							}else if(attitudeList.get(i).getTypeId().equals("A03")) { //퇴근
 								avo.setEndDate(attitudeList.get(i).getStartDate().split("\\.")[0]);
 							}else if(attitudeList.get(i).getTypeId().equals("A25")) { //전일퇴근
@@ -3242,7 +3242,7 @@ public class EzAttitudeController {
 								String dayAfter = commonUtil.getDayAfter(startDate[0]);
 								avo.setEndDate(dayAfter + " " + startDate[1].split("\\.")[0]);
 							}else if(attitudeList.get(i).getTypeId().equals("A08")) { //조퇴
-								avo.setEndDate(attitudeList.get(i).getStartDate().split("\\.")[0] + " (" + egovMessageSource.getMessage("ezAttitude.t114") + ")");
+								avo.setEndDate(attitudeList.get(i).getStartDate().split("\\.")[0] + " (" + egovMessageSource.getMessage("ezAttitude.t114", locale) + ")");
 							}else if(attitudeList.get(i).getTypeId().equals("A07")) { //휴근
 								String date = avo.getWorkingHoliday() == null ? attitudeList.get(i).getStartDate().split("\\.")[0] + " ~ " + attitudeList.get(i).getEndDate() : avo.getWorkingHoliday() + "\r\n" + attitudeList.get(i).getStartDate().split("\\.")[0] + " ~ " + attitudeList.get(i).getEndDate();
 								avo.setWorkingHoliday(date);
@@ -3299,7 +3299,7 @@ public class EzAttitudeController {
 						if(attitudeList.get(i).getTypeId().equals("A01")) { //출근
 							avo.setStartDate(attitudeList.get(i).getStartDate().split("\\.")[0]);
 						}else if(attitudeList.get(i).getTypeId().equals("A02")) { //지각
-							avo.setStartDate(attitudeList.get(i).getStartDate().split("\\.")[0] + " (" + egovMessageSource.getMessage("ezAttitude.t113") + ")");
+							avo.setStartDate(attitudeList.get(i).getStartDate().split("\\.")[0] + " (" + egovMessageSource.getMessage("ezAttitude.t113", locale) + ")");
 						}else if(attitudeList.get(i).getTypeId().equals("A03")) { //퇴근
 							avo.setEndDate(attitudeList.get(i).getStartDate().split("\\.")[0]);
 						}else if(attitudeList.get(i).getTypeId().equals("A25")) { //전일퇴근
@@ -3307,7 +3307,7 @@ public class EzAttitudeController {
 							String dayAfter = commonUtil.getDayAfter(startDate[0]);
 							avo.setEndDate(dayAfter + " " + startDate[1].split("\\.")[0]);
 						}else if(attitudeList.get(i).getTypeId().equals("A08")) { //조퇴
-							avo.setEndDate(attitudeList.get(i).getStartDate().split("\\.")[0] + " (" + egovMessageSource.getMessage("ezAttitude.t114") + ")");
+							avo.setEndDate(attitudeList.get(i).getStartDate().split("\\.")[0] + " (" + egovMessageSource.getMessage("ezAttitude.t114", locale) + ")");
 						}else if(attitudeList.get(i).getTypeId().equals("A07")) { //휴근
 							String date = avo.getWorkingHoliday() == null ? attitudeList.get(i).getStartDate().split("\\.")[0] + " ~ " + attitudeList.get(i).getEndDate() : avo.getWorkingHoliday() + "\r\n" + attitudeList.get(i).getStartDate().split("\\.")[0] + " ~ " + attitudeList.get(i).getEndDate();
 							avo.setWorkingHoliday(date);
@@ -3735,7 +3735,7 @@ public class EzAttitudeController {
 		
 		String userId = userInfo.getId();
 		String companyId = userInfo.getCompanyID();
-		String userLang = userInfo.getLang();
+		String userLang = commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId());
 		String startDate = request.getParameter("startDate");
 		String endDate = request.getParameter("endDate");
 		String orderCell = request.getParameter("orderCell");

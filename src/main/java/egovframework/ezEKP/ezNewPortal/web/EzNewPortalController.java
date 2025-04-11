@@ -283,7 +283,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			model.addAttribute("popupNotiList", popupNotiListAfter);
 			model.addAttribute("useActiveX", data.get("useActiveX"));
 			model.addAttribute("lang",userInfo.getLang());
-			model.addAttribute("primary", userInfo.getPrimary());
+			model.addAttribute("primary", commonUtil.getPrimaryData(userInfo.getLang(),userInfo.getTenantId()));
 			model.addAttribute("primaryLang", ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId()));
 			if (data.get("roleInfo").toString().equalsIgnoreCase("admin")) {
 				model.addAttribute("utilAdminUrl", data.get("utilAdminUrl"));
@@ -1150,7 +1150,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		
 		JSONObject jsonResult = new JSONObject();
 		
-		List<PortalUserSwitchVO> arrayUserJob = ezNewPortalService.getArrayUserJob(userInfo.getLang(), userInfo.getId(), userInfo.getTenantId());
+		String lang = commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId());
+		List<PortalUserSwitchVO> arrayUserJob = ezNewPortalService.getArrayUserJob(lang, userInfo.getId(), userInfo.getTenantId());
 		arrayUserJob.forEach(vo -> {
 			if ((StringUtils.isBlank(userInfo.getJobId()) && StringUtils.isBlank(vo.getJobId())) || (vo.getCompanyId().equals(userInfo.getCompanyID())
 					&& vo.getDeptId().equals(userInfo.getDeptID()) && vo.getJobId().equals(userInfo.getJobId()))) {

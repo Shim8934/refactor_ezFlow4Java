@@ -57,7 +57,7 @@
 			}
 			
 			window.onresize = function () {   	
-                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 200 + "PX";
+                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 280 + "PX";
 		    }
 			
 			function Editor_Complete() {
@@ -108,6 +108,14 @@
 				//유형명
             	typeName = ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName, "&amp;", "&"), "&#39;", "'"), "&lt;", "<"), "&gt;", ">"), "&quot;", '"'), "&amp;", "&");
 				
+				var uselang = "<c:out value='${userInfo.lang}'/>";
+				if (uselang != "1") {		
+					$("#writerName").siblings("th").text("<spring:message code='ezAttitude.t93'/>");
+					$("#attiTime").siblings("th").text("<spring:message code='ezAttitude.t149'/>");
+					$("#mobile").siblings("th").text("<spring:message code='ezOrgan.t285'/>");
+					$("#bizsub").siblings("th").text("<spring:message code='ezAttitude.t311'/>");
+				}
+								
 				$("#typeName").text(" " + typeName);
 				$("#writerName").text(" " + writerName);
 				$("#region").html(" " + region);
@@ -404,7 +412,7 @@
 	            </div>
 	        </div>
 	        <script type="text/javascript">
-		        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 200 + "PX";
+		        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 280 + "PX";
 		    </script>
 	    </form>
 	</body>

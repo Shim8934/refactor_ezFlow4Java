@@ -196,6 +196,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 			String type = request.getParameter("type") == null ? "" : request.getParameter("type");
 			String connectMenuId = type.equals("mobile") ? "-2" : "-1";
 			model.addAttribute("connectMenuId", connectMenuId);
+			model.addAttribute("userLang", userInfo.getLang());
 			
 			response.setHeader("Pragma", "no-cache"); //HTTP 1.0
 			response.setHeader("Cache-Control", "no-cache"); //HTTP 1.1 
