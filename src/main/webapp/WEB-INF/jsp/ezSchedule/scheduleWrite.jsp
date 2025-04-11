@@ -468,8 +468,8 @@
 		        	if (document.getElementById("LabelOwner")) {
 		            	printOwner = document.getElementById("LabelOwner").textContent;
 		        	}
-		        	if (document.getElementById("LabelAttendant")) {
-		            	printAttendant = document.getElementById("LabelAttendant").textContent;
+		        	if (document.querySelector("#LabelAttendant span")) {
+		            	printAttendant = document.querySelector("#LabelAttendant span").textContent;
 		        	}
 		        }
 
@@ -771,7 +771,7 @@
                                         <tr id="HolderEdit2">
                                             <th><spring:message code='ezSchedule.t163'/></th>
                                             <td colspan="2">
-                                            	<div style="overflow-y: auto; height: 14px; padding-top: 2px" id="LabelAttendant">                                                
+                                            	<div style="overflow-y: auto; height: 100%; width: 100%; vertical-align: middle; display: table-cell;" id="LabelAttendant">                                                
 													<c:forEach var="item" items="${attendantList}" varStatus="status">
 														<script>
 															modAttendIdList.push('${item.attendantId}');

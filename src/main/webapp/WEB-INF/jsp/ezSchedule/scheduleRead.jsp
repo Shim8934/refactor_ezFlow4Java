@@ -907,7 +907,7 @@
 	                            <th style="white-space:nowrap">
 	                                <spring:message code='ezSchedule.t311' />
 	                            </th>
-	                            <td colspan="3" width="100%" style="overflow-y:auto; height:30px; padding-top:1px; padding-bottom:1px;">
+	                            <td colspan="3" width="100%" style="overflow-y: auto; height: 100%; width: 100%; vertical-align: middle; display: table-cell;">
 	                                <div style="max-height:30px;" id="LabelAttendant">	                                
 	                                	<c:forEach var="item" items="${attendantList}" varStatus="status">	                                		  		
 	                                	 	<span title="<spring:message code='ezSchedule.t162'/>" style="cursor:pointer" onclick="show_personinfo('${item.attendantId}')">
@@ -951,7 +951,7 @@
 	                                <spring:message code='ezSchedule.t314' />
 	                            </th>
 	                            <td colspan="3">
-	                                <div style="word-break: break-all; overflow-y: auto; height: 19px;" id="LabelSubject">	                                    
+	                                <div style="overflow-y: auto; height: 100%; width: 100%; vertical-align: middle; display: table-cell;" id="LabelSubject">	                                    
 	                                    <c:out value="${scheduleInfo.title}" />
 	                                </div>
 	                            </td>
