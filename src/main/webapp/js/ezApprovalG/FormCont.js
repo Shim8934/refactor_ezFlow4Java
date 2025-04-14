@@ -16,7 +16,9 @@ function GetFormInfo(ID, KIND, searchType, searchName) {
 		return;
 	}
 	
-	searchName = searchname.replace(/\\/g, "\\\\").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/%/g, "\\%").replace(/'/g, "\\'").replace(/_/g, "\\_");
+	if (searchName !== null) {
+		searchName = searchName.replace(/\\/g, "\\\\").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/%/g, "\\%").replace(/'/g, "\\'").replace(/_/g, "\\_");
+	}
 	
 	$.ajax({
 		type : "POST",
