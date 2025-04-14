@@ -3437,6 +3437,7 @@
        			TENANT_ID = #tenantID#
        		AND  
        			ITEMID = #itemID#
+			ORDER BY GUID 
 		]]>
 	</select>
 
@@ -9675,5 +9676,19 @@
 		AND		COMPANYID = #companyID#
 		AND		TENANT_ID = #tenantID#
 		ORDER BY MEALDATE ASC
+	</select>
+
+	<select id="EzBoardDAO.getRealFileNames" parameterClass="map" resultClass="String">
+		<![CDATA[
+			SELECT
+				CONCAT(GROUP_CONCAT(FILENAME ORDER BY GUID SEPARATOR '|'), '|') AS FILENAME
+			FROM
+				TBL_BOARD_ITEM_ATTACHMENTS
+			WHERE
+				ITEMID = #itemID#
+		  	AND
+				TENANT_ID = #tenant_id#
+			ORDER BY GUID
+		]]>
 	</select>
 </sqlMap>
