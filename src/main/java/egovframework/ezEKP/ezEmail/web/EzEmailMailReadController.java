@@ -307,12 +307,12 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				}				
 			}
 
+			Folder f = null;
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 			
-			if (ia != null){
-				
-				Folder f = ia.getFolder(folderPath != null ? folderPath : "");
+			if (ia != null) {
+				f = ia.getFolder(folderPath != null ? folderPath : "");
 				if (f == null || !f.exists()) {
 					logger.error("Folder not found. folderPath=" + folderPath);
 					model.addAttribute("title", egovMessageSource.getMessage("ezEmail.t565", locale));
@@ -584,7 +584,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				
 			} else {
 				if (ia != null){
-					Folder f = ia.getFolder(folderPath != null ? folderPath : "");
 					if (f == null || !f.exists()) {
 						logger.error("Folder not found. folderPath=" + folderPath);
 						model.addAttribute("title", egovMessageSource.getMessage("ezEmail.t565", locale));
