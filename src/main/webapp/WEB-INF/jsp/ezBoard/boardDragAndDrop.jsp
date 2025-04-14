@@ -386,6 +386,7 @@
                 var pBoardID = window.parent.pBoardID;
                 var strRet = "";
                 var filecnt = document.getElementById("filelist").childNodes.length;
+                var realFileNames = "";
                 
                 for (var i = 1; i < filecnt; i++) {
                     var filepath = document.getElementById("filelist").childNodes[i].getAttribute("DATA2");
@@ -399,8 +400,11 @@
                     else {
                         strRet += pBoardID + "/uploadFile/" + filepath + "|";
                     }
+
+                    realFileNames += document.getElementById("filelist").childNodes[i].getAttribute("realfilename") + "|";
                 }
                 window.parent.attachxml = strRet;
+                window.parent.realFileNames = realFileNames;
             }
 
             function showAttachInnerNotice() {
