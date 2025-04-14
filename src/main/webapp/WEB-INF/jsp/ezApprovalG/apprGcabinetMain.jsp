@@ -905,7 +905,7 @@
 		                break;
 		        }
 
-				if (g_sFlag !== "m01" && g_sFlag !== "m05" && g_sFlag !== "m06") {
+				if (g_sFlag !== "m01" && g_sFlag !== "m05" && g_sFlag !== "m06" && g_sFlag !== "m12" && g_sFlag !== "m13" ) {
 					document.getElementById("attachedDraft").style.display = "none";
 				}
 		    }
