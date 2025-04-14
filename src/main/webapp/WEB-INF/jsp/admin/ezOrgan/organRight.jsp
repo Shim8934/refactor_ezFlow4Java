@@ -400,7 +400,7 @@
 			    if (CrossYN()){
 			        companyinfo_dialogArguments[0] = args;
 			        companyinfo_dialogArguments[1] = add_company_Complete;
-			        var OpenWin = window.open("/admin/ezOrgan/companyInfo.do", "CompanyInfo", GetOpenWindowfeature(448, 260));
+			        var OpenWin = window.open("/admin/ezOrgan/companyInfo.do", "CompanyInfo_Add", GetOpenWindowfeature(448, 260));
 			        try { OpenWin.focus(); } catch (e) { }
 			    }else{
 			        var rtnValue = window.showModalDialog("/admin/ezOrgan/companyInfo.do", treeNode.GetNodeData("CN"), "dialogHeight:230px; dialogWidth:448px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(448, 260));
