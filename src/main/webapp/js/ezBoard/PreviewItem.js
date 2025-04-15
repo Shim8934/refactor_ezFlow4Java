@@ -365,14 +365,17 @@ function ItemPreviewRead_click(obj) {
 var xmlhttp = createXMLHttpRequest();
 var xmlhttp2 = createXMLHttpRequest();
 function ItemPreviewRead(obj) {
-	
-	for (var i = 0; i < obj.childNodes.length; i++) {
-		if (obj.childNodes[i].style.fontWeight == "bold") {
-			obj.childNodes[i].style.fontWeight = "normal";
-		} else {
-			obj.childNodes[i].style.fontWeight = "normal";
-		}
-	}
+	var noticeObj = ["0", "5", "M"].includes(pBoardType) && obj.getAttribute("DATA9") == "1";
+    
+	if (!noticeObj) {
+        for (var i = 0; i < obj.childNodes.length; i++) {
+            if (obj.childNodes[i].style.fontWeight == "bold") {
+                obj.childNodes[i].style.fontWeight = "normal";
+            } else {
+                obj.childNodes[i].style.fontWeight = "normal";
+            }
+        }
+    }
 
     var pboardid = obj.getAttribute("DATA1");
     var pitemid = obj.getAttribute("DATA2");
