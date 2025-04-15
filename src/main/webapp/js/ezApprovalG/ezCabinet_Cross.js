@@ -1941,8 +1941,8 @@ function makePageSelPage(pTotalCnt) {
     totalPage = Math.ceil(new Number(pTotalCnt / PageSize));
     var pageNum = curpage;
     if (totalPage > 1 && pageNum != 1) {
-        strtext = "<span class='btnimg first'><a onclick= 'return goToPageByNum(1)'>";
-        strtext = strtext + "</a></span>";
+        strtext = "<span class='btnimg first' onclick= 'return goToPageByNum(1)'>";
+        strtext = strtext + "</span>";
         PagingHTML += strtext;
     }
     else {
