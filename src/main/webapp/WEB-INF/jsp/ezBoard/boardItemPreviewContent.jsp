@@ -692,28 +692,27 @@
 					<span id="disLikeCountSpan" style="vertical-align:top;"><c:if test="${disLikeCount > 0}"> (<c:out value="${disLikeCount}"/>)</c:if></span>
 					</span>
 				</div>
-			</c:if>
-			
+            </c:if>
+        </div>
+
             <%-- 2024-09-24 이혜림 - 본문 하단, 첨부파일/한줄댓글 상단에 별점 평가하기 추가 --%>
             <c:if test="${not empty boardInfo.starRatingFlag && boardInfo.starRatingFlag == 'Y'}">
-            <div id="ratingContainer" class="rating_div" onclick="clickRatingButton()">
+                <div id="ratingContainer" class="rating_div" onclick="clickRatingButton()">
                     <div>
-					<span id="avgScore"><b>${itemStarRating.averageScore}</b><spring:message code='ezBoard.lhr004'/></span>
+					    <span id="avgScore"><b>${itemStarRating.averageScore}</b><spring:message code='ezBoard.lhr004'/></span>
                         <span>(<span id="totalRaters">${itemStarRating.totalRaters}</span><spring:message code='ezBoard.lhr003'/>)</span>
                     </div>
                     <span class="ratingButton" title="<spring:message code='ezBoard.lhr001'/>">
-                    <c:forEach var="i" begin="1" end="5">
-                        <c:set var="srcIconFlag" value="${itemStarRating.rating >= i}" />
-                    <label for="rate${i}">
-                        <input type="radio" name="reviewStar" value="${i}" id="rate${i}" <c:if test="${itemStarRating.rating == i}"> checked </c:if> />
-                        <img draggable="false" src="/images/ImgIcon/${srcIconFlag ? 'icon-flag.gif' : 'view-flag.gif'}"/>
-                    </label>
+                    <c:forEach var="i" begin="1" end="5"> <c:set var="srcIconFlag" value="${itemStarRating.rating >= i}" />
+                        <label for="rate${i}">
+                            <input type="radio" name="reviewStar" value="${i}" id="rate${i}" <c:if test="${itemStarRating.rating == i}"> checked </c:if> />
+                            <img draggable="false" src="/images/ImgIcon/${srcIconFlag ? 'icon-flag.gif' : 'view-flag.gif'}"/>
+                        </label>
                     </c:forEach>
                     </span>
                     <a class="imgbtn"><span onclick="clickSaveRatingButton()"><spring:message code='ezBoard.lhr001'/></span></a>
                 </div>
             </c:if>
-		</div>
 			
 		<%-- 2019-11-06 홍승비 - 하단댓글 영역 추가 --%>
         <c:if test="${OneLineReplyFlag == '2'}">

@@ -573,7 +573,7 @@
 	    		var pageFrom = "";
 	    		var xmlHTTP = createXMLHttpRequest();
 	    		var xmlDom = createXmlDom();    
-	    		var objNode;
+	    		var objNode, objRow, objRows;
 
 	    		objNode = createNodeInsert(xmlDom, objNode, "DATA");
 	    		createNodeAndInsertText(xmlDom, objNode, "SCHEDULEID", "");
@@ -588,9 +588,20 @@
 	    		createNodeAndInsertText(xmlDom, objNode, "IMPORTANCE", document.getElementById("importance1").value);
 	    		createNodeAndInsertText(xmlDom, objNode, "ISPUBLIC", "N");
 	    		createNodeAndInsertText(xmlDom, objNode, "REPETITION", repetition);
-				createNodeAndInsertText(xmlDom, objNode, "TITLE", ConvertCharToEntityReference(document.getElementById("title").value));
+				createNodeAndInsertText(xmlDom, objNode, "TITLE", document.getElementById("title").value);
 	    		createNodeAndInsertText(xmlDom, objNode, "LOCATION", "");
 	    		createNodeAndInsertText(xmlDom, objNode, "CONTENTPATH", "");
+	    		
+	    		objRow = createNodeAndAppandNode(xmlDom, objNode, objRow, "ATTENDANTLIST");
+                if (g_attendant != null) {
+                    for (var i=0; i<g_attendant["id"].length; i++) {
+                        createNodeAndAppandNodeText(xmlDom, objRow, objRows , "ATTENDANTID", g_attendant["id"][i]);
+                        createNodeAndAppandNodeText(xmlDom, objRow, objRows , "ATTENDANTNAME1", g_attendant["name1"][i]);
+                        createNodeAndAppandNodeText(xmlDom, objRow, objRows , "ATTENDANTNAME2", g_attendant["name2"][i]);
+                        createNodeAndAppandNodeText(xmlDom, objRow, objRows , "ATTENDANTDEPTNAME", g_attendant["deptname"][i]);
+                        createNodeAndAppandNodeText(xmlDom, objRow, objRows , "ATTENDANTDEPTNAME2", g_attendant["deptname2"][i]);
+                    }
+                }
 	    		
 	    		var Doc_ContentHtml = document.createElement("DIV");
 	    	    var strBody = message.GetEditorContent();
@@ -719,6 +730,50 @@
 		        return str;
 		    }
 	        
+            function useScheduleOnclick() {
+                if ($("#useSchedule").is(":checked")) {
+                    $("#attendantTr").show();
+                } else {
+                    $("#attendantTr").hide();
+                }
+            }
+		    
+		    var g_attendant = null;
+            var schedule_select_attendant_dialogArguments = new Array();
+            function manage_attendant() {
+                var StartTime = $("#Sdatepicker").datepicker({dateFormat: 'yy-mm-dd'}).val()
+                var EndTime = $("#Edatepicker").datepicker({dateFormat: 'yy-mm-dd'}).val()
+            
+                schedule_select_attendant_dialogArguments[0] = g_attendant;
+                schedule_select_attendant_dialogArguments[1] = manage_attendant_Complete;
+            
+                GetOpenWindow("/ezSchedule/scheduleSelectAttendant.do?title=" + encodeURI("<spring:message code='ezSchedule.t234'/>") + "&StartTime=" + StartTime + "&EndTime=" + EndTime + "&ownerid=" + s_userID, "schedule_select_attendant", 970, 655);
+            }
+            
+            function manage_attendant_Complete(rtn) {
+                if (typeof (rtn) != "undefined") {
+                    g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array() };
+                    document.getElementById("receiverinput").innerText = "";
+                    
+                    var receiverList = "";
+                    for (var i = 0; i < rtn["id"].length; i++) {
+                        if (i != 0) {
+                            receiverList += ", ";
+                        }
+                        receiverList += rtn["name"][i];
+                      
+                        g_attendant["name"][i] = rtn["name"][i];
+                        g_attendant["id"][i] = rtn["id"][i];
+                        g_attendant["deptname"][i] = rtn["deptname"][i];
+                        g_attendant["name1"][i] = rtn["name1"][i];
+                        g_attendant["name2"][i] = rtn["name2"][i];
+                        g_attendant["deptname2"][i] = rtn["deptname2"][i];
+                        g_attendant["jikwe"][i] = rtn["jikwe"][i];
+                        g_attendant["phone"][i] = rtn["phone"][i];
+                    }
+                    document.getElementById("receiverinput").innerText = receiverList;
+                }
+            }
 		</script>
 	</head>
 	<xmp id="sigBody" style="display: none;">${content}</xmp>
@@ -859,7 +914,15 @@
 	       				<c:if test="${useSchedule && cmdStr eq 'add'}">
 	       				<tr>
 	         				<th><spring:message code="ezSchedule.t214"/></th>
-	         				<td colspan="3"><input type="checkbox" id="useSchedule" name="useSchedule">          </td>
+	         				<td colspan="3"><input type="checkbox" id="useSchedule" name="useSchedule" onclick="useScheduleOnclick()"></td>
+	       				</tr>
+	       				<tr id="attendantTr" style="display:none;">
+	         				<th><spring:message code="ezSchedule.t163"/></th>
+	         				<td colspan="3">
+	         				    <span id="clickbtn" class="imgbtn" style="padding: 0px 10px;" onclick="manage_attendant()"><spring:message code="ezSchedule.t364"/></span>
+	         				    <!-- <input type="text" id="receiverinput" /> -->
+	         				    <span id="receiverinput" style="vertical-align:middle; margin-left: 5px;"></span>
+                            </td>
 	       				</tr>
 	       				</c:if>
       				</table>

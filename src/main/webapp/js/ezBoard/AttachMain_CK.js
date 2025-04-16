@@ -344,7 +344,7 @@ function AppendFileAttachInfo(ret) {
             var ServerFile = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[2]);
             var is_newfile = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[5]);
             var fileSize = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[6]);
-            realFileNM = ReplaceText(realFileNM, "'", "&apos;");
+            //realFileNM = ReplaceText(realFileNM, "'", "&apos;");
 
             if (is_newfile != "DEL") {
                 objTr = document.createElement("TR");
@@ -598,10 +598,12 @@ var htmlEntities = {
 	'&#40;': '(',
 	'&#41;': ')',
 	'&#64;': '@',
+	'&#39;': '\'', 
+	'&apos;': '\'', 
 };
 
 function unescapeHtml(escapedString) {
-    return escapedString.replace(/&amp;|&#40;|&#41;|&#64;/g, function(match) {
-        return htmlEntities[match];
-    });
+	return escapedString.replace(/&amp;|&#40;|&#41;|&#64;|&#39;/g, function(match) {
+		return htmlEntities[match];
+	});
 }

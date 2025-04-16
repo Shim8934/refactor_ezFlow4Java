@@ -66,6 +66,14 @@ tr.mail { display: none; }
 <%-- 결재를 사용하지 않는다면 결재 tr을 숨김 --%>
 tr[data-target='.approval'], tr.approval { display: none; }
 </c:if>
+<c:if test="${not usePassAprLine}">
+<%-- 기결재통과를 사용하지 않는다면 결재통과알림 tr을 숨김 --%>
+tr.approval.passAprLine { display: none; }
+</c:if>
+<c:if test="${not useBallotSystem}">
+<%-- 투표를 사용하지 않는다면 투표 tr을 숨김 --%>
+tr[data-target='.poll'], tr.poll { display: none; }
+</c:if>
 </style>
 <title></title>
 </head>
@@ -136,7 +144,7 @@ tr[data-target='.approval'], tr.approval { display: none; }
 			<td><%=makeCheckbox(disableItemFinder, 2, 5, 3)%></td>
 			<td><%=makeCheckbox(disableItemFinder, 2, 5, 4)%></td>
 		</tr>
-		<tr class="collapse approval">
+		<tr class="collapse approval passAprLine">
 			<td><spring:message code='ezPersonal.noti.item.approval.6' /></td>
 			<td><%=makeCheckbox(disableItemFinder, 2, 6, 1)%></td>
 			<td><%=makeCheckbox(disableItemFinder, 2, 6, 2)%></td>

@@ -3634,11 +3634,14 @@ public class EzEmailUtil {
 					// 료비에서 온 메일 중에 related 파트안에 인라인으로 첨부파일이 있는 메일이 있어 이 경우
 					// Forward시 첨부되도록 하기 위해 || p.isMimeType("application/*") 조건을 추가함.
 					if (((MimePart)p).getContentID() != null
+							// attachment로 첨부 파일이면서 Content-ID가 있는 경우 회신 시 포함되는 문제가 발생해 제외 조건 추가함
+							// 혹시라도 인라인 이미지인데 attachment인 경우엔 인라인 이미지로 포함되지 않을 수 있음
+							&& !Part.ATTACHMENT.equalsIgnoreCase(p.getDisposition())
 							&& !p.isMimeType("text/plain")
 							&& !p.isMimeType("application/*")
 							|| (includeAttachment 
-									&& ((p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)) 
-											|| (p.isMimeType("application/*"))))) {
+									&& (Part.ATTACHMENT.equalsIgnoreCase(p.getDisposition()) 
+											|| p.isMimeType("application/*")))) {
 						dest.addBodyPart(p);	
 						isAdded = true;
 					}
@@ -3660,6 +3663,7 @@ public class EzEmailUtil {
 
 				// dhlee : 20221125 - multipart/mixed 안에 인라인 이미지 파트가 있는 메일이 있어 추가함.
 				if (((MimePart)p).getContentID() != null
+						&& !Part.ATTACHMENT.equalsIgnoreCase(p.getDisposition())
 						&& !p.isMimeType("text/plain")
 						&& !p.isMimeType("application/*")) {
 					isAdded = true;
@@ -3672,6 +3676,9 @@ public class EzEmailUtil {
 		// related 파트안에 mixed 파트가 있고 첨부파일이 있는 메일.eml 참고
 		} else if (src instanceof BodyPart) {
 			if (((MimePart)src).getContentID() != null // dhlee : 20221125 - multipart/mixed 안에 인라인 이미지 파트가 있는 메일이 있어 추가함.
+					// attachment로 첨부 파일이면서 Content-ID가 있는 경우 회신 시 포함되는 문제가 발생해 제외 조건 추가함
+					// 혹시라도 인라인 이미지인데 attachment인 경우엔 인라인 이미지로 포함되지 않을 수 있음
+					&& !Part.ATTACHMENT.equalsIgnoreCase(src.getDisposition())
 					// Content-Type: pdf; name="=?UTF-8?B?7Jew6rWs6rCc67Cc6rO87KCcIOuzgOqyvSDsmpTssq3shJwyLnBkZg==?="
 					// Content-Disposition: attachment;
 					// filename="=?UTF-8?B?7Jew6rWs6rCc67Cc6rO87KCcIOuzgOqyvSDsmpTssq3shJwyLnBkZg==?="
@@ -3689,7 +3696,7 @@ public class EzEmailUtil {
 					// 제외 조건을 Content-Disposition: attachment로 하지 않는 이유는 Inline Image이지만 attachment로 잘못 되어 있는 경우도 있는 것으로 보이기 때문
 					&& !src.isMimeType("application/*")
 					|| (includeAttachment
-							&& (src.getDisposition() != null && src.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)
+							&& (Part.ATTACHMENT.equalsIgnoreCase(src.getDisposition())
 									|| src.isMimeType("application/*")))) {
 				dest.addBodyPart((BodyPart)src);	
 			}			

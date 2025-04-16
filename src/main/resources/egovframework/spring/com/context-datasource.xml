@@ -50,6 +50,7 @@
         <property name="minEvictableIdleTimeMillis" value="300000"/>
         <property name="testWhileIdle" value="true"/>        
         <property name="maxActive" value="500"/>
+        <property name="maxIdle" value="500"/>
         <property name="maxWait" value="20000"/>
     </bean>
     
@@ -89,6 +90,7 @@
         <property name="minEvictableIdleTimeMillis" value="300000"/>
         <property name="testWhileIdle" value="true"/>        
         <property name="maxActive" value="500"/>
+        <property name="maxIdle" value="500"/>
         <property name="maxWait" value="20000"/>     
     </bean>
     

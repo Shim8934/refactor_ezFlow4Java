@@ -3503,8 +3503,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         	
         	return "EMAIL_ERROR";
         }
-        // UUID로 pass 변경
-        String restorePwd = UUID.randomUUID().toString();
         
         int tenantID = userInfo.getTenantId();        
         String cnList = request.getParameter("cn");
@@ -3582,7 +3580,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 							logger.error(e.getMessage(), e);
 						}
 						
-						ezOrganAdminService.setPasswordWithEmailSystem(cn[i], domain, restorePwd, tenantID);
 						
 					} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
 						ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);

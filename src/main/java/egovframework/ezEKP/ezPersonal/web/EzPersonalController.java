@@ -2496,6 +2496,10 @@ public class EzPersonalController extends EgovFileMngUtil {
 
 		String packageType = commonUtil.getPackageType(user.getTenantId());
 		model.addAttribute("packageType",packageType);
+		
+		model.addAttribute("usePassAprLine", "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("usePassAprLine", user.getTenantId())));
+		model.addAttribute("useBallotSystem", "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useBallotSystem", user.getTenantId())));
+		
 		logger.debug("notificationItemTab ended.");
 		return "/ezPersonal/noti/notificationItemTab";
 	}

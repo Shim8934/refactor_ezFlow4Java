@@ -1340,7 +1340,7 @@
 		<![CDATA[
 			INSERT INTO TBL_USERMASTER_RETIRE
               ( CN, DISPLAYNAME, DISPLAYNAME2, MAIL, MAILNICKNAME, UPNNAME, DEPARTMENT, DESCRIPTION, DESCRIPTION2, DESCRIPTION3, PHYSICALDELIVERYOFFICENAME, COMPANY, COMPANY2, TITLE, TITLE2, TELEPHONENUMBER, HOMEPHONE, FACSIMILETELEPHONENUMBER, MOBILE, POSTALCODE, STREETADDRESS, INFO, EXTENSIONATTRIBUTE1, EXTENSIONATTRIBUTE2, EXTENSIONATTRIBUTE3, EXTENSIONATTRIBUTE4, EXTENSIONATTRIBUTE5, EXTENSIONATTRIBUTE6, EXTENSIONATTRIBUTE7, EXTENSIONATTRIBUTE8, EXTENSIONATTRIBUTE9, EXTENSIONATTRIBUTE10, EXTENSIONATTRIBUTE102, EXTENSIONATTRIBUTE11, EXTENSIONATTRIBUTE12, EXTENSIONATTRIBUTE13, EXTENSIONATTRIBUTE14, EXTENSIONATTRIBUTE15, ADSPATH, UPDATEDT, MOBILE_ENABLE, MOBILE_NOTUSE, MOBILE_PIN, SIPURI,PASSWORD,
-                       CREATEDT, TENANT_ID, MAILBOXQUOTA, MAILBOXUSAGE )
+                       CREATEDT, TENANT_ID, MAILBOXQUOTA, MAILBOXUSAGE, MANUAL_FLAG )
               ( SELECT
               		CN ,
                     DisplayName ,
@@ -1390,7 +1390,8 @@
                     CREATEDT ,
                     TENANT_ID ,
                     MAILBOXQUOTA ,
-                    MAILBOXUSAGE
+                    MAILBOXUSAGE,
+                    MANUAL_FLAG
                 FROM TBL_USERMASTER 
                 WHERE  CN = #v_CN#
                 AND TENANT_ID = #v_TENANT_ID#
@@ -6155,7 +6156,7 @@
 		<![CDATA[
 			 INSERT INTO
 			 	TBL_USERMASTER
-				( CN, DisplayName, DisplayName2, mail, MAILNICKNAME, UPNNAME, Department, Description, Description2, Description3, PhysicalDeliveryOfficeName, Company, Company2, Title, Title2, TelephoneNumber, HomePhone, FACSIMILETELEPHONENUMBER, Mobile, postalcode, streetaddress, info, extensionAttribute1, extensionAttribute2, extensionAttribute3, extensionAttribute4, extensionAttribute5, extensionAttribute6, extensionAttribute7, extensionAttribute8, extensionAttribute9, extensionAttribute10, extensionAttribute102, extensionAttribute11, extensionAttribute12, extensionAttribute13, extensionAttribute14, extensionAttribute15, ADSPath, UpdateDT, Mobile_Enable, Mobile_NotUse, Mobile_PIN, SIPURI ,PASSWORD, CREATEDT, TENANT_ID, MAILBOXQUOTA, MAILBOXUSAGE )
+				( CN, DisplayName, DisplayName2, mail, MAILNICKNAME, UPNNAME, Department, Description, Description2, Description3, PhysicalDeliveryOfficeName, Company, Company2, Title, Title2, TelephoneNumber, HomePhone, FACSIMILETELEPHONENUMBER, Mobile, postalcode, streetaddress, info, extensionAttribute1, extensionAttribute2, extensionAttribute3, extensionAttribute4, extensionAttribute5, extensionAttribute6, extensionAttribute7, extensionAttribute8, extensionAttribute9, extensionAttribute10, extensionAttribute102, extensionAttribute11, extensionAttribute12, extensionAttribute13, extensionAttribute14, extensionAttribute15, ADSPath, UpdateDT, Mobile_Enable, Mobile_NotUse, Mobile_PIN, SIPURI ,PASSWORD, CREATEDT, TENANT_ID, MAILBOXQUOTA, MAILBOXUSAGE, MANUAL_FLAG )
            		( 	SELECT
            				CN ,
                     	DISPLAYNAME ,
@@ -6215,7 +6216,8 @@
 	                    CREATEDT,
 	                    TENANT_ID,
 	                    MAILBOXQUOTA ,
-	                    MAILBOXUSAGE
+	                    MAILBOXUSAGE,
+	                    MANUAL_FLAG
               			FROM
               				TBL_USERMASTER_RETIRE 
               			WHERE

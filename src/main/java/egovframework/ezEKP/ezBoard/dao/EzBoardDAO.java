@@ -1231,4 +1231,9 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	public MealDataVO getTodayLunch(Map<String, Object> map) {
 		return (MealDataVO) select("EzBoardDAO.getTodayLunch", map);
 	}
+    
+	public String getRealFileNames(Map<String, Object> map) throws Exception {
+		return (String)select("EzBoardDAO.getRealFileNames", map);
+	}
+	
 }

@@ -4071,10 +4071,15 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			List<String> attachmentList = getCopyItemAttach(orgItemID, userInfo.getTenantId());
 			
 			String attachments = "";
-			
+			String realFileNames = "";
 			/* 2021-06-02 홍승비 - 파일 이동 시 move가 아닌 copy로 변경, 모든 DB 데이터 변경작업이 정상적으로 끝난 이후 한꺼번에 기존 위치의 첨부파일을 삭제하도록 수정 */
 			if (attachmentList != null) {
 				attachments = copyAttachments(orgBoardID, destItemID, destBoardID, attachmentList, realPath + uploadFilePath, "copy", userInfo.getTenantId());
+				Map<String, Object> realFileNameMap = new HashMap<String, Object>();
+					realFileNameMap.put("itemID", orgItemID);
+					realFileNameMap.put("tenant_id", userInfo.getTenantId());
+				realFileNames = ezBoardDAO.getRealFileNames(realFileNameMap);
+
 				deleteAttachStr.addAll(attachmentList);
 			}
 			
@@ -4139,7 +4144,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				}
 				sb.append("</KEYWORDS>");
 			}
-			
+
+			sb.append("<REALFILENAMES>" + realFileNames + "</REALFILENAMES>");
 	        sb.append("</NODE>");
 	        sb.append("</NODES>");
 
@@ -4178,10 +4184,11 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		for (int i = 0; i < attachmentList.size(); i++) {
 			orgFilePath = attachmentList.get(i);
 			orgFilePath = path.replace(commonUtil.getUploadPath("upload_board.ROOT", tenantID), "") + orgFilePath;
-			
-			String fileName = "";
-			fileName = attachmentList.get(i).substring(attachmentList.get(i).lastIndexOf(commonUtil.separator + "uploadFile" + commonUtil.separator) + 12).substring(39);
-			fileName = "{" + UUID.randomUUID() + "}_" + fileName;
+
+			// 확장자 추출 
+			int lastDotIndex = orgFilePath.lastIndexOf('.');
+			String fileExt = orgFilePath.substring(lastDotIndex);
+			String fileName = fileName = UUID.randomUUID() + fileExt;;
 			
 			destFilePath = path + commonUtil.separator + destBoardID + commonUtil.separator + "uploadFile" + commonUtil.separator + fileName;
 			
@@ -4548,9 +4555,13 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			
 			List<String> attachmentList = getCopyItemAttach(orgItemID, userInfo.getTenantId());
 			String attachments = "";
-			
+			String realFileNames = "";
 			if (attachmentList != null) {
 				attachments = copyAttachments(orgBoardID, destItemID, destBoardID, attachmentList, realPath + uploadFilePath, "copy", userInfo.getTenantId());
+				Map<String, Object> realFileNameMap = new HashMap<String, Object>();
+					realFileNameMap.put("itemID", orgItemID);
+					realFileNameMap.put("tenant_id", userInfo.getTenantId());
+				realFileNames = ezBoardDAO.getRealFileNames(realFileNameMap);
 			}
 			
 			List<BoardKeywordVO> keywordList = selectBoardKeywordByBoardItem(orgItemID, orgBoardID, userInfo.getTenantId());
@@ -4611,7 +4622,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				}
 				sb.append("</KEYWORDS>");
 			}
-			
+
+			sb.append("<REALFILENAMES>" + realFileNames + "</REALFILENAMES>");
 	        sb.append("</NODE>");
 	        sb.append("</NODES>");
 
