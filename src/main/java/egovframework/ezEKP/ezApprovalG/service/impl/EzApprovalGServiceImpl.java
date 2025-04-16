@@ -39522,7 +39522,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
     public String getSummaryFileContent(ApprGSummaryVO summary) throws Exception {
         logger.debug("getSummaryFileContent started");
         
-        SummaryPath path = new SummaryPath(summary.getDocID(), summary.getCompanyID(), summary.getTenantID());
+        FilePath path = new FilePath(summary.getDocID() + ".mht", "uploadSummary", summary.getCompanyID(), summary.getTenantID());
         byte[] fileBytes = loadFile(path.getFileFullPath());
         
         logger.debug("getSummaryFileContent ended");
@@ -39544,7 +39544,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
        logger.debug("saveSummaryFileContent started");
        
         String status = "";
-        SummaryPath path = new SummaryPath(summary.getDocID(), summary.getCompanyID(), summary.getTenantID());
+        FilePath path = new FilePath(summary.getDocID() + ".mht", "uploadSummary", summary.getCompanyID(), summary.getTenantID());
         
         // 파일 저장
         Files.createDirectories(Paths.get(path.getDirFullPath()));
@@ -39558,7 +39558,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
     public void deleteSummaryFile(String docID, String companyID, int tenantID) throws Exception {
         logger.debug("deleteSummaryFile started");
         
-        SummaryPath path = new SummaryPath(docID, companyID, tenantID);
+        FilePath path = new FilePath(docID + ".mht", "uploadSummary", companyID, tenantID);
         
         File summaryFile = new File(path.getFileFullPath());
         if (summaryFile.exists()) {
@@ -39593,15 +39593,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         }
     }
     
-    private class SummaryPath {
+    private class FilePath {
         private final String fileName;
         private final String dirPath;
         private final String realPath;
         
-        SummaryPath(String docID, String companyID, int tenantID) throws Exception {
+        FilePath(String fileName, String dirName, String companyID, int tenantID) throws Exception {
             String pRealPath = commonUtil.getRealPath(servletContext);
-            String pDirPath = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + companyID + commonUtil.separator + "uploadSummary" + commonUtil.separator;
-            this.fileName = commonUtil.detectPathTraversal(docID + ".mht");
+            String pDirPath = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + companyID + commonUtil.separator + dirName + commonUtil.separator;
+            this.fileName = commonUtil.detectPathTraversal(fileName);
             this.dirPath = commonUtil.detectPathTraversal(pDirPath);
             this.realPath = commonUtil.detectPathTraversal(pRealPath);
         }
@@ -39610,5 +39610,18 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         private String getDirFullPath() { return realPath + dirPath; }
         private String getFilePath() { return dirPath + fileName; };
         private String getFileFullPath() { return realPath + dirPath + fileName; }
+    }
+    
+    @Override
+    public String saveSignImg(MultipartFile signImg, String companyID, int tenantID) throws Exception {
+        logger.debug("saveSignImg started.");
+        String fileName = UUID.randomUUID().toString() + ".jpg";
+        FilePath path = new FilePath(fileName, "drawSignImg", companyID, tenantID);
+        // 파일 저장
+        Files.createDirectories(Paths.get(path.getDirFullPath()));
+        Files.write(Paths.get(path.getFileFullPath()), signImg.getBytes(), StandardOpenOption.CREATE);
+        
+        logger.debug("saveSignImg ended.");
+        return path.getFilePath();
     }
 }

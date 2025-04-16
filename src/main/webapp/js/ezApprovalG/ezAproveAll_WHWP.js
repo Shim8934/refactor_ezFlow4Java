@@ -1552,7 +1552,7 @@ function openSingUI(parameter) {
 
 	var SignNodeList = SelectNodes(loadXMLString(result), "LISTVIEWDATA/ROWS/ROW");
   
-	if (SignNodeList.length != 0) { 
+	// if (SignNodeList.length != 0) { 
 		var parameter = pingUserID;
 		/*var url = "/ezApprovalG/aprSign.do";
 		var feature	= "status:no;dialogWidth:350px;dialogHeight:310px;help:no;scroll:no;edge:sunken";
@@ -1560,11 +1560,13 @@ function openSingUI(parameter) {
 		aprsign1_cross_dialogArguments[0] = parameter;
         aprsign1_cross_dialogArguments[1] = openSingUI_Complete;
         DivPopUpShow(350, 310, "/ezApprovalG/aprSign.do");
+	/*
 	} else {
 		var ret = "NAME";
 		Approve_complete(ret);
 		//GetHTML(Approve_complete);
 	}
+	*/
 }
 
 function SetAutoPropFinal() {

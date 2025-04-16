@@ -4985,9 +4985,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String userInfoApprovalG = config.getProperty("config.UserInfo_ApprovalG");
+		String signCount = ezOrganService.getPropertyValue(userInfo.getId(), "extensionAttribute3", userInfo.getTenantId());
+		String existSign = Strings.isNotBlank(signCount) ? "Y" : "N";
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("userInfoApprovalG", userInfoApprovalG);
+		model.addAttribute("existSign", existSign);
 		
 		logger.debug("aprSign ended.");
 		
@@ -14104,5 +14107,21 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			logger.error(e.getMessage(), e);
 		}
 		return code;
+	}
+	
+	@PostMapping(value="/ezApprovalG/saveDrawSignImg.do")
+	@ResponseBody
+	public Map<String, String> saveDrawSignImg(@CookieValue("loginCookie") String loginCookie, @RequestParam MultipartFile signImg) throws Exception {
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		Map<String, String> rtnVal = new HashMap<>();
+		try {
+			String signImgUrl = ezApprovalGService.saveSignImg(signImg, userInfo.getCompanyID(), userInfo.getTenantId());
+			rtnVal.put("status", "ok");
+			rtnVal.put("url", signImgUrl);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			rtnVal.put("status", "error");
+		}
+		return rtnVal;
 	}
 }
