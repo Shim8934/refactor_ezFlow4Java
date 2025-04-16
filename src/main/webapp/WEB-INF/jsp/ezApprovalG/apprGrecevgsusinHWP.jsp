@@ -453,7 +453,10 @@
 			            setNodeText(btnRJunkyul.childNodes[0], "<spring:message code='ezApprovalG.t1406'/>");
 			
 			            if (pDocType == "001") {
-			                btnReturn.style.display = "none";
+							var btnReturn = document.getElementById("btnReturn");
+							if (btnReturn) {
+								btnReturn.style.display = "none";
+							}
                             btnReqReSend.style.display = isRelay ? "" : "none";
 			
 			                if (pAprState == "011") {
@@ -487,8 +490,11 @@
 	        	            if (g_DraftFlag == "REDRAFT" && pDraftFlag == "SUSIN") {
 	        	                setMenuBar("btnDistribute", false);
 	        	            }
-	                    	
-	                        btnReturn.style.display = "none";
+
+							var btnReturn = document.getElementById("btnReturn");
+							if (btnReturn) {
+								btnReturn.style.display = "none";
+							}
                             btnReqReSend.style.display = isRelay ? "" : "none";
 
 	                        if (pAprState == "011") {
@@ -1387,7 +1393,10 @@
 			function JiJungBeBuDisable() {
 			    btnAssign.style.display = "none";
 			    btnDistribute.style.display = "none";
-			    btnReturn.style.display = "none";
+				var btnReturn = document.getElementById("btnReturn");
+				if (btnReturn) {
+					btnReturn.style.display = "none";
+				}
 			}
 		
 			function getGongRamDocInfo() {
@@ -1791,12 +1800,12 @@
 	                        <li id="btnReDistribute" style="display: none"><span onclick="return btnReDistribute_onclick()"><spring:message code='ezApprovalG.t1433'/></span></li>
 	                        <c:choose>
 		                        <c:when test="${isNonElecRec eq 'Y'}">
-			                        <li id="btnDel"><span onclick="return btnDel_onclick()">삭제</span></li>
+			                        <li id="btnDel"><span onclick="return btnDel_onclick()"><spring:message code='ezApprovalG.t266'/></span></li>
 		                        </c:when>
-		                        <c:otherwise>
-			                        <li id="btnReturn"><span onclick="return btnReturn_onclick()"><spring:message code='ezApprovalG.t1434'/></span></li>
-		                        </c:otherwise>
 	                        </c:choose>
+							<c:if test="${isNonElecRec != 'Y'}">
+								<li id="btnReturn"><span onclick="return btnReturn_onclick()"><spring:message code='ezApprovalG.t1434'/></span></li>
+							</c:if>
 	                        <li id="btnReqReSend" style="display: none"><span onclick="return btnReqReSend_onclick()"><spring:message code='ezApprovalG.t1435'/></span></li>
 	                        <li id="btnEdit"><span onclick="return btnEdit_onclick()"><spring:message code='ezApprovalG.t44'/></span></li>
 	                        <li id="btnPrint"><span onclick="return btnPrint_onclick()"><spring:message code='ezApprovalG.t60'/></span></li>

@@ -1553,7 +1553,10 @@
 			function JiJungBeBuDisable() {
 			    btnAssign.style.display = "none";
 			    btnDistribute.style.display = "none";
-			    btnReturn.style.display = "none";
+				var btnReturn = document.getElementById("btnReturn");
+				if (btnReturn) {
+					btnReturn.style.display = "none";
+				}
 			}
 		
 			function getGongRamDocInfo() {
@@ -2167,12 +2170,11 @@
 							<c:choose>
 								<c:when test="${isNonElecRec eq 'Y'}">
 									<li id="btnDel"><span onclick="return btnDel_onclick()"><spring:message code='ezApprovalG.t266'/></span></li>
-									<li id="btnReturn" style="display: none"><span onclick="return btnReturn_onclick()"><spring:message code='ezApprovalG.t1434'/></span></li>
 								</c:when>
-								<c:otherwise>
-									<li id="btnReturn" style="display: none"><span onclick="return btnReturn_onclick()"><spring:message code='ezApprovalG.t1434'/></span></li>
-								</c:otherwise>
 							</c:choose>
+							<c:if test="${isNonElecRec != 'Y'}">
+								<li id="btnReturn" style="display: none"><span onclick="return btnReturn_onclick()"><spring:message code='ezApprovalG.t1434' /></span></li>
+							</c:if>
 							<li id="btnEdit" style="display: none"><span onclick="return btnEdit_onclick()"><spring:message code='ezApprovalG.t44'/></span></li>
 	                        <li id="btnPrint"><span class="icon16 popup_icon16_print" onclick="return btnPrint_onclick()"></span></li>
 	                        <c:if test="${useExternalMailServer == 'NO'}">

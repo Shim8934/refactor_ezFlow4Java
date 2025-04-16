@@ -1510,7 +1510,10 @@
 		    function JiJungBeBuDisable() {
 		        btnAssign.style.display = "none";
 		        btnDistribute.style.display = "none";
-		        btnReturn.style.display = "none";
+				var btnReturn = document.getElementById("btnReturn");
+				if (btnReturn) {
+					btnReturn.style.display = "none";
+				}
 		    }
 		    function getGongRamDocInfo() {
 		        try {
@@ -2058,7 +2061,9 @@
 					</c:if>
 					<li id="btnAssign" ><span  onClick="return btnAssign_onclick()"><spring:message code='ezApprovalG.t1430'/></span></li>
 					<li id="btnDistribute"><span  onClick="return btnDistribute_onclick()"><spring:message code='ezApprovalG.t1432'/></span></li>
-					<li id="btnReturn"><span  onClick="return btnReturn_onclick()"><spring:message code='ezApprovalG.t1434'/></span></li>
+					<c:if test="${isNonElecRec != 'Y'}">
+						<li id="btnReturn"><span onClick="return btnReturn_onclick()"><spring:message code='ezApprovalG.t1434'/></span></li>
+					</c:if>
 					<li id="btnEdit"><span  onClick="return btnEdit_onclick()"><spring:message code='ezApprovalG.t44'/></span></li>
 			<c:choose>
 				<c:when test="${isNonElecRec eq 'Y'}">
