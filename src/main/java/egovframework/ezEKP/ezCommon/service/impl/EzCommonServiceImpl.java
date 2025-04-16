@@ -538,8 +538,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             InputStream tempIn = null;
             try {
             	if (imgSrc.contains("222.106.242.180")) {
-            		continue;
-            	} else {
+                    continue;
+                // 이미지 src에 base64로 변환된 이미지를 직접 넘겨주는 경우 파일입출력 하지 않음
+            	} else if (!imgSrc.startsWith("data:")) { 
             		tempIn = Files.newInputStream(Paths.get(realPath + imgSrc));
             		contentType = URLConnection.guessContentTypeFromStream(tempIn);
             	}
@@ -565,8 +566,8 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             */
             imgSrc = imgSrc.replaceAll("\\{", "!!Q").replaceAll("\\}", "!!W");
             tempHtml = tempHtml.replaceAll("\\{", "!!Q").replaceAll("\\}", "!!W");
-            tempHtml = Pattern.compile(imgSrc).matcher(tempHtml).replaceAll("file:///C:/IMAGE" + (imgSrcs.indexOf(imgSrc) + 1) + extension);
-            tempHtml = Pattern.compile(imgSrc.substring(1)).matcher(tempHtml).replaceAll("file:///C:/IMAGE" + (imgSrcs.indexOf(imgSrc) + 1) + extension);
+            tempHtml = Pattern.compile(Pattern.quote(imgSrc)).matcher(tempHtml).replaceAll(("file:///C:/IMAGE" + (imgSrcs.indexOf(imgSrc) + 1) + extension));
+            tempHtml = Pattern.compile(Pattern.quote(imgSrc.substring(1))).matcher(tempHtml).replaceAll(("file:///C:/IMAGE" + (imgSrcs.indexOf(imgSrc) + 1) + extension));
 
             imgSrc = imgSrc.replaceAll("!!Q", "\\{").replaceAll("!!W", "\\}");
             tempHtml = tempHtml.replaceAll("!!Q", "\\{").replaceAll("!!W", "\\}");
@@ -631,6 +632,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
                 } catch (Exception e) {
                     logger.error(e.getMessage(), e);
                 }
+            } else if (imgSrc.startsWith("data:")) { 
+                // 이미지 src에 base64로 변환된 이미지를 직접 넘겨주는 경우 파일입출력 하지 않음
+                String strImageDataEncording64  = imgSrc.split(",")[1];
+                imagesBuilder.append(strImageDataEncording64 + commonUtil.CRLF);
+                imagesBuilder.append("--" + m_strBoundary);
             } else {
                 try {
                     String fisPath = new File(realPath + imgSrc).exists() ? realPath + imgSrc : realPath + "/" + imgSrc;

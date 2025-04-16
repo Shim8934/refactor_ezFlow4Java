@@ -3028,17 +3028,19 @@ function openSingUI(parameter) {
     var objNodes = SelectNodes(Resultxml, "LISTVIEWDATA/ROWS/ROW");
     var SignNodeList = objNodes.length;
     // 결재 서명 정보가 존재하는 경우
-    if (SignNodeList != 0) {
+    // if (SignNodeList != 0) {
         var parameter = pingUserID;
         aprsign1_cross_dialogArguments[0] = parameter;
         aprsign1_cross_dialogArguments[1] = openSingUI_Complete;
         // 서명하는 팝업 호출
         DivPopUpShow(350, 310, "/ezApprovalG/aprSign.do");
-    }
-    else {
-        var ret = "NAME";
-        Approv_Complete(ret);
-    }
+        /*
+        }
+        else {
+            var ret = "NAME";
+            Approv_Complete(ret);
+        }
+        */
 }
 /**
  * sentdate field가 존재하는 경우

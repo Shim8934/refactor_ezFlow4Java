@@ -1595,14 +1595,16 @@ function openSignUI() {
 	  	
 	  	SignNodeList = SelectNodes(loadXMLString(result), "LISTVIEWDATA/ROWS/ROW");
 	    
-	    if (SignNodeList.length != 0) { 
+	    // if (SignNodeList.length != 0) { 
 	  		var parameter	= pUserID;
 	  		var url = "/ezApprovalG/aprSign.do";
 	  		var feature	= "status:no;dialogWidth:350px;dialogHeight:310px;help:no;scroll:no;edge:sunken";
 	  	    var ret = window.showModalDialog(url, parameter, feature);
-	    } else {
+		/*
+		} else {
 	  		var ret = "NAME";
 	    }
+		*/
 	      
 	  	return ret;
     } catch(e) {
