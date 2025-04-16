@@ -877,7 +877,7 @@ function checkMailStatusAndSave(savemode) {
     
     dadiframe.updateItemUid();
 }
-
+var alertFlag = false;
 function Save_onClick(savemode) {
     // 이미 저장 혹은 발송 중이면 저장 작업을(자동 저장) 수행하지 않고 그냥 반환한다.
     if (savemode == "tempsave" && MailStatus == "SEND" && !previewChk) {
@@ -886,10 +886,14 @@ function Save_onClick(savemode) {
     
     // 2024-03-06 이사라 - 임시보관함으로 메일을 저장하는 경우도 제목을 필수로 입력하도록 수정
     if (eSubject.value.trim() == "" && !previewChk) {
-        alert(strLang92);
-        eSubject.focus();
+        if (!alertFlag) {
+            alert(strLang92);
+            eSubject.focus();
+            alertFlag = true;
+        }
         return "noSubject"; // 2024.04.29 한슬기 : 제목이 없는 경우 noSubject를 리턴하도록 변경
     }
+    alertFlag = false;
 
 	if (window.dadiframe && dadiframe.isfileup) {
 		alert(strLang86);
