@@ -199,7 +199,6 @@
 			var totalUserCount = "";
 			var pSeach = false;
 			function displayUserList(DeptID){
-				console.log("currentListMode  00  >> " + window.currentListMode);
 				var cellContent;
 				var typeContent;
 
