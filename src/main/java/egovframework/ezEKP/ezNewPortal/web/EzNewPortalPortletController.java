@@ -1464,7 +1464,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	 * */
 	@RequestMapping(value = "/ezNewPortal/getTheme2NotiBoardItemList.do", method = RequestMethod.GET)
 	@ResponseBody
-	public JSONArray getTheme2NotiBoardItemList(HttpServletRequest req, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
+	public JSONObject getTheme2NotiBoardItemList(HttpServletRequest req, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("getTheme2NotiBoardItemList Start");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -1481,6 +1481,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
 		String result = resultBody.get("status").toString();
 		JSONArray boardList = new JSONArray();
+		String userLang = userInfo.getLang();
 		
 		if (result.equals("ok")) {
 			JSONObject data = (JSONObject) resultBody.get("data");
@@ -1491,9 +1492,12 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 			}
 		}
 		
+		JSONObject response = new JSONObject();
+		response.put("boardList", boardList);
+		response.put("userLang",userLang );
 		logger.debug("getTheme2NotiBoardItemList End");
-		
-		return boardList;
+
+		return response;
 	}
 
 	/**
