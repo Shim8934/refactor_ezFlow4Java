@@ -1159,7 +1159,7 @@
 		    	configmyboard_dialogArguments[0] = "";
 		    	
 		        if (CrossYN()) {
-		            var OpenWin = GetOpenWindow("/ezBoard/myBoardConfig.do?type=ADD&boardID=" + encodeURIComponent(pBoardID), "MyBoardConfig", 525, 418);
+		            var OpenWin = GetOpenWindow("/ezBoard/myBoardConfig.do?type=ADD&boardID=" + encodeURIComponent(pBoardID), "MyBoardConfig", 600, 418);
 		            try {
 		            	OpenWin.focus();
 		            	
@@ -1180,7 +1180,7 @@
 		            } catch (e) { }
 		        }
 		        else
-		            showModalDialog("/ezBoard/myBoardConfig.do?type=ADD&boardID=" + encodeURIComponent(pBoardID), null, "dialogHeight:418px; dialogWidth:525px; status:no; help:no; scroll:no; edge:sunken");
+		            showModalDialog("/ezBoard/myBoardConfig.do?type=ADD&boardID=" + encodeURIComponent(pBoardID), null, "dialogHeight:418px; dialogWidth:600px; status:no; help:no; scroll:no; edge:sunken");
 		    }
 		
 		    function SetBoardAcl() {
