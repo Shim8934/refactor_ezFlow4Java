@@ -127,18 +127,18 @@ function getBirthdayList(currentPage) {
                     var userBirthdayFormat2 = userBirthday.slice(3,4);
                     if (userLang == 1) {
                         if (userBirthdayFormat1 == 0) {
-                            userBirthdayFormatSum = userBirthday.slice(1,2) + "월 ";
+                            userBirthdayFormatSum = userBirthday.slice(1,2) + messages.strLang5;
                             if (userBirthdayFormat2 == 0) {
-                                userBirthdayFormatSum += userBirthday.slice(4) + "일";
+                                userBirthdayFormatSum += userBirthday.slice(4) + messages.strLang6;
                             } else {
-                                userBirthdayFormatSum += userBirthday.slice(3) + "일";
+                                userBirthdayFormatSum += userBirthday.slice(3) + messages.strLang6;
                             }
                         } else {
-                            userBirthdayFormatSum = userBirthday.slice(0,2) + "월 ";
+                            userBirthdayFormatSum = userBirthday.slice(0,2) + messages.strLang5;
                             if (userBirthdayFormat2 == 0) {
-                                userBirthdayFormatSum += userBirthday.slice(4) + "일";
+                                userBirthdayFormatSum += userBirthday.slice(4) + messages.strLang6;
                             } else {
-                                userBirthdayFormatSum += userBirthday.slice(3) + "일";
+                                userBirthdayFormatSum += userBirthday.slice(3) + messages.strLang6;
                             }
                         }
                     } else {
