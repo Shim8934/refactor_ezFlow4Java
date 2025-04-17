@@ -2600,7 +2600,6 @@ public class CommonUtil {
 					}
             	} // for end.
             }
-			patternContent += "</div>";
             
             if (!patternContent.equals("")) {
             	sResult = patternContentTemp.replace("${str}", patternContent);
