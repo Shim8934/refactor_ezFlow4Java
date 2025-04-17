@@ -237,18 +237,23 @@
 			
 			/* 2019-02-18 홍승비 - 일반설정 저장 시 각 필드 문자, 숫자 입력 제한 적용 */
 			function Save() {
-	            if ($.trim($("#txtBoardName").val()) == "") {
+				var name1 = $.trim($("#txtBoardName").val());
+				var name2 = $.trim($("#txtBoardName2").val());
+				var name3 = $.trim($("#txtBoardName3").val());
+				var name4 = $.trim($("#txtBoardName4").val());
+				
+				if (name1 == "") {
 	                alert("<spring:message code='ezBoard.t144'/>");
 	                return;
 	            }
-	            if ($.trim($("#txtBoardName2").val()) == "") {
-	            	$("#txtBoardName2").val($("#txtBoardName").val());
+	            if (name2 == "") {
+					name2 = name1;
 	            }
-	            if ($.trim($("#txtBoardName3").val()) == "") {
-	            	$("#txtBoardName3").val($("#txtBoardName").val());
+	            if (name3 == "") {
+					name3 = name1;
 	            }
-	            if ($.trim($("#txtBoardName4").val()) == "") {
-	            	$("#txtBoardName4").val($("#txtBoardName").val());
+	            if (name4 == "") {
+					name4 = name1;
 	            }
 	            
 	            //승인게시판
@@ -517,8 +522,8 @@
 	            	url : "/admin/ezBoard/saveBoardProperty.do",
 	            	async : false,
 	            	data : {
-	            		boardName:$("#txtBoardName").val(), boardName2:$("#txtBoardName2").val(),
-	            		boardName3:$("#txtBoardName3").val(), boardName4:$("#txtBoardName4").val(),
+	            		boardName:name1, boardName2:name2,
+	            		boardName3:name3, boardName4:name4,
 	            		boardID:BoardID, attachSizeLimit:AttachMax, boardDescription:Description,
 	            		itemExpires:Expires, url:url, guBun:gubun, replyNotify:replynotify, deleteAfter:iDeleteAfter,
 	            		boardColor:brd_color, portlet:"N", backGround:background,
