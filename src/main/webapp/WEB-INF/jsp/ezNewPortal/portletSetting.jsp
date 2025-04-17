@@ -100,7 +100,7 @@
 						<span class="form_name"><spring:message code='ezPortal.separationTheme' /></span>
 					</li>
 				</ul>
-				<h3><spring:message code='ezPortal.kmh1' /></h3>
+				<h3><spring:message code='ezPortal.settingMode' /></h3>
 				<ul class="form_set mode default" id="modeSet">
 					<li class="white select">
 						<span class="form_image"></span>
