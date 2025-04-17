@@ -268,7 +268,7 @@
 		            }
 		            
 		            // 2024-07-31 전인하 - 게시판 > 확장컬럼 > peoplePicker 타입, textArea 타입 출력값 가공
-		            var userLang = "${userInfo.lang}"
+		            var userLang = "${extenLang}"
 		            var boardAttrListTemp = '<c:out value="${boardAttrJson}"/>';
 		            var boardAttrListJson = JSON.parse(replaceEntityCodeToStr(boardAttrListTemp));
 		            var boardItemTemp = '<c:out value="${boardItemJson}"/>';
