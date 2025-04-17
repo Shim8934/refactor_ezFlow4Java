@@ -2807,8 +2807,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		boolean isOuterForm = ezApprovalGService.isOuterForm(formID, userInfo.getCompanyID(), userInfo.getTenantId());
 		if(isOuterForm) {
 			bigSizeApprAttachLimit = "0";
-			apprTotalAttachLimit = "6";
-			apprAttachLimit = "6";
+			apprTotalAttachLimit = "20";
+			apprAttachLimit = "20";
 		}
 		
 		//String bigSizeMailAttachDelDate = EgovDateUtil.addDay(EgovDateUtil.getToday("-"), Integer.parseInt(pBigAttachDownloadDay), "yyyy-MM-dd");
