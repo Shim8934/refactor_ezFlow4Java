@@ -773,7 +773,7 @@
 				var getBirth = document.getElementById("txtBirth").value;
 
 				if(getBirth.length != 0) {
-					var newPassword = getBirth.value.replace(/-/g, '');
+					var newPassword = getBirth.replace(/-/g, '');
 					var data = document.getElementById("UserID").value;
 
 					$.ajax({
@@ -864,7 +864,7 @@
 	                </table>
 	            </td>
 	            <th style="width: 71px; text-align:center"><spring:message code='ezOrgan.t278' /></th>
-	            <td style="width: 240px; padding: 0">
+	            <td style="width: 320px; padding: 0">
 	                <table style="width:100%">
 	                    <tr class="primary">
 	                        <th><c:out value='${primary}'/></th>

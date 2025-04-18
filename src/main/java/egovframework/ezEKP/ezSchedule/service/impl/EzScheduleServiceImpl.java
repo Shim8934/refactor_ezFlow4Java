@@ -282,6 +282,13 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		
+		// 2025-03-17 이가은 - 관리자 > 회사일정관리인지 체크
+		boolean adminPage = false;
+		if (indiList.startsWith("ADMIN_PAGE")) {
+			adminPage = true;
+			indiList = indiList.split("ADMIN_PAGE")[1];
+		}
+		
 		/* 2024-07-05 홍승비 - SQL Injection 수정 > 문자열 대신 배열 리스트 파라미터 전달 */
 		map.put("v_INDILIST", indiList.replace("'", "").replace("\\", "").replace(" ", "").split(","));
 		map.put("v_PIDLIST", pidList.replace("'", "").replace("\\", "").replace(" ", "").split(","));		
@@ -698,7 +705,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		String useWorkspaceSchedule = ezCommonService.getTenantConfig("useWorkspaceSchedule", tenantId);
 	    logger.debug("useWorkspaceSchedule : " + useWorkspaceSchedule);
 		
-		if (useWorkspaceSchedule == null || useWorkspaceSchedule.equals("")) {
+		if (useWorkspaceSchedule == null || useWorkspaceSchedule.equals("") || adminPage) {
 			useWorkspaceSchedule = "NO";
 		}
 		

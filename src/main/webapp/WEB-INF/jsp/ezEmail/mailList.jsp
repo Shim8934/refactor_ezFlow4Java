@@ -764,6 +764,10 @@
 		        mailsearchDetail = "N";
 		        
 		        goToPageByNum("1");
+				try {
+					if (document.getElementById("HeaderAllCheckBox") != null)
+						document.getElementById("HeaderAllCheckBox").checked = false;
+				} catch (e) {console.log(e);}
 		    }
 		    
 		    function start_search() {

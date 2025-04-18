@@ -1148,10 +1148,10 @@ function GetListIevent_ongetxmlcomplete() {
                         return;
                     }
                 }
-                try {
-                    if (document.getElementById("HeaderAllCheckBox") != null)
-                        document.getElementById("HeaderAllCheckBox").checked = false;
-                } catch (e) {console.log(e);}
+                // try {
+                //     if (document.getElementById("HeaderAllCheckBox") != null)
+                //         document.getElementById("HeaderAllCheckBox").checked = false;
+                // } catch (e) {console.log(e);}
             } else {
             	parent.frames["left"].reloadRetryCount--;
             	
@@ -1363,11 +1363,11 @@ function MailListRefresh() {
     
     if (p_ListorderValue != "SENT" && p_ListorderValue != "SUBJECT") {
     	// 20200428 조진호 - 메일 리스트에서 체크박스를 이용한 행위 뒤 체크박스가 풀리도록 추가
-        if (listContentArry.length > 0) {
-            for (var i = 1; i <= listContentArry.length; i++) {
-                document.getElementById(listContentArry[listContentArry.length - i]).children[0].children[0].checked = false;
-            }
-        }
+        // if (listContentArry.length > 0) {
+        //     for (var i = 1; i <= listContentArry.length; i++) {
+        //         document.getElementById(listContentArry[listContentArry.length - i]).children[0].children[0].checked = false;
+        //     }
+        // }
     	
     	goToPageByNum(MailList.getAttribute("curPage"));
     }
@@ -1401,11 +1401,11 @@ function MailListRefresh() {
             var ContentObject = document.getElementById("GroupSubList");
             
             // 20200428 조진호 - 메일 리스트에서 체크박스를 이용한 행위 뒤 체크박스가 풀리도록 추가
-            if (listContentArry.length > 0) {
-                for (var i = 1; i <= listContentArry.length; i++) {
-                    document.getElementById(listContentArry[listContentArry.length - i]).children[0].children[0].checked = false;
-                }
-            }
+            // if (listContentArry.length > 0) {
+            //     for (var i = 1; i <= listContentArry.length; i++) {
+            //         document.getElementById(listContentArry[listContentArry.length - i]).children[0].children[0].checked = false;
+            //     }
+            // }
             
             listSubContentArry = new Array();
             listContentArry = new Array();
@@ -1457,6 +1457,10 @@ function goToPageByNum(szNum) {
     GetListInfo(HeaderObject,ContentObject);
     if (currentPage != document.getElementById("MailList").getAttribute("curPage")) {
         $("#contentlistDiv").scrollTop(0); 
+        try {
+            if (document.getElementById("HeaderAllCheckBox") != null)
+                document.getElementById("HeaderAllCheckBox").checked = false;
+        } catch (e) {console.log(e);}
     } else {
         $("#contentlistDiv").scrollTop(currentScrollTop);
     }

@@ -4,6 +4,8 @@ import java.util.List;
 
 import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupVO;
+import egovframework.let.user.login.vo.LoginVO;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface EzScheduleAdminService {
 	
@@ -46,4 +48,6 @@ public interface EzScheduleAdminService {
 	public void scheduleDelExecutive(String userID, String companyID, int tenantId) throws Exception;
 
 	public void scheduleNumUpdateExecutive(String userID, int priority, String companyID, int tenantID) throws Exception;
+	
+	public String companyScheduleExcelUpload(String userID, MultipartFile uploadFile, String companyID, String companyName, String companyName2, LoginVO loginVO, String defaultPath, String content) throws Exception;
 }

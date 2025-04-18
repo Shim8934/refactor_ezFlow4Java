@@ -529,6 +529,10 @@ function Read_StatusChange(pGubun) {
             document.getElementById(listContentArry[listContentArry.length - i]).children[0].children[0].checked = false;
         }
     }
+    try {
+        if (document.getElementById("HeaderAllCheckBox") != null)
+            document.getElementById("HeaderAllCheckBox").checked = false;
+    } catch (e) {console.log(e);}
     
     MailListRefresh();
 }
@@ -626,6 +630,10 @@ function move_mail_onclick_Complete(moveUrl) {
                 document.getElementById(listContentArry[listContentArry.length - i]).children[0].children[0].checked = false;
             }
         }
+        try {
+            if (document.getElementById("HeaderAllCheckBox") != null)
+                document.getElementById("HeaderAllCheckBox").checked = false;
+        } catch (e) {console.log(e);}
         
         MailListRefresh();
     }
@@ -1961,6 +1969,10 @@ function mail_export_exec(isAllMail) {
             document.getElementById(listContentArry[listContentArry.length - i]).children[0].children[0].checked = false;
         }
     }
+    try {
+        if (document.getElementById("HeaderAllCheckBox") != null)
+            document.getElementById("HeaderAllCheckBox").checked = false;
+    } catch (e) {console.log(e);}
     
     MailListRefresh();
     
@@ -2257,12 +2269,12 @@ function PopUpNextMail() {
 function event_flag(obj) {
     var temp_listContentArry = listContentArry;
     listContentArry = [GetAttribute(obj.parentElement, "id")];
-    toggle_flag();
+    toggle_flag(obj);
     listContentArry = temp_listContentArry;
 }
 
 var flagXmlHttp;
-function toggle_flag() {
+function toggle_flag(obj) {
     if (listContentArry.length == 0 && listSubContentArry.length == 0 && currentFixingId == null) {
         alert(strLang42);
         return;
@@ -2311,12 +2323,17 @@ function toggle_flag() {
         flagXmlHttp.open("POST", url, true);
         flagXmlHttp.onreadystatechange = event_toggle_flag_end;
         flagXmlHttp.send(xmlDom);
-        
-        // 20200428 조진호 - 메일 리스트에서 체크박스를 이용한 행위 뒤 체크박스가 풀리도록 추가
-        if (listContentArry.length > 0) {
-            for (var i = 1; i <= listContentArry.length; i++) {
-                document.getElementById(listContentArry[listContentArry.length - i]).children[0].children[0].checked = false;
+        if(typeof obj === "undefined") {
+            // 20200428 조진호 - 메일 리스트에서 체크박스를 이용한 행위 뒤 체크박스가 풀리도록 추가
+            if (listContentArry.length > 0) {
+                for (var i = 1; i <= listContentArry.length; i++) {
+                    document.getElementById(listContentArry[listContentArry.length - i]).children[0].children[0].checked = false;
+                }
             }
+            try {
+                if (document.getElementById("HeaderAllCheckBox") != null)
+                    document.getElementById("HeaderAllCheckBox").checked = false;
+            } catch (e) {console.log(e);}
         }
     }
     catch (e) {console.log(e);}
