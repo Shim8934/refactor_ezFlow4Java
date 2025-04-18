@@ -4843,6 +4843,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 	public Object mMailFileDown(HttpServletRequest request,
 			@PathVariable String folderId, @PathVariable String messageId, @PathVariable String index, @PathVariable String userId) throws Exception {
 		logger.debug("MOBILE G/W MAIL mMailFileDown started.");
+		folderId = URLDecoder.decode(folderId);
 		logger.debug("folderId=" + folderId + ",messageId=" + messageId + ",userId=" + userId + ",index=" + index);
 		
 		String filename = "";

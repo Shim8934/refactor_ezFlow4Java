@@ -244,6 +244,9 @@
 			    } else if (message === "loginSessionFlag") {
 					$("#imgMnt9").html("<img src='/images/warning2.png'>");
 					$("#exDiv9").modal();
+				} else if (message === "organInfoChangedFlag") {
+					$("#imgMnt11").html("<img src='/images/warning2.png'>");
+					$("#exDiv11").modal();
 				} else if (message === "loginBlock") {
 					$("#imgMnt10").html("<img src='/images/warning2.png'>");
 					$("#exDiv10").modal();
@@ -878,7 +881,22 @@
 					</dl>
 				</div>
 			</div>
-
+			<!-- 2025.04.08 김승연 조직 정보 변경 시 알림 레이어 팝업-->
+			<div id="exDiv11" style="display:none;max-width:690px;height:190px;padding-top:27px;margin-bottom:100px">
+				<div id="close">
+					<ul>
+						<li><a rel="modal:close"><span></span></a></li>
+					</ul>
+				</div>
+				<div class="warning_wrap" style="padding-left:20px">
+					<p style="border:0px" id="imgMnt11"></p>
+					<dl>
+						<dt id="layerTitle11" class="layerTitle"><spring:message code="ezOrgan.sy01" /></dt>
+						<dd><spring:message code="ezOrgan.sy02" /></dd>
+					</dl>
+				</div>
+			</div>
+			</div>
 		</div>
 	</body>
 </html>

@@ -195,6 +195,10 @@ public class LoginController {
 		if(StringUtils.isNotEmpty(request.getParameter("loginSessionFlag"))){
 			model.addAttribute("message", "loginSessionFlag");
 		}
+
+		if(StringUtils.isNotEmpty(request.getParameter("organInfoChangedFlag"))){
+			model.addAttribute("message", "organInfoChangedFlag");
+		}
     	
     	String pbm = egovFileScrty.getPbm();
     	

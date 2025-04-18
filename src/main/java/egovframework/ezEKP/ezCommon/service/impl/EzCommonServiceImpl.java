@@ -1749,7 +1749,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	}
 	
 	@Override
-	public int checkDeptId(String userID, String deptID, String tenantId) {
+	public int checkDeptId(String userID, String deptID, String tenantId, String jobID) {
 		//logger.debug("checkDeptId started"); // 로그정리
 		int result = 0;
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1757,6 +1757,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		map.put("tenantID", tenantId);
 		map.put("deptID", deptID);
 		map.put("userID", userID);
+        map.put("jobID", jobID);
 		result= ezCommonDAO.checkDeptId(map);
 		//logger.debug("checkDeptId ended"); // 로그정리
 		return result;
