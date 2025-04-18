@@ -4402,6 +4402,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 				map.put("companyId", company.getCompanyId());
 				map.put("tenantId", company.getTenantId());
 				map.put("nowDate", nowDate);
+                
+                Locale locale = commonUtil.getPrimaryLocale(company.getTenantId());
+                map.put("typeName", egovMessageSource.getMessage("ezSystem.config.type", locale));
+                map.put("typeDetail", egovMessageSource.getMessage("ezSystem.config.type.detail", locale));
+                map.put("configDetail", egovMessageSource.getMessage("ezSystem.config.detail", locale));
 				ezCommonDAO.insertStandardSystemConfigData(map);
 			}
 		}

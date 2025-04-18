@@ -3528,4 +3528,33 @@ public class CommonUtil {
 		
 		return str;
 	}
+
+	/**
+	 * PrimaryLang 컨피그에 해당하는 Locale 반환
+	 */
+	public Locale getPrimaryLocale(int tenantId) throws Exception {
+		Locale locale;
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
+		
+		try {
+			switch (primaryLang) {
+				case "1":
+					locale = Locale.KOREA;
+					break;
+				case "2":
+					locale = Locale.US;
+					break;
+				case "3":
+					locale = Locale.JAPAN;
+					break;
+				default:
+					locale = Locale.getDefault();
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			locale = Locale.KOREA; // 보안 제한 등으로 getDefault() 오류 시 한국으로 세팅
+		}
+		
+		return locale;
+	}
 }

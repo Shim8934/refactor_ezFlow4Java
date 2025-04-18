@@ -887,6 +887,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		date.setTimeZone(TimeZone.getTimeZone("GMT"));
 		String nowDate = date.format(new Date());
 		map.put("nowDate", nowDate);
+		Locale locale = commonUtil.getPrimaryLocale(tenantID);
 		
 		ezOrganAdminDao.insertDBData_company(map);
 		
@@ -915,6 +916,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				map1.put("topMenuLogoEnUUID", UUID.randomUUID().toString());
 				map1.put("PrimaryLang", ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId()));
 				map1.put("menuType", "0");
+				map1.put("typeName", egovMessageSource.getMessage("ezSystem.config.type", locale));
+				map1.put("typeDetail", egovMessageSource.getMessage("ezSystem.config.type.detail", locale));
+				map1.put("configDetail", egovMessageSource.getMessage("ezSystem.config.detail", locale)); 
 				for (int i = 0; i < 112; i++) {
 					map1.put("menuItemUUID"+String.valueOf(i), UUID.randomUUID().toString());
 				}
