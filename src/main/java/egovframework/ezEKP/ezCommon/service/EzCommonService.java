@@ -150,7 +150,7 @@ public interface EzCommonService {
 
 	public void createOpenGovTable() throws Exception;
 
-	public int checkDeptId(String userID, String deptID, String tenantId);
+	public int checkDeptId(String userID, String deptID, String tenantId, String jobID);
 
 	public void createRsFavoriteTable();
 	

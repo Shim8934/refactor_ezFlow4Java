@@ -859,17 +859,20 @@ public class CommonUtil {
 		boolean useDbSession = "YES".equalsIgnoreCase(config.getProperty("config.UseDbSession"));
 
 		if (!useDbSession && (!usingSession || usingAsAPI || isLoopbackRequest)) {
-			return validLoginCookie(request, response);
+			return "0".equals(validLoginCookie(request, response));
 		}
 
 		return validSessionLoginCookie(request, response);
 	}
 
-	private boolean validLoginCookie(HttpServletRequest request,  HttpServletResponse response) {
+	private String validLoginCookie(HttpServletRequest request,  HttpServletResponse response) {
+		
+		String result = "0"; //  0 : 유효한 쿠키 , 1 : 세션 만료 , 2 :  쿠키 만료 및 예외 , 3 :  부서 및 직위 등 조직도 정보 변경
+		
 		Cookie loginCookie = WebUtils.getCookie(request, "loginCookie");
 
 		if (loginCookie == null) {
-			return false;
+			result = "2";
 		}
 
 		try {
@@ -878,17 +881,21 @@ public class CommonUtil {
 
 			// 2024-09-02 - db 세션 사용 시에는 ip check 생략 함
 			if ("YES".equalsIgnoreCase(config.getProperty("config.UseDbSession"))) {
-				return checkDeptId(decryptedLoginCookie);
+				return checkDeptId(decryptedLoginCookie) ? "0" : "3"; // 조직도 정보 변경 여부
 			}
 
 			// 복호화된 로그인 쿠키는 "///" 구분자로 여러 정보가 담겨있으며 그 중 4번째가 클라이언트의 IP이다.
-			return decryptedLoginCookie.split("///")[3].equals(ip) && checkDeptId(decryptedLoginCookie);
+			if(!decryptedLoginCookie.split("///")[3].equals(ip)){
+				result = "2";
+			} else {
+				result = checkDeptId(decryptedLoginCookie) ? "0" : "3"; // 조직도 정보 변경 여부
+			}
 		} catch (Exception e) {
 			clearAllCookies(request, response); // 오류발생 시 쿠키를 삭제하도록 수정
 			logger.error(e.getMessage(), e);
 		}
 
-		return false;
+		return result;
 	}
 
 	private boolean validSessionLoginCookie(HttpServletRequest request, HttpServletResponse response) {
@@ -901,7 +908,7 @@ public class CommonUtil {
 			return false;
 		}
 
-		return validLoginCookie(request, response);
+		return "0".equals(validLoginCookie(request, response));
 	}
 
 	private void clearAllCookies(HttpServletRequest request, HttpServletResponse response) {
@@ -937,21 +944,25 @@ public class CommonUtil {
 		String userID = decDataArray[1];
         String tenantId = "0";
         String deptID = "";
-        
+		String jobID = "";
+		
         if (decDataArray.length >= 9) {
             tenantId = decDataArray[8];	
         }
         if(decDataArray.length >= 10) {
         	deptID = decDataArray[9];
         }
-        
+		if(decDataArray.length >= 12) {
+			jobID = decDataArray[11];
+		}
+		
         // ezSyncServer에서 ezFlow를 호출하는 경우에는 쿠키안에 부서 아이디가 포함되어 있지 않으므로
         // 이 경우엔 true를 반환한다.
         if ("".equals(deptID)) {
         	return true;
         }
         
-		int isDept = ezCommonService.checkDeptId(userID, deptID, tenantId);
+		int isDept = ezCommonService.checkDeptId(userID, deptID, tenantId, jobID);
 		
 		if(isDept>0){
 			return true;
@@ -3246,7 +3257,7 @@ public class CommonUtil {
 	
 	public String loginCookieExists(HttpServletRequest request, HttpServletResponse response) {
 		boolean usingSession = false;
-		String  result = "null"; //  0 : 세션 유지 , 1 : 세션 만료 , 2 :  쿠키 만료 및 예외
+		String  result = "null"; //  0 : 세션 유지 , 1 : 세션 만료 , 2 :  쿠키 만료 및 예외 , 3 :  부서 및 직위 등 조직도 정보 변경
 
 		try {
 			String serverName = request.getServerName();
@@ -3266,11 +3277,7 @@ public class CommonUtil {
 		boolean isLoopbackRequest = request.getRemoteAddr().equals("127.0.0.1");
 
 		if (!usingSession || usingAsAPI || isLoopbackRequest) {
-			if(validLoginCookie(request, response)){
-				return "0";
-			}else{
-				return "2";
-			}
+			return validLoginCookie(request, response);
 		}
 
 		if(validSessionLoginCookie(request, response)){

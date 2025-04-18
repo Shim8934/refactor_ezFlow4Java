@@ -1675,7 +1675,8 @@
 			COUNT(DEPTID) 
 		FROM 
 			(SELECT 
-				DEPTID 
+				DEPTID,
+				JOBID
 			FROM 
 				TBL_ADDJOBMASTER A
 			INNER JOIN 
@@ -1688,7 +1689,8 @@
 				A.TENANT_ID = #tenantID#
 			UNION
 			SELECT 
-				DEPARTMENT AS DEPTID 
+				DEPARTMENT AS DEPTID,
+				TO_CHAR(EXTENSIONATTRIBUTE7) AS JOBID
 			FROM 
 				TBL_USERMASTER 
 			WHERE 
@@ -1697,6 +1699,8 @@
 				TENANT_ID = #tenantID#) D
 		WHERE 
 			D.DEPTID = #deptID#
+		AND
+			D.JOBID = #jobID#
 	]]>
 	</select>
 

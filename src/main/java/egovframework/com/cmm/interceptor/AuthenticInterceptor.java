@@ -165,6 +165,14 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 			} finally {
 				return false;
 			}
+		} else if ("3".equals(loginCookieExists)) {
+			try {
+				response.sendRedirect("/user/login/login.do?organInfoChangedFlag=1");
+			} catch (Exception e) {
+				logger.error(e.getMessage(), e);
+			} finally {
+				return false;
+			}
 		} else {
 			String ezOffice365Auth = "";			
 			int tenantId = -1;
