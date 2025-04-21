@@ -628,6 +628,9 @@ function treeicon_toggle(pNodeID, pTreeID, callbackFunc, pNodeIconID) {
 function node_select(pNodeID, pNodeNM, pTreeID, callbackFunc) {
     var treeDiv = document.getElementById(pTreeID);
     var preSelectID = GetAttribute(treeDiv, "SELECTNODEID");
+    
+    issearch = false;
+    pSeach = false;
 
     if (preSelectID != "" && preSelectID != "undefined") {
         var objSpan = document.getElementById("spn_" + preSelectID);
