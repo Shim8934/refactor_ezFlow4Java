@@ -666,6 +666,14 @@ function ListView() {
                 var oText = document.createTextNode(strValue);
                 var objTd = document.createElement("TD");
 
+                // mouseover 시 td마다 title 세팅
+                var headerColName = SelectSingleNodeValue(oHeaders[j], "COLNAME");
+                if (headerColName != "ITEMID" && headerColName != "ATTACHMENTS") {
+                    objTd.title = strValue;
+                } else { // 체크박스, 첨부파일 툴팁 미표출
+                    objTd.title = "";
+                }
+                
                 /* 2018-07-09 홍승비 - 썸네일게시판의 읽지 않은 게시물 리스트 폰트를 bold로 수정 */
                 if(getNodeText(oDatas[7]) == "0") {
                 	objTd.setAttribute("style", "text-align:left; padding-top:2px; padding-bottom:2px; font-weight:bold;");
