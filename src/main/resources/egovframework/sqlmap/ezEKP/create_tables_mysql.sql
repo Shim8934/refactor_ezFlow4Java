@@ -15089,7 +15089,8 @@ FROM
 		FROM
 			(tbl_usermaster a
 		LEFT JOIN tbl_usermaster_retire b ON
-			(a.CN = b.CN))
+			(a.CN = b.CN
+			AND a.TENANT_ID = b.TENANT_ID)) 			
 		WHERE
 			b.CN IS NULL
 			AND a.DEPARTMENT NOT LIKE '%shared_mailbox_%'
@@ -15126,7 +15127,8 @@ FROM
 		FROM
 			(tbl_addjobmaster a
 		JOIN tbl_usermaster b ON
-			(a.CN = b.CN))
+			(a.CN = b.CN
+			AND a.TENANT_ID = b.TENANT_ID)) 			
         ) USER) v
 WHERE
 	v.TYPE = 'USER';
@@ -15213,7 +15215,8 @@ FROM
 		FROM
 			(tbl_usermaster a
 		LEFT JOIN tbl_usermaster_retire b ON
-			(a.CN = b.CN))
+			(a.CN = b.CN
+			AND a.TENANT_ID = b.TENANT_ID)) 			
 		WHERE
 			b.CN IS NULL
 			AND a.DEPARTMENT NOT LIKE '%shared_mailbox_%'
