@@ -648,6 +648,16 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>2.9.1</version>
             </plugin>
+			<!-- maven-war-plugin을 사용하여 fileroot 폴더 제외
+			※ intellij smart-tomcat 사용하면 fileroot가 같이 묶인다고 함.
+			https://maven.apache.org/plugins/maven-war-plugin/examples/including-excluding-files-from-war.html -->
+            <plugin>
+              <artifactId>maven-war-plugin</artifactId>
+              <version>3.4.0</version>
+              <configuration>
+                <packagingExcludes>fileroot/**</packagingExcludes>
+              </configuration>
+            </plugin>
         </plugins>
     </build>
     <reporting>
