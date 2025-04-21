@@ -798,7 +798,7 @@ public class EzTalkGateController {
 		boolean isUserExists = false;
 		
 		LoginVO loginVO = new LoginVO();	
-		tenantId = 0;
+		//tenantId = 0;
 		loginVO.setId(id);
 		loginVO.setTenantId(tenantId);
 
