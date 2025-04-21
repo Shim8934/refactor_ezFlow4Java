@@ -1177,13 +1177,13 @@ var strLangJSBAP03 = "Would you like to proceed with batch submission and final 
 
 var strJangJIH04 = "Please specify a start date faster than the end date."
 
-var strLangKWC01 = "비전자문서는 재사용 할 수 없습니다.";
-var strLangKWC02 = "양식이 삭제되어 재사용 할 수 없습니다.";
+var strLangKWC01 = "Nonelectronic documents cannot be reused.";
+var strLangKWC02 = "The form has been deleted and cannot be reused.";
 
 /* 2024-12-27 홍승비 - 기록물 배부대장 > 배부한 문서가 삭제된 경우 알러트를 표출하기 위한 메세지 추가 */
-var strLangHSBDR01 = "해당 배부문서는 삭제된 문서입니다. 열람이 불가능합니다.";
+var strLangHSBDR01 = "The specified distribution document is a deleted document and cannot be viewed.";
 
-var strLangKMH01 = "일괄지정을 진행하시겠습니까?<br>결재상태가 회송인 문서, 문서상태가 합의인 문서는 대상에서 제외됩니다.";
+var strLangKMH01 = "Would you like to proceed with bulk designation?<br>Documents with a approval status of returned and documents with a status of agreement are excluded";
 
 var strLangJJE01 = "The department does not receive approval documents.\nIt is excluded from favorites."
 
@@ -1192,8 +1192,8 @@ var ezApproval_headerHide01 = "hide header";
 var ezApproval_headerHide02 = "show header";
 
 /* 2024-12-23 이가은 - 전자결재 일괄배부 기능 추가 */
-var ezApproval_allBeabu01 = "일괄배부를 진행하시겠습니까?";
-var ezApproval_allBeabu02 = "합의문이나 회송된 문서는 대상에서 제외됩니다.";
+var ezApproval_allBeabu01 = "Would you like to proceed with the bulk distribution?";
+var ezApproval_allBeabu02 = "Agreements or returned documents are excluded from the list.";
 
 /* 요약전 에디터 기능 */
 var strLangJIH_Summary01 = "The summary has been successfully saved.";
