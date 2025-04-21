@@ -1278,7 +1278,7 @@
 			var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
 			
 			var url = "/admin/ezNewPortal/portalMenuAuth.do?menuId=" + event.data.themeId + "&companyId=" + companyValue + "&mode=theme";
-			var OpenWin = window.open(url, "", GetOpenWindowfeature(980, 650));
+			var OpenWin = window.open(url, "", GetOpenWindowfeature(980, 660)); // 높이 수정 650 > 660
 		    	try { OpenWin.focus(); } catch (e) { }
 		}
 
