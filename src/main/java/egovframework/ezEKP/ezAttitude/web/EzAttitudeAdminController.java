@@ -2963,7 +2963,7 @@ public class EzAttitudeAdminController {
 		String orderOption = request.getParameter("orderOption");
 		String secondYear = request.getParameter("secondYear");
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
-		String userLang = userInfo.getLang();
+		String userLang = commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId());
 		if (userId != null) {
 			String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 			String url = gwServerUrl + "/rest/ezattitude/users/" + userId + "/" + userLang +"/annual";
