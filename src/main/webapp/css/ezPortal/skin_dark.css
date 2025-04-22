@@ -214,6 +214,33 @@ header + .lnb ul li:hover span, .lnb ul li.on span{color:#388CE5;}
 .main_time{margin:11px 0 0 0;}
 #theme2Body .personal_content dl.time dd {color:#fff;}
 
+#theme2Body .personal_content dl.commute{
+    width: calc(50% - 7px);
+    height: 34px;
+    margin: 5px 2px 0px 2px;
+    background: #272829;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    cursor: pointer;
+    border-radius: 5px;
+    box-sizing: border-box;
+    border:1px solid #272829;}
+
+#theme2Body .personal_content dl.commute:hover{
+    width: calc(50% - 7px);
+    height: 34px;
+    margin: 5px 2px 0px 2px;
+    background: #343638;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    cursor: pointer;
+    border-radius: 5px;
+    box-sizing: border-box;
+    border:1px solid #4294ea;}
+
+#theme2Body .personal_content dl.commute:hover dt#inAttiBtn{ color : #4294ea; }
+#theme2Body .personal_content dl.commute:hover dt#outAttiBtn{ color : #4294ea; }
+#theme2Body .personal_content dl.commute dt#inAttiBtn{ color : #F3F3F3; }
+#theme2Body .personal_content dl.commute dt#outAttiBtn{ color : #F3F3F3;}
+
 .main_time .timeCheckIn{line-height:30px; border:1px solid #3C3C3C; background:#343638; box-shadow:none; color:#fff;}
 .main_time .timeCheckIn.commute_on{box-shadow:none;}
 .main_time .timeCheckOut{line-height:30px; border:1px solid #3C3C3C; background:#343638; box-shadow:none; color:#fff;}
