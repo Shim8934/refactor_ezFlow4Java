@@ -2199,7 +2199,7 @@ public class EzNewPortalGWController {
 			result.put("userCompany", userInfo.getCompanyID());
 			result.put("lang",lang);
 
-			List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(userId, userInfo.getTenantId(), userInfo.getLang(), deptId, jobId);
+			List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(userId, userInfo.getTenantId(), lang, deptId, jobId);
 			
 			result.put("data", adminCompanyList);
 			result.put("primary", primary);

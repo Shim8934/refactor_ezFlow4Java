@@ -6286,7 +6286,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		logger.debug("getCompanys started.");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getLang(), userInfo.getDeptID(), userInfo.getJobId());
+		String lang = commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId());
+		List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), lang, userInfo.getDeptID(), userInfo.getJobId());
 		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID(), userInfo.getJobId());
 
 		model.addAttribute("userCompany", userInfo.getCompanyID());
