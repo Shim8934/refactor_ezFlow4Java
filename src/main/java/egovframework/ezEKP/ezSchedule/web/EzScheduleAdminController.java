@@ -984,8 +984,8 @@ public class EzScheduleAdminController {
 		String cn = request.getParameter("userID");
 		int tenantID = loginVO.getTenantId();
 		String keyword = request.getParameter("keyword");
-		String lang = loginVO.getLang();
-		
+		String lang = commonUtil.getPrimaryData(loginVO.getLang(), loginVO.getTenantId());
+
 		if (companyID == null || companyID.equals("")) {
 			companyID = loginVO.getCompanyID();
 		}
