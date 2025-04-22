@@ -405,9 +405,10 @@ public class EzResourceController extends EgovFileMngUtil {
 			
 			xmlDom.getElementsByTagName("STARTDATETIME").item(0).setTextContent(xmlDom.getElementsByTagName("STARTDATETIME").item(0).getTextContent().substring(0, 10));
 			xmlDom.getElementsByTagName("ENDDATETIME").item(0).setTextContent(xmlDom.getElementsByTagName("ENDDATETIME").item(0).getTextContent().substring(0, 10));
-			
+
+			String lang = commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId());
 			//스케줄 정보 가져옴
-			reVal = ezResourceService.getScheduleXML(commonUtil.convertDocumentToString(xmlDom), resID, userInfo.getCompanyID(), groupID, gubun, type, title, writerName, writerDept, userInfo.getTenantId(), userInfo.getOffset(), userInfo.getLang());
+			reVal = ezResourceService.getScheduleXML(commonUtil.convertDocumentToString(xmlDom), resID, userInfo.getCompanyID(), groupID, gubun, type, title, writerName, writerDept, userInfo.getTenantId(), userInfo.getOffset(), lang);
 			logger.debug("getScheduleXML=" + reVal);
 			
 			// date타입 변경
@@ -1465,7 +1466,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			ResGetScheduleVO getSchedule = new ResGetScheduleVO();
 			
 			if (typeVal.equals("Master") || typeVal.equals("Readonly")) {
-				getSchedule = ezResourceService.getSchedule(Integer.parseInt(orgNum), orgOwnerID, userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getLang());
+				getSchedule = ezResourceService.getSchedule(Integer.parseInt(orgNum), orgOwnerID, userInfo.getCompanyID(), userInfo.getTenantId(), commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()));
 			}
 
 			if (getSchedule == null) {
