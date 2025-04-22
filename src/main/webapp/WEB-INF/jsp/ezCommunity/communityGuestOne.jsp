@@ -2,6 +2,7 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -418,7 +419,7 @@
 	    		var href = "/ezCommunity/guestOne.do?bName=" + encodeURIComponent('<c:out value="${mode}"/>')
 				            + "&sRadio=" + encodeURIComponent("${sRadio}")
 				            + "&code=" + encodeURIComponent(code)
-				            + "&keyword=" + "${keyword}"
+							+ "&keyword=" + encodeURIComponent("${fn:escapeXml(keyword)}");
 				            + "&block=" + encodeURIComponent("${nowBlock}");
 				            
 	            if (parseInt(newPage) > 0 && parseInt(newPage) <= parseInt(totalPage)) {
@@ -431,7 +432,7 @@
 		        var href = "/ezCommunity/guestOne.do?bName=" + encodeURIComponent("${mode}")
 					+ "&sRadio=" + encodeURIComponent('<c:out value="${sRadio}"/>')
 					+ "&code=" + encodeURIComponent('<c:out value="${code}"/>')
-					+ "&keyword=" + '<c:out value="${keyword}"/>'
+					+ "&keyword=" + encodeURIComponent("${fn:escapeXml(keyword)}");
 					+ "&block=" + encodeURIComponent("${nowBlock}");
 
 		        if (page == "front") {
