@@ -505,7 +505,7 @@ public class EzNotificationController {
 		
 		model.addAttribute("adminFlag", adminFlag);
 		model.addAttribute("userId", userInfo.getId());
-		model.addAttribute("lang", userInfo.getLang());
+		model.addAttribute("lang", commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()));
 		
 		logger.debug("emergencyNotiItem ended");
 		return "/ezNotification/emergencyNotiItem";
