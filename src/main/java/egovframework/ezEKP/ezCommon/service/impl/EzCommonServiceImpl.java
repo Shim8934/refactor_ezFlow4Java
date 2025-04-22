@@ -1981,6 +1981,15 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("description","웹한글 문서 재사용 시 양식선택창을 표출한다. YES: 양식선택창 표출, NO: 양식선택창 표출하지 않고 바로 기안창 호출 (default : YES)");
 			put("config_type","전자결재G");
 		}});
+        
+        test.add(new HashMap<String, Object>(){{
+			put("confName","webHWPVersion");
+			put("property_value","2");
+			put("config_name","웹한글기안기 버전");
+			put("regdate","2025-04-22 00:00:00");
+			put("description","웹한글기안기 버전에 따라 다른 동작을 하는 부분을 옵션화한다. 1: 웹한글기안기 v1.0 사용, 2: 웹한글기안기 v2.0 사용 (default : 1)");
+			put("config_type","전자결재G");
+		}});
 
 		List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
 		
