@@ -229,7 +229,6 @@ public class EzEmailWriteServiceImpl implements EzEmailWriteService {
 
         Map<String, Object> extraMap = writevo.getExtraMap();
         String folderPath = writevo.getFolderPath();
-        long uid = writevo.getUid();
         boolean isReply = writetype.isReply();
         boolean isReserve = writetype.isReserve();
 
@@ -245,7 +244,7 @@ public class EzEmailWriteServiceImpl implements EzEmailWriteService {
                 if (isReserve) {
                     isValid = emlFile != null;
                 } else {
-                    orgMessage = ((IMAPFolder)orgFolder).getMessageByUID(uid);
+                    orgMessage = ((IMAPFolder)orgFolder).getMessageByUID(writevo.getUid());
                     isValid = orgMessage != null;
                 }
 
@@ -285,6 +284,7 @@ public class EzEmailWriteServiceImpl implements EzEmailWriteService {
                     messagevo.setEncodedSubject(EgovStringUtil.getSpclStrCnvr(subject));
 
                     // body, attach
+                    long uid = writevo.getUid(); // 예약발송은  savedMessage 이후 uid가 생성됨
                     List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();
                     List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, locale, extraMap);
                     String bodyValue = bodyInfoList.get(0);

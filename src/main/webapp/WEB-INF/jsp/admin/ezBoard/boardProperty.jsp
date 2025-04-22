@@ -1389,13 +1389,6 @@
 	        	</td>
 	        </tr>
 	        
-	        <tr id="writerFlagTR" style="${style}">
-	        	<th><spring:message code="ezBoard.LJE02" /></th>
-	        	<td>
-	        		<span style="display:inline-block;"><input type="checkbox" id="chkWriterFlag"><spring:message code="ezBoard.t162"/></span>
-	        	</td>
-	        </tr>
-	        
 	        <%-- 승인여부 체크 시 나타나는 승인메일옵션과 승인자 리스트 --%>
 	        <tr id="chkApprListMail" style="display:none;">
 	            <th><spring:message code="ezBoard.t999019" /></th>
@@ -1411,6 +1404,13 @@
 	                <span id="selectedTarget" style="vertical-align: middle;display:none;"></span>
 	                <div class="listview" style="height:100px;overflow-y:auto;overflow-x:hidden;" id="AccessList"></div>
 	            </td>
+	        </tr>
+	        
+	        <tr id="writerFlagTR" style="${style}">
+	        	<th><spring:message code="ezBoard.LJE02" /></th>
+	        	<td>
+	        		<span style="display:inline-block;"><input type="checkbox" id="chkWriterFlag"><spring:message code="ezBoard.t162"/></span>
+	        	</td>
 	        </tr>
 	        
 	        <%-- 2021-06-21 홍승비 - 메일알림 옵션 분리, 게시알림 / 수정알림 / 댓글알림 추가 --%>
