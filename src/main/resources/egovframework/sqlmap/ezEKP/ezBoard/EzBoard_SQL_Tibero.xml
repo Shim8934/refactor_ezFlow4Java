@@ -6338,6 +6338,7 @@
 				updaterid = #updaterID#,
 				writerId = #writerID#,
 				writerName = #writerName#,
+		        writerName2 = #writerName2#,
 				writerNameType = #writerNameType#
     		WHERE  
     			TENANT_ID = #tenantID#
