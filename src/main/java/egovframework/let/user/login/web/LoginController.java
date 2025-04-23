@@ -1087,7 +1087,7 @@ public class LoginController {
 			if (useDbSession && StringUtils.isNotBlank(ezSessionId)) { // 로그인
 				sessionCode = ezSessionId;
 			} else if (useDbSession && StringUtils.isBlank(ezSessionId)) { // 로그아웃
-				sessionCode = loginCookie.getValue();
+				sessionCode = loginCookie.getValue() != null ? loginCookie.getValue() : "";
 			} else {
 				sessionCode = request.getSession().getId();
 			}
