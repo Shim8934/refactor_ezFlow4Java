@@ -2471,6 +2471,13 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		
 		model.addAttribute("webHWPUrl", ezCommonService.getTenantConfig("webHWPUrl", userInfo.getTenantId()));
 		
+		// 웹한글기안기 버전의 옵션화, defalt를 ver2로 설정, 서버 업데이트 시 유의
+		String webHWPVersion = ezCommonService.getTenantConfig("webHWPVersion", userInfo.getTenantId());
+		if (StringUtils.isBlank(webHWPVersion)) {
+			webHWPVersion = "2";
+		}
+		model.addAttribute("webHWPVersion", webHWPVersion);
+		
 		logger.debug("hwpctrlmain ended.");
 		return "ezApprovalG/hwpctrlmain";
 	}

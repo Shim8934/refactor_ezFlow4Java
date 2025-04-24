@@ -139,7 +139,7 @@
 	                    
 	                    EditMode(0);
 						SetViewProperties(2, 100);
-	                    ScrollPosInfo(0, 0);
+	                    ScrollPosTop(100);
 	                    
 	                    // 부모창의 문서로딩완료 카운트를 하나 증가시킨다.
                     	parent.docLoadCompleteCnt ++;
@@ -450,7 +450,20 @@
 	            ScrollPosSet.SetItem("HorzPos", HorzPos);
 	            ScrollPosSet.SetItem("VertPos", VertPos);
 	            HwpCtrl.ScrollPosInfo = ScrollPosSet;
-	        }        
+	        }
+	        
+	        function ScrollPosTop(time) {
+				setTimeout(function() {
+					var ScrollPosSet;
+		            ScrollPosSet = HwpCtrl.ScrollPosInfo;
+		            ScrollPosSet.SetItem("HorzPos", 0);
+		            ScrollPosSet.SetItem("VertPos", 0);
+		            HwpCtrl.ScrollPosInfo = ScrollPosSet;
+					setTimeout(function() {
+						ScrollPosInfo(0, 0);
+					}, 100);
+				}, time);
+			}     
 
 	        function SetToolBar(option, ToolBarID) { //툴바 설정
 	            HwpCtrl.SetToolBar(option, ToolBarID);

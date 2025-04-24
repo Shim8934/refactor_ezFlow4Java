@@ -251,7 +251,7 @@
 	                    OpenAlertUI(pAlertContent);
 	                    Clear();
 	                }
-	                message.FreeUndoHistory();
+	                FreeUndoHistory();
  	            } catch (e) {
  	            	console.log(e);
 	                alert("apprGdraftuiAllContent_WHWP.FieldsAvailable()  ::  " + e.description);
@@ -402,6 +402,10 @@
 	        function Clear() {
 	            HwpCtrl.Clear(1);
 	        }
+	        
+            function FreeUndoHistory() {
+			    HwpCtrl.FreeUndoHistory();
+            }
 
 	        function EditMode(option) {
 	            HwpCtrl.EditMode = option;
