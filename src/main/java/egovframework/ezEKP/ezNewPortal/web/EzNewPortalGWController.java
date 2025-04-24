@@ -1889,6 +1889,9 @@ public class EzNewPortalGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String companyId = request.getParameter("companyId");
+			if (companyId == null || "".equalsIgnoreCase(companyId)){
+				companyId = info.getCompanyId();
+			}
 			String deptId = request.getParameter("deptId");
 			int tenantId = info.getTenantId();
 			String portletLang = info.getLang();
