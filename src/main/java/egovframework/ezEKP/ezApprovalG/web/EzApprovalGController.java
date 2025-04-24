@@ -913,7 +913,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		/* 2024-05-08 양지혜 - 공개문서에서 파라미터 조작으로 접근 취약점 보완. 매번 권한체크를 하도록 함 */
         //2018-09-04 강민수92 비공개문서일때 결재라인 안보이게 하기 위해 추가
         if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("m=1") == -1) {
-        	pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getPrimary(), tenantID, approvalFlag, userInfo.getDeptID());
+        	pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), tenantID, approvalFlag, userInfo.getDeptID());
         	
 			if (!pass.equals("<RESULT>TRUE</RESULT>")) {
 				return "NOTPERMISSION";
@@ -1019,7 +1019,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 					}
 				}
 			} else if (mode.toUpperCase().equals("END")) {
-				pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId(), approvalFlag, userInfo.getDeptID());
+				pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag, userInfo.getDeptID());
 				
 				//회람일때 권한 노체크
 				if (flag != null && !flag.equals("Y")) {
@@ -13804,7 +13804,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			String[] docIdList = request.getParameterValues("docIdList");
 			String accessInfo = ezCommonService.getTenantConfig("UserInfo_ApprovalG_VIEW", userInfo.getTenantId());
 			String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
-			Map<String, Object> docRightInfo = ezApprovalGService.getDocRightInfoForAttachApr(docIdList, userInfo.getId(), userInfo.getDeptID(), userInfo.getRollInfo(), accessInfo, approvalFlag, userInfo.getPrimary(), userInfo.getCompanyID(), userInfo.getTenantId());
+			Map<String, Object> docRightInfo = ezApprovalGService.getDocRightInfoForAttachApr(docIdList, userInfo.getId(), userInfo.getDeptID(), userInfo.getRollInfo(), accessInfo, approvalFlag, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId());
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("noRightDocIds", docRightInfo.get("noRightDocIds"));
