@@ -1608,7 +1608,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 			List<ScheduleInfoVO> resultList = null;
 			resultList = sList.subList(startRow, endRow);
 			*/
-			logger.debug("sList : " + sList.toString());
+			logger.debug("status: OK / sList size : {}", sList.size());
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", sList);

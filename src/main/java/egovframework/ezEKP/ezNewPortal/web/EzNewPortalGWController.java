@@ -4490,7 +4490,7 @@ public class EzNewPortalGWController {
 			
 			Collections.sort(sList, new EzScheduleCompareUtil());
 			
-			logger.debug("sList : " + sList.toString());
+			logger.debug("status: OK / sList size : {}", sList.size());
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", sList);
@@ -6875,7 +6875,7 @@ public class EzNewPortalGWController {
 				jsonArray.add(jsonObject);
 			}
 			
-			logger.debug("sList : " + jsonArray);
+			logger.debug("status: OK / sList size : {}", jsonArray.size());
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", jsonArray);
