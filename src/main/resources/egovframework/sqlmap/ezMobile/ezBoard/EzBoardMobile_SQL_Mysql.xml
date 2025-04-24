@@ -2356,7 +2356,9 @@
 				AND 
 					(TOPWRITERID = #userID#
 					OR
-					WRITERID = #userID#)
+					WRITERID = #userID#
+					OR
+					EXTENSIONATTRIBUTE2 = '1')
 			]]>
 		</isEqual>
 	</select>
@@ -2498,7 +2500,9 @@
 				AND
 					(TOPWRITERID = #userID#
 					OR
-					WRITERID = #userID#)
+					WRITERID = #userID#
+					OR
+					EXTENSIONATTRIBUTE2 = '1')
 			]]>
 		</isEqual>
 		
@@ -2633,7 +2637,9 @@
 					AND
 						(TOPWRITERID = #userID#
 						OR
-						WRITERID = #userID#)
+						WRITERID = #userID#
+						OR
+						EXTENSIONATTRIBUTE2 = '1')
 				]]>
 			</isEqual>
              <![CDATA[             
