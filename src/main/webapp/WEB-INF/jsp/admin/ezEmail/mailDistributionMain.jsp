@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html style="height: 99%;">
 <head>
@@ -19,7 +20,8 @@
     	<span class="title_bar"><img src="/images/name_bar.gif"></span>
     	<select id="ListCompany" class="companySelect" onchange="selectCompanyId()" style="height:29px">
         	<c:forEach var="item" items="${list}">
-        		<c:set var="optionSelect" value="${item.cn == userInfo.companyID ? 'selected' : ''}"/>
+        		<%--<c:set var="optionSelect" value="${item.cn == userInfo.companyID ? 'selected' : ''}"/>--%>
+                <c:set var="optionSelect" value="${fn:contains(companyId, item.cn) ? 'selected' : ''}" />
         		<option value="<c:out value='${item.cn}'/>" ${optionSelect}><c:out value='${item.displayName}'/></option>
            	</c:forEach>
 	    </select>
