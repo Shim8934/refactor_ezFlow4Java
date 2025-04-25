@@ -2283,7 +2283,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 			}
 		}
 		
-		logger.debug("getScheduleCompleteIsAllRep ended. isAllRep = " + result);
+		logger.debug("getScheduleCompleteIsAllRep ended. isAllRep size = {}", result);
 		return result;
 	}
 	

@@ -2569,6 +2569,8 @@
 			  	A.TENANT_ID = P.TENANT_ID
 			AND
 			  	A.BOARDID = P.BOARDID
+			AND
+				P.GUBUN != '5'
 			AND 
 			  	A.TENANT_ID = #v_TENANTID#
 	 		AND
@@ -2635,6 +2637,8 @@
 						   OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
 				   AND
 					   A.BOARDID = P.BOARDID
+				   AND
+						P.GUBUN != '5'
 				   AND
 					   A.TENANT_ID = #v_TENANTID#
 				   AND
@@ -2837,6 +2841,8 @@
 				AND 
 					A.TENANT_ID = #tenantID#
 				AND
+					P.GUBUN != '5'
+				AND
 	            	(A.WRITERCOMPANYID = #companyID# OR TRIM(A.WRITERCOMPANYID) = ''
 	            		OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
 				AND 
@@ -2921,6 +2927,8 @@
 						OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
 	              AND
 	                A.BOARDID = P.BOARDID
+				  AND
+					P.GUBUN != '5'
 	              AND 
 	                A.TENANT_ID = #tenantID#
 	              AND
