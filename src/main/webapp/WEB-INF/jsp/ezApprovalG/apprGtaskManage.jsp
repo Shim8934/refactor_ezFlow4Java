@@ -165,7 +165,7 @@
 			<li id="istat2" ><span class="icon16 icon16_search" onClick="return btnFindTaskFullList_onclick()"></span></li>
 		</ul>
 		</div>
-		<span id="MailListRayer" style="border: 0px solid blue; vertical-align: top; overflow: hidden; display: inline-block;">
+		<span id="MailListRayer" style="width: 100%; border: 0px solid blue; vertical-align: top; overflow: hidden; display: inline-block;">
             <div id="divList" class="div_scroll" style="width: 100%; height: 641x; overflow: AUTO; margin-bottom:10px;">
                 <div ID="lvtDoclist"></div>
             </div>
