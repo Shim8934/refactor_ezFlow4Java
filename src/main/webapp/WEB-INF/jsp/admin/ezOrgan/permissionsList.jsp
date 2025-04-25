@@ -727,7 +727,7 @@
 					return;
 				}
 				
-		    	GetOpenWindow("/admin/ezOrgan/chooseDeletege.do?type=" + encodeURIComponent(types),"chooseDeletege", 600, 200);
+		    	GetOpenWindow("/admin/ezOrgan/chooseDeletege.do?type=" + encodeURIComponent(types),"chooseDeletege", 600, 210);
 		    }
 		    
 		    /* function choose_Del_complete(data) {
