@@ -2403,7 +2403,10 @@ window.open = function (url, target, features) {
     } else {
         urlObj = new URL(url);
     }
-    urlObj.searchParams.set('__wwidth', top.outerWidth);
+    
+    try {
+        urlObj.searchParams.set('__wwidth', top.outerWidth);
+    } catch (e) {console.log(e);}
     return originWindowOpen.call(window, urlObj.toString(), target, features);
 };
 
