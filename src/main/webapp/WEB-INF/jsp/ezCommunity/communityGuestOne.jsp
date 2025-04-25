@@ -96,7 +96,7 @@
 					html += "<div style='height:auto;'>";
 					html += "<table id='replyLayerTable_" + SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "NO") + "' class='mainlist emoticonLayerStaticPosition' style='width: 100%; display: none'>";
 					html += "<tbody><tr>";
-					html += "<th style='text-align:left; border: #fff; width: 100%;'>";
+					html += "<th style='text-align:left; border: #fff; width: 85%;'>";
 					html += "<textarea id='onelinereply"+ SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "NO") +"' rows='2' style='resize:none; margin-left: 10px; margin-top: 4px; width: 95%;' maxLength='300'></textarea>";
 					html += "<th style='text-align:center; border: #fff; width: 15%;'>";
 					html += '<a class="imgbtn" style="vertical-align: middle"><span onclick="guestOneLineReply(\'new\' ,' + SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "NO") + ')"><spring:message code="ezBoard.t321" /></span></a>';
