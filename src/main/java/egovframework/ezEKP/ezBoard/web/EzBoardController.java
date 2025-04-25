@@ -4153,13 +4153,19 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		//KMS 안써서 픽스
 		String useEzKMS = "NO";
+		String guBun = boardInfo.getGuBun();
+		String userId = userInfo.getId();
 		
 		if (!boardInfo.getRead_FG().equals("true")) {
 			return "main/warning";
+		} else if ("5".equals(guBun) && "false".equals(boardInfo.getBoardAdmin_FG())) {
+			// 게시관리자가 아닌 사람은 QNA게시판에서 본인이 쓴 게시물과, 본인이 쓴 게시물에 달린 답 게시물, 공지게시물만 볼 수 있음
+			if (!userId.equals(boardItem.getWriterID()) && !userId.equals(boardItem.getTopWriterID()) && !"1".equals(boardItem.getExtensionAttribute2())) {
+				return "main/warning";
+			}
 		}
 		
-		String guBun = boardInfo.getGuBun();
-		//추가항목 잇을 경우 추가항목을 가져온다
+		//추가항목이 있을 경우 추가항목을 가져온다
 		List<BoardAttributeVO> boardAttr = new ArrayList<BoardAttributeVO>();
 		
 		int boardAttrCount = 0; 

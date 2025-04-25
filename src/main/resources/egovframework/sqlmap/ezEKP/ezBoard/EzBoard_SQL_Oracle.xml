@@ -919,7 +919,8 @@
                     	C.MAIL,
                     	A.ITEMID,
                     	A.WRITERID,
-						A.WRITERDEPTID
+						A.WRITERDEPTID,
+						A.TOPWRITERID
                 	FROM 
                 		TBL_Board_Item A
                 	JOIN 
@@ -991,7 +992,8 @@
 	                    A.CONTENTLOCATION,
 	                    A.ITEMID,
 	                    A.WRITERID,
-						A.WRITERDEPTID
+						A.WRITERDEPTID,
+						A.TOPWRITERID
 	                FROM 
 	                	TBL_Board_Item A
 	                JOIN 
@@ -1783,7 +1785,10 @@
 				<isEqual property="adminType" compareValue="false" prepend="AND">
 					(TOPWRITERID = #v_PUSERID#
 					OR
-					WRITERID = #v_PUSERID#)
+					WRITERID = #v_PUSERID#
+					OR
+					EXTENSIONATTRIBUTE2 = '1'
+					)
 				</isEqual>
 				<isEqual property="type" compareValue="1">
 				<![CDATA[
@@ -2935,7 +2940,7 @@
 				AND ABSTRACT like ('%' || #v_SEARCH_ABSTRACT# || '%')
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_TOPWRITERID">
-				AND TOPWRITERID = #v_SEARCH_TOPWRITERID#
+				AND (TOPWRITERID = #v_SEARCH_TOPWRITERID#  OR EXTENSIONATTRIBUTE2 = '1')
 			</isNotEmpty>
 			<isEqual property="v_useKeywordFlag" compareValue="Y">
 				<isNotEmpty property="v_KEYWORD">
@@ -3221,7 +3226,7 @@
 				AND ABSTRACT like ('%' || #v_SEARCH_ABSTRACT# || '%')
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_TOPWRITERID">
-				AND TOPWRITERID = #v_SEARCH_TOPWRITERID#
+				AND (TOPWRITERID = #v_SEARCH_TOPWRITERID# OR EXTENSIONATTRIBUTE2 = '1')
 			</isNotEmpty>
 			<isEqual property="v_useKeywordFlag" compareValue="Y">
 				<isNotEmpty property="v_KEYWORD">
@@ -3396,7 +3401,7 @@
 				AND ABSTRACT like ('%' || #v_SEARCH_ABSTRACT# || '%')
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_TOPWRITERID">
-				AND TOPWRITERID = #v_SEARCH_TOPWRITERID#
+				AND (TOPWRITERID = #v_SEARCH_TOPWRITERID# OR EXTENSIONATTRIBUTE2 = '1')
 			</isNotEmpty>
 			<isNotEmpty property="v_KEYWORD">
 				<![CDATA[
@@ -3552,7 +3557,7 @@
 				AND ABSTRACT like ('%' || #v_SEARCH_ABSTRACT# || '%')
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_TOPWRITERID">
-				AND TOPWRITERID = #v_SEARCH_TOPWRITERID#
+				AND (TOPWRITERID = #v_SEARCH_TOPWRITERID# OR EXTENSIONATTRIBUTE2 = '1')
 			</isNotEmpty>
 			<isNotEmpty property="v_KEYWORD">
 				<![CDATA[
@@ -3719,7 +3724,7 @@
 				AND ABSTRACT like ('%' || #v_SEARCH_ABSTRACT# || '%')
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_TOPWRITERID">
-				AND TOPWRITERID = #v_SEARCH_TOPWRITERID#
+				AND (TOPWRITERID = #v_SEARCH_TOPWRITERID# OR EXTENSIONATTRIBUTE2 = '1')
 			</isNotEmpty>
 			<isNotEmpty property="v_KEYWORD">
 				<![CDATA[
@@ -3877,7 +3882,8 @@
 				A.PUBLICFLAG AS PUBLICFLAG,
 	            CASE WHEN #lang# = '2' THEN C.DISPLAYNAME2 ELSE C.DISPLAYNAME END AS UPDATERNAME,
 	            A.UPDATEDATE,
-				A.WRITERNAMETYPE
+				A.WRITERNAMETYPE,
+				A.TOPWRITERID
 	        FROM
 	        	TBL_Board_Item A
             JOIN
@@ -4054,7 +4060,10 @@
                    AND 
                    	(TOPWRITERID = #v_PUSERID#
 					OR
-					WRITERID = #v_PUSERID#)
+					WRITERID = #v_PUSERID#
+				    OR 
+				   EXTENSIONATTRIBUTE2 = '1'
+				    )
 			</isEqual>
 		</isEqual>
 		<isEqual property="v_PTYPE" compareValue="2">
@@ -4097,7 +4106,10 @@
                    AND 
                    	(TOPWRITERID = #v_PUSERID#
 					OR
-					WRITERID = #v_PUSERID#)
+					WRITERID = #v_PUSERID#
+				    OR 
+				    EXTENSIONATTRIBUTE2 = '1'
+				    )
 			</isEqual>
 		</isEqual>
 		<isEqual property="v_PTYPE" compareValue="3">
@@ -4119,7 +4131,10 @@
                    AND 
                    	(TOPWRITERID = #v_PUSERID#
 					OR
-					WRITERID = #v_PUSERID#)
+					WRITERID = #v_PUSERID#
+				    OR
+				    EXTENSIONATTRIBUTE2 = '1'
+					)
 			</isEqual>
 		</isEqual>
 	</select>
@@ -4656,7 +4671,7 @@
 			AND ABSTRACT like '%' || #v_SEARCH_ABSTRACT# || '%'
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
-			AND TOPWRITERID = #v_SEARCH_TOPWRITERID#
+			AND (TOPWRITERID = #v_SEARCH_TOPWRITERID# OR EXTENSIONATTRIBUTE2 = '1')
 		</isNotEmpty>
 		<isEqual property="v_useKeywordFlag" compareValue="Y">
 			<isNotEmpty property="v_KEYWORD">
@@ -4765,7 +4780,7 @@
 			AND ABSTRACT like '%' || #v_SEARCH_ABSTRACT# || '%'
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
-			AND TOPWRITERID = #v_SEARCH_TOPWRITERID#
+			AND (TOPWRITERID = #v_SEARCH_TOPWRITERID# OR EXTENSIONATTRIBUTE2 = '1')
 		</isNotEmpty>
 		<isNotEmpty property="v_KEYWORD">
 			<![CDATA[
@@ -4829,7 +4844,7 @@
 			AND ABSTRACT like '%' || #v_SEARCH_ABSTRACT# || '%'
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
-			AND TOPWRITERID = #v_SEARCH_TOPWRITERID#
+			AND (TOPWRITERID = #v_SEARCH_TOPWRITERID# OR EXTENSIONATTRIBUTE2 = '1')
 		</isNotEmpty>
 		<isNotEmpty property="v_KEYWORD">
 			<![CDATA[
@@ -5630,7 +5645,7 @@
 			AND ABSTRACT like '%' || #v_SEARCH_ABSTRACT# || '%'
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
-			AND TOPWRITERID = #v_SEARCH_TOPWRITERID#
+			AND (TOPWRITERID = #v_SEARCH_TOPWRITERID# OR EXTENSIONATTRIBUTE2 = '1')
 		</isNotEmpty>
 		<isNotEmpty property="v_KEYWORD">
 			<![CDATA[
@@ -7104,7 +7119,9 @@
 					</isNotEmpty>
 						(A.TOPWRITERID = #v_PUSERID#
 						OR
-						A.WRITERID = #v_PUSERID#)
+						A.WRITERID = #v_PUSERID#
+					    OR 
+						EXTENSIONATTRIBUTE2 = '1')
 						AND
 						I.BOARDID IN
 						<iterate property="v_qnaItemList" open="(" close=")" conjunction=","> #v_qnaItemList[]# </iterate>
@@ -7146,7 +7163,7 @@
 				AND ABSTRACT like '%' || #v_SEARCH_ABSTRACT# || '%'
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_TOPWRITERID">
-				AND TOPWRITERID = #v_SEARCH_TOPWRITERID#
+				AND (TOPWRITERID = #v_SEARCH_TOPWRITERID# OR EXTENSIONATTRIBUTE2 = '1')
 			</isNotEmpty>
 			<isNotEmpty property="v_KEYWORD">
 				<![CDATA[
@@ -7225,7 +7242,9 @@
 				</isNotEmpty>
 					(A.TOPWRITERID = #v_PUSERID#
 					OR
-					A.WRITERID = #v_PUSERID#)
+					A.WRITERID = #v_PUSERID# 
+					OR
+					EXTENSIONATTRIBUTE2 = '1')
 					AND
 					I.BOARDID IN
 					<iterate property="v_qnaItemList" open="(" close=")" conjunction=","> #v_qnaItemList[]# </iterate>
@@ -7268,7 +7287,7 @@
 			AND ABSTRACT like '%' || #v_SEARCH_ABSTRACT# || '%'
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
-			AND TOPWRITERID = #v_SEARCH_TOPWRITERID#
+			AND (TOPWRITERID = #v_SEARCH_TOPWRITERID# OR EXTENSIONATTRIBUTE2 = '1')
 		</isNotEmpty>
 		<isNotEmpty property="v_KEYWORD">
 			<![CDATA[
@@ -8533,6 +8552,8 @@
 				A.STARTDATE <= #nowDate#
 			AND
 				A.ENDDATE > #nowDate#
+			AND
+				P.GUBUN != '5'
 		]]>
 	</select>
 	
@@ -8632,6 +8653,8 @@
 										A.TENANT_ID = F.TENANT_ID
 									WHERE
 									   A.TENANT_ID = #v_TENANTID#
+									AND
+										P.GUBUN != '5'
 								   AND
 									   (A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(A.WRITERCOMPANYID) = '' OR A.WRITERCOMPANYID IS NULL
 										   OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
@@ -9871,6 +9894,8 @@
 					AND
 						A.TENANT_ID = #v_TENANTID#
 					AND
+						P.GUBUN != '5'
+					AND
 						(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(A.WRITERCOMPANYID) = '' OR A.WRITERCOMPANYID IS NULL
 							OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
 					AND
@@ -9995,6 +10020,8 @@
 									   (A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(A.WRITERCOMPANYID) = '' OR A.WRITERCOMPANYID IS NULL
 										   OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
 		<![CDATA[
+								   AND
+								   		P.GUBUN != '5'
 								   AND
 									   (A.APPRFLAG = 'Y'
 										   OR A.APPRFLAG IS NULL)
