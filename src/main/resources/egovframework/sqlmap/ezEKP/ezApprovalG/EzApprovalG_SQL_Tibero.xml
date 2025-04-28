@@ -9106,8 +9106,11 @@
 					</iterate>
 	         	AND 
 	         		TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015')
-	         	AND
-                    PROCESSORID IS NULL)
+	         	<isNotEqual property="v_MODE" compareValue="relay">
+                AND
+                    PROCESSORID IS NULL
+                </isNotEqual>
+                )
 	      	</isEqual>
 	      	<isEqual property="v_aprFlag" compareValue="G">
 		     	OR
@@ -15022,8 +15025,11 @@
 			</iterate>
              AND
              TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015')
+             <isNotEqual property="v_MODE" compareValue="relay">
              AND
-             PROCESSORID IS NULL)
+             PROCESSORID IS NULL
+             </isNotEqual>
+             )
 	     </isEqual>
 	     <isEqual property="v_aprFlag" compareValue="G">
 	     	OR

@@ -292,7 +292,7 @@
 		                    pGubun = "11";
 		                    setProperty();
 		                    setAutoProperty();
-		                    updateReceivedDept();
+		                    // updateReceivedDept();
 		                }
 		            }
 		        }
