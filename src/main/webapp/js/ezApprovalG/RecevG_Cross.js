@@ -640,18 +640,18 @@ function getExtInfo() {
 
                 var tempNode = SelectSingleNode(Nodes[i], "signimage");
                 if (tempNode) {
-                    signPath = dirPath + sCompanyID + "/ExDocUserSign/" + getSignURL(GetAttribute(tempNode.selectSingleNode("img"), "src"));
+                    signPath = dirPath + sCompanyID + "/ExDocUserSign/" + getSignURL(GetAttribute(SelectSingleNode(tempNode, "img"), "src"));
                     field = message.GetListItem(fields, "sign" + SignOrder);
                     if (field) {
-                        if (GetAttribute(tempNode.selectSingleNode("img"), "width") == "" || GetAttribute(tempNode.selectSingleNode("img"), "width") == null)
+                        if (GetAttribute(SelectSingleNode(tempNode, "img"), "width") == "" || GetAttribute(SelectSingleNode(tempNode, "img"), "width") == null)
                             var signWidth = 50;
                         else
-                            var signWidth = ConversionPt(GetAttribute(tempNode.selectSingleNode("img"), "width"));
+                            var signWidth = ConversionPt(GetAttribute(SelectSingleNode(tempNode, "img"), "width"));
 
-                        if (GetAttribute(tempNode.selectSingleNode("img"), "height") == "" || GetAttribute(tempNode.selectSingleNode("img"), "height") == null)
+                        if (GetAttribute(SelectSingleNode(tempNode, "img"), "height") == "" || GetAttribute(SelectSingleNode(tempNode, "img"), "height") == null)
                             var signHeight = 28;
                         else
-                            var signHeight = ConversionPt(GetAttribute(tempNode.selectSingleNode("img"), "height"));
+                            var signHeight = ConversionPt(GetAttribute(SelectSingleNode(tempNode, "img"), "height"));
 
                         if (signWidth > 70)
                             signWidth = 50;
@@ -729,19 +729,19 @@ function getExtInfo() {
 
                 var tempNode = SelectSingleNode(Nodes[i], "signimage");
                 if (tempNode) {
-                    signPath = dirPath + sCompanyID + "/ExDocUserSign/" + getSignURL(GetAttribute(tempNode.selectSingleNode("img"), "src"));
+                    signPath = dirPath + sCompanyID + "/ExDocUserSign/" + getSignURL(GetAttribute(SelectSingleNode(tempNode, "img"), "src"));
 
                     field = message.GetListItem(fields, "habyuisign" + SignOrder);
                     if (field) {
-                        if (GetAttribute(tempNode.selectSingleNode("img"), "width") == "" || GetAttribute(tempNode.selectSingleNode("img"), "width") == null)
+                        if (GetAttribute(SelectSingleNode(tempNode, "img"), "width") == "" || GetAttribute(SelectSingleNode(tempNode, "img"), "width") == null)
                             var signWidth = 50;
                         else
-                            var signWidth = ConversionPt(GetAttribute(tempNode.selectSingleNode("img"), "width"));
+                            var signWidth = ConversionPt(GetAttribute(SelectSingleNode(tempNode, "img"), "width"));
 
-                        if (GetAttribute(tempNode.selectSingleNode("img"), "height") == "" || GetAttribute(tempNode.selectSingleNode("img"), "height") == null)
+                        if (GetAttribute(SelectSingleNode(tempNode, "img"), "height") == "" || GetAttribute(SelectSingleNode(tempNode, "img"), "height") == null)
                             var signHeight = 28;
                         else
-                            var signHeight = ConversionPt(GetAttribute(tempNode.selectSingleNode("img"), "height"));
+                            var signHeight = ConversionPt(GetAttribute(SelectSingleNode(tempNode, "img"), "height"));
 
                         if (signWidth > 70)
                             signWidth = 50;
