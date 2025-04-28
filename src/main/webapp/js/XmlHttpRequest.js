@@ -2520,6 +2520,9 @@ function resizableMenu(url) {
         
         if (url.includes("ezSurvey")) {
             SurveyItem.btnResize();
+        } 
+        if (url.includes("/ezResource/scheduleApprovList.do")) {
+            btnSet();
         }
     }
 
