@@ -126,7 +126,7 @@
 	        var MozMaxZoom = 2;
 	        var MozMinZoom = 0.8;
 			/* 2023-04-12 이가은 - 답글 기능을 위한 변수 추가 */
-	        var userInfoName = "${userInfo.displayName1}";
+	        var userInfoName = "${userInfo.displayName}"; 
 			var replyOpenFlag = 0;
 			var replyModifyFlag = 0;
 			var replyModifyId = "";
