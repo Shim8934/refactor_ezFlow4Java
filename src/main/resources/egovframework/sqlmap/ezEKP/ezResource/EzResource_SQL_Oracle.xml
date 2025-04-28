@@ -2841,13 +2841,17 @@
 	    	CAT_NAME = #CAT_NAME# 
 	    WHERE 
 	    	CAT_ID = #CAT_ID#
+		AND
+			USER_ID = #USER_ID#
 	</update>
 	
-	<delete id="EzResourceDAO.delFavoriteCategory" parameterClass="String">
+	<delete id="EzResourceDAO.delFavoriteCategory" parameterClass="map">
 		DELETE FROM 
 			TBL_RS_FAV_CAT 
 		WHERE 
-			CAT_ID = #catId# 
+			CAT_ID = #CAT_ID#
+		AND
+		    USER_ID = #USER_ID#
 	</delete>
 	
 	<insert id="EzResourceDAO.insertBrdFavoriteCategory" parameterClass="map">
@@ -2880,6 +2884,8 @@
 	        TBL_RS_BRD.OWNERPOSITION,
 	        TBL_RS_BRD.OWNERPOSITION2,
 	        TBL_RS_BRD.OWNERCALL,
+			RES_MAX_DATE,
+			RES_MAX_USER_CNT,
 	        NVL(RESLOCATION, ' ') AS RESLOCATION,
 	        TO_CHAR(TO_DATE(MAKEDATE, 'YYYYMMDD'), 'YYYY-MM-DD') AS MAKEDATE,
 	        NVL(APPROVEFLAG, '0') AS APPROVEFLAG,
@@ -2898,6 +2904,8 @@
 	        TBL_RS_BRD.TENANT_ID = TBL_RS_CAT_BRD.TENANT_ID
 	    WHERE
 	        TBL_RS_CAT_BRD.CAT_ID = #catId#
+	    AND
+	        TBL_RS_CAT_BRD.USER_ID = #userID#
 	    ORDER BY
 	        TBL_RS_CAT_BRD.UPDATEDATE DESC
 	    ]]>
