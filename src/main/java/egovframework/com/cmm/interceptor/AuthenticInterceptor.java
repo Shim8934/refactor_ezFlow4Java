@@ -112,7 +112,7 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 	        	String mobileRedirection = ezCommonService.getTenantConfig("mobileRedirection", tenantId);
 	        	String userOs = ClientUtil.getClientInfo(request, "os");
 	        	
-	        	if (userOs.equals("iOS") || userOs.equals("Android") || userOs.equals("BlackBerry") || userOs.equals("iPod") || userOs.equals("iPad")) {
+	        	if (userOs.equals("iOS") || userOs.equals("Android") || userOs.equals("BlackBerry") || userOs.equals("iPod")) {
 	        		if (!mobileRedirection.equals("") && !mobileRedirection.equals("*")) {
 	        			response.sendRedirect(mobileRedirection);
 	        			
@@ -205,7 +205,7 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 		        	String mobileRedirection = ezCommonService.getTenantConfig("mobileRedirection", tenantId);
 		        	String userOs = ClientUtil.getClientInfo(request, "os");
 		        	
-		        	if (userOs.equals("iOS") || userOs.equals("Android") || userOs.equals("BlackBerry") || userOs.equals("iPod") || userOs.equals("iPad")) {
+		        	if (userOs.equals("iOS") || userOs.equals("Android") || userOs.equals("BlackBerry") || userOs.equals("iPod")) {
 		        		if (!mobileRedirection.equals("") && !mobileRedirection.equals("*")) {
 		        			response.sendRedirect(mobileRedirection);
 		        		}

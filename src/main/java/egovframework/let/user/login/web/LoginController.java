@@ -159,7 +159,7 @@ public class LoginController {
     	String mobileRedirection = ezCommonService.getTenantConfig("mobileRedirection", tenantId);
     	String userOs = ClientUtil.getClientInfo(request, "os");
     	
-    	if (userOs.equals("iOS") || userOs.equals("Android") || userOs.equals("BlackBerry") || userOs.equals("iPod") || userOs.equals("iPad")) {
+    	if (userOs.equals("iOS") || userOs.equals("Android") || userOs.equals("BlackBerry") || userOs.equals("iPod")) {
     		logger.debug("mobileRedirection : " + mobileRedirection);
     		if (!mobileRedirection.equals("") && !mobileRedirection.equals("*")) {
     			response.sendRedirect(mobileRedirection);
