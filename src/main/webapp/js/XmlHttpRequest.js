@@ -2156,7 +2156,7 @@ function checkImgExtension(pFileExt) {
 	return res;
 }
 
-/* 2022-01-03 박성빈 채변 년도 기산일에 맞춰 가져오기 */
+/* 2022-01-03 박성빈 채번 년도 기산일(회계년도)에 맞춰 가져오기 */
 function getAccountingYear() {
     var res = "";
 

@@ -9142,4 +9142,10 @@
 			WHERE FORM_ID=8
 		]]>
 	</update>
+	
+	<!-- 2025-04-29 홍승비 - 전자결재G > 회계년도 계산 시 타임존 선택 옵션 컨피그 추가 -->
+	<insert id="EzCommonDAO.insertAccountYearTimeZone">
+		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
+		VALUES (#tenantID#, 'accountYearTimeZone', '전자결재 회계년도 계산 시 타임존 선택 옵션', 'KST', '회계년도 계산 시, UTC 또는 KST (한국 표준시)를 사용할지 선택한다. (default: KST)', sysdate, '전자결재G')
+	</insert>
 </sqlMap>

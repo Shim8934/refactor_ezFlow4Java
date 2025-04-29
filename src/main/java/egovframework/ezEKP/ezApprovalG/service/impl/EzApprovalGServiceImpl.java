@@ -4819,7 +4819,15 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 	public String getTaskSubCategoryAll(String deptCode, String companyID, String cateCode, String strType, String initFlag, int tenantID, String viewFlag) throws Exception {
 		logger.debug("getTaskSubCategoryAll started");
 		
-		String accountYear = getAccountingYear(commonUtil.getTodayUTCTime(""), companyID, strType, tenantID);
+		/* 2025-04-01 홍승비 - 전자결재G > 기산일(회계년도) 시간대 기준 값을 테넌트 컨피그로 옵션화, 디폴트로 UTC 정시가 아닌 한국시(UTC + 9)를 기준으로 사용하도록 수정 */
+		String todayUTCTime = commonUtil.getTodayUTCTime("");
+		String accountYearTimeZone = ezCommonService.getTenantConfig("accountYearTimeZone", tenantID);
+		
+		if ("KST".equals(accountYearTimeZone)) {
+			todayUTCTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), "235|+09:00", false);
+		}
+		
+		String accountYear = getAccountingYear(todayUTCTime, companyID, strType, tenantID);
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		
@@ -4962,8 +4970,15 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 		logger.debug("getSimpleCabinetList started.");
 		logger.debug("companyID = " + companyID + " || processDeptCode = " + processDeptCode + " || productionYear = " + productionYear + " || taskCode = " + taskCode + " || flag = " + flag + " || langType = " + langType);
 		
-		String accountYear = getAccountingYear(commonUtil.getTodayUTCTime(""), companyID, langType, tenantID);
+		/* 2025-04-01 홍승비 - 전자결재G > 기산일(회계년도) 시간대 기준 값을 테넌트 컨피그로 옵션화, 디폴트로 UTC 정시가 아닌 한국시(UTC + 9)를 기준으로 사용하도록 수정 */
+		String todayUTCTime = commonUtil.getTodayUTCTime("");
+		String accountYearTimeZone = ezCommonService.getTenantConfig("accountYearTimeZone", tenantID);
 		
+		if ("KST".equals(accountYearTimeZone)) {
+			todayUTCTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), "235|+09:00", false);
+		}
+		
+		String accountYear = getAccountingYear(todayUTCTime, companyID, langType, tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		if (selYear != null) {
@@ -10479,7 +10494,16 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
         String transExpire = "";
         
 		if (doc.getElementsByTagName("TRANSEXPIRE").item(0) != null && doc.getElementsByTagName("TRANSEXPIRE").item(0).getTextContent().length() > 0) {
-			String accountingYear = getAccountingYear(commonUtil.getTodayUTCTime(""), recordListVO.getCompanyID(), lang, tenantID);
+			
+			/* 2025-04-01 홍승비 - 전자결재G > 기산일(회계년도) 시간대 기준 값을 테넌트 컨피그로 옵션화, 디폴트로 UTC 정시가 아닌 한국시(UTC + 9)를 기준으로 사용하도록 수정 */
+			String todayUTCTime = commonUtil.getTodayUTCTime("");
+			String accountYearTimeZone = ezCommonService.getTenantConfig("accountYearTimeZone", tenantID);
+			
+			if ("KST".equals(accountYearTimeZone)) {
+				todayUTCTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), "235|+09:00", false);
+			}
+			
+			String accountingYear = getAccountingYear(todayUTCTime, recordListVO.getCompanyID(), lang, tenantID);
 			
 			if (accountingYear != null && !accountingYear.equals("")) {
 				transExpire = accountingYear;
@@ -11533,10 +11557,18 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 		map.put("v_TENANTID", tenantID);
         map.put("upperDeptCode", upperDeptCode);
         map.put("lang", commonUtil.getMultiData(lang, tenantID));
+        
+        /* 2025-04-01 홍승비 - 전자결재G > 기산일(회계년도) 시간대 기준 값을 테넌트 컨피그로 옵션화, 디폴트로 UTC 정시가 아닌 한국시(UTC + 9)를 기준으로 사용하도록 수정 */
+		String todayUTCTime = commonUtil.getTodayUTCTime("");
+		String accountYearTimeZone = ezCommonService.getTenantConfig("accountYearTimeZone", tenantID);
+		
+		if ("KST".equals(accountYearTimeZone)) {
+			todayUTCTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), "235|+09:00", false);
+		}
 		
 		/* 2023-01-03 홍승비 - 전자결재G > 기산월을 체크하는 회계연도 조건을 미리 만들어서 전달하도록 수정 (쿼리 상에서 년-월 조건 분리된 부분 제거) */
 		// 사용자에게 표출되는 기록물철의 종료연도는 현재 기준으로 계산된 회계년도보다 크거나 같아야 함
-		String accountYear = getAccountingYear(commonUtil.getTodayUTCTime(""), companyID, lang, tenantID);
+		String accountYear = getAccountingYear(todayUTCTime, companyID, lang, tenantID);
 		map.put("v_ACCOUNTYEAR", accountYear);
 		
 		List<ApprGTaskVO> apprGTaskVOList = ezApprovalGDAO.getMyTaskCode(map);
@@ -13866,9 +13898,17 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 		String subSQL = "";
 		
 		String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent();
-		String createDate = commonUtil.getTodayUTCTime("");
 		String deptCode = xmlDom.getElementsByTagName("DEPTCODE").item(0).getTextContent().trim();
 		String taskCode = xmlDom.getElementsByTagName("TASKCODE").item(0).getTextContent();
+		
+		/* 2025-04-01 홍승비 - 전자결재G > 기산일(회계년도) 시간대 기준 값을 테넌트 컨피그로 옵션화, 디폴트로 UTC 정시가 아닌 한국시(UTC + 9)를 기준으로 사용하도록 수정 */
+		String createDate = commonUtil.getTodayUTCTime("");
+		String accountYearTimeZone = ezCommonService.getTenantConfig("accountYearTimeZone", tenantID);
+		
+		if ("KST".equals(accountYearTimeZone)) {
+			createDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), "235|+09:00", false);
+		}
+		
 		//'기록물철 분류번호: 처리과기관코드+단위업무코드+생산년도+등록일련번호
 		//수정(2007.07.26 김상건) : 회계년도가 3월 ~ 익년 2월까지이므로 RegYear 년도는 회계년도 값을 가져야 한다.
 		String regSN = formatSerialNum(getSerialNum("001", deptCode, taskCode, companyID, strLang, tenantID));
@@ -13987,10 +14027,18 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 
 		String strMultiData = commonUtil.getMultiData(langType, tenantID);
 		
+		/* 2025-04-01 홍승비 - 전자결재G > 기산일(회계년도) 시간대 기준 값을 테넌트 컨피그로 옵션화, 디폴트로 UTC 정시가 아닌 한국시(UTC + 9)를 기준으로 사용하도록 수정 */
+		String todayUTCTime = commonUtil.getTodayUTCTime("");
+		String accountYearTimeZone = ezCommonService.getTenantConfig("accountYearTimeZone", tenantID);
+		
+		if ("KST".equals(accountYearTimeZone)) {
+			todayUTCTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), "235|+09:00", false);
+		}
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
 		map.put("v_PDEPTCODE", processDeptCode);
-		map.put("v_PYEAR", getAccountingYear(commonUtil.getTodayUTCTime(""), companyID, langType, tenantID));
+		map.put("v_PYEAR", getAccountingYear(todayUTCTime, companyID, langType, tenantID));
 		map.put("v_SEARCHNAME", searchKeyword);
 		map.put("v_FLAG", flag);
 		map.put("v_LANGTYPE", strMultiData);
@@ -14079,10 +14127,18 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 
 		String strMultiData = commonUtil.getMultiData(langType, tenantID);
 		
+		/* 2025-04-01 홍승비 - 전자결재G > 기산일(회계년도) 시간대 기준 값을 테넌트 컨피그로 옵션화, 디폴트로 UTC 정시가 아닌 한국시(UTC + 9)를 기준으로 사용하도록 수정 */
+		String todayUTCTime = commonUtil.getTodayUTCTime("");
+		String accountYearTimeZone = ezCommonService.getTenantConfig("accountYearTimeZone", tenantID);
+		
+		if ("KST".equals(accountYearTimeZone)) {
+			todayUTCTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), "235|+09:00", false);
+		}
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
 		map.put("v_PDEPTCODE", processDeptCode);
-		map.put("v_PYEAR", getAccountingYear(commonUtil.getTodayUTCTime(""), companyID, langType, tenantID));
+		map.put("v_PYEAR", getAccountingYear(todayUTCTime, companyID, langType, tenantID));
 		map.put("v_SEARCHNAME", searchKeyword);
 		map.put("v_FLAG", flag);
 		map.put("v_LANGTYPE", strMultiData);
@@ -14597,8 +14653,16 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 	
 	private String rollbackSN(String snType1, String snType2, String snType3, String toSN, String companyID, String strLang, int tenantID) throws Exception {
 		logger.debug("rollbackSN started");
+		
+		/* 2025-04-01 홍승비 - 전자결재G > 기산일(회계년도) 시간대 기준 값을 테넌트 컨피그로 옵션화, 디폴트로 UTC 정시가 아닌 한국시(UTC + 9)를 기준으로 사용하도록 수정 */
+		String todayUTCTime = commonUtil.getTodayUTCTime("");
+		String accountYearTimeZone = ezCommonService.getTenantConfig("accountYearTimeZone", tenantID);
+		
+		if ("KST".equals(accountYearTimeZone)) {
+			todayUTCTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), "235|+09:00", false);
+		}
 
-		String accountYear = getAccountingYear(commonUtil.getTodayUTCTime(""), companyID, strLang, tenantID);
+		String accountYear = getAccountingYear(todayUTCTime, companyID, strLang, tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("iv_Type1", snType1);
@@ -14787,6 +14851,14 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 
 		String accountYear = "";
 		
+		/* 2025-04-01 홍승비 - 전자결재G > 기산일(회계년도) 시간대 기준 값을 테넌트 컨피그로 옵션화, 디폴트로 UTC 정시가 아닌 한국시(UTC + 9)를 기준으로 사용하도록 수정 */
+		String todayUTCTime = commonUtil.getTodayUTCTime("");
+		String accountYearTimeZone = ezCommonService.getTenantConfig("accountYearTimeZone", tenantID);
+		
+		if ("KST".equals(accountYearTimeZone)) {
+			todayUTCTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), "235|+09:00", false);
+		}
+		
 		if (!docID.trim().equals("")) {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("companyID", companyID);
@@ -14796,12 +14868,16 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 			String processDate = ezApprovalGDAO.getDraftDate(map);
 			
 			if (processDate != null && !processDate.equals("")) {
+				// 기안일자는 UTC 시간대로 저장되므로, 채번을 위한 회계년도 계산도 테넌트 컨피그에 따라 진행하도록 수정
+				if ("KST".equals(accountYearTimeZone)) {
+					processDate = commonUtil.getDateStringInUTC(processDate, "235|+09:00", false);
+				}
 				accountYear = getAccountingYear(processDate, companyID, langType, tenantID);
 			} else {
-				accountYear = getAccountingYear(commonUtil.getTodayUTCTime(""), companyID, langType, tenantID);
+				accountYear = getAccountingYear(todayUTCTime, companyID, langType, tenantID);
 			}
 		} else {
-			accountYear = getAccountingYear(commonUtil.getTodayUTCTime(""), companyID, langType, tenantID);
+			accountYear = getAccountingYear(todayUTCTime, companyID, langType, tenantID);
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -14857,6 +14933,14 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 		String daliyDocNumYN = ezCommonService.getTenantConfig("daliyDocNumYN", tenantID);
 		String lastDocDate = null;
 		
+		/* 2025-04-01 홍승비 - 전자결재G > 기산일(회계년도) 시간대 기준 값을 테넌트 컨피그로 옵션화, 디폴트로 UTC 정시가 아닌 한국시(UTC + 9)를 기준으로 사용하도록 수정 */
+		String todayUTCTime = commonUtil.getTodayUTCTime("");
+		String accountYearTimeZone = ezCommonService.getTenantConfig("accountYearTimeZone", tenantID);
+		
+		if ("KST".equals(accountYearTimeZone)) {
+			todayUTCTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), "235|+09:00", false);
+		}
+		
 		if (!docID.trim().equals("")) {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("companyID", companyID);
@@ -14866,19 +14950,23 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 			String processDate = ezApprovalGDAO.getDraftDate(map);
 			// 결재일자
 			if (processDate != null && !processDate.equals("")) {
+				// 결재일자는 UTC 시간대로 저장되므로, 채번을 위한 회계년도 계산도 테넌트 컨피그에 따라 진행하도록 수정
+				if ("KST".equals(accountYearTimeZone)) {
+					processDate = commonUtil.getDateStringInUTC(processDate, "235|+09:00", false);
+				}
 				accountYear = getAccountingYear(processDate, companyID, langType, tenantID);
 			} else {
-				accountYear = getAccountingYear(commonUtil.getTodayUTCTime(""), companyID, langType, tenantID);
+				accountYear = getAccountingYear(todayUTCTime, companyID, langType, tenantID);
 			}
 		} else {
-			accountYear = getAccountingYear(commonUtil.getTodayUTCTime(""), companyID, langType, tenantID);
+			accountYear = getAccountingYear(todayUTCTime, companyID, langType, tenantID);
 		}
 		
 		// 채번대상이 되는 부서가 있는지 체크하여 deptId를 변경
 		String ApprovalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
-		if(ApprovalFlag.equals("S")) {
+		if (ApprovalFlag.equals("S")) {
 			String chaebunDept = getChaebunDept(type2, companyID, tenantID);
-			if(chaebunDept != null) {
+			if (chaebunDept != null) {
 				logger.debug("채번부서 : " + chaebunDept + ", 대상부서 : " + type2);
 				type2 = chaebunDept;
 			}
@@ -18527,6 +18615,10 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 		String docID = "";
 		String processDate = "";
 		String nonElecRecYN = "";
+		
+		/* 2025-04-01 홍승비 - 전자결재G > 기산일(회계년도) 시간대 기준 값을 테넌트 컨피그로 옵션화, 디폴트로 UTC 정시가 아닌 한국시(UTC + 9)를 기준으로 사용하도록 수정 */
+		String todayUTCTime = commonUtil.getTodayUTCTime("");
+		String accountYearTimeZone = ezCommonService.getTenantConfig("accountYearTimeZone", tenantID);
         
         /* 전자결재G > 상위부서문서함 사용 > 상위부서 정보로 record 정보를 저장 */
         Map<String, String> upDeptInfo = getUpperDeptInfo(deptCode, tenantID);
@@ -18535,6 +18627,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
             deptName = upDeptInfo.get("upperDeptName");
         }
 		
+        // 2025-04-07 기준으로 manualFlag값은 항상 "0"으로만 전달되며, REGISTERDATE값 또한 XML로 전달되지 않는 상태임. 정상 동작하지 않는 분기로 추정됨.
 		if (manualFlag.equals("1")) { // 수기등록문서일 경우
 			registerDate = objParam.getElementsByTagName("REGISTERDATE").item(0).getTextContent();
 			specialCatalogFlag = objParam.getElementsByTagName("SPECIALCATALOGFLAG").item(0).getTextContent();
@@ -18556,14 +18649,24 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 			map.put("v_DOCID", docID.trim());
 			map.put("v_TENANTID", tenantID);
 			
-			processDate = ezApprovalGDAO.getDraftDate(map);
+			processDate = ezApprovalGDAO.getDraftDate(map); // 기안일자는 UTC 표준시로 저장됨
 			
 			if (processDate != null && !processDate.equals("")) {
 				if (registerType.equals("2")) {
 					registerDate = processDate;
 				}
+				
+				// UTC 시간으로 저장된 processDate가 정상 존재하는 경우, todayUTCTime 변수에 해당 값을 저장한다.
+				if ("KST".equals(accountYearTimeZone)) {
+					todayUTCTime = commonUtil.getDateStringInUTC(processDate, "235|+09:00", false);
+				}
 			} else {
 				processDate = registerDate;
+				
+				// UTC 시간으로 저장된 processDate가 존재하지 않는 경우, 테넌트 컨피그에 따른 값을 todayUTCTime 변수에 저장한다.
+				if ("KST".equals(accountYearTimeZone)) {
+					todayUTCTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), "235|+09:00", false);
+				}
 			}
 		}
 		
@@ -18571,7 +18674,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 			regSN = formatSerialNum(regSN);
 		}
 		
-		String regYear = getAccountingYear(processDate, companyID, langType, tenantID);
+		String regYear = getAccountingYear(todayUTCTime, companyID, langType, tenantID);
 		String title = objParam.getElementsByTagName("TITLE").item(0).getTextContent();
 		String numOfPage = objParam.getElementsByTagName("NUMOFPAGE").item(0).getTextContent();
     	String aprMemberTitle = objParam.getElementsByTagName("APRMEMBERTITLE").item(0).getTextContent();
@@ -18845,7 +18948,15 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 	public String getSerialNum(String snType1, String snType2, String snType3, String companyID, String langType, int tenantID) throws Exception {
 		logger.debug("getSerialNum started.");
 		
-		String accountYear = getAccountingYear(commonUtil.getTodayUTCTime(""), companyID, langType ,tenantID);
+		/* 2025-04-01 홍승비 - 전자결재G > 기산일(회계년도) 시간대 기준 값을 테넌트 컨피그로 옵션화, 디폴트로 UTC 정시가 아닌 한국시(UTC + 9)를 기준으로 사용하도록 수정 */
+		String todayUTCTime = commonUtil.getTodayUTCTime("");
+		String accountYearTimeZone = ezCommonService.getTenantConfig("accountYearTimeZone", tenantID);
+		
+		if ("KST".equals(accountYearTimeZone)) {
+			todayUTCTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), "235|+09:00", false);
+		}
+		
+		String accountYear = getAccountingYear(todayUTCTime, companyID, langType ,tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("iv_Type1", snType1);
@@ -25442,7 +25553,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 		String attachFlag = "0"; // 25
 		String docID = ""; // 26
 		
-		if(manualFlag.equals("1")) {// 수기등록 문서이면
+		if (manualFlag.equals("1")) {// 수기등록 문서이면
 			//(2007.08.10 김상건) : 수기기록물이고 첨부파일이 있을 경우 docid 필요
 			docID = xmlDom.getElementsByTagName("DOCID").item(0).getTextContent().trim();
 			registerDate = xmlDom.getElementsByTagName("REGISTERDATE").item(0).getTextContent().trim();
@@ -25452,12 +25563,20 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 			// 2011.04.04 수기등록시 첨부등록 추가
 			attachFlag = xmlDom.getElementsByTagName("ATTACHFLAG").item(0).getTextContent().trim();
 			regSn = getSerialNum("002", deptCode, "", companyID, langType, tenantID);
-			if(regSn.equals("")) {
+			if (regSn.equals("")) {
 				return "<RESULT>FALSE</RESULT>";
 			}
 		}
 		else {
-			registerDate = commonUtil.getTodayUTCTime("");
+			/* 2025-04-01 홍승비 - 전자결재G > 기산일(회계년도) 시간대 기준 값을 테넌트 컨피그로 옵션화, 디폴트로 UTC 정시가 아닌 한국시(UTC + 9)를 기준으로 사용하도록 수정 */
+			String todayUTCTime = commonUtil.getTodayUTCTime("");
+			String accountYearTimeZone = ezCommonService.getTenantConfig("accountYearTimeZone", tenantID);
+			
+			if ("KST".equals(accountYearTimeZone)) {
+				todayUTCTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), "235|+09:00", false);
+			}
+			
+			registerDate = todayUTCTime;
 			specialCatalogFlag = getRecordSCFlag(cabID, companyID, tenantID);
 			regSn = xmlDom.getElementsByTagName("REGSN").item(0).getTextContent().trim();
 			rejectFlag = xmlDom.getElementsByTagName("REJECTFLAG").item(0).getTextContent().trim();
@@ -25465,7 +25584,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 			docID = xmlDom.getElementsByTagName("DOCID").item(0).getTextContent().trim();
 		}
 		
-		if(!regSn.trim().equals("")) {
+		if (!regSn.trim().equals("")) {
 			regSn = formatSerialNum(regSn);
 		}
 		
@@ -25599,6 +25718,14 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 		StringBuilder resultXML = new StringBuilder();
 		String langData = commonUtil.getMultiData( userInfo.getLang(), userInfo.getTenantId());
 		
+		/* 2025-04-01 홍승비 - 전자결재G > 기산일(회계년도) 시간대 기준 값을 테넌트 컨피그로 옵션화, 디폴트로 UTC 정시가 아닌 한국시(UTC + 9)를 기준으로 사용하도록 수정 */
+		String todayUTCTime = commonUtil.getTodayUTCTime("");
+		String accountYearTimeZone = ezCommonService.getTenantConfig("accountYearTimeZone", userInfo.getTenantId());
+		
+		if ("KST".equals(accountYearTimeZone)) {
+			todayUTCTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), "235|+09:00", false);
+		}
+		
 		cabinetListVO.setCompanyID(xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent());
 		cabinetListVO.setDeptCode(xmlDom.getElementsByTagName("PROCESSDEPTCODE").item(0).getTextContent().trim());
 		cabinetListVO.setListFlag(xmlDom.getElementsByTagName("LISTFLAG").item(0).getTextContent());
@@ -25652,7 +25779,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 			break;
 		case "8" :	// 정리대상 기록물철
             //동국대학교 수정 (2007.07.30) : 회계년도가 3월 ~ 익년 2월까지이므로 회계년도 값을 보정한다.
-			cabinetListVO.setAccountYear(getAccountingYear(commonUtil.getTodayUTCTime(""), cabinetListVO.getCompanyID(),  userInfo.getLang(), userInfo.getTenantId()));
+			cabinetListVO.setAccountYear(getAccountingYear(todayUTCTime, cabinetListVO.getCompanyID(),  userInfo.getLang(), userInfo.getTenantId()));
 			cabinetListVO.setListType("009");
 			break;
 		case "9" :	// 인계기록물철
@@ -25660,7 +25787,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 			break;
 		case "10" :	// 종료연기 신청 대상 기록물철(업무담당자)
             //동국대학교 수정 (2007.07.30) : 회계년도가 3월 ~ 익년 2월까지이므로 회계년도 값을 보정한다.
-			cabinetListVO.setAccountYear(getAccountingYear(commonUtil.getTodayUTCTime(""), cabinetListVO.getCompanyID(),  userInfo.getLang(), userInfo.getTenantId()));
+			cabinetListVO.setAccountYear(getAccountingYear(todayUTCTime, cabinetListVO.getCompanyID(),  userInfo.getLang(), userInfo.getTenantId()));
             cabinetListVO.setListType("010");
 			break;
 		case "11" :	// 종료연기 확인 대상 기록물철(기록물 관리 책임자)
@@ -25668,7 +25795,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 			break;
 		case "12" :	// 미정리 기록물철
             //동국대학교 수정 (2007.07.30) : 회계년도가 3월 ~ 익년 2월까지이므로 회계년도 값을 보정한다.
-			cabinetListVO.setAccountYear(getAccountingYear(commonUtil.getTodayUTCTime(""), cabinetListVO.getCompanyID(),  userInfo.getLang(), userInfo.getTenantId()));
+			cabinetListVO.setAccountYear(getAccountingYear(todayUTCTime, cabinetListVO.getCompanyID(),  userInfo.getLang(), userInfo.getTenantId()));
 			cabinetListVO.setListType("009");
 			break;
 		default : 
@@ -25750,7 +25877,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 		}
 		
 		if (xmlDom.getElementsByTagName("TRANSEXPIRE").item(0) != null && xmlDom.getElementsByTagName("TRANSEXPIRE").item(0).getTextContent().length() > 0) {
-			String accountingYear = getAccountingYear(commonUtil.getTodayUTCTime(""), cabinetListVO.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+			String accountingYear = getAccountingYear(todayUTCTime, cabinetListVO.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 			
 			 if (!accountingYear.equals("")) {
 				 cabinetListVO.setTransExpire(accountingYear);
@@ -39079,8 +39206,16 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 							
 							if (Arr_Header[i].equalsIgnoreCase("@dp")) {
 								receiptFormat += description;
-							} else if (Arr_Header[i].equalsIgnoreCase("@yy")){
-								String accountYear = (getAccountingYear(commonUtil.getTodayUTCTime(""), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId()));
+							} else if (Arr_Header[i].equalsIgnoreCase("@yy")) {
+								/* 2025-04-01 홍승비 - 전자결재G > 기산일(회계년도) 시간대 기준 값을 테넌트 컨피그로 옵션화, 디폴트로 UTC 정시가 아닌 한국시(UTC + 9)를 기준으로 사용하도록 수정 */
+								String todayUTCTime = commonUtil.getTodayUTCTime("");
+								String accountYearTimeZone = ezCommonService.getTenantConfig("accountYearTimeZone", userInfo.getTenantId());
+								
+								if ("KST".equals(accountYearTimeZone)) {
+									todayUTCTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), "235|+09:00", false);
+								}
+								
+								String accountYear = getAccountingYear(todayUTCTime, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 								receiptFormat += accountYear;
 							} else if (Arr_Header[i].equalsIgnoreCase("@mm")) {
 								receiptFormat += (commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(5, 7));

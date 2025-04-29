@@ -9602,4 +9602,18 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
         
         logger.debug("createApproveErrorInfoTable ended");
     }
+	
+	/* 2025-04-29 홍승비 - 전자결재G > 회계년도 계산 시 타임존 선택 옵션 컨피그 추가 */
+	@Override
+	public void insertAccountYearTimeZone() throws Exception {
+		List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+		
+		for (TenantVO tenantVO : tenantIdList) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("tenantID", tenantVO.getTenantId());
+			map.put("property", "ACCOUNTYEARTIMEZONE");
+			
+			ezCommonDAO.insertAccountYearTimeZone(map);
+		}
+	}
 }

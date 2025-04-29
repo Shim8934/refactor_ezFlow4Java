@@ -3965,4 +3965,16 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 	
+	
+	/* 2025-04-29 홍승비 - 전자결재G > 회계년도 계산 시 타임존 선택 옵션 컨피그 추가 */
+	public void insertAccountYearTimeZone(Map<String, Object> map) {
+		String accountYearTimeZone = (String) select("EzCommonDAO.getTenantConfig", map);
+		
+		if (accountYearTimeZone == null) {
+			logger.debug("accountYearTimeZone tenant config doesn't exist. insert data...");
+			
+			map.put("property", "accountYearTimeZone");
+			insert("EzCommonDAO.insertAccountYearTimeZone", map);
+		}
+	}
 }

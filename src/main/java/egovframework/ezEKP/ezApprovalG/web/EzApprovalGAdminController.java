@@ -5244,12 +5244,20 @@ public class EzApprovalGAdminController extends EzFileMngUtil {
 
 		List<OrganDeptVO> resultList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary(), userInfo.getDeptID(), userInfo.getJobId());
 		
+		/* 2025-04-01 홍승비 - 전자결재G > 기산일(회계년도) 시간대 기준 값을 테넌트 컨피그로 옵션화, 디폴트로 UTC 정시가 아닌 한국시(UTC + 9)를 기준으로 사용하도록 수정 */
+		String todayUTCTime = commonUtil.getTodayUTCTime("");
+		String accountYearTimeZone = ezCommonService.getTenantConfig("accountYearTimeZone", userInfo.getTenantId());
+		
+		if ("KST".equals(accountYearTimeZone)) {
+			todayUTCTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), "235|+09:00", false);
+		}
+		
 		// 생산연도를 전달하여 회계연도 가져오기 (1월 ~ 12월이 아닌 3월 ~ 익년 2월인 경우 대비)
 		// 올해 1월 1일 ~ 12월 31일까지를 회계연도로 가지는 경우는 현재 날짜에 -0 (변함없음)
 		// 올해 3월 1일 ~ 내년 2월 28/29일까지를 회계연도로 가지는 경우는 현재 날짜에 -2개월 감소 보정
 		//    -2개월 감소 보정의 예) 2022년 2월 10일 = -2개월 감소 보정 => 현재 연도 2021년으로 취급 (2021년 12월 10일)
 		//    -2개월 감소 보정의 예) 2023년 3월 1일 = -2개월 감소 보정 => 현재 연도 2023년으로 취급 (2023년 1월 1일)
-		String nowYear = ezApprovalGService.getAccountingYear(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		String nowYear = ezApprovalGService.getAccountingYear(todayUTCTime, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 		
 		// 회계종료월
 		String accountLastMonth = ezApprovalGService.getCode2Name("A30", "003", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
@@ -5299,8 +5307,16 @@ public class EzApprovalGAdminController extends EzFileMngUtil {
 		String retVal = "";
 		int successCount = 0;
 		
+		/* 2025-04-01 홍승비 - 전자결재G > 기산일(회계년도) 시간대 기준 값을 테넌트 컨피그로 옵션화, 디폴트로 UTC 정시가 아닌 한국시(UTC + 9)를 기준으로 사용하도록 수정 */
+		String todayUTCTime = commonUtil.getTodayUTCTime("");
+		String accountYearTimeZone = ezCommonService.getTenantConfig("accountYearTimeZone", userInfo.getTenantId());
+		
+		if ("KST".equals(accountYearTimeZone)) {
+			todayUTCTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), "235|+09:00", false);
+		}
+		
 		// 종료연도(기산일 적용된 현재 기준의 연도)와 선택한 회사ID를 조건으로 자동 생성할 기록물철을 찾아서 전달
-		String currYear = ezApprovalGService.getAccountingYear(commonUtil.getTodayUTCTime(""), companyID, userInfo.getLang(), userInfo.getTenantId());
+		String currYear = ezApprovalGService.getAccountingYear(todayUTCTime, companyID, userInfo.getLang(), userInfo.getTenantId());
 		
 		List<Map<String, Object>> cabinetList = ezApprovalGAdminService.getCabinetListByExpireYear(currYear, companyID, tenantID);
 		
@@ -5333,8 +5349,16 @@ public class EzApprovalGAdminController extends EzFileMngUtil {
 
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String companyID = request.getParameter("companyID");
+		
+		/* 2025-04-01 홍승비 - 전자결재G > 기산일(회계년도) 시간대 기준 값을 테넌트 컨피그로 옵션화, 디폴트로 UTC 정시가 아닌 한국시(UTC + 9)를 기준으로 사용하도록 수정 */
+		String todayUTCTime = commonUtil.getTodayUTCTime("");
+		String accountYearTimeZone = ezCommonService.getTenantConfig("accountYearTimeZone", userInfo.getTenantId());
+		
+		if ("KST".equals(accountYearTimeZone)) {
+			todayUTCTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), "235|+09:00", false);
+		}
 
-		String result = ezApprovalGService.getAccountingYear(commonUtil.getTodayUTCTime(""), companyID, userInfo.getLang(), userInfo.getTenantId());
+		String result = ezApprovalGService.getAccountingYear(todayUTCTime, companyID, userInfo.getLang(), userInfo.getTenantId());
 		String accountLastMonth = ezApprovalGService.getCode2Name("A30", "003", companyID, userInfo.getLang(), userInfo.getTenantId());
 		
 		// 회계종료월 값이 이상한 경우(12개월을 초과하는 값이 존재하는 경우)에 대한 예외처리

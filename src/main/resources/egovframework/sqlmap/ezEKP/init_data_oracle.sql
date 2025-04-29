@@ -391,6 +391,9 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_V
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'hwpFilter', '웹한글필터 사용여부', 'N', '웹한글필터 사용여부', TO_DATE('2025-01-08 00:00:00','yyyy-mm-dd hh24:mi:ss'), '전자결재G');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'hwpPath', '웹한글필터 NFS 경로', '/home/hancom/NAS', '웹한글필터 fileroot가 존재하는 NFS 경로', TO_DATE('2025-01-08 00:00:00','yyyy-mm-dd hh24:mi:ss'), '전자결재G');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'hwpFilterServer', '웹한글필터 호출 URL', 'http://webhwp.kaoni.com:8080/filterserver/convert/manager', '웹한글필터 호출 URL 웹한글이 아닌 filter를 직접 호출한다.', TO_DATE('2025-01-08 00:00:00','yyyy-mm-dd hh24:mi:ss'), '전자결재G');
+-- 전자결재 G > 회계년도 계산 시 타임존 선택 옵션 컨피그 추가 (UTC / KST)
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES	(0, 'accountYearTimeZone', '전자결재 회계년도 계산 시 타임존 선택 옵션', 'KST', '회계년도 계산 시, UTC 또는 KST (한국 표준시)를 사용할지 선택한다. (default: KST)', TO_DATE('2025-04-29 00:00:00', 'yyyy-mm-dd hh24:mi:ss'), '전자결재G');
+
 --Board insert
 
 INSERT INTO TBL_Board_MyBoards (UserID, BoardID, BoardName, BoardName2, TreeviewNum, companyID, tenant_ID) VALUES ('everyone', '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', '새게시물', 'New BoardItem', -1, 'Top', 0);

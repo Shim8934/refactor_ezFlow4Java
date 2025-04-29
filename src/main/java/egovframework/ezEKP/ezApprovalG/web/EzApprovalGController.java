@@ -12768,15 +12768,23 @@ public class EzApprovalGController extends EzFileMngUtil{
 	    return result;
     }
 
-//	기산일 적용 년도 가져오기
+	// 기산일 적용 년도 가져오기 (양식에 채번 년도 표출 시 사용)
 	@RequestMapping(value = "/ezApprovalG/getAccountingYear.do", produces = "text/plain; charset=utf-8", method = RequestMethod.GET)
 	@ResponseBody
 	public String getAccountingYear(@CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("getAccountingYear started.");
 
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
-
-		String result = ezApprovalGService.getAccountingYear(commonUtil.getTodayUTCTime(""), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		
+		/* 2025-04-01 홍승비 - 전자결재G > 기산일(회계년도) 시간대 기준 값을 테넌트 컨피그로 옵션화, 디폴트로 UTC 정시가 아닌 한국시(UTC + 9)를 기준으로 사용하도록 수정 */
+		String todayUTCTime = commonUtil.getTodayUTCTime("");
+		String accountYearTimeZone = ezCommonService.getTenantConfig("accountYearTimeZone", userInfo.getTenantId()); // UTC, KST
+		
+		if ("KST".equals(accountYearTimeZone)) {
+			todayUTCTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), "235|+09:00", false);
+		}
+		
+		String result = ezApprovalGService.getAccountingYear(todayUTCTime, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 
 		logger.debug("getAccountingYear ended.");
 		
