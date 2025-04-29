@@ -1283,6 +1283,24 @@ function getSignURL(SignURL) {
         if (getNodeText(pRelayDocInfo.getElementsByTagName("SignName").item(i)).toLowerCase() == SignURL.toLowerCase())
             rtnVal = getNodeText(pRelayDocInfo.getElementsByTagName("RealSignName").item(i));
     }
+    
+    //경로에 / 포함된경우 비교가 안되는 케이스로 인해 추가
+    if (rtnVal == null || rtnVal == "") {
+    	for (var i = 0 ; i < pRelayDocInfo.getElementsByTagName("SignName").length ; i++) {
+            if (getNodeText(pRelayDocInfo.getElementsByTagName("SignName").item(i)).toLowerCase().indexOf(SignURL.toLowerCase()) > -1)
+                rtnVal = getNodeText(pRelayDocInfo.getElementsByTagName("RealSignName").item(i));
+        }
+    }
+    
+    // xml 파일 본문에서 filename이 / 가 들어간 케이스로 인해 추가
+    if(rtnVal == null || rtnVal == "") {
+        for (var i = 0 ; i < pRelayDocInfo.getElementsByTagName("SignName").length ; i++) {
+            if (SignURL.startsWith("/") && (getNodeText(pRelayDocInfo.getElementsByTagName("SignName").item(i)).toLowerCase() == SignURL.substr(1).toLowerCase())) {
+                rtnVal = getNodeText(pRelayDocInfo.getElementsByTagName("RealSignName").item(i));
+            }
+        }
+	}
+    
     return rtnVal;
 }
 
