@@ -1238,6 +1238,7 @@ public class EzScheduleAdminController {
 		}
 		pageNum = Math.min(pageNum, totalPage);
 		
+		model.addAttribute("primary", userInfo.getPrimary());
 		model.addAttribute("scheduleList", paginatedList);
 		model.addAttribute("pageNum", pageNum);
 		model.addAttribute("totalPage", totalPage);

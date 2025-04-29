@@ -82,6 +82,9 @@
                             var importance = item.importance;
                             importance = importance == "3" ? "<spring:message code = 'ezSchedule.t327' />" : importance == "2" ? "<spring:message code = 'ezSchedule.t326' />" : "<spring:message code = 'ezSchedule.t325' />";
                                              
+                            var primary = data.primary;
+                            var creatorName = primary == "1" ? item.creatorName : item.creatorName2 ;
+                            
                             html += "<tr repeatcount=" + item.repeatCount + " ondblclick='readSchedule(" + item.scheduleId + ");'>";
                             //html += "   <td ondblclick='stopEventPropagation(event)'><input name='chk_schedule' type='checkbox' scheduleId=" + item.scheduleId + "></td>";
                             html += "   <td title='" + escapedTitle + "'>" + escapedTitle + "</td>";
@@ -89,7 +92,7 @@
                             html += "   <td>" + (item.startDate).substring(0, 16) + "</td>";
                             html += "   <td>" + (item.endDate).substring(0, 16) + "</td>";
                             html += "   <td>" + item.location + "</td>";
-                            html += "   <td>" + item.creatorName + "</td>";
+                            html += "   <td>" + creatorName + "</td>";
                             html += "</tr>";
                             itemNum++;
                         });
