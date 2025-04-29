@@ -472,7 +472,7 @@
 			<span class="date_arr date_next" onclick="dateMove_onClick( '1' )"></span>
 		</div>
 		<div class="schedule_group_info">
-			<h2 id="groupName"></h2><span class="info_txt">일정있음</span>
+			<h2 id="groupName"></h2><span class="info_txt"><spring:message code='ezSchedule.ksy01'/></span>
 		</div>
 		<table class="nobox" style="width:100%;">
 	    	<tr>
