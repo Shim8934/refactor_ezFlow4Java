@@ -353,7 +353,31 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		logger.debug("mailConfirmDialog ended.");
 		return "ezEmail/mailConfirmDialog";
 	}
-	
+
+	/**
+	 * 첨부파일 추가
+	 */
+	@RequestMapping(value="/ezEmail/mailLargeFileUpload.do", method = RequestMethod.GET)
+	public String mailLargeFileUpload(
+			@RequestParam("CAPTION") String caption,
+			@RequestParam("MESSAGE") String message,
+			@RequestParam("BUTTONNAME") String buttonName,
+			HttpServletRequest request,
+			Model model) throws Exception {
+		logger.debug("mailLargeFileUpload started.");
+
+		caption = caption != null ? caption : "";
+		message = message != null ? message : "";
+		buttonName = buttonName != null ? buttonName : "";
+
+		model.addAttribute("caption", caption);
+		model.addAttribute("message", message);
+		model.addAttribute("buttonName", buttonName);
+
+		logger.debug("mailLargeFileUpload ended.");
+		return "ezEmail/mailLargeFileUpload";
+	}
+
 	/**
 	 * 메일 파일첨부 화면 호출 함수
 	 */

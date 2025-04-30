@@ -580,6 +580,13 @@
 	            }    
 	            
 	            mail_message_cross_dialogArguments[1] = window_close_Complete;
+
+	            if(dadiframe.isfileup){
+	                var pUrl = "/ezEmail/mailLargeFileUpload.do?CAPTION=" + encodeURIComponent("<spring:message code='ezEmail.t666' />") + "&MESSAGE=" + encodeURIComponent(strLang86) + "&BUTTONNAME=" + encodeURIComponent("<spring:message code='ezEmail.t38' />");
+	                DivPopUpShow(330, 205, pUrl);
+	                return;
+	            }
+
 	            var pUrl = "/ezEmail/mailConfirmDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezEmail.t666' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezEmail.t667' />") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezEmail.t671' />");
 	            DivPopUpShow(330, 205, pUrl);	            
 	        } else {
