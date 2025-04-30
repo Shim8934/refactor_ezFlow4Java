@@ -404,10 +404,10 @@
 				<td style="height: 10px; vertical-align: top;">
 					<div id="menu">
 						<ul>
-							<c:if test="${bName == 'tbl_c_board'}">
-								<li id="btn_Reply"><span onclick="btn_Reply_Onclick()" ><spring:message code='ezCommunity.t207' /></span></li>
-							</c:if>
+							<%--<c:if test="${bName == 'tbl_c_board'}">
+							</c:if>--%>
 							<c:if test="${strWriterID == userInfo.id ||fn:indexOf(userInfo.rollInfo, 'c=1') > -1 || fn:indexOf(userInfo.rollInfo, 'k=1') > -1}">
+								<li id="btn_Reply"><span onclick="btn_Reply_Onclick()" ><spring:message code='ezCommunity.t207' /></span></li>
 								<li id="btn_Modify"><span  onclick="btn_Modify_Onclick()" ><spring:message code='ezCommunity.t6' /></span></li>
 								<li id="btn_Delete"><span class="icon16 popup_icon16_delete" onclick="btn_Delete_Onclick()"></span></li>
 		          			</c:if>
