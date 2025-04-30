@@ -87,7 +87,7 @@
 	        }
 	        
 	        function journalConfig() {
-	        	window.parent.frames["right"].location.href = "/ezJournal/journalConfig.do";
+	        	window.parent.document.querySelector("iframe[name=right]").src = "/ezJournal/journalConfig.do";
 	        	setRecvCount();
 	        }
 	        

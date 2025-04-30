@@ -794,7 +794,7 @@ var SurveyItem = function() {
 	function afterCheckReusePermission(data, itemId) {
 		var code = data.code;
 		switch(code) {
-			case 0 : window.parent.frames["right"].location.href = "/ezSurvey/reuseItem.do?itemId=" + itemId; break;
+			case 0 : window.parent.document.querySelector("iframe[name=right]").src = "/ezSurvey/reuseItem.do?itemId=" + itemId; break;
 			case 1 : alert(SurveyMessages.strParamErr); break;
 			case 2 : alert(SurveyMessages.strError)   ; break;
 			case 3 : alert(SurveyMessages.strPerm)    ; break;
@@ -861,7 +861,7 @@ var SurveyItem = function() {
 	}
 	
 	function modifySurveyItem(itemId) {
-		window.parent.frames["right"].location.href = "/ezSurvey/modifyItem.do?itemId=" + itemId;
+		window.parent.document.querySelector("iframe[name=right]").src = "/ezSurvey/modifyItem.do?itemId=" + itemId;
 	}
 	
 	function getSelectedItems() {

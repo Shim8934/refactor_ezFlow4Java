@@ -85,7 +85,7 @@
 	
 			    if (CrossYN()) {
 			        parent.window.frames.left.location.reload();
-			        parent.window.frames.right.location.href = "/ezCommunity/adminBasic.do?code=" + '<c:out value="${code}"/>';
+			        parent.document.querySelector("iframe[name=right]").src = "/ezCommunity/adminBasic.do?code=" + '<c:out value="${code}"/>';
 	            }
 	            else
 	                window.parent.frames.item(0).location.reload();

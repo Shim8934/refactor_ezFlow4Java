@@ -2955,7 +2955,7 @@
 		  		
 		  		xhr1.open("POST", "/ezPoll/updateEndDateForQst.do", false);
 	    	    xhr1.send(fd);
-	    	    window.parent.frames["right"].location.href = "/ezPoll/pollList.do?brdID=6";
+	    	    window.parent.document.querySelector("iframe[name=right]").src = "/ezPoll/pollList.do?brdID=6";
 		  	}
 		  	
 		  	function dateTimePickerSetting(){
@@ -3144,7 +3144,7 @@
 		  		}
 		  		
 		  		if(window.parent.frames["right"] !== undefined){
-			  		window.parent.frames["right"].location.href = "/ezPoll/pollList.do?qstId=" + qstId + "&gotoList=" + gotoList + "&params=" + params;
+			  		window.parent.document.querySelector("iframe[name=right]").src = "/ezPoll/pollList.do?qstId=" + qstId + "&gotoList=" + gotoList + "&params=" + params;
 		  		}
 		  		//알림 메일로 받았을 경우 처리.
 		  		else {

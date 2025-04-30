@@ -143,7 +143,7 @@
         $(document).off('keydown.modal');
         
         if (parent.frames["right"]) {        	
-            if (parent.frames["right"].location.href.includes("connTestManage")) {
+            if (parent.document.querySelector("iframe[name=right]").src.includes("connTestManage")) {
         	    parent.frames["right"].document.body.style.overflow = "";
             } else {
         	    parent.frames["right"].document.body.style.overflow = "hidden";

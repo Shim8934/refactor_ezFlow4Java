@@ -444,7 +444,7 @@
 			// 환경설정 호출
 			function mail_Config() {
 				detailView();
-		 		parent.frames["right"].location.href = "/ezEmail/mailConfig.do?flag=address";
+		 		parent.document.querySelector("iframe[name=right]").src = "/ezEmail/mailConfig.do?flag=address";
 			}
 			
 			// 주소록 트리 이름

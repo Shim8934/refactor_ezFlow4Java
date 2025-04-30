@@ -211,23 +211,23 @@
 				}
 			}
 		    function mail_Config() {
-		        parent.frames["right"].location.href = "/ezEmail/mailConfig.do?flag=email";
+		        parent.document.querySelector("iframe[name=right]").src = "/ezEmail/mailConfig.do?flag=email";
 		        liSelected();
 		    }
 		    function address_Config() {
-		        parent.frames["right"].location.href = "/ezEmail/mailConfig.do?flag=address";
+		        parent.document.querySelector("iframe[name=right]").src = "/ezEmail/mailConfig.do?flag=address";
 		        liSelected();
 		    }
 		    function Pims_Config() {
-		        parent.frames["right"].location.href = "/ezSchedule/scheduleConfigMain.do?flag=schedule";
+		        parent.document.querySelector("iframe[name=right]").src = "/ezSchedule/scheduleConfigMain.do?flag=schedule";
 		        liSelected();
 		    }
 		    function Approval_Config() {
-		        parent.frames["right"].location.href = "/ezPersonal/ezApprovalConfig.do";
+		        parent.document.querySelector("iframe[name=right]").src = "/ezPersonal/ezApprovalConfig.do";
 		        liSelected();
 		    }
 		    function Task_Config() {
-		        parent.frames["right"].location.href = "/ezSchedule/scheduleConfigMain.do?flag=task";
+		        parent.document.querySelector("iframe[name=right]").src = "/ezSchedule/scheduleConfigMain.do?flag=task";
 		        liSelected();
 		    }
 		    function leftResize(){

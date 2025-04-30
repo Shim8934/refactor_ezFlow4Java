@@ -258,7 +258,7 @@ var SurveyCreate     = function() {
 				window.parent.frames["left"].$(".node_selected").attr("class", "list_text");
 				ingSurveyLi.querySelector(".list_text").setAttribute("class", "list_text node_selected");
 			}
-			window.parent.frames["right"].location.href = "/ezSurvey/surveyList.do?mode=processing";
+			window.parent.document.querySelector("iframe[name=right]").src = "/ezSurvey/surveyList.do?mode=processing";
 		}
 	}
 	// 설문 저장
@@ -353,7 +353,7 @@ var SurveyCreate     = function() {
 			case 0 : alert(SurveyMessages.strSaveDraft);
 					 window.parent.frames["left"].surveyId = -1;
 					 window.parent.frames["left"].isInCreateSurvey = false; // 신규 설문 임시저장 완료
-					 window.parent.frames["right"].location.href = "/ezSurvey/surveyList.do?mode=draft";
+					 window.parent.document.querySelector("iframe[name=right]").src = "/ezSurvey/surveyList.do?mode=draft";
 					 break;
 			case 1 : alert(SurveyMessages.strParamErr) ; break;
 			case 2 : alert(SurveyMessages.strError)    ; break;
@@ -365,7 +365,7 @@ var SurveyCreate     = function() {
 		var saveSurveybtn = document.getElementById('saveSurvey');
 		var code = data.code;
 		switch(code) {
-			case 0 : window.parent.frames["right"].location.href = "/ezSurvey/surveyList.do?mode=processing";
+			case 0 : window.parent.document.querySelector("iframe[name=right]").src = "/ezSurvey/surveyList.do?mode=processing";
 					 window.parent.frames["left"].surveyId = -1;
 					 window.parent.frames["left"].isInCreateSurvey = false; // 신규 설문 생성 완료
 					 break;

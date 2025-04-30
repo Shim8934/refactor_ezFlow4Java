@@ -301,9 +301,9 @@
 	                var chkPhotoBrd = treeNode.GetNodeData("DATA6");
 
 	                if (chkPhotoBrd != "3"){
-	                    window.parent.frames.right.location.href = "/ezCommunity/boardItemList.do?boardID=" + encodeURIComponent(treeNode.GetNodeData("DATA1")) + "&boardName=" + encodeURI(treeNode.GetNodeData("DATA2")) + "&code=" + code;
+	                    window.parent.document.querySelector("iframe[name=right]").src = "/ezCommunity/boardItemList.do?boardID=" + encodeURIComponent(treeNode.GetNodeData("DATA1")) + "&boardName=" + encodeURI(treeNode.GetNodeData("DATA2")) + "&code=" + code;
 	                }else{
-	                    window.parent.frames.right.location.href = "/ezCommunity/boardItemListPhoto.do?boardID=" + encodeURIComponent(treeNode.GetNodeData("DATA1")) + "&boardName=" + encodeURI(treeNode.GetNodeData("DATA2")) + "&code=" + code;
+	                    window.parent.document.querySelector("iframe[name=right]").src = "/ezCommunity/boardItemListPhoto.do?boardID=" + encodeURIComponent(treeNode.GetNodeData("DATA1")) + "&boardName=" + encodeURI(treeNode.GetNodeData("DATA2")) + "&code=" + code;
 	                }
 	                if (CrossYN()) {
 	                }

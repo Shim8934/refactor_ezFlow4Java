@@ -72,13 +72,13 @@
 		    	var folderId = $(elem).attr("folderId");
 		    	var folderName = $(elem).attr("folderName");
 		    	
-	        	window.parent.frames["right"].location.href = "/ezMemo/memoMain.do?brdID=8&folderId="+folderId+"&folderName="+encodeURI(encodeURIComponent(folderName))+"&configView="+configView;
+	        	window.parent.document.querySelector("iframe[name=right]").src = "/ezMemo/memoMain.do?brdID=8&folderId="+folderId+"&folderName="+encodeURI(encodeURIComponent(folderName))+"&configView="+configView;
 		    	configView = false;
 		    }
 		    
 		    function memoConfig(){
 		    	configView = true;
-		    	window.parent.frames["right"].location.href = "/ezMemo/memoConfig.do";
+		    	window.parent.document.querySelector("iframe[name=right]").src = "/ezMemo/memoConfig.do";
 		    }
 		    
 		    function memoWrite(){

@@ -74,19 +74,19 @@
 				else {
 					if (CrossYN()) {
 			            if (idx == 1) {
-			                window.parent.frames["right"].location.href = "/ezPoll/pollList.do?brdID=6&qstId=" + qstId;
+			                window.parent.document.querySelector("iframe[name=right]").src = "/ezPoll/pollList.do?brdID=6&qstId=" + qstId;
 			                qstId = "";
 			            }
 			            else {
-			                window.parent.frames["right"].location.href = "/ezPoll/pollCreate.do?brdID=6";
+			                window.parent.document.querySelector("iframe[name=right]").src = "/ezPoll/pollCreate.do?brdID=6";
 			            }
 			        } else {
 			            if (idx == 1) {
-			            	window.parent.frames["right"].location.href = "/ezPoll/pollList.do?brdID=6&qstId=" + qstId;
+			            	window.parent.document.querySelector("iframe[name=right]").src = "/ezPoll/pollList.do?brdID=6&qstId=" + qstId;
 			            	qstId = "";
 			            }
 			            else {
-			            	window.parent.frames["right"].location.href = "/ezPoll/pollCreate.do?brdID=6";
+			            	window.parent.document.querySelector("iframe[name=right]").src = "/ezPoll/pollCreate.do?brdID=6";
 			            }
 			            SetTreeviewUnSelect("");
 			        }
@@ -107,15 +107,15 @@
 		    	$(elem).attr("class","node_selected");
 		    	
 				var szUrl = "/ezPoll/pollList.do?brdID=" + g_BrdID + "&see=0&currPage=1&mode=&search=&mode1=sub&searchN=&pollType=" + num;			
-				window.parent.frames["right"].location.href = szUrl;
+				window.parent.document.querySelector("iframe[name=right]").src = szUrl;
 		    }
 		    
 		    function pollConfig(){
-		    	window.parent.frames["right"].location.href = "/ezPoll/pollConfig.do";
+		    	window.parent.document.querySelector("iframe[name=right]").src = "/ezPoll/pollConfig.do";
 		    }
 		    
 		    function pollWrite(){
-		    	window.parent.frames["right"].location.href = "/ezPoll/pollCreate.do?brdID=6";
+		    	window.parent.document.querySelector("iframe[name=right]").src = "/ezPoll/pollCreate.do?brdID=6";
 		    }
 		    
 		    function leftResize(){

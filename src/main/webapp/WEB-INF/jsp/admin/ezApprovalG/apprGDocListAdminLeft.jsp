@@ -1180,7 +1180,7 @@
 		            if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9")
 		                pListTypeValue = "1";
 		
-		            parent.frames["left"].location.href = "/ezApprovalG/apprGLeft.do?listType=" + pListTypeValue;
+		            parent.document.querySelector("iframe[name=left]").src = "/ezApprovalG/apprGLeft.do?listType=" + pListTypeValue;
 		        }
 		    }
 		    function ChangeCookies() {

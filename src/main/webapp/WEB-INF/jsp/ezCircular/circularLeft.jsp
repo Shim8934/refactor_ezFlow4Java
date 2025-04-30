@@ -185,37 +185,37 @@
 	        
 	        /* 2017-05-17 정수현 구현 */
 	        function newCircular() {
-	        	window.parent.frames["right"].location.href = "/ezCircular/newCircular.do";
+	        	window.parent.document.querySelector("iframe[name=right]").src = "/ezCircular/newCircular.do";
 	        	getNewCircularCount();
 	        }
 	        
 	        function circularComplete() {                
-	        	window.parent.frames["right"].location.href = "/ezCircular/circularComplete.do";
+	        	window.parent.document.querySelector("iframe[name=right]").src = "/ezCircular/circularComplete.do";
 	        	getNewCircularCount();
 	        }
 	        
 	        function circularMyCircular() {                
-	        	window.parent.frames["right"].location.href = "/ezCircular/circularMyCircular.do";
+	        	window.parent.document.querySelector("iframe[name=right]").src = "/ezCircular/circularMyCircular.do";
 	        	getNewCircularCount();
 	        }
 	        
 	        function circularTemp() {                
-	        	window.parent.frames["right"].location.href = "/ezCircular/circularTemp.do";
+	        	window.parent.document.querySelector("iframe[name=right]").src = "/ezCircular/circularTemp.do";
 	        	getNewCircularCount();
 	        }
 	        
 	        function circularDelete() {                
-	        	window.parent.frames["right"].location.href = "/ezCircular/circularDelete.do";
+	        	window.parent.document.querySelector("iframe[name=right]").src = "/ezCircular/circularDelete.do";
 	        	getNewCircularCount();
 	        }
 	        
 	        function circularConfig() {                
-	        	window.parent.frames["right"].location.href = "/ezCircular/circularConfig.do";
+	        	window.parent.document.querySelector("iframe[name=right]").src = "/ezCircular/circularConfig.do";
 	        	getNewCircularCount();
 	        }
 
 	        function circular_Search() {
-	        	window.parent.frames["right"].location.href = "/ezCircular/circularSearchView.do";
+	        	window.parent.document.querySelector("iframe[name=right]").src = "/ezCircular/circularSearchView.do";
 	        	getNewCircularCount();
 	        }
 	        

@@ -320,10 +320,10 @@
 	                
 	                if (RedirectBoardID != "") {
 	                    if (RedirectBoardGroupID != "") {	                    	
-	                        window.parent.frames["board_main"].location.href = "/admin/ezBoard/boardConfig.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd + "&parentBoardID=" + encodeURIComponent(SelectedBoardParentBoardID) + "&tabID=1tab2";
+	                        window.parent.document.querySelector("iframe[name=board_main]").src = "/admin/ezBoard/boardConfig.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd + "&parentBoardID=" + encodeURIComponent(SelectedBoardParentBoardID) + "&tabID=1tab2";
 	                    }
 	                }else{                	
-	                    window.parent.frames["board_main"].location.href = "/admin/ezBoard/boardConfig.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd + "&parentBoardID=" + encodeURIComponent(SelectedBoardParentBoardID);
+	                    window.parent.document.querySelector("iframe[name=board_main]").src = "/admin/ezBoard/boardConfig.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd + "&parentBoardID=" + encodeURIComponent(SelectedBoardParentBoardID);
 	                }
 	                
 	                /* 2019-04-19 홍승비 - 하위게시판 진입 시 해당 게시판 좌측리스트의 게시물 카운트 갱신 */

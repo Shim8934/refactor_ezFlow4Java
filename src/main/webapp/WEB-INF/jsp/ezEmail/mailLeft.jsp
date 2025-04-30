@@ -755,7 +755,7 @@
 	        		requestUrl += "&shareId=" + encodeURIComponent(shareId);
 	        	}
 	        	
-	            parent.frames["right"].location.href = requestUrl;
+	            parent.document.querySelector("iframe[name=right]").src = requestUrl;
 	            detailView(shareId);
 	            liSelcted();
 	        }
@@ -941,7 +941,7 @@
 		            		url += "&shareId=" + encodeURIComponent(shareId);
 			            }
 		            	
-		            	parent.frames["right"].location.href = url;
+		            	parent.document.querySelector("iframe[name=right]").src = url;
 		    		}
 	            	
             		setTimeout(function() {
@@ -965,7 +965,7 @@
 		            		url += "&shareId=" + encodeURIComponent(shareId);
 			            }
 		            	
-		            	parent.frames["right"].location.href = url;
+		            	parent.document.querySelector("iframe[name=right]").src = url;
 		    		}
 		    		
 	            	parent.frames["right"].mailbox_import();
@@ -1598,7 +1598,7 @@
 			// 환경설정 호출
 			function address_Config() {
 				detailView();
-		 		parent.frames["right"].location.href = "/ezEmail/mailConfig.do?flag=address";
+		 		parent.document.querySelector("iframe[name=right]").src = "/ezEmail/mailConfig.do?flag=address";
 			}
 			//address end
 			

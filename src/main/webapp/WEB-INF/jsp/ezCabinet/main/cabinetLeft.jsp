@@ -114,7 +114,7 @@
 						if (targetSpan) {
 							targetSpan.className = "list_text node_selected selectedNode";
 							var cabinetId = targetSpan.getAttribute("role");
-							window.parent.frames["right"].location.href = "/ezCabinet/myCabinet.do?cabinetId=" + cabinetId;
+							window.parent.document.querySelector("iframe[name=right]").src = "/ezCabinet/myCabinet.do?cabinetId=" + cabinetId;
 							clearInterval(checkInterval);
 						}
 					}, 100);
@@ -131,7 +131,7 @@
 					if (!document.getElementById("myBar").className == "") {drawVolume();}
 				}
 				
-				function handleErrorTree(errorUrl) {window.parent.frames["right"].location.href = errorUrl;}
+				function handleErrorTree(errorUrl) {window.parent.document.querySelector("iframe[name=right]").src = errorUrl;}
 				
 				function openCabinet(obj) { // 2023-06-23 황인경 - 디자인 개선 > 캐비넷 > 좌측메뉴 > 트리구조 LNB 이미지 수정 및 클래스 제어
 					if ($("#" + obj).hasClass("on")) {
@@ -168,12 +168,12 @@
 				
 				function getCabinet(obj) {
 					var cabinetId = obj.getAttribute("role");
-					window.parent.frames["right"].location.href = "/ezCabinet/myCabinet.do?cabinetId=" + cabinetId;
+					window.parent.document.querySelector("iframe[name=right]").src = "/ezCabinet/myCabinet.do?cabinetId=" + cabinetId;
 				}
 				
 				function getShareCabinet(obj) {
 					var cabinetId = obj.getAttribute("role");
-					window.parent.frames["right"].location.href = "/ezCabinet/getShareCabinet.do?cabinetId=" + cabinetId;
+					window.parent.document.querySelector("iframe[name=right]").src = "/ezCabinet/getShareCabinet.do?cabinetId=" + cabinetId;
 				}
 				
 				function getMyCabinet()  {
@@ -185,7 +185,7 @@
 				}
 				
 				function getAdminPage()  {window.open("/admin/ezCabinet/cabinetAdminMain.do", "", "");}
-				function getConfigPage() {window.parent.frames["right"].location.href = "/ezCabinet/cabinetConfig.do";}
+				function getConfigPage() {window.parent.document.querySelector("iframe[name=right]").src = "/ezCabinet/cabinetConfig.do";}
 				function reloadRelatedTree(currentNode) {relatedTree.makeTree({cabinetNode : currentNode});}
 				
 				function reloadTree(currentNode, mode) {

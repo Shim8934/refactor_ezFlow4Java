@@ -66,7 +66,7 @@
 			// 회사선택시 각 회사에서 사용하는 양식함 로드
 		    function changeCompany(val) {
 				var url = "/admin/ezJournal/form.do";
-				parent.frames["right"].location.href = url+ "?companyId=" + encodeURIComponent(val);
+				parent.document.querySelector("iframe[name=right]").src = url+ "?companyId=" + encodeURIComponent(val);
 		    }
 		    
 			// 양식추가버튼

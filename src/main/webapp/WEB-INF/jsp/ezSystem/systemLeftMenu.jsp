@@ -32,9 +32,9 @@
     window.onload = function()
     {	
     	if (cChk == "1") {
-        	parent.frames[1].location.href = "/admin/ezSystem/systemMainMenu.do";        
+        	parent.document.querySelectorAll("iframe")[1].src = "/admin/ezSystem/systemMainMenu.do";        
     	} else {
-			parent.frames[1].location.href = "/admin/ezSystem/systemConnectorHist.do";
+			parent.document.querySelectorAll("iframe")[1].src = "/admin/ezSystem/systemConnectorHist.do";
     	}
     };
 	
@@ -50,55 +50,55 @@
 	    switch(this_menu)
 	    {	
 	    	case "PARAMETER":
-				parent.frames[1].location.href = "/admin/ezSystem/systemMainMenu.do";
+				parent.document.querySelectorAll("iframe")[1].src = "/admin/ezSystem/systemMainMenu.do";
 				break;
 			case "CONNECTORLIST":
-				parent.frames[1].location.href = "/admin/ezSystem/systemConnectorHist.do";
+				parent.document.querySelectorAll("iframe")[1].src = "/admin/ezSystem/systemConnectorHist.do";
 				break;
 	    	case "LOGINHIST":
-	    		parent.frames[1].location.href = "/admin/ezSystem/systemLoginHist.do";
+	    		parent.document.querySelectorAll("iframe")[1].src = "/admin/ezSystem/systemLoginHist.do";
 	    		break;
 	    	case "ADMINACCESSHIST":
-	    		parent.frames[1].location.href = "/admin/ezSystem/systemAdminAccessHist.do";
+	    		parent.document.querySelectorAll("iframe")[1].src = "/admin/ezSystem/systemAdminAccessHist.do";
 	    		break;
 	    	case "USERCHANGEHIST":
-	    		parent.frames[1].location.href = "/admin/ezSystem/systemUserChangeHist.do";
+	    		parent.document.querySelectorAll("iframe")[1].src = "/admin/ezSystem/systemUserChangeHist.do";
 				break;
 			case "DEPTCHANGEHIST":
-				parent.frames[1].location.href = "/admin/ezSystem/systemDeptChangeHist.do";
+				parent.document.querySelectorAll("iframe")[1].src = "/admin/ezSystem/systemDeptChangeHist.do";
 				break;
 			case "PERMISSIONCHHIST":
-				parent.frames[1].location.href = "/admin/ezSystem/permissionChangeHist.do";
+				parent.document.querySelectorAll("iframe")[1].src = "/admin/ezSystem/permissionChangeHist.do";
 				break;
 	    	case "IPMANAGER":
-	    		parent.frames[1].location.href = "/admin/ezSystem/systemIPManager.do";
+	    		parent.document.querySelectorAll("iframe")[1].src = "/admin/ezSystem/systemIPManager.do";
 	    		break;
 	    	case "SYSMONITOR":
-	    		//parent.frames[1].location.href = "/admin/ezSystem/sysMonitor.do";
-	    		parent.frames[1].location.href = "/admin/ezSystem/sysREST.do";
+	    		//parent.document.querySelectorAll("iframe")[1].src = "/admin/ezSystem/sysMonitor.do";
+	    		parent.document.querySelectorAll("iframe")[1].src = "/admin/ezSystem/sysREST.do";
 	    		break;	    		
 	    	case "MODMONITOR":
-	    		parent.frames[1].location.href = "/admin/ezSystem/systemModuleMonitor.do";
+	    		parent.document.querySelectorAll("iframe")[1].src = "/admin/ezSystem/systemModuleMonitor.do";
 	    		break;
 	    	case "MULTILOGIN":
-	    		parent.frames[1].location.href = "/admin/ezSystem/multiLoginManager.do";
+	    		parent.document.querySelectorAll("iframe")[1].src = "/admin/ezSystem/multiLoginManager.do";
 	    		break;
 	    	case "ADMINIPMANAGER":
-	    		parent.frames[1].location.href = "/admin/ezSystem/systemAdminIPManager.do";
+	    		parent.document.querySelectorAll("iframe")[1].src = "/admin/ezSystem/systemAdminIPManager.do";
 	    		break;
 	    	case "PASSWORDPOLICY":
-	    		parent.frames[1].location.href = "/admin/ezSystem/passwordPolicyMain.do";
+	    		parent.document.querySelectorAll("iframe")[1].src = "/admin/ezSystem/passwordPolicyMain.do";
 	    		break;
     		// 2022-12-23 김대현  파일 업로드 허용 확장자명 분기처리
 			case "FILEEXTENSION":
 				fileExtensionViewType = 0;
-				parent.frames[1].location.href = "/admin/ezSystem/systemFileExtension.do";
+				parent.document.querySelectorAll("iframe")[1].src = "/admin/ezSystem/systemFileExtension.do";
 				break;
 			case "SYSTEMCONFIG":
-				parent.frames[1].location.href = "/admin/ezSystem/systemConfigList.do";
+				parent.document.querySelectorAll("iframe")[1].src = "/admin/ezSystem/systemConfigList.do";
 				break;
 			case "FIDOMANAGER":
-				parent.frames[1].location.href = "/admin/ezSystem/fidoAuthenticationManager.do";
+				parent.document.querySelectorAll("iframe")[1].src = "/admin/ezSystem/fidoAuthenticationManager.do";
 				break;
 	    }
 	    

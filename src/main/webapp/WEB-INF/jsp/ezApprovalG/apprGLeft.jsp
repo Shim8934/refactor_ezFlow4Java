@@ -1236,7 +1236,7 @@
 						onUserChange();
 					}
 					
-		            parent.frames["left"].location.href = "/ezApprovalG/apprGLeft.do?listType=" + pListTypeValue;
+		            parent.document.querySelector("iframe[name=left]").src = "/ezApprovalG/apprGLeft.do?listType=" + pListTypeValue;
 		        }
 		    }
 		    function ChangeCookies() {
