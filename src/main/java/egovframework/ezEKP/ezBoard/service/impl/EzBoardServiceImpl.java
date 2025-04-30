@@ -4145,7 +4145,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				sb.append("</KEYWORDS>");
 			}
 
-			sb.append("<REALFILENAMES>" + realFileNames + "</REALFILENAMES>");
+			sb.append("<REALFILENAMES>" + commonUtil.cleanValue(realFileNames) + "</REALFILENAMES>");
 	        sb.append("</NODE>");
 	        sb.append("</NODES>");
 
@@ -4623,7 +4623,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				sb.append("</KEYWORDS>");
 			}
 
-			sb.append("<REALFILENAMES>" + realFileNames + "</REALFILENAMES>");
+			sb.append("<REALFILENAMES>" + commonUtil.cleanValue(realFileNames) + "</REALFILENAMES>");
 	        sb.append("</NODE>");
 	        sb.append("</NODES>");
 
