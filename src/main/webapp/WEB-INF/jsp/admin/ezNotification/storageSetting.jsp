@@ -26,7 +26,7 @@
 		</colgroup>
 		<tr>
 			<th><spring:message code="ezNotification.hth24" /></th>
-			<td style="padding:5px;"><span><spring:message code="ezNotification.hth33"/></span><input id="storagePeriod" style="width:100px;" maxlength="5" autocomplete="off" onkeypress="return changeInputOnlyNumber()" type="text" value="${notiStoragePeriod}"/><span> <spring:message code="ezNotification.hth32"/></span></td>
+			<td style="padding:5px;"><span><spring:message code="ezNotification.hth32"/></span><input id="storagePeriod" style="width:100px;" maxlength="5" autocomplete="off" onkeypress="return changeInputOnlyNumber()" type="text" value="${notiStoragePeriod}"/><span> <spring:message code="ezNotification.hth33"/></span></td>
 		</tr>
 	</table>
 	<div style="width:600px;">
