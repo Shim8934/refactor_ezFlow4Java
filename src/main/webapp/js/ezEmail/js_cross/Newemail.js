@@ -1472,11 +1472,9 @@ function event_xmlhttp_mailPreview_Complete() {
                 document.getElementById("PreH_MailCCDetail").innerHTML = pCcDetailHtml;
                 document.getElementById("PreH_sub_MailSender").innerHTML = pMailSenderHtml;
                 
-                if (senderProfileImageName !== "") {
-                	document.getElementById("preHSenderImage").src = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + senderProfileImageName;
-                } else {
-                	document.getElementById("preHSenderImage").src = "/images/kr/main/bestEmployee_pic_none.png";
-                }
+                var picNone = "/images/kr/main/bestEmployee_pic_none.png";
+                document.getElementById("preHSenderImage").src = (senderProfileImageName !== "")? "/admin/ezOrgan/getPersonalInfo.do?fileName=" + senderProfileImageName : picNone;
+                document.getElementById("preHSenderImage").setAttribute('onerror', "this.src='" + picNone + "'");
 
 				if (useMailTag) {
 					document.getElementById("pre_h_tag_add").value = "";
@@ -1505,11 +1503,9 @@ function event_xmlhttp_mailPreview_Complete() {
                 document.getElementById("PreW_MailCCDetail").innerHTML = pCcDetailHtml;
                 document.getElementById("PreW_sub_MailSender").innerHTML = pMailSenderHtml;
                 
-                if (senderProfileImageName !== "") {
-                	document.getElementById("preWSenderImage").src = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + senderProfileImageName;
-                } else {
-                	document.getElementById("preWSenderImage").src = "/images/kr/main/bestEmployee_pic_none.png";
-                }
+                var picNone = "/images/kr/main/bestEmployee_pic_none.png";
+                document.getElementById("preWSenderImage").src = (senderProfileImageName !== "")? "/admin/ezOrgan/getPersonalInfo.do?fileName=" + senderProfileImageName : picNone;
+                document.getElementById("preWSenderImage").setAttribute('onerror', "this.src='" + picNone + "'");
 
 				if (useMailTag) {
 					document.getElementById("pre_w_tag_add").value = "";

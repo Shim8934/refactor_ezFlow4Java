@@ -870,12 +870,12 @@
 					$("#tempItemList").html("");
 					
 					for(var i = 0; i < len; i++) {
-						var picsrc = "/images/ezLadder/icon_defaultAttendant.png";
+						var picNone = "/images/ezLadder/icon_defaultAttendant.png";
 						html = "";
 						
 						if(attendants["id"][i].substring(0, 14) === "anonyAttendant") {
 							html += '<li class="attendant"><div style="height: 140px; padding-top:  20px;">';
-							html += '<div class="userPicWraper"><img src="' + picsrc + '" width="48px" height="48px" /></div>';
+							html += '<div class="userPicWraper"><img src="' + picNone + '" width="48px" height="48px" /></div>';
 							html += '<div style="margin-top: 10px;"><span>'
 							html += '<input type="text" class="input" name="userNames" style="line-height: 30px;" id="userNames' + i + '" maxlength="' + maxname + '" /></span></div>';
 							html += '<input type="text" name="userName2s" style="display: none;" />';
@@ -884,12 +884,10 @@
 							html += '<input type="text" name="description" style="display: none;" />';
 							html += '<span><img id="removeIcon" src="/images/ezLadder/icon_removeAttendant.png" style="position: absolute; top: 20px; right: 15px; cursor: pointer;"></span></div></li>';
 						} else {
-							if(attendants["pic"][i] !== "") {
-								picsrc = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + attendants["pic"][i];
-							}
+							var picsrc = (attendants["pic"][i] !== "")? "/admin/ezOrgan/getPersonalInfo.do?fileName=" + attendants["pic"][i] : picNone;
 							
 							html += '<li class="attendant"><div style="height: 140px; padding-top:  20px;">';
-							html += '<div class="userPicWraper"><img src="' + picsrc + '" width="48px" height="48px" /></div>';
+							html += '<div class="userPicWraper"><img src="' + picsrc + '" onerror="this.src=\'' + picNone + '\'" width="48px" height="48px" /></div>';
 							html += '<div style="margin-top: 10px;"><span>'
 							html += '<input type="text" class="input" readonly="readonly" name="userNames" style="line-height: 30px; background: rgb(244, 245, 245)" /></span></div>';
 							html += '<input type="text" name="userName2s" style="display: none;" />';

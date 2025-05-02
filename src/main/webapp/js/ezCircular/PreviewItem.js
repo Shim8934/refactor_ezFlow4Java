@@ -277,6 +277,7 @@ var Content;
 var status;
 var option;
 var memberFile;
+var picNone = "/images/kr/main/bestEmployee_pic_none.png";
 
 function event_ItemPreviewRead() {
     if ((xmlhttp != null && xmlhttp.readyState == 4) && (xmlhttp2 != null && xmlhttp2.readyState == 4)) {
@@ -297,11 +298,8 @@ function event_ItemPreviewRead() {
             option = SelectSingleNodeValueNew(xmlDoc, "NODES/NODE/Option");
             memberFile = SelectSingleNodeValueNew(xmlDoc, "NODES/NODE/MemberFile");
             
-            if (memberFile == null || memberFile == "null") {
-            	document.getElementById("Pre" + pPreviewShow_HOW + "_userPic").innerHTML = "<img src='/images/kr/main/bestEmployee_pic_none.png' width='55px' height='55px'>";
-            } else {
-            	document.getElementById("Pre" + pPreviewShow_HOW + "_userPic").innerHTML = "<img src='/admin/ezOrgan/getPersonalInfo.do?fileName=" + memberFile + "' width='55px' height='55px'>";
-            }
+            var userPic = (memberFile == null || memberFile == "null")? "/admin/ezOrgan/getPersonalInfo.do?fileName=" + memberFile : picNone;
+            document.getElementById("Pre" + pPreviewShow_HOW + "_userPic").innerHTML = "<img src='" + userPic + "' onerror=\"this.src='" + picNone + "'\" width='55px' height='55px'>";
 
             if (pPreviewShow_HOW.trim() == "W") {
                 document.getElementById("Preview_HeaderW").style.display = "";

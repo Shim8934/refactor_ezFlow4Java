@@ -169,7 +169,7 @@
 					        <tr id="${user.userId }" name="${user.userName }" deptId="${user.deptId}" onclick="setUserAuthorDept(this);" ondblclick="setAuthorViewUser();" style="cursor: pointer;" class="hover">
 								<td class="pictd"><div class="pic">
 								<c:if test="${not empty user.userImg }">
-								<img src="/admin/ezOrgan/getPersonalInfo.do?fileName=${user.userImg }" width="90px" height="90px">
+								<img src="/admin/ezOrgan/getPersonalInfo.do?fileName=${user.userImg }" onerror="this.style.display='none'" width="90px" height="90px">
 								</c:if>
 								</div></td>
 								<td style="width: 75%;">
@@ -233,7 +233,7 @@
 					        <tr id="${user.userId }" name="${user.userName }" deptId="${user.deptId}" onclick="setUserAuthorDept(this);" ondblclick="setAuthorViewUser();" style="cursor: pointer;" class="hover">
 								<td class="pictd"><div class="pic">
 								<c:if test="${not empty user.userImg }">
-								<img src="/admin/ezOrgan/getPersonalInfo.do?fileName=${user.userImg }" width="90px" height="90px">
+								<img src="/admin/ezOrgan/getPersonalInfo.do?fileName=${user.userImg }" onerror="this.style.display='none'" width="90px" height="90px">
 								</c:if>
 								</div></td>
 								<td style="width: 75%;">

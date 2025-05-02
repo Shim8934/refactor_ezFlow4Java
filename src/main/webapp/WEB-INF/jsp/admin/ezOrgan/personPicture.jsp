@@ -28,6 +28,7 @@
 		    var RetValue;
 	    	var imageName="";
 	    	var userPhoto = "";
+	    	var picNone = "/images/default_pic.jpg";
 	    	
 			$(document).ready(function(){
 				try {
@@ -40,17 +41,19 @@
 							preview.style.visibility = "hidden";
 							preview.src = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + userPhoto;
 							preview.style.visibility = "visible";
+							preview.setAttribute('onerror', "this.src='" + picNone + "'");
 						} else {
 							preview.src = "";
 							preview.style.visibility = "hidden";
 							preview.src = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + userPhoto;
 							preview.style.visibility = "visible";
+							preview.setAttribute('onerror', "this.src='" + picNone + "'");
 						}
 		            }
 		            else {
 		            	preview.src = "";
 						preview.style.visibility = "hidden";
-						preview.src = "/images/default_pic.jpg";
+						preview.src = picNone;
 						preview.style.visibility = "visible";
 		            }
 		        }catch(e){
@@ -64,17 +67,19 @@
 								preview.style.visibility = "hidden";
 								preview.src = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + userPhoto;
 								preview.style.visibility = "visible";
+								preview.setAttribute('onerror', "this.src='" + picNone + "'");
 							} else {
 								preview.src = "";
 								preview.style.visibility = "hidden";
 								preview.src = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + userPhoto;
 								preview.style.visibility = "visible";
+								preview.setAttribute('onerror', "this.src='" + picNone + "'");
 							}
 			            }
 		                else {
 			            	preview.src = "";
 							preview.style.visibility = "hidden";
-							preview.src = "/images/default_pic.jpg";
+							preview.src = picNone;
 							preview.style.visibility = "visible";
 			            }
 		            } catch (e) {

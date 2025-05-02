@@ -511,12 +511,13 @@
 					
 					var html = '';
 					_ladderLine.forEach(function(line, index) {
-						var picsrc = !line.pic ? "/images/ezLadder/icon_defaultAttendant.png" : "/admin/ezOrgan/getPersonalInfo.do?fileName=" + line.pic;
+						var picNone = "/images/ezLadder/icon_defaultAttendant.png";
+						var picsrc = !line.pic ? picNone : "/admin/ezOrgan/getPersonalInfo.do?fileName=" + line.pic;
 						html += '<li style="margin-right: ' + (wSize - userDiv) + 'px"><div id="drag' + index + '" class="userInfo" ondragstart="return false;" style="cursor: pointer;">';
 						if(!line.pic) {
-							html += '<span class="userPicWraper_d"><img src="/images/ezLadder/icon_defaultAttendant.png" class="userInfo" width="48px" height="48px" style="display: block;" /></span>';
+							html += '<span class="userPicWraper_d"><img src=' + picNone + ' class="userInfo" width="48px" height="48px" style="display: block;" /></span>';
 						} else {
-							html += '<span class="userPicWraper"><img src="' + picsrc + '" class="userInfo" width="48px" height="48px" /></span>';
+							html += '<span class="userPicWraper"><img src="' + picsrc + '" onerror="this.src=\'' + picNone + '\'" class="userInfo" width="48px" height="48px" /></span>';
 						}
 						html += '<div title="' + line.userName + '" class="userInfo" style="line-height: 30px; background: white; height: 30px; margin-top: 10px; overflow: hidden; text-overflow: ellipsis;"><span style="white-space: nowrap">' + line.userName + '</span></div></div></li>';
 					});
@@ -551,11 +552,12 @@
 				},
 				success: function(data) {
 					var cmt = data["myComment"];
-					var picsrc = cmt["pic"] != "" ? "/admin/ezOrgan/getPersonalInfo.do?fileName=" + cmt["pic"] : "/images/ezLadder/icon_defaultAttendant.png";
+					var picNone = "/images/ezLadder/icon_defaultAttendant.png";
+					var picsrc = cmt["pic"] != "" ? "/admin/ezOrgan/getPersonalInfo.do?fileName=" + cmt["pic"] : picNone;
 					if(flag == "add") { 
 						// add
 						var html = '<tr _comtIndex="' + cmt["id"] + '">';
-						html += '<td style="padding: 0px 0px 0px 10px; width: 24px; height: 24px; vertical-align:top; "><div style="width: 38px; height: 38px; overflow: hidden; border: 1px solid #DDD; border-radius: 20px; margin-top: 10px; cursor: pointer;" onclick="menuQst_DetailUserInfo(\'' +  cmt["userId"] + '\', \'' +  cmt["deptID"] + '\',  ' + cmt["setRetireFlag"] + ')"><img src="' + picsrc + '" style="height: 38px; width:38px;"></div></td>';
+						html += '<td style="padding: 0px 0px 0px 10px; width: 24px; height: 24px; vertical-align:top; "><div style="width: 38px; height: 38px; overflow: hidden; border: 1px solid #DDD; border-radius: 20px; margin-top: 10px; cursor: pointer;" onclick="menuQst_DetailUserInfo(\'' +  cmt["userId"] + '\', \'' +  cmt["deptID"] + '\',  ' + cmt["setRetireFlag"] + ')"><img src="' + picsrc + '" onerror="this.src=\'' + picNone + '\'" style="height: 38px; width:38px;"></div></td>';
 						html += '<td><div class="userName">' + cmt["userName"] + '</div>';
 						html += '<div id="div2Cmt' + cmt["id"] + '" style="display: inline-block; height: auto; padding:10px 0px 10px 20px; max-width: 1300px;" >';
 						html += '<p id="cmtArea' + cmt["id"] + '" style="word-break: break-all; margin-top: 0px;margin-bottom: 0px;"></p></div>';
@@ -835,7 +837,7 @@
 								<img src="/images/poll/default_pic_vote.gif" width="48px" height="48px" style="position: relative;">
 							</c:when>
 							<c:otherwise>
-								<img src="/admin/ezOrgan/getPersonalInfo.do?fileName=<c:out value="${vo.pic}" />" width="48px" height="48px" style="position: relative; border-radius: 25px;">
+								<img src="/admin/ezOrgan/getPersonalInfo.do?fileName=<c:out value="${vo.pic}" />" onerror="this.src='/images/poll/default_pic_vote.gif'" width="48px" height="48px" style="position: relative; border-radius: 25px;">
 							</c:otherwise>
 						</c:choose>
 					</p>
@@ -920,7 +922,7 @@
 														</c:when>
 														<c:otherwise>
 															<span class="userPicWraper">
-																<img src="/admin/ezOrgan/getPersonalInfo.do?fileName=${line.pic}" width="48px" height="48px" />
+																<img src="/admin/ezOrgan/getPersonalInfo.do?fileName=${line.pic}" onerror="this.src='/images/ezLadder/icon_defaultAttendant.png'" width="48px" height="48px" />
 															</span>
 														</c:otherwise>
 													</c:choose>
@@ -968,7 +970,7 @@
 															</c:when>
 															<c:otherwise>
 																<span class="userPicWraper">
-																	<img src="/admin/ezOrgan/getPersonalInfo.do?fileName=${line.pic}" width="48px" height="48px" class="userInfo" />
+																	<img src="/admin/ezOrgan/getPersonalInfo.do?fileName=${line.pic}" onerror="this.src='/images/ezLadder/icon_defaultAttendant.png'" width="48px" height="48px" class="userInfo" />
 																</span>
 															</c:otherwise>
 														</c:choose>
@@ -1023,7 +1025,7 @@
 										<img src="/images/ezLadder/icon_defaultAttendant.png" style="height: 38px; width:38px;">
 									</c:when>
 									<c:otherwise>
-										<img src="/admin/ezOrgan/getPersonalInfo.do?fileName=${_comt.pic}" style="height: 38px; width:38px;">
+										<img src="/admin/ezOrgan/getPersonalInfo.do?fileName=${_comt.pic}" onerror="this.src='/images/ezLadder/icon_defaultAttendant.png'" style="height: 38px; width:38px;">
 									</c:otherwise>
 								</c:choose>
 								</div>

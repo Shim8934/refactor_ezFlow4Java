@@ -310,6 +310,7 @@
 	    				$("#userDept").text(result.list[0].deptName);
 	    				if (result.list[0].imgPath != null && result.list[0].imgPath != "") {
 		    				$("#userImage").attr("src","/admin/ezOrgan/getPersonalInfo.do?fileName=" + result.list[0].imgPath);
+		    				$("#userImage").attr("onerror","this.src='/images/kr/main/bestEmployee_pic_none.png'");
 	    				} 
 	    				var totalAnnualCnt = 0;
 		    			if (Number(result.list[0].totalAnnualCnt.split(".")[1]) > 0) {

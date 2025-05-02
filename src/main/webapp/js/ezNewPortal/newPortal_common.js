@@ -806,7 +806,7 @@ function getBirthdayEmployeesList() {
 					strHTML += "<li id='B" + birthdayList[i].userId + "'>";
 					strHTML += "<dl class='theme1_birthListDL'>";
 					strHTML += "<dt class='theme1_birthPic'>";
-					strHTML += "<img src='" + birthdayList[i].userImg + "' width = '32' height='32'>";
+					strHTML += "<img src='" + birthdayList[i].userImg + "' onerror=\"this.src='/images/ezNewPortal/info_pic_none.png'\" width = '32' height='32'>";
 					strHTML += "</dt>";
 					strHTML += "<dd class='theme1_birthName'>[" + userBirthday + "] " + birthdayList[i].userName + "</dd>";
 					strHTML += "<dd class='theme1_birthTeam'>" + birthdayList[i].userDeptName + "</dd>";

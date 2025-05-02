@@ -114,7 +114,7 @@ function getBirthdayList(currentPage) {
 					strHTML += "<li id='P" + birthdayList[i].userId + "'>";
 					strHTML += "<dl class='birthListDL'>";
 					strHTML += "<dt class='birthPic'>";
-					strHTML += "<img src='" + birthdayList[i].userImg + "' width = '32' height='32'>";
+					strHTML += "<img src='" + birthdayList[i].userImg + "' onerror=\"this.src='/images/ezNewPortal/info_pic_none.png'\" width = '32' height='32'>";
 					strHTML += "</dt>";
 					strHTML += "<dd class='birthName'>" + birthdayList[i].userName  + " ";
                     if (birthdayList[i].title != null && birthdayList[i].title != "null") {

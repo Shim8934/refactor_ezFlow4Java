@@ -637,6 +637,7 @@
 	                    if (M_TR.getAttribute("_DATA9") != "") {	                    	
 	                        var M_TR_IMG = document.createElement("IMG");
 	                        M_TR_IMG.setAttribute("SRC", "/admin/ezOrgan/getPersonalInfo.do?fileName=" + M_TR.getAttribute("_DATA9"));
+	                        M_TR_IMG.setAttribute('onerror', "this.style.display='none'");
 	                        M_TR_IMG.setAttribute("width", "90px");
 	                        M_TR_IMG.setAttribute("height", "90px");
 	                        M_TR_DIV.appendChild(M_TR_IMG);
