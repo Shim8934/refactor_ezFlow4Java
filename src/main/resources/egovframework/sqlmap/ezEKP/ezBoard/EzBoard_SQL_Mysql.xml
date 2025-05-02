@@ -102,6 +102,7 @@
 		<result property="updateDate" 				column="UPDATEDATE" 			columnIndex="42"/>
         <result property="publicFlag" 		        column="PUBLICFLAG" 		    columnIndex="43"/>
 		<result property="writerNameType" 			column="WRITERNAMETYPE" 		columnIndex="44"/>
+		<result property="topWriterID" 			    column="TOPWRITERID" 			columnIndex="46"/>
 	</resultMap>
 	
 	<resultMap id="getBrdGetItemInfoTemp" class="BoardListVO">
@@ -143,6 +144,7 @@
 		<result property="notiEnd" 					column="NTENDDATE" 				columnIndex="36"/>
         <result property="publicFlag" 		        column="PUBLICFLAG" 		    columnIndex="37"/>
         <result property="writerNameType" 		    column="WRITERNAMETYPE"			columnIndex="38"/>
+		<result property="topWriterID" 			    column="TOPWRITERID" 			columnIndex="40"/>
 	</resultMap>
 	
 	<!-- baonk added -->
