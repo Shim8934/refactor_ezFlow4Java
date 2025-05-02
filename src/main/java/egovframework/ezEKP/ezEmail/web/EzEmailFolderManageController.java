@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezEmail.web;
 
+import java.net.URLEncoder;
+import java.text.ParseException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -13,6 +15,8 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -271,6 +275,31 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	            		} else if (result == 3) {
 	            			returnValue = "ALREADY_EXISTS";
 	            		}
+
+						String oldFolderPathParam = "oldFolderPath=" + URLEncoder.encode(oldFolderPath, "UTF-8");
+						String newFolderPathParam = "newFolderPath=" + URLEncoder.encode(newFolderPath, "UTF-8");
+						String newFolderNameParam = "name=" + URLEncoder.encode(name, "UTF-8");
+						String userParam = "userId=" + URLEncoder.encode(userAccount, "UTF-8");
+
+						String inputParams = userParam + "&" + oldFolderPathParam + "&" + newFolderPathParam + "&" + newFolderNameParam;
+						logger.debug("case=MODIFY, updateMailDelete started. inputParams=" + inputParams);
+
+						try {
+							String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/updateMailDeleteSql", inputParams);
+							logger.debug("strJson=" + strJson);
+
+							JSONParser parser = new JSONParser();
+							JSONObject object = (JSONObject)parser.parse(strJson);
+
+							if (!object.get("resultCode").equals("OK") || ((Long)object.get("reasonCode")).intValue() != 0) {
+								throw new Exception("JGwServer no updateMailDelete");
+							}
+
+						} catch (ParseException e) {
+							logger.error(e.getMessage(), e);
+						} catch (Exception e) {
+							logger.debug("[JGW-SERVER] No updateMailDelete.");
+						}
 	            	}
 	            	
 	                break;
@@ -291,6 +320,31 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	            		} else if (result == 3) {
 	            			returnValue = "ALREADY_EXISTS";
 	            		}
+
+						String oldFolderPathParam = "oldFolderPath=" + URLEncoder.encode(oldFolderPath, "UTF-8");
+						String newFolderPathParam = "newFolderPath=" + URLEncoder.encode(newFolderPath, "UTF-8");
+						String newFolderNameParam = "name=" + URLEncoder.encode(oldFolderName, "UTF-8");
+						String userParam = "userId=" + URLEncoder.encode(userAccount, "UTF-8");
+
+						String inputParams = userParam + "&" + oldFolderPathParam + "&" + newFolderPathParam + "&" + newFolderNameParam;
+						logger.debug("case=MOVE, updateMailDelete started. inputParams=" + inputParams);
+
+						try {
+							String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/updateMailDeleteSql", inputParams);
+							logger.debug("strJson=" + strJson);
+
+							JSONParser parser = new JSONParser();
+							JSONObject object = (JSONObject)parser.parse(strJson);
+
+							if (!object.get("resultCode").equals("OK") || ((Long)object.get("reasonCode")).intValue() != 0) {
+								throw new Exception("JGwServer no updateMailDelete");
+							}
+
+						} catch (ParseException e) {
+							logger.error(e.getMessage(), e);
+						} catch (Exception e) {
+							logger.debug("[JGW-SERVER] No updateMailDelete.");
+						}
 	            	}
 	            	
 	                break;
@@ -335,6 +389,30 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	            		if (result == 0) {
 	            			returnValue = "OK";
 	            		}
+
+						String folderPathParam = "folderPath=" + URLEncoder.encode(url, "UTF-8");
+
+						String userParam = "userId=" + URLEncoder.encode(userAccount, "UTF-8");
+
+						String inputParams = userParam + "&" + folderPathParam;
+						logger.debug("case=DEL, deleteMailDelete started. inputParams=" + inputParams);
+
+						try {
+							String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/deleteMailDelete", inputParams);
+							logger.debug("strJson=" + strJson);
+
+							JSONParser parser = new JSONParser();
+							JSONObject object = (JSONObject)parser.parse(strJson);
+
+							if (!object.get("resultCode").equals("OK") || ((Long)object.get("reasonCode")).intValue() != 0) {
+								throw new Exception("JGwServer no deleteMailDelete");
+							}
+
+						} catch (ParseException e) {
+							logger.error(e.getMessage(), e);
+						} catch (Exception e) {
+							logger.debug("[JGW-SERVER] No deleteMailDelete.");
+						}
 	            	}
 	            	
 	                break;
