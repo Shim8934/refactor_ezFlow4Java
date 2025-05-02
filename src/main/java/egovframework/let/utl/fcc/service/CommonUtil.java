@@ -3676,4 +3676,12 @@ public class CommonUtil {
 	private boolean isCellMerged(Map<String, CellRangeAddress> mergedCells, int row, int col) {
 		return mergedCells.containsKey(row + ":" + col);
 	}
+	
+	public boolean isTodayBetween(String start, String end, String offset) throws Exception {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime s = LocalDateTime.parse(getDateStringInUTC(start, offset, true), formatter);
+        LocalDateTime e = LocalDateTime.parse(getDateStringInUTC(end, offset, true), formatter);
+        LocalDateTime today = LocalDateTime.parse(getTodayUTCTime("yyyy-MM-dd HH:mm:ss"), formatter);
+        return today.isAfter(s) && today.isBefore(e);
+    }
 }

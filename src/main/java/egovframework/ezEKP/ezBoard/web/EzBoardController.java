@@ -4175,12 +4175,14 @@ public class EzBoardController extends EgovFileMngUtil{
 		String useEzKMS = "NO";
 		String guBun = boardInfo.getGuBun();
 		String userId = userInfo.getId();
+		String offset = userInfo.getOffset();
 		
 		if (!boardInfo.getRead_FG().equals("true")) {
 			return "main/warning";
 		} else if ("5".equals(guBun) && "false".equals(boardInfo.getBoardAdmin_FG())) {
 			// 게시관리자가 아닌 사람은 QNA게시판에서 본인이 쓴 게시물과, 본인이 쓴 게시물에 달린 답 게시물, 공지게시물만 볼 수 있음
-			if (!userId.equals(boardItem.getWriterID()) && !userId.equals(boardItem.getTopWriterID()) && !"1".equals(boardItem.getExtensionAttribute2())) {
+			if (!userId.equals(boardItem.getWriterID()) && !userId.equals(boardItem.getTopWriterID()) 
+					&& !("1".equals(boardItem.getExtensionAttribute2()) && commonUtil.isTodayBetween(boardItem.getNotiStart(), boardItem.getNotiEnd(), offset))) {
 				return "main/warning";
 			}
 		}
