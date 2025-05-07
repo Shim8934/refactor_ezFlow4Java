@@ -322,3 +322,12 @@ var strLangFvYGS16 = "삭제되었습니다.";
 var strLangFvYGS17 = "즐겨찾기 그룹이 없습니다.";
 var strLangFvYGS18 = "자원에는 하위를 추가할 수 없습니다.";
 var strLangFvYGS19 = "분류 삭제 시 하위의 모든 자원 및 분류가 삭제됩니다.\n정말 삭제하시겠습니까?";
+
+// 2024-08-26 유길상 - 자원등록 > 최대 예약 가능 기간, 정원
+var strLangMaxYGS01 = "최대 예약 가능 기간을 초과하였습니다.";
+var strLangMaxYGS02 = "정원";
+var strLangMaxYGS03 = "명";
+var strLangMaxYGS04 = "정원을 입력하세요.";
+
+// 2025-05-07 이혜림 - 자원등록 > 최대 예약 가능 기간 제한
+var strLangLHR01 = "최대 예약 가능 기간은 1부터 입력할 수 있습니다.";

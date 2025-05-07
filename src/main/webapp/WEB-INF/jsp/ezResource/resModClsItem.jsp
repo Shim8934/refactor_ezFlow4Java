@@ -86,6 +86,20 @@
 					ownerList2 += "," + res_owner["ownerId"][i];
 				}
 				
+				/* 2025-05-07 이혜림 - 최대 예약 가능 기간 확인*/
+				if (document.getElementById("ResMaxDate").value.trim() == "0") {
+                    alert(strLangLHR01);
+                    document.getElementById("ResMaxDate").focus();
+                    return;
+                }
+				
+				// 2024-09-13 유길상 - 정원 미입력 확인
+				if (document.getElementById("ResMaxUserCnt").value.trim() == "") {
+					alert(strLangMaxYGS04);
+					document.getElementById("ResMaxUserCnt").focus();
+					return;
+				}
+				
 				/* 2018-05-02 서주연 #12558 */
 				// 2018-07-10 김민성 - 자원관리 글자수 체크 maxlength로 수정
 				/* var brdNmTag = document.getElementById("Brd_NM");
@@ -180,6 +194,15 @@
 				} else {
 					createNodeAndInsertText(xmlPara, objNode, "DATA", "0");
 				}
+				
+				// 2024-08-26 유길상 - 정원, 최대 예약 가능 기간 요청 xml 추가
+				createNodeAndInsertText(xmlPara, objNode, "RESMAXUSERCNT", document.getElementById("ResMaxUserCnt").value);
+				
+				var paramResMaxDate = document.getElementById("ResMaxDate").value;
+				if (!document.getElementById("ResMaxDate").value || isNaN(paramResMaxDate)) {
+					paramResMaxDate = "0";
+				}
+				createNodeAndInsertText(xmlPara, objNode, "RESMAXDATE", paramResMaxDate);
 				
 				xmlHttp.open("Post", "/ezResource/callModClsItem.do", false);
 				xmlHttp.send(xmlPara)
@@ -448,6 +471,19 @@
 					}
 				}
 			}
+			// 2024-08-26 유길상 - 최대 예약 가능 기간 value 검증
+			function numberCheck(el) {
+				var curValue = el.value;
+				
+				if (isNaN(curValue.charAt(curValue.length - 1))) {
+					curValue = curValue.slice(0, -1);
+				}
+				if (curValue.length > 3) {
+                    curValue = curValue.slice(0, -1);
+                }
+
+				el.value = curValue;
+			}
 		</script>
 	</head>
 	<body class="popup"  style="height:100%">
@@ -526,9 +562,17 @@
 							</td>
         				</tr>
         				<tr>
+       						<th><spring:message code="ezResource.max.ygs02"/></th>
+       						<td colspan="3"><input type="text" name="ResMaxUserCnt" onInput="numberCheck(this);" id="ResMaxUserCnt" value="${resMaxUserCnt}" style="width: 100%;" maxlength="100"></td>
+       					</tr>
+        				<tr>
           					<th> <spring:message code="ezResource.t148"/></th>
           					<td colspan="3"><input type="text" name="ResLocation" id="ResLocation" value="<c:out value='${resLocation}'/>" style="width: 100%" maxlength="100"></td>
         				</tr>
+        				<tr>
+       						<th><spring:message code="ezResource.max.ygs01"/></th>
+       						<td colspan="3"><input type="text" name="ResMaxDate" onInput="numberCheck(this);" id="ResMaxDate" value="<c:if test="${!(empty resMaxDate || resMaxDate == '0' || resMaxDate == '-')}">${resMaxDate}</c:if>" style="width: 100%;" maxlength="100"></td>
+       					</tr>
 						<tr>
 							<th> <spring:message code="ezResource.lyj01"/></th>
 							<td colspan="3" style="width:100%"><input type="radio" name="repeat" id="repeat1" value="1" <c:if test="${repeatFlag eq 1}"> checked </c:if>>
