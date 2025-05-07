@@ -1,4 +1,4 @@
-﻿/* XMLHttpRequest객체를 생성합니다. */ 
+﻿﻿/* XMLHttpRequest객체를 생성합니다. */ 
 function createXMLHttpRequest() {
     var oXmlRequest;
     try {
@@ -992,7 +992,7 @@ function GetOpenWindow(url, target, popUpW, popUpH, resizeFlag) {
     else
         resize = "resizable=yes";
     
-    var feature = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + pLeft + "px ,top=" + pTop + "px, status = no, toolbar=no, menubar=no,location=no," + resize;
+    var feature = "height=" + popUpH + ",width=" + popUpW + ",left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no," + resize;
     var result = window.open(url, target, feature);
     result.focus();
     return result;
