@@ -2560,9 +2560,9 @@
 						select
 							COUNT(*)
 						from
-							tbl_executive
+							tbl_secretary
 						where
-							cn = #v_USERID#
+							USERID = #v_USERID#
 						  and COMPANYID = #v_COMPANYID#
 						  and TENANT_ID = #v_TENANTID#) as executive,
 					(
