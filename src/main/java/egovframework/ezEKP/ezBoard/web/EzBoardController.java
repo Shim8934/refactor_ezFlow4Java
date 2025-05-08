@@ -4108,7 +4108,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		// 2024-11-19 비공개 게시판의경우 관리자와 글쓴이만 접근 가능 - 관리자일경우는 return true 됨
 		if (rtv && "N".equals(boardItemVO.getPublicFlag())) {
 			// 익명일 경우 비번 체크
-			if ("2".equals(boardProp.getGuBun())) {
+			if ("2".equals(boardProp.getGuBun()) || boardItemVO.getWriterID() == null) {
 				rtv = ezBoardService.chkPasswordAnonymous(boardItemVO.getItemID(), password, userInfo.getTenantId());
 			} else {
 				rtv = boardItemVO.getWriterID().equalsIgnoreCase(userInfo.getId());
@@ -4521,6 +4521,20 @@ public class EzBoardController extends EgovFileMngUtil{
 			return "main/warning";
 		}
 		
+		String guBun = boardInfo.getGuBun();
+		String paramGuBun = request.getParameter("gubun");
+		boolean isTempPhoto = requestURL.contains("TempPhoto");
+		boolean isTempMovie = requestURL.contains("TempMovie");
+		
+		// 포토, 썸네일, 동영상 타입의 게시판이면서 게시하기 호출 url은 일반 게시판으로 들어왔을 때,
+		// 리스트 페이지에서 넘겨받은 게시판타입과 DB에서 받은 게시판타입이 상이할 때,
+		// 관리자페이지에서 게시판 타입이 변경된 것으로 그룹웨어 새로고침을 요구함
+		if ((!Arrays.asList("3", "4", "7").contains(guBun) && (isTempPhoto || isTempMovie)) ||
+			(StringUtils.isNotEmpty(paramGuBun) && !guBun.equals(paramGuBun)) ) {
+			model.addAttribute("gubunExchanged", "Y");
+			return "main/warning_board";
+		}
+		
 		//추가 항목 가져오는 소스 
 		List<BoardAttributeVO> boardAttributeListVO = new ArrayList<BoardAttributeVO>();
 		if (boardInfo.getAttributeYN() != null && boardInfo.getAttributeYN().equals("Y")) {
@@ -4859,6 +4873,10 @@ public class EzBoardController extends EgovFileMngUtil{
         if (boardInfo.getWrite_FG().equals("false")) {
             return "<RESULT>INACCESSIBLE</RESULT>";
         }
+		
+		if (!boardInfo.getGuBun().equals(gubun)) {
+			return 	"<RESULT>GUBUNCHANGED</RESULT>";
+		}
 
         String ret = ezBoardService.insertNewItem(doc, pMode, realPath, userInfo);
         
@@ -6809,6 +6827,14 @@ public class EzBoardController extends EgovFileMngUtil{
 			return "main/warning"; 
 		}
 		
+		String guBun = boardInfo.getGuBun();
+		String paramGuBun = request.getParameter("gubun");
+		
+		if (!Arrays.asList("3", "4").contains(guBun) || (StringUtils.isNotEmpty(paramGuBun) && !guBun.equals(paramGuBun))) {
+			model.addAttribute("gubunExchanged", "Y");
+			return "main/warning_board";
+		}
+		
 		uploadFilePath = commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId());
 		strNow = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
 		
@@ -7133,6 +7159,10 @@ public class EzBoardController extends EgovFileMngUtil{
 		String mainImageID = doc.getElementsByTagName("MAINIMAGEID").item(0).getTextContent();
 		
 		BoardPropertyVO boardInfo = getBoardInfo(doc.getElementsByTagName("BOARDID").item(0).getTextContent(), userInfo);
+		
+		if (!boardInfo.getGuBun().equals(guBun)) {
+			return "<RESULT>GUBUNCHANGED</RESULT>";
+		}
 		
 		if (boardInfo.getWrite_FG().equals("false")) {
 			return "<RESULT>INACCESSIBLE</RESULT>";
@@ -10397,6 +10427,14 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		if (boardInfo.getWrite_FG().equals("false")) {
 			return "main/warning"; 
+		}
+		
+		String guBun = boardInfo.getGuBun();
+		String paramGuBun = request.getParameter("gubun");
+		
+		if (!"7".equals(guBun) || (StringUtils.isNotEmpty(paramGuBun) && !guBun.equals(paramGuBun))) {
+			model.addAttribute("gubunExchanged", "Y");
+			return "main/warning_board";
 		}
 		
 		uploadFilePath = commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId());

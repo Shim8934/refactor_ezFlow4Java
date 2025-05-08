@@ -12,6 +12,7 @@
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>	    
 	    <script type="text/javascript" src="${util.addVer('/js/ezPersonal/ListView_list.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('ezBoard.e1', 'msg')}"></script>
 		<script type="text/javascript" language="javascript">
 			var BoardID = "<c:out value='${model.boardID}'/>";
 	        var brd_color = "<c:out value='${model.boardColor}'/>";
@@ -565,18 +566,21 @@
 						attachmentFlag:attachmentFlag, allNewBoardFlag:useAllNewBoard, writerFlag : writerFlag,
 						starRatingFlag:starRatingFlag, versionManage : vmf
 	            	},
-	            	success : function(){
-	            		alert("<spring:message code='ezBoard.t79'/>");
-	            		
-	            		if ("<c:out value='${adminType}'/>" == "y") {
-							if (!!parent.parent.board_menu && !!parent.parent.board_menu.refreshLeft) {
-	            				//parent.parent.board_menu.refreshLeft();
-							}
-	            		} else {
-							if (!!parent.board_menu && !!parent.board_menu.refreshLeft) {
-								//parent.board_menu.refreshLeft();
-							}
-	            		}
+	            	success : function(result) {
+	            	    if (result == "success") {
+                            alert("<spring:message code='ezBoard.t79'/>");
+                            if ("<c:out value='${adminType}'/>" == "y") {
+                                if (!!parent.parent.board_menu && !!parent.parent.board_menu.refreshLeft) {
+	            				//parent.parent.board_menu.refreshLeft();window.parent.frames.location.href = "/admin/ezBoard/boardConfig.do?boardID=" + encodeURIComponent(BoardID);
+                                }
+                            } else {
+                                if (!!parent.board_menu && !!parent.board_menu.refreshLeft) {
+                                    parent.board_menu.refreshLeft();
+                                }
+                            }
+                        } else if (result == "nonEmptyBoard") {
+                            alert(strLangJIHgubunChange01);
+                        }
 	            	}
 	            });
 	        }

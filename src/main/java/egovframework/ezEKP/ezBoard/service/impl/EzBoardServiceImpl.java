@@ -525,7 +525,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		int rtnCount = 0;
 		
 		 /* 2018-09-14 홍승비 - 포틀릿에 표출되는 게시판에서 공지사항 리스트 제거 */
-		if (myFavoriteVO.getType().equals("portletBoard")) {
+		if ("portletBoard".equals(myFavoriteVO.getType())) {
 			myFavoriteVO.setType("1");
 		}
 		

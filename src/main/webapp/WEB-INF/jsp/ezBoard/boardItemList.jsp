@@ -755,7 +755,7 @@
 		        //2018.01.29 김기하
 		        var feature = GetOpenWindowfeature(790, 820).replace("resizable=no","resizable=yes"); 
 
-	            window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&mode=new", "", feature, "");
+	            window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&gubun=" + gubun + "&mode=new", "", feature, "");
 		    }
 		    
 		    function ItemRead_onclick(obj) {

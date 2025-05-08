@@ -4142,6 +4142,31 @@
                 	ENDDATE < #nowDate#
 			]]>
 		</isEqual>
+		<!-- 전체 카운트 (시스템 상 잔여 데이터가 있는지 확인) -->
+		<isEqual property="type" compareValue="4">
+			<![CDATA[
+				SELECT 
+					COUNT(A.ITEMID)  TOTALCOUNT
+              	FROM 
+              		TBL_Board_Item A
+				LEFT JOIN
+	  			  	TBL_BOARD_CATEGORYINFO CI
+	  			ON 
+	  			  	A.BOARDID = CI.BOARDID
+	  			AND
+	  			  	A.TENANT_ID = CI.TENANT_ID
+	  			AND
+	  			  	A.CATEGORYID = CI.CATEGORYID
+             	WHERE  
+             		A.TENANT_ID = #tenantID#
+             	AND
+             		A.BOARDID = #boardId#
+                AND 
+                	APPRFLAG = 'Y'
+                AND
+					(CI.USEYN = '1' OR CI.USEYN IS NULL)
+			]]>
+		</isEqual>
 	</select>
 	
 	<select id="EzBoardDAO.getBrdTotalItemCount2" parameterClass="BoardMyFavoriteVO" resultClass="Integer">
@@ -4290,6 +4315,29 @@
 			<isNotEqual property = "useVersion" compareValue = "Y" prepend="AND">
 				(M1.ITEMID IS NULL OR M1.RN = 1)
 			</isNotEqual>
+		</isEqual>
+		<!-- 전체 카운트 (시스템 상 잔여 데이터가 있는지 확인) -->
+		<isEqual property="type" compareValue="4">
+			<![CDATA[
+				SELECT 
+					COUNT(A.ITEMID)  TOTALCOUNT
+              	FROM 
+              		TBL_Board_Item A
+				LEFT JOIN
+	  			  	TBL_BOARD_CATEGORYINFO CI
+	  			ON 
+	  			  	A.BOARDID = CI.BOARDID
+	  			AND
+	  			  	A.TENANT_ID = CI.TENANT_ID
+	  			AND
+	  			  	A.CATEGORYID = CI.CATEGORYID
+             	WHERE  
+             		A.TENANT_ID = #tenantID#
+             	AND
+             		A.BOARDID = #boardId#
+                AND
+					(CI.USEYN = '1' OR CI.USEYN IS NULL)
+			]]>
 		</isEqual>
 	</select>
 	

@@ -632,8 +632,14 @@
 	                    window.opener.location.reload(false);
 	                }
 	                catch (e) { }
-	
-					window.close();
+	                
+	                if(autoFlag != "Y")
+						window.close();
+	                else
+	                	autoFlag = "N";
+	                
+	            } else if (getNodeText(GetChildNodes(loadXMLString(xmlhttp.responseText))[0]) == "GUBUNCHANGED") {
+                    alert(strLangJIHgubunChange02);
 	            } else {
 	                alert("<spring:message code='ezBoard.t403'/>" + xmlhttp.responseXML.text);
 	            }

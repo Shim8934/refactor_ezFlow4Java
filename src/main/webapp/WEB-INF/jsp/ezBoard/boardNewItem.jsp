@@ -1387,6 +1387,9 @@
 		            else if (getNodeText(loadXMLString(xmlhttp.responseText)) == "INACCESSIBLE") {
 						alert(strLang173);
 					}
+					else if (getNodeText(GetChildNodes(loadXMLString(xmlhttp.responseText))[0]) == "GUBUNCHANGED") {
+		                alert(strLangJIHgubunChange02);
+		            }
 					else if (getNodeText(GetChildNodes(loadXMLString(xmlhttp.responseText))[0]) == "DUPLICATED") {
 						alert(strLangFileViewr01);
 					}
