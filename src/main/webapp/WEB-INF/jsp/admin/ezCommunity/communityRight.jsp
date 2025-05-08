@@ -13,7 +13,7 @@
 		<iframe src="/admin/ezCommunity/searchKey.do" name="comm_main"></iframe>
 	</c:when>
 	<c:otherwise>
-		<iframe src="/ezCommunity/commHome/commHome.do?code = <c:out value = '${cID }' />" name="comm_main"></iframe>
+		<iframe src="/ezCommunity/commHome/commHome.do?code=<c:out value='${cID}'/>" name="comm_main"></iframe>
 	</c:otherwise>
 </c:choose>
 </body>
