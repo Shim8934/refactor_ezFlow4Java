@@ -8358,7 +8358,7 @@
 		   SELECT 
 				SUM(AttachFileSize)  TOTALSIZE  ,
                 CASE 
-                     WHEN SUM(AttachFileSize)  > 5000000 THEN 'Y'
+                     WHEN SUM(AttachFileSize)  > 20000000 THEN 'Y'
                 ELSE 
                 	'N'
                 END FLAG  
