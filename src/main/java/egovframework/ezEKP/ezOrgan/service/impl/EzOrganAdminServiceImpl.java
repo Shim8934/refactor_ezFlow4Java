@@ -379,8 +379,8 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			String mailAddr = cn + "@" + domain;
 			
 			int rc = ezEmailUserAdminService.updateGroupMove(oldGroupAddr, newGroupAddr, mailAddr);
-			
-			if (rc == 0) { // 성공
+
+			if (rc != -100 && rc != -3) { // -1(기존 부모그룹을 못찾음) or -2(멤버에서 자식 주소를 찾지 못함)는 성공으로 봄(어차피 삭제하려는 것이므로)
 				try {
 					moveDBData(parentCn, cn, type, offset, tenantID);
 		            result = "OK";
