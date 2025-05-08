@@ -4951,6 +4951,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		
 		// 카테고리 자원 보유 여부 변경
 		map.put("catId", delTopId);
+		map.put("userID", userId);
 		if (ezResourceDAO.selectFavoriteBrdList(map).size() == 0) {
 			map.put("brdYn", "N");
 			map.put("CAT_ID", delTopId);
