@@ -889,7 +889,9 @@
 		                    } else {
 		                        pPage = Number(imagetotalcount / 10) + 1;
 		                    }
-		                    imagepage = imagetotalcount % 10 - 1;
+							if (imagetotalcount != 10) {
+		                    	imagepage = imagetotalcount % 10 - 1;
+							}
 		                }
 		                NewPage = parseInt(pPage) - 1;
 		            }
