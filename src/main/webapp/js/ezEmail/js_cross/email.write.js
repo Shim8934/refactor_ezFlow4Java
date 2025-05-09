@@ -52,3 +52,33 @@ function forward_mail_call(selectItems, shareId) {
 
     return true;
 }
+
+/**
+ * checkBlockedMail가 NewMailList.js에 있음.
+ * mailSearchView.jsp에 NewMailList.js를 포함시키긴 힘듦.
+ * 그래서 checkBlockedMail만 따로 떼어와 붙였지만,
+ *
+ * 이와 같이 함수가 흩뿌려져 중복 선언되는 것을 막고 공통적으로 관리가 될 수 있도록 '열람 차단 관련 js'가 따로 만들어진다면
+ * 아래 함수는 지우고, email.write.js 파일을 로드할때 같은 레벨에 함께 로드하도록 하면 깔끔할 것.
+ */
+function checkBlockedMail(url) {
+    var strQuery = "<URL>" + url + "</URL>";
+    xmlhttp_mailCheckBlock = createXMLHttpRequest();
+
+    var previewUrl = "/ezEmail/mailPrevShow.do?MSGFLAG=N";
+
+    if (typeof(shareId) != "undefined" && shareId != "") {
+        previewUrl += "&shareId=" + encodeURIComponent(shareId);
+    }
+
+    xmlhttp_mailCheckBlock.open("POST", previewUrl, false);
+    xmlhttp_mailCheckBlock.send(strQuery);
+
+    var pBlockedMail = 1;
+
+    if (xmlhttp_mailCheckBlock.status == 200) {
+        pBlockedMail = getNodeText(SelectNodes(xmlhttp_mailCheckBlock.responseXML, "DATA/BLOCKEDMAIL")[0]);
+    }
+
+    return pBlockedMail;
+}
