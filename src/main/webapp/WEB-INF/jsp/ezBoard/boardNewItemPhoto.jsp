@@ -331,7 +331,7 @@
 	
 				strXML += "<WRITERID>" + SSUserID + "</WRITERID>";
 				if ('Y' == writerFlag) {
-					var flagwriterName = $('#writerFlag').val().toString().split(":");
+					var flagwriterName = $('#writerFlag').val().toString().split("\\");
 					strXML += "<WRITERNAME>" + MakeXMLString(flagwriterName[0]) + "</WRITERNAME>";
 					strXML += "<WRITERNAME2>" + MakeXMLString(flagwriterName[1]) + "</WRITERNAME2>";
 					strXML += "<WRITERNAMETYPE>" + MakeXMLString(flagwriterName[2]) + "</WRITERNAMETYPE>";
@@ -937,9 +937,9 @@
 				  <c:if test="${'Y' == boardInfo.writerFlag}">
 					  <input type="checkbox" id="chkUseDept" style="margin-left: 0px !important;" onclick="chkUseDept_onclick()">
 					  <select id="writerFlag" style="display: none;">
-						  <option value="<c:out value='${writerOption.N}:${writerOption.N2}:0' />"></option>
-						  <option value="<c:out value='${writerOption.T}:${writerOption.T2}:1' />"></option>
-						  <option value="<c:out value='${writerOption.D}:${writerOption.D2}:2' />"></option>
+						  <option value="<c:out value='${writerOption.N}\\${writerOption.N2}\\0' />"></option>
+						  <option value="<c:out value='${writerOption.T}\\${writerOption.T2}\\1' />"></option>
+						  <option value="<c:out value='${writerOption.D}\\${writerOption.D2}\\2' />"></option>
 					  </select>
 				  </c:if>
 			  </td>
