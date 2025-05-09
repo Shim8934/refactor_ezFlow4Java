@@ -1984,6 +1984,17 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
         // 20181219 김수아 : 첨부파일 이미지 미리보기 사용자 컨피그
         MailGeneralVO mailGeneralVO = ezEmailService.getMailGeneral(userInfo.getTenantId(), userInfo.getId()).get(0);
         String previewMailImage = mailGeneralVO.getPreviewMailImage() == null ? "Y" : mailGeneralVO.getPreviewMailImage();
+		// AI 첨부파일 이름 최대 길이 - 기존 메일과 동일한 값 사용
+		String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId());
+		// AI 사용여부 확인
+		String companyId = userInfo.getCompanyID();
+		boolean useAI = "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useAI", userInfo.getTenantId()));
+		// AI 챗봇 첨부파일 최대용량
+		String aiAttachMBSize = "10";//ezCommonService.getTenantConfig("aiAttachMBSize", -99); // 모든 테넌트 공통 값
+
+		model.addAttribute("useAI", useAI);
+		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
+		model.addAttribute("aiAttachMBSize", aiAttachMBSize);
         
         model.addAttribute("htmlBody", htmlBody);
 		model.addAttribute("pAttachListHtml", bodyInfoList.get(1));
@@ -3853,6 +3864,18 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
         	previewImageListHtml = bodyInfoList.get(5);
         	isIcalMail = bodyInfoList.get(6);
         }
+
+		// AI 첨부파일 이름 최대 길이 - 기존 메일과 동일한 값 사용
+		String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId());
+		// AI 사용여부 확인
+		String companyId = userInfo.getCompanyID();
+		boolean useAI = "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useAI", userInfo.getTenantId()));
+		// AI 챗봇 첨부파일 최대용량
+		String aiAttachMBSize = "10";//ezCommonService.getTenantConfig("aiAttachMBSize", -99); // 모든 테넌트 공통 값
+
+		model.addAttribute("useAI", useAI);
+		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
+		model.addAttribute("aiAttachMBSize", aiAttachMBSize);
 
 		model.addAttribute("url", url);
 		model.addAttribute("htmlBody", htmlBody);

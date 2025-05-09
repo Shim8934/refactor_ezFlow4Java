@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="16" height="16" viewBox="0 0 16 16">
+  <defs>
+    <clipPath id="clip-path">
+      <path id="패스_9116" data-name="패스 9116" d="M21.85,0A2.292,2.292,0,0,0,20.21.681l-.983.983a.462.462,0,0,0,0,.654L21.85,4.941a.464.464,0,0,0,.654,0l.983-.983a2.311,2.311,0,0,0,0-3.277A2.289,2.289,0,0,0,21.85,0Z" transform="translate(-19.092)" fill="none"/>
+    </clipPath>
+    <linearGradient id="linear-gradient" x1="0.068" y1="1" x2="1" y2="0.5" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#00b4ff"/>
+      <stop offset="1" stop-color="#1367ce"/>
+    </linearGradient>
+    <clipPath id="clip-path-2">
+      <path id="패스_9117" data-name="패스 9117" d="M7.673,6.263,1.466,12.469a2.335,2.335,0,0,0-.6,1.029L.016,16.626a.463.463,0,0,0,.449.584A.567.567,0,0,0,.586,17.2l3.129-.853a2.332,2.332,0,0,0,1.029-.6L10.95,9.54a.467.467,0,0,0,0-.658L8.331,6.263A.473.473,0,0,0,8,6.127a.461.461,0,0,0-.327.136" transform="translate(0 -6.127)" fill="none"/>
+    </clipPath>
+    <linearGradient id="linear-gradient-2" x1="0.002" y1="1" x2="0.972" y2="0.76" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#00efac"/>
+      <stop offset="1" stop-color="#0195fb"/>
+    </linearGradient>
+  </defs>
+  <g id="icon_ai_menu06" transform="translate(95 -1525)">
+    <g id="그룹_7314" data-name="그룹 7314" transform="translate(-94 1526)">
+      <g id="그룹_7311" data-name="그룹 7311" transform="translate(8.924)">
+        <g id="그룹_7310" data-name="그룹 7310" clip-path="url(#clip-path)">
+          <rect id="사각형_29869" data-name="사각형 29869" width="5.122" height="5.075" transform="translate(-0.045 0)" fill="url(#linear-gradient)"/>
+        </g>
+      </g>
+      <g id="그룹_7313" data-name="그룹 7313" transform="translate(0 2.917)">
+        <g id="그룹_7312" data-name="그룹 7312" clip-path="url(#clip-path-2)">
+          <rect id="사각형_29870" data-name="사각형 29870" width="11.156" height="11.083" transform="translate(-0.026 0)" fill="url(#linear-gradient-2)"/>
+        </g>
+      </g>
+    </g>
+    <rect id="사각형_30001" data-name="사각형 30001" width="16" height="16" transform="translate(-95 1525)" fill="none"/>
+  </g>
+</svg>

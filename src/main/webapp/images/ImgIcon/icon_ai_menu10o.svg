@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="16" height="16" viewBox="0 0 16 16">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="사각형_29910" data-name="사각형 29910" width="14" height="14" transform="translate(0 0)" fill="#fff"/>
+    </clipPath>
+  </defs>
+  <g id="icon_ai_menu10o" transform="translate(-286 -1529)">
+    <g id="그룹_7422" data-name="그룹 7422" transform="translate(287 1530)">
+      <g id="그룹_7421" data-name="그룹 7421" clip-path="url(#clip-path)">
+        <path id="패스_9170" data-name="패스 9170" d="M14.412,2.059V4.529H4.941a.413.413,0,0,0-.412.412V9.882a.413.413,0,0,0,.412.412H9.059V14h-7A2.06,2.06,0,0,1,0,11.941V2.059A2.06,2.06,0,0,1,2.059,0H12.353a2.06,2.06,0,0,1,2.059,2.059" fill="#fff"/>
+        <path id="패스_9171" data-name="패스 9171" d="M13,13h9.059v6.588A2.06,2.06,0,0,1,20,21.647H17.529V17.529a.413.413,0,0,0-.412-.412H13Z" transform="translate(-7.647 -7.647)" fill="#fff"/>
+      </g>
+    </g>
+    <rect id="사각형_30006" data-name="사각형 30006" width="16" height="16" transform="translate(286 1529)" fill="none"/>
+  </g>
+</svg>

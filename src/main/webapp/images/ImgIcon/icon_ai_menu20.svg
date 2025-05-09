@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewBox="0 0 24 24">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="사각형_30523" data-name="사각형 30523" width="20.297" height="17.502" transform="translate(0 0)" fill="none"/>
+    </clipPath>
+    <linearGradient id="linear-gradient" x1="-0.326" y1="0.846" x2="0.887" y2="0.196" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#0195fb"/>
+      <stop offset="0.506" stop-color="#00c1f3"/>
+      <stop offset="1" stop-color="#00efac"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-2" x1="0.5" x2="0.5" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#bacfdc"/>
+      <stop offset="1" stop-color="#8f999b"/>
+    </linearGradient>
+  </defs>
+  <g id="그룹_9235" data-name="그룹 9235" transform="translate(-714 -1508)">
+    <rect id="사각형_29994" data-name="사각형 29994" width="24" height="24" transform="translate(714 1508)" fill="none"/>
+    <g id="그룹_9177" data-name="그룹 9177" transform="translate(715.802 1511.199)">
+      <g id="그룹_9174" data-name="그룹 9174" transform="translate(0 0)" clip-path="url(#clip-path)">
+        <path id="패스_10000" data-name="패스 10000" d="M25.557,15.7h-7.78a.757.757,0,0,0-.761.761V27.367a.757.757,0,0,0,.761.761h7.78a.757.757,0,0,0,.761-.761V16.46a.758.758,0,0,0-.761-.762" transform="translate(-11.518 -10.625)" fill="url(#linear-gradient)"/>
+        <path id="패스_10001" data-name="패스 10001" d="M19.764,3.889a1.156,1.156,0,0,0,1.183-1.183V2.283H24.33v.423a1.183,1.183,0,0,0,2.367,0V1.183A1.156,1.156,0,0,0,25.513,0H19.762a1.156,1.156,0,0,0-1.183,1.183V2.706a1.273,1.273,0,0,0,1.185,1.183" transform="translate(-12.576 0)" fill="url(#linear-gradient-2)"/>
+        <path id="패스_10002" data-name="패스 10002" d="M3.129,15.7H.761A.757.757,0,0,0,0,16.459V27.367a.757.757,0,0,0,.761.761H3.129a.757.757,0,0,0,.761-.761V16.46a.759.759,0,0,0-.762-.762" transform="translate(0 -10.625)" fill="url(#linear-gradient)"/>
+        <path id="패스_10003" data-name="패스 10003" d="M53.9,15.7H51.537a.757.757,0,0,0-.761.761V27.367a.757.757,0,0,0,.761.761H53.9a.757.757,0,0,0,.761-.761V16.46A.758.758,0,0,0,53.9,15.7" transform="translate(-34.369 -10.625)" fill="url(#linear-gradient)"/>
+      </g>
+    </g>
+  </g>
+</svg>

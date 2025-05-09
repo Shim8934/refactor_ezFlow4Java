@@ -1780,6 +1780,14 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		logger.debug("=== insert TBL_TENANT_CONFIG Test ===");
 		List<Map<String, Object>> test = new ArrayList<Map<String, Object>>(); // List : 순서보장 Collection
 
+        test.add(new HashMap<String, Object>(){{
+            put("confName","useAI");
+            put("property_value","NO");
+            put("config_name","ezAI 사용여부");
+            put("regdate","2025-05-09 00:00:00");
+            put("description","ezAI 사용여부 (default:NO)");
+            put("config_type","AI");
+        }});
 		test.add(new HashMap<String, Object>(){{
 			put("confName","checkPasswordNumber");
 			put("property_value","YES");

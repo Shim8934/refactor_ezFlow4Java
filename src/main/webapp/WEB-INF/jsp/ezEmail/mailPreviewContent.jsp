@@ -527,5 +527,8 @@
 				<div class="previewIamgelist" id="PreviewAttachList">${previewImageListHtml}</p>
 			</div>  
 		</c:if>
+		<%--<c:if test="${useAI}">--%>
+            <c:import url="/WEB-INF/jsp/ezAI/aiSlide.jsp" />
+        <%--</c:if>--%>
 	</body>
 </html>
