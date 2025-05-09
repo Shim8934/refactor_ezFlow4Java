@@ -4188,7 +4188,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			// 확장자 추출 
 			int lastDotIndex = orgFilePath.lastIndexOf('.');
 			String fileExt = orgFilePath.substring(lastDotIndex);
-			String fileName = fileName = UUID.randomUUID() + fileExt;;
+			String fileName = UUID.randomUUID() + fileExt;
 			
 			destFilePath = path + commonUtil.separator + destBoardID + commonUtil.separator + "uploadFile" + commonUtil.separator + fileName;
 			
