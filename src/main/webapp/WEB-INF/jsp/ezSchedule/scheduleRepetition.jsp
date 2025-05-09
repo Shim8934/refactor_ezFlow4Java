@@ -981,8 +981,8 @@
 
                     //시작시간
                     var startTime;
-                    var hour = now.getHours();
-                    var time = now.getMinutes();
+                    var hour = RetValue["SDATE"].split(" ")[1].split(":")[0];
+                    var time = RetValue["SDATE"].split(" ")[1].split(":")[1];
 
                     if (parseInt(time) < 30) {
                         startTime = hour + ":00:00";
@@ -992,10 +992,8 @@
 
                     //종료시간
                     var endTime;
-                    now.setMinutes(now.getMinutes() + 30);
-
-                    hour = now.getHours();
-                    time = now.getMinutes();
+                    var hour = RetValue["EDATE"].split(" ")[1].split(":")[0];
+                    var time = RetValue["EDATE"].split(" ")[1].split(":")[1];
 
                     if (parseInt(time) < 30) {
                         endTime = hour + ":00:00";
