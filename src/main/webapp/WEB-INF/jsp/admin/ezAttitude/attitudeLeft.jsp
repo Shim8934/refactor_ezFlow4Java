@@ -61,7 +61,8 @@
 						url = "/admin/ezAttitude/attitudeAnnualConfig.do";
 						break;
 				}
-				window.open(url, "attitude_main");
+
+                parent.document.querySelector("iframe[name=attitude_main]").src = url;
 				
 				$("#left .adminListBox h2 span").click(function(){
 					$("#left .adminListBox h2").removeClass("on");

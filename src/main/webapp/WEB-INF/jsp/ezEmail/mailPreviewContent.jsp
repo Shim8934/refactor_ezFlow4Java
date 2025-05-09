@@ -409,8 +409,8 @@
 	        
 	        //프로젝트 관리 이동
 	        function goProjectDetails(projectId) {
-	        	window.open("/ezPMS/getProjectDetails.do?projectId=" + projectId, "right");
-	        	window.open("/ezPMS/pmsLeft.do?mode=mail", "left");
+	        	parent.document.querySelector("iframe[name=right]").src = "/ezPMS/getProjectDetails.do?projectId=" + projectId;
+	        	parent.document.querySelector("iframe[name=left]").src = "/ezPMS/pmsLeft.do?mode=mail";
 	        }
 	        
 	     	// 전달, 회신 시 보낸 시간

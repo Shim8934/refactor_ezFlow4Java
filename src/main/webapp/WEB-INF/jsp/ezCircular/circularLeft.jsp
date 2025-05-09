@@ -140,7 +140,7 @@
 	            
 	            var url = "/ezCircular/circularFolderDoc.do?folderId=" + folderId;
  	            
-				window.open(url, "right");
+				parent.document.querySelector("iframe[name=right]").src = url;
 	        }
 
 	        /* 2023-06-14 황인경 - 디자인 개선 > 회람판 > 좌측메뉴 > 트리구조 LNB 이미지 수정 */

@@ -757,11 +757,6 @@
 
                             if (AttachUrl != "null") {
                                 var tempINGFlag = "";
-                                /* if (GetAttribute(tr,"data4") == "file") {
-                                    window.open(document.location.protocol + "//" + document.location.hostname + "/approvalG/downloadAttach.do?type=APPROVAL&docID=" + GetAttribute(tr, "data3") + "&docStatus=" + tempINGFlag + "&docAttachSn=" + GetAttribute(tr,"data2"));
-                                } else {
-                                    window.open("/ezApprovalG/downloadAttach.do?fileName=" + Attachfilename + "&filePath=" + AttachUrl, "_self");
-                                } */
                                 
                               	//2018-09-12 천성준 - 전자결재 결재문서리스트 하단 첨부탭에서 첨부파일이 문서첨부일경우 문서보기로 열수있게
 								try {

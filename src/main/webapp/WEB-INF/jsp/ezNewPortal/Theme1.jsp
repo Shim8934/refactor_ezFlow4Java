@@ -608,13 +608,13 @@
                 try {
                     mainHref = window.parent.main.location.href;
                 } catch (e) {
-                    window.open('/ezBoard/boardMainRedirect.do?boardID="' + encodeURIComponent('{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}') + '"', "main", "");
+                    parent.document.querySelector("iframe[name='" + target + "']").src = '/ezBoard/boardMainRedirect.do?boardID="' + encodeURIComponent('{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}') + '"';
                     break;
                 }
                 try {
                     mainBoardHref = window.parent.mainBoard.location.href;
                 } catch (e) {
-                    window.open('/ezBoard/boardMainRedirect.do?boardID="'+ encodeURIComponent('{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}') + '"', "main", "");
+                    parent.document.querySelector("iframe[name='" + target + "']").src = '/ezBoard/boardMainRedirect.do?boardID="'+ encodeURIComponent('{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}') + '"';
                     break;
                 }
 
@@ -625,7 +625,7 @@
                 } else if(mainHref == 'about:blank' && mainBoardHref != 'about:blank'){ // 메인영역이 비어 있고 메인보드 영역이 비어있지 않을때
                     target = "mainBoard";
                 }
-                window.open('/ezBoard/boardMainRedirect.do?boardID="'+ encodeURIComponent('{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}') + '"', target, "");
+                parent.document.querySelector("iframe[name='" + target + "']").src = '/ezBoard/boardMainRedirect.do?boardID="'+ encodeURIComponent('{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}') + '"';
                 break;
 
             default: break;

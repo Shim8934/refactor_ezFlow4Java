@@ -89,10 +89,10 @@
 			function goPage(idx) {
 				switch(idx) {
 					case 1:
-						window.open("/admin/ezWebFolder/webfolderAdminRight.do", "right");
+						parent.document.querySelector("iframe[name=right]").src = "/admin/ezWebFolder/webfolderAdminRight.do";
 						break;
 					case 2:
-						window.open("/admin/ezWebFolder/webfolderAdminPersonal.do", "right");
+						parent.document.querySelector("iframe[name=right]").src = "/admin/ezWebFolder/webfolderAdminPersonal.do";
 						break;
 
 				}
@@ -100,7 +100,7 @@
 			
 			function companyFolder() {
 				clearToggle();
-				window.open("/admin/ezWebFolder/webfolderAdminCompanyFolder.do", "right");
+				parent.document.querySelector("iframe[name=right]").src = "/admin/ezWebFolder/webfolderAdminCompanyFolder.do";
 			}
 			
 			function displayPersonal(obj) {
@@ -185,7 +185,7 @@
 			
 			function fileTransactionHistory(obj) {
 				clearToggle(obj);
-				window.open("/admin/ezWebFolder/webfolderAdminFileHistory.do", "right");
+				parent.document.querySelector("iframe[name=right]").src = "/admin/ezWebFolder/webfolderAdminFileHistory.do";
 				// 2023-07-04 황인경 - 디자인개선 > 관리자 > 웹폴더 > 좌측메뉴 트리구조 클래스 추가
 				$(obj).parent().attr("class", "on");
 				$(".tree_arrow_down").attr("class", "sub_iconLNB tree_plus");
@@ -193,14 +193,14 @@
 			
 			function getTrashCanList(obj) {
 				clearToggle(obj);
-				window.open("/admin/ezWebFolder/recycleBin.do", "right");
+				parent.document.querySelector("iframe[name=right]").src = "/admin/ezWebFolder/recycleBin.do";
 				$(obj).parent().attr("class", "on");
 				$(".tree_arrow_down").attr("class", "sub_iconLNB tree_plus");
 			}
 			
 			function departmentFolder() {
 				clearToggle();
-				window.open("/admin/ezWebFolder/webfolderAdminDeptFolder.do", "right");
+				parent.document.querySelector("iframe[name=right]").src = "/admin/ezWebFolder/webfolderAdminDeptFolder.do";
 			}
 			
 			function departmentFile(obj) {
@@ -234,7 +234,7 @@
 				clearToggle();
 			
 				var rightURL = "/admin/ezWebFolder/applicationHistoryMain.do";
-				window.open(rightURL, "right");
+				parent.document.querySelector("iframe[name=right]").src = rightURL;
 			}
 			
 		</script>

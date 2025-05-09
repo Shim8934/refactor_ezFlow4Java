@@ -346,7 +346,7 @@
 		    function btnCcalendar_Click() {
 		        var strUrl = "/ezResource/viewResList2.do?brdID=" + pBrdid + "&accessCode=" + pAccessCode;
 		        strUrl = strUrl + "&brdNm=" + encodeURIComponent(pBrdnm);
-		        window.open(strUrl, 'right');
+                parent.document.querySelector("iframe[name=right]").src = strUrl;
 		    }
 		    
 		    //2018-09-03 김보미 - 페이징 하단에 나타나도록 조정

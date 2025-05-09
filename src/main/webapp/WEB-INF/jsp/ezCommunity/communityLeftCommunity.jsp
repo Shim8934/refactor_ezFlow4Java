@@ -80,25 +80,25 @@
 
                     	if (funCode == "1") {
 	                        GoTopNavigate("<spring:message code='ezCommunity.t863' />");
-		                    window.parent.frames.right.document.location.href = "/ezCommunity/board/bbsList.do?bName=tbl_c_notice&type=notice&userLevel=" + UserLevel;
+		                    parent.document.querySelector("iframe[name=right]").src = "/ezCommunity/board/bbsList.do?bName=tbl_c_notice&type=notice&userLevel=" + UserLevel;
 		                    document.getElementById('Map510').click();
 		                }else if (funCode == "2") {
 		                    GoTopNavigate("<spring:message code='ezCommunity.t74' />");
-				            window.parent.frames.right.document.location.href = "/ezCommunity/board/bbsList.do?bName=tbl_c_Board&type=board&userLevel=" + UserLevel;
+				            parent.document.querySelector("iframe[name=right]").src = "/ezCommunity/board/bbsList.do?bName=tbl_c_Board&type=board&userLevel=" + UserLevel;
 				            document.getElementById('Map520').click();
 				        }else if (funCode == "3") {
 				            GoTopNavigate("<spring:message code='ezCommunity.t1117' />");
-					        window.parent.frames.right.document.location.href = "/ezcommunity/searchKey.do?sRadio=c_ClubName&keyword=&key";
+					        parent.document.querySelector("iframe[name=right]").src = "/ezcommunity/searchKey.do?sRadio=c_ClubName&keyword=&key";
 					        document.getElementById('Map530').click();
 					    }else if (funCode == "4") {
 					        GoTopNavigate("<spring:message code='ezCommunity.t1011' />");
-				            window.parent.frames.right.document.location.href = "/ezCommunity/commMake.do";
+				            parent.document.querySelector("iframe[name=right]").src = "/ezCommunity/commMake.do";
 					        document.getElementById('Map540').click();
 					    }else if (funCode == "5") {
-					        window.parent.frames.right.document.location.href = "/ezCommunity/searchKey.do?type=best";
+					        parent.document.querySelector("iframe[name=right]").src = "/ezCommunity/searchKey.do?type=best";
 					    }else {
 					        GoTopNavigate("main");
-					        window.parent.frames.right.document.location.href = "/ezCommunity/mainPage.do";
+					        parent.document.querySelector("iframe[name=right]").src = "/ezCommunity/mainPage.do";
 					    }
 	        		}
 				}catch (e) {
@@ -334,8 +334,8 @@
 	            }
 	            if (UserLevel == "0" || UserLevel == "9") {
 	                switch (btn.id) {
-	                    case "btn_QsPoll": 
-	                    	window.open("/ezCommunity/commHome/poll/pollMain.do?code=" + code + "&userLevel=" + UserLevel, "right");
+	                    case "btn_QsPoll":
+                            parent.document.querySelector("iframe[name=right]").src = "/ezCommunity/commHome/poll/pollMain.do?code=" + code + "&userLevel=" + UserLevel;
 	                        break;
 	                    case "btn_MemberInfo": 
 	                    	alert("<spring:message code='ezCommunity.t431' />");
@@ -343,14 +343,14 @@
 			            case "btn_MemberOut": 
 			            	alert("<spring:message code='ezCommunity.t1102' />");
 			                break;
-			            case "btn_home": 
-			            	window.open("/ezCommunity/commHome/popupCommHome.do?code=" + code + "&userLevel=" + UserLevel, "right");
+			            case "btn_home":
+                            parent.document.querySelector("iframe[name=right]").src = "/ezCommunity/commHome/popupCommHome.do?code=" + code + "&userLevel=" + UserLevel;
 			                break;
-			            case "btn_Pims": 
-			            	window.open("schedule_main.do?code=" + code + "&userLevel=" + UserLevel, "right");
+			            case "btn_Pims":
+                            parent.document.querySelector("iframe[name=right]").src = "schedule_main.do?code=" + code + "&userLevel=" + UserLevel;
 			                break;
-			            case "btn_guest": 
-			            	window.open("commhome/guest/guestOne.do?code=" + code, "right");
+			            case "btn_guest":
+                            parent.document.querySelector("iframe[name=right]").src = "commhome/guest/guestOne.do?code=" + code;
 			                break;
 			            case "btn_MemberIn":
 			                var feature = "toolbar=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,width=390,height=210";
@@ -367,17 +367,17 @@
 // 			                alert("<spring:message code='ezCommunity.t1102' />");
 			                alert("<spring:message code='ezCommunity.kbm01' />");
 			                break;
-			            default: 
-			            	window.open("/ezcommunity/commHome/popupCommHome.do?code=" + code + "&userLevel=" + UserLevel, "right");
+			            default:
+                            parent.document.querySelector("iframe[name=right]").src = "/ezcommunity/commHome/popupCommHome.do?code=" + code + "&userLevel=" + UserLevel;
 			                break;
 			        }
 			    }else {
 			        switch (btn.id) {
-			            case "btn_QsPoll": 
-			            	window.open("/ezcommunity/commHome/poll/pollMain.do?code=" + code + "&userLevel=" + UserLevel, "right");
+			            case "btn_QsPoll":
+                            parent.document.querySelector("iframe[name=right]").src = "/ezcommunity/commHome/poll/pollMain.do?code=" + code + "&userLevel=" + UserLevel;
 			                break;
-			            case "btn_MemberInfo": 
-			            	window.open("/ezcommunity/commHome/commViewMember.do?code=" + code, "right");
+			            case "btn_MemberInfo":
+                            parent.document.querySelector("iframe[name=right]").src = "/ezcommunity/commHome/commViewMember.do?code=" + code;
 			                break;
 			            case "btn_MemberOut":
 			                if (ch_CheckSysop.toUpperCase() == "TRUE"){
@@ -389,14 +389,14 @@
 		                case "btn_Manager": 
 		                	open_admin(code);
 		                    break;
-		                case "btn_home": 
-		                	window.open("/ezcommunity/commHome/popupCommHome.do?code=" + code + "&userLevel=" + UserLevel, "right");
+		                case "btn_home":
+                            parent.document.querySelector("iframe[name=right]").src = "/ezcommunity/commHome/popupCommHome.do?code=" + code + "&userLevel=" + UserLevel;
 		                    break;
-		                case "btn_Pims": 
-		                	window.open("scheduleMain.do?code=" + code + "&userLevel=" + UserLevel, "right");
+		                case "btn_Pims":
+                            parent.document.querySelector("iframe[name=right]").src = "scheduleMain.do?code=" + code + "&userLevel=" + UserLevel;
 		                    break;
-		                case "btn_guest": 
-		                	window.open("commhome/guest/guestOne.do?code=" + code, "right");
+		                case "btn_guest":
+                            parent.document.querySelector("iframe[name=right]").src = "commhome/guest/guestOne.do?code=" + code;
 		                    break;
 			            case "btn_MemberIn":
 			                    var feature = "toolbar=0,location=1,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,width=390,height=170";
@@ -413,8 +413,8 @@
 // 			                alert("<spring:message code='ezCommunity.t1102' />");
 			                alert("<spring:message code='ezCommunity.kbm01' />");
 		                    break;
-		                default: 
-		                	window.open("/ezcommunity/commHome/popupCommHome.do?code=" + code + "&userLevel=" + UserLevel, "right");
+		                default:
+                            parent.document.querySelector("iframe[name=right]").src = "/ezcommunity/commHome/popupCommHome.do?code=" + code + "&userLevel=" + UserLevel;
 		                    break;
 		            }
 		        }
@@ -431,16 +431,16 @@
 	                        window.top.frames("top").document.Script.change_menu(idx, navigation_info);
 	                        break;
 	                    case "<spring:message code = 'ezCommunity.t73' />":
-                            window.open("/ezCommunity/board/bbsList.do?bName=tbl_c_notice&type=notice", "right");
+                            parent.document.querySelector("iframe[name=right]").src = "/ezCommunity/board/bbsList.do?bName=tbl_c_notice&type=notice";
                             break;
                         case "<spring:message code = 'ezCommunity.t74' />":
-                            window.open("/ezCommunity/board/bbsList.do?bName=tbl_c_Board&type=board", "right");
+                            parent.document.querySelector("iframe[name=right]").src = "/ezCommunity/board/bbsList.do?bName=tbl_c_Board&type=board";
                             break;
                         case "<spring:message code = 'ezCommunity.t1117' />":
-                            window.open("/ezCommunity/searchKey.do?sRadio=c_ClubName&keyword=&key", "right");
+                            parent.document.querySelector("iframe[name=right]").src = "/ezCommunity/searchKey.do?sRadio=c_ClubName&keyword=&key";
                             break;
                         case "<spring:message code = 'ezCommunity.t1011' />":
-                            window.open("/ezCommunity/commMake.do", "right");
+                            parent.document.querySelector("iframe[name=right]").src = "/ezCommunity/commMake.do";
                             break;
                         default:
                             break;
@@ -578,11 +578,11 @@
                         url = "mainPage1.do";
                         break;
                 }
-                window.open(url, "right");
+                parent.document.querySelector("iframe[name=right]").src = url;
             }
             
             function List_more() {
-                window.parent.frames.right.document.location.href = "/ezCommunity/board/bbsList.do?bName=tbl_c_Board&type=board&userLevel=" + UserLevel;
+                parent.document.querySelector("iframe[name=right]").src = "/ezCommunity/board/bbsList.do?bName=tbl_c_Board&type=board&userLevel=" + UserLevel;
             }
             
             /* 2018-05-15 홍승비 - 커뮤니티 만들기 팝업창으로 수정 */

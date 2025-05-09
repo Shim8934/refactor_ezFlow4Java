@@ -22,17 +22,11 @@
 				var admin = "${admin}"; // 전체관리자, 회사관리자
 				if (admin == "admin"){
 				    <c:if test="${packageType != 'standard' || firstScreen_Mail == 'YES'}">
-				    	window.open("/admin/ezOrgan/organMain.do", "bottom");
+                    	parent.document.querySelector("iframe[name=bottom]").src = "bottom";
 				    </c:if>
 				    <c:if test="${packageType == 'standard' && firstScreen_Mail == 'NO'}">
-					//일단 게시판으로 이동하게 만듬 2016-02-16 장진혁
-					//메인화면 포탈로 설정 2016-10-04 지정석
-//						window.open("/admin/ezPortal/portalMain.do", "bottom");
-	 					window.open("/admin/ezNewPortal/portalMain.do", "bottom");
+	 					parent.document.querySelector("iframe[name=bottom]").src = "/admin/ezNewPortal/portalMain.do";
 					</c:if>
-					/* <c:if test="${use_portal != 'YES'}">
-						window.open("/admin/ezPersonal/personalMain.do", "bottom");
-					</c:if> */
 					
 					<c:if test="${useActiveX == 'YES'}">
 						var userAgent = window.navigator.userAgent;
@@ -43,7 +37,7 @@
 			    	</c:if>
 				} else {
 					if ("${isWFAdmin}" == "YES") {
-						window.open("/admin/ezWebFolder/webFolderMain.do", "bottom");
+						parent.document.querySelector("iframe[name=bottom]").src = "/admin/ezWebFolder/webFolderMain.do";
 					}				
 				}
 			}

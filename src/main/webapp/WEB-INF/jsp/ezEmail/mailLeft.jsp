@@ -604,7 +604,7 @@
 		            		url += "&shareId=" + encodeURIComponent(shareId);
 			            }
 		                
-		                window.open(url, "right");
+		                parent.document.querySelector("iframe[name=right]").src = url;
 		                
 		                previewSubTreeCall();
 		                applyEllipsisMailTree();
@@ -682,7 +682,7 @@
 	                	url += "?shareId=" + encodeURIComponent(shareId);
 	                }
 	                
-	                window.open(url, "right");
+	                parent.document.querySelector("iframe[name=right]").src = url;
 	            } catch (e) {console.log(e);}
 	            liSelcted();
 	        }
@@ -693,7 +693,7 @@
 	                
 	             	// 2024.03.26 한슬기 : 스팸메시지함 호출 url변경
 	                //url = "https://gwspam.bizmeka.com/personal/index.php?email=${credentialForBizmekaSpambox}&init=mail";
-	                //window.open(url, "right");
+	                //parent.document.querySelector("iframe[name=right]").src = url;
 	                url = "https://gwspam.ktbizoffice.com/personal/index.php?email=${credentialForBizmekaSpambox}&init=mail";
 	                window.open(url, "_blank", "width=870, height=500");
 	            } catch (e) {	              
@@ -703,7 +703,7 @@
 	        
 			function oepnSpamOutBox() {
 				try {
-					window.open(spamOutLoginURI, "right");
+                    parent.document.querySelector("iframe[name=right]").src = spamOutLoginURI;
 				} catch (e) {
 				    console.log(e);
 				}
@@ -721,7 +721,7 @@
 		    		url += "&shareId=" + $(t).data("id");
 		    	}
 		    	
-		    	window.open(url, "right");
+		    	parent.document.querySelector("iframe[name=right]").src = url;
 		    }
 		    
 	        function Open_ReservationManage(shareId) {
@@ -843,7 +843,7 @@
 			        	break;			            
 				}
 				
-				window.open(url, "right");
+				parent.document.querySelector("iframe[name=right]").src = url;
 			}
 
 			// scroll한 뒤 컨텍스트 메뉴의 위치가 잘못 나오는 현상이 있어 수정  
@@ -1114,7 +1114,7 @@
 	            liSelcted();
 			}
 
-			// window.open(url, "right"); 구절이 중복되어 통일함.
+			// parent.document.querySelector("iframe[name=right]").src = url; 구절이 중복되어 통일함.
 			function openRightFrame(dispname, url, extra) {
 				// 메일 페이지로 처음 진입 시 (대 메뉴 "메일" 클릭)
 				// : parent.frames["right"]는 있지만 빈 frame의 Window_onunload()는 없는 상태이기 때문에(window.open(right) 이 후 → Window_onunload() 있음.)
@@ -1131,7 +1131,7 @@
 					g_firstOpen = false;
 
 				} else {
-					window.open("/ezEmail/mailList.do?dispname=" + dispname + "&url=" + url + extra, "right");
+                    parent.document.querySelector("iframe[name=right]").src = "/ezEmail/mailList.do?dispname=" + dispname + "&url=" + url + extra;
 				}
 
 				get_unreadcount();
@@ -1364,7 +1364,7 @@
 				}
 				
                 var url = spamSniperUrl + "?email=" + cryptValue + "&init=mail";
-                window.open(url, "right");
+                parent.document.querySelector("iframe[name=right]").src = url;
 			}
 			
 			function goAdress() {
@@ -1401,7 +1401,7 @@
                     tagcontentId = "tagcontent_" + shareId;
                 }
 				$("#" + tagcontentId + " a").on("click", function() {
-					window.open("/ezEmail/mailList.do?tagName=" + encodeURIComponent(this.innerText) + "&shareId=" + shareId, "right");
+                    parent.document.querySelector("iframe[name=right]").src = "/ezEmail/mailList.do?tagName=" + encodeURIComponent(this.innerText) + "&shareId=" + shareId;
 				});
 			}
 
@@ -1495,11 +1495,11 @@
 						+ encodeURIComponent(AddressTreeView.getvalue(nodeIdx,
 								"folderid")) + "&type="
 						+ encodeURIComponent(AddressTreeView.getvalue(nodeIdx, "type"));
-				window.open(url, "right");
+				parent.document.querySelector("iframe[name=right]").src = url;
 			}
 
 			function address_Search() {
-				window.open("/ezAddress/addressMainSearch.do", "right");
+                parent.document.querySelector("iframe[name=right]").src = "/ezAddress/addressMainSearch.do";
 			}
 
 			var AddressTreeView = null;

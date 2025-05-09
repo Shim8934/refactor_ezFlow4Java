@@ -353,7 +353,7 @@
 				        break;
 				}
 				
-				window.open(url,"right");
+				parent.document.querySelector("iframe[name=right]").src = url;
 			}
 			
 			/* 2018-06-20 홍승비 - 커뮤니티 관리메뉴 > 게시판 그룹명 스타일 수정 */

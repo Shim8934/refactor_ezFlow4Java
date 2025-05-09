@@ -579,7 +579,11 @@
  		            }
  		        }
 			} */
-			window.open(url, location, option);
+			if (location === "main") {
+                parent.document.querySelector("iframe[name=main]").src = url;
+            } else {
+				window.open(url, location, option);
+			}
 		}
 		
 		function OpenWindow2(targetid, url, location, option) {
@@ -611,7 +615,11 @@
         			clickmenuName = menuName;
     			}
 			} */
-			window.open(url, location, option);
+            if (location === "main") {
+                parent.document.querySelector("iframe[name=main]").src = url;
+            } else {
+                window.open(url, location, option);
+            }
 		}
         
         function showProgress() {

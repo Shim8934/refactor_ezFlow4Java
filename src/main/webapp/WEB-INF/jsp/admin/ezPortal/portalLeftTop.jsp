@@ -92,7 +92,7 @@
 				        break;
 								
 				}
-				window.open(url,"right");
+				parent.document.querySelector("iframe[name=right]").src = url;
 			}    
 		</script>
 	</head>

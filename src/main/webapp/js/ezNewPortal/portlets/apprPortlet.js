@@ -126,17 +126,17 @@ var apprChangeTab = function(obj, portletId) {
 var Appmore_btnClick = function(portletId) {
 	var portletNum = apprPortletIDs.indexOf(portletId);
 	type = apprPortletTypes[portletNum];
-    
+    var mainUrl = "";
     if (type == 'doing') {
-    	window.open("/ezApprovalG/apprGMain.do?listType=1", "main");
+    	mainUrl = "/ezApprovalG/apprGMain.do?listType=1";
     } else if (type == 'display') {
-    	window.open("/ezApprovalG/apprGMain.do?listType=99", "main");
+    	mainUrl = "/ezApprovalG/apprGMain.do?listType=99";
     } else if (type == 'reject') {
-        window.open("/ezApprovalG/apprGMain.do?listType=24", "main");
+        mainUrl = "/ezApprovalG/apprGMain.do?listType=24";
     } else {
-    	window.open("/ezApprovalG/apprGMain.do?listType=2", "main");
+    	mainUrl = "/ezApprovalG/apprGMain.do?listType=2";
     }
-	
+    parent.document.querySelector("iframe[name=main]").src = mainUrl;
 }
 
 var dataAssembler = function(object) {

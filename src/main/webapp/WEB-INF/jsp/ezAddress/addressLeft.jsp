@@ -333,7 +333,7 @@
 	        function selectnode_address() {
 	            var nodeIdx = AddressTreeView.selectedIndex();
 	            var url = "/ezAddress/addressMainList.do?folderid=" + encodeURIComponent(AddressTreeView.getvalue(nodeIdx, "folderid")) + "&type=" + encodeURIComponent(AddressTreeView.getvalue(nodeIdx, "type"));
-	            window.open(url, "right");
+	            parent.document.querySelector("iframe[name=right]").src = url;
 	        }
 	        var address_foldermanage_dialogArguments = new Array();
 	        function address_foldermanage() {
@@ -364,7 +364,7 @@
 	            }
 	        }
 	        function address_Search() {
-	            window.open("/ezAddress/addressMainSearch.do", "right");
+                parent.document.querySelector("iframe[name=right]").src = "/ezAddress/addressMainSearch.do";
 	            // 2023-06-28 황인경 - 디자인 개선 > 주소록 > 좌측메뉴 > 하단 '주소록검색' 메뉴 선택시 상단 메뉴 선택 해제
 	            $(".node_selected").attr("class", "node_normal");
 	            $(".list_text").addClass("node_selected");

@@ -63,10 +63,10 @@
 					h2List[2].firstElementChild.onclick = function(e) {getRelatedConfig();};
 				}
 				
-				function getBasicPage()     {window.open("/admin/ezCabinet/getBasicPage.do", "right");}
-				function getPersonalPage()  {window.open("/admin/ezCabinet/getPersonalPage.do", "right");}
-				function getRelatedConfig() {window.open("/admin/ezCabinet/getRelatedCabinetConfig.do", "right");}
-			})();
+				function getBasicPage()     {parent.document.querySelector("iframe[name=right]").src = "/admin/ezCabinet/getBasicPage.do";}
+				function getPersonalPage()  {parent.document.querySelector("iframe[name=right]").src = "/admin/ezCabinet/getPersonalPage.do";}
+				function getRelatedConfig() {parent.document.querySelector("iframe[name=right]").src = "/admin/ezCabinet/getRelatedCabinetConfig.do";}
+            })();
 		</script>
 	</body>
 </html>

@@ -1555,7 +1555,11 @@
 			}
 			
 			function OpenWindow2(targetid, url, location, option) {
-				window.open(url, location, option);
+                if (location === "main") {
+                    parent.document.querySelector("iframe[name=main]").src = url;
+                } else {
+                    window.open(url, location, option);
+                }
 			}
 		    
 		    function showProgress() {

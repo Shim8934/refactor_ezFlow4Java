@@ -79,52 +79,52 @@
 				    // 기본 메뉴		
 			
 				    case "menu00":
-				        window.open("/ezPortal/help/indexSub.do?lUrl=/ezPortal/help/leftPortal.do?lang=" + lang + "&rUrl=/ezPortal/help/main.do?id=/images/help/portal_" + pUrl + "01", "bottom");
+				        parent.document.querySelector("iframe[name=bottom]").src = "/ezPortal/help/indexSub.do?lUrl=/ezPortal/help/leftPortal.do?lang=" + lang + "&rUrl=/ezPortal/help/main.do?id=/images/help/portal_" + pUrl + "01";
 				        break;
 				    case "menu01":
-				        window.open("/ezPortal/help/indexSub.do?lUrl=/ezPortal/help/leftTask.do?lang=" + lang + "&rUrl=/ezPortal/help/main.do?id=/images/help/task_" + pUrl + "01", "bottom");
+				        parent.document.querySelector("iframe[name=bottom]").src = "/ezPortal/help/indexSub.do?lUrl=/ezPortal/help/leftTask.do?lang=" + lang + "&rUrl=/ezPortal/help/main.do?id=/images/help/task_" + pUrl + "01";
 				        break;
 					case "menu02":
-					    window.open("/ezPortal/help/indexSub.do?lUrl=/ezPortal/help/leftMail.do?lang=" + lang + "&rUrl=/ezPortal/help/main.do?id=/images/help/mail_" + pUrl + "01", "bottom");
+					    parent.document.querySelector("iframe[name=bottom]").src = "/ezPortal/help/indexSub.do?lUrl=/ezPortal/help/leftMail.do?lang=" + lang + "&rUrl=/ezPortal/help/main.do?id=/images/help/mail_" + pUrl + "01";
 						break;
 					case "menu03":
-					    window.open("/ezPortal/help/indexSub.do?lUrl=/ezPortal/help/leftBoard.do?lang=" + lang + "&rUrl=/ezPortal/help/main.do?id=/images/help/board_" + pUrl + "01", "bottom");
+					    parent.document.querySelector("iframe[name=bottom]").src = "/ezPortal/help/indexSub.do?lUrl=/ezPortal/help/leftBoard.do?lang=" + lang + "&rUrl=/ezPortal/help/main.do?id=/images/help/board_" + pUrl + "01";
 						break;
 					case "menu04":
-					    window.open("/ezPortal/help/indexSub.do?lUrl=/ezPortal/help/leftAppr.do?lang=" + lang + "&rUrl=/ezPortal/help/main.do?id=/images/help/appr_" + pUrl + "01", "bottom");
+					    parent.document.querySelector("iframe[name=bottom]").src = "/ezPortal/help/indexSub.do?lUrl=/ezPortal/help/leftAppr.do?lang=" + lang + "&rUrl=/ezPortal/help/main.do?id=/images/help/appr_" + pUrl + "01";
 						break;
 					case "menu05":
-					    window.open("/ezPortal/help/indexSub.do?lUrl=/ezPortal/help/leftCommunity.do?lang=" + lang + "&rUrl=/ezPortal/help/main.do?id=/images/help/community_" + pUrl + "01", "bottom");
+					    parent.document.querySelector("iframe[name=bottom]").src = "/ezPortal/help/indexSub.do?lUrl=/ezPortal/help/leftCommunity.do?lang=" + lang + "&rUrl=/ezPortal/help/main.do?id=/images/help/community_" + pUrl + "01";
 						break;	
 					case "menu07":
-					    window.open("/ezPortal/help/indexSub.do?lUrl=/ezPortal/help/leftResource.do?lang=" + lang + "&rUrl=/ezPortal/help/main.do?id=/images/help/resource_" + pUrl + "01", "bottom");
+					    parent.document.querySelector("iframe[name=bottom]").src = "/ezPortal/help/indexSub.do?lUrl=/ezPortal/help/leftResource.do?lang=" + lang + "&rUrl=/ezPortal/help/main.do?id=/images/help/resource_" + pUrl + "01";
 						break;
 					case "menu08":
-					    window.open("/ezPortal/help/indexSub.do?lUrl=/ezPortal/help/leftSchedule.do?lang=" + lang + "&rUrl=/ezPortal/help/main.do?id=/images/help/schedule_" + pUrl + "01", "bottom");
+					    parent.document.querySelector("iframe[name=bottom]").src = "/ezPortal/help/indexSub.do?lUrl=/ezPortal/help/leftSchedule.do?lang=" + lang + "&rUrl=/ezPortal/help/main.do?id=/images/help/schedule_" + pUrl + "01";
 						break;
 				    case "menu09":
-				        window.open("/ezPortal/help/indexSub.do?lUrl=/ezPortal/help/leftAddr.do?lang=" + lang + "&rUrl=/ezPortal/help/main.do?id=/images/help/addr_" + pUrl + "01", "bottom");
+				        parent.document.querySelector("iframe[name=bottom]").src = "/ezPortal/help/indexSub.do?lUrl=/ezPortal/help/leftAddr.do?lang=" + lang + "&rUrl=/ezPortal/help/main.do?id=/images/help/addr_" + pUrl + "01";
 				        break;
 				    case "menu06":
 				    	var packageType = "${packageType}";
 				    	if (packageType != 'standard') {
-				    		window.open("/ezPortal/help/indexSub.do?lUrl=/ezPortal/help/leftEnv.do?lang=" + lang + "&rUrl=/ezPortal/help/main.do?id=/images/help/env_" + pUrl + "02&topMenuID=" + topMenuID, "bottom");	
+				    		parent.document.querySelector("iframe[name=bottom]").src = "/ezPortal/help/indexSub.do?lUrl=/ezPortal/help/leftEnv.do?lang=" + lang + "&rUrl=/ezPortal/help/main.do?id=/images/help/env_" + pUrl + "02&topMenuID=" + topMenuID;	
 				    	} else {
-				    		window.open("/ezPortal/help/indexSub.do?lUrl=/ezPortal/help/leftEnv.do?lang=" + lang + "&rUrl=/ezPortal/help/main.do?id=/images/help/env_" + pUrl + "01&topMenuID=" + topMenuID, "bottom");	
+				    		parent.document.querySelector("iframe[name=bottom]").src = "/ezPortal/help/indexSub.do?lUrl=/ezPortal/help/leftEnv.do?lang=" + lang + "&rUrl=/ezPortal/help/main.do?id=/images/help/env_" + pUrl + "01&topMenuID=" + topMenuID;	
 				    	}
 				        
 				        break;
 				    case "menu10":
-				        window.open("/ezPortal/help/indexSub.do?lUrl=/ezPortal/help/leftApprG.do?lang=" + lang + "&rUrl=/ezPortal/help/main.do?id=/images/help/apprG_" + pUrl + "01", "bottom");
+				        parent.document.querySelector("iframe[name=bottom]").src = "/ezPortal/help/indexSub.do?lUrl=/ezPortal/help/leftApprG.do?lang=" + lang + "&rUrl=/ezPortal/help/main.do?id=/images/help/apprG_" + pUrl + "01";
 				        break;
 				    case "menu11":
-				        window.open("/ezPortal/help/indexSub.do?lUrl=/ezPortal/help/leftPoll.do?lang=" + lang + "&rUrl=/ezPortal/help/main.do?id=/images/help/poll_" + pUrl + "01", "bottom");
+				        parent.document.querySelector("iframe[name=bottom]").src = "/ezPortal/help/indexSub.do?lUrl=/ezPortal/help/leftPoll.do?lang=" + lang + "&rUrl=/ezPortal/help/main.do?id=/images/help/poll_" + pUrl + "01";
 				        break;
 				    case "menu12":
-				        window.open("/ezPortal/help/indexSub.do?lUrl=/ezPortal/help/leftCircular.do?lang=" + lang + "&rUrl=/ezPortal/help/main.do?id=/images/help/circular_" + pUrl + "01", "bottom");
+				        parent.document.querySelector("iframe[name=bottom]").src = "/ezPortal/help/indexSub.do?lUrl=/ezPortal/help/leftCircular.do?lang=" + lang + "&rUrl=/ezPortal/help/main.do?id=/images/help/circular_" + pUrl + "01";
 				        break;
 				    case "menu13":
-				        window.open("/ezPortal/help/indexSub.do?lUrl=/ezPortal/help/leftWebfolder.do?lang=" + lang + "&rUrl=/ezPortal/help/main.do?id=/images/help/webfolder_" + pUrl + "01", "bottom");
+				        parent.document.querySelector("iframe[name=bottom]").src = "/ezPortal/help/indexSub.do?lUrl=/ezPortal/help/leftWebfolder.do?lang=" + lang + "&rUrl=/ezPortal/help/main.do?id=/images/help/webfolder_" + pUrl + "01";
 				        break;
 					default:
 						break;

@@ -79,7 +79,7 @@ function Navigate(url){
 
     //window.parent.right.location = url // 임시로 주석
     //window.parent.right.location.href = url;
-    window.open(url, 'right');
+    parent.document.querySelector("iframe[name=right]").src = url;
 }
 
 function displayBrdTree(p_UserID, p_DeptID, event) {

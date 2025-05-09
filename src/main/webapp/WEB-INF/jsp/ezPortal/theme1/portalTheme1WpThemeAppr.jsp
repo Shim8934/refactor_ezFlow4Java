@@ -154,19 +154,21 @@
 	            }
 	        
 	            function Appmore_btnClick() {
+                	var mainUrl = "";
 	                if ("${userApprovalG}" == "YES"){
 	                    if (pListTypeValue != "2")
-	                        window.open("/ezApprovalG/apprGMain.do?listType=1", "main");
+                            mainUrl = "/ezApprovalG/apprGMain.do?listType=1";
 	                    else
-	                        window.open("/ezApprovalG/apprGMain.do?listType=2", "main");
+                            mainUrl = "/ezApprovalG/apprGMain.do?listType=2";
 	                }
 	                else {
 	                    if (pListTypeValue != "2")
-	                        window.open("/ezApprovalG/apprGMain.do?listType=1", "main");
+                            mainUrl = "/ezApprovalG/apprGMain.do?listType=1";
 	                    else
-	                        window.open("/ezApprovalG/apprGMain.do?listType=2", "main");
+                            mainUrl = "/ezApprovalG/apprGMain.do?listType=2";
 	                }
-	            }
+                    parent.document.querySelector("iframe[name=main]").src = mainUrl;
+                }
 	            
 	            function apprChangeTab(obj) {
 	                switch (obj.id) {
