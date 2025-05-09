@@ -2193,7 +2193,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 					ScheduleOwnerInfoVO deptSoi = new ScheduleOwnerInfoVO();
 					
 					deptSoi.setScheduleType("2");
-					deptSoi.setOwnerId(userId);
+					deptSoi.setOwnerId(loginVO.getDeptID());
 					deptSoi.setOwnerName(loginVO.getDeptName1());
 					deptSoi.setOwnerName2(loginVO.getDeptName2());
 					
