@@ -2430,5 +2430,8 @@
                 <img id="previewImage" class="previewImage">
             </div>            
         </div>
+        <%--<c:if test="${useAI}">--%>
+            <c:import url="/WEB-INF/jsp/ezAI/aiSlide.jsp" />
+        <%--</c:if>--%>
 	</body>
 </html>
