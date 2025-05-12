@@ -1144,7 +1144,7 @@ function hideLeftFrameOnResize() {
         // 플래그를 둠
         if (hidingFrame) return;
         var leftBtn = document.getElementsByClassName('left_btn')[0];
-        var leftFrame = parent.frames["left"].document
+        var leftFrame = parent.document.getElementById("left");
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(function() {
             if (top.outerWidth < 1180) {

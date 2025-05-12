@@ -14,7 +14,7 @@
                 folderType = "C"
             }
             var url = "/ezWebFolder/webfolderLeft.do?folderType=" + folderType;
-            document.getElementById("leftFrame").src = url;
+            document.getElementById("left").src = url;
         }
 	</script>
 </head>
