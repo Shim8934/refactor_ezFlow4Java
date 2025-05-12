@@ -1,4 +1,4 @@
-﻿﻿// ApprovUI\ApprovUI.js
+﻿﻿﻿// ApprovUI\ApprovUI.js
 var strLang2 = "Agreement"
 var strLang3 = "Cooperation"
 var strLang4 = "Returning"
@@ -1201,3 +1201,10 @@ var strLangJIH_Summary02 = "You cannot save an empty summary.";
 var strLangJIH_Summary03 = "Invalid access.";
 var strLangJIH_Summary04 = "Unable to load the summary.";
 var strLangJIH_Summary05 = "Summary Info"
+
+/* 전자결재 사인 그리기 기능 */
+var strLangHIH_signDraw01 = "Please sign and then approve.";
+
+/* 2025-05-12 김수연 aprmanage_Cross.js 하드코딩 수정 */
+var strLangAssignedList = "Assignment list";
+var strLangDeptInbox = "Dept. receipt folder";

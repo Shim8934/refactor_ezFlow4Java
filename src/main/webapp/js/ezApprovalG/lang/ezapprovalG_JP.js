@@ -1200,3 +1200,11 @@ var strLangJIH_Summary02 = "内容が空の要約は保存できません。";
 var strLangJIH_Summary03 = "不正なアクセスです。";
 var strLangJIH_Summary04 = "要約を読み込めません。";
 var strLangJIH_Summary05 = "要約情報"
+var strLangJIH_Summary05 = "要約情報"
+
+/* 전자결재 사인 그리기 기능 */
+var strLangHIH_signDraw01 = "서명을 작성한 뒤 결재해주세요.";
+
+/* 2025-05-12 김수연 aprmanage_Cross.js 하드코딩 수정 */
+var strLangAssignedList = "指定リスト";
+var strLangDeptInbox = "部署受信文書";
