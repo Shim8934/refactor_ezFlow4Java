@@ -6,7 +6,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezAI.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery.multipleSortable.js')}"></script>
