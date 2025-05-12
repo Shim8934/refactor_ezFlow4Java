@@ -788,7 +788,7 @@
 								AND
 									companyid = #companyID#
 		<isNotEqual property="v_APPROVUSER" compareValue="" prepend="AND">
-					TBL_APRLINEINFO.aprmembername = #v_APPROVUSER#
+									TBL_APRLINEINFO.aprmembername LIKE '%' || #v_APPROVUSER# || '%'
 		</isNotEqual>
 				) aaa
 			ON
@@ -2459,7 +2459,7 @@
 				AND
 					TBL_APRLINEINFO.companyid = #companyID#
 		<isNotEqual property="v_APPROVUSER" compareValue="" prepend="AND">
-					TBL_APRLINEINFO.aprmembername = #v_APPROVUSER#
+					TBL_APRLINEINFO.aprmembername LIKE '%' || #v_APPROVUSER# || '%'
 		</isNotEqual>
 				) aaa
 			ON
