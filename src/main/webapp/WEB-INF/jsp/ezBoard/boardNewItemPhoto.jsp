@@ -45,7 +45,7 @@
 	        var strNow = "${strNow}";		
 	        var bodycount = "0";
 	        var pAttachListXml = "";
-	        var gubun = "3";
+	        var gubun = "${boardInfo.guBun}";
 	        var SSUserID = "${userInfo.id}";
 		    var SSUserName = "${userInfo.displayName1}";
 		    var SSUserName2 = "${userInfo.displayName2}";
