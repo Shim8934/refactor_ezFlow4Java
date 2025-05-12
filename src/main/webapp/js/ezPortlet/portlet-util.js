@@ -58,7 +58,7 @@ var portletOption = Object.freeze({
     },
     dragStartPredicate: function (item, hammerEvent) {
         // 좌클릭으로만 동작
-        if (hammerEvent.srcEvent.button !== 0) return false;
+        if (!hammerEvent.srcEvent.type.includes('touch') && hammerEvent.srcEvent.button !== 0) return false;
         var target = hammerEvent.target;
         // 핸들클래스 안의 노드 중 드래그 이벤트를 실행시킬 노드를 추가 하려면 아래 배열에 추가
         var handleClass = ['portletText', 'handle-movie'];
