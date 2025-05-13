@@ -1110,7 +1110,7 @@
 		    		data : {
 		    			fontFamily : pDefaultFontFamily,
 		    			fontSize : pDefaultFontSize,
-		    			content : text.replace(/"/g,'\\\"'),
+		    			content : text.replace(/"/g,'\\\"').replace(/<div id=\\?"hwpEditorBoardContent\\"[^]*?<\/div>/g, ''),
 		    			docType : "MHT"
 		    		},
 		    		success: function(xml){
