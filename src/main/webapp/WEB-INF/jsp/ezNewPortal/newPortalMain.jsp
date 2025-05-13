@@ -169,17 +169,14 @@
 			//20250513 : 김진홍 : 챗봇 창 조절관련 postmessageEvent 추가
 			window.addEventListener("message", function(event) {
 				//if (event.origin !== "http://localhost:3000") return;
-				if (event.origin !== "http://ezai.kaonilab.com/") return;
-				console.log(event.data);
+				if (event.origin !== "http://ezai.kaonilab.com") return;
 				switch(event.data){
 					case "close":
-						debugger
 						document.getElementById("wrapAIbox").classList.remove("active");
 						break;
 					case "zoom":
 						if(document.getElementById("wrapAIbox").classList.contains("wrapAIzoom")){
 							document.getElementById("wrapAIbox").classList.remove("wrapAIzoom");
-
 						}
 						else{
 							document.getElementById("wrapAIbox").classList.add("wrapAIzoom");
