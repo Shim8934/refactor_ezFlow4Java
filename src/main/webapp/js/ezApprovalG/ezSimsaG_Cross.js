@@ -715,14 +715,14 @@ function covBody(pbody) {
     var BodyStr = "<content>" + newSTR.replace(re, "&amp;nbsp;").replace(/&lt;/g, "&amp;lt;").replace(/&gt;/g, "&amp;gt;") + "</content>";
 
     BodyStr = BodyStr.replace(/: '/g, ":");
-    BodyStr = BodyStr.replace(/'' /g, "' ");
+    BodyStr = BodyStr.replace(/''(?=[a-zA-Z0-9])/g, "'");
     BodyStr = BodyStr.replace(/''>/g, "'>");
     BodyStr = BodyStr.replace(/'; /g, "; ");
     BodyStr = BodyStr.replace(/''font-size:'/g, "'font-size:");
     
     BodyStr = BodyStr.replace(/''margin-bottom:'/g, "'margin-bottom:");
     BodyStr = BodyStr.replace(/='>/g, "=''>");
-    BodyStr = BodyStr.replace(/=''/g, "='");
+    BodyStr = BodyStr.replace(/(style|data-\w+)=('')/g, "$1=''");
     BodyStr = BodyStr.replace(/:'  '/g, ":");
     BodyStr = BodyStr.replace(/:'  /g, ":");
     BodyStr = BodyStr.replace(/';'/g, ";'");
