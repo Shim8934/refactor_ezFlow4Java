@@ -1319,7 +1319,7 @@ var SurveyCreate     = function() {
 					edges.push({data: {source : questionLevel, target: skipQst}});
 				}
 				else {
-					if (questions[i]["level"] == questions.length) {
+					if (questions[i]["level"] == questions.length || questions[i]["skip"] == "0") {
 						continue;
 					}
 					else {
