@@ -333,6 +333,11 @@
 	        
 		    function Open_Func(pthis) {
 		        try {
+		        	
+		        	if (!pthis.id) {
+		        		pthis = pthis.nextElementSibling;
+		        	}
+		        	
 		            switch (pthis.id) {
 		                case "APPROVAL":
 		                    setPresentValue("<spring:message code='ezApprovalG.t1747'/>");
@@ -1090,6 +1095,11 @@
 		
 		    function Menu_Click(pthis) {
 		        try {
+		        	
+		        	if (!pthis.id) {
+		        		pthis = pthis.nextElementSibling;
+		        	}
+		        	
 		            switch (pthis.id) {
 		                case "admin_sub01":
 		                    PresentOpen = "DOC_ADMIN";
@@ -1368,7 +1378,7 @@
 			</c:if>
 			<div class="apprListBox" style="overflow:hidden; padding-right: 0; height: 912px;">
 		        <h2 class="on" id="apprH2">
-		            <span class="sub_iconLNB tree_arrow_down"></span><span class="h2Title" id="APPROVAL" onclick="openFolder('appr')"><spring:message code='main.t00018'/></span>
+		            <span class="sub_iconLNB tree_arrow_down"  onclick="openFolder('appr')"></span><span class="h2Title" id="APPROVAL" onclick="openFolder('appr')"><spring:message code='main.t00018'/></span>
 		        </h2>
 		        <ul class="lnbUL" id="apprUL">
 					<li><span class="list_text" id="APPROVAL1" onclick="setPresentValue('<spring:message code='ezApprovalG.t1747'/>');convMain('1','')"><spring:message code='ezApprovalG.t1747'/><span id=COUNT1></span></span></li>
@@ -1417,7 +1427,7 @@
 					</c:if>
 		        </ul>
 		        <h2 class="off" id="compH2">
-		            <span class="sub_iconLNB tree_plus"></span><span class="h2Title" id="APPROVAL" onclick="openFolder('comp')"><spring:message code='ezApprovalG.lhj15'/></span>
+		            <span class="sub_iconLNB tree_plus" onclick="openFolder('comp')"></span><span class="h2Title" id="APPROVAL" onclick="openFolder('comp')"><spring:message code='ezApprovalG.lhj15'/></span>
 		        </h2>
 		        <ul class="lnbUL off" id="compUL">
                    	<li><span class="list_text" id="MYCONT" onClick="setPresentValue('<spring:message code='ezApproval.t990042'/>');Open_Func(this)"><spring:message code='ezApproval.t990042'/></span></li>
@@ -1435,7 +1445,7 @@
 					</c:if>
 		        </ul>
 		        <h2 class="off" id="deptH2">
-		            <span class="sub_iconLNB tree_plus"></span><span class="h2Title" onclick="openFolder('dept')"><spring:message code='ezApprovalG.t1755'/></span>
+		            <span class="sub_iconLNB tree_plus" onclick="openFolder('dept')"></span><span class="h2Title" onclick="openFolder('dept')"><spring:message code='ezApprovalG.t1755'/></span>
 		        </h2>
 		        <ul class="lnbUL off" id="deptUL">
                    	<c:choose>
@@ -1462,7 +1472,7 @@
 		        <c:if test="${approvalFlag == 'S'}">
 		        	<c:if test="${useApprFormCont == 'YES'}">
 		        	<h2 class="off" id="ITEMCONTH2">
-		        		<span class="sub_iconLNB tree_plus"></span>
+		        		<span class="sub_iconLNB tree_plus" onclick="openFolder('ITEMCONT');"></span>
 		        		<span class="h2Title" onclick="openFolder('ITEMCONT');"><spring:message code='ezApprovalG.apprLeft01'/></span>
 		        	</h2>
 					<ul class="lnbUL off" id="ITEMCONTUL">
@@ -1473,7 +1483,7 @@
 		          	</c:if>
 		          	<c:if test="${useApprCodeCont == 'YES'}">
 		        	<h2 class="off" id="ITEMCONT2H2">
-		        		<span class="sub_iconLNB tree_plus"></span>
+		        		<span class="sub_iconLNB tree_plus" onclick="openFolder('ITEMCONT2');"></span>
 		        		<span class="h2Title" onclick="openFolder('ITEMCONT2');"><spring:message code='ezApproval.t844'/></span>
 		        	</h2>
 		        	<ul class="lnbUL off" id="ITEMCONT2UL">
@@ -1484,7 +1494,7 @@
 		          	</c:if>
 		          	<c:if test="${fn:length(userShareList) > 0}">
 			        	<h2 class="off" id="USERSHAREH2">
-			        		<span class="sub_iconLNB tree_plus"></span>
+			        		<span class="sub_iconLNB tree_plus" onclick="openFolder('USERSHARE');"></span>
 			        		<span class="h2Title" onclick="openFolder('USERSHARE');"><spring:message code='ezApprovalG.apprLeft02'/></span>
 			        	</h2>
 						<ul class="lnbUL off" id="USERSHAREUL">
@@ -1514,7 +1524,7 @@
 		          	</c:if>
 		          	<c:if test="${fn:length(deptShareList) > 0}">
 			        	<h2 class="off" id="DEPTSHAREH2">
-			        		<span class="sub_iconLNB tree_plus"></span>
+			        		<span class="sub_iconLNB tree_plus" onclick="openFolder('DEPTSHARE');"></span>
 			        		<span class="h2Title" onclick="openFolder('DEPTSHARE');"><spring:message code='ezApprovalG.apprLeft03'/></span>
 			        	</h2>
 						<ul class="lnbUL off" id="DEPTSHAREUL">
@@ -1560,10 +1570,10 @@
 		        </c:if>
 		        <c:if test="${approvalFlag eq 'G'}">
 		        	<h2 class="off" id="readingRecordH2">
-		        		<span class="sub_iconLNB tree_plus"></span><span class="h2Title" id="readingRecord" onclick="openFolder('readingRecord'), Open_Func(this)"><spring:message code='ezApprovalG.kwc001'/></span>
+		        		<span class="sub_iconLNB tree_plus" onclick="openFolder('readingRecord'), Open_Func(this)"></span><span class="h2Title" id="readingRecord" onclick="openFolder('readingRecord'), Open_Func(this)"><spring:message code='ezApprovalG.kwc001'/></span>
 			        </h2>
 		        	<h2 class="off" id="recordCabinetH2">
-		        		<span class="sub_iconLNB tree_plus"></span><span class="h2Title" onclick="openFolder('recordCabinet')"><spring:message code='ezApprovalG.LeftMenu01'/></span>
+		        		<span class="sub_iconLNB tree_plus" onclick="openFolder('recordCabinet')"></span><span class="h2Title" onclick="openFolder('recordCabinet')"><spring:message code='ezApprovalG.LeftMenu01'/></span>
 			        </h2>
 			        <ul class="lnbUL off" id="recordCabinetUL">
 			        	<li><span class="list_text" id="m01" onclick="Open_Func(this)"><spring:message code='ezApprovalG.t552'/></span></li>
@@ -1577,7 +1587,7 @@
 			        </ul>
 			        <c:if test="${fn:contains(userInfo.rollInfo, 'm=1') || fn:contains(userInfo.rollInfo, 'w=1') || fn:contains(userInfo.rollInfo, 'c=1')}">
 				        <h2 class="off" id="manageCabinetH2">
-			        		<span class="sub_iconLNB tree_plus"></span><span class="h2Title" onclick="openFolder('manageCabinet')"><spring:message code='ezApprovalG.LeftMenu02'/></span>
+			        		<span class="sub_iconLNB tree_plus" onclick="openFolder('manageCabinet')"></span><span class="h2Title" onclick="openFolder('manageCabinet')"><spring:message code='ezApprovalG.LeftMenu02'/></span>
 				        </h2>
 				        <ul class="lnbUL off" id="manageCabinetUL">
 				        	<li><span class="list_text" id="m07" onclick="Open_Func(this)"><spring:message code='ezApprovalG.t907'/></span></li>
@@ -1599,7 +1609,7 @@
 			        
 			        <c:if test="${fn:length(userShareList) > 0}">
 			        	<h2 class="off" id="USERSHAREH2">
-			        		<span class="sub_iconLNB tree_plus"></span>
+			        		<span class="sub_iconLNB tree_plus" onclick="openFolder('USERSHARE');"></span>
 			        		<span class="h2Title" onclick="openFolder('USERSHARE');"><spring:message code='ezApprovalG.apprLeft02'/></span>
 			        	</h2>
 						<ul class="lnbUL off" id="USERSHAREUL">
@@ -1630,7 +1640,7 @@
 		          	</c:if>
 		          	<c:if test="${fn:length(deptShareList) > 0}">
 			        	<h2 class="off" id="DEPTSHAREH2">
-			        		<span class="sub_iconLNB tree_plus"></span>
+			        		<span class="sub_iconLNB tree_plus" onclick="openFolder('DEPTSHARE');"></span>
 			        		<span class="h2Title" onclick="openFolder('DEPTSHARE');"><spring:message code='ezApprovalG.apprLeft03'/></span>
 			        	</h2>
 						<ul class="lnbUL off" id="DEPTSHAREUL">
@@ -1664,10 +1674,19 @@
 						<li id="admin_sub04" onclick="Menu_Click(this)"><span style="width:100%;display:inline-block;"><spring:message code='ezApprovalG.t520'/></span></li>
 					</ul>
 				</c:if> --%>
+				<c:if test="${useUserCont eq 'YES'}">
+					<h2 class="off" id="personH2">
+						<span class="sub_iconLNB tree_manage" onclick="MngUserOnclick()"></span>
+						<span class="sub_iconLNB tree_plus" onclick="openFolder('person')"></span><span class="h2Title" onclick="openFolder('person')"><spring:message code='ezApproval.t848'/></span>
+					</h2>
+					<ul class="lnbUL off" id="personUL">
+						<div class="tree onlytree" id="divUserContTree"></div>
+					</ul>
+				</c:if>
 				<c:if test="${approvalForDoc == 'Y'}">
 					<c:if test="${fn:contains(userInfo.rollInfo, 'c=1') || fn:contains(userInfo.rollInfo, 'k=1') || fn:contains(userInfo.rollInfo, 'q=1')}">
 						<h2 class="off" id="adminH2">
-			            	<span class="sub_iconLNB tree_plus"></span><span class="h2Title" onclick="openFolder('admin')"><spring:message code='ezApprovalG.lhj13'/></span>
+			            	<span class="sub_iconLNB tree_plus" onclick="openFolder('admin')"></span><span class="h2Title" onclick="openFolder('admin')"><spring:message code='ezApprovalG.lhj13'/></span>
 						</h2>
 						<ul class="lnbUL off" id="adminUL">
                            	<li><span class="list_text" id="approvalForDoc_sub01" onclick="Menu_Click(this)"><spring:message code='ezApprovalG.lhj14'/></span></li>
@@ -1678,7 +1697,7 @@
 				<c:if test="${useOpenGov == 'YES'}">
 					<c:if test="${fn:contains(userInfo.rollInfo, 'c=1') || fn:contains(userInfo.rollInfo, 'k=1') || fn:contains(userInfo.rollInfo, 'q=1')}">
 						<h2 class="off" id="openGovH2">
-							<span class="sub_iconLNB tree_plus"></span><span class="h2Title" id="openGov" onClick="Menu_Click(this)"><spring:message code='ezApprovalG.LeftMenu04'/></span>
+							<span class="sub_iconLNB tree_plus" onClick="Menu_Click(this)"></span><span class="h2Title" id="openGov" onClick="Menu_Click(this)"><spring:message code='ezApprovalG.LeftMenu04'/></span>
 						</h2>
 					</c:if>
 				</c:if>
