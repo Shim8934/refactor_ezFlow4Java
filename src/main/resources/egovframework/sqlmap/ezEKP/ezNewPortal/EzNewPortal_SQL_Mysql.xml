@@ -897,7 +897,7 @@ AND
 		AND
 			A.BOARDID = #boardId#
 		AND
-			B.MAIN_FLAG = 'y'
+			B.MAIN_FLAG = 'Y'
 		AND
 			(A.APPRFLAG = 'Y' 
 			OR A.APPRFLAG IS NULL)
