@@ -28610,6 +28610,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			//2020.09.10. 한사대 주석 제거 방식 때문에 전처리 내용이 사라지는 경우가 발생 하여 주석 제거 방식 수정
 			content = content.replaceAll("(?m)(?s)<!--(.*)-->", "");
 			content = content.replaceAll("﻿", "");
+            content = content.replaceAll("\u200B", "").replaceAll("&ZeroWidthSpace;", "");
+            
 			// 2020-01-12 정주환 태그내 " -> ' 로 처리
 			String[] sp1 = content.split("<");
 			content = "";
