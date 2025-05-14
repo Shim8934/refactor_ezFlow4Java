@@ -77,6 +77,10 @@
 	    	var memoClickTimer = 0;
 	     	var memoDelay = 200;
 	     	var memoPrevent = false;
+
+			//ezAI 사용 여부
+			var useAI = '<c:out value="${useAI}"/>';
+			var ezAIUrl = '<c:out value="${ezAIUrl}"/>';
 	     	
 			topHeight = "60";
 
@@ -168,8 +172,7 @@
 		   
 			//20250513 : 김진홍 : 챗봇 창 조절관련 postmessageEvent 추가
 			window.addEventListener("message", function(event) {
-				//if (event.origin !== "http://localhost:3000") return;
-				if (event.origin !== "http://ezai.kaonilab.com") return;
+				if (event.origin !== ezAIUrl) return;
 				switch(event.data){
 					case "close":
 						document.getElementById("wrapAIbox").classList.remove("active");
@@ -194,12 +197,14 @@
 			</div>
 		</div>
 		<!--20250513 : 김진홍 : AI 파트 추가-->
-		<div id="wrapAIbox" class="wrapAIbox">
-			<div class="wrapAI">
-				<iframe id="iframeChatbot" style="width:100%; height:100%;" frameborder="0" scrolling="NO" src="http://ezai.kaonilab.com/ChatUi">
-				</iframe>
+		<c:if test="${useAI == 'Y'}">
+			<div id="wrapAIbox" class="wrapAIbox">
+				<div class="wrapAI">
+					<iframe id="iframeChatbot" style="width:100%; height:100%;" frameborder="0" scrolling="NO" src="<c:out value='${ezAIUrl}'/>/ChatUi">
+					</iframe>
+				</div>
 			</div>
-		</div>
+		</c:if>
 		<div id="noticeLayer" onclick="hidefunc(this)" style="display:none; right: 0px; width: 100%; height: 100vh; background-color: rgba(0, 0, 0, 0.3); z-index: 9999; position: absolute;">
 			<div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);">
 	        	<iframe id="noticeLayerFrame" style="margin:0; padding:0; border:0 none; width:640px; height:430px; border-radius:20px; box-shadow:0 3px 6px rgba(0,0,0,0.16); background:#fff;" src=""></iframe>

@@ -29,6 +29,10 @@
 		<script>
 			var useColor = '<c:out value="${useColor}"/>';
 			var packageType = '<c:out value="${packageType}"/>';
+
+			//ezAI 사용 여부
+			var useAI = '<c:out value="${useAI}"/>';
+
 			// UI 스킨 작업용
 			function skin(skinId){
 				var skinLink = "";
@@ -455,8 +459,10 @@
 					str += '<li><span style="font-family: 돋움; font-size: 13px; font-weight: bold; color: #333; display: inline-block; margin-top: 17px; width: 111px;" title="' + '<spring:message code="ezSystem.x0025" />(<spring:message code="ezSystem.x0024" />)' + '">' + '${lastLogin} (' + '${loginIP})' + '</span></li>';
 				}
 								
-				//20250513 : 김진홍 : 메인화면 챗봇버튼 추가 추후 설정값 추가
-				str += '<li><span class="util_aiToolbar" id="util_aiToolbar" onclick="openChatbotUi();">AI 도구</span></li>';
+				//20250513 : 김진홍 : 메인화면 챗봇버튼 추가
+				if(useAI == "Y"){
+					str += '<li><span class="util_aiToolbar" id="util_aiToolbar" onclick="openChatbotUi();">AI 도구</span></li>';
+				}
 
 				if ('${useUtilTalk}' === 'YES') str += '<li><span class="icon_topmenu util_messenger" id="util_messenger" title="' + '<spring:message code="ezNewPortal.kje01" />' + '"></span></li>'; // 메신저 다운로드 추가
 				if ('${roleInfo}' === 'admin') str += '<li><span class="util_admin" id="util_admin" title="' + '<spring:message code="ezNewPortal.t004" />' + '"></span></li>';
