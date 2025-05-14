@@ -748,6 +748,9 @@ function styleToAttribute(bodyElem) {
 	for (var i = 0; i < pElem.length; i++) {
 		if (pElem[i].style && pElem[i].style.textAlign) {
 			pElem[i].align = pElem[i].style.removeProperty("text-align");
+            if (pElem[i].align == 'justify') {
+                pElem[i].align = 'adjust';
+            }
 		}
 		
 		if (pElem[i].getAttribute("style") == "") {
