@@ -60,20 +60,23 @@ function simpleAIRisize() {
         aiView.style.width = "850px";
     }
 }
-
-window.addEventListener('resize', function() { simpleAIRisize();});
+window.onload = function () {
+    window.addEventListener('resize', function() { simpleAIRisize();});
+};
 // ai 애니메이션 효과 end
 
 // *** ai chat start
-document.getElementById("chatInput").addEventListener("keyup", function(event) {
-    if (event.key === 'Enter' && !event.shiftKey) {
-        event.preventDefault();
-        userInput();
-    }
-});
+window.onload = function () {
+    document.getElementById("chatInput").addEventListener("keyup", function(event) {
+        if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault();
+            userInput();
+        }
+    });
+}
 
 // 추천 promt 클릭
-function simplePrompt(element) {
+function simplePrompt(element, module) {
     const displayText = element.textContent.trim(); // 화면에 보일 텍스트
     const userText = element.getAttribute("data-comment"); // 실제 프롬프트로 사용할 값
 
@@ -84,11 +87,11 @@ function simplePrompt(element) {
     const chatInput = document.getElementById("chatInput");
     chatInput.value = "";
 
-    aiSend(userText, displayText);
+    aiSend(userText, displayText, module);
 }
 
 // 사용자 입력
-function userInput() {
+function userInput(module) {
     const chatInput = document.getElementById("chatInput");
     const userText = chatInput.value.trim();
     chatInput.value = "";
@@ -97,11 +100,11 @@ function userInput() {
         return;
     }
 
-    aiSend(userText, userText);
+    aiSend(userText, userText, module);
 }
 
 // ai 전송 main
-async function aiSend(userText, displayText) {
+async function aiSend(userText, displayText, module) {
     appendUserChatWithLoading(displayText);
 
     const aiTextDivs = document.querySelectorAll('.ai_text.al_loading');
@@ -112,7 +115,14 @@ async function aiSend(userText, displayText) {
         return;
     }
 
-    const requestData = createRequestData(userText);
+    if (!module) {
+        console.warn('No module found.');
+        return;
+    }
+
+    const requestData = createRequestData(userText, module);
+    // 데이터 조합 테스트용 콘솔로 운영 시 주석 처리
+    console.log(requestData);
 
     try {
         const response = await fetch('/ezAI/ai/stream.do', {
@@ -140,13 +150,53 @@ async function aiSend(userText, displayText) {
 }
 
 // 데이터
-function createRequestData(userText) {
+function createRequestData(userText, module) {
     return {
-        meta: extractEmailMetaData(),
-        userPrompt: userText,
-        content: extractEmailContent(), // 메일본문
-        attachedFiles: extractAttachedFiles() // 첨부파일 정보 추가
+        'service': module,
+        'function': 'qna',
+        'input_data': createInputData(module),
+        'options' : createOptions(userText, module)
     };
+}
+
+function createInputData(module) {
+
+    if ('mail' == module) {
+        var mailMetaData = extractEmailMetaData();
+        return [
+            {
+                'from': mailMetaData.from,
+                'to': mailMetaData.to,
+                'cc': mailMetaData.to,
+                'received_dt': mailMetaData.date,
+                'subject': mailMetaData.subject,
+                'tag_name' : mailMetaData.tag_name,
+                'content' : extractEmailContent(), // 메일본문
+            }
+        ];
+    } else if ('approval' == module) {
+    
+    } else if ('board' == module) {
+    
+    } else {
+         return [];
+    }
+
+}
+
+function createOptions(userText, module) {
+    if ('mail' == module) {
+        return {
+            'command': userText, // 사용자 요청
+            'tone': 'formally',
+            'length': 'medium',
+            //'targetLanguage': 'en', // 현재 필요없음
+        };
+    } else if ('approval' == module) {
+
+    } else if ('board' == module) {
+
+    }
 }
 
 // 로딩 div -> 응답 UI, 응답 출력을 표출할 span 반환
@@ -391,11 +441,11 @@ function extractEmailContent() {
 }
 
 function extractEmailMetaData() {
-  const parentDoc = window.parent.document;
-  
-  // 제목
-  const subjectEl = parentDoc.querySelector('.mail_readTitle');
-  const subject = subjectEl ? subjectEl.innerText : '';
+    const parentDoc = window.parent.document;
+    
+    // 제목
+    const subjectEl = parentDoc.querySelector('.mail_readTitle');
+    const subject = subjectEl ? subjectEl.innerText : '';
 
     // From
     const senderEl = parentDoc.querySelector('#MsgToPut');
@@ -409,11 +459,20 @@ function extractEmailMetaData() {
     const recipientEmail = recipientNameEl ? recipientNameEl.getAttribute('title') || '' : '';
     const recipient = recipientName && recipientEmail ? `${recipientName}<${recipientEmail}>` : recipientName || recipientEmail;
   
-  // 날짜
-  const dateEl = parentDoc.querySelector('.day_mark .day span');
-  const date = dateEl ? dateEl.innerText : '';
-
-  return "subject: " + subject +", sender: " + sender + ", recipient: " + recipient + ", received date: " + date;
+    // 날짜
+    const dateEl = parentDoc.querySelector('.day_mark .day span');
+    const date = dateEl ? dateEl.innerText : '';
+    
+    console.log(subject+","+ sender+","+ recipient+","+ date);
+    
+    return {
+            'subject': subject,
+            'from' : sender,
+            'to' : recipient,
+            'cc' : [],
+            'date' : date,
+            'tag_name' : ""
+    };
 }
 // ai chat end
 
