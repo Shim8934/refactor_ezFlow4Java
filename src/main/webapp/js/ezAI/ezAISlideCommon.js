@@ -48,7 +48,20 @@ function fn_showViewoption() {
             }
         }
     }
+    simpleAIRisize();
 }
+
+function simpleAIRisize() {
+    const aiView = document.getElementById("simpleAi");
+    const aiWidth = window.innerWidth;
+    if (aiView.classList.contains('on')) {
+        aiView.style.width = (aiWidth - 70) + "px";
+    } else {
+        aiView.style.width = "850px";
+    }
+}
+
+window.addEventListener('resize', function() { simpleAIRisize();});
 // ai 애니메이션 효과 end
 
 // *** ai chat start

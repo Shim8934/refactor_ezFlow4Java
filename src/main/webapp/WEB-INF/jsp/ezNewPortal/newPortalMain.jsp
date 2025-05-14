@@ -17,6 +17,9 @@
 		<!-- 컨텍스트 메뉴 관련 -->
 		<link rel="stylesheet" href="${util.addVer('/css/contextMenu.css')}">
 		<link rel="stylesheet" href="${util.addVer('/css/font-awesome-5.0.10/css/fontawesome-all.css')}">
+		<!--20250512 : ai 기능 추가-->
+		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/ai.css')}" />
+
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezMemo/memo.js')}"></script>
@@ -161,12 +164,39 @@
 				   metaTag.setAttribute("content", "width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no");
 			   }
 		   });
+
+		   
+			//20250513 : 김진홍 : 챗봇 창 조절관련 postmessageEvent 추가
+			window.addEventListener("message", function(event) {
+				//if (event.origin !== "http://localhost:3000") return;
+				if (event.origin !== "http://ezai.kaonilab.com") return;
+				switch(event.data){
+					case "close":
+						document.getElementById("wrapAIbox").classList.remove("active");
+						break;
+					case "zoom":
+						if(document.getElementById("wrapAIbox").classList.contains("wrapAIzoom")){
+							document.getElementById("wrapAIbox").classList.remove("wrapAIzoom");
+						}
+						else{
+							document.getElementById("wrapAIbox").classList.add("wrapAIzoom");
+						}
+						break;
+				}
+			});
 		</script>
 	</head>
 	<body style="margin:0px 0px 0px 0px;padding: 0px 0px 0px 0px;overflow:hidden;">
 		<div id="iframeShawdowLayer" class="iframeShawdowLayer" onclick = "hidefunc(this)" style="display: none; width:100vw; right:0;">
 			<div id="myNotificationUL" style="padding: 0px; margin: 0px;  width: 390px; height: 603px; right: 50px; z-index:20; position:absolute;">
 				<iframe id="iframeNoti" style="width:100%; height:70vh;" frameborder="0" scrolling="NO" src="/ezNotification/notificationMain.do">
+				</iframe>
+			</div>
+		</div>
+		<!--20250513 : 김진홍 : AI 파트 추가-->
+		<div id="wrapAIbox" class="wrapAIbox">
+			<div class="wrapAI">
+				<iframe id="iframeChatbot" style="width:100%; height:100%;" frameborder="0" scrolling="NO" src="http://ezai.kaonilab.com/ChatUi">
 				</iframe>
 			</div>
 		</div>
