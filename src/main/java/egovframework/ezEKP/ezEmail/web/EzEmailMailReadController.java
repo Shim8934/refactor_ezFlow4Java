@@ -53,6 +53,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.JsonElement;
 
+import egovframework.ezEKP.ezAI.util.AICommonUtil;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.IOUtils;
@@ -128,6 +129,9 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 
 	@Autowired
 	private CommonUtil commonUtil;
+	
+	@Autowired
+	private AICommonUtil aICommonUtil;
 
 	@Autowired
 	private Properties config;
@@ -1987,8 +1991,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		// AI 첨부파일 이름 최대 길이 - 기존 메일과 동일한 값 사용
 		String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId());
 		// AI 사용여부 확인
-		String companyId = userInfo.getCompanyID();
-		boolean useAI = "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useAI", userInfo.getTenantId()));
+		boolean useAI = aICommonUtil.checkUseAI(userInfo.getTenantId());
 		// AI 챗봇 첨부파일 최대용량
 		String aiAttachMBSize = "10";//ezCommonService.getTenantConfig("aiAttachMBSize", -99); // 모든 테넌트 공통 값
 
@@ -3868,8 +3871,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		// AI 첨부파일 이름 최대 길이 - 기존 메일과 동일한 값 사용
 		String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId());
 		// AI 사용여부 확인
-		String companyId = userInfo.getCompanyID();
-		boolean useAI = "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useAI", userInfo.getTenantId()));
+		boolean useAI = aICommonUtil.checkUseAI(userInfo.getTenantId());
 		// AI 챗봇 첨부파일 최대용량
 		String aiAttachMBSize = "10";//ezCommonService.getTenantConfig("aiAttachMBSize", -99); // 모든 테넌트 공통 값
 
