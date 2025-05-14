@@ -116,6 +116,7 @@
 			var SSDeptID = "<c:out value='${userInfo.deptID}'/>";
 			var starRatingFlag = "<c:out value='${boardInfo.starRatingFlag}'/>";
 			var rating = "${itemStarRating.rating}";
+			var updateDate = "<c:out value= '${boardItem.updateDate}'/>";
 
 		    // 수정 수아 재은	    
 		    var nowZoom = 100;
@@ -432,6 +433,7 @@
 		    
 		    /* 2018-12-26 홍승비 - 저해상도 대응을 위해 리사이즈 함수 분리 */
 		    function resizeMessageFrame() {
+		        // 댓글 높이 계산 시작
 				/* 2019-11-05 홍승비 - 하단댓글 사용 시 메세지 프레임 높이 조정 추가 */
 				/* 2019-05-08 홍승비 - 익명게시판에 확장컬럼 존재 시 세로 리사이즈 오류 수정 */
 				var replyOffsetH = 0;
@@ -450,41 +452,42 @@
 						}
 					}
 				} else { // 댓글을 사용하지 않거나 레이어 팝업인 경우
-					replyOffsetH = -30;
+					replyOffsetH = -18;
+				}
+				// 댓글 높이 계산 끝
+				
+				var contentHeight;
+				contentHeight = document.documentElement.clientHeight - 305 - addheight + replyOffsetH;
+				
+                if (gubun == "2") { // 익명게시판일 경우
+				    contentHeight += 18;
 				}
 				
-		        if (pAttributeYN == "Y") {
-		            var contentHeight;
-		            if (gubun == "2") {
-		                contentHeight = document.documentElement.clientHeight - 239 - addheight + replyOffsetH;
-		            } else {
-		                contentHeight = document.documentElement.clientHeight - 268 - addheight + replyOffsetH
-		            }
-		            /* 2019-04-05 홍승비 - 좋아요 버튼 추가로 게시물 본문 세로길이 수정 */
-		        	if (likeFlag != null && likeFlag == "Y") {
-						contentHeight = contentHeight - 28;
-		        	}
-		        	if (disLikeFlag != null && disLikeFlag == "Y") {
-						contentHeight = contentHeight - 28;
-		        	}	
-		            document.getElementById("message").style.height = contentHeight + "PX";
-		            document.getElementById("pad1").style.height = contentHeight + "PX";
-		        } else {
-		            var contentHeight;
-		            if (gubun == "2") {
-		                contentHeight = document.documentElement.clientHeight - 243 + replyOffsetH;
-		            } else {
-		                contentHeight = document.documentElement.clientHeight - 268 + replyOffsetH;
-		            }
-		        	if (likeFlag != null && likeFlag == "Y") {
-						contentHeight = contentHeight - 28;
-		        	}
-		        	if (disLikeFlag != null && disLikeFlag == "Y") {
-						contentHeight = contentHeight - 28;
-		        	}
-		            document.getElementById("message").style.height = contentHeight + "PX";
-		            document.getElementById("pad1").style.height = contentHeight + "PX";
-		        }
+                if (useKeyword == "Y") { // 키워드 사용할 경우
+				    contentHeight -= 28;
+				}
+				
+				if ((BoardAdmin_FG == 'true' || BoardGroupAdmin_FG == 'OK') && updateDate && updateDate.length != 0) { // 수정일 컬럼 존재할 경우
+				    contentHeight -= 28;
+				}
+				
+                if ((likeFlag != null && likeFlag == "Y") || (disLikeFlag != null && disLikeFlag == "Y")) { // 좋아요/싫어요 버튼 존재할 경우
+                    contentHeight -= 28;
+                }
+                
+                if (starRatingFlag == "Y") { // 별점 평가하기 존재할 경우
+                    contentHeight -= 38;
+                }
+                
+                // 본문 영역에 최소 / 최대 크기 추가함, 없앨 수 없는 스크롤 생기는 것을 방지
+                if (contentHeight < 300) {
+                    contentHeight = 300;
+                } else if (contentHeight > 600) {
+                    contentHeight = 600;
+                }
+                
+                document.getElementById("message").style.height = contentHeight + "PX";
+                document.getElementById("pad1").style.height = (contentHeight + 20) + "PX";
 		    }
 		
 		    function AddLinkTarget() {
@@ -2010,14 +2013,14 @@
 						<c:choose>
 							<c:when test="${guBun != '2'}">
 								<td id="WriteUserNM" style="width:40%;">
-									<div style="vertical-align:middle;width:100%;height:16px;overflow-y:auto;cursor:pointer" onclick='OpenUserInfo("${boardItem.writerID}", "${boardItem.writerDeptID} ")'>
+									<div style="vertical-align:middle;width:100%;overflow-y:auto;cursor:pointer" onclick='OpenUserInfo("${boardItem.writerID}", "${boardItem.writerDeptID} ")'>
 										<c:out value="${boardItem.writerName}"/>
 									</div>
 								</td>
 							</c:when>
 							<c:otherwise>
 								<td id="WriteUserNM" style="width:40%; white-space:nowrap">
-									<div style="vertical-align:middle;width:100%;height:16px;overflow-y:auto;">
+									<div style="vertical-align:middle;width:100%;overflow-y:auto;">
 										<c:out value="${boardItem.writerName}"/>
 									</div>
 								</td>

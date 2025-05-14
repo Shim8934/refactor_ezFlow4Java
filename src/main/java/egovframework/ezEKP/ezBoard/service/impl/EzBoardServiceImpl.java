@@ -53,6 +53,13 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.logging.log4j.util.Strings;
+import org.jasypt.commons.CommonUtils;
+import org.jsoup.select.Elements;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7328,5 +7335,20 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		result.put("averageScore", updateAverageScore);
 		
 		return result;
+	}
+
+	@Override
+	public String getBoardNameLocalizing(String userLang, BoardPropertyVO boardProperty) throws Exception {
+		String boardName = boardProperty.getBoardName();
+		
+		if ("2".equals(userLang) && boardProperty.getBoardName2() != null && !boardProperty.getBoardName2().isEmpty()) {
+			boardName = boardProperty.getBoardName2();
+		} else if ("3".equals(userLang) && boardProperty.getBoardName3() != null && !boardProperty.getBoardName3().isEmpty()) {
+			boardName = boardProperty.getBoardName3();
+		} else if ("4".equals(userLang) && boardProperty.getBoardName4() != null && !boardProperty.getBoardName4().isEmpty()) {
+			boardName = boardProperty.getBoardName4();
+		}
+		
+		return boardName;
 	}
 }

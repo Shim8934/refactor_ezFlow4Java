@@ -3315,7 +3315,8 @@
 			SELECT
 				c_sysopid,
 				companyid,
-				c_clubname
+				c_clubname,
+				c_clubname2
 			FROM
 				TBL_C_CLUB
 			WHERE
