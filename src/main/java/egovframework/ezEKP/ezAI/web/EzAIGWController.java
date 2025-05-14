@@ -7,7 +7,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezAI.service.EzAIService;
 import egovframework.ezEKP.ezAI.util.AICommonUtil;
 import egovframework.ezEKP.ezAI.vo.AIPayloadVO;
-import egovframework.ezEKP.ezAI.vo.AICommandRequestVO;
+import egovframework.ezEKP.ezAI.vo.AICommandVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -62,7 +62,7 @@ public class EzAIGWController {
 
     @PostMapping("/ai/stream.do")
     @ResponseBody
-    public void streamAiResponse(@CookieValue("loginCookie") String loginCookie, @Nullable @RequestBody AICommandRequestVO aiCommandRequestVO, HttpServletResponse response) {
+    public void streamAiResponse(@CookieValue("loginCookie") String loginCookie, @Nullable @RequestBody AICommandVO aiCommandVO, HttpServletResponse response) {
         logger.debug("streamAiResponse started.");
 
         response.setContentType("text/event-stream;charset=UTF-8");
@@ -78,7 +78,7 @@ public class EzAIGWController {
             String timezone = aiCommonUtil.getPersonalTimezone(userInfo.getId(), userInfo.getTenantId());
          
             // frontend에서 받아오는 모든 param AIPayloadVO로 mapping
-            AIPayloadVO aiPayloadVO = ezAIService.convertToAPIRequest(aiCommandRequestVO);
+            AIPayloadVO aiPayloadVO = ezAIService.convertToAPIRequest(aiCommandVO);
            
             // 사용자 정보 locale에 mapping
             Map<String, String> localeMap = new HashMap<>();

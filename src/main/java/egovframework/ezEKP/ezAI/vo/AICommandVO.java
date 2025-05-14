@@ -7,8 +7,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class AICommandRequestVO {
-    private static final Logger logger = LoggerFactory.getLogger(AICommandRequestVO.class);
+public class AICommandVO {
+    private static final Logger logger = LoggerFactory.getLogger(AICommandVO.class);
 
     // JSON 구조와 매핑되는 필드
     private String service;

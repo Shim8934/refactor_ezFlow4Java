@@ -42,7 +42,7 @@ public class AICommonUtil {
     public String getEzAIApiKey() throws Exception {
         logger.debug("getEzAIApiKey started.");
         
-        URL url = new URL(config.getProperty("config.ezAIUrl.apiKey") + "/api/apikey");
+        URL url = new URL(config.getProperty("config.ezAIUrl") + "/api/apikey");
         String targetName = "ezFlow";// config
 
         // HTTP 연결 설정 및 요청
