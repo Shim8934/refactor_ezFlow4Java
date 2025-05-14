@@ -2,7 +2,7 @@ package egovframework.ezEKP.ezAI.service.impl;
 
 import egovframework.ezEKP.ezAI.service.EzAIService;
 import egovframework.ezEKP.ezAI.vo.AIPayloadVO;
-import egovframework.ezEKP.ezAI.vo.AICommandRequestVO;
+import egovframework.ezEKP.ezAI.vo.AICommandVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ public class EzAIServiceImpl implements EzAIService {
     private static final Logger logger = LoggerFactory.getLogger(EzAIServiceImpl.class);
 
     @Override
-    public AIPayloadVO convertToAPIRequest(AICommandRequestVO requestVO) {
+    public AIPayloadVO convertToAPIRequest(AICommandVO requestVO) {
         logger.debug("Converting AICommandRequestVO to AIPayloadVO: {}", requestVO);
 
         if (requestVO == null) {
