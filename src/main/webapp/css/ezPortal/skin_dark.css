@@ -212,6 +212,8 @@ header + .lnb ul li:hover span, .lnb ul li.on span{color:#388CE5;}
 .presentTime .timeTxt span{color:#fff;}
 #ptlTimeFlow{background-image:url(../../images/ezNewPortal/skin/dark/present_time_icon.png);}
 .main_time{margin:11px 0 0 0;}
+#theme2Body .personal_content dl.time dd {color:#fff;}
+
 .main_time .timeCheckIn{line-height:30px; border:1px solid #3C3C3C; background:#343638; box-shadow:none; color:#fff;}
 .main_time .timeCheckIn.commute_on{box-shadow:none;}
 .main_time .timeCheckOut{line-height:30px; border:1px solid #3C3C3C; background:#343638; box-shadow:none; color:#fff;}

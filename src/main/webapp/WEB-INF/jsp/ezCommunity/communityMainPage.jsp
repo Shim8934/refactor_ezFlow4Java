@@ -456,7 +456,7 @@
 						var ul = document.getElementById("listCommunityPop");
 					}
 
-					if (!document.querySelector('.nodata_sIcon')) {
+					if (ul.querySelector('.nodata_sIcon') == null) {
 						var dl = document.createElement("DL");
 						dl.className = "nodata_sIcon";
 						

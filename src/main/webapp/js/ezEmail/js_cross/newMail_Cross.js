@@ -1065,6 +1065,11 @@ function Save_onClick_Complete(ReturnValue) {
         }
     } catch (e) {
         console.log(e);
+        
+        // 자동 저장 도중 Exception이 발생한 경우 MailStatus가 SEND로 유지되어 발송 버튼을
+        // 눌러도 반응이 없는 문제 수정
+        MailStatus = "NO";
+        isAutoSave = false;        
     }
 }
 

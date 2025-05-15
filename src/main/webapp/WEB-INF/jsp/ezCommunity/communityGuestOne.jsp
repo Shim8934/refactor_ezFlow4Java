@@ -2,6 +2,7 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -95,7 +96,7 @@
 					html += "<div style='height:auto;'>";
 					html += "<table id='replyLayerTable_" + SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "NO") + "' class='mainlist emoticonLayerStaticPosition' style='width: 100%; display: none'>";
 					html += "<tbody><tr>";
-					html += "<th style='text-align:left; border: #fff; width: 100%;'>";
+					html += "<th style='text-align:left; border: #fff; width: 85%;'>";
 					html += "<textarea id='onelinereply"+ SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "NO") +"' rows='2' style='resize:none; margin-left: 10px; margin-top: 4px; width: 95%;' maxLength='300'></textarea>";
 					html += "<th style='text-align:center; border: #fff; width: 15%;'>";
 					html += '<a class="imgbtn" style="vertical-align: middle"><span onclick="guestOneLineReply(\'new\' ,' + SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "NO") + ')"><spring:message code="ezBoard.t321" /></span></a>';
@@ -418,7 +419,7 @@
 	    		var href = "/ezCommunity/guestOne.do?bName=" + encodeURIComponent('<c:out value="${mode}"/>')
 				            + "&sRadio=" + encodeURIComponent("${sRadio}")
 				            + "&code=" + encodeURIComponent(code)
-				            + "&keyword=" + "${keyword}"
+							+ "&keyword=" + encodeURIComponent("${fn:escapeXml(keyword)}");
 				            + "&block=" + encodeURIComponent("${nowBlock}");
 				            
 	            if (parseInt(newPage) > 0 && parseInt(newPage) <= parseInt(totalPage)) {
@@ -431,7 +432,7 @@
 		        var href = "/ezCommunity/guestOne.do?bName=" + encodeURIComponent("${mode}")
 					+ "&sRadio=" + encodeURIComponent('<c:out value="${sRadio}"/>')
 					+ "&code=" + encodeURIComponent('<c:out value="${code}"/>')
-					+ "&keyword=" + '<c:out value="${keyword}"/>'
+					+ "&keyword=" + encodeURIComponent("${fn:escapeXml(keyword)}");
 					+ "&block=" + encodeURIComponent("${nowBlock}");
 
 		        if (page == "front") {

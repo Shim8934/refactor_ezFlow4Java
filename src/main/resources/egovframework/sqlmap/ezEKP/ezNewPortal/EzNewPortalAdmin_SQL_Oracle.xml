@@ -821,7 +821,70 @@
 					(#companyId#, #tenantId#, #logoType#, #logoUrl#)
 		]]>
 		</isEqual>
+		<isEqual property="logoType" compareValue="D">
+		<![CDATA[
+			MERGE INTO TBL_PORTAL_LOGO
+			USING DUAL
+			ON (
+					company_id = #companyId#
+				AND
+					tenant_id = #tenantId#
+				AND
+					logo_type = #logoType#
+				)
+			WHEN MATCHED THEN
+				UPDATE SET
+					logo_url = #logoUrl#
+			WHEN NOT MATCHED THEN
+				INSERT 
+					(company_id, tenant_id, logo_type, logo_url)
+				VALUES
+					(#companyId#, #tenantId#, #logoType#, #logoUrl#)
+		]]>
+		</isEqual>
+		<isEqual property="logoType" compareValue="MP">
+		<![CDATA[
+			MERGE INTO TBL_PORTAL_LOGO
+			USING DUAL
+			ON (
+					company_id = #companyId#
+				AND
+					tenant_id = #tenantId#
+				AND
+					logo_type = #logoType#
+				)
+			WHEN MATCHED THEN
+				UPDATE SET
+					logo_url = #logoUrl#
+			WHEN NOT MATCHED THEN
+				INSERT 
+					(company_id, tenant_id, logo_type, logo_url)
+				VALUES
+					(#companyId#, #tenantId#, #logoType#, #logoUrl#)
+		]]>
+		</isEqual>
 		<isEqual property="logoType" compareValue="L">
+		<![CDATA[
+			MERGE INTO TBL_PORTAL_LOGO
+			USING DUAL
+			ON (
+					company_id = TO_CHAR(#tenantId#)
+				AND
+					tenant_id = #tenantId#
+				AND
+					logo_type = #logoType#
+				)
+			WHEN MATCHED THEN
+				UPDATE SET
+					logo_url = #logoUrl#
+			WHEN NOT MATCHED THEN
+				INSERT
+					(company_id, tenant_id, logo_type, logo_url)
+				VALUES
+					(TO_CHAR(#tenantId#), #tenantId#, #logoType#, #logoUrl#)
+		]]>
+		</isEqual>
+		<isEqual property="logoType" compareValue="ML">
 		<![CDATA[
 			MERGE INTO TBL_PORTAL_LOGO
 			USING DUAL
@@ -955,10 +1018,18 @@
 	]]>
 	</isEqual>
 	<isNotEqual property="logoType" compareValue="L">
-	<![CDATA[
-		AND
-			company_id = #companyId#
-	]]>
+		<isEqual property="logoType" compareValue="ML">
+		<![CDATA[
+			AND
+				company_id = #tenantId#
+		]]>
+		</isEqual>
+		<isNotEqual property="logoType" compareValue="ML">
+		<![CDATA[
+			AND
+				company_id = #companyId#
+		]]>
+		</isNotEqual>
 	</isNotEqual>
 	</delete>
 	

@@ -384,7 +384,7 @@ function tempInsert(objNodes, DataSDT, DataEDT) {
     pTempData.oPnumber = SelectSingleNodeValue(objNodes, "pnumber");
     pTempData.oOwner_id = SelectSingleNodeValue(objNodes, "owner_id");
     pTempData.oWriter_id = SelectSingleNodeValue(objNodes, "writer_id");
-    pTempData.oSubject = replaceEntityCodeToStr(SelectSingleNodeValue(objNodes, "subject"));
+    pTempData.oSubject = ConvertEntityReferenceToChar(SelectSingleNodeValue(objNodes, "subject")); 
     pTempData.oInstancetype = SelectSingleNodeValue(objNodes, "instancetype");
     pTempData.oLocation = SelectSingleNodeValue(objNodes, "location");
     pTempData.oDtstart = mfGetUTFIsoDate(DataSDT.getFullYear(), DataSDT.getMonth(), DataSDT.getDate(), DataSDT.getHours(), DataSDT.getMinutes());
@@ -752,7 +752,7 @@ function CalMonthDataBind(oAppointment, oAppointment2) {
         oTd.setAttribute("approveFlag", oAppointment.oApproveFlag);
         oTd.setAttribute("command", "open");
         oTd.setAttribute("ptime", pTime);
-        oTd.setAttribute("subject",  ConvertEntityReferenceToChar(oAppointment.oSubject.split("'").join("&apos;")));
+        oTd.setAttribute("subject",  oAppointment.oSubject.split("'").join("&apos;"));
         //이벤트변경 - 마우스오버
         //oTd.setAttribute("onclick", "Schedule_onMouseClick(this);showTooltip(this, event, '" + pTime + "', '" + oAppointment.oSubject.split("'").join("&apos;") + "', '" + oAppointment.oApproveFlag + "');");
         //oTd.setAttribute("onmouseover", "TooltipMouseOver(this, \"M\")");

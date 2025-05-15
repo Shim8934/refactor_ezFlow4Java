@@ -62,6 +62,7 @@
 					<li><span  class = "list_text leftMenu_btn" id="MPortlets"><spring:message code='ezNewPortal.t056' /></span></li>
 					<li><span  class = "list_text leftMenu_btn" id="MTheme"><spring:message code='ezNewPortal.mobilePortal02' /></span></li>
 					<li><span  class = "list_text leftMenu_btn" id="MMenus"><spring:message code = 'ezNewPortal.t055' /></span></li>
+					<li><span class = "list_text leftMenu_btn" id = "MLogos"><spring:message code='ezNewPortal.t057' /></span></li>
 				</ul>
 				</c:if>
 			</div>
@@ -100,6 +101,9 @@
 							break;
 						case "MTheme" :
 							url = "/admin/ezNewPortal/portalThemes.do?type=mobile";
+							break;
+						case "MLogos" :
+							url = "/admin/ezNewPortal/portalLogos.do?type=mobile";
 							break;
 					}
 					

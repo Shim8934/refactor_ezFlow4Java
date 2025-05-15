@@ -1367,10 +1367,10 @@
 						</ul>
 			        </c:if>
 					<h2 class="off">
-						<span class="sub_iconLNB tree_plus"></span><span class="h2Title" id="allBoardList" onclick="AllBoard('allBoardList')"><spring:message code="ezBoard.allboard.hth01" /></span>
+						<span class="sub_iconLNB tree_plus" onclick="NewBoard('newBoardList')"></span><span class="h2Title" id="newBoardList" onclick="NewBoard('newBoardList')"><spring:message code="ezBoard.lyj01" /></span>
 					</h2>
 					<h2 class="off">
-						<span class="sub_iconLNB tree_plus"></span><span class="h2Title" id="newBoardList" onclick="NewBoard('newBoardList')"><spring:message code="ezBoard.lyj01" /></span>
+						<span class="sub_iconLNB tree_plus" onclick="AllBoard('allBoardList')"></span><span class="h2Title" id="allBoardList" onclick="AllBoard('allBoardList')"><spring:message code="ezBoard.allboard.hth01" /></span>
 					</h2>
 			        <div id='TopBoardsList'>
 			        	<script type="text/javascript">
@@ -1383,9 +1383,9 @@
 
 								if (i == 0) {
 									var nodeValue = $(this).text();
-									document.write("<span class='sub_iconLNB tree_arrow_down'></span>");
+									document.write("<span class='sub_iconLNB tree_arrow_down' onclick ='TopBoard_onclick(\"TreeCtrl" + i + "\", \"" + $(this).find("DATA1").text()+ "\")'></span>");
 			       			    } else {
-			       			    	document.write("<span class='sub_iconLNB tree_plus'></span>");
+			       			    	document.write("<span class='sub_iconLNB tree_plus' onclick ='TopBoard_onclick(\"TreeCtrl" + i + "\", \"" + $(this).find("DATA1").text()+ "\")'></span>");
 			       			    }
 
 		       			     	document.write("<span id='TreeCtr" + i + "' class='h2Title' value='" + $(this).find("DATA1").text() + "' onclick='TopBoard_onclick(\"TreeCtrl" + i + "\", \"" + $(this).find("DATA1").text()
@@ -1418,21 +1418,30 @@
 					<c:if test="${MyBoardScrapFlag == 'TYPE2'}">
 						<h2 class="off" id="scrapH2">
 							<span class="sub_iconLNB tree_manage" onclick="MngUserOnclick()"></span>
-							<span class="sub_iconLNB tree_plus"></span><span class="h2Title" onclick="openScrapFolder('scrap')"><spring:message code="ezBoard.kmh12" /></span>
+							<span class="sub_iconLNB tree_plus" onclick="openScrapFolder('scrap')"></span><span class="h2Title" onclick="openScrapFolder('scrap')"><spring:message code="ezBoard.kmh12" /></span>
 						</h2>
 						<ul class="lnbUL off" id="scrapUL">
 							<div class="tree onlytree" id="divUserScrapContTree"></div>
 						</ul>
 					</c:if>
+					<c:if test="${MyStorageContFlag != 'NO'}">
+						<h2 class="off" id="storageH2">
+							<span class="sub_iconLNB tree_manage" onclick="storageMngOnclick()"></span>
+							<span class="sub_iconLNB tree_plus" onclick="openStorageFolder('storage')"></span><span class="h2Title" onclick="openStorageFolder('storage')"><spring:message code="ezBoard.kmh57" /></span>
+						</h2>
+						<ul class="lnbUL off" id="storageUL">
+							<div class="tree onlytree" id="divUserStorageContTree"></div>
+						</ul>
+					</c:if>
 			        <ul class="lnbUL">
                        	<%-- 2023-06-22 황인경 - 디자인 개선 > 게시판 > 좌측메뉴 > '검색' 태그 구조, LNB 이미지 수정 --%>
 						<h2 class="off">
-                           	<span class="sub_iconLNB tree_plus"></span><span id="boardSearchH2" class="h2Title" value="" onclick="boardSearch('boardSearchH2')"><spring:message code="ezBoard.khj1" /></span>
+                           	<span class="sub_iconLNB tree_plus" onclick="boardSearch('boardSearchH2')"></span><span id="boardSearchH2" class="h2Title" value="" onclick="boardSearch('boardSearchH2')"><spring:message code="ezBoard.khj1" /></span>
 						</h2>
 <%--                       	<li><span class="sub_iconLNB tree_search"></span><span class="list_text" onclick="boardSearch()"><spring:message code="ezBoard.khj1" /></span></li> --%>
                     	<c:if test="${applyFlag == 'OK'}">
 	                    	<h2 class="off">	
-	                           	<span class="sub_iconLNB tree_plus"></span><span id="apprboardH2" class="h2Title" onclick="Apprboard('apprboardH2')"><spring:message code="ezBoard.t999001" /><span id="applyCount">(${applyCount})</span>
+	                           	<span class="sub_iconLNB tree_plus" onclick="Apprboard('apprboardH2')"></span><span id="apprboardH2" class="h2Title" onclick="Apprboard('apprboardH2')"><spring:message code="ezBoard.t999001" /><span id="applyCount">(${applyCount})</span>
 	                        </h2>
                     	</c:if>
 						<c:if test="${useMealPlan == 'YES'}">

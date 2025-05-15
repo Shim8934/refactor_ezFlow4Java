@@ -988,7 +988,7 @@
                     } else if (myBoardScrapFlag == "TYPE2") {
                         addScrapType2();
                     } else {
-                        alert("오류발생");
+                        alert("<spring:message code='ezBoard.kmh46'/>");
                     }
                 }
 			    
@@ -1081,7 +1081,7 @@
             function btn_ThumbnailDelete() {
             	
             	if (addThumbnail == "Y") {
-            		if (confirm("썸네일을 삭제하시겠습니까?")) {
+            		if (confirm("<spring:message code='ezBoard.thumbnail.kwc009'/>")) {
             			var thumbnail = makeThumbnail("mainVideo");
             			var fd2 = new FormData();
             			var xhr2 = new XMLHttpRequest();
@@ -1137,7 +1137,7 @@
                         }
             		}
             	} else {
-            		alert("등록하신 썸네일이 없습니다.");
+            		alert("<spring:message code='ezBoard.thumbnail.kwc010'/>");
             	}
             }
             

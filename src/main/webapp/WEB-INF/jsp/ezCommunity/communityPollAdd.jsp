@@ -79,7 +79,7 @@
 	                }
 	                document.getElementById('Sdatepicker').value = StartDateTime;
 	                document.getElementById('Edatepicker').value = EndDateTime;	                
-	                document.getElementById('pollSubject').value = "<c:out value='${pSubject}' />";
+// 	                document.getElementById('pollSubject').value = "<c:out value='${pSubject}' />";
 	            }
 	        }
 	        
@@ -454,7 +454,7 @@
 	    	<table class="content" style="margin-top:12px">
 	            <tr>
 	                <th><spring:message code='ezCommunity.t599' /></th>
-	                <td style="padding:3px"><textarea id="pollSubject" name="pollSubject" style="width: 98%; height: 130px; resize:none;" runat="server" onkeyup="ismaxlength(this)" value = "${pSubject}"></textarea></td>
+	                <td style="padding:3px"><textarea id="pollSubject" name="pollSubject" style="width: 98%; height: 130px; resize:none;" runat="server" onkeyup="ismaxlength(this)"><c:out value='${pSubject}' /></textarea></td>
 	            </tr>
 	            <tr>
 	                <th><spring:message code='ezCommunity.t600' /></th>

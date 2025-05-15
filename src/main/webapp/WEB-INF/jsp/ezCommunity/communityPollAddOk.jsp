@@ -72,7 +72,7 @@
 				stringHTML += '<INPUT type="hidden" name="selRes2" value="' + '<c:out value="${selRes2}"/>' + '">';
 				stringHTML += '<INPUT type="hidden" name="startDate" value="' + '<c:out value="${startDate}"/>' + '">';
 				stringHTML += '<INPUT type="hidden" name="endDate" value="' + '<c:out value="${endDate}"/>' + '">';	
-				stringHTML += '<INPUT type="hidden" name="subject" value="' + document.getElementById("pollSubject").value + '" >';
+				stringHTML += '<INPUT type="hidden" name="subject" value="' + MakeXMLString(document.getElementById("pollSubject").value) + '" >';
 				stringHTML += '</form>';			
 					
 				document.body.innerHTML += stringHTML;

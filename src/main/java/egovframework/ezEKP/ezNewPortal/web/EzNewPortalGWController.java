@@ -2199,7 +2199,7 @@ public class EzNewPortalGWController {
 			result.put("userCompany", userInfo.getCompanyID());
 			result.put("lang",lang);
 
-			List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(userId, userInfo.getTenantId(), userInfo.getLang(), deptId, jobId);
+			List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(userId, userInfo.getTenantId(), lang, deptId, jobId);
 			
 			result.put("data", adminCompanyList);
 			result.put("primary", primary);
@@ -3320,11 +3320,26 @@ public class EzNewPortalGWController {
 			boolean portalLogoUrlDefault = true;
 			boolean darkLogoUrlDefault = true;
 			
+			// 2025-03-07 황인경 - 관리자 > 포탈 > 모바일포탈관리 > 로고관리
+			String mobileChk = "N";
+			String mLoginLogoUrl = "";
+			String mPortalLogoUrl = "";
+			boolean mLoginLogoUrlDefault = true;
+			boolean mPortalLogoUrlDefault = true;
+			
+			if (request.getParameter("mobile") != null && !request.getParameter("mobile").equals("") && request.getParameter("mobile").equals("Y")) {
+				mobileChk = "Y";
+			}
 			//로그인 가져오기
 			if (companyId != null) {
-				loginLogoUrl = ezNewPortalService.getPortalLogoInfo(null, tenantId, "L");
-				portalLogoUrl = ezNewPortalService.getPortalLogoInfo(companyId, tenantId, "P");
-				darkLogoUrl = ezNewPortalService.getPortalLogoInfo(companyId, tenantId, "D");
+				if (mobileChk.equals("N")) { // 웹
+					loginLogoUrl = ezNewPortalService.getPortalLogoInfo(null, tenantId, "L");
+					portalLogoUrl = ezNewPortalService.getPortalLogoInfo(companyId, tenantId, "P");
+					darkLogoUrl = ezNewPortalService.getPortalLogoInfo(companyId, tenantId, "D");
+				} else { // 모바일
+					mLoginLogoUrl = ezNewPortalService.getPortalLogoInfo(null, tenantId, "ML");
+					mPortalLogoUrl = ezNewPortalService.getPortalLogoInfo(companyId, tenantId, "MP");
+				}
 			}
 			
 			if (loginLogoUrl == null || loginLogoUrl.equals("")) {
@@ -3351,28 +3366,59 @@ public class EzNewPortalGWController {
 				darkLogoUrlDefault = false;
 			}
 			
+			if (mLoginLogoUrl == null || mLoginLogoUrl.equals("")) {
+				mLoginLogoUrl = "/files/upload_portal/Top/Logo/logo.png";
+				mLoginLogoUrlDefault = true;
+			} else {
+				mLoginLogoUrl = commonUtil.getUploadPath("upload_newPortal.ROOT", tenantId) + commonUtil.separator + "uploadFile" + commonUtil.separator + mLoginLogoUrl;
+				mLoginLogoUrlDefault = false;
+			}
+			
+			if (mPortalLogoUrl == null || mPortalLogoUrl.equals("")) {
+				mPortalLogoUrl = "/files/upload_portal/Top/Logo/logo.png";
+				mPortalLogoUrlDefault = true;
+			} else {
+				mPortalLogoUrl = commonUtil.getUploadPath("upload_newPortal.ROOT", tenantId) + commonUtil.separator + "uploadFile" + commonUtil.separator + mPortalLogoUrl;
+				mPortalLogoUrlDefault = false;
+			}
+			
 			List<PortalLogoVO> logoList = new ArrayList<PortalLogoVO>();
-			
-			PortalLogoVO loginLogo = new PortalLogoVO();
-			loginLogo.setLogoType("L");
-			loginLogo.setLogoUrl(loginLogoUrl);
-			loginLogo.setLogoDefault(loginLogoUrlDefault);
-			
-			logoList.add(loginLogo);
-			
-			PortalLogoVO portalLogo = new PortalLogoVO();
-			portalLogo.setLogoType("P");
-			portalLogo.setLogoUrl(portalLogoUrl);
-			portalLogo.setLogoDefault(portalLogoUrlDefault);
-			
-			logoList.add(portalLogo);
+			if (mobileChk.equals("N")) { // 웹
+				PortalLogoVO loginLogo = new PortalLogoVO();
+				loginLogo.setLogoType("L");
+				loginLogo.setLogoUrl(loginLogoUrl);
+				loginLogo.setLogoDefault(loginLogoUrlDefault);
 
-			PortalLogoVO darkLogo = new PortalLogoVO();
-			darkLogo.setLogoType("D");
-			darkLogo.setLogoUrl(darkLogoUrl);
-			darkLogo.setLogoDefault(darkLogoUrlDefault);
+				logoList.add(loginLogo);
 
-			logoList.add(darkLogo);
+				PortalLogoVO portalLogo = new PortalLogoVO();
+				portalLogo.setLogoType("P");
+				portalLogo.setLogoUrl(portalLogoUrl);
+				portalLogo.setLogoDefault(portalLogoUrlDefault);
+
+				logoList.add(portalLogo);
+
+				PortalLogoVO darkLogo = new PortalLogoVO();
+				darkLogo.setLogoType("D");
+				darkLogo.setLogoUrl(darkLogoUrl);
+				darkLogo.setLogoDefault(darkLogoUrlDefault);
+
+				logoList.add(darkLogo);
+			} else { // 모바일
+				PortalLogoVO mLoginLogo = new PortalLogoVO();
+				mLoginLogo.setLogoType("ML");
+				mLoginLogo.setLogoUrl(mLoginLogoUrl);
+				mLoginLogo.setLogoDefault(mLoginLogoUrlDefault);
+
+				logoList.add(mLoginLogo);
+
+				PortalLogoVO mPortalLogo = new PortalLogoVO();
+				mPortalLogo.setLogoType("MP");
+				mPortalLogo.setLogoUrl(mPortalLogoUrl);
+				mPortalLogo.setLogoDefault(mPortalLogoUrlDefault);
+
+				logoList.add(mPortalLogo);
+			}
 			
 			result.put("status", "ok");
 			result.put("code", 0);

@@ -579,5 +579,6 @@ public interface EzBoardService {
 	public String saveMealPlan(List<MealDataVO> mealInputList) throws Exception;
 
 	public JSONObject getMenuSchedule(Map<String, Object> map, JSONObject returnJson) throws Exception;
-
+	
+	public String getBoardNameLocalizing(String userLang, BoardPropertyVO boardProperty) throws Exception;
 }

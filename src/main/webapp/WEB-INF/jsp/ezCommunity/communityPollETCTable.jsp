@@ -21,7 +21,7 @@
 			<c:forEach items="${responseList }" var = "response" varStatus="status">
 				<tr>
 			        <td width="50" align="center">${status.count }</td>
-			        <td>${response.answerETC }</td>
+			        <td><c:out value="${response.answerETC }"/></td>
 				</tr>
 			</c:forEach>
 			

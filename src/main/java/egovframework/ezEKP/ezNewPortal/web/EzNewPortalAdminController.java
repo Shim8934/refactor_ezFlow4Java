@@ -719,6 +719,16 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
         		adminCheck = true;
         	}
         	
+			// 2025-03-07 황인경 - 관리자 > 포탈 > 모바일포탈관리 > 로고관리
+			String type = "";
+			
+			if (request.getParameter("type") != null && request.getParameter("type").equals("mobile")) {
+				type = "mobile";
+				model.addAttribute("mobileCheck", "Y");
+			} else {
+				model.addAttribute("mobileCheck", "N");
+			};
+			
         	model.addAttribute("adminCheck", adminCheck);
 			logger.debug("portalManageLogo ended.");
 			return "/admin/ezNewPortal/portalLogos";
@@ -1007,6 +1017,13 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		String url = "/rest/admin/ezPortal/logos/companies/" + companyId;
 		paramMap.put("userId", userInfo.getId());
 		
+		// 2025-03-07 황인경 - 관리자 > 포탈 > 모바일포탈관리 > 로고관리
+		if (request.getParameter("mobile") != null && !request.getParameter("mobile").equals("")) {
+			paramMap.put("mobileCheck", request.getParameter("mobile"));
+		} else {
+			paramMap.put("mobileCheck", "N");
+		}
+		
 		JSONArray logoList = new JSONArray();
 		JSONObject result = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, paramMap, request, "get", null);
 		String status = result.get("status").toString();
@@ -1030,9 +1047,9 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 
 		String logoType = request.getParameter("logoType");
 
-		if (userInfo == null ||
-				"L".equalsIgnoreCase(logoType) && !userInfo.getRollInfo().contains("c=1")) {
-			return "rejected";
+		if (userInfo == null || 
+		    (!userInfo.getRollInfo().contains("c=1") && ("L".equalsIgnoreCase(logoType) || "ML".equalsIgnoreCase(logoType)))) {
+		    return "rejected";
 		}
 
 		String companyId = request.getParameter("companyId").toString();

@@ -4787,6 +4787,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		int tenantID = userInfo.getTenantId();
 		
 		CommunityClubVO clubVO = ezCommunityService.adminNoticeMailOkGet1(code, tenantID);
+		String clubName = ezCommunityService.getClubNameLocalization(userInfo.getLang(), clubVO);
 		
 		if (clubVO.getC_SysopID() != null) {
 			List<CommunityClubVO> list = ezCommunityService.adminNoticeMailOkGet2(code, tenantID);
@@ -4831,7 +4832,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 				String linkUrl = "/ezCommunity/checkCommHome.do?communityCD=" + code;
 	        	String linkUrlMobile = "";
 	        	String notiSubType = "NOTICE";
-				String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientList, "COMMUNITY", notiSubType, clubVO.getC_ClubName() + " - 상세 내용은  메일함에서 확인 필요", "popup", "1300", "900", linkUrl, linkUrlMobile, "");
+				String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientList, "COMMUNITY", notiSubType, clubName + " - " + egovMessageSource.getMessage("ezCommunity.noti01", userInfo.getLocale()), "popup", "1300", "900", linkUrl, linkUrlMobile, "");
 				logger.debug("community " +  notiSubType + " noti status : " + notiStatus);
 			}
 			
@@ -5132,6 +5133,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String content = "";
 		String subject = "";
 		String strURL = "";
+		CommunityClubVO clubVO = ezCommunityService.aspCommInfoGet1(boardProperty.getC_ClubNo(), userInfo.getTenantId());
+		String boardName = ezCommunityService.getClubBoardNameLocalization(userInfo.getLang(), boardProperty);
 		
 		// 포토게시물과 일반(그룹, 익명) 게시물 링크 분기처리
 		if (boardProperty.getGubun().equals("3")) {
@@ -5150,7 +5153,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t120", userInfo.getLocale()) + strURL + commonUtil.cleanValue(itemVO.getTitle()) + "</a>");
 	        
 	        content = commonUtil.createNotiMailContent(bodyContent.toString(), userInfo.getTenantId(), userInfo.getLocale());
-	        subject = "[Community " + egovMessageSource.getMessage("ezBoard.HSBMail01", userInfo.getLocale()) + "-" + boardProperty.getBoardName() + "] " + itemVO.getTitle();
+	        subject = "[Community " + egovMessageSource.getMessage("ezBoard.HSBMail01", userInfo.getLocale()) + "-" + boardName + "] " + itemVO.getTitle();
 		}
 		else if (pMode.equals("modify")) { // 게시판 수정알림 (아래 게시판의 게시물이 수정되었습니다.)
 			bodyContent.append("<br>" + egovMessageSource.getMessage("ezBoard.HSBMail05", userInfo.getLocale()) + "<br><br>");
@@ -5161,7 +5164,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t120", userInfo.getLocale()) + strURL + commonUtil.cleanValue(itemVO.getTitle()) + "</a>");
 	        
 	        content = commonUtil.createNotiMailContent(bodyContent.toString(), userInfo.getTenantId(), userInfo.getLocale());
-	        subject = "[Community " + egovMessageSource.getMessage("ezBoard.HSBMail02", userInfo.getLocale()) + "-" + boardProperty.getBoardName() + "] " + itemVO.getTitle();
+	        subject = "[Community " + egovMessageSource.getMessage("ezBoard.HSBMail02", userInfo.getLocale()) + "-" + boardName + "] " + itemVO.getTitle();
 		}
 		else if (pMode.equals("comment")) { // 게시판 댓글알림 (아래 게시판의 게시물에 댓글이 등록되었습니다.)
 			bodyContent.append("<br>" + egovMessageSource.getMessage("ezBoard.HSBMail06", userInfo.getLocale()) + "<br><br>");
@@ -5172,7 +5175,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t120", userInfo.getLocale()) + strURL + commonUtil.cleanValue(itemVO.getTitle()) + "</a>");
 	        
 	        content = commonUtil.createNotiMailContent(bodyContent.toString(), userInfo.getTenantId(), userInfo.getLocale());
-	        subject = "[Community " + egovMessageSource.getMessage("ezBoard.HSBMail03", userInfo.getLocale()) + "-" + boardProperty.getBoardName() + "] " + itemVO.getTitle();
+	        subject = "[Community " + egovMessageSource.getMessage("ezBoard.HSBMail03", userInfo.getLocale()) + "-" + boardName + "] " + itemVO.getTitle();
 		}
 		else {
 			return;
@@ -5211,7 +5214,7 @@ public class EzCommunityController extends EgovFileMngUtil{
     	String notiSubType = pMode.toUpperCase();
 		
     	if (notiRecipientList != null && notiRecipientList.size() > 0) {
-			String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientList, "community", notiSubType, boardProperty.getBoardName() + " - " + itemVO.getTitle(), "popup", "750", "721", linkUrl, linkUrlMobile, "");
+			String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientList, "community", notiSubType, boardName + " - " + itemVO.getTitle(), "popup", "750", "721", linkUrl, linkUrlMobile, "");
 			logger.debug("community " +  notiSubType + " noti status : " + notiStatus);
     	}
     	

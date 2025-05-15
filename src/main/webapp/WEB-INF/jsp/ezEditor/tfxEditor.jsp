@@ -265,11 +265,27 @@
 	        if (useHTMLMode == "NO") {
 	        	xfe.showTab(1, false);
 	        }
-	        
-	        window.onload = function() {
-	        	editorLoadFlag = true;
-	        	parent.Editor_Complete();
-	        };
+
+			window.onload = function() {
+				editorLoadFlag = true;
+				if (parent && (parent.onloadflag || typeof parent.onloadflag === "undefined")) {
+					if (typeof parent.Editor_Complete === "function") {
+						parent.Editor_Complete();
+					} 
+				} else {
+					setTimeout(OnInitCompleted, 10);
+				}
+			};
+
+			function OnInitCompleted() {
+				if (parent && (parent.onloadflag || typeof parent.onloadflag === "undefined")) {
+					if (typeof parent.Editor_Complete === "function") {
+						parent.Editor_Complete();
+					} 
+				} else {
+					setTimeout(OnInitCompleted, 10);
+				}
+			}
 	    </script>
 	</body>
 </html>

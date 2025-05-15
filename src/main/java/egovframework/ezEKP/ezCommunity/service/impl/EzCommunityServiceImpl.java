@@ -44,6 +44,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7814,6 +7815,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map2.put("tenantID", tenantID);
 		
 		LoginVO vo = ezCommunityDAO.joinOkSendMailGet2(map2);
+		String clubName = getClubNameLocalization(userInfo.getLang(), clubVO);
 		
 		if (vo.getEmail() != null) {
 			String subject = "";
@@ -7821,12 +7823,12 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			String notiSubType = "";
 			// 2023-08-18 황인경 - 커뮤니티 > 사용자 가입시 관리자가 받는 메일 제목, 본문 수정
 			if (clubVO.getC_ClubConfirmType().equals("3")) {
-				subject = "[" + clubVO.getC_ClubName() + "]" + userInfo.getDisplayName() + " " + egovMessageSource.getMessage("ezCommunity.t1531", userInfo.getLocale());
+				subject = "[" + clubName + "]" + userInfo.getDisplayName() + " " + egovMessageSource.getMessage("ezCommunity.t1531", userInfo.getLocale());
 				bodyContent += "[" + clubVO.getC_ClubName() + "]" + userInfo.getDisplayName() + "[" + userInfo.getDeptName() + "] " + egovMessageSource.getMessage("ezCommunity.t1531", userInfo.getLocale());
 				bodyContent += "<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t1533", userInfo.getLocale());
 				notiSubType = "APPLY";
 			} else {
-				subject = "[" + clubVO.getC_ClubName() + "]" + userInfo.getDisplayName() + " " + egovMessageSource.getMessage("ezCommunity.t1532", userInfo.getLocale());
+				subject = "[" + clubName + "]" + userInfo.getDisplayName() + " " + egovMessageSource.getMessage("ezCommunity.t1532", userInfo.getLocale());
 				bodyContent += "[" + clubVO.getC_ClubName() + "]" + userInfo.getDisplayName() + "[" + userInfo.getDeptName() + "] " + egovMessageSource.getMessage("ezCommunity.t1532", userInfo.getLocale());
 				notiSubType = "JOIN";
 			}
@@ -7882,10 +7884,11 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         map.put("companyID", userInfo.getCompanyID());
         
         CommunityClubVO vo = ezCommunityDAO.commOutOkGet2(map);
+		String clubName = getClubNameLocalization(userInfo.getLang(), vo);
         
         /* 2018-11-27 홍승비 - 커뮤니티 탈퇴 신청 알림 메일 폰트 수정 */
         if (vo.getEmail() != null) {
-        	String subject = "[" + vo.getC_ClubName() + "]Community" + egovMessageSource.getMessage("ezCommunity.t720", userInfo.getLocale()) + userInfo.getDisplayName() + " " + egovMessageSource.getMessage("ezCommunity.t722", userInfo.getLocale());
+        	String subject = "[" + clubName + "]Community" + egovMessageSource.getMessage("ezCommunity.t720", userInfo.getLocale()) + userInfo.getDisplayName() + " " + egovMessageSource.getMessage("ezCommunity.t722", userInfo.getLocale());
         	String bodyContent = "[" + vo.getC_ClubName() + "]" + egovMessageSource.getMessage("ezCommunity.t720", userInfo.getLocale()) + userInfo.getDisplayName() + " " + egovMessageSource.getMessage("ezCommunity.t587", userInfo.getLocale()) + "< " + reason + " > " + egovMessageSource.getMessage("ezCommunity.t721", userInfo.getLocale());
         	
         	String content = commonUtil.createNotiMailContent(bodyContent, userInfo.getTenantId(), userInfo.getLocale());
@@ -7928,6 +7931,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         map.put("tenantID", userInfo.getTenantId());
         
         CommunityClubVO cvo = ezCommunityDAO.getCClubName(map);
+		String clubName = getClubNameLocalization(userInfo.getLang(), cvo);
         OrganUserVO uvo = ezOrganAdminService.getUserInfo(cID, userInfo.getPrimary(), userInfo.getTenantId());
         //logger.debug("C_ClubName=" + cvo.getC_ClubName() + ", email=" + uvo.getMail());
         
@@ -7943,7 +7947,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
             }
             
             if (!ezPersonalService.hasNotiDiableItem(cID, NotiType.fromString("COMMUNITY_" + notiSubType), NotiPlatform.MAIL, userInfo.getTenantId())) {
-	        	String subject = "[" + cvo.getC_ClubName() + "] " + subName;
+	        	String subject = "[" + clubName + "] " + subName;
 	
 	        	String bodyContent = "[" + cvo.getC_ClubName() + "] " + bodyName;
 	        	
@@ -8133,6 +8137,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			StringBuilder bodyContent = new StringBuilder();
 			Locale locale = userInfo.getLocale();
 			String strURL = "";
+			String boardName = getClubBoardNameLocalization(userInfo.getLang(), boardInfo);
 			
 			// 포토게시물과 일반(그룹, 익명) 게시물 링크 분기처리
 			if (boardInfo.getGubun().equals("3")) {
@@ -8141,7 +8146,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				strURL = "<a id='community_a' style='color:blue;text-decoration:underline;cursor:pointer;' onclick=\"" + "item_View_New_Community('" + boardID + "', '" + itemID + "', '" + communityID + "'); return false;" + "\" href=\"_blank\" target=\"_blank\">";
 			}
 			
-			String subject = "[Community " + egovMessageSource.getMessage("ezCommunity.t127", locale) + boardInfo.getBoardName() + "] " + itemVO.getTitle();
+			String subject = "[Community " + egovMessageSource.getMessage("ezCommunity.t127", locale) + boardName + "] " + itemVO.getTitle();
 			bodyContent.append("<br>" + egovMessageSource.getMessage("ezCommunity.t126", locale) + "<br><br>");
 			bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("main.t1006", userInfo.getLocale()) + " : " + commonUtil.cleanValue(boardInfo.getC_ClubName()));
 			bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t117", locale) + commonUtil.cleanValue(boardInfo.getBoardName()));
@@ -8206,7 +8211,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         	recipientMap.put("cn", uvo.getCn());
         	notiRecipientList.add(recipientMap);
         	
-			String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientList , "COMMUNITY", notiSubType, boardInfo.getBoardName() + " - " + itemVO.getTitle(), "popup", "750", "721", linkUrl, linkUrlMobile, "");
+			String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientList , "COMMUNITY", notiSubType, boardName + " - " + itemVO.getTitle(), "popup", "750", "721", linkUrl, linkUrlMobile, "");
 			logger.debug("community " +  notiSubType + " noti status : " + notiStatus);
 			
 		}
@@ -8653,5 +8658,24 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		logger.debug("getReadFlag ended.");
 		return ezCommunityDAO.getReadFlag(map);
+	}
+
+	@Override
+	public String getClubNameLocalization(String userLang, CommunityClubVO clubVO) throws Exception {
+		String clubName = clubVO.getC_ClubName();
+		if (Strings.isNotBlank(userLang) && !"1".equals(userLang) && Strings.isNotBlank(clubVO.getC_ClubName2())) {
+			clubName = clubVO.getC_ClubName2();
+		}
+		return clubName;
+	}
+
+	@Override
+	public String getClubBoardNameLocalization(String userLang, CommunityBoardPropertyVO clubBoardVO) throws Exception {
+		String boardName = clubBoardVO.getBoardName();
+		
+		if (Strings.isNotBlank(userLang) && !"1".equals(userLang) && Strings.isNotBlank(clubBoardVO.getBoardName2())) {
+			boardName = clubBoardVO.getBoardName2();
+		}
+		return boardName;
 	}
 }

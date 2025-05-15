@@ -379,8 +379,8 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			String mailAddr = cn + "@" + domain;
 			
 			int rc = ezEmailUserAdminService.updateGroupMove(oldGroupAddr, newGroupAddr, mailAddr);
-			
-			if (rc == 0) { // 성공
+
+			if (rc != -100 && rc != -3) { // -1(기존 부모그룹을 못찾음) or -2(멤버에서 자식 주소를 찾지 못함)는 성공으로 봄(어차피 삭제하려는 것이므로)
 				try {
 					moveDBData(parentCn, cn, type, offset, tenantID);
 		            result = "OK";
@@ -887,6 +887,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		date.setTimeZone(TimeZone.getTimeZone("GMT"));
 		String nowDate = date.format(new Date());
 		map.put("nowDate", nowDate);
+		Locale locale = commonUtil.getPrimaryLocale(tenantID);
 		
 		ezOrganAdminDao.insertDBData_company(map);
 		
@@ -915,6 +916,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				map1.put("topMenuLogoEnUUID", UUID.randomUUID().toString());
 				map1.put("PrimaryLang", ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId()));
 				map1.put("menuType", "0");
+				map1.put("typeName", egovMessageSource.getMessage("ezSystem.config.type", locale));
+				map1.put("typeDetail", egovMessageSource.getMessage("ezSystem.config.type.detail", locale));
+				map1.put("configDetail", egovMessageSource.getMessage("ezSystem.config.detail", locale)); 
 				for (int i = 0; i < 112; i++) {
 					map1.put("menuItemUUID"+String.valueOf(i), UUID.randomUUID().toString());
 				}

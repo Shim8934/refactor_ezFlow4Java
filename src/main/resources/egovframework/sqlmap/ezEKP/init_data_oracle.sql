@@ -307,7 +307,7 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_V
 -- 전자설문 종료 후 게시기간 설정 컨피그 추가
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'SurveyPostingMaxPeriod', '전자설문 종료 후 게시기간 설정', '999', '전자설문 설문 종료 후 게시기간 최대일자를 설정한다. (default:999)', TO_DATE('2024-03-26 00:00:00', 'yyyy-mm-dd hh24:mi:ss'), '전자설문');
 -- 만료게시물 조회 가능 여부
-INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'endDateOptionConfig', 'NOPE', '게시판 게시물 리스트 조회 시 만료게시물 조회가능 여부 / NOPE:불가, ADMIN:관리자만 조회가능, ALWAYS:전부 조회 가능 (default:NOPE)', '만료게시물 조회가능 여부', TO_DATE('2024-05-24 00:00:00', 'yyyy-mm-dd hh24:mi:ss'), '게시판');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'endDateOptionConfig', '만료게시물 조회가능 여부', 'NOPE', '게시판 게시물 리스트 조회 시 만료게시물 조회가능 여부 / NOPE:불가, ADMIN:관리자만 조회가능, ALWAYS:전부 조회 가능 (default:NOPE)', TO_DATE('2024-05-24 00:00:00', 'yyyy-mm-dd hh24:mi:ss'), '게시판');
 
 
 -- 누락된 컨피그 추가 (문서24 관련)

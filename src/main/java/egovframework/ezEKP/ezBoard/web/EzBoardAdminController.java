@@ -288,13 +288,22 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 
 		BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(parentBoardID, userInfo.getTenantId());
 		
-		if (lang.equals("2") && !boardPropertyVO.getBoardName2().equals("")) {
-			parentBoardName = boardPropertyVO.getBoardName2();
-		} else if(lang.equals("3")) { // 2024-08-22 유길상 - 관리자 > 게시판 > 게시판등록 > 일본어 추가
-			parentBoardName = boardPropertyVO.getBoardName3();
-		} else {
-			parentBoardName = boardPropertyVO.getBoardName();
-		}	
+		switch (lang) {
+			case "1":
+				parentBoardName = boardPropertyVO.getBoardName();
+				break;
+			case "2":
+				parentBoardName = boardPropertyVO.getBoardName2();
+				break;
+			case "3":
+				parentBoardName = boardPropertyVO.getBoardName3();
+				break;
+			case "4":
+				parentBoardName = boardPropertyVO.getBoardName4();
+				break;
+			default:
+				parentBoardName = boardPropertyVO.getBoardName();
+		}
 		
 		model.addAttribute("parentBoardID", parentBoardID);
 		model.addAttribute("boardGroupID", boardGroupID);
@@ -368,12 +377,22 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		
 		BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(boardID, userInfo.getTenantId());
 
-		/* 2023-08-07 이주원 - 게시판명에 다국어 기본언어, 멀티언어 적용 */
 		String multiBoardName = "";
-		if (commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()).equals("1")) {
-			multiBoardName = boardPropertyVO.getBoardName();
-		} else {
-			multiBoardName = boardPropertyVO.getBoardName2();
+		switch (userInfo.getLang()) {
+			case "1":
+				multiBoardName = boardPropertyVO.getBoardName();
+				break;
+			case "2":
+				multiBoardName = boardPropertyVO.getBoardName2();
+				break;
+			case "3":
+				multiBoardName = boardPropertyVO.getBoardName3();
+				break;
+			case "4":
+				multiBoardName = boardPropertyVO.getBoardName4();
+				break;
+			default:
+				multiBoardName = boardPropertyVO.getBoardName();
 		}
 
 		model.addAttribute("upperBoardID", parentBoardID);
@@ -458,16 +477,28 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 			logger.debug("boardDelete ended");
 			return "admin/ezBoard/boardRight";
 		} else {
-			
-			// 2023-08-22 황인경 - 관리자 > 게시판 > 삭제 > 게시판그룹, 게시판명 다국어 처리
-			if (!user.getLang().equals("1")) {
-				boardPropertyVO.setBoardName(boardPropertyVO.getBoardName2());
-				boardPropertyVO.setBoardGroupName(boardPropertyVO.getBoardGroupName2());
+
+			String boardName = "";
+			switch (user.getLang()) {
+				case "1":
+					boardName = boardPropertyVO.getBoardName();
+					break;
+				case "2":
+					boardName = boardPropertyVO.getBoardName2();
+					break;
+				case "3":
+					boardName = boardPropertyVO.getBoardName3();
+					break;
+				case "4":
+					boardName = boardPropertyVO.getBoardName4();
+					break;
+				default:
+					boardName = boardPropertyVO.getBoardName();
 			}
 			
 			model.addAttribute("boardID", boardID);
 			model.addAttribute("boardGroupID", boardGroupID);
-			model.addAttribute("boardName", boardPropertyVO.getBoardName());
+			model.addAttribute("boardName", boardName);
 			
 			logger.debug("boardDelete ended");
 			return "admin/ezBoard/boardDelete";
@@ -776,10 +807,28 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		if (!userInfo.getLang().equals("1")) {
 			boardPropertyVO.setBoardName(boardPropertyVO.getBoardName2());
 		}
+
+		String boardName = "";
+		switch (userInfo.getLang()) {
+			case "1":
+				boardName = boardPropertyVO.getBoardName();
+				break;
+			case "2":
+				boardName = boardPropertyVO.getBoardName2();
+				break;
+			case "3":
+				boardName = boardPropertyVO.getBoardName3();
+				break;
+			case "4":
+				boardName = boardPropertyVO.getBoardName4();
+				break;
+			default:
+				boardName = boardPropertyVO.getBoardName();
+		}
 		
 		model.addAttribute("boardID", boardID);
 		model.addAttribute("boardGroupID", boardGroupID);
-		model.addAttribute("boardName", boardPropertyVO.getBoardName());
+		model.addAttribute("boardName", boardName);
 		model.addAttribute("hasSubBoard", hasSubBoard);
 
 		logger.debug("boardMove ended");

@@ -155,6 +155,7 @@
 	    	$frm.append(param1).append(param2).append(param3);
 	    	$frm.submit();
 		} else { // 체크된 파일 없음
+			alert("<spring:message code='ezApprovalG.t519'/>");
 			return;
 		}
    	}

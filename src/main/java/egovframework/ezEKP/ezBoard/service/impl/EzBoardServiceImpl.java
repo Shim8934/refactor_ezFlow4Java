@@ -53,6 +53,13 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.logging.log4j.util.Strings;
+import org.jasypt.commons.CommonUtils;
+import org.jsoup.select.Elements;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -4145,7 +4152,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				sb.append("</KEYWORDS>");
 			}
 
-			sb.append("<REALFILENAMES>" + realFileNames + "</REALFILENAMES>");
+			sb.append("<REALFILENAMES>" + commonUtil.cleanValue(realFileNames) + "</REALFILENAMES>");
 	        sb.append("</NODE>");
 	        sb.append("</NODES>");
 
@@ -4188,7 +4195,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			// 확장자 추출 
 			int lastDotIndex = orgFilePath.lastIndexOf('.');
 			String fileExt = orgFilePath.substring(lastDotIndex);
-			String fileName = fileName = UUID.randomUUID() + fileExt;;
+			String fileName = UUID.randomUUID() + fileExt;
 			
 			destFilePath = path + commonUtil.separator + destBoardID + commonUtil.separator + "uploadFile" + commonUtil.separator + fileName;
 			
@@ -4623,7 +4630,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				sb.append("</KEYWORDS>");
 			}
 
-			sb.append("<REALFILENAMES>" + realFileNames + "</REALFILENAMES>");
+			sb.append("<REALFILENAMES>" + commonUtil.cleanValue(realFileNames) + "</REALFILENAMES>");
 	        sb.append("</NODE>");
 	        sb.append("</NODES>");
 
@@ -7328,5 +7335,20 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		result.put("averageScore", updateAverageScore);
 		
 		return result;
+	}
+
+	@Override
+	public String getBoardNameLocalizing(String userLang, BoardPropertyVO boardProperty) throws Exception {
+		String boardName = boardProperty.getBoardName();
+		
+		if ("2".equals(userLang) && boardProperty.getBoardName2() != null && !boardProperty.getBoardName2().isEmpty()) {
+			boardName = boardProperty.getBoardName2();
+		} else if ("3".equals(userLang) && boardProperty.getBoardName3() != null && !boardProperty.getBoardName3().isEmpty()) {
+			boardName = boardProperty.getBoardName3();
+		} else if ("4".equals(userLang) && boardProperty.getBoardName4() != null && !boardProperty.getBoardName4().isEmpty()) {
+			boardName = boardProperty.getBoardName4();
+		}
+		
+		return boardName;
 	}
 }
