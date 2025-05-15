@@ -16,9 +16,9 @@
 				<SaveFile visible="true" title="保存"/>
 				<AutoSave visible="true" title="自動保存呼ぶこと"/>
 				<split/>
-				<TemplateTree visible="true" title="テンプレートツリー"/>
-				<Signature visible="true" title="署名テンプレート"/>
-				<split/>
+				<TemplateTree visible="false" title="テンプレートツリー"/>
+				<Signature visible="false" title="署名テンプレート"/>
+				<!-- <split/> -->
 				<Print visible="true" title="印刷"/>				
 				<PageProperty visible="true" title="ページプロパティ"/>
 			</File>
@@ -259,8 +259,8 @@
 				<NewFile visible="true" title="新しい文書"/>
 				<OpenFile visible="true" title="ファイルを開く。"/>
 				<split/>
-				<TemplateTree visible="true" title="テンプレートツリー"/>
-				<Signature visible="true" title="署名テンプレート"/>
+				<TemplateTree visible="false" title="テンプレートツリー"/>
+				<Signature visible="false" title="署名テンプレート"/>
 				<Layout visible="true" title="レイアウト"/>
 				<split/>
 				<SaveFile visible="true" title="保存"/>
@@ -395,8 +395,8 @@
 		
 		<menu1>
 			<newfile visible="true">新しいドキュメント</newfile>
-			<TemplateTree visible="true">テンプレートツリー</TemplateTree>
-			<Signature visible="true">署名テンプレート/</Signature>
+			<TemplateTree visible="false">テンプレートツリー</TemplateTree>
+			<Signature visible="false">署名テンプレート/</Signature>
 			<openfile visible="true">ファイルを開く</openfile>
 			<savefile visible="true">ファイルの保存</savefile>
 			<autoSave visible="true">自動保存ファイルを開く</autoSave>

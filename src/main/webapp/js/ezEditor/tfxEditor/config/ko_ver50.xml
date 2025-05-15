@@ -16,9 +16,9 @@
 				<SaveFile visible="true" title="저장"/>
 				<AutoSave visible="true" title="자동 저장 불러오기"/>
 				<split/>
-				<TemplateTree visible="true" title="템플릿 트리"/>
-				<Signature visible="true" title="서명 템플릿"/>
-				<split/>
+				<TemplateTree visible="false" title="템플릿 트리"/>
+				<Signature visible="false" title="서명 템플릿"/>
+				<!-- <split/> -->
 				<Print visible="true" title="인쇄"/>				
 				<PageProperty visible="true" title="환경 설정"/>
 			</File>
@@ -225,8 +225,8 @@
 				<NewFile visible="true" title="새 문서"/>
 				<OpenFile visible="true" title="파일 열기"/>
 				<split/>
-				<TemplateTree visible="true" title="템플릿 트리"/>
-				<Signature visible="true" title="서명 템플릿"/>
+				<TemplateTree visible="false" title="템플릿 트리"/>
+				<Signature visible="false" title="서명 템플릿"/>
 				<Layout visible="true" title="레이아웃"/>
 				<split/>
 				<SaveFile visible="true" title="저장"/>
@@ -362,8 +362,8 @@
 		
 		<menu1>
 			<Newfile visible="true">새 문서</Newfile>
-			<TemplateTree visible="true">템플릿 트리</TemplateTree>
-			<Signature visible="true">서명 템플릿</Signature>
+			<TemplateTree visible="false">템플릿 트리</TemplateTree>
+			<Signature visible="false">서명 템플릿</Signature>
 			<Openfile visible="true">파일 열기</Openfile>
 			<Savefile visible="true">파일 저장</Savefile>
 			<AutoSave visible="true">자동 저장 파일 열기</AutoSave>

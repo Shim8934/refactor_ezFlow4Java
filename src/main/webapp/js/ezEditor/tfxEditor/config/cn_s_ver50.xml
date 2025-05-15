@@ -16,9 +16,9 @@
 				<SaveFile visible="true" title="贮藏"/>
 				<AutoSave visible="true" title="自动储存"/>
 				<split/>
-				<TemplateTree visible="true" title="模板树"/>
-				<Signature visible="true" title="签名模板"/>
-				<split/>
+				<TemplateTree visible="false" title="模板树"/>
+				<Signature visible="false" title="签名模板"/>
+				<!-- <split/> -->
 				<Print visible="true" title="印刷"/>
 				<PageProperty visible="true" title="页面属性"/>
 			</File>
@@ -255,8 +255,8 @@
 				<NewFile visible="true" title="新条目"/>
 				<OpenFile visible="true" title="文件热"/>
 				<split/>
-				<TemplateTree visible="true" title="模板树"/>
-				<Signature visible="true" title="签名模板"/>
+				<TemplateTree visible="false" title="模板树"/>
+				<Signature visible="false" title="签名模板"/>
 				<Layout visible="true" title="版面布局"/>
 				<split/>
 				<SaveFile visible="true" title="贮藏"/>
@@ -392,8 +392,8 @@
 		
 		<menu1>
 			<newfile visible="true">新文件</newfile>
-			<TemplateTree visible="true">模板树</TemplateTree>
-			<Signature visible="true">签名模板</Signature>
+			<TemplateTree visible="false">模板树</TemplateTree>
+			<Signature visible="false">签名模板</Signature>
 			<openfile visible="true">打开文件</openfile>
 			<savefile visible="true">保存文件</savefile>
 			<autoSave visible="true">打开自动保存文件</autoSave>

@@ -16,9 +16,9 @@
 				<SaveFile visible="true" title="Save"/>
 				<AutoSave visible="true" title="Load autosave"/>
 				<split/>
-				<TemplateTree visible="true" title="Template tree"/>
-				<Signature visible="true" title="Signature"/>
-				<split/>
+				<TemplateTree visible="false" title="Template tree"/>
+				<Signature visible="false" title="Signature"/>
+				<!-- <split/> -->
 				<Print visible="true" title="Print"/>
 				<PageProperty visible="true" title="Page property"/>
 			</File>
@@ -254,8 +254,8 @@
 				<NewFile visible="true" title="New"/>
 				<OpenFile visible="true" title="Open file"/>
 				<split/>
-				<TemplateTree visible="true" title="Template tree"/>
-				<Signature visible="true" title="Signature"/>
+				<TemplateTree visible="false" title="Template tree"/>
+				<Signature visible="false" title="Signature"/>
 				<Layout visible="true" title="Layout"/>
 				<split/>
 				<SaveFile visible="true" title="Save"/>
@@ -392,8 +392,8 @@
 		
 		<menu1>
 			<newfile visible="true">New File</newfile>
-			<TemplateTree visible="true">Template Tree</TemplateTree>
-			<Signature visible="true">Signature</Signature>
+			<TemplateTree visible="false">Template Tree</TemplateTree>
+			<Signature visible="false">Signature</Signature>
 			<openfile visible="true">Open File</openfile>
 			<savefile visible="true">Save File</savefile>
 			<autoSave visible="true">Load autosave</autoSave>
