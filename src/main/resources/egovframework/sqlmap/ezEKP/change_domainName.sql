@@ -2,6 +2,8 @@
 /* jmocha_mail_tag, jmocha_mail_tag_config의 james_user에 대한 FK를 제거후 변경하고 다시 FK 재설정 함 */
 ALTER TABLE jmocha_mail_tag DROP CONSTRAINT jmocha_mail_tag_fk;
 ALTER TABLE jmocha_mail_tag_config DROP CONSTRAINT jmocha_mail_tag_config_fk;
+ALTER TABLE jmocha_distribution DROP CONSTRAINT fk_jmocha_distribution;
+ALTER TABLE jmocha_mail_outofoffice_sent DROP CONSTRAINT fk_jmocha_outofoffice_sent;
 UPDATE james_domain SET DOMAIN_NAME = REPLACE(DOMAIN_NAME, 'old.kaoni.com', 'new.kaoni.com');
 UPDATE james_mailbox SET USER_NAME = REPLACE(USER_NAME, 'old.kaoni.com', 'new.kaoni.com');
 UPDATE james_recipient_rewrite SET DOMAIN_NAME = REPLACE(DOMAIN_NAME, 'old.kaoni.com', 'new.kaoni.com');
@@ -56,5 +58,8 @@ UPDATE tbl_usermaster_retire SET MAIL = REPLACE(MAIL, 'old.kaoni.com', 'new.kaon
 UPDATE tbl_usermaster_retire SET UPNNAME = REPLACE(UPNNAME, 'old.kaoni.com', 'new.kaoni.com');
 UPDATE tbl_usermaster_delete SET MAIL = REPLACE(MAIL, 'old.kaoni.com', 'new.kaoni.com');
 UPDATE tbl_usermaster_delete SET UPNNAME = REPLACE(UPNNAME, 'old.kaoni.com', 'new.kaoni.com');
-ALTER TABLE jmocha_mail_tag ADD CONSTRAINT jmocha_mail_tag_fk FOREIGN KEY (user_name) REFERENCES james_user(USER_NAME) ON DELETE CASCADE;
-ALTER TABLE jmocha_mail_tag_config ADD CONSTRAINT jmocha_mail_tag_config_fk FOREIGN KEY (user_name) REFERENCES james_user(USER_NAME) ON DELETE CASCADE;
+ALTER TABLE jmocha_mail_tag ADD CONSTRAINT jmocha_mail_tag_fk FOREIGN KEY (user_name) REFERENCES james_user(user_name) ON DELETE CASCADE;
+ALTER TABLE jmocha_mail_tag_config ADD CONSTRAINT jmocha_mail_tag_config_fk FOREIGN KEY (user_name) REFERENCES james_user(user_name) ON DELETE CASCADE;
+ALTER TABLE jmocha_distribution_sub ADD CONSTRAINT fk_distribution_sub FOREIGN KEY (domain_name, user_name) REFERENCES jmocha_distribution(domain_name, user_name) ON DELETE CASCADE ENABLE;
+ALTER TABLE jmocha_mail_outofoffice_sent ADD CONSTRAINT fk_jmocha_outofoffice_sent FOREIGN KEY (user_id) REFERENCES jmocha_mail_outofoffice(user_id) ON DELETE CASCADE ENABLE;
+-- tbl_tenant_config에서 PROPERTY_NAME like '%omain%', PROPERTY_VALUE  like '%old%' 확인
