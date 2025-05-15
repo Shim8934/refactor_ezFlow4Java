@@ -339,44 +339,24 @@
 	            var strContent = "<html><head>";
 	            strContent = strContent + "<title>" + strLangLHM02 + "</title>";
 	            strContent = strContent + "<link rel=\"stylesheet\" href=\"/css/" + strLangLHM01 + ".css\" type=\"text/css\" />";
-	            strContent = strContent + "<style> .content2 tr{height:30px;} .content2 td{padding-left:10px;} </style>";
-	            strContent = strContent + "</head><body style='padding:10px;'onload='window.print();' >";
+				strContent += "<style>";
+				strContent += ".content2 tr { height: 30px; } .content2 td { padding-left: 10px; }";
+				strContent += "#printDocument p { margin-top: 0px; margin-bottom: 0px; margin-left: 0px; }";
+				strContent += "#printDocument div { margin-top: 0px; margin-bottom: 0px; margin-left: 0px; }";
+				strContent += "#printDocument td { margin-top: 0px; margin-bottom: 0px; margin-left: 0px; }";
+				strContent += "#printDocument ul { margin-top: 0px; margin-bottom: 0px; margin-left: 0px; }";
+				strContent += "#printDocument ol { margin-top: 0px; margin-bottom: 0px; margin-left: 0px; }";
+				strContent += "#printDocument li { margin-top: 0px; margin-bottom: 0px; margin-left: 0px; }";
+				strContent += "#printDocument { margin :8px; font-size: 10pt; line-height: 1.3; font-family: 'Malgun Gothic', 'Meiryo UI'; }";
+				strContent += "#printDocument table td { text-indent: 0px; }";
+				strContent += "#printDocument blockquote { margin-top: 0px; margin-bottom: 0px; }";
+				strContent += "</style>";
+				strContent = strContent + "</head><body style='padding:10px;'onload='window.print();' >";
 	            strContent = strContent + "<div style='width:100%'><table id='printScreen' class='layout'>";
 	            strContent = strContent + document.getElementById("printScreen").innerHTML;
 	            strContent = strContent + "</table></div>";
 	            strContent = strContent + "</body>";
 	            printWindow.document.write(strContent);
-
-	            var iframeStyle = "<style>";
-	            iframeStyle += "P { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
-	            iframeStyle += "DIV { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
-	            iframeStyle += "TD { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
-	            iframeStyle += "UL { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
-	            iframeStyle += "OL { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
-	            iframeStyle += "LI { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
-	            iframeStyle += "BODY { MARGIN-RIGHT: 8px; FONT-SIZE:10PT;LINE-HEIGHT:1.3; FONT-FAMILY:Malgun Gothic, Meiryo UI }";
-	            iframeStyle += "TABLE TD { text-indent: 0px }";
-	            iframeStyle += "BLOCKQUOTE { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px;}";
-	            iframeStyle += "</style>";
-	            
-	            var iframe = printWindow.document.getElementById("printDocument");
-
-	            iframe.style.border = "0px";
-	            iframe.style.minHeight = "467px";
-	            iframe.style.height = iframeH;
-	            
-	            var doc = iframe.document;
-
-	            if (iframe.contentDocument)
-	              doc = iframe.contentDocument; // For NS6
-	            else if(iframe.contentWindow)
-	              doc = iframe.contentWindow.document; // For IE5.5 and IE6
-	             
-	            // Put the content in the iframe
-	            doc.open();
-	            doc.writeln(iframeStyle+sigBody.innerHTML);
-	            doc.close();
-            
 	            printWindow.document.close();
 	            printWindow.focus();
 	        }
@@ -387,6 +367,10 @@
 	            document.getElementById("printDate").textContent = document.getElementById("AllDayDisplay").textContent;
 	            document.getElementById("printItem").textContent = document.getElementById("itemList").textContent;
 	            document.getElementById("printTitle").textContent = document.getElementById("titleDIV").textContent;
+
+				var iframe = document.getElementById("message");
+				var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+				document.getElementById("printDocument").innerHTML = iframeDocument.body.innerHTML;
 	        }
 	        
 	        function SetReturnFlag(pFlag) {
@@ -690,7 +674,7 @@
 						</tr> 
 						<tr style="height:10px;"></tr>
 						<tr> 
-		 					<td colspan="2" style="padding:0px;"> <iframe id="printDocument" style="WIDTH: 100%; height:100%; PADDING:0px; text-align:left;"></iframe></td> 
+							<td colspan="2" style="padding:0px;"><div id="printDocument" style="min-height:467px;"> </div></td> 
 						</tr> 
 					</table>
 				</td>
