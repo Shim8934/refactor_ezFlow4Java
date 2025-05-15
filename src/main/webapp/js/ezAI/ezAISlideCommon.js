@@ -60,52 +60,76 @@ function simpleAIRisize() {
         aiView.style.width = "850px";
     }
 }
-window.onload = function () {
+
+window.addEventListener('DOMContentLoaded', function () {
     window.addEventListener('resize', function() { simpleAIRisize();});
-};
+});
 // ai 애니메이션 효과 end
 
 // *** ai chat start
-window.onload = function () {
+window.addEventListener('load', function () {
     document.getElementById("chatInput").addEventListener("keyup", function(event) {
         if (event.key === 'Enter' && !event.shiftKey) {
             event.preventDefault();
             userInput();
         }
     });
+});
+
+class promptData {
+    constructor(displayText, chatInput, functionType) {
+        this.displayText = displayText; // 화면에 보일 텍스트
+        this.chatInput = chatInput; // 사용자가 입력한 값
+        this.functionType = functionType; // 질문유형; simplePrompt에서 사용하는 function 값
+    }
+    
+    static userInputData(chatInput) {
+        return new promptData(chatInput, chatInput, "qna");
+    }
+    
+    static simpleData(element, chatInput) {
+        const displayText = element.textContent.trim();
+        const functionType = element.dataset.functiontype;
+        return new promptData(displayText, chatInput, functionType);
+    }
+}
+
+function getModueType() {
+    const simpleAIElem = document.getElementById("simpleAi");
+    return simpleAIElem.dataset.type;
+}
+
+function getSubModuleType() {
+    const simpleAIElem = document.getElementById("simpleAi");
+    return simpleAIElem.dataset.subtype;
 }
 
 // 추천 promt 클릭
-function simplePrompt(element, module) {
-    const displayText = element.textContent.trim(); // 화면에 보일 텍스트
-    const userText = element.getAttribute("data-comment"); // 실제 프롬프트로 사용할 값
+function simplePrompt(element) {
+    const promptDataVal = promptData.simpleData(element, "");
 
-    if (!userText) {
+    if (!promptDataVal.chatInput) {
         return;
     }
-
-    const chatInput = document.getElementById("chatInput");
-    chatInput.value = "";
-
-    aiSend(userText, displayText, module);
+    
+    aiSend(promptDataVal, null);
 }
 
 // 사용자 입력
-function userInput(module) {
-    const chatInput = document.getElementById("chatInput");
-    const userText = chatInput.value.trim();
-    chatInput.value = "";
+function userInput() {
+    const chatInput = document.getElementById("chatInput").value.trim();
     
-    if (!userText) {
+    if (!chatInput) {
         return;
     }
-
-    aiSend(userText, userText, module);
+    
+    const promptDataVal = promptData.userInputData(chatInput);
+    aiSend(promptDataVal, null);
 }
 
 // ai 전송 main
-async function aiSend(userText, displayText, module) {
-    appendUserChatWithLoading(displayText);
+async function aiSend(promptData, callback) {
+    appendUserChatWithLoading(promptData.displayText);
 
     const aiTextDivs = document.querySelectorAll('.ai_text.al_loading');
     const aiLoadingDiv = aiTextDivs[aiTextDivs.length - 1];
@@ -114,13 +138,14 @@ async function aiSend(userText, displayText, module) {
         console.warn('No loading div found.');
         return;
     }
-
+    
+    const module = getModueType();
     if (!module) {
         console.warn('No module found.');
         return;
     }
 
-    const requestData = createRequestData(userText, module);
+    const requestData = createRequestData(promptData);
     // 데이터 조합 테스트용 콘솔로 운영 시 주석 처리
     console.log(requestData);
 
@@ -145,22 +170,29 @@ async function aiSend(userText, displayText, module) {
         console.error('AI streaming failed:', error.message || error);
         showError(aiLoadingDiv);
     }
-
+    
+    if (!!callback) {
+        callback;
+    }
+    
     scrollToBottom();
 }
 
 // 데이터
-function createRequestData(userText, module) {
+function createRequestData(promptData) {
+    const simpleAIElem = document.getElementById("simpleAi");
+    
     return {
-        'service': module,
-        'function': 'qna',
-        'input_data': createInputData(module),
-        'options' : createOptions(userText, module)
+        'service': getModueType(),
+        'function': promptData.functionType,
+        'input_data': createInputData(),
+        'options' : createOptions(promptData)
     };
 }
 
-function createInputData(module) {
-
+function createInputData() {
+    const module = getModueType();
+    
     if ('mail' == module) {
         var mailMetaData = extractEmailMetaData();
         return [
@@ -177,17 +209,21 @@ function createInputData(module) {
     } else if ('approval' == module) {
     
     } else if ('board' == module) {
-    
+        let inputDataArray = [];
+        const inputData = makeBoardDataForAI();
+        inputDataArray.push(inputData);
+        return inputDataArray;
     } else {
          return [];
     }
 
 }
 
-function createOptions(userText, module) {
+function createOptions(promptData) {
+    const module = getModueType();
     if ('mail' == module) {
         return {
-            'command': userText, // 사용자 요청
+            'command': promptData.chatInput, // 사용자 요청
             'tone': 'formally',
             'length': 'medium',
             //'targetLanguage': 'en', // 현재 필요없음
