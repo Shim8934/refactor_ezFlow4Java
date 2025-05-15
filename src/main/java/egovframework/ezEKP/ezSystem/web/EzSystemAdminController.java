@@ -252,6 +252,7 @@ public class EzSystemAdminController {
 		}
 		String usePortal = ezCommonService.getTenantConfig("Use_Portal", userInfo.getTenantId());
 		Integer notiPollingInterval = Integer.parseInt(ezCommonService.getTenantConfig("notiPollingInterval", userInfo.getTenantId())) / (1000 * 60);
+		String zipEncMenu = ezCommonService.getTenantConfig("zipEncMenu", userInfo.getTenantId());
 
 		model.addAttribute("dotNetIntegration", dotNetIntegration);
 		model.addAttribute("configMap", configMap);
@@ -267,6 +268,7 @@ public class EzSystemAdminController {
 		model.addAttribute("usePortal", usePortal);
 		model.addAttribute("systemDomain", systemDomain);
 		model.addAttribute("notiPollingInterval", notiPollingInterval);
+		model.addAttribute("zipEncMenu", zipEncMenu);
 
 		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
 		model.addAttribute("packageType", packageType);

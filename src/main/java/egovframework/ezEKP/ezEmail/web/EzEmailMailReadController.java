@@ -2666,7 +2666,16 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			
 		try {
 			// get fileId with extension
-			fileId = fileId.substring(0, 36);
+			if (fileId.length() < 36) {
+				if (fileId.toLowerCase().endsWith(".zip.zip")) {
+					fileId = fileId.substring(0, fileId.length() - ".zip.zip".length());
+				} else {
+					fileId = fileId.substring(0, fileId.length() - ".zip".length());
+				}
+			} else {
+				fileId = fileId.substring(0, 36);
+			}
+			
 			File directory = new File(realFilePath);
 			File[] files = directory.listFiles((FileFilter) new PrefixFileFilter(fileId));
 			
