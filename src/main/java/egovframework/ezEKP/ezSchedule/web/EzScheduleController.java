@@ -5547,6 +5547,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		}
 		// 일정 본문 데이터 가져오기
 		String htmlBody = ezCommonService.getMHTtoHTML("SCHEDULECONTENT", url, tenantId, realPath, request, locale, scheme);
+		htmlBody = htmlBody.replaceAll("(?is)<style[^>]*?>.*?</style>", "");
 		String escapedHtml = StringEscapeUtils.escapeHtml4(htmlBody);
 		sb.append("<HTMLDESCRIPTION>" + escapedHtml + "</HTMLDESCRIPTION>");
 
