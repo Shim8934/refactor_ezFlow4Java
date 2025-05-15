@@ -107,11 +107,6 @@ function getSubModuleType() {
 // 추천 promt 클릭
 function simplePrompt(element) {
     const promptDataVal = promptData.simpleData(element, "");
-
-    if (!promptDataVal.chatInput) {
-        return;
-    }
-    
     aiSend(promptDataVal, null);
 }
 
