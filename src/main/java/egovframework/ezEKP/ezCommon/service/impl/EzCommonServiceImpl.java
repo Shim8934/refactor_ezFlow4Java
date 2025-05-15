@@ -2006,6 +2006,24 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             put("config_type","포탈");
         }});
 
+        test.add(new HashMap<String, Object>(){{
+            put("confName","zipEncMenu");
+            put("property_value","NO");
+            put("config_name","관리자 > 시스템 > 페러메터 메일 zip 암호 설정 메뉴 표출여부");
+            put("regdate","2025-05-09 00:00:00");
+            put("description","관리자 > 시스템 > 페러메터에서 zip 암호 설정 메뉴를 표출한다 YES: 관리자 > 시스템 > 페러메터 메일 zip 암호 설정 메뉴 표출, NO: 관리자 > 시스템 > 페러메터 메일 zip 암호 설정 메뉴 표출 (default : NO)");
+            put("config_type","메일");
+        }});
+
+        test.add(new HashMap<String, Object>(){{
+            put("confName","useAutoZipEnc");
+            put("property_value","NO");
+            put("config_name","메일쓰기창 첨부파일 업로드시 zip 암호 설정 여부");
+            put("regdate","2025-05-09 00:00:00");
+            put("description","메일쓰기창 첨부파일 업로드시 zip 암호 설정 여부를 옵션화한다. YES: zip 암호 설정 사용, NO: 암호 설정하지 않고 업로드 (default : NO)");
+            put("config_type","메일");
+        }});
+
 		List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
 		
 		for (Map<String, Object> map : test) {

@@ -21,6 +21,7 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.MalformedInputException;
+import java.nio.file.StandardCopyOption;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.interfaces.RSAPublicKey;
@@ -51,6 +52,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 import java.util.stream.StreamSupport;
+import java.nio.file.Files;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
@@ -92,6 +94,12 @@ import javax.xml.bind.DatatypeConverter;
 import com.google.gson.JsonElement;
 import egovframework.let.utl.fcc.service.KlibUtil;
 import net.fortuna.ical4j.util.CompatibilityHints;
+import net.lingala.zip4j.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
+import net.lingala.zip4j.model.ZipParameters;
+import net.lingala.zip4j.model.enums.CompressionLevel;
+import net.lingala.zip4j.model.enums.CompressionMethod;
+import net.lingala.zip4j.model.enums.EncryptionMethod;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
@@ -5582,6 +5590,63 @@ public class EzEmailUtil {
 		
 		return zipFileName;
 	}
+	public static boolean checkZipEncrypted(File file) {
+		try {
+			ZipFile zipFile = new ZipFile(file);
+			return zipFile.isEncrypted();  // 암호 있으면 true, 없으면 false
+		} catch (ZipException e) {
+			throw new RuntimeException("Not a ZIP file or the file is corrupted.", e);
+		}
+	}
+
+	public boolean compressAndEncryptFile(File file, String fileName, String zipPath, String password) {
+		try {
+
+			if (!file.exists()) {
+				System.out.println("File does not exist : " + file.getAbsolutePath());
+				return false;
+			}
+
+			// 임시 복사 파일 만들기
+			File tempFile = new File(file.getParent(), fileName);
+			Files.copy(file.toPath(), tempFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+			// 압축
+			ZipFile zipFile = new ZipFile(zipPath, password.toCharArray());
+
+			ZipParameters parameters = new ZipParameters();
+			parameters.setCompressionMethod(CompressionMethod.DEFLATE); // 기본 압축
+			parameters.setCompressionLevel(CompressionLevel.NORMAL);
+			parameters.setEncryptFiles(true);
+			parameters.setEncryptionMethod(EncryptionMethod.ZIP_STANDARD); // 윈도우 호환 방식
+
+			zipFile.addFile(tempFile, parameters);  // 파라미터로 추가
+
+			// 압축 후 임시 파일 및 원본 파일 삭제
+			tempFile.delete();
+			file.delete();
+			
+			return true;
+		} catch (ZipException e) {
+			logger.error(e.getMessage(), e);
+			return false;
+		} catch (IOException e) {
+			logger.error(e.getMessage(), e);
+			return false;
+		}
+	}
+
+	public String createEncryptZipFile(File file, String fileName, String zipPassword, String pDirTempPath) {
+		String zipPath = pDirTempPath + commonUtil.separator + fileName + ".zip";  // 결과 zip 경로 설정
+
+		boolean encrypted = compressAndEncryptFile(file, fileName, zipPath, zipPassword);
+		if (encrypted) {
+			return zipPath;  // 암호화된 zip 파일 경로 반환
+		}
+
+		return null;  // 실패한 경우 null 반환
+	}
+	
 	//메일, 메일함 저장시 파일 이름 : 보낸사람이름_[보낸사람 메일주소]_[보낸 날짜]_메일제목.eml 이 되도록 만들어주는 메서드
 	public String saveFilenameForm(LoginVO loginInfo , Locale locale , Message message) throws Exception {
 		EzEmailUtil ezEmailUtil = new EzEmailUtil();
