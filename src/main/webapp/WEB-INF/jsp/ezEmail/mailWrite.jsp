@@ -2266,13 +2266,33 @@
 				document.getElementById("MsgTo").focus();
 			
 			} else if (defaultCursorPosition == "content") {
-				// 에디터에 커서를 위치시킴
-				message.SetEditorFocus();
-			
+				// 2025.05.16 한슬기 : 에디터에 커서를 위치시킴. 필요시 case를 추가하여 에디터별로 설정
 				setTimeout(function() {
-					   message.SetEditorFocus();
-				   }, 50);
-			
+					switch (pUse_Editor){
+						case "TAGFREE":
+							// 태그프리
+							var editorBody = document.querySelector('#tbContentElement')
+									?.contentDocument?.querySelector('.xfeDesignFrame')
+									?.contentDocument?.body;
+
+							if (editorBody) {
+								editorBody.focus();
+							} else {
+								console.warn("에디터 영역을 찾을 수 없습니다.");
+							}
+							break;
+						case "KUKUDOCS":
+							//쿠쿠닥스
+							message.SetEditorFocus();
+							break;
+
+						default:
+							//쿠쿠닥스
+							message.SetEditorFocus();
+							break;
+					}
+				   }, 500);
+
 			} else if (defaultCursorPosition == "subject") {
 				var inputValue = document.getElementById("eSubject").value;
 			
