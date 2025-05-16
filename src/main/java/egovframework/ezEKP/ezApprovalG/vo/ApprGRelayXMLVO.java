@@ -574,13 +574,13 @@ public class ApprGRelayXMLVO {
     }
     
     private String base64Decode(String str) throws UnsupportedEncodingException {
-        str = str.replaceAll("\\r\\n|\\r|\\n", "");
+        str = str.replaceAll("\\s+", "");
         return new String(Base64.getDecoder().decode(str), "euc-kr");
     }
     
     private String base64DecodeGetBytes(byte[] bytes) throws UnsupportedEncodingException {
         String str =  new String(bytes);
-        str = str.replaceAll("\\r\\n|\\r|\\n", "");
+        str = str.replaceAll("\\s+", "");
         return new String(Base64.getDecoder().decode(str), "euc-kr");
     }
 }
