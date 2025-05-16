@@ -158,7 +158,7 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 		if (request.getParameter("fm") != null) {
 			model.addAttribute("isFolderManager", "1");
 		} else {
-			model.addAttribute("isFolderManager", "1"); // 0 > 1로 값 변경하여 전체메일 숨기는 용도로 사용 함 (기존 isFolderManager가 0일때 mailMoveCopy 나타나틑 차이점이 없음) 
+			model.addAttribute("isFolderManager", "0");
 		}
 		
 		logger.debug("mailMoveCopy ended.");
