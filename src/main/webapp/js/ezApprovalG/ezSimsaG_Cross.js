@@ -746,17 +746,55 @@ function removeTags(input, allowed) {
 function styleToAttribute(bodyElem) {
 	var pElem = bodyElem.getElementsByTagName("p");
 	for (var i = 0; i < pElem.length; i++) {
-		if (pElem[i].style && pElem[i].style.textAlign) {
-			pElem[i].align = pElem[i].style.removeProperty("text-align");
-            if (pElem[i].align == 'justify') {
-                pElem[i].align = 'adjust';
+        if (pElem[i].style) {
+            if (pElem[i].style.textAlign) {
+                var alignVal = pElem[i].style.removeProperty("text-align");
+                if (alignVal == 'justify') {
+                    pElem[i].removeAttribute("align");
+                } else {
+                    pElem[i].align = alignVal;
+                }
             }
-		}
-		
+            
+            if (pElem[i].style.lineHeight) {
+                var lh = pElem[i].style.lineHeight;
+    
+                if (isLineHeightUnitless(lh)) {
+                    var fontSizeStr = pElem[i].style.fontSize;
+                    var fontPx = 16;
+    
+                    if (fontSizeStr) {
+                        var match = fontSizeStr.match(/^([\d.]+)(pt|px)?$/);
+                        if (match) {
+                            var size = parseFloat(match[1]);
+                            var unit = match[2] || "px";
+    
+                            if (unit == "pt") {
+                                fontPx = size * (96 / 72);
+                            } else if (unit == "px") {
+                                fontPx = size;
+                            } else {
+                                fontPx = 16;
+                            }
+                        }
+                    }
+    
+                    var multiplier = parseFloat(lh);
+                    if (!isNaN(multiplier)) {
+                        pElem[i].style.lineHeight = (fontPx * multiplier) + "px";
+                    }
+                }
+            }
+        }
+    
 		if (pElem[i].getAttribute("style") == "") {
 			pElem[i].removeAttribute("style");
 		}
 	}
+}
+
+function isLineHeightUnitless(value) {
+  return !!value && /^[\d.]+$/.test(value);
 }
 
 function FileUpload(pFileName, pURL, localPath)
