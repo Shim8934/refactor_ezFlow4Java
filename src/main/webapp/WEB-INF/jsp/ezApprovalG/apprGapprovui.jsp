@@ -528,7 +528,7 @@
 		                    }
 		                }
 		            } catch (e) {
-		                alert("setInitOpinion ::" + e.description);
+		                showAlert("setInitOpinion ::" + e.description);
 		            }
 				}
 		    }
@@ -814,7 +814,7 @@
 		    function btnApprove_onclick()
 		    {
 	    		if (checkAprState()) {
-	    			alert("<spring:message code='ezApprovalG.bhs23'/>");
+	    			showAlert("<spring:message code='ezApprovalG.bhs23'/>");
 	    			if (allFlag == "1") {
 	    				LoadNextDocument("\n" + "<spring:message code='ezApprovalG.t4'/>");
 	    			} else {
@@ -879,7 +879,7 @@
 		    function Approv_Complete(signtype) {
 		        DivPopUpHidden();
 		        if (checkAprState()) {
-		        	alert("<spring:message code='ezApprovalG.bhs23'/>");
+		        	showAlert("<spring:message code='ezApprovalG.bhs23'/>");
 	    			//모두결재인 경우 다음 문서로 넘어가도록 설정
 	    			if (allFlag == "1") {
 	    				LoadNextDocument("\n" + "<spring:message code='ezApprovalG.t4'/>");
@@ -1231,7 +1231,7 @@
 		    }
 		    function btnReject_onclick() {
 		    	if (checkAprState()) {
-		    		alert("<spring:message code='ezApprovalG.bhs23'/>");
+		    		showAlert("<spring:message code='ezApprovalG.bhs23'/>");
 	    			window.returnValue = "CLOSE";
 	    			btnClose_onclick();
 	    			return;
@@ -1288,7 +1288,7 @@
 		            }
 		            
 		            if (checkAprState()) {
-		            	alert("<spring:message code='ezApprovalG.bhs23'/>");
+		            	showAlert("<spring:message code='ezApprovalG.bhs23'/>");
 		    			window.returnValue = "CLOSE";
 		    			btnClose_onclick();
 		    			return;
@@ -1357,7 +1357,7 @@
 		    }
 		    function btnStay_onclick() {
 		    	if (checkAprState()) {
-		    		alert("<spring:message code='ezApprovalG.bhs23'/>");
+		    		showAlert("<spring:message code='ezApprovalG.bhs23'/>");
 	    			if (allFlag == "1") {
 	    				LoadNextDocument("\n" + "<spring:message code='ezApprovalG.t4'/>");
 	    			} else {
@@ -1405,7 +1405,7 @@
 		        if (ret != "cancel") {
 	                pHasOpinionYN = "Y";
 		        	if (checkAprState()) {
-		        		alert("<spring:message code='ezApprovalG.bhs23'/>");
+		        		showAlert("<spring:message code='ezApprovalG.bhs23'/>");
 		    			if (allFlag == "1") {
 		    				LoadNextDocument("\n" + "<spring:message code='ezApprovalG.t4'/>");		    				
 		    			} else {
@@ -1497,7 +1497,7 @@
 		            }
 		        }
 		        catch (e) {
-		            alert("btnModAprDept_onclick : " + e.description);
+		            showAlert("btnModAprDept_onclick : " + e.description);
 		        }
 		    }
 		    function btnOpinion_onclick() {
@@ -1670,7 +1670,7 @@
 		                TaskCode = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/TASKCODE");
 		            }
 		        } catch (e) {
-		            alert("btnSetTaskCode_onclick : " + e.description);
+		            showAlert("btnSetTaskCode_onclick : " + e.description);
 		        }
 		    }
 		
@@ -1730,7 +1730,7 @@
 		    var ezapprovalinfo_dialogArguments = new Array();
 		    function btnApprovalInfo() {
 		    	if (checkAprState()) {
-		    		alert("<spring:message code='ezApprovalG.bhs23'/>");
+		    		showAlert("<spring:message code='ezApprovalG.bhs23'/>");
 	    			if (allFlag == "1") {
 	    				LoadNextDocument("\n" + "<spring:message code='ezApprovalG.t4'/>");		    				
 	    			} else {
@@ -1893,7 +1893,7 @@
 		                    			if (result == 'TRUE') {
 		                    				
 		                    			} else {
-		                    				alert(strLang163);
+		                    				showAlert(strLang163);
 		                    			}
 		                    		}
 		                    	});
@@ -2013,7 +2013,7 @@
 		
 		            }
 		            catch (e) {
-		                alert("<spring:message code='ezApprovalG.pjj02'/>");
+		                showAlert("<spring:message code='ezApprovalG.pjj02'/>");
 		            }
 		        } else if (ret != undefined && ret[0] == "DUPL") {
 		        	window.returnValue = "CLOSE";
@@ -2026,7 +2026,7 @@
 		    function btnEdit_onclick()
 		    {
 		    	if (checkAprState()) {
-		    		alert("<spring:message code='ezApprovalG.bhs23'/>");
+		    		showAlert("<spring:message code='ezApprovalG.bhs23'/>");
 	    			if (allFlag == "1") {
 	    				LoadNextDocument("\n" + "<spring:message code='ezApprovalG.t4'/>");		    				
 	    			} else {
@@ -2037,7 +2037,7 @@
 	    		}
 				
 				if (getSnapshotCode() !== snapshotCode) {
-					alert("<spring:message code='ezApprovalG.edit.pgb01'/>");
+					showAlert("<spring:message code='ezApprovalG.edit.pgb01'/>");
 					if (allFlag == "1") {
 						LoadNextDocument("\n" + "<spring:message code='ezApprovalG.t4'/>");
 					} else {
@@ -2075,7 +2075,7 @@
 		        DivPopUpHidden();
 		        
 		        if (checkAprState()) {
-		    		alert("<spring:message code='ezApprovalG.bhs23'/>");
+		    		showAlert("<spring:message code='ezApprovalG.bhs23'/>");
 	    			if (allFlag == "1") {
 	    				LoadNextDocument("\n" + "<spring:message code='ezApprovalG.t4'/>");		    				
 	    			} else {
@@ -2086,7 +2086,7 @@
 	    		}
 				
 				if (getSnapshotCode() !== snapshotCode) {
-					alert("<spring:message code='ezApprovalG.edit.pgb01'/>");
+					showAlert("<spring:message code='ezApprovalG.edit.pgb01'/>");
 					if (allFlag == "1") {
 						LoadNextDocument("\n" + "<spring:message code='ezApprovalG.t4'/>");
 					} else {
@@ -2209,7 +2209,7 @@
 		     			}
 		            });
 		    	} catch (e) {
-		    		alert("getDocMode() :: " + e.description);
+		    		showAlert("getDocMode() :: " + e.description);
 		    	}
 		    	
 		    	return rtnVal;
@@ -2488,7 +2488,7 @@
 			function btnReturnDesignation_onclick() {
 				returnChk = "Y";
 				if (checkAprState()) {
-					alert("<spring:message code='ezApprovalG.bhs23'/>");
+					showAlert("<spring:message code='ezApprovalG.bhs23'/>");
 					window.returnValue = "CLOSE";
 					btnClose_onclick();
 					return;

@@ -73,7 +73,7 @@
 						shareSetList_complete(rtnValue);
 					},
 					error : function() {
-						alert("<spring:message code='ezApprovalG.bhs04'/>");
+						showAlert("<spring:message code='ezApprovalG.bhs04'/>");
 					}
 				})
 			}
@@ -118,7 +118,7 @@
 					},
 					success : function() {
 						shareSetList();
-						alert("<spring:message code='ezApprovalG.bhs05'/>");
+						showAlert("<spring:message code='ezApprovalG.bhs05'/>");
 					},
 					error : function() {
 						
@@ -131,7 +131,7 @@
 				var selectedChkLength = $("#shareApprovalList tbody").find("input[type=checkbox]:checked").length;
 				
 				if (selectedChkLength == 0) {
-					alert("<spring:message code='ezApprovalG.bhs06'/>");
+					showAlert("<spring:message code='ezApprovalG.bhs06'/>");
 					return;
 				}
 				
@@ -152,7 +152,7 @@
 						shareUserId : checkedUserList
 					},
 					success : function() {
-						alert("<spring:message code='ezApprovalG.bhs07'/>");
+						showAlert("<spring:message code='ezApprovalG.bhs07'/>");
 						shareSetList();
 					},
 					error : function() {
@@ -210,6 +210,10 @@
 	    <div class="btnpositionJsp" style="width:750px;">
 	    	<a class="imgbtn" onclick="addShare_onclick()"><span><spring:message code='ezApprovalG.bhs14'/></span></a>
 	    	<a class="imgbtn" onclick="delShare_onclick()"><span><spring:message code='ezApprovalG.bhs15'/></span></a>
-	    </div>    
+	    </div>
+	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
+		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+		</div>    
 	</body>
 </html>

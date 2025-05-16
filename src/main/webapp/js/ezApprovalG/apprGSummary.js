@@ -3,14 +3,14 @@ function btnSummaryEdit() {
         DivPopUpShow(713, 570, "/ezApprovalG/apprGSummaryEdit.do?docID=" + pDocID);
     } catch (e) {
         console.log(e);
-        alert(strLang199);
+        showAlert(strLang199);
     }
 }
         
 function btnSummaryEdit_Complete(rtn) {
     switch (rtn.status) {
         case "success":
-            alert(strLangJIH_Summary01);
+            showAlert(strLangJIH_Summary01);
             pSummery = rtn.summary;
             pSummaryPath = rtn.summaryPath;
             DivPopUpHidden();
@@ -19,10 +19,10 @@ function btnSummaryEdit_Complete(rtn) {
             DivPopUpHidden();
             break;
         case "noData":
-            alert(strLangJIH_Summary02);
+            showAlert(strLangJIH_Summary02);
             break;
         default:
-            alert(strLang199);
+            showAlert(strLang199);
     }
 }
 

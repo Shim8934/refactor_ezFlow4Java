@@ -821,7 +821,10 @@ function openUserInfo() {
                 var width = window.screen.availWidth;
                 var left = (width - 500) / 2;
                 var top = (heigth - 400) / 2;
-                window.open("/ezCommon/showPersonInfo.do?id=" + pDeptID + "&dept=" + GetAttribute(tr, "DATA6"), "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
+                // window.open("/ezCommon/showPersonInfo.do?id=" + pDeptID + "&dept=" + GetAttribute(tr, "DATA6"), "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
+                var url = "/ezCommon/showPersonInfo.do?id=" + pDeptID + "&dept=" + GetAttribute(tr, "DATA6");
+                var feature = "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left;
+                showPopup(url, 420, 450, "", feature, hidePopup);
             }
         }
         else {
@@ -939,7 +942,8 @@ function openDraftUI(pDraftFlag, pCurSelRow,officeFlag) {
     	}
     }
 
-    openwindow(openLocation, windowName, 890, 560);
+    // openwindow(openLocation, windowName, 890, 560);
+    showPopupSlide(openLocation, 890, 560, windowName, "", hidePopupSlide, openwindow);
 }
 
 function openApprovUI(allFlag) {
@@ -1085,25 +1089,27 @@ function RemoveDoc(pDocID, orgCompanyID) {
     }
 }
 
-var getformcont_cross_dialogArguments = new Array();
-var getformcont_Cross_OpenWin = "";
+// var getformcont_cross_dialogArguments = new Array();
+// var getformcont_Cross_OpenWin = "";
 function openForm() {
     var parameter = new Array();
     parameter[0] = arr_userinfo[4];
     parameter[1] = "000";
     var url = "/ezApprovalG/getFormCont.do";
-    var feature = "status:no;dialogWidth:713px;dialogHeight:570px;edge:sunken;scroll:no";
-    feature = feature + GetShowModalPosition(713, 570);
-
-    getformcont_cross_dialogArguments[0] = parameter;
-    getformcont_cross_dialogArguments[1] = openForm_Complete;
-    getformcont_Cross_OpenWin = window.open(url, "getformcont_Cross", GetOpenWindowfeature(713, 570));
-    
-    try { getformcont_Cross_OpenWin.focus(); } catch (e) { }
+    // var feature = "status:no;dialogWidth:713px;dialogHeight:570px;edge:sunken;scroll:no";
+    // feature = feature + GetShowModalPosition(713, 570);
+    //
+    // getformcont_cross_dialogArguments[0] = parameter;
+    // getformcont_cross_dialogArguments[1] = openForm_Complete;
+    // getformcont_Cross_OpenWin = window.open(url, "getformcont_Cross", GetOpenWindowfeature(713, 570));
+    //
+    // try { getformcont_Cross_OpenWin.focus(); } catch (e) { }
+    ezCommon_cross_dialogArguments[0] = parameter;
+    showPopup(url, 713, 570, "getformcont_Cross", GetOpenWindowfeature(713, 570), openForm_Complete);
 }
 
 function openForm_Complete(ret) {
-    getformcont_Cross_OpenWin.close();
+    hidePopup();
     formURL = ret[0];
     formDocType = ret[1];
     reformflag = ret["reformflag"];

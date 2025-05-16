@@ -30,7 +30,11 @@
                     ReturnFunction = opener.SelUserCont_dialogArgument[1];
                 } catch (e) {
                     try {
-                        ReturnFunction = parent.SelUserCont_dialogArgument[1];
+                        if (isParentCommonArgsUsed()) {
+                            ReturnFunction = parent.ezCommon_cross_dialogArguments[1];
+                        } else {
+                            ReturnFunction = parent.SelUserCont_dialogArgument[1];
+                        }
                     } catch (e) {
                     }
                 }

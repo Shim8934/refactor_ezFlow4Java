@@ -555,16 +555,20 @@
 		    function lvtDetail_SelChange() { }
 		    
 		    // 전자결재 일반(S)버전에서만 사용하는 문서함검색 함수
-		    var SelCont_dialogArgument = new Array();
+		    // var SelCont_dialogArgument = new Array();
 		    function SelCont_onclick() {
 		        var para;
 		        var url = "/ezApprovalG/selectContainer.do"
-		        SelCont_dialogArgument[0] = para;
-		        SelCont_dialogArgument[1] = SelCont_Complete;        
-		        var result = GetOpenWindow(url, "selectContainer", 950, 440, "NO");
+		        // SelCont_dialogArgument[0] = para;
+		        // SelCont_dialogArgument[1] = SelCont_Complete;        
+		        // var result = GetOpenWindow(url, "selectContainer", 950, 440, "NO");
+				var feature = "status=no,toolbar=no,scroll=no,menubar=no,location=no,width=950px,height=440px,resizable=no";
+				ezCommon_cross_dialogArguments[0] = para;
+				showPopup(url, 950, 440, "selectContainer", feature, SelCont_Complete);
 		    }
 		    
 		    function SelCont_Complete(retVal) {
+				hidePopup();
 		        var i;
 		        try {
 		            if (retVal == "")
@@ -643,18 +647,24 @@
 		
 		    function hideProgress() {
 		    }
-		    var setsearchinfo_cross_dialogArguments = new Array();
-		    var OpenWin2;
+		    // var setsearchinfo_cross_dialogArguments = new Array();
+		    // var OpenWin2;
 		    function SearchCondi_onclick() {
 		        var para = LoadSquery;
-		        setsearchinfo_cross_dialogArguments[0] = para;
-		        setsearchinfo_cross_dialogArguments[1] = SearchCondi_onclick_Complete;
-		
-		        OpenWin2 = window.open("/ezApprovalG/setSearchInfo.do", "setsearchInfo_Cross", GetOpenWindowfeature(510, 405));
-		        try { OpenWin2.focus(); } catch (e) { }
+		        // setsearchinfo_cross_dialogArguments[0] = para;
+		        // setsearchinfo_cross_dialogArguments[1] = SearchCondi_onclick_Complete;
+				//
+		        // OpenWin2 = window.open("/ezApprovalG/setSearchInfo.do", "setsearchInfo_Cross", GetOpenWindowfeature(510, 405));
+		        // try { OpenWin2.focus(); } catch (e) { }
+				ezCommon_cross_dialogArguments[0] = para;
+				var url = "/ezApprovalG/setSearchInfo.do";
+				var height = 405;
+				if (para == "usercontlist") height += 45;
+				showPopup(url, 510, height, "setsearchInfo_Cross", "", SearchCondi_onclick_Complete);
 		    }
 		
 		    function SearchCondi_onclick_Complete(returnvalue) {
+				hidePopup();
 		    	isSearch = true;
 	    	   for(var i =0; i < returnvalue.length; i++) {
 					if (returnvalue[i] == null) {
@@ -804,7 +814,7 @@
 													openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
 												} else {
 													var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
-													alert(pAlertContent);
+													showAlert(pAlertContent);
 													return;
 												}
 											} else {
@@ -851,7 +861,7 @@
 
 		        if (selRow.length <= 0) {
 		        	var pAlertContent = "<spring:message code='ezApprovalG.t1533'/>";
-		        	alert(pAlertContent);
+		        	showAlert(pAlertContent);
 		            return;
 		        }
 		        
@@ -914,7 +924,7 @@
 				                openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
 			                } else {
 			                	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
-			                	alert(pAlertContent);
+			                	showAlert(pAlertContent);
 			                    
 			                    return;
 			                }
@@ -990,7 +1000,7 @@
 	            var param = "status=0,menubar=0,scrollbars=0,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left;
 	            window.open(openLocation, "enforce", param);
 	        } */
-	        var getformcont_cross_dialogArguments = new Array();
+	        // var getformcont_cross_dialogArguments = new Array();
 	        function enforce_onclick() {
 				var DocList = new ListView();
 				DocList.LoadFromID("DocList");
@@ -999,8 +1009,8 @@
 		        if (selRow.length > 0) {
 		        	var pWriterID = GetAttribute(selRow[0], "DATA3");
 		        	if (pWriterID.toLowerCase() == UserID.toLowerCase()) {
-		        		getformcont_cross_dialogArguments[0] = ""; //parameter가 없다..
-			            getformcont_cross_dialogArguments[1] = enforce_onclick_complete;
+		        		// getformcont_cross_dialogArguments[0] = ""; //parameter가 없다..
+			            // getformcont_cross_dialogArguments[1] = enforce_onclick_complete;
 		        		
 			            enforceDocID = GetAttribute(selRow[0], "DATA1");
 			            enforceDocHref = GetAttribute(selRow[0], "DATA2");
@@ -1008,14 +1018,16 @@
 			            enforceExt = GetAttribute(selRow[0], "DATA2").indexOf("hwp") > -1 ? "hwp" : "mht";
 			            
 		        		var pURL = "/ezApprovalG/getFormCont.do?pFormType=004&ext=" + enforceExt; //일반버전의 FormType=004는 시행문
-		        		var getFormCont_Cross = window.open(pURL, "formCont", GetOpenWindowfeature(713, 570));
-		        		try { getFormCont_Cross.focus(); } catch (e) {}
+		        		// var getFormCont_Cross = window.open(pURL, "formCont", GetOpenWindowfeature(713, 570));
+		        		// try { getFormCont_Cross.focus(); } catch (e) {}
+						ezCommon_cross_dialogArguments[0] = "";
+						showPopup(pURL, 713, 570, "formCont", GetOpenWindowfeature(713, 570), enforce_onclick_complete);
 		        	} else {
-						alert("<spring:message code='ezApprovalG.t1519'/>");
+						showAlert("<spring:message code='ezApprovalG.t1519'/>");
 		        	}
 		        } else {
 		        	var pAlertContent = "<spring:message code='ezApprovalG.t1533'/>";
-					alert(pAlertContent);
+					showAlert(pAlertContent);
 		            return;
 		        }
 	        }
@@ -1024,6 +1036,7 @@
 	        var enforceDocOrgCompanyID = "";
 	        var enforceExt = "";
 	        function enforce_onclick_complete(ret) {
+				hidePopup();
 	        	if (ret[0] != "cancel") {
 	        	    var isHwp = enforceExt == "hwp";
 	        		var pURL = isHwp ? "/ezApprovalG/ezConvSihang_WHWP.do" : "/ezApprovalG/enforceSihangDocView.do";
@@ -1117,7 +1130,7 @@
 		            window.open(wfileLocation, wName, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
 		        }
 		        catch (e) {
-		            alert("openwindow :: " + e.description);
+		            showAlert("openwindow :: " + e.description);
 		        }
 		    }
 		    function onchange_objSelForm(p_strVal) {
@@ -1639,7 +1652,7 @@
 		        	//팝업창에서 알럿창으로 변경
 // 		            OpenAlertUI("<spring:message code='ezApprovalG.t113'/>");
 					var pAlertContent = "<spring:message code='ezApprovalG.t1533'/>";
-					alert(pAlertContent);
+					showAlert(pAlertContent);
 		            return;
 		        }
 		        else {
@@ -1679,8 +1692,9 @@
 		    function TotalSave_onclick_complete(pDocID, orgCompanyID) {
 		        var url = "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=END&orgCompanyID="+orgCompanyID;
 		        var feature = "status=no,help=no,scroll=no,edge=sunken,width=580px,height=480px";
-		        feature = feature + GetOpenPosition(580, 480);
-		        window.open(url, "", feature);
+		        // feature = feature + GetOpenPosition(580, 480);
+		        // window.open(url, "", feature);
+				showPopup(url, 580, 480, "", feature, DivPopUpHidden);
 		    }
 		
 		    window.onresize = function () {
@@ -1755,7 +1769,7 @@
 		            } */
 		        }
 		        else {
-		            alert("<spring:message code='ezApprovalG.t1160'/>");
+		            showAlert("<spring:message code='ezApprovalG.t1160'/>");
 		            return;
 		        }
 		        pageNum = 1;
@@ -1783,7 +1797,7 @@
 
 		        if (tr.length <= 0) {
 		        	var pAlertContent = "<spring:message code='ezApprovalG.t1533'/>";
-		        	alert(pAlertContent);
+		        	showAlert(pAlertContent);
 		            return;
 		        }
 		        
@@ -1812,7 +1826,7 @@
 		        else if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
 		            openLocation = "";
 		            if (CrossYN()) {
-		                alert(strLang1103);
+		                showAlert(strLang1103);
 		                return;
 		            }
 		            else {
@@ -1838,7 +1852,7 @@
 		        
 		        if (tr.length <= 0) {
 		        	var pAlertContent = "<spring:message code='ezApprovalG.t1533'/>";
-		        	alert(pAlertContent);
+		        	showAlert(pAlertContent);
 		            return;
 		        }
 	
@@ -1853,15 +1867,18 @@
 		        para[0] = DocID;
 		        para[1] = pURL;
 				
-	            aprgongramline_cross_dialogArguments[0] = para;
-	            aprgongramline_cross_dialogArguments[1] = sendCirCulation_onclick_Complete;
-	
-	            var OpenWin = window.open(url, "AprGongRamLine_Cross", GetOpenWindowfeature(1145, 760));
-	            try { OpenWin.focus(); } catch (e) { }
+	            // aprgongramline_cross_dialogArguments[0] = para;
+	            // aprgongramline_cross_dialogArguments[1] = sendCirCulation_onclick_Complete;
+				//
+	            // var OpenWin = window.open(url, "AprGongRamLine_Cross", GetOpenWindowfeature(1145, 760));
+	            // try { OpenWin.focus(); } catch (e) { }
+				ezCommon_cross_dialogArguments[0] = para;
+				showPopup(url, 1145, 760, "AprGongRamLine_Cross", GetOpenWindowfeature(1145, 760), sendCirCulation_onclick_Complete);
 		    }
 
 		    function sendCirCulation_onclick_Complete(rtn) {
-		        if (rtn == "OK") {
+		        hidePopup();
+				if (rtn == "OK") {
 		            var pAlertContent = "<spring:message code='ezApprovalG.hyj27'/>";
 		            OpenAlertUI(pAlertContent);
 		        }
@@ -2134,6 +2151,11 @@
 	            </div>
 	        </div>
 	    </div>
+
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
+		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+		</div>
 	    
 	    <script type="text/javascript">
 	        selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");

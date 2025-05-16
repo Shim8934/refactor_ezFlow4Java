@@ -49,8 +49,13 @@
 		        pDeptID = "<c:out value = '${deptID}'/>";
 		
 		        try {
-		            RetValue = parent.getformcont_cross_dialogArguments[0];
-		            ReturnFunction = parent.getformcont_cross_dialogArguments[1];
+		            if (isParentCommonArgsUsed()) {
+						RetValue = parent.ezCommon_cross_dialogArguments[0];
+						ReturnFunction = parent.ezCommon_cross_dialogArguments[1];
+					} else {
+						RetValue = parent.getformcont_cross_dialogArguments[0];
+						ReturnFunction = parent.getformcont_cross_dialogArguments[1];
+					}
 		        } catch (e) {
 		            try {
 		                RetValue = opener.getformcont_cross_dialogArguments[0];
@@ -522,7 +527,7 @@
 		
 		        if (TreeIdx != "") {
 		            if (document.getElementById('forminfo').value == "") {
-		                alert("<spring:message code='ezApprovalG.t1160'/>");
+		            	showAlert("<spring:message code='ezApprovalG.t1160'/>");
 		                return;
 		            }
 		

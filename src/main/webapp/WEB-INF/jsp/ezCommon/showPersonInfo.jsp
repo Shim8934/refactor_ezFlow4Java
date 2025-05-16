@@ -30,6 +30,7 @@
 		
 		<script type="text/javascript">
 			var primaryLang = "${primaryLang}";
+			var ReturnFunction;
 			window.onload = function () {
 				if (MACSAFARIYN()) {
 					window.resizeTo(420, 480);
@@ -37,6 +38,10 @@
 				
 				if (primaryLang == '3') {
 					window.resizeTo(500, 645);
+				}
+				
+				if (isParentCommonArgsUsed()) {
+					ReturnFunction = parent.ezCommon_cross_dialogArguments[1];
 				}
 			}
 			
@@ -115,9 +120,13 @@
 				// 화면의 중앙으로 위치 변경
 				window.moveTo(leftPosition, topPosition);
 			}
-			
-			
-			
+
+			function btnClose_onclick() {
+				if (ReturnFunction != null) {
+					ReturnFunction("cancel");
+				}
+				window.close();
+			}
 		</script>
 	</head>
 	
@@ -131,7 +140,7 @@
 			    </div>
 			    <div id="close">
 			    	<ul>
-			        	<li><span onClick="window.close()"></span></li>
+			        	<li><span onClick="return btnClose_onclick()"></span></li>
 			        </ul>
 			    </div>
 			    <script type="text/javascript">

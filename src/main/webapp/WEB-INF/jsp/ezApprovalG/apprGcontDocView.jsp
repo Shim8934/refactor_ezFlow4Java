@@ -208,7 +208,7 @@
                 if (ifrmPreViewH != null && window.self.frameElement.id == "ifrmPreViewH") {
                     ifrmPreViewH.src = "<spring:message code='main.kms4'/>";
                 } else {
-                    alert(strLang1139);
+                    showAlert(strLang1139);
                     btnClose_onclick();
 		        }
 		    }
@@ -411,7 +411,7 @@
 		            var param = "status=0,menubar=0,scrollbars=0,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left
 		            window.open(wfileLocation, "view", param);
 		        } catch (e) {
-		            alert("openwindow :: " + e.description);
+		            showAlert("openwindow :: " + e.description);
 		        }
 		    }
 		    
@@ -472,7 +472,7 @@
 		            var pLeft = (pwidth - 765) / 2;
 		            
 		            if (ret[2] == "2" || ret[2] == "3" || ret[2] == "4" || ret[2] == "7" || ret[2] == "8" || (ret[3] != "null" && ret[3] != null && ret[3] != "")) {
-		                alert(strLang1031);
+		                showAlert(strLang1031);
 		            }
 		            else {
 		                window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&mode=new1&pbrdGbn=SiteNewBoard&pFromScreen=Mail&docID=" + pDocID + "&url=" + pDocHref + "&orgCompanyID=" + orgCompanyID, '', GetOpenWindowJun(765, 870));
@@ -636,7 +636,7 @@
 		                }
 		            }
 		        } catch (e) {
-		            alert("putSignXML : " + e.description);
+		            showAlert("putSignXML : " + e.description);
 		            return false;
 		        }
 		        return retVal;
@@ -833,7 +833,7 @@
 		        
 		        if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
 		            if (CrossYN()) {
-		                alert(strLang1103);
+		                showAlert(strLang1103);
 		                return;
 		            } else {
 		                var openLocation = "/myoffice/ezApproval/ezViewHWP/ezDraftUI_HWP.aspx";
@@ -913,7 +913,7 @@
 
 		                        signCnt = signCnt + 1;
 		                    }
-		                    catch (e) { alert(e.description); }
+		                    catch (e) { showAlert(e.description); }
 		                }
 		                else {
 		                    strimg = "<p style=\"FONT-WEIGHT:900;FONT-SIZE:10pt;FONT-FAMILY:" + strLang9 + "\">" + arr_userinfo[2] + "</p>";

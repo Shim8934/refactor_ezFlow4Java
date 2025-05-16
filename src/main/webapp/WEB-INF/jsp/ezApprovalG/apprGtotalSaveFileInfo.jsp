@@ -53,7 +53,11 @@
 			    }
 	        	
 	            try {
-	                ReturnFunction = parent.totalsavefileinfo_dialogArguments[1];
+	                if (isParentCommonArgsUsed()) {
+						ReturnFunction = parent.ezCommon_cross_dialogArguments[1];
+					} else {
+						ReturnFunction = parent.totalsavefileinfo_dialogArguments[1];
+					}
 	            } catch (e) {
 	                try {
 	                    ReturnFunction = opener.totalsavefileinfo_dialogArguments[1];
@@ -221,7 +225,7 @@
 	        function btn_OK()
 	        {
 	            if (strTypeInfo == ""  && opinionChk == "") {
-	                alert(strLang584);
+	                showAlert(strLang584);
 	                return;
 	            }
 	            
@@ -351,7 +355,7 @@
 	        
 	        function QuitWindow() {
 // 		        OpenAlertUI(strLang929);
-				alert(strLang1139);
+				showAlert(strLang1139);
 				window_close();
 		    }
 	        
@@ -362,7 +366,7 @@
 					return download(downUrl);
 				} else {
 					if (isHwpCtrlOpen != true) {
-						alert(strLangKWCHd01);
+						showAlert(strLangKWCHd01);
 						return;
 					}
 	        		
@@ -397,7 +401,7 @@
         	   						return hwp_url(num);
         						});
                    			} else {
-                   				alert(strLangKWCHd01);
+                   				showAlert(strLangKWCHd01);
                    				return;
                    			}
         				});	
@@ -408,7 +412,7 @@
 	        /* 2023-05-09 김우철 - 통합PC저장 시 단일 파일을 더블클릭으로 저장할 때 배포용 문서로 저장 */
 			function dcHwpDown(obj, pSourcePath, pDocID_mht) {
 				if (isHwpCtrlOpen != true) {
-	        		alert(strLangKWCHd01);
+	        		showAlert(strLangKWCHd01);
 	        		return;
 	        	}
 	        	
@@ -435,7 +439,7 @@
 		  					document.getElementById("AttachDownFrame").src = "/ezApprovalG/downloadHwpDbClick.do?fileName=" + encodeURIComponent(filename + "." + pSourcePath) + "&docID=" + pDocID_mht + "&downloadUrl=" + result.downloadUrl;
 						});
 					} else {
-						alert(strLangKWCHd01);
+						showAlert(strLangKWCHd01);
 						return;
 					}
 				});	
@@ -516,5 +520,10 @@
 	    </div>
 	    <iframe name="AttachDownFrame" id="AttachDownFrame" src="about:blank" width="0" height="0" frameborder="0" marginheight="0" marginwidth="0" scrolling="no" style="display: none"></iframe>
 	    <div id="hwpctrl"/>
+
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
+		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+		</div>
 	</body>
 </html>

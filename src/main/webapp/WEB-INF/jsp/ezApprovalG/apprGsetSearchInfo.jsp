@@ -52,8 +52,13 @@
 		    var openPageInfo;
 		    window.onload = function () {
 		        try {
-		            openPageInfo = parent.setsearchinfo_cross_dialogArguments[0];
-		            ReturnFunction = parent.setsearchinfo_cross_dialogArguments[1];
+		            if (isParentCommonArgsUsed()) {
+						openPageInfo = parent.ezCommon_cross_dialogArguments[0];
+						ReturnFunction = parent.ezCommon_cross_dialogArguments[1];
+					} else {
+						openPageInfo = parent.setsearchinfo_cross_dialogArguments[0];
+						ReturnFunction = parent.setsearchinfo_cross_dialogArguments[1];
+					}
 		        } catch (e) {
 		            try {
 		            	openPageInfo = opener.setsearchinfo_cross_dialogArguments[0];

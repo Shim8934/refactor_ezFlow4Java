@@ -63,7 +63,7 @@
 		            treeView.DataBind("TreeView");
 		        }
 		        catch (ErrMsg) {
-		            alert(" TreeViewinitialize : " + ErrMsg.description);
+		            showAlert(" TreeViewinitialize : " + ErrMsg.description);
 		        }
 		    };
 		    
@@ -131,7 +131,7 @@
 		    			event_displayUserList(loadXMLString(xml));
 		    		},
 		    		error: function(request, status){
-		    			alert("<spring:message code='ezPersonal.t60'/>" + request.status);
+		    			showAlert("<spring:message code='ezPersonal.t60'/>" + request.status);
 		    		}
 		    	});
 		    }
@@ -174,12 +174,12 @@
 		    
 		    function search_click() {
 		    	if (specialChk(document.getElementById("keyword").value.trim())) {
-			    	alert("<spring:message code='ezResource.special' />");
+			    	showAlert("<spring:message code='ezResource.special' />");
 			    	return;
 			    }
 		    	
 		        if (document.getElementById("keyword").value.trim() == "") {
-		            alert("<spring:message code='ezPersonal.t61'/>");
+		            showAlert("<spring:message code='ezPersonal.t61'/>");
 		            document.getElementById("keyword").focus();
 		            return;
 		        }
@@ -205,12 +205,12 @@
 		    var rgParams = new Array();
 		    function deptsearch_click() {
 		    	if (specialChk(document.getElementById("deptkeyword").value)) {
-			    	alert("<spring:message code='ezResource.special' />");
+			    	showAlert("<spring:message code='ezResource.special' />");
 			    	return;
 			    }
 		    	
 		        if (deptkeyword.value.trim() == "") {
-		            alert("<spring:message code='ezPersonal.t61'/>");
+		            showAlert("<spring:message code='ezPersonal.t61'/>");
 		            deptkeyword.focus();
 		            return;
 		        }
@@ -231,7 +231,7 @@
 		    			result = loadXMLString(xml);
 		    		},
 		    		error: function(request, status){
-		    			alert("<spring:message code='ezPersonal.t62'/>" + request.status);
+		    			showAlert("<spring:message code='ezPersonal.t62'/>" + request.status);
 		    		}
 		    	});
 		    	
@@ -239,7 +239,7 @@
                 adCount = xmlDom.getElementsByTagName("ROW").length;
 		
 		        if (adCount == 0) {
-		            alert("<spring:message code='ezPersonal.t63'/>");
+		            showAlert("<spring:message code='ezPersonal.t63'/>");
 		            return;
 		        }
 		        else if (adCount == 1) {
@@ -316,7 +316,7 @@
 		                treeView.DataBind("TreeView");
 		            }
 		            else {
-		                alert("<spring:message code='ezPersonal.t17'/>" + g_xmlHTTP.status);
+		                showAlert("<spring:message code='ezPersonal.t17'/>" + g_xmlHTTP.status);
 		                g_xmlHTTP = null;
 		            }
 		        }
@@ -329,23 +329,23 @@
 		        var length = tr.length;
 		        var checkDupl = true;
 		        if (length == 0) {
-		            alert("<spring:message code='ezApprovalG.bhs16'/>");
+		            showAlert("<spring:message code='ezApprovalG.bhs16'/>");
 		            return;
 		        }
 		        
 		        if (length > 1) {
-		            alert("<spring:message code='ezApprovalG.bhs21'/>");
+		            showAlert("<spring:message code='ezApprovalG.bhs21'/>");
 		            return;
 		        }
 		        
 		        var selRow = tr[0];
 		        if ("${userInfo.id}" == selRow.getAttribute("DATA2")) {
-					alert("<spring:message code='ezApprovalG.bhs17'/>");
+					showAlert("<spring:message code='ezApprovalG.bhs17'/>");
 					return;
 		        }
 		        
 				if (checkDuplShareUser(selRow.getAttribute("DATA2"))) {
-					alert("<spring:message code='ezApprovalG.bhs18'/>");
+					showAlert("<spring:message code='ezApprovalG.bhs18'/>");
 					return;
 				}
 		        

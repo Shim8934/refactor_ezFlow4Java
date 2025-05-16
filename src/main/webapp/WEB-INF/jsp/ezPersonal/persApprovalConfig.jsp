@@ -69,12 +69,12 @@
 		
 		        if (pFlag == "Y" && document.getElementById("pwdType").value == "A") {
 		            if (document.getElementById("txtNewPassword").value.length < 3) {
-		                alert("<spring:message code='ezPersonal.t945'/>");
+		                showAlert("<spring:message code='ezPersonal.t945'/>");
 		                document.getElementById("txtNewPassword").focus();
 		                return;
 		            }
 		            if (document.getElementById("txtNewPassword").value != document.getElementById("txtNewPasswordConfirm").value) {
-		                alert("<spring:message code='ezPersonal.t942'/>");
+		                showAlert("<spring:message code='ezPersonal.t942'/>");
 		                document.getElementById("txtNewPasswordConfirm").value = "";
 		                document.getElementById("txtNewPasswordConfirm").focus();
 		                return;
@@ -84,14 +84,14 @@
 		            if (AprPass != "") {
 		
 		                if (document.getElementById("txtOldPassword").value == "") {
-		                    alert("<spring:message code='ezPersonal.t947'/>");
+		                    showAlert("<spring:message code='ezPersonal.t947'/>");
 		                    document.getElementById("txtOldPassword").value = "";
 		                    document.getElementById("txtOldPassword").focus();
 		                    return;
 		                }
 		                
 		                if (document.getElementById("txtOldPassword").value == document.getElementById("txtNewPassword").value) {
-		                	alert("<spring:message code='ezPersonal.t194'/>");
+		                	showAlert("<spring:message code='ezPersonal.t194'/>");
 		                	document.getElementById("txtNewPassword").value = "";
 		                	document.getElementById("txtNewPassword").focus();
 		                	return;
@@ -109,7 +109,7 @@
 		
 		
 		            if (!CheckPwd) {
-		                alert("<spring:message code='ezPersonal.t946'/>");
+		                showAlert("<spring:message code='ezPersonal.t946'/>");
 		                document.getElementById("txtOldPassword").value = "";
 		                document.getElementById("txtOldPassword").focus();
 		                return;
@@ -143,9 +143,9 @@
 		    	});
 		        
 		        if (result == "OK")
-		            alert("<spring:message code='ezPersonal.t191'/>");
+		            showAlert("<spring:message code='ezPersonal.t191'/>");
 		        else
-		            alert("<spring:message code='ezPersonal.t192'/>");
+		            showAlert("<spring:message code='ezPersonal.t192'/>");
 		
 		        window.location.reload(true);
 		    }

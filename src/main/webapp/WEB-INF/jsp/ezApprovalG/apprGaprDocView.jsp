@@ -318,7 +318,7 @@
 		                }
 		            }
 		        } catch (e) {
-		            alert("putSignXML : " + e.description);
+		            showAlert("putSignXML : " + e.description);
 		            return false;
 		        }
 		        
@@ -567,7 +567,7 @@
 		     			}        			
 		            });
 		    	} catch (e) {
-		    		alert("getDocMode() :: " + e.description);
+		    		showAlert("getDocMode() :: " + e.description);
 		    	}
 		    	
 		    	return rtnVal;
@@ -869,13 +869,13 @@
 		    function btnReturn_onclick() {
 	        	var deptCheckFlag = checkDeptAndCabinetId();
 		    	if (deptCheckFlag == "3") {
-		    		alert(strLanggarm06 + " '" + arr_userinfo[5] + "'" +strLanggarm03 + " '" + arr_userinfo[5] + "'" + strLanggarm07 );
+		    		showAlert(strLanggarm06 + " '" + arr_userinfo[5] + "'" +strLanggarm03 + " '" + arr_userinfo[5] + "'" + strLanggarm07 );
 		    		return;
 		    	} else if (deptCheckFlag == "4") {
-		    		alert(strLanggarm06 + " '" + "'" + strLanggarm08);
+		    		showAlert(strLanggarm06 + " '" + "'" + strLanggarm08);
 		    		return;
 		    	} else if (deptCheckFlag == "2") {
-					alert("타부서의 철정보로 설정되어있습니다. \n'" + arr_userinfo[5] + "'부서의 철로 변경해주시기바랍니다.");
+					showAlert("타부서의 철정보로 설정되어있습니다. \n'" + arr_userinfo[5] + "'부서의 철로 변경해주시기바랍니다.");
 					return;
 				}	
 		    	
@@ -906,7 +906,7 @@
 		        DivPopUpHidden();
 
 		        if (checkAprState()) {
-		    		alert("<spring:message code='ezApprovalG.bhs23'/>");
+		    		showAlert("<spring:message code='ezApprovalG.bhs23'/>");
 	    			window.close();
 	    			return;
 		    	}
@@ -1023,7 +1023,7 @@
 		            var pLeft = (pwidth - 765) / 2;
 		            
 		            if (ret[2] == "2" || ret[2] == "3" || ret[2] == "4" || ret[2] == "7" || ret[2] == "8" || (ret[3] != "null" && ret[3] != null && ret[3] != "")) {
-		                alert(strLang1031);
+		                showAlert(strLang1031);
 		            }
 		            else {
 		                window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&mode=new1&pbrdGbn=SiteNewBoard&pFromScreen=Mail&docID=" + pDocID + "&url=" + pDocHref + "&orgCompanyID=" + orgCompanyID, '', GetOpenWindowJun(765, 870));

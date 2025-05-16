@@ -305,34 +305,34 @@
 		        var strEndDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 		        
 		        if (new Date(strCurrDate) > new Date(strStartDate)) {
-		            alert("<spring:message code='ezPersonal.t14'/>");
+		            showAlert("<spring:message code='ezPersonal.t14'/>");
 		            return true;
 		        } else if (new Date(strCurrDate) > new Date(strEndDate)) {
-		            alert("<spring:message code='ezPersonal.t15'/>");
+		            showAlert("<spring:message code='ezPersonal.t15'/>");
 		            return true;
 		        } else if (new Date() > new Date(strEndDate + "T" +$("#Etimepicker").val())) {
-		        	alert("<spring:message code='ezPersonal.t26'/>");
+		        	showAlert("<spring:message code='ezPersonal.t26'/>");
     				return true;
 		        } else if (strStartDate == strEndDate) {
 		        	if (gIsAppoint == '1') {
 		        		if (Number($("#Stimepicker").val().substring(0,2)) > Number($("#Etimepicker").val().substring(0,2))) {
-			        		alert("<spring:message code='ezPersonal.pjj2'/>");
+			        		showAlert("<spring:message code='ezPersonal.pjj2'/>");
 			        		return true;
 		        		} else if (Number($("#Stimepicker").val().substring(0,2)) == Number($("#Etimepicker").val().substring(0,2))) {
 		        			if (Number($("#Stimepicker").val().substring(3,5)) > Number($("#Etimepicker").val().substring(3,5))) {
-		        				alert("<spring:message code='ezPersonal.pjj2'/>");
+		        				showAlert("<spring:message code='ezPersonal.pjj2'/>");
 		        				return true;
 		        			} else if  (Number($("#Stimepicker").val().substring(3,5)) == Number($("#Etimepicker").val().substring(3,5))) {
-		        				alert("<spring:message code='ezPersonal.pjj1'/>");
+		        				showAlert("<spring:message code='ezPersonal.pjj1'/>");
 		        				return true;
 		        			}
 		        		} else if ($("#Stimepicker").val() == $("#Etimepicker").val()) {
-		        			alert("<spring:message code='ezPersonal.pjj1'/>");
+		        			showAlert("<spring:message code='ezPersonal.pjj1'/>");
 	        				return true;
 		        		}
 		        	}
 		        } else if ((strStartDate > strEndDate)) {
-		        	alert("<spring:message code='ezPersonal.t26'/>");
+		        	showAlert("<spring:message code='ezPersonal.t26'/>");
     				return true;
 		        } else {
 		            return false;
@@ -346,7 +346,7 @@
 		        if (gIsAppoint != '2') {
 		            
 		        	if (document.getElementById("TextName").value != "" && document.getElementById("absentreason").value != "<spring:message code='ezPersonal.t35'/>") {
-		                alert("<spring:message code='ezPersonal.t36'/>");
+		                showAlert("<spring:message code='ezPersonal.t36'/>");
 		                return;
 		            }
 		        }
@@ -357,7 +357,7 @@
 		        /*
 		        if (document.getElementById("TextName").value != "") {
 		            if (orguserid.toLowerCase() == userid.toLowerCase()) {
-		                alert("<spring:message code='ezPersonal.t16'/>");
+		                showAlert("<spring:message code='ezPersonal.t16'/>");
 		                return;
 		            }
 		            pBujae = userid + ":" + document.getElementById("TextName").value + ":" + deptid + ":" + $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val() + ":" + $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() +  " " + $('#Etimepicker').val() + ":";
@@ -413,7 +413,7 @@
 			        	formArray.push(jo);
 			        });
 		        } catch(e) {
-		        	alert('<spring:message code="ezPersonal.tt16"/>');
+		        	showAlert('<spring:message code="ezPersonal.tt16"/>');
 		        }
 		        
 		        try {
@@ -431,39 +431,39 @@
 		    		success: function(text){
 			            /*
 		    			if (gIsAppoint == "1") {
-			                alert("<spring:message code='ezPersonal.t00002'/>"); // 대리 결재자 지정
+			                showAlert("<spring:message code='ezPersonal.t00002'/>"); // 대리 결재자 지정
 // 			                window.location.reload(false);
 			            }
 			            else if (gIsAppoint == "2") {
-			                alert("<spring:message code='ezPersonal.t40'/>"); // 부재사유 설정
+			                showAlert("<spring:message code='ezPersonal.t40'/>"); // 부재사유 설정
 // 			                window.location.reload(false);
 			            }
 			            else if (gIsAppoint == "3") {
-			                alert("<spring:message code='ezPersonal.t41'/>"); // 설정 해제 
+			                showAlert("<spring:message code='ezPersonal.t41'/>"); // 설정 해제 
 // 			                window.location.reload(false);
 			            }
 			            else if (gIsAppoint == "4") {
-			            	alert("<spring:message code='ezPersonal.t65'/>");// 아무것도 지정 않았을 때
+			            	showAlert("<spring:message code='ezPersonal.t65'/>");// 아무것도 지정 않았을 때
 			            }
 			            */
-			            alert("<spring:message code='ezPersonal.tt16'/>");
+			            showAlert("<spring:message code='ezPersonal.tt16'/>");
 		    		},
 		    		error: function(){
 			            /*
 		    			if (gIsAppoint == "1") {
-			                alert("<spring:message code='ezPersonal.t37'/>");
+			                showAlert("<spring:message code='ezPersonal.t37'/>");
 			            }
 			            else if (gIsAppoint == "2") {
-			                alert("<spring:message code='ezPersonal.t38'/>");
+			                showAlert("<spring:message code='ezPersonal.t38'/>");
 			            }
 			            else if (gIsAppoint == "3") {
-			                alert("<spring:message code='ezPersonal.t39'/>");
+			                showAlert("<spring:message code='ezPersonal.t39'/>");
 			            }
 			            else if (gIsAppoint == "4") {
-			            	alert("<spring:message code='ezEmail.t133'/>");
+			            	showAlert("<spring:message code='ezEmail.t133'/>");
 			            }
 			            */
-			            alert("<spring:message code='ezPersonal.tt14'/>");
+			            showAlert("<spring:message code='ezPersonal.tt14'/>");
 		    		}
 		    	});
 		        document.location.reload(true);
@@ -772,5 +772,9 @@
 		    	</div>	
 		  	</div>
 		</form>
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
+		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+		</div>
 	</body>
 </html>

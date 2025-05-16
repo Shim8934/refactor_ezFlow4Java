@@ -424,7 +424,7 @@
 				})
 				.fail(function(fail) {
 					console.log("apprGManage > /admin/ezOrgan/getEntryInfo.do > fail => ", fail);
-					alert("<spring:message code='ezTask.t200913'/>");
+					showAlert("<spring:message code='ezTask.t200913'/>");
 					return;
 				});
 				
@@ -452,7 +452,7 @@
 		    	})
 		    	.fail(function(fail) {
 		    		console.log("apprGManage > /admin/ezOrgan/getUserAddJobList.do > fail => ", fail);
-		    		alert("<spring:message code='ezTask.t200913'/>");
+		    		showAlert("<spring:message code='ezTask.t200913'/>");
 					return;
 		    	});
 		         
@@ -831,7 +831,7 @@
 		                return;
 		            if (pListTypeValue == "1" || pListTypeValue == "11") { //listTypeValue = 11(공유결재문서)
 						if (checkAprState(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("DATA12"), pCurSelRow.getAttribute("DATA4"), pCurSelRow.getAttribute("APRMEMBERSN"), pCurSelRow.getAttribute("ORGCOMPANYID"))){
-							alert("<spring:message code='ezApprovalG.bhs23'/>");
+							showAlert("<spring:message code='ezApprovalG.bhs23'/>");
 							getDocList();
 							return;
 	                	}
@@ -1053,7 +1053,7 @@
 		            if (tempFlag == 0 || tempFlag == 1) {
 		            	//첫번째 문서가 모두결재인 경우에는 결재창을 열지 않도록 변경
 						if (checkAprState(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("DATA12"), pCurSelRow.getAttribute("DATA4"), pCurSelRow.getAttribute("APRMEMBERSN"), pCurSelRow.getAttribute("ORGCOMPANYID"))){
-							alert("<spring:message code='ezApprovalG.bhs23'/>");
+							showAlert("<spring:message code='ezApprovalG.bhs23'/>");
 							getDocList();
 							return;
 							
@@ -1062,7 +1062,7 @@
 		            	/* 2022-02-23 홍승비 - 일괄기안된 문서는 모두결재에서 제외 */
 						var isGroupDoc = checkIsGroupDoc(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("ORGCOMPANYID")); // 일괄기안문서 여부 체크 (1안 기준의 DOCID 전달)
 		            	if (tempFlag == 1 && isGroupDoc == "Y") {
-		            		alert("<spring:message code='ezApprovalG.HSBDa05'/>");
+		            		showAlert("<spring:message code='ezApprovalG.HSBDa05'/>");
 							return;
 		            	}
                 	}
@@ -1095,7 +1095,7 @@
 		            else {
 		                var pAlertContent = "<spring:message code='ezApprovalG.t1533'/>";
 		                //OpenAlertUI(pAlertContent);
-		                alert(pAlertContent);
+		                showAlert(pAlertContent);
 		            }
 		        }
 		        else {
@@ -1118,7 +1118,7 @@
 					} else {
 						if(useWebHWP == "NO") {
 							if (/chrome/i.test(navigator.userAgent)) {
-								alert(strLang1103);
+								showAlert(strLang1103);
 								return;
 							} else {
 								if (docHref == "hwp" || g_RelayG_Type.toUpperCase() == "HWP") {
@@ -1141,7 +1141,7 @@
 		        
 		        if (oArrRows.length <= 0) {
 		        	var pAlertContent = "<spring:message code='ezApprovalG.t1533'/>";
-		        	alert(pAlertContent);
+		        	showAlert(pAlertContent);
 		            return;
 		        }
 		        
@@ -1158,7 +1158,7 @@
 		        
 		        if (pCurSelRow.getAttribute("orgcompanyid") != "" && pCurSelRow.getAttribute("orgcompanyid") != companyID) {
 		        	var pAlertContent = "<spring:message code='ezApprovalG.csj01'/>";
-		        	alert(pAlertContent);
+		        	showAlert(pAlertContent);
 		            return;
 		        }
 		        
@@ -1174,13 +1174,13 @@
 		                var pAlertContent = "<spring:message code='ezApprovalG.t1727'/>" + "\n" +
 		                            "<spring:message code='ezApprovalG.t1712'/>" + ret + "<spring:message code='ezApprovalG.t1713'/>";
 		                //OpenAlertUI(pAlertContent);
-		                alert(pAlertContent);
+		                showAlert(pAlertContent);
 		                return;
 		            }
 		        }
 		        
 		        if ((pListTypeValue == "1" || pListTypeValue == "11") && checkAprState(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("DATA12"), pCurSelRow.getAttribute("DATA4"), pCurSelRow.getAttribute("APRMEMBERSN"), pCurSelRow.getAttribute("ORGCOMPANYID"))){
-		        	alert("<spring:message code='ezApprovalG.bhs23'/>");
+		        	showAlert("<spring:message code='ezApprovalG.bhs23'/>");
 					getDocList();
 					return;
 				}
@@ -1224,77 +1224,12 @@
 		        var oArrRows = DocList.GetSelectedRows();
 		        if (oArrRows == 0) {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t1533'/>";
-		            //OpenAlertUI(pAlertContent);
-		            alert(pAlertContent);
+					showAlert(pAlertContent);
 		            return;
 		        }
-		        
-		        /* 2020-08-27 홍승비 - 체크박스로 다중선택된 반송(004), 회송(015), 회수(006)문서의 다중삭제가 가능하도록 수정 */
-		        var Ans = confirm("<spring:message code='ezApprovalG.t1728'/>");
-		        if (Ans) {
-		        	var pCurSelRow = "";
-		        	var pFunctionType = "";
-					var pDocState = "";
-		        	 
-		        	for (var i = 0; i < oArrRows.length; i++) {
-		        		pCurSelRow = oArrRows[i];
-		        		pFunctionType = GetAttribute(pCurSelRow, "DATA10"); // DATA10 = APRSTATE(FUNCTIONTYPE)
-		        		pDocState = GetAttribute(pCurSelRow, "DATA12"); // DATA9 = 수신문 관련 플래그, DATA12 = DOCSTATE
-		        		
-		        		// 내부결재가 아닌 수신문(011), 합의문(012)의 경우 삭제 불가능, 재기안만 가능함 + 임시보관함의 경우 전부 삭제 가능
-		        		// 부서수신함과 발송의뢰문서(pListTypeValue == "4"/"6")의 경우, 회송된 수신문과 합의문 모두 삭제 가능함 (G버전은 부서수신함에서 회송 시 상태만 변하고 문서는 리스트 상에 남아있음)
-				        if ((pListTypeValue == "21") || (pListTypeValue == "10") ||
-				        		((pFunctionType == "004" || pFunctionType == "006" || pFunctionType == "015") && ((pListTypeValue == "4" || pListTypeValue == "97") || (pListTypeValue == "6") || (GetAttribute(pCurSelRow, "DATA9") == "0" && pDocState != "011" && pDocState != "012")))) {
-					        if (pListTypeValue == "1" || pListTypeValue == "11" || pListTypeValue == "2") {
-								if (checkAprState(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("DATA12"), pCurSelRow.getAttribute("DATA4"), pCurSelRow.getAttribute("APRMEMBERSN"), pCurSelRow.getAttribute("ORGCOMPANYID"))){
-									alert("<spring:message code='ezApprovalG.bhs23'/>");
-									getDocList();
-									return;
-								}
-							}
-				            
-			            	/* 2022-02-10 홍승비 - 문서 삭제 시 일괄기안 그룹정보 레코드도 함께 삭제 (1안의 DOCID / DOCSN 기준으로 GROUPDOCSN 찾아서 삭제함)*/
-			                isGroupDoc = checkIsGroupDoc(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("ORGCOMPANYID"));
-			                if (isGroupDoc == "Y") {
-			                	// 해당 일괄기안그룹에 속한 문서들은 루프를 돌며 전부 삭제한다.
-			                	var groupDocList = getGroupDocListByDocID(pCurSelRow.getAttribute("DATA1"));
-			                	groupDocListCnt = groupDocList.length;
-			                	groupDocDelCnt = 0;
-			                	
-			                	for (var g = 0; g < groupDocList.length; g++) {
-			                		// 삭제완료 알러트는 한번만 표출하도록 내부 분기 추가함
-				                	 if (pListTypeValue == "21") {
-						                RemoveTmpDoc(groupDocList[g]);
-						            } else {
-						                RemoveDoc(groupDocList[g], pCurSelRow.getAttribute("orgcompanyid"));
-						            }
-			                	}
-			                	// 문서정보 삭제 루프 이후, 일괄기안 그룹 레코드는 전체적으로 삭제한다.(GROUPDOCSN조건으로 삭제, mode = ALL)
-			                	delGroupDocInfoByDocID(pCurSelRow.getAttribute("DATA1"), "ALL");
-			                }
-			                // 일괄기안 그룹이 아닌 경우, 기존 삭제 분기 동작
-			                else {
-					            if (pListTypeValue == "21") {  //[한양대] 추가 사항 (서버 임시저장하기)
-					                RemoveTmpDoc(pCurSelRow.getAttribute("DATA1"));
-					            } else if (pListTypeValue == "10") {	// 공람완료문서 삭제기능
-									RemoveGongramDoc(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("aprmembersn"));
-								} else {
-					                RemoveDoc(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("orgcompanyid"));
-					            }
-			                }
-				        }
-		        	}
-		            
-		            if (pListTypeValue == "4" || pListTypeValue == "97") {
-		                getReceivedDocList();
-		            } else if (pListTypeValue == "6") {
-		                getSimsaDocList();
-		            } else {
-		                getDocList();
-		            }
-		            
-		            parent.frames["left"].getAprCount();
-		        }
+
+				ezCommon_cross_dialogParams[0] = oArrRows;
+				showConfirm("<spring:message code='ezApprovalG.t1728'/>", btnRemoveDoc_onclick_afterConfirm);
 		    }
 		    function btnAssign_onclick() {
 		        var DocList = new ListView();
@@ -1323,7 +1258,7 @@
 		                    openLocation = "/myoffice/ezApprovalG/ezViewWord/ezConvOut_word_Cross.aspx?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pURL);
 		                } else if (ext == "hwp") { // 2018.07.26 (KLIB) - ezd 확장자 처리
 		                    if (CrossYN() && !(/netscape/i.test(navigator.appName) && /trident/i.test(navigator.userAgent) || /msie/i.test(navigator.userAgent))) {
-		                        alert(strLang1103);
+		                        showAlert(strLang1103);
 		                        return;
 		                    } else {
 // 		                        openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezConvOut_HWP.aspx?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pURL);
@@ -1356,12 +1291,12 @@
 		                } else {
 		                    var pAlertContent = "<spring:message code='ezApprovalG.t1730'/>";
 		                    //OpenAlertUI(pAlertContent);
-		                    alert(pAlertContent);
+		                    showAlert(pAlertContent);
 		                }
 		            }
 		        } else {
 		        	var pAlertContent = "<spring:message code='ezApprovalG.t1533'/>";
-		        	alert(pAlertContent);
+		        	showAlert(pAlertContent);
 		            return;
 		        }
 		    }
@@ -1695,7 +1630,7 @@
 				    		});
 		                } else {
 		                    var pAlertContent = "<spring:message code='ezApprovalG.t1730'/>";
-		                    alert(pAlertContent);
+		                    showAlert(pAlertContent);
 		                }
 			    	
 				    	// 접수된 문서인지 확인하기
@@ -1782,7 +1717,7 @@
 			        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
 			
 			        if (chkReceivedDoc != 0) {
-			        	alert("<spring:message code='ezApprovalG.pjg04'/>");
+			        	showAlert("<spring:message code='ezApprovalG.pjg04'/>");
 			        	window.close();
 			        } else {
 			        	OpenPopupWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&orgCompanyID=" + orgCompanyID + "&docType=" + pDocType, "ezApprovalInfo", GetOpenWindowfeature(1210, 750));
@@ -1834,7 +1769,7 @@
 		                    			if (result == 'TRUE') {
 		                    				
 		                    			} else {
-		                    				alert(strLang163);
+		                    				showAlert(strLang163);
 		                    			}
 		                    		}
 		                    	});
@@ -1878,7 +1813,7 @@
 			            savexmlhttp = null;
 			            }
 			            catch (e) {
-			                alert("저장시 오류 발생");
+			                showAlert("저장시 오류 발생");
 			            }
 			        }
 		    }
@@ -2157,7 +2092,7 @@
 		        if (approvalFlag == "G") {
 			        if (oArrRows.length > 0) {
 			        	if (checkNonElecRec(oArrRows[0].getAttribute("DATA7"))) {
-			        		alert("비전자문서는 회송이 불가능 합니다.");
+			        		showAlert("비전자문서는 회송이 불가능 합니다.");
 			        		return;
 			        		/* if (confirm("삭제 하시겠습니까 ?")) {
 			        			RemoveSusinNonElecRecDoc(oArrRows[0].getAttribute("DATA1"));
@@ -2170,7 +2105,7 @@
 				                if (pCurSelRow.cells[6].innerHTML == "<spring:message code='ezApprovalG.t1731'/>") {
 				                    var pAlertContent = "<spring:message code='ezApprovalG.t1732'/>";
 				                    //OpenAlertUI(pAlertContent);
-				                    alert(pAlertContent);
+									showAlert(pAlertContent);
 				                    return;
 				                }
 				            }
@@ -2187,7 +2122,7 @@
 			    	if (oArrRows != 0) {
 		                var pCurSelRow = oArrRows[0];
 		                if (checkAprState(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("DATA12"), pCurSelRow.getAttribute("DATA4"), pCurSelRow.getAttribute("APRMEMBERSN"),pCurSelRow.getAttribute("ORGCOMPANYID"))){
-							alert("<spring:message code='ezApprovalG.bhs23'/>");
+							showAlert("<spring:message code='ezApprovalG.bhs23'/>");
 							getDocList();
 							return;
 	                	}
@@ -2429,7 +2364,7 @@
 		        if (oArrRows.length == 0) {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t1533'/>";
 		            //OpenAlertUI(pAlertContent);
-		            alert(pAlertContent);
+					showAlert(pAlertContent);
 		            return;
 		        }
 		        if (tr) {
@@ -2438,7 +2373,7 @@
 		                var pAlertContent = "<spring:message code='ezApprovalG.t1727'/>" + "\n" +
 		                            "<spring:message code='ezApprovalG.t1712'/>" + ret + "<spring:message code='ezApprovalG.t1713'/>";
 		                //OpenAlertUI(pAlertContent);
-		                alert(pAlertContent);
+						showAlert(pAlertContent);
 		                return;
 		            }
 		        }
@@ -2460,7 +2395,7 @@
 		        if (pHrefExt === "hwp") {
 		        	if(useWebHWP == "NO") {
 			            if (/msie/i.test(navigator.userAgent)) {
-			                alert(strLang1103);
+							showAlert(strLang1103);
 			                return;
 			            } else if (!isIE()) {
 							alert("한글양식은 IE에서만 발송할 수 있습니다.");
@@ -2521,12 +2456,12 @@
 		            //결재할문서(1)과 부서수신함(4)의 부서아이디 DATA가 달라서 변경 
 					if (pListTypeValue == "1") {
 			            if (arr_userinfo[4] != tr.getAttribute("DATA7")) {
-			            	alert("'" + tr.getAttribute("DATA7") + "'부서의 문서입니다. \n'" + tr.getAttribute("DATA7") + "'부서로 겸직변경 후 대장등록해주시기 바랍니다.");
+							showAlert("'" + tr.getAttribute("DATA7") + "'부서의 문서입니다. \n'" + tr.getAttribute("DATA7") + "'부서로 겸직변경 후 대장등록해주시기 바랍니다.");
 			            	return;
 			            }
 					} else if (pListTypeValue == "4" || pListTypeValue == "97") {
 			            if (arr_userinfo[4] != tr.getAttribute("DATA6")) {
-			            	alert("'" + tr.getAttribute("DATA6") + "'부서의 문서입니다. \n'" + tr.getAttribute("DATA6") + "'부서로 겸직변경 후 대장등록해주시기 바랍니다.");
+			            	showAlert("'" + tr.getAttribute("DATA6") + "'부서의 문서입니다. \n'" + tr.getAttribute("DATA6") + "'부서로 겸직변경 후 대장등록해주시기 바랍니다.");
 			            	return;
 			            }
 					}
@@ -2536,7 +2471,7 @@
 		                var pAlertContent = "<spring:message code='ezApprovalG.t1727'/>" + "\n" +
 		                            "<spring:message code='ezApprovalG.t1712'/>" + ret + "<spring:message code='ezApprovalG.t1713'/>";
 		                //OpenAlertUI(pAlertContent);
-		                alert(pAlertContent);
+						showAlert(pAlertContent);
 		                return;
 		            }
 		            if (tr.getAttribute("DATA10") == "015") {
@@ -2559,7 +2494,7 @@
 		        else {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t1533'/>";
 		            //OpenAlertUI(pAlertContent);
-		            alert(pAlertContent);
+					showAlert(pAlertContent);
 		            return;
 		        }
 		    }
@@ -2771,7 +2706,7 @@
 	            var isGroupDoc = checkIsGroupDoc(pDocID, orgCompanyID); // 일괄기안문서 여부 체크 (1안 기준의 DOCID 전달)
 	            if (isGroupDoc == "Y") {
 	            	var pAlertContent = "일괄기안된 문서는 결재완료 이전에 통합 PC 저장이 불가능합니다.";
-					alert(pAlertContent);
+					showAlert(pAlertContent);
 		            return;
 	            }
 	            
@@ -2780,7 +2715,8 @@
 		        var feature = "status=no,help=no,scroll=no,edge=sunken,width=580px,height=480px";
 		        
 		        feature = feature + GetOpenPosition(580, 480);
-		        window.open(url, "", feature);
+		        // window.open(url, "", feature);
+				showPopup(url, 580, 480, "", feature, DivPopUpHidden);
 		    }
 		    
 		    function getDocMode(pDocID, pOrgCompanyID) {
@@ -2800,27 +2736,32 @@
 		     			}
 		            });
 		    	} catch (e) {
-		    		alert("getDocMode() :: " + e.description);
+					showAlert("getDocMode() :: " + e.description);
 		    	}
 		    	
 		    	return rtnVal;
 		    }
 		
-		    var setsearchinfo_cross_dialogArguments = new Array();
-		    var OpenWin2;
+		    // var setsearchinfo_cross_dialogArguments = new Array();
+		    // var OpenWin2;
 		    function SearchCondi_onclick() {
 		        var para;
-		        setsearchinfo_cross_dialogArguments[0] = para;
-		        setsearchinfo_cross_dialogArguments[1] = SearchCondi_onclick_Complete;
-		        var type = "APR";
-		        OpenWin2 = window.open("/ezApprovalG/setSearchInfo.do?type=" + type+ "&searchType="+pListTypeValue, "setsearchInfo_Cross", GetOpenWindowfeature(510, 405));
-		        try { OpenWin2.focus(); } catch (e) { }
+		        // setsearchinfo_cross_dialogArguments[0] = para;
+		        // setsearchinfo_cross_dialogArguments[1] = SearchCondi_onclick_Complete;
+		        // var type = "APR";
+		        // OpenWin2 = window.open("/ezApprovalG/setSearchInfo.do?type=" + type+ "&searchType="+pListTypeValue, "setsearchInfo_Cross", GetOpenWindowfeature(510, 405));
+		        // try { OpenWin2.focus(); } catch (e) { }
+				ezCommon_cross_dialogArguments[0] = para;
+				var url = "/ezApprovalG/setSearchInfo.do?type=APR&searchType=" + pListTypeValue;
+				var height = approvalFlag == "S" ? 355 : 375;
+				showPopup(url, 510, height, "setsearchInfo_Cross", "", SearchCondi_onclick_Complete);
 		    }
 		
 		    var SearchCond = new Array();
 
 		    var SQLPARADATA;
 		    function SearchCondi_onclick_Complete(returnvalue) {
+				hidePopup();
 		        condition = returnvalue;
 		        if (condition) {
 		        	for (var i = 0; i < condition.length; i++) {
@@ -3134,7 +3075,7 @@
 					}
 		        }
 		        else {
-		            alert("<spring:message code='ezApprovalG.t1160'/>");
+					showAlert("<spring:message code='ezApprovalG.t1160'/>");
 		            return;
 		        }
 		        pageNum = 1;
@@ -3187,7 +3128,7 @@
 		    var SelUserCont_dialogArgument = new Array();
 		    function btnRegUserCont_onclick() {
 		        SelUserCont_dialogArgument[0] = "";
-		        SelUserCont_dialogArgument[1] = RegUserCont_Complete;;
+		        SelUserCont_dialogArgument[1] = RegUserCont_Complete;
 		        var url = "/ezApprovalG/selUserCont.do";
 		        ContOpen = GetOpenWindow(url, "selUserCont", 340, 460, "NO");
 		        try { ContOpen.focus() } catch (e) { }
@@ -3227,7 +3168,7 @@
 		                InformationString = strLangS386;
 		            else
 		                InformationString = strLangS1124;
-		            alert(InformationString);
+					showAlert(InformationString);
 		        }
 		    }
 		    
@@ -3606,7 +3547,76 @@
 					window.close();
 				}
 			}
+			
+			function btnRemoveDoc_onclick_afterConfirm(rtn) {
+				/* 2020-08-27 홍승비 - 체크박스로 다중선택된 반송(004), 회송(015), 회수(006)문서의 다중삭제가 가능하도록 수정 */
+				if (rtn) {
+					var oArrRows = ezCommon_cross_dialogParams[0];
+					var pCurSelRow = "";
+					var pFunctionType = "";
+					var pDocState = "";
 
+					for (var i = 0; i < oArrRows.length; i++) {
+						pCurSelRow = oArrRows[i];
+						pFunctionType = GetAttribute(pCurSelRow, "DATA10"); // DATA10 = APRSTATE(FUNCTIONTYPE)
+						pDocState = GetAttribute(pCurSelRow, "DATA12"); // DATA9 = 수신문 관련 플래그, DATA12 = DOCSTATE
+
+						// 내부결재가 아닌 수신문(011), 합의문(012)의 경우 삭제 불가능, 재기안만 가능함 + 임시보관함의 경우 전부 삭제 가능
+						// 부서수신함과 발송의뢰문서(pListTypeValue == "4"/"6")의 경우, 회송된 수신문과 합의문 모두 삭제 가능함 (G버전은 부서수신함에서 회송 시 상태만 변하고 문서는 리스트 상에 남아있음)
+						if ((pListTypeValue == "21") || (pListTypeValue == "10") ||
+								((pFunctionType == "004" || pFunctionType == "006" || pFunctionType == "015") && ((pListTypeValue == "4" || pListTypeValue == "97") || (pListTypeValue == "6") || (GetAttribute(pCurSelRow, "DATA9") == "0" && pDocState != "011" && pDocState != "012")))) {
+							if (pListTypeValue == "1" || pListTypeValue == "11" || pListTypeValue == "2") {
+								if (checkAprState(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("DATA12"), pCurSelRow.getAttribute("DATA4"), pCurSelRow.getAttribute("APRMEMBERSN"), pCurSelRow.getAttribute("ORGCOMPANYID"))){
+									showAlert("<spring:message code='ezApprovalG.bhs23'/>");
+									getDocList();
+									return;
+								}
+							}
+
+							/* 2022-02-10 홍승비 - 문서 삭제 시 일괄기안 그룹정보 레코드도 함께 삭제 (1안의 DOCID / DOCSN 기준으로 GROUPDOCSN 찾아서 삭제함)*/
+							isGroupDoc = checkIsGroupDoc(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("ORGCOMPANYID"));
+							if (isGroupDoc == "Y") {
+								// 해당 일괄기안그룹에 속한 문서들은 루프를 돌며 전부 삭제한다.
+								var groupDocList = getGroupDocListByDocID(pCurSelRow.getAttribute("DATA1"));
+								groupDocListCnt = groupDocList.length;
+								groupDocDelCnt = 0;
+
+								for (var g = 0; g < groupDocList.length; g++) {
+									// 삭제완료 알러트는 한번만 표출하도록 내부 분기 추가함
+									if (pListTypeValue == "21") {
+										RemoveTmpDoc(groupDocList[g]);
+									} else {
+										RemoveDoc(groupDocList[g], pCurSelRow.getAttribute("orgcompanyid"));
+									}
+								}
+								// 문서정보 삭제 루프 이후, 일괄기안 그룹 레코드는 전체적으로 삭제한다.(GROUPDOCSN조건으로 삭제, mode = ALL)
+								delGroupDocInfoByDocID(pCurSelRow.getAttribute("DATA1"), "ALL");
+							}
+							// 일괄기안 그룹이 아닌 경우, 기존 삭제 분기 동작
+							else {
+								if (pListTypeValue == "21") {  //[한양대] 추가 사항 (서버 임시저장하기)
+									RemoveTmpDoc(pCurSelRow.getAttribute("DATA1"));
+								} else if (pListTypeValue == "10") {	// 공람완료문서 삭제기능
+									RemoveGongramDoc(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("aprmembersn"));
+								} else {
+									RemoveDoc(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("orgcompanyid"));
+								}
+							}
+						}
+					}
+
+					if (pListTypeValue == "4" || pListTypeValue == "97") {
+						getReceivedDocList();
+					} else if (pListTypeValue == "6") {
+						getSimsaDocList();
+					} else {
+						getDocList();
+					}
+
+					parent.frames["left"].getAprCount();
+				}
+				hideConfirm();
+			}
 		</script>
 	</head>
 	<body class="mainbody" style="margin-top:0px; overflow:auto;" marginwidth="0" marginheight="0" onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">	

@@ -279,7 +279,7 @@ function CodeSearch_onclick() {
     var SearchOPtion = GetAttribute(document.getElementById("selSearchOption")[document.getElementById("selSearchOption").selectedIndex], "id");
     var SearchValue = document.getElementById("txtCodeSearch").value;
     if (SearchValue.trim() == "") {
-        alert(strLangS554);
+    	showAlert(strLangS554);
         return;
     }
 

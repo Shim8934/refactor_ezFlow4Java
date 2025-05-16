@@ -106,8 +106,13 @@
 		                KeEventControl(document.getElementById("textUser"));
 		            }
 		            try {
-		                    RetValue = opener.aprgongramline_cross_dialogArguments[0];
-		                    ReturnFunction = opener.aprgongramline_cross_dialogArguments[1];
+						if (isParentCommonArgsUsed()) {
+							RetValue = parent.ezCommon_cross_dialogArguments[0];
+							ReturnFunction = parent.ezCommon_cross_dialogArguments[1];
+						} else {
+		                    RetValue = parent.aprgongramline_cross_dialogArguments[0];
+		                    ReturnFunction = parent.aprgongramline_cross_dialogArguments[1];
+						}
 		            } catch (e) {
 		                try {
 		                    RetValue = opener.aprgongramline_cross_dialogArguments[0];

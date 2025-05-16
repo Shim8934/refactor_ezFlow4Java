@@ -25,7 +25,7 @@
 		    }
 		    function btn_OpinionOK_onclick() {
 		        if (ReturnFunction != null) {
-		            ReturnFunction();
+		            ReturnFunction(closeParent);
 		            
 		            if (winFlag) {
 		            	window.close();
@@ -37,11 +37,19 @@
 		    }
 		    var ReturnFunction;
 		    var winFlag;
+			var closeParent = false;
 		    window.onload = function () {
 		        try {
-		            RetValue = parent.ezapralert_cross_dialogArguments[0];
-		            ReturnFunction = parent.ezapralert_cross_dialogArguments[1];
-		            winFlag = parent.ezapralert_cross_dialogArguments[2];
+		            if (isParentCommonArgsUsed()) {
+						RetValue = parent.ezCommon_cross_dialogArguments[0];
+						ReturnFunction = parent.ezCommon_cross_dialogArguments[1];
+						winFlag = parent.ezCommon_cross_dialogArguments[2];
+						closeParent = parent.ezCommon_cross_dialogArguments[3];
+					} else {
+						RetValue = parent.ezapralert_cross_dialogArguments[0];
+						ReturnFunction = parent.ezapralert_cross_dialogArguments[1];
+						winFlag = parent.ezapralert_cross_dialogArguments[2];
+					}
 		        } catch (e) {
 		            try {
 		                RetValue = opener.ezapralert_cross_dialogArguments[0];

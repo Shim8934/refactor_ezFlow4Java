@@ -37,12 +37,17 @@
 		    window.onload = function () {
 		        pDeptID = "<c:out value='${userInfo.deptID}'/>";
 		
-		        if (CrossYN() || opener.SelCont_dialogArgument != undefined)
-		        {
-		            ReturnFunction = opener.SelCont_dialogArgument[1];
-		        }
-		        else
-		            window.returnValue = "";
+		        // if (CrossYN() || opener.SelCont_dialogArgument != undefined)
+		        // {
+		        //     ReturnFunction = opener.SelCont_dialogArgument[1];
+		        // }
+		        // else
+		        //     window.returnValue = "";
+				try {
+					ReturnFunction = parent.ezCommon_cross_dialogArguments[1];
+				} catch (e) {
+					ReturnFunction = opener.ezCommon_cross_dialogArguments[1];
+				}
 		
 		        listHeader();
 		        Init();

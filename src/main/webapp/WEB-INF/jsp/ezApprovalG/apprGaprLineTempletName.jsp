@@ -34,12 +34,12 @@
 		        if (p_AprLineTempletName.trim() == "") {
 		        	var pAlertContent;
 		        	if (type == "") {
-	                    alert("<spring:message code='ezApprovalG.t2107'/>");
+	                    showAlert("<spring:message code='ezApprovalG.t2107'/>");
 		        	} else {
 		        		if (approvalFlag == "G") {
-			        		alert("<spring:message code='ezApprovalG.t6003'/>");
+			        		showAlert("<spring:message code='ezApprovalG.t6003'/>");
 		        		} else {
-			        		alert("<spring:message code='ezApprovalG.hyj10'/>");
+			        		showAlert("<spring:message code='ezApprovalG.hyj10'/>");
 		        		}
 		        	}
 		        	

@@ -1394,31 +1394,35 @@ function check_presence2() {
         SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";
     }
 
-    var SelUserCont_dialogArgument = new Array();
+    // var SelUserCont_dialogArgument = new Array();
     function btnRegUserCont_onclick() {
     	//2018-09-19 김보미 - 선택된 문서 없을 경우
         var DocList = new ListView();
         DocList.LoadFromID("DocList");
         var selRow = DocList.GetSelectedRows();
-        
-        var orgCompanyID = "";
-
         if (selRow.length <= 0) {
             var InformationString = strLangS385;
             //OpenAlertUI(InformationString);
-            alert(InformationString);
+            showAlert(InformationString);
             return;
         }
     	
-        SelUserCont_dialogArgument[0] = "";
-        SelUserCont_dialogArgument[1] = RegUserCont_Complete;
+        // SelUserCont_dialogArgument[0] = "";
+        // SelUserCont_dialogArgument[1] = RegUserCont_Complete;
         var url = "/ezApprovalG/selUserCont.do";
-        ContOpen = GetOpenWindow(url, "selUserCont", 340, 460, "NO");
-        try { ContOpen.focus() } catch (e) { }
+        // ContOpen = GetOpenWindow(url, "selUserCont", 340, 460, "NO");
+        // try { ContOpen.focus() } catch (e) { }
+        var feature = "status=no,toolbar=no,scroll=no,menubar=no,location=no,width=340px,height=460px,resizable=no";
+        ezCommon_cross_dialogArguments[0] = "";
+        showPopup(url, 340, 460, "selUserCont", feature, RegUserCont_Complete);
     }
     
     function RegUserCont_Complete(RtnVal) {
-        ContOpen.close();
+        if (typeof ContOpen != "undefined") {
+            ContOpen.close();
+        } else {
+            hidePopup();
+        }
         var DocList = new ListView();
         DocList.LoadFromID("DocList");
         var selRow = DocList.GetSelectedRows();
@@ -1459,7 +1463,7 @@ function check_presence2() {
                 InformationString = strLangS386;
             else
                 InformationString = strLangS1124;
-            alert(InformationString);
+            showAlert(InformationString);
         }
     }
     

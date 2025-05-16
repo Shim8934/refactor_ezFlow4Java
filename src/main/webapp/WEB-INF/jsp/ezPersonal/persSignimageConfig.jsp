@@ -70,7 +70,7 @@
 		                DocList = null;
 	        		},
 	        		error: function(){
-	        			alert("<spring:message code='ezPersonal.t3003'/>");
+	        			showAlert("<spring:message code='ezPersonal.t3003'/>");
 	        		}
 	        	});
 	        }
@@ -97,7 +97,7 @@
 		        DocList.LoadFromID("DocList");
 		
 		        if (DocList.GetSelectedRows().length == 0) {
-		            alert("<spring:message code='ezPersonal.t3004'/>");
+		            showAlert("<spring:message code='ezPersonal.t3004'/>");
 				    return;
 		        }
 		
@@ -137,15 +137,15 @@
 							},
 					success : function(result){
 						if(result != "OK"){
-							alert("<spring:message code='ezPersonal.t3006' />");
+							showAlert("<spring:message code='ezPersonal.t3006' />");
 						}else{
-							alert("<spring:message code='ezPersonal.t3007' />");
+							showAlert("<spring:message code='ezPersonal.t3007' />");
 							ContentDescription.innerHTML = '<div style="padding-top:80px;">' + "<spring:message code='ezPersonal.t3012'/>" + "</div>";
 							GetSignInfo();
 						}
 					},
 					error : function(){
-						alert("<spring:message code='ezPersonal.t189' />");
+						showAlert("<spring:message code='ezPersonal.t189' />");
 					}
 				});
 		    }
@@ -161,7 +161,7 @@
 				    check = compareExtension(check, extension[extension.length - 1]);
 				    
 				    if (!check || extension == null) {
-		    		    alert("<spring:message code='ezPersonal.t206'/>" + " <spring:message code='ezPersonal.t200'/>");
+		    		    showAlert("<spring:message code='ezPersonal.t206'/>" + " <spring:message code='ezPersonal.t200'/>");
 		        		document.getElementById("file1").value = "";
 		    		} else {
 		            xhr = new XMLHttpRequest();
@@ -204,10 +204,10 @@
 			/* 2021-12-08 홍승비 - 전자결재 서명 업로드 시 서버단에서도 이미지 확장자 체크 진행 */
 		    function returnvalue() {
 		    	if (xhr.responseText == "UPLOAD_ERROR") {
-					alert(document.form.file1.value + " <spring:message code='ezPersonal.t3010'/>" + "\n\n");
+					showAlert(document.form.file1.value + " <spring:message code='ezPersonal.t3010'/>" + "\n\n");
 					return;
 		    	} else if (xhr.responseText == "UPLOAD_EXT_ERROR") {
-		            alert("<spring:message code='ezAttitude.t260'/>");
+		            showAlert("<spring:message code='ezAttitude.t260'/>");
 		            return;
 		    	} else {
 					fileName = xhr.responseText;
@@ -239,9 +239,9 @@
 							},
 					success : function(result){
 						if(result != "OK"){
-							alert(filename + "<spring:message code='ezPersonal.t3010' />");
+							showAlert(filename + "<spring:message code='ezPersonal.t3010' />");
 						}else{
-							alert("<spring:message code='ezPersonal.t281' />");
+							showAlert("<spring:message code='ezPersonal.t281' />");
 							GetSignInfo();
 						}
 					}

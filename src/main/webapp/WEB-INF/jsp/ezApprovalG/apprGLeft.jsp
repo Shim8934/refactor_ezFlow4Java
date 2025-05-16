@@ -293,14 +293,16 @@
 		            }
 		        }
 		       
-	        var mngusercont_dialogArgument = new Array();
+	        // var mngusercont_dialogArgument = new Array();
 	        function MngUserOnclick() {
 	            var url = "/ezApprovalG/mngUserCont.do";
-	            mngusercont_dialogArgument[0] = "";
-	            mngusercont_dialogArgument[1] = MngUserOnclick_Complete;
-	            var Opener = GetOpenWindow(url, "MngUserCont", 465, 395, "NO");
+	            // mngusercont_dialogArgument[0] = "";
+	            // mngusercont_dialogArgument[1] = MngUserOnclick_Complete;
+	            // var Opener = GetOpenWindow(url, "MngUserCont", 465, 395, "NO");
+				showPopup(url, 465, 395, "MngUserCont", GetOpenWindowfeature(465, 395), MngUserOnclick_Complete);
 	        }
 	        function MngUserOnclick_Complete(RtnVal) {
+				hidePopup();
 	            TreeViewRefresh();
 	        }
 
@@ -613,11 +615,13 @@
 		        }
 		        
 		        if (CrossYN()) {
-		            getformcont_cross_dialogArguments[0] = parameter;
-		            getformcont_cross_dialogArguments[1] = openForm_Complete;
-		            var getFormCont_Cross = window.open(url, "/ezApproval/getFormCont.do", GetOpenWindowfeature(713, 570));
-		            
-		            try { getFormCont_Cross.focus(); } catch (e) {}
+		            // getformcont_cross_dialogArguments[0] = parameter;
+		            // getformcont_cross_dialogArguments[1] = openForm_Complete;
+		            // var getFormCont_Cross = window.open(url, "/ezApproval/getFormCont.do", GetOpenWindowfeature(713, 570));
+		            //
+		            // try { getFormCont_Cross.focus(); } catch (e) {}
+					ezCommon_cross_dialogArguments[0] = parameter;
+					showPopup(url, 713, 570, "/ezApproval/getFormCont.do", GetOpenWindowfeature(713, 570), openForm_Complete);
 		        } else {
 		            var feature = "status:no;dialogWidth:713px;dialogHeight:570px;edge:sunken;scroll:no";
 		            var ret = window.showModalDialog(url, parameter, feature);
@@ -651,6 +655,7 @@
 		    function draftAll_Complete(ret) {}
 		    
 		    function openForm_Complete(ret) {
+				hidePopup();
 		        formURL = ret[0];
 		        formDocType = ret[1];
                 attachedDocList = ret[5];
@@ -707,7 +712,8 @@
                 openLocation = openLocation + "&susinSN=" + escape(pArgument[4]) + "&docState=" + escape(pArgument[5]) + "&listType=1" + "&aprState=" + escape(pArgument[6]);
                 openLocation = openLocation + "&isTmpDoc=" + escape(pArgument[7]) + "&officeFlag=" + encodeURI(p_officeFlag) + "&attachedDocList=" + (typeof attachedDocList == "undefined" ? "" : attachedDocList);
                 
-	            openwindow(openLocation, "", 1150, 950);
+	            // openwindow(openLocation, "", 1150, 950);
+				showPopupSlide(openLocation, 1150, 950, "", "", hidePopupSlide, openwindow);
 	        }
 		    
 		    function openwindow(wfileLocation, wName, wWeigth, wHeigth) {

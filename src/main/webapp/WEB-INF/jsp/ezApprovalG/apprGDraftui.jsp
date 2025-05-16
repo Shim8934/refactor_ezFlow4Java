@@ -228,10 +228,15 @@
 
 			// 창마다 고유한 id 지정용
 			var windowUuid = getRandomId();
+			var ReturnFunction;
 			
 		    window.onload = function ()
 		    {
-		    	if(officeFlag == 'Y'){
+		    	if (isParentCommonArgsUsed()) {
+					ReturnFunction = parent.ezCommon_cross_dialogArguments[1];
+				}
+				
+				if(officeFlag == 'Y'){
 		    		window.resizeTo(1920, 1200);
 		    		 var sw = screen.width;
 		    		 var sh = screen.height;
@@ -246,7 +251,7 @@
 		            setMenuBar("btnSendDraft", true);
 		            dragNdrapNo();	
 		        } catch(e){
-		            alert(e.description + ": window_onload");
+		            showAlert(e.description + ": window_onload");
 		        }
 		        
 		        if(approvalFlag == "G") {
@@ -273,7 +278,7 @@
 		                return false;
 		            }
 		            div.ondrop = function (e) {
-		                alert("<spring:message code='ezApprovalG.pjj30'/>");
+		                showAlert("<spring:message code='ezApprovalG.pjj30'/>");
 		                return false;
 		            }
 		            
@@ -282,7 +287,7 @@
 		                return false;
 		            }
 		            div2.ondrop = function (e) {
-		                alert("<spring:message code='ezApprovalG.noDrag.jih01'/>");
+		                showAlert("<spring:message code='ezApprovalG.noDrag.jih01'/>");
 		                return false;
 		            }
 		            
@@ -295,7 +300,7 @@
 				        e.preventDefault();
 		            }	            
 		        } catch(e) {
-		            alert("ezdraftui.dragNdrapNo()::" + e.description);
+		            showAlert("ezdraftui.dragNdrapNo()::" + e.description);
 		        }
 		    }
 		    var noFieldsAvailable = false;
@@ -640,7 +645,7 @@
 		                }
 		            }
 		        } catch (e) {
-		            alert("process_AfterOpen : " + e.description);
+		            showAlert("process_AfterOpen : " + e.description);
 		        }
 		    }
 		
@@ -685,7 +690,7 @@
 		            }
 		            return false;
 		        } catch (e) {
-		            alert("btnSetAprLine_onclick : " + e.description);
+		            showAlert("btnSetAprLine_onclick : " + e.description);
 		        }
 		    }
 		    function btnSetReceivLine_onclick() {
@@ -708,7 +713,7 @@
 		            }
 		        }
 		        catch (e) {
-		            alert("btnSetReceivLine_onclick : " + e.description);
+		            showAlert("btnSetReceivLine_onclick : " + e.description);
 		        }
 		    }
 		    function btnSendDraft_onclick() {
@@ -722,13 +727,13 @@
 	        	var deptCheckFlag = checkDeptAndCabinetId();
 	        	
 				if (deptCheckFlag == "3") {
-					alert(strLanggarm02 + " '" + replaceEntityCodeToStr(arr_userinfo[5]) + "' " + strLanggarm03 + " '" + replaceEntityCodeToStr(arr_userinfo[5]) + "'" + strLanggarm04 );
+					showAlert(strLanggarm02 + " '" + replaceEntityCodeToStr(arr_userinfo[5]) + "' " + strLanggarm03 + " '" + replaceEntityCodeToStr(arr_userinfo[5]) + "'" + strLanggarm04 );
 					return;
 				} else if (deptCheckFlag == "4") {
-					alert(strLanggarm02 + " '" + replaceEntityCodeToStr(arr_userinfo[5]) + "'" + strLanggarm05);
+					showAlert(strLanggarm02 + " '" + replaceEntityCodeToStr(arr_userinfo[5]) + "'" + strLanggarm05);
 					return;
 				} else if (deptCheckFlag == "2" && upperDeptCode == "") {
-					alert("타부서의 철정보로 설정되어있습니다. \n'" + replaceEntityCodeToStr(arr_userinfo[5]) + "'부서의 철로 변경해주시기바랍니다.");
+					showAlert("타부서의 철정보로 설정되어있습니다. \n'" + replaceEntityCodeToStr(arr_userinfo[5]) + "'부서의 철로 변경해주시기바랍니다.");
 					return;
 				}
 
@@ -753,7 +758,7 @@
 		        try {
 		        	if (isEditorComplete == true) {
 		        		if (pDraftFlag == "REDRAFT" && checkAprState() && ListType != "21") {
-		        			alert("<spring:message code='ezApprovalG.bhs23'/>");
+		        			showAlert("<spring:message code='ezApprovalG.bhs23'/>");
 			    			window.returnValue = "CLOSE";
 			    			window.close();
 			    			return;
@@ -994,7 +999,7 @@
 		        		OpenAlertUI("<spring:message code='ezApprovalG.pjg02'/>");
 		        	}		            
 		        } catch (e) {
-		            alert("btnSendDraft_onclick()" + e.description);
+		            showAlert("btnSendDraft_onclick()" + e.description);
 		        }
 		    }
 			
@@ -1250,7 +1255,7 @@
 		        }
 		        
 		        if (pDraftFlag == "REDRAFT" && checkAprState() && ListType != "21") {
-		        	alert("<spring:message code='ezApprovalG.bhs23'/>");
+		        	showAlert("<spring:message code='ezApprovalG.bhs23'/>");
 	    			window.returnValue = "CLOSE";
 	    			window.close();
 	    			return;
@@ -1360,17 +1365,17 @@
 		        try {
 		            var ret = openFileAttachUI();
 		        } catch (e) {
-		            alert("btnFileAttach_onclick : " + e.description);
+		            showAlert("btnFileAttach_onclick : " + e.description);
 		        }
 		    }
 		    function btnAprDocAttach_onclick() {
 	        	var deptCheckFlag = checkDeptAndCabinetId();
 	        	
 				if (deptCheckFlag == "3") {
-					alert(strLanggarm02 + " '" + replaceEntityCodeToStr(arr_userinfo[5]) + "' " + strLanggarm03 + " '" + replaceEntityCodeToStr(arr_userinfo[5]) + "'" + strLanggarm04 );
+					showAlert(strLanggarm02 + " '" + replaceEntityCodeToStr(arr_userinfo[5]) + "' " + strLanggarm03 + " '" + replaceEntityCodeToStr(arr_userinfo[5]) + "'" + strLanggarm04 );
 					return;
 				} else if (deptCheckFlag == "4") {
-					alert(strLanggarm02 + " '" + replaceEntityCodeToStr(arr_userinfo[5]) + "'" + strLanggarm05);
+					showAlert(strLanggarm02 + " '" + replaceEntityCodeToStr(arr_userinfo[5]) + "'" + strLanggarm05);
 					return;
 				}
 				
@@ -1431,8 +1436,12 @@
 		
 		    function btnClose_onclick_Complete(rtn) {
 		        DivPopUpHidden();
-		        if (rtn)
+		        if (rtn) {
+					if (ReturnFunction != null) {
+						ReturnFunction("cancel");
+					}
 		            window.close();
+				}
 		    }
 		    function window_onbeforeunload() {
 		        if (bAttachProcess == false) {
@@ -1663,7 +1672,7 @@
 		                TaskCode = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/TASKCODE");
 		            }
 		        } catch (e) {
-		            alert("btnSetTaskCode_onclick : " + e.description);
+		            showAlert("btnSetTaskCode_onclick : " + e.description);
 		        }
 		    }
 		    var inssepattach_cross_dialogArguments = new Array();
@@ -1671,10 +1680,10 @@
 	        	var deptCheckFlag = checkDeptAndCabinetId();
 	        	
 				if (deptCheckFlag == "3") {
-					alert(strLanggarm02 + " '" + replaceEntityCodeToStr(arr_userinfo[5]) + "' " + strLanggarm03 + " '" + replaceEntityCodeToStr(arr_userinfo[5]) + "'" + strLanggarm04 );
+					showAlert(strLanggarm02 + " '" + replaceEntityCodeToStr(arr_userinfo[5]) + "' " + strLanggarm03 + " '" + replaceEntityCodeToStr(arr_userinfo[5]) + "'" + strLanggarm04 );
 					return;
 				} else if (deptCheckFlag == "4") {
-					alert(strLanggarm02 + " '" + replaceEntityCodeToStr(arr_userinfo[5]) + "'" + strLanggarm05);
+					showAlert(strLanggarm02 + " '" + replaceEntityCodeToStr(arr_userinfo[5]) + "'" + strLanggarm05);
 					return;
 				}
 				
@@ -1820,7 +1829,7 @@
 		                    }
 		                }
 		            } catch (e) {
-		                alert("setInitOpinion ::" + e.description);
+		                showAlert("setInitOpinion ::" + e.description);
 		            }
 				}
 		    }
@@ -1830,15 +1839,15 @@
 	        	var deptCheckFlag = checkDeptAndCabinetId();
 
 				if (deptCheckFlag == "3") {
-					alert(strLanggarm02 + " '" + replaceEntityCodeToStr(arr_userinfo[5]) + "' " + strLanggarm03 + " '" + replaceEntityCodeToStr(arr_userinfo[5]) + "'" + strLanggarm04 );
+					showAlert(strLanggarm02 + " '" + replaceEntityCodeToStr(arr_userinfo[5]) + "' " + strLanggarm03 + " '" + replaceEntityCodeToStr(arr_userinfo[5]) + "'" + strLanggarm04 );
 					return;
 				} else if (deptCheckFlag == "4") {
-					alert(strLanggarm02 + " '" + replaceEntityCodeToStr(arr_userinfo[5]) + "'" + strLanggarm05);
+					showAlert(strLanggarm02 + " '" + replaceEntityCodeToStr(arr_userinfo[5]) + "'" + strLanggarm05);
 					return;
 				}
 				
 		    	if (pDraftFlag == "REDRAFT" && checkAprState() && ListType != "21") {
-		    		alert("<spring:message code='ezApprovalG.bhs23'/>");
+		    		showAlert("<spring:message code='ezApprovalG.bhs23'/>");
 	    			window.returnValue = "CLOSE";
 	    			window.close();
 	    			return;
@@ -2113,7 +2122,7 @@
 		
 		            }
 		            catch (e) {
-		                alert("<spring:message code='ezApprovalG.pjj02'/>");
+		                showAlert("<spring:message code='ezApprovalG.pjj02'/>");
 		            }
 		        } else if (ret != undefined && ret[0] == "DUPL") {
 		        	window.returnValue = "CLOSE";
