@@ -76,7 +76,8 @@ window.addEventListener('load', function () {
     });
 });
 
-class promptData {
+// promptData js 클래스; 파라미터 간소화를 위해 작성하였음
+class PromptData {
     constructor(displayText, chatInput, functionType) {
         this.displayText = displayText; // 화면에 보일 텍스트
         this.chatInput = chatInput; // 사용자가 입력한 값
@@ -84,13 +85,13 @@ class promptData {
     }
     
     static userInputData(chatInput) {
-        return new promptData(chatInput, chatInput, "qna");
+        return new PromptData(chatInput, chatInput, "qna");
     }
     
     static simpleData(element, chatInput) {
         const displayText = element.textContent.trim();
         const functionType = element.dataset.functiontype;
-        return new promptData(displayText, chatInput, functionType);
+        return new PromptData(displayText, chatInput, functionType);
     }
 }
 
@@ -104,13 +105,13 @@ function getSubModuleType() {
     return simpleAIElem.dataset.subtype;
 }
 
-// 추천 promt 클릭
+// 추천 promt 동작
 function simplePrompt(element) {
-    const promptDataVal = promptData.simpleData(element, "");
-    aiSend(promptDataVal, null);
+    const promptData = PromptData.simpleData(element, "");
+    aiSend(promptData, null);
 }
 
-// 사용자 입력
+// 사용자 입력 prompt 동작
 function userInput() {
     const chatInput = document.getElementById("chatInput").value.trim();
     
@@ -118,8 +119,9 @@ function userInput() {
         return;
     }
     
-    const promptDataVal = promptData.userInputData(chatInput);
-    aiSend(promptDataVal, null);
+    document.getElementById("chatInput").value = "";
+    const promptData = PromptData.userInputData(chatInput);
+    aiSend(promptData, null);
 }
 
 // ai 전송 main
@@ -128,6 +130,7 @@ async function aiSend(promptData, callback) {
 
     const aiTextDivs = document.querySelectorAll('.ai_text.al_loading');
     const aiLoadingDiv = aiTextDivs[aiTextDivs.length - 1];
+    let callbackParam = "";
 
     if (!aiLoadingDiv) {
         console.warn('No loading div found.');
@@ -137,6 +140,8 @@ async function aiSend(promptData, callback) {
     const module = getModueType();
     if (!module) {
         console.warn('No module found.');
+        const resultSpan = renderAiResultContainer(aiLoadingDiv);
+        resultSpan.innerText += 'No module found.'; 
         return;
     }
 
@@ -158,8 +163,18 @@ async function aiSend(promptData, callback) {
         }
 
         const resultSpan = renderAiResultContainer(aiLoadingDiv);
-        const reader = response.body.getReader();
-        await streamAndRender(reader, resultSpan);
+        
+        // 1차 개발 : json 출력
+        const rtnData = await response.json();
+        callbackParam = rtnData.ai_message;
+        resultSpan.innerText += rtnData.ai_message; 
+        // 1차 개발 : json 출력 끝
+        
+        /*
+            TODO: 2차 개발 때 SSE 형태로 수정시 아래 주석 해제
+            const reader = response.body.getReader();
+            await streamAndRender(reader, resultSpan);
+        */
 
     } catch (error) {
         console.error('AI streaming failed:', error.message || error);
@@ -167,7 +182,7 @@ async function aiSend(promptData, callback) {
     }
     
     if (!!callback) {
-        callback;
+        callback(collbackParam);
     }
     
     scrollToBottom();
@@ -243,6 +258,7 @@ function renderAiResultContainer(aiLoadingDiv) {
     resultSpan.className = "ai_text_detail";
 
     // 버튼 start
+    /* 1차 개발: 편집, 복사 버튼 미사용
     const editBtn = document.createElement("button");
     editBtn.type = "button";
     editBtn.setAttribute("data-mode", "EDIT");
@@ -257,13 +273,17 @@ function renderAiResultContainer(aiLoadingDiv) {
     copyBtn.type = "button";
     copyBtn.innerText = msgCopy;
     copyBtn.onclick = copy;
+    */
     // 버튼 end
 
     resultDiv.appendChild(iconSpan);
     resultDiv.appendChild(resultSpan);
+    
+    /* 1차 개발: 편집, 복사 버튼 미사용
     resultDiv.appendChild(editBtn);
     resultDiv.appendChild(space); // 공백 삽입
     resultDiv.appendChild(copyBtn);
+    */
 
     aiLoadingDiv.replaceWith(resultDiv);
 

@@ -30,6 +30,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -64,8 +66,11 @@ public class EzAIGWController {
     @ResponseBody
     public void streamAiResponse(@CookieValue("loginCookie") String loginCookie, @Nullable @RequestBody AICommandVO aiCommandVO, HttpServletResponse response) {
         logger.debug("streamAiResponse started.");
-
-        response.setContentType("text/event-stream;charset=UTF-8");
+        
+        //  1차 개발: JSON 형태 응답 반환
+        response.setContentType("application/json;charset=UTF-8");
+        //TODO: 2차 개발 때 SSE 형태로 수정시 아래 주석 해제
+        //response.setContentType("text/event-stream;charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
 
         HttpURLConnection conn = null;
@@ -116,23 +121,27 @@ public class EzAIGWController {
             if (responseCode != 200) {
                 throw new IOException("AI server responded with code: " + responseCode);
             }
-
-            // testdev : 1차 push 개발코드
-            BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8));
-            String inputLine;
-            StringBuilder content = new StringBuilder();
-
-            while ((inputLine = in.readLine()) != null) {
-                content.append(inputLine);
-            }
-
-            // 응답 처리 (여기서는 예시로 출력만 함)
-            logger.debug("Response: " + content.toString());
             
-            //TODO: 2차 개발 때 SSE 형태로 수정시 아래 주석 해제
-            /*try (BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8));
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8));
                  PrintWriter writer = new PrintWriter(new OutputStreamWriter(clientOut, StandardCharsets.UTF_8), true)) {
+                
+                // 1차 개발: JSON 형태 응답 반환
+                String inputLine;
+                StringBuilder content = new StringBuilder();
+    
+                while ((inputLine = reader.readLine()) != null) {
+                    content.append(inputLine);
+                }
+                
+                logger.debug("Response: " + content.toString());
+                
+                // 응답 처리 (여기서는 예시로 출력만 함)
+                clientOut.write(content.toString().getBytes(StandardCharsets.UTF_8));
+                clientOut.flush(); // 클라이언트로 전송
+                // 1차 개발: JSON 형태 응답 반환 끝
 
+                //TODO: 2차 개발 때 SSE 형태로 수정시 아래 주석 해제
+                /*
                 String line;
                 while ((line = reader.readLine()) != null) {
                     if (line.isEmpty()) {
@@ -142,8 +151,8 @@ public class EzAIGWController {
                     }
                     writer.flush(); // 줄마다 강제 전송
                 }
-
-            }*/
+                 */
+            }
         } catch (Exception e) {
             logger.error("AI stream error", e);
 
