@@ -320,7 +320,7 @@
 			}
 			
 			function btnforcecallback_onclick() {
-				var pMsg = "문서를 강제회수하시겠습니까?";
+				var pMsg = "<spring:message code='ezApprovalG.km02'/>";
 				OpenInformationUI(pMsg, btnforcecallback_onclick_Complete);
 			}
 		    function btnforcecallback_onclick_Complete(ans) {
@@ -365,7 +365,7 @@
 					
 					ExcuteInfo("CALLBACK_AFTER", "DRAFT");
 
-					OpenAlertUI("문서를 회수하였습니다.", function() {
+					OpenAlertUI(strLangKm01, function() {
 						btnClose_onclick();
 					});
 		        } else {
@@ -421,7 +421,7 @@
 				});  
 			}
 		    function btncallback_onclick() {
-				var pMsg = "문서를 회수하시겠습니까?";
+				var pMsg = "<spring:message code='ezApprovalG.km01'/>";
 				OpenInformationUI(pMsg, btncallback_onclick_Complete);
 		    }
 		    function btncallback_onclick_Complete(ans) {
@@ -474,7 +474,7 @@
 
 					ExcuteInfo("CALLBACK_AFTER", "DRAFT");
 
-					OpenAlertUI("문서를 회수하였습니다.", function() {
+					OpenAlertUI(strLangKm01, function() {
 						btnClose_onclick();
 					});
 					
