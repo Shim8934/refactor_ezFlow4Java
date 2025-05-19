@@ -1,4 +1,141 @@
-﻿.ai_top{display:flex; min-height:61px; padding-top:25px; padding-bottom:20px; box-sizing:border-box;}
+﻿/* 노토산스 font */
+@font-face {
+	font-family: 'Noto Sans KR';
+	font-style: normal;
+	font-weight: 100;
+	src: url(fonts/NotoSansKr/woff/NotoSansKR-Thin.woff) format('woff'),
+	url(fonts/NotoSansKr/otf/NotoSansKR-Thin.otf) format('opentype');
+}
+@font-face {
+	font-family: 'Noto Sans KR';
+	font-style: normal;
+	font-weight: 300;
+	src: url(fonts/NotoSansKr/woff/NotoSansKR-Light.woff) format('woff'),
+	url(fonts/NotoSansKr/otf/NotoSansKR-Light.otf) format('opentype');
+}
+@font-face {
+	font-family: 'Noto Sans KR';
+	font-style: normal;
+	font-weight: 400;
+	src: url(fonts/NotoSansKr/woff/NotoSansKR-Regular.woff) format('woff'),
+	url(fonts/NotoSansKr/otf/NotoSansKR-Regular.otf) format('opentype');
+}
+@font-face {
+	font-family: 'Noto Sans KR';
+	font-style: normal;
+	font-weight: 500;
+	src: url(fonts/NotoSansKr/woff/NotoSansKR-Medium.woff) format('woff'),
+	url(fonts/NotoSansKr/otf/NotoSansKR-Medium.otf) format('opentype');
+}
+@font-face {
+	font-family: 'Noto Sans KR';
+	font-style: normal;
+	font-weight: 700;
+	src: url(fonts/NotoSansKr/woff/NotoSansKR-Bold.woff) format('woff'),
+	url(fonts/NotoSansKr/otf/NotoSansKR-Bold.otf) format('opentype');
+}
+@font-face {
+	font-family: 'Noto Sans KR';
+	font-style: normal;
+	font-weight: 900;
+	src: url(fonts/NotoSansKr/woff/NotoSansKR-Black.woff) format('woff'),
+	url(fonts/NotoSansKr/otf/NotoSansKR-Black.otf) format('opentype');
+}
+
+html{font-family: 'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana' !important;}
+.inputText {
+	border:1px solid #999
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="tel"]:focus,
+input[type="url"]:focus,
+textarea:focus { border: 1px solid #388CE5; outline: none; border-radius: 3px;}
+
+input, label, textarea, select, ul, li, h1, h2, table, th, .page, .point, .box, .box2, .nobox, .leftbody, .message, .mainbody,  .listview2 td,.content td, .file td, .file2 td, .txt, .imgbtn{
+	font-family: 'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana';
+	font-size:13px;
+	color: #333;
+	text-decoration: none;
+	ime-mode:active;
+}
+
+p, strong, h3, div, a, span, table, th, td {
+	font-family: 'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana';
+}
+
+input {
+	box-sizing:border-box;
+	-moz-box-sizing:border-box;
+	border:1px solid #dedede;
+	outline: none;
+	border-radius: 2px;
+}
+
+input[type=checkbox], input[type=radio] {
+	border:0 !important;
+}
+
+input[type=text] {
+	height:24px;
+	border-radius: 2px;
+}
+
+a{
+	color: #333;
+	text-decoration: none;
+	ime-mode:active;
+	cursor:pointer;
+}
+span {
+	font-size:13px;
+	text-decoration: none;}
+
+/*ul, li, h1, h2, h3, h4, h5, h6, body { margin:0 }*/
+ul, li { margin-top:0; margin-bottom:0px; }
+h1, h2, h3, h4, h5, h6, body { margin:0; }
+h2 {margin:2px 0; font-size:14px;}
+.margin ul, li{ MARGIN:auto; }
+.margin table { border-collapse: separate; }
+
+.file td input { border: expression((this.type=='text')?'none':((this.type=='checkbox')?'none':''));}
+.file2 td input { border: expression((this.type=='text')?'none':((this.type=='checkbox')?'none':''));}
+select {border-radius: 3px;-webkit-appearance: none; border:1px solid #dedede;min-height:25px;margin:0;padding: .1em .1em; background: url(../images/next.gif) no-repeat right 1px center; padding-right:18px;background-color: white; outline: none; cursor: pointer;}
+select::-ms-expand {
+	display: none;
+}
+
+#menu select {height:27px;}
+
+#menu select.disabled {background-color: #EEE;}
+
+#menu select, #menu input {border: 1px solid #CECECE; }
+
+textarea {
+	padding: 5px;
+	border: 1px solid #dedede;
+	width:100%;
+}
+table, th, td {
+	border-collapse: collapse;
+	empty-cells: show;
+	padding:0;margin:0;
+	font-size:13px;
+}
+th{
+	white-space: nowrap;
+	word-break: keep-all;
+	word-wrap: normal;
+	color: #333;
+	background-color:#f8f8fa;
+	border:1px solid #d2d2d2;
+	padding:2px 10px;
+}
+/* 노토산스 font end */
+
+.ai_top{display:flex; min-height:61px; padding-top:25px; padding-bottom:20px; box-sizing:border-box;}
 .ai_top > .ai_close{margin-left:auto; background:transparent; border:0px none;}
 .ai_cont{display:flex; flex-direction:column; height:calc(100% - 156px); overflow:auto;}
 .ai_cont > div{margin-bottom:28px;}
@@ -7,7 +144,7 @@
 .ai_cont .ai_text{position:relative; min-width:316px; max-width:75%;  margin-left:52px; place-self: flex-start; padding:20px; background: rgb(1,149,251); background: linear-gradient(90deg, rgba(1,149,251,0.13) 0%, rgba(0,193,243,0.13) 50%, rgba(0,239,172,0.13) 100%); border-radius:5px; box-sizing:border-box;}
 .ai_cont .ai_text .icon_ai{position:absolute; left:-52px; top:0px; width:40px; height:40px; background:url(../images/ImgIcon/icon_ai.svg) #fff no-repeat center; background-size:21px 20px; border:1px solid #E9E9E9; border-radius:50%; box-sizing:border-box;}
 .ai_cont .ai_text .ai_text_title{display:block; margin:0px; padding:0px 0px 8px 0px; color:#000000; font-size:16px; font-weight:500;}
-.ai_cont .ai_text .ai_text_detail{display:block; padding:0px 0px 20px 0px; color:#000; word-break:break-all;}
+.ai_cont .ai_text .ai_text_detail{display:block; padding:0px 0px 20px 0px; color:#000; word-break:break-all; outline: none;}
 .ai_cont .ai_text > button{min-height:25px; padding:0px 12px; font-size:13px; font-weight:500; color:#56565E; background-color:#fff; border:1px solid #E5E5E5; border-radius:3px; box-sizing:border-box;}
 .ai_cont .ai_text > button:hover{border-color:#0195FB; background-color:#0195FB; color:#fff;}
 .ai_cont .ai_text_question{max-width:75%;  margin-left:52px; box-sizing:border-box;}
@@ -209,7 +346,7 @@
         --angle: 360deg;
     }
 }
-.textarea_value textarea{border:0px none; width:100%; resize:none;}
+.textarea_value textarea{border:0px none; width:100%; resize:none; outline: none;}
 .textarea_value > div{display:flex; justify-content: flex-end; align-items: flex-end;}
 .textarea_value > div > button{margin-left:20px; margin-bottom:3px; cursor:pointer;}
 .btn_value_file{min-width:20px; width:20px; height:20px; background:url(../images/ImgIcon/icon_ai_file.svg) no-repeat;}

@@ -95,7 +95,7 @@ class PromptData {
     }
 }
 
-function getModueType() {
+function getModuleType() {
     const simpleAIElem = document.getElementById("simpleAi");
     return simpleAIElem.dataset.type;
 }
@@ -137,7 +137,7 @@ async function aiSend(promptData, callback) {
         return;
     }
     
-    const module = getModueType();
+    const module = getModuleType();
     if (!module) {
         console.warn('No module found.');
         const resultSpan = renderAiResultContainer(aiLoadingDiv);
@@ -207,7 +207,7 @@ function createRequestData(promptData) {
     const simpleAIElem = document.getElementById("simpleAi");
     
     return {
-        'service': getModueType(),
+        'service': getModuleType(),
         'function': promptData.functionType,
         'input_data': createInputData(),
         'options' : createOptions(promptData)
@@ -215,7 +215,7 @@ function createRequestData(promptData) {
 }
 
 function createInputData() {
-    const module = getModueType();
+    const module = getModuleType();
     
     if ('mail' == module) {
         var mailMetaData = extractEmailMetaData();
@@ -223,7 +223,7 @@ function createInputData() {
             {
                 'from': mailMetaData.from,
                 'to': mailMetaData.to,
-                'cc': mailMetaData.to,
+                'cc': mailMetaData.cc,
                 'received_dt': mailMetaData.date,
                 'subject': mailMetaData.subject,
                 'tag_name' : mailMetaData.tag_name,
@@ -244,7 +244,7 @@ function createInputData() {
 }
 
 function createOptions(promptData) {
-    const module = getModueType();
+    const module = getModuleType();
     if ('mail' == module) {
         return {
             'command': promptData.chatInput, // 사용자 요청
@@ -277,7 +277,6 @@ function renderAiResultContainer(aiLoadingDiv) {
     resultSpan.className = "ai_text_detail";
 
     // 버튼 start
-    /* 1차 개발: 편집, 복사 버튼 미사용
     const editBtn = document.createElement("button");
     editBtn.type = "button";
     editBtn.setAttribute("data-mode", "EDIT");
@@ -292,17 +291,14 @@ function renderAiResultContainer(aiLoadingDiv) {
     copyBtn.type = "button";
     copyBtn.innerText = msgCopy;
     copyBtn.onclick = copy;
-    */
     // 버튼 end
 
     resultDiv.appendChild(iconSpan);
     resultDiv.appendChild(resultSpan);
     
-    /* 1차 개발: 편집, 복사 버튼 미사용
     resultDiv.appendChild(editBtn);
     resultDiv.appendChild(space); // 공백 삽입
     resultDiv.appendChild(copyBtn);
-    */
 
     aiLoadingDiv.replaceWith(resultDiv);
 
@@ -511,38 +507,128 @@ function extractEmailContent() {
 }
 
 function extractEmailMetaData() {
+    const subModule = getSubModuleType();
     const parentDoc = window.parent.document;
     
-    // 제목
-    const subjectEl = parentDoc.querySelector('.mail_readTitle');
-    const subject = subjectEl ? subjectEl.innerText : '';
+    if ('preview' == subModule) {
+        // 제목
+        const subjectEl = parentDoc.querySelector('#PreH_sub_subject');
+        const subject = subjectEl ? subjectEl.innerText.trim() : '';
 
-    // From
-    const senderEl = parentDoc.querySelector('#MsgToPut');
-    const senderName = senderEl ? senderEl.innerText : '';
-    const senderEmail = senderEl ? senderEl.getAttribute('title') || '' : '';
-    const sender = senderName && senderEmail ? `${senderName}<${senderEmail}>` : senderName || senderEmail;
-    
-    // To
-    const recipientNameEl = parentDoc.querySelector('.recipient_list .name');
-    const recipientName = recipientNameEl ? recipientNameEl.innerText : '';
-    const recipientEmail = recipientNameEl ? recipientNameEl.getAttribute('title') || '' : '';
-    const recipient = recipientName && recipientEmail ? `${recipientName}<${recipientEmail}>` : recipientName || recipientEmail;
-  
-    // 날짜
-    const dateEl = parentDoc.querySelector('.day_mark .day span');
-    const date = dateEl ? dateEl.innerText : '';
-    
-    console.log(subject+","+ sender+","+ recipient+","+ date);
-    
-    return {
+        // From (보낸사람)
+        const senderNameEl = parentDoc.querySelector('#PreH_sub_MailSender span');
+        const senderName = senderNameEl ? senderNameEl.innerText.trim() : '';
+        const senderEmail = senderNameEl ? senderNameEl.getAttribute('title') || '' : '';
+        const sender = senderName && senderEmail ? `${senderName}<${senderEmail}>` : senderName || senderEmail;
+
+        // To (받는사람)
+        const receiverEl = parentDoc.querySelector('#PreH_MailReceiver span');
+        const receiverName = receiverEl ? receiverEl.innerText.trim() : '';
+        const receiverEmail = receiverEl ? receiverEl.getAttribute('title') || '' : '';
+        const recipient = receiverName && receiverEmail ? `${receiverName}<${receiverEmail}>` : receiverName || receiverEmail;
+
+        // CC (참조)
+        let cc = [];
+        const ccLayer = parentDoc.querySelector('#PreH_MailCCDetail_Rayer');
+        if (ccLayer) {
+            const ccSpans = ccLayer.querySelectorAll('span[title]');
+            ccSpans.forEach(span => {
+                const name = span.innerText.trim();
+                const email = span.getAttribute('title') || '';
+                if (name || email) {
+                    cc.push(name && email ? `${name}<${email}>` : name || email);
+                }
+            });
+        }
+
+        const tagEl = parentDoc.querySelector('#pre_h_tag_view .tag_name');
+        const tagName = tagEl ? tagEl.innerText.trim() : '';
+
+        const dateEl = parentDoc.querySelector('#PreH_date');
+        const date = dateEl ? dateEl.innerText.trim() : '';
+
+        console.log(subject + "," + sender + "," + recipient + "," + JSON.stringify(cc) + "," + date + "," + tagName);
+
+        return {
             'subject': subject,
-            'from' : sender,
-            'to' : recipient,
-            'cc' : [],
-            'date' : date,
-            'tag_name' : ""
-    };
+            'from': sender,
+            'to': recipient,
+            'cc': cc,
+            'date': date,
+            'tag_name': tagName
+        };
+    } else if ('read' == subModule) {
+        // 제목
+        const subjectEl = parentDoc.querySelector('#LabelSubject');
+        const subject = subjectEl ? subjectEl.innerText : '';
+    
+        // From (보낸사람)
+        const senderNameEl = parentDoc.querySelector('#LabelFromName');
+        const senderName = senderNameEl ? senderNameEl.innerText : '';
+        const senderEl = parentDoc.querySelector('#MsgToPut');
+        const senderEmail = senderEl ? senderEl.getAttribute('title') || '' : '';
+        const sender = senderName && senderEmail ? `${senderName}<${senderEmail}>` : senderName || senderEmail;
+        
+        // To (받는사람)
+        const recipientEl = parentDoc.querySelector('#LabelTo span:first-child');
+        const recipientName = recipientEl ? recipientEl.innerText : '';
+        const recipientEmail = recipientEl ? recipientEl.getAttribute('title') || '' : '';
+        const recipient = recipientName && recipientEmail ? `${recipientName}<${recipientEmail}>` : recipientName || recipientEmail;
+      
+        // CC (참조)
+        let cc = [];
+        
+        // CC 기본 표시 영역
+        const ccContainer = parentDoc.querySelector('#LabelCC');
+        if (ccContainer) {
+            const ccSpans = ccContainer.querySelectorAll('span[title]');
+            ccSpans.forEach(span => {
+                const name = span.innerText;
+                const email = span.getAttribute('title') || '';
+                if (name || email) {
+                    cc.push(name && email ? `${name}<${email}>` : name || email);
+                }
+            });
+        }
+        
+        // 숨겨진 CC 영역 (여러 명일 경우)
+        const hiddenCcContainer = parentDoc.querySelector('#LabelCCHidden');
+        if (hiddenCcContainer) {
+            const hiddenCcSpans = hiddenCcContainer.querySelectorAll('span[title]');
+            hiddenCcSpans.forEach(span => {
+                const name = span.innerText;
+                const email = span.getAttribute('title') || '';
+                if (name || email) {
+                    // 중복 방지를 위한 검사
+                    const entry = name && email ? `${name}<${email}>` : name || email;
+                    if (!cc.includes(entry)) {
+                        cc.push(entry);
+                    }
+                }
+            });
+        }
+        
+        // 태그
+        const tagNameEl = parentDoc.querySelector('#tag_name');
+        const tagName = tagNameEl ? tagNameEl.innerText : '';
+        
+        // 날짜
+        const dateEl = parentDoc.querySelector('#LabelReceiveDate');
+        const date = dateEl ? dateEl.innerText : '';
+        
+        console.log(subject + "," + sender + "," + recipient + "," + JSON.stringify(cc) + "," + date + "," + tagName);
+        
+        return {
+            'subject': subject,
+            'from': sender,
+            'to': recipient,
+            'cc': cc,
+            'date': date,
+            'tag_name': tagName
+        };
+    }
+    
+    return;
 }
 // ai chat end
 

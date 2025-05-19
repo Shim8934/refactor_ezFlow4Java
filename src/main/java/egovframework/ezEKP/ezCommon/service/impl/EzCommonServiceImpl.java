@@ -1788,6 +1788,14 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             put("description","ezAI 사용여부 (default:NO)");
             put("config_type","AI");
         }});
+        test.add(new HashMap<String, Object>(){{
+            put("confName","aiAttachMBSize");
+            put("property_value","10");
+            put("config_name","ezAI 첨부파일 최대용량");
+            put("regdate","2025-05-09 00:00:00");
+            put("description","ezAI에서 허용하는 첨부파일 최대용량 (default:10MB)");
+            put("config_type","AI");
+        }});
 		test.add(new HashMap<String, Object>(){{
 			put("confName","checkPasswordNumber");
 			put("property_value","YES");

@@ -13,7 +13,6 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezAI/ezAISlideCommon.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezAI/marked.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezAI/purify.min.js')}"></script>
-		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
 		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/css/ai.css')}" type="text/css">
 		<style>
@@ -114,7 +113,7 @@
                         <div class="textarea_value" id="dropZone">
                             <textarea id="chatInput" rows="2" placeholder="<spring:message code='ai.chat.plceholder' />" onkeyup=""></textarea>
                             <div class="refDocuments">
-                                <div class="upload_file">
+                                <div class="upload_file" style="pointer-events: none; user-select: none;">
                                     <%--<button type="button" style="" class="btn_upload_drop">4개</button>
                                     <span id="f12d9212-aa4f-4b10-b2dd-c4ecfb88a58c" data-filepath="/Upload_Common/2025/04/09/ezAI/f12d9212-aa4f-4b10-b2dd-c4ecfb88a58c.pdf" data-filename="전자계약시스템_사용자 매뉴얼.pdf" data-file-size="3091151" data-file-ext="">전자계약시스템_사용자 매뉴얼.pdf<button type="button" class="btn_close"></button></span><span id="8ea131d3-060b-4c0d-88de-90ac26bb7540" data-filepath="/Upload_Common/2025/04/09/ezAI/8ea131d3-060b-4c0d-88de-90ac26bb7540.jpeg" data-filename="AdobeStock_1079135365 (1).jpeg" data-file-size="3686856" data-file-ext="">AdobeStock_1079135365 (1).jpeg<button type="button" class="btn_close"></button></span><span id="16598385-ab7a-4bea-b896-b6f7d8c371bb" data-filepath="/Upload_Common/2025/04/09/ezAI/16598385-ab7a-4bea-b896-b6f7d8c371bb.jpeg" data-filename="AdobeStock_1079135365 (2).jpeg" data-file-size="3686856" data-file-ext="">AdobeStock_1079135365 (2).jpeg<button type="button" class="btn_close"></button></span><span id="fddca0be-8fc0-46e5-b771-09290c9fef0e" data-filepath="/Upload_Common/2025/04/09/ezAI/fddca0be-8fc0-46e5-b771-09290c9fef0e.jpeg" data-filename="AdobeStock_1175719583.jpeg" data-file-size="2942271" data-file-ext="">AdobeStock_1175719583.jpeg<button type="button" class="btn_close"></button></span>--%>
                                 </div>

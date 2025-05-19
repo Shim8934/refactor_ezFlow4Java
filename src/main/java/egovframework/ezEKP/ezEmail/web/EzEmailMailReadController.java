@@ -1993,8 +1993,10 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		// AI 사용여부 확인
 		boolean useAI = aICommonUtil.checkUseAI(userInfo.getTenantId());
 		// AI 챗봇 첨부파일 최대용량
-		String aiAttachMBSize = "10";//ezCommonService.getTenantConfig("aiAttachMBSize", -99); // 모든 테넌트 공통 값
+		String aiAttachMBSize = ezCommonService.getTenantConfig("aiAttachMBSize", userInfo.getTenantId());
 
+		model.addAttribute("moduleType", "mail"); // ezAI api 타입
+		model.addAttribute("moduleSubType", "read");
 		model.addAttribute("useAI", useAI);
 		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
 		model.addAttribute("aiAttachMBSize", aiAttachMBSize);
@@ -3873,11 +3875,14 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		// AI 사용여부 확인
 		boolean useAI = aICommonUtil.checkUseAI(userInfo.getTenantId());
 		// AI 챗봇 첨부파일 최대용량
-		String aiAttachMBSize = "10";//ezCommonService.getTenantConfig("aiAttachMBSize", -99); // 모든 테넌트 공통 값
+		String aiAttachMBSize = aICommonUtil.getAIAttachSize(userInfo.getTenantId());
 
+		model.addAttribute("moduleType", "mail"); // ezAI api 타입
+		model.addAttribute("moduleSubType", "preview");
 		model.addAttribute("useAI", useAI);
 		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
 		model.addAttribute("aiAttachMBSize", aiAttachMBSize);
+		model.addAttribute("aiAttachMBSize", "mail");
 
 		model.addAttribute("url", url);
 		model.addAttribute("htmlBody", htmlBody);

@@ -33,6 +33,10 @@ public class AICommonUtil {
         return "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useAI", tenantId));
     }
 
+    public String getAIAttachSize(int tenantId) throws Exception {
+        return ezCommonService.getTenantConfig("aiAttachMBSize", tenantId);
+    }
+
     /**
      * ezAI 자체 apiKey (LLM/SLM의 key와 다른 것임)
      * ezEKP - ezAI 서버와의 통신에서 필요함

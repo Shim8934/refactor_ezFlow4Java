@@ -15,8 +15,11 @@ import com.fasterxml.jackson.core.JsonParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -39,7 +42,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-@RestController
+@Controller
 @RequestMapping("/ezAI")
 public class EzAIGWController {
     private static final Logger logger = LoggerFactory.getLogger(EzAIGWController.class);
@@ -135,7 +138,7 @@ public class EzAIGWController {
                 
                 logger.debug("Response: " + content.toString());
                 
-                // 응답 처리 (여기서는 예시로 출력만 함)
+                // 응답 처리
                 clientOut.write(content.toString().getBytes(StandardCharsets.UTF_8));
                 clientOut.flush(); // 클라이언트로 전송
                 // 1차 개발: JSON 형태 응답 반환 끝
@@ -186,5 +189,35 @@ public class EzAIGWController {
         // 제어 문자 허용
         objectMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true);
         return objectMapper;
+    }
+
+    /**
+     *  본 코드는 모듈 내 iframe으로 slide창을 띄우기 위해 작성, 필요여부 검토 중으로 현재 1차 개발에서는 사용하지 않음
+     */
+    @GetMapping("/aiSlide.do")
+    public String getAISlide(@CookieValue("loginCookie") String loginCookie, Model model) {
+        // 사용자 정보
+        LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+
+        try {
+            // AI 첨부파일 이름 최대 길이 - 기존 메일과 동일한 값 사용
+            String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId());
+            // AI 사용여부 확인
+            boolean useAI = aiCommonUtil.checkUseAI(userInfo.getTenantId());
+            // AI 챗봇 첨부파일 최대용량
+            String aiAttachMBSize = ezCommonService.getTenantConfig("aiAttachMBSize", -99); // 모든 테넌트 공통 값
+
+            model.addAttribute("useAI", useAI);
+            model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
+            model.addAttribute("aiAttachMBSize", aiAttachMBSize);
+
+        } catch (Exception e) {
+            logger.error("AI 슬라이드 설정 로딩 중 오류 발생", e);
+            // 에러 처리 로직 추가
+            model.addAttribute("useAI", false); // 기본값 설정
+            model.addAttribute("errorMessage", "AI 설정을 불러오는 중 오류가 발생했습니다.");
+        }
+
+        return "ezAI/aiSlide";
     }
 }
