@@ -615,7 +615,7 @@ public class EzEmailMailListController {
 
 					sb.append(String.format("<sender><![CDATA[%s]]></sender>", name));
 					sb.append(String.format("<readdt><![CDATA[%s]]></readdt>", readDate));
-					sb.append(String.format("<msgto><![CDATA[%s]]></msgto>", msgto));
+					sb.append(String.format("<msgto><![CDATA[%s]]></msgto>", msgto.replace("]]>", "]]]]><![CDATA[>")));
 					sb.append(String.format("<recipientCount><![CDATA[%d]]></recipientCount>", addressList.size()));
 
 					// subject
@@ -641,10 +641,10 @@ public class EzEmailMailListController {
 						htmlBody = htmlBody.substring(0, minLen);
 
 						String preview = "<br/><span style='font-weight:normal;font-size:9pt;color:gray'>" + htmlBody + "</span>";
-						sb.append(String.format("<subject><![CDATA[%s]]></subject>", subject + preview));
+						sb.append(String.format("<subject><![CDATA[%s]]></subject>", (subject + preview).replace("]]>", "]]]]><![CDATA[>")));
 					}
 					else {
-						sb.append(String.format("<subject><![CDATA[%s]]></subject>", subject));
+						sb.append(String.format("<subject><![CDATA[%s]]></subject>", subject.replace("]]>", "]]]]><![CDATA[>")));
 					}
 
 					// received date
@@ -1291,7 +1291,7 @@ public class EzEmailMailListController {
 					sb.append(String.format("<systemCountryCode><![CDATA[%s]]></systemCountryCode>", systemCountryCode.toLowerCase()));
 					sb.append(String.format("<useCountryIP><![CDATA[%s]]></useCountryIP>", useCountryIP));
 					sb.append(String.format("<sender><![CDATA[%s]]></sender>", name));
-					sb.append(String.format("<msgto><![CDATA[%s]]></msgto>", msgto));
+					sb.append(String.format("<msgto><![CDATA[%s]]></msgto>", msgto.replace("]]>", "]]]]><![CDATA[>")));
 	
 					// subject
 					String subject =  mailInfo.get("SUBJECT");								
@@ -1316,10 +1316,10 @@ public class EzEmailMailListController {
 						htmlBody = htmlBody.substring(0, minLen);
 						
 						String preview = "<br/><span style='font-weight:normal;font-size:9pt;color:gray'>" + htmlBody + "</span>";
-						sb.append(String.format("<subject><![CDATA[%s]]></subject>", subject + preview));
+						sb.append(String.format("<subject><![CDATA[%s]]></subject>", (subject + preview).replace("]]>", "]]]]><![CDATA[>")));
 					}
 					else {
-						sb.append(String.format("<subject><![CDATA[%s]]></subject>", subject));
+						sb.append(String.format("<subject><![CDATA[%s]]></subject>", subject.replace("]]>", "]]]]><![CDATA[>")));
 					}
 					
 					// received date
