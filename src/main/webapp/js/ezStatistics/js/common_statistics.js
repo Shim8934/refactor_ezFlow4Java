@@ -223,7 +223,7 @@ function drawChart(labelArr, dataArr) {
 
 function drawInMenuChart(element) {
     var curIdx = element._index;
-    if (element.datasets[1].data[curIdx] == 0) return;
+    if (!!element.datasets && element.datasets.length > 1 && element.datasets[1].data[curIdx] == 0) return;
     var dataJson = {
         companyId: companySelectID,
         year: document.getElementById("searchYear").value,
