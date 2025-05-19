@@ -971,3 +971,32 @@ function getRandomId() {
         return v.toString(16);
     });
 }
+
+function changeSelectBoxByVal(selectElement, value) {
+    if (typeof selectElement === 'string') {
+        selectElement = document.getElementById(selectElement);
+    }
+
+    if (!selectElement || selectElement.tagName !== 'SELECT') {
+        console.error('유효한 select 요소가 아닙니다.');
+        return false;
+    }
+
+    const options = selectElement.options;
+    var found = false;
+
+    for (var i = 0; i < options.length; i++) {
+        if (options[i].value === value + '') {
+            // 해당 옵션으로 선택 변경
+            selectElement.selectedIndex = i;
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        console.warn(`"${value}" 값을 가진 옵션을 찾을 수 없습니다.`);
+        return false;
+    }
+    return true;
+}

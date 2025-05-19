@@ -19,6 +19,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery-ui.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezSurvey/lang/ezSurvey_ko.js')}"></script>
 		<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ClickTracker.js')}"></script>
 		<style>
 			#editMenuBtn {display: none;}
 			.ui-sortable-helper {border-left:1px dashed #898989; border-top : 1px dashed #898989;}
@@ -229,6 +230,7 @@
 				if (menuCount < maxMenuCount) { // 최대 7개 표출
 					var menuLi = document.createElement('li');
 					var mainFrame = window.parent.document.getElementById("mainFrame");
+					menuLi.setAttribute("data-menu-id", item.menuId);
 					if (menuDisplayMode == "0") { // 메뉴 top에 생성
 						menuLi.setAttribute('id', 'menu_' + item.menuId);
 						menuLi.textContent = item.menuName;
@@ -654,6 +656,7 @@
 				menuAllListSpan.textContent = item.menuName;
 				menuAllList.appendChild(menuAllListSpan);
 				menuAllList.setAttribute("id", item.menuId);
+				menuAllList.setAttribute("data-menu-id", item.menuId);
 				if (!!item.iconUrl && item.iconUrl.split(" ").length > 0)  menuAllList.classList.add(item.iconUrl.split(" ")[1] + "_leftmenu");
 				menuAllList.classList.add('sortable-item');
 				
@@ -1837,6 +1840,10 @@
 		
 		window.onload = function() {
 			//callAllUserTab();
+            if ("<c:out value='${useStatMenu}' />" === "YES") {
+                var menuTracker = new ClickTracker().addTarget('[data-menu-id]').addExclude('.ui-draggable').addDataset('menuId').start();
+            }
+            
 			setUseActiveX();		 // activeX 설치 (useActiveX가 YES일때)
 		}
 		

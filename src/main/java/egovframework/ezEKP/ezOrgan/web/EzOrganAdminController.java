@@ -231,6 +231,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.createTblScheduleGather(); // 2023-09-27 임정은 - 일정관리 > 일정 모아보기 그룹 테이블 추가
 			ezCommonService.createTblBoardStarRating(); // 2024-10-02 이혜림 - 게시물 별점 평가하기 관련 테이블 및 컬럼 추가
 			ezCommonService.createMealPlanTable(); // 2025-01-14 조수빈 - 식단 테이블  추가
+			ezCommonService.createTblStatMenu(); // 2025-03-19 박기범 - 메뉴 통계 테이블 추가
 
 			// alter table
 	    	ezCommonService.alterTableAddColumns(); // 2022-01-19 김은실 - alter 재사용 모듈 추가

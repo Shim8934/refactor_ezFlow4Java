@@ -7259,4 +7259,118 @@
 		VALUES
 		    ('{MMMMMMMM-MMMM-MMMM-MMMM-MMMMMMMMMMMM}', '식단', 'MealPlan', '献立表', '菜单',  -2, 0, 'None', NULL, 0, NULL, 0, NULL, 0, 0, NULL, 0, NULL, 0, 'N', #v_TENANTID#, 'Top')
 	</insert>
+	
+	<select id="EzCommonDAO.checkTblStatMenuUser" resultClass="String">
+		SELECT
+			USER_ID
+		FROM
+			TBL_STAT_MENU_USER
+				<![CDATA[ WHERE
+				ROWNUM = 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.createTblStatMenuUser">
+		CREATE TABLE TBL_STAT_MENU_USER
+		(
+			USER_ID    NVARCHAR2(80)  NOT NULL,
+			TENANT_ID  NUMBER(5, 0),
+			COMPANY_ID NVARCHAR2(100) NOT NULL,
+			IPADDRESS  NVARCHAR2(15),
+			YEAR       NUMBER(4, 0)   NOT NULL,
+			MONTH      NUMBER(2, 0)   NOT NULL,
+			DAY        NUMBER(2, 0)   NOT NULL,
+			HOUR       NUMBER(2, 0)   NOT NULL,
+			TIME_CODE  NUMBER(10, 0)  NOT NULL,
+
+			MENU_ID    NUMBER(10, 0),
+			CODE       NVARCHAR2(10),
+			STAT_COUNT NUMBER(20, 0)  NOT NULL,
+
+			CONSTRAINT PK_TBL_STAT_MENU_USER PRIMARY KEY (TENANT_ID, COMPANY_ID, USER_ID, MENU_ID, TIME_CODE)
+		)
+	</statement>
+
+	<select id="EzCommonDAO.checkTblStatMenuUserMonth" resultClass="String">
+		SELECT
+			USER_ID
+		FROM
+			TBL_STAT_MENU_USER_MONTH
+				<![CDATA[ WHERE
+				ROWNUM = 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.createTblStatMenuUserMonth">
+		CREATE TABLE TBL_STAT_MENU_USER_MONTH
+		(
+			USER_ID    NVARCHAR2(80)  NOT NULL,
+			TENANT_ID  NUMBER(5, 0)   NOT NULL,
+			COMPANY_ID NVARCHAR2(100) NOT NULL,
+			IPADDRESS  NVARCHAR2(15),
+			YEAR       NUMBER(4, 0)   NOT NULL,
+			MONTH      NUMBER(2, 0)   NOT NULL,
+			TIME_CODE  NUMBER(10, 0)  NOT NULL,
+
+			MENU_ID    NUMBER(10, 0),
+			CODE       NVARCHAR2(6),
+			STAT_COUNT NUMBER(20, 0)  NOT NULL,
+
+			CONSTRAINT PK_TBL_STAT_MENU_USER_MONTH PRIMARY KEY (TENANT_ID, COMPANY_ID, USER_ID, MENU_ID, TIME_CODE)
+		)
+	</statement>
+
+	<select id="EzCommonDAO.checkTblStatMenuDept" resultClass="String">
+		SELECT
+			DEPT_ID
+		FROM
+			TBL_STAT_MENU_DEPT
+				<![CDATA[ WHERE
+				ROWNUM = 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.createTblStatMenuDept">
+		CREATE TABLE TBL_STAT_MENU_DEPT
+		(
+			DEPT_ID    NVARCHAR2(80)  NOT NULL,
+			TENANT_ID  NUMBER(5, 0)   NOT NULL,
+			COMPANY_ID NVARCHAR2(100) NOT NULL,
+			YEAR       NUMBER(4, 0)   NOT NULL,
+			MONTH      NUMBER(2, 0)   NOT NULL,
+			DAY        NUMBER(2, 0)   NOT NULL,
+			HOUR       NUMBER(2, 0)   NOT NULL,
+			TIME_CODE  NUMBER(10, 0)  NOT NULL,
+
+			MENU_ID    NUMBER(10, 0),
+			CODE       NVARCHAR2(10),
+			STAT_COUNT NUMBER(20, 0)  NOT NULL,
+
+			CONSTRAINT PK_TBL_STAT_MENU_DEPT PRIMARY KEY (TENANT_ID, COMPANY_ID, DEPT_ID, MENU_ID, TIME_CODE)
+		)
+	</statement>
+
+	<select id="EzCommonDAO.checkTblStatMenuDeptMonth" resultClass="String">
+		SELECT
+			DEPT_ID
+		FROM
+			TBL_STAT_MENU_DEPT_MONTH
+				<![CDATA[ WHERE
+				ROWNUM = 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.createTblStatMenuDeptMonth">
+		CREATE TABLE TBL_STAT_MENU_DEPT_MONTH
+		(
+			DEPT_ID    NVARCHAR2(80)  NOT NULL,
+			TENANT_ID  NUMBER(5, 0)   NOT NULL,
+			COMPANY_ID NVARCHAR2(100) NOT NULL,
+			YEAR       NUMBER(4, 0)   NOT NULL,
+			MONTH      NUMBER(2, 0)   NOT NULL,
+			TIME_CODE  NUMBER(10, 0)  NOT NULL,
+
+			MENU_ID    NUMBER(10, 0),
+			CODE       NVARCHAR2(6),
+			STAT_COUNT NUMBER(20, 0)  NOT NULL,
+
+			CONSTRAINT PK_TBL_STAT_MENU_DEPT_MONTH PRIMARY KEY (TENANT_ID, COMPANY_ID, DEPT_ID, MENU_ID, TIME_CODE)
+		)
+	</statement>
 </sqlMap>

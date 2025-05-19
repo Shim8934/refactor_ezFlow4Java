@@ -36,23 +36,23 @@ import java.lang.reflect.Method;
 import java.math.BigInteger;
 import java.net.URI;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.text.DecimalFormat;
 import java.text.Normalizer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -70,6 +70,7 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import javax.annotation.PostConstruct;
@@ -107,10 +108,22 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.logging.log4j.util.Strings;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.XML;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -3556,5 +3569,109 @@ public class CommonUtil {
 		}
 		
 		return locale;
+	}
+
+	public static List<String> getMonthList(Locale locale, TextStyle textStyle) {
+		return IntStream.range(1, 13).boxed().map(m -> {
+			return Month.of(m).getDisplayName(textStyle, locale);
+		}).collect(Collectors.toList());
+	}
+
+	/**
+	 * 표를 엑셀로 변환 다운로드
+	 */
+	public void downloadHtmlTableAsExcel(String htmlTable, HttpServletResponse response, String fileName) throws Exception {
+		org.jsoup.nodes.Document doc = Jsoup.parse(htmlTable);
+		Element table = doc.selectFirst("table");
+		if (table == null) {
+			throw new Exception("Table does not exist");
+		}
+		Elements rows = table.select("tr");
+		String encodedFileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8.toString())
+				.replaceAll("\\+", "%20");
+
+		try (XSSFWorkbook workbook = new XSSFWorkbook()) {
+			Sheet sheet = workbook.createSheet("data");
+			XSSFCellStyle headerStyle= workbook.createCellStyle();
+			headerStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+			headerStyle.setFillPattern(XSSFCellStyle.SOLID_FOREGROUND);
+			headerStyle.setBorderBottom(XSSFCellStyle.BORDER_THIN);
+			headerStyle.setBorderTop(XSSFCellStyle.BORDER_THIN);
+			headerStyle.setBorderRight(XSSFCellStyle.BORDER_THIN);
+			headerStyle.setBorderLeft(XSSFCellStyle.BORDER_THIN);
+			headerStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+			headerStyle.setAlignment(HorizontalAlignment.CENTER);
+			headerStyle.setWrapText(true);
+
+			XSSFCellStyle bodyStyle= workbook.createCellStyle();
+			bodyStyle.setBorderBottom(XSSFCellStyle.BORDER_THIN);
+			bodyStyle.setBorderTop(XSSFCellStyle.BORDER_THIN);
+			bodyStyle.setBorderRight(XSSFCellStyle.BORDER_THIN);
+			bodyStyle.setBorderLeft(XSSFCellStyle.BORDER_THIN);
+			bodyStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+			bodyStyle.setAlignment(HorizontalAlignment.CENTER);
+			bodyStyle.setWrapText(true);
+
+			Map<String, CellRangeAddress> mergedCells = new HashMap<>();
+
+			int rowIndex = 0;
+			for (Element row : rows) {
+				Row excelRow = sheet.createRow(rowIndex);
+				Elements cells = row.select("th, td");
+
+				int colIndex = 0;
+				for (Element cell : cells) {
+					int rowSpan = cell.hasAttr("rowspan") ? Integer.parseInt(cell.attr("rowspan")) : 1;
+					int colSpan = cell.hasAttr("colspan") ? Integer.parseInt(cell.attr("colspan")) : 1;
+
+					while (isCellMerged(mergedCells, rowIndex, colIndex)) {
+						colIndex++;
+					}
+
+					Cell excelCell = excelRow.createCell(colIndex);
+					String cellText = cell.text().trim();
+					excelCell.setCellValue(cellText);
+					excelCell.setCellStyle(cell.is("th") ? headerStyle : bodyStyle);
+
+					if (rowSpan > 1 || colSpan > 1) {
+						CellRangeAddress region = new CellRangeAddress(
+								rowIndex, rowIndex + rowSpan - 1,
+								colIndex, colIndex + colSpan - 1
+						);
+						sheet.addMergedRegion(region);
+
+						for (int r = region.getFirstRow(); r <= region.getLastRow(); r++) {
+							for (int c = region.getFirstColumn(); c <= region.getLastColumn(); c++) {
+								if (r != rowIndex || c != colIndex) {
+									mergedCells.put(r + ":" + c, region);
+								}
+							}
+						}
+					}
+
+					colIndex += colSpan;
+				}
+				rowIndex++;
+			}
+
+			double unit = 2.0;
+			for (int i = 0; i < 30; i++) {
+				sheet.autoSizeColumn(i);
+
+				int currentWidth = sheet.getColumnWidth(i);
+				if (currentWidth > 0) {
+					System.out.println(1);
+					int newWidth = (int)(currentWidth * unit);
+					sheet.setColumnWidth(i, Math.min(65280, newWidth));
+				}
+			}
+
+			response.setHeader("Content-Disposition","attachment; filename=\"" + encodedFileName + ".xlsx\"");
+			workbook.write(response.getOutputStream());
+		}
+	}
+	
+	private boolean isCellMerged(Map<String, CellRangeAddress> mergedCells, int row, int col) {
+		return mergedCells.containsKey(row + ":" + col);
 	}
 }

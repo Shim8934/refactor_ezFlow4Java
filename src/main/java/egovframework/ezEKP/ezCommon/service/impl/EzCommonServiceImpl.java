@@ -1991,6 +1991,15 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("config_type","전자결재G");
 		}});
 
+        test.add(new HashMap<String, Object>(){{
+            put("confName","useStatMenu");
+            put("property_value","YES");
+            put("config_name","메뉴 통계 사용 여부");
+            put("regdate","2025-03-21 00:00:00");
+            put("description","메뉴 관련 통계 집계, 및 사용 여부 (default:YES)");
+            put("config_type","포탈");
+        }});
+
 		List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
 		
 		for (Map<String, Object> map : test) {
@@ -4820,4 +4829,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			ezCommonDAO.insertMealPlanBoardInfo(tenantVo.getTenantId());
 		}
 	}
+
+    @Override
+    public void createTblStatMenu() {
+        ezCommonDAO.createTblStatMenu();
+    }
 }

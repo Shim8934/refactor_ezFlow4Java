@@ -577,4 +577,6 @@ public interface EzCommonService {
 	
 	// 2025-02-05 조수빈 - 식단 사용 여부 컨피그
 	public void insertMealPlanTenantConfig() throws Exception;
+
+	void createTblStatMenu();
 }

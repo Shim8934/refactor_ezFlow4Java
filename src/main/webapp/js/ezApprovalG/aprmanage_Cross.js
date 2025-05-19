@@ -462,7 +462,7 @@ function getReceivedDocList_after(xml) {
         	parent.frames["left"].pListTypeValue = pListTypeValue;
             parent.frames["left"].getAprCount();
             if (pListTypeValue == 4) {
-                var topTitle = assignChk == "Y" ? "지정목록" : "부서수신함";
+                var topTitle = assignChk == "Y" ? strLangAssignedList : strLangDeptInbox;
                 parent.frames["left"].setPresentValue(topTitle);
             } else {
                 parent.frames["left"].setPresentValue("");

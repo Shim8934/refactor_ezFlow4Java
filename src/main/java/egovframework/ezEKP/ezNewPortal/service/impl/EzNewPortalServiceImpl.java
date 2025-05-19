@@ -2359,11 +2359,179 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("menuLang", menuLang);
 		map.put("type", type);
 		
-		List<MenuInfoVO> list = ezNewPortalDAO.getMenus(map);
+		List<MenuInfoVO> menuInfos = ezNewPortalDAO.getMenus(map);
+
+		//tenant config가 NO인 경우 관리자 메뉴 관리에서도 나오면 안됨
+		//컨피그 : useQuestion(전자설문), useMemo(메모), useLadder(사다리게임), useCabinet(캐비닛), 
+		//		 useBallotSystem(투표), USE_JOURNAL(업무일지), USE_CIRCULAR(회람판), USE_ATTITUDE(근태관리)
+		//		 useWebfolder(웹폴더),  USE_ezPMS(프로젝트관리), USE_COMMUNITY(커뮤니티), useCar(차량관리)
+		String useQuestion = ezCommonService.getTenantConfig("useQuestion", tenantId);
+		String useSurvey = ezCommonService.getTenantConfig("useSurvey", tenantId);
+		String useMemo = ezCommonService.getTenantConfig("useMemo", tenantId);
+		String useLadder = ezCommonService.getTenantConfig("useLadder", tenantId);
+		String useCabinet = ezCommonService.getTenantConfig("useCabinet", tenantId);
+		String useVote = ezCommonService.getTenantConfig("useBallotSystem", tenantId);
+		String useJournal = ezCommonService.getTenantConfig("USE_JOURNAL", tenantId);
+		String useCircular = ezCommonService.getTenantConfig("USE_CIRCULAR", tenantId);
+		String useAttitude = ezCommonService.getTenantConfig("USE_ATTITUDE", tenantId);
+		String useWebfolder = ezCommonService.getTenantConfig("useWebfolder", tenantId);
+		String useEzPMS = ezCommonService.getTenantConfig("USE_ezPMS", tenantId);
+		String useCommunity = ezCommonService.getTenantConfig("USE_COMMUNITY", tenantId);
+		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", tenantId);
+
+		String useSchedule = ezCommonService.getTenantConfig("useSchedule", tenantId);
+		String useResource = ezCommonService.getTenantConfig("useResource", tenantId);
+		String useBoard = ezCommonService.getTenantConfig("useBoard", tenantId);
+		String useToDo = ezCommonService.getTenantConfig("useToDo", tenantId);
+		String useCar = ezCommonService.getTenantConfig("useCar", tenantId);
+
+		if (useAttitude == null || useAttitude.equals("")) {
+			useAttitude = "NO";
+		}
+
+		if (useMemo == null || useMemo.equals("")) {
+			useMemo = "YES";
+		}
+
+		if (useLadder == null || useLadder.equals("")) {
+			useLadder = "NO";
+		}
+
+		if (useCabinet == null || useCabinet.equals("")) {
+			useCabinet = "NO";
+		}
+
+		if (useVote == null || useVote.equals("")) {
+			useVote = "YES";
+		}
+
+		if (useJournal == null || useJournal.equals("")) {
+			useJournal = "NO";
+		}
+
+		if (useCircular == null || useCircular.equals("")) {
+			useCircular = "YES";
+		}
+
+		if (useQuestion == null || useQuestion.equals("")) {
+			useQuestion = "NO";
+		}
+
+		if (useSurvey == null || useSurvey.equals("")) {
+			useSurvey = "YES";
+		}
+
+		if (useWebfolder == null || useWebfolder.equals("")) {
+			useWebfolder = "NO";
+		}
+
+		if (useCommunity == null || useCommunity.equals("")) {
+			useCommunity = "YES";
+		}
+
+		if (useEzPMS == null || useEzPMS.equals("")) {
+			useEzPMS = "NO";
+		}
+
+		if (useExternalMailServer == null || useExternalMailServer.equals("")) {
+			useExternalMailServer = "NO";
+		}
+
+		if (useSchedule == null || useSchedule.equals("")) {
+			useSchedule = "YES";
+		}
+
+		if (useResource == null || useResource.equals("")) {
+			useResource = "YES";
+		}
+
+		if (useBoard == null || useBoard.equals("")) {
+			useBoard = "YES";
+		}
+
+		if (useToDo == null || useToDo.equals("")) {
+			useToDo = "YES";
+		}
+		if (useCar == null || useCar.equals("")) {
+			useCar = "NO";
+		}
+
+		if (useQuestion.equals("NO")) {
+			menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("question")));
+		}
+
+		if (useSurvey.equals("NO")) {
+			menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("survey")));
+		}
+
+		if (useMemo.equals("NO")) {
+			menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("memo")));
+		}
+
+		if (useLadder.equals("NO")) {
+			menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("ladder")));
+		}
+
+		if (useCabinet.equals("NO")) {
+			menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("cabinet")));
+		}
+
+		if (useVote.equals("NO")) {
+			menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("vote")));
+		}
+
+		if (useJournal.equals("NO")) {
+			menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("journal")));
+		}
+
+		if (useCircular.equals("NO")) {
+			menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("circular")));
+		}
+
+		if (useAttitude.equals("NO")) {
+			menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("attitude")));
+		}
+
+		if (useWebfolder.equals("NO")) {
+			menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("webfolder")));
+		}
+
+		if (useEzPMS.equals("NO")) {
+			menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("pms")));
+		}
+
+		if (useCommunity.equals("NO")) {
+			menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("community")));
+		}
+
+		if (useExternalMailServer.equalsIgnoreCase("YES")) {
+			menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("mail")));
+			menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("address")));
+		}
+
+		if (useSchedule.equals("NO")) {
+			menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("schedule")));
+		}
+
+		if (useResource.equals("NO")) {
+			menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("resource")));
+		}
+
+		if (useBoard.equals("NO")) {
+			menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("board")));
+		}
+
+		if (useToDo.equals("NO")) {
+			menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("task")));
+		}
+
+		if (useCar.equals("NO")) {
+			menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("car")));
+		}
 		
 		logger.debug("getMenus ended.");
 		
-		return list;
+		return menuInfos;
 	}
 	
 	@Override
