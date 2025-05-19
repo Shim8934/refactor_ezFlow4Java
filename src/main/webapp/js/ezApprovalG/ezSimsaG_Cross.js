@@ -749,19 +749,24 @@ function styleToAttribute(bodyElem) {
         if (pElem[i].style) {
             if (pElem[i].style.textAlign) {
                 var alignVal = pElem[i].style.removeProperty("text-align");
-                if (alignVal == 'justify') {
-                    pElem[i].removeAttribute("align");
-                } else {
+                if (alignVal == 'left' || alignVal == 'center' || alignVal == 'right') {
                     pElem[i].align = alignVal;
+                } else {
+                    pElem[i].removeAttribute("align");
+                }
+            } else {
+                var pElemAlign = pElem[i].getAttribute("align");
+                if (pElemAlign == null || !(pElemAlign == 'left' || pElemAlign == 'center' || pElemAlign == 'right')){
+                    pElem[i].removeAttribute("align");
                 }
             }
             
             if (pElem[i].style.lineHeight) {
                 var lh = pElem[i].style.lineHeight;
+                var fontPx = 16;
     
                 if (isLineHeightUnitless(lh)) {
                     var fontSizeStr = pElem[i].style.fontSize;
-                    var fontPx = 16;
     
                     if (fontSizeStr) {
                         var match = fontSizeStr.match(/^([\d.]+)(pt|px)?$/);
