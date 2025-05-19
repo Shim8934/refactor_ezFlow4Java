@@ -4334,6 +4334,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("scrapContID", scrapContID);
 		model.addAttribute("attachFileNameMaxLength", ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId()));
 		model.addAttribute("itemStarRating", itemStarRating);
+		model.addAttribute("moduleType", "board");
+		model.addAttribute("moduleSubType", "read");
 		
 		logger.debug("getBoardItemView ended");
         return "ezBoard/boardItemView";
@@ -7986,7 +7988,29 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		// 2025-01-23 게시판 > 게시물 미리보기 > 게시물 평가하기 기능 추가
 		Map<String, Object> itemStarRating = ezBoardService.getItemStarRating(itemID, userInfo.getId(), userInfo.getTenantId());
-				 
+		
+		List<BoardAttributeVO> boardAttr = new ArrayList<>();
+		String extenLang = "1";
+		// 2025-05-09 게시판 내용 받기
+		BoardListVO boardItem = ezBoardService.getBrdGetItemInfo(boardID, itemID, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
+		if (boardInfo.getAttributeYN() != null && boardInfo.getAttributeYN().equals("Y")) {
+			boardAttr = ezBoardAdminService.getBoardAttribute(boardID, userInfo.getTenantId());
+			if (!commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()).equals("1")) {
+				extenLang = "2";
+			}
+		}
+		
+		JsonSerializer<String> stringSerializer = new JsonSerializer<String>() {
+			@Override
+			public JsonElement serialize(String src, Type typeOfSrc, JsonSerializationContext context) {
+				String escapedString = src.replace("\\", "\\\\")
+											.replace("\"", "\\\"")
+											.replace("/", "\\/");
+				return new JsonPrimitive(escapedString);
+			}
+		};
+		Gson gson = new GsonBuilder().registerTypeAdapter(String.class, stringSerializer).create();
+		
 		model.addAttribute("OneLineReplyFlag", OneLineReplyFlag);
 		model.addAttribute("gubun", boardInfo.getGuBun());
 		model.addAttribute("itemID", itemID);
@@ -8005,6 +8029,12 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("itemLocation", itemLocation);
 		model.addAttribute("attachFileNameMaxLength", ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId()));
 		model.addAttribute("itemStarRating", itemStarRating);
+		model.addAttribute("boardItem", gson.toJson(boardItem));
+		model.addAttribute("boardAttr", gson.toJson(boardAttr));
+		model.addAttribute("extenLang", extenLang);
+		model.addAttribute("boardAttr", gson.toJson(boardAttr));
+		model.addAttribute("moduleType", "board");
+		model.addAttribute("moduleSubType", "previewRead");
 		
 		logger.debug("boardItemPreviewContent ended");
 		return "ezBoard/boardItemPreviewContent";

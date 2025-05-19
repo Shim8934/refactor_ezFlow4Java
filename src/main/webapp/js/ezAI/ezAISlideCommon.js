@@ -255,7 +255,12 @@ function createOptions(promptData) {
     } else if ('approval' == module) {
 
     } else if ('board' == module) {
-
+       return {
+            'command': promptData.chatInput, // 사용자 요청
+            'tone': 'formally',
+            'length': 'medium',
+            //'targetLanguage': 'en', // 현재 필요없음
+        };
     }
 }
 

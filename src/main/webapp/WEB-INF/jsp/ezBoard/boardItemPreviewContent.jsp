@@ -119,6 +119,14 @@
             var attachLimit = "${boardInfo.attachSizeLimit}"; // 개별 첨부파일 limit
             var attachFileNameMaxLength = Number("${attachFileNameMaxLength}"); // 첨부파일명 글자수 제한 limit
             var totalFileSize = 0; // 현재 총 첨부파일 사이즈
+            
+			// 확장컬럼 관련 함수 전역변수로 변경함
+            var userLang = "${extenLang}"
+            var pBoardName = '<c:out value="${boardInfo.boardName}"/>';
+            var boardAttrListTemp = '<c:out value="${boardAttr}"/>';
+            var boardAttrListJson = JSON.parse(replaceEntityCodeToStr(boardAttrListTemp));
+            var boardItemTemp = '<c:out value="${boardItem}"/>';
+            var boardItemJson = JSON.parse(replaceEntityCodeToStr(boardItemTemp));
 
 	        window.onload = function () {
 	            document.getElementById("txtContent").style.textAlign = "center";
@@ -652,6 +660,45 @@
 				var feature  = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes";
 				return feature;
 			}
+				
+			function makeBoardDataForAI() {
+			    let dataArray = [];
+			    const attrData = makeAttributeData();
+			    let contentHtmlStr = document.querySelector('#divContent').getHTML();
+			    contentHtmlStr = removeHtmlTag(contentHtmlStr);
+			    
+			    const data = {
+			        writerID : boardItemJson.writerID,
+			    	writerName : boardItemJson.writerName,
+                    writerDeptName : boardItemJson.writerDeptName,
+                    writerCompanyName : boardItemJson.writerCompanyName,
+			        writeDate : boardItemJson.startDate,
+			        endDate : boardItemJson.endDate,
+                    boardName : pBoardName,
+                    title : boardItemJson.title,
+			        content : contentHtmlStr,
+                    extensionAttribute : attrData
+			    }
+			    dataArray.push(data);
+			    return data;
+			}
+			
+            function makeAttributeData() {
+                const contentAttrListData = [];
+            
+                for (let i = 0; i < boardAttrListJson.length; i++) {
+                    const tableColName = boardAttrListJson[i].tableCol; // 확장컬럼 테이블 컬럼명
+                    const colName = userLang === '1' ? boardAttrListJson[i].colName1 : boardAttrListJson[i].colName2;
+                    const colVal = boardItemJson[tableColName] ?? ""; // null처리
+            
+                    const contentAttrObj = { 
+                        columnName : colName,
+                        columnValue : colVal
+                    };
+                    contentAttrListData.push(contentAttrObj);
+                }
+                return contentAttrListData;
+            }
 	    </script>
 	</head>
 	<body>

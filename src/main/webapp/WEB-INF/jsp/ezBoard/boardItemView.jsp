@@ -141,6 +141,12 @@
 			var attachLimit = "${boardInfo.attachSizeLimit}"; // 첨부파일 크기 limit
 			var attachFileNameMaxLength = Number("${attachFileNameMaxLength}");// 첨부파일명 글자수 제한 limit
 			var totalFileSize = 0; // 현재 총 첨부파일 사이즈
+			
+            var userLang = "${extenLang}"
+            var boardAttrListTemp = '<c:out value="${boardAttrJson}"/>';
+            var boardAttrListJson = JSON.parse(replaceEntityCodeToStr(boardAttrListTemp));
+            var boardItemTemp = '<c:out value="${boardItemJson}"/>';
+            var boardItemJson = JSON.parse(replaceEntityCodeToStr(boardItemTemp));
 	        
 	        function Bigger(doc) {     
 	            if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -268,12 +274,6 @@
 		            }
 		            
 		            // 2024-07-31 전인하 - 게시판 > 확장컬럼 > peoplePicker 타입, textArea 타입 출력값 가공
-		            var userLang = "${extenLang}"
-		            var boardAttrListTemp = '<c:out value="${boardAttrJson}"/>';
-		            var boardAttrListJson = JSON.parse(replaceEntityCodeToStr(boardAttrListTemp));
-		            var boardItemTemp = '<c:out value="${boardItemJson}"/>';
-                    var boardItemJson = JSON.parse(replaceEntityCodeToStr(boardItemTemp));
-                    
 		            for (let i = 0 ; i < boardAttrListJson.length ; i++ ) {
 		                var boardAttr = boardAttrListJson[i];
 		                if (boardAttr.colType == 'people') {
@@ -1877,6 +1877,43 @@
 					}
 				});
 			}
+	
+			function makeBoardDataForAI() {
+			    const attrData = makeAttributeData();
+			    const frame = document.querySelector("#message");
+			    let contentHtmlStr = frame.contentDocument.querySelector('#txtContent').getHTML();
+			    contentHtmlStr = removeHtmlTag(contentHtmlStr);
+			    const data = {
+			        writerID : strWriterID,
+			    	writerName : strWriterName,
+                    writerDeptName : strWriterDeptName,
+                    writerCompanyName : strWriterCompanyName,
+			        writeDate : strWriteDate,
+			        endDate : strEndDate,
+                    boardName : pBoardName,
+                    title : boardItemJson.title,
+			        content : contentHtmlStr,
+                    extensionAttribute : attrData
+			    }
+			    return data;
+			}
+			
+            function makeAttributeData() {
+                const contentAttrListData = [];
+            
+                for (let i = 0; i < boardAttrListJson.length; i++) {
+                    const tableColName = boardAttrListJson[i].tableCol; // 확장컬럼 테이블 컬럼명
+                    const colName = userLang === '1' ? boardAttrListJson[i].colName1 : boardAttrListJson[i].colName2;
+                    const colVal = boardItemJson[tableColName] ?? ""; // null처리
+            
+                    const contentAttrObj = { 
+                        columnName : colName,
+                        columnValue : colVal
+                    };
+                    contentAttrListData.push(contentAttrObj);
+                }
+                return contentAttrListData;
+            }
 
 		</script>
 	</head>
