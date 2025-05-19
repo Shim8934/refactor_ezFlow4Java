@@ -11,6 +11,8 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery.multipleSortable.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezAI/ezAISlideCommon.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezAI/marked.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezAI/purify.min.js')}"></script>
 		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
 		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/css/ai.css')}" type="text/css">

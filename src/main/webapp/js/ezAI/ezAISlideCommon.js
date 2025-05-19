@@ -165,9 +165,10 @@ async function aiSend(promptData, callback) {
         const resultSpan = renderAiResultContainer(aiLoadingDiv);
         
         // 1차 개발 : json 출력
-        const rtnData = await response.json();
-        callbackParam = rtnData.ai_message;
-        resultSpan.innerText += rtnData.ai_message; 
+        let rtnData = await response.json();
+        rtnData = parseMarkdownToHtml(rtnData.ai_message);
+        callbackParam = rtnData;
+        resultSpan.innerHTML += rtnData; 
         // 1차 개발 : json 출력 끝
         
         /*
@@ -186,6 +187,19 @@ async function aiSend(promptData, callback) {
     }
     
     scrollToBottom();
+}
+
+function parseMarkdownToHtml(rtnData) {
+    // marked 라이브러리 사용하여 파싱
+    marked.setOptions({
+        breaks: true,  
+        gfm: true     
+    });
+    
+    let rtnDataParse = marked.parse(rtnData);
+    //DomPurity 라이브러리 사용하여 XSS 방지 처리
+    DOMPurify.sanitize(rtnDataParse);
+    return rtnDataParse;
 }
 
 // 데이터
