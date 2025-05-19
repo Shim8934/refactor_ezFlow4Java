@@ -233,10 +233,9 @@ function createInputData() {
     } else if ('approval' == module) {
     
     } else if ('board' == module) {
-        let inputDataArray = [];
-        const inputData = makeBoardDataForAI();
-        inputDataArray.push(inputData);
-        return inputDataArray;
+        if (['view', 'preview'].includes(getSubModuleType())) {
+            return makeBoardDataForAI();
+        }
     } else {
          return [];
     }

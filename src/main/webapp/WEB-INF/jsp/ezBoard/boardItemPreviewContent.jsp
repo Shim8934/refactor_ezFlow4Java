@@ -660,45 +660,6 @@
 				var feature  = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes";
 				return feature;
 			}
-				
-			function makeBoardDataForAI() {
-			    let dataArray = [];
-			    const attrData = makeAttributeData();
-			    let contentHtmlStr = document.querySelector('#divContent').getHTML();
-			    contentHtmlStr = removeHtmlTag(contentHtmlStr);
-			    
-			    const data = {
-			        writerID : boardItemJson.writerID,
-			    	writerName : boardItemJson.writerName,
-                    writerDeptName : boardItemJson.writerDeptName,
-                    writerCompanyName : boardItemJson.writerCompanyName,
-			        writeDate : boardItemJson.startDate,
-			        endDate : boardItemJson.endDate,
-                    boardName : pBoardName,
-                    title : boardItemJson.title,
-			        content : contentHtmlStr,
-                    extensionAttribute : attrData
-			    }
-			    dataArray.push(data);
-			    return data;
-			}
-			
-            function makeAttributeData() {
-                const contentAttrListData = [];
-            
-                for (let i = 0; i < boardAttrListJson.length; i++) {
-                    const tableColName = boardAttrListJson[i].tableCol; // 확장컬럼 테이블 컬럼명
-                    const colName = userLang === '1' ? boardAttrListJson[i].colName1 : boardAttrListJson[i].colName2;
-                    const colVal = boardItemJson[tableColName] ?? ""; // null처리
-            
-                    const contentAttrObj = { 
-                        columnName : colName,
-                        columnValue : colVal
-                    };
-                    contentAttrListData.push(contentAttrObj);
-                }
-                return contentAttrListData;
-            }
 	    </script>
 	</head>
 	<body>
@@ -869,8 +830,8 @@
                 <img id="previewImage" class="previewImage">
             </div>            
         </div>
-        <%--<c:if test="${useAI}">--%>
+        <c:if test="${useAI}">
             <c:import url="/WEB-INF/jsp/ezAI/aiSlide.jsp" />
-        <%--</c:if>--%>
+        </c:if>
 	</body>
 </html>

@@ -54,6 +54,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import egovframework.ezEKP.ezAI.util.AICommonUtil;
 import egovframework.ezEKP.ezBoard.vo.BoardKeywordVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
 import egovframework.ezEKP.ezOrgan.vo.OrganAuth.AdminAuth;
@@ -159,6 +160,9 @@ public class EzBoardController extends EgovFileMngUtil{
 	
 	@Autowired
 	private CommonUtil commonUtil;
+	
+	 @Autowired
+    private AICommonUtil aICommonUtil;
 	
 	@Autowired
 	private Properties globals;
@@ -4300,6 +4304,14 @@ public class EzBoardController extends EgovFileMngUtil{
 		// 2024-10-07 이혜림 - 게시판 > 별점 평가하기 조회
 		Map<String, Object> itemStarRating = ezBoardService.getItemStarRating(itemID, userInfo.getId(), userInfo.getTenantId());
 		
+		// ai 관련 컨피그 추가
+		// AI 첨부파일 이름 최대 길이 - 기존 첨부파일과 동일한 값 사용
+		String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId());
+		// AI 사용여부 확인
+		boolean useAI = aICommonUtil.checkUseAI(userInfo.getTenantId());
+		// AI 챗봇 첨부파일 최대용량
+		String aiAttachMBSize = ezCommonService.getTenantConfig("aiAttachMBSize", userInfo.getTenantId());
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("boardItem", boardItem);
@@ -4335,7 +4347,10 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("attachFileNameMaxLength", ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId()));
 		model.addAttribute("itemStarRating", itemStarRating);
 		model.addAttribute("moduleType", "board");
-		model.addAttribute("moduleSubType", "read");
+		model.addAttribute("moduleSubType", "view");
+		model.addAttribute("useAI", useAI);
+		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
+		model.addAttribute("aiAttachMBSize", aiAttachMBSize);
 		
 		logger.debug("getBoardItemView ended");
         return "ezBoard/boardItemView";
@@ -8011,6 +8026,14 @@ public class EzBoardController extends EgovFileMngUtil{
 		};
 		Gson gson = new GsonBuilder().registerTypeAdapter(String.class, stringSerializer).create();
 		
+		// ai 관련 컨피그 추가
+		// AI 첨부파일 이름 최대 길이 - 기존 첨부파일과 동일한 값 사용
+		String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId());
+		// AI 사용여부 확인
+		boolean useAI = aICommonUtil.checkUseAI(userInfo.getTenantId());
+		// AI 챗봇 첨부파일 최대용량
+		String aiAttachMBSize = ezCommonService.getTenantConfig("aiAttachMBSize", userInfo.getTenantId());
+		
 		model.addAttribute("OneLineReplyFlag", OneLineReplyFlag);
 		model.addAttribute("gubun", boardInfo.getGuBun());
 		model.addAttribute("itemID", itemID);
@@ -8034,7 +8057,10 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("extenLang", extenLang);
 		model.addAttribute("boardAttr", gson.toJson(boardAttr));
 		model.addAttribute("moduleType", "board");
-		model.addAttribute("moduleSubType", "previewRead");
+		model.addAttribute("moduleSubType", "preview");
+		model.addAttribute("useAI", useAI);
+		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
+		model.addAttribute("aiAttachMBSize", aiAttachMBSize);
 		
 		logger.debug("boardItemPreviewContent ended");
 		return "ezBoard/boardItemPreviewContent";
