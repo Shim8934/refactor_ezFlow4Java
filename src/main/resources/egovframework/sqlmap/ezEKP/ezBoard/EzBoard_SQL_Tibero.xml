@@ -144,7 +144,6 @@
 		<result property="notiEnd" 					column="NTENDDATE" 				columnIndex="36"/>
 		<result property="publicFlag" 		        column="PUBLICFLAG" 		    columnIndex="37"/>
 		<result property="writerNameType" 		    column="WRITERNAMETYPE" 		columnIndex="38"/>
-		<result property="topWriterID" 			    column="TOPWRITERID" 			columnIndex="40"/>
 	</resultMap>
 	
 	<!-- baonk added -->
