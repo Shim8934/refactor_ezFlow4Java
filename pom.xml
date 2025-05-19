@@ -588,6 +588,11 @@
 			<scope>test</scope>
 		</dependency>
 		<!-- JUnit5 end -->
+		<dependency>
+			<groupId>net.lingala.zip4j</groupId>
+			<artifactId>zip4j</artifactId>
+			<version>2.9.0</version>
+		</dependency>
 	</dependencies>
 
     <build>
