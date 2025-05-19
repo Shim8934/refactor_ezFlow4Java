@@ -6745,4 +6745,122 @@
 		VALUES
 		    ('{MMMMMMMM-MMMM-MMMM-MMMM-MMMMMMMMMMMM}', '식단', 'MealPlan', '献立表', '菜单',  -2, 0, 'None', NULL, 0, NULL, 0, NULL, 0, 0, NULL, 0, NULL, 0, 'N', #v_TENANTID#, 'Top')
 	</insert>
+
+	<select id="EzCommonDAO.checkTblStatMenuUser" resultClass="String">
+		SELECT
+			USER_ID
+		FROM
+			TBL_STAT_MENU_USER
+		LIMIT 1
+	</select>
+	<statement id="EzCommonDAO.createTblStatMenuUser">
+		CREATE TABLE TBL_STAT_MENU_USER
+		(
+			USER_ID    VARCHAR(80)  NOT NULL COMMENT '유저 id(비회원은 ip)',
+			TENANT_ID  MEDIUMINT(9) NOT NULL DEFAULT 0 COMMENT '빠른 범위 검색/정렬용 (형식: YYYYMMDDHH)',
+			COMPANY_ID VARCHAR(100) NOT NULL COMMENT '회사 id',
+			IPADDRESS  VARCHAR(15) COMMENT 'ip',
+			YEAR       SMALLINT     NOT NULL COMMENT '집계 년도(YYYY)',
+			MONTH      TINYINT      NOT NULL COMMENT '집계 월(01 ~ 12)',
+			DAY        TINYINT      NOT NULL COMMENT '집계 일(01 ~ 31)',
+			HOUR       TINYINT      NOT NULL COMMENT '집계 시간(00 ~ 23)',
+			TIME_CODE  INT          NOT NULL COMMENT '빠른 범위 검색/정렬용 (형식: YYYYMMDDHH)',
+			MENU_ID    INT(11) COMMENT '집계 메뉴 id',
+			CODE       VARCHAR(10) COMMENT '집계 통계 종류',
+			STAT_COUNT INT          NOT NULL DEFAULT 0 COMMENT '집계 카운트',
+
+			PRIMARY KEY (TENANT_ID, COMPANY_ID, USER_ID, MENU_ID, TIME_CODE),
+			INDEX IDX_TIME_COMPONENTS (YEAR, MONTH, DAY, HOUR),
+			INDEX IDX_TIME_STR (TIME_CODE),
+			INDEX IDX_MENU (MENU_ID)
+		) ENGINE = INNODB
+		  DEFAULT CHARSET = UTF8MB4
+	</statement>
+
+	<select id="EzCommonDAO.checkTblStatMenuUserMonth" resultClass="String">
+		SELECT
+			USER_ID
+		FROM
+			TBL_STAT_MENU_USER_MONTH
+		LIMIT 1
+	</select>
+	<statement id="EzCommonDAO.createTblStatMenuUserMonth">
+		CREATE TABLE TBL_STAT_MENU_USER_MONTH
+		(
+			USER_ID    VARCHAR(80)  NOT NULL COMMENT '유저 id(비회원은 ip)',
+			TENANT_ID  MEDIUMINT(9) NOT NULL DEFAULT 0 ,
+			COMPANY_ID VARCHAR(100) NOT NULL COMMENT '회사 id',
+			IPADDRESS  VARCHAR(15) COMMENT 'ip',
+			YEAR       SMALLINT     NOT NULL COMMENT '집계 년도(YYYY)',
+			MONTH      TINYINT      NOT NULL COMMENT '집계 월(01 ~ 12)',
+			TIME_CODE  INT          NOT NULL COMMENT '빠른 범위 검색/정렬용 (형식: YYYYMM)',
+			MENU_ID    INT(11) COMMENT '집계 메뉴 id',
+			CODE       VARCHAR(10) COMMENT '집계 통계 종류',
+			STAT_COUNT INT          NOT NULL DEFAULT 0 COMMENT '집계 카운트',
+
+			PRIMARY KEY (TENANT_ID, COMPANY_ID, USER_ID, MENU_ID, TIME_CODE),
+			INDEX IDX_TIME_COMPONENTS (YEAR, MONTH),
+			INDEX IDX_TIME_STR (TIME_CODE),
+			INDEX IDX_MENU (MENU_ID)
+		) ENGINE = INNODB
+		  DEFAULT CHARSET = UTF8MB4
+	</statement>
+
+	<select id="EzCommonDAO.checkTblStatMenuDept" resultClass="String">
+		SELECT
+			DEPT_ID
+		FROM
+			TBL_STAT_MENU_DEPT
+		LIMIT 1
+	</select>
+	<statement id="EzCommonDAO.createTblStatMenuDept">
+		CREATE TABLE TBL_STAT_MENU_DEPT
+		(
+			DEPT_ID    VARCHAR(80)  NOT NULL COMMENT '부서 id',
+			TENANT_ID  MEDIUMINT(9) NOT NULL DEFAULT 0 ,
+			COMPANY_ID VARCHAR(100) NOT NULL COMMENT '회사 id',
+			YEAR       SMALLINT     NOT NULL COMMENT '집계 년도(YYYY)',
+			MONTH      TINYINT      NOT NULL COMMENT '집계 월(01 ~ 12)',
+			DAY        TINYINT      NOT NULL COMMENT '집계 일(01 ~ 31)',
+			HOUR       TINYINT      NOT NULL COMMENT '집계 시간(00 ~ 23)',
+			TIME_CODE  INT          NOT NULL COMMENT '빠른 범위 검색/정렬용 (형식: YYYYMMDDHH)',
+			MENU_ID    INT(11) COMMENT '집계 메뉴 id',
+			CODE       VARCHAR(10) COMMENT '집계 통계 종류',
+			STAT_COUNT INT          NOT NULL DEFAULT 0 COMMENT '집계 카운트',
+
+			PRIMARY KEY (TENANT_ID, COMPANY_ID, DEPT_ID, MENU_ID, TIME_CODE),
+			INDEX IDX_TIME_COMPONENTS (YEAR, MONTH, DAY, HOUR),
+			INDEX IDX_TIME_STR (TIME_CODE),
+			INDEX IDX_MENU (MENU_ID)
+		) ENGINE = INNODB
+		  DEFAULT CHARSET = UTF8MB4
+	</statement>
+
+	<select id="EzCommonDAO.checkTblStatMenuDeptMonth" resultClass="String">
+		SELECT
+			DEPT_ID
+		FROM
+			TBL_STAT_MENU_DEPT_MONTH
+		LIMIT 1
+	</select>
+	<statement id="EzCommonDAO.createTblStatMenuDeptMonth">
+		CREATE TABLE TBL_STAT_MENU_DEPT_MONTH
+		(
+			DEPT_ID    VARCHAR(80)  NOT NULL COMMENT '부서 id',
+			TENANT_ID  MEDIUMINT(9) NOT NULL DEFAULT 0 ,
+			COMPANY_ID VARCHAR(100) NOT NULL COMMENT '회사 id',
+			YEAR       SMALLINT     NOT NULL COMMENT '집계 년도(YYYY)',
+			MONTH      TINYINT      NOT NULL COMMENT '집계 월(01 ~ 12)',
+			TIME_CODE  INT          NOT NULL COMMENT '빠른 범위 검색/정렬용 (형식: YYYYMM)',
+			MENU_ID    INT(11) COMMENT '집계 메뉴 id',
+			CODE       VARCHAR(10) COMMENT '집계 통계 종류',
+			STAT_COUNT INT          NOT NULL DEFAULT 0 COMMENT '집계 카운트',
+
+			PRIMARY KEY (TENANT_ID, COMPANY_ID, DEPT_ID, MENU_ID, TIME_CODE),
+			INDEX IDX_TIME_COMPONENTS (YEAR, MONTH),
+			INDEX IDX_TIME_STR (TIME_CODE),
+			INDEX IDX_MENU (MENU_ID)
+		) ENGINE = INNODB
+		  DEFAULT CHARSET = UTF8MB4
+	</statement>
 </sqlMap>

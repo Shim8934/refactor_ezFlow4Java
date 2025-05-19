@@ -1,9 +1,11 @@
 package egovframework.ezEKP.ezStatistics.web;
 
+import java.util.Objects;
 import java.util.Properties;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -68,7 +70,9 @@ public class EzStatisticsLeftMenuController {
 		if (useExternalMailServer == null || useExternalMailServer.equals("")) {
 			useExternalMailServer = "NO";
 		}
-		
+
+		//2025-03-21 박기범 - 메뉴통계 추가 
+		model.addAttribute("useStatMenu", Objects.toString(ezCommonService.getTenantConfig("useStatMenu", userInfo.getTenantId()), "NO"));
 		model.addAttribute("useExternalMailServer", useExternalMailServer);
 	    
 		return "ezStatistics/statisticsLeftMenu";

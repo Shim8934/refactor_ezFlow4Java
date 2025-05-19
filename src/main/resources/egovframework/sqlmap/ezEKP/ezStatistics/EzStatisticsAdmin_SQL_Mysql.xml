@@ -6,6 +6,7 @@
 	<typeAlias  alias="StatApprVO" 				type="egovframework.ezEKP.ezStatistics.vo.StatApprVO"/>
 	<typeAlias  alias="StatConnVO"				type="egovframework.ezEKP.ezStatistics.vo.StatConnVO"/>
 	<typeAlias  alias="StatMailLogVO" 			type="egovframework.ezEKP.ezStatistics.vo.StatMailLogVO"/>
+	<typeAlias  alias="StatisticVO" 			type="egovframework.ezEKP.ezStatistics.vo.StatisticVO"/>
 	
 	<select id="EzStatisticsAdminDAO.getTimeList_F" parameterClass="StatApprVO" resultClass="StatDailyDocCountLogVO">
 		<![CDATA[
@@ -1863,4 +1864,230 @@
 		  AND
 			COMPANYID = #companyID#
 	</select>
+
+	<insert id="EzStatisticsAdminDAO.upsertStatMenuUser" parameterClass="StatisticVO">
+		INSERT INTO TBL_STAT_MENU_USER (USER_ID,
+										IPADDRESS,
+										TENANT_ID,
+										COMPANY_ID,
+										YEAR,
+										MONTH,
+										DAY,
+										HOUR,
+										TIME_CODE,
+										MENU_ID,
+										CODE,
+										STAT_COUNT)
+		VALUES (IFNULL(#userId#, #ip#),
+				#ip#,
+				#tenantId#,
+				#companyId#,
+				#year#,
+				#month#,
+				#day#,
+				#hour#,
+				#timeCode#,
+				#menuId#,
+				#code#,
+				1)
+		ON DUPLICATE KEY
+			UPDATE STAT_COUNT = STAT_COUNT + 1
+	</insert>
+
+	<insert id="EzStatisticsAdminDAO.upsertStatMenuUserMonth" parameterClass="StatisticVO">
+		INSERT INTO TBL_STAT_MENU_USER_MONTH (USER_ID,
+											  IPADDRESS,
+											  TENANT_ID,
+											  COMPANY_ID,
+											  YEAR,
+											  MONTH,
+											  TIME_CODE,
+											  MENU_ID,
+											  CODE,
+											  STAT_COUNT)
+		VALUES (IFNULL(#userId#, #ip#),
+				#ip#,
+				#tenantId#,
+				#companyId#,
+				#year#,
+				#month#,
+				FLOOR(#timeCode# / 10000),
+				#menuId#,
+				#code#,
+				1)
+		ON DUPLICATE KEY
+			UPDATE STAT_COUNT = STAT_COUNT + 1
+	</insert>
+
+	<select id="EzStatisticsAdminDAO.getStatMenuUser" resultClass="StatisticVO">
+		SELECT YEAR,
+			   MONTH,
+			   DAY,
+			   HOUR,
+			   MENU_ID    AS menuId,
+			   STAT_COUNT AS statCount
+		FROM TBL_STAT_MENU_USER
+		WHERE TENANT_ID = #tenantId#
+		  AND COMPANY_ID = #companyId#
+		  AND USER_ID = #userId#
+		    <![CDATA[
+		  AND TIME_CODE >= #startTime#
+		  AND TIME_CODE <= #endTime#
+		    ]]>
+		ORDER BY TIME_CODE, MENU_ID
+	</select>
+
+	<select id="EzStatisticsAdminDAO.getStatMenuUserMonth" resultClass="StatisticVO">
+		SELECT YEAR,
+			   MONTH,
+			   MENU_ID    AS menuId,
+			   STAT_COUNT AS statCount
+		FROM TBL_STAT_MENU_USER_MONTH
+		WHERE TENANT_ID = #tenantId#
+		  AND COMPANY_ID = #companyId#
+		  AND USER_ID = #userId#
+		    <![CDATA[
+		  AND TIME_CODE >= #startTime#
+		  AND TIME_CODE <= #endTime#
+		    ]]>
+		ORDER BY TIME_CODE, MENU_ID
+	</select>
+
+	<select id="EzStatisticsAdminDAO.getStatMenuUserDay" resultClass="StatisticVO">
+		SELECT YEAR,
+			   MONTH,
+			   DAY,
+			   MENU_ID         AS menuId,
+			   SUM(STAT_COUNT) AS statCount
+		FROM TBL_STAT_MENU_USER
+		WHERE TENANT_ID = #tenantId#
+		  AND COMPANY_ID = #companyId#
+		  AND USER_ID = #userId#
+		    <![CDATA[
+		  AND TIME_CODE >= #startTime#
+		  AND TIME_CODE <= #endTime#
+		    ]]>
+		GROUP BY YEAR, MONTH, DAY, MENU_ID
+		ORDER BY YEAR, MONTH, DAY, MENU_ID
+	</select>
+
+	<insert id="EzStatisticsAdminDAO.upsertStatMenuDept" parameterClass="StatisticVO">
+		INSERT INTO TBL_STAT_MENU_DEPT (DEPT_ID,
+										TENANT_ID,
+										COMPANY_ID,
+										YEAR,
+										MONTH,
+										DAY,
+										HOUR,
+										TIME_CODE,
+										MENU_ID,
+										CODE,
+										STAT_COUNT)
+		VALUES (#deptId#,
+				#tenantId#,
+				#companyId#,
+				#year#,
+				#month#,
+				#day#,
+				#hour#,
+				#timeCode#,
+				#menuId#,
+				#code#,
+				1)
+		ON DUPLICATE KEY
+			UPDATE STAT_COUNT = STAT_COUNT + 1
+	</insert>
+
+	<insert id="EzStatisticsAdminDAO.upsertStatMenuDeptMonth" parameterClass="StatisticVO">
+		INSERT INTO TBL_STAT_MENU_DEPT_MONTH (DEPT_ID,
+											  TENANT_ID,
+											  COMPANY_ID,
+											  YEAR,
+											  MONTH,
+											  TIME_CODE,
+											  MENU_ID,
+											  CODE,
+											  STAT_COUNT)
+		VALUES (#deptId#,
+				#tenantId#,
+				#companyId#,
+				#year#,
+				#month#,
+				FLOOR(#timeCode# / 10000),
+				#menuId#,
+				#code#,
+				1)
+		ON DUPLICATE KEY
+			UPDATE STAT_COUNT = STAT_COUNT + 1
+	</insert>
+
+	<select id="EzStatisticsAdminDAO.getStatMenuDept" resultClass="StatisticVO">
+		SELECT YEAR,
+			   MONTH,
+			   DAY,
+			   HOUR,
+			   MENU_ID    AS menuId,
+			   STAT_COUNT AS statCount
+		FROM TBL_STAT_MENU_DEPT
+		WHERE TENANT_ID = #tenantId#
+		  AND COMPANY_ID = #companyId#
+		  AND DEPT_ID = #deptId#
+		    <![CDATA[
+		  AND TIME_CODE >= #startTime#
+		  AND TIME_CODE <= #endTime#
+		    ]]>
+		ORDER BY TIME_CODE, MENU_ID
+	</select>
+
+	<select id="EzStatisticsAdminDAO.getStatMenuDeptMonth" resultClass="StatisticVO">
+		SELECT YEAR,
+			   MONTH,
+			   MENU_ID    AS menuId,
+			   STAT_COUNT AS statCount
+		FROM TBL_STAT_MENU_DEPT_MONTH
+		WHERE TENANT_ID = #tenantId#
+		  AND COMPANY_ID = #companyId#
+		  AND DEPT_ID = #deptId#
+		    <![CDATA[
+		  AND TIME_CODE >= #startTime#
+		  AND TIME_CODE <= #endTime#
+		    ]]>
+		ORDER BY TIME_CODE, MENU_ID
+	</select>
+
+	<select id="EzStatisticsAdminDAO.getStatMenuDeptDay" resultClass="StatisticVO">
+		SELECT YEAR,
+			   MONTH,
+			   DAY,
+			   MENU_ID         AS menuId,
+			   SUM(STAT_COUNT) AS statCount
+		FROM TBL_STAT_MENU_DEPT
+		WHERE TENANT_ID = #tenantId#
+		  AND COMPANY_ID = #companyId#
+		  AND DEPT_ID = #deptId#
+		    <![CDATA[
+		  AND TIME_CODE >= #startTime#
+		  AND TIME_CODE <= #endTime#
+		    ]]>
+		GROUP BY YEAR, MONTH, DAY, MENU_ID
+		ORDER BY YEAR, MONTH, DAY, MENU_ID
+	</select>
+	
+	<delete id="EzStatisticsAdminDAO.deleteStatMenuUser" parameterClass="StatisticVO">
+		DELETE
+		FROM TBL_STAT_MENU_USER
+		WHERE
+		    <![CDATA[
+			TIME_CODE < #timeCode#
+		]]>
+	</delete>
+
+	<delete id="EzStatisticsAdminDAO.deleteStatMenuDept" parameterClass="StatisticVO">
+		DELETE
+		FROM TBL_STAT_MENU_DEPT
+		WHERE
+		    <![CDATA[
+			TIME_CODE < #timeCode#
+		]]>
+	</delete>
 </sqlMap>

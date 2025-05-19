@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezCommon.dao;
 
 import java.net.URLEncoder;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -3316,6 +3317,41 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		if (propertyValue == null) {
 			logger.debug("MealPlanBoard doesn't exist. insert data...");
 			insert("EzCommonDAO.insertMealPlanBoard", tenantId);
+		}
+	}
+
+	public void createTblStatMenu() {
+		try {
+			select("EzCommonDAO.checkTblStatMenuUser");
+		} catch (RuntimeException e) {
+			logger.debug("TBL_STAT_MENU_USER doesn't exist. creating the table...");
+
+			update("EzCommonDAO.createTblStatMenuUser");
+		}
+
+		try {
+			select("EzCommonDAO.checkTblStatMenuUserMonth");
+		} catch (RuntimeException e) {
+			logger.debug("TBL_STAT_MENU_USER_MONTH doesn't exist. creating the table...");
+
+			update("EzCommonDAO.createTblStatMenuUserMonth");
+		}
+
+		try {
+			select("EzCommonDAO.checkTblStatMenuDept");
+		} catch (RuntimeException e) {
+			logger.debug("TBL_STAT_MENU_DEPT doesn't exist. creating the table...");
+
+			update("EzCommonDAO.createTblStatMenuDept");
+		}
+
+
+		try {
+			select("EzCommonDAO.checkTblStatMenuDeptMonth");
+		} catch (RuntimeException e) {
+			logger.debug("TBL_STAT_MENU_DEPT_MONTH doesn't exist. creating the table...");
+
+			update("EzCommonDAO.createTblStatMenuDeptMonth");
 		}
 	}
 }

@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -306,6 +307,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 				userPhoto = commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId()) + commonUtil.separator + imgUrl;
 			}
 			model.addAttribute("userPhoto", userPhoto);
+			// 2025-03-21 메뉴 통계 추가
+			model.addAttribute("useStatMenu", Objects.toString(ezCommonService.getTenantConfig("useStatMenu", userInfo.getTenantId()), "NO"));
 		}
 		
 		/* 2024-03-26 한태훈 - 통합알림용 데이터 추가 */

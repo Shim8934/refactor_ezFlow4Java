@@ -4244,6 +4244,10 @@ a.commentFileSpan:hover {cursor: pointer; text-decoration: underline;}
 #moreBoardIcon .layer_select .icon16.switchIcon {display: none;}
 #moreBoardIcon .layer_select .iconTexts {display: block;}
 
+.flex_row_center {display: flex; justify-content: center;align-items: center;}
+#areaChartMenu {position: absolute; top:0; left: 10px;}
+.accent_font {font-size: 14px; font-weight: bold;text-overflow: ellipsis; overflow: hidden;white-space: nowrap;}
+.emphasis_sentence {margin-left: 10px; color:#eb3939;}
 
 /* 2025-02-24 전인하 - 요약전 */
 .summaryPrintBtn {width:32px!important; border:1px solid #CECECE; border-radius:3px; color:#333; margin-right:5px;}
