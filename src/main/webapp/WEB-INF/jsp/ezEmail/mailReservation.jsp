@@ -12,7 +12,7 @@
 		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
-		
+        <script type="text/javascript" src="${util.addVer('/js/jquery/jquery.min.js')}"></script>
 		<style> 
 		.imgbtn_h { height:auto; } 
 		</style>
@@ -58,28 +58,39 @@
 			}
 			
 			function View_ReservationMail(pMessageID, pSendDate) {
-		    	var date = pSendDate.split(" ");
-		    	var yyyymmdd = date[0].split("-");
-		    	var hms = date[1].split(":");
-		    	
-		    	var sendDate = new Date(yyyymmdd[0], yyyymmdd[1]-1, yyyymmdd[2], hms[0], hms[1], "00");
-		    	var nowDate = new Date();
-		    	var gap = sendDate.getTime() - nowDate.getTime();
-		    	var pWidth = "";
-		    	var pHeight = "";
-		    	if(gap/1000/60 < 30) {
-		    		pUrl = "/ezEmail/mailMessage.do?messageid=" + encodeURIComponent(pMessageID);
-		    		pWidth = 380;
-		    		pHeight = 111;
-		    	} else {
-		    		pUrl = "/ezEmail/mailWrite.do?cmd=RESERVE&messageid=" + encodeURIComponent(pMessageID);
-					pUrl += shareId? "&shareId=" + encodeURIComponent(shareId) : "";
-		    		pWidth = 890;
-		    		pHeight = 840;
-		    	}
-		        
-		        var newwin = GetOpenWindow(pUrl, "", pWidth, pHeight, "yes");
-		        newwin.focus();
+                $.ajax({
+                    url: '/ezEmail/getServerTime.do',
+                    method : 'POST',
+                    dataType: 'json',
+                    success: function(response) {
+                        var serverTimeStr = response.serverTime;
+
+                        var sendDate = new Date(pSendDate.replace(" ", "T"));
+                        var serverDate = new Date(serverTimeStr.replace(" ", "T"));
+
+                        var gap = sendDate.getTime() - serverDate.getTime();
+
+                        var pWidth = "";
+                        var pHeight = "";
+                        if(gap/1000/60 < 30) {
+                            pUrl = "/ezEmail/mailMessage.do?messageid=" + encodeURIComponent(pMessageID);
+                            pWidth = 380;
+                            pHeight = 111;
+                        } else {
+                            pUrl = "/ezEmail/mailWrite.do?cmd=RESERVE&messageid=" + encodeURIComponent(pMessageID);
+                            pUrl += shareId? "&shareId=" + encodeURIComponent(shareId) : "";
+                            pWidth = 890;
+                            pHeight = 840;
+                        }
+
+                        var newwin = GetOpenWindow(pUrl, "", pWidth, pHeight, "yes");
+                        newwin.focus();
+                    },
+                    error: function(xhr, status, error) {
+                        alert(error);
+                    }
+                });
+
 		    }
 		    
 		    // 제목에 태그 입력 후 예약발송 > 예약발송관리에서 확인 시 태그 적용되어 나타나는 현상 수정

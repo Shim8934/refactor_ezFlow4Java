@@ -128,15 +128,19 @@ public class EzEmailWriteServiceImpl implements EzEmailWriteService {
         //utc에서 timezone으로 시간변경
         delaySendDate = commonUtil.getDateStringInUTC(delaySendDate, loginInfo.getOffset(), false);
 
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.MINUTE, 30);
-        Date currentTime = cal.getTime();
-
         SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+        String utcDate = commonUtil.getTodayUTCTime("");
+        Date nowDate = transFormat.parse(commonUtil.getDateStringInUTC(utcDate, loginInfo.getOffset(), false));
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(nowDate);
+        cal.add(Calendar.MINUTE, 30);
+        Date timePlus30 = cal.getTime();
+
         Date reservedSaveTime = transFormat.parse(delaySendDate);
 
         //예약발송 시간 30분 전에는 수정 불가
-        if (reservedSaveTime.before(currentTime)) {
+        if (reservedSaveTime.before(timePlus30)) {
             return "ezEmail.lhm07";
         }
 

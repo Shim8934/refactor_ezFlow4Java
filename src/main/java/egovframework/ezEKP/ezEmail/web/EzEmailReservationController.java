@@ -2,10 +2,7 @@ package egovframework.ezEKP.ezEmail.web;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -201,5 +198,15 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		logger.debug("mailMessage ended.");
 		return "ezEmail/mailMessage";
 	}
-	
+	@RequestMapping(value="/ezEmail/getServerTime.do", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, String> getServerTime(@CookieValue("loginCookie") String loginCookie) throws Exception {
+		String utcDate = commonUtil.getTodayUTCTime("");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String nowDate = commonUtil.getDateStringInUTC(utcDate, userInfo.getOffset(), false);
+
+		Map<String, String> result = new HashMap<>();
+		result.put("serverTime", nowDate);
+		return result;
+	}
 }
