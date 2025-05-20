@@ -13,7 +13,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezAI/ezAISlideCommon.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezAI/marked.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezAI/purify.min.js')}"></script>
-        <script type="text/javascript" src="${util.addVer('/js/ezAI/ezAIBoardCommon.js')}"></script>
+        <script type="text/javascript" src="${util.addVer('/js/ezAI/ezBoard/ezAIBoardCommon.js')}"></script>
 		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/css/ai.css')}" type="text/css">
 		<style>

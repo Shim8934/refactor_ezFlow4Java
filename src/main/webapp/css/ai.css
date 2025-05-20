@@ -180,6 +180,7 @@ th{
 .ai_cont .ai_text .ai_text_detail > ol li > ul {padding: 0px 20px;margin: 0;}
 .ai_cont .ai_text .ai_text_detail > ul {padding: 0px 20px 10px 20px;margin: 0;}
 .ai_cont .ai_text .ai_text_detail > ul li {list-style: inherit;padding: 0 0 10px 0;margin: 0;}
+.ai_text table, .ai_text table th, .ai_text table td {border: 1px solid; border-collapse: collapse; padding: 8px;}
 /* 대화내용태그 style */
 
 /* portal AI layout */
