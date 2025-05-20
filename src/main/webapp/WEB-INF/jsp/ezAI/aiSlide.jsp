@@ -13,6 +13,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezAI/ezAISlideCommon.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezAI/marked.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezAI/purify.min.js')}"></script>
+        <script type="text/javascript" src="${util.addVer('/js/ezAI/ezEmail/ezAIEmailCommon.js')}"></script>
         <script type="text/javascript" src="${util.addVer('/js/ezAI/ezBoard/ezAIBoardCommon.js')}"></script>
         <script type="text/javascript" src="${util.addVer('/js/ezAI/ezApprovalG/ezAIApprGCommon.js')}"></script>
 		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
