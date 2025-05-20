@@ -200,7 +200,7 @@
 		<c:if test="${useAI == 'Y'}">
 			<div id="wrapAIbox" class="wrapAIbox">
 				<div class="wrapAI">
-					<iframe id="iframeChatbot" style="width:100%; height:100%;" frameborder="0" scrolling="NO" src="<c:out value='${ezAIUrl}'/>/ChatUi">
+					<iframe id="iframeChatbot" style="width:100%; height:100%;" frameborder="0" scrolling="NO" src="<c:out value='${aiChatbotUrl}'/>">
 					</iframe>
 				</div>
 			</div>

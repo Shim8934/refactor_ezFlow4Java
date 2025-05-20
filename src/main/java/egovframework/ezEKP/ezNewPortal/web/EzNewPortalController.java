@@ -196,6 +196,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		//ezAi 사용 여부 추가
 		model.addAttribute("useAI", aICommonUtil.checkUseAI(userInfo.getTenantId())?"Y":"N");
 		model.addAttribute("ezAIUrl", config.getProperty("config.ezAIUrl"));
+		model.addAttribute("aiChatbotUrl", config.getProperty("config.ezAIUrl") + "/ChatUi?userId=" + userId + "&tenantId=" + userInfo.getTenantId());
 
 		logger.debug("returnUrl : " + returnUrl);
 		logger.debug("portalMain End");
