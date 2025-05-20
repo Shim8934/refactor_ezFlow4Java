@@ -52,6 +52,7 @@
 		    var pEndDocHref	=   "<c:out value ='${dirPath}'/>";
 		    var pFormHref = new String("");
 		    var pFormID = new String();
+		    var formName = "<c:out value ='${formName}'/>";
 		    var pDocID = new String("");
 		    var pHasAttachYN = new String("N");
 		    var pHasOpinionYN = new String("N");
@@ -2643,8 +2644,8 @@
 		<div id="layerpopup" class="layerpopup" style="z-index: 1000; position: absolute; top: 50%; margin-top: -100px; height: 200px; left: 50%; margin-left: -250px; width: 500px; display: none;">
 			<iframe src="<spring:message code='main.kms4' />" style="border:none; width: 100%; height: 100%;" id="iFrameLayer2"></iframe>
 		</div>
-        <%--<c:if test="${useAI}">--%>
+        <c:if test="${useAI}">
             <c:import url="/WEB-INF/jsp/ezAI/aiSlide.jsp" />
-        <%--</c:if>--%>
+        </c:if>
 	</body>
 </html>

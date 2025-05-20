@@ -148,6 +148,7 @@ async function aiSend(promptData, callback) {
     const requestData = createRequestData(promptData);
     // 데이터 조합 테스트용 콘솔로 운영 시 주석 처리
     console.log(requestData);
+    console.log(JSON.stringify(requestData));
 
     try {
         const response = await fetch('/ezAI/ai/stream.do', {
@@ -231,7 +232,9 @@ function createInputData() {
             }
         ];
     } else if ('approval' == module) {
-    
+        if (['apprDoc', 'draftDoc'].includes(getSubModuleType())) {
+            return makeApprovalDataForAI();
+        }
     } else if ('board' == module) {
         if (['view', 'preview'].includes(getSubModuleType())) {
             return makeBoardDataForAI();
@@ -252,7 +255,11 @@ function createOptions(promptData) {
             //'targetLanguage': 'en', // 현재 필요없음
         };
     } else if ('approval' == module) {
-
+        return {
+            'command': promptData.chatInput,
+            'tone': 'formally',
+            'length': 'medium'
+        };
     } else if ('board' == module) {
        return {
             'command': promptData.chatInput, // 사용자 요청
