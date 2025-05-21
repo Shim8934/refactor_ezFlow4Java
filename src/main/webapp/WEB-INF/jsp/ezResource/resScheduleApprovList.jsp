@@ -98,37 +98,39 @@
 	    	window.onload = function () {
 		        getCalendarList();
 	    	}
+			function btnSet() {
+				if(approveFlag != "2") {
+					listviewtype = document.getElementById("listviewtype")[document.getElementById("listviewtype").selectedIndex].value;
 
+					document.getElementById("Span1").parentNode.style.display = "none";
+					document.getElementById("pn_img").parentNode.style.display = "none";
+					document.getElementById("pn_img2").parentNode.style.display = "none";
+
+					if(listviewtype == "0") {
+						document.getElementById("Span1").parentNode.style.display = "";
+						document.getElementById("pn_img2").parentNode.style.display = "";
+					}
+					else if(listviewtype == "1") {
+						document.getElementById("pn_img").parentNode.style.display = "";
+					}
+					else if(listviewtype == "2") {
+						document.getElementById("Span1").parentNode.style.display = "";
+					}
+				}
+
+				if(pType == "User") {
+					document.getElementById("Span1").parentNode.style.display = "none";
+					document.getElementById("pn_img").parentNode.style.display = "none";
+					document.getElementById("pn_img2").parentNode.style.display = "none";
+				}
+			}
 	    	function getCalendarList(type) {
 		        if (type == "search") {
 	            	CurPage = "1";
 		        }
 
 	        	var listviewtype = "";
-	        	if(approveFlag != "2") {
-	        		listviewtype = document.getElementById("listviewtype")[document.getElementById("listviewtype").selectedIndex].value;
-		        	
-	        		document.getElementById("Span1").parentNode.style.display = "none";
-	    			document.getElementById("pn_img").parentNode.style.display = "none";
-	    			document.getElementById("pn_img2").parentNode.style.display = "none";
-	    			
-	    			if(listviewtype == "0") {
-	    				document.getElementById("Span1").parentNode.style.display = "";
-	        			document.getElementById("pn_img2").parentNode.style.display = "";
-	    			}
-	    			else if(listviewtype == "1") {
-	    				document.getElementById("pn_img").parentNode.style.display = "";
-	    			}
-	    			else if(listviewtype == "2") {
-	    				document.getElementById("Span1").parentNode.style.display = "";
-	    			}
-	        	}
-	        	
-	        	if(pType == "User") {
-	        		document.getElementById("Span1").parentNode.style.display = "none";
-	    			document.getElementById("pn_img").parentNode.style.display = "none";
-	    			document.getElementById("pn_img2").parentNode.style.display = "none";
-	        	}
+				btnSet();
     			
 	        	xmlhttp = createXMLHttpRequest();
 	        	var xmlpara = createXmlDom();

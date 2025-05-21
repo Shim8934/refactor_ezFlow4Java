@@ -999,6 +999,7 @@ function getAttitudeList(themeId) {
 					if ($('#36Portlet')) {
 						$("#ptlInAttiBtn").attr("onclick", "").unbind("mouseenter");
 						$("#ptlInAttiBtn").removeClass("out").addClass("lateIn");
+						$("#ptlInAttiBtn").addClass("commute_on");
 						$("#ptlInAttiBtn dt").css("margin-bottom","5px");
 						$("#ptlInAttiBtn dd").text(result[i].startDate.split(" ")[1].substring(0,5));
  					}
@@ -1023,6 +1024,7 @@ function getAttitudeList(themeId) {
 					if ($('#36Portlet')) {
 //						$("#ptlOutAttiBtn").attr("onclick", "").unbind("mouseenter");
 						$("#ptlOutAttiBtn").removeClass("out").addClass("in");
+						$("#ptlOutAttiBtn").addClass("commute_on");
 						$("#ptlOutAttiBtn dt").css("margin-bottom","5px");
 						$("#ptlOutAttiBtn dd").text(result[i].startDate.split(" ")[1].substring(0,5));
  					}

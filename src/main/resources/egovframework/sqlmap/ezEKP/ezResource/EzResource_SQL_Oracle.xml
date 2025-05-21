@@ -668,8 +668,10 @@
 				REFLAG = '0'
 			]]>
 			<isNotEmpty property="v_TITLE">
-			AND 
-                ( A.TITLE LIKE '%' || #v_TITLE# || '%' )
+			<![CDATA[
+		  	AND 
+           	    REPLACE(REPLACE(REPLACE(A.TITLE, '&lt;', '<'), '&gt;', '>'), '&amp;', '&') LIKE '%' || #v_TITLE# || '%' 
+			]]>
             </isNotEmpty>
             <![CDATA[
 			AND
@@ -829,8 +831,10 @@
 				( to_date(#v_PENDDATE#,'YYYY-MM-DD HH24:MI:SS') <= ENDDATETIME OR to_date(#v_PENDDATE#,'YYYY-MM-DD HH24:MI:SS') >= ENDDATETIME )
 			]]>
 			<isNotEmpty property="v_TITLE">
-			AND 
-                ( A.TITLE LIKE '%' || #v_TITLE# || '%' )
+			<![CDATA[
+		  	AND 
+           	    REPLACE(REPLACE(REPLACE(A.TITLE, '&lt;', '<'), '&gt;', '>'), '&amp;', '&') LIKE '%' || #v_TITLE# || '%' 
+			]]>
             </isNotEmpty>
             <![CDATA[
 			AND

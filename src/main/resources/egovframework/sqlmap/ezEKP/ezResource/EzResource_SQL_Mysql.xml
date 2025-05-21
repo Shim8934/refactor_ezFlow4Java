@@ -682,9 +682,11 @@
 				REFLAG = '0'
 			]]>
 			<isNotEmpty property="v_TITLE">
+			<![CDATA[
 			AND 
-                ( A.TITLE LIKE CONCAT('%', #v_TITLE#, '%')  )
-            </isNotEmpty>
+				REPLACE(REPLACE(REPLACE(A.TITLE, '&lt;', '<'), '&gt;', '>'), '&amp;', '&') LIKE CONCAT('%', #v_TITLE#, '%')
+			]]>
+			</isNotEmpty>
             <![CDATA[
 			AND 
                 ( OWNERNM LIKE CONCAT('%', #v_WRITERNAME#, '%')  )
@@ -845,8 +847,10 @@
 				( STR_TO_DATE(#v_PENDDATE#,'%Y-%m-%d %T') <= ENDDATETIME OR STR_TO_DATE(#v_PENDDATE#,'%Y-%m-%d %T') >= ENDDATETIME )
 			]]>
 			<isNotEmpty property="v_TITLE">
+			<![CDATA[
 			AND 
-                ( A.TITLE LIKE CONCAT('%', #v_TITLE#, '%')  )
+				REPLACE(REPLACE(REPLACE(A.TITLE, '&lt;', '<'), '&gt;', '>'), '&amp;', '&') LIKE CONCAT('%', #v_TITLE#, '%')
+			]]>
             </isNotEmpty>
             <![CDATA[
 			AND
