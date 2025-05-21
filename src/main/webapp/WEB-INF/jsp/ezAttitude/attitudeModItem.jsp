@@ -202,6 +202,18 @@
 			            } catch (e) { 
 // 			            	window.opener.att_refresh();
 			            }
+
+						if (window.opener) {
+							var parentWindow = window.opener;
+
+							var matchingElements = parentWindow.document.querySelectorAll(`[attitudeid="${data.attitudeId}"]`);
+
+							matchingElements.forEach(function(elem) {
+								if (elem.getAttribute('modappl') == '0') {
+									elem.setAttribute('modappl', '1');
+								}
+							});
+						}
 			            window.close();
 				    }
 			    });
