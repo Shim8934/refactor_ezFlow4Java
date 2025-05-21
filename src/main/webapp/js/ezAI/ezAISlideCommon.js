@@ -190,6 +190,14 @@ async function aiSend(promptData, callback) {
     scrollToBottom();
 }
 
+// HTML 태그를 전부 제거하는 함수
+function removeHtmlTag(htmlString) {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(htmlString, 'text/html');
+  return doc.body.textContent || "";
+}
+
+// 마크다운 파싱 함수
 function parseMarkdownToHtml(rtnData) {
     // marked 라이브러리 사용하여 파싱
     marked.setOptions({
