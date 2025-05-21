@@ -1424,15 +1424,6 @@
 							<div class="tree onlytree" id="divUserScrapContTree"></div>
 						</ul>
 					</c:if>
-					<c:if test="${MyStorageContFlag != 'NO'}">
-						<h2 class="off" id="storageH2">
-							<span class="sub_iconLNB tree_manage" onclick="storageMngOnclick()"></span>
-							<span class="sub_iconLNB tree_plus" onclick="openStorageFolder('storage')"></span><span class="h2Title" onclick="openStorageFolder('storage')"><spring:message code="ezBoard.kmh57" /></span>
-						</h2>
-						<ul class="lnbUL off" id="storageUL">
-							<div class="tree onlytree" id="divUserStorageContTree"></div>
-						</ul>
-					</c:if>
 			        <ul class="lnbUL">
                        	<%-- 2023-06-22 황인경 - 디자인 개선 > 게시판 > 좌측메뉴 > '검색' 태그 구조, LNB 이미지 수정 --%>
 						<h2 class="off">
