@@ -140,8 +140,7 @@ async function aiSend(promptData, callback) {
     const module = getModuleType();
     if (!module) {
         console.warn('No module found.');
-        const resultSpan = renderAiResultContainer(aiLoadingDiv);
-        resultSpan.innerText += 'No module found.'; 
+         showError(aiLoadingDiv);
         return;
     }
 
@@ -162,13 +161,13 @@ async function aiSend(promptData, callback) {
         if (!response.ok) {
             throw new Error(`HTTP error ${response.status}: ${response.statusText}`);
         }
-
-        const resultSpan = renderAiResultContainer(aiLoadingDiv);
         
         // 1차 개발 : json 출력
         let rtnData = await response.json();
         rtnData = parseMarkdownToHtml(rtnData.ai_message);
         callbackParam = rtnData;
+        
+        const resultSpan = renderAiResultContainer(aiLoadingDiv);
         resultSpan.innerHTML += rtnData; 
         // 1차 개발 : json 출력 끝
         
@@ -192,9 +191,16 @@ async function aiSend(promptData, callback) {
 
 // HTML 태그를 전부 제거하는 함수
 function removeHtmlTag(htmlString) {
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(htmlString, 'text/html');
-  return doc.body.textContent || "";
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(htmlString, 'text/html');
+    
+    // style 태그 제거
+    const style = doc.querySelector('style');
+    if (style) {
+        style.remove();
+    }
+    
+    return doc.body.textContent || "";
 }
 
 // 마크다운 파싱 함수
