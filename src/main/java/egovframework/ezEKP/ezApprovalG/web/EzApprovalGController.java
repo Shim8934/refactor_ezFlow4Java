@@ -554,7 +554,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		/* 2023-08-04 민지수 - 부재자 설정값 다국어 처리 */
 		if (userInfo.getDeptID().equals(userRealDeptId) && userGetTitle.equals(userRealTitle) && !userLang.equals("2")) {
 			buJaeInfo = doc.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).getTextContent();
-		} else if (userInfo.getDeptID().equals(userRealDeptId) && userGetTitle.equals(userRealTitle2) && userLang.equals("2")) {
+		} else if (userInfo.getDeptID().equals(userRealDeptId) && userGetTitle.equals(userRealTitle2) && (userLang.equals("2") || userLang.equals("3"))) {
 			buJaeInfo = doc.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).getTextContent();
 		} else {
 			//buJaeInfo = ezOrganService.getAddJobProxy(userInfo.getId(), userInfo.getDeptID(), userInfo.getTenantId());
