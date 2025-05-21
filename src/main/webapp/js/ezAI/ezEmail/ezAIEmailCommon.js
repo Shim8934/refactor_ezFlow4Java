@@ -62,8 +62,19 @@ function extractEmailMetaData() {
             });
         }
 
-        const tagEl = parentDoc.querySelector('#pre_h_tag_view .tag_name');
-        const tagName = tagEl ? tagEl.innerText.trim() : '';
+        let tagName = [];
+        const tagEl = parentDoc.querySelector('#pre_h_tag_view');
+
+        if (tagEl) {
+            const tagDiv = parentDoc.querySelectorAll('.tag_name');
+            tagDiv.forEach(span => {
+                const name = span.innerText.trim();
+                tagName.push(name);
+            });
+        }
+
+        //const tagEl = parentDoc.querySelector('#pre_h_tag_view .tag_name');
+        //const tagName = tagEl ? tagEl.innerText.trim() : '';
 
         const dateEl = parentDoc.querySelector('#PreH_date');
         const date = dateEl ? dateEl.innerText.trim() : '';
@@ -130,8 +141,9 @@ function extractEmailMetaData() {
         }
         
         // 태그
-        const tagNameEl = parentDoc.querySelector('#tag_name');
-        const tagName = tagNameEl ? tagNameEl.innerText : '';
+        let tagName = Array.from(
+          parentDoc.querySelectorAll('.tag_name')
+        ).map(span => span.innerText.trim());
         
         // 날짜
         const dateEl = parentDoc.querySelector('#LabelReceiveDate');
