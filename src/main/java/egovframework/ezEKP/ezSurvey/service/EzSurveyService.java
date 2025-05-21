@@ -74,4 +74,6 @@ public interface EzSurveyService {
 	// 2024-07-12 전인하 - 설문 > 사용자가 결과조회 가능한 설문 id 조회
 	public List<Long> getUserReceivedSurveyResultList(LoginVO userInfo, long surveyId) throws Exception;
 	public void updateTotalNotiSentFlag(long surveyId, int mailSentFlag, String companyId, int tenantId) throws Exception;
+
+	public int checkEditingState(long surveyId, String companyId, int tenantId) throws Exception;
 }

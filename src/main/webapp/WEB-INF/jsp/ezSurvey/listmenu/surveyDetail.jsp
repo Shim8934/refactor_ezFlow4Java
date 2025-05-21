@@ -132,9 +132,17 @@
 </body>
 <script type="text/javascript" src="${util.addVer('/js/ezSurvey/surveyFile.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezSurvey/survey.js')}    "></script>
+<script type="text/javascript" src="${util.addVer('/js/ezPoll/stomp.min.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezPoll/sockjs.min.js')}"></script>
 <script type="text/javascript">
 	/* 2021-10-28 홍승비 - 초기 표출 시 다른 분기처리를 위하여 전역변수 설정 */
 	var isFirstEvent = true; // 초기 슬라이드값은 반드시 최소값이므로, 비활성화 방지용 변수
+
+	window.onunload = function() {
+		if (stompClient !== null) {
+			stompClient.disconnect();
+		}
+	};
 	
 	$(function() {
 		var survey       = ${survey};
@@ -148,6 +156,9 @@
 		};
 		// 20.05.06 강승구 : 설문응답여부 코드추가
 		var resStatus	 = ${resStatus};
+
+		getCmtSockConnect(); /* 수정상태 확인을 위해 웹소켓 연결추가 */
+		stompDisConnProcess(); /* 웹소켓 끊어짐 처리 */
 		userEvent();
 		
 		var jsonResult;
@@ -792,34 +803,39 @@
 			}
 		}
 		
+		function refreshOpenerAndClose(closeYN) {
+			if (window.opener.reloadSurveyPage != undefined) {
+				window.opener.reloadSurveyPage();
+				// 일단 현 상황에 맞춰 주석처리 나중에 필요하면 주석 풀면 됨
+				// window.opener.getUnreadCounts('YES', 'YES', 'YES', 'YES', 'YES');
+			}
+
+			if (window.opener.SurveyItem != null) {
+				if (window.opener && window.opener.SurveyItem) {window.opener.SurveyItem.reload();}
+				if (window.opener && window.opener.openSurveyPopup)	{window.opener.openSurveyPopup("", 600, 600, 0, window.opener.surveyPopupIndex);}
+				if (parent && parent.SurveyItem)               {parent.SurveyItem.reload();}
+			}
+
+			if (closeYN == 'Y') {
+				window.close();
+			}
+		}
+		
 		function afterSaveSuccessfully(data) {
 			var code = data.code;
 			
 			switch(code) {
-				case 0 : alert(SurveyMessages.strSave2)    ;
-						 resposeObj.responses = [];
-						 
-						 if (window.opener.reloadSurveyPage != undefined) {
-							 window.opener.reloadSurveyPage();
-							 // 일단 현 상황에 맞춰 주석처리
-							 // 나중에 필요하면 주석 풀면 됌
-							 // window.opener.getUnreadCounts('YES', 'YES', 'YES', 'YES', 'YES');
-							 window.close();
-						 }
-						 
-						 if (window.opener.SurveyItem != null) {
-							 if (window.opener && window.opener.SurveyItem) {window.opener.SurveyItem.reload();}
-							 if (window.opener && window.opener.openSurveyPopup)	{window.opener.openSurveyPopup("", 600, 600, 0, window.opener.surveyPopupIndex);}
-							 if (parent && parent.SurveyItem)               {parent.SurveyItem.reload();}
-						 } 
-						 
-						 window.close();
-						 break;
+				case 0 : alert(SurveyMessages.strSave2)     ; resposeObj.responses = []; refreshOpenerAndClose("Y"); break;
 				case 1 : alert(SurveyMessages.strParamErr)  ; resposeObj.responses = []; break;
 				case 2 : alert(SurveyMessages.strError)     ; resposeObj.responses = []; break;
 				case 5 : alert(SurveyMessages.strMultiple3) ; resposeObj.responses = []; break;
 				case 6 : alert(SurveyMessages.strNotResp)   ; resposeObj.responses = []; break;
 				case 7 : alert(SurveyMessages.strNotPeriod2); resposeObj.responses = []; break;
+				case 8 : 
+					alert(data.status == 'editing' ? SurveyMessages.strEditingErr : SurveyMessages.strDeletedErr); 
+					resposeObj.responses = []; 
+					refreshOpenerAndClose("Y"); 
+					break;
 				default: alert(SurveyMessages.strError)     ; resposeObj.responses = []; return;
 			}
 		}
@@ -1415,6 +1431,32 @@
                 event.target.style.transition = "all 0.5s";
             }
         })
+
+		/* 수정 이벤트 수신을 위한 WebSocket subscribe 설정 */
+		function getCmtSockConnect() {
+			var tenantID = "${tenantId}";
+			var socket = new SockJS('/hello');
+			stompClient = Stomp.over(socket);
+			stompClient.connect({}, function (frame) {
+				stompClient.subscribe('/reply/getSeenUpdateForSurvey' + surveyId + "+" + tenantID, function (updatedInfo) {
+					var status = JSON.parse(updatedInfo.body).status;
+					var updatedSurveyId = JSON.parse(updatedInfo.body).surveyId;
+
+					if (status == "MODIFY" && updatedSurveyId == surveyId) {
+						alert("작성자가 설문내용을 수정하였습니다. 설문을 다시 불러옵니다.");
+						refreshOpenerAndClose("N");
+						window.location.reload();
+					}
+				});
+			});
+		}
+		function stompDisConnProcess() {
+			setInterval(function(){
+				if(stompClient.connected === false){
+					window.location.reload();
+				}
+			}, 10000);
+		}
 	});
 	
 	/* 2021-10-27 홍승비 - 전자설문 분기처리 전체적으로 수정 */

@@ -38,9 +38,11 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -81,6 +83,9 @@ public class EzSurveyController extends EgovFileMngUtil {
 	@Autowired
 	private EzSurveyService ezSurveyService;
 
+	@Autowired
+	private SimpMessagingTemplate template;
+	
 	@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
 	
@@ -347,6 +352,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 		String defaultFontSize = "13px";
 		
 		model.addAttribute("user", user.getId());
+		model.addAttribute("tenantId", user.getTenantId());
 		model.addAttribute("mode", mode);
 		model.addAttribute("defaultFontFamily", defaultFontFamily);
 		model.addAttribute("defaultFontSize", defaultFontSize);
@@ -524,6 +530,14 @@ public class EzSurveyController extends EgovFileMngUtil {
 		
 		JSONObject resultObj = surveyRestService.saveSurveyItem(request, surveyItem);
 		
+		/* 수정 시 변경 상태(MODIFY)와 기존 surveyId 포함한 WebSocket 메시지 전송 로직 추가 */
+		if (!"-1".equals(surveyItem.get("surveyId").toString()) && surveyItem.get("draft") == null) {
+			String orgSurveyId = surveyItem.get("surveyId").toString();
+			String result = "{\"status\":\"MODIFY\", \"surveyId\":\"" + orgSurveyId + "\"}";
+			JSONParser parser = new JSONParser();
+			JSONObject json = (JSONObject) parser.parse(result);
+			this.template.convertAndSend("/reply/getSeenUpdateForSurvey" + orgSurveyId + "+" + user.getTenantId(), json);
+		}
 		logger.debug("jsonSaveSurveyItem ended");
 		return resultObj;
 	}

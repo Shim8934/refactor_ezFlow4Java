@@ -836,9 +836,24 @@ public class EzSurveyGWController {
 				result.put("code", 1);
 				return result;
 			}
-			
+
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
-			result           = surveyService.saveResponseItem(responses, surveyId, userInfo);
+
+			/* 응답 시 현재 설문의 상태(수정/삭제)를 확인 */
+			int editingState = surveyService.checkEditingState(surveyId, userInfo.getCompanyID(), userInfo.getTenantId());
+			if (1 == editingState) {
+				logger.debug("Survey in edit mode. surveyId={}", surveyId);
+				result.put("status", "editing");
+				result.put("code", 8);
+				return result;
+			} else if (-1 == editingState) {
+				logger.debug("Survey has been deleted. surveyId={}", surveyId);
+				result.put("status", "deleted");
+				result.put("code", 8);
+				return result;
+			} else {
+				result = surveyService.saveResponseItem(responses, surveyId, userInfo);
+			}
 		}
 		
 		catch (Exception e) {

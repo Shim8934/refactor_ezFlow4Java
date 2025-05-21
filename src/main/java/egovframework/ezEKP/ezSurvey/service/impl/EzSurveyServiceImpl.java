@@ -1970,4 +1970,26 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 
 		return result;
 	}
+	
+	@Override
+	public int checkEditingState(long surveyId, String companyId, int tenantId) throws Exception {
+		logger.debug("checkEditingState started");
+		int res = 0;
+		
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("surveyId", surveyId);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		// MODIFY_FLAG : 0(미사용) 1(사용) , USE_STATUS 0(삭제) 1(사용)
+		HashMap<String, Object> resMap = ezSurveyDAO.checkEditingState(map);
+		if ("0".equals(resMap.get("USE_STATUS").toString())) {
+			res = -1;
+		} else if ("1".equals(resMap.get("MODIFY_FLAG").toString())) {
+			res = 1;
+		}
+		
+		logger.debug("checkEditingState ended");
+		return res;
+	}
 }
