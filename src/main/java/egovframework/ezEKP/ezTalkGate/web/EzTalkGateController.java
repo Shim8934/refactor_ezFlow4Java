@@ -805,7 +805,10 @@ public class EzTalkGateController {
 		if (pw == null) {
 			loginVO.setDn("NOPASSWORD");
 		} else {
-			String encryptedPw = EgovFileScrty.encryptPassword(pw, id);
+			//String encryptedPw = EgovFileScrty.encryptPassword(pw, id);
+			loginVO.setDn("NOPASSWORD");
+			LoginVO resultVO = loginService.selectUser(loginVO);
+			String encryptedPw = EgovFileScrty.encryptPassword(pw, resultVO.getId());
 
 			logger.debug("encryptedPw=" + encryptedPw);
 
