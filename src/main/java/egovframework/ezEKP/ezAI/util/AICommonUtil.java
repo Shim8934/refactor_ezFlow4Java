@@ -40,6 +40,7 @@ public class AICommonUtil {
     /**
      * ezAI 자체 apiKey (LLM/SLM의 key와 다른 것임)
      * ezEKP - ezAI 서버와의 통신에서 필요함
+     * 2025-05-21 사용 안하고 config에 저장하기로 함
      * @return apiKey
      * @throws Exception
      */

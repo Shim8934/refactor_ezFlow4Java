@@ -98,7 +98,7 @@ public class EzAIGWController {
             // AI 서버로 호출
             ObjectMapper objectMapper = createConfiguredMapper();
             URL url = new URL(config.getProperty("config.ezAIUrl") + "/api/command");
-            String apiKey = aiCommonUtil.getEzAIApiKey();
+            String apiKey = config.getProperty("config.apiKey");
 
             conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
