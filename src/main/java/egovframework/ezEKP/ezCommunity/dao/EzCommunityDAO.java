@@ -1248,4 +1248,8 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	public String getReadFlag(Map<String, Object> map) {
 		return (String) select("EzCommunityDAO.getReadFlag", map);
 	}
+	
+    public int checkPollPeriod(Map<String, Object> map) throws Exception {
+		return (int) select("EzCommunityDAO.checkPollPeriod", map);
+    }
 }
