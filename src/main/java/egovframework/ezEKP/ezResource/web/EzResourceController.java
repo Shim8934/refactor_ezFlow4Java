@@ -1619,6 +1619,9 @@ public class EzResourceController extends EgovFileMngUtil {
 		} else {
 			model.addAttribute("strIReFlagVal", reFlag);
 		}
+
+		model.addAttribute("DstartDateVal", startDateVal.replaceAll("\\.", "-"));
+		model.addAttribute("DendDateVal", endDateVal.replaceAll("\\.", "-"));
 		
 		String requestURL = (String) req.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
 		//뷰만 다르고 cs가 같은 경우여서 requestURL 사용해서 다이나믹뷰
