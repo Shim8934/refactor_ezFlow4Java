@@ -1250,6 +1250,7 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	}
 	
     public int checkPollPeriod(Map<String, Object> map) throws Exception {
-		return (int) select("EzCommunityDAO.checkPollPeriod", map);
+		Integer res = (Integer) select("EzCommunityDAO.checkPollPeriod", map);
+		return res != null ? res : -1;
     }
 }

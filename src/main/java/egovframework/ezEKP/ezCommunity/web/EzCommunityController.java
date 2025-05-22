@@ -5503,7 +5503,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		int result = ezCommunityService.checkPollPeriod(code, pollManagerID, userInfo);
 
 		logger.debug("checkPollPeriod ended.");
-		return 1 == result ? "ok" : "Inactive";
+		return -1 != result ? (1 == result ? "ok" : "Inactive") : "deleted";
 	}
 }
 

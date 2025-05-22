@@ -42,7 +42,8 @@
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript">
 			function sendIt() {
-				if (checkPollPeriod()) {
+				var pollStatus = checkPollPeriod();
+				if ('ok' == pollStatus) {
 					if ("${isSave}" == 0) {
 						if (confirm("<spring:message code='ezPoll.t210' />")) {
 							poll_res_ok.submit();
@@ -53,13 +54,13 @@
 						}
 					}
 				} else {
-					alert("<spring:message code='ezCommunity.t683' />");
+					alert('deleted' == pollStatus ? "<spring:message code='ezCommunity.t682' />" : "<spring:message code='ezCommunity.t683' />");
 					goPage();
 				}
 			}
 			
 			function checkPollPeriod() {
-				var result = false;
+				var result;
 				
 				$.ajax({
 					type : "POST",
@@ -71,9 +72,7 @@
 						pollManagerID : '${pollManagerID}'
 					},
 					success: function(res){
-						if (res == "ok") {
-							result = true;
-						}
+						result = res;
 					}
 				});
 				
