@@ -567,8 +567,8 @@ public class EzMemoController {
 		param.put("use_date", 1);
 		param.put("use_gadget", 1);
 		param.put("default_color", 1);
-		param.put("gadget_right", 15);
-		param.put("gadget_bottom", 15);
+		param.put("gadget_right", 75);
+		param.put("gadget_bottom", 35);
 		param.put("layer_left", 0);
 		param.put("layer_top", 56);
 		param.put("layer_width", 340);
