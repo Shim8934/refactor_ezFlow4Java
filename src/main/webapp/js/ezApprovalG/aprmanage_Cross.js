@@ -2356,7 +2356,12 @@ function setbuttonenable() {
 		if (approvalFlag == "G") {
 			if((pListTypeValue == "4" || pListTypeValue == "97") && (useHWP == 'YES' || pNonElecRecType.toUpperCase() == "MHT")) {
 				document.getElementById("tbtnNonElecRec").style.display = "";
-			}
+			}else{
+                var ElecElement = document.getElementById("tbtnNonElecRec");
+                if (ElecElement) {
+                    ElecElement.style.display = "none";
+                }
+            }
 		}
         
         //20130311 cpno.64
