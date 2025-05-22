@@ -30,6 +30,7 @@ import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -86,6 +87,9 @@ public class EzCircularController extends EgovFileMngUtil {
 	
 	@Autowired
 	private EzEmailService ezEmailService;
+
+	@Autowired
+	private SimpMessagingTemplate template;
 	
 	@Resource(name="EzScheduleService")
 	private EzScheduleService ezScheduleService;
@@ -1279,6 +1283,12 @@ public class EzCircularController extends EgovFileMngUtil {
 			ezCircularService.updateCircular(circularListVO.getTitle(),circularListVO.getImportance(),circularListVO.getOption(), originCircularID, userInfo.getTenantId(), userInfo.getId(), 
 					receiverLength, circularListVO.getStatus(), loginCookie, userInfo, regDate, circularListVO.getContent(), fileList, userInfo.getOffset(), receiverID, receiverName,
 					receiverName2, circularUserId, updateStatus, mode, pDirPath);
+			if (mode.equals("modify")) { // 회람 문서 수정 시 변경 상태(MODIFY)와 기존 circularID를 포함한 WebSocket 메시지 전송 로직 추가
+				String result = "{\"status\":\"MODIFY\", \"circuralrId\":\"" + originCircularID + "\"}";
+				JSONParser parser = new JSONParser();
+				JSONObject json = (JSONObject) parser.parse(result);
+				this.template.convertAndSend("/reply/getSeenUpdateForCircular" + originCircularID + "+" + userInfo.getTenantId(), json);
+			}
 		} else {
 			ezCircularService.insertCircular(circularListVO.getCircularID(), circularListVO.getTitle(), circularListVO.getImportance(), circularListVO.getOption(), 
 					circularListVO.getContent(), circularListVO.getHasFile(), circularListVO.getStatus(), regDate, circularListVO.getEndDate(), 
