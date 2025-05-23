@@ -2034,7 +2034,12 @@ public class EzNewPortalGWController {
 			if ("YES".equals(useMail)) {
 				int unreadMailCount = 0;
 
-				String userEmail = userId + "@" + ezCommonService.getTenantConfig("DomainName", tenantId);
+				try {
+					unreadMailCount = (int) ezEmailService.getUnreadCountAll(null, userId, locale, tenantId).get("totalUnreadCountInAllAccounts");
+				} catch (Exception e) {
+					logger.error(e.getMessage(), e);
+				}
+				/*String userEmail = userId + "@" + ezCommonService.getTenantConfig("DomainName", tenantId);
 				String password = jspw;
 				String url = "/rest/ezPortal/portlets/unreadMailCount";
 
@@ -2054,7 +2059,7 @@ public class EzNewPortalGWController {
 					String mailCount = String.valueOf(resultBody.get("unreadMailCount"));
 					unreadMailCount = Integer.parseInt(mailCount);
 					logger.debug("unreadMailCount = " + unreadMailCount);
-				}
+				}*/
 
 				data.put("unreadMailCount", unreadMailCount);
 			}
