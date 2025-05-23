@@ -23,10 +23,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Nullable;
 import javax.annotation.Resource;
+import javax.net.ssl.HttpsURLConnection;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
@@ -35,7 +35,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -76,7 +75,7 @@ public class EzAIGWController {
         //response.setContentType("text/event-stream;charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
 
-        HttpURLConnection conn = null;
+        HttpsURLConnection conn = null;
 
         try (ServletOutputStream clientOut = response.getOutputStream()) {
             // 사용자 정보, AIRequestVO 빌드
@@ -100,7 +99,7 @@ public class EzAIGWController {
             URL url = new URL(config.getProperty("config.ezAIUrl") + "/api/command");
             String apiKey = config.getProperty("config.apiKey");
 
-            conn = (HttpURLConnection) url.openConnection();
+            conn = (HttpsURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Content-Type", "application/json");
             //TODO: 2차 개발 때 SSE 형태로 수정시 아래 주석 해제
