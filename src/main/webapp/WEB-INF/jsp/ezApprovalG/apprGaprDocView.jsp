@@ -89,6 +89,7 @@
 			var useHideHeaderArea = "<c:out value ='${useHideHeaderArea}'/>";
 
 			var tenantID = "<c:out value ='${userInfo.tenantId}'/>";
+			var ReturnFunction;
 	        
 		    $(function () {
 		      	if(approvalFlag == "G") {
@@ -98,6 +99,10 @@
 	        		$(".approvalG").css("display","none");
 	        		$(".approval").css("display","");
 	        	}
+
+				if (isParentCommonArgsUsed()) {
+					ReturnFunction = parent.ezCommon_cross_dialogArguments[1];
+				}
 		      	
 		      	$("#message").load(function() {
 					var selectOp = $("#selectImg option").length;
@@ -396,7 +401,10 @@
 		    	PrintClick("Cross", pDocID, "ING");
 		    }
 		    function btnClose_onclick() {
-		        window.close();
+				if (ReturnFunction != null) {
+					ReturnFunction("cancel");
+				}
+				window.close();
 		    }
 		
 // 		    function btnMail_onclick() {
@@ -593,7 +601,8 @@
 	        
 			function addRelatedCabinet() {
 				//* moon 2018.07.26
-				window.open("/ezCabinet/cabinetAddRelated.do?module=apprv", "addRelated", getOpenWindowfeature(480, 505));
+// 				window.open("/ezCabinet/cabinetAddRelated.do?module=apprv", "addRelated", getOpenWindowfeature(480, 505));
+				showPopup("/ezCabinet/cabinetAddRelated.do?module=apprv", 480, 505, "addRelated", getOpenWindowfeature(480, 505), hidePopup);
 			}
 			
 			function getOpenWindowfeature(popUpW, popUpH) {

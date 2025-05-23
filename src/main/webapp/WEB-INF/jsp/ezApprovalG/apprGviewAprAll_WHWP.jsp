@@ -168,6 +168,7 @@
 			
 			// 2024-01-11 김우철 - 다안기안문서 전체 탭 호출 후 selTab(1)을 위한 setTimeout 시간
 			var loadTime = "${loadTimeForApprAll}";
+			var ReturnFunction;
     		
 			function btnOpinion_onclick() {
 				openOpinionUI_New("Show");
@@ -195,6 +196,12 @@
 				    btnClose_onclick();
 				    return;
 				}
+
+				try {
+					if (isParentCommonArgsUsed()) {
+						ReturnFunction = parent.ezCommon_cross_dialogArguments[1];
+					}
+				} catch (e) { }
 			
 			    /*
 			    if (pDocState == "015" && pOrgDocID.length >= 20 && "<c:out value='${listTypeValue}'/>" == "99") {
@@ -266,7 +273,10 @@
 		        if (parent.opener != null && parent.opener.getApprovalList != undefined) {
 		        	parent.opener.clearAbsence(true);
 		        }
-			
+
+				if (ReturnFunction != null) {
+					ReturnFunction();
+				}
 			    window.close();
 			}
 			

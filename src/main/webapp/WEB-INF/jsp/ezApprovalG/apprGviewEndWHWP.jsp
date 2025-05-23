@@ -79,7 +79,8 @@
 			
 			// 첨부문서 확인 여부 (첨부문서 창 닫을시 발생하는 오류 방지를 위한 Flag)
 			var isDocAttach = "<c:out value = '${isDocAttach}'/>";
-            
+			var ReturnFunction;
+			
             var approvalFlag = "<c:out value = '${approvalFlag}'/>";
 	        window.onresize = function () {
 	       		document.getElementById("messageWHWPEditor").style.height = document.documentElement.clientHeight - 150 + "px";
@@ -185,6 +186,12 @@
 	            if ("${pass}" != "<RESULT>TRUE</RESULT>") {
 	                QuitWindow();
 	            }
+
+				try {
+					if (isParentCommonArgsUsed()) {
+						ReturnFunction = parent.ezCommon_cross_dialogArguments[1];
+					}
+				} catch (e) { }
 	            
 				// 일반첨부, 대용량첨부파일 관련 가이드 메세지 추가
 				setAttachGuideText();
@@ -220,9 +227,9 @@
 				message.PrintDocument();
 			}
 			
-			function btnClose_onclick() {
-			    window.close();
-			}
+			// function btnClose_onclick() {
+			//     window.close();
+			// }
 	
 			var ezapropinion_cross_dialogArguments = new Array();
 			function OpenInformationUI(pInformationContent, CompleteFunction) {

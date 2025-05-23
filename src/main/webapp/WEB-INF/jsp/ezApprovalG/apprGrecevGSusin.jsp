@@ -163,6 +163,7 @@
 			var upperDeptCode = "<c:out value ='${upperDeptCode}'/>";
 			var upperDeptName = "<c:out value ='${upperDeptName}'/>";
 			var allowDeptIDs = "<c:out value ='${allowDeptIDs}'/>"
+			var ReturnFunction;
 
 		    $(document).ready(function(){
 				if (approvalFlag == 'S') {
@@ -172,10 +173,17 @@
 					$(".approvalG").show();
 					$(".approvalS").hide();
 				}
+
+				try {
+					if (isParentCommonArgsUsed()) {
+						ReturnFunction = parent.ezCommon_cross_dialogArguments[1];
+					}
+				} catch (e) { }
 				
 				if (isReceived != 0) {
 					showAlert("<spring:message code='ezApprovalG.pjg04'/>");
-					window.close();
+					// window.close();
+					btnClose_onclick();
 				}
 				
 				if (nonElecRec == "Y") {
@@ -982,9 +990,9 @@
 		        headerAction("open");
 		    	PrintClick("Cross", pDocID, "ING");
 		    }
-		    function btnClose_onclick() {
-		        window.close();
-		    }
+		    // function btnClose_onclick() {
+		    //     window.close();
+		    // }
 		    window.onbeforeunload = function () {
 		        try {
 		            window.opener.openergetDocInfo();

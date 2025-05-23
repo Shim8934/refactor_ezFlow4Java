@@ -94,6 +94,7 @@
 
 			var tenantID = "<c:out value ='${userInfo.tenantId}'/>";
 			var nonElecRec = "<c:out value ='${nonElecRec}'/>";
+			var ReturnFunction;
 
 		    $(function () {
 		    	/* 2022-07-29 홍승비 - 열람권한 체크는 초기 진입 시 한번만 진행 (관리자 > 전체 완료문서조회 > 관리자는 모든 문서 열람 가능) */
@@ -108,6 +109,12 @@
 	        		$(".approvalG").css("display","none");
 	        		$(".approval").css("display","");
 	        	}
+				  
+				try {
+					if (isParentCommonArgsUsed()) {
+						ReturnFunction = parent.ezCommon_cross_dialogArguments[1];
+					}
+				} catch (e) { }
 		      	
 		      	//감사문서도 재사용하지 못하도록 수정. 2020-03-16 홍대표.
 		      	if (docState == "012" || docState == "013" || docState == "014") {
@@ -339,7 +346,10 @@
 		        headerAction("open");
 		    	PrintClick("Cross", pDocID, "END");
 		    }
-		    function btnClose_onclick() {	    
+		    function btnClose_onclick() {
+				if (ReturnFunction != null) {
+					ReturnFunction("cancel");
+				}
                 window.close();
                 window.open('/blank.htm', "_self");
 		    }

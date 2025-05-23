@@ -139,6 +139,7 @@
 
 			// 창마다 고유한 id 지정용
 			var windowUuid = getRandomId();
+			var ReturnFunction;
 			
 			window.onresize = function () {
 				document.getElementById("messageWHWPEditor").style.height = document.documentElement.clientHeight - 170 + "px";
@@ -245,6 +246,12 @@
 			}
 	
 			function window_onload() {
+				try {
+					if (isParentCommonArgsUsed()) {
+						ReturnFunction = parent.ezCommon_cross_dialogArguments[1];
+					}
+				} catch (e) { }
+				
 			    IsSkipDrafter = "TRUE";
 				DeptSymbol = getDeptSymbol(arr_userinfo[4], arr_userinfo[5]);
 			    SetBtnStateTrue();
@@ -637,9 +644,9 @@
 				message.PrintDocument();
 			}
 			
-			function btnClose_onclick() {
-			    window.close();
-			}
+			// function btnClose_onclick() {
+			//     window.close();
+			// }
 	
 			function window_onbeforeunload() {
 			    try {

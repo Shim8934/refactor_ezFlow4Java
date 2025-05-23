@@ -1,4 +1,4 @@
-﻿var arrySubTab = new Array(0, 9, 4, 3, 4);
+﻿﻿var arrySubTab = new Array(0, 9, 4, 3, 4);
 var subTabLastCol = 1;
 
 function GetDocList(p_FormCd) {

@@ -4341,3 +4341,24 @@ body.drag *{user-select:none !important;}
 .tagArea .imgbtn span{line-height: 23px !important;}
 .tagAdd input[type="text"]{width: 143px}
 .tag_btnSave{text-align: center; margin: 0 0 3px 0; border-top: 1px solid #f1f1f1; padding-top: 10px;}
+
+/* teams 레이어팝업 전환 */
+.layerpopup_slider{
+	position: absolute;
+	top: 0px !important;
+	right: -50% !important;
+	width: 0 !important;
+	height: 100% !important;
+	z-index: -1 !important;
+	overflow: hidden;
+	transition:all 0.5s;
+}
+.layerpopup_slider.active{
+	min-width: 947px;
+	width:70% !important;
+	height:100% !important;
+	/*left: auto !important;*/
+	right:0 !important;
+	z-index:2000 !important;
+	box-shadow: -5px 3px 6px rgba(0,0,0,0.16);
+}

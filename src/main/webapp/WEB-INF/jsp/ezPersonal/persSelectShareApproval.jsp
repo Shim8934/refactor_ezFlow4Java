@@ -19,7 +19,11 @@
 		    var userID = "${userInfo.id}";
 		    window.onload = function () {
 		        try {
-		            ReturnFunction = parent.share_cross_dialogArguments[1];
+		            if (isParentCommonArgsUsed()) {
+						ReturnFunction = parent.ezCommon_cross_dialogArguments[1];
+					} else {
+						ReturnFunction = parent.share_cross_dialogArguments[1];
+					}
 		        } catch (e) {
 		            try {
 		                ReturnFunction = opener.share_cross_dialogArguments[1];
@@ -201,7 +205,7 @@
 		    	});
 		    }
 		    
-		    var checkname2_cross_dialogArguments = new Array();
+		    // var checkname2_cross_dialogArguments = new Array();
 		    var rgParams = new Array();
 		    function deptsearch_click() {
 		    	if (specialChk(document.getElementById("deptkeyword").value)) {
@@ -259,10 +263,12 @@
 		
 		
 		            if (CrossYN()) {
-		                checkname2_cross_dialogArguments[0] = rgParams;
-		                checkname2_cross_dialogArguments[1] = deptsearch_click_Complete;
-		                var OpenWin = window.open("/ezPersonal/checkName2.do", "checkName2_cross", GetOpenWindowfeature(600, 350));
-		                try { OpenWin.focus(); } catch (e) { }
+// 		                checkname2_cross_dialogArguments[0] = rgParams;
+// 		                checkname2_cross_dialogArguments[1] = deptsearch_click_Complete;
+// 		                var OpenWin = window.open("/ezPersonal/checkName2.do", "checkName2_cross", GetOpenWindowfeature(600, 350));
+// 		                try { OpenWin.focus(); } catch (e) { }
+						ezCommon_cross_dialogArguments[0] = rgParams;
+						showPopup("/ezPersonal/checkName2.do", 600, 350, "checkName2_cross", GetOpenWindowfeature(600, 350), deptsearch_click_Complete);
 		            }
 		            else {
 		                window.showModalDialog("/ezPersonal/checkName2.do", rgParams, feature);
@@ -280,6 +286,11 @@
 		    }
 		    
 		    function deptsearch_click_Complete() {
+		    	hidePopup();
+		    	if(rgParams["recipientTDData"] == "dontprocess") {
+		    		return;
+		    	}
+		    	
 		        if (rgParams["deptid"] != "") {
 		            bSearch = true;
 		            g_xmlHTTP = createXMLHttpRequest();
@@ -355,7 +366,8 @@
 		        else {
 	                window.returnValue = selRow.getAttribute("DATA2");
 		        }
-		        window.close();
+		        // window.close();
+				btnClose_onclick();
 		    }
 		    
 		    function checkDuplShareUser(shareUserId) {
@@ -415,7 +427,7 @@
 		<div id="close">
 			<ul>
 				<li>
-					<span onClick="window.close()" style="cursor:pointer"></span>
+					<span onClick="btnClose_onclick()" style="cursor:pointer"></span>
 				</li>
 			</ul>
 		</div>
@@ -455,6 +467,10 @@
 		</table>
 		<div class="btnposition btnpositionNew">
 		    <a class="imgbtn" onClick="select_member()" ><span><spring:message code='ezPersonal.t12'/></span></a>
+		</div>
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
+		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 	</body>
 </html>

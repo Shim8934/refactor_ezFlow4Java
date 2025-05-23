@@ -226,12 +226,19 @@
 
             // 2025-02-18 박기범 - 프론트에서 문서 편집시, 문서를 오픈한 이후로 다른 문서/결재진행 변화가 있었는지 체크하기 위한 코드
             var snapshotCode = "<c:out value ='${snapshotCode}'/>";
+			var ReturnFunction;
             
             var drafterName = "<c:out value ='${drafterName}'/>";
 		    var drafterDept = "<c:out value ='${drafterDept}'/>";
 		    var formName = "<c:out value ='${formName}'/>";
 			
 			window.onload = function () {
+				try {
+					if (isParentCommonArgsUsed()) {
+						ReturnFunction = parent.ezCommon_cross_dialogArguments[1];
+					}
+				} catch (e) { }
+				
 		        if (allFlag == "2") {
 		            selectedDocID = window.opener.selectedDocIDS;
 		        }
@@ -811,8 +818,7 @@
 				}
 
 		    }
-		    function btnApprove_onclick()
-		    {
+		    function btnApprove_onclick() {
 	    		if (checkAprState()) {
 	    			showAlert("<spring:message code='ezApprovalG.bhs23'/>");
 	    			if (allFlag == "1") {
@@ -825,40 +831,13 @@
 	    		}
 		        try {
 		            if (OrgAprUserID != arr_userinfo[1]) {
-		                if (!confirm(OrgAprUserName + "<spring:message code='ezApprovalG.t2106'/>")) {
-		                    window.returnValue = "CLOSE";
-		                    btnClose_onclick();
-		                    return;
-		                }
+		            	showConfirm(OrgAprUserName + "<spring:message code='ezApprovalG.t2106'/>", btnApprove_onclick_afterConfirm);
+		            	return;
 		            }
 		        } catch (e) {
 		        }
-		        setMenuDisable("btnApprove", true);
-		        var signInfo;
-		        if ((LastKyulSN == pAprMemberSN && pAprLineType != strAprType2) || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
-		            if (pDraftFlag == "HABYUI" || pDraftFlag == "B_GAMSA" || pDraftFlag == "A_GAMSA") {
-		                getLastOpinon();
-		            }
-		            var fields = message.GetFieldsList(); 	
-		            var field = message.GetListItem(fields, "lastdraftdate");
-		            if (field) {
-		                var CurrentDate = getGyulJeDate();
-		                setNodeText(field, CurrentDate);
-		            }
-		        }
-		        if (!isjunkyul) {
-		            //if ("${approvalPWD}" != "N") {
-		            if (CheckUsePassword()) {
-		                chk_Passwd(pingUserID, btnApprove_chkpassword_Complete);
-		            }
-		            else
-		                check_openSingUI();
-		        }
-		        else {
-		            check_openSingUI();
-		        }
 		    }
-		
+		        
 		    function check_openSingUI() {
 		        var ret = "NAME";
 		        if ((pAprLineType != strAprType2) && (pAprLineType != strAprType7) && (pAprLineType != strAprType15) && (pAprLineType != strAprType17)) {
@@ -1520,15 +1499,15 @@
 		    }
 		
 		    /* 2020-02-24 홍승비 - 편집모드 > 저장 시 원문서 정보와 수정이력을 바로 업데이트하도록 수정하여, 기존 경고창 주석처리 */
-		    function btnClose_onclick() {
+		    // function btnClose_onclick() {
 /* 		    	if (editedFlag) {
 		    		var pInformationContent = "<spring:message code='ezApprovalG.t148'/>" + "<br>" + "<spring:message code='ezApprovalG.t149'/>";
 				    OpenInformationUI(pInformationContent, btnClose_onclick_Complete);
 		    	} else {
 			        window.close();
 		    	} */
-		    	window.close();
-		    }
+			// 	window.close();
+		    // }
 		    
 		    function btnClose_onclick_Complete(rtn) {
 		    	DivPopUpHidden();
@@ -1819,12 +1798,15 @@
 		        ezapprovalinfo_dialogArguments[0] = parameter;
 		        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
 
-		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun +"&orgCompanyID=" + pCompanyID + "&docType=" + pDocType + "&formID=" + pFormID, "ezApprovalInfo", GetOpenWindowfeature(1210, 750));
-		        
-		        try { OpenWin.focus(); } catch (e) { }
+		        // var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun +"&orgCompanyID=" + pCompanyID + "&docType=" + pDocType + "&formID=" + pFormID, "ezApprovalInfo", GetOpenWindowfeature(1210, 750));
+		        //
+		        // try { OpenWin.focus(); } catch (e) { }
+				showPopup("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun +"&orgCompanyID=" + pCompanyID + "&docType=" + pDocType + "&formID=" + pFormID, 1210, 750, "ezApprovalInfo", GetOpenWindowfeature(1210, 750), btnApprovalInfo_Complete);
 		    }
 		
 		    function btnApprovalInfo_Complete(ret) {
+				hidePopup();
+				
 		        if (ret != undefined && ret[0] == "OK") {
 		            try {
 		                //결재선 저장
@@ -2239,7 +2221,8 @@
 			
 			function addRelatedCabinet() {
 				//* moon 2018.07.26
-				window.open("/ezCabinet/cabinetAddRelated.do?module=apprv", "addRelated", getOpenWindowfeature(480, 505));
+				// window.open("/ezCabinet/cabinetAddRelated.do?module=apprv", "addRelated", getOpenWindowfeature(480, 505));
+				showPopup("/ezCabinet/cabinetAddRelated.do?module=apprv", 480, 505, "addRelated", getOpenWindowfeature(480, 505), hidePopup);
 			}
 			
 			function getOpenWindowfeature(popUpW, popUpH) {
@@ -2495,6 +2478,41 @@
 				}
 				var pInformationContent = "<spring:message code='ezApprovalG.yjh04'/>";
 				OpenInformationUI(pInformationContent, btnReject_onclick_Complete);
+			}
+			
+			function btnApprove_onclick_afterConfirm(rtn){
+				 hideConfirm();
+				 if(!rtn){
+					window.returnValue = "CLOSE";
+	                btnClose_onclick();
+	                return;
+				}
+				
+		        setMenuDisable("btnApprove", true);
+		        var signInfo;
+		        if ((LastKyulSN == pAprMemberSN && pAprLineType != strAprType2) || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
+		            if (pDraftFlag == "HABYUI" || pDraftFlag == "B_GAMSA" || pDraftFlag == "A_GAMSA") {
+		                getLastOpinon();
+		            }
+		            var fields = message.GetFieldsList(); 	
+		            var field = message.GetListItem(fields, "lastdraftdate");
+		            if (field) {
+		                var CurrentDate = getGyulJeDate();
+		                setNodeText(field, CurrentDate);
+		            }
+		        }
+		        if (!isjunkyul) {
+		            //if ("${approvalPWD}" != "N") {
+		            if (CheckUsePassword()) {
+		                chk_Passwd(pingUserID, btnApprove_chkpassword_Complete);
+		            }
+		            else {
+		                check_openSingUI();
+		            }    
+		        }
+		        else {
+		            check_openSingUI();
+		        }
 			}
 
 		</script>

@@ -100,14 +100,20 @@
 				document.getElementById("shareApprovalList").getElementsByTagName("tbody")[0].innerHTML = strHTML;
 			}
 			
-			var share_cross_dialogArguments = new Array();
+			// var share_cross_dialogArguments = new Array();
 			function addShare_onclick() {
-			    share_cross_dialogArguments[1] = addShare_onclick_complete;
-		        var OpenWin = window.open("/ezPersonal/selectShareApproval.do", "SelectPerson_cross", GetOpenWindowfeature(715, 535));
-		        try { OpenWin.focus(); } catch (e) { }
+			    // share_cross_dialogArguments[1] = addShare_onclick_complete;
+		        // var OpenWin = window.open("/ezPersonal/selectShareApproval.do", "SelectPerson_cross", GetOpenWindowfeature(715, 535));
+		        // try { OpenWin.focus(); } catch (e) { }
+				showPopup("/ezPersonal/selectShareApproval.do", 715, 535, "SelectPerson_cross", GetOpenWindowfeature(715, 535), addShare_onclick_complete);
 			}
 			
 			function addShare_onclick_complete(userId, deptId) {
+				hidePopup();
+				if (userId == "cancel") {
+					return;
+				}
+				
 				$.ajax({
 					url : '/ezPersonal/saveShareApproval.do',
 					method : 'POST',

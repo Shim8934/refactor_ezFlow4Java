@@ -18,7 +18,8 @@
         var p_AprDeptTempletName = trim(document.getElementById('Text1').value);
         if (p_AprDeptTempletName.length <= 0) {
             var pAlertContent = "<spring:message code='ezApprovalG.t349'/>";
-            OpenAlertUI(pAlertContent);
+            // OpenAlertUI(pAlertContent);
+			showAlert(pAlertContent);
 
             document.getElementById('Text1').focus();
         }
@@ -64,12 +65,12 @@
         document.getElementById('Text1').focus();
     }
     
-    function OpenAlertUI(pAlertContent) {
-        var parameter = pAlertContent;
-        var url = "/ezApprovalG/ezAprAlert.do";
-        var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
-        var RtnVal = window.showModalDialog(url, parameter, feature);
-    }
+    // function OpenAlertUI(pAlertContent) {
+    //     var parameter = pAlertContent;
+    //     var url = "/ezApprovalG/ezAprAlert.do";
+    //     var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
+    //     var RtnVal = window.showModalDialog(url, parameter, feature);
+    // }
     function trim(parm_str) {
         if (parm_str == "")
             return ""
@@ -112,7 +113,7 @@
                 count++;
         }
         if (parseInt(count) > parseInt(pSize)) {
-            alert("<spring:message code='ezApprovalG.t343'/>" + pSize + " byte <spring:message code='ezApprovalG.t344'/>" + pKoreanLen + " <spring:message code='ezApprovalG.t345'/>");
+            showAlert("<spring:message code='ezApprovalG.t343'/>" + pSize + " byte <spring:message code='ezApprovalG.t344'/>" + pKoreanLen + " <spring:message code='ezApprovalG.t345'/>");
             pObj.focus();
             return false;
         }
@@ -137,7 +138,12 @@
 	</div>
 	<div class="btnposition btnpositionNew" >
 		<a class="imgbtn" name="btn_SaveAprLineTempletName" id="btn_SaveAprLineTempletName" onClick="return btn_SaveAprDeptTempletName_onclick()"><span><spring:message code='ezApprovalG.t20'/></span></a>
-	</div>	
+	</div>
+
+	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
+	<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+		<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+	</div>
 </body>
 </html>
 

@@ -148,8 +148,15 @@
 			
 			// 창마다 고유한 id 지정용
 			var windowUuid = getRandomId();
+			var ReturnFunction;
 
 			window.onload = function () {
+				try {
+					if (isParentCommonArgsUsed()) {
+						ReturnFunction = parent.ezCommon_cross_dialogArguments[1];
+					}
+				} catch (e) { }
+				
 				// 일반첨부, 대용량첨부파일 관련 가이드 메세지 추가
 				setAttachGuideText();
 			};
@@ -719,10 +726,10 @@
 			
 			
 			// 종료
-			function btnClose_onclick()
-			{
-				window.close();
-			}
+			// function btnClose_onclick()
+			// {
+			// 	window.close();
+			// }
 			window.onbeforeunload = function () {
 				try{
 					window.opener.openergetDocInfo();

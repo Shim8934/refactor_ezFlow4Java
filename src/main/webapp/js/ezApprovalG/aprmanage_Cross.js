@@ -990,7 +990,7 @@ function openApprovUI(allFlag) {
 	        		openLocation += "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(GetAttribute(tr[0], "DATA12")) + "&mode=" + encodeURI(mode) + "&orgCompanyID=" + orgCompanyID + "&orgDocID=" + encodeURI(GetAttribute(tr[0], "DATA2"));
 	        	} else {
 	        		var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
-	        		alert(pAlertContent);
+	        		showAlert(pAlertContent);
 	                
 	                return;
 	        	}
@@ -1016,11 +1016,12 @@ function openApprovUI(allFlag) {
             openLocation = openLocation + "&id=" + encodeURI(pArgument[1]) + "&name=" + encodeURI(pArgument[2]);
             openLocation = openLocation + "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(GetAttribute(tr[0], "DATA12")) + "&mode=" + encodeURI(mode) + "&orgCompanyID=" + orgCompanyID + "&orgDocID=" + encodeURI(GetAttribute(tr[0], "DATA2")) + "&aprMemberSN=" + pArgument[4];
         }
-        openwindow(openLocation, "ApprovUI", 880, 550);
+        // openwindow(openLocation, "ApprovUI", 880, 550);
+        showPopupSlide(openLocation, 880, 550, "ApprovUI", "", hidePopupSlide, openwindow);
     }
     else {
         var pAlertContent = strLang870;
-        alert(pAlertContent);
+        showAlert(pAlertContent);
     }
 }
 
@@ -1175,7 +1176,7 @@ function openViewDocInfo(type) {
 	            	openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
 	            } else {
 	            	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
-	            	alert(pAlertContent);
+	            	showAlert(pAlertContent);
 	                
 	                return;
 	            }
@@ -1196,7 +1197,7 @@ function openViewDocInfo(type) {
 	            	openLocation = "/ezApprovalG/ezviewAprHWP.do";
 	            } else {
 	            	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
-	            	alert(pAlertContent);
+	            	showAlert(pAlertContent);
 	                
 	                return;
 	            }
@@ -1230,7 +1231,8 @@ function openViewDocInfo(type) {
         	openLocation += "&pageType=admin";
         }
     }
-    openwindow(openLocation, "", 880, 570);
+    // openwindow(openLocation, "", 880, 570);
+    showPopupSlide(openLocation, 880, 570, "", "", hidePopupSlide, openwindow);
 }
 
 function OpenReceiveAssignUI(pCurSelRow) {
@@ -1265,7 +1267,7 @@ function OpenReceiveDraftUI(pCurSelRow, pDraftFlag) {
             } else {
             	if(useWebHWP == "NO") {
 	                if (/chrome/i.test(navigator.userAgent)) {
-	                     alert(strLang1103);
+	                     showAlert(strLang1103);
 	                     return;
 	            	 } else {
 	            		if (docHref == "hwp" || g_RelayG_Type.toUpperCase() == "HWP") {
@@ -1276,7 +1278,8 @@ function OpenReceiveDraftUI(pCurSelRow, pDraftFlag) {
             		openLocation = "/ezApprovalG/ezRecevGSusinWHWP.do?docID=" + escape(pDocID) + "&draftFlag=" + escape(pDraftFlag) + "&uOrgID=" + encodeURI(GetAttribute(pCurSelRow, "DATA7"));
             	}
             }
-            openwindow(openLocation, "receive", 880, 550);
+            // openwindow(openLocation, "receive", 880, 550);
+            showPopupSlide(openLocation, 880, 550, "receive", "", hidePopupSlide, openwindow);
         } else {
             var pURL = GetAttribute(pCurSelRow, "DATA3");
             var pDocID = GetAttribute(pCurSelRow, "DATA1");
@@ -1299,7 +1302,8 @@ function OpenReceiveDraftUI(pCurSelRow, pDraftFlag) {
             	openLocation = "/ezApprovalG/recev.do";
             }
             openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&draftFlag=" + encodeURI(pDraftFlag) + "&orgCompanyID=" + encodeURI(orgCompanyID);
-            openwindow(openLocation, "receive", 880, 550);
+            // openwindow(openLocation, "receive", 880, 550);
+            showPopupSlide(openLocation, 880, 550, "receive", "", hidePopupSlide, openwindow);
         }
     } else {
         var pAlertContent = strLang870;
@@ -1360,7 +1364,8 @@ function OpenReceiveENDDraftUI(pCurSelRow, pDraftFlag) {
             g_selReturn = "N";
         }
 
-        openwindow(openLocation, "receive", 880, 550);
+        // openwindow(openLocation, "receive", 880, 550);
+        showPopupSlide(openLocation, 880, 550, "receive", "", hidePopupSlide, openwindow);
     }
     else {
         var pAlertContent = strLang870;
@@ -1906,7 +1911,7 @@ function openergetDocInfo() {
 			// TODO: handle exception
 		}
     } catch (e) {
-        alert("openergetDocInfo :: " + e.description);
+        showAlert("openergetDocInfo :: " + e.description);
     }
 }
 
@@ -3051,7 +3056,8 @@ function openServerDraftUI(pDraftFlag, pCurSelRow) {
     	}
     }
     
-    openwindow(openLocation, windowName, 890, 560);
+    // openwindow(openLocation, windowName, 890, 560);
+    showPopupSlide(openLocation, 890, 560, windowName, "", hidePopupSlide, openwindow);
 }
 
 /* 2022-02-10 홍승비 - 일괄기안문서 대응을 위해 알림메세지 및 갱신 분기 추가 */
@@ -3075,20 +3081,20 @@ function RemoveTmpDoc(pDocID) {
 			if (typeof(isGroupDoc) != "undefined" && isGroupDoc == "Y" && typeof(groupDocListCnt) != "undefined" && typeof(groupDocDelCnt) != "undefined") {
 				groupDocDelCnt ++; // 일괄기안 루프 내부 문서삭제완료 카운트 증가 
 				if (groupDocDelCnt == groupDocListCnt) {
-					alert(pAlertContent);
+					showAlert(pAlertContent);
 					openergetDocInfo();
 				}
 			}
 			// 기존 일반문서 삭제 분기
 			else {
-				alert(pAlertContent);
+				showAlert(pAlertContent);
 		        openergetDocInfo();
 			}
 		},
 		error : function() {
 			var pAlertContent = strLang872;
 	        //OpenAlertUI(pAlertContent);
-	        alert(pAlertContent);
+			showAlert(pAlertContent);
 		}
 	});
 }

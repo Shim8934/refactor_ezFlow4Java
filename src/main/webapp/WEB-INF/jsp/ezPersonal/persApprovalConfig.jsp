@@ -303,6 +303,10 @@
 			    <a class="imgbtn" onClick="Change_Click()" ><span><spring:message code='ezPersonal.t34'/></span></a>
 			    <a class="imgbtn" onClick="Cancel_Click()" ><span><spring:message code='ezPersonal.t13'/></span></a>
 			</div>
+			<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
+			<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+				<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+			</div>
 			<input id="publicModulus" value="${publicModulus}" type="hidden"/>
 			<input id="publicExponent" value="${publicExponent}" type="hidden"/>
 		</form>

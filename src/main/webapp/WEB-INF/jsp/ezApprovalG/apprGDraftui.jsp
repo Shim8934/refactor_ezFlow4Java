@@ -2282,7 +2282,8 @@
 			
 			function addRelatedCabinet() {
 				//* moon 2018.07.26
-				window.open("/ezCabinet/cabinetAddRelated.do?module=apprv", "addRelated", getOpenWindowfeature(480, 505));
+				// window.open("/ezCabinet/cabinetAddRelated.do?module=apprv", "addRelated", getOpenWindowfeature(480, 505));
+				showPopup("/ezCabinet/cabinetAddRelated.do?module=apprv", 480, 505, "addRelated", getOpenWindowfeature(480, 505), hidePopup);
 			}
 			
 			function getOpenWindowfeature(popUpW, popUpH) {

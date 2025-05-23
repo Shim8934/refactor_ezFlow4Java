@@ -938,7 +938,8 @@
 		            if(share && share == 'share'){
 		            	openLocation += "&share=Y";
 		            }
-		            openwindow(openLocation, "", 880, 570);
+		            // openwindow(openLocation, "", 880, 570);
+					showPopupSlide(openLocation, 880, 570, "", "", hidePopupSlide, openwindow);
 		        }
 		    }
 		    //END

@@ -18,6 +18,19 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
 		<script type="text/javascript">
+			var ReturnFunction;
+			window.onload = function () {
+				if (isParentCommonArgsUsed()) {
+					ReturnFunction = parent.ezCommon_cross_dialogArguments[1];
+				}
+			}
+
+			function btnClose_onclick() {
+				if (ReturnFunction != null) {
+					ReturnFunction("cancel");
+				}
+				window.close();
+			}
 		</script>
 	</head>
 	<body class="popup" style="overflow:hidden;">
@@ -26,7 +39,7 @@
 		</h1>
 		<div id="close">
 		  <ul>
-		    <li><span onclick="window.close()"></span></li>
+		    <li><span onclick="btnClose_onclick()"></span></li>
 		  </ul>
 		</div>
 		

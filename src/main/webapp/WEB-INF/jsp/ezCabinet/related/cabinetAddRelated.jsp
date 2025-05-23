@@ -57,6 +57,16 @@
 		
 		
 		<script type="text/javascript">
+			var ReturnFunction;
+			window.onload = function () {
+				try {
+					if (isParentCommonArgsUsed()) {
+						ReturnFunction = parent.ezCommon_cross_dialogArguments[1];
+					}
+				} catch (e) {
+				}
+			}
+			
 			var CabinetRlModule = function() {
 				var rlWindow      = null;
 				var cabinetId     = null;
@@ -91,9 +101,9 @@
 					var listMgBttns          = cabMgBttnElmt.children;
 					
 					listMgBttns[0].onclick   = function(e) {documentSavehandler();};
-					listMgBttns[1].onclick   = function(e) {closeWindow();};
+					listMgBttns[1].onclick   = function(e) {btnClose_onclick();};
 					
-					document.getElementById("cabRlClose").onclick = function(e) {closeWindow();};
+					document.getElementById("cabRlClose").onclick = function(e) {btnClose_onclick();};
 				}
 				
 				function autoSelect(){
@@ -112,7 +122,9 @@
 					fogPanel.style.display   = "none";
 				}
 				
-				function closeWindow() {window.close();}
+				// function closeWindow() {
+				// 	window.close();
+				// }
 				
 				function setModuleTitle() {
 					var title = "";
@@ -134,7 +146,7 @@
 				}
 				
 				function setApprovalTitle() {
-					var approvalOpener = window.opener;
+					var approvalOpener = window.opener || window.parent;
 					if(!approvalOpener) {showAlert(CabinetMessages.strSelect); return;}
 					var messageFrame   = approvalOpener.document.getElementById("message");
 					var contentWd      = messageFrame.contentWindow || messageFrame.contentDocument;
@@ -143,7 +155,7 @@
 				}
 				
 				function setBoardTitle() {
-					var boardOpener    = window.opener;
+					var boardOpener    = window.opener || window.parent;
 					if (!boardOpener) {showAlert(CabinetMessages.strSelect); return;}
 					
 					var messageFrame   =  boardOpener.document.getElementById("message");
@@ -157,21 +169,21 @@
 				}
 				
 				function setEmailTitle() {
-					var mailOpener = window.opener;
+					var mailOpener = window.opener || window.parent;
 					if (!mailOpener) {showAlert(CabinetMessages.strSelect); return;}
 					
 					return mailOpener.document.getElementById("LabelSubject") ? trimStr(mailOpener.document.getElementById("LabelSubject").textContent) : "";
 				}
 				
 				function setScheduleTitle() {
-					var scheduleOpener = window.opener;
+					var scheduleOpener = window.opener || window.parent;
 					if (!scheduleOpener) {showAlert(CabinetMessages.strSelect); return;}
 					
 					return scheduleOpener.document.getElementById("LabelSubject") ? trimStr(scheduleOpener.document.getElementById("LabelSubject").textContent) : "";
 				}
 				
 				function setCommunityTitle() {
-					var commuOpener = window.opener;
+					var commuOpener = window.opener || window.parent;
 					if (!commuOpener) {showAlert(CabinetMessages.strSelect); return;}
 					var postdate = commuOpener.document.getElementById("PostDate");
 					
@@ -184,21 +196,21 @@
 				}
 				
 				function setOptionTitle() {
-					var optionOpener = window.opener;
+					var optionOpener = window.opener || window.parent;
 					if (!optionOpener) {showAlert(CabinetMessages.strSelect); return;}
 					
 					return optionOpener.document.getElementById("titleTd") ? trimStr(optionOpener.document.getElementById("titleTd").textContent) : "";
 				}
 				
 				function setResourceTitle() {
-					var resourceOpener = window.opener;
+					var resourceOpener = window.opener || window.parent;
 					if (!resourceOpener) {showAlert(CabinetMessages.strSelect); return;}
 					
 					return resourceOpener.document.getElementById("titleDIV") ? trimStr(resourceOpener.document.getElementById("titleDIV").textContent) : "";
 				}
 				
 				function setAddressTitle() {
-					var addressOpener = window.opener;
+					var addressOpener = window.opener || window.parent;
 					if (!addressOpener) {showAlert(CabinetMessages.strSelect); return;}
 					
 					var addressDocument = addressOpener.document;
@@ -206,7 +218,7 @@
 				}
 				
 				function setJournalTitle() {
-					var journalOpener = window.opener;
+					var journalOpener = window.opener || window.parent;
 					if (!journalOpener) {showAlert(CabinetMessages.strSelect); return;}
 					
 					return journalOpener.document.getElementById("cTitle") ? trimStr(journalOpener.document.getElementById("cTitle").textContent) : "";
@@ -269,7 +281,7 @@
 				}
 				
 				function saveEmailDocument(moduleTitle, moduleSummary, saveMode, cabinetId) {
-					var mailOpener   = window.opener;
+					var mailOpener   = window.opener || window.parent;
 					if (!mailOpener) {showAlert(CabinetMessages.strSelect); return;}
 					
 					var mailDate     = mailOpener.document.getElementById("LabelReceiveDate").textContent;
@@ -329,7 +341,7 @@
 				}
 				
 				function saveApprovalDocument(moduleTitle, moduleSummary, saveMode, cabinetId) {
-					var approvalOpener = window.opener;
+					var approvalOpener = window.opener || window.parent;
 					if(!approvalOpener) {showAlert(CabinetMessages.strSelect); return;}
 					var messageFrame   = approvalOpener.document.getElementById("message");
 					var contentWd      = messageFrame.contentWindow || messageFrame.contentDocument;
@@ -386,7 +398,7 @@
 				}
 				
 				function saveBoardDocument(moduleTitle, moduleSummary, saveMode, cabinetId) {
-					var boardOpener   = window.opener;
+					var boardOpener   = window.opener || window.parent;
 					if (!boardOpener) {showAlert(CabinetMessages.strSelect); return;}
 					var messageFrame  =  boardOpener.document.getElementById("message");
 					if (messageFrame) {
@@ -470,7 +482,7 @@
 				}
 				
 				function saveAddressDocument(moduleTitle, moduleSummary, saveMode, cabinetId) {
-					var addressOpener = window.opener;
+					var addressOpener = window.opener || window.parent;
 					if (!addressOpener) {showAlert(CabinetMessages.strSelect); return;}
 					
 					var listMembers = addressOpener.document.getElementById("ListMember");
@@ -485,7 +497,7 @@
 				}
 				
 				function saveCommunityDocument(moduleTitle, moduleSummary, saveMode, cabinetId) {
-					var commuOpener   = window.opener;
+					var commuOpener   = window.opener || window.parent;
 					if (!commuOpener) {showAlert(CabinetMessages.strSelect); return;}
 					
 					var postdate = commuOpener.document.getElementById("PostDate");
@@ -563,7 +575,7 @@
 				}
 				
 				function saveScheduleDocument(moduleTitle, moduleSummary, saveMode, cabinetId) {
-					var scheduleOpener = window.opener;
+					var scheduleOpener = window.opener || window.parent;
 					if (!scheduleOpener) {showAlert(CabinetMessages.strSelect); return;}
 					
 					var scheduleGroup    = "";
@@ -636,7 +648,7 @@
 				}
 				
 				function saveOptionDocument(moduleTitle, moduleSummary, saveMode, cabinetId) {
-					var optionOpener   = window.opener;
+					var optionOpener   = window.opener || window.parent;
 					if (!optionOpener) {showAlert(CabinetMessages.strSelect); return;}
 					
 					var title        = trimStr(optionOpener.document.getElementById("titleTd").textContent);
@@ -673,7 +685,7 @@
 				}
 				
 				function saveJournalDocument(moduleTitle, moduleSummary, saveMode, cabinetId) {
-					var journalOpener = window.opener;
+					var journalOpener = window.opener || window.parent;
 					if (!journalOpener) {showAlert(CabinetMessages.strSelect); return;}
 					
 					var title         = trimStr(journalOpener.document.getElementById("cTitle").textContent);
@@ -720,7 +732,7 @@
 				}
 				
 				function saveResourceDocument(moduleTitle, moduleSummary, saveMode, cabinetId) {
-					var resourceOpener = window.opener;
+					var resourceOpener = window.opener || window.parent;
 					if (!resourceOpener) {showAlert(CabinetMessages.strSelect); return;}
 					
 					var resWriter    = resourceOpener.writerIDVal;

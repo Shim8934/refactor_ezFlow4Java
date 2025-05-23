@@ -2589,10 +2589,13 @@ function decodeHtml(str) {
     return str;
 }
 
-/* 브라우저 기본 대화창 공통 함수 */
-var ezCommon_cross_dialogArguments = new Array(); // 다른 jsp에서 필요한 파라미터 전달용 배열 변수 (보통 [0]은 파라미터, [1]은 callback)
-var ezCommon_cross_dialogParams = new Array(); // callback에서 필요한 파라미터 배열 변수 (ezCommon_cross_dialogArguments[2])
-var ezCommon_cross_openWin = ""; // 새 창(window.open)객체를 저장하는 변수
+/* 브라우저 기본 대화창 공통 변수, 함수 */
+/** 다른 jsp에서 필요한 파라미터 전달용 배열 변수 (보통 [0]은 파라미터, [1]은 callback) */
+var ezCommon_cross_dialogArguments = new Array();
+/** callback에서 필요한 파라미터 배열 변수 (ezCommon_cross_dialogArguments[2]) */
+var ezCommon_cross_dialogParams = new Array();
+/** 새 창(window.open)객체를 저장하는 변수 */
+var ezCommon_cross_openWin = "";
 
 // 사용자 실행 환경이 Teams 데스크톱 앱인지 확인
 function isTeamsDesktop(){
@@ -2605,7 +2608,11 @@ function isTeamsDesktop(){
     }
 }
 
-// alert 보여주기
+/**
+ * alert 보여주기
+ * @param {string} msg - 메시지
+ * @param {boolean} closeParent - 바깥 팝업도 함께 닫아줘야 하는 경우 true
+ */
 function showAlert(msg, closeParent) {
     if (isTeamsDesktop()) {
         // 결재환경설정 페이지에서 요청 시 부모(right)의 showAlert 함수 요청
@@ -2614,17 +2621,12 @@ function showAlert(msg, closeParent) {
             return;
         }
 
-        // 기존에 사용 중인 OpenAlertUI 함수가 있는지 확인
-        if (typeof OpenAlertUI == "function") { // 있는 경우
-            if (hasIframeFunction("OpenAlertUI")) { // 레이어팝업 영역에 동일한 함수 있는지 확인
-                document.getElementById("iFrameLayer").contentWindow["OpenAlertUI"](msg);
-            } else {
-                if (hasIframeFunction("showAlertUI")) { // 레이어팝업 영역에 대체 함수 있는지 확인
-                    document.getElementById("iFrameLayer").contentWindow["showAlertUI"](msg, closeParent);
-                } else {
-                    OpenAlertUI(msg);
-                }
-            }
+        if (hasIframeFunction("OpenAlertUI")) { // 레이어팝업 영역에 동일한 함수 있는지 확인
+            document.getElementById("iFrameLayer").contentWindow["OpenAlertUI"](msg);
+        } else if (hasIframeFunction("showAlertUI")) { // 레이어팝업 영역에 대체 함수 있는지 확인
+            document.getElementById("iFrameLayer").contentWindow["showAlertUI"](msg, closeParent);
+        } else if (typeof OpenAlertUI == "function") { // 기존에 사용 중인 OpenAlertUI 함수가 있는지 확인
+            OpenAlertUI(msg);
         } else { // 없는 경우 현재 js에 있는 대체 함수 요청
             showAlertUI(msg, closeParent);
         }
@@ -2633,7 +2635,10 @@ function showAlert(msg, closeParent) {
     }
 }
 
-// alert 숨기기
+/**
+ * alert 숨기기
+ * @param {boolean} closeParent - 바깥 팝업도 함께 닫아줘야 하는 경우 true
+ */
 function hideAlert(closeParent) {
     DivPopUpHidden();
     ezCommon_cross_dialogArguments.length = 0;
@@ -2643,7 +2648,11 @@ function hideAlert(closeParent) {
     }
 }
 
-// alert 페이지 요청
+/**
+ * alert 페이지 요청
+ * @param {string} msg - 메시지
+ * @param {boolean} closeParent - 바깥 팝업도 함께 닫아줘야 하는 경우 true
+ */
 function showAlertUI(msg, closeParent) {
     // 기존 alert 레이어팝업의 크기보다 부모 레이어팝업이 작은 경우 -20 처리
     var width = 330;
@@ -2661,7 +2670,11 @@ function showAlertUI(msg, closeParent) {
     DivPopUpShow(width, height, "/ezApprovalG/ezAprAlert.do");
 }
 
-// confirm 보여주기
+/**
+ * confirm 보여주기
+ * @param {string} msg - 메시지
+ * @param {() => void} callback - confirm 이후 실행할 콜백 함수
+ */
 function showConfirm(msg, callback) {
     if (isTeamsDesktop()) {
         showConfirmUI(msg, callback);
@@ -2683,7 +2696,11 @@ function hideConfirm() {
     ezCommon_cross_dialogParams.length = 0;
 }
 
-// confirm 페이지 요청
+/**
+ * confirm 페이지 요청
+ * @param {string} msg - 메시지
+ * @param {() => void} callback - confirm 이후 실행할 콜백 함수
+ */
 function showConfirmUI(msg, callback) {
     ezCommon_cross_dialogArguments[0] = msg;
     ezCommon_cross_dialogArguments[1] = callback;
@@ -2699,10 +2716,18 @@ function showPopup(url, width, height, target, feature, callback) {
             ezCommon_cross_dialogArguments.length = 0; // 현재 변수 비우기
             
             parent.document.getElementById("right").contentWindow.showPopup(url, width, height, target, feature, callback);
-            return;
+        } else if (window.name === "mainFrame") { // 결재환경설정 페이지(mainFrame)에서 요청할 경우 right의 레이어팝업이 열리도록 함
+            parent.ezCommon_cross_dialogArguments = ezCommon_cross_dialogArguments.slice();
+            ezCommon_cross_dialogArguments.length = 0;
+
+            parent.showPopup(url, width, height, target, feature, callback);
         } else {
-            ezCommon_cross_dialogArguments[1] = callback;
-            DivPopUpShow(width, height, url);
+            // if (document.documentElement.clientWidth > width 
+            //     && document.documentElement.clientHeight > height
+            // ) {
+                ezCommon_cross_dialogArguments[1] = callback;
+                DivPopUpShow(width, height, url);
+            // } else { }
         }
     } else {
         ezCommon_cross_openWin = window.open(url, target, feature);
@@ -2715,6 +2740,9 @@ function hidePopup(closeParent) {
     if (isTeamsDesktop()) {
         if (window.name === "left") {
             parent.document.getElementById("right").contentWindow.hidePopup();
+            return;
+        } else if (window.name === "mainFrame") {
+            parent.hidePopup();
             return;
         } else {
             DivPopUpHidden();
@@ -2743,12 +2771,13 @@ function isParentCommonArgsUsed() {
     }
 }
 
-// 자식 레이어팝업에 동일한 함수가 존재하는지 확인
+// 자식 레이어팝업이 존재하고 동일한 함수가 존재하는지 확인
 function hasIframeFunction(funcName) {
     var iframe = document.getElementById("iFrameLayer");
     
     if (iframe
         && iframe.contentWindow
+        && iframe.contentWindow.document.getElementById("iFrameLayer")
         && typeof iframe.contentWindow[funcName] === "function"
     ) {
         return true;
@@ -2797,12 +2826,17 @@ function hidePopupSlide(closeParent) {
 function DivPopUpShowSlide(popUpW, popUpH, URL) {
     try {
         document.getElementById("iFrameLayer").src = URL;
-        document.getElementById("iFramePanel").style.top = "0px";
+
+        document.getElementById("iFramePanel").classList.remove("layerpopup");
+        document.getElementById("iFramePanel").classList.add("layerpopup_slider");
+        document.getElementById("iFramePanel").classList.add("active");
+
+        // document.getElementById("iFramePanel").style.top = "0px";
         document.getElementById("iFramePanel").style.left = "";
-        document.getElementById("iFramePanel").style.right = "0px";
-        document.getElementById("iFramePanel").style.height = "100%";
-        document.getElementById("iFrameLayer").style.width = "1200px";
-        document.getElementById("iFrameLayer").style.height = "99%";
+        // document.getElementById("iFramePanel").style.right = "0px";
+        // document.getElementById("iFramePanel").style.height = "100%";
+        document.getElementById("iFrameLayer").style.width = "100%";
+        document.getElementById("iFrameLayer").style.height = "100%";
         //2020-05-06 : right frame 리스트에서 divPopup 사용 시 left frame 영역도 적용
         try {
             if (typeof(window.parent.frames.left) == "object") {
@@ -2819,15 +2853,94 @@ function DivPopUpShowSlide(popUpW, popUpH, URL) {
 
 function DivPopUpHiddenSlide() {
     try {
-        //2020-05-06 : right frame 리스트에서 divPopup 사용 시 left frame 영역도 적용
-        try {
-            if (typeof(window.parent.frames.left) == "object") {
-                window.parent.frames.left.document.getElementById("mailPanel_left").style.display = "none";
-            }
-        } catch(e) { }
-        document.getElementById("mailPanel").style.display = "none";
-        document.getElementById("iFramePanel").style.display = "none";
-        document.getElementById("iFramePanel").style.right = ""; // right 속성 초기화
-        document.getElementById("iFrameLayer").src = "/blank.htm";
+        document.getElementById("iFramePanel").classList.remove("active");
+
+        setTimeout(function() {
+            //2020-05-06 : right frame 리스트에서 divPopup 사용 시 left frame 영역도 적용
+            try {
+                if (typeof(window.parent.frames.left) == "object") {
+                    window.parent.frames.left.document.getElementById("mailPanel_left").style.display = "none";
+                }
+            } catch(e) {}
+            document.getElementById("mailPanel").style.display = "none";
+            document.getElementById("iFramePanel").style.display = "none";
+            // document.getElementById("iFramePanel").style.right = ""; // right 속성 초기화
+            document.getElementById("iFrameLayer").src = "/blank.htm";
+
+            document.getElementById("iFramePanel").classList.remove("layerpopup_slider");
+            document.getElementById("iFramePanel").classList.add("layerpopup");
+        }, 500);
     } catch (e) {}
+}
+
+// jsp에서 alert, confirm을 mailPanel_sub, iFramePanel_sub로 사용하는 경우를 위해 분리
+// alert 보여주기
+function showAlert_sub(msg) {
+    if (isTeamsDesktop()) {
+        showAlertUI_sub(msg);
+    } else {
+        alert(msg);
+    }
+}
+
+// alert 숨기기
+function hideAlert_sub() {
+    DivPopUpHidden_sub();
+    ezCommon_cross_dialogArguments.length = 0;
+    ezCommon_cross_dialogParams.length = 0;
+}
+
+// alert 페이지 요청
+function showAlertUI_sub(msg) {
+    // 기존 alert 레이어팝업의 크기보다 부모 레이어팝업이 작은 경우 -20 처리
+    var width = 330;
+    var height = 205;
+    if (width > document.documentElement.clientWidth) {
+        width = document.documentElement.clientWidth - 20;
+    }
+    if (height > document.documentElement.clientHeight) {
+        height = document.documentElement.clientHeight - 20;
+    }
+
+    ezCommon_cross_dialogArguments[0] = msg;
+    ezCommon_cross_dialogArguments[1] = hideAlert_sub;
+    DivPopUpShow_sub(width, height, "/ezApprovalG/ezAprAlert.do");
+}
+
+// confirm 보여주기
+function showConfirm_sub(msg, callback) {
+    if (isTeamsDesktop()) {
+        showConfirmUI_sub(msg, callback);
+    } else {
+        if (confirm(msg)) {
+            callback(true);
+        } else {
+            callback(false);
+        }
+    }
+}
+
+// confirm 숨기기
+function hideConfirm_sub() {
+    if (isTeamsDesktop()) {
+        DivPopUpHidden_sub();
+    }
+    ezCommon_cross_dialogArguments.length = 0;
+    ezCommon_cross_dialogParams.length = 0;
+}
+
+// confirm 페이지 요청
+function showConfirmUI_sub(msg, callback) {
+    ezCommon_cross_dialogArguments[0] = msg;
+    ezCommon_cross_dialogArguments[1] = callback;
+    ezCommon_cross_dialogArguments[2] = ezCommon_cross_dialogParams;
+    DivPopUpShow_sub(330, 205, "/ezCommon/ezConfirm.do");
+}
+
+// X버튼 온클릭 메소드
+function btnClose_onclick() {
+    if (typeof ReturnFunction == "function") {
+        ReturnFunction("cancel");
+    }
+    window.close();
 }

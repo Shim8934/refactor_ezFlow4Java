@@ -257,7 +257,7 @@
 			var curDocID = "";
 			var draftAllFlag = "<c:out value ='${draftAllFlag}'/>";
 			var pDocIDAry = new Array();
-			var receiptFlag = opener.receiptFlag;
+			var receiptFlag = opener != null ? opener.receiptFlag : parent.receiptFlag;
 
 			var doctitle;
 
@@ -2990,7 +2990,7 @@
 		</div>
 	    <div id="close">
             <ul>
-                <li><span onclick="window.close()"></span></li>
+                <li><span onclick="btn_Close()"></span></li>
             </ul>
         </div>
 	    <div class="portlet_tabpart02" style="margin: 5px 0px 15px">

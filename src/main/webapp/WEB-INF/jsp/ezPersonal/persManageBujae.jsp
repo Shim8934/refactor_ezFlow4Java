@@ -248,7 +248,7 @@
 		 	    var date = String(yy) +"-"+ String(mm) +"-"+ String(dd);
 		 	    return date;
 			}
-			var selectperson_cross_dialogArguments = new Array();
+			// var selectperson_cross_dialogArguments = new Array();
 			var type_Complete;
 			var NoneActiveX = "YES";
 			function select_person(type, tagName) {
@@ -259,9 +259,10 @@
 				
 			    type_Complete = type;
 			    if (CrossYN() || NoneActiveX == "YES") {
-			        selectperson_cross_dialogArguments[1] = select_person_Complete;
-			        var OpenWin = window.open("/ezPersonal/selectPerson.do?type=" + type + "&dept=" + selectedDept + "&tagName=" + tagName, "SelectPerson_cross", GetOpenWindowfeature(860, 535));
-			        try { OpenWin.focus(); } catch (e) { }
+			        // selectperson_cross_dialogArguments[1] = select_person_Complete;
+			        // var OpenWin = window.open("/ezPersonal/selectPerson.do?type=" + type + "&dept=" + selectedDept + "&tagName=" + tagName, "SelectPerson_cross", GetOpenWindowfeature(860, 535));
+			        // try { OpenWin.focus(); } catch (e) { }
+					showPopup("/ezPersonal/selectPerson.do?type=" + type + "&dept=" + selectedDept + "&tagName=" + tagName, 860, 535, "SelectPerson_cross", GetOpenWindowfeature(860, 535), select_person_Complete);
 			    }
 			    else {
 			        debugger;
@@ -280,7 +281,12 @@
 			        }
 			    }
 			}
-			function select_person_Complete(rtnValue) {
+			function select_person_Complete(rtnValue, tagName) {
+				hidePopup();
+				if (rtnValue == "cancel") {
+					return;
+				}
+				
 				if (typeof (rtnValue) != "undefined" && type_Complete == "") {
 			        userid = rtnValue.userId;
                     document.getElementById(rtnValue.tagName).value = rtnValue.userName;

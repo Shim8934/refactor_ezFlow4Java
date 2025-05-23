@@ -167,6 +167,7 @@
 			var upperDeptCode = "<c:out value ='${upperDeptCode}'/>";
 			var upperDeptName = "<c:out value ='${upperDeptName}'/>";
 			var allowDeptIDs = "<c:out value ='${allowDeptIDs}'/>"
+			var ReturnFunction;
 
 		    function process_AfterOpen() {
 		        try {
@@ -317,6 +318,12 @@
 	        }
 		    
 		    function window_onload() {
+				try {
+					if (isParentCommonArgsUsed()) {
+						ReturnFunction = parent.ezCommon_cross_dialogArguments[1];
+					}
+				} catch (e) { }
+				
 				var chkReceivedDoc = 0;
 				
 		    	//접수된 문서인지 확인하기
@@ -335,7 +342,8 @@
 		    	
 		    	if (chkReceivedDoc != 0) {
 		        	alert("<spring:message code='ezApprovalG.pjg04'/>");
-		        	window.close();
+		        	// window.close();
+					btnClose_onclick();
 		    	} else {
 		    		window_onload2();
 		    	}
@@ -1055,9 +1063,9 @@
 				  message.PrintDocument();
 			  }
 			
-			  function btnClose_onclick() {
-			      window.close();
-			  }
+			  // function btnClose_onclick() {
+			  //     window.close();
+			  // }
 		
 			  function window_onbeforeunload() {
 			      try {

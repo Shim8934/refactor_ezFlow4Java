@@ -883,7 +883,7 @@
 				                	openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
 			                	} else {
 			                		var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
-				                    alert(pAlertContent);
+				                    showAlert(pAlertContent);
 				                    
 				                    return;
 			                	}
@@ -933,7 +933,7 @@
 		                openUserInfo();
 		                break;
 		            case "2":
-						var win;
+						// var win;
 						if (pListTypeValue == "99" || pListTypeValue == "10") {
 							var heigth = window.screen.availHeight;
 							var width = window.screen.availWidth;
@@ -943,18 +943,21 @@
 
 							if (isExtYN.toUpperCase() == "Y") {
 								var url = "/ezApprovalG/ezReceiptHistoryInfo.do?docID=" + tr.getAttribute("DATA2") + "&deptID=" + encodeURI(tr.getAttribute("DATA1"));
-								win = window.open(url, "", "height=300px,width=855px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+								// win = window.open(url, "", "height=300px,width=855px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+								showPopup(url, 855, 300, "", "height=300px,width=855px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1", hidePopup);
 							} else {
 								left = (parseInt(width) - 1155) / 2;
 								top = (parseInt(heigth) - 460) / 2;
-								win = window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr.getAttribute("DATA2") + "&deptID=" + encodeURI(tr.getAttribute("DATA1")) + "&docState=011" + "&aprState=" + escape(tr.getAttribute("DATA4")), "", "height=460px,width=1155px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+								// win = window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr.getAttribute("DATA2") + "&deptID=" + encodeURI(tr.getAttribute("DATA1")) + "&docState=011" + "&aprState=" + escape(tr.getAttribute("DATA4")), "", "height=460px,width=1155px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+								showPopup("/ezApprovalG/ezLineInfo.do?docID=" + tr.getAttribute("DATA2") + "&deptID=" + encodeURI(tr.getAttribute("DATA1")) + "&docState=011" + "&aprState=" + escape(tr.getAttribute("DATA4")), 1155, 460, "", "height=460px,width=1155px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 							}
 						} else {
 							var url = "/ezApprovalG/ezReceiptInfoIng.do?docId=" + tr.getAttribute("DATA2") + "&receiptId=" + tr.getAttribute("DATA1") + "&receiptName=" + encodeURIComponent(tr.getAttribute("DATA10"));
-							win = window.open(url, "", GetOpenWindowfeature(1155, 460, false));
+							// win = window.open(url, "", GetOpenWindowfeature(1155, 460, false));
+							showPopup(url, 1155, 460, "", GetOpenWindowfeature(1155, 460, false), hidePopup);
 						}
 
-						try { win.focus(); } catch (e) {}
+						// try { win.focus(); } catch (e) {}
 		                break;
 		            case "4":
 		            	var AttachfilenameA1 = tr.cells[1].innerHTML;
@@ -1002,7 +1005,7 @@
 		                                    		openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
 		                                    	} else {
 		                                    		var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
-		                		                	alert(pAlertContent);
+		                		                	showAlert(pAlertContent);
 		                		                	return;
 		                                    	}
 	                                    	} else {
@@ -1012,7 +1015,8 @@
 	                                    	openLocation = "/ezApprovalG/contDocView.do";
 	                                    }
 	                                    openLocation += "?docID=" + docID + "&docHref=" + AttachUrl + "&formID=&orgDocID=";
-	                                    openwindow(openLocation, "", 880, 570);
+	                                    // openwindow(openLocation, "", 880, 570);
+										showPopupSlide(openLocation, 880, 570, "", "", hidePopupSlide, openwindow);
 									} else {
 	                                    window.open("/ezApprovalG/downloadAttach.do?fileName=" + Attachfilename + "&filePath=" + AttachUrl, "_self");
 	                                }
@@ -2398,7 +2402,7 @@
 							showAlert(strLang1103);
 			                return;
 			            } else if (!isIE()) {
-							alert("한글양식은 IE에서만 발송할 수 있습니다.");
+							showAlert("한글양식은 IE에서만 발송할 수 있습니다.");
 							return;
 			            } else {
 			                openLocation = "/ezApprovalG/ezSimsaG_HWP.do";
@@ -3346,7 +3350,8 @@
 					var iframePrev = document.getElementById("ifrmPreViewH");
 					if (iframePrev != null) {
 						var openLocation = iframePrev.src.replace("&isPreview=Y", ""); // 미리보기가 아닌 팝업으로 열게 되므로, url 수정
-						openwindow(openLocation, "", 880, 570);
+						// openwindow(openLocation, "", 880, 570);
+						showPopupSlide(openLocation, 880, 570, "", "", hidePopupSlide, openwindow);
 					}
 				}
 			}
@@ -3549,9 +3554,10 @@
 			}
 			
 			function btnRemoveDoc_onclick_afterConfirm(rtn) {
+				var oArrRows = ezCommon_cross_dialogParams[0];
+				hideConfirm();
 				/* 2020-08-27 홍승비 - 체크박스로 다중선택된 반송(004), 회송(015), 회수(006)문서의 다중삭제가 가능하도록 수정 */
 				if (rtn) {
-					var oArrRows = ezCommon_cross_dialogParams[0];
 					var pCurSelRow = "";
 					var pFunctionType = "";
 					var pDocState = "";
@@ -3615,7 +3621,6 @@
 
 					parent.frames["left"].getAprCount();
 				}
-				hideConfirm();
 			}
 		</script>
 	</head>

@@ -128,7 +128,16 @@
 			/* 2024-07-18 양지혜 - 상위부서문서함 관련 */
 			var upperDeptCode = "<c:out value ='${upperDeptCode}'/>";
 			var allowDeptIDs = "<c:out value ='${allowDeptIDs}'/>"
+			var ReturnFunction;
 
+			$(function () {
+				try {
+					if (isParentCommonArgsUsed()) {
+						ReturnFunction = parent.ezCommon_cross_dialogArguments[1];
+					}
+				} catch (e) { }
+			});
+			
 		    function process_AfterOpen() {
 		        try {
 		            if (pFormHref == "") {
@@ -437,9 +446,9 @@
 		    function btnPrint_onclick() {
 		        PrintClick("Cross", pDocID, "");
 		    }
-		    function btnClose_onclick() {
-		        window.close();
-		    }
+		    // function btnClose_onclick() {
+		    //     window.close();
+		    // }
 		    window.onbeforeunload = function () {
 		        try {
 		            window.opener.openergetDocInfo();

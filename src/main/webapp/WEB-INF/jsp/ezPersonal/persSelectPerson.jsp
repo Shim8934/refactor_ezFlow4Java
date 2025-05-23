@@ -32,7 +32,11 @@
 		    var companyID = "${companyID}";
 		    window.onload = function () {
 		        try {
-		            ReturnFunction = parent.selectperson_cross_dialogArguments[1];
+		            if (isParentCommonArgsUsed()) {
+						ReturnFunction = parent.ezCommon_cross_dialogArguments[1];
+					} else {
+						ReturnFunction = parent.selectperson_cross_dialogArguments[1];
+					}
 		        } catch (e) {
 		            try {
 		                ReturnFunction = opener.selectperson_cross_dialogArguments[1];
@@ -239,7 +243,7 @@
 		    		}        			
 		    	});
 		    }
-		    var checkname2_cross_dialogArguments = new Array();
+		    // var checkname2_cross_dialogArguments = new Array();
 		    var rgParams = new Array();
 		    function deptsearch_click() {
 		    	if (specialChk(document.getElementById("deptkeyword").value)) {
@@ -304,10 +308,12 @@
 		
 		
 		            if (CrossYN()) {
-		                checkname2_cross_dialogArguments[0] = rgParams;
-		                checkname2_cross_dialogArguments[1] = deptsearch_click_Complete;
-		                var OpenWin = window.open("/ezPersonal/checkName2.do", "checkName2_cross", GetOpenWindowfeature(600, 350));
-		                try { OpenWin.focus(); } catch (e) { }
+		                // checkname2_cross_dialogArguments[0] = rgParams;
+		                // checkname2_cross_dialogArguments[1] = deptsearch_click_Complete;
+		                // var OpenWin = window.open("/ezPersonal/checkName2.do", "checkName2_cross", GetOpenWindowfeature(600, 350));
+		                // try { OpenWin.focus(); } catch (e) { }
+						ezCommon_cross_dialogArguments[0] = rgParams;
+						showPopup("/ezPersonal/checkName2.do", 600, 350, "checkName2_cross", GetOpenWindowfeature(600, 350), deptsearch_click_Complete);
 		            }
 		            else {
 		                window.showModalDialog("/ezPersonal/checkName2.do", rgParams, feature);
@@ -330,6 +336,11 @@
 		        }
 		    }
 		    function deptsearch_click_Complete() {
+				hidePopup();
+				if (rgParams["recipientTDData"] == "dontprocess") {
+					return;
+				}
+				
 		        if (rgParams["deptid"] != "") {
 		            bSearch = true;
 		            
@@ -429,7 +440,8 @@
 		        } else {
                     window.returnValue = rtnJson;
 		        }
-		        window.close();
+		        // window.close();
+				btnClose_onclick();
 		    }
 		</script>
 		<style>
@@ -490,7 +502,7 @@
 		<div id="close">
 			<ul>
 				<li>
-					<span onClick="window.close()" style="cursor:pointer"></span>
+					<span onClick="btnClose_onclick()" style="cursor:pointer"></span>
 				</li>
 			</ul>
 		</div>
