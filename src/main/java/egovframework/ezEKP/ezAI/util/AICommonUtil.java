@@ -85,4 +85,18 @@ public class AICommonUtil {
         
         return personalTimezone;
     }
+
+    public String getLangFromNum(String langNum) throws Exception {
+        if (langNum == null || langNum.trim().isEmpty()) {
+            return "ko";
+        }
+
+        switch (langNum) {
+            case "1": return "ko";
+            case "2": return "en";
+            case "3": return "ja";
+            case "4": return "zh";
+            default: return "ko";
+        }
+    }
 }

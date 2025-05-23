@@ -82,7 +82,7 @@ public class EzAIGWController {
             // 사용자 정보, AIRequestVO 빌드
             LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
             
-            String lang = userInfo.getLang();
+            String lang = aiCommonUtil.getLangFromNum(userInfo.getLang());
             String timezone = aiCommonUtil.getPersonalTimezone(userInfo.getId(), userInfo.getTenantId());
          
             // frontend에서 받아오는 모든 param AIPayloadVO로 mapping
