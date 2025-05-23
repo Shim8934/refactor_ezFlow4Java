@@ -68,11 +68,11 @@
 <table class="content" style="margin-top: 3px">
     <tr>
         <th><spring:message code="ezEmail.zipEncryptedFile.004" /></th>
-        <td><input id=newZipFilePassword type=password style="width:98%" maxlength="50"></td>
+        <td><input id=newZipFilePassword type=password style="width:98%" maxlength="20"></td>
     </tr>
     <tr>
         <th><spring:message code="ezEmail.zipEncryptedFile.005" /></th>
-        <td><input id=confirmZipFilePassword type=password style="width:98%" maxlength="50"></td>
+        <td><input id=confirmZipFilePassword type=password style="width:98%" maxlength="20"></td>
     </tr>
 </table>
 <div class="btnpositionNew">
