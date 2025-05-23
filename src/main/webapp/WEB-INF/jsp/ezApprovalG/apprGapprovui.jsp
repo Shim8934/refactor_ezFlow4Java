@@ -837,7 +837,7 @@
 		        } catch (e) {
 		        }
 		    }
-		        
+        
 		    function check_openSingUI() {
 		        var ret = "NAME";
 		        if ((pAprLineType != strAprType2) && (pAprLineType != strAprType7) && (pAprLineType != strAprType15) && (pAprLineType != strAprType17)) {

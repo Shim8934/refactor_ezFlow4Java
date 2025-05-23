@@ -24,13 +24,6 @@
 					ReturnFunction = parent.ezCommon_cross_dialogArguments[1];
 				}
 			}
-
-			function btnClose_onclick() {
-				if (ReturnFunction != null) {
-					ReturnFunction("cancel");
-				}
-				window.close();
-			}
 		</script>
 	</head>
 	<body class="popup" style="overflow:hidden;">
