@@ -887,6 +887,8 @@ public class CommonUtil {
 
 		if (loginCookie == null) {
 			result = "2";
+			
+			return result;
 		}
 
 		try {
