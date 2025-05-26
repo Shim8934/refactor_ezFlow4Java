@@ -522,17 +522,17 @@ var filelist;
 var isfileup = false;
 var filedate = new Date().getTime().toString(); // 파일 업로드 타임스탬프
 
-function btnfileup() {
+function aiBtnfileup() {
     document.getElementById("file").click();
 }
 
-function filechange(e) {
+function aiFilechange(e) {
     if (!document.getElementById("file").value == "") {
         onDrop();
     }
 }
 
-function onDrop(evt) {
+function aiOnDrop(evt) {
     if (evt != undefined) {
         evt.stopPropagation();
         evt.preventDefault();
@@ -603,7 +603,7 @@ function onDrop(evt) {
 
     filesize += tempfilesize;
 
-    fileupload();
+    aiFileupload();
 
     if (CrossYN()) {
         if (navigator.userAgent.search('Trident') != -1) { //IE 11
@@ -621,7 +621,7 @@ function onDrop(evt) {
 
 var attachedFileNameFilteringArr = [];
 
-function fileupload() {
+function aiFileupload() {
     isfileup = true;
 
     var fd = new FormData();
@@ -653,7 +653,7 @@ function fileupload() {
             }
 
             if (!validFilteringFileName) {
-                fileNameFiltering(attachedFileNameFilteringArr);
+                aiFileNameFiltering(attachedFileNameFilteringArr);
                 isfileup = false;
                 return;
             }
@@ -678,7 +678,7 @@ function fileupload() {
                 try {
                     const response = JSON.parse(xhr.responseText);
                     if (Array.isArray(response)) {
-                        renderUploadedFiles(response); // 성공적으로 파일을 받으면 UI 갱신
+                        aiRenderUploadedFiles(response); // 성공적으로 파일을 받으면 UI 갱신
                     } else {
                         toast(msgErrUpload).error();
                     }
@@ -693,7 +693,7 @@ function fileupload() {
     };
 }
 
-function renderUploadedFiles(newFiles) {
+function aiRenderUploadedFiles(newFiles) {
     const uploadFileDiv = document.querySelector(".upload_file");
 
     // fileCount 버튼 처리
@@ -722,7 +722,7 @@ function renderUploadedFiles(newFiles) {
     });
 }
 
-function removeFile(obj) {
+function aiRemoveFile(obj) {
     if (!obj) {
         return;
     }
@@ -738,12 +738,12 @@ function removeFile(obj) {
         delObj.remove();
 
         // 삭제 후, 남은 파일 개수 업데이트
-        updateFileCount(refDocumentsContainerObj);
+        aiUpdateFileCount(refDocumentsContainerObj);
     }
 }
 
 // 파일 개수 업데이트 함수
-function updateFileCount(refDocumentsContainerObj) {
+function aiUpdateFileCount(refDocumentsContainerObj) {
     var remainingFiles = refDocumentsContainerObj.querySelectorAll("span");
     var fileCount = remainingFiles.length;  // 현재 남아있는 파일 개수
     
