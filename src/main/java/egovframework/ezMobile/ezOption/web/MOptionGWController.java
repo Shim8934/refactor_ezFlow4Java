@@ -187,7 +187,7 @@ public class MOptionGWController extends EzFileMngUtil {
 			String lang = jsonObject.get("lang").toString();
 			String mainType = jsonObject.get("mainType").toString();
 			String listCnt = jsonObject.get("listCnt").toString();
-			String useSecurity = "";
+			String useSecurity = "N";
 			if (jsonObject.get("useSecurity") != null){
 				useSecurity = jsonObject.get("useSecurity").toString();
 			}
