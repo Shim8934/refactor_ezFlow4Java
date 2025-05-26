@@ -1670,7 +1670,6 @@
 	</update>
 	
 	<select id="EzCommonDAO.checkDeptId" parameterClass="Map" resultClass="int">
-	<![CDATA[
 		SELECT 
 			COUNT(DEPTID) 
 		FROM 
@@ -1699,9 +1698,12 @@
 				TENANT_ID = #tenantID#) D
 		WHERE 
 			D.DEPTID = #deptID#
-		AND
-			D.JOBID = #jobID#
-	]]>
+		<isNotEmpty property="jobID">
+			AND D.JOBID = #jobID#
+		</isNotEmpty>
+		<isEmpty property="jobID">
+			AND D.JOBID IS NULL
+		</isEmpty>
 	</select>
 
 	<select id="EzCommonDAO.checkTblRsFavorite" resultClass="String">
