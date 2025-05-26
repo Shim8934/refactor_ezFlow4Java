@@ -1453,6 +1453,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 				Map<String, Object> resMap = new HashMap<String, Object>();
 				resMap.put("surveyId", surveyId);
 				resMap.put("userId", userInfo.getId());
+				resMap.put("tenantId", userInfo.getTenantId());
 				
 				ezSurveyDAO.deleteRespondents(resMap);
 				ezSurveyDAO.deleteResponseItems(resMap);
@@ -1991,5 +1992,16 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		
 		logger.debug("checkEditingState ended");
 		return res;
+	}
+
+	@Override
+	public void deleteResponseItem(long surveyId, LoginVO userInfo) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("surveyId", surveyId);
+		map.put("userId", userInfo.getId());
+		map.put("tenantId", userInfo.getTenantId());
+
+		ezSurveyDAO.deleteRespondents(map);
+		ezSurveyDAO.deleteResponseItems(map);
 	}
 }

@@ -933,4 +933,38 @@ public class EzSurveyGWController {
 		
 		return result;
 	}
+	
+	@RequestMapping(value="/rest/ezsurvey/response-item/delete", method=RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject deleteResponse(@RequestBody JSONObject responseItem, HttpServletRequest request) throws Exception {
+		JSONObject result   = new JSONObject();
+		JSONParser jp       = new JSONParser();
+
+		try {
+			JSONObject response  = (JSONObject) jp.parse(responseItem.toJSONString());
+			long surveyId        = response.get("surveyId")           != null ? (Long)response.get("surveyId")        : -1;
+			String serverName    = request.getHeader("host-name")  != null ? request.getHeader("host-name")  	  : "";
+			String userId        = responseItem.get("userId")         != null ? responseItem.get("userId").toString() : "";
+
+			logger.debug("ServerName: " + serverName + " ||  userId: " + userId + " || surveyId: " + surveyId);
+
+			if ("".equals(serverName) || "".equals(userId)) {
+				logger.debug("Parameter error!");
+				result.put("status", "error");
+				result.put("code", 1);
+				return result;
+			}
+
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			surveyService.deleteResponseItem(surveyId, userInfo);
+			result.put("status", "ok");
+			result.put("code", 9);
+
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+
+		return result;
+	}
 }

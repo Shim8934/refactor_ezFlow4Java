@@ -454,4 +454,13 @@ public class EzSurveyRestServiceImpl implements EzSurveyRestService {
 		return resultBody;
 	}
 
+	@Override
+	public JSONObject deleteResponse(HttpServletRequest request, JSONObject responseItem) throws Exception {
+		String url            = "/rest/ezsurvey/response-item/delete";
+		logger.debug(responseItem.toJSONString());
+
+		JSONObject resultBody = getJsonResult(url, null, request, "put", responseItem);
+		return resultBody;
+	}
+
 }

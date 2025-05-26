@@ -1567,4 +1567,18 @@ public class EzSurveyController extends EgovFileMngUtil {
 			return "NO";
 		}
 	}
+
+	@RequestMapping(value="/ezSurvey/deleteResponse.do", method = RequestMethod.POST)
+	@ResponseBody
+	public JSONObject jsonDeleteResponse(@RequestBody JSONObject responseItem, @CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("jsonDeleteResponse started");
+
+		LoginSimpleVO user = loginCookie != null ? commonUtil.userInfoSimple(loginCookie) : new LoginSimpleVO();
+		responseItem.put("userId", user.getId());
+
+		JSONObject resultObj = surveyRestService.deleteResponse(request, responseItem);
+
+		logger.debug("jsonDeleteResponse ended");
+		return resultObj;
+	}
 }

@@ -1462,6 +1462,8 @@
 				survey_id = #surveyId# 
 			and 
 				user_id = #userId#
+			and
+			    tenant_id = #tenantId#
 		]]>
 	</delete>
 	
@@ -1528,6 +1530,8 @@
 				survey_id = #surveyId# 
 			and 
 				user_id = #userId#
+			and
+			    tenant_id = #tenantId#
 		]]>
 	</delete>
 	

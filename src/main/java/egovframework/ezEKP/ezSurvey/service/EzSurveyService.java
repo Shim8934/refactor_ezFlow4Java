@@ -76,4 +76,6 @@ public interface EzSurveyService {
 	public void updateTotalNotiSentFlag(long surveyId, int mailSentFlag, String companyId, int tenantId) throws Exception;
 
 	public int checkEditingState(long surveyId, String companyId, int tenantId) throws Exception;
+	// 2025-05-23 양지혜 - 설문 > 응답삭제
+    public void deleteResponseItem(long surveyId, LoginVO userInfo) throws Exception;
 }

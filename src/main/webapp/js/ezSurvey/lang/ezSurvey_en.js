@@ -194,5 +194,7 @@ var SurveyMessages = {
     strLangPGB02 : "non-participation",
     strNumber : "Type",
 	strEditingErr : "The survey is currently being edited. Your response cannot be saved.",
-	strDeletedErr : "Survey no longer exists. Response could not be saved. Back to the list."
+	strDeletedErr : "Survey no longer exists. Response could not be saved. Back to the list.",
+	strDelResponse : "Delete your response? The survey status will change to not participated.",
+	strDelEnd : "Your response has been deleted."
 }

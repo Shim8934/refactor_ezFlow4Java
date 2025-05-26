@@ -45,7 +45,8 @@
 					<li class="off"><span id="suvyDlt"><spring:message code="ezSurvey.t21"/></span></li>
 				</c:if>
 				<c:if test="${(survey.draftFlag ne 1) && (participation eq 'yes') && (survey.multiAnswerFlag eq 0) && (resStatus eq true)}">
-					<li class="off"><span id="suvyUdt"><spring:message code="ezSurvey.t78"/></span></li>
+					<li class="off"><span id="suvyUdt"><spring:message code="ezSurvey.t118"/></span></li>
+					<li class="off"><span id="suvyDel"><spring:message code="ezSurvey.t117"/></span></li>
 				</c:if>
 			</ul>
 		</div>
@@ -621,6 +622,9 @@
 			var updateBttn = document.getElementById("suvyUdt");
 			if (updateBttn) {updateBttn.onclick = function(e) {saveSurveyResponses();};}
 
+			var deleteBttn = document.getElementById("suvyDel");
+			if (updateBttn) {deleteBttn.onclick = function(e) {deleteSurveyResponses();};}
+			
 			// 20.05.06 강승구 : 설문응답여부에 따른 처리 코드추가
 			checkQuestionAnswer();
 			isFirstEvent = false;
@@ -802,6 +806,27 @@
 				resposeObj.responses = [];
 			}
 		}
+
+		/* 2025-05-23 양지혜 - 응답삭제 */
+		function deleteSurveyResponses() {
+			if (confirm(SurveyMessages.strDelResponse)) {
+				$.ajax({
+					type: "POST",
+					url: "/ezSurvey/deleteResponse.do",
+					data: JSON.stringify(resposeObj),
+					contentType: "application/json; charset=utf-8",
+					dataType: "JSON",
+					async: false,
+					cache: false,
+					success : function(data) {
+						afterSaveSuccessfully(data);
+					},
+					error : function() {
+						alert(SurveyMessages.strError);
+					}
+				});
+			};
+		}
 		
 		function refreshOpenerAndClose(closeYN) {
 			if (window.opener.reloadSurveyPage != undefined) {
@@ -818,6 +843,8 @@
 
 			if (closeYN == 'Y') {
 				window.close();
+			} else {
+				window.location.reload();
 			}
 		}
 		
@@ -836,6 +863,7 @@
 					resposeObj.responses = []; 
 					refreshOpenerAndClose("Y"); 
 					break;
+				case 9 : alert(SurveyMessages.strDelEnd)	; resposeObj.responses = []; refreshOpenerAndClose("N"); break;
 				default: alert(SurveyMessages.strError)     ; resposeObj.responses = []; return;
 			}
 		}
