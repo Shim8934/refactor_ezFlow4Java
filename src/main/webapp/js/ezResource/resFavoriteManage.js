@@ -130,8 +130,11 @@ function getMainTreeUI(catList, treeMain) {
                 // if (!lang) {
                 //     lang = "";
                 // } 
-                
-                brdNode.innerHTML = brdList[j]["brdNm" + lang];
+                if(lang == '1'){
+                    brdNode.innerHTML = brdList[j]["brdNm"];
+                }else{
+                    brdNode.innerHTML = brdList[j]["brdNm2"];
+                }
                 brdNode.classList.add("node_normal");
                 brdNode.classList.add("brd_node");
                 brdNode.style.cursor = "pointer";
