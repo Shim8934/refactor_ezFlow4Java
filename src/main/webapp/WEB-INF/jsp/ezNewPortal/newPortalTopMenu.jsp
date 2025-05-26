@@ -570,7 +570,7 @@
 			}
 			/* document.getElementById("util_frmae").addEventListener("click", viewPortletEnv); */
 			/*통합검색*/
-			if ('YES' === 'YES') {				
+			if ('${useTotalSearch}' === 'YES') {				
 				document.getElementById("topsearch_btn").addEventListener("keydown", totalSearch_key_event);
 			}
 			
