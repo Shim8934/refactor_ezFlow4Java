@@ -811,7 +811,7 @@ public class EzTalkGateController {
 			String encryptedPw = EgovFileScrty.encryptPassword(pw, resultVO.getId());
 
 			logger.debug("encryptedPw=" + encryptedPw);
-
+			loginVO.setDn("PASSWORD");
 			loginVO.setPassword(encryptedPw);
 		}
 		
