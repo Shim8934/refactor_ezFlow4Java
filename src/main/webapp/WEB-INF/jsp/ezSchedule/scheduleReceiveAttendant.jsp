@@ -412,7 +412,7 @@
 	            </ul>
 	        </div> 
 	
-	        <div id="receivelist" style="OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:100%;">
+	        <div id="receivelist" style="OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:100%; max-height: 370px;">
 	            <table class="popuplist" style="WIDTH: 100%">
 	                <tr>
 	                    <th style="white-space:nowrap; text-align:center; width:20px"><spring:message code='ezSchedule.t190' /></th> 
