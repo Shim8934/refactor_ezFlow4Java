@@ -96,7 +96,7 @@
 	  			<h2 class="on"><span class="h2Title" style="display:inline-block;width:100%;" onClick="goPage(2)"><spring:message code='ezSchedule.t36' /></span></h2>
 	  			<h2><span class="h2Title" style="display:inline-block;width:100%;" onClick="goPage(3)"><spring:message code='ezSchedule.t4003' /></span></h2>
 	  			<c:if test="${lang != 3}">
-		  			<h2><span style="display:inline-block;width:100%;" onClick="goPage(4)"><spring:message code='ezSchedule.t6000' /></span></h2>
+		  			<h2><span class="h2Title" style="display:inline-block;width:100%;" onClick="goPage(4)"><spring:message code='ezSchedule.t6000' /></span></h2>
 	  			</c:if>
 	  			<h2><span class="h2Title" style="display:inline-block;width:100%;" onClick="goPage(5)"><spring:message code='ezSchedule.t9990007' /></span></h2>
 	  			<h2><span class="h2Title" style="display:inline-block;width:100%;" onClick="goPage(6)"><spring:message code='ezSchedule.shb12' /></span></h2>
