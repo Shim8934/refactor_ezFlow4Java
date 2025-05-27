@@ -168,16 +168,20 @@ public class MScheduleGWController extends EgovFileMngUtil {
 					info.setCompanyId(SuserCompanyId);
 					sList = mScheduleService.scheduleUserSearchList(info, startDate, endDate, searchTitle);
 				}
-			}else {
+			} else {
 				sList = mScheduleService.scheduleList(info, startDate, endDate, searchTitle, searchLocation, searchAll, "");
 
 				String useWorkspaceSchedule = ezCommonService.getTenantConfig("useWorkspaceSchedule", info.getTenantId());
 				
 				if (useWorkspaceSchedule == null || useWorkspaceSchedule.equals("")) {
 					useWorkspaceSchedule = "NO";
-				} else if(useWorkspaceSchedule.equalsIgnoreCase("YES")) {
+				} else if (useWorkspaceSchedule.equalsIgnoreCase("YES")) {
 					String workspaceHostUrl = ezCommonService.getTenantConfig("workspaceHostUrlForMobile", info.getTenantId());
+					/* 2025-03-13 홍승비 - 협업 모듈에 고정된 하드코딩 문자열 제거 (ezWorkspace), 테넌트 컨피그 workspaceAppPath로 협업 웹응용프로그램 경로를 분리하여 사용 ("" 또는 "/ezWork" 등) */
+					String workspaceAppPath = ezCommonService.getTenantConfig("workspaceAppPath", info.getTenantId());
+					
 					result.put("workspaceHostUrl", workspaceHostUrl);
+					result.put("workspaceAppPath", workspaceAppPath);
 				}
 
 				String useGoogleCalendar = ezCommonService.getTenantConfig("useGoogleCalendar", info.getTenantId());

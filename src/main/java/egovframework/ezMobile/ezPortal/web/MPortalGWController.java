@@ -236,9 +236,13 @@ public class MPortalGWController extends EgovFileMngUtil {
 					if (useWorkspaceSchedule == null || useWorkspaceSchedule.equals("")) {
 						useWorkspaceSchedule = "NO";
 					}
-			        if("YES".equalsIgnoreCase(useWorkspaceSchedule)) {
+			        if ("YES".equalsIgnoreCase(useWorkspaceSchedule)) {
 			        	String workspaceHostUrl = ezCommonService.getTenantConfig("workspaceHostUrlForMobile", info.getTenantId());
-			        	dataObject.put("workspaceHostUrl", workspaceHostUrl);
+			        	/* 2025-03-13 홍승비 - 협업 모듈에 고정된 하드코딩 문자열 제거 (ezWorkspace), 테넌트 컨피그 workspaceAppPath로 협업 웹응용프로그램 경로를 분리하여 사용 ("" 또는 "/ezWork" 등) */
+						String workspaceAppPath = ezCommonService.getTenantConfig("workspaceAppPath", info.getTenantId());
+						
+						dataObject.put("workspaceHostUrl", workspaceHostUrl);
+			        	dataObject.put("workspaceAppPath", workspaceAppPath);
 			        }
 				}
 				
@@ -462,9 +466,13 @@ public class MPortalGWController extends EgovFileMngUtil {
 					if (useWorkspaceSchedule == null || useWorkspaceSchedule.equals("")) {
 						useWorkspaceSchedule = "NO";
 					}
-					if("YES".equalsIgnoreCase(useWorkspaceSchedule)) {
+					if ("YES".equalsIgnoreCase(useWorkspaceSchedule)) {
 			        	String workspaceHostUrl = ezCommonService.getTenantConfig("workspaceHostUrlForMobile", info.getTenantId());
+			        	/* 2025-03-13 홍승비 - 협업 모듈에 고정된 하드코딩 문자열 제거 (ezWorkspace), 테넌트 컨피그 workspaceAppPath로 협업 웹응용프로그램 경로를 분리하여 사용 ("" 또는 "/ezWork" 등) */
+						String workspaceAppPath = ezCommonService.getTenantConfig("workspaceAppPath", info.getTenantId());
+						
 			        	dataObject.put("workspaceHostUrl", workspaceHostUrl);
+			        	dataObject.put("workspaceAppPath", workspaceAppPath);
 			        }
 					
 					logger.debug("## 일정관리 소요시간(초.0f) : " + (System.currentTimeMillis() - startTime)/1000.0f + "초");

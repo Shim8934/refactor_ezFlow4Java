@@ -82,6 +82,8 @@
 		    
 		    /* 2020-05-18 협업-일정 연동 관련 추가 */
 		    var WorkspaceUrl = "<c:out value='${workspaceHostUrl}'/>";     // 협업이 그룹웨어와 별도의 Url로 서비스 되는 경우에만 설정
+		    /* 2025-03-13 홍승비 - 협업 모듈에 고정된 하드코딩 문자열 제거 (ezWorkspace), 테넌트 컨피그 workspaceAppPath로 협업 웹응용프로그램 경로를 분리하여 사용 ("/" 또는 "/ezWork" 등) */
+		    var workspaceAppPath = "${workspaceAppPath}";
 		    var g_bMobileExtra = false;       // 모바일 외부 서버 여부 (내/외부 네트워크 분리 환경에서만 설정) (true: 외부서버, false: 해당 없음)
 		    /* select_memorialDays(uselang); */
 		    
@@ -500,20 +502,27 @@
 		    function getWorkspaceUrl() {
 		        var result = "";
 
-		        if (typeof (WorkspaceUrl) != "undefined")
-		            result = WorkspaceUrl;
-
+		        if (typeof (WorkspaceUrl) != "undefined") {
+		        	result = WorkspaceUrl;
+		        }
+		        
 		        return result;
 		    }
 
 		    // 협업 웹응용프로그램 경로
 		    function getWorkspaceAppPath() {
-		        var result = "/ezWorkspace";    // 자바
-
+		        var result = ""; // 자바
+		        
+		        /* 2025-03-13 홍승비 - 협업 모듈에 고정된 하드코딩 문자열 제거 (ezWorkspace), 테넌트 컨피그 workspaceAppPath로 협업 웹응용프로그램 경로를 분리하여 사용 ("" 또는 "/ezWork" 등) */
+		        if (typeof (workspaceAppPath) != "undefined") {
+		            result = workspaceAppPath;
+		        }
+		        
 		        // 모바일 외부서버에서 접속 시 내부 서버를 통해 데이터를 처리하도록 Mobile 컨트롤러 경로를 붙여준다.
-		        if (typeof (g_bMobileExtra) != "undefined" && g_bMobileExtra === true)
+		        if (typeof (g_bMobileExtra) != "undefined" && g_bMobileExtra === true) {
 		            result = result + "/Mobile";
-
+		        }
+		        
 		        return result;
 		    }
 		    
@@ -531,7 +540,7 @@
 					window.showModalDialog("/ezAttitude/attitudeItemView.do?attitudeId=" + ScheduleID + "&typeId=" + ParentID, "", 
 					    "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(672, 640));
 				}
-		   	}``
+		   	}
 		    
 		    function WriteSchedule() {
 		        var pheight = window.screen.availHeight;

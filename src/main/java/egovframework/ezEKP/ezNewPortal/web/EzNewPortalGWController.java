@@ -438,9 +438,10 @@ public class EzNewPortalGWController {
 				portletOrder.removeIf(vo -> (vo.getPortletCode() != null && vo.getPortletCode().equals("weather")));
 			}
 			
+			/* 2025-03-07 홍승비 - 협업 메뉴 사용 여부 판별 시 URL이 아닌 메뉴코드를 사용하도록 수정 */
 			// 협업 사용여부에 따라 제거 
 			if (useEzWorkspace.equals("NO")) {
-				portletOrder.removeIf(vo -> vo.getPortletUrl().contains("ezWorkspace"));
+				portletOrder.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("workspace")));
 			}
 
 			if (useExternalMailServer.equalsIgnoreCase("YES")) {
@@ -631,8 +632,13 @@ public class EzNewPortalGWController {
 			//if ("YES".equals(useEzWorkspace)) {
 				String workspaceHostUrl = ezCommonService.getTenantConfig("workspaceHostUrl", tenantId);
 				String workspaceContextRootUrl = ezCommonService.getTenantConfig("workspaceContextRootUrl", tenantId);
+				
+				/* 2025-03-13 홍승비 - 협업 모듈에 고정된 하드코딩 문자열 제거 (ezWorkspace), 테넌트 컨피그 workspaceAppPath로 협업 웹응용프로그램 경로를 분리하여 사용 ("" 또는 "/ezWork" 등) */
+				String workspaceAppPath = ezCommonService.getTenantConfig("workspaceAppPath", tenantId);
+				
 				data.put("workspaceHostUrl", workspaceHostUrl);
 				data.put("workspaceContextRootUrl", workspaceContextRootUrl);
+				data.put("workspaceAppPath", workspaceAppPath);
 			//}
 			
 			data.put("usedTheme", userThemeSetting.getUsedTheme());

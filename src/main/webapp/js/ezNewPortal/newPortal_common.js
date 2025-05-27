@@ -1488,7 +1488,7 @@ function viewQuickResizePortlet() {
 // 협업 관련 추가
 function ezWorkspaceData(workspaceContextRootUrl) {
 	var workSpace = document.getElementById('ezWorkspace');
-	if(!workSpace) return;
+	if (!workSpace) return;
 
 	//협업 카운트
 	if (typeof (GetWorkspaceUserActLogCount) === "function") {
@@ -1498,7 +1498,7 @@ function ezWorkspaceData(workspaceContextRootUrl) {
 	var checkBrowser = function () {
 		var agent = navigator.userAgent.toLowerCase();
 		
-	  	if(agent.indexOf('msie') !== -1) {
+	  	if (agent.indexOf('msie') !== -1) {
 	   		return false;
 	   	} else {
 	   		return true;
@@ -1506,7 +1506,7 @@ function ezWorkspaceData(workspaceContextRootUrl) {
 	};
 	   
 	// ie 10일 경우는 다르게 해야겠음.		
-	if(!checkBrowser()) {
+	if (!checkBrowser()) {
 		$("#workspaceCnt").one("DOMSubtreeModified", function() {
 		   	var workspaceCnt = document.getElementById("workspaceCnt").innerHTML * 1;
 		   	if (workspaceCnt > 999) {
@@ -1551,7 +1551,8 @@ function ezWorkspaceData(workspaceContextRootUrl) {
 	}
 
 	workSpace.addEventListener('click', function() {
-		window.open(workspaceContextRootUrl + "/ezWorkspace/Account/SSO", "main", "");
+		/* 2025-03-13 홍승비 - 협업 모듈에 고정된 하드코딩 문자열 제거 (ezWorkspace) */
+		window.open(workspaceContextRootUrl + "/Account/SSO", "main", "");
 	});	
 
 }

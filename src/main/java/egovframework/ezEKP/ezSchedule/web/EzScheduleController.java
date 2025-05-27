@@ -834,6 +834,9 @@ public class EzScheduleController extends EgovFileMngUtil {
       	
       	String workspaceHostUrl = ezCommonService.getTenantConfig("workspaceHostUrl", loginVO.getTenantId());
         
+      	/* 2025-03-13 홍승비 - 협업 모듈에 고정된 하드코딩 문자열 제거 (ezWorkspace), 테넌트 컨피그 workspaceAppPath로 협업 웹응용프로그램 경로를 분리하여 사용 ("" 또는 "/ezWork" 등) */
+		String workspaceAppPath = ezCommonService.getTenantConfig("workspaceAppPath", loginVO.getTenantId());
+		
         model.addAttribute("userInfo",		loginVO);
         model.addAttribute("pOffset",		pOffset);
         model.addAttribute("timeZoneStr",	timeZone);
@@ -857,6 +860,7 @@ public class EzScheduleController extends EgovFileMngUtil {
         model.addAttribute("publicIds",jsonArray);
         model.addAttribute("useAnnualScheduleYN", useAnnualScheduleYN);
         model.addAttribute("workspaceHostUrl", workspaceHostUrl);
+        model.addAttribute("workspaceAppPath", workspaceAppPath);
         
 		return "/ezSchedule/scheduleMain";
 	}
@@ -5916,6 +5920,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 		String useAnnualScheduleYN = ezCommonService.getTenantConfig("useAnnualScheduleYN", loginVO.getTenantId());
 
 		String workspaceHostUrl = ezCommonService.getTenantConfig("workspaceHostUrl", loginVO.getTenantId());
+		
+		/* 2025-03-13 홍승비 - 협업 모듈에 고정된 하드코딩 문자열 제거 (ezWorkspace), 테넌트 컨피그 workspaceAppPath로 협업 웹응용프로그램 경로를 분리하여 사용 ("" 또는 "/ezWork" 등) */
+		String workspaceAppPath = ezCommonService.getTenantConfig("workspaceAppPath", loginVO.getTenantId());
 
 		model.addAttribute("userInfo",		loginVO);
 		model.addAttribute("pOffset",		pOffset);
@@ -5940,6 +5947,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		model.addAttribute("publicIds",jsonArray);
 		model.addAttribute("useAnnualScheduleYN", useAnnualScheduleYN);
 		model.addAttribute("workspaceHostUrl", workspaceHostUrl);
+		model.addAttribute("workspaceAppPath", workspaceAppPath);
 
 		model.addAttribute("typeCal",		typeCal);
 		//model.addAttribute("sDate",		sDate);
