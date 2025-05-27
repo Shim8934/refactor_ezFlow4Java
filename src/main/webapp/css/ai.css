@@ -95,7 +95,7 @@ span {
 
 /*ul, li, h1, h2, h3, h4, h5, h6, body { margin:0 }*/
 ul, li { margin-top:0; margin-bottom:0px; }
-h1, h2, h3, h4, h5, h6, body { margin:0; }
+h1, h2, h3, h4, h5, h6 { margin:0; }
 h2 {margin:2px 0; font-size:14px;}
 .margin ul, li{ MARGIN:auto; }
 .margin table { border-collapse: separate; }
