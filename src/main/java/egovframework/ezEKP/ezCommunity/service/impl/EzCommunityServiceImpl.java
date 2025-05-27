@@ -33,6 +33,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.Collections;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
@@ -85,6 +86,7 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityMemberInfoVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityMyCommunityVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityOneLineReplyVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCClubGuestReplyVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityMemberGradeVO;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezNotification.service.EzNotificationService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
@@ -595,7 +597,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		CommunityClubVO clubVO = aspCommInfoGet1(code, userInfo.getTenantId());
 		
 		// 18-05-08 김민성 - 커뮤니티 회원수 수정
-		clubVO.setC_MemberCnt(commViewMemberGet2(clubVO.getC_ClubNo().trim(), userInfo.getPrimary(), "", "", userInfo.getCompanyID(), userInfo.getTenantId()));
+		clubVO.setC_MemberCnt(commViewMemberGet2(clubVO.getC_ClubNo().trim(), userInfo.getPrimary(), "", "", userInfo.getCompanyID(), userInfo.getTenantId(), ""));
 		
 		StringBuilder sb = new StringBuilder();
 		sb.append("<DATA>");
@@ -698,7 +700,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		int pPage = 1, totalCount = 0, totalPage = 0;
 		String pBoardID = request.getParameter("boardID");
 		
-		if (boardInfo.getListView_FG().equals("true")) {
+		if (boardInfo.getListView_FG().equals("10")) {
 			url = boardInfo.getUrl();
 			
 			if (request.getParameter("sortBy") != null) {
@@ -1786,7 +1788,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 
 	@Override
-	public String commViewMember(LoginVO userInfo, String code, String strSysopID, String keyword, String sRadio, int comNoPerPage, int curPage) throws Exception {
+	public String commViewMember(LoginVO userInfo, String code, String strSysopID, String keyword, String sRadio, int comNoPerPage, int curPage, String selectGrade) throws Exception {
 		//logger.debug("code : " + code + ", strSysopID : " + strSysopID + ", keyword : " + keyword + ", sRadio : " + sRadio);
 		
 		StringBuilder sb = new StringBuilder();
@@ -1794,14 +1796,14 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		String primary = userInfo.getPrimary();
 		
 		// 여기서 회원리스트를 받아온다. CommunityCClubUserVO에 deptID, deptName 필드를 추가했다.
-		List<CommunityCClubUserVO> userList = commViewMemberGet1(code, primary, keyword, sRadio, userInfo.getCompanyID(), userInfo.getTenantId());
+		List<CommunityCClubUserVO> userList = commViewMemberGet1(code, primary, keyword, sRadio, userInfo.getCompanyID(), userInfo.getTenantId(), selectGrade);
 		
 		int iOutputCount = 0;
 		
 		/* 2021-08-17 홍승비 - 데이터가 없는 경우 tr 추가 */
 		if (userList ==  null || userList.size() == 0) {
 			sb.append("<tr>");
-			sb.append("<td colspan=\"7\" style=\"width:100%; height:30px; text-align:center;\">" + egovMessageSource.getMessage("ezOrgan.hdp25", userInfo.getLocale()) + "</td>");
+			sb.append("<td colspan=\"8\" style=\"width:100%; height:30px; text-align:center;\">" + egovMessageSource.getMessage("ezOrgan.hdp25", userInfo.getLocale()) + "</td>");
 			sb.append("</tr>");
 		}
 		else {
@@ -1823,7 +1825,11 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 					CommunityMemberInfoVO memberInfo = commViewMemberGet3(user.getC_ID().trim(), user.getCompanyID(), primary, userInfo.getTenantId());
 					
 					sb.append("<tr>");
-					sb.append("<td style=\"width:55; height:23; align:center;\">" + (userList.indexOf(user) + 1) + "</td>");
+					if (!user.getPermit().equals("4")) {
+						sb.append("<td style=\"width:55; height:23; align:center;\"><input type=\"CHECKBOX\" id=\"checkbox" + iOutputCount + "\" class=\"selectMember\" onclick=\"selectMember('" + user.getC_ID() + "', " + iOutputCount + ");\"></td>");
+					} else {
+						sb.append("<td style=\"width:55; height:23; align:center;\"></td>");
+					}
 					sb.append("<td>");
 					
 					if (user.getC_ID().trim().equals(strSysopID)) {
@@ -2252,7 +2258,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			
 			// 이미 companyID로 걸러진 커뮤니티를 가져와 후작업한다.
 			for (CommunityMyCommunityVO vo : list) {
-				int cnt = commViewMemberGet2(vo.getC_ClubNo().trim(), userInfo.getPrimary(), "", "", userInfo.getCompanyID(), userInfo.getTenantId());
+				int cnt = commViewMemberGet2(vo.getC_ClubNo().trim(), userInfo.getPrimary(), "", "", userInfo.getCompanyID(), userInfo.getTenantId(), "");
 				vo.setC_memberCnt(String.valueOf(cnt));
 				rtnVal.append(commonUtil.getQueryResult(vo));
 			}
@@ -2269,7 +2275,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			
 			// 이미 companyID로 걸러진 커뮤니티를 가져와 후작업한다.
 			for (CommunityMyCommunityVO vo : list) {
-				int cnt = commViewMemberGet2(vo.getC_ClubNo().trim(), userInfo.getPrimary(), "", "", userInfo.getCompanyID(), userInfo.getTenantId());
+				int cnt = commViewMemberGet2(vo.getC_ClubNo().trim(), userInfo.getPrimary(), "", "", userInfo.getCompanyID(), userInfo.getTenantId(), "");
 				vo.setC_memberCnt(String.valueOf(cnt));
 				rtnVal.append(commonUtil.getQueryResult(vo));
 			}
@@ -4596,7 +4602,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 
 	@Override
-	public int commViewMemberGet2(String code, String primary, String keyword, String sRadio, String companyID, int tenantID) throws Exception {
+	public int commViewMemberGet2(String code, String primary, String keyword, String sRadio, String companyID, int tenantID, String selectGrade) throws Exception {
 		logger.debug("commViewMemberGet2 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -4606,7 +4612,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_S_RADIO", sRadio.toUpperCase());
 		map.put("tenantID", tenantID);
 		map.put("companyID", companyID);
-		
+		map.put("selectGrade", selectGrade);
+
 		int result = ezCommunityDAO.commViewMemberGet2(map);
 		
 		logger.debug("commViewMemberGet2 ended. result="+result);
@@ -4866,6 +4873,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_ISIN", clubVO.getIsIn());
 		map.put("v_C_CLUBDESC", clubVO.getC_ClubDesc());
 		map.put("v_CODE", code);
+		map.put("read_Grade", clubVO.getMemlist_readGrade());
 		map.put("tenantID", tenantID);
 		
 		ezCommunityDAO.adminBasicOkupdate(map);
@@ -5007,7 +5015,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 
 	@Override
-	public void createBoardInsert(String code, String boardID, String boardName, String boardName2, String parentBoardID, String boardGroupID, String comatt, LoginVO userInfo) throws Exception {
+	public void createBoardInsert(String code, String boardID, String boardName, String boardName2, String parentBoardID, String boardGroupID, String comatt, LoginVO userInfo, String readGrade, String writeGrade) throws Exception {
 		logger.debug("createBoardInsert started.");
 		
 		int boardNo = ezCommunityDAO.createBoardInsertSelect(userInfo.getTenantId());
@@ -5026,7 +5034,9 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_USERINFO_DEPTNAME", userInfo.getDeptName1());
 		map.put("v_BOARDNO", boardNo);
 		map.put("tenantID", userInfo.getTenantId());
-		
+		map.put("readGrade", readGrade);
+		map.put("writeGrade", writeGrade);
+
 /*		logger.debug("code="+code);
 		logger.debug("boardID"+boardID);
 		logger.debug("boardName="+boardName);
@@ -5041,7 +5051,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		logger.debug("v_BOARDNO="+boardNo);*/
 		
 		ezCommunityDAO.createBoardInsertInsert1(map);
-		ezCommunityDAO.createBoardInsertInsert2(map);
+		/*ezCommunityDAO.createBoardInsertInsert2(map); accessID를 "everyone"으로만 insert하도록 해당 라인은 주석처리 */
 		ezCommunityDAO.createBoardInsertInsert3(map);
 		ezCommunityDAO.createBoardInsertDelete(userInfo.getTenantId());
 		
@@ -5324,26 +5334,19 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 
 	@Override
-	public void adminMemberListOkGoSe(String mode, String code, String cID, String cNm, int tenantID) throws Exception {
+	public void adminMemberListOkGoSe(String mode, String code, String cID, String cNm, LoginVO userInfo) throws Exception {
 		logger.debug("adminMemberListOkGoSe started.");
 		//logger.debug("code=" + code + ", id=" + cID + ", Nm=" + cNm);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CODE", code);
 		map.put("v_C_ID", cID);
 		map.put("v_C_NM", cNm);
-		map.put("tenantID", tenantID);
+		map.put("tenantID", userInfo.getTenantId());
 		
 		if (mode.equals("MASTER")) {
-			List<CommunityBoardPropertyVO> list = ezCommunityDAO.adminMemberListGoSESelect(map);
-			
 			ezCommunityDAO.adminMemberListGoSEUpdate1(map);
-			
-			for (CommunityBoardPropertyVO vo : list) {
-				map.put("accessID", vo.getAccessID());
-				map.put("boardID", vo.getBoardID());
-				
-				ezCommunityDAO.adminMemberListGoSEUpdate2(map);
-			}
+			updateMemberGrade(code, "1", Collections.singletonList(cID), userInfo.getCompanyID(), userInfo.getTenantId());
+			updateMemberGrade(code, "3", Collections.singletonList(userInfo.getId()), userInfo.getCompanyID(), userInfo.getTenantId());
 		} else {
 			ezCommunityDAO.adminMemberListGoSEDelete1(map);
 			ezCommunityDAO.adminMemberListGoSEUpdate3(map);
@@ -5538,7 +5541,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 
 	@Override
-	public void joinOkSet1(String code, String id, String todayTime, String companyID, int tenantID) throws Exception {
+	public void joinOkSet1(String code, String id, String todayTime, String companyID, int tenantID, String joinGrade) throws Exception {
 		logger.debug("joinOkSet1 started.");
 		
 		Map<String, Object> map =new HashMap<String, Object>();
@@ -5550,7 +5553,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_USERINFO_USERID", id);
 		map.put("v_pNow", todayTime);
 		map.put("v_USERINFO_COMPANYID", companyID);
-		
+		map.put("joinGrade", joinGrade);
+
 		ezCommunityDAO.joinOkSet1Insert(map);
 		
 		logger.debug("joinOkSet1 ended.");
@@ -5739,14 +5743,15 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 	
 	@Override
-	public void okNoSet(String flag, String code, String cID, int tenantID) throws Exception {
+	public void okNoSet(String flag, String code, String cID, int tenantID, String joinGrade) throws Exception {
 		logger.debug("okNoSet started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CODE", code);
 		map.put("v_C_ID", cID);
 		map.put("tenantID", tenantID);
-		
+		map.put("joinGrade", joinGrade);
+
 		if (flag.equals("OK")) {
 			logger.debug("okNoSet flag=OK.");
 			
@@ -6325,7 +6330,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 	
 	/* 2018-07-02 홍승비 - 커뮤니티 회원목록 회원정보 표출 시 companyID 조건 추가 */
-	public List<CommunityCClubUserVO> commViewMemberGet1(String code, String primary, String keyword, String sRadio, String companyID, int tenantID) throws Exception {
+	public List<CommunityCClubUserVO> commViewMemberGet1(String code, String primary, String keyword, String sRadio, String companyID, int tenantID, String selectGrade) throws Exception {
 		logger.debug("commViewMemberGet1 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -6335,7 +6340,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_s_radio", sRadio.toUpperCase());
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
-		
+		map.put("selectGrade", selectGrade);
+
 		List<CommunityCClubUserVO> list = ezCommunityDAO.commViewMemberGet1(map);
 		
 		logger.debug("commViewMemberGet1 ended.");
@@ -7309,8 +7315,9 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("tenantID", tenantID);
 		
 		ezCommunityDAO.insertCommBoardInfo(map);
-		
-		map = new HashMap<String, Object>();
+
+		// accessID를 "everyone"으로만 insert하도록 해당 부분은 주석처리
+		/*map = new HashMap<String, Object>();
 		map.put("v_BOARDID", pNewID);
 		map.put("v_ACCESSID", id);
 		map.put("v_ACCESSNAME", displayName1 + "(" + companyName1 + ", " + deptName1 + ")");
@@ -7344,8 +7351,11 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_INHERIT_FG", "true");
 		map.put("tenantID", tenantID);
 		
-		ezCommunityDAO.insertCommBoardManage(map);
-		
+		ezCommunityDAO.insertCommBoardManage(map);*/
+
+		// 1~10까지의 등급 존재 가능 (1:마스터, 2:운영자, 3:정회원, 4:준회원, ... , 10: 손님)
+		// 초기 등급 - 1:마스터, 2:운영자, 3:정회원, 4:준회원, 10:손님
+		// 게시판별 권한을 등급으로 설정 가능
 		map = new HashMap<String, Object>();
 		map.put("v_BOARDID", pNewID);
 		map.put("v_ACCESSID", "everyone");
@@ -7353,13 +7363,13 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_ACCESSLEVEL", null);
 		map.put("v_ACCESS_", 1);
 		map.put("v_PARENTBOARDID", "top");
-		map.put("v_BOARDADMIN_FG", "false");
-		map.put("v_LISTVIEW_FG", "true");
-		map.put("v_READ_FG", "true");
-		map.put("v_WRITE_FG", "false");
-		map.put("v_REPLY_FG", "true");
-		map.put("v_DELETE_FG", "false");
-		map.put("v_INHERIT_FG", "false");
+		map.put("v_BOARDADMIN_FG", "1"); // 마스터만 가능(디폴트)
+		map.put("v_LISTVIEW_FG", "10"); // 리스트권한:손님이상(디폴트)
+		map.put("v_READ_FG", "4"); // 읽기권한:정회원이상(사용자 설정 가능)
+		map.put("v_WRITE_FG", "3"); // 쓰기권한:준회원이상(사용자 설정 가능)
+		map.put("v_REPLY_FG", "3"); // 답글권한:쓰기권한과 동일(디폴트)
+		map.put("v_DELETE_FG", "2"); // 삭제권한:운영자이상(디폴트)
+		map.put("v_INHERIT_FG", "1"); // 마스터만 가능(디폴트)
 		map.put("tenantID", tenantID);
 		
 		ezCommunityDAO.insertCommBoardManage(map);
@@ -7371,13 +7381,13 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_ACCESSLEVEL", null);
 		map.put("v_ACCESS_", 1);
 		map.put("v_PARENTBOARDID", pNewID);
-		map.put("v_BOARDADMIN_FG", "false");
-		map.put("v_LISTVIEW_FG", "true");
-		map.put("v_READ_FG", "true");
-		map.put("v_WRITE_FG", "false");
-		map.put("v_REPLY_FG", "true");
-		map.put("v_DELETE_FG", "false");
-		map.put("v_INHERIT_FG", "false");
+		map.put("v_BOARDADMIN_FG", "1");
+		map.put("v_LISTVIEW_FG", "10");
+		map.put("v_READ_FG", "4");
+		map.put("v_WRITE_FG", "3");
+		map.put("v_REPLY_FG", "3");
+		map.put("v_DELETE_FG", "2");
+		map.put("v_INHERIT_FG", "1");
 		map.put("tenantID", tenantID);
 		
 		ezCommunityDAO.insertCommBoardManage(map);
@@ -7399,6 +7409,13 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		ezCommunityDAO.insertClubUser(map);
 		
+		map = new HashMap<String, Object>();
+		map.put("v_CODE", code);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+
+		ezCommunityDAO.insertClubGrade(map); // 1~4,10등급 (마스터, 운영자, 정회원, 준회원, 손님) 디폴트로 insert
+
 		logger.debug("commMakeOkInsert2 ended.");
 	}
 	
@@ -8692,5 +8709,193 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 
 		logger.debug("checkPollPeriod ended.");
 		return ezCommunityDAO.checkPollPeriod(map);
+	}
+
+	@Override
+	public void updateJoinGrade(String code, String joinGrade, String companyID, int tenantID) throws Exception {
+		logger.debug("updateJoinGrade started.");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("code", code);
+		map.put("joinGrade", joinGrade);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+
+		ezCommunityDAO.updateJoinGrade(map);
+
+		logger.debug("updateJoinGrade ended.");
+	}
+
+	@Override
+	public String saveGradeList(String code, List<String> gradeList, String companyID, int tenantID) throws Exception {
+		logger.debug("saveGradeList started.");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		for (int i = 0; i <= gradeList.size(); i++) {
+			map.put("code", code);
+			if (i != gradeList.size()) {
+				map.put("gradeCode", i + 1);
+				map.put("gradeName", gradeList.get(i));
+			} else {
+				map.put("gradeCode", 10);
+				map.put("gradeName", "손님");
+			}
+			map.put("companyID", companyID);
+			map.put("tenantID", tenantID);
+
+			ezCommunityDAO.saveGradeList(map);
+		}
+
+		logger.debug("saveGradeList ended.");
+		return "true";
+	}
+
+	@Override
+	public void deleteGradeList(String code, String companyID, int tenantID) throws Exception {
+		logger.debug("deleteGradeList started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("code", code);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+
+		ezCommunityDAO.deleteGradeList(map);
+
+		logger.debug("deleteGradeList ended");
+	}
+
+	@Override
+	public List<CommunityMemberGradeVO> getMemberGrade(String code, String companyID, int tenantID) throws Exception {
+		logger.debug("getMemberGrade started.");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("code", code);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+
+		List<CommunityMemberGradeVO> memberGrade = ezCommunityDAO.getMemberGrade(map);
+
+		logger.debug("getMemberGrade ended.");
+
+		return memberGrade;
+	}
+
+	@Override
+	public String getMemberGradeName(String code, String gradeCode, String companyID, int tenantID) throws Exception {
+		logger.debug("getMemberGradeName started.");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("code", code);
+		map.put("gradeCode", gradeCode);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+
+		String gradeName = ezCommunityDAO.getMemberGradeName(map);
+
+		logger.debug("getMemberGradeName ended.");
+
+		return gradeName;
+	}
+
+	@Override
+	public void updateMemberGrade(String code, String grade, List<String> id, String companyID, int tenantID) throws Exception {
+		logger.debug("updateMemberGrade started.");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		for (int i = 0; i < id.size(); i++) {
+			map.put("code", code);
+			map.put("grade", grade);
+			map.put("userId", id.get(i));
+			map.put("companyID", companyID);
+			map.put("tenantID", tenantID);
+
+			ezCommunityDAO.updateMemberGrade(map);
+		}
+
+		logger.debug("updateMemberGrade ended.");
+	}
+
+	@Override
+	public String getUserGrade(String code, String userId, String companyID, int tenantID) throws Exception {
+		logger.debug("getUserGrade started.");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("code", code);
+		map.put("userId", userId);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+
+		String gradeCode = ezCommunityDAO.getUserGrade(map);
+
+		logger.debug("getUserGrade ended.");
+
+		return gradeCode;
+	}
+
+	@Override
+	public String getMemListReadGrade(String code, String companyID, int tenantID) throws Exception {
+		logger.debug("getMemListReadGrade started.");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("code", code);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+
+		String readGrade = ezCommunityDAO.getMemListReadGrade(map);
+
+		logger.debug("getMemListReadGrade ended.");
+
+		return readGrade;
+	}
+
+	@Override
+	public int getGradeCount(String code, String grade, String companyID, int tenantID) throws Exception {
+		logger.debug("getGradeCount started.");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("code", code);
+		map.put("grade", grade);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+
+		int gradeCount = ezCommunityDAO.getGradeCount(map);
+
+		logger.debug("getGradeCount ended.");
+
+		return gradeCount;
+	}
+
+	@Override
+	public void updateBoardManageGrade(String boardID, String readGrade, String writeGrade, int tenantID) throws Exception {
+		logger.debug("updateBoardManageGrade started.");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pBoardID", boardID);
+		map.put("readGrade", readGrade);
+		map.put("writeGrade", writeGrade);
+		map.put("v_pAccessID", "everyone");
+		map.put("tenantID", tenantID);
+
+		ezCommunityDAO.updateBoardManageGrade(map);
+
+		logger.debug("updateBoardManageGrade ended.");
+	}
+
+	@Override
+	public String getCommunityJoinGrade(String code, String companyID, int tenantID) throws Exception {
+		logger.debug("getCommunityJoinGrade started.");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("code", code);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+
+		String joinGrade = ezCommunityDAO.getCommunityJoinGrade(map);
+
+		logger.debug("getCommunityJoinGrade ended.");
+
+		return joinGrade;
 	}
 }

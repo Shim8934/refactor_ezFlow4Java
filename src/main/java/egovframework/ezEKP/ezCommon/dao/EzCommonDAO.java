@@ -3585,4 +3585,34 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			insert("EzCommonDAO.insertExecutiveScheduleConfig", map);
 		}
 	}
+
+	public void alterTblClubUserGradeColumn() {
+		try {
+			select("EzCommonDAO.checkTblClubUserGradeColumn");
+		} catch (Exception e) {
+			logger.debug("In TBL_C_CLUBUSER doesn't exist GRADE column. creating the column...");
+
+			update("EzCommonDAO.alterTblClubUserGradeColumn");
+		}
+	}
+
+	public void alterTblClubJoinGradeColumn() {
+		try {
+			select("EzCommonDAO.checkTblClubJoinGradeColumn");
+		} catch (Exception e) {
+			logger.debug("In TBL_C_CLUB doesn't exist JOIN_GRADE, MEMLIST_READGRADE column. creating the column...");
+
+			update("EzCommonDAO.alterTblClubJoinGradeColumn");
+		}
+	}
+
+	public void createTblCommunityGradeTable() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblCommunityGradeTable");
+		} catch (Exception e) {
+			logger.debug("TBL_C_GRADE doesn't exist. creating the table...");
+
+			update("EzCommonDAO.createTblCommunityGradeTable");
+		}
+	}
 }

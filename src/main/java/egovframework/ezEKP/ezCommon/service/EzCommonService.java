@@ -628,4 +628,13 @@ public interface EzCommonService {
 
 	// 2025-07-07 이유정 - 일정관리 > 임원일정 조회 가능 범위 설정 컨피그 추가
 	public void insertExecutiveScheduleConfig() throws Exception;
+
+    // 2025-07-10 이유정 - 커뮤니티 > 회원등급 추가 (회원테이블 등급컬럼 추가)
+	public void alterTblClubUserGradeColumn() throws Exception;
+
+	// 2025-07-10 이유정 - 커뮤니티 > 회원등급 추가 (커뮤니티테이블 최초가입시 등급, 회원목록 조회등급 컬럼 추가)
+	public void alterTblClubJoinGradeColumn() throws Exception;
+
+	// 2025-07-10 이유정 - 커뮤니티 > 회원등급 테이블 추가
+	public void createTblCommunityGradeTable() throws Exception;
 }

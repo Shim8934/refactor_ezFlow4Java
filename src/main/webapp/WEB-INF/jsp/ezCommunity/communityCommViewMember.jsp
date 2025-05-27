@@ -37,11 +37,21 @@
 		    var CurPage = "<c:out value = '${curPage}' />";
 		    var totalPage = "<c:out value = '${totalPage}' />";
 		    var totalCount = "<c:out value = '${keywordCount}' />";
-		    var code = "<c:out value = '${code}' />"
+		    var code = "<c:out value = '${code}' />";
+			var selectGrade = "<c:out value = '${selectGrade}' />";
+
 		    document.onselectstart = function () { return false; };
 		    
 		    window.onload =function () {		        
 			    makePageSelPage();
+				getGradeList();
+
+				setTimeout(function() {
+					var selectElement = document.getElementById("selGradeList");
+					if (selectGrade) {
+						selectElement.value = selectGrade;
+					}
+				}, 100);
 			}
 			
 		    /* 2018-06-29 홍승비 - 커뮤니티 회원을 해당 회사에 겸직하고 있는 정보로 표출하기 */
@@ -257,7 +267,135 @@
 					var url = "/ezCommunity/commViewMember.do?code=${code}";
 					location.href = url;
 			}
-			
+
+			function getGradeList() {
+				$.ajax({
+					type : "GET",
+					url : "/ezCommunity/getAdminMemberGrade.do",
+					dataType : "json",
+					data : {
+						code : code
+					},
+					success : function(result) {
+						getGradeList_after(result);
+					},
+					error : function(xhr, status, error) {
+						console.error("Error: " + error);
+					}
+				});
+			}
+
+			function getGradeList_after(gradeList) {
+				var selectGrade = document.getElementById("gradeList");
+				var selectGrade2 = document.getElementById("selGradeList");
+
+				if (selectGrade) {
+					selectGrade.innerHTML = "";
+
+					for (var i = 2; i < gradeList.length-1; i++) {
+						var option = document.createElement("option");
+
+						option.value = gradeList[i].gradeCode;
+						option.textContent = gradeList[i].gradeName;
+
+						selectGrade.appendChild(option);
+					}
+				}
+
+				for (var i = 0; i < gradeList.length-1; i++) {
+					var option2 = document.createElement("option");
+
+					option2.value = gradeList[i].gradeCode;
+					option2.textContent = gradeList[i].gradeName;
+
+					selectGrade2.appendChild(option2);
+				}
+			}
+
+			var userIds = new Array();
+			function selectMember(userId, checkId) {
+				var checkbox = document.getElementById("checkbox" + checkId);
+				if (checkbox.checked == true) {
+					userIds.push(userId);
+				} else {
+					var index = userIds.indexOf(userId);
+
+					if (index > -1) {
+						userIds.splice(index, 1);
+					}
+				}
+			}
+
+			function allCheck(element) {
+				var checkboxes = document.querySelectorAll('.selectMember');
+
+				checkboxes.forEach(function(checkbox) {
+					checkbox.checked = element.checked;
+
+					var tr = checkbox.closest('tr');
+					var tds = tr.querySelectorAll('td');
+					var userIdtd = tds[4];
+
+					if (userIdtd) {
+						var userId = userIdtd.textContent;
+
+						if (element.checked) {
+							userIds.push(userId);
+						} else {
+							var index = userIds.indexOf(userId);
+							if (index !== -1) {
+								userIds.splice(index, 1);
+							}
+						}
+					}
+				});
+			}
+
+			function changeGrade() {
+				var select = document.getElementById("gradeList");
+				var selectedOption = select.options[select.selectedIndex].value;
+
+				userIds = userIds.filter((value, index, self) => {
+					return self.indexOf(value) === index;
+				});
+
+				if (userIds.length == 0) {
+					alert("<spring:message code = 'ezCommunity.lyj19' />");
+				} else {
+					if (confirm("<spring:message code = 'ezCommunity.lyj20' />")) {
+						$.ajax({
+							type : "POST",
+							url : "/ezCommunity/adminMemberGradeUpdate.do",
+							dataType : "json",
+							contentType: "application/json;charset=UTF-8",
+							async : false,
+							data : JSON.stringify({
+								code : code,
+								grade : selectedOption,
+								userIds : userIds
+							}),
+							success : function(result) {
+								if (result == true) {
+									alert("<spring:message code = 'ezCommunity.t282' />");
+									location.reload();
+								} else {
+									alert("<spring:message code = 'ezCommunity.t283' />");
+								}
+							},
+							error : function() {
+								alert("<spring:message code = 'ezCommunity.t283' />");
+							}
+						});
+					}
+				}
+			}
+
+			var select = "";
+			function viewGradeList() {
+				select = document.getElementById("selGradeList").value;
+
+				window.location.href = "/ezCommunity/commViewMember.do?code=" + code + "&selectGrade=" + select;
+			}
 		</script>
 	</head>
 	<body class="cmhome_body">
@@ -265,7 +403,7 @@
 		<form name="page">
 			<table class="content" style="width:100%;border:0px">			
 				<tr>
-					<td style="border:1px solid #ddd;border:0px;padding:0px">
+					<td style="border:1px solid #ddd;border:0px;padding:0px;width:100px;">
 						<select id="s_radio" name="s_radio" style="font-size: 13px;vertical-align: middle;text-align: center;height: 24px;cursor: pointer;">
 							<option value="id"><spring:message code = 'ezCommunity.t512' /></option>
 							<option selected value="name"><spring:message code = 'ezCommunity.t10' /></option>
@@ -274,7 +412,22 @@
 						<a class="imgbtn imgbck" style="vertical-align: middle;height:22px;margin:0px"><span onClick="javascript:search();" style="height:22px;line-height:22px"><spring:message code = 'ezCommunity.t31' /></span></a>						
 						<c:if test="${keyword != '' }">
 							<a class="imgbtn" style="vertical-align: middle;height:22px;margin:0px"><span onClick="searchList()" style="height:22px;line-height:22px"><spring:message code = 'ezCommunity.t724' /></span></a>
-						</c:if>						
+						</c:if>
+					</td>
+					<td style="border:0px;width:150px;text-align: right;">
+						<span style="font-size: 13px;vertical-align: middle;"><spring:message code = 'ezCommunity.lyj29' /></span>
+						<select id="selGradeList" style="font-size: 13px;vertical-align: middle;cursor: pointer;MIN-WIDTH: 60px;height: 20px;" onchange="viewGradeList()">
+							<option value="0"><spring:message code = 'ezCommunity.lyj30' /></option>
+						</select>
+						<c:if test="${gradeCode == '1' || gradeCode == '2'}">
+							<span style="margin-left:5px;margin-right:5px;">|</span>
+							<span style="font-size: 13px;vertical-align: middle;"><spring:message code = 'ezCommunity.lyj18' /></span>
+							<select id="gradeList" style="font-size: 13px;vertical-align: middle;cursor: pointer;MIN-WIDTH: 60px;height: 20px;" onchange="">
+								<option value="3" selected><spring:message code = 'ezCommunity.lyj07' /></option>
+								<option value="4"><spring:message code = 'ezCommunity.lyj08' /></option>
+							</select>
+							<a href="javascript:changeGrade()" style="width: 50px;padding-left: 7px;padding-right: 6px;text-align:center;" class="imgbtn imgbck" title="<spring:message code = 'ezCommunity.lyj17' />"><spring:message code = 'ezCommunity.lyj17' /></a>
+						</c:if>
 					</td>
 				</tr>			
 			</table>
@@ -282,12 +435,13 @@
 		<div  style = "height:370px;">
 		<table id="tblList" class="cmhomelist" style="width:100%;margin-top:10px">
 			<tr> 
-				<th style="width:40px"><spring:message code = 'ezCommunity.t32' /></th>
+				<th style="width:40px"><input type="checkbox" id="HeaderAllCheckBox" class="selectMember" onclick="allCheck(this)"></th>
 				<th style="width:110px"><spring:message code = 'ezCommunity.t10' /></th>
+				<th style="width:100px"><spring:message code = 'ezCommunity.lyj16' /></th>
 				<th style="width:100px"><spring:message code = 'ezCommunity.t241' /></th>
 				<th style="width:100px"><spring:message code = 'ezCommunity.t512' /></th>
-				<th style="width:85px"><spring:message code = 'ezCommunity.t725' /></th>
-				<th style="width:85px"><spring:message code = 'ezCommunity.t726' /></th>
+				<th style="width:75px"><spring:message code = 'ezCommunity.t725' /></th>
+				<th style="width:75px"><spring:message code = 'ezCommunity.t726' /></th>
 				<th style="width:60px"><spring:message code = 'ezCommunity.t727' /></th>
 			</tr>
 			${strXML}

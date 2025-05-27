@@ -73,6 +73,7 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityCPollResponseVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityClubVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityMemberInfoVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityOneLineReplyVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityMemberGradeVO;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezNotification.service.EzNotificationService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
@@ -485,7 +486,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		CommunityClubVO clubVO = ezCommunityService.leftCommunityGet4(code, userInfo.getCompanyID(), userInfo.getTenantId());
 		
-		if (clubVO.getC_SysopID().trim().equals(userInfo.getId()) && !checkSysop) {
+		String userGrade = ezCommunityService.getUserGrade(code, userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId()) != null ? ezCommunityService.getUserGrade(code, userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId()) : "10";
+
+		if (!checkSysop && Integer.parseInt(userGrade) <= 2) {
 			checkSysop = true;
 		}
 		
@@ -493,7 +496,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 		pastDate = commonUtil.getTodayUTCTime("");
 		pastDate = EgovDateUtil.addDay(pastDate, -1, "yyyy-MM-dd HH:mm:ss");
 		pastDate = EgovDateUtil.addYMDtoDayTime(pastDate.substring(0, 10), pastDate.substring(11, 16), 0, 0, 0, 0, Integer.parseInt(commonUtil.getMinuteUTC(userInfo.getOffset())), "yyyy-MM-dd HH:mm:");
-		pastDate = pastDate.concat(commonUtil.getTodayUTCTime("").substring(17,19));	
+		pastDate = pastDate.concat(commonUtil.getTodayUTCTime("").substring(17,19));
+
+		String readGrade = ezCommunityService.getMemListReadGrade(code, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("primary", primary);
@@ -506,7 +511,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("retXML", retXML);
 		model.addAttribute("pastDate", pastDate);
 		model.addAttribute("lang", userInfo.getLang()); // 2019-07-11 홍승비 - 다국어 지원용 lang 초가
-		
+		model.addAttribute("userGrade", Integer.parseInt(userGrade));
+		model.addAttribute("readGrade", Integer.parseInt(readGrade));
+
 		logger.debug("popupCommHome ended.");
 		return "ezCommunity/communityPopupCommHome";
 	}
@@ -2465,7 +2472,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezCommunity/commViewMember.do", method = RequestMethod.GET)
 	public String commViewMember(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String keyword = "", sRadio = "", block = "";
+		String keyword = "", sRadio = "", block = "", selectGrade = "";
 		int curPage = 1;
 		
 		String code = request.getParameter("code");
@@ -2482,12 +2489,15 @@ public class EzCommunityController extends EgovFileMngUtil{
 		if (request.getParameter("block") != null) {
 			block = request.getParameter("block");
 		}
-		
+		if (request.getParameter("selectGrade") != null && !request.getParameter("selectGrade").equals("0")) {
+			selectGrade = request.getParameter("selectGrade");
+		}
+
 		if (!ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 1, response, userInfo, "")) {
 			return "cmm/error/egovError";
 		}
 		
-		int keywordCount = ezCommunityService.commViewMemberGet2(code, userInfo.getPrimary(), keyword, sRadio, userInfo.getCompanyID(), userInfo.getTenantId());
+ 		int keywordCount = ezCommunityService.commViewMemberGet2(code, userInfo.getPrimary(), keyword, sRadio, userInfo.getCompanyID(), userInfo.getTenantId(), selectGrade);
 		
 		int comNoPerPage = 10;
         int totalPage = keywordCount / comNoPerPage;
@@ -2498,7 +2508,9 @@ public class EzCommunityController extends EgovFileMngUtil{
         
 		String strSysopID = ezCommunityService.adminMemberListGet2(code, userInfo.getTenantId()).trim();
 		// 여기에서 해당 회원의 deptID, deptname을 xml 내부에 받아온다.
-		String strXML = ezCommunityService.commViewMember(userInfo, code, strSysopID, keyword, sRadio, comNoPerPage, curPage);
+		String strXML = ezCommunityService.commViewMember(userInfo, code, strSysopID, keyword, sRadio, comNoPerPage, curPage, selectGrade);
+
+		String gradeCode = ezCommunityService.getUserGrade(code, userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId()) != null ? ezCommunityService.getUserGrade(code, userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId()) : "10";
 		
 		model.addAttribute("curPage", curPage);
 		model.addAttribute("totalPage", totalPage);
@@ -2509,7 +2521,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("keywordCount", keywordCount);
 		model.addAttribute("strSysopID", strSysopID);
 		model.addAttribute("strXML", strXML);
-		
+		model.addAttribute("gradeCode", gradeCode);
+		model.addAttribute("selectGrade", selectGrade);
+
 		//logger.debug("strXML = " + strXML);
 		
 		return "ezCommunity/communityCommViewMember";
@@ -2525,7 +2539,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String code = request.getParameter("code");
 		CommunityClubVO club = ezCommunityService.aspCommInfoGet1(code, userInfo.getTenantId());
 		// 2018-06-29 김보미 - 커뮤니티 회원수 수정
-		club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo().trim(), userInfo.getPrimary(), "", "", userInfo.getCompanyID(), userInfo.getTenantId()));
+		club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo().trim(), userInfo.getPrimary(), "", "", userInfo.getCompanyID(), userInfo.getTenantId(), ""));
 		CommunityMemberInfoVO member = ezCommunityService.commOutGet(club.getC_SysopID().trim(), club.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId());
 		
 		String sysopName = member.getUserName();
@@ -2692,7 +2706,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		int pPermitCount = ezCommunityService.adminMemPermitGet1(code, userInfo.getTenantId());
 		String cCateA = ezCommunityService.adminBasicGet1(code, userInfo.getTenantId());
 		//String cCateB = ezCommunityService.adminBasicGet2(code, userInfo.getTenantId());
-		
+		String readGrade = ezCommunityService.getMemListReadGrade(code, userInfo.getCompanyID() ,userInfo.getTenantId());
+
 		model.addAttribute("code", code);
 		model.addAttribute("club", club);
 		model.addAttribute("name1", name1);
@@ -2701,7 +2716,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		//model.addAttribute("c_cate_b", (cCateB == null) ? "" : egovMessageSource.getMessage("ezCommunity."+cCateB, userInfo.getLocale()));
 		model.addAttribute("lang_Primary", langPrimary);
 		model.addAttribute("lang_Secondary", langSecondary);
-		
+		model.addAttribute("readGrade", readGrade);
+
 		logger.debug("adminBasic ended.");
 		
 		return "ezCommunity/communityAdminBasic";
@@ -2982,7 +2998,11 @@ public class EzCommunityController extends EgovFileMngUtil{
 		} else {
 			multiBoardName = boardInfo.getBoardName2();
 		}
-		
+
+		CommunityBoardPropertyVO boardGradeInfo = ezCommunityService.brdGetACL(boardID, "everyone", userInfo.getTenantId());
+		String readGrade = boardGradeInfo.getRead_FG();
+		String writeGrade = boardGradeInfo.getWrite_FG();
+
 		model.addAttribute("boardID", boardID);
 		model.addAttribute("parentBoardID", parentBoardID);
 		model.addAttribute("boardGroupID", boardGroupID);
@@ -2994,7 +3014,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("_style", style);
 		model.addAttribute("userInfo",userInfo);
 		model.addAttribute("multiBoardName", multiBoardName);
-		
+		model.addAttribute("readGrade", readGrade);
+		model.addAttribute("writeGrade", writeGrade);
+
 		logger.debug("adminBoardProperty ended.");
 		
 		return "ezCommunity/communityAdminBoardProperty";
@@ -3009,8 +3031,12 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
+		String readGrade = request.getParameter("readGrade");
+		String writeGrade = request.getParameter("writeGrade");
+
 		String ret = ezCommunityService.saveBoardProperty(userInfo, vo);
-		
+		ezCommunityService.updateBoardManageGrade(vo.getBoardID(), readGrade, writeGrade, userInfo.getTenantId());
+
 		model.addAttribute("result", ret);
 		
 		logger.debug("saveBoardProperty ended. ret = " + ret);
@@ -3186,11 +3212,13 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String parentBoardID = request.getParameter("parentBoardID");
 		String boardGroupID = request.getParameter("boardGroupID");
 		String code = request.getParameter("code");
-		
+		String readGrade = request.getParameter("readGrade");
+		String writeGrade = request.getParameter("writeGrade");
+
 		//첨부 용량 제한 [이성우]
 		String comatt = "10";
 		
-		ezCommunityService.createBoardInsert(code, commonUtil.stripScriptTags(boardID), boardName, boardName2, parentBoardID, boardGroupID, comatt, userInfo);
+		ezCommunityService.createBoardInsert(code, commonUtil.stripScriptTags(boardID), boardName, boardName2, parentBoardID, boardGroupID, comatt, userInfo, readGrade, writeGrade);
 	}
 	
 	/**
@@ -3618,7 +3646,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			return "cmm/error/egovError";
 		}
 		
-		ezCommunityService.adminMemberListOkGoSe(mode.toUpperCase(), code, cID, cNm, userInfo.getTenantId());
+		ezCommunityService.adminMemberListOkGoSe(mode.toUpperCase(), code, cID, cNm, userInfo);
 		
 		model.addAttribute("code", code);
 		model.addAttribute("mode", mode);
@@ -3646,7 +3674,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		CommunityClubVO club = ezCommunityService.aspCommInfoGet1(code, userInfo.getTenantId());
 		
 		// 2018-07-03 김보미 - 커뮤니티 회원수 수정
-		club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo().trim(), userInfo.getPrimary(), "", "", userInfo.getCompanyID(), userInfo.getTenantId()));
+		club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo().trim(), userInfo.getPrimary(), "", "", userInfo.getCompanyID(), userInfo.getTenantId(),""));
 		
 		/* 겸직사원의 커뮤니티 선택 시 companyID로 조건 추가 */
 		CommunityMemberInfoVO member = ezCommunityService.aspCommInfoGet2(userInfo.getPrimary(), club.getC_SysopID().trim(), userInfo.getCompanyID(), userInfo.getTenantId());
@@ -3918,8 +3946,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 			bCanJoin = false;
 		}
 		
+		String joinGrade = ezCommunityService.getCommunityJoinGrade(code, userInfo.getCompanyID(), tenantID);
 		/* 겸직 시 현재 선택한 companyID가 userInfo에 제대로 반영되는지 확인 필요  */
-		ezCommunityService.joinOkSet1(code, id, commonUtil.getTodayUTCTime(""), userInfo.getCompanyID(), tenantID);
+		ezCommunityService.joinOkSet1(code, id, commonUtil.getTodayUTCTime(""), userInfo.getCompanyID(), tenantID, joinGrade);
 		
 		String cID = ezCommunityService.joinOkGet2(code, id, tenantID);
 		CommunityClubVO clubVO = ezCommunityService.joinOkGet3(code, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), tenantID);
@@ -4086,9 +4115,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		int postCount = ezCommunityService.adminMemPermitGet1(code, userInfo.getTenantId());		
 		String idSpanValue = ezCommunityService.adminMemPermit(userInfo, code);
-		
+		String joinGrade = ezCommunityService.getCommunityJoinGrade(code, userInfo.getCompanyID(), userInfo.getTenantId());
 		try {
-			ezCommunityService.okNoSet(flag.toUpperCase(), code, cID, userInfo.getTenantId());
+			ezCommunityService.okNoSet(flag.toUpperCase(), code, cID, userInfo.getTenantId(), joinGrade);
 			ezCommunityService.okNoSetSendMail(request, loginCookie, userInfo, flag.toUpperCase(), code, cID);
 			
 			result = "true";
@@ -4135,7 +4164,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		CommunityClubVO club = ezCommunityService.todayCopGet2(num, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		if (club != null) {
-			club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo(), userInfo.getPrimary(), "", "", userInfo.getCompanyID(), userInfo.getTenantId()));
+			club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo(), userInfo.getPrimary(), "", "", userInfo.getCompanyID(), userInfo.getTenantId(), ""));
 			
 			if (!club.getC_Cate_A().equals("0")){
 				cCatecAName = ezCommunityService.todayCopGet3(club.getC_Cate_A(), "A", userInfo.getTenantId());
@@ -4225,7 +4254,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		// 18-05-08 김민성 - 커뮤니티 회원수 수정
 		for (CommunityClubVO club : clubList) {
-			club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo(), userInfo.getPrimary(), "", "", userInfo.getCompanyID(), userInfo.getTenantId()));
+			club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo(), userInfo.getPrimary(), "", "", userInfo.getCompanyID(), userInfo.getTenantId(),""));
 			club.setItemCnt(ezCommunityService.categoryListItemCntGet(club.getC_ClubNo(), userInfo.getTenantId()));
 		}
 		
@@ -4274,7 +4303,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			}
 			
 			// 18-05-08 김민성 - 커뮤니티 회원수 수정
-			club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo(), userInfo.getPrimary(), "", "", userInfo.getCompanyID(), userInfo.getTenantId()));
+			club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo(), userInfo.getPrimary(), "", "", userInfo.getCompanyID(), userInfo.getTenantId(),""));
 			club.setItemCnt(ezCommunityService.categoryListItemCntGet(club.getC_ClubNo(), userInfo.getTenantId()));
 		}
 		
@@ -4520,7 +4549,8 @@ public class EzCommunityController extends EgovFileMngUtil{
         String showAdjacent = "", pReservedItem = "", itemID = "";
         String previousItemID = "", previousTitle = "", nextItemID = "", nextTitle = "";
         String gImageUrl = "", gWidth = "", gHeight = "";
-        
+		String code = "";
+
 		String boardID = request.getParameter("boardID");
 		String type = "";
 
@@ -4537,7 +4567,10 @@ public class EzCommunityController extends EgovFileMngUtil{
 		if (request.getParameter("showAdjacent") != null) {
 			showAdjacent = request.getParameter("showAdjacent");
 		}
-		
+		if (request.getParameter("code") != null) {
+			code = request.getParameter("code");
+		}
+
 		if (!ezCommunityService.communityConnCHK(userInfo.getId(), "", boardID, userInfo.getRollInfo(), 0, response, userInfo, type)) {
 			if (type.equals("pop")) {
 				response.setContentType("application/json; charset=UTF-8");
@@ -5504,6 +5537,131 @@ public class EzCommunityController extends EgovFileMngUtil{
 
 		logger.debug("checkPollPeriod ended.");
 		return -1 != result ? (1 == result ? "ok" : "Inactive") : "deleted";
+	}
+
+	/**
+	 * 회원등급 관리 화면
+	 */
+	@RequestMapping(value = "/ezCommunity/adminMemberGrade.do", method = RequestMethod.GET)
+	public String adminMemberGrade(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("adminMemberGrade started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String flag = "", ser = "";
+
+		String code = request.getParameter("code");
+		String mode = request.getParameter("mode");
+
+		if (request.getParameter("flag") != null) {
+			flag = request.getParameter("flag");
+		}
+
+		if (request.getParameter("ser") != null) {
+			ser = request.getParameter("ser");
+		}
+
+		ser = ser.replace("'", "''");
+
+		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID(), userInfo.getTenantId());
+
+		if (sysopCheck != 1) {
+			return "cmm/error/egovError";
+		}
+
+		model.addAttribute("code", code);
+		model.addAttribute("mode", mode);
+
+		logger.debug("adminMemberGrade ended.");
+
+		return "ezCommunity/communityAdminMemberGrade";
+	}
+
+	/**
+	 * 회원등급 관리 저장
+	 */
+	@RequestMapping(value = "/ezCommunity/adminMemberGradeSave.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String adminMemberGradeSave(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> param) throws Exception {
+		logger.debug("adminMemberGradeSave started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		String code = param.get("code").toString(); // 커뮤니티 아이디
+		String joinGrade = param.get("joinGrade").toString(); // 회원가입시 최초등급
+		List<String> gradeList = (List<String>) param.get("gradeName"); // 회원등급 리스트
+		String companyID = userInfo.getCompanyID();
+		int tenantID = userInfo.getTenantId();
+
+		ezCommunityService.updateJoinGrade(code, joinGrade, companyID, tenantID);
+		ezCommunityService.deleteGradeList(code, companyID, tenantID);
+
+		String result = ezCommunityService.saveGradeList(code, gradeList, companyID, tenantID);
+
+		logger.debug("adminMemberGradeSave ended.");
+		return result;
+	}
+
+	/**
+	 * 회원등급 관리 조회
+	 */
+	@RequestMapping(value = "/ezCommunity/getAdminMemberGrade.do", method = RequestMethod.GET)
+	@ResponseBody
+	public List<CommunityMemberGradeVO> getAdminMemberGrade(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("getAdminMemberGrade started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String code = request.getParameter("code");
+		String companyID = userInfo.getCompanyID();
+		int tenantID = userInfo.getTenantId();
+
+		List<CommunityMemberGradeVO> memberGrade = ezCommunityService.getMemberGrade(code, companyID, tenantID);
+
+		logger.debug("getAdminMemberGrade ended.");
+
+		return memberGrade;
+	}
+
+	/**
+	 * 회원목록 > 회원등급 변경
+	 */
+	@RequestMapping(value = "/ezCommunity/adminMemberGradeUpdate.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String adminMemberGradeUpdate(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> param) throws Exception {
+		logger.debug("adminMemberGradeUpdate started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		String code = param.get("code").toString();
+		String grade = param.get("grade").toString();
+		List<String> userIds = (List<String>) param.get("userIds");
+		String companyID = userInfo.getCompanyID();
+		int tenantID = userInfo.getTenantId();
+
+		ezCommunityService.updateMemberGrade(code, grade, userIds, companyID, tenantID);
+
+		logger.debug("adminMemberGradeUpdate ended.");
+		return "true";
+	}
+
+	/**
+	 * 회원목록 > 회원등급 삭제시 회원존재여부 체크
+	 */
+	@RequestMapping(value = "/ezCommunity/adminMemberGradeCount.do", method = RequestMethod.POST)
+	@ResponseBody
+	public int adminMemberGradeCount(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("adminMemberGradeCount started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		String code = request.getParameter("code");
+		String grade = request.getParameter("grade");
+		String companyID = userInfo.getCompanyID();
+		int tenantID = userInfo.getTenantId();
+
+		int gradeCount = ezCommunityService.getGradeCount(code, grade, companyID, tenantID);
+
+		logger.debug("adminMemberGradeCount ended.");
+		return gradeCount;
 	}
 }
 

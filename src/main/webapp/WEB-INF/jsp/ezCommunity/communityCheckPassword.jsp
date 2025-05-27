@@ -50,8 +50,14 @@
 						rtnVal = result;
 					}
 				});
-	
-			    window.close();
+
+				if (ReturnFunction != null) {
+					window.opener.confirm = window.confirm;
+					ReturnFunction(rtnVal);
+				} else {
+					window.returnValue = rtnVal;
+				}
+				window.close();
 			}
 	
 			window.onunload = function () {

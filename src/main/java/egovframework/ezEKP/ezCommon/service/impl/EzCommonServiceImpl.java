@@ -8685,4 +8685,16 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             ezCommonDAO.insertExecutiveScheduleConfig(map);
         }
     }
+
+    public void alterTblClubUserGradeColumn() throws Exception {
+        ezCommonDAO.alterTblClubUserGradeColumn();
+    }
+
+    public void alterTblClubJoinGradeColumn() throws Exception {
+        ezCommonDAO.alterTblClubJoinGradeColumn();
+    }
+
+    public void createTblCommunityGradeTable() throws Exception {
+        ezCommonDAO.createTblCommunityGradeTable();
+    }
 }

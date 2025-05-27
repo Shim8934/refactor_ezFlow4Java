@@ -8313,4 +8313,64 @@
 		VALUES
 			(#v_TENANTID#, 'useExecSchedulePublic', 'ON', '일정관리 > 임원일정의 조회 가능 범위 설정 여부 ON : 모든 사용자 조회 / OFF : 임원비서만 조회', '일정관리 > 임원일정 조회 가능 범위 설정', TO_DATE('2025-07-07 00:00:00', 'yyyy-mm-dd hh24:mi:ss'), '일정관리')
 	</insert>
+
+	<select id="EzCommonDAO.checkTblClubUserGradeColumn" resultClass="String">
+		<![CDATA[
+			SELECT
+				GRADE
+			FROM
+				TBL_C_CLUBUSER
+			WHERE
+				ROWNUM <= 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.alterTblClubUserGradeColumn">
+		ALTER TABLE
+			TBL_C_CLUBUSER
+			ADD
+				GRADE NCHAR(10) DEFAULT '4' NOT NULL
+	</statement>
+
+	<select id="EzCommonDAO.checkTblClubJoinGradeColumn" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				JOIN_GRADE, MEMLIST_READGRADE
+			FROM
+				TBL_C_CLUB
+			WHERE
+				ROWNUM <= 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.alterTblClubJoinGradeColumn">
+		ALTER TABLE
+			TBL_C_CLUB
+			ADD (
+				JOIN_GRADE bigint(10) DEFAULT 4 NOT NULL,
+				MEMLIST_READGRADE varchar(10) DEFAULT '4' NOT NULL
+		    )
+	</statement>
+
+	<select id="EzCommonDAO.checkTblCommunityGradeTable" resultClass="String">
+		<![CDATA[
+			SELECT
+				GRADENAME
+			FROM
+				TBL_C_GRADE
+			WHERE
+				ROWNUM <= 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.createTblCommunityGradeTable">
+		CREATE TABLE TBL_C_GRADE (
+			 C_CLUBNO VARCHAR2(40) NOT NULL,
+			 GRADECODE VARCHAR2(50) NOT NULL,
+			 GRADENAME VARCHAR2(100) NOT NULL,
+			 COMPANYID VARCHAR2(40) NOT NULL,
+			 TENANT_ID NUMBER(5) NOT NULL DEFAULT 0,
+			 PRIMARY KEY PK_TBL_C_GRADE PRIMARY KEY (C_CLUBNO, GRADECODE, COMPANYID, TENANT_ID)
+		)
+	</statement>
 </sqlMap>

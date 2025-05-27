@@ -351,6 +351,10 @@
 				    case 10:
 				        url = "/ezCommunity/adminHomeBoard.do?code=" + code;
 				        break;
+
+					case 11:
+						url = "/ezCommunity/adminMemberGrade.do?code=" + code;
+						break;
 				}
 				
 				window.open(url,"right");
@@ -408,6 +412,7 @@
 			
 			<h2><span onClick="goPage(4)" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t490' /></span><ul></ul></h2>	
 			<h2><span onClick="goPage(6)" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t492' /></span><ul></ul></h2>
+			<h2><span onClick="goPage(11)" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.lyj01' /></span><ul></ul></h2>
 			<h2><span onClick="goPage(7)" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t493' /></span><ul></ul></h2>	
 			<h2><span onClick="goPage(8)" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t494' /></span><ul></ul></h2>	
 			<h2><span onClick="goPage(5)" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t491' /></span><ul></ul></h2>	

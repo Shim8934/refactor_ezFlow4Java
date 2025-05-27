@@ -149,6 +149,8 @@ public class CommunityClubVO {
 	String c_name;
 	/** 2024-04-29 한태훈 - userId 추가 */
 	String userId;
+	/** 회원목록 보기 권한 등급*/
+	String memlist_readGrade;
 	
 	public String getC_ClubNo() {
 		return c_ClubNo;
@@ -593,5 +595,13 @@ public class CommunityClubVO {
 	}
 	public void setUserId(String userId) {
 		this.userId = userId;
+	}
+
+	public String getMemlist_readGrade() {
+		return memlist_readGrade;
+	}
+
+	public void setMemlist_readGrade(String memlist_readGrade) {
+		this.memlist_readGrade = memlist_readGrade;
 	}
 }

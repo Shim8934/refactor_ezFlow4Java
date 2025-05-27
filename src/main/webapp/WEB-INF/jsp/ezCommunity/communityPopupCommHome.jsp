@@ -71,6 +71,9 @@
 		    var strLang6 =  "<spring:message code='ezCommunity.t431' />";
 		    //2018-07-24 김보미
 		    var strLang7 =  "<spring:message code='ezCommunity.kbm01' />";
+
+			var userGrade = "<c:out value='${userGrade }'/>";
+			var readGrade = "<c:out value = '${readGrade}' />";
 		    
 		    $(function () {
 		        $.ajax({
@@ -627,21 +630,26 @@
 		                    document.getElementById("mainboard").style.display = "none";
 		                    document.getElementById("makeguide").style.display = "none";
 		                    break;
-		                case "btn_MemberInfo": document.getElementById("rightfrm").src = "/ezCommunity/commViewMember.do?code=" + code, "right";
-		                    tempboard.className = "off";
-		                    tempboard = "";
-		                    document.getElementById(btn.id).className = "on";
-		                    
-		                    if (tempmenuid != "" && tempmenuid != "btn_MemberInfo") {
-		                        document.getElementById(tempmenuid).className = "off";
-		                    }
-		                    
-		                    tempmenuid = btn.id;
-		                    document.getElementById("copmaindesc").style.display = "none";
-		                    document.getElementById("rightfrm").style.display = "";
-		                    document.getElementById("rightfrm").style.height = "659px";
-		                    document.getElementById("mainboard").style.display = "none";
-		                    document.getElementById("makeguide").style.display = "none";
+		                case "btn_MemberInfo": 
+							if (userGrade > readGrade) { <%-- 회원목록 읽기 권한 체크 --%>
+								alert("<spring:message code='ezCommunity.t431' />");
+							} else {
+								document.getElementById("rightfrm").src = "/ezCommunity/commViewMember.do?code=" + code, "right";
+								tempboard.className = "off";
+								tempboard = "";
+								document.getElementById(btn.id).className = "on";
+
+								if (tempmenuid != "" && tempmenuid != "btn_MemberInfo") {
+									document.getElementById(tempmenuid).className = "off";
+								}
+
+								tempmenuid = btn.id;
+								document.getElementById("copmaindesc").style.display = "none";
+								document.getElementById("rightfrm").style.display = "";
+								document.getElementById("rightfrm").style.height = "659px";
+								document.getElementById("mainboard").style.display = "none";
+								document.getElementById("makeguide").style.display = "none";
+							}
 		                    break;
 		                case "btn_MemberOut":
 		                    if (chCheckSysop.toUpperCase() == "TRUE") {

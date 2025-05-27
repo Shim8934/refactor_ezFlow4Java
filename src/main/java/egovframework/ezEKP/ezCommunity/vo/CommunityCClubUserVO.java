@@ -39,7 +39,9 @@ public class CommunityCClubUserVO {
 	private String deptID;
 	/** 2018-07-02 홍승비 - 회원의 부서이름 */
 	private String deptName;
-	
+	/** 사용자 회원등급*/
+	private String grade;
+
 	public String getC_clubNo() {
 		return c_clubNo;
 	}
@@ -153,6 +155,14 @@ public class CommunityCClubUserVO {
 	}
 	public void setDeptName(String deptName) {
 		this.deptName = deptName;
+	}
+	
+	public String getGrade() {
+		return grade;
+	}
+
+	public void setGrade(String grade) {
+		this.grade = grade;
 	}
 
 }

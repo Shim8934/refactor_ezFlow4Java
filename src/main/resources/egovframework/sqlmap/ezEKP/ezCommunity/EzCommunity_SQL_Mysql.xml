@@ -25,6 +25,7 @@
 	<typeAlias alias="CommunityMyCommunityVO"			type="egovframework.ezEKP.ezCommunity.vo.CommunityMyCommunityVO"/>
 	<typeAlias alias="CommunityBoardDeleteItemVO" 		type="egovframework.ezEKP.ezCommunity.vo.CommunityBoardDeleteItemVO"/>
 	<typeAlias alias="CommunityCClubGuestReplyVO" 		type="egovframework.ezEKP.ezCommunity.vo.CommunityCClubGuestReplyVO"/>
+	<typeAlias alias="CommunityMemberGradeVO" 			type="egovframework.ezEKP.ezCommunity.vo.CommunityMemberGradeVO"/>
 	<typeAlias alias="OrganUserVO"						type="egovframework.ezEKP.ezOrgan.vo.OrganUserVO"/>
 	
 	<resultMap class="CommunityCBoardVO" id="LeftBBSList">
@@ -110,7 +111,14 @@
 		<result property="closeState"					column="CLOSESTATE"					columnIndex="8"/>
 		<result property="closeState2"					column="CLOSESTATE2"				columnIndex="9"/>
 	</resultMap>
-	
+
+    <resultMap class="CommunityMemberGradeVO" id="CommunityMemberGradeVO">
+		<result property="c_ClubNo"						column="C_CLUBNO"					columnIndex="1"/>
+		<result property="gradeCode"					column="GRADECODE"					columnIndex="2"/>
+		<result property="gradeName"					column="GRADENAME"					columnIndex="3"/>
+		<result property="join_Grade"					column="JOIN_GRADE"					columnIndex="4"/>
+	</resultMap>
+
 	<resultMap class="CommunityCClubGuestReplyVO" id="communityCClubGuestReplyVO">
 		<result property="itemId"						column="ITEMID"						columnIndex="1"/>
 		<result property="replyId"						column="REPLYID"					columnIndex="2"/>
@@ -154,8 +162,8 @@
 							RTRIM(parentboardid) = UPPER(#v_pRootBoardID#)
 						AND
 							access_ = 1
-						AND
-							write_fg = 'true'
+						/*AND
+							write_fg = 'true'*/
 						AND
 							boardid <> #v_pExcludeBoardID#
 						AND (	accessid = #v_pUserID#
@@ -1623,11 +1631,15 @@
 					A.tenant_id = #tenantID#
 				AND
 					T2.companyid = #companyID#
+			]]>
+				<isNotEmpty property="selectGrade">
+					AND
+						A.GRADE = #selectGrade#
+				</isNotEmpty>
 				GROUP BY
 					C_CLUBNO, C_ID
 				ORDER BY
-					c_indate DESC
-			]]>
+					A.grade asc
 		</isEqual>
 		
 		<isNotEqual property="v_s_radio" compareValue="ID">
@@ -1705,11 +1717,15 @@
 						A.tenant_id = #tenantID#
 					AND
 						T2.companyid = #companyID#
+				]]>
+					<isNotEmpty property="selectGrade">
+						AND
+							A.GRADE = #selectGrade#
+					</isNotEmpty>
 					GROUP BY
 						A.C_CLUBNO, A.C_ID
 					ORDER BY
-						A.c_indate DESC
-				]]>
+						A.grade asc
 			</isEqual>
 			
 			<isNotEqual property="v_s_radio" compareValue="NAME">
@@ -1780,11 +1796,15 @@
 						A.tenant_id = #tenantID#
 					AND
 						T2.companyid = #companyID#
+				]]>
+					<isNotEmpty property="selectGrade">
+						AND
+							A.GRADE = #selectGrade#
+					</isNotEmpty>
 					GROUP BY
 						C_CLUBNO, C_ID
 					ORDER BY
-						c_indate DESC
-				]]>
+						A.grade asc
 			</isNotEqual>
 		</isNotEqual>
 	</select>
@@ -3531,7 +3551,7 @@
 			FROM
 				TBL_COMM_BOARDMANAGE
 			WHERE
-				boardadmin_fg = 'true'
+				boardadmin_fg = '1'
 			AND
 				boardid = #v_pBoardID#
 			AND
@@ -4216,6 +4236,10 @@
 				AND
 					TBL_C_CLUBUSER.tenant_id = #tenantID#
 			]]>
+			<isNotEmpty property="selectGrade">
+				AND
+				    GRADE = #selectGrade#
+			</isNotEmpty>
 		</isEqual>
 		<isNotEqual property="v_S_RADIO" compareValue="ID">
 			<isEqual property="v_S_RADIO" compareValue="NAME">
@@ -4241,6 +4265,10 @@
 					AND
 						TBL_C_CLUBUSER.companyID = #companyID#
 				]]>
+					<isNotEmpty property="selectGrade">
+						AND
+						    GRADE = #selectGrade#
+					</isNotEmpty>
 			</isEqual>
 			<isNotEqual property="v_S_RADIO" compareValue="NAME">
 				<![CDATA[
@@ -4261,6 +4289,10 @@
 					AND
 						TBL_C_CLUBUSER.tenant_id = #tenantID#
 				]]>
+					<isNotEmpty property="selectGrade">
+						AND
+							GRADE = #selectGrade#
+					</isNotEmpty>
 			</isNotEqual>
 		</isNotEqual>
 	</select>
@@ -5581,7 +5613,9 @@
    				c_logo_thumbnail,
    				c_clubbanner,
    				companyid,
-   				tenant_id)
+   				tenant_id,
+    			join_grade,
+    			memlist_readGrade)
    			VALUES
     			(#v_CODE#,
     			DATE_FORMAT(#v_pNow#, '%Y-%m-%d %H:%i:%s'),
@@ -5601,7 +5635,9 @@
     			#v_LOGO_THUMBNAIL#,
     			#v_BANNER#,
     			#v_USERINFO_COMPANYID#,
-    			#tenantID#)
+    			#tenantID#,
+    			'4',
+    			'4')
 		]]>
 	</insert>
 	
@@ -5683,6 +5719,7 @@
     			c_birth,
     			c_sex,
     			permit,
+     			grade,
     			companyid,
     			tenant_id)
      		VALUES
@@ -5697,6 +5734,7 @@
      			#v_OPENBIRTH#,
      			#v_OPENSEX#,
      			#v_PERMIT#,
+     			'1',
      			#v_USERINFO_COMPANYID#,
      			#tenantID#)
 		]]>
@@ -6259,7 +6297,8 @@
 				c_clubgubun = #v_C_CLUBGUBUN#,
 				c_clubconfirmtype = #v_C_CLUBTYPE#,
 				isin = #v_ISIN#,
-				c_clubdesc = #v_C_CLUBDESC#
+				c_clubdesc = #v_C_CLUBDESC#,
+				memlist_readGrade = #read_Grade#
 			WHERE
 				RTRIM(c_clubno) = #v_CODE#
 			AND
@@ -6445,7 +6484,7 @@
 				1,
 				1,
 				'top',
-				'true',
+				'1',
 				#tenantID#)
 		]]>
 	</insert>
@@ -6468,7 +6507,7 @@
 				null,
 				1,
 				'top',
-				'true',
+				'10',
 				#tenantID#)
 		]]>
 	</insert>
@@ -6593,13 +6632,13 @@
 				NULL,
 				1,
 				#v_PARENTBOARDID#,
-				'false',
-				'true',
-				'true',
-				'true',
-				'true',
-				'true',
-				'false',
+				'1',
+				'10',
+				#readGrade#,
+				#writeGrade#,
+				#writeGrade#,
+				'2',
+				'1',
 				#tenantID#)
 		]]>
 	</insert>
@@ -6877,6 +6916,7 @@
      			companyid,
      			permit,
      			c_visited,
+     			grade,
      			tenant_id)
      		VALUES
      			(#v_CODE#,
@@ -6886,6 +6926,7 @@
      			#v_USERINFO_COMPANYID#,
      			1,
      			1,
+     			#joinGrade#,
      			#tenantID#)
 		]]>
 	</insert>
@@ -6930,7 +6971,8 @@
 				c_birth = #v_OPENBIRTH#,
 				c_sex = #v_OPENSEX#,
 				c_intro = #v_C_INTRO#,
-				permit = '0'
+				permit = '0',
+				grade = '10'
 			WHERE
 				RTRIM(c_clubno) = #v_CODE#
 			AND
@@ -6963,7 +7005,8 @@
 			UPDATE
 				TBL_C_CLUBUSER
 			SET
-				permit = 1
+				permit = 1,
+				grade = #joinGrade#
 			WHERE
 				RTRIM(c_clubno) = #v_CODE#
 			AND
@@ -8504,4 +8547,198 @@
 		  AND TENANT_ID = #tenantID#
 	]]>
 	</select>
+
+    <update id="EzCommunityDAO.updateJoinGrade"	parameterClass="Map">
+		<![CDATA[
+        UPDATE
+            TBL_C_CLUB
+        SET
+            JOIN_GRADE = #joinGrade#
+        WHERE
+            C_CLUBNO = #code#
+          AND
+            COMPANYID = #companyID#
+          AND
+            tenant_id = #tenantID#
+        ]]>
+	</update>
+
+    <insert id="EzCommunityDAO.saveGradeList" parameterClass="Map">
+		<![CDATA[
+        INSERT INTO TBL_C_GRADE
+        (C_CLUBNO,
+         GRADECODE,
+         GRADENAME,
+         COMPANYID,
+         TENANT_ID)
+        VALUES
+            (#code#,
+             #gradeCode#,
+             #gradeName#,
+             #companyID#,
+             #tenantID#)
+        ]]>
+	</insert>
+
+    <delete id="EzCommunityDAO.deleteGradeList" parameterClass="Map">
+		<![CDATA[
+        DELETE FROM
+            TBL_C_GRADE
+        WHERE
+            C_CLUBNO = #code#
+          AND
+            COMPANYID = #companyID#
+          AND
+            tenant_id = #tenantID#
+        ]]>
+	</delete>
+
+    <select id="EzCommunityDAO.getMemberGrade" parameterClass="Map" resultClass="CommunityMemberGradeVO">
+ 		<![CDATA[
+        SELECT
+            a.C_CLUBNO,
+            a.GRADECODE,
+            a.GRADENAME,
+            b.JOIN_GRADE
+        FROM
+            TBL_C_GRADE a
+                inner join TBL_C_CLUB b on
+                a.C_CLUBNO = b.C_CLUBNO
+        WHERE
+            a.TENANT_ID = #tenantID#
+          AND
+            a.C_CLUBNO = #code#
+          AND
+            a.COMPANYID = #companyID#
+        order by CAST(a.GRADECODE AS INT) asc
+        ]]>
+ 	</select>
+
+    <select id="EzCommunityDAO.getMemberGradeName" parameterClass="Map" resultClass="String">
+ 		<![CDATA[
+        SELECT
+            GRADENAME
+        FROM
+            TBL_C_GRADE
+        WHERE
+            TENANT_ID = #tenantID#
+          AND
+            C_CLUBNO = #code#
+          AND
+            COMPANYID = #companyID#
+          AND
+            GRADECODE = #gradeCode#
+        ]]>
+ 	</select>
+
+    <update id="EzCommunityDAO.updateMemberGrade"	parameterClass="Map">
+		<![CDATA[
+        UPDATE
+            TBL_C_CLUBUSER
+        SET
+            GRADE = #grade#
+        WHERE
+            C_CLUBNO = #code#
+          AND
+            C_ID = #userId#
+          AND
+            COMPANYID = #companyID#
+          AND
+            tenant_id = #tenantID#
+        ]]>
+	</update>
+
+    <select id="EzCommunityDAO.getUserGrade" parameterClass="Map" resultClass="String">
+ 		<![CDATA[
+        SELECT
+            GRADE
+        FROM
+            TBL_C_CLUBUSER
+        WHERE
+            TENANT_ID = #tenantID#
+          AND
+            C_CLUBNO = #code#
+          AND
+            COMPANYID = #companyID#
+          AND
+            C_ID = #userId#
+        ]]>
+ 	</select>
+
+    <select id="EzCommunityDAO.getMemListReadGrade" parameterClass="Map" resultClass="String">
+ 		<![CDATA[
+        SELECT
+            memlist_readGrade
+        FROM
+            TBL_C_CLUB
+        WHERE
+            TENANT_ID = #tenantID#
+          AND
+            C_CLUBNO = #code#
+          AND
+            COMPANYID = #companyID#
+        ]]>
+ 	</select>
+
+    <select id="EzCommunityDAO.getGradeCount" parameterClass="Map" resultClass="Integer">
+ 		<![CDATA[
+        SELECT
+            count(*)
+        FROM
+            TBL_C_CLUBUSER
+        WHERE
+            GRADE = #grade#
+          AND
+            TENANT_ID = #tenantID#
+          AND
+            C_CLUBNO = #code#
+          AND
+            COMPANYID = #companyID#
+        ]]>
+ 	</select>
+
+    <update id="EzCommunityDAO.updateBoardManageGrade" parameterClass="Map">
+		<![CDATA[
+        UPDATE
+            TBL_COMM_BOARDMANAGE
+        SET
+            read_fg = #readGrade#,
+            write_fg = #writeGrade#,
+            reply_fg = #writeGrade#
+        WHERE
+            boardid = #v_pBoardID#
+          AND
+            accessid = #v_pAccessID#
+          AND
+            tenant_id = #tenantID#
+        ]]>
+	</update>
+
+    <select id="EzCommunityDAO.getCommunityJoinGrade" parameterClass="Map" resultClass="String">
+ 		<![CDATA[
+        SELECT
+            join_grade
+        FROM
+            TBL_C_CLUB
+        WHERE
+            TENANT_ID = #tenantID#
+          AND
+            C_CLUBNO = #code#
+          AND
+            COMPANYID = #companyID#
+        ]]>
+ 	</select>
+
+    <insert id="EzCommunityDAO.insertClubGrade" parameterClass="Map">
+		<![CDATA[
+        INSERT INTO TBL_C_GRADE
+            (c_clubno,gradecode,gradename,companyid,tenant_id)
+        VALUES
+            (#v_CODE#, '1', '마스터', #companyID#, #tenantID#),
+            (#v_CODE#, '2', '운영자', #companyID#, #tenantID#),
+            (#v_CODE#, '3', '정회원', #companyID#, #tenantID#),
+            (#v_CODE#, '4', '준회원', #companyID#, #tenantID#),
+            (#v_CODE#, '10', '손님', #companyID#, #tenantID#)
+        ]]>
+	</insert>
 </sqlMap>

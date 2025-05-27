@@ -7798,4 +7798,55 @@
 		VALUES
 			(#v_TENANTID#, 'useExecSchedulePublic', 'ON', '일정관리 > 임원일정의 조회 가능 범위 설정 여부 ON : 모든 사용자 조회 / OFF : 임원비서만 조회', '일정관리 > 임원일정 조회 가능 범위 설정', '2025-07-07 00:00:00', '일정관리')
 	</insert>
+
+	<select id="EzCommonDAO.checkTblClubUserGradeColumn" resultClass="String">
+		SELECT
+			GRADE
+		FROM
+			TBL_C_CLUBUSER
+				LIMIT 1
+	</select>
+
+	<statement id="EzCommonDAO.alterTblClubUserGradeColumn">
+		ALTER TABLE
+			TBL_C_CLUBUSER
+			ADD
+				GRADE VARCHAR(10) DEFAULT '4' NOT NULL
+	</statement>
+
+	<select id="EzCommonDAO.checkTblClubJoinGradeColumn" resultClass="Integer">
+		SELECT
+			JOIN_GRADE, MEMLIST_READGRADE
+		FROM
+			TBL_C_CLUB
+				LIMIT 1
+	</select>
+
+	<statement id="EzCommonDAO.alterTblClubJoinGradeColumn">
+		ALTER TABLE
+			TBL_C_CLUB
+			ADD
+				JOIN_GRADE bigint(10) DEFAULT 4 NOT NULL,
+			ADD
+				MEMLIST_READGRADE varchar(10) DEFAULT '4' NOT NULL
+	</statement>
+
+	<select id="EzCommonDAO.checkTblCommunityGradeTable" resultClass="String">
+		SELECT
+			GRADENAME
+		FROM
+			TBL_C_GRADE
+				LIMIT 1
+	</select>
+
+	<statement id="EzCommonDAO.createTblCommunityGradeTable">
+		CREATE TABLE TBL_C_GRADE (
+			 `C_CLUBNO` varchar(40) NOT NULL,
+			 `GRADECODE` varchar(50) NOT NULL,
+			 `GRADENAME` varchar(100) NOT NULL,
+			 `COMPANYID` varchar(40) NOT NULL,
+			 `TENANT_ID` mediumint(9) NOT NULL DEFAULT 0,
+			 PRIMARY KEY (`C_CLUBNO`, `GRADECODE`, `COMPANYID`,`TENANT_ID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+	</statement>
 </sqlMap>
