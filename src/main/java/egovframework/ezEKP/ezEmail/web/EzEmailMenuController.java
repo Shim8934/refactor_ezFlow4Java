@@ -496,6 +496,8 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 				isSubscribe = false;
 			}
 
+			boolean showAllMail = request.getParameter("am").equalsIgnoreCase("y");
+
 			StringBuilder subFolderXML = new StringBuilder();
 
 			IMAPAccess ia = null;
@@ -556,7 +558,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 						subFolderXML.append("></node>");
 					}
 				} else {
-					/*if (isSubscribe) {
+					if (showAllMail) {
 						// 전체메일
 						try {
 							String displayName = egovMessageSource.getMessage("email.allmail", locale);
@@ -572,7 +574,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 							logger.error("Error get unread message count: " + e.getMessage());
 							logger.error(e.getMessage(), e);
 						}
-					}*/
+					}
 
 					String useDefaultFoldersForLangOnly = ezCommonService.getTenantConfig("UseDefaultFoldersForLangOnly", loginInfo.getTenantId());
 					boolean isUseDefaultFoldersForLangOnly = useDefaultFoldersForLangOnly.equals("YES") ? true : false;
