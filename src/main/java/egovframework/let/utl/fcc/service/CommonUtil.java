@@ -285,7 +285,17 @@ public class CommonUtil {
     	commonUtilInstance = this;
 
 		emptyDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-    	
+
+		String useS3ObjectStorage = config.getProperty("config.useS3ObjectStorage");
+
+		logger.info("useS3ObjectStorage={},s3EndPoint={},s3Bucket={}", useS3ObjectStorage, config.getProperty("config.S3EndPoint"), config.getProperty("config.S3Bucket"));
+
+		if ("YES".equalsIgnoreCase(useS3ObjectStorage)) {
+			EzFAL.setStorageMode(EzFAL.OBJECT_STORAGE_MODE);
+			EzFAL.initS3Client(config.getProperty("config.S3EndPoint"), config.getProperty("config.S3AccessKey"),
+					config.getProperty("config.S3SecretKey"), config.getProperty("config.S3Bucket"));
+		}
+		
     	logger.debug("init ended.");
     }
 

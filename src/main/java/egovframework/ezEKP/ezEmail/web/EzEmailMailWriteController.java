@@ -78,6 +78,7 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
+import egovframework.let.utl.fcc.service.EzFAL;
 import egovframework.let.utl.rest.Result;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
@@ -551,7 +552,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		pDirPath = realPath + pDirPath;
 		
 		// check the upload mail root folder and create it if it doesn't exist.
-		File uploadMailRootFolder = new File(pDirPath);
+		EzFAL.EzFile uploadMailRootFolder = new EzFAL.EzFile(pDirPath);
 
 		if (!uploadMailRootFolder.exists()) {
 			logger.debug("creating uploadMailRootFolder=" + uploadMailRootFolder);
@@ -575,7 +576,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
                 String pDate = EgovDateUtil.getToday("");
                 folderDate = pDate;
                 pDirTempPath = largeFilePath + commonUtil.separator + pDate;
-                File file = new File(pDirTempPath);
+				EzFAL.EzFile file = new EzFAL.EzFile(pDirTempPath);
                 
                 if (!file.exists()) {
                 	file.mkdirs();
@@ -586,12 +587,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
                 pFileName[i] = commonUtil.normalizeFileName(pFileName[i]);
                 
                 String base64OrgFileName = Base64.encodeBase64String(pFileName[i].getBytes("UTF-8"));
-                FileOutputStream fos = null;
+				EzFAL.EzFileOutputStream fos = null;
                 
                 try {
 					// 대용량 첨부 파일명을 저장하는 파일
-                	File f = new File(commonUtil.detectPathTraversal(pDirTempPath + commonUtil.separator + sGUID[i] + "__.txt"));
-                	fos = new FileOutputStream(f);
+					EzFAL.EzFile f = new EzFAL.EzFile(commonUtil.detectPathTraversal(pDirTempPath + commonUtil.separator + sGUID[i] + "__.txt"));
+                	fos = new EzFAL.EzFileOutputStream(f);
                     fos.write(base64OrgFileName.getBytes("ISO-8859-1"));
                 } catch(IOException e) {
                 	throw e;
@@ -607,8 +608,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
                 pDirTempPath = pDirPath + commonUtil.separator + "tempFileUpload";
                 pBigFileUpload = "N";
             }
-			
-			File f = new File(pDirTempPath);
+
+			EzFAL.EzFile f = new EzFAL.EzFile(pDirTempPath);
 
 			if (!f.exists()) {
 				f.mkdirs();
@@ -622,8 +623,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
                     resultUpload[i] = "denied";
                 } else {
 					// Multipart 형식으로 업로드된 파일을 복사한다.
-                    //writeUploadedFile(multiFile.get(i), sGUID[i], pDirTempPath);
-					multiFile.get(i).transferTo(new File(pDirTempPath, sGUID[i]));
+                    writeUploadedFile(multiFile.get(i), sGUID[i], pDirTempPath);
+					//multiFile.get(i).transferTo(new File(pDirTempPath, sGUID[i]));
                     fileLocation[i] = pDirTempPath + commonUtil.separator + sGUID[i];
                     resultUpload[i] = "true";
                 }
@@ -674,7 +675,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		strXML += strXML2 + "</NODES></ROOT>";
 
         String xmlPath = pDirPath + commonUtil.separator + "templist";
-        File f = new File(xmlPath);
+		EzFAL.EzFile f = new EzFAL.EzFile(xmlPath);
 
         if (!f.exists()) {
 			f.mkdirs();
@@ -682,7 +683,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 
 		// 업로드된 파일에 대한 정보를 누적해서 저장하는 파일
         xmlPath += commonUtil.separator + tempFolderName + ".txt";
-        f = new File(xmlPath);
+        f = new EzFAL.EzFile(xmlPath);
         
         if (f.exists()) {
         	String tempXmlList = "";
@@ -691,7 +692,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         	OutputStreamWriter osw = null;
         	
         	try {
-	        	isr = new InputStreamReader(new FileInputStream(f));
+	        	isr = new InputStreamReader(new EzFAL.EzFileInputStream(f));
 	        	br = new BufferedReader(isr);
 	        	int read = 0;
 				
@@ -709,7 +710,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	            	nodeList.item(0).appendChild(xmldom.importNode(nodeList2.item(i), true));
 	            }
             	
-	            osw = new OutputStreamWriter(new FileOutputStream(f));
+	            osw = new OutputStreamWriter(new EzFAL.EzFileOutputStream(f));
             	osw.write(commonUtil.convertDocumentToString(xmldom));
             	String crlf = System.getProperty("line.separator");
         		osw.append(crlf+crlf);
@@ -737,7 +738,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         	OutputStreamWriter osw = null;
         	
         	try {
-        		osw = new OutputStreamWriter(new FileOutputStream(f));
+        		osw = new OutputStreamWriter(new EzFAL.EzFileOutputStream(f));
         		osw.write(strXML);
         		String crlf = System.getProperty("line.separator");
         		osw.append(crlf+crlf);

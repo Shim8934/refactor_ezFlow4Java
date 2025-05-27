@@ -29,6 +29,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import egovframework.let.utl.fcc.service.EzFAL;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -194,7 +195,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 		
 		try {
 		    stream = file.getInputStream();
-		    File cFile = new File(stordFilePathReal);
+			EzFAL.EzFile cFile = new EzFAL.EzFile(stordFilePathReal);
 	
 		    if (!cFile.isDirectory()) {
 				boolean _flag = cFile.mkdirs();
@@ -203,7 +204,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 				}
 		    }
 	
-		    bos = new FileOutputStream(stordFilePathReal + File.separator + newName);
+		    bos = new EzFAL.EzFileOutputStream(stordFilePathReal + File.separator + newName);
 	
 		    int bytesRead = 0;
 		    byte[] buffer = new byte[BUFF_SIZE];
