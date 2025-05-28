@@ -4807,6 +4807,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			version = request.getParameter("version") == null ? "" : request.getParameter("version");
 		}
 		model.addAttribute("version", version);
+		model.addAttribute("boardNoticePeriod", ezCommonService.getTenantConfig("boardNoticePeriod", userInfo.getTenantId()));
 		
 		logger.debug("newBoardItem ended");
 		return requestURL;
