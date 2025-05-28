@@ -78,9 +78,9 @@
 				for (var i = 0; i < personalScheConfigList.length; i++) {
 					try {
 						var config = personalScheConfigList[i];
-						var scheduleType = (config.scheduleType !== undefined) ? config.scheduleType : 1;
-						var relatedId = (config.relatedId !== undefined) ? config.relatedId : config.userId;
-						var tagColor = (config.tagColor !== undefined) ? config.tagColor : null;
+						var scheduleType = config.scheduleType ? config.scheduleType : 1;
+						var relatedId = config.relatedId ? config.relatedId : config.userId;
+						var tagColor = config.tagColor ? config.tagColor : null;
 
 						// 기본 셀렉터 구성 (색상 태그, 색상 텍스트)
 						var selector = "div[data-schedule-type='" + scheduleType + "']";
@@ -92,7 +92,7 @@
 
 						var targetElem = document.querySelector(selector);
 
-						if (!targetElem) {
+						if (!targetElem || !tagColor) {
 							continue;
 						}
 
