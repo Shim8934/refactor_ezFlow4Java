@@ -105,14 +105,27 @@ function getSubModuleType() {
     return simpleAIElem.dataset.subtype;
 }
 
+let isAiRequestInProgress = false;
 // 추천 promt 동작
 function simplePrompt(element) {
+    // 이미 요청이 진행 중인 경우 차단
+    if (isAiRequestInProgress) {
+        console.warn('AI request already in progress. Please wait.');
+        return;
+    }
+
     const promptData = PromptData.simpleData(element, "");
     aiSend(promptData, null);
 }
 
 // 사용자 입력 prompt 동작
 function userInput() {
+    // 이미 요청이 진행 중인 경우 차단
+    if (isAiRequestInProgress) {
+        console.warn('AI request already in progress. Please wait.');
+        return;
+    }
+
     const chatInput = document.getElementById("chatInput").value.trim();
     
     if (!chatInput) {
@@ -126,6 +139,10 @@ function userInput() {
 
 // ai 전송 main
 async function aiSend(promptData, callback) {
+
+    // 요청 시작 시 플래그 설정
+    isAiRequestInProgress = true;
+
     appendUserChatWithLoading(promptData.displayText);
 
     const aiTextDivs = document.querySelectorAll('.ai_text.al_loading');
@@ -180,13 +197,14 @@ async function aiSend(promptData, callback) {
     } catch (error) {
         console.error('AI streaming failed:', error.message || error);
         showError(aiLoadingDiv);
+    } finally {
+        if (!!callback) {
+            callback(callbackParam);
+        }
+
+        isAiRequestInProgress = false;
+        scrollToBottom();
     }
-    
-    if (!!callback) {
-        callback(collbackParam);
-    }
-    
-    scrollToBottom();
 }
 
 // HTML 태그를 전부 제거하는 함수
