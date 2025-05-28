@@ -297,13 +297,13 @@
 	                if (pGubun == "ALL") {
 						fragment.appendChild(TR);
 	                }
-	                else if (pGubun == "READ" && reader.ReadDate != "UNREAD") {
+	                else if (pGubun == "READ" && reader.ReadDate != "UNREAD" && reader.CancelStatus == "2") {
 						fragment.appendChild(TR);
 	                }
 	                else if (pGubun == "UNREAD" && reader.ReadDate == "UNREAD") {
 						fragment.appendChild(TR);
 	                }
-	                else if (pGubun == "CANCEL" && reader.CancelStatus != "") {
+	                else if (pGubun == "CANCEL" && reader.CancelStatus != "" && reader.CancelStatus != "2") {
 						fragment.appendChild(TR);
 	                }
 	            });
