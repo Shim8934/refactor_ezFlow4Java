@@ -3136,7 +3136,7 @@ function Option_onClick() {
     	requestUrl += "?shareId=" + encodeURIComponent(shareId);
     	
     	if (individualmailuser != "0") {
-	        DivPopUpShow(410, 350, requestUrl);
+	        DivPopUpShow(410, 360, requestUrl);
 	    } else {
 	        DivPopUpShow(410, 275, requestUrl);
 	    }
