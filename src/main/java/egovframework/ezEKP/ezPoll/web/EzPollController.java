@@ -45,29 +45,19 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.stringtemplate.v4.compiler.STParser.mapExpr_return;
 import org.w3c.dom.Document;
-
-import com.google.api.services.drive.Drive.Files;
-import com.ibm.icu.util.RangeValueIterator.Element;
 
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezBoard.vo.BoardPollConfigVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
-import egovframework.ezEKP.ezEmail.service.EzEmailService;
-import egovframework.ezEKP.ezEmail.vo.MailColorVO;
-import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
-import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
-import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezNotification.service.EzNotificationService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
-import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezPoll.service.EzPollService;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollCommentVO;
-import egovframework.ezEKP.ezPoll.vo.PollEmailSimpleUser;
 import egovframework.ezEKP.ezPoll.vo.PollFilePathVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionStatusVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
@@ -76,10 +66,7 @@ import egovframework.ezEKP.ezPoll.vo.PollUserVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
-import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
-import egovframework.let.utl.fcc.service.EgovDateUtil;
-import egovframework.let.utl.fcc.service.EgovStringUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @Controller
@@ -108,10 +95,7 @@ public class EzPollController extends EgovFileMngUtil {
 	private EzOrganService ezOrganService;
 	
 	@Autowired
-	private EzEmailService ezEmailService;
-	
-	@Autowired
-	private EzOrganAdminService ezOrganAdminService;
+	private EzNotificationService ezNotificationService;
 	
 	@Autowired
 	private SimpMessagingTemplate template;
@@ -343,13 +327,29 @@ public class EzPollController extends EgovFileMngUtil {
 	public String qstMain(HttpServletRequest request, ModelMap model) throws Exception{
 		logger.debug("pollMain Start");
 		String qstId = request.getParameter("qstId");
+		String leftFrameWidth = "220";
+		int width = 0;
 		
 		if (qstId != null) {
 			qstId = commonUtil.detectPathTraversal(qstId);
 			qstId = commonUtil.stripScriptTags(qstId);
 		}
+
+		if (request.getParameter("__wwidth") != null) {
+			String widthParam = request.getParameter("__wwidth");
+
+			try {
+				width = Integer.parseInt(widthParam);
+
+				leftFrameWidth = width < 1180 ? "0" : "220";
+			} catch (NumberFormatException e) {
+				width = 0;
+			}
+		}
 		
 		model.addAttribute("qstId", qstId);
+		model.addAttribute("leftFrameWidth", leftFrameWidth);
+		
 		logger.debug("pollMain End");
 		return "/ezPoll/pollMain";
 	}
@@ -497,7 +497,7 @@ public class EzPollController extends EgovFileMngUtil {
 		String modifyingQst = ((String)session.getAttribute("modifying_question") != null) ? (String)session.getAttribute("modifying_question") : "";					
 		
 		for (PollQuestionVO pollQstVO : listTotalQuestions) {
-			if (pollQstVO.getIsMofifying() == 1) {
+			if (pollQstVO.getIsModifying() == 1) {
 				if (modifyingQst.equals("")) {
 					listOfModifyingQst.add(pollQstVO);
 				}
@@ -762,9 +762,29 @@ public class EzPollController extends EgovFileMngUtil {
 				ezPollService.insertOption(pollAnswerVO);
 			}
 		}
-
-		// Send posting notification mail
-		// 메일 발송 체크되어 있고, 투표 등록이나 재사용일 경우 => true
+		
+		Set<LoginVO> setOfUserIds = new HashSet<LoginVO>();
+		ezPollService.getAllUserForQuestion(loginVO, pollQuestionVO.getQstId(), setOfUserIds);
+		
+		List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
+		
+		for (LoginVO user : setOfUserIds) {
+			Map<String, Object> recipientMap = new HashMap<String, Object>();
+			recipientMap.put("userType", "PERSON");
+			recipientMap.put("companyId", loginVO.getCompanyID());
+			recipientMap.put("cn", user.getId());
+			notiRecipientList.add(recipientMap);
+		}
+		
+		if (notiRecipientList != null && notiRecipientList.size() > 0) {
+			String linkUrl = "/ezPoll/pollVote.do?brdId=6&qstId=" + pollAnswerVO.getQstId();
+			String linkUrlMobile = "";
+			ezNotificationService.sendNoti(req, loginVO.getId(), loginVO.getDisplayName(), notiRecipientList, "POLL", "NEW", pollQuestionVO.getTitle(), "popup", "900", "750", linkUrl, linkUrlMobile, "");
+		}
+		
+    	// Send posting notification mail
+    	// 메일 발송 체크되어 있고, 투표 등록이나 재사용일 경우 => true
+    	
 		if (sendPostNotice == 1 && qstModifyInfo.equals("")) {
 			ezPollService.sendPostNotiMail(loginVO, loginCookie, pollQuestionVO);
 		}
@@ -811,8 +831,13 @@ public class EzPollController extends EgovFileMngUtil {
 		
 		//Get question
 		pollQuestionVO = ezPollService.getQuestionByIdAndTenantId(qstId, tenantId);
-
-		if (pollQuestionVO.getIsMofifying() == 1) {
+		
+		if (pollQuestionVO == null) {
+			model.addAttribute("messageContent", egovMessageSource.getMessage("ezMain.delete.hth01", loginVO.getLocale()));
+			return "/common/error";
+		}
+		
+		if (pollQuestionVO.getIsModifying() == 1) {
 			String modifyingUser = ezPollService.getModifyingUser(tenantId, qstId);
 			if (loginVO.getId().equals(modifyingUser)) {
 				return "redirect:/ezPoll/pollCreate.do?qstId=" + qstId + "&mode=modify" + "&params=" + params + "&search=" + searchStr + "&searchN=" + searchN;
@@ -1130,7 +1155,7 @@ public class EzPollController extends EgovFileMngUtil {
 		//Get question
 		PollQuestionVO pollQuestionVO = ezPollService.getQuestionByIdAndTenantId(qstId, tenantId);
 
-		if (pollQuestionVO.getIsMofifying() == 0) {
+		if (pollQuestionVO.getIsModifying() == 0) {
 			data = "{\"result\":\"Normal\"}";
 		}
 		else {
@@ -2384,333 +2409,8 @@ public class EzPollController extends EgovFileMngUtil {
 	
 	/**
 	 * 메일 쓰기화면 호출 함수
+	 * : /ezEmail/mailWrite.do 로 통합함.
 	 */
-	@RequestMapping(value="/ezPoll/mailWrite.do", method = RequestMethod.GET)
-	public String pollMailWrite( @CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {		
-		logger.debug("mailWrite started.");
-		
-		String from = "";
-		String to = "";
-		String cc = "";
-		String bcc = "";
-		
-		//String body = "";
-		String tempBody = "";
-		String bodyValue = "";
-		
-		String subject = "";
-		String url = "";
-		String attach = "";
-		String importance = "1";
-		String isEach = "FALSE";
-		String isSecureMail = "false";
-		String bodyType = "0";
-		String replySendTime = "0";
-		String replyReadTime = "1";
-		String delaySendDate = "";
-		String unread = "";
-		String reSendFlag = "N";
-		String folderPath = "";
-		
-		String mailSign1 = "";
-		String mailSign2 = "";
-		String mailSign3 = "";
-		String mailSignSel = "0";
-		
-		String boardID = "";
-		String itemID = "";
-		String docHref = "";
-		String docID = "";
-		String docImagCnt = "";
-		String docTarget = "";
-		String retransType = "";
-		
-		String fileUploadType = "";
-		String newWindowId = "";
-		ObjectMapper om = new ObjectMapper();
-
-		// get user credentials
-		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
-		OrganUserVO userInfo = ezOrganAdminService.getUserInfo(loginInfo.getId(), loginInfo.getPrimary(), loginInfo.getTenantId());		
-		
-		// set attributes
-		String userPrimary = loginInfo.getPrimary();
-		String userLang = loginInfo.getLang();
-		String userTimeset = loginInfo.getOffset();
-		logger.debug("userPrimary=" + userPrimary + ",userLang=" + userLang + ",userTimeset=" + userTimeset);
-		
-		String displayNamePrintable = userInfo.getDisplayName();
-		String serverName = loginInfo.getServerName();
-		logger.debug("displayNamePrintable=" + displayNamePrintable + ",serverName=" + serverName);
-		
-		String folderDate = EgovDateUtil.getToday("");
-		String stateName = UUID.randomUUID().toString();
-		logger.debug("folderDate=" + folderDate + ",stateName=" + stateName);
-		
-		String mailInnerDomain = ezCommonService.getTenantConfig("MailInnerDomain", loginInfo.getTenantId());
-		String useEditor = ezCommonService.getTenantConfig("EDITOR", loginInfo.getTenantId());
-		String useSecureMail = ezCommonService.getTenantConfig("USE_SECUREMAIL", loginInfo.getTenantId());
-		logger.debug("mailInnerDomain=" + mailInnerDomain + ",useEditor=" + useEditor + ",useSecureMail=" + useSecureMail);
-		
-		//메일 색상 관련 설정
-		String inMailColor = "#808080";
-		String outMailColor = "#0080ff";
-		MailColorVO vo = ezEmailService.getMailColor(loginInfo.getTenantId());
-		if (vo != null) {
-			inMailColor = vo.getInmailColor();
-			outMailColor = vo.getOutmailColor();
-		}
-		logger.debug("inMailColor=" + inMailColor + ",outMailColor=" + outMailColor);
-		
-		//파일첨부 제한 관련 변수 설정 
-		String mailAttachLimit = ezCommonService.getTenantConfig("MailAttachLimit", loginInfo.getTenantId());
-		String bigSizeMailAttachLimit = ezCommonService.getTenantConfig("BigSizeMailAttachLimit", loginInfo.getTenantId());
-		String totBigSizeMailAttachLimit = ezCommonService.getTenantConfig("totBigSizeMailAttachLimit", loginInfo.getTenantId());
-		String pBigAttachDownloadDay = ezCommonService.getTenantConfig("BigSizeMailAttachDelDay", loginInfo.getTenantId());
-		logger.debug("mailAttachLimit=" + mailAttachLimit + ",bigSizeMailAttachLimit=" + bigSizeMailAttachLimit
-				+ ",totBigSizeMailAttachLimit=" + totBigSizeMailAttachLimit + ",pBigAttachDownloadDay=" + pBigAttachDownloadDay);
-		
-		String bigSizeMailAttachDelDate = EgovDateUtil.addDay(EgovDateUtil.getToday("-"), Integer.parseInt(pBigAttachDownloadDay), "yyyy-MM-dd");
-        String pBigAttachDownloadPeriod = EgovDateUtil.getToday("/") + " ~ " + EgovDateUtil.addDay(EgovDateUtil.getToday("/"), Integer.parseInt(pBigAttachDownloadDay), "yyyy/MM/dd");
-        String pAttachWarning = egovMessageSource.getMessage("ezEmail.lhm18", locale) + mailAttachLimit + egovMessageSource.getMessage("ezEmail.lhm19", locale) 
-        	+ totBigSizeMailAttachLimit + egovMessageSource.getMessage("ezEmail.lhm20", locale)+ egovMessageSource.getMessage("ezEmail.lhm69", locale) + pBigAttachDownloadDay + egovMessageSource.getMessage("ezEmail.lhm21", locale);
-        if(totBigSizeMailAttachLimit.equals("0")){
-        	pAttachWarning = egovMessageSource.getMessage("ezEmail.kms01", locale) + mailAttachLimit +egovMessageSource.getMessage("ezEmail.kms02", locale);
-        }
-        logger.debug("bigSizeMailAttachDelDate=" + bigSizeMailAttachDelDate + ",pBigAttachDownloadPeriod=" + pBigAttachDownloadPeriod
-        		+ ",pAttachWarning=" + pAttachWarning);
-        
-        // set pAutoSaveTime,mailSendObject
- 		MailGeneralVO mailGeneralVO = ezEmailService.getMailGeneral(loginInfo.getTenantId(), loginInfo.getId()).get(0);
- 		String pAutoSaveTime = mailGeneralVO.getKeepDeleteLength() == null ? "0" : mailGeneralVO.getKeepDeleteLength();
- 		String pMailSenderNM = EgovStringUtil.isEmpty(mailGeneralVO.getMailSenderNm()) ? userInfo.getDisplayName2() : mailGeneralVO.getMailSenderNm();
- 		StringBuilder mailSendObjectBld = new StringBuilder();
- 		mailSendObjectBld.append("<option value='NONE'>" + egovMessageSource.getMessage("ezEmail.t99000032", locale) + "</option>");
- 		
- 		if (pMailSenderNM != null && !pMailSenderNM.trim().equals("")) {
- 			String[] senderList = pMailSenderNM.split("\\|!\\-@\\-!\\|");
- 			
- 	 		for (String pSenderNM : senderList) {
- 	 			mailSendObjectBld.append("<option value='" + pSenderNM + "'>" + pSenderNM + "</option>");
- 	 		}
- 		}
-        logger.debug("pAutoSaveTime=" + pAutoSaveTime + ",pMailSenderNM=" + pMailSenderNM);
- 		
-        //set mail sign
-        MailSignatureVO mailSignatureVO = ezEmailService.getMailSignature(loginInfo.getTenantId(), loginInfo.getId());
-        
-        if (mailSignatureVO != null) {
-        	mailSign1 = mailSignatureVO.getContent1();
-            mailSign2 = mailSignatureVO.getContent2();
-            mailSign3 = mailSignatureVO.getContent3();
-            mailSignSel = mailSignatureVO.getUseFlag().trim();
-        }
-        
-        if (!mailSignSel.equals("0") && !mailSignSel.equals("1") && !mailSignSel.equals("2") && !mailSignSel.equals("3")) {
-        	mailSignSel = "0";
-        }        
-        
-  		String useMultiLangMail = "1";
-  		String pSecurity = "1";
-  		String charsetCheck = "1";
-  		String postType = "0";
-  		logger.debug("useMultiLangMail=" + useMultiLangMail + ",pSecurity=" + pSecurity + ",charsetCheck=" + charsetCheck
-  				+ ",postType=" + postType);
-  		
-		String individualMailUser = ezCommonService.getTenantConfig("INDIVIDUALMAILUSER", loginInfo.getTenantId());
-		
-		String cmdOwn = "";
-		String urlOwn = "";
-		String _cmd = "";	                
-        String type = request.getParameter("type") == null ? "" : request.getParameter("type");
-        
-        // in case of only one user
-        if (type.equals("one")) {        	
-        	String userID = request.getParameter("userId") == null ? "" : request.getParameter("userId");
-        	LoginVO receivedUser = loginService.selectReceiver(userID, loginInfo.getTenantId());
-        	PollEmailSimpleUser simpleUserVO = new PollEmailSimpleUser();
-        	simpleUserVO.setEmail(receivedUser.getEmail());
-        	
-        	if (userPrimary.equals("1")) {
-        		simpleUserVO.setUserName(receivedUser.getDisplayName1());
-        	}
-        	else {
-        		simpleUserVO.setUserName(receivedUser.getDisplayName2());
-        	}
-        	
-        	to = om.writeValueAsString(simpleUserVO);
-        	model.addAttribute("pollSendType", "one");
-        }        
-        else if (type.equals("group")) {
-        	String state = request.getParameter("state") == null ? "" : request.getParameter("state");
-        	int qstId = Integer.parseInt(request.getParameter("qstId"));
-        	List<PollEmailSimpleUser> listSimpleUser = new ArrayList<PollEmailSimpleUser>();
-        	
-        	switch (state) {
-        		case "voted":
-        			int optId =	Integer.parseInt(request.getParameter("optId"));
-        			listSimpleUser = getListSimpleUsers(qstId, optId, loginInfo.getTenantId(), userPrimary);        			
-        			break;
-        		case "seen":
-        			listSimpleUser = getListSimpleUsers(loginInfo, qstId, loginInfo.getTenantId(), userPrimary, 1);
-        			break;
-        		case "unseen":
-        			listSimpleUser = getListSimpleUsers(loginInfo, qstId, loginInfo.getTenantId(), userPrimary, 0);
-        			break;
-        		case "notjoin":
-        			listSimpleUser = getListSimpleUsers(loginInfo, qstId, loginInfo.getTenantId(), userPrimary);
-        			break;
-        	}
-        	
-        	to = om.writeValueAsString(listSimpleUser);
-        	model.addAttribute("pollSendType", "list");
-        }
-        
-        String useFromAddress = ezCommonService.getTenantConfig("Use_FromAddress", loginInfo.getTenantId());
-		String fromAddressHtml = "";
-		
-		if (useFromAddress != null) {
-			if (useFromAddress.equals("YES")) {
-				List<String[]> fromAddressList = ezEmailService.getAliasAddress(loginInfo.getId(), loginInfo.getTenantId());
-				
-				/* 아래 내용은 료비개발 시에 추가된 내용으로 표준에는 미적용
-				 * if (fromAddressList.size() >= 2) {
-					String companyDomainName = ezCommonService.getCompanyConfig(loginInfo.getTenantId(), loginInfo.getCompanyID(), "DomainName");
-					
-					// 회사별 이메일 도메인명이 설정되어 있으면 Account 이메일 주소를 목록에서 제외한다.								
-					if (!companyDomainName.isEmpty()) {
-						for (int i = 0; i < fromAddressList.size(); i++) {
-							String[] item = fromAddressList.get(i);
-							String itemType = item[1];
-							
-							if (itemType.equals("1")) {
-								logger.debug("removing the account email address...");
-								
-								fromAddressList.remove(i);
-								
-								break;
-							}
-						}
-					}
-				}*/
-				
-				if (fromAddressList.size() < 2) {
-					useFromAddress = "NO";
-				} else {
-					StringBuilder sb = new StringBuilder();
-					sb.append("<select id='ex_select' onchange='fromAddressChange(this.value)'>");
-					
-					boolean isValidFrom = false;
-					
-					for (String[] address : fromAddressList) {
-						if (from.equals(address[0])) {
-							isValidFrom = true;
-							break;
-						}
-					}
-					
-					if (!isValidFrom) {
-						from = loginInfo.getEmail();
-					}
-					
-					for (String[] address : fromAddressList) {
-						if (from.equals(address[0])) {
-							sb.append("<option value='" + address[0] + "' selected>" + address[0] + "</option>");
-						} else {
-							sb.append("<option value='" + address[0] + "'>" + address[0] + "</option>");
-						}
-					}
-					
-					sb.append("</select>");
-					sb.append("<label for='ex_select'>" + from + "</label>");
-					
-					fromAddressHtml = sb.toString();
-				}
-			}
-		} else {
-			useFromAddress = "NO";
-		}
-		
-        String browser = ClientUtil.getClientInfo(request, "browser");
-		boolean isCrossBrowser = browser.equals("IE9") ? false : true;
-		
-		model.addAttribute("userInfo", userInfo);
-		model.addAttribute("tenantId", loginInfo.getTenantId());
-		model.addAttribute("to", to);
-		model.addAttribute("cc", cc);
-		model.addAttribute("bcc", bcc);		
-		model.addAttribute("subject", subject);
-		model.addAttribute("encodedSubject", EgovStringUtil.getSpclStrCnvr(subject));
-		model.addAttribute("importance", importance);
-		model.addAttribute("isEach", isEach);
-		model.addAttribute("useSecureMail", useSecureMail);
-		model.addAttribute("isSecureMail", isSecureMail);
-		model.addAttribute("bodyType", bodyType);
-		model.addAttribute("replySendTime", replySendTime);
-		model.addAttribute("replyReadTime", replyReadTime);
-		model.addAttribute("delaySendDate", delaySendDate);
-		model.addAttribute("postType", postType);
-		model.addAttribute("url", url);
-		model.addAttribute("attach", attach);
-		model.addAttribute("_cmd", _cmd);
-		model.addAttribute("unread", unread);
-		model.addAttribute("boardID", boardID);
-		model.addAttribute("itemID", itemID);
-		model.addAttribute("docHref", docHref);
-		model.addAttribute("docID", docID);
-		model.addAttribute("docImagCnt", docImagCnt);
-		model.addAttribute("docTarget", docTarget);
-		model.addAttribute("retransType", retransType);
-		model.addAttribute("useMultiLangMail", useMultiLangMail);
-		model.addAttribute("displayNamePrintable", displayNamePrintable);
-		model.addAttribute("charsetCheck", charsetCheck);
-		model.addAttribute("userLang", userLang);
-		model.addAttribute("userPrimary", userPrimary);
-		model.addAttribute("reSendFlag", reSendFlag);
-		model.addAttribute("mailAttachLimit", mailAttachLimit);
-		model.addAttribute("bigSizeMailAttachLimit", bigSizeMailAttachLimit);
-		model.addAttribute("totBigSizeMailAttachLimit", totBigSizeMailAttachLimit);
-		model.addAttribute("bigSizeMailAttachDelDate", bigSizeMailAttachDelDate);
-		model.addAttribute("userTimeset", userTimeset);
-		model.addAttribute("cmdOwn", cmdOwn);
-		model.addAttribute("urlOwn", urlOwn);
-		model.addAttribute("mailSign1", mailSign1);
-		model.addAttribute("mailSign2", mailSign2);
-		model.addAttribute("mailSign3", mailSign3);
-		model.addAttribute("mailSignSel", mailSignSel);
-		model.addAttribute("bodyValue", bodyValue);
-		model.addAttribute("fileUploadType", fileUploadType);
-		model.addAttribute("folderPath", folderPath);
-		model.addAttribute("tempBody", tempBody);
-		model.addAttribute("newWindowId", newWindowId);
-		model.addAttribute("individualMailUser", individualMailUser); //int형
-		model.addAttribute("pSecurity", pSecurity);
-		model.addAttribute("folderDate", folderDate);
-		model.addAttribute("stateName", stateName);
-		model.addAttribute("pBigAttachDownloadDay", pBigAttachDownloadDay);
-		model.addAttribute("pBigAttachDownloadPeriod", pBigAttachDownloadPeriod);
-		model.addAttribute("pAutoSaveTime", pAutoSaveTime);
-		model.addAttribute("pAttachWarning", pAttachWarning);
-		model.addAttribute("mailSendObject", mailSendObjectBld.toString());
-		model.addAttribute("mailInnerDomain", mailInnerDomain);
-		model.addAttribute("inMailColor", inMailColor);
-		model.addAttribute("outMailColor", outMailColor);
-		model.addAttribute("useEditor", useEditor);
-		model.addAttribute("serverName", serverName);
-		model.addAttribute("uploadCommonPath", commonUtil.getUploadPath("upload_common.ROOT", loginInfo.getTenantId()));
-		model.addAttribute("uploadCommunityPath", commonUtil.getUploadPath("upload_community.ROOT", loginInfo.getTenantId()));
-		model.addAttribute("isCrossBrowser", isCrossBrowser);
-		model.addAttribute("useFromAddress", useFromAddress);
-		model.addAttribute("fromAddressHtml", fromAddressHtml);
-		model.addAttribute("moduleType", "poll");
-		model.addAttribute("useAdditionalInfo", "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useMailWriteRecipientAdditional", loginInfo.getTenantId())));
-		
-		response.setHeader("X-XSS-Protection", "0");
-		
-		logger.debug("mailWrite ended.");
-		
-		return "ezEmail/mailWrite";
-	}
 	
 	private String addUserAndAnswer(PollUserAnswerVO pollUserAnswer, String sessionId) {
 		String strXML = "";
@@ -2938,34 +2638,6 @@ public class EzPollController extends EgovFileMngUtil {
 		}
 	}
 	
-	private void getAllUserForQuestion(LoginVO loginVO, int questionID, Set<LoginVO> set) throws Exception {
-		//Check if this question is for all members
-		int target = ezPollService.checkTargetOfQst(questionID, loginVO.getTenantId());
-		List<LoginVO> list = new ArrayList<LoginVO>();
-		
-		if (target == 0) {
-			list = loginService.selectAllMemberOfCompany(loginVO.getCompanyID(), loginVO.getTenantId());
-		}
-		else {
-			List<String> departIdList = ezPollService.getListOfUserIdForQst(questionID, loginVO.getTenantId(), "dept");
-			
-			for (String deptId : departIdList) {				
-				getAllMemberOfDept(list, deptId, loginVO.getTenantId());				
-			}
-			
-			List<String> userIdList = ezPollService.getListOfUserIdForQst(questionID, loginVO.getTenantId(), "user");	
-			
-			for (String _userID : userIdList) {				
-				LoginVO user = loginService.selectReceiver(_userID, loginVO.getTenantId());
-				if(user != null){
-					list.add(user);
-				}
-			}
-		}	
-		
-		set.addAll(list);
-	}
-	
 	private String questionDelete(String listQstIds, LoginVO loginVO, String pDirPath, String realPath) throws Exception {			
 		String strXML = "";
 		String [] qstIdArray = listQstIds.split(",");
@@ -3055,126 +2727,6 @@ public class EzPollController extends EgovFileMngUtil {
         return fileSize_;
 	}
 	
-	private List<PollEmailSimpleUser> getListSimpleUsers(int qstId, int optId, int tenantId, String userPrimary) throws Exception {
-		List<PollEmailSimpleUser> listSimpleUser = new ArrayList<PollEmailSimpleUser>();
-		List<PollUserAnswerVO> listOfVotedUsersForAnswer = ezPollService.getListVotedUsersForAnswer(optId, qstId, tenantId);
-		
-		for (PollUserAnswerVO userAnswer: listOfVotedUsersForAnswer) {       							
-			LoginVO receivedUser = loginService.selectReceiver(userAnswer.getUserId(), tenantId);   
-			PollEmailSimpleUser simpleUserVO = new PollEmailSimpleUser();
-			simpleUserVO.setEmail(receivedUser.getEmail());
-			
-			if (userPrimary.equals("1")) {
-        		simpleUserVO.setUserName(receivedUser.getDisplayName1());
-        	}
-        	else {
-        		simpleUserVO.setUserName(receivedUser.getDisplayName2());
-        	}
-			
-        	listSimpleUser.add(simpleUserVO);
-		}
-		
-		return listSimpleUser;
-	}
-	
-	private List<PollEmailSimpleUser> getListSimpleUsers(LoginVO loginVO, int qstId, int tenantId, String userPrimary, int mode) throws Exception {
-		List<PollEmailSimpleUser> listSimpleUser = new ArrayList<PollEmailSimpleUser>();
-		List<LoginVO> listofSeenUsers = new ArrayList<LoginVO>();
-		//Get all of seen users
-		List<String> listOfSeenUsers = ezPollService.getNumberOfSeenUsers(qstId, tenantId);
-		
-		for (String _userID : listOfSeenUsers) {
-			LoginVO user = loginService.selectReceiver(_userID, tenantId);
-			listofSeenUsers.add(user);
-		}
-		
-		if (mode == 0) {			
-			//Get all related users for this question
-			Set<LoginVO> setOfUserIds = new HashSet<LoginVO>();
-			getAllUserForQuestion(loginVO, qstId, setOfUserIds);
-			List<LoginVO> listofUnseenUsers = new ArrayList<LoginVO>(setOfUserIds);
-	
-			listofUnseenUsers.removeAll(listofSeenUsers);
-			
-			for (LoginVO receivedUser: listofUnseenUsers) {       				
-				PollEmailSimpleUser simpleUserVO = new PollEmailSimpleUser();
-				simpleUserVO.setEmail(receivedUser.getEmail());
-				
-				if (userPrimary.equals("1")) {
-	        		simpleUserVO.setUserName(receivedUser.getDisplayName1());
-	        	}
-	        	else {
-	        		simpleUserVO.setUserName(receivedUser.getDisplayName2());
-	        	}
-				
-	        	listSimpleUser.add(simpleUserVO);
-			}
-		}
-		else {
-			for (LoginVO receivedUser: listofSeenUsers) {       				
-				PollEmailSimpleUser simpleUserVO = new PollEmailSimpleUser();
-				simpleUserVO.setEmail(receivedUser.getEmail());
-				
-				if (userPrimary.equals("1")) {
-	        		simpleUserVO.setUserName(receivedUser.getDisplayName1());
-	        	}
-	        	else {
-	        		simpleUserVO.setUserName(receivedUser.getDisplayName2());
-	        	}
-				
-	        	listSimpleUser.add(simpleUserVO);
-			}
-		}
-		
-		return listSimpleUser;
-	}
-	
-	private List<PollEmailSimpleUser> getListSimpleUsers(LoginVO loginVO, int qstId, int tenantId, String userPrimary) throws Exception {
-		List<PollEmailSimpleUser> listSimpleUser = new ArrayList<PollEmailSimpleUser>();
-		//Get all users for this question
-		Set<LoginVO> setOfUserIds = new HashSet<LoginVO>();
-		getAllUserForQuestion(loginVO, qstId, setOfUserIds);
-		List<LoginVO> listOfUnvotedUsers = new ArrayList<LoginVO>(setOfUserIds);		
-		
-		//Get list of users and their answers
-		List<PollUserAnswerVO> listOfPollUserAndAnswer = ezPollService.getPollUserAndAnswer(qstId, tenantId);
-		
-		//Get list of voted users
-		List<String> listOfAnsweredUsers = new ArrayList<String>();
-		
-		for (PollUserAnswerVO pollUserAndAnswer : listOfPollUserAndAnswer) {
-			if (!listOfAnsweredUsers.contains(pollUserAndAnswer.getUserId())) {
-				listOfAnsweredUsers.add(pollUserAndAnswer.getUserId());
-			}
-		}		
-		
-		Iterator<LoginVO> iterator = listOfUnvotedUsers.iterator();
-		
-		while (iterator.hasNext()) {
-			LoginVO user = iterator.next();
-			
-			if (listOfAnsweredUsers.contains(user.getId())) {
-				iterator.remove();	
-			}
-		}		
-		
-		for (LoginVO receivedUser: listOfUnvotedUsers) {       				
-			PollEmailSimpleUser simpleUserVO = new PollEmailSimpleUser();
-			simpleUserVO.setEmail(receivedUser.getEmail());
-			
-			if (userPrimary.equals("1")) {
-        		simpleUserVO.setUserName(receivedUser.getDisplayName1());
-        	}
-        	else {
-        		simpleUserVO.setUserName(receivedUser.getDisplayName2());
-        	}
-			
-        	listSimpleUser.add(simpleUserVO);
-		}
-		
-		return listSimpleUser;
-	}
-	
 	@RequestMapping(value="/ezPoll/updateEndDateForQst.do", method = RequestMethod.POST)
 	public String updateEndDateForQst(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, ModelMap model, HttpServletResponse response) throws Exception {		
 		logger.debug("Updating question end-date is running!");		
@@ -3205,6 +2757,7 @@ public class EzPollController extends EgovFileMngUtil {
 		String targetDirFullPath = realPath + targetDirPath ;
 		String targetContent = "";
 		List<Map<String, String>> copyFilePathList = new ArrayList<>();
+		
 		// 댓글 이미지일 경우
 		if (folderName.equals("commentImages")) {
 			Map<String, String> copyMap = new HashMap<>();
@@ -3217,11 +2770,13 @@ public class EzPollController extends EgovFileMngUtil {
 			copyFilePathList.add(copyMap);
 			targetContent = targetDirPath + commonUtil.separator + fileName;
 			logger.debug("targetContent : {}", targetContent);
-		// 에디터 이미지일 경우
-		} else {
+		}
+		// 에디터 이미지일 경우 (uploadFile)
+		else {
 			org.jsoup.nodes.Document document = Jsoup.parse(content);
 			Elements elements = document.getElementsByTag("img");
 
+			// 에디터 본문 내부에 이미지가 존재하는 경우, 해당 이미지의 파일경로 변경
 			if (!elements.isEmpty()) {
 				for (org.jsoup.nodes.Element element : elements) {
 					Map<String, String> copyMap = new HashMap<>();
@@ -3233,10 +2788,13 @@ public class EzPollController extends EgovFileMngUtil {
 					element.attr("src", targetDirPath + commonUtil.separator + fileName);
 					copyFilePathList.add(copyMap);
 				}
-				Elements body = document.body().children();
-				targetContent = body.toString();
 			}
+			
+			/* 2024-12-11 홍승비 - 투표 > 에디터 본문 내부에 이미지가 없는 경우, 내용(content)을 저장하지 못하는 오류 분기 수정 */
+			Elements body = document.body().children();
+			targetContent = body.toString();
 		}
+		
 		// path를 바꿔준 최종 내용, 파일을 복사하기 위해 필요한 source와 target Path를 반환
 		PollFilePathVO pollFilePathVO = new PollFilePathVO(targetContent, copyFilePathList, targetDirFullPath);
 		return pollFilePathVO;

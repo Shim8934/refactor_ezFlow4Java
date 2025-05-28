@@ -7,7 +7,8 @@
 	<head>
 		<title></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
-		<link rel="stylesheet" href="${util.addVer('ezAttitude.i1', 'msg')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>		
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>	
@@ -198,7 +199,7 @@
 	            var endDate = "";
 	    		
 				if ($("#searchYear").val() == null || $("#searchYear").val() == "") {
-					selyear = joinDate.split("-")[0];
+					selyear = year;
 	    		}
 
 	    		if ($("#searchYear").val() != null && $("#searchYear").val() != "") {
@@ -240,9 +241,6 @@
 	                $("#searchYear").html(optionHtml);
 	                $("#searchYear").val(selyear);
 	    		}
-                //2020.01.06 김정언 - 개인연차현황 selectBox option 최근 날짜로 선택 되도록 변경
-                //2023-11-28 전인하 - 개인연차현황 selectBox option 선택이 리스트호출보다 늦은 시점이어서 에러 발생하는 것을 수정함
-                $("#searchYear option:eq(0)").prop("selected", true);
 
 	    		//리스트
 	    		getUserAnnualList();
@@ -291,7 +289,7 @@
 			       		})
 			       	},
 			       	error : function(jqXHR, textStatus, errorThrown) {
- 			  			alert("에러발생! " + jqXHR.status + ", " + jqXHR.statusText + ", " + jqXHR.readyState);
+ 			  			alert("에러발생! " + jqXHR.status + ", " + jqXHR.readyState);
 					}
 				})
 	    		
@@ -701,7 +699,7 @@
 			
 		</script>
 	</head>
-	<body class="mainbody" style="overflow:auto;" marginwidth="0" marginheight="0">
+	<body class="mainbody" style="overflow:auto; min-width: 975px;" marginwidth="0" marginheight="0">
 	    <h1>
 	    	<spring:message code='ezAttitude.t265' />
 	    </h1>

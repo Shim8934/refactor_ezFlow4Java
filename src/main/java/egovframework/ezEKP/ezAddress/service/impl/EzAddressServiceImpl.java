@@ -65,7 +65,7 @@ public class EzAddressServiceImpl implements EzAddressService {
 		logger.debug("inputParams=" + inputParams);
 
 		String strJson = ezEmailUtil.getWebServiceResult(
-				config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/getTopFolderSubCount", inputParams);
+				getJgwServerUrl() + "/jMochaEzAddress/getTopFolderSubCount", inputParams);
 		logger.debug("strJson=" + strJson);
 
 		JSONParser parser = new JSONParser();
@@ -91,7 +91,7 @@ public class EzAddressServiceImpl implements EzAddressService {
 		logger.debug("inputParams=" + inputParams);
 
 		String strJson = ezEmailUtil.getWebServiceResult(
-				config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/getListType", inputParams);
+				getJgwServerUrl() + "/jMochaEzAddress/getListType", inputParams);
 		logger.debug("strJson=" + strJson);
 
 		JSONParser parser = new JSONParser();
@@ -116,7 +116,7 @@ public class EzAddressServiceImpl implements EzAddressService {
 		logger.debug("inputParams=" + inputParams);
 
 		String strJson = ezEmailUtil.getWebServiceResult(
-				config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/getListCnt", inputParams);
+				getJgwServerUrl() + "/jMochaEzAddress/getListCnt", inputParams);
 		logger.debug("strJson=" + strJson);
 
 		JSONParser parser = new JSONParser();
@@ -143,7 +143,7 @@ public class EzAddressServiceImpl implements EzAddressService {
 		logger.debug("inputParams=" + inputParams);
 
 		String strJson = ezEmailUtil.getWebServiceResult(
-				config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/setAddressGeneral", inputParams);
+				getJgwServerUrl() + "/jMochaEzAddress/setAddressGeneral", inputParams);
 		logger.debug("strJson=" + strJson);
 
 		JSONParser parser = new JSONParser();
@@ -190,7 +190,7 @@ public class EzAddressServiceImpl implements EzAddressService {
 		logger.debug("inputParams=" + inputParams);
 
 		String strJson = ezEmailUtil.getWebServiceResult(
-				config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/getFolderAddressCount", inputParams);
+				getJgwServerUrl() + "/jMochaEzAddress/getFolderAddressCount", inputParams);
 		logger.debug("strJson=" + strJson);
 
 		JSONParser parser = new JSONParser();
@@ -237,7 +237,7 @@ public class EzAddressServiceImpl implements EzAddressService {
 		logger.debug("inputParams=" + inputParams);
 
 		String strJson = ezEmailUtil.getWebServiceResult(
-				config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/getOwnerAddressCount", inputParams);
+				getJgwServerUrl() + "/jMochaEzAddress/getOwnerAddressCount", inputParams);
 		logger.debug("strJson=" + strJson);
 
 		JSONParser parser = new JSONParser();
@@ -290,7 +290,7 @@ public class EzAddressServiceImpl implements EzAddressService {
 		logger.debug("inputParams=" + inputParams);
 
 		String strJson = ezEmailUtil.getWebServiceResult(
-				config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/getFolderAddressList", inputParams);
+				getJgwServerUrl() + "/jMochaEzAddress/getFolderAddressList", inputParams);
 		logger.debug("strJson=" + strJson);
 
 		JSONParser parser = new JSONParser();
@@ -355,7 +355,7 @@ public class EzAddressServiceImpl implements EzAddressService {
 		logger.debug("inputParams=" + inputParams);
 
 		String strJson = ezEmailUtil.getWebServiceResult(
-				config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/getFolderAllAddressList", inputParams);
+				getJgwServerUrl() + "/jMochaEzAddress/getFolderAllAddressList", inputParams);
 		logger.debug("strJson=" + strJson);
 
 		JSONParser parser = new JSONParser();
@@ -438,7 +438,7 @@ public class EzAddressServiceImpl implements EzAddressService {
 		logger.debug("inputParams=" + inputParams);
 
 		String strJson = ezEmailUtil.getWebServiceResult(
-				config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/getOwnerAddressList", inputParams);
+				getJgwServerUrl() + "/jMochaEzAddress/getOwnerAddressList", inputParams);
 		logger.debug("strJson=" + strJson);
 
 		JSONParser parser = new JSONParser();
@@ -486,7 +486,7 @@ public class EzAddressServiceImpl implements EzAddressService {
 		logger.debug("inputParams=" + inputParams);
 
 		String strJson = ezEmailUtil.getWebServiceResult(
-				config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/checkDuplicateAddress", inputParams);
+				getJgwServerUrl() + "/jMochaEzAddress/checkDuplicateAddress", inputParams);
 		logger.debug("strJson=" + strJson);
 
 		JSONParser parser = new JSONParser();
@@ -539,7 +539,7 @@ public class EzAddressServiceImpl implements EzAddressService {
 		logger.debug("inputParams=" + inputParams);
 
 		String strJson = ezEmailUtil.getWebServiceResult(
-				config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/getAddressInfo", inputParams);
+				getJgwServerUrl() + "/jMochaEzAddress/getAddressInfo", inputParams);
 		logger.debug("strJson=" + strJson);
 
 		JSONParser parser = new JSONParser();
@@ -625,7 +625,7 @@ public class EzAddressServiceImpl implements EzAddressService {
 		logger.debug("inputParams=" + inputParams);
 
 		String strJson = ezEmailUtil.getWebServiceResult(
-				config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/addAddress", inputParams);
+				getJgwServerUrl() + "/jMochaEzAddress/addAddress", inputParams);
 		logger.debug("strJson=" + strJson);
 
 		JSONParser parser = new JSONParser();
@@ -671,7 +671,7 @@ public class EzAddressServiceImpl implements EzAddressService {
 		logger.debug("inputParams=" + inputParams);
 
 		String strJson = ezEmailUtil.getWebServiceResult(
-				config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/modAddress", inputParams);
+				getJgwServerUrl() + "/jMochaEzAddress/modAddress", inputParams);
 		logger.debug("strJson=" + strJson);
 
 		JSONParser parser = new JSONParser();
@@ -692,7 +692,7 @@ public class EzAddressServiceImpl implements EzAddressService {
 		logger.debug("inputParams=" + inputParams);
 
 		String strJson = ezEmailUtil.getWebServiceResult(
-				config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/delAddress", inputParams);
+				getJgwServerUrl() + "/jMochaEzAddress/delAddress", inputParams);
 		logger.debug("strJson=" + strJson);
 
 		JSONParser parser = new JSONParser();
@@ -719,7 +719,7 @@ public class EzAddressServiceImpl implements EzAddressService {
 		logger.debug("inputParams=" + inputParams);
 
 		String strJson = ezEmailUtil.getWebServiceResult(
-				config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/moveAddress", inputParams);
+				getJgwServerUrl() + "/jMochaEzAddress/moveAddress", inputParams);
 		logger.debug("strJson=" + strJson);
 
 		JSONParser parser = new JSONParser();
@@ -751,7 +751,7 @@ public class EzAddressServiceImpl implements EzAddressService {
 		logger.debug("inputParams=" + inputParams);
 
 		String strJson = ezEmailUtil.getWebServiceResult(
-				config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/copyAddress", inputParams);
+				getJgwServerUrl() + "/jMochaEzAddress/copyAddress", inputParams);
 		logger.debug("strJson=" + strJson);
 
 		JSONParser parser = new JSONParser();
@@ -774,7 +774,7 @@ public class EzAddressServiceImpl implements EzAddressService {
 		logger.debug("inputParams=" + inputParams);
 
 		String strJson = ezEmailUtil.getWebServiceResult(
-				config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/getSubFolder", inputParams);
+				getJgwServerUrl() + "/jMochaEzAddress/getSubFolder", inputParams);
 		logger.debug("strJson=" + strJson);
 
 		JSONParser parser = new JSONParser();
@@ -808,7 +808,7 @@ public class EzAddressServiceImpl implements EzAddressService {
 		logger.debug("inputParams=" + inputParams);
 
 		String strJson = ezEmailUtil.getWebServiceResult(
-				config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/getHighFolder", inputParams);
+				getJgwServerUrl() + "/jMochaEzAddress/getHighFolder", inputParams);
 		logger.debug("strJson=" + strJson);
 
 		JSONParser parser = new JSONParser();
@@ -849,7 +849,7 @@ public class EzAddressServiceImpl implements EzAddressService {
 		logger.debug("inputParams=" + inputParams);
 
 		String strJson = ezEmailUtil.getWebServiceResult(
-				config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/getLowFolder", inputParams);
+				getJgwServerUrl() + "/jMochaEzAddress/getLowFolder", inputParams);
 		logger.debug("strJson=" + strJson);
 
 		JSONParser parser = new JSONParser();
@@ -886,7 +886,7 @@ public class EzAddressServiceImpl implements EzAddressService {
 		logger.debug("inputParams=" + inputParams);
 
 		String strJson = ezEmailUtil.getWebServiceResult(
-				config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/getFolderInfo", inputParams);
+				getJgwServerUrl() + "/jMochaEzAddress/getFolderInfo", inputParams);
 		logger.debug("strJson=" + strJson);
 
 		JSONParser parser = new JSONParser();
@@ -919,7 +919,7 @@ public class EzAddressServiceImpl implements EzAddressService {
 		logger.debug("inputParams=" + inputParams);
 
 		String strJson = ezEmailUtil.getWebServiceResult(
-				config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/addFolder", inputParams);
+				getJgwServerUrl() + "/jMochaEzAddress/addFolder", inputParams);
 		logger.debug("strJson=" + strJson);
 
 		JSONParser parser = new JSONParser();
@@ -939,7 +939,7 @@ public class EzAddressServiceImpl implements EzAddressService {
 		logger.debug("inputParams=" + inputParams);
 
 		String strJson = ezEmailUtil.getWebServiceResult(
-				config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/modFolder", inputParams);
+				getJgwServerUrl() + "/jMochaEzAddress/modFolder", inputParams);
 		logger.debug("strJson=" + strJson);
 
 		JSONParser parser = new JSONParser();
@@ -956,7 +956,7 @@ public class EzAddressServiceImpl implements EzAddressService {
 		logger.debug("inputParams=" + inputParams);
 
 		String strJson = ezEmailUtil.getWebServiceResult(
-				config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/delFolder", inputParams);
+				getJgwServerUrl() + "/jMochaEzAddress/delFolder", inputParams);
 		logger.debug("strJson=" + strJson);
 
 		JSONParser parser = new JSONParser();
@@ -981,7 +981,7 @@ public class EzAddressServiceImpl implements EzAddressService {
 		logger.debug("inputParams=" + inputParams);
 
 		String strJson = ezEmailUtil.getWebServiceResult(
-				config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/moveFolder", inputParams);
+				getJgwServerUrl() + "/jMochaEzAddress/moveFolder", inputParams);
 		logger.debug("strJson=" + strJson);
 
 		JSONParser parser = new JSONParser();
@@ -1010,7 +1010,7 @@ public class EzAddressServiceImpl implements EzAddressService {
 		logger.debug("inputParams=" + inputParams);
 
 		String strJson = ezEmailUtil.getWebServiceResult(
-				config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/copyFolder", inputParams);
+				getJgwServerUrl() + "/jMochaEzAddress/copyFolder", inputParams);
 		logger.debug("strJson=" + strJson);
 
 		JSONParser parser = new JSONParser();
@@ -1031,7 +1031,7 @@ public class EzAddressServiceImpl implements EzAddressService {
 		logger.debug("inputParams=" + inputParams);
 
 		String strJson = ezEmailUtil.getWebServiceResult(
-				config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/getSimpleAddress", inputParams);
+				getJgwServerUrl() + "/jMochaEzAddress/getSimpleAddress", inputParams);
 		logger.debug("strJson=" + strJson);
 
 		JSONParser parser = new JSONParser();
@@ -1075,7 +1075,7 @@ public class EzAddressServiceImpl implements EzAddressService {
 		logger.debug("inputParams=" + inputParams);
 
 		String strJson = ezEmailUtil.getWebServiceResult(
-				config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/setSimpleAddress", inputParams);
+				getJgwServerUrl() + "/jMochaEzAddress/setSimpleAddress", inputParams);
 		logger.debug("strJson=" + strJson);
 
 		JSONParser parser = new JSONParser();
@@ -1103,7 +1103,7 @@ public class EzAddressServiceImpl implements EzAddressService {
 		logger.debug("inputParams=" + inputParams);
 
 		String strJson = ezEmailUtil.getWebServiceResult(
-				config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/getAddressZipCodeList", inputParams);
+				getJgwServerUrl() + "/jMochaEzAddress/getAddressZipCodeList", inputParams);
 		logger.debug("strJson=" + strJson);
 
 		JSONParser parser = new JSONParser();
@@ -1142,7 +1142,7 @@ public class EzAddressServiceImpl implements EzAddressService {
 		logger.debug("inputParams=" + inputParams);
 
 		String strJson = ezEmailUtil.getWebServiceResult(
-				config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/removeUserAddress", inputParams);
+				getJgwServerUrl() + "/jMochaEzAddress/removeUserAddress", inputParams);
 		logger.debug("strJson=" + strJson);
 		
 		String resultCode = "Error";
@@ -1199,7 +1199,7 @@ public class EzAddressServiceImpl implements EzAddressService {
 		logger.debug("inputParams=" + inputParams);
 
 		String strJson = ezEmailUtil.getWebServiceResult(
-				config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/getFolderAddressCount", inputParams);
+				getJgwServerUrl() + "/jMochaEzAddress/getFolderAddressCount", inputParams);
 		logger.debug("strJson=" + strJson);
 
 		JSONParser parser = new JSONParser();
@@ -1251,7 +1251,7 @@ public class EzAddressServiceImpl implements EzAddressService {
 		logger.debug("inputParams=" + inputParams);
 
 		String strJson = ezEmailUtil.getWebServiceResult(
-				config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/getFilterAddressCount", inputParams);
+				getJgwServerUrl() + "/jMochaEzAddress/getFilterAddressCount", inputParams);
 		logger.debug("strJson=" + strJson);
 
 		JSONParser parser = new JSONParser();
@@ -1301,7 +1301,7 @@ public class EzAddressServiceImpl implements EzAddressService {
 		logger.debug("inputParams=" + inputParams);
 
 		String strJson = ezEmailUtil.getWebServiceResult(
-				config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/getFolderAddressList", inputParams);
+				getJgwServerUrl() + "/jMochaEzAddress/getFolderAddressList", inputParams);
 		logger.debug("strJson=" + strJson);
 
 		JSONParser parser = new JSONParser();
@@ -1372,7 +1372,7 @@ public class EzAddressServiceImpl implements EzAddressService {
 		logger.debug("inputParams=" + inputParams);
 
 		String strJson = ezEmailUtil.getWebServiceResult(
-				config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/getFilterAddressList", inputParams);
+				getJgwServerUrl() + "/jMochaEzAddress/getFilterAddressList", inputParams);
 		logger.debug("strJson=" + strJson);
 
 		JSONParser parser = new JSONParser();
@@ -1405,5 +1405,124 @@ public class EzAddressServiceImpl implements EzAddressService {
 		}
 
 		return list;
+	}
+
+	/**
+	 * 최근 사용 주소 get
+	 * @param tenantId
+	 * @param cn	userId or shareId
+	 * @throws Exception
+	 */
+	@Override
+	public List<AddressVO> getLastSentEmailAddresses(int tenantId, String cn) throws Exception {
+		List<AddressVO> list = new ArrayList<AddressVO>();
+
+		String tenantIdParam = "tenantId=" + tenantId;
+		String cnParam = "cn=" + URLEncoder.encode(cn, "UTF-8");
+
+		String inputParams = String.join("&", tenantIdParam, cnParam);
+		logger.debug("inputParams=" + inputParams);
+
+		String strJson = ezEmailUtil.getWebServiceResult(
+				config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/getLastSentEmailAddresses", inputParams);
+		logger.debug("strJson=" + strJson);
+
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject) parser.parse(strJson);
+
+		if (object.get("resultCode").equals("OK") && ((Long) object.get("reasonCode")).intValue() == 0) {
+			JSONArray resultArray = (JSONArray) object.get("result");
+
+			for (int i = 0; i < resultArray.size(); i++) {
+				JSONObject obj = (JSONObject) resultArray.get(i);
+
+				AddressVO vo = new AddressVO();
+				vo.setsName((String) obj.get("name"));
+				vo.setsEmail((String) obj.get("email"));
+				vo.setCreateDate((String) obj.get("sentDate"));
+
+				list.add(vo);
+			}
+		}
+
+		return list;
+	}
+
+	/**
+	 * 메일 전송시 최근 사용 주소 테이블에(jmocha_address_last_sent) insert.
+	 * @param lastSentEmailAddresses	to, cc, bcc 의 주소록에 들어갈 name, address
+	 * @param tenantId
+	 * @param cn	userId or shareId	//또는 userAccount도 있음. (ex. ssdevt_shared@svn1.opensol2014.com)
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public void insertLastSentEmailAddresses(List<Map<String, Object>> lastSentEmailAddresses, int tenantId, String cn) throws Exception {
+		logger.debug("insertLastSentEmailAddresses start.");
+		JSONArray jsonArray = new JSONArray();
+
+		lastSentEmailAddresses.stream()
+				.map(map -> new JSONObject(map))	//생성자가 (), (map) 2개 있으므로 JSONObject::new 가 안됨. (map)만 있었으면 가능.
+				.forEach(jsonArray::add);
+
+		String lastSentEmailAddressesParam = "lastSentEmailAddresses=" + URLEncoder.encode(jsonArray.toJSONString(), "UTF-8");
+		String tenantIdParam = "tenantId=" + tenantId;
+		String cnParam = "cn=" + URLEncoder.encode(cn, "UTF-8");
+
+		String inputParams = String.join("&", lastSentEmailAddressesParam, tenantIdParam, cnParam);
+		logger.debug("inputParams=" + inputParams);
+
+		String strJson = ezEmailUtil.getWebServiceResult(
+				config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/insertLastSentEmailAddresses", inputParams);
+		logger.debug("strJson=" + strJson);
+
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject) parser.parse(strJson);
+
+		if (!object.get("resultCode").equals("OK") || ((Long) object.get("reasonCode")).intValue() != 0) {
+			throw new Exception("Error from JGwServer.");
+		}
+
+		logger.debug("insertLastSentEmailAddresses end.");
+	}
+
+	/**
+	 * 최근 사용 주소 delete.
+	 * @param tenantId
+	 * @param cn	userId or shareId
+	 * @param email
+	 * @throws Exception
+	 */
+	@Override
+	public void deleteLastSentEmailAddress(int tenantId, String cn, String email) throws Exception {
+		logger.debug("deleteLastSentEmailAddress start.");
+
+		String tenantIdParam = "tenantId=" + tenantId;
+		String cnParam = "cn=" + URLEncoder.encode(cn, "UTF-8");
+		String emailParam = "email=" + URLEncoder.encode(email, "UTF-8");
+
+		String inputParams = String.join("&", tenantIdParam, cnParam, emailParam);
+		logger.debug("inputParams=" + inputParams);
+
+		String strJson = ezEmailUtil.getWebServiceResult(
+				config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/deleteLastSentEmailAddress", inputParams);
+		logger.debug("strJson=" + strJson);
+
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject) parser.parse(strJson);
+
+		if (!object.get("resultCode").equals("OK") || ((Long) object.get("reasonCode")).intValue() != 0) {
+			throw new Exception("Error from JGwServer.");
+		}
+
+		logger.debug("deleteLastSentEmailAddress end.");
+	}
+
+	private String getJgwServerUrl() {
+		if (config.containsKey("config.JGwServerURL2")) {
+			return config.getProperty("config.JGwServerURL2");
+		}
+
+		return config.getProperty("config.JGwServerURL");
 	}
 }

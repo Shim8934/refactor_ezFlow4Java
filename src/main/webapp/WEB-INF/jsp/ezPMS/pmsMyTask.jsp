@@ -9,7 +9,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title><spring:message code='ezPMS.t142' /></title>
 
-<link rel="stylesheet" href="${util.addVer('ezPMS.e1', 'msg')}" type="text/css" />
+<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css" />
 <link rel="stylesheet" href="${util.addVer('/css/ezPMS/pms.css')}" type="text/css" />
 <link rel="stylesheet" href="${util.addVer('/js/jquery/jquery.modal.css')}" type="text/css" />
@@ -546,7 +547,7 @@ function goGroupDetails(elem) {
 </style>
 </head>
 <body class="mainbody" style="height: 95%; overflow: hidden" marginwidth="0" marginheight="0">
-	<h1><spring:message code='ezPMS.t142'/><span id="mailBoxInfo"> <spring:message code='ezPMS.t3' /> <span style="color:#017BEC;" id="totalCount"> </span><spring:message code='ezPMS.t4' /></span></h1>
+	<h1><spring:message code='ezPMS.t142'/><span id="mailBoxInfo"> <spring:message code='ezPMS.t3' /> <span class='txt_color' id="totalCount"> </span><spring:message code='ezPMS.t4' /></span></h1>
 	<div class="portlet_tabpart01" style="margin-bottom: 10px">
 	   <div class="portlet_tabpart01_top" id="tab1">
 	   		<p id="FBoard_sub0"><span id="1tab0" divname="FBoard_div0" class="tab"><spring:message code='ezPMS.t147' /></span></p>

@@ -6,7 +6,8 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezJournal.c1', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -15,15 +16,14 @@
 	    	var selectedUser ;
 	    	var selectedUserName ;
 	    
-			function changeSelectCompany(val) {			    
+			function changeCompany() {
 				var url = "/admin/ezJournal/author.do";
-				parent.frames["right"].location.href = url+"?companyId="+val;
+				parent.frames["right"].location.href = url + "?companyId=" + encodeURIComponent(companySelectID);
 			}
 			
 			function insertAuth() {
 				var url = "/admin/ezJournal/authorView.do";
-				var companyId = document.getElementById("companyId").value;
-				url+="?companyId="+companyId;
+				url+="?companyId=" + encodeURIComponent(companySelectID);
 				
 		    	if (navigator.userAgent.toLowerCase().indexOf("chrome") != -1) {
 					window.open(url, "authorView", GetOpenWindowfeature(523, 215));
@@ -35,8 +35,7 @@
 			function updateAuth() {
 				var userId = selectedUser;
 				var url = "/admin/ezJournal/authorView.do";
-				var companyId = document.getElementById("companyId").value;
-				url += "?companyId=" + encodeURIComponent(companyId);
+				url += "?companyId=" + encodeURIComponent(companySelectID);
 				
 				if (userId) {
 					url += "&userId=" + encodeURIComponent(userId) + "&userName=" + encodeURIComponent(selectedUserName);
@@ -90,16 +89,9 @@
 	<body class="mainbody"> 
 		<h1>
 			<spring:message code='ezJournal.t4' />
-		    <span class="title_bar"><img src="/images/name_bar.gif"></span>
-			<select class="companySelect" name="companyId" id="companyId" onchange="changeSelectCompany(this.value)">
-            	<c:forEach items="${compList}" var="company">
-	            	<option value="${company.companyId }"
-            		<c:if test="${company.selected eq 'selected' }">
-            			selected
-            		</c:if>
-	            	><c:out value='${company.companyName }'/></option>
-            	</c:forEach>
-            </select>
+			<jsp:include page="/WEB-INF/jsp/admin/companySelect.jsp">
+				<jsp:param name="companySelectID" value="${selectedCompany}" />
+			</jsp:include>
 		</h1>
 		<form class="journalForm">
 			<div id="mainmenu" style="padding-left: 5px;">

@@ -1,11 +1,40 @@
 var ezapralert_cross_dialogArguments = new Array();
-function OpenAlertUI(pAlertContent, CompleteFunction, type) {
+function OpenAlertUI(pAlertContent, CompleteFunction, type, selectType) {
     var parameter = pAlertContent;
     var url = "";
-    if(CompleteFunction == "OPEN") 
-        url = "/ezApprovalG/ezAprAlert.do?type=OPEN";
-    else
-        url = "/ezApprovalG/ezAprAlert.do";
+
+    if (typeof selectType != "undefined" && selectType) {
+        /*
+            n지선다 선택지 제공 팝업 추가
+             : pAlertContent : alert message
+             : CompeleteFunction :
+               ex) var tmp = [
+                   {
+                        "msg" : 선택지 버튼 텍스트,
+                        "rtnF" : 해당 버튼의 eventHandler,
+                        "fl" : alert 팝업으로부터 ↑ 위 이벤트 function의 위치(parent, left 등... empty String일 경우 ""로 초기화),
+                        "css" : tag style 속성. 없을 경우 ""로 초기화(버튼 개수에 따른 margin 등의 속성을 컨트롤 하기 위함.)
+                   },
+                   {
+                        "msg" : 선택지 버튼 텍스트,
+                        "rtnF" : 해당 버튼의 eventHandler,
+                        "fl" : alert 팝업으로부터 ↑ 위 이벤트 function의 위치(parent, left 등... empty String일 경우 ""로 초기화),
+                        "css" : tag style 속성. 없을 경우 ""로 초기화(버튼 개수에 따른 margin 등의 속성을 컨트롤 하기 위함.)
+                   },
+                   .
+                   .
+                   .
+               ]
+             : type = null
+             : selectType = 선택지 팝업? or 기존 팝업? (true || false)
+        */
+        url = "/ezApprovalG/ezAprSelectAlert";
+    } else {
+        if (CompleteFunction == "OPEN")
+            url = "/ezApprovalG/ezAprAlert.do?type=OPEN";
+        else
+            url = "/ezApprovalG/ezAprAlert.do";
+    }
 
     if (CrossYN()) {
         ezapralert_cross_dialogArguments[0] = parameter;
@@ -18,7 +47,10 @@ function OpenAlertUI(pAlertContent, CompleteFunction, type) {
             		ezapralert_cross_dialogArguments[2] = true;
             	}
             	ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
-                var OpenWin = GetOpenWindow(url, "", 330, 205, "NO");
+                setTimeout(function () {
+                    var OpenWin = GetOpenWindow(url, "", 330, 205, "NO");
+                }, 100);
+
             }
             else
                 DivPopUpShow(330, 205, url);

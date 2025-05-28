@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezEmail.logic;
 
+import java.io.Closeable;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.text.Collator;
@@ -41,7 +42,7 @@ import com.sun.mail.util.MailSSLSocketFactory;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 
-public class IMAPAccess {
+public class IMAPAccess implements Closeable {
 
     private static final Logger logger = LoggerFactory.getLogger(IMAPAccess.class);
     
@@ -60,6 +61,9 @@ public class IMAPAccess {
 	// 청와대에서 용량이 큰 메일을 다수 삭제할 경우 타임아웃이 발생하여 10초에서 120초로 변경함 
 	private int timeout = 120000; 
 	private int connectionTimeout = 20000; 
+	// 승인메일
+	private Store apprStore; // 승인메일 store
+	private String apprUserName; // 승인메일 공유사서함
 	
 	private static final String DEFAULT_FOLDER_NAMES 
 		= "INBOX,보낸 편지함,임시 보관함,지운 편지함,개인 편지함,정크 메일" // 한국어
@@ -77,6 +81,18 @@ public class IMAPAccess {
 		this.egovMessageSource = egovMessageSource;
 		this.locale = locale;
 		this.ezEmailUtil = ezEmailUtil;
+	}
+	
+	private IMAPAccess(String host, String port, String userName, String password, EgovMessageSource egovMessageSource, 
+						Locale locale, EzEmailUtil ezEmailUtil, String apprUserName) {
+		this.host = host;
+		this.port = port;
+		this.userName = userName;
+		this.password = password;
+		this.egovMessageSource = egovMessageSource;
+		this.locale = locale;
+		this.ezEmailUtil = ezEmailUtil;
+		this.apprUserName = apprUserName;
 	}
 	
 	private IMAPAccess(String host, String port, String userName, String password, EgovMessageSource egovMessageSource, 
@@ -155,12 +171,82 @@ public class IMAPAccess {
 
 		return store;
 	}
+	
+	// 승인메일 공유사서함 연결
+	private Store getApprStore() {
+		if (apprStore != null) {
+			return apprStore;
+		}
+		
+		try {
+			Properties properties = new Properties();
+			properties.put("mail.imap.host", host);
+			properties.put("mail.imaps.host", host);
+			properties.put("mail.imap.port", port);
+			properties.put("mail.imaps.port", port);
+			
+			if (port.equals("993")) {
+    			MailSSLSocketFactory sf = new MailSSLSocketFactory();
+    			sf.setTrustAllHosts(true); 
+    			properties.put("mail.imaps.ssl.trust", "*");
+    			properties.put("mail.imaps.ssl.socketFactory", sf);
+			}
+			
+			//If set to true, failure to create a socket using the specified socket factory class will 
+			//cause the socket to be created using the java.net.Socket class. Defaults to true.
+			properties.setProperty("mail.imap.socketFactory.fallback", "false");
+			properties.setProperty("mail.imaps.socketFactory.fallback", "false");
+			properties.setProperty("mail.imap.socketFactory.port", port);
+			properties.setProperty("mail.imaps.socketFactory.port", port);
+			
+			// these properties are required to be set to false, otherwise
+			// big mail body part(in-line image, attachment, etc) fetching may be very slow.
+			properties.setProperty("mail.imap.partialfetch", "false");
+			properties.setProperty("mail.imaps.partialfetch", "false");
+			
+			properties.put("mail.imap.connectiontimeout", connectionTimeout);
+			properties.put("mail.imaps.connectiontimeout", connectionTimeout);
+			properties.put("mail.imap.timeout", timeout);
+			properties.put("mail.imaps.timeout", timeout);			
+			
+			Session session = Session.getInstance(properties);
 
+			// IMAPS의 Well-Known Port인 993일 때는 imaps를 사용한다.
+			if (port.equals("993")) {
+				apprStore = session.getStore("imaps");
+			} else {
+				apprStore = session.getStore("imap");
+			}
+			
+			apprStore.connect(apprUserName, password);
+		} catch (NoSuchProviderException e) {
+			logger.error("Error get store from session: " + e.getMessage());
+			logger.error(e.getMessage(), e);
+		} catch (MessagingException e) {
+			logger.error("Error connect store: " + e.getMessage());
+		} catch (GeneralSecurityException e) {
+		    logger.error("GeneralSecurityException: " + e.getMessage());
+            logger.error(e.getMessage(), e);
+        }
+		
+		// 2023-05-16 이사라 : NullPointerException 시큐어코딩
+		if (Objects.isNull(apprStore)) {
+			throw new NullPointerException("getApprStore apprStore is null, but it isn't ready");
+		}
+
+		return apprStore;
+	}
+
+	@Override
 	public void close() {
 		try {
 			if(store != null){
 				store.close();
 				store = null;
+			}
+			if (apprStore != null) {
+				apprStore.close();
+				apprStore = null;
 			}
 		} catch (MessagingException e) {
 			logger.error("Error close store: " + e.getMessage());
@@ -417,6 +503,37 @@ public class IMAPAccess {
 		return unreadCount;
 	}
 	
+	public int getTotalCount(String folderName) {
+		int totalCount = 0;
+		try {
+			totalCount = getStore().getFolder(folderName).getMessageCount();
+		} catch (MessagingException e) {
+			logger.error("Error get total message count: " + e.getMessage());
+		}
+		return totalCount;
+	}
+
+	// 전체메일 - [받은편지함 + 하위, 개인편지함 + 하위] 모든 메일함
+	public List<String> getAllFolderNames() {
+		List<String> folderNames = new ArrayList<>();
+
+		try {
+			Folder[] folders = getStore().getDefaultFolder().list("*");
+
+			for (Folder folder : folders) {
+				String folderName = folder.getFullName();
+
+				if (folderName.startsWith("INBOX") || folderName.startsWith("Personal folder")) {
+					folderNames.add(folderName);
+				}
+			}
+		} catch (MessagingException e) {
+			logger.error("Error get all folder names: " + e.getMessage());
+		}
+
+		return folderNames;
+	}
+	
 	public Folder getFolder(String folderName) {
 		Folder folder = null;
 		
@@ -424,6 +541,33 @@ public class IMAPAccess {
 			folder = getStore().getFolder(folderName);
 		} catch (MessagingException e) {
 			logger.error("Error get folder: " + e.getMessage());
+		}
+		
+		return folder;
+	}
+	
+	// 승인메일 : apprMail이 true이면 승인메일 공유사서함의 보낸편지함 하위에 사용자 폴더를 리턴, false면 기존 그대로
+	public Folder getFolder(String folderName, boolean apprMail) {
+		logger.debug("apprMail={}, apprUserName={}", apprMail, apprUserName);
+		Folder folder = null;
+		
+		if (!apprMail || apprUserName == null || "".equals(apprUserName)) {
+			folder = getFolder(folderName);
+		} else {
+			try {
+				// 승인메일 공유사서함에 사용자cn별로 폴더 생성
+				String userCnFolderName = userName.split("@")[0];
+				
+				String folderPath = getApprStore().getFolder(ezEmailUtil.getSentFolderId(locale)).getFolder(userCnFolderName).getFullName();
+				folder = getApprStore().getFolder(folderPath);
+				
+				if (!folder.exists()) {
+					createApprFolder(folderPath);
+					folder = getApprStore().getFolder(folderPath);
+				}
+			} catch (MessagingException e) {
+				logger.error("Error get appr folder: " + e.getMessage());
+			}
 		}
 		
 		return folder;
@@ -439,6 +583,40 @@ public class IMAPAccess {
 		
 		try {
 			Folder rootFolder = getStore().getDefaultFolder();
+			Folder newFolder = rootFolder.getFolder(folderPath);
+			
+			if (newFolder.exists()) {
+				logger.debug("folder already exist. folderPath=" + folderPath);
+				return 2;
+			}
+
+			if (!newFolder.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES)) {
+				logger.debug("fail to create folder.");
+				return 1;
+			}
+			
+			newFolder.setSubscribed(true);
+			logger.debug(folderPath + " is created.");
+			result = 0;
+			
+		} catch (MessagingException e) {
+			logger.error(e.getMessage(), e);
+			result = 3;
+		}
+		
+		return result;
+	}
+	
+	/** 
+	 * 메일함 생성
+	 * @param folderPath
+	 * @return 0:성공, 1:실패, 2:중복, 3:에러
+	 */
+	public int createApprFolder(String folderPath) {
+		int result = 1;
+		
+		try {
+			Folder rootFolder = getApprStore().getDefaultFolder();
 			Folder newFolder = rootFolder.getFolder(folderPath);
 			
 			if (newFolder.exists()) {
@@ -631,6 +809,8 @@ public class IMAPAccess {
 						|| isInlinePartWithoutContentID) {
 				isAttached = true;
 			}			
+		} catch (MessagingException e) {
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		} 		
@@ -641,6 +821,11 @@ public class IMAPAccess {
 	public static IMAPAccess getInstance(String host, String port, String username, String password, EgovMessageSource egovMessageSource, 
 								Locale locale, EzEmailUtil ezEmailUtil) {
 		return new IMAPAccess(host, port, username, password, egovMessageSource, locale, ezEmailUtil);
+	}
+	
+	public static IMAPAccess getInstance(String host, String port, String username, String password, EgovMessageSource egovMessageSource, 
+								Locale locale, EzEmailUtil ezEmailUtil, String apprUsername) {
+		return new IMAPAccess(host, port, username, password, egovMessageSource, locale, ezEmailUtil, apprUsername);
 	}
 	
 	public static IMAPAccess getInstance(String host, String port, String username, String password, EgovMessageSource egovMessageSource, 

@@ -1,14 +1,19 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
 <html>
 <head>
-<title><spring:message code='ezApprovalG.t348'/></title>
+<title>
+	<c:if test ="${approvalFlag =='G'}"><spring:message code = 'ezApprovalG.lhj19' /></c:if>
+	<c:if test = "${approvalFlag == 'S'}" ><spring:message code = 'ezApprovalG.lhj20' /></c:if>
+</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
-<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 <script type="text/javascript">
     function btn_SaveAprDeptTempletName_onclick() {
         var p_AprDeptTempletName = trim(document.getElementById('Text1').value);
@@ -115,7 +120,10 @@
 </script>
 </head>
 <body class="popup">
-	<h1><spring:message code='ezApprovalG.t348'/></h1>
+	<h1>
+		<c:if test ="${approvalFlag =='G'}"><spring:message code = 'ezApprovalG.lhj19' /></c:if>
+		<c:if test = "${approvalFlag == 'S'}" ><spring:message code = 'ezApprovalG.lhj20' /></c:if>
+	</h1>
 	<div id="close">
         <ul>
             <li><span name="btn_CancelAprLineTempletName" id="btn_CancelAprLineTempletName" onclick="return btn_CancelAprDeptTempletName_onclick()"></span></li>

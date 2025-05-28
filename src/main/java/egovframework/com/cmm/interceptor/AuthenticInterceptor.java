@@ -92,6 +92,7 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 	 */
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws ServletException {		
+		String loginCookieExists =  commonUtil.loginCookieExists(request, response);
 		if(!commonUtil.checkMultiLogin(request, response)) {
 			try {
 //				RequestDispatcher dispatcher = request.getRequestDispatcher("/user/login/actionLogoutWithRedirectUri.do?redirectUri=" + "/user/login/login.do&message=multiLoginNoti");
@@ -104,14 +105,14 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 			}
 		}
 
-		if ("0".equals(commonUtil.loginCookieExists(request, response))) {
+		if ("0".equals(loginCookieExists)) {
 			try {
 		        String serverName = request.getServerName();
 		        int tenantId = loginService.getTenantId(serverName);
 	        	String mobileRedirection = ezCommonService.getTenantConfig("mobileRedirection", tenantId);
 	        	String userOs = ClientUtil.getClientInfo(request, "os");
 	        	
-	        	if (userOs.equals("iOS") || userOs.equals("Android") || userOs.equals("BlackBerry") || userOs.equals("iPod") || userOs.equals("iPad")) {
+	        	if (userOs.equals("iOS") || userOs.equals("Android") || userOs.equals("BlackBerry") || userOs.equals("iPod")) {
 	        		if (!mobileRedirection.equals("") && !mobileRedirection.equals("*")) {
 	        			response.sendRedirect(mobileRedirection);
 	        			
@@ -156,11 +157,19 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 			}
 			
 			return true;
-		} else if ("1".equals(commonUtil.loginCookieExists(request, response))) {
+		} else if ("1".equals(loginCookieExists)) {
 			try {
 				response.sendRedirect("/user/login/login.do?loginSessionFlag=1");
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
+			} finally {
+				return false;
+			}
+		} else if ("3".equals(loginCookieExists)) {
+			try {
+				response.sendRedirect("/user/login/login.do?organInfoChangedFlag=1");
+			} catch (Exception e) {
+				logger.error(e.getMessage(), e);
 			} finally {
 				return false;
 			}
@@ -196,7 +205,7 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 		        	String mobileRedirection = ezCommonService.getTenantConfig("mobileRedirection", tenantId);
 		        	String userOs = ClientUtil.getClientInfo(request, "os");
 		        	
-		        	if (userOs.equals("iOS") || userOs.equals("Android") || userOs.equals("BlackBerry") || userOs.equals("iPod") || userOs.equals("iPad")) {
+		        	if (userOs.equals("iOS") || userOs.equals("Android") || userOs.equals("BlackBerry") || userOs.equals("iPod")) {
 		        		if (!mobileRedirection.equals("") && !mobileRedirection.equals("*")) {
 		        			response.sendRedirect(mobileRedirection);
 		        		}
@@ -480,15 +489,22 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 			// if the number of name components is one or two(such as vertx.io, google.com) 
 			// just return the name itself
 			// else try to extract the domain part of the name
-			if (urlSplit.length > 2) {		
+			if (urlSplit.length > 2) {
+				String secondLevelDomain = urlSplit[urlSplit.length - 2];
+				
 				// such as www.name.co.kr, www.vertx.io
 				if (topLevelDomain.length() == 2) {
-					// this is not correct in case the name is like www.vertx.io, but ignore the case here
-					url = urlSplit[urlSplit.length - 3] + "." + urlSplit[urlSplit.length - 2] + "."
-							+ urlSplit[urlSplit.length - 1];
+					// such as www.vertx.io
+					if (secondLevelDomain.length() > 2) {
+						url = secondLevelDomain + "." + topLevelDomain;
+					// such as www.name.co.kr
+					} else {
+						url = urlSplit[urlSplit.length - 3] + "." + secondLevelDomain + "."
+								+ topLevelDomain;
+					}
 				// such as www.google.com, www.apache.org
 				} else if (topLevelDomain.length() == 3) {
-					url = urlSplit[urlSplit.length - 2] + "." + urlSplit[urlSplit.length - 1];
+					url = secondLevelDomain + "." + topLevelDomain;
 				}
 			}
 		} catch (Exception e) {

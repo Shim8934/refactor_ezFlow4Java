@@ -51,4 +51,6 @@ public interface EzResourceAdminService {
 	public void delResAcll(String resID, String companyID, int tenantID) throws Exception;
 	
 	public boolean userResPermissionCheck(String xmlStr, int tenantID) throws Exception;
+	
+	public String getScheduleXML(String xmlStr, String ownerID, String companyID, int tenantID, String pType, String offset) throws Exception;
 }

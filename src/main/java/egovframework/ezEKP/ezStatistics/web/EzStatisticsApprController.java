@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -84,17 +85,7 @@ public class EzStatisticsApprController {
 			return "cmm/error/adminDenied";
 		}
 		
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
-		
-		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-		
-		for (int i = 0 ; i < list.size() ; i++) {
-			OrganDeptVO vo = list.get(i);
-			
-			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
-				resultList.add(vo);
-			}
-		}
+		List<OrganDeptVO> resultList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary(), userInfo.getDeptID(), userInfo.getJobId());
 		
 		model.addAttribute("list", resultList);
 		model.addAttribute("userCompany", userInfo.getCompanyID());
@@ -287,17 +278,7 @@ public class EzStatisticsApprController {
 			return "cmm/error/adminDenied";
 		}
 		
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
-		
-		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-		
-		for (int i = 0 ; i < list.size() ; i++) {
-			OrganDeptVO vo = list.get(i);
-			
-			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
-				resultList.add(vo);
-			}
-		}
+		List<OrganDeptVO> resultList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary(), userInfo.getDeptID(), userInfo.getJobId());
 		
 		model.addAttribute("list", resultList);
 		model.addAttribute("userCompany", userInfo.getCompanyID());
@@ -404,27 +385,20 @@ public class EzStatisticsApprController {
 			return "cmm/error/adminDenied";
 		}
 		
-		List<OrganDeptVO> deptVOs = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+		List<OrganDeptVO> resultList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary(), userInfo.getDeptID(), userInfo.getJobId());
 		
 		StringBuilder companySel = new StringBuilder();
 		
-		for (OrganDeptVO vo : deptVOs) {
-			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
-				companySel.append("<option value='" + vo.getCn() + "'>");
-				companySel.append(vo.getDisplayName());
-				companySel.append("</option>");
-			}
+		for (OrganDeptVO vo : resultList) {
+			companySel.append("<option value='").append(vo.getCn()).append("'>")
+					.append(vo.getDisplayName())
+					.append("</option>");
 		}
 		
-		String topid = "";
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID(), userInfo.getJobId());
+		String topID = organAuth.isAuth(OrganAuth.AdminAuth.ADMIN_MASTER) ? "Top/organ" : userInfo.getCompanyID();
 		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1) {
-			topid = userInfo.getCompanyID();
-		} else {
-			topid = "Top/organ";
-		}
-		
-		model.addAttribute("companyID", topid);					
+		model.addAttribute("companyID", topID);
 		model.addAttribute("companySel", companySel);
 		model.addAttribute("userInfo", userInfo);
 		
@@ -519,17 +493,7 @@ public class EzStatisticsApprController {
 			return "cmm/error/adminDenied";
 		}
 		
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
-		
-		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-		
-		for (int i = 0 ; i < list.size() ; i++) {
-			OrganDeptVO vo = list.get(i);
-			
-			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
-				resultList.add(vo);
-			}
-		}
+		List<OrganDeptVO> resultList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary(), userInfo.getDeptID(), userInfo.getJobId());
 		
 		model.addAttribute("list", resultList);
 		model.addAttribute("userCompany", userInfo.getCompanyID());
@@ -595,17 +559,7 @@ public class EzStatisticsApprController {
 			return "cmm/error/adminDenied";
 		}
 		
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
-		
-		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-		
-		for (int i = 0 ; i < list.size() ; i++) {
-			OrganDeptVO vo = list.get(i);
-			
-			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
-				resultList.add(vo);
-			}
-		}
+		List<OrganDeptVO> resultList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary(), userInfo.getDeptID(), userInfo.getJobId());
 		
 		model.addAttribute("list", resultList);
 		model.addAttribute("userCompany", userInfo.getCompanyID());

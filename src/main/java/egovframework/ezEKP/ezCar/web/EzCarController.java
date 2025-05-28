@@ -855,7 +855,7 @@ public class EzCarController extends EgovFileMngUtil {
          
          // 2018-10-30 김민성 - 자원 멀티관리자 데이터 처리
          String[] ownerList = carBrd.getOwnerID().split(",");
-         List<OrganUserVO> ownerInfoList = ezResourceService.getOwnerInfo(ownerList, userInfo.getTenantId(), userInfo.getCompanyID());
+         List<OrganUserVO> ownerInfoList = ezResourceService.getOwnerInfo(ownerList, userInfo.getTenantId(), userInfo.getCompanyID(), userInfo.getLang());
          car_nm = carBrd.getCar_nm();
          strBrdID = carBrd.getCarID();
          strOwnDeptID = carBrd.getOwnDeptID();
@@ -949,7 +949,7 @@ public class EzCarController extends EgovFileMngUtil {
             // 2018-10-24 김민성 - 자원관리 관리자 조회
             String[] ownerList = carBrd.getOwnerID().split(",");
             if(ownerList.length != 0) {
-               ownerListVO = ezResourceService.getOwnerInfo(ownerList, userInfo.getTenantId(), userInfo.getCompanyID());
+               ownerListVO = ezResourceService.getOwnerInfo(ownerList, userInfo.getTenantId(), userInfo.getCompanyID(), userInfo.getLang());
                
                JSONArray jArray = new JSONArray();
 
@@ -1113,7 +1113,7 @@ public class EzCarController extends EgovFileMngUtil {
 	         
 	         // 2018-10-30 김민성 - 자원 멀티관리자 데이터 처리
 	         String[] ownerList = carBrd.getOwnerID().split(",");
-	         List<OrganUserVO> ownerInfoList = ezResourceService.getOwnerInfo(ownerList, userInfo.getTenantId(), userInfo.getCompanyID());
+	         List<OrganUserVO> ownerInfoList = ezResourceService.getOwnerInfo(ownerList, userInfo.getTenantId(), userInfo.getCompanyID(), userInfo.getLang());
 	         car_nm = carBrd.getCar_nm();
 	         strBrdID = carBrd.getCarID();
 	         strOwnDeptID = carBrd.getOwnDeptID();
@@ -1262,7 +1262,7 @@ public class EzCarController extends EgovFileMngUtil {
 			
 			String[] ownerList = carBrd.getOwnerID().split(",");
 			
-			List<OrganUserVO> ownerInfoList = ezResourceService.getOwnerInfo(ownerList, userInfo.getTenantId(), userInfo.getCompanyID());
+			List<OrganUserVO> ownerInfoList = ezResourceService.getOwnerInfo(ownerList, userInfo.getTenantId(), userInfo.getCompanyID(), userInfo.getLang());
 			for(int i=0; i<ownerInfoList.size(); i++){ //관리자 이름 받아오기
 				        	 ownerName += ownerInfoList.get(i).getDisplayName() + ',';
 			}
@@ -1313,7 +1313,7 @@ public class EzCarController extends EgovFileMngUtil {
 			CarBrdVO carBrd = ezCarService.getBrd(Integer.parseInt(carID), userInfo.getCompanyID(), userInfo.getTenantId());
 			String[] ownerList = carBrd.getOwnerID().split(",");
 			
-			List<OrganUserVO> ownerInfoList = ezResourceService.getOwnerInfo(ownerList, userInfo.getTenantId(), userInfo.getCompanyID());
+			List<OrganUserVO> ownerInfoList = ezResourceService.getOwnerInfo(ownerList, userInfo.getTenantId(), userInfo.getCompanyID(), userInfo.getLang());
 			
 			for(int i=0; i<ownerInfoList.size(); i++){ //관리자 이름 받아오기
 				        	 ownerName += ownerInfoList.get(i).getDisplayName() + ',';
@@ -1492,11 +1492,11 @@ public class EzCarController extends EgovFileMngUtil {
 			carID = request.getParameter("carID");
 			yearMonth = request.getParameter("yearMonth");
 
-			//엑셀시작
+			// 엑셀시작
 			try (HSSFWorkbook workbook = new HSSFWorkbook()) {
 				HSSFSheet sheet;
 	
-				//헤더 폰트 굵게
+				// 헤더 폰트 굵게
 				HSSFFont headerFont = workbook.createFont();
 				headerFont.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
 				
@@ -1532,13 +1532,13 @@ public class EzCarController extends EgovFileMngUtil {
 				
 				String[] ownerList = carBrd.getOwnerID().split(",");
 				
-				List<OrganUserVO> ownerInfoList = ezResourceService.getOwnerInfo(ownerList, userInfo.getTenantId(), userInfo.getCompanyID());
-				for(int i=0; i<ownerInfoList.size(); i++){ //관리자 이름 받아오기
+				List<OrganUserVO> ownerInfoList = ezResourceService.getOwnerInfo(ownerList, userInfo.getTenantId(), userInfo.getCompanyID(), userInfo.getLang());
+				for(int i=0; i<ownerInfoList.size(); i++){ // 관리자 이름 받아오기
 					        	 ownerName += ownerInfoList.get(i).getDisplayName() + ',';
 				}
-				ownerName = ownerName.substring(0, ownerName.length()-1); //마지막 , 지우기
+				ownerName = ownerName.substring(0, ownerName.length()-1); // 마지막 , 지우기
 				
-				//헤더만들기
+				// 헤더만들기
 				Row row;
 				Cell cell;
 				      
@@ -1546,7 +1546,7 @@ public class EzCarController extends EgovFileMngUtil {
 				
 				row = sheet.createRow(0);
 					cell = row.createCell(2);
-					cell.setCellValue("차 량 운 행 기 록 일 지 (차종  : "+carBrd.getCarName()+", 차량번호 : "+carBrd.getCar_nm()+")");
+					cell.setCellValue("차 량 운 행 기 록 일 지 (차종  : " + carBrd.getCarName() + ", 차량번호 : " + carBrd.getCar_nm() + ")");
 					cell.setCellStyle(headerStyle2);
 					row.setHeight((short)700);
 					sheet.autoSizeColumn(2);
@@ -1555,7 +1555,7 @@ public class EzCarController extends EgovFileMngUtil {
 				
 				row = sheet.createRow(2);
 					cell = row.createCell(0);
-					cell.setCellValue("차 량 담당자 : "+ownerName+" ("+carBrd.getOwnerCall()+")");
+					cell.setCellValue("차 량 담당자 : " + ownerName + " (" + carBrd.getOwnerCall() + ")");
 					row.setHeight((short)512);
 					sheet.autoSizeColumn(0);
 					sheet.setColumnWidth(0, (sheet.getColumnWidth(2)) + 512);
@@ -1613,7 +1613,7 @@ public class EzCarController extends EgovFileMngUtil {
 						cell.setCellStyle(headerStyle);
 						row.setHeight((short)512);
 						sheet.autoSizeColumn(i);
-						sheet.setColumnWidth(i, (sheet.getColumnWidth(i)) + 512);
+						sheet.setColumnWidth(i, (sheet.getColumnWidth(i)) + 512); // 헤더명 길이는 headerName1 배열 내부 문자열으로 고정된 상태
 					}
 						cell = row.createCell(13);
 						cell.setCellValue("업무 외 이용(km)");
@@ -1676,11 +1676,11 @@ public class EzCarController extends EgovFileMngUtil {
 				sheet.addMergedRegion(new CellRangeAddress(4, 5, 13, 13));
 				sheet.addMergedRegion(new CellRangeAddress(3, 5, 14, 14));
 	
-				yearMonth = yearMonth.replace("-",""); //2021-06 -> 202106
-				//body만들기
+				yearMonth = yearMonth.replace("-",""); // 2021-06 -> 202106
+				// body만들기
 				List<CarFormListVO> carFormList = ezCarService.getCarFormList2(Integer.parseInt(carID), userInfo.getCompanyID(), userInfo.getTenantId(), yearMonth);
 				for(int j=0; j<carFormList.size(); j++){
-					row = sheet.createRow(j+6); //7번째행부터 입력되어야한다
+					row = sheet.createRow(j+6); // 7번째행부터 입력되어야한다
 					
 					for(int k=0; k<15; k++){
 						cell = row.createCell(k);
@@ -1722,14 +1722,16 @@ public class EzCarController extends EgovFileMngUtil {
 						cell.setCellStyle(bodyStyle);
 						row.setHeight((short)384);
 						sheet.autoSizeColumn(k);
-					    sheet.setColumnWidth(k, (sheet.getColumnWidth(k)) + 3000);
+						
+						/* 2024-11-05 홍승비 - 엑셀 파일 저장 시 동적인 너비 계산이 setColumnWidth()에서 허용하는 최대 제한을 넘지 않도록 수정 (255 * 256 = 65280) */
+					    sheet.setColumnWidth(k, Math.min(65280, sheet.getColumnWidth(k) + 3000));
 					}
 				}
 				
-				int lastrow =carFormList.size()+6+2; //마지막 row +2
-				int sum_commute = 0;//주행거리합계_출퇴근
-				int sum_work = 0;//주행거리함계_일반업무
-				int sum_worketc = 0;//주행거리합계_업무외이용
+				int lastrow =carFormList.size()+6+2; // 마지막 row +2
+				int sum_commute = 0; // 주행거리합계_출퇴근
+				int sum_work = 0; // 주행거리함계_일반업무
+				int sum_worketc = 0; // 주행거리합계_업무외이용
 				
 				for(int i=0; i<carFormList.size(); i++){
 						if(carFormList.get(i).getA_distance_commute()!= null && !carFormList.get(i).getA_distance_commute().equals("")){
@@ -1892,7 +1894,7 @@ public class EzCarController extends EgovFileMngUtil {
 			if (req.getParameter("msg") != null && !req.getParameter("msg").equals("")) {
 				accMessage = req.getParameter("msg");
 			}
-			model.addAttribute("accMessage", commonUtil.cleanScriptValue(accMessage, "clean"));
+			model.addAttribute("accMessage", commonUtil.cleanScriptValue(accMessage));
 			model.addAttribute("userInfo", userInfo); 
 			return "/ezCar/carNonResList";
 		}

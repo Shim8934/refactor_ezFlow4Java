@@ -581,8 +581,10 @@ function ListView() {
                 }
                 else {
 
-                    if (!_SetHeightFree)
+                    if (!_SetHeightFree){
                         objTd.height = "24";
+						objTd.width = "1"; // 2024.07.03 한슬기 : 맥 사파리에서 td태그 안이 비어있는 경우 해당 태그의영역이 잡히지 않아 테이블이 틀어지는 문제가 있어 추가 
+					}
 
                     if (_titleIdx == null) {               
                         if (_Align[j] == 0)
@@ -1165,7 +1167,7 @@ try {
 	);
 }
 catch (e)
-{ }
+{console.log(e);}
 String.prototype.trim = function() {
     var str = this.replace(/(\s+$)/g, "");
     return str.replace(/(^\s*)/g, "");

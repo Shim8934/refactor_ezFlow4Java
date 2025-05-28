@@ -6,7 +6,8 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
-		<link rel="stylesheet" href="${util.addVer('ezWebFolder.i1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('/css/ezWebFolder/webfolder.css')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
 		<script type="text/javascript" src="${util.addVer('ezWebFolder.e1', 'msg')}"></script>
@@ -216,7 +217,10 @@
 					document.getElementById("fldName2").value = obj.getAttribute("fldName2");
 					document.getElementById("usersSelect").style.display  = "none";
 					document.getElementById("displayUsers").style.display = "none";
-					// 2020-11-24 김은실 - (카이스트)회사 폴더별 관리자 지원 기능 
+					document.getElementById("newTargetDivManager").parentNode.style.background = "";
+					document.getElementById("newTargetDivManager").parentElement.style.border = "0";
+					document.getElementById("newTargetDiv").parentElement.style.border = "0";
+					// 2020-11-24 김은실 - (카이스트)회사 폴더별 관리자 지원 기능
 					document.getElementById("usersSelectManager").style.display  = "none";
 					document.getElementById("displayUsersManager").style.display = "none";
 					// 회의실 사용 기간
@@ -257,6 +261,8 @@
 								document.getElementById("usersSelectManager").style.display  = (level != 1) ? "none" : "";
 								document.getElementById("displayUsersManager").style.display = (level == 0) ? "none" : "inline-block";
 								document.getElementById("newTargetDivManager").parentNode.style.background = (level > 1) ? "#f6f6f6" : "";
+								document.getElementById("newTargetDivManager").parentElement.style.border = "1px solid #ddd";
+								document.getElementById("newTargetDiv").parentElement.style.border = "1px solid #ddd";
 								processUsersList(data, obj.getAttribute("fldName1"), obj.getAttribute("fldName2"));
 								break;
 							case 1:
@@ -447,6 +453,8 @@
 				document.getElementById("usersSelectManager").style.display  = (compFolderId == selectedFolder) ? "inline-block"      : "none";
 				document.getElementById("usersSelect").style.display  = "";
 				document.getElementById("newTargetDivManager").parentNode.style.background = (compFolderId == selectedFolder) ? "" 	  : "#f6f6f6";
+				document.getElementById("newTargetDivManager").parentElement.style.border = "1px solid #ddd";
+				document.getElementById("newTargetDiv").parentElement.style.border = "1px solid #ddd";
 
 				document.getElementById("listBttn1").style.display    = "none";
 				document.getElementById("listBttn2").style.display    = "";
@@ -807,7 +815,7 @@
 													<img src="/images/kr/left/left_dot02.gif" />
 													<span id=""><spring:message code="ezWebFolder.kes012" /></span>&nbsp;
 												</div>
-												<a class="imgbtn"><span onclick="getUsersPage(1);" id="usersSelectManager"><spring:message code='ezWebFolder.t205'/></span></a>											
+												<a class="imgbtn" id="usersSelectManager"><span onclick="getUsersPage(1);" ><spring:message code='ezWebFolder.t205'/></span></a>
 											</div>
 										</td>
 									</tr>
@@ -826,7 +834,7 @@
 													<img src="/images/kr/left/left_dot02.gif" />
 													<span id=""><spring:message code='ezWebFolder.t204'/></span>&nbsp;
 												</div>
-												<a class="imgbtn"><span onclick="getUsersPage(0);" id="usersSelect"><spring:message code='ezWebFolder.t205'/></span></a>											
+												<a class="imgbtn" id="usersSelect"><span onclick="getUsersPage(0);"><spring:message code='ezWebFolder.t205'/></span></a>
 											</div>
 										</td>
 									</tr>

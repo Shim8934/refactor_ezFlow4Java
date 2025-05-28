@@ -1342,6 +1342,11 @@
 				a.CN <> a.EXTENSIONATTRIBUTE2
 			  AND
 				a.CN NOT LIKE '%trash_dept_%'
+		]]>
+			<isEqual property="adminOrgan" compareValue="n" prepend="AND">
+				DEPTTREEFLAG = 'Y'
+			</isEqual>
+		<![CDATA[ 
 			ORDER BY
 				lpad(NVL(a.EXTENSIONATTRIBUTE15, 0),6,0), a.DISPLAYNAME
 		]]>
@@ -1399,6 +1404,9 @@
 				CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
 			AND
 				TENANT_ID = #tenantId#
+			<isEqual property="adminOrgan" compareValue="n" prepend="AND">
+				USERTREEFLAG = 'Y'
+			</isEqual>
 				
 			UNION ALL
 			
@@ -1417,6 +1425,9 @@
 				B.DEPTID = #deptId#
 			AND
 				B.TENANT_ID = #tenantId#
+			<isEqual property="adminOrgan" compareValue="n" prepend="AND">
+				B.USERTREEFLAG = 'Y'
+			</isEqual>
 		) AA
 		ORDER BY
 			EXTENSIONATTRIBUTE15 ASC,

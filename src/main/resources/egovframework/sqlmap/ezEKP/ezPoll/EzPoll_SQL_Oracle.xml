@@ -29,7 +29,7 @@
         <result property="creatorDept"          column="creator_dept"              columnIndex="14" />
         <result property="filePath"          	column="file_path"                 columnIndex="15" 			jdbcType="CLOB" 			javaType="java.lang.String"/>
         <result property="resultFirst"          column="result_first"              columnIndex="16" />
-        <result property="isMofifying"          column="is_modifying"              columnIndex="17" />
+        <result property="isModifying"          column="is_modifying"              columnIndex="17" />
         <result property="setDate"          	column="set_date"              	   columnIndex="18" />
         <result property="isSorting"          	column="is_sorting"                columnIndex="19" />
         <result property="isSelOnlyOnce"        column="is_selonlyonce"            columnIndex="20" />
@@ -408,14 +408,14 @@
 			AND 
 				SEEN	  = 1
 		]]>			
-    </select> 
-     
+    </select>
+    
+	<!-- 2024-12-11 홍승비 - 투표 리스트 셀렉트 > 실제로 사용하지 않는 컬럼(content, filePath)을 셀렉트하지 않도록 수정, 오라클 쿼리의 CLOB 변환 오류 방지 -->
     <select id="EzPollDAO.getQuestionsTest" resultClass="PollQuestionVO">   
 		<![CDATA[
 			SELECT 
 				a.ID AS qstid,
 				a.TENANT_ID AS tenantid,
-				a.CONTENT AS content,
 				a.MULTI_SELECT AS multiselect,
 				a.CREATE_DATE AS createdate,
 				a.START_DATE AS startdate,
@@ -426,7 +426,6 @@
 				a.CREATOR AS creator,
 				a.CREATOR_NAME1 AS creatorname1,
 				a.CREATOR_NAME2 AS creatorname2,
-				a.FILE_PATH AS filepath,
 				a.RESULT_FIRST AS resultfirst,
 				a.IS_MODIFYING AS ismodifying,
 				a.SET_DATE AS setdate,
@@ -458,7 +457,7 @@
 							(
 									USER_ID   = #company_id#
 								OR
-									USER_ID IN (SELECT EXTENSIONATTRIBUTE2 FROM TBL_DEPTMASTER WHERE CN IN (SELECT DEPTID FROM TBL_ADDJOBMASTER WHERE TENANT_ID = #tenant_id# AND CN = #user_id#))
+									USER_ID = (SELECT EXTENSIONATTRIBUTE2 FROM TBL_DEPTMASTER WHERE CN = #dept_id# AND TENANT_ID = #tenantId#)
 							)
 						) 
 					OR
@@ -486,8 +485,6 @@
 															)	
 												OR 
 													CN = 'Top'
-												OR
-													CN IN (SELECT DEPTID FROM TBL_ADDJOBMASTER WHERE CN = #user_id#)										
 											)
 										AND
 											TENANT_ID = #tenant_id#
@@ -515,15 +512,15 @@
 	        		a.CREATOR_NAME2 LIKE '%' ||#search_str#|| '%'				
 		        ]]>
 			 </isNotEqual>
-		</isEqual>		
-    </select> 
+		</isEqual>
+    </select>
     
-    <select id="EzPollDAO.getAllQuestions" resultClass="PollQuestionVO">   
+    <!-- 2024-12-11 홍승비 - 투표 리스트 셀렉트 > 실제로 사용하지 않는 컬럼(content, filePath)을 셀렉트하지 않도록 수정, 오라클 쿼리의 CLOB 변환 오류 방지 -->
+    <select id="EzPollDAO.getAllQuestions" resultClass="PollQuestionVO">
 		<![CDATA[
 			SELECT DISTINCT
 				a.ID AS qstid,
 				a.TENANT_ID AS tenantid,
-				TO_CHAR(a.CONTENT) AS content,
 				a.MULTI_SELECT AS multiselect,
 				a.CREATE_DATE AS createdate,
 				a.START_DATE AS startdate,
@@ -534,7 +531,6 @@
 				a.CREATOR AS creator,
 				a.CREATOR_NAME1 AS creatorname1,
 				a.CREATOR_NAME2 AS creatorname2,
-				TO_CHAR(a.FILE_PATH) AS filepath,
 				a.RESULT_FIRST AS resultfirst,
 				a.IS_MODIFYING AS ismodifying,
 				a.SET_DATE AS setdate,
@@ -557,9 +553,9 @@
 			(
 					a.COMPANYID = #companyid#
 				OR
-					b.USER_ID IN (SELECT DEPTID FROM TBL_ADDJOBMASTER WHERE CN = #user_id# AND tenant_id = #tenant_id#)
+					b.USER_ID = #dept_id#
 				OR
-					b.USER_ID IN (SELECT EXTENSIONATTRIBUTE2 FROM TBL_DEPTMASTER WHERE CN IN (SELECT DEPTID FROM TBL_ADDJOBMASTER WHERE TENANT_ID = #tenant_id# AND CN = #user_id#))
+					b.USER_ID = (SELECT EXTENSIONATTRIBUTE2 FROM TBL_DEPTMASTER WHERE CN = #dept_id# AND TENANT_Id = #tenantId#)
 			)
 		]]>	
 		<isEqual property="mode" compareValue="sub" prepend="AND">
@@ -578,8 +574,8 @@
 	        		a.CREATOR_NAME2 LIKE '%' ||#search_str#|| '%'				
 		        ]]>
 			 </isNotEqual>
-		</isEqual>			
-    </select>     
+		</isEqual>
+    </select>
     
     <select id="EzPollDAO.getOwnQuestions" resultMap="pollQuestion">   
 		<![CDATA[

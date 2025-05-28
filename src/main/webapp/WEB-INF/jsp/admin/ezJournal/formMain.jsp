@@ -7,12 +7,12 @@
 	<head>
 		<title><spring:message code='ezJournal.t3' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezJournal.c1', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript">		    
-		    var companyId = "";
 		    var typeId = "";
 		    var formId = "";
 		    var selFormId = "";
@@ -25,7 +25,6 @@
 	        var pLeft = (pwidth - 790) / 2;
     
 			$(document).ready(function() {
-				companyId = $("#SCompID").val();
 			   	var firstType = $("#formType").find("td:first");
 				getFormList(firstType);
 			});
@@ -52,7 +51,7 @@
 		    		dataType : "html",
 		    		async : false,
 		    		url : "/admin/ezJournal/getFormList.do",
-		    		data : {"companyId"  : companyId,
+		    		data : {"companyId"  : encodeURIComponent(companySelectID),
     						"typeId"	  : typeId},
 		    		success: function(result) {
 		    			$("#formList").html(result);
@@ -65,16 +64,15 @@
 			}			
 		    
 			// 회사선택시 각 회사에서 사용하는 양식함 로드
-		    function selectCompanyList(val) {
+		    function changeCompany(val) {
 				var url = "/admin/ezJournal/form.do";
-				parent.frames["right"].location.href = url+ "?companyId=" + val;
-				companyId = val;
+				parent.frames["right"].location.href = url+ "?companyId=" + encodeURIComponent(val);
 		    }
 		    
 			// 양식추가버튼
 		    function btnInsForm() {
 		    	var url = "/admin/ezJournal/insertForm.do";
-		    	url += "?companyId=" + encodeURIComponent(companyId) + "&typeId=" + encodeURIComponent(typeId);
+		    	url += "?companyId=" + encodeURIComponent(companySelectID) + "&typeId=" + encodeURIComponent(typeId);
 		    	
 		    	window.open(url, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=820,width=790,top=" + pTop + ",left=" + pLeft, "");
 		    //	GetOpenWindow(url + parameter, "FormMain", 830, 950, "yes");
@@ -93,7 +91,7 @@
 					}
 					
 			    	var url = "/admin/ezJournal/insertForm.do";
-			    	url += "?companyId=" + encodeURIComponent(companyId) + "&typeId=" + encodeURIComponent(typeId)
+			    	url += "?companyId=" + encodeURIComponent(companySelectID) + "&typeId=" + encodeURIComponent(typeId)
 			    			+ "&formId=" + encodeURIComponent(selFormId);
 			    	
 			    	window.open(url, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=820,width=790,top=" + pTop + ",left=" + pLeft, "");
@@ -121,7 +119,7 @@
 			    				type : "POST",
 			    				url : "/admin/ezJournal/deleteForm.do",
 			    				data : {"formId"	 : selFormId,
-			    						"companyId"  : companyId,
+			    						"companyId"  : encodeURIComponent(companySelectID),
 			    						"typeId" 	 : typeId},
 			    				success : function (result) {
 			    					if (result === "ok") {
@@ -183,16 +181,9 @@
 	<body class="mainbody"> 
 		<h1>
 			<spring:message code='ezJournal.t3' />
-		    <span class="title_bar"><img src="/images/name_bar.gif"></span>
-			<select class="companySelect" id="SCompID" name="SCompID" onchange="selectCompanyList(this.value)">
-            	<c:forEach var="company" items="${companyList}">
-            		<option value="<c:out value='${company.companyId}'/>"
-            		<c:if test="${company.selected eq 'selected'}">
-	            		 selected
-            		</c:if>
-	            		 ><c:out value='${company.companyName}'/></option>
-            	</c:forEach>
-            </select>
+			<jsp:include page="/WEB-INF/jsp/admin/companySelect.jsp">
+				<jsp:param name="companySelectID" value="${selectedCompany}" />
+			</jsp:include>
 		</h1>
 		<div id="mainmenu" style="padding-left: 5px;">
             <ul>

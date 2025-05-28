@@ -51,7 +51,7 @@
                 B.updateStatus,
                 A.title,
                 A.memberid,
-                A.membername,
+                CASE WHEN #lang# = '1' THEN A.membername ELSE A.membername2 END AS membername,
                 DATE_ADD(DATE_FORMAT(A.regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS regdate,
                 B.status AS confirmstatus,
                 IFNULL(DATE_ADD(DATE_FORMAT(B.confirmdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS confirmdate,
@@ -126,10 +126,18 @@
         	</isEqual>
         	
         	<isEqual property="searchType" compareValue="writer">
-	        	<![CDATA[
-	        		AND
-	        			A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
-	        	]]>
+				<isEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+					]]>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername2 LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+					]]>
+				</isNotEqual>
         	</isEqual>
         </isNotEqual>
 		
@@ -150,11 +158,18 @@
             ORDER BY
         ]]>
         
+        <!-- 2024-07-01 홍승비 - SQL Injection 수정 > 정렬 조건에서 $ 기호 제거 -->
         <isNotEqual property="orderCell" compareValue="">
-        	<![CDATA[    
-            	$orderOption1$
-            ]]>
-        </isNotEqual>
+			<isEqual property="orderCell" compareValue="IMPORTANCE">IMPORTANCE</isEqual>
+			<isEqual property="orderCell" compareValue="CONFIRMSTATUS">CONFIRMSTATUS</isEqual>
+			<isEqual property="orderCell" compareValue="COMMENTSTATUS">COMMENTSTATUS</isEqual>
+			<isEqual property="orderCell" compareValue="HASFILE">HASFILE</isEqual>
+			<isEqual property="orderCell" compareValue="TITLE">TITLE</isEqual>
+			<isEqual property="orderCell" compareValue="MEMBERNAME">MEMBERNAME</isEqual>
+			<isEqual property="orderCell" compareValue="REGDATE">REGDATE</isEqual>
+			<isEqual property="orderCell" compareValue="STATUS">STATUS</isEqual>
+			<isEqual property="orderOption" compareValue="DESC">DESC</isEqual>
+      	</isNotEqual>
         
         <isEqual property="orderCell" compareValue="">
         	<![CDATA[    
@@ -205,10 +220,18 @@
         	</isEqual>
         	
         	<isEqual property="searchType" compareValue="writer">
-	        	<![CDATA[
-	        		AND
-	        			A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
-	        	]]>
+				<isEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+					]]>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername2 LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+					]]>
+				</isNotEqual>
         	</isEqual>
         </isNotEqual>
         
@@ -235,7 +258,7 @@
                 DATE_ADD(DATE_FORMAT(A.enddate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS enddate,
                 A.option,
                 A.content,
-                A.memberName,
+				CASE WHEN #lang# = '1' THEN A.membername ELSE A.membername2 END AS membername,
                 IFNULL(C.confirmcount, '0') AS confirmcount,
 				D.confirmtotalcount,
 				B.status confirmstatus,
@@ -495,7 +518,7 @@
 				A.status,
 				A.title,
 				A.memberid,
-				A.membername,
+				CASE WHEN #lang# = '1' THEN A.membername ELSE A.membername2 END AS membername,
 				DATE_ADD(DATE_FORMAT(A.regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS regdate,
 				B.status AS confirmstatus,
 				IFNULL(DATE_ADD(DATE_FORMAT(B.confirmdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS confirmdate,
@@ -571,10 +594,18 @@
 	        	]]>
         	</isEqual>
         	<isEqual property="searchType" compareValue="writer">
-	        	<![CDATA[
-	        		AND
-	        			A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
-	        	]]>
+				<isEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+					]]>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername2 LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+					]]>
+				</isNotEqual>
         	</isEqual>
         </isNotEqual>
         
@@ -587,12 +618,19 @@
 	        ]]>
 	    </isNotEqual>
 	    
+        <!-- 2024-07-01 홍승비 - SQL Injection 수정 > 정렬 조건에서 $ 기호 제거 -->
         <isNotEqual property="orderCell" compareValue="">
-        	<![CDATA[
-        		ORDER BY
-            		$orderOption1$
-            ]]>
-        </isNotEqual>
+        	ORDER BY
+			<isEqual property="orderCell" compareValue="IMPORTANCE">IMPORTANCE</isEqual>
+			<isEqual property="orderCell" compareValue="CONFIRMSTATUS">CONFIRMSTATUS</isEqual>
+			<isEqual property="orderCell" compareValue="COMMENTSTATUS">COMMENTSTATUS</isEqual>
+			<isEqual property="orderCell" compareValue="HASFILE">HASFILE</isEqual>
+			<isEqual property="orderCell" compareValue="TITLE">TITLE</isEqual>
+			<isEqual property="orderCell" compareValue="MEMBERNAME">MEMBERNAME</isEqual>
+			<isEqual property="orderCell" compareValue="REGDATE">REGDATE</isEqual>
+			<isEqual property="orderCell" compareValue="STATUS">STATUS</isEqual>
+			<isEqual property="orderOption" compareValue="DESC">DESC</isEqual>
+      	</isNotEqual>
         
         <isEqual property="orderCell" compareValue="">
         	<![CDATA[
@@ -642,10 +680,18 @@
         	</isEqual>
         	
         	<isEqual property="searchType" compareValue="writer">
-	        	<![CDATA[
-	        		AND
-	        			A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
-	        	]]>
+				<isEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+					]]>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername2 LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+					]]>
+				</isNotEqual>
         	</isEqual>
         </isNotEqual>
         
@@ -694,10 +740,18 @@
         	</isEqual>
         	
         	<isEqual property="searchType" compareValue="writer">
-	        	<![CDATA[
-	        		AND
-	        			A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
-	        	]]>
+				<isEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+					]]>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername2 LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+					]]>
+				</isNotEqual>
         	</isEqual>
         </isNotEqual>
         
@@ -720,7 +774,7 @@
                 A.status,
                 A.title,
                 A.memberid,
-                A.membername,
+                CASE WHEN #lang# = '1' THEN A.membername ELSE A.membername2 END AS membername,
                 B.status AS confirmstatus,
                 DATE_ADD(DATE_FORMAT(A.regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS regdate,
                 IFNULL(DATE_ADD(DATE_FORMAT(B.confirmdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS confirmdate,
@@ -789,10 +843,18 @@
 	        	]]>
         	</isEqual>
         	<isEqual property="searchType" compareValue="writer">
-	        	<![CDATA[
-	        		AND
-	        			A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
-	        	]]>
+				<isEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+					]]>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername2 LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+					]]>
+				</isNotEqual>
         	</isEqual>
         </isNotEqual>
         
@@ -817,11 +879,18 @@
             ORDER BY
         ]]>
         
+        <!-- 2024-07-01 홍승비 - SQL Injection 수정 > 정렬 조건에서 $ 기호 제거 -->
         <isNotEqual property="orderCell" compareValue="">
-        	<![CDATA[    
-            	$orderOption1$
-            ]]>
-        </isNotEqual>
+			<isEqual property="orderCell" compareValue="IMPORTANCE">IMPORTANCE</isEqual>
+			<isEqual property="orderCell" compareValue="CONFIRMSTATUS">CONFIRMSTATUS</isEqual>
+			<isEqual property="orderCell" compareValue="COMMENTSTATUS">COMMENTSTATUS</isEqual>
+			<isEqual property="orderCell" compareValue="HASFILE">HASFILE</isEqual>
+			<isEqual property="orderCell" compareValue="TITLE">TITLE</isEqual>
+			<isEqual property="orderCell" compareValue="MEMBERNAME">MEMBERNAME</isEqual>
+			<isEqual property="orderCell" compareValue="REGDATE">REGDATE</isEqual>
+			<isEqual property="orderCell" compareValue="STATUS">STATUS</isEqual>
+			<isEqual property="orderOption" compareValue="DESC">DESC</isEqual>
+      	</isNotEqual>
         
         <isEqual property="orderCell" compareValue="">
         	<![CDATA[    
@@ -884,10 +953,18 @@
 	        	]]>
         	</isEqual>
         	<isEqual property="searchType" compareValue="writer">
-	        	<![CDATA[
-	        		AND
-	        			A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
-	        	]]>
+				<isEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+					]]>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+					<![CDATA[
+							AND
+								A.membername2 LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+						]]>
+				</isNotEqual>
         	</isEqual>
 		</isNotEqual>
 		
@@ -910,7 +987,7 @@
 				A.status,
 				A.title,
 				A.memberid,
-				A.membername,
+				CASE WHEN #lang# = '1' THEN A.membername ELSE A.membername2 END AS membername,
 				DATE_ADD(DATE_FORMAT(A.regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS regdate,
 				B.status AS confirmstatus,
 				IFNULL(DATE_ADD(DATE_FORMAT(B.confirmdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS confirmdate,
@@ -984,10 +1061,18 @@
 	        	]]>
         	</isEqual>
         	<isEqual property="searchType" compareValue="writer">
-	        	<![CDATA[
-	        		AND
-	        			A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
-	        	]]>
+				<isEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+					]]>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername2 LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+					]]>
+				</isNotEqual>
         	</isEqual>
         </isNotEqual>
         
@@ -1008,11 +1093,18 @@
 			ORDER BY
 		]]>
 		
-		<isNotEqual property="orderCell" compareValue="">
-        	<![CDATA[    
-            	$orderOption1$
-            ]]>
-        </isNotEqual>
+		<!-- 2024-07-01 홍승비 - SQL Injection 수정 > 정렬 조건에서 $ 기호 제거 -->
+        <isNotEqual property="orderCell" compareValue="">
+			<isEqual property="orderCell" compareValue="IMPORTANCE">IMPORTANCE</isEqual>
+			<isEqual property="orderCell" compareValue="CONFIRMSTATUS">CONFIRMSTATUS</isEqual>
+			<isEqual property="orderCell" compareValue="COMMENTSTATUS">COMMENTSTATUS</isEqual>
+			<isEqual property="orderCell" compareValue="HASFILE">HASFILE</isEqual>
+			<isEqual property="orderCell" compareValue="TITLE">TITLE</isEqual>
+			<isEqual property="orderCell" compareValue="MEMBERNAME">MEMBERNAME</isEqual>
+			<isEqual property="orderCell" compareValue="REGDATE">REGDATE</isEqual>
+			<isEqual property="orderCell" compareValue="STATUS">STATUS</isEqual>
+			<isEqual property="orderOption" compareValue="DESC">DESC</isEqual>
+      	</isNotEqual>
         
         <isEqual property="orderCell" compareValue="">
         	<![CDATA[
@@ -1050,7 +1142,7 @@
                 A.status,
                 A.title,
                 A.memberid,
-                A.membername,
+                CASE WHEN #lang# = '1' THEN A.membername ELSE A.membername2 END AS membername,
                 IFNULL(DATE_ADD(DATE_FORMAT(A.regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS regdate,
                 B.status AS confirmstatus,
                 IFNULL(DATE_ADD(DATE_FORMAT(B.confirmdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS confirmdate,
@@ -1123,10 +1215,18 @@
         	</isEqual>
         	
         	<isEqual property="searchType" compareValue="writer">
-	        	<![CDATA[
-	        		AND
-	        			A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
-	        	]]>
+				<isEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+					]]>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername2 LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+					]]>
+				</isNotEqual>
         	</isEqual>
         </isNotEqual>
         
@@ -1136,11 +1236,18 @@
 			ORDER BY
         ]]>
         
+        <!-- 2024-07-01 홍승비 - SQL Injection 수정 > 정렬 조건에서 $ 기호 제거 -->
         <isNotEqual property="orderCell" compareValue="">
-        	<![CDATA[    
-            	$orderOption1$
-            ]]>
-        </isNotEqual>
+			<isEqual property="orderCell" compareValue="IMPORTANCE">IMPORTANCE</isEqual>
+			<isEqual property="orderCell" compareValue="CONFIRMSTATUS">CONFIRMSTATUS</isEqual>
+			<isEqual property="orderCell" compareValue="COMMENTSTATUS">COMMENTSTATUS</isEqual>
+			<isEqual property="orderCell" compareValue="HASFILE">HASFILE</isEqual>
+			<isEqual property="orderCell" compareValue="TITLE">TITLE</isEqual>
+			<isEqual property="orderCell" compareValue="MEMBERNAME">MEMBERNAME</isEqual>
+			<isEqual property="orderCell" compareValue="REGDATE">REGDATE</isEqual>
+			<isEqual property="orderCell" compareValue="STATUS">STATUS</isEqual>
+			<isEqual property="orderOption" compareValue="DESC">DESC</isEqual>
+      	</isNotEqual>
         
         <isEqual property="orderCell" compareValue="">
         	<![CDATA[    
@@ -1184,10 +1291,18 @@
 	        	]]>
         	</isEqual>
         	<isEqual property="searchType" compareValue="writer">
-	        	<![CDATA[
-	        		AND
-	        			A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
-	        	]]>
+				<isEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+					]]>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername2 LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+					]]>
+				</isNotEqual>
         	</isEqual>
         </isNotEqual>
     </select>
@@ -1231,10 +1346,18 @@
         	</isEqual>
         	
         	<isEqual property="searchType" compareValue="writer">
-	        	<![CDATA[
-	        			A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
-	        		AND
-	        	]]>
+				<isEqual property="lang" compareValue="1">
+					<![CDATA[
+							A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+						AND
+					]]>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+					<![CDATA[
+							A.membername2 LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+						AND
+					]]>
+				</isNotEqual>
         	</isEqual>
         </isNotEqual>
         
@@ -1263,7 +1386,7 @@
 				A.status,
 				A.title,
 				A.memberid,
-				A.membername,
+                CASE WHEN #lang# = '1' THEN A.membername ELSE A.membername2 END AS membername,
 				IFNULL(DATE_ADD(DATE_FORMAT(A.regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS regdate,
 				d.status as confirmstatus,
 				IFNULL(DATE_ADD(DATE_FORMAT(D.confirmdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS confirmdate,
@@ -1340,10 +1463,18 @@
 	        	]]>
         	</isEqual>
         	<isEqual property="searchType" compareValue="writer">
-	        	<![CDATA[
-	        			A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
-	        		AND
-	        	]]>
+				<isEqual property="lang" compareValue="1">
+					<![CDATA[
+							A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+						AND
+					]]>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+					<![CDATA[
+							A.membername2 LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+						AND	
+					]]>
+				</isNotEqual>
         	</isEqual>
         </isNotEqual>
         
@@ -1367,11 +1498,18 @@
 			ORDER BY
         ]]>
         
+        <!-- 2024-07-01 홍승비 - SQL Injection 수정 > 정렬 조건에서 $ 기호 제거 -->
         <isNotEqual property="orderCell" compareValue="">
-        	<![CDATA[    
-            	$orderOption1$
-            ]]>
-        </isNotEqual>
+			<isEqual property="orderCell" compareValue="IMPORTANCE">IMPORTANCE</isEqual>
+			<isEqual property="orderCell" compareValue="CONFIRMSTATUS">CONFIRMSTATUS</isEqual>
+			<isEqual property="orderCell" compareValue="COMMENTSTATUS">COMMENTSTATUS</isEqual>
+			<isEqual property="orderCell" compareValue="HASFILE">HASFILE</isEqual>
+			<isEqual property="orderCell" compareValue="TITLE">TITLE</isEqual>
+			<isEqual property="orderCell" compareValue="MEMBERNAME">MEMBERNAME</isEqual>
+			<isEqual property="orderCell" compareValue="REGDATE">REGDATE</isEqual>
+			<isEqual property="orderCell" compareValue="STATUS">STATUS</isEqual>
+			<isEqual property="orderOption" compareValue="DESC">DESC</isEqual>
+      	</isNotEqual>
         
         <isEqual property="orderCell" compareValue="">
         	<![CDATA[    
@@ -1454,6 +1592,7 @@
 					circularcomment,
 					memberid,
 					membername,
+					membername2,
 					DATE_ADD(DATE_FORMAT(regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS regdate,
 					status,
 					tenantid
@@ -1488,6 +1627,7 @@
 					A.circularcomment,
 					A.memberid,
 					A.membername,
+					membername2,
 					DATE_ADD(DATE_FORMAT(A.regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS regdate,
 					A.status,
 					B.status AS confirmStatus,

@@ -6,7 +6,8 @@
 	<head>
 	<title></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<link rel="stylesheet" href="${util.addVer('ezWebFolder.i1', 'msg')}" type="text/css">
+	<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 	<script type="text/javascript" src="${util.addVer('ezWebFolder.e1', 'msg')}"></script>	
 	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>	
 	<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -367,8 +368,8 @@
 			parentId = data.data.folderUpp;
 			
 			namePath(folderPath, originalPath);
-			document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp; " + messages.strLang15 + " <span style='color:#017BEC;'>" + fldCnt +" </span>"
-			 + " / " + messages.strLang16 + " <span style='color:#017BEC;'> " 
+			document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp; " + messages.strLang15 + " <span class='txt_color'>" + fldCnt +" </span>"
+			 + " / " + messages.strLang16 + " <span class='txt_color'> " 
 				+ fileCnt +" </span>";
 			$("#listcount").val(result.listCount).prop("selected", true);
 			capacity.load();

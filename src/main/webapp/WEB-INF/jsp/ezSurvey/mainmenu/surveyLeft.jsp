@@ -6,7 +6,8 @@
 <html style="height:100%">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezSurvey.css', 'msg'                    )}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('/css/ezMemo/jquery.mCustomScrollbar.css')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
 		<script type="text/javascript">
@@ -69,6 +70,7 @@
 		
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js'                   )}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js'      )}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezSurvey.lang', 'msg'                 )}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
 		<script type="text/javascript">
@@ -219,8 +221,34 @@
 				
 				function windowResize() {$(".surveyList").height(window.innerHeight - 105);}
 				
+				function cancelSurvey (id) {
+					if (surveyId != -1 || isInCreateSurvey == true) {
+						if (surveyId != -1) {
+							changeSurveyState();
+						}
+						switch (id) {
+							case 'surveyConfig':
+								getConfigPage();
+								break;
+							case 'totalSurvey':
+								getAllSurveyList();
+								break;
+							case 'processingSurvey':
+								getProcessingSurveyList();
+								break;
+							case 'finishedSurvey':
+								getFinishedSurveyPage();
+								break;
+							case 'mySurvey':
+								getMySurveyPage();
+								break;
+						}
+						isInCreateSurvey = false;
+					}
+				}
+				
 				return {
-					
+					cancelSurvey:cancelSurvey
 				};
 			}();
 			

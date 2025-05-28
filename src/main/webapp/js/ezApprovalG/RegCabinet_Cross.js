@@ -129,12 +129,18 @@ function RegisterCabinet() {
         arrDisplayInfo[0] = "";
         arrDisplayInfo[1] = "";
     }
-
+    if (typeof upperDeptCode === "undefined" || upperDeptCode === "") {
+        upperDeptCode = parent.upperDeptCode || arr_userinfo[4];
+    }
+    if (typeof upperDeptName === "undefined" || upperDeptName === "") {
+        upperDeptName = parent.upperDeptName || arr_userinfo[15];
+    }
+    
     var xmlpara = createXmlDom();   
     var objRoot, objNode, scinfo, catalognode, cataloginfo, objSC, objSCNode;
     objRoot = createNodeInsert(xmlpara, objRoot, "PARAMETERS"); 
-    objNode = createNodeAndAppandNodeText(xmlpara, objRoot, objNode, "DEPTCODE", arr_userinfo[4]);
-    objNode = createNodeAndAppandNodeText(xmlpara, objRoot, objNode, "DEPTNAME", arr_userinfo[15]);
+    objNode = createNodeAndAppandNodeText(xmlpara, objRoot, objNode, "DEPTCODE", upperDeptCode);
+    objNode = createNodeAndAppandNodeText(xmlpara, objRoot, objNode, "DEPTNAME", upperDeptName);
     objNode = createNodeAndAppandNodeText(xmlpara, objRoot, objNode, "DEPTNAME2", arr_userinfo[16]);
     objNode = createNodeAndAppandNodeText(xmlpara, objRoot, objNode, "TASKCODE", arrTask[0]);
     objNode = createNodeAndAppandNodeText(xmlpara, objRoot, objNode, "TASKNAME", arrTask[6]);

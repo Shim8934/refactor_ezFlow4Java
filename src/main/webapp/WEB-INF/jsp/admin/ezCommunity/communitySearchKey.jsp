@@ -8,7 +8,8 @@
 		<title></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
-		<link rel="stylesheet" href="${util.addVer('ezCommunity.i1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<style>
 		.idSpan select {vertical-align: middle; height: 22px; margin-left: 2px;}
 		.categorySpan {
@@ -62,7 +63,7 @@
 					infoPopup = window.open("/admin/ezCommunity/admCommunityInfoEdit.do?code=" + pcode, "", "location=1,toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=390,width=480,top=" + pTop + ",left=" + pLeft, "");
 				}
 				else {
-					infoPopup = window.open("/admin/ezCommunity/closeCommunityInfo.do?code=" + pcode, "", "location=1,toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=295,width=480,top=" + pTop + ",left=" + pLeft, "");
+					infoPopup = window.open("/admin/ezCommunity/closeCommunityInfo.do?companyID=" + encodeURIComponent(companySelectID) + "&code=" + pcode, "", "location=1,toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=295,width=480,top=" + pTop + ",left=" + pLeft, "");
 				}
 			}
 			
@@ -207,7 +208,8 @@
 						pageNum     : pCurPage,
 						searchType  : document.getElementsByName("cCateA")[0].value, // 카테고리 종류
 						searchType2 : QuerySelect.options[QuerySelect.selectedIndex].value, // 커뮤니티 검색옵션
-						searchValue : document.getElementById("txt_SearchQuery").value // 검색값
+						searchValue : document.getElementById("txt_SearchQuery").value, // 검색값
+						companyId 	: encodeURIComponent(companySelectID)
 					},
 					success : function (data) {
 						pCurPage   = data.pageNum;
@@ -284,7 +286,8 @@
 					{
 						pageNum     : pCurPage,
 						searchType2 : QuerySelect.options[QuerySelect.selectedIndex].value, // 커뮤니티 검색옵션
-						searchValue : document.getElementById("txt_SearchQuery").value
+						searchValue : document.getElementById("txt_SearchQuery").value,
+						companyId 	: encodeURIComponent(companySelectID)
 					},
 					success : function (data) {
 						pCurPage   = data.pageNum;
@@ -335,7 +338,7 @@
 			
 			function makePageSelPage() {
 				document.getElementById("tblPageRayer").innerHTML = "";
-				document.getElementById("TitleInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;font-weight:bold;'>" + pTotalCnt + "</span>";
+				document.getElementById("TitleInfo").innerHTML = "&nbsp;&nbsp;<span class='txt_color' style='font-weight:bold;'>" + pTotalCnt + "</span>";
 				
 				var strtext = "<div class='pagenavi'>";
 				var PagingHTML = "";
@@ -344,23 +347,23 @@
 				var pageNum = pCurPage;
 				
 				if (pTotalPage > 1 && pageNum != 1) {
-					strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' ></span>";
+					strtext = "<span class='btnimg first' onclick= 'return goToPageByNum(1)'></span>";
 					PagingHTML += strtext;
 				} else {
-					strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif'></span>";
+					strtext = "<span class='btnimg first disabled'></span>";
 					PagingHTML += strtext;
 				}
 				
 				if (pTotalPage > pBlockSize) {
 					if (pageNum > pBlockSize) {
-						strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif'></span>";
+						strtext = "<span class='btnimg prev' onclick= 'return selbeforeBlock()'></span>";
 						PagingHTML += strtext;
 					} else {
-						strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif'></span>";
+						strtext = "<span class='btnimg prev disabled'></span>";
 						PagingHTML += strtext;
 					}
 				} else {
-					strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif'></span>";
+					strtext = "<span class='btnimg prev disabled'></span>";
 					PagingHTML += strtext;
 				}
 				
@@ -391,24 +394,24 @@
 				if (pTotalPage > pBlockSize) {
 					if (pTotalPage >= parseInt(((parseInt((pageNum - 1) / pBlockSize) + 1) * pBlockSize) + 1)) {
 						strtext = "";
-						strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif'></span>";
+						strtext = strtext + "<span class='btnimg next' onclick='return selafterBlock()'></span>";
 						PagingHTML += strtext;
 					} else {
 						strtext = "";
-						strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+						strtext = strtext + "<span class='btnimg next disabled'></span>";
 						PagingHTML += strtext;
 					}
 				} else {
 					strtext = "";
-					strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif'></span>";
+					strtext = strtext + "<span class='btnimg next disabled'></span>";
 					PagingHTML += strtext;
 				}
 				
 				if (pTotalPage > 1 && pTotalPage != 1 && (pTotalPage != pageNum)) {
-					strtext = "<span class='btnimg' onclick='return goToPageByNum(" + pTotalPage + ")'><img src='/images/sub/btn_n_next.gif'></span>";
+					strtext = "<span class='btnimg last' onclick='return goToPageByNum(" + pTotalPage + ")'></span>";
 					PagingHTML += strtext;
 				} else {
-					strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif'></span>";
+					strtext = "<span class='btnimg last disabled'></span>";
 					PagingHTML += strtext;
 				}
 				
@@ -622,10 +625,16 @@
 				
 				return retVal;
 			}
+
+			function changeCompany() {
+				ChangeTab(document.querySelector("#openCommu"));
+			}
 		</script>
 	</head>
 	<body class="mainbody">
-		<h1><spring:message code = 'ezCommunity.khj02' /><span id="TitleInfo"></span></h1>
+		<h1><spring:message code = 'ezCommunity.khj02' /><span id="TitleInfo"></span>
+			<jsp:include page="/WEB-INF/jsp/admin/companySelect.jsp"/>
+		</h1>
 		
 			<%--<div class="page">
 			<img src="/images/page_previous.gif" width="15" height="16" align="absmiddle" id="td_Previous"  onClick="prevPage_onclick()">

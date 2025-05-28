@@ -6,7 +6,8 @@
 	<head>
 		<title><spring:message code="ezCar.smb13" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-		<link rel="stylesheet" href="${util.addVer('ezResource.e2', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link type="text/css" rel="stylesheet" href="${util.addVer('main.lhm01', 'msg')}" />
 		<style>
 	    	.box {
@@ -25,9 +26,6 @@
 	    	#countInfo {
 	    		overflow: hidden;
 	    		display: inline-block;
-	    	}
-	    	.countColor {
-	    		color:#017BEC;
 	    	}
 	    </style>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -329,9 +327,9 @@
 							var strIsLeaf = $("div#" + id + "").attr("isleaf");
 							
 							if (result.containLow == "YES" && strIsLeaf != "TRUE") { //하위가 있고, 표기방식이 [1명/ 전체10명]일 경우
-			        			document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='countColor'>" + result.totalCount + "</span> / <span class='countColor'>" + parseInt(result.totalCount + result.totalCount2) + "</span>";
+			        			document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='txt_color'>" + result.totalCount + "</span> / <span class='txt_color'>" + parseInt(result.totalCount + result.totalCount2) + "</span>";
 							} else {
-								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='countColor'>" + result.totalCount + "</span>";
+								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='txt_color'>" + result.totalCount + "</span>";
 							}
 							//2018-08-01 김보미 - 부서명 [사원수] 가 넘치는지 확인하는 함수
 							deptNameLong(result.containLow, strIsLeaf);
@@ -740,15 +738,15 @@
 	                /* if (SelectDeptNM.getAttribute("countinfo") != "1") {
 	                	if (SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length != "" && typeof (SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length) != "undefined") {
 	                		if (SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length !=  getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0])) {
-			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + "/" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0]) + strLang400 + "</span>]";
+			        			SelectDeptNM.innerHTML += "-[<span class='txt_color'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + "/" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0]) + strLang400 + "</span>]";
 			        		} else {
-			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang400 + "</span>]";
+			        			SelectDeptNM.innerHTML += "-[<span class='txt_color'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang400 + "</span>]";
 			        		}
 	                	} else {
 	                		if (SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length !=  getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0])) {
-			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + "0/" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0]) + strLang400 + "</span>]";
+			        			SelectDeptNM.innerHTML += "-[<span class='txt_color'>" + "0/" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0]) + strLang400 + "</span>]";
 			        		} else {
-			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + "0" + strLang400 + "</span>]";
+			        			SelectDeptNM.innerHTML += "-[<span class='txt_color'>" + "0" + strLang400 + "</span>]";
 			        		}
 	                	}
 	                    
@@ -761,7 +759,7 @@
 	                    document.getElementById("txtlist_table").style.display = "none";
 	                    document.getElementById("Search_txtlist_table").style.display = "none";
 	                    if (pSeach) {
-	                        document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px;\" >" + "<span id='spn_deptName'>" + strLang401 + "</span>" + "<span id='countInfo' style='color:#017BEC;'>&nbsp;&nbsp;<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + "</span></span>";
+	                        document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px;\" >" + "<span id='spn_deptName'>" + strLang401 + "</span>" + "<span id='countInfo' class='txt_color'>&nbsp;&nbsp;<span class='txt_color'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + "</span></span>";
 	                        SelectDeptNM.setAttribute("countinfo", "1")
 	                    }
 	                } else {
@@ -773,7 +771,7 @@
 	                    } else {
 	                        document.getElementById("Search_txtlist_table").style.display = "";
 	                        document.getElementById("txtlist_table").style.display = "none";
-	                        document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px;\" >" + "<span id='spn_deptName'>" + strLang401 + "</span>" + "<span id='countInfo' style='color:#017BEC;'>&nbsp;&nbsp;<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + "</span></span>";
+	                        document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px;\" >" + "<span id='spn_deptName'>" + strLang401 + "</span>" + "<span id='countInfo' class='txt_color'>&nbsp;&nbsp;<span class='txt_color'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + "</span></span>";
 	                        SelectDeptNM.setAttribute("countinfo", "1")
 	                    }
 	                }
@@ -1133,7 +1131,7 @@
 	    	        	var treeNode = new TreeNode();
 	    	        	treeNode.LoadFromID(nodeIdx.NodeID);
 	            	} else {
-	                	alert(g_xmlHTTP.statusText)
+	                	alert(g_xmlHTTP.status)
 		                g_xmlHTTP = null;
 	            	}
 	        	}
@@ -1151,7 +1149,7 @@
 	                	    DisplayUserImageList();
 	                	}
 	            	} else {
-	                	alert(g_xmlHTTP.statusText);
+	                	alert(g_xmlHTTP.status);
 	            	}
 
 	            	g_xmlHTTP = null;

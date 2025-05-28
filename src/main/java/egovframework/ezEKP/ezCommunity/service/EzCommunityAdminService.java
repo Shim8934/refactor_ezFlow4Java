@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import javax.servlet.http.HttpServletRequest;
+
 import egovframework.ezEKP.ezCommunity.vo.CommunityCBoardVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCComCloseVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityClubVO;
@@ -57,7 +59,7 @@ public interface EzCommunityAdminService {
 
 	String admCommunityInfoEditOk(String lang, String cCateA, String cCateB, String cCateC, String clubName, String clubDesc, String code, int tenantID) throws Exception;
 	
-	void createCommunityAdmitSendMail(String loginCookie, LoginVO userInfo, List<HashMap<String, Object>> recipientList, boolean isAdmit) throws Exception;
+	void createCommunityAdmitSendMail(HttpServletRequest request, String loginCookie, LoginVO userInfo, List<HashMap<String, Object>> recipientList, boolean isAdmit) throws Exception;
 
 	String adminBbsList(LoginVO userInfo, List<CommunityCBoardVO> cBoardList, String code, int curPage, String bName, int comNoPerPage) throws Exception;
 

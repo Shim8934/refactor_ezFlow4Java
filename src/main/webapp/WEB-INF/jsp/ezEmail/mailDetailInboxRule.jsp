@@ -6,10 +6,15 @@
 	<head>
 		<title><spring:message code='ezEmail.t823' /><c:if test="${shareName != null}"> - <c:out value="${shareName}" /></c:if></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<link href="${util.addVer('/js/jquery/jquery.modal.css')}" rel="stylesheet" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/jquery-ui.css')}" type="text/css">
 		<style>
 			#ConS span, #ExptArea span, #Conitems span { word-break: break-all; }
+			.ui-autocomplete {
+				z-index: 9999;
+			}
 		</style>
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/encode_component.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/string_component.js')}"></script>
@@ -19,6 +24,10 @@
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/ListView_list.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/input-util.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/email_tag.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
 		<script type="text/javascript" >
 		    var _OpenerObject;
 		    var RuleItemID;
@@ -36,12 +45,76 @@
 		        }
 		
 		        Make_RuleDetail();
-		    }
+
+				$(document).mouseup(function (e) {
+					var clickedElementClass = e.target.className;
+					if (!clickedElementClass.includes('input_select_arrow')) {
+						hiddenMoreMenu();
+					}
+				});
+				
+				var tagAddInput = document.getElementById("tag_add");
+				// 태그 입력 시 특수문자 입력 못하도록 함
+				inputUtil.makeNotAllowTyping(tagAddInput, /[!@#$%^&()\\\/:*?"<>|'`]/g);
+				inputUtil.makeReplaceTyping(tagAddInput, /\s/g, '_');
+				// 엔터 시 태그로 추가되도록 함
+				tagAddInput.addEventListener("keydown", function (e) {
+					if (e.keyCode == 13) addTag();
+				});
+				document.querySelector(".input_wrap + .imgbtn").addEventListener("click", function (e) {
+					addTag();
+				});
+				// 태그 X 버튼 클릭시 삭제
+				$(".tag_del").on("click", function () {
+					removeTag(this.nextElementSibling);
+				});
+
+				// 태그 추가 시 자동완성
+				$(tagAddInput).autocomplete({
+					source: function (request, response) {
+						if (!window.cacheTags) {
+							$.ajax({
+								cache: false,
+								async: false,
+								url: "/ezEmail/getUserTagList.do",
+								success: function (result) {
+									if (result.status == "error") {
+										alert(strLang321);
+										return;
+									}
+									var tags = result.data;
+									window.cacheTags = $.map(tags, function (ul, item) {
+										return ul.name;
+									});
+								}
+							});
+						}
+
+						response($.grep(window.cacheTags, function (tag) {
+							return tag.indexOf(request.term) > -1;
+						}));
+					},
+					minLength: 2,
+					selectFirst: true,
+				});
+
+				tagAddInput.addEventListener("input", function () {
+					var inputWrap = document.getElementById("input_wrap");
+
+					// 클래스에 "on"이 있으면 제거
+					if (inputWrap.classList.contains("on")) {
+						inputWrap.classList.remove("on");
+					}
+				});
+
+			} //onload end
+			
 		    window.onunload = function () {
 		    	if (isFolderChanged) {
             		try {
             			opener.parent.parent.frames["left"].mailbox_treeview_reload();
             		} catch (e) {
+            		    console.log(e);
             		}
             	}
 		    }
@@ -97,72 +170,72 @@
 		        // CONDITION ===============================================================================================================
 		        var spltRuleVal = _ConVal.split('|!|');
 		        var ConRowObj = null;
+				for (var i = 0 ; i < spltRule.length; i++) {
+					AddRule(ConArea);
+
+					ConObj = document.all("Condition").item(i);
+
+					switch (spltRule[i]) {
+						case "SENDER":
+							ConObj.selectedIndex = 1;
+							ConObj.item(1).checked = true;
+							var _exp = "\"" + spltRuleVal[i].replace(/;/g, "" + strLang236 + "") + "\"";
+							ConObj.nextSibling.innerHTML = "<span onclick='Ruleselectcell(this);' value='" + spltRuleVal[i] + "'><nobr><u>" + _exp + "</u></nobr></span>";
+							ConObj.nextSibling.setAttribute("value", spltRuleVal[i]);
+							ConObj.nextSibling.setAttribute("RuleKind", spltRule[i]);
+							break;
+						case "DOMAIN":
+							ConObj.selectedIndex = 2;
+							ConObj.item(2).checked = true;
+							var _exp = "\"" + spltRuleVal[i].replace(/;/g, "" + strLang236 + "") + "\"";
+							ConObj.nextSibling.innerHTML = "<span onclick='Ruleselectcell(this);' value='" + spltRuleVal[i] + "'><nobr><u>" + _exp + "</u></nobr></span>";
+							ConObj.nextSibling.setAttribute("value", spltRuleVal[i]);
+							ConObj.nextSibling.setAttribute("RuleKind", spltRule[i]);
+							break;
+						case "RECEIVER":
+							ConObj.selectedIndex = 3;
+							ConObj.item(3).checked = true;
+							var _exp = "\"" + MakeXMLString(spltRuleVal[i].replace(/;/g, "" + strLang236 + "")) + "\"";
+							ConObj.nextSibling.innerHTML = "<span onclick='Ruleselectcell(this);' value='" + MakeXMLString(spltRuleVal[i]) + "'><nobr><u>" + _exp + "</u></nobr></span>";
+							ConObj.nextSibling.setAttribute("value", spltRuleVal[i]);
+							ConObj.nextSibling.setAttribute("RuleKind", spltRule[i]);
+							break;
+						case "SUBJECT":
+							ConObj.selectedIndex = 4;
+							ConObj.item(4).checked = true;
+							var _exp = "\"" + MakeXMLString(spltRuleVal[i]) + "\"";
+							ConObj.nextSibling.innerHTML = "<span onclick='Ruleselectcell(this);' value='" + MakeXMLString(spltRuleVal[i]) + "'><nobr><u>" + _exp + "</u></nobr></span>";
+							ConObj.nextSibling.setAttribute("value", spltRuleVal[i]);
+							ConObj.nextSibling.setAttribute("RuleKind", spltRule[i]);
+							break;
+						case "BODY":
+							ConObj.selectedIndex = 5;
+							ConObj.item(5).checked = true;
+							var _exp = "\"" + MakeXMLString(spltRuleVal[i].replace(/;/g, "" + strLang236 + "")) + "\"";
+							ConObj.nextSibling.innerHTML = "<span onclick='Ruleselectcell(this);' value='" + MakeXMLString(spltRuleVal[i]) + "'><nobr><u>" + _exp + "</u></nobr></span>";
+							ConObj.nextSibling.setAttribute("value", spltRuleVal[i]);
+							ConObj.nextSibling.setAttribute("RuleKind", spltRule[i]);
+							break;
+						case "SUBJECTORBODY":
+							ConObj.selectedIndex = 6;
+							ConObj.item(6).checked = true;
+							var _exp = "\"" + MakeXMLString(spltRuleVal[i].replace(/;/g, "" + strLang236 + "")) + "\"";
+							ConObj.nextSibling.innerHTML = "<span onclick='Ruleselectcell(this);' value='" + MakeXMLString(spltRuleVal[i]) + "'><nobr><u>" + _exp + "</u></nobr></span>";
+							ConObj.nextSibling.setAttribute("value", spltRuleVal[i]);
+							ConObj.nextSibling.setAttribute("RuleKind", spltRule[i]);
+							break;
+						default:
+							ConObj.selectedIndex = 7;
+							ConObj.item(7).checked = true;
+							ConObj.nextSibling.innerHTML = "<span><nobr><u>" + strLang340 + "</u></nobr></span>";
+							ConObj.nextSibling.setAttribute("value", "ALLMESSAGES");
+							ConObj.nextSibling.setAttribute("RuleKind", "ALLMESSAGES");
+							document.getElementById("tb_AddRuleCon").style.display = "none";
+							break;
+					}
+				}
+		
 		        var isFirstRow = 0; // 첫번째 행일 때 0, 그 외 1
-		
-		        for (var i = 0 ; i < spltRule.length; i++) {
-		            AddRule(ConArea);
-		
-		            ConObj = document.all("Condition").item(i);
-		
-		            switch (spltRule[i]) {
-		                case "SENDER":
-		                    ConObj.selectedIndex = 1;
-		                    ConObj.item(1).checked = true;
-		                    var _exp = "\"" + spltRuleVal[i].replace(/;/g, "" + strLang236 + "") + "\"";
-		                    ConObj.nextSibling.innerHTML = "<span onclick='Ruleselectcell(this);' value='" + spltRuleVal[i] + "'><nobr><u>" + _exp + "</u></nobr></span>";
-		                    ConObj.nextSibling.setAttribute("value", spltRuleVal[i]);
-		                    ConObj.nextSibling.setAttribute("RuleKind", spltRule[i]);
-		                    break;
-		                case "DOMAIN":
-		                    ConObj.selectedIndex = 2;
-		                    ConObj.item(2).checked = true;
-		                    var _exp = "\"" + spltRuleVal[i].replace(/;/g, "" + strLang236 + "") + "\"";
-		                    ConObj.nextSibling.innerHTML = "<span onclick='Ruleselectcell(this);' value='" + spltRuleVal[i] + "'><nobr><u>" + _exp + "</u></nobr></span>";
-		                    ConObj.nextSibling.setAttribute("value", spltRuleVal[i]);
-		                    ConObj.nextSibling.setAttribute("RuleKind", spltRule[i]);
-		                    break;
-		                case "RECEIVER":
-		                    ConObj.selectedIndex = 3;
-		                    ConObj.item(3).checked = true;
-		                    var _exp = "\"" + MakeXMLString(spltRuleVal[i].replace(/;/g, "" + strLang236 + "")) + "\"";
-		                    ConObj.nextSibling.innerHTML = "<span onclick='Ruleselectcell(this);' value='" + MakeXMLString(spltRuleVal[i]) + "'><nobr><u>" + _exp + "</u></nobr></span>";
-		                    ConObj.nextSibling.setAttribute("value", spltRuleVal[i]);
-		                    ConObj.nextSibling.setAttribute("RuleKind", spltRule[i]);
-		                    break;
-		                case "SUBJECT":
-		                    ConObj.selectedIndex = 4;
-		                    ConObj.item(4).checked = true;
-		                    var _exp = "\"" + MakeXMLString(spltRuleVal[i]) + "\"";
-		                    ConObj.nextSibling.innerHTML = "<span onclick='Ruleselectcell(this);' value='" + MakeXMLString(spltRuleVal[i]) + "'><nobr><u>" + _exp + "</u></nobr></span>";
-		                    ConObj.nextSibling.setAttribute("value", spltRuleVal[i]);
-		                    ConObj.nextSibling.setAttribute("RuleKind", spltRule[i]);
-		                    break;
-		                case "BODY":
-		                    ConObj.selectedIndex = 5;
-		                    ConObj.item(5).checked = true;
-		                    var _exp = "\"" + MakeXMLString(spltRuleVal[i].replace(/;/g, "" + strLang236 + "")) + "\"";
-		                    ConObj.nextSibling.innerHTML = "<span onclick='Ruleselectcell(this);' value='" + MakeXMLString(spltRuleVal[i]) + "'><nobr><u>" + _exp + "</u></nobr></span>";
-		                    ConObj.nextSibling.setAttribute("value", spltRuleVal[i]);
-		                    ConObj.nextSibling.setAttribute("RuleKind", spltRule[i]);
-		                    break;
-		                case "SUBJECTORBODY":
-		                    ConObj.selectedIndex = 6;
-		                    ConObj.item(6).checked = true;
-		                    var _exp = "\"" + MakeXMLString(spltRuleVal[i].replace(/;/g, "" + strLang236 + "")) + "\"";
-		                    ConObj.nextSibling.innerHTML = "<span onclick='Ruleselectcell(this);' value='" + MakeXMLString(spltRuleVal[i]) + "'><nobr><u>" + _exp + "</u></nobr></span>";
-		                    ConObj.nextSibling.setAttribute("value", spltRuleVal[i]);
-		                    ConObj.nextSibling.setAttribute("RuleKind", spltRule[i]);
-		                    break;
-		                default:
-		                    ConObj.selectedIndex = 7;
-		                    ConObj.item(7).checked = true;
-		                    ConObj.nextSibling.innerHTML = "<span><nobr><u>" + strLang340 + "</u></nobr></span>";
-		                    ConObj.nextSibling.setAttribute("value", "ALLMESSAGES");
-		                    ConObj.nextSibling.setAttribute("RuleKind", "ALLMESSAGES");
-		                    document.getElementById("tb_AddRuleCon").style.display = "none";
-		                    break;
-		            }
-		        }
 		
 		        // =========================================================================================================================
 		        // ACTION ==================================================================================================================
@@ -186,6 +259,7 @@
 		                    ActObj.nextSibling.setAttribute("url", spltActFid[ActFcnt]);
 		                    ActObj.nextSibling.setAttribute("fordername", spltActFnm[ActFcnt]);
 		                    ActObj.nextSibling.setAttribute("RuleKind", spltAct[i]);
+		                    ActObj.nextSibling.setAttribute("value", spltActFid[ActFcnt]);
 		                    ActFcnt++;
 		                    break;
 		                case "DELETE":
@@ -209,6 +283,7 @@
 		                    ActObj.nextSibling.setAttribute("url", spltActFid[ActFcnt]);
 		                    ActObj.nextSibling.setAttribute("fordername", spltActFnm[ActFcnt]);
 		                    ActObj.nextSibling.setAttribute("RuleKind", spltAct[i]);
+							ActObj.nextSibling.setAttribute("value", spltActFid[ActFcnt]);
 		                    ActFcnt++;
 		                    break;
 		                case "READ":
@@ -238,6 +313,29 @@
 		                    }
 		                    ActObj.nextSibling.setAttribute("value", spltActVal[i]);
 		                    break;
+						case "TAG":
+							ActObj.selectedIndex = 7;
+							ActObj.item(7).checked = true;
+							ActObj.nextSibling.setAttribute("value", spltActVal[i]);
+
+							const tagList = spltActVal[i].split(";");
+							let tagStr = "";
+
+							if (tagList.length === 0) {
+								tagStr = '';
+							} else if (tagList.length === 1) {
+								tagStr = '"' + tagList[0] + '"';
+							} else {
+								let tag = tagList.slice(0, 2).map(function(tag) {
+									return '"' + tag + '"';
+								}).join(", ");
+								tagStr = tag + '...';
+							}
+
+
+							ActObj.nextSibling.innerHTML = "<span onclick='tagRuleselectcell(this);' value='" + MakeXMLString(spltActVal[i]) + "'><nobr><u>" + tagStr + "</u></nobr></span>";
+							ActObj.nextSibling.setAttribute("RuleKind", spltAct[i]);
+							break;
 		                /* case "FORWARD":
 		                    ActObj.selectedIndex = 7;
 		                    ActObj.item(7).checked = true;
@@ -392,6 +490,12 @@
 		                _curCellObj.nextSibling.nextSibling.style.display = "";
 		                _curCellObj.style.width = "auto";
 		                break;
+					case "TAG":
+						_curCellObj.innerHTML = "";
+						_curCellObj.setAttribute("RuleKind", "TAG");
+						$("#inboxRuleAddTag").modal({escapeClose: false, clickClose: false});
+						document.getElementById("inboxRuleAddTag").style.width = "auto";
+						break;
 		        }
 		
 		        if (obj.value != "IMPORTANCE")
@@ -436,10 +540,11 @@
 		            _curCellObj.setAttribute("RuleKind", _RuleKind);
 		            _curCellObj.setAttribute("url", url);
 		            _curCellObj.setAttribute("fordername", name);
+					_curCellObj.setAttribute("value", url);
 		            _curCellObj.innerHTML = "<span onclick='getFoldercell(this);' value='" + url + "'><nobr>\"<u>" + name + "" + ((_RuleKind == "MOVE") ? strLang220 : strLang342) + "</u></nobr></span>";
 		            isFolderChanged = mailBoxInfo["isFolderChanged"];
 		        } catch (e) {
-		
+		            console.log(e);
 		        }
 		    }
 		    function getFoldercell(obj) {
@@ -469,9 +574,10 @@
 		            //mail_selectfolder_cross_dialogArguments[2].parentNode.setAttribute("RuleKind", "MOVE");
 		            _curCellObj.setAttribute("url", url);
 		            _curCellObj.setAttribute("fordername", name);
+					_curCellObj.setAttribute("value", url);
 		            _curCellObj.innerHTML = "<span onclick='getFoldercell(this);' value='" + url + "'><nobr>\"<u>" + name + "" + ((_RuleKind == "MOVE") ? strLang220 : strLang342) + "</u></nobr></span>";
 		        } catch (e) {
-		
+		            console.log(e);
 		        }
 		    }
 		    function IsEmail(strEmail) {
@@ -488,7 +594,6 @@
 		    }
 		    function pop_addcon() {
 		        if (inboxRuleCon1.value.length > 0) {
-		            inboxRuleCon1.value = inboxRuleCon1.value.replace(/<[^>]*>?/g, '');
 		            var ischeck = true;
 		            if (checkRuleKind(_RuleKind))
 		                ischeck = IsEmail(inboxRuleCon1.value);
@@ -509,8 +614,8 @@
 		                }
 		            }
 		            for (var i = 0; i < Conitems.children.length; i++) {
-		                if (inboxRuleCon1.value == Conitems.children.item(i).value) {
-		                    if (confirm(strLang221 = '')) {
+		                if (inboxRuleCon1.value == Conitems.children.item(i).textContent) {
+		                    if (confirm(strLang221)) {
 		                        inboxRuleCon1.focus();
 		                        return;
 		                    }
@@ -523,15 +628,16 @@
 		                    }
 		                }
 		            }
+					var inboxRuleValue = escapeHtml(inboxRuleCon1.value);
 		            if (ischeck) {
 		                if (ConCellRow != null) {
-							ConCellRow.setAttribute('value', inboxRuleCon1.value);
+							ConCellRow.setAttribute('value', inboxRuleValue);
 							ConCellRow.firstChild.innerText = inboxRuleCon1.value;
 		                    inputBtn.textContent = strLang239;
 		                    ConCellRow = null;
 		                }
 		                else {
-							Conitems.innerHTML += createCellRow(inboxRuleCon1.value, inboxRuleCon1.value);
+							Conitems.innerHTML += createCellRow(inboxRuleValue,inboxRuleCon1.value);
 		                }
 		            }
 		            else {
@@ -548,10 +654,10 @@
 		        if (value.length > 0) {
 		            if (checkRuleKind(RuleKind) && value.split("<").length > 1) {
 						var mailaddress = value.split("<")[1].replace(">", "");
-						Conitems.innerHTML += createCellRow(mailaddress, MakeXMLString(value));
+						Conitems.innerHTML += createCellRow(mailaddress, escapeHtml(value));
 					}
 		            else {
-						Conitems.innerHTML += createCellRow(value, value);
+						Conitems.innerHTML += createCellRow(escapeHtml(value), value);
 		            }
 		        }
 		    }
@@ -586,7 +692,8 @@
 		    var ConCellRow = null;
 		    function pop_modify(obj) {
 		        ConCellRow = obj;
-		        inboxRuleCon1.value = obj.getAttribute("value");
+				let objValue = obj.getAttribute("value");
+				inboxRuleCon1.value = unEscapeHtml(objValue);
 		        inboxRuleCon1.focus();        
 		        document.getElementById("inputBtn").textContent = strLang240;
 		    }
@@ -814,11 +921,17 @@
 		        if (document.getElementsByName("ActS").length == 1) {
 		            alert(strLang232); return;
 		        }
-		        else {
-		            if (document.getElementById("ActS").getAttribute("RuleKind") == null) {
-		                alert(strLang232); return;
-		            }
-		        }
+				else {
+					let actS = document.getElementsByName("ActS").item(0);
+					let ruleKind = actS.getAttribute("RuleKind");
+					let value = actS.getAttribute("value");
+
+					if (ruleKind == null || (ruleKind !== "DELETE" && ruleKind !== "READ" && (value === null || value === ''))) {
+						alert(strLang232);
+						return;
+					}
+				}
+				
 		        var XmlDom = createXmlDom();
 		        var Xmlhttp = createXMLHttpRequest();
 		        var objRoot, objRow, objRow2, objRow3, objNode, objRowRow, objRow2Row, objRow3Row, objRows;
@@ -835,7 +948,8 @@
 		            curKind = document.getElementsByName("ConS").item(i).getAttribute("RuleKind");
 		            objRows = createNodeAndAppandNode(XmlDom, objRow, objRows, "ROW");
 		            createNodeAndAppandNodeText(XmlDom, objRows, objRowRow, "CONKIND", curKind);
-		            createNodeAndAppandNodeText(XmlDom, objRows, objRowRow, "CONVALUE", document.getElementsByName("ConS").item(i).getAttribute("value"));
+					let convalue = document.getElementsByName("ConS").item(i).getAttribute("value");
+					createNodeAndAppandNodeText(XmlDom, objRows, objRowRow, "CONVALUE", unEscapeHtml(convalue));
 		        }
 		
 		        // ACTION NODE
@@ -870,7 +984,8 @@
 		            curKind = document.getElementsByName("ExptS").item(i).getAttribute("RuleKind");
 		            objRows = createNodeAndAppandNode(XmlDom, objRow3, objRows, "ROW");
 		            createNodeAndAppandNodeText(XmlDom, objRows, objRow3Row, "EXPTKIND", curKind);
-		            createNodeAndAppandNodeText(XmlDom, objRows, objRow3Row, "EXPTVALUE", document.getElementsByName("ExptS").item(i).getAttribute("value"));
+					let exptvale= document.getElementsByName("ExptS").item(i).getAttribute("value");
+					createNodeAndAppandNodeText(XmlDom, objRows, objRow3Row, "EXPTVALUE", unEscapeHtml(exptvale));
 		        }
 		
 		        /*
@@ -950,8 +1065,8 @@
 		        receiverData["window"] = this;
 		        mail_newreceiverchoose_dialogArguments[0] = receiverData;
 		        mail_newreceiverchoose_dialogArguments[1] = addReceiver;
-		        var OpenWin = window.open("/ezEmail/mailNewReceiverChoose.do?defaultwin=&type=" + type + "&RuleKind=" + _RuleKind, "mail_foldermanage_Cross", GetOpenWindowfeature(1120, 655));
-		        try { OpenWin.focus(); } catch (e) { }
+		        var OpenWin = window.open("/ezEmail/mailNewReceiverChoose.do?defaultwin=&type=" + type + "&RuleKind=" + _RuleKind, "mail_foldermanage_Cross", GetOpenWindowfeature(1120, 720));
+		        try { OpenWin.focus(); } catch (e) {console.log(e);}
 		    }
 		    function addReceiver(pListView) {
 		        var ListData = loadXMLString(pListView);
@@ -1010,14 +1125,31 @@
 					case "SUBJECTORBODY":
 						inboxRuleConbtn1comment.innerHTML = "▒ " + strLang338 + "";
 						break;
+					case "TAG":
+						break;
 		        }
 		    }
-		    function MakeXMLString(pStr) {
-		        pStr = ReplaceText(pStr, "&", "&amp;");
-		        pStr = ReplaceText(pStr, "<", "&lt;");
-		        pStr = ReplaceText(pStr, ">", "&gt;");
-		        return pStr;
-		    }
+
+			function MakeXMLString(pStr) {
+				pStr = ReplaceText(pStr, "&", "&amp;");
+				pStr = ReplaceText(pStr, "<", "&lt;");
+				pStr = ReplaceText(pStr, ">", "&gt;");
+				pStr = ReplaceText(pStr, "'", "&apos;");
+				pStr = ReplaceText(pStr, "\"", "&quot;");
+				return pStr;
+			}
+
+            function hiddenMoreMenu() {
+                var tagLayerElement = document.getElementById("layer_select");
+                if (tagLayerElement) {
+                    tagLayerElement.scroll({top:0});
+                    var tagLayerStyle = getComputedStyle(tagLayerElement);
+                    if (tagLayerStyle.display !== 'none') {
+                        document.getElementById("input_wrap").classList.remove("on");
+                    }
+                }
+            }
+			
 		    window.onselect = function ()
 		    { }
 		</script>
@@ -1074,6 +1206,7 @@
 		    <option value="COPY"><spring:message code='ezEmail.t838' /></option>
 		    <option value="READ"><spring:message code='ezEmail.t839' /></option>
 		    <option value="IMPORTANCE"><spring:message code='ezEmail.t840' /></option>
+			<option value="TAG"><spring:message code='ezEmail.kdh08' /></option>
 		    <!-- <option value="FORWARD"><spring:message code='ezEmail.t841' /></option> -->
 		</select><span id="ActS" name="ActS"  style="display: inline-block; width:230px;height:20px;border:0px solid #dbdbda;height:20px;margin-left:8px;margin-top:0px;text-overflow:ellipsis; overflow:hidden;cursor:pointer;vertical-align:middle;color:#6495ED;font-weight:bold;"></span>
         <select id="ImportanceSel" name="ImportanceSel" class="mailRule_select" onchange="ImSelect(this)" style="width:auto; display:none;">
@@ -1118,13 +1251,49 @@
 				</tr>
 			</table>
 			<div style="border:1px solid #dddddd; margin:10px 10px 10px 10px; padding:10px 10px 10px 10px; background-color:#f2f2f2;">
-				<div id="Conitems" name="Conitems" style="font-family:<spring:message code='main.t246' />;border:1px solid #dbdbda;width:435px;height:200px;overflow-y:auto;overflow-x:hidden;text-overflow:ellipsis;background-color:#ffffff;">
+				<div id="Conitems" name="Conitems" style="font-family:<spring:message code='main.t246' />;border:1px solid #dbdbda;width:auto;height:200px;overflow-y:auto;overflow-x:hidden;text-overflow:ellipsis;background-color:#ffffff;">
 				</div>
 			</div>
 			<div class="btnpositionLayer">
 				<a class="imgbtn"><span onClick="pop_confirm();"><spring:message code='ezEmail.t38' /></span></a>
 			</div>
 		</div>	
+	</div>
+	</div>
+	<div id="inboxRuleAddTag" name="inboxRuleAddTag" style="display:none; position: fixed;  transform: translate(-50%, -50%); top: 50%; left: 50%">
+		<div class="popupJQLayer" style="padding-top:6px">
+			<div class="title" style="overflow:hidden; text-overflow:ellipsis; width:450px;"><spring:message code="ezEmail.t124" /></div>
+			<div id="close">
+				<ul>
+					<li><span onclick="tag_cancel()"></span></li>
+				</ul>
+			</div>
+			<span style="width:100%; height:30px; margin:0 10px 0 10px;" class="txt" id="inboxRuleAddTagcomment1" name="inboxRuleAddTagcomment1"><spring:message code="ezEmail.kdh07" /></span>
+
+			<table style="width:100%;border:0;border-collapse:collapse; border-spacing:0;padding:0px; margin:0 10px 0 10px;" >
+				<tr class="tag_td">
+					<td id="tag_td" colspan="4" style="padding: 10px 0 10px 0">
+						<div class="input_select">
+							<div class="input_wrap" id="input_wrap">
+								<input id="tag_add" type="text" maxlength="100" />
+								<span class="input_select_arrow" onclick="$('.input_wrap').toggleClass('on');getTagList_Rule()"></span>
+							</div>
+							<a class="imgbtn"><span><spring:message code="ezEmail.tag.user.addbtn" /></span></a>
+							<ul class="layer_select" id="layer_select">
+
+							</ul>
+						</div>
+					</td>
+				</tr>
+			</table>
+			<div style="font-family:<spring:message code='main.t246' />;border:1px solid #dbdbda;width:435px;height:170px;overflow-y:auto;overflow-x:auto;text-overflow:ellipsis;background-color:#ffffff; padding: 10px 10px 10px 10px; margin:0 10px 0 10px;">
+				<div id="tag_view" name="tag_view">
+				</div>
+			</div>
+			<div class="btnpositionLayer">
+				<a class="imgbtn"><span onClick="tag_confirm();"><spring:message code='ezEmail.t38' /></span></a>
+			</div>
+		</div>
 	</div>
 	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 	<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

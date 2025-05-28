@@ -64,6 +64,9 @@
 			<div class="popup-wrapdiv">
 				<table class="mainlist user-tbl" id="user-tblmain"></table>
 			</div>
+			<div class="popup-wrapdiv">
+                <table class="mainlist user-tbl" id="userResult-tblmain"></table>
+            </div>
 		</div>
 	</div>
 </div>

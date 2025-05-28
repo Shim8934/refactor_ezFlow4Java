@@ -5,7 +5,8 @@
 <html>
 	<head>
 		<title><spring:message code='ezOrgan.t144' /></title>
-		<link rel="stylesheet" href="${util.addVer('ezOrgan.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript">
@@ -224,7 +225,7 @@
 				        }
 				        if (document.getElementById("ListEmail").options[i].getAttribute("type") === "0") {
 							if (document.getElementById("ListEmail").options[i].textContent.includes("(Primary)")) {
-								createNodeAndAppandNodeText(xmlPara, objRoot, subNode, "MAIL", document.getElementById("ListEmail").options[i].textContent.slice(0, -9));
+								createNodeAndAppandNodeText(xmlPara, objRoot, subNode, "MAIL", document.getElementById("ListEmail").options[i].textContent.slice(0, -9).trim());
 							} else {
 								//2024-01-09 김대현 : node를 만들기 전에 메일에 맨뒤에 빈값이 들어가면 지워주는 작업을 한다
 								var mailValue = document.getElementById("ListEmail").options[i].textContent

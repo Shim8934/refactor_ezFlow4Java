@@ -34,7 +34,9 @@ public class ApprGLineTempletVO {
 	private String aprMemberJobTitle2;
 	/** */
 	private String memberDeptName2;
-	
+	/* 2024-05-10 양지혜 - 퇴직자 여부 */
+	private String retireChk;
+
 	public String getAprLineSN() {
 		return aprLineSN;
 	}
@@ -131,5 +133,10 @@ public class ApprGLineTempletVO {
 	public void setMemberDeptName2(String memberDeptName2) {
 		this.memberDeptName2 = memberDeptName2;
 	}
-	
+	public String getRetireChk() {
+		return retireChk;
+	}
+	public void setRetireChk(String retireChk) {
+		this.retireChk = retireChk;
+	}
 }

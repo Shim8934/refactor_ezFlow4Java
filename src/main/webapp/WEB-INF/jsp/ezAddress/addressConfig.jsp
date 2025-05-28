@@ -5,7 +5,8 @@
 <html>
 	<head>
 		<title>address_search</title>
-		<link rel="stylesheet" href="${util.addVer('ezAddress.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script>
@@ -34,7 +35,7 @@
 				if (xmlHTTP.status == 200) 
 					alert("<spring:message code='ezEmail.t42' />");
 				else
-					alert("<spring:message code='ezAddress.t34' /> -" + xmlHTTP.statusText);	
+					alert("<spring:message code='ezAddress.t34' /> -" + xmlHTTP.status);
 						
 				window.location.reload(true);
 			}
@@ -77,7 +78,7 @@
 			  </tr>
 			</table>
 			<div align="center" style="width:450px;">
-				<div class="btnpositionJsp">
+				<div class="btnpositionJsp" style="padding: 0px;">
 					<a class="imgbtn" onClick="Change_Click()"><span><spring:message code='ezAddress.t300' /></span></a>
 					<a class="imgbtn" onClick="Cancel_Click()"><span><spring:message code='ezAddress.t11' /></span></a>
 				</div>	

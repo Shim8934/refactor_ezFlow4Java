@@ -5,7 +5,8 @@
 <html>
 	<head>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	    <link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+	    <link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 	    <script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -98,7 +99,7 @@
 				success:function(data) {
 					makeDlList(data);
 				}, error:function(er) {
-					alert("<spring:message code='ezEmail.t574' />" + er.status + er.statusText);
+					alert("<spring:message code='ezEmail.t574' />" + er.status);
 				}
 			})
 		}
@@ -131,7 +132,7 @@
 	            mail_add_distributionlist_cross_dialogArguments[0] = companyId;
 	            mail_add_distributionlist_cross_dialogArguments[1] = getDLList;
 	            var OpenWin = window.open(popUrl + param, "", GetOpenWindowfeature(popSizeW, popSizeH));
-	            try { OpenWin.focus(); } catch (e) { }
+	            try { OpenWin.focus(); } catch (e) {console.log(e);}
 	        }
 	        else {
 	            var rtnValue = window.showModalDialog(popUrl + param, companyId, feature);
@@ -164,7 +165,7 @@
 	            mail_add_distributionlist_cross_dialogArguments[0] = companyId;
 	            mail_add_distributionlist_cross_dialogArguments[1] = getDLList;
 	            var OpenWin = window.open(popUrl + param, "", GetOpenWindowfeature(popSizeW, popSizeH));
-	            try { OpenWin.focus(); } catch (e) { }
+	            try { OpenWin.focus(); } catch (e) {console.log(e);}
 	        }
 	        else {
 	            var rtnValue = window.showModalDialog(popUrl + param, companyId, feature);

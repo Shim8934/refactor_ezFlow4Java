@@ -50,3 +50,5 @@ var srtLangHSBEx01 = "非対応拡張子です。";
 
 /* 2022-11-22 조소정 - 관리자 > 포탈 > 빠른링크 > 중국어 버전 추가 */
 var strLangCSJQL01 = "中国語";
+
+var strLangQuickLinkSize01 = "&nbsp&nbsp&nbsp(画像サイズは100*50ピクセルです。)";

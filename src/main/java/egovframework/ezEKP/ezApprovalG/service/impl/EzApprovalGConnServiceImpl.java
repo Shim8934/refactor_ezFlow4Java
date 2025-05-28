@@ -1,7 +1,15 @@
 package egovframework.ezEKP.ezApprovalG.service.impl;
 
+import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGDAO;
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import org.apache.commons.collections4.map.HashedMap;
+import org.apache.commons.io.FileUtils;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +18,21 @@ import org.springframework.stereotype.Service;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGConnDAO;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGConnService;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 import org.w3c.dom.Document;
 
+import javax.annotation.Resource;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -24,6 +45,18 @@ public class EzApprovalGConnServiceImpl extends EgovFileMngUtil implements EzApp
     
     @Autowired
     EzApprovalGConnDAO ezApprovalGConnDao;
+
+    @Autowired
+    EzApprovalGService ezApprovalGService;
+
+    @Resource(name = "EzApprovalGDAO")
+    private EzApprovalGDAO ezApprovalGDAO;
+
+    @Resource(name = "EzCommonService")
+    private EzCommonService ezCommonService;
+
+    @Autowired
+    private ServletContext servletContext;
 
     /**
      * 연동 테이블에서 연동 데이터를 조회한다
@@ -122,11 +155,14 @@ public class EzApprovalGConnServiceImpl extends EgovFileMngUtil implements EzApp
          * </PARAMETER>
          * */
         String formXslt = ezApprovalGConnDao.getFormXslt(connFormCode, userInfo.getTenantId(), userInfo.getCompanyID());
-        String bodyHtml = commonUtil.convertXsltToHtml(formXslt, body);
+        
+        if (!"".equals(formXslt) && formXslt != null) {
+            String bodyHtml = commonUtil.convertXsltToHtml(formXslt, body);
 
-        retParam = "<PARAMETER>"
-                + "<BODYHTML HTML=\"Y\"><![CDATA[" + bodyHtml + "]]></BODYHTML>"
-                + "</PARAMETER>";
+            retParam = "<PARAMETER>"
+                    + "<BODYHTML HTML=\"Y\"><![CDATA[" + bodyHtml + "]]></BODYHTML>"
+                    + "</PARAMETER>";
+        }
         
         /**
          * 연동테이블에서 본문 데이터를 html로 받아서 연동 하는 경우
@@ -205,6 +241,11 @@ public class EzApprovalGConnServiceImpl extends EgovFileMngUtil implements EzApp
             case "SUSIN;HESONG": status = "SRT"; break;
         }
         
+        // 기안 상신의 경우 TBL_CONNATTACHINFODATA 테이블의 ATTACHFILEHREF 경로에 있는 파일 물리적 삭제처리
+        if ("ING".equals(status)) {
+            deleteConnAttachData(connKey, "2");
+        }
+        
         if (status.isEmpty()) {
             return "<RETURNDATA RESULT=\"false\"></RETURNDATA>";
         }
@@ -216,5 +257,353 @@ public class EzApprovalGConnServiceImpl extends EgovFileMngUtil implements EzApp
         logger.debug("updateStatus ended");
 
         return "<RETURNDATA RESULT=\"true\"></RETURNDATA>";
+    }
+
+    @Override
+    public void registConnData(String keyId, String userId, String deptId, String title, String formCode, String bodyHtml) throws Exception {
+        logger.debug("registConnData started");
+        String nowDate = commonUtil.getTodayUTCTime("");
+
+        Map<String, Object> map = new HashedMap<>();
+        map.put("KEYID", keyId);
+        map.put("USERID", userId);
+        map.put("DEPTID", deptId);
+        map.put("TITLE", title);
+        map.put("FORMID", formCode);
+        map.put("BODYHTML", bodyHtml);
+        map.put("v_SYSDATE", nowDate);
+
+        ezApprovalGConnDao.registConnData(map);
+        logger.debug("registConnData ended");
+    }
+
+    @Override
+    public List<Map<String, Object>> getConnAttachData(String keyId) throws Exception {
+        logger.debug("getConnAttachData started");
+
+        List<Map<String, Object>> list = ezApprovalGConnDao.getConnAttachData(keyId);
+
+        logger.debug("getConnAttachData ended");
+        return list;
+    }
+
+    @Override
+    public void insertConnAttachData(String keyId, int attachSn, String attachFileName, String attachFileHref, long attachFileSize, String attachUserId) throws Exception {
+        logger.debug("insertConnAttachData started");
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("KEYID", keyId);
+        map.put("ATTACHSN", attachSn);
+        map.put("ATTACHFILENAME", attachFileName);
+        map.put("ATTACHFILEHREF", attachFileHref);
+        map.put("ATTACHFILESIZE", attachFileSize);
+        map.put("ATTACHUSERID", attachUserId);
+        
+        ezApprovalGConnDao.insertConnAttachData(map);
+        logger.debug("insertConnAttachData ended");
+    }
+
+    @Override
+    public void deleteConnAttachData(String keyId, String type) throws Exception {
+        logger.debug("deleteConnAttachData started");
+
+        List<Map<String, Object>> list = ezApprovalGConnDao.getConnAttachData(keyId);
+        
+        for(Map<String, Object> info : list) {
+            String delPath = commonUtil.getRealPath(servletContext) + (String) info.get("ATTACHFILEHREF");
+            new File(delPath).delete();
+        }
+        
+        // 결재가 올라간 연동문서의 경우 파일첨부 정보 데이터는 히스토리를 위하여 삭제처리 하지 않음.
+        if ("1".equals(type))
+            ezApprovalGConnDao.deleteConnAttachData(keyId);
+        
+        logger.debug("deleteConnAttachData ended");
+    }
+
+    @Override
+    public void initConnAttachFileInfo(String docID, LoginVO userInfo, List<Map<String, Object>> attachList) throws Exception {
+        logger.info("initConnAttachFileInfo started");
+
+        String size = "";
+        String oldYear = ezApprovalGService.getDocHrefYear(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("v_DOCID", docID);
+        map.put("companyID", userInfo.getCompanyID());
+        map.put("v_TENANTID", userInfo.getTenantId());
+
+        String targetHref = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());
+        
+        for (int k = 0; k < attachList.size(); k++) {
+            map = attachList.get(k);
+            String from = commonUtil.getRealPath(servletContext) + map.get("ATTACHFILEHREF").toString();
+            String to = commonUtil.getRealPath(servletContext) + commonUtil.separator
+                    + targetHref + commonUtil.separator + userInfo.getCompanyID()
+                    + commonUtil.separator + "uploadFile" + commonUtil.separator + oldYear + commonUtil.separator
+                    + (Integer.parseInt(docID.substring(docID.length() - 3, docID.length())) % 1000)
+                    + commonUtil.separator + docID.trim()
+                    + getNDigitNum(map.get("ATTACHSN").toString(), 4)
+                    + map.get("ATTACHFILENAME");
+            
+            copyFile(from, to, to.substring(0, to.lastIndexOf(commonUtil.separator)));
+            size = map.get("ATTACHFILESIZE").toString();
+
+            /* 2020-03-25 홍승비 - 첨부파일 저장 시점부터 순서값 VIEWORDER 삽입 */
+            map.put("v_DOCID", docID);
+            map.put("v_ATTACHFILESN", map.get("ATTACHSN"));
+            map.put("v_VIEWORDER", map.get("ATTACHSN"));
+            map.put("v_ATTACHFILENAME", (String) map.get("ATTACHFILENAME"));
+            map.put("v_ATTACHFILEHREF", to.substring(to.indexOf("/fileroot/")));
+            map.put("v_ATTACHFILESIZE", size);
+            map.put("v_ATTACHUSERID", userInfo.getId());
+            map.put("v_ATTACHUSERNAME", userInfo.getDisplayName());
+            map.put("v_ATTACHUSERNAME2", userInfo.getDisplayName2());
+            map.put("v_ATTACHUSERJOBTITLE", userInfo.getJikChek());
+            map.put("v_ATTACHUSERJOBTITLE2", userInfo.getJikChek2());
+            map.put("v_ATTACHUSERDEPTID", userInfo.getDeptID());
+            map.put("v_ATTACHUSERDEPTNAME", userInfo.getDeptName());
+            map.put("v_ATTACHUSERDEPTNAME2", userInfo.getDeptName2());
+            map.put("v_PAGENUM", 1);
+            map.put("v_DISPLAYNAME", (String) map.get("ATTACHFILENAME"));
+            map.put("v_BODYATTACH", "N");
+            map.put("FLAG", "Y");
+            map.put("companyID", userInfo.getCompanyID());
+            map.put("v_TENANTID", userInfo.getTenantId());
+
+            /* 2020-11-12 홍승비 - 대용량첨부 플래그, 첨부파일 최초 저장일 추가 */
+            map.put("v_ISBIGATTACH", "N");
+            map.put("v_ISBIGATTACHDEL", "N");
+            map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+            ezApprovalGDAO.insertAprAttachInfo(map);
+            ezApprovalGDAO.updateHistoryAttachInfo(map);
+            ezApprovalGDAO.updateAttachFileInfo(map);
+        }
+
+        logger.info("initConnAttachFileInfo ended");
+    }
+
+    public String getNDigitNum(String strValue, int numDigits) {
+        int valueLen = strValue.length();
+        String tempDigit = "";
+
+        while (valueLen < numDigits) {
+            tempDigit = "0" + "" + tempDigit;
+            valueLen++;
+        }
+
+        return tempDigit + strValue;
+    }
+
+    public boolean copyFile(String source, String target, String dirPath) throws Exception {
+        logger.debug("copyFile started source : " + source);
+        logger.debug("copyFile started target : " + target);
+
+        if (!dirPath.trim().equals("")) {
+            File file = new File(commonUtil.detectPathTraversal(dirPath));
+
+            if (!file.exists()) {
+                file.mkdirs();
+            }
+        }
+        try {
+            File src = new File(commonUtil.detectPathTraversal(source));
+            File des = new File(commonUtil.detectPathTraversal(target));
+
+            FileUtils.copyFile(src, des);
+
+            logger.debug("copyFile ended");
+            return true;
+        } catch (Exception e) {
+            logger.debug("e: {}", e);
+            return false;
+        }
+    }
+    @Override
+    public String checkFileAttach(List<MultipartFile> attachList, int tenantID) throws Exception {
+        logger.debug("checkFileAttach started");
+
+        String apprAttachCntLimitMax = ezCommonService.getTenantConfig("ApprAttachCntLimitMax", tenantID);
+        String apprTotalAttachLimit = ezCommonService.getTenantConfig("ApprTotalAttachLimit", tenantID);
+        String ext = ezCommonService.getTenantConfig("USE_FileExtension", tenantID);
+
+        long totalSize = 0;
+        long maxSizeByte = (long) (Integer.parseInt(apprTotalAttachLimit)) * 1024 * 1024;
+        try {
+            for (MultipartFile attachInfo : attachList) {
+                long fileSize = attachInfo.getSize();
+                String fileName = attachInfo.getOriginalFilename();
+                String fileExt = "";
+
+                if (fileName != null && fileName.contains(".")) {
+                    fileExt = fileName.substring(fileName.lastIndexOf(".") + 1);
+                }
+                if (fileSize == 0) {
+                    return "ZERO_SIZE"; // 파일 사이즈 0일때
+                }
+                if (!ext.contains(fileExt)) {
+                    return "EXT_ERROR"; // 파일 확장자 에러
+                }
+                totalSize += fileSize;
+            }
+            if (attachList.size() > Integer.parseInt(apprAttachCntLimitMax)) {
+                return "OVER_CNT";  // 파일 개수 에러
+            }
+
+            if (maxSizeByte != 0 && totalSize > maxSizeByte) {
+                return "OVER_SIZE"; // 파일 사이즈 에러
+            }
+        } catch (Exception e) {
+            return "ERROR";
+        }
+
+        logger.debug("checkFileAttach ended");
+        return "TRUE";
+    }
+    
+    @Override
+    public String getDraftUrl(Map<String, Object> connData, LoginVO userInfo) throws Exception {
+        String keyId = (String) connData.get("KEYID");
+        String formCode = (String) connData.get("FORMCODE");
+        String fileCheck = (String) connData.get("fileCheck");
+
+        String formInfoStr = ezApprovalGService.getFormInfoDetail(formCode, userInfo.getCompanyID(), userInfo.getTenantId());
+        Document formInfo = commonUtil.convertStringToDocument(formInfoStr);
+
+        String formUrl = formInfo.getElementsByTagName("FORMFILELOCATION").item(0).getTextContent().trim();
+        String formDocType = formInfo.getElementsByTagName("FORMDOCTYPE").item(0).getTextContent().trim();
+
+        String path = "";
+        MultiValueMap queryParam = new LinkedMultiValueMap();
+        if (formUrl.endsWith(".mht")) {
+            path = "/ezApprovalG/draftui.do";
+            queryParam.set("formURL", formUrl);
+            queryParam.set("draftFlag", "DRAFT");
+            queryParam.set("formDocType", formDocType);
+            queryParam.set("susinSN", "0");
+            queryParam.set("docState", "");
+            queryParam.set("listType", "1");
+            queryParam.set("aprState", "");
+            queryParam.set("isTmpDoc", "");
+            queryParam.set("officeFlag", "N");
+            queryParam.set("connKey", keyId);
+            queryParam.set("connFormCode", formCode);
+            if (fileCheck != null && !fileCheck.isEmpty()) 
+                queryParam.set("connAttachCheck", fileCheck);
+        } else if (formUrl.endsWith(".hwp")) {
+            path = "/ezApprovalG/draftuiWHWP.do";
+            queryParam.set("formURL", formUrl);
+            queryParam.set("draftFlag", "DRAFT");
+            queryParam.set("formDocType", formDocType);
+            queryParam.set("susinSN", "0");
+            queryParam.set("docState", "");
+            queryParam.set("listType", "1");
+            queryParam.set("aprState", "");
+            queryParam.set("isTmpDoc", "");
+            queryParam.set("connKey", keyId);
+            queryParam.set("connFormCode", formCode);
+            if (fileCheck != null && !fileCheck.isEmpty())
+                queryParam.set("connAttachCheck", fileCheck);
+        } else {
+            throw new Exception();
+        }
+
+        return makeUrl(path, queryParam);
+    }
+
+    @Override
+    public String getAprUrl(Map<String, Object> connData, LoginVO userInfo) throws Exception {
+        String docId = (String) connData.get("DOCID");
+
+        String docInfoStr = ezApprovalGService.getDocInfo(docId, "APR", "ALL", userInfo, userInfo.getCompanyID(), userInfo.getTenantId(), "", "");
+        Document docInfo = commonUtil.convertStringToDocument(docInfoStr);
+
+        String docHref = docInfo.getElementsByTagName("HREF").item(0).getTextContent().trim();
+        String opinionFlag = docInfo.getElementsByTagName("HASOPINIONYN").item(0).getTextContent().trim();
+        String docState = docInfo.getElementsByTagName("DOCSTATE").item(0).getTextContent().trim();
+
+        String path = "";
+        MultiValueMap queryParam = new LinkedMultiValueMap();
+        if (docHref.endsWith(".mht")) {
+            path = "/ezApprovalG/aprDocView.do";
+            queryParam.set("docID", docId);
+            queryParam.set("docHref", docHref);
+            queryParam.set("opinionFlag", opinionFlag);
+            queryParam.set("docState", docState);
+            queryParam.set("listSusin", "");
+            queryParam.set("oDoc", "");
+            queryParam.set("isOpinion", "OPINION_SHOW");
+            queryParam.set("listType", "1");
+            queryParam.set("CallBackType", "");
+            queryParam.set("ext", docHref.substring(docHref.lastIndexOf(".") + 1));
+            queryParam.set("orgCompanyID", userInfo.getCompanyID());
+        } else if (docHref.endsWith(".hwp")) {
+            path = "/ezApprovalG/ezviewAprWHWP.do";
+            queryParam.set("docID", docId);
+            queryParam.set("docHref", docHref);
+            queryParam.set("opinionFlag", opinionFlag);
+            queryParam.set("docState", docState);
+            queryParam.set("listSusin", "");
+            queryParam.set("oDoc", "");
+            queryParam.set("isOpinion", "OPINION_SHOW");
+            queryParam.set("listType", "1");
+            queryParam.set("CallBackType", "");
+            queryParam.set("ext", docHref.substring(docHref.lastIndexOf(".") + 1));
+            queryParam.set("orgCompanyID", userInfo.getCompanyID());
+        } else {
+            throw new Exception();
+        }
+
+        return makeUrl(path, queryParam);
+    }
+
+    @Override
+    public String getEndUrl(Map<String, Object> connData, LoginVO userInfo) throws Exception {
+        String docId = (String) connData.get("DOCID");
+        String formCode = (String) connData.get("FORMCODE");
+
+        String docInfoStr = ezApprovalGService.getDocInfo(docId, "END", "ALL", userInfo, userInfo.getCompanyID(), userInfo.getTenantId(), "", "");
+        Document docInfo = commonUtil.convertStringToDocument(docInfoStr);
+
+        String docHref = docInfo.getElementsByTagName("HREF").item(0).getTextContent().trim();
+        String docState = docInfo.getElementsByTagName("DOCSTATE").item(0).getTextContent().trim();
+        String orgDocId = docInfo.getElementsByTagName("ORGDOCID").item(0).getTextContent().trim();
+
+        String tempDocHref = docHref;
+        if (tempDocHref.endsWith(".ezd")) {
+            tempDocHref = tempDocHref.replace(".ezd", "");
+        }
+
+        String path = "";
+        MultiValueMap queryParam = new LinkedMultiValueMap();
+        if (tempDocHref.endsWith(".mht")) {
+            path = "/ezApprovalG/contDocView.do";
+            queryParam.set("docID", docId);
+            queryParam.set("docHref", docHref);
+            queryParam.set("formID", formCode);
+            queryParam.set("orgDocID", orgDocId);
+            queryParam.set("docState", docState);
+            queryParam.set("orgCompanyID", userInfo.getCompanyID());
+        } else if (tempDocHref.endsWith(".hwp")) {
+            path = "/ezApprovalG/ezViewEnd_WHWP.do";
+            queryParam.set("docID", docId);
+            queryParam.set("docHref", docHref);
+            queryParam.set("formID", formCode);
+            queryParam.set("orgDocID", orgDocId);
+            queryParam.set("docState", docState);
+            queryParam.set("orgCompanyID", userInfo.getCompanyID());
+        } else {
+            throw new Exception();
+        }
+
+        return makeUrl(path, queryParam);
+    }
+
+    private String makeUrl(String path, MultiValueMap queryParam) throws Exception {
+        UriComponents uriComponents = UriComponentsBuilder.newInstance()
+                .path(path)
+                .queryParams(queryParam)
+                .build();
+
+        return uriComponents.toUriString();
     }
 }

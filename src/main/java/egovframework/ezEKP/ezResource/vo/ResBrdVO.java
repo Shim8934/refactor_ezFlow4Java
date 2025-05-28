@@ -45,7 +45,14 @@ public class ResBrdVO {
 	private String rsPortletOwnName;
 	/** 자원관리 포틀릿 소유자부서*/
 	private String rsPortletDeptName;
-	
+	/** 반복예약허용 유무*/
+	private String repeatFlag;
+	/** 자원관리 자원예약 제목 */
+	private String rsPortletTitle;
+	/** 자원관리 종료날짜 */
+	private String rsPortletStratAllTime;
+	/** 자원관리 시작날짜 */
+	private String rsPortletEndAllTime;
 	
 	public String getRsPortletTime() {
 		return rsPortletTime;
@@ -179,4 +186,12 @@ public class ResBrdVO {
 	public void setBrdAccess(String brdAccess) {
 		this.brdAccess = brdAccess;
 	}
+	public String getRepeatFlag() { return repeatFlag; }
+	public void setRepeatFlag(String repeatFlag) { this.repeatFlag = repeatFlag; }
+	public String getRsPortletTitle() { return rsPortletTitle; }
+	public void setRsPortletTitle(String rsPortletTitle) { this.rsPortletTitle = rsPortletTitle; }
+	public String getRsPortletStratAllTime() { return rsPortletStratAllTime; }
+	public void setRsPortletStratAllTime(String rsPortletStratAllTime) { this.rsPortletStratAllTime = rsPortletStratAllTime; }
+	public String getRsPortletEndAllTime() { return rsPortletEndAllTime; }
+	public void setRsPortletEndAllTime(String rsPortletEndAllTime) { this.rsPortletEndAllTime = rsPortletEndAllTime; }
 }

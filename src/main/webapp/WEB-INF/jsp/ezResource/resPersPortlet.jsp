@@ -6,7 +6,8 @@
    <head>
       <title><spring:message code="ezResource.t375" /></title>
       <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-      <link rel="stylesheet" href="${util.addVer('ezResource.e2', 'msg')}" type="text/css" />
+      <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
       <link type="text/css" rel="stylesheet" href="${util.addVer('main.lhm01', 'msg')}" />
       <link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
       <style>
@@ -25,6 +26,7 @@
          var g_DeptID   = "${userInfo.deptID}";
          var g_DeptPath   = "${userInfo.deptPathCode}";
          var pCompanyID    = "${userInfo.companyID}";
+         var pLang    = "${userInfo.lang}";
          var g_AccessCode = "${accessCode}"; 
          var g_ServerName = "${serverName}";
          var selectNo = "${selectNo}";
@@ -449,7 +451,11 @@
       function mappingResourcePortlet(id, name, name2){
 		if (boolfirstlist) {
 			var xmlString = "<LISTVIEWDATA><ROWS>";
-			xmlString += "<ROW><CELL><VALUE>" + name + "</VALUE><CN>" + id + "</CN><NAME>" + name2 + "</NAME></CELL></ROW>";
+            if(typeof(pLang) != "undefined" && pLang != "1"){
+                xmlString += "<ROW><CELL><VALUE>" + name2 + "</VALUE><CN>" + id + "</CN><NAME>" + name2 + "</NAME></CELL></ROW>";
+            }else{
+                xmlString += "<ROW><CELL><VALUE>" + name + "</VALUE><CN>" + id + "</CN><NAME>" + name + "</NAME></CELL></ROW>";
+            }
 			xmlString += "</ROWS></LISTVIEWDATA>";
 			var emptyxml = createXmlDom();
 			emptyxml = loadXMLString(xmlString);
@@ -458,7 +464,12 @@
 			boolfirstlist = false;
 		} else {
 			var emptyxml = createXmlDom();
-			emptyxml = loadXMLString("<ROW><CELL><VALUE>" + name + "</VALUE><CN>" + id + "</CN><NAME>" + name2 + "</NAME></CELL></ROW>");
+            if(typeof(pLang) != "undefined" && pLang != "1"){
+				emptyxml = loadXMLString("<ROW><CELL><VALUE>" + name2 + "</VALUE><CN>" + id + "</CN><NAME>" + name2 + "</NAME></CELL></ROW>");
+                xmlString += "<ROW><CELL><VALUE>" + name2 + "</VALUE><CN>" + id + "</CN><NAME>" + name2 + "</NAME></CELL></ROW>";
+            }else{
+				emptyxml = loadXMLString("<ROW><CELL><VALUE>" + name + "</VALUE><CN>" + id + "</CN><NAME>" + name + "</NAME></CELL></ROW>");
+            }
 			pListView.AddRow(emptyxml);
 			pListView.make();
 		}

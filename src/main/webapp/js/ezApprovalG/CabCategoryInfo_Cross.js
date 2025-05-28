@@ -54,7 +54,14 @@ function TaskSCateList_rowclick() {
 
 function InitCategorySelection() {
 	var result = "";
-	
+    
+    // 2024-07-19 양지혜 - 전자결재G > 상위부서문서함 사용 > 상위부서로 확인
+    if (typeof upperDeptCode !== "undefined" && upperDeptCode !== "") {
+        g_DeptCode = upperDeptCode;
+    } else if (typeof upperDeptCode === "undefined" && opener !== null && typeof opener.upperDeptCode !== "undefined" && opener.upperDeptCode !== "") { // 기록물철 인계
+        g_DeptCode = opener.upperDeptCode;
+    }
+    
     $.ajax({
 		type : "POST",
 		dataType : "text",
@@ -349,6 +356,8 @@ function OpenTaskFindWin_Complete(rtn) {
     }
 }
 
+/* 2024-12-06 홍승비 - 전자결재G > 기록물등록대장 > 대장등록 > 단위업무찾기 > 정상 동작하지 않는 함수 원상복구 */
+// 해당 함수는 기록물관리 > 단위업무관리 메뉴에서 접근하지 않으며, 동일하게 동작하지 않아야 하는 함수임
 function GetFindTaskListXml(pTitle, pCode, pFlag, pDeptCode) {
 	var result = "";
 	var pageSize = "";

@@ -7,7 +7,8 @@
 	<head>
 		<title>main_page</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezCommunity.i1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 		<!-- 18-04-27 김민성 - 카테고리별 커뮤니티 클릭시 bold 지정 -->
 		<style>
@@ -429,44 +430,61 @@
 						data : { page   : CurPage
 						},
 						success: function(result){
-							event_get_myCommunity(result);
+							event_get_myCommunity(result, 'new');
 							//commuTitleWidth(); //타이틀 너비 조정
 						}
 				});
 	        }
 	        
 	        // 커뮤니티 새글
-	        function event_get_myCommunity(result) {
+	        function event_get_myCommunity(result, type) {
                 var xmldom = loadXMLString(result);
                 var table;
                 
+				if (type == 'new') {
+					document.getElementById("listCommunity2").style.display = "";
+					document.getElementById("listCommunityPop").style.display = "none";
+				} else {
+					document.getElementById("listCommunityPop").style.display = "";
+					document.getElementById("listCommunity2").style.display = "none";
+				}
+				
                 if (SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW").length == 0) {
-                	
-                	var ul = document.getElementById("listCommunity2");
-                	
-                	var dl = document.createElement("DL");
-                	dl.className = "nodata_sIcon";
-                	
-					var dt = document.createElement("DT");
-					 
-		            var img = document.createElement("IMG");
-		            img.src = "/images/kr/main/noData_sIcon.png";
-		             
-		            var dd = document.createElement("DD");
-		            dd.innerHTML = strLang535;
-		             
-		             dt.appendChild(img);
-		             dl.appendChild(dt);
-		             dl.appendChild(dd);
+					if (type == 'new') {
+						var ul = document.getElementById("listCommunity2");
+					} else {
+						var ul = document.getElementById("listCommunityPop");
+					}
 
-		             ul.appendChild(dl);
-		             
+					if (ul.querySelector('.nodata_sIcon') == null) {
+						var dl = document.createElement("DL");
+						dl.className = "nodata_sIcon";
+						
+						var dt = document.createElement("DT");
+						 
+						var img = document.createElement("IMG");
+						img.src = "/images/kr/main/noData_sIcon.png";
+						 
+						var dd = document.createElement("DD");
+						dd.innerHTML = strLang535;
+						 
+						 dt.appendChild(img);
+						 dl.appendChild(dt);
+						 dl.appendChild(dd);
+
+						 ul.appendChild(dl);
+					}
                 	return;
                 }
                 
                 var j = 0;
-                
-                document.getElementById("listCommunity2").innerHTML = "";
+
+				if (type == 'new') {
+					document.getElementById("listCommunity2").innerHTML = "";
+				} else {
+					document.getElementById("listCommunityPop").innerHTML = "";
+				}
+               
                 
                 for(var i = 0; i < SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW").length; i++) {
 	                var li = document.createElement("LI");
@@ -514,8 +532,12 @@
 	                li.appendChild(span2);
 	                li.appendChild(span3);
 	                li.appendChild(span4);
-	                
-	                document.getElementById("listCommunity2").appendChild(li);
+
+					if (type == 'new') {
+						document.getElementById("listCommunity2").appendChild(li);
+					} else {
+						document.getElementById("listCommunityPop").appendChild(li);
+					}
 					
                 }
 	        }
@@ -693,23 +715,23 @@
 	            var pageNum = CurPage;
 	            
 	            if (totalPage > 1 && pageNum != 1) {
-	                strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' ></span>";
+	                strtext = "<span class='btnimg first' onclick= 'return goToPageByNum(1)'></span>";
 	                PagingHTML += strtext;
 	            } else {
-	                strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>";
+	                strtext = "<span class='btnimg first disabled'></span>";
 	                PagingHTML += strtext;
 	            }
 	            
 	            if (totalPage > BlockSize) {
 	                if (pageNum > BlockSize) {
-	                    strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' ></span>";
+	                    strtext = "<span class='btnimg prev' onclick= 'return selbeforeBlock()'></span>";
 	                    PagingHTML += strtext;
 	                } else {
-	                    strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+	                    strtext = "<span class='btnimg prev disabled'></span>";
 	                    PagingHTML += strtext;
 	                }
 	            } else {
-	                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+	                strtext = "<span class='btnimg prev disabled'></span>";
 	                PagingHTML += strtext;
 	            }
 	            
@@ -740,24 +762,24 @@
 	            if (totalPage > BlockSize) {
 	                if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
 	                    strtext = "";
-	                    strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' ></span>";
+	                    strtext = strtext + "<span class='btnimg next' onclick='return selafterBlock()'></span>";
 	                    PagingHTML += strtext;
 	                } else {
 	                    strtext = "";
-	                    strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+	                    strtext = strtext + "<span class='btnimg next disabled'></span>";
 	                    PagingHTML += strtext;
 	                }
 	            } else {
 	                strtext = "";
-	                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+	                strtext = strtext + "<span class='btnimg next disabled'></span>";
 	                PagingHTML += strtext;
 	            }
 	            
 	            if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-	                strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' ></span>";
+	                strtext = "<span class='btnimg last' onclick='return goToPageByNum(" + totalPage + ")'></span>";
 	                PagingHTML += strtext;
 	            } else {
-	                strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
+	                strtext = "<span class='btnimg last disabled'></span>";
 	                PagingHTML += strtext;
 	            }
 	            
@@ -1615,19 +1637,68 @@
 	            var pwidth = window.screen.availWidth;
 	            var pTop = (pheight - 720) / 2;
 	            var pLeft = (pwidth - 765) / 2;
+				var type = val.parentNode.id;
 
-	            if (gubun == "3") {
-	                if (CrossYN()) {
-	                    window.open("/ezCommunity/boardItemViewPhoto.do?showAdjacent=" + 1 + "&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
-	                } else {
-	                    window.open("/ezCommunity/boardItemViewPhoto.do?showAdjacent=" + 1 + "&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
-	                }
+				if (gubun == "3") {
+					if (type == 'listCommunityPop') {
+						$.ajax({
+							type : "GET",
+							dataType : "text",
+							url : "/ezCommunity/boardItemViewPhoto.do",
+							data : {	
+								showAdjacent : 1,
+								itemID : pItemID,
+								boardID : pItemBoardID,
+								type : "pop"
+							},
+							success: function(result){
+								try {
+									var resultObj = JSON.parse(result);
+									if (resultObj.result == false) {
+										GetOpenWindow("/ezCommunity/communityMainPopBoardAlert.do","", 370, 190);
+									}
+								} catch (e) {
+									GetOpenWindow("/ezCommunity/boardItemViewPhoto.do?showAdjacent=" + 1 + "&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+								}
+							}
+						});
+					} else {
+						if (CrossYN()) {
+							window.open("/ezCommunity/boardItemViewPhoto.do?showAdjacent=" + 1 + "&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+						} else {
+							window.open("/ezCommunity/boardItemViewPhoto.do?showAdjacent=" + 1 + "&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+						}
+					}
 	            } else {
-	                if (CrossYN()) {
-	                	GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(copno) + "&showAdjacent=" + 1, "", 750, 721);
-	                } else {
-	                	GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(copno) + "&showAdjacent=" + 1, "", 750, 721);
-	                }
+					if (type == 'listCommunityPop') {
+						$.ajax({
+							type : "GET",
+							dataType : "text",
+							url : "/ezCommunity/boardItemView.do",
+							data : {
+								showAdjacent : 1,
+								itemID : pItemID,
+								boardID : pItemBoardID,
+								type : "pop"
+							},
+							success: function(result){
+								try {
+									var resultObj = JSON.parse(result);
+									if (resultObj.result == false) {
+										GetOpenWindow("/ezCommunity/communityMainPopBoardAlert.do","", 370, 190);
+									} 
+								} catch (e) {
+									GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(copno) + "&showAdjacent=" + 1 + "&type=pop", "", 750, 721);
+								}
+							}
+						});
+					} else {
+						if (CrossYN()) {
+							GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(copno) + "&showAdjacent=" + 1, "", 750, 721);
+						} else {
+							GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(copno) + "&showAdjacent=" + 1, "", 750, 721);
+						}
+					}
 	            }
 	        }
 
@@ -1846,9 +1917,23 @@
 	            feature = feature + GetOpenPosition(760, 720);
 	            window.open("/ezCommunity/board/bbsViewNew.do?mode=content&no=" + sURL + "&bName=" + ttt, "", feature);
 			}
+			
+			/* 2024-10-08 황인경 - 커뮤니티 > 인기글 조회 */
+			function getPopBoard() {
+				$.ajax({
+					type : "GET",
+					dataType : "text",
+					async : false,
+					url : "/ezCommunity/popularBoardItem.do",
+					success: function(result){
+						event_get_myCommunity(result, 'pop');
+					}
+				});
+			}
+			
 		</script>
 	</head>
-	<body class="mainbody" style="margin:10px 0 0; min-width:1040px; padding:0 10px 10px;">
+	<body class="mainbody" style="margin:20px 0 0; min-width:1040px; padding:0 30px 10px;">
 		<div class="main_community_center">
 			<!-- communitySection01 : banner -->
 		    <div class="community_section01">
@@ -1904,9 +1989,12 @@
 		        </div>
 		        <div class="contents_boardCommunity">
 		        	<dl class="contents_tabCommunity">
-		                <dt><spring:message code='ezCommunity.kmsc02'/></dt>
+		                <dt class="boardNewPop" id="newPost" onclick="get_myCommunity()"><spring:message code='ezCommunity.kmsc02'/></dt>
+		                <dt class="boardNewPop" id="popularPost" onclick="getPopBoard()"><spring:message code='ezCommunity.popularPosts01'/></dt>
 		            </dl>
 		            <ul id="listCommunity2" class="contents_listCommunity">
+		            </ul>
+		            <ul id="listCommunityPop" style="display: none" class="contents_listCommunity">
 		            </ul>
 		        </div>
 		    </div>

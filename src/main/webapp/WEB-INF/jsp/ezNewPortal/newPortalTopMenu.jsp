@@ -7,6 +7,7 @@
 		<title>TopMenu</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/ezNewPortal/portal.css')}" />
 		<link href="${util.addVer('main.portal', 'msg')}" rel="stylesheet" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('ezNewPortal.e2', 'msg')}">
 		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
@@ -18,18 +19,117 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery-ui.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezSurvey/lang/ezSurvey_ko.js')}"></script>
 		<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
-		<style type="text/css">
-			#editBtn {float: right;}
-			#editBtn img {margin-right: 10px;	margin-top: 8px;cursor: pointer;}
+		<script type="text/javascript" src="${util.addVer('/js/ClickTracker.js')}"></script>
+		<style>
 			#editMenuBtn {display: none;}
 			.ui-sortable-helper {border-left:1px dashed #898989; border-top : 1px dashed #898989;}
 			#logoUrl {height:42px;}
 			/*-- top_totalSearch --*/
-			.top_totalSearch {font-family:Gulim, Dotum, Arial, Helvetica, sans-serif; font-size:12px;float:right; margin:9px 30px 0px 0px; padding:0px; width:243px; height:34px; background:url(../images/kr/cm/top_search_bg.gif) no-repeat;vertical-align:middle; }
+			.top_totalSearch {font-family:Gulim, Dotum, Arial, Helvetica, sans-serif; font-size:12px;float:right; margin:12px 10px 0px 0px; padding:0px; width:245px; height:34px; background:url(../images/kr/cm/top_search_bg.gif) no-repeat;vertical-align:middle; }
 		</style>
+		<script>
+			var useColor = '<c:out value="${useColor}"/>';
+			var packageType = '<c:out value="${packageType}"/>';
+			// UI 스킨 작업용
+			function skin(skinId){
+				var skinLink = "";
+				var skinCss = document.getElementById("skinCss");
+				var mainFrame = window.parent.document.getElementById("mainFrame").contentWindow;
+				var mainSkinCss = mainFrame.document.getElementById("mainSkinCss");
+				var notiFrame = window.parent.document.getElementById("iframeNoti").contentWindow;
+				var notiSkinCss = notiFrame.document.getElementById("notiSkinCss");
+				var themeId = mainFrame.document.querySelector(".mainbg");
+
+				if(skinCss){
+					skinCss.href = skinId ? "/css/ezPortal/skin_" + skinId + ".css" : "";
+				} else {
+					skinLink = document.createElement("link");
+					skinLink.id = "skinCss";
+					skinLink.rel = "stylesheet";
+					skinLink.href = skinId ? "/css/ezPortal/skin_" + skinId + ".css" : "";
+					document.head.appendChild(skinLink);
+				}
+
+				if(mainSkinCss){
+					mainSkinCss.href = skinId ? "/css/ezPortal/skin_" + skinId + ".css" : "";
+				} else {
+					skinLink = document.createElement("link");
+					skinLink.id = "mainSkinCss";
+					skinLink.rel = "stylesheet";
+					skinLink.href = skinId ? "/css/ezPortal/skin_" + skinId + ".css" : "";
+					mainFrame.document.head.appendChild(skinLink);
+				}
+
+				if(notiSkinCss){
+					notiSkinCss.href = skinId ? "/css/ezPortal/skin_" + skinId + ".css" : "";
+				} else {
+					skinLink = document.createElement("link");
+					skinLink.id = "notiSkinCss";
+					skinLink.rel = "stylesheet";
+					skinLink.href = skinId ? "/css/ezPortal/skin_" + skinId + ".css" : "";
+					notiFrame.document.head.appendChild(skinLink);
+				}
+
+				if (mainFrame.document.getElementsByName("left")[0]) {
+					var leftFrame = mainFrame.document.getElementsByName("left")[0].contentWindow;
+					var leftSkinCss = leftFrame.document.getElementById("leftSkinCss");
+	
+					if(leftSkinCss){
+						leftSkinCss.href = skinId ? "/css/ezPortal/skin_" + skinId + ".css" : "";
+					} else {
+						skinLink = document.createElement("link");
+						skinLink.id = "leftSkinCss";
+						skinLink.rel = "stylesheet";
+						skinLink.href = skinId ? "/css/ezPortal/skin_" + skinId + ".css" : "";
+						leftFrame.document.head.appendChild(skinLink);
+					}
+				}
+				
+				if (mainFrame.document.getElementsByName("right")[0]) {
+					var rightFrame = mainFrame.document.getElementsByName("right")[0].contentWindow;
+					var rightSkinCss = rightFrame.document.getElementById("rightSkinCss");
+	
+					if(rightSkinCss){
+						rightSkinCss.href = skinId ? "/css/ezPortal/skin_" + skinId + ".css" : "";
+					} else {
+						skinLink = document.createElement("link");
+						skinLink.id = "rightSkinCss";
+						skinLink.rel = "stylesheet";
+						skinLink.href = skinId ? "/css/ezPortal/skin_" + skinId + ".css" : "";
+						rightFrame.document.head.appendChild(skinLink);
+					}
+				}
+			}
+			
+		</script>
 	</head>
 	<body>
+		<%-- ui 확인용 버튼(추후 삭제 예정)-조기완 --%>
+		<div class="skin_test" style="position:absolute; left:50%; top:0; transform:translateX(-50%); z-index:10000; user-select:none; display:none;">
+			<span style="float:left; font-size:16px; line-height:58px; color:royalblue; cursor:pointer; margin-right:10px;" onclick="skin('');">기본</span>
+			<span style="float:left; font-size:16px; line-height:58px; color:royalblue; cursor:pointer; margin-right:10px;" onclick="skin('dark');">다크</span>
+			<span style="float:left; font-size:16px; line-height:58px; color:royalblue; cursor:pointer; margin-right:10px;" onclick="skin('blue');">블루</span>
+			<span style="float:left; font-size:16px; line-height:58px; color:royalblue; cursor:pointer;" onclick="skin('red');">레드</span>
+		</div>
 		<header id="top"></header>
+		<div class="lnb">
+			<ul id="mainMenuListLeft">
+			</ul>
+			<div class="lnb_menu_all" id="menuAllContainer">
+	            <div class="lnb_menu_setting" id="menuSettingElem"<c:if test="${packageType eq 'mail'}"> style = "display:none"</c:if>>
+	                <div class="menu_set" id="editBtn">
+	                    <p><spring:message code="ezNewPortal.topMenu.hth09" /></p>
+	                </div>
+
+	                <div class="set_btn" id="editMenuBtn">
+	                    <span id="editMenuSave"><spring:message code="ezNewPortal.t002" /></span><span id="editMenuCancel"><spring:message code="ezNewPortal.t001" /></span>
+	                </div>
+	            </div>
+	            <ul id="menuListAll" class="menu_list_all">
+	         	</ul>
+	         </div>
+	         
+		</div>
 		<c:if test="${useActiveX == 'YES'}">
 			<script type="text/javascript">
 				ezIcd_ActiveX("i_icd2");
@@ -38,7 +138,44 @@
 		</c:if>
 
 		<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;display:none;" id="progressPanel">&nbsp;</div>
-		<script type="text/javascript">
+	<script type="text/javascript">
+		var connectMenuId = -1; // 웹페이지 연계메뉴는 -1로 고정
+		var maxMenuCount = 7;
+		// 상단 메뉴시 화면 작아질시 좌측으로 이동 함수 start(테스트용/UIUX-조기완)
+		/* function calcWidth(obj){
+			var totalWidth = 0;
+			$(obj).each(function(){
+				totalWidth += $(this).outerWidth(true);
+			})
+			return totalWidth;
+		}
+
+		function gnbChange(){
+			var windowWidth = $(window).outerWidth(true);
+			var leftWidth = calcWidth(".topmenulayout > .contentlayout_left");
+			var rightWidth = calcWidth(".topmenulayout > .contentlayout_right");
+			var contWidth = windowWidth - leftWidth - rightWidth;
+			var gnbWidth = calcWidth(".topNavCls li");
+
+			if(gnbWidth > contWidth){
+				$(window.parent.document).find("#mainFrame").addClass("active");
+				$(".contentlayout_none").css("visibility","hidden");
+			} else{
+				$(window.parent.document).find("#mainFrame").removeClass("active");
+				$(".contentlayout_none").css("visibility","visible");
+			}
+		}
+
+		$(window).resize(function(){
+			gnbChange();
+		}) */
+		// 상단 메뉴시 화면 작아질시 좌측으로 이동 함수 end
+
+		var menuDisplayMode = '<c:out value="${menuDisplayMode}"/>';
+		var userLang = '<c:out value="${lang}"/>';
+		var userPrimary = '<c:out value="${primary}"/>';
+		var userPhotoSrc = '<c:out value="${userPhoto}"/>';
+		var primaryLang = '<c:out value="${primaryLang}"/>';
 		
 		var newPortalTopMenu = {
 			menuListArr: [],           // 메뉴 리스트 배열에 저장
@@ -53,7 +190,7 @@
 			var str = '';
 				
 				str += '<div class="logo">';
-				str += '	<img src="${logoUrl}" id="logoUrl" style="cursor:pointer">';
+				str += '	<img src="${logoUrl}" id="logoUrl" style="cursor:pointer; height:42px; margin-top:9px;">';
 				str += '</div>';
 				
 			return str;
@@ -72,12 +209,52 @@
 				menuList = reData;
 			}
 			
-			document.getElementById('mainMenuList').innerHTML = '';
+			removeAllChildernElem(document.getElementById('mainMenuList'));
+			removeAllChildernElem(document.getElementById('mainMenuListLeft'));
 			
- 			var str = '';
-			menuList.forEach(function (item, index) {
-				str += '<li id="menu_' + item.menuId + '">' + ConvertCharToEntityReference(item.menuName) + '</li>';
+			var mainMenuElem = null;
+			if (menuDisplayMode == "0") {
+				mainMenuElem = document.getElementById('mainMenuList');
+				document.getElementById('mainMenuListLeft').classList.remove("lnb_list");
+			} else if (menuDisplayMode == "1") {
+				mainMenuElem = document.getElementById('mainMenuListLeft');
+				document.getElementById('mainMenuListLeft').classList.add("lnb_list");
+			}
+			
+			var menuCount = 0;
+			menuList.some(function (item, index) {
+				if (item.menuId == connectMenuId) {
+					return; //연계메뉴 표출 x
+				}
 				
+				if (menuCount < maxMenuCount) { // 최대 7개 표출
+					var menuLi = document.createElement('li');
+					var mainFrame = window.parent.document.getElementById("mainFrame");
+					menuLi.setAttribute("data-menu-id", item.menuId);
+					if (menuDisplayMode == "0") { // 메뉴 top에 생성
+						menuLi.setAttribute('id', 'menu_' + item.menuId);
+						menuLi.textContent = item.menuName;
+						mainFrame.style.width = "100%";
+						mainFrame.style.float = "none";
+						mainFrame.style.position = "static";
+						
+					} else if (menuDisplayMode == "1") {// 메뉴 left에 생성
+						if (!!item.iconUrl && item.iconUrl.split(" ").length > 0) menuLi.classList.add(item.iconUrl.split(" ")[1] + "_leftmenu"); // 탑메뉴 아이콘과 구분하기 위해서 _leftmenu 추가
+						menuLi.classList.add('sortable-item');
+						menuLi.setAttribute('id', 'menu_' + item.menuId);
+						var liSpan = document.createElement('span');
+						liSpan.textContent = item.menuName;
+						menuLi.appendChild(liSpan);
+						mainFrame.style.width = "calc(100% - 81px)";
+						mainFrame.style.float = "right";
+						mainFrame.style.position = "relative"; // 이거 빼면 mainFrame 스크롤도 안되고 동작도 안됨.
+					}
+	
+					menuLi.addEventListener('click', leftMainMecuClickEvent.bind(menuLi, item.menuUrl, item.openType));
+					
+					mainMenuElem.appendChild(menuLi);
+					menuCount++;
+				}
 				// 메뉴리스트 객체 생성
 				newPortalTopMenu.menuListObj['menu_'+ item.menuId] = {
 					menuId: item.menuId,
@@ -87,24 +264,15 @@
 					menuName: item.menuName,
 				};
 			});
-			
-			document.getElementById('mainMenuList').innerHTML = str;
-			
-			// 메인메뉴 이벤트 모아둔 곳
-			HTMLCollection.prototype.forEach = Array.prototype.forEach;
-			var menuLi = document.getElementById('mainMenuList').children;
-			menuLi.forEach(function (item, index) {
-				var menuUrl = newPortalTopMenu.menuListObj[item.id].menuUrl;
-				item.addEventListener('click', function () {
-					//window.open(menuUrl, 'main', '');
-					// 클릭하면 창닫기.
-					subMenuClickEvent('off', menuUrl);
-					notice_all_close();
-				});
-			});
-			
-			/* $("#util_frame").on("click", ParentViewPortletEnv); */
-		}		
+		}
+		
+		function leftMainMecuClickEvent(menuUrl, openType) {
+			offMenuAll();
+			this.classList.add("on");
+			subMenuClickEvent('off', menuUrl, openType);
+			notice_all_close();
+			closeNoti();
+		}
 		
 		/* //포틀릿 및 프레임 환경설정 열기
 		function ParentViewPortletEnv() {
@@ -219,45 +387,30 @@
 				str += '<li class="contentlayout_none">';
 				//str += '<nav id="topNav" class="topNavCls" tyle="max-width:1102px;">';
 				str += '<nav id="topNav" class="topNavCls">';
-				str += '<div id="topMenuFull" class="full_nav off"><span class="icon_topmenu full_menu"></span></div>';
-				str += '<div class="countBox" style="display: block;"><span class="hidden_nav_count" id="nav_count"></span><span class="icon_topmenu icon_count_arrow"></span></div>';
-				// str += '<div class="countBox"><span class="hidden_nav_count">+1</span><span class="icon_topmenu icon_count_arrow"></span></div>';
 				str += '<ul class="navUL" id="mainMenuList">';
-				
-				//str += assembleMainMenu();
-				
-				str += '</ul>';				
-				
-				str += '<div id="menu_toggle">';
-				str += '	<div class="full_menu_toggle"><ul class="full_menu_toggleUL" id="toggleMenu"></ul></div>';
-				str += '	<div class="menu_toggle_context" id="expandMenuFooter">'
-				str += '		<div id="editBtn"><img src="/images/ezNewPortal/icon_setup.png" /></div>';
-				str += '		<div id="editMenuBtn">'
-				str += '			<span class="topMenuBtn" id="editMenuCancel"><spring:message code="ezNewPortal.t001" /></span>';
-				str += '			<span class="topMenuBtn" id="editMenuSave"><spring:message code="ezNewPortal.t002" /></span>';
-				/* str += '			<span class="topMenuBtn initOrder" id="editcompanyOrder"><spring:message code="ezNewPortal.t003" /></span>'; */
-				str += '		</div>';
-				str += '	</div>';				
-				str += '</div>';
+				str += '</ul>';
 				str += '</nav>';
 				str += '</li>';
 				str += '</ul>';
-				
+
 			return str;
 		}
 		
 		// 헤더 세팅
 		var setTopMenu = function () {
 			var str = '';
-			
 				str += '<ul class="contentlayout topmenulayout">';
+				str += '	<li class="contentlayout_left"><div class="total_menu"><span onclick="toggleAllMenu()"></span></div></li>';
 				str += '	<li class="contentlayout_left">';
 				str += setLogo();
 				str += '	</li>';
 				str += '	<li class="contentlayout_right">';
 				str += setUtilMenu();
 				str += '	</li>';
-				str += '	<li class="contentlayout_none">';
+				if ('${useTotalSearch}' === 'YES') {
+					str += '<li class="contentlayout_right"><div class="employee_search"><input type="text" placeholder="<spring:message code="main.t00029" />" id="topsearch_btn"><span onclick="toggleTopSearch()"></span></div></li>' 
+				}
+				str += '	<li class="contentlayout_none" onclick="subMenuClickEvent(\'off\')">';
 				str += setMainMenu();
 				str += '	</li>';
 				str += '</ul>';		
@@ -269,10 +422,17 @@
 		var setEvent = function (id, url, location, option) {
 			var element = document.getElementById(id);
 			element.addEventListener('click', function () {
-			    if (id == 'util_logout') {
+				closeNoti(); // 통합알림창 닫기
+				// 메뉴이동 외의 로고 클릭의 경우도 탑 메뉴 항목 off를 위해 분기 추가 함.
+				if (id == 'logoUrl') {
+					offMenuAll();
+					subMenuClickEvent('off');
+					window.open(url, location, option);
+				} else if (id == 'util_logout') {
 			        subMenuClickEvent('off');
 			        self.top.location.href = url;
-			    } else if (id != 'util_employee_search' && id != 'util_admin') {
+			    } else if (id != 'util_employee_search' && id != 'util_admin' && id != 'util_set') {
+			    	offMenuAll();
 					subMenuClickEvent('off', url);
 				} else {
 					subMenuClickEvent('off');
@@ -284,22 +444,39 @@
 		// 유틸메뉴 설정
 		var setUtilMenu = function () {
 			var str = '';
-			
 				str += '<ul class="util">';
+				//str += '<ul class="util"><li id="listSwitch" style="display: flex;align-items: center;">';
 				if ('${packageType}' === 'mail' && '${lastLogin}' != '') {	// 20200326 조진호 - 패키지 타입이 메일 일 때 최종 접속 로그인 시간과 ip를 탑메뉴 상단에 표시
-					str += '<li><span style="font-family: 돋움; font-size: 13px; font-weight: bold; color: #333; display: inline-block; margin-right: 10px;margin-top: 20px;" title="' + '<spring:message code="ezSystem.x0025" />(<spring:message code="ezSystem.x0024" />)' + '">' + '${lastLogin} (' + '${loginIP})' + '</span></li>';
+					str += '<li><span style="font-family: 돋움; font-size: 13px; font-weight: bold; color: #333; display: inline-block; margin-top: 17px; width: 111px;" title="' + '<spring:message code="ezSystem.x0025" />(<spring:message code="ezSystem.x0024" />)' + '">' + '${lastLogin} (' + '${loginIP})' + '</span></li>';
 				}
-				//통합검색
-				if ('${useTotalSearch}' === 'YES') str += "<li><div class='top_totalSearch'><input id='input_totalSearch' class='input_text' type='text' onkeyup='totalSearch_key_event()' onfocus=\"this.placeholder=' '\"/><input type='image' src='/images/kr/cm/top_search_btn.gif' alt='' id='topsearch_btn' class=\"topsearch_btn\" ></div></li>";
+								
 				if ('${useUtilTalk}' === 'YES') str += '<li><span class="icon_topmenu util_messenger" id="util_messenger" title="' + '<spring:message code="ezNewPortal.kje01" />' + '"></span></li>'; // 메신저 다운로드 추가
-				if ('${roleInfo}' === 'admin') str += '<li><span class="icon_topmenu util_admin" id="util_admin" title="' + '<spring:message code="ezNewPortal.t004" />' + '"></span></li>';
-				str += '<li><span class="icon_topmenu util_employee_search" id="util_employee_search" title="' + '<spring:message code="ezNewPortal.t005" />' + '"></span></li>';
+				if ('${roleInfo}' === 'admin') str += '<li><span class="util_admin" id="util_admin" title="' + '<spring:message code="ezNewPortal.t004" />' + '"></span></li>';
+				str += '<li><span class="util_employee_search" id="util_employee_search" title="' + '<spring:message code="ezNewPortal.t005" />' + '"></span></li>';
 				/* str += '<li><span class="icon_topmenu util_frame" id="util_frame" title="프레임설정"></span></li>'; */
-				str += '<li><span class="icon_topmenu util_set" id="util_set" title="' + '<spring:message code="ezNewPortal.t006" />' + '"></span></li>';
 			    /* 2023-08-29 - 민지수 포탈 > 탑메뉴 > 다국어 > ? 아이콘 클릭시 영어매뉴얼 다운로드 되도록 수정 */
-				if ('${lang}' != '2') str += '<li><span class="icon_topmenu util_help" id="util_help" title="' + '<spring:message code="ezNewPortal.t007" />' + '"></span></li>';
+				if ('${lang}' != '2') str += '<li style="display :none;"><span class="util_help" id="util_help" title="' + '<spring:message code="ezNewPortal.t007" />' + '"></span></li>';
 				if ('${lang}' == '2') str += '<li><a href="<%= request.getContextPath() %>/files/QST User Guide.pptx"><span class="icon_topmenu util_help" id="util_help" title="' + '<spring:message code="ezNewPortal.t007" />' + '">'+'</span></a></li>';
-				str += '<li><span class="icon_topmenu util_logout" id="util_logout" title="' + '<spring:message code="ezNewPortal.t008" />' + '"></span></li>';
+				
+				// 통합알림
+				str += '<li id="util_noti"><span class="util_alarm" title="' + '<spring:message code="ezPortal.notification.hth01" />"' + ' onclick="toggleNoti()"><span id="notiin"></span></span></li>';
+				// 퀵메뉴
+				str += '<li><span class="util_quick_menu" id="util_quickmenu" title="<spring:message code="ezPersonal.khj1" />"></span>';
+                str += '<div class="quick_menu_list util_div_menu" id="quickMenuContainer"><p><spring:message code="ezPersonal.khj1" /></p><ul id="quickMenuList"></ul></div></li>';
+                
+                // 프로필 정보
+			    str += '<li><span class="util_profile" id="util_profile">';
+			    if (userPhotoSrc != "") {
+				    str += '<img src="' + '/ezCommon/downloadAttach.do?filePath=' + userPhotoSrc + '"></span>';
+			    } else {
+				    str += '<img src="/images/ezNewPortal/info_pic_none.png"></span>';
+			    }
+			    
+			    str += '<div class="profile_div util_div_menu" id="profileContainer"><div class="btn_tab"><span class="set" id="util_set"><spring:message code="ezNewPortal.t006" /></span>';
+				if(primaryLang == 1) {
+					str	+= '<span class="help" onclick="openHelp();"><spring:message code="main.t00037" /></span>' ;
+				}
+				str	+= '<span class="logout" id="util_logout"><spring:message code="ezNewPortal.t008" /></span></div></div></li>';
 				str += '</ul>';
 			
 			return str;
@@ -307,7 +484,7 @@
 		
 		/* 통합검색 */
 		var totalSearch = function () {
-			var keyword = $("#input_totalSearch").val();
+			var keyword = $("#topsearch_btn").val();
 			//$("#input_totalSearch").val("");
 // 			OpenWindow(event, "/ezPortal/totalSearch.do?keyword=" + encodeURIComponent(keyword) , "main", "");
 			window.open("/ezPortal/totalSearch.do?keyword=" + encodeURIComponent(keyword) , "main", "");
@@ -360,8 +537,8 @@
 			if('${roleInfo}' === 'admin') {
 				setEvent('util_admin', '${utilAdminUrl}', '' ,'');	
 			}
-			//setEvent('util_employee_search', '/ezPersonal/personSearch.do', '' ,'height=560px,width=750px, status = no, toolbar=no, menubar=no,location=no, resizable=0');
-			document.getElementById("util_employee_search").addEventListener('click', employeeSearch );
+			setEvent('util_employee_search', '/ezPersonal/personSearch.do', '' ,'height=670px,width=750px,top=' + (window.screen.availHeight - 670)/2 + ',left= ' + (window.screen.availWidth - 750) / 2 + ',status = no, toolbar=no, menubar=no,location=no, resizable=0');
+			//document.getElementById("util_employee_search").addEventListener('click', employeeSearch );
 			setEvent('util_set', '/ezPortal/environmentMain.do', 'main' ,'');
 			//setEvent('util_help', '/ezPortal/help/help.do', 'helpWindow', 'height=700px,width=1000px, status = no, toolbar=no, menubar=no, location=no, resizable=0');
 			//setEvent('util_help', '/ezNewPortal/help/index.do', 'helpWindow', 'height=700px,width=1000px, status = no, toolbar=no, menubar=no, location=no, resizable=0');
@@ -378,9 +555,18 @@
 			/* document.getElementById("util_frmae").addEventListener("click", viewPortletEnv); */
 			/*통합검색*/
 			if ('${useTotalSearch}' === 'YES') {				
-				document.getElementById("topsearch_btn").addEventListener("click", totalSearch);
+				document.getElementById("topsearch_btn").addEventListener("keydown", totalSearch_key_event);
 			}
+			
+			document.querySelector('#util_quickmenu').addEventListener("click", function() {toggleDivMenu(document.querySelector('#quickMenuContainer'))});
+			document.querySelector('#util_profile').addEventListener("click", function() {toggleDivMenu(document.querySelector('#profileContainer'))});
 		}
+
+		function openHelp(){
+			helpDetail();
+			toggleDivMenu(document.querySelector('#profileContainer'))
+		}
+
 
 		/* //포틀릿 및 프레임 환경설정 열기
 		function viewPortletEnv() {
@@ -404,53 +590,24 @@
 		} */
 		
 		// 확장버튼 UI 이벤트 함수
-		var subMenuClickEvent = function (type, menuUrl) {
-			var topMenuFull = document.getElementById('topMenuFull');
-			var topFrame = parent.document.getElementById('topFrame');
-			var bodyTag = document.getElementsByTagName('Body')[0];
-			
+		var subMenuClickEvent = function (type, menuUrl, openType) {
 			if(type === 'on') {
-				$("#menu_toggle").css('display', 'none');
+				toggleAllMenu(type);
 				
-				$("#topMenuFull").fadeOut(0, function() {
-					$("#topMenuFull").attr("class", "full_nav on");
-					$("#topMenuFull").fadeIn(100);
-					
-					if ($("#nav_count").html() != "") {
-						$("#nav_count").attr("class", "hidden_nav_count_on");
-					}
-				});
-				var screenHeight = screen.height;
-				topFrame.style.position = 'relative';
-				topFrame.style.minHeight = screenHeight+"px";
-				bodyTag.style.backgroundColor = 'rgba(0, 0, 0, 0.3)';
-				$("#menu_toggle").slideDown(200);
-			} else if (type === 'off'){
-				if ($("#topMenuFull").attr("class") == "full_nav on") {
-					$("#topMenuFull").fadeOut(100, function() {
-						$("#topMenuFull").attr("class", "full_nav off");
-						$("#topMenuFull").fadeIn(100);
-						
-						if ($("#nav_count").html() != "") {
-							$("#nav_count").attr("class", "hidden_nav_count");
-						}
-					});
+			} else if (type === 'off') {
+				toggleAllMenu(type);
+				toggleDivMenu(document.querySelector('#quickMenuContainer') ,type);
+				toggleDivMenu(document.querySelector('#profileContainer') ,type);
+				closeNoti(); // 통합알림 팝업창 닫기
+
+				if (openType == 1) {
+					window.open(menuUrl, '_blank');
+				} else if (openType == 2) {
+					window.open(menuUrl, '_blank', 'width=1000,height=900');
+				} else if (openType == 3) {
+					window.open(menuUrl, 'main', '');
 				}
-				
-				$(".full_menu_toggleDL").attr("class", "full_menu_toggleDL");
-				
-				$("#menu_toggle").slideUp(200, function() {
-					topFrame.style.position = '';	
-					bodyTag.style.backgroundColor = 'rgba(0, 0, 0, 0)';
-					
-					$(".full_menu_toggleDL").clearQueue();
-					$(".full_menu_toggleDL").stop();
-					
-					if (menuUrl != null) {
-						window.open(menuUrl, 'main', '');
-					}
-				});
-				
+
 				// 취소버튼과 같은 역할
 				var editMenuCancel = document.getElementById('editMenuCancel');
 				editMenuCancel.click();	
@@ -466,87 +623,146 @@
 			} else {
 				menuList = orderData;
 			}
-			var str = '';
-			var toggleMenu = document.getElementById('toggleMenu');
-			toggleMenu.innerHTML = '';
 
-			menuList.forEach(function (item, index) {
+			removeAllChildernElem(document.getElementById('menuListAll'));
+			
+			var menuCount = 1;
+			for (var i = 0; i < menuList.length; i++) {
+				if (menuCount == 8) {
+					var menuResetBtn = document.createElement('li');
+					var menuResetBtnSpan = document.createElement('span');
+					menuResetBtnSpan.textContent = '<spring:message code="ezNewPortal.topMenu.hth08" />';
+					menuResetBtn.appendChild(menuResetBtnSpan);
+					menuResetBtn.setAttribute("id", "menuResetting");
+					menuResetBtn.classList.add("icon_nav_menuset_leftmenu");
+					menuResetBtn.addEventListener('click', menuReset);
+					document.getElementById('menuListAll').appendChild(menuResetBtn);
+					menuCount++;
+					i--;
+					continue;
+				}
+				
+				var item = menuList[i];
+				if (item.menuId == connectMenuId) {
+					continue; //연계메뉴 표출 x
+				}
 				// 컨텍스트메뉴와 연동하기 위함.
 				if(item.menuUrl.indexOf('ezMemo') > -1 && item.menuUsed) {
 					parent.useMemoContextMenu = true;
 				}
-
-				str += '<li id="'+item.menuId+'" data-companyorder='+ item.companyOrder +'><dl class="full_menu_toggleDL"><dt><span class="'+ item.iconUrl +'"></span></dt><dd>'+ ConvertCharToEntityReference(item.menuName) +'</dd></dl></li>';
-			});
-
-			toggleMenu.innerHTML = str;
-			
-			// 확장메뉴 링크 이벤트
-			var toggleMenu = document.getElementById('toggleMenu').children;
-			toggleMenu.forEach(function (item, index) {
-				var menuUrl = newPortalTopMenu.menuListObj['menu_' + item.id].menuUrl;
 				
-				item.addEventListener('click', function () {
-					subMenuClickEvent('off', menuUrl);
-					notice_all_close();
-					//window.open(menuUrl, 'main', '');
-				});
-			});				
+				var menuAllList = document.createElement('li');
+				var menuAllListSpan = document.createElement('span');
+				menuAllListSpan.textContent = item.menuName;
+				menuAllList.appendChild(menuAllListSpan);
+				menuAllList.setAttribute("id", item.menuId);
+				menuAllList.setAttribute("data-menu-id", item.menuId);
+				if (!!item.iconUrl && item.iconUrl.split(" ").length > 0)  menuAllList.classList.add(item.iconUrl.split(" ")[1] + "_leftmenu");
+				menuAllList.classList.add('sortable-item');
+				
+				if (menuCount <= maxMenuCount) {
+					menuAllList.classList.add('on');
+					menuAllList.classList.add('menu-icon');
+				}
+				
+				menuAllList.addEventListener('click', expandMenuClickEvent.bind(menuAllList, item.menuUrl, item.openType));
+				
+				document.getElementById('menuListAll').appendChild(menuAllList);
+				//str += '<li id="'+item.menuId+'" data-companyorder='+ item.companyOrder +'><dl class="full_menu_toggleDL"><dt><span class="'+ item.iconUrl +'"></span></dt><dd>'+ ConvertCharToEntityReference(item.menuName) +'</dd></dl></li>';
+				
+				menuCount++;
+			}
+
+			if(packageType != 'mail'){
+			    //  메뉴 개수가 8개보다 작아서 메뉴정렬 버튼이 표출되지 않는 경우, 마지막에 버튼 추가
+                if (menuList.length <= maxMenuCount) {
+                    var menuResetBtn = document.createElement('li');
+                    var menuResetBtnSpan = document.createElement('span');
+                    menuResetBtnSpan.textContent = '<spring:message code="ezNewPortal.topMenu.hth08" />';
+                    menuResetBtn.appendChild(menuResetBtnSpan);
+                    menuResetBtn.setAttribute("id", "menuResetting");
+                    menuResetBtn.classList.add("icon_nav_menuset_leftmenu");
+                    menuResetBtn.addEventListener('click', menuReset);
+                    document.getElementById('menuListAll').appendChild(menuResetBtn);
+                }
+			}
 		}
 		
+		function expandMenuClickEvent(menuUrl, menuOpenType) {
+			offMenuAll();
+			var menuId = this.getAttribute("id");
+			if (!!document.getElementById("menu_" + menuId)) {
+				document.getElementById("menu_" + menuId).classList.add("on");
+			}
+			subMenuClickEvent('off', menuUrl, menuOpenType);
+			notice_all_close();
+		}
+		
+		
+		var menuReset = function () {
+			HTMLCollection.prototype.forEach = Array.prototype.forEach;
+			$('#menuListAll li').removeClass("on");							
+			$("#menuListAll .sortable-item").draggable({
+			    revert: "invalid",
+			    containment: "parent",
+			    zIndex: 100,
+			    start: function (event, ui) {
+			    	var dragElem = $(this);
+			    	dragElem.css({
+			    		"cursor": "move",
+			    		"opacity": "0.6"
+			    	});
+			    },
+			    snap:'#menuListAll li',
+			    stop : function(event, ui) {
+			    	var dragElem = $(this);
+			    	dragElem.css({
+			    		"cursor": "pointer",
+			    		"opacity": ""
+			    	});
+			    },
+			    helper : "clone"
+			});
+			  
+			$("#menuListAll .sortable-item").droppable({
+			    tolerance: "intersect",
+			    drop: function(event, ui) {
+				var dragElem = ui.draggable;
+				var dropElem = $(this);
+				changePosition(dragElem, dropElem);
+				if(newPortalTopMenu.isInitOrder === true) {
+					newPortalTopMenu.isInitOrder = false;
+				}
+			  }
+			});
+			
+			var sortedMenu = document.getElementById('menuListAll');
+			sortedMenu.className = 'full_menu_toggleUL_edit';
+
+			// 하단 메뉴 변경
+			var editMenuBtn = document.getElementById('editMenuBtn');
+			document.getElementById("editBtn").style.display = "none";
+			editMenuBtn.style.display = 'block';
+            $("#menuAllContainer ul").addClass("active");
+		}
 		
 		// 확장메뉴 버튼에서 나오는 메뉴리스트 및 이벤트
 		var setExpandMenuListEvent = function () {
 
 			setExpandMenuList(); // 확장메뉴 리스트
 			
-			// 편집모드로 변경 이벤트
-			var editBtn = document.getElementById('editBtn');
-			editBtn.addEventListener('click', function () {
-				HTMLCollection.prototype.forEach = Array.prototype.forEach;
-				
-				// 드래그앤드롭
-				$('#toggleMenu').sortable({
-					scroll: false,
-				    helper: 'clone',
-					activate: function () {
-						$("li.ui-sortable-placeholder").css("visibility", "visible");
-						$("li.ui-sortable-placeholder").css("border-right", "1px dashed #898989");
-						$("li.ui-sortable-placeholder").css("border-bottom", "1px dashed #898989");
-						
-						if(newPortalTopMenu.isInitOrder === true) {
-							newPortalTopMenu.isInitOrder = false;
-						}
-					},
-					change : function() {
-						$("li.ui-sortable-placeholder").css("visibility", "visible");
-						$("li.ui-sortable-placeholder").css("border-right", "1px dashed #898989");
-						$("li.ui-sortable-placeholder").css("border-bottom", "1px dashed #898989");
-					}
-				});
-				$('#toggleMenu').sortable("option", "disabled", false);
-				/* $('#toggleMenu').disableSelection(); */	
-				var sortedMenu = document.getElementById('toggleMenu');
-				sortedMenu.className = 'full_menu_toggleUL_edit';
-				
-				// 하단 메뉴 변경
-				var editMenuBtn = document.getElementById('editMenuBtn');
-				editBtn.style.display = 'none';
-				editMenuBtn.style.display = 'block';
-			});
-			
 			// 취소버튼
 			var editMenuCancel = document.getElementById('editMenuCancel');
 			editMenuCancel.addEventListener('click', function() {
-				
+				document.getElementById("editBtn").style.display = "block";
 				document.getElementById('editMenuBtn').style.display = 'none';
-				document.getElementById('editBtn').style.display = 'block';
+				$("#menuAllContainer ul").removeClass("active");
 				
-				var sortedMenu = document.getElementById('toggleMenu');
+				var sortedMenu = document.getElementById('menuListAll');
 				sortedMenu.className = 'full_menu_toggleUL';
 				
-				$('#toggleMenu').sortable();
-				$('#toggleMenu').sortable("option", "disabled", true);
+				$('#menuListAll').sortable();
+				$('#menuListAll').sortable("option", "disabled", true);
 				
 				// 취소하면 버튼 처음으로 재정렬
 				setExpandMenuList();
@@ -555,18 +771,18 @@
 			// 저장버튼
 			var editMenuSave = document.getElementById('editMenuSave');
 			editMenuSave.addEventListener('click', function() {
-				
+				document.getElementById("editBtn").style.display = "block";
 				document.getElementById('editMenuBtn').style = 'none';
-				document.getElementById('editBtn').style = 'block';
+				$("#menuAllContainer ul").removeClass("active");
+				 
+				var menuListAll = document.getElementById('menuListAll');
+				menuListAll.className = 'full_menu_toggleUL';
 				
-				var sortedMenu = document.getElementById('toggleMenu');
-				sortedMenu.className = 'full_menu_toggleUL';
-				
-				$('#toggleMenu').sortable();
-				$('#toggleMenu').sortable("option", "disabled", true);				
+				$('#menuListAll .sortable-item').draggable("disable");
+				$('#menuListAll .sortable-item').droppable("disable");
 				
 				HTMLCollection.prototype.forEach = Array.prototype.forEach;
-				var sortedMenu = document.getElementById('toggleMenu').getElementsByTagName('li');
+				var sortedMenu = document.getElementById('menuListAll').getElementsByClassName('sortable-item');
 				
 				var orderObj = [];
 				sortedMenu.forEach(function (item, index) {
@@ -604,100 +820,46 @@
 				}
 				
 			});			
-			
-			// 메뉴 순서 초기화 버튼
-			/* var editcompanyOrder = document.getElementById('editcompanyOrder');
-			editcompanyOrder.addEventListener('click', function() {
- 
-				var elements = document.getElementById('toggleMenu').childNodes;
-	 			Array.prototype.forEach.call(elements, function (item, index) { 				
-					newPortalTopMenu.companyOrder[index] = {
-						menuId: item.id,
-						companyOrder: item.dataset.companyorder*1,
-						iconUrl: newPortalTopMenu.menuListObj['menu_'+item.id].iconUrl,
-						menuName: newPortalTopMenu.menuListObj['menu_'+item.id].menuName,
-						menuUrl: newPortalTopMenu.menuListObj['menu_'+item.id].menuUrl,
-					};
-				});
-	 			
-	 			var temp = [];
-	 			for(var i=0; i<newPortalTopMenu.companyOrder.length; i++ ) {
-	 				for(var j=i; j<newPortalTopMenu.companyOrder.length; j++) {
-	 					if(newPortalTopMenu.companyOrder[i].companyOrder > newPortalTopMenu.companyOrder[j].companyOrder ) {
-	 						temp = newPortalTopMenu.companyOrder[i];
-	 						newPortalTopMenu.companyOrder[i] = newPortalTopMenu.companyOrder[j];
-	 						newPortalTopMenu.companyOrder[j] = temp;
-	 					}
-	 				}
-	 			};
-	 			
-				// 확장메뉴 재배치	
-	 			setExpandMenuList(newPortalTopMenu.companyOrder);
-				
-				// 메뉴 순서 초기화 값 true로 변경
-				newPortalTopMenu.isInitOrder = true;
-			});	 */		
-		}			
+		}
 		
-		// 확장메뉴 이벤트 모아둔 곳
-		var setExpandMenuEvent = function () {
-			// 확장버튼 UI 이벤트 설정
-			var topMenuFull = document.getElementById('topMenuFull');
-			topMenuFull.addEventListener('click', function () {
-				if (topMenuFull.className.indexOf('on') > -1) { // 닫을 때
-					subMenuClickEvent('off');
-				} else if (topMenuFull.className.indexOf('off') > -1) { // 열 때
-					subMenuClickEvent('on');
+		function changePosition(dragElem, dropElem) {
+			var menuListAllChildren = $("#menuListAll li");
+			var dragElemIndex = menuListAllChildren.index(dragElem);
+			var dropElemIndex = menuListAllChildren.index(dropElem);
+			var menuListAll = $('#menuListAll');
+			
+			dragElem.insertAfter(menuListAll.children().eq(dropElemIndex));
+			if (dragElemIndex > dropElemIndex) {
+				dropElem.insertAfter(menuListAll.children().eq(dragElemIndex));
+			} else {
+				if (dragElemIndex - 1 < 0) {
+					dropElem.insertBefore(menuListAll.children().eq(0));
+				} else {
+					dropElem.insertAfter(menuListAll.children().eq(dragElemIndex - 1));
 				}
+			}
+			
+			dragElem.css({
+				left: '0',
+			    top: '0'
 			});
 			
-			var topMenuFullRight = $('.countBox');
-			topMenuFullRight.click(function () {
-				if (topMenuFull.className.indexOf('on') > -1) { // 닫을 때
-					subMenuClickEvent('off');
-				} else if (topMenuFull.className.indexOf('off') > -1) { // 열 때
-					subMenuClickEvent('on');
-				}
-			});
-		}		
+			dropElem.css({
+				left: '0',
+			    top: '0'
+		    });
+		}
 		
 		// 메뉴 리스트의 사이즈 구하기
 		var getMenuListWidth = function () {
+			if (menuDisplayMode != "0") {
+				return;
+			}
+			
 			var elements = document.getElementById('mainMenuList').childNodes;
  			Array.prototype.forEach.call(elements, function (item, index) {
-				newPortalTopMenu.menuWidth[index] = item.offsetWidth;
+ 				newPortalTopMenu.menuWidth[index] = item.offsetWidth;
 			});	
-		}
-		
-		// 탑메뉴 숨김메뉴 개수 표시
-		var countTopMenuList = function () {
-			// 현재 메인메뉴의 width를 구하기
-			var listWidth = document.getElementById('mainMenuList').offsetWidth;
-			
-			var sumWidth = 0;
-			var menuCnt = 0;
-			var totalMenuCnt = 0;
-			// 각 메뉴들의 사이즈를 더해서 현재 메인메뉴의 width보다 작을때를 확인.
-			newPortalTopMenu.menuWidth.forEach(function (item, index) {
-				if (sumWidth < listWidth) {
-					sumWidth += (item*1);
-					if (sumWidth < listWidth) {
-						menuCnt++;
-					}
-				}
-				totalMenuCnt++;
-			});
-			var viewCnt = totalMenuCnt*1 - (menuCnt*1);
-			if (viewCnt > 0) {
-				$('#nav_count').attr('class','hidden_nav_count');
-				document.getElementById('nav_count').innerHTML = '+' + (totalMenuCnt*1 - (menuCnt*1));
-				
-				$('.countBox').css("display", "block");
-			} else {
-				$('#nav_count').attr('class','hidden_nav_count_off');
-				
-				$('.countBox').css("display", "none");
-			}
 		}
 		
 		var getSurveyPopupList = function() {
@@ -731,15 +893,19 @@
 		}
 		
 		var setLayer = function () {
-			document.getElementById("menu_toggle").style.display = "none";
-			var topMenuFull = document.getElementById('topMenuFull');
+			toggleAllMenu('off');
 			var topFrame = parent.document.getElementById('topFrame');
 			var bodyTag = document.getElementsByTagName('Body')[0];
 			
 			var screenHeight = screen.height;
 			topFrame.style.position = 'relative';
-			topFrame.style.minHeight = screenHeight+"px";
 			bodyTag.style.backgroundColor = 'rgba(0, 0, 0, 0.3)';
+			
+			if (menuDisplayMode == "1") {
+				document.querySelector('#mainMenuListLeft').classList.add('layer');
+				parent.document.getElementById('mainFrame').style.position = 'static';
+				$('#mainMenuListLeft li').addClass("layer");
+			}
 			
 			var popupArea = parent.document.getElementById("popupArea");
 			popupArea.style.height = (screenHeight) + "px";
@@ -1196,11 +1362,11 @@
     		popupDiv.appendChild(formElement);
     		 
     		parent.document.getElementById("popupArea").querySelector("#noticePopupLayer").appendChild(popupDiv);
-    		
-    		parent.document.getElementById("surv_popup").style.height = wHeight - 40 + "px";
-    		parent.document.getElementById("surv_popup").style.width = wWidth - 40 + "px";
-    		parent.document.getElementById("surv_popup").style.left = wLeft + "px";
-    		parent.document.getElementById("surv_popup").style.top = wTop + "px";
+
+			parent.document.getElementById("surv_popup").style.height = wHeight - 40 + "px";
+			parent.document.getElementById("surv_popup").style.width = wWidth - 40 + "px";
+			parent.document.getElementById("surv_popup").style.left = wLeft + "px";
+			parent.document.getElementById("surv_popup").style.top = wTop + "px";
     		parent.document.getElementById("surv_popup").style.zIndex = index + 1;
     		parent.document.getElementById("surv_popup").addEventListener("click", changeZIndex);
     		parent.document.getElementById("surv_inp_noticeCheck").addEventListener("change", function() {
@@ -1281,6 +1447,12 @@
 				document.getElementsByTagName("body")[0].style.backgroundColor = "";
 				topFrame.style.position = "";
 			}
+
+			var userAgent = navigator.userAgent.toLowerCase();
+
+			if (/iphone|ipod|ipad|android.*mobile/i.test(userAgent) || /tablet|ipad|android/i.test(userAgent) || navigator.maxTouchPoints > 4) {
+				window.parent.fixLayout();
+			}
 		}
 		
 		var notice_all_close = function () {
@@ -1293,6 +1465,12 @@
 				
 				popup.parentNode.removeChild(popup);
 			}
+			
+			if (menuDisplayMode == "1") {
+				document.querySelector('#mainMenuListLeft').classList.remove('layer');
+				parent.document.getElementById('mainFrame').style.position = 'relative';
+				$('#mainMenuListLeft li').removeClass("layer");
+			}
 		}
 		
 		function setCookie(name, value, expiredays) {
@@ -1300,6 +1478,23 @@
 			var expireDate = new Date(todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate(), 23, 59, 59);
 			document.cookie = name + "=" + encodeURIComponent( value ) + "; path=/; expires=" + expireDate.toGMTString() + ";";
 		}
+
+		<%--function getCookie(Name) {
+			var search = Name + "="
+			if (document.cookie.length > 0) { // 쿠키가 설정되어 있다면
+				offset = document.cookie.indexOf(search)
+
+				if (offset != -1) { // 쿠키가 존재하면
+					offset += search.length
+					// set index of beginning of value
+					end = document.cookie.indexOf(";", offset);
+					// 쿠키 값의 마지막 위치 인덱스 번호 설정
+					if (end == -1)
+						end = document.cookie.length
+					return unescape(document.cookie.substring(offset, end))
+				}
+			}
+		} --%>
 		
 		var officeBugPatch = function() {
 		}
@@ -1338,22 +1533,22 @@
 		
  		var newPortalTopMenuFunc = function () {
  			newPortalTopMenu.menuListArr = JSON.parse('${menuList}');
-		
 			setTopMenu();            // 헤더 전체 셋팅
 			setMainMenuList();       // 메인메뉴 리스트 출력
+			getQuickLink();		     // 퀵메뉴 리스트
+			setProfile();            // 프로파일 메뉴 세팅 
 			setUtilEvent();          // 유틸메뉴 이벤트 설정
+			setExpandMenuListEvent();// 확장메뉴 이벤트 설정			
 			getMenuListWidth();      // 메인메뉴 li별 사이즈 측정
-			countTopMenuList();      // 메인메뉴 카운팅
 			getNotiPopup();          // 팝업공지 불러오기
-			setExpandMenuListEvent();// 확장메뉴 이벤트 설정
-			setExpandMenuEvent();    // 확장메뉴 이벤트 설정
-			
+			if (parseInt(${pollingInterval}) > 0) {
+				startPolling(${pollingInterval});
+			}
 		}
  		
  		var showProgress = function(position) {
- 			
  			if (position == "notice") {
- 				document.getElementById("progressPanel").style.height = "56px"; 
+				document.getElementById("progressPanel").style.height = "100%";
  				parent.document.getElementById("popupArea").style.display = "block";
  			} else {
  				document.getElementById("progressPanel").style.height = "100%";
@@ -1370,27 +1565,471 @@
         	if (area === "notice") {
         		parent.document.getElementById("popupArea").style.display = "none";
         	}
+        	
+        	if (menuDisplayMode == "1") {
+				document.querySelector('#mainMenuListLeft').classList.remove('layer');
+				parent.document.getElementById('mainFrame').style.position = 'relative';
+				$('#mainMenuListLeft li').removeClass("layer");
+			}
         }
         
         /* 2022-10-14 홍승비 - 상단 메뉴 확장버튼 클릭하여 body 전체에 회색 영역 표출 시, 상단 메뉴가 아닌 회색 영역을 클릭하는 경우 확장메뉴 숨김처리 */
       	$("body").click(function (e) {
       		// 클릭한 영역에 다른 태그가 없고 topBody 또는 contentlayout topmenulayout 클래스를 가지는 태그만이 존재한다면, 확장된 메뉴 이외의 회색 영역을 클릭한 것이므로 메뉴를 닫는다.
       		// 회색 영역이 아닌 상단 메뉴 영역을 클릭한 경우, 메뉴가 확장된 상태를 유지한다.
-      		if ($(e.target).hasClass("topBody") || $(e.target).hasClass("contentlayout topmenulayout")) {
+      		if ($(e.target).hasClass("topBody") || $(e.target).hasClass("contentlayout topmenulayout") || $(e.target).hasClass("dimLayerOpen")) {
       			subMenuClickEvent('off');
       		}
       	});
+
+		<%-- function callAllUserTab() {
+			$.ajax({
+				type: "GET",
+				url: "/ezNewPortal/allUserTab.do",
+				dataType: "JSON",
+				success : function(data) {
+					makeAllUserTab(data);
+				}
+			});
+		}
+
+		function makeAllUserTab(json) {
+			var switchUserCompany = "<c:out value='${switchUserCompany}' />"
+
+			if (switchUserCompany !== "Y") return;
+
+			var list = document.createElement("li");
+			list.className = "contentlayout_right";
+
+			var select = document.createElement("select");
+			select.id = "switchUser";
+			select.style.height = "54px";
+			select.style.padding = "0 6px";
+			list.append(select);
+
+			for (var i = 0; i < json.length; i++) {
+				var option = document.createElement("option");
+				option.setAttribute("data-dept", json[i].deptId);
+				option.setAttribute("data-company", json[i].companyId);
+				option.setAttribute("data-job", json[i].jobId);
+				option.value = json[i].companyId;
+				option.text = json[i].companyName + " (" + json[i].deptName + " " + json[i].title + ")";
+				select.appendChild(option);
+				option.selected = json[i].curr;
+			}
+			var last = document.querySelector("#top .contentlayout_none");
+			document.querySelector("#top > ul").insertBefore(list, last);
+
+			select.addEventListener("change", function() {
+				switchAllUserInfo();
+			});
+		}
+
+		function switchAllUserInfo() {
+			var select = document.getElementById("switchUser").selectedOptions[0];
+			var json = {};
+			json['companyId'] = select.getAttribute("data-company");
+			json['deptId'] = select.getAttribute("data-dept");
+			json['jobId'] = select.getAttribute("data-job");
+
+			$.ajax({
+				type: "POST",
+				url: "/ezNewPortal/switchAllUserInfo.do",
+				contentType: "application/json; charset=UTF-8",
+				data: JSON.stringify(json),
+				success : function(text) {
+					if (text === "true") parent.location.reload();
+				}
+			});
+		} --%>
+		
+		var getQuickLink = function () {
+	 		var xhr = new XMLHttpRequest();
+	 		xhr.onload = function () {
+	 			if (xhr.status >= 200 && xhr.status < 300) {
+	 				var parseData = JSON.parse(xhr.responseText);
+	 				setQuickMenuList(parseData.data);
+	 			} else {
+	 				console.error(xhr.responseText);	
+	 			}
+	 		};
+	 		xhr.open('GET', '/ezNewPortal/getQuickLink.do'); 		
+	 		xhr.setRequestHeader('Content-Type', 'application/json');
+	 		xhr.send();
+	 	}
+		
+		var setProfile = function () {
+			$.ajax({
+				type: "GET",
+				url: "/ezNewPortal/allUserTab.do",
+				dataType: "JSON",
+				success : function(result) {
+					var switchUserCompany = "<c:out value='${switchUserCompany}' />"
+					
+					var userJobList = result.userJobList;
+					var currJobInfo = result.currJobInfo;
+					var profileContainer = document.getElementById('profileContainer');
+					var btnTabDiv = profileContainer.firstChild; //환경설정, 로그아웃 버튼
+					
+					var imgDiv = document.createElement('div');
+					imgDiv.classList.add('profile_img');
+					var userImg = document.createElement('img');
+					
+					if (userPhotoSrc != "") {
+						userImg.setAttribute("src","/ezCommon/downloadAttach.do?filePath=" + userPhotoSrc);
+					} else {
+						userImg.setAttribute("src", "/images/ezNewPortal/info_pic_none.png");
+					}
+					imgDiv.appendChild(userImg);
+					profileContainer.insertBefore(imgDiv, btnTabDiv);
+					
+					var dl = document.createElement('dl');
+					var dt = document.createElement('dt');
+					
+					if (userPrimary == "1") {
+						dt.textContent = result.userName + " " + currJobInfo.title;
+					} else {
+						dt.textContent = result.userName2 + " " + currJobInfo.title2;
+					}
+					
+					var dd = document.createElement('dd');
+					if (userPrimary == "1") {
+						dd.textContent = currJobInfo.deptName;
+					} else {
+						dd.textContent = currJobInfo.deptName2;
+					}
+					dl.appendChild(dt);
+					dl.appendChild(dd);
+					profileContainer.insertBefore(dl, btnTabDiv);
+					
+					if (switchUserCompany == "Y") {
+						var selectDiv = document.createElement('div');
+						selectDiv.classList.add('select_div');
+						var selectSpan = document.createElement('span');
+						selectSpan.classList.add('select_box');
+						selectSpan.textContent = "<spring:message code='ezNewPortal.topMenu.hth07' />";
+						selectSpan.addEventListener('click', function() {
+							event.target.classList.toggle('on');
+						});
+						selectDiv.appendChild(selectSpan);
+						
+						var ul = document.createElement('ul');
+						
+						for (var i = 0; i < userJobList.length; i++) {
+							var li = document.createElement("li");
+							li.setAttribute("data-dept", userJobList[i].deptId);
+							li.setAttribute("data-company", userJobList[i].companyId);
+							li.setAttribute("data-job", userJobList[i].jobId);
+							if (userPrimary == "1") {
+								li.textContent = userJobList[i].companyName + " (" + userJobList[i].deptName + " " + userJobList[i].title + ")";
+							} else {
+								li.textContent = userJobList[i].companyName2 + " (" + userJobList[i].deptName2 + " " + userJobList[i].title2 + ")";
+							}
+							
+							ul.appendChild(li);
+							li.addEventListener('click', function () {
+								switchAllUserInfo();
+							});
+						}
+						selectDiv.appendChild(ul);
+						
+						profileContainer.insertBefore(selectDiv, btnTabDiv);
+					}
+				}
+			});
+			
+		}
+		
+		function switchAllUserInfo() {
+			var selectedLi = event.target;
+			var json = {};
+			json['companyId'] = selectedLi.getAttribute("data-company");
+			json['deptId'] = selectedLi.getAttribute("data-dept");
+			json['jobId'] = selectedLi.getAttribute("data-job");
+
+			$.ajax({
+				type: "POST",
+				url: "/ezNewPortal/switchAllUserInfo.do",
+				contentType: "application/json; charset=UTF-8",
+				data: JSON.stringify(json),
+				success : function(text) {
+					if (text === "true") {
+						parent.window.location.reload();
+					}
+				}
+			});
+		}
+		
+		function setQuickMenuList(quickmenuData) {
+			var quickMenu = document.querySelector('#quickMenuList');
+			var quickList = quickmenuData.quickLinkList;
+			
+			while(quickMenu.hasChildNodes()) {
+	 			quickMenu.removeChild(quickMenu.firstChild);
+	 		}
+			
+			if (quickList == null || quickList.length == 0) {
+				var dlEl = document.createElement('dl');
+				dlEl.className = 'nodata';
+				
+				var dtEl = document.createElement('dt');
+				
+				var imgEl = document.createElement('img');
+				imgEl.src = '/images/kr/main/noData_sIcon.png';
+				
+				var ddEl = document.createElement('dd');
+				ddEl.textContent =  '"<spring:message code="main.t00026" />"';
+				
+				dtEl.appendChild(imgEl);
+				
+				dlEl.appendChild(dtEl);
+				dlEl.appendChild(ddEl);
+				
+				quickMenu.appendChild(dlEl);
+				return;
+			}
+			
+			quickList.forEach(function (item, index) {
+				var li = document.createElement('li');
+				var div = document.createElement('div');
+				div.classList.add("quick_img");
+				
+				var img = document.createElement('img');
+	 			img.src = item.linkTypeUrl;
+	 			
+	 			div.appendChild(img);
+	 			li.appendChild(div);
+	 			
+	 			var spanText = document.createElement('span');
+	 			
+	 			if (userLang == "2") { // 영어
+	 				spanText.textContent = item.quickLinkName2;
+	 			} else if (userLang == "3") { // 일본어
+	 				spanText.textContent = item.quickLinkName3;
+	 			} else { // 기본 언어
+	 				spanText.textContent = item.quickLinkName;
+	 			}
+	 			
+	 			li.appendChild(spanText);
+	 			li.addEventListener('click', function(){
+					var url = item.url;
+					
+					if (url.indexOf("http:") == -1 && url.indexOf("https:") == -1) {
+						url = "http://" + url;
+					}
+					
+					// size가 FULL인 경우 vs 아닌 경우
+					if(item.quickSize === 'FULL') {
+						window.open( url, '_blank', '');
+					} else if (item.quickSize.indexOf(':') > 0) {
+						var sizeArr = item.quickSize.split(':');
+						var popupX = (window.screen.width / 2) - (sizeArr[0] /2);
+						var popupY = (window.screen.height / 2) - (sizeArr[1] /2);
+						var option = 'width='+sizeArr[0]+'px,height='+sizeArr[1]+'px, left='+popupX+', top='+popupY+', status = no, toolbar=no, menubar=no,location=no, resizable=0';
+						window.open(url, '_blank', option);
+					}
+				}); 
+	 			
+	 			quickMenu.appendChild(li);
+			});
+            //str += '<li><div class="quick_img"><img src="images/quick_sample.png"></div><span>홈페이지</span></li>'
+		}
  		
  		// 시작지점
 		newPortalTopMenuFunc();	
 		
-		window.onresize = function () {
-			countTopMenuList();      // 메인메뉴 카운팅
-		}
-		
 		window.onload = function() {
+			//callAllUserTab();
+            if ("<c:out value='${useStatMenu}' />" === "YES") {
+                var menuTracker = new ClickTracker().addTarget('[data-menu-id]').addExclude('.ui-draggable').addDataset('menuId').start();
+            }
+            
 			setUseActiveX();		 // activeX 설치 (useActiveX가 YES일때)
 		}
+		
+		function removeAllChildernElem(element){
+			while (element.firstChild) {
+				element.removeChild(element.firstChild);
+			}
+		}
+		
+		function toggleAllMenu(mode) {
+			var menuAllContainer = $('#menuAllContainer');
+			var mainFrame = window.parent.document.getElementById("mainFrame");
+			if (mode == "on" || (mode == null && !menuAllContainer.hasClass('on'))) {
+				subMenuClickEvent('off');
+				dimLayerControl('open');
+				menuAllContainer.addClass('on');
+            } else {
+            	dimLayerControl('close');
+            	menuAllContainer.removeClass('on');
+            }
+		}
+		
+		function toggleDivMenu(elem, mode) {
+			if (mode == "on" || (typeof mode == "undefined" && getComputedStyle(elem).display == "none")) {
+	        	subMenuClickEvent('off');
+	        	elem.style.display = "block";
+	        	dimLayerControl('open');
+	        } else {
+	        	elem.style.display = "none";
+	            dimLayerControl('close');
+	        }
+		}
+		
+		function dimLayerControl(mode) {
+			var mainFrame = window.parent.document.getElementById("mainFrame");
+			if(mode == "open") {
+				document.querySelector('body').style.background = "rgba(0,0,0,0.3)";
+	            document.querySelector('body').classList.add("dimLayerOpen");
+                window.parent.document.getElementById("topFrame").style.zIndex = "5";
+                if (menuDisplayMode == "0") {
+                	mainFrame.style.float = "right";
+                } else {
+                	mainFrame.style.position = "static";
+					var userAgent = navigator.userAgent.toLowerCase();
+					
+					if (/iphone|ipod|ipad|android.*mobile/i.test(userAgent) || /tablet|ipad|android/i.test(userAgent) || navigator.maxTouchPoints > 4) {
+						window.parent.fixLayout();
+					}
+                }
+			} else if (mode == "close") {
+				document.querySelector('body').style.background = "rgba(0,0,0,0)";
+                document.querySelector('body').classList.remove("dimLayerOpen");
+                $(window.parent.document).find("#topFrame").css("z-index","0");
+                if (menuDisplayMode == "0") {
+                	mainFrame.style.float = "none";
+                } else {
+                	mainFrame.style.position = "relative";
+                }
+			}
+			
+			var userAgent = navigator.userAgent.toLowerCase();
+			
+			if (/iphone|ipod|ipad|android.*mobile/i.test(userAgent) || /tablet|ipad|android/i.test(userAgent) || navigator.maxTouchPoints > 4) {
+				window.parent.fixLayout();
+			}
+		}
+		
+		var lastNotiPollTime = "${lastNotiPollTime}";
+		
+		function pollNewNoti() {
+		    $.ajax({
+		        url: '/ezNotification/getNewNotiCnt.do', 
+		        method: 'GET',
+		        dataType : 'JSON',
+		        data: {
+		        	lastNotiPollTime: lastNotiPollTime
+				},
+		        success: function(response) {
+		        	var newNotiCnt = response.newNotiCnt;
+		        	if (parseInt(newNotiCnt) > 0) {
+		        		parent.document.getElementById("iframeNoti").src = "/ezNotification/notificationMain.do";
+		        	}
+		        	lastNotiPollTime = response.lastNotiPollTime;
+		        },
+		        error: function(xhr, status, error) {
+		            console.log(error);
+		        }
+		    });
+		}
+
+		// 일정한 간격으로 pollUnreadData 함수를 실행하는 함수
+		function startPolling(interval) {
+		    setInterval(function() {
+		    	pollNewNoti();
+		    }, interval);
+		}
+		
+		function toggleNoti() {
+			//subMenuClickEvent('off');
+			if (parent.document.getElementById("iframeShawdowLayer").style.display == "block") {
+				closeNoti();
+			} else {
+				openNoti();
+			}
+		}
+
+		function openNoti() {
+			pollNewNoti();
+			subMenuClickEvent('off');
+			var screenHeight = screen.height;
+			var topFrame = parent.document.getElementById('iframeShawdowLayer');
+			topFrame.style.minHeight = screenHeight+"px";
+			topFrame.style.backgroundColor = 'rgba(0, 0, 0, 0.3)';
+			topFrame.style.display = "block";
+			topFrame.style.zIndex = "9999";
+			topFrame.style.top = "60px";
+			topFrame.style.position = "absolute";
+			
+			var userAgent = navigator.userAgent.toLowerCase();
+			
+			if (/iphone|ipod|ipad|android.*mobile/i.test(userAgent) || /tablet|ipad|android/i.test(userAgent) || navigator.maxTouchPoints > 4) {
+				window.parent.fixLayout();
+			}
+			
+			if (menuDisplayMode == '1') {
+				topFrame.style.width = "calc(100vw - 81px)";
+			} else {
+				topFrame.style.width = "100vw";
+			}
+			//parent.document.getElementById('topFrame').style.position = 'relative';
+		}
+
+		function closeNoti() {
+			parent.document.getElementById("iframeShawdowLayer").style.display = "none";
+		}
+
+		// 겸직
+		function callAllUserTab() {
+			$.ajax({
+				type: "GET",
+				url: "/ezNewPortal/allUserTab.do",
+				dataType: "JSON",
+				success : function(data) {
+					makeAllUserTab(data);
+				}
+			});
+		}
+
+		function makeAllUserTab(json) {
+			var switchUserCompany = "<c:out value='${switchUserCompany}' />"
+
+			if (switchUserCompany !== "Y") return;
+
+			var wrap = document.getElementById("listSwitch");
+			var select = document.createElement("select");
+			select.id = "switchUser";
+			select.style.maxWidth = "80px"; // 길이 임시조치
+			// select.style.padding = "0 6px";
+			// list.append(select);
+			wrap.append(select);
+
+			for (var i = 0; i < json.length; i++) {
+				var option = document.createElement("option");
+				option.setAttribute("data-dept", json[i].deptId);
+				option.setAttribute("data-company", json[i].companyId);
+				option.setAttribute("data-job", json[i].jobId);
+				option.value = json[i].companyId;
+				option.text = json[i].companyName + " (" + json[i].deptName + " " + json[i].title + ")";
+				select.appendChild(option);
+				option.selected = json[i].curr;
+			}
+
+			select.addEventListener("change", function() {
+				switchAllUserInfo();
+			});
+		}
+		
+		function toggleTopSearch() {
+			 $(".employee_search").toggleClass("active");
+		}
+
+		function offMenuAll() {
+			$(".lnb_list li").removeClass("on");
+			$(".navUL li").removeClass("on");
+		}
+
 		</script>
 		<iframe name="AttachDownFrame" id="AttachDownFrame" width=0 height=0 frameborder=0 marginheight=0 marginwidth=0 scrolling=no style="display:none"></iframe>	
 	</body>

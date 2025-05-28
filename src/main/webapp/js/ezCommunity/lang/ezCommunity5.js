@@ -56,3 +56,6 @@ var strLang89 = "Please select a file to delete.";
 
 /* 2021-12-09 홍승비 - 확장자 관련 메세지 추가 */
 var srtLangHSBEx01 = "Unacceptable extension.";
+
+// 2024-06-28 민지수 - 커뮤니티 > 첨부파일 드래그 앤 드롭 안내 메세지 추가
+var strLangMJS01 = "Bạn có thể kéo và thả để thêm tệp và thay đổi thứ tự của các tệp đã thêm.";

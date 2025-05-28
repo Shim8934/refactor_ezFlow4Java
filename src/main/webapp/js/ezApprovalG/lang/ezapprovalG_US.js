@@ -684,7 +684,7 @@ var strLang1027 = "Fixed comments";
 var strLang1028 = "Year";
 var strLang1029 = "Month";
 var strLang1030 = "Day";
-var strLang1031 = "Can not post email / approval-document to photo board or anonymous board or url board.";
+var strLang1031 = "Posts are only allowed on general and Q&A boards.";
 var strLang1038 = "외부발송문서 본문에는 이미지와 링크가 들어갈 수 없습니다.";
 var strLang1039 = "Selected user is out of office.</br>Would you like to add it?";
 
@@ -1164,3 +1164,50 @@ var strLang974 = "Please select a receiving group.";
 
 /* 2023-08-11 민지수 - 전자결재 > 양식버전 다를 시 오류 메세지 추가 */
 var strLang975 = "The form version is different and cannot be reused.";
+
+/* 2023-05-16 이가은 - 일괄접수 관련 메세지 추가 */
+var strLangLGEAR01 = "The batch has been accepted.";
+var strLangLGEAR02 = "An error occurred during batch reception.<br>";
+var strLangLGEAR03 = "The batch recipient has been transferred.";
+var strLangLGEAR04 = "An error occurred during the batch recipient's pre-decision.<br>";
+
+//2024-04-11 조수빈 - 일괄접수 관련 누락 메세지 추가
+var strLangJSBAP02 = "Would you like to proceed with batch submission? <br>Documents with forwarding status, implementation statements and agreements, and documents with separate attachments are excluded.";
+var strLangJSBAP03 = "Would you like to proceed with batch submission and final approval? <br>Documents with forwarding status, implementation statements and agreements, and documents with separate attachments are excluded.";
+
+var strJangJIH04 = "Please specify a start date faster than the end date."
+
+var strLangKWC01 = "Nonelectronic documents cannot be reused.";
+var strLangKWC02 = "The form has been deleted and cannot be reused.";
+
+/* 2024-12-27 홍승비 - 기록물 배부대장 > 배부한 문서가 삭제된 경우 알러트를 표출하기 위한 메세지 추가 */
+var strLangHSBDR01 = "The specified distribution document is a deleted document and cannot be viewed.";
+
+var strLangKMH01 = "Would you like to proceed with bulk designation?<br>Documents with a approval status of returned and documents with a status of agreement are excluded";
+
+var strLangJJE01 = "The department does not receive approval documents.\nIt is excluded from favorites."
+
+/* 전자결재 헤더 숨기기 기능 */
+var ezApproval_headerHide01 = "hide header";
+var ezApproval_headerHide02 = "show header";
+
+/* 2024-12-23 이가은 - 전자결재 일괄배부 기능 추가 */
+var ezApproval_allBeabu01 = "Would you like to proceed with the bulk distribution?";
+var ezApproval_allBeabu02 = "Agreements or returned documents are excluded from the list.";
+
+/* 요약전 에디터 기능 */
+var strLangJIH_Summary01 = "The summary has been successfully saved.";
+var strLangJIH_Summary02 = "You cannot save an empty summary.";
+var strLangJIH_Summary03 = "Invalid access.";
+var strLangJIH_Summary04 = "Unable to load the summary.";
+var strLangJIH_Summary05 = "Summary Info"
+
+/* 전자결재 사인 그리기 기능 */
+var strLangHIH_signDraw01 = "Please sign and then approve.";
+
+/* 2025-05-12 김수연 aprmanage_Cross.js 하드코딩 수정 */
+var strLangAssignedList = "Assignment list";
+var strLangDeptInbox = "Dept. receipt folder";
+
+var strLangAtachHIK_01 = "Approval attach can be up to "; 
+var strLangAtachHIK_02 = "MB."; 

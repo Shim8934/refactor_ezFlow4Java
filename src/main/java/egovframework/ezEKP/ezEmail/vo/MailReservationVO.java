@@ -7,7 +7,8 @@ public class MailReservationVO {
 	private String subject;
 	private String modify;
 	private String connUrl;
-	
+	private String sender;
+
 	public String getMessageId() {
 		return messageId;
 	}
@@ -38,11 +39,17 @@ public class MailReservationVO {
 	public void setConnUrl(String connUrl) {
 		this.connUrl = connUrl;
 	}
+	public String getSender() {
+		return sender;
+	}
+	public void setSender(String sender) {
+		this.sender = sender;
+	}
 	
 	@Override
 	public String toString() {
 		return "MailReservationVO [messageId=" + messageId + ", sendDate=" + sendDate + ", subject=" + subject
-				+ ", modify=" + modify + ", connUrl=" + connUrl + "]";
+				+ ", modify=" + modify + ", connUrl=" + connUrl + ", sender=" + sender + "]";
 	}
 	
 }

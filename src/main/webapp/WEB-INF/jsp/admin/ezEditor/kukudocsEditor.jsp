@@ -74,6 +74,8 @@
 
 	        function CellCheckField(a, b) {
 	            if (parent.Attribute_Write != undefined) {
+                	parent.Attribute_Write("");
+                	
 	                var selectE = kukudocsEditor.GetCurrentElement("TD");
 	
 	                if (Array.isArray(selectE)) {
@@ -85,6 +87,7 @@
 	                if (selectE != null && selectE.tagName == "TD") {
 	                    parent.Attribute_Write(GetAttribute(selectE, "id"));
 	                }
+	                
 	            }
 	        }
 			
@@ -323,13 +326,7 @@
 		    		lang = "ja";
 		    		break;
 		    	case "4": 
-		    		lang = "zh";
-		    		break;
-		    	case "5": 
-		    		lang = "vi";
-		    		break;
-		    	case "6": 
-		    		lang = "id";
+		    		lang = "cn";
 		    		break;
 		    	default :
 		    		lang = "en";
@@ -356,29 +353,29 @@
 			
 			// 폰트 크기 리스트 설정
 			var fontSize = [
-				{name:'8px',  value:'8px'},
-				{name:'9px',  value:'9px'},
-				{name:'10px', value:'10px'},
-				{name:'11px', value:'11px'},
-				{name:'12px', value:'12px'},
-				{name:'13px', value:'13px'},
-				{name:'14px', value:'14px'},
-				{name:'15px', value:'15px'},
-				{name:'16px', value:'16px'},
-				{name:'18px', value:'18px'},
-				{name:'20px', value:'20px'},
-				{name:'22px', value:'22px'},
-				{name:'24px', value:'24px'},
-				{name:'26px', value:'26px'},
-				{name:'30px', value:'30px'},
-				{name:'36px', value:'36px'},
-				{name:'42px', value:'42px'},
-				{name:'48px', value:'48px'},
-				{name:'54px', value:'54px'},
-				{name:'72px', value:'72px'},
-				{name:'80px', value:'80px'},
-				{name:'88px', value:'88px'},
-				{name:'100px', value:'100px'}
+				{name:'8pt',  value:'8pt'},
+                {name:'9pt',  value:'9pt'},
+                {name:'10pt', value:'10pt'},
+                {name:'11pt', value:'11pt'},
+                {name:'12pt', value:'12pt'},
+                {name:'13pt', value:'13pt'},
+                {name:'14pt', value:'14pt'},
+                {name:'15pt', value:'15pt'},
+                {name:'16pt', value:'16pt'},
+                {name:'18pt', value:'18pt'},
+                {name:'20pt', value:'20pt'},
+                {name:'22pt', value:'22pt'},
+                {name:'24pt', value:'24pt'},
+                {name:'26pt', value:'26pt'},
+                {name:'30pt', value:'30pt'},
+                {name:'36pt', value:'36pt'},
+                {name:'42pt', value:'42pt'},
+                {name:'48pt', value:'48pt'},
+                {name:'54pt', value:'54pt'},
+                {name:'72pt', value:'72pt'},
+                {name:'80pt', value:'80pt'},
+                {name:'88pt', value:'88pt'},
+                {name:'100pt', value:'100pt'}
 			];
 			
 			// 폰트 리스트 설정
@@ -426,7 +423,7 @@
 	            defaultTableWidth : 700,
 	            customMagicLineStyle : 'background-color:#888;',
 	            customAlignMenu : customAlignMenu,
-	            useMenuBar : false,
+	            useMenuBar : true,
 	            useHTMLMode : useHTMLMode,
 	            useTextMode : false,
 	            usePreviewMode : false,
@@ -441,8 +438,8 @@
 	            errorImageURL : '/js/ezEditor/kukudocsEditor/images/error.png',
 	            imageUploadURL : imageUploadURL,
 	            Editor_Complete : Editor_Complete,
-	            Mouse_event : {'keyup' : CellCheckField},
-	            Key_event : {'mouseup' : CellCheckField},
+	            Key_event : { keyup : CellCheckField },
+	            Mouse_event : { click : CellCheckField},
 	            useLockMenu : true,
 	            cell_lock_name : 'cell_lock',
 	            lockImageURL : '/images/lock.png',

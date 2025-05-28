@@ -18,7 +18,7 @@ import egovframework.ezEKP.ezEmail.vo.MailPOP3VO;
 import egovframework.ezEKP.ezEmail.vo.MailReadVO;
 import egovframework.ezEKP.ezEmail.vo.MailReservationVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
-import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzEmailDAO")
 public class EzEmailDAO extends EgovAbstractDAO {
@@ -261,5 +261,13 @@ public class EzEmailDAO extends EgovAbstractDAO {
 	public int deleteMailboxProgress(Map<String, Object> map) {
 		return delete("EzEmailDAO.deleteMailboxProgress", map);
 	}
+
+	// 승인메일
+	public int checkApprMailApprover(Map<String, Object> map) {
+		return (int) select("EzEmailDAO.checkApprMailApprover", map);
+	}
 	
+	public void cancelMailByMailUid(MailDeletedIdVO mailDeletedIdVO) {
+		delete("EzEmailDAO.cancelMailByMailUid", mailDeletedIdVO);
+	}
 }

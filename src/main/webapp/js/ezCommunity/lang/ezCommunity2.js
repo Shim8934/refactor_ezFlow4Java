@@ -48,11 +48,14 @@ var strLangLHM01 = "Cannot be longer than ";
 //2018-01-12 강민수92
 var strLang85 = "You must upload an image file.";
 //2018-02-13 장진혁
-var strLang86 = "No My Community";
-var strLang87 = "Join the Community";
+var strLang86 = "You aren't in any communities...";
+var strLang87 = "Join a Community!";
 var strLang88 = "No communities open";
 
 var strLang89 = "Please select a file to delete.";
 
 /* 2021-12-09 홍승비 - 확장자 관련 메세지 추가 */
 var srtLangHSBEx01 = "Unacceptable extension.";
+
+// 2024-06-28 민지수 - 커뮤니티 > 첨부파일 드래그 앤 드롭 안내 메세지 추가
+var strLangMJS01 = "You can drag and drop to add files and change the order of added files.";

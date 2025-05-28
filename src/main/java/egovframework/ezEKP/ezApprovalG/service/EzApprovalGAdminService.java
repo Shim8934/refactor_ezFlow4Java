@@ -66,6 +66,8 @@ public interface EzApprovalGAdminService {
 
 	public String getTaskCategoryNodeExist(String categoryType, String categoryCode, String companyID, int tenantID, String approvalFlag) throws Exception;
 
+	public String getTaskCategoryNodeCnt(String categoryType, String categoryCode, String companyID, int tenantID, String approvalFlag) throws Exception;
+
 	public String removeTaskCategory(String categoryType, String categoryCode, String companyID, int tenantID, String approvalFlag) throws Exception;
 
 	public String getTaskCodeDuplicate(String taskCode, String companyID, int tenantID) throws Exception;
@@ -86,7 +88,7 @@ public interface EzApprovalGAdminService {
 	
 	public String getTaskHistory(String taskCode, String companyID, String lang, int tenantID, String offset) throws Exception;
 	
-	public String getTaskFullList(String deptCode, String pageSize, String pageNo, String langType, String companyID, int tenantID) throws Exception;
+	public String getTaskFullList(String deptCode, String pageSize, String pageNo, String langType, String companyID, int tenantID, String title, String code, String flag, String orderOption1, String orderOption2) throws Exception;
 	
 	public String getSealList(String realPath, String listFlag, String companyID, String lang, int tenantID, String offset) throws Exception;
 
@@ -146,7 +148,8 @@ public interface EzApprovalGAdminService {
 	
 	public String moveDocList(String strMoveListIDInfo, String SourceContID, String TargetContID, String chkAll, String companyID, int tenantID) throws Exception;
 
-	public String deleteDocList(String xmlPara, String offset, String companyID, int tenantID) throws Exception;
+	/* 2024-06-04 홍승비 - 현재 사용되지 않는 메서드로 확인하여 주석처리 */
+	// public String deleteDocList(String xmlPara, String offset, String companyID, int tenantID) throws Exception;
 	
 	public String getSecurityType(String selected, LoginVO userInfo, String companyID, String approvalFlag) throws Exception;
 
@@ -158,6 +161,8 @@ public interface EzApprovalGAdminService {
 
 	public String getFormAprRuleLine(String formID, String companyID, int tenantID) throws Exception;
 
+	/* 2024-04-19 홍승비 - 특수문서함 관련 기능 > 호출되지 않는 URL로 확인, 관련 메서드와 쿼리 전체 주석처리 */
+	/*
 	public String getSpecialContList(String deptID, String companyID, String lang, int tenantID, String approvalFlag) throws Exception;
 
 	public String getSpecialContCode(String contType, String companyID, String lang, int tenantID) throws Exception;
@@ -169,7 +174,8 @@ public interface EzApprovalGAdminService {
 	public String delSpecialCont(ApprGContInfoVO vo, int tenantID) throws Exception;
 	
 	public String changeSpecialContSN(String deptID, String sContType, String sSn, String tContType, String tSn, String companyID, int tenantID) throws Exception;
-
+	*/
+	
 	public List<ApprGFormConnInfoVO> getFormConnInfo() throws Exception;
 	
 	public String editApprovalDoc(String docID, String companyID, String formMHT, String formHTML, String realPath, LoginVO userInfo, String filePath, String htmlData) throws Exception;
@@ -180,17 +186,17 @@ public interface EzApprovalGAdminService {
 	
 	public String getParentContName(String formID, String companyID, int tenantID, String langType) throws Exception;
 	
-	public int getContDocListCountjson(String containerID, String userID, String userSecurityCode, boolean publicFlag, String subQuery, String companyID, int tenantID) throws Exception;
+	public int getContDocListCountjson(String containerID, String userID, String userSecurityCode, boolean publicFlag, String companyID, int tenantID, Map<String,Object> queryMap) throws Exception;
 	
-	public int getDeleteDocListCountjson(String userID, String userSecurityCode, boolean publicFlag, String subQuery, String companyID, int tenantID) throws Exception;
+	public int getDeleteDocListCountjson(String userID, String userSecurityCode, boolean publicFlag, String companyID, int tenantID, Map<String,Object> queryMap) throws Exception;
 	
-	public List<ApprGDocListVO> getContDocList_json(String containerID, String userID, String userSecurityCode, boolean publicFlag, String subQuery, int startRow, int pageSize, String pageNum, String orderCell, String orderOption, int totalcnt, String companyID, String lang, int tenantID, String offset, Locale locale) throws Exception;
+	public List<ApprGDocListVO> getContDocList_json(String containerID, String userID, String userSecurityCode, boolean publicFlag, int startRow, int pageSize, String pageNum, String orderCell, String orderOption, int totalcnt, String companyID, String lang, int tenantID, String offset, Locale locale, Map<String,Object> queryMap) throws Exception;
 
 	public String getIsUse(String code1, String code2, String companyID, String userLang, int tenantID) throws Exception;
 	
 	public String deleteDocListjson(String[] DocDelIDArr, String[] DocDelNoArr, String[] DocDelTitleArr, String[] DocDelWriterNameArr, String[] DocDelDeptNameArr,String deleteDay, String DeluserId, String offset, String companyID, int tenantID) throws Exception;
 
-	public List<ApprGDocListVO> getDeleteDocList_json(String userID, String subQuery, int startRow, int pageSize, String pageNum, int totalcnt, String companyID, int tenantID, String offset, String lang, Locale locale) throws Exception;
+	public List<ApprGDocListVO> getDeleteDocList_json(String userID, int startRow, int pageSize, String pageNum, int totalcnt, String companyID, int tenantID, String offset, String lang, Locale locale, Map<String,Object> queryMap) throws Exception;
 	
 	public String getExAttribute(String buJaeId, int tenantID) throws Exception;
 	
@@ -219,9 +225,10 @@ public interface EzApprovalGAdminService {
 
 	String deleteShareDocDir(String ownerId, int tenantId) throws Exception;
 	
-	public String getSendOutDocList(String userID, String deptID, String mode, String pageSize, String pageNum, String sortHeader, String sortOption, String companyID, String userLang, int tenantID, String offset, String searchQuery) throws Exception;
+	public String getSendOutDocList(String userID, String deptID, String mode, String pageSize, String pageNum, String sortHeader, String sortOption, String companyID, String userLang, int tenantID, String offset, Map<String,Object> queryMap) throws Exception;
 
-	public String getAdminSearchDocList(
+	/* 2024-06-04 홍승비 - 구버전 전자결재 전체문서조회(완료문서) 문서목록 호출 함수 > 호출되지 않는 URL로 확인, 관련 메서드와 쿼리 주석처리 */
+	/*public String getAdminSearchDocList(
 			String formID,
 			String formName,
 			String docNumber,
@@ -245,7 +252,7 @@ public interface EzApprovalGAdminService {
 			String keyword,
 			Locale locale
 			) throws Exception;
-
+	*/
 	public String auditApprLineManage(String loginCookie, HttpServletRequest request, HttpServletResponse response, ModelAndView model) throws Exception;
 
 	public String getAuditApprLineList(String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception;
@@ -271,5 +278,17 @@ public interface EzApprovalGAdminService {
 	public int cloneMultipleCabinets(String regYear, List<Map<String, Object>> cabinetList, String strLang, String companyID, int tenantID) throws Exception;
 	
 	/* 2024-04-05 전인하 - 전자결재G > 기록물관리 > 단위업무 관리 > 총 단위업무 갯수 카운트 호출 */
-	public int getTaskListCount(String deptCode, String companyID, int tenantID) throws Exception;
+	public int getTaskListCount(String deptCode, String companyID, int tenantID, String title, String code, String flag) throws Exception;
+
+	public List<String> getIronListYear(String companyID, int tenantID) throws Exception;
+	
+	/* 2024-07-16 기민혁 - 전자결재 > 양식함 이동 */
+	public String contMove(String companyID, String contID, String selContID, String parentContID, int tenantID) throws Exception;
+
+	/* 2024-07-17 기민혁 - 전자결재 > 양식함 순서조정 리스트 호출  */
+	public List<ApprGFormVO> getSNFContList(String contID, String companyID, int tenantID) throws Exception;
+
+	/* 2024-07-17 기민혁 - 전자결재 > 양식함 순서조정 실행 함수  */
+	public String moveContSN(String contID, String groupList, String companyID, int tenantID) throws Exception;
+	
 }

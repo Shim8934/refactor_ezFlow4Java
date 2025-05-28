@@ -9,6 +9,11 @@
 <title>PortalPage</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="${util.addVer('/css/orbit-1.2.3.css')}" type="text/css" />
+<link href="${util.addVer('/css/ezNewPortal/swiper.min.css')}" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezNewPortal/swiper.min.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/fixBoard.js')}"></script>
+<link rel="stylesheet" type="text/css" href="${util.addVer('/css/ezNewPortal/portal.css')}" />
 <link href="${util.addVer('main.portal', 'msg')}" rel="stylesheet" type="text/css">
 <style type="text/css">
 	.notEmptySlider {
@@ -37,8 +42,7 @@
 	.right_float {float:right;}
 	#nodata_NewBirth {display:none;}
 	#featured {background : none;}
-	#theme3Body .two_column {width:48.4%;}
-	.orbit-wrapper .timer {display:none;}
+	/*#theme3Body .two_column {width:48.4%;}*/
 	.linkIcon {display: block; margin: 0 auto; padding: 9px 0px 5px 0px; text-align: center;}
 	.linkTxt {display: block; width: 78px; text-align: center; color: #333; font-size: 12px; height: 27px; letter-spacing: 0px; overflow: hidden;margin: 0 auto; padding: 2px 0px 0px 0px; word-break: break-all; line-height: 15px; text-overflow: ellipsis; white-space: nowrap;}
 	
@@ -48,33 +52,53 @@
 </head>
 <body class="mainbg" id="theme3Body">
 	<div id="Center">
-	<div style="position:relative;">
-		<aside id="quickSide" style="width:0px;height:100%">
-			<p class="linkBtn_close" id="linkBtn_open"><img id="quicklinkBtn" src="/images/ezNewPortal/theme3Img/linkBtn_open.png"></p>
-			<div class="aside_quick">
-				<p class="quickmenu_title"><spring:message code='ezNewPortal.t020' /></p>
-				<ul id="quickmenu" class="quickmenu">
-				</ul>
-			</div>
-			<div class="aside_link">
-				<div class="linkBtn">
-					<p class="btnLay" id="btnLay">
-					</p>
+		<div class="top_info_area_wrap">
+			<span class="top_info_toggle_btn"></span>
+			<div class="top_info_area">
+				<div class="my_info_wrap">
+					<div class="my_info" id="myInfo">
+						<div class="my_info_img"><img src="/images/ezNewPortal/bannerImg_left.png"></div>
+						<div class="my_info_div">
+							<span class="name">${userName} ${userTitle}</span>
+							<span class="team">${deptName}</span>
+						</div>
+					</div>
+
+					<div class="portal_setting" onclick="viewPortletEnv()"><spring:message code = 'ezNewPortal.HSBPT01' /></div>
+					<div class="config_setting" onclick="infoSetClick()"><spring:message code = 'ezNewPortal.t006' /></div>
+
+					<div class="news_setting" style="display:none;">
+						<input type="checkbox" id="portal_set" onchange="displayFixPortlet()">
+						<label for="portal_set"><span></span><spring:message code='ezNewPortal.topMenu.hth13'/></label>
+					</div>
 				</div>
+				<ul>
+					<li>
+						<span class="mail" onclick="openPageOfPortal(this.className)"><span><spring:message code = 'ezNewPortal.topMenu.unReadMail' /></span><em id="unReadMailCount"></em></span>
+						<span class="appr" onclick="openPageOfPortal(this.className)"><span><spring:message code = 'ezNewPortal.gu2' /></span><em id="approvalCnt"></em></span>
+                        <span class="board" onclick="openPageOfPortal(this.className)"><span><spring:message code = 'ezBoard.t480' /></span><em id="newBoardCnt"></em></span>
+					</li>
+					<li>
+						<h3><spring:message code = 'ezPortal.newPost' /></h3>
+						<div class="noti" id="noti"></div>
+					</li>
+				</ul>
+				<div id="fixBoardArea" style=""></div>
 			</div>
-		</aside>
-	</div>	
-		<section class="section_main">
-			<div class="portlet_area">
+		</div>
+		<section class="section_main active">
+			<div id="dummyArea"></div>
+			<div id="portletArea" class="portlet_area">
 			</div>
 		</section>
 		
 		<div style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; z-index: 1005; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
 			
-		<div class="layerpopup"  style="z-index: 2000; position: fixed;display: none;" id="iFramePanel">
+		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
-	</div>		
+	</div>
+	<div class="title_tooltip"></div>
 <%-- script line --%>
 <script type="text/javascript" src="${util.addVer('/js/ezPortal/string_component.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezPortal/functionLib.js')}"></script>
@@ -89,9 +113,15 @@
 <script type="text/javascript" src="${util.addVer('ezNewPortal.e1', 'msg')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezNewPortal/newPortal_common.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/Holiday.js')}"></script>
+
+<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}"/>
+<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}"/>
+<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>
+
 <!-- 일정관리 -->
 <script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>
-<script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/schedulePortlet.js')}"></script>		
 <c:choose>
 	<c:when test="${checkBrowser == true}">
 		<script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/sCalendarMini_IEEIP.js')}"></script>
@@ -101,8 +131,14 @@
 	</c:otherwise>
 </c:choose>
 <!-- 일정관리 끝 -->
+<script type="text/javascript" src="${util.addVer('/js/ezPortlet/web-animations.min.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezPortlet/muuri.min.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezPortlet/portlet-util.js')}"></script>
+<link rel="stylesheet" href="${util.addVer('/css/ezPortlet/portlet.css')}" type="text/css" />
 <script type="text/javascript">
 	var portletOrder = JSON.parse('${portletOrder}');
+	var fixedPortletList = JSON.parse('${fixedPortletList}');
 	var photoBoardPage = 1;
 	var photoCount = 3;
  	var nowAttiTime = "";
@@ -119,11 +155,24 @@
  	var timer;
  	var frameId = "<c:out value='${usedFrame}'/>";
  	var usedTheme = "<c:out value='${usedTheme}'/>";
+ 	var usePaging = "<c:out value='${usePaging}'/>";
  	var WorkspaceUrl = "${workspaceHostUrl}"; // 협업이 그룹웨어와 별도의 Url로 서비스 되는 경우에만 설정
     var workspaceContextRootUrl = "${workspaceContextRootUrl}";
+    /* 2025-03-13 홍승비 - 협업 모듈에 고정된 하드코딩 문자열 제거 (ezWorkspace), 테넌트 컨피그 workspaceAppPath로 협업 웹응용프로그램 경로를 분리하여 사용 ("" 또는 "/ezWork" 등) */
+    var workspaceAppPath = "${workspaceAppPath}";
     var userLang = "<c:out value='${userLang}'/>";
     var userLang2 = "<c:out value='${userLang2}'/>";
- 	
+	var usePortletSize = "<c:out value='${usePortletSize}'/>" === "Y";
+	var portletInfoMap = {};
+	var useWebHWP = "<c:out value='${useWebHWP}'/>";
+	var companyID = "<c:out value='${companyID}'/>";
+	var userID = "<c:out value='${userId}'/>";
+	var apprPortletIDs = [];
+	var apprPortletTypes = [];
+	var strBoardPassword =  "<spring:message code='ezBoard.private.pgb05' />";
+	var strBoardOk =  "<spring:message code='ezBoard.private.pgb06' />";
+	var strWrongPassword =  "<spring:message code='ezBoard.t267' />";
+	
  	var quickLinkPage = {
  		current: 1,
  		total: 1,
@@ -267,73 +316,12 @@
  	}
  	
 	$(function() {
-		$("#featured").orbit();
-		
-		var portletCount = portletOrder.length;
-		var portletHTML = "";
-		
-		for (var i = 0; i < portletCount; i++) {
-			portletHTML += "<div class='portlet' id='" + portletOrder[i].portletId + "Portlet'></div>";
+		makePortletsShell(portletOrder)
+		if (!!fixedPortletList) {
+			makeFixPortlet(fixedPortletList);
 		}
-		
-		$(".portlet_area").html(portletHTML);
- 		frameSetting(frameId);
-		
-		for (var i = 0; i < portletCount; i++) {
-			var portletId = portletOrder[i].portletId;
-			var portletUrl = portletOrder[i].portletUrl;
-			var portletName = portletOrder[i].portletName;
-			var portletCode = portletOrder[i].portletCode;
-			
-			/* if (portletUrl.indexOf("ezNewPortal") != -1) { */
-				(function (portletId, portletUrl, portletName, portletCode) {
-					$.ajax({
-						type : "GET",
-						dataType : "html",
-						data : {"portletId" : portletId, "portletName" : portletName, "usedTheme" : usedTheme},
-						url : portletUrl,
-						tryCount : 0,
-						retryLimit : 3,
-						success : function(result) {
-							$("#" + portletId + "Portlet").append(result);
-							
-							/* 2023-06-08 홍승비 - 디자인 개선을 위해 테마3의 모든 포틀릿 background 스타일 제거  */
-							//if (portletId != "34") {
-							$("#" + portletId + "Portlet").css("background", "");
-							//}
-							
-							eventSetting(portletId, usedTheme, portletCode, false);
-							
-							if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1) {
-								sortableEvent();
-							}
-						},
-						error : function() {
-							var nonePage = "<article class='box_shadow'></article>"
-							$("#" + portletId + "Portlet").append(nonePage);
-						},
-						error : function() {
-							this.url = "/ezNewPortal/errorPortlet.do";
-							this.tryCount++;
-							
-							if (this.tryCount <= this.retryLimit) {
-								//try again
-								$.ajax(this);
-								return;
-							}
-							
-							if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1) {
-								sortableEvent();
-							}
-							
-							return;
-						}
-					});
-				}(portletId, portletUrl, portletName, portletCode));
-			/* } */
-			
-		}
-		
+		makePortlets(portletOrder);
+
 		var useQuestion = "<c:out value='${useQuestion}'/>";
 		var useSurvey = "<c:out value='${useSurvey}'/>";
 		var useCircular = "<c:out value='${useCircular}'/>";
@@ -385,7 +373,7 @@
 		$("#6portlet").css("background-color","none");
 
 		// 퀵링크 호출
-		getQuickLink();		
+		//getQuickLink(); 2024-05-23 한태훈 > 퀵링크 아이콘 삭제.		
 		
 		//포틀릿 드래그 앤 드롭
 		if (navigator.userAgent.toLowerCase().indexOf("firefox") == -1) {
@@ -395,6 +383,10 @@
 		/* $(".portlet_area").disableSelection(); */
 		
 		setPortalRefresh();
+		
+		setPortalCount();		// 포탈 카운트 세팅
+        setBoardItemListToTopMenu("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}");
+        makeSwiperByTopMenu();
 	});
 	
 	var refreshInterval = "<c:out value='${usePortalAutoRefreshInterval}'/>";
@@ -477,7 +469,7 @@
 	var tryCount = 0;
 	
 	var sortableEvent = function () {
-		
+		if (usePortletSize) return false;
 		//포틀릿 드래그 앤 드롭
 		try {
 			$(".portlet_area").sortable({
@@ -548,6 +540,259 @@
 			}
 		}
 	}
+	
+	  function setPortalCount(){
+	        var reqURL = "/ezNewPortal/allCount.do";
+	        $.ajax({
+	            method : "GET",
+	            url : reqURL,
+	            dataType : "text",
+	            success : function(retData){
+	                var jsonData = JSON.parse(retData);
+	                if(jsonData.status != "ok")	{
+	                    console.log(jsonData.message);
+	                    return;
+	                }
+	                
+	                var newBoardCnt = jsonData.newBoardCnt;
+	                var unReadMailCount = jsonData.unreadMailCount;
+	                var approvalCnt = jsonData.approvalCnt;
+
+	                if(typeof newBoardCnt == "undefined") newBoardCnt = 0;
+	                if(typeof unReadMailCount == "undefined") unReadMailCount = 0;
+	                if(typeof approvalCnt == "undefined") approvalCnt = 0;
+
+	                document.getElementById("newBoardCnt").innerText = newBoardCnt;
+	                document.getElementById("unReadMailCount").innerText = unReadMailCount;
+	                document.getElementById("approvalCnt").innerText = approvalCnt;
+	            },
+	            error : function(e){
+	                console.log(e);
+	            }
+	        });
+	    }
+
+	    function openPageOfPortal(className){
+	        if(className === null || typeof className == "undefined" || !className) return;
+
+	        var target = "main";
+
+	        switch(className){
+	            case "mail":
+	                quickMenuOpen('NewMail');
+	                break;
+	            case "appr":
+	                quickMenuOpen('ApprG');
+	                break;
+	            case "board":
+	                var mainHref = "";
+	                var mainBoardHref = "";
+	                try {
+	                    mainHref = window.parent.main.location.href;
+	                } catch (e) {
+	                    window.open('/ezBoard/boardMainRedirect.do?boardID="' + encodeURIComponent('{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}') + '"', "main", "");
+	                    break;
+	                }
+	                try {
+	                    mainBoardHref = window.parent.mainBoard.location.href;
+	                } catch (e) {
+	                    window.open('/ezBoard/boardMainRedirect.do?boardID="'+ encodeURIComponent('{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}') + '"', "main", "");
+	                    break;
+	                }
+
+	                var portalURL = "/ezNewPortal/newPortalPortalPage";
+
+	                if (mainHref.indexOf(portalURL) > -1 && mainHref != 'about:blank'){ // 메인영역이 포탈로 활성화되어 있고 메인보드 영역이 비어있을때
+	                    target = "main";
+	                } else if(mainHref == 'about:blank' && mainBoardHref != 'about:blank'){ // 메인영역이 비어 있고 메인보드 영역이 비어있지 않을때
+	                    target = "mainBoard";
+	                }
+	                window.open('/ezBoard/boardMainRedirect.do?boardID="'+ encodeURIComponent('{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}') + '"', target, "");
+	                break;
+
+	            default: break;
+	        }
+	    }
+
+	    function setBoardItemListToTopMenu(boardId) {
+	        if(!boardId) {
+	            return;
+	        }
+
+	        $.ajax({
+	            url : "/ezNewPortal/boardItemListToTopMenu.do",
+	            method : "GET",
+	            data : {"boardId" : boardId},
+	            contentType : "text",
+	            success : function(obj){
+	                if(obj.status == "ok"){
+	                    var len = obj.boardList.length;
+	                    if(len > 0){
+	                        var target = document.getElementById("noti");
+	                        target.innerHTML = "";
+
+	                        var swDiv = document.createElement("div");
+	                        swDiv.classList.add('swiper');
+	                        swDiv.classList.add('mySwiper');
+	                        swDiv.classList.add('swiper-container');
+	                        swDiv.classList.add('swiper-container-initialized');
+	                        swDiv.classList.add('swiper-container-horizontal');
+	                        
+	                        var swWrap = document.createElement("div");
+	                        swWrap.classList.add('swiper-wrapper');
+	                        swWrap.style.cssText = 'transform : translate3d(0px, 0px, 0px)';
+	                        swDiv.append(swWrap);
+	                        target.append(swDiv);
+	                        makeSlideByTopMenu(obj.boardList);
+	                    }else{
+	                        var target = document.getElementById("noti");
+	                        target.innerHTML = "";
+	                        var noItemText = "<spring:message code = 'ezNewPortal.topMenu.newBoardItem' />";
+	                        var div = document.createElement("div");
+	                        div.id = "noItemArea";
+	                        div.innerText = noItemText;
+	                        target.append(noItemText);
+	                    }
+	                } else {
+	                    var target = document.getElementById("noti");
+	                    target.innerHTML = "";
+	                    var noItemText = "<spring:message code = 'ezNewPortal.topMenu.newBoardItem' />";
+	                    var div = document.createElement("div");
+	                    div.id = "noItemArea";
+	                    div.innerText = noItemText;
+	                    target.append(noItemText);
+	                }
+	            },
+	            error : function(e){
+	                var target = document.getElementById("noti");
+	                target.innerHTML = "";
+	                var noItemText = "<spring:message code = 'ezNewPortal.topMenu.newBoardItem' />";
+	                var div = document.createElement("div");
+	                div.id = "noItemArea";
+	                div.innerText = noItemText;
+	                target.append(noItemText);
+	                console.log(e)
+	            }
+	        });
+	    }
+
+	    var makeSlideByTopMenu = function (bList) {
+	        var noidDiv = document.getElementById('noti');
+	        var wrapper = noidDiv.querySelector(".swiper-wrapper");
+
+	        var max = bList.length;
+	        for (var i = 0; i < max; i++) {
+	            const board = bList[i];
+	            const slide = document.createElement('div');
+	            slide.classList.add('swiper-slide');
+	            if (i===0) {
+	                slide.classList.add('swiper-slide-active');
+	            } else {
+	                slide.classList.add('swiper-slide-next');
+	            }
+	            wrapper.appendChild(slide);
+	            const divText = document.createElement('div');
+	            divText.classList.add('swiper_txt');
+
+				if (board.extensionAttribute2 == 1) {
+					divText.style.display ="flex";
+					const notiDiv = document.createElement('div');
+					notiDiv.className = "notiBox";
+					notiDiv.innerText = "<spring:message code = 'ezNotification.hth89' />";
+					divText.appendChild(notiDiv);
+				}
+				
+	            slide.appendChild(divText);
+	            var textNode = document.createTextNode(board.title);
+	            divText.appendChild(textNode);
+	        }
+
+			wrapper.addEventListener("click", function (event) {
+				if (!event.target.closest('.swiper-slide')) return;
+				var index = event.target.closest('.swiper-slide').getAttribute('data-swiper-slide-index');
+				openBoard(bList[index].itemID,bList[index].guBun,bList[index].boardID);
+			});
+			
+	        makeSwiperByTopMenu();
+	    }
+
+		var makeSwiperByTopMenu = function () {
+			var swiper = new Swiper(".mySwiper", {
+				loop: true,
+				autoplay: {
+					delay: 5000,
+					disableOnInteraction: false,
+				}
+			});
+		}
+	    
+	    function getCookie(Name) {
+	        var search = Name + "="
+	        if (document.cookie.length > 0) { // 쿠키가 설정되어 있다면
+	            offset = document.cookie.indexOf(search)
+
+	            if (offset != -1) { // 쿠키가 존재하면
+	                offset += search.length
+	                // set index of beginning of value
+	                end = document.cookie.indexOf(";", offset);
+	                // 쿠키 값의 마지막 위치 인덱스 번호 설정
+	                if (end == -1)
+	                    end = document.cookie.length
+	                return unescape(document.cookie.substring(offset, end))
+	            }
+	        }
+	    }
+	
+	// 고정포틀릿 on/off
+	function displayFixPortlet() {
+		var onOff = document.getElementById("portal_set").checked;
+		var fixArea = document.getElementById("fixBoardArea");
+
+		if (onOff) {
+			fixArea.classList.add("hidden");
+		} else {
+			fixArea.classList.remove("hidden");
+		}
+	}
+
+	$(document).ready(function(){
+		$(".top_info_toggle_btn").click(function(){
+			if($(this).hasClass("on")){
+				$(".top_info_area_wrap").css("width","510px");
+			} else {
+				$(".top_info_area_wrap").css("width","0");
+			}
+			$(this).toggleClass("on");
+
+			if($(".top_info_area_wrap").hasClass("position")) {
+				$(".section_main").attr("class","section_main");
+			} else {
+				$(".section_main").toggleClass("active");
+			}
+			
+			$(".top_info_area_wrap").one("transitionend", function() {
+				resizePortlet();
+			});
+		})
+
+		$(window).resize(function(){
+			if($(window).width() < 1320){
+				if($(".top_info_area_wrap").hasClass("position") == false){
+					$(".top_info_area_wrap").css("width","0");
+					$(".top_info_toggle_btn").addClass("on");
+				}
+				$(".top_info_area_wrap").attr("class","top_info_area_wrap position");
+				$(".section_main").attr("class","section_main");
+			} else{
+				$(".top_info_area_wrap").attr("class","top_info_area_wrap");
+				if($(".top_info_toggle_btn").hasClass("on")){
+					$(".section_main").attr("class","section_main");
+				} else{
+					$(".section_main").attr("class","section_main active");
+				}
+			}
+		})
+	})
 	</script>
 	</body>
 </html>

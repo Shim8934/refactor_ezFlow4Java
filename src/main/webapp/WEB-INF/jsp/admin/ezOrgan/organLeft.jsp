@@ -6,7 +6,8 @@
 	<head>
 		<title><spring:message code="main.t23" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">	   	   	
-		<link rel="stylesheet" href="${util.addVer('main.e15', 'msg')}" type="text/css">	
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">	
 		<link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">	
 		<style>
 			#mCSB_1_container { margin-right: 0px;} 
@@ -55,6 +56,9 @@
 				switch(idx){
 					case 1:
 						url = "/admin/ezOrgan/organRight.do";
+						break;
+					case 2:
+						url = "/admin/ezOrgan/totalUserList.do"
 						break;
 					case 10:
 						url = "/admin/ezOrgan/retireUserManage.do";
@@ -110,8 +114,11 @@
   			<div class="adminListBox" style="overflow:hidden; padding-right: 0;">
 				<h2 class="on">
 					<span class="list_text" id="Organ" onClick="goPage(1)" style="display:inline-block;width:100%;"><spring:message code='main.t56' /></span>
-				</h2> 
-			<c:if test="${dotNetIntegration ne 'YES'}">
+				</h2>
+				<h2>
+					<span class="list_text" id="totalUser" onClick="goPage(2)" style="display:inline-block;width:100%;"><spring:message code='ezOrgan.ksy01' /></span>
+				</h2>
+				<c:if test="${dotNetIntegration ne 'YES'}">
 				<h2>
 					<span class="list_text" id="CheckAdmin" onClick="goPage(12)" style="display:inline-block;width:100%;"><spring:message code='main.t00062' /></span>
 				</h2> 

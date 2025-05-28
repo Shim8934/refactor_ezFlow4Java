@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import egovframework.ezEKP.ezCabinet.vo.CabinetModuleVO;
 import egovframework.ezEKP.ezCabinet.vo.CompanyCapacityVO;
 import egovframework.ezEKP.ezCabinet.vo.UserCapacityVO;
-import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 
 @SuppressWarnings("unchecked")
 @Repository("EzCabinetAdminDAO")

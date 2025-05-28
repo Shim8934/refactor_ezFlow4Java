@@ -6,7 +6,8 @@
 	<head>
 		<title>poll_add_ok</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" type="text/css" href="${util.addVer('ezCommunity.i1', 'msg')}">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/community.css')}" />
 		<style>
 			select {
@@ -71,7 +72,7 @@
 				stringHTML += '<INPUT type="hidden" name="selRes2" value="' + '<c:out value="${selRes2}"/>' + '">';
 				stringHTML += '<INPUT type="hidden" name="startDate" value="' + '<c:out value="${startDate}"/>' + '">';
 				stringHTML += '<INPUT type="hidden" name="endDate" value="' + '<c:out value="${endDate}"/>' + '">';	
-				stringHTML += '<INPUT type="hidden" name="subject" value="' + document.getElementById("pollSubject").value + '" >';
+				stringHTML += '<INPUT type="hidden" name="subject" value="' + MakeXMLString(document.getElementById("pollSubject").value) + '" >';
 				stringHTML += '</form>';			
 					
 				document.body.innerHTML += stringHTML;

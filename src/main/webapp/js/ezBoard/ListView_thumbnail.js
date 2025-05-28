@@ -539,7 +539,7 @@ function ListView() {
                     objTd.setAttribute("writerindex", i);
                 }
 
-                if (strColName == "ATTACHMENTS" || strColName == "READCOUNT" || strColName == "TITLE" || strColName == "LIKECOUNT") {
+                if (strColName == "ATTACHMENTS" || strColName == "READCOUNT" || strColName == "TITLE" || strColName == "LIKECOUNT" || strColName == "DISLIKECOUNT") {
                     objTd.style.textAlign = "CENTER";
                 }
 
@@ -677,7 +677,11 @@ function ListView() {
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "ITEMID") {
                     var _TDCheckBox_Sub = document.createElement("INPUT");
                     _TDCheckBox_Sub.type = "checkbox";
-                    _TDCheckBox_Sub.id = strValue + "," + getNodeText(oDatas[2]) + ";";
+
+                    // 게시물 리스트 체크박스 id에 writerDeptId, writerNameType 추가
+                    var _TDCheckBox_writerDeptId = getNodeText(oDatas.find(node => node.tagName === "WRITERDEPTID"));
+                    var _TDCheckBox_writerNameType = getNodeText(oDatas.find(node => node.tagName === "WRITERNAMETYPE"));
+                    _TDCheckBox_Sub.id = strValue + "," + getNodeText(oDatas[2]) + "," + _TDCheckBox_writerDeptId + "," + _TDCheckBox_writerNameType + ";";
                     _TDCheckBox_Sub.style.margin = "0px";
                     _TDCheckBox_Sub.style.padding = "0px";
                     _TDCheckBox_Sub.style.width = "13px";
@@ -715,21 +719,28 @@ function ListView() {
                     
                     /* 2018-11-06 홍승비 - 동영상게시판인 경우, 썸네일 경로에 s_붙이고 플레이버튼 표시 */
                     if (gubun == 7) {
+                    	var thumbFile = "";
+                    	if (getNodeText(oDatas[8]) == "Y") {
+                    		thumbFile = Filename.substring(0, Filename.lastIndexOf(".") + 1) + getNodeText(oDatas[9]);
+                    	} else {
+                    		thumbFile = Filename.substring(0, Filename.lastIndexOf(".") + 1) + "png";
+                    	}
                     	ImgElement.src = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + encodeURI(getNodeText(oDatas[0])) +
-                    	"&fileName=s_" + encodeURI(Filename.substring(0, Filename.lastIndexOf(".") + 1) + "png");              	
+                    	"&fileName=s_" + encodeURI(thumbFile);              	
                     	ImgElement.style.filter = "brightness(75%)";
                     	
-	                    var ImgElementPlay = document.createElement("IMG");
-	                    ImgElementPlay.src = "/images/playButton_small.png";
-	                    ImgElementPlay.style.position = "absolute";
-	                    ImgElementPlay.style.left = "24px";
-	                    ImgElementPlay.style.top = "13px";
-	                    
 	                    var imgCell = document.createElement("TD");
 	                    imgCell.style.borderBottom = "0px";
 	                    
 	                    ImgDiv.appendChild(ImgElement);
-	                    ImgDiv.appendChild(ImgElementPlay);
+	                    if (getNodeText(oDatas[8]) != "Y") {
+                    		var ImgElementPlay = document.createElement("IMG");
+		                    ImgElementPlay.src = "/images/playButton_small.png";
+		                    ImgElementPlay.style.position = "absolute";
+		                    ImgElementPlay.style.left = "24px";
+		                    ImgElementPlay.style.top = "13px";
+	                    	ImgDiv.appendChild(ImgElementPlay);
+                    	}
 	                    imgCell.appendChild(ImgDiv);
                     }
                     else {
@@ -830,7 +841,7 @@ function ListView() {
                 }
                 else {
 
-                    if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "READCOUNT" || SelectSingleNodeValue(oHeaders[j], "COLNAME") == "LIKECOUNT") {
+                    if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "READCOUNT" || SelectSingleNodeValue(oHeaders[j], "COLNAME") == "LIKECOUNT" || SelectSingleNodeValue(oHeaders[j], "COLNAME") == "DISLIKECOUNT"){
                         objTd.style.textAlign = "center";
                     }
 

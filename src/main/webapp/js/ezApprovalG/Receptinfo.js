@@ -45,7 +45,7 @@ function ChangeReceptTab(obj) {
         document.getElementById("ReceptGroup").style.display = "none";
         document.getElementById("ReceptOuter").style.display = "none";
         document.getElementById("ReceptDoc24").style.display = "none";
-        document.getElementById("btnaddressChange").style.display = "none";
+        // document.getElementById("btnaddressChange").style.display = "none";
         document.getElementById("AprDeptAdd").style.display = "";
         document.getElementById("AprDeptOuterAdd").style.display = "none";
         internalTab = true;
@@ -64,7 +64,7 @@ function ChangeReceptTab(obj) {
         document.getElementById("ReceptTemp").style.display = "";
         document.getElementById("ReceptOuter").style.display = "none";
         document.getElementById("ReceptDoc24").style.display = "none";
-        document.getElementById("btnaddressChange").style.display = "none";
+        // document.getElementById("btnaddressChange").style.display = "none";
         document.getElementById("ReceptGroup").style.display = "none";
         document.getElementById("AprDeptAdd").style.display = "";
         document.getElementById("AprDeptOuterAdd").style.display = "none";
@@ -80,7 +80,7 @@ function ChangeReceptTab(obj) {
         document.getElementById("ReceptTemp").style.display = "none";
         document.getElementById("ReceptOuter").style.display = "none";
         document.getElementById("ReceptDoc24").style.display = "none";
-        document.getElementById("btnaddressChange").style.display = "none";
+        // document.getElementById("btnaddressChange").style.display = "none";
         document.getElementById("ReceptGroup").style.display = "";
         document.getElementById("AprDeptAdd").style.display = "";
         document.getElementById("AprDeptOuterAdd").style.display = "none";
@@ -92,11 +92,7 @@ function ChangeReceptTab(obj) {
         document.getElementById("ReceptTemp").style.display = "none";
         document.getElementById("ReceptOuter").style.display = "";
         document.getElementById("ReceptDoc24").style.display = "none";
-        if (useReceiveInfoName == '1') {
-//        	document.getElementById("btnaddressChange").style.display = "";
-        } else {
-        	document.getElementById("btnaddressChange").style.display = "";
-        }
+        // document.getElementById("btnaddressChange").style.display = "";
         
         document.getElementById("ReceptGroup").style.display = "none";
         document.getElementById("AprDeptAdd").style.display = "none";
@@ -175,7 +171,7 @@ function initReceptListView() {
 	        document.getElementById("inputSummaryOuterReceiverList").focus();
 	        document.getElementById("trSummaryOuterReceiverList").style.display = "";
 	        document.getElementById("btnaddress").style.display = "none";
-	        document.getElementById("btnaddressChange").style.display = "none";
+	        // document.getElementById("btnaddressChange").style.display = "none";
 	    }
     }
 
@@ -265,8 +261,10 @@ function event_TreeViewinitialize_tree2() {
 }
 //#############################################################################################################################################수신처 조직도 트리뷰 클릭 이벤트 
 var nodeIdx;
+var useupperdeptbox;
 function TreeViewNodeClick2(pNodeID, pNodeNM) {
     nodeIdx = pNodeID;
+    useupperdeptbox = document.getElementById(pNodeID).getAttribute("useupperdeptbox");
 
     var treeNode = new TreeNode();
     treeNode.LoadFromID(nodeIdx);
@@ -287,6 +285,7 @@ function RequestData2(pNodeID, pTreeID) {
 
     var treeView = new TreeView();
     treeView.LoadFromID(pTreeID);
+    treeView.SetUseSusinColor4AprG(true); // 하위트리 오픈 시, 색 적용 안되는 문제 수정
     treeView.AppendChildNodes(xmlHTTP.responseXML.documentElement, pNodeID);
 }
 //#############################################################################################################################################수신처 조직도 사용자 가져오기 
@@ -483,10 +482,15 @@ function AprDeptAdd_onclick(Type) {
             var pCurSelRow = listview.GetSelectedRows();
             
             if (pCurSelRow.length != 0) {
+                if (isExistDept(true)) {
+                    var pAlertContent = strLang244 + "</br>" + strLang245;
+                    OpenAlertUI(pAlertContent);
+                    return;
+                }
             	/* 2023-03-09 홍승비 - 전자결재G > 결재문서를 수신하지 않는 부서의 소속 사원은 수신자로 지정 불가능하도록 수정 */
             	var userDeptID = pCurSelRow[0].getAttribute("DATA3");
-            	
-            	if (GetEntryInfo(userDeptID) == "N") { // 결재문서를 수신하지 않는 부서 체크
+                /* 2024-07-17 양지혜 - 전자결재G > 상위부서문서함 사용 부서의 사원은 수신자로 지정 가능하도록 함 */
+            	if (GetEntryInfo(userDeptID) == "N" && useupperdeptbox === "N") { // 결재문서를 수신하지 않는 부서 체크
             		OpenAlertUI(strLang1105);
             	}
             	else { // 수신자 중복부서 체크
@@ -504,6 +508,7 @@ function AprDeptAdd_onclick(Type) {
     }
     catch (e) {
         alert("AprDeptAdd_onclick : " + e.description);
+        console.log(e);
     }
 }
 //#############################################################################################################################################수신처 중복체크
@@ -592,9 +597,16 @@ function AprLineAddDept(nodeIdx, tr) {
     //2018-08-20 이효진
     if (useReceiveInfoName == '1') {
     	//현재부서명 + 장
-    	setNodeText(GetChildNodes(objNodes[1])[0], pDeptNm + "장");
+    	setNodeText(GetChildNodes(objNodes[1])[0], pDeptNm + strLang93);
     } else if (useReceiveInfoName == '2') {
-    	//추가 개발 시 상위부서명 + 장
+        // 상위부서명(현재부서명 + 장)
+        var reName;
+        if (treeNode.NodeLevel === "0" || deptid === strCmpID) { // 회사
+            reName = pDeptNm + strLang93
+        } else { // 부서
+            reName = getParentDeptNameForDB(deptid) + "(" + pDeptNm + strLang93 + ")";
+        }
+        setNodeText(GetChildNodes(objNodes[1])[0], reName);
     } else {
     	//default
     	setNodeText(GetChildNodes(objNodes[1])[0], pDeptNm);
@@ -640,9 +652,9 @@ function AprLineAddDept(nodeIdx, tr) {
         listview.AddDataRow(objTr, Resultxml.documentElement.getElementsByTagName("ROW")[0]);
     }
     
-    if (useReceiveInfoName == '0') {
-    	document.getElementById("btnaddressChange").style.display = "none";
-    }
+    // if (useReceiveInfoName == '0') {
+    //     document.getElementById("btnaddressChange").style.display = "none";
+    // }
     
     //DeptAddIndex = DeptAddIndex + 1;
 }
@@ -673,11 +685,12 @@ function AprLineAddDept_User(pSelectedRow) {
     var strCmpID = pSelectedRow.getAttribute("DATA7");
     var pDeptNm = pSelectedRow.childNodes[1].innerText;
     var puserNm = pSelectedRow.childNodes[0].innerText;
+    var pDeptID = pSelectedRow.getAttribute("DATA3");
 
     var objNodes = SelectNodes(Resultxml, "LISTVIEWDATA/ROWS/ROW/CELL");
 
     setNodeText(GetChildNodes(objNodes[0])[0], DeptAddIndex);
-    setNodeText(GetChildNodes(objNodes[0])[1], pSelectedRow.getAttribute("DATA3"));
+    setNodeText(GetChildNodes(objNodes[0])[1], pDeptID);
     setNodeText(GetChildNodes(objNodes[0])[2], pDocID);
     setNodeText(GetChildNodes(objNodes[0])[3], isCurretnCompany);
     setNodeText(GetChildNodes(objNodes[0])[4], "N");
@@ -692,6 +705,27 @@ function AprLineAddDept_User(pSelectedRow) {
     setNodeText(GetChildNodes(objNodes[0])[13], pSelectedRow.getAttribute("DATA13"));
     setNodeText(GetChildNodes(objNodes[1])[0], pDeptNm);
     setNodeText(GetChildNodes(objNodes[2])[0], puserNm);
+    
+    // 개인 수신자 수신처명 옵션화하지 않으려면 여기를 주석처리
+    if (useReceiveInfoName == '1') {
+        //현재부서명 + 장
+        setNodeText(GetChildNodes(objNodes[1])[0], pDeptNm + strLang93);
+    } else if (useReceiveInfoName == '2') {
+        // 상위부서명(현재부서명 + 장)
+        var reName = "";
+        var upperDeptNm = getParentDeptNameForDB(pSelectedRow.getAttribute("DATA3"));
+        if (!upperDeptNm || pDeptID === strCmpID) { // 회사
+            reName = pDeptNm + strLang93
+        } else { // 부서
+            reName = upperDeptNm + "(" + pDeptNm + strLang93 + ")";
+        }
+        setNodeText(GetChildNodes(objNodes[1])[0], reName);
+        
+    } else {
+        //default
+        setNodeText(GetChildNodes(objNodes[1])[0], pDeptNm);
+    }
+
     var tmptr = listview.GetSelectedRows();
     var InitTr = listview.GetDataRows();
 
@@ -773,7 +807,7 @@ function APRDeptXMLParsing(APRDEPT, pDocID) {
         GetXml += "<DATA name='ReceiptMemberID'>" + MakeXMLString(GetAttribute(AprDeptRow[i], "DATA7")) + "</DATA>";
         GetXml += "<DATA name='ReceiptMemberName'>" + MakeXMLString(GetAttribute(AprDeptRow[i], "DATA8")) + "</DATA>";
         GetXml += "<DATA name='ReceiptMemberJobTitle'>" + MakeXMLString(GetAttribute(AprDeptRow[i], "DATA9")) + "</DATA>";
-        GetXml += "<DATA name='AprMemberDeptName'>" + MakeXMLString(GetAttribute(AprDeptRow[i], "DATA10")) + "</DATA>";
+        GetXml += "<DATA name='AprMemberDeptName'>" + MakeXMLString(AprDeptRow[i].childNodes[1].textContent) + "</DATA>";
         GetXml += "<DATA name='AprMemberDeptName2'>" + MakeXMLString(GetAttribute(AprDeptRow[i], "DATA11")) + "</DATA>";
         GetXml += "<DATA name='ReceiptMemberName2'>" + MakeXMLString(GetAttribute(AprDeptRow[i], "DATA12")) + "</DATA>";
 
@@ -1177,16 +1211,12 @@ function btnSearchDept_onClick_Complete(reParam) {
                 document.getElementById("inputSummaryOuterReceiverList").focus();
                 document.getElementById("trSummaryOuterReceiverList").style.display = "";
                 document.getElementById("btnaddress").style.display = "none";
-                document.getElementById("btnaddressChange").style.display = "none";
+                // document.getElementById("btnaddressChange").style.display = "none";
             } else {
                 document.getElementById("trSummaryOuterReceiverList").style.display = "none";
                 document.getElementById("inputSummaryOuterReceiverList").value = "";
                 document.getElementById("btnaddress").style.display = "";
-                if (useReceiveInfoName == '1') {
-//                	document.getElementById("btnaddressChange").style.display = "";
-                } else {
-                	document.getElementById("btnaddressChange").style.display = "";
-                }
+                // document.getElementById("btnaddressChange").style.display = "";
             }
         } else {
             var pAlertContent = strLang247 + "<br>  " + strLang248;
@@ -1343,16 +1373,12 @@ function btnSearchDept_onClick_Complete(reParam) {
                     document.getElementById("inputSummaryOuterReceiverList").focus();
                     document.getElementById("trSummaryOuterReceiverList").style.display = "";
                     document.getElementById("btnaddress").style.display = "none";
-                    document.getElementById("btnaddressChange").style.display = "none";
+                    // document.getElementById("btnaddressChange").style.display = "none";
                 } else {
                     document.getElementById("trSummaryOuterReceiverList").style.display = "none";
                     document.getElementById("inputSummaryOuterReceiverList").value = "";
                     document.getElementById("btnaddress").style.display = "";
-                    if (useReceiveInfoName == '1') {
-//                    	document.getElementById("btnaddressChange").style.display = "";
-                    } else {
-                    	document.getElementById("btnaddressChange").style.display = "";
-                    }
+                    // document.getElementById("btnaddressChange").style.display = "";
                 }
 
             } else {
@@ -1451,7 +1477,7 @@ function event_getDeptFullTree() {
             treeViewScrollTo("tvTreeView2");   //2020-04-24 : 선택된 노드로 트리뷰 커서 이동
         }
         else {
-            alert(strLang249 + g_xmlHTTP.statusText);
+            alert(strLang249 + g_xmlHTTP.status);
             g_xmlHTTP = null;
         }
     }
@@ -1710,20 +1736,16 @@ function AprLineAddDeptG_New(outDeptID) {
 		}
 		
 		/* 2015-06-30 표준모듈:추가(외부수신자요약) - KSK */ //이건 복붙
-		if (listView.GetDataRows().length > 8) {
+		if (listView.GetDataRows().length > 9) {
 			document.getElementById("inputSummaryOuterReceiverList").focus();
 			document.getElementById("trSummaryOuterReceiverList").style.display = "";
 			document.getElementById("btnaddress").style.display = "none";
-			document.getElementById("btnaddressChange").style.display = "none";
+			// document.getElementById("btnaddressChange").style.display = "none";
 		} else {
 			document.getElementById("trSummaryOuterReceiverList").style.display = "none";
 			document.getElementById("inputSummaryOuterReceiverList").value = "";
 			document.getElementById("btnaddress").style.display = "";
-			if (useReceiveInfoName == '1') {
-				//document.getElementById("btnaddressChange").style.display = "";
-			} else {
-				document.getElementById("btnaddressChange").style.display = "";
-			}
+			// document.getElementById("btnaddressChange").style.display = "";
 		}
 	}
 }
@@ -1862,16 +1884,12 @@ function AprLineAddDeptG(nodeIdx, tr) {
         document.getElementById("inputSummaryOuterReceiverList").focus();
         document.getElementById("trSummaryOuterReceiverList").style.display = "";
         document.getElementById("btnaddress").style.display = "none";
-        document.getElementById("btnaddressChange").style.display = "none";
+        // document.getElementById("btnaddressChange").style.display = "none";
     } else {
         document.getElementById("trSummaryOuterReceiverList").style.display = "none";
         document.getElementById("inputSummaryOuterReceiverList").value = "";
         document.getElementById("btnaddress").style.display = "";
-        if (useReceiveInfoName == '1') {
-//        	document.getElementById("btnaddressChange").style.display = "";
-        } else {
-        	document.getElementById("btnaddressChange").style.display = "";
-        }
+        // document.getElementById("btnaddressChange").style.display = "";
     }
 
 }
@@ -2005,7 +2023,7 @@ function AprDeptDel_onclick() {
     }
 
     /* 2015-06-30 표준모듈:추가(외부수신자요약) - KSK */
-    if (listview.GetDataRows().length < 9) {
+    if (listview.GetDataRows().length < 10) {
         document.getElementById("trSummaryOuterReceiverList").style.display = "none";
         document.getElementById("inputSummaryOuterReceiverList").value = "";
         document.getElementById("btnaddress").style.display = "";
@@ -2321,9 +2339,9 @@ function AprLineAddDeptAddress(AddressName) {
 
     DeptAddIndex = DeptAddIndex + 1;
     
-    if (useReceiveInfoName == '0') {
-	    document.getElementById("btnaddressChange").style.display = "";
-	}
+    // if (useReceiveInfoName == '0') {
+	//     document.getElementById("btnaddressChange").style.display = "";
+	// }
     
     /* 2023-01-12 홍승비 - 결재정보 > 수신자 수기입력 완료 후 ROW 추가 시, 수기입력된 수신처ID를 전체적으로 갱신 ("Address" + 숫자 형태의 ID를 가지는 경우에만) */
     refreshAllDeptAddressRowID();
@@ -2473,7 +2491,7 @@ function insertOrganAll(_ParentOrganId, _ParentOrganName) {
 
             var treeNode = new TreeNode();
             treeNode.LoadFromID(nodeIdx);
-
+            
             var DuplicateFlag = DuplicateAprDeptCheck(RECEPTLIST, _ParentOrganId);
             if (DuplicateFlag)
                 AddOrgan(_ParentOrganId, _ParentOrganName);
@@ -2577,6 +2595,25 @@ function AddOrgan(_OrganId, _OrganName) {
         setNodeText(GetChildNodes(objNodes[0])[12], "");
         setNodeText(GetChildNodes(objNodes[0])[13], "");
         setNodeText(GetChildNodes(objNodes[1])[0], pDeptNm);
+        
+        if (useReceiveInfoName == '1') {
+            //현재부서명 + 장
+            setNodeText(GetChildNodes(objNodes[1])[0], pDeptNm + strLang93);
+        } else if (useReceiveInfoName == '2') {
+            // 상위부서명(현재부서명 + 장)
+            var reName = "";
+            var upperDeptNm = getParentDeptNameForDB(deptid);
+            if (!upperDeptNm || deptid === strCmpID) { // 회사
+                reName = pDeptNm + strLang93
+            } else { // 부서
+                reName = upperDeptNm + "(" + pDeptNm + strLang93 + ")";
+            }
+            setNodeText(GetChildNodes(objNodes[1])[0], reName);
+            
+        } else {
+            //default
+            setNodeText(GetChildNodes(objNodes[1])[0], pDeptNm);
+        }
 
         var tr = listview.GetSelectedRows();
         var InitTr = listview.GetDataRows();
@@ -2795,16 +2832,12 @@ function AddOuter(strOuterDeptId, strOuterDeptName) {
             document.getElementById("inputSummaryOuterReceiverList").focus();
             document.getElementById("trSummaryOuterReceiverList").style.display = "";
             document.getElementById("btnaddress").style.display = "none";
-            document.getElementById("btnaddressChange").style.display = "none";
+            // document.getElementById("btnaddressChange").style.display = "none";
         } else {
             document.getElementById("trSummaryOuterReceiverList").style.display = "none";
             document.getElementById("inputSummaryOuterReceiverList").value = "";
             document.getElementById("btnaddress").style.display = "";
-            if (useReceiveInfoName == '1') {
-//            	document.getElementById("btnaddressChange").style.display = "";
-            } else {
-            	document.getElementById("btnaddressChange").style.display = "";
-            }
+            // document.getElementById("btnaddressChange").style.display = "";
         }
 
     } catch (e) {
@@ -3138,4 +3171,27 @@ function refreshAllDeptAddressRowID() {
 			item.setAttribute("data1", "Address" + (parseInt(deptAddressRowLength) - parseInt(index)));
 		});
 	}
+}
+
+function getParentDeptNameForDB(deptID) {
+    var rtnVal = "";
+    
+    $.ajax({
+		type : "GET",
+		dataType : "json",
+		async : false,
+		url : "/ezOrgan/getUpperDeptName.do",
+		data : {
+			deptID : deptID
+		},
+		success: function(result) {
+			rtnVal = result.upperDeptName;
+		},
+        error: function(xhr, status, error){
+            console.log(error);
+            alert(strLang199);
+        },
+	});
+    
+    return rtnVal;
 }

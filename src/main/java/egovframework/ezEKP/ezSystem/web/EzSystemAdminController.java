@@ -20,6 +20,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.BooleanUtils;
+import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
+import egovframework.ezEKP.ezOrgan.vo.OrganAuth.AdminAuth;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
@@ -57,9 +60,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.HandlerMapping;
+import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezNotification.service.EzNotificationService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
@@ -73,6 +78,8 @@ import egovframework.ezEKP.ezSystem.vo.ModuleSizeVO;
 import egovframework.ezEKP.ezSystem.vo.PasswordPolicyVO;
 import egovframework.ezEKP.ezSystem.vo.PermissionInfoVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
+import egovframework.ezEKP.ezSystem.vo.SystemConfigTypeVO;
+import egovframework.ezEKP.ezSystem.vo.SystemConfigVO;
 import egovframework.ezEKP.ezSystem.vo.UserChangeInfoVO;
 import egovframework.let.main.vo.MainVO;
 import egovframework.let.user.login.service.LoginService;
@@ -104,6 +111,9 @@ public class EzSystemAdminController {
 	@Autowired
 	private EzOrganAdminService ezOrganAdminService;
 	
+	@Autowired
+	private EzNotificationService ezNotificationService;
+
 	@Resource
 	private EgovMessageSource egovMessageSource;
 	
@@ -141,6 +151,12 @@ public class EzSystemAdminController {
 		}
 		model.addAttribute("cChk", cChk);
 		
+		String useFidoAccessMenu = ezCommonService.getTenantConfig("useFidoAccessMenu", userInfo.getTenantId());
+
+		if (useFidoAccessMenu == null || useFidoAccessMenu.equals("")) {
+			useFidoAccessMenu = "NO";
+		}
+		
 		String useIPAccessMenu = ezCommonService.getTenantConfig("useIPAccessMenu", userInfo.getTenantId());
 		
 		if (useIPAccessMenu == null || useIPAccessMenu.equals("")) {
@@ -155,6 +171,7 @@ public class EzSystemAdminController {
 		String useSystemMonitor = ezCommonService.getTenantConfig("useSystemMonitor", userInfo.getTenantId());
 		
 		model.addAttribute("useIPAccessMenu", useIPAccessMenu);
+		model.addAttribute("useFidoAccessMenu", useFidoAccessMenu);
 		model.addAttribute("useModuleUsage", useModuleUsage);
 		model.addAttribute("useSystemMonitor", useSystemMonitor);		
 		
@@ -200,6 +217,11 @@ public class EzSystemAdminController {
 		
 		// masteradmin 사용자를 제외하기 위해 1을 뺀다.
 		userCount--;
+		// 승인메일 공유사서함이 있으면 해당 계정은 라이센스에서 제외
+		Boolean apprSharedExist = BooleanUtils.toBoolean(ezOrganAdminService.userCheck("__approved_mail", userInfo.getTenantId()));
+		if (apprSharedExist) {
+			userCount--;
+		}
 		
 		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", userInfo.getTenantId());
 		boolean isDotNetAdmin = false;
@@ -220,7 +242,7 @@ public class EzSystemAdminController {
 			defaultFontFamilyList = Arrays.asList(egovMessageSource.getMessage("main.t0620", Locale.JAPAN).split(";"));
 		} 
 		
-		List<String> defaultFontSizeList = Arrays.asList("8px,9px,10px,11px,12px,13px,14px,16px,18px,20px,24px,30px,36px,54px,72px".split(","));
+		List<String> defaultFontSizeList = Arrays.asList("8pt,9pt,10pt,11pt,12pt,13pt,14pt,16pt,18pt,20pt,24pt,30pt,36pt,54pt,72pt".split(","));
 		String useAllUserOldMailDelete = ezCommonService.getTenantConfig("useAllUserOldMailDelete", userInfo.getTenantId());
 		String useAllUserOldMailDeletePeriod = ezCommonService.getTenantConfig("useAllUserOldMailDeletePeriod", userInfo.getTenantId());
 		String usePortalAutoRefreshInterval = ezCommonService.getTenantConfig("usePortalAutoRefreshInterval", userInfo.getTenantId());
@@ -229,7 +251,8 @@ public class EzSystemAdminController {
 			useExternalMailServer = "NO";
 		}
 		String usePortal = ezCommonService.getTenantConfig("Use_Portal", userInfo.getTenantId());
-		
+		Integer notiPollingInterval = Integer.parseInt(ezCommonService.getTenantConfig("notiPollingInterval", userInfo.getTenantId())) / (1000 * 60);
+
 		model.addAttribute("dotNetIntegration", dotNetIntegration);
 		model.addAttribute("configMap", configMap);
 		model.addAttribute("licensedUserCount", licensedUserCount);
@@ -243,7 +266,11 @@ public class EzSystemAdminController {
 		model.addAttribute("useExternalMailServer", useExternalMailServer);
 		model.addAttribute("usePortal", usePortal);
 		model.addAttribute("systemDomain", systemDomain);
-		
+		model.addAttribute("notiPollingInterval", notiPollingInterval);
+
+		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
+		model.addAttribute("packageType", packageType);
+
 		logger.debug("systemMainMenu ended");
 		
 		return "/ezSystem/systemMainMenu";
@@ -353,25 +380,13 @@ public class EzSystemAdminController {
 		mailLogKeepPeriodMessage = String.format(mailLogKeepPeriodMessage, LoginMailLogKeepPeriod);
 		
 		model.addAttribute("mailLogKeepPeriodMessage", mailLogKeepPeriodMessage);
-		
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
-		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-		int j = 0;
-		
-		for (int i = 0; i < list.size(); i++) {
-			OrganDeptVO vo = list.get(i);			
 
-			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
-				resultList.add(j++, vo);
-			}
-		}
+		List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary(), userInfo.getDeptID(), userInfo.getJobId());
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID(), userInfo.getJobId());
+
+		String isMasterAdmin = organAuth.isAuth(AdminAuth.ADMIN_MASTER) ? "y" : "";
 		
-		String isMasterAdmin = "";
-		if (userInfo.getRollInfo().indexOf("c=1") != -1) { // 전체관리자
-			isMasterAdmin = "y";
-		}
-		
-		model.addAttribute("list", resultList);
+		model.addAttribute("list", adminCompanyList);
 		model.addAttribute("companyId", companyId);
 		model.addAttribute("isMasterAdmin", isMasterAdmin);
 		
@@ -1037,7 +1052,7 @@ public class EzSystemAdminController {
 		
 		return jObj.toString();
 	}
-	
+
 	@RequestMapping(value="/admin/ezSystem/systemIPManager.do", method=RequestMethod.GET)
 	public String systemIPManager(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("systemIPManager started");
@@ -1052,6 +1067,8 @@ public class EzSystemAdminController {
 		String useIPAccess = ezCommonService.getTenantConfig("useIPAccess", userInfo.getTenantId());
 
 		model.addAttribute("useIPAccess", useIPAccess);
+		model.addAttribute("rollInfo", userInfo.getRollInfo());
+
 		logger.debug("systemIPManager ended");
 		 
 		return "/ezSystem/systemIPManager";
@@ -1136,8 +1153,16 @@ public class EzSystemAdminController {
 		
 		String saveCountryList = request.getParameter("saveList");
 		logger.debug("saveCountryList=" + saveCountryList);
-		
-		ezSystemAdminService.setAccessCountry(userInfo.getTenantId(), saveCountryList);
+
+		int tenantID = userInfo.getTenantId();
+
+		String useIPAccess = ezCommonService.getTenantConfig("useIPAccess", tenantID);
+		result = ezSystemAdminService.isExistSystemAccess(saveCountryList, "country", useIPAccess, tenantID);
+
+		if ("success".equalsIgnoreCase(result)){
+			ezSystemAdminService.setAccessCountry(userInfo.getTenantId(), saveCountryList);
+			logger.debug("setAccessCountry success");
+		}
 		
 		logger.debug("saveAccessCountryList ended");
 		return result;
@@ -1168,6 +1193,7 @@ public class EzSystemAdminController {
 	}
 	
 	@RequestMapping(value="/ezSystem/setUseIPAccess.do", method=RequestMethod.POST)
+	@ResponseBody
 	public String setUseIPAccess(@CookieValue("loginCookie") String loginCookie, Model model, String allowResult) throws Exception {
 		logger.debug("setUseIPAccess started");
 		
@@ -1182,6 +1208,22 @@ public class EzSystemAdminController {
 
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
+		}
+
+		if (allowResult.equalsIgnoreCase("YES")){
+			List<String> userList = ezSystemAdminService.getAllAccessListCom(userInfo.getTenantId());
+			String countryCodeList = ezSystemAdminService.getAccessCountryList(userInfo.getTenantId());
+			List<IPBandVO> ipList = ezSystemAdminService.getAllIPBand(userInfo.getTenantId());
+			int accessIp = 0;
+			for(int i = 0; i < ipList.size(); i++) {
+				if ("YES".equalsIgnoreCase(ipList.get(i).getAccess())){
+					accessIp += 1;
+				}
+			}
+
+			if (userList.size() == 0 && "".equalsIgnoreCase(countryCodeList) && accessIp ==0){
+				return "setAccess";
+			}
 		}
 
 		ezSystemAdminService.updateSystemIPAllow(allowResult, userInfo.getTenantId());
@@ -1258,13 +1300,24 @@ public class EzSystemAdminController {
 	
 	@ResponseBody
 	@RequestMapping(value="/ezSystem/deleteIPBand.do", method=RequestMethod.POST)
-	public void deleteIPBand(@CookieValue("loginCookie") String loginCookie, Model model, String ipNo) throws Exception {
+	public String deleteIPBand(@CookieValue("loginCookie") String loginCookie, Model model, String ipNo) throws Exception {
 		logger.debug("deleteIPBand started");
 		logger.debug("ipNo=" + ipNo);
-		
-		ezSystemAdminService.deleteIPBand(ipNo);
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		int tenantID = userInfo.getTenantId();
+
+		String useIPAccess = ezCommonService.getTenantConfig("useIPAccess", tenantID);
+		String result = ezSystemAdminService.isExistSystemAccess(ipNo, "ip", useIPAccess, tenantID);
+
+		if ("success".equalsIgnoreCase(result)){
+			ezSystemAdminService.deleteIPBand(ipNo);
+			logger.debug("deleteIPBand success");
+		}
 		
 		logger.debug("deleteIPBand ended");
+
+		return result;
 	}
 	
 	
@@ -1285,6 +1338,8 @@ public class EzSystemAdminController {
 			IPBandVO getIPBand = null;
 			if (pageType.equals("adminIpAccess")) { // 관리자 IP 제한
 				getIPBand = ezSystemAdminService.getSystemAdminIPBand(ipBand.getIpNo());
+			} else if (pageType.equals("fidoAuthentication")) { //Fido인증 관리
+				getIPBand = ezSystemAdminService.getSystemFidoIPBand(ipBand.getIpNo());
 			} else {
 				getIPBand = ezSystemAdminService.getSystemIPBand(ipBand.getIpNo());
 			}
@@ -1436,12 +1491,22 @@ public class EzSystemAdminController {
 	
 	@ResponseBody
 	@RequestMapping(value="/ezSystem/deleteAccessList.do", method=RequestMethod.POST)
-	public void deleteAccessList(@CookieValue("loginCookie") String loginCookie, Model model, String accessNo) throws Exception {
+	public String deleteAccessList(@CookieValue("loginCookie") String loginCookie, Model model, String accessNo) throws Exception {
 		logger.debug("deleteAccessList started. accessNo=" + accessNo);
-		
-		ezSystemAdminService.deleteAccessId(accessNo);
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		int tenantID = userInfo.getTenantId();
+
+		String useIPAccess = ezCommonService.getTenantConfig("useIPAccess", tenantID);
+		String result = ezSystemAdminService.isExistSystemAccess(accessNo, "id", useIPAccess, tenantID);
+
+		if ("success".equalsIgnoreCase(result)){
+			ezSystemAdminService.deleteAccessId(accessNo);
+			logger.debug("deleteAccessList success");
+		}
 		
 		logger.debug("deleteAccessList ended");
+		return result;
 	}
 	
 	@RequestMapping(value="/ezSystem/systemAddAccessList.do", method=RequestMethod.GET)
@@ -1581,17 +1646,10 @@ public class EzSystemAdminController {
 		useMultiLogin = Optional.ofNullable(useMultiLogin).filter(StringUtils::isNotEmpty).orElse("YES");
 		
 		// 회사리스트
-		List<OrganDeptVO> companyList = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), tenantID);
-		List<OrganDeptVO> resultCompanyList = new ArrayList<OrganDeptVO>();
-		
-		for(OrganDeptVO company : companyList) {
-			if(company.getCn().equals(userInfo.getCompanyID()) || userInfo.getRollInfo().indexOf("c=1") != -1) {
-				resultCompanyList.add(company);
-			}
-		}
-		
+		List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), tenantID, userInfo.getPrimary(), userInfo.getDeptID(), userInfo.getJobId());
+
 		model.addAttribute("companyID", companyID);
-		model.addAttribute("companyList", resultCompanyList);
+		model.addAttribute("companyList", adminCompanyList);
 		model.addAttribute("useMultiLogin", useMultiLogin);
 		
 		logger.debug("multiLoginManager ended");
@@ -1743,7 +1801,7 @@ public class EzSystemAdminController {
 			
 			returnJsonArr.add(obj);
 		}
-		
+
 		logger.debug("returnJsonArr=" + returnJsonArr.toJSONString());
 		logger.debug("getAdminAccessIPBand ended");
 		return ResponseEntity.ok().body(returnJsonArr);
@@ -1785,14 +1843,23 @@ public class EzSystemAdminController {
 
 	// 관리자 IP제한 - ip 삭제
 	@ResponseBody
-	@RequestMapping(value="/ezSystem/deleteAdminIPBand.do", method=RequestMethod.POST)
-	public void deleteAdminIPBand(@CookieValue("loginCookie") String loginCookie, Model model, String ipNo) throws Exception {
+	@RequestMapping(value="/ezSystem/deleteAdminIPBand.do", method=RequestMethod.POST, produces="text/plain")
+	public String deleteAdminIPBand(@CookieValue("loginCookie") String loginCookie, Model model, String ipNo) throws Exception {
 		logger.debug("deleteAdminIPBand started");
 		logger.debug("ipNo=" + ipNo);
-		
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		int tenantID = userInfo.getTenantId();
+		String useAdminIpAccess = ezCommonService.getTenantConfig("useAdminIPAccess", tenantID);
+
+		int isExist = ezSystemAdminService.isExistSystemAdminIPBand(ipNo);
+		if ("YES".equalsIgnoreCase(useAdminIpAccess) && (0==isExist)) {
+			return "noExist";
+		}
+
 		ezSystemAdminService.deleteAdminIPBand(ipNo);
 		
-		logger.debug("deleteAdminIPBand ended");
+		return "OK";
 	}
 
 	/**
@@ -1807,26 +1874,18 @@ public class EzSystemAdminController {
 		String companyID = userInfo.getCompanyID();
 		
 		// 회사리스트
-		List<OrganDeptVO> companyList = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), tenantID);
-		List<OrganDeptVO> resultCompanyList = new ArrayList<OrganDeptVO>();
-		
-		for(OrganDeptVO company : companyList) {
-			if(company.getCn().equals(userInfo.getCompanyID()) || userInfo.getRollInfo().indexOf("c=1") != -1) {
-				resultCompanyList.add(company);
-			}
-		}
-		
+		List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(userInfo.getId(), tenantID, userInfo.getPrimary(), userInfo.getDeptID(), userInfo.getJobId());
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID(), userInfo.getJobId());
+
 		boolean isDotNetAdmin = false;
 		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", userInfo.getTenantId());
 		
 		if (dotNetIntegration.equals("YES")) {
-			if (userInfo.getRollInfo().indexOf("c=1") != -1 || userInfo.getRollInfo().indexOf("k=1") != -1) {
-				isDotNetAdmin = true;
-			}			
+			isDotNetAdmin = organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER);
 		}
 		
 		model.addAttribute("companyID", companyID);
-		model.addAttribute("companyList", resultCompanyList);
+		model.addAttribute("companyList", adminCompanyList);
 		model.addAttribute("isDotNetAdmin", isDotNetAdmin);
 		
 		logger.debug("passwordPolicyMain ended.");
@@ -1856,8 +1915,12 @@ public class EzSystemAdminController {
 		expirePassPeriod = expirePassPeriod.equals("") ? "0" : expirePassPeriod;
 		String maxAllowedCountOfLoginFail = ezCommonService.getCompanyConfig(tenantId, companyId, "MaxAllowedCountOfLoginFail"); // 암호 최대 오류 횟수
 		maxAllowedCountOfLoginFail = maxAllowedCountOfLoginFail.equals("") ? "0" : maxAllowedCountOfLoginFail;
+		String loginLockedDuration = ezCommonService.getCompanyConfig(tenantId, companyId, "LoginLockedDuration"); // 계정 잠금 처리 시간
+		loginLockedDuration = loginLockedDuration.equals("") ? "0" : loginLockedDuration;
 		String useChkPrevPwd = ezCommonService.getCompanyConfig(tenantId, companyId, "useChkPrevPwd"); // 2021-11-10 이사라 : 가장 최근 암호 사용 금지 여부
 		useChkPrevPwd = useChkPrevPwd.equals("") ? "NO" : useChkPrevPwd;
+		String rememberPWCount = ezCommonService.getCompanyConfig(tenantId, companyId, "RememberPWCount"); // 2024-07-16 김대현 : 기억할 암호 수
+		rememberPWCount = rememberPWCount.equals("") ? "1" : rememberPWCount;
 		String usePasswordPatternPolicy = ezCommonService.getCompanyConfig(tenantId, companyId, "UsePasswordPatternPolicy"); // 암호 정책관리 사용여부
 		usePasswordPatternPolicy = usePasswordPatternPolicy.equals("") ? "NO" : usePasswordPatternPolicy;
 		logger.debug("expirePassPeriod=" + expirePassPeriod + ", maxAllowedCountOfLoginFail=" + maxAllowedCountOfLoginFail 
@@ -1867,12 +1930,41 @@ public class EzSystemAdminController {
 
 		returnMap.put("expirePassPeriod", expirePassPeriod);
 		returnMap.put("maxAllowedCountOfLoginFail", maxAllowedCountOfLoginFail);
+		returnMap.put("LoginLockedDuration", loginLockedDuration);
 		returnMap.put("useChkPrevPwd", useChkPrevPwd); // 2021-11-10 이사라 : 추가
+		returnMap.put("rememberPWCount", rememberPWCount);
 		returnMap.put("usePasswordPatternPolicy", usePasswordPatternPolicy);
 		returnMap.put("pwPolicyMap", pwPolicyMap);
 		logger.debug("return :: " + returnMap.toString());
 		
 		logger.debug("getPasswordPolicy ended.");
+		return returnMap;
+	}
+
+	/**
+	 * 회사별 암호 정책 문구
+	 */
+	@RequestMapping(value = "/admin/ezSystem/getPasswordPolicyExplain.do", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> getPasswordPolicyExplain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getPasswordPolicyExplain started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String companyId = userInfo.getCompanyID();
+		Map<String, Object> returnMap = new HashMap<String, Object>();
+
+		String reCompanyId = request.getParameter("companyId");
+		if (reCompanyId != null && !reCompanyId.equals("")) {
+			companyId = reCompanyId;
+		}
+		logger.debug("tenantId=" + userInfo.getTenantId() + ", companyId=" + companyId);
+		
+		String pwPolicyExplain = commonUtil.getPwPolicyExplain(companyId, userInfo.getTenantId(), userInfo.getLocale());
+		
+		returnMap.put("pwPolicyExplain", pwPolicyExplain);
+		
+		logger.debug("getPasswordPolicyExplain ended.");
+		
 		return returnMap;
 	}
 	
@@ -2336,16 +2428,9 @@ public class EzSystemAdminController {
 		 * model.addAttribute("mailLogKeepPeriodMessage", mailLogKeepPeriodMessage);
 		 */
 
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(user.getPrimary(), tenantId);
-		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-		int j = 0;
-		boolean isMasterAdmin = user.getRollInfo().contains("c=1");
-
-		for (OrganDeptVO vo : list) {
-			if (isMasterAdmin || vo.getCn().equals(companyId)) {
-				resultList.add(j++, vo);
-			}
-		}
+		List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(user.getId(), tenantId, user.getPrimary(), user.getDeptID(), user.getJobId());
+		OrganAuth organAuth = commonUtil.makeOrganAuth(user.getId(), user.getTenantId(), user.getDeptID(), user.getJobId());
+		boolean isMasterAdmin = organAuth.isAuth(AdminAuth.ADMIN_MASTER);
 
 		// 관리자 구분 셀렉트박스 적용
 		String approvalFlag		= ezCommonService.getTenantConfig("ApprovalFlag" ,tenantId);
@@ -2354,6 +2439,7 @@ public class EzSystemAdminController {
 		boolean useWebfolder	= ezCommonService.getTenantConfig("useWebfolder" ,tenantId).equalsIgnoreCase("YES");
 		boolean useBoard		= !ezCommonService.getTenantConfig("useBoard" ,tenantId).equalsIgnoreCase("NO");
 		boolean useSurvey		= !ezCommonService.getTenantConfig("useSurvey" ,tenantId).equalsIgnoreCase("NO");
+		boolean useSchedule		= ezCommonService.getTenantConfig("useSchedule" ,tenantId).equalsIgnoreCase("YES");
 		String packageType		= commonUtil.getPackageType(tenantId);
 
 		model.addAttribute("approvalFlag", approvalFlag);
@@ -2363,9 +2449,10 @@ public class EzSystemAdminController {
 		model.addAttribute("packageType", packageType);
 		model.addAttribute("useBoard", useBoard);
 		model.addAttribute("useSurvey", useSurvey);
-		model.addAttribute("list", resultList);
+		model.addAttribute("list", adminCompanyList);
 		model.addAttribute("companyId", companyId);
 		model.addAttribute("isMasterAdmin", isMasterAdmin);
+		model.addAttribute("useSchedule", useSchedule); // 일정관리 모듈 사용여부(사용 : true)
 
 		logger.debug("ended permissionChangeHist controller.");
 
@@ -2665,7 +2752,7 @@ public class EzSystemAdminController {
 				adminType = egovMessageSource.getMessage("ezOrgan.t303", locale);
 			} else if (adminType.contains("e=")) {
 				adminType = egovMessageSource.getMessage("ezOrgan.kbm01", locale);
-			} else { 
+			} else {
 				adminType = egovMessageSource.getMessage("ezOrgan.t9904", locale);
 			}
 
@@ -2760,21 +2847,11 @@ public class EzSystemAdminController {
 		}
 
 		String companyId = user.getCompanyID();
-		int tenantId = user.getTenantId();
-		
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(user.getPrimary(), tenantId);
-		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-		int j = 0;
-		boolean isMasterAdmin = user.getRollInfo().contains("c=1");
+		List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(user.getId(), user.getTenantId(), user.getPrimary(), user.getDeptID(), user.getJobId());
+		OrganAuth organAuth = commonUtil.makeOrganAuth(user.getId(), user.getTenantId(), user.getDeptID(), user.getJobId());
+		boolean isMasterAdmin = organAuth.isAuth(AdminAuth.ADMIN_MASTER);
 
-		for (OrganDeptVO vo : list) {
-			if (isMasterAdmin || vo.getCn().equals(companyId)) {
-				resultList.add(j++, vo);
-			}
-		}
-
-
-		model.addAttribute("list", resultList);
+		model.addAttribute("list", adminCompanyList);
 		model.addAttribute("companyId", companyId);
 		model.addAttribute("isMasterAdmin", isMasterAdmin);
 
@@ -3127,14 +3204,11 @@ public class EzSystemAdminController {
 		String companyId = user.getCompanyID();
 		int tenantId = user.getTenantId();
 
-		List<OrganDeptVO> lists = ezOrganAdminService.getCompanyList(user.getPrimary(), tenantId);
+		List<OrganDeptVO> adminCompanyList = ezOrganAdminService.getAdminCompanyList(user.getId(), user.getTenantId(), user.getPrimary(), user.getDeptID(), user.getJobId());
+		OrganAuth organAuth = commonUtil.makeOrganAuth(user.getId(), user.getTenantId(), user.getDeptID(), user.getJobId());
+		boolean isMasterAdmin = organAuth.isAuth(AdminAuth.ADMIN_MASTER);
 
-		boolean isMasterAdmin = user.getRollInfo().contains("c=1");
-
-		List<OrganDeptVO> companyList = lists.stream().filter(list -> isMasterAdmin || list.getCn().equals(companyId))
-				.collect(Collectors.toList());
-
-		model.addAttribute("list", companyList);
+		model.addAttribute("list", adminCompanyList);
 		model.addAttribute("companyId", companyId);
 		model.addAttribute("isMasterAdmin", isMasterAdmin);
 
@@ -3499,4 +3573,1021 @@ public class EzSystemAdminController {
 		logger.debug("deptChageHistExcelExport ended.");
 	}
 
+	/**
+	 * 접속자 목록 메인 호출
+	 * 2024-05-21 장혜연
+	 */
+	@RequestMapping(value="/admin/ezSystem/systemConnectorHist.do", method = RequestMethod.GET)
+	public String systemConnectorList(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model) throws Exception {
+
+		logger.debug("started systemConnectorList controller.");
+
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		String companyId = userInfo.getCompanyID();
+
+		String LoginMailLogKeepPeriod = ezCommonService.getTenantConfig("LoginMailLogKeepPeriod",
+				userInfo.getTenantId());
+		LoginMailLogKeepPeriod = LoginMailLogKeepPeriod.equals("") ? "3" : LoginMailLogKeepPeriod;
+
+		String mailLogKeepPeriodMessage = egovMessageSource.getMessage("ezStatistics.t1065", locale);
+		mailLogKeepPeriodMessage = String.format(mailLogKeepPeriodMessage, LoginMailLogKeepPeriod);
+
+		model.addAttribute("mailLogKeepPeriodMessage", mailLogKeepPeriodMessage);
+
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+		int j = 0;
+
+		for (int i = 0; i < list.size(); i++) {
+			OrganDeptVO vo = list.get(i);
+
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
+				resultList.add(j++, vo);
+			}
+		}
+
+		String isMasterAdmin = "";
+		if (userInfo.getRollInfo().indexOf("c=1") != -1) { // 전체관리자
+			isMasterAdmin = "y";
+		}
+
+		model.addAttribute("list", resultList);
+		model.addAttribute("companyId", companyId);
+		model.addAttribute("isMasterAdmin", isMasterAdmin);
+
+		logger.debug("ended systemConnectorList controller.");
+
+		return "/ezSystem/systemConnectorHist";
+
+	}
+
+	/**
+	 * 접속자 데이터 목록 호출
+	 * 2024-05-21 장혜연
+	 */
+	@RequestMapping(value="/admin/ezSystem/systemConnectorList.do", method = RequestMethod.POST)
+	public String systemConnectorList(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest req,
+			@RequestParam(required=false)String searchKeycode, @RequestParam(required=false)String searchKeyword,
+			@RequestParam(required=false)String startDate, @RequestParam(required=false)String endDate) throws Exception {
+
+		logger.debug("started systemConnectorList controller.");
+
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+		String offset = userInfo.getOffset();
+		String currPage = req.getParameter("pageNum");
+
+		if (currPage == null || currPage.equals("")) {
+			currPage = "1";
+		}
+
+		int maxItemPerPage = 20;
+		int currentPage = Integer.parseInt(currPage);
+		int startRow = Math.multiplyExact(Math.subtractExact(Integer.parseInt(currPage), 1), maxItemPerPage);
+
+		if (currPage.equals("-1")) {
+			startRow = -1;
+		}
+
+		/*
+		 * 2018.11.21 김수아 (전체관리자) 회사선택 후 선택한 회사의 로그인 히스토리가 나오도록 변경
+		 */
+		String companyId = req.getParameter("companyId"); // 선택된 회사
+
+		/*
+		 * 2017.07.26 강민석 로그인 히스토리에는 자신의 회사만 나오도록 수정
+		 */
+		// String companyId = userInfo.getCompanyID();
+		logger.debug("companyId : " + companyId);
+
+		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
+
+		if (userInfo.getLang().equals(sysLang)) {
+			sysLang = "primary";
+		}
+
+		searchKeyword = searchKeyword.replace("%", "\\%").replace("_", "\\_");
+		List<ConnectionInfoVO> loginHistList = ezSystemAdminService.getConnectorList(
+				Integer.valueOf(userInfo.getTenantId()), commonUtil.getMinuteUTC(offset), startRow, maxItemPerPage,
+				searchKeycode, searchKeyword, sysLang, startDate, endDate, companyId);
+
+		int itemCnt = ezSystemAdminService.getConnectorListCount(userInfo.getTenantId(),
+				commonUtil.getMinuteUTC(offset), searchKeycode, searchKeyword, sysLang, startDate, endDate, companyId);
+
+		int totalPage = itemCnt / maxItemPerPage;
+
+		if (itemCnt < 1) {
+			totalPage = 1;
+		}
+
+		if ((totalPage * maxItemPerPage) != itemCnt && (itemCnt % maxItemPerPage) != 0) {
+			totalPage = totalPage + 1;
+		}
+
+		currentPage = Math.min(currentPage, totalPage);
+		model.addAttribute("loginHistList", loginHistList);
+		model.addAttribute("lang", sysLang);
+		model.addAttribute("currPage", currentPage);
+		model.addAttribute("totalPage", totalPage);
+		model.addAttribute("itemCnt", itemCnt);
+		model.addAttribute("searchKeyword", searchKeyword);
+		model.addAttribute("searchKeycode", searchKeycode);
+		model.addAttribute("startDate", startDate);
+		model.addAttribute("endDate", endDate);
+
+		logger.debug("ended systemConnectorList controller.");
+
+		return "json";
+	}
+
+	/*
+	 * 엑셀 워크시트 생성 및 자동 다운로드 함수
+	 * 2024-05-21 장혜연
+	 */
+	@RequestMapping(value = "/admin/ezSystem/systemConnHistExcelExport.do", method = RequestMethod.GET)
+	@ResponseBody
+	public void connectorHistExcelExport (@CookieValue("loginCookie") String loginCookie,
+			HttpServletRequest request, String searchKeycode, String searchKeyword,
+			String startDate, String endDate, Locale locale, HttpServletResponse response) throws Exception {
+		logger.debug("connectorHistExcelExport started.");
+
+		LoginVO user = commonUtil.userInfo(loginCookie);
+
+		int tenantId = user.getTenantId();
+		String offset = user.getOffset();
+		String currPage = request.getParameter("pageNum");
+
+		int maxItemPerPage = 20;
+		int startRow = (Integer.parseInt(currPage) - 1) * maxItemPerPage;
+
+		if (currPage.equals("-1")) {
+			startRow = -1;
+		}
+
+		String companyId = request.getParameter("companyId"); // 선택된 회사
+		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
+
+		if (user.getLang().equals(sysLang)) {
+			sysLang = "primary";
+		}
+
+		searchKeyword = searchKeyword.replace("%", "\\%").replace("_", "\\_");
+		List<ConnectionInfoVO> connectorList = new ArrayList<ConnectionInfoVO>();
+		int totalCount = 0;
+
+		String fileName = startDate + "_" + endDate + "_connectorHistory";
+
+		connectorList = ezSystemAdminService.getConnectorList(Integer.valueOf(tenantId),
+				commonUtil.getMinuteUTC(offset), startRow, maxItemPerPage, searchKeycode, searchKeyword, sysLang,
+				startDate, endDate, companyId);
+		totalCount = ezSystemAdminService.getConnectorListCount(tenantId, commonUtil.getMinuteUTC(offset),
+				searchKeycode, searchKeyword, sysLang, startDate, endDate, companyId);
+
+		String userNm = "";
+		String deptNm = "";
+		String compNm = "";
+
+		List<List<String>> rowDeptValue = new ArrayList<List<String>>();
+
+		for (ConnectionInfoVO connInfo : connectorList) {
+			List<String> cellDeptValue = new ArrayList<>();
+
+			userNm = connInfo.getUsernm() + "(" + connInfo.getUserid() + ")";
+			deptNm = connInfo.getDeptnm();
+			compNm = connInfo.getCompanynm();
+
+			if (!"primary".equals(sysLang)) {
+				userNm = connInfo.getUsernm2() + "(" + connInfo.getUserid() + ")";
+				deptNm = connInfo.getDeptnm2();
+				compNm = connInfo.getCompanynm2();
+			}
+
+			cellDeptValue.add(userNm);
+			cellDeptValue.add(deptNm);
+			cellDeptValue.add(compNm);
+
+			rowDeptValue.add(cellDeptValue);
+		}
+
+		SXSSFRow row = null;
+		SXSSFCell cell = null;
+		String[] histHeaderArr = egovMessageSource.getMessage("ezSystem.jhyConnectorHistory", locale).split(";");
+
+		try (SXSSFWorkbook workbook = new SXSSFWorkbook(totalCount + 2)) {
+			SXSSFSheet sheet = workbook.createSheet("connectorHistory");
+			CellStyle headerStyle = workbook.createCellStyle();
+			CellStyle bodyStyle = workbook.createCellStyle();
+
+			// 시트 기본 열 넓이
+			sheet.setDefaultColumnWidth(20);
+
+			// 폰트 설정
+			Font font = workbook.createFont();
+			font.setFontHeightInPoints((short) 11);
+			font.setBold(Boolean.TRUE);
+			headerStyle.setFont(font);
+
+			// 헤더 스타일
+			headerStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+			headerStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+			headerStyle.setBorderBottom(CellStyle.BORDER_THIN);
+			headerStyle.setBorderTop(CellStyle.BORDER_THIN);
+			headerStyle.setBorderRight(CellStyle.BORDER_THIN);
+			headerStyle.setBorderLeft(CellStyle.BORDER_THIN);
+			headerStyle.setVerticalAlignment((short) 1);
+
+			// 바디 스타일
+			bodyStyle.setBorderBottom(CellStyle.BORDER_THIN);
+			bodyStyle.setBorderTop(CellStyle.BORDER_THIN);
+			bodyStyle.setBorderRight(CellStyle.BORDER_THIN);
+			bodyStyle.setBorderLeft(CellStyle.BORDER_THIN);
+
+			// 1행 - 조회한 기간, count 입력
+			row = sheet.createRow(0);
+			cell = row.createCell(0);
+			cell.setCellStyle(bodyStyle);
+			cell.setCellValue(
+					egovMessageSource.getMessage("ezSystem.x0032", locale) + " : " + startDate + " ~ " + endDate);
+			cell = row.createCell(histHeaderArr.length - 1);
+			cell.setCellStyle(bodyStyle);
+			cell.setCellValue(egovMessageSource.getMessage("main.t252", locale) + " " + totalCount
+					+ egovMessageSource.getMessage("ezSystem.kyj2", locale));
+
+			// 2행 - 헤더 입력
+			row = sheet.createRow(1);
+			for (int head = 0; head < histHeaderArr.length; head++) {
+				cell = row.createCell(head);
+				cell.setCellStyle(headerStyle);
+				cell.setCellValue(histHeaderArr[head]);
+			}
+
+			// 3행 ~ - 바디 입력
+			for (int nRow = 2; nRow < totalCount + 2; nRow++) {
+				row = sheet.createRow(nRow);
+
+				for (int nCell = 0; nCell < histHeaderArr.length; nCell++) {
+					cell = row.createCell(nCell);
+					cell.setCellStyle(bodyStyle);
+					cell.setCellValue(rowDeptValue.get(nRow - 2).get(nCell));
+				}
+			}
+			response.setCharacterEncoding("UTF-8");
+			response.setHeader("Content-Disposition", "attachment; fileName=" + fileName + ".xlsx");
+			response.setContentType("application/vnd.ms-excel");
+
+			workbook.write(response.getOutputStream());
+			workbook.close();
+		}
+		;
+		logger.debug("connectorHistExcelExport ended.");
+	}
+
+	@RequestMapping(value = "/admin/ezSystem/resetUserSettings.do", method = RequestMethod.GET)
+	public String resetUserSettings(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("resetUserSettings started.");
+
+		LoginVO user = commonUtil.checkAdmin(loginCookie);
+		//관리자 권한 체크
+		if (user == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		model.addAttribute("type", request.getParameter("type"));
+
+		logger.debug("resetUserSettings ended.");
+		return "/ezSystem/systemResetUserSettings";
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/admin/ezSystem/allUserResetFrame.do", method=RequestMethod.POST)
+	public String allUserResetFrame(@CookieValue String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("allUserResetFrame started.");
+		//관리자 권한체크
+		LoginVO user = commonUtil.checkAdmin(loginCookie);
+
+		if (user == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		try {
+			ezSystemAdminService.resetThemeAllUser();
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			logger.debug("allUserResetFrame ended.");
+			return "fail";
+		}
+
+		logger.debug("allUserResetFrame ended.");
+		return "success";
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/admin/ezSystem/allUserResetPortlet.do", method=RequestMethod.POST)
+	public String allUserResetPortlet(@CookieValue String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("allUserResetPortlet started.");
+		//관리자 권한체크
+		LoginVO user = commonUtil.checkAdmin(loginCookie);
+
+		if (user == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		try {
+			ezSystemAdminService.resetPortletAllUser();
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			logger.debug("resetPortletAllUser ended.");
+			return "fail";
+		}
+
+		logger.debug("allUserResetPortlet ended.");
+		return "success";
+	}
+	
+	/**
+	 * 시스템 SYSTEM CONFIG 메뉴 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezSystem/systemConfigList.do", method = RequestMethod.GET)	
+	public String systemConfigList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+	    logger.debug("systemConfigList started.");
+	    
+		LoginVO user = commonUtil.checkAdmin(loginCookie);
+		//관리자 권한 체크
+		if (user == null) {
+			return "cmm/error/adminDenied";
+		}
+		model.addAttribute("isAdmin", user.getRollInfo().indexOf("c=1") > -1);
+		model.addAttribute("lang", user.getLang());
+		
+		logger.debug("systemConfigList ended.");
+		
+		return "/ezSystem/systemConfigList";
+	}
+	
+	/**
+	 * 시스템 SYSTEM CONFIG 리스트 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezSystem/getSystemConfigList.do", method = RequestMethod.POST, produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getSystemConfigList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+	    logger.debug("getSystemConfigList started.");
+	    
+        LoginVO userInfo = commonUtil.userInfo(loginCookie);
+        int tenantID = userInfo.getTenantId();
+        String useLang = commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId());
+        logger.debug("tenantID=" + tenantID);
+	    
+        String companyID = request.getParameter("companyID");
+        String typeCode = request.getParameter("typeCode");
+		String searchValue = request.getParameter("searchValue");
+		int pageNum = Integer.parseInt(request.getParameter("pageNum"));
+		int pageSize = Integer.parseInt(request.getParameter("pageSize"));		
+        
+		searchValue = searchValue.replace("%", "\\%").replace("_", "\\_");
+		
+        int cnt = ezSystemAdminService.getSystemConfigListCount(searchValue, typeCode, companyID, tenantID);
+        int totalPages  = (cnt + pageSize - 1) / pageSize;
+        pageNum = pageNum > totalPages ? totalPages : pageNum;
+        pageNum = pageNum == 0         ? 1          : pageNum;
+
+        int startRow  = (pageNum - 1) * pageSize;
+        logger.debug("searchValue=" + searchValue + ",pageNum=" + pageNum
+                + ",pageSize=" + pageSize + ",startRow=" + startRow + ",totalCount=" + cnt);
+        
+        List<SystemConfigVO> list = ezSystemAdminService.getSystemConfigList(searchValue, typeCode, commonUtil.getMinuteUTC(userInfo.getOffset()), startRow, pageSize, companyID, tenantID);
+        
+		StringBuilder result = new StringBuilder("<LISTVIEWDATA>");
+		result.append("<ROWS>");
+		result.append("<TOTALCNT>");
+		result.append(cnt);
+		result.append("</TOTALCNT>");
+        
+        for (int i = 0; i < list.size(); i++) {
+        	SystemConfigVO vo = list.get(i);
+        	
+        	result.append("<ROW>");
+        	result.append("<CELL>");
+        	result.append("<VALUE>" + commonUtil.cleanValue(vo.getCode()) + "</VALUE>");
+            result.append("<DATA1>" + commonUtil.cleanValue(vo.getCode()) + "</DATA1>");
+            result.append("<DATA2>" + commonUtil.cleanValue(vo.getTypeCode()) + "</DATA2>");
+            if (useLang.equals("1")) {
+            	result.append("<DATA3>" + commonUtil.cleanValue(vo.getTypeName()) + "</DATA3>");
+            } else {
+            	result.append("<DATA3>" + commonUtil.cleanValue(vo.getTypeName2()) + "</DATA3>");
+            }
+            result.append("<DATA4>" + commonUtil.cleanValue(vo.getCodeValue()) + "</DATA4>");
+            result.append("<DATA5>" + commonUtil.cleanValue(vo.getDescription()) + "</DATA5>");
+            result.append("<DATA6>" + commonUtil.cleanValue(vo.getWriterid()) + "</DATA6>");
+            result.append("<DATA7>" + commonUtil.cleanValue(vo.getWritername()) + "</DATA7>");
+            result.append("<DATA8>" + commonUtil.cleanValue(vo.getWritedate()) + "</DATA8>");
+            result.append("<DATA9>" + commonUtil.cleanValue(vo.getIsDeleteBlock()) + "</DATA9>");
+            result.append("</CELL>");
+            result.append("<CELL>");
+            result.append("<VALUE>" + commonUtil.cleanValue(vo.getCode()) + "</VALUE>");
+            result.append("</CELL>");
+            result.append("<CELL>");
+            if (useLang.equals("1")) {
+            	result.append("<VALUE>" + commonUtil.cleanValue(vo.getTypeName()) + "</VALUE>");
+            } else {
+            	result.append("<VALUE>" + commonUtil.cleanValue(vo.getTypeName2()) + "</VALUE>");
+            }
+            result.append("</CELL>");
+            result.append("<CELL>");
+            result.append("<VALUE>" + commonUtil.cleanValue(vo.getCodeValue()) + "</VALUE>");
+            result.append("</CELL>");
+            result.append("<CELL>");
+            result.append("<VALUE>" + commonUtil.cleanValue(vo.getDescription()) + "</VALUE>");
+            result.append("</CELL>");
+            result.append("<CELL>");
+            result.append("<VALUE>" + commonUtil.cleanValue(vo.getWritername()) + "</VALUE>");
+            result.append("</CELL>");
+            result.append("<CELL>");
+            result.append("<VALUE>" + commonUtil.cleanValue(vo.getWritedate().substring(0, 10)) + "</VALUE>");
+            result.append("</CELL>");
+            result.append("<CELL>");
+            result.append("<VALUE>" + commonUtil.cleanValue(vo.getIsDeleteBlock().toUpperCase().equals("Y") ? "O" : "X") + "</VALUE>");
+            result.append("</CELL>");
+            result.append("</ROW>");
+        }
+        result.append("</ROWS>");
+        result.append("</LISTVIEWDATA>");
+        
+        logger.debug("getSystemConfigList ended.");
+        
+		return result.toString();
+	}
+	
+	/**
+	 * 시스템 SYSTEM CONFIG 리스트 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezSystem/getSystemConfigListPopup.do", method = RequestMethod.POST, produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getSystemConfigListPopup(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+	    logger.debug("getSystemConfigListPopup started.");
+	    
+        LoginVO userInfo = commonUtil.userInfo(loginCookie);
+        int tenantID = userInfo.getTenantId();
+        
+        logger.debug("tenantID=" + tenantID);
+	    String companyID = request.getParameter("companyID");
+	    String typeCode = request.getParameter("typeCode");
+		String searchValue = request.getParameter("searchValue");
+		int pageNum = Integer.parseInt(request.getParameter("pageNum"));
+		int pageSize = Integer.parseInt(request.getParameter("pageSize"));		
+        
+        
+		searchValue = searchValue.replace("%", "\\%").replace("_", "\\_");
+		
+        int cnt = ezSystemAdminService.getSystemConfigListCountPopup(searchValue, typeCode, companyID, tenantID);
+        
+        int totalPages  = (cnt + pageSize - 1) / pageSize;
+        pageNum = pageNum > totalPages ? totalPages : pageNum;
+        pageNum = pageNum == 0         ? 1          : pageNum;
+
+        int startRow  = (pageNum - 1) * pageSize;
+        int endRow = Math.multiplyExact(pageSize, pageNum);
+        logger.debug("searchValue=" + searchValue + ",pageNum=" + pageNum
+                + ",pageSize=" + pageSize + ",startRow=" + startRow + ",endRow=" + endRow
+                + ",totalCount=" + cnt);
+        
+        List<SystemConfigVO> list = ezSystemAdminService.getSystemConfigListPopup(searchValue, typeCode, commonUtil.getMinuteUTC(userInfo.getOffset()), startRow, pageSize, companyID, tenantID);
+        
+		StringBuilder result = new StringBuilder("<LISTVIEWDATA>");
+		result.append("<ROWS>");
+		result.append("<TOTALCNT>");
+		result.append(cnt);
+		result.append("</TOTALCNT>");
+        
+        for (int i = 0; i < list.size(); i++) {
+        	SystemConfigVO vo = list.get(i);
+        	
+        	result.append("<ROW>");
+        	result.append("<CELL>");
+        	result.append("<VALUE>" + commonUtil.cleanValue(vo.getCode()) + "</VALUE>");
+            result.append("<DATA1>" + commonUtil.cleanValue(vo.getCode()) + "</DATA1>");
+            result.append("<DATA2>" + commonUtil.cleanValue(vo.getCodeValue()) + "</DATA2>");
+            result.append("<DATA3>" + commonUtil.cleanValue(vo.getDescription()) + "</DATA3>");
+            result.append("<DATA4>" + commonUtil.cleanValue(vo.getWriterid()) + "</DATA4>");
+            result.append("<DATA5>" + commonUtil.cleanValue(vo.getWritername()) + "</DATA5>");
+            result.append("<DATA6>" + commonUtil.cleanValue(vo.getWritedate()) + "</DATA6>");
+            result.append("</CELL>");
+            result.append("<CELL>");
+            result.append("<VALUE>" + commonUtil.cleanValue(vo.getCode()) + "</VALUE>");
+            result.append("</CELL>");
+            result.append("<CELL>");
+            result.append("<VALUE>" + commonUtil.cleanValue(vo.getCodeValue()) + "</VALUE>");
+            result.append("</CELL>");
+            result.append("<CELL>");
+            result.append("<VALUE>" + commonUtil.cleanValue(vo.getDescription()) + "</VALUE>");
+            result.append("</CELL>");
+            result.append("<CELL>");
+            result.append("<VALUE>" + commonUtil.cleanValue(vo.getWritername()) + "</VALUE>");
+            result.append("</CELL>");
+            result.append("<CELL>");
+            result.append("<VALUE>" + commonUtil.cleanValue(vo.getWriterid()) + "</VALUE>");
+            result.append("</CELL>");
+            result.append("<CELL>");
+            result.append("<VALUE>" + commonUtil.cleanValue(vo.getWritedate()) + "</VALUE>");
+            result.append("</CELL>");
+            result.append("</ROW>");
+        }
+        result.append("</ROWS>");
+        result.append("</LISTVIEWDATA>");
+        
+        logger.debug("getSystemConfigListPopup ended.");
+        
+		return result.toString();
+	}
+	
+	/**
+	 * 시스템 SYSTEM CONFIG 메뉴 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezSystem/addSystemConfig.do", method = RequestMethod.GET)	
+	public String addSystemConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, String CODE) throws Exception{
+	    logger.debug("addSystemConfig started.");
+	    
+	    SystemConfigVO configVO = null;
+	    String sFlag = "add";
+	    String companyID = request.getParameter("companyID");
+	    LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+	    String useLang = commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId());
+		
+	    //관리자 권한체크
+  		LoginVO adminChk = commonUtil.checkAdmin(loginCookie);
+
+  		if (adminChk == null) {
+  			return "cmm/error/adminDenied";
+  		}
+	    
+		if (CODE != null) {
+			configVO = ezSystemAdminService.getSystemConfig(CODE, commonUtil.getMinuteUTC(userInfo.getOffset()), companyID, userInfo.getTenantId());
+			sFlag = "mod";
+			String mode = request.getParameter("mode");
+			if (mode != null && mode.equals("view")) {
+				sFlag = "view";
+			}
+		}
+		
+		List<SystemConfigTypeVO> configTypeList = ezSystemAdminService.getSystemConfigTypeListNotXml("", commonUtil.getMinuteUTC(userInfo.getOffset()), 0, 0, "ALL", companyID, userInfo.getTenantId());
+		model.addAttribute("configTypeList", configTypeList);
+		model.addAttribute("flag", sFlag);
+		model.addAttribute("configVO", configVO);
+		model.addAttribute("companyID", companyID);
+		model.addAttribute("useLang", useLang);
+		
+		logger.debug("addSystemConfig ended.");
+		
+		return "/ezSystem/addSystemConfig";
+	}
+	
+	/**
+	 * 시스템 SYSTEM CONFIG 삭제 호출 함수
+	 */
+	@RequestMapping(value="/admin/ezSystem/deletesyStemConfig.do", method=RequestMethod.POST)
+	@ResponseBody
+	public String deleteSystemConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, String[] CODE) throws Exception {
+		logger.debug("deleteSystemConfig started");
+		logger.debug("CODE=" + CODE);
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		// 관리자 권한 체크
+		if (userInfo == null) {
+			return "ERROR";
+		}
+		
+		String result = "";
+		String companyID = request.getParameter("companyID");
+		
+		if (CODE != null) {
+			for (int i = 0; i < CODE.length; i++) {
+				String sCode = CODE[i];
+				try {
+					ezSystemAdminService.deletesyStemConfig(sCode, companyID, userInfo.getTenantId());
+					
+					result = "OK";
+				} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
+					logger.error(e.getMessage(), e);
+					result = "ERROR";
+				}
+			}
+		} else {
+			result = "OK";
+		}
+		
+		logger.debug("deleteSystemConfig ended");
+		
+		return result;
+	}
+	
+	/**
+	 * 시스템 SYSTEM CONFIG 등록/수정 호출 함수
+	 */
+	@RequestMapping(value="/admin/ezSystem/saveSystemConfig.do", method=RequestMethod.POST, produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String saveSystemConfig(@CookieValue("loginCookie") String loginCookie,@RequestBody String data) throws Exception {
+		logger.debug("saveSystemConfig started");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		Document doc = commonUtil.convertStringToDocument(data);
+		String flag;
+		flag = doc.getElementsByTagName("FLAG").item(0).getTextContent();
+		// 관리자 권한 체크
+		if (userInfo == null) {
+			return "ERROR";
+		}
+		
+		String result = "";
+		
+		if (flag.equals("add")) {
+			result = ezSystemAdminService.insertStemConfig(doc, userInfo.getId(), userInfo.getDisplayName(), userInfo.getTenantId());
+		} else if (flag.equals("mod")){
+			// 수정
+			result = ezSystemAdminService.updateStemConfig(doc, userInfo.getId(), userInfo.getDisplayName(), userInfo.getTenantId());
+		}
+		
+		logger.debug("saveSystemConfig ended");
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "/admin/ezSystem/getSystemConfigTypeList.do", method = RequestMethod.GET, produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getSystemConfigType(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, String CODE) throws Exception{
+	    logger.debug("getSystemConfigType started.");
+	    LoginVO userInfo = commonUtil.userInfo(loginCookie);
+	    String companyID = request.getParameter("companyID");
+	    
+	    String searchValue = request.getParameter("searchValue");
+	    String searchMode = request.getParameter("mode");
+	    String systemConfigTypeList = "";
+	    if (searchMode != null && searchMode.equals("ALL")) {
+	    	systemConfigTypeList = ezSystemAdminService.getSystemConfigTypeList(searchValue, commonUtil.getMinuteUTC(userInfo.getOffset()), 0, 0, searchMode, userInfo.getPrimary(), companyID, userInfo.getTenantId());
+	    } else {
+	    	int pageNum = Integer.parseInt(request.getParameter("pageNum"));
+	    	int pageSize = Integer.parseInt(request.getParameter("pageSize"));		
+	    	
+	    	int cnt = ezSystemAdminService.getSystemConfigTypeListCount(searchValue, companyID, userInfo.getTenantId());
+	    	int totalPages  = (cnt + pageSize - 1) / pageSize;
+	    	pageNum = pageNum > totalPages ? totalPages : pageNum;
+	    	pageNum = pageNum == 0         ? 1          : pageNum;
+	    	
+	    	int startRow  = (pageNum - 1) * pageSize;
+	    	searchValue = searchValue.replace("%", "\\%").replace("_", "\\_");
+	    	
+	    	systemConfigTypeList = ezSystemAdminService.getSystemConfigTypeList(searchValue, commonUtil.getMinuteUTC(userInfo.getOffset()), startRow, pageSize, searchMode, userInfo.getPrimary(), companyID, userInfo.getTenantId());
+	    }
+	    
+		logger.debug("getSystemConfigType ended.");
+	
+		return systemConfigTypeList;
+	}
+	
+	@RequestMapping(value = "/admin/ezSystem/editSystemConfigType.do", method = RequestMethod.GET)
+	public String editSystemConfigType(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("editSystemConfigType started.");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String companyID = request.getParameter("companyID");
+		
+		model.addAttribute("companyID", companyID);
+		
+		logger.debug("editSystemConfigType ended.");
+		return "/ezSystem/editSystemConfigType";
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/admin/ezSystem/deleteSystemConfigType.do", method=RequestMethod.POST)
+	@ResponseBody
+	public String deleteSystemConfigType(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, @RequestBody Map<String, Object> data) throws Exception {
+		logger.debug("deleteSystemConfig started");
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		// 관리자 권한 체크
+		if (userInfo == null) {
+			return "ERROR";
+		}
+		
+		String result = "";
+		List<String> typeCodes = (List<String>) data.get("typeCodes");
+		String companyID = (String) data.get("companyID");
+		
+		for(int i = 0; i < typeCodes.size(); i++) {
+			String typeCode = typeCodes.get(i);
+			try {
+				ezSystemAdminService.deleteSystemConfigType(typeCode, companyID, userInfo.getTenantId());
+				result = "OK";
+			} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
+				logger.error(e.getMessage(), e);
+				result = "ERROR";
+			}
+		}
+		
+		logger.debug("deleteSystemConfig ended");
+		
+		return result;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="/admin/ezSystem/checkDuplicateCode.do", method=RequestMethod.GET, produces = "text/xml;charset=utf-8")
+	public String checkDuplicateCode(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("checkDuplicateCode started");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String code = request.getParameter("code");
+		String companyID = request.getParameter("companyID");
+		String result = ezSystemAdminService.checkDuplicateCode(code, userInfo.getTenantId(), companyID);
+		
+		logger.debug("checkDuplicateCode ended");
+		return result;
+	}
+	
+	@RequestMapping(value = "/admin/ezSystem/addSystemConfigType.do", method = RequestMethod.GET)
+	public String addSystemConfigType(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("editSystemConfigType started.");
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		String companyID = request.getParameter("companyID");
+		String typeCode = request.getParameter("typeCode");
+		String flag = "";
+		if (typeCode == null || typeCode.equals("")) {
+			flag = "add";
+		} else {
+			SystemConfigTypeVO configTypeVO = ezSystemAdminService.getSystemConfigType(typeCode, commonUtil.getMinuteUTC(userInfo.getOffset()), companyID, userInfo.getTenantId());
+			model.addAttribute("configTypeVO", configTypeVO);
+			flag = "mod";
+		}
+		model.addAttribute("companyID", companyID);
+		model.addAttribute("flag", flag);
+		
+		logger.debug("addSystemConfigType ended.");
+		return "/ezSystem/addSystemConfigType";
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="/admin/ezSystem/checkDuplicateTypeCode.do", method=RequestMethod.GET, produces = "text/xml;charset=utf-8")
+	public String checkDuplicateTypeCode(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("checkDuplicateTypeCode started");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String typeCode = request.getParameter("typeCode");
+		String companyID = request.getParameter("companyID");
+		String result = ezSystemAdminService.checkDuplicateTypeCode(typeCode, userInfo.getTenantId(), companyID);
+		
+		logger.debug("checkDuplicateTypeCode ended");
+		return result;
+	}
+	
+	@RequestMapping(value="/admin/ezSystem/saveSystemConfigTypeCode.do", method=RequestMethod.POST, produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String saveSystemConfigTypeCode(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, SystemConfigTypeVO data) throws Exception {
+		logger.debug("saveSystemConfigTypeCode started");
+		
+		String result = "";
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		// 관리자 권한 체크
+		if (userInfo == null) {
+			return "ERROR";
+		}
+		String flag = request.getParameter("flag");
+		String companyID = request.getParameter("companyID");
+		String typeCode = request.getParameter("typeCode");
+		String typeName = request.getParameter("typeName");
+		String typeName2 = request.getParameter("typeName2");
+		String description = request.getParameter("description");
+		
+		if (flag.equals("add")) {
+			ezSystemAdminService.insertSystemConfigType(typeCode, typeName, typeName2, description, userInfo.getId(), userInfo.getDisplayName(), userInfo.getDisplayName2(), userInfo.getTenantId(), companyID);
+		} else {
+			// 수정
+			ezSystemAdminService.updateSystemConfigType(typeCode, typeName, typeName2, description, userInfo.getId(), userInfo.getDisplayName(), userInfo.getDisplayName2(), userInfo.getTenantId(), companyID);
+		}
+		
+		result = "OK";
+		logger.debug("saveSystemConfigTypeCode ended");
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/admin/ezSystem/disableDeleteSystemConfig.do", method=RequestMethod.POST)
+	@ResponseBody
+	public String disableDeleteSystemConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, String[] CODE) throws Exception {
+		logger.debug("disableDeleteSystemConfig started");
+		logger.debug("CODE=" + CODE);
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		// 관리자 권한 체크
+		if (userInfo == null) {
+			return "ERROR";
+		}
+		
+		String result = "";
+		String companyID = request.getParameter("companyID");
+		
+		for(int i=0; i < CODE.length; i++) {
+			String sCode = CODE[i];
+			try {
+				ezSystemAdminService.disableDeleteSystemConfig(sCode, companyID, userInfo.getTenantId());
+				
+				result = "OK";
+			} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
+				logger.error(e.getMessage(), e);
+				result = "ERROR";
+			}
+		}
+		
+		logger.debug("disableDeleteSystemConfig ended");
+		
+		return result;
+	}
+
+	//FIDO인증관리 메인 호출	
+	@RequestMapping(value="/admin/ezSystem/fidoAuthenticationManager.do", method=RequestMethod.GET)
+	public String fidoAuthenticationManager(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("fidoAuthenticationManager started");
+
+		//관리자 권한체크
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		int tenantId = userInfo.getTenantId();
+		String companyId = userInfo.getCompanyID();
+		String rollInfo = userInfo.getRollInfo();
+		boolean adminChk = rollInfo.indexOf("c=1") > -1;
+
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), tenantId);
+		List<OrganDeptVO> resultList = new ArrayList<>();
+
+		int j = 0;
+		boolean isMasterAdmin = userInfo.getRollInfo().contains("c=1");
+
+		for (OrganDeptVO vo : list) {
+			if (isMasterAdmin || vo.getCn().equals(companyId)) {
+				resultList.add(j++, vo);
+			}
+		}
+
+		model.addAttribute("adminChk", adminChk);
+		model.addAttribute("list", resultList);
+		model.addAttribute("companyId", companyId);
+
+		logger.debug("fidoAuthenticationManager ended");
+
+		return "/ezSystem/systemFidoManager";
+	}
+
+	//FIDO인증관리 사용여부
+	@ResponseBody
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/ezSystem/getFidoUseConfig.do", method=RequestMethod.POST)
+	public String getFidoUseConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getFidoUseConfig started");
+
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		String companyId = request.getParameter("companyID");
+
+		String result = ezCommonService.getCompanyConfig(userInfo.getTenantId(), companyId, "useFidoSession");
+
+		logger.debug("getFidoUseConfig ended");
+		return result;
+	}
+
+	//FIDO인증관리 사용여부 설정 변경
+	@ResponseBody
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/ezSystem/setFidoUseConfig.do", method=RequestMethod.POST)
+	public String setFidoUseConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("setFidoUseConfig started");
+
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		String companyId = request.getParameter("companyID");
+		String propertyValue = request.getParameter("propertyValue");
+
+		String result = ezCommonService.getCompanyConfig(userInfo.getTenantId(), companyId, "useFidoSession");
+
+		if (StringUtils.isNotEmpty(propertyValue)) {
+			if (StringUtils.isNotEmpty(result)){
+				ezCommonService.updateCompanyConfig(userInfo.getTenantId(), companyId, "useFidoSession", propertyValue);
+			} else {
+				ezCommonService.insertCompanyConfig(userInfo.getTenantId(), companyId, "useFidoSession", propertyValue);
+			}
+		}
+
+		logger.debug("setFidoUseConfig ended");
+		return result;
+	}
+
+	//FIDO인증관리 IP리스트 화면
+	@RequestMapping(value="/ezSystem/systemFidoIPBand.do", method=RequestMethod.GET)
+	public String systemFidoIPBand(@CookieValue("loginCookie") String loginCookie, Model model, @RequestParam String companyId) throws Exception {
+		logger.debug("systemAdminIPBand started");
+
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		companyId = Optional.ofNullable(companyId).orElseGet(() -> userInfo.getCompanyID());
+
+		model.addAttribute("companyId", companyId);
+
+		logger.debug("systemFidoIPBand ended");
+		return "/ezSystem/systemFidoIPBand";
+	}
+	
+	//FIDO인증관리 IP리스트
+	@ResponseBody
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/ezSystem/getfidoIPBandList.do", method=RequestMethod.POST)
+	public ResponseEntity<JSONArray> getfidoIPBandList(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap) throws Exception {
+		logger.debug("getfidoIPBandList started");
+
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+
+		if (userInfo == null) {
+			logger.debug("getfidoIPBandList accessDenied");
+
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new JSONArray());
+		}
+
+		int tenantId = userInfo.getTenantId();
+		String companyId = Optional.ofNullable(paramMap.get("companyId").toString()).orElseGet(() -> userInfo.getCompanyID()); // 선택된 회사
+
+		List<IPBandVO> ipList = ezSystemAdminService.getFidoAuthenticList(tenantId, companyId);
+
+		if (ipList == null) {
+			return null;
+		}
+
+		JSONArray returnJsonArr = new JSONArray();
+
+		for (IPBandVO ipVo : ipList) {
+			JSONObject obj = new JSONObject();
+
+			obj.put("ipNo", ipVo.getIpNo());
+			obj.put("ipAddress", ipVo.getIpAddress());
+			obj.put("access", ipVo.getAccess());
+			obj.put("explanation", ipVo.getExplanation());
+
+			returnJsonArr.add(obj);
+		}
+
+		logger.debug("returnJsonArr=" + returnJsonArr.toJSONString());
+		logger.debug("getfidoIPBandList ended");
+		return ResponseEntity.ok().body(returnJsonArr);
+	}
+
+	// FIDO인증관리 IP제한 - ip 추가
+	@ResponseBody
+	@RequestMapping(value="/ezSystem/insertFidoIPBand.do", method=RequestMethod.POST)
+	public ResponseEntity<Void> insertFidoIPBand(@CookieValue("loginCookie") String loginCookie, @ModelAttribute IPBandVO ipBand) throws Exception {
+		logger.debug("insertFidoIPBand started");
+
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+
+		if (userInfo == null) {
+			logger.debug("insertFidoIPBand accessDenied");
+
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		}
+
+		String ipBandExplaination = ipBand.getExplanation() == null ? "" : ipBand.getExplanation();
+
+		ezSystemAdminService.insertFidoIPBand(userInfo.getTenantId(), ipBand.getCompanyId(), ipBand.getIpAddress(), ipBand.getAccess(), ipBandExplaination);
+
+		logger.debug("insertFidoIPBand ended");
+		return ResponseEntity.noContent().build();
+	}
+	
+	// FIDO인증관리 IP제한 - ip 수정
+	@ResponseBody
+	@RequestMapping(value="/ezSystem/updateFidoIPBand.do", method=RequestMethod.POST)
+	public void updateFidoIPBand(@ModelAttribute IPBandVO ipBand) throws Exception {
+		logger.debug("updateFidoIPBand started");
+		logger.debug("ipNo=" + ipBand.getIpNo() + ", ipAddress=" + ipBand.getIpAddress() + ", explanation=" + ipBand.getExplanation());
+
+		ezSystemAdminService.updateFidoIPBand(ipBand.getIpNo(), ipBand.getIpAddress(), ipBand.getAccess(), ipBand.getExplanation());
+
+		logger.debug("updateFidoIPBand ended");
+	}
+
+	// FIDO인증관리 IP제한 - ip 삭제
+	@ResponseBody
+	@RequestMapping(value="/ezSystem/deleteFidoIPBand.do", method=RequestMethod.POST)
+	public void deleteFidoIPBand(String ipNo) throws Exception {
+		logger.debug("deleteFidoIPBand started");
+		logger.debug("ipNo=" + ipNo);
+
+		ezSystemAdminService.deleteFidoIPBand(ipNo);
+
+		logger.debug("deleteFidoIPBand ended");
+	}
+	
 }

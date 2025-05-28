@@ -9,7 +9,8 @@
 		  .IMG_BTN { behavior:url("/css/include/ImgBtn.htc") }
 		</style>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
     	<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -34,6 +35,9 @@
 		    var UserLang = "<c:out value='${userInfo.lang}'/>";
 		    var taskCount = "<c:out value='${taskCount}'/>"; // 단위업무 전체 갯수
 		    var pageAdminFlag = 'user'
+		    var searchTitle = '';
+            var searchCode = '';
+            var searchFlag = '';
 		    
 		    document.onselectstart = function () { return false; };
 		    window.onload = function () {
@@ -47,7 +51,7 @@
 		        PageSize = 20; // 한 페이지에서 표출하는 항목 갯수
 		        curpage = 1; // 현재 페이지
 		        totalPage = Math.ceil(taskCount/PageSize); // 총 페이지 수
-		        makePagenationBar();
+		        makePagenationBar(null, null, 0);
 		        DocList_Resizer();
 		    };
 		    window.onresize = function () {
@@ -79,6 +83,32 @@
      			   }
 		        }
 		    }
+		    function lvtDoclist_HeaderClick(pHeader) {
+                if (OrderCell == pHeader) {
+                    if (OrderOption == "")
+                        OrderOption = "DESC";
+                    else
+                        OrderOption = "";
+                }
+                else {
+                    OrderCell = pHeader;
+                    OrderOption = "";
+                }
+                    SortList(pHeader);
+            }
+
+            function SortList(szField) {
+                if (g_SortField == szField)
+                {
+                    g_SortType = GetToggledSotrType();
+                }
+                else {
+                    g_SortType = "ASC";
+                }
+                g_SortField = szField;
+
+                GetTaskFullList(searchTitle, searchCode, searchFlag);
+            }
 		    function btnClose_onclick() {
 		        window.close();
 		    }
@@ -125,7 +155,7 @@
 		    <spring:message code='ezApprovalG.t717'/>
 		    <span id='TitleInfo' style='color: #666; font-weight:normal;'>
 		     &nbsp;
-		     <span id='listcount' style='color:#017BEC; font-weight:bold;'></span>
+		     <span id='listcount' class='txt_color' style='font-weight:bold;'></span>
 		    </span>
 		</h1>
 		<div id="mainmenu">
@@ -135,7 +165,7 @@
 			<li id="istat2" ><span class="icon16 icon16_search" onClick="return btnFindTaskFullList_onclick()"></span></li>
 		</ul>
 		</div>
-		<span id="MailListRayer" style="border: 0px solid blue; vertical-align: top; overflow: hidden; display: inline-block;">
+		<span id="MailListRayer" style="width: 100%; border: 0px solid blue; vertical-align: top; overflow: hidden; display: inline-block;">
             <div id="divList" class="div_scroll" style="width: 100%; height: 641x; overflow: AUTO; margin-bottom:10px;">
                 <div ID="lvtDoclist"></div>
             </div>

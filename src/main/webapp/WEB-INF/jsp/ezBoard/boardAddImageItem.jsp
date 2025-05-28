@@ -16,7 +16,8 @@
 	         	resize:none;
 	         }
 	    </style>
-	    <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+	    <link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <c:if test="${!isCrossBrowser}">
 		    <script type="text/javascript" src="${util.addVer('/js/ezBoard/AttachMain.js')}"></script>
@@ -334,7 +335,7 @@
 				    xmldom = null;
 				    alert(strLang46);
 				    
-				    sendBoardAlertMail("modify", pBoardID, pItemID, isAllGroupBoard);
+				    sendBoardAlert("modify", pBoardID, pItemID, isAllGroupBoard);
 				    
 				    /* 2019-01-15 홍승비 - 사진추가 후 DB에 게시물 수정일자 업데이트 */
                     $.ajax({
@@ -518,12 +519,12 @@
 			}
 	        
 	        /* 2021-06-22 홍승비 - 게시판 메일알림 함수 추가, 비동기로 백그라운드 동작 */
-	        function sendBoardAlertMail(pMode, pBoardID, pItemID, pIsAllGroupBoard) {
+	        function sendBoardAlert(pMode, pBoardID, pItemID, pIsAllGroupBoard) {
 		        $.ajax({
 					type : "POST",
 					dataType : "text",
 					async : true,
-					url : "/ezBoard/sendBoardAlertMail.do",
+					url : "/ezBoard/sendBoardAlert.do",
 					data : {
 						mode : pMode,
 						boardID : pBoardID,

@@ -83,4 +83,6 @@ function closeAllPopup() {
 }
 function DivPopUpHidden() {
 	document.getElementById("iFramePanel").style.display = "none";
+	document.getElementById("mailPanel").style.display = "none";
+	document.getElementById("iFrameLayer").src = "/blank.htm";
 }

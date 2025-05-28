@@ -6,7 +6,8 @@
 	<head>
 		<title><spring:message code='ezPersonal.t402'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="${util.addVer('ezPersonal.e3', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>   
 		<script type="text/javascript">
@@ -28,6 +29,10 @@
 			        strmail += "Y;";
 			    else
 			        strmail += "N;";
+		        if (document.getElementById("inviteScheModMail").checked == true)
+			    	strmail += "Y;";
+			    else
+			        strmail += "N;";    
 			    if (document.getElementById("cancellationMail").checked == true)
 			    	strmail += "Y;";
 			    else
@@ -79,6 +84,17 @@
 						</c:otherwise>
 					</c:choose>
 					<td>&nbsp;<spring:message code='ezSchedule.kmss09'/></td>
+				</tr>
+				<tr>
+					<c:choose>
+						<c:when test="${mailConfig.inviteScheModMail == null || mailConfig.inviteScheModMail == 'Y'}">
+							<th style="white-space:nowrap"><input type="checkbox" id="inviteScheModMail" checked="checked"/></th>
+						</c:when>
+						<c:otherwise>
+							<th style="white-space:nowrap"><input type="checkbox" id="inviteScheModMail"/></th>
+						</c:otherwise>
+					</c:choose>
+				  <td>&nbsp;<spring:message code='ezSchedule.cofig.hth01'/></td>
 				</tr>
 				<tr>
 					<c:choose>		

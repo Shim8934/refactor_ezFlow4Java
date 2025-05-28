@@ -6,7 +6,8 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" type="text/css" href="${util.addVer('ezSurvey.css', 'msg')                      }">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/jquery-ui.css')                       }">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/dateControls/demos.css')        }">
@@ -201,7 +202,9 @@
 					switch(questionType) {
 						case 1:
 						case 2:
-						case 9: 
+						case 9:
+						case 10:
+						case 11:
 							createQuestionPie(question, divElmt);
 							break;
 						case 3:
@@ -289,7 +292,7 @@
 				var questionType = question["type"];
 				var options      = question["option"];
 				
-				if (questionType == 1 || questionType == 2 || questionType == 9) {
+				if (questionType == 1 || questionType == 2 || questionType == 9 || questionType == 10 || questionType == 11) {
 					for (var i = 0; i < options.length; i++) {
 						if (options[i]["responses"] && options[i]["responses"].length > 0) {
 							getUserFromResponses(options[i]["responses"], userList);
@@ -335,9 +338,22 @@
 				var divChild1  = document.createElement("div");
 				var divRespCnt = document.createElement("div");
 				var totalCnt   = question["users"].length;
+				var imgTitle   = question["imgTitle"];
+				var imgTitleDiv = null;
 				divElemt1.className    = "response-header";
 				divElemt2.className    = "response-users";
+				if (imgTitle) {
+					imgTitleDiv = document.createElement("div");
+					imgTitleDiv.className = "imgTitleDiv";
+					var img = document.createElement("img");
+					img = document.createElement("img");
+					img.className = "imgTitle";
+					img.src = imgTitle["fpath"];
+					imgTitleDiv.appendChild(img);
+				}
+				
 				divChild1.textContent  = question["level"] + "." + question["content"];
+				
 				spanElmt.textContent   = SurveyMessages.strRespondent + " " + totalCnt;
 				divRespCnt.textContent = responsesCnt <= 999 ? responsesCnt : 999 + "+";
 				spanElmt.className     = "response-usercnt";
@@ -352,6 +368,9 @@
 				divElemt1.appendChild(divRespCnt);
 				divElemt2.appendChild(ulElmt);
 				mainDiv.appendChild(divElemt1);
+				if (imgTitle) {
+					mainDiv.appendChild(imgTitleDiv);
+				}
 				mainDiv.appendChild(divElemt2);
 				return mainDiv;
 			}

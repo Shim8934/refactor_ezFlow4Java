@@ -7,18 +7,22 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code='ezNewPortal.t055' /></title>
+		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/ezNewPortal/portal.css')}" />
 		<link href="${util.addVer('main.portal', 'msg')}" rel="stylesheet" type="text/css" />
-		<link rel="stylesheet" href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/thumbnailGrid/default.css')}" />
 	<link rel="stylesheet" type="text/css" href="${util.addVer('/css/thumbnailGrid/component.css')}" />
 	<link rel="stylesheet" type="text/css" href="${util.addVer('/css/jquery-ui.css')}" />
 		<style type="text/css">
 			body {background-color : white;}
 			.ui-sortable{ margin:0px; padding:0px;}
-			.menu, .menuAdd {cursor:pointer; vertical-align:top;display : inline-block;width : 100px; border : 1px solid #d9d9d9; margin :10px 5px 0px 0px; height:122px}
+			.menu, .menuAdd {cursor:pointer; vertical-align:top;display : inline-block;width : 100px; border : 1px solid #d9d9d9; margin :10px 4px 0px 0px; height:122px}
 			#menuAdd {border : 1px dashed #aaaaaa;}
 			.menu dl dt, .menuAdd dl dt {text-align : center;display : block;height : 42px;margin : 0px;	padding : 0px;}
+			.menu dl dt{height:auto;}
 			.menu dl dd, .menuAdd dl dd {display:table-cell; width : 98px; height:56px; margin:0px; padding:0px; text-align:center; vertical-align:middle; font-size:15px; font-weight:bold; letter-spacing:-1px;}
+			.menu dl dd{height:auto; display:block; margin-top:10px;}
 			span.icon_topmenu {margin-top : 20px;}
 			.menuUsed {background-color : #fff;}
 			.menuUsed_on{color: #0470e3; border-color: #b9d7f6; background: #f1f8ff;}
@@ -29,7 +33,7 @@
 			.menuDetails hr {display:block; width:99%;}
 			.menuIconInfo {display:inline-block; margin:43px 23px 23px 23px;}
 			.menuIcon {width:100px;height:100px;border:1px solid black;margin-bottom:10px;text-align:center;vertical-align:middle;}
-			.menuIcon span, .menuIcon img {margin:23px 26px;}
+			.menuIcon span, .menuIcon img {margin:18px 21px;}
 			.menuInfo {display:inline-block; vertical-align:top; margin-top:23px;}
 			.menuInfo ul {padding:0px;}
 			.menuInfo ul li {font-size:15px; font-weight:bold; display:block;margin-bottom:12px;}
@@ -62,17 +66,38 @@
 			<spring:message code='ezNewPortal.t055' />
 			<span class="title_bar"><img src="/images/name_bar.gif"></span>
 			<select class="companySelect" id="ListCompany"></select>
-			<span><spring:message code='ezNewPortal.garm07' /></span>
 		</h1>
-		
-		
+		<c:if test="${type != 'mobile' }">
+		<div style="margin-bottom:10px;">
+			<span style="font-size: 14px; font-weight: 500;">▒ <spring:message code="ezNewPortal.topMenu.hth01"/></span> <span style="font-size: 11px; font-weight: 400;">(<spring:message code="ezNewPortal.topMenu.hth02"/></span>)</span>
+			<form id="Form1" method="post">
+				<br>
+				<table class="content" style="width: 450px; margin-top:10px;">
+				    <tbody><tr>
+				        <th><spring:message code="ezNewPortal.topMenu.hth01"/></th>
+				        <td>
+				            <input style="margin-top: 0px;" type="radio" id="topDisplayMode" name="topMenuDisplayMode" value="0"><label for="topDisplayMode" style="cursor: pointer; vertical-align: middle"><spring:message code="ezNewPortal.kwc01"/></label>
+				            <input style="margin-top: 0px;" type="radio" id="leftDisplayMode" name="topMenuDisplayMode" value="1"><label for="leftDisplayMode" style="cursor: pointer; vertical-align: middle"><spring:message code="ezPortal.t72"/></label>
+				        </td>
+				    </tr>
+				</tbody></table>
+				<div class="btnpositionJsp" style="width: 436px; margin-top:10px;">
+				    <a class="imgbtn" onclick="topMenuDisplayModeSave()"><span><spring:message code="ezNewPortal.topMenu.hth05"/></span></a>
+				    <a class="imgbtn" onclick="getCompanyTopMenuDisplayMode()"><span><spring:message code="ezNewPortal.topMenu.hth06"/></span></a>
+				</div>
+			</form>
+		</div>
+		</c:if>
 		<%-- <div id="mainmenu">
 			<ul style="margin-top: 15px;">
 				<li class="menuOrderResetButton" id="menuOrderReset"><span><spring:message code='ezNewPortal.t003' /></span></li>
 			</ul>
 		</div> --%>
-		<ul id="menuList">
+		<div>
+		<span style="font-size: 14px; font-weight: 500;">▒ <spring:message code="ezNewPortal.topMenu.hth04"/></span> </span> <span style="font-size: 11px; font-weight: 400;">(<spring:message code='ezNewPortal.garm07' />)</span>
+		<ul id="menuList" class="admin_menu_set">
 		</ul>
+		</div>
 	</body>
 	
 	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -87,10 +112,14 @@
 		var useChinese = "${useChinese}";
 		var useVietnamese = "${useVietnamese}";
 		var useIndonesian = "${useIndonesian}";
+		var type = "${type}";
+		var connectMenuId = '<c:out value="${connectMenuId}"/>';
+		var userLang = '<c:out value="${userLang}"/>';
 		
 		$(function(){
 			getCompanies();
 			getMenus();
+			getCompanyTopMenuDisplayMode();
 			/* document.getElementById("menuOrderReset").addEventListener("click", resetMenuOrder); */
 		});
 		
@@ -136,6 +165,7 @@
 					
 					document.getElementById("ListCompany").addEventListener('change', function() {
 						getMenus();
+						getCompanyTopMenuDisplayMode();
 					});
 				} else {
 					// We reached our target server, but it returned an error
@@ -171,7 +201,11 @@
 					}
 					
 					menuList.forEach(function (item, index) {
-						menusHTML += "<li class='menu' id='menu" + item.menuId + "'>";
+						if (item.menuId == connectMenuId) { // 연계메뉴는 표출 안함.
+							return;
+						}
+						
+						menusHTML += "<li class='menu draggable-item' id='menu" + item.menuId + "'>";
 						menusHTML += "<dl>";
 						menusHTML += "<dt><span class='" + item.iconUrl + "'>";
 						menusHTML += "</span></dt>";
@@ -208,19 +242,36 @@
 					});
 					
 					//메뉴 드래그앤드롭
-					$("#menuList").sortable({ 
-						//handle : ".menuSortable",
-						items: "li.menu",
-						scroll: false,
-					    helper: 'clone',
-						start : function(event, ui) {
-							//$(".menuDetails").css("display", "none");
-							$(".menuDetails").remove();
-							
-						},
-						update : function(event, ui) {
-							updateMenuOrder();
-						}
+					$("#menuList .draggable-item").draggable({
+					    revert: "invalid",
+					    containment: "parent",
+					    zIndex: 100,
+					    start: function (event, ui) {
+					    	var dragElem = $(this);
+					    	dragElem.css({
+					    		"cursor": "move",
+					    		"opacity": "0.6"
+					    	});
+					    },
+					    snap:'#menuList li',
+					    stop : function(event, ui) {
+					    	var dragElem = $(this);
+					    	dragElem.css({
+					    		"cursor": "pointer",
+					    		"opacity": ""
+					    	});
+					    },
+					    helper : "clone"
+					});
+					  
+					$("#menuList .draggable-item").droppable({
+					    tolerance: "intersect",
+					    drop: function(event, ui) {
+						var dragElem = ui.draggable;
+						var dropElem = $(this);
+						changePosition(dragElem, dropElem);
+						updateMenuOrder();
+					  }
 					});
 					
 					//$("#menuList").disableSelection();
@@ -233,10 +284,39 @@
 			request.onerror = function() {}
 			
 			var data = JSON.stringify({
-				companyId : companyValue
+				companyId : companyValue,
+				type : type
 			});
 			 
 			request.send(data);
+		}
+		
+		var getCompanyTopMenuDisplayMode = function() {
+			var companiesObj = document.getElementById("ListCompany");
+			var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
+			
+			$.ajax({
+				type: "GET",
+				url: "/admin/ezNewPortal/getTopMenuDisplayModeForCompany.do",
+				dataType: "JSON",
+				data : {
+					companyId : companyValue	
+				},
+				async: true,
+				success: function(result) {
+					var topMenuDisplayModeBtn = document.getElementsByName('topMenuDisplayMode');
+					for (var i = 0; i < topMenuDisplayModeBtn.length; i++) {
+						if (topMenuDisplayModeBtn[i].value == result.data) {
+							topMenuDisplayModeBtn[i].checked = true;
+							break;
+						}
+					}
+					
+				},
+				error: function (xhr, status, e){
+					
+				}
+			});
 		}
 		
 		var openMenuDetail = function(event) {
@@ -275,9 +355,9 @@
 					menusHTML += "<div class='admin_menu_content'>";
 					menusHTML += "<dl class='adminMenu_icon'><dt class='admenuIcon menuIcon'><span class='" + menuInfo.iconUrl + "'></span></dt>";
 					
-					if (menuInfo.menuType != "G") { //기본 메뉴는 아이콘 변경이 불가능함					
-						menusHTML += "<dd class='admenuIcon_up iconBtn'><spring:message code='ezNewPortal.t075' /></dd>";
-					}
+					// if (menuInfo.menuType != "G") { //기본 메뉴는 아이콘 변경이 불가능함					
+					menusHTML += "<dd class='admenuIcon_up iconBtn'><spring:message code='ezNewPortal.t075' /></dd>";
+					// }
 					
 					menusHTML += "</dl><table class='iconTable01' border='0' cellpadding='0' cellspacing='0' style='clear:none;'>";
 					menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t076' /></th>";
@@ -291,6 +371,65 @@
 					menusHTML += "<tr><th class='menuIconTH'>URL</th><td colspan='2' class='menuIconTD conUrl'><input type='text' class='admin_input' style='width:281px;' value='" +ReplaceText(ReplaceText(ConvertCharToEntityReference(menuInfo.menuUrl), '\"', "&#39;"), "\'", "&#34;") + "' maxlength='100'></td></tr>"
 					menusHTML += "<tr><th rowspan='" + menuNames.length + "' class='menuIconTH'><spring:message code='ezNewPortal.t077' /></th>";
 					
+					var menuIconTD1 = "<spring:message code='ezNewPortal.t078' />";
+					var menuIconTD2 = "<spring:message code='ezNewPortal.t079' />";
+					var menuIconTD3 = "<spring:message code='ezNewPortal.t080' />";
+					var menuIconTD4 = "<spring:message code='ezPortal.t4094' />";
+					var menuIconTD5 = "<spring:message code='ezNewPortal.t079' />"; // 베트남어(사용시 추가)
+ 					var menuIconTD6 = "<spring:message code='ezNewPortal.t079' />"; // 인도네시아어(사용시 추가)
+					
+					var langOrder = [1, 2, 3, 4, 5, 6];
+					var langType = ['1', '2', '3', '4', '5', '6'];
+					
+					var menuNames1 = ""; // 한국어
+					var menuNames2 = ""; // 영어
+					var menuNames3 = ""; // 일본어
+					var menuNames4 = ""; // 중국어
+					var menuNames5 = ""; // 베트남어
+					var menuNames6 = ""; // 인도네시아어
+					
+					function clearMenuNames(menuName) {
+						return ReplaceText(ReplaceText(ConvertCharToEntityReference(menuName), '\"', "&#39;"), "\'", "&#34;");
+					}
+					
+					function checkMenuLang(menuNames, lang) {
+					  return menuNames.filter(function(item) {
+						return item.menuLang == lang;
+					  });
+					}
+					
+					langType.forEach(function(lang) {
+					var filteredMenu = checkMenuLang(menuNames, lang);
+					
+					if (filteredMenu.length > 0) {
+						var menuName = filteredMenu[0].menuName;
+						var clearMenuName = clearMenuNames(menuName);
+						
+						switch (lang) {
+							case '1':
+								menuNames1 = clearMenuName;
+								break;
+							case '2':
+								menuNames2 = clearMenuName;
+								break;
+							case '3':
+								menuNames3 = clearMenuName;
+								break;
+							case '4':
+								menuNames4 = clearMenuName;
+								break;
+							case '5':
+								menuNames5 = clearMenuName;
+								break;
+							case '6':
+								menuNames6 = clearMenuName;
+								break;
+							default:
+								break;
+							}
+						}
+					});
+					
 					menuNames.forEach(function(item, index) {
 						if (index != 0) {
 							menusHTML += "<tr>";
@@ -299,23 +438,253 @@
 						menusHTML += "<spring:message code='ezNewPortal.t077' /> ("; 
 						
 						var country = "";
-						if (item.menuLang == 1) {
-							country = "<spring:message code='ezNewPortal.t078' />";
-						} else if (item.menuLang == 2) {
-							country = "<spring:message code='ezNewPortal.t079' />";
-						} else if (item.menuLang == 3) {
-							country = "<spring:message code='ezNewPortal.t080' />";
-						} else if (item.menuLang == 4) {
-							country = "<spring:message code='ezPortal.t4094' />";
+						var menuNameInputId = 1;
+						var menuRealName = menuNames1;
+						
+						if (userLang == "1") { // 한국어
+							langOrder.forEach(function(lang) {
+								if (item.menuLang == lang) {
+									switch (lang) {
+										case 1:
+											country = menuIconTD1;
+											break;
+										case 2:
+											country = menuIconTD2;
+											menuNameInputId = 2;
+											menuRealName = menuNames2;
+											break;
+										case 3:
+											country = menuIconTD3;
+											menuNameInputId = 3;
+											menuRealName = menuNames3;
+											break;
+										case 4:
+											country = menuIconTD4;
+											menuNameInputId = 4;
+											menuRealName = menuNames4;
+											break;
+										case 5:
+											country = menuIconTD5;
+											menuNameInputId = 5;
+											menuRealName = menuNames5;
+											break;
+										case 6:
+											country = menuIconTD6;
+											menuNameInputId = 6;
+											menuRealName = menuNames6;
+											break;
+										default:
+											break;
+									}
+								}
+							});
+						} else if (userLang == "2") { // 영어
+							langOrder.forEach(function(lang) {
+								if (item.menuLang == lang) {
+									switch (lang) {
+										case 1:
+											country = menuIconTD2;
+											menuNameInputId = 2;
+											menuRealName = menuNames2;
+											break;
+										case 2:
+											country = menuIconTD1;
+											break;
+										case 3:
+											country = menuIconTD3;
+											menuNameInputId = 3;
+											menuRealName = menuNames3;
+											break;
+										case 4:
+											country = menuIconTD4;
+											menuNameInputId = 4;
+											menuRealName = menuNames4;
+											break;
+										case 5:
+											country = menuIconTD5;
+											menuNameInputId = 5;
+											menuRealName = menuNames5;
+											break;
+										case 6:
+											country = menuIconTD6;
+											menuNameInputId = 6;
+											menuRealName = menuNames6;
+											break;
+										default:
+											break;
+									}
+								}
+							});
+						} else if (userLang == "3") { // 일본어
+							langOrder.forEach(function(lang) {
+								if (item.menuLang == lang) {
+									switch (lang) {
+										case 1:
+											country = menuIconTD3;
+											menuNameInputId = 3;
+											menuRealName = menuNames3;
+											break;
+										case 2:
+											country = menuIconTD2;
+											menuNameInputId = 2;
+											menuRealName = menuNames2;
+											break;
+										case 3:
+											country = menuIconTD1;
+											break;
+										case 4:
+											country = menuIconTD4;
+											menuNameInputId = 4;
+											menuRealName = menuNames4;
+											break;
+										case 5:
+											country = menuIconTD5;
+											menuNameInputId = 5;
+											menuRealName = menuNames5;
+											break;
+										case 6:
+											country = menuIconTD6;
+											menuNameInputId = 6;
+											menuRealName = menuNames6;
+											break;
+										default:
+											break;
+									}
+								}
+							});
+						} else if (userLang == "4") { // 중국어
+							langOrder.forEach(function(lang) {
+								if (item.menuLang == lang) {
+									switch (lang) {
+										case 1:
+											country = menuIconTD4;
+											menuNameInputId = 4;
+											menuRealName = menuNames4;
+											break;
+										case 2:
+											country = menuIconTD2;
+											menuNameInputId = 2;
+											menuRealName = menuNames2;
+											break;
+										case 3:
+											country = menuIconTD1;
+											break;
+										case 4:
+											country = menuIconTD3;
+											menuNameInputId = 3;
+											menuRealName = menuNames3;
+											break;
+										case 5:
+											country = menuIconTD5;
+											menuNameInputId = 5;
+											menuRealName = menuNames5;
+											break;
+										case 6:
+											country = menuIconTD6;
+											menuNameInputId = 6;
+											menuRealName = menuNames6;
+											break;
+										default:
+											break;
+									}
+								}
+							});
+						} else if (userLang == "5") { // 베트남어
+							langOrder.forEach(function(lang) {
+								if (item.menuLang == lang) {
+									switch (lang) {
+										case 1:
+											country = menuIconTD5;
+											menuNameInputId = 5;
+											menuRealName = menuNames5;
+											break;
+										case 2:
+											country = menuIconTD2;
+											menuNameInputId = 2;
+											menuRealName = menuNames2;
+											break;
+										case 3:
+											country = menuIconTD1;
+											break;
+										case 4:
+											country = menuIconTD3;
+											menuNameInputId = 3;
+											menuRealName = menuNames3;
+											break;
+										case 5:
+											country = menuIconTD4;
+											menuNameInputId = 4;
+											menuRealName = menuNames4;
+											break;
+										case 6:
+											country = menuIconTD6;
+											menuNameInputId = 6;
+											menuRealName = menuNames6;
+											break;
+										default:
+											break;
+									}
+								}
+							});
+						} else if (userLang == "6") { // 인도네시아어
+							langOrder.forEach(function(lang) {
+								if (item.menuLang == lang) {
+									switch (lang) {
+										case 1:
+											country = menuIconTD6;
+											menuNameInputId = 6;
+											menuRealName = menuNames6;
+											break;
+										case 2:
+											country = menuIconTD2;
+											menuNameInputId = 2;
+											menuRealName = menuNames2;
+											break;
+										case 3:
+											country = menuIconTD1;
+											break;
+										case 4:
+											country = menuIconTD3;
+											menuNameInputId = 3;
+											menuRealName = menuNames3;
+											break;
+										case 5:
+											country = menuIconTD4;
+											menuNameInputId = 4;
+											menuRealName = menuNames4;
+											break;
+										case 6:
+											country = menuIconTD5;
+											menuNameInputId = 5;
+											menuRealName = menuNames5;
+											break;
+										default:
+											break;
+									}
+								}
+							});
 						}
 						
 						menusHTML += country + ")</td>";
-						menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='menu" +  item.menuLang + "' type='text' value='" + ReplaceText(ReplaceText(ConvertCharToEntityReference(item.menuName), '\"', "&#39;"), "\'", "&#34;") + "' maxlength='50'></td>";
+						menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='menu";
+						menusHTML += menuNameInputId + "' type='text' value='"
+						menusHTML += menuRealName + "' maxlength='50'></td>";
 						menusHTML += "</tr>";
 					});
 					
 					menusHTML += "</table>";
 					menusHTML += "<table class='iconTable02' border='0' cellpadding='0' cellspacing='0' style='clear:none;'>";
+					
+					// 2024-07-19 조수빈 - 웹인 경우 새 탭 / 새 창 / iframe으로 띄우는 옵션 설정 행 추가
+					if (type != 'mobile') {
+						menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewportal.openType' /></th><td class='menuIconTD'>";
+						menusHTML += "<select id='menuOpenType' style='margin-left:10px'>";
+						menusHTML += "<option value='tab' " + (menuInfo.openType == 1 ? "selected" : "") + "><spring:message code='ezNewportal.openNewTab' /></option>";
+						menusHTML += "<option value='window' " + (menuInfo.openType == 2 ? "selected" : "") + "><spring:message code='ezNewportal.openNewWindow' /></option>";
+						menusHTML += "<option value='iframe' " + (menuInfo.openType == 3 ? "selected" : "") + "><spring:message code='ezNewportal.openIframe' /></option>";
+						menusHTML += "</select></td></tr>";
+					}
+					
 					menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t081' /></th><td class='menuIconTD accessOK'><div>";
 					
 					if (menuAuthsY != null && menuAuthsY.length != 0) {
@@ -357,7 +726,7 @@
 					menusHTML += "</table>";
 					menusHTML += "<div class='bottomBtn'><a class='btnA updateMenu'><spring:message code='ezNewPortal.t002' /></a><a class='btnA menuAuthBtn'><spring:message code='ezNewPortal.t086' /></a>";
 					
-					if (menuInfo.menuType == "A") {
+					if (menuInfo.menuType == "A" || menuInfo.menuType == "MA") {
 						menusHTML += "<a class='btnA deleteMenu'><spring:message code='ezNewPortal.t124' /></a>";
 					}
 					menusHTML += "</div></div></div></li>"
@@ -388,7 +757,7 @@
 					}
 					
 					//기본메뉴일때 연결 URL변경 불가능
-					if (menuInfo.menuType == "G") { //기본 메뉴는 아이콘 변경이 불가능함
+					if (menuInfo.menuType == "G" || menuInfo.menuType == "MG") { //기본 메뉴는 아이콘 변경이 불가능함
 						$(".conUrl").find("input[type='text']").attr('readonly','readonly');
 					}
 					
@@ -407,7 +776,7 @@
 					//저장기능 
 					$(".updateMenu").on("click", {"menuId" : menuInfo.menuId, "menuType" : menuInfo.menuType}, updateMenu);
 					
-					if (menuInfo.menuType == "A") {
+					if (menuInfo.menuType == "A" || menuInfo.menuType == "MA") {
 						$(".deleteMenu").on("click", {"menuId" : menuInfo.menuId}, deleteMenu);
 					}
 					
@@ -460,8 +829,10 @@
 			var menuNamesCount = menuNames.length;
 			var menuType = event.data.menuType;
 			var menuNameEmptyNum = 0;
-			//특수문자  체크 (앤드&, 소괄호(), 슬래쉬/만 허용함)
-			var special_pattern = /[\{\}\[\]?.,;:|*~`!^\-_+<>@\#$%\\\=\'\"]/g;
+			// 특수문자 체크 (앤드&, 소괄호(), 슬래쉬/, - 만 허용함)
+			var special_pattern = /[\{\}\[\]?.,;:|*~`!^\_+<>@\#$%\\\=\'\"]/g;
+
+
 			const regex = new RegExp(special_pattern);
 			
 			//메뉴 사용 유무
@@ -470,6 +841,11 @@
 			//연결 urlz
 			var menuUrl = $(".conUrl").find("input[type='text']").val();
 			menuUrl = $.trim(menuUrl);
+			
+			if (type == 'mobile' && menuUrl.indexOf('/mobile/') != 0) {
+				alert("<spring:message code='ezNewPortal.mobileUrl' />");
+				return;
+			}
 			
 			if (menuUrl == "" || menuUrl == null) {
 				alert("<spring:message code='ezNewPortal.t083' />");
@@ -480,6 +856,10 @@
 				alert("<spring:message code='ezNewPortal.t084' />");
 				return;
 			}
+
+			// 2024-08-05 조수빈 - 모바일은 해당 기능을 사용하지 않으나 not null인 값이므로 임의로 tab에 해당하는 1을 넣도록 한다.
+			var openType = document.getElementById("menuOpenType") ? document.getElementById("menuOpenType").value : 'tab';
+			var mapping = {'tab': 1, 'window': 2, 'iframe': 3};
 			
 			//아이콘
 			var iconUrl = $(".menuIcon").find("span").attr("class");
@@ -489,7 +869,8 @@
 				"menuUsed" : menuUsed,
 				"menuUrl" : menuUrl,
 				"menuType" : menuType,
-				"iconUrl" : iconUrl
+				"iconUrl" : iconUrl,
+				"openType" : mapping[openType]
 			}
 			
 			for (var i = 0; i < menuNamesCount; i++) {
@@ -537,7 +918,8 @@
 				companyId : companyValue,
 				menuNames : menuNameList,
 				menuInfo : menuInfo, 
-				menuAuths : menuAuths
+				menuAuths : menuAuths,
+				type : type
 			});
 			 
 			request.send(data);
@@ -664,6 +1046,17 @@
 			}
 			menusHTML += "</table>";
 			menusHTML += "<table class='iconTable02' border='0' cellpadding='0' cellspacing='0' style='clear:none'>";
+
+			// 2024-07-19 조수빈 - 웹인 경우 새 탭 / 새 창 / iframe으로 띄우는 옵션 설정 행 추가
+			if (type != 'mobile') {
+				menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewportal.openType' /></th><td class='menuIconTD'>";
+				menusHTML += "<select id='menuOpenType' style='margin-left:10px'>";
+				menusHTML += "<option value='tab'><spring:message code='ezNewportal.openNewTab' /></option>";
+				menusHTML += "<option value='window'><spring:message code='ezNewportal.openNewWindow' /></option>";
+				menusHTML += "<option value='iframe'><spring:message code='ezNewportal.openIframe' /></option>";
+				menusHTML += "</select></td></tr>";
+			}
+			
 			menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t081' /></th><td class='menuIconTD accessOK'><div></div></td></tr>";
 			menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t082' /></th><td class='menuIconTD accessNO'><div></div></td></tr></table>";
 			menusHTML += "<div class='bottomBtn'><a class='btnA addMenuBtn'><spring:message code='ezNewPortal.t002' /></a><a class='btnA menuAuthBtn'><spring:message code='ezNewPortal.t086' /></a>";
@@ -725,8 +1118,8 @@
 			var menuNames = $(".menuNameInput");
 			var menuNamesCount = menuNames.length;
 			var menuNameEmptyNum = 0;
-			// 특수문자 체크 (앤드&, 소괄호(), 슬래쉬/만 허용함)
-			var special_pattern = /[\{\}\[\]?.,;:|*~`!^\-_+<>@\#$%\\\=\'\"]/g;
+			// 특수문자 체크 (앤드&, 소괄호(), 슬래쉬/, - 만 허용함)
+			var special_pattern = /[\{\}\[\]?.,;:|*~`!^\_+<>@\#$%\\\=\'\"]/g;
 			const regex = new RegExp(special_pattern);
 			
 			//메뉴 사용 유무
@@ -741,14 +1134,24 @@
 				return;
 			}
 			
+			// 2024-08-05 조수빈 - 모바일은 해당 기능을 사용하지 않으나 not null인 값이므로 임의로 tab에 해당하는 1을 넣도록 한다.
+			var openType = document.getElementById("menuOpenType") ? document.getElementById("menuOpenType").value : 'tab';
+			var mapping = {'tab': 1, 'window': 2, 'iframe': 3};
+			
 			//아이콘
 			var iconUrl = $(".menuIcon").find("span").attr("class");
+			
+			if (iconUrl == null || iconUrl == "") {
+				alert("<spring:message code='ezNewPortal.adminMenu.hth01' />");
+				return;
+			}
 			
 			var menuInfo = {
 				"menuUsed" : menuUsed,
 				"menuUrl" : menuUrl,
-				"menuType" : "A",
-				"iconUrl" : iconUrl
+				"menuType" : type == "mobile" ? "MA" : "A",
+				"iconUrl" : iconUrl,
+				"openType" : mapping[openType]
 			}
 			
 			for (var i = 0; i < menuNamesCount; i++) {
@@ -824,7 +1227,8 @@
 				
 				var data = JSON.stringify({
 					menuId : menuId,
-					companyId : companyValue
+					companyId : companyValue,
+					type : type
 				});
 				 
 				request.send(data);
@@ -840,7 +1244,7 @@
 			var top = (height - 500) / 2;
 			var left = (width - 765) / 2;
 			   
-			window.open("/admin/ezNewPortal/selectMenuIcon.do", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=342,width=500,top=" + top + ",left=" + left, "");
+			window.open("/admin/ezNewPortal/selectMenuIcon.do", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=470,width=660,top=" + top + ",left=" + left, "");
 		}
 		
 		var updateMenuOrder = function() {
@@ -883,6 +1287,65 @@
 			var url = "/admin/ezNewPortal/portalMenuAuth.do?menuId=" + event.data.menuId + "&companyId=" + event.data.companyId + "&mode=menu";
 			var OpenWin = window.open(url, "", GetOpenWindowfeature(980, 650));
 		    	try { OpenWin.focus(); } catch (e) { }
+		}
+		
+		var topMenuDisplayModeSave = function () {
+			var companiesObj = document.getElementById("ListCompany");
+			var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
+			
+			var topMenuDisplayModeBtn = document.getElementsByName('topMenuDisplayMode');
+		    var type = 0;
+		    for (let i = 0; i < topMenuDisplayModeBtn.length; i++) {
+		        if (topMenuDisplayModeBtn[i].checked) {
+		        	type = topMenuDisplayModeBtn[i].value;
+		        	break;
+		        }
+		    }
+			
+			$.ajax({
+				type: "POST",
+				url: "/admin/ezNewPortal/updateTopMenuDisplayModeForCompany.do",
+				dataType: "text",
+				data : {
+					companyId : companyValue,
+					type : type
+				},
+				async: true,
+				success: function(result) {
+					alert("<spring:message code='ezPortal.t121'/>");
+				},
+				error: function (xhr, status, e){
+					
+				}
+			});
+		}
+		
+		function changePosition(dragElem, dropElem) {
+			var menuListChildren = $("#menuList li");
+			var dragElemIndex = menuListChildren.index(dragElem);
+			var dropElemIndex = menuListChildren.index(dropElem);
+			var menuList = $('#menuList');
+			
+			dragElem.insertAfter(menuList.children().eq(dropElemIndex));
+			if (dragElemIndex > dropElemIndex) {
+				dropElem.insertAfter(menuList.children().eq(dragElemIndex));
+			} else {
+				if (dragElemIndex - 1 < 0) {
+					dropElem.insertBefore(menuList.children().eq(0));
+				} else {
+					dropElem.insertAfter(menuList.children().eq(dragElemIndex - 1));
+				}
+			}
+			
+			dragElem.css({
+				left: '0',
+			    top: '0'
+			});
+			
+			dropElem.css({
+				left: '0',
+			    top: '0'
+		    });
 		}
 
 	</script>

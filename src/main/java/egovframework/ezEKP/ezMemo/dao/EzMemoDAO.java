@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import egovframework.ezEKP.ezMemo.vo.MemoConfigVO;
 import egovframework.ezEKP.ezMemo.vo.MemoFolderVO;
 import egovframework.ezEKP.ezMemo.vo.MemoVO;
-import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 
 
 @Repository("EzMemoDAO")

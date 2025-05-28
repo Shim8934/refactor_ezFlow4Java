@@ -6,7 +6,8 @@
 	<head>
 		<title><spring:message code="ezOrgan.t238" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
-	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e2', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>    
 	    <script type="text/javascript" src="${util.addVer('ezOrgan.e1', 'msg')}"></script>	    
@@ -291,7 +292,7 @@
 			<tr>
 		    	<th><spring:message code='ezOrgan.t245' /></th>
 		    	<td width="100%">		    
-		    		<input id=imagefile name=imagefile style=" WIDTH: 247px" readonly="readonly" />
+		    		<input id=imagefile name=imagefile style=" WIDTH: 80%" readonly="readonly" />
 		    		<iframe name="ifrm" src="about:blank" style="display: none"></iframe>
 		    		<form method="post" id="form" name="form" enctype="multipart/form-data" target="ifrm" >
 		  				<input type="file" name="file1" id="file1" style="width: 1px; height: 1px; display:none;" onchange="imgtemp_onclick()" multiple="false" accept="image/*"/>

@@ -48,7 +48,8 @@ function getTheme2NotiBoardItem() {
 
 // 회사별 공지사항 게시판의 게시물 데이터를 전달받아 화면에 표출하는 함수
 function getTheme2NotiBoardItemList_after(data) {
-	var boardList = data;
+	var boardList = data.boardList;
+	var userLang = data.userLang;
 	var boardCount = boardList.length;
 	var boardHTML = "";
 	
@@ -56,11 +57,17 @@ function getTheme2NotiBoardItemList_after(data) {
 	if (boardCount > 0) {
 		for (var i = 0; i < boardCount; i++) {
 			var item = boardList[i];
+			var writer = "";
+			if (userLang === "1") {
+				writer= item.writerName;
+			} else {
+				writer = item.writerName2;
+			}
 			
 			boardHTML += "<li onclick='openTheme2NotiBoardItem(\"" + item.itemID + "\", \"" + item.guBun + "\", \"" + item.boardID + "\")'>";
 			boardHTML += "<span class='txt'>" + MakeXMLString(item.title) + "</span>";
 			boardHTML += "<span class='date'>" + item.startDate.substring(5, 16) + "</span>";
-			boardHTML += "<span class='name'>" + item.writerName + "</span>";
+			boardHTML += "<span class='name'>" + writer + "</span>";
 			boardHTML += "</li>";
 		}
 

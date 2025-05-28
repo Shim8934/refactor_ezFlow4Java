@@ -5,7 +5,8 @@
 <html>
 	<head>
 	    <title><spring:message code="ezBoard.t16" /></title>
-	    <link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+	    <link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('/js/ezEmail/Controls/ezSearchDatePicker.htc')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('main.lhm01', 'msg')}" type="text/css">
@@ -44,13 +45,19 @@
 	    		overflow: hidden;
 	    		display: inline-block;
 	    	}
-	    	.countColor {
-	    		color:#017BEC;
-	    	}
 	    	/* 2022-03-30 홍승비 - MsgToList 테이블 내부의 직위, 직책명이 긴 경우 하단 border 잘리지 않도록 수정 */
 	    	#MsgToList {
 	    		table-layout : auto;
 	    	}
+	    	
+	    	
+	    	.mobile .organwrap .pictd {
+				width: 99px;
+			}
+			
+			.mobile .organwrap {
+				width: 100%;
+			}
 	    </style>
 	    <script>
 	        var ua = navigator.userAgent.toLowerCase();
@@ -104,12 +111,13 @@
                 var objNode;
                 
                 createNodeInsert(xmlpara, objNode, "DATA");
-                createNodeAndInsertText(xmlpara, objNode, "DEPTID", deptId);
                 /* 2019-09-19 홍승비 - 전체관리자가 그룹사게시판의 권한 설정하는 경우, 전체 조직도 표출 */
                 if (isAllGroupBoard == "Y") {
+					createNodeAndInsertText(xmlpara, objNode, "DEPTID", deptId);
                 	createNodeAndInsertText(xmlpara, objNode, "TOPID", topid + "/organ");
 		        } else {
-		        	createNodeAndInsertText(xmlpara, objNode, "TOPID", topid);
+					createNodeAndInsertText(xmlpara, objNode, "DEPTID", "");
+		        	createNodeAndInsertText(xmlpara, objNode, "TOPID", topid + "/organ");
 		        }
                 
                 // 조직도 부서정보에 속성 추가
@@ -134,7 +142,7 @@
 	                    treeView.DataBind("TreeView");
 	                }
 	                else {
-	                    alert("<spring:message code='ezEmail.t13' />" + xmlHTTP.statusText);
+	                    alert("<spring:message code='ezEmail.t13' />" + xmlHTTP.status);
 	                    xmlHTTP = null;
 	                }
 	            }
@@ -145,6 +153,19 @@
 	            document.getElementById("admin_NO").disabled = true;
 		        document.getElementById("admin_OK").checked = false;
 		        document.getElementById("admin_NO").checked = true;
+		        
+				if (navigator.maxTouchPoints > 4) {
+					// 태블릿 기기이면 높이 조정하여 하단 잘림 방지
+					document.getElementById("tblwrap").style.height = (document.body.clientHeight - 70) + 'px';
+					document.getElementById("tblwrap").style.overflowX = 'hidden';
+					document.getElementById("tblwrap").style.overflowY = 'scroll';
+					
+					document.getElementById("DeptUserImgList").style.width = '';
+					document.getElementById("orglistView").style.width = '';
+					document.getElementById("TreeView").style.width = '';
+					
+					document.getElementById("DeptUserImgList").className += ' mobile';
+		        }
 	        }
 	
 	        function MakeXMLString(pStr) {
@@ -273,9 +294,9 @@
 							var strIsLeaf = $("div#" + id + "").attr("isleaf");
 							
 							if (result.containLow == "YES" && strIsLeaf != "TRUE") { //하위가 있고, 표기방식이 [1명/ 전체10명]일 경우
-			        			document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='countColor'>" + result.totalCount + "</span> / <span class='countColor'>" + parseInt(result.totalCount + result.totalCount2) + "</span>";
+			        			document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='txt_color'>" + result.totalCount + "</span> / <span class='txt_color'>" + parseInt(result.totalCount + result.totalCount2) + "</span>";
 							} else {
-								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='countColor'>" + result.totalCount + "</span>";
+								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='txt_color'>" + result.totalCount + "</span>";
 							}
 							//2018-08-01 김보미 - 부서명 [사원수] 가 넘치는지 확인하는 함수
 							deptNameLong(result.containLow, strIsLeaf);
@@ -396,7 +417,7 @@
 	                document.getElementById("Search_txtlist_table").style.display = "none";
 	                
 	                if (pSeach) {
-	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + "<spring:message code='ezEmail.t655' />" + "" + "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang1 + "</span>]";
+	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + "<spring:message code='ezEmail.t655' />" + "" + "-[<span class='txt_color'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang1 + "</span>]";
 	                    SelectDeptNM.setAttribute("countinfo", "1")
 	                }
 	            } else {
@@ -409,7 +430,7 @@
 	                } else {
 	                    document.getElementById("Search_txtlist_table").style.display = "";
 	                    document.getElementById("txtlist_table").style.display = "none";
-	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + "<spring:message code='ezEmail.t655' />" + "" + "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang1 + "</span>]";
+	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + "<spring:message code='ezEmail.t655' />" + "" + "-[<span class='txt_color'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang1 + "</span>]";
 	                    SelectDeptNM.setAttribute("countinfo", "1")
 	                }
 	            }
@@ -1275,7 +1296,7 @@
 		            xmlHTTP.send("");
 		            
 		            if (xmlHTTP.status != 200) {
-			            alert("<spring:message code='ezEmail.t574' />" + xmlHTTP.statusText);
+			            alert("<spring:message code='ezEmail.t574' />" + xmlHTTP.status);
 		            } else {
 		            	document.getElementById("ListViewJikwi").innerHTML = "";
 			            var pListViewJikwi = new ListView();
@@ -1320,7 +1341,7 @@
 		            xmlHTTP.send("");
 		            
 		            if (xmlHTTP.status != 200) {
-			            alert("<spring:message code='ezEmail.t574' />" + xmlHTTP.statusText);
+			            alert("<spring:message code='ezEmail.t574' />" + xmlHTTP.status);
 		            } else {
 		            	document.getElementById("ListViewJikchek").innerHTML = "";
 			            var pListViewJikchek = new ListView();
@@ -1366,7 +1387,7 @@
 		            xmlHTTP.send("");
 		            
 		            if (xmlHTTP.status != 200) {
-			            alert("<spring:message code='ezEmail.t574' />" + xmlHTTP.statusText);
+			            alert("<spring:message code='ezEmail.t574' />" + xmlHTTP.status);
 		            } else {
 		            	document.getElementById("ListViewGroup").innerHTML = "";
 			            var pListViewGroup = new ListView();
@@ -1968,7 +1989,7 @@
 		            xmlHTTP.send("");
 		            
 		            if (xmlHTTP.status != 200) {
-			            alert("<spring:message code='ezEmail.t574' />" + xmlHTTP.statusText);
+			            alert("<spring:message code='ezEmail.t574' />" + xmlHTTP.status);
 		            } else {
 		            	document.getElementById("ListViewGroup").innerHTML = "";
 			            var pListViewGroup = new ListView();
@@ -2033,6 +2054,7 @@
                 <li><span onclick="window.close()"></span></li>
             </ul>
         </div>
+        <div id="tblwrap">
 	    <table style="width:100%;margin-top:10px">
 	        <tr>
 	            <td style="vertical-align: top;">
@@ -2108,7 +2130,7 @@
 	                                                </th>
 	                                            </tr>
 	                                        </table>
-	                                        <div style="vertical-align: top; height: 426px; overflow: auto; width: 446px;" id="txtlist_Layer">
+	                                        <div style="vertical-align: top; height: 426px; overflow: auto; width: 100%;" id="txtlist_Layer">
 	                                            <table style="width: 100%; border: 1px solid #ddd; display: none;" id="txtlist_table" class="mainlist">
 	                                                <tr>
 	                                                    <td style="width: 150px; font-weight: bold;" class="td_gray"><spring:message code='ezEmail.t31' /></td>
@@ -2228,6 +2250,7 @@
 	            </td>
 	        </tr>
 	    </table>
+	    </div>
 		<div class="btnpositionNew">
 			<a class="imgbtn"><span onclick="confirm_onClick()" ><spring:message code='ezBoard.t48' /></span></a>
 		</div>

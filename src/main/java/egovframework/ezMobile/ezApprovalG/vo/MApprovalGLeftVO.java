@@ -21,6 +21,10 @@ public class MApprovalGLeftVO {
 	private int gongRamCount;
 	/** 공람완료문서갯수*/
 	private int gongRamEndCount;
+	/** 반송된문서갯수*/
+	private int aprBanCount;
+	/** 보낸공람문서갯수*/
+	private int gongRamSendCount;
 	
 	public String getCompanyId() {
 		return companyId;
@@ -82,4 +86,14 @@ public class MApprovalGLeftVO {
 	public void setGongRamEndCount(int gongRamEndCount) {
 		this.gongRamEndCount = gongRamEndCount;
 	}
+	public int getAprBanCount() { return aprBanCount; }
+	public void setAprBanCount(int aprBanCount) { this.aprBanCount = aprBanCount; }
+	
+	public int getGongRamSendCount() {
+		return gongRamSendCount;
+	}
+	public void setGongRamSendCount(int gongRamSendCount) {
+		this.gongRamSendCount = gongRamSendCount;
+	}
+	
 }

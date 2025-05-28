@@ -5,13 +5,15 @@
 	<head>
 		<title>mail_filter</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/encode_component.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/string_component.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
 		<script type="text/javascript">
 		    var Xmlhttp = null;
 		    var sortRuleNameStatNum = 0;
@@ -118,7 +120,7 @@
                                         _actval += "|!|0";
                                         actfcnt++;
                                     }
-                                    else if (curkind == "REDIRECTION" || curkind == "FORWARD" || curkind == "IMPORTANCE") {
+                                    else if (curkind == "REDIRECTION" || curkind == "FORWARD" || curkind == "IMPORTANCE" || curkind == "TAG") {
                                         _act += "|!|" + curkind;
                                         _actval += "|!|" + actPath.getElementsByTagName("VALUES").item(j).textContent;
                                     }
@@ -155,7 +157,7 @@
                                 _expt = _expt.substring(3, _expt.length);
                                 _exptval = _exptval.substring(3, _exptval.length);
         
-                                _html += "<tr _itemid='" + _itemid + "' _name='" + MakeXMLString(_name).replace(/\'/g, "&#039;") + "' _priority='" + _priority + "' _con='" + _con + "' _conval='" + _conval + "' _act='" + _act + "' _actfid='" + _actfid + "'  _actfnm='" + _actfnm + "' _actval='" + _actval + "' _expt='" + _expt + "' _exptval='" + _exptval + "'  onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_click(this);' ondblclick='event_dbclick(this);'>";
+                                _html += "<tr _itemid='" + _itemid + "' _name='" + MakeXMLString(_name).replace(/\'/g, "&#039;") + "' _priority='" + _priority + "' _con='" + _con + "' _conval='" + escapeHtml(_conval) + "' _act='" + _act + "' _actfid='" + _actfid + "'  _actfnm='" + _actfnm + "' _actval='" + _actval + "' _expt='" + _expt + "' _exptval='" + escapeHtml(_exptval) + "'  onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_click(this);' ondblclick='event_dbclick(this);'>";
 //                                 alert("itemid='" + _itemid + "' _name='" + MakeXMLString(_name).replace(/\'/g, "&#039;") + "' _priority='" + _priority + "' _con='" + _con + "' _conval='" + _conval + "' _act='" + _act + "' _actfid='" + _actfid + "'  _actfnm='" + _actfnm + "' _actval='" + _actval + "' _expt='" + _expt + "' _exptval='" + _exptval + "'");
                                 
                                 if (_act.indexOf("NONE") != -1) {
@@ -231,7 +233,7 @@
                                         _actval += "|!|0";
                                         actfcnt++;
                                     }
-                                    else if (curkind == "REDIRECTION" || curkind == "FORWARD" || curkind == "IMPORTANCE") {
+                                    else if (curkind == "REDIRECTION" || curkind == "FORWARD" || curkind == "IMPORTANCE"  || curkind == "TAG") {
                                         _act += "|!|" + curkind;
                                         _actval += "|!|" + actPath.getElementsByTagName("VALUES").item(j).text;
                                     }
@@ -404,54 +406,66 @@
 		        var isNONE = false;
 		        for (var i = 0; i < act.length; i++) {
 		            switch (act[i]) {
-		                case "MOVE":
-		                    _act += "<div><img src='/images/ImgIcon/dot.gif' align='absmiddle' hspace='5'>\"<span style='color:red;'>" + actfnm[fcnt] + "</span>\" " + strLang213 + "</div>";
-		                    fcnt++;
-		                    break;
-		                case "COPY":
-		                    _act += "<div><img src='/images/ImgIcon/dot.gif' align='absmiddle' hspace='5'>\"<span style='color:red;'>" + actfnm[fcnt] + "</span>" + strLang342 + "</div>";
-		                    fcnt++;
-		                    break;
-		                case "READ":
-		                    _act += "<div><img src='/images/ImgIcon/dot.gif' align='absmiddle' hspace='5'><span style='color:red;'>" + strLang341 + "</span></div>";
-		                    break;
-		                case "DELETE":
-		                    _act += "<div><img src='/images/ImgIcon/dot.gif' align='absmiddle' hspace='5'><span style='color:red;'>" + strLang212 + "</span></div>";
-		                    break;
-		                case "FORWARD":
-		                    if (actval[i].indexOf(" </o=") == -1) {
-		                        _act += "<div><span><img src='/images/ImgIcon/dot.gif' align='absmiddle' hspace='5'>" + strLang344 + " </span><br/>\"<span style='color:red;'>" +
-		                     MakeXMLString(actval[i].replace(/;/g, "_replacesemiconlon_")).replace(/_replacesemiconlon_/g, "</span>\"<br/>\"<span style='color:red;'>") + "</span>\"</div>";
-		                    }
-		                    else {
-		                        _act += "<div><span><img src='/images/ImgIcon/dot.gif' align='absmiddle' hspace='5'>" + strLang344 + " </span><br/>\"<span style='color:red;'>" +
-		                     MakeXMLString(actval[i].substring(0, actval[i].indexOf(" </o="))) + "</span>\"</div>";
-		                    }
-		                    break;
-		                case "REDIRECTION":
-		                    if (actval[i].indexOf(" </o=") == -1) {
-		                        _act += "<div><span><img src='/images/ImgIcon/dot.gif' align='absmiddle' hspace='5'>" + strLang345 + " </span><br/>\"<span style='color:red;'>" +
-		                     MakeXMLString(actval[i].replace(/;/g, "_replacesemiconlon_")).replace(/_replacesemiconlon_/g, "</span>\"<br/>\"<span style='color:red;'>") + "</span>\"</div>";
-		                    }
-		                    else {
-		                        _act += "<div><span><img src='/images/ImgIcon/dot.gif' align='absmiddle' hspace='5'>" + strLang345 + " </span><br/>\"<span style='color:red;'>" +
-		                     MakeXMLString(actval[i].substring(0, actval[i].indexOf(" </o="))) + "</span>\"</div>";
-		                    }
-		                    break;
-		                case "IMPORTANCE":
-		                    _act += "<div><img src='/images/ImgIcon/dot.gif' align='absmiddle' hspace='5'>" + strLang343;
-		                    switch (actval[i]) {
-		                        case "LOW":
-		                            _act += "<span style='color:red;'>" + strLang346 + "</span></div>";
-		                            break;
-		                        case "NORMAL":
-		                            _act += "<span style='color:red;'>" + strLang347 + "</span></div>";
-		                            break;
-		                        case "HIGH":
-		                            _act += "<span style='color:red;'>" + strLang348 + "</span></div>";
-		                            break;
-		                    }
-		                    break;
+						case "MOVE":
+							_act += "<div><img src='/images/ImgIcon/dot.gif' align='absmiddle' hspace='5'>\"<span style='color:red;'>" + actfnm[fcnt] + "</span>\" " + strLang213 + "</div>";
+							fcnt++;
+							break;
+						case "COPY":
+							_act += "<div><img src='/images/ImgIcon/dot.gif' align='absmiddle' hspace='5'>\"<span style='color:red;'>" + actfnm[fcnt] + "</span>" + strLang342 + "</div>";
+							fcnt++;
+							break;
+						case "READ":
+							_act += "<div><img src='/images/ImgIcon/dot.gif' align='absmiddle' hspace='5'><span style='color:red;'>" + strLang341 + "</span></div>";
+							break;
+						case "DELETE":
+							_act += "<div><img src='/images/ImgIcon/dot.gif' align='absmiddle' hspace='5'><span style='color:red;'>" + strLang212 + "</span></div>";
+							break;
+						case "FORWARD":
+							if (actval[i].indexOf(" </o=") == -1) {
+								_act += "<div><span><img src='/images/ImgIcon/dot.gif' align='absmiddle' hspace='5'>" + strLang344 + " </span><br/>\"<span style='color:red;'>" +
+										MakeXMLString(actval[i].replace(/;/g, "_replacesemiconlon_")).replace(/_replacesemiconlon_/g, "</span>\"<br/>\"<span style='color:red;'>") + "</span>\"</div>";
+							} else {
+								_act += "<div><span><img src='/images/ImgIcon/dot.gif' align='absmiddle' hspace='5'>" + strLang344 + " </span><br/>\"<span style='color:red;'>" +
+										MakeXMLString(actval[i].substring(0, actval[i].indexOf(" </o="))) + "</span>\"</div>";
+							}
+							break;
+						case "REDIRECTION":
+							if (actval[i].indexOf(" </o=") == -1) {
+								_act += "<div><span><img src='/images/ImgIcon/dot.gif' align='absmiddle' hspace='5'>" + strLang345 + " </span><br/>\"<span style='color:red;'>" +
+										MakeXMLString(actval[i].replace(/;/g, "_replacesemiconlon_")).replace(/_replacesemiconlon_/g, "</span>\"<br/>\"<span style='color:red;'>") + "</span>\"</div>";
+							} else {
+								_act += "<div><span><img src='/images/ImgIcon/dot.gif' align='absmiddle' hspace='5'>" + strLang345 + " </span><br/>\"<span style='color:red;'>" +
+										MakeXMLString(actval[i].substring(0, actval[i].indexOf(" </o="))) + "</span>\"</div>";
+							}
+							break;
+						case "IMPORTANCE":
+							_act += "<div><img src='/images/ImgIcon/dot.gif' align='absmiddle' hspace='5'>" + strLang343;
+							switch (actval[i]) {
+								case "LOW":
+									_act += "<span style='color:red;'>" + strLang346 + "</span></div>";
+									break;
+								case "NORMAL":
+									_act += "<span style='color:red;'>" + strLang347 + "</span></div>";
+									break;
+								case "HIGH":
+									_act += "<span style='color:red;'>" + strLang348 + "</span></div>";
+									break;
+							}
+							break;
+						case "TAG":
+							_act += "<div><span><img src='/images/ImgIcon/dot.gif' align='absmiddle' hspace='5'>" + strLangTagadd + " </span><br/>";
+							
+							let actList = actval[i].split(";");
+							for (let i = 0; i < actList.length; i++) {
+								let act = actList[i];
+								_act += "\"<span style='color:red;'>" + MakeXMLString(act) + "</span>\"";
+								
+								if (i < actList.length - 1) {
+									_act += " ," + "</br>";
+								}
+							}
+							_act += "</div>";
+							break;
 		                case "NONE":
 		                    //_html = "<span style='color:red;'>" + strLang242 + "</span>";
 		                    isNONE = true;
@@ -518,7 +532,7 @@
 		        	pHeight = 584;
 		        }
 		        var OpenWin = window.open(requestUrl, "mail_NewInboxRule_cross", GetOpenWindowfeature(605, pHeight));
-		        try { OpenWin.focus(); } catch (e) { }
+		        try { OpenWin.focus(); } catch (e) {console.log(e);}
 		    }
 		    function New_InboxRule_Complete(newWin) {
 		        try {
@@ -528,7 +542,7 @@
 		                Rule_Reload();
 		            }
 		        } catch (e) {
-		
+		            console.log(e);
 		        }
 		    }
 		    function MakeXmlNode(xmldoc, root, key, value) {
@@ -571,7 +585,7 @@
 		        	pHeight = 584;
 		        }
 		        var OpenWin = window.open(requestUrl, "mail_NewInboxRule_cross", GetOpenWindowfeature(605, pHeight));
-		        try { OpenWin.focus(); } catch (e) { }
+		        try { OpenWin.focus(); } catch (e) {console.log(e);}
 		    }
 		    function Detail_InboxRule_Complete(newWin) {
 		        try {
@@ -580,7 +594,7 @@
 		                document.getElementById("ContentDescription").innerHTML = "";
 		                Rule_Reload();
 		            }
-		        } catch (e) {}
+		        } catch (e) {console.log(e);}
 		    }
 		    var XmlhttpDelete;
 		    function event_DeleteRule() {
@@ -786,12 +800,15 @@
 		             }
 		         }
 		     }
-		     function MakeXMLString(pStr) {
-		         pStr = ReplaceText(pStr, "&", "&amp;");
-		         pStr = ReplaceText(pStr, "<", "&lt;");
-		         pStr = ReplaceText(pStr, ">", "&gt;");
-		         return pStr;
-		     }
+			
+			 function MakeXMLString(pStr) {
+				pStr = ReplaceText(pStr, "&", "&amp;");
+				pStr = ReplaceText(pStr, "<", "&lt;");
+				pStr = ReplaceText(pStr, ">", "&gt;");
+				pStr = ReplaceText(pStr, "'", "&apos;");
+				pStr = ReplaceText(pStr, "\"", "&quot;");
+				return pStr;
+			}
 		     
 			function sortRuleName(td) {
 				sortRuleNameStatNum = sortRuleNameStatNum == 2 ? 0 : sortRuleNameStatNum+1;

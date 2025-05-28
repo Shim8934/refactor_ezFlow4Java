@@ -15,7 +15,8 @@
     </c:choose>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
-	<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+	<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 	<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
 	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -108,6 +109,8 @@
         
         var isSihangReject = "N"; // 시행문변환 시 반송을 위한 구분값 전달
         var pRecordID = "<c:out value = '${recordID}'/>";
+        var approvalFlag = "<c:out value = '${approvalFlag}'/>";
+        var pFormURL = "<c:out value = '${pFormURL}'/>";
 
 		// 2023-05-25 조수빈 - 전자결재 첨부파일 미리보기 사용 여부
 		var useAprFilePrvw = "<c:out value ='${useAprFilePrvw}'/>";
@@ -203,14 +206,13 @@
             try {
                 window.onresize();
                 
-                if (isConvSihang) {
+                if (isConvSihang && approvalFlag == "G") {
                     setMenuDisable("btnOpinion", true);
-                    setMenuDisable("btnReject", true); // 시행문변환으로 접근해도 반송이 가능하도록 수정
                     isSihangReject = "Y"; // 시행문변환으로 접근 시 반송 관련 플래그 설정
-                } else {
-                    setMenuDisable("btnReject", true);
                 }
-                
+                if(approvalFlag == "G")
+                    setMenuDisable("btnReject", true); // 시행문변환으로 접근해도 반송이 가능하도록 수정
+
 				// 일반첨부, 대용량첨부파일 관련 가이드 메세지 추가
 				setAttachGuideText();
             } catch (e) {
@@ -226,11 +228,55 @@
         
         function Editor_Complete() {
         	showLoadingProgress();
-        	
-        	if (pDocHref != "") { 
-        		var URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(pDocHref);
-        		message.Open(URL, "", "", function (res) { FieldsAvailable(res.result) }, null);
+
+        	if(approvalFlag == "G"){
+                if (pDocHref != "") {
+                    var URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(pDocHref);
+                    message.Open(URL, "", "", function (res) { FieldsAvailable(res.result) }, null);
+                }
+        	}else{
+                var URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(pFormURL);
+                message.Open(URL, "", "", function (res) { Insert_Content(res.result) }, null);
         	}
+        }
+
+        function Editor_Complete2() {
+        }
+
+        function Insert_Content() {
+            var URL;
+            URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(pDocHref);
+            message2.Open(URL, "", "", function (res) { CopyAndPasteContent(res.result) }, null);
+        }
+
+        function CopyAndPasteContent(isTrue) {
+            try {
+                message.EditMode(0);
+                if(isTrue) {
+                    var fieldList = message2.GetFieldList();
+                    message2.GetCloneData("doctitle", "JSON", function (tempContent) { message.SetCloneData(tempContent, "doctitle", "JSON") });
+                    message2.GetCloneData("body", "JSON", function (tempContent) { message.SetCloneData(tempContent, "body", "JSON") });
+                    message.PutFieldText("docnumber", message2.GetFieldText("docnumber"));
+                    message.PutFieldText("recipient", message2.GetFieldText("recipient"));
+                    message.PutFieldText("recipients", message2.GetFieldText("recipients"));
+                    var enforcedate = message2.GetFieldText("enforcedate");
+                    if(trim(enforcedate) == ""){
+                        enforcedate = GetDocInfoData("END", "ENDDATE").substring(0,10).replace("-",".").replace("-",".");
+                    }
+                    message.PutFieldText("enforcedate", enforcedate);
+                    pOrgDocID = pDocID;
+                    pDocID = CreateNewDoc(pDocID, pUserID);
+                    pDocHref = pDocHref.substring(0,pDocHref.lastIndexOf("/"));
+                    pDocHref = pDocHref.substring(0,pDocHref.lastIndexOf("/")) + "/" + Number(pDocID.substr(-3)) + "/" + pDocID + "." + ext;
+                } else {
+                    var pAlertContent = "<spring:message code='ezApprovalG.t1373'/>";
+                    OpenAlertUI(pAlertContent);
+                    message.Clear();
+                }
+                hideLoadingProgress();
+            } catch (e) {
+                alert("CopyAndPasteContent ::" + e);
+            }
         }
 
         function setArrAttachInfo() {
@@ -443,7 +489,8 @@
         var writeboardselect_modal_dialogArguments = new Array();
         function btnBoard_onclick_complete2(html) {
             SaveHtml = html;
-            //SaveFile();
+            if(approvalFlag == "S")
+                saveEndFile(pDocID, html);
 
             btnBoard_onclick_complete3();
         }
@@ -468,11 +515,11 @@
                 var pTop = (pheight - 720) / 2;
                 var pLeft = (pwidth - 765) / 2;
 
-                if (ret[2] == "2" || ret[2] == "3" || ret[2] == "4") {
+                if (ret[2] == "2" || ret[2] == "3" || ret[2] == "4" || ret[2] == "7" || ret[2] == "8") {
                     alert(strLang1031);
                 }
                 else {
-                    window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&mode=new1&pbrdGbn=SiteNewBoard&pFromScreen=Mail&docID=" + pDocID + "&url=" + pDocHref, '', "top=" + pTop.toString() + ", left=" + pLeft.toString() + ',height=870,width=765,scrollbars=no');
+                    window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&mode=new1&pbrdGbn=SiteNewBoard&pFromScreen=Mail&docID=" + (approvalFlag == "S" ? pOrgDocID : pDocID) + "&url=" + pDocHref, '', "top=" + pTop.toString() + ", left=" + pLeft.toString() + ',height=870,width=765,scrollbars=no');
                 }
             }
         }
@@ -987,7 +1034,8 @@
 		    		data : {
 		    			fontFamily : "",
 		    			fontSize : "",
-		    			content : text
+		    			content : text,
+		    			docType : "WHWP"
 		    		},
 		    		success: function(xml){
 		    			result = loadXMLString(xml);
@@ -1476,7 +1524,20 @@
             	 document.getElementById("apprAttachGuideTR").style.display = "none";
              }
     	}
-    	
+
+        //메일발송
+        function btnMail_onclick() {
+            if (!stampFlag && !NostampFlag) {
+                var pAlertContent = "<spring:message code='ezApprovalG.t216'/>";
+                OpenAlertUI(pAlertContent);
+                return;
+            }
+            GetHTML(sendMail);
+        }
+
+        function sendMail(){
+            window.open(document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezEmail/mailWrite.do?docHref=" + pDocHref + "&cmd=docsend&docID=" + pOrgDocID + "&TARGET=APPROVALG", "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(890, window.screen.availHeight * 0.8));
+        }
     </script>
 </head>
 <body class="popup" onload="return window_onload()" style="overflow: hidden" onbeforeunload="return window_onbeforeunload()">
@@ -1490,13 +1551,16 @@
                 <div id="menu">
                     <ul>
                         <li id="btnOpinion" style="display: none"><span onclick="return btnOpinion_onclick()"><spring:message code='ezApprovalG.t55'/></span></li>
-                        <li id="btnSetReceivLine"><span onclick="return btnSetReceivLine_onclick()"><spring:message code='ezApprovalG.t53'/></span></li>
+                        <li id="btnSetReceivLine" <c:if test="${approvalFlag == 'S'}">style="display: none"</c:if>><span onclick="return btnSetReceivLine_onclick()"><spring:message code='ezApprovalG.t53'/></span></li>
                         <li id="btnStamp"><span onclick="return btnStamp_onclick()"><spring:message code='ezApprovalG.t213'/></span></li>
                         <li id="btnNoStamp"><span onclick="return btnNoStamp_onclick()"><spring:message code='ezApprovalG.t222'/></span></li>
-                        <li id="btnSend"><span onclick="return btnSend_onclick()"><spring:message code='ezApprovalG.t214'/></span></li>
+                        <li id="btnSend"<c:if test="${approvalFlag == 'S'}">style="display: none"</c:if>><span onclick="return btnSend_onclick()"><spring:message code='ezApprovalG.t214'/></span></li>
                         <li id="btnBoard"><span onclick="return btnBoard_onclick()"><spring:message code='ezApprovalG.t215'/></span></li>
                         <li id="btnReject" style="display: none"><span onclick="return btnReject_onclick()"><spring:message code='ezApprovalG.t49'/></span></li>
                         <li id="btnPrint"><span class='icon16 popup_icon16_print' onclick="return btnPrint_onclick()"></span></li>
+                        <c:if test="${approvalFlag == 'S'}">
+	                        <li id="btnMail"><span class="icon16 popup_icon16_mail_gray" onclick="return btnMail_onclick()"></span></li>
+                        </c:if>
                     </ul>
                 </div>
                 <div id="close">
@@ -1515,6 +1579,13 @@
 		    	<iframe id="message" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox"  src="/ezApprovalG/WHWPEditor.do" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
 	        </td>
         </tr>
+        <c:if test="${approvalFlag == 'S'}">
+        <tr>
+            <td style="vertical-align: top; height: 0%" id="form2">
+                <iframe id="message2" name="message2" src="/ezApprovalG/WHWPEditor.do?type=copyAppr"  style="background-color: White; height: 0px; width: 0px;"></iframe>
+            </td>
+        </tr>
+        </c:if>
         <tr>
             <td height="20">
                 <table class="file" style="height:80px; margin-top:-9px;">

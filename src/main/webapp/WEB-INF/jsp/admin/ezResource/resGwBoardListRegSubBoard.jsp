@@ -6,7 +6,8 @@
 	<head>
 		<title><spring:message code="ezResource.t55" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-		<link rel="stylesheet" href="${util.addVer('ezResource.e2', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}" ></script>
 		<script type="text/javascript" id="clientEventHandlersJS" >
 			g_BrdID  = "<c:out value='${brdID}' />";
@@ -158,7 +159,7 @@
 					return;
 				}else{
 					alert("<spring:message code='ezResource.t56' />");
-					parent.window.location.reload();
+					window.parent.board_menu.location.href = "/admin/ezResource/gwBoardListManagelistLeft.do?flag=SELECT_YES&selCompany=" + pCompanyID;
 				}
 			}
 

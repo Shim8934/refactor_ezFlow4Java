@@ -5,7 +5,8 @@
 	<head>
 		<title><spring:message code="ezEmail.pyy01" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<link href="${util.addVer('/js/jquery/jquery.modal.css')}" rel="stylesheet" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/encode_component.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/string_component.js')}"></script>
@@ -88,7 +89,6 @@
 		}
 		function pop_addcon() {
 		    if (inboxRuleCon1.value.length > 0) {
-		        inboxRuleCon1.value = inboxRuleCon1.value.replace(/<[^>]*>?/g, '');
 		        var ischeck = true;
 		        for (var i = 0; i < Conitems.childNodes.length; i++) {
 		            if (inboxRuleCon1.value == Conitems.childNodes.item(i).value) {
@@ -135,6 +135,31 @@
 	        Conitems.innerHTML = "";
 	        window.close();
 		}
+
+		function setDefault(){
+            if (_popObj != null) {
+                removeDefault();
+
+                _popObj.setAttribute('value','___'+_popObj.getAttribute('value'));
+                _popObj.textContent = _popObj.textContent + ' (default)'
+                //_popObj.outerHTML = ;
+                return;
+            }
+		}
+
+		function removeDefault(){
+    		$("div[value]").each(function() {
+                var value = $(this).attr("value");
+
+                if (value.startsWith("___")) {
+                    var newValue = value.substring(3); // "___" 제거
+                    $(this).attr("value", newValue);
+                    var newText = $(this).text().replace(" (default)", ""); // " (default)" 제거
+                    $(this).text(newText);
+                }
+            });
+
+		}
 		</script>
 	</head>
 	<body style="background-color:#ffffff;">
@@ -166,7 +191,9 @@
 				</div>
 			</div>
 			<div class="btnpositionLayer">
-				<a class="imgbtn"><span onClick="pop_confirm();"><spring:message code='ezEmail.t38' /></span></a>
+				<a class="imgbtn"><span onClick="setDefault();"><spring:message code='ezEmail.yja002' /> </span></a>
+				<a class="imgbtn"><span onClick="removeDefault();"><spring:message code='ezEmail.yja003' /></span></a>
+				<a class="imgbtn"><span onClick="pop_confirm();"><spring:message code='main.sp09' /></span></a>
 			</div>
 		</div>	
 	</div>

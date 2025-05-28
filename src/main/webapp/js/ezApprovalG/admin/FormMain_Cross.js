@@ -572,7 +572,7 @@ function MakeFormInfoXML_Detail() {
     }
     
     /* 2022-01-07 홍승비 - 전자결재G 일괄결재 옵션 추가 */
-    if (approvalFlag == "G" && document.getElementById("setDraftAllFlag").checked) {
+    if (document.getElementById("setDraftAllFlag").checked) {
     	createNodeAndInsertText(xmlpara, objNode, "draftAllFlag", "Y");
     } else {
     	createNodeAndInsertText(xmlpara, objNode, "draftAllFlag", "N");
@@ -724,7 +724,9 @@ function MakeFormMHTXML_Detail() {
         
         //태그프리 에디터일 경우 FIELD클래스의 불필요한 문자제거 2019-03-19 홍대표
         if (useEditor === "TAGFREE") {
-        	Div.innerHTML = Div.innerHTML.replace(/class=".*?FIELD.*?"/g, 'class="FIELD"');
+            Div.querySelectorAll('[class*="FIELD"]').forEach(el => {
+                el.className = 'FIELD';
+            });
         }
         
         if (message.GetEditorContent().indexOf("BodyContent") === -1) {

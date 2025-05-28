@@ -3,12 +3,14 @@ package egovframework.ezEKP.ezBoard.web;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URLDecoder;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.StringJoiner;
 import java.util.concurrent.CountDownLatch;
@@ -21,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -119,14 +122,17 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String serverName = request.getServerName();
 		String redirectBoardID = "";
 		String redirectBoardGroupID = "";
-		
+		String companyID = Optional.ofNullable(request.getParameter("company")).orElse(user.getCompanyID());
+
 		if (request.getParameter("boardID") != null) {
 			redirectBoardID = request.getParameter("boardID");
 			List<BoardVO> leftBoardList = ezBoardService.getLeft_BoardSTD(redirectBoardID, user.getTenantId());
 			
 			redirectBoardGroupID = leftBoardList.get(0).getBoardGroupId();
 		}
-		
+
+//		List<OrganDeptVO> listCompanyBoard = ezBoardAdminService.getListCompanyInBoard(user.getId(), user.getPrimary(), user.getTenantId());
+
 		/* 2019-07-09 홍승비 - 게시판 좌측메뉴 게시물 개수 표출 사용여부 플래그 추가 */
         String useLeftCnt = "";
         if (ezCommonService.getTenantConfig("USE_BOARD_LEFTMENU_COUNT", user.getTenantId()) != null) {
@@ -138,7 +144,10 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		model.addAttribute("user", user);
 		model.addAttribute("serverName", serverName);
 		model.addAttribute("useLeftCnt", useLeftCnt);
-		
+		model.addAttribute("userCompany", companyID);
+//		model.addAttribute("listCompany", listCompanyBoard);
+		model.addAttribute("useMealPlan", ezCommonService.getTenantConfig("useMealPlan", user.getTenantId()));
+
 		logger.debug("boardLeft ended");
 		return "admin/ezBoard/boardLeft";
 	}
@@ -160,11 +169,13 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String parentBoardID = request.getParameter("boardType");
+		String companyID = Optional.ofNullable(request.getParameter("company")).orElse(userInfo.getCompanyID());
+
 		String rollInfo = userInfo.getRollInfo(); // 전체관리자 권한 확인용
 		boolean isCompanyAdmin = commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), rollInfo, "c");
 		
 		/* 2018-06-25 홍승비 - 게시판 > 관리자 > 좌측 게시판리스트(그룹) 표출 시 companyID 조건 추가 */
-		List<BoardTreeVO> list = ezBoardAdminService.get_Admin_TopBoardList(parentBoardID, commonUtil.getLangData(userInfo.getLang()), userInfo.getCompanyID(), userInfo.getTenantId(), isCompanyAdmin);
+		List<BoardTreeVO> list = ezBoardAdminService.get_Admin_TopBoardList(parentBoardID, commonUtil.getLangData(userInfo.getLang()), companyID, userInfo.getTenantId(), isCompanyAdmin);
 		
 		for (int i = 0; i < list.size(); i++) {
 			BoardTreeVO vo = list.get(i);
@@ -233,6 +244,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String accessName2 = user.getDeptName2() + "(" + user.getCompanyName2()	+ ", " + user.getDeptName2() + ")";
 		String uID = user.getId();
 		String boardGroupId = boardPropertyVO.getBoardGroupID();
+		String companyID = Optional.ofNullable(boardPropertyVO.getCompanyID()).orElse(user.getCompanyID());
 		
 		boardPropertyVO.setBoardGroupName(groupName1);
 		boardPropertyVO.setBoardGroupName2(groupName2);
@@ -241,7 +253,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		boardPropertyVO.setAccessID(uID);
 		boardPropertyVO.setAccessName(accessName1);
 		boardPropertyVO.setAccessName2(accessName2);
-		boardPropertyVO.setCompanyID(user.getCompanyID());
+		boardPropertyVO.setCompanyID(companyID);
 		boardPropertyVO.setTenantID(user.getTenantId());
 		boardPropertyVO.setLoginVO(user);
 		boardPropertyVO.setBoardGroupID(commonUtil.stripScriptTags(boardGroupId));
@@ -276,10 +288,21 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 
 		BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(parentBoardID, userInfo.getTenantId());
 		
-		if (lang.equals("2") && !boardPropertyVO.getBoardName2().equals("")) {
-			parentBoardName = boardPropertyVO.getBoardName2();
-		} else {
-			parentBoardName = boardPropertyVO.getBoardName();
+		switch (lang) {
+			case "1":
+				parentBoardName = boardPropertyVO.getBoardName();
+				break;
+			case "2":
+				parentBoardName = boardPropertyVO.getBoardName2();
+				break;
+			case "3":
+				parentBoardName = boardPropertyVO.getBoardName3();
+				break;
+			case "4":
+				parentBoardName = boardPropertyVO.getBoardName4();
+				break;
+			default:
+				parentBoardName = boardPropertyVO.getBoardName();
 		}
 		
 		model.addAttribute("parentBoardID", parentBoardID);
@@ -332,7 +355,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		boardPropertyVO.setAccessID(uID);
 		boardPropertyVO.setAccessName(accessName1);
 		boardPropertyVO.setAccessName2(accessName2);
-		boardPropertyVO.setCompanyID(user.getCompanyID());
+		boardPropertyVO.setCompanyID(boardGroupPropertyVO.getCompanyID());
 		boardPropertyVO.setTenantID(user.getTenantId());
 		
 		ezBoardAdminService.createBoard(boardPropertyVO);
@@ -354,12 +377,22 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		
 		BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(boardID, userInfo.getTenantId());
 
-		/* 2023-08-07 이주원 - 게시판명에 다국어 기본언어, 멀티언어 적용 */
 		String multiBoardName = "";
-		if (commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()).equals("1")) {
-			multiBoardName = boardPropertyVO.getBoardName();
-		} else {
-			multiBoardName = boardPropertyVO.getBoardName2();
+		switch (userInfo.getLang()) {
+			case "1":
+				multiBoardName = boardPropertyVO.getBoardName();
+				break;
+			case "2":
+				multiBoardName = boardPropertyVO.getBoardName2();
+				break;
+			case "3":
+				multiBoardName = boardPropertyVO.getBoardName3();
+				break;
+			case "4":
+				multiBoardName = boardPropertyVO.getBoardName4();
+				break;
+			default:
+				multiBoardName = boardPropertyVO.getBoardName();
 		}
 
 		model.addAttribute("upperBoardID", parentBoardID);
@@ -444,16 +477,28 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 			logger.debug("boardDelete ended");
 			return "admin/ezBoard/boardRight";
 		} else {
-			
-			// 2023-08-22 황인경 - 관리자 > 게시판 > 삭제 > 게시판그룹, 게시판명 다국어 처리
-			if (!user.getLang().equals("1")) {
-				boardPropertyVO.setBoardName(boardPropertyVO.getBoardName2());
-				boardPropertyVO.setBoardGroupName(boardPropertyVO.getBoardGroupName2());
+
+			String boardName = "";
+			switch (user.getLang()) {
+				case "1":
+					boardName = boardPropertyVO.getBoardName();
+					break;
+				case "2":
+					boardName = boardPropertyVO.getBoardName2();
+					break;
+				case "3":
+					boardName = boardPropertyVO.getBoardName3();
+					break;
+				case "4":
+					boardName = boardPropertyVO.getBoardName4();
+					break;
+				default:
+					boardName = boardPropertyVO.getBoardName();
 			}
 			
 			model.addAttribute("boardID", boardID);
 			model.addAttribute("boardGroupID", boardGroupID);
-			model.addAttribute("boardName", boardPropertyVO.getBoardName());
+			model.addAttribute("boardName", boardName);
 			
 			logger.debug("boardDelete ended");
 			return "admin/ezBoard/boardDelete";
@@ -480,6 +525,12 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 			ezBoardAdminService.deleteNoticeBoard(userInfo.getTenantId(), userInfo.getCompanyID());
 		}
 		
+		/* 스크랩 게시물 삭제 */
+		ezBoardAdminService.deleteScrapBoard(boardID);
+
+		/* 스크랩함 게시물 삭제 */
+		ezBoardAdminService.deleteScrapContBoard(boardID);
+		
 		logger.debug("deleteBoard ended");
 	}
 
@@ -487,12 +538,14 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 	 * 게시판관리 배경이미지 관리 메뉴화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezBoard/boardBackGround.do", method = RequestMethod.GET)
-	public String boardBackGround(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+	public String boardBackGround(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("boardBackGround started");
 
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
 		model.addAttribute("tenantID", userInfo.getTenantId());
+		model.addAttribute("companyID",
+				Optional.ofNullable(request.getParameter("companyID")).orElse(userInfo.getCompanyID()));
 
 		logger.debug("boardBackGround ended");
 		
@@ -508,9 +561,9 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		logger.debug("getBackGroundImage started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		boardBackgroundVO.setCompanyID(userInfo.getCompanyID());
+		boardBackgroundVO.setCompanyID(Optional.ofNullable(boardBackgroundVO.getCompanyID()).orElse(userInfo.getCompanyID()));
 		boardBackgroundVO.setTenantID(userInfo.getTenantId());
-		
+
 		/* 2018-06-26 홍승비 - companyID 조건 추가 */
 		List<BoardBackgroundVO> list = ezBoardAdminService.getBackGroundImage(boardBackgroundVO);
 		
@@ -754,10 +807,28 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		if (!userInfo.getLang().equals("1")) {
 			boardPropertyVO.setBoardName(boardPropertyVO.getBoardName2());
 		}
+
+		String boardName = "";
+		switch (userInfo.getLang()) {
+			case "1":
+				boardName = boardPropertyVO.getBoardName();
+				break;
+			case "2":
+				boardName = boardPropertyVO.getBoardName2();
+				break;
+			case "3":
+				boardName = boardPropertyVO.getBoardName3();
+				break;
+			case "4":
+				boardName = boardPropertyVO.getBoardName4();
+				break;
+			default:
+				boardName = boardPropertyVO.getBoardName();
+		}
 		
 		model.addAttribute("boardID", boardID);
 		model.addAttribute("boardGroupID", boardGroupID);
-		model.addAttribute("boardName", boardPropertyVO.getBoardName());
+		model.addAttribute("boardName", boardName);
 		model.addAttribute("hasSubBoard", hasSubBoard);
 
 		logger.debug("boardMove ended");
@@ -947,6 +1018,9 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 			}
 		}
 		
+		/* 2024-09-10 조소정 - 게시판 > 카테고리 기능 추가 */
+		int boardItemCnt = ezBoardAdminService.getBoardItemCnt(boardID, userInfo.getTenantId());
+		
 		/* 2018-07-26 홍승비 - 다국어 표출 시 lang 대신 primary 조건 사용하도록 수정 */
 		model.addAttribute("model", boardPropertyVO);
 		model.addAttribute("use_multiData", use_multiData);
@@ -963,7 +1037,8 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		model.addAttribute("lang_quaternary", lang_quaternary);
 		model.addAttribute("useJapanese", useJapanese);
 		model.addAttribute("useChinese", useChinese);
-
+		model.addAttribute("boardItemCnt", boardItemCnt);
+		
 		logger.debug("boardProperty ended");
 		return "admin/ezBoard/boardProperty";
 	}
@@ -983,6 +1058,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		
 		boardPropertyVO.setTenantID(userInfo.getTenantId());
 		
+		BoardPropertyVO beforeBoardProperty = ezBoardService.getBoardProperty(boardPropertyVO.getBoardID(), userInfo.getTenantId()); // 게시판 이름 변경 전 정보
 		ezBoardAdminService.saveBoardProperty(boardPropertyVO);
 		
 		if (!noticeBoardMod.equals("")) { // 공지사항 게시판 설정이 변경되었다면 추가 동작 진행
@@ -997,16 +1073,31 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		BoardPropertyVO boardpro = ezBoardService.getBoardProperty(boardPropertyVO.getBoardID(), userInfo.getTenantId());
 		int tabNum = 3; //탭 개수
 		
+		/* 2023-11-08 민지수 - 카테고리게시판으로 게시판 유형을 변경한 경우, 즐겨찾기와 마이게시판 목록에서 해당 게시판 제거 */
+		if (boardpro.getGuBun() != null && boardpro.getGuBun().equals("10")) {
+			ezBoardAdminService.deleteMyBoardData("MyBoards", boardPropertyVO.getBoardID(), userInfo.getTenantId());
+			ezBoardAdminService.deleteMyBoardData("MyBoardTree", boardPropertyVO.getBoardID(), userInfo.getTenantId());
+		}
+		
 		for (int i = 1; i <= tabNum; i++) {
 			String tabBoardMod = request.getParameter("tabBoardMod" + i);
+			String tabBoardCheck = request.getParameter("tabBoardCheck" + i);
+			String tempCompanyId = boardpro.getCompanyID() != null ? boardpro.getCompanyID() : " " ;
+			
 			if (!tabBoardMod.equals("")) {
-				String tempCompanyId = boardpro.getCompanyID() != null ? boardpro.getCompanyID() : " " ;
 				if(tabBoardMod.equals("UPDATE")) {
 					ezBoardAdminService.updateTabBoard(i, boardPropertyVO.getBoardID(), userInfo.getTenantId(), tempCompanyId, boardPropertyVO.getBoardName(), boardPropertyVO.getBoardName2());
 				} else { // DELETE
 					ezBoardAdminService.deleteTabBoard(i, boardpro.getTenantID(), tempCompanyId);
 				}
+			} else {
+				if (tabBoardCheck.equals("true")) { 
+					if (!beforeBoardProperty.getBoardName().equals(boardpro.getBoardName()) || !beforeBoardProperty.getBoardName2().equals(boardpro.getBoardName2())) { // 게시판 이름 수정했을 경우
+						ezBoardAdminService.updateTabBoard(i, boardPropertyVO.getBoardID(), userInfo.getTenantId(), tempCompanyId, boardPropertyVO.getBoardName(), boardPropertyVO.getBoardName2());
+					}
+				}
 			}
+			
 		}
 		
 		logger.debug("saveBoardProperty ended");
@@ -1163,6 +1254,8 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String pAccessLevel = request.getParameter("accessLevel");
 		String primary = userInfo.getPrimary(); // 사용하지 않는 userLang 변수 제거, primary로 대체
 		String isAllGroupBoard = "";
+		// 2025-02-10 조수빈 - voc #154032 처리를 위해 전체, 게시, 회사 관리자인 경우에만 권한전파 및 권한복사 버튼 표출하기 위한 변수
+		String isBoardAdmin = "NO";
 		
 		BoardPropertyVO boardProperty = ezBoardService.getBoardProperty(boardID, userInfo.getTenantId());
 
@@ -1244,6 +1337,18 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		
 		String result = sb.toString().replace("null", "");
 		
+		String rollInfo = userInfo.getRollInfo();
+		// 전체관리자
+		boolean isAllAdmin = commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), rollInfo, "c");
+		// 게시관리자
+		boolean isCompanyAdmin = commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), rollInfo, "n");
+		// 회사관리자
+		boolean isPostAdmin = commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), rollInfo, "k");
+		
+		if (isAllAdmin || isCompanyAdmin || isPostAdmin) {
+			isBoardAdmin = "YES";
+		}
+		
 		model.addAttribute("boardID", boardID);
 		model.addAttribute("parentBoardID", parentBoardID);
 		model.addAttribute("primary", primary);
@@ -1255,6 +1360,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		model.addAttribute("boardName", boardName);
 		model.addAttribute("strList", result);
 		model.addAttribute("isAllGroupBoard", isAllGroupBoard);
+		model.addAttribute("isBoardAdmin", isBoardAdmin);
 
 		logger.debug("boardACL ended");
 		return "admin/ezBoard/boardACL";
@@ -1594,13 +1700,15 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String boardType = request.getParameter("boardType");
 		String parentBoardID = request.getParameter("parentBoardID");
 		String tabID = (request.getParameter("tabID") == null ? "1tab1" : request.getParameter("tabID"));
+		String useFormFlag = ezBoardAdminService.getUseFormFlag(boardID, userInfo.getTenantId());
 		
 		model.addAttribute("boardID", boardID);
 		model.addAttribute("boardName", commonUtil.cleanValue(boardName));
 		model.addAttribute("boardType", boardType);
 		model.addAttribute("parentBoardID", parentBoardID);
 		model.addAttribute("tabID", tabID);		
-		model.addAttribute("use_Editor", ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId()));
+		model.addAttribute("use_Editor", ezCommonService.getTenantConfig("MODULEEDITOR", userInfo.getTenantId()));
+		model.addAttribute("useFormFlag", useFormFlag);
 
 		logger.debug("boardConfig ended");
 		return "admin/ezBoard/boardConfig";
@@ -1628,7 +1736,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		
 		model.addAttribute("boardID", boardID);
 		model.addAttribute("checkForm", checkForm);
-		model.addAttribute("use_Editor", ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId()));
+		model.addAttribute("use_Editor", ezCommonService.getTenantConfig("MODULEEDITOR", userInfo.getTenantId()));
 
 		logger.debug("boardFormSave ended");
 		return "admin/ezBoard/boardFormSave";
@@ -1647,8 +1755,14 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String boardID = request.getParameter("boardID");
 		String formContent = request.getParameter("formContent");
 		String realPath = commonUtil.getRealPath(request);
+		String editor = ezCommonService.getTenantConfig("MODULEEDITOR", userInfo.getTenantId());
+		String formLocation = "";
 		
-		String formLocation = ezBoardAdminService.saveMHT(boardID, formContent, realPath, userInfo.getTenantId());		
+		if (!editor.equals("HWP")) {
+			formLocation = ezBoardAdminService.saveMHT(boardID, formContent, realPath, userInfo.getTenantId());		
+		} else {
+			formLocation = ezBoardAdminService.saveHWP(boardID, formContent, realPath, userInfo.getTenantId());
+		}
 		
 		ezBoardAdminService.setBoardForm(boardID, formLocation, userInfo.getTenantId());
 
@@ -1665,19 +1779,18 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 
 		LoginVO user = commonUtil.userInfo(loginCookie);
 		String isAllGroupBoard = request.getParameter("isAllGroupBoard");
-		String topid = "";
-		
+		String topid = Optional.ofNullable(request.getParameter("companyID")).orElse(user.getCompanyID());
+
 		if (isAllGroupBoard == null || isAllGroupBoard.equals("")) {
 			isAllGroupBoard = "N";
 		}
-		
-		if (!commonUtil.isAdmin(user.getId(), user.getTenantId(), user.getRollInfo(), "c") || isAllGroupBoard.equals("N")) { // 전체관리자가 아니거나, 그룹사게시판이 아님(회사 소속 게시판)
-			topid = user.getCompanyID();
-		} else { // 전체관리자이면서 그룹사게시판인 경우 (모든 회사를 조직도에서 표출)
-			topid = "Top";
-		}
-		
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(user.getPrimary(), user.getTenantId());
+
+		// 전체관리자이면서 그룹사게시판인 경우 (모든 회사를 조직도에서 표출)
+        if (commonUtil.isAdmin(user.getId(), user.getTenantId(), user.getRollInfo(), "c") && !isAllGroupBoard.equals("N")) {
+            topid = "Top";
+        }
+
+        List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(user.getPrimary(), user.getTenantId());
 
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		
@@ -1961,5 +2074,146 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 	}
 	
 //////////////////////////////////////관리자단 게시판 트리캐시 일괄생성 코드 완료 //////////////////////////////////////
+
+	/**
+	 * 인사연동 > 부서생성 - 해당 API 호출 시 부서게시판 하위에 부서게시판 생성 로직
+	 */
+	@RequestMapping(value = "/ezConn/ezBoard/makeDeptBoard.do", method = RequestMethod.POST)
+	@ResponseBody
+	public JSONObject makeDeptBoard(HttpServletRequest request) throws Exception {
+		logger.debug("makeDeptBoard started");
+
+		JSONObject result;
+		Map<String, Object> resultMap = new HashMap<>();
+		String[] deptArr;
+		
+		String tenant = request.getParameter("tenantID");
+		String deptID = request.getParameter("deptID"); // 부서아이디 (구분자 ,)
+		String companyID = request.getParameter("companyID");
+		
+		if (StringUtils.isBlank(tenant) || StringUtils.isBlank(deptID) || StringUtils.isBlank(companyID)) {
+			resultMap.put("status", "error");
+			resultMap.put("message", "PARAM_ERROR");
+
+			result = new JSONObject(resultMap);
+			return result;
+		} else {
+			int tenantID = Integer.parseInt(tenant);
+			deptArr = deptID.split(",");
+
+			LoginVO user = new LoginVO();
+			user.setLang("");
+
+			// API 호출 시 부서게시판 {BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB} 이 존재하는지 확인 없으면 생성
+			String deptBoardID = "{BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB}";
+			BoardPropertyVO deptBoardProperty = ezBoardService.getBoardProperty(deptBoardID, tenantID);
+			BoardPropertyVO boardPropertyVO = new BoardPropertyVO();
+
+			if (deptBoardProperty == null) {
+				try {
+					boardPropertyVO.setBoardGroupName("부서게시판");
+					boardPropertyVO.setBoardGroupName2("Dept BoardItem");
+					boardPropertyVO.setBoardGroupName3("部署掲示板");
+					boardPropertyVO.setBoardGroupName4("部门公告板");
+					boardPropertyVO.setAccessID("NONE");
+					boardPropertyVO.setCompanyID(companyID);
+					boardPropertyVO.setTenantID(tenantID);
+					boardPropertyVO.setLoginVO(user);
+					boardPropertyVO.setBoardGroupID(deptBoardID);
+					boardPropertyVO.setGuBun("0");
+					ezBoardAdminService.createBoardGroup(boardPropertyVO);
+				} catch (SQLException e) {
+					logger.error(e.getMessage());
+					resultMap.put("status", "error");
+					resultMap.put("message", "CREATE_GROUP_ERROR");
+					result = new JSONObject(resultMap);
+					return result;
+				}
+			}
+			
+			List<Map<String, Object>> addDeptlist = new ArrayList<>();
+			for (String deptCn : deptArr) {
+				try {
+					BoardPropertyVO boardPropertyVO2 = new BoardPropertyVO();
+					OrganDeptVO deptInfo = ezOrganAdminService.getDeptDisplayNm(deptCn, tenantID);
+
+					if (deptInfo == null) {
+						resultMap.put("status", "error");
+						resultMap.put("message", "DEPT_ERROR");
+
+						result = new JSONObject(resultMap);
+						return result;
+					}
+					
+					String boardID = "{" + ezBoardAdminService.getNewGuid() + "}";
+
+					boardPropertyVO2.setBoardID(boardID);
+					boardPropertyVO2.setBoardName(deptInfo.getDisplayName());
+					boardPropertyVO2.setBoardName2(deptInfo.getDisplayName2());
+					boardPropertyVO2.setBoardName3(deptInfo.getDisplayName2());
+					boardPropertyVO2.setBoardName4(deptInfo.getDisplayName2());
+					boardPropertyVO2.setAccessID(deptCn);
+					boardPropertyVO2.setAccessName(deptInfo.getDisplayName());
+					boardPropertyVO2.setAccessName2(deptInfo.getDisplayName2());
+					boardPropertyVO2.setCompanyID(companyID);
+					boardPropertyVO2.setTenantID(tenantID);
+					boardPropertyVO2.setParentBoardID(deptBoardID);
+					boardPropertyVO2.setBoardGroupID(deptBoardID);
+					boardPropertyVO2.setType("DEPT");
+					boardPropertyVO.setGuBun("0");
+
+					ezBoardAdminService.createBoard(boardPropertyVO2);
+					Map<String, Object> map = new HashMap<>();
+					map.put("boardID", boardID);
+					map.put("accessID", deptCn);
+					addDeptlist.add(map);
+				} catch (SQLException e) {
+					logger.error(e.getMessage());
+					resultMap.put("status", "error");
+					resultMap.put("message", "CREATE_BOARD_ERROR");
+					result = new JSONObject(resultMap);
+					return result;
+				}
+			}
+
+			for (Map<String, Object> info : addDeptlist) {
+				List<BoardPropertyVO> accessList = ezBoardAdminService.getBoardAccessList((String) info.get("boardID"), "N", companyID, tenantID);
+				for (BoardPropertyVO access : accessList) {
+					if ((access.getAccessID()).equals(info.get("accessID"))) {
+						
+						Map<String, Object> map = new HashMap<>();
+						map.put("v_COMPANYID", companyID);
+						map.put("v_TENANTID", tenantID);
+						map.put("v_pBoardID", info.get("boardID"));
+						map.put("v_pAccessID", access.getAccessID());
+						map.put("v_pAccessName", access.getAccessName());
+						map.put("v_pParentBoardID",	access.getParentBoardID());
+						map.put("v_pInherit", access.getInherit_FG());
+						map.put("v_pAdmin", "false");
+						map.put("v_pAccess", access.getAccess_());
+						map.put("v_pListView", access.getListView_FG());
+						map.put("v_pRead", access.getRead_FG());
+						map.put("v_pWrite", access.getWrite_FG());
+						map.put("v_pReply", access.getReply_FG());
+						map.put("v_pDelete", access.getDelete_FG());
+						map.put("v_pPostNotice", access.getPostNotice());
+						map.put("v_pAccessName2", access.getAccessName2());
+						map.put("v_pBoardGroupACL", access.getBoardGroupACL());
+						map.put("isAllGroupBoard", access.getIsAllGroupBoard());
+						map.put("v_pType", "DEPT");
+
+						// 상위 그룹게시판 (부서게시판) 권한 하위게시판 따라가도록 설정
+						ezBoardAdminService.saveACL(map);
+					}
+				}
+			}
+		}
+		
+		logger.debug("makeDeptBoard ended");
+		resultMap.put("status", "ok");
+		resultMap.put("message", "SUCCESS");
+		result = new JSONObject(resultMap);
+		return result;
+	}
 	
 }

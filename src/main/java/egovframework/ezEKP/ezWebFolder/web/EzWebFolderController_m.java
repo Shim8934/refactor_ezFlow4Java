@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezWebFolder.web;
 import static org.apache.commons.lang3.StringUtils.defaultString;
 
 import java.security.MessageDigest;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -39,6 +40,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezNotification.service.EzNotificationService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_m;
 import egovframework.ezEKP.ezWebFolder.vo.DuplicateInfoVO.Type;
@@ -70,6 +72,9 @@ public class EzWebFolderController_m {
 	
 	@Resource(name = "egovMessageSource")
 	private EgovMessageSource egovMessageSource;
+	
+	@Resource(name = "EzNotificationService")
+	private EzNotificationService ezNotificationService;
 
 	@Autowired
 	private Rest rest;
@@ -893,6 +898,7 @@ public class EzWebFolderController_m {
 						InternetAddress[] toArr = new InternetAddress[webfolderAdminListCnt];
 						
 						int nowi = 0;
+						List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
 						for (OrganUserVO vo : webfolderAdminList) {
 							String voMail = vo.getMail();
 							String voCn = vo.getCn();
@@ -904,6 +910,19 @@ public class EzWebFolderController_m {
 							
 							toArr[nowi] = addrTemp;
 							nowi++;
+
+							Map<String, Object> recipientMap = new HashMap<String, Object>();
+							recipientMap.put("userType", "PERSON");
+							recipientMap.put("companyId", companyId);
+							recipientMap.put("cn", voCn);
+							notiRecipientList.add(recipientMap);
+						}
+						
+						if (notiRecipientList != null && notiRecipientList.size() > 0) {
+							String notiSubType = "OPEN_APPLY";
+							String linkUrl = "/admin/ezWebFolder/applicationHistoryMain.do";
+							String notiStatus = ezNotificationService.sendNoti(request, user.getId(), user.getDisplayName(), notiRecipientList, "WEBFOLDER", notiSubType, folderName, "popup", "1300", "1000", linkUrl, "", "notChkSetting");
+							logger.debug("webfolder " +  notiSubType + " noti status : " + notiStatus);
 						}
 						
 						String mailContent = "";
@@ -927,6 +946,7 @@ public class EzWebFolderController_m {
 						
 						mailContent = commonUtil.createNotiMailContent(mailContent, tenantId, locale);
 						ezEmailService.sendMail(loginCookie, from, toArr, null, null, mailSubject, mailContent, false);
+						
 					} catch (Exception e) {
 						logger.error(e.getMessage(), e);
 						returnStr = "EMAIL_ERROR";

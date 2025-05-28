@@ -10,6 +10,7 @@
     <typeAlias  alias="loginVO"                 	type="egovframework.let.user.login.vo.LoginVO"/>
 	<typeAlias  alias="CompanyInfoVO" 				type="egovframework.ezEKP.ezCommon.vo.CompanyInfoVO"/>
 	<typeAlias  alias="CountryVO" 					type="egovframework.ezEKP.ezSystem.vo.CountryVO"/>
+	<typeAlias  alias="TblColumnsInfoVO" 			type="egovframework.ezEKP.ezCommon.vo.TblColumnsInfoVO"/>
 	
 	<!-- 로그인 처리를 위한 resultMap -->
     <resultMap id="login" class="egovframework.let.user.login.vo.LoginVO">
@@ -212,6 +213,19 @@
 			)
 		]]>
 	</insert>
+
+	<delete id="EzCommonDAO.deleteUserConfigInfo" parameterClass="Map">
+		<![CDATA[
+		DELETE FROM
+			TBL_USER_CONFIG
+		WHERE
+			TENANT_ID = #tenant_id#
+		  AND
+			USER_ID = #user_id#
+		  AND
+			PROPERTY_NAME = #property_name#
+		]]>
+	</delete>
 	
 	<update id="EzCommonDAO.updateUserConfigInfo" parameterClass="Map">
 		<![CDATA[
@@ -545,6 +559,28 @@
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8
 	</statement>
 	
+	<select id="EzCommonDAO.checkTblFidoSession">
+		<![CDATA[
+			SELECT 
+				FIDO_SESSION_ID
+			FROM 
+				TBL_FIDO_SESSION
+			LIMIT 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.createTblFidoSession">
+		CREATE TABLE
+		TBL_FIDO_SESSION(
+						FIDO_SESSION_ID varchar(50) NOT NULL,
+						USER_ID varchar(80) NOT NULL,
+						CREATE_TIME DATETIME NOT NULL,
+						ACCESS_IP varchar(80) NOT NULL,
+						STATUS varchar(50),
+						PRIMARY KEY (FIDO_SESSION_ID)
+						)
+	</statement>
+
 	<select id="EzCommonDAO.checkPortalThemePortlet">
 		<![CDATA[
 			SELECT
@@ -957,9 +993,9 @@
 	
 	<insert id="EzCommonDAO.insertPortletComp">
 		INSERT INTO TBL_PORTAL_PORTLET_COMP 
-			(COMPANY_ID, TENANT_ID, PORTLET_ID, MENU_ID, PORTLET_USED, PORTLET_ORDER, BOARD_ID) 
+			(COMPANY_ID, TENANT_ID, PORTLET_ID, MENU_ID, PORTLET_USED, PORTLET_ORDER, BOARD_ID, CONNECTION_URL)
 		VALUES 
-			(#companyId#, #tenantId#, #portletId#, #menuId#, #portletUsed#, #portletOrder#, #boardId#)
+			(#companyId#, #tenantId#, #portletId#, #menuId#, #portletUsed#, #portletOrder#, #boardId#, #connectionUrl#)
 	</insert>
 	
 	<insert id="EzCommonDAO.insertRsPortletName">
@@ -976,7 +1012,7 @@
 			(PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
 		VALUES
 			(#portletId#, #menuId#, 1, #tenantId#, #companyId#, '개인폴더'),
-			(#portletId#, #menuId#, 2, #tenantId#, #companyId#, 'Personal Folder'),
+			(#portletId#, #menuId#, 2, #tenantId#, #companyId#, 'My Folder'),
 			(#portletId#, #menuId#, 3, #tenantId#, #companyId#, 'Webフォルダ')
 	</insert>
 	
@@ -993,16 +1029,21 @@
 		INSERT INTO TBL_PORTAL_THEME_PORTLET
 			(THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED)
 		VALUES
+		<isNotEqual property="webType" compareValue="mobile">
 			(1, #tenantId#, #companyId#, #portletId#, #portletUsed#, #portletOrder#, #menuId#, 0),
 			(2, #tenantId#, #companyId#, #portletId#, #portletUsed#, #portletOrder#, #menuId#, 0),
 			(3, #tenantId#, #companyId#, #portletId#, #portletUsed#, #portletOrder#, #menuId#, 0)
+		</isNotEqual>
+		<isEqual property="webType" compareValue="mobile">
+			(4, #tenantId#, #companyId#, #portletId#, #portletUsed#, #portletOrder#, #menuId#, 0)
+		</isEqual>
 	</insert>
 	
 	<insert id="EzCommonDAO.insertPortalPortletAuth">
 		INSERT INTO TBL_PORTAL_PORTLET_AUTH
-			(PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE)
+			(PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SUBDEPT_PERMITTED)
 		VALUES
-			(#portletId#, #companyId#, #tenantId#, #companyId#, 1, 0)
+			(#portletId#, #companyId#, #tenantId#, #companyId#, 1, 0, 'Y')
 	</insert>
 	
 	<select id="EzCommonDAO.checkTblThemeAuth">
@@ -1709,12 +1750,12 @@
 	</statement>
 	
 	<select id="EzCommonDAO.checkDeptId" parameterClass="Map" resultClass="int">
-	<![CDATA[
 		SELECT 
 			COUNT(DEPTID) 
 		FROM 
 			(SELECT 
-				DEPTID 
+				DEPTID,
+				JOBID
 			FROM 
 				TBL_ADDJOBMASTER A
 			INNER JOIN 
@@ -1727,7 +1768,8 @@
 				A.TENANT_ID = #tenantID#
 			UNION
 			SELECT 
-				DEPARTMENT AS DEPTID 
+				DEPARTMENT AS DEPTID,
+				EXTENSIONATTRIBUTE7 AS JOBID
 			FROM 
 				TBL_USERMASTER 
 			WHERE 
@@ -1736,7 +1778,12 @@
 				TENANT_ID = #tenantID#) D
 		WHERE 
 			D.DEPTID = #deptID#
-	]]>
+		<isNotEmpty property="jobID">
+			AND D.JOBID = #jobID#
+		</isNotEmpty>
+		<isEmpty property="jobID">
+			AND D.JOBID IS NULL
+		</isEmpty>
 	</select>
 	
 	<select id="EzCommonDAO.checkUserDlTable">
@@ -1843,32 +1890,33 @@
 		VALUES
 			(1, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
 			(2, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
-			(3, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
+			(3, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+			(4, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
 	]]>
 	</insert>
 	
 	<insert id="EzCommonDAO.insertPortletAuthInit" parameterClass="Map">
 	<![CDATA[
 		INSERT INTO TBL_PORTAL_PORTLET_AUTH
-			(portlet_id, company_id, tenant_id, user_id, access_YN, user_type, sn) 
+			(portlet_id, company_id, tenant_id, user_id, access_YN, user_type, sn, subdept_permitted) 
 		VALUES 
-    		(1, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
-    		(2, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
-    		(4, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
-    		(5, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
-    		(6, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
-    		(7, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
-    		(8, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
-    		(9, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
-    		(10, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
-    		(11, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
-    		(12, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
-    		(14, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
-    		(26, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
-    		(34, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
-    		(36, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
-    		(47, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
-    		(49, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
+    		(1, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y'),
+    		(2, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y'),
+    		(4, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y'),
+    		(5, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y'),
+    		(6, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y'),
+    		(7, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y'),
+    		(8, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y'),
+    		(9, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y'),
+    		(10, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y'),
+    		(11, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y'),
+    		(12, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y'),
+    		(14, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y'),
+    		(26, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y'),
+    		(34, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y'),
+    		(36, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y'),
+    		(47, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y'),
+    		(49, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y')
 	]]>
 	</insert>
 	
@@ -2306,7 +2354,10 @@
 		VALUES
 			(#portletId#, #menuId#, 1, #tenantId#, #companyId#, #portletName1#),
 			(#portletId#, #menuId#, 2, #tenantId#, #companyId#, #portletName2#),
-			(#portletId#, #menuId#, 3, #tenantId#, #companyId#, #portletName3#)
+			(#portletId#, #menuId#, 3, #tenantId#, #companyId#, #portletName3#),
+			(#portletId#, #menuId#, 4, #tenantId#, #companyId#, #portletName4#),
+			(#portletId#, #menuId#, 5, #tenantId#, #companyId#, #portletName5#),
+			(#portletId#, #menuId#, 6, #tenantId#, #companyId#, #portletName6#)
 	</insert>
 
 	<insert id="EzCommonDAO.insertPortletWithCode">
@@ -3615,14 +3666,20 @@
 	
 	<insert id="EzCommonDAO.insertUseAprFilePrvwConfig">
         INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
-        VALUES (0, 'useAprFilePrvw', '결재문서 첨부파일 미리보기 기능 사용 여부', '1', '결재문서 첨부파일 미리보기 기능 사용 여부 0: 사용 안함, 1: 사용', '2023-06-29 00:00:00', '전자결재');
+        VALUES (0, 'useAprFilePrvw', '결재문서 첨부파일 미리보기 기능 사용 여부', '1', '결재문서 첨부파일 미리보기 기능 사용 여부 0: 사용 안함, 1: 사용', '2023-06-29 00:00:00', '전자결재')
     </insert>
     
     <insert id="EzCommonDAO.insertUseBoardFilePrvwConfig">
         INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
-        VALUES (0, 'useBoardFilePrvw', '게시판 첨부파일 미리보기 기능 사용 여부', '1', '게시판 첨부파일 미리보기 기능 사용 여부 0: 사용 안함, 1: 사용', '2023-06-29 00:00:00', '게시판');
+        VALUES (0, 'useBoardFilePrvw', '게시판 첨부파일 미리보기 기능 사용 여부', '1', '게시판 첨부파일 미리보기 기능 사용 여부 0: 사용 안함, 1: 사용', '2023-06-29 00:00:00', '게시판')
     </insert>
     
+    <!-- 2023-12-05 홍승비 - 전자결재 서명 데이터 재맵핑 시점 컨피그 추가 -->
+	<insert id="EzCommonDAO.insertApprSignRemapApplyTime">
+		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
+		VALUES (#tenantID#, 'apprSignRemapApplyTime', '전자결재 서명 데이터 재맵핑 시점', DATE_FORMAT(UTC_TIMESTAMP(), '%Y-%m-%d %H:%i:%s'), '결재서명 데이터를 재맵핑하기 위해, TBL_SIGNINFO 테이블에 정상적인 데이터 삽입을 보장하는 시점을 정의한다. 해당 시점 이후에 기안된 문서들이 결재서명 재맵핑 대상이 된다. (UTC 시간, %Y-%m-%d %H:%i:%s 형식)', sysdate(), '전자결재')
+	</insert>
+	
 	<select id="EzCommonDAO.checkPermissionBasisDeptYN_Config" resultClass="String">
 		SELECT
 			PROPERTY_VALUE
@@ -3633,7 +3690,7 @@
 		AND
 			TENANT_ID = 0
 	</select>
-	
+
 	<insert id="EzCommonDAO.insertPermissionBasisDeptYN_Config">
 		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
 		VALUES ('0', 'permissionBasisDeptYN', 'N', '조직도 > 권한 설정 시 Y: 사용자/겸직부서를 기준으로 권한을 부여한다 // N: 사용자만을 기준으로 권한을 부여한다.(Default: N)', '조직도 권한부여 기준 설정', '2023-08-16 00:00:00.000', '조직도')
@@ -3657,7 +3714,7 @@
 			STACK      MEDIUMTEXT    NULL
 		) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4
 	</statement>
-	
+
 	<!-- 2023-11-22 조소정 - 포탈 > 기본 탑메뉴 중국어 버전 추가 -->
     <select id="EzCommonDAO.getPortalMenuTenantList" resultClass="String">
 		<![CDATA[
@@ -3835,7 +3892,7 @@
 			(#v_TENANTID#, 'LangQuaternary4', '멀티언어4', '中文', '', '2023-11-27 14:30:00', '일반'),
 			(#v_TENANTID#, 'LangQuaternary5', '멀티언어5', '', '', '2023-11-27 14:30:00', '일반')
 	</insert>
-	
+
 	<select id="EzCommonDAO.checkLoadTimeForApprAllConfig" resultClass="String">
 		SELECT
 			PROPERTY_VALUE
@@ -3846,7 +3903,7 @@
 		AND
 			TENANT_ID = 0
 	</select>
-	
+
 	<insert id="EzCommonDAO.insertLoadTimeForApprAllConfig">
         INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
         VALUES ('0', 'loadTimeForApprAll', '200', '다안기안 문서 표출 시 글꼴,스크롤 오류를 해결하기 위한 setTimeout 시간. 네트워크 환경에 따라 적절한 시간 조절을 위해 사용(default:200)', '다안기안 문서 로딩시간', '2024-01-11 00:00:00', '전자결재G')
@@ -3930,7 +3987,7 @@
 			TBL_TOTAL_HISTORY
 		LIMIT 1
 	</select>
-	
+
 	<statement id="EzCommonDAO.createTblTotalHistory">
 		CREATE TABLE `tbl_total_history` (
 		  `DOCID` varchar(80) NOT NULL,
@@ -3948,8 +4005,8 @@
 		  `COMPANYID` varchar(20) NOT NULL,
 		  PRIMARY KEY (`DOCID`, `USERID`, `REGDATE`, `TENANT_ID`, `COMPANYID`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='2023-06-30 기준 통합 PC 저장에서만 사용하고 있음. gubun 은 "D"(Download) 로 사용하고 있음.';
-	</statement>	
-	
+	</statement>
+
 
 	<!-- 2024-05-23 민지수 - 전자결재 > 첨부 > 첨부 등록자 이외의 사용자가 첨부 삭제가능여부 -->
 	<select id="EzCommonDAO.checkDelAttachByOthersConfing" resultClass="String">
@@ -3969,4 +4026,2922 @@
 		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
 		VALUES (#v_TENANTID#, 'delAttachByOthers', '0', '결재에서 첨부를 올린사람 이외의 사람도 삭제가능여부를  결정하는 테넌트 값(0 : 불가 1 : 허용), (default:0) ', '결재에서 첨부파일을 다른사람이 지울수있는 여부', '2021-03-05 00:00:00', '전자결재')
 	</insert>
+
+	<select id="EzCommonDAO.checkUseHideHeaderArea" resultClass="String">
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			PROPERTY_NAME = 'useHideHeaderArea'
+		AND
+			TENANT_ID = #v_TENANTID#
+	</select>
+
+	<insert id="EzCommonDAO.insertUseHideHeaderArea">
+        INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+        VALUES (#v_TENANTID#, 'useHideHeaderArea', 'NO', '전자결재 mht양식 headerArea 필드 숨기기 기능 사용여부. 양식에 headerArea 필드가 있어야 사용 가능. YES: 사용 NO: 사용안함 (default: NO)', '헤더 숨기기 기능 사용여부', '2024-05-23 00:00:00', '전자결재')
+    </insert>
+
+	<select id="EzCommonDAO.checkRepeatFlagColumnForResourceInfo" resultClass="String">
+	<![CDATA[
+		SELECT
+			REPEATFLAG
+		FROM
+			TBL_RS_BRD
+			LIMIT 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.alterRepeatFlagForResourceInfo">
+	<![CDATA[
+		ALTER TABLE
+			TBL_RS_BRD
+			ADD
+			REPEATFLAG varchar(2) DEFAULT '1'
+		]]>
+    </statement>
+
+	<!-- 2024-05-28 김유진 - 포탈 메뉴,포틀릿,테마,빠른링크 > 하위부서 허용여부 컬럼 추가, 빠른링크 > 유저타입 컬럼 추가 ㅡ -->
+	<select id="EzCommonDAO.checkSubPermittedForMenuAuth" resultClass="String">
+	<![CDATA[
+		SELECT
+			subdept_permitted
+		FROM
+			tbl_portal_menu_auth
+			LIMIT 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.alterSubPermittedForMenuAuth">
+	<![CDATA[
+		ALTER TABLE
+			tbl_portal_menu_auth
+		ADD
+		    subdept_permitted VARCHAR(4) DEFAULT 'N'
+		]]>
+    </statement>
+
+	<update id="EzCommonDAO.updateSubPermittedForMenuAuth">
+		UPDATE
+			tbl_portal_menu_auth
+		SET
+			subdept_permitted = 'Y'
+		WHERE
+			user_type = 0
+	</update>
+
+	<select id="EzCommonDAO.checkSubPermittedForPortletAuth" resultClass="String">
+	<![CDATA[
+		SELECT
+			subdept_permitted
+		FROM
+			tbl_portal_portlet_auth
+			LIMIT 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.alterSubPermittedForPortletAuth">
+	<![CDATA[
+		ALTER TABLE
+			tbl_portal_portlet_auth
+		ADD
+			subdept_permitted VARCHAR(4) DEFAULT 'N'
+		]]>
+    </statement>
+
+	<update id="EzCommonDAO.updateSubPermittedForPortletAuth">
+		UPDATE
+			tbl_portal_portlet_auth
+		SET
+			subdept_permitted = 'Y'
+		WHERE
+			user_type = 0
+	</update>
+
+	<select id="EzCommonDAO.checkSubPermittedForThemeAuth" resultClass="String">
+	<![CDATA[
+		SELECT
+			subdept_permitted
+		FROM
+			tbl_portal_theme_auth
+				LIMIT 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.alterSubPermittedForThemeAuth">
+	<![CDATA[
+		ALTER TABLE
+			tbl_portal_theme_auth
+		ADD
+			subdept_permitted VARCHAR(4) DEFAULT 'N'
+		]]>
+    </statement>
+
+	<update id="EzCommonDAO.updateSubPermittedForThemeAuth">
+		UPDATE
+			tbl_portal_theme_auth
+		SET
+			subdept_permitted = 'Y'
+		WHERE
+			user_type = 0
+	</update>
+
+	<select id="EzCommonDAO.checkSubPermittedForQuicklinkAcl" resultClass="String">
+	<![CDATA[
+		SELECT
+			USER_TYPE, SUBDEPT_PERMITTED
+		FROM
+			tbl_ps_quicklink_acl
+				LIMIT 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.alterSubPermittedForQuicklinkAcl">
+	<![CDATA[
+		ALTER TABLE
+			tbl_ps_quicklink_acl
+		ADD
+		    COLUMN USER_TYPE VARCHAR(100) NOT NULL,
+		ADD
+		   	COLUMN SUBDEPT_PERMITTED VARCHAR(4) DEFAULT 'N'
+		]]>
+    </statement>
+
+	<update id="EzCommonDAO.updateSubPermittedForQuicklinkAcl">
+		UPDATE tbl_ps_quicklink_acl qla
+			LEFT JOIN tbl_usermaster um ON qla.accessid = um.cn and qla.TENANT_ID = um.TENANT_ID
+			LEFT JOIN tbl_deptmaster dm ON qla.accessid = dm.cn and qla.TENANT_ID = dm.TENANT_ID
+			LEFT JOIN tbl_user_jobmaster ujm ON qla.accessid =  CAST(ujm.jobid AS CHAR) and qla.TENANT_ID = ujm.TENANT_ID
+			LEFT JOIN tbl_permissiongrouplist pgl ON qla.accessid = pgl.group_id and qla.TENANT_ID = pgl.TENANT_ID
+			SET qla.user_type =
+				CASE
+				WHEN um.cn IS NOT NULL THEN 'USER'
+				WHEN dm.cn IS NOT NULL THEN 'DEPT'
+				WHEN (ujm.jobid IS NOT null and ujm.`TYPE` = '001') THEN 'jIKWI'
+				WHEN (ujm.jobid IS NOT null and ujm.`TYPE` = '002') THEN 'JIKCHEK'
+				WHEN pgl.group_id IS NOT NULL THEN 'GROUP'
+				ELSE 'USER'
+				END,
+		   qla.subdept_permitted =
+			CASE
+				WHEN dm.cn IS NOT NULL THEN 'Y'
+				ELSE 'N'
+				END
+	</update>
+
+
+
+	<!-- 2024-05-29 김유진 - tenant_config 작업; 전자결재G 비전자문서등록 양식 확장자 정보추가 -->
+	<select id="EzCommonDAO.checkApprNonElecRecTypeConfing" resultClass="String">
+	<![CDATA[
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			PROPERTY_NAME = 'ApprNonElecRecType'
+		  AND
+			TENANT_ID = #v_TENANTID#
+		]]>
+	</select>
+
+	<insert id="EzCommonDAO.insertApprNonElecRecTypeConfing">
+		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
+		VALUES (#v_TENANTID#, 'ApprNonElecRecType', '전자결재G 비전자문서등록 양식 확장자', 'HWP', '전자결재 G버전의 비전자문서 등록 시, 양식 확장자를 설정한다. (MHT 또는 HWP) (default : HWP)', '2021-04-07 00:00:00', '전자결재G')
+	</insert>
+	
+	<statement id="EzCommonDAO.createJmochaApprAllowedDomain">
+		CREATE TABLE JMOCHA_APPR_ALLOWED_DOMAIN (
+		  TENANT_ID int(11) NOT NULL,
+		  COMPANY_ID varchar(80) NOT NULL,
+		  DOMAIN_NAME varchar(100) NOT NULL,
+		  PRIMARY KEY (TENANT_ID,COMPANY_ID,DOMAIN_NAME)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	</statement>
+	
+	<statement id="EzCommonDAO.createJmochaApprUser">
+		CREATE TABLE JMOCHA_APPR_USER (
+		  TENANT_ID int(11) NOT NULL,
+		  COMPANY_ID varchar(80) NOT NULL,
+		  USER_ID varchar(100) NOT NULL,
+		  USER_TYPE varchar(10) NOT null,
+		  PRIMARY KEY (TENANT_ID, COMPANY_ID, USER_ID,USER_TYPE)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	</statement>
+	
+	<statement id="EzCommonDAO.createJmochaApprHistory">
+		CREATE TABLE JMOCHA_APPR_HISTORY (
+		  TENANT_ID int(11) NOT NULL,
+		  COMPANY_ID varchar(80) NOT NULL,
+		  MAIL_UID bigint(20) NOT NULL,
+		  SUBJECT longtext CHARACTER SET utf8mb4 DEFAULT NULL,
+		  SENDEREMAIL varchar(100) DEFAULT NULL,
+		  USER_ID varchar(100) NOT NULL,
+		  USER_NAME varchar(100) DEFAULT NULL,
+		  USER_NAME2 varchar(100) DEFAULT NULL,
+		  USER_DEPTID varchar(100) DEFAULT NULL,
+		  USER_DEPTNAME varchar(100) DEFAULT NULL,
+		  USER_DEPTNAME2 varchar(100) DEFAULT NULL,
+		  WRITE_DATE datetime DEFAULT NULL,
+		  APPROVER_ID varchar(100) DEFAULT NULL,
+		  APPROVER_NAME varchar(100) DEFAULT NULL,
+		  APPROVER_NAME2 varchar(100) DEFAULT NULL,
+		  UPDATEDT datetime DEFAULT NULL,
+		  STATE varchar(10) DEFAULT NULL,
+		  MEMO varchar(200) DEFAULT NULL,
+		  DEL_FLAG varchar(10) DEFAULT 'N',
+		  PRIMARY KEY (TENANT_ID,MAIL_UID,USER_ID)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	</statement>
+	
+	<statement id="EzCommonDAO.createJmochaApprCompHistory">
+		CREATE TABLE JMOCHA_APPR_COMP_HISTORY (
+		  TENANT_ID int(11) NOT NULL,
+		  COMPANY_ID varchar(80) NOT NULL,
+		  MAIL_UID bigint(20) NOT NULL,
+		  SUBJECT longtext CHARACTER SET utf8mb4 DEFAULT NULL,
+		  SENDEREMAIL varchar(100) DEFAULT NULL,
+		  USER_ID varchar(100) NOT NULL,
+		  USER_NAME varchar(100) DEFAULT NULL,
+		  USER_NAME2 varchar(100) DEFAULT NULL,
+		  USER_DEPTID varchar(100) DEFAULT NULL, 
+		  USER_DEPTNAME varchar(100) DEFAULT NULL,
+		  USER_DEPTNAME2 varchar(100) DEFAULT NULL,
+		  WRITE_DATE datetime DEFAULT NULL,
+		  APPROVER_ID varchar(100) DEFAULT NULL,
+		  APPROVER_NAME varchar(100) DEFAULT NULL,
+		  APPROVER_NAME2 varchar(100) DEFAULT NULL,
+		  UPDATEDT datetime DEFAULT NULL,
+		  STATE varchar(10) DEFAULT NULL,
+		  MEMO varchar(200) DEFAULT NULL,
+		  DEL_FLAG varchar(10) DEFAULT 'N',
+		  PRIMARY KEY (TENANT_ID,MAIL_UID,USER_ID)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	</statement>
+	
+	<statement id="EzCommonDAO.createJmochaAddressLastSent">
+		CREATE TABLE jmocha_address_last_sent (
+		  SEQUENCE bigint(20) NOT NULL AUTO_INCREMENT,
+		  TENANT_ID mediumint(5) NOT NULL DEFAULT 0,
+		  CN varchar(80) NOT NULL,
+		  name varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
+		  email varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
+		  sent_date datetime DEFAULT utc_timestamp,
+		  PRIMARY KEY (SEQUENCE)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	</statement>
+
+	<select id="EzCommonDAO.checkTable" resultClass="String" parameterClass="Map">
+		SELECT 
+			#v_COLUMN#
+		FROM
+			<isEqual property="v_TABLE" compareValue="jmocha_appr_allowed_domain">jmocha_appr_allowed_domain</isEqual>
+			<isEqual property="v_TABLE" compareValue="jmocha_appr_user">jmocha_appr_user</isEqual>
+			<isEqual property="v_TABLE" compareValue="jmocha_appr_history">jmocha_appr_history</isEqual>
+			<isEqual property="v_TABLE" compareValue="jmocha_appr_comp_history">jmocha_appr_comp_history</isEqual>
+			<isEqual property="v_TABLE" compareValue="jmocha_address_last_sent">jmocha_address_last_sent</isEqual>
+		LIMIT 1
+	</select>
+
+    <select id="EzCommonDAO.checkRecordHeadereOption" resultClass="String">
+        <![CDATA[
+		SELECT
+			COMPANYID
+		FROM
+			TBL_LISTINFO
+		WHERE
+			DTYPE = 'dtClassTitle'
+		  AND
+			TENANT_ID = #v_TENANTID#
+		  AND
+		    COMPANYID = #v_COMPANYID#
+		  AND
+			LISTTYPE = '001'
+		]]>
+    </select>
+
+	<insert id="EzCommonDAO.insertRecordHeaderClassTitle" parameterClass="Map">
+		INSERT INTO TBL_LISTINFO
+		    (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, TENANT_ID, COMPANYID)
+		VALUES
+			('001',1,'순번',40,null,null,'dtSerialNum','dtSerialNum','기록물 대장',null,'No.','順番','序号',#v_TENANTID#,#v_COMPANYID#),
+			('001',2,'등록구분',120,'TBL_SEPERATEATTACH','TBL_SEPERATEATTACH.RegisterType','RegisterType','dtRegisterType','기록물 대장',null,'RegisterType','登録区分','招生区分',#v_TENANTID#,#v_COMPANYID#),
+			('001',3,'등록일',100,'TBL_RECORD','TBL_RECORD.RegisterDate','RegisterDate','dtDateTime','기록물 대장',null,'RegisterDate','登録日','注册',#v_TENANTID#,#v_COMPANYID#),
+			('001',4,'문서번호',80,'TBL_ENDAPRDOCINFO','TBL_ENDAPRDOCINFO.DOCNO','DispRegisterNo','Default','기록물 대장',null,'Doc. No.','登録番号','註冊號',#v_TENANTID#,#v_COMPANYID#),
+			('001',5,'제목',300,'TBL_SEPERATEATTACH','TBL_SEPERATEATTACH.Title','RecTitle','Default','기록물 대장',null,'Title','タイトル','标题',#v_TENANTID#,#v_COMPANYID#),
+			('001',6,'기록물철명',150,'TBL_CABINETCLASS','TBL_CABINET.Title','RecName','dtClassTitle','기록물 대장',null,'RecName','記録物名','档案名称',#v_TENANTID#,#v_COMPANYID#),
+			('001',7,'기안자',70,'TBL_RECORD','TBL_RECORD.DrafterName','DrafterName','Default','기록물 대장',null,'Drafter','起案者','起草人',#v_TENANTID#,#v_COMPANYID#),
+			('001',8,'수신자(발신자)',90,'TBL_RECORD','TBL_RECORD.ReceiptMemberName','ReceiptName','Default','기록물 대장',null,'Recipient(Sender)','受信者（起案者）','受信者(送信者)',#v_TENANTID#,#v_COMPANYID#),
+			('001',9,'결재권자',80,'TBL_RECORD','TBL_RECORD.AprMemberTitle','AprMemberTitle','Default','기록물 대장',null,'Approval person','決裁権者','审批',#v_TENANTID#,#v_COMPANYID#),
+			('001',10,'시행번호',180,null,'ENDDOCNO.DOCNO','SihangNo','dtSihangNO','기록물 대장',null,'SihangNo','施行番号','试行编号',#v_TENANTID#,#v_COMPANYID#),
+			('001',11,'첨부',40,'TBL_RECORD','TBL_RECORD.AttachFlag','AttachFlag','dtBool','기록물 대장','첨부여부','AttachFlag','添付','附件',#v_TENANTID#,#v_COMPANYID#),
+			('001',12,'수신',40,'TBL_RECORD','CASE WHEN TBL_ENDAPRDOCINFO.DocType = ''003'' AND TBL_SEPERATEATTACH.RegisterType = ''1'' THEN ''발송'' ELSE ''없음'' END','ReSendFlag','Default','기록물 대장','수신문 발송여부','ReSendFlag','受信','接待区分',#v_TENANTID#,#v_COMPANYID#),
+			('001',13,'반려',40,'TBL_RECORD','TBL_RECORD.RejectFlag','RejectFlag','dtBool','기록물 대장','반려여부','RejectFlag','差し戻し','伴侣区分',#v_TENANTID#,#v_COMPANYID#)
+	</insert>
+
+    <delete id="EzCommonDAO.deleteRecordHeader" parameterClass="Map">
+        DELETE FROM
+            TBL_LISTINFO
+        WHERE
+            LISTTYPE = '001'
+          AND
+            TENANT_ID = #v_TENANTID#
+          AND
+            COMPANYID = #v_COMPANYID#
+    </delete>
+
+	<select id="EzCommonDAO.checkUseReceiptDeptFileAttach" resultClass="String">
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			PROPERTY_NAME = 'useReceiptDeptFileAttach'
+		AND
+			TENANT_ID = #v_TENANTID#
+	</select>
+
+	<insert id="EzCommonDAO.insertUseReceiptDeptFileAttach">
+        INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+        VALUES (#v_TENANTID#, 'useReceiptDeptFileAttach', 'NO', '부서수신함에서 첨부, 문서첨부 기능 사용 여부. YES: 사용 NO: 사용안함 (default: NO)', '부서수신함에서 첨부, 문서첨부 기능 사용여부', '2024-06-04 00:00:00', '전자결재')
+    </insert>
+
+
+	<select id="EzCommonDAO.checkExistDocBinderListOption" parameterClass="map" resultClass="int">
+		SELECT
+			COUNT(*)
+		FROM
+			TBL_LISTOPTION
+		WHERE
+			LISTTYPE = '095'
+		AND
+			TENANT_ID = #tenantId#
+		AND
+			COMPANYID = #companyId#
+	</select>
+
+	<insert id="EzCommonDAO.insertDocBinderListOption" parameterClass="map">
+		INSERT INTO
+			TBL_LISTOPTION (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, TENANT_ID, COMPANYID)
+		VALUES
+			('095', 1, '이름', 140, 'TBL_CABINETCLASS', 'TITLE', null, null, 'Simple기록물철', '이름', 'Name', '綴じ名', '名稱', #tenantId#, #companyId#),
+			('095', 2, '생산연도', 50, 'TBL_CABINETCLASS', 'PRODUCTIONYEAR', null, null, 'Simple기록물철', '생산연도', 'Productionyear', '生産年度', '生产年度', #tenantId#, #companyId#),
+			('095', 3, '단위업무명(분류코드)', 160, 'TBL_CABINETCLASS', 'TASKNAME', null, null, 'Simple기록물철', '단위업무명(분류코드)', 'Taskname', '単位業務名', '单位业务名称',  #tenantId#, #companyId#),
+			('095', 4, '형태', 100, 'TBL_CABINETCLASS', 'RECTYPECODE', null, null, 'Simple기록물철', '형태', 'FORM', '形態', '表', #tenantId#, #companyId#),
+			('095', 5, '연번', 50, 'TBL_CABINETCLASS', 'REGSERIALNO', null, null, 'Simple기록물철', '연번', 'SN.', '連番', '序列号', #tenantId#, #companyId#),
+			('095', 6, '권호수', 40, 'TBL_CABINET', 'VOLUMENO', null, null, 'Simple기록물철', '권호수', 'VOL.', '巻号数', '卷湖',  #tenantId#, #companyId#)
+	</insert>
+
+	<delete id="EzCommonDAO.delDocBinderListOption" parameterClass="map" >
+		DELETE FROM
+			TBL_LISTOPTION
+		WHERE
+			LISTTYPE = '095'
+		AND
+			TENANT_ID = #tenantId#
+		AND
+			COMPANYID = #companyId#
+	</delete>
+
+	<select id="EzCommonDAO.checkEndDateOptionConfig" resultClass="String">
+		<![CDATA[
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			PROPERTY_NAME = 'endDateOptionConfig'
+		  AND
+			TENANT_ID = #v_TENANTID#
+		]]>
+	</select>
+
+	<insert id="EzCommonDAO.insertEndDateOptionConfig">
+		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+		VALUES (#v_TENANTID#, 'endDateOptionConfig', 'NOPE', '게시판 게시물 리스트 조회 시 만료게시물 조회가능 여부 / NOPE:불가, ADMIN:관리자만 조회가능, ALWAYS:전부 조회 가능 (default:NOPE)', '만료게시물 조회가능 여부', '2024-05-24 00:00:00', '게시판')
+	</insert>
+
+	<insert id="EzCommonDAO.insertReturnByDesignationUsedConfig" parameterClass="Map">
+		INSERT INTO TBL_TENANT_CONFIG
+		(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+		VALUES
+			(#tenantID#, 'ReturnByDesignationUsed', 'NO', '지정반송 사용여부 (default:NO)', '지정반송 사용여부', '2024-06-18 00:00:00', '전자결재')
+	</insert>
+
+	<select id="EzCommonDAO.checkDocAttachNameCol">
+		SELECT
+		    DOCATTACHNAME
+		FROM
+		    TBL_RECORD_TEMP
+		LIMIT 1
+	</select>
+
+	<statement id="EzCommonDAO.alterDocAttachNameCol">
+		ALTER TABLE
+			TBL_RECORD_TEMP
+		ADD
+			DOCATTACHNAME varchar(300) DEFAULT '' ;
+	</statement>
+
+	<select id="EzCommonDAO.checkNonUseDocAttachYN" resultClass="String">
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			PROPERTY_NAME = 'NonUseDocAttachYN'
+		  AND
+			TENANT_ID = #v_TENANTID#
+	</select>
+
+	<insert id="EzCommonDAO.insertNonUseDocAttachYN">
+		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+		VALUES (#v_TENANTID#, 'NonUseDocAttachYN', 'Y', '비전자문서 본문첨부 기능 사용여부 / Y:사용, N:사용안함 (default:Y)', '본문첨부 기능 사용여부', '2024-07-02 00:00:00', '전자결재')
+	</insert>
+
+	<select id="EzCommonDAO.selectColumnsOnlyExistTblUsermaster" resultClass="TblColumnsInfoVO">
+		SELECT COLUMN_NAME as columnNm, COLUMN_DEFAULT as columnDefault, CASE WHEN IS_NULLABLE = 'YES' THEN 'NULL' ELSE 'NOT NULL' END isNullAble, COLUMN_TYPE as columnType 
+		FROM INFORMATION_SCHEMA.COLUMNS 
+		WHERE TABLE_NAME = 'TBL_USERMASTER' 
+		AND COLUMN_NAME NOT IN (SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'TBL_USERMASTER_RETIRE')
+	</select>
+
+	<select id="EzCommonDAO.checkReadingRecordHeader" parameterClass="map" resultClass="int">
+		SELECT
+			COUNT(*)
+		FROM
+			TBL_LISTINFO
+		WHERE
+			LISTTYPE = '012'
+		  AND
+			TENANT_ID = #tenantId#
+		  AND
+			COMPANYID = #companyId#
+	</select>
+
+	<insert id="EzCommonDAO.insertReadingRecordHeader" parameterClass="map">
+		INSERT INTO
+			TBL_LISTINFO (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, TENANT_ID, COMPANYID)
+		VALUES
+			('012', 1, '문서번호', 110, null, 'CONCAT(CONCAT(TBL_RECORD.ProcessDeptName, ''-''), SUBSTR(TBL_RECORD.RegisterNo, -6))', 'DispRegisterNo', 'Default', '열람문서함', null, 'Doc. No.', '登録番号', '註冊號', #tenantId#, #companyId#),
+			('012', 2, '제목', 200, 'TBL_SEPERATEATTACH', 'TBL_SEPERATEATTACH.Title', 'RecTitle', 'Default', '열람문서함', null, 'Title', 'タイトル', '标题', #tenantId#, #companyId#),
+			('012', 3, '기안자', 50, 'TBL_RECORD', 'TBL_RECORD.DrafterName', 'DrafterName', 'Default', '열람문서함', null, 'Drafter', '起案者', '起草人', #tenantId#, #companyId#),
+			('012', 4, '기안부서', 70, 'TBL_ENDAPRDOCINFO', 'TBL_ENDAPRDOCINFO.WriterDeptName', 'WriterDeptName', 'Default', '열람문서함', null, 'Dept.(draft)', '起案部署', '起草部门', #tenantId#, #companyId#),
+			('012', 5, '등록일', 100, 'TBL_RECORD', 'TBL_RECORD.RegisterDate', 'RegisterDate', 'dtDateTime', '열람문서함', null, 'RegisterDate', '登録日', '注册', #tenantId#, #companyId#),
+			('012', 6, '문서명', 80, 'TBL_EXPENDAPRDOCINFO', 'TBL_EXPENDAPRDOCINFO.FormName', 'FormName', 'Default', '열람문서함', null, 'Form title', '文書名', '文件名', #tenantId#, #companyId#),
+			('012', 7, '첨부', 40, 'TBL_RECORD', 'TBL_RECORD.AttachFlag', 'AttachFlag', 'dtBool', '열람문서함', '첨부여부', 'AttachFlag', '添付', '附件', #tenantId#, #companyId#),
+			('012', 8, '공개', 40, 'TBL_ENDAPRDOCINFO', 'TBL_ENDAPRDOCINFO.ISPUBLIC', 'IsPublic', 'Default', '열람문서함', null, 'Public', '公開', '公开', #tenantId#, #companyId#),
+			('012', 9, '반려', 40, 'TBL_RECORD', 'TBL_RECORD.RejectFlag', 'RejectFlag', 'dtBool', '열람문서함', '반려여부', 'RejectFlag', '差し戻し', '伴侣区分', #tenantId#, #companyId#),
+			('012', 10, '수신', 40, 'TBL_RECORD', 'CASE WHEN TBL_ENDAPRDOCINFO.DocType = ''003'' AND TBL_SEPERATEATTACH.RegisterType = ''1'' THEN ''발송'' ELSE ''없음'' END', 'ReSendFlag', 'Default', '열람문서함', '발송여부', 'ReSendFlag', '受信', '接待区分', #tenantId#, #companyId#)
+	</insert>
+
+	<delete id="EzCommonDAO.delReadingRecordHeader" parameterClass="map" >
+		DELETE FROM
+			TBL_LISTINFO
+		WHERE
+			LISTTYPE = '012'
+		  AND
+			TENANT_ID = #tenantId#
+		  AND
+			COMPANYID = #companyId#
+	</delete>
+
+    <select id="EzCommonDAO.checkTblPortalPortletSize" resultClass="Integer">
+        SELECT SIZE_ID FROM TBL_PORTAL_PORTLET_SIZE LIMIT 1
+    </select>
+
+    <statement id="EzCommonDAO.createPortalPortletSize">
+        create table tbl_portal_portlet_size
+        (
+            SIZE_ID    int          not null comment '사용가능한 포틀릿 사이즈 ID'
+                primary key,
+            CLASS_SIZE varchar(100) not null comment '사이즈 클래스 명'
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 comment '포틀릿 사이즈 클래스명 정의 테이블'
+    </statement>
+
+    <statement id="EzCommonDAO.createPortalPortletCompanySize">
+        create table tbl_portal_portlet_company_size
+        (
+            TENANT_ID    mediumint(5)    default 0  not null comment '테넌트 아이디',
+            COMPANY_ID   varchar(100) default '' not null comment '회사 아이디',
+            PORTLET_ID   int          default 0  not null comment '포틀릿 아이디',
+            THEME_ID     int          default 1  not null,
+            SIZE_ID      int                     not null comment '사용가능한 포틀릿 사이즈 ID',
+            DEFAULT_FLAG tinyint(1)   default 0  not null comment '기본 사이즈 설정 여부',
+            primary key (TENANT_ID, COMPANY_ID, PORTLET_ID, THEME_ID, SIZE_ID),
+            constraint FK_tbl_portal_portlet_company_size_SIZE_ID
+                foreign key (SIZE_ID) references jmocha.tbl_portal_portlet_size (SIZE_ID)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 comment '포틀릿 사이즈 클래스명 정의 테이블'
+    </statement>
+
+    <statement id="EzCommonDAO.createPortalPortletUserSize">
+        create table tbl_portal_portlet_user_size
+        (
+            USER_ID    varchar(100)            not null comment '사용자 아이디',
+            TENANT_ID  mediumint    default 0  not null comment '테넌트 아이디',
+            COMPANY_ID varchar(100) default '' not null comment '회사 아이디',
+            PORTLET_ID int          default 0  not null comment '포틀릿 아이디',
+            THEME_ID   int          default 1  not null,
+            SIZE_ID    int                     not null,
+            primary key (USER_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, THEME_ID),
+            constraint FK_tbl_portal_portlet_user_size_tbl_portal_portlet_size_SIZE_ID
+                foreign key (SIZE_ID) references jmocha.tbl_portal_portlet_size (SIZE_ID)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 comment '사용자 별 포틀릿 사이즈 설정 테이블'
+    </statement>
+
+    <insert id="EzCommonDAO.insertUsePortletSize">
+        INSERT INTO tbl_tenant_config (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+        VALUES (0, 'usePortletSize', 'Y', 'Y: 사용 N: 사용안함 (default: N)', '포탈 포틀릿 커스텀 사이즈 사용 여부', '2023-11-20 00:00:00', '포탈')
+    </insert>
+
+    <insert id="EzCommonDAO.insertPortalPortletSizeDefault">
+        INSERT INTO JMOCHA.TBL_PORTAL_PORTLET_SIZE (SIZE_ID, CLASS_SIZE)
+        VALUES (0, 'one_by_one'),
+               (1, 'two_by_one'),
+               (2, 'one_by_two')
+    </insert>
+
+	<select id="EzCommonDAO.checkTblPortalTopUser" resultClass="String">
+		SELECT 1 FROM TBL_PORTAL_TOP_USER LIMIT 1
+	</select>
+
+	<statement id="EzCommonDAO.createTblPortalTopUser">
+		CREATE TABLE TBL_PORTAL_TOP_USER
+		(
+			USER_ID    VARCHAR(100)            NOT NULL COMMENT '사용자 아이디',
+			TENANT_ID  MEDIUMINT    DEFAULT 0  NOT NULL COMMENT '테넌트 아이디',
+			COMPANY_ID VARCHAR(100) DEFAULT '' NOT NULL COMMENT '회사 아이디',
+			TYPE       MEDIUMINT    DEFAULT 0  NOT NULL COMMENT '타입',
+			PRIMARY KEY (USER_ID, TENANT_ID, COMPANY_ID)
+		)
+			COMMENT '개인별 탑 메뉴 프레임 타입'
+	</statement>
+
+	<select id="EzCommonDAO.checkTblRealTimeNotification">
+		SELECT NOTISEQ FROM TBL_REALTIME_NOTIFICATION LIMIT 1
+	</select>
+
+	<statement id="EzCommonDAO.createTblRealTimeNotification">
+		CREATE TABLE `tbl_realtime_notification` (
+		  `NOTISEQ` bigint(20) NOT NULL AUTO_INCREMENT,
+		  `USERID` varchar(80) NOT NULL,
+		  `MAINTYPE` varchar(20) NOT NULL,
+		  `SUBTYPE` varchar(20) DEFAULT NULL,
+		  `NOTICONTENT` varchar(2000) DEFAULT NULL,
+		  `SENDERID` varchar(80) DEFAULT NULL,
+		  `SENDERNAME` varchar(100) DEFAULT NULL,
+		  `REGDATE` datetime DEFAULT NULL,
+		  `ISREAD` char(1) DEFAULT 'N',
+		  `READDATE` datetime DEFAULT NULL,
+		  `ETCDATA` varchar(400) DEFAULT NULL,
+		  `ISDELETE` char(1) DEFAULT 'N',
+		  `DELETEDATE` datetime DEFAULT NULL,
+		  `LINKURL` varchar(2000) DEFAULT NULL,
+		  `LINKURL_MOBILE` varchar(2000) DEFAULT NULL,
+		  `VIEWTYPE` varchar(10) DEFAULT NULL,
+		  `VIEWWIDTH` int(11) DEFAULT NULL,
+		  `VIEWHEIGHT` int(11) DEFAULT NULL,
+		  `TENANT_ID` mediumint(5) NOT NULL,
+		  `COMPANYID` varchar(200) DEFAULT NULL,
+		  PRIMARY KEY (`NOTISEQ`,`TENANT_ID`)
+		) ENGINE=InnoDB AUTO_INCREMENT=736 DEFAULT CHARSET=utf8mb4;
+	</statement>
+
+	<select id="EzCommonDAO.getNotiStoragePeriodConfig" parameterClass="Map" resultClass="String">
+	<![CDATA[
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			tenant_id = #tenantId#
+		AND
+			PROPERTY_NAME = 'notiStoragePeriod'
+	]]>
+	</select>
+
+	<insert id="EzCommonDAO.addNotiStoragePeriodConfig"  parameterClass="Map">
+		INSERT INTO TBL_TENANT_CONFIG
+			(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+		VALUES
+			(#tenantId#, #propertyName#, #propertyValue#, #description#, #configName#, #regdate#, #configType#)
+	</insert>
+
+	<select id="EzCommonDAO.getNotiPollingIntervalConfig" parameterClass="Map" resultClass="String">
+	<![CDATA[
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			tenant_id = #tenantId#
+		AND
+			PROPERTY_NAME = 'notiPollingInterval'
+	]]>
+	</select>
+
+	<insert id="EzCommonDAO.addNotiPollingIntervalConfig"  parameterClass="Map">
+		INSERT INTO TBL_TENANT_CONFIG
+			(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+		VALUES
+			(#tenantId#, #propertyName#, #propertyValue#, #description#, #configName#, #regdate#, #configType#)
+	</insert>
+
+	<select id="EzCommonDAO.checkTblPortalTopCompany" resultClass="String">
+		SELECT 1 FROM TBL_PORTAL_TOP_COMPANY LIMIT 1
+	</select>
+
+	<statement id="EzCommonDAO.createTblPortalTopCompany">
+		CREATE TABLE TBL_PORTAL_TOP_COMPANY
+		(
+			COMPANY_ID VARCHAR(100) DEFAULT '' NOT NULL COMMENT '회사 아이디',
+			TYPE       MEDIUMINT    DEFAULT 0  NOT NULL COMMENT '타입 0:탑, 1:좌측메뉴',
+			TENANT_ID  MEDIUMINT    DEFAULT 0  NOT NULL COMMENT '테넌트 아이디',
+			PRIMARY KEY (COMPANY_ID, TENANT_ID)
+		)
+			COMMENT '회사별 탑 메뉴 프레임 타입'
+	</statement>
+
+    <select id="EzCommonDAO.checkQuickLinkCompanyID">
+		<![CDATA[
+        SELECT
+            COMPANYID
+        FROM
+            TBL_PS_QUICKLINK
+                LIMIT 1
+        ]]>
+	</select>
+
+    <statement id="EzCommonDAO.addQuickLinkCompanyID">
+        ALTER TABLE
+            TBL_PS_QUICKLINK
+            ADD
+                COMPANYID varchar(20) NOT NULL
+    </statement>
+
+    <select id="EzCommonDAO.checkUserThemePagination">
+		SELECT	USEPAGING
+		FROM	TBL_PORTAL_THEME_USER
+		LIMIT 1
+    </select>
+
+    <statement id="EzCommonDAO.alterUserThemePagination">
+		ALTER TABLE
+			TBL_PORTAL_THEME_USER
+		ADD
+			USEPAGING	TINYINT	DEFAULT	1	NOT NULL	COMMENT '페이징 사용 여부'
+    </statement>
+
+    <select id="EzCommonDAO.checkThemeInformation" resultClass="string">
+    	SELECT
+    		THEME_CONTENT
+    	FROM
+    		TBL_PORTAL_THEME
+    	WHERE
+    		THEME_ID=1
+    </select>
+
+    <update id="EzCommonDAO.alterThemeInformation" parameterClass="Map">
+    	<![CDATA[
+			UPDATE
+					TBL_PORTAL_THEME
+			SET
+					THEME_CONTENT = #themeContent1#,
+					THEME_CONTENT2 = #themeContent2#,
+					THEME_CONTENT3 = #themeContent3#,
+					THEME_CONTENT4 = #themeContent4#,
+					THEME_CONTENT5 = #themeContent5#,
+					THEME_CONTENT6 = #themeContent6#
+			WHERE
+					THEME_ID = #themeId#
+		]]>
+    </update>
+
+	<select id="EzCommonDAO.checkCompanyMenuIconUrl">
+		SELECT	ICON_URL
+		FROM	TBL_PORTAL_MENU_COMP
+					LIMIT 1
+	</select>
+
+	<statement id="EzCommonDAO.alterCompanyMenuIconUrl">
+		ALTER TABLE
+			TBL_PORTAL_MENU_COMP
+		ADD
+			ICON_URL varchar(200) DEFAULT NULL COMMENT '회사별 기본 아이콘 변경'
+	</statement>
+
+	<!-- 2024-07-17 이주원 - 일정관리 > 상단표시 컬럼 추가 -->
+	<select id="EzCommonDAO.checkTblScheduleForShowtop" resultClass="String">
+		<![CDATA[
+		SELECT
+			SHOWTOP
+		FROM
+			tbl_schedule
+			LIMIT 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.alterTblScheduleForShowtop">
+		<![CDATA[
+		ALTER TABLE
+			tbl_schedule
+		ADD
+		    COLUMN SHOWTOP VARCHAR(2) DEFAULT 'N'
+		]]>
+	</statement>
+
+	<select id="EzCommonDAO.checkUserHideFlag">
+		SELECT
+			USERTREEFLAG
+		FROM
+			TBL_USERMASTER
+				LIMIT 1
+	</select>
+
+	<select id="EzCommonDAO.checkAddJobHideFlag">
+		SELECT
+			USERTREEFLAG
+		FROM
+			TBL_ADDJOBMASTER
+				LIMIT 1
+	</select>
+
+	<select id="EzCommonDAO.checkDeptHideFlag">
+		SELECT
+			DEPTTREEFLAG
+		FROM
+			TBL_DEPTMASTER
+				LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.addUserHideFlag">
+		ALTER TABLE tbl_usermaster  ADD COLUMN USERTREEFLAG char(1) DEFAULT 'Y' COMMENT '조직도사용여부Y:사용 N:숨김'
+	</statement>
+
+	<statement id="EzCommonDAO.addAddJobHideFlag">
+		ALTER TABLE tbl_addjobmaster ADD COLUMN USERTREEFLAG char(1) DEFAULT 'Y' COMMENT '조직도사용여부Y:사용 N:숨김'
+	</statement>
+
+	<statement id="EzCommonDAO.addDeptHideFlag">
+		ALTER TABLE tbl_deptmaster ADD COLUMN DEPTTREEFLAG char(1) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT 'Y' NULL COMMENT '조직도사용여부 Y:사용 N:숨김'
+	</statement>
+
+	<select id="EzCommonDAO.checkGongRamListOption" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				companyid
+			FROM
+				TBL_LISTOPTION
+			WHERE
+				LISTTYPE = #listOption#
+			AND
+				companyid = #companyId#
+			AND
+				tenant_id = #tenantId#
+			LIMIT 1
+		]]>
+	</select>
+
+	<insert id="EzCommonDAO.insertGongRamListOption">
+		INSERT INTO TBL_LISTOPTION
+			(LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, TENANT_ID, COMPANYID)
+		VALUES
+			(#listOption#,1,'순번',35,'TBL_APRLINEINFO','AprMemberSN',NULL,NULL,'결재선정보(공람)','순번','No.','順番','序号',#tenantId#, #companyId#),
+			(#listOption#,2,'성명',100,'TBL_APRLINEINFO','AprMemberName',NULL,NULL,'결재선정보(공람)','성명','Name','氏名','姓名',#tenantId#, #companyId#),
+			(#listOption#,3,'직위',100,'TBL_APRLINEINFO','AprMemberJobTitle',NULL,NULL,'결재선정보(공람)','직위','Title','役職','职位',#tenantId#, #companyId#),
+			(#listOption#,4,'부서',300,'TBL_APRLINEINFO','AprMemberDeptName',NULL,NULL,'결재선정보(공람)','부서명','Dept.','部署','部门',#tenantId#, #companyId#),
+			(#listOption#,5,'공람일시',300,'TBL_APRLINEINFO','ProcessDate',NULL,NULL,'결재선정보(공람)','공람일시','Date','供覧日時','供览日时',#tenantId#, #companyId#)
+	</insert>
+	    
+	<select id="EzCommonDAO.checkScheduleReminderScheduler">
+		SELECT
+			SCHEDULEID
+		FROM
+			TBL_SCHEDULE_REMINDER_SCHEDULER
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createTblScheduleReminderScheduler">
+	CREATE TABLE `TBL_SCHEDULE_REMINDER_SCHEDULER` (
+		  `SCHEDULEID` bigint(10) NOT NULL,
+		  `PARENTID` bigint(10) NOT NULL DEFAULT 0,
+		  `OWNERID` varchar(100) NOT NULL,
+		  `OWNERNAME` varchar(100) NOT NULL,
+		  `OWNERNAME2` varchar(100) DEFAULT NULL,
+		  `CREATORID` varchar(100) NOT NULL,
+		  `CREATORNAME` varchar(100) NOT NULL,
+		  `CREATORNAME2` varchar(100) DEFAULT NULL,
+		  `SCHEDULETYPE` mediumint(5) NOT NULL,
+		  `DATETYPE` mediumint(5) NOT NULL,
+		  `STARTDATE` datetime NOT NULL,
+		  `ENDDATE` datetime NOT NULL,
+		  `REPETITION` varchar(100) DEFAULT NULL,
+		  `TITLE` varchar(500) NOT NULL,
+		  `TENANT_ID` mediumint(5) NOT NULL,
+		  `COMPANYID` varchar(40) DEFAULT NULL,
+		  `REMINDERSTATUS` varchar(2) DEFAULT '0' COMMENT '0: 미완료, 1:완료',
+		  `OFFSETINFO` varchar(40) DEFAULT '',
+		  `LANG` varchar(10) DEFAULT NULL,
+		  `OFFSETMIN` varchar(10) DEFAULT NULL,
+		  PRIMARY KEY (`SCHEDULEID`),
+		  KEY `IDX_OWNERID` (`OWNERID`) USING BTREE
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+	</statement>
+	
+	<select id="EzCommonDAO.checkReminderTimeColumnAtTblScheduleConfig">
+		SELECT
+			REMINDERTIME
+		FROM
+			TBL_SCHEDULECONFIG
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.addReminderTimeAtTblScheduleConfig">
+		ALTER TABLE
+			TBL_SCHEDULECONFIG
+		ADD
+			REMINDERTIME VARCHAR(8) NOT NULL DEFAULT '0'
+	</statement>
+	
+	<select id="EzCommonDAO.getAllDaySTimeTenantConfig" parameterClass="map" resultClass="String">
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			PROPERTY_NAME = #property#
+		  AND
+			TENANT_ID = #tenantID#
+	</select>
+
+	<insert id="EzCommonDAO.insertAllDaySTimeForReminderTenantConfig">
+		INSERT INTO TBL_TENANT_CONFIG
+			(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+		VALUES
+			(#tenantID#, #property#, '09:00', 'HH24:MM 형식으로 미리알림 시 하루종일 일정의 시작 시각 설정가능(MM은 00 또는 30만 가능)', '미리알림 시 하루종일 일정의 시작 시각 세팅', '2023-09-15 00:00:00.000', '일정관리')
+	</insert>
+	
+	<select id="EzCommonDAO.checkSaveFlagForCbShare" resultClass="String">
+	<![CDATA[
+		SELECT
+			SAVEFLAG
+		FROM
+			TBL_CB_SHARE
+				LIMIT 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.alterSaveFlagForCbShare">
+	<![CDATA[
+		ALTER TABLE
+			TBL_CB_SHARE
+			ADD
+				SAVEFLAG tinyint(4)
+		]]>
+    </statement>
+
+	<statement id="EzCommonDAO.alterBoardExtentionAttrByteSize" parameterClass="Map">
+		ALTER TABLE
+			$table$
+		MODIFY
+			$column$ $dataTypeMysql$
+	</statement>
+	
+	<select id="EzCommonDAO.getDotNetTotalNotificationConfig" parameterClass="map" resultClass="String">
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			PROPERTY_NAME = #property#
+		  AND
+			TENANT_ID = #tenantID#
+	</select>
+
+	<insert id="EzCommonDAO.insertDotNetTotalNotificationConfig">
+		INSERT INTO TBL_TENANT_CONFIG
+			(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+		VALUES
+			(#tenantID#, #property#, 'NO', 'YES:사용함 NO:사용안함 (default: NO)', '닷넷 모듈의 통합알림 사용 여부', '2019-01-08 00:00:00.000', '연동')
+	</insert>
+	
+	<select id="EzCommonDAO.selectInProcessJpCodeName3" resultClass="String">
+		SELECT * FROM TBL_CODELIST WHERE NAME3 = '進行中'
+	</select>
+	
+	<update id="EzCommonDAO.updateInProcessJpCodeName3" parameterClass="Map">
+		UPDATE TBL_CODELIST SET NAME3 = #NAME3# WHERE CODE1 = #CODE1#
+	</update>
+	
+	<select id="EzCommonDAO.checkTblDistributeinfo" resultClass="String">
+		<![CDATA[
+		SELECT
+			SN
+		FROM
+			TBL_DISTRIBUTEINFO
+		LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblDistributeinfo">
+		CREATE TABLE `TBL_DISTRIBUTEINFO` 
+		(
+			`SN` bigint(10) NOT NULL,
+			`DOCID` varchar(80) NOT NULL,
+			`RECEIPTDATE` datetime DEFAULT NULL,
+			`ORGANID` varchar(400) NOT NULL,
+			`ORGAN` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+			`ORGANUSERNAME` varchar(100) DEFAULT NULL,
+			`DOCNUMBER` varchar(200) DEFAULT NULL,
+			`MANAGEDEPTID` varchar(400) DEFAULT NULL,
+			`MANAGEDEPT` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+			`ORGDOCNUMCODE` varchar(200) DEFAULT NULL,
+			`DOCTITLE` varchar(1020) CHARACTER SET utf8mb4 DEFAULT NULL,
+			`MANAGEDEPT2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+			`ORGAN2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+			`ORGANUSERNAME2` varchar(100) DEFAULT NULL,
+			`TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
+			`COMPANYID` varchar(20) NOT NULL,
+			`PARENTDOCID` varchar(80) NULL,
+			`ORGDOCID` varchar(80) NOT NULL,
+			`DELIVERYSN` bigint(10) DEFAULT NULL,
+			`TYPE` varchar(100) DEFAULT NULL,
+			 PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`SN`,`DOCID`,`ORGANID`(255))
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='배부이력 정보'
+	</statement>
+
+	<select id="EzCommonDAO.checkExecutiveTable" resultClass="String">
+		SELECT
+			CN
+		FROM
+			TBL_EXECUTIVE
+				LIMIT 1
+	</select>
+
+	<statement id="EzCommonDAO.createExecutiveTable">
+		CREATE TABLE `TBL_EXECUTIVE` (
+			  `CN` VARCHAR(50) NOT NULL,
+			  `PRIORITY` INT(11) NOT NULL,
+			  `USAGE` CHAR(1) NOT NULL,
+			  `CREATEUSER` VARCHAR(50) NOT NULL,
+			  `LASTUPDATE` DATETIME NOT NULL,
+			  `COMPANYID` VARCHAR(50) NOT NULL,
+			  `TENANT_ID` MEDIUMINT DEFAULT 0 NOT NULL,
+			  PRIMARY KEY (`CN`,`COMPANYID`,`TENANT_ID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+	</statement>
+
+	<select id="EzCommonDAO.checkServeyResultviewPermTbl">
+		SELECT
+			SURVEY_ID
+		FROM
+			TBL_SURVEY_RESULTVIEWPERMISSION
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createServeyResultviewPermTbl">
+		CREATE TABLE TBL_SURVEY_RESULTVIEWPERMISSION (
+		SURVEY_ID 			INT(11) 		NOT NULL,
+		COMPANY_ID 			VARCHAR(100) 	NOT NULL,
+		TENANT_ID 			INT(9) 			NOT NULL,
+		CN 					VARCHAR(100) 	NOT NULL 	COMMENT '권한자 아이디',
+		USER_TYPE 			VARCHAR(30) 				COMMENT '권한자 타입',
+		SUBDEPT_PERMITTED 	VARCHAR(30) 	DEFAULT 'N' COMMENT 'Y(하위 가능), N(하위 불가)',
+		CNNAME 				VARCHAR(120) 				COMMENT '권한자 이름',
+		CNNAME2 			VARCHAR(120) 				COMMENT '권한자 이름',
+		PRIMARY KEY (SURVEY_ID, COMPANY_ID, TENANT_ID, CN)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '설문 지정공개대상자 리스트 테이블'
+	</statement>
+
+	<!-- 2024-07-17 기민혁 - 전자결재 > 양식함 순서 컬럼 추가 -->
+	<select id="EzCommonDAO.checkTblFormContainerSN">
+        <![CDATA[
+			SELECT
+				SN
+			FROM
+				TBL_FORMCONTAINER
+			LIMIT 1
+		]]>
+    </select>
+
+	<statement id="EzCommonDAO.addTblFormContainerSN">
+		ALTER TABLE
+			TBL_FORMCONTAINER
+		ADD (
+			SN bigint(20) DEFAULT NULL
+			)
+	</statement>
+	
+	<!--2024-07-12 황인경 - 모바일 포탈 개발 -->
+	<select id="EzCommonDAO.checkMobileTheme" resultClass="Integer">
+		SELECT
+			count(*)
+		FROM
+			TBL_PORTAL_THEME
+		WHERE
+			theme_id = 4
+	</select>
+
+	<insert id="EzCommonDAO.insertMobileTheme">
+		INSERT INTO TBL_PORTAL_THEME (
+			theme_id, theme_name, theme_name2, theme_name3, theme_content, theme_content2, theme_content3, theme_content4, theme_content5, theme_content6
+		)
+		VALUES (
+			4, '테마4', 'Theme4', 'Theme4', '모바일용 포틀릿 테마 입니다.', 'Theme For Mobile', 'モバイルのテーマ', '手机主题', 'Theme For Mobile', 'Theme For Mobile'
+		)
+	</insert>
+
+	<select id="EzCommonDAO.checkMobileFrame" resultClass="Integer">
+		SELECT
+			count(*)
+		FROM
+			TBL_PORTAL_FRAME
+		WHERE
+			theme_id = 4
+	</select>
+
+	<insert id="EzCommonDAO.insertMobileFrame">
+		INSERT INTO TBL_PORTAL_FRAME (
+			frame_id, frame_name, theme_id
+		) 
+		VALUES 
+			(9, 'Frame1', 4)
+	</insert>
+
+	<insert id="EzCommonDAO.insertMobileFrameComp" parameterClass="Map">
+		<![CDATA[
+		INSERT INTO TBL_PORTAL_FRAME_COMP (
+			COMPANY_ID, TENANT_ID, THEME_ID, FRAME_ID, FRAME_USED, FRAME_DEFAULT
+		)
+		VALUES (
+			#companyId#, #tenantId#, 4, 9, 1, 1
+		)
+		]]>	
+	</insert>
+
+	<select id="EzCommonDAO.checkMobileThemeInitAuth" parameterClass="Map" resultClass="Integer">
+		SELECT
+			count(*)
+		FROM
+			TBL_PORTAL_THEME_AUTH
+		WHERE
+			theme_id = 4
+		AND
+			COMPANY_ID = #companyId#
+		AND
+			TENANT_ID = #tenantId#
+	</select>
+
+	<insert id="EzCommonDAO.insertMobileThemeInitAuth" parameterClass="Map">
+		INSERT INTO TBL_PORTAL_THEME_AUTH (
+			THEME_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN, SUBDEPT_PERMITTED
+		)
+		VALUES 
+			(4, #companyId#, #tenantId#, #companyId#, 1, 0, 1, 'Y')
+	</insert>
+	
+	<select id="EzCommonDAO.checkMobileThemeInitComp" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				count(*)
+			FROM
+				TBL_PORTAL_THEME_COMP
+			WHERE
+				theme_id = 4
+			AND
+				COMPANY_ID = #companyId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</select>
+
+	<insert id="EzCommonDAO.insertMobileThemeInitComp" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_PORTAL_THEME_COMP
+				(COMPANY_ID, TENANT_ID, THEME_ID, THEME_USED, THEME_DEFAULT)
+			VALUES 
+				(#companyId#, #tenantId#, 4, 1, 0)
+		]]>	
+	</insert>
+
+	<update id="EzCommonDAO.resetMobileUser">
+		<![CDATA[
+		UPDATE TBL_USERMOBILEINFO 
+		SET MAINTYPE = 'D'
+		]]>	
+	</update>
+	
+    <select id="EzCommonDAO.checkMenuOpenType">
+		SELECT	OPENTYPE
+		FROM	TBL_PORTAL_MENU_COMP
+		LIMIT 1
+    </select>
+
+    <statement id="EzCommonDAO.alterMenuOpenType">
+		ALTER TABLE
+			TBL_PORTAL_MENU_COMP
+		ADD
+			OPENTYPE	TINYINT	DEFAULT	3	NOT NULL	COMMENT '메뉴 열기 방식'
+    </statement>
+    
+	<select id="EzCommonDAO.chkTblSystemConfig" resultClass="String">
+        SELECT
+        	CODE
+        FROM
+        	TBL_SYSTEMCONFIG
+        LIMIT 1
+    </select>
+
+    <statement id="EzCommonDAO.createTblSystemConfig">
+	    CREATE TABLE `TBL_SYSTEMCONFIG` (
+		  `CODE` varchar(50) NOT NULL,
+		  `CODEVALUE` varchar(2000) NOT NULL,
+		  `DESCRIPTION` varchar(1000) DEFAULT NULL,
+		  `WRITERID` varchar(50) DEFAULT NULL,
+		  `WRITERNAME` varchar(100) DEFAULT NULL,
+		  `WRITEDATE` datetime DEFAULT NULL,
+		  `TENANT_ID` mediumint(5) NOT NULL,
+		  `COMPANY_ID` varchar(80) NOT NULL,
+		  `TYPECODE` varchar(80) DEFAULT NULL,
+		  `ISDELETEBLOCK` CHAR(1) DEFAULT 'N',
+		  PRIMARY KEY (`CODE`,`TENANT_ID`,`COMPANY_ID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+    </statement>
+    
+    <select id="EzCommonDAO.chkTblSystemConfigType" resultClass="String">
+        SELECT
+        	TYPECODE
+        FROM
+        	TBL_SYSTEMCONFIG_TYPE
+        LIMIT 1
+    </select>
+
+    <statement id="EzCommonDAO.createTblSystemConfigType">
+	   CREATE TABLE `TBL_SYSTEMCONFIG_TYPE` (
+		  `TYPECODE` varchar(50) NOT NULL,
+		  `TENANT_ID` mediumint(5) NOT NULL,
+		  `COMPANY_ID` varchar(80) NOT NULL,
+		  `TYPENAME` varchar(1000) DEFAULT NULL,
+		  `TYPENAME2` varchar(1000) DEFAULT NULL,
+		  `DESCRIPTION` varchar(3000) DEFAULT NULL,
+		  `WRITERID` varchar(50) DEFAULT NULL,
+		  `WRITERNAME` varchar(100) DEFAULT NULL,
+		  `WRITERNAME2` varchar(100) DEFAULT NULL,
+		  `WRITEDATE` datetime DEFAULT NULL,
+		  PRIMARY KEY (`TYPECODE`,`TENANT_ID`,`COMPANY_ID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+    </statement>
+    
+    <select id="EzCommonDAO.checkConnectionId" resultClass="String">
+		SELECT
+			CONNECTION_ID
+		FROM
+			TBL_PORTAL_PORTLET_COMP
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createConnectionIdOnTblPortalPortletComp">
+		ALTER TABLE
+			TBL_PORTAL_PORTLET_COMP
+		ADD
+			COLUMN connection_id VARCHAR(200) NULL DEFAULT NULL
+	</statement>
+	
+	<select id="EzCommonDAO.checkConnectionMenu" parameterClass="Map" resultClass="String">
+	<![CDATA[
+		SELECT
+			menu_id
+		FROM
+			tbl_portal_menu
+		WHERE
+			menu_url = '/connectionMenu.do'
+		AND
+			menu_type = 'G'
+		AND
+			menu_id = '-1'
+		LIMIT 1
+	]]>
+	</select>
+	
+	<insert id="EzCommonDAO.insertConnectionMenu" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO TBL_PORTAL_MENU 
+			(menu_id, menu_url, menu_type, icon_url, default_order, menucode)
+		VALUES
+			(-1, '/connectionMenu.do', 'G', 'icon_topmenu icon_nav_connection', -1, 'connectPortlet'),
+			(-2, '/mobile/connectionMenu.do', 'MG', 'icon_topmenu icon_nav_connection', -2, 'connectPortlet')
+	]]>
+	</insert>
+	
+	<insert id="EzCommonDAO.insertConnectionMenuComp" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO TBL_PORTAL_MENU_COMP 
+			(company_id, tenant_id, menu_id, menu_used, company_lang, company_order)
+		VALUES
+			(#companyId#, #tenantId#, -1, 1, 1, -1),
+			(#companyId#, #tenantId#, -2, 1, 1, -2)
+	]]>
+	</insert>
+	
+	<insert id="EzCommonDAO.insertConnectionMenuAuth" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO TBL_PORTAL_MENU_AUTH
+			(menu_id, company_id, tenant_id, user_id, access_YN, user_type, sn, subdept_permitted)
+		VALUES
+			(-1, #companyId#, #tenantId#, #companyId#, 1, 0, 0, 'Y'),
+			(-2, #companyId#, #tenantId#, #companyId#, 1, 0, 0, 'Y')
+	]]>
+	</insert>
+	
+	<insert id="EzCommonDAO.insertConnectionMenuName" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO TBL_PORTAL_MENU_NAME 
+			(menu_id, menu_lang, company_id, tenant_id, menu_name)
+		VALUES
+	    	(-1, 1, #companyId#, #tenantId#, '연계'),
+	    	(-1, 2, #companyId#, #tenantId#, 'Connection'),
+	    	(-1, 3, #companyId#, #tenantId#, '連携'),
+	    	(-1, 4, #companyId#, #tenantId#, '关联'),
+	    	(-1, 5, #companyId#, #tenantId#, 'Connection'),
+	    	(-1, 6, #companyId#, #tenantId#, 'Connection'),
+	    	(-2, 1, #companyId#, #tenantId#, '연계'),
+	    	(-2, 2, #companyId#, #tenantId#, 'Connection'),
+	    	(-2, 3, #companyId#, #tenantId#, '連携'),
+	    	(-2, 4, #companyId#, #tenantId#, '关联'),
+	    	(-2, 5, #companyId#, #tenantId#, 'Connection'),
+	    	(-2, 6, #companyId#, #tenantId#, 'Connection')
+	]]>
+	</insert>
+	
+	<select id="EzCommonDAO.selectSystemConfigTotalCnt" parameterClass="Map" resultClass="int">
+		SELECT
+			COUNT(*)
+		FROM
+			TBL_SYSTEMCONFIG
+		WHERE
+			TENANT_ID = #tenantId#
+		AND
+			COMPANY_ID = #companyId#
+	</select>
+	
+	<select id="EzCommonDAO.chkPortletSystemConfigType" resultClass="int">
+		SELECT
+			COUNT(*)
+		FROM
+			TBL_SYSTEMCONFIG_TYPE
+		WHERE
+			TENANT_ID = #tenantId#
+		AND
+			COMPANY_ID = #companyId#
+		AND
+			TYPECODE = 'PORTLET'
+	</select>
+	
+	<insert id="EzCommonDAO.insertPortletSystemConfigType" parameterClass="Map">
+		INSERT INTO TBL_SYSTEMCONFIG_TYPE 
+			(TYPECODE, TENANT_ID, COMPANY_ID, TYPENAME, TYPENAME2, DESCRIPTION, WRITERID, WRITERNAME, WRITERNAME2, WRITEDATE)
+		VALUES
+	    	('PORTLET', #tenantId#, #companyId#, #typeName#, 'Portlet', #typeDetail#, #companyId#,
+	    	(SELECT DISPLAYNAME FROM TBL_DEPTMASTER WHERE CN = #companyId# AND TENANT_ID = #tenantId#), (SELECT DISPLAYNAME2 FROM TBL_DEPTMASTER WHERE CN = #companyId# and TENANT_ID = #tenantId#), #nowDate#)
+	</insert>
+	
+	<insert id="EzCommonDAO.insertStandardSystemConfigData" parameterClass="Map">
+	<![CDATA[
+	INSERT INTO TBL_SYSTEMCONFIG 
+		(CODE, CODEVALUE, DESCRIPTION, WRITERID, WRITERNAME, WRITEDATE, TENANT_ID, COMPANY_ID, TYPECODE)
+	VALUES
+		('PORTLET_STANDARD',
+		'{
+			"portletType":"standard",\n
+			"viewType": "list",\n
+			"connectType": "",\n
+			"paging":"",\n
+			"listCnt":"",\n
+			"width": "",\n
+			"height": "",\n
+			"linkUrl": "",\n
+			"mobileLinkUrl": "",\n
+			"restUrl": "",\n
+			"httpMethodType":"",\n
+			"headerParam" : {  	},\n
+			"dataParam" : "{    }",\n
+			"dataParamType" : "",\n
+			"dataResultType" : "",\n
+			"dataResultFormat" : {\n
+				"rootPath" : "",\n 
+				"totalCnt" : "",\n
+				"dataInfo" : {\n
+					"title" : "",\n
+					"writer" : "",\n
+					"date" : "",\n
+					"linkUrl" : "",\n
+					"mobileLinkUrl" : "",\n
+					"width": "",\n
+					"height": ""\n
+				}\n
+			},\n
+			"dbType": "",\n
+			"dbIp": "",\n
+			"dbPort": "",\n
+			"dataBase": "",\n
+			"dbUser": "",\n
+			"dbPwd": "",\n
+			"dbDataQuery": "",\n
+			"totalCntQuery": "",\n
+			"driverClassName" : ""\n
+		}',
+		#configDetail#, #companyId#, (SELECT DISPLAYNAME FROM TBL_DEPTMASTER WHERE CN = #companyId# AND TENANT_ID = #tenantId#), #nowDate#, #tenantId#, #companyId#, 'PORTLET'
+	) ]]>
+	</insert>
+	
+	<select id="EzCommonDAO.chkTblNotiEmergencyCompany" resultClass="String">
+        SELECT
+        	COMPANY_ID
+        FROM
+        	TBL_NOTI_EMERGENCY_COMPANY
+        LIMIT 1
+    </select>
+
+    <statement id="EzCommonDAO.createTblNotiEmergencyCompany">
+	 CREATE TABLE `tbl_noti_emergency_company` (
+	  `COMPANY_ID` varchar(200) NOT NULL,
+	  `TENANT_ID` mediumint(5) NOT NULL,
+	  `EMERGENCY_CONTENT` varchar(200) DEFAULT NULL,
+	  `WRITERID` varchar(80) NOT NULL,
+	  `WRITEDATE` datetime DEFAULT NULL,
+	  PRIMARY KEY (`COMPANY_ID`,`TENANT_ID`)
+	) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+    </statement>
+    
+    <select id="EzCommonDAO.chkTblNotiEmergencyItem" resultClass="String">
+        SELECT
+        	NOTIID
+        FROM
+        	TBL_NOTI_EMERGENCY_ITEM
+        LIMIT 1
+    </select>
+
+    <statement id="EzCommonDAO.createTblNotiEmergencyItem">
+	CREATE TABLE `tbl_noti_emergency_item` (
+	  `NOTIID` bigint(20) NOT NULL AUTO_INCREMENT,
+	  `WRITERID` varchar(80) NOT NULL,
+	  `COMPANY_ID` varchar(200) NOT NULL,
+	  `TENANT_ID` mediumint(5) NOT NULL,
+	  `NOTITITLE` varchar(2000) DEFAULT NULL,
+	  `NOTIBODY` varchar(2000) DEFAULT NULL,
+	  `WRITEDATE` datetime DEFAULT NULL,
+	  PRIMARY KEY (`NOTIID`,`TENANT_ID`)
+	) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4;
+    </statement>
+    
+    <select id="EzCommonDAO.chkTblNotiEmergencyPermission" resultClass="String">
+        SELECT
+        	PERMISSION_CODE
+        FROM
+        	TBL_NOTI_EMERGENCY_PERMISSION
+        LIMIT 1
+    </select>
+
+    <statement id="EzCommonDAO.createTblNotiEmergencyPermission">
+	CREATE TABLE `tbl_noti_emergency_permission` (
+	  `PERMISSION_CODE` bigint(20) NOT NULL AUTO_INCREMENT,
+	  `CN` varchar(80) NOT NULL,
+	  `DEPTID` varchar(80) DEFAULT NULL,
+	  `JOBID` varchar(80) DEFAULT NULL,
+	  `ROLEID` varchar(80) DEFAULT NULL,
+	  `USER_TYPE` varchar(50) DEFAULT NULL,
+	  `COMPANY_ID` varchar(200) NOT NULL,
+	  `TENANT_ID` mediumint(5) NOT NULL,
+	  `REGDATE` datetime DEFAULT NULL,
+	  `SUBDEPTYN` char(1) DEFAULT NULL,
+	  PRIMARY KEY (`PERMISSION_CODE`,`TENANT_ID`)
+	) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4;
+    </statement>
+	
+	<select id="EzCommonDAO.chkMobileMenus" resultClass="int">
+		SELECT
+            COUNT(*)
+        FROM
+            TBL_PORTAL_MENU
+		WHERE
+			MENU_TYPE = 'MG'
+		<![CDATA[
+		AND
+			MENU_ID > 0
+		]]>
+	</select>
+	
+	<select id="EzCommonDAO.getNewMenuId" resultClass="Integer">
+	<![CDATA[
+		SELECT
+			NVL(MAX(menu_id), 0) + 1 as menuId
+		FROM
+			TBL_PORTAL_MENU
+	]]>
+	</select>
+	
+	<insert id="EzCommonDAO.insertMobileMenus"  parameterClass="Integer">
+		<![CDATA[
+		INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode)
+		SELECT
+			#menuId#, '/mobile/ezEmail/mailList.do?folderId=INBOX', 'MG', 'iconCommon icon_mail', (SELECT MAX(A.default_order) + 1 FROM TBL_PORTAL_MENU A), 'mMail'
+		UNION ALL
+		SELECT
+			(#menuId# + 1), '/mobile/ezOrgan/personList.do', 'MG', 'iconCommon icon_employee', (SELECT MAX(A.default_order) + 2 FROM TBL_PORTAL_MENU A), 'mAddress'
+		UNION ALL
+		SELECT
+			(#menuId# + 2), '/mobile/ezApprovalG/mApproveList.do?pType=DO', 'MG', 'iconCommon icon_approval', (SELECT MAX(A.default_order) + 3 FROM TBL_PORTAL_MENU A), 'mApproval'
+		UNION ALL
+		SELECT
+			(#menuId# + 3), '/mobile/ezResource/searchTodayList.do', 'MG', 'iconCommon icon_resource', (SELECT MAX(A.default_order) + 4 FROM TBL_PORTAL_MENU A), 'mResource'
+		UNION ALL
+		SELECT
+			(#menuId# + 4), '/mobile/ezBoard/boardItemList.do?boardID={FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', 'MG', 'iconCommon icon_notice', (SELECT MAX(A.default_order) + 5 FROM TBL_PORTAL_MENU A), 'mBoard'
+		UNION ALL
+		SELECT
+			(#menuId# + 5), '/mobile/ezAddress/addressList.do?pSearchTarget=personal', 'MG', 'iconCommon icon_address', (SELECT MAX(A.default_order) + 6 FROM TBL_PORTAL_MENU A), 'mAddress'
+		UNION ALL
+		SELECT
+			(#menuId# + 6), '/mobile/ezSchedule/mScheduleList.do', 'MG', 'iconCommon icon_schedule', (SELECT MAX(A.default_order) + 7 FROM TBL_PORTAL_MENU A), 'mSchedule'
+		UNION ALL
+		SELECT
+			(#menuId# + 7), '/mobile/ezSurvey/surveyList.do?mode=processing', 'MG', 'iconCommon icon_survey', (SELECT MAX(A.default_order) + 8 FROM TBL_PORTAL_MENU A), 'mSurvey'
+		UNION ALL
+		SELECT
+			(#menuId# + 8), '/mobile/ezWebfolder/main.do', 'MG', 'iconCommon icon_webfolder', (SELECT MAX(A.default_order) + 9 FROM TBL_PORTAL_MENU A), 'mWebfolder'
+		]]>
+	</insert>
+	
+	<insert id="EzCommonDAO.insertCompanyMobileMenus"  parameterClass="Map">
+		INSERT INTO TBL_PORTAL_MENU_COMP (COMPANY_ID, TENANT_ID, MENU_ID, MENU_USED, COMPANY_LANG, COMPANY_ORDER)
+		SELECT
+			#companyId#, #tenantId#, #menuId#, 1, 1, (SELECT MAX(A.COMPANY_ORDER) + 1 FROM TBL_PORTAL_MENU_COMP A WHERE COMPANY_ID = #companyId# AND TENANT_ID = #tenantId#)
+		UNION ALL
+		SELECT
+			#companyId#, #tenantId#, (#menuId# + 1), 1, 1, (SELECT MAX(A.COMPANY_ORDER) + 2 FROM TBL_PORTAL_MENU_COMP A WHERE COMPANY_ID = #companyId# AND TENANT_ID = #tenantId#)
+		UNION ALL
+		SELECT
+			#companyId#, #tenantId#, (#menuId# + 2), 1, 1, (SELECT MAX(A.COMPANY_ORDER) + 3 FROM TBL_PORTAL_MENU_COMP A WHERE COMPANY_ID = #companyId# AND TENANT_ID = #tenantId#)
+		UNION ALL
+		SELECT
+			#companyId#, #tenantId#, (#menuId# + 3), 1, 1, (SELECT MAX(A.COMPANY_ORDER) + 4 FROM TBL_PORTAL_MENU_COMP A WHERE COMPANY_ID = #companyId# AND TENANT_ID = #tenantId#)
+		UNION ALL
+		SELECT
+			#companyId#, #tenantId#, (#menuId# + 4), 1, 1, (SELECT MAX(A.COMPANY_ORDER) + 5 FROM TBL_PORTAL_MENU_COMP A WHERE COMPANY_ID = #companyId# AND TENANT_ID = #tenantId#)
+		UNION ALL
+		SELECT
+			#companyId#, #tenantId#, (#menuId# + 5), 1, 1, (SELECT MAX(A.COMPANY_ORDER) + 6 FROM TBL_PORTAL_MENU_COMP A WHERE COMPANY_ID = #companyId# AND TENANT_ID = #tenantId#)
+		UNION ALL
+		SELECT
+			#companyId#, #tenantId#, (#menuId# + 6), 1, 1, (SELECT MAX(A.COMPANY_ORDER) + 7 FROM TBL_PORTAL_MENU_COMP A WHERE COMPANY_ID = #companyId# AND TENANT_ID = #tenantId#)
+		UNION ALL
+		SELECT
+			#companyId#, #tenantId#, (#menuId# + 7), 1, 1, (SELECT MAX(A.COMPANY_ORDER) + 8 FROM TBL_PORTAL_MENU_COMP A WHERE COMPANY_ID = #companyId# AND TENANT_ID = #tenantId#)
+		UNION ALL
+		SELECT
+			#companyId#, #tenantId#, (#menuId# + 8), 1, 1, (SELECT MAX(A.COMPANY_ORDER) + 9 FROM TBL_PORTAL_MENU_COMP A WHERE COMPANY_ID = #companyId# AND TENANT_ID = #tenantId#)
+	</insert>
+	
+	<insert id="EzCommonDAO.insertCompanyMobileMenuNames"  parameterClass="Map">
+		INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME)
+		VALUES
+			(#menuId#, 1, #companyId#, #tenantId#, '메일'),
+			(#menuId#, 2, #companyId#, #tenantId#, 'Mail'),
+			(#menuId#, 3, #companyId#, #tenantId#, 'メール'),
+			(#menuId#, 4, #companyId#, #tenantId#, '收件箱'),
+			(#menuId#, 5, #companyId#, #tenantId#, 'Hộp Thư Đến'),
+			(#menuId#, 6, #companyId#, #tenantId#, 'Surat Masuk'),
+			((#menuId# + 1), 1, #companyId#, #tenantId#, '직원목록'),
+			((#menuId# + 1), 2, #companyId#, #tenantId#, 'Employee List'),
+			((#menuId# + 1), 3, #companyId#, #tenantId#, '従業員リスト'),
+			((#menuId# + 1), 4, #companyId#, #tenantId#, '员工名单'),
+			((#menuId# + 1), 5, #companyId#, #tenantId#, 'Danh Sách Nhân Viên'),
+			((#menuId# + 1), 6, #companyId#, #tenantId#, 'Daftar Karyawan'),
+			((#menuId# + 2), 1, #companyId#, #tenantId#, '전자결재'),
+			((#menuId# + 2), 2, #companyId#, #tenantId#, 'Approval'),
+			((#menuId# + 2), 3, #companyId#, #tenantId#, '承認'),
+			((#menuId# + 2), 4, #companyId#, #tenantId#, '审批'),
+			((#menuId# + 2), 5, #companyId#, #tenantId#, 'Phê Duyệt'),
+			((#menuId# + 2), 6, #companyId#, #tenantId#, 'Persetujuan'),
+			((#menuId# + 3), 1, #companyId#, #tenantId#, '자원관리'),
+			((#menuId# + 3), 2, #companyId#, #tenantId#, 'Resource Management'),
+			((#menuId# + 3), 3, #companyId#, #tenantId#, '資源管理'),
+			((#menuId# + 3), 4, #companyId#, #tenantId#, '资源管理'),
+			((#menuId# + 3), 5, #companyId#, #tenantId#, 'Quản Lý Tài Nguyên'),
+			((#menuId# + 3), 6, #companyId#, #tenantId#, 'Manajemen Sumber Daya'),
+			((#menuId# + 4), 1, #companyId#, #tenantId#, '게시판'),
+			((#menuId# + 4), 2, #companyId#, #tenantId#, 'Board'),
+			((#menuId# + 4), 3, #companyId#, #tenantId#, '掲示板'),
+			((#menuId# + 4), 4, #companyId#, #tenantId#, '公告板'),
+			((#menuId# + 4), 5, #companyId#, #tenantId#, 'Bảng Tin'),
+			((#menuId# + 4), 6, #companyId#, #tenantId#, 'Papan Pengumuman'),
+			((#menuId# + 5), 1, #companyId#, #tenantId#, '개인주소록'),
+			((#menuId# + 5), 2, #companyId#, #tenantId#, 'Personal Address Book'),
+			((#menuId# + 5), 3, #companyId#, #tenantId#, '個人住所録'),
+			((#menuId# + 5), 4, #companyId#, #tenantId#, '个人通讯录'),
+			((#menuId# + 5), 5, #companyId#, #tenantId#, 'Danh Bạ Cá Nhân'),
+			((#menuId# + 5), 6, #companyId#, #tenantId#, 'Buku Alamat Pribadi'),
+			((#menuId# + 6), 1, #companyId#, #tenantId#, '오늘일정'),
+			((#menuId# + 6), 2, #companyId#, #tenantId#, 'Today Schedule'),
+			((#menuId# + 6), 3, #companyId#, #tenantId#, '今日のスケジュール'),
+			((#menuId# + 6), 4, #companyId#, #tenantId#, '今天的日程'),
+			((#menuId# + 6), 5, #companyId#, #tenantId#, 'Lịch Trình Hôm Nay'),
+			((#menuId# + 6), 6, #companyId#, #tenantId#, 'Jadwal Hari Ini'),
+			((#menuId# + 7), 1, #companyId#, #tenantId#, '전자설문'),
+			((#menuId# + 7), 2, #companyId#, #tenantId#, 'Survey'),
+			((#menuId# + 7), 3, #companyId#, #tenantId#, '電子アンケート'),
+			((#menuId# + 7), 4, #companyId#, #tenantId#, '电子问卷'),
+			((#menuId# + 7), 5, #companyId#, #tenantId#, 'Khảo sát điện tử'),
+			((#menuId# + 7), 6, #companyId#, #tenantId#, 'Survei'),
+			((#menuId# + 8), 1, #companyId#, #tenantId#, '웹폴더'),
+			((#menuId# + 8), 2, #companyId#, #tenantId#, 'WebFolder'),
+			((#menuId# + 8), 3, #companyId#, #tenantId#, 'Webフォルダ'),
+			((#menuId# + 8), 4, #companyId#, #tenantId#, '网络文件夹'),
+			((#menuId# + 8), 5, #companyId#, #tenantId#, 'WebFolder'),
+			((#menuId# + 8), 6, #companyId#, #tenantId#, 'WebFolder')
+	</insert>
+	
+	<insert id="EzCommonDAO.insertMobileMenusAuth"  parameterClass="Map">
+		INSERT INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, sn)
+		SELECT
+			#menuId#, #companyId#, #tenantId#, #companyId#, 1, 0, 1
+		UNION ALL
+		SELECT
+			(#menuId# + 1), #companyId#, #tenantId#, #companyId#, 1, 0, 1
+		UNION ALL
+		SELECT
+			(#menuId# + 2), #companyId#, #tenantId#, #companyId#, 1, 0, 1
+		UNION ALL
+		SELECT
+			(#menuId# + 3), #companyId#, #tenantId#, #companyId#, 1, 0, 1
+		UNION ALL
+		SELECT
+			(#menuId# + 4), #companyId#, #tenantId#, #companyId#, 1, 0, 1
+		UNION ALL
+		SELECT
+			(#menuId# + 5), #companyId#, #tenantId#, #companyId#, 1, 0, 1
+		UNION ALL
+		SELECT
+			(#menuId# + 6), #companyId#, #tenantId#, #companyId#, 1, 0, 1
+		UNION ALL
+		SELECT
+			(#menuId# + 7), #companyId#, #tenantId#, #companyId#, 1, 0, 1
+		UNION ALL
+		SELECT
+			(#menuId# + 8), #companyId#, #tenantId#, #companyId#, 1, 0, 1
+	</insert>
+	    
+    <select id="EzCommonDAO.checkUseColor">
+		SELECT	USECOLOR
+		FROM	TBL_PORTAL_TOP_USER
+		LIMIT 1
+    </select>
+
+    <statement id="EzCommonDAO.alterUseColor">
+		ALTER TABLE
+			TBL_PORTAL_TOP_USER
+		ADD
+			USECOLOR	TINYINT	DEFAULT	0	NOT NULL	COMMENT '사용 모드(색상)'
+    </statement>
+		    
+    <select id="EzCommonDAO.chkThemeName" resultClass="Integer">
+		SELECT	COUNT(*)
+		FROM	TBL_PORTAL_THEME
+		WHERE	THEME_NAME LIKE '테마%'
+    </select>
+    
+	<update id="EzCommonDAO.updateTheme1">
+			UPDATE
+				TBL_PORTAL_THEME
+			SET
+				THEME_NAME = '기본형',
+				THEME_NAME2 = 'Default Type',
+				THEME_NAME3 = 'きほんがた'
+			WHERE
+				THEME_ID = 1
+	</update>
+    
+	<update id="EzCommonDAO.updateTheme2">
+			UPDATE
+				TBL_PORTAL_THEME
+			SET
+				THEME_NAME = '바로가기형',
+				THEME_NAME2 = 'Shortcut Type',
+				THEME_NAME3 = 'ショートカットがた'
+			WHERE
+				THEME_ID = 2
+	</update>
+    
+	<update id="EzCommonDAO.updateTheme3">
+			UPDATE
+				TBL_PORTAL_THEME
+			SET
+				THEME_NAME = '정보분리형',
+				THEME_NAME2 = 'Information Separation Type',
+				THEME_NAME3 = 'じょうほうぶんりがた'
+			WHERE
+				THEME_ID = 3
+	</update>
+
+	<select id="EzCommonDAO.checkRsScheduleDeptIdColumn" resultClass="String">
+		SELECT
+			DEPTID
+		FROM
+			TBL_RS_SCHEDULE
+		LIMIT 1
+	</select>
+
+	<statement id="EzCommonDAO.createRsScheduleDeptIdColumn">
+		ALTER TABLE
+			TBL_RS_SCHEDULE
+			ADD DEPTID varchar(80) DEFAULT NULL
+	</statement>
+
+	<select id="EzCommonDAO.checkTblBoardOneLineChildReply">
+		<![CDATA[
+			SELECT
+				REPLYLEVEL
+			FROM
+				TBL_BOARD_ONELINEREPLY
+			LIMIT 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.alterTblBoardOneLineChildReply">
+		ALTER TABLE
+			TBL_BOARD_ONELINEREPLY
+		ADD
+		(
+			REPLYLEVEL BIGINT(10) NULL,
+		    PARENTREPLYID VARCHAR(100) NULL,
+		    PARENTWRITERNAME VARCHAR(100) NULL,
+		    UPDATEDATE VARCHAR(40) NULL
+		)
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblBoardOneReplyImageContentColumn">
+		<![CDATA[
+			SELECT
+				IMAGECONTENT
+			FROM
+				TBL_BOARD_ONELINEREPLY
+			LIMIT 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.insertTblBoardOneReplyImageContentColumn">
+		<![CDATA[
+		ALTER TABLE
+			TBL_BOARD_ONELINEREPLY
+		ADD
+			IMAGECONTENT varchar(600) NULL
+		]]>
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblBoardInfoDisLikeFlag" resultClass="String">
+		<![CDATA[
+			SELECT 
+				DISLIKEFLAG
+			FROM 
+				TBL_BOARD_BOARDINFO
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addBoardDisLikeFlag"> 
+		ALTER TABLE 
+			TBL_BOARD_BOARDINFO
+		ADD 
+			DISLIKEFLAG VARCHAR(2) DEFAULT NULL
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblBoardDisLike" resultClass="String">
+		<![CDATA[
+			SELECT 
+				ITEMID
+			FROM 
+				TBL_BOARD_DISLIKE
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblBoardDisLike"> 
+		CREATE TABLE `tbl_board_dislike` (
+		  `ITEMID` varchar(80) NOT NULL,
+		  `USERID` varchar(80) NOT NULL,
+		  `DISLIKEDATE` varchar(40) DEFAULT NULL,
+		  `TENANT_ID` mediumint(5) NOT NULL,
+		  PRIMARY KEY (`ITEMID`,`USERID`,`TENANT_ID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+	</statement>
+    
+	<select id="EzCommonDAO.checkBoardKeywordTable">
+		<![CDATA[
+			SELECT
+				KEYWORDID
+			FROM
+				TBL_BOARD_KEYWORD
+			LIMIT 1
+		]]>
+	</select>
+
+	<select id="EzCommonDAO.checkBoardItemKeywordTable">
+		<![CDATA[
+			SELECT
+				KEYWORDID
+			FROM
+				TBL_BOARD_BOARDITEM_KEYWORD
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createBoardKeywordTable">
+		<![CDATA[
+		CREATE TABLE TBL_BOARD_KEYWORD (
+			KEYWORDID bigint(20) NOT NULL AUTO_INCREMENT,
+			KEYWORDNAME varchar(100) NOT NULL UNIQUE,
+			TENANT_ID mediumint(5) NOT NULL,
+			PRIMARY KEY (KEYWORDID, TENANT_ID)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+		]]>
+	</statement>
+
+	<statement id="EzCommonDAO.createBoardItemKeywordTable">
+		<![CDATA[
+		CREATE TABLE TBL_BOARD_BOARDITEM_KEYWORD (
+			KEYWORDID bigint(20) NOT NULL,
+			BOARDID varchar(40) NOT NULL,
+			ITEMID varchar(40) NOT NULL,
+			TENANT_ID mediumint(5) NOT NULL,
+			SN tinyint(3) NOT NULL,
+			PRIMARY KEY (KEYWORDID, ITEMID, SN, TENANT_ID)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+		]]>
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblRsFavCat">
+		SELECT CAT_ID FROM TBL_RS_FAV_CAT LIMIT 1
+	</select>
+
+	<statement id="EzCommonDAO.createTblRsFavCat">
+		CREATE TABLE `TBL_RS_FAV_CAT` (
+		  `CAT_ID` varchar(80) NOT NULL,
+		  `TOP_ID` varchar(80) DEFAULT NULL,
+		  `USER_ID` varchar(100) NOT NULL,
+		  `CAT_NAME` varchar(200) NOT NULL,
+		  `UPDATEDATE` datetime NOT NULL,
+		  `COMPANYID` varchar(20) NOT NULL,
+		  `BRDYN` varchar(10) DEFAULT NULL,
+		  `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
+		  PRIMARY KEY (`CAT_ID`, `TENANT_ID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblRsCatBrd">
+		SELECT CAT_ID FROM TBL_RS_CAT_BRD LIMIT 1
+	</select>
+
+	<statement id="EzCommonDAO.createTblRsCatBrd">
+		CREATE TABLE `TBL_RS_CAT_BRD` (
+		  `CAT_ID` varchar(100) NOT NULL,
+		  `BRD_ID` varchar(80) NOT NULL,
+		  `USER_ID` varchar(80) NOT NULL,
+		  `COMPANYID` varchar(80) NOT NULL,
+		  `UPDATEDATE` datetime NOT NULL,
+		  `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
+		  PRIMARY KEY (`CAT_ID`,`BRD_ID`,`USER_ID`,`TENANT_ID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+	</statement>
+
+	<select id="EzCommonDAO.checkBoardAttachmentFlag" resultClass="String">
+        <![CDATA[
+		SELECT
+			ATTACHMENTFLAG
+		FROM
+			TBL_BOARD_BOARDINFO
+		LIMIT 1
+		]]>
+    </select>
+
+	<statement id="EzCommonDAO.addBoardAttachmentFlag">
+		ALTER TABLE
+			TBL_BOARD_BOARDINFO
+		ADD
+			ATTACHMENTFLAG CHAR(1) DEFAULT 'Y'
+	</statement>
+
+    <select id="EzCommonDAO.checkTblBoardInfoPublicFlag">
+        SELECT
+            PUBLICFLAG
+        FROM
+            TBL_BOARD_BOARDINFO
+            LIMIT 1
+    </select>
+
+    <statement id="EzCommonDAO.addTblBoardInfoPublicFlag">
+        ALTER TABLE TBL_BOARD_BOARDINFO
+            ADD PUBLICFLAG char(1) default 'N'
+    </statement>
+
+    <statement id="EzCommonDAO.addTblBoardItemPublicFlag">
+        ALTER TABLE TBL_BOARD_ITEM
+            ADD PUBLICFLAG char(1)  default 'Y'
+    </statement>
+
+    <statement id="EzCommonDAO.addTblBoardItemTempPublicFlag">
+        ALTER TABLE TBL_BOARD_ITEM_TEMP
+            ADD PUBLICFLAG char(1) default 'Y'
+    </statement>
+		
+    <select id="EzCommonDAO.checkAllBoardListOption" parameterClass="Map" resultClass="String">
+        <![CDATA[
+			SELECT
+				LISTTYPE
+			FROM
+				TBL_BOARD_ITEM_LISTOPTION
+			WHERE
+				LISTTYPE = 'E'
+    		AND
+				TENANT_ID = #v_TENANTID#
+		  	LIMIT 1
+		]]>
+    </select>
+    
+    <insert id="EzCommonDAO.insertAllBoardListOption" parameterClass="Map">
+		<![CDATA[
+		INSERT INTO TBL_BOARD_ITEM_LISTOPTION (LISTTYPE, SN, NAME1, NAME2, NAME3, NAME4, COLNAME, WIDTH, VIEW_FG, TENANT_ID)
+		VALUES
+		('E', 0, 'CHECK', 'CHECK', 'CHECK', 'CHECK', 'ITEMID', 20, 'Y', #v_TENANTID#),
+	    ('E', 1, '첨부', 'Attachments', '添付', '附加', 'ATTACHMENTS', 30, 'Y', #v_TENANTID#),
+	    ('E', 2, '게시판명', 'Board', '掲示板名', '布告板名称', 'BOARDNAME', 100, 'Y', #v_TENANTID#),
+	    ('E', 3, '제목', 'Title', '件名', '标题', 'TITLE', 400, 'Y', #v_TENANTID#),
+	    ('E', 4, '부서', 'Department', '部署', '部门', 'WRITERDEPTNAME', 100, 'Y', #v_TENANTID#),
+	    ('E', 5, '게시자', 'Writer', '作成者', '写作者', 'WRITERNAME', 100, 'Y', #v_TENANTID#),
+	    ('E', 6, '게시일', 'Registered', '掲示日', '发布日期', 'WRITEDATE', 100, 'Y', #v_TENANTID#),
+	    ('E', 7, '조회수', 'View', 'ヒット数', '查询数', 'READCOUNT', 50, 'Y', #v_TENANTID#)
+		]]>
+    </insert>
+    
+    <select id="EzCommonDAO.checkAllBoardInfo" parameterClass="Map" resultClass="String">
+        <![CDATA[
+		SELECT
+		    BOARDNAME
+		FROM
+		    TBL_BOARD_BOARDINFO
+		WHERE
+		    BOARDID = '{ZZZZZZZZ-ZZZZ-ZZZZ-ZZZZ-ZZZZZZZZZZZZ}'
+		AND
+			TENANT_ID = #v_TENANTID#
+		LIMIT 1
+		]]>
+    </select>
+	
+	<insert id="EzCommonDAO.insertAllBoardInfo" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_BOARD_BOARDINFO
+				(BOARDID, BOARDNAME, BOARDNAME2, BOARDNAME3, BOARDNAME4, TREEVIEWORDER, BOARDLEVEL, PARENTBOARDID, BOARDDESCRIPTION, ITEMEXPIRES, ATTACHSIZELIMIT, REPLYNOTIFY, BOARDGROUPID, ALERTPOSTITEM, GUBUN, URL, DELETEAFTER, BOARDCOLOR, BOARDNO, PORTLET, TENANT_ID, COMPANYID)
+			VALUES
+			    ('{ZZZZZZZZ-ZZZZ-ZZZZ-ZZZZ-ZZZZZZZZZZZZ}', '전체게시물', 'ALL BoardItem', '全ての投稿 ', '所有帖子',  -3, 0, 'None', NULL, 0, NULL, 0, NULL, 0, 0, NULL, 0, NULL, 0, 'N', #v_TENANTID#, 'Top')
+		]]>
+    </insert>
+    
+    <select id="EzCommonDAO.checkSurveyTotalNotiSentFlag" resultClass="String">
+        <![CDATA[
+		SELECT
+			TOTALNOTI_SENT_FLAG
+		FROM
+			TBL_SURVEY
+				LIMIT 1
+		]]>
+    </select>
+
+	<statement id="EzCommonDAO.addSurveyTotalNotiSentFlag">
+		ALTER TABLE
+			TBL_SURVEY
+		ADD
+			TOTALNOTI_SENT_FLAG tinyint(4) DEFAULT 0
+	</statement>
+    <select id="EzCommonDAO.checkJmochaMailBlocked">
+		<![CDATA[
+        SELECT
+            MESSAGE_ID
+        FROM
+            JMOCHA_MAIL_BLOCKED
+                LIMIT 1
+        ]]>
+	</select>
+
+    <statement id="EzCommonDAO.createJmochaMailBlocked">
+        CREATE TABLE JMOCHA_MAIL_BLOCKED (
+                                             MESSAGE_ID varchar(500) NOT NULL,
+                                             PRIMARY KEY (MESSAGE_ID)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+    </statement>
+    
+	<select id="EzCommonDAO.checkModuleEditor" resultClass="String">
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			PROPERTY_NAME = 'MODULEEDITOR'
+		AND
+			TENANT_ID = #v_TENANTID#
+	</select>
+
+	<insert id="EzCommonDAO.insertModuleEditor">
+        INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+        VALUES (#v_TENANTID#, 'MODULEEDITOR', 'KUKUDOCS', 'CK, NAMO, TAGFREE, FORM, POLARIS, DEXT, KUKUDOCS, HWP 중 사용할 에디터를 설정한다. (default: KUKUDOCS)', '전자결재, 메일을 제외한 에디터 타입', '2024-09-23 00:00:00', '일반')
+    </insert>
+	
+	<select id="EzCommonDAO.checkServername" resultClass="String">
+		SELECT 
+		    SERVER_NAME
+		FROM 
+		    TBL_TENANT_SERVERNAME
+		WHERE
+		    SERVER_NAME = '127.0.0.1'
+		AND
+			TENANT_ID = 0
+	</select>
+	
+	<insert id="EzCommonDAO.insertServername">
+		INSERT INTO TBL_TENANT_SERVERNAME (SERVER_NAME, TENANT_ID)
+		VALUES ('127.0.0.1', 0)
+	</insert>
+	
+    <select id="EzCommonDAO.checkScrapTenantConfig" resultClass="String" parameterClass="Map">
+		SELECT
+			property_value
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			property_name = 'MyBoardScrapFlag'
+		AND
+			tenant_id = #tenantId#
+	</select>
+	
+	<insert id="EzCommonDAO.insertScrapTenantConfig" parameterClass="Map">
+		INSERT INTO TBL_TENANT_CONFIG 
+			(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+		VALUES
+			(#tenantId#, #propertyName#, #propertyValue#, #description#, #configName#, #regdate#, #configType#) 
+	</insert>
+
+	<select id="EzCommonDAO.insertScrapTableHeaderCheck" resultClass="String" parameterClass="Map">
+		SELECT 
+		    LISTTYPE
+		FROM 
+		    TBL_BOARD_ITEM_LISTOPTION
+		WHERE
+		    LISTTYPE = #listType#
+	  	AND
+		    TENANT_ID = #tenantId#
+		LIMIT 1
+	</select>
+
+	<insert id="EzCommonDAO.insertScrapTableHeader" parameterClass="Map">
+		INSERT INTO TBL_BOARD_ITEM_LISTOPTION
+			(LISTTYPE, SN, NAME1, NAME2, NAME3, NAME4, COLNAME, WIDTH, VIEW_FG, TENANT_ID)
+		VALUES
+			(#listType#, 0, 'CHECK', 'CHECK', 'CHECK', 'CHECK', 'ITEMID', 20, 'Y', #tenantId#),
+			(#listType#, 1, '첨부', 'Attachments', '添付', '附加', 'ATTACHMENTS', 20, 'Y', #tenantId#),
+			(#listType#, 2, '제목', 'Title', '件名', '标题', 'TITLE', 400, 'Y', #tenantId#),
+			(#listType#, 3, '부서', 'Department', '部署', '部门', 'WRITERDEPTNAME', 100, 'Y', #tenantId#),
+			(#listType#, 4, '게시자', 'Writer', '作成者', '写作者', 'WRITERNAME', 100, 'Y', #tenantId#),
+			(#listType#, 5, '게시일', 'Registered', '掲示日', '发布日期', 'WRITEDATE', 100, 'Y', #tenantId#),
+			(#listType#, 6, '조회수', 'View', 'ヒット数', '查询数', 'READCOUNT', 50, 'Y', #tenantId#)
+	</insert>
+	
+	<select id="EzCommonDAO.checkTblBoardScrap" resultClass="String">
+		<![CDATA[
+			SELECT 
+				ITEMID
+			FROM 
+				TBL_BOARDITEM_SCRAP
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblBoardScrap"> 
+		CREATE TABLE `tbl_boarditem_scrap` (
+		  `USERID` varchar(100) NOT NULL,
+		  `BOARDID` varchar(76) NOT NULL,
+		  `ITEMID` varchar(76) NOT NULL,
+		  `SCRAPDATE` varchar(40) DEFAULT NULL,
+		  `TENANT_ID` mediumint(5) NOT NULL,
+		  `COMPANYID` varchar(20) NOT NULL,
+		  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`USERID`,`BOARDID`,`ITEMID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblUserScrapCont" resultClass="String">
+		<![CDATA[
+			SELECT 
+				USERSCRAPCONTID
+			FROM 
+				TBL_USERSCRAPCONT
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblUserScrapCont"> 
+		CREATE TABLE `tbl_userscrapcont` (
+		  `USERSCRAPCONTID` varchar(20) NOT NULL,
+		  `USERSCRAPCONTNAME` varchar(255) CHARACTER SET utf8mb4 DEFAULT NULL,
+		  `PARENTSCRAPCONTID` varchar(20) DEFAULT NULL,
+		  `DESCRIPTION` varchar(255) DEFAULT NULL,
+		  `USERID` varchar(100) DEFAULT NULL,
+		  `TENANT_ID` mediumint(5) NOT NULL,
+		  `COMPANYID` varchar(20) NOT NULL,
+		  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`USERSCRAPCONTID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblUserScrapContList" resultClass="String">
+		<![CDATA[
+			SELECT 
+				USERSCRAPCONTID
+			FROM 
+				TBL_USERSCRAPCONTLIST
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblUserScrapContList"> 
+		CREATE TABLE `tbl_userscrapcontlist` (
+		  `BOARDID` varchar(76) NOT NULL,
+		  `ITEMID` varchar(76) NOT NULL,
+  		  `USERID` varchar(100) DEFAULT NULL,
+		  `USERSCRAPCONTID` varchar(20) NOT NULL,
+		  `SCRAPDATE` varchar(40) DEFAULT NULL,
+		  `DESCRIPTION` varchar(255) DEFAULT NULL,
+		  `TENANT_ID` mediumint(5) NOT NULL,
+		  `COMPANYID` varchar(20) NOT NULL,
+		  PRIMARY KEY (`TENANT_ID`,`BOARDID`,`USERSCRAPCONTID`,`ITEMID`,`USERID`, `COMPANYID`),
+		  CONSTRAINT `PK_USERSCRAPCONT` FOREIGN KEY (`TENANT_ID`, `COMPANYID`, `USERSCRAPCONTID`) REFERENCES `tbl_userscrapcont` (`TENANT_ID`, `COMPANYID`, `USERSCRAPCONTID`) ON DELETE NO ACTION ON UPDATE NO ACTION
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	</statement>
+
+
+	<select id="EzCommonDAO.checkJmochaCompanyQuota">
+		<![CDATA[
+		SELECT
+			COMPANY_ID
+		FROM
+			JMOCHA_COMPANY_QUOTA
+				LIMIT 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.createJmochaCompanyQuota">
+		CREATE TABLE JMOCHA_COMPANY_QUOTA (
+				DOMAIN_NAME varchar(100) NOT NULL,
+				COMPANY_ID varchar(160) NOT NULL,
+				MAX_STORAGE double DEFAULT 0,
+				WARN_STORAGE double DEFAULT 0,
+				PRIMARY KEY (DOMAIN_NAME, COMPANY_ID)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+	</statement>
+
+	<select id="EzCommonDAO.chkTblBoardCommentAttachExist">
+		SELECT
+			REPLYID
+		FROM
+			TBL_BOARD_COMMENT_ATTACHMENTS
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createTblBoardCommentAttach">
+		CREATE TABLE TBL_BOARD_COMMENT_ATTACHMENTS (
+			ITEMID varchar(76) NOT NULL COMMENT '게시글 아이디',
+			REPLYID varchar(76) NOT NULL COMMENT '댓글 아이디',
+			SN mediumint(5) NOT NULL COMMENT '첨부파일 순번',
+			FILEPATH varchar(800) DEFAULT NULL COMMENT '첨부파일 저장경로',
+			FILESIZE varchar(100) DEFAULT NULL COMMENT '첨부파일 크기',
+			FILENAME varchar(255) DEFAULT NULL COMMENT '첨부파일 이름',
+			TENANT_ID mediumint(5) NOT NULL COMMENT '테넌트 아이디',
+		  PRIMARY KEY (ITEMID, REPLYID, SN, TENANT_ID)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '게시판 댓글 첨부파일 정보 테이블';
+	</statement>
+	
+    <select id="EzCommonDAO.checkAddThumbnailForTPI" resultClass="String">
+		<![CDATA[
+			SELECT
+				ADDTHUMBNAIL
+			FROM
+				TBL_Photo_ImageItem
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.alterAddThumbnailForTPI">
+		<![CDATA[
+			ALTER TABLE
+				TBL_Photo_ImageItem
+			ADD 
+				ADDTHUMBNAIL VARCHAR(20) DEFAULT NULL
+		]]>
+	</statement>
+	
+	<select id="EzCommonDAO.checkThumbnailExtForTPI" resultClass="String">
+		<![CDATA[
+			SELECT
+				THUMBNAILEXT
+			FROM
+				TBL_Photo_ImageItem
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.alterThumbnailExtForTPI">
+		<![CDATA[
+			ALTER TABLE
+				TBL_Photo_ImageItem
+			ADD 
+				THUMBNAILEXT VARCHAR(20) DEFAULT NULL
+		]]>
+	</statement>
+		
+	<select id="EzCommonDAO.checkAttachmentsForCBoard" resultClass="String">
+		<![CDATA[
+			SELECT
+				ATTACHMENTS
+			FROM
+				TBL_C_BOARD
+			LIMIT 1
+		]]>
+	</select>
+				
+	<statement id="EzCommonDAO.alterAttachmentsForCBoard">
+		<![CDATA[
+			ALTER TABLE
+				TBL_C_BOARD
+			ADD
+				ATTACHMENTS VARCHAR(20) DEFAULT NULL
+		]]>
+    </statement>
+    
+    <select id="EzCommonDAO.checkIsDeleteBlock" resultClass="String">
+        <![CDATA[
+		SELECT
+			ISDELETEBLOCK
+		FROM
+			TBL_SYSTEMCONFIG
+		LIMIT 1
+		]]>
+    </select>
+
+	<statement id="EzCommonDAO.createIsDeleteBlock">
+		ALTER TABLE
+			TBL_SYSTEMCONFIG
+		ADD
+		   ISDELETEBLOCK CHAR(1) DEFAULT 'N'
+	</statement>
+
+	<select id="EzCommonDAO.checkTblCommunityClubguestOnelinereply" resultClass="Integer">
+		SELECT
+			count(REPLYID)
+		FROM
+			TBL_C_CLUBGUEST_ONELINEREPLY
+	</select>
+
+	<statement id="EzCommonDAO.createTblCommunityClubguestOnelinereply">
+		CREATE TABLE TBL_C_CLUBGUEST_ONELINEREPLY (
+			ITEMID INT NOT NULL,
+			REPLYID VARCHAR(38) NOT NULL,
+			C_CLUBNO VARCHAR(38) NOT NULL,
+			USERID VARCHAR(50),
+			USERNAME VARCHAR(50),
+			USERNAME2 VARCHAR(50),
+			WRITEDATE DATETIME,
+			CONTENT VARCHAR(300),
+			TENANT_ID INT DEFAULT 0,
+			COMPANYID VARCHAR(80),
+			PRIMARY KEY (`ITEMID`,`REPLYID`,`TENANT_ID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+	</statement>
+
+	<select id="EzCommonDAO.checkBoardItemListOptionAN" parameterClass="Map" resultClass="String">
+        <![CDATA[
+			SELECT
+				LISTTYPE
+			FROM
+				TBL_BOARD_ITEM_LISTOPTION
+			WHERE
+			    LISTTYPE = 'R'
+			  AND
+				TENANT_ID = #v_TENANTID#
+			LIMIT 1
+		]]>
+    </select>
+	
+	<insert id="EzCommonDAO.insertBoardItemListOptionAN" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_BOARD_ITEM_LISTOPTION
+				(LISTTYPE, SN, NAME1, NAME2, NAME3, NAME4, COLNAME, WIDTH, VIEW_FG, TENANT_ID)
+			VALUES
+				('R', 0, 'CHECK', 'CHECK', 'CHECK', 'CHECK', 'ITEMID', 20, 'Y', #v_TENANTID#),
+				('R', 1, 'No', 'No', 'No', 'No', 'DOCNO', 30, 'Y', #v_TENANTID#),
+				('R', 2, '첨부', 'Attachments', '添付', '附加', 'ATTACHMENTS', 30, 'Y', #v_TENANTID#),
+				('R', 3, '게시판명', 'Board', '掲示板名', '布告板名称', 'BOARDNAME', 100, 'Y', #v_TENANTID#),
+				('R', 4, '제목', 'Title', '件名', '标题', 'TITLE', 400, 'Y', #v_TENANTID#),
+				('R', 5, '부서', 'Department', '部署', '部门', 'WRITERDEPTNAME', 100, 'Y', #v_TENANTID#),
+				('R', 6, '게시자', 'Writer', '作成者', '写作者', 'WRITERNAME', 100, 'Y', #v_TENANTID#),
+				('R', 7, '게시일', 'Registered', '掲示日', '发布日期', 'WRITEDATE', 100, 'Y', #v_TENANTID#),
+				('R', 8, '조회수', 'View', 'ヒット数', '查询数', 'READCOUNT', 50, 'Y', #v_TENANTID#)
+		]]>
+    </insert>
+
+	<select id="EzCommonDAO.checkRecentBoardInfo" parameterClass="Map" resultClass="String">
+        <![CDATA[
+			SELECT
+				BOARDNAME
+			FROM
+				TBL_BOARD_BOARDINFO
+			WHERE
+				BOARDID = '{YYYYYYYY-YYYY-YYYY-YYYY-YYYYYYYYYYYY}'
+			  AND
+				TENANT_ID = #v_TENANTID#
+			LIMIT 1
+		]]>
+    </select>
+
+	<insert id="EzCommonDAO.insertRecentBoardInfo" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_BOARD_BOARDINFO
+				(BOARDID, BOARDNAME, BOARDNAME2, BOARDNAME3, BOARDNAME4, TREEVIEWORDER, BOARDLEVEL, PARENTBOARDID, BOARDDESCRIPTION, ITEMEXPIRES, ATTACHSIZELIMIT, REPLYNOTIFY, BOARDGROUPID, ALERTPOSTITEM, GUBUN, URL, DELETEAFTER, BOARDCOLOR, BOARDNO, PORTLET, TENANT_ID, COMPANYID)
+			VALUES
+			    ('{YYYYYYYY-YYYY-YYYY-YYYY-YYYYYYYYYYYY}', '최근게시물', 'Recent BoardItem', '最近の投稿', '最近的帖子', -2, 0, 'None', NULL, 0, NULL, 0, NULL, 0, 0, NULL, 0, NULL, 0, 'N', #v_TENANTID#, 'Top')
+		]]>
+    </insert>
+
+	<select id="EzCommonDAO.checkBoardAllNewBoardFlag" resultClass="String">
+        <![CDATA[
+		SELECT
+			ALLNEWBOARDFLAG
+		FROM
+			TBL_BOARD_BOARDINFO
+				LIMIT 1
+		]]>
+    </select>
+
+	<statement id="EzCommonDAO.addBoardAllNewBoardFlag">
+		ALTER TABLE
+			TBL_BOARD_BOARDINFO
+			ADD
+				ALLNEWBOARDFLAG CHAR(1) DEFAULT 'Y'
+	</statement>
+
+	<select id="EzCommonDAO.checkAllNewBoardListDate" resultClass="String">
+        <![CDATA[
+		SELECT
+			ALLNEWBOARDLISTDATE
+		FROM
+			TBL_BOARD_CONFIGURATION
+				LIMIT 1
+		]]>
+    </select>
+
+	<statement id="EzCommonDAO.addBoardAllNewBoardListDate">
+		ALTER TABLE
+			TBL_BOARD_CONFIGURATION
+			ADD
+				ALLNEWBOARDLISTDATE INT(10) DEFAULT 5
+	</statement>
+    
+	<select id="EzCommonDAO.checkAprAutoSaveConfig" resultClass="String" parameterClass="Map">
+		SELECT
+			property_value
+		FROM
+			tbl_tenant_config
+		WHERE
+			property_name = 'AprAutoSaveFlag'
+	  	AND
+			tenant_id = #tenantId#
+	</select>
+
+	<insert id="EzCommonDAO.insertAprAutoSaveConfig" parameterClass="Map">
+		INSERT INTO TBL_TENANT_CONFIG
+			(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+		VALUES
+			(#tenantId#, #propertyName#, #propertyValue#, #description#, #configName#, #regdate#, #configType#)
+	</insert>
+
+    <select id="EzCommonDAO.checkResendFormYN" resultClass="String">
+        SELECT
+            PROPERTY_VALUE
+        FROM
+            TBL_TENANT_CONFIG
+        WHERE
+            PROPERTY_NAME = 'ResendFormYN'
+        AND
+            TENANT_ID = #v_TENANTID#
+    </select>
+
+    <insert id="EzCommonDAO.insertResendFormYN">
+        INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+        VALUES (#v_TENANTID#, 'ResendFormYN', 'Y', '최근서식 기능 사용여부 / Y:사용, N:사용안함 (default:Y)', '최근서식 기능 사용여부', '2024-12-04 00:00:00', '전자결재')
+    </insert>
+
+	<select id="EzCommonDAO.checkEditVertionYN" resultClass="String">
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			PROPERTY_NAME = 'EditVertionYN'
+	  	AND
+			TENANT_ID = #v_TENANTID#
+	</select>
+
+	<insert id="EzCommonDAO.insertEditVertionYN">
+		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+		VALUES (#v_TENANTID#, 'EditVertionYN', 'Y', '본문수정 시 본문버전 변경 기능 사용여부 / Y:사용, N:사용안함 (default:Y)', '본문수정 시 본문버전 변경 기능 사용여부', '2024-12-05 00:00:00', '전자결재')
+	</insert>
+
+	<select id="EzCommonDAO.checkEditVersionHistory">
+        <![CDATA[
+			SELECT
+				EDITVERSION
+			FROM
+				TBL_HISTORYDOCINFO
+			LIMIT 1
+		]]>
+    </select>
+
+	<statement id="EzCommonDAO.alterEditVersionHistory">
+		ALTER TABLE
+			TBL_HISTORYDOCINFO
+		ADD (
+			EDITVERSION VARCHAR(100)  DEFAULT NULL,
+			EDITMODE CHAR(1) DEFAULT NULL
+		)
+	</statement>
+
+	<select id="EzCommonDAO.checkEditVersionListOption" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				COMPANYID
+			FROM
+				TBL_LISTOPTION
+			WHERE
+				LISTTYPE = #listOption#
+		  	AND
+				COMPANYID = #companyId#
+		  	AND
+				TENANT_ID = #tenantId#
+			LIMIT 1
+		]]>
+	</select>
+
+	<insert id="EzCommonDAO.insertEditVersionListOption">
+		INSERT INTO TBL_LISTOPTION
+			(LISTTYPE, 	  SN, NAME, 	   WIDTH, 	TABLENAME, 				COLNAME, 			COLALIAS, DTYPE, TYPEDESC, 		FIELDDESC, NAME2, 		NAME3, 		NAME4, 		TENANT_ID, COMPANYID)
+		VALUES
+			(#listOption#, 1, '변경순번', 	60, 	'TBL_HISTORYDOCINFO', 	'ChangeSN', 			NULL, NULL, '문서이력리스트', '변경순번', 	'No.', 		'変更順番', 	'变更序号', 	#tenantId#, #companyId#),
+			(#listOption#, 2, '변경일자', 	90, 	'TBL_HISTORYDOCINFO', 	'ChangeDate', 			NULL, NULL, '문서이력리스트', '변경일자', 	'Date', 	'変更日時', 	'变更日', 	#tenantId#, #companyId#),
+			(#listOption#, 3, '변경자이름', 	90, 	'TBL_HISTORYDOCINFO', 	'ChangeUserName', 		NULL, NULL, '문서이력리스트', '변경자이름', 'Name', 	'変更者', 	'变更者名', 	#tenantId#, #companyId#),
+			(#listOption#, 4, '변경자직위', 	90, 	'TBL_HISTORYDOCINFO', 	'ChangeUserJobTitle', 	NULL, NULL,' 문서이력리스트', '변경자직위', 'Title', 	'変更者役職', '变更者职位', #tenantId#, #companyId#),
+			(#listOption#, 5, '변경자부서', 	90, 	'TBL_HISTORYDOCINFO', 	'ChangeUserDeptName', 	NULL, NULL, '문서이력리스트', '변경자부서', 'Dept.', 	'変更者部署', '变更者部门',	#tenantId#, #companyId#),
+			(#listOption#, 6, '버전', 		60, 	'TBL_HISTORYDOCINFO', 	'EditVersion',  		NULL, NULL, '문서이력리스트', '변경버전', 	'Version', 	'版本', 		'版本',		#tenantId#, #companyId#)
+	</insert>
+
+	<select id="EzCommonDAO.checkPersonalHideSusinYN" resultClass="String">
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			PROPERTY_NAME = 'PersonalHideSusin'
+	  	AND
+			TENANT_ID = #v_TENANTID#
+	</select>
+
+	<insert id="EzCommonDAO.insertPersonalHideSusinYN">
+		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+		VALUES (#v_TENANTID#, 'PersonalHideSusin', 'Y', '개인수신함 기능 사용여부 / Y:사용, N:사용안함 (default:Y)', '개인수신함 기능 사용여부', '2024-11-26 00:00:00', '전자결재')
+	</insert>
+
+
+	<select id="EzCommonDAO.checkPersonalSusinListOption" parameterClass="Map" resultClass="String">
+		<![CDATA[
+		SELECT
+			COMPANYID
+		FROM
+			TBL_LISTOPTION
+		WHERE
+			LISTTYPE = #listOption#
+	  	AND
+			COMPANYID = #companyId#
+	  	AND
+			TENANT_ID = #tenantId#
+		LIMIT 1
+		]]>
+	</select>
+	
+	<insert id="EzCommonDAO.inserPersonalSusinListOption">
+		INSERT INTO TBL_LISTOPTION 
+		    (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, TENANT_ID, COMPANYID)
+		VALUES
+			(#listOption#, 1, '제목', 	300, 'TBL_APRDOCINFO', 'DocTitle', NULL, NULL, '수신문서처리기', '제목', 'Title', '見出し', '标题', #tenantId#, #companyId#),
+			(#listOption#, 2, '문서상태', 70, 'TBL_APRRECEIPTPROCESSINFO', 'DocState', NULL, NULL, '수신문서처리기', '문서상태', 'Doc. status', '文書区分', '文件状态', #tenantId#, #companyId#),
+			(#listOption#, 3, '결재상태', 70, 'TBL_APRRECEIPTPROCESSINFO', 'AprState', NULL, NULL, '수신문서처리기', '결재상태', 'Approval status', 'ステータス', '批准状态', #tenantId#, #companyId#),
+			(#listOption#, 4, '기안자', 	 70, 'TBL_APRDOCINFO', 'WriterName', NULL, NULL,' 수신문서처리기', '기안자', 'Drafter', '起案者', '起草人', #tenantId#, #companyId#),
+			(#listOption#, 5, '발신부서', 90, 'TBL_APRRECEIPTPROCESSINFO', 'SentDeptName', NULL, NULL, '수신문서처리기', '발신부서', 'Dept. sent', '送信部署', '发送部门', #tenantId#, #companyId#),
+			(#listOption#, 6, '수신자', 	70, 'TBL_APRRECEIPTPROCESSINFO', 'PROCESSORNAME', NULL, NULL, '수신문서처리기', '수신자', 'Receiver', '受信者', '受信者', #tenantId#, #companyId#),
+			(#listOption#, 7, '수신부서', 90, 'TBL_APRRECEIPTPROCESSINFO', 'ReceivedDeptName', NULL, NULL, '수신문서처리기', '도착부서', 'Date received', '受信部署', '收信部门', #tenantId#, #companyId#),
+			(#listOption#, 8, '도착일자', 100, 'TBL_APRRECEIPTPROCESSINFO', 'ProcessDate', NULL, NULL, '수신문서처리기', '도착일자', 'ProcessDate', '到着日付', '接收日', #tenantId#, #companyId#),
+			(#listOption#, 9, '양식명', 	70, 'TBL_APRDOCINFO', 'FormName', NULL, NULL, '수신문서처리기', '양식명', 'Form Name', '様式名', '样式名', #tenantId#, #companyId#),
+			(#listOption#, 10, '첨부', 	30, 'TBL_APRDOCINFO', 'HASATTACHYN', NULL, NULL, '수신문서처리기', '첨부', 'Attach', '添付', '附件', #tenantId#, #companyId#),
+			(#listOption#, 11, '공개',	 30, 'TBL_APRDOCINFO', 'ISPUBLIC', NULL, NULL, '수신문서처리기', '공개', 'Public', '公開', '公开', #tenantId#, #companyId#)
+	</insert>
+
+	<select id="EzCommonDAO.checkUseUpperDeptBox" resultClass="String">
+		SELECT
+			USEUPPERDEPTBOX
+		FROM
+			TBL_DEPTMASTER
+		LIMIT 1
+	</select>
+
+	<statement id="EzCommonDAO.alterUseUpperDeptBox">
+		ALTER TABLE
+			TBL_DEPTMASTER
+		ADD
+			USEUPPERDEPTBOX varchar(4) DEFAULT 'N' COMMENT '상위부서문서함 사용 여부'
+    </statement>
+
+	<select id="EzCommonDAO.checkTalkNotiTenant" resultClass="String">
+		select
+		TenantId
+		from
+		talk_tblnotification
+		limit 1
+	</select>
+
+	<statement id="EzCommonDAO.alterTalkNotiTenant">
+		ALTER TABLE
+		talk_tblnotification
+		ADD
+		`TenantId` mediumint(5) NOT NULL
+	</statement>
+
+	<select id="EzCommonDAO.checkServerNameMain" resultClass="String">
+		SELECT
+		MAINYN
+		FROM
+		TBL_TENANT_SERVERNAME
+		LIMIT 1
+	</select>
+
+	<statement id="EzCommonDAO.alterServerNameMain">
+		ALTER TABLE
+		TBL_TENANT_SERVERNAME
+		ADD
+		`MAINYN` VARCHAR(10) DEFAULT 'N'
+	</statement>
+
+	<select id="EzCommonDAO.checkBodyHTMLToConnData" resultClass="String">
+		<![CDATA[
+		SELECT
+			BODYHTML
+		FROM
+			TBL_CONNDATA
+		LIMIT 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.changeBodyHTMLToConnData">
+		ALTER TABLE TBL_CONNDATA CHANGE COLUMN BODYXML BODYHTML longtext
+	</statement>
+	
+	<select id="EzCommonDAO.checkGongramDeleteHistory">
+		SELECT DOCID FROM TBL_GONGRAMDELETEHISTORY LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createGongramDeleteHistory"> 
+		CREATE TABLE `tbl_gongramdeletehistory` (
+			`DOCID` varchar(80) NOT NULL,
+			`APRMEMBERSN` bigint(10) NOT NULL,
+			`APRTYPE` varchar(12) DEFAULT NULL,
+			`APRSTATE` varchar(12) DEFAULT NULL,
+			`APRMEMBERID` varchar(400) DEFAULT NULL,
+			`APRMEMBERISDEPTYN` varchar(4) DEFAULT NULL,
+			`APRMEMBERNAME` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+			`APRMEMBERJOBTITLE` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+			`APRMEMBERDEPTID` varchar(400) DEFAULT NULL,
+			`APRMEMBERDEPTNAME` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+			`APRMEMBERLDAPPATH` varchar(400) DEFAULT NULL,
+			`RECEIVEDDATE` datetime DEFAULT NULL,
+			`PROCESSDATE` datetime DEFAULT NULL,
+			`DELETEDATE` datetime DEFAULT NULL,
+			`REASONDONOTAPPROV` varchar(1020) DEFAULT NULL,
+			`ISPROPOSERYN` varchar(4) DEFAULT NULL,
+			`ISBRIEFUSERYN` varchar(4) DEFAULT NULL,
+			`APRMEMBERNAME2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+			`APRMEMBERJOBTITLE2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+			`APRMEMBERDEPTNAME2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+			`TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
+			`COMPANYID` varchar(20) NOT NULL,
+			PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`DOCID`,`APRMEMBERID`),
+			KEY `tbl_gongramdeletehistory_IDX` (`DOCID`, `APRMEMBERSN`, `TENANT_ID`, `COMPANYID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+	</statement>
+
+	<select id="EzCommonDAO.checkBoardInfoWriterFlag" resultClass="String">
+		SELECT
+			WRITERFLAG
+		FROM
+			TBL_BOARD_BOARDINFO
+		LIMIT 1
+    </select>
+	<statement id="EzCommonDAO.alterBoardInfoWriteFlag">
+		ALTER TABLE
+			TBL_BOARD_BOARDINFO
+		ADD
+			WRITERFLAG VARCHAR(2) DEFAULT 'N'
+	</statement>
+
+	<select id="EzCommonDAO.checkBoardItemWriterNameType" resultClass="String">
+		SELECT
+			WRITERNAMETYPE
+		FROM
+			TBL_BOARD_ITEM
+		LIMIT 1
+	</select>
+	<statement id="EzCommonDAO.addBoardItemWriterNameType">
+		ALTER TABLE
+			TBL_BOARD_ITEM
+		ADD
+			WRITERNAMETYPE VARCHAR(2) DEFAULT NULL
+	</statement>
+
+	<select id="EzCommonDAO.checkBoardItemTempWriterNameType" resultClass="String">
+		SELECT
+			WRITERNAMETYPE
+		FROM
+			TBL_BOARD_ITEM_TEMP
+		LIMIT 1
+	</select>
+	<statement id="EzCommonDAO.addBoardItemTempWriterNameType">
+		ALTER TABLE
+			TBL_BOARD_ITEM_TEMP
+		ADD
+			WRITERNAMETYPE VARCHAR(2) DEFAULT NULL
+	</statement>
+	<!-- 2023-09-27 임정은 - 일정관리 > 일정 모아보기 그룹 테이블 추가 -->
+	<select id="EzCommonDAO.checkTblScheduleGather">
+		SELECT
+			GROUPID
+		FROM
+			TBL_SCHEDULEGATHER
+		LIMIT 1
+	</select>
+	<statement id="EzCommonDAO.createTblScheduleGather">
+		CREATE TABLE `tbl_schedulegather` (
+			`GROUPID` varchar(100) NOT NULL,
+			`GROUPNAME` varchar(100) CHARACTER SET utf8mb4 NOT NULL,
+			`CREATORID` varchar(100) DEFAULT NULL,
+			`CREATORNAME` varchar(100) CHARACTER SET utf8mb4 NOT NULL,
+			`CREATORNAME2` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
+			`DESCRIPTION` varchar(500) CHARACTER SET utf8mb4 NOT NULL,
+			`CREATEDATE` datetime DEFAULT NULL,
+			`TENANT_ID` mediumint(5) NOT NULL,
+			`companyid` varchar(40) DEFAULT NULL,
+			PRIMARY KEY (`GROUPID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8
+	</statement>
+
+	<select id="EzCommonDAO.checkTblScheduleGatherMember">
+		SELECT
+			GROUPID
+		FROM
+			TBL_SCHEDULEGATHERMEMBER
+		LIMIT 1
+	</select>
+	<statement id="EzCommonDAO.createTblScheduleGatherMember">
+		CREATE TABLE `tbl_schedulegathermember` (
+			`GROUPID` varchar(100) NOT NULL,
+			`MEMBERID` varchar(100) NOT NULL,
+			`MEMBERNAME` varchar(100) CHARACTER SET utf8mb4 NOT NULL,
+			`MEMBERNAME2` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
+			`TENANT_ID` mediumint(5) NOT NULL,
+			PRIMARY KEY (`GROUPID`,`MEMBERID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8
+	</statement>
+	
+	<select id="EzCommonDAO.checkMemberDeptIdAtScheduleGroupMember" parameterClass="Map" resultClass="String">
+		SELECT
+			MEMBERDEPTID
+		FROM
+			TBL_SCHEDULEGROUPMEMBER
+		LIMIT 1
+	</select>
+	
+	<update id="EzCommonDAO.addMemberDeptIdScheduleGroupMember" parameterClass="Map">
+		ALTER TABLE
+			TBL_SCHEDULEGROUPMEMBER
+		ADD
+			MEMBERDEPTID VARCHAR(100) DEFAULT NULL
+	</update>
+	
+	<select id="EzCommonDAO.checkMemberDeptIdAtScheduleGatherMember" parameterClass="Map" resultClass="String">
+		SELECT
+			MEMBERDEPTID
+		FROM
+			TBL_SCHEDULEGATHERMEMBER
+		LIMIT 1
+	</select>
+	
+	<update id="EzCommonDAO.addMemberDeptIdScheduleGatherMember" parameterClass="Map">
+		ALTER TABLE
+			TBL_SCHEDULEGATHERMEMBER
+		ADD
+			MEMBERDEPTID VARCHAR(100) DEFAULT NULL
+	</update>
+
+	<select id="EzCommonDAO.checkTblBoardStarRatingItem" resultClass="String">
+		<![CDATA[
+			SELECT
+				ITEMID
+			FROM
+				TBL_BOARD_ITEM_RATING
+			LIMIT 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.createTblBoardStarRatingItem">
+		CREATE TABLE tbl_board_item_rating (
+		ITEMID varchar(76) NOT NULL,
+		USERID varchar(80) NOT NULL,
+		RATING varchar(2) NOT NULL,
+		RATINGDATE varchar(40) NOT NULL,
+		TENANT_ID mediumint(5) NOT NULL,
+		COMPANYID varchar(80) DEFAULT NULL,
+		PRIMARY KEY (ITEMID, USERID, TENANT_ID)
+		)
+	</statement>
+
+	<select id="EzCommonDAO.checkTblBoardStarRatingSummary" resultClass="String">
+		<![CDATA[
+			SELECT
+				ITEMID
+			FROM
+				TBL_BOARD_ITEM_RATING_SUMMARY
+			LIMIT 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.createTblBoardStarRatingSummary">
+		CREATE TABLE tbl_board_item_rating_summary (
+		ITEMID varchar(76) NOT NULL,
+		TOTALRATERS varchar(10) NOT NULL,
+		TOTALSCORE varchar(6) NOT NULL,
+		AVERAGESCORE varchar(5) NOT NULL,
+		TENANT_ID mediumint(5) NOT NULL,
+		COMPANYID varchar(80) DEFAULT NULL,
+		PRIMARY KEY (ITEMID, TENANT_ID)
+		)
+	</statement>
+
+	<select id="EzCommonDAO.checkTblBoardInfoStarRatingFlag" resultClass="String">
+		<![CDATA[
+			SELECT
+				STARRATINGFLAG
+			FROM
+				TBL_BOARD_BOARDINFO
+			LIMIT 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.addBoardStarRatingFlag">
+		ALTER TABLE
+		TBL_BOARD_BOARDINFO
+		ADD
+		STARRATINGFLAG VARCHAR(1) DEFAULT NULL
+	</statement>
+	
+	<select id="EzCommonDAO.checkMealPlanTable">
+		<![CDATA[
+		SELECT
+			MEALDATE
+		FROM
+			TBL_MEAL_PLAN
+		LIMIT 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.createMealPlanTable">
+		CREATE TABLE TBL_MEAL_PLAN (
+			MEALDATE DATE NOT NULL,
+			ACOURSE VARCHAR(300) DEFAULT '',
+			BCOURSE VARCHAR(300) DEFAULT '',
+			SALADBAR VARCHAR(300) DEFAULT '',
+			DESSERT VARCHAR(300) DEFAULT '',
+			TOTALCAL INT DEFAULT 0,
+			COMPANYID VARCHAR(160),
+			TENANT_ID mediumint(5) NOT NULL,
+			PRIMARY KEY (MEALDATE, COMPANYID, TENANT_ID)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+	</statement>
+	
+	<select id="EzCommonDAO.checkUseMealPlan" parameterClass="Integer" resultClass="String">
+		SELECT
+			property_value
+		FROM
+			tbl_tenant_config
+		WHERE
+			property_name = 'useMealPlan'
+		AND
+			tenant_id = #tenantId#
+	</select>
+		
+	<select id="EzCommonDAO.checkHasMealPlanBoard" parameterClass="Integer" resultClass="String">
+		SELECT
+			count(*)
+		FROM
+			tbl_board_boardinfo
+		WHERE
+			boardid = '{MMMMMMMM-MMMM-MMMM-MMMM-MMMMMMMMMMMM}'
+		AND
+			tenant_id = #tenantId#
+	</select>
+	
+	<insert id="EzCommonDAO.insertUseMealPlan" parameterClass="Integer">
+		INSERT INTO TBL_TENANT_CONFIG
+			(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+		VALUES
+			(#tenantId#, 'useMealPlan', 'YES', '식단 사용 여부', '식단 사용 여부', '2025-02-05', '게시판')
+	</insert>
+	
+	<insert id="EzCommonDAO.insertMealPlanBoard" parameterClass="Integer">
+		INSERT INTO TBL_BOARD_BOARDINFO
+				(BOARDID, BOARDNAME, BOARDNAME2, BOARDNAME3, BOARDNAME4, TREEVIEWORDER, BOARDLEVEL, PARENTBOARDID, BOARDDESCRIPTION, ITEMEXPIRES, ATTACHSIZELIMIT, REPLYNOTIFY, BOARDGROUPID, ALERTPOSTITEM, GUBUN, URL, DELETEAFTER, BOARDCOLOR, BOARDNO, PORTLET, TENANT_ID, COMPANYID)
+		VALUES
+		    ('{MMMMMMMM-MMMM-MMMM-MMMM-MMMMMMMMMMMM}', '식단', 'MealPlan', '献立表', '菜单',  -2, 0, 'None', NULL, 0, NULL, 0, NULL, 0, 0, NULL, 0, NULL, 0, 'N', #v_TENANTID#, 'Top')
+	</insert>
+
+	<select id="EzCommonDAO.checkTblStatMenuUser" resultClass="String">
+		SELECT
+			USER_ID
+		FROM
+			TBL_STAT_MENU_USER
+		LIMIT 1
+	</select>
+	<statement id="EzCommonDAO.createTblStatMenuUser">
+		CREATE TABLE TBL_STAT_MENU_USER
+		(
+			USER_ID    VARCHAR(80)  NOT NULL COMMENT '유저 id(비회원은 ip)',
+			TENANT_ID  MEDIUMINT(9) NOT NULL DEFAULT 0 COMMENT '빠른 범위 검색/정렬용 (형식: YYYYMMDDHH)',
+			COMPANY_ID VARCHAR(100) NOT NULL COMMENT '회사 id',
+			IPADDRESS  VARCHAR(15) COMMENT 'ip',
+			YEAR       SMALLINT     NOT NULL COMMENT '집계 년도(YYYY)',
+			MONTH      TINYINT      NOT NULL COMMENT '집계 월(01 ~ 12)',
+			DAY        TINYINT      NOT NULL COMMENT '집계 일(01 ~ 31)',
+			HOUR       TINYINT      NOT NULL COMMENT '집계 시간(00 ~ 23)',
+			TIME_CODE  INT          NOT NULL COMMENT '빠른 범위 검색/정렬용 (형식: YYYYMMDDHH)',
+			MENU_ID    INT(11) COMMENT '집계 메뉴 id',
+			CODE       VARCHAR(10) COMMENT '집계 통계 종류',
+			STAT_COUNT INT          NOT NULL DEFAULT 0 COMMENT '집계 카운트',
+
+			PRIMARY KEY (TENANT_ID, COMPANY_ID, USER_ID, MENU_ID, TIME_CODE),
+			INDEX IDX_TIME_COMPONENTS (YEAR, MONTH, DAY, HOUR),
+			INDEX IDX_TIME_STR (TIME_CODE),
+			INDEX IDX_MENU (MENU_ID)
+		) ENGINE = INNODB
+		  DEFAULT CHARSET = UTF8MB4
+	</statement>
+
+	<select id="EzCommonDAO.checkTblStatMenuUserMonth" resultClass="String">
+		SELECT
+			USER_ID
+		FROM
+			TBL_STAT_MENU_USER_MONTH
+		LIMIT 1
+	</select>
+	<statement id="EzCommonDAO.createTblStatMenuUserMonth">
+		CREATE TABLE TBL_STAT_MENU_USER_MONTH
+		(
+			USER_ID    VARCHAR(80)  NOT NULL COMMENT '유저 id(비회원은 ip)',
+			TENANT_ID  MEDIUMINT(9) NOT NULL DEFAULT 0 ,
+			COMPANY_ID VARCHAR(100) NOT NULL COMMENT '회사 id',
+			IPADDRESS  VARCHAR(15) COMMENT 'ip',
+			YEAR       SMALLINT     NOT NULL COMMENT '집계 년도(YYYY)',
+			MONTH      TINYINT      NOT NULL COMMENT '집계 월(01 ~ 12)',
+			TIME_CODE  INT          NOT NULL COMMENT '빠른 범위 검색/정렬용 (형식: YYYYMM)',
+			MENU_ID    INT(11) COMMENT '집계 메뉴 id',
+			CODE       VARCHAR(10) COMMENT '집계 통계 종류',
+			STAT_COUNT INT          NOT NULL DEFAULT 0 COMMENT '집계 카운트',
+
+			PRIMARY KEY (TENANT_ID, COMPANY_ID, USER_ID, MENU_ID, TIME_CODE),
+			INDEX IDX_TIME_COMPONENTS (YEAR, MONTH),
+			INDEX IDX_TIME_STR (TIME_CODE),
+			INDEX IDX_MENU (MENU_ID)
+		) ENGINE = INNODB
+		  DEFAULT CHARSET = UTF8MB4
+	</statement>
+
+	<select id="EzCommonDAO.checkTblStatMenuDept" resultClass="String">
+		SELECT
+			DEPT_ID
+		FROM
+			TBL_STAT_MENU_DEPT
+		LIMIT 1
+	</select>
+	<statement id="EzCommonDAO.createTblStatMenuDept">
+		CREATE TABLE TBL_STAT_MENU_DEPT
+		(
+			DEPT_ID    VARCHAR(80)  NOT NULL COMMENT '부서 id',
+			TENANT_ID  MEDIUMINT(9) NOT NULL DEFAULT 0 ,
+			COMPANY_ID VARCHAR(100) NOT NULL COMMENT '회사 id',
+			YEAR       SMALLINT     NOT NULL COMMENT '집계 년도(YYYY)',
+			MONTH      TINYINT      NOT NULL COMMENT '집계 월(01 ~ 12)',
+			DAY        TINYINT      NOT NULL COMMENT '집계 일(01 ~ 31)',
+			HOUR       TINYINT      NOT NULL COMMENT '집계 시간(00 ~ 23)',
+			TIME_CODE  INT          NOT NULL COMMENT '빠른 범위 검색/정렬용 (형식: YYYYMMDDHH)',
+			MENU_ID    INT(11) COMMENT '집계 메뉴 id',
+			CODE       VARCHAR(10) COMMENT '집계 통계 종류',
+			STAT_COUNT INT          NOT NULL DEFAULT 0 COMMENT '집계 카운트',
+
+			PRIMARY KEY (TENANT_ID, COMPANY_ID, DEPT_ID, MENU_ID, TIME_CODE),
+			INDEX IDX_TIME_COMPONENTS (YEAR, MONTH, DAY, HOUR),
+			INDEX IDX_TIME_STR (TIME_CODE),
+			INDEX IDX_MENU (MENU_ID)
+		) ENGINE = INNODB
+		  DEFAULT CHARSET = UTF8MB4
+	</statement>
+
+	<select id="EzCommonDAO.checkTblStatMenuDeptMonth" resultClass="String">
+		SELECT
+			DEPT_ID
+		FROM
+			TBL_STAT_MENU_DEPT_MONTH
+		LIMIT 1
+	</select>
+	<statement id="EzCommonDAO.createTblStatMenuDeptMonth">
+		CREATE TABLE TBL_STAT_MENU_DEPT_MONTH
+		(
+			DEPT_ID    VARCHAR(80)  NOT NULL COMMENT '부서 id',
+			TENANT_ID  MEDIUMINT(9) NOT NULL DEFAULT 0 ,
+			COMPANY_ID VARCHAR(100) NOT NULL COMMENT '회사 id',
+			YEAR       SMALLINT     NOT NULL COMMENT '집계 년도(YYYY)',
+			MONTH      TINYINT      NOT NULL COMMENT '집계 월(01 ~ 12)',
+			TIME_CODE  INT          NOT NULL COMMENT '빠른 범위 검색/정렬용 (형식: YYYYMM)',
+			MENU_ID    INT(11) COMMENT '집계 메뉴 id',
+			CODE       VARCHAR(10) COMMENT '집계 통계 종류',
+			STAT_COUNT INT          NOT NULL DEFAULT 0 COMMENT '집계 카운트',
+
+			PRIMARY KEY (TENANT_ID, COMPANY_ID, DEPT_ID, MENU_ID, TIME_CODE),
+			INDEX IDX_TIME_COMPONENTS (YEAR, MONTH),
+			INDEX IDX_TIME_STR (TIME_CODE),
+			INDEX IDX_MENU (MENU_ID)
+		) ENGINE = INNODB
+		  DEFAULT CHARSET = UTF8MB4
+	</statement>
+
+	<select id="EzCommonDAO.checkUseSaasYN" resultClass="String">
+		SELECT
+		PROPERTY_VALUE
+		FROM
+		TBL_TENANT_CONFIG
+		WHERE
+		PROPERTY_NAME = 'useSaas'
+		AND
+		TENANT_ID = 0
+	</select>
+
+	<insert id="EzCommonDAO.insertUseSaasYN">
+		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
+		VALUES (0, 'useSaas', '톡 모바일 푸시 알림 테넌트에 따른 구분 사용 여부', 'N', '톡서버에 푸시 알림 보낼때 테넌트 아이디 붙여서 넘길지 말지 사용 여부(default:N)', '2025-05-21 00:00:00', '포탈')
+	</insert>
+
+	<select id="EzCommonDAO.checkUseExtLargeFilesever" resultClass="String">
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			PROPERTY_NAME = 'useExternalLargeFileServer'
+		AND
+			TENANT_ID = 0
+	</select>
+
+	<insert id="EzCommonDAO.inserUseExtLargeFilesever">
+		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
+		VALUES (0, 'useExternalLargeFileServer', '메일 대용량 첨부 외부메일 동시 업로드 여부', 'N', '메일에서 대용량 첨부할때 외부메일 서버 동시 업로드 여부(default:N)', '2025-05-23 00:00:00', '메일')
+	</insert>
+
+	<select id="EzCommonDAO.checkExtLargeFileseverUrl" resultClass="String">
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			PROPERTY_NAME = 'externalFileServerUrl'
+		AND
+			TENANT_ID = 0
+	</select>
+
+	<insert id="EzCommonDAO.inserExtLargeFileseverUrl">
+		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
+		VALUES (0, 'externalFileServerUrl', '대용량 첨부파일 업로드 서버', 'http://127.0.0.1:8080/', '대용량 첨부파일 동시 업로드할 외부 서버', '2025-05-23 00:00:00', '메일')
+	</insert>
+
 </sqlMap>

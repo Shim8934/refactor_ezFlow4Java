@@ -21,7 +21,8 @@
 			}
 	    </style>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	    <link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 	    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('/css/font-awesome-4.7.0/css/font-awesome.min.css')}" type="text/css"/>
 	    <link href="${util.addVer('/css/previewmail.css')}" rel="stylesheet" type="text/css">
@@ -120,6 +121,7 @@
 			var selectYear = "ALL";
 		    
 		    var containerState = "<c:out value = '${containerState}'/>";
+		    var useReceiveInfoName = "<c:out value ='${useReceiveInfoName}'/>"; // 수신처 뒤에 "장"을 붙이는지 여부 (0 : 안붙임 / 1 : 붙임 / 2: 상위부서 + 수신처장)
  	        
 	        document.onselectstart = function () { return false; };
 	
@@ -324,7 +326,9 @@
 							pPreviewShow_HOW = "OFF";
 						}
 					}
-					PreviewRayerChange(pPreviewShow_HOW, 'Container');
+					if (previewInfo != "H") {
+						PreviewRayerChange(pPreviewShow_HOW, 'Container');
+					}
 					/* 2022-06-29 홍승비 - 우측 미리보기 영역을 위한 온로드 시 리사이즈 동작 추가 */
 			    	Window_resize();
 	            } else {
@@ -357,7 +361,7 @@
 		            
 		            var pAlertContent = "";
 		            
-		            if (userLang == "1") {
+		            if (userLang == "1" || userLang == "3") {
 			            pAlertContent = arr_userinfo[2] + "<spring:message code='ezApprovalG.t1721'/>" + "<br>" + tmpStartDate + "~" + tmpEndDate + "<br>" + "<spring:message code='ezApprovalG.t1723'/>" + "<br>" + " <spring:message code='ezApprovalG.t1724'/>";
 		            }
 		            else if (userLang == "2") {
@@ -378,7 +382,7 @@
 		        		
 			            var pAlertContent = "";
 			            
-			            if (userLang == "1") {
+			            if (userLang == "1" || userLang == "3") {
 				            pAlertContent = arr_userinfo[2] + "<spring:message code='ezApprovalG.t1721'/>" + "<br>" + tmpStartDate + "~" + tmpEndDate + "<br>" + "<spring:message code='ezApprovalG.t1723'/>" + "<br>" + " <spring:message code='ezApprovalG.t1724'/>";
 			            }
 			            else if (userLang == "2") {
@@ -1005,8 +1009,9 @@
 			            enforceDocID = GetAttribute(selRow[0], "DATA1");
 			            enforceDocHref = GetAttribute(selRow[0], "DATA2");
 			            enforceDocOrgCompanyID = GetAttribute(selRow[0], "ORGCOMPANYID");
+			            enforceExt = GetAttribute(selRow[0], "DATA2").indexOf("hwp") > -1 ? "hwp" : "mht";
 			            
-		        		var pURL = "/ezApprovalG/getFormCont.do?pFormType=004"; //일반버전의 FormType=004는 시행문
+		        		var pURL = "/ezApprovalG/getFormCont.do?pFormType=004&ext=" + enforceExt; //일반버전의 FormType=004는 시행문
 		        		var getFormCont_Cross = window.open(pURL, "formCont", GetOpenWindowfeature(713, 570));
 		        		try { getFormCont_Cross.focus(); } catch (e) {}
 		        	} else {
@@ -1021,17 +1026,23 @@
 	        var enforceDocID = "";
 	        var enforceDocHref = "";
 	        var enforceDocOrgCompanyID = "";
+	        var enforceExt = "";
 	        function enforce_onclick_complete(ret) {
 	        	if (ret[0] != "cancel") {
-	        		var pURL = "/ezApprovalG/enforceSihangDocView.do";
+	        	    var isHwp = enforceExt == "hwp";
+	        		var pURL = isHwp ? "/ezApprovalG/ezConvSihang_WHWP.do" : "/ezApprovalG/enforceSihangDocView.do";
 	        		pURL += "?pFormURL=" + encodeURIComponent(ret[0]);
 	        		pURL += "&pFormType=" + encodeURIComponent(ret[1]);
 	        		pURL += "&pFormID=" + encodeURIComponent(ret[2]);
-	        		pURL += "&pDocID=" + encodeURIComponent(enforceDocID);
-	        		pURL += "&pDocHref=" + encodeURIComponent(enforceDocHref);
-	        		pURL += "&pOrgCompanyID=" + encodeURIComponent(enforceDocOrgCompanyID);
-	        		
-	        		window.open(pURL, "", GetOpenWindowfeature(850, 900));
+	        		pURL +=  (isHwp ? "&docID=" : "&pDocID=") + encodeURIComponent(enforceDocID);
+	        		pURL += (isHwp ? "&docHref=" : "&pDocHref=") + encodeURIComponent(enforceDocHref);
+	        		pURL += (isHwp ? "&orgCompanyID=" : "&pOrgCompanyID=") + encodeURIComponent(enforceDocOrgCompanyID);
+
+                    var height = window.screen.availHeight;
+                    var width = window.screen.availWidth;
+                    var height = height - 50;
+                    var width = width/2;
+	        		window.open(pURL, "", GetOpenWindowfeature(isHwp ? width : 850, isHwp ? height : 900));
 	        	}
 	        }
 			function Approval_onclick() {
@@ -1142,6 +1153,7 @@
 			            url = "/ezApprovalG/excelExportOut.do";
 			        }
 			
+			        // 2024-03-07 기준으로 DocListType 변수를 "DocList"로 설정하는 코드 미존재, 해당 if 분기는 의미가 없음 
 			        if (DocListType == "DocList") {
 			            url += "?listType=DOC&cont=" + encodeURI(ContainerID) + "&PN=" +
 			                encodeURI(tempPageNum) + "&PS=" + encodeURI(tempPageSize) + "&OC=" + encodeURI(OrderCell) +
@@ -1153,9 +1165,18 @@
 	        			var apprTo = condition[6];
 	        			var draftFrom = condition[3];
 	        			var draftTo = condition[4];*/
+						if (typeof (condition[24]) != "undefined" && condition[24] != "") {
+							if (subCondition) {
+								subCondition += "AND ";
+							}
+							subCondition += "KEYWORD like '%" + condition[24].slice(5) + "%'";
+						}
 	        			var searchStatus = $("#sel_status").val();
 	        			if(searchStatus && searchStatus != "ALL"){
 	        				searchStatus = "PROCESSYN = '" + searchStatus + "'";
+							if (subCondition) {
+								searchStatus = " AND " + searchStatus;
+							}
 	        			} else {
 	        				searchStatus = "";
 	        			}
@@ -1215,7 +1236,7 @@
 		                "&P19=" + encodeURI(condition[19]) + "&P20=" + encodeURI(condition[20]) + "&P21=" + encodeURI(condition[21]) +
 		                "&P22=" + encodeURI(condition[22]) + "&P23=" + encodeURI(condition[23]) + "&P24=" + encodeURI(ContainerID) +
 		                "&PN=" + encodeURI(tempPageNum) + "&PS=" + encodeURI(tempPageSize) + "&OC=" + encodeURI(OrderCell) +
-		                "&OO=" + encodeURI(OrderOption) + "&SQ=" + encodeURI(subCondition + searchStatus)+ "&allFG=" + AllFG ;
+		                "&OO=" + encodeURI(OrderOption) + "&SQ=" + encodeURI(subCondition + searchStatus)+ "&allFG=" + AllFG + "&KW=" + condition[24];
 		               
 		                // 2023-07-21 한태훈 - 부서공유함에서 회사가 다를 시, 엑셀 내보내기 안되는 오류 수정.
 		                if (orgCompanyID != null && orgCompanyID != "") {
@@ -1452,37 +1473,42 @@
 	            	}
 		        }
 		
-		        document.getElementById("TitleInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;font-weight:bold;'> " + NodeListLen + " </span>&nbsp;/ " + period;
+		        document.getElementById("TitleInfo").innerHTML = "&nbsp;&nbsp;<span class='txt_color' style='font-weight:bold;'> " + NodeListLen + " </span>&nbsp;/ " + period;
 		
 		        strtext = "<div class='pagenavi'>";
 		        PagingHTML += strtext;
 		        var totalPage = totalPages;
 		        var pageNum = curpage;
 		        if (totalPage > 1 && pageNum != 1) {
-		            strtext = "<span class='btnimg'><a onclick= 'return goToPageByNum(1)'>";
-		            strtext = strtext + "<img src='/images/kr/cm/btn_p_prev.gif' /></a></span>";
+		            // strtext = "<span class='btnimg'><a onclick= 'return goToPageByNum(1)'>";
+		            // strtext = strtext + "<img src='/images/kr/cm/btn_p_prev.gif' /></a></span>";
+					strtext = "<span class='btnimg first' onclick= 'return goToPageByNum(1)'></span>";
 		            PagingHTML += strtext;
 		        }
 		        else {
-		            strtext = "<span class='btnimg'><a >";
-		            strtext = strtext + "<img src='/images/kr/cm/btn_p_prev01.gif' /></a></span>";
+		            // strtext = "<span class='btnimg'><a >";
+		            // strtext = strtext + "<img src='/images/kr/cm/btn_p_prev01.gif' /></a></span>";
+					strtext = "<span class='btnimg first disabled'></span>";
 		            PagingHTML += strtext;
 		        }
 		        if (totalPage > BlockSize) {
 		            if (pageNum > BlockSize) {
-		                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'>";
-		                strtext = strtext + "<img src='/images/kr/cm/btn_prev.gif' ></span>";
+		                // strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'>";
+		                // strtext = strtext + "<img src='/images/kr/cm/btn_prev.gif' ></span>";
+						strtext = "<span class='btnimg prev' onclick= 'return selbeforeBlock()'></span>";
 		                PagingHTML += strtext;
 		            }
 		            else {
-		                strtext = "<span class='btnimg'>";
-		                strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif'></span>";
+		                // strtext = "<span class='btnimg'>";
+		                // strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif'></span>";
+						strtext = "<span class='btnimg prev disabled'></span>";
 		                PagingHTML += strtext;
 		            }
 		        }
 		        else {
-		            strtext = "<span class='btnimg'>";
-		            strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif'></span>";
+		            // strtext = "<span class='btnimg'>";
+		            // strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif'></span>";
+					strtext = "<span class='btnimg prev disabled'></span>";
 		            PagingHTML += strtext;
 		        }
 		        var MaxNum;
@@ -1510,29 +1536,34 @@
 		        }
 		        if (totalPage > BlockSize) {
 		            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-		                strtext = "<span class='btnimg' onclick='return selafterBlock()'>";
-		                strtext = strtext + "<img src='/images/kr/cm/btn_next.gif'></span>";
+		                // strtext = "<span class='btnimg' onclick='return selafterBlock()'>";
+		                // strtext = strtext + "<img src='/images/kr/cm/btn_next.gif'></span>";
+						strtext = "<span class='btnimg next' onclick='return selafterBlock()'></span>";
 		                PagingHTML += strtext;
 		            }
 		            else {
-		                strtext = "<span class='btnimg'>";
-		                strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif'></span>";
+		                // strtext = "<span class='btnimg'>";
+		                // strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif'></span>";
+						strtext = "<span class='btnimg next disabled'></span>";
 		                PagingHTML += strtext;
 		            }
 		        }
 		        else {
-		            strtext = "<span class='btnimg'>";
-		            strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif'></span>";
+		            // strtext = "<span class='btnimg'>";
+		            // strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif'></span>";
+					strtext = "<span class='btnimg next disabled'></span>";
 		            PagingHTML += strtext;
 		        }
 		        if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-		            strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'>";
-		            strtext = strtext + "<img src='/images/kr/cm/btn_n_next.gif' /></span>";
+		            // strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'>";
+		            // strtext = strtext + "<img src='/images/kr/cm/btn_n_next.gif' /></span>";
+					strtext = "<span class='btnimg last' onclick='return goToPageByNum(" + totalPage + ")'></span>";
 		            PagingHTML += strtext;
 		        }
 		        else {
-		            strtext = "<span class='btnimg'>";
-		            strtext = strtext + "<img src='/images/kr/cm/btn_n_next01.gif' /></span>";
+		            // strtext = "<span class='btnimg'>";
+		            // strtext = strtext + "<img src='/images/kr/cm/btn_n_next01.gif' /></span>";
+					strtext = "<span class='btnimg last disabled'></span>";
 		            PagingHTML += strtext;
 		        }
 		        PagingHTML += "</div>";
@@ -1996,15 +2027,15 @@
 		            <li id="tSearchCondi"><span class="icon16 icon16_search" id="SearchCondi" onclick="return SearchCondi_onclick()"></span></li>
 		            <!-- <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li> -->
 	            </c:if>
-
-				<%-- 전자결재 우측 미리보기 영역 상단 아이콘 --%>
-			    <div id="right" class="sub_frameIcon" <c:if test="${useAprPreview != 'YES'}">style="display:none;"</c:if>>	
-					<div class="sub_frameIconUL" style="width:auto !important;">
-					   	<p class="frameIconLI"><span class="icon16 btn_noframe" id="PreViewNone" onclick="PreviewRayerChange('NONE', 'Container')"></span></p>
-					    <p class="frameIconLI"><span class="icon16 btn_leftframe" id="PreViewleft" onclick="PreviewRayerChange('H', 'Container')"></span></p>
-					</div>
-				</div>
-				
+				<c:if test="${null eq sQuery || sQuery eq '' }">
+                    <%-- 전자결재 우측 미리보기 상단 아이콘 --%>
+                    <div id="right" class="sub_frameIcon" <c:if test="${useAprPreview != 'YES'}">style="display:none;"</c:if>>
+                        <div class="sub_frameIconUL" style="width:auto !important;">
+                            <p class="frameIconLI"><span class="icon16 btn_noframe" id="PreViewNone" onclick="PreviewRayerChange('NONE', 'Manage')"></span></p>
+                            <p class="frameIconLI"><span class="icon16 btn_leftframe" id="PreViewleft" onclick="PreviewRayerChange('H', 'Manage')"></span></p>
+                        </div>
+                    </div>
+				</c:if>
 	            <!-- <img src="/images/i_bar.gif"> -->
 	            <li style="vertical-align: middle; float:right">
 	            	<select id="sel_year" name="sel_year" style="height:29px;" onchange="onSelect_Year(this);">
@@ -2027,6 +2058,15 @@
 		        <li id="tViewDocApr"><span id="ViewDocApr" onClick="return ViewDoc_onclick()" ><spring:message code='ezApproval.pjj35'/></span></li>
 		        <li id="Li1"><span id="Span1" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 		        <li id="tSearchCondiApr"><span class="icon16 icon16_search" id="SearchCondiApr" onClick="return SearchCondi_onclick()" ></span></li>
+			<c:if test="${null ne sQuery && sQuery ne '' }">
+                 <%-- 전자결재 우측 미리보기 상단 아이콘 --%>
+                 <div id="right" class="sub_frameIcon" <c:if test="${useAprPreview != 'YES'}">style="display:none;"</c:if>>
+                     <div class="sub_frameIconUL" style="width:auto !important;">
+                         <p class="frameIconLI"><span class="icon16 btn_noframe" id="PreViewNone" onclick="PreviewRayerChange('NONE', 'Manage')"></span></p>
+                         <p class="frameIconLI"><span class="icon16 btn_leftframe" id="PreViewleft" onclick="PreviewRayerChange('H', 'Manage')"></span></p>
+                     </div>
+                 </div>
+	        </c:if>
 		        <li style="vertical-align: middle; float:right">
 		        	<select id="who_year" name="who_year" style="height:29px;" onchange="onSelect_Year(this);">
 		            	<option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option>
@@ -2037,7 +2077,7 @@
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none; z-index: 5000;" id="ResizeBarPanel"></div>
 	    <div style="width: 8px; height: 738px; background-color: #808080; position: absolute; z-index: 10000; display: none;" id="ResizeBarH"></div>
 	   	<span id="MailListRayer" style="border: 0px solid blue; vertical-align: top; overflow: hidden; display: inline-block;">
-		    <div class="div_scroll" style="width:100%;HEIGHT:395px; overflow:AUTO; margin-bottom:10px;" id="divList">
+		    <div class="div_scroll" style="width:100%;HEIGHT:480px; overflow:AUTO; margin-bottom:10px;" id="divList">
 		        <div id="lvtDoclist"></div>
 		    </div>
 		    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none; z-index: 5000;" id="loadingPanel" onclick="ContextMenuHidden();"></div>
@@ -2069,7 +2109,7 @@
 				  	</div>	
 				</div>
 		
-		        <div style="WIDTH:100%;HEIGHT:241px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
+		        <div style="WIDTH:100%;HEIGHT:171px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
 		            <div id="lvtDetail" style="border: 0;"></div>
 		        </div>
 		    </div>
@@ -2077,7 +2117,7 @@
 		
 		<%-- 전자결재 우측 미리보기 영역 --%>
 		<div id="PreviewRayerH" style="border:0px; width:500px; height:100%; overflow:hidden; vertical-align:top; display:none; margin-left:-5px;">
-	        <div class="previewmail_bar_h" id="previewmail_bar_h" onmousedown="PreviewH_onMouserDown(event);" style="cursor: w-resize; display: inline-block; height:738px;">
+	        <div class="previewmail_bar_h" id="previewmail_bar_h" onmousedown="PreviewH_onMouserDown(event);" style="cursor: w-resize; display: inline-block; height:753px;">
 	            <p class="hbar_dotted">
 	                <img src="/images/prevview_hbar_dotted.gif">
 	            </p>

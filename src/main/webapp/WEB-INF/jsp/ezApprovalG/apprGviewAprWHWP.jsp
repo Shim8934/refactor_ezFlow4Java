@@ -7,7 +7,8 @@
 	<head>
 	    <title><spring:message code='ezApprovalG.t367'/></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -20,9 +21,13 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/appandbody.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/apprGSummary.js')}"></script>
 	    <script type="text/javascript">
 	        var docID = "<c:out value='${docID}'/>";
 	        var docHref = "<c:out value='${docHref}'/>";
+	        var formUrl = "<c:out value='${formUrl}'/>";
+	        var formDocType = "<c:out value='${formDocType}'/>";
+	        var useFormContOnReuseForWHWP = "<c:out value='${useFormContOnReuseForWHWP}'/>";
 	        var opinionFlag = "<c:out value='${opinionFlag}'/>";
 	        var listTypeValue = "<c:out value='${listTypeValue}'/>";
 	        var listSusin = "<c:out value='${listSusin}'/>";
@@ -110,15 +115,23 @@
 				    return;
 				}
 			
-			    if (pDocState == "015" && pOrgDocID.length >= 20 && "<c:out value='${listTypeValue}'/>" == "99") {
-			        btnGongRam.style.display = "";
-			        pOpinionType = "";
+			    if (pDocState === "015" && pOrgDocID.length >= 20) {
+			    	if (listTypeValue === "99") {	// 공람할문서
+			    		btnGongRam.style.display = "";
+				        btnBoard.style.display = "";
+				        btnReuse.style.display = "";
+				        pOpinionType = "";
+			    	} else if (listTypeValue === "10") {	// 공람완료문서
+			    		btnBoard.style.display = "";
+				        btnReuse.style.display = "";
+			    	}
 			    }
+			    
 			    pDocID = docID;
 			    pDocHref = docHref;
 			    pOpinionFlag = opinionFlag;
 			    pListTypeValue = listTypeValue;
-			    if (pListTypeValue == "4") {
+			    if (pListTypeValue == "4" || pListTypeValue == "97") {
 					pListSusin = listSusin;
 				}	
 				cancelYN();
@@ -142,6 +155,14 @@
 					        GetExchInfo();
 					        //SignCheck();
 					        hideLoadingProgress();
+					        
+					        /* 2023-12-07 홍승비 - 결재서명 재맵핑 함수 호출 (TBL_SIGNINFO 테이블에 정상적인 서명 데이터가 확정 삽입되는 시점은 테넌트 컨피그로 체크) */
+					        message.startRemapAllAprSign_WHWP(pDocID, orgCompanyID);
+					        
+					        // 현재 문서가 수신문 또는 공람문서이면서 원문서가 존재하는 경우, 원문서의 서명 데이터도 재맵핑
+					        if ((pDocState == "011" || pDocState == "015") && pOrgDocID != null && typeof(pOrgDocID) != "undefined" && pOrgDocID != "") {
+					        	message.startRemapAllAprSign_WHWP(pOrgDocID, orgCompanyID);
+					        }
 				
 					        if (pHasOpinion == "Y") {
 					            var pInformationContent = "<spring:message code='ezApprovalG.t9'/><br> <spring:message code='ezApprovalG.t170'/>";
@@ -174,7 +195,7 @@
 			function btnClose_onclick() {
 				//2019.02.21 유은정 : 포탈개인화 결재리스트에서 포틀릿 정보 가져오는 매서드 추가
 		        if (parent.opener != null && parent.opener.getApprovalList != undefined) {
-		        	parent.opener.getApprovalList("draft");
+		        	parent.opener.clearAbsence(true);
 		        }
 			
 			    window.close();
@@ -229,7 +250,7 @@
 			
 			function OpenAlertUI_Close() {
 				if (parent.opener != null && parent.opener.getApprovalList != undefined) {
-				    parent.opener.getApprovalList("draft");
+				    parent.opener.clearAbsence(true);
 				}
 		    
 		        window.close();
@@ -584,7 +605,7 @@
 		    	} else if (deptCheckFlag == "4") {
 		    		alert(strLanggarm06 + " '" + "'" + strLanggarm08);
 		    		return;
-		    	} else if (deptCheckFlag == "2") {
+		    	} else if (deptCheckFlag == "2" && upperDeptCode == "") {
 					alert("타부서의 철정보로 설정되어있습니다. \n'" + arr_userinfo[5] + "'부서의 철로 변경해주시기바랍니다.");
 					return;
 				}	
@@ -671,6 +692,166 @@
 					}
 				}
 			}
+			
+	    	// 게시판 게시
+	    	var writeboardselect_modal_dialogArguments = new Array();
+		    function NewItem_onclick() {
+		    	writeboardselect_modal_dialogArguments[1] = NewItem_onclick_Complete;
+		        var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(355, 600));
+		        try {
+		        	if (OpenWin) {
+		        		OpenWin.focus(); 
+		        	} 
+		        } catch (e) {
+		        	console.error('OpenWin 접근 실패:', e);
+		        }
+		    }
+		    
+		    function NewItem_onclick_Complete(ret) {
+		        if (typeof (ret) != "undefined") {
+		            pBoardID = ret[0];
+		
+		            if (pBoardID == "" || typeof (pBoardID) == "undefined") {
+		                return;
+		            }
+		
+		            var pheight = window.screen.availHeight;
+		            var pwidth = window.screen.availWidth;
+		            var pTop = (pheight - 720) / 2;
+		            var pLeft = (pwidth - 765) / 2;
+		            
+		            if (ret[2] == "2" || ret[2] == "3" || ret[2] == "4" || ret[2] == "7" || ret[2] == "8" || (ret[3] != "null" && ret[3] != null && ret[3] != "")) {
+		                alert(strLang1031);
+		            }
+		            else {
+		                window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&mode=new1&pbrdGbn=SiteNewBoard&pFromScreen=Mail&docID=" + pDocID + "&url=" + docHref + "&orgCompanyID=" + orgCompanyID, '', GetOpenWindowJun(765, 870));
+		            }
+		        }
+		    }
+		    
+		    // 재사용 - 공람할문서, 공람완료문서 메뉴에서 사용함
+			var editable = "";
+			var getformcont_cross_dialogArguments = new Array();
+		 	function btnReuse_onclick(type) {
+		 		editable = type;
+		 		if (useFormContOnReuseForWHWP === "YES") {
+			 		var parameter = new Array();
+			        parameter[0] = "sol2";
+			        parameter[1] = "A01000";
+			        
+			        url = "/ezApprovalG/getFormCont.do";
+			        
+			        if (CrossYN()) {
+			            getformcont_cross_dialogArguments[0] = parameter;
+			            getformcont_cross_dialogArguments[1] = btnReuse_onclick_complete;
+			            var getFormCont_Cross = window.open(url, "/ezApproval/getFormCont.do", GetOpenWindowfeature(713, 570));
+			            
+			            try {
+			            	getFormCont_Cross.focus();
+			            } catch (e) {
+			            	console.error('Error focusing window:', e);
+			            }
+			        } else {
+			            var feature = "status:no;dialogWidth:713px;dialogHeight:570px;edge:sunken;scroll:no";
+			            var ret = window.showModalDialog(url, parameter, feature);
+			            formURL = ret[0];
+			            formDocType = ret[1];
+			            
+			            if (formURL != "cancel") {
+			                openDraftUI(formURL, formDocType);
+			            }
+			        }
+		 		}
+		 		else {
+		 			newFormURL = formUrl;
+		 			newFormDocType = formDocType;
+		 	        openDraftUI("DRAFT");
+		 		}
+		 	}	
+		 	
+		 	var editable = "";
+		 	var newFormURL = "";
+		 	var newFormDocType = "";
+			function btnReuse_onclick_complete(ret) {
+				if(ret[0] != "cancel") {
+					newFormURL = ret[0];
+			        newFormDocType = ret[1];
+			        newFormID = newFormURL.substring(newFormURL.lastIndexOf("/")+1);
+			        
+					var pAlertContent;
+					 $.ajax({
+				    		type : "POST",
+				    		dataType : "text",
+				    		data : {
+				    			formID : newFormID,
+				    			companyID : orgCompanyID
+				    		},
+				    		url : "/ezApprovalG/getFormDetail.do",
+				    		success: function(xml){
+								xml = loadXMLString(xml);
+								
+								var currConnflag = getNodeText(GetElementsByTagName(xml, 'FORMCONNFLAG')[0]);
+								var currVersion = getNodeText(GetElementsByTagName(xml, 'FORMVERSION')[0]);
+		
+								if(currConnflag === 'Y') {
+									pAlertContent = '연동양식은 재사용 할 수 없습니다.';
+									OpenAlertUI(pAlertContent);
+									return;
+								}
+								
+								openDraftUI("DRAFT");
+							},
+							error: function() {
+								pAlertContent = '문서 재사용에 실패하였습니다.';
+								OpenAlertUI(pAlertContent);
+							}        			
+			    	});
+				}
+		     }
+			 
+			function openDraftUI(pDraftFlag) {
+		        var pArgument = new Array();
+
+		        pArgument[0] = pUserID;
+		        pArgument[1] = newFormURL;
+		        pArgument[2] = pDraftFlag;
+		        pArgument[3] = newFormDocType;
+	            pArgument[4] = "0";
+	            pArgument[5] = "";
+	            pArgument[6] = "";
+	            pArgument[7] = "";
+	            pArgument[8] = listTypeValue;
+	            pArgument[9] = editable;
+	            pArgument[10] = pDocID;
+	            pArgument[11] = pOrgDocID;
+	            pArgument[12] = 1;
+	            			
+	            var params = {
+	            	formURL: escape(pArgument[1]),
+	            	draftFlag: escape(pArgument[2]),
+	            	formDocType: escape(pArgument[3]),
+	            	susinSN: escape(pArgument[4]),
+	            	docState: escape(pArgument[5]),
+	            	aprState: escape(pArgument[6]),
+	            	isTmpDoc: escape(pArgument[7]),
+	            	listType: escape(pArgument[8]),
+	            	isUsed: escape(pArgument[9]),
+	            	beforeDocID: escape(pArgument[10]),
+	            	orgDocID: escape(pArgument[11]),
+	            	fromGongram: escape(pArgument[12])
+	            };
+	            
+				var openLocation = "";
+				
+				if (useWebHWP == "YES") {
+					openLocation = "/ezApprovalG/draftuiWHWP.do?" + new URLSearchParams(params);	
+				} else {
+					openLocation = "/ezApprovalG/draftuiHWP.do?" + new URLSearchParams(params);
+				} 
+				
+		        var result = GetOpenWindow(openLocation, "", 1050, 970, "YES");
+		        window.close();
+		    }
 	    </script>
 	</head>
 	<body class="popup" onload="return window_onload()" onbeforeunload="return window_onbeforeunload()">
@@ -680,15 +861,27 @@
 	                <div id="menu">
 	                    <%-- 2022-06-23 홍승비 - 전자결재 미리보기 영역에서 문서보기 페이지 접근 시, 모든 버튼을 ul 태그부터 숨김처리 --%>
 		        		<ul <c:if test="${isPreview == 'Y'}">style="display:none"</c:if>>
-	                        <li id="btnGongRam" style="display: none"><span onclick="btnGongRam_onclick()"><spring:message code='ezApprovalG.t1442'/></span></li>
+                            <c:if test="${approvalFlag == 'G'}">
+    	                        <li id="btnGongRam" style="display: none"><span onclick="btnGongRam_onclick()"><spring:message code='ezApprovalG.t1442'/></span></li>
+                            </c:if>
+                            <c:if test="${approvalFlag != 'G'}">
+                              <li id="btnGongRam" style="display:none"><span onclick ="return btnGongRam_onclick()" ><spring:message code='ezApprovalG.hyj22'/></span></li>
+                            </c:if>
 	                        <li id="btnCallback" style="display:none"><span onclick="return btncallback_onclick()" ><spring:message code='ezApprovalG.t66'/></span></li>
 							<li id="btnForceCallback" style="display:none"><span onclick="return btnforcecallback_onclick()"><spring:message code='ezApprovalG.t2005'/></span></li>
 							<li id="tbtnReturn" style="display: none;"><span onclick="return btnReturn_onclick()"><spring:message code='ezApprovalG.t1434'/></span></li>
 	                        <li id="btnOpinion"><span onclick="return btnOpinion_onclick()"><spring:message code='ezApprovalG.t55'/></span></li>
 	                        <li id="btnDocInfo"><span onclick="return btnDocInfo_onclick()"><spring:message code='ezApprovalG.t54'/></span></li>
+	                        <li id="btnSummary"><span onclick="return btnSummaryView()"><spring:message code='ezApprovalG.t1203'/></span></li> <%-- 요약전 --%>
 	                        <li id="btnhistory"><span onclick="btnhistory_onclick()"><spring:message code='ezApprovalG.t61'/></span></li>
 	                        <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
-	                        <li id="btnPrint"><span class="icon16 popup_icon16_print" onclick="return btnPrint_onclick()"></span></li>
+				            <c:if test="${useBoard == 'YES'}">
+				          		<li id="btnBoard" style="display: none;"><span onclick="return NewItem_onclick()"><spring:message code='ezApprovalG.t1514'/></span></li>
+				            </c:if>
+				            <c:if test="${formID != '2018000000'}">
+				          		<li id="btnReuse" style="display: none;"><span onClick="return btnReuse_onclick('reuse')"><spring:message code='ezApprovalG.t990048'/></span></li>
+				            </c:if>
+				            <li id="btnPrint"><span class="icon16 popup_icon16_print" onclick="return btnPrint_onclick()"></span></li>
 	                        <c:if test="${useExternalMailServer == 'NO'}">
 	                        	<li id="btnMail" style="display:none"><span class="icon16 popup_icon16_mail_gray" onclick="return btnMail_onclick()"></span></li>
 	                        </c:if>

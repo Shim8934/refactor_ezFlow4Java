@@ -1851,6 +1851,7 @@ public class EzWebFolderGWController {
 		String deptId     = request.getParameter("deptId")   != null ? request.getParameter("deptId")    : "";
 		String userId     = request.getParameter("userId")   != null ? request.getParameter("userId")    : "";
 		String serverName = request.getHeader("x-user-host")   != null ? request.getHeader("x-user-host")    : "";
+		String adminOrgan = request.getParameter("adminOrgan") != null ? request.getParameter("adminOrgan") : "n";
 		JSONObject result = new JSONObject();
 		
 		logger.debug("CompanyId: " + companyId + " || serverName: " + serverName + " || Department Id: " + deptId + " || UserId: " + userId);
@@ -1868,6 +1869,9 @@ public class EzWebFolderGWController {
 			int tenantId          = userInfo.getTenantId();
 			deptId                = deptId.equals("") ? userInfo.getDeptID() : deptId;
 			SimpleDeptVO sCompany = null;
+			String useOrganHideFlag = ezCommonService.getTenantConfig("useOrganHideFlag",tenantId);
+			// useOganHideFlag를 사용하지 않으면 adminOrgan을 다 "y"로 둬서 조직도숨김을 뺀다.
+			adminOrgan = "NO".equalsIgnoreCase(useOrganHideFlag) ? "y" : adminOrgan;
 			
 			if (deptId.equals("")) {
 				sCompany = ezWebFolderService.getAllDepts(companyId, 0, primary, tenantId);
@@ -1877,7 +1881,7 @@ public class EzWebFolderGWController {
 				String[] path    = deptPath.split(",");
 				sCompany         = ezWebFolderService.getSimpleCompany(companyId, 0, primary, tenantId);
 				
-				ezWebFolderService.getAllDepts(sCompany, path, primary, tenantId, 1, 1);
+				ezWebFolderService.getAllDepts(sCompany, path, primary, tenantId, 1, 1, adminOrgan);
 			}
 			
 			result.put("status", "ok");
@@ -1935,6 +1939,7 @@ public class EzWebFolderGWController {
 		logger.debug("getAllDeptMembers start");
 		String serverName = request.getHeader("x-user-host") != null ? request.getHeader("x-user-host") : "";
 		String userId     = request.getParameter("userId") != null ? request.getParameter("userId") : "";
+		String adminOrgan = request.getParameter("adminOrgan") != null ? request.getParameter("adminOrgan") : "n";
 		JSONObject result = new JSONObject();
 		
 		logger.debug("deptId: " + deptId + " || serverName: " + serverName + " || UserId: " + userId);
@@ -1950,7 +1955,10 @@ public class EzWebFolderGWController {
 			LoginVO userInfo               = commonUtil.getUserForGw(userId, serverName);
 			int tenantId                   = userInfo.getTenantId();
 			String primary                 = userInfo.getPrimary();
-			List<SimpleUserVO> listMembers = ezWebFolderService.getDeptMemberList(deptId, primary, tenantId);
+			String useOrganHideFlag = ezCommonService.getTenantConfig("useOrganHideFlag",tenantId);
+			// useOganHideFlag를 사용하지 않으면 adminOrgan을 다 "y"로 둬서 조직도숨김을 뺀다.
+			adminOrgan = "NO".equalsIgnoreCase(useOrganHideFlag) ? "y" : adminOrgan;
+			List<SimpleUserVO> listMembers = ezWebFolderService.getDeptMemberList(deptId, primary, tenantId, adminOrgan);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -3151,7 +3159,7 @@ public class EzWebFolderGWController {
 		return result;
 	}
 	
-	@RequestMapping(value="/rest/ezwebfolder/users/{userid}/env/list-count", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolder/users/{userid:.+}/env/list-count", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getListCount(@PathVariable(value="userid") String userId, HttpServletRequest request, Locale locale) {
 		logger.debug("getListCount start");
 		String serverName = request.getHeader("x-user-host")   != null ? request.getHeader("x-user-host") : "";
@@ -3753,7 +3761,7 @@ public class EzWebFolderGWController {
 		return;
 	}
 
-	@RequestMapping(value = "/rest/ezwebfolder/{userId}/upload-limit", method = RequestMethod.GET)
+	@RequestMapping(value = "/rest/ezwebfolder/{userId:.+}/upload-limit", method = RequestMethod.GET)
 	@ResponseBody
 	public JSONObject getUploadLimit(@PathVariable String userId, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("getUploadLimit start");
@@ -3780,7 +3788,7 @@ public class EzWebFolderGWController {
 		return result;
 	}
 
-	@RequestMapping(value="/rest/ezwebfolder/users/{userId}/checknotinherit", method=RequestMethod.POST, produces ="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolder/users/{userId:.+}/checknotinherit", method=RequestMethod.POST, produces ="application/json;charset=utf-8")
 	public JSONObject checkNotInherit(@PathVariable String userId, @RequestBody JSONObject jsonObject, HttpServletRequest request) {
 		logger.debug("checkNotInherit started.");
 
@@ -3820,7 +3828,7 @@ public class EzWebFolderGWController {
 		return jsonObj;
 	}
 
-	@RequestMapping(value="/rest/ezwebfolder/users/{userId}/checkencryptcreator", method=RequestMethod.POST, produces ="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolder/users/{userId:.+}/checkencryptcreator", method=RequestMethod.POST, produces ="application/json;charset=utf-8")
 	public JSONObject checkEncryptCreator(@PathVariable String userId, @RequestBody JSONObject jsonObject, HttpServletRequest request) {
 		logger.debug("checkEncryptCreator started.");
 

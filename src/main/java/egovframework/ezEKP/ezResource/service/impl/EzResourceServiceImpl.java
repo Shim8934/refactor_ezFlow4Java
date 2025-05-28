@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import egovframework.com.cmm.EgovMessageSource;
@@ -37,6 +38,7 @@ import egovframework.ezEKP.ezResource.vo.ResAdminVO;
 import egovframework.ezEKP.ezResource.vo.ResBrdListVO;
 import egovframework.ezEKP.ezResource.vo.ResBrdVO;
 import egovframework.ezEKP.ezResource.vo.ResDateVO;
+import egovframework.ezEKP.ezResource.vo.ResFavoriteCategoryVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdmSubClsTreeVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdminFlagVO;
 import egovframework.ezEKP.ezResource.vo.ResGetClsAclListVO;
@@ -45,12 +47,13 @@ import egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
 import egovframework.ezEKP.ezResource.vo.ResGetSendMailToUserVO;
 import egovframework.ezEKP.ezResource.vo.ResMakeDupResultVO;
+import egovframework.ezEKP.ezResource.vo.ResOccuVO;
 import egovframework.ezEKP.ezResource.vo.ResScheduleRepetitionVO;
 import egovframework.ezEKP.ezResource.vo.ResSelectFormIDVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
-import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service("EzResourceService")
 public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements EzResourceService{
@@ -143,8 +146,8 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_POWNERID", ownerID);
 		map.put("v_PCOMPANYID", companyID);
-		map.put("v_PSTARTDATE", startDate);
-		map.put("v_PENDDATE", endDate);
+		map.put("v_PSTARTDATE", startDate.replace(".", "-"));
+		map.put("v_PENDDATE", endDate.replace(".", "-"));
 		map.put("v_WRITERNAME", writerName);
 		map.put("v_WRITERDEPT", writerDept);
 		if(!title.equals("")) {
@@ -223,16 +226,14 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return ezResourceDAO.getRepDateTimes(map);
 	}
 
+	/* 2024-07-05 홍승비 - SQL Injection 수정 > 다국어 칼럼은 쿼리 내부 분기로 처리 */
 	@Override
-	public List<ResBrdListVO> getBrdList(int topCnt, int brdID, String CompanyID, String ownDeptNm, String ownerNm, String ownerPosition, String brdNm, int tenantID) throws Exception {
+	public List<ResBrdListVO> getBrdList(int topCnt, int brdID, String CompanyID, String lang, int tenantID) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_PTOPCNT", topCnt);
 		map.put("v_PBRDID", brdID);
 		map.put("v_PCOMPANYID", CompanyID);
-		map.put("v_POWNDEPTNM", ownDeptNm);
-		map.put("v_POWNERNM", ownerNm);
-		map.put("v_POWNERPOSITION", ownerPosition);
-		map.put("v_PBRDNM", brdNm);
+		map.put("v_lang", lang);
 		map.put("tenantID", tenantID);
 		return ezResourceDAO.getBrdList(map);
 	}
@@ -265,10 +266,27 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		ezResourceDAO.delResData_U(map);
 		ezResourceDAO.delResData1(map);
 		ezResourceDAO.delResData3(map);
+		ezResourceDAO.delResDataForm(map);
+		
+		/* 2024-08-09 유길상 - 자원 삭제 시 즐겨찾기 정보도 삭제 */
+		List<String> delBrdCatList = ezResourceDAO.delBrdCatList(map);
+		ezResourceDAO.delResData_F(map);
+		
+		for (String catId : delBrdCatList) {
+			Map<String,Object> map1 = new HashMap<String, Object>();
+			map1.put("CAT_ID", catId);
+			map1.put("COMPANY_ID", companyID);
+			map1.put("TENANT_ID", tenantID);
+			int cnt = ezResourceDAO.selectBrdCnt(map1);
+			if (cnt == 0) {
+				map1.put("brdYn","N");
+				ezResourceDAO.updateFavoriteCategoryBrdYN2(map1);
+			}
+		}
 	}
 	
 	public void modifyResData(String brdID, String deptID, String deptNm, String ownerID, String ownerNm, String ownerPos, String ownerCall, String brdNm, String resLocation,
-	String brdExplain,String companyID, String approve, String brdNm2, String deptNm2, String ownerNm2, String ownerPos2, int tenantID, String realPath, String strAttachList1, String strAttachList2, String strReturn) throws Exception {
+	String brdExplain,String companyID, String approve, String brdNm2, String deptNm2, String ownerNm2, String ownerPos2, int tenantID, String realPath, String strAttachList1, String strAttachList2, String strReturn, String repeat) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_P_Brd_ID", brdID);
 		map.put("v_P_ODeptID", deptID);
@@ -283,6 +301,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_P_CompanyID", companyID);
 		map.put("v_P_Approve", approve);
 		map.put("v_P_Return", strReturn);
+		map.put("v_P_Repeat", repeat);
 		map.put("v_P_Brd_NM2", brdNm2);
 		map.put("v_P_ODeptNm2", deptNm2);
 		map.put("v_P_OwnerNm2", ownerNm2);
@@ -394,7 +413,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 	
 	public void addResData(String classGB, String deptID, String deptNm, String ownerID, String ownerNm, String ownerPos, String ownerCall, String brdNm, String resLocation,
-	String brdExplain, String companyID, String approve, String brdNm2, String deptNm2, String ownerNm2, String ownerPos2,String strBreAccess, int tenantID, String realPath, String strAttachList1, String strAttachList2, String strReturn) throws Exception {
+	String brdExplain, String companyID, String approve, String brdNm2, String deptNm2, String ownerNm2, String ownerPos2,String strBreAccess, int tenantID, String realPath, String strAttachList1, String strAttachList2, String strReturn, String repeat) throws Exception {
 		logger.debug("addResData Start");
 		
 		Map<String,Object> map = new HashMap<String, Object>();
@@ -422,6 +441,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_Brd_ID", brdID);
 		map.put("v_Brd_Access", strBreAccess);
 		map.put("v_P_Return", strReturn);
+		map.put("v_P_Repeat", repeat);
 		
 		Map<String,Object> map2 = new HashMap<String, Object>();
 		logger.debug("classGB="+classGB);
@@ -628,20 +648,19 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		
 		boolean flag = false;
 		String[] ownerList = ownerID.split(",");			// 자원 관리자 체크
-		for(int i=0; i<ownerList.length; i++) {
-			if(userID.equals(ownerList[i])) {
+		
+		for (int i = 0; i < ownerList.length; i++) {
+			if (userID.equals(ownerList[i])) {
 				flag = true;
 			}
 		}
 		
-		//해안1
-		
-		if(!flag) {
+		if (!flag) {
 			brdUpper = ezResourceDAO.getAclTblBrd_S2(map);
 			map.put("v_BRD_UPPER", brdUpper);
 			accessLvl = ezResourceDAO.getAclTblBrd_S3(map);
-			logger.debug("brdUpper="+brdUpper);
-			logger.debug("accessLvl="+accessLvl);
+			logger.debug("brdUpper = " + brdUpper + " / accessLvl = " + accessLvl);
+			
 			if (accessLvl != null && accessLvl.trim().equals("1")) {		// 유저의 권한 체크
 				logger.debug("user accessLvl = admin");
 				return "Y";
@@ -668,12 +687,12 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 						Collections.addAll(deptIds, deptPath.split(","));
 						//deptIds.remove(0);				// companyID 삭제
 						
-						if(deptIds.size() > 0) {
+						if (deptIds.size() > 0) {
 							Collections.reverse(deptIds);
 							map.put("v_PUSERID", deptIds.get(0));
 							accessLvl = ezResourceDAO.getAclTblBrd_S3(map);
 								
-							if(accessLvl != null && accessLvl.trim().equals("1")) {
+							if (accessLvl != null && accessLvl.trim().equals("1")) {
 								logger.debug("user dept accessLvl = admin");
 								return "Y";
 							}
@@ -684,15 +703,15 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 								}
 								// 부서 상위 권한 체크
 								deptIds.remove(0);				// 현재 부서ID 삭제
-								if(deptIds.size() > 0) {
-									String newDeptPath = "'" + String.join(",", deptIds).trim().replace(",", "', '") + "'";
+								if (deptIds.size() > 0) {
+									/* 2024-07-05 홍승비 - SQL Injection 수정 > 문자열 대신 배열 리스트 파라미터 전달 */
+									map.put("v_PUSERID", deptIds);
 									
-									map.put("v_PUSERID", newDeptPath);
 									List<ResGetClsAclListVO> deptAclList = ezResourceDAO.getDeptAcl(map);
 		
-									if(deptAclList != null) {
-										for(int i=0; i<deptAclList.size(); i++) {
-											if(deptAclList.get(i).getAccessLvl().equals("1")) {
+									if (deptAclList != null) {
+										for (int i = 0; i < deptAclList.size(); i++) {
+											if (deptAclList.get(i).getAccessLvl().equals("1")) {
 												logger.debug("user upper dept accessLvl = admin");
 												return "Y";
 											}
@@ -709,19 +728,19 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 						// 사내 겸직 권한 체크
 						List<OrganUserVO> userAddJobList = ezOrganAdminService.getUserAddJobList(userID, "1", tenantID);
 
-						if(userAddJobList.size() > 0) {
-							for(int i=0; i<userAddJobList.size(); i++) {
+						if (userAddJobList.size() > 0) {
+							for (int i = 0; i < userAddJobList.size(); i++) {
 								String addJobDeptPath = ezOrganService.getDeptPath(userAddJobList.get(i).getDepartment(), tenantID);
 								List<String> addJobDeptIds = new ArrayList<String>();
 								Collections.addAll(addJobDeptIds, addJobDeptPath.split(","));
 								//addJobDeptIds.remove(0);				// companyID 삭제
 								
-								if(addJobDeptIds.size() > 0) {
+								if (addJobDeptIds.size() > 0) {
 									Collections.reverse(addJobDeptIds);
 									map.put("v_PUSERID", addJobDeptIds.get(0));
 									accessLvl = ezResourceDAO.getAclTblBrd_S3(map);
 									
-									if(accessLvl != null && accessLvl.trim().equals("1")) {
+									if (accessLvl != null && accessLvl.trim().equals("1")) {
 										logger.debug("user addjob dept accessLvl = admin");
 										return "Y";
 									}
@@ -732,15 +751,14 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 										} 
 										// 부서 상위 권한 체크
 										addJobDeptIds.remove(0);				// 현재 부서ID 삭제
-										if(addJobDeptIds.size() > 0) {
-											String newDeptPath = "'" + String.join(",", addJobDeptIds).trim().replace(",", "', '") + "'";
+										if (addJobDeptIds.size() > 0) {
+											map.put("v_PUSERID", addJobDeptIds);
 											
-											map.put("v_PUSERID", newDeptPath);
 											List<ResGetClsAclListVO> deptAclList = ezResourceDAO.getDeptAcl(map);
 											
-											if(deptAclList != null) {
-												for(int j=0; j<deptAclList.size(); j++) {
-													if(deptAclList.get(j).getAccessLvl().equals("1")) {
+											if (deptAclList != null) {
+												for (int j = 0; j < deptAclList.size(); j++) {
+													if (deptAclList.get(j).getAccessLvl().equals("1")) {
 														logger.debug("user addjob upper dept accessLvl = admin");
 														return "Y";
 													}
@@ -777,6 +795,15 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_PCOMPANYID", companyID);
 		map.put("tenantID", tenantID);
 		return ezResourceDAO.getBrdApproveFlag(map);
+	}
+
+	@Override
+	public String getBrdRepeatFlag(int brdID, String companyID, int tenantID) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_PBRDID", brdID);
+		map.put("v_PCOMPANYID", companyID);
+		map.put("tenantID", tenantID);
+		return ezResourceDAO.getBrdRepeatFlag(map);
 	}
 	
 	@Override
@@ -942,7 +969,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	
 	public int addResSch(String ownerID, String pNum, String companyID, String writerID, String title, String location, String timeDisplay,
 			String startDate, String endDate, String allDay, String alertTime, String content, String importance, String reFlag, String gresFlag,
-			String entryList, String characterID, String attachFlag, String deptNm, String ownerNm, String approve, String scheduleID, int tenantID, String offset) throws Exception {
+			String entryList, String characterID, String attachFlag, String deptNm, String ownerNm, String approve, String scheduleID, int tenantID, String offset, String deptId) throws Exception {
 		startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
 		endDate = commonUtil.getDateStringInUTC(endDate, offset, true);
 		String nowDate = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss");
@@ -977,6 +1004,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_Num", "");
 		map.put("v_WriteDay", "");
 		map.put("tenantID", tenantID);
+		map.put("deptId", deptId);
 		map.put("nowDate", nowDate);
 
 		String approveFlag = ezResourceDAO.addRessch_S1(map);
@@ -1084,6 +1112,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 					timeDisplay = "";
 				}
 				returnStr.append("<busystatus>"+timeDisplay+"</busystatus>");
+				returnStr.append("<title>"+ title +"</title>");
 				returnStr.append("</appointment>");
 			} else {
 				returnStr.append("<appointment>");
@@ -1147,6 +1176,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				returnStr.append("<owner_nm><![CDATA[" + scheRSDom.getElementsByTagName("owner_nm").item(i).getTextContent() + "]]></owner_nm>");
 				returnStr.append("<dept_name><![CDATA[" + scheRSDom.getElementsByTagName("dept_name").item(i).getTextContent() + "]]></dept_name>");
 				returnStr.append("<writeDay>"+ writeDay +"</writeDay>");
+				returnStr.append("<title>"+ title +"</title>");
 					
 				/*if (pType == null || pType.equals("")) {
 					returnStr.append("<owner_nm2><![CDATA[" + scheRSDom.getElementsByTagName("owner_nm2").item(i).getTextContent() + "]]></owner_nm2>");
@@ -1330,7 +1360,10 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	
 	public String getScheduleList(String ownerID, String companyID, String groupID, String gubun, String sDate, String eDate, String pType, String pTitle, String pWriterName, String pWriterDept, int tenantID, String offset, String lang) throws Exception {
 		logger.debug("getScheduleList Start");
-
+		
+		sDate = sDate.replace(".", "-");
+		eDate = eDate.replace(".", "-");
+		
 		String startDateLimit = eDate + " 23:59:59";
 		String endDateLimit = sDate + " 00:00:01";
 		
@@ -2112,9 +2145,8 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 					// 부서 상위 권한 체크
 					deptIds.remove(0);				// 현재 부서ID 삭제
 					if(deptIds.size() > 0) {
-						String newDeptPath = "'" + String.join(",", deptIds).trim().replace(",", "', '") + "'";
+						map.put("v_PUSERID", deptIds);
 						
-						map.put("v_PUSERID", newDeptPath);
 						List<ResGetClsAclListVO> deptAclList = ezResourceDAO.getDeptAcl(map);
 		
 						if(deptAclList != null) {
@@ -2160,9 +2192,8 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 							// 부서 상위 권한 체크
 							addJobDeptIds.remove(0);				// 현재 부서ID 삭제
 							if(addJobDeptIds.size() > 0) {
-								String newDeptPath = "'" + String.join(",", addJobDeptIds).trim().replace(",", "', '") + "'";
+								map.put("v_PUSERID", addJobDeptIds);
 								
-								map.put("v_PUSERID", newDeptPath);
 								List<ResGetClsAclListVO> deptAclList = ezResourceDAO.getDeptAcl(map);
 								
 								if(deptAclList != null) {
@@ -2434,7 +2465,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 
 		for (int i=0; i<brdID.split(",").length; i++) {
 			delResData(brdID.split(",")[i], companyID, tenantID);
-			deleteAttachFiles(brdID, realPath, companyID, tenantID);
+			deleteAttachFiles(brdID.split(",")[i], realPath, companyID, tenantID);
 		}
 		return true;
 	}
@@ -2484,6 +2515,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	    String strAttachList1 = "";
 	    String strAttachList2 = "";
 	    String strReturn = "";
+		String strRepeat = "";
 	    
 		Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
 		strBrdID = xmlRes.getElementsByTagName("DATA").item(0).getTextContent().trim();
@@ -2499,16 +2531,17 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		strCompanyID = xmlRes.getElementsByTagName("DATA").item(10).getTextContent().trim();
 		strApprove = xmlRes.getElementsByTagName("DATA").item(11).getTextContent().trim();
 		strBrdNm2 = xmlRes.getElementsByTagName("DATA").item(12).getTextContent().trim();
-		strODeptNm2 = xmlRes.getElementsByTagName("DATA").item(16).getTextContent().trim();
-		strOwnerNm2 = xmlRes.getElementsByTagName("DATA").item(17).getTextContent().trim();
-		strOwnerPos2 = xmlRes.getElementsByTagName("DATA").item(18).getTextContent().trim();
+		strODeptNm2 = xmlRes.getElementsByTagName("DATA").item(17).getTextContent().trim();
+		strOwnerNm2 = xmlRes.getElementsByTagName("DATA").item(18).getTextContent().trim();
+		strOwnerPos2 = xmlRes.getElementsByTagName("DATA").item(19).getTextContent().trim();
 			
-		realPath = xmlRes.getElementsByTagName("DATA").item(19).getTextContent().trim();
+		realPath = xmlRes.getElementsByTagName("DATA").item(20).getTextContent().trim();
 		strAttachList1 = xmlRes.getElementsByTagName("DATA").item(13).getTextContent().trim();
 		strAttachList2 = xmlRes.getElementsByTagName("DATA").item(14).getTextContent().trim();
 		strReturn = xmlRes.getElementsByTagName("DATA").item(15).getTextContent().trim();
+		strRepeat = xmlRes.getElementsByTagName("DATA").item(16).getTextContent().trim();
 		
-		modifyResData(strBrdID, strODeptID, strODeptNm, strOwnerID, strOwnerNm, strOwnerPos, strOwnerCall, strBrdNm, strResLocation, strBrdExplain, strCompanyID, strApprove, strBrdNm2, strODeptNm2, strOwnerNm2, strOwnerPos2, tenantID, realPath, strAttachList1, strAttachList2, strReturn);
+		modifyResData(strBrdID, strODeptID, strODeptNm, strOwnerID, strOwnerNm, strOwnerPos, strOwnerCall, strBrdNm, strResLocation, strBrdExplain, strCompanyID, strApprove, strBrdNm2, strODeptNm2, strOwnerNm2, strOwnerPos2, tenantID, realPath, strAttachList1, strAttachList2, strReturn, strRepeat);
 
 		return true;
 	}
@@ -2536,6 +2569,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	    String strAttachList1 = "";
 	    String strAttachList2 = "";
 	    String strReturn = "";
+		String strRepeat = "";
 	    
 	   	Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
 		strClassGB = xmlRes.getElementsByTagName("DATA").item(0).getTextContent().trim();
@@ -2551,17 +2585,18 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		strCompanyID = xmlRes.getElementsByTagName("DATA").item(10).getTextContent().trim();
 		strApprove = xmlRes.getElementsByTagName("DATA").item(11).getTextContent().trim();
 		strBrdNm2 = xmlRes.getElementsByTagName("DATA").item(12).getTextContent().trim();
-		strODeptNm2 = xmlRes.getElementsByTagName("DATA").item(16).getTextContent().trim();
-		strOwnerNm2 = xmlRes.getElementsByTagName("DATA").item(17).getTextContent().trim();
-		strOwnerPos2 = xmlRes.getElementsByTagName("DATA").item(18).getTextContent().trim();
+		strODeptNm2 = xmlRes.getElementsByTagName("DATA").item(17).getTextContent().trim();
+		strOwnerNm2 = xmlRes.getElementsByTagName("DATA").item(18).getTextContent().trim();
+		strOwnerPos2 = xmlRes.getElementsByTagName("DATA").item(19).getTextContent().trim();
 		
-		realPath = xmlRes.getElementsByTagName("DATA").item(19).getTextContent().trim();
+		realPath = xmlRes.getElementsByTagName("DATA").item(20).getTextContent().trim();
 		strAttachList1 = xmlRes.getElementsByTagName("DATA").item(13).getTextContent().trim();
 		strAttachList2 = xmlRes.getElementsByTagName("DATA").item(14).getTextContent().trim();
 		strReturn = xmlRes.getElementsByTagName("DATA").item(15).getTextContent().trim();
+		strRepeat = xmlRes.getElementsByTagName("DATA").item(16).getTextContent().trim();
 		strBreAccess = egovMessageSource.getMessage("ezResource.t58", locale);
 			
-		addResData(strClassGB, strODeptID, strODeptNm, strOwnerID, strOwnerNm, strOwnerPos, strOwnerCall, strBrdNm, strResLocation, strBrdExplain, strCompanyID, strApprove, strBrdNm2, strODeptNm2, strOwnerNm2, strOwnerPos2, strBreAccess, tenantID, realPath, strAttachList1, strAttachList2, strReturn);
+		addResData(strClassGB, strODeptID, strODeptNm, strOwnerID, strOwnerNm, strOwnerPos, strOwnerCall, strBrdNm, strResLocation, strBrdExplain, strCompanyID, strApprove, strBrdNm2, strODeptNm2, strOwnerNm2, strOwnerPos2, strBreAccess, tenantID, realPath, strAttachList1, strAttachList2, strReturn, strRepeat);
 
 		return true;
 	}
@@ -2943,6 +2978,9 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		if (nodeList.getLength() > 23) {
 			scheduleID = nodeList.item(23).getTextContent().trim();
 		}
+
+		Node nodeDept = xmlRes.getElementsByTagName("DEPTID").item(0);
+		String deptId = nodeDept != null ? nodeDept.getTextContent() : "";
 		
 		if (attachFiles != null && !attachFiles.equals("")) {
 			attachFlag = "1";
@@ -2952,7 +2990,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		
 		timeDisplay = "1";
 		int num = addResSch(ownerID, pNum, companyID, writerID, title, location, timeDisplay, startDate, endDate, allDay, alertTime, content, importance, reFlag, gresFlag, 
-				entryList, characterID, attachFlag, deptNm, ownerNm, strApprove, scheduleID, tenantID, offset);
+				entryList, characterID, attachFlag, deptNm, ownerNm, strApprove, scheduleID, tenantID, offset,  deptId);
 		String returnStr = "";
 		returnStr += "<RTN_DATA>";
         returnStr += "<NUM>" + num + "</NUM>";
@@ -4025,7 +4063,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return returnList2;
 	}
 	
-	public List<OrganUserVO> getOwnerInfo(String[] ownerList, int tenantID, String companyID) throws Exception {
+	public List<OrganUserVO> getOwnerInfo(String[] ownerList, int tenantID, String companyID, String lang) throws Exception {
 		logger.debug("getOwnerInfo started");
 		
 		Map<String,Object> map = new HashMap<String, Object>();
@@ -4033,6 +4071,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("tenantID", tenantID);
 		map.put("companyID", companyID);
 		map.put("ownerID", ownerList[0]);
+		map.put("lang", lang);
 		
 		logger.debug("getOwnerInfo ended");
 		return ezResourceDAO.getOwnerInfo(map);
@@ -4130,11 +4169,10 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				// 현재 부서 권한 체크 > 상위 부서 권한 체크
 				if(isManager.equals("0")) {
 					deptIds.remove(0);				// 부서 ID 삭제
-					String newDeptPath = "'" + String.join(",", deptIds).trim().replace(",", "', '") + "'";
-					
 					map.put("v_BRD_UPPER", selectedResourceGroupId);
 					map.put("v_PCOMPANYID", companyID);
-					map.put("v_PUSERID", newDeptPath);
+					map.put("v_PUSERID", deptIds);
+					
 					List<ResGetClsAclListVO> deptAclList = ezResourceDAO.getDeptAcl(map);
 					
 					if(deptAclList.size() > 0) {
@@ -4171,9 +4209,8 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 							addJobDeptIds.remove(0);			// deptID 삭제
 			
 							if(addJobDeptIds.size() > 0) {
-								String newDeptPath2 = "'" + String.join(",", addJobDeptIds).trim().replace(",", "', '") + "'";
-									
-								map.put("v_PUSERID", newDeptPath2);
+								map.put("v_PUSERID", addJobDeptIds);
+								
 								List<ResGetClsAclListVO> deptAclList2 = ezResourceDAO.getDeptAcl(map);
 								
 								if(deptAclList2.size() > 0) {
@@ -4220,12 +4257,10 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			deptIds.remove(0);				// 부서 ID 삭제
 			
 			// 상위 부서 권한 체크
-			String newDeptPath = "'" + String.join(",", deptIds).trim().replace(",", "', '") + "'";
-			
 			map.put("v_BRD_UPPER", brdID);
 			map.put("v_PCOMPANYID", companyID);
+			map.put("v_PUSERID", deptIds);
 			
-			map.put("v_PUSERID", newDeptPath);
 			List<ResGetClsAclListVO> deptAclList = ezResourceDAO.getDeptAcl(map);
 			
 			if(deptAclList.size() > 0) {
@@ -4261,9 +4296,8 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 					addJobDeptIds.remove(0);			// deptID 삭제
 	
 					if(addJobDeptIds.size() > 0) {
-						String newDeptPath2 = "'" + String.join(",", addJobDeptIds).trim().replace(",", "', '") + "'";
-							
-						map.put("v_PUSERID", newDeptPath2);
+						map.put("v_PUSERID", addJobDeptIds);
+						
 						List<ResGetClsAclListVO> deptAclList2 = ezResourceDAO.getDeptAcl(map);
 						
 						if(deptAclList2.size() > 0) {
@@ -4283,10 +4317,9 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 
 	@Override
-	public List<ResBrdVO> getResourcePortlet(@CookieValue("loginCookie") String loginCookie, String date) throws Exception {
+	public List<ResBrdVO> getResourcePortlet(LoginVO userInfo, String date) throws Exception {
 		logger.debug("Service getResourePortlet started");
-		
-		LoginVO userInfo  = commonUtil.userInfo(loginCookie);
+
 		String  id        = userInfo.getId();
 		String  companyID = userInfo.getCompanyID();
 		String  offset    = userInfo.getOffset();
@@ -4315,6 +4348,9 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 					StringBuilder number   = new StringBuilder();	// 자원1의번호;자원2의번호;....
 					StringBuilder ownName  = new StringBuilder();	// 소유자1의이름;소유자2의이름;...
 					StringBuilder deptName = new StringBuilder();	// 소유자1부서;소유자2의부서
+					StringBuilder titleName = new StringBuilder();	// 자원예약1의제목;자원예약2의제목
+					StringBuilder startAllTime = new StringBuilder();	// 예약1의시작날짜시간;예약1의시작날짜시간
+					StringBuilder endAllTime = new StringBuilder();	// 예약1의종료날짜시간;예약1의종료날짜시간
 					String retVal = getScheduleXML(date, resources.get(i).getBrdID(), companyID, "", "P", "", "",  "", "", tenantID, offset, lang);
 					Document xmlDom2 = commonUtil.convertStringToDocument(retVal);
 					for (int j=0; j<xmlDom2.getDocumentElement().getChildNodes().getLength(); j++) {
@@ -4325,15 +4361,24 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 						String num   = xmlDom2.getElementsByTagName("number").item(j).getTextContent();
 						String own   = xmlDom2.getElementsByTagName("owner_nm").item(j).getTextContent();
 						String dept  = xmlDom2.getElementsByTagName("dept_name").item(j).getTextContent();
+						String title  = xmlDom2.getElementsByTagName("title").item(j).getTextContent();
+						String startDateAll = xmlDom2.getElementsByTagName("dtstart").item(j).getTextContent();
+						String endDateAll  = xmlDom2.getElementsByTagName("dtend").item(j).getTextContent();
 						sb.append(sDate + "~" + eDate + ";");
 						number.append(num + ";" );
 						ownName.append(own + ";");
 						deptName.append(dept + ";");
+						titleName.append(title + ";");
+						startAllTime.append(startDateAll + ";");
+						endAllTime.append(endDateAll + ";");
 					}
 					resources.get(i).setRsPortletTime(sb.toString());
 					resources.get(i).setRsPortletNum(number.toString());
 					resources.get(i).setRsPortletOwnName(ownName.toString());
 					resources.get(i).setRsPortletDeptName(deptName.toString());
+					resources.get(i).setRsPortletTitle(titleName.toString());
+					resources.get(i).setRsPortletStratAllTime(startAllTime.toString());
+					resources.get(i).setRsPortletEndAllTime(endAllTime.toString());
 				}
 			}
 		}
@@ -4376,8 +4421,543 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantId);
 		
-		logger.debug("getAttachList start");
+		logger.debug("getAttachList end");
 		return ezResourceDAO.getAttachList(map);
 		
+	}
+	
+	@Override
+	public List<ResOccuVO> getResOccuList(String companyID, int tenantID, String startTime, String endTime, String offset) throws Exception {
+		logger.debug("getResOccuList started");
+		
+		startTime = startTime.replace(".", "-");
+		endTime = endTime.replace(".", "-");
+		
+		String startDateLimit = startTime + " 00:00:00";
+		String endDateLimit = endTime + " 23:59:59";
+		
+		String startDate = commonUtil.getDateStringInUTC(startDateLimit, offset, true);
+		String endDate = commonUtil.getDateStringInUTC(endDateLimit, offset, true); 
+		
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_PSTARTDATE", startDate.replace(".", "-"));
+		map.put("v_PENDDATE", endDate.replace(".", "-"));
+		map.put("v_PCOMPANYID", companyID);
+		map.put("tenantID", tenantID);
+		
+		List<ResOccuVO> getResOccuList = ezResourceDAO.getResOccuList(map);
+		List<ResOccuVO> getScheduleListRept = ezResourceDAO.getScheduleListRepetiti2(map);
+		List<ResOccuVO> getResRepOccuList = new ArrayList<ResOccuVO>();
+		
+		if (getScheduleListRept.size() > 0) {
+			
+			SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd");
+			for (int i = 0; i < getScheduleListRept.size(); i++) {
+				String reCompanyID = getScheduleListRept.get(i).getCompanyID();
+				int reNum = getScheduleListRept.get(i).getNum();
+				String reOwnerID = getScheduleListRept.get(i).getOwnerId();
+				int count = 0;
+				long timeDiff = 0;
+				
+				// tbl_schedulerepetition에서 정보 가져옴
+				ResGetScheduleRepetitionVO vo = getRepDateTimes(reOwnerID, reCompanyID, reNum, tenantID);
+				if (vo != null) {
+					vo.setStartDateTime(commonUtil.getDateStringInUTC(vo.getStartDateTime(), offset, false));
+					vo.setEndDateTime(commonUtil.getDateStringInUTC(vo.getEndDateTime(), offset, false));
+					
+					// ResGetScheduleRepetitionVO -> ResScheduleRepetitionVO
+					ResScheduleRepetitionVO rvo = resStruct(vo);
+					
+					// 반복예약의 반복되는 날짜리스트 뽑아옴
+					List<Date[]> returnRepDateTimes = getRepDateTimes(rvo, startTime, endTime, offset);
+					
+					// 반복예약 중에 삭제된 예약 가져옴
+					List<String> deletedDateStrList = getDeletedRepScheduleDate(reNum, reCompanyID, reOwnerID, tenantID);
+					logger.debug("deletedDateStrList.size=" + deletedDateStrList.size());
+					
+					for (int j = 0; j < deletedDateStrList.size(); j++) {
+						deletedDateStrList.set(j, (commonUtil.getDateStringInUTC(deletedDateStrList.get(j), offset, false)).substring(0,10));
+					}
+					
+					for (Date[] dateArr : returnRepDateTimes) {
+						// 삭제된 예약이면 넘어감
+						if (deletedDateStrList.contains(format2.format(dateArr[0]))) {		// 날짜만 비교하도록 수정
+							continue;
+						}
+						
+						count++;
+						timeDiff = timeDiff + ((dateArr[1].getTime() - dateArr[0].getTime()) / 60000);
+					}
+				}
+				
+				if (count != 0) {
+					ResOccuVO temp = new ResOccuVO();
+					
+					temp.setOwnerId(getScheduleListRept.get(i).getOwnerId());
+					temp.setBrdNm(getScheduleListRept.get(i).getBrdNm());
+					temp.setCompanyID(getScheduleListRept.get(i).getCompanyID());
+					temp.setCount(count);
+					temp.setUsageTime(timeDiff);
+					getResRepOccuList.add(temp);
+				}
+			}
+		}
+		
+		int size = getResRepOccuList.size();
+		boolean addResRepOccuList = false;
+		if (size > 0) {
+			for (int i = 0; i < size; i++) {
+				boolean isExist = false;
+				if (getResOccuList.size() > 0) {
+					for (int j = 0; j < getResOccuList.size(); j++) {
+						if (getResRepOccuList.get(i).getOwnerId().equals(getResOccuList.get(j).getOwnerId())) {
+							int count = getResOccuList.get(j).getCount() + getResRepOccuList.get(i).getCount();
+							long usageTime = getResOccuList.get(j).getUsageTime() + getResRepOccuList.get(i).getUsageTime();
+							getResOccuList.get(j).setCount(count);
+							getResOccuList.get(j).setUsageTime(usageTime);
+							isExist = true;
+							addResRepOccuList = true;
+							break;
+						} else if (!isExist && j == (getResOccuList.size() - 1)) {
+							ResOccuVO temp2 = new ResOccuVO();
+							temp2.setOwnerId(getResRepOccuList.get(i).getOwnerId());
+							temp2.setBrdNm(getResRepOccuList.get(i).getBrdNm());
+							temp2.setCompanyID(getResRepOccuList.get(i).getCompanyID());
+							temp2.setCount(getResRepOccuList.get(i).getCount());
+							temp2.setUsageTime(getResRepOccuList.get(i).getUsageTime());
+							getResOccuList.add(temp2);
+							addResRepOccuList = true;
+							break;
+						}
+					}
+				} else {
+					ResOccuVO temp2 = new ResOccuVO();
+					temp2.setOwnerId(getResRepOccuList.get(i).getOwnerId());
+					temp2.setBrdNm(getResRepOccuList.get(i).getBrdNm());
+					temp2.setCompanyID(getResRepOccuList.get(i).getCompanyID());
+					temp2.setCount(getResRepOccuList.get(i).getCount());
+					temp2.setUsageTime(getResRepOccuList.get(i).getUsageTime());
+					getResOccuList.add(temp2);
+					addResRepOccuList = true;
+				}
+			}
+		}
+		
+		if (addResRepOccuList && getResOccuList.size() > 0) {
+			Collections.sort(getResOccuList, new Comparator<ResOccuVO>() {
+				public int compare(ResOccuVO v1, ResOccuVO v2) {
+					if (Integer.parseInt(v1.getOwnerId()) > Integer.parseInt(v2.getOwnerId())) {
+						return 1;
+					} else if (Integer.parseInt(v1.getOwnerId()) < Integer.parseInt(v2.getOwnerId())) {
+						return -1;
+					} 
+					return 0;
+				}
+			});
+		}
+		
+		logger.debug("getResOccuList end");
+		return getResOccuList;
+	}
+
+	@Override
+	public List<ResBrdVO> getUserResourceList(String userId, String companyId, String deptId, int tenantId) throws Exception {
+		logger.debug("getUserResourceList start");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("cn",          userId);
+		map.put("tenant_id",   tenantId);
+		map.put("brd_company", companyId);
+		
+		logger.debug("getAttachList start");
+		List<ResBrdVO> resources = ezResourceDAO.getResourcePortlet(map);
+		int cnt = resources.size();
+		for(int i=0; i < cnt; i++) {
+			// 접근 권한이 없을 경우 삭제
+			if(getACL(companyId, resources.get(i).getBrdID(), userId, "everyone", tenantId, deptId).equals("")) {
+				resources.remove(i);
+				i--;
+				cnt--;
+			}
+		}
+		return resources;
+	}
+
+	@Override
+	public List<ResBrdVO> getResourceScheduleList(String brdId, String date, int currentPage, int listCnt, int tenantId, String companyId, String offset, String lang) throws Exception {
+		List<ResBrdVO> resourceScheduleList = new ArrayList<ResBrdVO>();
+		
+		if(date != null && !date.equals("")) {
+			String retVal = getScheduleXML(date, brdId, companyId, "", "P", "", "",  "", "", tenantId, offset, lang);
+			Document xmlDom2 = commonUtil.convertStringToDocument(retVal);
+			for (int i = 0; i < xmlDom2.getDocumentElement().getChildNodes().getLength(); i++) {
+				// 허가되지 않은 자원의 리스트는 skip 비승인0 승인1 
+				if (xmlDom2.getElementsByTagName("approveFlag").item(i).getTextContent().equals("0")) {
+					continue;
+				}
+				
+				String sDate = xmlDom2.getElementsByTagName("dtstart").item(i).getTextContent().substring(11, 16);
+				String eDate = xmlDom2.getElementsByTagName("dtend").item(i).getTextContent().substring(11, 16);
+				String num   = xmlDom2.getElementsByTagName("number").item(i).getTextContent();
+				String own   = xmlDom2.getElementsByTagName("owner_nm").item(i).getTextContent();
+				String dept  = xmlDom2.getElementsByTagName("dept_name").item(i).getTextContent();
+				String title  = xmlDom2.getElementsByTagName("title").item(i).getTextContent();
+				String startDateAll = xmlDom2.getElementsByTagName("dtstart").item(i).getTextContent();
+				String endDateAll  = xmlDom2.getElementsByTagName("dtend").item(i).getTextContent();
+				
+				ResBrdVO resourceReservation = new ResBrdVO();
+						
+				resourceReservation.setRsPortletTime(startDateAll.replaceAll("-", ".").substring(0, 16) + " ~ " + endDateAll.replaceAll("-", ".").substring(0, 16));
+				resourceReservation.setRsPortletNum(num);
+				resourceReservation.setRsPortletOwnName(own);
+				resourceReservation.setRsPortletDeptName(dept);
+				resourceReservation.setRsPortletTitle(title);
+				resourceReservation.setRsPortletStratAllTime(startDateAll);
+				resourceReservation.setRsPortletEndAllTime(endDateAll);
+				
+				resourceScheduleList.add(resourceReservation);
+			}
+		}
+		
+		int totalCnt = resourceScheduleList.size();
+		int startRow = (currentPage - 1) * listCnt;
+		int lastRow = Math.min(totalCnt, startRow + listCnt);
+		
+		List<ResBrdVO> resultList = null;
+		resultList = resourceScheduleList.subList(startRow, lastRow);
+		
+		return resultList;
+	}
+	
+	/**
+	 * 즐겨찾기 카테고리 추가
+	 */
+	@Override
+	public void addFavoriteCategory(String catName, String catId, String userID, String companyID, int teanatId) throws Exception {
+		logger.debug("addFavoriteCategory start");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("TOP_ID", catId);
+		map.put("USER_ID", userID);
+		
+		String newCatId=ezResourceDAO.getNewFavoriteCategoryId();
+		logger.debug("newCatId=" + newCatId);
+		
+		map.put("CAT_ID", newCatId);
+		map.put("CAT_NAME", catName);
+		map.put("COMPANYID", companyID);
+		map.put("TENANT_ID", teanatId);
+		ezResourceDAO.insertFavoriteCategory(map);
+		
+		logger.debug("addFavoriteCategory end");
+	}
+	
+	/**
+	 * 즐겨찾기 카테고리 목록 조회
+	 */
+	@Override
+	public List<ResFavoriteCategoryVO> getFavoriteCategoryList(String catId, String userID) throws Exception {
+		logger.debug("getFavoriteCategoryList start");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("TOP_ID", catId);
+		map.put("USER_ID", userID);
+		
+		List<ResFavoriteCategoryVO> list = ezResourceDAO.selectFavoriteCategoryList(map);
+		
+		for (ResFavoriteCategoryVO vo : list) {
+			map.put("TOP_ID", vo.getCatId());
+			map.put("USER_ID", userID);
+			List<ResFavoriteCategoryVO> childList = ezResourceDAO.selectFavoriteCategoryList(map);
+			vo.setChildList(childList);
+		}
+		
+		logger.debug("getFavoriteCategoryList end");
+		return list;
+	}
+	
+	/**
+	 * 즐겨찾기 카테고리 수정
+	 */
+	@Override
+	public void modFavoriteCategory(String catName, String catId, String userID) throws Exception {
+		logger.debug("modFavoriteCategory start");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("CAT_ID", catId);
+		map.put("CAT_NAME", catName);
+		map.put("USER_ID", userID);
+		ezResourceDAO.updateFavoriteCategory(map);
+		
+		logger.debug("modFavoriteCategory end");
+	}
+	
+	/**
+	 * 즐겨찾기 카테고리 삭제
+	 */
+	@Override
+	public void delFavoriteCategory(String catId, String userID, String companyID, int tenantID) throws Exception {
+		logger.debug("delFavoriteCategory start");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("TOP_ID", catId);
+		map.put("USER_ID", userID);
+		map.put("TENANT_ID", tenantID);
+		map.put("COMPANY_ID", companyID);
+		map.put("CAT_ID", catId);
+		
+		ezResourceDAO.delFavoriteCategory(map);
+		
+		
+		// 삭제할 카테고리 하위 카테고리 목록 조회
+		List<String> childeCatIdList = ezResourceDAO.checkChildYN(map);
+		
+		// 하위 카테고리, 자원 정보 삭제
+		deletChild(childeCatIdList, userID, companyID, tenantID);
+		ezResourceDAO.deleteCatBrd(map);
+		ezResourceDAO.deleteChildList(map);
+		
+		logger.debug("delFavoriteCategory end");
+	}
+
+	/**
+	 * 카테고리 삭제시 하위 계층 카테고리 확인 후 하위 카테고리 삭제를 위한 메서드 
+	 */
+	private void deletChild(List<String> childeCatIdList, String userID, String companyID, int tenantID) throws Exception {
+		logger.debug("deletChild start");
+		
+		boolean flag = childeCatIdList.size()>0;
+		
+		if (flag) {
+			for(String id: childeCatIdList) {
+				Map<String, Object> map1 = new HashMap<String, Object>();
+				map1.put("USER_ID", userID);
+				map1.put("COMPANY_ID", companyID);
+				map1.put("TENANT_ID", tenantID);
+				map1.put("CAT_ID", id);
+				map1.put("TOP_ID", id);
+				
+				List<String> childeCatIdList2 = ezResourceDAO.checkChildYN(map1);
+				
+				// 하위 체크 후 반복 삭제
+				deletChild(childeCatIdList2, userID, companyID, tenantID);
+				ezResourceDAO.deleteCatBrd(map1);
+				ezResourceDAO.deleteChildList(map1);
+			}
+		}
+		
+		logger.debug("deletChild end");
+	}
+	
+	/**
+	 * 자원을 즐겨찾기 카테고리(분류)에 추가 하는 메서드
+	 */
+	@Override
+	public String addBrdFavoriteCategory(String brdId, String catId, String userID, String companyID, int tenantID) throws Exception {
+		logger.debug("addBrdFavoriteCategory start");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("CAT_ID", catId);
+		map.put("BRD_ID", brdId);
+		map.put("USER_ID", userID);
+		map.put("TENANT_ID", tenantID);
+		map.put("COMPANY_ID", companyID);
+		
+		int cnt = ezResourceDAO.selectBrdFavoriteCategoryList(map);
+		String result = "";
+		if (cnt > 0) {
+			result = "fail";
+		} else {
+			ezResourceDAO.insertBrdFavoriteCategory(map);
+			
+			map.put("brdYn", "Y");
+			ezResourceDAO.updateFavoriteCategoryBrdYN(map);
+			result =  "ok";
+		}
+		
+		logger.debug("addBrdFavoriteCategory end");
+		return result;
+	}
+	
+	/**
+	 * 즐겨찾기 카테고리(분류) 자원 목록 조회 메서드
+	 */
+	@Override
+	public List<ResBrdVO> getFavoriteBrdList(String catId, String companyId, int tenantId, String userID) throws Exception {
+		logger.debug("getFavoriteBrdList start");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("catId", catId);
+		map.put("companyId", companyId);
+		map.put("userID", userID);
+		map.put("tenantId", tenantId);
+		
+		List<ResBrdVO> favoriteBrdList = ezResourceDAO.selectFavoriteBrdList(map);
+		
+		logger.debug("getFavoriteBrdList end");
+		return favoriteBrdList;
+	}
+	
+	/**
+	 * topId 최종적으로 이동될 위치 카테고리 ID
+	 * catId 이동 대상 카테고리
+	 */
+	@Override
+	public String moveCategory(String userID, String companyID, int tenantID, String catId, String topId) throws Exception {
+		logger.debug("moveCategory start");
+		
+		String result = "";
+		if (topId.equals(catId)) {
+			// 이동하려는 카테고리와 현재 카테고리가 같을 경우
+			result = "equalfail";
+		} else {
+			Map<String, Object> map = new HashMap<String, Object>();
+			// 이동 시킬 카테고리(분류) ID
+			map.put("CAT_ID", catId);
+			// 최종 이동될 카테고리(분류) ID
+			map.put("TOP_ID", topId);
+			map.put("USER_ID", userID);
+			map.put("TENANT_ID", tenantID);
+			map.put("COMPANY_ID", companyID);
+			
+			// 옮겨질 카테고리를 상위로 가지고 있는 카테고리 ID LIST
+			List<String> childeCatIdList = ezResourceDAO.checkChildYN(map);
+			// 바로 하위 시도 여부 파악
+			boolean contains = childeCatIdList.contains(topId);
+			
+			if (contains) {
+				// 바로 하위로 이동 시도
+				result = "fail";
+			} else {
+				// 현재 카테고리의 하위 계층에 이동을 시도 하려는지 검증
+				boolean containsFlag = checkIfContains(childeCatIdList, topId, userID, companyID, tenantID);
+				if (containsFlag) {
+					// 검증 통과
+					ezResourceDAO.moveCategoryToCategory(map);
+					result = "true";
+				} else {
+					// 자식 요소로 이동 시도
+					result = "fail";
+				}
+			}
+		}
+		
+		logger.debug("moveCategory end");
+		return result;
+	}
+	
+	/**
+	 * @param initialList : 하위 목록 검증할 catId 목록  
+	 * @param topId : 검증 대상 ID 
+	 * @return initialList에 top ID 가 포함되어 있으면 false
+	 */
+	private boolean checkIfContains(List<String> initialList, String topId, String userID, String companyID, int tenantID) throws Exception {
+		
+	    for (String id : initialList) {
+	        if (!recursiveCheck(id, topId, userID, companyID, tenantID)) {
+	            return false;
+	        }
+	    }
+	    
+	    return true;
+	}
+	
+	/**
+	 * @param currentId : 하위 검증 위한 CAT_ID 해당 카테고리 하위에 있는 카테고리 전부 검증
+	 * @param topId : 검증할 TOP_ID
+	 * @return curentId 의 하위 카테고리의 top_id 가 파라미터 top_id 와 같으면 false
+	 */
+	private boolean recursiveCheck(String currentId, String topId, String userID, String companyID, int tenantID) throws Exception {
+	    Map<String, Object> map = new HashMap<>();
+	    map.put("CAT_ID", currentId);
+	    map.put("USER_ID", userID);
+	    map.put("COMPANY_ID", companyID);
+	    
+	    List<String> childList = ezResourceDAO.checkChildYN(map);
+	    
+	    if (childList.contains(topId)) {
+	        return false;
+	    }
+	    
+	    for (String childId : childList) {
+	        if (!recursiveCheck(childId, topId, userID, companyID, tenantID)) {
+	            return false;
+	        }
+	    }
+	    
+	    return true;
+	}
+	
+	/**
+	 * 자원을 다른 즐겨찾기 카테고리(분류)로 이동하기 위한 메서드
+	 */
+	@Override
+	public String moveResource(String userID, String companyID, int tenantID, String catId, String brdId, String topId) throws Exception {
+		logger.debug("moveResource start");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		// 이동할 카테고리
+		map.put("CAT_ID", catId);
+		// 자원 brdId
+		map.put("BRD_ID", brdId);
+		// 현재 속한 카테고리
+		map.put("CUR_ID", topId);
+		map.put("USER_ID", userID);
+		map.put("COMPANY_ID", companyID);
+		map.put("TENANT_ID", tenantID);
+		
+		int cnt = ezResourceDAO.selectBrdCategoryCnt(map);
+		String resultStr = "";
+		if (cnt > 0) {
+			resultStr = "no";
+		} else {
+			// 자원 이동
+			ezResourceDAO.moveBrdCategoryToCategory(map);
+			
+			// 이동한 카테고리 자원 여부 Y
+			map.put("brdYn", "Y");
+			ezResourceDAO.updateFavoriteCategoryBrdYN(map);
+			
+			// 기존 카테고리 자원 여부 파악 후 없을경우 N
+			map.put("catId", topId);
+			if (ezResourceDAO.selectFavoriteBrdList(map).size() == 0) {
+				map.put("brdYn", "N");
+				map.put("CAT_ID", topId);
+				ezResourceDAO.updateFavoriteCategoryBrdYN(map);
+			}
+			
+			resultStr = "ok";
+		}
+		
+		logger.debug("moveResource end");
+		return resultStr;
+	}
+	
+	/**
+	 * 즐겨찾기 카테고리(분류)에 속한 자원정보 삭제 메서드
+	 */
+	@Override
+	public void delBrdFavoriteCategory(String userId, int tenantId, String companyId, String delBrdId, String delTopId) throws Exception {
+		logger.debug("delBrdFavoriteCategory start");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("BRD_ID", delBrdId);
+		map.put("CAT_ID", delTopId);
+		map.put("USER_ID", userId);
+		map.put("TENANT_ID", tenantId);
+		map.put("COMPANY_ID", companyId);
+		
+		ezResourceDAO.deleteBrdFavoriteCategory(map);
+		
+		// 카테고리 자원 보유 여부 변경
+		map.put("catId", delTopId);
+		map.put("userID", userId);
+		if (ezResourceDAO.selectFavoriteBrdList(map).size() == 0) {
+			map.put("brdYn", "N");
+			map.put("CAT_ID", delTopId);
+			ezResourceDAO.updateFavoriteCategoryBrdYN(map);
+		}
+		
+		logger.debug("delBrdFavoriteCategory end");
 	}
 }

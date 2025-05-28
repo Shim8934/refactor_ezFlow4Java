@@ -6,7 +6,8 @@
 	<head>
 		<title>Insert title here</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezPersonal.e3', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezPersonal/controls/ListView_list.js')}"></script>
@@ -49,8 +50,7 @@
 					alert("<spring:message code = 'ezPersonal.t106' />");
 				}
 				else {
-				//    document.getElementById("ListCompany").selectedIndex = 0;
-					company_change();
+					changeCompany();
 				}
 				getLightPollConfig();
 				makelist();
@@ -101,11 +101,7 @@
 		<form method="post">
 			<h1><spring:message code = 'ezPersonal.hyh1' /><span id="mailBoxInfo"></span>
 		    	<span class="title_bar"><img src="/images/name_bar.gif"></span>
-				<select class="companySelect" id="ListCompany" onChange="company_change()">
-					<c:forEach var="item" items="${list}">
-						<option value="<c:out value='${item.cn}'/>" ${item.cn == companyId ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-					</c:forEach>
-				</select>
+				<jsp:include page="/WEB-INF/jsp/admin/companySelect.jsp"/>
 			</h1>
 			<div id="mainmenu">
 				<ul style="margin-top:15px">	            	

@@ -264,3 +264,38 @@ var strLangHTH01 = "日付は1～31の整数で入力してください。";
 var strLangHTH02 = "繰り返しサイクル日数を正確に入力してください。";
 var strLangHTH03 = "繰り返し周期を正確に入力してください。";
 var strLangHTH04 = "月間隔は0より大きい整数で入力してください。";
+
+// 2024-07-03 김우철 - 관리자 > 현황조회
+var strLangKWC01 = "承認リソース現況";
+var strLangKWC02 = "承認待ちリソース現況";
+var strLangKWC03 = "終了リソース現況";
+
+//2024-08-06 유길상 - 자원 즐겨찾기 메세지 표출
+var strLangFvYGS01 = "移動";
+var strLangFvYGS02 = "削除するリソースを選択してください。";
+var strLangFvYGS03 = "既に追加されたリソースです。";
+var strLangFvYGS04 = "追加されました。";
+var strLangFvYGS05 = "分類名を入力してください。";
+var strLangFvYGS06 = "分類を選択してください。";
+var strLangFvYGS07 = "下位ツリーへ移動できません。";
+var strLangFvYGS08 = "同じツリーへ移動できません。";
+var strLangFvYGS09 = "現在の位置です。";
+var strLangFvYGS10 = "選択したリソースを削除しますか？";
+var strLangFvYGS11 = "お気に入りに追加しますか？";
+var strLangFvYGS12 = "選択したカテゴリを削除しますか？";
+var strLangFvYGS13 = "削除する対象を選択してください。";
+var strLangFvYGS14 = "移動させたい対象を選択してください。";
+var strLangFvYGS15 = "修正しました。";
+var strLangFvYGS16 = "削除しました。";
+var strLangFvYGS17 = "お気に入りのグループがありません。";
+var strLangFvYGS18 = "リソースには下位を追加できません。";
+var strLangFvYGS19 = "カテゴリを削除すると、下位のすべてのリソースおよびカテゴリが削除されます。\n本当に削除しますか？";
+
+// 2024-08-26 유길상 - 자원등록 > 최대 예약 가능 기간, 정원
+var strLangMaxYGS01 = "最大予約可能期間を超過しました。";
+var strLangMaxYGS02 = "定員";
+var strLangMaxYGS03 = "名";
+var strLangMaxYGS04 = "定員を入力してください。";
+
+// 2025-05-07 이혜림 - 자원등록 > 최대 예약 가능 기간 제한
+var strLangLHR01 = "最大予約可能期間は1(日)から入力できます。";

@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.security.PrivateKey;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
@@ -17,14 +18,20 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 import java.util.StringJoiner;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 
+import egovframework.ezEKP.ezBoard.dao.EzBoardDAO;
+import egovframework.ezMobile.ezBoard.dao.MBoardDAO;
+import egovframework.ezEKP.ezBoard.vo.BoardKeywordVO;
+import egovframework.let.user.login.vo.LoginVO;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -32,11 +39,14 @@ import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import egovframework.com.cmm.EgovMessageSource;
@@ -45,6 +55,7 @@ import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezBoard.vo.BoardAccessVO;
 import egovframework.ezEKP.ezBoard.vo.BoardLineReplyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
+import egovframework.ezEKP.ezBoard.vo.MealDataVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EmailImportance;
@@ -52,11 +63,15 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
+import egovframework.ezEKP.ezPersonal.type.NotiPlatform;
+import egovframework.ezEKP.ezPersonal.type.NotiType;
 import egovframework.ezMobile.ezBoard.service.MBoardService;
 import egovframework.ezMobile.ezBoard.vo.MBoardAttachVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardFavoriteVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardInfoVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardItemVO;
+import egovframework.ezMobile.ezBoard.vo.MBoardListVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardNewListVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardTreeVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
@@ -95,6 +110,10 @@ public class MBoardGWController {
 	@Resource(name = "MBoardService")
 	private MBoardService mBoardService;
 	
+
+	@Resource(name = "EzPersonalService")
+	private EzPersonalService ezPersonalService;
+
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
 	
@@ -106,6 +125,9 @@ public class MBoardGWController {
 	
 	@Resource(name = "jspw")
 	private String jspw;
+
+	@Resource(name = "MBoardDAO")
+	private MBoardDAO mBoardDAO;
 	
 	/**
 	 * 모바일 G/W 게시판 [GET] 새게시물 리스트
@@ -292,14 +314,28 @@ public class MBoardGWController {
 		try {
 			String userID = request.getParameter("userID");
 			String serverName = request.getHeader("x-user-host");
+			String acScrap = request.getParameter("acScrapBoard");
 			
 			MCommonVO info = mOptionService.commonInfo(serverName, userID);
 			MOptionVO mobileInfo = mOptionService.optionInfo(userID, info.getTenantId());
 			
-			MBoardItemVO boardItem = mBoardService.getBrdItemInfo(contentId, commonUtil.getMultiData(info.getLang(), info.getTenantId()), info.getTenantId());
+			MBoardItemVO boardItem = mBoardService.getBrdItemInfo(contentId, commonUtil.getPrimaryData(info.getLang(), info.getTenantId()), info.getTenantId());
+
+			String authorization = request.getHeader("Authorization");
+			String password = StringUtils.isNotBlank(authorization) ? new String(java.util.Base64.getDecoder().decode(StringUtils.removeStart(authorization, "Basic "))) : "";
+			
+			
+			if (boardItem == null) {
+				result.put("status", "empty");
+				result.put("code", -1);			
+				result.put("data", "");
+				return result;
+			}
+			
 			boardItem.setWriteDate(commonUtil.getDateStringInUTC(boardItem.getWriteDate(), info.getOffSet(), false));
 			boardItem.setNotiStart(commonUtil.getDateStringInUTC(boardItem.getNotiStart(), info.getOffSet(),false));
 			boardItem.setNotiEnd(commonUtil.getDateStringInUTC(boardItem.getNotiEnd(), info.getOffSet(),false));
+			boardItem.setUpdateDate(commonUtil.getDateStringInUTC(boardItem.getUpdateDate(), info.getOffSet(),false));
 			
 			String primary = commonUtil.getPrimaryData(mobileInfo.getLang(), info.getTenantId());
 			
@@ -319,7 +355,7 @@ public class MBoardGWController {
 			boardInfo.setType("boardItem");
 			
 			// 해당 게시물 읽기권한 없다면 리턴
-			if (!accessCheck(boardId, contentId, deptPathCode, info)) {
+			if (!accessCheck(boardId, contentId, deptPathCode, info, password)) {
 				result.put("status", "no");
 				return result;
 			}
@@ -346,12 +382,24 @@ public class MBoardGWController {
 	    	
 			String mhtContent = mBoardService.getMhtContent(realPath, domain, info, boardItem.getContentLocation(), locale, scheme);
 			
+			// 2025-01-23 게시판 > 게시물 미리보기 > 게시물 평가하기 기능 추가
+			Map<String, Object> itemStarRating = ezBoardService.getItemStarRating(contentId, info.getUserId(), info.getTenantId());
+			
 			//새게시물 눌렀을때, read테이블에 들어가게함.
 			mBoardService.setAsRead(info, boardId, contentId);
 			
 			// 20180824 조진호 - 모바일 viewerflag 값 추가
         	String useMobileViewer = ezCommonService.getTenantConfig("useMobileViewer", info.getTenantId());
-        	
+			
+			List<String> keywords = new ArrayList<>();
+			if (boardInfo.getUseKeyword()!= null && boardInfo.getUseKeyword().equals("Y")) {
+				List<BoardKeywordVO> keywordsObj = ezBoardService.selectBoardKeywordByBoardItem(contentId, boardId, info.getTenantId());
+				keywords = keywordsObj.stream().map(BoardKeywordVO::getKeywordName).collect(Collectors.toList());
+			}
+			/* 2023-11-22 기민혁 - 해당 게시물에 대해 사용자가 스크랩을 했는지 체크 */
+			String isScrap = ezBoardService.getScrapItemCount(userID, contentId, boardId, info.getCompanyId(), info.getTenantId());
+			String myBoardScrapFlag = ezCommonService.getTenantConfig("MyBoardScrapFlag", info.getTenantId());
+			
         	logger.debug("realPath = " + realPath + " | domain = " + domain + " | scheme = " + scheme + " | useMobileViewer = " + useMobileViewer);
         	
         	data.put("useMobileViewer", useMobileViewer);
@@ -360,6 +408,11 @@ public class MBoardGWController {
 			data.put("boardInfo", boardInfo);
 			data.put("attachFileNameMaxLength", attachFileNameMaxLength);
 			data.put("commentCount", commentCount);
+			data.put("keywords", keywords);
+			data.put("acScrap", acScrap);
+			data.put("myBoardScrapFlag", myBoardScrapFlag);
+			data.put("isScrap", isScrap);
+			data.put("itemStarRating", itemStarRating);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -390,12 +443,24 @@ public class MBoardGWController {
 		try {
 			String userID = request.getParameter("userID");
 			String serverName = request.getHeader("x-user-host");
+			String acScrap = request.getParameter("acScrapBoard");
 			
 			MCommonVO info = mOptionService.commonInfo(serverName, userID);
 			MOptionVO mobileInfo = mOptionService.optionInfo(userID, info.getTenantId());
 			
 			MBoardItemVO boardItem = mBoardService.getBrdItemInfo(contentId, commonUtil.getMultiData(info.getLang(), info.getTenantId()), info.getTenantId());
+
+			String authorization = request.getHeader("Authorization");
+			String password = StringUtils.isNotBlank(authorization) ? new String(Base64.getDecoder().decode(StringUtils.removeStart(authorization, "Basic "))) : "";
+			
+			if (boardItem == null) {
+				result.put("status", "empty");
+				result.put("code", -1);			
+				result.put("data", "");
+				return result;
+			}
 			boardItem.setWriteDate(commonUtil.getDateStringInUTC(boardItem.getWriteDate(), info.getOffSet(), false));
+			boardItem.setUpdateDate(commonUtil.getDateStringInUTC(boardItem.getUpdateDate(), info.getOffSet(),false));
 			
 			//boardInfo
 			String primary = commonUtil.getPrimaryData(mobileInfo.getLang(), info.getTenantId());
@@ -414,7 +479,7 @@ public class MBoardGWController {
 			boardInfo.setType("photoBoardItem");
 			
 			// 해당 게시물 읽기권한 없다면 리턴
-			if (!accessCheck(boardId, contentId, deptPathCode, info)) {
+			if (!accessCheck(boardId, contentId, deptPathCode, info, password)) {
 				result.put("status", "no");
 				return result;
 			}
@@ -431,20 +496,41 @@ public class MBoardGWController {
 				commentCount = ezBoardService.getOneLineReplyCount(boardId, contentId, info.getTenantId());
 			}
 			
+			// 2025-01-23 게시판 > 게시물 미리보기 > 게시물 평가하기 기능 추가
+			Map<String, Object> itemStarRating = ezBoardService.getItemStarRating(contentId, info.getUserId(), info.getTenantId());
+			
 			List<MBoardAttachVO> photoList = mBoardService.photoViewDB(contentId, boardId, info.getTenantId());
 			
+			List<String> keywords = new ArrayList<>();
+			if (boardInfo.getUseKeyword() != null && boardInfo.getUseKeyword().equals("Y")) {
+				List<BoardKeywordVO> keywordsObj = ezBoardService.selectBoardKeywordByBoardItem(contentId, boardId, info.getTenantId());
+				keywords = keywordsObj.stream().map(BoardKeywordVO::getKeywordName).collect(Collectors.toList());
+			}
 			for (MBoardAttachVO photo : photoList) {
 				photo.setFilePath(photo.getFilePath());
 			}
 				
+			String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", info.getTenantId());
+			
 			logger.debug("photoList:"+photoList);
 			
 			mBoardService.setAsRead(info, boardId, contentId);
-			
+
+			/* 2023-11-22 기민혁 - 해당 게시물에 대해 사용자가 스크랩을 했는지 체크 */
+			String isScrap = ezBoardService.getScrapItemCount(userID, contentId, boardId, info.getCompanyId(), info.getTenantId());
+			String myBoardScrapFlag = ezCommonService.getTenantConfig("MyBoardScrapFlag", info.getTenantId());
+
+
 			data.put("boardItem", boardItem);
 			data.put("boardInfo", boardInfo);
 			data.put("photoList", photoList);
 			data.put("commentCount", commentCount);
+			data.put("keywords", keywords);
+			data.put("acScrap", acScrap);
+			data.put("myBoardScrapFlag", myBoardScrapFlag);
+			data.put("isScrap", isScrap);
+			data.put("attachFileNameMaxLength", attachFileNameMaxLength);
+			data.put("itemStarRating", itemStarRating);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -675,12 +761,36 @@ public class MBoardGWController {
 			List<MBoardTreeVO> list = mBoardService.getBoardTree(rootBoardID, mode, Integer.parseInt(subFlag), Integer.parseInt(selectBy), excludeBoardID, info);
 			/* 2018-07-03 홍승비 - 좌측메뉴 리스트 새게시물 카운트 표시 시 companyID 조건 추가 */
 			int listCount = mBoardService.getNewBoardListCount(userId, "", info.getCompanyId(), info.getTenantId(), "");
+			int listCount2 = mBoardService.getAllNewBoardListCount(userId, "", info.getCompanyId(), info.getTenantId(), "");
 			
+			int allListCount = mBoardService.getAllBoardItemListCount(userId, info.getCompanyId(), info.getTenantId()); 
+			
+			// rootBoardId의 guBun 값 전달 > 카테고리게시판인 경우 동작을 막기위함
+			if (!rootBoardID.equals("top")) {
+				String guBun = mBoardService.getGubun(rootBoardID);
+				result.put("guBun",guBun);
+			}
+			
+			String myBoardScrapFlag = ezCommonService.getTenantConfig("MyBoardScrapFlag", info.getTenantId());
+
 			data.put("list", list);
 			data.put("listCount", listCount);
+			data.put("listCount2", listCount2);
+
+			data.put("allListCount", allListCount);
+			data.put("myBoardScrapFlag", myBoardScrapFlag);
 			
+			if (myBoardScrapFlag.equals("TYPE1")) {
+				/* 모바일 스크랩 게시판 게시물 카운트*/
+				Map<String, ArrayList<String>> scrapBoardListReadView_FG = mBoardService.getScrapBoardListReadView_FG(info);
+				ArrayList<String> scrapBoardListView_FG =  scrapBoardListReadView_FG.get("scrapBoardListView_FG");
+				
+				int myBoardScrapCount = mBoardService.getScrapBoardListCount(userId, info.getCompanyId(), info.getTenantId(), "", scrapBoardListView_FG);
+				data.put("myBoardScrapCount", myBoardScrapCount);
+			}
+
 			result.put("status", "ok");
-			result.put("code", 0);			
+			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
@@ -835,13 +945,7 @@ public class MBoardGWController {
 	public JSONObject mFileUpload(HttpServletRequest request, @RequestBody JSONObject jsonObject) throws Exception {
 		logger.debug("MOBILE G/W BOARD [GET /mobile/ezboard/fileupload] started.");
 		
-		String filePath = request.getParameter("filePath");
-		String fileName = request.getParameter("fileName");
-		String boardID = request.getParameter("boardID");
 		String serverName = request.getHeader("x-user-host");
-		
-		logger.debug("filePath = " + filePath);
-		logger.debug("serverName = " + serverName + " | fileName = " + fileName + " | boardID = " + boardID);
 		
 		JSONParser jp = new JSONParser();
 		jsonObject = (JSONObject) jp.parse(jsonObject.toJSONString());
@@ -851,6 +955,7 @@ public class MBoardGWController {
 		try {
 			JSONArray fileArray = new JSONArray();
 			
+			String boardID = "";
 			String userID = "";
 			int cnt = 0;
 			int maxSize = 0;
@@ -871,7 +976,12 @@ public class MBoardGWController {
 				userID = (String) jsonObject.get("userID");
 			}
 			
+			if (jsonObject.get("boardID") != null) {
+				boardID = (String) jsonObject.get("boardID");
+			}
+			
 			logger.debug("cnt = " + cnt + " | maxSize = " + maxSize + " | userID = " + userID);
+			logger.debug("serverName = " + serverName + " | boardID = " + boardID);
 			
 			MCommonVO info = mOptionService.commonInfo(serverName, userID);
 			
@@ -883,6 +993,7 @@ public class MBoardGWController {
 			Long[] fileSize = new Long[cnt];
 			String[] resultUpload = new String[cnt];
 			String[] fileLocation = new String[cnt];
+			String[] extList = new String[cnt];
 			
 			 for (int i = 0; i < cnt; i++) {
 		            resultUpload[i] = "false";
@@ -934,16 +1045,17 @@ public class MBoardGWController {
                         resultUpload[i] = "denied";
                     } else {
                         String pAttachPath = realPath + commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", info.getTenantId()) + commonUtil.separator;
-                        File fTemp = new File(pAttachPath, pUploadSN[i] + "_" + pFileName[i]);
+                        File fTemp = new File(pAttachPath, sGUID[i] + "." + extStr);
                         
                         if (!file.exists()) {
                         	fTemp.mkdirs();
                         }
                         
-                        mobileBoardWriteUploadedFile((String)((JSONObject)fileArray.get(i)).get("bytes"), pUploadSN[i] + "_" + pFileName[i], pAttachPath);
+                        mobileBoardWriteUploadedFile((String)((JSONObject)fileArray.get(i)).get("bytes"), sGUID[i] + "." + extStr, pAttachPath);
                         
-                        fileLocation[i] = commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", info.getTenantId()) + commonUtil.separator + pUploadSN[i] + "_" + pFileName[i];
+                        fileLocation[i] = commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", info.getTenantId()) + commonUtil.separator + sGUID[i] + "." + extStr;
                         resultUpload[i] = "true";
+						extList[i] = extStr;
                     }
 	            }
 	        }
@@ -953,7 +1065,7 @@ public class MBoardGWController {
 	        strXML.append("<ROOT><NODES>");
 	        
 	        for (int i = 0; i < cnt; i++) {
-	            strXML.append("<NODE><PUPLOADSN><![CDATA[" + pUploadSN[i] + "_" + pFileName[i] + "]]></PUPLOADSN>");
+	            strXML.append("<NODE><PUPLOADSN><![CDATA[" + sGUID[i] + "." + extList[i] + "]]></PUPLOADSN>");
 	            strXML.append("<RESULTUPLOADA><![CDATA[" + resultUpload[i] + "]]></RESULTUPLOADA>");
 	            strXML.append("<PFILENAME><![CDATA[" + pFileName[i] + "]]></PFILENAME>");
 	            strXML.append("<FILESIZE>" + fileSize[i] + "</FILESIZE>");
@@ -983,7 +1095,7 @@ public class MBoardGWController {
 	/**
      * 첨부파일을 서버에 저장한다.
      *
-     * @param file
+     * @param bytearray
      * @param newName
      * @param stordFilePath
      * @throws Exception
@@ -1038,11 +1150,12 @@ public class MBoardGWController {
     /**
 	 * 게시판 게시판권한체크 표출 Method(EzBoardController 참고)
 	 */
-	public boolean accessCheck(String boardID, String contentID, String deptPath, MCommonVO info) throws Exception {
+	public boolean accessCheck(String boardID, String contentID, String deptPath, MCommonVO info, String password) throws Exception {
 		logger.debug("accessCheck started");
 		
 		String rollInfo = info.getRollInfo();
 		BoardPropertyVO boardProp = ezBoardService.getBoardProperty(boardID, info.getTenantId());
+		MBoardItemVO boardItem = mBoardService.getBrdItemInfo(contentID, commonUtil.getMultiData(info.getLang(), info.getTenantId()), info.getTenantId());
 		String boardGroupID = "";
 		String isAllGroupBoard = "N";
 		
@@ -1189,6 +1302,16 @@ public class MBoardGWController {
 				rtv = true;
 			}
 		} // 개인, 직위/직책, 부서권한 전부 존재하지 않는다면 false 리턴 (rtv는 디폴트 값이 false임)
+
+		// 2024-11-19 비공개 게시판의경우 관리자와 글쓴이만 접근 가능 - 관리자일경우는 return true 됨
+		if (rtv && "N".equals(boardItem.getPublicFlag())) {
+			// 익명일 경우 비번 체크
+			if ("2".equals(boardProp.getGuBun())) {
+				rtv = ezBoardService.chkPasswordAnonymous(boardItem.getItemID(), password, info.getTenantId());
+			} else {
+				rtv = boardItem.getWriterID().equalsIgnoreCase(info.getUserId());
+			}
+		}
 		
 		logger.debug("rtv = " + rtv);
 		logger.debug("accessCheck ended2");
@@ -1209,12 +1332,25 @@ public class MBoardGWController {
 		try {
 			String userID = request.getParameter("userID");
 			String serverName = request.getHeader("x-user-host");
+			String acScrap = request.getParameter("acScrapBoard");
 			
 			MCommonVO info = mOptionService.commonInfo(serverName, userID);
 			MOptionVO mobileInfo = mOptionService.optionInfo(userID, info.getTenantId());
 			
 			MBoardItemVO boardItem = mBoardService.getBrdItemInfo(contentId, commonUtil.getMultiData(info.getLang(), info.getTenantId()), info.getTenantId());
+
+			String authorization = request.getHeader("Authorization");
+			String password = StringUtils.isNotBlank(authorization) ? new String(Base64.getDecoder().decode(StringUtils.removeStart(authorization, "Basic "))) : "";
+			
+			if (boardItem == null) {
+				result.put("status", "empty");
+				result.put("code", -1);			
+				result.put("data", "");
+				return result;
+			}
+			
 			boardItem.setWriteDate(commonUtil.getDateStringInUTC(boardItem.getWriteDate(), info.getOffSet(), false));
+			boardItem.setUpdateDate(commonUtil.getDateStringInUTC(boardItem.getUpdateDate(), info.getOffSet(),false));
 			
 			String primary = commonUtil.getPrimaryData(mobileInfo.getLang(), info.getTenantId());
 			
@@ -1232,7 +1368,7 @@ public class MBoardGWController {
 			boardInfo.setType("movieBoardItem");
 			
 			// 해당 게시물 읽기권한 없다면 리턴
-			if (!accessCheck(boardId, contentId, deptPathCode, info)) {
+			if (!accessCheck(boardId, contentId, deptPathCode, info, password)) {
 				result.put("status", "no");
 				return result;
 			}
@@ -1249,16 +1385,37 @@ public class MBoardGWController {
 				commentCount = ezBoardService.getOneLineReplyCount(boardId, contentId, info.getTenantId());
 			}
 			
+			// 2025-01-23 게시판 > 게시물 미리보기 > 게시물 평가하기 기능 추가
+			Map<String, Object> itemStarRating = ezBoardService.getItemStarRating(contentId, info.getUserId(), info.getTenantId());
+			
 			List<MBoardAttachVO> movieAttachVO = mBoardService.photoViewDB(contentId, boardId, info.getTenantId());
+
+			List<String> keywords = new ArrayList<>();
+			if (boardInfo.getUseKeyword() != null && boardInfo.getUseKeyword().equals("Y")) {
+				List<BoardKeywordVO> keywordsObj = ezBoardService.selectBoardKeywordByBoardItem(contentId, boardId, info.getTenantId());
+				keywords = keywordsObj.stream().map(BoardKeywordVO::getKeywordName).collect(Collectors.toList());
+			}
+			
+			String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", info.getTenantId());
 			
 			logger.debug("movieAttachVO : " + movieAttachVO.get(0));
 			
 			mBoardService.setAsRead(info, boardId, contentId);
-			
+
+			/* 2023-11-22 기민혁 - 해당 게시물에 대해 사용자가 스크랩을 했는지 체크 */
+			String isScrap = ezBoardService.getScrapItemCount(userID, contentId, boardId, info.getCompanyId(), info.getTenantId());
+			String myBoardScrapFlag = ezCommonService.getTenantConfig("MyBoardScrapFlag", info.getTenantId());
+
 			data.put("boardItem", boardItem);
 			data.put("boardInfo", boardInfo);
 			data.put("movieAttachVO", movieAttachVO.get(0));
 			data.put("commentCount", commentCount);
+			data.put("keywords", keywords);
+			data.put("acScrap", acScrap);
+			data.put("myBoardScrapFlag", myBoardScrapFlag);
+			data.put("isScrap", isScrap);
+			data.put("attachFileNameMaxLength", attachFileNameMaxLength);
+			data.put("itemStarRating", itemStarRating);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -1279,9 +1436,9 @@ public class MBoardGWController {
      * 2021-09-07 홍승비 - 게시판의 게시관리자에게 게시알림메일 발송
      */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezboard/boards/{boardId}/sendmail/admin", method= RequestMethod.POST, produces="application/json;charset=utf-8")
-	public Object sendBoardAlertMailAdmin(@PathVariable String boardId, HttpServletRequest request) throws Exception {		
-		logger.debug("MOBILE G/W BOARD [GET /ezboard/movie/boards/{boardId}/sendmail/admin] started.");
+	@RequestMapping(value="/mobile/ezboard/boards/{boardId}/sendnoti/admin", method= RequestMethod.POST, produces="application/json;charset=utf-8")
+	public Object sendBoardAlertNotiAdmin(@PathVariable String boardId, HttpServletRequest request) throws Exception {
+		logger.debug("MOBILE G/W BOARD [POST /mobile/ezboard/boards/{boardId}/sendnoti/admin] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -1331,64 +1488,133 @@ public class MBoardGWController {
 	        
 	        String content = commonUtil.createNotiMailContent(bodyContent.toString(), mobileInfo.getTenantId(), locale);
 	        String subject = "[" + egovMessageSource.getMessage("ezBoard.t255", locale) + boardInfo.getBoardName() + "] " + boardItem.getTitle();
-	        
+	        String notiContent = "[" + egovMessageSource.getMessage("ezNotification.hth35", locale) + "]"+ boardInfo.getBoardName() + " - " + boardItem.getTitle();
+
 	        InternetAddress[] toArray = new InternetAddress[1]; // 한번에 한 사람에게만 발송
 	        List<BoardAccessVO> list = ezBoardService.getPostNotiMailUserList(boardId, primary, mobileInfo.getTenantId());
 	        
+	        List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
+	        logger.debug("Sending mail starts");
+
 	        for (BoardAccessVO vo : list) {
-	        	InternetAddress from = new InternetAddress();
-	        	
-	        	// 익명게시판의 경우, 관리자에게 게시알림 메일발송 시 게시자 표출명과 임의의 이메일을 사용
-	        	if (boardInfo.getGuBun().equals("2")) {
-	        		from.setPersonal(boardItem.getWriterName(), "UTF-8");
-	        		from.setAddress("AnonyBoardMail@boardmail");
-	        	} else {
-	        		if (primary.equals("1")) {
-	        			from.setPersonal(info.getUserName(), "UTF-8");
-	        		} else {
-	        			from.setPersonal(info.getUserName2(), "UTF-8");
-	        		}
-	        		from.setAddress(info.getEmail());
-	        	}
-	        	
-	        	String mail = "";
-	        	
+	        	Map<String, Object> recipientMap = new HashMap<String, Object>();
+				recipientMap.put("userType", "PERSON");
+				recipientMap.put("companyId", info.getCompanyId());
+				recipientMap.put("cn", vo.getAccessID());
+				notiRecipientList.add(recipientMap);
+				
 	        	try {
-	        		OrganUserVO AccessUserInfo = ezOrganAdminService.getUserInfo(vo.getAccessID(), primary, info.getTenantId());
-	        		
-	        		mail = AccessUserInfo.getMail();
-	        		logger.debug("user sendMail : " + mail);
-				} catch (Exception e) {
-					try {
-						OrganDeptVO accessDeptInfo = ezOrganService.getDeptInfo(vo.getAccessID(), primary, info.getTenantId());
-						
-						mail = accessDeptInfo.getMail();
-						logger.debug("dept sendMail : " + mail);
-					} catch (Exception e2) {
-						logger.error(e2.getMessage(), e2);
-						logger.debug("error in accessID : " + vo.getAccessID()); // 직위, 직책, 권한그룹에 대해 메일발송되지 않음 (2021-09-08 기준 웹 그룹웨어와 동일 스펙)
-						continue;
+	        		InternetAddress from = new InternetAddress();
+
+		        	// 익명게시판의 경우, 관리자에게 게시알림 메일발송 시 게시자 표출명과 임의의 이메일을 사용
+		        	if (boardInfo.getGuBun().equals("2")) {
+		        		from.setPersonal(boardItem.getWriterName(), "UTF-8");
+		        		from.setAddress("AnonyBoardMail@boardmail");
+		        	} else {
+		        		if (primary.equals("1")) {
+		        			from.setPersonal(info.getUserName(), "UTF-8");
+		        		} else {
+		        			from.setPersonal(info.getUserName2(), "UTF-8");
+		        		}
+		        		from.setAddress(info.getEmail());
+		        	}
+
+		        	String mail = "";
+
+		        	try {
+		        		OrganUserVO AccessUserInfo = ezOrganAdminService.getUserInfo(vo.getAccessID(), primary, info.getTenantId());
+
+		        		mail = AccessUserInfo.getMail();
+		        		logger.debug("user sendMail : " + mail);
+					} catch (Exception e) {
+						try {
+							OrganDeptVO accessDeptInfo = ezOrganService.getDeptInfo(vo.getAccessID(), primary, info.getTenantId());
+
+							mail = accessDeptInfo.getMail();
+							logger.debug("dept sendMail : " + mail);
+						} catch (Exception e2) {
+							logger.error(e2.getMessage(), e2);
+							logger.debug("error in accessID : " + vo.getAccessID()); // 직위, 직책, 권한그룹에 대해 메일발송되지 않음 (2021-09-08 기준 웹 그룹웨어와 동일 스펙)
+							continue;
+						}
 					}
-				}
-	        	
-	        	InternetAddress to = new InternetAddress();
-	        	to.setPersonal(vo.getAccessName(), "UTF-8");
-	        	to.setAddress(mail);
-	        	
-	        	toArray[0] = to;
-	        	
-	        	ezEmailService.sendMail(userEmail, password, locale, from, toArray, null, null, subject, content, false, EmailImportance.NORMAL);
+
+		        	InternetAddress to = new InternetAddress();
+		        	to.setPersonal(vo.getAccessName(), "UTF-8");
+		        	to.setAddress(mail);
+
+		        	toArray[0] = to;
+
+		        	ezEmailService.sendMail(userEmail, password, locale, from, toArray, null, null, subject, content, false, EmailImportance.NORMAL);
+	        	} catch (Exception e) {
+	        		logger.debug(e.getMessage());
+	        		logger.debug("Sending board mail is failed : " + vo.getAccessID());
+	        		continue;
+	        	}
 	        }
 	        
+	        logger.debug("Sending mail ends");
+
+	        if (notiRecipientList == null || notiRecipientList.size() == 0) {
+				result.put("status", "ok");
+				result.put("code", 0);
+				result.put("data", null);
+				return result;
+			}
+
+	        // 2024-03-29 한태훈 - 모바일 > 게시판 > 관리자 신규 게시 통합알림 추가
+ 			String boardStatus = "";
+			String boardType = boardInfo.getGuBun();
+			String linkUrl = "";
+			String linkUrlMobile = "";
+
+			String tempItemID = encodeURIComponent(itemID);
+			String tempBoardID = encodeURIComponent(boardId);
+			String tempBoardStatus = encodeURIComponent(boardStatus);
+			if (boardType != null && (boardType.equals("4") || boardType.equals("3"))) {
+				tempBoardStatus = "photoBoardItem";
+			}
+
+			if (boardId.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
+				tempBoardStatus = "newBoardItemList";
+			} else {
+				tempBoardStatus = "boardItemList";
+			}
+
+			switch (boardType) {
+			case "3":
+			case "4":
+				linkUrl += "/ezBoard/boardItemViewPhoto.do?itemID=" + (tempItemID) + "&boardID=" + (tempBoardID);
+				linkUrlMobile += "/mobile/ezBoard/photoBoardItem.do?boardID=" + (tempBoardID) + "&itemID=" + (tempItemID) + "&type=photoBoardItem&boardItemListType=" + (tempBoardStatus);
+				break;
+			case "7":
+				linkUrl += "/ezBoard/boardItemViewMovie.do?itemID=" + (tempItemID) + "&boardID=" + (tempBoardID);
+				linkUrlMobile += "/mobile/ezBoard/movieBoardItem.do?boardID=" + (tempBoardID) + "&itemID=" + (tempItemID) + "&type=movieBoardItem&boardItemListType=" + (tempBoardStatus);
+				break;
+			default:
+				linkUrl += "/ezBoard/boardItemView.do?itemID=" + (tempItemID) + "&boardID=" + (tempBoardID);
+				linkUrlMobile += "/mobile/ezBoard/boardItem.do?boardID=" + (tempBoardID) + "&itemID=" + (tempItemID) + "&type=boardItem&boardItemListType=" + (tempBoardStatus);
+				break;
+			}
+
+ 			Map<String, Object> data = new HashMap<String, Object>();
+ 			data.put("notiRecipientParam", notiRecipientList);
+ 			data.put("notiContent", notiContent);
+ 			data.put("linkUrl", linkUrl);
+ 			data.put("linkUrlMobile",linkUrlMobile);
+ 			data.put("etcData", "notChkSetting");
+ 			data.put("boardType", boardType);
+
 			result.put("status", "ok");
 			result.put("code", 0);			
+			result.put("data", data);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);			
 		}		
 		
-		logger.debug("MOBILE G/W BOARD [GET /ezboard/movie/boards/{boardId}/sendmail/admin] ended.");
+		logger.debug("MOBILE G/W BOARD [GET /ezboard/movie/boards/{boardId}/sendnoti/admin] ended.");
 		
 		return result;
 	}
@@ -1397,9 +1623,9 @@ public class MBoardGWController {
      * 2021-09-07 홍승비 - 게시판의 일반 사용자들에게 메일 발송
      */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezboard/boards/{boardId}/sendmail", method= RequestMethod.POST, produces="application/json;charset=utf-8")
-	public Object sendBoardAlertMail(@PathVariable String boardId, HttpServletRequest request) throws Exception {		
-		logger.debug("MOBILE G/W BOARD [GET /ezboard/movie/boards/{boardId}/sendmail] started.");
+	@RequestMapping(value="/mobile/ezboard/boards/{boardId}/sendnoti", method= RequestMethod.POST, produces="application/json;charset=utf-8")
+	public Object sendBoardAlert(@PathVariable String boardId, HttpServletRequest request) throws Exception {
+		logger.debug("MOBILE G/W BOARD [POST /mobile/ezboard/boards/{boardId}/sendnoti] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -1419,46 +1645,66 @@ public class MBoardGWController {
 			String domainName = ezCommonService.getTenantConfig("DomainName", tenantID);
 			String userEmail = userID + "@" + domainName;
 			String password = jspw;
-			
+			List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
+			boolean disableMail = false;
+
 			// 게시판 옵션에서 메일알림을 사용하는 경우에만 발송한다.
 			MBoardInfoVO boardInfo = mBoardService.getBoardProperty(boardId, primary, tenantID, info.getUserId());
 			MBoardItemVO boardItem = mBoardService.getBrdItemInfo(itemID, commonUtil.getMultiData(info.getLang(), tenantID), tenantID);
 			List<HashMap<String, String>> possibleUserInfo = new ArrayList<HashMap<String, String>>();
 			HashMap<String, String> recipientIDs = new HashMap<String, String>();
+			List<String> notiRecipientIds = new ArrayList<String>();
 			String companyID = isAllGroupBoard.equals("Y") ? "" : boardInfo.getCompanyID(); // 회사ID의 경우, 그룹사게시판이 아닌 경우에만 게시판이 속한 회사ID로 세팅한다.
 			
 			logger.debug("serverName = " + serverName + " | userID = " + userID + " | itemID = " + itemID + " | primary = " + primary);
 			
-			
+
 			// 신규 게시물 등록, 수정 알림에 대한 수신인 ID 리턴
 			if ((mode.equals("new") && boardInfo.getMailFG_Post() != null && boardInfo.getMailFG_Post().equals("Y")) || (mode.equals("modify") && boardInfo.getMailFG_Mod() != null && boardInfo.getMailFG_Mod().equals("Y"))) {
-				// 표준모듈(포탈, 게시판)에 회사 전환 기능이 없으므로, 사간겸직에 대해서는 권한을 체크하지 않는다. (회사 변경기능이 있다면 해당 회사에 대응하도록 수정 필요)
-				possibleUserInfo = ezBoardService.getBoardUserInfoForMailSend(isAllGroupBoard, commonUtil.getPrimaryData(info.getLang(), tenantID), companyID, tenantID);
-				
-				// 관리자권한이 있는 사원 + 해당 회사 소속 사원 정보를 리턴받는다.
-				for (int i = 0; i < possibleUserInfo.size(); i++) {
-					String userIDTemp = possibleUserInfo.get(i).get("CN");
-					String userName = possibleUserInfo.get(i).get("USERNAME");
-					String mail = possibleUserInfo.get(i).get("MAIL");
-					String deptID = possibleUserInfo.get(i).get("DEPTID");
-					String userCompanyID = possibleUserInfo.get(i).get("COMPANYID");
-					String deptPathCode = userID + "," + possibleUserInfo.get(i).get("DEPT_CD_PATH");
-					String rollInfo = possibleUserInfo.get(i).get("ROLLINFO");
-					String value = userName + ";;" + mail;
-					
-					// userID가 메일발송 대상에 없는 경우 권한체크 진행
-					if (!recipientIDs.containsKey(userIDTemp)) {
-						boolean canAccess = accessListViewFGCheck(boardId, boardInfo.getGuBun(), userIDTemp, deptID, deptPathCode, rollInfo, isAllGroupBoard, userCompanyID, tenantID);
-						
-						if (canAccess) {
-							recipientIDs.put(userIDTemp, value);
-						}
+				List<OrganUserVO> favoriteBoardUserList = ezBoardService.getFavoriteBoardUserList(boardId, info.getCompanyId(), info.getTenantId());
+				for (int i = 0; i < favoriteBoardUserList.size(); i++) {
+					String writerID = favoriteBoardUserList.get(i).getCn();
+					String value = favoriteBoardUserList.get(i).getDisplayName() + ";;" + favoriteBoardUserList.get(i).getMail();
+					int tenantId = favoriteBoardUserList.get(i).getTenantId();
+					disableMail = ezPersonalService.hasNotiDiableItem(writerID, mode.equals("new") ? NotiType.BOARD_NEW : NotiType.BOARD_MODIFY, NotiPlatform.MAIL, tenantId);
+					if (!disableMail) {
+				        recipientIDs.put(writerID, value);
 					}
+
+					if (!notiRecipientIds.contains(writerID)) {
+						notiRecipientIds.add(writerID);
+						Map<String, Object> recipientMap = new HashMap<String, Object>();
+						recipientMap.put("userType", "PERSON");
+						recipientMap.put("companyId", info.getCompanyId());
+						recipientMap.put("cn", writerID);
+						notiRecipientList.add(recipientMap);
+					}
+				}
+			} else if (mode.equals("comment") && boardInfo.getMailFG_Comment() != null && boardInfo.getMailFG_Comment().equals("Y")) {
+				possibleUserInfo = ezBoardService.getCommentNoticeMail(boardId, itemID, info.getLang(), info.getTenantId());
+
+				for (int i = 0; i < possibleUserInfo.size(); i++) {
+					String writerID = possibleUserInfo.get(i).get("WRITERID");
+					String writerName = possibleUserInfo.get(i).get("WRITERNAME");
+					String mail = possibleUserInfo.get(i).get("MAIL");
+					int tenantId = Integer.parseInt(possibleUserInfo.get(i).get("TENANT_ID"));
+					String value = writerName + ";;" + mail;
+					disableMail = ezPersonalService.hasNotiDiableItem(writerID, NotiType.BOARD_COMMENT, NotiPlatform.MAIL, tenantId);
+					if (!recipientIDs.containsKey(writerID) && !disableMail) {
+						recipientIDs.put(writerID, value);
+					}
+
+					notiRecipientIds.add(writerID);
+					Map<String, Object> recipientMap = new HashMap<String, Object>();
+					recipientMap.put("userType", "PERSON");
+					recipientMap.put("companyId", info.getCompanyId());
+					recipientMap.put("cn", writerID);
+					notiRecipientList.add(recipientMap);
 				}
 			}
 			// 메일발송 하지 않는 경우, 바로 리턴
 			else {
-				logger.debug("sendBoardAlertMail ended. (mail alert is not used for mode [" + mode + "])");
+				logger.debug("sendBoardAlert ended. (Sending alert is not used for mode [" + mode + "])");
 				result.put("status", "ok");
 				result.put("code", 0);
 				return result;
@@ -1467,30 +1713,40 @@ public class MBoardGWController {
 			// 게시물 링크, 게시일 정보 등 생성
 			String strURL = "Item_View_New('" + boardId + "','" + itemID + "','" + boardInfo.getGuBun() + "');";
 	        strURL = "<span id='board_a' style=\"color:blue;cursor:pointer;text-decoration:underline;\" onClick=\"" + strURL + "\">";
-	        String strDate = commonUtil.getDateStringInUTC(boardItem.getWriteDate(), info.getOffSet(), false); 
+	        String strDate = commonUtil.getDateStringInUTC(boardItem.getWriteDate(), info.getOffSet(), false);
 	        strDate += "( " + info.getOffSet().split("\\|")[1] + " )";
-	        
+
 			// 메일 본문 생성
 			StringBuilder bodyContent = new StringBuilder();
 			String content = "";
 			String subject = "";
-			
+
+
 			if (mode.equals("new")) { // 게시판 게시알림 (아래 게시판에 새 게시글이 게시되었습니다.)
 				bodyContent.append("<br>" + egovMessageSource.getMessage("ezBoard.t250", locale) + "<br><br>");
 		        bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t251", locale) + commonUtil.cleanValue(boardInfo.getBoardName()));
 		        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t252", locale) + strDate);
-		        if (primary.equals("1")) {
-		        	bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253", locale) + info.getUserName() + "(" + (info.getTitle() == null || "null".equals(info.getTitle()) ? "" : info.getTitle()+ ", ")  + info.getDeptName() + ", " + info.getCompanyName() + ")");
-		        } else {
-		        	bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253", locale) + info.getUserName2() + "(" + (info.getTitle2() == null || "null".equals(info.getTitle2()) ? "" : info.getTitle2()+ ", ") + info.getDeptName2() + ", " + info.getCompanyName2() + ")");
-		        }
+		        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253", locale) + info.getUserName() + "(" + (info.getTitle() == null || "null".equals(info.getTitle()) ? "" : info.getTitle()) + ", " + info.getDeptName() + ", " + info.getCompanyName() + ")");
 		        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t254", locale) + strURL + commonUtil.cleanValue(boardItem.getTitle()) + "</a>");
-		        
-		        content = commonUtil.createNotiMailContent(bodyContent.toString(), tenantID, locale);
+
+
+		        content = commonUtil.createNotiMailContent(bodyContent.toString(), info.getTenantId(), locale);
 		        subject = "[" + egovMessageSource.getMessage("ezBoard.t255", locale) + boardInfo.getBoardName() + "] " + boardItem.getTitle();
-			}
-			else if (mode.equals("modify")) { // 게시판 수정알림 (아래 게시판의 게시물이 수정되었습니다.)
+
+			} else if (mode.equals("modify")) { // 게시판 수정알림 (아래 게시판의 게시물이 수정되었습니다.)
 				bodyContent.append("<br>" + egovMessageSource.getMessage("ezBoard.HSBMail05", locale) + "<br><br>");
+		        bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t251", locale) + commonUtil.cleanValue(boardInfo.getBoardName()));
+		        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t252", locale) + strDate);
+		        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253", locale) + info.getUserName() + "(" + (info.getTitle() == null || "null".equals(info.getTitle()) ? "" : info.getTitle()) + ", " + info.getDeptName() + ", " + info.getCompanyName() + ")");
+		        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t254", locale) + strURL + commonUtil.cleanValue(boardItem.getTitle()) + "</a>");
+
+
+		        content = commonUtil.createNotiMailContent(bodyContent.toString(), info.getTenantId(), locale);
+		        subject = "[" + egovMessageSource.getMessage("ezBoard.HSBMail07", locale) + boardInfo.getBoardName() + "] " + boardItem.getTitle();
+
+			}
+			else if (mode.equals("comment")) {
+				bodyContent.append("<br>" + egovMessageSource.getMessage("ezBoard.HSBMail06", locale) + "<br><br>");
 		        bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t251", locale) + commonUtil.cleanValue(boardInfo.getBoardName()));
 		        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t252", locale) + strDate);
 		        if (primary.equals("1")) {
@@ -1498,47 +1754,117 @@ public class MBoardGWController {
 		        } else {
 		        	bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253", locale) + info.getUserName2() + "(" + (info.getTitle2() == null || "null".equals(info.getTitle2()) ? "" : info.getTitle2()) + ", " + info.getDeptName2() + ", " + info.getCompanyName2() + ")");
 		        }
+
 		        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t254", locale) + strURL + commonUtil.cleanValue(boardItem.getTitle()) + "</a>");
-		        
+
 		        content = commonUtil.createNotiMailContent(bodyContent.toString(), tenantID, locale);
-		        subject = "[" + egovMessageSource.getMessage("ezBoard.HSBMail07", locale) + boardInfo.getBoardName() + "] " + boardItem.getTitle();
+		        subject = "[" + egovMessageSource.getMessage("ezBoard.HSBMail08", locale) + boardInfo.getBoardName() + "] " + boardItem.getTitle();
 			}
-			
+
 			// 수신인 ID에 대해 개별 메일발송 실행
 			InternetAddress[] toArray = new InternetAddress[1];
 			Iterator<String> keys = recipientIDs.keySet().iterator();
+			String key = "";
+
+			logger.debug("Sending mail starts");
+
 			while (keys.hasNext()) {
-				String key = keys.next(); // userID
-				String value = recipientIDs.get(key); // userName;;mail
-				String userName = value.split(";;")[0];
-				String mail = value.split(";;")[1];
-						
-				InternetAddress from = new InternetAddress();
-				if (primary.equals("1")) {
-					from.setPersonal(info.getUserName(), "UTF-8");
-				} else {
-					from.setPersonal(info.getUserName2(), "UTF-8");
+				try {
+					key = keys.next(); // userID
+					String value = recipientIDs.get(key); // userName;;mail
+					String userName = value.split(";;")[0];
+					String mail = value.split(";;")[1];
+
+					InternetAddress from = new InternetAddress();
+					if (primary.equals("1")) {
+						from.setPersonal(info.getUserName(), "UTF-8");
+					} else {
+						from.setPersonal(info.getUserName2(), "UTF-8");
+					}
+		        	from.setAddress(info.getEmail());
+
+					InternetAddress to = new InternetAddress();
+		        	to.setPersonal(userName, "UTF-8");
+		        	to.setAddress(mail);
+
+		        	toArray[0] = to;
+
+		        	ezEmailService.sendMail(userEmail, password, locale, from, toArray, null, null, subject, content, false, EmailImportance.NORMAL);
+				} catch (Exception e) {
+					logger.debug("Sending board mail is failed : " + key);
+					logger.debug(e.getMessage());
+					continue;
 				}
-	        	from.setAddress(info.getEmail());
-	        	
-				InternetAddress to = new InternetAddress();
-	        	to.setPersonal(userName, "UTF-8");
-	        	to.setAddress(mail);
-	        	
-	        	toArray[0] = to;
-	        	
-	        	ezEmailService.sendMail(userEmail, password, locale, from, toArray, null, null, subject, content, false, EmailImportance.NORMAL);
 			}
-	        
+			logger.debug("Sending mail ends");
+			
+			// 2024-03-29 한태훈 - 게시판 > 사용자 통합알림 추가 (즐겨찾기 게시판 등록 및 수정 알림, 전체 게시판 답변 및 댓글 알림)
+			if (notiRecipientIds == null || notiRecipientIds.size() <= 0) {
+				result.put("status", "ok");
+				result.put("code", 0);
+				result.put("data", null);
+				
+				logger.debug("MOBILE G/W BOARD [POST /mobile/ezboard/boards/{boardId}/sendnoti] ended.");
+				
+				return result;
+			}
+			
+			String notiContent = boardInfo.getBoardName() + " - " + boardItem.getTitle();
+			
+			// 게시물 링크, 게시일 정보 등 생성
+			String linkUrl = "";
+			String linkUrlMobile = "";
+			String boardStatus = "";
+			String boardType = boardInfo.getGuBun();
+			
+			if (boardType != null && (boardType.equals("4") || boardType.equals("3"))) {
+				boardStatus = "photoBoardItem";
+			}
+			
+			if (boardId.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
+				boardStatus = "newBoardItemList";
+			} else {
+				boardStatus = "boardItemList";
+			}
+
+			String tempItemID = encodeURIComponent(itemID);
+			String tempBoardId = encodeURIComponent(boardId);
+			boardStatus = encodeURIComponent(boardStatus);
+
+			switch (boardType) {
+			case "3":
+			case "4":
+				linkUrl += "/ezBoard/boardItemViewPhoto.do?itemID=" + (tempItemID) + "&boardID=" + (tempBoardId);
+				linkUrlMobile += "/mobile/ezBoard/photoBoardItem.do?boardID=" + (tempBoardId) + "&itemID=" + (tempItemID) + "&type=photoBoardItem&boardItemListType=" + (boardStatus);
+				break;
+			case "7":
+				linkUrl += "/ezBoard/boardItemViewMovie.do?itemID=" + (tempItemID) + "&boardID=" + (tempBoardId);
+				linkUrlMobile += "/mobile/ezBoard/movieBoardItem.do?boardID=" + (tempBoardId) + "&itemID=" + (tempItemID) + "&type=movieBoardItem&boardItemListType=" + (boardStatus);
+				break;
+			default:
+				linkUrl += "/ezBoard/boardItemView.do?itemID=" + (tempItemID) + "&boardID=" + (tempBoardId);
+				linkUrlMobile += "/mobile/ezBoard/boardItem.do?boardID=" + (tempBoardId) + "&itemID=" + (tempItemID) + "&type=boardItem&boardItemListType=" + (boardStatus);
+				break;
+			}
+
+			Map<String, Object> data = new HashMap<String, Object>();
+			data.put("notiRecipientParam", notiRecipientList );
+			data.put("notiContent", notiContent);
+			data.put("linkUrl", linkUrl);
+			data.put("linkUrlMobile",linkUrlMobile);
+			data.put("boardType",boardType);
+
 			result.put("status", "ok");
 			result.put("code", 0);
+			result.put("data", data);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
+			result.put("data", null);
 		}
 		
-		logger.debug("MOBILE G/W BOARD [GET /ezboard/movie/boards/{boardId}/sendmail] ended.");
+		logger.debug("MOBILE G/W BOARD [POST /mobile/ezboard/boards/{boardId}/sendnoti] ended.");
 		
 		return result;
 	}
@@ -1703,12 +2029,14 @@ public class MBoardGWController {
 			String userName = "";
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName,  userID);
+			String sort = request.getParameter("sort");
+			sort = StringUtils.isBlank(sort) ? "earliest" : sort;
 			
 			logger.debug("serverName = " + serverName + " | userId = " + userID);
 			
 			userName = "USERNAME" + commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			
-	    	List<BoardLineReplyVO> boardLineReplyVOList = ezBoardService.readOneLineReply(boardId, contentId, userName, gubun, info.getCompanyId(), info.getTenantId());
+	    	List<BoardLineReplyVO> boardLineReplyVOList = ezBoardService.readOneLineReply(boardId, contentId, userName, gubun, info.getCompanyId(), info.getTenantId(), sort);
 	    	
 	    	// 댓글의 작성일자 UTC시간 계산하여 각 VO에 설정
 	    	for (BoardLineReplyVO reply : boardLineReplyVOList) {
@@ -1743,6 +2071,7 @@ public class MBoardGWController {
 		try {
 			String userID = request.getParameter("userID");
 			String content = request.getParameter("content");
+			String imageContent = request.getParameter("imageContent"); // 2023-11-16 전인하 - 모바일 > 게시판 > 이모티콘 삽입 > 이모티콘 정보 추가
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName,  userID);
 			
@@ -1750,7 +2079,12 @@ public class MBoardGWController {
 			
 			content = content.replace("'", "''");
 			
-			mBoardService.saveOneLineReply(contentId, replyID, boardId, userID, info.getUserName(), info.getUserName2(), info.getTenantId(), info.getCompanyId(), content);
+			mBoardService.saveOneLineReply(contentId, replyID, boardId, userID, info.getUserName(), info.getUserName2(), info.getTenantId(), info.getCompanyId(), content, imageContent);
+			
+			// 댓글 첨부 저장
+			String attach = request.getParameter("attach");
+			String realPath = commonUtil.getRealPath(request);
+			ezBoardService.saveCommentAttachment(attach, replyID, contentId, boardId, realPath, info.getTenantId());
 			
 	        result.put("status", "ok");
 			result.put("code", 0);			
@@ -1814,7 +2148,10 @@ public class MBoardGWController {
 		try {
 			String userID = request.getParameter("userID");
 			String gubun = request.getParameter("gubun");
+			String replyLevel = request.getParameter("replyLevel");
+			String parentReplyID = request.getParameter("parentReplyID");
 			String serverName = request.getHeader("x-user-host");
+			String itemID = request.getHeader("itemID");
 			MCommonVO info = mOptionService.commonInfo(serverName,  userID);
 			
 			logger.debug("serverName = " + serverName + " | userId = " + userID);
@@ -1824,9 +2161,25 @@ public class MBoardGWController {
 			if (info.getRollInfo().indexOf("c=1") > -1 || info.getRollInfo().indexOf("k=1") > -1 || info.getRollInfo().indexOf("n=1") > -1) {
 				gubun = "2";
 			}
-			*/
+			*/				
 			
-			String resStr = ezBoardService.deleteOneLineReply(userID, replyID, gubun, info.getTenantId());
+			String resStr = "";
+			if (Integer.parseInt(replyLevel) != 1) { // 최상위부모댓글이 아닌 경우
+				resStr = ezBoardService.deleteOneLineReply(userID, replyID, itemID, gubun, info.getTenantId()); // 무조건 삭제
+				int sibilingsCnt = ezBoardService.getChildReplyCnt(contentId, boardId, parentReplyID, info.getTenantId()); // 형제댓글 갯수
+				int parentReplyExistFlag = mBoardService.checkThisReplyExist(parentReplyID, contentId, info.getTenantId()); // 부모댓글 실존여부 (존재할경우 1, 아니면 0)
+				if (sibilingsCnt == 0 && parentReplyExistFlag == 0) { // 형제댓글이 존재하지 않고, 부모댓글은 이미 지워진 상태일 때 null 삽입되어있던 부모댓글을 지운다.
+					ezBoardService.deleteOneLineReply("", parentReplyID, itemID, gubun, info.getTenantId());
+				}
+			} else { // 최상위 부모댓글인 경우 자식 댓글이 존재한다면 null 삽입, 자식댓글이 없다면 일반 삭제.
+				int childCnt = ezBoardService.getChildReplyCnt(contentId, boardId, replyID, info.getTenantId());
+				if (childCnt == 0) {
+					resStr = ezBoardService.deleteOneLineReply(userID, replyID, itemID, gubun, info.getTenantId());
+				} else {
+					ezBoardService.updateDelParentReply(replyID, contentId, boardId, info.getTenantId());
+					resStr = "OK_DELETED";
+				}
+			}
 			
 	        result.put("status", resStr);
 			result.put("code", 0);			
@@ -1842,5 +2195,433 @@ public class MBoardGWController {
 		
 		return result;
 	}
+
+	// 2024-03-29 한태훈 - java에서 encodeURIComponent 메소드 구현
+	public String encodeURIComponent(String s) throws Exception {
+	    String result = null;
+    	result = URLEncoder.encode(s, "UTF-8")
+                         .replaceAll("\\+", "%20")
+                         .replaceAll("\\%21", "!")
+                         .replaceAll("\\%27", "'")
+                         .replaceAll("\\%28", "(")
+                         .replaceAll("\\%29", ")")
+                         .replaceAll("\\%7E", "~");
+		return result;
+	}
+
+	/* 2023-11-13 전인하 - 모바일 게시판 댓글 수정 */
+	@RequestMapping(value="/mobile/ezboard/boards/{boardId}/contents/{contentId}/comments/{replyID}", method=RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject updateBoardComment(@PathVariable String boardId, @PathVariable String contentId, @PathVariable String replyID, HttpServletRequest request) throws Exception {
+		logger.debug("MOBILE G/W BOARD [PUT /ezboard/boards/{boardId}/contents/{contentId}/comments/{replyID}] started.");
+
+		JSONObject result = new JSONObject();
+
+		try {
+			String userID = request.getParameter("userID");
+			String content = request.getParameter("content");
+			String imageContent = request.getParameter("imageContent"); // 2023-11-16 전인하 - 모바일 > 게시판 > 이모티콘 삽입 > 이모티콘 정보 추가
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName,  userID);
+
+			logger.debug("serverName = " + serverName + " | userId = " + userID);
+
+			content = content.replace("'", "''");
+			
+			mBoardService.updateOneLineReply(contentId, replyID, content, info.getTenantId(), imageContent);
+			
+			// 댓글 첨부 저장
+			String attach = request.getParameter("attach");
+			String realPath = commonUtil.getRealPath(request);
+			ezBoardService.saveCommentAttachment(attach, replyID, contentId, boardId, realPath, info.getTenantId());
+
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", "");
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+
+		logger.debug("MOBILE G/W BOARD [PUT /ezboard/boards/{boardId}/contents/{contentId}/comments/{replyID}] ended.");
+
+		return result;
+	}
+
+	/* 2023-11-13 전인하 - 모바일 게시판 대댓글 작성 */
+	@RequestMapping(value="/mobile/ezboard/boards/{boardId}/contents/{contentId}/replyComments/{replyID}", method=RequestMethod.POST, produces="application/json;charset=utf-8")
+	public JSONObject insertReplyBoardComment(@PathVariable String boardId, @PathVariable String contentId, @PathVariable String replyID, HttpServletRequest request) throws Exception {
+		logger.debug("MOBILE G/W BOARD [POST /ezboard/boards/{boardId}/contents/{contentId}/replyComments/{replyID}] started.");
+
+		JSONObject result = new JSONObject();
+
+		try {
+			String userID = request.getParameter("userID");
+			String content = request.getParameter("content");
+			String parentReplyID = request.getParameter("parentReplyID");
+			String imageContent = request.getParameter("imageContent"); // 2023-11-16 전인하 - 모바일 > 게시판 > 이모티콘 삽입 > 이모티콘 정보 추가
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName,  userID);
+
+			logger.debug("serverName = " + serverName + " | userId = " + userID);
+
+			content = content.replace("'", "''");
+
+			// 패스워드 삽입 로직
+			// 추후 모바일 익명게시판에서 댓글 지원할 때 아래 password 변수에 "" 대신 사용자가 입력한 비밀번호를 삽입하면 됨
+			// 현시점에서는 모바일 익명게시판에서 댓글 지원하지 않으므로 단순 null에러 방지 목적으로 삽입함
+			String password = "";
+			String prm = egovFileScrty.getPrm();
+			String pre = egovFileScrty.getPre();
+			PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
+
+			String rpwd = EgovFileScrty.decryptRsa(pk, "");
+			password = EgovFileScrty.encryptPassword(rpwd, "unknown");
+			
+			mBoardService.saveOneLineReReply(contentId, boardId, replyID, parentReplyID, content, password, info, imageContent);
+			
+			// 댓글 첨부 저장
+			String attach = request.getParameter("attach");
+			String realPath = commonUtil.getRealPath(request);
+			ezBoardService.saveCommentAttachment(attach, replyID, contentId, boardId, realPath, info.getTenantId());
+
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", "");
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result.put("status", "error");
+			result.put("code", 1); 
+			result.put("data", "");
+		}
+
+		logger.debug("MOBILE G/W BOARD [POST /ezboard/boards/{boardId}/contents/{contentId}/replyComments/{replyID}] ended.");
+
+	    return result;
+	}
+
+	/**
+	 * 모바일 G/W 게시판 [GET] 최근게시물 리스트
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/mobile/ezboard/allnew-list/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public Object getBoardMainNewList(@PathVariable String userId, HttpServletRequest request, Model model) {
+		logger.debug("MOBILE G/W BOARD [GET /mobile/ezboard/allnew-list/{userId}] started.");
+
+		JSONObject result = new JSONObject();
+
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String boardId = request.getParameter("boardID");
+			String lastDate = request.getParameter("lastDate");
+			String pSearchText = request.getParameter("pSearchText");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			MOptionVO mobileInfo = mOptionService.optionInfo(userId, info.getTenantId());
+			String primary = commonUtil.getPrimaryData(mobileInfo.getLang(), info.getTenantId());
+
+			logger.debug("serverName = " + serverName + " | boardId = " + boardId + " | lastDate = " + lastDate + " | pSearchText = " + pSearchText + " | primary = " + primary);
+
+			MBoardInfoVO boardInfo = new MBoardInfoVO();
+
+			String deptPathCode = info.getUserId() + "," + mBoardService.getDeptPathCode(info.getDeptId(), info.getTenantId());
+
+			logger.debug("deptPathCode = " + deptPathCode);
+
+			boardInfo = mBoardService.getBoardProperty(boardId, primary, info.getTenantId(), info.getUserId());
+			boardInfo = mBoardService.getBoardInfo(boardInfo, info.getRollInfo(), deptPathCode, info);
+			
+			List<MBoardNewListVO> list = mBoardService.getAllNewBoardList(userId, commonUtil.getDateStringInUTC(lastDate, info.getOffSet(), true), info.getDeptId(), info.getCompanyId(), info.getTenantId(), info.getOffSet(),pSearchText);
+			
+			int listCount = mBoardService.getAllNewBoardListCount(userId, "", info.getCompanyId(), info.getTenantId(), pSearchText);
+			logger.debug("listCount ="+listCount);
+
+			JSONObject data = new JSONObject();
+			data.put("list", list);
+			data.put("boardInfo", boardInfo);
+			data.put("listCount", listCount);
+
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", data);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+
+		logger.debug("MOBILE G/W BOARD [GET /mobile/ezboard/allnew-list/{userId}] ended.");
+
+		return result;
+	}
+
+	/**
+	 * 익명게시판 비번체크
+	 */
+	@RequestMapping(value = "/mobile/ezboard/boards/private", method = RequestMethod.GET ,produces = "text/plain; charset=utf-8")
+	@ResponseBody
+	public String chkPasswordAnonymous(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) {
+		try {
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+			String itemID = request.getParameter("itemID");
+			String password = request.getParameter("pw");
+			return ezBoardService.chkPasswordAnonymous(itemID, password, userInfo.getTenantId()) ? "Y" : "N";
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			return "N";
+		}
+	}
 	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/mobile/ezboard/all-list/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public Object getAllBoardList(@PathVariable String userId, HttpServletRequest request, Model model) {		
+		logger.debug("MOBILE G/W BOARD [GET /mobile/ezboard/all-list/{userId}] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String boardId = request.getParameter("boardID");
+			String lastDate = request.getParameter("lastDate");
+			String pSearchText = request.getParameter("pSearchText");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			MOptionVO mobileInfo = mOptionService.optionInfo(userId, info.getTenantId());
+			String primary = commonUtil.getPrimaryData(mobileInfo.getLang(), info.getTenantId());
+			
+			logger.debug("serverName = " + serverName + " | boardId = " + boardId + " | lastDate = " + lastDate + " | pSearchText = " + pSearchText + " | primary = " + primary);
+			
+			MBoardInfoVO boardInfo = new MBoardInfoVO();
+			/* 2018-07-05 홍승비 - deptPath에 자신의 ID 빠져있는 부분 추가 */
+			String deptPathCode = info.getUserId() + "," + mBoardService.getDeptPathCode(info.getDeptId(), info.getTenantId());
+			
+			logger.debug("deptPathCode = " + deptPathCode);
+			
+			boardInfo = mBoardService.getBoardProperty(boardId, primary, info.getTenantId(), info.getUserId());
+			boardInfo = mBoardService.getBoardInfo(boardInfo, info.getRollInfo(), deptPathCode, info);
+
+			List<MBoardListVO> list = mBoardService.getAllBoardItemList(userId, commonUtil.getDateStringInUTC(lastDate, info.getOffSet(), true), info.getDeptId(), info.getCompanyId(), info.getTenantId(), info.getOffSet());
+			
+			int listCount = mBoardService.getAllBoardItemListCount(userId, info.getCompanyId(), info.getTenantId());
+			logger.debug("listCount ="+listCount);
+			
+			JSONObject data = new JSONObject();
+			data.put("list", list);
+			data.put("boardInfo", boardInfo);
+			data.put("listCount", listCount);
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", data);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}
+		
+		logger.debug("MOBILE G/W BOARD [GET /mobile/ezboard/all-list/{userId}] ended.");
+		
+		return result;
+	}
+	
+	/**
+	 * 모바일 G/W 게시판 [POST] 스크랩 설정
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/mobile/ezboard/boards/boardID/{boardId}/itemID/{itemId}/scrap", method= RequestMethod.POST, produces="application/json;charset=utf-8")
+	public JSONObject insertScrap(@PathVariable String boardId,@PathVariable String itemId,HttpServletRequest request) throws Exception {
+		logger.debug("MOBILE G/W BOARD [POST /ezboard/boards/boardID/{boardId}/itemID/{itemId}/scrap] started.");
+
+		JSONObject result = new JSONObject();
+
+		try {
+			String userId = request.getParameter("userId");
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName,  userId);
+
+			logger.debug("serverName = " + serverName + " | userId = " + userId);
+
+			String ScrapCheck = ezBoardService.getScrapItemCount(info.getUserId(),itemId,boardId,info.getCompanyId(),info.getTenantId());
+
+			if(ScrapCheck == "true"){
+				ScrapCheck = ezBoardService.setScrapItem(info.getUserId(),itemId,boardId,info.getCompanyId(),info.getTenantId());
+			}
+
+			result.put("status", "ok");
+			result.put("code", 0);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+		}
+
+		logger.debug("MOBILE G/W BOARD [POST /ezboard/boards/boardID/{boardId}/itemID/{itemId}/scrap] ended.");
+
+		return result;
+	}
+
+	/**
+	 * 모바일 G/W 게시판 [DELETE] 스크랩 해제
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/mobile/ezboard/boards/boardID/{boardId}/itemID/{itemId}/scrap", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
+	public JSONObject deleteScrap(@PathVariable String boardId,@PathVariable String itemId,HttpServletRequest request) throws Exception {
+		logger.debug("MOBILE G/W BOARD [DELETE /ezboard/boards/boardID/{boardId}/itemID/{itemId}/scrap] started.");
+
+		JSONObject result = new JSONObject();
+
+		try {
+			String userId = request.getParameter("userId");
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName,  userId);
+
+			logger.debug("serverName = " + serverName + " | userId = " + userId);
+
+			String ScrapCheck = ezBoardService.getScrapItemCount(info.getUserId(),itemId,boardId,info.getCompanyId(),info.getTenantId());
+
+			if(ScrapCheck == "false"){
+				ScrapCheck = ezBoardService.delScrapItem(info.getUserId(),itemId,boardId,info.getCompanyId(),info.getTenantId());
+			}
+
+			result.put("status", "ok");
+			result.put("code", 0);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+		}
+
+		logger.debug("MOBILE G/W BOARD [DELETE /ezboard/boards/boardID/{boardId}/itemID/{itemId}/scrap] ended.");
+
+		return result;
+	}
+
+	/**
+	 * 모바일 G/W 게시판 [GET] 스크랩 리스트
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/mobile/ezboard/scrap/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public Object getBoardScrapList(@PathVariable String userId, HttpServletRequest request, Model model) {
+		logger.debug("MOBILE G/W BOARD [GET /mobile/ezboard/scrap/{userId}] started.");
+
+		JSONObject result = new JSONObject();
+
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String boardId = request.getParameter("boardID");
+			String pSearchText = request.getParameter("pSearchText");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			MOptionVO mobileInfo = mOptionService.optionInfo(userId, info.getTenantId());
+			String primary = commonUtil.getPrimaryData(mobileInfo.getLang(), info.getTenantId());
+
+			MBoardInfoVO boardInfo = new MBoardInfoVO();
+			String deptPathCode = info.getUserId() + "," + mBoardService.getDeptPathCode(info.getDeptId(), info.getTenantId());
+
+			logger.debug("deptPathCode = " + deptPathCode);
+
+			boardInfo = mBoardService.getBoardProperty(boardId, primary, info.getTenantId(), info.getUserId());
+			boardInfo = mBoardService.getBoardInfo(boardInfo, info.getRollInfo(), deptPathCode, info);
+
+			boardInfo.setType("scrapBoardItemList");
+			boardInfo.setBoardName(egovMessageSource.getMessage("ezBoard.kmh12", new Locale(commonUtil.getTwoLetterLangFromLangNum(mobileInfo.getLang()))));
+			
+			Map<String, ArrayList<String>> scrapBoardListReadView_FG = mBoardService.getScrapBoardListReadView_FG(info);
+			ArrayList<String> scrapBoardListRead_FG = scrapBoardListReadView_FG.get("scrapBoardListRead_FG");
+			ArrayList<String> scrapBoardListView_FG =  scrapBoardListReadView_FG.get("scrapBoardListView_FG");
+			
+			List<MBoardNewListVO> list = mBoardService.getScrapBoardList(userId, info.getDeptId(), info.getCompanyId(), info.getTenantId(), info.getOffSet(),pSearchText, scrapBoardListView_FG);
+
+			int listCount = mBoardService.getScrapBoardListCount(userId, info.getCompanyId(), info.getTenantId(), pSearchText, scrapBoardListView_FG);
+
+			JSONObject data = new JSONObject();
+			data.put("list", list);
+			data.put("boardInfo", boardInfo);
+			data.put("listCount", listCount);
+			data.put("scrapBoardListRead_FG", scrapBoardListRead_FG);
+
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", data);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+
+		logger.debug("MOBILE G/W BOARD [GET /mobile/ezboard/scrap/{userId}] ended.");
+
+		return result;
+	}
+	@Transactional
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/mobile/ezboard/boards/{boardId}/contents/{contentId}/rate", method=RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public Map<String, Object> saveItemStarRating(@PathVariable String boardId, @PathVariable String contentId, HttpServletRequest request) throws Exception {
+		logger.debug("saveItemStarRating started");
+		
+		String userId = request.getParameter("userId");
+		String serverName = request.getHeader("x-user-host");
+		LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+		
+		int updateRating = Integer.parseInt(request.getParameter("updateRating"));
+		String isReRated = request.getParameter("isReRated");
+
+		Map<String, Object> result = new HashMap<>();
+
+		try {
+			Map<String, Object> resultData = ezBoardService.saveItemStarRating(contentId, isReRated, updateRating, userInfo);
+			result.put("status", "success");
+			result.put("totalRaters", resultData.get("totalRaters"));
+			result.put("averageScore", resultData.get("averageScore"));
+		} catch (Exception e) {
+			result.put("status", "error");
+			logger.error(e.getMessage(), e);
+		}
+
+		logger.debug("saveItemStarRating ended");
+		
+		return result;
+	}
+	
+	/**
+	 * 모바일 G/W 게시판 [GET] 오늘의 식단 가져오기
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/mobile/ezboard/mealPlan/{startDate}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public Object getMealPlan(@PathVariable String startDate,HttpServletRequest request) throws Exception {
+		logger.debug("MOBILE G/W BOARD [GET /mobile/ezboard/mealPlan/{startDate}] started.");
+
+		JSONObject result = new JSONObject();
+
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userID");
+
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			MOptionVO mobileInfo = mOptionService.optionInfo(userId, info.getTenantId());
+			String primary = commonUtil.getPrimaryData(mobileInfo.getLang(), info.getTenantId());
+
+			logger.debug("serverName = " + serverName + " | primary = " + primary);
+			
+			Map<String, Object> map = new HashMap<>();
+			map.put("startDate", startDate);
+			map.put("companyID", request.getParameter("companyID"));
+			map.put("tenantID", request.getParameter("tenantID"));
+
+			List<MealDataVO> mealDataList = ezBoardService.getMealPlanList(map);
+
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", mealDataList);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		logger.debug("MOBILE G/W BOARD [GET /mobile/ezboard/mealPlan/{startDate}] ended.");
+
+		return result;
+	}
 }

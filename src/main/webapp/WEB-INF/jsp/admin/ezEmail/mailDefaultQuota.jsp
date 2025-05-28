@@ -6,13 +6,48 @@
 	<head>
 		<title>mailDefaultQuota</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
-		<script type="text/javascript">            
-            function Save(pPath)
+		<script type="text/javascript">
+			var userCompany = "${userCompany}";
+			var companyId;
+
+			window.onload = function() {
+				companyId = userCompany;
+				getCompanyQuota();
+			}
+
+			// 회사 선택
+			function companyChange() { 
+				companyId = document.getElementById("companyList").value;
+				getCompanyQuota();
+			}
+			
+			// 회사별 메일박스정책 가져오기
+			function getCompanyQuota() {
+				$.ajax({
+					type : "POST",
+					url : "/admin/ezEmail/getDefaultQuota.do",
+					dataType : "json",
+					data : {"companyId" : companyId},
+					success : function(data) {
+						var companyWarn = data.companyWarn;
+						var companyMax = data.companyMax;
+						document.getElementById("defaultWarn").value = companyWarn;
+						document.getElementById("defaultMax").value = companyMax;
+					},
+					error : function () {
+						alert("error");
+					}
+				});
+			}
+
+			function Save(pPath)
             {
                 var defaultWarnInput = document.getElementById("defaultWarn");
                 var defaultMaxInput = document.getElementById("defaultMax");
@@ -36,21 +71,22 @@
                 }
                 
                 var strXML = "<DATA>";
+				strXML += "<COMPANYID>" + companyId + "</COMPANYID>";
                 strXML += "<WARNSTORAGE>" + parseFloat(Remove1000Sep(defaultWarnInput.value, ",", "") * 1024) + "</WARNSTORAGE>";
                 strXML += "<MAXSTORAGE>" + parseFloat(Remove1000Sep(defaultMaxInput.value, ",", "") * 1024) + "</MAXSTORAGE>";
                 strXML += "</DATA>";
 
                 var xmlhttp = createXMLHttpRequest();
-                xmlhttp.open("POST", "/admin/ezEmail/mailSaveDefaultQuota.do", false);
-                xmlhttp.send(strXML);
+				xmlhttp.open("POST", "/admin/ezEmail/mailSaveDefaultQuota.do", false);
+				xmlhttp.send(strXML);
                 
-                if (xmlhttp.responseText == "True") {
+				if (xmlhttp.responseText == "True") {
                     alert("<spring:message code='ezEmail.t42' />");
-                    document.location.href = document.location.href;
+					getCompanyQuota();
                 }
                 else {
                     alert("<spring:message code='ezEmail.t228' />");
-                    document.location.href = document.location.href;
+					getCompanyQuota();
                 }
                 xmlhttp = null;
             }
@@ -146,7 +182,16 @@
 		</script>
 	</head>
   <body class="mainbody">  
-    <h1><spring:message code='ezEmail.t73' /></h1>   
+    <h1>
+		<spring:message code='ezEmail.t73' />
+		<span class="title_bar"><img src="/images/name_bar.gif"></span>
+		<select id="companyList" class="companySelect" onchange="companyChange(this);">
+			<option value="*"><spring:message code='ezEmail.t588' /></option>
+			<c:forEach var="item" items="${list}">
+				<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+			</c:forEach>
+		</select>
+	</h1>   
     <span class="txt" style="margin-top:30px;display: block">* <spring:message code='ezEmail.t74' /></span><p>
     <div style="width:310px;">
 	    <div style="border: 1px solid #dbdbda;">

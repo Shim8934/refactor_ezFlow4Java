@@ -7,7 +7,7 @@
 	</head>
 	<frameset rows="0,*" frameborder="0" border="0">
 		<frame src="" name="white" marginwidth="0" marginheight="0" scrolling="no" frameborder="0">
-			<frameset cols="220,*" frameborder="0" border="0">
+			<frameset cols="${leftFrameWidth},*" frameborder="0" border="0" id="frameset">
 				<frame src="/ezCabinet/cabinetLeft.do" name="left" marginwidth="0" marginheight="0" scrolling="auto" frameborder="0" noresize>
 				<frame name="right" marginwidth="0" marginheight="0" scrolling="auto" frameborder="0" noresize>
 			</frameset>

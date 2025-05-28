@@ -148,6 +148,14 @@ function SetGongRamList(pstrXML) {
         var strRows = "<ROWS>"; 
         
         var i = 1;
+        /* 2024-05-10 양지혜 - 전자결재 > 결재정보 > 퇴직자 포함된 즐겨찾기 적용 시 제외 */
+        var RetireList = [];
+        document.querySelectorAll('[id^="lvRecSaveDetailCC_TR_"]').forEach(function(element) {
+            if (element.getAttribute('RETIRECHK') == "Y") {
+                RetireList.push(element.querySelector("td:nth-child(3)").textContent)
+            }
+        });
+        var sn = listnodes.length-RetireList.length;
         for (var cnt = listnodes.length-1; cnt >= 0; cnt-- ) {
         	var preDeptName = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[9], "DATA9");
             var preDeptJobTitle = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[7], "DATA7");
@@ -159,40 +167,50 @@ function SetGongRamList(pstrXML) {
             var preDeptJobTitle2 = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[7], "DATA7");
             var preDeptID = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[8], "DATA8");
             var preUserID = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[5], "DATA5");
-            
-            strRows += "<ROW>";
-            strRows += "<CELL>";
-            strRows += "<VALUE>" + (listnodes.length+1-i) + "</VALUE>";
-            strRows += "<DATA1>" + "" + "</DATA1>";
-            strRows += "<DATA2>" + "" + "</DATA2>";
-            strRows += "<DATA3>" + pDocID + "</DATA3>";
-            strRows += "<DATA4>" + preUserID + "</DATA4>";
-            strRows += "<DATA5>" + "N" + "</DATA5>";
-            strRows += "<DATA6>" + preDeptID + "</DATA6>";
-            strRows += "<DATA7>" + "" + "</DATA7>";
-            strRows += "<DATA8>" + "N" + "</DATA8>";
-            strRows += "<DATA9>" + "N" + "</DATA9>";
-            strRows += "<DATA10>7001388</DATA10>";
-            strRows += "<DATA11>015</DATA11>";
-            strRows += "<DATA12>001</DATA12>";
-            strRows += "<DATA13>" + MakeXMLString(preWriterName1) + "</DATA13>";
-            strRows += "<DATA14>" + MakeXMLString(preWriterName2) + "</DATA14>";
-            strRows += "<DATA15>" + MakeXMLString(preDeptName1) + "</DATA15>";
-            strRows += "<DATA16>" + MakeXMLString(preDeptName2) + "</DATA16>";
-            strRows += "<DATA17>" + MakeXMLString(preDeptJobTitle1) + "</DATA17>";
-            strRows += "<DATA18>" + MakeXMLString(preDeptJobTitle2) + "</DATA18>";
-            strRows += "</CELL><CELL>";
-            strRows += "<VALUE>" + MakeXMLString(preWriterName1) + "</VALUE>";
-            strRows += "</CELL><CELL>";
-            strRows += "<VALUE>" + MakeXMLString(preDeptJobTitle) + "</VALUE>";
-            strRows += "</CELL><CELL>";
-            strRows += "<VALUE>" + MakeXMLString(preDeptName) + "</VALUE>";
-            strRows += "</CELL><CELL>";
-            strRows += "<VALUE>" + strLangAprType17 + "</VALUE>";
-            strRows += "</CELL><CELL>";
-            strRows += "<VALUE>" + strLang72 + "</VALUE>";
-            strRows += "</CELL><CELL><VALUE></VALUE></CELL></ROW>";
-            
+            var RetireChk = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[10], "RETIRECHK");
+
+            if (RetireChk == "N") {
+                strRows += "<ROW>";
+                strRows += "<CELL>";
+                strRows += "<VALUE>" + sn + "</VALUE>";
+                strRows += "<DATA1>" + "" + "</DATA1>";
+                strRows += "<DATA2>" + "" + "</DATA2>";
+                strRows += "<DATA3>" + pDocID + "</DATA3>";
+                strRows += "<DATA4>" + preUserID + "</DATA4>";
+                strRows += "<DATA5>" + "N" + "</DATA5>";
+                strRows += "<DATA6>" + preDeptID + "</DATA6>";
+                strRows += "<DATA7>" + "" + "</DATA7>";
+                strRows += "<DATA8>" + "N" + "</DATA8>";
+                strRows += "<DATA9>" + "N" + "</DATA9>";
+                strRows += "<DATA10>7001388</DATA10>";
+                strRows += "<DATA11>015</DATA11>";
+                strRows += "<DATA12>001</DATA12>";
+                strRows += "<DATA13>" + MakeXMLString(preWriterName1) + "</DATA13>";
+                strRows += "<DATA14>" + MakeXMLString(preWriterName2) + "</DATA14>";
+                strRows += "<DATA15>" + MakeXMLString(preDeptName1) + "</DATA15>";
+                strRows += "<DATA16>" + MakeXMLString(preDeptName2) + "</DATA16>";
+                strRows += "<DATA17>" + MakeXMLString(preDeptJobTitle1) + "</DATA17>";
+                strRows += "<DATA18>" + MakeXMLString(preDeptJobTitle2) + "</DATA18>";
+                strRows += "</CELL><CELL>";
+                strRows += "<VALUE>" + MakeXMLString(preWriterName1) + "</VALUE>";
+                strRows += "</CELL><CELL>";
+                strRows += "<VALUE>" + MakeXMLString(preDeptJobTitle) + "</VALUE>";
+                strRows += "</CELL><CELL>";
+                strRows += "<VALUE>" + MakeXMLString(preDeptName) + "</VALUE>";
+                strRows += "</CELL><CELL>";
+                
+                /* 2024-12-04 홍승비 - 전자결재G > 공람자 즐겨찾기 적용 > 회람 및 공람 메세지 분기처리 추가 */
+                if (approvalFlag == "G") {
+                	strRows += "<VALUE>" + strLangDocState15 + "</VALUE>";
+				} else {
+					strRows += "<VALUE>" + strLangAprType17 + "</VALUE>";
+				}
+                
+                strRows += "</CELL><CELL>";
+                strRows += "<VALUE>" + strLang72 + "</VALUE>";
+                strRows += "</CELL><CELL><VALUE></VALUE></CELL></ROW>";
+                sn--;
+            }
             i++;
         }
         
@@ -211,6 +229,10 @@ function SetGongRamList(pstrXML) {
         pAPRLINE.SetHeightFree(true);
         pAPRLINE.DataSource(objXML);
         pAPRLINE.DataBind("APRLINECC");
+
+        if (RetireList.length > 0) {
+            alert("[" + RetireList.join(",") + "] 는 퇴직자입니다.\n즐겨찾기 적용에서 제외됩니다.");
+        }
 
         /*for (var cnt = listnodes.length-1; cnt >= 0; cnt-- ) {
 

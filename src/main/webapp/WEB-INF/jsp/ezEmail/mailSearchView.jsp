@@ -6,7 +6,8 @@
 	<head>
 		<title>mail_search</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/search_mail.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/newMail_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
@@ -221,6 +222,10 @@
 					this.usepostDate = true;
 				}
 		    	if (!TrimText(ALL.value)) {
+                    if (TrimText(prekeywordDetail1.value).length == 1 || TrimText(prekeywordDetail2.value).length == 1 || TrimText(prekeywordDetail3.value).length == 1) {
+                        alert("<spring:message code='ezSystem.yja01' />");
+                        return;
+                    }
 		    		if( $("#moreSearch").css("display") != "none"){
 			    		if (!TrimText(prekeywordDetail1.value) && !TrimText(prekeywordDetail2.value) && !TrimText(prekeywordDetail3.value) 
 			    				&& !this.usepostDate) {
@@ -234,6 +239,10 @@
 		    			}
 		    		}
 		        } else {
+		            if (TrimText(ALL.value).length == 1) {
+                        alert("<spring:message code='ezSystem.yja01' />");
+                        return;
+                    }
 	        		searchCArray.push("ALL");
 	    			searchKArray.push(TrimText(ALL.value));
 		        	document.getElementById("resultTD").setAttribute("curPage", 1);
@@ -518,8 +527,8 @@
 			            mail_movecopy_cross_dialogArguments[1] = move_mail_onclick_Complete;
 			            mail_movecopy_cross_dialogArguments[2] = "CLOSE";
 			            
-			            var OpenWin = window.open(requestUrl, "mail_movecopy_cross", GetOpenWindowfeature(320, 375));
-			            try { OpenWin.focus(); } catch (e) { }
+			            var OpenWin = window.open(requestUrl, "mail_movecopy_cross", GetOpenWindowfeature(500, 700));
+			            try { OpenWin.focus(); } catch (e) {console.log(e);}
 			        }
 			        else {
 			            var feature = "dialogHeight:375px; dialogWidth:320px; status:no; help:no; edge:sunken";
@@ -851,6 +860,17 @@
                         }
                     }
 				}
+				// 20200428 조진호 - 메일 리스트에서 체크박스를 이용한 행위 뒤 체크박스가 풀리도록 추가
+				if (listContentArry.length > 0) {
+					for (var i = 1; i <= listContentArry.length; i++) {
+						document.getElementById(listContentArry[listContentArry.length - i]).children[0].children[0].checked = false;
+						document.getElementById(listContentArry[listContentArry.length - i]).style.background = m_strColorDefault;
+					}
+				}
+				try {
+					if (document.getElementById("Checkbox1") != null)
+						document.getElementById("Checkbox1").checked = false;
+				} catch (e) {console.log(e);}
 			}
 		
 			function mailExport_start(pwd) {

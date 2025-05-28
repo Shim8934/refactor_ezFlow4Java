@@ -29,3 +29,8 @@ var strLang28 = "선택된 회람이 없습니다.";
 var strLang29 = "/blank_kr.htm";
 var strLang30 = "회람이 없습니다.";
 var strLang50 = "검색결과가 없습니다.";
+
+// 2024-06-28 민지수 - 회람판 > 첨부파일 드래그 앤 드롭 안내 메세지 추가
+var strLangMJS01 = "드래그 앤 드롭으로 파일 추가 및 추가한 파일의 순서를 변경할 수 있습니다.";
+var strLangMJS02 = "첨부파일명"
+var strLangMJS03 = "파일크기"

@@ -7,10 +7,11 @@
 <!DOCTYPE html>
 <html>
 	<head> 
-		<title>::: ezEKP Java :::</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />		
+		<title>::: ezFlow Java :::</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link rel="shortcut icon" href="/images/favicon.ico">
 		<link href="${util.addVer('/css/login.css')}" rel="stylesheet" type="text/css" />
-<%-- 		<link rel="stylesheet" href="${util.addVer('main.e15', 'msg')}" type="text/css"> --%>
+<%-- 		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css"> --%>
 		<link href="${util.addVer('/js/jquery/jquery.modal.css')}" rel="stylesheet" type="text/css" />
 		<style>
 			.blocker {
@@ -47,7 +48,7 @@
 			.password_reset .passwordForm li.grayText{ color:#8e8e8e; font-size:12px; margin:0px; padding:0px}
 			#exDiv3 dl{margin-top: 20px;}
 			.warning_wrap .layerTitle{margin-bottom: 20px;}
-			.modal{max-width: 600px !important;}
+			.modal:not(#exDiv10){max-width: 600px !important;}
 			
 			/* 2018-11-06 포탈개인화 로고 설정 - 유은정 */
 			/*.logo img {width:137px; height:38px;} */
@@ -87,8 +88,20 @@
 		<script type="text/javascript" src="${util.addVer('/js/rsa/rsa.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/rsa/prng4.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/rsa/rng.js')}"></script>
-		<script type="text/javascript">		
+		<script type="text/javascript">
+			var lastLoginAttempt = 0;
+			var loginCooldown = 1000; // 1초 (1000 밀리초)
+			var pwPolicyExplain = "${pwPolicyExplain}";
+			var usefidoforce = "${usefidoforce}";
+		
 			function actionLogin() {
+				var currentTime = new Date().getTime();
+
+				// 중복 실행 방지: 1초 이내에 다시 로그인 시도를 막음
+				if (currentTime - lastLoginAttempt < loginCooldown) {
+					return;
+				}
+
 			    if (document.loginForm.id.value =="") {
 			        alert("<spring:message code='main.jjs02'/>");
 			        document.loginForm.id.focus();
@@ -110,8 +123,16 @@
 					frm.id.value = "";
 					frm.password.value = "";
 					frm.otp.value = "";
+
+					// fido test
+					if ('true' == usefidoforce) {
+						frm.password.value = 'usefidoforce';
+					}
+
 					frm.action="<c:url value='/user/login/actionLogin.do'/>";        
 					frm.submit();
+
+					lastLoginAttempt = new Date().getTime();
 			    }
 			}
 			
@@ -223,6 +244,12 @@
 			    } else if (message === "loginSessionFlag") {
 					$("#imgMnt9").html("<img src='/images/warning2.png'>");
 					$("#exDiv9").modal();
+				} else if (message === "organInfoChangedFlag") {
+					$("#imgMnt11").html("<img src='/images/warning2.png'>");
+					$("#exDiv11").modal();
+				} else if (message === "loginBlock") {
+					$("#imgMnt10").html("<img src='/images/warning2.png'>");
+					$("#exDiv10").modal();
 				} else if (message != "") {
 // 			        alert(message);
 					$("#layerTitle").text(message);
@@ -282,6 +309,9 @@
 			        document.all['txtNewPasswordConfirm'].focus();
 			        return;
 			    }
+				
+				var resetPasswordFlag = "${resetPassword}";
+				resetPasswordFlag = resetPasswordFlag ==="" ? 'N' : resetPasswordFlag;
 		        
 		        var frm = document.loginForm;
 		        var rsa = new RSAKey();
@@ -295,7 +325,8 @@
 		    			USERID : rsa.encrypt(document.getElementById("chooseId").getAttribute("data-userId")),
 		    			OLDPASSWORD : rsa.encrypt(document.getElementById('txtOldPassword').value),
 		    			NEWPASSWORD : rsa.encrypt(document.getElementById('txtNewPassword').value),
-		    			NEWPASSWORDCONFIRM : rsa.encrypt(document.getElementById('txtNewPasswordConfirm').value)
+		    			NEWPASSWORDCONFIRM : rsa.encrypt(document.getElementById('txtNewPasswordConfirm').value),
+						RESETPASSWORDFLAG : resetPasswordFlag
 		    		},
 		    		url : "/user/login/changePassword.do",
 		    		success: function(text){
@@ -485,6 +516,10 @@
 	                clearObj.focus();
 	            })
 	        }
+			
+			function resetPassword () {
+				window.location.href = "/user/login/resetPw/resetPwInfo.do";
+			}
 	
     	</script>
 	</head>	
@@ -506,7 +541,7 @@
 		                    	<p class="logo" ><img style ="width: 229px; height: 81px;" src="<c:out value='${logoUrl }'/>"></p>
 		                        <p class="id_txt"><spring:message code="main.login.design01"/></p>
 		                        <p class="id">
-		                        	<input id="uid" name="id" placeholder="<spring:message code="main.login.design02"/>" style="ime-mode:disabled;" class="input_text" type="text" onblur="if (this.value.length==0) {this.className='input_text', document.getElementById('BC').style.display = 'none';} else {this.className='input_text'};" onfocus="this.className='input_text focus', document.getElementById('BC').style.display = 'block';" onKeyPress="if(event.keyCode==13) document.loginForm.password.focus();" />
+		                        	<input id="uid" name="id" placeholder="<spring:message code="main.login.design02"/>" style="ime-mode:disabled;" class="input_text" type="text" onblur="if (this.value.length==0) {this.className='input_text', document.getElementById('BC').style.display = 'none';} else {this.className='input_text'};" onfocus="this.className='input_text focus', document.getElementById('BC').style.display = 'block';" onKeyPress="if(event.keyCode==13) document.loginForm.password.focus();" maxlength="20"/>
 		                        	<span class="btnClear" id="BC" onclick="clearInput(this)" style="display:none;"></span>
 		                        </p>
 		                        <p class="pw_txt"><spring:message code="main.login.design03"/></p>
@@ -538,7 +573,7 @@
 			                        </p>
 	  		                        <c:if test="${usePasswordReset == 'YES'}"> 
 				                        <p class="find_pw">
-			                                <a id="findPwd" onclick="openFindPwd();" ><spring:message code="login.zno025"/></a>
+			                                <a id="findPwd" onclick="resetPassword();" ><spring:message code="login.zno025"/></a>
 			                            </p>
 	 	                            </c:if>
 	                        	</div>
@@ -558,75 +593,63 @@
 			</span>
 			<p><span>[<strong class="yellow_txt">Caps Lock</strong>]?pCapsLockMsg?></span></p>
 		</div>
-		<div id="exDiv" style="display:none;margin-bottom:100px;padding:67px 20px 32px">
+		<div id="exDiv" style="display: none; margin-bottom: 100px;padding: 67px 20px 32px;" class="modal">
 			<div id="close">
-	            <ul>
-	                <li><a rel="modal:close"><span></span></a></li>
-	            </ul>
-	        </div>			
-			<div class="password_reset">
-				<p class="passwordTitle" style="margin: 0 auto; text-align: center; ">
-					<c:if test="${isFirstLogin == 'Y'}">
-						<img src="/images/kr/login/firstLogin_txt.svg" style="height: 52px;">
-					</c:if>
-					<c:if test="${isFirstLogin != 'Y'}">
-						<img src="/images/kr/login/expireDate_txt.svg" style="height: 52px;">
-					</c:if>
-				</p>
+				<ul>
+					<li><a rel="modal:close"><span></span></a></li>
+				</ul>
+			</div>
+			<div class="password_change">
+				<div class="passwordTitle">
+					<span class="password_lock"></span>
+					<div class="password_tit">
+						<p class="tit_01">
+							<c:choose>
+								<c:when test="${isFirstLogin == 'Y' && resetPassword != 'Y'}">
+									<spring:message code='login.kdh029'/>
+								</c:when>
+								<c:when test="${isFirstLogin != 'Y' && resetPassword != 'Y'}">
+									<spring:message code='login.kdh030'/>
+								</c:when>
+								<c:otherwise>
+									<spring:message code='login.kdh032'/>
+								</c:otherwise>
+							</c:choose>
+						</p>
+						<p class="tit_02">
+<%--							<span><spring:message code='main.login.design03'/></span>--%>
+							<spring:message code='login.kdh031' htmlEscape="false"/>
+						</p>
+					</div>
+				</div>
 				<ul class="passwordForm">
+					<li>
+						<div>${pwPolicyExplain}</div>
+					</li>
 					<li style="padding-top:10px;">
 						<span class="formText"><spring:message code='main.jjh09'/></span>
 						<span class="formID" id="chooseId" data-userId="${userId}">${loginId}</span>
 					</li>
-					<li><span class="formText"><spring:message code='ezPersonal.t949'/></span><span class="formInput"><input type="password" id="txtOldPassword" onKeyPress="if(event.keyCode==13) PassWordChange();"/></span></li>
-					<li><span class="formText"><spring:message code='main.jjh05'/></span><span class="formInput"><input type="password" id="txtNewPassword" onKeyPress="if(event.keyCode==13) PassWordChange();"/></span></li>
-					<li><span class="formText"><spring:message code='main.jjh06'/></span><span class="formInput"><input type="password" id="txtNewPasswordConfirm" onKeyPress="if(event.keyCode==13) PassWordChange();"/></span></li>
-					<%-- <li style="padding-bottom:10px;padding-top:3px" class="grayText">▒ <spring:message code='main.jjh04'/></li> --%>
-					<li style="padding-bottom:10px;padding-top:3px" class="grayText">${pwPolicyExplain}</li>
+					<li>
+						<span class="formText">
+							<c:if test="${resetPassword == 'Y'}"><spring:message code='login.kdh001'/></c:if>
+							<c:if test="${resetPassword != 'Y'}"><spring:message code='ezPersonal.t949'/> </c:if>
+						</span><span class="formInput"><input type="password" id="txtOldPassword" onkeypress="if(event.keyCode==13) PassWordChange();"></span></li>
+					<li><span class="formText"><spring:message code='main.jjh05'/></span><span class="formInput"><input type="password" id="txtNewPassword" onkeypress="if(event.keyCode==13) PassWordChange();"></span></li>
+					<li><span class="formText"><spring:message code='main.jjh06'/></span><span class="formInput"><input type="password" id="txtNewPasswordConfirm" onkeypress="if(event.keyCode==13) PassWordChange();"></span></li>
+
+					<li style="padding-bottom:10px;padding-top:3px" class="grayText"></li>
 				</ul>
 			</div>
 			<div class="btnpositionLayer" style="background-color: white;border:0px">
-			    <a class="imgbtn" onClick="javascript:PassWordChange()" style="background: #3F8EE8; border: 1px solid #3F8EE8;"><span style="color: #fff;"><spring:message code='ezSchedule.t4' /></span></a>
-			    <c:if test="${isFirstLogin != 'Y'}">
-		    		<a class="imgbtn" onClick="passwordUpdateNextTime()" ><span><spring:message code='main.hdp01'/></span></a>
-			    </c:if>
-			</div>			
-			<%-- <div style="float:left">
-				<c:if test="${isFirstLogin == 'Y'}"><img src="/images/hello.png" width="52" height="52"/></c:if>
-				<c:if test="${isFirstLogin != 'Y'}"><img src="/images/warning.png" width="52" height="52"/></c:if>
-			</div>
-			<div style="float:right;color:rgb(0, 72, 149);width:360px">
-				<c:if test="${isFirstLogin == 'Y'}">
-					<div style="font-size:11px">▒ <spring:message code='main.jjh07'/></div>
+				<a class="imgbtn ok" onclick="javascript:PassWordChange()"><span><spring:message code='ezSchedule.t4' /></span></a>
+				<c:if test="${isFirstLogin != 'Y' && resetPassword != 'Y'}">
+					<a class="imgbtn" onClick="passwordUpdateNextTime()" ><span><spring:message code='main.hdp01'/></span></a>
 				</c:if>
-				<c:if test="${isFirstLogin != 'Y'}">
-					<div style="font-size:11px">▒ <spring:message code='fail.user.passwordExpired'/></div>
-				</c:if>				
-				<div style="font-size:11px;margin-top:3px">▒ <spring:message code='main.jjh03'/></div>
-				<div style="font-size:11px;margin-top:3px">▒ <spring:message code='main.jjh04'/></div>
 			</div>
-			<div style="clear:both"></div>
-			<p style="border-top:1px solid rgb(0, 72, 149);margin-top:13px">
-				<label style="color:rgb(0, 72, 149);"><spring:message code='main.jjh09'/> : </label>
-				<span id="chooseId">${userId}</span>
-			</p>
-			<p>
-				<label style="color:rgb(0, 72, 149);"><spring:message code='ezPersonal.t949'/> : </label>
-				<input type="password" id="txtOldPassword" onKeyPress="if(event.keyCode==13) PassWordChange();"/>
-			</p>
-			<p>
-				<label style="color:rgb(0, 72, 149);"><spring:message code='main.jjh05'/> : </label>
-				<input type="password" id="txtNewPassword" onKeyPress="if(event.keyCode==13) PassWordChange();"/>
-			</p>
-			<p style="border-bottom:1px solid rgb(0, 72, 149)">
-				<label style="color:rgb(0, 72, 149);"><spring:message code='main.jjh06'/> : </label>
-				<input type="password" id="txtNewPasswordConfirm" onKeyPress="if(event.keyCode==13) PassWordChange();"/>
-			</p>
-			<div class="btnpositionLayer" style="background-color: white;border:0px">
-			    <a class="imgbtn" onClick="javascript:PassWordChange()" ><span><spring:message code='ezSchedule.t4' /></span></a>
-			</div> --%>			
-		</div>
-		
+
+			<a href="#close-modal" rel="modal:close" class="close-modal ">Close</a></div>
+
 		<%-- 2018-05-24 홍승비 - 비밀번호 오류 시 레이어팝업 출력 --%>
 		<div id="exDiv2" style="display:none;max-width:620px;height:190px;padding-top:27px;margin-bottom:100px">
 			<div id="close">
@@ -835,6 +858,45 @@
 				</div>
 			</div>
 
+			<div id="exDiv10" style="display:none;max-width:690px;height:190px;padding-top:27px;margin-bottom:100px">
+				<div id="close">
+					<ul>
+						<li><a rel="modal:close"><span></span></a></li>
+					</ul>
+				</div>
+				<div class="warning_wrap" style="margin:10px 0px 10px 27px; width:640px;">
+					<p style="border:0px" id="imgMnt10"></p>
+					<dl sty`le="margin:-108px 0px 0px 150px;">
+						<dt>${message1}</dt>
+						<br>
+						<dd>${message2}</dd>
+						<c:choose>
+							<c:when test="${useOTP}">
+								<dd><spring:message code='fail.common.login.otp.warning2'/></dd>
+							</c:when>
+							<c:otherwise>
+								<dd><spring:message code='fail.common.login.warning6'/></dd>
+							</c:otherwise>
+						</c:choose>
+					</dl>
+				</div>
+			</div>
+			<!-- 2025.04.08 김승연 조직 정보 변경 시 알림 레이어 팝업-->
+			<div id="exDiv11" style="display:none;max-width:690px;height:190px;padding-top:27px;margin-bottom:100px">
+				<div id="close">
+					<ul>
+						<li><a rel="modal:close"><span></span></a></li>
+					</ul>
+				</div>
+				<div class="warning_wrap" style="padding-left:20px">
+					<p style="border:0px" id="imgMnt11"></p>
+					<dl>
+						<dt id="layerTitle11" class="layerTitle"><spring:message code="ezOrgan.sy01" /></dt>
+						<dd><spring:message code="ezOrgan.sy02" /></dd>
+					</dl>
+				</div>
+			</div>
+			</div>
 		</div>
 	</body>
 </html>

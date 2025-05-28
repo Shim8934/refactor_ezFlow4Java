@@ -146,6 +146,32 @@ public class OrganUserVO {
 	/** 겸직 직위*/
 	private String addJobTitle;
 
+	/** 겸직 최상위 부서명*/
+	private String physicalDeliveryOfficeName1;
+
+	/** 겸직 타입*/
+	private String jobType;
+
+	/** 권한 */
+	private String roleInfo;
+
+	/** 관리자 권한 객체 */
+	private OrganAuth auth;
+
+	/** 조직도 사용 여부*/
+	private String userTreeFlag;
+
+	/** 퇴직자 여부 */
+	private int isRetire;
+
+	public String getUserTreeFlag() {
+		return userTreeFlag;
+	}
+
+	public void setUserTreeFlag(String userTreeFlag) {
+		this.userTreeFlag = userTreeFlag;
+	}
+
 	public String getAddJobTitle() {
 		return addJobTitle;
 	}
@@ -702,5 +728,41 @@ public class OrganUserVO {
 
 	public void setRoleId(String roleId) {
 		this.roleId = roleId;
+	}
+
+	public String getPhysicalDeliveryOfficeName1() {return physicalDeliveryOfficeName1; }
+
+	public void setPhysicalDeliveryOfficeName1(String physicalDeliveryOfficeName1) {this.physicalDeliveryOfficeName1 = physicalDeliveryOfficeName1; }
+
+	public String getJobType() {
+		return jobType;
+	}
+
+	public void setJobType(String jobType) {
+		this.jobType = jobType;
+	}
+
+	public String getRoleInfo() {
+		return roleInfo;
+	}
+
+	public void setRoleInfo(String roleInfo) {
+		this.roleInfo = roleInfo;
+	}
+
+	public OrganAuth getAuth() {
+		return auth;
+	}
+
+	public void setAuth(OrganAuth auth) {
+		this.auth = auth;
+	}
+
+	public int getIsRetire() {
+		return isRetire;
+	}
+
+	public void setIsRetire(int isRetire) {
+		this.isRetire = isRetire;
 	}
 }

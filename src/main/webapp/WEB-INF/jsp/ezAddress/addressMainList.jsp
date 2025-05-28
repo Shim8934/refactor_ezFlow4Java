@@ -6,7 +6,8 @@
     <head>
 	    <title>address_list</title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	    <link rel="stylesheet" href="${util.addVer('ezAddress.e2', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 	    <link href="${util.addVer('/js/jquery/jquery.modal.css')}" rel="stylesheet" type="text/css" />
 	    <style>
 	    	.emptyDiv {
@@ -282,7 +283,7 @@
 	                    address_movecopy_dialogArguments[2] = "CLOSE";
 	                    address_movecopy_dialogArguments[3] = xmlDom;
 	                    address_movecopyOpenWin = window.open("/ezAddress/addressMoveCopy.do", "address_movecopy", GetOpenWindowfeature(500, 375));
-	                    try { address_movecopyOpenWin.focus(); } catch (e) { }
+	                    try { address_movecopyOpenWin.focus(); } catch (e) {console.log(e);}
 	                }
 	                else {
 	                    var feature = "dialogHeight:375px; dialogWidth:500px; status:no; help:no; edge:sunken";
@@ -343,6 +344,7 @@
 	                }	
 	            }
 	        }
+
 	        function move_address_Complete(moveUrl) {
 	            try {
 	                if (typeof (moveUrl) == "undefined")
@@ -353,15 +355,36 @@
 	                        var AddressObj = document.getElementById(listContentArry[Cnt]);
 	                        if (moveUrl["folderid"] == AddressObj.getAttribute("_folderid")
 	                                && moveUrl["foldertype"] == AddressObj.getAttribute("_FolderType")) {
-	                            alert("<spring:message code='ezAddress.t170' />");
-	                            return;
+	                            
+		                    	// 2024.07.05 한슬기 : 팝업창이 완전히 닫혔는지 체크 후에 alert을 띄우도록 변경(safari에서 alert이 가려지는 문제가 있음)
+		    	                var checkChildClosed = setInterval(function() {
+		    						if (address_movecopyOpenWin.closed){
+		    							clearInterval(checkChildClosed);
+		    							alert("<spring:message code='ezAddress.t170' />");
+		    						}
+		    					}, 100);
+		                    	
+	   							return;
+	                        	
+	                        	//alert("<spring:message code='ezAddress.t170' />");
+	                            //return;
 	                        }
 	                    }
 	                }
 	                else {
 	                    if (moveUrl["folderid"] == pFolderID && moveUrl["ownerid"] == pOwerID) {
-	                        alert("<spring:message code='ezAddress.t170' />");
-	                        return;
+	                    	// 2024.07.05 한슬기 : 팝업창이 완전히 닫혔는지 체크 후에 alert을 띄우도록 변경(safari에서 alert이 가려지는 문제가 있음)
+	    	                var checkChildClosed = setInterval(function() {
+	    						if (address_movecopyOpenWin.closed){
+	    							clearInterval(checkChildClosed);
+	    							alert("<spring:message code='ezAddress.t170' />");
+	    						}
+	    					}, 100);
+	                    	
+   							return;
+	                    	
+	                    	//alert("<spring:message code='ezAddress.t170' />");
+	                        //return;
 	                    }
 	                }
 	                if (moveUrl["cmd"] == "MOVE") {
@@ -390,7 +413,28 @@
 	                xmlHTTP.open("POST", "/ezAddress/addressSaveMoveCopy.do", false);
 	                xmlHTTP.send(address_movecopy_dialogArguments[3]);
 	
-	                if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK")
+	                // 2024.07.05 한슬기 : 팝업창이 완전히 닫혔는지 체크 후에 alert을 띄우도록 변경(safari에서 alert이 가려지는 문제가 있음)
+	                var checkChildClosed = setInterval(function() {
+						if (address_movecopyOpenWin.closed){
+							
+							clearInterval(checkChildClosed);
+							
+			                if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK")
+			                    alert("<spring:message code='ezAddress.t218' />");
+			                else {
+			                    alert("<spring:message code='ezAddress.t219' />");
+			                    if (moveUrl["cmd"] == "MOVE") {
+			                        if (searchFlag)
+			                            Get_SearchAddressList();
+			                        else
+			                            Get_AddressList();
+			                    }
+			                }
+						}
+						
+					}, 100);
+	                
+	                /*if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK")
 	                    alert("<spring:message code='ezAddress.t218' />");
 	                else {
 	                    alert("<spring:message code='ezAddress.t219' />");
@@ -400,8 +444,8 @@
 	                        else
 	                            Get_AddressList();
 	                    }
-	                }
-	            } catch (e) {}
+	                }*/
+	            } catch (e) {console.log(e);}
 	        }
 	        function delete_address() {
 	        		
@@ -1096,7 +1140,7 @@
 		            </ul>
 		        </div>
 				<!-- 내용 -->
-			    <table class="popuplist" id="addpopup_list" style="width:478px;margin:10px 0px 0px 1px;">
+			    <table class="popuplist" id="addpopup_list" style="width:510px;margin:10px 0px 0px 1px;">
 					<tr>
 			  			<th style="width:90px;height:30px"><spring:message code='ezAddress.t124' /></th>
 						<td><input type="text" id="qname" name="qname" class="textarea" style="width:98%;box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px" maxlength="24"></td>

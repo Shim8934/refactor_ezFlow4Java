@@ -264,3 +264,40 @@ var strLangHTH01 = "Enter date between 1 and 31 as integer.";
 var strLangHTH02 = "Please enter the number of repeat cycle days accurately.";
 var strLangHTH03 = "Please enter the repeat cycle accurately.";
 var strLangHTH04 = "Please enter the monthly interval as an integer greater than 0.";
+
+// 2024-07-03 김우철 - 관리자 > 현황조회
+var strLangKWC01 = "Approved Resource Status";
+var strLangKWC02 = "Pending Approval Resource Status";
+var strLangKWC03 = "Terminated Resource Status";
+
+//2024-08-06 유길상 - 자원 즐겨찾기 메세지 표출
+var strLangFvYGS01 = "Move";
+var strLangFvYGS02 = "Please select a resource to delete.";
+var strLangFvYGS03 = "This resource has already been added.";
+var strLangFvYGS04 = "Added.";
+var strLangFvYGS05 = "Please enter the category name.";
+var strLangFvYGS06 = "Please select a category.";
+var strLangFvYGS07 = "Cannot move to a sub-tree.";
+var strLangFvYGS08 = "Cannot move to the same tree.";
+var strLangFvYGS09 = "This is the current location.";
+var strLangFvYGS10 = "Do you want to delete the selected resource?";
+var strLangFvYGS11 = "Do you want to add to favorites?";
+var strLangFvYGS12 = "Do you want to delete the selected category?";
+var strLangFvYGS13 = "Please select an item to delete.";
+var strLangFvYGS14 = "Please select an item to move.";
+var strLangFvYGS15 = "Modified.";
+var strLangFvYGS16 = "Deleted.";
+var strLangFvYGS17 = "There are no favorite groups.";
+var strLangFvYGS18 = "Cannot add sub-items to a resource.";
+var strLangFvYGS19 = "Deleting a category will delete all its sub-resources and sub-categories.\nAre you sure you want to delete?";
+
+
+
+// 2024-08-26 유길상 - 자원등록 > 최대 예약 가능 기간, 정원
+var strLangMaxYGS01 = "Maximum reservation period exceeded.";
+var strLangMaxYGS02 = "Capacity";
+var strLangMaxYGS03 = "People";
+var strLangMaxYGS04 = "Please enter the capacity.";
+
+// 2025-05-07 이혜림 - 자원등록 > 최대 예약 가능 기간 제한
+var strLangLHR01 = "You can only enter numbers greater than or equal to 1 (days)";

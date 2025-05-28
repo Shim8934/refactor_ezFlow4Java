@@ -497,7 +497,7 @@ public class EzCabinetGWController {
 		return result;
 	}
 	
-	@RequestMapping(value="/rest/ezcabinet/module/id/{userid}/person", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezcabinet/module/id/{userid:.+}/person", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getActiveModulesForUser(@PathVariable(value="userid") String userId, HttpServletRequest request) {
 		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
 		JSONObject result = new JSONObject();
@@ -529,7 +529,7 @@ public class EzCabinetGWController {
 		return result;
 	}
 	
-	@RequestMapping(value="/rest/ezcabinet/module/id/{userid}/active-check", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezcabinet/module/id/{userid:.+}/active-check", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject checkActiveModules(@PathVariable(value="userid") String userId, HttpServletRequest request) {
 		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
 		String moduleType = request.getParameter("module") != null ? request.getParameter("module") : "";
@@ -568,7 +568,7 @@ public class EzCabinetGWController {
 		return result;
 	}
 	
-	@RequestMapping(value="/rest/ezcabinet/module/id/{userid}/person", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezcabinet/module/id/{userid:.+}/person", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public JSONObject saveModulesSettingForUser(@PathVariable(value="userid") String userId, HttpServletRequest request) {
 		String serverName = request.getHeader("host-name")  != null ? request.getHeader("host-name")  : "";
 		String moduleList = request.getParameter("modules") != null ? request.getParameter("modules") : "";

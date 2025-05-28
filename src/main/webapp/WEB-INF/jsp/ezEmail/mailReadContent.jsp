@@ -99,7 +99,13 @@
 			            if (ReadCountCheck=="N") {
 			                parent.opener.refreshUnreadCount();
 			            }
-			        } catch (e) { }				    					
+			        } catch (e) {console.log(e);}
+
+					document.addEventListener('click', function (e) {
+						if (window.parent.hiddenMoreMenu) {
+							parent.hiddenMoreMenu(e);
+						}
+					})
 				}
 				
 				function sizeBtnAppend() {
@@ -432,14 +438,16 @@
 		        }
 		     	
 		     	function AttachFile_Preview(mailPath, mailUid, fileIndex, fileName) {
-						
+					// voc #131788 메일 > 메일읽기 > 첨부 미리보기 시 : 띄어쓰기 있는 메일박스(Personal+folder) 미리보기 되지 않는 오류
+					mailPath = mailPath.replace("+"," ");
+					
 		     		//window.open('http://jmocha.kaoni.com:8080/uFOCS3.0/viewer/document/docviewer.do?filepath=http://10.0.120.213:8080' + encodeURIComponent(downloadURL) + '&filename=' + fileName + '&fileext=txt&viewerselect=image');
 		    		  $.ajax({
 		    			  type : 'get',
 		    			  url : '/ezEmail/attachFilePreview.do',
 		    			  data : {
 		    				  "fileName" : fileName,
-		    				  "folderId" : mailPath,
+		    				  "folderId" : decodeURIComponent(mailPath),
 		    				  "mailId" : mailUid,
 		    				  "fileIndex" : fileIndex
 		    			  },
@@ -452,13 +460,26 @@
 		    					  link.setAttribute("onClick",result);
 		    					  link.setAttribute("target","_blink");
 		    					  link.click();  */
-		    					  window.open(result);
+		    					  window.open(result, '_blank', getOpenWindowfeature(1100, 950));
 		    			  }
 		    		  });
 		     	}
 		     	
 				function webfolderUpload_open(obj) {
 					return parent.webfolderUpload_open(obj);
+				}
+
+				function getOpenWindowfeature(popUpW, popUpH) {
+					var heigth   = window.screen.availHeight;
+					var width    = window.screen.availWidth;
+					var left     = 0;
+					var top      = 0;
+					var pleftpos = parseInt(width) - popUpW;
+					heigth       = parseInt(heigth) - popUpH;
+					left         = pleftpos / 2;
+					top          = heigth / 2;
+					var feature  = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes";
+					return feature;
 				}
 			</script> 
 	</head>

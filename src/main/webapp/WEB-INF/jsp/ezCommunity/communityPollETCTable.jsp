@@ -6,7 +6,8 @@
 	<head>
 		<title>poll_etc_table</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" type="text/css" href="${util.addVer('ezCommunity.i1', 'msg')}">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	</head>
 	
@@ -20,7 +21,7 @@
 			<c:forEach items="${responseList }" var = "response" varStatus="status">
 				<tr>
 			        <td width="50" align="center">${status.count }</td>
-			        <td>${response.answerETC }</td>
+			        <td><c:out value="${response.answerETC }"/></td>
 				</tr>
 			</c:forEach>
 			

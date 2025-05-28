@@ -7,16 +7,18 @@
 	<head>
 		<title><spring:message code='ezJournal.t224' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezJournal.c1', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript">		
 	    
-			function journal_get_formuse(val) {			    
+			function changeCompany(val) {
 				var url = "/admin/ezJournal/formType.do";
 				parent.frames["right"].location.href = url+"?companyId="+val;
-			}	
+			}
+
 			
 		    function Cancel_Click() {
 		        window.location.reload(true);
@@ -24,7 +26,7 @@
 		    function Change_Click() {
 		    	var formData = $("form.journalForm").serialize();
 		    	var companyId = $("select[name='companyId']").val();
-		    	formData += "&companyId="+companyId;
+		    	formData += "&companyId=" + companySelectID;
 		        $.ajax({
 		    		type : "POST",
 		    		url : "/admin/ezJournal/updatreFormType.do",
@@ -53,16 +55,9 @@
 	<body class="mainbody"> 
 		<h1>
 			<spring:message code='ezJournal.t2' />
-		    <span class="title_bar"><img src="/images/name_bar.gif"></span>
-			<select class="companySelect" name="companyId" onchange="journal_get_formuse(this.value)">
-            	<c:forEach items="${compList}" var="company">
-	            	<option value="${company.companyId }"
-            		<c:if test="${company.selected eq 'selected' }">
-            			selected
-            		</c:if>
-	            	><c:out value='${company.companyName }'/></option>
-            	</c:forEach>
-            </select>
+			<jsp:include page="/WEB-INF/jsp/admin/companySelect.jsp">
+				<jsp:param name="companySelectID" value="${selectedCompany}" />
+			</jsp:include>
 		</h1>
 		<form class="journalForm">
 			<table class="content" style="width: 400px; margin-left: 5px; margin-top:30px">

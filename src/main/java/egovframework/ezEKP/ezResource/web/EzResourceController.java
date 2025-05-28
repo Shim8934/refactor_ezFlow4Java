@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -23,17 +24,29 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -48,18 +61,24 @@ import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezNotification.service.EzNotificationService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
+import egovframework.ezEKP.ezPersonal.type.NotiPlatform;
+import egovframework.ezEKP.ezPersonal.type.NotiType;
 import egovframework.ezEKP.ezResource.service.EzResourceAdminService;
 import egovframework.ezEKP.ezResource.service.EzResourceService;
 import egovframework.ezEKP.ezResource.vo.ResAdminVO;
 import egovframework.ezEKP.ezResource.vo.ResBrdListVO;
 import egovframework.ezEKP.ezResource.vo.ResBrdVO;
+import egovframework.ezEKP.ezResource.vo.ResFavoriteCategoryVO;
 import egovframework.ezEKP.ezResource.vo.ResGetItemListVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
 import egovframework.ezEKP.ezResource.vo.ResGetSendMailToUserVO;
 import egovframework.ezEKP.ezResource.vo.ResMakeDupResultVO;
+import egovframework.ezEKP.ezResource.vo.ResOccuVO;
 import egovframework.ezEKP.ezResource.vo.ResSelectFormIDVO;
 import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleConfigVO;
@@ -123,6 +142,12 @@ public class EzResourceController extends EgovFileMngUtil {
 	@Resource(name="EzResourceAdminService")
 	private EzResourceAdminService ezResourceAdminService;
 	
+	@Resource(name="EzNotificationService")
+	private EzNotificationService ezNotificationService;
+	
+	@Resource(name="EzPersonalService")
+	private EzPersonalService ezPersonalService;
+	
 	/**
 	 * 자원관리 메인 화면 호출 함수
 	 */
@@ -133,6 +158,8 @@ public class EzResourceController extends EgovFileMngUtil {
 		String brdTopPath = "";
 		String pUrl = "";
 		String url = "/ezResource/leftResource.do";
+		String leftFrameWidth = "220";
+		int width = 0;
 		
 		if(req.getParameter("brdID") != null) {
 			brdID = req.getParameter("brdID");
@@ -153,8 +180,21 @@ public class EzResourceController extends EgovFileMngUtil {
 		} else {
 			pUrl = url + "?brdID=" + brdID + "&brdNm=" + brdNm + "&boardGbn=M";
 		}
+
+		if (req.getParameter("__wwidth") != null) {
+			String widthParam = req.getParameter("__wwidth");
+
+			try {
+				width = Integer.parseInt(widthParam);
+
+				leftFrameWidth = width < 1180 ? "0" : "220";
+			} catch (NumberFormatException e) {
+				width = 0;
+			}
+		}
 		
 		model.addAttribute("pUrl", pUrl);
+		model.addAttribute("leftFrameWidth", leftFrameWidth);
 		
 		return "/ezResource/resMain";
 	}
@@ -365,9 +405,10 @@ public class EzResourceController extends EgovFileMngUtil {
 			
 			xmlDom.getElementsByTagName("STARTDATETIME").item(0).setTextContent(xmlDom.getElementsByTagName("STARTDATETIME").item(0).getTextContent().substring(0, 10));
 			xmlDom.getElementsByTagName("ENDDATETIME").item(0).setTextContent(xmlDom.getElementsByTagName("ENDDATETIME").item(0).getTextContent().substring(0, 10));
-			
+
+			String lang = commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId());
 			//스케줄 정보 가져옴
-			reVal = ezResourceService.getScheduleXML(commonUtil.convertDocumentToString(xmlDom), resID, userInfo.getCompanyID(), groupID, gubun, type, title, writerName, writerDept, userInfo.getTenantId(), userInfo.getOffset(), userInfo.getLang());
+			reVal = ezResourceService.getScheduleXML(commonUtil.convertDocumentToString(xmlDom), resID, userInfo.getCompanyID(), groupID, gubun, type, title, writerName, writerDept, userInfo.getTenantId(), userInfo.getOffset(), lang);
 			logger.debug("getScheduleXML=" + reVal);
 			
 			// date타입 변경
@@ -597,6 +638,11 @@ public class EzResourceController extends EgovFileMngUtil {
 		String adminFg = ezResourceService.getAdminFlag(userInfo.getCompanyID(), brdID, userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID()); 
 		logger.debug("adminFg="+adminFg);
 		
+		String adminCKFlag = "";
+		if (commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), userInfo.getRollInfo(), "c;k")) {
+			adminCKFlag = "Y";
+		}
+		
 		//brdNm = brdNm.replace("chr(38)", "&");
 		StringBuilder childBrdBld = new StringBuilder();
 		childBrdBld.append(ezResourceService.getItemList(loginCookie,brdID));
@@ -630,6 +676,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("startDay", startDay);
 		model.addAttribute("lang", lang);
 		model.addAttribute("lunarUse", lunarUse);
+		model.addAttribute("adminCKFlag", adminCKFlag);
 		
 		logger.debug("viewResList2 End");
 		return "/ezResource/resViewResList2";
@@ -708,29 +755,13 @@ public class EzResourceController extends EgovFileMngUtil {
 			curPage = "1";
 			totalPage = 1;
 		}
-
-		int topCount = Math.multiplyExact(Integer.parseInt(curPage.trim()), pageSize);
 		
+		int topCount = Math.multiplyExact(Integer.parseInt(curPage.trim()), pageSize);
 		int start = Math.multiplyExact(Math.subtractExact(Integer.parseInt(curPage.trim()), 1), pageSize);
 		
-		String brdNmStr = "";
-		String ownDeptNm = "";
-		String ownerNm = "";
-		String ownerPosition = "";
+		/* 2024-07-05 홍승비 - SQL Injection 수정 > 다국어 칼럼은 쿼리 내부 분기로 처리 */
+		List<ResBrdListVO> resBrdList =  ezResourceService.getBrdList(topCount, Integer.parseInt(brdID), userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId());
 		
-		if (userInfo.getPrimary().equals("1")) {
-			brdNmStr = "Brd_NM";
-			ownerNm = "OwnerNm";
-			ownDeptNm = "OwnDeptNm";
-			ownerPosition = "OwnerPosition";
-		} else {
-			brdNmStr = "Brd_NM" + userInfo.getPrimary();
-			ownDeptNm = "OwnDeptNm" + userInfo.getPrimary();
-			ownerNm = "OwnerNm" + userInfo.getPrimary();
-			ownerPosition = "OwnerPosition" + userInfo.getPrimary();
-		}
-		
-		List<ResBrdListVO> resBrdList =  ezResourceService.getBrdList(topCount, Integer.parseInt(brdID), userInfo.getCompanyID(), ownDeptNm, ownerNm, ownerPosition, brdNmStr, userInfo.getTenantId());
 		model.addAttribute("companyID", userInfo.getCompanyID());
 		model.addAttribute("userID", userInfo.getId());
 		model.addAttribute("deptID", userInfo.getDeptID());
@@ -769,6 +800,8 @@ public class EzResourceController extends EgovFileMngUtil {
 		String strMakeDate = "";
 		String strApproveFlag = "";
 		String strReturnFlag = "";
+		// 반복예약허용 flag
+		String strRepeatFlag = "";
 		
 		if (!req.getParameter("brdID").equals("")) {
 			brdID = req.getParameter("brdID");
@@ -777,7 +810,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		
 		// 2018-10-30 김민성 - 자원 멀티관리자 데이터 처리
 		String[] ownerList = resBrd.getOwnerID().split(",");
-		List<OrganUserVO> ownerInfoList = ezResourceService.getOwnerInfo(ownerList, userInfo.getTenantId(), userInfo.getCompanyID());
+		List<OrganUserVO> ownerInfoList = ezResourceService.getOwnerInfo(ownerList, userInfo.getTenantId(), userInfo.getCompanyID(), userInfo.getLang());
 		
 		strBrdID = resBrd.getBrdID();
 		strBrdExplain = resBrd.getBrdExplain();
@@ -800,6 +833,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		strMakeDate = resBrd.getMakeDate();
 		strApproveFlag = resBrd.getApproveFlag();
 		strReturnFlag = resBrd.getReturnFlag();
+		strRepeatFlag = resBrd.getRepeatFlag();
 		
 		List<String> attachList = ezResourceService.getAttachList(brdID, userInfo.getCompanyID(), userInfo.getTenantId());
 
@@ -828,6 +862,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("makeDate", strMakeDate);
 		model.addAttribute("approveFlag", strApproveFlag);
 		model.addAttribute("returnFlag", strReturnFlag);
+		model.addAttribute("repeatFlag", strRepeatFlag);
 		
 		return "/ezResource/resViewClsItem";
 	}
@@ -883,6 +918,8 @@ public class EzResourceController extends EgovFileMngUtil {
 		String strMakeDate = "";
 		String strApproveFlag = "";
 		String strReturnFlag = "";
+		// 반복예약허용 flag
+		String strRepeatFlag = "";
 		List<OrganUserVO> ownerListVO;
 		
 		if (req.getParameter("brdID") != null) {
@@ -904,7 +941,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			// 2018-10-24 김민성 - 자원관리 관리자 조회
 			String[] ownerList = resBrd.getOwnerID().split(",");
 			if(ownerList.length != 0) {
-				ownerListVO = ezResourceService.getOwnerInfo(ownerList, userInfo.getTenantId(), userInfo.getCompanyID());
+				ownerListVO = ezResourceService.getOwnerInfo(ownerList, userInfo.getTenantId(), userInfo.getCompanyID(), userInfo.getLang());
 				
 				JSONArray jArray = new JSONArray();
 
@@ -944,6 +981,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			strMakeDate = resBrd.getMakeDate();
 			strApproveFlag = resBrd.getApproveFlag();
 			strReturnFlag = resBrd.getReturnFlag();
+			strRepeatFlag = resBrd.getRepeatFlag();
 			
 			List<String> attachList = ezResourceService.getAttachList(brdID, userInfo.getCompanyID(), userInfo.getTenantId());
 
@@ -975,6 +1013,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("strResID", resID); 
 		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
 		model.addAttribute("returnFlag", strReturnFlag);
+		model.addAttribute("repeatFlag", strRepeatFlag);
 		
 		return "/ezResource/resModClsItem";
 	}
@@ -1049,6 +1088,8 @@ public class EzResourceController extends EgovFileMngUtil {
 
 		String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId());
 		
+		String lang = userInfo.getLang();
+		
 		if (attachFileNameMaxLength.equals("")) {
 			attachFileNameMaxLength = "100";
 		}
@@ -1058,9 +1099,17 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("companyID", userInfo.getCompanyID());
 		model.addAttribute("userID", userInfo.getId());
 		model.addAttribute("userName", userInfo.getName());
-		model.addAttribute("deptName", userInfo.getDeptName1());
-		model.addAttribute("title", userInfo.getTitle1());
-		model.addAttribute("displayName", userInfo.getDisplayName1());
+		
+		if (lang.equals("1")) {
+			model.addAttribute("displayName", userInfo.getDisplayName1());
+			model.addAttribute("deptName", userInfo.getDeptName1());
+			model.addAttribute("title", userInfo.getTitle1());
+		} else {
+			model.addAttribute("displayName", userInfo.getDisplayName2());
+			model.addAttribute("deptName", userInfo.getDeptName2());
+			model.addAttribute("title", userInfo.getTitle2());
+		}
+		
 		model.addAttribute("ownerCall", userInfo.getPhone());
 		model.addAttribute("makeDate", EgovDateUtil.getTodayTime().substring(0, 10));
 		model.addAttribute("langPrimary", ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId()));
@@ -1079,7 +1128,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		Locale locale = userInfo.getLocale();
 		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
-		
+
 		String ownerList = xmlDom.getElementsByTagName("DATA").item(3).getTextContent().trim();
 		String strOwnerID = ownerList.split(",")[0];
 		String deptID = xmlDom.getElementsByTagName("DATA").item(1).getTextContent().trim();		// 부서ID
@@ -1187,7 +1236,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		ResBrdVO resBrd = ezResourceService.getBrd(Integer.parseInt(resID), userInfo.getCompanyID(), userInfo.getTenantId());
 		String[] ownerList = resBrd.getOwnerID().split(",");
 		
-		List<OrganUserVO> ownerListVO = ezResourceService.getOwnerInfo(ownerList, userInfo.getTenantId(), userInfo.getCompanyID());
+		List<OrganUserVO> ownerListVO = ezResourceService.getOwnerInfo(ownerList, userInfo.getTenantId(), userInfo.getCompanyID(), userInfo.getLang());
 		
 		resBrd.setOwnerID(ownerList[0]);
 		
@@ -1257,6 +1306,11 @@ public class EzResourceController extends EgovFileMngUtil {
 			}
 		}
 		
+		String adminCKFlag = "";
+		if (commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), userInfo.getRollInfo(), "c;k")) {
+			adminCKFlag = "Y";
+		}
+		
 		/*if (req.getParameter("cuid") != null) {
 			cUserIDStr = req.getParameter("cuid");
 		}*/
@@ -1303,6 +1357,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("brdExplain", strBrdExplain);
 		model.addAttribute("timeZoneStr", timeZoneStr);
 		model.addAttribute("startDay", startDay);
+		model.addAttribute("adminCKFlag", adminCKFlag);
 		
 		return "/ezResource/resScheduleMain";
 	}
@@ -1411,7 +1466,11 @@ public class EzResourceController extends EgovFileMngUtil {
 			ResGetScheduleVO getSchedule = new ResGetScheduleVO();
 			
 			if (typeVal.equals("Master") || typeVal.equals("Readonly")) {
-				getSchedule = ezResourceService.getSchedule(Integer.parseInt(orgNum), orgOwnerID, userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getLang());
+				getSchedule = ezResourceService.getSchedule(Integer.parseInt(orgNum), orgOwnerID, userInfo.getCompanyID(), userInfo.getTenantId(), commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()));
+			}
+
+			if (getSchedule == null) {
+				return "cmm/error/noData";
 			}
 			
 			num = String.valueOf(getSchedule.getNum());
@@ -1620,6 +1679,9 @@ public class EzResourceController extends EgovFileMngUtil {
 
 		String adminFg = ezResourceService.getACL(userInfo.getCompanyID(), resID, userInfo.getId(), "", userInfo.getTenantId(), userInfo.getDeptID());
 		String brdApproveFlag = ezResourceService.getBrdApproveFlag(Integer.parseInt(resID), userInfo.getCompanyID(), userInfo.getTenantId());
+
+		// 반복예약허용 Flag
+		String brdRepeatFlag = ezResourceService.getBrdRepeatFlag(Integer.parseInt(resID), userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		if (req.getParameter("cmd") != null) {
 			cmdStr = req.getParameter("cmd");
@@ -1782,6 +1844,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("resID", resID);
 		model.addAttribute("num", num);
 		model.addAttribute("approveFlag", brdApproveFlag);
+		model.addAttribute("repeatFlag", brdRepeatFlag);
 		model.addAttribute("cmdStr", cmdStr.toLowerCase());
 		model.addAttribute("fromStr", fromStr);
 		model.addAttribute("dayView", dayView);
@@ -1796,7 +1859,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("timeDisplay", timeDisplay);
 		model.addAttribute("writerID", writerID);
 		model.addAttribute("deptNm", deptNm);
-		model.addAttribute("title", title);
+		model.addAttribute("title", title.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\"", "&quot;").replaceAll("'", "&apos;").replaceAll("\\\\", "&#92;"));
 		model.addAttribute("allDay", allDay);
 		model.addAttribute("entryList", entryList);
 		model.addAttribute("startDateTime", startDateTime);
@@ -2156,6 +2219,10 @@ public class EzResourceController extends EgovFileMngUtil {
 				endDate = dateFormat.format(cal.getTime());
 				dom.getElementsByTagName("ENDDATETIME").item(0).setTextContent(endDate);
 			}
+			
+			Element elementDept = dom.createElement("DEPTID");
+			elementDept.setTextContent(userInfo.getDeptID());
+			dom.getDocumentElement().appendChild(elementDept);
 
 			ret = ezResourceService.addResSch(commonUtil.convertDocumentToString(dom), userInfo.getTenantId(), userInfo.getOffset());
 		} else if (cmd.equals("mod")) {
@@ -2376,7 +2443,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		if (req.getParameter("msg") != null && !req.getParameter("msg").equals("")) {
 			accMessage = req.getParameter("msg");
 		}
-		model.addAttribute("accMessage", commonUtil.cleanScriptValue(accMessage, "clean"));
+		model.addAttribute("accMessage", commonUtil.cleanScriptValue(accMessage));
 		model.addAttribute("userInfo", userInfo); 
 		return "/ezResource/resNonResList";
 	}
@@ -2394,9 +2461,10 @@ public class EzResourceController extends EgovFileMngUtil {
 		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
 		
 		String ownerID = xmlDom.getElementsByTagName("OWNERID").item(0).getTextContent();
-		String title = xmlDom.getElementsByTagName("TITLE").item(0).getTextContent();
+		String title = StringEscapeUtils.unescapeHtml4(xmlDom.getElementsByTagName("TITLE").item(0).getTextContent());
 		String startDateTime = xmlDom.getElementsByTagName("STARTDATETIME").item(0).getTextContent();
 		String endDateTime = xmlDom.getElementsByTagName("ENDDATETIME").item(0).getTextContent();
+		String num = xmlDom.getElementsByTagName("RSSCHEDULENUM").item(0).getTextContent();
 		
 		//startDateTime = commonUtil.getDateStringInUTC(startDateTime, userInfo.getOffset(), false);
 		//endDateTime = commonUtil.getDateStringInUTC(endDateTime, userInfo.getOffset(), false);
@@ -2446,6 +2514,30 @@ public class EzResourceController extends EgovFileMngUtil {
 	        	
 	        ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content, false);
     	}
+    	
+    	if (startDateTime.length() == 16) {
+    		startDateTime = startDateTime + ":00";
+    	}
+    	if (endDateTime.length() == 16) {
+    		endDateTime = endDateTime + ":00";
+    	}
+    	
+    	String linkUrl = "/ezResource/scheduleRead.do?cmd=mod&from=schedule&num=" + num + "&ownerID=" + ownerID + "&type=Master&startDate=" + startDateTime.substring(0,10) + "&endDate=" + endDateTime.substring(0,10);
+    	String linkUrlMobile = "/mobile/ezResource/SearchResSchDetail.do?ownerId=" + ownerID + "&num=" + num + "&startDate=" + startDateTime.substring(0,19) + "&endDate=" + endDateTime.substring(0,19) + "&type=" + "res";
+    	
+    	List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
+    	for (String cn : ownerList) {
+    		Map<String, Object> recipientMap = new HashMap<String, Object>();
+    		recipientMap.put("userType", "PERSON");
+    		recipientMap.put("companyId", userInfo.getCompanyID());
+    		recipientMap.put("cn", cn);
+    		notiRecipientList.add(recipientMap);
+    	}
+    	
+    	if (notiRecipientList != null && notiRecipientList.size() > 0) {
+    		ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientList, "RESOURCE", "RESERVE", brdNm + " - " + title, "popup", "760", "750", linkUrl, linkUrlMobile, "notChkSetting");
+    	}
+    	
         logger.debug("sendMail ended");
         
         return "OK";
@@ -2465,6 +2557,8 @@ public class EzResourceController extends EgovFileMngUtil {
 		String resID = xmlDom.getElementsByTagName("RESID").item(0).getTextContent();
 		String num = xmlDom.getElementsByTagName("NUM").item(0).getTextContent();
 		String approve = xmlDom.getElementsByTagName("APPROVE").item(0).getTextContent();
+		String startDateTime = xmlDom.getElementsByTagName("STARTDATETIME").item(0).getTextContent();
+		String endDateTime = xmlDom.getElementsByTagName("ENDDATETIME").item(0).getTextContent();
 		
 		logger.debug("resID=" + resID + ",num=" + num + ",approve=" + approve);
 		
@@ -2474,57 +2568,75 @@ public class EzResourceController extends EgovFileMngUtil {
         
         // 2023-08-02 황인경 - 자원관리 > 예약 승인/거절시 작성자들에게 메일 발송 처리 > 메일 제목, 본문 실자원명 다국어 지원
      	String brdNm;
-
+     	
      	if (userInfo.getPrimary().equals("1")) {
-     		brdNm = resInfo.getBrd_Nm();
+     		brdNm = StringEscapeUtils.unescapeHtml4(resInfo.getBrd_Nm());
      	} else {
-     		brdNm = resInfo.getBrd_Nm2();
+     		brdNm = StringEscapeUtils.unescapeHtml4(resInfo.getBrd_Nm2());
      	}
-            
+     	
+     	String subject = "";
+        String notiSubType = "";
         if (approve.equals("1")) {
-           	bodyContent.append(resInfo.getOwnerNm() + egovMessageSource.getMessage("ezResource.t9900007", userInfo.getLocale()));
-           	bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;"+egovMessageSource.getMessage("ezResource.t9900008", userInfo.getLocale()) + " : " + brdNm);
-        } else if (approve.equals("0")) {
-           	bodyContent.append(resInfo.getOwnerNm() + egovMessageSource.getMessage("ezResource.t9900009", userInfo.getLocale()));
-           	bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;"+egovMessageSource.getMessage("ezResource.t9900010", userInfo.getLocale()) + " : " + brdNm);
-        } else {
-           	bodyContent.append(resInfo.getOwnerNm() + egovMessageSource.getMessage("ezResource.t9900015", userInfo.getLocale()));
-           	bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;"+egovMessageSource.getMessage("ezResource.t9900016", userInfo.getLocale()) + " : " + brdNm);
-        }
-        
-        bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;"+egovMessageSource.getMessage("ezResource.t9900004", userInfo.getLocale()) + " : " 
-        		+ commonUtil.getDateStringInUTC(resInfo.getStartDate().substring(0, 16), userInfo.getOffset(), false) + "&nbsp;~&nbsp;" 
-        		+ commonUtil.getDateStringInUTC(resInfo.getEndDate().substring(0, 16), userInfo.getOffset(), false));
-        
-        String subject = "";
-        if (approve.equals("1")) {
-        	subject = "["+egovMessageSource.getMessage("ezResource.t9900011", userInfo.getLocale()) + " : " + brdNm + "] " + resInfo.getTitle();
+        	subject = "["+egovMessageSource.getMessage("ezResource.t9900011", userInfo.getLocale()) + " : " + brdNm + "] " + StringEscapeUtils.unescapeHtml4(resInfo.getTitle());
+        	notiSubType = "APPROVE";
         } else if (approve.equals("0")){
-        	subject = "["+egovMessageSource.getMessage("ezResource.t9900012", userInfo.getLocale()) + " : " + brdNm + "] " + resInfo.getTitle();
+        	subject = "["+egovMessageSource.getMessage("ezResource.t9900012", userInfo.getLocale()) + " : " + brdNm + "] " + StringEscapeUtils.unescapeHtml4(resInfo.getTitle());
+        	notiSubType = "CANCEL";
         } else {
-        	subject = "["+egovMessageSource.getMessage("ezResource.t9900017", userInfo.getLocale()) + " : " + brdNm + "] " + resInfo.getTitle();
+        	subject = "["+egovMessageSource.getMessage("ezResource.t9900017", userInfo.getLocale()) + " : " + brdNm + "] " + StringEscapeUtils.unescapeHtml4(resInfo.getTitle());
+        	notiSubType = "REJECT";
         }
+
+     	if (!ezPersonalService.hasNotiDiableItem(resInfo.getWriterID(), NotiType.fromString("RESOURCE_" + notiSubType), NotiPlatform.MAIL, userInfo.getTenantId())) {
+	        if (approve.equals("1")) {
+	           	bodyContent.append(resInfo.getOwnerNm() + egovMessageSource.getMessage("ezResource.t9900007", userInfo.getLocale()));
+	           	bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;"+egovMessageSource.getMessage("ezResource.t9900008", userInfo.getLocale()) + " : " + brdNm);
+	        } else if (approve.equals("0")) {
+	           	bodyContent.append(resInfo.getOwnerNm() + egovMessageSource.getMessage("ezResource.t9900009", userInfo.getLocale()));
+	           	bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;"+egovMessageSource.getMessage("ezResource.t9900010", userInfo.getLocale()) + " : " + brdNm);
+	        } else {
+	           	bodyContent.append(resInfo.getOwnerNm() + egovMessageSource.getMessage("ezResource.t9900015", userInfo.getLocale()));
+	           	bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;"+egovMessageSource.getMessage("ezResource.t9900016", userInfo.getLocale()) + " : " + brdNm);
+	        }
+	        
+	        bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;"+egovMessageSource.getMessage("ezResource.t9900004", userInfo.getLocale()) + " : " 
+	        		+ commonUtil.getDateStringInUTC(resInfo.getStartDate().substring(0, 16), userInfo.getOffset(), false) + "&nbsp;~&nbsp;" 
+	        		+ commonUtil.getDateStringInUTC(resInfo.getEndDate().substring(0, 16), userInfo.getOffset(), false));
+	        
+	        String content = commonUtil.createNotiMailContent(bodyContent.toString(), userInfo.getTenantId(), userInfo.getLocale());
+	        
+	    	InternetAddress from = new InternetAddress();
+	    	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
+	    	from.setAddress(userInfo.getEmail());
+	    	
+	    	String emailAddress = resInfo.getMail(); 
+	    	String accessName = resInfo.getOwnerNm(); 
+	    	
+	    	if (accessName.indexOf("(") > -1) {
+	    		accessName = accessName.split("\\(")[0];
+	    	}
+	    	
+	    	InternetAddress to = new InternetAddress();
+	    	to.setPersonal(accessName, "UTF-8");
+	    	to.setAddress(emailAddress);
+	        
+	        ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content, false);
+     	}
+     	
+        String linkUrl = "/ezResource/scheduleRead.do?cmd=mod&from=schedule&num=" + num + "&ownerID=" + resID + "&type=Master&startDate=" + startDateTime.substring(0,10) + "&endDate=" + endDateTime.substring(0,10);
+        String linkUrlMobile = "/mobile/ezResource/SearchResSchDetail.do?ownerId=" + resID + "&num=" + num + "&startDate=" + startDateTime.substring(0,19) + "&endDate=" + endDateTime.substring(0,19) + "&type=" + "res";
         
-        String content = commonUtil.createNotiMailContent(bodyContent.toString(), userInfo.getTenantId(), userInfo.getLocale());
+        List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
+
+        Map<String, Object> recipientMap = new HashMap<String, Object>();
+        recipientMap.put("userType", "PERSON");
+        recipientMap.put("companyId", userInfo.getCompanyID());
+        recipientMap.put("cn", resInfo.getWriterID());
+        notiRecipientList.add(recipientMap);
+
         
-    	InternetAddress from = new InternetAddress();
-    	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
-    	from.setAddress(userInfo.getEmail());
-    	
-    	String emailAddress = resInfo.getMail(); 
-    	String accessName = resInfo.getOwnerNm(); 
-    	
-    	if (accessName.indexOf("(") > -1) {
-    		accessName = accessName.split("\\(")[0];
-    	}
-    	
-    	InternetAddress to = new InternetAddress();
-    	to.setPersonal(accessName, "UTF-8");
-    	to.setAddress(emailAddress);
-        	
-        
-        ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content, false);
-        
+    	ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientList, "RESOURCE", notiSubType, brdNm + " - " + StringEscapeUtils.unescapeHtml4(resInfo.getTitle()), "popup", "760", "750", linkUrl, linkUrlMobile, "");
         logger.debug("sendMailToUser ended");
 	}
 	
@@ -2539,8 +2651,10 @@ public class EzResourceController extends EgovFileMngUtil {
 			JSONObject err = new JSONObject();
 			return err;
 		}
-
-		List<ResBrdVO> list = ezResourceService.getResourcePortlet(loginCookie, date);
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+    
+		List<ResBrdVO> list = ezResourceService.getResourcePortlet(userInfo, date);
 		JSONObject jObject = new JSONObject();
 		jObject.put("status", "ok");
 		jObject.put("list", list);
@@ -2949,5 +3063,412 @@ public class EzResourceController extends EgovFileMngUtil {
         logger.debug("tempUploadFileDelete ended");
         
         return "json";
+    }
+	
+	@RequestMapping(value = "/ezResource/checkApprovalFlag.do", method = RequestMethod.GET, produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String checkApprovalFlag(HttpServletRequest request, LoginVO userInfo, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("checkApprovalFlag Start");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+
+		String resID = "";
+		if(request.getParameter("resID") != null) {
+			resID = request.getParameter("resID");
+		}
+		
+		String brdApproveFlag = ezResourceService.getBrdApproveFlag(Integer.parseInt(resID), userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		logger.debug("checkApprovalFlag end");
+		return brdApproveFlag;
+	}
+	
+	@RequestMapping(value = "/ezResource/resourceOccupancy.do", method = RequestMethod.GET)
+	public String resourceOccupancy(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("resourceOccupancy Start");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		int tenantId = userInfo.getTenantId();
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("tenantId", tenantId);
+		
+		logger.debug("resourceOccupancy End");
+		return "ezResource/resOccupancy";
+	}
+	
+	@RequestMapping(value = "/ezResource/getResOccuList.do", method = RequestMethod.GET)
+	public String getResOccuList(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		
+		String searchStartTime = request.getParameter("searchStartTime").substring(0, 10);
+		String searchEndTime = request.getParameter("searchEndTime").substring(0, 10);
+		int tenantID = commonUtil.userInfo(loginCookie).getTenantId();
+		String companyID = request.getParameter("pCompanyID");
+		String companyName = request.getParameter("pCompanyName");
+		String offset = commonUtil.userInfo(loginCookie).getOffset();
+		
+		List<ResOccuVO> getResOccuList = ezResourceService.getResOccuList(companyID, tenantID, searchStartTime, searchEndTime, offset);
+		long totalTime = 0;
+		if (getResOccuList.size() > 0) {
+			for (int i = 0; i < getResOccuList.size(); i++) {
+				totalTime += getResOccuList.get(i).getUsageTime();
+			}
+			
+			for (int i = 0; i < getResOccuList.size(); i++) {
+				double occu = (getResOccuList.get(i).getUsageTime() / (double)totalTime) * 100;
+				String occupancy = String.format("%.2f", occu) + "%";
+				getResOccuList.get(i).setOccupancy(occupancy);
+				getResOccuList.get(i).setCompanyName(companyName);
+			}
+		}
+		
+		model.addAttribute("getResOccuList", getResOccuList);
+		model.addAttribute("totalTime", totalTime);
+		return "json";
+	}
+	
+	@RequestMapping(value = "/ezResource/excelExportOut.do", method = {RequestMethod.POST, RequestMethod.GET})
+	@ResponseBody
+	public void excelExportOut(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
+		logger.debug("excelExportOut started");
+		
+		String searchStartTime = request.getParameter("searchStartTime").substring(0, 10);
+		String searchEndTime = request.getParameter("searchEndTime").substring(0, 10);
+		int tenantID = commonUtil.userInfo(loginCookie).getTenantId();
+		String companyID = request.getParameter("pCompanyID");
+		String companyName = request.getParameter("pCompanyName");
+		String offset = commonUtil.userInfo(loginCookie).getOffset();
+		
+		List<ResOccuVO> getResOccuList = ezResourceService.getResOccuList(companyID, tenantID, searchStartTime, searchEndTime, offset);
+		long totalTime = 0;
+		if (getResOccuList.size() > 0) {
+			for (int i = 0; i < getResOccuList.size(); i++) {
+				totalTime += getResOccuList.get(i).getUsageTime();
+			}
+			
+			for (int i = 0; i < getResOccuList.size(); i++) {
+				double occu = (getResOccuList.get(i).getUsageTime() / (double)totalTime) * 100;
+				String occupancy = String.format("%.2f", occu) + "%";
+				getResOccuList.get(i).setOccupancy(occupancy);
+				getResOccuList.get(i).setCompanyName(companyName);
+			}
+		}
+		
+		try (HSSFWorkbook workbook = new HSSFWorkbook()) {
+			HSSFSheet sheet;
+			HSSFCellStyle headerStyle= workbook.createCellStyle();
+		    headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+		    headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		    headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		    headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		    headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		    headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		    headerStyle.setAlignment(CellStyle.ALIGN_CENTER);
+		      
+		    HSSFCellStyle bodyStyle= workbook.createCellStyle();
+		    bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		    bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		    bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		    bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		    bodyStyle.setAlignment(CellStyle.ALIGN_CENTER);
+		    bodyStyle.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+		    
+		    Row row;
+		    Cell cell;
+		    
+		    String pFileName = searchStartTime.replace("-", ".") + "~" + searchEndTime.replace("-", ".") + "_resList";
+			
+			sheet = workbook.createSheet("resList");
+			row = sheet.createRow(0);
+			
+			for (int i = 0; i < 6; i++) {
+				cell = row.createCell(i);
+				cell.setCellStyle(headerStyle);
+				cell.setCellValue(egovMessageSource.getMessage("ezResource.header.kwc" + (i + 1), locale));
+				sheet.autoSizeColumn(i);
+				sheet.setColumnWidth(i, Math.min(65280, sheet.getColumnWidth(i) + 4096));
+			}
+			
+			for (int i = 0; i < getResOccuList.size(); i++) {
+				row = sheet.createRow(i + 1);
+				cell = row.createCell(0);
+				cell.setCellStyle(bodyStyle);
+				cell.setCellValue(getResOccuList.get(i).getCompanyName());
+				cell = row.createCell(1);
+				cell.setCellStyle(bodyStyle);
+				cell.setCellValue(getResOccuList.get(i).getBrdNm());
+				cell = row.createCell(2);
+				cell.setCellStyle(bodyStyle);
+				cell.setCellValue(getResOccuList.get(i).getCount());
+				cell = row.createCell(3);
+				cell.setCellStyle(bodyStyle);
+				cell.setCellValue(getResOccuList.get(i).getUsageTime());
+				cell = row.createCell(4);
+				cell.setCellStyle(bodyStyle);
+				cell.setCellValue(totalTime);
+				cell = row.createCell(5);
+				cell.setCellStyle(bodyStyle);
+				cell.setCellValue(getResOccuList.get(i).getOccupancy());
+				if (i == (getResOccuList.size() - 1) && getResOccuList.size() > 1) {
+					sheet.addMergedRegion(new CellRangeAddress(1, getResOccuList.size(), 4, 4));
+				}
+			}
+			
+			response.setContentType("application/ms-excel");
+			response.setCharacterEncoding("utf-8");
+			response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
+		    workbook.write(response.getOutputStream());
+		}
+		
+		logger.debug("excelExportOut ended");
+	}
+	
+	/**
+	 * 즐겨찾기 관리창 호출 Method
+	 */
+	@RequestMapping(value = "/ezResource/resFavoriteManage.do", method = RequestMethod.GET, produces = "text/xml; charset=utf-8")
+	public String favoriteManage(@CookieValue("loginCookie") String loginCookie, @RequestParam(required = false) String brdId, Model model) throws Exception {
+		logger.debug("favoriteManage start, brdId=" + brdId);
+		
+		model.addAttribute("brdId", brdId);
+		
+		logger.debug("favoriteManage end");
+		
+		return "/ezResource/resFavoriteManage";
+	}
+
+	/**
+	 * 즐겨찾기 카테고리(분류) 추가 Method
+	 */
+	@RequestMapping(value = "/ezResource/addFavoriteCategory.do", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> addFavoriteCategory(@CookieValue("loginCookie") String loginCookie, @RequestParam String catName, @RequestParam(required = false) String catId) throws Exception {
+		logger.debug("addFavoriteCategory start, catName=" + catName + " catId=" + catId);
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		ezResourceService.addFavoriteCategory(catName, catId, userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("type", "C");
+		
+		logger.debug("addFavoriteCategory end");
+		
+		return result;
+	}
+	
+	/**
+	 * 즐겨찾기 카테고리(분류) 수정 Method
+	 */
+	@RequestMapping(value = "/ezResource/modFavoriteCategory.do", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> modFavoriteCategory(@CookieValue("loginCookie") String loginCookie, @RequestParam String catName, @RequestParam String catId) throws Exception {
+		logger.debug("modFavoriteCategory start, catName=" + catName, "catId=" + catId);
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		ezResourceService.modFavoriteCategory(catName, catId, userInfo.getId());
+		
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("type", "U");
+		
+		logger.debug("modFavoriteCategory end");
+		
+		return result;
+	}
+	
+	/**
+	 * 즐겨찾기 카테고리(분류) 삭제 Method
+	 */
+	@RequestMapping(value = "/ezResource/delFavoriteCategory.do", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> delFavoriteCategory(@CookieValue("loginCookie") String loginCookie, @RequestParam String catId) throws Exception {
+		logger.debug("delFavoriteCategory start, catId=" + catId);
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		ezResourceService.delFavoriteCategory(catId, userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("type", "D");
+		
+		logger.debug("delFavoriteCategory end");
+		return result;
+	}
+	
+	/**
+	 * 상위로 부터 하위 카테고리(분류) 조회 Method
+	 */
+	@RequestMapping(value = "/ezResource/getFavoriteCategoryList.do", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> getFavoriteCategoryList(@CookieValue("loginCookie") String loginCookie, @RequestParam(required = false) String topId) throws Exception {
+		logger.debug("getFavoriteCategoryList start, topId=" + topId);
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		List<ResFavoriteCategoryVO> list = ezResourceService.getFavoriteCategoryList(topId, userInfo.getId());
+		
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("list", list);
+		
+		logger.debug("getFavoriteCategoryList end");
+		return result;
+	}
+	
+	/**
+	 * 자원을 카테고리(분류) 에 추가히기 위한  Method
+	 */
+	@RequestMapping(value = "/ezResource/addBrdFavoriteCategory.do", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> addBrdFavoriteCategory(@CookieValue("loginCookie") String loginCookie, @RequestParam String brdId, @RequestParam String catId) throws Exception {
+		logger.debug("addBrdFavoriteCategory start, brdId=" + brdId + ", catId=" + catId);
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String res = ezResourceService.addBrdFavoriteCategory(brdId, catId, userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("result", res);
+		
+		logger.debug("addBrdFavoriteCategory end, result=" + res);
+		
+		return result;
+	}
+	
+	/**
+	 * 카테고리(분류)에 존재하는 자원 목록 조회
+	 */
+	@RequestMapping(value = "/ezResource/getBrdFavoriteList.do", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> getBrdFavoriteList(@CookieValue("loginCookie") String loginCookie, @RequestParam String catId) throws Exception {
+		logger.debug("getBrdFavoriteList start, catId=", catId);
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		List<ResBrdVO> list = ezResourceService.getFavoriteBrdList(catId, userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getId());
+
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("list", list);
+		result.put("userLang", userInfo.getLang());
+		
+		logger.debug("getBrdFavoriteList end");
+		
+		return result;
+	}
+	
+	/**
+	 * 자원, 카테고리(분류) 아동 Method
+	 * @param loginCookie 
+	 * @param requestBody => catId, brdId, topId 세 값을 파라미터로 받음
+	 * brdId (자원 이동시 이동할 자원의 분류ID) = > 자원 이동시에만 자원의 brdId값이 넘어오고 해당 값의 유무로 카테고리 이동인지 자원 이동인지 구분됨
+	 * catId (카테고리 이동시 이동될 카테고리 ID or 자원 이동 시 현재 속한 카테고리 ID) = > 카테고리 이동 시엔 이동할 카테고리(분류) ID가 넘어오고 자원 이동시엔 이동할 자원이 속한 카테고리(분류) ID가 넘어옴
+	 * topId (최종 이동 카테고리 ID) = > 최종적으로 이동되어질 카테고리(분류) ID
+	 * @return 결과 문자열 
+	 * "equalfail" - 현재 위치로 이동 시도 했을 경우
+	 * "fail" - 분류 이동 시 하위로 이동 시도 했을 경우
+	 * "true" - 이동 성공 
+	 */
+	@RequestMapping(value = "/ezResource/moveCategory.do", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> moveCategory(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> requestBody) throws Exception {
+		logger.debug("moveCategory start");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String catId = requestBody.get("catId") != null ? (String) requestBody.get("catId") : null;
+		String topId = requestBody.get("topId") != null ? (String) requestBody.get("topId") : null;
+		String brdId = requestBody.get("brdId") != null ? (String) requestBody.get("brdId") : null;
+		logger.debug("resquestBody : catId=" + catId + ", topId=" + topId + ", brdId=" + brdId);
+		
+		String resultStr="";
+		if (brdId != null) {
+			//자원을 다른 카테고리로 이동
+			resultStr = ezResourceService.moveResource(userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId(), catId, brdId, topId);
+		} else {
+			if (catId.equals(topId)) {
+				//현재 카테고리
+				resultStr = "equalfail";
+			}
+			//카테고리를 다른 카테고리 이동
+			resultStr = ezResourceService.moveCategory(userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId(), catId, topId);
+		}
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("result", resultStr);
+		
+		logger.debug("moveCategory end, result=" + resultStr);
+		
+		return result;
+	}
+	
+	/**
+	 * 즐겨찾기 카테고리(분류)의 자원 정보 삭제
+	 */
+	@RequestMapping(value = "/ezResource/delBrdFavoriteCategory.do", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> delBrdFavoriteCategory(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> resquestBody) throws Exception {
+		logger.debug("delBrdFavoriteCategory start");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String delBrdId = resquestBody.get("delBrdId") != null ? (String) resquestBody.get("delBrdId") : null;
+		String delTopId = resquestBody.get("delTopId") != null ? (String) resquestBody.get("delTopId") : null;
+		logger.debug("resquestBody : delBrdId=" + delBrdId + ", delTopId=" + delTopId);
+		
+		ezResourceService.delBrdFavoriteCategory(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID(), delBrdId, delTopId);
+		
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("type", "BD");
+		
+		logger.debug("delBrdFavoriteCategory end");
+		
+		return result;
+	}
+	
+	/**
+	 * 자원 즐겨찾기 관리 "자원 즐겨찾기 분류 추가/수정" 창 호출
+	 */
+	@RequestMapping(value = "/ezResource/inputNameDlg.do", method = RequestMethod.GET)
+	public String delBrdFavoriteCategory() throws Exception {
+		return "/ezResource/resInputNameDlg";
+	}
+	
+	/**
+	 * 즐겨찾기 관리 "이동" 창 호출
+	 */
+	@RequestMapping(value = "/ezResource/resFavoriteMove.do", method = RequestMethod.GET)
+	public String resFavoriteMove() throws Exception {
+		return "/ezResource/resFavoriteMove";
+	}
+
+    /**
+     * 자원반복설정 값 확인 
+     */
+    @RequestMapping(value = "/ezResource/repeatFlagCheck.do", method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String, Object> repeatFlagCheck(HttpServletRequest request, LoginVO userInfo, @CookieValue("loginCookie") String loginCookie) throws Exception {
+        logger.debug("repeatFlagCheck start");
+        userInfo = commonUtil.userInfo(loginCookie);
+        String[] resIDArray = request.getParameterValues("resIDArray[]");
+        List<String> repeatCheckList = new ArrayList<>();
+        String repeatResult = "true";
+
+        try{
+            if (resIDArray != null && resIDArray.length > 0){
+                for (String resID : resIDArray) {
+                    String brdRepeatFlag = ezResourceService.getBrdRepeatFlag(Integer.parseInt(resID), userInfo.getCompanyID(), userInfo.getTenantId());
+                    if (!brdRepeatFlag.equals("1")) {
+                        repeatCheckList.add(resID);
+                        repeatResult = "false";
+                    }
+                }
+            }
+        }catch(Exception e){
+            logger.error(e.getMessage(), e);
+            repeatResult = "error";
+        }
+
+        Map<String, Object> result = new HashMap<String, Object>();
+        result.put("repeatCheckList", repeatCheckList);
+        result.put("repeatResult", repeatResult);
+
+        logger.debug("repeatFlagCheck end");
+        return result;
     }
 }

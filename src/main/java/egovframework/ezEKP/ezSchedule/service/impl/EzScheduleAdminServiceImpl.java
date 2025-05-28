@@ -1,11 +1,29 @@
 package egovframework.ezEKP.ezSchedule.service.impl;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
+import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleExecutiveVO;
+import egovframework.let.user.login.vo.LoginVO;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +35,9 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleShareVO;
+import org.springframework.web.multipart.MultipartFile;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 
 @Service("EzScheduleAdminService")
 public class EzScheduleAdminServiceImpl implements EzScheduleAdminService{
@@ -24,7 +45,10 @@ public class EzScheduleAdminServiceImpl implements EzScheduleAdminService{
 	
 	@Resource(name="EzScheduleAdminDAO")
 	private EzScheduleAdminDAO ezScheduleAdminDAO;
-		
+	
+	@Resource(name="EzScheduleService")
+	private EzScheduleService ezScheduleService;
+	
 	@Autowired
 	private CommonUtil commonUtil;
 
@@ -237,6 +261,202 @@ public class EzScheduleAdminServiceImpl implements EzScheduleAdminService{
 		
 		return cnt;
 	}
+
+	@Override
+	public String scheduleGetExecutiveList(String cn, String companyID, int tenantID, String offset, String keyword, String lang, String companyName) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("cn", cn);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_KEYWORD", keyword);
+		map.put("v_LANG", lang);
+		map.put("v_COMPANYNAME", companyName);
+
+		List<ScheduleExecutiveVO> list = ezScheduleAdminDAO.scheduleGetExecutiveList(map);
+
+		StringBuilder sb = new StringBuilder("<DATA>");
+
+		for (int i=0; i < list.size(); i++) {
+			ScheduleExecutiveVO vo = list.get(i);
+			vo.setLastUpdate(commonUtil.getDateStringInUTC(vo.getLastUpdate(), offset, false));
+			sb.append(commonUtil.getQueryResult(vo));
+		}
+		sb.append("</DATA>");
+
+		return sb.toString();
+	}
+
+	@Override
+	public void scheduleSaveExecutive(String userID, int priority, String usage, String createUser, String companyID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_USERID", userID);
+		map.put("v_PRIORITY", priority);
+		map.put("v_USAGE", usage);
+		map.put("v_CREATEUSER", createUser);
+		map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+		map.put("v_TENANTID", tenantID);
+		map.put("v_COMPANYID", companyID);
+
+		ezScheduleAdminDAO.scheduleSaveExecutive(map);
+	}
+
+	@Override
+	public void scheduleUpdateExecutive(String userID, int priority, String usage, String createUser, String companyID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_USERID", userID);
+		map.put("v_PRIORITY", priority);
+		map.put("v_USAGE", usage);
+		map.put("v_CREATEUSER", createUser);
+		map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+		map.put("v_TENANTID", tenantID);
+		map.put("v_COMPANYID", companyID);
+
+		ezScheduleAdminDAO.scheduleUpdateExecutive(map);
+	}
+
+	@Override
+	public void scheduleDelExecutive(String userID, String companyID, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_USERID", userID);
+		map.put("v_TENANTID", tenantId);
+		map.put("v_COMPANYID", companyID);
+
+		ezScheduleAdminDAO.scheduleDelExecutive(map);
+
+		logger.debug("deleted holidayID : " + userID);
+	}
+
+	@Override
+	public void scheduleNumUpdateExecutive(String userID, int priority, String companyID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_USERID", userID);
+		map.put("v_PRIORITY", priority);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_COMPANYID", companyID);
+
+		ezScheduleAdminDAO.scheduleUpdateExecutive(map);
+	}
+
+	@Override
+	public String companyScheduleExcelUpload(String userID, MultipartFile uploadFile, String companyID, String companyName, String companyName2, LoginVO userInfo, String defaultPath, String content) throws Exception {
+
+		try {
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			Document doc = builder.newDocument();
+			
+			NodeList attach = doc.getElementsByTagName("");
+			
+			InputStream file = uploadFile.getInputStream();
+
+			Workbook workbook = new XSSFWorkbook(file);
+
+			int sheetCount = workbook.getNumberOfSheets();
+			
+			// 등록된 양식이 아닌지 먼저 체크 후 아닐 경우 업로드 취소
+			for (int i = 0; i < sheetCount; i++) {
+				Sheet sheet = workbook.getSheetAt(i);
+
+				Row rowB01 = sheet.getRow(0);
+				if (rowB01 == null || rowB01.getCell(1) == null) {
+					return "{\"status\":\"FORM_ERROR\"}";
+				}
+
+				// 두 번째 셀 값 가져오기
+				String valueB01 = rowB01.getCell(1).toString();
+
+				if (!valueB01.startsWith("달력연도")) {
+					return "{\"status\":\"FORM_ERROR\"}";
+				}	
+			}
+
+			for (int i = 0; i < sheetCount; i++) {
+				Sheet sheet = workbook.getSheetAt(i);
+				
+				Row yearRow = sheet.getRow(0);
+				Cell yearCell = yearRow.getCell(1);
+				String dateString = ((XSSFCell) yearCell).getRawValue();
+				Pattern pattern = Pattern.compile("(\\d{4})년 (\\d{1,2})월");
+				Matcher matcher = pattern.matcher(dateString);
+
+				String year = "";
+				String month = "";
+				if (matcher.find()) {
+					year = matcher.group(1);
+					month = matcher.group(2);
+				}
+				
+				List<List<String>> cellGroups = new ArrayList<>();
+				
+				// B3:H12, B13:C:14 영역 데이터
+				for (int rowIndex = 2; rowIndex < 16; rowIndex += 2) {	// 2행씩 이동
+					int colEndIndex = 8;
+					if (rowIndex == 14) colEndIndex = 3;
+					
+					for (int colIndex = 1; colIndex < colEndIndex; colIndex++) {	// B열 부터 H열 까지 마지막 rowIndex 에서는 C열까지만 반복
+						boolean checkValue = false;
+						List<String> cellGroup = new ArrayList<>();
 	
+						for (int j = 0; j < 2; j++) {
+							Row row = sheet.getRow(rowIndex + j);
+	
+							if (row != null) {
+								Cell cell = row.getCell(colIndex);
+								if (cell != null) {
+									if (j == 0 && cell.getCellType() == Cell.CELL_TYPE_FORMULA) {
+										String convertingData = convertingExcelDate(((XSSFCell) cell).getRawValue());
+										//if (year.equals(convertingData.split("-")[0]) && month.equals(convertingData.split("-")[1]))
+										cellGroup.add(convertingData);
+									} else if (j == 1 && cell.getCellType() == Cell.CELL_TYPE_STRING) {
+										if (!"".equals(cell.toString()) && cell.toString() != null) {
+											// 일정 제목 데이터 100자 제한하기
+											if (cell.toString().length() <= 100)
+												checkValue = true;
+										}
+										cellGroup.add(cell.toString());
+									}
+								}
+							}
+						}
+						// 일정 데이터가 있을 경우에만 넣어주기
+ 						if (checkValue) cellGroups.add(cellGroup);
+					}
+				}
+				for (List<String> item : cellGroups) {
+					String scheduleDate = item.get(0);
+					String title = item.get(1);
+					
+					String startDate = scheduleDate + " 00:00";
+					String endDate = scheduleDate + " 23:59";
+
+					startDate = commonUtil.getDateStringInUTC(startDate, userInfo.getOffset(), true);
+					endDate = commonUtil.getDateStringInUTC(endDate, userInfo.getOffset(), true);
+					
+					// 회사 일정 DB 인서트 작업
+					ezScheduleService.insertSchedule(companyID, companyName, companyName2, userID, userInfo.getDisplayName(), userInfo.getDisplayName2(), "3", "2", "Y", "2", startDate, endDate, "", title, "", content, attach,
+							null, null, null, null, null, defaultPath, userInfo.getTenantId(), companyID, "N", userInfo.getOffset(), userInfo.getLang());
+				}
+				
+			}
+			file.close();
+		} catch (IOException e) {
+			e.fillInStackTrace();
+			
+			return "{\"status\":\"ERROR\"}";
+		}
+
+		return "{\"status\":\"SUCCESS\"}";
+	}
+
+	public String convertingExcelDate(String excelSerialDate) {
+		LocalDate excelStartDate = LocalDate.of(1900, 1, 1);	// 엑셀의 경우 1900년 01월 01일을 기준으로 계산됨
+		
+		LocalDate localDate = excelStartDate.plusDays(Integer.parseInt(excelSerialDate) - 2);
+		
+		String formattedDate = "";
+		formattedDate = localDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+		
+		return formattedDate;
+	}
 }
 

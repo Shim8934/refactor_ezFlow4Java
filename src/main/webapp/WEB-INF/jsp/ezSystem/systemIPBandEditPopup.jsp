@@ -7,7 +7,8 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code='ezSystem.jje12'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	    <link rel="stylesheet" href="${util.addVer('main.e15', 'msg')}" type="text/css" />
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+	    <link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 	    <link rel="stylesheet" href="${util.addVer('/css/ezEmail/style.css')}" />
 	    <link rel="stylesheet" href="${util.addVer('/js/dist/themes/default/style.min.css')}" />
 	    <script src="${util.addVer('/js/dist/jstree.min.js')}"></script>
@@ -21,6 +22,7 @@
 		var _access = "${access}";
 		var _explanation = "${explanation}";
 		var _pageType = "<c:out value = '${pageType}' />";
+		var _companyId = "<c:out value='${param.companyId}'/>";
 	
 		window.onload = function () {
 			if (_type === 'modify') {
@@ -29,7 +31,7 @@
 				for (var i = 1; i <= ipAddressTemp.length; i++) {
 					document.getElementById("ipBand" + i).value = ipAddressTemp[i-1];
 				}
-				
+
 				if (_access == "YES") {
 					document.getElementById("ipAllow1").checked = true;
 					document.getElementById("ipAllow2").checked = false;
@@ -110,6 +112,12 @@
 			} else if (_pageType == "adminIpAccess" && _type == "modify") {
 				formUrl = "/ezSystem/updateAdminIPBand.do";
 				formData += "&ipNo=" + _ipNo;
+			} else if (_pageType == "fidoAuthentication" && _type == "add") {
+				formUrl = "/ezSystem/insertFidoIPBand.do";
+				formData += "&companyId=" + _companyId;
+			} else if (_pageType == "fidoAuthentication" && _type == "modify") {
+				formUrl = "/ezSystem/updateFidoIPBand.do";
+				formData += "&ipNo=" + _ipNo;
 			} else if (_type == "modify") {
 				formUrl = "/ezSystem/updateIPBand.do";
 				formData += "&ipNo=" + _ipNo;
@@ -151,13 +159,13 @@
 			<div class="leTitle" style="padding-left:10px"><spring:message code='ezSystem.jje12'/></div>
 			
 			<table class="content" style="width:95%; margin:auto; margin-top: 2px;">
-				<tr>
-					<th><spring:message code='ezSystem.jje3'/></th>
-					<td>
-						<label id="la1"><input type="radio" id="ipAllow1" name="ipAllow" Checked>&nbsp;<span style="vertical-align:middle;"><spring:message code='ezSystem.jje21'/></span></label>
-	                	<label id="la2"><input type="radio" id="ipAllow2" name="ipAllow">&nbsp;<span style="vertical-align:middle;"><spring:message code='ezSystem.jje22'/></span></label>
-	                </td>
-			    </tr>
+					<tr>
+						<th><spring:message code='ezSystem.jje3'/></th>
+						<td>
+							<label id="la1"><input type="radio" id="ipAllow1" name="ipAllow" Checked>&nbsp;<span style="vertical-align:middle;"><spring:message code='ezSystem.jje21'/></span></label>
+							<label id="la2"><input type="radio" id="ipAllow2" name="ipAllow">&nbsp;<span style="vertical-align:middle;"><spring:message code='ezSystem.jje22'/></span></label>
+						</td>
+					</tr>
 			    <tr>
 					<th><spring:message code='ezSystem.jje5'/></th>
 					<td style="padding:3px 5px;"><form id="myForm"><input name="ipBand" type="text" size="3" maxlength="3" id="ipBand1">.<input name="ipBand" type="text" size="3" maxlength="3" id="ipBand2">.<input name="ipBand" type="text" size="3" maxlength="3" id="ipBand3">.<input name="ipBand" type="text" size="3" maxlength="3" id="ipBand4"></form>

@@ -85,7 +85,7 @@ function mappingResourcePortlet(vo){
 	var timeTable = vo.rsPortletTime.split(";");
 	var num       = vo.rsPortletNum.split(";");
 	var cnt       = timeTable.length; 
-	if(cnt>4)     {cnt=4;} // 포틀릿 스크롤바 때문에 최대 3개로 고정
+	// if(cnt>4)     {cnt=4;} // 포틀릿 스크롤바 때문에 최대 3개로 고정 // 2024-06-07 디자인 변경사항 : 예약 시간 추가한 것 다 보이도록 수정
 	
 	var li       = document.createElement("li");
 	var dl       = document.createElement("dl");
@@ -103,26 +103,29 @@ function mappingResourcePortlet(vo){
 	else { spanImg.setAttribute("class", "sub_iconLNB tree_resource_no");}
 	spanTxt.setAttribute("class", "resource_list_text");
 	spanTxt.addEventListener('click', function(event) {reserveInfoPopup(vo.brdID)});
-	spanTxt.textContent = vo.brdNm;
+	if(typeof(userLang2) != "undefined" && userLang2 != "1"){
+		spanTxt.textContent = vo.brdNm2;
+	}else{
+		spanTxt.textContent = vo.brdNm;
+	}
 	if(cnt==1) { // 예약이 없을 경우 
 		p = makeEmptyList(vo.brdID);
 		dd.appendChild(p);
 	} else {		// 예약 있음
 		for(var i=0; i<cnt-1; i++) {
-			var span = document.createElement('span');
+			var p = document.createElement('p');
 			var arr  = new Array();
-			span.setAttribute("class", "resource_list_item");
-			span.setAttribute("num", num[i]);
-			span.setAttribute("ownerID", vo.brdID);
-			span.style.float = 'left';
-			span.textContent = timeTable[i];
-			span.addEventListener('click', function(event) {reserveViewPopup()});
-			dd.appendChild(span);
-		}
-		if(cnt<4) {
-			p = makeEmptyList(vo.brdID);
+			p.setAttribute("class", "resource_list_item");
+			p.setAttribute("num", num[i]);
+			p.setAttribute("ownerID", vo.brdID);
+			p.textContent = timeTable[i];
+			p.addEventListener('click', function(event) {reserveViewPopup()});
 			dd.appendChild(p);
 		}
+		// if(cnt<4) {
+			p = makeEmptyList(vo.brdID);
+			dd.appendChild(p);
+		// }
 	}
 
 	dt.appendChild(spanImg);
@@ -174,7 +177,8 @@ function reserveInfoPopup(id) {
 
 // 예약 등록 팝업
 function reserveSavePopup(id) {
-	 var url = "/ezResource/persPortletAdd.do?cmd=add&from=schedule&selsd=" + Sdatepicker.value + "&seled=" + Sdatepicker.value + "&dayView=&ownerID=" + id;
+	 var selectedDate = Sdatepicker.value.replace(/\./g, "-");
+	 var url = "/ezResource/persPortletAdd.do?cmd=add&from=schedule&selsd=" + selectedDate + "&seled=" + selectedDate + "&dayView=&ownerID=" + id;
      var feature =  "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1"
      feature = feature + GetOpenPosition(820, 700);
      window.open(url, "", feature);
@@ -185,10 +189,52 @@ function reserveViewPopup() {//0 num //1 id
 	var _this    = event.target;
 	var _num     = _this.getAttribute('num');
 	var _ownerID = _this.getAttribute('ownerID');
-	
-	var url     = "/ezResource/persPortletRead.do?cmd=mod&from=schedule&num=" + _num + "&ownerID=" + _ownerID + "&type=Master&startDate=" + Sdatepicker.value+ "&endDate=" + Sdatepicker.value
+	var selectedDate = Sdatepicker.value.replace('/\./g', '-');
+	var url     = "/ezResource/persPortletRead.do?cmd=mod&from=schedule&num=" + _num + "&ownerID=" + _ownerID + "&type=Master&startDate=" + selectedDate + "&endDate=" + selectedDate
     var feature =  "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1"
     
 	feature = feature + GetOpenPosition(820, 700);
     window.open(url, "", feature);
+}
+
+function settingResourceCalendar() {
+	var dayList = messages.strLangSchedule01.split(";");
+ 	var dSun = dayList[0];
+	var dMon = dayList[1];
+	var dTue = dayList[2];
+	var dWed = dayList[3];
+	var dThu = dayList[4];
+	var dFri = dayList[5];
+	var dSat = dayList[6];
+	$("#Sdatepicker").datepicker({
+		changeMonth: true,
+		changeYear: true,
+		autoSize: true,
+		showOn: "both",
+		buttonImage: "/images/ezNewPortal/calIcon.png",
+		buttonImageOnly: true,
+		closeText: messages.strLang601,
+		prevText: messages.strLang599,
+		nextText: messages.strLang600,
+		currentText: messages.strLang598,
+		monthNames: [messages.strLang586, messages.strLang587, messages.strLang588, messages.strLang589, messages.strLang590, messages.strLang591, messages.strLang592, messages.strLang593, messages.strLang594, messages.strLang595, messages.strLang596, messages.strLang597],
+		monthNamesShort: [messages.strLang586, messages.strLang587, messages.strLang588, messages.strLang589, messages.strLang590, messages.strLang591, messages.strLang592, messages.strLang593, messages.strLang594, messages.strLang595, messages.strLang596, messages.strLang597],
+		dayNames: [dSun, dMon, dTue, dWed, dThu, dFri, dSat],
+		dayNamesShort: [dSun, dMon, dTue, dWed, dThu, dFri, dSat],
+		dayNamesMin: [dSun, dMon, dTue, dWed, dThu, dFri, dSat],
+		weekHeader: "Wk",
+		dateFormat: "yy.mm.dd",
+		firstDay: 0,
+		isRTL: false,
+		duration: 200,
+		showAnim: "show",
+		showMonthAfterYear: true,
+		onSelect: function(dateText, inst) {
+			var date = $(this).val();
+			getPersPortlet();
+		}
+	});
+	
+	var SDate = new Date();
+	$("#Sdatepicker").datepicker('setDate', SDate);
 }

@@ -11,7 +11,7 @@ import egovframework.ezEKP.ezCar.vo.CarFormListVO;
 import egovframework.ezEKP.ezCar.vo.CarGetAdmSubClsTreeVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdminFlagVO;
 import egovframework.ezEKP.ezResource.vo.ResGetClsAclListVO;
-import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzCarDAO")
 public class EzCarDAO extends EgovAbstractDAO {

@@ -11,7 +11,7 @@
 		<div class="layDIV">
 			<dl class="portlet_title sortablePortlet" style="<c:if test='${usedTheme == 3}'>border-bottom: 1px solid #D7E3E5;</c:if>">
 			    <dt class="portletText"><spring:message code='ezNewPortal.pjg01'/></dt>
-			    <dd class="portletPlus" id="ezWorkspacePlus"><img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme}'/>.png"></dd>
+			    <dd class="portletPlus plus" id="ezWorkspacePlus"></dd>
 			</dl>          
 			<ul class="collaborate_tab" id="divSpaceListResults" style="overflow-y: auto; height: 204px;">
 			</ul>
@@ -27,11 +27,13 @@
 			</div>
 		</div> 
 	</article>
-	<script type="text/javascript" src="${workspaceContextRootUrl}/ezWorkspace/Scripts/moment.min.js"></script>	
-   	<script type="text/javascript" src="${workspaceContextRootUrl}/ezWorkspace/Scripts/Groupwareapi.js"></script>
+	<script type="text/javascript" src="${workspaceContextRootUrl}/Scripts/moment.min.js"></script>	
+   	<script type="text/javascript" src="${workspaceContextRootUrl}/Scripts/Groupwareapi.js"></script>
 	<script type="text/javascript">
 		var g_UserID = "${userId}"; // GW 사용자 Id, 가온누리 Java버전엔 이미 선언되어 있음
 		var WorkspaceUrl = "${workspaceHostUrl}"; // 협업이 그룹웨어와 별도의 Url로 서비스 되는 경우에만 설정
+		/* 2025-03-13 홍승비 - 협업 모듈에 고정된 하드코딩 문자열 제거 (ezWorkspace), 테넌트 컨피그 workspaceAppPath로 협업 웹응용프로그램 경로를 분리하여 사용 ("" 또는 "/ezWork" 등) */
+	    var workspaceAppPath = "${workspaceAppPath}";
 		var g_bGroupwareUIType = false;  // 그룹웨어 UI 타입 => true: UIUX, false: Normal(예전 GW 화면)
 		var feedListCount = 4;
 		var g_bRayful = false;
@@ -40,7 +42,7 @@
 		var g_bEzWorkspaceJava = true; // 협업 자바버전 변경을 위한 변수
 		
 		document.getElementById('ezWorkspacePlus').addEventListener('click', function() {
-			window.open("${workspaceContextRootUrl}/ezWorkspace/Account/SSO", "main", "");
+			window.open("${workspaceContextRootUrl}/Account/SSO", "main", "");
 		});
 	</script>	
 </body>

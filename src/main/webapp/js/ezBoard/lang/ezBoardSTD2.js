@@ -76,3 +76,33 @@ var strLangKWCHd01 = "An error occurred while saving security HWP document. Plea
 var strLangLGE188 = "You cannot 'Like' your own comments.";
 var strLangLGE189 = "You cannot 'Dislike' your own comments.";
 var strLangLGE190 = "This comment has already been deleted.";
+
+// 2023-03-30 이가은 추가
+var strLangLGE01 = "Open a Reply";
+var strLangLGE02 = "Collapse a Reply";
+var strLangLGE03 = "Save";
+var strLangLGE04 = "Cancel";
+var strLangLGE05 = "Password";
+var strLangLGE06 = "Anonymous";
+var strLangLGE07 = "This comment has been deleted by its writer.";
+
+/* 2024-08-26 전인하 - 게시판 > 키워드 > 특문입력제한 */
+var strLangKeywordJIH01 = "You cannot enter reverse slashes, lower quotes, double quotes, inequalities, and hash sign."
+var strLangKeywordJIH02 = "An error occurred."
+var strLangKeywordJIH03 = "You cannot search for keyword because this post was either not accessed from the groupware or changes have been made to the groupware page from which it was accessed.";
+var strLangKeywordJIH04 = "Do you want to close the post you are currently viewing?";
+var strLangKeywordJIH05 = "You cannot search for keywords in posts viewed through the post or email view popup, or in posts viewed through the admin screen.";
+
+var strLangAttachJIH01 = "Attach";
+var strLangAttachJIH02 = "File name cannot exceed ";
+var strLangAttachJIH03 = " characters.";
+var strLangAttachJIH04 = "An error has occurred.";
+
+// 2024-06-28 민지수 - 게시판 > 첨부파일 드래그 앤 드롭 안내 메세지 추가
+var strLangMJS01 = "You can drag and drop to add files and change the order of added files.";
+
+
+// 2024-10-02 이혜림 추가
+var strLangLHR001 = "You cannot evaluate with a score of 0";
+var strLangLHR002 = "You can't rate with the same score as before";
+var strLangLHR003 = "The score was successfully saved.";

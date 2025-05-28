@@ -657,7 +657,8 @@
 				} else if (objThis.id == "ModInfo") {
 					window.open("/ezPortal/environmentMain.do?funCode=1", "main");
 				} else if (objThis.id == "Workspace") {
-					window.open("${workspaceContextRootUrl}/ezWorkspace/Account/SSO", "main");
+					/* 2025-03-13 홍승비 - 협업 모듈에 고정된 하드코딩 문자열 제거 (ezWorkspace) */
+					window.open("${workspaceContextRootUrl}/Account/SSO", "main");
 				} else {
 					ifrw.topMenuToggle(objThis.id);
 				}
@@ -1540,8 +1541,8 @@
 	</body>
 	<!-- 협업 연동 script -->
 	<c:if test="${hasWorkspace == true }">
-	    <script type="text/javascript" src="${workspaceContextRootUrl}/ezWorkspace/Scripts/moment.min.js"></script>
-	    <script type="text/javascript" src="${workspaceContextRootUrl}/ezWorkspace/Scripts/Groupwareapi.js"></script>
+	    <script type="text/javascript" src="${workspaceContextRootUrl}/Scripts/moment.min.js"></script>
+	    <script type="text/javascript" src="${workspaceContextRootUrl}/Scripts/Groupwareapi.js"></script>
 	    <script type="text/javascript">
 		    var g_UserID = "${userInfo.id}"; // GW 사용자 Id, 가온누리 Java버전엔 이미 선언되어 있음
 		    var WorkspaceUrl = "${workspaceHostUrl}"; // 협업이 그룹웨어와 별도의 Url로 서비스 되는 경우에만 설정

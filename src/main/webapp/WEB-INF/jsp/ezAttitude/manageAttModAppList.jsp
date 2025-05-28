@@ -10,7 +10,8 @@
 <head>
 		<title><spring:message code='ezAttitude.t165' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezAttitude.i1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/previewmail.css')}">
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/jquery.modal.css')}" type="text/css" />
@@ -221,32 +222,32 @@
 	        var strtext;
 	        var PagingHTML = "";
 	        document.getElementById("tblPageRayer").innerHTML = "";
-	        //document.getElementById("mailBoxInfo").innerHTML = " [" + "총"  + "<span style='color:#017BEC;'> " + totalAtt + " </span>" + "개]";
+	        //document.getElementById("mailBoxInfo").innerHTML = " [" + "총"  + "<span class='txt_color'> " + totalAtt + " </span>" + "개]";
 	        strtext = "<div class='pagenavi'>";
 	        PagingHTML += strtext;
 	        var pageNum = currentPage;
 	        
 	        if (totalPages > 1 && pageNum != 1) {
-	            strtext = "<span class='btnimg' onClick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif'></span>";
+				strtext = "<span class='btnimg first' onClick= 'return goToPageByNum(1)'></span>";
 	            PagingHTML += strtext;
 	        }
 	        else {
-	            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>";
+				strtext = "<span class='btnimg first disabled'></span>";
 	            PagingHTML += strtext;
 	        }
 	        
 	        if (totalPages > blockSize) {
 	            if (pageNum > blockSize) {
-	                strtext = "<span class='btnimg' onClick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' ></span>";
+					strtext = "<span class='btnimg prev' onClick= 'return selbeforeBlock()'></span>";
 	                PagingHTML += strtext;
 	            }
 	            else {
-	                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+					strtext = "<span class='btnimg prev disabled'></span>";
 	                PagingHTML += strtext;
 	            }
 	        }
 	        else {
-	            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif'></span>";
+				strtext = "<span class='btnimg prev disabled'></span>";
 	            PagingHTML += strtext;
 	        }
 	        
@@ -275,27 +276,27 @@
 	        if (totalPages > blockSize) {
 	        	if (totalPages >= parseInt(((parseInt((pageNum - 1) / blockSize) + 1) * blockSize) + 1)) {
 	        	    strtext = "";
-	        	    strtext = strtext + "<span class='btnimg' onClick='return selafterBlock()'><img src='/images/sub/btn_next.gif' ></span>";
+					strtext = strtext + "<span class='btnimg next' onClick='return selafterBlock()'></span>";
 	                PagingHTML += strtext;
 	        	}
 	        	else {
 	                strtext = "";
-	                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+					strtext = strtext + "<span class='btnimg next disalbed'></span>";
 	                PagingHTML += strtext;
 	        	}
 	        }
 	        else {
 	            strtext = "";
-	            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif'></span>";
+				strtext = strtext + "<span class='btnimg next disabled'></span>";
 	            PagingHTML += strtext;
 	        }
 	        
 	        if (totalPages > 1 && totalPages != 1 && (totalPages != pageNum)) {
-	            strtext = "<span class='btnimg' onClick='return goToPageByNum(" + totalPages + ")'><img src='/images/sub/btn_n_next.gif'></span>";
+				strtext = "<span class='btnimg last' onClick='return goToPageByNum(" + totalPages + ")'></span>";
 	            PagingHTML += strtext;
 	        }
 	        else {
-	            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
+				strtext = "<span class='btnimg last disabled'></span>";
 	            PagingHTML += strtext;
 	        }
 	        
@@ -456,6 +457,13 @@
 			    	ajaxRunning = false;
 			    },
 			    success : function(json){
+			    	
+			    	// 2025-02-20 조수빈 - 다운로드할 내용 없을 경우 동작이 없어 분기 추가
+			    	if (json.list.length < 1) {
+			    		alert('<spring:message code="ezAttitude.t56"/>');
+			    		return;
+			    	}
+			    	
 			    	getAttList_after(json, true);
 			    },
 				complete : function() {
@@ -478,16 +486,16 @@
 		    	totalPages = data.totalPages;
 		    	makePageSelPage();
 		    	
-		    	infoStr += "&nbsp;&nbsp;<span style='color:#017BEC;'>" + data.totalAtt;
+		    	infoStr += "&nbsp;&nbsp;<span class='txt_color'>" + data.totalAtt;
 		    	
 		    	if (data.startDate != "" && data.endDate != "") {
 		    		infoStr += "</span>";
-	    			infoStr += ' / ' + data.startDate.substring(0,4) + "<spring:message code='ezAttitude.t66'/>" + 
-			    	data.startDate.substring(5,7) + "<spring:message code='ezAttitude.t67'/>" + 
-			    	data.startDate.substring(8,10) + "<spring:message code='ezAttitude.t68'/>~";
-			    	infoStr += data.endDate.substring(0,4) + "<spring:message code='ezAttitude.t66'/>" + 
-			    	data.endDate.substring(5,7) + "<spring:message code='ezAttitude.t67'/>" + 
-			    	data.endDate.substring(8,10) + "<spring:message code='ezAttitude.t68'/>]</span>";	
+	    			infoStr += ' / ' + data.startDate.substring(0,4) + "<spring:message code='ezAttitude.t66'/> " +
+			    	data.startDate.substring(5,7).replace(/^0/, '') + "<spring:message code='ezAttitude.t67'/> " +
+			    	data.startDate.substring(8,10) + "<spring:message code='ezAttitude.t68'/> ~ ";
+			    	infoStr += data.endDate.substring(0,4) + "<spring:message code='ezAttitude.t66'/> " +
+			    	data.endDate.substring(5,7).replace(/^0/, '') + "<spring:message code='ezAttitude.t67'/> " +
+			    	data.endDate.substring(8,10) + "<spring:message code='ezAttitude.t68'/></span>";
 		    	} else {
 		    		infoStr += "</span>";
 		    	}
@@ -1062,7 +1070,7 @@
 	    
 	    function getHistory(t) {
 		    attModId = $(t).parent().parent().find('td input').attr("value");
-		    window.open("/ezAttitude/attitudeModHistory.do?attModId=" + attModId, "history", GetOpenWindowfeature(600, 300));
+		    window.open("/ezAttitude/attitudeModHistory.do?attModId=" + attModId, "history", GetOpenWindowfeature(800, 300));
 	    }
 	    
 	    function layerHidden() {
@@ -1079,8 +1087,8 @@
 			<li id="appr"><span onClick="modApprove()"><spring:message code='ezAttitude.kje02'/></span></li>
         	<li id="ret"><span onClick="modReturn()"><spring:message code='ezAttitude.kje03'/></span></li>
 	        <li id="reply"><span onClick="get_excelAtt_list()"><spring:message code='ezAttitude.t145'/></span></li>
-	        <li id="search"><span class="icon16 icon16_search" onClick="search_popup()"></span></li>
-        	<li onClick="att_search('refresh')"><span class="icon16 icon16_refresh"></span></li>
+	        <li id="search" onclick="search_popup();"><span class="icon16 icon16_search switchIcon"></span><span class="iconTexts"><spring:message code='ezAttitude.t121'/></span></li>
+        	<li onClick="att_search('refresh')"><span class="icon16 icon16_refresh switchIcon"></span><span class="iconTexts"><spring:message code='ezAttitude.t122'/></span></li>
 			<li>
 				<select id="writerDept_search" onchange="dept_change()" style="height:28px;">
 					<option value="ALL" selected><spring:message code='ezAttitude.t124'/></option>
@@ -1216,6 +1224,7 @@
 		</div>
 		
 		<form id="formAgent" name="formAgent" method="POST" target="saveExcel" action="/ezAttitude/saticGetXlsAtt.do">
+	        <input type="hidden" id="saveFileName" name="saveFileName" value="<spring:message code = 'ezAttitude.t7' />"/>
 	        <input type="hidden" id="saveExcelData" name="saveExcelData" value=""/>
 	        <input type="hidden" id="userAgent" name="userAgent" value=""/>
 	    </form>

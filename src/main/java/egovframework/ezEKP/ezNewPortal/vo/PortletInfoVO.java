@@ -1,5 +1,8 @@
 package egovframework.ezEKP.ezNewPortal.vo;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class PortletInfoVO {
@@ -18,6 +21,7 @@ public class PortletInfoVO {
 	private List<PortletNameInfoVO> portletNameList; // 포틀릿명 리스트
 	private String boardName1;
 	private String boardName2;
+	private int boardGubun;	// 게시판 구분
 	private String menuName;
 	private String userAuth;
 	private String deptAuth;
@@ -28,7 +32,36 @@ public class PortletInfoVO {
 	//2019.07.15 유은정 : 포틀릿 및 메뉴 코드 개선 작업
 	private String portletCode;
 	private String menuCode;
+	private String classSize = "one_by_one";	// 포틀릿 사이즈
 	
+	private String portletConnectionId; // 포틀릿 연계(SystemConfig) id
+	private String connectionName; // 포틀릿 연계 포틀릿 코드 이름
+	
+	private List<String> listPortletSize = new ArrayList<>(Collections.singletonList("one_by_one"));
+
+	public boolean isFixBoard() {
+		for (FixBoardCode code : FixBoardCode.values()) {
+			if (code.getCode().equalsIgnoreCase(this.getPortletCode())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public enum FixBoardCode {
+		FIX_LEFT("fixLeft"), FIX_RIGHT("fixRight");
+
+		private String code;
+
+		FixBoardCode(String code) {
+			this.code = code;
+		}
+
+		public String getCode() {
+			return code;
+		}
+	}
+
 	public String getPortletCode() {
 		return portletCode;
 	}
@@ -162,17 +195,53 @@ public class PortletInfoVO {
 	public void setFixed(boolean isFixed) {
 		this.isFixed = isFixed;
 	}
+
+	public String getClassSize() {
+		return classSize;
+	}
+
+	public void setClassSize(String classSize) {
+		this.classSize = classSize != null ? classSize : "one_by_one";
+	}
+
+	public List<String> getListPortletSize() {
+		return listPortletSize;
+	}
+
+	public void setListPortletSize(List<String> listPortletSize) {
+		this.listPortletSize = listPortletSize;
+	}
+
+	public void addListPortletSize(String size) {
+		this.listPortletSize.add(size);
+	}
+
+	public int getBoardGubun() {
+		return boardGubun;
+	}
+
+	public void setBoardGubun(int boardGubun) {
+		this.boardGubun = boardGubun;
+	}
+	
+	public String getPortletConnectionId() {
+		return portletConnectionId;
+	}
+	
+	public void setPortletConnectionId(String portletConnectionId) {
+		this.portletConnectionId = portletConnectionId;
+	}
+	
+	public String getConnectionName() {
+		return connectionName;
+	}
+	
+	public void setConnectionName(String connectionName) {
+		this.connectionName = connectionName;
+	}
 	
 	@Override
 	public String toString() {
-		/*return "PortletInfoVO [portletId=" + portletId + ", portletOrder=" + portletOrder + ", portletName="
-				+ portletName + ", menuId=" + menuId + ", portletUrl=" + portletUrl + ", isGeneral=" + isGeneral
-				+ ", defaultOrder=" + defaultOrder + ", portletCategory=" + portletCategory + ", connectionUrl="
-				+ connectionUrl + ", portletUsed=" + portletUsed + ", portletBoardId=" + portletBoardId
-				+ ", portletNameList=" + portletNameList + ", boardName1=" + boardName1 + ", boardName2=" + boardName2
-				+ ", menuName=" + menuName + ", userAuth=" + userAuth + ", deptAuth=" + deptAuth + ", comAuth="
-				+ comAuth + ", accessYN=" + accessYN + ", isFixed=" + isFixed + ", portletCode=" + portletCode
-				+ ", menuCode=" + menuCode + "]";*/
 		return "[portletId=" + portletId + " portletName=" + portletName + "]"; // 로그정리
 	}
 }

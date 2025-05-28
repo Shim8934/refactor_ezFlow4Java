@@ -6,7 +6,8 @@
 	<head>
 	    <title></title>
 	    <link rel="stylesheet" href="${util.addVer('ezEmail.e4', 'msg')}" type="text/css">
-	    <link rel="stylesheet" href="${util.addVer('ezEmail.c3', 'msg')}" type="text/css" />
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+	    <link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -44,7 +45,7 @@
 	            if (CrossYN()) {
 	                manycolor_dialogArguments[1] = SelectColor_Complete;
 	                var OpenWin = window.open("/ezCommon/manyColor.do?refresh5=&type=" + Name, "manyColor", GetOpenWindowfeature(294, 260));
-	                try { OpenWin.focus(); } catch (e) { }
+	                try { OpenWin.focus(); } catch (e) {console.log(e);}
 	            }
 	            else {
 	                var retValue = window.showModalDialog("/ezCommon/manyColor.do?refresh5=&type=" + Name, "", "dialogHeight:260px; dialogWidth:294px; status:no;scroll:no; help:no; edge:sunken");

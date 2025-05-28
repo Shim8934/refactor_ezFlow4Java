@@ -7,7 +7,8 @@
 	<head>
 	    <title><spring:message code='ezApprovalG.t367'/></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<style>
 			.contentlist_layout {
     			padding: 0px 15px;
@@ -80,9 +81,10 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/attachG.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/conn_WHWP.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/escapenew.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/appandbody.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/appandbody_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/apprGSummary.js')}"></script>
 	    <script type="text/javascript">
 	        var docID = "<c:out value='${docID}'/>";
 	        var docHref = "<c:out value='${docHref}'/>";
@@ -149,7 +151,8 @@
 			var pDocHrefAry = new Array();
 	        var pDocIDAry = new Array();
 	        var pDocTypeAry = new Array();
-	        
+	        var extAry = new Array();
+
 			var currentTabIdx = 0; // 안별 탭 구분용 인덱스 (현재 선택됨)
 			var allTabNum = "<c:out value ='${groupDocInfoListCnt}'/>"; //  현재 안의 갯수 (groupDocInfoListCnt)
 			var wh = window.innerHeight - 100;
@@ -203,18 +206,20 @@
 				pDocIDAry.push("");
 				pDocHrefAry.push("");
 				pDocTypeAry.push("");
-				
+				extAry.push("");
+
             <c:forEach items="${groupDocInfoList}" var="item">
            		pDocIDAry.push("${item.docID}");
            		pDocHrefAry.push("${item.docHref}"); // 문서경로
     			pDocTypeAry.push("${item.docType}"); // 문서타입 (내부결재, 수신문...)
+    			extAry.push("${item.docHref}".substring("${item.docHref}".lastIndexOf(".") + 1));
     		</c:forEach>
     			
 			    pDocID = docID;
 			    pDocHref = docHref;
 			    pOpinionFlag = opinionFlag;
 			    pListTypeValue = listTypeValue;
-			    if (pListTypeValue == "4") {
+			    if (pListTypeValue == "4" || pListTypeValue == "97") {
 					pListSusin = listSusin;
 				}
 			    
@@ -245,14 +250,20 @@
 			}
 	
 			function btnPrint_onclick() {
-				var currIfrm = document.getElementById("ifrm" + currentTabIdx);
-	        	currIfrm.contentWindow.PrintDocument();
+				var formFileLocation = pDocHrefAry[currentTabIdx];
+				var currentExt = formFileLocation.substring(formFileLocation.lastIndexOf(".") + 1);
+				if (currentExt === "mht") {
+					PrintClick("Cross", pDocID, "ING");
+				} else {
+					var currIfrm = document.getElementById("ifrm" + currentTabIdx);
+					currIfrm.contentWindow.PrintDocument();
+				}
 			}
 			
 			function btnClose_onclick() {
 				//2019.02.21 유은정 : 포탈개인화 결재리스트에서 포틀릿 정보 가져오는 매서드 추가
 		        if (parent.opener != null && parent.opener.getApprovalList != undefined) {
-		        	parent.opener.getApprovalList("draft");
+		        	parent.opener.clearAbsence(true);
 		        }
 			
 			    window.close();
@@ -312,7 +323,7 @@
 			
 			function OpenAlertUI_Close() {
 				if (parent.opener != null && parent.opener.getApprovalList != undefined) {
-				    parent.opener.getApprovalList("draft");
+				    parent.opener.clearAbsence(true);
 				}
 		    
 		        window.close();
@@ -829,7 +840,7 @@
                     }
 
 					// formID는 자식 프레임에서 process_AfterOpen() > getApprovInfo() 등으로 알아서 가져오게 된다. 안 넘겨줘도 됨
-					var iframeURL = "/ezApprovalG/apprViewContentAll_WHWP.do?frameNum=" + viewTabIdx + "&docHref=" + encodeURI(pDocHrefAry[viewTabIdx]) + "&docID=" + encodeURI(pDocIDAry[viewTabIdx]);
+                    var iframeURL = (extAry[i] == "mht" ? "/ezApprovalG/aprDocViewContent.do" : "/ezApprovalG/apprViewContentAll_WHWP.do") + "?frameNum=" + viewTabIdx + "&docHref=" + encodeURI(pDocHrefAry[viewTabIdx]) + "&docID=" + encodeURI(pDocIDAry[viewTabIdx]);
 					addString = addString + "<iframe name=\"ifrm" + viewTabIdx + "\" id=\"ifrm" + viewTabIdx + "\" style=\"width:100%; height:" + wh + "px; border:0px\" onload=\"getReSize()\" src=\"" + iframeURL + "\"></iframe></div>";
 					
                     $("div.tab_container").append(addString);
@@ -911,7 +922,31 @@
 	                }
 	            }                       
 	        }
-        	 
+
+        	function DocumentComplete(frame){
+        	    var frameNum = frame.name.substring(4);
+        	    frame.Set_EditorContentURL(pDocHrefAry[frameNum]);
+        	}
+
+        	function FieldsAvailable(frame) {
+                try {
+                    var frameNum = frame.name.substring(4);
+                    setTabInfo(frameNum);
+
+                    docLoadCompleteCnt ++;
+
+                    // 로딩된 문서의 전체 갯수가 재기안 시작 시 가져온 전체 안의 갯수와 일치하는 경우
+                    if (docLoadCompleteCnt == (pDocIDAry.length - 1)) {
+                        HiddenMailProgress(); // 전부 완료 시 로딩중 이미지 제거
+                        CheckOpinionYN(); // 모든 문서가 완료된 다음, 대표로 1안에 대해서만 의견 존재 여부를 확인하고, 레이어 팝업을 호출한다.
+                        setTimeout(function() {
+                            selTab(1); // 각 안을 전부 로딩한 뒤, 기본으로 1안을 선택하도록 한다.
+                        }, loadTime);
+                    }
+                } catch (e) {
+                    alert("apprGviewAprAllContent_WHWP.jsp.FieldsAvailable()  ::  " + e);
+                }
+            }
 	    </script>
 	</head>
 	<body class="popup" style="overflow:hidden;" onload="return window_onload()" onbeforeunload="return window_onbeforeunload()">
@@ -927,6 +962,7 @@
 							<%--<li id="tbtnReturn" style="display: none;"><span onclick="return btnReturn_onclick()"><spring:message code='ezApprovalG.t1434'/></span></li>--%>
 	                        <li id="btnOpinion"><span onclick="return btnOpinion_onclick()"><spring:message code='ezApprovalG.t55'/></span></li>
 	                        <li id="btnDocInfo"><span onclick="return btnDocInfo_onclick()"><spring:message code='ezApprovalG.t54'/></span></li>
+	                        <li id="btnSummary"><span onclick="return btnSummaryView()"><spring:message code='ezApprovalG.t1203'/></span></li> <%-- 요약전 --%>
 	                        <li id="btnhistory"><span onclick="btnhistory_onclick()"><spring:message code='ezApprovalG.t61'/></span></li>
 	                        <%-- 일괄기안문서는 결재진행 도중 문서저장 불가능 --%>
 	                        <li id="tbtnTotalSave" style="display: none"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>

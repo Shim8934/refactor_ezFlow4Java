@@ -6,7 +6,8 @@
 	<head>
 		<title><spring:message code="ezResource.t20" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-		<link rel="stylesheet" href="${util.addVer('ezResource.e2', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link type="text/css" rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" />
 		<link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
 		<style>
@@ -22,21 +23,18 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezResource/admin/gwAdmin.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
 		<script type="text/javascript" id="clientEventHandlersJS" >
-			var pUserID		= '${userInfo.id}';
-			var pDeptID		= '${userInfo.deptID}';
-			var pCompanyID	= '${userInfo.companyID}';
-			var pAdminYN	= '${adminYN}';
-
+			var pUserID		= "<c:out value='${userInfo.id}'/>";
+			var pDeptID		= "<c:out value='${userInfo.deptID}'/>";
+			var pCompanyID	= "<c:out value='${selectedCompany}'/>";
+			var pAdminYN	= "<c:out value='${adminYN}'/>";
 			var HqProposalNM;
-			var pSelCompanyID = "";
-
-			var selectNo = "${selectNo}";
+			var selectNo = "<c:out value='${selectNo}'/>";
 
 		    function TreeView_onNodeDblClick() {
 		        TreeView.toggle(TreeView.selectedIndex());
 		    }
 
-		    window.onload = function () {;
+		    window.onload = function () {
 		        var TreeView = new organtreeview('TreeView', 'TreeView');
 		        TreeView.attachEvent('requestdata', TreeView_onNodeExpanded);
 		        TreeView.attachEvent('nodeselect', TreeView_onNodeClick);
@@ -47,33 +45,30 @@
 		        xmlHTTP.send();
 
 		        if (xmlHTTP.readyState == 4 && xmlHTTP.status == 200) {
-		            TreeView.server('${serverName}');
+		            TreeView.server("<c:out value='${serverName}'/>");
 		            TreeView.config(xmlHTTP.responseXML);
 		            TreeView.update();
-		            GetTopGroupXML();
-		            changeTree();
+					changeCompany(pCompanyID);
+		        }
+		        
+		        if (document.getElementsByClassName("title_bar")[0] !== "undefined") {
+		            document.getElementsByClassName("title_bar")[0].style="display: none;"
 		        }
 		    }
 
-		    function changeTree() {
-		        pSelCompanyID = document.getElementById("SCompID").value;
-		        pCompanyID = pSelCompanyID;
+			function changeTree() {
+				changeCompany(pCompanyID);
+			}
 
-		        if (pAdminYN == "YES")
-		            cAdmin = "ADMIN"
-		        else
-		            cAdmin = "BOARDADMIN"
+			function changeCompany(selCompany) {
+				pCompanyID = selCompany || document.getElementById('ListCompany').value;
+				if (pAdminYN == "YES")
+					cAdmin = "ADMIN"
+				else
+					cAdmin = "BOARDADMIN"
 
-		        initTreeInfo(pUserID, pDeptID, pSelCompanyID);
-		    }
-
-		    function GetTopGroupXML() {
-		        var oOption = document.createElement("OPTION");
-		        oOption.text = "${userInfo.companyName1}";
-		        oOption.value = "${userInfo.companyID}";
-		        oOption.setAttribute("DATA", "D090");
-		        document.getElementById("SCompID").add(oOption);
-		    }
+				initTreeInfo(pUserID, pCompanyID);
+			}
 
 		    function searchValue() {
 		        if(window.parent.frames["board_main"].document.getElementById("proc") != null){
@@ -87,7 +82,7 @@
 		    }
 
 
-		    function initTreeInfo(p_UserID, p_DeptID, pSelCompanyID) {
+		    function initTreeInfo(p_UserID, selectedCompany) {
 		        var xmlhttp = createXMLHttpRequest();
 		        var xmlpara = createXmlDom();
 		        var xmlRtn = createXmlDom();
@@ -95,7 +90,7 @@
 		        var objNode;
 		        createNodeInsert(xmlpara, objNode, "BRDLIST");
 		        createNodeAndInsertText(xmlpara, objNode, "PARENT_ID", "");
-		        createNodeAndInsertText(xmlpara, objNode, "COMPANY_ID", pSelCompanyID);
+		        createNodeAndInsertText(xmlpara, objNode, "COMPANY_ID", selectedCompany);
 		        createNodeAndInsertText(xmlpara, objNode, "ACCESS_FLAG", "0");
 		        createNodeAndInsertText(xmlpara, objNode, "FIRST_NODE", "Y");
 		        createNodeAndInsertText(xmlpara, objNode, "TREE_TYPE", "1");
@@ -134,7 +129,7 @@
 		        var objNode;
 		        createNodeInsert(xmlpara, objNode, "BRDLIST");
 		        createNodeAndInsertText(xmlpara, objNode, "PARENT_ID", p_brd_id);
-		        createNodeAndInsertText(xmlpara, objNode, "COMPANY_ID", pSelCompanyID);
+		        createNodeAndInsertText(xmlpara, objNode, "COMPANY_ID", pCompanyID);
 		        createNodeAndInsertText(xmlpara, objNode, "ACCESS_FLAG", "0");
 		        createNodeAndInsertText(xmlpara, objNode, "FIRST_NODE", "N");
 		        createNodeAndInsertText(xmlpara, objNode, "TREE_TYPE", "1");
@@ -178,7 +173,12 @@
 	</head>
 	<body class="newLeft">	
 		<div id="left" class="lnb" style="overflow: auto">
-  			<div class="admin_left_title"><spring:message code="ezResource.t17" /></div>
+            <jsp:include page="/WEB-INF/jsp/admin/companySelect.jsp">
+                <jsp:param name="companySelectID" value="${selectedCompany}" />
+            </jsp:include>
+  			<div class="admin_left_title"><spring:message code="ezResource.t17" />
+				
+			</div>
   			<div class="adminListBox" style="overflow:hidden; padding-right: 0;">
 				<div><h1 id="ToTitle" class="receiver_tltype01" style="background: #f8f9fb; padding: 10px 0px 10px 23px; font-size: 16px;"><spring:message code="ezResource.t71" /></h1></div>
 	    		<div id="TreeView" valign="top" style="height:250px; overflow-x:hidden; overflow-y:auto;
@@ -191,6 +191,7 @@
 				<h2><span onClick="brdlistsInit();NavigateBrdAdmin_Res('STEP')" style="display:inline-block;width:100%;"><spring:message code="ezResource.t25" /></span></h2>
 				<h2><span onClick="NavigateBrdAdmin_Res('MOV')" style="display:inline-block;width:100%;"><spring:message code="ezResource.t26" /></span></h2>
 				<h2><span onClick="NavigateBrdAdmin_Res('DEL')" style="display:inline-block;width:100%;"><spring:message code="ezResource.t27" /></span></h2>
+				<h2><span onClick="NavigateBrdAdmin_Res('STATUS')" style="display:inline-block;width:100%;"><spring:message code="ezResource.kwc01" /></span></h2>
 				<div class="point" style="margin-top:10px; margin-left:5px" >
 					<%-- <spring:message code="ezResource.t28" /> --%>
 					<select id="SCompID" name="SCompID" onChange="changeTree()" style="width: 145px; display: none;"></select>

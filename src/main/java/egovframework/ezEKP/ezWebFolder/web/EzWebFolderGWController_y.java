@@ -95,7 +95,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 	 * root 폴더 존재 여부 확인 - 존재하지 않을 경우 생성
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/rest/ezwebfolder/users/{userId}/checkRootFolder", method=RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolder/users/{userId:.+}/checkRootFolder", method=RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject checkRootFolder(@PathVariable String userId, HttpServletRequest request) {
 		logger.debug("checkRootFolder started.");
 		
@@ -140,7 +140,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 	 * 폴더 트리 조회
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/rest/ezwebfolder/users/{userId}/folder-tree", method=RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolder/users/{userId:.+}/folder-tree", method=RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getFolderTree(@PathVariable String userId, HttpServletRequest request) {
 		logger.debug("getFolderTree started.");
 		
@@ -980,7 +980,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 	}
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/rest/ezwebfolder/users/{userId}/checkpermission", method=RequestMethod.POST, produces ="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolder/users/{userId:.+}/checkpermission", method=RequestMethod.POST, produces ="application/json;charset=utf-8")
 	public JSONObject checkPermission (@PathVariable String userId, @RequestBody JSONObject jsonObject, HttpServletRequest request)  {
 		logger.debug("checkPermission started.");
 		
@@ -1040,7 +1040,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 	}
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/rest/ezwebfolder/users/{userId}/checkpermissions", method=RequestMethod.POST, produces ="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolder/users/{userId:.+}/checkpermissions", method=RequestMethod.POST, produces ="application/json;charset=utf-8")
 	public JSONObject checkPermissions(@PathVariable String userId, @RequestBody JSONObject jsonObject, HttpServletRequest request) {
 		logger.debug("checkPermissions started.");
 

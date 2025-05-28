@@ -10,7 +10,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title></title>
 <link rel="stylesheet" href="${util.addVer('/css/ezPMS/default/style.css')}" type="text/css" />
-<link rel="stylesheet" href="${util.addVer('ezPMS.e1', 'msg')}" type="text/css" />
+<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezPMS/common.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -164,7 +165,7 @@
 </script>
 </head>
 <body class="mainbody">
-	<h1><spring:message code="ezPMS.t235"/><span id="mailBoxInfo"> <spring:message code='ezPMS.t3' /> <span style="color:#017BEC;" id="totalCount"> </span><spring:message code='ezPMS.t4' /></span></h1>
+	<h1><spring:message code="ezPMS.t235"/><span id="mailBoxInfo"> <spring:message code='ezPMS.t3' /> <span class='txt_color' id="totalCount"> </span><spring:message code='ezPMS.t4' /></span></h1>
 	<table class="content" >
 			<form name="page">
 				<tr>

@@ -2,10 +2,13 @@ package egovframework.ezEKP.ezCommunity.web;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
+import egovframework.ezEKP.ezOrgan.vo.OrganAuth.AdminAuth;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -119,11 +122,13 @@ public class EzCommunityAdminController {
 	@RequestMapping(value = "/admin/ezCommunity/bbsList.do", method = RequestMethod.GET)
 	public String bbsList(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		String useEditor = ezCommonService.getTenantConfig("MODULEEDITOR", userInfo.getTenantId());
 		String code = "", keyword = "", sRadio = "", titleName = "";
 		int nowBlock = 0, curPage = 1 , comNoPerPage = 10;
 		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID(), userInfo.getJobId());
+
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -152,8 +157,10 @@ public class EzCommunityAdminController {
 		if (!code.equals("")) {
 			titleName = ezCommunityService.getBoardTitleName(bName, code, userInfo.getTenantId());
 		}
-		
-		int keywordCount = ezCommunityService.bbsListGet1(bName, userInfo.getPrimary(), keyword, sRadio, userInfo.getCompanyID(), userInfo.getTenantId());
+
+		String companyID = Optional.ofNullable(request.getParameter("companyID")).orElse(userInfo.getCompanyID());
+
+		int keywordCount = ezCommunityService.bbsListGet1(bName, userInfo.getPrimary(), keyword, sRadio, companyID, userInfo.getTenantId());
 		int totalPage = keywordCount / comNoPerPage;
 		
 		if ((totalPage * comNoPerPage) != keywordCount && (keywordCount % comNoPerPage) != 0) {
@@ -162,7 +169,7 @@ public class EzCommunityAdminController {
 		
 		curPage = Math.min(curPage,  totalPage);
 		
-		List<CommunityCBoardVO> cBoardList = ezCommunityService.bbsListGet2(bName, userInfo.getPrimary(), keyword, sRadio, userInfo.getTenantId(), userInfo.getCompanyID());
+		List<CommunityCBoardVO> cBoardList = ezCommunityService.bbsListGet2(bName, userInfo.getPrimary(), keyword, sRadio, userInfo.getTenantId(), companyID);
 		
 		//String idSpanValue = ezCommunityService.bbsList(userInfo, cBoardList, code, curPage, bName, comNoPerPage);
 		//번호 1,2,3 순서로 출력하기 위해
@@ -180,7 +187,8 @@ public class EzCommunityAdminController {
 		model.addAttribute("totalPage", totalPage);
 		model.addAttribute("titleName", titleName);
 		model.addAttribute("idSpanValue", idSpanValue);
-		
+		model.addAttribute("companySelectID", companyID);
+
 		return "/admin/ezCommunity/communityBBSList";
 	}
 	
@@ -193,7 +201,9 @@ public class EzCommunityAdminController {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID(), userInfo.getJobId());
+
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -217,7 +227,6 @@ public class EzCommunityAdminController {
 		
 		String lang      = userInfo.getLang();
 		String primary   = userInfo.getPrimary();
-		String companyId = userInfo.getCompanyID();
 		int tenantId     = userInfo.getTenantId();
 		
 		int pageSize       = 10;
@@ -225,6 +234,7 @@ public class EzCommunityAdminController {
 		String searchType  = request.getParameter("searchType") != null ? request.getParameter("searchType")   : "" ;
 		String searchType2  = request.getParameter("searchType2") != null ? request.getParameter("searchType2")   : "" ;
 		String searchValue = request.getParameter("searchValue") != null ? request.getParameter("searchValue") : "" ;
+				String companyId = request.getParameter("companyId") != null ? request.getParameter("companyId") : userInfo.getCompanyID() ;
 		String offSetMin   = commonUtil.getMinuteUTC(userInfo.getOffset());
 		
 /*		logger.debug("pageNum=" + pageNum);
@@ -276,13 +286,13 @@ public class EzCommunityAdminController {
 		
 		String lang      = userInfo.getLang();
 		String primary   = userInfo.getPrimary();
-		String companyId = userInfo.getCompanyID();
 		int tenantId     = userInfo.getTenantId();
 		
 		int pageSize       = 10;
 		int pageNum        = request.getParameter("pageNum") != null ? Integer.parseInt(request.getParameter("pageNum")) : 1;
-		String searchValue = request.getParameter("searchValue") != null ? request.getParameter("searchValue") : "" ;
-		String searchType2 = request.getParameter("searchType2") != null ? request.getParameter("searchType2") : "" ;
+		String searchValue = request.getParameter("searchValue") != null ? request.getParameter("searchValue") : "";
+		String searchType2 = request.getParameter("searchType2") != null ? request.getParameter("searchType2") : "";
+		String companyId = request.getParameter("companyId") != null ? request.getParameter("companyId") : userInfo.getCompanyID() ;
 		String offSetMin   = commonUtil.getMinuteUTC(userInfo.getOffset());
 		
 /*		logger.debug("pageNum=" + pageNum);
@@ -380,7 +390,7 @@ public class EzCommunityAdminController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String offSetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
 		String lang        = userInfo.getLang();
-		String companyId   = userInfo.getCompanyID();
+		String companyId   = Optional.ofNullable(request.getParameter("companyID")).orElse(userInfo.getCompanyID());
 		int tenantId       = userInfo.getTenantId();
 		
 		String code = request.getParameter("code");
@@ -463,8 +473,7 @@ public class EzCommunityAdminController {
 	@RequestMapping(value = "/admin/ezCommunity/commAdminCloseAll.do", method = RequestMethod.POST)
 	public String commAdminCloseAll(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
-		String companyId   = userInfo.getCompanyID();
+
 		String companyName = userInfo.getCompanyName1();
 		int tenantId       = userInfo.getTenantId();
 		
@@ -472,7 +481,8 @@ public class EzCommunityAdminController {
 		
 		CommunityCComCloseVO closeVO = ezCommunityService.adminCommCloseOkGet1(code, tenantId);
 		CommunityClubVO clubVO       = ezCommunityService.adminCommCloseOkGet2(code, tenantId);
-		
+		String companyId   = clubVO.getCompanyID();
+
 		if (closeVO != null) {
 			ezCommunityAdminService.adminCommCloseAll(code, egovMessageSource.getMessage("ezCommunity.khj01", userInfo.getLocale()), userInfo.getLocale(), tenantId);
 		} else {
@@ -505,12 +515,12 @@ public class EzCommunityAdminController {
 			diviTitle = egovMessageSource.getMessage("ezCommunity.t43", userInfo.getLocale());
 			
 			recipientList = ezCommunityAdminService.aspCommAdmitOkSet1(code, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
-			ezCommunityAdminService.createCommunityAdmitSendMail(loginCookie, userInfo, recipientList, false);
+			ezCommunityAdminService.createCommunityAdmitSendMail(request, loginCookie, userInfo, recipientList, false);
 		} else if (pDivi.equals("AdmitOK")) {
 			diviTitle = egovMessageSource.getMessage("ezCommunity.t45", userInfo.getLocale());
 			recipientList = ezCommunityAdminService.aspCommAdmitOkSet2(code, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), "", "", userInfo.getTenantId());
 			
-			ezCommunityAdminService.createCommunityAdmitSendMail(loginCookie, userInfo, recipientList, true);
+			ezCommunityAdminService.createCommunityAdmitSendMail(request, loginCookie, userInfo, recipientList, true);
 		} else {
 			diviTitle = egovMessageSource.getMessage("ezCommunity.t47", userInfo.getLocale());
 		}
@@ -533,7 +543,9 @@ public class EzCommunityAdminController {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID(), userInfo.getJobId());
+
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -554,7 +566,7 @@ public class EzCommunityAdminController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String lang        = userInfo.getLang();
-		String companyId   = userInfo.getCompanyID();
+		String companyId   = Optional.ofNullable(request.getParameter("companyID")).orElse(userInfo.getCompanyID());
 		int tenantId       = userInfo.getTenantId();
 		
 		int pageSize       = 10;
@@ -612,7 +624,7 @@ public class EzCommunityAdminController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String lang        = userInfo.getLang();
-		String companyId   = userInfo.getCompanyID();
+		String companyId   = Optional.ofNullable(request.getParameter("companyID")).orElse(userInfo.getCompanyID());
 		int tenantId       = userInfo.getTenantId();
 		
 		int pageSize       = 10;

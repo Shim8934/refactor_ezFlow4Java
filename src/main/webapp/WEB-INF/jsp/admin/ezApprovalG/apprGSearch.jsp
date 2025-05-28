@@ -6,7 +6,8 @@
 	<head>
 		<title><spring:message code = 'ezApprovalG.t1325' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}"/>
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}"/>		
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -22,10 +23,15 @@
 	        var approvalFlag = "<c:out value = '${approvalFlag}' />";
 	        
 	        var ReturnFucntion;
+	        var ReturnQueryMap = new Map(); // subQuery를 대체하기 위한 맵 변수 (관리자단 전체완료문서 페이지에서만 사용)
 	        
 	        $(document).ready(function(){
 	            if (CrossYN()) {
 	                ReturnFucntion = opener.ezStatisticsSearch_Cross_dialogArguments[1];
+	                
+	                if (typeof(opener.ezStatisticsSearch_QueryMap) != "undefined" && opener.ezStatisticsSearch_QueryMap != null) {
+	                	ReturnQueryMap = opener.ezStatisticsSearch_QueryMap;
+	                }
 	            }
 	            
 	            var ua = navigator.userAgent;
@@ -305,11 +311,14 @@
 		        RtnVal[16] = document.getElementsByName("FormName")[0].value;
 		        RtnVal[17] = document.getElementById("drafterdept").value;
 		        RtnVal[18] = "";
+		        ReturnQueryMap.set("keyword", "");
+            	ReturnQueryMap.set("itemcode", "");
 		        
+		        /* 2024-03-20 홍승비 - SQL Injection 제거 > 관리자 > 전체문서조회(완료문서) > 검색 쿼리를 문자열이 아닌 개별 파라미터로 전달하도록 신규 변수 추가 */
+		        // 해당 검색 팝업창은 다른 관리자단 문서 조회 기능에서도 사용되므로, 기존 RtnVal[18]에 담긴 쿼리 문자열은 유지함.
 		        if (keyword.value != "") {
 		            RtnVal[18] = " keyword like '%" + document.getElementById("keyword").value + "%' ";
-		        } else {
-		            RtnVal[18] = "";
+		            ReturnQueryMap.set("keyword", document.getElementById("keyword").value);
 		        }
 		
 		        if (document.getElementsByName("tbItemCode").value != "" && document.getElementsByName("tbItemCode").value != undefined) {
@@ -317,6 +326,7 @@
 		                RtnVal[18] = RtnVal[18] + " and ";
 		            }
 		            RtnVal[18] = RtnVal[18] + " itemcode = '" + document.getElementsByName("tbItemCode").value + "' ";
+		            ReturnQueryMap.set("itemcode", document.getElementsByName("tbItemCode").value);
 		        }
 		
 		        RtnVal[19] = approvUser.value;
@@ -437,6 +447,8 @@
 		        RtnVal[18] = "";
 		        RtnVal[19] = approvUser.value;
 		        RtnVal[20] = "";
+		        ReturnQueryMap.set("keyword", "");
+            	ReturnQueryMap.set("itemcode", "");
 		        
 		        if (document.getElementsByName("FormName")[0].id == "FormName") {
 		            document.getElementsByName("FormName")[0].id = "";
@@ -526,6 +538,8 @@
 			    RtnVal[18] = "";
 			    RtnVal[19] = approvUser.value;
 			    RtnVal[20] = "";
+			    ReturnQueryMap.set("keyword", "");
+            	ReturnQueryMap.set("itemcode", "");
 			    
 			    if (document.getElementsByName("FormName")[0].id == "FormName") {
 			        document.getElementsByName("FormName")[0].id = "";
@@ -626,6 +640,8 @@
 		        RtnVal[18] = "";
 		        RtnVal[19] = approvUser.value;
 		        RtnVal[20] = "";
+		        ReturnQueryMap.set("keyword", "");
+            	ReturnQueryMap.set("itemcode", "");
 		
 		        if (document.getElementsByName("FormName")[0].id == "FormName") {
 		            document.getElementsByName("FormName")[0].id = "";

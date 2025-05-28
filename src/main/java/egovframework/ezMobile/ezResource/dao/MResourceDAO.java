@@ -13,7 +13,7 @@ import egovframework.ezMobile.ezResource.vo.MResourceScheduleVO;
 import egovframework.ezMobile.ezResource.vo.ResGetScheduleRepetitionVO;
 import egovframework.ezMobile.ezResource.vo.ResGetScheduleVO;
 import egovframework.ezMobile.ezResource.vo.ResScheGetHolidayVO;
-import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("MResourceDAO")
 public class MResourceDAO extends EgovAbstractDAO {
@@ -62,8 +62,9 @@ public class MResourceDAO extends EgovAbstractDAO {
 		return  (List<MResourceScheduleVO>) list("MResourceDAO.getResFavoriteList", map);
 	}
 	
-	public void addResSch(Map<String, Object> map){
+	public Integer addResSch(Map<String, Object> map){
 		insert("MResourceDAO.addResSch", map);
+		return (Integer) map.get("v_PNUM");
 	}
 	
 	public void modifyResSch(Map<String, Object> map){

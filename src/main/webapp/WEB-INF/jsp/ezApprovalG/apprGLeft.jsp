@@ -9,7 +9,8 @@
 	<head>
 		<title></title>
 		<meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link href="${util.addVer('/css/jquery.selectbox.css')}" type="text/css" rel="stylesheet" />
 		<link href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css" rel="stylesheet" />
 		<%-- <link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css"> --%>
@@ -91,6 +92,8 @@
 		    var useWebHWP = "<c:out value = '${useWebHWP}'/>";
 		    var userTitle = "<c:out value = '${userInfo.title}'/>";
 		    var useDraftAll = "<c:out value = '${useDraftAll}'/>";
+            var attachedDocList;
+			var popupWindow;
 		    
 		    $(function () {
 		      	if(approvalFlag == "G") {
@@ -204,6 +207,7 @@
 			                DocManageMain("m02");
 			            }
 			            if (pListTypeValue == "99") {
+			            	window.open("/ezApprovalG/aprManage.do?listType=" + pListTypeValue + "&subQuery=", "right");
 			            	setPresentValue("<spring:message code='ezApprovalG.hyj04'/>");
 			                document.getElementById('APPROVAL99').click();
 			            }
@@ -211,6 +215,11 @@
 			            	setPresentValue("<spring:message code='ezApprovalG.t3000'/>");
 			                document.getElementById('APPROVAL21').click();
 			            }
+						if (pListTypeValue == '24') {
+							window.open("/ezApprovalG/aprManage.do?listType=" + pListTypeValue + "&subQuery=", "right");
+							setPresentValue("<spring:message code='ezApprovalG.t1756'/>");
+							document.getElementById('APPROVAL24').click();
+						}
 		        }
 		        getAprCount();
 		        leftResize();
@@ -324,6 +333,11 @@
 	        
 		    function Open_Func(pthis) {
 		        try {
+		        	
+		        	if (!pthis.id) {
+		        		pthis = pthis.nextElementSibling;
+		        	}
+		        	
 		            switch (pthis.id) {
 		                case "APPROVAL":
 		                    setPresentValue("<spring:message code='ezApprovalG.t1747'/>");
@@ -356,6 +370,7 @@
 		                    DocManageMain(pthis.id);
 		                    break;
 		                case "m02":
+						case "m15" :
 		                    DocManageMain(pthis.id);
 		                    break;
 		                case "m03":
@@ -401,6 +416,12 @@
 							pListTypeValue = "23";
 		                    DocManageMain(pthis.id);
 		                    break;
+		                case "readingRecord" : 
+		                	DocManageMain(pthis.id);
+		                	break;
+						case "m96":
+							DocManageMain(pthis.id);
+							break;	
 		                default:
 		                    break;
 		            }
@@ -449,7 +470,7 @@
 				        if (tempValue == "") {
 				            tempValue = localValue;
 				        } else {
-		 		    	if (event.target.tagName == "SPAN" && event.target.classList.contains("list_text") && !event.target.classList.contains("deptShare")) {
+		 		    	if (typeof target != 'undefined' && event.target.tagName == "SPAN" && event.target.classList.contains("list_text") && !event.target.classList.contains("deptShare")) {
 		 		    		var divElements = document.querySelectorAll('div');
 		 		    		divElements.forEach(function(div) {
 		 		    	        if (div.id.endsWith('_sub')) {
@@ -471,6 +492,9 @@
 				        }
 				        catch (e) { }		    	        
 		    	}
+				if (tempValue == '부서수신함') {
+					parent.frames["right"].assignChk = "N";
+				}
 		    } 
 		
 		    function convMain(listtype, SubQuery, shareUserId) {
@@ -537,6 +561,18 @@
 				                    parent.frames["right"].passValLeftMenu("23");
 				                    parent.frames["right"].checkBujaeInfo();
 				                }
+								else if (listtype == "24") {
+									parent.frames["right"].passValLeftMenu("24");
+									parent.frames["right"].checkBujaeInfo();
+								}
+								else if (listtype == "97") {
+									parent.frames["right"].passValLeftMenu("97");
+									parent.frames["right"].checkBujaeInfo();
+								}
+								else if (listtype == "98") {
+				                    parent.frames["right"].passValLeftMenu("98");
+				                    parent.frames["right"].checkBujaeInfo();
+				                }
 				                else {
 				                    parent.frames["right"].passValLeftMenu("1");
 				                    parent.frames["right"].checkBujaeInfo();
@@ -568,6 +604,7 @@
 		    	var parameter = new Array();
 		        parameter[0] = "sol2";
 		        parameter[1] = "A01000";
+                parameter[2] = attachedDocList;
 
 		        if ("YES" == ("YES")) {
 		            url = "/ezApprovalG/getFormCont.do";
@@ -591,17 +628,24 @@
 		                openDraftUI(formURL, formDocType);
 		            }
 		        }
+
+				attachedDocList = "";
 		    }
 		    
 		    /* 2022-01-11 홍승비 - 전자결재G 일괄기안 기능 추가 (웹한글) */
 		    function btnDraftAll_onclick() {
 		    	var parameter = new Array();
+
+				parameter.push(attachedDocList);
+
 	            getformcont_cross_dialogArguments[0] = parameter; // 일괄기안창으로 전달할 파라미터 있다면 배열에 추가
 	            getformcont_cross_dialogArguments[1] = draftAll_Complete;
 	            
 	            // 양식 선택창 없이 바로 일괄기안창을 호출한다.
 	            var getFormCont_Cross = window.open("/ezApprovalG/draftuiAll_WHWP.do", "/ezApproval/draftuiAll_WHWP.do", GetOpenWindowfeature(1150, 950));
 	            try { getFormCont_Cross.focus(); } catch (e) {}
+
+				attachedDocList = "";
 		    }
 		    
 		    function draftAll_Complete(ret) {}
@@ -609,6 +653,7 @@
 		    function openForm_Complete(ret) {
 		        formURL = ret[0];
 		        formDocType = ret[1];
+                attachedDocList = ret[5];
 		        var officeFlag = "";
 
 		        if(ret[4] !== null) {
@@ -660,7 +705,7 @@
 	            
                 openLocation = openLocation + "?formURL=" + escape(pArgument[1]) + "&draftFlag=" + escape(pArgument[2]) + "&formDocType=" + escape(pArgument[3]);
                 openLocation = openLocation + "&susinSN=" + escape(pArgument[4]) + "&docState=" + escape(pArgument[5]) + "&listType=1" + "&aprState=" + escape(pArgument[6]);
-                openLocation = openLocation + "&isTmpDoc=" + escape(pArgument[7]) + "&officeFlag=" + encodeURI(p_officeFlag);
+                openLocation = openLocation + "&isTmpDoc=" + escape(pArgument[7]) + "&officeFlag=" + encodeURI(p_officeFlag) + "&attachedDocList=" + (typeof attachedDocList == "undefined" ? "" : attachedDocList);
                 
 	            openwindow(openLocation, "", 1150, 950);
 	        }
@@ -857,7 +902,9 @@
 						"11" : "COUNT11",
 						"21" : "COUNT21",
 						"23" : "COUNTUNTREATED",
-						"99" : "COUNT99"
+						"24" : "COUNT24",
+						"99" : "COUNT99",
+						"98" : "COUNT98"
 					}
 
 					for (var i = 0, iLen = countList.length; i < iLen; i++) {
@@ -1024,9 +1071,35 @@
 		                count99.innerHTML = "";
 		        } catch (e) { }
 		    }
+		    
+		    var xmlhttp_98 = createXMLHttpRequest();
+		    function getAprCount98() {
+		        var strQuery = "<DATA><LISTTYPE>98</LISTTYPE></DATA>";
+		        xmlhttp_98.open("POST", "/ezApprovalG/getListCount.do", true);
+		        xmlhttp_98.onreadystatechange = getAprCount98_after;
+		        xmlhttp_98.send(strQuery);
+		    }
+		
+		    function getAprCount98_after() {
+		        if (xmlhttp_98 == null || xmlhttp_98.readyState != 4) return;
+		        try {
+		            if (xmlhttp_98.responseText == "") return;
+		            var ResultXML = xmlhttp_98.responseXML;
+		            var cnt = getNodeText(GetChildNodes(ResultXML)[0]);
+		            if (cnt > 0)
+		                count98.innerHTML = "&nbsp;&nbsp;<b>" + cnt + "</b>";
+		            else
+		                count98.innerHTML = "";
+		        } catch (e) { }
+		    }
 		
 		    function Menu_Click(pthis) {
 		        try {
+		        	
+		        	if (!pthis.id) {
+		        		pthis = pthis.nextElementSibling;
+		        	}
+		        	
 		            switch (pthis.id) {
 		                case "admin_sub01":
 		                    PresentOpen = "DOC_ADMIN";
@@ -1076,9 +1149,13 @@
 		
 		    function DocManageMain(sFlag) {
 		        try {
-		            if (PresentOpen != "DOCMANAGE") {
+		            if (PresentOpen != "DOCMANAGE" && sFlag != "readingRecord") {
 		                PresentOpen = "DOCMANAGE";
-		                window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
+						if(sFlag == "m96"){
+							window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=m01&selSendStatus=N";
+						}else{
+							window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
+						}
 		            }
 		            else {
 		                window.parent.frames["right"].g_uFlag = sFlag;
@@ -1087,6 +1164,7 @@
 		                    	window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
 		                        break;
 		                    case "m02":
+							case "m15" :
 		                        window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
 		                        break;
 		                    case "m03":
@@ -1122,6 +1200,12 @@
 							case "m14":
 		                        window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
 								break;
+							case "m96":
+								window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=m01&selSendStatus=N";
+								break;	
+							case "readingRecord" : 
+								window.parent.frames.right.document.location.href = "/ezApprovalG/readingRecord.do";
+								break;
 		                }
 		            }
 		        } catch (e) { }
@@ -1147,7 +1231,11 @@
 		
 		            if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9")
 		                pListTypeValue = "1";
-		
+
+					if (typeof onUserChange === "function") {
+						onUserChange();
+					}
+					
 		            parent.frames["left"].location.href = "/ezApprovalG/apprGLeft.do?listType=" + pListTypeValue;
 		        }
 		    }
@@ -1251,6 +1339,12 @@
 					console.log(e);
 				}
 			}
+
+			onUserChange = () => {
+				if (popupWindow && !popupWindow.closed) {
+					popupWindow.OpenAlertUI("<spring:message code='ezApprovalG.jje02'/>");
+				}
+			};
 		</script>
 	</head>
 	<body ondragstart="return false" onselectstart="return false" class="newLeft">
@@ -1267,7 +1361,7 @@
 	        <%-- 25022-01-11 홍승비 - 전자결재G 일괄기안 버튼 추가 (웹한글) --%>
 	        <div class="btn_writeBox">
 	        	<c:choose>
-	        	<c:when test="${approvalFlag == 'G' && useWebHWP == 'YES' && useDraftAll == 'YES'}">
+	        	<c:when test="${useDraftAll == 'YES'}">
 	        		<p class="btn_write01" onclick="btnDraft_onclick();" style="width:83px; display:inline-block; float:none;"><spring:message code='main.t00031'/></p>
 	        		<p class="btn_write01" onclick="btnDraftAll_onclick();" style="width:83px; display:inline-block; float:right;"><spring:message code='ezApprovalG.HSBDa01'/></p>
 	        	</c:when>
@@ -1284,24 +1378,30 @@
 			</c:if>
 			<div class="apprListBox" style="overflow:hidden; padding-right: 0; height: 912px;">
 		        <h2 class="on" id="apprH2">
-		            <span class="sub_iconLNB tree_arrow_down"></span><span class="h2Title" id="APPROVAL" onclick="openFolder('appr')"><spring:message code='main.t00018'/></span>
+		            <span class="sub_iconLNB tree_arrow_down"  onclick="openFolder('appr')"></span><span class="h2Title" id="APPROVAL" onclick="openFolder('appr')"><spring:message code='main.t00018'/></span>
 		        </h2>
 		        <ul class="lnbUL" id="apprUL">
 					<li><span class="list_text" id="APPROVAL1" onclick="setPresentValue('<spring:message code='ezApprovalG.t1747'/>');convMain('1','')"><spring:message code='ezApprovalG.t1747'/><span id=COUNT1></span></span></li>
                    	<c:if test="${whoKyulYN == '1'}">
                        	<li><span class="list_text" id="MYCONTWHO" onclick="setPresentValue('<spring:message code='ezApproval.pjj34'/>');Open_Func(this)"><spring:message code='ezApproval.pjj34'/><span id="COUNTWHO"></span></span></li>
 	                </c:if>
-                   	<c:if test="${approvalFlag == 'S' && useShareApproval == 'YES' }">
+                   	<c:if test="${approvalFlag == 'S' && useShareApproval == 'YES'}">
                        	<li><span class="list_text" id="APPROVAL11" onclick="setPresentValue('<spring:message code='ezApprovalG.bhs03'/>');convMain('11','')"><spring:message code='ezApprovalG.bhs03'/><span id=COUNT11></span></span></li>
 					</c:if>
                    	<li><span class="list_text" id="APPROVAL2" onclick="setPresentValue('<spring:message code='ezApprovalG.t1706'/>');convMain('3','')"><spring:message code='ezApprovalG.t1706'/><span id=COUNT2></span></span></li>
                    	<li><span class="list_text" id="APPROVAL3" onclick="setPresentValue('<spring:message code='ezApprovalG.t1748'/>');convMain('2','')"><spring:message code='ezApprovalG.t1748'/><span id=COUNT3></span></span></li>
+					<%-- 2023-03-23 양지혜 - 반송된문서함 추가 --%>
+					<li><span class="list_text" id="APPROVAL24" onclick="setPresentValue('<spring:message code='ezApprovalG.t1756'/>');convMain('24','')"><spring:message code='ezApprovalG.t1756'/><span id=COUNT24></span></span></li>
+
 					<c:if test="${approvalFlag eq 'G' && autoSendOfferFlag eq '1'}">
                    	<li><span class="list_text" id="UNTREATED" onclick="setPresentValue('미처리문서');Open_Func(this);">미처리문서함<span id=COUNTUNTREATED></span></span></li>
                    	</c:if>
                    	<li><span class="list_text" id="APPROVAL21" onclick="setPresentValue('<spring:message code='ezApprovalG.t3000'/>');convMain('21','')"><spring:message code='ezApprovalG.t3000'/><span id=COUNT21></span></span></li>
                    	<c:if test="${hideSusin != 'N'}">
                        	<li><span class="list_text" id="APPROVAL4" onclick="setPresentValue('<spring:message code='ezApprovalG.t1749'/>');convMain('4','')"><spring:message code='ezApprovalG.t1749'/><span id=COUNT4></span></span></li>
+					</c:if>
+					<c:if test="${personalHideSusin == 'Y' && fn:contains(userInfo.rollInfo, 'a=1')}">
+						<li><span class="list_text" id="APPROVAL97" onclick="setPresentValue('<spring:message code='ezApprovalG.PHSKMH01'/>');convMain('97','')"><spring:message code='ezApprovalG.PHSKMH01'/><span id=COUNT97></span></span></li>
 					</c:if>
                    	<c:if test="${approvalFlag == 'S'}">
                        	<li></span><span class="list_text" id="APPROVAL99" onclick="setPresentValue('<spring:message code='ezApprovalG.hyj04'/>');convMain('99','')"><spring:message code='ezApprovalG.hyj04'/><span id="COUNT99"></span></span></li>
@@ -1319,14 +1419,15 @@
 						<c:if test="${relayShowFlag eq 'Y' || howToSendOffer eq '1'}">
 							<li class="approvalG"><span class="list_text" id="APPROVAL6" onclick="setPresentValue('<spring:message code='ezApprovalG.kbh05'/>');convMain('6');"><spring:message code='ezApprovalG.kbh05'/><span id="COUNT6"></span></span></li>
 						</c:if>
-                   	</c:if>
+						<li><span class="list_text" id="m96" onclick="Open_Func(this); getAprCount();"><spring:message code='ezApprovalG.KMHG03'/><span id="COUNT96"></span></span></li>
+					</c:if>
 					<c:if test="${userSendOut == 'YES'}">
                        	<li class="approvalG"><span class="list_text" id="APPROVAL7" onclick="setPresentValue('<spring:message code='ezApprovalG.t1752'/>');convMain('7','')"><spring:message code='ezApprovalG.t1752'/><span id=COUNT7></span></span></li>
                        	<li class="approvalG"><span class="list_text" id="APPROVAL8" onclick="setPresentValue('<spring:message code='ezApprovalG.t1275'/>');convMain('8','')"><spring:message code='ezApprovalG.t1275'/></span></li>
 					</c:if>
 		        </ul>
 		        <h2 class="off" id="compH2">
-		            <span class="sub_iconLNB tree_plus"></span><span class="h2Title" id="APPROVAL" onclick="openFolder('comp')"><spring:message code='ezApprovalG.lhj15'/></span>
+		            <span class="sub_iconLNB tree_plus" onclick="openFolder('comp')"></span><span class="h2Title" id="APPROVAL" onclick="openFolder('comp')"><spring:message code='ezApprovalG.lhj15'/></span>
 		        </h2>
 		        <ul class="lnbUL off" id="compUL">
                    	<li><span class="list_text" id="MYCONT" onClick="setPresentValue('<spring:message code='ezApproval.t990042'/>');Open_Func(this)"><spring:message code='ezApproval.t990042'/></span></li>
@@ -1336,9 +1437,15 @@
                    	<c:if test="${approvalFlag == 'G'}">
                            	<li><span class="list_text" id="APPROVAL10" onClick="setPresentValue('<spring:message code='ezApprovalG.t1787'/>');convMain('10','')"><spring:message code='ezApprovalG.t1787'/></span></li>
                    	</c:if>
+					<c:if test="${approvalFlag == 'S'}">
+                       	<li><span class="list_text" id="APPROVAL98" onclick="setPresentValue('<spring:message code='ezApprovalG.sendGongram02'/>');convMain('98','')"><spring:message code='ezApprovalG.sendGongram02'/><span id="COUNT98" style="display:none;"></span></span></li>
+					</c:if>
+					<c:if test="${approvalFlag == 'G'}">
+                       	<li><span class="list_text" id="APPROVAL98" onclick="setPresentValue('<spring:message code='ezApprovalG.sendGongram01'/>');convMain('98','')"><spring:message code='ezApprovalG.sendGongram01'/><span id="COUNT98" style="display:none;"></span></span></li>
+					</c:if>
 		        </ul>
 		        <h2 class="off" id="deptH2">
-		            <span class="sub_iconLNB tree_plus"></span><span class="h2Title" onclick="openFolder('dept')"><spring:message code='ezApprovalG.t1755'/></span>
+		            <span class="sub_iconLNB tree_plus" onclick="openFolder('dept')"></span><span class="h2Title" onclick="openFolder('dept')"><spring:message code='ezApprovalG.t1755'/></span>
 		        </h2>
 		        <ul class="lnbUL off" id="deptUL">
                    	<c:choose>
@@ -1365,7 +1472,7 @@
 		        <c:if test="${approvalFlag == 'S'}">
 		        	<c:if test="${useApprFormCont == 'YES'}">
 		        	<h2 class="off" id="ITEMCONTH2">
-		        		<span class="sub_iconLNB tree_plus"></span>
+		        		<span class="sub_iconLNB tree_plus" onclick="openFolder('ITEMCONT');"></span>
 		        		<span class="h2Title" onclick="openFolder('ITEMCONT');"><spring:message code='ezApprovalG.apprLeft01'/></span>
 		        	</h2>
 					<ul class="lnbUL off" id="ITEMCONTUL">
@@ -1376,7 +1483,7 @@
 		          	</c:if>
 		          	<c:if test="${useApprCodeCont == 'YES'}">
 		        	<h2 class="off" id="ITEMCONT2H2">
-		        		<span class="sub_iconLNB tree_plus"></span>
+		        		<span class="sub_iconLNB tree_plus" onclick="openFolder('ITEMCONT2');"></span>
 		        		<span class="h2Title" onclick="openFolder('ITEMCONT2');"><spring:message code='ezApproval.t844'/></span>
 		        	</h2>
 		        	<ul class="lnbUL off" id="ITEMCONT2UL">
@@ -1385,9 +1492,9 @@
 			          	</c:forEach>
 		          	</ul>
 		          	</c:if>
-		          	<c:if test="${fn:length(userShareList) > 0 }">
+		          	<c:if test="${fn:length(userShareList) > 0}">
 			        	<h2 class="off" id="USERSHAREH2">
-			        		<span class="sub_iconLNB tree_plus"></span>
+			        		<span class="sub_iconLNB tree_plus" onclick="openFolder('USERSHARE');"></span>
 			        		<span class="h2Title" onclick="openFolder('USERSHARE');"><spring:message code='ezApprovalG.apprLeft02'/></span>
 			        	</h2>
 						<ul class="lnbUL off" id="USERSHAREUL">
@@ -1395,7 +1502,7 @@
 				          	<c:forEach var="userShare" items="${userShareList}" varStatus="status">				          	
 								<i id="imgNode_UserShare_${status.index}" class="sub_iconLNB tree_plus" border="0" onclick="treeicon_toggle('UserShare_${status.index}', 'UserContTree', UserContRequestData, 'imgNode_UserShare_${status.index}');" style="width: 18px;height: 18px;cursor: pointer;margin-left: 23px;"></i>
 <%-- 								<img id="subImgNode_UserShare_${status.index}" border="0" src="/images/OrganTree_cross/fldr.gif" style="width: 18px; height: 18px;" class="mCS_img_loaded"> --%>
-								<span id="spn_UserShare_${status.index}" class="node_normal" onclick="treeicon_toggle('UserShare_${status.index}', 'UserContTree', UserContRequestData, 'imgNode_UserShare_${status.index}');" style="cursor: pointer; width: 135px;" title='<c:out value="${userShare.shareName }"></c:out>'><c:out value="${userShare.shareName }"></c:out></span>
+								<span id="spn_UserShare_${status.index}" class="node_normal" onclick="treeicon_toggle('UserShare_${status.index}', 'UserContTree', UserContRequestData, 'imgNode_UserShare_${status.index}');" style="cursor: pointer; width: 135px;" title='<c:out value="${userShare.shareName}"></c:out>'><c:out value="${userShare.shareName}"></c:out></span>
 								<div id="UserShare_${status.index}_sub" style="display:none;">
 <%-- 					    			<div class="node_div" id="DeptShare_${status.index}_0" nodename="결재진행문서" nodelevel="1" endnode="true" value="결재진행문서" isleaf="TRUE" expanded="FALSE" style="white-space: nowrap;"> --%>
 <!-- 										<img border="0" class="DOT" src="/images/OrganTree/dot_end.gif" style="width: 18px; height: 18px;"> -->
@@ -1403,30 +1510,31 @@
 <%-- 										<img id="subImgNode_DeptShare_${status.index}_0" border="0" src="/images/OrganTree_cross/fldr.gif" style="width: 18px; height: 18px;"> --%>
 <%-- 										<span onclick="setPresentValue('결재진행문서');convMain('3','','${userShare.shareId}')" style="cursor: pointer; width: 135px;" title="결재진행문서" id="spn_DeptShare_${status.index}_0" class="node_normal">결재진행문서</span> --%>
 <!-- 									</div> -->
-					    			<div class="node_div" id="DeptShare_${status.index}_1" nodename="결재완료문서" nodelevel="1" endnode="true" value="결재완료문서" isleaf="TRUE" expanded="FALSE" style="white-space: nowrap;">
+									<%-- 2024-11-14 홍승비 - 개인공유함 > 결재완료문서 다국어 처리 --%>
+					    			<div class="node_div" id="DeptShare_${status.index}_1" nodename=<spring:message code='ezApproval.t990042'/> nodelevel="1" endnode="true" value=<spring:message code='ezApproval.t990042'/> isleaf="TRUE" expanded="FALSE" style="white-space: nowrap;">
 										<img border="0" class="DOT" src="/images/OrganTree/dot_end.gif" style="width: 18px; height: 18px;">
 										<img id="imgNode_DeptShare_${status.index}_1" border="0" src="/images/OrganTree_cross/dot_end.gif" style="width: 18px; height: 18px;">
 										<img id="subImgNode_DeptShare_${status.index}_1" border="0" src="/images/OrganTree_cross/dot_end.gif" style="width: 18px; height: 18px;">
-										<span onclick="setPresentValue('결재완료문서'); Open_Func(this); setBoldText(this);" style="cursor: pointer; width: 135px;" shareUserId="${userShare.shareId }" title="결재완료문서" id="spn_DeptShare_${status.index}_1" class="node_normal shareCont">결재완료문서</span>
+										<span onclick="setPresentValue('<spring:message code='ezApproval.t990042'/>'); Open_Func(this); setBoldText(this);" style="cursor: pointer; width: 135px;" shareUserId="${userShare.shareId}" title=<spring:message code='ezApproval.t990042'/> id="spn_DeptShare_${status.index}_1" class="node_normal shareCont"><spring:message code='ezApproval.t990042'/></span>
 									</div>
 								</div>
 				          	</c:forEach>
 				          	</div>
 			          	</ul>
 		          	</c:if>
-		          	<c:if test="${fn:length(deptShareList) > 0 }">
+		          	<c:if test="${fn:length(deptShareList) > 0}">
 			        	<h2 class="off" id="DEPTSHAREH2">
-			        		<span class="sub_iconLNB tree_plus"></span>
+			        		<span class="sub_iconLNB tree_plus" onclick="openFolder('DEPTSHARE');"></span>
 			        		<span class="h2Title" onclick="openFolder('DEPTSHARE');"><spring:message code='ezApprovalG.apprLeft03'/></span>
 			        	</h2>
 						<ul class="lnbUL off" id="DEPTSHAREUL">
 				          	<c:forEach var="deptShare" items="${deptShareList}" varStatus="status">				          	
 								<i id="imgNode_DeptShare_${status.index}" class="sub_iconLNB tree_plus" border="0" onclick="treeicon_toggle('DeptShare_${status.index}', 'UserContTree', UserContRequestData, 'imgNode_DeptShare_${status.index}');" style="width: 18px;height: 18px;cursor: pointer;margin-left: 23px;"></i>
 <%-- 								<img id="subImgNode_DeptShare_${status.index}" border="0" src="/images/OrganTree_cross/fldr.gif" style="width: 18px; height: 18px;" class="mCS_img_loaded"> --%>
-								<span id="spn_DeptShare_${status.index}" class="node_normal" style="cursor: pointer; width: 135px;" title='<c:out value="${deptShare.shareName }"></c:out>'><c:out value="${deptShare.shareName }"></c:out></span>
+								<span id="spn_DeptShare_${status.index}" class="node_normal" onclick="treeicon_toggle('DeptShare_${status.index}', 'UserContTree', UserContRequestData, 'imgNode_DeptShare_${status.index}');" style="cursor: pointer; width: 135px;" title='<c:out value="${deptShare.shareName}"></c:out>'><c:out value="${deptShare.shareName}"></c:out></span>
 								<div id="DeptShare_${status.index}_sub" style="display:none;">
-									<c:if test="${fn:length(shareUsersItemList) > 0 }">
-										<c:forEach items="${shareUsersItemList }" var="shareUsersItemListMap">
+									<c:if test="${fn:length(shareUsersItemList) > 0}">
+										<c:forEach items="${shareUsersItemList}" var="shareUsersItemListMap">
 									    	<c:if test="${shareUsersItemListMap.key eq deptShare.shareId}">
 									    		<c:forEach items="${shareUsersItemListMap.value}" var="item" varStatus="status2">
 									    			<div class="node_div" id="DeptShare_${status.index}_${status2.index}" nodename="${item.formName}" nodelevel="1" endnode="true" value="${item.formName}" isleaf="TRUE" expanded="FALSE" style="white-space: nowrap;">
@@ -1461,8 +1569,11 @@
 			        </ul>
 		        </c:if>
 		        <c:if test="${approvalFlag eq 'G'}">
+		        	<h2 class="off" id="readingRecordH2">
+		        		<span class="sub_iconLNB tree_plus" onclick="openFolder('readingRecord'), Open_Func(this)"></span><span class="h2Title" id="readingRecord" onclick="openFolder('readingRecord'), Open_Func(this)"><spring:message code='ezApprovalG.kwc001'/></span>
+			        </h2>
 		        	<h2 class="off" id="recordCabinetH2">
-		        		<span class="sub_iconLNB tree_plus"></span><span class="h2Title" onclick="openFolder('recordCabinet')">기록물대장</span>
+		        		<span class="sub_iconLNB tree_plus" onclick="openFolder('recordCabinet')"></span><span class="h2Title" onclick="openFolder('recordCabinet')"><spring:message code='ezApprovalG.LeftMenu01'/></span>
 			        </h2>
 			        <ul class="lnbUL off" id="recordCabinetUL">
 			        	<li><span class="list_text" id="m01" onclick="Open_Func(this)"><spring:message code='ezApprovalG.t552'/></span></li>
@@ -1476,24 +1587,29 @@
 			        </ul>
 			        <c:if test="${fn:contains(userInfo.rollInfo, 'm=1') || fn:contains(userInfo.rollInfo, 'w=1') || fn:contains(userInfo.rollInfo, 'c=1')}">
 				        <h2 class="off" id="manageCabinetH2">
-			        		<span class="sub_iconLNB tree_plus"></span><span class="h2Title" onclick="openFolder('manageCabinet')">기록물관리</span>
+			        		<span class="sub_iconLNB tree_plus" onclick="openFolder('manageCabinet')"></span><span class="h2Title" onclick="openFolder('manageCabinet')"><spring:message code='ezApprovalG.LeftMenu02'/></span>
 				        </h2>
 				        <ul class="lnbUL off" id="manageCabinetUL">
-				        	<li><span class="list_text" id="m07" onclick="Open_Func(this)">종료연기신청</span></li>
+				        	<li><span class="list_text" id="m07" onclick="Open_Func(this)"><spring:message code='ezApprovalG.t907'/></span></li>
 				        	<li><span class="list_text" id="m08" onclick="Open_Func(this)"><spring:message code='ezApprovalG.t908'/></span></li>
 				        	 <c:if test="${fn:contains(userInfo.rollInfo, 'm=1') || fn:contains(userInfo.rollInfo, 'c=1')}">
 					        	<li><span class="list_text" id="m09" onclick="Open_Func(this)"><spring:message code='ezApprovalG.t909'/></span></li>
 					        	<li><span class="list_text" id="admin_sub01" onclick="Menu_Click(this)"><spring:message code='ezApprovalG.t717'/></span></li>
 					        	<li><span class="list_text" id="admin_sub02" onclick="Menu_Click(this)"><spring:message code='ezApprovalG.t1754'/></span></li>
-					        	<li><span class="list_text" id="admin_sub03" onclick="Menu_Click(this)">종료연기승인</span></li>
+					        	<li><span class="list_text" id="admin_sub03" onclick="Menu_Click(this)"><spring:message code='ezApprovalG.LeftMenu03'/></span></li>
 					        	<li><span class="list_text" id="admin_sub04" onclick="Menu_Click(this)"><spring:message code='ezApprovalG.t520'/></span></li>
-					        </c:if>
+								<li>
+									<span class = "list_text" id = "m15" onclick = "Open_Func(this)">
+										<spring:message code = 'ezApprovalG.listOfDeletedIron' />
+									</span>
+								</li>
+							 </c:if>
 				        </ul>
 			        </c:if>
 			        
-			        <c:if test="${fn:length(userShareList) > 0 }">
+			        <c:if test="${fn:length(userShareList) > 0}">
 			        	<h2 class="off" id="USERSHAREH2">
-			        		<span class="sub_iconLNB tree_plus"></span>
+			        		<span class="sub_iconLNB tree_plus" onclick="openFolder('USERSHARE');"></span>
 			        		<span class="h2Title" onclick="openFolder('USERSHARE');"><spring:message code='ezApprovalG.apprLeft02'/></span>
 			        	</h2>
 						<ul class="lnbUL off" id="USERSHAREUL">
@@ -1502,7 +1618,7 @@
 <%-- 								<img id="imgNode_UserShare_${status.index}" border="0" src="/images/OrganTree_cross/plus.gif" onclick="treeicon_toggle('UserShare_${status.index}', 'UserContTree', UserContRequestData, 'imgNode_UserShare_${status.index}');" style="width: 18px;height: 18px;cursor: pointer;margin-left: 10px;"> --%>
 								<i id="imgNode_UserShare_${status.index}" class="sub_iconLNB tree_plus" border="0" onclick="treeicon_toggle('UserShare_${status.index}', 'UserContTree', UserContRequestData, 'imgNode_UserShare_${status.index}');" style="width: 18px;height: 18px;cursor: pointer;margin-left: 23px;"></i>
 <%-- 								<img id="subImgNode_UserShare_${status.index}" border="0" src="/images/OrganTree_cross/fldr.gif" style="width: 18px; height: 18px;" class="mCS_img_loaded"> --%>
-								<span id="spn_UserShare_${status.index}" class="node_normal" onclick="treeicon_toggle('UserShare_${status.index}', 'UserContTree', UserContRequestData, 'imgNode_UserShare_${status.index}');" style="cursor: pointer; width: 135px;" title='<c:out value="${userShare.shareName }"></c:out>'><c:out value="${userShare.shareName }"></c:out></span>
+								<span id="spn_UserShare_${status.index}" class="node_normal" onclick="treeicon_toggle('UserShare_${status.index}', 'UserContTree', UserContRequestData, 'imgNode_UserShare_${status.index}');" style="cursor: pointer; width: 135px;" title='<c:out value="${userShare.shareName}"></c:out>'><c:out value="${userShare.shareName}"></c:out></span>
 								<div id="UserShare_${status.index}_sub" style="display:none;">
 <%-- 					    			<div class="node_div" id="DeptShare_${status.index}_0" nodename="결재진행문서" nodelevel="1" endnode="true" value="결재진행문서" isleaf="TRUE" expanded="FALSE" style="white-space: nowrap;"> --%>
 <!-- 										<img border="0" class="DOT" src="/images/OrganTree/dot_end.gif" style="width: 18px; height: 18px;"> -->
@@ -1510,26 +1626,27 @@
 <%-- 										<img id="subImgNode_DeptShare_${status.index}_0" border="0" src="/images/OrganTree_cross/fldr.gif" style="width: 18px; height: 18px;"> --%>
 <%-- 										<span onclick="setPresentValue('결재진행문서');convMain('3','','${userShare.shareId}')" style="cursor: pointer; width: 135px;" title="결재진행문서" id="spn_DeptShare_${status.index}_0" class="node_normal">결재진행문서</span> --%>
 <!-- 									</div> -->
-					    			<div class="node_div" id="DeptShare_${status.index}_1" nodename="결재완료문서" nodelevel="1" endnode="true" value="결재완료문서" isleaf="TRUE" expanded="FALSE" style="white-space: nowrap;">
+									<%-- 2024-11-14 홍승비 - 개인공유함 > 결재완료문서 다국어 처리 --%>
+					    			<div class="node_div" id="DeptShare_${status.index}_1" nodename=<spring:message code='ezApproval.t990042'/> nodelevel="1" endnode="true" value=<spring:message code='ezApproval.t990042'/> isleaf="TRUE" expanded="FALSE" style="white-space: nowrap;">
 										<img border="0" class="DOT" src="/images/OrganTree/dot_end.gif" style="width: 18px; height: 18px;">
 										<img id="imgNode_DeptShare_${status.index}_1" border="0" src="/images/OrganTree_cross/dot_end.gif" style="width: 18px; height: 18px;">
 										<img id="subImgNode_DeptShare_${status.index}_1" border="0" src="/images/OrganTree_cross/dot_end.gif" style="width: 18px; height: 18px;">
-										<span onclick="setPresentValue('결재완료문서'); Open_Func(this); setBoldText(this);" style="cursor: pointer; width: 135px;" shareUserId="${userShare.shareId }" title="결재완료문서" id="spn_DeptShare_${status.index}_1" class="node_normal shareCont">결재완료문서</span>
+										<span onclick="setPresentValue('<spring:message code='ezApproval.t990042'/>'); Open_Func(this); setBoldText(this);" style="cursor: pointer; width: 135px;" shareUserId="${userShare.shareId}" title=<spring:message code='ezApproval.t990042'/> id="spn_DeptShare_${status.index}_1" class="node_normal shareCont"><spring:message code='ezApproval.t990042'/></span>
 									</div>
 								</div>
 				          	</c:forEach>
 				          	</div>
 			          	</ul>
 		          	</c:if>
-		          	<c:if test="${fn:length(deptShareList) > 0 }">
+		          	<c:if test="${fn:length(deptShareList) > 0}">
 			        	<h2 class="off" id="DEPTSHAREH2">
-			        		<span class="sub_iconLNB tree_plus"></span>
+			        		<span class="sub_iconLNB tree_plus" onclick="openFolder('DEPTSHARE');"></span>
 			        		<span class="h2Title" onclick="openFolder('DEPTSHARE');"><spring:message code='ezApprovalG.apprLeft03'/></span>
 			        	</h2>
 						<ul class="lnbUL off" id="DEPTSHAREUL">
 				          	<c:forEach var="deptShare" items="${deptShareList}" varStatus="status">	
 				          		<li class="on">
-				          			<span class="list_text deptShare" id="${deptShare.shareId}" onclick="Open_Func(this); setBoldText(this);"><c:out value="${deptShare.shareName }"></c:out></span>
+				          			<span class="list_text deptShare" id="${deptShare.shareId}" onclick="Open_Func(this); setBoldText(this);"><c:out value="${deptShare.shareName}"></c:out></span>
 				          		</li>			          	
 				          	</c:forEach>
 			          	</ul>
@@ -1557,10 +1674,19 @@
 						<li id="admin_sub04" onclick="Menu_Click(this)"><span style="width:100%;display:inline-block;"><spring:message code='ezApprovalG.t520'/></span></li>
 					</ul>
 				</c:if> --%>
+				<c:if test="${useUserCont eq 'YES'}">
+					<h2 class="off" id="personH2">
+						<span class="sub_iconLNB tree_manage" onclick="MngUserOnclick()"></span>
+						<span class="sub_iconLNB tree_plus" onclick="openFolder('person')"></span><span class="h2Title" onclick="openFolder('person')"><spring:message code='ezApproval.t848'/></span>
+					</h2>
+					<ul class="lnbUL off" id="personUL">
+						<div class="tree onlytree" id="divUserContTree"></div>
+					</ul>
+				</c:if>
 				<c:if test="${approvalForDoc == 'Y'}">
 					<c:if test="${fn:contains(userInfo.rollInfo, 'c=1') || fn:contains(userInfo.rollInfo, 'k=1') || fn:contains(userInfo.rollInfo, 'q=1')}">
 						<h2 class="off" id="adminH2">
-			            	<span class="sub_iconLNB tree_plus"></span><span class="h2Title" onclick="openFolder('admin')"><spring:message code='ezApprovalG.lhj13'/></span>
+			            	<span class="sub_iconLNB tree_plus" onclick="openFolder('admin')"></span><span class="h2Title" onclick="openFolder('admin')"><spring:message code='ezApprovalG.lhj13'/></span>
 						</h2>
 						<ul class="lnbUL off" id="adminUL">
                            	<li><span class="list_text" id="approvalForDoc_sub01" onclick="Menu_Click(this)"><spring:message code='ezApprovalG.lhj14'/></span></li>
@@ -1571,7 +1697,7 @@
 				<c:if test="${useOpenGov == 'YES'}">
 					<c:if test="${fn:contains(userInfo.rollInfo, 'c=1') || fn:contains(userInfo.rollInfo, 'k=1') || fn:contains(userInfo.rollInfo, 'q=1')}">
 						<h2 class="off" id="openGovH2">
-							<span class="sub_iconLNB tree_plus"></span><span class="h2Title" id="openGov" onClick="Menu_Click(this)">원문공개문서함</span>
+							<span class="sub_iconLNB tree_plus" onClick="Menu_Click(this)"></span><span class="h2Title" id="openGov" onClick="Menu_Click(this)"><spring:message code='ezApprovalG.LeftMenu04'/></span>
 						</h2>
 					</c:if>
 				</c:if>

@@ -27,4 +27,7 @@ public class Globals {
 	public static final String UPLOAD_FILE_NM = "uploadFileName";
 	//파일경로
 	public static final String FILE_PATH = "filePath";
+
+	//승인메일 공유사서함 id
+	public static final String APPR_MAIL_SHARED_ID = "__approved_mail";
 }

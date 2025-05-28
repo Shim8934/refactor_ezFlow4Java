@@ -7,7 +7,8 @@
 	<head>
 		<title><spring:message code='ezSchedule.t261' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />	    
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
         <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
         <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>        
         <script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>        
@@ -107,6 +108,7 @@
 			         	<c:if test="${item.scheduleType == '7'}"><spring:message code='ezSchedule.t282' /></c:if>
 			         	<c:if test="${item.scheduleType == '8'}"><spring:message code='ezSchedule.t205' /> / <spring:message code='ezSchedule.t996' /></c:if>
 			         	<c:if test="${item.scheduleType == '9'}"><spring:message code='ezSchedule.google12' /></c:if>
+						<c:if test="${item.scheduleType == '10'}"><spring:message code='ezSchedule.lyj09'/></c:if>
 			         </td>
 			         <td style="overflow-wrap: break-word; word-wrap: break-word; word-break: normal; line-break: strict; hyphens: none; -webkit-hyphens: none; -moz-hyphens: none;">			          
 				        <c:if test="${primary == '1'}"><c:out value="${item.ownerName}"/></c:if>

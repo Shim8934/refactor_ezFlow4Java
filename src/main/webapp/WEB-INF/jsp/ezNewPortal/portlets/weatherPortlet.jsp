@@ -5,13 +5,21 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.orbit-1.2.3.min.js')}"></script>
+		<style>
+			.selectCountry {
+				width : 78px;
+				height : 28px;
+				border : 1px solid #c0c0c0;
+				text-align : center;
+				vertical-align : middle;
+			}
+		</style>
 		<script type="text/javascript">
 			var currentWeather = "${currentWeather}";
 			var todayWeather = "${todayWeather}";
 			var cityList = JSON.parse('${cityList}');
 			var cityCode = "${cityCode}";
+			var countryCode = "${ countryCode }";
 			var displayName = "${displayName}";
 			var todayHours = "${todayHours}"; 
 			var todayHoursArr = todayHours.split(";");
@@ -58,21 +66,30 @@
 			
 			$(function(){
 				// 셀렉트박스 onchange
-				$("#cityList").change(function(){
+				$(".setWeatherEventHandler").change(function(){
+					let target = event.target;
+					let urlCityCode = target.id === "countryList" ? "none" : $("#cityList").val();
+					let urlCountryCode = $("#countryList").val();
+
 			    	$.ajax({
 			    		type : "GET",
 			    		dataType : "json",
 			    		async : false,
 			    		url : "/ezNewPortal/weatherPortletChange.do",
 			    		data : {
-			    			cityCode : this.value
+							cityCode : urlCityCode,
+							countryCode : urlCountryCode
 			    		},
-			    		success: function(data) {		
+			    		success: function(data) {
 				    		if (lang == 2) {
 				    			$("#cityName").text(data.cityName);
 				    		} else {
 				    			$("#cityName").text(data.displayName);
 				    		}
+
+							if (target.id === "countryList") {
+								reArrangeCityList(data);
+							}
 			    			
 			    			currentWeatherArr = data.currentWeather.split(";");
 			    			
@@ -117,10 +134,10 @@
 			    			}
 			    			
 			    			if (currentTemp.indexOf(".") == -1) {
-			    				$("#currentTemp").text(currentTemp + "℃");
-			    			} else {
-			    				$("#currentTemp").text(currentTemp.substring(0,currentTemp.indexOf(".") + 2) + "℃");
-			    			}
+								$("#currentTemp").text(currentTemp + "℃");
+							} else {
+								$("#currentTemp").text(currentTemp.substring(0,currentTemp.indexOf(".") + 2) + "℃");
+							}
 			    			
 			    			$("#currentHumidity").text(currentHumidity);
 			    			$("#currentClouds").text(currentClouds);
@@ -211,17 +228,69 @@
 			    	});	
 				});
 			});
+
+			function reArrangeCityList(data) {
+				// child node 삭제
+				removeChildren();
+
+				// cityList 배열
+				arrangeCityList(data);
+			}
+
+			function arrangeCityList(data) {
+				var cityList = data.cityList;
+
+				for (var i = 0; i < cityList.length; i++) {
+					if (lang == "2") {
+						$("#cityList").append("<option value='" + cityList[i].cityCode + "'>" + cityList[i].cityName + "</option>");
+					} else {
+						$("#cityList").append("<option value='" + cityList[i].cityCode + "'>" + cityList[i].displayName + "</option>");
+					}
+				}
+			}
+
+			function removeChildren() {
+				let parentNode = document.getElementById("cityList");
+				let childNode = parentNode.children;
+				let tmp;
+
+				while((tmp = childNode[0]) != null) {
+					parentNode.removeChild(tmp);
+				}
+			}
 		</script>
 	</head>
 	<body>
 		<article class="weather box_shadow">
 			<div class="layDiv">
 				<dl class="portlet_title sortablePortlet">
-		        	<dt class="portletText"><c:out value='${portletName }'/></dt>
-		            <dd class="portletPlus">
-		            	<select id="cityList" class="weatherSelect">
-		                </select>
-		            </dd>
+		        	<dt class="portletText" style = "width : 100px !important;"><c:out value='${portletName }'/></dt>
+					<dd class="portletPlus">
+						<select id = "countryList" class = "weatherSelect selectCountry setWeatherEventHandler" style="margin-right: 10px;">
+							<!-- 한국 -->
+							<option value = '1'><spring:message code = 'weather.nation1' /></option>
+							<!-- 미국 -->
+							<option value = '2'><spring:message code = 'weather.nation2' /></option>
+							<!-- 일본 -->
+							<c:if test = "${ useJP eq 'YES' }">
+							<option value = "${ codeJP }"><spring:message code = 'weather.nation3' /></option>
+							</c:if>
+							<!-- 중국 -->
+							<c:if test = "${ useCN eq 'YES' }">
+							<option value = "${ codeCN }"><spring:message code = 'weather.nation4' /></option>
+							</c:if>
+							<!-- 베트남 -->
+							<c:if test = "${ useVN eq 'YES' }">
+							<option value = "${ codeVN }"><spring:message code = 'weather.nation5' /></option>
+							</c:if>
+							<!-- 인도네시아 -->
+							<c:if test = "${ useID eq 'YES' }">
+							<option value = "${ codeID }"><spring:message code = 'weather.nation6' /></option>
+							</c:if>
+						</select>
+						<select id="cityList" class="weatherSelect setWeatherEventHandler">
+						</select>
+					</dd>
 		        </dl>
 		        <%-- 2023-06-01 홍승비 - 홈 > 날씨 포틀릿 > 디자인 개선을 위해 스타일 및 날씨 이미지 수정 --%>
 		        <div class="weather_content">
@@ -234,15 +303,15 @@
 		                <ul class="weatherPer">
 		                	<li class="weatherPerLi" style="display: list-item;">
 		                		<%-- <span class="icon iconbg01"><img src="/images/ezNewPortal/weather/weatherIcon_add01.png"></span> --%>
-		                		<span class="text"><span class="text" id="humidity" style="margin-right:5px;font-weight: normal"></span><span id="currentHumidity"></span><span class="text" id="humidityPer"></span></span>
+		                		<span class="text"><span class="text" id="humidity"></span><span id="currentHumidity"></span><span class="text" id="humidityPer"></span></span>
 		                	</li>
 		                    <li class="weatherPerLi" style="display: list-item;">
 		                    	<%-- <span class="icon iconbg02"><img src="/images/ezNewPortal/weather/weatherIcon_add02.png"></span> --%>
-		                    	<span class="text"><span class="text" id="clouds" style="margin-right:5px;font-weight: normal"></span><span id="currentClouds"></span><span class="text" id="cloudsPer"></span></span>
+		                    	<span class="text"><span class="text" id="clouds"></span><span id="currentClouds"></span><span class="text" id="cloudsPer"></span></span>
 		                    </li>
 		                    <li class="weatherPerLi" style="display: list-item;">
 		                    	<%-- <span class="icon iconbg03"><img src="/images/ezNewPortal/weather/weatherIcon_add03.png"></span> --%>
-		                    	<span class="text"><span class="text" id="wind" style="margin-right:5px;font-weight: normal"></span><span id="currentWind"></span><span class="text" id="windPer"></span></span>
+		                    	<span class="text"><span class="text" id="wind"></span><span id="currentWind"></span><span class="text" id="windPer"></span></span>
 		                    </li>
 		                </ul>
 		            </div>
@@ -273,7 +342,7 @@
 		</article>
 		<script>
 			$("#currentIcon").attr("src", "/images/ezNewPortal/weather/wt" +  currentIcon.substring(0,2) + ".png");
-				
+
 			switch (currentMain) {
 			case "Clear" : $("#mainWeather").text("<spring:message code='ezNewPortal.garm01'/>");
 						   break;
@@ -385,6 +454,37 @@
 			}
 			
 			$("#cityList").val(cityCode).prop("selected", true);
+			$("#countryList").val(countryCode).prop("selected", true);
+
+			function reArrangeCityList(data) {
+				// child node 삭제
+				removeChildren();
+
+				// cityList 배열
+				arrangeCityList(data);
+			}
+
+			function arrangeCityList(data) {
+				var cityList = data.cityList;
+
+				for (var i = 0; i < cityList.length; i++) {
+					if (lang == "2") {
+						$("#cityList").append("<option value='" + cityList[i].cityCode + "'>" + cityList[i].cityName + "</option>");
+					} else {
+						$("#cityList").append("<option value='" + cityList[i].cityCode + "'>" + cityList[i].displayName + "</option>");
+					}
+				}
+			}
+
+			function removeChildren() {
+				let parentNode = document.getElementById("cityList");
+				let childNode = parentNode.children;
+				let tmp;
+
+				while((tmp = childNode[0]) != null) {
+					parentNode.removeChild(tmp);
+				}
+			}
 		</script>
 	</body>
 </html>

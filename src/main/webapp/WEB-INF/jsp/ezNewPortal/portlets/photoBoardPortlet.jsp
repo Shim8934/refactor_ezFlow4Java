@@ -10,6 +10,7 @@
 </head>
 <body>
 	<article class="photo_board box_shadow photo_portlet">
+	<input type="hidden" id=photoPortletListCnt value="${totalCnt}">
 		<div class="layDIV">
 			<c:choose>
 				<c:when test="${access eq 'true' }">
@@ -17,11 +18,10 @@
 						<dt class="portletText" data1="${boardId }">
 							<c:out value="${portletName }" />
 						</dt>
-					<dd class="portletPlus" id="photoBoardPlus">
-						<img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme}'/>.png">
-					</dd>
+					<dd class="portletPlus plus" id="photoBoardPlus"></dd>
+						<!-- 
 						<c:if test="${not empty photoBoardList}">
-							<dd class="nextBtn">
+							<dd class="portletPlus  nextBtn">
 								<c:choose>
 									<c:when test="${usedTheme eq 3}">
 										<img src="/images/ezNewPortal/photo_next.png">
@@ -31,7 +31,7 @@
 									</c:otherwise>
 								</c:choose>
 							</dd>
-							<dd class="preBtn">
+							<dd class="portletPlus preBtn">
 								<c:choose>
 									<c:when test="${usedTheme eq 3}">
 										<img src="/images/ezNewPortal/photo_pre.png">
@@ -42,10 +42,11 @@
 								</c:choose>
 							</dd>
 						</c:if>
+						 -->
 						</dl>
 						<c:choose>
 							<c:when test="${not empty photoBoardList && photoBoardList != ''}">
-								<ul class="photoList" id="photoul">
+								<ul class="photoList portletPagingArea" id="photoul">
 									<c:forEach items="${photoBoardList}" var="photo">
 										<li><img src="${photo.filePath}" data1="${photo.boardID}" data2="${photo.itemID}" onclick="photoItemRead(this)">
 											<span><c:out value='${photo.title}'/></span>
@@ -54,7 +55,7 @@
 								</ul>
 							</c:when>
 							<c:otherwise>
-								<ul class="portlet_list">
+								<ul class="portlet_list portletPagingArea" id="photoul" style="display:block">
 									<dl class="nodata">
 										<dt>
 											<img src="/images/kr/main/noData_sIcon.png">
@@ -73,7 +74,7 @@
 								<c:out value="${portletName }" />
 							</dt>
 						</dl>
-						<ul class="portlet_list">
+						<ul class="portlet_list portletPagingArea" id="photoul" style="display:block">
 							<dl class="nodata">
 								<dt>
 									<img src="/images/kr/main/noData_sIcon.png">
@@ -83,12 +84,12 @@
 						</ul>
 						</c:when>
 						<c:otherwise>
-							<dl class="portlet_title photo_board sortablePortlet">
+							<dl class="portlet_title photo_board sortablePortlet" style="display:block">
 								<dt class="portletText" data1="">
 									<c:out value="${portletName }" />
 								</dt>
 							</dl>
-							<ul class="portlet_list">
+							<ul class="portlet_list portletPagingArea" id="photoul">
 								<dl class="nodata">
 									<dt>
 										<img src="/images/kr/main/noData_sIcon.png">
@@ -100,6 +101,11 @@
 					</c:choose>
 				</c:otherwise>
 			</c:choose>
+		</div>
+		
+		<div class="portletPageNav">
+			<span class="portlet_list_nav prev"></span>
+			<span class="portlet_list_nav next"></span>
 		</div>
 	</article>
 </body>

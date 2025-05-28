@@ -291,7 +291,7 @@ var result = "";
 		async : false,
 		url : "/ezOrgan/getADInfos.do",
 		data : {
-			cn : DeptID,
+            cn : DeptID,
 			prop : "extensionAttribute6",
 			cate  : "group"
 		},

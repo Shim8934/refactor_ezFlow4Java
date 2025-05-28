@@ -14,7 +14,8 @@
 			</c:otherwise>
 		</c:choose>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	    <link rel="stylesheet" href="${util.addVer('ezJournal.c1', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 	    <link rel="stylesheet" href="${util.addVer('/css/jstree/style.css')}" type="text/css" />
 	    <link rel="stylesheet" href="${util.addVer('/css/ezJournal/journal_css.css')}" type="text/css" />
 	    <link rel="stylesheet" href="${util.addVer('/js/jquery/jquery.modal.css')}" type="text/css" />
@@ -599,6 +600,26 @@
 					window.close();
 				}
 			}
+			
+			function mobileDistinction() {
+				var  userAgent = navigator.userAgent.toLowerCase();
+				
+				if (/iphone|ipod|ipad|android.*mobile/i.test(userAgent) || /tablet|ipad|android/i.test(userAgent) || navigator.maxTouchPoints > 4) {
+					if (window.innerWidth > window.innerHeight) {
+						document.getElementById("EdtorSize").style.height = 436 + "PX";
+						document.getElementById("Iframe1").style.height = 436 + "PX";
+					} else {
+						document.getElementById("EdtorSize").style.height = "100%";
+						document.getElementById("Iframe1").style.height = "98%";
+					}
+				}
+			}
+		
+			window.addEventListener('resize', function() {
+				mobileDistinction();
+			});
+	
+			mobileDistinction();
 	    </script>
 	</head>
 	<body class="popup" style="height: 99%;" ondragover="bodydragover(event)">
@@ -733,6 +754,8 @@
     			}
     		});
 		}
+		
+			mobileDistinction();
 		</script>
 	</body>
 </html>

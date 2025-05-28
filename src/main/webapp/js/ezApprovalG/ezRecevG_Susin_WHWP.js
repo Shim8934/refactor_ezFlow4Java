@@ -235,9 +235,8 @@ function setClearSusinCellInfo()
   }
 }
 
-function SendDraftMappingSign(ret)
-{
-  try{
+function SendDraftMappingSign(ret) {
+  try {
 	var psigncell;
 	var pseumyungcell;
 	var pseumyungdatecell;
@@ -248,12 +247,37 @@ function SendDraftMappingSign(ret)
 	var OpinionText = "";
 	var PositionText = "";
 	
-	if( LastSignSN == 1 || CurAprType == strAprType4 || CurAprType == strAprType16 ) {
+	if (LastSignSN == 1 || CurAprType == strAprType4 || CurAprType == strAprType16) {
 		OpinionText = getSignDate() + "\15";
 	}
+
+    if (approvalFlag == "S") {
+        if (LastSignSN == 1) {
+            for (i = 1; i < 20; i++) {
+                if (pDraftFlag == "SUSIN") signID = pSusinSN + "sign" + i
+                else signID = "sign" + i
+
+                if (message.FieldExist(signID)) {
+                    LastSignNo = i;
+                }
+            }
+            sn = LastSignNo;
+        } else if (DraftLastFlag) {
+            putJunkyulSign("sign" + sn);
+            for (i = 1; i < 20; i++) {
+                if (pDraftFlag == "SUSIN") signID = pSusinSN + "sign" + i
+                else signID = "sign" + i
+
+                if (message.FieldExist(signID)) {
+                    LastSignNo = i;
+                }
+            }
+            sn = LastSignNo;
+        }
+    }
 	
 	signCnt = 0;
-	if(pDraftFlag == "SUSIN" ||  pDocState == "011") { 
+	if (pDraftFlag == "SUSIN" || pDocState == "011") { 
 	  	psigncell = pSusinSN + "sign" + sn;
 	  	pseumyungcell = pSusinSN + "jikwe" + sn;
 	  	pseumyungdatecell = pSusinSN + "seumyungdate" + sn;
@@ -263,56 +287,65 @@ function SendDraftMappingSign(ret)
 	  	pseumyungdatecell = "seumyungdate" + sn;
 	}
 	
-	 
 	var RtnVal = getGyulJeDate();
 	var CurrentDate = RtnVal.split(".");
 	var s = CurrentDate[1] + "." + CurrentDate[2]; 
 	var strimg;
 	var SingFlag = true;
 	var DekyulFlag = false;
+	
+	// 2023-11-24 홍승비 - 웹한글 접수기안 > 서명 이미지 삽입 시 포트번호 추가
+	var portNum = document.location.port == "" ? "" : ":" + document.location.port;
 
-	if (message.FieldExist(pseumyungcell))
+	if (message.FieldExist(pseumyungcell)) {
 	    message.PutFieldText(pseumyungcell, message.GetFieldText(pseumyungcell) + PositionText);
-
+	}
+	
 	if (message.FieldExist(pseumyungdatecell)) {
 	    message.PutFieldText(pseumyungdatecell, s);
         rtnSignInfo.push(pseumyungdatecell);
+        
+        /* 2023-10-06 홍승비 - 서명일자가 TBL_SIGNINFO 테이블에 저장되도록 데이터 추가 (서명일자 필드 존재 시) */
+		signInfo[signCnt] = pseumyungdatecell;
+		SignName[signCnt] = pseumyungdatecell;
+		SignType[signCnt] = "TEXT";
+		SignContent[signCnt] = s;
+		signCnt = signCnt + 1;
     }
-		
-	if(CurAprType == strAprType16 )
-	{			
-		if (message.FieldExist(psigncell))
-		{
+    
+	if (CurAprType == strAprType16) {
+		if (message.FieldExist(psigncell)) {
+			// 서명일자칸이 존재하는 경우, 서명칸에는 날짜를 표출하지 않음
+			if (message.FieldExist(pseumyungdatecell)) {
+			    OpinionText = "\15";
+			}
 			
-			if(ret != "NAME")
-			{
+			/* 2023-11-24 홍승비 - 웹한글문서 접수기안 시 이미지 맵핑 관련 함수 호출 일부 변경 */
+			if (ret != "NAME") {
 				message.PutFieldText(psigncell, "");	
-				message.SetFieldImage(psigncell, document.location.protocol + "//" + document.location.hostname +  ":" + document.location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), null);
-				message.AppendFieldText(psigncell, strLang7 + "\15" + OpinionText, true);
-
+				//message.SetFieldImage(psigncell, document.location.protocol + "//" + document.location.hostname +  ":" + document.location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), null);
+				message.PrependFieldText(psigncell, strLang7 + OpinionText);
+				message.InsertPicture(psigncell, document.location.protocol + "//" + document.location.hostname + portNum + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), null);
 			  	
 			  	signInfo[signCnt] = psigncell;
-			  	
 				SignType[signCnt] = "IMAGE";
 				SignName[signCnt] = psigncell;
 				SignContent[signCnt] = ret + "::" + strLang7 + OpinionText;
                 rtnSignInfo.push(psigncell);
-							  	
+                
+                // 연동정보 저장 함수로, 웹한글문서 접수기안 시 이미지 서명 사용 중에 오류를 발생시킨다. 추후 확인 예정
 			  	SetDocumentElement(psigncell, ret);
 			  	signCnt = signCnt + 1
 			  	SingFlag = true;
 			}
-			else
-			{
+			else {
 				message.PutFieldText(psigncell, arr_userinfo[2]);	
-				
-				message.AppendFieldText(psigncell, strLang7 + "\15" + OpinionText, true);
+				message.PrependFieldText(psigncell, strLang7 + OpinionText, true);
 		  		
 		  		signInfo[signCnt] = psigncell;
-		  		
 				SignType[signCnt] = "TEXT";
 				SignName[signCnt] = psigncell;
-				SignContent[signCnt] = arr_userinfo[2] + strLang7 + OpinionText;
+				SignContent[signCnt] = strLang7 + OpinionText + arr_userinfo[2];
                 rtnSignInfo.push(psigncell);
 				
 		  		signCnt = signCnt + 1
@@ -321,26 +354,23 @@ function SendDraftMappingSign(ret)
 		}	
 		DekyulFlag = true;
 		sn = sn + 1;
-		if(pDraftFlag == "SUSIN" ||  pDocState == "011")  
-		{ 
+		
+		if (pDraftFlag == "SUSIN" ||  pDocState == "011") { 
 		  	psigncell = pSusinSN + "sign" + sn;
 		  	pseumyungcell = pSusinSN + "jikwe" + sn;
 		  	pseumyungdatecell = pSusinSN + "seumyungdate" + sn;
-		}else{
+		} else {
 		  	psigncell = "sign" + sn;
 		  	pseumyungcell = "jikwe" + sn;
 		  	pseumyungdatecell = "seumyungdate" + sn;
 		}
 	}
 	
-	if (DekyulFlag && NextAprType == strAprType4)
-	{
-		if (message.FieldExist(psigncell))
-		{
+	if (DekyulFlag && NextAprType == strAprType4) {
+		if (message.FieldExist(psigncell)) {
 			message.PutFieldText(psigncell, strLang6);	
 			
 			signInfo[signCnt] = psigncell;
-			
 			SignType[signCnt] = "TEXT";
 			SignName[signCnt] = psigncell;
 			SignContent[signCnt] = strLang6;
@@ -350,59 +380,58 @@ function SendDraftMappingSign(ret)
 			SingFlag = false; 
 		}
 	}
-	else if (DekyulFlag)
-	{
+	else if (DekyulFlag) {
 	}
-	else
-	{
-		if (message.FieldExist(psigncell))
-		{
+	else {
+		if (message.FieldExist(psigncell)) {
+			// 서명일자칸이 존재하는 경우, 서명칸에는 날짜를 표출하지 않음
+			if (message.FieldExist(pseumyungdatecell)) {
+			    OpinionText = "\15";
+			}
 			
-			if(ret != "NAME")
-			{
-				message.PutFieldText(psigncell, "");	
-				message.SetFieldImage(psigncell, document.location.protocol + "//" + document.location.hostname + ":" + document.location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), null);
-			
-				if (message.FieldExist(pseumyungdatecell))
-				    OpinionText = "";
-
+			if (ret != "NAME") {
+				message.PutFieldText(psigncell, "");
+				
 				if (CurAprType == strAprType4) {
-					OpinionText = strLang6 + OpinionText;
-					message.AppendFieldText(psigncell, strLang6 + "\15" + OpinionText, true);
-				} else {
-					message.AppendFieldText(psigncell, OpinionText, true);
+                    OpinionText = strLangAprType4 + OpinionText;
 				}
-			  	
+				
+				// OpinionText에 대결/전결/서명일자 표기 없이 개행문자만 존재하는 경우, 공백으로 치환
+				if (OpinionText == "\15") {
+					OpinionText = "";
+				}
+				
+				message.PrependFieldText(psigncell, OpinionText);
+                message.InsertPicture(psigncell, document.location.protocol + "//" + document.location.hostname + portNum + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), null);
+                
 			  	signInfo[signCnt] = psigncell;
-			  	
 				SignType[signCnt] = "IMAGE";
 				SignName[signCnt] = psigncell;
 				SignContent[signCnt] = ret + "::" + OpinionText;
                 rtnSignInfo.push(psigncell);
 				
+                // 연동정보 저장 함수로, 웹한글문서 접수기안 시 이미지 서명 사용 중에 오류를 발생시킨다. 추후 확인 예정
 			  	SetDocumentElement(psigncell, ret);
 			  	signCnt = signCnt + 1
 			  	SingFlag = true;
 			}
-			else
-			{
-			    if (message.FieldExist(pseumyungdatecell))
-			        OpinionText = "";
-			  	
-				message.PutFieldText(psigncell, arr_userinfo[2]);
-				
-				if (CurAprType == strAprType4 )	{
-					OpinionText = strLang6 + OpinionText;
-					message.AppendFieldText(psigncell, strLang6 + "\15" + OpinionText, true);
-				} else {
-					message.AppendFieldText(psigncell, OpinionText, true);
+			else {
+				if (CurAprType == strAprType4) {
+			    	OpinionText = strLangAprType4 + OpinionText;
+			    }
+			    
+			    // OpinionText에 대결/전결/서명일자 표기 없이 개행문자만 존재하는 경우, 공백으로 치환
+				if (OpinionText == "\15") {
+					OpinionText = "";
 				}
+				
+				message.PutFieldText(psigncell, arr_userinfo[2]);	
+			    message.PrependFieldText(psigncell, OpinionText);
 			  	
 			  	signInfo[signCnt] = psigncell;
-			  	
 		        SignType[signCnt] = "TEXT";
 		        SignName[signCnt] = psigncell;
-		        SignContent[signCnt] = arr_userinfo[2] + OpinionText;
+		        SignContent[signCnt] = OpinionText + arr_userinfo[2];
                 rtnSignInfo.push(psigncell);
 		        
 			  	signCnt = signCnt + 1
@@ -411,7 +440,7 @@ function SendDraftMappingSign(ret)
 		}
 	}	
     return signInfo;
-  }catch(e){
+  } catch(e) {
     alert("SendDraftMappingSign(ret)" + e.description);
   }
 }
@@ -796,7 +825,7 @@ function setRecevInfo(ret) {
     if (xmldom.documentElement.length == 0) return;
     var rows = xmldom.documentElement.childNodes
     for (var i = rows.length - 1; i >= 0; i--) {
-        var row = rows(i)
+        var row = rows(i);
         if (recipflag) {
             if (getNodeText(rows(i).childNodes(3)) == "Y") {
                 precipent = getNodeText(rows(i).childNodes(7)) + " " + getNodeText(rows(i).childNodes(0))
@@ -818,7 +847,7 @@ function setRecevInfo(ret) {
 
         }
         else {
-            precipent = strLang92;
+            precipent = approvalFlag == "G" ? strLang92 : strLangS68;
 
             if (getNodeText(rows(i).childNodes(3)) == "Y")
                 precipents = precipents + "," + getNodeText(rows(i).childNodes(7)) + " " + getNodeText(rows(i).childNodes(0))
@@ -896,7 +925,7 @@ function openOpinionUI(pOpinionFlag) {
 	}
 }*/
 
-function openFileAttachUI()
+/*function openFileAttachUI()
 {
   try{
 	var parameter	= pDocID;
@@ -912,7 +941,7 @@ function openFileAttachUI()
   }catch(e){
     alert("openFileAttachUI : " + e.description);
   }
-}
+}*/
 
 
 function SaveDraftDocInfo() {
@@ -949,7 +978,11 @@ function SaveDraftDocInfo_susin() {
 	createNodeAndInsertText(xmlpara, objNode, "FUNCTIONTYPE", "002");
 	createNodeAndInsertText(xmlpara, objNode, "HREF", getNodeText(objNodes[6]));
 	createNodeAndInsertText(xmlpara, objNode, "DOCTITLE", pDocTitle);
-	createNodeAndInsertText(xmlpara, objNode, "DOCNO", pDocNo);
+	if (approvalFlag == 'G') {
+        createNodeAndInsertText(xmlpara, objNode, "DOCNO", pDocNo);
+    } else {
+        createNodeAndInsertText(xmlpara, objNode, "DOCNO",  message.GetFieldText("docnumber"));
+    }
 
 	if (pHasAttachYN == "") {
 	    createNodeAndInsertText(xmlpara, objNode, "HASATTACHYN", getNodeText(objNodes[9]));
@@ -1112,7 +1145,7 @@ function btnAddSepAttach_onclick() {
 	} else if (deptCheckFlag == "4") {
 		alert("접수창의 부서정보가 '" + arr_userinfo[5] + "'부서로 되어있습니다. \n사용자의 부서가 변경되거나 겸직이 삭제되었으니 접수창을 새로 띄워주시기바랍니다.");
 		return;
-	} else if (deptCheckFlag == "2") {
+	} else if (deptCheckFlag == "2" && upperDeptCode == "") {
 		alert("타부서의 철정보로 설정되어있습니다. \n'" + arr_userinfo[5] + "'부서의 철로 변경해주시기바랍니다.");
 		return;
 	}
@@ -1510,8 +1543,9 @@ function chkBtnConfirm(para)
 			setMenuBar("btnDistribute", false);
 			bbtnDistribute = "1";
 		}
-			
-		if(btnReturn.style.display == "")
+
+		var btnReturn = document.getElementById("btnReturn");
+		if(btnReturn && btnReturn.style.display == "")
 		{
 			setMenuBar("btnReturn", false);
 			bbtnReturn = "1";
@@ -1650,7 +1684,10 @@ function setBtnEnable() {
 		}        			
 	});
 
-	btnReturn.style.display = "none";   	//회송
+	var btnReturn = document.getElementById("btnReturn"); //회송
+	if (btnReturn) {
+		btnReturn.style.display = "none";
+	}
 	btnAssign.style.display = "none";   	//지정
 	btnDistribute.style.display = "none";   //배부
 	btnReDistribute.style.display = "none"; //재배부요청
@@ -1660,7 +1697,11 @@ function setBtnEnable() {
 		if (tempFlag) { //문서과
 			btnAssign.style.display = "";
 			btnDistribute.style.display = "";
-			btnReqReSend.style.display = "";
+			btnReqReSend.style.display = isRelay ? "" : "none";
+			if (pAprState === "014") {
+				btnReqReSend.style.display = "none";
+				btnReDistribute.style.display = "";
+			}
 		} else { //일반부서
 			if (pAprState === "012") {
 				btnAssign.style.display = "";
@@ -1673,22 +1714,31 @@ function setBtnEnable() {
 			}
 		}
 	} else if (pDocType === "003") {
+		var btnReturn = document.getElementById("btnReturn");
 		if (pAprState === "011") {
-			btnReturn.style.display = "";
+			if (btnReturn) {
+				btnReturn.style.display = "";
+			}
 			btnAssign.style.display = "";
 			btnDistribute.style.display = "";
 		} else if (pAprState === "012") {
 			btnAssign.style.display = "";
-			if (pSusinAdmin === "YES") {
+			/* 2024-12-06 홍승비 - 수신문 접수 > 지정받은 문서는 수발신담당자 권한에 상관없이 회송/배부가 가능하도록 수정 (MHT와 동일 스펙, 비전자문서도 수신문이므로 포함) */
+			//if (pSusinAdmin === "YES") {
+			if (btnReturn) {
 				btnReturn.style.display = "";
-				btnDistribute.style.display = "";
-			}
+			}			btnDistribute.style.display = "";
+			//}
 		} else if (pAprState === "014") {
-			btnReturn.style.display = "";
+			if (btnReturn) {
+				btnReturn.style.display = "";
+			}			
 			btnAssign.style.display = "";
 			btnDistribute.style.display = "";
 		} else if (pAprState === "013") {
-			btnReturn.style.display = "";
+			if (btnReturn) {
+				btnReturn.style.display = "";
+			}			
 			btnAssign.style.display = "";
 			btnDistribute.style.display = "";
 		}

@@ -6,7 +6,7 @@
     <head>
     <title></title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <link rel="stylesheet" href="/css/default_kr.css" type="text/css">
+    <link rel="stylesheet" href="/css/default.css" type="text/css">
     <link rel="stylesheet" href="/css/fileExtension.css" type="text/css">
     <link href="${util.addVer('/js/jquery/jquery.modal.css')}" rel="stylesheet" type="text/css" />
     <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -124,34 +124,39 @@
     // 허용 첨부 확장자 추가
     function add() {
         var addValue = document.getElementById('qname').value.toLowerCase();
-        if (addValue == null || addValue == '') {
-            alert("<spring:message code='ezSystem.kdh05' />  ");
+
+        if (!addValue) {
+            alert("<spring:message code='ezSystem.kdh05' />");
             return;
         }
 
         var addList = addValue.split(',');
-        var updateFileEx = '';
-        var addedItems = []; // 중복 발생 시 추가된 Item을 저장하는 배열
+        var lengthExceed = "- <spring:message code='ezSystem.kdh09' />"; // 확장자 길이는 10자를 초과할 수 없습니다.
+        var duplValue = "- <spring:message code='ezSystem.kdh04' />"; // 확장자 명이 이미 존재합니다.
+        var lengthOk = true;
+        var duplOk = true;
+        
         for (var i = 0; i < addList.length; i++) {
             var trimTemp = addList[i].trim();
 
-            if (updateFileExList.indexOf(trimTemp) !== -1) {
-                alert(trimTemp+" <spring:message code='ezSystem.kdh04' />  ");
-                // 중간에 중복 발생 시 앞에 추가된 Item을 지워준다.
-                for (var j = 0; j < addedItems.length; j++) {
-                    updateFileExList.pop();
-                }
-                add_close();
-                return;
-            } else {
-                updateFileExList.push(trimTemp);
-                addedItems.push(trimTemp); // 중복이 발생하기 전에 추가한 Item을 저장
-            }
+            if (trimTemp.length >= 10) {
+                lengthExceed += '\n'+trimTemp;
+                lengthOk = false;
+                
+            } else if (updateFileExList.indexOf(trimTemp) !== -1) {
+                duplValue += '\n'+trimTemp;
+                duplOk = false;
+            } 
         }
-        
-        var data = updateFileExList;
+        if (!lengthOk || !duplOk) {
+            var message = (lengthOk ? '' : lengthExceed + '\n') + (duplOk ? '' : duplValue);
+            
+            alert(message.trim()); // 공백 제거
+        } else {
+            updateFileExList = updateFileExList.concat(addList);
 
-        actionAjax(true, data);
+            actionAjax(true, updateFileExList);
+        }
     }
 
     function deleteFile(deleteFE) {
@@ -270,7 +275,7 @@
             <table class="popuplist" id="addpopup_list" style="width:478px;margin:10px 0px 0px 1px;">
                 <tr>
                     <th style="width:90px;height:30px"><spring:message code='ezSystem.kdh02' /></th>
-                    <td><input type="text" id="qname" name="qname" class="textarea" onkeyup="if(event.keyCode ==13) add();" style="width:98%;box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px" maxlength="10"></td>
+                    <td><input type="text" id="qname" name="qname" class="textarea" onkeyup="if(event.keyCode ==13) add();" style="width:98%;box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px" maxlength="50"></td>
                 </tr>
             </table>
             <div class="btnpositionLayer">

@@ -17,8 +17,19 @@
 			</c:otherwise>
 		</c:choose>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	    <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+	    <link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
+	    <style>
+            .peopleSelectBtn {
+                border-radius: 3px;
+                line-height: 23px;
+                border: 1px solid #ccc;
+                cursor: pointer;
+                padding: 2px 5px;
+                margin-right: 10px;
+            }
+	    </style>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezBoard/datepicker.htc.js')}"></script>
@@ -26,6 +37,7 @@
 	    <script type="text/javascript" src="${util.addVer('/js/ezBoard/ConvertSaveImage.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('ezBoard.e1', 'msg')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezBoard/common.js')}"></script>
 	    <c:if test="${!isCrossBrowser}">
 		    <script type="text/javascript" src="${util.addVer('/js/ezBoard/AttachMain.js')}"></script>
 		    <script type="text/javascript" src="${util.addVer('/js/ezBoard/AttachItem.js')}"></script>
@@ -117,6 +129,7 @@
 		    var NewGuid = "${newGuid}";
 			var mgubun = "";
 			var attachxml = "";
+			var realFileNames = "";
 			var pBoardType = "${boardType}";
 		    var saveItemBoardId = "";
 		    var SelBoard = false;
@@ -128,6 +141,9 @@
 		    var orgCompanyID = "${orgCompanyID}";
 		    var isAllGroupBoard = "${boardInfo.isAllGroupBoard}";
 		    var mailShareId = "${mailShareId}";
+		    var useKeywordFlag = "<c:out value='${useKeyword}'/>"; // 키워드 사용여부 (Y/N)
+		    var keywordArr = []; // 키워드 배열
+
 		    
 		    /* 2023-05-16 김우철 - hwp결재문서를 배포용 문서로 저장하기 위한 변수 */
 		    var HwpCtrl;
@@ -135,6 +151,7 @@
 			var HwpSecurityNum = "<c:out value='${HwpSecurityNum}'/>";
 			var isHwpCtrlOpen = false;
 		    var startCheck = false;
+		    var authList = [];
 		    
 			/* 2023-07-04 김우철 - 전자결재 일반버전에서 테넌트 컨피그 useHwpDownSecurity값에 상관없이 대응하기 위한 변수 */
 		    var approvalFlag = "<c:out value='${approvalFlag}'/>";
@@ -147,12 +164,30 @@
 			/* 2023-11-17 홍승비 - 승인게시판의 경우, 반려된 게시물을 재작성 후 저장 시 수정알림메일을 발송하지 않도록 파라미터 추가 */
 			var itemApprFlag = "<c:out value='${boardListVO.apprFlag}'/>";
 
+			var offset = "${userInfo.offset}";
+
+			/* 2024-05-20 김유진 - 일정에서 게시판 게시를 위한 변수 */
+			var scheduleId = "<c:out value='${scheduleId}'/>";
+			/* 2024-08-26 김유진 - 확장컬럼 사용 여부 */
+			var pAttributeYN = "${boardInfo.attributeYN}";
+
+			/* 2024-10-24 정지은 - 글 작성 시 파일첨부 가능여부 설정 */
+			var attachmentFlag = "<c:out value='${boardInfo.attachmentFlag}'/>";
+			
+			var editor = "${editor}";
+			var formPath = "";
+
+			var writerFlag = "${boardInfo.writerFlag}"; // 2025-01-21 임정은 - 게시판 게시물 게시자명선택 사용여부 플래그
+			var writerNameType = parseInt("<c:out value='${boardListVO.writerNameType}'/>"); // 2025-01-21 임정은 - 게시자명선택 타입 (0 : 이름, 1 : 부서명)
+
 		    window.onload = function () {
 		    	
 		    	// useHwpDownSecurity가 Y일 때만 Whwp api 호출. 전자결재 일반버전에서는 useHwpDownSecurity의 값에 상관없이 Whwp api 호출하지 않음.
+	        	/*
 	        	if (useHWP == "YES" && useHwpDownSecurity == "Y" && approvalFlag == "G") {
 	        		HwpCtrl = BuildWebHwpCtrl("hwpctrl", "${webHWPUrl}", function () {isHwpCtrlOpen = true;});
 	        	}
+	        	*/
 		    	
 		        if (pUseBackGround == "TRUE") {
 		            document.getElementById("pUseBackGroundTR").style.display = "";
@@ -195,6 +230,7 @@
 							/* 2019-01-22 홍승비 - 게시물 수정, 임시저장 시 첨부파일의 경로 전체가 특문 치환되는 오류 수정 */
 				            for (var i = 0; i < objAttachNodes.length; i++) {
 								 attachxml += getNodeText(SelectNodes(objAttachNodes[0], "DATA2")[i]) + "|";
+								 realFileNames += getNodeText(SelectNodes(objAttachNodes[0], "realFileNM")[i]) + "|";
 				            }
 			            }
 			        }
@@ -236,6 +272,35 @@
 										document.getElementById(tableCol[i]).value = getExtensionValue(tableCol[i]);
 									} else if (colType[i] == "select") {
 										document.getElementById(tableCol[i]).value = getExtensionValue(tableCol[i]);
+									} else if (colType[i] == "textArea") {
+									    document.getElementById(tableCol[i]).value = getExtensionValue(tableCol[i]).replace(/<br\s*\/?>/gi, '\n');
+									} else if (colType[i] == "people") {
+									    // 2024-07-31 전인하 - 게시판 > 확장컬럼 > 게시물 수정 시 peoplePicker 타입 출력값 가공
+									    var authListObjTemp = {};
+									    var tempData = [];
+									    var displayUserListText = "";
+                                        var tempAuthListArr = getExtensionValue(tableCol[i]).split(";");
+                                        for (let i = 0 ; i < tempAuthListArr.length; i++) {
+                                            if (tempAuthListArr[i] == "") {
+                                                break;
+                                            }
+                                            var authInfoJson = {};
+                                            var tempAuthObj = tempAuthListArr[i].split("/");
+                                            authInfoJson.userId = tempAuthObj[0];
+                                            authInfoJson.userName = "${userInfo.lang}" == "1" ? tempAuthObj[1] : tempAuthObj[2];
+                                            authInfoJson.userName1 = tempAuthObj[1];
+                                            authInfoJson.userName2 = tempAuthObj[2];
+                                            authInfoJson.userType = tempAuthObj[3];
+                                            if (i != 0) {
+                                                displayUserListText += ", "
+                                            }
+                                            displayUserListText += "${userInfo.lang}" == "1" ? tempAuthObj[1] : tempAuthObj[2];
+                                            tempData.push(authInfoJson);
+                                        }
+                                        authListObjTemp.columnName = tableCol[i];
+                                        authListObjTemp.data = tempData;
+                                        authList.push(authListObjTemp);
+                                        document.getElementById(tableCol[i]).innerText = displayUserListText;
 									}
 			    				}
 			            	}
@@ -287,8 +352,22 @@
 				/* 2023-09-25 민지수 - 게시물 로드시 정보 불러오도록 추가 */
 				NotiPost_onclick();
 				Noti_setTime();
+				
+				// 2024-08-23 전인하 - 게시판 > 게시글 수정/임시저장게시글 작성 > 게시물일 경우 입력되어있던 키워드 정보 삽입
+				if ((pMode == "modify" || pMode == "temp") && useKeywordFlag == "Y") {
+				    var keywordSpanArr = document.querySelectorAll(".keywordSpanView");
+				    for (let i=0; i<keywordSpanArr.length; i++) {
+				        keywordArr.push(keywordSpanArr[i].id);
+				    }
+				}
 
 			    FirstFlag = false;
+
+				if (writerFlag == 'Y' && !isNaN(writerNameType)) {
+					if (writerNameType == 1) document.getElementById('chkUseDept').checked = true;
+					chkUseDept_onclick();
+				}
+				
 			    try {
 			        if (document.getElementById("txtTitle").value == "")
 			            if (OpenWin == null)
@@ -300,6 +379,11 @@
 		    /* 2022-06-21 홍승비 - 에디터 영역 리사이즈 함수 분리 */
 		    window.onresize = function () {
 				resizeMessageFrame();
+				if (editor == "HWP") {
+					var mHeight = document.getElementById("EdtorSize").clientHeight - 16 + "px";
+		       		message.Resize(mHeight);
+				}
+				mobileDistinction();
 		    };
 
 		    function resizeMessageFrame () {
@@ -314,6 +398,7 @@
 		                } else if (pUrl.toLowerCase().indexOf(".hwp") < 0) { 
 		        	        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 320 + "PX";
 		                }
+						mobileDistinction();
 		                break;
 		            case "MailEnv_div3":
 		                {
@@ -333,14 +418,27 @@
 				        	        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 320 + "PX";
 		                    	}
 		                    }
+							mobileDistinction();
 		                    break;
 		                }
 		            default:
 		            	if (pUrl.toLowerCase().indexOf(".hwp") < 0) 
 		                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 320 + "PX";
+						mobileDistinction();
 		                break;
 		        }
-		      
+				/* 2024-08-26 김유진 - 사용된 확장컬럼 높이 고려하여 에디터 높이 설정 */
+				if (pAttributeYN == "Y" && document.getElementById("tab01")) {
+					document.getElementById("EdtorSize").style.height = '100%'
+                    mobileDistinction();
+				}
+
+				if ("<c:out value='${boardInfo.attachmentFlag}'/>" != "Y") {
+					var beforeEditorSize = document.getElementById("EdtorSize").style.height;
+					document.getElementById("EdtorSize").style.height = parseInt(beforeEditorSize, 10) + 145 + "PX";
+					mobileDistinction();
+				}
+				
 		        var editorW = (document.documentElement.clientWidth - 20) + "PX";
 		        document.getElementById("tab02").style.width = editorW;
 	            document.getElementById("message").style.width = editorW;
@@ -517,6 +615,7 @@
 		            str += "<DATA4></DATA4>";
 		            str += "<DATA5>Y</DATA5>";
 		            str += "<DATA6>" + MakeXMLString(SelectSingleNodeValue(xmldomNodes[i], "FileSize2")) + "</DATA6>";
+					str += "<realFileNM><![CDATA[" + filename + "]]></realFileNM>";
 		            str += "</CELL>";
 		            str += "<CELL><VALUE></VALUE>";
 		            str += "</CELL></ROW>";
@@ -578,10 +677,13 @@
 		                return;
 		            }
 		        }
-		        if (MHTLoadComplete != "true") {
-		            alert("<spring:message code='ezBoard.t377' />");
-		            return;
-		        }
+		    	
+		    	if (editor != "HWP") {
+		    		if (MHTLoadComplete != "true") {
+			            alert("<spring:message code='ezBoard.t377' />");
+			            return;
+			        }
+		    	}
 		
 		        //추가항목
 				var must = new Array();
@@ -601,7 +703,6 @@
 				</c:forEach>
 				
 				for (var i = 0; i < colType.length;i++){
-					// 2021-06-24 김은실 - 대체 어디서 변경하는 지를 모르겠는데(핸들러??), model에서 jsp로 넘어올때 특수문자가 변경됨. &'"<> → &amp;&#039;&#034;&lt;&gt;
 					var colName = colName1[i].replace(/\n/gi, "\\n").replace(/\\\\/gi, "\\")
 											 .replace(/&amp;/gi, "&")
 											 .replace(/&#039;/gi, "'")
@@ -609,25 +710,33 @@
 											 .replace(/&lt;/gi, "<")
 											 .replace(/&gt;/gi, ">");
 					
-					if(must[i] == "Y"){
+					if (must[i] == "Y") {
 		        		if (colType[i] == "radio") {
 		        			if (GetRadioVal(tableCol[i]) == "") {
 		        				Tab1_MouseClick(document.getElementById("1tab1"));
 	                            alert(strLang188 + colName + strLang179);
 	                            return;
 		        			}
-		        		} else if(colType[i] == "text") {
-		        			if(document.getElementById(tableCol[i]).value == ""){
+		        		} else if (colType[i] == "text" || colType[i] == "textArea") {
+		        			if (document.getElementById(tableCol[i]).value.trim() == "") {
+		        			    document.getElementById(tableCol[i]).value = "";
 		        				Tab1_MouseClick(document.getElementById("1tab1"));
 	                            alert(strLang189 + colName + strLang187);
 	                            return;
 		        			}
-		        		} else if(colType[i] == "check") {
+		        		} else if (colType[i] == "check") {
 		        			if(GetCheckVal(tableCol[i]) == ""){
 		        				Tab1_MouseClick(document.getElementById("1tab1"));
 	                            alert(strLang188 + colName + strLang179);
 	                            return;
 		        			}
+		        		} else if (colType[i] == "people") {
+		        		    var tempPeopleList = document.getElementById(tableCol[i]).innerHTML;
+		        		    if (tempPeopleList.trim() == "") {
+                                Tab1_MouseClick(document.getElementById("1tab1"));
+                                alert(strLang188 + colName + strLang179);
+                                return;
+                            }
 		        		}
 		        	}	
 				}
@@ -768,8 +877,15 @@
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "BOARDID", pBoardID);
 		        if (gubun != "2") {
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERID", SSUserID);
-		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME", MakeXMLString(SSUserName));
-		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME2", MakeXMLString(SSUserName2));
+					if ('Y' == writerFlag) {
+						var flagwriterName = $('#writerFlag').val().toString().split(":");
+						createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME", MakeXMLString(flagwriterName[0]));
+						createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME2", MakeXMLString(flagwriterName[1]));
+						createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAMETYPE", MakeXMLString(flagwriterName[2]));
+					} else {
+						createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME", MakeXMLString(SSUserName));
+						createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME2", MakeXMLString(SSUserName2));
+					}
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DEPTID", SSDeptID);
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DEPTNAME", MakeXMLString(SSDeptName));
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DEPTNAME2", MakeXMLString(SSDeptName2));
@@ -805,13 +921,14 @@
 				createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "RSVCANCEL", isReservedCancel);
 		        
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "IMPORTANCE", importance);
-		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "TITLE", document.getElementById("txtTitle").value);
+		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "TITLE", document.getElementById("txtTitle").value.replace(/[\t\n\r]+/g, ' ').trim());
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "STARTDATE", pStartDate);
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ENDDATE", pEndDate);
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ABSTRACT", document.getElementById("txtAbstract").value);
 		        
 		        if (CrossYN() && pUrl.toLowerCase().indexOf(".hwp") < 0 ) {
 		            if (attachxml != "") {
+						callMoveAttachFileOrder(attachxml);
 		                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ATTACHMENTS", attachxml);
 		            } else {
 		                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ATTACHMENTS", "");
@@ -819,6 +936,8 @@
 		        } else {
 	            	createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ATTACHMENTS", AttachFileList2());
 		        }
+		        
+            	createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "REALFILENAMES", realFileNames);
 
 		        /* 2021-02-16 홍승비 - 익명게시판에 TOPWRITERID 저장하지 않도록 수정 */
 		        if (pMode == "new" || pMode == "new1" || pMode == "boardContent" || pMode == "boardAttach" || pUrl != "" || orgMode == "temp") {
@@ -881,9 +1000,14 @@
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE2", "");
 		        }
 
-		        if (gubun != "2") {
-		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE3", strUserRank);
-		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE32", strUserRank2);
+				if (gubun != "2") {
+					if ('Y' == writerFlag && chkUseDept.checked) {
+						createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE3", SSDeptName);
+						createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE32", SSDeptName2);
+					} else {
+						createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE3", strUserRank);
+						createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE32", strUserRank2);
+					}
 		            if (gubun != "3") {
 		                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE4", strUserPhone);
 		            }
@@ -913,50 +1037,60 @@
 
 		        setTimeout(JSleep, 1000);
 
-		        var strBody = message.GetEditorContent();
-		        
-		        if (pDocID != "" && pUrl.toLowerCase().indexOf(".mht") > -1) {
-		        	strBody = message.GetEditorContent() + "<hr><br/><div contenteditable='false' >" + GetBODY(document.getElementById('docContent')).innerHTML + "</div>";
+		        if (editor != "HWP") {
+			        var strBody = message.GetEditorContent();
+			        
+			        if (pDocID != "" && pUrl.toLowerCase().indexOf(".mht") > -1) {
+			        	strBody = message.GetEditorContent() + "<hr><div contenteditable='false' >" + GetBODY(document.getElementById('docContent')).innerHTML + "</div>";
+			        } else {
+			        	strBody = message.GetEditorContent() + "<div contenteditable='false' >" + GetBODY(document.getElementById('docContent')).innerHTML + "</div>";
+			        }
+			        
+			        // 게시물 내용을 db에 넣기 위한 변수 2018-04-06 강민수92
+			        var strContent = strBody;		        
+			        
+					strBody = strBody.replace(/&quot;/gi, "\'");
+					
+					//html 태그를 제거
+					strContent = strContent.replace(/(<([^>]+)>)/gi, "");
+					
+	      			if (strBody.indexOf("url(\'/") > -1) {
+	      				strBody = strBody.replace("url(\'/", "url(\'");
+	      			}
+	      			
+	      			/* 2019-04-01 홍승비 - MHT파일 변환 및 저장 시 예외처리 추가 */
+	      			try {
+				        if (trim_Cross(strBody) != "" || pDocID == "") {
+				            strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + strBody + "</BODY>" + "</HTML>", "");
+				        }
+				        else {
+				            if (pDocID == "")
+				                strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(strBody) + "</BODY>" + "</HTML>", "");
+				            else if (pUrl.toLowerCase().indexOf(".mht") > -1) {
+				                var tempstr = strBody + "<hr><br/>" + GetBODY(document.getElementById('docContent')).innerHTML;
+				                strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(tempstr) + "</BODY>" + "</HTML>", "");
+				            } else {
+								var tempstr = strBody + "<br/>" + GetBODY(document.getElementById('docContent')).innerHTML;
+								strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(tempstr) + "</BODY>" + "</HTML>", "");
+				            }
+				        }
+	      			} catch (e) {
+	      				alert("<spring:message code='ezCommunity.lhj04'/>");
+	      				return;
+	      			}
+			        
+					createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DOCCONTENT", strContent);
+			        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "CONTENT", strBody.replace(/\r\n/g, "@r!n@"));
 		        } else {
-		        	strBody = message.GetEditorContent() + "<br/><div contenteditable='false' >" + GetBODY(document.getElementById('docContent')).innerHTML + "</div>";
+		        	var hwpContent = hwpHtml;
+		        	hwpHtml = hwpHtml.replace(/&quot;/gi, "\'");
+		        	hwpContent = hwpContent.replace(/(<([^>]+)>)/gi, "");
+		        	if (hwpHtml.indexOf("url(\'/") > -1) {
+		        		hwpHtml = hwpHtml.replace("url(\'/", "url(\'");
+	      			}
+		        	createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DOCCONTENT", hwpContent);
+			        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "CONTENT", hwpHtml.replace(/\r\n/g, "@r!n@"));
 		        }
-		        
-		        // 게시물 내용을 db에 넣기 위한 변수 2018-04-06 강민수92
-		        var strContent = strBody;		        
-		        
-				strBody = strBody.replace(/&quot;/gi, "\'");
-				
-				//html 태그를 제거
-				strContent = strContent.replace(/(<([^>]+)>)/gi, "");
-				
-      			if (strBody.indexOf("url(\'/") > -1) {
-      				strBody = strBody.replace("url(\'/", "url(\'");
-      			}
-      			
-      			/* 2019-04-01 홍승비 - MHT파일 변환 및 저장 시 예외처리 추가 */
-      			try {
-			        if (trim_Cross(strBody) != "" || pDocID == "") {
-			            strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + strBody + "</BODY>" + "</HTML>", "");
-			        }
-			        else {
-			            if (pDocID == "")
-			                strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(strBody) + "</BODY>" + "</HTML>", "");
-			            else if (pUrl.toLowerCase().indexOf(".mht") > -1) {
-			                var tempstr = strBody + "<hr><br/>" + GetBODY(document.getElementById('docContent')).innerHTML;
-			                strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(tempstr) + "</BODY>" + "</HTML>", "");
-			            } else {
-							var tempstr = strBody + "<br/>" + GetBODY(document.getElementById('docContent')).innerHTML;
-							strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(tempstr) + "</BODY>" + "</HTML>", "");
-			            }
-			        }
-      			} catch (e) {
-      				alert("<spring:message code='ezCommunity.lhj04'/>");
-      				return;
-      			}
-		        
-				createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DOCCONTENT", strContent);
-
-		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "CONTENT", strBody.replace(/\r\n/g, "@r!n@"));
 
 		        if (gubun == "2") {
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DOCPASSWORD", rsa.encrypt(document.getElementById('txtPassWord').value));
@@ -974,6 +1108,9 @@
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "READCOUNTFLAG", "N");
 		        }
 		        
+				// 2024-10-21 박기범 - 게시물 공개 여부
+				createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "PUBLICFLAG", !document.getElementById("publicFlag") || document.getElementById("publicFlag").checked ? "Y" : "N");
+				
 				var colType = new Array();
 				var tableCol = new Array();
 				
@@ -993,7 +1130,35 @@
 						createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, tableCol[i].toUpperCase(), MakeXMLString(document.getElementById(tableCol[i]).value));
 					} else if(colType[i] == "select") {
 						createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, tableCol[i].toUpperCase(), MakeXMLString(document.getElementById(tableCol[i]).value));
+					} else if (colType[i] == "people") {
+					    // 2024-07-31 전인하 - 게시판 > 확장컬럼 > peoplePicker 타입 저장 시 문자열 형태로 입력값 가공
+					    // 각 유저는 구분자 ; 를 통해 구별함. 
+					    // 유저 상세정보는 /를 구분자로 사용하며 값의 의미는 순서대로 id값/이름1/이름2/타입(부서 직위 직책 등).
+					    var peoplePickerString = "";
+					    var authListColumn = authList.filter((e) => e.columnName == tableCol[i]);
+                        if (authListColumn.length > 0) {
+                            var authListData = authListColumn[0].data;
+                            for (var j = 0; j < authListData.length; j++) {
+                                var userId = authListData[j].userId;
+                                var userName1 = authListData[j].userName1;
+                                var userName2 = authListData[j].userName2;
+                                var userType = authListData[j].userType;
+                                peoplePickerString += userId + "/";
+                                peoplePickerString += userName1 + "/";
+                                peoplePickerString += userName2 + "/";
+                                peoplePickerString += userType + ";";
+                            }   
+                        }
+					    createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, tableCol[i].toUpperCase(), MakeXMLString(escapeForJson(peoplePickerString)));
+					} else if (colType[i] == "textArea") {
+					    createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, tableCol[i].toUpperCase(), MakeXMLString(document.getElementById(tableCol[i]).value).replace(/(?:\r\n|\r|\n)/g, '<br/>'));
 					}
+				}
+
+				if (useKeywordFlag != null && useKeywordFlag == 'Y') {
+				    for (var keyword of keywordArr) {
+				        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "KEYWORD", keyword);
+				    }
 				}
 
 		        xmlhttp.open("POST", "/ezBoard/saveItem.do?mode=" + pMode + "&guBun=" + gubun, false);
@@ -1011,30 +1176,29 @@
 		            
 		            if (pMode != "temp") {
 		                if (document.getElementById("chk_reservation").checked == false) {
-		                	/* 2023-11-15 홍승비 - 승인게시판의 경우, 게시물 승인 전에 관리자에게 게시알림메일을 보내지 않도록 수정 + 답변알림메일을 보내지 않도록 수정 */
+		                	/* 2023-11-15 홍승비 - 승인게시판의 경우, 게시물 승인 전에 관리자에게 게시알림을 보내지 않도록 수정 + 답변알림을 보내지 않도록 수정 */
 		                	if ("${boardInfo.apprFlag}" != "Y") {
-			                	/* 2022-08-24 홍승비 - 임시저장한 게시물 저장(등록) 시, 해당 게시판의 관리자에게 게시알림메일이 가지 않는 오류 수정 */
+			                	/* 2022-08-24 홍승비 - 임시저장한 게시물 저장(등록) 시, 해당 게시판의 관리자에게 게시알림이 가지 않는 오류 수정 */
 			                    if (strItemID == "" || (strItemID != "" && orgMode == "temp")) {
 			                        xmlhttp = createXMLHttpRequest();
-			                        xmlhttp.open("POST", "/ezBoard/sendPostNotiMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(newID), false);
+			                        xmlhttp.open("POST", "/ezBoard/sendPostNotiForAdmin.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(newID), false);
 			                        xmlhttp.send();
 			                        xmlhttp = null;
 			                    }
 			                    if (pMode == "reply") {
 			                        xmlhttp = createXMLHttpRequest();
-			                        xmlhttp.open("POST", "/ezBoard/sendReplyNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(newID) + "&itemTreeID=" + encodeURIComponent(strUpperItemIDTree), false);
+			                        xmlhttp.open("POST", "/ezBoard/sendReplyNotice.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(newID) + "&itemTreeID=" + encodeURIComponent(strUpperItemIDTree), false);
 			                        xmlhttp.send();
 			                        xmlhttp = null;
 			                    }
 		                	}
-		                	
 		                    /* 2021-06-22 홍승비 - 게시판 게시알림(일반 사용자 대상 발송), 수정알림 추가 (승인게시판의 경우, 게시물 승인 전에 게시알림 메일 사용안함) */
 		                    if (("${boardInfo.apprFlag}" != "Y") && (pMode == "new" || pMode == "new1" || pMode == "boardContent" || pMode == "boardAttach" || pMode == "save")) { // 게시알림
-		                    	sendBoardAlertMail("new", pBoardID, newID, isAllGroupBoard);
+		                    	sendBoardAlert("new", pBoardID, newID, isAllGroupBoard);
 		                    }
 		                    /* 2023-11-17 홍승비 - 승인게시판의 경우, 반려된 게시물을 재작성 후 저장 시 수정알림메일을 발송하지 않도록 수정 */
-		                    else if ((itemApprFlag == null || itemApprFlag == "Y") && pMode == "modify") { // 수정알림 (반려된 게시물이 아닌 경우에만 발송)
-		                    	sendBoardAlertMail("modify", pBoardID, strItemID, isAllGroupBoard);
+		                    else if ((itemApprFlag == null || itemApprFlag == "" || itemApprFlag == "Y") && pMode == "modify") { // 수정알림 (반려된 게시물이 아닌 경우에만 발송)
+		                    	sendBoardAlert("modify", pBoardID, strItemID, isAllGroupBoard);
 		                    }
 		                    
 		                    alert("<spring:message code='ezBoard.t399' />");
@@ -1043,7 +1207,7 @@
 		                }
 		                
 		                /* 2019-05-07 홍승비 - 승인게시판의 경우, 반려된 게시물을 재작성 후 저장 시 승인요청 알림메일 발송하도록 수정 */
-		                /* 2019-05-07 홍승비 - 이미 승인된 게시물을 수정하는 경우, 승인요청 알림메일 발송하지 않도록 수정 */
+		                /* 2019-05-07 홍승비 - 이미 승인된 게시물을 수정하는 경우, 승인요청 알림 발송하지 않도록 수정 */
 		                if (("${boardInfo.apprMail_FG}" == "Y") && ((pMode != "modify") || ((itemApprFlag != null && itemApprFlag != "Y") && pMode == "modify"))) {
 		                	var tItemID = strItemID; // 게시물 수정(재작성)
 		                	if (pMode != "modify") { // 신규 게시물 등록
@@ -1051,7 +1215,7 @@
 		                	}
 		                	
 		                    xmlhttp = createXMLHttpRequest();
-		                    xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(tItemID), false);
+		                    xmlhttp.open("POST", "/ezBoard/sendApprNotice.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(tItemID), false);
 		                    xmlhttp.send();
 		                    xmlhttp = null;
 		                }
@@ -1127,9 +1291,11 @@
 						if (parent.opener != null && parent.opener.getNoticePortletList != undefined) {
 							parent.opener.getNoticePortletList();
 						}
-						
-						// 게시판 포틀릿 리스트 업데이트 되도록 수정
-			            if (parent.opener != null && parent.opener.getBoardPortletInfo != undefined) {
+					} catch (e) {console.log(e); }	
+					
+					try{
+						// 카드A형, 카드B형, 리스트형 포틀릿 업데이트 되도록 수정
+			            if (parent.opener != null && parent.opener.refreshBordPortletInfo != undefined) {
 			            	var customBoardList = parent.opener.document.getElementsByClassName("customBoard");
 			            	var customBoardCount = customBoardList.length;
 			            	
@@ -1139,17 +1305,23 @@
 			            		if (boardId == pBoardID) {
 			            			var portletId = customBoardList[i].parentElement.id;
 			            			portletId = portletId.substring(0, portletId.indexOf("P"));
-			            			parent.opener.getBoardPortletInfo(portletId);
+			            			parent.opener.refreshBordPortletInfo(portletId);
 			            		}
 			            	}
 			            }
-						
+					} catch (e) {console.log(e); }
+					
+					try { // 탭게시판  포틀릿 새로고침
+						if (parent.opener != null && parent.opener.refreshTab != undefined) {
+                 			parent.opener.refreshTab();
+                 		}
+                 	} catch (e) {console.log(e);}
+					
+					try{
 						if (parent.opener != null && parent.opener.getBoardList_NewBoardSTD != undefined) {
 							parent.opener.getBoardList_NewBoardSTD();
 						}
-					} catch (e) {
-						
-					}
+					} catch (e) {console.log(e); }
 					
 
 		            window.close();
@@ -1165,6 +1337,14 @@
 		        xmlDom = null;
 		    	
 		    }
+			
+			function callMoveAttachFileOrder(attachxml) {
+				var tmpFileList = dadiframe.document.querySelectorAll("#filelist tr[_fileindex]");
+				if(tmpFileList.length > 0) {
+					dadiframe.moveAttachFileOrder(tmpFileList, attachxml);
+				}
+			}
+			
 		    function JSleep() {
 		    	return;
 		    }
@@ -1285,8 +1465,18 @@
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - 720) / 2;
 		        var pLeft = (pwidth - 765) / 2;
+				var pWriterNameType = "";
+				
+				if (writerFlag == "Y") {
+					if (chkUseDept.checked) {
+						pWriterNameType = "1";
+					} else {
+						pWriterNameType = "0";
+					}
+				}
+				
 		        if (gubun != "2")
-		            window.open("/ezBoard/boardItemPreView.do?guBun=" + gubun + "&boardID=" + encodeURIComponent(pBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=0,height=720,width=744,top=" + pTop + ",left=" + pLeft, "");
+		            window.open("/ezBoard/boardItemPreView.do?guBun=" + gubun + "&boardID=" + encodeURIComponent(pBoardID) + "&writerNameType=" + pWriterNameType, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=0,height=720,width=744,top=" + pTop + ",left=" + pLeft, "");
 		        else {
 		            var ua = navigator.userAgent;
 		            if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
@@ -1450,7 +1640,45 @@
 		        ret = SelectBoard(InsertDocInfo_Complete);
 		    }
 		    */
-		
+
+			/* 2024-05-21 김유진 - 일정 정보 가져오기 */
+			function InsertScheduleInfo() {
+				var _newGuid = "{" + NewGuid + "}";
+				var strQuery = "<DATA><URL>" + pUrl + "</URL><NEWGUID>" + _newGuid + "</NEWGUID><ATTACHLIMIT>" + AttachLimit + "</ATTACHLIMIT><SCHEDULEID>" + scheduleId + "</SCHEDULEID></DATA>";
+				var requestUrl = "/ezSchedule/ezScheduleReadBoard.do";
+				MailxmlHTTP.open("POST", requestUrl, false);
+				MailxmlHTTP.send(strQuery);
+
+				if (MailxmlHTTP.status == 200) {
+					var retXml = loadXMLString(MailxmlHTTP.responseText);
+					document.getElementById('txtTitle').value = "일정게시 : " + getNodeText(retXml.getElementsByTagName("SUBJECT").item(0));
+					var Content = "<P>&nbsp;<br></P><br><DIV><br><br>-----<B>[&nbsp;일정 내용&nbsp;]</B>-----</DIV><DIV><B>날짜 : </B>" + getNodeText(retXml.getElementsByTagName("DATE").item(0)) + "</DIV>";
+					Content = Content + "<DIV><B>작성자 : </B>" + ReplaceText(ReplaceText(getNodeText(retXml.getElementsByTagName("FROMNAME").item(0)), "<", "&lt"), ">", "&gt;") + "</DIV>";
+					Content = Content + "<DIV><B>제목 : </B>" + getNodeText(retXml.getElementsByTagName("SUBJECT").item(0)) + "</DIV><P><br><br>" + getNodeText(retXml.getElementsByTagName("HTMLDESCRIPTION").item(0)) + "</P>";
+					Content = ReplaceText(Content, "id=doctitle", "");
+					Content = ReplaceText(Content, "id=\"doctitle\"", "");
+					Content = ReplaceText(Content, "id=\'doctitle\'", "");
+
+					message.SetEditorContent(Content);
+
+					var attCnt = retXml.getElementsByTagName("ATTACHID").length;
+					if (attCnt > 0) {
+						var xmlstringUl = "<DATA><BOARDID>" + pBoardID + "</BOARDID><ROWS>";
+						for (i = 0; i < attCnt; i++) {
+							xmlstringUl += "<ROW>";
+							xmlstringUl += "<FILENAME>"+ getNodeText(retXml.getElementsByTagName("FILENAME").item(i)) + "</FILENAME>";
+							xmlstringUl += "<FILEPATH>"+ decodeURIComponent(getNodeText(retXml.getElementsByTagName("FILEPATH").item(i))) + "</FILEPATH>";
+							xmlstringUl += "<FILESIZE>"+ getNodeText( retXml.getElementsByTagName("FILESIZE").item(i)) + "</FILESIZE>";
+							xmlstringUl += "</ROW>";
+						}
+						xmlstringUl += "</ROWS></DATA>";
+						uploadScheduleFile(xmlstringUl);
+					}
+				}
+
+
+			}
+		    
 	        function InsertDocInfo() {
 	            if (OpenWin != null) {
 	                OpenWin.close();
@@ -1471,7 +1699,14 @@
 		        GetBoardInfo();
 		        InitializeSettings();
 		
-		        if (pcheckForm.toUpperCase() == "TRUE") {
+		        if (pUseBackGround.toUpperCase() == "TRUE") {
+		            document.getElementById("pUseBackGroundTR").style.display = "";
+		            GetBackGroundImage();
+		        }
+		        else
+		            document.getElementById("pUseBackGroundTR").style.display = "none";
+		        
+				if (pcheckForm.toUpperCase() == "TRUE") {
 		            var tempHtml = message.GetEditorContent();
 		            var fullPath = "";
                 	$.ajax({
@@ -1485,28 +1720,26 @@
     					success: function(result){
     						fullPath = result;
     					}        			
-    				});	
-		            var htmlData = message.GetEditorContentURL(fullPath);
-		            message.SetEditorContent(htmlData + tempHtml);
+    				});
+                	if (editor != "HWP") {
+                		var htmlData = message.GetEditorContentURL(fullPath);
+    		            message.SetEditorContent(htmlData + tempHtml);	
+                	} else {
+                		var formFrame = document.getElementById("message2");
+                		formPath = fullPath;
+                		formFrame.src = "/ezBoard/WHWPEditor.do?type=form";
+                	}
 		        }
-		
-		        if (pUseBackGround.toUpperCase() == "TRUE") {
-		            document.getElementById("pUseBackGroundTR").style.display = "";
-		            GetBackGroundImage();
-		        }
-		        else
-		            document.getElementById("pUseBackGroundTR").style.display = "none";
-		
-		
+
 		        if (pUrl.toLowerCase().indexOf(".mht") > -1) {
 		            var fullPath = encodeURI(pUrl);
 		            var tempXML = createXmlDom();
-// 		            var XmlBodyATT = createXmlDom();
+//	 		        var XmlBodyATT = createXmlDom();
 		            var XmlBodyDATA = createXmlDom();
 		            var tempStr = "";
 		            tempStr = ConvertMHTtoHTML(fullPath);
 		            tempXML = loadXMLString(tempStr);
-// 		            XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
+//	 		        XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
 		            XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
 		            var htmlData = getNodeText(XmlBodyDATA);
 		
@@ -1536,7 +1769,11 @@
 		                }
 		            }
 		        }
-		        var xmlHTTP = createXMLHttpRequest();
+		        addAttach();
+		    }
+		    
+		    function addAttach() {
+		    	var xmlHTTP = createXMLHttpRequest();
 		        var xmlpara = createXmlDom();
 		        var xmlstring = "<DOCINFO><DocID>" + pDocID + "</DocID><ORGCOMPANYID>"+ orgCompanyID +"</ORGCOMPANYID></DOCINFO>";
 		        xmlpara = loadXMLString(xmlstring);
@@ -1555,6 +1792,7 @@
 		            uploadXml(0, xmldom);
 		        }
 		    }
+		    
 		    function GetBoardInfo() {
 		        var xmlhttp_boardinfo = createXMLHttpRequest();
 		        xmlhttp_boardinfo.open("POST", "/ezBoard/getBoardInfo.do?boardID=" + encodeURIComponent(pBoardID), false);
@@ -1570,7 +1808,7 @@
 		        xmlhttp_boardinfo = null;
 		    }
 		    function InitializeSettings() {
-		        document.getElementById('BoardSpan').innerHTML = pBoardName;
+		        document.getElementById('BoardSpan').innerText = pBoardName;
 		        if (ExpireDays == "-1") {
 		            document.getElementById('ChkPermanence').checked = true;
 		            document.getElementById('Makedate').style.visibility = "hidden";
@@ -1642,77 +1880,109 @@
 		        }
 		        return strRet;
 		    }
+		    
+		    var hwpChk = true;
 		    function Editor_Complete() {
-		        if (flag == false) {
-		            flag = true;
-		            if (pMode == "new" || pModeOld == "loadpc" || pMode == "boardAttach") {
-		                if (pcheckForm.toUpperCase() == "TRUE") {
-		                	var fullPath = "";
-		                	$.ajax({
-		    					type : "POST",
-		    					dataType : "text",
-		    					async : false,
-		    					url : "/ezBoard/getContentInfo.do",	        			
-		    					data : { type : "BOARDFORM", 
-		    							 docID: pBoardID
-		    						   },
-		    					success: function(result){
-		    						fullPath = result;
-		    					}        			
-		    				});	
-		                    var htmlData = message.GetEditorContentURL(fullPath);
-		                    message.SetEditorContent(htmlData);
-		                } else {
-		                    if (OpenWin == null){
-		                        document.getElementById("txtTitle").focus();
-		                    }
-		                    
-		                    message.SetEditorContent("");
-		                }
-		            } else {
-		                if (pUrl == "") {
-		                    var fullPath = strContentLocation;
-		                    if (pMode == "reply") {
-		                        var htmlData = message.GetEditorContentURL(fullPath);
-		                        htmlData = ReplaceText(htmlData, "class=&quot;FIELD&quot;", "");
-		                        htmlData = ReplaceText(htmlData, "class=FIELD", "");
-		                        /* 2020-11-30 홍승비 - 본문의 내용 내부 특수문자 치환할 필요 없으므로 주석처리, 이스케이프 문자 처리 추가 */
-/* 		                        htmlData = ReplaceText(htmlData, "&amp;", "&");
-		                        htmlData = ReplaceText(htmlData, "&lt;", "<");
-		                        htmlData = ReplaceText(htmlData, "&gt;", ">"); */
-		                        htmlData = "<body free>" + htmlData + "</body>";
-		                        
-		                        if (gubun != "2") {
-		                        	var replyHeader = "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
-		                        	replyHeader += "<p " + defaultFontAndSize + ">-----<B>[&nbsp;<spring:message code='ezBoard.t423' /></B>-----</p>";
-		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t424' /></B>" + strWriteDate + "</p>";
-		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t425' /></B>" + strWriterName + "(" + strWriterTitle + "," + strWriterDeptName + "," + strWriterCompanyName + ")</p>";
-		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t413' /></B>" + ReplaceText("<c:out value = '${boardListVO.title}' />", "&amp;#92;", "\\") + "</p>";
-		                        	replyHeader += "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
-		                        	htmlData = replyHeader + htmlData;
-		                        } else {
-		                        	var replyHeader = "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
-		                        	replyHeader += "<p " + defaultFontAndSize + ">-----<B>[&nbsp;<spring:message code='ezBoard.t423' /></B>-----</p>";
-		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t424' /></B>" + strWriteDate + "</p>";
-		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t425' /></B>" + strWriterFakeName + "</p>";
-		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t413' /></B>" + ReplaceText("<c:out value = '${boardListVO.title}' />", "&amp;#92;", "\\") + "</p>";
-		                        	replyHeader += "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
-		                        	htmlData = replyHeader + htmlData;
-		                        }
-		                        message.SetEditorContent(htmlData);
-		                    }else {
-		                        message.SetEditorContentURL(fullPath);
-		                    }
-		                } else {
-		                    if (pDocID == "") {
-		                        if (InsertMailInfo() == -1) window.close();
-		                    }else {
-		                        if (InsertDocInfo() == -1) window.close();
-		                    }
-		                }
-		            }
-		            MHTLoadComplete = "true";
-		        }
+                /* 2025-01-08 홍승비 - 전자결재 메일 발송 > 웹한글문서 메일로 전송 시, 웹한글기안기의 로딩 순서를 보장하도록 수정 */
+                // Editor_Complete() 함수 호출 시점은 iframe 태그 내부 "/ezEditor/selectEditor.do" 페이지의 로딩 시점에 의존함
+                // useHwpDownSecurity가 Y일 때만 Whwp api 호출. 전자결재 일반버전에서는 useHwpDownSecurity의 값에 상관없이 Whwp api 호출하지 않음.
+                if (useHWP == "YES" && useHwpDownSecurity == "Y" && approvalFlag == "G") {
+                    if (hwpChk) {
+                        // BuildWebHwpCtrl() 함수의 완료 후 콜백으로 다시 Editor_Complete()을 호출하여, 반드시 웹한글기안기 로딩이 끝난 시점에 한번 더 동작하도록 함
+                        HwpCtrl = BuildWebHwpCtrl("hwpctrl", "${webHWPUrl}", function () {
+                            isHwpCtrlOpen = true;
+                            hwpChk = false;
+                            Editor_Complete();  // Editor_Complete() 함수 내부에서 다시 호출된 Editor_Complete() 함수가 아래의 return 코드 이후 동작을 진행
+                        });
+                        return; // 반드시 return이 필요 (최초에 호출된 Editor_Complete()를 즉시 종료하기 위함으로, 중복 동작을 방지)
+                    }
+                }
+		    
+		    	if (editor != "HWP") {
+		    		if (flag == false) {
+			            flag = true;
+			            if (pMode == "new" || pModeOld == "loadpc" || pMode == "boardAttach") {
+			                if (pcheckForm.toUpperCase() == "TRUE") {
+			                	var fullPath = "";
+			                	$.ajax({
+			    					type : "POST",
+			    					dataType : "text",
+			    					async : false,
+			    					url : "/ezBoard/getContentInfo.do",	        			
+			    					data : { type : "BOARDFORM", 
+			    							 docID: pBoardID
+			    						   },
+			    					success: function(result){
+			    						fullPath = result;
+			    					}        			
+			    				});	
+			                    var htmlData = message.GetEditorContentURL(fullPath);
+			                    message.SetEditorContent(htmlData);
+			                } else {
+			                    if (OpenWin == null){
+			                        document.getElementById("txtTitle").focus();
+			                    }
+			                    
+			                    message.SetEditorContent("");
+			                }
+			            } else {
+			                if (pUrl == "") {
+			                    var fullPath = strContentLocation;
+			                    if (pMode == "reply") {
+			                        var htmlData = message.GetEditorContentURL(fullPath);
+			                        htmlData = ReplaceText(htmlData, "class=&quot;FIELD&quot;", "");
+			                        htmlData = ReplaceText(htmlData, "class=FIELD", "");
+			                        /* 2020-11-30 홍승비 - 본문의 내용 내부 특수문자 치환할 필요 없으므로 주석처리, 이스케이프 문자 처리 추가 */
+	/* 		                        htmlData = ReplaceText(htmlData, "&amp;", "&");
+			                        htmlData = ReplaceText(htmlData, "&lt;", "<");
+			                        htmlData = ReplaceText(htmlData, "&gt;", ">"); */
+			                        htmlData = "<body free>" + htmlData + "</body>";
+			                        
+			                        if (gubun != "2") {
+			                        	var replyHeader = "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
+			                        	replyHeader += "<p " + defaultFontAndSize + ">-----<B>[&nbsp;<spring:message code='ezBoard.t423' /></B>-----</p>";
+			                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t424' /></B>" + strWriteDate + "</p>";
+			                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t425' /></B>" + strWriterName + "(" + strWriterTitle + "," + strWriterDeptName + "," + strWriterCompanyName + ")</p>";
+			                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t413' /></B>" + ReplaceText("<c:out value = '${boardListVO.title}' />", "&amp;#92;", "\\") + "</p>";
+			                        	replyHeader += "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
+			                        	htmlData = replyHeader + htmlData;
+			                        } else {
+			                        	var replyHeader = "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
+			                        	replyHeader += "<p " + defaultFontAndSize + ">-----<B>[&nbsp;<spring:message code='ezBoard.t423' /></B>-----</p>";
+			                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t424' /></B>" + strWriteDate + "</p>";
+			                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t425' /></B>" + strWriterFakeName + "</p>";
+			                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t413' /></B>" + ReplaceText("<c:out value = '${boardListVO.title}' />", "&amp;#92;", "\\") + "</p>";
+			                        	replyHeader += "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
+			                        	htmlData = replyHeader + htmlData;
+			                        }
+			                        message.SetEditorContent(htmlData);
+			                    }else {
+			                        message.SetEditorContentURL(fullPath);
+			                    }
+			                } else {
+			                    if (pDocID == "" && (scheduleId == "" || scheduleId == null)) {
+			                        if (InsertMailInfo() == -1) window.close();
+			                    } else if (scheduleId != "" && scheduleId != null) {
+									if (InsertScheduleInfo() == -1) window.close();
+								} else {
+			                        if (InsertDocInfo() == -1) window.close();
+			                    }
+			                }
+			            }
+			            MHTLoadComplete = "true";
+			        }
+		    	} else {
+		    		var URL;
+                    URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=";
+                    message.Open(URL, "", "", function (res) { FieldsAvailable(res.result) }, null);
+                    
+		    	}
+		    }
+		    
+		    function Editor_Modify_Complete() {
+		    	var URL;
+                URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(strContentLocation);
+                message.Open(URL, "", "", function (res) { FieldsAvailable(res.result) }, null);
 		    }
 		
 		    function btn_AttachSelect_onclick() {
@@ -1812,6 +2082,7 @@
 		                } else if (pUrl.toLowerCase().indexOf(".hwp") < 0) { 
 		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 320 + "PX";
 		                }
+						mobileDistinction();
 		                break;
 		            case "MailEnv_div3":
 		                document.getElementById("tab01").style.display = "none";
@@ -1832,9 +2103,21 @@
 		                    } else if (pUrl.toLowerCase().indexOf(".hwp") < 0) { 
 			                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 320 + "PX";
 		                    }
+							mobileDistinction();
 		                }
 		        }
-		        
+				/* 2024-08-26 김유진 - 사용된 확장컬럼 높이 고려하여 에디터 높이 설정 */
+				if (pAttributeYN == "Y" && document.getElementById("tab01")) {
+					document.getElementById("EdtorSize").style.height = '100%'
+                    mobileDistinction();
+				}
+
+				if ("<c:out value='${boardInfo.attachmentFlag}'/>" != "Y") {
+					var beforeEditorSize = document.getElementById("EdtorSize").style.height;
+					document.getElementById("EdtorSize").style.height = parseInt(beforeEditorSize, 10) + 145 + "PX";
+					mobileDistinction();
+				}
+				
                 var editorW = (document.documentElement.clientWidth - 20) + "PX";
 		       	document.getElementById("tab02").style.width = editorW;
 	            document.getElementById("message").style.width = editorW;
@@ -1886,7 +2169,7 @@
 		                        return;
 		                    }
 		                }
-		                document.getElementById("BoardSpan").innerHTML = ret[1];
+		                document.getElementById("BoardSpan").innerText = ret[1];
 		                InitializeSettings();
 		                ChkPermanent();
 						NotiPost_onclick();
@@ -1950,7 +2233,7 @@
 	                    }
 	                }
 	                pBoardID = ret[0];
-	                document.getElementById("BoardSpan").innerHTML = ret[1];
+	                document.getElementById("BoardSpan").innerText = ret[1];
 	                InitializeSettings();
 	                ChkPermanent();
 					NotiPost_onclick();
@@ -2090,56 +2373,77 @@
 		    }
 		
 		    function backgroundimagechange() {
-		    	var editor = "${editor}";
-		    	
-		        for (var i = 0; i < document.getElementsByName("backradio").length; i++) {
-		            if (document.getElementsByName("backradio")[i].checked) {
-		                var Table = document.createElement("TABLE");
-		                var Tr = document.createElement("TR");
-		                var Td = document.createElement("TD");
-		                Tr.appendChild(Td);
-		                Table.appendChild(Tr);
-		                Td.innerHTML = message.GetEditorContent();
-		                var temp = Td.getElementsByTagName("TD");
-		
-		                Td.id = "imagediv";
-		                Td.style.verticalAlign = "top";
-		                Td.style.fontSize = "10pt";
-		                Td.style.lineHeight = "20px";
-		                Td.style.width = document.getElementsByName("backradio")[i].parentNode.getAttribute("imgwidth") + "px";
-	                    Td.style.height = document.getElementsByName("backradio")[i].parentNode.getAttribute("imgheight") + "px";
-		                Td.style.wordBreak = "break-all";
-		                Td.style.backgroundRepeat = "no-repeat";
-		                Td.style.backgroundSize = Td.style.width + " " +Td.style.height;     
-		                Td.setAttribute("free", "");
-		
-		                if (document.getElementsByName("backradio")[i].parentNode.getAttribute("filemane") != null) {
-	                		Td.style.backgroundImage = "URL(<spring:eval expression='@commonUtil.getUploadPath(\"upload_board.BOARDBACKGROUND\", \"${userInfo.tenantId}\")'/>" + "/S_" 
-	                				+ document.getElementsByName("backradio")[i].parentNode.getAttribute("filemane") + ")";	
-	                		Table.style.width = document.getElementsByName("backradio")[i].parentNode.getAttribute("imgwidth") + "px";
-		                    Table.style.height = document.getElementsByName("backradio")[i].parentNode.getAttribute("imgheight") + "px";
-		                }
-		                else {
-		                    for (var j = 0; j < temp.length; j++) {
-		                        if (temp[j].id == "imagediv") {
-		                            message.SetEditorContent(temp[j].innerHTML);
-		                            break;
-		                        }
-		                    }
-		                    break;
-		                }
-		                if (temp.length > 0) {
-		                    for (var j = 0; j < temp.length; j++) {
-		                        if (temp[j].id == "imagediv") {
-		                            Td.innerHTML = temp[j].innerHTML;
-		                            message.SetEditorContent(Table.outerHTML);
-		                            break;
-		                        }
-		                    }
-		                }
-		                message.SetEditorContent(Table.outerHTML);
-		            }
-		        }
+		    	if (editor != "HWP") {
+		    		for (var i = 0; i < document.getElementsByName("backradio").length; i++) {
+			            if (document.getElementsByName("backradio")[i].checked) {
+			                var Table = document.createElement("TABLE");
+			                var Tr = document.createElement("TR");
+			                var Td = document.createElement("TD");
+			                Tr.appendChild(Td);
+			                Table.appendChild(Tr);
+			                Td.innerHTML = message.GetEditorContent();
+			                var temp = Td.getElementsByTagName("TD");
+			
+			                Td.id = "imagediv";
+			                Td.style.verticalAlign = "top";
+			                Td.style.fontSize = "10pt";
+			                Td.style.lineHeight = "20px";
+			                Td.style.width = document.getElementsByName("backradio")[i].parentNode.getAttribute("imgwidth") + "px";
+		                    Td.style.height = document.getElementsByName("backradio")[i].parentNode.getAttribute("imgheight") + "px";
+			                Td.style.wordBreak = "break-all";
+			                Td.style.backgroundRepeat = "no-repeat";
+			                Td.style.backgroundSize = Td.style.width + " " +Td.style.height;     
+			                Td.setAttribute("free", "");
+			
+			                if (document.getElementsByName("backradio")[i].parentNode.getAttribute("filemane") != null) {
+		                		Td.style.backgroundImage = "URL(<spring:eval expression='@commonUtil.getUploadPath(\"upload_board.BOARDBACKGROUND\", \"${userInfo.tenantId}\")'/>" + "/S_" 
+		                				+ document.getElementsByName("backradio")[i].parentNode.getAttribute("filemane") + ")";	
+		                		Table.style.width = document.getElementsByName("backradio")[i].parentNode.getAttribute("imgwidth") + "px";
+			                    Table.style.height = document.getElementsByName("backradio")[i].parentNode.getAttribute("imgheight") + "px";
+			                }
+			                else {
+			                    for (var j = 0; j < temp.length; j++) {
+			                        if (temp[j].id == "imagediv") {
+			                            message.SetEditorContent(temp[j].innerHTML);
+			                            break;
+			                        }
+			                    }
+			                    break;
+			                }
+			                if (temp.length > 0) {
+			                    for (var j = 0; j < temp.length; j++) {
+			                        if (temp[j].id == "imagediv") {
+			                            Td.innerHTML = temp[j].innerHTML;
+			                            message.SetEditorContent(Table.outerHTML);
+			                            break;
+			                        }
+			                    }
+			                }
+			                message.SetEditorContent(Table.outerHTML);
+			            }
+			        }
+		    	} else {
+		    		for (var i = 0; i < document.getElementsByName("backradio").length; i++) {
+		    			if (document.getElementsByName("backradio")[i].checked) {
+		    				if (document.getElementsByName("backradio")[i].parentNode.getAttribute("filemane") != null) {
+		    					message.createField("backGround");
+		    					if (message.FieldExist("backGround")) {
+		    						message.MoveToField("backGround");
+		    						var url = "<spring:eval expression='@commonUtil.getUploadPath(\"upload_board.BOARDBACKGROUND\", \"${userInfo.tenantId}\")'/>" + "/S_" 
+												+ document.getElementsByName("backradio")[i].parentNode.getAttribute("filemane");
+				    				var width = document.getElementsByName("backradio")[i].parentNode.getAttribute("imgwidth");
+				                    var height = document.getElementsByName("backradio")[i].parentNode.getAttribute("imgheight");
+				                    message.SetFieldImage("", document.location.protocol + "//" + document.location.hostname + ":" + document.location.port + url, 1, width, height, true, 2);
+		    					}
+		    					
+		    				} else {
+		    					if (message.FieldExist("backGround")) {
+		    						message.deleteField("backGround");
+		    					}
+		    				}
+		    			}
+		    		}
+		    	}
 		    }
 		
 		    function BackImageUp() {
@@ -2151,7 +2455,6 @@
 		    }
 		    
 		    function BackImageUp_After(rtn) {
-		    	var editor = "${editor}";
 		        var xmlhttp = null;
 		        xmlhttp = createXMLHttpRequest();
 
@@ -2166,40 +2469,51 @@
 		        var imgSrc = xmlhttp.responseText;
 		        var imgWidth = rtn[1];
 		        var imgHeight = rtn[2];
+		        
+		        if (editor != "HWP") {
+		        	var Table = document.createElement("TABLE");
+			        var Tr = document.createElement("TR");
+			        var Td = document.createElement("TD");
+			        Tr.appendChild(Td);
+			        Table.appendChild(Tr);
+			        Td.innerHTML = message.GetEditorContent();
+			        var temp = Td.getElementsByTagName("TD");
 
-		        var Table = document.createElement("TABLE");
-		        var Tr = document.createElement("TR");
-		        var Td = document.createElement("TD");
-		        Tr.appendChild(Td);
-		        Table.appendChild(Tr);
-		        Td.innerHTML = message.GetEditorContent();
-		        var temp = Td.getElementsByTagName("TD");
+			        Td.id = "imagediv";
+			        Td.style.verticalAlign = "top";
+			        Td.style.fontSize = "10pt";
+			        Td.style.lineHeight = "20px";
+			        Td.style.wordBreak = "break-all";
+			        Td.style.backgroundRepeat = "no-repeat";
+			        Td.style.width = imgWidth + "px";
+			        Td.style.height = imgHeight + "px";
+			        Td.style.backgroundSize = "" + imgWidth + "px" + imgHeight + "px";
+		        	Td.style.backgroundImage = "URL(" + imgSrc + ")";
+		        	
+			        Table.style.width = "auto";
+			        Table.style.height = "auto";
 
-		        Td.id = "imagediv";
-		        Td.style.verticalAlign = "top";
-		        Td.style.fontSize = "10pt";
-		        Td.style.lineHeight = "20px";
-		        Td.style.wordBreak = "break-all";
-		        Td.style.backgroundRepeat = "no-repeat";
-		        Td.style.width = imgWidth + "px";
-		        Td.style.height = imgHeight + "px";
-		        Td.style.backgroundSize = "" + imgWidth + "px" + imgHeight + "px";
-	        	Td.style.backgroundImage = "URL(" + imgSrc + ")";
-	        	
-		        Table.style.width = "auto";
-		        Table.style.height = "auto";
+			        if (temp.length > 0) {
+			            for (var j = 0; j < temp.length; j++) {
+			                if (temp[j].id == "imagediv") {
+			                    Td.innerHTML = temp[j].innerHTML;
+			                    message.SetEditorContent(Table.outerHTML);
+			                    break;
+			                }
+			            }
+			        }
 
-		        if (temp.length > 0) {
-		            for (var j = 0; j < temp.length; j++) {
-		                if (temp[j].id == "imagediv") {
-		                    Td.innerHTML = temp[j].innerHTML;
-		                    message.SetEditorContent(Table.outerHTML);
-		                    break;
-		                }
-		            }
+			        message.SetEditorContent(Table.outerHTML);
+		        } else {
+		        	if (message.FieldExist("backGround")) {
+						message.deleteField("backGround");
+					}
+		        	message.createField("backGround");
+		        	if (message.FieldExist("backGround")) {
+		        		message.MoveToField("backGround");
+		        		message.SetFieldImage("", document.location.protocol + "//" + document.location.hostname + ":" + document.location.port + imgSrc, 1, imgWidth, imgHeight, true, 2);
+		        	}
 		        }
-
-		        message.SetEditorContent(Table.outerHTML);
 		    }
 		
 	        //추가항목 관련 Function 추가
@@ -2290,12 +2604,12 @@
 		    }
 	        
 	        /* 2021-06-22 홍승비 - 게시판 메일알림 함수 추가, 비동기로 백그라운드 동작 */
-	        function sendBoardAlertMail(pMode, pBoardID, pItemID, pIsAllGroupBoard) {
+	        function sendBoardAlert(pMode, pBoardID, pItemID, pIsAllGroupBoard) {
 		        $.ajax({
 					type : "POST",
 					dataType : "text",
 					async : true,
-					url : "/ezBoard/sendBoardAlertMail.do",
+					url : "/ezBoard/sendBoardAlert.do",
 					data : {
 						mode : pMode,
 						boardID : pBoardID,
@@ -2483,12 +2797,178 @@
                 var strRet = "";
                 for (i = 0; i < nodes.length; i++) {
                     var filepath = getNodeText(GetChildNodes(nodes[i])[0]);
-                    
+
                     strRet += "tempUploadFile/" + filepath + "|";
                 }
                 attachxml = strRet;
 	        }
+
+			function uploadScheduleFile(xmlstring) {
+				var xmlHTTP = createXMLHttpRequest();
+				var xmldom2 = createXmlDom();
+				xmldom2 = loadXMLString(xmlstring);
+				xmlHTTP.open("POST", "/ezBoard/uploadScheduleFile.do", false);
+				xmlHTTP.send(xmldom2);
+				returnvalue(xmlHTTP.responseText);
+
+				var xml = loadXMLString(xmlHTTP.responseText);
+				var nodes = SelectNodes(xml, "ROOT/NODES/NODE");
+				var strRet = "";
+				for (i = 0; i < nodes.length; i++) {
+					var filepath = getNodeText(GetChildNodes(nodes[i])[0]);
+
+					strRet += "tempUploadFile/" + filepath + "|";
+				}
+				attachxml = strRet;
+			}
+			function openPopupAuth(e) {
+			    var columnName = e.target.getAttribute("columnName");
+                var OpenWin = window.open("/ezBoard/boardSelectUser.do?companyId=" + SSCompanyID + "&columnName=" + columnName, "", GetOpenWindowfeature(970, 670));
+                OpenWin.focus();
+            }
+            
+            function characterCheckForExtAttr(obj) {
+                var regExp = /[\\'\"<>]/gi;
+                if (regExp.test(obj.value)) {
+                    alert("<spring:message code='ezBoard.extensionAttr.JIH04' />");
+                    obj.value = obj.value.replace(regExp, '');
+                }
+            }
+            
+            function FieldsAvailable(isTrue) {
+            	if (isTrue) {
+            		if (pMode == "new" || pMode == "new1" || pMode == "boardAttach") {
+            			message.SetMargin(3000);
+            		}
+            		message.EditMode(1);
+            		message.SetViewProperties(2, 100);
+		            message.ScrollPosInfo(0, 0);
+		            message.ShowToolBar(true);
+		            message.ShowRibbon(true);
+		            message.FoldRibbon(true);
+		            window.onresize();
+		            if (pUrl != "") {
+	                    if (pDocID == "" && (scheduleId == "" || scheduleId == null)) {
+	                        if (InsertMailInfo() == -1) window.close();
+	                    } else if (scheduleId != "" && scheduleId != null) {
+							if (InsertScheduleInfo() == -1) window.close();
+						} else {
+	                        if (InsertDocInfo() == -1) window.close();
+	                    }
+		            } else if (pMode != "modify" && pMode != "reply") {
+		            	if (pcheckForm.toUpperCase() == "TRUE") {
+		                	$.ajax({
+		    					type : "POST",
+		    					dataType : "text",
+		    					async : false,
+		    					url : "/ezBoard/getContentInfo.do",	        			
+		    					data : { type : "BOARDFORM", 
+		    							 docID: pBoardID
+		    						   },
+		    					success: function(result){
+		    						var formFrame = document.getElementById("message2");
+		                    		formPath = result;
+		                    		formFrame.src = "/ezBoard/WHWPEditor.do?type=form";
+		    					}        			
+		    				});	
+		                }
+		            } else if (pMode == "reply") {
+		            	var replyHeader = "";
+		            	if (gubun != "2") {
+                        	replyHeader += "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
+                        	replyHeader += "<p " + defaultFontAndSize + ">-----<B>[&nbsp;<spring:message code='ezBoard.t423' /></B>-----</p>";
+                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t424' /></B>" + strWriteDate + "</p>";
+                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t425' /></B>" + strWriterName + "(" + strWriterTitle + "," + strWriterDeptName + "," + strWriterCompanyName + ")</p>";
+                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t413' /></B>" + ReplaceText("<c:out value = '${boardListVO.title}' />", "&amp;#92;", "\\") + "</p>";
+                        	replyHeader += "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
+                        } else {
+                        	replyHeader += "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
+                        	replyHeader += "<p " + defaultFontAndSize + ">-----<B>[&nbsp;<spring:message code='ezBoard.t423' /></B>-----</p>";
+                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t424' /></B>" + strWriteDate + "</p>";
+                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t425' /></B>" + strWriterFakeName + "</p>";
+                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t413' /></B>" + ReplaceText("<c:out value = '${boardListVO.title}' />", "&amp;#92;", "\\") + "</p>";
+                        	replyHeader += "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
+                        }
+		            	
+		            	message.moveTopOfFile();
+            			message.createField("reply");
+            			message.AppendFieldText("reply", replyHeader, "", "HTML", "", function() {
+	            			message.moveEndOfFile();
+            			});
+		            }
+            	} else {
+            		message.Clear();
+            	}
+            }
+            
+            function onresizeHWP() {
+	       		var mHeight = document.getElementById("EdtorSize").clientHeight - 6 + "px";
+	       		message.Resize(mHeight);
+				mobileDistinction();
+	        }
+            
+            var ingFlag = false;
+            function SaveItemHWP(pMode) {
+            	GetHTML(before_saveItem, pMode);
+            }
+            
+            function GetHTML(callback, pMode) {
+                ingFlag = true;
+			    message.GetTextFile("HWP", "", function (data) { ingFlag = false; callback(data, pMode); });
+			}
+            
+            var hwpHtml = "";
+            function before_saveItem(html, pMode) {
+            	hwpHtml = html;
+            	SaveItem(pMode);
+            }
+            
+            function PreventSaveItemHWP(pMode) {
+            	GetHTML(before_preventSaveItem, pMode);
+            }
+            
+            function before_preventSaveItem(html, pMode) {
+            	hwpHtml = html;
+            	PreventSaveItem(pMode);
+            }
+            
+            function Editor_Form_Complete() {
+            	var URL;
+                URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(formPath);
+                message2.Open(URL, "", "", function (res) { addForm(res.result) }, null);
+            }
+            
+            function addForm(isTrue) {
+            	if (isTrue) {
+            		message2.GetCloneData("", "HWP", addFormComplete);
+            	}
+            }
+            
+            function addFormComplete(data) {
+            	var formData = data;
+				message.moveTopOfFile();
+				message.SetCloneData(formData, "", "HWP");
+            }
 	        
+            function mobileDistinction() {
+                    var  userAgent = navigator.userAgent.toLowerCase();
+                
+                if (/iphone|ipod|ipad|android.*mobile/i.test(userAgent) || /tablet|ipad|android/i.test(userAgent) || navigator.maxTouchPoints > 4) {
+                    if (window.innerWidth > window.innerHeight) {
+                        document.getElementById("EdtorSize").style.height = 436 + "PX";
+                    }
+                }
+            }
+
+			function chkUseDept_onclick() {
+				if (chkUseDept.checked) { // 팀/부서로 표시
+					spUseDept.innerHTML = "${deptName}";
+					document.getElementById("writerFlag").selectedIndex = 1;
+				} else { // 이름으로 표시
+					spUseDept.innerHTML = "${displayName}";
+					document.getElementById("writerFlag").selectedIndex = 0;
+				}
+			}
 	    </script>
 	    <c:if test="${!isCrossBrowser}">
 	   		<script type="text/javascript" FOR="EzHTTPTrans" EVENT="AttachAddFile(filename)">
@@ -2502,20 +2982,40 @@
 	            <td style="height: 20px">
 	                <div id="menu">
 	                    <ul>
-	                    	<c:choose>
+	                    	<c:if test="${editor ne 'HWP'}">
+	                    		<c:choose>
 	                    		<c:when test="${mode == 'temp'}">
-	                    		<!-- 2018-05-30 구해안 그룹웨어 모듈 '등록','저장후닫기' => '저장'으로 통일  ezBoard.t321 => t98 -->
+	                    		<!-- 2018-05-30 구해안 그룹웨어 모듈 '등록','저장후닫기' => '저장'으로 통일  ezBoard.t98 => t98 -->
 			                        <li><span onclick="SaveItem('save');"><spring:message code='ezBoard.t98' /></span></li>
 	                    		</c:when>
 	                    		<c:otherwise>
 			                        <li><span onclick="PreventSaveItem('<c:out value="${mode}"/>');"><spring:message code='ezBoard.t98' /></span></li>
 	                    		</c:otherwise>
-	                    	</c:choose>
-	                    	<c:if test="${boardInfo.guBun != '3'}">
-		                        <li><span onclick="PreviewItem();"><spring:message code='ezBoard.t431' /></span></li>
+		                    	</c:choose>
+		                    	<c:if test="${boardInfo.guBun != '3'}">
+			                        <li><span onclick="PreviewItem();"><spring:message code='ezBoard.t431' /></span></li>
+		                    	</c:if>
+		                    	<c:if test="${boardInfo.guBun != '2' && (mode != 'modify' && mode != 'reply')}">
+			                        <li><span onclick="PreventSaveItem('temp');"><spring:message code='ezBoard.t10034' /></span></li>
+		                    	</c:if>
 	                    	</c:if>
-	                    	<c:if test="${boardInfo.guBun != '2' && (mode != 'modify' && mode != 'reply')}">
-		                        <li><span onclick="PreventSaveItem('temp');"><spring:message code='ezBoard.t10034' /></span></li>
+	                    	
+	                    	<c:if test="${editor eq 'HWP'}">
+	                    		<c:choose>
+	                    		<c:when test="${mode == 'temp'}">
+	                    		<!-- 2018-05-30 구해안 그룹웨어 모듈 '등록','저장후닫기' => '저장'으로 통일  ezBoard.t98 => t98 -->
+			                        <li><span onclick="SaveItemHWP('save');"><spring:message code='ezBoard.t98' /></span></li>
+	                    		</c:when>
+	                    		<c:otherwise>
+			                        <li><span onclick="PreventSaveItemHWP('<c:out value="${mode}"/>');"><spring:message code='ezBoard.t98' /></span></li>
+	                    		</c:otherwise>
+		                    	</c:choose>
+		                    	<%-- <c:if test="${boardInfo.guBun != '3'}">
+			                        <li><span onclick="PreviewItemHWP();"><spring:message code='ezBoard.t431' /></span></li>
+		                    	</c:if> --%>
+		                    	<c:if test="${boardInfo.guBun != '2' && (mode != 'modify' && mode != 'reply')}">
+			                        <li><span onclick="PreventSaveItemHWP('temp');"><spring:message code='ezBoard.t10034' /></span></li>
+		                    	</c:if>
 	                    	</c:if>
 	                    </ul>
 	                </div>
@@ -2559,7 +3059,7 @@
 	                        	<c:choose>
 	                        		<c:when test="${boardType != 'SELECT'}">
 			                            <span id="BoardSpan">
-			                                ${boardInfo.boardName} 
+			                                <c:out value='${boardName}' />
 			                            </span>
 	                        		</c:when>
 	                        		<c:otherwise>
@@ -2622,6 +3122,25 @@
 								</span>
 							</td>
 						</tr>
+						<c:if test="${'Y' == boardInfo.writerFlag}">
+							<tr class="td_style">
+								<th><spring:message code='ezBoard.t223' /></th>
+								<td colspan="3">
+									<span id="spUseDept">
+										<c:choose>
+											<c:when test="${mode == 'new'}">${userInfo.displayName}</c:when>
+											<c:otherwise>${boardListVO.writerName}</c:otherwise>
+										</c:choose>
+									</span>
+									<input type="checkbox" id="chkUseDept" style="margin-left: 0px !important;" onclick="chkUseDept_onclick()">
+									<select id="writerFlag" style="display: none;">
+										<option value="<c:out value='${writerOption.N}:${writerOption.N2}:0' />"></option>
+										<option value="<c:out value='${writerOption.T}:${writerOption.T2}:1' />"></option>
+										<option value="<c:out value='${writerOption.D}:${writerOption.D2}:2' />"></option>
+									</select>
+								</td>
+							</tr>
+						</c:if>
              			<!-- 추가 항목이 있을 경우 -->
              			<c:forEach var="boardAttributeVO" items="${boardAttributeListVO}" step="1" varStatus="status">
              				<tr>
@@ -2678,10 +3197,41 @@
 											</select>
 										</td>
 									</c:when>
+									<c:when test="${boardAttributeVO.colType == 'people'}">
+                                        <td colspan="3">
+                                            <span id="peopleSelectBtn" class="peopleSelectBtn" columnName='${boardAttributeVO.tableCol}' style="" onclick ='openPopupAuth(event)'><spring:message code='ezWebFolder.t516' /></span>
+                                            <span id ='${boardAttributeVO.tableCol}' name='${boardAttributeVO.tableCol}' type="people" class='authList_div peoplePickerData ${boardAttributeVO.tableCol}'></span>
+                                        </td>
+                                    </c:when>
+                                    <c:when test="${boardAttributeVO.colType == 'textArea'}">
+                                        <td colspan="3">
+                                            <span id='icon_textArea'></span>
+                                            <textarea maxlength="450" id='${boardAttributeVO.tableCol}' name='${boardAttributeVO.tableCol}' type="textArea" onkeyup="characterCheckForExtAttr(this)" onkeydown="characterCheckForExtAttr(this)" style="width: 100%; height: 150px; box-sizing: border-box; "></textarea>
+                                        </td>
+                                    </c:when>
              					</c:choose>
              				</tr>
              			</c:forEach>
 	         			<!-- 추가 항목이 있을 경우 끝-->
+	         			<!-- 키워드 시작 -->
+	         			<c:if test="${not empty useKeyword && useKeyword eq 'Y'}">
+                            <tr>
+                                <th><spring:message code="ezApprovalG.t1200" /></th>
+                                <td colspan="3" id="keyWordResult">
+                                    <c:if test="${not empty useKeyword && useKeyword eq 'Y' && (mode eq 'modify' || mode eq 'temp')}">
+                                        <c:forEach var="keyword" items="${keywordListForModify}">
+                                            <span id="${keyword.keywordName}" class="keywordSpanView">
+                                                #${keyword.keywordName}<img src="/images/icon/oneline_delete.gif" class="keywordDeleteBtn" onclick="removeKeyword(event)">
+                                            </span>
+                                        </c:forEach>
+                                    </c:if>
+                                    <c:if test="${fn:length(keywordListForModify) < 10}">
+                                        <input type="text" id="txtKeyword" style="WIDTH: 20%; word-wrap: break-word; word-break: break-all;" value="" maxlength="100" onkeyup="keyword_onkeyUp(event)" >
+                                    </c:if>
+                                </td>
+                            </tr>
+                        </c:if>
+                        <!-- 키워드 끝 -->
 	                    <tr>
 	                        <th><spring:message code='ezBoard.t208' /></th>
 	                        <td colspan="3">
@@ -2723,6 +3273,19 @@
 	                                   &nbsp;<a class="imgbtn imgbck" style= "height:22px; margin-top:2px !important"><span onclick="btn_PostDate_Clear()" popuplocation='topright'><spring:message code='ezBoard.t220' /></span></a></td>
 	                            </span>
 	                    </tr>
+						<c:if test="${boardInfo.publicFlag eq 'Y'}">
+							<tr>
+								<th><spring:message code='ezBoard.private.pgb02'/></th>
+								<td>
+									<span style="line-height: 20px; height: 20px; display: inline-block;">
+										<input type="checkbox" id="publicFlag" name="publicFlag" ${boardListVO.publicFlag == "Y" ? "checked" : "" } style="margin-top:3px;" value="Y">
+									</span>
+									<label for="publicFlag" style="line-height: 21px; height: 12px; display: inline-block; margin-top: 3px;">
+										<spring:message code='ezBoard.private.pgb04'/>
+									</label>
+								</td>
+							</tr>
+						</c:if>
 	                    <tr id="tdEndDate">
 	                        <th><spring:message code='ezBoard.t156' /></th>
 	                        <td>
@@ -2774,7 +3337,7 @@
 	                <table class="content">
 	                    <tr>
 	                        <th><spring:message code='ezBoard.t111' /></th>
-	                        <td id="tdBoardName" style="width: 100%" colspan="2">${boardInfo.boardName}</td>
+	                        <td id="tdBoardName" style="width: 100%" colspan="2">${boardName}</td>
 	                    </tr>
 	                    <tr>
 	                        <th><spring:message code='ezBoard.t208' /></th>
@@ -2877,7 +3440,15 @@
 	        </tr>
 	        <tr>
 	            <td style="vertical-align: top; height: 100%" id="EdtorSize">
-	                <iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do?type=BOARDBACKGROUND" style="padding: 0; height: 100%; width: 100%; overflow: auto; margin-top:-1px"></iframe>
+	            	<c:if test="${editor ne 'HWP'}">
+	            		<iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do?type=BOARDBACKGROUND" style="padding: 0; height: 100%; width: 100%; overflow: auto; margin-top:-1px"></iframe>
+	            	</c:if>
+	            	<c:if test="${editor eq 'HWP'}">
+	            		<iframe id="message" class="viewbox"  src="/ezBoard/WHWPEditor.do?type=${mode}" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
+	            		<c:if test="${checkForm eq 'TRUE'}">
+	            			<iframe id="message2" name="message2" style="display:none;"></iframe>
+	            		</c:if>
+	            	</c:if>
 	            </td>
 	        </tr>
 	        <tr id="docTR" style="display: none">
@@ -2890,7 +3461,7 @@
 	    	<c:if test="${!isCrossBrowser}">
 				<c:choose>
 					<c:when test="${boardInfo.guBun != '3'}">
-				      <tr>
+				      <tr <c:if test="${boardInfo.attachmentFlag != 'Y'}"> style="display:none;"</c:if>>
 				        <td height="20" valign="top" style="padding-top:10px">
 				          <table class="file" style="height:100px">
 				            <form name="multicheck">
@@ -2915,7 +3486,7 @@
 	    	<c:if test="${isCrossBrowser}">
 				<c:choose>
 					<c:when test="${boardInfo.guBun != '3'}">
-				        <tr id="attachIframeTR">
+						<tr id="attachIframeTR" <c:if test="${boardInfo.attachmentFlag != 'Y'}"> style="display:none;"</c:if>>
 				            <td style="height: 145px">
 				                <iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 100%; border: 0px" src="/ezBoard/dragAndDrop.do"></iframe>
 				                <input type="hidden" name="mode" id="mode" />
@@ -2934,18 +3505,6 @@
 		<div id="hwpctrl"/>
 	</body>
 	<script type="text/javascript">
-	//사용안되는듯 2017-01-11 파악
-// 	    function SelectBoard2() {
-// 	        var url = "BoardSelect2.aspx";
-// 	        var feature = "status:no;dialogWidth:352px;dialogHeight:700px;help:no;scroll:no;edge:sunken";
-// 	        feature = feature + GetShowModalPosition(352, 700);
-// 	        var ret = window.showModalDialog(url, "", feature);
-	
-// 	        if (typeof (ret) == "undefined") return "";
-// 	        return ret;
-// 	    }
-	</script>
-	<script type="text/javascript">
 	    Tab1_NewTabIni("tab1");
 	</script>
 	<script type="text/javascript">
@@ -2956,5 +3515,16 @@
 	    } else if (pUrl.toLowerCase().indexOf(".hwp") < 0) {
 	        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 320 + "PX";
 	    }
+		/* 2024-08-26 김유진 - 사용된 확장컬럼 높이 고려하여 에디터 높이 설정 */
+		if (pAttributeYN == "Y" && document.getElementById("tab01")) {
+		    document.getElementById("EdtorSize").style.height = '100%'
+		}
+		
+		if ("<c:out value='${boardInfo.attachmentFlag}'/>" != "Y") {
+			var beforeEditorSize = document.getElementById("EdtorSize").style.height;
+			document.getElementById("EdtorSize").style.height = parseInt(beforeEditorSize, 10) + 145 + "PX";
+		}
+		
+		mobileDistinction();
 	</script>
 </html>

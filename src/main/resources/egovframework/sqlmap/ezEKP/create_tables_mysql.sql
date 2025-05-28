@@ -75,9 +75,11 @@ CREATE TABLE `james_mail_blob` (
   `HEADER_BYTES` mediumblob NOT NULL,
   `MAILBOX_ID` bigint(20) DEFAULT NULL,
   `MAIL_UID` bigint(20) DEFAULT NULL,
+  `DISK_ID` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`MAIL_BLOB_ID`),
   KEY `INDEX_MESSAGE_BLOB_MSG_ID` (`MAIL_BLOB_ID`),
-  KEY `MAILBOX_ID` (`MAILBOX_ID`,`MAIL_UID`)
+  KEY `MAILBOX_ID` (`MAILBOX_ID`,`MAIL_UID`),
+  KEY `james_mail_blob_DISK_ID_IDX` (`DISK_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -113,8 +115,7 @@ CREATE TABLE `james_mail_property` (
   PRIMARY KEY (`PROPERTY_ID`),
   KEY `INDEX_PROPERTY_LINE_NUMBER` (`PROPERTY_LINE_NUMBER`),
   KEY `INDEX_PROPERTY_MSG_ID` (`PROPERTY_ID`),
-  KEY `MAILBOX_ID` (`MAILBOX_ID`,`MAIL_UID`),
-  CONSTRAINT `james_mail_property_ibfk_1` FOREIGN KEY (`MAILBOX_ID`, `MAIL_UID`) REFERENCES `james_mail` (`MAILBOX_ID`, `MAIL_UID`) ON DELETE CASCADE
+  KEY `MAILBOX_ID` (`MAILBOX_ID`,`MAIL_UID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -145,9 +146,32 @@ CREATE TABLE `james_mail_search` (
   KEY `IDX_SENDER` (`SENDER`(191)),
   KEY `IDX_RECIPIENT` (`RECIPIENT`(191)),
   KEY `IDX_ATTACHED_FILENAME` (`ATTACHED_FILENAME`(191)),
-  KEY `IDX_SUBJECT` (`SUBJECT`(191)),
-  CONSTRAINT `james_mail_search_ibfk_1` FOREIGN KEY (`MAILBOX_ID`, `MAIL_UID`) REFERENCES `james_mail` (`MAILBOX_ID`, `MAIL_UID`) ON DELETE CASCADE
+  KEY `IDX_SUBJECT` (`SUBJECT`(191))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+-- mroonga 적용 테이블
+-- CREATE TABLE `james_mail_search` (
+--  `MAIL_SEARCH_ID` bigint(20) NOT NULL AUTO_INCREMENT,
+--  `ATTACHED_FILENAME` longtext DEFAULT NULL,
+--  `CONTENT` longtext DEFAULT NULL,
+--  `RECIPIENT` longtext DEFAULT NULL,
+--  `SENDER` mediumtext DEFAULT NULL,
+--  `SUBJECT` longtext DEFAULT NULL,
+--  `MAILBOX_ID` bigint(20) DEFAULT NULL,
+--  `MAIL_UID` bigint(20) DEFAULT NULL,
+--  `IMPORTANCE` int(1) DEFAULT NULL,
+--  `MESSAGE_ID` varchar(500) DEFAULT NULL,
+--  `MAIL_IP` varchar(200) DEFAULT NULL,
+--  `COUNTRY_CODE` varchar(200) DEFAULT NULL,
+--  `SECURE_FLAG` int(1) DEFAULT 0,
+--  PRIMARY KEY (`MAIL_SEARCH_ID`),
+--  KEY `MAILBOX_ID` (`MAILBOX_ID`,`MAIL_UID`),
+--  KEY `MESSAGE_ID` (`MESSAGE_ID`(191)),
+--  FULLTEXT KEY `SENDER` (`SENDER`) COMMENT 'parser "TokenBigramIgnoreBlankSplitSymbolAlphaDigit"',
+--  FULLTEXT KEY `CONTENT` (`CONTENT`) COMMENT 'parser "TokenBigramIgnoreBlankSplitSymbolAlphaDigit"',
+--  FULLTEXT KEY `RECIPIENT` (`RECIPIENT`) COMMENT 'parser "TokenBigramIgnoreBlankSplitSymbolAlphaDigit"',
+--  FULLTEXT KEY `ATTACHED_FILENAME` (`ATTACHED_FILENAME`) COMMENT 'parser "TokenBigramIgnoreBlankSplitSymbolAlphaDigit"',
+--  FULLTEXT KEY `SUBJECT` (`SUBJECT`) COMMENT 'parser "TokenBigramIgnoreBlankSplitSymbolAlphaDigit"'
+-- ) ENGINE=Mroonga AUTO_INCREMENT=937619 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='engine "InnoDB"';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -164,7 +188,7 @@ CREATE TABLE `james_mail_userflag` (
   `MAIL_UID` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`USERFLAG_ID`),
   KEY `MAILBOX_ID` (`MAILBOX_ID`,`MAIL_UID`),
-  CONSTRAINT `james_mail_userflag_ibfk_1` FOREIGN KEY (`MAILBOX_ID`, `MAIL_UID`) REFERENCES `james_mail` (`MAILBOX_ID`, `MAIL_UID`) ON DELETE CASCADE
+  KEY `james_mail_userflag_NAME_IDX` (`USERFLAG_NAME`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -359,6 +383,24 @@ CREATE TABLE `jmocha_address_simple` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `jmocha_address_last_sent`
+--
+
+DROP TABLE IF EXISTS `jmocha_address_last_sent`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `jmocha_address_last_sent` (
+  `SEQUENCE` bigint(20) NOT NULL AUTO_INCREMENT,
+  `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
+  `CN` varchar(80) NOT NULL,
+  `name` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `email` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `sent_date` datetime DEFAULT utc_timestamp,  -- 기본값으로 현재 날짜와 시간 설정 (utc)
+  PRIMARY KEY (`SEQUENCE`) -- 삽입, 삭제가 빈번한 테이블이라, UNIQUE KEY 사용하지 않음. (* UNIQUE: TENANT_ID, CN, email)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `jmocha_alias`
 --
 
@@ -366,6 +408,20 @@ DROP TABLE IF EXISTS `jmocha_alias`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `jmocha_alias` (
+  `target_address` varchar(100) NOT NULL,
+  `alias_address` varchar(100) NOT NULL,
+  PRIMARY KEY (`target_address`,`alias_address`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `jmocha_alias_retire`
+--
+
+DROP TABLE IF EXISTS `jmocha_alias_retire`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `jmocha_alias_retire` (
   `target_address` varchar(100) NOT NULL,
   `alias_address` varchar(100) NOT NULL,
   PRIMARY KEY (`target_address`,`alias_address`)
@@ -422,6 +478,18 @@ CREATE TABLE `jmocha_default_quota` (
   PRIMARY KEY (`DOMAIN_NAME`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `jmocha_company_quota`
+--
+DROP TABLE IF EXISTS `jmocha_company_quota`;
+CREATE TABLE `jmocha_company_quota` 
+(   `DOMAIN_NAME` varchar(100) NOT NULL,
+    `COMPANY_ID` varchar(160) NOT NULL,
+    `MAX_STORAGE` double DEFAULT 0,
+    `WARN_STORAGE` double DEFAULT 0,
+    PRIMARY KEY (`DOMAIN_NAME`,`COMPANY_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `jmocha_dept_master`
@@ -676,10 +744,16 @@ CREATE TABLE `jmocha_mail_general` (
   `PREVIEW_W_CONTENT` int(11) DEFAULT NULL,
   `PREVIEW_H_LIST` int(11) DEFAULT NULL,
   `PREVIEW_H_CONTENT` int(11) DEFAULT NULL,
+  `TEXT_OPTION` varchar(10) DEFAULT NULL,
   `MAIL_SENDER_NAME` varchar(255) CHARACTER SET utf8mb4 DEFAULT NULL,
   `PREVIEW_SUBTREE` varchar(10) DEFAULT 'N',
   `PREVIEW_MAIL_IMAGE` varchar(10) DEFAULT 'Y',
-  `TEXT_OPTION` varchar(10) DEFAULT NULL,
+  `PREVIEW_MAIL` varchar(10) DEFAULT 'N',
+  `MAIL_SEND_RESULT` varchar(10) DEFAULT 'N',
+  `EDITOR_FONT_FAMILY` varchar(50) DEFAULT NULL,
+  `EDITOR_FONT_SIZE` varchar(10) DEFAULT NULL,
+  `DEFAULT_SEPARATE_SEND` VARCHAR(10) DEFAULT NULL,
+  `DEFAULT_CURSOR_POSITION` VARCHAR(50) DEFAULT NULL,
   PRIMARY KEY (`USER_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -805,6 +879,7 @@ CREATE TABLE `jmocha_mail_recall_detail` (
   `status` int(11) DEFAULT NULL,
   `del_date` datetime DEFAULT NULL,
   `receiver_name` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `receiver_primary_email` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`recall_idx`,`receiver_email`),
   CONSTRAINT `recall_foreign_key` FOREIGN KEY (`recall_idx`) REFERENCES `jmocha_mail_recall` (`recall_idx`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -819,7 +894,8 @@ DROP TABLE IF EXISTS `jmocha_mail_reserve`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `jmocha_mail_reserve` (
   `MESSAGE_ID` varchar(50) NOT NULL,
-  `USER_ID` varchar(100) DEFAULT NULL,
+  `USER_ID` varchar(100) DEFAULT NULL, -- userAccount (mailId@domainName)
+  `SENDER` varchar(80) DEFAULT NULL, -- userId
   `SUBJECT` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `SEND_DATE` datetime DEFAULT NULL,
   PRIMARY KEY (`MESSAGE_ID`),
@@ -844,8 +920,7 @@ CREATE TABLE `jmocha_mail_secure` (
   `max_read_count` int(11) DEFAULT NULL,
   `max_read_date` datetime DEFAULT NULL,
   PRIMARY KEY (`secure_id`),
-  KEY `fk_mail_secure_idx` (`mailbox_id`,`mail_uid`),
-  CONSTRAINT `fk_mail_secure` FOREIGN KEY (`mailbox_id`, `mail_uid`) REFERENCES `james_mail` (`MAILBOX_ID`, `MAIL_UID`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `fk_mail_secure_idx` (`mailbox_id`,`mail_uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1054,18 +1129,54 @@ CREATE TABLE `jmocha_stat_mail_log` (
   `SENDER_NAME` varchar(500) CHARACTER SET utf8mb4 DEFAULT NULL,
   `RECIPIENT_NAME` varchar(500) CHARACTER SET utf8mb4 DEFAULT NULL,
   `ATTACHED_FILENAME` varchar(4000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `DEPT_NAME` VARCHAR(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `DEPT_NAME2` VARCHAR(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `SENDER_NAME2` VARCHAR(120) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `RECIPIENT_NAME2` VARCHAR(120) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `DEPT_ID` varchar(80) DEFAULT NULL,
+  `COMPANY_ID` varchar(160) DEFAULT NULL,
   PRIMARY KEY (`IDX`),
   KEY `IDX_TENANT_ID` (`TENANT_ID`),
   KEY `IDX_LOG_DATE` (`LOG_DATE`),
   KEY `IDX_EVENT_TYPE` (`EVENT_TYPE`),
-  KEY `IDX_SENDER_NAME` (`SENDER_NAME`),
-  KEY `IDX_SENDER` (`SENDER`),
-  KEY `IDX_RECIPIENT` (`RECIPIENT`),
-  KEY `IDX_RECIPIENT_NAME` (`RECIPIENT_NAME`),
-  KEY `IDX_MESSAGESUBJECT` (`MESSAGESUBJECT`(768)),
-  KEY `IDX_ATTACHED_FILENAME` (`ATTACHED_FILENAME`(768)),
   KEY `IDX_MESSAGEID` (`MESSAGEID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+--  mroonga 적용 테이블
+--  CREATE TABLE `jmocha_stat_mail_log` (
+--  `IDX` int(10) unsigned NOT NULL AUTO_INCREMENT,
+--  `TENANT_ID` int(11) NOT NULL,
+--  `LOG_DATE` datetime DEFAULT NULL,
+--  `EVENT_TYPE` varchar(20) DEFAULT NULL,
+--  `SENDER` varchar(200) DEFAULT NULL,
+--  `RECIPIENT` varchar(200) DEFAULT NULL,
+--  `TOTALBYTES` int(11) DEFAULT NULL,
+--  `MESSAGEID` varchar(500) DEFAULT NULL,
+--  `MESSAGESUBJECT` varchar(4000) CHARACTER SET utf8mb4 DEFAULT NULL,
+--  `SENDER_NAME` varchar(500) CHARACTER SET utf8mb4 DEFAULT NULL,
+--  `RECIPIENT_NAME` varchar(500) CHARACTER SET utf8mb4 DEFAULT NULL,
+--  `ATTACHED_FILENAME` varchar(4000) CHARACTER SET utf8mb4 DEFAULT NULL,
+--  `DEPT_NAME` VARCHAR(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+--  `DEPT_NAME2` VARCHAR(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+--  `SENDER_NAME2` VARCHAR(120) CHARACTER SET utf8mb4 DEFAULT NULL,
+--  `RECIPIENT_NAME2` VARCHAR(120) CHARACTER SET utf8mb4 DEFAULT NULL,
+--  `DEPT_ID` VARCHAR(80) DEFAULT NULL,
+--  `COMPANY_ID` VARCHAR(160) DEFAULT NULL,
+--  PRIMARY KEY (`IDX`),
+--  KEY `IDX_TENANT_ID` (`TENANT_ID`),
+--  KEY `IDX_LOG_DATE` (`LOG_DATE`),
+--  KEY `IDX_EVENT_TYPE` (`EVENT_TYPE`),
+-- KEY `IDX_MESSAGEID` (`MESSAGEID`),
+--  FULLTEXT KEY `SENDER` (`SENDER`) COMMENT 'parser "TokenBigramIgnoreBlankSplitSymbolAlphaDigit"',
+--  FULLTEXT KEY `SENDER_NAME` (`SENDER_NAME`) COMMENT 'parser "TokenBigramIgnoreBlankSplitSymbolAlphaDigit"',
+--  FULLTEXT KEY `RECIPIENT` (`RECIPIENT`) COMMENT 'parser "TokenBigramIgnoreBlankSplitSymbolAlphaDigit"',
+--  FULLTEXT KEY `RECIPIENT_NAME` (`RECIPIENT_NAME`) COMMENT 'parser "TokenBigramIgnoreBlankSplitSymbolAlphaDigit"',
+--  FULLTEXT KEY `MESSAGESUBJECT` (`MESSAGESUBJECT`) COMMENT 'parser "TokenBigramIgnoreBlankSplitSymbolAlphaDigit"',
+--  FULLTEXT KEY `ATTACHED_FILENAME` (`ATTACHED_FILENAME`) COMMENT 'parser "TokenBigramIgnoreBlankSplitSymbolAlphaDigit"',
+--  FULLTEXT KEY `DEPT_NAME` (`DEPT_NAME`) COMMENT 'parser "TokenBigramIgnoreBlankSplitSymbolAlphaDigit"',
+--  FULLTEXT KEY `DEPT_NAME2` (`DEPT_NAME2`) COMMENT 'parser "TokenBigramIgnoreBlankSplitSymbolAlphaDigit"',
+--  FULLTEXT KEY `SENDER_NAME2` (`SENDER_NAME2`) COMMENT 'parser "TokenBigramIgnoreBlankSplitSymbolAlphaDigit"',
+--  FULLTEXT KEY `RECIPIENT_NAME2` (`RECIPIENT_NAME2`) COMMENT 'parser "TokenBigramIgnoreBlankSplitSymbolAlphaDigit"'
+--  ) ENGINE=Mroonga DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci COMMENT='engine "InnoDB"';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1956,6 +2067,7 @@ CREATE TABLE `talk_tblnotification` (
   `EtcData` varchar(200) DEFAULT NULL,
   `LinkURL` varchar(512) DEFAULT NULL,
   `ShowMsg` varchar(128) DEFAULT NULL,
+  `TenantId` mediumint(5) NOT NULL,
   PRIMARY KEY (`ItemSeq`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -2850,24 +2962,6 @@ CREATE TABLE `tbl_aprdocinfo` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `TBL_APRDRAFTALLGROUP`
---
-
-DROP TABLE IF EXISTS `TBL_APRDRAFTALLGROUP`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `TBL_APRDRAFTALLGROUP` (
-  `MAINDOCID` varchar(80) DEFAULT NULL,
-  `SUBDOCID` varchar(80) DEFAULT NULL,
-  `TENANT_ID` mediumint(5) DEFAULT NULL,
-  `COMPANYID` varchar(20) DEFAULT NULL,
-  `ORDERNUM` mediumint(5) DEFAULT NULL,
-  `CREATEDATE` datetime DEFAULT NULL,
-  `APRMEMBERID` varchar(400) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `tbl_aprlinegroup`
 --
 
@@ -3598,14 +3692,14 @@ DROP TABLE IF EXISTS `tbl_board_boardinfo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_board_boardinfo` (
-  `BOARDID` varchar(510) NOT NULL,
+  `BOARDID` varchar(76) NOT NULL,
   `BOARDNAME` varchar(510) CHARACTER SET utf8mb4 DEFAULT NULL,
   `BOARDNAME2` varchar(510) CHARACTER SET utf8mb4 DEFAULT NULL,
   `BOARDNAME3` varchar(510) CHARACTER SET utf8mb4 DEFAULT NULL,
   `BOARDNAME4` varchar(510) CHARACTER SET utf8mb4 DEFAULT NULL,
   `TREEVIEWORDER` int(11) DEFAULT NULL,
   `BOARDLEVEL` int(11) DEFAULT NULL,
-  `PARENTBOARDID` varchar(510) DEFAULT NULL,
+  `PARENTBOARDID` varchar(76) DEFAULT NULL,
   `BOARDDESCRIPTION` varchar(510) CHARACTER SET utf8mb4 DEFAULT NULL,
   `ITEMEXPIRES` int(11) DEFAULT NULL,
   `ATTACHSIZELIMIT` varchar(510) DEFAULT NULL,
@@ -3634,7 +3728,12 @@ CREATE TABLE `tbl_board_boardinfo` (
   `MAILFG_MOD` varchar(2) DEFAULT NULL,
   `MAILFG_COMMENT` varchar(2) DEFAULT NULL,
   `REACTFLAG` varchar(1) DEFAULT NULL,
-  PRIMARY KEY (`BOARDID`(255),`TENANT_ID`),
+  `ATTACHMENTFLAG` char(1) DEFAULT 'Y',
+  `PUBLICFLAG` char(1) DEFAULT 'N',
+  `ALLNEWBOARDFLAG` char(1) DEFAULT 'Y',
+  `WRITERFLAG` varchar(2) DEFAULT 'N',
+  `STARRATINGFLAG` varchar(1) DEFAULT NULL,
+  PRIMARY KEY (`BOARDID`,`TENANT_ID`),
   KEY `idx_companyid` (`COMPANYID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -3706,6 +3805,7 @@ CREATE TABLE `tbl_board_configuration` (
   `PREVIEWWCONTENT` bigint(10) DEFAULT 0,
   `PREVIEWHLIST` bigint(10) DEFAULT 0,
   `PREVIEWHCONTENT` bigint(10) DEFAULT 0,
+  `ALLNEWBOARDLISTDATE` int(10) DEFAULT 5,
   `TENANT_ID` mediumint(5) NOT NULL,
   PRIMARY KEY (`TENANT_ID`,`USERID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -3785,17 +3885,19 @@ CREATE TABLE `tbl_board_item` (
   `NOTINO` decimal(19,0) DEFAULT NULL,
   `TOPWRITERID` varchar(40) DEFAULT NULL,
   `APPRFLAG` varchar(4) DEFAULT NULL,
-  `EXTENSIONATTRIBUTE6` varchar(200) DEFAULT NULL,
-  `EXTENSIONATTRIBUTE7` varchar(200) DEFAULT NULL,
-  `EXTENSIONATTRIBUTE8` varchar(200) DEFAULT NULL,
-  `EXTENSIONATTRIBUTE9` varchar(200) DEFAULT NULL,
-  `EXTENSIONATTRIBUTE10` varchar(200) DEFAULT NULL,
+  `EXTENSIONATTRIBUTE6` varchar(500) DEFAULT NULL,
+  `EXTENSIONATTRIBUTE7` varchar(500) DEFAULT NULL,
+  `EXTENSIONATTRIBUTE8` varchar(500) DEFAULT NULL,
+  `EXTENSIONATTRIBUTE9` varchar(500) DEFAULT NULL,
+  `EXTENSIONATTRIBUTE10` varchar(500) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
   `CONTENT` longtext DEFAULT NULL,
   `PARENTWRITEDATE2` varchar(40) DEFAULT NULL,
   `DELFLAG` char(1) DEFAULT NULL,
   `NTSTARTDATE` varchar(40) DEFAULT NULL,
   `NTENDDATE` varchar(40) DEFAULT NULL,
+  `PUBLICFLAG`char(1) DEFAULT 'Y',
+  `WRITERNAMETYPE` varchar(2) DEFAULT NULL,
   PRIMARY KEY (`TENANT_ID`,`ITEMID`),
   KEY `writedate` (`WRITEDATE`,`PARENTWRITEDATE`),
   KEY `writedate1` (`WRITEDATE`),
@@ -3914,7 +4016,7 @@ CREATE TABLE `tbl_board_item_listoption_boar` (
   `WIDTH` bigint(10) NOT NULL,
   `VIEW_FG` varchar(4) NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
-  UNIQUE KEY `PK_TBL_BOARD_ITEM_LISTOPTION_2` (`TENANT_ID`,`BOARDID`,`SN`)
+  PRIMARY KEY (`TENANT_ID`,`BOARDID`,`SN`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -3987,12 +4089,13 @@ CREATE TABLE `tbl_board_item_temp` (
   `DOCNO` decimal(19,0) DEFAULT NULL,
   `DOCPASSWORD` varchar(100) DEFAULT NULL,
   `MAINCONTENT` longtext CHARACTER SET utf8mb4 DEFAULT NULL,
-  `EXTENSIONATTRIBUTE6` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `EXTENSIONATTRIBUTE7` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `EXTENSIONATTRIBUTE8` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `EXTENSIONATTRIBUTE9` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `EXTENSIONATTRIBUTE10` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `EXTENSIONATTRIBUTE6` varchar(500) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `EXTENSIONATTRIBUTE7` varchar(500) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `EXTENSIONATTRIBUTE8` varchar(500) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `EXTENSIONATTRIBUTE9` varchar(500) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `EXTENSIONATTRIBUTE10` varchar(500) CHARACTER SET utf8mb4 DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
+  `PUBLICFLAG`char(1) DEFAULT 'Y',
   PRIMARY KEY (`TENANT_ID`,`ITEMID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -4134,6 +4237,11 @@ CREATE TABLE `tbl_board_onelinereply` (
   `PASSWORD` varchar(1368) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
   `COMPANYID` varchar(80) DEFAULT NULL,
+  `REPLYLEVEL` bigint(10) DEFAULT NULL,
+  `PARENTREPLYID` varchar(100) DEFAULT NULL,
+  `PARENTWRITERNAME` varchar(100) DEFAULT NULL,
+  `UPDATEDATE` varchar(40) DEFAULT NULL,
+  `IMAGECONTENT` varchar(600) DEFAULT NULL,
   PRIMARY KEY (`TENANT_ID`,`ITEMID`,`REPLYID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -4997,6 +5105,7 @@ CREATE TABLE `tbl_cb_share` (
   `share_date` datetime NOT NULL,
   `child_permission` tinyint(4) NOT NULL COMMENT '1: 권한있음, 0: 권한없음',
   `use_status` tinyint(4) NOT NULL COMMENT '1: 사용, 0: 삭제',
+  `saveflag` tinyint(4) NOT NULL COMMENT '1: 최종 저장, 0: 검색시 저장',
   `company_id` varchar(50) NOT NULL,
   `tenant_id` int(11) NOT NULL,
   PRIMARY KEY (`share_id`,`tenant_id`)
@@ -5370,28 +5479,6 @@ CREATE TABLE `tbl_codelist` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `tbl_columns`
---
-
-DROP TABLE IF EXISTS `tbl_columns`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_columns` (
-  `TBL_ID` varchar(200) DEFAULT NULL,
-  `ORDER_NUM` varchar(200) DEFAULT NULL,
-  `COL_NM` varchar(200) DEFAULT NULL,
-  `COL_COMM` varchar(200) DEFAULT NULL,
-  `COL_TYPE` varchar(200) DEFAULT NULL,
-  `COL_NULL` varchar(200) DEFAULT NULL,
-  `COL_KEY` varchar(200) DEFAULT NULL,
-  `COL_DEFAULT` varchar(200) DEFAULT NULL,
-  `CREATE_DT` datetime DEFAULT NULL,
-  `UPDATE_DT` datetime DEFAULT NULL,
-  `USE_YN` char(1) DEFAULT 'Y'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `tbl_comm_boardinfo`
 --
 
@@ -5672,13 +5759,15 @@ DROP TABLE IF EXISTS `tbl_conndata`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_conndata` (
-  `KEYID` varchar(50) NOT NULL COMMENT 'ERP Key 값',
+  `KEYID` varchar(50) NOT NULL COMMENT '연동 Key 값',
   `FORMID` varchar(10) NOT NULL COMMENT '연동 양식ID',
-  `BODYXML` longtext DEFAULT NULL COMMENT '본문 XML',
+  `USERID` varchar(400) NOT NULL COMMENT '기안자 ID',
+  `DEPTID` varchar(400) NOT NULL COMMENT '기안자 부서ID',
+  `TITLE` varchar(1020) NOT NULL COMMENT '문서제목',
+  `BODYHTML` longtext DEFAULT NULL COMMENT '본문 HTML',
   `STATUS` varchar(10) DEFAULT NULL COMMENT 'W:대기\nD:기안\nE:완료\nR:반송',
   `DOCID` varchar(20) DEFAULT NULL COMMENT '문서ID',
   `UPDATEDATE` datetime DEFAULT NULL COMMENT '업데이트 일자',
-  `UPDATEID` varchar(20) DEFAULT NULL COMMENT '업데이트 주체',
   PRIMARY KEY (`KEYID`,`FORMID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -5700,6 +5789,34 @@ CREATE TABLE TBL_SESSION (
 	PRIMARY KEY (`SESSION_ID`),
 	KEY `IDX_SESSION_LAST_TIME` (`SESSION_ID`,`LAST_ACCESS_TIME`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Table structure for table `TBL_FIDO_SESSION`
+--
+DROP TABLE IF EXISTS  `TBL_FIDO_SESSION`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `TBL_FIDO_SESSION` (
+  `FIDO_SESSION_ID` varchar(50) NOT NULL,
+  `USER_ID` varchar(80) NOT NULL,
+  `CREATE_TIME` DATETIME NOT NULL,
+  `ACCESS_IP` varchar(100) NOT NULL,
+  `STATUS` varchar(50) NOT NULL,
+  PRIMARY KEY (`FIDO_SESSION_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS  `TBL_NOT_ACCESS_FIDO_IP`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `TBL_NOT_ACCESS_FIDO_IP` (
+  `IPNO` int(11) NOT NULL AUTO_INCREMENT,
+  `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
+  `COMPANYID` varchar(200) DEFAULT NULL,
+  `IPADDRESS` varchar(100) NOT NULL,
+  `ALLOW_ACCESS` varchar(10) DEFAULT 'NO',
+  `EXPLANATION` varchar(200) DEFAULT NULL,
+  PRIMARY KEY (`IPNO`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `tbl_connection_info`
@@ -6086,7 +6203,7 @@ CREATE TABLE `tbl_deptcont` (
   `MANAGEUSERID` varchar(400) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
   `COMPANYID` varchar(20) NOT NULL,
-  UNIQUE KEY `PK_TBL_DEPTCONT` (`TENANT_ID`,`DEPTCONTID`)
+  PRIMARY KEY (`TENANT_ID`,`DEPTCONTID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -6148,6 +6265,7 @@ CREATE TABLE `tbl_deptmaster` (
   `CREATEDT` datetime DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
   `MANUAL_FLAG` varchar(10) DEFAULT NULL,
+  `DEPTTREEFLAG` char(1) DEFAULT 'Y',
   PRIMARY KEY (`TENANT_ID`,`CN`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -9034,6 +9152,7 @@ CREATE TABLE `tbl_portal_menu_auth` (
   `access_YN` int(11) DEFAULT NULL COMMENT '접근 가능(1), 접근 불가(0)',
   `user_type` int(11) DEFAULT NULL COMMENT '사용자(U), 부서(D)',
   `sn` int(11) DEFAULT 0,
+  `subdept_permitted` varchar(4) DEFAULT 'Y',
   PRIMARY KEY (`menu_id`,`company_id`,`tenant_id`,`user_id`),
   CONSTRAINT `FK_tbl_portal_menu_auth_menu_id_tbl_portal_menu_menu_id` FOREIGN KEY (`menu_id`) REFERENCES `tbl_portal_menu` (`menu_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='메뉴권한 설정 테이블';
@@ -9054,6 +9173,7 @@ CREATE TABLE `tbl_portal_menu_comp` (
   `company_lang` varchar(45) DEFAULT NULL,
   `company_order` int(11) DEFAULT NULL,
   `menu_ipused` int(11) DEFAULT 0 COMMENT '활성화(Y), 비활성화(N)',
+  `icon_url` varchar(200) DEFAULT NULL COMMENT '회사별 기본 아이콘 변경',
   PRIMARY KEY (`company_id`,`tenant_id`,`menu_id`),
   KEY `FK_tbl_portal_menu_comp_menu_id_tbl_portal_menu_menu_id` (`menu_id`),
   CONSTRAINT `FK_tbl_portal_menu_comp_menu_id_tbl_portal_menu_menu_id` FOREIGN KEY (`menu_id`) REFERENCES `tbl_portal_menu` (`menu_id`)
@@ -9132,6 +9252,7 @@ CREATE TABLE `tbl_portal_portlet_auth` (
   `access_YN` int(11) DEFAULT NULL COMMENT '접근 가능(1), 접근 불가(0)',
   `user_type` int(11) DEFAULT NULL COMMENT '사용자(U), 부서(D)',
   `sn` int(11) DEFAULT 0,
+  `subdept_permitted` varchar(4) DEFAULT 'Y',
   PRIMARY KEY (`portlet_id`,`company_id`,`tenant_id`,`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -9251,6 +9372,7 @@ CREATE TABLE `tbl_portal_theme_auth` (
   `access_YN` int(11) DEFAULT NULL COMMENT '접근 가능(1), 접근 불가(0)',
   `user_type` int(11) DEFAULT NULL COMMENT '사용자(U), 부서(D)',
   `sn` int(11) DEFAULT 0,
+  `subdept_permitted` varchar(4) DEFAULT 'Y',
   PRIMARY KEY (`theme_id`,`company_id`,`tenant_id`,`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -9655,6 +9777,8 @@ CREATE TABLE `tbl_ps_quicklink_acl` (
   `ACCESSNAME2` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
   `VIEW_FLAG` varchar(4) NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
+  `USER_TYPE` varchar(100) NOT NULL,
+  `SUBDEPT_PERMITTED` varchar(4) DEFAULT 'N',
   PRIMARY KEY (`TENANT_ID`,`QUICKLINKID`,`ACCESSID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -9730,7 +9854,7 @@ CREATE TABLE `tbl_ps_webpartgroup` (
   `ID` varchar(510) NOT NULL,
   `NAME` varchar(510) CHARACTER SET utf8mb4 DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
-  UNIQUE KEY `PK_TBL_PS_WEBPARTGROUP` (`TENANT_ID`,`ID`(255))
+  PRIMARY KEY (`TENANT_ID`,`ID`(255))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -9751,7 +9875,7 @@ CREATE TABLE `tbl_ps_webpartitem` (
   `DEFAULTPOSITION` double(126,0) DEFAULT NULL,
   `DEFAULTUSE` double(126,0) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
-  UNIQUE KEY `PK_TBL_PS_WEBPARTITEM` (`TENANT_ID`,`ID`(255))
+  PRIMARY KEY (`TENANT_ID`,`ID`(255))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -9767,7 +9891,7 @@ CREATE TABLE `tbl_ps_webpartitemacl` (
   `ACCESSID` varchar(510) DEFAULT NULL,
   `ACCESSNAME` varchar(510) CHARACTER SET utf8mb4 DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
-  UNIQUE KEY `PK_TBL_PS_WEBPARTITEMACL` (`TENANT_ID`,`ITEMID`(255))
+  PRIMARY KEY (`TENANT_ID`,`ITEMID`(255))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -10810,6 +10934,7 @@ CREATE TABLE `tbl_rs_brd` (
   `BRD_UPPER2` varchar(8) DEFAULT NULL,
   `APPROVEFLAG` varchar(2) DEFAULT '0',
   `RETURNFLAG` varchar(2) DEFAULT '0',
+  `REPEATFLAG` varchar(2) DEFAULT '1',
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
   PRIMARY KEY (`TENANT_ID`,`BRD_ID`,`BRD_COMPANY`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -10903,6 +11028,7 @@ CREATE TABLE `tbl_rs_schedule` (
   `RETURNFLAG` varchar(2) DEFAULT '0',
   `SCHEDULEID` varchar(1000) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
+  `DEPTID` varchar(80) DEFAULT NULL,
   PRIMARY KEY (`TENANT_ID`,`OWNERID`,`NUM`,`COMPANYID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -11270,6 +11396,7 @@ CREATE TABLE `tbl_scheduleconfig` (
   `RejectedMail` varchar(4) DEFAULT 'Y',
   `AUTODELETE` bigint(10) NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
+  `REMINDERTIME` VARCHAR(8) NOT NULL DEFAULT '0',
   PRIMARY KEY (`USERID`,`TENANT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -11313,6 +11440,7 @@ CREATE TABLE `tbl_schedulegroupmember` (
   `MEMBERID` varchar(100) NOT NULL,
   `MEMBERNAME` varchar(100) CHARACTER SET utf8mb4 NOT NULL,
   `MEMBERNAME2` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `MEMBERDEPTID` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
   `STATUS` mediumint(5) NOT NULL,
   `RESPONSEDATE` datetime NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
@@ -12048,23 +12176,6 @@ CREATE TABLE `tbl_survey_response` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `tbl_table`
---
-
-DROP TABLE IF EXISTS `tbl_table`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_table` (
-  `TBL_ID` varchar(200) DEFAULT NULL,
-  `TBL_NM` varchar(200) DEFAULT NULL,
-  `TBL_DESCRPT` varchar(200) DEFAULT NULL,
-  `CREATE_DT` datetime DEFAULT NULL,
-  `UPDATE_DT` datetime DEFAULT NULL,
-  `USE_YN` char(1) DEFAULT 'Y'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `tbl_task`
 --
 
@@ -12400,23 +12511,6 @@ CREATE TABLE `tbl_tasksubcategory` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `tbl_temppassword`
---
-
-DROP TABLE IF EXISTS `tbl_temppassword`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_temppassword` (
-  `USERID` varchar(200) NOT NULL,
-  `PHONENUM` varchar(200) NOT NULL,
-  `IP` varchar(100) NOT NULL,
-  `SMSCODE` varchar(100) NOT NULL,
-  `CREATEDDATE` datetime NOT NULL,
-  `TENANT_ID` mediumint(5) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `tbl_tenant`
 --
 
@@ -12461,6 +12555,7 @@ DROP TABLE IF EXISTS `tbl_tenant_servername`;
 CREATE TABLE `tbl_tenant_servername` (
   `SERVER_NAME` varchar(400) NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
+  `MAINYN` varchar(10) DEFAULT 'N',
   PRIMARY KEY (`SERVER_NAME`(255)),
   KEY `FK_TBL_TENANT_SERVERNAME_idx` (`TENANT_ID`),
   CONSTRAINT `FK_TBL_TENANT_SERVERNAME` FOREIGN KEY (`TENANT_ID`) REFERENCES `tbl_tenant` (`TENANT_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION
@@ -13046,6 +13141,7 @@ CREATE TABLE `tbl_usermaster` (
   `MAILBOXUSAGE` varchar(50) DEFAULT NULL,
   `PASSWORD2` varchar(100) DEFAULT NULL,
   `PHOTO_UPDATEDT` datetime DEFAULT NULL,
+  `USERTREEFLAG` char(1) DEFAULT 'Y',
   PRIMARY KEY (`CN`,`TENANT_ID`),
   KEY `IDX_EMP_NO` (`EXTENSIONATTRIBUTE14`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -13139,36 +13235,51 @@ CREATE TABLE `tbl_usermaster_retire` (
   `POSTALCODE` varchar(100) DEFAULT NULL,
   `STREETADDRESS` varchar(400) DEFAULT NULL,
   `INFO` varchar(2000) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `EXTENSIONATTRIBUTE1` varchar(200) DEFAULT NULL,
+  `EXTENSIONATTRIBUTE1` varchar(200) DEFAULT NULL COMMENT 'c:전체, k:회사, g:그룹, a:수발신, n:게시관리, l:설문, i:심사자, w:업무, m:기록물관리',
   `EXTENSIONATTRIBUTE2` varchar(200) DEFAULT NULL,
   `EXTENSIONATTRIBUTE3` varchar(2000) DEFAULT NULL,
   `EXTENSIONATTRIBUTE4` varchar(2000) DEFAULT NULL,
-  `EXTENSIONATTRIBUTE5` varchar(200) DEFAULT NULL,
+  `EXTENSIONATTRIBUTE5` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `EXTENSIONATTRIBUTE6` varchar(200) DEFAULT NULL,
   `EXTENSIONATTRIBUTE7` varchar(200) DEFAULT NULL,
   `EXTENSIONATTRIBUTE8` varchar(200) DEFAULT NULL,
   `EXTENSIONATTRIBUTE9` varchar(200) DEFAULT NULL,
-  `EXTENSIONATTRIBUTE10` varchar(200) DEFAULT NULL,
-  `EXTENSIONATTRIBUTE102` varchar(200) DEFAULT NULL,
+  `EXTENSIONATTRIBUTE10` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `EXTENSIONATTRIBUTE102` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `EXTENSIONATTRIBUTE11` varchar(200) DEFAULT NULL,
   `EXTENSIONATTRIBUTE12` varchar(200) DEFAULT NULL,
   `EXTENSIONATTRIBUTE13` varchar(200) DEFAULT NULL,
   `EXTENSIONATTRIBUTE14` varchar(200) DEFAULT NULL,
   `EXTENSIONATTRIBUTE15` varchar(200) DEFAULT NULL,
   `ADSPATH` varchar(200) DEFAULT NULL,
+  `SIPURI` varchar(100) DEFAULT NULL,
   `UPDATEDT` datetime NOT NULL,
+  `CREATEDT` datetime NOT NULL,
   `MOBILE_ENABLE` varchar(4) DEFAULT NULL,
-  `MOBILE_NOTUSE` varchar(4) DEFAULT NULL,
+  `MOBILE_NOTUSE` varchar(4) DEFAULT 'N',
   `MOBILE_PIN` varchar(4) DEFAULT NULL,
-  `SIPURI` varchar(200) DEFAULT NULL,
-  `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
+  `POSITIONCD` varchar(40) DEFAULT NULL,
+  `BIRTH` varchar(20) DEFAULT NULL,
+  `BIRTHTYPE` varchar(4) DEFAULT NULL,
   `PASSWORD` varchar(100) DEFAULT NULL,
+  `IPADDRESS` varchar(15) DEFAULT NULL,
+  `LASTLOGIN` datetime DEFAULT NULL,
+  `LOGINCNT` bigint(10) DEFAULT 0,
+  `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
+  `MANUAL_FLAG` varchar(4) DEFAULT NULL,
+  `LISTTYPE` varchar(3) DEFAULT 'TXT',
+  `PASSWORD_UPDATEDT` datetime DEFAULT NULL,
   `FURIGANA` varchar(120) CHARACTER SET utf8mb4 DEFAULT NULL,
   `EXTENSIONPHONE` varchar(100) DEFAULT NULL,
   `OFFICEMOBILE` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`TENANT_ID`,`CN`)
+  `MAILBOXQUOTA` varchar(50) DEFAULT NULL,
+  `MAILBOXUSAGE` varchar(50) DEFAULT NULL,
+  `PASSWORD2` varchar(100) DEFAULT NULL,
+  `PHOTO_UPDATEDT` datetime DEFAULT NULL,
+  `USERTREEFLAG` char(1) DEFAULT 'Y',
+  PRIMARY KEY (`CN`,`TENANT_ID`),
+  KEY `IDX_EMP_NO` (`EXTENSIONATTRIBUTE14`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `tbl_usermasterforhistory`
@@ -13475,6 +13586,7 @@ CREATE TABLE `tbl_weather_user` (
   `USERID` varchar(80) NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
   `CITYCODE` varchar(45) DEFAULT NULL,
+  `COUNTRYCODE` varchar(2) DEFAULT NULL,
   PRIMARY KEY (`USERID`,`TENANT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -13489,6 +13601,14 @@ CREATE TABLE `tbl_weather_user` (
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+DROP TABLE IF EXISTS `TBL_WEATHER_CITY`;
+
+CREATE TABLE TBL_WEATHER_CITY (
+    `CITYCODE` VARCHAR(20) NOT NULL,
+    `DISPLAYCITYNAME` VARCHAR(50),
+    `USERLOCALLANG` VARCHAR(10)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `tbl_webfolder_apply_hist_mem`
@@ -13934,6 +14054,83 @@ CREATE TABLE `jmocha_mailbox_progress` (
   `PERCENT` mediumint(100) NOT NULL,
   `UPDATEDT` datetime DEFAULT current_timestamp(),
   PRIMARY KEY (`USER_KEY`,`TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 
+-- Table structure for table `jmocha_appr_allowed_domain`
+--
+DROP TABLE IF EXISTS `jmocha_appr_allowed_domain`;
+CREATE TABLE `jmocha_appr_allowed_domain` (
+  `TENANT_ID` int(11) NOT NULL,
+  `COMPANY_ID` varchar(80) NOT NULL,
+  `DOMAIN_NAME` varchar(100) NOT NULL,
+  PRIMARY KEY (`TENANT_ID`,`COMPANY_ID`,`DOMAIN_NAME`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 
+-- Table structure for table `jmocha_appr_user`
+--
+DROP TABLE IF EXISTS `jmocha_appr_user`;
+CREATE TABLE `jmocha_appr_user` (
+  `TENANT_ID` int(11) NOT NULL,
+  `COMPANY_ID` varchar(80) NOT NULL,
+  `USER_ID` varchar(100) NOT NULL,
+  `USER_TYPE` varchar(10) NOT null,
+  PRIMARY KEY (`TENANT_ID`, `COMPANY_ID`, `USER_ID`,`USER_TYPE`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 
+-- Table structure for table `jmocha_appr_history`
+--
+DROP TABLE IF EXISTS `jmocha_appr_history`;
+CREATE TABLE `jmocha_appr_history` (
+  `TENANT_ID` int(11) NOT NULL,
+  `COMPANY_ID` varchar(80) NOT NULL,
+  `MAIL_UID` bigint(20) NOT NULL,
+  `SUBJECT` longtext CHARACTER SET utf8mb4 DEFAULT NULL,
+  `SENDEREMAIL` varchar(100) DEFAULT NULL,
+  `USER_ID` varchar(100) NOT NULL,
+  `USER_NAME` varchar(100) DEFAULT NULL,
+  `USER_NAME2` varchar(100) DEFAULT NULL,
+  `USER_DEPTID` varchar(100) DEFAULT NULL,
+  `USER_DEPTNAME` varchar(100) DEFAULT NULL,
+  `USER_DEPTNAME2` varchar(100) DEFAULT NULL,
+  `WRITE_DATE` datetime DEFAULT NULL,
+  `APPROVER_ID` varchar(100) DEFAULT NULL,
+  `APPROVER_NAME` varchar(100) DEFAULT NULL,
+  `APPROVER_NAME2` varchar(100) DEFAULT NULL,
+  `updatedt` datetime DEFAULT NULL,
+  `STATE` varchar(10) DEFAULT NULL,
+  `MEMO` varchar(200) DEFAULT NULL,
+  `DEL_FLAG` varchar(10) DEFAULT 'N',
+  PRIMARY KEY (`TENANT_ID`,`MAIL_UID`,`USER_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 
+-- Table structure for table `jmocha_appr_comp_history`
+--
+DROP TABLE IF EXISTS `jmocha_appr_comp_history`;
+CREATE TABLE `jmocha_appr_comp_history` (
+  `TENANT_ID` int(11) NOT NULL,
+  `COMPANY_ID` varchar(80) NOT NULL,
+  `MAIL_UID` bigint(20) NOT NULL,
+  `SUBJECT` longtext CHARACTER SET utf8mb4 DEFAULT NULL,
+  `SENDEREMAIL` varchar(100) DEFAULT NULL,
+  `USER_ID` varchar(100) NOT NULL,
+  `USER_NAME` varchar(100) DEFAULT NULL,
+  `USER_NAME2` varchar(100) DEFAULT NULL,
+  `USER_DEPTID` varchar(100) DEFAULT NULL, 
+  `USER_DEPTNAME` varchar(100) DEFAULT NULL,
+  `USER_DEPTNAME2` varchar(100) DEFAULT NULL,
+  `WRITE_DATE` datetime DEFAULT NULL,
+  `APPROVER_ID` varchar(100) DEFAULT NULL,
+  `APPROVER_NAME` varchar(100) DEFAULT NULL,
+  `APPROVER_NAME2` varchar(100) DEFAULT NULL,
+  `updatedt` datetime DEFAULT NULL,
+  `STATE` varchar(10) DEFAULT NULL,
+  `MEMO` varchar(200) DEFAULT NULL,
+  `DEL_FLAG` varchar(10) DEFAULT 'N',
+  PRIMARY KEY (`TENANT_ID`,`MAIL_UID`,`USER_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -14533,6 +14730,40 @@ CREATE TABLE `TBL_SUSINSCHEDULE` (
   UNIQUE KEY `IDX_TBL_SUSINSCHEDULE` (`DOCID`,`TENANTID`,`COMPANYID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+
+--
+-- Table structure for table `TBL_SCHEDULE_REMINDER_SCHEDULER`
+--
+
+DROP TABLE IF EXISTS `TBL_SCHEDULE_REMINDER_SCHEDULER`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `TBL_SCHEDULE_REMINDER_SCHEDULER` (
+		  `SCHEDULEID` bigint(10) NOT NULL,
+		  `PARENTID` bigint(10) NOT NULL DEFAULT 0,
+		  `OWNERID` varchar(100) NOT NULL,
+		  `OWNERNAME` varchar(100) NOT NULL,
+		  `OWNERNAME2` varchar(100) DEFAULT NULL,
+		  `CREATORID` varchar(100) NOT NULL,
+		  `CREATORNAME` varchar(100) NOT NULL,
+		  `CREATORNAME2` varchar(100) DEFAULT NULL,
+		  `SCHEDULETYPE` mediumint(5) NOT NULL,
+		  `DATETYPE` mediumint(5) NOT NULL,
+		  `STARTDATE` datetime NOT NULL,
+		  `ENDDATE` datetime NOT NULL,
+		  `REPETITION` varchar(100) DEFAULT NULL,
+		  `TITLE` varchar(500) NOT NULL,
+		  `TENANT_ID` mediumint(5) NOT NULL,
+		  `COMPANYID` varchar(40) DEFAULT NULL,
+		  `REMINDERSTATUS` varchar(2) DEFAULT '0' COMMENT '0: 미완료, 1:완료',
+		  `OFFSETINFO` varchar(40) DEFAULT '',
+		  `LANG` varchar(10) DEFAULT NULL,
+		  `OFFSETMIN` varchar(10) DEFAULT NULL,
+		  PRIMARY KEY (`SCHEDULEID`),
+		  KEY `IDX_OWNERID` (`OWNERID`) USING BTREE
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
 CREATE OR REPLACE VIEW VIEW_EZWEBFOLDER AS
 SELECT
 F.FILE_ID 										AS FILEID,
@@ -14706,7 +14937,8 @@ AFTER UPDATE ON tbl_deptmaster
 FOR EACH ROW
 BEGIN
     IF NEW.displayname != OLD.displayname OR NEW.displayname2 != OLD.displayname2 THEN
-        UPDATE tbl_webfolder_folder SET folder_name1 = NEW.displayname, folder_name2 = NEW.displayname2 WHERE owner_id = NEW.cn AND folder_upper = 'root' AND folder_type IN ('C', 'D');
+        UPDATE tbl_webfolder_folder SET folder_name1 = NEW.displayname, folder_name2 = NEW.displayname2
+        WHERE owner_id = NEW.cn AND folder_upper = 'root' AND folder_type IN ('C', 'D') AND TENANT_ID = NEW.TENANT_ID;
     END IF;
 END; //
 
@@ -14715,7 +14947,8 @@ AFTER UPDATE ON tbl_usermaster
 FOR EACH ROW
 BEGIN
     IF NEW.displayname != OLD.displayname OR NEW.displayname2 != OLD.displayname2 THEN
-        UPDATE tbl_webfolder_folder SET folder_name1 = NEW.displayname, folder_name2 = NEW.displayname2 WHERE owner_id = NEW.cn AND folder_upper = 'root' AND folder_type IN ('U');
+        UPDATE tbl_webfolder_folder SET folder_name1 = NEW.displayname, folder_name2 = NEW.displayname2
+        WHERE owner_id = NEW.cn AND folder_upper = 'root' AND folder_type IN ('U') AND TENANT_ID = NEW.TENANT_ID;
     END IF;
 END; //
 
@@ -14753,6 +14986,14 @@ BEGIN
     END IF;
 END; //
 
+CREATE OR REPLACE TRIGGER trigger_mail_deleted_id
+AFTER DELETE ON james_mail
+FOR EACH ROW
+BEGIN
+    INSERT INTO james_mail_deleted_id (MAILBOX_ID, MAIL_UID)
+    VALUES (OLD.MAILBOX_ID, OLD.MAIL_UID);
+END; //
+
 DELIMITER ;
 
 -- ezEKP <-> ezTalk 간 인사연동 뷰 테이블(V_USERMASTER, V_DEPTMASTER, V_ADDJOBMASTER)
@@ -14760,6 +15001,7 @@ DELIMITER ;
 CREATE OR REPLACE VIEW V_USERMASTER AS
 SELECT
 	v.USER_ID AS USER_ID,
+    v.EMP_NO AS EMP_NO,
 	v.NAME AS NAME,
 	v.NAME2 AS NAME2,
 	v.EMAIL AS EMAIL,
@@ -14768,6 +15010,8 @@ SELECT
 	v.DEPT_NAME2 AS DEPT_NAME2,
 	v.TITLE AS TITLE,
 	v.TITLE2 AS TITLE2,
+	v.ROLE AS ROLE,
+	v.ROLE2 AS ROLE2,
 	v.POSITION AS POSITION,
 	v.POSITION2 AS POSITION2,
 	v.TEL AS TEL,
@@ -14786,6 +15030,7 @@ FROM
 	(
 	SELECT
 		USER.USER_ID AS USER_ID,
+        USER.EMP_NO AS EMP_NO,
 		USER.NAME AS NAME,
 		USER.NAME2 AS NAME2,
 		USER.EMAIL AS EMAIL,
@@ -14794,6 +15039,8 @@ FROM
 		USER.DEPT_NAME2 AS DEPT_NAME2,
 		USER.TITLE AS TITLE,
 		USER.TITLE2 AS TITLE2,
+		USER.ROLE AS ROLE,
+        USER.ROLE2 AS ROLE2,
 		USER.POSITION AS POSITION,
 		USER.POSITION2 AS POSITION2,
 		USER.TEL AS TEL,
@@ -14815,6 +15062,7 @@ FROM
 		(
 		SELECT
 			a.CN AS USER_ID,
+            a.EXTENSIONATTRIBUTE14 AS EMP_NO,   
 			a.DISPLAYNAME AS NAME,
 			a.DISPLAYNAME2 AS NAME2,
 			a.MAIL AS EMAIL,
@@ -14823,6 +15071,8 @@ FROM
 			a.DESCRIPTION2 AS DEPT_NAME2,
 			a.EXTENSIONATTRIBUTE10 AS TITLE,
 			a.EXTENSIONATTRIBUTE102 AS TITLE2,
+			a.EXTENSIONATTRIBUTE10 AS ROLE,
+            a.EXTENSIONATTRIBUTE102 AS ROLE2,
 			a.TITLE AS POSITION,
 			a.TITLE2 AS POSITION2,
 			a.TELEPHONENUMBER AS TEL,
@@ -14841,7 +15091,8 @@ FROM
 		FROM
 			(tbl_usermaster a
 		LEFT JOIN tbl_usermaster_retire b ON
-			(a.CN = b.CN))
+			(a.CN = b.CN
+			AND a.TENANT_ID = b.TENANT_ID)) 			
 		WHERE
 			b.CN IS NULL
 			AND a.DEPARTMENT NOT LIKE '%shared_mailbox_%'
@@ -14849,6 +15100,7 @@ FROM
 	UNION ALL
 		SELECT
 			a.CN AS USER_ID,
+            b.EXTENSIONATTRIBUTE14 AS EMP_NO,
 			b.DISPLAYNAME AS NAME,
 			b.DISPLAYNAME2 AS NAME2,
 			b.MAIL AS EMAIL,
@@ -14857,6 +15109,8 @@ FROM
 			b.DESCRIPTION2 AS DEPT_NAME2,
 			a.POSITIONCD AS TITLE,
 			a.POSITIONCD AS TITLE2,
+            b.EXTENSIONATTRIBUTE10 AS ROLE,
+            b.EXTENSIONATTRIBUTE102 AS ROLE2,
 			a.TITLE AS POSITION,
 			a.TITLE2 AS POSITION2,
 			b.TELEPHONENUMBER AS TEL,
@@ -14875,7 +15129,9 @@ FROM
 		FROM
 			(tbl_addjobmaster a
 		JOIN tbl_usermaster b ON
-			(a.CN = b.CN))) USER) v
+			(a.CN = b.CN
+			AND a.TENANT_ID = b.TENANT_ID)) 			
+        ) USER) v
 WHERE
 	v.TYPE = 'USER';
 	
@@ -14910,10 +15166,13 @@ CREATE OR REPLACE VIEW V_DEPTMASTER AS
 CREATE OR REPLACE VIEW V_ADDJOBMASTER AS            
 SELECT
 	v.USER_ID AS USER_ID,
+    v.EMP_NO AS EMP_NO,
 	v.NAME AS NAME,
 	v.DEPT_ID AS DEPT_ID,
 	v.POSITION AS POSITION,
 	v.POSITION2 AS POSITION2,
+	v.ROLE AS ROLE,
+    v.ROLE2 AS ROLE2,
 	v.ORDER_BY AS ORDER_BY,
 	v.UPDATEDT AS UPDATEDT,
 	v.TENANT_ID AS TENANT_ID,
@@ -14923,10 +15182,13 @@ FROM
 	(
 	SELECT
 		USER.USER_ID AS USER_ID,
+        USER.EMP_NO AS EMP_NO,
 		USER.NAME AS NAME,
 		USER.DEPT_ID AS DEPT_ID,
 		USER.POSITION AS POSITION,
 		USER.POSITION2 AS POSITION2,
+		USER.ROLE AS ROLE,
+        USER.ROLE2 AS ROLE2,
 		USER.ORDER_BY AS ORDER_BY,
 		USER.UPDATEDT AS UPDATEDT,
 		USER.TENANT_ID AS TENANT_ID,
@@ -14939,10 +15201,13 @@ FROM
 		(
 		SELECT
 			a.CN AS USER_ID,
+            a.EXTENSIONATTRIBUTE14 AS EMP_NO,
 			a.DISPLAYNAME AS NAME,
 			a.DEPARTMENT AS DEPT_ID,
 			a.TITLE AS POSITION,
 			a.TITLE2 AS POSITION2,
+            a.EXTENSIONATTRIBUTE10 AS ROLE,
+            a.EXTENSIONATTRIBUTE102 AS ROLE2,
 			IF(a.EXTENSIONATTRIBUTE15 <> '',
 			CAST(a.EXTENSIONATTRIBUTE15 AS unsigned),
 			0) AS ORDER_BY,
@@ -14952,7 +15217,8 @@ FROM
 		FROM
 			(tbl_usermaster a
 		LEFT JOIN tbl_usermaster_retire b ON
-			(a.CN = b.CN))
+			(a.CN = b.CN
+			AND a.TENANT_ID = b.TENANT_ID)) 			
 		WHERE
 			b.CN IS NULL
 			AND a.DEPARTMENT NOT LIKE '%shared_mailbox_%'
@@ -14960,10 +15226,13 @@ FROM
 	UNION ALL
 		SELECT
 			a.CN AS USER_ID,
+            b.EXTENSIONATTRIBUTE14 AS EMP_NO,
 			b.DISPLAYNAME AS NAME,
 			a.DEPTID AS DEPT_ID,
 			a.TITLE AS POSITION,
 			a.TITLE2 AS POSITION2,
+			a.ROLE AS ROLE,
+            a.ROLE2 AS ROLE2,
 			MIN(IF(a.ORDERBY <> '', CAST(a.ORDERBY AS unsigned),0)) AS ORDER_BY,
 			current_timestamp() AS UPDATEDT,
 			a.TENANT_ID AS TENANT_ID,
@@ -14979,6 +15248,351 @@ FROM
             a.TITLE) USER) v
 WHERE
 	v.TYPE = 'ADDJOB';
+
+-- ezTalk 뷰 제공시 멀티테넌트를 지원을 위해 tenant_id 같이 붙여서 넘기도록 수정
+-- -- V_USERMASTER
+-- CREATE OR REPLACE VIEW V_USERMASTER AS
+-- SELECT
+--	v.USER_ID AS USER_ID,
+--    v.EMP_NO AS EMP_NO,
+--	v.NAME AS NAME,
+--	v.NAME2 AS NAME2,
+--	v.EMAIL AS EMAIL,
+--	v.DEPT_ID AS DEPT_ID,
+--	v.DEPT_NAME AS DEPT_NAME,
+--	v.DEPT_NAME2 AS DEPT_NAME2,
+--	v.TITLE AS TITLE,
+--	v.TITLE2 AS TITLE2,
+--	v.ROLE AS ROLE,
+--	v.ROLE2 AS ROLE2,
+--	v.POSITION AS POSITION,
+--	v.POSITION2 AS POSITION2,
+--	v.TEL AS TEL,
+--	v.MOBILE AS MOBILE,
+--	v.PROFILE_IMAGE AS PROFILE_IMAGE,
+--	v.JOB AS JOB,
+--	v.COMP_ID AS COMP_ID,
+--	v.COMP_NAME AS COMP_NAME,
+--	v.COMP_NAME2 AS COMP_NAME2,
+--	v.ORDER_BY AS ORDER_BY,
+--	v.UPDATE_DATE AS UPDATE_DATE,
+--	v.PHOTO_UPDATEDT AS PHOTO_UPDATEDT,
+--	v.TENANT_ID AS TENANT_ID,
+--	v.TYPE AS TYPE,
+--	v.SORT_NUM AS SORT_NUM,
+--    ts.SERVER_NAME AS HOSTNAME
+-- FROM
+--	(
+--	SELECT
+--		USER.USER_ID AS USER_ID,
+--        USER.EMP_NO AS EMP_NO,
+--		USER.NAME AS NAME,
+--		USER.NAME2 AS NAME2,
+--		USER.EMAIL AS EMAIL,
+--		USER.DEPT_ID AS DEPT_ID,
+--		USER.DEPT_NAME AS DEPT_NAME,
+--		USER.DEPT_NAME2 AS DEPT_NAME2,
+--		USER.TITLE AS TITLE,
+--		USER.TITLE2 AS TITLE2,
+--		USER.ROLE AS ROLE,
+--        USER.ROLE2 AS ROLE2,
+--		USER.POSITION AS POSITION,
+--		USER.POSITION2 AS POSITION2,
+--		USER.TEL AS TEL,
+--		USER.MOBILE AS MOBILE,
+--		USER.PROFILE_IMAGE AS PROFILE_IMAGE,
+--		USER.JOB AS JOB,
+--		USER.COMP_ID AS COMP_ID,
+--		USER.COMP_NAME AS COMP_NAME,
+--		USER.COMP_NAME2 AS COMP_NAME2,
+--		USER.ORDER_BY AS ORDER_BY,
+--		USER.UPDATE_DATE AS UPDATE_DATE,
+--		USER.PHOTO_UPDATEDT AS PHOTO_UPDATEDT,
+--		USER.TENANT_ID AS TENANT_ID,
+--		USER.TYPE AS TYPE,
+--		ROW_NUMBER() OVER ( PARTITION BY USER.DEPT_ID
+--	ORDER BY
+--		USER.ORDER_BY,
+--		USER.NAME) - 1 AS SORT_NUM
+--	FROM
+--		(
+--		SELECT
+--			concat(a.CN, '@', a.TENANT_ID) AS USER_ID,
+--            a.EXTENSIONATTRIBUTE14 AS EMP_NO,
+--			a.DISPLAYNAME AS NAME,
+--			a.DISPLAYNAME2 AS NAME2,
+--			a.MAIL AS EMAIL,
+--			concat(a.DEPARTMENT, '@', a.TENANT_ID) AS DEPT_ID,
+--			a.DESCRIPTION AS DEPT_NAME,
+--			a.DESCRIPTION2 AS DEPT_NAME2,
+--			a.EXTENSIONATTRIBUTE10 AS TITLE,
+--			a.EXTENSIONATTRIBUTE102 AS TITLE2,
+--			a.EXTENSIONATTRIBUTE10 AS ROLE,
+--            a.EXTENSIONATTRIBUTE102 AS ROLE2,
+--			a.TITLE AS POSITION,
+--			a.TITLE2 AS POSITION2,
+--			a.TELEPHONENUMBER AS TEL,
+--			a.MOBILE AS MOBILE,
+--			a.EXTENSIONATTRIBUTE2 AS PROFILE_IMAGE,
+--			a.INFO AS JOB,
+--			concat(a.PHYSICALDELIVERYOFFICENAME, '@', a.TENANT_ID) AS COMP_ID,
+--			a.COMPANY AS COMP_NAME,
+--			a.COMPANY2 AS COMP_NAME2,
+--			IF(a.EXTENSIONATTRIBUTE15 <> '',
+--			CAST(a.EXTENSIONATTRIBUTE15 AS unsigned),
+--			0) AS ORDER_BY,
+--			a.UPDATEDT AS UPDATE_DATE,
+--			a.PHOTO_UPDATEDT AS PHOTO_UPDATEDT,
+--			a.TENANT_ID AS TENANT_ID,
+--			'USER' AS TYPE
+--		FROM
+--			(tbl_usermaster a
+--		LEFT JOIN tbl_usermaster_retire b ON
+--			(a.CN = b.CN
+--			AND a.TENANT_ID = b.TENANT_ID))
+--		WHERE
+--			b.CN IS NULL
+--			AND a.DEPARTMENT NOT LIKE '%shared_mailbox_%'
+--			AND a.CN <> 'masteradmin'
+--	UNION ALL
+--		SELECT
+--			concat(a.CN, '@', b.TENANT_ID) AS USER_ID,
+--            b.EXTENSIONATTRIBUTE14 AS EMP_NO,
+--			b.DISPLAYNAME AS NAME,
+--			b.DISPLAYNAME2 AS NAME2,
+--			b.MAIL AS EMAIL,
+--			concat(a.DEPTID, '@', b.TENANT_ID) AS DEPT_ID,
+--			b.DESCRIPTION AS DEPT_NAME,
+--			b.DESCRIPTION2 AS DEPT_NAME2,
+--			a.POSITIONCD AS TITLE,
+--			a.POSITIONCD AS TITLE2,
+--            b.EXTENSIONATTRIBUTE10 AS ROLE,
+--            b.EXTENSIONATTRIBUTE102 AS ROLE2,
+--			a.TITLE AS POSITION,
+--			a.TITLE2 AS POSITION2,
+--			b.TELEPHONENUMBER AS TEL,
+--			b.MOBILE AS MOBILE,
+--			b.EXTENSIONATTRIBUTE2 AS PROFILE_IMAGE,
+--			b.INFO AS JOB,
+--			concat(b.PHYSICALDELIVERYOFFICENAME, '@', b.TENANT_ID) AS COMP_ID,
+--			b.COMPANY AS COMP_NAME,
+--			b.COMPANY2 AS COMP_NAME2,
+--			IF(a.ORDERBY <> '',
+--			CAST(a.ORDERBY AS unsigned),
+--			0) AS ORDER_BY,
+--			b.UPDATEDT AS UPDATE_DATE,
+--			b.PHOTO_UPDATEDT AS PHOTO_UPDATEDT,
+--			b.TENANT_ID AS TENANT_ID,
+--			'ADDJOB' AS TYPE
+--		FROM
+--			(tbl_addjobmaster a
+--		JOIN tbl_usermaster b ON
+--			(a.CN = b.CN
+--			AND a.TENANT_ID = b.TENANT_ID))
+--        ) USER) v
+--    LEFT JOIN tbl_tenant_servername ts
+--        ON v.TENANT_ID = ts.TENANT_ID
+--        AND ts.MAINYN = 'Y'
+-- WHERE
+--	v.TYPE = 'USER';
+--
+-- -- V_DEPTMASTER
+-- CREATE OR REPLACE VIEW V_DEPTMASTER AS
+--    SELECT
+--        concat(tbl_deptmaster.CN, '@', tbl_deptmaster.TENANT_ID) AS DEPT_ID,
+--        tbl_deptmaster.DISPLAYNAME AS NAME,
+--        tbl_deptmaster.DISPLAYNAME2 AS NAME2,
+--        tbl_deptmaster.MAIL AS EMAIL,
+--        case when tbl_deptmaster.EXTENSIONATTRIBUTE1 = 'Top' then 'Top'
+--        else concat(tbl_deptmaster.EXTENSIONATTRIBUTE1, '@', tbl_deptmaster.TENANT_ID)
+--        end as PARENT_ID,
+--        REGEXP_REPLACE(tbl_deptmaster.DEPT_CD_PATH, '([^,]+)', CONCAT('\\1@', tbl_deptmaster.TENANT_ID)) AS DEPT_CD_PATH,
+--        concat(tbl_deptmaster.EXTENSIONATTRIBUTE2, '@', tbl_deptmaster.TENANT_ID) AS COMP_ID,
+--        tbl_deptmaster.EXTENSIONATTRIBUTE3 AS COMP_NAME,
+--        tbl_deptmaster.COMPNM2 AS COMP_NAME2,
+--        IF(tbl_deptmaster.EXTENSIONATTRIBUTE15 <> '',
+--            CAST(tbl_deptmaster.EXTENSIONATTRIBUTE15 AS UNSIGNED),
+--            0) AS ORDER_BY,
+--        tbl_deptmaster.USEFLAG AS USEFLAG,
+--        tbl_deptmaster.UPDATEDT AS UPDATEDT,
+--        tbl_deptmaster.TENANT_ID AS TENANT_ID,
+--        tbl_tenant_servername.server_name AS HOSTNAME
+--    FROM
+--        tbl_deptmaster
+--    LEFT JOIN tbl_tenant_servername
+--        ON tbl_deptmaster.TENANT_ID = tbl_tenant_servername.TENANT_ID
+--        AND tbl_tenant_servername.MAINYN = 'Y'
+--    WHERE
+--        tbl_deptmaster.CN NOT LIKE '%shared_mailbox_%'
+--            AND tbl_deptmaster.CN NOT LIKE '%trash_dept_%'
+--            AND tbl_deptmaster.CN <> 'Top'
+--            AND tbl_deptmaster.DEPT_CD_PATH NOT LIKE '%trash_dept_%';
+
+-- -- V_ADDJOBMASTER
+-- CREATE OR REPLACE VIEW V_ADDJOBMASTER AS
+-- SELECT
+--	v.USER_ID AS USER_ID,
+--    v.EMP_NO AS EMP_NO,
+--	v.NAME AS NAME,
+--	v.DEPT_ID AS DEPT_ID,
+--	v.COMP_ID AS COMP_ID,
+--	v.POSITION AS POSITION,
+--	v.POSITION2 AS POSITION2,
+--	v.ROLE AS ROLE,
+--    v.ROLE2 AS ROLE2,
+--	v.ORDER_BY AS ORDER_BY,
+--	v.UPDATEDT AS UPDATEDT,
+--	v.TENANT_ID AS TENANT_ID,
+--	v.TYPE AS TYPE,
+--	v.SORT_NUM AS SORT_NUM,
+--    ts.SERVER_NAME AS HOSTNAME
+-- FROM
+--	(
+--	SELECT
+--		USER.USER_ID AS USER_ID,
+--        USER.EMP_NO AS EMP_NO,
+--		USER.NAME AS NAME,
+--		USER.DEPT_ID AS DEPT_ID,
+--		USER.COMP_ID AS COMP_ID,
+--		USER.POSITION AS POSITION,
+--		USER.POSITION2 AS POSITION2,
+--		USER.ROLE AS ROLE,
+--        USER.ROLE2 AS ROLE2,
+--		USER.ORDER_BY AS ORDER_BY,
+--		USER.UPDATEDT AS UPDATEDT,
+--		USER.TENANT_ID AS TENANT_ID,
+--		USER.TYPE AS TYPE,
+--		ROW_NUMBER() OVER ( PARTITION BY USER.DEPT_ID
+--	ORDER BY
+--		USER.ORDER_BY,
+--		USER.NAME) - 1 AS SORT_NUM
+--	FROM
+--		(
+--		SELECT
+--			concat(a.CN, '@', a.TENANT_ID) AS USER_ID,
+--            a.EXTENSIONATTRIBUTE14 AS EMP_NO,
+--			a.DISPLAYNAME AS NAME,
+--			concat(a.DEPARTMENT, '@', a.TENANT_ID) AS DEPT_ID,
+--			concat(a.PHYSICALDELIVERYOFFICENAME, '@', a.TENANT_ID) AS COMP_ID,
+--			a.TITLE AS POSITION,
+--			a.TITLE2 AS POSITION2,
+--            a.EXTENSIONATTRIBUTE10 AS ROLE,
+--            a.EXTENSIONATTRIBUTE102 AS ROLE2,
+--			IF(a.EXTENSIONATTRIBUTE15 <> '',
+--			CAST(a.EXTENSIONATTRIBUTE15 AS unsigned),
+--			0) AS ORDER_BY,
+--			a.UPDATEDT AS UPDATEDT,
+--			a.TENANT_ID AS TENANT_ID,
+--			'USER' AS TYPE
+--		FROM
+--			(tbl_usermaster a
+--		LEFT JOIN tbl_usermaster_retire b ON
+--			(a.CN = b.CN
+--			AND a.TENANT_ID = b.TENANT_ID))
+--		WHERE
+--			b.CN IS NULL
+--			AND a.DEPARTMENT NOT LIKE '%shared_mailbox_%'
+--			AND a.CN <> 'masteradmin'
+--	UNION ALL
+--		SELECT
+--			concat(a.CN, '@', a.TENANT_ID) AS USER_ID,
+--            b.EXTENSIONATTRIBUTE14 AS EMP_NO,
+--			b.DISPLAYNAME AS NAME,
+--			concat(a.DEPTID, '@', a.TENANT_ID) AS DEPT_ID,
+--			concat(b.PHYSICALDELIVERYOFFICENAME, '@', b.TENANT_ID) AS COMP_ID,
+--			a.TITLE AS POSITION,
+--			a.TITLE2 AS POSITION2,
+--			a.ROLE AS ROLE,
+--            a.ROLE2 AS ROLE2,
+--			MIN(IF(a.ORDERBY <> '', CAST(a.ORDERBY AS unsigned),0)) AS ORDER_BY,
+--			current_timestamp() AS UPDATEDT,
+--			a.TENANT_ID AS TENANT_ID,
+--			'ADDJOB' AS TYPE
+--		FROM
+--			(tbl_addjobmaster a
+--		JOIN tbl_usermaster b ON
+--			(a.CN = b.CN
+--			AND a.TENANT_ID = b.TENANT_ID))
+--		GROUP BY
+--            a.CN,
+--            a.DEPTID,
+--            a.TITLE) USER) v
+--    LEFT JOIN tbl_tenant_servername ts
+--        ON v.TENANT_ID = ts.TENANT_ID
+--        AND ts.MAINYN = 'Y'
+-- WHERE
+--	v.TYPE = 'ADDJOB';
+
+-- G_USERMASTER
+CREATE OR REPLACE VIEW G_USERMASTER AS
+SELECT
+    a.CN AS CN,
+    a.PASSWORD AS PASSWORD,
+    a.DEPARTMENT AS DEPARTMENT,
+    a.DISPLAYNAME AS DISPLAYNAME,
+    a.DISPLAYNAME2 AS DISPLAYNAME2,
+    a.mail AS EMAIL_ADDRESS,
+    a.TITLE AS TITLE,
+    a.TITLE2 AS TITLE2,
+    a.EXTENSIONATTRIBUTE10 AS EXTENSIONATTRIBUTE10,
+    a.EXTENSIONATTRIBUTE102 AS EXTENSIONATTRIBUTE102,
+    a.HOMEPHONE AS HOMEPHONE,
+    a.MOBILE AS MOBILE,
+    a.TELEPHONENUMBER AS TELEPHONENUMBER,
+    a.FACSIMILETELEPHONENUMBER AS FACSIMILETELEPHONENUMBER,
+    a.EXTENSIONATTRIBUTE2 AS EXTENSIONATTRIBUTE2,
+    IF(a.EXTENSIONATTRIBUTE15 <> '', CAST(a.EXTENSIONATTRIBUTE15 AS unsigned),0) AS EXTENSIONATTRIBUTE15,
+    a.BIRTH AS BIRTH,
+    a.BIRTHTYPE AS BIRTHTYPE,
+    a.UPDATEDT AS UPDATEDT,
+    a.EXTENSIONATTRIBUTE14 AS EXTENSIONATTRIBUTE14,
+    a.EXTENSIONATTRIBUTE2 AS PROFILE_IMAGE,
+    CASE 
+        WHEN NULLIF(a.extensionattribute2, '') IS NOT NULL THEN CONCAT('https://jrel.kaoni.com/fileroot/0/files/upload_personal/photo/', a.extensionattribute2)
+        ELSE NULL
+    END AS PROFILE_IMAGE_URL,
+    'Y' AS USE_YN
+FROM
+    (tbl_usermaster a
+        LEFT JOIN tbl_usermaster_retire b ON
+        (a.CN = b.CN))
+WHERE
+    b.CN IS NULL
+  AND a.DEPARTMENT NOT LIKE '%shared_mailbox_%'
+  AND a.CN <> 'masteradmin';
+
+-- G_ADDJOBMASTER
+CREATE OR REPLACE VIEW G_ADDJOBMASTER AS            
+SELECT
+    CN,
+    DEPTID,
+    TITLE,
+    TITLE2,
+    ROLE,
+    ROLE2,
+    ORDERBY AS SORT_ORDER
+FROM
+    TBL_ADDJOBMASTER;
+
+-- G_DEPTMASTER
+CREATE OR REPLACE VIEW G_DEPTMASTER AS
+SELECT
+    CN,
+    DISPLAYNAME,
+    DISPLAYNAME2,
+    EXTENSIONATTRIBUTE1,
+    EXTENSIONATTRIBUTE15,
+    'Y' AS USE_YN
+FROM
+    tbl_deptmaster
+WHERE
+    CN NOT LIKE '%shared_mailbox_%'
+  AND
+    CN NOT LIKE '%trash_dept_%'
+  AND
+    CN <> 'Top'
+  AND
+    DEPT_CD_PATH NOT LIKE '%trash_dept_%';
 
 CREATE TABLE `tbl_serialnumgen_grant` (
     `IDX` int(10) NOT NULL AUTO_INCREMENT,
@@ -15161,3 +15775,587 @@ WHERE
         `tbl_task_deptinfo`.`DELFLAG` = '0'
    OR `tbl_task_deptinfo`.`DELFLAG` IS NULL
    OR `tbl_task_deptinfo`.`DELFLAG` = '2';
+
+create table tbl_portal_portlet_size
+(
+    SIZE_ID    int          not null comment '사용가능한 포틀릿 사이즈 ID'
+        primary key,
+    CLASS_SIZE varchar(100) not null comment '사이즈 클래스 명'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 comment '포틀릿 사이즈 클래스명 정의 테이블';
+
+
+create table tbl_portal_portlet_company_size
+(
+    TENANT_ID    mediumint    default 0  not null comment '테넌트 아이디',
+    COMPANY_ID   varchar(100) default '' not null comment '회사 아이디',
+    PORTLET_ID   int          default 0  not null comment '포틀릿 아이디',
+    THEME_ID     int          default 1  not null,
+    SIZE_ID      int                     not null comment '사용가능한 포틀릿 사이즈 ID',
+    DEFAULT_FLAG tinyint(1)   default 0  not null comment '기본 사이즈 설정 여부',
+    primary key (TENANT_ID, COMPANY_ID, PORTLET_ID, THEME_ID, SIZE_ID),
+    constraint FK_tbl_portal_portlet_company_size_SIZE_ID
+        foreign key (SIZE_ID) references jmocha.tbl_portal_portlet_size (SIZE_ID)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 comment '회사별 포틀릿 사이즈 설정 테이블';
+
+create index IDX_TBL_PORTAL_PORTLET_COMPANY_SIZE_ID
+    on jmocha.tbl_portal_portlet_company_size (SIZE_ID);
+
+create index tbl_portal_portlet_company_size_COMPANY_ID_index
+    on jmocha.tbl_portal_portlet_company_size (COMPANY_ID);
+
+create index tbl_portal_portlet_company_size_TENANT_ID_index
+    on jmocha.tbl_portal_portlet_company_size (TENANT_ID);
+
+create index tbl_portal_portlet_company_size_THEME_ID_index
+    on jmocha.tbl_portal_portlet_company_size (THEME_ID);
+
+
+
+create table tbl_portal_portlet_user_size
+(
+    USER_ID    varchar(100)            not null comment '사용자 아이디',
+    TENANT_ID  mediumint    default 0  not null comment '테넌트 아이디',
+    COMPANY_ID varchar(100) default '' not null comment '회사 아이디',
+    PORTLET_ID int          default 0  not null comment '포틀릿 아이디',
+    THEME_ID   int          default 1  not null,
+    SIZE_ID    int                     not null,
+    primary key (USER_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, THEME_ID),
+    constraint FK_tbl_portal_portlet_user_size_tbl_portal_portlet_size_SIZE_ID
+        foreign key (SIZE_ID) references jmocha.tbl_portal_portlet_size (SIZE_ID)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 comment '사용자 별 포틀릿 사이즈 설정 테이블';
+
+create index IDX_TBL_PORTAL_PORTLET_USER_COMPANY
+    on jmocha.tbl_portal_portlet_user_size (COMPANY_ID);
+
+create index IDX_TBL_PORTAL_PORTLET_USER_ID
+    on jmocha.tbl_portal_portlet_user_size (USER_ID);
+
+create index IDX_TBL_PORTAL_PORTLET_USER_PORTLET
+    on jmocha.tbl_portal_portlet_user_size (PORTLET_ID);
+
+create index IDX_TBL_PORTAL_PORTLET_USER_TENANT
+    on jmocha.tbl_portal_portlet_user_size (TENANT_ID);
+
+--
+-- Table structure for table `TBL_PORTAL_TOP_USER`
+--
+
+DROP TABLE IF EXISTS `TBL_PORTAL_TOP_USER`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `TBL_PORTAL_TOP_USER`
+(
+    USER_ID    VARCHAR(100)            NOT NULL COMMENT '사용자 아이디',
+    TENANT_ID  MEDIUMINT    DEFAULT 0  NOT NULL COMMENT '테넌트 아이디',
+    COMPANY_ID VARCHAR(100) DEFAULT '' NOT NULL COMMENT '회사 아이디',
+    TYPE       MEDIUMINT    DEFAULT 0  NOT NULL COMMENT '타입',
+    PRIMARY KEY (USER_ID, TENANT_ID, COMPANY_ID)
+)   ENGINE=InnoDB DEFAULT CHARSET=utf8
+    COMMENT '개인별 탑 메뉴 프레임 타입';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `TBL_PORTAL_TOP_USER`
+--
+
+DROP TABLE IF EXISTS `TBL_PORTAL_TOP_COMPANY`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+
+CREATE TABLE TBL_PORTAL_TOP_COMPANY
+		(
+			COMPANY_ID VARCHAR(100) DEFAULT '' NOT NULL COMMENT '회사 아이디',
+			TYPE       MEDIUMINT    DEFAULT 0  NOT NULL COMMENT '타입 0:탑, 1:좌측메뉴',
+			TENANT_ID  MEDIUMINT    DEFAULT 0  NOT NULL COMMENT '테넌트 아이디',
+			PRIMARY KEY (COMPANY_ID, TENANT_ID)
+		)
+			COMMENT '회사별 탑 메뉴 프레임 타입';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_realtime_notification`
+--
+
+DROP TABLE IF EXISTS `tbl_realtime_notification`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_realtime_notification` (
+		  `NOTISEQ` bigint(20) NOT NULL AUTO_INCREMENT,
+		  `USERID` varchar(80) NOT NULL,
+		  `MAINTYPE` varchar(20) NOT NULL,
+		  `SUBTYPE` varchar(20) DEFAULT NULL,
+		  `NOTICONTENT` varchar(2000) DEFAULT NULL,
+		  `SENDERID` varchar(80) DEFAULT NULL,
+		  `SENDERNAME` varchar(100) DEFAULT NULL,
+		  `REGDATE` datetime DEFAULT NULL,
+		  `ISREAD` char(1) DEFAULT 'N',
+		  `READDATE` datetime DEFAULT NULL,
+		  `ETCDATA` varchar(400) DEFAULT NULL,
+		  `ISDELETE` char(1) DEFAULT 'N',
+		  `DELETEDATE` datetime DEFAULT NULL,
+		  `LINKURL` varchar(2000) DEFAULT NULL,
+		  `LINKURL_MOBILE` varchar(2000) DEFAULT NULL,
+		  `VIEWTYPE` varchar(10) DEFAULT NULL,
+		  `VIEWWIDTH` int(11) DEFAULT NULL,
+		  `VIEWHEIGHT` int(11) DEFAULT NULL,
+		  `TENANT_ID` mediumint(5) NOT NULL,
+		  `COMPANYID` varchar(200) DEFAULT NULL,
+		  PRIMARY KEY (`NOTISEQ`,`TENANT_ID`)
+		) ENGINE=InnoDB AUTO_INCREMENT=736 DEFAULT CHARSET=utf8mb4;
+
+
+--
+-- Table structure for table `tbl_distributeinfo`
+--
+
+DROP TABLE IF EXISTS `TBL_DISTRIBUTEINFO`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `TBL_DISTRIBUTEINFO`
+(
+  `SN` bigint(10) NOT NULL,
+  `DOCID` varchar(80) NOT NULL,
+  `RECEIPTDATE` datetime DEFAULT NULL,
+  `ORGANID` varchar(400) NOT NULL,
+  `ORGAN` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `ORGANUSERNAME` varchar(100) DEFAULT NULL,
+  `DOCNUMBER` varchar(200) DEFAULT NULL,
+  `MANAGEDEPTID` varchar(400) DEFAULT NULL,
+  `MANAGEDEPT` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `ORGDOCNUMCODE` varchar(200) DEFAULT NULL,
+  `DOCTITLE` varchar(1020) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `MANAGEDEPT2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `ORGAN2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `ORGANUSERNAME2` varchar(100) DEFAULT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
+  `COMPANYID` varchar(20) NOT NULL,
+  `PARENTDOCID` varchar(80) NULL,
+  `ORGDOCID` varchar(80) NOT NULL,
+  `DELIVERYSN` bigint(10) DEFAULT NULL,
+  `TYPE` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`SN`,`DOCID`,`ORGANID`(255))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='배부이력 정보';
+
+--
+-- Table structure for table `tbl_executive`
+--
+
+DROP TABLE IF EXISTS `tbl_executive`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_executive` (
+          `CN` VARCHAR(50) NOT NULL,
+          `PRIORITY` INT(11) NOT NULL,
+          `USAGE` CHAR(1) NOT NULL,
+          `CREATEUSER` VARCHAR(50) NOT NULL,
+          `LASTUPDATE` DATETIME NOT NULL,
+          `COMPANYID` VARCHAR(50) NOT NULL,
+          `TENANT_ID` MEDIUMINT DEFAULT 0 NOT NULL,
+          PRIMARY KEY (`CN`, `COMPANYID`, `TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 comment '임원 테이블';
+
+DROP TABLE IF EXISTS TBL_SURVEY_RESULTVIEWPERMISSION;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE TBL_SURVEY_RESULTVIEWPERMISSION (
+    SURVEY_ID 			INT(11) 		NOT NULL,
+    COMPANY_ID 			VARCHAR(100) 	NOT NULL,
+    TENANT_ID 			INT(9) 			NOT NULL,
+    CN 					VARCHAR(100) 	NOT NULL 	COMMENT '권한자 아이디',
+    USER_TYPE 			VARCHAR(30) 				COMMENT '권한자 타입',
+    SUBDEPT_PERMITTED 	VARCHAR(30) 	DEFAULT 'N' COMMENT 'Y(하위 가능), N(하위 불가)',
+    CNNAME 				VARCHAR(120) 				COMMENT '권한자 이름',
+    CNNAME2 			VARCHAR(120) 				COMMENT '권한자 이름',
+    PRIMARY KEY (SURVEY_ID, COMPANY_ID, TENANT_ID, CN)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '설문 지정공개대상자 정보 테이블';
+
+DROP TABLE IF EXISTS `TBL_SYSTEMCONFIG`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `TBL_SYSTEMCONFIG` (
+  `CODE` varchar(50) NOT NULL,
+  `CODEVALUE` varchar(2000) NOT NULL,
+  `DESCRIPTION` varchar(1000) DEFAULT NULL,
+  `WRITERID` varchar(50) DEFAULT NULL,
+  `WRITERNAME` varchar(100) DEFAULT NULL,
+  `WRITEDATE` datetime DEFAULT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  `COMPANY_ID` varchar(80) NOT NULL,
+  `TYPECODE` varchar(80) DEFAULT NULL,
+  `ISDELETEBLOCK` CHAR(1) DEFAULT 'N',
+  PRIMARY KEY (`CODE`,`TENANT_ID`,`COMPANY_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+DROP TABLE IF EXISTS `TBL_SYSTEMCONFIG_TYPE`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `TBL_SYSTEMCONFIG_TYPE` (
+  `TYPECODE` varchar(50) NOT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  `COMPANY_ID` varchar(80) NOT NULL,
+  `TYPENAME` varchar(1000) DEFAULT NULL,
+  `TYPENAME2` varchar(1000) DEFAULT NULL,
+  `DESCRIPTION` varchar(3000) DEFAULT NULL,
+  `WRITERID` varchar(50) DEFAULT NULL,
+  `WRITERNAME` varchar(100) DEFAULT NULL,
+  `WRITERNAME2` varchar(100) DEFAULT NULL,
+  `WRITEDATE` datetime DEFAULT NULL,
+  PRIMARY KEY (`TYPECODE`,`TENANT_ID`,`COMPANY_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+DROP TABLE IF EXISTS `TBL_NOTI_EMERGENCY_COMPANY`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `TBL_NOTI_EMERGENCY_COMPANY` (
+  `COMPANY_ID` varchar(200) NOT NULL,
+  `TENANT_ID` mediumint(9) NOT NULL,
+  `EMERGENCY_CONTENT` varchar(200) DEFAULT NULL,
+  `WRITERID` varchar(80) NOT NULL,
+  `WRITEDATE` datetime DEFAULT NULL,
+  PRIMARY KEY (`COMPANY_ID`,`TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+DROP TABLE IF EXISTS `TBL_NOTI_EMERGENCY_ITEM`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `TBL_NOTI_EMERGENCY_ITEM` (
+  `NOTIID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `WRITERID` varchar(80) NOT NULL,
+  `COMPANY_ID` varchar(200) NOT NULL,
+  `TENANT_ID` mediumint(9) NOT NULL,
+  `NOTITITLE` varchar(2000) DEFAULT NULL,
+  `NOTIBODY` varchar(2000) DEFAULT NULL,
+  `WRITEDATE` datetime DEFAULT NULL,
+  PRIMARY KEY (`NOTIID`,`TENANT_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4;
+
+DROP TABLE IF EXISTS `TBL_NOTI_EMERGENCY_PERMISSION`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `TBL_NOTI_EMERGENCY_PERMISSION` (
+  `PERMISSION_CODE` bigint(20) NOT NULL AUTO_INCREMENT,
+  `CN` varchar(80) NOT NULL,
+  `DEPTID` varchar(80) DEFAULT NULL,
+  `JOBID` varchar(80) DEFAULT NULL,
+  `ROLEID` varchar(80) DEFAULT NULL,
+  `USER_TYPE` varchar(50) DEFAULT NULL,
+  `COMPANY_ID` varchar(200) NOT NULL,
+  `TENANT_ID` mediumint(9) NOT NULL,
+  `REGDATE` datetime DEFAULT NULL,
+  `SUBDEPTYN` char(1) DEFAULT NULL,
+  PRIMARY KEY (`PERMISSION_CODE`, `TENANT_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4;
+
+--
+-- Table structure for table `TBL_BOARD_KEYWORD`
+--
+CREATE TABLE TBL_BOARD_KEYWORD (
+    KEYWORDID bigint(20) NOT NULL AUTO_INCREMENT COMMENT '키워드 아이디',
+    KEYWORDNAME varchar(100) NOT NULL UNIQUE COMMENT '키워드 이름',
+    TENANT_ID mediumint(5) NOT NULL COMMENT '테넌트 아이디',
+    PRIMARY KEY (KEYWORDID, TENANT_ID)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Table structure for table `TBL_BOARD_BOARDITEM_KEYWORD`
+--
+CREATE TABLE TBL_BOARD_BOARDITEM_KEYWORD (
+    KEYWORDID bigint(20) NOT NULL COMMENT '키워드 아이디',
+    BOARDID varchar(40) NOT NULL COMMENT '게시판 아이디',
+    ITEMID varchar(40) NOT NULL COMMENT '게시물 아이디',
+    TENANT_ID mediumint(5) NOT NULL COMMENT '테넌트 아이디',
+    SN tinyint(3) NOT NULL COMMENT '키워드 순번',
+    PRIMARY KEY (KEYWORDID, ITEMID, SN, TENANT_ID)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Table structure for table `tbl_rs_fav_cat`
+--
+
+DROP TABLE IF EXISTS `tbl_rs_fav_cat`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_rs_fav_cat` (
+		  `CAT_ID` varchar(80) NOT NULL,
+		  `TOP_ID` varchar(80) DEFAULT NULL,
+		  `USER_ID` varchar(100) NOT NULL,
+		  `CAT_NAME` varchar(200) NOT NULL,
+		  `UPDATEDATE` datetime NOT NULL,
+		  `COMPANYID` varchar(20) NOT NULL,
+		  `BRDYN` varchar(10) DEFAULT NULL,
+		  `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
+		  PRIMARY KEY (`CAT_ID`, `TENANT_ID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+		
+--
+-- Table structure for table `tbl_rs_cat_brd`
+--
+
+DROP TABLE IF EXISTS `tbl_rs_cat_brd`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_rs_cat_brd` (
+		  `CAT_ID` varchar(100) NOT NULL,
+		  `BRD_ID` varchar(80) NOT NULL,
+		  `USER_ID` varchar(80) NOT NULL,
+		  `COMPANYID` varchar(80) NOT NULL,
+		  `UPDATEDATE` datetime NOT NULL,
+		  `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
+		  PRIMARY KEY (`CAT_ID`,`BRD_ID`,`USER_ID`,`TENANT_ID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+CREATE TABLE `jmocha_mail_tag` (
+	 `idx` INT(11) AUTO_INCREMENT,
+	 `user_name` VARCHAR(100) NOT NULL,
+	 `name` VARCHAR(100) CHARACTER SET utf8mb4 NOT NULL,
+	 CONSTRAINT `jmocha_mail_tag_pk` PRIMARY KEY (`idx`),
+	 CONSTRAINT `jmocha_mail_tag_fk` FOREIGN KEY (`user_name`) REFERENCES `james_user` (`user_name`) ON DELETE CASCADE,
+	 CONSTRAINT `jmocha_mail_tag_uq` UNIQUE (`user_name`, `name`)
+	) CHARSET=utf8;
+
+
+CREATE TABLE `jmocha_mail_tag_config` (
+ `user_name` VARCHAR(100),
+ `enable` CHAR(1) NOT NULL,
+ `orderby` CHAR(1) NOT NULL,
+ CONSTRAINT `jmocha_mail_tag_config_pk` PRIMARY KEY (`user_name`),
+ CONSTRAINT `jmocha_mail_tag_config_fk` FOREIGN KEY (`user_name`) REFERENCES `james_user` (`user_name`) ON DELETE CASCADE,
+ CONSTRAINT `jmocha_mail_tag_config_check` CHECK (`enable` IN ('0', '1')),
+ CONSTRAINT `jmocha_mail_tag_config_check2` CHECK (`orderby` IN ('0', '1', '2'))
+) CHARSET=utf8;
+
+--
+-- Table structure for table `jmocha_mail_blocked`
+--
+
+DROP TABLE IF EXISTS jmocha_mail_blocked;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE JMOCHA_MAIL_BLOCKED (
+    MESSAGE_ID varchar(500) NOT NULL,
+     PRIMARY KEY (MESSAGE_ID)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+DROP TABLE IF EXISTS TBL_BOARD_COMMENT_ATTACHMENTS;
+CREATE TABLE TBL_BOARD_COMMENT_ATTACHMENTS (
+  `ITEMID` varchar(76) NOT NULL COMMENT "게시글 아이디",
+  `REPLYID` varchar(76) NOT NULL COMMENT "댓글 아이디",
+  `SN` mediumint(5) NOT NULL COMMENT "첨부파일 순번",
+  `FILEPATH` varchar(800) DEFAULT NULL COMMENT "첨부파일 저장경로",
+  `FILESIZE` varchar(100) DEFAULT NULL COMMENT "첨부파일 크기",
+  `FILENAME` varchar(255) DEFAULT NULL COMMENT "첨부파일 이름",
+  `TENANT_ID` mediumint(5) NOT NULL COMMENT "테넌트 아이디",
+  PRIMARY KEY (`ITEMID`, `REPLYID`, `SN`, `TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT "게시판 댓글 첨부파일 정보 테이블";
+
+--
+-- Table structure for table `TBL_C_CLUBGUEST_ONELINEREPLY`
+--
+DROP TABLE IF EXISTS `TBL_C_CLUBGUEST_ONELINEREPLY`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE TBL_C_CLUBGUEST_ONELINEREPLY (
+    ITEMID INT NOT NULL COMMENT "방명록 아이디",
+    REPLYID VARCHAR(38) NOT NULL COMMENT "방명록 댓글 아이디",
+    C_CLUBNO VARCHAR(38) NOT NULL COMMENT "커뮤니티 아이디",
+    USERID VARCHAR(50) COMMENT "방명록 작성자 아이디",
+    USERNAME VARCHAR(50) COMMENT "방명록 작성자 이름",
+    USERNAME2 VARCHAR(50) COMMENT "방명록 작성자 이름 다국어",
+    WRITEDATE DATETIME COMMENT "방명록 댓글 작성날짜",
+    CONTENT VARCHAR(300) COMMENT "방명록 댓글 내용",
+    TENANT_ID INT DEFAULT 0 COMMENT "테넌트 아이디",
+    COMPANYID VARCHAR(80) COMMENT "회사 아이디",
+    PRIMARY KEY (`ITEMID`,`REPLYID`,`TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT "커뮤니티 방명록 댓글 정보 테이블";
+
+DROP TABLE IF EXISTS `tbl_gongramdeletehistory`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_gongramdeletehistory` (
+	`DOCID` varchar(80) NOT NULL,
+	`APRMEMBERSN` bigint(10) NOT NULL,
+	`APRTYPE` varchar(12) DEFAULT NULL,
+	`APRSTATE` varchar(12) DEFAULT NULL,
+	`APRMEMBERID` varchar(400) DEFAULT NULL,
+	`APRMEMBERISDEPTYN` varchar(4) DEFAULT NULL,
+	`APRMEMBERNAME` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+	`APRMEMBERJOBTITLE` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+	`APRMEMBERDEPTID` varchar(400) DEFAULT NULL,
+	`APRMEMBERDEPTNAME` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+	`APRMEMBERLDAPPATH` varchar(400) DEFAULT NULL,
+	`RECEIVEDDATE` datetime DEFAULT NULL,
+	`PROCESSDATE` datetime DEFAULT NULL,
+	`DELETEDATE` datetime DEFAULT NULL,
+	`REASONDONOTAPPROV` varchar(1020) DEFAULT NULL,
+	`ISPROPOSERYN` varchar(4) DEFAULT NULL,
+	`ISBRIEFUSERYN` varchar(4) DEFAULT NULL,
+	`APRMEMBERNAME2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+	`APRMEMBERJOBTITLE2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+	`APRMEMBERDEPTNAME2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+	`TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
+	`COMPANYID` varchar(20) NOT NULL,
+	PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`DOCID`,`APRMEMBERID`),
+	KEY `tbl_gongramdeletehistory_IDX` (`DOCID`, `APRMEMBERID`, `TENANT_ID`, `COMPANYID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `tbl_schedulegather` (
+    `GROUPID` varchar(100) NOT NULL,
+    `GROUPNAME` varchar(100) CHARACTER SET utf8mb4 NOT NULL,
+    `CREATORID` varchar(100) DEFAULT NULL,
+    `CREATORNAME` varchar(100) CHARACTER SET utf8mb4 NOT NULL,
+    `CREATORNAME2` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
+    `DESCRIPTION` varchar(500) CHARACTER SET utf8mb4 NOT NULL,
+    `CREATEDATE` datetime DEFAULT NULL,
+    `TENANT_ID` mediumint(5) NOT NULL,
+    `companyid` varchar(40) DEFAULT NULL,
+    PRIMARY KEY (`GROUPID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `tbl_schedulegathermember` (
+    `GROUPID` varchar(100) NOT NULL,
+    `MEMBERID` varchar(100) NOT NULL,
+    `MEMBERNAME` varchar(100) CHARACTER SET utf8mb4 NOT NULL,
+    `MEMBERNAME2` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
+    `MEMBERDEPTID` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
+    `TENANT_ID` mediumint(5) NOT NULL,
+    PRIMARY KEY (`GROUPID`,`MEMBERID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Table structure for table `tbl_board_item_rating`
+--
+CREATE TABLE tbl_board_item_rating (
+    ITEMID varchar(76) NOT NULL COMMENT '게시물 아이디',
+    USERID varchar(80) NOT NULL COMMENT '사용자 아이디',
+    RATING varchar(2) NOT NULL COMMENT '별점',
+    RATINGDATE varchar(40) NOT NULL COMMENT '별점 부여 날짜',
+    TENANT_ID mediumint(5) NOT NULL COMMENT '테넌트 아이디',
+    COMPANYID varchar(80) DEFAULT NULL COMMENT '회사 아이디',
+    PRIMARY KEY (ITEMID, USERID, TENANT_ID)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Table structure for table `tbl_board_item_rating_summary`
+--
+CREATE TABLE tbl_board_item_rating_summary (
+    ITEMID varchar(76) NOT NULL COMMENT '게시물 아이디',
+    TOTALRATERS varchar(10) NOT NULL COMMENT '총 평가자 수',
+    TOTALSCORE varchar(6) NOT NULL COMMENT '총 점수',
+    AVERAGESCORE varchar(5) NOT NULL COMMENT '평균 점수',
+    TENANT_ID mediumint(5) NOT NULL COMMENT '테넌트 아이디',
+    COMPANYID varchar(80) DEFAULT NULL COMMENT '회사 아이디',
+    PRIMARY KEY (ITEMID, TENANT_ID)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `TBL_CONNATTACHINFODATA` ( 
+  `KEYID` varchar(50) NOT NULL,
+  `ATTACHSN` bigint(10) NOT NULL,
+  `ATTACHFILENAME` varchar(1020) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `ATTACHFILEHREF` varchar(1020) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `ATTACHFILESIZE` double(126,0) DEFAULT NULL,
+  `ATTACHUSERID` varchar(400) DEFAULT NULL,
+  PRIMARY KEY (`KEYID`,`ATTACHSN`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT "전자결재 연동 첨부파일 테이블";
+
+--
+-- Table structure for table `TBL_MEAL_PLAN`
+--
+DROP TABLE IF EXISTS `TBL_MEAL_PLAN`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE TBL_MEAL_PLAN (
+			MEALDATE DATE NOT NULL,
+			ACOURSE VARCHAR(300) DEFAULT '',
+			BCOURSE VARCHAR(300) DEFAULT '',
+			SALADBAR VARCHAR(300) DEFAULT '',
+			DESSERT VARCHAR(300) DEFAULT '',
+			TOTALCAL INT DEFAULT 0,
+			COMPANYID VARCHAR(160),
+			TENANT_ID mediumint(5) NOT NULL,
+			PRIMARY KEY (MEALDATE, COMPANYID, TENANT_ID)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT "식단 정보 테이블";
+
+
+DROP TABLE IF EXISTS TBL_STAT_MENU_USER;
+DROP TABLE IF EXISTS TBL_STAT_MENU_USER_MONTH;
+DROP TABLE IF EXISTS TBL_STAT_MENU_DEPT;
+DROP TABLE IF EXISTS TBL_STAT_MENU_DEPT_MONTH;
+CREATE TABLE TBL_STAT_MENU_USER
+(
+    USER_ID    VARCHAR(80)  NOT NULL COMMENT '유저 id(비회원은 ip)',
+    TENANT_ID  MEDIUMINT(9) NOT NULL DEFAULT 0,
+    COMPANY_ID VARCHAR(100) NOT NULL COMMENT '회사 id',
+    IPADDRESS  VARCHAR(15) COMMENT 'ip',
+    YEAR       SMALLINT     NOT NULL COMMENT '집계 년도(YYYY)',
+    MONTH      TINYINT      NOT NULL COMMENT '집계 월(01 ~ 12)',
+    DAY        TINYINT      NOT NULL COMMENT '집계 일(01 ~ 31)',
+    HOUR       TINYINT      NOT NULL COMMENT '집계 시간(00 ~ 23)',
+    TIME_CODE  INT          NOT NULL COMMENT '빠른 범위 검색/정렬용 (형식: YYYYMMDDHH)',
+    MENU_ID    INT(11) COMMENT '집계 메뉴 id',
+    CODE       VARCHAR(10) COMMENT '집계 통계 종류',
+    STAT_COUNT INT          NOT NULL DEFAULT 0 COMMENT '집계 카운트',
+
+    PRIMARY KEY (TENANT_ID, COMPANY_ID, USER_ID, MENU_ID, TIME_CODE),
+    INDEX IDX_TIME_COMPONENTS (YEAR, MONTH, DAY, HOUR),
+    INDEX IDX_TIME_STR (TIME_CODE),
+    INDEX IDX_MENU (MENU_ID)
+) ENGINE = INNODB
+  DEFAULT CHARSET = UTF8MB4 COMMENT "유저별 메뉴 통계 시간별 집계 테이블";
+CREATE TABLE TBL_STAT_MENU_USER_MONTH
+(
+    USER_ID    VARCHAR(80)  NOT NULL COMMENT '유저 id(비회원은 ip)',
+    TENANT_ID  MEDIUMINT(9) NOT NULL DEFAULT 0,
+    COMPANY_ID VARCHAR(100) NOT NULL COMMENT '회사 id',
+    IPADDRESS  VARCHAR(15) COMMENT 'ip',
+    YEAR       SMALLINT     NOT NULL COMMENT '집계 년도(YYYY)',
+    MONTH      TINYINT      NOT NULL COMMENT '집계 월(01 ~ 12)',
+    TIME_CODE  INT          NOT NULL COMMENT '빠른 범위 검색/정렬용 (형식: YYYYMM)',
+    MENU_ID    INT(11) COMMENT '집계 메뉴 id',
+    CODE       VARCHAR(10) COMMENT '집계 통계 종류',
+    STAT_COUNT INT          NOT NULL DEFAULT 0 COMMENT '집계 카운트',
+
+    PRIMARY KEY (TENANT_ID, COMPANY_ID, USER_ID, MENU_ID, TIME_CODE),
+    INDEX IDX_TIME_COMPONENTS (YEAR, MONTH),
+    INDEX IDX_TIME_STR (TIME_CODE),
+    INDEX IDX_MENU (MENU_ID)
+) ENGINE = INNODB
+  DEFAULT CHARSET = UTF8MB4 COMMENT "유저별 메뉴 통계 월별 집계 테이블";
+CREATE TABLE TBL_STAT_MENU_DEPT
+(
+    DEPT_ID    VARCHAR(80)  NOT NULL COMMENT '부서 id',
+    TENANT_ID  MEDIUMINT(9) NOT NULL DEFAULT 0,
+    COMPANY_ID VARCHAR(100) NOT NULL COMMENT '회사 id',
+    YEAR       SMALLINT     NOT NULL COMMENT '집계 년도(YYYY)',
+    MONTH      TINYINT      NOT NULL COMMENT '집계 월(01 ~ 12)',
+    DAY        TINYINT      NOT NULL COMMENT '집계 일(01 ~ 31)',
+    HOUR       TINYINT      NOT NULL COMMENT '집계 시간(00 ~ 23)',
+    TIME_CODE  INT          NOT NULL COMMENT '빠른 범위 검색/정렬용 (형식: YYYYMMDDHH)',
+    MENU_ID    INT(11) COMMENT '집계 메뉴 id',
+    CODE       VARCHAR(10) COMMENT '집계 통계 종류',
+    STAT_COUNT INT          NOT NULL DEFAULT 0 COMMENT '집계 카운트',
+
+    PRIMARY KEY (TENANT_ID, COMPANY_ID, DEPT_ID, MENU_ID, TIME_CODE),
+    INDEX IDX_TIME_COMPONENTS (YEAR, MONTH, DAY, HOUR),
+    INDEX IDX_TIME_STR (TIME_CODE),
+    INDEX IDX_MENU (MENU_ID)
+) ENGINE = INNODB
+  DEFAULT CHARSET = UTF8MB4 COMMENT "부서별 메뉴 통계 시간별 집계 테이블";
+CREATE TABLE TBL_STAT_MENU_DEPT_MONTH
+(
+    DEPT_ID    VARCHAR(80)  NOT NULL COMMENT '부서 id',
+    TENANT_ID  MEDIUMINT(9) NOT NULL DEFAULT 0,
+    COMPANY_ID VARCHAR(100) NOT NULL COMMENT '회사 id',
+    YEAR       SMALLINT     NOT NULL COMMENT '집계 년도(YYYY)',
+    MONTH      TINYINT      NOT NULL COMMENT '집계 월(01 ~ 12)',
+    TIME_CODE  INT          NOT NULL COMMENT '빠른 범위 검색/정렬용 (형식: YYYYMM)',
+    MENU_ID    INT(11) COMMENT '집계 메뉴 id',
+    CODE       VARCHAR(10) COMMENT '집계 통계 종류',
+    STAT_COUNT INT          NOT NULL DEFAULT 0 COMMENT '집계 카운트',
+
+    PRIMARY KEY (TENANT_ID, COMPANY_ID, DEPT_ID, MENU_ID, TIME_CODE),
+    INDEX IDX_TIME_COMPONENTS (YEAR, MONTH),
+    INDEX IDX_TIME_STR (TIME_CODE),
+    INDEX IDX_MENU (MENU_ID)
+) ENGINE = INNODB
+  DEFAULT CHARSET = UTF8MB4 COMMENT "부서별 메뉴 통계 월별 집계 테이블";

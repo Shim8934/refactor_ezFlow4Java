@@ -6,7 +6,8 @@
 	<head>
 		<title><spring:message code="ezResource.t117" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-		<link rel="stylesheet" href="${util.addVer('ezResource.e2', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link type="text/css" rel="stylesheet" href="${util.addVer('main.lhm01', 'msg')}" />
 		<link type="text/css" rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" />
 		<script type="text/javascript" src="${util.addVer('ezResource.e1', 'msg')}"></script>

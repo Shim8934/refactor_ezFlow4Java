@@ -7,7 +7,8 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>left_task</title>
-		<link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
 		<link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
 		<style type="text/css">
@@ -203,7 +204,7 @@
 	</head>
 	<body class="newLeft">
 		<div id="left" class="lnb task_left" style="overflow: auto">
-	    	<div class="left_title" title="<spring:message code='ezSchedule.t1011'/>"><spring:message code='ezSchedule.t1011'/>
+	    	<div class="left_title" title="<spring:message code='ezTask.t84'/>"><spring:message code='ezTask.t84'/>
 	        	<span onClick="Function_Flag(11)" class="sub_iconLNB tree_leftconfig" title="<spring:message code='ezTask.yej01'/>"></span>
 	        </div>
 	        <div class="btn_writeBox" onclick="WritePopup()">

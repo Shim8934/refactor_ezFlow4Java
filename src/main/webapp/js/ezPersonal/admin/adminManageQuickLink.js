@@ -1,8 +1,11 @@
-function makeList() {
+function makeList(com) {
+	var companyID = com || document.getElementById('ListCompany').value;
 	$.ajax({
-		type : "POST",
 		url : "/admin/ezPersonal/getQuickLinkList.do",
 		async : false,
+		data:{
+			companyID : companyID
+		},
 		dataType : "JSON",
 		success : function(result) {
 			event_QuickList(result.list);
@@ -12,6 +15,9 @@ function makeList() {
 
 function event_QuickList(result) {
 	var mainList = document.getElementById("mainlist");
+	while (mainList.firstChild) {
+		mainList.removeChild(mainList.firstChild);
+	}
 	
 	result.forEach(function(item, index) {
 		var itemId  = item.quickLinkID;
@@ -131,11 +137,22 @@ function setQuickImg(linkType, linkTypeUrl) {
 		case "D" : result = "<img src='/images/admin/link_connectedPrograms.png' id='D'>"; break;
 		case "E" : result = "<img src='/images/admin/link_blog.png' id='E'>"; break;
 		*/
-		case "A" : result = "<img src='/images/admin/link_03.png' id='A'>"; break;
-		case "B" : result = "<img src='/images/admin/link_04.png' id='B'>"; break;
-		case "C" : result = "<img src='/images/admin/link_02.png' id='C'>"; break;
-		case "D" : result = "<img src='/images/admin/link_05.png' id='D'>"; break; // 2023-06-01 기준 사용하지 않는 분기
-		case "E" : result = "<img src='/images/admin/link_01.png' id='E'>"; break;
+		case "A" : result = "<img src='/images/admin/photo1.png' id='A'>"; break;
+		case "B" : result = "<img src='/images/admin/photo2.png' id='B'>"; break;
+		case "C" : result = "<img src='/images/admin/photo3.png' id='C'>"; break;
+		case "D" : result = "<img src='/images/admin/photo4.png' id='D'>"; break; // 2023-06-01 기준 사용하지 않는 분기
+		case "E" : result = "<img src='/images/admin/photo5.png' id='E'>"; break;
+		case "F" : result = "<img src='/images/admin/photo6.png' id='F'>"; break;
+		case "G" : result = "<img src='/images/admin/photo7.png' id='G'>"; break;
+		case "H" : result = "<img src='/images/admin/photo8.png' id='H'>"; break;
+		case "I" : result = "<img src='/images/admin/photo9.png' id='I'>"; break;
+		case "J" : result = "<img src='/images/admin/photo10.png' id='J'>"; break;
+		case "K" : result = "<img src='/images/admin/photo11.png' id='K'>"; break;
+		case "L" : result = "<img src='/images/admin/photo12.png' id='L'>"; break;
+		case "M" : result = "<img src='/images/admin/photo13.png' id='M'>"; break;
+		case "N" : result = "<img src='/images/admin/photo14.png' id='N'>"; break;
+		case "O" : result = "<img src='/images/admin/photo15.png' id='O'>"; break;
+		case "P" : result = "<img src='/images/admin/photo16.png' id='P'>"; break;
 		default : result = "<img src='" + linkTypeUrl + "' style='width:39px; height:38px; padding:0px; margin-top:8px;'>"; break;
 		break;
 	}
@@ -319,12 +336,26 @@ function openLinkDetail(item, itemId) {
 	linksHTML += "</table>";
 	linksHTML += "<table class='quickTable02' border='0' cellpadding='0' cellspacing='0'>";
 	linksHTML += "<tr>";
-	linksHTML += "<th class='quickLinkTH02'><spring:message code = 'ezPersonal.t1023' /> Type <span class='Ared'>*</span><span class='adminPlusBtn' onclick='CreateType()'><img src='/images/admin/adminPlus.png'></span></th></tr>";
+	linksHTML += "<th class='quickLinkTH02'><spring:message code = 'ezPersonal.t1023' /> Type <span class='Ared'>*</span><span style='font-size: 12px; font-weight: normal;'>" + strLangQuickLinkSize01 + "</span><span class='adminPlusBtn' onclick='CreateType()'><img src='/images/admin/adminPlus.png'></span></th></tr>";
 	linksHTML += "<tr><td class='quickTD'>";
+	linksHTML += "<div>";
 	linksHTML += "<dl class='quickIcon_link'><dt class='quickIcon_linkDT'>" + setQuickImg("A", "") + "</dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='A' checked=''></dd></dl>";
 	linksHTML += "<dl class='quickIcon_link'><dt class='quickIcon_linkDT'>" + setQuickImg("B", "") + "</dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='B'></dd></dl>";
 	linksHTML += "<dl class='quickIcon_link'><dt class='quickIcon_linkDT'>" + setQuickImg("C", "") + "</dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='C'></dd></dl>";
 	linksHTML += "<dl class='quickIcon_link'><dt class='quickIcon_linkDT'>" + setQuickImg("E", "") + "</dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='E'></dd></dl>";
+	linksHTML += "<dl class='quickIcon_link'><dt class='quickIcon_linkDT'>" + setQuickImg("D", "") + "</dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='D'></dd></dl>";
+	linksHTML += "<dl class='quickIcon_link'><dt class='quickIcon_linkDT'>" + setQuickImg("F", "") + "</dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='F'></dd></dl>";
+	linksHTML += "<dl class='quickIcon_link'><dt class='quickIcon_linkDT'>" + setQuickImg("G", "") + "</dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='G'></dd></dl>";
+	linksHTML += "<dl class='quickIcon_link'><dt class='quickIcon_linkDT'>" + setQuickImg("H", "") + "</dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='H'></dd></dl>";
+	linksHTML += "<dl class='quickIcon_link'><dt class='quickIcon_linkDT'>" + setQuickImg("I", "") + "</dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='I'></dd></dl>";
+	linksHTML += "<dl class='quickIcon_link'><dt class='quickIcon_linkDT'>" + setQuickImg("J", "") + "</dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='J'></dd></dl>";
+	linksHTML += "<dl class='quickIcon_link'><dt class='quickIcon_linkDT'>" + setQuickImg("K", "") + "</dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='K'></dd></dl>";
+	linksHTML += "<dl class='quickIcon_link'><dt class='quickIcon_linkDT'>" + setQuickImg("L", "") + "</dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='L'></dd></dl>";
+	linksHTML += "<dl class='quickIcon_link'><dt class='quickIcon_linkDT'>" + setQuickImg("M", "") + "</dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='M'></dd></dl>";
+	linksHTML += "<dl class='quickIcon_link'><dt class='quickIcon_linkDT'>" + setQuickImg("N", "") + "</dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='N'></dd></dl>";
+	linksHTML += "<dl class='quickIcon_link'><dt class='quickIcon_linkDT'>" + setQuickImg("O", "") + "</dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='O'></dd></dl>";
+	linksHTML += "<dl class='quickIcon_link'><dt class='quickIcon_linkDT'>" + setQuickImg("P", "") + "</dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='P'></dd></dl>";
+	linksHTML += "</div>";
 	linksHTML += "<dl class='quickIcon_link'><dt id='typeImg' class='quickIcon_linkDT'></dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='Z' id='Z' onclick='radioClick(this, 'rad')' style='display:none;' /></dd></dl>";
 	linksHTML += "</td></tr>";
 	linksHTML += "</table>";
@@ -530,11 +561,11 @@ function regit() {
 		selecttarget_dialogArguments[0] = g_attendant;
 		selecttarget_dialogArguments[1] = regit_Complete;
 		
-		var SelectTarget = window.open("/admin/ezPersonal/selectTargetQuickLink.do", "SelectTarget", GetOpenWindowfeature(840, 480));
+		var SelectTarget = window.open("/admin/ezPersonal/selectTargetQuickLink.do", "SelectTarget", GetOpenWindowfeature(980, 670));
 		try { SelectTarget.focus(); } catch (e) { }
 	} 
 	else {
-		var config = "status:false;dialogWidth:840px;dialogHeight:480px;scroll:no;status:no;edge:sunken" + GetShowModalPosition(840, 480);
+		var config = "status:false;dialogWidth:840px;dialogHeight:480px;scroll:no;status:no;edge:sunken" + GetShowModalPosition(980, 670);
 		var ret = window.showModalDialog("/admin/ezPersonal/selectTargetQuickLink.do", g_attendant, config);
 		
 		if (ret == undefined)
@@ -552,7 +583,7 @@ function regit_Complete(rtv) {
 
 function makePermissionsList(value, xmlFalg) {
 	if (document.getElementById("AccessList").innerHTML != "") document.getElementById("AccessList").innerHTML = "";
-	g_attendant = { "DATA1": new Array(), "DATA2": new Array(), "DATA3": new Array(), "DATA5": new Array() };
+	g_attendant = {  "accessId": new Array(), "accessName": new Array(), "accessName2": new Array(), "userType": new Array(), "accessYN": new Array(), "subdeptPermitted": new Array() };
 	
 	if(xmlFalg) {
 		var xmldom = value;
@@ -567,37 +598,49 @@ function makePermissionsList(value, xmlFalg) {
 	listview.SetHeightFree(true);
 	listview.DataBind("AccessList");
 	var xmldomNode = SelectNodes(xmldom, "NODES/NODE");
+    var primary = $("#quickUserPrimanry").val();
 	
 	for (var i = 0; i < xmldomNode.length; i++) {
-		g_attendant["DATA1"][i] = SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME");
-		g_attendant["DATA2"][i] = SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME2");
-		g_attendant["DATA3"][i] = SelectSingleNodeValue(xmldomNode[i], "ACCESSID");
-		g_attendant["DATA5"][i] = SelectSingleNodeValue(xmldomNode[i], "PERMISSIONS");
+		var accessId =  SelectSingleNodeValue(xmldomNode[i], "ACCESSID");
+		var accessName = ""
+        var accessName2 = ""
+        
+        if (primary == 1) {
+            accessName = SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME");
+            accessName2 = SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME2");
+        } else {
+            accessName = SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME2");
+            accessName2 = SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME");
+        }
+        
+		var userType =  SelectSingleNodeValue(xmldomNode[i], "USERTYPE");
+		var accessYN =  SelectSingleNodeValue(xmldomNode[i], "PERMISSIONS");
+		var subdeptPermitted =  SelectSingleNodeValue(xmldomNode[i], "SUBDEPTPERMITTED");
+		var listTDText = accessName;
+
+		g_attendant["accessId"][i] = accessId;
+		g_attendant["accessName"][i] = accessName;
+		g_attendant["accessName2"][i] = accessName2;
+		g_attendant["userType"][i] = userType;
+		g_attendant["accessYN"][i] = accessYN;
+		g_attendant["subdeptPermitted"][i] = subdeptPermitted;
 		
 		var listTR = listview.AddRow(listview.GetRowCount());
 		var listTD = document.createElement("TD");
 		listTD.style.paddingBottom = "0px";
 		listTD.style.paddingTop = "0px";
 		
-		if (userLang == "2" && SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME2") != "") {
-			if (SelectSingleNodeValue(xmldomNode[i], "PERMISSIONS") == "N") {
-				var listTDText = document.createTextNode(SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME2"));
-			} else {
-				var listTDText = document.createTextNode(SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME2"));
-			}
-		} else {
-			if (SelectSingleNodeValue(xmldomNode[i], "PERMISSIONS") == "N") {
-				var listTDText = document.createTextNode(SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME"));
-			} else {
-				var listTDText = document.createTextNode(SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME"));
-			}
-		}
-		
-		listTD.setAttribute("DATA", SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME"));
-		listTD.setAttribute("DATA2", SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME2"));
-		listTD.setAttribute("DATA1", SelectSingleNodeValue(xmldomNode[i], "ACCESSID"));
-		listTD.setAttribute("DATA5", SelectSingleNodeValue(xmldomNode[i], "PERMISSIONS"));
-		listTD.appendChild(listTDText);
+		// if (userLang != "1" && SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME2") != "") {
+		// 	listTDText = accessName2;
+		// }
+
+		listTD.setAttribute("DATA", accessName);
+		listTD.setAttribute("DATA1", accessName2);
+		listTD.setAttribute("DATA2", accessId);
+		listTD.setAttribute("DATA3", accessYN);
+		listTD.setAttribute("DATA4", userType);
+		listTD.setAttribute("DATA5", subdeptPermitted);
+		listTD.appendChild(document.createTextNode(listTDText));
 		listTR.appendChild(listTD);
 	}
 	
@@ -609,7 +652,7 @@ function makePermissionsList(value, xmlFalg) {
 	var InitTr2 = listview2.GetDataRows();
 	
 	for (var i = 0; i < InitTr2.length; i++) {
-		if (InitTr2[i].childNodes[0].getAttribute("data5") == "N") {
+		if (InitTr2[i].childNodes[0].getAttribute("data3") == "N") {
 			InitTr2[i].childNodes[0].style.color = "red";
 		}
 	}
@@ -693,6 +736,7 @@ function SaveQuickLink(itemId) {
 	createNodeAndInsertText(xmlpara, objNode, "pLinkTypeURL", linkURL);
 	createNodeAndInsertText(xmlpara, objNode, "pMode", mode);
 	createNodeAndInsertText(xmlpara, objNode, "pURL", document.getElementById("txtURL").value);
+	createNodeAndInsertText(xmlpara, objNode, "companyID", document.getElementById("ListCompany").value);
 	
 	if (document.getElementById("popSize").value == "chk_Full") {
 		createNodeAndInsertText(xmlpara, objNode, "pSize", "FULL");
@@ -710,6 +754,8 @@ function SaveQuickLink(itemId) {
 			createNodeAndAppandNodeText(xmlpara, objNode2, objNode3, "data", listviewSelected[nCnt1].childNodes[0].getAttribute("data"));
 			createNodeAndAppandNodeText(xmlpara, objNode2, objNode3, "data1", listviewSelected[nCnt1].childNodes[0].getAttribute("data1"));
 			createNodeAndAppandNodeText(xmlpara, objNode2, objNode3, "data2", listviewSelected[nCnt1].childNodes[0].getAttribute("data2"));
+			createNodeAndAppandNodeText(xmlpara, objNode2, objNode3, "data3", listviewSelected[nCnt1].childNodes[0].getAttribute("data3"));
+			createNodeAndAppandNodeText(xmlpara, objNode2, objNode3, "data4", listviewSelected[nCnt1].childNodes[0].getAttribute("data4"));
 			createNodeAndAppandNodeText(xmlpara, objNode2, objNode3, "data5", listviewSelected[nCnt1].childNodes[0].getAttribute("data5"));
 			
 			if (mode == "new") {
@@ -841,4 +887,8 @@ function updateLinkOrder() {
 		success: function(result) {
 		}
 	});
+}
+
+function changeCompany(comID) {
+	makeList(comID);
 }

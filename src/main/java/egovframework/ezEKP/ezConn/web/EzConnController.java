@@ -16,10 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.WebUtils;
 
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -185,14 +182,13 @@ public class EzConnController {
 
 					if (!decryptedLoginCookie.split("///")[1].equals(orgId)) {
 						commonUtil.updateLoginInfo(request, resultVO);
+						loginController.createLoginCookie(resultVO.getId(), " ", " ", tenantId, request, response, resultVO.getDeptID(), resultVO.getCompanyID());
 					}
 
 				} else {
 					commonUtil.updateLoginInfo(request, resultVO);
+					loginController.createLoginCookie(resultVO.getId(), " ", " ", tenantId, request, response, resultVO.getDeptID(), resultVO.getCompanyID());
 				}
-				
-				// 로그인쿠키는 새로 생성
-				loginController.createLoginCookie(resultVO.getId(), " ", " ", tenantId, request, response, resultVO.getDeptID(), resultVO.getCompanyID());
 
 				// IE, Safari의 경우 기존 사이트에서 iframe으로 ezEKP를 연동할 경우
 				// 보안 문제로 쿠키 정보가 유실되는 현상이 발생해 다음 헤더를 추가함
@@ -436,6 +432,31 @@ public class EzConnController {
 		logger.debug("changePassword ended. result=" + result);
 		return result;
 	}
+
+	@RequestMapping("/ezConn/changeLoginCnt.do")
+	@ResponseBody
+	public String changeLoginCnt(HttpServletRequest request, HttpServletResponse response) {
+		logger.debug("changeLoginCnt started.");
+		String result = "ERROR";
+
+		try {
+			String id = request.getParameter("id");
+			id = ezConnUtil.decryptAES(id);
+			logger.debug("id=" + id);
+
+			String cn = id.split(":")[0];
+			int tenantID = 0;
+
+			ezOrganAdminService.resetLoginCnt(cn, tenantID);
+
+			result = "OK";
+		} catch (Exception e) {
+			result = "ERROR";
+		}
+
+		logger.debug("changeLoginCnt ended. result=" + result);
+		return result;
+	}
 	
 	/**
 	 * 자체 방식 SSO를 위한 암호화된 인증 스트링을 반환한다. 암호화된 인증 스트링을 전달 받은
@@ -448,9 +469,7 @@ public class EzConnController {
 	 * @param response
 	 * @return
 	 */
-	// 필요시에만 주석을 풀어 사용함
-	/*
-	@RequestMapping(value="/ezConn/getSSOAuthString.do", method=RequestMethod.GET)
+	@RequestMapping(value="/ezAuth/getSSOAuthString.do", method=RequestMethod.GET)
 	@ResponseBody
 	public String getSSOAuthString(@RequestParam String userId, HttpServletRequest request, HttpServletResponse response) {
 		logger.debug("getSSOAuthString started. userId=" + userId);
@@ -496,7 +515,6 @@ public class EzConnController {
 		
 		return result;
 	}
-	*/
 	
 	/**
 	 * 암호화된 자체 방식 SSO 인증 스트링을 전달 받아 복화화해 사용자를 확인한 후 로그인 처리를 수행한다.
@@ -560,7 +578,7 @@ public class EzConnController {
 							// 2023-05-23 이사라 - 로그인 정보 저장
 							if (commonUtil.isLoginCookieExists(request, response)) {
 								Cookie loginCookie = WebUtils.getCookie(request, "loginCookie");
-								String decryptedLoginCookie = egovFileScrty.decryptAES(loginCookie.getValue());
+								String decryptedLoginCookie = commonUtil.getDecryptedLoginCookie(loginCookie.getValue());
 
 								if (!decryptedLoginCookie.split("///")[1].equals(userId)) {
 									commonUtil.updateLoginInfo(request, user);
@@ -644,5 +662,46 @@ public class EzConnController {
 		}
 		
 		return resultPage;
+	}
+
+	/**
+	 * 외부메일가는 url반환하기 위한 작업
+	 */
+	@RequestMapping(value="/ezAuth/getSSORedirectUrl.do", method=RequestMethod.GET)
+	@ResponseBody
+	public String getSSORedirectUrl(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) {
+		logger.debug("getSSORedirectUrl started. ");
+
+		String result = "ERROR";
+
+		userInfo = commonUtil.userInfo(loginCookie);
+
+		String redircetDomain = request.getParameter("redirectDomain");
+		String redircetResource = request.getParameter("redirectResource");
+
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+			String nowDate = sdf.format(new Date());
+			String roleInfo = userInfo.getRollInfo();
+			String userType = "user";
+
+			if (roleInfo.indexOf("c=1") != -1 || roleInfo.indexOf("k=1") != -1) {
+				userType = "admin";
+			}
+
+			String authString = userInfo.getDeptID() + ":" + userInfo.getId() + ":" + nowDate + ":" + userType;
+
+			logger.debug("authString=" + authString);
+			result = redircetDomain + "/ezConn/loginWithSSOAuthString.do?id=";
+			result += URLEncoder.encode(ezConnUtil.encryptAES(authString));
+			result += "&redirectUrl=" + redircetResource;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		logger.debug("getSSORedirectUrl ended. result=" + result);
+
+		return result;
 	}
 }

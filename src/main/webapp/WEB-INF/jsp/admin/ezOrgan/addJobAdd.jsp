@@ -6,7 +6,8 @@
 	<head>
 		<title><spring:message code='ezOrgan.t248' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
-	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e2', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -18,7 +19,7 @@
 			var xmlHTTP = createXMLHttpRequest();
 			
 		    $(document).ready(function(){
-		    	var strQuery = "<DATA><DEPTID><c:out value='${userInfo.deptID}'/></DEPTID><TOPID>" + topid + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
+		    	var strQuery = "<DATA><DEPTID></DEPTID><TOPID>" + topid + "/organ</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
 		    		
 		    	xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		    	xmlHTTP.onreadystatechange = event_GetDeptTreeInfo;
@@ -149,7 +150,7 @@
 		                checkname2_cross_dialogArguments[0] = rgParams;
 		                checkname2_cross_dialogArguments[1] = deptsearch_click_Complete;		                
 		                var OpenWin = window.open("/admin/ezOrgan/checkName2.do", "checkName2_Cross", GetOpenWindowfeature(598, 340));
-		                try { OpenWin.focus(); } catch (e) { }
+		                try { OpenWin.focus(); } catch (e) {console.log(e);}
 		            }else{
 		                var feature = "dialogHeight:340px; dialogWidth:598px; status:no;scroll:no; help:no; edge:sunken";
 		                feature = feature + GetShowModalPosition(600, 340);
@@ -187,7 +188,7 @@
 		                        } else {
 		                            window.dialogArguments["window"].opener.top.organview = loadXMLString(g_xmlHTTP.responseText);
 		                        }
-		                    } catch (e) { }
+		                    } catch (e) {console.log(e);}
 		                }
 
 		                var treeXML = loadXMLFile("/xml/common/organtree_config3.xml");

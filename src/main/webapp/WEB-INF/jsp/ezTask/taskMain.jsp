@@ -7,7 +7,8 @@
 		<title>task_main</title>
 		<link type="text/css" rel="stylesheet" href="${util.addVer('/css/olstyle_nonIE.css')}" />
 		<link rel="stylesheet" href="${util.addVer('ezTask.e1', 'msg')}" type="text/css">
-		<link rel="stylesheet" href="${util.addVer('ezTask.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link type="text/css" rel="stylesheet" href="${util.addVer('/css/Tab.css')}" />
 		<link rel="stylesheet" href="${util.addVer('/css/jquery.lineProgressbar.css')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -204,25 +205,25 @@
 			    var totalPage = totalpage;
 			    var pageNum = currentpage;
 			    if (totalPage > 1 && pageNum != 1) {
-			        strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' ></span>"
+			        strtext = "<span class='btnimg first' onclick= 'return goToPageByNum(1)'></span>"
 			        PagingHTML += strtext;
 			    }
 			    else {
-			        strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>"
+			        strtext = "<span class='btnimg first disabled'></span>"
 			        PagingHTML += strtext;
 			    }
 			    if (totalPage > BlockSize) {
 			        if (pageNum > BlockSize) {
-			            strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' ></span>";
+			            strtext = "<span class='btnimg prev' onclick= 'return selbeforeBlock()'></span>";
 			            PagingHTML += strtext;
 			        }
 			        else {
-			            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+			            strtext = "<span class='btnimg prev disabled'></span>";
 			            PagingHTML += strtext;
 			        }
 			    }
 			    else {
-			        strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+			        strtext = "<span class='btnimg prev disabled'></span>";
 			        PagingHTML += strtext;
 			    }
 			    var MaxNum;
@@ -252,26 +253,26 @@
 			    if (totalPage > BlockSize) {
 			        if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
 			            strtext = "";
-			            strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' ></span>";
+			            strtext = strtext + "<span class='btnimg next' onclick='return selafterBlock()'></span>";
 			            PagingHTML += strtext;
 			        }
 			        else {
 			            strtext = "";
-			            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+			            strtext = strtext + "<span class='btnimg next disabled'></span>";
 			            PagingHTML += strtext;
 			        }
 			    }
 			    else {
 			        strtext = "";
-			        strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+			        strtext = strtext + "<span class='btnimg next disabled'></span>";
 			        PagingHTML += strtext;
 			    }
 			    if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-			        strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' ></span>";
+			        strtext = "<span class='btnimg last' onclick='return goToPageByNum(" + totalPage + ")'></span>";
 			        PagingHTML += strtext;
 			    }
 			    else {
-			        strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
+			        strtext = "<span class='btnimg last disabled'></span>";
 			        PagingHTML += strtext;
 			    }
 			    PagingHTML += "</div>";
@@ -805,7 +806,7 @@
 		                type = "1";
 		                cnt = getNodeText(listdom.documentElement.getElementsByTagName("CNT")[0]);
 		                document.getElementById("presentcell").innerHTML = "<spring:message code='ezTask.t200901' />";
-		                document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + currentCount + "</span>";
+		                document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span class='txt_color'>" + currentCount + "</span>";
 		                currentTab = "normal";
 		                if(chkValue === "memo") {
 		                	cnt = currentCount;
@@ -815,7 +816,7 @@
 		                type = "2";
 		                cnt2 = getNodeText(listdom.documentElement.getElementsByTagName("CNT2")[0]);
 		                document.getElementById("presentcell").innerHTML = "<spring:message code='ezTask.t200903' />";
-		                document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + currentCount + "</span>";
+		                document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span class='txt_color'>" + currentCount + "</span>";
 		                currentTab = "send";
 		                if(chkValue === "memo") {
 		                	cnt2 = currentCount;
@@ -825,7 +826,7 @@
 		                type = "3";
 		                cnt3 = getNodeText(listdom.documentElement.getElementsByTagName("CNT3")[0]);
 		                document.getElementById("presentcell").innerHTML = "<spring:message code='ezTask.t200902' />";
-		                document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + currentCount + "</span>";
+		                document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span class='txt_color'>" + currentCount + "</span>";
 		                currentTab = "repeat"
 		                if(chkValue === "memo") {
 			                cnt3 = currentCount;
@@ -893,19 +894,19 @@
 		            case "taskprog":
 		                type = "1";
 		                document.getElementById("presentcell").innerHTML = "<spring:message code='ezTask.t200901' />";
-		                document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + cnt + "</span>";
+		                document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span class='txt_color'>" + cnt + "</span>";
 		                currentTab = "normal";
 		                break;
 		            case "taskdictate":
 		                type = "2";
 		                document.getElementById("presentcell").innerHTML = "<spring:message code='ezTask.t200903' />";
-		                document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + cnt2 + "</span>";
+		                document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span class='txt_color'>" + cnt2 + "</span>";
 		                currentTab = "send";
 		                break;
 		            case "taskrepetition":
 		                type = "3";
 		                document.getElementById("presentcell").innerHTML = "<spring:message code='ezTask.t200902' />";
-		                document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + cnt3 + "</span>";
+		                document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span class='txt_color'>" + cnt3 + "</span>";
 		                currentTab = "repeat"
 		                break;
 		        }

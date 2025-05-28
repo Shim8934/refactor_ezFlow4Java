@@ -41,7 +41,7 @@ var strLang44 = "Select one mail only.";
 var strLang52 = "Error occurred while copying mail.";
 var strLang53 = "Successfully copied.";
 var strLang54 = "Both the folder and the letters in the deleted items folder will be permanently removed.\nAre you sure you want to proceed?";
-var strLang58 = "Do you want to delete this mail permanently?";
+var strLang58 = "Once deleted, this email cannot be recovered.\nDo you want to delete this mail permanently?";
 var strLang59 = "Do you want to delete this mail?";
 var strLang61 = "Receiving denial has been registered successfully.";
 var strLang62 = "An error occurred while adding to the spam registration list.";
@@ -247,7 +247,7 @@ var strLang332 = "You can not delete the top level folder.";
 var strLang333 = "Are you sure you want to permanently delete all the files in the Folder?";
 var strLang334 = "Choose the Folder.";
 var strLang336 = "Path not found.";
-var strLang337 = "Can not post email/approval-document to photo-board or anonymous-board or URL-link-board.";
+var strLang337 = "Posts are only allowed on general and Q&A boards.";
 var strLang338 = "Please register include the words of the subject or body. ex) \"advertise\"";
 var strLang339 = "In the mail subject or body ";
 var strLang340 = "Apply to all mails";
@@ -266,6 +266,13 @@ var strLang353 = "The same domain or email address exists.";
 var strLang354 = "Please enter a domain name.";
 var strLang355 = "Big";
 var strLang359 = "Move completed.";
+var strLangLDH01 = "Do you want to block access to this email?";
+var strLangLDH02 = "Do you want to unblock this email?";
+var strLangLDH03 = "Block completed.";
+var strLangLDH04 = "An error occurred while blocking.";
+var strLangLDH05 = "Unblock completed.";
+var strLangLDH06 = "An error occurred while unblocking.";
+var strLangLDH07 = "This mail is blocked by the administrator.";
 var strLangLHM01 = "Please enter a domain name.";
 var strLangLHM02 = "No admin.";
 var strLangLHM03 = "No List ID is specified.";
@@ -299,7 +306,7 @@ var strLangKMS08 = "Folders can not be uploaded."
 var strLangKYJ03 = "Spaces can not be entered."
 var strLangLSD02 = "The non-members of the department.";
 var strLangJYH01 = "Not selected mail.";
-var strLangKSA01 = "The same email address is already stored : \n %s";
+var strLangKSA01 = "The same email address is already stored : %s";
 var strLangKSA02 = "You do not have permission to send mail.";
 var strLangPYY01 = "Please select a mail account to be automatically forwarded.";
 var strLangLS01 = "No mail selected. \nAre you sure you want to save all mail in that mailbox?"
@@ -307,6 +314,7 @@ var strLangLS02 = "No mail selected. \nAre you sure you want to save all retriev
 var strLangLS03 = "The search results will be downloaded as a single zip file. \nThis process may take a while. Do you want to proceed?"
 var strLangLS04 = ".";
 var strLangLS05 = "';' cannot be contained."
+var strLangAllmailSaveAlert = "No emails selected. \nPlease select emails or search before saving."
 
 /* 2018-07-03 홍승비 - 승인게시물, 커뮤니티 답변메일 companyID 관련 처리*/
 var strLangHSB01 = "This post can be viewed on ";
@@ -333,13 +341,66 @@ var strLangKSA03 = "Would you like to register for the groupware personal calend
 var strLangKSA04 = "Successfully saved appointment.";
 var strLangKSA05 = "Error occured while saving appointment.";
 
-var strLangTagAlreadyUse = "이미 사용 중인 다른 태그의 이름입니다.";
+var strLangTagAlreadyUse = "This name is already in use by another tag.";
 
 /* 2023-05-16 김우철 - 한글 배포용 문서 저장을 위한 메세지 추가 */
 var strLangKWCHd01 = "An error occurred while saving security HWP document. Please try again.";
 
 var strLangNJK01 = "Restricted special characters for an email folder name(";
 var strLangNJK02 = "are included.";
+
+//승인메일
+var strLangAppr01 = "Company mail approval application is not possible because there is no full administrator.";
+var strLangAppr02 = "Approver does not exist";
+var strLangAppr03 = "Approval mail error";
+var strLangAppr04 = "Approval mail cannot be pre-sent."
+var strLangAppr05 = "Mail to the entire company must be approved by the administrator to actually ship it. Do you want to ship it?"
+
+// 스팸신고
+var strLangHSG01 = "Spam report cannot be made as email address is not found.";
+var strLangHSG02 = "Spam report was not processed successfully.";
+
+// 2024.04.29 한슬기 : 메일 관련 메시지
+var strLangHSG03 = "Subject field is empty.";
+
+var strLangKDH01 = "Read info";
+
+//new ui
+const strLangFolderManage = "Manage folder";
+const strLangSubscribe = "Subscribe";
+const strLangPlzCheckSearchInput = "Enter search term.";
+const strLangSearchFetchError = "Error occurred while retrieving search results. -";
+const strLangNoSuchDept = "There is no department found.";
+const strLangDistributionFetchError = "Error occurred while retrieving public distribution group list. -";
+const strLangAddJobSimplyMark = "(Concurrent) ";
+const strLangCompany = "Company";
+const strLangDistributionAdd = "Add distribution list";// ezEmail.t60 = 배포목록추가
+const strLangAddressFetchError = "Error occurred while reading address list";// ezEmail.t585 = 주소목록을 읽는중에 오류발생
+const strLangPlzSelectGroupMail = "Select group message.";// ezEmail.t581 = 그룹메일을 선택해주세요.
+const strLangPlzSelectDistribution = "Select public distribution group.";// ezEmail.t580 = 공용배포그룹을 선택해주세요.
+const strLangNotAllowedSpecialChar = "The special character can't be entered.";
+
+const strLangSelectDept = "Select Department";
+const strLangSelectTitle = "Select Title";
+const strLangSelectRole = "Select Role";
+const strLangPlzCheckSearchNameInput = "Enter name to search.";
+const strLangOrgFetchError = "An error occurred while searching organization chart. -";
+const strLangSelectProxyApproverWarning = "Select a person for deputy.";
+
+const strLangTempSaveAttachmentsWarning = "Attached files will be deleted upon saving. Do you want to save?";
+
+var strNoSubject = "Enter title.";
+var strSendOK = "The email has been sent successfully.";
+var strUreadDelChk = "Do you want to delete all unread emails in this mailbox?";
+var strUreadDelSearch = "Do you want to delete all unread emails among the search results?";
+var strUreadDelPermenant = "Once deleted, the emails cannot be recovered.\nDo you want to permanently delete all unread emails in the mailbox?";
+var strUreadDelSearchPermenant = "Once deleted, the emails cannot be recovered.\nDo you want to permanently delete all unread emails among the search results?";
+
+const strLangTagLimit = "You can register up to 5 tags.";
+const strLangTagadd = "Add tags to mail :";
+
+const strLangChangeButton = "Switch";
+const strLangChangeLimit = "Cannot switch because the attachment size exceeds the limit.";
 
 function GetLocalTime(Offset , pDateTime)
 {

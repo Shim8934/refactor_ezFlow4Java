@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+
+<!-- root를 최상위 태그로 사용해야합니다. -->
+<!-- 폴더는 dir태그로 생성합니다. -->
+<!-- 템플릿 파일은 template태그로 생성합니다. -->
+<!-- title : 폴더 or 파일 명. -->
+<!-- show : 폴더 or 파일을 보여줄지 결정. (true: 보임, false: 숨김) -->
+<!-- path : 템플릿 파일의 경로. (기준 : 에디터가 존재하는 폴더) -->
+<root title="태그프리" show="true">
+  <dir title="템플릿 샘플" show="true">
+    <template title="사업계획서" show="true" path="/ex_documents/doc1.html" />
+    <template title="급여지급명세서" show="true" path="/ex_documents/doc2.html" />
+    <template title="공문양식" show="true" path="/ex_documents/doc3.html" />
+    <template title="기안지" show="true" path="/ex_documents/doc4.html" />
+  </dir>
+  <dir title="기획" show="true"></dir>
+  <dir title="총무부" show="true"></dir>
+  <dir title="인사부" show="true"></dir>
+  <dir title="경리부" show="true"></dir>
+  <dir title="구매부" show="true"></dir>
+  <dir title="영업부" show="true"></dir>
+  <dir title="고객관리부" show="true"></dir>
+</root>

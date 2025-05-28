@@ -6,7 +6,8 @@
 	<head>
 		<title><spring:message code='ezEmail.t659' /></title>
 		<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
-		<link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script>
@@ -29,7 +30,7 @@
 		                Arguments = opener.mail_select_dlmember_cross_dialogArguments[0];
 		                ReturnFunction = opener.mail_select_dlmember_cross_dialogArguments[1];
 		                CancelFunction = opener.mail_select_dlmember_cross_dialogArguments[2];
-		            } catch (e) { }
+		            } catch (e) {console.log(e);}
 		        }
 		        
 		        document.all("cmd_ok").focus();
@@ -77,10 +78,18 @@
 	                <li><span onclick="Window_Close()"></span></li>
 	            </ul>
 	        </div>
+			<c:if test="${newMailFlag ne null}">
+			<div id="txt" style="WIDTH:100%; height:20px; margin-bottom: 5px;">
+				<span style="font-weight: bolder;"><spring:message code='ezEmail.t57'/>&nbsp;&#58;&nbsp;</span>
+				<span>${name}&nbsp;&lt;${mailAddress}&gt;</span>
+			</div>
+			</c:if>
 			<div id="maillist" style="OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:100%; height:350px;">
 			  <table style="width:100%;" class="popuplist" style="TABLE-LAYOUT:fixed" id="checkboxtable">
 			    <tr>
-			      <th style="width:50px;text-align:center;"><spring:message code='ezEmail.t488' /></th>
+				  <c:if test="${newMailFlag eq null}">
+				  <th style="width:50px;text-align:center;"><spring:message code='ezEmail.t488' /></th>
+				  </c:if>	  
 			      <th style="width:120px;text-align:center;"><spring:message code='ezEmail.t31' /></th>
 			      <th style="text-align:center;"><spring:message code='ezEmail.t712' /></th>
 			      <th style="width:100px;text-align:center;"><spring:message code='ezEmail.t26' /></th>
@@ -97,7 +106,9 @@
 			    	<c:otherwise>
 			    		<c:forEach var="item" items="${list}">
 					    <tr>
-					      <td style="text-align:center;"><input type='checkbox' name="goruplistinput" _email="${item.mail}" _name="${item.displayName}" checked ></td>
+						  <c:if test="${newMailFlag eq null}">
+						  <td style="text-align:center;"><input type='checkbox' name="goruplistinput" _email="${item.mail}" _name="${item.displayName}" checked ></td>
+						  </c:if>
 					      <td style="text-align:center;">${item.displayName}</td>
 					      <td style="text-align:center;">&nbsp;${item.company} </td>
 					      <td style="text-align:center;">${item.dept}</td>

@@ -28,8 +28,9 @@
 	<resultMap id="deptTreeInfo" class="OrganDeptVO">
 		<result property="cn" 									column="cn" 							columnIndex="1"/>
 		<result property="displayName" 					        column="displayName" 			        columnIndex="2"/>
-		<result property="extensionAttribute15" 			    column="extensionAttribute15"	        columnIndex="3"/>
-		<result property="type" 								column="type" 						    columnIndex="4"/>		
+		<result property="type" 								column="type" 						    columnIndex="3"/>		
+		<result property="jobId" 								column="JOBID" 						    columnIndex="4"/>		
+		<result property="roleId" 								column="ROLEID" 						columnIndex="5"/>		
 	</resultMap>
 		
 	<resultMap id="attitudeUserConfig" class="AttitudeUserConfigVO">
@@ -42,26 +43,29 @@
 	</resultMap>
 	
 	<resultMap id="attitude" class="AttitudeVO">
-		<result  property="attitudeId" 			column="ATTITUDE_ID"			columnIndex="1"/>
-		<result  property="companyId" 			column="COMPANY_ID"				columnIndex="2"/>
-		<result  property="tenantId" 			column="TENANT_ID"				columnIndex="3"/>
-		<result  property="writerId" 			column="WRITER_ID"				columnIndex="4"/>
-		<result  property="deptId" 				column="DEPT_ID"				columnIndex="5"/>
-		<result  property="startDate" 			column="START_DATE"				columnIndex="6"/>
-		<result  property="endDate" 			column="END_DATE"				columnIndex="7"/>
-		<result  property="modAppl" 			column="MODAPPL"				columnIndex="8"/>
-		<result  property="region" 				column="REGION"					columnIndex="9"/>
-		<result  property="mobile" 				column="MOBILE"					columnIndex="10"/>
-		<result  property="bizSub" 				column="BIZSUB"					columnIndex="11"/>
-		<result  property="content" 			column="CONTENT"				columnIndex="12"/>
-		<result  property="ip" 					column="IP"						columnIndex="13"/>
-		<result  property="dateType" 			column="DATE_TYPE"				columnIndex="14"/>
-		<result  property="typeId" 				column="TYPE_ID"				columnIndex="15"/>
-		<result	 property="typeName"			column="TYPE_NAME"				columnIndex="16"/>
-		<result  property="imgPath"				column="IMG_PATH"				columnIndex="17"/>
-		<result  property="writerName"			column="WRITER_NAME"			columnIndex="18"/>
-		<result  property="writerDeptName"		column="WRITER_DEPT_NAME"		columnIndex="19"/>
-		<result property="workStatus" 			column="WORK_STATUS" 			columnIndex="20"/>
+		<result property="attitudeId" 			column="ATTITUDE_ID"			columnIndex="1"/>
+		<result property="companyId" 			column="COMPANY_ID"				columnIndex="2"/>
+		<result property="tenantId" 			column="TENANT_ID"				columnIndex="3"/>
+		<result property="writerId" 			column="WRITER_ID"				columnIndex="4"/>
+		<result property="deptId" 				column="DEPT_ID"				columnIndex="5"/>
+		<result property="startDate" 			column="START_DATE"				columnIndex="6"/>
+		<result property="endDate" 				column="END_DATE"				columnIndex="7"/>
+		<result property="modAppl" 				column="MODAPPL"				columnIndex="8"/>
+		<result property="region" 				column="REGION"					columnIndex="9"/>
+		<result property="mobile" 				column="MOBILE"					columnIndex="10"/>
+		<result property="bizSub" 				column="BIZSUB"					columnIndex="11"/>
+		<result property="content" 				column="CONTENT"				columnIndex="12"/>
+		<result property="ip" 					column="IP"						columnIndex="13"/>
+		<result property="dateType" 			column="DATE_TYPE"				columnIndex="14"/>
+		<result property="typeId" 				column="TYPE_ID"				columnIndex="15"/>
+		<result	property="typeName"				column="TYPE_NAME"				columnIndex="16"/>
+		<result property="imgPath"				column="IMG_PATH"				columnIndex="17"/>
+		<result property="writerName"			column="WRITER_NAME"			columnIndex="18"/>
+		<result property="writerDeptName"		column="WRITER_DEPT_NAME"		columnIndex="19"/>
+		<result property="attendType"			column="ATTEND_TYPE"			columnIndex="20"/>
+		<result property="latitude" 			column="LATITUDE" 				columnIndex="21" nullValue="0"/>
+		<result property="longitude" 			column="LONGITUDE" 				columnIndex="22" nullValue="0"/>
+		<result property="workStatus" 			column="WORK_STATUS" 			columnIndex="23"/>
 	</resultMap>
 	
 	<resultMap id="attitudeUserConfTime" class="AttitudeUserConfigVO">
@@ -70,7 +74,7 @@
 	</resultMap>
 	
 	<resultMap id="attitudeStatis" class="AttitudeStatisVO">
-		<result property="count"			column="COUNT"			columnIndex="1"/>
+		<result property="count"			column="COUNT"				columnIndex="1"/>
 		<result property="typeId"			column="TYPE_ID"			columnIndex="2"/>
 	</resultMap>
 	
@@ -152,13 +156,13 @@
 	</resultMap>
 	
 	<resultMap class="java.util.HashMap" id="monthlyAnnualMap">
-		<result property="annualCount" 					column="ANNUAL_COUNT" 					columnIndex="1"/>
+		<result property="annualCount" 				column="ANNUAL_COUNT" 		columnIndex="1"/>
 		<result property="month" 					column="MONTH" 				columnIndex="2"/>
 	</resultMap>
 
 	<resultMap class="java.util.HashMap" id="tenantIdCompanyIdInfo">
 		<result property="tenantId" 					column="TENANT_ID" 					columnIndex="1"/>
-		<result property="companyId" 					column="PHYSICALDELIVERYOFFICENAME" 				columnIndex="2"/>
+		<result property="companyId" 					column="PHYSICALDELIVERYOFFICENAME" columnIndex="2"/>
 	</resultMap>
 
 	<resultMap class="java.util.HashMap" id="getJoinDateUserList">
@@ -185,76 +189,74 @@
 	</resultMap>
 	
 	<resultMap class="java.util.HashMap" id="attitudeAprlineMap">
-		<result property="docId"		column="DOCID" 		columnIndex="1"/>
-		<result property="aprMemberSn"		column="APRMEMBERSN" 		columnIndex="2"/>
-		<result property="aprType"		column="APRTYPE"		columnIndex="3"/>
-		<result property="aprState"		column="APRSTATE" 		columnIndex="4"/> 		
-		<result property="aprMemberId"		column="APRMEMBERID" 		columnIndex="5"/>
-		<result property="aprMemberIsDeptYn"			column="APRMEMBERISDEPTYN" 			columnIndex="6"/>
-		<result property="aprMemberName"			column="APRMEMBERNAME" 			columnIndex="7"/>
-		<result property="aprMemberJobTitle"		column="APRMEMBERJOBTITLE" 		columnIndex="8"/>
-		<result property="aprMemberDeptId"	column="APRMEMBERDEPTID" 	columnIndex="9"/>
-		<result property="aprMemberDeptName"			column="APRMEMBERDEPTNAME" 			columnIndex="10"/>
-		<result property="aprMemberLdapPath"			column="APRMEMBERLDAPPATH" 			columnIndex="11"/>
+		<result property="docId"				column="DOCID" 					columnIndex="1"/>
+		<result property="aprMemberSn"			column="APRMEMBERSN" 			columnIndex="2"/>
+		<result property="aprType"				column="APRTYPE"				columnIndex="3"/>
+		<result property="aprState"				column="APRSTATE" 				columnIndex="4"/> 		
+		<result property="aprMemberId"			column="APRMEMBERID" 			columnIndex="5"/>
+		<result property="aprMemberIsDeptYn"	column="APRMEMBERISDEPTYN" 		columnIndex="6"/>
+		<result property="aprMemberName"		column="APRMEMBERNAME" 			columnIndex="7"/>
+		<result property="aprMemberJobTitle"	column="APRMEMBERJOBTITLE" 		columnIndex="8"/>
+		<result property="aprMemberDeptId"		column="APRMEMBERDEPTID" 		columnIndex="9"/>
+		<result property="aprMemberDeptName"	column="APRMEMBERDEPTNAME" 		columnIndex="10"/>
+		<result property="aprMemberLdapPath"	column="APRMEMBERLDAPPATH" 		columnIndex="11"/>
 	</resultMap>
 	
+	<!-- 2024-07-23 홍승비 - SQL Injection 수정 > $ 기호 제거, 오라클 쿼리의 오류 수정 (MySQL 쿼리 그대로 복사한 부분 수정) -->
 	<sql id="ezAttitudeDAO.searchQuery">
 		<isNotEmpty property="userId" prepend="and"> 
 			a.WRITER_ID = #userId#
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchDeptId">
-			A.WRITER_DEPT_ID = #searchDeptId#
+			a.WRITER_DEPT_ID = #searchDeptId#
 		</isNotEmpty>
-		<iterate prepend="AND A.WRITER_DEPT_ID IN" property="deptIdList" open="(" close=")" conjunction=",">
+		<iterate prepend="AND a.WRITER_DEPT_ID IN" property="deptIdList" open="(" close=")" conjunction=",">
       		#deptIdList[]#
 		</iterate>
 		<isNotEmpty property="apprUserName" prepend="and">
-			<isNotEmpty property="apprUserName" >
-				A.APPR_USER_NAME$lang$ LIKE CONCAT('%', #apprUserName#,'%')
+			<isNotEmpty property="apprUserName">
+				CASE #lang# WHEN '2' THEN a.APPR_USER_NAME2 ELSE a.APPR_USER_NAME END LIKE '%' || #apprUserName# ||'%'
 			</isNotEmpty>
 		</isNotEmpty>
 		<isNotEmpty property="writerName" prepend="and">
-			<isNotEmpty property="writerName" >
-				A.WRITER_NAME$lang$ LIKE CONCAT('%', #writerName#,'%')
+			<isNotEmpty property="writerName">
+				CASE #lang# WHEN '2' THEN a.WRITER_NAME2 ELSE a.WRITER_NAME END LIKE '%' || #writerName# || '%'
 			</isNotEmpty>
 		</isNotEmpty>
 		<isNotEmpty property="writerDeptName" prepend="and">
-			<isNotEmpty property="writerDeptName" >
-				A.WRITER_DEPT_NAME$lang$ LIKE CONCAT('%', #writerDeptName#,'%')
+			<isNotEmpty property="writerDeptName">
+				CASE #lang# WHEN '2' THEN a.WRITER_DEPT_NAME2 ELSE a.WRITER_DEPT_NAME END LIKE '%' || #writerDeptName# || '%'
 			</isNotEmpty>
 		</isNotEmpty>
 		<isNotEmpty property="startDate" prepend="and">
 			<![CDATA[
-			DATE_FORMAT(DATE_ADD(DATE_FORMAT(A.CHANGE_DATE,'%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d') >= #startDate# 
+			a.CHANGE_DATE + #offset# / (24 * 60) >= TO_DATE(#startDate# || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS') 
 			]]>
 		</isNotEmpty>
 		<isNotEmpty property="endDate" prepend="and">
 			<![CDATA[
-			DATE_FORMAT(DATE_ADD(DATE_FORMAT(A.CHANGE_DATE,'%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d') <= #endDate#
+			a.CHANGE_DATE + #offset# / (24 * 60) <= TO_DATE(#endDate# || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
 			]]>
 		</isNotEmpty>
 		<isNotEmpty property="type" prepend="and">
-			<![CDATA[
 			a.APPR_STATUS = #type#
-			]]>
 		</isNotEmpty>
-		<![CDATA[
 			AND
-				A.DELFLAG = 0
-		]]>
-		<isNotEmpty prepend="" property="order">
-				ORDER BY $order$, A.APPL_CNT DESC
+				a.DELFLAG = 0
+			ORDER BY
+		<isNotEmpty property="orderColumn">
+			<isEqual property="orderColumn" compareValue="START_DATE">START_DATE</isEqual>
+			<isEqual property="orderColumn" compareValue="WRITER_NAME">WRITER_NAME</isEqual>
+			<isEqual property="orderColumn" compareValue="WRITER_DEPT_NAME">WRITER_DEPT_NAME</isEqual>
+			<isEqual property="orderColumn" compareValue="APPR_STATUS">APPR_STATUS</isEqual>
+			<isEqual property="orderColumn" compareValue="APPR_USER_NAME">APPR_USER_NAME</isEqual>
+			<isEqual property="orderColumn" compareValue="APPL_DATE">APPL_DATE</isEqual>
+			<isEqual property="orderSort" compareValue="DESC">DESC</isEqual>,
 		</isNotEmpty>
-		<isEmpty prepend="" property="order">
-				ORDER BY A.APPL_DATE DESC, A.APPL_CNT DESC
+		<isEmpty property="orderColumn">
+			a.APPL_DATE DESC,
 		</isEmpty>
-		<isNotEmpty property="startPoint" prepend="limit">
-			<isNotEmpty property="endPoint">
-				<![CDATA[
-					$startPoint$, $endPoint$
-				]]>
-			</isNotEmpty>
-		</isNotEmpty>
+			a.APPL_CNT DESC
 	</sql>
 	
 	<sql id="ezAttitudeDAO.searchQuery2">
@@ -262,58 +264,56 @@
 			a.WRITER_ID = #userId#
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchDeptId">
-			A.WRITER_DEPT_ID = #searchDeptId#
+			a.WRITER_DEPT_ID = #searchDeptId#
 		</isNotEmpty>
 		<iterate prepend="AND A.WRITER_DEPT_ID IN" property="deptIdList" open="(" close=")" conjunction=",">
       		#deptIdList[]#
 		</iterate>
 		<isNotEmpty property="apprUserName" prepend="and">
-			<isNotEmpty property="apprUserName" >
-				A.APPR_USER_NAME$lang$ LIKE CONCAT('%', #apprUserName#,'%')
+			<isNotEmpty property="apprUserName">
+				CASE #lang# WHEN '2' THEN a.APPR_USER_NAME2 ELSE a.APPR_USER_NAME END LIKE '%' || #apprUserName# || '%'
 			</isNotEmpty>
 		</isNotEmpty>
 		<isNotEmpty property="writerName" prepend="and">
-			<isNotEmpty property="writerName" >
-				A.WRITER_NAME$lang$ LIKE CONCAT('%', #writerName#,'%')
+			<isNotEmpty property="writerName">
+				CASE #lang# WHEN '2' THEN a.WRITER_NAME2 ELSE a.WRITER_NAME END LIKE '%' || #writerName# || '%'
 			</isNotEmpty>
 		</isNotEmpty>
 		<isNotEmpty property="writerDeptName" prepend="and">
-			<isNotEmpty property="writerDeptName" >
-				A.WRITER_DEPT_NAME$lang$ LIKE CONCAT('%', #writerDeptName#,'%')
+			<isNotEmpty property="writerDeptName">
+				CASE #lang# WHEN '2' THEN a.WRITER_DEPT_NAME2 ELSE a.WRITER_DEPT_NAME END LIKE '%' || #writerDeptName# || '%'
 			</isNotEmpty>
 		</isNotEmpty>
 		<isNotEmpty property="startDate" prepend="and">
 			<![CDATA[
-			DATE_FORMAT(DATE_ADD(DATE_FORMAT(B.START_DATE,'%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d') >= #startDate# 
+			b.START_DATE + #offset# / (24 * 60) >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') 
 			]]>
 		</isNotEmpty>
 		<isNotEmpty property="endDate" prepend="and">
 			<![CDATA[
-			DATE_FORMAT(DATE_ADD(DATE_FORMAT(B.START_DATE,'%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d') <= #endDate#
+			b.START_DATE + #offset# / (24 * 60) >= TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
 			]]>
 		</isNotEmpty>
 		<isNotEmpty property="type" prepend="and">
-			<![CDATA[
 			a.APPR_STATUS = #type#
-			]]>
 		</isNotEmpty>
-		<![CDATA[
 			AND
-				A.DELFLAG = 0
-		]]>
-		<isNotEmpty prepend="" property="order">
-				ORDER BY $order$, A.APPL_CNT DESC
+				a.DELFLAG = 0
+			ORDER BY
+		<isNotEmpty property="orderColumn">
+			<isEqual property="orderColumn" compareValue="START_DATE">START_DATE</isEqual>
+			<isEqual property="orderColumn" compareValue="WRITER_NAME">WRITER_NAME</isEqual>
+			<isEqual property="orderColumn" compareValue="WRITER_DEPT_NAME">WRITER_DEPT_NAME</isEqual>
+			<isEqual property="orderColumn" compareValue="TYPE_NAME">TYPE_NAME</isEqual>
+			<isEqual property="orderColumn" compareValue="APPR_STATUS">APPR_STATUS</isEqual>
+			<isEqual property="orderColumn" compareValue="APPR_USER_NAME">APPR_USER_NAME</isEqual>
+			<isEqual property="orderColumn" compareValue="APPL_DATE">APPL_DATE</isEqual>
+			<isEqual property="orderSort" compareValue="DESC">DESC</isEqual>,
 		</isNotEmpty>
-		<isEmpty prepend="" property="order">
-				ORDER BY A.APPL_DATE DESC, A.APPL_CNT DESC
+		<isEmpty property="orderColumn">
+			a.APPL_DATE DESC,
 		</isEmpty>
-		<isNotEmpty property="startPoint" prepend="limit">
-			<isNotEmpty property="endPoint">
-				<![CDATA[
-					$startPoint$, $endPoint$
-				]]>
-			</isNotEmpty>
-		</isNotEmpty>
+			a.APPL_CNT DESC
 	</sql>
 	
 	<select id="ezAttitudeDAO.getAttitudeList" parameterClass="Map" resultMap="attitude" remapResults="true">
@@ -343,19 +343,20 @@
 					A.IP,
 					A.DATE_TYPE,
 					A.TYPE_ID,
-					B.TYPE_NAME$lang$ AS TYPE_NAME,
+					CASE #lang# WHEN '2' THEN B.TYPE_NAME2 ELSE B.TYPE_NAME END AS TYPE_NAME,
 					B.IMG_PATH,
-					C.DISPLAYNAME$lang$ AS WRITER_NAME,
-					C.DESCRIPTION$lang$ AS WRITER_DEPT_NAME,
+					CASE #lang# WHEN '2' THEN C.DISPLAYNAME2 ELSE C.DISPLAYNAME END AS WRITER_NAME,
+					CASE #lang# WHEN '2' THEN C.DESCRIPTION2 ELSE C.DESCRIPTION END AS WRITER_DEPT_NAME,
+					A.ATTEND_TYPE,
+					A.LATITUDE,
+					A.LONGITUDE,
 					A.WORK_STATUS
 				FROM   
 					tbl_attitude A 
 				INNER JOIN 
 					tbl_attitude_type B 
 				ON 
-				]]>
 					(A.TYPE_ID = B.TYPE_ID AND A.COMPANY_ID = B.COMPANY_ID AND A.TENANT_ID = B.TENANT_ID AND ISDEL = 0)
-				<![CDATA[
 				INNER JOIN 
 					tbl_usermaster C
 				ON
@@ -428,10 +429,14 @@
 						D.IP,
 						D.DATE_TYPE,
 						D.TYPE_ID,
-						E.TYPE_NAME$lang$ AS TYPE_NAME,
+						CASE #lang# WHEN '2' THEN E.TYPE_NAME2 ELSE E.TYPE_NAME END AS TYPE_NAME,
 						E.IMG_PATH,
-						F.DISPLAYNAME$lang$ AS WRITER_NAME,
-						F.DESCRIPTION$lang$ AS WRITER_DEPT_NAME
+						CASE #lang# WHEN '2' THEN F.DISPLAYNAME2 ELSE F.DISPLAYNAME END AS WRITER_NAME,
+						CASE #lang# WHEN '2' THEN F.DESCRIPTION2 ELSE F.DESCRIPTION END AS WRITER_DEPT_NAME,
+						D.ATTEND_TYPE,
+						D.LATITUDE,
+						D.LONGITUDE,
+						D.WORK_STATUS
 					FROM   
 						tbl_attitude D 
 					INNER JOIN 
@@ -467,7 +472,7 @@
 							or
 							(START_DATE + #offsetMin# / (24 * 60) < TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') AND END_DATE + #offsetMin# / (24 * 60) >= TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS'))
 						)
-				]]>
+					]]>
 			</isNotEmpty>
 		<![CDATA[
 		) H
@@ -676,16 +681,16 @@
 				FROM
 				(
 					SELECT
-							a.attitude_id as ATTITUDE_ID,
-							TO_CHAR(a.change_date + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') as CHANGE_DATE,
-							a.appr_user_name$lang$ as APPR_USER_NAME,
-							TO_CHAR(a.origin_date + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') as START_DATE,
-							a.appr_status as APPR_STATUS,
-							a.writer_name$lang$ as WRITER_NAME,
-							a.writer_dept_name$lang$ as WRITER_DEPT_NAME,
-							a.appl_cnt AS APPL_CNT,
-							a.writer_id as WRITER_ID,
-							TO_CHAR(a.appl_date + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') as APPL_DATE
+						a.attitude_id as ATTITUDE_ID,
+						TO_CHAR(a.change_date + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') as CHANGE_DATE,
+						CASE #lang# WHEN '2' THEN a.appr_user_name2 ELSE a.appr_user_name END AS APPR_USER_NAME,
+						TO_CHAR(a.origin_date + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') as START_DATE,
+						a.appr_status as APPR_STATUS,
+						CASE #lang# WHEN '2' THEN a.writer_name2 ELSE a.writer_name END AS WRITER_NAME,
+						CASE #lang# WHEN '2' THEN a.writer_dept_name2 ELSE a.writer_dept_name END AS WRITER_DEPT_NAME,
+						a.appl_cnt AS APPL_CNT,
+						a.writer_id as WRITER_ID,
+						TO_CHAR(a.appl_date + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') as APPL_DATE
 					FROM 
 						tbl_attitude_modappl a 
 					inner 
@@ -703,55 +708,7 @@
 					and
 						a.writer_id NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
 				]]>
-				<isNotEmpty property="userId" prepend="and"> 
-					a.WRITER_ID = #userId#
-				</isNotEmpty>
-				<isNotEmpty prepend="AND" property="searchDeptId">
-					A.WRITER_DEPT_ID = #searchDeptId#
-				</isNotEmpty>
-				<iterate prepend="AND A.WRITER_DEPT_ID IN" property="deptIdList" open="(" close=")" conjunction=",">
-		      		#deptIdList[]#
-				</iterate>
-				<isNotEmpty property="apprUserName" prepend="and">
-					<isNotEmpty property="apprUserName" >
-						A.APPR_USER_NAME$lang$ LIKE '%' || #apprUserName# ||'%'
-					</isNotEmpty>
-				</isNotEmpty>
-				<isNotEmpty property="writerName" prepend="and">
-					<isNotEmpty property="writerName" >
-						A.WRITER_NAME$lang$ LIKE '%' || #writerName# || '%'
-					</isNotEmpty>
-				</isNotEmpty>
-				<isNotEmpty property="writerDeptName" prepend="and">
-					<isNotEmpty property="writerDeptName" >
-						A.WRITER_DEPT_NAME$lang$ LIKE '%' || #writerDeptName# || '%'
-					</isNotEmpty>
-				</isNotEmpty>
-				<isNotEmpty property="startDate" prepend="and">
-					<![CDATA[
-						A.CHANGE_DATE + #offset# / (24 * 60) >= TO_DATE(#startDate# || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS') 
-					]]>
-				</isNotEmpty>
-				<isNotEmpty property="endDate" prepend="and">
-					<![CDATA[
-						A.CHANGE_DATE + #offset# / (24 * 60) <= TO_DATE(#endDate# || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
-					]]>
-				</isNotEmpty>
-				<isNotEmpty property="type" prepend="and">
-					<![CDATA[
-						a.APPR_STATUS = #type#
-					]]>
-				</isNotEmpty>
-				<![CDATA[
-					AND
-						A.DELFLAG = 0
-				]]>
-				<isNotEmpty prepend="" property="order">
-						ORDER BY $order$, A.APPL_CNT DESC
-				</isNotEmpty>
-				<isEmpty prepend="" property="order">
-						ORDER BY A.APPL_DATE DESC, A.APPL_CNT DESC
-				</isEmpty>
+				<include refid="ezAttitudeDAO.searchQuery"/>
 				) T1
 			)
 			<isNotEmpty property="startRow">
@@ -787,17 +744,17 @@
 			SELECT
 				a.attitude_id AS ATTITUDE_ID,
 				TO_CHAR(a.change_date + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') AS CHANGE_DATE,
-				a.appr_user_name$lang$ AS APPR_USER_NAME,
+				CASE #lang# WHEN '2' THEN a.appr_user_name2 ELSE a.appr_user_name END AS APPR_USER_NAME,
 				TO_CHAR(a.origin_date + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') AS START_DATE,
 				a.appr_status AS APPR_STATUS,
 				c.type_id AS TYPE_ID,
-				c.type_name$lang$ AS TYPE_NAME,
+				CASE #lang# WHEN '2' THEN c.type_name2 ELSE c.type_name END AS TYPE_NAME,
 				a.content AS CONTENT,
 				a.writer_id AS WRITER_ID,
 				a.writer_dept_id AS WRITER_DEPT_ID,
-				a.writer_name$lang$ AS WRITER_NAME,
-				a.writer_title$lang$ AS WRITER_TITLE,
-				a.writer_dept_name$lang$ AS WRITER_DEPT_NAME
+				CASE #lang# WHEN '2' THEN a.writer_name2 ELSE a.writer_name END AS WRITER_NAME,
+				CASE #lang# WHEN '2' THEN a.writer_title2 ELSE a.writer_title END AS WRITER_TITLE,
+				CASE #lang# WHEN '2' THEN a.writer_dept_name2 ELSE a.writer_dept_name END AS WRITER_DEPT_NAME
 			FROM 
 				tbl_attitude_modappl a
 			inner 
@@ -819,7 +776,7 @@
 			and
 				a.ATTITUDE_ID = #attModId#
 		]]>
-		<!-- 			applCnt가 없으면 제일 큰 거 있으면 applCnt에 해당하는 수정신청을 보여준다. -->
+		<!-- applCnt가 없으면 제일 큰 값 (가장 마지막 수정신청) / 있으면 applCnt에 해당하는 수정신청을 보여준다. -->
 		<isNotEmpty property="applCnt">
 			and
 				a.APPL_CNT = #applCnt#
@@ -921,55 +878,7 @@
 			and
 				a.writer_id NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
 		]]>
-		<isNotEmpty property="userId" prepend="and"> 
-			a.WRITER_ID = #userId#
-		</isNotEmpty>
-		<isNotEmpty prepend="AND" property="searchDeptId">
-			A.WRITER_DEPT_ID = #searchDeptId#
-		</isNotEmpty>
-		<iterate prepend="AND A.WRITER_DEPT_ID IN" property="deptIdList" open="(" close=")" conjunction=",">
-      		#deptIdList[]#
-		</iterate>
-		<isNotEmpty property="apprUserName" prepend="and">
-			<isNotEmpty property="apprUserName" >
-				A.APPR_USER_NAME$lang$ LIKE '%' || #apprUserName# ||'%'
-			</isNotEmpty>
-		</isNotEmpty>
-		<isNotEmpty property="writerName" prepend="and">
-			<isNotEmpty property="writerName" >
-				A.WRITER_NAME$lang$ LIKE '%' || #writerName# || '%'
-			</isNotEmpty>
-		</isNotEmpty>
-		<isNotEmpty property="writerDeptName" prepend="and">
-			<isNotEmpty property="writerDeptName" >
-				A.WRITER_DEPT_NAME$lang$ LIKE '%' || #writerDeptName# || '%'
-			</isNotEmpty>
-		</isNotEmpty>
-		<isNotEmpty property="startDate" prepend="and">
-			<![CDATA[
-			A.CHANGE_DATE + #offset# / (24 * 60) >= TO_DATE(#startDate# || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS') 
-			]]>
-		</isNotEmpty>
-		<isNotEmpty property="endDate" prepend="and">
-			<![CDATA[
-			A.CHANGE_DATE + #offset# / (24 * 60) <= TO_DATE(#endDate# || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
-			]]>
-		</isNotEmpty>
-		<isNotEmpty property="type" prepend="and">
-			<![CDATA[
-			a.APPR_STATUS = #type#
-			]]>
-		</isNotEmpty>
-		<![CDATA[
-			AND
-				A.DELFLAG = 0
-		]]>
-		<isNotEmpty prepend="" property="order">
-				ORDER BY $order$, A.APPL_CNT DESC
-		</isNotEmpty>
-		<isEmpty prepend="" property="order">
-				ORDER BY A.APPL_DATE DESC, A.APPL_CNT DESC
-		</isEmpty>
+		<include refid="ezAttitudeDAO.searchQuery"/>
 	</select>
 	
 	<select id="ezAttitudeDAO.getAttsModAttCount" parameterClass="Map" resultClass="Integer">
@@ -1145,7 +1054,7 @@
 		<![CDATA[
 			SELECT 
 				A.FORM_ID,
-				A.FORM_HTML$lang$ AS FORM_HTML
+				CASE #lang# WHEN '2' THEN TO_CHAR(A.FORM_HTML2) ELSE TO_CHAR(A.FORM_HTML) END AS FORM_HTML
 			FROM 
 				tbl_attitude_form A
 			INNER JOIN
@@ -1342,10 +1251,10 @@
 			A.IP,
 			A.DATE_TYPE,
 			A.TYPE_ID,
-			B.TYPE_NAME$lang$ AS TYPE_NAME,
+			CASE #lang# WHEN '2' THEN B.TYPE_NAME2 ELSE B.TYPE_NAME END AS TYPE_NAME,
 			B.IMG_PATH,
-		    C.DISPLAYNAME$lang$ AS DISPLAYNAME,
-		    C.DESCRIPTION$lang$ AS DESCRIPTION,
+			CASE #lang# WHEN '2' THEN C.DISPLAYNAME2 ELSE C.DISPLAYNAME END AS DISPLAYNAME,
+			CASE #lang# WHEN '2' THEN C.DESCRIPTION2 ELSE C.DESCRIPTION END AS DESCRIPTION,
 		    NVL(D.ANNUAL_APPR_STATUS, -1) as ANNUAL_APPR_STATUS,
 		    NVL(
 				    (
@@ -1656,13 +1565,13 @@
 			SELECT
 				A.ATTITUDE_ID,
 				to_char(A.APPR_DATE + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') AS APPR_DATE,
-				A.APPR_USER_NAME$lang$ AS APPR_USER_NAME,
+				CASE #lang# WHEN '2' THEN A.APPR_USER_NAME2 ELSE A.APPR_USER_NAME END AS APPR_USER_NAME,
 				A.APPR_STATUS,
 				A.CONTENT,
 				to_char(A.ORIGIN_DATE + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') AS ORIGIN_DATE,
 				to_char(A.CHANGE_DATE + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') AS CHANGE_DATE,
-				B.TITLE$lang$ AS TITLE,
-				B.DESCRIPTION$lang$ AS DESCRIPTION
+				CASE #lang# WHEN '2' THEN B.TITLE2 ELSE B.TITLE END AS TITLE,
+				CASE #lang# WHEN '2' THEN B.DESCRIPTION2 ELSE B.DESCRIPTION END AS DESCRIPTION
 			FROM 
 				TBL_ATTITUDE_MODAPPL A
 			INNER JOIN
@@ -1921,174 +1830,216 @@
 	</select>
 	
 	<select id="ezAttitudeDAO.getSearchListCount" parameterClass="Map" resultClass="int">
-		<![CDATA[
-			SELECT 
-				COUNT(*) AS TOTALCOUNT 
-			FROM (
-				SELECT
-					CN
-				FROM
-					TBL_USERMASTER  A
-					$strSQL$
-		]]>					
+		SELECT 
+			COUNT(*) AS TOTALCOUNT 
+		FROM (
+			SELECT
+				CN
+			FROM
+				TBL_USERMASTER A
+		<isNotEmpty property="v_SEARCHCOL">
+			WHERE
+			<isEqual property="v_SEARCHCOL" compareValue="DISPLAYNAME">
+				(DISPLAYNAME LIKE ('%' || #v_SEARCHPARAM# || '%') OR DISPLAYNAME2 LIKE ('%' || #v_SEARCHPARAM# || '%'))
+			</isEqual>
+			<isEqual property="v_SEARCHCOL" compareValue="DESCRIPTION">
+				(DESCRIPTION LIKE ('%' || #v_SEARCHPARAM# || '%') OR DESCRIPTION2 LIKE ('%' || #v_SEARCHPARAM# || '%'))
+			</isEqual>
+			<isEqual property="v_SEARCHCOL" compareValue="TITLE">
+				(A.TITLE LIKE ('%' || #v_SEARCHPARAM# || '%') OR A.TITLE2 LIKE ('%' || #v_SEARCHPARAM# || '%'))
+			</isEqual>
+			<isEqual property="v_SEARCHCOL" compareValue="TELEPHONENUMBER">
+				TELEPHONENUMBER LIKE ('%' || #v_SEARCHPARAM# || '%')
+			</isEqual>
+			<isEqual property="v_SEARCHCOL" compareValue="MOBILE">
+				MOBILE LIKE ('%' || #v_SEARCHPARAM# || '%')
+			</isEqual>
+			<isEqual property="v_SEARCHCOL" compareValue="HOMEPHONE">
+				HOMEPHONE LIKE ('%' || #v_SEARCHPARAM# || '%')
+			</isEqual>
+			<isEqual property="v_SEARCHCOL" compareValue="FACSIMILETELEPHONENUMBER">
+				FACSIMILETELEPHONENUMBER LIKE ('%' || #v_SEARCHPARAM# || '%')
+			</isEqual>
+			<isEqual property="v_SEARCHCOL" compareValue="MAIL">
+				MAIL LIKE ('%' || #v_SEARCHPARAM# || '%')
+			</isEqual>
+			<isEqual property="v_SEARCHCOL" compareValue="STREETADDRESS">
+				STREETADDRESS LIKE ('%' || #v_SEARCHPARAM# || '%')
+			</isEqual>
+		</isNotEmpty>
 		<iterate prepend="AND DEPARTMENT IN" property="deptIdList" open="(" close=")" conjunction=",">
       		#deptIdList[]#
 		</iterate>
-		<![CDATA[					
-				AND 
-					CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)
-				AND 
-					A.TENANT_ID = #v_TENANT_ID#
-
-				UNION ALL
-
-				SELECT
-					A.CN
-				FROM
-					TBL_USERMASTER B
-				INNER JOIN  TBL_ADDJOBMASTER A
-				ON
-					a.cn = b.cn and a.tenant_id = b.tenant_id
-					$strSQL$
-		]]>
+			AND 
+				CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)
+			AND 
+				A.TENANT_ID = #v_TENANT_ID#
+			
+			UNION ALL
+			
+			SELECT
+				A.CN
+			FROM
+				TBL_USERMASTER B
+			INNER JOIN
+				TBL_ADDJOBMASTER A
+			ON
+				A.cn = B.cn and A.tenant_id = B.tenant_id
+		<isNotEmpty property="v_SEARCHCOL">
+			WHERE
+			<isEqual property="v_SEARCHCOL" compareValue="DISPLAYNAME">
+				(DISPLAYNAME LIKE ('%' || #v_SEARCHPARAM# || '%') OR DISPLAYNAME2 LIKE ('%' || #v_SEARCHPARAM# || '%'))
+			</isEqual>
+			<isEqual property="v_SEARCHCOL" compareValue="DESCRIPTION">
+				(DESCRIPTION LIKE ('%' || #v_SEARCHPARAM# || '%') OR DESCRIPTION2 LIKE ('%' || #v_SEARCHPARAM# || '%'))
+			</isEqual>
+			<isEqual property="v_SEARCHCOL" compareValue="TITLE">
+				(A.TITLE LIKE ('%' || #v_SEARCHPARAM# || '%') OR A.TITLE2 LIKE ('%' || #v_SEARCHPARAM# || '%'))
+			</isEqual>
+			<isEqual property="v_SEARCHCOL" compareValue="TELEPHONENUMBER">
+				TELEPHONENUMBER LIKE ('%' || #v_SEARCHPARAM# || '%')
+			</isEqual>
+			<isEqual property="v_SEARCHCOL" compareValue="MOBILE">
+				MOBILE LIKE ('%' || #v_SEARCHPARAM# || '%')
+			</isEqual>
+			<isEqual property="v_SEARCHCOL" compareValue="HOMEPHONE">
+				HOMEPHONE LIKE ('%' || #v_SEARCHPARAM# || '%')
+			</isEqual>
+			<isEqual property="v_SEARCHCOL" compareValue="FACSIMILETELEPHONENUMBER">
+				FACSIMILETELEPHONENUMBER LIKE ('%' || #v_SEARCHPARAM# || '%')
+			</isEqual>
+			<isEqual property="v_SEARCHCOL" compareValue="MAIL">
+				MAIL LIKE ('%' || #v_SEARCHPARAM# || '%')
+			</isEqual>
+			<isEqual property="v_SEARCHCOL" compareValue="STREETADDRESS">
+				STREETADDRESS LIKE ('%' || #v_SEARCHPARAM# || '%')
+			</isEqual>
+		</isNotEmpty>
 		<iterate prepend="AND DEPARTMENT IN" property="deptIdList" open="(" close=")" conjunction=",">
       		#deptIdList[]#
 		</iterate>
-		<![CDATA[					 
-				AND 
-					A.TENANT_ID = #v_TENANT_ID#
-				) A
-		]]>
+			AND 
+				A.TENANT_ID = #v_TENANT_ID#
+		) A
 	</select>
 	
+	<!-- 2024-07-25 홍승비 - SQL Injection 수정 > $ 기호 제거, 사용하지 않는 분기 제거, 겸직 사용자 검색을 위한 JOBID, ROLEID 파라미터 추가 -->
 	<select id="ezAttitudeDAO.attOrganSearchList" parameterClass="Map" resultMap="deptTreeInfo">
-		<isEqual property="type" compareValue="U">
-			<![CDATA[
-			 SELECT
-			 		* 
-				FROM
-				 	(SELECT 
-					 	ROW_NUMBER() OVER(order by CN) as RNUM,  
-						cn, 
-						displayName,
-						extensionAttribute15, 
-						type 
-			          FROM
-			          	(SELECT  
-			             	cn, 
-			                department as displayName, 
-			                '' as extensionAttribute15,
-			                'user' as type,
-			                DESCRIPTION 
-			             FROM  
-			             	TBL_USERMASTER A 
-                         $strSQL$
-			]]>					
+		SELECT
+			* 
+		FROM
+		 	(SELECT 
+			 	ROW_NUMBER() OVER(order by CN) as RNUM,  
+				cn,
+				displayName,
+				type,
+				DESCRIPTION,
+				JOBID,
+				ROLEID 
+			FROM
+				(SELECT  
+					cn,
+					department as displayName,
+					'USER' as type,
+					DESCRIPTION,
+					'' AS JOBID,
+					'' AS ROLEID
+			   FROM  
+					TBL_USERMASTER A 
+			<isNotEmpty property="v_SEARCHCOL">
+				WHERE
+				<isEqual property="v_SEARCHCOL" compareValue="DISPLAYNAME">
+					(DISPLAYNAME LIKE ('%' || #v_SEARCHPARAM# || '%') OR DISPLAYNAME2 LIKE ('%' || #v_SEARCHPARAM# || '%'))
+				</isEqual>
+				<isEqual property="v_SEARCHCOL" compareValue="DESCRIPTION">
+					(DESCRIPTION LIKE ('%' || #v_SEARCHPARAM# || '%') OR DESCRIPTION2 LIKE ('%' || #v_SEARCHPARAM# || '%'))
+				</isEqual>
+				<isEqual property="v_SEARCHCOL" compareValue="TITLE">
+					(A.TITLE LIKE ('%' || #v_SEARCHPARAM# || '%') OR A.TITLE2 LIKE ('%' || #v_SEARCHPARAM# || '%'))
+				</isEqual>
+				<isEqual property="v_SEARCHCOL" compareValue="TELEPHONENUMBER">
+					TELEPHONENUMBER LIKE ('%' || #v_SEARCHPARAM# || '%')
+				</isEqual>
+				<isEqual property="v_SEARCHCOL" compareValue="MOBILE">
+					MOBILE LIKE ('%' || #v_SEARCHPARAM# || '%')
+				</isEqual>
+				<isEqual property="v_SEARCHCOL" compareValue="HOMEPHONE">
+					HOMEPHONE LIKE ('%' || #v_SEARCHPARAM# || '%')
+				</isEqual>
+				<isEqual property="v_SEARCHCOL" compareValue="FACSIMILETELEPHONENUMBER">
+					FACSIMILETELEPHONENUMBER LIKE ('%' || #v_SEARCHPARAM# || '%')
+				</isEqual>
+				<isEqual property="v_SEARCHCOL" compareValue="MAIL">
+					MAIL LIKE ('%' || #v_SEARCHPARAM# || '%')
+				</isEqual>
+				<isEqual property="v_SEARCHCOL" compareValue="STREETADDRESS">
+					STREETADDRESS LIKE ('%' || #v_SEARCHPARAM# || '%')
+				</isEqual>
+			</isNotEmpty>
 			<iterate prepend="AND DEPARTMENT IN" property="deptIdList" open="(" close=")" conjunction=",">
 	      		#deptIdList[]#
 			</iterate>
-			<![CDATA[
-                         AND 
-                             CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)                                                                                                                                                                      
-                         AND 
-                             A.TENANT_ID = #v_TENANT_ID#
-			       		 
-			             UNION ALL
+				AND 
+				    CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)                                                                                                                                                                      
+				AND 
+				    A.TENANT_ID = #v_TENANT_ID#
+				
+				UNION ALL
 			            
-       			         SELECT
-       			        	a.cn  , 
-       			            deptid as displayName , 
-       			            '' as extensionAttribute15,
-       			            'user' as type,
-       			            DESCRIPTION  
-       			         FROM 
-       			         	TBL_USERMASTER b   
-       			         INNER JOIN 
-       			         	TBL_ADDJOBMASTER A  
-       			         ON  
-       			         	a.cn = b.cn AND a.tenant_id = b.tenant_id
-                         $strSQL$
-			]]>					
+				SELECT
+					A.cn, 
+					deptid as displayName, 
+					'ADDJOB' as type,
+					DESCRIPTION,
+					A.JOBID AS JOBID,
+					A.ROLEID AS ROLEID
+				FROM 
+					TBL_USERMASTER B
+				INNER JOIN 
+					TBL_ADDJOBMASTER A  
+				ON  
+					A.cn = B.cn AND A.tenant_id = B.tenant_id
+			<isNotEmpty property="v_SEARCHCOL">
+				WHERE
+				<isEqual property="v_SEARCHCOL" compareValue="DISPLAYNAME">
+					(DISPLAYNAME LIKE ('%' || #v_SEARCHPARAM# || '%') OR DISPLAYNAME2 LIKE ('%' || #v_SEARCHPARAM# || '%'))
+				</isEqual>
+				<isEqual property="v_SEARCHCOL" compareValue="DESCRIPTION">
+					(DESCRIPTION LIKE ('%' || #v_SEARCHPARAM# || '%') OR DESCRIPTION2 LIKE ('%' || #v_SEARCHPARAM# || '%'))
+				</isEqual>
+				<isEqual property="v_SEARCHCOL" compareValue="TITLE">
+					(A.TITLE LIKE ('%' || #v_SEARCHPARAM# || '%') OR A.TITLE2 LIKE ('%' || #v_SEARCHPARAM# || '%'))
+				</isEqual>
+				<isEqual property="v_SEARCHCOL" compareValue="TELEPHONENUMBER">
+					TELEPHONENUMBER LIKE ('%' || #v_SEARCHPARAM# || '%')
+				</isEqual>
+				<isEqual property="v_SEARCHCOL" compareValue="MOBILE">
+					MOBILE LIKE ('%' || #v_SEARCHPARAM# || '%')
+				</isEqual>
+				<isEqual property="v_SEARCHCOL" compareValue="HOMEPHONE">
+					HOMEPHONE LIKE ('%' || #v_SEARCHPARAM# || '%')
+				</isEqual>
+				<isEqual property="v_SEARCHCOL" compareValue="FACSIMILETELEPHONENUMBER">
+					FACSIMILETELEPHONENUMBER LIKE ('%' || #v_SEARCHPARAM# || '%')
+				</isEqual>
+				<isEqual property="v_SEARCHCOL" compareValue="MAIL">
+					MAIL LIKE ('%' || #v_SEARCHPARAM# || '%')
+				</isEqual>
+				<isEqual property="v_SEARCHCOL" compareValue="STREETADDRESS">
+					STREETADDRESS LIKE ('%' || #v_SEARCHPARAM# || '%')
+				</isEqual>
+			</isNotEmpty>
 			<iterate prepend="AND DEPARTMENT IN" property="deptIdList" open="(" close=")" conjunction=",">
 	      		#deptIdList[]#
 			</iterate>
 			<![CDATA[                        
-	                      AND 
-	                      	A.TENANT_ID = #v_TENANT_ID#) AA ) BB
-                      AND 
-                      	RNUM >= #startRow# AND RNUM < #endRow#
-                      ORDER BY 
-                      	DESCRIPTION
-               ]]>
-          </isEqual>
-          <isEqual property="class" compareValue="all">
-          	<![CDATA[
-            SELECT
-            *
-            FROM
-                (
-			    SELECT 
-			    ROW_NUMBER() OVER(order by CN) as RNUM,
-				cn,
-				department as displayName,
-				'' as extensionAttribute15,
-				'user' as type				
-     			FROM 
-     	    		TBL_USERMASTER A 
-                $strSQL$
-                AND 
-                    CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)                                                                                                                                                             
-                AND 
-                    A.TENANT_ID = #v_TENANT_ID#
-     	    		 
-     	      	UNION ALL
-     	      		      	
-     	      	SELECT 
-     	      		A.cn,
-     	      		deptid as displayName,
-     	      		'' as extensionAttribute15,
-     	      		'user' as type
-     	      	FROM	
-     				TBL_USERMASTER B 
-     			INNER JOIN 
-     				TBL_ADDJOBMASTER A 
-     			ON 
-     				A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID
-                $strSQL$ AND A.TENANT_ID = #v_TENANT_ID#
-     				
-     			UNION ALL
-				
-				SELECT
-					CN,
-					'' as displayName,
-					'' as extensionAttribute15,
-					'group' as type
-				FROM
-					TBL_DEPTMASTER A	
-                $strSQL$ AND A.TENANT_ID = #v_TENANT_ID#
-                ) AA
-            WHERE RNUM >= #startRow# AND RNUM < #endRow#
-			ORDER BY DISPLAYNAME                
+				AND 
+				 	A.TENANT_ID = #v_TENANT_ID#) AA ) BB
+			WHERE 
+				RNUM >= #startRow# AND RNUM < #endRow#
+			ORDER BY 
+				DESCRIPTION
 			]]>
-          </isEqual>
-		  <isEqual property="type" compareValue="G">
-		  	<![CDATA[
-		  	select
-		  		*
-		  	from(SELECT
-		  			ROW_NUMBER() OVER(order by CN) as RNUM,
-		    		cn,
-		    		'' as displayName,
-		    		'' as extensionAttribute15,
-		    		'group' as type
-		    	FROM
-		    		TBL_DEPTMASTER A
-	            $strSQL$ AND A.TENANT_ID = #v_TENANT_ID#
-	            ) AA
-	        WHERE RNUM >= #startRow# AND RNUM < #endRow#
-            ORDER BY DISPLAYNAME
-			]]>
-	      </isEqual>
 	</select>
 	
 	<select id="ezAttitudeDAO.checkModApplStatus" parameterClass="Map" resultClass="String">
@@ -2104,7 +2055,7 @@
 			and
 				ATTITUDE_ID = #attModId#
 		]]>
-		<!-- applCnt가 없으면 제일 큰 거 있으면 applCnt에 해당하는 수정신청을 보여준다. -->
+		<!-- applCnt가 없으면 제일 큰 값 (가장 마지막 수정신청) / 있으면 applCnt에 해당하는 수정신청을 보여준다. -->
 		<isNotEmpty property="applCnt">
 			and
 				APPL_CNT = #applCnt#
@@ -2267,9 +2218,9 @@
 		<isNotEmpty property="oneMonthAgo">
 			<![CDATA[
 				AND
-					START_DATE <= DATE_ADD(#oneDayAgo#, interval - 540 minute)
-				AND 
-					START_DATE > DATE_ADD(#oneMonthAgo#, interval -540 minute)
+					START_DATE <= TO_DATE(#oneDayAgo#, 'YYYY-MM-DD HH24:MI:SS') - (540/(60*24))
+				AND
+					START_DATE > TO_DATE(#oneMonthAgo#, 'YYYY-MM-DD HH24:MI:SS') - (540/(60*24))
 			]]>
 		</isNotEmpty>
 		<![CDATA[
@@ -2392,7 +2343,7 @@
 			AND
 				ATTITUDE_ID = #attModId#
 		]]>
-		<!-- applCnt가 없으면 제일 큰 거 있으면 applCnt에 해당하는 수정신청을 보여준다. -->
+		<!-- applCnt가 없으면 제일 큰 값 (가장 마지막 수정신청) / 있으면 applCnt에 해당하는 수정신청을 보여준다. -->
 		<isNotEmpty property="applCnt">
 			and
 				APPL_CNT = #applCnt#
@@ -2454,55 +2405,7 @@
 			and
 				a.writer_id NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
 		]]>
-		<isNotEmpty property="userId" prepend="and"> 
-			a.WRITER_ID = #userId#
-		</isNotEmpty>
-		<isNotEmpty prepend="AND" property="searchDeptId">
-			A.WRITER_DEPT_ID = #searchDeptId#
-		</isNotEmpty>
-		<iterate prepend="AND A.WRITER_DEPT_ID IN" property="deptIdList" open="(" close=")" conjunction=",">
-      		#deptIdList[]#
-		</iterate>
-		<isNotEmpty property="apprUserName" prepend="and">
-			<isNotEmpty property="apprUserName" >
-				A.APPR_USER_NAME$lang$ LIKE '%' || #apprUserName# || '%'
-			</isNotEmpty>
-		</isNotEmpty>
-		<isNotEmpty property="writerName" prepend="and">
-			<isNotEmpty property="writerName" >
-				A.WRITER_NAME$lang$ LIKE '%' || #writerName# || '%'
-			</isNotEmpty>
-		</isNotEmpty>
-		<isNotEmpty property="writerDeptName" prepend="and">
-			<isNotEmpty property="writerDeptName" >
-				A.WRITER_DEPT_NAME$lang$ LIKE '%' || #writerDeptName# || '%'
-			</isNotEmpty>
-		</isNotEmpty>
-		<isNotEmpty property="startDate" prepend="and">
-			<![CDATA[
-				B.START_DATE + #offset# / (24 * 60) >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')
-			]]>
-		</isNotEmpty>
-		<isNotEmpty property="endDate" prepend="and">
-			<![CDATA[
-				B.START_DATE + #offset# / (24 * 60) >= TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
-			]]>
-		</isNotEmpty>
-		<isNotEmpty property="type" prepend="and">
-			<![CDATA[
-			a.APPR_STATUS = #type#
-			]]>
-		</isNotEmpty>
-		<![CDATA[
-			AND
-				A.DELFLAG = 0
-		]]>
-		<isNotEmpty prepend="" property="order">
-				ORDER BY $order$, A.APPL_CNT DESC
-		</isNotEmpty>
-		<isEmpty prepend="" property="order">
-				ORDER BY A.APPL_DATE DESC, A.APPL_CNT DESC
-		</isEmpty>
+		<include refid="ezAttitudeDAO.searchQuery2"/>
 	</select>
 	
 	<select id="ezAttitudeDAO.getUsersCancelAnn" parameterClass="Map" resultMap="annualCancelVO">
@@ -2519,13 +2422,13 @@
 					SELECT
 						a.attitude_id as ATTITUDE_ID,
 						to_char(b.end_date + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') AS CHANGE_DATE,
-						a.appr_user_name$lang$ as APPR_USER_NAME,
+						CASE #lang# WHEN '2' THEN a.APPR_USER_NAME2 ELSE a.APPR_USER_NAME END AS APPR_USER_NAME,
 						to_char(b.start_date + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') AS START_DATE,
 						a.appr_status as APPR_STATUS,
 						c.type_id AS TYPE_ID,
-						c.type_name$lang$ AS TYPE_NAME,
-						a.writer_name$lang$ as WRITER_NAME,
-						a.writer_dept_name$lang$ as WRITER_DEPT_NAME,
+						CASE #lang# WHEN '2' THEN c.type_name2 ELSE c.type_name END AS TYPE_NAME,
+						CASE #lang# WHEN '2' THEN a.WRITER_NAME2 ELSE a.WRITER_NAME END AS WRITER_NAME,
+						CASE #lang# WHEN '2' THEN a.WRITER_DEPT_NAME2 ELSE a.WRITER_DEPT_NAME END AS WRITER_DEPT_NAME,
 						a.appl_cnt AS APPL_CNT,
 						a.writer_id as WRITER_ID,
 						to_char(A.appl_date + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') AS APPL_DATE
@@ -2550,55 +2453,7 @@
 				and
 					a.writer_id NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
 			]]>
-				<isNotEmpty property="userId" prepend="and"> 
-					a.WRITER_ID = #userId#
-				</isNotEmpty>
-				<isNotEmpty prepend="AND" property="searchDeptId">
-					A.WRITER_DEPT_ID = #searchDeptId#
-				</isNotEmpty>
-				<iterate prepend="AND A.WRITER_DEPT_ID IN" property="deptIdList" open="(" close=")" conjunction=",">
-		      		#deptIdList[]#
-				</iterate>
-				<isNotEmpty property="apprUserName" prepend="and">
-					<isNotEmpty property="apprUserName" >
-						A.APPR_USER_NAME$lang$ LIKE '%' || #apprUserName# || '%'
-					</isNotEmpty>
-				</isNotEmpty>
-				<isNotEmpty property="writerName" prepend="and">
-					<isNotEmpty property="writerName" >
-						A.WRITER_NAME$lang$ LIKE '%' || #writerName# || '%'
-					</isNotEmpty>
-				</isNotEmpty>
-				<isNotEmpty property="writerDeptName" prepend="and">
-					<isNotEmpty property="writerDeptName" >
-						A.WRITER_DEPT_NAME$lang$ LIKE '%' || #writerDeptName# || '%'
-					</isNotEmpty>
-				</isNotEmpty>
-				<isNotEmpty property="startDate" prepend="and">
-					<![CDATA[
-						B.START_DATE + #offset# / (24 * 60) >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')
-					]]>
-				</isNotEmpty>
-				<isNotEmpty property="endDate" prepend="and">
-					<![CDATA[
-						B.START_DATE + #offset# / (24 * 60) >= TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
-					]]>
-				</isNotEmpty>
-				<isNotEmpty property="type" prepend="and">
-					<![CDATA[
-					a.APPR_STATUS = #type#
-					]]>
-				</isNotEmpty>
-				<![CDATA[
-					AND
-						A.DELFLAG = 0
-				]]>
-				<isNotEmpty prepend="" property="order">
-						ORDER BY $order$, A.APPL_CNT DESC
-				</isNotEmpty>
-				<isEmpty prepend="" property="order">
-						ORDER BY A.APPL_DATE DESC, A.APPL_CNT DESC
-				</isEmpty>
+			<include refid="ezAttitudeDAO.searchQuery2"/>
 				) T1
 			)
 			<isNotEmpty property="startRow">
@@ -2618,17 +2473,17 @@
 			SELECT
 				a.attitude_id AS ATTITUDE_ID,
 				to_char(b.end_date + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') AS CHANGE_DATE,
-				a.appr_user_name$lang$ AS APPR_USER_NAME,
+				CASE #lang# WHEN '2' THEN a.appr_user_name2 ELSE a.appr_user_name END AS APPR_USER_NAME,
 				to_char(b.start_date + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') AS START_DATE,
 				a.appr_status AS APPR_STATUS,
 				c.type_id AS TYPE_ID,
-				c.type_name$lang$ AS TYPE_NAME,
+				CASE #lang# WHEN '2' THEN c.type_name2 ELSE c.type_name END AS TYPE_NAME,
 				a.content AS CONTENT,
 				a.writer_id AS WRITER_ID,
 				a.writer_dept_id AS WRITER_DEPT_ID,
-				a.writer_name$lang$ AS WRITER_NAME,
-				a.writer_title$lang$ AS WRITER_TITLE,
-				a.writer_dept_name$lang$ AS WRITER_DEPT_NAME
+				CASE #lang# WHEN '2' THEN a.writer_name2 ELSE a.writer_name END AS WRITER_NAME,
+				CASE #lang# WHEN '2' THEN a.writer_title2 ELSE a.writer_title END AS WRITER_TITLE,
+				CASE #lang# WHEN '2' THEN a.writer_dept_name2 ELSE a.writer_dept_name END AS WRITER_DEPT_NAME
 			FROM 
 				TBL_ATTITUDE_ANNUAL_CANAPPL a
 			inner 
@@ -2650,7 +2505,7 @@
 			and
 				a.ATTITUDE_ID = #attModId#
 		]]>
-		<!-- 			applCnt가 없으면 제일 큰 거 있으면 applCnt에 해당하는 수정신청을 보여준다. -->
+		<!-- applCnt가 없으면 제일 큰 값 (가장 마지막 수정신청) / 있으면 applCnt에 해당하는 수정신청을 보여준다. -->
 		<isNotEmpty property="applCnt">
 			and
 				a.APPL_CNT = #applCnt#
@@ -2713,13 +2568,13 @@
 			SELECT
 				A.ATTITUDE_ID,
 				to_char(A.APPR_DATE + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') AS APPR_DATE,
-				A.APPR_USER_NAME$lang$ AS APPR_USER_NAME,
+				CASE #lang# WHEN '2' THEN A.APPR_USER_NAME2 ELSE A.APPR_USER_NAME END AS APPR_USER_NAME,
 				A.APPR_STATUS,
 				A.CONTENT,
 				to_char(C.START_DATE + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') AS ORIGIN_DATE,
 				to_char(C.END_DATE + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') AS CHANGE_DATE,
-				B.TITLE$lang$ AS TITLE,
-				B.DESCRIPTION$lang$ AS DESCRIPTION,
+				CASE #lang# WHEN '2' THEN B.TITLE2 ELSE B.TITLE END AS TITLE,
+				CASE #lang# WHEN '2' THEN B.DESCRIPTION2 ELSE B.DESCRIPTION END AS DESCRIPTION,
 				C.TYPE_ID
 			FROM 
 				TBL_ATTITUDE_ANNUAL_CANAPPL A
@@ -2736,7 +2591,7 @@
 			inner join
 				tbl_attitude C
 			on 
-				a.ATTITUDE_ID = C.ATTITUDE_ID
+				A.ATTITUDE_ID = C.ATTITUDE_ID
 			AND
 				A.TENANT_ID = C.TENANT_ID
 			ORDER BY
@@ -2783,34 +2638,34 @@
 	
 	<select id="ezAttitudeDAO.getAttitudeAprInfo" parameterClass="Map" resultMap="attitudeAprlineMap">
 		<![CDATA[
-			SELECT 
-					B.DOCID AS DOCID,
-			    	B.APRMEMBERSN AS APRMEMBERSN,
-			    	B.APRTYPE AS APRTYPE,
-			    	B.APRSTATE AS APRSTATE,
-			    	B.APRMEMBERID AS APRMEMBERID,
-			    	B.APRMEMBERISDEPTYN AS APRMEMBERISDEPTYN,
-			    	B.APRMEMBERNAME$lang$ AS APRMEMBERNAME,
-			    	B.APRMEMBERJOBTITLE$lang$ AS APRMEMBERJOBTITLE,
-			    	B.APRMEMBERDEPTID AS APRMEMBERDEPTID,
-			    	B.APRMEMBERDEPTNAME$lang$ AS APRMEMBERDEPTNAME,
-			    	B.APRMEMBERLDAPPATH AS APRMEMBERLDAPPATH
-				FROM 
-					tbl_attitude_apr_conn A
-				INNER JOIN 
-					tbl_endaprlineinfo B
-				ON
-					(A.TENANT_ID = B.TENANT_ID 
-					AND
-					 A.COMPANY_ID = B.COMPANYID 
-					AND
-					 A.ANNUAL_DOC_ID = B.DOCID)
-				WHERE
-					A.TENANT_ID = #tenantId#
-				AND 
-					A.COMPANY_ID = #companyId#
-				AND			
-					A.ATTITUDE_ID = #attitudeId#
+			SELECT
+				B.DOCID AS DOCID,
+		    	B.APRMEMBERSN AS APRMEMBERSN,
+		    	B.APRTYPE AS APRTYPE,
+		    	B.APRSTATE AS APRSTATE,
+		    	B.APRMEMBERID AS APRMEMBERID,
+		    	B.APRMEMBERISDEPTYN AS APRMEMBERISDEPTYN,
+		    	CASE #lang# WHEN '2' THEN B.APRMEMBERNAME2 ELSE B.APRMEMBERNAME END AS APRMEMBERNAME,
+		    	CASE #lang# WHEN '2' THEN B.APRMEMBERJOBTITLE2 ELSE B.APRMEMBERJOBTITLE END AS APRMEMBERJOBTITLE,
+		    	B.APRMEMBERDEPTID AS APRMEMBERDEPTID,
+		    	CASE #lang# WHEN '2' THEN B.APRMEMBERDEPTNAME2 ELSE B.APRMEMBERDEPTNAME END AS APRMEMBERDEPTNAME,
+		    	B.APRMEMBERLDAPPATH AS APRMEMBERLDAPPATH
+			FROM
+				tbl_attitude_apr_conn A
+			INNER JOIN
+				tbl_endaprlineinfo B
+			ON
+				(A.TENANT_ID = B.TENANT_ID 
+				AND
+				 A.COMPANY_ID = B.COMPANYID 
+				AND
+				 A.ANNUAL_DOC_ID = B.DOCID)
+			WHERE
+				A.TENANT_ID = #tenantId#
+			AND
+				A.COMPANY_ID = #companyId#
+			AND
+				A.ATTITUDE_ID = #attitudeId#
 		]]>
 	</select>
 	
@@ -2863,10 +2718,10 @@
 						ELSE TO_CHAR(A.END_DATE + #v_OFFSETMIN# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS')
 					END AS ENDDATE,
 					A.TYPE_ID AS TYPEID,
-					B.TYPE_NAME$lang$ AS TYPENAME,
+					CASE #lang# WHEN '2' THEN B.TYPE_NAME2 ELSE B.TYPE_NAME END AS TYPENAME,
 					B.IMG_PATH AS IMGPATH,
-					C.DISPLAYNAME$lang$ AS WRITERNAME,
-					C.DESCRIPTION$lang$ AS WRITERDEPTNAME
+					CASE #lang# WHEN '2' THEN C.DISPLAYNAME2 ELSE C.DISPLAYNAME END AS WRITERNAME,
+					CASE #lang# WHEN '2' THEN C.DESCRIPTION2 ELSE C.DESCRIPTION END AS WRITERDEPTNAME
 				FROM   
 					tbl_attitude A 
 				INNER JOIN 
@@ -2908,11 +2763,36 @@
 						(START_DATE < TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND END_DATE >= TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS'))
 					)
 				]]>
+				<!-- 2024-06-27 전인하 - 일정 > 일정검색 > 근태 연동 시 전체검색, 지역검색 추가 -->
+				<isNotEmpty property="v_SEARCHTITLE">
+					AND
+						B.TYPE_NAME like concat(concat('%', #v_SEARCHTITLE#), '%')
+				</isNotEmpty>
+				<isNotEmpty property="v_SEARCHLOCATION">
+					AND
+						A.REGION like concat(concat('%', #v_SEARCHLOCATION#), '%')
+				</isNotEmpty>
+				<isNotEmpty property="v_SEARCHALL">
+					AND (
+							B.TYPE_NAME like concat(concat('%', #v_SEARCHALL#), '%')
+						OR
+							A.REGION like concat(concat('%', #v_SEARCHALL#), '%')
+						)
+				</isNotEmpty>
+				<isEqual property="v_PFILTER" compareValue="ISPUBLIC">
+					<isNotEmpty property="v_INDILIST">
+					AND
+						A.WRITER_ID IN
+						<iterate property="v_INDILIST" open="(" close=")" conjunction=",">
+							#v_INDILIST[]#
+						</iterate>
+					</isNotEmpty>
+				</isEqual>
 	</select>
 	
 	<select id="ezAttitudeDAO.getAttitudeTime" parameterClass="Map" resultClass="String">
 		SELECT 
-			date_add(START_DATE, INTERVAL #offsetMin# minute)
+			TO_CHAR(START_DATE + (#offsetMin#/(60*24)), 'YYYY-MM-DD HH24:MI:SS')
 		FROM
 			TBL_ATTITUDE
 		WHERE
@@ -2924,7 +2804,7 @@
 		AND 
 			TYPE_ID IN ('A01', 'A02')
 		AND
-			date_add(START_DATE, INTERVAL #offsetMin# minute) LIKE CONCAT(#startDate2#,'%')
+			TO_CHAR(START_DATE + (#offsetMin#/(60*24)), 'YYYY-MM-DD HH24:MI:SS') LIKE CONCAT(#startDate2#, '%')
 	</select>
 	
 	<update id = "ezAttitudeDAO.updateWorkStatus" parameterClass="map">
@@ -2957,11 +2837,11 @@
 						A.tenant_id AS tenantid,
 						A.writer_id AS writerid,
 						A.dept_id AS deptid,
-						to_char(A.start_date, 'YYYY-MM-DD HH24:MI:SS') AS startdate,
-		                SUBSTR(TO_CHAR(A.start_date, 'YYYY-MM-DD HH24:MI:SS'), 12) AS starttime,
+						A.start_date AS startdate,
+		                TO_CHAR(A.start_date, 'HH24:MI:SS') AS starttime,
 						A.modappl,
 						A.type_id AS typeid,
-						B.type_name$primary$ AS typename,
+						B.type_name AS typename,
 						A.work_status AS workstatus
 					FROM
 						TBL_ATTITUDE A
@@ -2990,7 +2870,7 @@
 					AND
 						A.modappl <> 5
 					ORDER BY
-						date_format(startdate, '%Y-%m-%d') DESC,
+						TO_DATE(startdate, 'YYYY-MM-DD') DESC,
 						writerid,
 						starttime DESC
 				]]>

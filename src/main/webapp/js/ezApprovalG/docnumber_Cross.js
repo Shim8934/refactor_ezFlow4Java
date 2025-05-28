@@ -52,6 +52,10 @@ function rollbackDocNumber(pDeptID, pPrefix) {
 
     docnumber = field.textContent;
 
+    if (typeof upperDeptCode !== "undefined" && upperDeptCode !== "") {
+        pDeptID = upperDeptCode;
+    }
+
     var xmlpara = createXmlDom();
 
     var objNode;

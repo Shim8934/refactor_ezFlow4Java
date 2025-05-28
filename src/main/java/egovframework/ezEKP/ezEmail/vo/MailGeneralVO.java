@@ -23,11 +23,31 @@ public class MailGeneralVO {
 	private String previewSubTree;
 	
 	private String previewMailImage;
-	
+
+	private String previewMail;
+
 	private String textOption;
 	
 	private String mailSearchPeriod;
 	
+	private String defaultCursorPosition; // 메일쓰기창 기본 커서 위치/ recipient: 받는사람, content : 내용
+	
+	private String defaultSeparateSend; // 개별발신 기본 사용 여부 Y : 개별발신, N : 사용안함
+	
+	private String mailSendResult;
+	
+	private String editorFontFamily;
+	
+	private String editorFontSize;
+	
+	public String getMailSendResult() {
+		return mailSendResult;
+	}
+
+	public void setMailSendResult(String mailSendResult) {
+		this.mailSendResult = mailSendResult;
+	}
+
 	public String getMailSearchPeriod() {
 		return mailSearchPeriod;
 	}
@@ -125,6 +145,14 @@ public class MailGeneralVO {
 	public void setPreviewMailImage(String previewMailImage) {
 		this.previewMailImage = previewMailImage;
 	}
+
+	public String getPreviewMail() {
+		return previewMail;
+	}
+
+	public void setPreviewMail(String previewMail) {
+		this.previewMail = previewMail;
+	}
 	
 	public String getTextOption() {
 		return textOption;
@@ -134,11 +162,42 @@ public class MailGeneralVO {
 		this.textOption = textOption;
 	}
 	
+	public String getDefaultCursorPosition() {
+		return defaultCursorPosition;
+	}
+	
+	public void setDefaultCursorPosition(String defaultCursorPosition) {
+		this.defaultCursorPosition = defaultCursorPosition;
+	}
+	
+	public String getDefaultSeparateSend() {
+		return defaultSeparateSend;
+	}
+	
+	public void setDefaultSeparateSend(String defaultSeparateSend) {
+		this.defaultSeparateSend = defaultSeparateSend;
+	}
+
+	public String getEditorFontFamily() {
+		return editorFontFamily;
+	}
+	public void setEditorFontFamily(String editorFontFamily) {
+		this.editorFontFamily = editorFontFamily;
+	}
+	public String getEditorFontSize() {
+		return editorFontSize;
+	}
+	public void setEditorFontSize(String editorFontSize) {
+		this.editorFontSize = editorFontSize;
+	}
+
 	public String toString() {
 		return "listCount=" + listCount + ",refreshInterval=" + refreshInterval + ",keepDeleteLength=" + keepDeleteLength
 				+ ",previewMode=" + previewMode + ",previewWList=" + previewWList + ",previewWContent=" + previewWContent
 				+ ",previewHList=" + previewHList + ",previewHContent=" + previewHContent + ",mailSenderNm=" + mailSenderNm
-				+ ",previewSubtree=" + previewSubTree + ",previewmailImage=" + previewMailImage + ",textOption=" + textOption
-				+ ",mailSearchPeriod=" + mailSearchPeriod;
+				+ ",previewSubtree=" + previewSubTree + ",previewmailImage=" + previewMailImage + ",previewMail=" + previewMail + ",textOption=" + textOption
+				+ ",mailSearchPeriod=" + mailSearchPeriod + ",defaultCursorPosition=" + defaultCursorPosition + ",defaultSeparateSend=" + defaultSeparateSend
+				+ ",mailSendResult=" + mailSendResult + ",editorFontFamily=" + editorFontFamily + ",editorFontSize=" + editorFontSize ;
 	}
+
 }

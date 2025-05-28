@@ -7,7 +7,8 @@
 	<head>
 	    <title><spring:message code='ezApprovalG.t427'/></title>
 	    <meta http-equiv="Content-Type" content="text/html;charset=utf-8;">
-	    <link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 	    <link rel="stylesheet" type="text/css" href="${util.addVer('/css/Tab.css')}">
 	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
@@ -182,71 +183,68 @@
 			}
 		    
 	    function btnAssign_onclick() {
-	        try {
-	        	var result = "";
-	        	if (approvalFlag == "S" && isReDraft != undefined && isReDraft == "Y") {
-	        		$.ajax({
-			    		type : "POST",
-			    		dataType : "text",
-			    		async : false,
-			    		url : "/ezApprovalG/checkAprState.do",
-			    		data : {
-			    			docID : pDocID,
-			    			docState : pDocState,
-			    			userID : '',
-			    			aprMemberSN : pReceiveSN,
-			    			orgCompanyID : orgCompanyID
-			    		},
-			    		success : function(text) {
-			    			result = text;
-			    		}
-			    	});
-	        		if (result == "FALSE") {
-	        			if (ReturnFunction != null) {
-                            ReturnFunction("DUPL");
-                        }
-                        else {
-                            window.returnValue = "DUPL";
-                            window.close();
-                        }
-		    			return;
-	        		}
-	        	}
-	            var listview = new ListView();
-	            listview.LoadFromID("listAPRLINE1");
-	            var oArrRows = listview.GetDataRows();
-	            
-	            if (oArrRows[0].textContent != strLang944) {
-	                var RtnVal = setReceiveDistribute();
-	                
-	                if (RtnVal == "TRUE") {
-	                    if (ReturnFunction != null) {
-							var pAlertContent = "<spring:message code='ezApprovalG.t1419'/>";
-							if (CrossYN()) {
-		                        ReturnFunction("true");
-		                        window.close();
-                            } else {
-                                OpenAlertUI(pAlertContent);
-                                try { opener.btnDistribute_onclick_Complete(true); } catch (e) { console.log(e); }
-							}
-							window.close();
-                        } else {
-	                        window.returnValue = "true";
-	                        window.close();
-	                    }
-                    } else {
-	                    var pAlertContent = "<spring:message code='ezApprovalG.t426'/>" + RtnVal;
-	                    OpenAlertUI(pAlertContent);
-	                    return;
-	                }
-                } else {
-	                var pAlertContent = "<spring:message code='ezApprovalG.t429'/>";
-	                OpenAlertUI(pAlertContent);
-	                return;
-	            }
-	        } catch (ErrMsg) {
-	            alert(ErrMsg.description);
-	        }
+	    	try {
+	    		var result = "";
+	    		if (approvalFlag == "S" && isReDraft != undefined && isReDraft == "Y") {
+	    			$.ajax({
+	    				type : "POST",
+	    				dataType : "text",
+	    				async : false,
+	    				url : "/ezApprovalG/checkAprState.do",
+	    				data : {
+	    					docID : pDocID,
+	    					docState : pDocState,
+	    					userID : '',
+	    					aprMemberSN : pReceiveSN,
+	    					orgCompanyID : orgCompanyID
+	    				},
+	    				success : function(text) {
+	    					result = text;
+	    				}
+	    			});
+	    			if (result == "FALSE") {
+	    				if (ReturnFunction != null) {
+	    					ReturnFunction("DUPL");
+	    				}
+	    				else {
+	    					window.returnValue = "DUPL";
+	    					window.close();
+	    				}
+	    				return;
+	    			}
+	    		}
+	    		var listview = new ListView();
+	    		listview.LoadFromID("listAPRLINE1");
+	    		var oArrRows = listview.GetDataRows();
+	    		
+	    		/* 2023-03-15 임정은 - 배부 기능 비동기화 */
+	    		if (oArrRows[0].textContent != strLang944) {
+	    			var RtnVal = setReceiveDistribute();
+					
+	    			if (ReturnFunction != null) {
+	    				if (CrossYN()) {
+		    				ReturnFunction("true");
+		    			} else {
+		    				var pAlertContent = "<spring:message code='ezApprovalG.t1419'/>";
+		    				OpenAlertUI(pAlertContent);
+		    				try {
+		    					opener.btnDistribute_onclick_Complete(true);
+		    				} catch (e) {
+		    					console.log(e.description);
+		    				}
+		    			}
+	    			} else {
+	    				window.returnValue = "true";
+	    			}
+	    			window.close();
+	    		} else {
+	    			var pAlertContent = "<spring:message code='ezApprovalG.t429'/>";
+	    			OpenAlertUI(pAlertContent);
+	    			return;
+	    		}
+	    	} catch (ErrMsg) {
+	    		alert(ErrMsg.description);
+	    	}
 	    }
 	    
         function btnCancel_onclick() {
@@ -287,13 +285,53 @@
 	            }
 	            
 	            if ("<c:out value ='${mode}'/>" == "add") {
-	                xmlhttp.open("POST", "/ezApprovalG/addBebu.do", false);
+	                xmlhttp.open("POST", "/ezApprovalG/addBebu.do", true);
 	            } else {
-	                xmlhttp.open("POST", "/ezApprovalG/setBebu.do", false);
+	                xmlhttp.open("POST", "/ezApprovalG/setBebu.do", true);
 	            }
 	            
 	            xmlhttp.send(xmlpara);
-	            return getNodeText(GetChildNodes(xmlhttp.responseXML)[0]);
+	            //return getNodeText(GetChildNodes(xmlhttp.responseXML)[0]);
+	        } catch (ErrMsg) {
+	            alert(ErrMsg.description);
+	        }
+	    }
+		
+		function setReceiveDistributeAll(pCurSelRow) {
+	        try {
+	            var xmlpara = createXmlDom();
+	            var listview = new ListView();
+	            listview.LoadFromID("listAPRLINE1");
+	            var objRoot, objRow, custData;
+	            var pSelRows = listview.GetDataRows();
+	            var i;
+	            
+	            objRoot = createNodeInsert(xmlpara, objRoot, "ROWS");
+	            SetAttribute(objRoot, "ReceiveSN", pReceiveSN);
+	            SetAttribute(objRoot, "SendDeptID", psentDeptID);
+	            SetAttribute(objRoot, "ReceivedDeptID", pReceivedDeptID);
+				SetAttribute(objRoot, "DocID", pDocID);
+				SetAttribute(objRoot, "AprState", pAprSate);
+				SetAttribute(objRoot, "DocState", pDocState);
+				
+				for (i = 0; i < pSelRows.length; i++) {
+	                var SelRow = pSelRows[i];
+	
+	                objRow = createNodeAndAppandNode(xmlpara, objRoot, objRow, "ROW");
+	                custData = createNodeAndAppandNodeText(xmlpara, objRow, custData, "RECEIVEDEPTID", SelRow.getAttribute("DATA1"));
+	                custData = createNodeAndAppandNodeText(xmlpara, objRow, custData, "RECEIVEDEPTNAME", SelRow.getAttribute("DATA4"));
+	                custData = createNodeAndAppandNodeText(xmlpara, objRow, custData, "RECEIVEDEPTNAME2", SelRow.getAttribute("DATA5"));
+	            }
+				
+				var res = "";
+				xmlhttp.open("POST", "/ezApprovalG/setBebuAll.do", false);
+				xmlhttp.send(xmlpara);
+				
+				if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+					return xmlhttp.responseText; // 요청 성공 시 응답 값 반환
+				} else {
+					return null;
+				}			
 	        } catch (ErrMsg) {
 	            alert(ErrMsg.description);
 	        }
@@ -610,10 +648,10 @@
 	            }
 	
 	            if (CrossYN()) {
-	                var pAlertContent = "<spring:message code='ezApprovalG.t1361'/>" + "<br>" + "<spring:message code='ezApprovalG.t1362'/>";
+	                var pAlertContent = "<spring:message code='ezApprovalG.t1361'/>" + "<spring:message code='ezApprovalG.t1362'/>";
 	                var Ans = OpenInformationUI(pAlertContent, Complete_AddReceptAll);
 	            } else {
-	                var pAlertContent = "<spring:message code='ezApprovalG.t1361'/>" + "<br>" + "<spring:message code='ezApprovalG.t1362'/>";
+	                var pAlertContent = "<spring:message code='ezApprovalG.t1361'/>" + "<spring:message code='ezApprovalG.t1362'/>";
 	                var Ans = OpenInformationUI(pAlertContent);
 	
 	                if (!Ans) {
@@ -1473,30 +1511,106 @@
 	    	        document.getElementById("inputSummaryOuterReceiverList").focus();
 	    	        document.getElementById("trSummaryOuterReceiverList").style.display = "";
 	    	        document.getElementById("btnaddress").style.display = "none";
-	    	        document.getElementById("btnaddressChange").style.display = "none";
+	    	        // document.getElementById("btnaddressChange").style.display = "none";
 	    		} else if (cnt <= 8 && checkOuter == "Y" && checkAddress.indexOf("Address") == -1) {
 	    	        document.getElementById("trSummaryOuterReceiverList").style.display = "none";
 	    	        document.getElementById("btnaddress").style.display = "";
-	    	        if (useReceiveInfoName == '1') {
-//	                	document.getElementById("btnaddressChange").style.display = "";
-	                } else {
-	                	document.getElementById("btnaddressChange").style.display = "";
-	                }
+	    	        // document.getElementById("btnaddressChange").style.display = "";
 	    		} else if (checkOuter == "Y" && checkAddress.indexOf("Address") != -1) {
 	    			document.getElementById("trSummaryOuterReceiverList").style.display = "none";
 	    	        document.getElementById("btnaddress").style.display = "";
-	    	        if (useReceiveInfoName == '1') {
-//	                	document.getElementById("btnaddressChange").style.display = "";
-	                } else {
-	                	document.getElementById("btnaddressChange").style.display = "";
-	                }
+	    	        // document.getElementById("btnaddressChange").style.display = "";
 	    		} else {
 	    			document.getElementById("trSummaryOuterReceiverList").style.display = "none";
 	    	        document.getElementById("btnaddress").style.display = "";
-	    	        document.getElementById("btnaddressChange").style.display = "none";
+	    	        // document.getElementById("btnaddressChange").style.display = "none";
 	    		}
 	    	}
 	    }
+		
+		// 일괄배부 기능 추가
+		function btnAssignAll_onclick() {
+			try {
+	    		var result = "";
+				
+	    		var listview = new ListView();
+	    		listview.LoadFromID("listAPRLINE1");
+	    		var oArrRows = listview.GetDataRows();
+				var pAlertContent = "";
+	    		
+	    		if (oArrRows[0].textContent != strLang944) {
+					showLoadingProgress();
+					setTimeout(function() {
+						var RtnVal = setReceiveDistributeAll();
+						hideLoadingProgress();
+						var arrRtnVal = RtnVal.split("/");
+						
+						if (arrRtnVal[0] == "OK") {
+							pAlertContent = strLang933 + (Number(arrRtnVal[1])) + strLang934_1 + "<br/>";
+							if (arrRtnVal[2] != 0) {
+								pAlertContent += strLang935 + arrRtnVal[2] + strLang934_1;
+							}
+							if (arrRtnVal[3] != 0) {
+								if (arrRtnVal[2] != 0) {
+									pAlertContent += " / ";
+								}
+								pAlertContent += strLang936 + arrRtnVal[3] + strLang934_1;
+							}
+
+							if (arrRtnVal[4] != 0) {
+								if (arrRtnVal[2] != 0 || arrRtnVal[3] != 0) {
+									pAlertContent += " / ";
+								}
+								pAlertContent += strLang938 + arrRtnVal[4] + strLang934_1;
+							}
+							pAlertContent += "<br/>" + "<spring:message code='ezApprovalG.t1419'/>";
+							
+						} else {
+							pAlertContent = "<spring:message code='ezApprovalG.bebuAll02'/>";
+						}
+						
+						if (window.opener && window.opener.pListTypeValue) {
+							if (window.opener.pListTypeValue == "97") {
+								window.opener.parent.frames[0].convMain('97', '');
+							} else {
+								window.opener.parent.frames[0].convMain('4', '');
+							}
+						}
+						OpenAlertUIDiv(pAlertContent, window.close);
+					}, 0);
+	    		} else {
+	    			var pAlertContent = "<spring:message code='ezApprovalG.t429'/>";
+	    			OpenAlertUI(pAlertContent);
+	    			return;
+	    		}
+					
+	    	} catch (ErrMsg) {
+	    		alert(ErrMsg.description);
+	    	}
+		}
+		
+		function OpenAlertUIDiv(pAlertContent, CompleteFunction) {
+		    var parameter = pAlertContent;
+		    var url = "/ezApprovalG/ezAprAlert.do";
+
+		    if (CrossYN()) {
+		        ezapralert_cross_dialogArguments[0] = parameter;
+		        if (CompleteFunction != undefined)
+		            ezapralert_cross_dialogArguments[1] = CompleteFunction;
+		        else
+		            ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
+				document.getElementById("iFrameLayer").onload =
+					function(e){
+						e.target.contentDocument.getElementsByClassName("popup_noti_content")[0].style.overflow = "hidden"
+					};
+		        DivPopUpShow(330, 205, url);
+		    }
+		    else {
+		        var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
+		        feature = feature + GetShowModalPosition(330, 205);
+		        var RtnVal = window.showModalDialog(url, parameter, feature);
+		    }
+		}
 	    </script>
 	    <style>
 	    	.mainlist tr th {border-top:0px}
@@ -1583,12 +1697,22 @@
 	        </tr>
 	    </table>
 	    <div class="btnposition btnpositionNew">
-	        <a class="imgbtn"><span onclick="return btnAssign_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>
+			<c:choose>
+                <c:when test="${mode == 'addAll'}">
+		            <a class="imgbtn"><span onclick="return btnAssignAll_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>
+                </c:when>
+                <c:otherwise>
+		            <a class="imgbtn"><span onclick="return btnAssign_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>
+                </c:otherwise>
+            </c:choose>
 	    </div>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
+		<div style="width: 200px; height: 50px; border: 0px solid red; text-align: center; vertical-align: middle; display: none; z-index: 9000; position: absolute;" id="loadingLayer">
+	        <img src="/images/email/progress_img.gif" style="vertical-align: middle;" />
+	    </div>
 	</body>
 	<script type="text/javascript">	    
 	    Tab3_NewTabIni("tab3");

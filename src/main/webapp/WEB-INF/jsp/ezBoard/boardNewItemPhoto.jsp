@@ -17,7 +17,8 @@
 	         	resize:none;
 	         }
 	     </style>
-	    <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+	    <link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
    	    <c:if test="${!isCrossBrowser}">
@@ -31,6 +32,7 @@
 	    </c:if>
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('ezBoard.e1', 'msg')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezBoard/common.js')}"></script>
 	    <script type="text/javascript">
 	        var pMode = "NEW";
 	        var AttachLimit = "${boardInfo.attachSizeLimit}";
@@ -64,6 +66,9 @@
 	        var saveItemBoardId = "";
 	        var SelBoard = false;
 	        var isAllGroupBoard = "${boardInfo.isAllGroupBoard}";
+		    var useKeywordFlag = "<c:out value='${useKeyword}'/>"; // 키워드 사용여부 (Y/N)
+		    var keywordArr = []; // 키워드 배열
+			var writerFlag = "${boardInfo.writerFlag}"; // 2025-01-21 임정은 - 게시판 게시물 게시자명선택 사용여부 플래그
 	        
 	        function window_onload() {
 	            var ua = navigator.userAgent;
@@ -325,8 +330,15 @@
 			    // 수정(2008.03.19) : 사용자 정보가 누락되는 경우 체크하는 부분 추가
 	
 				strXML += "<WRITERID>" + SSUserID + "</WRITERID>";
-				strXML += "<WRITERNAME>" + MakeXMLString(SSUserName) + "</WRITERNAME>";
-				strXML += "<WRITERNAME2>" + MakeXMLString(SSUserName2) + "</WRITERNAME2>";
+				if ('Y' == writerFlag) {
+					var flagwriterName = $('#writerFlag').val().toString().split(":");
+					strXML += "<WRITERNAME>" + MakeXMLString(flagwriterName[0]) + "</WRITERNAME>";
+					strXML += "<WRITERNAME2>" + MakeXMLString(flagwriterName[1]) + "</WRITERNAME2>";
+					strXML += "<WRITERNAMETYPE>" + MakeXMLString(flagwriterName[2]) + "</WRITERNAMETYPE>";
+				} else {
+					strXML += "<WRITERNAME>" + MakeXMLString(SSUserName) + "</WRITERNAME>";
+					strXML += "<WRITERNAME2>" + MakeXMLString(SSUserName2) + "</WRITERNAME2>";
+				}
 				strXML += "<DEPTID>" + SSDeptID + "</DEPTID>";
 				strXML += "<DEPTNAME>" + MakeXMLString(SSDeptName) + "</DEPTNAME>";
 				strXML += "<DEPTNAME2>" + MakeXMLString(SSDeptName2) + "</DEPTNAME2>";
@@ -334,7 +346,7 @@
 				strXML += "<COMPANYNAME>" + MakeXMLString(SSCompanyName) + "</COMPANYNAME>";
 				strXML += "<COMPANYNAME2>" + MakeXMLString(SSCompanyName2) + "</COMPANYNAME2>";
 	            strXML += "<IMPORTANCE>" + importance + "</IMPORTANCE>";
-			    strXML += "<TITLE>" + MakeXMLString(txtTitle.value) + "</TITLE>";
+			    strXML += "<TITLE>" + MakeXMLString(txtTitle.value.replace(/[\t\n\r]+/g, ' ').trim()) + "</TITLE>";
 			    strXML += "<STARTDATE>" + pStartDate + "</STARTDATE>";
 			    strXML += "<ENDDATE>" + pEndDate + "</ENDDATE>";
 			    strXML += "<ABSTRACT>" + MakeXMLString(txtAbstract.value) + "</ABSTRACT>";
@@ -346,8 +358,15 @@
 			    //확장 필드(필요에 따라 추가)
 			    strXML += "<EXTENSIONATTRIBUTE1></EXTENSIONATTRIBUTE1>";
 			    strXML += "<EXTENSIONATTRIBUTE2></EXTENSIONATTRIBUTE2>";
-				strXML += "<EXTENSIONATTRIBUTE3>" + strUserRank + "</EXTENSIONATTRIBUTE3>";	//직급으로 사용
-				strXML += "<EXTENSIONATTRIBUTE32>" + strUserRank2 + "</EXTENSIONATTRIBUTE32>";	//직급으로 사용
+
+				if ('Y' == writerFlag && chkUseDept.checked) {
+					strXML += "<EXTENSIONATTRIBUTE3>" + SSDeptName + "</EXTENSIONATTRIBUTE3>";
+					strXML += "<EXTENSIONATTRIBUTE32>" + SSDeptName2 + "</EXTENSIONATTRIBUTE32>";
+				} else {
+					strXML += "<EXTENSIONATTRIBUTE3>" + strUserRank + "</EXTENSIONATTRIBUTE3>";	//직급으로 사용
+					strXML += "<EXTENSIONATTRIBUTE32>" + strUserRank2 + "</EXTENSIONATTRIBUTE32>";	//직급으로 사용
+				}
+
 				strXML += "<EXTENSIONATTRIBUTE4>" + MakeXMLString(txtPhotoFile.value) + "</EXTENSIONATTRIBUTE4>";//이미지명으로 사용함
 			    strXML += "<EXTENSIONATTRIBUTE5>" + MakeXMLString(GetSmallUrl()) + "</EXTENSIONATTRIBUTE5>";
 			    
@@ -377,6 +396,17 @@
 	            
 	            /* 2018-11-06 홍승비 - 게시판 체크용 구분값 추가 */
 	            strXML += "<GUBUN>" + gubun + "</GUBUN>";
+	            
+                /* 2024-08-13 전인하 - 키워드 추가 */
+                if (useKeywordFlag != null && useKeywordFlag == 'Y') {
+                    strXML += "<KEYWORDS>";
+                    for (var keyword of keywordArr) {
+                        // createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "KEYWORD", keyword);
+                        strXML += "<KEYWORD>" + keyword + "</KEYWORD>";
+                    }
+                    strXML += "</KEYWORDS>";
+                }
+	            
 			    strXML += "</NODE>";
 			    strXML += "</NODES>";
 			    
@@ -392,31 +422,31 @@
 				    xmlhttp = null;
 				    xmldom = null;
 				    if (pMode != "temp") {
-				    	/* 2023-11-15 홍승비 - 승인게시판의 경우, 게시물 승인 전에 관리자에게 게시알림메일을 보내지 않도록 수정 + 답변알림메일을 보내지 않도록 수정 */
+				    	/* 2023-11-15 홍승비 - 승인게시판의 경우, 게시물 승인 전에 관리자에게 게시알림을 보내지 않도록 수정 + 답변알림을 보내지 않도록 수정 */
 	                	if ("${boardInfo.apprFlag}" != "Y") {
 							if (strItemID == "") {
 							    xmlhttp = createXMLHttpRequest();
-								xmlhttp.open("POST", "/ezBoard/sendPostNotiMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(itemid), false);
+								xmlhttp.open("POST", "/ezBoard/sendPostNotiForAdmin.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(itemid), false);
 								xmlhttp.send();
 								xmlhttp = null;
 							}
 							if (pMode == "reply") {
 							    xmlhttp = createXMLHttpRequest();
-							    xmlhttp.open("POST", "/ezBoard/sendReplyNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(itemid) + "&itemTreeID=" + encodeURIComponent(strUpperItemIDTree), false);
+							    xmlhttp.open("POST", "/ezBoard/sendReplyNotice.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(itemid) + "&itemTreeID=" + encodeURIComponent(strUpperItemIDTree), false);
 							    xmlhttp.send();
 							    xmlhttp = null;
 							}
 							
 							/* 2021-06-22 홍승비 - 게시판 게시알림(일반 사용자 대상 발송) 추가 (승인게시판의 경우, 게시물 승인 전에 게시알림 메일 사용안함) */
 		                    if (pMode == "new") { // 게시알림
-		                    	sendBoardAlertMail("new", pBoardID, itemid, isAllGroupBoard);
+		                    	sendBoardAlert("new", pBoardID, itemid, isAllGroupBoard);
 		                    }
 	                	}
 						
-						/* 2019-05-07 홍승비 - 이미 승인된 게시물을 수정하는 경우, 승인요청 알림메일 발송하지 않도록 수정 */
+						/* 2019-05-07 홍승비 - 이미 승인된 게시물을 수정하는 경우, 승인요청 알림 발송하지 않도록 수정 */
 						if (("${boardInfo.apprMail_FG}" == "Y") && (pMode != "modify")) {
 						    xmlhttp = createXMLHttpRequest();
-						    xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(itemid), false);
+						    xmlhttp.open("POST", "/ezBoard/sendApprNotice.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(itemid), false);
 						    xmlhttp.send();
 						    xmlhttp = null;
 						}
@@ -817,12 +847,12 @@
 			}
 		    
 	        /* 2021-06-22 홍승비 - 게시판 메일알림 함수 추가, 비동기로 백그라운드 동작 */
-	        function sendBoardAlertMail(pMode, pBoardID, pItemID, pIsAllGroupBoard) {
+	        function sendBoardAlert(pMode, pBoardID, pItemID, pIsAllGroupBoard) {
 		        $.ajax({
 					type : "POST",
 					dataType : "text",
 					async : true,
-					url : "/ezBoard/sendBoardAlertMail.do",
+					url : "/ezBoard/sendBoardAlert.do",
 					data : {
 						mode : pMode,
 						boardID : pBoardID,
@@ -831,7 +861,16 @@
 					}
 				});
 	        }
-	        
+
+			function chkUseDept_onclick() {
+				if (chkUseDept.checked) { // 팀/부서로 표시
+					spUseDept.innerHTML = "${deptName}";
+					document.getElementById("writerFlag").selectedIndex = 1;
+				} else { // 이름으로 표시
+					spUseDept.innerHTML = "${displayName}";
+					document.getElementById("writerFlag").selectedIndex = 0;
+				}
+			}
 	    </script>
 	</head>
 	<c:if test="${!isCrossBrowser}">
@@ -875,10 +914,10 @@
 	          		</c:otherwise>
 	          	</c:choose>
 	          </th>
-	          <td style="width:70%" id="tdBoardName">
+	          <td style="width:45%" id="tdBoardName">
 	          	<c:choose>
 	          		<c:when test="${boardType != 'SELECT'}">
-	          			${boardInfo.boardName}
+	          			${boardName}
 	          		</c:when>
 	          		<c:otherwise>
 	          			<c:choose>
@@ -886,15 +925,35 @@
 			                    <span id="BoardSpan"><spring:message code='ezBoard.t57'/></span>
 	          				</c:when>
 	          				<c:otherwise>
-			                    <span id="BoardSpan">${boardInfo.boardName}</span>
+			                    <span id="BoardSpan">${boardName}</span>
 	          				</c:otherwise>
 	          			</c:choose>
 	          		</c:otherwise>
 	          	</c:choose>
 	          </td>
-	          <th style="width:80px; text-align:center"><spring:message code='ezBoard.t223'/></th>
-	          <td style="width:120px; text-align:center">${userID}</td>
+	          <th style="width:100px; text-align:center"><spring:message code='ezBoard.t223'/></th>
+	          <td style="width:47%;">
+				  <span id="spUseDept">${userInfo.displayName}</span>
+				  <c:if test="${'Y' == boardInfo.writerFlag}">
+					  <input type="checkbox" id="chkUseDept" style="margin-left: 0px !important;" onclick="chkUseDept_onclick()">
+					  <select id="writerFlag" style="display: none;">
+						  <option value="<c:out value='${writerOption.N}:${writerOption.N2}:0' />"></option>
+						  <option value="<c:out value='${writerOption.T}:${writerOption.T2}:1' />"></option>
+						  <option value="<c:out value='${writerOption.D}:${writerOption.D2}:2' />"></option>
+					  </select>
+				  </c:if>
+			  </td>
 	        </tr>
+            <!-- 키워드 시작 -->
+            <c:if test="${not empty useKeyword && useKeyword eq 'Y'}">
+               <tr>
+                   <th><spring:message code="ezApprovalG.t1200" /></th>
+                   <td colspan="3" id="keyWordResult">
+                       <input type="text" id="txtKeyword" style="WIDTH: 20%; word-wrap: break-word; word-break: break-all;" value="" maxlength="100" onkeyup="keyword_onkeyUp(event)" >
+                   </td>
+               </tr>
+            </c:if>
+            <!-- 키워드 끝 -->
 	        <tr>
 	          <th style="text-align:center"><spring:message code='ezBoard.t208'/></th>
 	          <td colspan="3" style="width:100%; vertical-align:middle; padding:0px 5px 0px 3px; margin:0;"><INPUT type="text" id="txtTitle" style="WIDTH:100%;word-wrap:break-word;word-break:break-all; border:1px solid #ddd; margin:0px; padding:2px 0px 2px 0px;" value="" maxlength="100" /></td>

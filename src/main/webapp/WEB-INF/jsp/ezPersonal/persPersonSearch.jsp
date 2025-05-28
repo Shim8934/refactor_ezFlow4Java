@@ -4,7 +4,8 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<link rel="stylesheet" href="${util.addVer('ezPersonal.e3', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 		<style>
@@ -17,14 +18,14 @@
 	    		white-space: nowrap;
 	    		overflow: hidden;
 	    		display: inline-block;
+	    		margin-right : 5px;
 	    	}
 	    	#countInfo {
 	    		overflow: hidden;
 	    		display: inline-block;
 	    	}
-	    	.countColor {
-	    		color:#017BEC;
-	    	}
+
+	    	.mainlist tr td[style*="display: none"]:first-child.none + td{padding-left:15px;}
 	    </style>
 		<title><spring:message code='ezPersonal.t210'/></title>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -62,7 +63,7 @@
 	        	}
 
 	        	if (navigator.userAgent.indexOf("Safari") > 0 && navigator.userAgent.indexOf("Chrome") == -1) {
-		            window.resizeTo(770, 595);
+		            window.resizeTo(770, 720);
 	        	}
 	        	ListTypeChangeIcon();
 	        	
@@ -106,10 +107,8 @@
 	        	selTab = "orgJobMstListView" + tabType;
 		        selSpan = "orgJobMstSpan" + tabType;
 		        
-		        $(".txtlist_DeptTD").css("display", "table-cell");
-		        $(".txtlist_DeptTD").css("padding-left", "15px");
-		        $(".mainlist tr td:nth-child(2)").css("padding-left", "4px");
-		        
+		        $(".none").css("display", "table-cell");
+
 		        clearOrgTab("orgJobMst");
 		        m_selectedTree = orglistView;
 		        orgJobMasterListSet(tabType);
@@ -127,6 +126,7 @@
 	            	createNodeAndInsertText(xmlpara, objNode, "DEPTID", "${userInfo.deptID}");	            	
 	                createNodeAndInsertText(xmlpara, objNode, "TOPID", topData);
 	            	createNodeAndInsertText(xmlpara, objNode, "PROP", "");
+					createNodeAndInsertText(xmlpara, objNode, "adminOrgan", "n");
 	            	xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
 	            	xmlHTTP.send(xmlpara);
 	            	xmlTree = loadXMLString(xmlHTTP.responseText);
@@ -161,6 +161,7 @@
 	        	createNodeInsert(xmlpara, objNode, "DATA");
 	        	createNodeAndInsertText(xmlpara, objNode, "DEPTID", deptID);
 	        	createNodeAndInsertText(xmlpara, objNode, "PROP", "mail;displayName");
+				createNodeAndInsertText(xmlpara, objNode, "adminOrgan", "n");
 	        	xmlHTTP.open("POST", "/ezOrgan/getDeptSubTreeInfo.do", false);
 	        	xmlHTTP.send(xmlpara);
 	        	xmlRtn = loadXMLString(xmlHTTP.responseText);
@@ -209,9 +210,10 @@
 	  				data : {
 	  					deptID : tempDeptID ,
 	  					cell : "company;description;displayName;title;telephoneNumber",
-	  					prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department;userType",
+						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department;userType;jobId",
 	  					page : CurPage ,
-	  					type : "user"
+	  					type : "user",
+						adminOrgan : "n"
 	  				} ,
 	      			success : function(xml) {
 						event_displayUserList(loadXMLString(xml));
@@ -233,17 +235,26 @@
 					method : "POST",
 					dataType : "json",
 					data : {
-						deptID : tempDeptID
+						deptID : tempDeptID,
+						adminOrgan : "n"
 					},
 					success : function(result) {
 						if (SelectDeptNM.getAttribute("countinfo") != "1" && !pSeach ) {
 							var id = $("span[class=node_selected]").eq(0).closest("div").attr("id");
 							var strIsLeaf = $("div#" + id + "").attr("isleaf");
 							
+							var companyID = "${userInfo.companyID}";
+							
 							if (result.containLow == "YES" && strIsLeaf != "TRUE") { //하위가 있고, 표기방식이 [1명/ 전체10명]일 경우
-			        			document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='countColor'>" + result.totalCount + "</span> / <span class='countColor'>" + parseInt(result.totalCount + result.totalCount2) + "</span>";
+								//2024.07.17 한슬기 : totalCount표시 조건 변경
+								if(tempDeptID == companyID){ // 회사인 경우
+									document.getElementById("countInfo").innerHTML += "<span class='countColor'>" + result.totalCount + "</span> / <span class='totalCount'>" + result.totalCount2 + "</span>";
+								} else { // 부서인 경우
+									document.getElementById("countInfo").innerHTML += "<span class='countColor'>" + result.totalCount + "</span> / <span class='totalCount'>" + parseInt(result.totalCount + result.totalCount2) + "</span>";
+								}
+							
 							} else {
-								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='countColor'>" + result.totalCount + "</span>";
+								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='txt_color'>" + result.totalCount + "</span>";
 							}
 							//2018-08-01 김보미 - 부서명 [사원수] 가 넘치는지 확인하는 함수
 							deptNameLong(result.containLow, strIsLeaf);
@@ -303,6 +314,8 @@
 	    	function event_listDBclick(obj) {
 		        var id = obj.getAttribute("_DATA2");
 		        var dept = obj.getAttribute("_DATA10");
+		        var jobId = obj.getAttribute("_DATA12");
+		        var type = obj.getAttribute("_DATA11");
 
 	    	    var width = 420, height = 450;
 	        	var leftPosition, topPosition;
@@ -312,10 +325,11 @@
 	        	topPosition = (window.screen.height / 2) - ((height / 2) + 50);
 	        	//Open the window.
 
-		        if(CrossYN())
+		        /* if(CrossYN())
 		            window.open("/ezCommon/showPersonInfo.do?id=" + id + "&dept=" + dept, "", "height=" + height + ",width=" + width + ", left=" + leftPosition + ",top=" + topPosition + ",screenX=" + leftPosition + ",screenY=" + topPosition + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 	    	    else
-	        	    window.open("/ezCommon/showPersonInfo.do?id=" + id + "&dept=" + dept, "", "height=" + height + ",width=" + width + ", left=" + leftPosition + ",top=" + topPosition + ",screenX=" + leftPosition + ",screenY=" + topPosition + ",status = no, toolbar=no, menubar=no,location=no, resizable=1");
+	        	    window.open("/ezCommon/showPersonInfo.do?id=" + id + "&dept=" + dept, "", "height=" + height + ",width=" + width + ", left=" + leftPosition + ",top=" + topPosition + ",screenX=" + leftPosition + ",screenY=" + topPosition + ",status = no, toolbar=no, menubar=no,location=no, resizable=1"); */
+	        	    window.open("/ezCommon/showPersonInfo.do?id=" + id + "&dept=" + dept + "&jobId=" + jobId + "&type=" + type , "", "height=" + height + ",width=" + width + ", left=" + leftPosition + ",top=" + topPosition + ",screenX=" + leftPosition + ",screenY=" + topPosition + ",status = no, toolbar=no, menubar=no,location=no, resizable=1");
 	    	}
 	    	var pSeach = false;
 	    	function DisplayUserImageList() {
@@ -334,9 +348,9 @@
 	        	
 	        	/* if (SelectDeptNM.getAttribute("countinfo") != "1" && getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0])!= null && getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0])!= "") {
 	        		if (getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) ==  getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0])) {
-	        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang1 + "</span>]";
+	        			SelectDeptNM.innerHTML += "-[<span class='txt_color'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang1 + "</span>]";
 	        		} else {
-	        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "/" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0]) + strLang1 + "</span>]";
+	        			SelectDeptNM.innerHTML += "-[<span class='txt_color'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "/" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0]) + strLang1 + "</span>]";
 	        		}
 	            	
 	            	SelectDeptNM.setAttribute("countinfo","1")
@@ -348,7 +362,7 @@
 	            	document.getElementById("txtlist_table").style.display = "none";
 	            	document.getElementById("Search_txtlist_table").style.display = "none";
 	            	if (pSeach) {
-	                	document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px;\" >" + "<span id='spn_deptName'>"  + strLang2 + "</span>" + "<span id='countInfo' style='color:#017BEC;'>&nbsp;&nbsp;<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "</span></span>";
+	                	document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px;\" >" + "<span id='spn_deptName'>"  + strLang2 + "</span>" + "<span id='countInfo' class='txt_color'>&nbsp;&nbsp;<span class='txt_color'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "</span></span>";
 	                	SelectDeptNM.setAttribute("countinfo", "1")
 	            	}
 	        	} else {
@@ -360,7 +374,7 @@
 	            	} else {
 	                	document.getElementById("Search_txtlist_table").style.display = "";
 	                	document.getElementById("txtlist_table").style.display = "none";
-	                	document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px;\" >" + "<span id='spn_deptName'>" + strLang2 + "</span>" + "<span id='countInfo' style='color:#017BEC;'>&nbsp;&nbsp;<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "</span></span>";
+	                	document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px;\" >" + "<span id='spn_deptName'>" + strLang2 + "</span>" + "<span id='countInfo' class='txt_color'>&nbsp;&nbsp;<span class='txt_color'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "</span></span>";
 	                	SelectDeptNM.setAttribute("countinfo", "1");
 						<c:if test="${useShowAllCompanies eq 'YES'}">
 							resizeWindowWidth();
@@ -603,15 +617,8 @@
 		        }
 	        	
 	        	if (selTab == "orglistView" && $(".txtlist_DeptTD").length > 0) {
-			        $(".txtlist_DeptTD").css("display", "none");
-			        $(".txtlist_DeptTD").css("padding-left", "4px");
-					//2023-06-02 김대현 조직도 리스트 보기에서 직위 테이블 헤더와 바디 값 줄이 안맞는 현상 수정
-					//$(".mainlist tr td:nth-child(2)").css("padding-left", "15px");
-					$(".mainlist tr .td_gray:nth-child(2)").css("padding-left", "15px");
-					// 검색시 이름이 밀리는 현상 수정
-					if ($("#Search_txtlist_table tr .td_gray:nth-child(2)").css("padding-left") == "15px") {
-						$("#Search_txtlist_table tr .td_gray:nth-child(2)").css("padding-left", "4px");
-					}
+			        $(".none").css("display", "none");
+
 		        }
 	    	}
 	    	
@@ -624,7 +631,9 @@
 	        	if (length > 0) {
 	            	var id = GetAttribute(selectdata[0], "DATA2");
 	            	var dept = GetAttribute(selectdata[0], "DATA10");
-	            	window.open("/ezCommon/showPersonInfo.do?id=" + id + "&dept=" + dept, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(420, 450));
+					var jobId = GetAttribute(selectdata[0], "DATA12");
+					var type = GetAttribute(selectdata[0], "DATA11");
+					window.open("/ezCommon/showPersonInfo.do?id=" + id + "&dept=" + dept + "&jobId=" + jobId + "&type=" + type, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(420, 450));
 	        	}
 	    	}
 	    	
@@ -657,12 +666,13 @@
 					data : {
 						search : document.getElementById("search_type").value + "::" + encodeURIComponent(keyword.value),
 						cell : "company;description;displayName;title;telephoneNumber;" + document.getElementById("search_type").value,
-						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department;userType",
+						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department;userType;jobId",
 						page : CurPage ,
 		                <c:if test="${useShowAllCompanies eq 'YES'}">
 	        			company : "",
 		                </c:if>		        			
-						type : "user"
+						type : "user",
+						adminOrgan : "n"
 					} ,
 					success : function(xml) {
 						event_displayUserList2(loadXMLString(xml));
@@ -750,14 +760,14 @@
 	            	if (CrossYN()) {
 		                <c:choose>
 		                <c:when test="${useShowAllCompanies eq 'YES'}">
-		                strQuery = "<DATA><DEPTID>" + SelectNodes(xmlDOM, "LISTVIEWDATA/ROWS/ROW/DATA2").item(0).textContent + "</DEPTID><TOPID>Top/organ</TOPID><PROP></PROP></DATA>";
+		                strQuery = "<DATA><DEPTID>" + SelectNodes(xmlDOM, "LISTVIEWDATA/ROWS/ROW/DATA2").item(0).textContent + "</DEPTID><TOPID>Top/organ</TOPID><PROP></PROP><ORGANADMIN>n</ORGANADMIN></DATA>";
 		                </c:when>
 		                <c:otherwise>
-		                strQuery = "<DATA><DEPTID>" + SelectNodes(xmlDOM, "LISTVIEWDATA/ROWS/ROW/DATA2").item(0).textContent + "</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
+		                strQuery = "<DATA><DEPTID>" + SelectNodes(xmlDOM, "LISTVIEWDATA/ROWS/ROW/DATA2").item(0).textContent + "</DEPTID><TOPID>Top</TOPID><PROP></PROP><ORGANADMIN>n</ORGANADMIN></DATA>";
 		                </c:otherwise>
 		                </c:choose>	                    	                    	            	    
 	            	} else {
-	                	strQuery = "<DATA><DEPTID>" + SelectNodes(xmlDOM, "LISTVIEWDATA/ROWS/ROW/DATA2").item(0).text + "</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
+	                	strQuery = "<DATA><DEPTID>" + SelectNodes(xmlDOM, "LISTVIEWDATA/ROWS/ROW/DATA2").item(0).text + "</DEPTID><TOPID>Top</TOPID><PROP></PROP><ORGANADMIN>n</ORGANADMIN></DATA>";
 	            	}
 
 	            	g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
@@ -780,7 +790,7 @@
 	                	if (rgParams["deptid"] != "") {
 		                    bSearch = true;
 	                    	g_xmlHTTP = createXMLHttpRequest();
-	                    	var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+	                    	var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP><ADMINORGAN>n</ADMINORGAN></DATA>";
 	                    	g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 	                    	g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 	                    	g_xmlHTTP.send(strQuery);
@@ -796,10 +806,10 @@
 	            	
 	                <c:choose>
 	                <c:when test="${useShowAllCompanies eq 'YES'}">
-	                var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top/organ</TOPID><PROP>mail</PROP></DATA>";
+	                var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top/organ</TOPID><PROP>mail</PROP><ADMINORGAN>n</ADMINORGAN></DATA>";
 	                </c:when>
 	                <c:otherwise>
-	                var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+	                var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP><ADMINORGAN>n</ADMINORGAN></DATA>";
 	                </c:otherwise>
 	                </c:choose>
 	            	
@@ -831,7 +841,7 @@
 	                	treeView.DataSource(g_xmlHTTP.responseXML);
 	                	treeView.DataBind("TreeView");
 	            	} else {
-	                	alert("<spring:message code='ezPersonal.t17'/>" + g_xmlHTTP.statusText)
+	                	alert("<spring:message code='ezPersonal.t17'/>" + g_xmlHTTP.status)
 	                	g_xmlHTTP = null;
 	            	}
 	        	}
@@ -923,22 +933,22 @@
 		        PagingHTML += strtext;
 	        	var pageNum = CurPage;
 	        	if (totalPage > 1 && pageNum != 1) {
-	            	strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' ></span>";
+	            	strtext = "<span class='btnimg first' onclick= 'return goToPageByNum(1)'></span>";
 	            	PagingHTML += strtext;
 	        	} else {
-	            	strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>";
+	            	strtext = "<span class='btnimg first disabled'></span>";
 	            	PagingHTML += strtext;
 	        	}
 	        	if (totalPage > BlockSize) {	
 		            if (pageNum > BlockSize) {
-	                	strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' ></span>";
+	                	strtext = "<span class='btnimg prev' onclick= 'return selbeforeBlock()'></span>";
 		                PagingHTML += strtext;
 		            } else {
-	                	strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+	                	strtext = "<span class='btnimg prev disabled'></span>";
 	                	PagingHTML += strtext;
 	            	}
 	        	} else {
-	            	strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+	            	strtext = "<span class='btnimg prev disabled'></span>";
 	            	PagingHTML += strtext;
 	        	}
 	        	var MaxNum;
@@ -964,23 +974,23 @@
 	        	if (totalPage > BlockSize) {
 		            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
 	                	strtext = "";
-	                	strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' ></span>";
+	                	strtext = strtext + "<span class='btnimg next' onclick='return selafterBlock()'></span>";
 	                	PagingHTML += strtext;
 	            	} else {
 	                	strtext = "";
-	                	strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+	                	strtext = strtext + "<span class='btnimg next disabled'></span>";
 	                	PagingHTML += strtext;
 	            	}
 	        	} else {
 	            	strtext = "";
-	            	strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+	            	strtext = strtext + "<span class='btnimg next disabled'></span>";
 	            	PagingHTML += strtext;
 	        	}
 	        	if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-	            	strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' ></span>";
+	            	strtext = "<span class='btnimg last' onclick='return goToPageByNum(" + totalPage + ")'></span>";
 	            	PagingHTML += strtext;
 	        	} else {
-	            	strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
+	            	strtext = "<span class='btnimg last disabled'></span>";
 	            	PagingHTML += strtext;
 	        	}
 	        	PagingHTML += "</div>";
@@ -1191,7 +1201,6 @@
 	        	var treeView = new TreeView();
 	            treeView.LoadFromID("FromTreeView");
 	            var treeViewSelectNode = treeView.GetSelectNode();
-	            
         		var jobId = treeViewSelectNode.GetNodeData("cn");
         		var comId = treeViewSelectNode.GetNodeData("comid");
         		var jobType = treeViewSelectNode.GetNodeData("jobtype");
@@ -1206,7 +1215,7 @@
 						jobID : jobId,
 						pageNum : CurPage,
 						cell : "company;description;displayName;title;telephoneNumber", 
-						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department;userType",
+						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department;userType;jobId",
 						searchType : "",
 						searchValue : "",
 						comID : comId
@@ -1217,7 +1226,7 @@
 						document.getElementById("SelectDeptNM").innerHTML 
 							= "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px; \" >"
 			            	+ "<span id='spn_deptName' title='" + jobName + "'>" + jobName + "</span>"
-			            	+ "<span id='countInfo'>&nbsp;<span class='countColor'> " + totalCnt + "</span></span>";
+			            	+ "<span id='countInfo'>&nbsp;<span class='txt_color'> " + totalCnt + "</span></span>";
 						
 		                pSeach = false;
 		                DisplayUserImageList();
@@ -1372,7 +1381,7 @@
           			<div style="vertical-align:top;height:67vh;overflow:auto;width:100%;" id="txtlist_Layer">   
           				<table style="width:100%;border:1px solid #ddd;display:none;" id="txtlist_table" class="mainlist" > 
               				<tr>
-              					<td style="width:110px;color:#333;background-color: #f8f8fa" class="td_gray txtlist_DeptTD"><spring:message code='ezPersonal.t305'/></td>
+              					<td style="width:110px;color:#333;background-color: #f8f8fa" class="td_gray txtlist_DeptTD none"><spring:message code='ezPersonal.t305'/></td>
                   				<td style="width:110px;color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezPersonal.t304'/></td>
                   				<td style="width:80px;color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezPersonal.t69'/></td>
                   				<td class="td_gray" style="color:#333;background-color: #f8f8fa"><spring:message code='ezPersonal.t177'/></td>

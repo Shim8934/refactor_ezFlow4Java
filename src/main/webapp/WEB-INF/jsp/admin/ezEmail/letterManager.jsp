@@ -7,7 +7,8 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title></title>
 		<link rel="stylesheet" href="${util.addVer('/js/dist/themes/default/style.min.css')}" />
-		<link rel="stylesheet" href="${util.addVer('main.e15', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('/css/ezEmail/style.css')}" />
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -242,6 +243,7 @@
 								closeCallback(win);
 							}
 						} catch (e) {
+						    console.log(e);
 						}
 					}, 1000);
 	

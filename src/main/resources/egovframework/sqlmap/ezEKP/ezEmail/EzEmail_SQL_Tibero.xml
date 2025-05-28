@@ -374,5 +374,30 @@
 				USER_KEY = #userKey#
 		]]>
 	</delete>
-	
+
+	<select id="EzEmailDAO.checkApprMailApprover" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(USER_ID)
+			FROM
+				JMOCHA_APPR_USER
+			WHERE
+				USER_ID = #cn#
+			AND
+				USER_TYPE = 'approver'
+			AND
+				COMPANY_ID = #companyId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</select>
+
+	<delete id="EzEmailDAO.cancelMailByMailUid" parameterClass="MailDeletedIdVO">
+		<![CDATA[
+			DELETE FROM
+				JAMES_MAIL
+			WHERE MAILBOX_ID = #mailBoxId#
+			  AND MAIL_UID = #mailUid#
+		]]>
+	</delete>
 </sqlMap>

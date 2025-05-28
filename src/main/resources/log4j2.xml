@@ -20,7 +20,7 @@
             </Policies>
         </RollingFile>-->
         <!--<JDBC name="exceptionDB" tableName="tbl_db_log">
-            <ConnectionFactory class="egovframework.rte.fdl.logging.db.EgovConnectionFactory" method="getDatabaseConnection" />
+            <ConnectionFactory class="org.egovframe.rte.fdl.logging.db.EgovConnectionFactory" method="getDatabaseConnection" />
             <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
             <Column name="event_date" isEventTimestamp="true" />
             <Column name="thread" pattern="%thread" />
@@ -42,7 +42,7 @@
 <!--            <AppenderRef ref="CustomAppender" />-->
 <!--            <AppenderRef ref="exceptionLog" />-->
         </Logger>
-        <Logger name="egovframework.rte.psl.orm.ibatis.SqlMapClientTemplate" level="INFO" additivity="false">
+        <Logger name="org.egovframe.rte.psl.orm.ibatis.SqlMapClientTemplate" level="INFO" additivity="false">
             <AppenderRef ref="console" />
         </Logger>        
           <!-- log SQL with timing information, post execution -->

@@ -715,14 +715,14 @@ function covBody(pbody) {
     var BodyStr = "<content>" + newSTR.replace(re, "&amp;nbsp;").replace(/&lt;/g, "&amp;lt;").replace(/&gt;/g, "&amp;gt;") + "</content>";
 
     BodyStr = BodyStr.replace(/: '/g, ":");
-    BodyStr = BodyStr.replace(/'' /g, "' ");
+    BodyStr = BodyStr.replace(/''(?=[a-zA-Z0-9])/g, "'");
     BodyStr = BodyStr.replace(/''>/g, "'>");
     BodyStr = BodyStr.replace(/'; /g, "; ");
     BodyStr = BodyStr.replace(/''font-size:'/g, "'font-size:");
     
     BodyStr = BodyStr.replace(/''margin-bottom:'/g, "'margin-bottom:");
     BodyStr = BodyStr.replace(/='>/g, "=''>");
-    BodyStr = BodyStr.replace(/=''/g, "='");
+    BodyStr = BodyStr.replace(/(style|data-\w+)=('')/g, "$1=''");
     BodyStr = BodyStr.replace(/:'  '/g, ":");
     BodyStr = BodyStr.replace(/:'  /g, ":");
     BodyStr = BodyStr.replace(/';'/g, ";'");
@@ -746,14 +746,60 @@ function removeTags(input, allowed) {
 function styleToAttribute(bodyElem) {
 	var pElem = bodyElem.getElementsByTagName("p");
 	for (var i = 0; i < pElem.length; i++) {
-		if (pElem[i].style && pElem[i].style.textAlign) {
-			pElem[i].align = pElem[i].style.removeProperty("text-align");
-		}
-		
+        if (pElem[i].style) {
+            if (pElem[i].style.textAlign) {
+                var alignVal = pElem[i].style.removeProperty("text-align");
+                if (alignVal == 'left' || alignVal == 'center' || alignVal == 'right') {
+                    pElem[i].align = alignVal;
+                } else {
+                    pElem[i].removeAttribute("align");
+                }
+            } else {
+                var pElemAlign = pElem[i].getAttribute("align");
+                if (pElemAlign == null || !(pElemAlign == 'left' || pElemAlign == 'center' || pElemAlign == 'right')){
+                    pElem[i].removeAttribute("align");
+                }
+            }
+            
+            if (pElem[i].style.lineHeight) {
+                var lh = pElem[i].style.lineHeight;
+                var fontPx = 16;
+    
+                if (isLineHeightUnitless(lh)) {
+                    var fontSizeStr = pElem[i].style.fontSize;
+    
+                    if (fontSizeStr) {
+                        var match = fontSizeStr.match(/^([\d.]+)(pt|px)?$/);
+                        if (match) {
+                            var size = parseFloat(match[1]);
+                            var unit = match[2] || "px";
+    
+                            if (unit == "pt") {
+                                fontPx = size * (96 / 72);
+                            } else if (unit == "px") {
+                                fontPx = size;
+                            } else {
+                                fontPx = 16;
+                            }
+                        }
+                    }
+    
+                    var multiplier = parseFloat(lh);
+                    if (!isNaN(multiplier)) {
+                        pElem[i].style.lineHeight = (fontPx * multiplier) + "px";
+                    }
+                }
+            }
+        }
+    
 		if (pElem[i].getAttribute("style") == "") {
 			pElem[i].removeAttribute("style");
 		}
 	}
+}
+
+function isLineHeightUnitless(value) {
+  return !!value && /^[\d.]+$/.test(value);
 }
 
 function FileUpload(pFileName, pURL, localPath)

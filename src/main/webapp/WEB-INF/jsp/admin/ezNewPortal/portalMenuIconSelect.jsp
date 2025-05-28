@@ -7,20 +7,23 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title><spring:message code='ezNewPortal.t075' /></title>
+<link rel="stylesheet" type="text/css" href="${util.addVer('/css/ezNewPortal/portal.css')}" />
 <link href="${util.addVer('main.portal', 'msg')}" rel="stylesheet" type="text/css">
-<link rel="stylesheet" href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css" />
+<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 <style type="text/css">
  .menuIcon {display:inline-block; height:118px; width:80px; text-align:center;}
  .iconArea {margin:22px;}
  .icon_topmenu {margin-top : 20px;}
  .menuIcon div {width:100%; height:66px; border:1px solid #afafaf; text-align:center;}
  input[name='selIcon'] {margin-top : 10px;}
+ body{height: auto;}
 </style>
 </head>
 <body class="popup">
 	<h1><spring:message code='ezNewPortal.t075' /></h1>
 	<div id="close"><ul><li><span></span></li></ul></div>
-	<div class="iconArea">
+	<div class="iconArea" id="iconArea">
 		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_webfolder"></span></div><input type="radio" name="selIcon"></div>
 		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_cabinet"></span></div><input type="radio" name="selIcon"></div>
 		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_project"></span></div><input type="radio" name="selIcon"></div>
@@ -28,6 +31,27 @@
 		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_resource"></span></div><input type="radio" name="selIcon"></div>
 		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_board"></span></div><input type="radio" name="selIcon"></div>
 		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_collaboration"></span></div><input type="radio" name="selIcon"></div>
+		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_calendar"></span></div><input type="radio" name="selIcon"></div>
+		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_memo"></span></div><input type="radio" name="selIcon"></div>
+		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_approval"></span></div><input type="radio" name="selIcon"></div>
+		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_circular_edition"></span></div><input type="radio" name="selIcon"></div>
+		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_community"></span></div><input type="radio" name="selIcon"></div>
+		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_survey"></span></div><input type="radio" name="selIcon"></div>
+		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_addressbook"></span></div><input type="radio" name="selIcon"></div>
+		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_voting"></span></div><input type="radio" name="selIcon"></div>
+		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_laddergame"></span></div><input type="radio" name="selIcon"></div>
+		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_mail"></span></div><input type="radio" name="selIcon"></div>
+	</div>
+	<div class="iconArea" id="mobileIconArea">
+		<div class="menuIcon"><div><span style="margin-top: 17px;" class="iconCommon icon_mail"></span></div><input type="radio" name="selIcon"></div>
+		<div class="menuIcon"><div><span style="margin-top: 17px;" class="iconCommon icon_employee"></span></div><input type="radio" name="selIcon"></div>
+		<div class="menuIcon"><div><span style="margin-top: 17px;" class="iconCommon icon_approval"></span></div><input type="radio" name="selIcon"></div>
+		<div class="menuIcon"><div><span style="margin-top: 17px;" class="iconCommon icon_resource"></span></div><input type="radio" name="selIcon"></div>
+		<div class="menuIcon"><div><span style="margin-top: 17px;" class="iconCommon icon_notice"></span></div><input type="radio" name="selIcon"></div>
+		<div class="menuIcon"><div><span style="margin-top: 17px;" class="iconCommon icon_address"></span></div><input type="radio" name="selIcon"></div>
+		<div class="menuIcon"><div><span style="margin-top: 17px;" class="iconCommon icon_schedule"></span></div><input type="radio" name="selIcon"></div>
+		<div class="menuIcon"><div><span style="margin-top: 17px;" class="iconCommon icon_survey"></span></div><input type="radio" name="selIcon"></div>
+		<div class="menuIcon"><div><span style="margin-top: 17px;" class="iconCommon icon_webfolder"></span></div><input type="radio" name="selIcon"></div>
 	</div>
 	<div id="addIcon" class="btnposition btnpositionNew">
 		<a class="imgbtn"><span><spring:message code='main.sp09' /></span></a>
@@ -37,10 +61,22 @@
 	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	<script type="text/javascript">
 		$(function() {
+			var type = window.opener.type;
+			
+			if (type != 'mobile') {
+				document.getElementById("mobileIconArea").style.display = "none";
+			} else {
+				document.getElementById("iconArea").style.display = "none";
+			}
+			
 			var beforeClass = $(opener.document).find(".menuIcon").find("span").attr("class");
 			
 			if (beforeClass == undefined) {
-				$(".icon_nav_webfolder").parent().siblings().prop("checked", true);
+				if (type != 'mobile') {
+					$(".icon_nav_webfolder").parent().siblings().prop("checked", true);
+				} else {
+					$(document.getElementById("mobileIconArea").children[0]).find("input").prop("checked", true);
+				}
 			} else {
 				beforeClass = beforeClass.substring(beforeClass.indexOf(" ") + 1);
 				$("." + beforeClass).parent().siblings().prop("checked", true);

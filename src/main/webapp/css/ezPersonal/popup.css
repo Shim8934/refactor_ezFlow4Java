@@ -2,7 +2,6 @@
 .skinList li {float:left;margin:5px;}
 .skins {position:relative;width:110px;height:44px;text-align:center;border:1px solid #cecece;cursor:pointer;}
 .skinImages {display:inline-block;position:relative;width:100%;height:100%; border:1px solid #cecece;}
-/* .checked {background-color:#edf7ff;border:1px solid #2196f3;} */
 .skinPopup {width:500px;height:500px;position:absolute;background:rgba(0,0,0,0.4);border-radius:30px;top:100px;left:150px;}
 .skinDivTop {display:inline-block;float:right;width:40px;margin-top:15px;}
 .skinPopImg {width:400px;height:400px;position:relative;top:50px;left:45px;}
@@ -11,37 +10,23 @@
 .isDefault {position:absolute; background:rgba(0,0,0,0.3);width:110px; height:44px; top:0px;}
 .isDefault img {margin-top:7px; width:27px; height:27px;}
 
-.popup_notice{height:100%;padding:20px;}
-.popup_type0{background:url(/images/admin/popup_bg01.png) #0078fe top right no-repeat;border:1px solid #0053b3;}
-.popup_type1{background:url(/images/admin/popup_bg02.png) #ffb4b4 top right no-repeat;border:1px solid #ff8080;}
-.popup_type2{background:url(/images/admin/popup_bg03.png) #ffd161 top right no-repeat;border:1px solid #e6a400;}
-.popup_type3{background:url(/images/admin/popup_bg04.png) #CCC top right no-repeat;border:1px solid #a6a6a6;}
+.popup_notice{box-sizing:border-box; border-radius:10px; box-shadow:0 3px 8px rgba(0,0,0,0.24);}
+.popup_type0{background:url(/images/admin/popup_bg01.png) top right no-repeat #388CE5;}
+.popup_type1{background:url(/images/admin/popup_bg02.png) top right no-repeat #FFB4B4;}
+.popup_type2{background:url(/images/admin/popup_bg03.png) top right no-repeat #FFD161;}
+.popup_type3{background:url(/images/admin/popup_bg04.png) top right no-repeat #CCCCCC;}
 .popup_notice form{display:inline; margin:0px;}
 .popup_notice .popup_noticeLayout{height:100%;}
 
-.popup_type0 .popup_noticeLayout .popup_noticeList {border:1px solid #0053b3;}
-.popup_type1 .popup_noticeLayout .popup_noticeList {border:1px solid #ff8080;}
-.popup_type2 .popup_noticeLayout .popup_noticeList {border:1px solid #e6a400;}
-.popup_type3 .popup_noticeLayout .popup_noticeList {border:1px solid #a6a6a6;}
+.popup_notice .popup_noticeTitle{overflow:hidden; margin:0px; padding:0px; display:flex; height:70px; padding:0 25px; align-items:center; border-radius:10px 10px 0 0;}
+.popup_notice .popup_noticeTitle dt{float:left; width:25px; height:25px; margin:0px 10px 0px 0px; padding:0px; background:url(../../images/surv_popup_title.png) no-repeat center;}
+.popup_notice .popup_noticeTitle dd{margin:0; padding:0px; font-size:18px; color:#fff; font-weight:500;}
 
-.popup_notice .popup_noticeTitle{overflow:hidden; margin:0px 0px 20px 0px; padding:0px;font-family: 'malgun gothic', 'arial', 'verdana';}
-.popup_notice .popup_noticeTitle dt{float:left; width:38px; height:38px; margin:0px 10px 0px 0px; padding:0px;}
-.popup_notice .popup_noticeTitle dt.title_type0 { background:url(/images/admin/popup_title_icon01.png) no-repeat;}
-.popup_notice .popup_noticeTitle dt.title_type1 { background:url(/images/admin/popup_title_icon02.png) no-repeat;}
-.popup_notice .popup_noticeTitle dt.title_type2 { background:url(/images/admin/popup_title_icon03.png) no-repeat;}
-.popup_notice .popup_noticeTitle dt.title_type3 { background:url(/images/admin/popup_title_icon04.png) no-repeat;}
-.popup_notice .popup_noticeTitle dd{margin:5px 48px; padding:0px; font-size:16px; color:#333; line-height:26px;font-family: 'malgun gothic', 'arial', 'verdana';}
-.popup_notice .popup_noticeTitle dd.name_type0{color:#FFF;}
-
-.popup_notice .popup_noticeLayout .popup_noticeList{overflow:auto; margin:0px; padding:20px; background:#FFF; height:calc(100% - 126px);  font-family:'malgun gothic',"돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
-.popup_notice .popup_noticeLayout .popup_noticeList p{margin:0px; padding:0px; line-height:18px; font-size:12px; font-family:'malgun gothic',"돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;word-break:break-all; word-wrap: break-word;}
-.popup_notice .popup_noticeLayout .notice_btn{overflow:hidden; margin:14px 0px 0px 0px; padding:0px;height:24px;}
-.popup_notice .popup_noticeLayout .notice_btn p{display:inline-block; margin:0px; padding:0px; font-size:12px; color:#333; font-family:'malgun gothic',"돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
+.popup_notice .popup_noticeLayout .popup_noticeList{overflow:auto; margin:0px; padding:25px; background:#FFF; height:calc(100% - 116px) !important; box-sizing:border-box;}
+.popup_notice .popup_noticeLayout .popup_noticeList p{margin:0px; padding:0px; line-height:18px; font-size:12px; word-break:break-all; word-wrap: break-word;}
+.popup_notice .popup_noticeLayout .notice_btn{overflow:hidden; margin:0px; padding:0 0 0 20px; height:46px; background:#F5F5F5; display:flex; align-items:center; border-radius:0 0 10px 10px;}
+.popup_notice .popup_noticeLayout .notice_btn p{display:inline-block; margin:0px; padding:0px; font-size:12px; color:#333;}
 .popup_notice .popup_noticeLayout .notice_btn .btn_checkbox{float:left; cursor:pointer;padding:0px;}
-.popup_notice .popup_noticeLayout .notice_btn .btn_checkbox label.name_type0{color:#FFF;}
-.popup_notice .popup_noticeLayout .notice_btn .btn_checkbox .inp_noticeCheck{width:13px; height:13px; margin:-2px 0px 0px 0px; padding:0; vertical-align:middle; overflow:hidden;}
+.popup_notice .popup_noticeLayout .notice_btn .btn_checkbox .inp_noticeCheck{width:14px; height:14px; margin:3px 0px 0px 0px; padding:0; vertical-align:top; overflow:hidden;}
+.popup_notice .popup_noticeLayout .notice_btn .btn_checkbox label{color:#333; font-size:14px; margin-left:10px;}
 .popup_notice .notice_btnClose{width:30px; height:30px; background:url(/images/webfolder/close.png) no-repeat; cursor:pointer;position:absolute;margin:0;right:-11px;top:-8px;border-radius:12px;}
-/* .popup_notice .notice_btnClose.close_type0 {background:url(/images/admin/noMenu.png) no-repeat;}
-.popup_notice .notice_btnClose.close_type1 {background:url(/images/admin/noMenu.png) no-repeat;}
-.popup_notice .notice_btnClose.close_type2 {background:url(/images/admin/noMenu.png) no-repeat;}
-.popup_notice .notice_btnClose.close_type3 {background:url(/images/admin/noMenu.png) no-repeat;} */

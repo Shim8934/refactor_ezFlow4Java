@@ -6,6 +6,7 @@
 <!-- 	<procedure id="EzCommunityAdminDAO.aspCloseComGet1"					parameterClass="Map"			resultClass="CommunityCComCloseVO"> -->
 <!-- 		{CALL EZSP_ASP_CLOSE_COM_GET1(#v_KEYWORD#, #v_S_RADIO#, #v_S#, #v_USERINFO_LANG#, #v_SORT1#, #v_SORT2#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
+	<!-- 2024-07-16 홍승비 - SQL Injection 수정 > $ 기호 제거 -->
 	<select id="EzCommunityAdminDAO.aspCloseGet1Select1"				parameterClass="Map"		resultClass="CommunityCComCloseVO">
 		<![CDATA[
 			SELECT
@@ -21,10 +22,10 @@
 						DISTINCT A.C_CLUBNO,
 						C_NAME,
 						CLOSESTATE,
-						D.C_CLUBNAME$v_USERINFO_LANG$ AS C_CLUBNAME,
+						CASE #v_USERINFO_LANG# WHEN '2' THEN D.C_CLUBNAME2 ELSE D.C_CLUBNAME END AS C_CLUBNAME,
 						C_CLUBCONFIRMTYPE,
 						C_CLUBGUBUN,
-						B.DISPLAYNAME$v_USERINFO_LANG$ AS USERNAME,
+						CASE #v_USERINFO_LANG# WHEN '2' THEN B.DISPLAYNAME2 ELSE B.DISPLAYNAME END AS USERNAME,
 						A.C_SYSOPID,
 						TO_DATE(APPLICATIONDATE, 'YYYY-MM-DD HH24:MI:SS')+(#v_OFFSETMIN#/(60*24)) AS APPLICATIONDATE
 					FROM
@@ -53,7 +54,8 @@
 					<isEqual property="v_SEARCHTYPE2" compareValue="C_ClubName">
 						<![CDATA[
 							AND
-								D.C_CLUBNAME$v_USERINFO_LANG$ LIKE '%' || #v_KEYWORD# || '%'
+								CASE #v_USERINFO_LANG# WHEN '2' THEN D.C_CLUBNAME2 ELSE D.C_CLUBNAME END
+								LIKE '%' || #v_KEYWORD# || '%'
 						]]>
 					</isEqual>
 					<isEqual property="v_SEARCHTYPE2" compareValue="C_CloseReason">
@@ -81,6 +83,7 @@
 			]]>
 	</select>
 	
+	<!-- 2024-07-16 홍승비 - 폐쇄승인 커뮤니티 리스트 쿼리 > 검색어를 사용하지 않는 분기의 검색조건 쿼리 제거 -->
 	<select id="EzCommunityAdminDAO.aspCloseGet1Select2"				parameterClass="Map"		resultClass="CommunityCComCloseVO">
 		<![CDATA[
 			SELECT
@@ -96,10 +99,10 @@
 						DISTINCT A.c_clubno,
 						c_name,
 						closestate,
-						D.c_clubname$v_USERINFO_LANG$ AS c_clubname,
+						CASE #v_USERINFO_LANG# WHEN '2' THEN D.C_CLUBNAME2 ELSE D.C_CLUBNAME END AS C_CLUBNAME,
 						c_clubConfirmType,
 						c_clubGubun,
-						B.DISPLAYNAME$v_USERINFO_LANG$ AS username,
+						CASE #v_USERINFO_LANG# WHEN '2' THEN B.DISPLAYNAME2 ELSE B.DISPLAYNAME END AS USERNAME,
 						A.c_sysopid,
 						TO_DATE(applicationdate, 'YYYY-MM-DD HH24:MI:SS')+(#v_OFFSETMIN#/(60*24)) AS applicationdate
 					FROM
@@ -125,8 +128,6 @@
 					WHERE
 						E.c_cat = 'a'
 					AND
-						D.c_clubname$v_USERINFO_LANG$ LIKE '%' || #v_KEYWORD# || '%'
-					AND
 						D.companyid = #companyID#
 					AND
 						A.tenant_id = #tenantID#
@@ -141,6 +142,7 @@
 <!-- 	<procedure id="EzCommunityAdminDAO.aspCloseComGet2"					parameterClass="Map"			resultClass="String"> -->
 <!-- 		{CALL EZSP_ASP_CLOSE_COM_GET2(#v_KEYWORD#, #v_S_RADIO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
+	<!-- 2024-07-16 홍승비 - 폐쇄승인 커뮤니티 카운트 쿼리 > TENANT_ID 조인조건 누락되었던 부분 추가, 커뮤니티명 검색 테이블 오류 수정 -->
 	<select id="EzCommunityAdminDAO.aspCloseComGet2Select1"				parameterClass="Map"		resultClass="Integer">
 		<![CDATA[
 			SELECT
@@ -157,6 +159,8 @@
 				TBL_C_CLUB
 			ON
 				TBL_C_CLUB.C_CLUBNO = C1.C_CLUBNO
+			AND
+				TBL_C_CLUB.TENANT_ID = C1.TENANT_ID
 			INNER JOIN
 				TBL_C_CATEGORY D
 			ON
@@ -169,7 +173,8 @@
 		<isEqual property="v_SEARCHTYPE2" compareValue="C_ClubName">
 			<![CDATA[
 				AND
-					C1.C_CLUBNAME$v_USERINFO_LANG$ LIKE '%' || #v_KEYWORD# || '%'
+					CASE #v_USERINFO_LANG# WHEN '2' THEN TBL_C_CLUB.C_CLUBNAME2 ELSE TBL_C_CLUB.C_CLUBNAME END
+					LIKE '%' || #v_KEYWORD# || '%'
 			]]>
 		</isEqual>
 		<isEqual property="v_SEARCHTYPE2" compareValue="C_CloseReason">
@@ -184,12 +189,10 @@
 					D.C_CODE = #v_S_RADIO#
 			]]>
 		</isNotEqual>
-		<![CDATA[
-				AND
-					TBL_C_CLUB.COMPANYID = #companyID#
-				AND
-					C1.TENANT_ID = #tenantID#
-		]]>
+			AND
+				TBL_C_CLUB.COMPANYID = #companyID#
+			AND
+				C1.TENANT_ID = #tenantID#
 	</select>
 	
 	<select id="EzCommunityAdminDAO.aspCloseComGet2Select2"				parameterClass="Map"		resultClass="Integer">
@@ -227,10 +230,11 @@
 					SELECT
 						DISTINCT C_CLUBNO,
 						C_NAME,
-						C_CLUBNAME$v_USERINFO_LANG$ C_CLUBNAME,
+						CASE #v_USERINFO_LANG# WHEN '2' THEN C_CLUBNAME2 ELSE C_CLUBNAME END AS C_CLUBNAME,
 						C_CLUBCONFIRMTYPE,
 						C_CLUBGUBUN,
-						NVL(C.DISPLAYNAME$v_USERINFO_LANG$, B.USERNAME$v_USERINFO_LANG$) AS USERNAME,
+						NVL(CASE #v_USERINFO_LANG# WHEN '2' THEN C.DISPLAYNAME2 ELSE C.DISPLAYNAME END,
+							CASE #v_USERINFO_LANG# WHEN '2' THEN B.USERNAME2 ELSE B.USERNAME END) AS USERNAME,
 						RTRIM(C_SYSOPID) AS C_SYSOPID,
 						TO_CHAR(C_REGDATE + #v_OFFSETMIN# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') AS C_REGDATE
 					FROM
@@ -259,7 +263,8 @@
 				<isEqual property="v_SEARCHTYPE2" compareValue="C_ClubName">
 					<![CDATA[
 						AND
-							C_CLUBNAME$v_USERINFO_LANG$ LIKE '%' || #v_KEYWORD# || '%'
+							CASE #v_USERINFO_LANG# WHEN '2' THEN C_CLUBNAME2 ELSE C_CLUBNAME END
+							LIKE '%' || #v_KEYWORD# || '%'
 					]]>
 				</isEqual>
 				<isEqual property="v_SEARCHTYPE2" compareValue="C_ClubDesc">
@@ -305,10 +310,11 @@
 					SELECT
 						DISTINCT c_clubno,
 						c_name,
-						c_clubname$v_USERINFO_LANG$ c_clubname,
+						CASE #v_USERINFO_LANG# WHEN '2' THEN C_CLUBNAME2 ELSE C_CLUBNAME END AS C_CLUBNAME,
 						c_clubConfirmType,
 						c_clubGubun,
-						NVL(C.DISPLAYNAME$v_USERINFO_LANG$, B.USERNAME$v_USERINFO_LANG$) AS username,
+						NVL(CASE #v_USERINFO_LANG# WHEN '2' THEN C.DISPLAYNAME2 ELSE C.DISPLAYNAME END,
+							CASE #v_USERINFO_LANG# WHEN '2' THEN B.USERNAME2 ELSE B.USERNAME END) AS username,
 						RTRIM(c_sysopid) AS c_sysopid,
 						TO_CHAR(c_regdate + #v_OFFSETMIN# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') AS c_regdate
 					FROM
@@ -382,7 +388,8 @@
 		<isEqual property="v_SEARCHTYPE2" compareValue="C_ClubName">
 			<![CDATA[
 				AND
-					C_CLUBNAME$v_USERINFO_LANG$ LIKE '%' || #v_KEYWORD# || '%'
+					CASE #v_USERINFO_LANG# WHEN '2' THEN C_CLUBNAME2 ELSE C_CLUBNAME END
+					LIKE '%' || #v_KEYWORD# || '%'
 			]]>
 		</isEqual>
 		<isEqual property="v_SEARCHTYPE2" compareValue="C_ClubDesc">
@@ -581,7 +588,8 @@
 		<isEqual property="v_STRSELECT2" compareValue="pCommunityName">
 			<![CDATA[
 				AND
-					C_CLUBNAME$v_USERINFO_LANG$ LIKE '%' || #v_STRQUERY# || '%'
+					CASE #v_USERINFO_LANG# WHEN '2' THEN C_CLUBNAME2 ELSE C_CLUBNAME END
+					LIKE '%' || #v_STRQUERY# || '%'
 			]]>
 		</isEqual>
 		<isEqual property="v_STRSELECT2" compareValue="pCommuintyDesc">
@@ -617,7 +625,7 @@
 				isin,
 				c_clubdesc,
 				c_clubconfirmtype,
-				c_clubname$v_USERINFO_LANG$ AS c_clubname,
+				CASE #v_USERINFO_LANG# WHEN '2' THEN C_CLUBNAME2 ELSE C_CLUBNAME END AS C_CLUBNAME,
 				RTRIM(c_cate_a) AS C_CATE_A,
 				RTRIM(c_cate_b) AS C_CATE_B,
 				RTRIM(c_cate_c) AS C_CATE_C
@@ -634,21 +642,20 @@
 <!-- 		{CALL EZSP_ADM_COMMUNITY_INFO_EDIT_O(#v_USERINFO_LANG#, #v_C_CATE_A#, #v_C_CATE_B#, #v_C_CATE_C#, #v_C_CLUBNAME#, #v_CODE#)} -->
 <!-- 	</procedure> -->
 	<update id="EzCommunityAdminDAO.admCommunityInfoEditOk"				parameterClass="Map">
-		<![CDATA[
 			UPDATE
 				TBL_C_CLUB
 			SET
 				c_cate_a = #v_C_CATE_A#,
 				c_cate_b = #v_C_CATE_B#,
 				c_cate_c = #v_C_CATE_C#,
-				c_clubname$v_USERINFO_LANG$ = #v_C_CLUBNAME#,
+				<isEqual property="v_USERINFO_LANG" compareValue="2">C_CLUBNAME2</isEqual>
+				<isNotEqual property="v_USERINFO_LANG" compareValue="2">C_CLUBNAME</isNotEqual> = #v_C_CLUBNAME#,
 				c_clubdesc = #v_C_CLUBDESC#,
 				isin = 2
 			WHERE
 				RTRIM(c_clubno) = #v_CODE#
 			AND
 				tenant_id = #tenantID#
-		]]>
 	</update>
 	
 <!-- 	<procedure id="EzCommunityAdminDAO.aspCommInfoGet3"					parameterClass="String"			resultClass="String"> -->
@@ -714,28 +721,9 @@
 				tenant_id = #tenantID#
 		]]>
 	</update>
-	<select id="EzCommunityAdminDAO.aspCommAdmitokSet1Select"			parameterClass="Map"		resultClass="HashMap">
-		<![CDATA[
-			SELECT
-				B.email EMAIL,
-				B.username$v_USERINFO_LANG$ USERNAME,
-				A.c_clubname$v_USERINFO_LANG$ C_CLUBNAME
-			FROM
-				TBL_C_CLUB A
-			INNER JOIN
-				TBL_C_MEMBERINFO B
-			ON
-				RTRIM(A.c_sysopid) = RTRIM(B.userid)
-			AND
-				A.companyid = B.companyid
-			AND
-				A.tenant_id = B.tenant_id
-			WHERE
-				RTRIM(A.c_clubno) = #v_CODE#
-			AND
-				A.TENANT_ID = #tenantID#
-		]]>
-	</select>
+	
+	<!-- 2024-07-16 홍승비 - 사용되지 않는 구버전 커뮤니티 쿼리 제거 (aspCommAdmitokSet1Select) -->
+	
 	<delete id="EzCommunityAdminDAO.aspCommAdmitOkSet1Delete"			parameterClass="Map">
 		<![CDATA[
 			DELETE FROM
@@ -839,8 +827,10 @@
 		<![CDATA[
 			SELECT
 				B.email EMAIL,
-				B.username$v_USERINFO_LANG$ USERNAME,
-				A.c_clubname$v_USERINFO_LANG$ C_CLUBNAME
+				CASE #v_USERINFO_LANG# WHEN '2' THEN B.USERNAME2 ELSE B.USERNAME END AS USERNAME,
+				CASE #v_USERINFO_LANG# WHEN '2' THEN A.C_CLUBNAME2 ELSE A.C_CLUBNAME END AS C_CLUBNAME,
+				B.USERID USERID,
+				A.C_CLUBNO C_CLUBNO
 			FROM
 				TBL_C_CLUB A
 			INNER JOIN
@@ -897,7 +887,7 @@
 	<select id="EzCommunityAdminDAO.getCClubName" 						parameterClass="Map"		resultClass="CommunityClubVO">
 		<![CDATA[
 			SELECT 
-				c_clubname$v_USERINFO_LANG$ C_CLUBNAME
+				CASE #v_USERINFO_LANG# WHEN '2' THEN C_CLUBNAME2 ELSE C_CLUBNAME END AS C_CLUBNAME
 			FROM
 				TBL_C_CLUB
 			WHERE
@@ -919,7 +909,8 @@
 		<isEqual property="v_SEARCHTYPE2" compareValue="pCommunityName">
 			<![CDATA[
 				AND
-					C_CLUBNAME$v_USERINFO_LANG$ LIKE '%' || #v_STRQUERY# || '%'
+					CASE #v_USERINFO_LANG# WHEN '2' THEN C_CLUBNAME2 ELSE C_CLUBNAME END
+					LIKE '%' || #v_STRQUERY# || '%'
 			]]>
 		</isEqual>
 		<isEqual property="v_SEARCHTYPE2" compareValue="pCommCloseReason">
@@ -989,7 +980,7 @@
 		<![CDATA[
 			SELECT
 				c_clubno,
-				c_clubname$v_USERINFO_LANG$ AS c_clubname,
+				CASE #v_USERINFO_LANG# WHEN '2' THEN C_CLUBNAME2 ELSE C_CLUBNAME END AS C_CLUBNAME,
 				c_sysopid,
 				TO_DATE(applicationdate, 'YYYY-MM-DD HH24:MI:SS')+(#v_OFFSETMIN#/(60*24)) AS applicationdate,
 				closereason

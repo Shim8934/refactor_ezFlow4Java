@@ -81,3 +81,6 @@ var strLang80 = "둘째"
 var strLang81 = "셋째"
 var strLang82 = "넷째"
 var strLang83 = "마지막"
+
+// 2024-06-28 민지수 - 업무관리 > 첨부파일 드래그 앤 드롭 안내 메세지 추가
+var strLangMJS01 = "드래그 앤 드롭으로 파일 추가 및 추가한 파일의 순서를 변경할 수 있습니다.";

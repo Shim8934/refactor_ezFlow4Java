@@ -18,7 +18,8 @@
 <script type="text/javascript" src="${util.addVer('/js/ezBoard/ListView_list.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezTask/jquery.lineProgressbar.js')}"></script>
 
-<link rel="stylesheet" href="${util.addVer('ezPMS.e1', 'msg')}" type="text/css" />
+<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 <link rel="stylesheet" href="${util.addVer('/css/ezPMS/pms.css')}" type="text/css" />
 <link rel="stylesheet" href="${util.addVer('/js/jquery/jquery.modal.css')}" type="text/css" />
 <link rel="stylesheet" href="${util.addVer('/css/jquery.lineProgressbar.css')}" type="text/css" />
@@ -1091,7 +1092,7 @@ function searchProject() {
 </style>
 </head>
 <body class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);">
-	<h1><spring:message code='ezPMS.t8' /><span id="mailBoxInfo"> <spring:message code='ezPMS.t3' /> <span style="color:#017BEC;" id="totalCount"> </span><spring:message code='ezPMS.t4' /></span></h1>
+	<h1><spring:message code='ezPMS.t8' /><span id="mailBoxInfo"> <spring:message code='ezPMS.t3' /> <span class='txt_color' id="totalCount"> </span><spring:message code='ezPMS.t4' /></span></h1>
 	<div id="mainmenu">
 	<ul>
 		<li>

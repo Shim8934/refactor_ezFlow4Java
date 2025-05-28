@@ -47,3 +47,5 @@ var strLangkhj31 = "Error occurred while deleting.";
 
 /* 2021-12-09 홍승비 - 확장자 관련 메세지 추가 */
 var srtLangHSBEx01 = "Unacceptable extension.";
+
+var strLangQuickLinkSize01 = "&nbsp&nbsp&nbsp(Ukuran gambar adalah 100*50 piksel.)";

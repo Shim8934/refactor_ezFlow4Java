@@ -6,7 +6,8 @@
 	<head>
 	    <title><spring:message code='ezApprovalG.t424'/></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	    <link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -49,6 +50,7 @@
 	        var isReDraft;
 	        var approvalFlag = "<c:out value ='${approvalFlag}'/>";
 	        var orgCompanyID;
+	        var mode = "<c:out value ='${mode}'/>";
 	        
 	        window.onload = function () {
 	            try {
@@ -57,12 +59,20 @@
 	                    KeEventControl(document.getElementById("textUser"));
 	                }
 	                try {
-	                    RetValue = parent.ezreceiveassignui_cross_dialogArguments[0];
-	                    ReturnFunction = parent.ezreceiveassignui_cross_dialogArguments[1];
+						if(mode == 'ALL'){
+							RetValue = parent.ezreceivejijungall_cross_dialogArguments[0];
+						}else{
+							RetValue = parent.ezreceiveassignui_cross_dialogArguments[0];
+							ReturnFunction = parent.ezreceiveassignui_cross_dialogArguments[1];
+						}
 	                } catch (e) {
 	                    try {
-	                        RetValue = opener.ezreceiveassignui_cross_dialogArguments[0];
-	                        ReturnFunction = opener.ezreceiveassignui_cross_dialogArguments[1];
+							if(mode == 'ALL'){
+								RetValue = opener.ezreceivejijungall_cross_dialogArguments[0];
+							}else{
+								RetValue = opener.ezreceiveassignui_cross_dialogArguments[0];
+								ReturnFunction = opener.ezreceiveassignui_cross_dialogArguments[1];
+							}
 	                    } catch (e) {
 	                        RetValue = window.dialogArguments;
 	                    }
@@ -74,11 +84,23 @@
 					pDocState = RetValue[3];
 					isReDraft = RetValue[4];
 					orgCompanyID = RetValue[5];
-						
-	                if (pReceiveSN == "s")
-	                    pReceiveSN = "1";
-	                else
-	                    pReceiveSN = pReceiveSN.replace("s", "");
+
+					if(mode == 'ALL'){
+						var Rdata = pReceiveSN.split(','); // 각 요소에 조건 적용 
+						for (var i = 0; i < Rdata.length; i++) {
+							if (Rdata[i] == "s") {
+								Rdata[i] = "1"; 
+							} else {
+								Rdata[i] = Rdata[i].replace("s", "");
+							} 
+						}
+						pReceiveSN = Rdata.join(',');
+					}else{
+						if (pReceiveSN == "s")
+							pReceiveSN = "1";
+						else
+							pReceiveSN = pReceiveSN.replace("s", "");
+					}
 	                InitTreeVal = arr_userinfo[4];
 	                Tree_setconfig();
 	                TreeViewinitialize(InitTreeVal, "<c:out value ='${userInfo.companyID}'/>", "", "<c:out value ='${serverName}'/>");
@@ -86,7 +108,11 @@
 	                var listview = new ListView();
 	                listview.SetID("OrganList");
 	                listview.SetMulSelectable(false);
-	                listview.SetRowOnDblClick("btnAssign_onclick");
+					if(mode == 'ALL'){
+						listview.SetRowOnDblClick("jijungALL_onclick");
+					}else{
+						listview.SetRowOnDblClick("btnAssign_onclick");
+					}
 	                /* 2023-01-30 홍승비 - 부서수신함 > 접수 > 수신자 지정 레이어 팝업 > 리스트뷰의 첫번째 row가 자동선택되지 않도록 수정 (대부분의 사용자지정화면 리스트뷰 UI와 통일, 지정 실수 방지) */
 	                listview.SetSelectFlag(false);
 	
@@ -155,8 +181,9 @@
 	                var pAlertContent = "<spring:message code='ezApprovalG.t425'/>";
 	                OpenAlertUI(pAlertContent);
 	            }
-	            else {
-	                if (trim_Cross(pCurSelRow[0].getAttribute("DATA3")) == InitTreeVal) {
+	            else { // G버전
+	                if (trim_Cross(pCurSelRow[0].getAttribute("DATA3")) == InitTreeVal 
+							|| checkIdInList(trim_Cross(pCurSelRow[0].getAttribute("DATA3")))) { // 상위부서문서함 사용중인 부서인지 확인
 	                    var RtnVal = setReceiveAssign(pCurSelRow);
 	                    if (RtnVal == "TRUE") {
 	                        if (ReturnFunction != null) {
@@ -194,6 +221,18 @@
 	    	
 	        try {
 	        	var result = "";
+
+				/* 2024-07-18 양지혜 - 상위부서문서함을 사용하고 있는 부서원 지정 처리 */
+				// 기본 : 선택한 사용자의 부서정보
+				var receivedDeptID = trim_Cross(pCurSelRow[0].getAttribute("DATA3"));
+				var receivedDeptName = trim_Cross(pCurSelRow[0].getAttribute("DATA12"));
+				if (parent.upperDeptCode !== "" && parent.upperDeptCode !== undefined) { // 현재부서가 상위부서문서함 사용 : 상위부서정보로 진행
+					receivedDeptID = parent.upperDeptCode;
+					receivedDeptName = parent.upperDeptName;
+				} else if (parent.upperDeptCode === "" && parent.allowDeptIDs !== "") { // 현재부서를 상위부서문서함으로 사용 : 현재부서(상위부서) 정보로 진행
+					receivedDeptID = arr_userinfo[4];
+					receivedDeptName = arr_userinfo[5];
+				}
 	        	
 	            $.ajax({
 	        		type : "POST",
@@ -206,8 +245,8 @@
 	        			processorID : trim_Cross(pCurSelRow[0].getAttribute("DATA2")),
 	        			processorName : trim_Cross(pCurSelRow[0].getAttribute("DATA8")),
 	        			processorJobTitle : trim_Cross(pCurSelRow[0].getAttribute("DATA10")),
-	        			receivedDeptID : trim_Cross(pCurSelRow[0].getAttribute("DATA3")),
-	        			receivedDeptName : trim_Cross(pCurSelRow[0].getAttribute("DATA12")),
+	        			receivedDeptID : receivedDeptID,
+	        			receivedDeptName : receivedDeptName,
 	        			docState : pAprSate,
 	        			processorName2 : trim_Cross(pCurSelRow[0].getAttribute("DATA9")),
 	        			processorJobTitle2 : trim_Cross(pCurSelRow[0].getAttribute("DATA11")),
@@ -343,6 +382,91 @@
 	    GetDeptSubTreeInfo(deptID, TreeIdx);
 	
 	}
+	
+	function jijungALL_onclick(){
+		try {
+			var listview = new ListView();
+			listview.LoadFromID("OrganList");
+			var selectRows = listview.GetSelectedRows();
+
+			if (selectRows.length == 0) {
+				var pAlertContent = "<spring:message code='ezApprovalG.t425'/>";
+				OpenAlertUI(pAlertContent);
+			} else {
+				if (trim_Cross(selectRows[0].getAttribute("DATA3")) == InitTreeVal) {
+					showLoadingProgress();
+					setTimeout(function() {
+						$.ajax({
+							type : "POST",
+							dataType : "text",
+							async : false,
+							url : "/ezApprovalG/setJijungALL.do",
+							data : {
+								docID : pDocID,
+								receiveSN : pReceiveSN,
+								processorID : trim_Cross(selectRows[0].getAttribute("DATA2")),
+								processorName : trim_Cross(selectRows[0].getAttribute("DATA8")),
+								processorJobTitle : trim_Cross(selectRows[0].getAttribute("DATA10")),
+								receivedDeptID : trim_Cross(selectRows[0].getAttribute("DATA3")),
+								receivedDeptName : trim_Cross(selectRows[0].getAttribute("DATA12")),
+								processorName2 : trim_Cross(selectRows[0].getAttribute("DATA9")),
+								processorJobTitle2 : trim_Cross(selectRows[0].getAttribute("DATA11")),
+								receivedDeptName2 : trim_Cross(selectRows[0].getAttribute("DATA13"))
+							},
+							success: function(res){
+												hideLoadingProgress();
+												var arrRtnVal = res.split("/");
+												var pAlertContent = strLang933 + (Number(arrRtnVal[0])) + strLang934_1 + "<br/>";
+												if (arrRtnVal[1] != 0) {
+																	pAlertContent += strLang935 + arrRtnVal[1] + strLang934_1;
+												}
+												
+												if (arrRtnVal[2] != 0) {
+													if (arrRtnVal[1] != 0) {
+															pAlertContent += " / ";
+													}
+													pAlertContent += strLang938 + arrRtnVal[2] + strLang934_1;
+												}
+								
+												if (arrRtnVal[3] != 0) {
+													if (arrRtnVal[1] != 0 || arrRtnVal[2] != 0) {
+														pAlertContent += " / ";
+													}
+													pAlertContent += strLang936 + arrRtnVal[3] + strLang934_1;
+												}
+												pAlertContent += "<br/>" + "<spring:message code='ezApprovalG.t1420'/>";
+	
+												if (window.opener && window.opener.pListTypeValue) {
+													if (window.opener.pListTypeValue == "97") {
+														window.opener.parent.frames[0].convMain('97', '');
+													} else {
+														window.opener.parent.frames[0].convMain('4', '');
+													}
+												}
+								OpenAlertUI(pAlertContent, window.close);
+							
+							}
+						});
+					}, 0);
+				}  else {
+					var pAlertContent = "<spring:message code='ezApprovalG.t225'/>";
+					OpenAlertUI(pAlertContent);
+					return;
+				}
+			}
+		} catch (ErrMsg) {
+			alert(ErrMsg.description);
+		}
+	}
+
+	function checkIdInList (checkID) {
+		if (typeof parent.allowDeptIDs === "undefined") {
+			return false;
+		} else {
+			var idList = parent.allowDeptIDs.split(";").filter(id => id !== '');
+			return idList.includes(checkID);
+		}
+	}
 	</script>
 	<style>
 	   .mainlist tr th {border-top:0px}
@@ -374,7 +498,8 @@
 	    <h1><spring:message code='ezApprovalG.t424'/></h1>
 		<div id="close">
             <ul>
-                <li><span onclick="return btnCancel_onclick()"></span></li>
+				<c:if test="${mode == 'ALL'}"> <li><span onclick="return window.close();"></span></li> </c:if> 
+				<c:if test="${mode != 'ALL'}"> <li><span onclick="return btnCancel_onclick()"></span></li> </c:if>
             </ul>
         </div>
 	    <table style="margin-top: -15px;">
@@ -398,11 +523,15 @@
 	        </tr>
 	    </table>
 	    <div class="btnposition btnpositionNew">
-	        <a class="imgbtn"><span onclick="return btnAssign_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>
-	    </div>
+			<c:if test="${mode == 'ALL'}"> <a class="imgbtn"><span onclick="return jijungALL_onclick()"><spring:message code='ezApprovalG.t20'/></span></a> </c:if>
+			<c:if test="${mode != 'ALL'}"> <a class="imgbtn"><span onclick="return btnAssign_onclick()"><spring:message code='ezApprovalG.t20'/></span></a> </c:if>
+		</div>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+		</div>
+		<div style="width: 200px; height: 50px; border: 0px solid red; text-align: center; vertical-align: middle; display: none; z-index: 9000; position: absolute;" id="loadingLayer">
+			<img src="/images/email/progress_img.gif" style="vertical-align: middle;" />
 		</div>
 	</body>
 </html>

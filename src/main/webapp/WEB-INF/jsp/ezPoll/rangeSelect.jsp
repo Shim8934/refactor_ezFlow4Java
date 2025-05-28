@@ -5,7 +5,8 @@
 <html>
 	<head>
 		<title><spring:message code='ezPoll.t222' /></title>
-		<link rel="stylesheet" href="${util.addVer('ezPoll.i1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">   
 		<link href="${util.addVer('/css/ezPoll/rangeSelect.css')}" rel="stylesheet" type="text/css">     
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -338,7 +339,7 @@
                 	listview.DataSource(xmlHttp_UserList.responseXML.getElementsByTagName("LISTVIEWDATA")[0]);
                 	listview.DataBind("OrganListView");
             	} else {
-	                alert("<spring:message code='ezPoll.t214' />" + xmlHttp_UserList.statusText)
+	                alert("<spring:message code='ezPoll.t214' />" + xmlHttp_UserList.status)
             	}
     	        xmlHttp_UserList = null;
 	        }
@@ -450,7 +451,7 @@
                 	treeView.DataSource(xmlHttp_Depttree.responseXML);
                 	treeView.DataBind("TreeView");
             	} else {
-	                alert("<spring:message code='ezPoll.t217' />" + xmlHttp_Depttree.statusText);
+	                alert("<spring:message code='ezPoll.t217' />" + xmlHttp_Depttree.status);
     	        }
             	xmlHttp_Depttree = null;
         	}

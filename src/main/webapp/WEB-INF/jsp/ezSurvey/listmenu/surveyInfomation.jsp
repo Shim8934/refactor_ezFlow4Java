@@ -1,10 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core"  %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
 <div class="surveyinfo-wrap">
 	<div class="survey-nminfo">
 		<div>
-			<input id="info-input-ttl" class="info-input-ttl" placeholder="<spring:message code='ezSurvey.t39'/>">
+			<input id="info-input-ttl" class="info-input-ttl" maxlength="40" placeholder="<spring:message code='ezSurvey.t39'/>">
 		</div>
 		
 		<div class="survey-otherinf">
@@ -28,7 +29,8 @@
 					<td class="right-Td">
 						<div>
 							<span class="inf-spanTxt"><input type="radio" name="publicSpan" value="1" checked><spring:message code="ezSurvey.t42"/></span>
-							<span class="inf-spanTxt"><input type="radio" name="publicSpan" value="0"><spring:message code="ezSurvey.t43"/></span>
+							<span class="inf-spanTxt"><input type="radio" name="publicSpan" value="0" ><spring:message code="ezSurvey.t43"/></span>
+							<span class="inf-spanTxt"><input type="radio" name="publicSpan" value="2" ><spring:message code="ezSurvey.jih01"/></span>
 						</div>
 					</td>
 					<th class="left-Th"><spring:message code="ezSurvey.t46"/></th> <%-- anonymous setting --%>
@@ -39,6 +41,15 @@
 						</div>
 					</td>
 				</tr>
+				<tr class='rspdtList' id='rspdtList2'>
+                    <th class="left-Th"><spring:message code="ezSurvey.t41"/></th> <%-- respondent setting --%>
+                    <td class="right-Td" colspan="3">
+                        <div id="userWrapDiv2" class="user-mainDiv">
+                            <a class="imgbtn inf-surveyimg" id="selectResultTargetBtn"><span><spring:message code="ezSurvey.t100"/></span></a>
+                            <div class="target-wrapper"><div id="userResultList_div" class="user-listDiv"></div></div>
+                        </div>
+                    </td>
+                </tr>
 				<tr>
 					<th class="left-Th"><spring:message code="ezSurvey.t112"/></th> <%-- mail setting --%>
 					<td class="right-Td">
@@ -106,7 +117,12 @@
 </div>
 
 <div class="survey-infpp-wrap" id="editorWrap">
-	<iframe id="info-input-pp" class="surey-frameeditor" name="info-input-pp" src="/ezEditor/selectEditor.do"></iframe>
+	<c:if test="${editor ne 'HWP'}">
+		<iframe id="info-input-pp" class="surey-frameeditor" name="info-input-pp" src="/ezEditor/selectEditor.do"></iframe>
+	</c:if>
+	<c:if test="${editor eq 'HWP'}">
+		<iframe id="info-input-pp" class="surey-frameeditor" name="info-input-pp" src="/ezBoard/WHWPEditor.do?type=${mode}"></iframe>
+	</c:if>
 </div>
 
 <div class="survey-bttn-panel">

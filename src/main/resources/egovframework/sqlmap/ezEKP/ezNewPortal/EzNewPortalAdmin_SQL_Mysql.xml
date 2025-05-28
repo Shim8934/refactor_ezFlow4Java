@@ -10,6 +10,7 @@
 	<typeAlias alias="PortletAuthVO" type="egovframework.ezEKP.ezNewPortal.vo.PortletAuthVO"/>
 	<typeAlias alias="portalDeptViewVO" 	type="egovframework.ezEKP.ezNewPortal.vo.DeptViewVO" />
 	<typeAlias alias="MenuAuthorUserVO" 	type="egovframework.ezEKP.ezNewPortal.vo.MenuAuthorUserVO" />
+	<typeAlias alias="PortalTopVO" type="egovframework.ezEKP.ezNewPortal.vo.PortalTopVO"/>
 	<resultMap class="java.util.HashMap" id="ThemeAuthMap">
 		<result property="themeId" column="THEMEID" />
 		<result property="userId" column="USERID" />
@@ -17,6 +18,7 @@
 		<result property="userDeptName" column="USERDEPTNAME" />
 		<result property="userType" column="USERTYPE" />
 		<result property="accessYN" column="ACCESSYN" javaType="boolean"/>
+		<result property="subdeptPermitted" column="SUBDEPTPERMITTED" />
 	</resultMap>
 	<resultMap class="java.util.HashMap" id="PortletAuthMap">
 		<result property="portletId" column="PORTLETID" />
@@ -25,6 +27,7 @@
 		<result property="userDeptName" column="USERDEPTNAME" />
 		<result property="userType" column="USERTYPE" />
 		<result property="accessYN" column="ACCESSYN" javaType="boolean"/>
+		<result property="subdeptPermitted" column="SUBDEPTPERMITTED" />
 	</resultMap>
 	<resultMap class="portalDeptViewVO" id="deptViewMap">
 		<result property="id" 				column="id" />
@@ -140,7 +143,10 @@
 				B.menu_Type AS menutype,
 				A.company_lang AS companylang,
 				B.menu_url AS menuurl,
-				B.icon_url AS iconurl,
+				CASE WHEN A.icon_url IS NULL 
+					THEN B.icon_url
+					ELSE A.icon_url
+				END AS iconurl,
 				CASE WHEN A.company_order IS NULL
 					THEN B.default_order
 					ELSE A.company_order
@@ -166,9 +172,15 @@
 				A.tenant_id = #tenantId#
 			AND
 				A.company_id = #companyId#
+		]]>
+		<isNotEqual property="type" compareValue="mobile">
+			AND B.menu_type IN ('G', 'A')
+		</isNotEqual>
+		<isEqual  property="type" compareValue="mobile">
+			AND B.menu_type IN ('MG', 'MA')
+		</isEqual>
 			ORDER BY
 				defaultorder
-		]]>
 	</select>
 	
 	<!-- 메뉴쪽은 일단 만들어놓고 쓰다가 필요없는거 날려야할듯 -->
@@ -181,12 +193,16 @@
 				A.menu_used AS menuused,
 				A.company_lang AS companylang,
 				B.menu_url AS menuurl,
-				B.icon_url AS iconurl,
+				CASE WHEN A.icon_url IS NULL
+					 THEN B.icon_url
+					 ELSE A.icon_url
+				END AS iconurl,
 				CASE WHEN A.company_order IS NULL
 					THEN B.default_order
 					ELSE A.company_order
 				END AS defaultorder,
-				B.menucode
+				B.menucode,
+				A.openType
 			FROM
 				TBL_PORTAL_MENU_COMP A
 			JOIN
@@ -258,7 +274,7 @@
 		]]>
 	</select>
 	
-	<!-- 언어는 좀따해야지 -->
+	<!-- 2024-07-09 홍승비 - SQL Injection 수정 > $ 기호 제거 -->
 	<select id="ezNewPortal.getMenuAuth" parameterClass="Map" resultClass="MenuAuthVO">
 		<![CDATA[
 			SELECT
@@ -278,12 +294,19 @@
 					ELSE ''
 				END AS username,
 				CASE WHEN user_type = 1	
-					THEN ifnull((SELECT description$lang$ FROM TBL_USERMASTER WHERE tenant_id = #tenantId# AND physicaldeliveryofficename = #companyId# AND cn = user_id),
-								(SELECT displayname$lang$ FROM TBL_DEPTMASTER WHERE cn in (SELECT deptid FROM TBL_ADDJOBMASTER WHERE cn = user_id) and extensionattribute2 = #companyId# limit 1))
-					ELSE (SELECT displayname$lang$ FROM TBL_DEPTMASTER WHERE tenant_id = #tenantId# AND extensionattribute2 = #companyId# AND cn = user_id)
+					THEN ifnull((SELECT
+									CASE #lang# WHEN '2' THEN description2 ELSE description END
+								FROM TBL_USERMASTER WHERE tenant_id = #tenantId# AND physicaldeliveryofficename = #companyId# AND cn = user_id),
+								(SELECT
+									CASE #lang# WHEN '2' THEN displayname2 ELSE displayname END
+								FROM TBL_DEPTMASTER WHERE cn in (SELECT deptid FROM TBL_ADDJOBMASTER WHERE cn = user_id) and extensionattribute2 = #companyId# limit 1))
+					ELSE (SELECT
+							CASE #lang# WHEN '2' THEN displayname2 ELSE displayname END
+						FROM TBL_DEPTMASTER WHERE tenant_id = #tenantId# AND extensionattribute2 = #companyId# AND cn = user_id)
 				END AS userdeptname,
 				user_type AS usertype,
-				access_yn AS accessyn
+				access_yn AS accessyn,
+				subdept_permitted as subdeptPermitted
 			FROM
 				TBL_PORTAL_MENU_AUTH
 			WHERE
@@ -338,7 +361,20 @@
 			UPDATE
 				TBL_PORTAL_MENU_COMP 
 			SET
-				menu_used = #menuUsed#
+				menu_used = #menuUsed#,
+				openType = #openType#
+			]]>
+			<isEqual property="menuType" compareValue="G" prepend=",">
+				<![CDATA[
+					icon_url = #iconUrl#
+				]]>
+			</isEqual>
+			<isEqual property="menuType" compareValue="MG" prepend=",">
+				<![CDATA[
+					icon_url = #iconUrl#
+				]]>
+			</isEqual>
+		<![CDATA[
 			WHERE
 				tenant_id = #tenantId#
 			AND
@@ -349,15 +385,24 @@
 	</update>
 	
 	<update id="ezNewPortal.updateCompanyMenuInfo" parameterClass="Map">
-		<![CDATA[
 			UPDATE
 				TBL_PORTAL_MENU
 			SET
-				menu_url = #menuUrl#,
+				menu_url = #menuUrl#
+		<isEqual property="menuType" compareValue="A" prepend=",">
 				icon_url = #iconUrl#
+		</isEqual>
+		<isEqual property="menuType" compareValue="MA" prepend=",">
+				icon_url = #iconUrl#
+		</isEqual>
+		<isEqual property="menuType" compareValue="G" prepend=",">
+				icon_url = #iconUrl#
+		</isEqual>
+		<isEqual property="menuType" compareValue="MG" prepend=",">
+				icon_url = #iconUrl#
+		</isEqual>
 			WHERE
 				menu_id = #menuId#
-		]]>
 	</update>
 	
 	<update id="ezNewPortal.updateCompanyMenuNameInfo" parameterClass="Map">
@@ -389,9 +434,9 @@
 	<update id="ezNewPortal.updateMenuAuth" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_PORTAL_MENU_AUTH
-				(menu_id, user_id, user_type, access_yn, company_id, tenant_id, sn)
+				(menu_id, user_id, user_type, access_yn, company_id, tenant_id, sn, subdept_permitted)
 			VALUES
-				(#menuId#, #userId#, #userType#, #accessYN#, #companyId#, #tenantId#, #sn#)
+				(#menuId#, #userId#, #userType#, #accessYN#, #companyId#, #tenantId#, #sn#, #subdeptPermitted#)
 			ON DUPLICATE KEY UPDATE
 				access_yn = #accessYN#,
 				sn = #sn#
@@ -489,7 +534,16 @@
 				A.boardid  as id,
 				A.parentboardid as parent,
 				A.boardname as boardname1,
-				A.boardname2 as boardname2,
+				CASE
+					WHEN (A.Boardname2 = '' OR A.Boardname2 IS NULL)
+					THEN A.Boardname
+					ELSE A.Boardname2
+				END as boardname2,
+				CASE
+					WHEN (A.Boardname3 = '' OR A.Boardname3 IS NULL)
+					THEN A.Boardname
+					ELSE A.Boardname3
+				END as boardname3,
 				A.treevieworder as sort,
 				B.parentboardid as topParent,
 				A.boardcolor,
@@ -525,10 +579,19 @@
 	<insert id="ezNewPortal.insertPortlet" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_PORTAL_PORTLET
-				(menu_id, portlet_url, portlet_type, default_order)
+				(menu_id, portlet_url, portlet_type, default_order, portletcode)
 			VALUES
-				(#menuId#, #connectionUrl#, 'A', (SELECT MAX(A.portlet_order) + 1 FROM TBL_PORTAL_PORTLET_COMP A WHERE A.tenant_id = #tenantId# AND A.company_id = #companyId#))
-		]]>
+		  ]]>
+		<isNotEqual property="type" compareValue="mobile">
+			<![CDATA[
+				(#menuId#, #connectionUrl#, 'A', (SELECT MAX(A.DEFAULT_ORDER) + 1 FROM TBL_PORTAL_PORTLET A WHERE A.PORTLET_TYPE IN ('A', 'G')), #portletCode#)
+			]]>
+		</isNotEqual>
+		<isEqual property="type" compareValue="mobile">
+			<![CDATA[
+				(#menuId#, #connectionUrl#, 'MA', (SELECT MAX(A.DEFAULT_ORDER) + 1 FROM TBL_PORTAL_PORTLET A WHERE A.PORTLET_TYPE IN ('MA', 'MG')), #portletCode#)
+			 ]]>
+		</isEqual>
 		<selectKey keyProperty="portletId" resultClass="Integer">
 			SELECT LAST_INSERT_ID()
 		</selectKey>
@@ -538,11 +601,21 @@
 	<![CDATA[
 		INSERT INTO TBL_PORTAL_PORTLET_COMP
 			(company_id,	tenant_id,		portlet_id,		menu_id,	portlet_category, 
-			connection_url,	portlet_used,	portlet_order, 	board_id)
+			connection_url,	portlet_used,	portlet_order, 	board_id, connection_id)
 		VALUES
-			(#companyId#,	#tenantId#,		#portletId#,	#menuId#,	#portletCategory#,
-			#connectionUrl#,	#portletUsed#,	(SELECT MAX(portlet_order) + 1 FROM TBL_PORTAL_PORTLET_COMP A WHERE tenant_id = #tenantId# AND company_id = #companyId#),	#boardId#)
-	]]>
+		  ]]>
+		<isNotEqual property="type" compareValue="mobile">
+			<![CDATA[
+				(#companyId#,	#tenantId#,		#portletId#,	#menuId#,	#portletCategory#,
+				#connectionUrl#,	#portletUsed#,	(SELECT MAX(portlet_order) + 1 FROM TBL_PORTAL_PORTLET_COMP A WHERE tenant_id = #tenantId# AND company_id = #companyId#),	#boardId#, #connectionId#)
+			]]>
+		</isNotEqual>
+		<isEqual property="type" compareValue="mobile">
+			<![CDATA[
+				(#companyId#,	#tenantId#,		#portletId#,	#menuId#,	#portletCategory#,
+				#connectionUrl#,	#portletUsed#,	(SELECT MAX(portlet_order) + 1 FROM TBL_PORTAL_PORTLET_COMP A WHERE tenant_id = #tenantId# AND company_id = #companyId#),	#boardId#, #connectionId#)
+			]]>
+		</isEqual>
 	</insert>
 	
 	<update id="ezNewPortal.updateCompanyPortletNameInfo" parameterClass="Map">
@@ -579,18 +652,15 @@
 			TBL_PORTAL_PORTLET_COMP
 		SET
 			menu_id = #menuId#,
-			portlet_used = #portletUsed#
+			portlet_used = #portletUsed#,
+			connection_id = #connectionId#,
+			board_id = #boardId#
 	]]>
 	<isNotNull property="connectionUrl" prepend=",">
 	<![CDATA[
 			connection_url = #connectionUrl#
 	]]>
 	</isNotNull>
-	<isNotEmpty property="boardId" prepend=",">
-	<![CDATA[
-			board_id = #boardId#
-	]]>
-	</isNotEmpty>
 	<![CDATA[
 		WHERE
 			tenant_id = #tenantId#
@@ -602,17 +672,16 @@
 	</update>
 	
 	<update id="ezNewPortal.updateCompanyPortletInfo2" parameterClass="Map">
-	<isNotNull property="connectionUrl">
-	<![CDATA[
 		UPDATE
 			TBL_PORTAL_PORTLET
 		SET
-			portlet_url = #connectionUrl#,
-			menu_id = #menuId#
+			menu_id = #menuId#,
+			portletcode = #portletCode#
+		<isNotNull property="connectionUrl" prepend=",">
+			portlet_url = #connectionUrl#
+		</isNotNull>
 		WHERE
 			portlet_id = #portletId#
-	]]>
-	</isNotNull>
 	</update>
 	
 	<delete id="ezNewPortal.deletePortletName" parameterClass="map">
@@ -697,6 +766,36 @@
 				(company_id, tenant_id, logo_type, logo_url)
 			VALUES
 				(#tenantId#, #tenantId#, #logoType#, #logoUrl#)
+			ON DUPLICATE KEY UPDATE
+				logo_url = #logoUrl#
+		]]>
+		</isEqual>
+		<isEqual property="logoType" compareValue="D">
+		<![CDATA[
+			INSERT INTO TBL_PORTAL_LOGO
+				(company_id, tenant_id, logo_type, logo_url)
+			VALUES
+				(#companyId#, #tenantId#, #logoType#, #logoUrl#)
+			ON DUPLICATE KEY UPDATE
+				logo_url = #logoUrl#
+		]]>
+		</isEqual>
+		<isEqual property="logoType" compareValue="ML">
+		<![CDATA[
+			INSERT INTO TBL_PORTAL_LOGO
+				(company_id, tenant_id, logo_type, logo_url)
+			VALUES
+				(#tenantId#, #tenantId#, #logoType#, #logoUrl#)
+			ON DUPLICATE KEY UPDATE
+				logo_url = #logoUrl#
+		]]>
+		</isEqual>
+		<isEqual property="logoType" compareValue="MP">
+		<![CDATA[
+			INSERT INTO TBL_PORTAL_LOGO
+				(company_id, tenant_id, logo_type, logo_url)
+			VALUES
+				(#companyId#, #tenantId#, #logoType#, #logoUrl#)
 			ON DUPLICATE KEY UPDATE
 				logo_url = #logoUrl#
 		]]>
@@ -814,10 +913,18 @@
 	]]>
 	</isEqual>
 	<isNotEqual property="logoType" compareValue="L">
-	<![CDATA[
-		AND
-			company_id = #companyId#
-	]]>
+		<isEqual property="logoType" compareValue="ML">
+		<![CDATA[
+			AND
+				company_id = #tenantId#
+		]]>
+		</isEqual>
+		<isNotEqual property="logoType" compareValue="ML">
+		<![CDATA[
+			AND
+				company_id = #companyId#
+		]]>
+		</isNotEqual>
 	</isNotEqual>
 	</delete>
 	
@@ -997,7 +1104,8 @@
 			C.portlet_name as portletname,
 			A.is_fixed as isFixed,
 			PORTLET.portletcode,
-			MENU.menucode
+			MENU.menucode,
+			PCS.CLASS_SIZE AS classSize
 		FROM
 			TBL_PORTAL_THEME_PORTLET A
 		JOIN
@@ -1028,6 +1136,15 @@
 			A.tenant_id = C.tenant_id
 		AND
 			C.portlet_lang = #lang#
+		LEFT JOIN (SELECT CS.*, PS.CLASS_SIZE
+                    FROM TBL_PORTAL_PORTLET_COMPANY_SIZE CS
+                             JOIN TBL_PORTAL_PORTLET_SIZE PS
+                                  ON CS.SIZE_ID = PS.SIZE_ID
+                    WHERE DEFAULT_FLAG = TRUE) PCS
+                   ON PCS.TENANT_ID = A.TENANT_ID
+                       AND PCS.COMPANY_ID = A.COMPANY_ID
+                       AND PCS.THEME_ID = A.THEME_ID
+                       AND PCS.PORTLET_ID = A.PORTLET_ID
 		WHERE
 			A.theme_id = #themeId#
 		AND
@@ -1054,6 +1171,23 @@
 			is_fixed = #isFixed#
 	]]>
 	</update>
+
+<update id="ezNewPortal.updateThemePortlet" parameterClass="Map">
+<![CDATA[
+		UPDATE
+			TBL_PORTAL_THEME_PORTLET
+		SET
+			menu_id = #menuId#
+		WHERE
+			theme_id = #themeId#
+		  AND
+			tenant_id = #tenantId#
+		  AND
+			company_id = #companyId#
+		  AND
+			portlet_id = #portletId#
+		]]>
+</update>
 	
 	
 
@@ -1072,6 +1206,7 @@
 ]]>
 </update>
 
+	<!-- 2024-07-09 홍승비 - SQL Injection 수정 > $ 기호 제거, 겸직자 부서명 IFNULL 처리 추가 -->
 	<!-- 18.12.03 테마별 포틀릿 사용여부 설정 관련 개발 ===== 끝-->
 	<!-- 테마별, 포틀릿별 권한 설정 관련 개발 -->
 	<select id="ezNewPortal.getThemeAuth" parameterClass="Map" resultMap="ThemeAuthMap" remapResults="true">
@@ -1081,23 +1216,37 @@
 			user_id AS userid,
 			CASE
 				WHEN user_type = 1
-					THEN (SELECT displayname$lang$ FROM TBL_USERMASTER WHERE tenant_id = #tenantId# AND cn = user_id)
+					THEN (SELECT
+							CASE #lang# WHEN '2' THEN displayname2 ELSE displayname END
+						FROM TBL_USERMASTER WHERE tenant_id = #tenantId# AND cn = user_id)
 				WHEN user_type = 2
-					THEN (SELECT displayname$lang$ FROM TBL_USER_JOBMASTER WHERE tenant_id = #tenantId# AND jobid = user_id AND type = '001' AND companyid = #companyId#)
+					THEN (SELECT
+							CASE #lang# WHEN '2' THEN displayname2 ELSE displayname END
+						FROM TBL_USER_JOBMASTER WHERE tenant_id = #tenantId# AND jobid = user_id AND type = '001' AND companyid = #companyId#)
 				WHEN
 					user_type = 3
-					THEN (SELECT displayname$lang$ FROM TBL_USER_JOBMASTER WHERE tenant_id = #tenantId# AND jobid = user_id AND type = '002' AND companyid = #companyId#)
+					THEN (SELECT
+							CASE #lang# WHEN '2' THEN displayname2 ELSE displayname END
+						FROM TBL_USER_JOBMASTER WHERE tenant_id = #tenantId# AND jobid = user_id AND type = '002' AND companyid = #companyId#)
 				WHEN
 					user_type = 4
                     THEN (SELECT group_name FROM TBL_PERMISSIONGROUPLIST WHERE tenant_id = #tenantId# AND group_id = user_id AND company_id = #companyId#)
 				ELSE ''
 			END AS username,
 			CASE WHEN user_type = 1
-				THEN (SELECT description$lang$ FROM TBL_USERMASTER WHERE tenant_id = #tenantId# AND physicaldeliveryofficename = #companyId# AND cn = user_id)
-				ELSE (SELECT displayname$lang$ FROM TBL_DEPTMASTER WHERE tenant_id = #tenantId# AND extensionattribute2 = #companyId# AND cn = user_id)
+				THEN IFNULL((SELECT
+								CASE #lang# WHEN '2' THEN description2 ELSE description END
+							FROM TBL_USERMASTER WHERE tenant_id = #tenantId# AND physicaldeliveryofficename = #companyId# AND cn = user_id),
+							(SELECT
+								CASE #lang# WHEN '2' THEN displayname2 ELSE displayname END
+							FROM TBL_DEPTMASTER WHERE cn in (SELECT deptid FROM TBL_ADDJOBMASTER WHERE cn = user_id) AND extensionattribute2 = #companyId# LIMIT 1))
+				ELSE (SELECT
+						CASE #lang# WHEN '2' THEN displayname2 ELSE displayname END
+					FROM TBL_DEPTMASTER WHERE tenant_id = #tenantId# AND extensionattribute2 = #companyId# AND cn = user_id)
 			END AS userdeptname,
 			user_type AS usertype,
-			access_yn AS accessyn
+			access_yn AS accessyn,
+			subdept_permitted AS subdeptPermitted
 		FROM
 			TBL_PORTAL_THEME_AUTH
 		WHERE
@@ -1108,21 +1257,15 @@
 			theme_id = #themeId#
 	]]>
 	<isNotEmpty property="accessType">
-		<![CDATA[
 		AND
 			access_yn = #accessType#
-		]]>
 	</isNotEmpty>
 	<isNotEmpty property="userId">
-		<![CDATA[
 		AND
 			user_id = #userId#
-		]]>
 	</isNotEmpty>
-		<![CDATA[
 		ORDER BY
 			sn, user_type
-		]]>
 	</select>
 	
 	<delete id="ezNewPortal.deleteThemeAuth" parameterClass="Map">
@@ -1141,9 +1284,9 @@
 	<insert id="ezNewPortal.insertThemeAuth" parameterClass="Map">
 	<![CDATA[
 		INSERT INTO TBL_PORTAL_THEME_AUTH (
-			theme_id, company_id, tenant_id, user_id, access_YN, user_type, sn
+			theme_id, company_id, tenant_id, user_id, access_YN, user_type, sn, subdept_permitted
 		) VALUES (
-			#themeId#, #companyId#, #tenantId#, #userId#, #accessYN#, #userType#, #sn#
+			#themeId#, #companyId#, #tenantId#, #userId#, #accessYN#, #userType#, #sn#, #subdeptPermitted#
 		)
 	]]>
 	</insert>
@@ -1174,6 +1317,7 @@
 	</isNotEqual>
 	</select>
 	
+	<!-- 2024-07-09 홍승비 - SQL Injection 수정 > $ 기호 제거, 겸직자 부서명 IFNULL 처리 추가 -->
 	<select id="ezNewPortal.getPortletAuth" parameterClass="Map" resultMap="PortletAuthMap">
 	<![CDATA[
 		SELECT
@@ -1181,23 +1325,37 @@
 			user_id AS userid,
 			CASE
 				WHEN user_type = 1
-					THEN (SELECT displayname$lang$ FROM TBL_USERMASTER WHERE tenant_id = #tenantId# AND cn = user_id)
+					THEN (SELECT
+							CASE #lang# WHEN '2' THEN displayname2 ELSE displayname END
+						FROM TBL_USERMASTER WHERE tenant_id = #tenantId# AND cn = user_id)
 				WHEN user_type = 2
-					THEN (SELECT displayname$lang$ FROM TBL_USER_JOBMASTER WHERE tenant_id = #tenantId# AND jobid = user_id AND type = '001' AND companyid = #companyId#)
+					THEN (SELECT
+							CASE #lang# WHEN '2' THEN displayname2 ELSE displayname END
+						FROM TBL_USER_JOBMASTER WHERE tenant_id = #tenantId# AND jobid = user_id AND type = '001' AND companyid = #companyId#)
 				WHEN
 					user_type = 3
-					THEN (SELECT displayname$lang$ FROM TBL_USER_JOBMASTER WHERE tenant_id = #tenantId# AND jobid = user_id AND type = '002' AND companyid = #companyId#)
+					THEN (SELECT
+							CASE #lang# WHEN '2' THEN displayname2 ELSE displayname END
+						FROM TBL_USER_JOBMASTER WHERE tenant_id = #tenantId# AND jobid = user_id AND type = '002' AND companyid = #companyId#)
 				WHEN
 					user_type = 4
                     THEN (SELECT group_name FROM TBL_PERMISSIONGROUPLIST WHERE tenant_id = #tenantId# AND group_id = user_id AND company_id = #companyId#)
 				ELSE ''
 			END AS username,
 			CASE WHEN user_type = 1
-				THEN (SELECT description$lang$ FROM TBL_USERMASTER WHERE tenant_id = #tenantId# AND physicaldeliveryofficename = #companyId# AND cn = user_id)
-				ELSE (SELECT displayname$lang$ FROM TBL_DEPTMASTER WHERE tenant_id = #tenantId# AND extensionattribute2 = #companyId# AND cn = user_id)
+				THEN IFNULL((SELECT
+								CASE #lang# WHEN '2' THEN description2 ELSE description END
+							FROM TBL_USERMASTER WHERE tenant_id = #tenantId# AND physicaldeliveryofficename = #companyId# AND cn = user_id),
+							(SELECT
+								CASE #lang# WHEN '2' THEN displayname2 ELSE displayname END
+							FROM TBL_DEPTMASTER WHERE cn in (SELECT deptid FROM TBL_ADDJOBMASTER WHERE cn = user_id) AND extensionattribute2 = #companyId# LIMIT 1))
+				ELSE (SELECT
+						CASE #lang# WHEN '2' THEN displayname2 ELSE displayname END
+					FROM TBL_DEPTMASTER WHERE tenant_id = #tenantId# AND extensionattribute2 = #companyId# AND cn = user_id)
 			END AS userdeptname,
 			user_type AS usertype,
-			access_yn AS accessyn
+			access_yn AS accessyn,
+			subdept_permitted as subdeptPermitted
 		FROM
 			TBL_PORTAL_Portlet_AUTH
 		WHERE
@@ -1229,9 +1387,9 @@
 	<insert id="ezNewPortal.insertPortletAuth" parameterClass="Map">
 	<![CDATA[
 		INSERT INTO TBL_PORTAL_PORTLET_AUTH (
-			portlet_id, company_id, tenant_id, user_id, access_YN, user_type, sn
+			portlet_id, company_id, tenant_id, user_id, access_YN, user_type, sn, subdept_permitted
 		) VALUES (
-			#portletId#, #companyId#, #tenantId#, #userId#, #accessYN#, #userType#, #sn#
+			#portletId#, #companyId#, #tenantId#, #userId#, #accessYN#, #userType#, #sn#, #subdeptPermitted#
 		)
 	]]>
 	</insert>
@@ -1267,155 +1425,248 @@
 	]]>
 	</select>
 
-	<!-- 조직도 만들기 위한 쿼리 -->
+	<!-- 2024-07-09 홍승비 - SQL Injection 수정 > $ 기호 제거 -->
+	<!-- 관리자 > 포탈 > 메뉴관리 > 권한설정 > 부서리스트 표출 시 조직도 생성을 위한 쿼리 -->
 	<select id="ezNewPortal.selectDeptList" parameterClass="map" resultMap="deptViewMap">
 		select
-		d.CN as id,
-		IF(d.extensionattribute1 = null
-		<isNotEmpty property="companyId">
-			or d.CN=#companyId#
-		</isNotEmpty>
-		,'##', d.EXTENSIONATTRIBUTE1) as parent,
-		d.extensionattribute2 as companyId,
-		d.DISPLAYNAME$lang$ as text,
-		case d.CN
-		when d.extensionattribute2 then 'comp'
-		else 'dept'
-		end as isComp,
-		case d.CN
-		when u.DEPARTMENT then 'yes'
-		else 'no'
-		end as myDept
+			d.CN as id,
+			IF(d.extensionattribute1 = null
+			<isNotEmpty property="companyId">
+				or d.CN = #companyId#
+			</isNotEmpty>
+			,'##', d.EXTENSIONATTRIBUTE1) as parent,
+			d.extensionattribute2 as companyId,
+			CASE #lang# WHEN '2' THEN d.DISPLAYNAME2 ELSE d.DISPLAYNAME END AS text,
+			case d.CN
+				when d.extensionattribute2 then 'comp'
+				else 'dept'
+			end as isComp,
+			case d.CN
+				when u.DEPARTMENT then 'yes'
+				else 'no'
+			end as myDept
 		from
-		tbl_deptmaster d
+			tbl_deptmaster d
 		left join
-		tbl_usermaster u
+			tbl_usermaster u
 		on
-		d.tenant_id = u.TENANT_ID
+			d.tenant_id = u.TENANT_ID
 		where
-		d.tenant_id = #tenantId#
+			d.tenant_id = #tenantId#
 		and
-		u.CN = #userId#
+			u.CN = #userId#
 		and
-		u.tenant_id = #tenantId#
+			u.tenant_id = #tenantId#
 		and
-		(
-		((substr(u.EXTENSIONATTRIBUTE1, 3, 1) = 0
-		and
-		d.extensionattribute2 = u.PHYSICALDELIVERYOFFICENAME))
-		or
-		(substr(u.EXTENSIONATTRIBUTE1, 3, 1) = 1)
-		)
-		and
-		not((d.extensionattribute1 is null or d.extensionattribute1 = '') and d.cn <![CDATA[<>]]> d.extensionattribute2)
+			not((d.extensionattribute1 is null or d.extensionattribute1 = '') and d.cn <![CDATA[<>]]> d.extensionattribute2)
 		<isNotEmpty property="companyId">
-			and
+		and
 			d.EXTENSIONATTRIBUTE2 = #companyId#
 		</isNotEmpty>
-		ORDER BY lpad(ifnull(d.EXTENSIONATTRIBUTE15, 0), 6, 0), d.DISPLAYNAME$lang$
+		ORDER BY
+			lpad(ifnull(d.EXTENSIONATTRIBUTE15, 0), 6, 0),
+			CASE #lang# WHEN '2' THEN d.DISPLAYNAME2 ELSE d.DISPLAYNAME END
 	</select>
 
 	<!-- 해당부서의 사원리스트 -->
 	<select id="ezNewPortal.selectUserList" parameterClass="Map" resultMap="userMap" remapResults="true">
-		select * from
-		(	select
-		DISPLAYNAME$lang$ as user_name,
-		CN as user_id,
-		TITLE$lang$ as jikwi,
-		MAIL as mail,
-		DEPARTMENT as dept_id,
-		DESCRIPTION$lang$ as dept_name,
-		EXTENSIONATTRIBUTE2 as user_img,
-		CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15,
-		'user' as userType
-		from
-		tbl_usermaster
-		where
-		TENANT_ID = #tenantId#
-		and
-		PHYSICALDELIVERYOFFICENAME = #companyId#
-		and
-		CN not in (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
-		<isNotEqual property="key" compareValue="DEPARTMENT">
-			and
-			$key$ like concat('%', #value#, '%')
-		</isNotEqual>
-		<isEqual property="key" compareValue="DEPARTMENT">
-			and
-			$key$ = #value#
-		</isEqual>
-		union all
 		select
-		A.DISPLAYNAME$lang$ as user_name,
-		A.CN as user_id,
-		B.TITLE$lang$ as jikwi,
-		A.MAIL as mail,
-		B.DEPTID as dept_id,
-		C.DISPLAYNAME$lang$ as dept_name,
-		A.EXTENSIONATTRIBUTE2 as user_img,
-		CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(A.EXTENSIONATTRIBUTE15, '0'))), IFNULL(A.EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15,
-		'addJob' as userType
+			* 
 		from
-		tbl_addjobmaster B
-		join
-		tbl_usermaster A on A.CN = B.CN and A.TENANT_ID = B.TENANT_ID
-		join
-		tbl_deptmaster C on B.DEPTID = C.CN and B.TENANT_ID = C.TENANT_ID
-		where
-		B.TENANT_ID = #tenantId#
-		<isNotEqual property="key" compareValue="DEPARTMENT">
+			(select
+				CASE #lang# WHEN '2' THEN DISPLAYNAME2 ELSE DISPLAYNAME END AS user_name,
+				CN as user_id,
+				CASE #lang# WHEN '2' THEN TITLE2 ELSE TITLE END AS jikwi,
+				MAIL as mail,
+				DEPARTMENT as dept_id,
+				CASE #lang# WHEN '2' THEN DESCRIPTION2 ELSE DESCRIPTION END AS dept_name,
+				EXTENSIONATTRIBUTE2 as user_img,
+				CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15,
+				'user' as userType
+			from
+				tbl_usermaster
+			where
+				TENANT_ID = #tenantId#
 			and
-			A.$key$ like concat('%', #value#, '%')
-		</isNotEqual>
-		<isEqual property="key" compareValue="DEPARTMENT">
+				PHYSICALDELIVERYOFFICENAME = #companyId#
 			and
-			B.DEPTID = #value#
-		</isEqual>
-		) AA
-		ORDER BY 8 ASC, 1 ASC
-		LIMIT $curPage$, $pageSize$
+				CN not in (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
+			<isNotEqual property="key" compareValue="DEPARTMENT" prepend="AND">
+				<isEqual property="key" compareValue="DISPLAYNAME">DISPLAYNAME</isEqual>
+				<isEqual property="key" compareValue="CN">CN</isEqual>
+				<isEqual property="key" compareValue="DESCRIPTION">DESCRIPTION</isEqual>
+				<isEqual property="key" compareValue="TITLE">TITLE</isEqual>
+				<isEqual property="key" compareValue="TELEPHONENUMBER">TELEPHONENUMBER</isEqual>
+				<isEqual property="key" compareValue="MOBILE">MOBILE</isEqual>
+				<isEqual property="key" compareValue="HOMEPHONE">HOMEPHONE</isEqual>
+				<isEqual property="key" compareValue="FACSIMILETELEPHONENUMBER">FACSIMILETELEPHONENUMBER</isEqual>
+				<isEqual property="key" compareValue="MAIL">MAIL</isEqual>
+				<isEqual property="key" compareValue="STREETADDRESS">STREETADDRESS</isEqual>
+				like concat('%', #value#, '%')
+			</isNotEqual>
+			<isEqual property="key" compareValue="DEPARTMENT" prepend="AND">
+				DEPARTMENT = #value#
+			</isEqual>
+			
+			union all
+			
+			select
+				CASE #lang# WHEN '2' THEN A.DISPLAYNAME2 ELSE A.DISPLAYNAME END AS user_name,
+				A.CN as user_id,
+				CASE #lang# WHEN '2' THEN B.TITLE2 ELSE B.TITLE END AS jikwi,
+				A.MAIL as mail,
+				B.DEPTID as dept_id,
+				CASE #lang# WHEN '2' THEN C.DISPLAYNAME2 ELSE C.DISPLAYNAME END AS dept_name,
+				A.EXTENSIONATTRIBUTE2 as user_img,
+				CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(A.EXTENSIONATTRIBUTE15, '0'))), IFNULL(A.EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15,
+				'addJob' as userType
+			from
+				tbl_addjobmaster B
+			join
+				tbl_usermaster A on A.CN = B.CN and A.TENANT_ID = B.TENANT_ID
+			join
+				tbl_deptmaster C on B.DEPTID = C.CN and B.TENANT_ID = C.TENANT_ID
+			where
+				B.TENANT_ID = #tenantId#
+			<isNotEqual property="key" compareValue="DEPARTMENT" prepend="AND">
+				<isEqual property="key" compareValue="DISPLAYNAME">A.DISPLAYNAME</isEqual>
+				<isEqual property="key" compareValue="CN">A.CN</isEqual>
+				<isEqual property="key" compareValue="DESCRIPTION">A.DESCRIPTION</isEqual>
+				<isEqual property="key" compareValue="TITLE">A.TITLE</isEqual>
+				<isEqual property="key" compareValue="TELEPHONENUMBER">A.TELEPHONENUMBER</isEqual>
+				<isEqual property="key" compareValue="MOBILE">A.MOBILE</isEqual>
+				<isEqual property="key" compareValue="HOMEPHONE">A.HOMEPHONE</isEqual>
+				<isEqual property="key" compareValue="FACSIMILETELEPHONENUMBER">A.FACSIMILETELEPHONENUMBER</isEqual>
+				<isEqual property="key" compareValue="MAIL">A.MAIL</isEqual>
+				<isEqual property="key" compareValue="STREETADDRESS">A.STREETADDRESS</isEqual>
+				like concat('%', #value#, '%')
+			</isNotEqual>
+			<isEqual property="key" compareValue="DEPARTMENT" prepend="AND">
+				B.DEPTID = #value#
+			</isEqual>
+			) AA
+		ORDER BY
+			8 ASC, 1 ASC
+		LIMIT
+			#curPage#, #pageSize#
 	</select>
 
 	<!-- 해당부서의 사원수 -->
 	<select id="ezNewPortal.getDeptUserListCount" parameterClass="Map" resultClass="Integer">
-		select count(*) AS count from
-		(	select
-		CN as user_id
-		from
-		tbl_usermaster
-		where
-		TENANT_ID = #tenantId#
-		and
-		PHYSICALDELIVERYOFFICENAME = #companyId#
-		and
-		CN not in (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
-		<isNotEqual property="key" compareValue="DEPARTMENT">
-			and
-			$key$ like concat('%', #value#, '%')
-		</isNotEqual>
-		<isEqual property="key" compareValue="DEPARTMENT">
-			and
-			$key$ = #value#
-		</isEqual>
-		union all
 		select
-		A.CN as user_id
+			count(*) AS count
 		from
-		tbl_addjobmaster B
-		join
-		tbl_usermaster A on A.CN = B.CN and A.TENANT_ID = B.TENANT_ID
-		join
-		tbl_deptmaster C on B.DEPTID = C.CN and B.TENANT_ID = C.TENANT_ID
-		where
-		B.TENANT_ID = #tenantId#
-		<isNotEqual property="key" compareValue="DEPARTMENT">
+			(select
+				CN as user_id
+			from
+				tbl_usermaster
+			where
+				TENANT_ID = #tenantId#
 			and
-			A.$key$ like concat('%', #value#, '%')
-		</isNotEqual>
-		<isEqual property="key" compareValue="DEPARTMENT">
+				PHYSICALDELIVERYOFFICENAME = #companyId#
 			and
-			B.DEPTID = #value#
-		</isEqual>
-		) AA
+				CN not in (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
+			<isNotEqual property="key" compareValue="DEPARTMENT" prepend="AND">
+				<isEqual property="key" compareValue="DISPLAYNAME">DISPLAYNAME</isEqual>
+				<isEqual property="key" compareValue="CN">CN</isEqual>
+				<isEqual property="key" compareValue="DESCRIPTION">DESCRIPTION</isEqual>
+				<isEqual property="key" compareValue="TITLE">TITLE</isEqual>
+				<isEqual property="key" compareValue="TELEPHONENUMBER">TELEPHONENUMBER</isEqual>
+				<isEqual property="key" compareValue="MOBILE">MOBILE</isEqual>
+				<isEqual property="key" compareValue="HOMEPHONE">HOMEPHONE</isEqual>
+				<isEqual property="key" compareValue="FACSIMILETELEPHONENUMBER">FACSIMILETELEPHONENUMBER</isEqual>
+				<isEqual property="key" compareValue="MAIL">MAIL</isEqual>
+				<isEqual property="key" compareValue="STREETADDRESS">STREETADDRESS</isEqual>
+				like concat('%', #value#, '%')
+			</isNotEqual>
+			<isEqual property="key" compareValue="DEPARTMENT" prepend="AND">
+				DEPARTMENT = #value#
+			</isEqual>
+			
+			union all
+			
+			select
+				A.CN as user_id
+			from
+				tbl_addjobmaster B
+			join
+				tbl_usermaster A on A.CN = B.CN and A.TENANT_ID = B.TENANT_ID
+			join
+				tbl_deptmaster C on B.DEPTID = C.CN and B.TENANT_ID = C.TENANT_ID
+			where
+				B.TENANT_ID = #tenantId#
+			<isNotEqual property="key" compareValue="DEPARTMENT" prepend="AND">
+				<isEqual property="key" compareValue="DISPLAYNAME">A.DISPLAYNAME</isEqual>
+				<isEqual property="key" compareValue="CN">A.CN</isEqual>
+				<isEqual property="key" compareValue="DESCRIPTION">A.DESCRIPTION</isEqual>
+				<isEqual property="key" compareValue="TITLE">A.TITLE</isEqual>
+				<isEqual property="key" compareValue="TELEPHONENUMBER">A.TELEPHONENUMBER</isEqual>
+				<isEqual property="key" compareValue="MOBILE">A.MOBILE</isEqual>
+				<isEqual property="key" compareValue="HOMEPHONE">A.HOMEPHONE</isEqual>
+				<isEqual property="key" compareValue="FACSIMILETELEPHONENUMBER">A.FACSIMILETELEPHONENUMBER</isEqual>
+				<isEqual property="key" compareValue="MAIL">A.MAIL</isEqual>
+				<isEqual property="key" compareValue="STREETADDRESS">A.STREETADDRESS</isEqual>
+				like concat('%', #value#, '%')
+			</isNotEqual>
+			<isEqual property="key" compareValue="DEPARTMENT" prepend="AND">
+				B.DEPTID = #value#
+			</isEqual>
+			) AA
 	</select>
+
+	<select id="ezNewPortal.getAllAvailablePortletSize" resultClass="String">
+		SELECT CLASS_SIZE FROM TBL_PORTAL_PORTLET_SIZE
+	</select>
+
+	<update id="ezNewPortal.clearPortletSize" parameterClass="Map">
+		DELETE
+		FROM TBL_PORTAL_PORTLET_COMPANY_SIZE
+		WHERE TENANT_ID = #tenantId#
+		  AND COMPANY_ID = #companyId#
+		  AND THEME_ID = #themeId#
+	</update>
+
+	<insert id="ezNewPortal.insertPortletSizeCompany" parameterClass="list">
+		INSERT INTO TBL_PORTAL_PORTLET_COMPANY_SIZE (TENANT_ID, COMPANY_ID, PORTLET_ID, THEME_ID, SIZE_ID, DEFAULT_FLAG)
+		VALUES
+		<iterate conjunction=",">
+			( #[].tenantId#, #[].companyId#, #[].portletId#,
+			#[].themeId#, (SELECT SIZE_ID
+			FROM TBL_PORTAL_PORTLET_SIZE
+			WHERE CLASS_SIZE = #[].portletSize# LIMIT 1)
+			, #[].default# )
+		</iterate>
+	</insert>
+	
+	<select id="ezNewPortal.getTopMenuDisplayModeForCompany" parameterClass="PortalTopVO" resultClass="PortalTopVO">
+		SELECT
+			TYPE
+		FROM
+			TBL_PORTAL_TOP_COMPANY
+		WHERE
+			TENANT_ID = #tenantID#
+		AND
+			COMPANY_ID = #companyID#
+	</select>
+	
+	<update id="ezNewPortal.updateTopMenuDisplayModeForCompany" parameterClass="PortalTopVO">
+		UPDATE 
+			TBL_PORTAL_TOP_COMPANY
+		SET
+			TYPE = #type#
+		WHERE
+			TENANT_ID = #tenantID#
+		AND
+			COMPANY_ID = #companyID#
+	</update>
+	
+	<insert id="ezNewPortal.insertTopMenuDisplayModeForCompany" parameterClass="PortalTopVO">
+		INSERT
+			INTO 
+    	TBL_PORTAL_TOP_COMPANY 
+    		(COMPANY_ID, TENANT_ID, TYPE)
+    	VALUES
+    		(#companyID#, #tenantID#, #type#)
+	</insert>
+	
 </sqlMap>

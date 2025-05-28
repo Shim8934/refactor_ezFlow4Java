@@ -6,7 +6,8 @@
 	<head>
 		<title><spring:message code='ezApprovalG.t1027'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -57,8 +58,13 @@
 		        if (RetValue[2])
 		            g_InitFlag = RetValue[2];
 		        if (g_InitFlag == "1") {
-		            document.getElementById("trChangeCabinet").style.display = "";
-		            document.getElementById("trModify").style.display = "none";
+					if (g_CabinetID != null) {
+						document.getElementById("trChangeCabinet").style.display = "none";
+						document.getElementById("trModify").style.display = "";
+					} else {
+						document.getElementById("trChangeCabinet").style.display = "";
+						document.getElementById("trModify").style.display = "none";
+					}
 		
 		            InitCabinetInfo(GetCabinetClassInfo(g_CabinetID));
 		        } else if (g_InitFlag == "2") {

@@ -7,7 +7,8 @@
 	<head>
 	    <title><spring:message code='ezApprovalG.t359'/></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	    <link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 	    <script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -58,6 +59,8 @@
 			var anNo = "<c:out value ='${anNo}'/>";
 			var selRowChangeFlag = false;
 			var cabinetAttachPage = true; // 문서 첨부 검색 페이지에서 의견 아이콘 삭제하기 위해 추가
+			var orgResultxml;
+			var useWebHWP = "<c:out value='${useWebHWP}'/>";
 	        
 	        window.onload = function () {
 	            var ua = navigator.userAgent;
@@ -97,6 +100,26 @@
 	            InitGlobals("RECORD", "9", "1");
 	            GetRecordList_lv();
 	            AttachList();
+	            
+	            if (parent.pOrgDocID != '') {
+	            	orgResultxml = orgAttachList(parent.pOrgDocID);
+	            	if (orgResultxml != null && SelectNodes(orgResultxml, "LISTVIEWDATA/ROWS/ROW").length > 0) {
+	            		var DocList = new ListView();
+			            DocList.LoadFromID("lvTDocLV");
+			            var attachSel = DocList.GetDataRows();
+			            var length = attachSel.length;
+			            for (var i = 0; i < length; i++) {
+			            	var href = GetAttribute(attachSel[i], "data1");
+			            	for (var j = 0; j < SelectNodes(orgResultxml, "LISTVIEWDATA/ROWS/ROW").length; j++) {
+			            		var orgHref = getNodeText(GetChildNodes(GetChildNodes(SelectNodes(orgResultxml, "LISTVIEWDATA/ROWS/ROW")[j])[0])[1]);
+								if (href == orgHref) {
+									SetAttribute(attachSel[i], "DELETE", "N");
+									break;
+								}
+			            	}
+			            }
+	            	}
+	            }
 	            if (!CrossYN())
 	                window.returnValue = "cancel";
 	        }
@@ -155,6 +178,10 @@
 			            	OpenAlertUI("<spring:message code='ezApprovalG.garm04'/>");
 			            	return;
 			            }
+						if (GetAttribute(pCurSel[count1], "DATA16") == "B") {
+							OpenAlertUI("<spring:message code='ezApprovalG.kmh06'/>");
+							return;
+						}
 			            //2018-10-12 김보미 - 문서첨부시 보안문서일 경우 보안날짜가 지나기 전엔 첨부할 수 없도록 변경
 			            if (GetAttribute(pCurSel[count1], "DATA14") != null && GetAttribute(pCurSel[count1], "DATA14") != "") {
 			            	date = GetAttribute(pCurSel[count1], "DATA14");
@@ -176,10 +203,28 @@
 	            DocList.LoadFromID("lvTDocLV");
 	            var pCurSel = DocList.GetSelectedRows();
 	            var length = pCurSel.length;
+	            
 	            if (length == 0) {
 	                OpenAlertUI("<spring:message code='ezApprovalG.t360'/>");
+	                return;
 	            }
-	            else if (arr_userinfo[1].toLowerCase() != GetAttribute(pCurSel[0], "DATA4").toLowerCase() && pDraftFlag != "REDRAFT") {
+	            
+	            for (var i = 0; i < length; i++) {
+	            	if (typeof(GetAttribute(pCurSel[i], "DELETE")) != "undefined" && GetAttribute(pCurSel[i], "DELETE") == "N") {
+	            		OpenAlertUI("<spring:message code='ezApprovalG.t277'/>");
+	            		return;
+	            	}
+	            }
+	            
+	            var userCheck = true;
+	            for (var i = 0; i < length; i++) {
+	            	if (arr_userinfo[1].toLowerCase() != GetAttribute(pCurSel[i], "DATA4").toLowerCase()) {
+	            		userCheck = false;
+	            		break;
+	            	}
+	            }
+	            
+	            if (!userCheck && pDraftFlag != "REDRAFT") {
 	                OpenAlertUI("<spring:message code='ezApprovalG.t361'/>");
 	                return;
 	            }
@@ -247,7 +292,184 @@
 			function btnSearch_onclick() {
 			    btnSearchRec_onclick("1");
 			}
-	    </script>
+
+			function showDocView_onclick() {
+				var listview = new ListView();
+				listview.LoadFromID("DocList");
+				var selRow = listview.GetSelectedRows()[0];
+				
+				if (selRow.length <= 0) {
+					var pAlertContent = "<spring:message code='ezApprovalG.t1533'/>";
+					alert(pAlertContent);
+					return;
+				}
+
+				/* 2024-07-31 김유진 - 문서첨부>문서보기 시 보안결재 문서 체크 */
+				var securityApprovalFlag = GetAttribute(selRow, "DATA14");
+				if (securityApprovalFlag != "null" && securityApprovalFlag != "" && securityApprovalFlag >= GetTodayDate()) {
+					if (CheckAprLine(selRow.getAttribute("DATA1")) == "TRUE" || GetUserRole() != "User" ) {
+						chk_Passwd(UserID, showDocView_onclick_Complete);
+					} else {
+						OpenAlertUI(strLang580);
+						return;
+					}
+				} else {
+					showDocView_onclick_Complete("True");
+				}
+			}
+
+
+			function showDocView_onclick_Complete() {
+				var listview = new ListView();
+				listview.LoadFromID("DocList");
+				var selRow = listview.GetSelectedRows()[0];
+				var DocID = GetAttribute(selRow, "DATA1");
+				var pURL = GetAttribute(selRow, "DATA2");
+				
+				if (trim_Cross(pURL) == "") {
+					var para2 = new Array();
+					para2[0] = GetAttribute(selRow, "DATA6");
+					para2[1] = GetAttribute(selRow, "DATA8");
+
+					var url = "/ezApprovalG/contDocView_NoDoc.do?docID=" + encodeURI(DocID) + "&g_RecID=" + encodeURI(para2[0]) + "&g_SepAttNo=" + encodeURI(para2[1]);
+					var left = 0;
+					var top = 0;
+					var wWidth = 600;
+					var wHeigth = 300;
+
+					left = window.outerWidth / 2 + window.screenX - (wWidth / 2);
+					top = window.outerHeight / 2 + window.screenY - (wHeigth / 2);
+
+					window.open(url, strLang1135, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + wHeigth + ",width=" + wWidth + ",top=" + top + ",left = " + left);
+				} else {
+					var para = new Array();
+					var tempUrl = pURL;
+					var openLocation = "";
+
+					if (tempUrl.substr(tempUrl.length - 4, tempUrl.length).toLowerCase() == ".ezd") {
+						tempUrl = tempUrl.substr(0, tempUrl.length - 4);
+					}
+
+					if (tempUrl.substr(tempUrl.length - 3, tempUrl.length).toLowerCase() == "hwp") {
+						if(useWebHWP == "NO") {
+							if (isIE()) {
+								openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
+							} else {
+								var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+								alert(pAlertContent);
+								return;
+							}
+						} else {
+							openLocation = "/ezApprovalG/ezViewEnd_WHWP.do";
+						}
+					} else {
+						openLocation = "/ezApprovalG/contDocView.do";
+					}
+					openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=" + encodeURI(selRow.getAttribute("DATA5")) + "&orgDocID=";
+					openwindow(openLocation, "", 880, 570);
+				}
+			}
+
+			function moveDataRow(e) {
+				let listView = new ListView();
+				listView.LoadFromID("lvTDocLV");
+
+				var msg = checkIsValidReq(listView, e);
+
+				if (!msg) {
+					return;
+				}
+
+				relocateAttachedList(listView, e);
+			}
+
+			function checkIsValidReq(listView, e) {
+				let bool = false;
+				let selectedRow = listView.GetSelectedRows();
+				let selectedRowCnt = selectedRow.length;
+				let curIdx;
+
+				if (selectedRowCnt == 0) {
+					alert("<spring:message code = 'ezApprovalG.docAttach.msg1' />");
+
+					return;
+				} else if (selectedRowCnt >= 2) {
+					alert("<spring:message code = 'ezApprovalG.docAttach.msg2' />");
+
+					return;
+				}
+
+				selectedRow = selectedRow[0];
+				curIdx = selectedRow.getAttribute("data2");
+
+				switch (e) {
+					case "up" : {
+						bool = curIdx != 1;
+
+						break;
+					}
+
+					case "down" : {
+						bool = curIdx < listView.GetDataRows().length;
+
+						break;
+					}
+				}
+
+				return bool;
+			}
+
+			function relocateAttachedList(listView, e) {
+				let attrData2 = parseInt(listView.GetSelectedRows()[0].getAttribute("data2"));
+				let curIdx;
+				let destIdx;
+
+				if (isNaN(attrData2)) {
+					let nodeID = listView.GetSelectedRows()[0].id;
+
+					attrData2 = nodeID.substring(nodeID.length - 1);
+				}
+
+				curIdx = attrData2 - 1;
+
+				switch (e) {
+					case "up" : {
+						destIdx = curIdx - 1;
+
+						break;
+					}
+
+					case "down" : {
+						destIdx = curIdx + 1;
+
+						break;
+					}
+				}
+
+				moveRow(listView, curIdx, destIdx);
+			}
+
+			function moveRow(listView, curIdx, destIdx) {
+				let attachedList = listView.GetDataRows();
+				let tbody = document.getElementById(listView.GetID()).querySelector("tbody");
+				let tmp1 = attachedList[curIdx];
+				let tmp2 = attachedList[destIdx];
+				let newNode;
+
+				attachedList[curIdx] = tmp2;
+				attachedList[destIdx] = tmp1;
+
+				tbody.replaceChildren();
+
+				var cnt = 0;
+				while ((newNode = attachedList[cnt]) != null) {
+					tbody.insertAdjacentElement("beforeend", newNode);
+					newNode.setAttribute("data2", cnt + 1);
+
+					cnt++;
+				}
+			}
+		</script>
 	    <style>
 	    	.mainlist tr th {border-top:0px}
 	    </style>
@@ -271,6 +493,7 @@
 					</li>
 				</c:if>	
 	            <li><span onclick="return btnSearch_onclick()"><spring:message code='ezApprovalG.t111'/></span></li>
+				<li><span onclick="return showDocView_onclick()"><spring:message code='ezApprovalG.t367'/></span></li>
 	        </ul>
 	    </div>
 	    <div id="close">
@@ -293,18 +516,38 @@
 	    </table>
 	
 	    <table>
+			<tr>
+				<td style = "height : 35px;" colspan = 2>
+					<%-- S버전과 동일한 화면 구성을 가져가기 위해 임의의 공백 td 삽입 --%>
+					&nbsp;
+				</td>
+				<td>
+					<a class = "imgBtn" onclick = "moveDataRow('up')" style="height:22px; /*margin : 0 5px 0 0;*/">
+						<span>
+							<img src="/images/ImgIcon/prev.gif" alt="" style="width : 20px;/* margin-top: 4px;*/">
+						</span>
+					</a>
+
+					<a onclick = "moveDataRow('down')">
+						<span>
+							<img src="/images/ImgIcon/next.gif" alt="" style="width : 20px;/* margin-top: 4px;*/">
+						</span>
+					</a>
+				</td>
+			</tr>
 	        <tr>
 	            <td style="vertical-align: top;">
 	                <div class="listview">
-	                    <div id="lvtDoclist" style="border: 0; width: 680px; height: 360px; overflow-x: auto; overflow-y:hidden;"></div>
+	                    <div id="lvtDoclist" style="border: 0; width: 680px; height: 385px; overflow-x: auto; overflow-y:hidden;"></div>
 					</div>
 					<div id="tblPageRayer"></div>
 	            </td>
 	            <td style="width: 25px; text-align: center;">
-	                <img id="arrow_right" onclick="return btnIns_onclick()" src="/images/arr01.gif" style="cursor: pointer"><img id="arrow_left" onclick="return btndel_onclick()" src="/images/arr02.gif" style="cursor: pointer"></td>
+	                <img id="arrow_right" onclick="return btnIns_onclick()" src="/images/arr01.gif" style="cursor: pointer"><img id="arrow_left" onclick="return btndel_onclick()" src="/images/arr02.gif" style="cursor: pointer">
+				</td>
 	            <td>
 	                <div class="listview" style="margin-bottom:45px">
-	                    <div id="lvTDoc" style="border: 0; width: 320px; height: 360px; overflow: auto"></div>
+	                    <div id="lvTDoc" style="border: 0; width: 320px; height: 385px; overflow: auto"></div>
 	                </div>
 	            </td>
 	        </tr>

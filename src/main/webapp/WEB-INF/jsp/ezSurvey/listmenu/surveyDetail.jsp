@@ -8,7 +8,8 @@
 <head>
 	<title><spring:message code="ezSurvey.t01"/></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<link rel="stylesheet" type="text/css" href="${util.addVer('ezSurvey.css', 'msg')                      }">
+	<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 	<link rel="stylesheet" type="text/css" href="${util.addVer('/css/jquery-ui.css')                       }">
 	<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
 	<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/dateControls/demos.css')        }">
@@ -24,6 +25,7 @@
 		#ppContent h4 {font-size:1em; margin-top:1.33em; margin-bottom:1.33em;}
 		#ppContent h5 {font-size:0.83em; margin-top:1.67em; margin-bottom:1.67em;}
 		#ppContent h6 {font-size:0.67em; margin-top:2.33em; margin-bottom:2.33em;}
+		#ppContent img {height:auto !important;}
 	</style>
 		
 	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js'   )}"></script>
@@ -61,7 +63,11 @@
 			<span><spring:message code="${survey.paritipateFlag == 1 ? 'ezSurvey.t54' : 'ezSurvey.t53'}"/></span>
 		</li>
 		<li><span class="srvyInfo srvyInfo03"></span><span><spring:message code="ezSurvey.t41" /> : </span>
-			<span><spring:message code="${survey.resultPublicFlag == 1 ? 'ezSurvey.t42' : 'ezSurvey.t43'}"/></span>
+			<span>
+			    <c:if test="${survey.resultPublicFlag == 0}"><spring:message code="ezSurvey.t43"/></c:if>
+			    <c:if test="${survey.resultPublicFlag == 1}"><spring:message code="ezSurvey.t42"/></c:if>
+			    <c:if test="${survey.resultPublicFlag == 2}"><spring:message code="ezSurvey.jih01"/></c:if>
+			</span>
 		</li>
 		<c:if test="${survey.resultPublicFlag == 1}">
 			<li><span class="srvyInfo srvyInfo04"></span><span><spring:message code="ezSurvey.t96" /> : </span>
@@ -310,7 +316,9 @@
 				switch(questionType) {
 					case 1:
 					case 2:
-					case 9: 
+					case 9:
+					case 10:
+					case 11:
 						checkQuestions(question["option"], question["level"], questionType);
 						break;
 					case 3:
@@ -327,7 +335,7 @@
 			}
 		}
 
-		// 20.05.07 강승구 : 선택형(단일선택, 다중선택, 드롭다운) 질문에 대한 값 세팅처리
+		// 20.05.07 강승구 : 선택형(단일선택, 다중선택, 드롭다운, 일정유형[단일/다중]) 질문에 대한 값 세팅처리
 		function checkQuestions(options, level, type) {
 			var userId = "${user}";
 			
@@ -492,7 +500,7 @@
 			window.addEventListener("resize", function(e) {setBodyHeight();}, false);
 			document.getElementById("surveyInfBttn").onclick = function(e) {toggleSurveyInformation();};
 			
-			// 단일 선택 질문 버튼 클릭 이벤트 (type 1)
+			// 단일 선택 질문 및 일정 단일 질문 버튼 클릭 이벤트 (type 1, type 10)
 			$(".prevQsArea").on("click", ".optRdo", function() {
 				var prId     = parseInt($(this).parents(".prevQsWrapper").attr("id").replace("prevQstn", ""));
 				var logicNum = parseInt($(this).attr("logic"));
@@ -529,7 +537,7 @@
 				
 				toggleQuestionList_New(prId);
 			});
-			// 다중선택 질문 버튼 클릭 이벤트 (type 2)
+			// 다중선택 질문 및 일정 다중 선택 버튼 클릭 이벤트 (type 2, type 11)
 			$(".prevQsArea").on("click", ".optChb", function() {
 				var prId     = parseInt($(this).parents(".prevQsWrapper").attr("id").replace("prevQstn", ""));
 				toggleQuestionList_New(prId);
@@ -709,11 +717,19 @@
 							case 9:
 								getDrdwRespose(id, type);
 								break;
+							case 10:
+								getSingleScheduleRespose(id, type);
+								break;
+							case 11:
+								getMultiScheduleRespose(id, type);
+								break;
 						}
 						
 					}
 					if (responseResult == 'fail') {
-						break;
+					    // 응답 획득에 실패할 경우, 응답 배열을 초기화 함
+						resposeObj.responses = [];
+						return;
 					}
 				}
 			}
@@ -783,8 +799,8 @@
 				case 0 : alert(SurveyMessages.strSave2)    ;
 						 resposeObj.responses = [];
 						 
-						 if (window.opener.getPotletSurveyList != undefined) {
-							 window.opener.getPotletSurveyList();
+						 if (window.opener.reloadSurveyPage != undefined) {
+							 window.opener.reloadSurveyPage();
 							 // 일단 현 상황에 맞춰 주석처리
 							 // 나중에 필요하면 주석 풀면 됌
 							 // window.opener.getUnreadCounts('YES', 'YES', 'YES', 'YES', 'YES');
@@ -820,24 +836,27 @@
 			
 			if (!isNaN(optId)) {
 				if (checkedBtn.attr("otherFlag") == 1) {
+					var checked = checkedBtn.prop("checked");
 					var otherValue = $("#othInput" + id).val().trim();
 					
-					if (otherValue != "") {
+					if (checked && otherValue != "") {
 						optionId['otherFlag'] = 1;
 						optionId['texts'] = otherValue;
-					}
-					else {
+					} else {
 						result = "fail";
 						alert(id + SurveyMessages.writeOthers);
 					}
 				}
-				optionId['optionId'] = optId;
-				optionId['responseId'] = responseId;
-				answer.push(optionId);
-				answerObj['answers'] = answer;
-				answerObj['type'] = type;
-				answerObj['questionLevel'] = id;
-				resposeObj.responses.push(answerObj);
+
+				if (result !== "fail") {
+					optionId['optionId'] = optId;
+					optionId['responseId'] = responseId;
+					answer.push(optionId);
+					answerObj['answers'] = answer;
+					answerObj['type'] = type;
+					answerObj['questionLevel'] = id;
+					resposeObj.responses.push(answerObj);
+				}
 			}
 			
 			return result;
@@ -860,17 +879,18 @@
 					
 					if (!isNaN(optId)) {
 						if (checkBox[i].getAttribute('otherFlag') == 1) {
+							var checked = checkBox[i].checked;
 							var otherValue = $("#othInput" + id).val().trim();
 							
-							if (otherValue != "") {
+							if (checked && otherValue != "") {
 								optionId['otherFlag'] = 1;
 								optionId['texts']     = otherValue;
-							}
-							else {
+							} else {
 								result = "fail";
 								alert(id + SurveyMessages.writeOthers);
 							}
 						}
+						// 기타추가가 현재 1개만 생성 가능하게 되어있으므로 하위 로직은 분기처리 안하고 일단 둔다.
 						optionId['optionId'] = optId;
 						optionId['responseId'] = responseId;
 						answer.push(optionId);
@@ -878,7 +898,7 @@
 				}
 			}
 			
-			if (answer.length > 0) {
+			if (answer.length > 0 && result !== "fail") {
 				answerObj['answers']       = answer;
 				answerObj['type']          = type;
 				answerObj['questionLevel'] = id;
@@ -1076,6 +1096,62 @@
 			}
 		}
 		
+		function getSingleScheduleRespose(id, type) {
+			var answerObj  = {};
+			var optionId   = {};
+			var answer     = [];
+			var result     = "success";
+			var wrapper    = $("#prevQstn" + id);
+			var checkedBtn = wrapper.find(".prevQsOpt").find("input[name^=qstn" + id+ "]:checked");
+			var optId      = parseInt(checkedBtn.attr("optionid"));
+			var responseId = parseInt(checkedBtn.attr("responseId"));
+			
+			if (!isNaN(optId)) {
+				optionId['optionId'] = optId;
+				optionId['responseId'] = responseId;
+				answer.push(optionId);
+				answerObj['answers'] = answer;
+				answerObj['type'] = type;
+				answerObj['questionLevel'] = id;
+				resposeObj.responses.push(answerObj);
+			}
+			
+			return result;
+		}
+		
+		function getMultiScheduleRespose(id, type) {
+			var answerObj = {};
+			var answer    = [];
+			var result    = "success";
+			var wrapper   = $("#prevQstn" + id);
+			var checkBox  = wrapper.find(".prevQsOpt").find("input[name^=qstn" + id+ "]");
+			var length    = checkBox.length;
+			
+			for (var i = 0; i < length; i++) {
+				if (checkBox[i].checked == true) {
+					//var optLevel = parseInt(checkBox[i].value);
+					var optId    = parseInt(checkBox[i].getAttribute('optionid'));
+					var responseId = parseInt(checkBox[i].getAttribute('responseId'));
+					var optionId = {};
+					
+					if (!isNaN(optId)) {
+						optionId['optionId'] = optId;
+						optionId['responseId'] = responseId;
+						answer.push(optionId);
+					}
+				}
+			}
+			
+			if (answer.length > 0 && result !== "fail") {
+				answerObj['answers']       = answer;
+				answerObj['type']          = type;
+				answerObj['questionLevel'] = id;
+				resposeObj.responses.push(answerObj);
+			}
+			
+			return result;
+		}
+		
 		function deleteFileConfirm() {
 			var itemArr = [];
 			itemArr.push(surveyId);
@@ -1103,8 +1179,8 @@
 			alert(SurveyMessages.strDel);
 			if (window.opener && window.opener.openSurveyPopup)    {window.opener.openSurveyPopup("", 600, 600, 0, window.opener.surveyPopupIndex);}
 			
-			if (window.opener != null && window.opener.getPotletSurveyList != undefined) {
-				 window.opener.getPotletSurveyList();
+			if (window.opener != null && window.opener.reloadSurveyPage != undefined) {
+				 window.opener.reloadSurveyPage();
 				 // 일단 현 상황에 맞춰 주석처리
 				 // 나중에 필요하면 주석 풀면 됌
 				 // window.opener.getUnreadCounts('YES', 'YES', 'YES', 'YES', 'YES');
@@ -1198,6 +1274,10 @@
 						case 9 : 
 							checkResult = checkDrdwResponse(id);
 							break;
+						case 10:
+						case 11:
+							checkResult = checkScheduleResponse(id);
+							break;
 					}
 				}
 				
@@ -1280,6 +1360,12 @@
 		function checkDrdwResponse(id) {
 			var selectedValue = $("select[name = drdw" + id + "]").val();
 			return selectedValue;
+		}
+		
+		//일정 유형 질문 답변 유무 체크
+		function checkScheduleResponse(id) {
+			var checkedCnt = $("input[name^=qstn" + id + "opt]:checked").length;
+			return checkedCnt;
 		}
 		
 		/* 2021-05-27 전자설문 이미지 확대 개선 */
@@ -1372,9 +1458,9 @@
 				// logic이 0인 경우 설문종료이므로, 자신 이후의 모든 질문을 disabled 처리
 				// logic이 -1이면 분기없음이므로 이후 처리 없음
 				else { // skip == -1
-					if (type == "1") { // 단일선택
+					if (type == "1" || type == "2" || type == "10" || type == "11") { // 단일선택 , 다중선택, 일정 단일 선택, 일정 다중 선택
 						// 현재 루프 중인 질문 자기 자신에 대해, 모든 답변이 가질 수 있는 분기를 체크
-						var qstOptions = $(this).find("[name = 'qstn" + qstIdx + "opt'][logic != '-1']"); // 분기가 설정된 세부 라디오 항목이 존재 (예 : qstn1opt)
+						var qstOptions = $(this).find("[name = 'qstn" + qstIdx + "opt'][logic != '-1']"); // 분기가 설정된 세부 항목이 존재 (예 : qstn1opt)
 						if (qstOptions.length > 0) {
 							qstOptions.each (function(index, element) {
 								if ($(this).attr("logic") != "0") { // 해당 목표 분기 비활성화 또는 활성화
@@ -1437,7 +1523,7 @@
 		var result = false;
 		var qstWrapper = $("#" + qstWrapperID);
 		
-		if (type == "1" || type == "2" || type == "3" || type == "4") { // 단일선택, 다중선택, 행렬(단일/다중)
+		if (type == "1" || type == "2" || type == "3" || type == "4" || type == "10" || type == "11") { // 단일선택, 다중선택, 행렬(단일/다중)
 			if (qstWrapper.find("input:checked").length > 0) {
 				result = true;
 			}
@@ -1499,10 +1585,14 @@
 				var type = $(this).attr("type");
 				
 				// 항목 별 세부분기 > 질문의 유형 별로 응답이 유효한지 체크
-				if (type == "1") { // 단일선택
+				if (type == "1" || type == "10") { // 단일선택
 					if ($(this).find(".optRdo[logic='" + qstLevel + "']:checked").length > 0) {
 						parentResponseExist = true;
 					}
+                } else if (type == "2" || type == "11") { // 다중선택
+					if ($(this).find(".optChb[logic='" + qstLevel + "']:checked").length > 0) {
+						parentResponseExist = true;
+					}  
 				} else if (type == "7") { // 슬라이드
 					var sliderVal = $(this).find("slider-range").val();
 					var sliderLogicPoint = $(this).find("slider-output").attr("logicpoint");
@@ -1537,7 +1627,7 @@
 				$("#mask" + qstLevel).css({"height": height, "width": width, "background-color": "gray", "opacity": "0.3", "position" : "absolute"});
 				
 				// 비활성화한 해당 질문에 응답이 존재하면 없애기 (슬라이드의 경우 값 초기화)
-				if (type == "1" || type == "2" || type == "3" || type == "4") { // 단일선택, 다중선택, 행렬(단일/다중)
+				if (type == "1" || type == "2" || type == "3" || type == "4" || type == "10" || type == "11") { // 단일선택, 다중선택, 행렬(단일/다중), 일정(단일/다중)
 					qstWrapper.find("input").prop("checked", false); // 체크박스 맟 라디오 체크된 값 일괄해제
 				} else if (type == "5") { // 단답형
 					qstWrapper.find("input").val("");
@@ -1586,7 +1676,7 @@
 					$("#mask" + i).css({"height": height, "width": width, "background-color": "gray", "opacity": "0.3", "position" : "absolute"});
 					
 					// 비활성화한 해당 질문에 응답이 존재하면 없애기 (슬라이드의 경우 값 초기화)
-					if (type == "1" || type == "2" || type == "3" || type == "4") { // 단일선택, 다중선택, 행렬(단일/다중)
+					if (type == "1" || type == "2" || type == "3" || type == "4" || type == "10" || type == "11") { // 단일선택, 다중선택, 행렬(단일/다중), 일정(단일/다중) 
 						qstWrapper.find("input").prop("checked", false); // 체크박스 맟 라디오 체크된 값 일괄해제
 					} else if (type == "5") { // 단답형
 						qstWrapper.find("input").val("");
@@ -1611,13 +1701,17 @@
 		var type = qstWrapper.attr("type");
 		var canEnableAll = false; // 모든 설문 활성화 가능한지 1차 체크
 		
-		if (type == "1" || type == "3") { // 단일선택, 행렬(단일)
+		if (type == "1" || type == "3" || type == "10") { // 단일선택, 행렬(단일), 일정 단일
 			// 설문종료 이외에 체크된 값이 있는가?
 			if (qstWrapper.find("input:checked").length > 0) {
 				canEnableAll = true;
 			}
-		}
-		else if (type == "2" || type == "4") { // 다중선택, 행렬(다중)
+		} else if (type == "2" || type == "11") { // 다중선택, 일정 (다중)
+			// 설문종료 값이 체크되어 있는가?
+			if (qstWrapper.find("input[logic='0']:checked").length == 0) {
+				canEnableAll = true;
+			}
+		} else if (type == "4") { //  행렬(다중)
 			// 모든 선택지가 선택 해제되어있는가?
 			if (qstWrapper.find("input:checked").length == 0) {
 				canEnableAll = true;
@@ -1673,8 +1767,12 @@
 						var type = $(this).attr("type");
 						
 						// 질문의 유형 별로 응답이 유효한지 체크 (항목 별 세부분기)
-						if (type == "1") { // 단일선택
+						if (type == "1" || type == "10") { // 단일선택, 일정 단일 선택
 							if ($(this).find(".optRdo[logic='" + i + "']:checked").length > 0) {
+								parentResponseExist = true;
+							}
+						} else if (type == "2" || type == "11") { // 다중선택
+							if ($(this).find(".optChb[logic='" + i + "']:checked").length > 0) {
 								parentResponseExist = true;
 							}
 						} else if (type == "7") { // 슬라이드

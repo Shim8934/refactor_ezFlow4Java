@@ -6,7 +6,8 @@
 	<head>
 		<title><spring:message code="ezBoard.t135" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	    <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css" />
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+	    <link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 	    <link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css" />
 	    <style>
 			.groupBoard {
@@ -277,7 +278,7 @@
                 <li><span onclick="window.close()"></span></li>
             </ul>
         </div>
-		<div class="box" style="height:485px;overflow-x:hidden;overflow-y:auto;word-break:break-all" id=TopBoardsList></div>
+		<div class="box" style="height:485px;overflow-x:hidden;overflow-y:auto;word-break:break-all" id="TopBoardsList"></div>
 		<div class="btnpositionNew">
 			<a class="imgbtn" name="Submit" onClick="Select()" ><span><spring:message code="ezBoard.t47" /></span></a>
 		</div>

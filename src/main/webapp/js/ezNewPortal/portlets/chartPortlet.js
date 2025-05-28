@@ -146,7 +146,6 @@ function EzChartPortlet() {
                     value = value.toString();
                     value = value.split(/(?=(?:...)*$)/);
                     value = value.join(',');
-                    console.log(value);
                     return value;
                 }
             }
@@ -167,8 +166,8 @@ function EzChartPortlet() {
             backgroundColor: !!_json[0].color ? _json[0].color: _genRotateColor(),
             data: []
         };
-        for (let i = 0; i < _json.length; i++){
-            const item = _json[i];
+        for (var i = 0; i < _json.length; i++){
+            var item = _json[i];
             var title = item.groupTitle;
             if (beforeTitle !== title) {
                 datasets.push(dataset);
@@ -188,6 +187,9 @@ function EzChartPortlet() {
         _data.labels = barLabel;
         _data.datasets = datasets;
         _option = _stackBarOptions;
+        /* 2024-04-30 position 속성 추가 */
+        var parentElement = _canvas.parentElement;
+        if (!parentElement.style.position) parentElement.style.position = 'relative';
     }
 
     var _initDoughnut = function () {
@@ -197,9 +199,9 @@ function EzChartPortlet() {
         var dataset = {};
         _data.datasets.push(dataset);
         dataset.data = [];
-        if(!!_json[0].color) dataset.backgroundColor = [];
-        for (let i = 0; i < _json.length; i++){
-            const item = _json[i];
+        dataset.backgroundColor = [];
+        for (var i = 0; i < _json.length; i++){
+            var item = _json[i];
             _data.labels.push(item.label);
             dataset.barPercentage = _doughnutThick;
             dataset.data.push(item.val);
@@ -214,7 +216,6 @@ function EzChartPortlet() {
 
     var _init = function () {
         var ctx = _canvas.getContext("2d");
-        console.log(_data);
         _chart = new Chart(ctx, {
             type: _realType,
             data: _data,
@@ -232,17 +233,9 @@ function EzChartPortlet() {
         var size = radius * 2 - 2;
         if (size === 0) return;
 
-        var beforeSpan = document.querySelector('.span-counts');
-        var beforeCount = 0;
-        try {
-            beforeCount = parseInt(beforeSpan.innerText.replaceAll(',', ''));
-        } catch (e) {
-            console.log('beforeCount e:' + e.stack);
-        }
-
-        const countDiv = document.createElement('div');
+        var countDiv = document.createElement('div');
         countDiv.className = 'div-counts';
-        const countSpan = document.createElement('span');
+        var countSpan = document.createElement('span');
         countSpan.className = 'span-counts';
         var parentElement = _canvas.parentElement;
         if (!parentElement.style.position) parentElement.style.position = 'relative';
@@ -263,7 +256,7 @@ function EzChartPortlet() {
         // 0이상~10억 미만까지 범위, 각 숫자 자릿수일 경우의 폰트 사이즈 크기 배열(px)
         var sumDataStr = _chart.getDatasetMeta(0).total;
         // 총합 쉼표 처리
-        $({val: beforeSpan}).animate({val: sumDataStr}, {
+        $({val: parseInt(countSpan.innerText.replaceAll(',', ''))}).animate({val: sumDataStr}, {
             duration: 1000,
             step: function () {
                 countSpan.innerText = Math.floor(this.val).toString().split(/(?=(?:...)*$)/).join(',');
@@ -306,7 +299,6 @@ function EzChartPortlet() {
             return _genRotateColor();
         } else {
             _defaultColorHis.push(_defaultColor);
-            console.log(_defaultColor);
             return "hsla(" + _defaultColor + colorSet + ")";
         }
     }

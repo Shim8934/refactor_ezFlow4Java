@@ -7,7 +7,8 @@
 <title></title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
-	<link rel="stylesheet" href="${util.addVer('ezOrgan.e2', 'msg')}" type="text/css">	    
+	<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 	<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
 	<script type="text/javascript" src="${util.addVer('ezOrgan.e1', 'msg')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -21,6 +22,7 @@
 		var type = "<c:out value='${type}'/>";
 		var jobCnt = "<c:out value='${jobCnt}'/>";
 		var companyID = "<c:out value='${companyID}'/>";
+		var maxSort = "<c:out value='${maxSort}'/>";
 		var ReturnFunction;
 		var displayName1, displayName2, code, sort, useFlag;
 		
@@ -30,7 +32,7 @@
 			try {
 	            RetValue = opener.titleInfo_dialogArguments[0];
 	        	ReturnFunction = opener.titleInfo_dialogArguments[1];
-	        } catch(e) {}
+	        } catch(e) {console.log(e);}
 	        
 	        if (RetValue[0] != "") {
 		        document.getElementById("companyName").value = RetValue[0]; 
@@ -117,7 +119,8 @@
             		jobID : jobID,
             		type : type,
             		mode : mode,
-            		sort : sort,
+					sort : sort,
+					maxSort : maxSort,
             		useFlag : useFlag,
             		companyID : companyID,
             		displayName1 : displayName1,
@@ -131,6 +134,17 @@
 	            		ReturnArray[3] = type;
 	            		
             		if (ReturnFunction != null) {
+            			// 2024.07.05 한슬기 : alert위치 변경(safari에서 alert이 팝업창에 가려 안보이는 현상이 있어 변경)
+            			if(ReturnArray[0] == "TRUE"){
+	            			if(ReturnArray[1] == "Add"){
+	            				alert("<spring:message code = 'ezBoard.t269'/>");
+	            			} else {
+	            				alert("<spring:message code = 'ezCommunity.t8'/>");
+	            			}
+            			} else{
+            				alert("<spring:message code = 'main.sp12'/>");
+            			}
+            		
 	            		ReturnFunction(ReturnArray);
             		}
             		window.close();
@@ -249,7 +263,7 @@
 				</select>
 			</td>
 		</tr>
-		<tr>
+		<tr style="display: none;">
 			<th><spring:message code='ezOrgan.csj06'/></th>
 			<td colspan="2">
 				<select id="sort">

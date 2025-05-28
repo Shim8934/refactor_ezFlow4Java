@@ -684,7 +684,7 @@ var strLang1027 = "Fixed comments";
 var strLang1028 = "Year";
 var strLang1029 = "Month";
 var strLang1030 = "Day";
-var strLang1031 = "Can not post email / approval-document to photo board or anonymous board or url board.";
+var strLang1031 = "Posts are only allowed on general and Q&A boards.";
 var strLang1038 = "외부발송문서 본문에는 이미지와 링크가 들어갈 수 없습니다.";
 var strLang1039 = "Selected user is out of office.</br>Would you like to add it?";
 
@@ -1164,3 +1164,51 @@ var strLang975 = "The form version is different and cannot be reused.";
 var strLangJIH01 = "You cannot preview a security document.";
 var strLangJIH02 = "/blank_id.htm"
 var strLangJIH03 = "Preview is possible after the first reading of the document."
+
+/* 2023-05-16 이가은 - 일괄접수 관련 메세지 추가 */
+var strLangLGEAR01 = "Pendaftaran telah selesai.";
+var strLangLGEAR02 = "Terjadi kesalahan saat menerima paket.<br>";
+var strLangLGEAR03 = "Pendaftaran telah selesai.";
+var strLangLGEAR04 = "Terjadi kesalahan selama penentuan penerima paket.<br>";
+
+// 2024-04-11 조수빈 - 일괄접수 관련 누락 메세지 추가
+var strLangJSBAP02 = "Apakah Anda ingin melanjutkan pengiriman secara berkelompok? <br>Dokumen yang statusnya diteruskan, dokumen pelaksanaan dan perjanjian, dan dokumen dengan lampiran pemisahan dikecualikan dari target.";
+var strLangJSBAP03 = "Apakah Anda ingin melanjutkan pengiriman secara berkelompok dan persetujuan akhir? <br>Dokumen yang statusnya diteruskan, dokumen pelaksanaan dan perjanjian, dan dokumen dengan lampiran pemisahan dikecualikan dari target.";
+
+var strJangJIH04 = "시작일을 종료일보다 빠르게 지정해 주십시오."
+
+var strLangKWC01 = "비전자문서는 재사용 할 수 없습니다.";
+var strLangKWC02 = "양식이 삭제되어 재사용 할 수 없습니다.";
+
+/* 2024-12-27 홍승비 - 기록물 배부대장 > 배부한 문서가 삭제된 경우 알러트를 표출하기 위한 메세지 추가 */
+var strLangHSBDR01 = "해당 배부문서는 삭제된 문서입니다. 열람이 불가능합니다.";
+
+var strLangKMH01 = "일괄지정을 진행하시겠습니까?<br>결재상태가 회송인 문서, 문서상태가 합의인 문서는 대상에서 제외됩니다.";
+
+var strLangJJE01 = "는 결재문서를 수신하지 않는 부서입니다.\n즐겨찾기 적용에서 제외됩니다.";
+
+/* 전자결재 헤더 숨기기 기능 */
+var ezApproval_headerHide01 = "헤더 숨기기";
+var ezApproval_headerHide02 = "헤더 펼치기";
+
+/* 2024-12-23 이가은 - 전자결재 일괄배부 기능 추가 */
+var ezApproval_allBeabu01 = "일괄배부를 진행하시겠습니까?";
+var ezApproval_allBeabu02 = "합의문이나 회송된 문서는 대상에서 제외됩니다.";
+
+/* 전자결재 요약전 에디터 기능 */
+var strLangJIH_Summary01 = "요약전 저장이 완료되었습니다.";
+var strLangJIH_Summary02 = "내용이 비어있는 요약전을 저장할 수 없습니다.";
+var strLangJIH_Summary03 = "잘못된 접근입니다.";
+var strLangJIH_Summary04 = "요약전을 불러올 수 없습니다."
+var strLangJIH_Summary05 = "요약전 정보"
+var strLangJIH_Summary05 = "요약전 정보"
+
+/* 전자결재 사인 그리기 기능 */
+var strLangHIH_signDraw01 = "서명을 작성한 뒤 결재해주세요.";
+
+/* 2025-05-12 김수연 aprmanage_Cross.js 하드코딩 수정 */
+var strLangAssignedList = "Daftar yang ditunjuk";
+var strLangDeptInbox = "Dept. receipt folder";
+
+var strLangAtachHIK_01 = "일반첨부파일은 총_ID"; 
+var strLangAtachHIK_02 = "MB까지 가능합니다._ID"; 

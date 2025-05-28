@@ -67,6 +67,8 @@ public interface EzCommonService {
 	public int updateUserConfigInfo(int tenantID, String userID, String propertyName, String propertyValue) throws Exception;
 	
 	public void insertUserConfigInfo(int tenantID, String userID, String propertyName, String propertyValue) throws Exception;
+
+	public void deleteUserConfigInfo(int tenantID, String userID, String propertyName) throws Exception;
 	
 	public void createTblCompanyConfig() throws Exception;
 	
@@ -148,7 +150,7 @@ public interface EzCommonService {
 
 	public void createOpenGovTable() throws Exception;
 
-	public int checkDeptId(String userID, String deptID, String tenantId);
+	public int checkDeptId(String userID, String deptID, String tenantId, String jobID);
 
 	public void createRsFavoriteTable();
 	
@@ -213,6 +215,8 @@ public interface EzCommonService {
 	public void insertChartPortletInfo() throws Exception;
 
 	void addTblUserMultiLoginMobileFlagColumn() throws Exception;
+	
+	void createTblFidoSession() throws Exception;
 	
 	public void createMailTemplateSequence() throws Exception;
 
@@ -302,7 +306,10 @@ public interface EzCommonService {
 	public void addTblBoardItemTempNoti() throws Exception;
 	
 	public void insertPrvwConfig() throws Exception;
-
+	
+	/* 2023-12-05 홍승비 - 전자결재 > 전자결재 서명 데이터 재맵핑 시점 컨피그 추가 */
+	public void insertApprSignRemapApplyTime() throws Exception;
+	
 	public void insertPermissionBasisDeptYN_Config() throws Exception;
 	
 	void createTblDbLog();
@@ -329,7 +336,257 @@ public interface EzCommonService {
 
 	/** 2023-06-26 한태훈 - 통합 PC 저장 이력 남기는 테이블(차후 다른 목적으로도 쓰일 수 있음) 추가 */
 	public void createTblTotalHistory() throws Exception;
-    
+
 	public void insertdelAttachByOthersConfing() throws Exception;
+
+	public void insertUseHideHeaderArea() throws Exception;
+
+	// 2024-05-28 이유정 - 자원관리 > 자원반복예약 허용 설정을 위한 RepeatFlag 컬럼 추가
+	public void alterRepeatFlagForResourceInfo() throws Exception;
+
+	/* 2024-05-28 김유진 - 포탈 메뉴,포틀릿,테마,빠른링크 > 하위부서 허용여부 컬럼 추가, 빠른링크 > 유저타입 컬럼 추가 */
+	public void alterSubPermittedForMenuAuth() throws Exception;
+
+	public void alterSubPermittedForPortletAuth() throws Exception;
+
+	public void alterSubPermittedForThemeAuth() throws Exception;
+
+	public void alterSubPermittedForQuicklinkAcl() throws Exception;
+
+	public void insertApprNonElecRecTypeConfing() throws Exception;
+	
+	public void createTables() throws Exception;
+
+    public void insertRecordHeaderClassTitle() throws Exception;
+
+	public void insertUseReceiptDeptFileAttach() throws Exception;
+
+	public void insertDocBinderListOption() throws Exception;
+
+	public void insertEndDateOptionConfig() throws Exception;
+
+	/* 2024-06-24 양지혜 - 전자결재 > 지정반송 사용여부 컨피그 */
+	public void insertReturnByDesignationUsedConfig() throws Exception;
+
+	public void alterDocAttachNameCol() throws Exception;
+
+	public void addColumnsRetireTblCompareWithUserTbl() throws Exception;
+
+	public void insertNonUseDocAttachYN() throws Exception;
+
+	public void insertReadingRecordHeader() throws Exception;
+
+    void insertPortalPortletSizeTables();
+
+	void insertTblPortalTopUser();
+	
+	// 2024-03-28 한태훈 > 통합알림 테이블 생성하는 메소드
+	public void createTblRealTimeNotification() throws Exception;
+
+	// 2024-03-28 한태훈 > 알림 보관기간 테넌트 컨피그 추가 메소드
+	public void addNotiStoragePeriodConfig() throws Exception;
+	
+	// 2024-03-28 한태훈 > 통합알림 polling 방식 이용시 알림 데이터 새로고침 주기 설정
+	public void addNotiPollingIntervalConfig() throws Exception;
+
+	void insertFixPortlet();
+
+	public void insertTblPortalTopCompany() throws Exception;
+
+	public void insertPortalTopCompanyInitdata() throws Exception;
+
+    void addQuickLinkCompanyID() throws Exception;
+
+	public void alterUserThemePagination() throws Exception;
+
+	public void alterThemeInformation() throws Exception;
+	
+	public void alterCompanyMenuIconUrl() throws Exception;
+
+    public void alterTblScheduleForShowtop() throws Exception;
+	
+	public void addUserDeptHideFlag() throws Exception;
+	
+	public void insertGongRamListOption() throws Exception;
+	
+	/* 2023-10-20 한태훈 - 일정관리 > 미리알림 테이블 추가 */
+	public void createTblScheduleReminderScheduler() throws Exception;
+	
+	/* 2023-10-20 한태훈 - 일정관리 > 미리알림 시간 컬럼 추가 */
+	public void addReminderTimeAtTblScheduleConfig() throws Exception;
+	
+	/* 2023-10-20 한태훈 - 일정관리 > 미리알림 테넌트 컨피그 추가 */
+	public void insertReminderTenantConfig() throws Exception;
+
+	// 2024-06-28 이유정 - 캐비넷 > 캐비넷공유 > 공유자 저장여부 컬럼 추가
+	public void alterSaveFlagForCbShare() throws Exception;
+	
+	public void alterBoardExtentionAttrByteSize() throws Exception;
+
+	// 2024-08-21 유길상 닷넷 통합알림 컨피그
+	public void insertDotNetTotalNotificationConfig() throws Exception;
+	
+	public void updateInProcessJpCodeName3() throws Exception;
+
+	public void createTblDistributeinfo() throws Exception;
+	
+	public void createExecutiveTable() throws Exception;
+ 
+	public void createServeyResultviewPermTbl() throws Exception;
+
+	/* 2024-07-17 기민혁 - 전자결재 > 양식함 순서 컬럼 추가 */
+	public void addTblFormContainerSN() throws Exception;
+	
+	public void insertInitMobileTheme() throws Exception;
+	
+	public void alterMenuOpenType() throws Exception;
+	
+	public void createSystemConfig() throws Exception;
+	
+	public void createConnectionMenu() throws Exception;
+	
+	public void insertStandardSystemConfigData() throws Exception;
+	
+	public void createEmergencyNotiTable() throws Exception;
+	
+	// 2024-08-08 조수빈 - 모바일 우측 panel의 기본 toggle menu 데이터 추가
+	public void insertMobileToggleMenus() throws Exception;
+	
+	// 2024-08-20 조수빈 - 포탈 설정 > 모드 설정 컬럼 추가
+	public void alterUseColor() throws Exception;
+	
+	// 2024-09-02 조수빈 - 테마 변경에 따른 테마 데이터 update
+	public void updateThemeData() throws Exception;
+	
+	void createRsScheduleDeptIdColumn() throws Exception;
+
+	/* 2023-03-30 이가은 - 게시판 > 게시물 댓글 정보 테이블에 답글 작성/수정기능 컬럼 추가 */
+	public void alterTblBoardOneLineChildReply() throws Exception;
+
+	// 2023-11-07 전인하 - 댓글 이모티콘 관련 컬럼 추가
+	public void insertBoardReplyCommentEmoticon() throws Exception;
+		
+	public void createTblBoardDisLike() throws Exception;
+	
+	public void addBoardDisLikeFlag() throws Exception;
+	
+
+	public void createBoardKeywordTable() throws Exception;
+	
+	// 2024-08-07 유길상 - 자원관리 즐겨찾기 카테고리 테이블 추가
+	public void createResourceFavoriteTables() throws Exception;
+
+	// 2024-10-23 정지은 - 게시판 > 글 작성 시 파일첨부 가능여부 설정
+	public void addBoardAttachmentFlag() throws Exception;
+	
+	void addTblBoardInfoPublicFlag();
+	
+	/* 2024-10-21 한태훈 - 게시판 > 전체게시물 리스트 헤더 추가 */
+	public void insertAllBoardListOption() throws Exception;
+	/* 2024-10-17 한태훈 - 게시판 > 전체게시물 게시판정보 추가 */
+	public void insertAllBoardInfo() throws Exception;
+
+	public void addSurveyTotalNotiSentFlag() throws Exception;
+
+    // 2024-11-14 김승연 메일 열람 차단 테이블 추가
+    public void createJmochaMailBlocked() throws Exception;
+	
+	public void insertModuleEditor() throws Exception;
+	
+	public void insertServername() throws Exception;
+	
+	public void insertScrapTenantConfig() throws Exception;
+	
+	public void insertScrapTableHeader() throws Exception;
+	
+	public void createTblBoardScrap() throws Exception;
+	
+	public void createTblUserScrapCont() throws Exception;
+	
+	public void createTblUserScrapContList() throws Exception;
+
+	// 2024-12-12 김혜림 회사별 메일박스 용량 테이블 추가
+	public void createJmochaCompanyQuota() throws Exception;
+	
+	// 2024-10-23 전인하 - 게시판 > 댓글 첨부 테이블 추가
+	public void createTblBoardCommentAttachments() throws Exception;
+    
+	public void alterAddThumbnailForTPI() throws Exception;
+	
+	public void alterThumbnailExtForTPI() throws Exception;
+	
+	public void alterAttachmentsForCBoard() throws Exception;
+	
+	// 2024-11-26 한태훈 - 시스템 컨피그 > 삭제 차단 컬럼 추가
+	public void addIsDeleteBlockToSytemConfig() throws Exception;
+
+	// 2024-10-30 황인경 - 커뮤니티 > 방명록 > 댓글 테이블 추가
+	public void addTblCommunityClubguestOnelinereply() throws Exception;
+
+	/* 2024-09-11 이유정 - 게시판 > 최근게시물 리스트헤더 추가 */
+	public void insertBoardItemListOptionAN() throws Exception;
+
+	/* 2024-09-11 이유정 - 게시판 > 최근게시물 게시판정보 추가 */
+	public void insertRecentBoardInfo() throws Exception;
+
+	// 2024-10-22 정지은 - 게시판 > 게시물의 최근 게시물 포함 여부 설정(게시판 설정)
+	public void addBoardAllNewBoardFlag() throws Exception;
+	// 2024-10-22 정지은 - 게시판 > 게시물의 최근 게시물 일자 설정
+	public void addBoardAllNewBoardListDate() throws Exception;
+
+    public void createTblAprAutoSaveConfig() throws Exception;
+	
+	public void alterBodyHTMLToConnData() throws Exception;
+
+    // 2024-12-04 기민혁 - 전자결재 > 최근서식 사용여부 테넌트 컨피그 추가
+    public void insertResendFormYN() throws Exception;
+    
+    // 2024-12-05 기민혁 - 전자결재 > 본문수정 시 본문버전 변경 기능 사용여부 테넌트 컨피그 추가
+    public void insertEditVertionYN() throws Exception;
+
+    // 2024-12-10 기민혁 - 전자결재 > 수정버전,수정모드 컬럼 추가
+    public void alterEditVersionHistory() throws Exception;
+
+    // 2024-12-10 기민혁 - 수정버전 리스트 해더 생성
+    public void insertEditVersionListOption() throws Exception;
+
+	// 2024-11-26 기민혁 - 전자결재 > 개인수신함 사용여부 테넌트 컨피그 추가
+	public void insertPersonalHideSusinYN() throws Exception;
+
+	// 2024-11-28 기민혁 - 개인 수신함 리스트 해더 추가
+	public void insertPersonalSusinListOption() throws Exception;
+
+	/* 2024-07-05 양지혜 - 전자결재 > 상위부서문서함 사용여부 컬럼 추가 */
+	public void alterUseUpperDeptBox() throws Exception;
+
+	/* 2025-03-10 유지아 - 톡알림 테이블 tenantId추가 */
+	public void alterTalkNotiTenant() throws Exception;
+
+	public void alterServerNameMain() throws Exception;
+
+	// 2024-12-27 이가은 - 공람완료문서 삭제 히스토리 테이블 생성
+	public void createGongramDeleteHistory() throws Exception;
+
+	public void addBoardWriterFlagAndWriterNameType() throws Exception;
+
+	public void createTblScheduleGather() throws Exception;
+
+	public void addMemberDeptIdScheduleGroupMember() throws Exception;
+	
+	public void addMemberDeptIdScheduleGatherMember() throws Exception;
+	
+	public void createTblBoardStarRating() throws Exception;
+	
+	// 2025-01-15 조수빈 - 식단 테이블 생성
+	public void createMealPlanTable() throws Exception;
+	
+	// 2025-02-05 조수빈 - 식단 사용 여부 컨피그
+	public void insertMealPlanTenantConfig() throws Exception;
+
+	void createTblStatMenu();
+
+	public void insertUseSaasYN() throws Exception;
+
+	public void inserExtLargeFilesever() throws Exception;
 
 }

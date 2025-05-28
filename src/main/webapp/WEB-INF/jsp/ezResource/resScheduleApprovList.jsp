@@ -7,7 +7,8 @@
 		<title><spring:message code="ezResource.t241" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<link rel="stylesheet" href="${util.addVer('/css/olstyle_nonIE.css')}" type="text/css" />
-		<link rel="stylesheet" href="${util.addVer('ezResource.e2', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -97,37 +98,39 @@
 	    	window.onload = function () {
 		        getCalendarList();
 	    	}
+			function btnSet() {
+				if(approveFlag != "2") {
+					listviewtype = document.getElementById("listviewtype")[document.getElementById("listviewtype").selectedIndex].value;
 
+					document.getElementById("Span1").parentNode.style.display = "none";
+					document.getElementById("pn_img").parentNode.style.display = "none";
+					document.getElementById("pn_img2").parentNode.style.display = "none";
+
+					if(listviewtype == "0") {
+						document.getElementById("Span1").parentNode.style.display = "";
+						document.getElementById("pn_img2").parentNode.style.display = "";
+					}
+					else if(listviewtype == "1") {
+						document.getElementById("pn_img").parentNode.style.display = "";
+					}
+					else if(listviewtype == "2") {
+						document.getElementById("Span1").parentNode.style.display = "";
+					}
+				}
+
+				if(pType == "User") {
+					document.getElementById("Span1").parentNode.style.display = "none";
+					document.getElementById("pn_img").parentNode.style.display = "none";
+					document.getElementById("pn_img2").parentNode.style.display = "none";
+				}
+			}
 	    	function getCalendarList(type) {
 		        if (type == "search") {
 	            	CurPage = "1";
 		        }
 
 	        	var listviewtype = "";
-	        	if(approveFlag != "2") {
-	        		listviewtype = document.getElementById("listviewtype")[document.getElementById("listviewtype").selectedIndex].value;
-		        	
-	        		document.getElementById("Span1").parentNode.style.display = "none";
-	    			document.getElementById("pn_img").parentNode.style.display = "none";
-	    			document.getElementById("pn_img2").parentNode.style.display = "none";
-	    			
-	    			if(listviewtype == "0") {
-	    				document.getElementById("Span1").parentNode.style.display = "";
-	        			document.getElementById("pn_img2").parentNode.style.display = "";
-	    			}
-	    			else if(listviewtype == "1") {
-	    				document.getElementById("pn_img").parentNode.style.display = "";
-	    			}
-	    			else if(listviewtype == "2") {
-	    				document.getElementById("Span1").parentNode.style.display = "";
-	    			}
-	        	}
-	        	
-	        	if(pType == "User") {
-	        		document.getElementById("Span1").parentNode.style.display = "none";
-	    			document.getElementById("pn_img").parentNode.style.display = "none";
-	    			document.getElementById("pn_img2").parentNode.style.display = "none";
-	        	}
+				btnSet();
     			
 	        	xmlhttp = createXMLHttpRequest();
 	        	var xmlpara = createXmlDom();
@@ -204,6 +207,8 @@
 	                	list += "<DATA7>" + getNodeText(SelectNodes(listxml, "instancetype")[i]).substring(0, 10) + "</DATA7>";
 	                	list += "<DATA8>" + getNodeText(SelectNodes(listxml, "pnumber")[i]).substring(0, 10) + "</DATA8>";
 	                	list += "<DATA9>" + getNodeText(SelectNodes(listxml, "groupflag")[i]).substring(0, 10) + "</DATA9>";
+	                	list += "<DATA10>" + getNodeText(SelectNodes(listxml, "dtstart")[i]).substring(0, 16) + "</DATA10>";
+	                	list += "<DATA11>" + getNodeText(SelectNodes(listxml, "dtend")[i]).substring(0, 16) + "</DATA11>";
 	                	list += "<CELL><VALUE>" + getNodeText(SelectNodes(listxml, "approveFlag")[i]) + "</VALUE></CELL>";
 	                	list += "</CELL><CELL><VALUE><![CDATA[" + getNodeText(SelectNodes(listxml, "subject")[i]) + "]]></VALUE></CELL>";
 	                	list += "<CELL><VALUE>" + getNodeText(SelectNodes(listxml, "dtstart")[i]).substring(0, 16).replace("T", " ") + "</VALUE></CELL>";
@@ -326,6 +331,18 @@
 
 	                	if (rtnValue == "True") {
 		                    xmlHTTP = createXMLHttpRequest();
+		                    var allDayCheck = selrow[i].getAttribute("DATA6");
+		                    var startdatetime = selrow[i].getAttribute("DATA10");
+		                    var enddatetime = selrow[i].getAttribute("DATA11");
+		                    if (allDayCheck == "1") {
+		                    	startdatetime = startdatetime.substring(0,10) + " 00:00:01";
+		                    	enddatetime = enddatetime.substring(0,10) + " 23:59:59";
+		                    } else {
+		                    	startdatetime = startdatetime.substring(0,10) + " " + startdatetime.substring(11,16) + ":00"; 
+		                    	enddatetime = enddatetime.substring(0,10) + " " + enddatetime.substring(11,16) + ":00"; 
+		                    }
+		                    createNodeAndInsertText(xmlDOM, objNode, "STARTDATETIME", startdatetime);
+		                	createNodeAndInsertText(xmlDOM, objNode, "ENDDATETIME", enddatetime);
 		                    xmlHTTP.open("POST", "/ezResource/sendMailToUser.do", false);
 	    	                xmlHTTP.send(xmlDOM);
 	        	            var ResponseXML = xmlHTTP.responseXML;
@@ -373,6 +390,18 @@
 
 	                	if (rtnValue == "True") {
 		                    xmlHTTP = createXMLHttpRequest();
+		                    var allDayCheck = selrow[i].getAttribute("DATA6");
+		                    var startdatetime = selrow[i].getAttribute("DATA10");
+		                    var enddatetime = selrow[i].getAttribute("DATA11");
+		                    if (allDayCheck == "1") {
+		                    	startdatetime = startdatetime.substring(0,10) + " 00:00:01";
+		                    	enddatetime = enddatetime.substring(0,10) + " 23:59:59";
+		                    } else {
+		                    	startdatetime = startdatetime.substring(0,10) + " " + startdatetime.substring(11,16) + ":00"; 
+		                    	enddatetime = enddatetime.substring(0,10) + " " + enddatetime.substring(11,16) + ":00"; 
+		                    }
+		                    createNodeAndInsertText(xmlDOM, objNode, "STARTDATETIME", startdatetime);
+		                	createNodeAndInsertText(xmlDOM, objNode, "ENDDATETIME", enddatetime);
 	                    	xmlHTTP.open("POST", "/ezResource/sendMailToUser.do", false);
 	                    	xmlHTTP.send(xmlDOM);
 	                    	var ResponseXML = xmlHTTP.responseXML;
@@ -634,22 +663,22 @@
 	        	PagingHTML += strtext;
 	        	var pageNum = CurPage;
 	        	if (totalPage > 1 && pageNum != 1) {
-		            strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' ></span>"
+					strtext = "<span class='btnimg first' onclick= 'return goToPageByNum(1)'></span>"
 		            PagingHTML += strtext;
 	    	    } else {
-	            	strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>"
+					strtext = "<span class='btnimg first disabled'></span>"
 	            	PagingHTML += strtext;
 	        	}
 	        	if (totalPage > BlockSize) {
 		            if (pageNum > BlockSize) {
-		                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' ></span>";
+						strtext = "<span class='btnimg prev' onclick= 'return selbeforeBlock()'></span>";
 	    	            PagingHTML += strtext;
 	        	    } else {
-	                	strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+						strtext = "<span class='btnimg prev disabled'></span>";
 	                	PagingHTML += strtext;
 	            	}
 	        	} else {
-	            	strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+					strtext = "<span class='btnimg prev disabled'></span>";
 	            	PagingHTML += strtext;
 	        	}
 	        	var MaxNum;
@@ -681,23 +710,23 @@
 	        	if (totalPage > BlockSize) {
 		            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
 		                strtext = "";
-	    	            strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' ></span>";
+						strtext = strtext + "<span class='btnimg next' onclick='return selafterBlock()'></span>";
 	        	        PagingHTML += strtext;
 	            	} else {
 	                	strtext = "";
-	                	strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+						strtext = strtext + "<span class='btnimg next disabled'></span>";
 	                	PagingHTML += strtext;
 	            	}
 	        	} else {
 	            	strtext = "";
-	            	strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+					strtext = strtext + "<span class='btnimg next disabled'></span>";
 	            	PagingHTML += strtext;
 	        	}
 	        	if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-	            	strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' ></span>";
+					strtext = "<span class='btnimg last' onclick='return goToPageByNum(" + totalPage + ")'></span>";
 	            	PagingHTML += strtext;
 	        	} else {
-	            	strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
+					strtext = "<span class='btnimg last disabled'></span>";
 	            	PagingHTML += strtext;
 	        	}
 	        	PagingHTML += "</div>";

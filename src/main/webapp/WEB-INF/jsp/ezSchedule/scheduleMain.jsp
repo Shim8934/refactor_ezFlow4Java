@@ -7,7 +7,8 @@
 	<head> 
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
         <link rel="stylesheet" href="${util.addVer('/css/olstyle_nonIE.css')}" type="text/css" />
-        <link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />
+        <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
         <link rel="stylesheet" href="${util.addVer('/css/ezSchedule/Calendar_cross.css')}" type="text/css" />  
         <link href="${util.addVer('/js/jquery/jquery.modal.css')}" rel="stylesheet" type="text/css" />
         <script type="text/javascript">
@@ -49,7 +50,6 @@
 		.chk_noneDisplay {
 			display:none;
 		}
-		
 		</style>
 		<script type="text/javascript">		    
 			var timeZoneStr = "<c:out value='${timeZoneStr}'/>";
@@ -78,6 +78,8 @@
 		    
 		    /* 2020-05-18 협업-일정 연동 관련 추가 */
 		    var WorkspaceUrl = "<c:out value='${workspaceHostUrl}'/>";     // 협업이 그룹웨어와 별도의 Url로 서비스 되는 경우에만 설정
+		    /* 2025-03-13 홍승비 - 협업 모듈에 고정된 하드코딩 문자열 제거 (ezWorkspace), 테넌트 컨피그 workspaceAppPath로 협업 웹응용프로그램 경로를 분리하여 사용 ("" 또는 "/ezWork" 등) */
+		    var workspaceAppPath = "${workspaceAppPath}";
 		    var g_bMobileExtra = false;       // 모바일 외부 서버 여부 (내/외부 네트워크 분리 환경에서만 설정) (true: 외부서버, false: 해당 없음)
 		    /* select_memorialDays(uselang); */
 		    
@@ -148,11 +150,11 @@
 			                    var repetition = GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYREPEAT")[0].textContent;	                    
 			                    
 			                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREPEAT")[0].textContent == "1") {
-			                        memorialDays.push(new memorialDay(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent, GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent,
+			                        memorialDays.push(new memorialDay(escapeHtml(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent), escapeHtml(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent),
 			                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(5, 7),
 			                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(8, 10), issolar, holiday, holidayFlag, repetition));
 			                    } else {                   	
-			                        yearmemorialDays.push(new yearmemorialDay(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent, GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent,
+			                        yearmemorialDays.push(new yearmemorialDay(escapeHtml(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent), escapeHtml(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent),
 			                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(0, 4),
 			                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(5, 7),
 			                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(8, 10), issolar, holiday, holidayFlag, repetition));
@@ -512,20 +514,27 @@
 		    function getWorkspaceUrl() {
 		        var result = "";
 
-		        if (typeof (WorkspaceUrl) != "undefined")
+		        if (typeof (WorkspaceUrl) != "undefined") {
 		            result = WorkspaceUrl;
+		        }
 
 		        return result;
 		    }
 
 		    // 협업 웹응용프로그램 경로
 		    function getWorkspaceAppPath() {
-		        var result = "/ezWorkspace";    // 자바
+		        var result = ""; // 자바
+		        
+		        /* 2025-03-13 홍승비 - 협업 모듈에 고정된 하드코딩 문자열 제거 (ezWorkspace), 테넌트 컨피그 workspaceAppPath로 협업 웹응용프로그램 경로를 분리하여 사용 ("" 또는 "/ezWork" 등) */
+		        if (typeof (workspaceAppPath) != "undefined") {
+		            result = workspaceAppPath;
+		        }
 
 		        // 모바일 외부서버에서 접속 시 내부 서버를 통해 데이터를 처리하도록 Mobile 컨트롤러 경로를 붙여준다.
-		        if (typeof (g_bMobileExtra) != "undefined" && g_bMobileExtra === true)
+		        if (typeof (g_bMobileExtra) != "undefined" && g_bMobileExtra === true) {
 		            result = result + "/Mobile";
-
+		        }
+		        
 		        return result;
 		    }
 		    
@@ -603,6 +612,7 @@
 		        }
 
 		        var sdate, edate, datetype;
+                var showtop = "N";
 
 		        // 2018-11-09 김민성 - 일보기/주보기일 때 종일일정 클릭시 시간 종일로 변경
 		        // 일보기, 주보기의 시간대 클릭
@@ -618,11 +628,18 @@
 					edate = sdate.replace(sdate.split(" ")[1], edateSplit[0] + ":" + leadingZeros(edateSplit[1]*1+30, 2) + ":" + edateSplit[2]);
 		        } 
 		        // 월보기 클릭
-		        else if(GetAttribute(srcEl, "id").indexOf("ALL") < 0) {
+		        else if(GetAttribute(srcEl, "id").indexOf("ALL") < 0 && GetAttribute(srcEl, "id").indexOf("TOP") == -1 ) {
 		        	datetype = "1";
 		        	// 시간데이터가 없는 경우 임의 시간
 		        	sdate = GetAttribute(srcEl, "dispDate") + " 00:00:00";
 		            edate = GetAttribute(srcEl, "dispDate") + " 23:59:00";
+		        }
+		        // 상단표시
+		        else if (GetAttribute(srcEl, "id").indexOf("TOP") !== -1) {
+		            showtop = "Y"
+		            datetype = "1";
+                    sdate = GetAttribute(srcEl, "dispdate");
+                    edate = sdate;
 		        }
 		        // 일보기, 주보기의 종일일정 클릭
 		        else {
@@ -658,14 +675,14 @@
 
 		            var feature = GetOpenPosition(790, 760);
 		            //if (CrossYN()) {
-		                window.open("/ezSchedule/scheduleWrite.do?defaultid=" + index + "&datetype=" + datetype + "&sdate=" + encodeURIComponent(sdate) + "&edate=" + encodeURIComponent(edate), "", "height = 830px, width = 790px,top=" + pTop + ", left=" + pLeft + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+		                window.open("/ezSchedule/scheduleWrite.do?defaultid=" + index + "&datetype=" + datetype + "&sdate=" + encodeURIComponent(sdate) + "&edate=" + encodeURIComponent(edate) + "&showtop=" + showtop, "", "height = 830px, width = 790px,top=" + pTop + ", left=" + pLeft + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		            /* } else {
 		                if (pUse_Editor == "" || pUse_Editor == "CK") {
-		                    window.open("schedule_write.aspx?defaultid=" + index + "&datetype=" + datetype + "&sdate=" + escape(sdate) + "&edate=" + escape(edate), "",
+		                    window.open("schedule_write.aspx?defaultid=" + index + "&datetype=" + datetype + "&sdate=" + escape(sdate) + "&edate=" + escape(edate) + "&showtop=" + showtop, "",
 						"height = 760px, width = 790px,top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		                }
 		                else {
-		                    window.open("schedule_write_IE.aspx?defaultid=" + index + "&datetype=" + datetype + "&sdate=" + escape(sdate) + "&edate=" + escape(edate), "",
+		                    window.open("schedule_write_IE.aspx?defaultid=" + index + "&datetype=" + datetype + "&sdate=" + escape(sdate) + "&edate=" + escape(edate) + "&showtop=" + showtop, "",
 						"height = 760px, width = 790px,top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		                }
 		            } */
@@ -675,7 +692,7 @@
 		            var feature = GetOpenPosition(790, 760);
 		            
 		            //if (CrossYN()) {
-		                window.open("/ezSchedule/scheduleWrite.do?otherid=" + encodeURIComponent(otherid) + "&type=" + type + "&othername=" + encodeURIComponent(secretarySelect.options[secretarySelect.selectedIndex].innerHTML) + "&datetype=" + datetype + "&sdate=" + encodeURIComponent(sdate) + "&edate=" + encodeURIComponent(edate), "",
+		                window.open("/ezSchedule/scheduleWrite.do?otherid=" + encodeURIComponent(otherid) + "&type=" + type + "&othername=" + encodeURIComponent(secretarySelect.options[secretarySelect.selectedIndex].innerHTML) + "&datetype=" + datetype + "&sdate=" + encodeURIComponent(sdate) + "&edate=" + encodeURIComponent(edate) + "&showtop=" + showtop, "",
 						"height = 830px, width = 790px,top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		            /* } else {
 		                if (pUse_Editor == "" || pUse_Editor == "CK") {
@@ -919,20 +936,56 @@
                 sDuration = event.duration;
             }
 			
-			
+			var schedule_print_dialogArguments = PrintModeSelect;
+            var schedule_print_data = new Array();
             function PrintSchedule() {
-                var year = sStartDate.split("-")[0];
-                var month = sStartDate.split("-")[1];
-                var day = sStartDate.split("-")[2];
-                var view = typeCal;
-                var date = year + "-" + month + "-" + day;
-                if (idlist == "")
-                    idlist = idtype;
-                var feature = GetOpenPosition(837, 660);
-                if (idlist == "G")
-                    window.open("/ezSchedule/schedulePrint.do?idlist=" + encodeURIComponent(idlist) + "&date=" + date + "&view=" + view + "&groupid=" + groupid, "", "height = 660px, width = 837px, status = no, toolbar=no, menubar=no, location=no, resizable=0" + feature);
-                else
-                    window.open("/ezSchedule/schedulePrint.do?idlist=" + encodeURIComponent(idlist) + "&date=" + date + "&view=" + view, "", "height = 660px, width = 837px, status = no, toolbar=no, menubar=no, location=no, resizable=0" + feature);
+                parent.frames["left"].document.body.style.overflow = "hidden";
+                
+                var leftFrameDocument = parent.frames["left"].document;
+                var newDiv = leftFrameDocument.createElement("div");
+                newDiv.id = "blockLeft";
+                newDiv.className = "blockLeft";
+                newDiv.style.position = "fixed";
+                newDiv.style.width = "100%";
+                newDiv.style.height = "100%";
+                newDiv.style.overflow = "hidden";
+                newDiv.onclick = function() {
+                    parent.frames["right"].BoardSearchOptionHidden();
+                };
+            
+                var leftDiv = leftFrameDocument.getElementById("left");
+                if (leftDiv) {
+                    leftDiv.insertAdjacentElement('afterend', newDiv);
+                }
+                
+                DivPopUpShow(350, 350, "/ezSchedule/schedulePrintMode.do");
+                
+            }
+            
+            function PrintModeSelect(rtn) {
+                DivPopUpHidden();
+                var curURL = "";
+                if (rtn == "list") {
+                
+                    var year = sStartDate.split("-")[0];
+                    var month = sStartDate.split("-")[1];
+                    var day = sStartDate.split("-")[2];
+                    var view = typeCal;
+                    var date = year + "-" + month + "-" + day;
+                    var feature = GetOpenPosition(837, 660);
+                    
+                    if (idlist == "")
+                        idlist = idtype;
+                    if (idlist == "G")
+                        curURL = "/ezSchedule/schedulePrint.do?idlist=" + encodeURIComponent(idlist) + "&date=" + date + "&view=" + view + "&groupid=" + groupid;
+                    else
+                        curURL = "/ezSchedule/schedulePrint.do?idlist=" + encodeURIComponent(idlist) + "&date=" + date + "&view=" + view;
+                    
+                    window.open(curURL, "", "height = 660px, width = 837px, status = no, toolbar=no, menubar=no, location=no, resizable=0" + feature);
+                } else {
+                    curURL = "/ezSchedule/schedulePrintCalendar.do?typeCal=" + typeCal + "&startDate=" + sStartDate + "&endDate=" + sEndDate;
+                    GetOpenWindow(curURL, "PrintSchedule", 1280, 1024, "YES");
+                }
             }
 			
             var schedule_repetition_del_dialogArugment = new Array();
@@ -1358,26 +1411,40 @@
 			function scrollTopTime() {
 				$("#CalDiv").scrollTop($(".today").eq(0).position().top);
 			}
+
+			function escapeHtml(text) {
+				var map = {
+					'&': '&amp;',
+					'<': '&lt;',
+					'>': '&gt;',
+					'"': '&quot;',
+					"'": '&#039;'
+				};
+
+				return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+			}
 	    </script>
 	</head>
-	<body class="mainbody" style="overflow: auto; margin-bottom:0px">
+	<body class="mainbody" style="overflow: auto; margin-bottom:0px; min-width: 950px;">
         <h1 id="titleimg">${defaultTitle}</h1>
-        <div id="mainmenu">
+        <div id="mainmenu" style="position:absolute;">
             <ul class="on">
             	<li class="important"><span id="pn_img" onClick="WriteSchedule()"><spring:message code='ezSchedule.t214'/></span></li>
-            	<li><span class="icon16 icon16_print" onClick="PrintSchedule()"></span></li>
-              	<li><span class="icon16 icon16_refresh" onClick="RefreshView()"></span></li>
+            	<li onClick="PrintSchedule()"><span class="icon16 icon16_print switchIcon"></span><span class="iconTexts"><spring:message code='ezSchedule.t217'/></span></li>
+              	<li onClick="RefreshView()"><span class="icon16 icon16_refresh switchIcon"></span><span class="iconTexts"><spring:message code='ezSchedule.t218'/></span></li>
             </ul>
 		</div>
-		<div class="calendar_pagenav">
-	        <ul class="contentlayout">
-	            <li class="contentlayout_left" id="preM"></li>
-	            <li class="contentlayout_right" id="preN"></li>
-	            <li class="contentlayout_none"><span class="spanText" id="calTitle"></span>
-	            </li>
-	        </ul>
+		<div style="display: flex; width: 100%; justify-content: center;">
+			<div class="calendar_pagenav" style="position:relative; margin-left: 0px; left: 0px; top: 0px">
+		        <ul class="contentlayout">
+		            <li class="contentlayout_left" id="preM"></li>
+		            <li class="contentlayout_right" id="preN"></li>
+		            <li class="contentlayout_none"><span class="spanText" id="calTitle"></span>
+		            </li>
+		        </ul>
+		    </div>
 	    </div>
-	    <div class="mainmenuTab">
+	    <div class="mainmenuTab" style="margin-top: 5px; position: unset;">
 	        <ul class="mainmenuTabUL">
 	            <li id="dayView" class="${defaultView == '0' ? 'on' : 'off' }"><span onclick='ViewChange("DAY");'><spring:message code='ezSchedule.t140'/></span></li><li id="weekView" class="${defaultView == '1' ? 'on' : 'off' }"><span onclick='ViewChange("WEEK");'><spring:message code='ezSchedule.t141'/></span></li><li id="monView" class="${defaultView == '2' ? 'on' : 'off' }"><span onclick='ViewChange("MONTH");'><spring:message code='ezSchedule.t142'/></span></li>
 	        </ul>

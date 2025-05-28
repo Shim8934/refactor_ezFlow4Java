@@ -5,6 +5,7 @@ public class MailCancelVO {
 	private String readerEmail;
 	private String readerName;
 	private String status;
+	private String primaryEmail;
 	
 	public String getReaderEmail() {
 		return readerEmail;
@@ -24,10 +25,15 @@ public class MailCancelVO {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	
+	public String getPrimaryEmail() {
+		return primaryEmail;
+	}
+	public void setPrimaryEmail(String primaryEmail) {
+		this.primaryEmail = primaryEmail;
+	}
 	@Override
 	public String toString() {
-		return "MailCancelVO [readerEmail=" + readerEmail + ", readerName=" + readerName + ", status=" + status + "]";
+		return "MailCancelVO [readerEmail=" + readerEmail + ", readerName=" + readerName + ", status=" + status + ", primaryEmail=" + primaryEmail + "]";
 	}
 	
 }

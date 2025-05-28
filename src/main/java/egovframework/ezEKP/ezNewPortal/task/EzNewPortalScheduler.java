@@ -76,4 +76,23 @@ public class EzNewPortalScheduler {
 
 		logger.debug("deleteDbSessionByTime ended");
 	}
+
+	@Scheduled(cron = "${config.cron.deleteFidoSessionByTime}")
+	public void deleteFidoSessionByTime() {
+		logger.debug("deleteFidoSessionByTime started");
+
+		// choose scheduler running server
+		if (!ezEmailScheduler.preScheduler("deleteFidoSessionByTime")) {
+			logger.debug("deleteFidoSessionByTime scheduler ended.");
+			return;
+		}
+
+		try {
+			loginService.deleteFidoSessionByTime();
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+
+		logger.debug("deleteFidoSessionByTime ended");
+	}
 }

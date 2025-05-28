@@ -16,7 +16,9 @@
 		</c:choose>
 	    </title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	    <link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
+		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -35,6 +37,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ezDraft_HWP.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/nonElecRec.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/apprGSummary.js')}"></script>
 	    <script type="text/javascript">
 	        var FormHref = "<c:out value ='${formURL}'/>";
 	        var DraftFlag = "<c:out value ='${draftFlag}'/>";
@@ -123,6 +126,7 @@
 	        var CurAprType = "";
 	        var NextAprType = "";
 		    var pSummery = "", pSpecialRecordCode = "", pPublicityCode = "", pPublicityYN = "";
+		    var pSummaryPath = "";
 	        var pLimitRange = "", pPageNum = "1";
 	        var cabinetID = "";
 	        var TaskCode = "";
@@ -173,10 +177,17 @@
 	        var formAprOption = "<c:out value='${formAprOption}'/>";
 	        var passAprLine = "";
 	        var useWebHWP = "<c:out value ='${useWebHWP}'/>";
+
+			/* 2024-07-18 양지혜 - 상위부서문서함 관련 */
+			var upperDeptCode = "<c:out value ='${upperDeptCode}'/>";
+			var upperDeptName = "<c:out value ='${upperDeptName}'/>";
 	        
 	        var gpGubun;
 			//부서감사 관련 2020-01-14 홍대표
 			var deptgamsaCount = 0;
+
+			// 창마다 고유한 id 지정용
+			var windowUuid = getRandomId();
 	        
 	        window.onload = function () {
 	            try {
@@ -248,15 +259,33 @@
 	        }
 	
 	        function dragNdrapNo() {
-	            try {
-	                var div = document.getElementById('lstAttachLink');
-	                div.ondragenter = div.ondragover = function (e) {
-	                    return false;
-	                }
-	                div.ondrop = function (e) {
-	                    alert("드래그 앤 드랍 기능을 이용할 수 없습니다.\n[첨부] 메뉴를 이용해 주시기 바랍니다.");
-	                    return false;
-	                }
+		        try{
+		            var div = document.getElementById('lstAttachLink');
+		            div.ondragenter = div.ondragover = function (e) {
+		                return false;
+		            }
+		            div.ondrop = function (e) {
+		                alert("<spring:message code='ezApprovalG.pjj30'/>");
+		                return false;
+		            }
+		            
+                    var div2 = document.getElementById('lstAttachLinkDoc');
+                    div2.ondragenter = div.ondragover = function (e) {
+		                return false;
+		            }
+		            div2.ondrop = function (e) {
+		                alert("<spring:message code='ezApprovalG.noDrag.jih01'/>");
+		                return false;
+		            }
+		            
+		            var html = document.getElementsByTagName('html')[0];
+		            html.ondragover = function (e) {
+		            	if (e.target.id == 'lstAttachLink' || e.target.id == 'lstAttachLinkDoc') { return false; }
+		            	
+		            	e.dataTransfer.dropEffect = "none";
+				        e.stopPropagation();
+				        e.preventDefault();
+		            }
 	            } catch (e) {
 	                alert("ezdraftui_hwp.dragNdrapNo()::" + e.description);
 	            }
@@ -479,6 +508,14 @@
 			                    }
 			                    pDocID = createNewDoc();
 			                }
+			                
+			                if (isUsed == "reuse") {
+                                if (apprReuseConfig != '1') {
+                                    getDocInfo();
+                                    setAttachInfo(pDocID, "APR", lstAttachLink);
+                                    copySummaryForReuse(beforeDocID, pDocID);
+                                }
+                            }
 			            }
 					}
 				} catch (e) {
@@ -822,7 +859,7 @@
 	                          
 	              		        //2019.02.21 유은정 : 포탈개인화 결재리스트에서 포틀릿 정보 가져오는 매서드 추가
 	              		        if (parent.opener != null && parent.opener.getApprovalList != undefined) { 
-	              		        	parent.opener.getApprovalList("reject");
+	              		        	parent.opener.clearAbsence(true);
 	              		        }
 	                            
 	                            window.close();
@@ -1067,7 +1104,7 @@
 		        if (!HwpCtrl.CheckFieldExist("publication")) return;
 		        var PublicType = pPublicityYN.substring(0, 1);
 
-		        if (PublicType == "Y")
+		        if (PublicType == "Y" || PublicType == "B")
 		            PublicText = "<spring:message code='ezApprovalG.t47'/>";
 		        else if (PublicType == "N")
 		            PublicText = "<spring:message code='ezApprovalG.t46'/>";
@@ -1275,7 +1312,7 @@
 			        if (isUsed == "reuse") {
 			        	OpenUrl +=  "&isUsed=" + isUsed + "&beforeDocID=" +beforeDocID
 			        }
-			        var OpenWin = window.open(OpenUrl , "ezApprovalInfo", GetOpenWindowfeature(1144, 750));
+			        var OpenWin = window.open(OpenUrl , "ezApprovalInfo-" + windowUuid, GetOpenWindowfeature(1144, 750));
 			        
 			        try { OpenWin.focus(); } catch (e) { }
 			        
@@ -1347,7 +1384,9 @@
 			                tempPublic = "N";
 			            } else if (ret[21].substring(0,1) == "Y") {
 		                	tempPublic = "Y";
-		                }
+		                } else if (ret[21].substring(0,1) == "B") {
+							tempPublic = "B";
+						}
 			            setPublicFlag();
 			            SummaryFlag = true;
 			            
@@ -1388,6 +1427,14 @@
 			    
 			function btnSaveServer_onclick(AutoSave) {
 			    try {
+					if (!!checkJobTransferStatus &&
+							!checkJobTransferStatus("<c:out value ='${userInfo.id}'/>",
+									"<c:out value ='${userInfo.deptID}'/>",
+									"<c:out value ='${userInfo.jobId}'/>")) {
+						window.close();
+						return;
+					}
+					
 			        if (pDraftFlag == "REDRAFT") {
 			            if (AutoSave == "save") {
 			                AutoSave = "";
@@ -1560,6 +1607,7 @@
 								</c:when>
 								<c:otherwise>
 									<li id="btntotaldocinfo"><span onclick="return btnApprovalInfo()"><spring:message code='ezApprovalG.t1742'/></span></li>
+									<li id="btnSummary"><span onclick="return btnSummaryEdit()"><spring:message code='ezApprovalG.t1203'/></span></li> <%-- 요약전 --%>
 	                        		<li id="btnReturn" style="display: none"><span onclick="return btnSendDraft_onclick()"><spring:message code='ezApprovalG.t155'/></span></li>
 			                        <li id="btnSendDraft"><span onclick="return btnSendDraft_onclick()"><spring:message code='ezApprovalG.t156'/></span></li>
 								</c:otherwise>

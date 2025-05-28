@@ -6,7 +6,8 @@
 	<head>
 		<title><spring:message code = 'ezCommunity.t363' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezCommunity.i1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -684,7 +685,7 @@
 			</tr>
 			<tr style="${_style}">
 			<%-- 2021-11-12 홍승비 - 메일알림 옵션 분리, 게시/수정/댓글알림 추가 --%>
-				<th><spring:message code = 'ezBoard.HSBMail00' /></th>
+				<th><spring:message code = 'ezNotification.hth38' /></th>
 				<td>
 					<c:choose>
 						<c:when test="${boardProp.mailFG_Post == 'Y' }">

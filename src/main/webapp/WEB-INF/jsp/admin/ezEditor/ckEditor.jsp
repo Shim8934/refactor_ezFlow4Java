@@ -256,6 +256,8 @@
 	        function CellCheckField() {
 	            var selectE = null;
 	            if (parent.Attribute_Write != undefined) {
+	            	parent.Attribute_Write("");
+	            	
 	                var selection = CKEDITOR.instances.editor1.getSelection();
 	                if (selection.getType() == CKEDITOR.SELECTION_ELEMENT) {
 	                    selectE = selection.getSelectedElement();

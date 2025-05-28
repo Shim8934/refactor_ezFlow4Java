@@ -4,8 +4,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <c:if test="${hasWorkspace == true}">
 <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-<script type="text/javascript" src="${workspaceContextRootUrl}/ezWorkspace/Scripts/moment.min.js"></script>
-<script type="text/javascript" src="${workspaceContextRootUrl}/ezWorkspace/Scripts/Groupwareapi.js"></script>
+<script type="text/javascript" src="${workspaceContextRootUrl}/Scripts/moment.min.js"></script>
+<script type="text/javascript" src="${workspaceContextRootUrl}/Scripts/Groupwareapi.js"></script>
 <link href="${util.addVer('main.e6', 'msg')}" rel="stylesheet" type="text/css">
 </c:if>
 <!DOCTYPE html>

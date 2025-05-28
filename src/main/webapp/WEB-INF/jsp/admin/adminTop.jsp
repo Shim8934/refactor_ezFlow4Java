@@ -136,6 +136,9 @@
 					case "menu33":
 						parent.frames["bottom"].location.href = "/admin/ezCar/carMain.do";
 						break;
+					case "menu34":
+						parent.frames["bottom"].location.href = "/admin/ezNotification/notificationMain.do";
+						break;
 				}
 			}
 			
@@ -254,6 +257,7 @@
 			      			<c:if test="${use_ezDMS == 'YES'}">
 			      				<li><span id="menu15" onClick="menu_change(920, event);"><spring:message code="main.t52" /></span></li>
 			      			</c:if>
+			      				<li><span id="menu34" onClick="menu_change(920, event);"><spring:message code='ezNotification.hth01'/></span></li>
                  	   </c:if>
                	    </c:if>
                     <c:if test="${admin != 'admin'}">

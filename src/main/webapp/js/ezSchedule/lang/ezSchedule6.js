@@ -139,6 +139,7 @@ var strLang128 = ".";
 var strLang129 = "";
 var strLang130 = "Jadwal Grup";
 var strLang130_1 = "Grup";
+var strLang131 = "tampilkan di bagian atas";
 
 var strLang253 = "Sumber daya tidak dipilih."
 var strLang254 = "Sumber daya yang dipilih tidak dapat dihapus."
@@ -214,6 +215,25 @@ var strLang127_2 = "Company";
 var strLang130_2 = "Group";
 var strLang131_2 = "Collabo";
 var strLang141_2 = "Google";
-var strLangHSBScPt1 = "-";
+var strLangHSBScPt1 = ".";
 var strLangHSBScPt2 = ".";
 var strLangHSBScPt3 = "";
+
+/* 2024-05-21 김유진 - 일정 게시판 게시 메세지 추가 */
+var ezSchedule_kyj1 = "Can not post schedules to photo board or anonymous board or url board.";
+
+/* 2024-06-24 김유진 - 일정관리 안내 메세지 추가 */
+var ezSchedule_kyj2 = "Please check the repetition pattern once again.";
+
+/* 2024-07-18 조소정 - 일정관리 > 그룹일정 관리 > 작성 권한 기능 추가 */
+var ezSchedule_csj1 = "Dapat ditulis";
+
+/* 2024-08-06 이유정 - 임원일정 메세지 추가 */
+var strLang151_2 = "itu";
+
+// 2024-06-28 민지수 - 일정 > 첨부파일 드래그 앤 드롭 안내 메세지 추가
+var strLangMJS01 = "You can drag and drop to add files and change the order of added files.";
+
+/* 2025-02-07 기민혁 - 반복자원 체크 메세지 추가 */
+var strLangKMH1 = "Sumber daya ini tidak mengizinkan pemesanan berulang.";
+var strLangKMH2 = "Terjadi kesalahan";

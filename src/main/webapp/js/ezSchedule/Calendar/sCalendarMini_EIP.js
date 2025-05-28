@@ -1,4 +1,4 @@
-﻿var sStartDate, sEndDate;
+﻿﻿var sStartDate, sEndDate;
 var DefaultView = 0;
 var sDate = new Date();
 
@@ -49,22 +49,14 @@ function CalendarMiniView(pTagetID) {
         //mSpan.style.marginLeft = "6px";
         //mSpan.style.marginTop = "4px";
         var mImg = document.createElement("IMG");
-        
-        if (Number($("#schedule_usedTheme").val()) === 3) {
-        	mImg.setAttribute("src", "/images/ezNewPortal/theme3Img/calender_pre.png");
-        } else {
-        	mImg.setAttribute("src", "/images/ezNewPortal/calender_pre.png");///
-        }
+       	mImg.setAttribute("src", "/images/ezNewPortal/calender_pre.png");
         
         mImg.setAttribute("border", "0");
-        mImg.setAttribute("onclick", "preMonth()");
+        mSpan.setAttribute("onclick", "preMonth()");
         mSpan.appendChild(mImg);
         mTd1.appendChild(mSpan);
         
-        /* 2023-06-08 홍승비 - 테마3 > 일정 포틀릿 상단 > 좌우이동 버튼과 년월 표기 순서 변경 */
-        if (Number($("#schedule_usedTheme").val()) !== 3) {
-        	mTr.appendChild(mTd1);
-        }
+       	mTr.appendChild(mTd1);
         
         var mTd2 = document.createElement("TD");
         mTd2.className = "calendar_mini_day"
@@ -118,18 +110,11 @@ function CalendarMiniView(pTagetID) {
         var curYear = sDate.getFullYear();
         var yText = document.createTextNode(curYear);
         
-        if (Number($("#schedule_usedTheme").val()) === 3) {
-        	yText.textContent = curYear + strLangHSBScPt1 + " "; // "년 " 표기
-        }
+        yText.textContent = curYear + strLangHSBScPt1 + " ";
         
         iySpan.appendChild(yText);
 
-        mTd2.appendChild(iySpan);
-
-        if (Number($("#schedule_usedTheme").val()) !== 3) {
-	        var dotText = document.createTextNode(".");
-	        mTd2.appendChild(dotText);
-        }
+        mTd2.appendChild(iySpan);        
 
         var imSpan = document.createElement("SPAN");//년 월 select박스인것 바꿔야할듯
         imSpan.setAttribute("id", "iMon");
@@ -137,17 +122,13 @@ function CalendarMiniView(pTagetID) {
         var curMonth = sDate.getMonth() + 1;
         var mText = document.createTextNode(curMonth);
         
-        if (Number($("#schedule_usedTheme").val()) === 3) {
-        	mText.textContent = curMonth + strLangHSBScPt2; // "월" 표기
-        }
+        mText.textContent = curMonth;
         
         imSpan.appendChild(mText);
         
         mTd2.appendChild(imSpan);
         
-        if (Number($("#schedule_usedTheme").val()) !== 3) {
-        	mTr.appendChild(mTd2);
-        }
+       	mTr.appendChild(mTd2);
 
         var mTd3 = document.createElement("TD");
         mTd3.className = "btn_next";
@@ -157,27 +138,13 @@ function CalendarMiniView(pTagetID) {
         //mSpan.style.marginRight = "6px";
         //mSpan.style.marginTop = "4px";
         var mImg = document.createElement("IMG");
-        if (Number($("#schedule_usedTheme").val()) === 3) {
-        	mImg.setAttribute("src", "/images/ezNewPortal/theme3Img/calender_next.png");
-        } else {
-        	mImg.setAttribute("src", "/images/ezNewPortal/calender_next.png");///
-        }
+       	mImg.setAttribute("src", "/images/ezNewPortal/calender_next.png");
         mImg.setAttribute("border", "0");
-        mImg.setAttribute("onclick", "nextMonth()");
+        mSpan.setAttribute("onclick", "nextMonth()");
         mSpan.appendChild(mImg);
         mTd3.appendChild(mSpan);
-        
-        if (Number($("#schedule_usedTheme").val()) !== 3) {
-        	mTr.appendChild(mTd3);
-        }
-
-        // 테마3 > 년월, 좌우이동버튼을 좌측에서부터 순서대로 표출
-        if (Number($("#schedule_usedTheme").val()) === 3) {
-        	mTr.appendChild(mTd2);
-        	mTr.appendChild(mTd1);
-        	mTr.appendChild(mTd3);
-        }
-
+       	mTr.appendChild(mTd3);
+       	
         mTable.appendChild(mTr);
         objElm.appendChild(mTable);
 
@@ -212,7 +179,7 @@ function GetTableMiniBodyObj() {
 
     var oBeforeMaxDay = oBeforeDate.getDate();
     var startThisDay = oThisDate.getDay();
-    oThisMonth = oThisDate.getMonth() + 1;
+    oThisMonth = oBeforeDate.getMonth() + 1;
 
     if (oThisMonth == 12) {
         oThisMonth = 0;
@@ -379,6 +346,11 @@ function DayOnMouseClick(event) {
     	} else {
     		$("#"+event.getAttribute("id")).parent().css("background","#f0f6ff").css("border-radius","20px").css("color","black");
     	}
+        $(".schedule_calendar .scalendar_mini td").removeClass("select");
+        $("#"+event.getAttribute("id")).parent().addClass("select");
+        if (event.parentNode.getAttribute("class").split(' ').includes("today")) {
+            document.getElementsByClassName("today")[0].style.color = "#333333";
+        }
     }
 	//$("#"+event.getAttribute("id")).parent().css("border-radius","20px");
 	
@@ -506,7 +478,12 @@ function clickDay(val01) {
 	if (usedTheme == 3) {
 		$("#"+val01).parent().addClass('schedule');
     } else {
-    	$("#"+val01).parent().css("background","#f0f6ff").css("border-radius","20px").css("color","black");
+    	// $("#"+val01).parent().css("background","#f0f6ff").css("border-radius","20px").css("color","black");
+        $(".schedule_calendar .scalendar_mini td").removeClass("select");
+        $("#"+val01).parent().addClass("select");
+        if ($("#"+val01).parent().attr("class").split(' ').includes("today")) {
+            $(".today").css("color", "#333333");
+        }
     } 
 	
     g_selTRID = $("#"+val01).parent().parent().attr("id");
@@ -888,7 +865,28 @@ function memorialDayCheck(solarDate, lunarDate) {
         				memorialDays[i].solarLunar == 1) {
         			tempmemorialDays.push(memorialDays[i]);
         		}
-        		if (memorialDays[i].month == lunarDate.month &&
+        		
+        		if (memorialDays[i].month == "12" && memorialDays[i].day == "30" && memorialDays[i].solarLunar == 2 && !memorialDays[i].leapMonth
+        			&& (lunarDate.month == "12" && lunarDate.day == "29")) {
+        			var tempDate = new Date(solarDate.getTime());
+    				tempDate.setDate(tempDate.getDate() + 1);
+    				var tempLunarDate = lunarCalc(tempDate.getFullYear(), tempDate.getMonth() + 1, tempDate.getDate(), 1);
+                    var tempLunarDatemonth = tempLunarDate.month;
+                    var tempLunarDateday = tempLunarDate.day;
+                    
+                    if (!(tempLunarDatemonth == "12" && tempLunarDateday == "30")) {
+                    	var tempMemorial = {}
+                    	var keys = Object.keys(memorialDays[i]);
+                        
+                        for (var j = 0; j < keys.length; j++) {
+                            var key = keys[j];
+                            tempMemorial[key] = memorialDays[i][key];
+                        }
+                        tempMemorial.day = "29"
+                    	tempmemorialDays.push(tempMemorial);
+                    }
+    				
+    			} else if (memorialDays[i].month == lunarDate.month &&
         				memorialDays[i].day == lunarDate.day &&
         				memorialDays[i].solarLunar == 2 &&
         				!memorialDays[i].leapMonth) {
@@ -919,7 +917,28 @@ function yearmemorialDayCheck(solarDate, lunarDate) {
         				yearmemorialDays[i].solarLunar == 1) {
         			tempyearmemorialDays.push(yearmemorialDays[i]);
         		}
-        		if (yearmemorialDays[i].year == lunarDate.year &&
+        		
+        		if (yearmemorialDays[i].year == lunarDate.year && yearmemorialDays[i].month == "12" && yearmemorialDays[i].day == "30" && yearmemorialDays[i].solarLunar == 2 && !yearmemorialDays[i].leapMonth
+        			&& (lunarDate.month == "12" && lunarDate.day == "29")) {
+        			var tempDate = new Date(solarDate.getTime());
+    				tempDate.setDate(tempDate.getDate() + 1);
+    				var tempLunarDate = lunarCalc(tempDate.getFullYear(), tempDate.getMonth() + 1, tempDate.getDate(), 1);
+                    var tempLunarDatemonth = tempLunarDate.month;
+                    var tempLunarDateday = tempLunarDate.day;
+                    
+                    if (!(tempLunarDatemonth == "12" && tempLunarDateday == "30")) {
+                    	var tempMemorial = {}
+                    	var keys = Object.keys(yearmemorialDays[i]);
+                        
+                        for (var j = 0; j < keys.length; j++) {
+                            var key = keys[j];
+                            tempMemorial[key] = yearmemorialDays[i][key];
+                        }
+                        tempMemorial.day = "29"
+                        tempyearmemorialDays.push(tempMemorial);
+                    }
+        				
+        		} else if (yearmemorialDays[i].year == lunarDate.year &&
         				yearmemorialDays[i].month == lunarDate.month &&
         				yearmemorialDays[i].day == lunarDate.day &&
         				yearmemorialDays[i].solarLunar == 2 &&

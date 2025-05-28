@@ -262,7 +262,7 @@ function tbContentElement_DisplayChanged()
 					QueryStatusToolbarSelects[i].element.value = statevalue;
 			}
 		}
-	} catch(e) {}
+	} catch(e) {console.log(e);}
 }
 
 function tbContentElement_ShowContextMenu() 

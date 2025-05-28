@@ -6,7 +6,8 @@
 	<head>
 		<title>left_Top</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-		<link rel="stylesheet" href="${util.addVer('ezJournal.c1', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
 		<style>
 			#mCSB_1_container {
@@ -70,9 +71,9 @@
 		<div id="left" class="lnb" style="overflow: auto">
 			<div class="admin_left_title" title="<spring:message code='ezJournal.t1'/>"><spring:message code='ezJournal.t1'/></div>			
 			<div class="adminListBox" style="overflow:hidden; padding-right: 0;">
-				<h2 class="on"><span onClick="goPage(1)" style="display:inline-block;width:100%;"><spring:message code='ezJournal.t2'/></span></h2>	
-				<h2><span onClick="goPage(2)" style="display:inline-block;width:100%;"><spring:message code='ezJournal.t3'/></span></h2>	
-				<h2><span onClick="goPage(3)" style="display:inline-block;width:100%;"><spring:message code='ezJournal.t4'/></span></h2>	
+				<h2 class="on"><span class="h2Title" onClick="goPage(1)" style="display:inline-block;width:100%;"><spring:message code='ezJournal.t2'/></span></h2>	
+				<h2><span class="h2Title" onClick="goPage(2)" style="display:inline-block;width:100%;"><spring:message code='ezJournal.t3'/></span></h2>	
+				<h2><span class="h2Title" onClick="goPage(3)" style="display:inline-block;width:100%;"><spring:message code='ezJournal.t4'/></span></h2>	
 			</div>
 		</div>
 	</body>

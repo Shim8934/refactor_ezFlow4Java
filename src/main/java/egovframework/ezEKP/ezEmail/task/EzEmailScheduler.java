@@ -1,13 +1,6 @@
 package egovframework.ezEKP.ezEmail.task;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -19,6 +12,7 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
 import java.util.UUID;
@@ -29,13 +23,8 @@ import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 import javax.annotation.Resource;
 import javax.crypto.Cipher;
-import javax.mail.Address;
-import javax.mail.Flags;
-import javax.mail.Folder;
-import javax.mail.Header;
-import javax.mail.Message;
+import javax.mail.*;
 import javax.mail.Message.RecipientType;
-import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
@@ -48,13 +37,16 @@ import javax.mail.search.ReceivedDateTerm;
 import javax.mail.search.SearchTerm;
 import javax.servlet.ServletContext;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -164,25 +156,30 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 					email = cn + "@" + domain;
 					ia = IMAPAccess.getInstance(mailServerAddress, iMAPPort, email, password, egovMessageSource, locale, ezEmailUtil);
 
-					long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
+                    if (ia != null){
+                        long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
 
-					long mailboxUsage = storageUsageAndLimit[0];
-					long mailboxQuota = storageUsageAndLimit[1];
+                        long mailboxUsage = storageUsageAndLimit[0];
+                        long mailboxQuota = storageUsageAndLimit[1];
 
-					ezOrganAdminService.updateProperty(cn, "mailboxusage", String.valueOf(mailboxUsage), "user", tenantID);
-					ezOrganAdminService.updateProperty(cn, "mailboxquota", String.valueOf(mailboxQuota), "user", tenantID);
-				} catch (Exception e) {
-					logger.debug("error. user=" + email);
-					logger.error(e.getMessage(), e);
-				} finally {
-					if (ia != null) {
-						ia.close();
-					}
-				}
-			}
-		}
-		logger.debug("mailboxQuotaListUpdate scheduler ended.");
-	}
+                        ezOrganAdminService.updateProperty(cn, "mailboxusage", String.valueOf(mailboxUsage), "user", tenantID);
+                        ezOrganAdminService.updateProperty(cn, "mailboxquota", String.valueOf(mailboxQuota), "user", tenantID);
+                    }
+                } catch (DataAccessException e) {
+                    logger.debug("error. user=" + email);
+                    logger.error(e.getMessage(), e);
+                } catch (Exception e) {
+                    logger.debug("error. user=" + email);
+                    logger.error(e.getMessage(), e);
+                } finally {
+                    if (ia != null) {
+                        ia.close();
+                    }
+                }
+            }
+        }
+        logger.debug("mailboxQuotaListUpdate scheduler ended.");
+    }
 
 	/**
 	 * 관리자 - 자동삭제 
@@ -240,38 +237,43 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 							// imap 접근 
 							ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"), 
 									userEmail, "_jmocha_101", egovMessageSource, locale, ezEmailUtil);
-							String folderPath = ia.getFolder("INBOX").getFolder("443c2406b761402a").getFullName();
-							int result = ia.createFolder(folderPath);
-							
-							if (result == 0) {
-								result = ia.deleteFolder(folderPath);
-								logger.debug("user=" + userEmail + " temp mailbox create and delete success. result=" + result);
-								
-								if (result != 0) {
-									logger.debug("temp mailbox delete error. result=" + result);
-									returnValue = "ERROR";
-								}
-								
-							} else if (result == 2) {
-								returnValue = "ALREADY_EXISTS";
-								logger.debug("temp mailbox create error. result=" + result);
-							}
-							
-							logger.debug("returnValue=" + returnValue);
-						}
-					}
-				}
-			}
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
-		} finally {
-			if (ia != null) {
-				ia.close();
-			}
-		}
-		
-		logger.debug("deleteAllUserMail scheduler ended.");
-	}
+                            String folderPath = "";
+                            if (ia != null){
+                                folderPath = ia.getFolder("INBOX").getFolder("443c2406b761402a").getFullName();
+                            }
+                            int result = ia.createFolder(folderPath);
+
+                            if (result == 0) {
+                                result = ia.deleteFolder(folderPath);
+                                logger.debug("user=" + userEmail + " temp mailbox create and delete success. result=" + result);
+
+                                if (result != 0) {
+                                    logger.debug("temp mailbox delete error. result=" + result);
+                                    returnValue = "ERROR";
+                                }
+
+                            } else if (result == 2) {
+                                returnValue = "ALREADY_EXISTS";
+                                logger.debug("temp mailbox create error. result=" + result);
+                            }
+
+                            logger.debug("returnValue=" + returnValue);
+                        }
+                    }
+                }
+            }
+        } catch (ParseException e) {
+            logger.error(e.getMessage(), e);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        } finally {
+            if (ia != null) {
+                ia.close();
+            }
+        }
+
+        logger.debug("deleteAllUserMail scheduler ended.");
+    }
 
     /**
      * james_mail_blob 삭제로 변경
@@ -378,7 +380,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 
 				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 						userEmail, password, egovMessageSource, locale, ezEmailUtil);
-				Folder f = ia.getFolder(path);
+                Folder f = ia.getFolder(path != null ? path : "");
 
 				if (f != null && f.exists()) {
 					f.open(Folder.READ_WRITE);
@@ -399,6 +401,8 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 					f.setFlags(messages, new Flags(Flags.Flag.DELETED), true);
 					f.close(true);
 				}
+            } catch (MessagingException e) {
+                logger.error(e.getMessage(), e);
 			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
 			} finally {
@@ -436,28 +440,30 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 		boolean retryFlag = false;
 		
 		for (int i = 0; i < list.size(); i++) {
-			MailReservationVO vo = list.get(i);
-			
-			logger.debug("messageId=" + vo.getMessageId());
-			logger.debug("userAccount=" + vo.getConnUrl());
-			
 			IMAPAccess ia = null;
 			FileInputStream fis = null;
 			File f = null;
 			File encryptedFile = null; // 보안메일 관련 파일 변수
-			String userAccount = vo.getConnUrl();
 			MimeMessage message = null;
 			Locale locale = null;
 			String offset = null;
-			
+
+			MailReservationVO vo = list.get(i);
+			String messageId = vo.getMessageId();
+			String userAccount = vo.getConnUrl();
+			String userId = vo.getSender();
+
+			String[] emailArr = userAccount.split("@");
+			String mailId = emailArr[0];
+			String domainName = emailArr[1];
+			userId = StringUtils.isBlank(userId)? mailId : userId;
+			logger.debug("messageId={}, userAccount={}, userId(sender)={}, mailId={}", messageId, userAccount, userId, mailId);
+
 			try {
 				
 				String password = jspw;
 	
 				String realPath = commonUtil.getRealPath(servletContext);
-				
-				String userId = userAccount.split("@")[0];
-				String domainName = userAccount.split("@")[1];
 				
 				int tenantId = ezCommonService.getTenantIdByDomainName(domainName);
 				String lang = ezCommonService.selectUserGetLang(userId, tenantId);
@@ -469,8 +475,8 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 				String pDirPath = commonUtil.getUploadPath("upload_mail.RESERVED_MAIL_PATH", tenantId);
 				pDirPath = realPath + pDirPath;
 	
-				f = new File(pDirPath + commonUtil.separator + vo.getMessageId() + ".eml");
-				logger.debug("filePath=" + pDirPath + commonUtil.separator + vo.getMessageId() + ".eml");
+				f = new File(pDirPath + commonUtil.separator + messageId + ".eml");
+				logger.debug("filePath=" + pDirPath + commonUtil.separator + messageId + ".eml");
 								
 				if (f.exists()) {
 					fis = new FileInputStream(f);
@@ -506,90 +512,96 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 						String secureReadCount = message.getHeader("X-JMocha-Secure-Mail-ReadCount")[0];
 						String secureReadDate = message.getHeader("X-JMocha-Secure-Mail-ReadDate")[0];
 						String serverName = message.getHeader("X-JMocha-Secure-Mail-ServerName")[0];
+						String securePasswordHint = message.getHeader("X-JMocha-Secure-Mail-PasswordHint")[0];
 						
 						// 암호화되어있는 securePassword 복호화
 		    			String prm = egovFileScrty.getPrm();
 		            	String pre = egovFileScrty.getPre();
 		            	PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
 		            	securePassword = EgovFileScrty.decryptRsa(pk, securePassword);
-						
-						logger.debug("securePassword=" + securePassword + ",secureReadCount=" + secureReadCount
-								+ ",secureReadDate=" + secureReadDate + ",serverName=" + serverName);
-						
-						// remove header
-						message.removeHeader("X-JMocha-Secure-Mail-Password");
-						message.removeHeader("X-JMocha-Secure-Mail-ReadCount");
-						message.removeHeader("X-JMocha-Secure-Mail-ReadDate");
-						message.removeHeader("X-JMocha-Secure-Mail-ServerName");
-						message.removeHeader("X-JMocha-Secure-Mail");
-						
-						// timezone 처리 확인
-						if (!secureReadDate.equals("")) {
-							SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-							secureReadDate = sdf.format(new Date(Long.parseLong(secureReadDate)));
-							secureReadDate = commonUtil.getDateStringInUTC(secureReadDate, offset, true);
-						}
-						
-						// securePassword 암호화
-	            		securePassword = egovFileScrty.encryptAES(securePassword);
-						
-						// save secure mail info and get secureId
-	            		int secureId = ezEmailService.setMailSecure(tenantId, userId, securePassword, Integer.parseInt(secureReadCount), secureReadDate);
-    		        	
-	            		if (secureId == 0) {
-    		        		throw new Exception("INSERTSECUREMAILFAIL");
-    		        	}
-						
-	            		MimeMessage secureMessage = sa.createMimeMessage();
-	            		
-	            		// copy message's headers
-	            		@SuppressWarnings("unchecked")
-						Enumeration<Header> headerEnum = message.getAllHeaders();
-	            		
-	            		while (headerEnum.hasMoreElements()) {
-	            			Header header = headerEnum.nextElement();
-	            			secureMessage.setHeader(header.getName(), header.getValue());
-	            		}
-						
-	            		MimeMultipart secureMixedPart = new MimeMultipart();
-    		        	
-    		        	// make secureBodyPart and add to secureMixedPart
-    		        	MimeBodyPart secureBodyPart = new MimeBodyPart();
-    		        	MimeMultipart secureBodyRelatedPart = new MimeMultipart("related");
-    		        	MimeBodyPart secureBodyHtmlPart = new MimeBodyPart();
-    		        	MimeBodyPart secureBodyImagePart = new MimeBodyPart();
-    		        	
-    		        	String tempFileName = UUID.randomUUID().toString();
-    		        	
-    		        	secureBodyHtmlPart.setContent(ezEmailUtil.getSecureBodyHtml(tempFileName, locale), "text/html; charset=utf-8");
-    		        	
-    		        	secureBodyImagePart.setHeader("Content-Disposition", "inline;\r\n\tfilename=\"" + tempFileName + ".gif\"");
-    		        	secureBodyImagePart.setHeader("Content-ID", "<" + tempFileName + ".gif@12345678.87654321>");
-    		        	secureBodyImagePart.setHeader("Content-Type", "image/gif");
-    		        	FileDataSource source = new FileDataSource(new File(realPath + "/images/email/secureMail/security_img.gif"));
-    		        	secureBodyImagePart.setDataHandler(new DataHandler(source));
-    		        	
-    		        	secureBodyRelatedPart.addBodyPart(secureBodyHtmlPart);
-    		        	secureBodyRelatedPart.addBodyPart(secureBodyImagePart);
-    		        	
-    		        	secureBodyPart.setContent(secureBodyRelatedPart);
-    		        	secureMixedPart.addBodyPart(secureBodyPart);
-    		        	// make secureBodyPart and add to secureMixedPart - end
-	            		
-    		        	// make secureAttachPart and add to secureMixedPart
-    		        	MimeBodyPart secureAttachPart = new MimeBodyPart();
-    		        	secureAttachPart.setHeader("Content-Disposition", "attachment;\r\n\tfilename=\"secureMail.html\"");
-    		        	secureAttachPart.setHeader("Content-Type", "text/html");
-    		        	
-    		        	String useHttps = ezCommonService.getTenantConfig("USE_HTTPS", tenantId);
-    		        	logger.debug("useHttps=" + useHttps);
-    		        	
-    		        	String secureAttachHtml = ezEmailUtil.getSecureAttachHtml(serverName, locale, useHttps);
-    		        	
-    		        	String secureMailKey = userAccount + "/" + secureId + "/" + userAccount;
-    		        	secureMailKey = egovFileScrty.encryptAES(secureMailKey);
-    		        	
-    		        	secureAttachPart.setContent(secureAttachHtml.replace("${X-JMocha-Secure-Mail-Key}", secureMailKey), "text/html; charset=utf-8");
+
+                        boolean useKlibEncrypt = "YES".equalsIgnoreCase(config.getProperty("config.useKlibEncrypt"));
+                        
+                        logger.debug("securePassword=" + securePassword + ",secureReadCount=" + secureReadCount
+                                + ",secureReadDate=" + secureReadDate + ",serverName=" + serverName + ",useKlibEncrypt=" + useKlibEncrypt);
+
+                        // remove header
+                        message.removeHeader("X-JMocha-Secure-Mail-Password");
+                        message.removeHeader("X-JMocha-Secure-Mail-ReadCount");
+                        message.removeHeader("X-JMocha-Secure-Mail-ReadDate");
+                        message.removeHeader("X-JMocha-Secure-Mail-ServerName");
+                        message.removeHeader("X-JMocha-Secure-Mail-PasswordHint");
+
+                        // timezone 처리 확인
+                        if (!secureReadDate.equals("")) {
+                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            secureReadDate = sdf.format(new Date(Long.parseLong(secureReadDate)));
+                            secureReadDate = commonUtil.getDateStringInUTC(secureReadDate, offset, true);
+                        }
+
+                        // securePassword 암호화
+                        securePassword = ezEmailService.encryptSecureValue(securePassword, useKlibEncrypt);
+
+                        // save secure mail info and get secureId
+                        int secureId = ezEmailService.setMailSecure(tenantId, mailId, securePassword, Integer.parseInt(secureReadCount), secureReadDate);
+
+                        if (secureId == 0) {
+                            throw new Exception("INSERTSECUREMAILFAIL");
+                        }
+
+                        MimeMessage secureMessage = sa.createMimeMessage();
+
+                        // copy message's headers
+                        @SuppressWarnings("unchecked")
+                        Enumeration<Header> headerEnum = message.getAllHeaders();
+
+                        while (headerEnum.hasMoreElements()) {
+                            Header header = headerEnum.nextElement();
+                            secureMessage.setHeader(header.getName(), header.getValue());
+                        }
+
+                        MimeMultipart secureMixedPart = new MimeMultipart();
+
+                        // make secureBodyPart and add to secureMixedPart
+                        MimeBodyPart secureBodyPart = new MimeBodyPart();
+                        MimeMultipart secureBodyRelatedPart = new MimeMultipart("related");
+                        MimeBodyPart secureBodyHtmlPart = new MimeBodyPart();
+                        MimeBodyPart secureBodyImagePart = new MimeBodyPart();
+
+                        String tempFileName = UUID.randomUUID().toString();
+
+                        secureBodyHtmlPart.setContent(ezEmailUtil.getSecureBodyHtml(tempFileName, locale), "text/html; charset=utf-8");
+
+                        secureBodyImagePart.setHeader("Content-Disposition", "inline;\r\n\tfilename=\"" + tempFileName + ".gif\"");
+                        secureBodyImagePart.setHeader("Content-ID", "<" + tempFileName + ".gif@12345678.87654321>");
+                        secureBodyImagePart.setHeader("Content-Type", "image/gif");
+                        FileDataSource source = new FileDataSource(new File(realPath + "/images/email/secureMail/security_img.gif"));
+                        secureBodyImagePart.setDataHandler(new DataHandler(source));
+
+                        secureBodyRelatedPart.addBodyPart(secureBodyHtmlPart);
+                        secureBodyRelatedPart.addBodyPart(secureBodyImagePart);
+
+                        secureBodyPart.setContent(secureBodyRelatedPart);
+                        secureMixedPart.addBodyPart(secureBodyPart);
+                        // make secureBodyPart and add to secureMixedPart - end
+
+                        // make secureAttachPart and add to secureMixedPart
+                        MimeBodyPart secureAttachPart = new MimeBodyPart();
+                        secureAttachPart.setHeader("Content-Disposition", "attachment;\r\n\tfilename=\"secureMail.html\"");
+                        secureAttachPart.setHeader("Content-Type", "text/html");
+
+                        String useHttps = ezCommonService.getTenantConfig("USE_HTTPS", tenantId);
+                        logger.debug("useHttps=" + useHttps);
+
+                        String secureAttachHtml = ezEmailUtil.getSecureAttachHtml(serverName, locale, useHttps);
+
+                        String secureMailKey = userAccount + "/" + secureId + "/" + userAccount;
+                        secureMailKey = ezEmailService.encryptSecureValue(secureMailKey, useKlibEncrypt);
+
+                        secureAttachHtml = secureAttachHtml.replace("${X-JMocha-Secure-Mail-Key}", secureMailKey);
+                        secureAttachHtml = secureAttachHtml.replace("${passwordHint}", securePasswordHint);
+
+						secureAttachPart.setContent(secureAttachHtml, "text/html; charset=utf-8");
     		        	secureAttachPart.setHeader("Content-Disposition", "attachment;\r\n\tfilename=\"secureMail.html\"");
     		        	secureMixedPart.addBodyPart(secureAttachPart);
     		        	// make secureAttachPart and add to secureMixedPart - end
@@ -610,16 +622,28 @@ public class EzEmailScheduler extends EgovFileMngUtil {
     		        	try {
     		        		fos = new FileOutputStream(originalFile);
     		        		message.writeTo(fos);
+                        } catch (FileNotFoundException e) {
+                            logger.error(e.getMessage(), e);
     		        	} catch (Exception e) {
     		        		logger.error(e.getMessage(), e);
     		        	} finally {
-    						if (fos != null) {
-    							try { fos.close(); } catch (IOException e) {logger.debug("e.message=" + e.getMessage());}
-    						}
+                            if (fos != null) {
+                                try {
+                                    fos.close();
+                                } catch (IOException e) {
+                                    logger.debug("e.message=" + e.getMessage());
+                                }
+                            }
     					}
     		        	
     		        	encryptedFile = new File(tempPath + commonUtil.separator + UUID.randomUUID().toString());
-    		        	egovFileScrty.cryptFile(Cipher.ENCRYPT_MODE, originalFile, encryptedFile);
+						
+						if (!useKlibEncrypt) {
+							egovFileScrty.cryptFile(Cipher.ENCRYPT_MODE, originalFile, encryptedFile);
+						} else {
+							byte[] bytes = commonUtil.readBytesFromFile(originalFile.toPath());
+							commonUtil.writeBytesToFile(encryptedFile.toPath(),klibUtil.encrypt(bytes));
+						}
     		        	
     		        	if (originalFile.delete()) {
     		        		logger.debug("originalFile is deleted. fileName=" + originalFile.getName());
@@ -655,7 +679,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 						logger.debug("Succeed in saving a message in sent folder.");
 	                    
 	            		// 보낸편지함에 저장한 메일의 uid를 저장한다.
-		            	String result = ezEmailService.updateMailSecure(tenantId, userId, secureId, folder.getFullName() + "/" + sentFolderMessageUID);
+		            	String result = ezEmailService.updateMailSecure(tenantId, mailId, secureId, folder.getFullName() + "/" + sentFolderMessageUID);
 			        	
 			        	if (!result.equals("OK")) {
 			        		throw new Exception("UPDATESECUREMAILFAIL");
@@ -710,7 +734,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 		        				message.setHeader("X-JMocha-Each-Mail", "true");
 		        				Transport.send(message);
 		        				
-		        			} catch (Exception e1) {
+		        			} catch (MessagingException e1) {
 		        				logger.error(e1.getMessage(), e1);
 		        				String errorMessage = e1.getMessage();
 		        				logger.debug("remove Invalid address. and retry");
@@ -719,50 +743,50 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 		        					String cause = e1.getCause().toString();
 		        					findInvalidAddresses(cause, invalidAddressList);
 
-		        					List<Address> allRecipientList = new ArrayList<Address>();
-		        					for( int x = 0; x < allRecipients.length; x++){
-		        						String recipient = allRecipients[x].toString();
-		        						String temp2 = recipient.substring(recipient.lastIndexOf(" <")+2, recipient.length()-1);
-		        						
-		        						if (invalidAddressList.contains(temp2)){
-		        							continue;
-		        						} else {
-		        							allRecipientList.add(allRecipients[x]);
-		        						}
-		        					}
-		        					
-		        					Address[] newRecipients = allRecipientList.stream().toArray(Address[]::new);							
-		        					message.setRecipients(RecipientType.TO, newRecipients);
-		        					logger.debug("validAddressList=" + allRecipientList.toString());
-									logger.debug("invalidAddressList=" + invalidAddressList);
-									message.setHeader("X-JMocha-Each-Mail", "true");
-									Transport.send(message);
-									
-		        				} else {
-		        					throw e1;	 // 예외를 발생시킴
-		        				}
-		        			}
-						} else {
-			            	for (Address a : allRecipients) {
-			            		logger.debug("address=" + a);
-			            		
-			            		try {
-				            		message.setRecipient(RecipientType.TO, a);
-			            			Transport.send(message);
-			        			} catch (Exception e) {
-			        				logger.error(e.getMessage(), e);
-			        				String errorMessage = e.getMessage();
-			        				
-			        				if (errorMessage.contains("Invalid Addresses")) {
-			        					String cause = e.getCause().toString();		
-			        					
-			        					findInvalidAddresses(cause, invalidAddressList);
-			        				}
-			        			} 						
-							}
-						}
-		            	
-		            	if (invalidAddressList.size() > 0) {
+                                    List<Address> allRecipientList = new ArrayList<Address>();
+                                    for (int x = 0; x < allRecipients.length; x++) {
+                                        String recipient = allRecipients[x].toString();
+                                        String temp2 = recipient.substring(recipient.lastIndexOf(" <") + 2, recipient.length() - 1);
+
+                                        if (invalidAddressList.contains(temp2)) {
+                                            continue;
+                                        } else {
+                                            allRecipientList.add(allRecipients[x]);
+                                        }
+                                    }
+
+                                    Address[] newRecipients = allRecipientList.stream().toArray(Address[]::new);
+                                    message.setRecipients(RecipientType.TO, newRecipients);
+                                    logger.debug("validAddressList=" + allRecipientList.toString());
+                                    logger.debug("invalidAddressList=" + invalidAddressList);
+                                    message.setHeader("X-JMocha-Each-Mail", "true");
+                                    Transport.send(message);
+
+                                } else {
+                                    throw e1;     // 예외를 발생시킴
+                                }
+                            }
+                        } else {
+                            for (Address a : allRecipients) {
+                                logger.debug("address=" + a);
+
+                                try {
+                                    message.setRecipient(RecipientType.TO, a);
+                                    Transport.send(message);
+                                } catch (MessagingException e) {
+                                    logger.error(e.getMessage(), e);
+                                    String errorMessage = e.getMessage();
+
+                                    if (errorMessage.contains("Invalid Addresses")) {
+                                        String cause = e.getCause().toString();
+
+                                        findInvalidAddresses(cause, invalidAddressList);
+                                    }
+                                }
+                            }
+                        }
+
+                        if (invalidAddressList.size() > 0) {
 //		            		sendInvalidRecipientNotiMail(userAccount, message.getSubject(), invalidAddressList, locale, offset);
 		            		
 		            		invalidAddressList.clear();
@@ -806,65 +830,102 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 							recipients = message.getRecipients(RecipientType.BCC);
 							newRecipientList.clear();
 
-							if (recipients != null) {
-								for (Address item : recipients) {
-									InternetAddress recipient = (InternetAddress)item;
-									if (!invalidAddressList.contains(recipient.getAddress())) {
-										newRecipientList.add(recipient);
-									}
-								}
-	
-								Address[] newRecipients = newRecipientList.stream().toArray(Address[]::new);							
-								message.setRecipients(RecipientType.BCC, newRecipients);
-								
-								logger.debug("Retrying... i=" + i + ",newRecipientList BCC=" + newRecipientList);
-							}
-							
-							invalidAddressList.clear();
-														
-							Transport.send(message);
-						} else {						
-							Transport.send(message);
-						}
-					}
-					
-			        logger.debug("Succeed in sending the reserved message.");
-			        
-					//파일시스템의 eml파일 삭제
-					if (f.delete()) {
-						logger.debug("Succeed in deleting EML file.");
-					}
-				} else {
-					logger.error("Cannot find EML file.");
-				}
-				
-				// 보안메일 관련 임시파일 삭제
-				if (encryptedFile != null) {
-					if (encryptedFile.delete()) {
-		        		logger.debug("encryptedFile is deleted. fileName=" + encryptedFile.getName());
-		        	}
-				}
-				
-				//DB에서 메일 예약발송 정보 삭제.
-				ezEmailService.deleteMailReserved(vo.getMessageId());
-				logger.debug("Succeed in deleting data from DB.");
-				
-				retryFlag = false;				
-			} catch (Exception e) {
-				logger.error(e.getMessage(), e);
-				String errorMessage = e.getMessage();
-				
-				//유효하지 않은 사용자일 경우, eml 파일 및  예약 발송 정보(DB) 삭제
-				if (!retryFlag && errorMessage.contains("Invalid Addresses")) {
-					invalidAddressList.clear();
-					
-					String cause = e.getCause().toString();					
-										
-					findInvalidAddresses(cause, invalidAddressList);
-					
-					logger.debug("invalidAddressList=" + invalidAddressList);
-					
-					if (message != null && invalidAddressList.size() > 0) {
+                            if (recipients != null) {
+                                for (Address item : recipients) {
+                                    InternetAddress recipient = (InternetAddress) item;
+                                    if (!invalidAddressList.contains(recipient.getAddress())) {
+                                        newRecipientList.add(recipient);
+                                    }
+                                }
+
+                                Address[] newRecipients = newRecipientList.stream().toArray(Address[]::new);
+                                message.setRecipients(RecipientType.BCC, newRecipients);
+
+                                logger.debug("Retrying... i=" + i + ",newRecipientList BCC=" + newRecipientList);
+                            }
+
+                            invalidAddressList.clear();
+
+                            Transport.send(message);
+                        } else {
+                            Transport.send(message);
+                        }
+                    }
+
+                    logger.debug("Succeed in sending the reserved message.");
+
+                    //파일시스템의 eml파일 삭제
+                    if (f.delete()) {
+                        logger.debug("Succeed in deleting EML file.");
+                    }
+                } else {
+                    logger.error("Cannot find EML file.");
+                }
+
+                // 보안메일 관련 임시파일 삭제
+                if (encryptedFile != null) {
+                    if (encryptedFile.delete()) {
+                        logger.debug("encryptedFile is deleted. fileName=" + encryptedFile.getName());
+                    }
+                }
+
+                //DB에서 메일 예약발송 정보 삭제.
+                ezEmailService.deleteMailReserved(messageId);
+                logger.debug("Succeed in deleting data from DB.");
+
+                retryFlag = false;
+            } catch (MessagingException e) {
+                logger.error(e.getMessage(), e);
+                String errorMessage = e.getMessage();
+
+                //유효하지 않은 사용자일 경우, eml 파일 및  예약 발송 정보(DB) 삭제
+                if (!retryFlag && errorMessage.contains("Invalid Addresses")) {
+                    invalidAddressList.clear();
+
+                    String cause = e.getCause().toString();
+
+                    findInvalidAddresses(cause, invalidAddressList);
+
+                    logger.debug("invalidAddressList=" + invalidAddressList);
+
+                    if (message != null && invalidAddressList.size() > 0) {
+//						sendInvalidRecipientNotiMail(userAccount, message.getSubject(), invalidAddressList, locale, offset);
+                    }
+
+                    retryFlag = true;
+                    i--;
+                    continue;
+                } else {
+                    //파일시스템의 eml파일 삭제
+                    if (f != null && f.delete()) {
+                        logger.debug("Succeed in deleting EML file.");
+                    }
+
+                    // 보안메일 관련 임시파일 삭제
+                    if (encryptedFile != null && encryptedFile.delete()) {
+                        logger.debug("encryptedFile is deleted. fileName=" + encryptedFile.getName());
+                    }
+
+                    //DB에서 메일 예약발송 정보 삭제.
+                    ezEmailService.deleteMailReserved(messageId);
+
+                    retryFlag = false;
+                }
+            } catch (Exception e) {
+                logger.error(e.getMessage(), e);
+                String errorMessage = e.getMessage();
+
+                //유효하지 않은 사용자일 경우, eml 파일 및  예약 발송 정보(DB) 삭제
+                if (!retryFlag && errorMessage.contains("Invalid Addresses")) {
+                    invalidAddressList.clear();
+
+                    String cause = e.getCause().toString();
+
+                    findInvalidAddresses(cause, invalidAddressList);
+
+                    logger.debug("invalidAddressList=" + invalidAddressList);
+
+                    if (message != null && invalidAddressList.size() > 0) {
 //						sendInvalidRecipientNotiMail(userAccount, message.getSubject(), invalidAddressList, locale, offset);
 					}
 					
@@ -883,7 +944,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 					}
 					
 					//DB에서 메일 예약발송 정보 삭제.
-					ezEmailService.deleteMailReserved(vo.getMessageId());
+					ezEmailService.deleteMailReserved(messageId);
 					
 					retryFlag = false;					
 				}				
@@ -944,24 +1005,26 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 				content.append(String.format("<span %s>%s</span><br/>", fontStyle, address));
 			}
 
-			content.append("<br/>");	
-			
-			content.append("<p " + fontStyle + ">");
-			content.append(String.format("<b>%s : </b> %s", egovMessageSource.getMessage("ezEmail.t704", locale), sdf.format(new Date()).replace("GMT", "")));
-			content.append("</p>");
-			
-			content.append("<p " + fontStyle + ">");
-			content.append(String.format("<b>%s : </b> %s", egovMessageSource.getMessage("ezEmail.t707", locale), EgovStringUtil.getSpclStrCnvr(originalSubject)));
-			content.append("</p>");
-			
-			InternetAddress from = new InternetAddress("postmaster@localhost");
-			
-			ezEmailService.sendMail(originalSender, jspw, null, from, new InternetAddress[]{ new InternetAddress(originalSender) }, null, null, subject, content.toString());
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
-		}
-	}
-	
+            content.append("<br/>");
+
+            content.append("<p " + fontStyle + ">");
+            content.append(String.format("<b>%s : </b> %s", egovMessageSource.getMessage("ezEmail.t704", locale), sdf.format(new Date()).replace("GMT", "")));
+            content.append("</p>");
+
+            content.append("<p " + fontStyle + ">");
+            content.append(String.format("<b>%s : </b> %s", egovMessageSource.getMessage("ezEmail.t707", locale), EgovStringUtil.getSpclStrCnvr(originalSubject)));
+            content.append("</p>");
+
+            InternetAddress from = new InternetAddress("postmaster@localhost");
+
+            ezEmailService.sendMail(originalSender, jspw, null, from, new InternetAddress[]{new InternetAddress(originalSender)}, null, null, subject, content.toString());
+        } catch (MessagingException e) {
+            logger.error(e.getMessage(), e);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+    }
+
     /**
      * Processes Mail Statistics Logs.
      * 매일 자정 1분 30초에 실행된다.
@@ -996,26 +1059,31 @@ public class EzEmailScheduler extends EgovFileMngUtil {
             int keepLogPeriodNum = 3; // Default 3개월
             
             if (!LoginMailLogKeepPeriod.equals("")) {
-	            try {
-	            	keepLogPeriodNum = Integer.parseInt(LoginMailLogKeepPeriod);
-	            } catch (Exception e) {            	
-	            	logger.error(e.getMessage(), e);
-	            }
+                try {
+                    keepLogPeriodNum = Integer.parseInt(LoginMailLogKeepPeriod);
+                } catch (NumberFormatException e) {
+                    logger.error(e.getMessage(), e);
+                }
             }
             
             try {
-	            // 보존 기간이 지난 로그인 히스토리 로그를 삭제한다.
-	            ezSystemAdminService.deleteLoginHist(keepLogPeriodNum, tenant.getTenantId());
-            } catch (Exception e) {           
-            	logger.error(e.getMessage(), e);
+                // 보존 기간이 지난 로그인 히스토리 로그를 삭제한다.
+                ezSystemAdminService.deleteLoginHist(keepLogPeriodNum, tenant.getTenantId());
+            } catch (DataAccessException e) {
+                logger.error(e.getMessage(), e);
+            } catch (Exception e) {
+                logger.error(e.getMessage(), e);
             }
             
             try {
-            	// 보존 기간이 지난 웹폴더 파일 로그를 삭제한다.
-            	ezSystemAdminService.deleteWebfolderLog(keepLogPeriodNum, tenant.getTenantId());
-            } catch (Exception e) { 
-            	logger.debug("deleteWebfolderLog delete fail. ");
-            	logger.error(e.getMessage(), e);
+                // 보존 기간이 지난 웹폴더 파일 로그를 삭제한다.
+                ezSystemAdminService.deleteWebfolderLog(keepLogPeriodNum, tenant.getTenantId());
+            } catch (DataAccessException e) {
+                logger.debug("deleteWebfolderLog delete fail. ");
+                logger.error(e.getMessage(), e);
+            } catch (Exception e) {
+                logger.debug("deleteWebfolderLog delete fail. ");
+                logger.error(e.getMessage(), e);
             }
             
             // 메일 건수, 크기 등 통계 현황을 통계 테이블에 저장하는 API를 호출한다.
@@ -1080,8 +1148,11 @@ public class EzEmailScheduler extends EgovFileMngUtil {
                     logger.debug("inputParams=" + inputParams);
                     
                     response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
-                    
-                    logger.debug("response=" + response);                           
+
+                    logger.debug("response=" + response);
+                } catch (DataAccessException e) {
+                    logger.debug(e.getMessage());
+                    logger.error(e.getMessage(), e);
                 } catch (Exception e) {
                     logger.debug(e.getMessage());
                     logger.error(e.getMessage(), e);
@@ -1136,215 +1207,218 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 			logger.debug("path=" + realPath + directory);
 			if (file.exists()) {
 				File[] files = file.listFiles();
-				
-				for (File f : files) {
-					logger.debug("f.getName()=" + f.getName());
-					logger.debug("nowTime=" + nowTime);
-					logger.debug("f.lastModified()=" + f.lastModified());
-					
-					if (nowTime - f.lastModified() > dayLimit * 24 * 60 * 60 * 1000) {
-						if (deleteDirectory(f)) {
-							logger.debug(f.getName() + " is deleted.");
-						}
-					}
-					
-				}
-			}
-		}
-		
-		logger.debug("dailyFileManage scheduler ended.");
-	}
-	
-	/**
-	 * @since 2018.03.06
-	 * @author jwseo99
-	 * 
-	 * 편지함 용량 경고 메일 자동 발송
-	 * */
-	@Scheduled(cron = "${config.cron.broadcastQuotaWarning}")
-	public void broadcastQuotaWarning() throws Exception {
-		logger.debug("broadcastQuotaWarning started.");
-		
-		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", 0);
-		if(useExternalMailServer != null && useExternalMailServer.equalsIgnoreCase("YES")) {
-			logger.debug("broadcastQuotaWarning scheduler ended.");
-			return;
-		}
-		
-		//choose scheduler running server
-		if (!preScheduler("broadcastQuotaWarning")) {
-			logger.debug("broadcastQuotaWarning scheduler ended.");
-			return;
-		}
-		
-		List<String> emailArray = new ArrayList<>();
-		
-		try {
-			// get all rows from jmocha_storage_warning_sent table
-			String requestURI = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getEmailForStorageWarningSent";
-			String resultJsonStr = ezEmailUtil.getWebServiceResult(requestURI, null);
-			
-			// result json parsing
-			JSONParser jsonParser = new JSONParser();
-			JSONObject jsonObject;
-			
-			jsonObject = (JSONObject) jsonParser.parse(resultJsonStr);
-			JSONArray emailJsonArray = (JSONArray) jsonObject.get("data");
-			
-			// JSONArray to ArrayList<String>
-			for (Object emailObject : emailJsonArray) {
-				String emailAddress = emailObject.toString();
-				emailArray.add(emailAddress);
-			}			
-		} catch (Exception ex) {
-			logger.error(ex.getMessage(), ex);
-		}
-		
-		// using system locale
-		Locale systemLocale = Locale.getDefault();
-		// mail access info
-		String mailServerAddress = config.getProperty("config.MailServerAddress");
-		String imapPort = config.getProperty("config.IMAPPort");
-		
-		// message info
-		InternetAddress from = new InternetAddress("postmaster@localhost");		
-		
-		// process mailQuota
-		for (String userEmail : emailArray) {
-			
-			try {
-				String domainName = userEmail.substring(userEmail.indexOf("@") + 1, userEmail.length());
-				int tenantId = ezCommonService.getTenantIdByDomainName(domainName);
-				String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
-				Locale locale;
+
+                if (files != null){
+                    for (File f : files) {
+                        logger.debug("f.getName()=" + f.getName());
+                        logger.debug("nowTime=" + nowTime);
+                        logger.debug("f.lastModified()=" + f.lastModified());
+
+                        if (nowTime - f.lastModified() > dayLimit * 24 * 60 * 60 * 1000) {
+                            if (deleteDirectory(f)) {
+                                logger.debug(f.getName() + " is deleted.");
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
+
+        logger.debug("dailyFileManage scheduler ended.");
+    }
+
+    /**
+     * @author jwseo99
+     * <p>
+     * 편지함 용량 경고 메일 자동 발송
+     * @since 2018.03.06
+     */
+    @Scheduled(cron = "${config.cron.broadcastQuotaWarning}")
+    public void broadcastQuotaWarning() throws Exception {
+        logger.debug("broadcastQuotaWarning started.");
+
+        String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", 0);
+        if (useExternalMailServer != null && useExternalMailServer.equalsIgnoreCase("YES")) {
+            logger.debug("broadcastQuotaWarning scheduler ended.");
+            return;
+        }
+
+        //choose scheduler running server
+        if (!preScheduler("broadcastQuotaWarning")) {
+            logger.debug("broadcastQuotaWarning scheduler ended.");
+            return;
+        }
+
+        List<String> emailArray = new ArrayList<>();
+
+        try {
+            // get all rows from jmocha_storage_warning_sent table
+            String requestURI = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getEmailForStorageWarningSent";
+            String resultJsonStr = ezEmailUtil.getWebServiceResult(requestURI, null);
+
+            // result json parsing
+            JSONParser jsonParser = new JSONParser();
+            JSONObject jsonObject;
+
+            jsonObject = (JSONObject) jsonParser.parse(resultJsonStr);
+            JSONArray emailJsonArray = (JSONArray) jsonObject.get("data");
+
+            // JSONArray to ArrayList<String>
+            for (Object emailObject : emailJsonArray) {
+                String emailAddress = emailObject.toString();
+                emailArray.add(emailAddress);
+            }
+        } catch (ParseException ex) {
+            logger.error(ex.getMessage(), ex);
+        } catch (Exception ex) {
+            logger.error(ex.getMessage(), ex);
+        }
+
+        // using system locale
+        Locale systemLocale = Locale.getDefault();
+        // mail access info
+        String mailServerAddress = config.getProperty("config.MailServerAddress");
+        String imapPort = config.getProperty("config.IMAPPort");
+
+        // message info
+        InternetAddress from = new InternetAddress("postmaster@localhost");
+
+        // process mailQuota
+        for (String userEmail : emailArray) {
+
+            try {
+                String domainName = userEmail.substring(userEmail.indexOf("@") + 1, userEmail.length());
+                int tenantId = ezCommonService.getTenantIdByDomainName(domainName);
+                String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
+                Locale locale;
 
 				String lang = ezCommonService.getTenantConfig("useSecondaryLang", tenantId);
 				if ("YES".equals(lang)){
 					primaryLang="2";
 				}
 
-				switch (primaryLang) {
-				case "1":
-					locale = Locale.KOREA;
-					break;
-				case "2":
-					locale = Locale.US;
-					break;
-				case "3":
-					locale = Locale.JAPAN;
-					break;
-				default:
-					locale = systemLocale;
-				}
-				
-				String fontFamily = egovMessageSource.getMessage("ezEmail.sjw01", locale);
-				String subject = egovMessageSource.getMessage("ezEmail.sjw02", locale);
-				String suggestion = egovMessageSource.getMessage("ezEmail.sjw03", locale);
-				
-				String fontStyle = String.format("style='font-family: %s; font-size: %spx;'", fontFamily, 13);
-				
-				// user quota info
-				Double[] userQuotaData = ezEmailUtil.getUserQuota(userEmail);
-				
-				if (userQuotaData[0] == null) {
-					userQuotaData = ezEmailUtil.getDefaultQuota(domainName);
-				}
-				
-				IMAPAccess imapAccess = IMAPAccess.getInstance(mailServerAddress, imapPort, userEmail, jspw, egovMessageSource, 
-														locale, ezEmailUtil);
-				
-				// KB
-				long[] storageUsageAndLimit = imapAccess.getStorageUsageAndLimit();
-				long mailboxUsage = storageUsageAndLimit[0];
-				long mailboxQuota = storageUsageAndLimit[1];
-				// MB to KB
-				double mailboxWarning = userQuotaData[1] * 1024;
-				
-				logger.debug("============");
-				logger.debug(String.format("user: %s", userEmail));
-				logger.debug(String.format("quota max: %s", mailboxQuota));
-				logger.debug(String.format("quota used: %s", mailboxUsage));
-				logger.debug(String.format("quota warning: %s", mailboxWarning));
-				
-				// 메일함 용량이 경고 발생 용량보다 작으면 continue
-				if (mailboxUsage < mailboxWarning) {
-					logger.debug("============");
-					continue;
-				}
-				
-				int usedPercent = (int) ((100 / (float) mailboxQuota) * mailboxUsage);
-				int unusedPercent = 100 - usedPercent;
-				
-				logger.debug("used percent: {}", usedPercent);
-				logger.debug("unused percent: {}", unusedPercent);
-				logger.debug("============");
-				
-				// content
-				StringBuilder content = new StringBuilder();
-				content.append(String.format("<span %s>%s</span><br/><br/>", fontStyle, subject));
-				content.append("<table cellspacing='0;'>")
-					.append("	<tbody>")
-					.append("		<tr>")
-					.append("			<td style='background-color:#FFCC00;width:" + usedPercent * 2 + "px;border-left-style:solid;border-top-style:solid;border-bottom-style:solid;border-color:black;border-width:1'><font color='#000000' size='2' face='Tahoma'>" + humanReadableByteCount(mailboxUsage * 1024) + "</font></td>")
-					.append("			<td style='background-color:#ffffff;width:" + unusedPercent * 2 + "px;border-right-style:solid;border-top-style:solid;border-bottom-style:solid;border-color:black;border-width:1'>&nbsp;</td>")
-					.append("			<td><span " + fontStyle + "><b>" + humanReadableByteCount(mailboxQuota * 1024) + "</b></span></td>")
-					.append("		</tr>")
-					.append("	</tbody>")
-					.append("</table>");
-				content.append(String.format("<br/><span %s>%s</span><br/>", fontStyle, suggestion));
-				
-				// send mail
-				ezEmailService.sendMail(userEmail, jspw, null, from, new InternetAddress[]{ new InternetAddress(userEmail) }, null, null, subject, content.toString(), false, EmailImportance.HIGH);
-			} catch (Exception ex) {
-				logger.error(ex.getMessage(), ex);
-			}
-			
-		}
-		
-		logger.debug("broadcastQuotaWarning end.");
-	}
-	
-	
-	/**
-	 * 만료일 지난 사용자 공용배포그룹 삭제
-	 */
-	@Scheduled(cron = "${config.cron.useDistributionoDelete}")
-	public void useDistributionoDelete() throws Exception{
-		logger.debug("useDistributionoDelete scheduler started.");
-		
-		//choose scheduler running server
-		if (!preScheduler("useDistributionoDelete")) {
-			logger.debug("useDistributionoDelete scheduler ended.");
-			return;
-		}
-		
-		int tenantId = 0;
-		String delDLURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/deleteDistribution";
-		
-		String useUserDefinedDL = ezCommonService.getTenantConfig("useUserDefinedDL", tenantId);
-		
-		if (useUserDefinedDL.equalsIgnoreCase("YES")) {
-			try {
-				List<MailDistributionVO> dlVoList = ezEmailService.getExpiredUserDistributionList();
-				for (MailDistributionVO dlVo : dlVoList) {
-					String domain = dlVo.getDomain();
-					String dlId = dlVo.getId();
-					logger.debug("domain=" + domain + ", dlId=" + dlId);
-					
-					String delDlInputParams = "domain=" + domain + "&cn=" + dlId;
-					String delDlResponse = ezEmailUtil.getWebServiceResult(delDLURL, delDlInputParams);		
-					logger.debug("delDlResponse=" + delDlResponse);
-					
-				}
-			} catch (Exception e) {
-				logger.error(e.getMessage(), e);
-			} finally {
-			}
-		}	
-		
-		logger.debug("useDistributionoDelete scheduler ended.");
-	}
-	
+                switch (primaryLang) {
+                    case "1":
+                        locale = Locale.KOREA;
+                        break;
+                    case "2":
+                        locale = Locale.US;
+                        break;
+                    case "3":
+                        locale = Locale.JAPAN;
+                        break;
+                    default:
+                        locale = systemLocale;
+                }
+
+                String fontFamily = egovMessageSource.getMessage("ezEmail.sjw01", locale);
+                String subject = egovMessageSource.getMessage("ezEmail.sjw02", locale);
+                String suggestion = egovMessageSource.getMessage("ezEmail.sjw03", locale);
+
+                String fontStyle = String.format("style='font-family: %s; font-size: %spx;'", fontFamily, 13);
+
+                // user quota info
+                Double[] userQuotaData = ezEmailUtil.getUserRealQuota(userEmail);
+
+                IMAPAccess imapAccess = IMAPAccess.getInstance(mailServerAddress, imapPort, userEmail, jspw, egovMessageSource,
+                        locale, ezEmailUtil);
+
+                // KB
+                long[] storageUsageAndLimit = imapAccess.getStorageUsageAndLimit();
+                long mailboxUsage = storageUsageAndLimit[0];
+                long mailboxQuota = storageUsageAndLimit[1];
+                // MB to KB
+                double mailboxWarning = userQuotaData[1] * 1024;
+
+                logger.debug("============");
+                logger.debug(String.format("user: %s", userEmail));
+                logger.debug(String.format("quota max: %s", mailboxQuota));
+                logger.debug(String.format("quota used: %s", mailboxUsage));
+                logger.debug(String.format("quota warning: %s", mailboxWarning));
+
+                // 메일함 용량이 경고 발생 용량보다 작으면 continue
+                if (mailboxUsage < mailboxWarning) {
+                    logger.debug("============");
+                    continue;
+                }
+
+                int usedPercent = (int) ((100 / (float) mailboxQuota) * mailboxUsage);
+                int unusedPercent = 100 - usedPercent;
+
+                logger.debug("used percent: {}", usedPercent);
+                logger.debug("unused percent: {}", unusedPercent);
+                logger.debug("============");
+
+                // content
+                StringBuilder content = new StringBuilder();
+                content.append(String.format("<span %s>%s</span><br/><br/>", fontStyle, subject));
+                content.append("<table cellspacing='0;'>")
+                        .append("	<tbody>")
+                        .append("		<tr>")
+                        .append("			<td style='background-color:#FFCC00;width:" + usedPercent * 2 + "px;border-left-style:solid;border-top-style:solid;border-bottom-style:solid;border-color:black;border-width:1'><font color='#000000' size='2' face='Tahoma'>" + humanReadableByteCount(mailboxUsage * 1024) + "</font></td>")
+                        .append("			<td style='background-color:#ffffff;width:" + unusedPercent * 2 + "px;border-right-style:solid;border-top-style:solid;border-bottom-style:solid;border-color:black;border-width:1'>&nbsp;</td>")
+                        .append("			<td><span " + fontStyle + "><b>" + humanReadableByteCount(mailboxQuota * 1024) + "</b></span></td>")
+                        .append("		</tr>")
+                        .append("	</tbody>")
+                        .append("</table>");
+                content.append(String.format("<br/><span %s>%s</span><br/>", fontStyle, suggestion));
+
+                // send mail
+                ezEmailService.sendMail(userEmail, jspw, null, from, new InternetAddress[]{new InternetAddress(userEmail)}, null, null, subject, content.toString(), false, EmailImportance.HIGH);
+            } catch (IndexOutOfBoundsException ex) {
+                logger.error(ex.getMessage(), ex);
+            } catch (Exception ex) {
+                logger.error(ex.getMessage(), ex);
+            }
+
+        }
+
+        logger.debug("broadcastQuotaWarning end.");
+    }
+
+
+    /**
+     * 만료일 지난 사용자 공용배포그룹 삭제
+     */
+    @Scheduled(cron = "${config.cron.useDistributionoDelete}")
+    public void useDistributionoDelete() throws Exception {
+        logger.debug("useDistributionoDelete scheduler started.");
+
+        //choose scheduler running server
+        if (!preScheduler("useDistributionoDelete")) {
+            logger.debug("useDistributionoDelete scheduler ended.");
+            return;
+        }
+
+        int tenantId = 0;
+        String delDLURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/deleteDistribution";
+
+        String useUserDefinedDL = ezCommonService.getTenantConfig("useUserDefinedDL", tenantId);
+
+        if (useUserDefinedDL.equalsIgnoreCase("YES")) {
+            try {
+                List<MailDistributionVO> dlVoList = ezEmailService.getExpiredUserDistributionList();
+                for (MailDistributionVO dlVo : dlVoList) {
+                    String domain = dlVo.getDomain();
+                    String dlId = dlVo.getId();
+                    logger.debug("domain=" + domain + ", dlId=" + dlId);
+
+                    String delDlInputParams = "domain=" + domain + "&cn=" + dlId;
+                    String delDlResponse = ezEmailUtil.getWebServiceResult(delDLURL, delDlInputParams);
+                    logger.debug("delDlResponse=" + delDlResponse);
+
+                }
+            } catch (DataAccessException e) {
+                logger.error(e.getMessage(), e);
+            } catch (Exception e) {
+                logger.error(e.getMessage(), e);
+            }
+        }
+
+        logger.debug("useDistributionoDelete scheduler ended.");
+    }
+
 
 	/** 
 	 * 퇴직일로부터 n일 지난 퇴직자 자동 삭제
@@ -1462,142 +1536,209 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 		logger.debug("preScheduler started.");
 		
 		boolean isSchedulerServer = false;
-		
-		if (config.getProperty("config.Run_Scheduler").equals("YES")) {
-			logger.debug("Elect scheduler server.");
-			try {
-				//set SchedulerServer
-				String server = config.getProperty("config.SchedulerServer");
-								
-				String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/setSchedulerServer";
-				
-				String schedulerParam = "scheduler=" + URLEncoder.encode(scheduler, "UTF-8");
-				String serverParam = "server=" + URLEncoder.encode(server, "UTF-8");
-				
-				String inputParams = schedulerParam + "&" + serverParam;
-				logger.debug("inputParams=" + inputParams);
-				
-				String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);		
-				logger.debug("response=" + response);
-				
-				//sleep 20 seconds
-				logger.debug(scheduler + " is sleeping...");
-				Thread.sleep(20000);
-				
-				//get SchedulerServer
-				requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getSchedulerServer";
-				
-				inputParams = schedulerParam;
-				logger.debug("inputParams=" + inputParams);
-				
-				response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
-				logger.debug("response=" + response);
-				
-				JSONParser parser = new JSONParser();
-				JSONObject object = (JSONObject)parser.parse(response);
-		        
-		        if (object.get("resultCode").equals("OK") && ((Long)object.get("reasonCode")).intValue() == 0) {
-		        	String schedulerServer = (String)object.get("result");
-		        	
-		        	if (schedulerServer.equals(server)) {
-		        		isSchedulerServer = true;
-		        		logger.debug("This is elected as a scheduler server.");
-		        	} else {
-		        		logger.debug("This is not elected.");
-		        	}
-		        } else {
-		        	logger.error("Cannot get SchedulerServer.");
-		        }
-				
-			} catch (Exception e) {
-				logger.error(e.getMessage(), e);
-			}
-		} else {
-			logger.debug("config.Run_Scheduler property is not YES.");
-		}
-		
-		logger.debug("preScheduler ended.");
-		
-		return isSchedulerServer;
-	}
-	
-	class DeleteExpireAttachFilter implements FilenameFilter {
-		private int bigSizeMailAttachDelDay;
-		private String today;
-		
-		public DeleteExpireAttachFilter(int bigSizeMailAttachDelDay) {
-			super();
-			
-			this.bigSizeMailAttachDelDay = bigSizeMailAttachDelDay;
-			this.today = EgovDateUtil.getToday("");
-		}
-		
-		@Override
-		public boolean accept(File dir, String name) {
-			if (name != null && dir.isDirectory()) {
-				if (NumberUtils.isNumber(name)) {
-					return EgovDateUtil.getDaysDiff(name, today) > bigSizeMailAttachDelDay;
-				}
-			}
-			return false;
-		}
-	}
-	
-	public String getWebServiceResultForGw(String urlString, String inputParams) throws Exception {
-		logger.debug("getWebServiceResultForGw Started.");
 
-		String result = null;
+        if ("YES".equals(config.getProperty("config.Run_Scheduler"))) {
+            logger.debug("Elect scheduler server.");
+            try {
+                //set SchedulerServer
+                String server = config.getProperty("config.SchedulerServer");
+
+                String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/setSchedulerServer";
+
+                String schedulerParam = "scheduler=" + URLEncoder.encode(scheduler, "UTF-8");
+                String serverParam = "server=" + URLEncoder.encode(server, "UTF-8");
+
+                String inputParams = schedulerParam + "&" + serverParam;
+                logger.debug("inputParams=" + inputParams);
+
+                String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+                logger.debug("response=" + response);
+
+                //sleep 20 seconds
+                logger.debug(scheduler + " is sleeping...");
+                Thread.sleep(20000);
+
+                //get SchedulerServer
+                requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getSchedulerServer";
+
+                inputParams = schedulerParam;
+                logger.debug("inputParams=" + inputParams);
+
+                response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+                logger.debug("response=" + response);
+
+                JSONParser parser = new JSONParser();
+                JSONObject object = (JSONObject) parser.parse(response);
+
+                if (object.get("resultCode").equals("OK") && ((Long) object.get("reasonCode")).intValue() == 0) {
+                    String schedulerServer = (String) object.get("result");
+
+                    if (schedulerServer.equals(server)) {
+                        isSchedulerServer = true;
+                        logger.debug("This is elected as a scheduler server.");
+                    } else {
+                        logger.debug("This is not elected.");
+                    }
+                } else {
+                    logger.error("Cannot get SchedulerServer.");
+                }
+            } catch (ParseException e) {
+                logger.error(e.getMessage(), e);
+            } catch (Exception e) {
+                logger.error(e.getMessage(), e);
+            }
+        } else {
+            logger.debug("config.Run_Scheduler property is not YES.");
+        }
+
+        logger.debug("preScheduler ended.");
+
+        return isSchedulerServer;
+    }
+
+    class DeleteExpireAttachFilter implements FilenameFilter {
+        private int bigSizeMailAttachDelDay;
+        private String today;
+
+        public DeleteExpireAttachFilter(int bigSizeMailAttachDelDay) {
+            super();
+
+            this.bigSizeMailAttachDelDay = bigSizeMailAttachDelDay;
+            this.today = EgovDateUtil.getToday("");
+        }
+
+        @Override
+        public boolean accept(File dir, String name) {
+            if (name != null) {
+                if (NumberUtils.isNumber(name)) {
+                    return EgovDateUtil.getDaysDiff(name, today) > bigSizeMailAttachDelDay;
+                }
+            }
+            return false;
+        }
+    }
+
+    public String getWebServiceResultForGw(String urlString, String inputParams) throws Exception {
+        logger.debug("getWebServiceResultForGw Started.");
+
+        String result = null;
+
+        URL url = new URL(urlString);
+        HttpURLConnection conn = null;
+
+        try {
+            conn = (HttpURLConnection) url.openConnection();
+
+            conn.setDoOutput(true);
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
+            //테넌트 0 번
+            conn.setRequestProperty("Cookie", "loginCookie=hfH144YiWCggw53Wkj4WXmhb0rhoI1B/DeoAXRh0t13Q2Lhpiu2cfZxpGhaoRn5VGFc0scMdIv6w/TXttsWK+JzNnK345dM+ex3sizp9pXwdl7edNQKS8ydC51Aa6GINBE5qSRsW8cV7E7GpPJ5qiEqKq8asuFkHy2ZDT26lofk=;");
+
+            if (inputParams != null) {
+                try (OutputStream os = conn.getOutputStream()) {
+                    // UTF-8로 인코딩한다.
+                    os.write(inputParams.getBytes("UTF-8"));
+                    os.flush();
+                }
+            }
+
+            if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                // Response Body를 UTF-8로서 디코딩한다.
+                try (BufferedReader br = new BufferedReader(
+                        new InputStreamReader(conn.getInputStream(), "UTF-8")
+                )) {
+
+                    StringBuilder sb = new StringBuilder();
+                    String output;
+
+                    while ((output = br.readLine()) != null) {
+                        sb.append(output);
+                    }
+
+                    result = sb.toString();
+                }
+
+                conn.disconnect();
+                conn = null;
+            } else {
+                Exception e = new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
+
+                throw e;
+            }
+        } finally {
+            if (conn != null) {
+                conn.disconnect();
+                conn = null;
+            }
+        }
+
+        logger.debug("getWebServiceResultForGw ended.");
+        return result;
+    }
+
+	/**
+	 * 승인메일 : 자동삭제 - (전사/일반) 승인신청한 메일이 n개월이 지나면 자동삭제 (상태변경)
+	 * 자동삭제 상태로 변경되는 메일은 신청자의 임시보관함으로 이동 및 알림메일 발송
+	 */
+	@Scheduled(cron = "${config.cron.autoDeleteApprMailHistory}")
+	public void autoDeleteApprMailHistroy() throws Exception {
+		logger.debug("autoDeleteApprMailHistroy scheduler started.");
 		
-		URL url = new URL(urlString);
-		HttpURLConnection conn = null;
-				
 		try {
-			conn = (HttpURLConnection) url.openConnection();
-			
-			conn.setDoOutput(true);
-			conn.setRequestMethod("POST");
-			conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
-			//테넌트 0 번 
-			conn.setRequestProperty("Cookie", "loginCookie=hfH144YiWCggw53Wkj4WXmhb0rhoI1B/DeoAXRh0t13Q2Lhpiu2cfZxpGhaoRn5VGFc0scMdIv6w/TXttsWK+JzNnK345dM+ex3sizp9pXwdl7edNQKS8ydC51Aa6GINBE5qSRsW8cV7E7GpPJ5qiEqKq8asuFkHy2ZDT26lofk=;");
-			
-			if (inputParams != null) {
-				OutputStream os = conn.getOutputStream();
-				// UTF-8로 인코딩한다.
-				os.write(inputParams.getBytes("UTF-8"));
-				os.flush();
-			}
-			
-			if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
-				// Response Body를 UTF-8로서 디코딩한다.			
-				BufferedReader br = new BufferedReader(
-							new InputStreamReader(conn.getInputStream(),"UTF-8")
-							);
-	
-				StringBuilder sb = new StringBuilder();
-				String output;
-	
-				while ((output = br.readLine()) != null) {
-					sb.append(output);
+			for (TenantVO tenantVO : ezCommonService.getTenantList()) {
+				int tenantId = tenantVO.getTenantId();
+				String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
+				
+				// 자동삭제 대상 리스트 조회
+				List<Map<String, String>> hisList = ezEmailService.getAutoDeleteApprMailHistoryList(tenantId, "1");
+				
+				for (Map<String, String> m : hisList) {
+					long uid = Long.parseLong(m.get("mailUID"));
+					String companyId = m.get("companyId");
+					String applicantId = m.get("userId");
+					String applicantEmail = applicantId + "@" + domainName;
+					logger.debug("uid={}, applicantEmail={}, companyId={}", uid, applicantEmail, companyId);
+
+					// 상태변경 및 알림메일 발송
+					ezEmailService.setApprMailAutoDelete(tenantId, companyId, applicantEmail, uid);
 				}
-				
-				result = sb.toString();
-				
-				conn.disconnect();		
-				conn = null;
 			}
-			else {
-				Exception e = new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());			
-				
-				throw e;
-			} 
-		} finally {
-			if (conn != null) {
-				conn.disconnect();
-				conn = null;
-			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
 		}
+		logger.debug("autoDeleteApprMailHistroy scheduler");
+	}
+
+	/**
+	 * 승인메일 : 오래된 로그 삭제 - (일반) n개월이 지난 승인대기 상태 그외의 로그 삭제
+	 */
+	@Scheduled(cron = "${config.cron.deleteOldApprMailHistory}")
+	public void deleteOldApprMailHistory() throws Exception {
+		logger.debug("deleteOldApprMailHistory scheduler started.");
 		
-		logger.debug("getWebServiceResultForGw ended.");
-		return result;
+		try {
+			for (TenantVO tenantVO : ezCommonService.getTenantList()) {
+				int tenantId = tenantVO.getTenantId();
+				String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
+				
+				// 로그 삭제 대상 리스트 조회
+				List<Map<String, String>> hisList = ezEmailService.getOldApprMailHistoryList(tenantId, "1");
+				
+				for (Map<String, String> m : hisList) {
+					long uid = Long.parseLong(m.get("mailUID"));
+					String companyId = m.get("companyId");
+					String applicantId = m.get("userId");
+					String applicantEmail = applicantId + "@" + domainName;
+					logger.debug("uid={}, applicantEmail={}, companyId={}", uid, applicantEmail, companyId);
+
+					// 삭제
+					ezEmailService.setOldApprMailDelete(tenantId, companyId, applicantEmail, uid);
+				}
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+		logger.debug("deleteOldApprMailHistory scheduler");
 	}
 }

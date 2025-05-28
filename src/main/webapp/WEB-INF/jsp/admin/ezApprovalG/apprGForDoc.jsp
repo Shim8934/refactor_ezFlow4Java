@@ -6,7 +6,8 @@
 	<head>
 		<title><spring:message code = 'ezApprovalG.t1310' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/css/font-awesome-4.7.0/css/font-awesome.min.css')}" type="text/css"/>
 		<style>
@@ -41,6 +42,7 @@
 			var pOpenYear = "<c:out value = '${openYear}'/>";
 			var useWebHWP = "<c:out value = '${useWebHWP}'/>";
 			var selectYear = "ALL";
+			var useReceiveInfoName = "<c:out value ='${useReceiveInfoName}'/>"; // 수신처 뒤에 "장"을 붙이는지 여부 (0 : 안붙임 / 1 : 붙임 / 2: 상위부서 + 수신처장)
 
 			document.onselectstart = function () {
 				if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
@@ -95,9 +97,10 @@
 				
 				var toDayYear = parseInt(nowDate.substring(0,4));
 	            var minusYear = parseInt(nowDate.substring(0,4)) - parseInt(pOpenYear);
-	            for (var i = toDayYear; i >= toDayYear - minusYear ; i--)
+	            for (var i = toDayYear; i >= toDayYear - minusYear ; i--) {
 	                AddOption(sel_year, i, i);
-                
+	            }
+	            
                 pChackYN = "INIT";
 				
 				GetDocList();
@@ -163,12 +166,21 @@
 				    for (var i = 0; i < 20; i++) {
 				        SearchCond[i] = "";
 				    }
-				} else if (pChackYN == "SEARCH") {
+				    
+				    /* 2024-03-20 홍승비 - 기존 문자열 subQuery를 신규 파라미터로 대체 (두 개의 검색조건만 사용됨) */
+				    ezStatisticsSearch_QueryMap.set("keyword", "");
+				    ezStatisticsSearch_QueryMap.set("itemcode", "");
+				}
+				else if (pChackYN == "SEARCH") {
+					// 검색을 위한 SearchCond 조건을 그대로 사용
+				}
+				else if (pChackYN == "INIT") {
+					for (var i = 0; i < 20; i++) {
+						SearchCond[i] = "";
+					}
 					
-				} else if (pChackYN == "INIT") {
-					 for (var i = 0; i < 20; i++) {
-					        SearchCond[i] = "";
-					 }
+					ezStatisticsSearch_QueryMap.set("keyword", "");
+					ezStatisticsSearch_QueryMap.set("itemcode", "");
 					 
 					var nowyear = nowDate.substring(0,4);
 			        var nowmonth = nowDate.substring(5,7);
@@ -213,11 +225,14 @@
 	            		pageNum : pageNum,
 	            		pageSize : pageSize,
 	            		docState : "",
-	            		subQuery : SearchCond[18],
+	            		//subQuery : SearchCond[18],
 	            		orderCell : "",
 	            		orderOption : "",
 	            		approvUser : SearchCond[19],
-	            		companyID : pCompanyID
+	            		companyID : pCompanyID,
+	            		/* 2024-03-20 홍승비 - 기존 문자열 subQuery를 신규 파라미터로 대체 (두 개의 검색조건만 사용됨) */
+	            		keyword : ezStatisticsSearch_QueryMap.get("keyword"),
+	            		itemcode : ezStatisticsSearch_QueryMap.get("itemcode")
 	            	},
 	            	success : function(resultXml) {
 	            		var result = JSON.parse(resultXml);
@@ -302,28 +317,28 @@
 				var strtext;
 				var PagingHTML = "";
 				document.getElementById("tblPageRayer").innerHTML = "";
-				document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + pTotalCnt + "</span>";
+				document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span class='txt_color'>" + pTotalCnt + "</span>";
 				strtext = "<div class='pagenavi'>";
 				PagingHTML += strtext;
 				
 				if (totalPage > 1 && pageNum != 1) {
-				    strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif'></span>";
+					strtext = "<span class='btnimg first' onclick= 'return goToPageByNum(1)'></span>";
 				    PagingHTML += strtext;
 				} else {
-				    strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif'></span>";
+					strtext = "<span class='btnimg first disabled'></span>";
 				    PagingHTML += strtext;
 				}
 				
 				if (totalPage > BlockSize) {
 				    if (pageNum > BlockSize) {
-				        strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif'></span>";
+						strtext = "<span class='btnimg prev' onclick= 'return selbeforeBlock()'></span>";
 				        PagingHTML += strtext;
 				    } else {
-				        strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif'></span>";
+						strtext = "<span class='btnimg prev disabled'></span>";
 				        PagingHTML += strtext;
 				    }
 				} else {
-				    strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif'></span>";
+					strtext = "<span class='btnimg prev disabled'></span>";
 				    PagingHTML += strtext;
 				}
 				var MaxNum;
@@ -354,24 +369,24 @@
 				if (totalPage > BlockSize) {
 				    if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
 				        strtext = "";
-				        strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif'></span>";
+						strtext = strtext + "<span class='btnimg next' onclick='return selafterBlock()'></span>";
 				        PagingHTML += strtext;
 				    } else {
 				        strtext = "";
-				        strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif'></span>";
+						strtext = strtext + "<span class='btnimg next disabled'></span>";
 				        PagingHTML += strtext;
 				    }
 				} else {
 				    strtext = "";
-				    strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif'></span>";
+					strtext = strtext + "<span class='btnimg next disabled'></span>";
 				    PagingHTML += strtext;
 				}
 				
 				if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-				    strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif'></span>";
+					strtext = "<span class='btnimg last' onclick='return goToPageByNum(" + totalPage + ")'></span>";
 				    PagingHTML += strtext;
 				} else {
-				    strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif'></span>";
+					strtext = "<span class='btnimg last disabled'></span>";
 				    PagingHTML += strtext;
 				}
 				
@@ -737,6 +752,7 @@
 			}
 			
 			var ezStatisticsSearch_Cross_dialogArguments = new Array();
+			var ezStatisticsSearch_QueryMap = new Map();
 			function SearchCondi_onclick() {
 				var para;
 				
@@ -912,7 +928,12 @@
 			function replaceCond(condStr){//검색조건 수정(% _ ' 추가)
 				return condStr.toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/%/g, "\\%").replace(/'/g, "\\'").replace(/_/g, "\\_");
 			}
-			
+
+			function restoreCond(condStr) {
+				return condStr.toString().replace(/\\_/g, "_").replace(/\\'/g, "'").replace(/\\%/g, "%").replace(/&gt;/g, ">").replace(/&lt;/g, "<").replace(/&amp;/g, "&");
+			}
+
+
 			var Tab1_SelectID = "";
 		    function Tab1_MouserOver(obj) {
 		        obj.className = "tabover";
@@ -1103,7 +1124,7 @@
 					"&P13=" + encodeURI(SearchCond[13]) + "&P14=" + encodeURI(SearchCond[14]) + "&P15=" + "" + "&P16=" + "" + "&P17=" +
 					 "" + "&P18=" + "" + "&P19=" + "" + "&P20=" + "" + "&P21=" + encodeURI(SearchCond[16]) +
 					"&P23=" + encodeURI(SearchCond[17]) + "&P24=" + "ADMIN" + "&PN=" + encodeURI(tempPageNum) + "&PS=" + encodeURI(tempPageSize) + "&OC=" + encodeURI(OrderCell) +
-					"&OO=" + "" + "&allFG=" + AllFG + "&SQ=" + "" + "&orgCompanyID=" + pCompanyID;
+					"&OO=" + "" + "&allFG=" + AllFG + "&SQ=" + encodeURI(restoreCond(SearchCond[18])) + "&orgCompanyID=" + pCompanyID;
 	       		} else {
 	       			url += "?listType=SEARCH&P0=" + encodeURI(SearchCond[0]) + "&P1=" + encodeURI(SearchCond[1]) +
 					"&P2=" + encodeURI(SearchCond[2]) +
@@ -1116,7 +1137,7 @@
 					"&P13=" + "" + "&P14=" + "" + "&P15=" + "" + "&P16=" + "" + "&P17=" + "" + 
 					"&P18=" + "" + "&P19=" + "" + "&P20=" + "" + "&P21=" + "" +
 					"&P23=" + "" + "&P24=" + "ADMIN" + "&PN=" + encodeURI(tempPageNum) + "&PS=" + encodeURI(tempPageSize) + "&OC=" + encodeURI(OrderCell) +
-					"&OO=" + "" + "&allFG=" + AllFG + "&SQ=" + "" + "&orgCompanyID=" + pCompanyID;
+					"&OO=" + "" + "&allFG=" + AllFG + "&SQ=" + encodeURI(restoreCond(SearchCond[18])) + "&orgCompanyID=" + pCompanyID;
 	       		}
 	           
 			     window.frames["saveExcel"].location.href = url;

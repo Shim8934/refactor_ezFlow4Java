@@ -6,7 +6,8 @@
 	<head>
 		<title><spring:message code="ezBoard.jjh02" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	    <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css" />
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+	    <link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezBoard/common.js')}"></script>	    
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -109,7 +110,7 @@
 				          		<th><c:out value='${lang_secondary}'/></th>
 				          		<td><input name="text" type="text" id="txtNewName2" style="WIDTH:100%" maxlength="30"></td>
 				        	</tr>
-			          		<c:if test="${useJapanese == 'YES'}">
+			          		<c:if test="${useJapanese == 'YES' && lang_primary ne lang_tertiary}">
 					        	<tr class="primary">
 					        		<th><c:out value='${lang_tertiary}'/></th>
 					          		<td><input name="text" type="text" id="txtNewName3" style="WIDTH:100%" maxlength="30"></td>

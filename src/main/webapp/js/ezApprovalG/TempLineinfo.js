@@ -354,6 +354,25 @@ function btn_AddToAprLine_onclick()
 	}
 	else
 	{
+		/* 2024-05-10 양지혜 - 전자결재 > 결재정보 > 퇴직자 포함된 즐겨찾기 적용 시 제외 */
+		var RetireList = [];
+		var NonReceivingDeptList = [];
+		document.querySelectorAll('[id^="lvAPRTEMP_TR_"]').forEach(function(element) {
+			if (element.getAttribute('RETIRECHK') == "Y") {
+				RetireList.push(element.querySelector("td:nth-child(3)").textContent);
+			}
+			if (approvalFlag === "G" && element.getAttribute("DATA6") == "Y" && GetEntryInfo(element.getAttribute("DATA5")) !== "Y") {
+				NonReceivingDeptList.push(element.getAttribute("DATA9"));
+			}
+		});
+		if (RetireList.length > 0) {
+			alert("[" + RetireList.join(",") + "] 는 퇴직자입니다.\n즐겨찾기 적용에서 제외됩니다.");
+		}
+
+		if (NonReceivingDeptList.length > 0) {
+			alert("[" + NonReceivingDeptList.join(",") + "] " + strLangJJE01);
+		}
+
 		AddToAprLineFromAprLineTemplet(p_CheckAprLineTempletSN);		
 		pAprLineTempletFlag = true;
 		p_CheckAprLineTempletSN = ListViewLen[0].getAttribute("DATA1"); 

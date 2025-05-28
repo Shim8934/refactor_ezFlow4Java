@@ -12,7 +12,7 @@ function showProgress() {
 function hideProgress() {
     try {
         document.getElementById("progressviewerRayer").style.display = "none";
-    } catch (e) {}
+    } catch (e) {console.log(e);}
 }
 
 function ShowMailProgress() {
@@ -44,22 +44,22 @@ function makePageSelPage() {
     var pageNum = parseInt(document.getElementById("resultTD").getAttribute("curPage"));
     
     if (totalPage > 1 && pageNum != 1) {
-        PagingHTML += "<span class=\"btnimg\" onclick= 'return goToPageByNum(1)'><img src=\"/images/kr/cm/btn_p_prev.gif\"></span>";
+        PagingHTML += "<span class=\"btnimg first\" onclick= 'return goToPageByNum(1)'></span>";
     }
     else {
-        PagingHTML += "<span class=\"btnimg\"><img src=\"/images/kr/cm/btn_p_prev01.gif\"></span>";
+        PagingHTML += "<span class=\"btnimg first disabled\"></span>";
     }
     
     if (totalPage > BlockSize) {
         if (pageNum > BlockSize) {
-            PagingHTML += "<span class=\"btnimg\" onclick= 'return selbeforeBlock()'><img src=\"/images/kr/cm/btn_prev.gif\"></span>";
+            PagingHTML += "<span class=\"btnimg prev\" onclick= 'return selbeforeBlock()'></span>";
         }
         else {
-            PagingHTML += "<span class=\"btnimg\" ><img src=\"/images/kr/cm/btn_prev01.gif\"></span>";
+            PagingHTML += "<span class=\"btnimg prev disabled\" ></span>";
         }
     }
     else {
-        PagingHTML += "<span class=\"btnimg\" ><img src=\"/images/kr/cm/btn_prev01.gif\"></span>";
+        PagingHTML += "<span class=\"btnimg prev disabled\" ></span>";
     }
     
     var MaxNum;
@@ -88,21 +88,21 @@ function makePageSelPage() {
     
     if (totalPage > BlockSize) {
         if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-            PagingHTML += "<span class=\"btnimg\" onclick='return selafterBlock()'><img src=\"/images/kr/cm/btn_next.gif\"></span>";
+            PagingHTML += "<span class=\"btnimg next\" onclick='return selafterBlock()'></span>";
         }
         else {
-            PagingHTML += "<span class=\"btnimg\"><img src=\"/images/kr/cm/btn_next01.gif\"></span>";
+            PagingHTML += "<span class=\"btnimg next disabled\"></span>";
         }
     }
     else {
-        PagingHTML += "<span class=\"btnimg\"><img src=\"/images/kr/cm/btn_next01.gif\"></span>";
+        PagingHTML += "<span class=\"btnimg next disabled\"></span>";
     }
     
     if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-        PagingHTML += "<span class=\"btnimg\" onclick='return goToPageByNum(" + totalPage + ")'><img src=\"/images/kr/cm/btn_n_next.gif\"></span>";
+        PagingHTML += "<span class=\"btnimg last\" onclick='return goToPageByNum(" + totalPage + ")'></span>";
     }
     else {
-        PagingHTML += "<span class=\"btnimg\"><img src=\"/images/kr/cm/btn_n_next01.gif\"></span>";
+        PagingHTML += "<span class=\"btnimg last disabled\"></span>";
     }
     
     PagingHTML += "</div>";
@@ -191,14 +191,15 @@ function start_search() {
     var sMailFolder = TrimText(select2.value);
     ShowMailProgress();
     if(listType == "mailList"){	
-    	searchRecurMail2(sMailFolder, startDate, endDate);
+    	//searchRecurMail2(sMailFolder, startDate, endDate);
+    	searchRecurMail(sMailFolder, startDate, endDate, true);
     } else {
-    	searchRecurMail(sMailFolder, startDate, endDate);
+    	searchRecurMail(sMailFolder, startDate, endDate, false);
     }
     
 }
 
-function searchRecurMail(sMailFolder, startDate, endDate) {
+function searchRecurMail(sMailFolder, startDate, endDate, isMailList) {
     var pageNum = parseInt(document.getElementById("resultTD").getAttribute("curPage"));
     var startIndex = listSize * (pageNum - 1);
     
@@ -243,7 +244,7 @@ function searchRecurMail(sMailFolder, startDate, endDate) {
     createNodeAndInsertText(xmlDOM, objNode, "STARTINDEX", startIndex);
     createNodeAndInsertText(xmlDOM, objNode, "LISTCOUNT", listSize);
 
-	if (window.tagName) {
+	if (isMailList && window.tagName) {
 		createNodeAndInsertText(xmlDOM, objNode, "TAGNAME", tagName);
 	}
 
@@ -257,7 +258,7 @@ function searchRecurMail(sMailFolder, startDate, endDate) {
     g_searchHttp.onreadystatechange = event_searchRecurMail;
     g_searchHttp.send(xmlDOM);
 }
-
+/* 2025-02-17 - searchRecurMail와 TAGNAME 부분 외 동일하기 때문에 불필요한 코드 중복으로 주석처리
 function searchRecurMail2(sMailFolder, startDate, endDate) {
 	var pageNum = parseInt(document.getElementById("MailList").getAttribute("curPage"));
 	var startIndex = listSize * (pageNum - 1);
@@ -312,7 +313,7 @@ function searchRecurMail2(sMailFolder, startDate, endDate) {
 	g_searchHttp.open("POST", requestUrl, true);
 	g_searchHttp.onreadystatechange = event_searchRecurMail;
 	g_searchHttp.send(xmlDOM);
-}
+}*/
 
 var resultTable = null;
 var recordCount = 0;
@@ -898,13 +899,13 @@ function toggle_flag() {
         flagXmlHttp.send(xmlDom);
         
         // 20200428 조진호 - 메일 리스트에서 체크박스를 이용한 행위 뒤 체크박스가 풀리도록 추가
-        if (listContentArry.length > 0) {
-            for (var i = 1; i <= listContentArry.length; i++) {
-                document.getElementById(listContentArry[listContentArry.length - i]).children[0].children[0].checked = false;
-            }
-        }
+        // if (listContentArry.length > 0) {
+        //     for (var i = 1; i <= listContentArry.length; i++) {
+        //         document.getElementById(listContentArry[listContentArry.length - i]).children[0].children[0].checked = false;
+        //     }
+        // }
     }
-    catch (e) { }
+    catch (e) {console.log(e);}
 }
 function event_toggle_flag_end() {
     if (flagXmlHttp != null && flagXmlHttp.readyState == 4) {

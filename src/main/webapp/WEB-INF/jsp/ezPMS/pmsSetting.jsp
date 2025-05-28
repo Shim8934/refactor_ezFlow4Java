@@ -7,7 +7,8 @@
 <html>
 <head>
 <title><spring:message code='ezPMS.t171' /></title>
-<link rel="stylesheet" href="${util.addVer('ezPMS.e1', 'msg')}" type="text/css" />
+<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css" />
 
 <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -132,7 +133,7 @@ function restoreColor(statusId) {
 }
 </style>
 </head>
-<body class="mainbody">
+<body class="mainbody pmsSetting">
     <h1><spring:message code='ezPMS.t171' /></h1>
     <div class="portlet_tabpart01" style="margin-bottom: 10px">
 	   <div class="portlet_tabpart01_top" id="tab1">
@@ -140,7 +141,7 @@ function restoreColor(statusId) {
 	   </div>
 	</div>
     <div id="contentArea" style="overflow:auto;">
-    	<table class="content" style="width:400px;margin-left:15px;">
+    	<table class="content" style="width:430px;margin-left:15px;">
 		       <tr>
 					<th><spring:message code='ezPMS.t173' /></th>
 					<td>
@@ -156,7 +157,7 @@ function restoreColor(statusId) {
             	<tr>
                 	<th><spring:message code='ezPMS.t174' /></th>
                		<td>
-               			<select id="defaultStatus" style="width: 120px">
+               			<select id="defaultStatus" style="width: 150px">
                				<option value="A"><spring:message code='ezPMS.t271' /></option>
                				<option value="P"><spring:message code='ezPMS.t258' /></option>
                				<option value="W"><spring:message code='ezPMS.t260' /></option>

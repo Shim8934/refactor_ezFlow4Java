@@ -326,18 +326,34 @@ function AppendFileAttachInfo(ret) {
         oTable.appendChild(objTr);
         dadiframe.document.getElementById("lstAttachLink").appendChild(oTable);
 
+		var objP = document.createElement("p");
+		objP.id = "attachInnerNotice";
+		objP.className = "attachInnerNotice_p_off";
+
+		var objSpan = document.createElement("span");
+		objSpan.innerText = strLangMJS01;
+		objSpan.className = "attachInnerNotice_span";
+
+		objP.appendChild(objSpan);
+
+		dadiframe.document.getElementById("lstAttachLink").appendChild(objP);
+		
+
         for (var i = 0; i < objAttachNodes.length; i++) {
             var realFileNM = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]);
             var ServerFile = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[2]);
             var is_newfile = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[5]);
             var fileSize = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[6]);
-            realFileNM = ReplaceText(realFileNM, "'", "&apos;");
+            //realFileNM = ReplaceText(realFileNM, "'", "&apos;");
 
             if (is_newfile != "DEL") {
                 objTr = document.createElement("TR");
                 objTr.setAttribute("DATA2", ServerFile);
+                objTr.setAttribute("realFileName", unescapeHtml(realFileNM));
                 objTr.setAttribute("NEWFILE", is_newfile);
                 objTr.setAttribute("REALFILESIZE", fileSize);
+				objTr.setAttribute("draggable", true);
+				objTr.setAttribute("_fileIndex", i);
 
                 var objTd = document.createElement("TD");
                 objTd.style.textAlign = "center";
@@ -577,4 +593,17 @@ function AttachFileList_Photo()
 	return strRet;
 }
 
+var htmlEntities = {
+	'&amp;': '&',
+	'&#40;': '(',
+	'&#41;': ')',
+	'&#64;': '@',
+	'&#39;': '\'', 
+	'&apos;': '\'', 
+};
 
+function unescapeHtml(escapedString) {
+	return escapedString.replace(/&amp;|&#40;|&#41;|&#64;|&#39;/g, function(match) {
+		return htmlEntities[match];
+	});
+}

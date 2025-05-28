@@ -241,8 +241,9 @@ function SendAckForSend(errMsg, type)
     if (type == "req-resend") {
     	if (result == "<RESLUT>TRUE</RESULT>") {
 	        var pAlertContent = strLang725;
-	        OpenAlertUI(pAlertContent);
-	        window.close();
+	        OpenAlertUI(pAlertContent, function() {
+	        	window.close();
+	        });
     	} else {
     		OpenAlertUI("재전송요청에 실패하였습니다.");
     	}
@@ -1240,7 +1241,7 @@ function convertDate(datestring) {
     }
 }
 
-function btnReqReSend_onclick() {
+/*function btnReqReSend_onclick() {
     var url = "/ezApprovalG/ezRetOpinon.do";
     var feature = "status:no;dialogWidth:420px;dialogHeight:270px;help:no;scroll:no"
     var ret = window.showModalDialog(url, null, feature);
@@ -1254,6 +1255,29 @@ function btnReqReSend_onclick() {
 
         SendAckForSend(pRetMsg, "req-resend");
     }
+}*/
+
+var reqResend_dialogArgument = new Array();
+function btnReqReSend_onclick() {
+	var url = "/ezApprovalG/ezRetOpinon.do";
+	reqResend_dialogArgument[0] = "";
+	reqResend_dialogArgument[1] = btnReqReSend_onclick_conplete;
+
+	DivPopUpShow(420, 270, url);
+}
+
+function btnReqReSend_onclick_conplete(retValue, reqValue) {
+	if (retValue === "cancel") {
+		DivPopUpHidden();
+	} else {
+		var pRetMsg = retValue;
+		pRetMsg = ReplaceString(pRetMsg, "\n", "<br>");
+		pRetMsg = ReplaceString(pRetMsg, "&", "&amp;");
+		pRetMsg = ReplaceString(pRetMsg, "<", "&lt;");
+		pRetMsg = ReplaceString(pRetMsg, ">", "&gt;");
+
+		SendAckForSend(pRetMsg, "req-resend");
+	}
 }
 
 function ReplaceHTML(str) {

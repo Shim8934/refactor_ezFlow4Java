@@ -3,12 +3,13 @@
 
 <sqlMap namespace="Login">
 
-    <typeAlias  alias="egovMap"                 type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+    <typeAlias  alias="egovMap"                 type="org.egovframe.rte.psl.dataaccess.util.EgovMap"/>
     <typeAlias  alias="loginVO"                 type="egovframework.let.user.login.vo.LoginVO"/>
     <typeAlias  alias="SessionVO"               type="egovframework.let.user.login.vo.SessionVO"/>
 	<typeAlias 	alias="loginDeviceVO" 			type="egovframework.let.user.login.vo.LoginDeviceVO"/>
 	<typeAlias 	alias="CountryVO" 			type="egovframework.ezEKP.ezSystem.vo.CountryVO"/>
 	<typeAlias 	alias="findPwdInfo" 			type="egovframework.let.user.login.vo.FindPwdInfoVO"/>
+	<typeAlias 	alias="fidoAuthenticationVO" 	type="egovframework.let.user.login.vo.FidoAuthenticationVO"/>
 
     <!-- 로그인 처리를 위한 resultMap -->
     <resultMap id="login" class="egovframework.let.user.login.vo.LoginVO">
@@ -39,6 +40,8 @@
         <result property="password_updatedt"    column="password_updatedt"          columnIndex="25"/>
         <result property="mobile"    			column="mobile"          			columnIndex="26"/>
         <result property="extensionattribute5"	column="extensionattribute5"		columnIndex="27"/>
+		<result property="jobId"				column="jobId"						columnIndex="28"/>
+		<result property="roleId"				column="roleId"						columnIndex="29"/>
     </resultMap>    
     
     <resultMap id="session" class="egovframework.let.user.login.vo.SessionVO">
@@ -51,6 +54,14 @@
         <result property="timeDiff"   			 column="TIME_DIFF"     			columnIndex="7"/>
     </resultMap>
 
+    <resultMap id="fidoAuthentication" class="egovframework.let.user.login.vo.FidoAuthenticationVO">
+        <result property="fidoSessionId"		column="fido_session_id"			columnIndex="1"/>
+        <result property="id"					column="user_id"					columnIndex="2"/>
+        <result property="creatTime"			column="create_time"				columnIndex="3"/>
+        <result property="ip"					column="access_ip"					columnIndex="4"/>
+        <result property="status"				column="status"						columnIndex="5"		nullValue=""/>
+	</resultMap>
+    
     <resultMap id="tenantServerName" class="egovframework.let.user.login.vo.TenantServerNameVO">
         <result property="serverName"           column="SERVER_NAME"                columnIndex="1"/>    
         <result property="tenantId"             column="TENANT_ID"                  columnIndex="2"/>
@@ -218,9 +229,7 @@
     <!-- 일반 로그인 -->
     <select id="loginDAO.selectUser" resultMap="login">
         <!-- 일반회원 -->       
-        <isEmpty property="deptID">
-	        <![CDATA[
- 	            SELECT  
+ 	            SELECT
  	                cn, 
  	                password,                
  	                displayname, 
@@ -247,17 +256,24 @@
  	                extensionattribute14 as sabun, 
  	                password_updatedt,
  	                mobile,
- 	                extensionattribute5
- 	            FROM  
+ 	                extensionattribute5,
+ 	                EXTENSIONATTRIBUTE7  as jobId,
+ 	            	EXTENSIONATTRIBUTE8  as roleId
+ 	            FROM
  	                TBL_USERMASTER a 
  	            WHERE  
- 	                (cn = #id# OR extensionattribute14 = #id#) AND tenant_id = #tenantId# 
- 	        ]]> 
-	        <isNotEqual prepend="AND" property="dn" compareValue="NOPASSWORD" >         
-	            password = #password#
-	        </isNotEqual>
-	    </isEmpty>
+ 	                (cn = #id# OR extensionattribute14 = #id#) AND tenant_id = #tenantId#
+					<isNotEmpty property="deptID">
+						and department = NVL(#deptID#, department)
+					</isNotEmpty>
+					<isNotEmpty property="jobId">
+						and EXTENSIONATTRIBUTE7 = NVL(#jobId#, EXTENSIONATTRIBUTE7)
+					</isNotEmpty>
+			<isNotEqual prepend="AND" property="dn" compareValue="NOPASSWORD" >
+				password = #password#
+			</isNotEqual>
 	    <isNotEmpty property="deptID">
+			UNION
 	            SELECT 
 					u.cn,
 					u.password,               
@@ -266,31 +282,19 @@
 					d.cn department,              
 					d.displayname description,
 					d.displayname2 description2,
-					case u.department
-				    when #deptID#
-				    then u.title
-				    else
-					(select title from tbl_addjobmaster where cn = #id# and deptid = #deptID# and tenant_id = #tenantId#)
-				    end
-				    as title,
-					case u.department
-				    when #deptID#
-				    then u.title2
-				    else
-					(select title2 from tbl_addjobmaster where cn = #id# and deptid = #deptID# and tenant_id = #tenantId#)
-				    end
-				    as title2,
+					b.title as title,
+					b.title2 as title2,
 					d.EXTENSIONATTRIBUTE2 companyid,
 					d.EXTENSIONATTRIBUTE3 company,
 					d.COMPNM2 company2,
 					u.updatedt,
 					case u.department
-				    when #deptID#
-				    then u.extensionattribute1
-				    else
-					'c=0;k=0;g=0;a=0;i=0;n=0;l=0;w=0;m=0;'
-				    end
-				    as rollinfo,
+						when #deptID#
+						then u.extensionattribute1
+						else
+						b.ROLL_INFO
+						end
+						as rollinfo,
 					u.telephonenumber,
 					u.mail,
 					u.extensionattribute10 as jikchek,
@@ -303,17 +307,24 @@
 					u.extensionattribute14 as sabun,
 					u.password_updatedt,
 					u.mobile as mobile,
-					u.extensionattribute5
-				FROM 
-					TBL_USERMASTER u
+					u.extensionattribute5,
+					b.jobid as jobId,
+					b.roleId as roleId
+				FROM
+					TBL_ADDJOBMASTER b
+				JOIN
+					TBL_USERMASTER u ON b.CN = u.CN AND b.TENANT_ID = u.TENANT_ID
 				inner join
 					tbl_deptMaster d
 				on (u.tenant_id = d.tenant_id)
-				WHERE 
+				AND d.CN = b.DEPTID
+				and b.JOBID = #jobId#
+				WHERE
 					(u.cn = #id# OR u.extensionattribute14 = #id#) 
 				    AND u.tenant_id = #tenantId#
 				    and d.cn = #deptID#
-	        <isNotEqual prepend="AND" property="dn" compareValue="NOPASSWORD" >         
+					and b.jobid = #jobId#
+	        <isNotEqual prepend="AND" property="dn" compareValue="NOPASSWORD" >
 	            password = #password#
 	        </isNotEqual>
 	    </isNotEmpty>
@@ -321,46 +332,51 @@
     
     <select id="loginDAO.selectUserWithCnOnly" resultMap="login">
         <!-- 일반회원 --> 
-         <isEmpty property="deptID">
-	        <![CDATA[
-	            SELECT  
-	                cn, 
-	                password,                
-	                displayname, 
-	                displayname2, 
-	                department,               
-	                description, 
-	                description2, 
-	                title, 
-	                title2, 
-	                physicaldeliveryofficename as companyid, 
-	                company, 
-	                company2, 
-	                updatedt, 
-	                extensionattribute1 as rollinfo, 
-	                telephonenumber, 
-	                mail, 
-	                extensionattribute10 as jikchek, 
-	                tenant_id, 
-	                (SELECT concat('top,Top,', dept_cd_path) FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenantId#) AS deptPathCode, 
-	                (SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenantId# AND property_name = 'PrimaryLang') AS primaryLang,
-	                loginCnt, 
-	                extensionattribute4 as gyumJik, 
-	                extensionattribute2 as userFileUrl, 
-	                extensionattribute14 as sabun,
-	                password_updatedt,
-	                mobile as mobile,
-	                extensionattribute5
-	            FROM  
-	                TBL_USERMASTER a 
-	            WHERE  
-	               cn = #id# AND tenant_id = #tenantId#
-	        ]]> 
-	        <isNotEqual prepend="AND" property="dn" compareValue="NOPASSWORD" >         
-	            password = #password#
-	        </isNotEqual>
-	    </isEmpty>
-	    <isNotEmpty property="deptID">      
+			SELECT
+				cn,
+				password,
+				displayname,
+				displayname2,
+				department,
+				description,
+				description2,
+				title,
+				title2,
+				physicaldeliveryofficename as companyid,
+				company,
+				company2,
+				updatedt,
+				extensionattribute1 as rollinfo,
+				telephonenumber,
+				mail,
+				extensionattribute10 as jikchek,
+				tenant_id,
+				(SELECT concat('top,Top,', dept_cd_path) FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenantId#) AS deptPathCode,
+				(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenantId# AND property_name = 'PrimaryLang') AS primaryLang,
+				loginCnt,
+				extensionattribute4 as gyumJik,
+				extensionattribute2 as userFileUrl,
+				extensionattribute14 as sabun,
+				password_updatedt,
+				mobile as mobile,
+				extensionattribute5,
+				EXTENSIONATTRIBUTE7  as jobId,
+				EXTENSIONATTRIBUTE8  as roleId
+			FROM
+				TBL_USERMASTER a
+			WHERE
+			   cn = #id# AND tenant_id = #tenantId#
+			<isNotEmpty property="deptID">
+				and department = NVL(#deptID#, department)
+			</isNotEmpty>
+			<isNotEmpty property="jobId">
+				and EXTENSIONATTRIBUTE7 = NVL(#jobId#, EXTENSIONATTRIBUTE7)
+			</isNotEmpty>
+		<isNotEqual prepend="AND" property="dn" compareValue="NOPASSWORD" >
+			password = #password#
+		</isNotEqual>
+	    <isNotEmpty property="deptID">
+		UNION
             SELECT 
 					u.cn,
 					u.password,               
@@ -369,20 +385,8 @@
 					d.cn department,              
 					d.displayname description,
 					d.displayname2 description2,
-					case u.department
-				    when #deptID#
-				    then u.title
-				    else
-					(select title from tbl_addjobmaster where cn = #id# and deptid = #deptID# and tenant_id = #tenantId#)
-				    end
-				    as title,
-					case u.department
-				    when #deptID#
-				    then u.title2
-				    else
-					(select title2 from tbl_addjobmaster where cn = #id# and deptid = #deptID# and tenant_id = #tenantId#)
-				    end
-				    as title2,
+					b.title as title,
+					b.title2 as title2,
 					d.EXTENSIONATTRIBUTE2 companyid,
 					d.EXTENSIONATTRIBUTE3 company,
 					d.COMPNM2 company2,
@@ -391,7 +395,7 @@
 				    when #deptID#
 				    then u.extensionattribute1
 				    else
-					'c=0;k=0;g=0;a=0;i=0;n=0;l=0;w=0;m=0;'
+					b.ROLL_INFO
 				    end
 				    as rollinfo,
 					u.telephonenumber,
@@ -406,16 +410,23 @@
 					u.extensionattribute14 as sabun,
 					u.password_updatedt,
 					u.mobile as mobile,
-					u.extensionattribute5
-				FROM 
-					TBL_USERMASTER u
+					u.extensionattribute5,
+					b.jobid as jobId,
+					b.roleId  as roleId
+				FROM
+					TBL_ADDJOBMASTER b
+				JOIN
+					TBL_USERMASTER u ON b.CN = u.CN AND b.TENANT_ID = u.TENANT_ID
 				inner join
 					tbl_deptMaster d
 				on (u.tenant_id = d.tenant_id)
-				WHERE 
+				AND d.CN = b.DEPTID
+				and b.JOBID = #jobId#
+				WHERE
 					u.cn = #id# AND u.tenant_id = #tenantId#
 				    and d.cn = #deptID#
-	        <isNotEqual prepend="AND" property="dn" compareValue="NOPASSWORD" >         
+					and b.jobid = #jobId#
+	        <isNotEqual prepend="AND" property="dn" compareValue="NOPASSWORD" >
 	            password = #password#
 	        </isNotEqual>
 	    </isNotEmpty>
@@ -515,7 +526,7 @@
         ]]>
     </select>
 
-    <delete id="loginDAO.deleteFidoSessionByTime" parameterClass="Integer">
+    <delete id="loginDAO.deleteDbSessionByTime" parameterClass="Integer">
 		<![CDATA[
 		DELETE FROM
 			TBL_SESSION
@@ -609,7 +620,9 @@
                 extensionattribute14 as sabun,
                 password_updatedt,
                 mobile,
-                extensionattribute5
+                extensionattribute5,
+                extensionattribute7 as JOBID,
+                '' ROLEID
             FROM 
                 TBL_USERMASTER a
             WHERE 
@@ -651,7 +664,9 @@
                 extensionattribute14 as sabun,
                 password_updatedt,
                 mobile,
-                extensionattribute5
+                extensionattribute5,
+                EXTENSIONATTRIBUTE7 as JOBID,
+                EXTENSIONATTRIBUTE8  as roleId
             FROM 
                 TBL_USERMASTER a
             WHERE 
@@ -693,7 +708,9 @@
                 extensionattribute14 as sabun,
                 password_updatedt,
                 mobile,
-                extensionattribute5
+                extensionattribute5,
+                extensionattribute7 as JOBID,
+                '' ROLEID
             FROM 
                 TBL_USERMASTER a
             WHERE 
@@ -705,6 +722,45 @@
         ]]>
     </select>
     
+    <insert id="loginDAO.setFidoSession" parameterClass="fidoAuthenticationVO">
+		INSERT INTO TBL_FIDO_SESSION(
+			FIDO_SESSION_ID,	USER_ID,		CREATE_TIME,		ACCESS_IP,		STATUS
+		)VALUES(
+			#fidoSessionId#,	#id#,	utc_timestamp(), 	#ip#,		#status#
+		)
+	</insert>
+
+	<select id="loginDAO.getFidoSession" parameterClass="String" resultMap="fidoAuthentication">
+		SELECT
+			FIDO_SESSION_ID,
+			USER_ID,
+			CREATE_TIME,
+			ACCESS_IP,
+			STATUS
+		FROM
+			tbl_fido_session
+		WHERE
+			fido_session_id = #fidoSessionId#
+	</select>
+
+	<update id="loginDAO.updateFidoStatus" parameterClass="fidoAuthenticationVO">
+		UPDATE
+			TBL_FIDO_SESSION
+		SET
+			STATUS = #status#
+		WHERE
+			FIDO_SESSION_ID = #fidoSessionId#
+	</update>
+
+	<delete id="loginDAO.deleteFidoSessionByTime" parameterClass="Integer">
+		<![CDATA[
+		DELETE FROM
+			TBL_FIDO_SESSION
+		WHERE
+			CREATE_TIME <= DATE_SUB(UTC_TIMESTAMP(), INTERVAL #fidoStoragePeriod# DAY)
+		]]>
+	</delete>
+
     <select id="loginDAO.getLoginIPCountry" parameterClass="Map" resultMap="countryVO">
 		SELECT 
 			START_IP, END_IP, START_IP_NUMBER, END_IP_NUMBER, 
@@ -805,5 +861,16 @@
 				cn = #id# AND tenant_id = #tenantId#
 		]]>
 	</update>
+	
+	<select id="loginDAO.userDeviceCnt" resultClass="int">
+		<![CDATA[
+			SELECT
+			    COUNT(USERID)
+			FROM
+			    TBL_DEV_MASTER
+			WHERE
+			    USERID = #CN#
+		]]>
+	</select>
 	
 </sqlMap>

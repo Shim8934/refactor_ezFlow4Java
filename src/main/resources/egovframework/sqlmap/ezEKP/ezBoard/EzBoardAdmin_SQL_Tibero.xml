@@ -92,9 +92,13 @@
 		<result property="type" 				column="TYPE" 				columnIndex="22"/>
 	</resultMap>
 	
+	<!-- 2024-06-20 홍승비 - 게시판 트리캐시에 각 언어별 다국어 적용 ("", 2, 3, 4) -->
 	<select id="EzBoardAdminDAO.getBoardTree_Get1" resultClass="String" parameterClass="Map" remapResults="true">
          SELECT 
-            result$v_STRLANG$
+            <isEqual property="v_STRLANG" compareValue=""> RESULT </isEqual>
+			<isEqual property="v_STRLANG" compareValue="2"> RESULT2 </isEqual>
+			<isEqual property="v_STRLANG" compareValue="3"> RESULT3 </isEqual>
+			<isEqual property="v_STRLANG" compareValue="4"> RESULT4 </isEqual>
          FROM 
             TBL_Board_TreeCache 
          WHERE 
@@ -409,14 +413,14 @@
 								ELSE A.Boardname2
 							END BoardName2,
 		                    CASE
-								WHEN (A.Boardname3 = '' OR A.Boardname3 IS NULL)
-								THEN A.Boardname
-								ELSE A.Boardname3
+								WHEN (A.boardname3 = '' OR A.boardname3 IS NULL)
+								THEN A.boardname
+								ELSE A.boardname3
 							END BoardName3,
 		                    CASE
-								WHEN (A.Boardname4 = '' OR A.Boardname4 IS NULL)
-								THEN A.Boardname
-								ELSE A.Boardname4
+								WHEN (A.boardname4 = '' OR A.boardname4 IS NULL)
+								THEN A.boardname
+								ELSE A.boardname4
 							END BoardName4,
 		                    A.TreeViewOrder ,
 		                    A.BoardColor BoardColor,
@@ -1600,34 +1604,40 @@
 		]]>
 	</select>
 	
+	<!-- 2024-06-20 홍승비 - 게시판명에 각 언어별 다국어 적용 ("", 2, 3, 4) -->
 	<select id="EzBoardAdminDAO.get_Admin_TopBoardList" resultClass="BoardTreeVO" parameterClass="Map">
-		<![CDATA[
-			SELECT 
-				boardid,
-				CASE WHEN (boardname$lang$ = '' OR boardname$lang$ IS NULL) THEN boardname ELSE boardname$lang$ END boardname,
-				treevieworder,
-				'' as boardcolor,
-				'' as gubun,
-				'' as boardgroupacl
-			FROM 
-				TBL_Board_BoardInfo
-			WHERE
-				tenant_id = #tenantID#
-			AND
-				(companyID = #companyID#
-		]]>
+		SELECT 
+			boardid,
+			<isEqual property="lang" compareValue="">
+				BOARDNAME,
+			</isEqual>
+			<isEqual property="lang" compareValue="2">
+				CASE WHEN (BOARDNAME2 = '' OR BOARDNAME2 IS NULL) THEN BOARDNAME ELSE BOARDNAME2 END BOARDNAME,
+			</isEqual>
+			<isEqual property="lang" compareValue="3">
+				CASE WHEN (BOARDNAME3 = '' OR BOARDNAME3 IS NULL) THEN BOARDNAME ELSE BOARDNAME3 END BOARDNAME,
+			</isEqual>
+			<isEqual property="lang" compareValue="4">
+				CASE WHEN (BOARDNAME4 = '' OR BOARDNAME4 IS NULL) THEN BOARDNAME ELSE BOARDNAME4 END BOARDNAME,
+			</isEqual>
+			treevieworder,
+			'' as boardcolor,
+			'' as gubun,
+			'' as boardgroupacl
+		FROM 
+			TBL_Board_BoardInfo
+		WHERE
+			tenant_id = #tenantID#
+		AND
+			(companyID = #companyID#
 		<isEqual property="isCompanyAdmin" compareValue="true">
-			<![CDATA[
-				OR	TRIM(companyID) = ''	OR	companyID IS NULL
-			]]>
+			OR TRIM(companyID) = '' OR companyID IS NULL
 		</isEqual>
-				)
-		<![CDATA[
-			AND
-				parentboardid = #parentBoardID#
-			ORDER BY 
-				treevieworder
-		]]>
+			)
+		AND
+			parentboardid = #parentBoardID#
+		ORDER BY 
+			treevieworder
 	</select>	
 	
 	<!-- 	권한가져오기 -->
@@ -1725,7 +1735,7 @@
 	       		sn
 		]]>
 	</select>
-		
+	
 	<select id="EzBoardAdminDAO.checkForm" parameterClass="Map" resultClass="Integer">
 		SELECT 
 			COUNT(BOARDID) CNT 
@@ -1804,44 +1814,47 @@
               	BOARDID = #v_PDEFAULTBOARDID# )
 		]]>
 	</insert>
-	
+
+	<!-- 이유정 - SQL Injection 제거 : IN 조건 문자열 수정 -->
 	<insert id="EzBoardAdminDAO.copyBoardAcl" parameterClass="Map">
-		<![CDATA[
-			INSERT INTO TBL_Board_BoardManage ( 
-				BOARDID, ACCESSID, ACCESSNAME, ACCESSNAME2, ACCESSLEVEL, ACCESS_, PARENTBOARDID, BOARDADMIN_FG, LISTVIEW_FG, READ_FG, WRITE_FG, REPLY_FG, DELETE_FG, INHERIT_FG, POSTNOTICE, BOARDGROUPACL, TENANT_ID, COMPANYID  , TYPE
-			)
-        	( SELECT
-        		#v_pBoardID# ,
-                ACCESSID ,
-                ACCESSNAME ,
-                ACCESSNAME2 ,
-                ACCESSLEVEL ,
-                ACCESS_ ,
-                #v_PPARENTBOARDID# ,
-                BOARDADMIN_FG ,
-                LISTVIEW_FG ,
-                READ_FG ,
-                WRITE_FG ,
-                REPLY_FG ,
-                DELETE_FG ,
-                INHERIT_FG ,
-                POSTNOTICE ,
-                BOARDGROUPACL ,
-                TENANT_ID,
-                COMPANYID,
-                NVL(TYPE, '') AS TYPE
-          	  FROM 
-          	  	TBL_Board_BoardManage 
-          	  WHERE  
-          	  	TENANT_ID = #v_TENANTID#
-          	  AND
-          	  	COMPANYID = #v_COMPANYID#
-          	  AND
-          	  	BOARDID = #v_PDEFAULTBOARDID#
-          	  AND
-          	  	ACCESSID IN ($tempCopyList$) 
-          	)
-		]]>
+		INSERT INTO TBL_Board_BoardManage ( 
+			BOARDID, ACCESSID, ACCESSNAME, ACCESSNAME2, ACCESSLEVEL, ACCESS_, PARENTBOARDID, BOARDADMIN_FG, LISTVIEW_FG, READ_FG, WRITE_FG, REPLY_FG, DELETE_FG, INHERIT_FG, POSTNOTICE, BOARDGROUPACL, TENANT_ID, COMPANYID  , TYPE
+		)
+		(SELECT
+			#v_pBoardID#,
+			ACCESSID,
+			ACCESSNAME,
+			ACCESSNAME2,
+			ACCESSLEVEL,
+			ACCESS_,
+			#v_PPARENTBOARDID#,
+			BOARDADMIN_FG,
+			LISTVIEW_FG,
+			READ_FG,
+			WRITE_FG,
+			REPLY_FG,
+			DELETE_FG,
+			INHERIT_FG,
+			POSTNOTICE,
+			BOARDGROUPACL,
+			TENANT_ID,
+			COMPANYID,
+			NVL(TYPE, '') AS TYPE
+		FROM 
+			TBL_Board_BoardManage 
+		WHERE  
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #v_COMPANYID#
+		AND
+			BOARDID = #v_PDEFAULTBOARDID#
+	<isNotEmpty property="copyListArray">
+		AND ACCESSID IN
+		<iterate property="copyListArray" open="(" close=")" conjunction=",">
+			#copyListArray[]#
+		</iterate>
+	</isNotEmpty>
+		)
 	</insert>
 	
 	<insert id="EzBoardAdminDAO.saveBoardProperty_appr_I" parameterClass="Map">
@@ -1961,16 +1974,24 @@
 			AND TENANT_ID = #v_TENANTID#
 			AND ACCESSID = #v_pAccessID#
 		]]>	
-	</update>	
+	</update>
 	
+	<!-- 이유정 - SQL Injection 제거 : IN 조건 문자열 수정 -->
 	<insert id="EzBoardAdminDAO.saveACLIncludeUppderBoard" parameterClass="Map">
 		MERGE INTO tbl_board_boardmanage tb1 
 		USING (SELECT * 
 		    FROM tbl_board_boardinfo 
-		    WHERE BOARDID in ( $v_upperBoadList$ ) 
-		    AND	TENANT_ID = #v_TENANTID#
+		    WHERE
+			<isNotEmpty property="v_upperBoadList">
+				BOARDID IN
+				<iterate property="v_upperBoadList" open="(" close=")" conjunction=",">
+					#v_upperBoadList[]#
+				</iterate>
+				AND
+			</isNotEmpty>
+		    TENANT_ID = #v_TENANTID#
 		    ) tb2
-		ON (tb1.BOARDID = tb2.BOARDID AND tb1.accessID = #v_pAccessID# )
+		ON (tb1.BOARDID = tb2.BOARDID AND tb1.accessID = #v_pAccessID#)
 		WHEN MATCHED THEN
 		    UPDATE SET
 		    	<isEqual property="type" compareValue="access">
@@ -2291,7 +2312,7 @@
 		<isNotEqual property="isAllGroupBoard" compareValue="Y">
 			<![CDATA[
 	     		VALUES ( 
-	     			#v_BOARDID#, #v_ACCESSID#, #v_ACCESSNAME#, #v_ACCESSNAME2#, 1, 			 1, 	  #v_PARENTBOARDID#, 'true', 		'true', 	 'true', 'true', 	'true',   'true',    'true', 	 #v_TENANTID#, #v_COMPANYID#, 'PERSON'
+	     			#v_BOARDID#, #v_ACCESSID#, #v_ACCESSNAME#, #v_ACCESSNAME2#, 1, 			 1, 	  #v_PARENTBOARDID#, 'true', 		'true', 	 'true', 'true', 	'true',   'true',    'true', 	 #v_TENANTID#, #v_COMPANYID#, #v_TYPE#
 	     		)
 			]]>
 		</isNotEqual>
@@ -2442,10 +2463,17 @@
 		          	APPRFLAG = #v_PAPPRFLAG#,
 		          	APPRMAILFLAG = #v_PAPPRMAILFLAG#,
 		          	LIKEFLAG = #v_LIKEFLAG#,
+		          	DISLIKEFLAG = #v_DISLIKEFLAG#,
 					MAILFG_POST = #v_MAILFG_POST#,
 		          	MAILFG_MOD = #v_MAILFG_MOD#,
 		          	MAILFG_COMMENT = #v_MAILFG_COMMENT#,
-		          	REACTFLAG = #v_REACTFLAG#
+	      			REACTFLAG = #v_REACTFLAG#,
+	      			USEKEYWORD = #v_USEKEYWORD#,
+		          	ATTACHMENTFLAG = #v_ATTACHMENTFLAG#,
+	      			PUBLICFLAG = #v_PUBLICFLAG#,
+		          	ALLNEWBOARDFLAG = #v_ALLNEWBOARDFLAG#,
+		          	WRITERFLAG = #v_WRITERFLAG#,
+		          	STARRATINGFLAG = #v_STARRATINGFLAG#
 	    		WHERE
 	    			TENANT_ID = #v_TENANTID#
 	    		AND  
@@ -2701,8 +2729,9 @@
 			AND TENANT_ID = #v_TENANTID#
 			AND ACCESSID = #v_pAccessID#
 		]]>	
-	</delete>	
-		
+	</delete>
+
+	<!-- 이유정 - SQL Injection 제거 : IN 조건 문자열 수정 -->
 	<delete id="EzBoardAdminDAO.deleteBoardManage" parameterClass="Map" >
 		<![CDATA[
 			DELETE FROM TBL_Board_BoardManage
@@ -2711,8 +2740,11 @@
       		AND  
       			BoardID = #v_pBoardID#
 		]]>
-		<isNotEmpty property="tempCopyList" prepend="AND">
-			ACCESSID IN ($tempCopyList$)
+		<isNotEmpty property="copyListArray">
+			AND ACCESSID IN
+			<iterate property="copyListArray" open="(" close=")" conjunction=",">
+				#copyListArray[]#
+			</iterate>
 		</isNotEmpty>
 	</delete>
 	
@@ -2919,5 +2951,61 @@
             WHERE
             	BOARDID = #v_pBoardID#
 		]]>
+	</delete>
+
+	<select id = "EzBoardAdminDAO.getUseFormFlag" parameterClass = "map" resultClass = "String">
+		SELECT
+			FORMFLAG
+		FROM
+			TBL_BOARD_BOARDINFO
+		WHERE
+			BOARDID = #boardID#
+		  AND
+			TENANT_ID = #tenantID#
+	</select>
+	
+	<delete id="EzBoardAdminDAO.deleteMyBoardsOnCategoryChange" parameterClass="map">
+		<![CDATA[
+			DELETE FROM TBL_BOARD_MYBOARDS
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				BOARDID = #boardID#
+		]]>
+	</delete>
+
+	<delete id="EzBoardAdminDAO.deleteMyBoardTreeOnCategoryChange" parameterClass="map">
+		<![CDATA[
+			DELETE FROM TBL_Board_MyTree
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				TREEBOARDID = #boardID#
+		]]>
+	</delete>
+
+	<select id="EzBoardAdminDAO.getBoardItemCnt" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM
+				TBL_BOARD_ITEM
+			WHERE
+				BOARDID = #boardID#
+			AND
+				TENANT_ID = #tenantID#
+ 		]]>
+	</select>
+
+	<delete id="EzBoardAdminDAO.deleteScrapBoard" parameterClass="String">
+		DELETE
+		FROM TBL_BOARDITEM_SCRAP
+		WHERE BOARDID = #boardID#
+	</delete>
+
+	<delete id="EzBoardAdminDAO.deleteScrapContBoard" parameterClass="String">
+		DELETE
+		FROM TBL_USERSCRAPCONTLIST
+		WHERE BOARDID = #boardID#
 	</delete>
 </sqlMap>

@@ -6,7 +6,8 @@
 	<head>
 		<title><spring:message code = 'ezApprovalG.t1279' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<style>
 			.mainlist tr th { border-top:0px }
 		</style>
@@ -23,6 +24,7 @@
 		    var pUserName1 = "<c:out value = '${userInfo.displayName1}' />";
 		    var pUserName2 = "<c:out value = '${userInfo.displayName2}' />";
 		    var pCompanyID = "<c:out value = '${userInfo.companyID}' />";
+		    var pLang = "<c:out value = '${userInfo.lang}' />";
 		    var parameter = new Array();
 		    var listview = new ListView();
 		    var OrderCell = "";
@@ -114,7 +116,7 @@
 		                }
 		        	},
 		        	error : function(jqXHR, textStatus, errorThrown) {
-		        		alert("<spring:message code = 'ezApprovalG.t228' />" + jqXHR.statusText);
+		        		alert("<spring:message code = 'ezApprovalG.t228' />" + jqXHR.status);
 		        	}
 		        });
 		    }
@@ -222,7 +224,11 @@
 		    function btnAdd_onclick() {
 		        var parameter = new Array();
 		        parameter[0] = pUserID;
-		        parameter[1] = pUserName;
+				if(pLang == "1"){
+					parameter[1] = pUserName;
+				}else{
+					parameter[1] = pUserName2;
+				}
 		        parameter[2] = pCompanyID;
 		        
 		        if (CrossYN()) {

@@ -6,7 +6,8 @@
 	<head>
 		<title><spring:message code = 'main.t48' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<%-- <link rel="stylesheet" href="${util.addVer('ezApprovalG.e3', 'msg')}" type="text/css"> --%>
 		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
 		<style>
@@ -28,7 +29,8 @@
 	        var pUserName = "<c:out value = '${userInfo.displayName1}' />";
 	        var pUserName2 = "<c:out value = '${userInfo.displayName2}' />";
 	        var pDeptID = "<c:out value = '${userInfo.deptID}' />";
-	        var parameter = new Array();
+			var pLang = "<c:out value = '${userInfo.lang}' />";
+			var parameter = new Array();
 	        var listview = new ListView();
 	
 	        $(document).ready(function(){
@@ -113,7 +115,7 @@
 	                    }
 	            	},
 		        	error : function(jqXHR, textStatus, errorThrown) {
-		        		alert("<spring:message code = 'ezApprovalG.t228' />" + jqXHR.statusText);
+		        		alert("<spring:message code = 'ezApprovalG.t228' />" + jqXHR.status);
 		        	}
 	            });
 	        }
@@ -222,7 +224,11 @@
 	        function btnAdd_onclick() {
 	            var parameter = new Array();
 	            parameter[0] = pUserID;
-	            parameter[1] = pUserName;
+				if(pLang == "1"){
+					parameter[1] = pUserName;
+				}else{
+					parameter[1] = pUserName2;
+				}
 	            parameter[2] = pDeptID;
 	            parameter[3] = $("#ListCompany option:selected").val();
 	

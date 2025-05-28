@@ -1,4 +1,4 @@
-﻿var beforeJob = "0";
+var beforeJob = "0";
 var pDocTypeValue = "000";
 var pageSize = "10";
 var CallPage = "Right";
@@ -151,10 +151,10 @@ function getDocList_after(xml) {
     DocList.SetUrgentFlag(false);
     
     /* 2023-06-19 조소정 - 공람할문서 메뉴(99) 복수 체크박스 추가 */
-    if(pListTypeValue == "1" || pListTypeValue == "99") { // 2020-04-29 : 결재할문서 복수체크박스 추가
+    if(pListTypeValue == "1" || pListTypeValue == "4" || pListTypeValue == "99" || pListTypeValue == "24" || pListTypeValue == "97" || pListTypeValue == "10") { // 2020-04-29 : 결재할문서 복수체크박스 추가
     	DocList.SetCheckBoxFlag(true);
     }
-    
+
     DocList.DataSource(xmlDoc);
     DocList.DataBind("lvDocList");
     
@@ -278,6 +278,8 @@ function getReceivedDocList(p_FormCd) {
 
     if (pListTypeValue == "5") {
         manager = manager + ";relay";
+    }else if(pListTypeValue == "97"){
+        manager = manager + ";personal";
     }
 
     if (beforeJob != pListTypeValue || SelYearFlag || SearchFlag) {
@@ -314,7 +316,8 @@ function getReceivedDocList(p_FormCd) {
 				orderCell : OrderCell,
 				orderOption : OrderOption,
 				searchQuery : SQLPARADATA,
-				searchStatus : searchStatus
+				searchStatus : searchStatus,
+                assignChk : assignChk
 				},
 		success: function(xml){
 			getReceivedDocList_after(loadXMLString(xml));
@@ -349,7 +352,13 @@ function getReceivedDocList_after(xml) {
                 getSimsaDocList();
             return;
         }
-
+        
+        // 리스트를 닫기 전에 미리 선택한 row가 있을 때를 확인
+        var preDocList = new ListView();
+        var docListID = "DocList";
+        preDocList.LoadFromID(docListID);
+       	var preSelectedRow = preDocList.GetSelectedRows();
+        
         makePageSelPage();
 
         var xmlDoc;
@@ -368,15 +377,34 @@ function getReceivedDocList_after(xml) {
 
         if (document.getElementById("lvDocList").innerHTML != "") document.getElementById("lvDocList").innerHTML = "";
         var DocList = new ListView();
-        DocList.SetID("DocList");
+        DocList.SetID(docListID);
         DocList.SetMulSelectable(false);
         DocList.SetHeaderOnClick("lvDocList_HeaderClick");
         DocList.SetRowOnClick("lvDocList_SelChange");
         DocList.SetRowOnDblClick("lvDocList_DBSelChange");
         DocList.SetTitleIdx(0);
         DocList.SetUrgentFlag(false);
+
+        if ((pListTypeValue == "4" && assignChk != "Y") || pListTypeValue == "97")  // 2023-04-12 이가은 - 부서수신함 복수체크박스 추가
+            DocList.SetCheckBoxFlag(true);
         DocList.DataSource(xmlDoc);
         DocList.DataBind("lvDocList");
+        
+        // 2024-05-29 조수빈 - 부서수신함에서 이전 선택한 row를 유지하는 부분이 누락되어 추가
+        // 리스트를 닫기 전에 미리 선택한 row로 재선택
+        if (selRowChangeFlag && preSelectedRow.length > 0) {
+        	// 탭 이동 시에도 전 탭에서 선택된 row를 선택되는 오류 개선
+        	selRowChangeFlag = false;
+        	var docListLength = DocList.GetRowCount() - 1;
+        	// 마지막 row의 결재가 완료된 후 리스트로 돌아오면 로우가 선택되어 있지 않는 오류 개선
+            var beforeSelectedId = preSelectedRow[0].getAttribute('id');
+            if (docListLength < beforeSelectedId.split("_")[2]) {
+        		DocList.SetSelectedIndex(docListLength);
+        	} else {
+                tr_select(beforeSelectedId, docListID, true);
+        	}
+        }  
+        
         DocList = null;
 
         HiddenMailProgress();
@@ -433,7 +461,12 @@ function getReceivedDocList_after(xml) {
         try {
         	parent.frames["left"].pListTypeValue = pListTypeValue;
             parent.frames["left"].getAprCount();
-            parent.frames["left"].setPresentValue("");
+            if (pListTypeValue == 4) {
+                var topTitle = assignChk == "Y" ? strLangAssignedList : strLangDeptInbox;
+                parent.frames["left"].setPresentValue(topTitle);
+            } else {
+                parent.frames["left"].setPresentValue("");
+            }
         } catch (e) { }
     }
     catch (e) {
@@ -859,11 +892,17 @@ function openDraftUI(pDraftFlag, pCurSelRow,officeFlag) {
     }
   
     if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "mht") {
-    	openLocation = "/ezApprovalG/draftui.do?formURL=";
-        openLocation = openLocation + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
-        openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
-        openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]) + "&officeFlag=" + encodeURI(p_officeFlag);
-        
+        var isGroupDoc = checkIsGroupDoc(pArgument[7], ""); // 일괄기안문서 여부 체크 (1안 기준의 DOCID 전달)
+
+        if (isGroupDoc == "Y") { // 반송된 일괄기안 문서를 여는 경우
+            openLocation = "/ezApprovalG/draftuiAll_WHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
+        } else {
+            openLocation = "/ezApprovalG/draftui.do?formURL=";
+            openLocation = openLocation + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
+        }
+            openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
+            openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]) + "&officeFlag=" + encodeURI(p_officeFlag);
+
 //        // FormBuilder
 //        if (window.reformflag == null) {
 //        	// reformflag null 값이라면
@@ -960,7 +999,11 @@ function openApprovUI(allFlag) {
         		openLocation += "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(GetAttribute(tr[0], "DATA12")) + "&mode=" + encodeURI(mode) + "&orgCompanyID=" + orgCompanyID + "&orgDocID=" + encodeURI(GetAttribute(tr[0], "DATA2"));
         	}
         } else {
-            openLocation = "/ezApprovalG/approvui.do?docID=";
+            var isGroupDoc = checkIsGroupDoc(encodeURI(pArgument[0]), orgCompanyID);
+            if (isGroupDoc == "Y") // 일괄기안 문서를 여는 경우
+                openLocation = "/ezApprovalG/approvuiAll_WHWP.do?docID=";
+            else
+                openLocation = "/ezApprovalG/approvui.do?docID=";
             openLocation = openLocation + encodeURI(pArgument[0]);
             openLocation = openLocation + "&id=" + encodeURI(pArgument[1]) + "&name=" + encodeURI(pArgument[2]);
             openLocation = openLocation + "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(GetAttribute(tr[0], "DATA12")) + "&mode=" + encodeURI(mode) + "&orgCompanyID=" + orgCompanyID + "&orgDocID=" + encodeURI(GetAttribute(tr[0], "DATA2")) + "&aprMemberSN=" + pArgument[4];
@@ -1074,7 +1117,7 @@ function openForm_Complete(ret) {
 }
 
 function openViewDocInfo(type) {
-	 if (type == undefined)
+	if (type == undefined)
 	        type = "";
     var DocList = new ListView();
     DocList.LoadFromID("DocList");
@@ -1089,7 +1132,7 @@ function openViewDocInfo(type) {
     pArgument[0] = DocID;
     pArgument[1] = formURL;
 
-    if (pListTypeValue == "4") {
+    if (pListTypeValue == "4" || pListTypeValue == "97") {
         pArgument[2] = GetAttribute(tr, "DATA5");
         pArgument[3] = "VIEW";
         pArgument[4] = pSusinManagerFlag;
@@ -1158,7 +1201,13 @@ function openViewDocInfo(type) {
         	}
         }
         else {
-        	openLocation = "/ezApprovalG/aprDocView.do";
+            var isGroupDoc = checkIsGroupDoc(encodeURI(DocID), orgCompanyID);
+
+            if (isGroupDoc == "Y") { // 일괄기안 문서를 여는 경우 (결재진행문서, 기안한문서 메뉴에서 접근 시 지원)
+                openLocation = "/ezApprovalG/ezviewAprAll_WHWP.do";
+            } else {
+        	    openLocation = "/ezApprovalG/aprDocView.do";
+        	}
         }
         openLocation = openLocation + "?docID=" + encodeURI(pArgument[0]) + "&docHref=" + encodeURI(pArgument[1]);
         openLocation = openLocation + "&opinionFlag=" + encodeURI(pArgument[2]) + "&docState=" + encodeURI(pArgument[3]) + "&listSusin=" + encodeURI(pArgument[4]) + "&oDoc=" + encodeURI(pArgument[5]);
@@ -1196,7 +1245,6 @@ function OpenReceiveDraftUI(pCurSelRow, pDraftFlag) {
                 openLocation = "";
                 
                 if (GetAttribute(pCurSelRow,"DATA15") == "001") {
-                	//언제타는지 궁금하구나
                 	openLocation = "/ezApprovalG/recevG.do";
                 } else {
                 	openLocation = "/ezApprovalG/recevGSusin.do";
@@ -1349,7 +1397,7 @@ function OpenOpinionUI(pSelectedRow, pOpinionFlag) {
 
 function OpenOpinionUI_Complete(ret) {
     if (ret != "cancel") {
-        if (pListTypeValue == "4") {
+        if (pListTypeValue == "4" || pListTypeValue == "97") {
             switch (GetAttribute(temppSelectedRow, "DATA9")) {
                 case "012":
                     setHeSongHapyuiDocInfo(temppSelectedRow);
@@ -1397,7 +1445,7 @@ function openOpinionUI_New(pSelectedRow, pOpinionType) {
 function openOpinionUI_New_Complete(ret) {
 	try {
 		if (ret != "cancel") {
-	        if (pListTypeValue == "4") {
+	        if (pListTypeValue == "4" || pListTypeValue == "97") {
 	            switch (GetAttribute(temppSelectedRow, "DATA9")) {
 	                case "012":
 	                case "014":
@@ -1438,7 +1486,7 @@ function setHeSongHapyuiDocInfo(pSelectedRow) {
         createNodeAndInsertText(xmlpara, objNode, "pAprMemberDeptID", arr_userinfo[4]);
         createNodeAndInsertText(xmlpara, objNode, "pAprMemberID", pUserID);
 
-        if (pListTypeValue == "4")
+        if (pListTypeValue == "4" || pListTypeValue == "97")
             createNodeAndInsertText(xmlpara, objNode, "pReceiveSN", GetAttribute(pSelectedRow, "DATA2"));
         else {
             createNodeAndInsertText(xmlpara, objNode, "pReceiveSN", "1");
@@ -1468,7 +1516,7 @@ function setHeSongDocInfo(pCurSelRow) {
 	var pReceiveSN = "";
 	var pDocState = "";
 	
-	if (pListTypeValue == "4") {
+	if (pListTypeValue == "4" || pListTypeValue == "97") {
 		pReceiveSN = GetAttribute(pCurSelRow, "DATA2");
 	} else {
 		pReceiveSN = GetAttribute(pCurSelRow, "DATA9");
@@ -1649,7 +1697,7 @@ function getAprDocAproveInfo(tr) {
     	});
     }
     else if (pDocInfoValue == "5") {
-    	if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9" || pListTypeValue == "99" || pListTypeValue == "10") {
+    	if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9" || pListTypeValue == "99" || pListTypeValue == "10" || pListTypeValue == "98") {
     		pDocID = GetAttribute(tr, "DATA2");
     		pFlag = "END";
     	} else if (pListTypeValue == "21") {
@@ -1834,7 +1882,7 @@ function openergetDocInfo() {
     	selRowChangeFlag = true;
         if (pListTypeValue == "6")
             getSimsaDocList();
-        else if (pListTypeValue == "4" || pListTypeValue == "5")
+        else if (pListTypeValue == "4" || pListTypeValue == "5" || pListTypeValue == "97")
             getReceivedDocList();
         else if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9")
             getSendOutDocList();
@@ -1897,7 +1945,7 @@ function makePageSelPage() {
     	period = getDatePeriod(userLang, document.getElementById("sel_year").value, 1, 1, document.getElementById("sel_year").value, 12, 31);
     }
     //document.getElementById("presentcell").innerHTML = " - " + localValue;
-    document.getElementById("TitleInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;font-weight:bold;'>" + pTotalCnt + "</span>&nbsp;/ " + period;
+    document.getElementById("TitleInfo").innerHTML = "&nbsp;&nbsp;<span class='txt_color' style='font-weight:bold;'>" + pTotalCnt + "</span>&nbsp;/ " + period;
 
     try {
     	if (ViewLeftCount == "YES" && ($("#sel_status option:selected").val() == "ALL" || $("#sel_status option:selected").val() == undefined)) {
@@ -1927,12 +1975,18 @@ function makePageSelPage() {
     		case "21":
     			parent.frames["left"].document.getElementById("count21").innerHTML = "&nbsp;&nbsp;" + pTotalCnt;
     			break;
+            case "24":
+                parent.frames["left"].document.getElementById("count24").innerHTML = "&nbsp;&nbsp;" + pTotalCnt;
+                break;
     		case "99":
     			parent.frames["left"].document.getElementById("count99").innerHTML = "&nbsp;&nbsp;" + pTotalCnt;
     			break;
     		case "11":
     			parent.frames["left"].document.getElementById("count11").innerHTML = "&nbsp;&nbsp;" + pTotalCnt;
     			break;
+            case "97":
+                parent.frames["left"].document.getElementById("count97").innerHTML = "&nbsp;&nbsp;" + pTotalCnt;
+                break;
     		}
     	}
 	} catch (e) {
@@ -1943,29 +1997,34 @@ function makePageSelPage() {
     strtext = "<div class='pagenavi'>";
     PagingHTML += strtext;
     if (totalPage > 1 && pageNum != 1) {
-        strtext = "<span class='btnimg'><a onclick= 'return goToPageByNum(1)'>";
-        strtext = strtext + "<img src='/images/kr/cm/btn_p_prev.gif' /></a></span>";
+        // strtext = "<span class='btnimg'><a onclick= 'return goToPageByNum(1)'>";
+        // strtext = strtext + "<img src='/images/kr/cm/btn_p_prev.gif' /></a></span>";
+        strtext = "<span class='btnimg first' onclick= 'return goToPageByNum(1)'></span>";
         PagingHTML += strtext;
     } else {
-        strtext = "<span class='btnimg'><a >";
-        strtext = strtext + "<img src='/images/kr/cm/btn_p_prev01.gif' /></a></span>";
+        // strtext = "<span class='btnimg'><a >";
+        // strtext = strtext + "<img src='/images/kr/cm/btn_p_prev01.gif' /></a></span>";
+        strtext = "<span class='btnimg first disabled'></span>";
         PagingHTML += strtext;
     }
     if (totalPage > BlockSize) {
         if (pageNum > BlockSize) {
-            strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'>";
-            strtext = strtext + "<img src='/images/kr/cm/btn_prev.gif' /></span>";
+            // strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'>";
+            // strtext = strtext + "<img src='/images/kr/cm/btn_prev.gif' /></span>";
+            strtext = "<span class='btnimg prev' onclick= 'return selbeforeBlock()'></span>";
             PagingHTML += strtext;
         }
         else {
-            strtext = "<span class='btnimg'>";
-            strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif' /></span>";
+            // strtext = "<span class='btnimg'>";
+            // strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif' /></span>";
+            strtext = "<span class='btnimg prev disabled'></span>";
             PagingHTML += strtext;
         }
     }
     else {
-        strtext = "<span class='btnimg'>";
-        strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif' /></span>";
+        // strtext = "<span class='btnimg'>";
+        // strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif' /></span>";
+        strtext = "<span class='btnimg prev disabled'></span>";
         PagingHTML += strtext;
     }
     var MaxNum;
@@ -1993,30 +2052,35 @@ function makePageSelPage() {
     }
     if (totalPage > BlockSize) {
         if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-            strtext = "<span class='btnimg' onclick='return selafterBlock()'>";
-            strtext = strtext + "<img src='/images/kr/cm/btn_next.gif'/></span>";
+            // strtext = "<span class='btnimg' onclick='return selafterBlock()'>";
+            // strtext = strtext + "<img src='/images/kr/cm/btn_next.gif'/></span>";
+            strtext = "<span class='btnimg next' onclick='return selafterBlock()'></span>";
             PagingHTML += strtext;
         }
         else {
-            strtext = "<span class='btnimg'>";
-            strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif'/></span>";
+            // strtext = "<span class='btnimg'>";
+            // strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif'/></span>";
+            strtext = "<span class='btnimg next disabled'></span>";
 
             PagingHTML += strtext;
         }
     }
     else {
-        strtext = "<span class='btnimg'>";
-        strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif'/></span>";
+        // strtext = "<span class='btnimg'>";
+        // strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif'/></span>";
+        strtext = "<span class='btnimg next disabled'></span>";
         PagingHTML += strtext;
     }
     if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-        strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'>";
-        strtext = strtext + "<img src='/images/kr/cm/btn_n_next.gif'/></span>";
+        // strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'>";
+        // strtext = strtext + "<img src='/images/kr/cm/btn_n_next.gif'/></span>";
+        strtext = "<span class='btnimg last' onclick='return goToPageByNum(" + totalPage + ")'></span>";
         PagingHTML += strtext;
     }
     else {
-        strtext = "<span class='btnimg'>";
-        strtext = strtext + "<img src='/images/kr/cm/btn_n_next01.gif' /></span>";
+        // strtext = "<span class='btnimg'>";
+        // strtext = strtext + "<img src='/images/kr/cm/btn_n_next01.gif' /></span>";
+        strtext = "<span class='btnimg last disabled'></span>";
         PagingHTML += strtext;
     }
     PagingHTML += "</div>";
@@ -2063,6 +2127,24 @@ function setbuttonenable() {
     
     if (pListTypeValue == "1") {
         document.getElementById("tbtnApproveALL").style.display = "";
+        document.getElementById("tbtnReceiptAll").style.display = "none";
+        document.getElementById("tbtnRJunkyulAll").style.display = "none";
+        document.getElementById("tbtnAssignList").style.display = "none";
+        document.getElementById("tbtnAssign").style.display = "none";
+        document.getElementById("tbtnDeptRecevList").style.display = "none";
+        document.getElementById("tbtnJiJungAll").style.display = "none";
+        document.getElementById("tbtnBebuAll").style.display = "none";
+    } else if (pListTypeValue == "4" || pListTypeValue == "97") {
+    	document.getElementById("tbtnApproveALL").style.display = "none";
+    	document.getElementById("tbtnReceiptAll").style.display = "";
+    	document.getElementById("tbtnRJunkyulAll").style.display = "";
+        if (assignPermission == "Y") { // 지정목록 > 수발신담당자, 기록물관리자에게만 표출
+            document.getElementById("tbtnAssignList").style.display = "";
+            document.getElementById("tbtnAssign").style.display = "none";
+            document.getElementById("tbtnDeptRecevList").style.display = "none";
+        }
+        document.getElementById("tbtnJiJungAll").style.display = "";
+        document.getElementById("tbtnBebuAll").style.display = "";
     }
     else {
     	// apprGManage.jsp에서 공람버튼의 기본 스타일을 display = "none"으로 수정 (공람할문서 메뉴에서만 표출)
@@ -2070,6 +2152,13 @@ function setbuttonenable() {
 
         document.getElementById("tbtnApprove2").style.display = "none";
         document.getElementById("tbtnApproveALL").style.display = "none";
+        document.getElementById("tbtnReceiptAll").style.display = "none";
+        document.getElementById("tbtnRJunkyulAll").style.display = "none";
+        document.getElementById("tbtnAssignList").style.display = "none";
+        document.getElementById("tbtnAssign").style.display = "none";
+        document.getElementById("tbtnDeptRecevList").style.display = "none";
+        document.getElementById("tbtnJiJungAll").style.display = "none";
+        document.getElementById("tbtnBebuAll").style.display = "none";
     }
 
     /*if (pListTypeValue == "8")
@@ -2077,7 +2166,7 @@ function setbuttonenable() {
     else
         document.getElementById("tbar1").style.display = "";*/
 
-    if (pListTypeValue != 1 && pListTypeValue != 4 && pListTypeValue != 5 && pListTypeValue != 10 && pListTypeValue != 99 && pListTypeValue != 11) {
+    if (pListTypeValue != 1 && pListTypeValue != 4 && pListTypeValue != 5 && pListTypeValue != 10 && pListTypeValue != 99 && pListTypeValue != 11 && pListTypeValue != 24 && pListTypeValue != "97") {
     	document.getElementById("tbtnRedraft").style.display = "none";		
         //SwapImage(document.getElementById("btnRedraft"), "dis");
         document.getElementById("tbtnRemoveDoc").style.display = "none";
@@ -2114,6 +2203,7 @@ function setbuttonenable() {
                 document.getElementById("tbtnRemoveDoc").style.display = "none";			
                 document.getElementById("tbtnSimsa").style.display = "none";
             }
+            document.getElementById("tbtnDraft").style.display = "";
         } else if (pListTypeValue == "7") {
             document.getElementById("tbtnReceipt").style.display = "";
             document.getElementById("tbtnNonElecRec").style.display = "none";
@@ -2142,7 +2232,7 @@ function setbuttonenable() {
                 document.getElementById("tbtnRemoveDoc").style.display = "none";
             }
         }
-    } else if (pListTypeValue == 1 || pListTypeValue == 10 || pListTypeValue == 99 || pListTypeValue == 11) {
+    } else if (pListTypeValue == 1 || pListTypeValue == 10 || pListTypeValue == 99 || pListTypeValue == 11 || pListTypeValue == 24) {
         document.getElementById("tbtnTotalSave").style.display = "";
         document.getElementById("tbtnSimsa").style.display = "none";
         //document.getElementById("tbtnGongRam").style.display = "";
@@ -2180,7 +2270,11 @@ function setbuttonenable() {
                 document.getElementById("tbtnLinkDraft").style.display = "none";
                 document.getElementById("tbtnRedraft").style.display = "none";
                 //SwapImage(document.getElementById("btnRedraft"), "dis");
-                document.getElementById("tbtnRemoveDoc").style.display = "none";
+				if (pListTypeValue == "10") {
+	                document.getElementById("tbtnRemoveDoc").style.display = "";
+				} else {
+	                document.getElementById("tbtnRemoveDoc").style.display = "none";
+				}
                 document.getElementById("tbtnApprove").style.display = "none";
                 document.getElementById("tbtnApprove1").style.display = "none";
                 document.getElementById("tbtnApprove2").style.display = "none";
@@ -2260,7 +2354,7 @@ function setbuttonenable() {
         document.getElementById("tbtnSimsa").style.display = "none";
         
 		if (approvalFlag == "G") {
-			if(pListTypeValue == "4" && (useHWP == 'YES' || pNonElecRecType.toUpperCase() == "MHT")) {
+			if((pListTypeValue == "4" || pListTypeValue == "97") && (useHWP == 'YES' || pNonElecRecType.toUpperCase() == "MHT")) {
 				document.getElementById("tbtnNonElecRec").style.display = "";
 			}
 		}
@@ -2323,16 +2417,24 @@ function setbuttonenable() {
     }
 
     if (oArrRows.length != 0) {
-        if (pListTypeValue == 4 && tr.getAttribute("DATA7") != "" && tr.getAttribute("DATA9") == "011") {
+        if ((pListTypeValue == 4 || pListTypeValue == 97) && tr.getAttribute("DATA7") != "" && tr.getAttribute("DATA9") == "011") {
             if (approvalFlag == 'G') {
             	document.getElementById("tDocInfo").style.display = "none";
             }
-        } else if (pListTypeValue != 4 && tr.getAttribute("DATA2") != "" && tr.getAttribute("DATA12") == "011") {
+            /* 2023-05-22 양지혜 - 반송문서는 공람정보 버튼을 활성화하지 않도록 제외 */
+        } else if (pListTypeValue != 4 && pListTypeValue != 97 && tr.getAttribute("DATA2") != "" && tr.getAttribute("DATA12") == "011" && pFunctionType != "004") {
         	if (approvalFlag == 'G') {
         		document.getElementById("tDocInfo").style.display = "";
             }
         } else {
             document.getElementById("tDocInfo").style.display = "none";
+        }
+        
+        if (pListTypeValue == 98) {
+            document.getElementById("tDocInfo").style.display = "";
+        	document.getElementById("tdGongRam").style.display = "";
+        } else {
+            document.getElementById("tdGongRam").style.display = "none";
         }
     } else
         document.getElementById("tDocInfo").style.display = "none";
@@ -2358,10 +2460,14 @@ function setbuttonenable() {
     }
 
     if (approvalFlag == "S") {
-	    if (pListTypeValue == "4") {
-	        document.getElementById("tbtnViewDoc").style.display = "none";
+	    if (pListTypeValue == "4" || pListTypeValue == "97") {
+//	        document.getElementById("tbtnViewDoc").style.display = "none";
 	        document.getElementById("tbtnReceipt").style.display = "";
-	        
+	        document.getElementById("tbtnReceiptAll").style.display = "";
+	        document.getElementById("tbtnRJunkyulAll").style.display = "";
+            document.getElementById("tbtnJiJungAll").style.display = "";
+	        document.getElementById("tbtnBebuAll").style.display = "";
+            
 	        if (pFunctionType == "015") {
 	            // 회송된 문서일 경우 접수버튼 display none 처리
 	            document.getElementById("tbtnReceipt").style.display = "none";	   	        	
@@ -2379,6 +2485,22 @@ function setbuttonenable() {
     
     if (pListTypeValue != "21" ) {
         document.getElementById("tbtnTotalSave").style.display = "";      
+    }
+
+    /* 2024-06-28 양지혜 - 부서수신함 > 지정목록에서 사용하는 버튼 */
+    if (assignChk == "Y" && pListTypeValue == "4") {
+        document.getElementById("tbtnReceiptAll").style.display = "none";
+        document.getElementById("tbtnRJunkyulAll").style.display = "none";
+        document.getElementById("tbtnAssignList").style.display = "none";
+        document.getElementById("tbtnAssign").style.display = "";
+        document.getElementById("tbtnDeptRecevList").style.display = "";
+        document.getElementById("tbtnDraft").style.display = "none";
+        document.getElementById("tbtnRedraft").style.display = "none";
+        document.getElementById("tbtnReceipt").style.display = "none";
+        document.getElementById("tbtnJiJungAll").style.display = "none";
+        document.getElementById("tbtnBebuAll").style.display = "none";
+    } else if (assignChk == "Y" && (pListTypeValue == "2" || pListTypeValue == "3")) {
+        document.getElementById("tbtnDraft").style.display = "";
     }
     
     document.getElementById("tSearchCondi").style.display = ""; 
@@ -2866,7 +2988,12 @@ function openServerDraftUI(pDraftFlag, pCurSelRow) {
     var openLocation = "";
     
     if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "mht") {
-    	openLocation = "/ezApprovalG/draftui.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
+        var isGroupDoc = checkIsGroupDoc(pDocSN, "");
+        if (isGroupDoc == "Y") { // 임시저장된 일괄기안 문서를 여는 경우
+            openLocation = "/ezApprovalG/draftuiAll_WHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
+        } else {
+    	    openLocation = "/ezApprovalG/draftui.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
+        }
     	openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
     	openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]) + "&docSN=" + encodeURI(pDocSN);
     	
@@ -3175,6 +3302,21 @@ function OpenAlertUI_Close() {
     }catch(e){}
 }
 
+function OpenAlertUI_Close_Complete() {
+    try {
+        DivPopUpHidden();
+        parent.frames["left"].getAprCount();
+        if (assignChk == "Y") { // 지정목록 > 지정완료 > 리스트 재호출
+            getReceivedDocList();
+        } else {
+            getDocList();
+        }
+        OpenPopupWin.close();
+    } catch (e) {
+        console.log("OpenAlertUI_Close_Complete ::: " + e);
+    }
+}
+
 function CheckUsePassword() {
     var result = "";
     $.ajax({
@@ -3327,4 +3469,160 @@ function openOpinionUI_New_Complete_Add(ret) {
     } catch (e) {
         alert("openOpinionUI_New_Complete ::: " + e.description);
     }
+}
+
+var aprgongramline_cross_dialogArguments = new Array();
+function btnSendAround_onclick() {
+    var DocList = new ListView();
+    DocList.LoadFromID("DocList");
+    var selRow = DocList.GetSelectedRows();
+    if (selRow.length != 0) {
+		var DocID = GetAttribute(selRow[0], "DATA2");
+        var para = new Array();
+        para[0] = DocID;
+        var url = "/ezApprovalG/aprGongRamLine.do?type=END";
+
+        aprgongramline_cross_dialogArguments[0] = para;
+        aprgongramline_cross_dialogArguments[1] = btnSendAround_onclick_Complete;
+
+        var OpenWin = window.open(url, "AprGongRamLine_Cross", GetOpenWindowfeature(1200, 760));
+        try { OpenWin.focus(); } catch (e) { }
+    }
+}
+
+function btnSendAround_onclick_Complete(rtn) {
+    if (rtn == "OK") {
+        var pAlertContent = "<spring:message code='ezApprovalG.t1424'/>";
+        OpenAlertUI(pAlertContent);
+    }
+}
+
+function RemoveGongramDoc(pDocID, pAprmemeberSn) {
+	var result = "FALSE";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/gongramDocDelete.do",
+		data : {
+			docID : pDocID,
+			aprmemberSN : pAprmemeberSn
+		},
+		success: function(res) {
+			result = res;
+		}        			
+	});
+    
+    if (result != "TRUE") {
+        var pAlertContent = strLang872;
+        OpenAlertUI(pAlertContent);
+    }
+}
+
+var ezreceivedistributeui_cross_dialogArguments = new Array();
+function btnBaeBuAll_onclick() {
+	var DocList = new ListView();
+	DocList.LoadFromID("DocList");
+	
+	var selRows = DocList.GetSelectedRows();
+
+    if (selRows.length == 0) {
+		var pAlertContent = strLang930 + "<br>" + strLang336;
+        OpenAlertUI(pAlertContent);
+        return;
+    } else {
+		OpenInformationUI(ezApproval_allBeabu01 + "<br>" + ezApproval_allBeabu02, btnBaeBuAll_onclick_Complete);
+	}
+}
+
+function btnBaeBuAll_onclick_Complete(rtn) {
+	DivPopUpHidden();
+	
+	var DocList = new ListView();
+	DocList.LoadFromID("DocList");
+	
+	var selRows = DocList.GetSelectedRows();
+	
+	var excludeCnt = 0;	// 일괄배부 제외 대상 문서 갯수
+	
+	for (var i = 0; i < selRows.length; i++) {
+		if (selRows[i].getAttribute("data10") == "015" || selRows[i].getAttribute("data9") == "012") {
+			excludeCnt += 1;
+		}
+		if (pSusinManagerFlag != "admin" && selRows[i].getAttribute("data8") != pUserID) {
+			var pAlertContent = "<spring:message code='ezApprovalG.t1730'/>";
+            OpenInformationUI(pAlertContent);
+			return;
+		}	
+	}
+	
+	if (rtn && selRows.length == excludeCnt) {
+		OpenAlertUI(strLang721);
+		return;
+	}
+	
+	var DocID = "";
+	var DocState = "";
+	var AprState = "";
+	
+	if (rtn) {
+		for (var j = 0; j < selRows.length; j++) {
+		    var targetUrl = selRows[j].getAttribute("data3");
+		    var targetUrlType = (targetUrl.substr(targetUrl.length-3, targetUrl.length)).toUpperCase(); 
+		    if (targetUrlType == "MHT") {
+            	ajaxUrl = "/ezApprovalG/recevGSusin.do";
+            } else if (targetUrlType == "HWP") {
+            	ajaxUrl = "/ezApprovalG/ezRecevGSusinHWP.do";
+            } else if (targetUrlType == "WHWP") {
+            	ajaxUrl = "/ezApprovalG/ezRecevGSusinWHWP.do";
+            }
+            	
+            // 수신문서 열어주는 작업
+            $.ajax({
+            	type : "GET",
+            	dataType : "text",
+            	async : false,
+            	url : ajaxUrl,
+            	data : {
+            		docID : selRows[j].getAttribute("data1"),
+            		uOrgID : selRows[j].getAttribute("data7"),
+            		isReDraft : "",
+            		draftFlag : "SUSIN",
+            		retFlag : "",
+            		isPreview : "Y"
+            	}
+            });
+		
+			DocID += selRows[j].getAttribute("data1");
+			DocState += selRows[j].getAttribute("data9");
+			AprState += selRows[j].getAttribute("data10");
+			if (j != selRows.length - 1) {
+				DocID += ",";
+				DocState += ",";
+				AprState += ",";
+			} 
+		}
+		var parameter = new Array();
+		parameter[0] = DocID;
+		parameter[1] = "1";
+		parameter[2] = arr_userinfo[4];
+		parameter[3] = AprState;
+		parameter[4] = arr_userinfo[4];
+		parameter[5] = DocState;
+	
+		var url = "/ezApprovalG/ezReceiveDistributeUI.do?mode=addAll&pdocid=" + DocID;
+	
+		ezreceivedistributeui_cross_dialogArguments[0] = parameter;
+		ezreceivedistributeui_cross_dialogArguments[1] = receiveDistributeAll_Complete;
+	
+		var OpenWin = window.open(url, "ezReceiveDistributeUI_Cross", GetOpenWindowfeature(800, 600));
+		try { OpenWin.focus(); } catch (e) { }
+	}
+
+}
+
+function receiveDistributeAll_Complete(ret){
+	if (ret == "cancel")
+		window.close();
 }

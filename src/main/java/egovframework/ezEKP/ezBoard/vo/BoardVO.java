@@ -26,7 +26,7 @@ public class BoardVO {
 	private String lang;
 	/** 검색 조건 */
 	private String searchQuery;
-	/** 리스트타입*/
+	/** 리스트 타입 (1: 일반보기, 2: 안읽은 게시물 보기, 3: 완료게시물 보기) */
 	private String type;
 	/** 검색조건 제목*/
 	private String title;
@@ -54,6 +54,18 @@ public class BoardVO {
 	private String content;
 	/** 2019-04-04 홍승비 - 게시판 좋아요 기능 플래그 추가 */
 	private String likeFlag;
+	/** 2023-04-06 기민혁 - 게시판 싫어요 기능 플래그 추가 */
+	private String disLikeFlag;
+	/** 키워드 */
+	private String keyword;
+	/** 키워드 사용여부 */
+	private String useKeyword;
+	/** 2023-05-03 기민혁 - 게시판 스크랩 */
+	private String scrap;
+	/** 2023-05-22 기민혁 - 게시판 스크랩함 ID */
+	private String scrapContID;
+	/** 2023-05-22 기민혁 - 게시판 스크랩함 이름 */
+	private String scrapContTitle;
 	
 	public int getSs_board_maxRows() {
 		return ss_board_maxRows;
@@ -211,5 +223,41 @@ public class BoardVO {
 	public void setLikeFlag(String likeFlag) {
 		this.likeFlag = likeFlag;
 	}
+	public String getDisLikeFlag() {
+		return disLikeFlag;
+	}
+	public void setDisLikeFlag(String disLikeFlag) {
+		this.disLikeFlag = disLikeFlag;
+	}
+	public String getScrap() {
+		return scrap;
+	}
+	public void setScrap(String scrap) {
+		this.scrap = scrap;
+	}
+	public String getScrapContID() {
+		return scrapContID;
+	}
+	public void setScrapContID(String scrapContID) {
+		this.scrapContID = scrapContID;
+	}
+	public String getScrapContTitle() {
+		return scrapContTitle;
+	}
+	public void setScrapContTitle(String scrapContTitle) {
+		this.scrapContTitle = scrapContTitle;
+	}
 	
+	public String getKeyword() {
+		return keyword;
+	}
+	public void setKeyword(String keyword) {
+		this.keyword = keyword;
+	}
+	public String getUseKeyword() {
+		return useKeyword;
+	}
+	public void setUseKeyword(String useKeyword) {
+		this.useKeyword = useKeyword;
+	}
 }

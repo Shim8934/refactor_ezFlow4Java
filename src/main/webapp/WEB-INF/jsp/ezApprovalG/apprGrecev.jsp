@@ -6,7 +6,9 @@
 	<head>
 		<title><spring:message code='ezApprovalG.t1308'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
+		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -21,6 +23,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/appandbody_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/CheckLines_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/apprGSummary.js')}"></script>
 		<script type="text/javascript" id="clientEventHandlersJS" >
 			var pDocID = "<c:out value = '${docID}'/>";
 			var DraftFlag = "<c:out value = '${draftFlag}'/>";
@@ -127,8 +130,14 @@
 			var signImageType = "<c:out value ='${signImageType}'/>";
 			var isReDraft = 'N';
 			
+			/* 2023-11-03 홍승비 - G버전에서는 부서합의문서 접수 시에도 기안자의 대결/전결이 가능하므로, 기안자의 결재유형 체크 변수 추가 */
+			var CurAprType = "";
+
+			// 창마다 고유한 id 지정용
+			var windowUuid = getRandomId();
+			
 			window.onload = function () {
-				if(DraftFlag == 'REDRAFT') {
+				if (DraftFlag == 'REDRAFT') {
 					isReDraft = 'Y';
 				}
 			};
@@ -1049,7 +1058,7 @@
 		        ezapprovalinfo_dialogArguments[0] = parameter;
 		        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;		
 		
-		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&docType=" + pDocType, "ezApprovalInfo", GetOpenWindowfeature(1194, 750));
+		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&docType=" + pDocType, "ezApprovalInfo-" + windowUuid, GetOpenWindowfeature(1210, 750));
 
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
@@ -1166,6 +1175,7 @@
 				<%-- 2022-06-23 홍승비 - 전자결재 미리보기 영역에서 문서보기 페이지 접근 시, 모든 버튼을 ul 태그부터 숨김처리 --%>
 				<ul <c:if test="${isPreview == 'Y'}">style="display:none"</c:if>>
 		          <li id="btntotaldocinfo"><span onClick="return btnApprovalInfo('9')" ><spring:message code="ezApprovalG.t1742"/></span></li>
+		          <li id="btnSummary"><span onclick="return btnSummaryView()"><spring:message code='ezApprovalG.t1203'/></span></li> <%-- 요약전 --%>
 		          <span style ="display:none" ><li id="btnSetAprLine"> <span onclick="return btnSetAprLine_onclick()" ><spring:message code='ezApprovalG.t153'/></span></li></span>
 		          <li id="btnSendDraft"> <span onclick="return btnSendDraft_onclick()" ><spring:message code='ezApprovalG.t156'/></span></li>
 		          <li id="btnReturn"><span onclick="return btnReturn_onclick()"><spring:message code='ezApprovalG.t1434'/></span></li>
@@ -1236,5 +1246,6 @@
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
+		<div id="RECEIPTDEPTID" style="display: none"></div>
 	</body>
 </html>

@@ -7,7 +7,8 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code='ezNewPortal.t006' /></title>
-		<link rel="stylesheet"  href="${util.addVer('ezPersonal.e3', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
 		<link type="text/css" rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" />
 	    <style type="text/css">
@@ -33,15 +34,17 @@
 		        } else if("${usePortal}" == "NO") {
 		        	document.getElementById("TimeZone").onclick();			        	
 		        } else {
-		        	if ("${portalEnv}" == "1") {
-			            //document.getElementById("Portal_sub1").parentNode.onclick()
-			            document.getElementById("Portal_sub1").onclick();
-			        } else if ("${portalEnv}" == "2") {
-			        	//document.getElementById("Portal_sub4").parentNode.onclick()
-			            document.getElementById("Portal_sub4").onclick();
-			        } else {
-			        	document.getElementById("Portal_sub1").onclick();
-			        }
+		        	// 테마설정 메뉴 제거
+// 		        	if ("${portalEnv}" == "1") {
+// 			            //document.getElementById("Portal_sub1").parentNode.onclick()
+// 			            document.getElementById("Portal_sub1").onclick();
+// 			        } else if ("${portalEnv}" == "2") {
+// 			        	//document.getElementById("Portal_sub4").parentNode.onclick()
+// 			            document.getElementById("Portal_sub4").onclick();
+// 			        } else {
+// 			        	document.getElementById("Portal_sub1").onclick();
+// 			        }
+		            document.getElementById("Portal_sub4").click();
 		        }
 		 		leftResize();
 		        $(".envListBox").mCustomScrollbar({
@@ -289,11 +292,11 @@
 						<c:if test="${firstScreen_Mail != 'YES'}">
 							<c:choose>
 								<c:when test="${portalEnv == '0' and usePortal eq 'YES'}">
-	                            	<li><span class="list_text node_selected" id="Portal_sub1" name="Portal_sub1"  onclick="Open_Func(this)"><spring:message code='ezNewPortal.t034' /></span></li>
+<%-- 	                            	<li><span class="list_text node_selected" id="Portal_sub1" name="Portal_sub1"  onclick="Open_Func(this)"><spring:message code='ezNewPortal.t034' /></span></li> --%>
 	                            	<li><span class="list_text" id="Portal_sub4"  name="Portal_sub4"  onclick="Open_Func(this)"><spring:message code='ezNewPortal.t136' /></span></li>
 			                    </c:when>
 			                    <c:when test="${portalEnv == '1'}">
-	                            	<li><span class="list_text" id="Portal_sub1" name="Portal_sub1"  onclick="Open_Func(this)"><spring:message code='ezNewPortal.t034' /></span></li>
+<%-- 	                            	<li><span class="list_text" id="Portal_sub1" name="Portal_sub1"  onclick="Open_Func(this)"><spring:message code='ezNewPortal.t034' /></span></li> --%>
 			                    </c:when>
 			                    <c:when test="${portalEnv == '2'}">
 	                            	<li><span class="list_text" id="Portal_sub4"  name="Portal_sub4"  onclick="Open_Func(this)"><spring:message code='ezNewPortal.t136' /></span></li>

@@ -73,6 +73,35 @@ var strLang189 = "Please enter ";
 var strLangKWCHd01 = "An error occurred while saving security HWP document. Please try again.";
 
 // 2023-03-08 이가은 추가
-var strLangLGE188 = "You cannot 'Like' your own comments.";
-var strLangLGE189 = "You cannot 'Dislike' your own comments.";
-var strLangLGE190 = "This comment has already been deleted.";
+var strLangLGE188 = "Bạn không thể thích bình luận của chính mình.";
+var strLangLGE189 = "Bạn không thể không thích bình luận của chính mình.";
+var strLangLGE190 = "Bình luận này đã bị xóa.";
+
+// 2023-03-30 이가은 추가
+var strLangLGE01 = "Viết phản hồi";
+var strLangLGE02 = "Thu gọn phản hồi";
+var strLangLGE03 = "Đăng";
+var strLangLGE04 = "Hủy";
+var strLangLGE05 = "Mật khẩu đăng bài";
+var strLangLGE06 = "Ẩn danh";
+var strLangLGE07 = "Bình luận này đã bị tác giả xóa.";
+
+/* 2024-08-26 전인하 - 게시판 > 키워드 > 특문입력제한 */
+var strLangKeywordJIH01 = "역슬래시, 작은따옴표, 큰따옴표, 부등호기호, 해시기호(#)를 입력할 수 없습니다."
+var strLangKeywordJIH02 = "오류가 발생하였습니다."
+var strLangKeywordJIH03 = "해당 게시물을 그룹웨어에서 접근하지 않았거나, 해당 게시물을 접근한 그룹웨어 페이지에 변경사항이 발생하여 키워드를 검색할 수 없습니다."
+var strLangKeywordJIH04 = "보고 있는 게시물 팝업을 닫겠습니까?"
+var strLangKeywordJIH05 = "게시물 혹은 메일 보기 팝업을 통하여 열람한 게시글, 관리자 화면을 통하여 열람한 게시글에서는 키워드를 검색할 수 없습니다.";
+
+var strLangAttachJIH01 = "첨부";
+var strLangAttachJIH02 = "파일명은 ";
+var strLangAttachJIH03 = "자를 넘을 수 없습니다.";
+var strLangAttachJIH04 = "에러가 발생하였습니다.";
+
+// 2024-06-28 민지수 - 게시판 > 첨부파일 드래그 앤 드롭 안내 메세지 추가
+var strLangMJS01 = "Bạn có thể kéo và thả để thêm tệp và thay đổi thứ tự của các tệp đã thêm.";
+
+// 2024-10-02 이혜림 추가
+var strLangLHR001 = "0점은 평가할 수 없습니다.";
+var strLangLHR002 = "기존과 동일한 점수로는 평가하기를 할 수 없습니다.";
+var strLangLHR003 = "별점이 성공적으로 저장되었습니다.";

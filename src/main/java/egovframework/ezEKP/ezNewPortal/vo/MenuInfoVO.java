@@ -14,6 +14,7 @@ public class MenuInfoVO {
 	private int companyOrder; // 회사 설정 기본 순서
 	private boolean accessYN;
 	private String menuCode;
+	private int openType; // 메뉴 여는 방식
 	
 	public boolean isAccessYN() {
 		return accessYN;
@@ -86,6 +87,12 @@ public class MenuInfoVO {
 	}
 	public void setMenuCode(String menuCode) {
 		this.menuCode = menuCode;
+	}
+	public int getOpenType() {
+		return openType;
+	}
+	public void setOpenType(int openType) {
+		this.openType = openType;
 	}
 	
 	@Override

@@ -7,7 +7,8 @@
 	<head>
 		<title><spring:message code='ezPoll.t232' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
-		<link rel="stylesheet" href="${util.addVer('ezPoll.i1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/css/ezPoll/vote.css')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/css/font-awesome-5.0.10/css/fontawesome-all.css')}">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/timeControls/jquery.timepicker.css')}" />
@@ -72,8 +73,6 @@
             iframeStyle += "TABLE TD    { text-indent: 0px }";
             iframeStyle += "BLOCKQUOTE  { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px;}";
             iframeStyle += "</style>";          
-            //투표 내용이 언어에 따라 폰트가 변하도록 수정. 2019-10-25 홍대표.
-            //iframeStyle += "<link rel='stylesheet' href=\"${util.addVer('ezPoll.i1', 'msg')}\" type='text/css'>";
             
     		window.onunload = function() {
     		    if (stompClient !== null) {
@@ -2580,7 +2579,7 @@
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - conHeight) / 2;
 		        var pLeft = (pwidth - 890) / 2;
-		        window.open("/ezPoll/mailWrite.do?type=group&state=voted&qstId=" + pQstID + "&optId=" + pOptID, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no,resizable=1" + feature);		       
+		        window.open("/ezEmail/mailWrite.do?cmd=POLL&type=group&state=voted&qstId=" + pQstID + "&optId=" + pOptID, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no,resizable=1" + feature);		       
 		    }
 		    
 		    //이모티콘 패널이 아닌 영역을 선택하면 패널이 닫힘

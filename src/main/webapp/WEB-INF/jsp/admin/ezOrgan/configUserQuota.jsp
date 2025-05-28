@@ -5,7 +5,8 @@
 <html>
 <head>
 	<title><spring:message code='ezOrgan.t168' /></title>
-	<link rel="stylesheet" href="${util.addVer('ezOrgan.e2', 'msg')}" type="text/css">
+	<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
     <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	<script type="text/javascript">
@@ -110,16 +111,17 @@
         	alert("<spring:message code='ezOrgan.t174' />");
         	var url = window.opener.document.location.href;
         	var arrUrl = url.split(window.location.protocol + "//" + window.location.host);
-        		
-        		if(arrUrl[1]=="/admin/ezEmail/mailQuotaList.do"){
+            var urlPath = arrUrl[1].split("?")[0]; 
+
+            if(urlPath=="/admin/ezEmail/mailQuotaList.do"){	
         			
-        			opener.location.href = "javascript:reload()";
-        			window.close();
+                opener.location.href = "javascript:reload()";
+                window.close();
         		
-        		} else {
-        			
-        			window.close();
-        		}
+            } else {
+                
+                window.close();
+            }
         }
     }	
 

@@ -6,7 +6,8 @@
     <head>
     <title><spring:message code='ezStatistics.t1001' /></title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <link rel="stylesheet" href="${util.addVer('ezStatistics.e2', 'msg')}" type="text/css" />
+    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
     <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
     <link rel="stylesheet" href="${util.addVer('/js/ezStatistics/js/jquery.jqplot.min.css')}" type="text/css">
     <style type="text/css">
@@ -372,9 +373,9 @@
                     <spring:message code='ezStatistics.t55' /></span>
             </td>
             <td>
-                <div id="mainmenu" style="height: 28px;margin:3px 0px !important"> 
+                <div id="mainmenu" style="height: 31px;margin:3px 0px !important"> 
                     <ul>
-                        <li><span style="width: 110px;text-align:center;background-color: white" onclick="return btnexportexcel_onclick()"><spring:message code='ezStatistics.t1003' /></span></li>
+                        <li><span class="btnexportexcel" style="width: 110px;text-align:center;background-color: white" onclick="return btnexportexcel_onclick()"><spring:message code='ezStatistics.t1003' /></span></li>
                     </ul>
                 </div>
             </td>

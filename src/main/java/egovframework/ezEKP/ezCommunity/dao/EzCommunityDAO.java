@@ -27,9 +27,10 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityClubVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityMemberInfoVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityMyCommunityVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityOneLineReplyVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityCClubGuestReplyVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
-import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzCommunityDAO")
 public class EzCommunityDAO extends EgovAbstractDAO{
@@ -1192,4 +1193,59 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		return (int) select("EzCommunityDAO.checkUserInCommunity", map);
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<String> myCommunityPopGet(Map<String, Object> map) throws Exception {
+		return (List<String>) list("EzCommunityDAO.myCommunityPopGet", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<CommunityMyCommunityVO> myCommunityPopItemGet(Map<String, Object> map) throws Exception {
+		return (List<CommunityMyCommunityVO>) list("EzCommunityDAO.myCommunityPopItemGet", map);
+	}
+	
+	public int getRecentNo(Map<String, Object> map) throws Exception {
+		return (int) select("EzCommunityDAO.getRecentNo", map);
+	}
+	
+	public void updateAttachments(Map<String, Object> map) throws Exception {
+		update("EzCommunityDAO.updateAttachments", map);
+	}
+	
+	public void bbsDelOkDelAttach(Map<String, Object> map) throws Exception {
+		delete("EzCommunityDAO.bbsDelOkDelAttach", map);
+	}
+
+	public int chkGuestReplyCnt(Map<String, Object> map) {
+		return (int) select("EzCommunityDAO.chkGuestReplyCnt", map);
+	}
+
+	public void insertGuestOneLineReply(Map<String, Object> map) throws Exception{
+		insert("EzCommunityDAO.insertGuestOneLineReply", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<CommunityCClubGuestReplyVO> getGuestOneLineReply(Map<String, Object> map) throws Exception {
+		return (List<CommunityCClubGuestReplyVO>) list("EzCommunityDAO.getGuestOneLineReply", map);
+	}
+
+	public void deleteGuestOneLineReply(Map<String, Object> map) throws Exception {
+		delete("EzCommunityDAO.deleteGuestOneLineReply", map);
+	}
+
+	public void modifyGuestOneLineReply(Map<String, Object> map) throws Exception {
+		update("EzCommunityDAO.modifyGuestOneLineReply", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<CommunityBoardListVO> commuTotalSearchList(Map<String, Object> map) {
+		return (List<CommunityBoardListVO>) list("EzCommunityDAO.commuTotalSearchList", map);
+	}
+
+	public int commuTotalSearchCount(Map<String, Object> map) {
+		return (int) select("EzCommunityDAO.commuTotalSearchCount", map);
+	}
+
+	public String getReadFlag(Map<String, Object> map) {
+		return (String) select("EzCommunityDAO.getReadFlag", map);
+	}
 }

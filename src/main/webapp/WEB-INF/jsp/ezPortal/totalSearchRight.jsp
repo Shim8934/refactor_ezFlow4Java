@@ -9,7 +9,8 @@
 <title><spring:message code="ezTotalSearch.t0001" /></title>
 <link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}" type="text/css">
 <link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}" type="text/css">
-<link rel="stylesheet" href="${util.addVer('main.e15', 'msg')}" type="text/css">
+<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
@@ -414,7 +415,7 @@ function dblClickBoard(boardID, itemID) {
 		
 		/* 2020-06-25 홍승비 - 동영상게시판 분기 추가, 게시판 팝업 보기 시의 창 크기 분리 */
 		url += "?itemID=" + itemID +"&boardID=" + boardID + "&location=GENERAL";
-		window.open(url, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + popupH + ",width=" + popupW + ",top=" + pTop + ",left=" + pLeft, "");		
+		window.open(encodeURI(url), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + popupH + ",width=" + popupW + ",top=" + pTop + ",left=" + pLeft, "");		
 	} else {
 		alert("<spring:message code='ezBoard.t194' />");		
 	}
@@ -1420,7 +1421,7 @@ function dblClickBoard_XTEN(boardID, itemID, gubun) {
 	
 	/* 2020-06-25 홍승비 - 동영상게시판 분기 추가, 게시판 팝업 보기 시의 창 크기 분리 */
 	url += "?itemID=" + itemID +"&boardID=" + boardID + "&location=GENERAL";
-	window.open(url, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + popupH + ",width=" + popupW + ",top=" + pTop + ",left=" + pLeft, "");		
+	window.open(encodeURI(url), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + popupH + ",width=" + popupW + ",top=" + pTop + ",left=" + pLeft, "");		
 }
 ///////////////////////////////////////////////// XTEN 통합검색 코드 종료 /////////////////////////////////////////////////
 

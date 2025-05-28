@@ -123,6 +123,7 @@ function filedelete(r) {
     fd.append("fileToDelete", fileinfo);
     xhr.open("POST", "/ezPoll/deleteFile.do");
     xhr.send(fd);
+    showAttachInnerNotice();
 }
 
 function fileupload() {	
@@ -156,7 +157,10 @@ function setAttachFileInfo1(strXML) {
     try {    	
         var listtable;    
         listtable = document.getElementById("filelist");
+        var lstAttachLink = document.getElementById("lstAttachLink");
+        /*lstAttachLink.insertBefore(listtable, lstAttachLink.firstChild);*/
         document.getElementById("lstAttachLink").appendChild(listtable);
+        document.getElementById("attachInnerNotice").className = "attachInnerNotice_p_off";
         var extCheck = false;
         
         for (i = 0; i < SelectNodes(xml, "ROOT/NODES/DATA").length; i++) {
@@ -223,5 +227,51 @@ function setAttachFileInfo1(strXML) {
     }
     catch (e) { 
     	alert("returnvalue :: " + e.description); 
+    }
+}
+
+function defaultenter(evt) {
+    evt.dataTransfer.dropEffect = "none";
+    evt.stopPropagation();
+    evt.preventDefault();
+}
+
+function setAttachSortable() {
+    $("#lstAttachLink").multipleSortable({
+        items : "tr[fileinfo]",
+        opacity: 0.3,
+        start : function(event, elem) {
+            $("#lstAttachLink tr").removeClass("multiple-sortable-selected");
+            $("#lstAttachLink tr").removeClass("ui-sortable-helper");
+        },
+        click : function(event) {
+            $("#lstAttachLink tr").removeClass("multiple-sortable-selected");
+            $("#lstAttachLink tr").removeClass("ui-sortable-helper");
+        },
+        stop : function(event, elem) {
+        }
+    });
+}
+
+function getAttachInnerNoticeObject() {
+    var pElem = document.createElement("p");
+    pElem.id = "attachInnerNotice";
+    pElem.className = "attachInnerNotice_p_on";
+
+    var spanElem = document.createElement("span");
+    spanElem.innerText = strLangMJS01;
+    spanElem.className = "attachInnerNotice_span";
+
+    pElem.appendChild(spanElem);
+
+    return pElem;
+}
+
+function showAttachInnerNotice() {
+    var fileCnt = document.querySelectorAll("#filelist tr[fileinfo]").length;
+    if (fileCnt > 0) {
+        document.getElementById("attachInnerNotice").className = "attachInnerNotice_p_off";
+    } else {
+        document.getElementById("attachInnerNotice").className = "attachInnerNotice_p_on";
     }
 }

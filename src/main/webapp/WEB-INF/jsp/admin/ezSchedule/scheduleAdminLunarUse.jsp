@@ -7,7 +7,8 @@
 	<head>
 		<title><spring:message code='ezSchedule.t6000' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -27,6 +28,10 @@
 			window.onload = function () {
 			    schedule_get_lunaruse();
 			}
+
+			function changeCompany() {
+				schedule_get_lunaruse();
+			}
 	
 			function schedule_get_lunaruse() {			    
 			    $.ajax({
@@ -36,7 +41,7 @@
 		    		cache : false,
 		    		url : "/ezSchedule/scheduleGetLunarUse.do",
 		    		data : {
-		    			/* COMPANYID  : document.getElementById("ListCompany")[document.getElementById("ListCompany").selectedIndex].value */		    			
+		    			 COMPANYID  : encodeURIComponent(companySelectID)
 		    		},
 		    		success: function(text) {
 		    			if (text == "0") {
@@ -77,17 +82,10 @@
 		</script>
 	</head>
 	<body class="mainbody"> 
-		<h1><spring:message code='ezSchedule.t6000' /></h1>
+		<h1><spring:message code='ezSchedule.t6000' />
+			<jsp:include page="/WEB-INF/jsp/admin/companySelect.jsp"/>
+		</h1>
 		<form id="Form1" method="post">
-			<!-- 2018-07-26 자시회사만 나올 수 있도록 수정 -->
-			<%-- <div id="mainmenu">
-				<span><b><spring:message code='ezResource.t28' /></b></span>&nbsp;
-	            <select id="ListCompany" onchange="schedule_get_lunaruse()">
-	            	<c:forEach var="item" items="${list}">
-           				<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-          				</c:forEach>
-	            </select>
-			</div> --%>
 			<br />
 			<table class="content" style="width: 450px;">
 			    <tr>
@@ -102,9 +100,6 @@
 			    <a class="imgbtn" onclick="Change_Click()"><span><spring:message code='ezSchedule.t157' /></span></a>
 			    <a class="imgbtn" onclick="Cancel_Click()"><span><spring:message code='ezSchedule.t5' /></span></a>
 			</div>
-		  <!--   <script type="text/javascript">
-		    	selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
-			</script> -->
 		</form>
 	</body>
 </html>

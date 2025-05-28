@@ -6,7 +6,8 @@
 	<head>
 		<title><spring:message code="ezBoard.jjh04" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	    <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css" />
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+	    <link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>	
 	    <script type="text/javascript" src="${util.addVer('/js/ezBoard/common.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>	    
@@ -63,6 +64,7 @@
 				}
 				
 				var newID = "{" + GetGUID() + "}";
+				var selectedComp = !!parent.frames['board_menu'] ? !!parent.frames['board_menu'].companySelectID ? parent.frames['board_menu'].companySelectID : "" : "";
 
 				$.ajax({
 					type : "POST",
@@ -73,12 +75,12 @@
 						boardGroupName2 : encodeURIComponent(name2),
 						boardGroupName3 : encodeURIComponent(name3),
 						boardGroupName4 : encodeURIComponent(name4),
+						companyID : selectedComp,
 						guBun : guBun
 					},
 					success: function(result){						
 						alert("<spring:message code='ezBoard.t121'/>");	
-						window.location.reload(true);
-						window.parent.frames[0].location.reload();
+						window.parent.frames[0].refreshLeft();
 					}  
 				});				
 			}
@@ -101,7 +103,7 @@
 			            		<th><c:out value='${lang_secondary}' /></th>
 			            		<td><input type="text" name="textfield" id="txtNewGroupName2" style="width:100%" maxlength=20></td>
 			          		</tr>
-			          		<c:if test="${useJapanese == 'YES'}">
+			          		<c:if test="${useJapanese == 'YES' && lang_primary ne lang_tertiary}">
 				          		<tr class="primary">
 				            		<th><c:out value='${lang_tertiary}' /></th>
 				            		<td><input type="text" name="textfield" id="txtNewGroupName3" style="width:100%" maxlength=20></td>

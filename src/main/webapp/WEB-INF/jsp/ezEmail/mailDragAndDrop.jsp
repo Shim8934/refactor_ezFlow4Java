@@ -10,7 +10,8 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery.multipleSortable.js')}"></script>
-		<link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<style>
 			#lstAttachLink {
 				height: 117px;
@@ -34,7 +35,19 @@
 		    var lstAttachLink = document.getElementById("lstAttachLink");
 		    var attachFileNameMaxLength = Number("${attachFileNameMaxLength}");
 		    var status = 0; // 일반-대용량 첨부파일 구분 상태값  
-		    
+            
+            $(document).ready(function () {
+                if ($("#lstAttachLink").length > 0) {
+                    $("#lstAttachLink").on("change", "input[type='checkbox'][name='fileSelect']", function () {
+                        if ($("#lstAttachLink input[name='fileSelect']:checked").length !== $("#lstAttachLink input[name='fileSelect']").length) {
+                            document.getElementById("checkboxall").checked = false;
+                        } else {
+                            document.getElementById("checkboxall").checked = true;
+                        }
+                    });
+                }
+            });
+            
 		    function onDragEnter(evt) {
 		        evt.dataTransfer.dropEffect = "copy";
 		        evt.stopPropagation();
@@ -60,7 +73,7 @@
 		    var shareId = '<c:out value="${shareId}"/>';
 		    
 		    function onDrop(evt) {
-		       
+
 		    	if (evt != undefined) {
 		            evt.stopPropagation();
 		            evt.preventDefault();
@@ -113,6 +126,13 @@
 		        
 		        for (var i = 0; i < filelist.length; i++) {
 		            
+			    	// 2024.05.02 한슬기 : 파일명 글지수 체크 위치 변경
+			    	if (filelist[i].name.length > attachFileNameMaxLength) {
+		        		alert("<spring:message code='main.jjh08' />" + attachFileNameMaxLength + "<spring:message code='main.lhm03' />");
+		        		isfileup = false;
+		        		return;
+		        	}
+		        
 		        	if (filelist[i].size / 1024 / 1024 > window.parent.BigSizeAttachMBSize || isbigyn == "Y") {
 		        		filelist[i].isBig = "Y";
 
@@ -151,7 +171,7 @@
 		        }
 		        
 		       // if (bigFileCheck && alertCnt < 2 && isbigyn == "N") {
-		        if (bigFileCheck && isbigyn == "N" && filelist.length == 1) {
+		        if (bigFileCheck && isbigyn == "N") {
 		    		// 2018-10-05 재은수정: 일반첨부에서 대용량첨부로 전환될 때 취소 버튼 추가
 		        	var bigFileAttachChk = confirm(strLang77 +window.parent.BigSizeAttachMBSize + "MB" + strLang78 + window.parent._pBigAttachDownloadDay + strLang79);
 		        	
@@ -186,7 +206,15 @@
                     }
 
 		            status = 1;
-		            return status;
+	            	//return status;
+		            
+		            // 2024.05.02 한슬기 : Drag&Drop으로 파일 첨부시 파일 첨부가 안되는 현상이 있어 수정
+		            if (evt != undefined){
+			            onDrop(evt);
+			            return;
+		            } else {
+		            	return status;
+		            }
 		        }
 
 		        if ((bigfilesize + tempbigfilesize) / 1024 / 1024 > window.parent.totBigSizeAttachMBSize) {
@@ -218,8 +246,7 @@
 		            document.getElementById("file").type = "text";
 		            document.getElementById("file").type = "file";
 		        }
-		        
-		        isbigyn = "N";
+		        isbigyn = "N"; 
 		    }
 		    
 		    function checkMailStatusAndFileUpload() {
@@ -278,21 +305,21 @@
 		        objTr.appendChild(objTh);
 		
 		        var objTh2 = document.createElement("TH");
-		        objTh2.style.width = "87%";
+		        objTh2.style.width = "calc(100% - 257px)";
 		        setNodeText(objTh2, "<spring:message code='ezEmail.t725' />");
 		        objTr.appendChild(objTh2);
 		
 		        var objTh3 = document.createElement("TH");
 		        setNodeText(objTh3, "<spring:message code='ezEmail.t726' />");
-		        objTh3.style.width = "13%";
+		        objTh3.style.width = "118px";
 		        objTr.appendChild(objTh3);
 		        
 		        if (window.parent.totBigSizeAttachMBSize > 0) {
-		        	objTh2.style.width = "67%";
+		        	objTh2.style.width = "calc(100% - 387px)";
 		        	
 		        	var objTh4 = document.createElement("TH");
 			        setNodeText(objTh4, "<spring:message code='ezEmail.sjw04' />");
-			        objTh4.style.width = "20%";
+			        objTh4.style.width = "230px";
 			        objTr.appendChild(objTh4);
 		        }
 		        
@@ -308,7 +335,16 @@
 		        
 		      	//첨부파일 드래그 기능 추가. 2020-03-17 홍대표.
 		        setAttachSortable();
-		        
+
+                $(document).mouseup(function(e) {
+                    var element = parent.document.getElementById("layer_menu");
+                    if (element) {
+                        if (element.style.display !== 'none') {
+                            parent.document.getElementById("view_more").classList.remove('on');
+                            element.style.display = 'none';
+                        }
+                    }
+                })
 		    }
 		    
 		    var AttatchReturnValue;
@@ -571,6 +607,7 @@
 		        }
 		        
 		        showAttachInnerNotice();
+                document.getElementById("checkboxall").checked = false;
 		    }
 			
 		    function checkall() {
@@ -597,12 +634,16 @@
 		        for (var i = 0; i < filelist.length; i++) {
 					var fnl = filelist[i].name.length;
 					var fbig = filelist[i].isBig;
-		        	
-		        	if (fnl > attachFileNameMaxLength) {
-		        		alert("<spring:message code='main.jjh08' />" + attachFileNameMaxLength + "<spring:message code='main.lhm03' />");
-		        		isfileup = false;
-		        		return;
-		        	} else if (bodyTypeIsPlain && fbig == "Y") {
+		        	// 2024.05.03 한슬기 : 글자수 제한으로 업로드에 실패해도 실패한 파일의 용량은 계산되는 문제로 인해 글자수 체크 위치 변경(onDrop() 내부로 위치 변경) 
+// 		        	if (fnl > attachFileNameMaxLength) {	
+// 		        		alert("<spring:message code='main.jjh08' />" + attachFileNameMaxLength + "<spring:message code='main.lhm03' />");
+// 		        		isfileup = false;
+// 		        		return;
+// 		        	} else if (bodyTypeIsPlain && fbig == "Y") {
+// 		        		plainText_BigAttChk = true;
+// 		        		continue;
+// 		        	} else {
+		        	if (bodyTypeIsPlain && fbig == "Y") {	
 		        		plainText_BigAttChk = true;
 		        		continue;
 		        	} else {
@@ -635,7 +676,7 @@
 		        xhr.send(fd);
 		        document.getElementById('progdiv').style.display = "inline-block";
 		    }
-		
+            
 		    var xhr2 = new XMLHttpRequest();
 		    function fileupload2(fileXml,purl) {
 		    	isfileup = true;
@@ -716,7 +757,6 @@
 		        		} else {
 			                alert(strLangKMS02 + window.parent.totSizeAttachMBSize + "MB" + strLang76);
 		        		}
-
 		        		return false;
 		        	} else {
 		                bigFileCheck = true;
@@ -738,8 +778,8 @@
 		        	if(!bigFileAttachCountCheck(newBigAttachCount)) {
 		        		return;
 		        	}
-		            var bigFileAttachChk = confirm(strLang77 +window.parent.BigSizeAttachMBSize + "MB" + strLang78 + window.parent._pBigAttachDownloadDay + strLang79);
-		            
+		        	var bigFileAttachChk = confirm(strLang77 +window.parent.BigSizeAttachMBSize + "MB" + strLang78 + window.parent._pBigAttachDownloadDay + strLang79);
+		        	
 		            if (!bigFileAttachChk) {
 		                return false;
 		            }
@@ -858,6 +898,8 @@
 		    }
 		
 		    function filePicker() {
+                isbigyn = (isbigyn === 'Y') ? 'N' : isbigyn;
+                
 		    	window.parent.filePickerOpen();
 		    }
 		</script>

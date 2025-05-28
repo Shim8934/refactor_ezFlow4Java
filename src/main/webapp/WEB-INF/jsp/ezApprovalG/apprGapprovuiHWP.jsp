@@ -7,7 +7,8 @@
 	<head>
 	    <title><spring:message code='ezApprovalG.t1'/></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -23,6 +24,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/Kaoni_ActiveX.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/nonElecRec.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/apprGSummary.js')}"></script>
 	    <script type="text/javascript">
 	        var OrgAprUserID = "<c:out value ='${orgAprUserID}'/>";
 	        var OrgAprUserName = "<c:out value ='${orgAprUserName}'/>";
@@ -436,7 +438,7 @@
 				        
 				      //2019.02.21 유은정 : 포탈개인화 결재리스트에서 포틀릿 정보 가져오는 매서드 추가
 				        if (parent.opener != null && parent.opener.getApprovalList != undefined) {
-				        	parent.opener.getApprovalList("doing");
+				        	parent.opener.clearAbsence(true);
 				        }
 				        return;
 				    }
@@ -454,7 +456,7 @@
 				        
 				      //2019.02.21 유은정 : 포탈개인화 결재리스트에서 포틀릿 정보 가져오는 매서드 추가
 				        if (parent.opener != null && parent.opener.getApprovalList != undefined) {
-				        	parent.opener.getApprovalList("doing");
+				        	parent.opener.clearAbsence(true);
 				        }
 				        return;
 				    }
@@ -472,7 +474,7 @@
 				        
 				      //2019.02.21 유은정 : 포탈개인화 결재리스트에서 포틀릿 정보 가져오는 매서드 추가
 				        if (parent.opener != null && parent.opener.getApprovalList != undefined) {
-				        	parent.opener.getApprovalList("doing");
+				        	parent.opener.clearAbsence(true);
 				        }
 				        return;
 				    }
@@ -1094,7 +1096,20 @@
 			
 			    function btnMail_onclick() {
 			        SaveFile();
-			        window.open("/ezEmail/mailWrite.do?docHref=" + pDocHref + "&cmd=docsend&docID=" + pDocID + "&TARGET=APPROVALG", "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+					var pheight = window.screen.availHeight;
+					var conHeight = pheight * 0.8;
+					var pwidth = window.screen.availWidth;
+					var conWidth = pwidth * 0.8;
+					if (conWidth > 890)
+						conWidth = 890;
+					var pTop = (pheight - conHeight) / 2;
+					var pLeft = (pwidth - 890) / 2;
+					var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1";
+					
+					var requestUrl = "/ezEmail/mailWrite.do?docHref=" + pDocHref + "&cmd=docsend&docID=" + pDocID + "&TARGET=APPROVALG";
+		
+					window.open(requestUrl, "", feature);
+			        // window.open("/ezEmail/mailWrite.do?docHref=" + pDocHref + "&cmd=docsend&docID=" + pDocID + "&TARGET=APPROVALG", "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
 			    }
 	
 			    var tempSecurity = "";
@@ -1451,6 +1466,7 @@
 	                            <li id="btnSetTaskCode"><span onclick="btnSetTaskCode_onclick()"><spring:message code='ezApprovalG.t9994'/></span></li>
 	                        </span>
 	                        <li id="btntotaldocinfo"><span onclick="return btnApprovalInfo()"><spring:message code='ezApprovalG.t1742'/></span></li>
+	                        <li id="btnSummary"><span onclick="return btnSummaryEdit()"><spring:message code='ezApprovalG.t1203'/></span></li> <%-- 요약전 --%>
 	                        <li id="btnJunKyul" style="display: none"><span onclick="return btnJunKyul_onclick()"><spring:message code='ezApprovalG.t25'/></span></li>
 	                        <span style="display: none">
 	                            <li id="btnModAprLine"><span onclick="return btnModAprLine_onclick()"><spring:message code='ezApprovalG.t52'/></span></li>

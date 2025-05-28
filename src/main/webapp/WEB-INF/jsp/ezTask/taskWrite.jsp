@@ -6,7 +6,8 @@
 	<HEAD>
 		<title><spring:message code='ezTask.t206' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="${util.addVer('ezTask.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}">
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/timeControls/jquery.timepicker.css')}" type="text/css" />
@@ -68,7 +69,7 @@
 			var radioCheck = false;
 			var flag = "<c:out value='${flag}'/>";
 			var printTitle = "<spring:message code='ezApprovalG.pjj03'/>";
-			var cssLang = "<spring:message code='ezTask.e2'/>";
+			var cssLang = "<spring:message code='main.default.css'/>";
 			
 			$(function () {
 				 $("#Sdatepicker").datepicker({
@@ -289,6 +290,8 @@
 						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 380 + "PX";
 					}
 				}
+				
+				mobileDistinction();
 			}
       
 			function attach_Add() {
@@ -586,6 +589,7 @@
 				printWindow = window.open("", "mywindow", "width=700, height=700,location=0,status=0,scrollbars=1,resizable=1" + feature);
 		        var strContent = "<html><head>"; // If you use this script inside <head> on the page, there might be error. So I am keeping inside body (becaue of <head>)        
 		        strContent = strContent + "<title>" + printTitle + "</title>";      
+		        strContent = strContent + "<link rel='stylesheet' href='/css/default.css' type='text/css' />";       
 		        strContent = strContent + "<link rel='stylesheet' href='" + cssLang + "' type='text/css' />";       
 		        strContent = strContent + "</head><body style='padding:10px;' onload='window.print();'>";   
 		        strContent = strContent + "<div id='printScreen' style>";
@@ -641,6 +645,15 @@
 		        return str;
 		    }
 		    
+			function mobileDistinction() {
+   				var  userAgent = navigator.userAgent.toLowerCase();
+				
+				if (/iphone|ipod|ipad|android.*mobile/i.test(userAgent) || /tablet|ipad|android/i.test(userAgent) || navigator.maxTouchPoints > 4) {
+					if (window.innerWidth > window.innerHeight) {
+						document.getElementById("EdtorSize").style.height = 436 + "PX";
+					}
+				}
+			}
 		</script>
 	</head>
 	<body class="popup" style="overflow: hidden;">
@@ -1182,6 +1195,8 @@
 						} 
 					}
 				}
+				
+				mobileDistinction(); 
 			</script>
 		</div>
 	</body>

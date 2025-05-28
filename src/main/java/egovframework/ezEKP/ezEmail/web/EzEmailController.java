@@ -37,6 +37,8 @@ public class EzEmailController {
 	public String showMailMain(Model model, HttpServletRequest request) throws Exception {
 		String funCode = "1";
 		String subCode = "1";
+        String leftFrameWidth = "220";
+        int width = 0;
 		
 		if (request.getParameter("funCode") != null) {
 			funCode = request.getParameter("funCode");
@@ -45,11 +47,30 @@ public class EzEmailController {
 		if (request.getParameter("subCode") != null) {
 			subCode = request.getParameter("subCode");
 		}
-		
-		model.addAttribute("funCode", funCode);
+
+		if (request.getParameter("__wwidth") != null) {
+			String widthParam = request.getParameter("__wwidth");
+
+            try {
+                width = Integer.parseInt(widthParam);
+
+                leftFrameWidth = width < 1180 ? "0" : "220";
+            } catch (NumberFormatException e) {
+                width = 0;
+            }
+		}
+
+        // 승인메일 수정필요
+        //boolean useApprMail = ezEmailUtil.useApprMailPolicy(tenantId, companyId); // 2024-03-06 이사라 - 승인메일 사용 여부
+        //boolean isApprMailApprover = useApprMail ? ezEmailService.checkApprMailApprover(tenantId, companyId, userInfo.getId()) : false; // 2024-03-06 이사라 - 승인자 여부 확인
+
+        model.addAttribute("funCode", funCode);
 		model.addAttribute("subCode", subCode);
-		
-		return "ezEmail/mailMain";
+        model.addAttribute("leftFrameWidth", leftFrameWidth);
+        model.addAttribute("useApprMail", true); // 2024-03-06 이사라 - 승인메일 사용 여부
+        model.addAttribute("isApprMailApprover", true); // 2024-03-06 이사라 - 승인자 여부 확인
+
+        return "ezEmail/mailMain";
 	}
 
     /**

@@ -4,6 +4,8 @@ import java.util.List;
 
 import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupVO;
+import egovframework.let.user.login.vo.LoginVO;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface EzScheduleAdminService {
 	
@@ -36,4 +38,16 @@ public interface EzScheduleAdminService {
 	public List<ScheduleGroupVO> getMyGroupList2 (String offset, String userId, int tenantId ,String companyID, String searchType2, String searchValue, String startDate, String endDate, int startRow, int maxItemPerPage, String primaryData) throws Exception;
 	
 	public int getMyGroupMemberListCnt(String groupId, String lang, int tenantId ,String companyID) throws Exception;
+	
+	public String scheduleGetExecutiveList(String cn, String companyID, int tenantId, String offset, String keyword, String lang, String companyName) throws Exception;
+	
+	public void scheduleSaveExecutive(String userID, int priority, String usage, String createUser, String companyID, int tenantID) throws Exception;
+	
+	public void scheduleUpdateExecutive(String userID, int priority, String usage, String createUser, String companyID, int tenantID) throws Exception;
+
+	public void scheduleDelExecutive(String userID, String companyID, int tenantId) throws Exception;
+
+	public void scheduleNumUpdateExecutive(String userID, int priority, String companyID, int tenantID) throws Exception;
+	
+	public String companyScheduleExcelUpload(String userID, MultipartFile uploadFile, String companyID, String companyName, String companyName2, LoginVO loginVO, String defaultPath, String content) throws Exception;
 }

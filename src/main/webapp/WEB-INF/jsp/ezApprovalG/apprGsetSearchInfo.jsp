@@ -6,7 +6,8 @@
 	<head>
 		<title><spring:message code='ezApprovalG.t1325'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -352,7 +353,7 @@
 						}
 					}
 					
-					if (window.opener && opener.pListTypeValue == '4') {
+					if (window.opener && (opener.pListTypeValue == '4' || opener.pListTypeValue == '97')) {
 						 RtnVal[25] = recvfrom;
 						 RtnVal[26] = recvto;
 						 RtnVal[27] = document.getElementById("sendDept").value;

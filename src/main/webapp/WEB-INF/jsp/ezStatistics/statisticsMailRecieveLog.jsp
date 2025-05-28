@@ -6,8 +6,10 @@
 <head>
 <title><spring:message code='ezStatistics.t1050'/></title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet"  href="${util.addVer('main.e15', 'msg')}" type="text/css">
+<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+<link rel="stylesheet"  href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 <link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
+<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
@@ -18,6 +20,7 @@
 	var strLang3 = "KB";
 	var strLang7 = "<spring:message code='main.t252'/>";
 	var strLang8 = "<spring:message code='ezSystem.kyj2'/>";
+	var strLang9 = "<spring:message code='ezSystem.yja01'/>";
 	var currPage = "";
 	var totalPage = "";
 	var totalCount = "";
@@ -143,30 +146,30 @@
         var PagingHTML = "";
         document.getElementById("tblPageRayer").innerHTML = "";
         document.getElementById("listInfo").innerHTML = " &nbsp;["
-			+ strLang7 + "<span style='color:#017BEC;'> "
+			+ strLang7 + "<span class='txt_color'> "
 			+ totalCount + " </span>" + strLang8 + "]";
         strtext = "<div class='pagenavi'>";
         PagingHTML += strtext;
         var pageNum = currPage;
         
         if (totalPage > 1 && pageNum != 1) {
-            strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' ></span>"
+            strtext = "<span class='btnimg first' onclick= 'return goToPageByNum(1)'></span>"
             PagingHTML += strtext;
         } else {
-            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>"
+            strtext = "<span class='btnimg first disabled'></span>"
             PagingHTML += strtext;
         }
         
         if (totalPage > BlockSize) {
             if (pageNum > BlockSize) {
-                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' ></span>";
+                strtext = "<span class='btnimg prev' onclick= 'return selbeforeBlock()'></span>";
                 PagingHTML += strtext;
             } else {
-                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+                strtext = "<span class='btnimg prev disabled'></span>";
                 PagingHTML += strtext;
             }
         } else {
-            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+            strtext = "<span class='btnimg prev disabled'></span>";
             PagingHTML += strtext;
         }
         
@@ -197,24 +200,24 @@
         if (totalPage > BlockSize) {
             if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
                 strtext = "";
-                strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' ></span>";
+                strtext = strtext + "<span class='btnimg next' onclick='return selafterBlock()'></span>";
                 PagingHTML += strtext;
             } else {
                 strtext = "";
-                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+                strtext = strtext + "<span class='btnimg next disabled'></span>";
                 PagingHTML += strtext;
             }
         } else {
             strtext = "";
-            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+            strtext = strtext + "<span class='btnimg next disabled'></span>";
             PagingHTML += strtext;
         }
         
         if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-            strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' ></span>";
+            strtext = "<span class='btnimg last' onclick='return goToPageByNum(" + totalPage + ")'></span>";
             PagingHTML += strtext;
         } else {
-            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
+            strtext = "<span class='btnimg last disabled'></span>";
             PagingHTML += strtext;
         }
         
@@ -269,7 +272,14 @@
 	//**/ 검색 버튼 클릭시 이벤트
     function search() {
 		$(function() {
-			
+
+            var searchValue = document.getElementById("searchValue").value;
+
+            if (searchValue.length > 0 && searchValue.length < 2) {
+                alert(strLang9);
+                return false;
+            }
+
 			if ($('#startDatepicker').val() != '' && $('#endDatepicker').val() == '') {
 				alert(strLang5);
 				return false;
@@ -284,6 +294,8 @@
 			
 			getMailLogList(1, searchStartTime, searchEndTime);
 			
+			// 2020-09-03 김은실-(빗썸코리아)체크박스 reset
+			adminMailCheckBox(false);			
 		});
     }
 	
@@ -298,6 +310,9 @@
 	//**/ 페이지네이션 클릭시
 	function goToPage(pageNo) {
 		getMailLogList(pageNo, searchStartTime, searchEndTime);
+		
+		// 2020-09-03 김은실-(빗썸코리아)체크박스 reset
+		adminMailCheckBox(false);		
 	}		
 
 	//**/ 메일 수신 로그내역 리스트 호출
@@ -356,7 +371,26 @@
 	   	    				var attStr = i.attachedFileName;
 	   	    				var attStrArr = attStr.split('|');
 	   	    				
-	   						html += "<tr>";
+	  				      	// 2020-09-03 김은실-(빗썸코리아)메일삭제를 위한 체크박스,취소선 추가
+	   						html += "<tr";
+	  				      	if(!i.messageId || !i.isNullInSearchId) { 
+	  				      		html += " style='text-decoration:line-through;color:red;'" 
+  				      		} else if (i.isBlocked == '1') {
+  				      			html += " style='text-decoration:line-through;color:gray;'"
+  				      		}
+  				      		
+	  				      	html += ">";
+                            html += "   <td style='width: 22px; text-align: center; cursor: default;'>";
+							
+                            html += "  <input type='checkbox' messageId='" + i.messageId + "'style='margin: 0px; padding: 0px; width: 13px; height: 13px;";
+							if(!i.messageId || !i.isNullInSearchId) {
+								html += " cursor: unset;' disabled='true'; >";
+							} else {
+								html += " cursor: pointer;' onclick='checkTheSameEml(this)'; >";
+							}
+							
+							html += "   </td>";
+                            
 	   						html += "	<td>" + i.LogTime 									    + "</td>";
 	   	    				html += "	<td>" + i.recipientDeptName 						    + "</td>";
 	   						html += "	<td>" + i.recipientName + " (" + i.recipientEmail + ")" + "</td>";
@@ -367,8 +401,8 @@
 		   	    				html += "	<td>" + i.senderName + " (" + i.senderEmail + ")" 	+ "</td>";
 	   	    				}
 	   	    				
-	   	    				html += "	<td style='width:100%;overflow:hidden;text-overflow:ellipsis;' title='"+i.subject+"'>";
-	   	    				html += "		<nobr>" + i.subject + "</nobr>";
+	   	    				html += "	<td style='width:100%;overflow:hidden;text-overflow:ellipsis;' title='"+escapeHtml(i.subject)+"'>";
+	   	    				html += "		<nobr>" + escapeHtml(i.subject) + "</nobr>";
 	   	    				html += "   </td>";
 	   	    				
 	   	    				if (attStrArr.length > 1) {
@@ -427,7 +461,16 @@
 			}
     	});
     }
-
+	function escapeHtml(text) {
+		var map = {
+			'&': '&amp;',
+			'<': '&lt;',
+			'>': '&gt;',
+			'"': '&quot;',
+			"'": '&#039;'
+		};
+		return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+	}
   	//**/ 엑셀내려받기 버튼 클릭시 이벤트 호출
     function excelExport() {
 		var pageNo = "-1";
@@ -452,7 +495,233 @@
     function companyChange() {
     	changeCompany = document.getElementById("SCompID").value;
     	getMailLogList(1, searchStartTime, searchEndTime);
+    	
+    	// 2020-09-03 김은실-(빗썸코리아)체크박스 reset
+		adminMailCheckBox(false);
     }
+    
+	// 2020-09-03 김은실-(빗썸코리아)체크박스 매개변수(checked)로 통일하는 함수
+    function adminMailCheckBox(checked) {
+		document.getElementById("HeaderAllCheckBox").checked = checked;
+    	// IE에서 .forEach(function(i,v){가 안됨..
+    	var list = document.querySelectorAll('#mailLogListBody input'); 
+    	if (!list.length) {
+    		return;
+    	}
+   		for(var i in list){ 
+   			if(!isNaN(i)) {
+	   			list.item(i).checked = checked;
+   			}
+		};
+    }
+    
+	// 2020-09-09 김은실-(빗썸코리아)일치하는 eml의 체크상태를 일치시키는 함수
+    function checkTheSameEml(obj) {
+    	// IE에서 .forEach(function(i,v){가 안됨..
+    	var list = document.querySelectorAll('#mailLogListBody input[messageId="' + obj.getAttribute('messageId') + '"]'); 
+    	if (!list.length) {
+    		return;
+    	}
+   		for(var i in list){ 
+   			if(!isNaN(i)) {
+	   			list.item(i).checked = obj.checked;
+   			}
+		};
+    }
+    
+	// 2020-09-03 김은실-(빗썸코리아)메일 영구삭제
+    function adminMailDeleteWork() {
+		// dim
+		var leftProgress = window.parent.frames[0].document.getElementsByClassName("progressPanel");
+        var rightProgress = window.parent.frames[1].document.getElementsByClassName("progressPanel");
+        leftProgress[0].style.display = "block";
+        rightProgress[0].style.display = "block";
+		document.getElementById("progressImg").style.display = "block";
+		document.getElementById("progressImg").style.top = (document.documentElement.clientHeight / 2) + "px";
+		document.getElementById("progressImg").style.left = (document.documentElement.clientWidth / 2) - 150 + "px";
+	
+		// 체크된 항목 수집
+    	var messageIds = "";
+    	var list = document.querySelectorAll('#mailLogListBody input'); 
+		var checkList = [];
+   		for(var i in list){
+   			if(!isNaN(i) 	// i = length,item,entries.. 등의 무의미한 요소의 배제
+   					&& list.item(i).checked == true 	// 체크여부 확인
+   					// IE에서 .includes() 지원하지 않음.
+   					&& 0 > messageIds.indexOf(list.item(i).getAttribute('messageId'))){ 	// 중복여부 확인_쿼리 최적화
+   				messageIds += "'" + list.item(i).getAttribute('messageId') + "',";
+				checkList.push(list.item(i));
+   			};
+		};
+		
+		// 유효성 검사
+		if (!messageIds) {
+	        alert(strLang42);
+			leftProgress[0].style.display = "none";
+			rightProgress[0].style.display = "none";
+			document.getElementById("progressImg").style.display = "none";
+	        return;
+	    }else if (!confirm(strLang58)) {
+			leftProgress[0].style.display = "none";
+			rightProgress[0].style.display = "none";
+			document.getElementById("progressImg").style.display = "none";
+        	return;
+        }
+		
+		// ('/js/XmlHttpRequest.js' 참조하고 있지 않기 때문에:) ajax사용 - 영구삭제 
+	    $.ajax({
+  			url: "/ezStatistics/adminMailDeleteWork.do"
+   			,type: "POST"
+   			,async: true
+  			,data: { "messageIds" : messageIds.substring(0, messageIds.lastIndexOf(",")) }
+  			,success: function(res) {
+  				if(JSON.parse(res).returnValue == "OK"){
+					alert(strLang215);
+					checkList.forEach(function(checkbox){
+						checkbox.disabled = true;
+						checkbox.style.cursor = "unset";
+					});
+  				}else {
+  					alert(strLang216);
+					console.log(res);
+  				}
+  			}
+			,error: function(err) {
+				alert(strLang216);
+				console.log(err);
+			}
+			,complete: function() {
+				leftProgress[0].style.display = "none";
+				rightProgress[0].style.display = "none";
+				document.getElementById("progressImg").style.display = "none";
+    			reload();
+			}
+		})
+    }
+    
+    function adminMailBlockWork() {
+		// dim
+		var leftProgress = window.parent.frames[0].document.getElementsByClassName("progressPanel");
+        var rightProgress = window.parent.frames[1].document.getElementsByClassName("progressPanel");
+        leftProgress[0].style.display = "block";
+        rightProgress[0].style.display = "block";
+		document.getElementById("progressImg").style.display = "block";
+		document.getElementById("progressImg").style.top = (document.documentElement.clientHeight / 2) + "px";
+		document.getElementById("progressImg").style.left = (document.documentElement.clientWidth / 2) - 150 + "px";
+	
+		// 체크된 항목 수집
+    	var messageIds = "";
+    	var list = document.querySelectorAll('#mailLogListBody input'); 
+   		for(var i in list){
+   			if(!isNaN(i) 	// i = length,item,entries.. 등의 무의미한 요소의 배제
+   					&& list.item(i).checked == true 	// 체크여부 확인
+   					// IE에서 .includes() 지원하지 않음.
+   					&& 0 > messageIds.indexOf(list.item(i).getAttribute('messageId'))){ 	// 중복여부 확인_쿼리 최적화
+   				messageIds += "" + list.item(i).getAttribute('messageId') + ",";
+   			};
+		};
+		
+		// 유효성 검사
+		if (!messageIds) {
+	        alert(strLang42);
+			leftProgress[0].style.display = "none";
+			rightProgress[0].style.display = "none";
+			document.getElementById("progressImg").style.display = "none";
+	        return;
+	    }else if (!confirm(strLangLDH01)) {
+			leftProgress[0].style.display = "none";
+			rightProgress[0].style.display = "none";
+			document.getElementById("progressImg").style.display = "none";
+        	return;
+        }
+		 
+	    $.ajax({
+  			url: "/ezStatistics/adminMailBlockWork.do"
+   			,type: "POST"
+   			,async: true
+  			,data: { "messageIds" : messageIds.substring(0, messageIds.lastIndexOf(",")) }
+  			,success: function(res) {
+  				if(JSON.parse(res).returnValue == "OK"){
+					alert(strLangLDH03);
+  				}else {
+  					alert(strLangLDH04);
+					console.log(res);
+  				}
+  			}
+			,error: function(err) {
+				alert(strLangLDH04);
+				console.log(err);
+			}
+			,complete: function() {
+				leftProgress[0].style.display = "none";
+				rightProgress[0].style.display = "none";
+				document.getElementById("progressImg").style.display = "none";
+    			reload();
+			}
+		})
+    }    
+    
+    function adminMailUnblockWork() {
+		// dim
+		var leftProgress = window.parent.frames[0].document.getElementsByClassName("progressPanel");
+        var rightProgress = window.parent.frames[1].document.getElementsByClassName("progressPanel");
+        leftProgress[0].style.display = "block";
+        rightProgress[0].style.display = "block";
+		document.getElementById("progressImg").style.display = "block";
+		document.getElementById("progressImg").style.top = (document.documentElement.clientHeight / 2) + "px";
+		document.getElementById("progressImg").style.left = (document.documentElement.clientWidth / 2) - 150 + "px";
+	
+		// 체크된 항목 수집
+    	var messageIds = "";
+    	var list = document.querySelectorAll('#mailLogListBody input'); 
+   		for(var i in list){
+   			if(!isNaN(i) 	// i = length,item,entries.. 등의 무의미한 요소의 배제
+   					&& list.item(i).checked == true 	// 체크여부 확인
+   					// IE에서 .includes() 지원하지 않음.
+   					&& 0 > messageIds.indexOf(list.item(i).getAttribute('messageId'))){ 	// 중복여부 확인_쿼리 최적화
+   				messageIds += "'" + list.item(i).getAttribute('messageId') + "',";
+   			};
+		};
+		
+		// 유효성 검사
+		if (!messageIds) {
+	        alert(strLang42);
+			leftProgress[0].style.display = "none";
+			rightProgress[0].style.display = "none";
+			document.getElementById("progressImg").style.display = "none";
+	        return;
+	    }else if (!confirm(strLangLDH02)) {
+			leftProgress[0].style.display = "none";
+			rightProgress[0].style.display = "none";
+			document.getElementById("progressImg").style.display = "none";
+        	return;
+        }
+		 
+	    $.ajax({
+  			url: "/ezStatistics/adminMailUnblockWork.do"
+   			,type: "POST"
+   			,async: true
+  			,data: { "messageIds" : messageIds.substring(0, messageIds.lastIndexOf(",")) }
+  			,success: function(res) {
+  				if(JSON.parse(res).returnValue == "OK"){
+					alert(strLangLDH05);
+  				}else {
+  					alert(strLangLDH06);
+					console.log(res);
+  				}
+  			}
+			,error: function(err) {
+				alert(strLangLDH06);
+				console.log(err);
+			}
+			,complete: function() {
+				leftProgress[0].style.display = "none";
+				rightProgress[0].style.display = "none";
+				document.getElementById("progressImg").style.display = "none";
+    			reload();
+			}
+		})
+    }        
 </script>
 </head>
 <body class="mainbody">
@@ -497,12 +766,21 @@
 					<a class="imgbtn" style="height:22px">
 						<span onclick="javascript:reload();"><spring:message code='ezStatistics.t1060'/></span>
 					</a>
+					<a id="deleteone" class="imgbtn" style="height:22px">
+				        <span onClick="javascript:adminMailDeleteWork();"><spring:message code="ezStatistics.kes007" /></span>
+					</a>
+					<a id="deleteone" class="imgbtn" style="height:22px">
+				        <span onClick="javascript:adminMailBlockWork();"><spring:message code="ezStatistics.kes008" /></span>
+					</a>
+					<a id="deleteone" class="imgbtn" style="height:22px">
+				        <span onClick="javascript:adminMailUnblockWork();"><spring:message code="ezStatistics.kes009" /></span>
+					</a>																																			
 				</span> 
 			</td>
 			<td width="5%">
-				<div id="mainmenu" style="height: 28px;margin:3px 0px !important">
+				<div id="mainmenu" style="height: 31px;margin:3px 0px !important">
                     <ul>
-						<li><span style="width: 110px;text-align:center;background-color: white" onclick="javascript:excelExport();"><spring:message code='ezStatistics.t1003'/></span></li>
+						<li><span class="btnexportexcel" style="width: 110px;text-align:center;background-color: white" onclick="javascript:excelExport();"><spring:message code='ezStatistics.t1003'/></span></li>
 					</ul>
 				</div>	
 			</td>
@@ -518,6 +796,10 @@
 		<table class="mainlist" style="width:100%;">
 			<thead>
 				<tr>
+					<th width='2%' style="text-align: center; cursor: default;">
+						<input type='checkbox' id='HeaderAllCheckBox' style='margin: 0px; padding: 0px; width: 13px; height: 13px; cursor: pointer;' 
+						onchange="adminMailCheckBox(this.checked);">
+					</th>				
 					<th width='12%'><spring:message code='ezStatistics.kyj10'/></th>
 					<th width='8%'><spring:message code='ezStatistics.t83'/></th>
 					<th width='15%'><spring:message code='ezStatistics.t1054'/> (<spring:message code='ezStatistics.t1055'/>)</th>

@@ -81,3 +81,6 @@ var strLang80 = "Thứ hai"
 var strLang81 = "Thứ ba"
 var strLang82 = "Thứ tư"
 var strLang83 = "Cuối cùng"
+
+// 2024-06-28 민지수 - 업무관리 > 첨부파일 드래그 앤 드롭 안내 메세지 추가
+var strLangMJS01 = "Bạn có thể kéo và thả để thêm tệp và thay đổi thứ tự của các tệp đã thêm.";

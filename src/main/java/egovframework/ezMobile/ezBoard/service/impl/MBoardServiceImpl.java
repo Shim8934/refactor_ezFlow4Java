@@ -21,6 +21,7 @@ import java.util.StringJoiner;
 
 import javax.annotation.Resource;
 
+import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONObject;
 import org.jsoup.Jsoup;
@@ -44,6 +45,7 @@ import egovframework.ezMobile.ezBoard.vo.MBoardFavoriteVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardInfoVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardItemVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardListHeaderVO;
+import egovframework.ezMobile.ezBoard.vo.MBoardListVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardNewListVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardTreeVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
@@ -389,8 +391,11 @@ public class MBoardServiceImpl implements MBoardService {
 		} else {
 			mBoardInfoVO.setIsAllGroupBoard("N");
 		}
+		if (orgBoardProp.getUseKeyword() != null) {
+			mBoardInfoVO.setUseKeyword(orgBoardProp.getUseKeyword());
+		}
 		
-	    if (mBoardInfoVO.getBoardID().equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
+	    if (mBoardInfoVO.getBoardID().equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") || mBoardInfoVO.getBoardID().equals("{YYYYYYYY-YYYY-YYYY-YYYY-YYYYYYYYYYYY}") || mBoardInfoVO.getBoardID().equals("{ZZZZZZZZ-ZZZZ-ZZZZ-ZZZZ-ZZZZZZZZZZZZ}")) {
 	    	mBoardInfoVO.setAccess_("1");
 	    	mBoardInfoVO.setAccess_FG("1");
 	    	mBoardInfoVO.setBoardAdmin_FG("false");
@@ -458,6 +463,9 @@ public class MBoardServiceImpl implements MBoardService {
 		if (vo.getBoardID().equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
 			vo.setType("newBoardItemList");
 			vo.setBoardName(egovMessageSource.getMessage("ezBoard.t480", new Locale(commonUtil.getTwoLetterLangFromLangNum(mobileInfo.getLang()))));
+		} else if (vo.getBoardID().equals("{ZZZZZZZZ-ZZZZ-ZZZZ-ZZZZ-ZZZZZZZZZZZZ}")) {
+			vo.setType("allBoardItemList");
+			vo.setBoardName(egovMessageSource.getMessage("ezBoard.allboard.hth01", new Locale(commonUtil.getTwoLetterLangFromLangNum(mobileInfo.getLang()))));
 		} else {
 			vo.setType("boardItemList");
 		}
@@ -499,6 +507,11 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("pSearchText", pSearchText.replace("%", "\\%").replace("_", "\\_"));
 		map.put("parentWriteDate", parentWriteDate);
 		map.put("upperitemidtree", upperitemidtree);
+		
+		MBoardInfoVO boardProp = getBoardProperty(boardID, "1", tenantID, userID);
+		if (boardProp.getUseKeyword() != null && boardProp.getUseKeyword().equals("Y")) {
+			map.put("useKeyword", boardProp.getUseKeyword());
+		}
 		
 		String apprFlag = mBoardDAO.getBoardApprFlag(map);
 		
@@ -580,6 +593,12 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("pSearchText", pSearchText.replace("%", "\\%").replace("_", "\\_"));
 		map.put("tenantID", tenantID);
+
+
+		MBoardInfoVO boardProp = getBoardProperty(boardID, "1", tenantID, userID);
+		if (boardProp.getUseKeyword() != null && boardProp.getUseKeyword().equals("Y")) {
+			map.put("useKeyword", boardProp.getUseKeyword());
+		}
 		
 		String apprFlag = mBoardDAO.getBoardApprFlag(map);
 		
@@ -732,6 +751,8 @@ public class MBoardServiceImpl implements MBoardService {
 		} else {
 			map.put("hasAttach", "0");
 		}
+
+		map.put("publicFlag", boardListVO.get("publicFlag"));
 		
 		String tempString = mBoardDAO.getApprFlag(map);
 		
@@ -859,10 +880,18 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("extensionAttribute8", boardListVO.get("extensionAttribute8"));
 		map.put("extensionAttribute9", boardListVO.get("extensionAttribute9"));
 		map.put("extensionAttribute10", boardListVO.get("extensionAttribute10"));
+		map.put("publicFlag", boardListVO.get("publicFlag"));
 		map.put("tenantID", info.getTenantId());
 		map.put("itemID", boardListVO.get("itemID"));
 		/* 2018-07-04 홍승비 - content 칼럼 데이터 저장을 위한 처리 추가 */
 		map.put("content", boardListVO.get("content"));
+		
+		BoardPropertyVO board = ezBoardService.getBoardProperty(boardListVO.get("boardID").toString(), info.getTenantId());
+		map.put("guBun", board.getGuBun());
+		if (!"2".equals(board.getGuBun())) {
+			map.put("updaterID", boardListVO.get("updaterID"));
+			map.put("updateDate", commonUtil.getTodayUTCTime(""));
+		}
 		
 		//mht파일저장
 		saveMHTResult = saveMHT(mhtData, boardListVO.get("itemID").toString(), boardListVO.get("boardID").toString(), filePath, "BOARD", realPath);
@@ -1020,6 +1049,7 @@ public class MBoardServiceImpl implements MBoardService {
 		mBoardDAO.deleteBoardItem(map);
 		mBoardDAO.deleteBoardReply(map);
 		mBoardDAO.deleteBoardItemRead2(map);
+		mBoardDAO.deleteScrapBoardItem(map);
 		
 		mBoardDAO.insertDeleteReservedItem(map);
 		
@@ -1795,6 +1825,11 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("tenantID", tenantID);
 		map.put("v_PADMINTYPE", mBoardInfoVO.getBoardAdmin_FG());
 		
+		MBoardInfoVO boardProp = getBoardProperty(boardID, "1", tenantID, userID);
+		if (boardProp.getUseKeyword() != null && boardProp.getUseKeyword().equals("Y")) {
+			map.put("useKeyword", boardProp.getUseKeyword());
+		}
+		
 		String apprFlag = mBoardDAO.getBoardApprFlag(map);
 		
 		if (apprFlag != null && apprFlag.equals("Y")) {
@@ -1825,6 +1860,12 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("parentWriteDate", parentWriteDate);
 		map.put("upperitemidtree", upperitemidtree);
 		map.put("v_PADMINTYPE", mBoardInfoVO.getBoardAdmin_FG());
+
+
+		MBoardInfoVO boardProp = getBoardProperty(boardID, "1", tenantID, userID);
+		if (boardProp.getUseKeyword() != null && boardProp.getUseKeyword().equals("Y")) {
+			map.put("useKeyword", boardProp.getUseKeyword());
+		}
 		
 		String apprFlag = mBoardDAO.getBoardApprFlag(map);
 		
@@ -1841,7 +1882,7 @@ public class MBoardServiceImpl implements MBoardService {
 	
 	/* 2022-11-18 홍승비 - 모바일 게시판 댓글 저장 기능 추가 */
 	@Override
-	public void saveOneLineReply(String itemID, String replyID, String boardID, String userID, String displayName, String displayName2, int tenantID, String companyID, String content) throws Exception {
+	public void saveOneLineReply(String itemID, String replyID, String boardID, String userID, String displayName, String displayName2, int tenantID, String companyID, String content, String imageContent) throws Exception {
 		logger.debug("saveOneLineReply started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1857,10 +1898,225 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("TENANTID", tenantID);
 		map.put("COMPANYID", companyID);
 		map.put("WRITEDATE", commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss"));
+		map.put("IMAGECONTENT", imageContent);
 		
 		mBoardDAO.saveOneLineReply(map);
 
 		logger.debug("saveOneLineReply ended");
+	}
+
+	/* 2023-11-13 전인하 - 모바일 게시판 댓글 수정 */
+	public void updateOneLineReply(String contentId, String replyID, String content, int tenantId, String imageContent) throws Exception {
+		logger.debug("updateOneLineReply/Mobile started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("CONTENTID", contentId);
+		map.put("REPLYID", replyID);
+		map.put("CONTENT", content);
+		map.put("TENANTID", tenantId);
+		map.put("IMAGECONTENT", imageContent);
+
+		mBoardDAO.updateOneLineReply(map);
+
+		logger.debug("updateOneLineReply/Mobile ended");
+	}
+
+	/* 2023-11-13 전인하 - 모바일 게시판 대댓글 삽입 */
+	@Override
+	public void saveOneLineReReply(String contentId, String boardId, String replyID, String parentReplyID, String content, String password, MCommonVO info, String imageContent) throws Exception {
+		logger.debug("insertOneLineReReply/Mobile started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("PITEMID", contentId);
+		map.put("PREPLYID", replyID);
+		map.put("PBOARDID", boardId);
+		map.put("USERID", info.getUserId());
+		map.put("USERNAME", info.getUserName());
+		map.put("USERNAME2", info.getUserName2());
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("PCONTENT", content);
+		map.put("PPASSWORD", password);
+		map.put("PARENTREPLYID", parentReplyID);
+		map.put("TENANTID", info.getTenantId());
+		map.put("COMPANYID", info.getCompanyId());
+		map.put("IMAGECONTENT", imageContent);
+		
+		mBoardDAO.saveOneLineReReply(map);
+
+		logger.debug("insertOneLineReReply/Mobile ended");
+
+	}
+	@Override
+	public int checkThisReplyExist(String replyId, String itemId, int tenantId) throws Exception {
+		logger.debug("checkThisReplyExist started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("REPLYID", replyId);
+		map.put("PITEMID", itemId);
+		map.put("TENANTID", tenantId);
+
+		logger.debug("checkThisReplyExist ended");
+		
+		return mBoardDAO.checkThisReplyExist(map);
+	}
+	
+	public String getGubun(String BoardID) throws Exception {
+		String gubun = mBoardDAO.getGubun(BoardID);
+		return gubun;
+	}
+
+	@Override
+	public int getAllBoardItemListCount(String userId, String companyId, int tenantId) throws Exception {
+		
+		logger.debug("getAllBoardItemListCount started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("v_pUserID", userId);
+		map.put("v_COMPANYID", companyId);
+		map.put("v_TENANTID", tenantId);
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+
+		logger.debug("getAllBoardItemListCount ended");
+		return mBoardDAO.getAllBoardItemListCount(map);
+	}
+
+	@Override
+	public List<MBoardListVO> getAllBoardItemList(String userId, String lastDate, String deptId, String companyId, int tenantId, String offSet) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("v_PUSERID", userId);
+		map.put("v_COMPANYID", companyId);
+		map.put("v_TENANTID", tenantId);
+		map.put("listSize", 50);
+		map.put("lastDate", lastDate);
+		map.put("offset", commonUtil.getMinuteUTC(offSet));
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		
+		logger.debug("getAllBoardItemList ended");
+		return mBoardDAO.getAllBoardItemList(map);
+	}
+	
+	
+	/* 2023-11-21 기민혁 - 모바일 스크랩 리스트 호출 */
+	@Override
+	public List<MBoardNewListVO> getScrapBoardList(String userID, String deptID, String companyID, int tenantID, String offset,String pSearchText, ArrayList<String> scrapBoardListView_FG) throws Exception {
+		logger.debug("getScrapBoardList started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("userID", userID);
+		map.put("listSize", 50);
+		map.put("offset", commonUtil.getMinuteUTC(offset));
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("deptID", deptID);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		map.put("pSearchText", pSearchText.replace("%", "\\%").replace("_", "\\_"));
+		map.put("scrapBoardListView_FG", scrapBoardListView_FG);
+
+		List<MBoardNewListVO> mScrapBoardList = mBoardDAO.getScrapBoardList(map);
+
+		String nowDate = commonUtil.getTodayUTCTime("");
+		nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
+		for (MBoardNewListVO vo : mScrapBoardList) {
+			if (vo.getWriteDate().toString().compareTo(nowDate) > 0) {
+				vo.setNewItemFlag("Y");
+			} else {
+				vo.setNewItemFlag("N");
+			}
+		}
+
+		logger.debug("getScrapBoardList ended");
+		return mScrapBoardList;
+	}
+
+	/* 2023-11-21 기민혁 - 모바일 스크랩 리스트 count */
+	@Override
+	public Integer getScrapBoardListCount(String userID, String companyID, int tenantID, String pSearchText, ArrayList<String> scrapBoardListView_FG) throws Exception {
+		logger.debug("getScrapBoardListCount started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("userID", userID);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("pSearchText", pSearchText.replace("%", "\\%").replace("_", "\\_"));
+		map.put("scrapBoardListView_FG", scrapBoardListView_FG);
+		
+		logger.debug("getScrapBoardListCount ended");
+		return mBoardDAO.getScrapBoardListCount(map);
+	}
+	
+	@Override
+	public Map<String, ArrayList<String>> getScrapBoardListReadView_FG(MCommonVO info) throws Exception {
+		MBoardInfoVO scrapBoardInfo = new MBoardInfoVO();
+			ArrayList<String> scrapBoardListView_FG = new ArrayList<String>();
+			ArrayList<String> scrapBoardListRead_FG = new ArrayList<String>();
+			List<HashMap<String, Object>> scrapBoardList = ezBoardService.getUserScrapBoardList(info.getUserId(), info.getTenantId());
+			String deptPathCode = info.getUserId() + "," + getDeptPathCode(info.getDeptId(), info.getTenantId());
+			Map<String, ArrayList<String>> result = new HashMap<>();
+		
+			if (scrapBoardList != null && scrapBoardList.size() > 0) {
+				for (HashMap<String, Object> scrapBoard : scrapBoardList) {
+					String checkBoardID = (String) scrapBoard.get("BOARDID");
+					scrapBoardInfo = getBoardProperty(checkBoardID, info.getPrimary(), info.getTenantId(), info.getUserId());
+					scrapBoardInfo = getBoardInfo(scrapBoardInfo, info.getRollInfo(), deptPathCode, info);
+					if (scrapBoardInfo.getListView_FG().equals("true")) {
+						scrapBoardListView_FG.add(checkBoardID);
+					}
+
+					if(scrapBoardInfo.getRead_FG().equals("true")){
+						scrapBoardListRead_FG.add(checkBoardID);
+					}
+					scrapBoardInfo = null;
+				}
+			}
+		result.put("scrapBoardListRead_FG", scrapBoardListRead_FG);
+		result.put("scrapBoardListView_FG", scrapBoardListView_FG);
+		
+		return result;
+	}
+
+	/* 2024-09-09 이유정 - 모바일 게시판 > 최근게시물 리스트 카운트 */
+	@Override
+	public Integer getAllNewBoardListCount(String userID, String startDate, String companyID, int tenantID, String pSearchText) throws Exception {
+		logger.debug("getAllNewBoardListCount started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("userID", userID);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		map.put("startDate", startDate);
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("pSearchText", pSearchText.replace("%", "\\%").replace("_", "\\_"));
+
+		logger.debug("getAllNewBoardListCount ended");
+		return mBoardDAO.getAllNewBoardListCount(map);
+	}
+
+	/* 2024-09-09 이유정 - 모바일 게시판 > 최근게시물 리스트 */
+	@Override
+	public List<MBoardNewListVO> getAllNewBoardList(String userID, String lastDate, String deptID, String companyID, int tenantID, String offset,String pSearchText) throws Exception {
+		logger.debug("getAllNewBoardList started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("userID", userID);
+		//mainList 임시 10까지
+		map.put("listSize", 50);
+		map.put("lastDate", lastDate);
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("offset", commonUtil.getMinuteUTC(offset));
+		map.put("deptID", deptID);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		map.put("pSearchText", pSearchText.replace("%", "\\%").replace("_", "\\_"));
+
+		logger.debug("getAllNewBoardList ended");
+		return mBoardDAO.getAllNewBoardList(map);
 	}
 	
 }

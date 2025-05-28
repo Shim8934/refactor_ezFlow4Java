@@ -5,7 +5,8 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('/css/font-awesome-4.7.0/css/font-awesome.min.css')}" type="text/css"/>
 	<style>
 		.mainlist tr th {text-align:center;}
@@ -63,7 +64,7 @@
 	  	</script>
 </head>
 <body class="popup">
-	<h1>[ <c:out value ='${cabinetName}'/> ] <spring:message code='ezApprovalG.yjyg01' /></h1>
+	<h1>[ <c:out value ='${cabinetName}'/> ] <spring:message code='ezApprovalG.yjyg01' /> (* <spring:message code='ezApprovalG.apprCablist.mjs01' /> )</h1>
 		<div id="close">
             <ul>
                 <li><span id="btnCancel" onclick="return btnCancel_onclick()"></span></li>

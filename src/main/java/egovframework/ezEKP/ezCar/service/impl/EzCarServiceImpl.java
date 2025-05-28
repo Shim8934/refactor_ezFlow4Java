@@ -35,7 +35,7 @@ import egovframework.ezEKP.ezCar.vo.CarGetAdmSubClsTreeVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdminFlagVO;
 import egovframework.ezEKP.ezResource.vo.ResGetClsAclListVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
-import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service("EzCarService")
 public class EzCarServiceImpl extends EgovAbstractServiceImpl implements EzCarService{
@@ -547,7 +547,10 @@ public class EzCarServiceImpl extends EgovAbstractServiceImpl implements EzCarSe
 		}
 		map.put("userID", pUserID);
 		map.put("deptID", pDeptID);
-		map.put("jobss", jobss);
+		
+		/* 2024-07-01 홍승비 - SQL Injection 수정 > $ 기호 제거, 배열로 전달 */
+		map.put("jobss", jobss.replace("'", "").replace(" ", "").split(","));
+		
 		return ezCarDAO.getAdmSubClsTreeUser(map);
 	}
 	
@@ -1183,7 +1186,9 @@ public class EzCarServiceImpl extends EgovAbstractServiceImpl implements EzCarSe
 					if(deptIds.size() > 0) {
 						String newDeptPath = "'" + String.join(",", deptIds).trim().replace(",", "', '") + "'";
 						
-						map.put("v_PUSERID", newDeptPath);
+						/* 2024-07-01 홍승비 - SQL Injection 수정 > $ 기호 제거, 배열로 전달 */
+						map.put("v_PUSERID", newDeptPath.replace("'", "").replace(" ", "").split(","));
+						
 						List<ResGetClsAclListVO> deptAclList = ezCarDAO.getDeptAcl(map);
 		
 						if(deptAclList != null) {

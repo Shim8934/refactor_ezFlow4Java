@@ -7,7 +7,8 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code="ezSchedule.t170" /></title>
-		<link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />			    
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>		
@@ -132,7 +133,7 @@
 		
 			            for (var i = 0; i < rtn["id"].length; i++) {
 			                var isExist = false;
-			                var checks = document.getElementsByTagName("input");
+			                var checks = document.getElementsByName("members");
 			                for (var j = 0; j < checks.length; j++) {
 			                    if (GetAttribute(checks.item(j), "memberid") == rtn["id"][i]) {
 		                            isExist = true;
@@ -145,7 +146,8 @@
 		                    data.memberID = rtn["id"][i];
 		                    data.memberName = rtn["name"][i];
 		                    data.memberName1 = rtn["name1"][i];
-		                    data.memberName2 = rtn["name2"][i]; 
+		                    data.memberName2 = rtn["name2"][i];
+		                    data.writePermission = rtn["writepermission"][i];
 		                    
 		                    memberList.push(data);
 			            }
@@ -281,7 +283,7 @@
 	
 		            for (var i = 0; i < rtn["id"].length; i++) {
 		                var isExist = false;
-		                var checks = document.getElementsByTagName("input");
+		                var checks = document.getElementsByName("members");
 		                for (var j = 0; j < checks.length; j++) {
 		                    if (GetAttribute(checks.item(j), "memberid") == rtn["id"][i]) {
 	                            isExist = true;
@@ -294,7 +296,9 @@
 	                    data.memberID = rtn["id"][i];
 	                    data.memberName = rtn["name"][i];
 	                    data.memberName1 = rtn["name1"][i];
-	                    data.memberName2 = rtn["name2"][i]; 
+	                    data.memberName2 = rtn["name2"][i];
+	                    data.writePermission = rtn["writepermission"][i];
+	                    data.memberDeptId = rtn["departmentid"][i];
 	                    
 	                    memberList.push(data);
 		            }
@@ -353,11 +357,40 @@
 			    		error: function(err){
 			    		}
 			        });
+			        
+			        <%-- 2024-07-18 조소정 - 일정관리 > 구성원 추가 시 그룹일정 작성 권한 저장 --%>
+			        var updateList = [];
+			        
+			        for (var i = 0; i < rtn["id"].length; i++) {
+		                var data = new Object();
+	                    data.memberId = rtn["id"][i];
+	                    data.writePermission = rtn["writepermission"][i];
+	                    
+	                    updateList.push(data);
+		            }
+
+			        var data = {
+			            groupId: groupid,
+			            memberList: updateList
+			        };
+			        
+			        $.ajax({
+			            type: "POST",
+			            url: "/ezSchedule/scheduleSaveWritePermission.do",
+			            contentType: "application/json",
+			            data: JSON.stringify(data),
+			            success: function() {
+			            	window.location.reload(false);
+			            },
+			            error: function() {
+			                alert("<spring:message code='ezSchedule.t198' />");
+			            }
+			        });
 		        }
 		    }
 					
 		    function del_member() {
-		        var checks = document.getElementsByTagName("input");
+		        var checks = document.getElementsByName("members");
 		        var memberId = [];
 		        var count = 0;
 		        
@@ -401,7 +434,7 @@
 		    }
 					
 		    function renew_member() {
-		        var checks = document.getElementsByTagName("input");
+		        var checks = document.getElementsByName("members");
 		        var memberId = [];
 		        var count = 0;
 		        
@@ -444,21 +477,17 @@
 		    }
 		    
 		    function check_length(chkstr, maxlength, fieldname) {
-		        var length = 0;
-		        var i;
+				var length = 0;
+				var i;
 
-		        for (i = 0; i < chkstr.length; i++)
-		            if (chkstr.charCodeAt(i) > 256)
-		                length = length + 2;
-		            else
-		                length++;
+				length = chkstr.length;
 
-		        if (length > maxlength) {
-		            alert(fieldname + "<spring:message code='ezSchedule.t200' />" + maxlength + "<spring:message code='ezSchedule.t201' />");
-		            return false
-		        }
+				if (length > maxlength) {
+					alert(fieldname + "<spring:message code='ezSchedule.t200' /> " + maxlength + "<spring:message code='ezSchedule.t201' />");
+					return false;
+				}
 
-		        return true;
+				return true;
 		    }
 		    
 		    function cancel_onclick() {
@@ -525,7 +554,7 @@
 		    }
 		 
 		    function give_permission() {
-		    	var checks = document.getElementsByTagName("input");
+		    	var checks = document.getElementsByName("members");
 		        var memberId;
 		        var memberName;
 		        var memberName2;
@@ -533,12 +562,12 @@
 		        
 		        var count = 0;
 		        
-		        for (var i = 2; i < checks.length; i++) {
-		            if (checks.item(i).checked == true) {	
-		                memberId = GetAttribute(checks.item(i), "memberid");
-		                memberName = g_Member.name1[i-2]; 
-		                memberName2 = g_Member.name2[i-2];
-		                status = GetAttribute(checks.item(i), "memberstatus");
+		        for (var i = 0; i < checks.length; i++) {
+		            if (checks.item(i).checked == true) {
+		                memberId = checks[i].getAttribute("memberid");
+		                memberName = g_Member.name1[i];
+		                memberName2 = g_Member.name2[i];
+		                status = checks[i].getAttribute("memberstatus");
 		                count++;
 		            }
 		        }
@@ -581,33 +610,100 @@
 		        });
 		        
 	    	}
+		    
+		    <%-- 2024-07-18 조소정 - 일정관리 > 그룹 관리 화면에서 그룹일정 작성 권한 저장 --%>
+		    function update_writePermission() {
+		        var checks = document.getElementsByName("memberaccess");
+		        var memberList = [];
+		        var count = 0;
+
+		        for (var i = 0; i < checks.length; i++) {
+		            var memberId = checks[i].getAttribute("memberid");
+		            var writePermission = checks[i].checked ? "Y" : "N";
+		            
+		            memberList.push({ memberId: memberId, writePermission: writePermission });
+		            count++;
+		        }
+
+		        if (count == 0) {
+		            return;
+		        }
+
+		        var data = {
+		            groupId: groupid,
+		            memberList: memberList
+		        };
+		        
+		        $.ajax({
+		            type: "POST",
+		            url: "/ezSchedule/scheduleSaveWritePermission.do",
+		            contentType: "application/json",
+		            data: JSON.stringify(data),
+		            success: function() {
+		            	alert("<spring:message code='ezSchedule.groupSchedule.csj02' />");
+		            },
+		            error: function() {
+		                alert("<spring:message code='ezSchedule.t198' />");
+		            }
+		        });
+		    }
 		    	
-		    function unEscapeHtml(text) {
-		        var map = {
-		            '&amp;' : '&',
-		            '&lt;' : '<',
-		            '&gt;' : '>',
-		            '&#034;' : '"',
-		            '&#039;' : "'"
+			var beforeText = '';
+			function unEscapeHtml(text) {
+				beforeText = text;
+
+				var map = {
+					'&amp;' : '&',
+					'&lt;' : '<',
+					'&gt;' : '>',
+					'&#034;' : '"',
+					'&#039;' : "'",
+					'&#92;' : '\\'
 		        };
 
-		        return text.replace(/&amp;|&lt;|&gt;|&#034;|&#039;/g, function(m) { return map[m]; });
+				return text.replace(/&amp;|&lt;|&gt;|&#034;|&#039;|&#92;/g, function(m) {
+					return map[m];
+				});
+			}
+
+			function unEscapeHtml2(text) {
+				beforeText = text;
+				var afterText = unEscapeHtml(beforeText);
+
+				while (beforeText != afterText) {
+					afterText = unEscapeHtml(afterText);
+				}
+
+				beforeText = '';
+				return afterText;
 		    }	
 		    
 		    //2018-08-10 김보미 - 추가
 		    window.onload = function () {
 		    	var groupName = "<c:out value='${groupName}' />";
 	    	    var description = "<c:out value='${description}' />";
-	        	$('#groupname').val(unEscapeHtml(groupName));
-	        	$('#description').val(unEscapeHtml(description));
+	        	$('#groupname').val(unEscapeHtml2(groupName));
+	        	$('#description').val(unEscapeHtml2(description));
+	        	
+	        	<%-- 2024-07-18 조소정 - 일정관리 > 그룹 관리 창에서 작성 권한 여부 표출 --%>
+		        var checks = document.getElementsByName("memberaccess");
+	            for (var i = 0; i < checks.length; i++) {
+	                if (checks[i].getAttribute("writepermission") == "Y") {
+	                	checks[i].checked = true;
+	                }
+	                else {
+	                	checks[i].checked = false;
+	                }
+	            }
 			    
-		    	g_Member = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array() };
+		    	g_Member = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array(), "writepermission": new Array(), "departmentid":new Array() };
 		    	
 		    	<c:forEach var="item" items="${memberList}">
 		    		g_Member.id.push( "${item.memberId}");
 		    		g_Member.name.push("${item.memberName}");
 		    		g_Member.name1.push("${item.memberName}");
 		    		g_Member.name2.push("${item.memberName2}");
+		    		g_Member.departmentid.push("${item.department}");
 		    	</c:forEach>
 		    }
 		</script>
@@ -619,6 +715,7 @@
 				    <li title="<spring:message code='ezSchedule.t185' />"><span onClick="add_member()"><spring:message code='ezSchedule.t186' /></span></li>
 				    <li title="<spring:message code='ezSchedule.t187' />"><span onClick="del_member()"><spring:message code='ezSchedule.t188' /></span></li>
 				    <li title="<spring:message code='ezSchedule.t189' />"><span onClick="renew_member()"><spring:message code='ezSchedule.t169' /></span></li>
+				    <li title="<spring:message code='ezSchedule.t189' />"><span onClick="update_writePermission()"><spring:message code='ezSchedule.groupSchedule.csj03' /></span></li>
 				    <li title="<spring:message code='ezSchedule.shb01' />"><span onClick="give_permission()"><spring:message code='ezSchedule.shb01' /></span></li>
 			  	</ul>
 			</div>
@@ -663,15 +760,16 @@
 			<div id="receivelist" style="OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:100%; HEIGHT:300px;"> 
 				<table width="100%" class="popuplist">
 			    	<tr>
-				    	<th style="width:40px; text-align:center"><spring:message code='ezSchedule.t190' /></th>
-				      	<th style="width:120px; text-align:center"><spring:message code='ezSchedule.t163' /></th>
-				      	<th style="width:80px; text-align:center"><spring:message code='ezSchedule.t164' /></th>
-				      	<th style="width:100px; text-align:center"><spring:message code='ezSchedule.t165' /></th>
+				    	<th style="width:30px; text-align:center"><spring:message code='ezSchedule.t190' /></th>
+				      	<th style="width:150px; text-align:center"><spring:message code='ezSchedule.t163' /></th>
+				      	<th style="width:30px; text-align:center"><spring:message code='ezSchedule.groupSchedule.csj04' /></th>
+				      	<th style="width:30px; text-align:center"><spring:message code='ezSchedule.t164' /></th>
+				      	<th style="width:70px; text-align:center"><spring:message code='ezSchedule.t165' /></th>
 				  	</tr>
 				  	<c:forEach var="item" items="${memberList}">
 				  	<tr>
 				  		<td style="text-align:center">
-		                	<input type='checkbox' value="1" memberid="${item.memberId}" memberstatus="${item.status}">
+		                	<input type='checkbox' value="1" name="members" memberid="${item.memberId}" memberstatus="${item.status}">
 		                </td> 
 		                <td style="cursor:pointer; white-space:nowrap; text-align:center" title="<spring:message code='ezSchedule.t162' />" onClick="show_personinfo('${item.memberId}')">
 		                    <c:choose>
@@ -679,6 +777,9 @@
                                <c:otherwise> ${item.memberName2} </c:otherwise>
 		                    </c:choose>
 		                </td> 
+		                <td style="text-align:center">
+		                	<input type="checkbox" name="memberaccess" memberid="${item.memberId}" writePermission="${item.writePermission}">
+		                </td>
 		                <td style="text-align:center">
 		                	<c:if test="${item.status == '0'}"><spring:message code='ezSchedule.t166' /></c:if>
 		                	<c:if test="${item.status == '1'}"><spring:message code='ezSchedule.t167' /></c:if>

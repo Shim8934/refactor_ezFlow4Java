@@ -6,7 +6,8 @@
     <head>
 	    <title><spring:message code='ezStatistics.t2' /></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	    <link rel="stylesheet" href="${util.addVer('ezStatistics.e2', 'msg')}" type="text/css" />
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 	    <link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
 		<style>
 			#mCSB_1_container {
@@ -138,6 +139,12 @@
 			        case 24: //부서별 근태통계
 			        	url = "/ezStatistics/statisticsAttitudeDept.do";
 			        	break;
+					case 25:
+						url = "/ezStatistics/statisticsMenuUser.do";
+						break;
+                    case 26:
+                        url = "/ezStatistics/statisticsMenuDept.do";
+                        break;
 			    }
 		
 			    window.open(url,"stat_main");
@@ -248,6 +255,15 @@
 					    </ul>
 				    </c:if>
 	            </c:if>
+				<c:if test="${useStatMenu == 'YES'}">
+					<h2 class="off" id="menu5H2">
+						<span class="sub_iconLNB tree_plus"></span><span class="h2Title" onclick="openFolder('menu5')" ><spring:message code='ezStatistics.pgb02' /></span>
+					</h2>
+					<ul class="lnbUL off" id="menu5UL">
+						<li><span class="h2_text list_text" onclick="goPage(25)"><spring:message code='ezStatistics.pgb04' /></span></li>
+						<li><span class="h2_text list_text" onclick="goPage(26)"><spring:message code='ezStatistics.pgb05' /></span></li>
+					</ul>
+				</c:if>
 		    </div>
 	    </div>
 		<div style="width:100%; height:100%; position:absolute; top:0; left:0; z-index:1000;

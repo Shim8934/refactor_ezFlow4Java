@@ -7,7 +7,8 @@
 	<head>
 		<title><spring:message code='ezApprovalG.t00008'/></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	    <link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -190,6 +191,11 @@
 	        function FileDown(obj) {
 	            var pSourcePath = obj.getAttribute("FILEPATH").split('.')[1];
 	            var pDocID_mht = obj.getAttribute("FILEPATH").substring(obj.getAttribute("FILEPATH").lastIndexOf("/") + 1, obj.getAttribute("FILEPATH").length).split('.')[0];
+	            
+	            if (pSourcePath.toUpperCase() == "MHT") {
+	            	AttachDownFrame.location.href = "/ezApprovalG/downloadMhtDbClick.do?fileName=" + encodeURIComponent(obj.getAttribute("DATA2") + "." + pSourcePath) + "&fileName2=" + obj.getAttribute("DATA2") + "&docID=" + pDocID_mht + "&docStatus=END&filePath=" + obj.getAttribute("FILEPATH");
+	            	return;
+	            }
 	            
 	            if (obj.getAttribute("DATA1") == "ATT") {
 	                AttachDownFrame.location.href = "/ezApprovalG/downloadAttachDbClick.do?type=APPROVALG&fileName=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&docID=" + pDocID + "&docStatus=" + pType + "&docAttachSN=" + obj.getAttribute("DATA4") + "&orgCompanyID=" + orgCompanyID;

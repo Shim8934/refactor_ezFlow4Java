@@ -148,7 +148,7 @@ var strLang254 = "输入的字段内容 "
 var strLang255 = "只能输入到. (韩字 "
 var strLang256 = "人)"
 // ezAPRDOCATTACH
-var strLang257 = 请从文档列表中选择要添加的文档。"
+var strLang257 = "请从文档列表中选择要添加的文档。"
 var strLang258 = "该文件已被登录"
 // ezAPRDOCATTACH\aprDocAttach.js
 // ezAPRDOCATTACH\getDocAttach.js
@@ -685,7 +685,7 @@ var strLang1027 = "意见已修改。";
 var strLang1028 = "年";
 var strLang1029 = "月";
 var strLang1030 = "日";
-var strLang1031 = "不得在匿名公告栏、照片公告栏或URL链接公告栏上发布邮件/审批文件。。";
+var strLang1031 = "您只能在普通公告栏和问答公告栏上发帖。";
 var strLang1038 = "外部发送文档正文中不能包含图像和链接。";
 var strLang1039 = "所选择的用户不在。</br>确定要添加吗?";
 
@@ -1165,3 +1165,48 @@ var strLang975 = "格式版本不同，不能重复使用.";
 var strLangJIH01 = "无法预览安全文档。";
 var strLangJIH02 = "/blank_cn.htm";
 var strLangJIH03 = "对外收信箱可以首次阅览文件后进行预览。"
+
+/* 2023-05-16 이가은 - 일괄접수 관련 메세지 추가 */
+var strLangLGEAR01 = "批受理已完成。";
+var strLangLGEAR02 = "批量受理中发生错误。<br>";
+var strLangLGEAR03 = "批受理者已结算完毕。";
+var strLangLGEAR04 = "批量受理者裁决中发生错误。<br>";
+
+// 2024-04-11 조수빈 - 일괄접수 관련 누락 메세지 추가
+var strLangJSBAP02 = "您是否要继续进行批量提交？<br>状态为退回文件的，执行文本和协议文本，以及存在分离附件的文件除外。";
+var strLangJSBAP03 = "您是否要继续进行批量提交和最终审批？<br>状态为退回文件的，执行文本和协议文本，以及存在分离附件的文件除外。";
+
+var strJangJIH04 = "시작일을 종료일보다 빠르게 지정해 주십시오."
+
+var strLangKWC01 = "비전자문서는 재사용 할 수 없습니다.";
+var strLangKWC02 = "양식이 삭제되어 재사용 할 수 없습니다.";
+
+/* 2024-12-27 홍승비 - 기록물 배부대장 > 배부한 문서가 삭제된 경우 알러트를 표출하기 위한 메세지 추가 */
+var strLangHSBDR01 = "해당 배부문서는 삭제된 문서입니다. 열람이 불가능합니다.";
+
+var strLangJJE01 = "는 결재문서를 수신하지 않는 부서입니다.\n즐겨찾기 적용에서 제외됩니다.";
+
+/* 전자결재 헤더 숨기기 기능 */
+var ezApproval_headerHide01 = "헤더 숨기기";
+var ezApproval_headerHide02 = "헤더 펼치기";
+
+/* 2024-12-23 이가은 - 전자결재 일괄배부 기능 추가 */
+var ezApproval_allBeabu01 = "일괄배부를 진행하시겠습니까?";
+var ezApproval_allBeabu02 = "합의문이나 회송된 문서는 대상에서 제외됩니다.";
+
+/* 전자결재 요약전 에디터 기능 */
+var strLangJIH_Summary01 = "요약전 저장이 완료되었습니다.";
+var strLangJIH_Summary02 = "내용이 비어있는 요약전을 저장할 수 없습니다.";
+var strLangJIH_Summary03 = "잘못된 접근입니다.";
+var strLangJIH_Summary04 = "요약전을 불러올 수 없습니다."
+var strLangJIH_Summary05 = "요약전 정보"
+
+/* 전자결재 사인 그리기 기능 */
+var strLangHIH_signDraw01 = "서명을 작성한 뒤 결재해주세요.";
+
+/* 2025-05-12 김수연 aprmanage_Cross.js 하드코딩 수정 */
+var strLangAssignedList = "指定目录";
+var strLangDeptInbox = "部门收件箱";
+
+var strLangAtachHIK_01 = "일반첨부파일은 총_CN"; 
+var strLangAtachHIK_02 = "MB까지 가능합니다._CN"; 

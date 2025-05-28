@@ -13,14 +13,12 @@
 			<dl class="portlet_title sortablePortlet">
 				<dt class="portletText"></dt>
 			</dl>
-			<div class="error_content">
-				<div>
-					<dl class="nodata">
-						<dt><img src="/images/kr/main/noData_sIcon.png"></dt>
-						<dd><spring:message code="ezNewPortal.t135"/></dd>
-					</dl>
-				</div>
-			</div>
+            <div class="portlet_list error_content">
+                <dl class="nodata">
+                    <dt><img src="/images/kr/main/noData_sIcon.png"></dt>
+                    <dd><spring:message code="ezNewPortal.t135"/></dd>
+                </dl>
+            </div>
 		</div>
 	</article>
 </body>

@@ -1,4 +1,4 @@
-﻿/* XMLHttpRequest객체를 생성합니다. */ 
+﻿﻿/* XMLHttpRequest객체를 생성합니다. */ 
 function createXMLHttpRequest() {
     var oXmlRequest;
     try {
@@ -700,7 +700,12 @@ function ConvertMHTtoHTML(pURL) {
 			rtnVal = result;
 		}        			
 	});
-    return rtnVal;
+    /* 2024-05-08 양지혜 - 공개문서에서 파라미터 조작으로 접근 취약점 보완. 권한 없을 시 권한없음 페이지 노출 */
+    if (rtnVal == "NoAccess") {
+        window.parent.location.replace('/ezApprovalG/accessWarning.do');
+    } else {
+        return rtnVal;
+    }
 }
 
 function ConvertHTMLtoMHT(pContent) {
@@ -900,7 +905,7 @@ function GetbrowserLanguage() {
 
 function GetCKEditerHeader() {
     //return "<HEAD><META content=\"text/html; charset=utf-8\" http-equiv=\"Content-Type\"><STYLE title=\"ezform_style_1\">P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} DIV { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} </STYLE></HEAD>";
-    return "<HEAD><META content=\"text/html; charset=utf-8\" http-equiv=\"Content-Type\"><STYLE title=\"ezform_style_1\">P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} DIV { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;} </STYLE></HEAD>";
+    return "<HEAD><META content=\"text/html; charset=utf-8\" http-equiv=\"Content-Type\"><STYLE title=\"ezform_style_1\">P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:normal;font-size:10pt;} DIV { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;} </STYLE></HEAD>";
 }
     // 사파리 버그 수정용 함수 2012.09.07
 function KeEventControl(obj) {
@@ -987,7 +992,7 @@ function GetOpenWindow(url, target, popUpW, popUpH, resizeFlag) {
     else
         resize = "resizable=yes";
     
-    var feature = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + pLeft + "px ,top=" + pTop + "px, status = no, toolbar=no, menubar=no,location=no," + resize;
+    var feature = "height=" + popUpH + ",width=" + popUpW + ",left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no," + resize;
     var result = window.open(url, target, feature);
     result.focus();
     return result;
@@ -1039,6 +1044,18 @@ function DivPopUpPosition_Layer(popUpW, popUpH) {
 
 function DivPopUpShow(popUpW, popUpH, URL) {
     try {
+    	
+    	if (navigator.maxTouchPoints > 4) {
+    		
+    		if (popUpW > document.documentElement.clientWidth) {
+    			popUpW = document.documentElement.clientWidth;
+    		}
+    		
+    		if (popUpH > document.documentElement.clientHeight) {
+    			popUpH = document.documentElement.clientHeight;
+    		}
+    	} 
+    	
         var Position = DivPopUpPosition(popUpW, popUpH);
         document.getElementById("iFrameLayer").src = URL;
         document.getElementById("iFramePanel").style.top = Position[0] + "px";
@@ -1094,6 +1111,94 @@ function DivPopUpHidden_sub() {
         document.getElementById("iFrameLayer_sub").src = "/blank.htm";
     } catch (e) { }
 }
+
+function toggleHideLeftFrameButton() {
+    var frameset = parent.document.getElementById("frameset");
+
+    if (frameset!= null){
+        var leftBtn = document.getElementsByClassName('left_btn')[0];
+
+        if (leftBtn) {
+            if (parent.document.getElementById("frameset").cols == "0,*") {
+                leftBtn.classList.add("on");
+            } else {
+                leftBtn.classList.remove("on");
+            }
+        }
+    }
+}
+
+var isHideLeftFrameButtonPressed = false;
+
+function hideLeftFrame(obj) {
+    if (parent.document.getElementById("frameset") != null) {
+        isHideLeftFrameButtonPressed = !isHideLeftFrameButtonPressed;
+        var colsValue = parent.document.getElementById("frameset").cols;
+
+        if (colsValue == "0,*") {
+            parent.document.getElementById("frameset").cols = "220,*";
+            obj.classList.remove("on");
+        } else {
+            parent.document.getElementById("frameset").cols = "0,*";
+            obj.classList.add("on");
+        }
+    }
+}
+
+function hideLeftFrameOnResize() {
+    if (parent.document.getElementById("frameset") != null) {
+        // hideLeftFrame 함수에 의해 left frame이 숨겨질 때에도
+        // resize 콜백이 실행되어 수동으로 사용자가 버튼을 누른 경우에 대한
+        // 플래그를 둠
+        if (!isHideLeftFrameButtonPressed) {
+            var leftBtn = document.getElementsByClassName('left_btn')[0];
+
+            if (top.outerWidth < 1180) {
+                parent.document.getElementById("frameset").cols = "0,*";
+                leftBtn.classList.add("on");
+            } else {
+                parent.document.getElementById("frameset").cols = "220,*";
+                leftBtn.classList.remove("on");
+            }
+        } else {
+            isHideLeftFrameButtonPressed = false;
+        }
+    }
+}
+
+window.addEventListener("load", function () {
+    if (parent.document.getElementById("frameset") != null) {
+        var rightFrameDoc = window.parent.frames["right"].document;
+
+        var rightFirstChild = rightFrameDoc.body.firstElementChild;
+
+        if (rightFirstChild) {
+            if (rightFirstChild.classList.contains("left_btn")){
+                return;
+            }
+        }
+
+        var leftBtn = rightFrameDoc.createElement("span");
+
+        leftBtn.className = "left_btn";
+
+        leftBtn.addEventListener("click", function() {
+            hideLeftFrame(this);
+        });
+
+        rightFrameDoc.body.insertBefore(leftBtn, rightFirstChild);
+    }
+
+    window.addEventListener("resize", function() {
+        if (window.name === "right") {
+            hideLeftFrameOnResize();
+        }
+    });
+
+});
+
+window.addEventListener("load", toggleHideLeftFrameButton);
+
 // 2002-11-05 >> return 20021105
 function CalToDate(p_strCal) {
     return p_strCal.substr(0, 4) + p_strCal.substr(5, 2) + p_strCal.substr(8, 2);
@@ -1712,32 +1817,32 @@ function makePageSelPageBrd() {
     var PagingHTML = "";
     document.getElementById("tblPageRayer").innerHTML = "";
     if (pAdminType != "y")
-        document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + pTotalCnt + " </span>";
+        document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span class='txt_color'>" + pTotalCnt + " </span>";
     else
-        parent.document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + pTotalCnt + " </span>";
+        parent.document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span class='txt_color'>" + pTotalCnt + " </span>";
     strtext = "<div class='pagenavi'>";
     PagingHTML += strtext;
     var pageNum = CurPage;
     if (totalPage > 1 && pageNum != 1) {
-        strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif'></span>"
+        strtext = "<span class='btnimg first' onclick= 'return goToPageByNum(1)'></span>"
         PagingHTML += strtext;
     }
     else {
-        strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif'></span>"
+        strtext = "<span class='btnimg first disabled'></span>"
         PagingHTML += strtext;
     }
     if (totalPage > BlockSize) {
         if (pageNum > BlockSize) {
-            strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif'></span>";
+            strtext = "<span class='btnimg prev' onclick= 'return selbeforeBlock()'></span>";
             PagingHTML += strtext;
         }
         else {
-            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif'></span>";
+            strtext = "<span class='btnimg prev disabled'></span>";
             PagingHTML += strtext;
         }
     }
     else {
-        strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif'></span>";
+        strtext = "<span class='btnimg prev disabled'></span>";
         PagingHTML += strtext;
     }
     var MaxNum;
@@ -1766,26 +1871,26 @@ function makePageSelPageBrd() {
     if (totalPage > BlockSize) {
         if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
             strtext = "";
-            strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' ></span>";
+            strtext = strtext + "<span class='btnimg next' onclick='return selafterBlock()'></span>";
             PagingHTML += strtext;
         }
         else {
             strtext = "";
-            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+            strtext = strtext + "<span class='btnimg next disabled'></span>";
             PagingHTML += strtext;
         }
     }
     else {
         strtext = "";
-        strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif'></span>";
+        strtext = strtext + "<span class='btnimg next disabled'></span>";
         PagingHTML += strtext;
     }
     if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-        strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif'></span>";
+        strtext = "<span class='btnimg last' onclick='return goToPageByNum(" + totalPage + ")'></span>";
         PagingHTML += strtext;
     }
     else {
-        strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif'></span>";
+        strtext = "<span class='btnimg last disabled'></span>";
         PagingHTML += strtext;
     }
     
@@ -1923,6 +2028,8 @@ function ReplaceHTML(str) {
     str = ReplaceAll(str, "&gt;", ">");
     str = ReplaceAll(str, "&apos;", "'");
     str = ReplaceAll(str, "&quot;", "\"");
+    str = ReplaceAll(str, '&#40;', '(');
+    str = ReplaceAll(str, '&#41;', ')');
     return str;
 }
 
@@ -2076,4 +2183,373 @@ function frontLogging(title, msg, stack) {
     } catch (e) {
         console.log("frontLogging 이 동작 안함");
     }
+}
+
+
+
+
+
+
+// pageTotalNum, pageStartNum, pageBlockSize, goToPageByNum, selbeforeBlock, selafterBlock 따로 설정
+function mkPageSelPage() {
+	var pageRayer = document.getElementById("tblPageRayer");
+
+	var totalPage 		= parseInt(pageTotalNum);
+	var pageNum 		= parseInt(pageStartNum);
+	var BlockSize 		= parseInt(pageBlockSize);
+	var MaxNum;
+	var startNum = (parseInt((pageNum - 1) / BlockSize) * BlockSize) + 1;
+	if (totalPage >= (startNum + parseInt(BlockSize))) {
+		MaxNum = (startNum + parseInt(BlockSize)) - 1;
+	} else {
+		MaxNum = totalPage;
+	}
+	
+    // 이미지
+    const pprevImg_able = "/images/kr/cm/btn_p_prev.gif";
+    const pprevImg_disable = "/images/kr/cm/btn_p_prev01.gif";
+    const prevImg_able = "/images/kr/cm/btn_prev.gif";
+    const prevImg_disable = "/images/kr/cm/btn_prev01.gif";
+    const nnextImg_able = "/images/kr/cm/btn_n_next.gif";
+    const nnextImg_disable = "/images/kr/cm/btn_n_next01.gif";
+    const nextImg_able = "/images/kr/cm/btn_next.gif";
+    const nextImg_disable = "/images/kr/cm/btn_next01.gif";
+    
+    // 사용 요소
+    var imgSPAN = document.createElement("span");
+    	imgSPAN.classList.add("btnimg");
+    	
+    var pprevEle = imgSPAN.cloneNode(true);
+    if (totalPage > 1 && pageNum != 1) {
+    	pprevEle.setAttribute("onClick", "goToPageByNum(1)");
+    	pprevEle.classList.add("first");
+    } else {
+    	pprevEle.classList.add("first", "disabled");
+    }
+    	
+    var prevEle = imgSPAN.cloneNode(true);
+    if (totalPage > BlockSize && pageNum > BlockSize) {
+    	prevEle.setAttribute("onClick", "selbeforeBlock()");
+    	prevEle.classList.add("prev");
+    } else {
+    	prevEle.classList.add("prev", "disabled");
+    }
+
+    var nnextEle = imgSPAN.cloneNode(true);
+    if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
+    	nnextEle.setAttribute("onClick", "goToPageByNum("+totalPage+")");
+    	nnextEle.classList.add("last");
+    } else {
+    	nnextEle.classList.add("last", "disabled");
+    }
+
+    var nextEle = imgSPAN.cloneNode(true);
+    if (totalPage > BlockSize && totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
+    	nextEle.setAttribute("onClick", "selafterBlock()");
+    	nextEle.classList.add("next");
+    } else {
+    	nextEle.classList.add("next", "disabled");
+    }
+    
+    // pagenavi
+    var pagenaviDIV = document.createElement("div");
+    	pagenaviDIV.classList.add("pagenavi");
+    	
+    	pagenaviDIV.appendChild(pprevEle);
+    	pagenaviDIV.appendChild(prevEle);
+    	if (MaxNum == 0) {
+    	    var pageSPAN = document.createElement("span");
+    		pageSPAN.classList.add("on");    		
+    		pageSPAN.append(1);
+    		
+    		pagenaviDIV.appendChild(pageSPAN);
+    	} else {
+    		for (var i = startNum; i <= MaxNum; i++) {
+        	    var pageSPAN = document.createElement("span");
+        	    
+    	        if (i == pageNum) {
+    	    		pageSPAN.classList.add("on");    		
+    	    		pageSPAN.append(i);
+    	        } else {
+    	    		pageSPAN.setAttribute("onClick", "goToPageByNum("+i+")");    		
+    	    		pageSPAN.append(i);
+    	        }
+        		pagenaviDIV.appendChild(pageSPAN);
+    	    }
+    	}
+    	pagenaviDIV.appendChild(nextEle);
+    	pagenaviDIV.appendChild(nnextEle);
+    
+    // append
+    pageRayer.innerHTML = "";
+    pageRayer.appendChild(pagenaviDIV);
+}
+
+function escapeForJson(inputString) {
+    return inputString.replace(/[\b\f\n\r\t\"\\]/g, function (char) {
+        switch (char) {
+            case '\b':
+                return '\\b';
+            case '\f':
+                return '\\f';
+            case '\n':
+                return '\\n';
+            case '\r':
+                return '\\r';
+            case '\t':
+                return '\\t';
+            default:
+                return char;
+        }
+    });
+}
+
+function unescapeForJson(inputString) {
+    return inputString.replace(/\\[bfnrt\"\\]/g, function (char) {
+        switch (char) {
+            case '\\b':
+                return '\b';
+            case '\\f':
+                return '\f';
+            case '\\n':
+                return '\n';
+            case '\\r':
+                return '\r';
+            case '\\t':
+                return '\t';
+            default:
+                return char;
+        }
+    });
+}
+
+function getCookie(name) {
+    const cookies = document.cookie.split('; ');
+    
+    for (const cookie of cookies) {
+        const [cookieName, cookieValue] = cookie.split('=');
+        if (cookieName === name) {
+            return decodeURIComponent(cookieValue);
+        }
+    }
+    
+    return null;
+}
+
+function setColorMode() {
+	
+	if (window.location.href.indexOf('admin') > 0 && window.location.href.indexOf('adminPage.do?initFlag=4') == -1 && window.location.href.indexOf('adminPage.do?initFlag=0') == -1) {
+		return;
+	}
+	
+	var useColor = getCookie('useColor');
+	if (useColor) {
+		var link = document.createElement('link');
+		link.rel = 'stylesheet';
+		link.id = "skinCss";
+
+		if (useColor == 1) {
+			link.href = '/css/ezPortal/skin_blue.css';
+		} else if (useColor == 2) {
+			link.href = '/css/ezPortal/skin_red.css';
+		} else if (useColor == 3) {
+			link.href = '/css/ezPortal/skin_dark.css';
+		}
+
+		document.head.appendChild(link);
+	}
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    setColorMode();
+    
+    // 2025-01-08 조수빈 - 태블릿에서 조회 시 팝업이 잘리는 현상 임시 조치
+    if (navigator.maxTouchPoints > 4 && document.body.classList.contains('popup')) {
+        document.body.style.overflow = '';
+    }
+    
+    var currentUrl = window.location.href;
+    if ((currentUrl.includes("ezBoard") || currentUrl.includes("ezResource") || 
+    currentUrl.includes("ezSurvey") || currentUrl.includes("ezMemo") || currentUrl.includes("ezTask") || 
+    currentUrl.includes("ezPMS") || currentUrl.includes("ezAttitude"))  && document.getElementById("mainmenu")) {
+        resizableMenu(currentUrl);
+    }
+});
+
+// 2024-11-21 한태훈 > resize시 dim처리된 layer판넬 위에 표출 되는 알림창의 위치 가운데로 재설정
+function adjustLayerAlertPosition(alertElemId) {
+	var iframePanel = document.getElementById(alertElemId);
+	if (!!iframePanel && iframePanel.style.display != "none") {
+		var iframePanelHeight = iframePanel.offsetHeight;
+		var iframePanelWidth = iframePanel.offsetWidth;
+    	var alertPostion = DivPopUpPosition(iframePanelWidth, iframePanelHeight);
+    	iframePanel.style.top = alertPostion[0] + "px";
+    	iframePanel.style.left = alertPostion[1] + "px";
+	}
+}
+
+// 기존의 window.open 메서드를 저장하여 재정의
+const originWindowOpen = window.open;
+
+window.open = function (url, target, features) {
+    var urlObj;
+    if (url.startsWith('/')) {
+        urlObj = new URL(url, window.location.origin);
+    } else if (!url.includes('://')) {
+        var basePath = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
+        urlObj = new URL(basePath + '/' + url, window.location.origin);
+    } else {
+        urlObj = new URL(url);
+    }
+    urlObj.searchParams.set('__wwidth', top.outerWidth);
+    return originWindowOpen.call(window, urlObj.toString(), target, features);
+};
+
+// 2025-01-02 황인경 > 게시판, 자원관리, 일정관리, 업무일지, 근태관리, 전자설문, 투표, 회람판, 메모 resize에 따른 more 버튼 표출
+function resizableMenu(url) {
+    var mainmenu = document.getElementById("mainmenu");
+    var buttonContainer = mainmenu.querySelector("ul");
+
+    var existingMoreBtn = document.getElementById("moreBoardIcon");
+    if (existingMoreBtn) {
+        existingMoreBtn.remove();
+    }
+
+    var createMoreBtnLi = document.createElement("li");
+    var createMoreBtnSpan = document.createElement("span");
+    var createMoreBtnImg = document.createElement("img");
+    var createMoreBtnUl = document.createElement("ul");
+    
+    createMoreBtnLi.id = "moreBoardIcon";
+    createMoreBtnLi.classList = "view_more";
+    createMoreBtnSpan.classList = "view_icon";
+    createMoreBtnSpan.setAttribute("onclick", "this.parentNode.classList.toggle('on')");
+    createMoreBtnImg.src = "/images/ImgIcon/view_more.png";
+    createMoreBtnUl.classList = "layer_select";
+    buttonContainer.style.overflow = "unset";
+    
+    if (url !== "undefined" && url !== null && url !== undefined && url.indexOf("ezAttitude") !== -1) {
+        if (url.indexOf("attitudeUserAnnual.do") === -1 && url.indexOf("attitudeManage.do") === -1) { // ... 이 위로 붙는 페이지 css 변경
+            createMoreBtnSpan.style.paddingTop = "13px";
+        }
+    }
+    
+    createMoreBtnSpan.appendChild(createMoreBtnImg);
+    createMoreBtnLi.appendChild(createMoreBtnSpan);
+    createMoreBtnLi.appendChild(createMoreBtnUl);
+    buttonContainer.appendChild(createMoreBtnLi);
+    
+    var moreButton = createMoreBtnLi;
+    var dropdownMenu = createMoreBtnUl;
+    var buttons = [];
+    var hiddenButtons = [];
+    var timer = null;
+    var btns = buttonContainer.querySelectorAll("li");
+    
+    for (var i = 0; i < btns.length; i++) {
+        var btn = btns[i];
+        if (!btn.classList.contains("view_more") && !btn.classList.contains("layer_select") && window.getComputedStyle(btn).display !== "none" && window.getComputedStyle(btn).float !== "right" && btn.children[0].tagName !== "SELECT") {
+            buttons.push(btn);
+        }
+    }
+
+    function resizeBtn() {
+        var mainMenuWidth = buttonContainer.offsetWidth;
+    
+        var rightSectionWidth = 0;
+        var rightDiv = document.querySelector("#right"); // 프레임 아이콘
+        
+        if (rightDiv) {
+            rightSectionWidth += rightDiv.offsetWidth;
+        }
+    
+        var floatRightButtons = document.querySelectorAll("li[style*='float: right']");
+        floatRightButtons.forEach(function (li) {
+            rightSectionWidth += li.offsetWidth;
+        });
+    
+        var remainingWidth = mainMenuWidth - rightSectionWidth;
+    
+        var moreButtonWidth;
+        var urlMapping = { // 관리자 페이지의 영역이 더 좁아 비율 상이
+            "admin": 0.8,
+            "ezBoard": 0.5
+        };
+        
+        if (url !== "undefined" && url !== null && url !== undefined) {
+            moreButtonWidth = remainingWidth * 0.6;
+            if (url.indexOf("/admin/") !== -1) {
+                moreButtonWidth = remainingWidth * 0.8;
+            } else if (url.indexOf("ezBoard") !== -1) {
+                moreButtonWidth = remainingWidth * 0.5;
+            }
+        } else {
+            moreButtonWidth = remainingWidth * 0.6;
+        }
+        
+        var mainMenuWidthCal = remainingWidth - moreButtonWidth;
+        var totalWidth = 0;
+    
+        hiddenButtons = [];
+        buttons.forEach(function (btn) {
+            btn.style.display = "block";
+        });
+    
+        buttons.forEach(function (button) {
+            totalWidth += button.offsetWidth;
+    
+            if (totalWidth > mainMenuWidthCal) {
+                hiddenButtons.push(button);
+                button.style.display = "none";
+            }
+        });
+    
+        dropdownMenu.innerHTML = "";
+    
+        if (hiddenButtons.length > 0) {
+            moreButton.style.display = "block"; 
+    
+            hiddenButtons.forEach(function (btn) {
+                var clone = btn.cloneNode(true);
+                clone.style.display = "";
+                dropdownMenu.appendChild(clone);
+            });
+        } else {
+            moreButton.style.display = "none";
+        }
+        
+        if (url.includes("ezSurvey")) {
+            SurveyItem.btnResize();
+        } 
+        if (url.includes("/ezResource/scheduleApprovList.do")) {
+            btnSet();
+        }
+    }
+
+    window.addEventListener("resize", function () {
+        clearTimeout(timer);
+        timer = setTimeout(resizeBtn, 100); // 딜레이를 주지 않으면 버튼 내려감 
+    });
+
+    resizeBtn();
+    
+    var viewMore = null;
+
+    function hideLayer(event) {
+        if (viewMore && !event.target.closest('.view_more')) {
+            viewMore.classList.remove('on');
+        }
+    }
+
+    function setUpHideLayerEvent() {
+        viewMore = document.getElementsByClassName('view_more')[0];
+
+        window.parent.parent.parent.frames['topFrame'].contentWindow.document.getElementById('top')
+                .addEventListener('click', hideLayer);
+        
+        window.parent.frames['left'].document.addEventListener('click', hideLayer);
+
+        document.addEventListener('click', hideLayer);
+    }
+    setUpHideLayerEvent();
 }

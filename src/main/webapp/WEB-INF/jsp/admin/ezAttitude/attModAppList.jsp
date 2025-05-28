@@ -10,7 +10,8 @@
 <head>
 		<title><spring:message code='ezAttitude.t165' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezAttitude.i1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/previewmail.css')}">
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/jquery.modal.css')}" type="text/css" />
@@ -240,26 +241,26 @@
 	        var pageNum = currentPage;
 	        
 	        if (totalPages > 1 && pageNum != 1) {
-	            strtext = "<span class='btnimg' onClick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif'></span>";
+	            strtext = "<span class='btnimg first' onClick= 'return goToPageByNum(1)'></span>";
 	            PagingHTML += strtext;
 	        }
 	        else {
-	            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif'></span>";
+	            strtext = "<span class='btnimg first disabled'></span>";
 	            PagingHTML += strtext;
 	        }
 	        
 	        if (totalPages > blockSize) {
 	            if (pageNum > blockSize) {
-	                strtext = "<span class='btnimg' onClick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif'></span>";
+	                strtext = "<span class='btnimg prev' onClick= 'return selbeforeBlock()'></span>";
 	                PagingHTML += strtext;
 	            }
 	            else {
-	                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif'></span>";
+	                strtext = "<span class='btnimg prev disabled'></span>";
 	                PagingHTML += strtext;
 	            }
 	        }
 	        else {
-	            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif'></span>";
+	            strtext = "<span class='btnimg prev disabled'></span>";
 	            PagingHTML += strtext;
 	        }
 	        
@@ -288,27 +289,27 @@
 	        if (totalPages > blockSize) {
 	        	if (totalPages >= parseInt(((parseInt((pageNum - 1) / blockSize) + 1) * blockSize) + 1)) {
 	        	    strtext = "";
-	        	    strtext = strtext + "<span class='btnimg' onClick='return selafterBlock()'><img src='/images/sub/btn_next.gif' ></span>";
+	        	    strtext = strtext + "<span class='btnimg next' onClick='return selafterBlock()'></span>";
 	                PagingHTML += strtext;
 	        	}
 	        	else {
 	                strtext = "";
-	                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif'></span>";
+	                strtext = strtext + "<span class='btnimg next disabled'></span>";
 	                PagingHTML += strtext;
 	        	}
 	        }
 	        else {
 	            strtext = "";
-	            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif'></span>";
+	            strtext = strtext + "<span class='btnimg next disabled'></span>";
 	            PagingHTML += strtext;
 	        }
 	        
 	        if (totalPages > 1 && totalPages != 1 && (totalPages != pageNum)) {
-	            strtext = "<span class='btnimg' onClick='return goToPageByNum(" + totalPages + ")'><img src='/images/sub/btn_n_next.gif'></span>";
+	            strtext = "<span class='btnimg last' onClick='return goToPageByNum(" + totalPages + ")'></span>";
 	            PagingHTML += strtext;
 	        }
 	        else {
-	            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif'></span>";
+	            strtext = "<span class='btnimg last disabled'></span>";
 	            PagingHTML += strtext;
 	        }
 	        
@@ -488,6 +489,13 @@
 			    	ajaxRunning = false;
 			    },
 			    success : function(json){
+			    	
+			    	// 2025-02-20 조수빈 - 다운로드할 내용 없을 경우 동작이 없어 분기 추가
+			    	if (json.list.length < 1) {
+			    		alert('<spring:message code="ezAttitude.t56"/>');
+			    		return;
+			    	}
+			    	
 			    	getAttList_after(json, true);
 			    },
 				complete : function() {
@@ -524,7 +532,7 @@
 		    	totalPages = data.totalPages;
 		    	makePageSelPage();
 		    	
-		    	infoStr += '&nbsp;&nbsp;<span style="color:#017BEC;">' + data.totalAtt;
+		    	infoStr += '&nbsp;&nbsp;<span class="txt_color">' + data.totalAtt;
 		    	
 		    	if (data.startDate != "" && data.endDate != "") {
 		    		infoStr += '</span>';
@@ -1256,6 +1264,7 @@
 		</div>
 		
 		<form id="formAgent" name="formAgent" method="POST" target="saveExcel" action="/ezAttitude/saticGetXlsAtt.do">
+	        <input type="hidden" id="saveFileName" name="saveFileName" value="<spring:message code = 'ezAttitude.t7' />"/>
 	        <input type="hidden" id="saveExcelData" name="saveExcelData" value=""/>
 	        <input type="hidden" id="userAgent" name="userAgent" value=""/>
 	    </form>

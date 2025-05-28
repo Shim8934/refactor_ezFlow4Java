@@ -7,7 +7,9 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
+import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -28,6 +30,7 @@ import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxUserVO;
 import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureTemplateVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzEmailService {
@@ -46,7 +49,7 @@ public interface EzEmailService {
 	public List<MailDeleteVO> getMailDeleteList() throws Exception;
 	public List<MailReservationVO> getMailReserved(int tenantId, String pUserId) throws Exception;
 	public List<MailReservationVO> getMailReserved2() throws Exception;
-	public String setMailReserved(int tenantId, String pMessageId, String pSubject, String pSendDate, String pUserId, String isReserve) throws Exception;
+	public String setMailReserved(int tenantId, String pMessageId, String pSubject, String pSendDate, String mailId, String sender, String isReserve) throws Exception;
 	public void deleteMailReserved(String pMessageId) throws Exception;
 	public String getMailReservedTime(String pMessageId) throws Exception;
 	public List<MailReadVO> getMailReadList(int tenantId, String pUserId, String pMessageId) throws Exception;
@@ -76,7 +79,7 @@ public interface EzEmailService {
 	public String mailContentDownload(String loginCookie, String url, String realPath) throws Exception;
 	public boolean checkMailQuota(LoginVO userInfo, String password) throws Exception;
 	public int getMaxMessageSize(int tenantId) throws Exception;
-	public List<String[]> getAliasAddress(String userId, int tenantId) throws Exception;
+	List<String[]> getAliasAddress(String userId, int tenantId, String useFromAddress, String useDistributionSender) throws Exception;
 	public List<Map<String, String>> getMailListT(LoginVO userInfo, String password, String dateTime, int count) throws Exception;
 	public List<MailDistributionVO> getDistributionList(String companyId, int tenantId) throws Exception;
 	public List<MailDistributionVO> getDistributionSearchList(String companyId, int tenantId, String searchValue) throws Exception;
@@ -133,6 +136,7 @@ public interface EzEmailService {
 	public int addDistributionList(String id, String name, List<String> memberList, List<Map<String, String>> subList, String compId, int tenantId) throws Exception;
 	public int updateDistributionList(String id, String name, List<String> memberList, List<Map<String, String>> subList, String compId, int tenantId) throws Exception;
 	public JSONObject recallMailByMessageId(String address, String messageId) throws Exception;
+	public void cancelMailByMailUid(Long mailUid, Long mailboxId) throws Exception;
 	public int getTotalUnreadCount(String userId, int tenantId) throws Exception;
 	public JSONObject getUnreadCountAll(JSONObject requestObject, String userId, Locale locale, int tenantId) throws Exception;
 	/**
@@ -173,6 +177,11 @@ public interface EzEmailService {
 	public void deleteBigAttachCountInfo(String[] fileIdArr, int tenantId) throws Exception;
 	public int deleteMailDeleteForUser(String pUserEmail) throws Exception;
 
+	public int deleteMailsByMessageIds(String messageIds) throws Exception;
+	public int blockMailsByMessageIds(String messageIds) throws Exception;
+	public int unblockMailsByMessageIds(String messageIds) throws Exception;
+	public int checkBlockedMailByMessageId(String messageId) throws Exception;
+	
 	public void setMailboxProgress(String userKey, String userId, String action, int tenantId, int percent) throws Exception;
 	public int updateMailboxProgress(String userKey, int percent) throws Exception;
 	public int getMailboxProgress(String userKey) throws Exception;
@@ -196,4 +205,77 @@ public interface EzEmailService {
 	 * @throws Exception
 	 */
 	public String checkInnerDomain(String forwardAddress, int tenantId) throws Exception;
+
+	public JSONObject getDistributionMemberList(String domain, String cn) throws Exception;
+	
+	/* 승인메일 */
+	JSONArray getAdminCompApprMailList(int tenantId, String companyId, String type, String id, String lang, int pageStartNum, int listCount) throws Exception;
+	JSONArray getAdminApprMailList(int tenantId, String companyId, String type, String id, String lang, int pageStartNum, int listCount) throws Exception;
+	int getAdminApprMailListCount(int tenantId, String companyId, String type, String id) throws Exception;
+	JSONArray getApprMailList(int tenantId, String companyId, String type, String id, String lang, int pageStartNum, int listCount, String domainName) throws Exception;
+	int getApprMailListCount(int tenantId, String companyId, String type, String id) throws Exception;
+	JSONArray setUTCtoUserTime(JSONArray array, String offset, int tenantId) throws Exception;
+	JSONArray setApprover(JSONArray array, Locale locale) throws Exception;
+	JSONArray setHref(JSONArray array) throws Exception;
+	String setHref(String senderId, String mailUID) throws Exception;
+	JSONArray setStateByLocale(JSONArray array, Locale locale) throws Exception;
+	public String setStateByLocale(String state, Locale locale) throws Exception;
+	boolean checkApprMailApprover(int tenantId, String companyId, String cn) throws Exception;
+	public List<String> getApprAllowedDomainList(int tenantId, String companyId) throws Exception;
+	public List<String> checkApprAllowedDomain(int tenantId, String companyId, String[] domainNameList) throws Exception;
+	public int insertApprAllowedDomain(int tenantId, String companyId, String domainName) throws Exception;
+	public int deleteApprAllowedDomain(int tenantId, String companyId, String[] domainNameList) throws Exception;
+	public List<String> getApproverList(int tenantId, String companyId) throws Exception;
+	public List<OrganUserVO> getApproverList(int tenantId, String companyId, String lang) throws Exception;
+	public List<OrganUserVO> getApproverSearchList(int tenantId, String companyId, String lang, String searchType, String searchValue) throws Exception;
+	//public List<String> checkApprover(int tenantId, String companyId, String[] userIdList) throws Exception;
+	public int resetApprover(int tenantId, String companyId, String[] userIdList) throws Exception;
+	public int insertApprover(int tenantId, String companyId, String[] userIdList) throws Exception;
+	public int deleteApprover(int tenantId, String companyId, String[] userIdList) throws Exception;
+	public List<String> getExceptionUserList(int tenantId, String companyId) throws Exception;
+	//public List<String> checkExceptionUser(int tenantId, String companyId, String[] userIdList) throws Exception;
+	public boolean checkExceptionUser(int tenantId, String companyId, String userId) throws Exception;
+	public int resetExceptionUser(int tenantId, String companyId, String[] userIdList) throws Exception;
+	public int insertExceptionUser(int tenantId, String companyId, String[] userIdList) throws Exception;
+	public int deleteExceptionUser(int tenantId, String companyId, String[] userIdList) throws Exception;
+	public Map<String, String> getApprAllHistoryInfo(int tenantId, String companyId, long mailUID, String userId, String lang) throws Exception;
+	public int insertApprCompHistory(int tenantId, String companyId, long mailUID, String userId, MimeMessage message) throws Exception;
+	public int insertApprHistory(int tenantId, String companyId, long mailUID, String userId, String approverId, MimeMessage message) throws Exception;
+	public int deleteApprCompHistory(int tenantId, String companyId, long mailUID, String userId) throws Exception;
+	public int deleteApprHistory(int tenantId, String companyId, long mailUID, String userId) throws Exception;
+	public int updateApprCompHistory(int tenantId, String companyId, long mailUID, String userId, String state, String approverId, String approverName, String approverName2, String memo) throws Exception;
+	public int updateApprHistory(int tenantId, String companyId, long mailUID, String userId, String state, String memo) throws Exception;
+	public int applyApprCompMail(String loginCookie, long mailUID, MimeMessage message) throws Exception;
+	public int applyApprCompMail(String loginCookie, long mailUID, MimeMessage message, String shareId) throws Exception;
+	public int applyApprCompMail(String userId, int tenantId, Map<String, Object> paramMap, long mailUID, MimeMessage message) throws Exception;
+	public int applyApprMail(String loginCookie, long mailUID, MimeMessage message, String approverId) throws Exception;
+	public int applyApprMail(String loginCookie, long mailUID, MimeMessage message, String approverId, String shareId) throws Exception;
+	public int applyApprMail(String userId, int tenantId, Map<String, Object> paramMap, long mailUID, MimeMessage message, String approverId) throws Exception;
+	public int setApprMailCancel(String loginCookie, String applicantEmail, long uid) throws Exception;
+	public int setApprMailCancel(int tenantId, Map<String, Object> paramMap, String applicantEmail, long uid) throws Exception;
+	public int setApprCompMailApproval(String loginCookie, String applicantEmail, long uid) throws Exception;
+	public int setApprMailApproval(String loginCookie, String applicantEmail, long uid) throws Exception;
+	public int setApprMailApproval(String userId, int tenantId, Map<String, Object> paramMap, String applicantEmail, long uid) throws Exception;
+	public int setApprCompMailReject(String loginCookie, String applicantEmail, long uid, String memo) throws Exception;
+	public int setApprMailReject(String loginCookie, String applicantEmail, long uid, String memo) throws Exception;
+	public int setApprMailReject(String userId, int tenantId, Map<String, Object> paramMap, String applicantEmail, long uid, String memo) throws Exception;
+	public int setApprCompMailDelete(String loginCookie, String applicantEmail, long uid) throws Exception;
+	public List<Map<String, String>> getAutoDeleteApprMailHistoryList(int tenantId, String lang) throws Exception;
+	public List<Map<String, String>> getOldApprMailHistoryList(int tenantId, String lang) throws Exception;
+	public int setApprMailAutoDelete(int tenantId, String companyId, String applicantEmail, long uid) throws Exception;
+	public int setOldApprMailDelete(int tenantId, String companyId, String applicantEmail, long uid) throws Exception;
+	public List<Map<String, String>> getApprCompMailHistorySearchList(int tenantId, String companyId, String lang, Locale locale, String offset) throws Exception;
+	public List<Map<String, String>> getApprCompMailHistorySearchList(int tenantId, String companyId, String lang, Locale locale, String offset, String sDate, String eDate) throws Exception;
+	public List<Map<String, String>> getApprCompMailHistorySearchList(int tenantId, String companyId, String lang, Locale locale, String offset, String sDate, String eDate, int pageStartNum, int listCount) throws Exception;
+	public int getApprCompMailHistorySearchListCnt(int tenantId, String companyId, String sDate, String eDate) throws Exception;
+	public List<Map<String, String>> getApprCompMailHistorySearchUserCnt(int tenantId, String companyId, String lang, String sDate, String eDate) throws Exception;
+	public JSONArray getApprMailHistorySearchList(int tenantId, String companyId, String lang, Locale locale, String offset) throws Exception;
+	public JSONArray getApprMailHistorySearchList(int tenantId, String companyId, String lang, Locale locale, String offset, String sDate, String eDate) throws Exception;
+	public JSONArray getApprMailHistorySearchList(int tenantId, String companyId, String lang, Locale locale, String offset, String sDate, String eDate, int pageStartNum, int listCount) throws Exception;
+	public int getApprMailHistorySearchListCnt(int tenantId, String companyId, String sDate, String eDate) throws Exception;
+	public List<Map<String, String>> getApprMailHistorySearchUserCnt(int tenantId, String companyId, String lang, String sDate, String eDate) throws Exception;
+	public void actionTrashMailAllDelete(IMAPAccess ia, String folderId) throws Exception;
+	public void actionMailMoveTrash(IMAPAccess ia, Map<String, long[]> folderUids, String cmd, Locale locale, int tenantID, String userEmail, String domainName) throws Exception;
+	public String encryptSecureValue(String encryptValue, boolean useKlibEncrypt) throws Exception;
+	public String decryptSecureValue(String decryptValue, boolean useKlibEncrypt) throws Exception;
 }

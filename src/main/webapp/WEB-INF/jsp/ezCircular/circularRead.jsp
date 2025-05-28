@@ -7,7 +7,8 @@
 	<head>
 		<title><spring:message code='ezCircular.t111'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-		<link rel="stylesheet" href="${util.addVer('ezCircular.c1', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('ezCircular.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -43,6 +44,80 @@
 			
 			#divCross p span{
 				font-size: inherit;
+			}
+			
+			#divCross h1{
+				display: block;
+    			font-size: 2em;
+    			margin-block-start: 0.67em;
+    			margin-block-end: 0.67em;
+    			margin-inline-start: 0px;
+    			margin-inline-end: 0px;
+    			font-weight: bold;
+    			unicode-bidi: isolate;
+			}
+			
+			#divCross h2{
+				display: block;
+    			font-size: 1.5em;
+    			margin-block-start: 0.83em;
+    			margin-block-end: 0.83em;
+    			margin-inline-start: 0px;
+    			margin-inline-end: 0px;
+    			font-weight: bold;
+    			unicode-bidi: isolate;
+			}
+			
+			#divCross h3{
+				display: block;
+    			font-size: 1.17em;
+    			margin-block-start: 1em;
+    			margin-block-end: 1em;
+    			margin-inline-start: 0px;
+    			margin-inline-end: 0px;
+    			font-weight: bold;
+    			unicode-bidi: isolate;
+			}
+			
+			#divCross h4{
+				font-size:1em;
+				display: block;
+    			margin-block-start: 1.33em;
+    			margin-block-end: 1.33em;
+    			margin-inline-start: 0px;
+    			margin-inline-end: 0px;
+    			font-weight: bold;
+    			unicode-bidi: isolate;
+			}
+			
+			#divCross h5{
+				display: block;
+    			font-size: 0.83em;
+    			margin-block-start: 1.67em;
+    			margin-block-end: 1.67em;
+    			margin-inline-start: 0px;
+    			margin-inline-end: 0px;
+    			font-weight: bold;
+    			unicode-bidi: isolate;
+			}
+			
+			#divCross h6{
+				display: block;
+    			font-size: 0.67em;
+    			margin-block-start: 2.33em;
+    			margin-block-end: 2.33em;
+    			margin-inline-start: 0px;
+    			margin-inline-end: 0px;
+    			font-weight: bold;
+    			unicode-bidi: isolate;
+			}
+			
+			.popup h1 {
+				all:unset;
+			}
+			
+			.popup h2 {
+				all:unset;
 			}
 			
 		</style>

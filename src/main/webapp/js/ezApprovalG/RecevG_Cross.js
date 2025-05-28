@@ -211,8 +211,14 @@ function SendAckForSend(errMsg, type) {
 	});
     
     if (type == "req-resend") {
-        var pAlertContent = strLang725;
-        OpenAlertUI(pAlertContent, OpenAlertUI_Close);
+        if (result == "<RESLUT>TRUE</RESULT>") {
+	        var pAlertContent = strLang725;
+	        OpenAlertUI(pAlertContent, function() {
+	        	window.close();
+	        });
+    	} else {
+    		OpenAlertUI("재전송요청에 실패하였습니다.");
+    	}
     }
 }
 
@@ -634,18 +640,18 @@ function getExtInfo() {
 
                 var tempNode = SelectSingleNode(Nodes[i], "signimage");
                 if (tempNode) {
-                    signPath = dirPath + sCompanyID + "/ExDocUserSign/" + getSignURL(GetAttribute(tempNode.selectSingleNode("img"), "src"));
+                    signPath = dirPath + sCompanyID + "/ExDocUserSign/" + getSignURL(GetAttribute(SelectSingleNode(tempNode, "img"), "src"));
                     field = message.GetListItem(fields, "sign" + SignOrder);
                     if (field) {
-                        if (GetAttribute(tempNode.selectSingleNode("img"), "width") == "" || GetAttribute(tempNode.selectSingleNode("img"), "width") == null)
+                        if (GetAttribute(SelectSingleNode(tempNode, "img"), "width") == "" || GetAttribute(SelectSingleNode(tempNode, "img"), "width") == null)
                             var signWidth = 50;
                         else
-                            var signWidth = ConversionPt(GetAttribute(tempNode.selectSingleNode("img"), "width"));
+                            var signWidth = ConversionPt(GetAttribute(SelectSingleNode(tempNode, "img"), "width"));
 
-                        if (GetAttribute(tempNode.selectSingleNode("img"), "height") == "" || GetAttribute(tempNode.selectSingleNode("img"), "height") == null)
+                        if (GetAttribute(SelectSingleNode(tempNode, "img"), "height") == "" || GetAttribute(SelectSingleNode(tempNode, "img"), "height") == null)
                             var signHeight = 28;
                         else
-                            var signHeight = ConversionPt(GetAttribute(tempNode.selectSingleNode("img"), "height"));
+                            var signHeight = ConversionPt(GetAttribute(SelectSingleNode(tempNode, "img"), "height"));
 
                         if (signWidth > 70)
                             signWidth = 50;
@@ -723,19 +729,19 @@ function getExtInfo() {
 
                 var tempNode = SelectSingleNode(Nodes[i], "signimage");
                 if (tempNode) {
-                    signPath = dirPath + sCompanyID + "/ExDocUserSign/" + getSignURL(GetAttribute(tempNode.selectSingleNode("img"), "src"));
+                    signPath = dirPath + sCompanyID + "/ExDocUserSign/" + getSignURL(GetAttribute(SelectSingleNode(tempNode, "img"), "src"));
 
                     field = message.GetListItem(fields, "habyuisign" + SignOrder);
                     if (field) {
-                        if (GetAttribute(tempNode.selectSingleNode("img"), "width") == "" || GetAttribute(tempNode.selectSingleNode("img"), "width") == null)
+                        if (GetAttribute(SelectSingleNode(tempNode, "img"), "width") == "" || GetAttribute(SelectSingleNode(tempNode, "img"), "width") == null)
                             var signWidth = 50;
                         else
-                            var signWidth = ConversionPt(GetAttribute(tempNode.selectSingleNode("img"), "width"));
+                            var signWidth = ConversionPt(GetAttribute(SelectSingleNode(tempNode, "img"), "width"));
 
-                        if (GetAttribute(tempNode.selectSingleNode("img"), "height") == "" || GetAttribute(tempNode.selectSingleNode("img"), "height") == null)
+                        if (GetAttribute(SelectSingleNode(tempNode, "img"), "height") == "" || GetAttribute(SelectSingleNode(tempNode, "img"), "height") == null)
                             var signHeight = 28;
                         else
-                            var signHeight = ConversionPt(GetAttribute(tempNode.selectSingleNode("img"), "height"));
+                            var signHeight = ConversionPt(GetAttribute(SelectSingleNode(tempNode, "img"), "height"));
 
                         if (signWidth > 70)
                             signWidth = 50;
@@ -1277,6 +1283,24 @@ function getSignURL(SignURL) {
         if (getNodeText(pRelayDocInfo.getElementsByTagName("SignName").item(i)).toLowerCase() == SignURL.toLowerCase())
             rtnVal = getNodeText(pRelayDocInfo.getElementsByTagName("RealSignName").item(i));
     }
+    
+    //경로에 / 포함된경우 비교가 안되는 케이스로 인해 추가
+    if (rtnVal == null || rtnVal == "") {
+    	for (var i = 0 ; i < pRelayDocInfo.getElementsByTagName("SignName").length ; i++) {
+            if (getNodeText(pRelayDocInfo.getElementsByTagName("SignName").item(i)).toLowerCase().indexOf(SignURL.toLowerCase()) > -1)
+                rtnVal = getNodeText(pRelayDocInfo.getElementsByTagName("RealSignName").item(i));
+        }
+    }
+    
+    // xml 파일 본문에서 filename이 / 가 들어간 케이스로 인해 추가
+    if(rtnVal == null || rtnVal == "") {
+        for (var i = 0 ; i < pRelayDocInfo.getElementsByTagName("SignName").length ; i++) {
+            if (SignURL.startsWith("/") && (getNodeText(pRelayDocInfo.getElementsByTagName("SignName").item(i)).toLowerCase() == SignURL.substr(1).toLowerCase())) {
+                rtnVal = getNodeText(pRelayDocInfo.getElementsByTagName("RealSignName").item(i));
+            }
+        }
+	}
+    
     return rtnVal;
 }
 
@@ -1325,7 +1349,7 @@ function convertDate(datestring) {
 }
 
 var reqResend_dialogArgument = new Array();
-function btnReqReSend_onclick() {
+/*function btnReqReSend_onclick() {
 	var url = "/ezApprovalG/ezRetOpinon.do";
     var feature = "width=420, height=270, resizable = no, scrollbars = no";
     
@@ -1340,6 +1364,28 @@ function btnReqReSend_onclick() {
 //    if (retValue == "true") {
 //        window.close();
 //    }
+}*/
+
+function btnReqReSend_onclick() {
+    var url = "/ezApprovalG/ezRetOpinon.do";
+    reqResend_dialogArgument[0] = "";
+    reqResend_dialogArgument[1] = btnReqReSend_onclick_conplete;
+
+    DivPopUpShow(420, 270, url);
+}
+
+function btnReqReSend_onclick_conplete(retValue, reqValue) {
+    if (retValue === "cancel") {
+        DivPopUpHidden();
+    } else {
+        var pRetMsg = retValue;
+        pRetMsg = ReplaceString(pRetMsg, "\n", "<br>");
+        pRetMsg = ReplaceString(pRetMsg, "&", "&amp;");
+        pRetMsg = ReplaceString(pRetMsg, "<", "&lt;");
+        pRetMsg = ReplaceString(pRetMsg, ">", "&gt;");
+
+        SendAckForSend(pRetMsg, "req-resend");
+    }
 }
 
 function getDraftUserInfo() {
@@ -2089,21 +2135,19 @@ function SendDraftMappingSign(ret) {
         var s = CurrentDate[1] + "." + CurrentDate[2];
 
         var field = message.GetListItem(fields, psigncell);
-        var signWidth = field.offsetWidth
-        var signHeight = field.offsetHeight
-
-        if (signWidth > signHeight) {
-            signHeight = signHeight - 15;
-            signWidth = signHeight;
-        } else {
-            signWidth = signWidth - 15;
-            sighHeight = signWidth
-        }
+        var signWidth = 50;
+        var signHeight = 50;
+        
         var field = message.GetListItem(fields, pseumyungdatecell);
         if (field) {
             setNodeText(field , s);
-            signWidth = 50;
-            signHeight = 50;
+            
+            /* 2023-10-06 홍승비 - 서명일자가 TBL_SIGNINFO 테이블에 저장되도록 데이터 추가 (서명일자 필드 존재 시) */
+    		signInfo[signCnt] = pseumyungdatecell;
+    		SignName[signCnt] = pseumyungdatecell;
+    		SignType[signCnt] = "TEXT";
+    		SignContent[signCnt] = s;
+    		signCnt = signCnt + 1;
         } else {
         	signWidth = 50;
             signHeight = 28;

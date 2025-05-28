@@ -1,26 +1,30 @@
 /**
  * 컨텍스트 메뉴
+TimelineLite : 타임라인을 가지고 애니메이션 생성할 때 사용.
  */
+/*
 var timelinePopupBtn = {
-	paused: true,		
+	paused: true, //paused true 인경우 타임라인이 생성될 때 자동재생 x 
 }
 
 var animatePopupBtn = new TimelineLite(timelinePopupBtn);
+
 animatePopupBtn.from('#popupMenuBtn', 0.45, {
 	scale: '0',
 	rotation: '-=135',
+	
 }, 0, 0); 
 
 animatePopupBtn.eventCallback('onStart', function() {
-	document.getElementById('contextMenuBtn').style.background = '#3398fe';
-	document.getElementById('contextMenuBtn').style.opacity = '1';
+	//document.getElementById('contextMenuBtn').style.background = '#3398fe';
+	//document.getElementById('contextMenuBtn').style.opacity = '1';
 });
 
 animatePopupBtn.eventCallback('onReverseComplete', function () {
-	document.getElementById('contextMenuBtn').style.opacity = '0.7';
-	document.getElementById('contextMenuBtn').style.background = '#0470e4';
+	//document.getElementById('contextMenuBtn').style.opacity = '0.7';
+	//document.getElementById('contextMenuBtn').style.background = '#0470e4';
 })
-
+*/
 var contextMenuObject = {
 	bottom: '',
 	right: '',
@@ -103,8 +107,8 @@ var getOpenWindowfeature = function (popUpW, popUpH) {
 	pleftpos = parseInt(width) - popUpW;
 	heigth = parseInt(heigth) - popUpH;
 	width = parseInt(width) - pleftpos;
-	left = pleftpos / 2;
-	top = heigth / 2;
+	left = window.outerWidth / 2 + window.screenX - (popUpW / 2);
+	top = window.outerHeight / 2 + window.screenY - (popUpH / 2);
 	var feature = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=no, scrollbars=yes";
 	return feature;
 }
@@ -214,14 +218,14 @@ var handleQuickMenuOpen = function (menu) {
 			
 	if (conWidth > 890) conWidth = 890;
 		        
-	var pTop = (pheight - conHeight) / 2;
-	var pLeft = (pwidth - 890) / 2;			
+	// var pTop = (pheight - conHeight) / 2;
+	// var pLeft = (pwidth - 890) / 2;			
 
 	switch (menu) {
 		case 'mail':    
 		    url = '/ezEmail/mailWrite.do?cmd=NEW';
 			location = '';
-			option = 'top='+pTop+', left='+pLeft+', height='+conHeight+', width='+conWidth+', status=no, toolbar=no, menubar=no, location=no, resizable=1';
+			option = getOpenWindowfeature(conWidth, conHeight) + ', resizable=1';
 			break;
 		case 'appr':
 			openForm();
@@ -229,15 +233,11 @@ var handleQuickMenuOpen = function (menu) {
 		case 'schedule':		
 			url = '/ezSchedule/scheduleWrite.do?defaultid=0';
 			location = '';
-			pTop = (pheight - 819) / 2;
-			pLeft = (pwidth - 890) / 2;	
-			option = 'top='+pTop+', left='+pLeft+ ',height='+ '830' +', width='+'790'+', status=no, toolbar=no, menubar=no, location=no, resizable=1';
+			option = getOpenWindowfeature(890, 819) + ', resizable=1';
 			break;
 		case 'organ':
 			url = '/ezPersonal/personSearch.do';
-			pTop = (pheight - 670) / 2;
-			pLeft = (pwidth - 750) / 2;	
-			option = 'top='+pTop+', left='+pLeft+ ',height=670px,width=750px, status = no, toolbar=no, menubar=no,location=no, resizable=0';			
+			option = getOpenWindowfeature(750, 670) + ', resizable=0';			
 			break;
 	}
 	
@@ -385,7 +385,7 @@ var setQuickMenuBtn = function () {
 		quickMenuBtn.appendChild(span);
 	});
 	
-	setQuickMenuBtnImg();	
+	setQuickMenuBtnImg();
 }
 
 var getContextMenuPostion = function () {
@@ -414,10 +414,9 @@ var getContextMenuPostion = function () {
 }
 	
 var setConextMenuPositionResize = function () {
-	
 	var obj = getContextMenuPostion();
 	var contextMenuBtn = document.getElementById('contextMenuBtn');
-
+	
 	if (Number(obj.offsetTop) < 0 ) {
 		contextMenuBtn.style.bottom = '';
 		contextMenuBtn.style.top = '0';
@@ -432,14 +431,14 @@ var setConextMenuPositionResize = function () {
 
 var checkPopupMenuPosition = function () {
 	var popupMenuBtn = document.getElementById('popupMenuBtn');
+	
 	var popupMenuCss = getComputedStyle(popupMenuBtn);
 	var top = contextMenuObject.replaceAll(popupMenuCss.top, 'px', '');
 	var left = contextMenuObject.replaceAll(popupMenuCss.left, 'px', '');
 	var right = contextMenuObject.replaceAll(popupMenuCss.right, 'px', '');
 	var bottom = contextMenuObject.replaceAll(popupMenuCss.bottom, 'px', '');
-	
-	var width = contextMenuObject.replaceAll(popupMenuCss.width, 'px', '');
-	var popupMenuRadius = Number(width) / 2;	
+	var menuBtnSpans = document.querySelectorAll('.quickMenuBtnDiv');
+	var popupMenuWidth = 100 * menuBtnSpans.length + contextMenuObject.menuRadius * 2;
 	
 	var isRight = false;
 	var isBottom = false;
@@ -448,37 +447,47 @@ var checkPopupMenuPosition = function () {
 
 	if (right < 0) {
 		isRight = true;
-		popupMenuBtn.style.right = '0';
+		popupMenuBtn.style.left = '';
+		popupMenuBtn.style.right = '0px';
 		contextMenuBtn.style.left = '';
-		contextMenuBtn.style.right = (popupMenuRadius - contextMenuObject.menuRadius) + 'px';
+		contextMenuBtn.style.right = '0px';
 	}
+	
 	if (bottom < 0) {
 		isBottom = true;
-		popupMenuBtn.style.bottom = '0';
+		popupMenuBtn.style.top = '';
+		popupMenuBtn.style.bottom = '0px';
 		contextMenuBtn.style.top = '';
-		contextMenuBtn.style.bottom = (popupMenuRadius - contextMenuObject.menuRadius) + 'px';
+		contextMenuBtn.style.bottom = '0px';
 	}	
 	
 	if (!isBottom && (top < 0 || top === 'auto')) {
-		popupMenuBtn.style.top = '0';
+		popupMenuBtn.style.bottom = '';
+		popupMenuBtn.style.top = '0px';
 		contextMenuBtn.style.bottom = '';
-		contextMenuBtn.style.top = (popupMenuRadius - contextMenuObject.menuRadius) + 'px';
+		contextMenuBtn.style.top = '0px';
 	}
 	
+	var leftMargin = 90;
+	
 	if (!isRight && (left < 0 || left === 'auto')) {
-		popupMenuBtn.style.left = '0';
-		contextMenuBtn.style.right = '';
-		contextMenuBtn.style.left = (popupMenuRadius - contextMenuObject.menuRadius) + 'px';
+		popupMenuBtn.style.left = '';
+		popupMenuBtn.style.right = window.innerWidth - popupMenuWidth - leftMargin + 'px';
+		contextMenuBtn.style.left = '';
+		contextMenuBtn.style.right = window.innerWidth - popupMenuWidth - leftMargin + 'px';
 	}
-
 	
 	var obj = getContextMenuPostion();
 	if(contextMenuBtn.style.left && contextMenuBtn.style.right) {
 		contextMenuBtn.style.left = '';		
 	}
+	
 	if(contextMenuBtn.style.top && contextMenuBtn.style.bottom) {
 		contextMenuBtn.style.top = '';		
-	}	
+	}
+	
+	contextMenuObject.bottom = obj.offsetBottom;
+	contextMenuObject.right = obj.offsetRight;
 }
 
 var setMenuPostionResize = function () {
@@ -509,14 +518,23 @@ var setContextMenuGadgetPosition = function () {
 }
 
 var handlePopupMenuBtn = function (type) {
+	// var menuBtnSpans = document.querySelectorAll('.quickMenuBtnDiv'); 기존방식
 	if (type === 'on') {
-		animatePopupBtn.play();
+		//animatePopupBtn.play();
+		// document.getElementById('popupMenuBtn').style.width = (100 * menuBtnSpans.length + 68) +'px'; 기존방식
+		// ↓↓ 다국어 이슈로 인한 .quickMenuBtn의 width값을 css에서 받아서 상위 div(슬라이드 동작때문에 고정 width값 필요)에 width값 계산해서 넣기(UIUX-조기완)
+		document.getElementById('popupMenuBtn').style.width = ($(".quickMenuBtn").outerWidth() + 20) + "px";
 		contextMenuObject.popupMenu = true;
 		$('#contextMenuBtn').draggable('disable');		
 	} else if (type === 'off') {
-		$('#contextMenuBtn').draggable('enable');
-		animatePopupBtn.reverse();
-		contextMenuObject.popupMenu = false;
+		document.getElementById('popupMenuBtn').style.width = '68px';
+		setTimeout(function() {
+			document.getElementById('popupMenuBtn').style.visibility = 'hidden';
+			$('#contextMenuBtn').draggable('enable');
+			contextMenuObject.popupMenu = false;
+		}, 300);		
+		//animatePopupBtn.reverse();
+		
 	} else if (type === 'ing') {
 		contextMenuObject.popupMenu = true;
 		$('#contextMenuBtn').draggable('disable');
@@ -543,44 +561,26 @@ var moveContextMenu = function () {
 
 var checkContextMenuPosition = function () {
 	var obj = getContextMenuPostion();
-	var popupMenuBtn = document.getElementById('popupMenuBtn');
-	var popupMenuCss = getComputedStyle(popupMenuBtn);
-	var width = contextMenuObject.replaceAll(popupMenuCss.width, 'px', '');
-	var popupMenuRadius = Number(width) / 2;
-	var menuRadius = contextMenuObject.menuRadius;
 	
+	var menuBtnSpans = document.querySelectorAll('.quickMenuBtnDiv');
+	var popupMenuWidth = 100 * menuBtnSpans.length;
 	var contextMenuBtn = document.getElementById('contextMenuBtn');
 	var isChanged = false;
 	
-	var tmpTop = obj.offsetTop;
-	var tmpLeft = obj.offsetLeft;
+	var tmpRight = obj.offsetLeft;
 	
-	if(popupMenuRadius > Number(obj.offsetTop) + menuRadius) {
-		tmpTop = popupMenuRadius - menuRadius;// + 'px';
-		isChanged = true;
-	} 
-	if (popupMenuRadius > Number(obj.offsetLeft) + menuRadius) {
-		tmpLeft = popupMenuRadius - menuRadius;// + 'px';
-		isChanged = true;
-	} 
-	if (popupMenuRadius > Number(obj.offsetBottom) + menuRadius) {
-		var windowHeight = Number(window.innerHeight);
-		tmpTop = (windowHeight - (popupMenuRadius + menuRadius));// + 'px';
-		isChanged = true;
-	} 
-	if (popupMenuRadius > Number(obj.offsetRight) + menuRadius) {
-		var windowWidth = Number(window.innerWidth);		
-		tmpLeft = (windowWidth - (popupMenuRadius + menuRadius));// + 'px';
+	var leftMargin = 90;
+	if (popupMenuWidth > Number(obj.offsetLeft)) {
+		tmpRight = window.innerWidth - popupMenuWidth - leftMargin - contextMenuObject.menuRadius * 2;// + 'px';
 		isChanged = true;
 	}
+	
 	if(isChanged) {
 		$('#contextMenuBtn').css({
-			'top': obj.offsetTop, 
-			'left' : obj.offsetLeft
+			'right' : obj.offsetRight
 		});
 		$('#contextMenuBtn').animate({
-			top: tmpTop,
-			left: tmpLeft,
+			right: tmpRight,
 		}, 100 , function() {
 			setRightAndBottom();
 			moveContextMenu();
@@ -600,26 +600,59 @@ var handleMemoFlag = function () {
 
 
 var setContextMenuEvent = function () {
-	$('#contextMenuBtn').draggable({
-		containment : "#contextMenuBlock",
-		scroll: false, 
+	var contextMenuBtn = $('#contextMenuBtn');
+
+	contextMenuBtn.draggable({
+		containment: "#contextMenuBlock",
+		scroll: false,
 		start: function () {
-			handleContextMenuBlock(true);	
+			handleContextMenuBlock(true);
 		},
-		stop: function() {
+		stop: function () {
 			setContextMenuGadgetPosition();
 			getContextMenuPosition();
 			handleContextMenuBlock(false);
-		},
+		}
 	});
-	
-	var contextMenuBtn = document.getElementById('contextMenuBtn');
-	
-	contextMenuBtn.addEventListener('click', function (event) {
+
+	contextMenuBtn.on("touchstart", function (event) {
+		var touch = event.originalEvent.touches[0];
+		var simulatedEvent = new MouseEvent("mousedown", {
+			bubbles: true,
+			cancelable: true,
+			clientX: touch.clientX,
+			clientY: touch.clientY
+		});
+		event.target.dispatchEvent(simulatedEvent);
+		event.preventDefault();
+	});
+
+	contextMenuBtn.on("touchmove", function (event) {
+		var touch = event.originalEvent.touches[0];
+		var simulatedEvent = new MouseEvent("mousemove", {
+			bubbles: true,
+			cancelable: true,
+			clientX: touch.clientX,
+			clientY: touch.clientY
+		});
+		event.target.dispatchEvent(simulatedEvent);
+		event.preventDefault();
+	});
+
+	contextMenuBtn.on("touchend", function (event) {
+		var simulatedEvent = new MouseEvent("mouseup", {
+			bubbles: true,
+			cancelable: true
+		});
+		event.target.dispatchEvent(simulatedEvent);
+		event.preventDefault();
+	});
+
+	document.getElementById('contextMenuBtn').addEventListener('click', function () {
 		setQuickMenuBtn();
 		checkContextMenuPosition();
-	});	
-}
+	});
+};
 
 var handleContextMenuBlock = function (type) {
 	var contextMenuBlock = document.getElementById('contextMenuBlock');
@@ -638,10 +671,10 @@ var setPopupMenuPosition = function () {
 	var height = contextMenuObject.replaceAll(popupMenuCss.height, 'px', '');
 	var menuRadius = contextMenuObject.menuRadius;
 	var distance = (width / 2) - menuRadius;
-
+	
 	popupMenuBtn.style.top = '';
-	popupMenuBtn.style.left = '';
 	popupMenuBtn.style.bottom = (contextMenuObject.bottom - distance) + 'px';
+	popupMenuBtn.style.left = '';
 	popupMenuBtn.style.right = (contextMenuObject.right - distance) + 'px';
 }
 

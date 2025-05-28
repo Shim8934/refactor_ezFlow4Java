@@ -7,7 +7,8 @@
 <HEAD>
 <title><spring:message code='ezApprovalG.t1224'/></title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 <script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -15,7 +16,6 @@
 <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezOrgan/TreeView.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendOffer_Cross.js')}"></script>
-<link rel="stylesheet" href="${util.addVer('/css/main_Cross.css')}"  type="text/css"/>
 <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css"/>
 <script type="text/javascript">
     var pDocID = "<c:out value ='${docID}'/>";
@@ -804,7 +804,7 @@
       </table>
 	  </td>
     <td style="width:25px;text-align:center"><img id="AprDeptAdd" alt="<spring:message code='ezApprovalG.t331'/>" src="/images/arr_right.gif" style="cursor:pointer" width="16" height="16" onClick="return AprDeptAdd_onclick()"><img id="AprDeptDel" alt="<spring:message code='ezApprovalG.t332'/>" src="/images/arr_left.gif" style="cursor:pointer" width="16" height="16" onClick="return AprDeptDel_onclick()"> </td>
-	<td><div class="listview" style="margin-top:38px" >
+	<td><div class="listview" style="margin-top:27px" >
 		<div ID="lvSelReceipt" STYLE="overflow:auto; border:0;	HEIGHT: 410px; WIDTH: 290px;margin:1px 1px 1px 1px"></div>
       </div></td>
   </tr>

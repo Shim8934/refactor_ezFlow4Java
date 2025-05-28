@@ -8,7 +8,8 @@
 	<head>
 		<title><spring:message code='ezJournal.t133' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="${util.addVer('ezJournal.c1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -209,7 +210,7 @@
 						<td>
 							<div id="lstAttachLink" style="OVERFLOW: auto; HEIGHT: 50px; background-color: white; text-align: left">
 								<c:forEach items="${journal.fileList }" var="file">
-									<div style="margin-top: 3px; height: 20px">
+									<div style="margin-top: 3px; height: auto !important;">
 										<c:set var="imagePath" value="/images/file.gif" />
 										<%-- <input type="checkbox" name="fileSelect" value="${file.fileName }"> --%>
 										<!-- 		            			<img src="/images/image.png">  -->

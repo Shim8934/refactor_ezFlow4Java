@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
 
+import org.json.simple.JSONObject;
 import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezBoard.vo.BoardAccessVO;
@@ -17,9 +20,16 @@ import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPollConfigVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
+import egovframework.ezEKP.ezBoard.vo.BoardThumbnailVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
+import egovframework.ezEKP.ezBoard.vo.BoardKeywordVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezBoard.vo.MealDataVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 public interface EzBoardService {
 
@@ -59,35 +69,35 @@ public interface EzBoardService {
 	
 	/* 2018-10-19 홍승비 - 익명게시물의 댓글 표출조건 gubun값 추가 */
 	/* 2018-07-02 홍승비 - 댓글 확인 시 작성자정보에 deptID 추가(작성자의 겸직정보 표시를 위해) */
-	public List<BoardLineReplyVO> readOneLineReply(String boardID, String itemID, String userName, String gubun, String companyID, int tenantID) throws Exception;
+	public List<BoardLineReplyVO> readOneLineReply(String boardID, String itemID, String lang, String gubun, String companyID, int tenantID, String sort) throws Exception;
 	
 	public List<BoardListVO> getUnreadItems(String pUserID, String pBoardID, int pMaxCount, int tenantID) throws Exception;
 	
-	public List<HashMap<String, Object>> getNewItemList(BoardListVO boardListVO) throws Exception;
+	public List<HashMap<String, Object>> getNewItemList(BoardListVO boardListVO, Map<String, String> orderByMap) throws Exception;
 
 	public List<HashMap<String, Object>> getNoticePostItem(BoardVO ezBoardVO, int personalCount) throws Exception;
 
-	public List<HashMap<String, Object>> getBoardListItem(String boardId, String userID, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, String type, int tenantID) throws Exception;
+	public List<HashMap<String, Object>> getBoardListItem(String boardId, String userID, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, Map<String, String> orderByMap, String type, int tenantID) throws Exception;
 	
-	public List<HashMap<String, Object>> getQnABoardListItem(String boardId, String userID, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, String type, String adminType, int tenantID) throws Exception;
+	public List<HashMap<String, Object>> getQnABoardListItem(String boardId, String userID, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, Map<String, String> orderByMap, String type, String adminType, int tenantID) throws Exception;
 	
-	public List<HashMap<String, Object>> getSearchBoardItemList(BoardListVO boardListVO, BoardVO boardVO) throws Exception;
+	public List<HashMap<String, Object>> getSearchBoardItemList(BoardListVO boardListVO, BoardVO boardVO, Map<String, String> searchMap, Map<String, String> orderByMap) throws Exception;
 	
-	public List<HashMap<String, Object>> getThumbnailList(BoardListVO boardListVO, BoardVO boardVO) throws Exception;
+	public List<HashMap<String, Object>> getThumbnailList(BoardListVO boardListVO, BoardVO boardVO, Map<String, String> orderByMap) throws Exception;
 	
-	public List<HashMap<String, Object>> getSearchThumbnailList(BoardListVO boardListVO, BoardVO boardVO) throws Exception;
+	public List<HashMap<String, Object>> getSearchThumbnailList(BoardListVO boardListVO, BoardVO boardVO, Map<String, String> searchMap, Map<String, String> orderByMap) throws Exception;
 	
 	public List<HashMap<String, Object>> getMyNoticePostItem(LoginVO userInfo, String type, int start, int end) throws Exception;
 	
-	public List<HashMap<String, Object>> getMyBoardListItem(LoginVO userInfo, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2) throws Exception;
+	public List<HashMap<String, Object>> getMyBoardListItem(LoginVO userInfo, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, Map<String, String> orderByMap) throws Exception;
 
-	public List<HashMap<String, Object>> getMyBoardListItemTemp(LoginVO userInfo, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2) throws Exception;
+	public List<HashMap<String, Object>> getMyBoardListItemTemp(LoginVO userInfo, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, Map<String, String> orderByMap) throws Exception;
 	
-	public List<HashMap<String, Object>> getApprBoardListItem(LoginVO userInfo, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2) throws Exception;
+	public List<HashMap<String, Object>> getApprBoardListItem(LoginVO userInfo, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, Map<String, String> orderByMap) throws Exception;
 	
-	public List<HashMap<String, Object>> getSearchMyBoardItemList(BoardListVO boardListVO, BoardVO boardVO) throws Exception;
+	public List<HashMap<String, Object>> getSearchMyBoardItemList(BoardListVO boardListVO, BoardVO boardVO, Map<String, String> searchMap, Map<String, String> orderByMap) throws Exception;
 
-	public List<HashMap<String, Object>> getSearchMyBoardItemListTemp(BoardListVO boardListVO, BoardVO boardVO) throws Exception;
+	public List<HashMap<String, Object>> getSearchMyBoardItemListTemp(BoardListVO boardListVO, BoardVO boardVO, Map<String, String> searchMap, Map<String, String> orderByMap) throws Exception;
 	
 	public List<BoardAccessVO> getPostNotiMailUserList(String boardID, String primary, int tenantID) throws Exception;
 	
@@ -132,7 +142,7 @@ public interface EzBoardService {
 	/* 2018-06-26 홍승비 - 승인게시물 표출 조건으로 companyID 추가 */
 	public String apprItem(String userID, String itemList, String pMod, String companyID, int tenantID) throws Exception;
 	
-	public String deleteOneLineReply(String id, String replyID, String guBun, int tenantID) throws Exception;
+	public String deleteOneLineReply(String id, String replyID, String itemID, String guBun, int tenantID) throws Exception;
 	
 	public String checkOneLineOwner(String replyID, String userID, int tenantID) throws Exception;
 	
@@ -164,7 +174,7 @@ public interface EzBoardService {
 	
 	public int getCheckApprUserList(String id, String itemID, int tenantID) throws Exception;
 	
-	public int getSearchBoardItemCount(BoardVO boardVO) throws Exception;
+	public int getSearchBoardItemCount(BoardVO boardVO, Map<String, String> searchMap) throws Exception;
 	
 	public int checkApprUserList(String userID, String itemID, int tenantID) throws Exception;
 	
@@ -174,9 +184,9 @@ public interface EzBoardService {
 	
 	public int getMyNoticePostItemCount(LoginVO userInfo) throws Exception;
 	
-	public int getSearchMyBoardItemCount(LoginVO userInfo, BoardVO boardVO) throws Exception;
+	public int getSearchMyBoardItemCount(LoginVO userInfo, BoardVO boardVO, Map<String, String> searchMap) throws Exception;
 
-	public int getSearchMyBoardItemCountTemp(LoginVO userInfo, BoardVO boardVO) throws Exception;
+	public int getSearchMyBoardItemCountTemp(LoginVO userInfo, BoardVO boardVO, Map<String, String> searchMap) throws Exception;
 	
 	public int getItemViewNew(String boardID, String itemID, int tenantID) throws Exception;
 	
@@ -196,7 +206,8 @@ public interface EzBoardService {
 	
 	public void brdUpdateItem(BoardListVO boardListVO, String mode) throws Exception;
 
-	public void saveOneLineReply(String itemID, String replyID, String boardID, LoginVO userInfo, String content, String password) throws Exception;
+	// 2023-11-07 전인하 - 게시판 > 댓글저장 메소드 동작 시 이모티콘 파라미터 추가
+	public void saveOneLineReply(String itemID, String replyID, String boardID, LoginVO userInfo, String content, String password, int replyLevel, String imageContent) throws Exception;
 	
 	public void setBoardList_Config(BoardConfigVO boardConfigVO) throws Exception;
 
@@ -241,7 +252,7 @@ public interface EzBoardService {
 
 	public String newItemPhoto(Document doc, String mode, String realPath, LoginVO userInfo, String mainImageID) throws Exception;
 
-	public boolean saveAttachmentsInfo(String attachments, String itemID, String boardID, String filePath, String strType, String realPath, int tenantID) throws Exception;
+	public boolean saveAttachmentsInfo(String attachments, String itemID, String boardID, String filePath, String strType, String realPath, int tenantID, String realFileNames) throws Exception;
 
 	public boolean saveMHT(String mainContent, String itemID, String boardID, String filePath, String string, String realPath) throws Exception;
 
@@ -267,13 +278,19 @@ public interface EzBoardService {
 
 	public void deleteReservedBoardItem(String realPath) throws Exception;
 
+	/* 2023-05-03 기민혁 - 나의 스크랩 삭제 스케줄러 */
+	public void deleteItemsScrap() throws Exception;
+
+	/* 2023-05-22 기민혁 - 스크랩함 삭제 스케줄러 */
+	public void deleteItemsScrapCont() throws Exception;
+
 	public String moveItem(String orgItemIDList, String orgBoardIDList, String destBoardID, LoginVO userInfo, String uploadFilePath, String realPath) throws Exception;
 
 	public String copyAttachments(String orgBoardID, String destItemID, String destBoardID, List<String> attachmentList, String path, String mode, int tenantID) throws Exception;
 
 	public String insertNewItem(Document doc, String pMode, String realPath, LoginVO userInfo) throws Exception;
 
-	public void copyFiles(String orgItemID, String orgBoardID, String destItemID, String destBoardID, String path, String mode) throws Exception;
+	public void copyFiles(String orgItemID, String orgBoardID, String destItemID, String destBoardID, String path, String mode, boolean hwpFile) throws Exception;
 
 	public String copyItem(String orgItemIDList, String orgBoardID, String destBoardID, String uploadFilePath, String realPath, LoginVO userInfo) throws Exception;
 
@@ -294,24 +311,24 @@ public interface EzBoardService {
 	public void moveOneLineReply(String orgBoardID, String orgItemID, String destBoardID, String destItemID) throws Exception;
 
 	//2018-06-07 김혜정
-	public List<HashMap<String, Object>> getSearchAllBoardItemList(LoginVO userInfo, BoardListVO boardListVO, BoardVO boardVO, ArrayList<String> listviewTrueList, ArrayList<String> qnaItemList, int pMode) throws Exception;
+	public List<HashMap<String, Object>> getSearchAllBoardItemList(LoginVO userInfo, BoardListVO boardListVO, BoardVO boardVO, ArrayList<String> listviewTrueList, ArrayList<String> qnaItemList, int pMode, Map<String, String> searchMap, Map<String, String> orderByMap, String keywordClick) throws Exception;
 
 	//2018-06-08 김혜정
-	public int getSearchAllBoardItemCount(LoginVO userInfo, BoardVO boardVO, ArrayList<String> listviewTrueList, ArrayList<String> qnaItemList, int pMode) throws Exception;
+	public int getSearchAllBoardItemCount(LoginVO userInfo, BoardVO boardVO, ArrayList<String> listviewTrueList, ArrayList<String> qnaItemList, int pMode, Map<String, String> searchMap, String keywordClick) throws Exception;
 	
 	//2018-06-11 홍승비
 	public String getLastImageID(String boardID, String itemID, int tenantID) throws Exception;
 	
 	//2018-06-28 홍승비 - 승인게시물 검색용 메서드 추가
-	public int getSearchApprBoardItemCount(LoginVO userInfo, BoardVO boardVO) throws Exception;
+	public int getSearchApprBoardItemCount(LoginVO userInfo, BoardVO boardVO, Map<String, String> searchMap) throws Exception;
 	
-	public List<HashMap<String, Object>> getSearchApprBoardItemList(BoardListVO boardListVO, BoardVO boardVO) throws Exception;
+	public List<HashMap<String, Object>> getSearchApprBoardItemList(BoardListVO boardListVO, BoardVO boardVO, Map<String, String> searchMap, Map<String, String> orderByMap) throws Exception;
 	
 	// 20181210 김윤진 - ezTalk Notice Board ID 가져오기.
 	public String getEzTalkGateNoticeBoardId(String companyID, int tenantID) throws Exception;
 	
 	/* 2019-01-15 홍승비 - 수정일(updateDate)만을 업데이트하는 쿼리 추가 */
-	public void modUpdateDate(String updateDate, String itemID, int tenantID) throws Exception;
+	public void modUpdateDate(String updateDate, String itemID, String userID, int tenantID) throws Exception;
 	
 	/* 2019-04-05 홍승비 - 좋아요 삽입 */
 	public void likeInsert(String userID, String itemID, int tenantID) throws Exception;
@@ -398,4 +415,170 @@ public interface EzBoardService {
 
 	/* 2023-10-17 박기범 - 특정 게시판에 대한 관리자 권한 여부 체크 메서드 */
 	boolean isBoardAdmin(String boardId, String userId, String deptId, String companyId, int tenantId, String rollInfo);
+
+	public void downloadBackgroundItemFile(HttpServletRequest request, HttpServletResponse response, String realPath, String filePath, String fileName) throws Exception;
+
+	Optional<BoardAttachVO> getBoardAttachByName(String itemID, String fileName, int tenantID) throws Exception;
+	
+	/* 2024-04-01 한태훈 - 게시판 > 게시판 즐겨찾기 추가한 유저 리스트 가져오는 메소드 */
+	public List<OrganUserVO> getFavoriteBoardUserList(String boardId, String companyId, int tenantId) throws Exception;
+
+	public boolean confirmBoardItemDeletion(String boardID, String itemID, int tenantId) throws Exception;
+	
+	public List<HashMap<String, Object>> getNoticePostItemList(String boardId, String userID, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, String type, int tenantID) throws Exception;
+
+	/* 2023-03-30 이가은 - 게시물 댓글의 답글 작성/수정기능 추가 > 댓글에 대한 답글 저장하는 메서드 */
+	public void saveOneLineChildReply(String itemID, String replyID, String boardID, LoginVO userInfo, String content, String password, String parentReplyID, int replyLevel, String parentWriterName, String imageContent) throws Exception;
+
+	/* 2023-03-30 이가은 - 게시물 댓글의 답글 작성/수정기능 추가 > 댓글 또는 답글 수정되었을 경우 업데이트하는 메서드 */
+	public void updateOneLineReply(String itemID, String boardID, String replyID, String content, String updateDate, int tenantID, String imageContent) throws Exception;
+
+	/* 2023-04-12 이가은 - 게시물 댓글의 답글 작성/수정기능 추가 > 댓글 삭제 시 자식 댓글 개수 리턴하는 메서드 */
+	public int getChildReplyCnt(String itemID, String boardID, String replyID, int tenantID) throws Exception;
+
+	/* 2023-04-12 이가은 - 게시물 댓글의 답글 작성/수정기능 추가 > 자식이 존재하는 부모댓글 삭제할 경우 해당 댓글 정보를 NULL로 변경해주는 메서드 */
+	public void updateDelParentReply(String replyID, String itemID, String boardID, int tenantID) throws Exception;
+
+	/* 2023-04-06 기민혁 - 싫어요 삽입 */
+	public void disLikeInsert(String userID, String itemID, int tenantID) throws Exception;
+	
+	/* 2023-04-06 기민혁 - 싫어요 삭제 */
+	public void disLikeDelete(String userID, String itemID, int tenantID) throws Exception;
+	
+	/* 2023-04-06 기민혁 - 싫어요 여부 체크 */
+	public String disLikeCheck(String userID, String itemID, int tenantID) throws Exception;
+	
+	/* 2023-04-06 기민혁 - 싫어요 갯수 가져오기 */
+	public int getDisLikeCount(String itemID, int tenantID) throws Exception;
+
+	/* 2023-04-06 기민혁 - 좋아요/싫어요 명단 호출 메서드 */
+	public String boardLikeAndDisLikeList(LoginVO userInfo, String pBoardID, String[] itemIDs) throws Exception;
+ 
+	/* 2024-08-23 전인하 - 게시판 > 게시글 작성 > 키워드 저장 메소드 */
+	public void saveKeyword(List<String> keywords, String boardID, String itemID, int tenantID) throws Exception;
+
+	/* 2024-08-23 전인하 - 게시판 > 게시물ID로 해당 게시물에 속한 키워드 반환 메소드 */
+	public List<BoardKeywordVO> selectBoardKeywordByBoardItem(String itemID, String boardID, int tenantId) throws Exception;
+
+    boolean chkPasswordAnonymous(String itemID, String password, int tenantID);
+
+	public int getAllBoardItemListCount(LoginVO userInfo) throws Exception;
+
+	public List<HashMap<String, Object>> getAllBoardItemList(BoardListVO boardListVO, Map<String, String> orderByMap) throws Exception;
+	
+	public String getContentlocation(String boardID, String itemID, int tenantId) throws Exception;
+	
+	/* 2023-05-03 기민혁 - 나의 스크랩 데이터 등록 */
+	public String setScrapItem(String userID, String itemID, String boardID, String companyID, int tenantID) throws Exception;
+
+	/* 2023-05-03 기민혁 - 나의 스크랩 등록 확인*/
+	public String getScrapItemCount(String userID, String itemID, String boardID, String companyID, int tenantID) throws Exception;
+
+	/* 2023-05-03 기민혁 - 나의 스크랩 목록 다중 해제 메서드*/
+	public String deleteScrapItem(String userID, String itemList, String companyID, int tenantID) throws Exception;
+
+	/* 2023-05-03 기민혁 - 나의 스크랩  해제 메서드*/
+	public String delScrapItem(String userID, String itemID, String boardID, String companyID, int tenantID) throws Exception;
+
+	/* 2023-05-03 기민혁 - 나의 스크랩 등록 item 리스트 호출*/
+	public List<HashMap<String, Object>> getMyBoardListItemScrap(LoginVO userInfo, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, ArrayList<String> scrapBoardListView_FG, Map<String, String> orderByMap) throws Exception;
+
+	/* 2023-05-03 기민혁 - 나의 스크랩 item totalcount*/
+	public int getMyBoardTotalItemCountScrap(LoginVO userInfo, ArrayList<String> scrapBoardListView_FG) throws Exception;
+
+	/* 2023-05-03 기민혁 - 나의 스크랩 검색 item totalcount*/
+	public int getSearchMyBoardItemCountScrap(LoginVO userInfo, BoardVO boardVO, ArrayList<String> scrapBoardListView_FG, Map<String, String> searchMap) throws Exception;
+
+	/* 2023-05-03 기민혁 - 나의 스크랩 검색 item 리스트 호출*/
+	public List<HashMap<String, Object>> getSearchMyBoardItemListScrap(BoardListVO boardListVO, BoardVO boardVO, ArrayList<String> scrapBoardListView_FG, Map<String, String> searchMap, Map<String, String> orderByMap) throws Exception;
+
+	/* 2023-05-03 기민혁 - 게시물 삭제시 scrap 목록 삭제*/
+	public void deleteBoardScrapItem(String itemList, String companyID, int tenantID) throws Exception;
+
+	/* 2023-05-22 기민혁 - 스크랩함 폴더 data 표출 */
+	public String getUserScrapContTree(String id, String string, String companyID, String lang, int tenantId, Locale locale) throws Exception;
+
+	/* 2023-05-22 기민혁 - 스크랩함 폴더 생성 */
+	public String insUserScrapCont(String ownUserID, String parentScrapContID, String ownUserName, String description, String companyID, String lang, int tenantId) throws Exception;
+
+	/* 2023-05-22 기민혁 - 스크랩함 폴더 변경 */
+	public String updateUserScrapCont(String scrapContID, String ownUserID, String parentScrapContID, String userScrapContName, String description, String companyID, String lang, int tenantId) throws Exception;
+
+	/* 2023-05-22 기민혁 - 스크랩함 폴더 삭제 */
+	public String deleteUserScrapCont(String pScrapContID, String pMode, String companyID, String lang, int tenantId) throws Exception;
+
+	/* 2023-05-22 기민혁 - 스크랩함 중복 스크랩 목록 확인 */
+	public int getOverlapItemCount(String id, String itemListID, String boardID, String userScrapContID, String companyID, int tenantID) throws Exception;
+
+	/* 2023-05-22 기민혁 - 스크랩함에 게시물 데이터 insert */
+	public String setUserScrapContItem(String id, String itemListID, String boardID, String userScrapContID, String companyID, int tenantId) throws Exception;
+
+	/* 2023-05-22 기민혁 - 스크랩함 게시물 스크랩 해제 */
+	public String deleteScrapContItemList(String userID, String itemList, String companyID, int tenantID, String contID) throws Exception;
+
+	/* 2023-05-22 기민혁 - 스크랩함 스크랩 item totalcount */
+	public int getUserScrapContlistCount(LoginVO userInfo, String scrapContID, ArrayList<String> scrapContBoardListView_FG) throws Exception;
+
+	/* 2023-05-22 기민혁 - 스크랩함 리스트 표출 */
+	public List<HashMap<String, Object>> getScrapContItemList(LoginVO userInfo, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, String scrapContID, ArrayList<String> scrapContBoardListView_FG, Map<String, String> orderByMap) throws Exception;
+
+	/* 2023-05-22 기민혁 - 스크랩함 검색결과 스크랩 item totalcount */
+	public int getSearchScrapContItemListCount(LoginVO userInfo, BoardVO boardVO, ArrayList<String> scrapContBoardListView_FG, Map<String, String> searchMap) throws Exception;
+
+	/* 2023-05-22 기민혁 - 스크랩함 검색리스트 표출 */
+	public List<HashMap<String, Object>> getSearchScrapContItemList(BoardListVO boardListVO, BoardVO boardVO, ArrayList<String> scrapContBoardListView_FG, Map<String, String> searchMap, Map<String, String> orderByMap) throws Exception;
+
+	/* 2023-05-22 기민혁 - 게시물 삭제시 scrapcont 목록 삭제 */
+	public void deleteBoardScrapContItem(String itemList, String companyID, int tenantID) throws Exception;
+
+	public List<HashMap<String, Object>> getUserScrapBoardList(String userID, int tenantID) throws Exception;
+
+	public List<HashMap<String, Object>> getUserScrapContBoardList(LoginVO userInfo, String scrapContID) throws Exception;
+	
+	// 2024-12-30 전인하 - 게시판 게시물 첨부파일저장 실행 
+	public boolean saveCommentAttachment(String strAttachments, String replyID, String strItemID, String strBoardID, String realPath, int tenantID) throws Exception;
+	
+	public List<BoardThumbnailVO> thumbnailViewDB(String itemID, String boardID, int pStartRow, int pEndRow, int tenantID) throws Exception;
+	
+	public void thumbnailUpdate(String imageID, String boardID, int tenantID, String ext, String oFileName, String addThumbnail) throws Exception;
+
+	/* 2024-09-05 이유정 - 게시판 > 최근게시물 리스트 카운트 메서드 */
+	public int getAllNewItemListCount(LoginVO userInfo) throws Exception;
+
+	/* 2024-09-05 이유정 - 게시판 > 최근게시물 리스트 메서드 */
+	public List<HashMap<String, Object>> getAllNewItemList(BoardListVO boardListVO, Map<String, String> orderByMap) throws Exception;
+	
+	public Map<String, Object> getWriterOption(LoginVO userInfo) throws Exception;
+
+	// 2024-10-24 조수빈 - 같은 리스트 형이나, 데이터를 저장하는 테이블이 달라 일반게시판과 포토게시판 조회 메소드를 분리함
+	public List<HashMap<String, Object>> getPhotoBoardListItem(String boardId, String id, int startRow, int endRow,
+			int boardCount, String orderOption1, String orderOption2, Map<String, String> orderByMap, String type, int tenantId, String boardType) throws Exception;
+
+	public List<BoardAttachVO> brdGetPhotoItemAttachmentInfo(String pItemID, int tenantID) throws Exception;
+
+	public void insertItemStarRating(String itemID, String userID, String rating, int tenantID, String companyID, String ratingDate) throws Exception;
+	
+	public void insertItemStarRatingSummary(String itemID, String totalRaters, String totalScore, String averageScore, int tenantID, String companyID) throws Exception;
+	
+	public void updateItemStarRating(String itemID, String userID, String rating, int tenantID, String companyID, String ratingDate) throws Exception;
+	
+	public void updateItemStarRatingSummary(String itemID, String totalRaters, String totalScore, String averageScore, int tenantID, String companyID) throws Exception;
+	
+	public void deleteStarRating(String itemID, int tenantID) throws Exception;
+	
+	public void deleteStarRatingSummary(String itemID, int tenantID) throws Exception;
+	
+	public Map<String, Object> getItemStarRating(String itemID, String userID, int tenantID) throws Exception;
+	
+	public Map<String, Object> saveItemStarRating(String itemID, String isReRated, int updateRating, LoginVO userInfo) throws Exception;
+	
+	// 2025-01-22 조수빈 - 식단 데이터 반환 메소드
+	public List<MealDataVO> getMealPlanList(Map<String, Object> map) throws Exception;
+
+	// 2025-01-22 조수빈 - 식단 데이터 저장 및 업데이트 메소드
+	public String saveMealPlan(List<MealDataVO> mealInputList) throws Exception;
+
+	public JSONObject getMenuSchedule(Map<String, Object> map, JSONObject returnJson) throws Exception;
+	
+	public String getBoardNameLocalizing(String userLang, BoardPropertyVO boardProperty) throws Exception;
 }

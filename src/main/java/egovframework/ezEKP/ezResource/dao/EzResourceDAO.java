@@ -10,6 +10,7 @@ import egovframework.ezEKP.ezResource.vo.ResAdminVO;
 import egovframework.ezEKP.ezResource.vo.ResBrdListVO;
 import egovframework.ezEKP.ezResource.vo.ResBrdVO;
 import egovframework.ezEKP.ezResource.vo.ResDateVO;
+import egovframework.ezEKP.ezResource.vo.ResFavoriteCategoryVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdmSubClsTreeVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdminFlagVO;
 import egovframework.ezEKP.ezResource.vo.ResGetClsAclListVO;
@@ -17,8 +18,9 @@ import egovframework.ezEKP.ezResource.vo.ResGetItemListVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
 import egovframework.ezEKP.ezResource.vo.ResGetSendMailToUserVO;
+import egovframework.ezEKP.ezResource.vo.ResOccuVO;
 import egovframework.ezEKP.ezResource.vo.ResSelectFormIDVO;
-import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzResourceDAO")
 public class EzResourceDAO extends EgovAbstractDAO {
@@ -138,6 +140,10 @@ public class EzResourceDAO extends EgovAbstractDAO {
 	
 	public String getBrdApproveFlag(Map<String, Object> map) {
 		return (String) select("EzResourceDAO.getBrdApproveFlag", map);
+	}
+
+	public String getBrdRepeatFlag(Map<String, Object> map) {
+		return (String) select("EzResourceDAO.getBrdRepeatFlag", map);
 	}
 	
 	public String getAclTblBrd_S1(Map<String, Object> map) {
@@ -373,5 +379,106 @@ public class EzResourceDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<ResGetClsAclListVO> getDeptAcl(Map<String, Object> map) {
 		return (List<ResGetClsAclListVO>) list("EzResourceDAO.getDeptAcl", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ResOccuVO> getResOccuList(Map<String, Object> map) {
+		return (List<ResOccuVO>) list("EzResourceDAO.getResOccuList", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ResOccuVO> getScheduleListRepetiti2(Map<String, Object> map){
+		return  (List<ResOccuVO>) list("EzResourceDAO.getScheduleListRepetiti2", map);
+	}
+	public String getNewFavoriteCategoryId() throws Exception{
+		return (String) select("EzResourceDAO.getNewFavoriteCategoryId");
+	}
+
+	public Object insertFavoriteCategory(Map<String, Object> map) throws Exception {
+		return insert("EzResourceDAO.insertFavoriteCategory", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ResFavoriteCategoryVO> selectFavoriteCategoryList(Map<String, Object> map) throws Exception {
+		return (List<ResFavoriteCategoryVO>) list("EzResourceDAO.selectFavoriteCategoryList", map);
+	}
+
+	public Object updateFavoriteCategory(Map<String, Object> map) throws Exception {
+		return update("EzResourceDAO.updateFavoriteCategory", map);
+	}
+
+	public void delFavoriteCategory(Map<String, Object> map) throws Exception {
+		delete("EzResourceDAO.delFavoriteCategory", map);
+	}
+
+	public void insertBrdFavoriteCategory(Map<String, Object> map) throws Exception {
+		insert("EzResourceDAO.insertBrdFavoriteCategory", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ResBrdVO> selectFavoriteBrdList(Map<String, Object> map) throws Exception {
+		return (List<ResBrdVO>) list("EzResourceDAO.selectFavoriteBrdList", map);
+	}
+
+	public int selectBrdFavoriteCategoryList(Map<String, Object> map) throws Exception {
+		return (int) select("EzResourceDAO.selectBrdFavoriteCategoryList", map);
+	}
+
+	public void updateFavoriteCategoryBrdYN(Map<String, Object> map) throws Exception {
+		update("EzResourceDAO.updateFavoriteCategoryBrdYN", map);
+	}
+
+	public void moveCategoryToCategory(Map<String, Object> map) throws Exception {
+		update("EzResourceDAO.moveCategoryToCategory", map);
+	}
+
+	public void deleteChildList(Map<String, Object> map) throws Exception {
+		delete("EzResourceDAO.deleteChildList", map);
+	}
+
+	public void deleteCatBrd(Map<String, Object> map) throws Exception {
+		delete("EzResourceDAO.deleteCatBrd", map);
+	}
+
+	public void moveBrdCategoryToCategory(Map<String, Object> map) throws Exception {
+		update("EzResourceDAO.moveBrdCategoryToCategory", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<String> checkChildYN(Map<String, Object> map) throws Exception {
+		return (List<String>) list("EzResourceDAO.checkChildYN", map);
+	}
+
+	public ResFavoriteCategoryVO selectFavoriteCategory(Map<String, Object> map) throws Exception {
+		return (ResFavoriteCategoryVO) select("EzResourceDAO.selectFavoriteCategory", map);
+	}
+
+	public int selectBrdCategoryCnt(Map<String, Object> map) throws Exception {
+		return (int) select("EzResourceDAO.selectBrdCategoryCnt", map);
+	}
+
+	public void deleteBrdFavoriteCategory(Map<String, Object> map) throws Exception {
+		delete("EzResourceDAO.deleteBrdFavoriteCategory", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<String> delBrdCatList(Map<String, Object> map) throws Exception {
+		return (List<String>) list("EzResourceDAO.delBrdCatList", map);
+	}
+	
+	public void delResData_F(Map<String, Object> map) throws Exception {
+		delete("EzResourceDAO.delResData_F", map);
+	}
+
+	public int selectBrdCnt(Map<String, Object> map) throws Exception {
+		return (int) select("EzResourceDAO.selectBrdCnt", map);
+	}
+
+	public void updateFavoriteCategoryBrdYN2(Map<String, Object> map) throws Exception {
+		update("EzResourceDAO.updateFavoriteCategoryBrdYN2", map);
+	}
+
+	public void delResDataForm(Map<String, Object> map) throws Exception {
+		delete("EzResourceDAO.delResDataForm", map);
 	}
 }

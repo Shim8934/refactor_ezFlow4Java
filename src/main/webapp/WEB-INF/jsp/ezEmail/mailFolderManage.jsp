@@ -7,7 +7,8 @@
 		<title><spring:message code='ezEmail.t455' /></title>
         <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
 		<link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
-		<link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<style>
 			.node_normal, .node_selected { width: auto;}
 			.node_div img {margin-bottom:5px}
@@ -46,7 +47,7 @@
 			    CurrenWidth = document.body.clientWidth;
 			    try {
 			        ReturnFunction = opener.mail_foldermanage_Cross_dialogArguments[1];
-			    } catch (e) { }
+			    } catch (e) {console.log(e);}
                 PostTreeView = new TreeView('PostTreeView', 'PostTreeView');
                 PostTreeView.attachEvent('requestdata', requestdata);
                 PostTreeView.attachEvent('nodedblclick', function () { PostTreeView.toggle(PostTreeView.selectedIndex()) });
@@ -115,7 +116,7 @@
 		        
 		        var childxml = get_childXML(PostTreeView.getvalue(PostTreeView.selectedIndex(), "href"), false, false, true);
                 PostTreeView.putchildxml(PostTreeView.selectedIndex(), childxml);
-                
+				LoadAddressTree(PostTreeView.selectedIndex());
 		        EventCheck = true;
 		    }
 		    
@@ -373,9 +374,15 @@
 		    
 			function LoadAddressTree(idx) {
 		        PostTreeView.config(treeconfig);
-		        PostTreeView.source("<tree><nodes>" + get_childXML("", true, false, true) + "</nodes></tree>");
+		        PostTreeView.source("<tree><nodes>" + get_childXML("", false, false, true) + "</nodes></tree>");
 		        PostTreeView.update();
 		        PostTreeView.toggle(idx);
+				
+				if (typeof getAllSubTree === 'undefined' || getAllSubTree === false) {
+					getAllSubTree = true;
+				}
+				var openTree = document.getElementById('toggleTreeNode')
+				openTree.className = openTree.className.replace('on', 'off');
 		    }
 			
 			// 2016-12-28 이효민 추가
@@ -386,17 +393,6 @@
 				} else {
 					return true;
 				}
-			}
-			
-			function HiddenMailProgress() {
-			    document.getElementById("mailPanel").style.display = "none";
-			    document.getElementById("MailProgress").style.display = "none";
-			}
-			function ShowMailProgress() {
-			    //document.getElementById("mailPanel").style.display = "";
-			    document.getElementById("MailProgress").style.top = (CurrentHeight / 2) + "px";
-			    document.getElementById("MailProgress").style.left = (CurrenWidth / 2) - 100 + "px";
-			    document.getElementById("MailProgress").style.display = "";
 			}
 			
 			function subscribe_onclick() {
@@ -520,10 +516,14 @@
 		    	<li><span onClick="manageClose()"></span></li>
 		  	</ul>
 		</div>
-		<table class="popuplist" style="width:100%;margin-top:5px">
+		<table class="popuplist" style="width:100%;margin-top:5px; height: 100%">
 			<tr>
 		    	<td>
-		        	<div style="height:390px;width:100%;overflow-x:auto;overflow-y:auto;background-color:#FFFFFF;padding-left:2px;padding-top:5px;" id="PostTreeView">
+					<div onclick="toggleTreeNode(true)" class="toggleTreeNode off" id="toggleTreeNode">
+                    <span class="treeNode_toggle_icon"></span>
+						<spring:message code='ezEmail.kdh06' />
+					</div>
+		        	<div style="height:390px;width:100%;max-height:370px;overflow-x:auto;overflow-y:auto;background-color:#FFFFFF;padding-left:2px;padding-top:5px;" id="PostTreeView">
 					</div>
 		    	</td>
 		  	</tr>
@@ -541,7 +541,7 @@
 		    <a class="imgbtn"><span onClick="subscribe_onclick()" style="text-align:center;"><spring:message code='ezEmail.lhm71' /></span></a>
 		</div>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
-		<div style="width:200px;height:50px;border:0px solid red;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="MailProgress">
+		<div style="border:0px solid red;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="MailProgress">
 		    <img src="/images/email/progress_img.gif" style="vertical-align:middle;"/>
 		</div>
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

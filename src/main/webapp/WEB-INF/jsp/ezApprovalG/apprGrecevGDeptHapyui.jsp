@@ -7,7 +7,9 @@
 	<head>
 		<title><spring:message code='ezApprovalG.t1308'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
+		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -22,6 +24,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/appandbody_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/CheckLines_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/apprGSummary.js')}"></script>
 		<script type="text/javascript" id="clientEventHandlersJS" >
 			var pDocID = "${docID}";
 			var DraftFlag = "${draftFlag}";
@@ -138,7 +141,14 @@
 
 			// 2023-05-25 조수빈 - 전자결재 첨부파일 미리보기 사용 여부
 			var useAprFilePrvw = "<c:out value ='${useAprFilePrvw}'/>";
-	        
+
+			/* 2024-07-18 양지혜 - 상위부서문서함 관련 */
+			var upperDeptCode = "<c:out value ='${upperDeptCode}'/>";
+			var upperDeptName = "<c:out value ='${upperDeptName}'/>";
+			
+			// 창마다 고유한 id 지정용
+			var windowUuid = getRandomId();
+
 			window.onload = function () {
 				// 일반첨부, 대용량첨부파일 관련 가이드 메세지 추가
 				setAttachGuideText();
@@ -364,7 +374,7 @@
 		        if (flag == false) {
 		            flag = true;
 		            IsSkipDrafter = "TRUE";
-		            DeptSymbol = getDeptSymbol(arr_userinfo[4], arr_userinfo[5]);
+					DeptSymbol = getDeptSymbol(arr_userinfo[4], arr_userinfo[5]);
 		            drafterDeptid = arr_userinfo[4];
 		            SetBtnStateTrue();
 		            getReceiveDocInfo();
@@ -686,7 +696,7 @@
 		        DivPopUpHidden();
 		        if (Ans) {
 		            //기록물철 선택과정에서 버그가 있어 파라미터를 14로 수정. 2019-03-12 홍대표
-		        	btnApprovalInfo("14");
+		        	btnApprovalInfo("15");
 		            return;
 		        }
 		        else {
@@ -919,7 +929,7 @@
 		        ezapprovalinfo_dialogArguments[0] = parameter;
 		        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;		
 		
-		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&docType=" + pDocType, "ezApprovalInfo", GetOpenWindowfeature(1194, 750));
+		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&docType=" + pDocType, "ezApprovalInfo-" + windowUuid, GetOpenWindowfeature(1210, 750));
 
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
@@ -1272,7 +1282,8 @@
 		    <td style="height:20px"><div id="menu">
 				<%-- 2022-06-23 홍승비 - 전자결재 미리보기 영역에서 문서보기 페이지 접근 시, 모든 버튼을 ul 태그부터 숨김처리 --%>
 		        <ul <c:if test="${isPreview == 'Y'}">style="display:none"</c:if>>
-		          <li id="btntotaldocinfo"><span onClick="return btnApprovalInfo('14')" ><spring:message code="ezApprovalG.t1742"/></span></li>
+		          <li id="btntotaldocinfo"><span onClick="return btnApprovalInfo('15')" ><spring:message code="ezApprovalG.t1742"/></span></li>
+		          <li id="btnSummary"><span onclick="return btnSummaryEdit()"><spring:message code='ezApprovalG.t1203'/></span></li> <%-- 요약전 --%>
 		          <span style ="display:none" ><li id="btnSetAprLine"> <span onclick="return btnSetAprLine_onclick()" ><spring:message code='ezApprovalG.t153'/></span></li></span>
 		          <li id="btnSendDraft"> <span onclick="return btnSendDraft_onclick()" ><spring:message code='ezApprovalG.t156'/></span></li>
 		          <li id="btnReturn"><span onclick="return btnReturn_onclick()"><spring:message code='ezApprovalG.t1434'/></span></li>
@@ -1348,5 +1359,6 @@
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
+		<div id="RECEIPTDEPTID" style="display: none"></div>
 	</body>
 </html>

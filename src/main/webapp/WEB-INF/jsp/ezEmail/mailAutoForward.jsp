@@ -8,7 +8,8 @@
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
-	    <link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+	    <link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 	    <script type="text/javascript">
 		    var g_UserID = "${userId}";
 		    var g_Email = "${userEmail}";
@@ -174,14 +175,15 @@
 	        function SelectReceiver_onClick() {
 	            var type = "auto";
 	            var receiverData = new Array();
+				var cursorType = "p"; // 커서 타입을 pointer로 지정해주기 위해 파라미터 추가
 	            
 	            receiverData["addReceiver"] = addReceiver;
 	            receiverData["window"] = this;
 	            mail_newreceiverchoose_dialogArguments[0] = receiverData;
 	            mail_newreceiverchoose_dialogArguments[1] = addReceiver;
 	            
-	            var OpenWin = window.open("/ezEmail/mailNewReceiverChoose.do?defaultwin=&type=" + type + "&rulekind=" + "", "mail_foldermanage_Cross", GetOpenWindowfeature(1120, 650));
-	            try { OpenWin.focus(); } catch (e) { }
+	            var OpenWin = window.open("/ezEmail/mailNewReceiverChoose.do?defaultwin=&type=" + type + "&rulekind=" + "" + "&cursorType=" + cursorType, "mail_foldermanage_Cross", GetOpenWindowfeature(1120, 700));
+	            try { OpenWin.focus(); } catch (e) {console.log(e);}
 	        }
 	
 	        function addReceiver(strEmail) {

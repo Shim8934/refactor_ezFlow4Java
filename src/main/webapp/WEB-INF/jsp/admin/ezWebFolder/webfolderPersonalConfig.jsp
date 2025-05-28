@@ -7,7 +7,8 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
-		<link rel="stylesheet" href="${util.addVer('ezWebFolder.i1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('ezWebFolder.e1', 'msg')}"></script>
 		<link rel="stylesheet" href="${util.addVer('/css/ezWebFolder/webfolder.css')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/css/jquery.lineProgressbar.css')}" type="text/css">
@@ -534,6 +535,13 @@
 					}
 				}
 			}
+			
+			function isEnter(e) {
+				
+				if (e.code == 'Enter' || e.code == 'NumpadEnter') {
+					startSearch();
+				}
+			}
 		</script>
 	</head>
 	<body class="mainbody" onresize="preProcessing();" onkeydown="keyPressPanel(event);">
@@ -582,7 +590,7 @@
 												<option id="departmentOption" value="deptName"><spring:message code='ezWebFolder.t142' /></option>
 												<option id="userOption" value="displayName"><spring:message code='ezWebFolder.t143' /></option>
 											</select>
-											<input id="inputSearch" type="text" style="flex: 1; height: 23px; margin: 2px 5px; padding: 0px 5px; border-radius: 3px; border: 1px solid #ddd;">
+											<input id="inputSearch" onkeypress="isEnter(event)" type="text" style="flex: 1; height: 23px; margin: 2px 5px; padding: 0px 5px; border-radius: 3px; border: 1px solid #ddd;">
 										</div>
 									</td>
 								</tr>

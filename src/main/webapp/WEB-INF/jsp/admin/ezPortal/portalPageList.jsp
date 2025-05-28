@@ -7,7 +7,8 @@
 	<head>
 		<title>portalpage_list</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-		<link rel="stylesheet" href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<style>
 	    	.mainlist tbody tr td:nth-child(2) {
 	    		padding-left:15px;
@@ -139,23 +140,23 @@
 		        PagingHTML += strtext;
 		        
 		        if (g_totalPage > 1 && g_intPage != 1) {
-		            strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' ></span>";
+		            strtext = "<span class='btnimg first' onclick= 'return goToPageByNum(1)'></span>";
 		            PagingHTML += strtext;
 		        } else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>";
+		            strtext = "<span class='btnimg first disabled'></span>";
 		            PagingHTML += strtext;
 		        }
 		        
 		        if (g_totalPage > BlockSize) {
 		            if (g_intPage > BlockSize) {
-		                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' ></span>";
+		                strtext = "<span class='btnimg prev' onclick= 'return selbeforeBlock()'></span>";
 		                PagingHTML += strtext;
 		            } else {
-		                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+		                strtext = "<span class='btnimg prev disabled'></span>";
 		                PagingHTML += strtext;
 		            }
 		        } else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+		            strtext = "<span class='btnimg prev disabled'></span>";
 		            PagingHTML += strtext;
 		        }
 		        
@@ -185,24 +186,24 @@
 		        if (g_totalPage > BlockSize) {
 		            if (g_totalPage >= parseInt(((parseInt((g_intPage - 1) / BlockSize) + 1) * BlockSize) + 1)) {
 		                strtext = "";
-		                strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' ></span>";
+		                strtext = strtext + "<span class='btnimg next' onclick='return selafterBlock()'></span>";
 		                PagingHTML += strtext;
 		            } else {
 		                strtext = "";
-		                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+		                strtext = strtext + "<span class='btnimg next disabled'></span>";
 		                PagingHTML += strtext;
 		            }
 		        } else {
 		            strtext = "";
-		            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+		            strtext = strtext + "<span class='btnimg next disabled'></span>";
 		            PagingHTML += strtext;
 		        }
 		        
 		        if (g_totalPage > 1 && g_totalPage != 1 && (g_totalPage != g_intPage)) {
-		            strtext = "<span class='btnimg' onclick='return goToPageByNum(" + g_totalPage + ")'><img src='/images/sub/btn_n_next.gif' ></span>";
+		            strtext = "<span class='btnimg last' onclick='return goToPageByNum(" + g_totalPage + ")'></span>";
 		            PagingHTML += strtext;
 		        } else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
+		            strtext = "<span class='btnimg last disabled'></span>";
 		            PagingHTML += strtext;
 		        }
 		        

@@ -4,7 +4,8 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 	</head>
 	<frameset cols="158,*" border="0" framespacing="0" frameborder="NO">
 		<frame src="${lUrl}" name="left" frameborder="NO" scrolling="auto" noresize marginwidth="0" marginheight="0">

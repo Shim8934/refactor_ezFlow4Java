@@ -5,7 +5,8 @@
 <html>
 	<head>
 	    <title><spring:message code="ezPersonal.yej04"/></title>
-	    <link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+	    <link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('/js/ezEmail/Controls/ezSearchDatePicker.htc')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('main.lhm01', 'msg')}" type="text/css">
@@ -43,9 +44,6 @@
 	    	#countInfo {
 	    		overflow: hidden;
 	    		display: inline-block;
-	    	}
-	    	.countColor {
-	    		color:#017BEC;
 	    	}
 	    </style>
 	    <script>
@@ -117,6 +115,7 @@
                 createNodeAndInsertText(xmlpara, objNode, "PROP", "mail");
                 createNodeAndInsertText(xmlpara, objNode, "ADMINDIST", "true");
                 createNodeAndInsertText(xmlpara, objNode, "DISPLAYTRASHDEPT", "true");
+                createNodeAndInsertText(xmlpara, objNode, "ADMINORGAN", "y");
 	            xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
 	            xmlHTTP.send(xmlpara);
 	            ListTypeChangeIcon();
@@ -307,6 +306,7 @@
 	            
 	            createNodeInsert(xmlpara, objNode, "DATA");
 	            createNodeAndInsertText(xmlpara, objNode, "DEPTID", deptID);
+	            createNodeAndInsertText(xmlpara, objNode, "ADMINORGAN", "y");
 	            createNodeAndInsertText(xmlpara, objNode, "PROP", "mail;displayName");
 	
 	            xmlHTTP.open("POST", "/ezOrgan/getDeptSubTreeInfo.do", false);
@@ -346,7 +346,7 @@
 		        	dataType : "text",
 		        	url : "/ezOrgan/getDeptMemberList.do",
 		        	async : true,
-		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department", type : "user"},
+		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department", type : "user",  adminOrgan : "y"},
 		        	success : function(result){
 		        		var resultXML = loadXMLString(result);
 		        		var headerData = createXmlDom();
@@ -383,7 +383,8 @@
 					method : "POST",
 					dataType : "json",
 					data : {
-						deptID : DeptID
+						deptID : DeptID,
+						adminOrgan : "y"
 					},
 					success : function(result) {
 						if (SelectDeptNM.getAttribute("countinfo") != "1" && !pSeach ) {
@@ -391,9 +392,9 @@
 							var strIsLeaf = $("div#" + id + "").attr("isleaf");
 							
 							if (result.containLow == "YES" && strIsLeaf != "TRUE") { //하위가 있고, 표기방식이 [1명/ 전체10명]일 경우
-			        			document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='countColor'>" + result.totalCount + "</span> / <span class='countColor'>" + parseInt(result.totalCount + result.totalCount2) + "</span>";
+			        			document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='txt_color'>" + result.totalCount + "</span> / <span class='txt_color'>" + parseInt(result.totalCount + result.totalCount2) + "</span>";
 							} else {
-								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='countColor'>" + result.totalCount + "</span>";
+								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='txt_color'>" + result.totalCount + "</span>";
 							}
 							//2018-08-01 김보미 - 부서명 [사원수] 가 넘치는지 확인하는 함수
 							deptNameLong(result.containLow, strIsLeaf);
@@ -484,7 +485,8 @@
 		        		<c:if test="${useShowAllCompanies eq 'YES'}">
 		    			company : "",
 		                </c:if>		        			
-		    			type : "user"
+		    			type : "user",
+						adminOrgan : "y"
 		        	},
 		        	success : function(result){	
 		        		var headerData = createXmlDom();
@@ -553,7 +555,8 @@
 		        		search : "displayname::" + encodeURIComponent(searchWord), 
 		        		cell : "extensionAttribute3;displayName;extensionAttribute9;", 
 		        		prop : "cn", 
-		        		type : "group"
+		        		type : "group",
+						adminOrgan : "y"
 		        	},
 		        	success : function(result){	
 		        		xmlDOM = loadXMLString(result);
@@ -573,9 +576,9 @@
 	                g_xmlHTTP = createXMLHttpRequest();
 	
 	                if (CrossYN()) {
-	                    var strQuery = "<DATA><DEPTID>" + xmlDOM.getElementsByTagName("DATA2").item(0).textContent + "</DEPTID><TOPID>Top</TOPID><PROP></PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
+	                    var strQuery = "<DATA><DEPTID>" + xmlDOM.getElementsByTagName("DATA2").item(0).textContent + "</DEPTID><TOPID>Top</TOPID><PROP></PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT><ADMINORGAN>y</ADMINORGAN></DATA>";
 	                } else {
-	                    var strQuery = "<DATA><DEPTID>" + xmlDOM.getElementsByTagName("DATA2").item(0).text + "</DEPTID><TOPID>Top</TOPID><PROP></PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
+	                    var strQuery = "<DATA><DEPTID>" + xmlDOM.getElementsByTagName("DATA2").item(0).text + "</DEPTID><TOPID>Top</TOPID><PROP></PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT><ADMINORGAN>y</ADMINORGAN></DATA>";
 	                }
 	
 	                g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
@@ -598,7 +601,7 @@
 	                    if (rgParams["deptid"] != "") {
 	                        bSearch = true;
 	                        g_xmlHTTP = createXMLHttpRequest();
-	                        var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
+	                        var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT><ADMINORGAN>y</ADMINORGAN></DATA>";
 	                        g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 	                        g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 	                        g_xmlHTTP.send(strQuery);
@@ -611,7 +614,7 @@
 	            if (rgParams["deptid"] != "") {
 	                bSearch = true;
 	                g_xmlHTTP = createXMLHttpRequest();
-	                var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
+	                var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT><ADMINORGAN>y</ADMINORGAN></DATA>";
 	                g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 	                g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 	                g_xmlHTTP.send(strQuery);
@@ -816,11 +819,11 @@
 	            var UserListHTML = "";
 
 	           /*  if (SelectDeptNM.getAttribute("countinfo") != "1" && SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length && SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length != "") {
-	                //SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang1 + "</span>]";
+	                //SelectDeptNM.innerHTML += "-[<span class='txt_color'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang1 + "</span>]";
 	                if (SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length ==  getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0])) {
-	        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang1 + "</span>]";
+	        			SelectDeptNM.innerHTML += "-[<span class='txt_color'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang1 + "</span>]";
 	        		} else {
-	        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + "/" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0]) + strLang1 + "</span>]";
+	        			SelectDeptNM.innerHTML += "-[<span class='txt_color'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + "/" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0]) + strLang1 + "</span>]";
 	        		}
 	                
 	                SelectDeptNM.setAttribute("countinfo", "1")
@@ -832,7 +835,7 @@
 	                document.getElementById("Search_txtlist_table").style.display = "none";
 	                
 	                if (pSeach) {
-	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + "<spring:message code='ezEmail.t655' />" + "" + "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang1 + "</span>]";
+	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + "<spring:message code='ezEmail.t655' />" + "" + "-[<span class='txt_color'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang1 + "</span>]";
 	                    SelectDeptNM.setAttribute("countinfo", "1")
 	                }
 	            } else {
@@ -845,7 +848,7 @@
 	                } else {
 	                    document.getElementById("Search_txtlist_table").style.display = "";
 	                    document.getElementById("txtlist_table").style.display = "none";
-	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + "<spring:message code='ezEmail.t655' />" + "" + "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang1 + "</span>]";
+	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + "<spring:message code='ezEmail.t655' />" + "" + "-[<span class='txt_color'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang1 + "</span>]";
 	                    SelectDeptNM.setAttribute("countinfo", "1")
 	                }
 	            }

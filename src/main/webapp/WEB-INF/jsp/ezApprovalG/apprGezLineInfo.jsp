@@ -7,7 +7,12 @@
 		<title>
 			<c:choose>
 				<c:when test="${docState == '015'}">
-					<spring:message code='ezApprovalG.t1214'/>
+			        <c:if test="${approvalFlag == 'G'}">
+					    <spring:message code='ezApprovalG.t1214'/>
+			        </c:if>
+			        <c:if test="${approvalFlag == 'S'}">
+					    <spring:message code='ezApprovalG.sendGongram03'/>
+			        </c:if>
 				</c:when>
 				<c:otherwise>
 					<spring:message code='ezApprovalG.t1215'/>
@@ -15,7 +20,8 @@
 			</c:choose>
 		</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 		<style>
 			.mainlist tr th {
@@ -39,6 +45,16 @@
 		    var tempDocID;
 		    var tempGDocID;
 		    var OrderCell = "";
+		    var ezapralert_cross_dialogArguments = new Array();
+		    var ezapropinion_cross_dialogArguments = new Array();
+		    
+		    //2023-05-16 임정은 - 공람 회수
+		    var count;
+		    var aprMemberSN;
+
+			// 의견 모달창을 띄우기 위한 companyID
+			var orgCompanyID = "<c:out value ='${companyID}'/>";
+
 		    window.onload = function () {
 		        try {
 		            var xmlpara = createXmlDom();
@@ -73,12 +89,51 @@
 		            alert("window_onload : " + e.description);
 		        }
 		    };
-		    function OpenAlertUI(pAlertContent) {
+		    function OpenAlertUI(pAlertContent, CompleteFunction) {
 		        var parameter = pAlertContent;
 		        var url = "/ezApprovalG/ezAprAlert.do";
-		        var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
-		        feature = feature + GetShowModalPosition(330, 205);
-		        var RtnVal = window.showModalDialog(url, parameter, feature);
+
+		        if (CrossYN()) {
+		            ezapralert_cross_dialogArguments[0] = parameter;
+		            ezapralert_cross_dialogArguments[2] = true;
+		            if (CompleteFunction != undefined)
+		                ezapralert_cross_dialogArguments[1] = CompleteFunction;
+		            else
+		                ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
+		            DivPopUpShow(330, 205, url);
+		        }
+		        else {
+		            var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
+		            feature = feature + GetShowModalPosition(330, 205);
+		            var RtnVal = window.showModalDialog(url, parameter, feature);
+		        }
+		    }
+		    function OpenAlertUI_Complete() {
+		        DivPopUpHidden();
+		    }
+		    function OpenInformationUI(pInformationContent, CompleteFunction) {
+		        var parameter = pInformationContent;
+		        var url = "/ezApprovalG/ezAprOpinion.do";
+		        if (CrossYN()) {
+		            ezapropinion_cross_dialogArguments[0] = parameter;
+		            ezapropinion_cross_dialogArguments[2] = true;
+		            if (CompleteFunction != undefined) {
+		                ezapropinion_cross_dialogArguments[1] = CompleteFunction;
+		            } else {
+		                ezapropinion_cross_dialogArguments[1] = OpenInformationUI_Complete;
+		            }
+		            DivPopUpShow(330, 205, url);
+		        } else {
+		            var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
+		            feature = feature + GetShowModalPosition(330, 205);
+		            var RtnVal = window.showModalDialog(url, parameter, feature);
+		            if (RtnVal)
+		                CompleteFunction(RtnVal);
+		        }
+		        return RtnVal;
+		    }
+		    function OpenInformationUI_Complete() {
+		        DivPopUpHidden();
 		    }
 		    function getAprLine(tempDocID) {
 		        $.ajax({
@@ -180,9 +235,26 @@
 		        }
 		    }
 		    function lvAprLine_DBSelChange() {
-		        if (pDocInfoValue == "1" || pDocInfoValue == "5")
+		        if (pDocInfoValue == "1" || pDocInfoValue == "5") {
 		            openUserInfo();
+				} else if (pDocInfoValue == "4") { // 의견 탭
+					btnOpinion_onclick();
+				}
 		    }
+			var aprendopinion_dialogArgument = new Array();
+			function btnOpinion_onclick() {
+				var parameter = new Array();
+				parameter[0] = tempDocID;
+				parameter[1] = "Show";
+				parameter[2] = orgCompanyID;
+
+				aprendopinion_dialogArgument[0] = parameter;
+				aprendopinion_dialogArgument[1] = openOpinionUI_Complete;
+				DivPopUpShow(430, 420, "/ezApprovalG/aprEndOpinion.do?resize=true");
+			}
+			function openOpinionUI_Complete() {
+				DivPopUpHidden();
+			}
 		    function openUserInfo() {
 		        var listview = new ListView();
 		        listview.LoadFromID("AprLine");
@@ -317,13 +389,68 @@
             		tab3.className = "tabon";
             	}
             }
+		    
+			// 2023-05-16 임정은 - 공람 회수 버튼 온클릭 이벤트
+		    function btnWithdraw_onclick() {
+		        // 의견탭에서 공람회수 기능 제외처리
+		        if ($('.tabon')[0].parentElement.id != "tagsub1") return;
+		        
+		 		var pAlertContent = "";
+		    	var listview = new ListView();
+		        listview.LoadFromID("AprLine");
+		        var tr = listview.GetSelectedRows();
+		        
+		        if (tr.length == 0) return;
+		        
+	        	if (tr[0].getAttribute("data12") != "002") {
+	        	    if ("<c:out value ='${approvalFlag}'/>" == 'G') {
+	        		    pAlertContent = "<spring:message code='ezApprovalG.LJEAppr04'/>";
+	        	    } else {
+	        		    pAlertContent = "<spring:message code='ezApprovalG.sendGongram05'/>";
+	        	    }
+	        		OpenAlertUI(pAlertContent);
+	        	} else {
+			        count = listview.GetDataRows().length;
+			        aprMemberSN = tr[0].firstChild.innerText;
+	        	    if ("<c:out value ='${approvalFlag}'/>" == 'G') {
+	        		    pAlertContent = "<spring:message code='ezApprovalG.LJEAppr05'/>";
+	        	    } else {
+	        		    pAlertContent = "<spring:message code='ezApprovalG.sendGongram06'/>";
+	        	    }
+	        		OpenInformationUI(pAlertContent, btnWithdraw_onclick_Complete);
+	        	}
+		    }
+		 	function btnWithdraw_onclick_Complete(ret) {
+		 		DivPopUpHidden();
+		 		if (ret) {
+		 			$.ajax({
+			    		type : "POST",
+			    		dataType : "text",
+			    		async : false,
+			    		url : "/ezApprovalG/gongRamCancel.do",
+			    		data : {
+			    				docID : tempDocID,
+			    				count : count,
+			    				aprMemberSN : aprMemberSN
+			    				},
+			    		success: function(xml){
+			    			window.location.reload();
+			    		}
+			    	});
+		 		}
+		 	}
 		</script>
 	</head>
 	<body class="popup" style="overflow:hidden;">
 		<h1>
 			<c:choose>
 				<c:when test="${docState == '015'}">
-					<spring:message code='ezApprovalG.t1214'/>
+				    <c:if test="${approvalFlag == 'G'}">
+					    <spring:message code='ezApprovalG.t1214'/>
+				    </c:if>
+				    <c:if test="${approvalFlag == 'S'}">
+					    <spring:message code='ezApprovalG.sendGongram03'/>
+				    </c:if>
 				</c:when>
 				<c:otherwise>
 					<spring:message code='ezApprovalG.t1215'/>
@@ -357,7 +484,12 @@
        		<div class="portlet_tabpart01_top" style="border-bottom:0px;">
 	       		<c:choose>
 					<c:when test="${docState == '015'}">
-		       			<p id="tagsub1"><span onclick="pDocInfoValue='1';MM_swapImagesub('1');Approval_onclick()"class="tabon"><spring:message code='ezApprovalG.t946'/></span></p>
+					    <c:if test="${approvalFlag == 'G'}">
+		       			    <p id="tagsub1"><span onclick="pDocInfoValue='1';MM_swapImagesub('1');Approval_onclick()"class="tabon"><spring:message code='ezApprovalG.t946'/></span></p>
+                        </c:if>
+					    <c:if test="${approvalFlag == 'S'}">
+		       			    <p id="tagsub1"><span onclick="pDocInfoValue='1';MM_swapImagesub('1');Approval_onclick()"class="tabon"><spring:message code='ezApprovalG.sendGongram03'/></span></p>
+                        </c:if>
 					</c:when>
 					<c:otherwise>
 		       			<p id="tagsub1"><span onclick="pDocInfoValue='1';MM_swapImagesub('1');Approval_onclick()"class="tabon"><spring:message code='ezApprovalG.t1769'/></span></p>
@@ -367,9 +499,22 @@
        			<c:if test="${approvalFlag == 'G'}">
 	       			<p id="tdGongRam" style="display:none"><span id="tagsub5" onclick="pDocInfoValue='5';MM_swapImagesub('5');GongRamInfo_onClick()"><spring:message code='ezApprovalG.t946'/></span></p>
        			</c:if>
+				<c:if test="${docState == '015'}">
+       			    <c:if test="${approvalFlag == 'G'}">
+       			        <input type="button" id="btnWithdraw" name="btnWithdraw" value="<spring:message code='ezApprovalG.LJEAppr03'/>" style="float:right; width:80px; padding:2px; cursor:pointer;" onclick="btnWithdraw_onclick()">
+       		        </c:if>
+       			    <c:if test="${approvalFlag == 'S'}">
+       			        <input type="button" id="btnWithdraw" name="btnWithdraw" value="<spring:message code='ezApprovalG.sendGongram04'/>" style="float:right; <c:if test="${lang == '2'}">width:150px;</c:if> <c:if test="${lang != '2'}">width:80px;</c:if> padding:2px; cursor:pointer;" onclick="btnWithdraw_onclick()">
+       		        </c:if>
+				</c:if>
        		</div>
        	</div>
        	
 		<div class="listview" style="overflow-x:auto;width:100%;"><div id="lvAprLine" style="HEIGHT:360px;WIDTH:100%;"></div></div>
+		
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
+		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+		</div>
 	</body>
 </html>

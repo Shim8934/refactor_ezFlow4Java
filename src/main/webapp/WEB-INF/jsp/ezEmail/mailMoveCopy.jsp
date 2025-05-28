@@ -7,7 +7,8 @@
     <title><spring:message code='ezEmail.t535' /></title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
-    <link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+    <link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
     <style>
     	.node_normal, .node_selected { width :auto;}
     	.node_div img { margin-bottom: 5px; }
@@ -48,7 +49,7 @@
                 try {
                     ReturnFunction = opener.mail_movecopy_cross_dialogArguments[1];
                     CancelFunction = opener.mail_movecopy_cross_dialogArguments[2];
-                } catch (e) { }
+                } catch (e) {console.log(e);}
             }
             PostTreeView = new TreeView('PostTreeView', 'PostTreeView');
             PostTreeView.attachEvent('requestdata', requestdata);
@@ -208,10 +209,14 @@
             <li><span onclick="Window_Close();"></span></li>
         </ul>
     </div>
-    <table class="content">
+    <table class="content" style="height: 100%; width: 100%;">
         <tr>
             <td class="pos1">
-                <div style="border: 0px solid #ddd; height: 255px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF; padding-left: 4px; padding-top: 5px; width:293px" id="PostTreeView">
+                <div onclick="toggleTreeNode(false)" class="toggleTreeNode off" id="toggleTreeNode">
+                    <span class="treeNode_toggle_icon"></span>
+                    <spring:message code='ezEmail.kdh06' />
+                </div>
+                <div style="border: 0px solid #ddd; min-height: 520px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF; padding-left: 4px; padding-top: 5px; padding-bottom: 30px;" id="PostTreeView">
                 </div>
             </td>
         </tr>
@@ -219,6 +224,10 @@
     <div class="btnpositionNew">
     	<a class="imgbtn"><span onclick="return btn_Move_onclick()"><spring:message code='ezEmail.t538' /></span></a>
     	<a class="imgbtn"><span onclick="return btn_Copy_onclick()"><spring:message code='ezEmail.t539' /></span></a>
+    </div>
+    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
+    <div style="border:0px solid red;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="MailProgress">
+        <img src="/images/email/progress_img.gif" style="vertical-align:middle;"/>
     </div>
 </body>
 </html>

@@ -8,7 +8,8 @@
 	   	<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
 	   	<link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
 	   	<link rel="stylesheet" href="${util.addVer('ezWebFolder.e1', 'msg')}" type="text/css">
-	    <link rel="stylesheet" href="${util.addVer('ezWebFolder.i1', 'msg')}" type="text/css">	        
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -39,6 +40,9 @@
 		    }
 		    #shareUL {
 		    	padding-left: 30px !important;
+		    }
+		    .newLeft {
+		    	overflow : hidden !important;
 		    }
 	    </style>
 		<script type="text/javascript" >
@@ -363,10 +367,10 @@
 			}
 			
 			function leftResize(){
-				var webfolderListBoxOT_Height = 0;
-				$.each($(".webfolderListBoxOT"), function(i,e) {
-					webfolderListBoxOT_Height += e.offsetHeight;
-				});
+				var webfolderListBoxOT_Height = 110;
+				//$.each($(".webfolderListBoxOT"), function(i,e) {
+				//	webfolderListBoxOT_Height += e.offsetHeight;
+				//});
 				
 	        	$(".webfolderListBox").height(window.innerHeight - webfolderListBoxOT_Height);
 	        }
@@ -489,8 +493,8 @@
 	    	<div class="left_title" title="<spring:message code='ezWebFolder.t10' />"><spring:message code='ezWebFolder.t10' />
 	        	<span class="sub_iconLNB tree_leftconfig" onclick="wfConfig();" title="<spring:message code="ezWebFolder.t236" />"></span>
 	        </div>
-	        <div class="btn_writeBox webfolderListBoxOT" style="height: auto;">
-	        	<p class="btn_write01" onclick="appliWebFolder()" style="min-height: 30px; height: auto;">
+	        <div class="btn_writeBox">
+	        	<p class="btn_write01" onclick="appliWebFolder()" >
 	        		<spring:message code="ezWebFolder.ksa18"/>
 	        	</p>
 	        </div>

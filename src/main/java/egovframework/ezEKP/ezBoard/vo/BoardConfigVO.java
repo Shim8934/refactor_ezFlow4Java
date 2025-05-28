@@ -21,6 +21,8 @@ public class BoardConfigVO {
 	private int pageCnt;
 	/** tenant*/
 	private int tenantID;
+	/** 최근게시물 표출 일수*/
+	private int allNewBoardListDate;
 	
 	public String getUserId() {
 		return userId;
@@ -82,5 +84,12 @@ public class BoardConfigVO {
 	public void setTenantID(int tenantID) {
 		this.tenantID = tenantID;
 	}
-	
+
+	public int getAllNewBoardListDate() {
+		return allNewBoardListDate;
+	}
+
+	public void setAllNewBoardListDate(int allNewBoardListDate) {
+		this.allNewBoardListDate = allNewBoardListDate;
+	}
 }

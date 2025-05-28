@@ -118,14 +118,14 @@ function getNonElecRecInfo() {
 	createNodeAndAppandNodeText(rtnXml, objItem, objData, "DEPTNAME", arr_userinfo[15]);
 	createNodeAndAppandNodeText(rtnXml, objItem, objData, "DEPTNAME2", arr_userinfo[16]);
 	createNodeAndAppandNodeText(rtnXml, objItem, objData, "REGISTERTYPE", selRegisterType.value);
-	createNodeAndAppandNodeText(rtnXml, objItem, objData, "REGISTERDATE", GetRegisterDate());
-	createNodeAndAppandNodeText(rtnXml, objItem, objData, "REGISTERYEAR", GetRegisterYear());
+	createNodeAndAppandNodeText(rtnXml, objItem, objData, "REGISTERDATE", GetRegisterDate()); // 등록일자
+	createNodeAndAppandNodeText(rtnXml, objItem, objData, "REGISTERYEAR", GetRegisterYear()); // 등록연도
 	createNodeAndAppandNodeText(rtnXml, objItem, objData, "TITLE", txtTitle.value);
 	createNodeAndAppandNodeText(rtnXml, objItem, objData, "APRMEMBERTITLE", txtAprMemberTitle.value);
 	createNodeAndAppandNodeText(rtnXml, objItem, objData, "APRMEMBERTITLE2", txtAprMemberTitle.value);
 	createNodeAndAppandNodeText(rtnXml, objItem, objData, "DRAFTERNAME", txtDrafter.value);
 	createNodeAndAppandNodeText(rtnXml, objItem, objData, "DRAFTERNAME2", txtDrafter.value);
-	createNodeAndAppandNodeText(rtnXml, objItem, objData, "EXECUTEDATE", GetExecuteDate());
+	createNodeAndAppandNodeText(rtnXml, objItem, objData, "EXECUTEDATE", GetExecuteDate()); // 시행일자
 	createNodeAndAppandNodeText(rtnXml, objItem, objData, "RECEIPTMEMBER", txtReceiptMember.value);
 	createNodeAndAppandNodeText(rtnXml, objItem, objData, "RECEIPTMEMBER2", txtReceiptMember.value);
 	createNodeAndAppandNodeText(rtnXml, objItem, objData, "SENDINGMEMBER", "");
@@ -212,6 +212,7 @@ function getNonElecRecInfo() {
             }
         }
     }
+		createNodeAndAppandNodeText(rtnXml, objItem, objData, "DOCATTACHNAME", filename.value);	
 	
 	return getXmlString(rtnXml);
 }
@@ -222,7 +223,15 @@ function nonElecRecInfoInit() {
 	var NonElecXML = createXmlDom();
 	NonElecXML = loadXMLString(nonElecRecInfoXml);
 	
-	if (nonElecRecInfoXml == ""){return}
+	// 등록일자 초기값 삽입 (현재시각)
+    var offset = new Date().getTimezoneOffset() * 60000;
+    regDateTime = new Date(Date.now() - offset).toISOString();
+    document.getElementById("regDate").value = regDateTime.substring(0, 10);
+    document.getElementById("regTime").value = regDateTime.substring(11, 16);
+	
+	if (nonElecRecInfoXml == "") {
+	    return;
+	}
 	
 	if (SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "REGISTERTYPE") != "") {
 		document.getElementById("selRegisterType").selectedIndex = SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "REGISTERTYPE") - 1;
@@ -240,21 +249,13 @@ function nonElecRecInfoInit() {
 	document.getElementById("txtReceiptMember").value = SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "RECEIPTMEMBER");
 	document.getElementById("txtDeliveryNo").value = SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "DELIVERYNO"); // 문서과 배부번호
 	document.getElementById("txtOriginSN").value = SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "ORIGINREGSN"); // 생산기관 등록번호
+	document.getElementById("exeDate").value = SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "EXECUTEDATE"); // 시행일자
 	
 	// 등록일자
 	if (SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "REGISTERDATE") != "") {
-		document.getElementById("txtRegY").value = SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "REGISTERDATE").split("-")[0];
-		document.getElementById("txtRegM").value = SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "REGISTERDATE").split("-")[1];
-		document.getElementById("txtRegD").value = SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "REGISTERDATE").split("-")[2].substring(0,2);
-		document.getElementById("txtRegH").value = SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "REGISTERDATE").split(" ")[1].split(":")[0];
-		document.getElementById("txtRegMi").value = SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "REGISTERDATE").split(" ")[1].split(":")[1];
-	}
-	
-	// 시행일자
-	if (SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "EXECUTEDATE") != "") {
-		document.getElementById("txtExeY").value = SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "EXECUTEDATE").split("-")[0];
-		document.getElementById("txtExeM").value = SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "EXECUTEDATE").split("-")[1];
-		document.getElementById("txtExeD").value = SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "EXECUTEDATE").split("-")[2];
+	    var regDateTime = SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "REGISTERDATE");
+	    document.getElementById("regDate").value = regDateTime.substring(0, 10);
+        document.getElementById("regTime").value = regDateTime.substring(11, 16);
 	}
 	
 	selRegisterType_onchange();
@@ -275,6 +276,11 @@ function nonElecRecInfoInit() {
 	    	}
 	    }
 	}
+	
+	if (SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "DOCATTACHNAME").length > 0){
+		document.getElementById("filename").value = SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "DOCATTACHNAME");
+	}
+	
 }
 /*
  * .hwp 전용  ret값 받아서 결재양식에 데이터 뿌려주는 메소드
@@ -653,6 +659,10 @@ function setCabInfoInit() {
 	    InitSCListXML();
 	} else {
 		g_SepAttachLVXml = g_SepAttachLVXml.replace(/nonElecRecTempCabinetName/gi, "").replace(/nonElecRecTempCabinet/gi, "");
+	}
+
+	if (doctitle != null) {
+		document.getElementById("txtTitle").value = doctitle;
 	}
 }
 /*
@@ -1085,27 +1095,24 @@ function GetAVTypeCode() {
 }
 
 function GetRegisterDate() {
-    if (txtRegY.value != "" && txtRegM.value != "" && txtRegD.value != "") {
-        return txtRegY.value + "-" + GetTwoDigitNumber(txtRegM.value) + "-" + GetTwoDigitNumber(txtRegD.value) + " " +
-				GetTwoDigitNumber(txtRegH.value) + ":" + GetTwoDigitNumber(txtRegMi.value);
-    }
-    else {
+    if (regDate.value != "" && regTime.value != "") {
+        return regDate.value + " " + regTime.value;
+    } else {
         return "";
     }
 }
 
 function GetRegisterYear() {
-    if (txtRegY.value != "")
-        return txtRegY.value;
+    if (regDate.value != "")
+        return regDate.value.substring(0, 4);
     else
         return "";
 }
 
 function GetExecuteDate() {
-    if (txtExeY.value != "" && txtExeM.value != "" && txtExeD.value != "") {
-        return txtExeY.value + "-" + GetTwoDigitNumber(txtExeM.value) + "-" + GetTwoDigitNumber(txtExeD.value);
-    }
-    else {
+    if (exeDate.value != "") {
+        return exeDate.value;
+    } else {
         return "";
     }
 }

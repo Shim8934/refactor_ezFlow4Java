@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -330,18 +331,41 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 * 초기화면 QuickLink메뉴 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/manageQuickLink.do", method = RequestMethod.GET)
-	public String manageQuickLink(@CookieValue("loginCookie") String loginCookie, Model model) {
+	public String manageQuickLink(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model)  throws Exception {
 		logger.debug("manageQuickLink started");
 
 		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		if (auth == null) {
 			return "cmm/error/adminDenied";
 		}
+		String companyId = "";
+		if (request.getParameter("companyId") != null) {
+			companyId = request.getParameter("companyId");
+		} else {
+			companyId = "";
+		}
+
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(auth.getPrimary(), auth.getTenantId());
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+
+		for (int i = 0; i < list.size(); i++) {
+			OrganDeptVO vo = list.get(i);
+
+			if (auth.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(auth.getCompanyID())) {
+				resultList.add(vo);
+			}
+		}
+
+		String userLang = commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId());
 		
 		model.addAttribute("host", auth.getServerName());
 		model.addAttribute("lang", auth.getLang());
-		
+		model.addAttribute("list", resultList);
+		model.addAttribute("companyId", companyId);
+		model.addAttribute("userPrimanryLang", userLang);
+
 		logger.debug("manageQuickLink ended");
 		return "admin/ezPersonal/personalManageQuickLink";
 	}
@@ -350,16 +374,16 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 * 초기화면 QuickLink 목록 호출 함수
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/admin/ezPersonal/getQuickLinkList.do", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
+	@RequestMapping(value = "/admin/ezPersonal/getQuickLinkList.do", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
 	@ResponseBody
-	public JSONObject getQuickLinkList(@CookieValue("loginCookie") String loginCookie) throws Exception {
-		logger.debug("getQuickLinkList started");
-		
+	public JSONObject getQuickLinkList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getQuickLinkList started company:" + request.getParameter("companyID"));
+
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		String lang = userInfo.getLang();
-		logger.debug("[getQuickLinkList] primaryLang : " + primaryLang + ", lang : " + lang);
-		
+		String companyID = Optional.ofNullable(request.getParameter("companyID")).orElse(userInfo.getCompanyID());
+
 		String userLang = "1";
 		
 		if (primaryLang.equals(lang)) {
@@ -368,7 +392,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			userLang = lang;
 		}
 		
-		List<PersonalQuickLinkVO> list = ezPersonalAdminService.getQuickLinkList(userInfo, userInfo.getLang(), userLang);
+		List<PersonalQuickLinkVO> list = ezPersonalAdminService.getQuickLinkList(userInfo, userInfo.getLang(), userLang, companyID);
 		
 		JSONObject json = new JSONObject();
 		json.put("list", list);
@@ -499,22 +523,6 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
-
-		String companyId = userInfo.getCompanyID();
-		
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
-		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-		
-		for (int i = 0; i < list.size(); i++) {
-			OrganDeptVO vo = list.get(i);			
-			
-			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
-				resultList.add(vo);
-			}
-		}
-		
-		model.addAttribute("list", resultList);
-		model.addAttribute("companyId", companyId);
 
 		logger.debug("managePoll ended");
 		return "admin/ezPersonal/personalManagePoll";
@@ -802,20 +810,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 
 		String noneActiveX = config.getProperty("NONEACTIVEX");
 		String useEditor = config.getProperty("EDITOR");
-		String companyId = userInfo.getCompanyID();
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
-		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		
-		for (int i = 0; i < list.size(); i++) {
-			OrganDeptVO vo = list.get(i);			
-			
-			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
-				resultList.add(vo);
-			}
-		}
-		
-		model.addAttribute("companyId", companyId);
-		model.addAttribute("list", resultList);
 		model.addAttribute("noneActiveX", noneActiveX);
 		model.addAttribute("useEditor", useEditor);
 
@@ -1107,11 +1102,12 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		
 		String year = request.getParameter("year");
 		logger.debug("year: " + year);
-		
+
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String companyID = Optional.ofNullable(request.getParameter("companyID")).orElse(userInfo.getCompanyID());
 		String userPrimaryLang = userInfo.getPrimary();
 		
-		List<PersonalEmpMonthVO> list = ezPersonalAdminService.getEmpMonth(year, userInfo.getCompanyID(), userInfo.getTenantId());
+		List<PersonalEmpMonthVO> list = ezPersonalAdminService.getEmpMonth(year,companyID , userInfo.getTenantId());
 		
 		for (PersonalEmpMonthVO vo : list) {
 			if (!userPrimaryLang.equals("1")) {
@@ -1154,14 +1150,16 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/setEmployeeMonth.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String setEmployeeMonth(HttpServletRequest request, LoginVO userInfo, @CookieValue("loginCookie") String loginCookie) throws Exception {
+	public String setEmployeeMonth(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("setEmployeeMonth started");
 
-		userInfo = commonUtil.userInfo(loginCookie);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String userID = "", deptID = "";
 		String type = request.getParameter("type");
 		String term = request.getParameter("term");
+		String companyID = Optional.ofNullable(request.getParameter("companyID")).orElse(userInfo.getCompanyID());
+		String jobName = request.getParameter("jobName"); // 같은 부서에 겸직이 되어있는경우 오류가 발생하여 직위 조건 추가
 		
 		if (request.getParameter("userID") != null) {
 			userID = request.getParameter("userID");
@@ -1171,7 +1169,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		}
 		
 		try {
-			ezPersonalAdminService.setEmpMonth(type, userID, deptID, term, userInfo);
+			ezPersonalAdminService.setEmpMonth(type, userID, deptID, term, companyID, userInfo.getTenantId(), jobName);
 			logger.debug("setEmployeeMonth ended");
 			return "OK";
 		} catch (Exception e) {
@@ -1480,13 +1478,13 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		
 		// png파일의 배경을 검게 만들지 않도록 수정
 		if (inputImage.getType() == 0) {
-			outputImage= new BufferedImage(40, 39, BufferedImage.TYPE_INT_RGB);
+			outputImage= new BufferedImage(100, 50, BufferedImage.TYPE_INT_RGB);
 		} else {
-			outputImage= new BufferedImage(40, 39, inputImage.getType());
+			outputImage= new BufferedImage(100, 50, inputImage.getType());
 		}
 		
 		saveImage = outputImage.createGraphics();
-		saveImage.drawImage(inputImage, 0, 0, 40, 39, null);
+		saveImage.drawImage(inputImage, 0, 0, 100, 50, null);
 		
 		HashMap<RenderingHints.Key,Object> hm = new HashMap<RenderingHints.Key,Object>();
 		

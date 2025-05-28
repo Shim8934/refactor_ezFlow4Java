@@ -17,7 +17,8 @@
 			</c:otherwise>
 		</c:choose>
 		
-		<link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
         <link rel="stylesheet" href="${util.addVer('/css/ezSchedule/Tab.css')}" type="text/css" />
         <link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}" type="text/css" >
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}" type="text/css" >
@@ -75,6 +76,18 @@
 		    var permissionBasisDeptYN = "<c:out value='${permissionBasisDeptYN}'/>"; // 겸직/사용자 기준 권한부여 옵션 여부
 		    var adminDeptListTemp = "<c:out value='${AdminDeptList}'/>"; // 부서관리자 권한이 존재하는 부서 id string
 		    var adminDeptList = adminDeptListTemp.split(";").filter(Boolean);
+			var chkPublic = "<c:out value='${chkSchedulePublic}'/>"; // 개인일정 작성시 공개/비공개값 설정가능 여부
+		    var showtop = "<c:out value='${showtop}'/>";
+
+		    /* 20203-09-22 한태훈 - 초대 일정 수정시 참석자에게 메일 보내는 용도 */
+			var modAttendIdList = [];
+			var modAttendName1List = [];
+			var modAttendName2List = [];
+		    
+		    /* 20203-09-22 한태훈 - 초대 일정 수정시 참석자에게 메일 보내는 용도 */
+			var modAttendIdList = [];
+			var modAttendName1List = [];
+			var modAttendName2List = [];
 		    
 		    window.onload = function () {
 		        if (scheduleid != "" && otherid == "" && (scheduletype != "1" && scheduletype != "6")) {
@@ -90,7 +103,38 @@
 		            document.body.style.oUserSelect = 'none';
 		            document.body.style.UserSelect = 'none';
 		        }
+		        // 상단표시로 바로 작성할 때
+                if (showtop == 'Y') {
+                    document.getElementById("topcheck").checked = true;
+                    var now = new Date();
 
+                    //시작시간
+                    var startTime;
+                    var hour = now.getHours();
+                    var time = now.getMinutes();
+
+                    if (parseInt(time) < 30) {
+                        startTime = hour + ":00:00";
+                    } else {
+                        startTime = hour + ":30:00";
+                    }
+
+                    //종료시간
+                    var endTime;
+                    now.setMinutes(now.getMinutes() + 30);
+
+                    hour = now.getHours();
+                    time = now.getMinutes();
+
+                    if (parseInt(time) < 30) {
+                        endTime = hour + ":00:00";
+                    } else {
+                        endTime = hour + ":30:00";
+                    }
+
+                    $('#Stimepicker').timepicker('setTime', startTime);
+                    $('#Etimepicker').timepicker('setTime', endTime);
+                }
 		        if (scheduleid != "") {
 		            document.getElementById("importantSelect").value = importance;
 		            document.getElementById("publicSelect").value = ispublic;	                
@@ -104,7 +148,13 @@
                     	if(document.getElementById("HolderEdit2") != null){
 							document.getElementById("HolderEdit2").style.display = "none";
 						}
-                    }
+                    } else {
+						// chkPublic이 OFF일 경우 비공개가 기본값임.
+						if (chkPublic == "OFF") {
+							document.getElementById("publicSelect").disabled = true;
+							document.getElementById("publicSelect").value = "N";
+						}
+					}
 
 	                /* if (scheduletype == "7") {
 		                //document.getElementById("HolderEdit2").style.display = "none";
@@ -146,7 +196,7 @@
 		        }
 
 		        document.getElementById("publicSelect").disabled = true;
-		        if (scheduletype == "1" || scheduletype == "6")
+		        if ((scheduletype == "1" && chkPublic == "ON") || scheduletype == "6")
 		            document.getElementById("publicSelect").disabled = false;
 
 		        if (scheduleid == "")
@@ -155,10 +205,10 @@
 		        if (hasattach == "Y") {
 		            setAttachFileInfo("${strAttach}");
 		        }
-		        
-		        if(ispublic != "") {
+
+		        /*if(ispublic != "") {
 		        	document.getElementById("publicSelect").value = ispublic;
-		        }
+		        }*/
 
 		        try{
 		            if (document.getElementById("TextTitle").value == "")
@@ -187,6 +237,7 @@
 		        switch (pSelectTab) {
 		            case "schedule1":
 		                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 395 + "PX";
+						mobileDistinction();
 		                break;
 		            case "schedule2":
 		                if (document.getElementById("receiverTr1").style.display == "none" && document.getElementById("HolderEdit2").style.display == "none") {
@@ -196,9 +247,11 @@
 						} else {
                             document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 365 + "PX";
                         }
+						mobileDistinction();
 		                break;
 		            case "schedule3":
 		                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 335 + "PX";
+						mobileDistinction();
 		                break;
 		        }
 		    }
@@ -207,13 +260,15 @@
 		        try {
 		    		window.opener.openerCalendarMiniView("CalendarMini");	    		
 		    		window.opener.openerCalendarMiniDataSource();
+		        } catch (e) { console.log(e) }
+		        
+		        var date = window.opener.selDate;
+	    		if(date == "") date = window.opener.nowDay;
+		        try {
 		    		// 정주환 포틀릿 일정추가후 불변요청
-		    		var date = window.opener.selDate;
-		    		if(date == "") date = window.opener.nowDay;
 		            window.opener.getScheduleList(date, "P");
-		    		window.opener.openerCalendarMiniView("CalendarMini_Top");	    		
-		    		window.opener.openerCalendarMiniDataSource("Top");
-		        } catch (e) { }
+		        } catch (e) { console.log(e)}
+		        
 		    }
 
 		    $(function () {
@@ -413,8 +468,8 @@
 		        	if (document.getElementById("LabelOwner")) {
 		            	printOwner = document.getElementById("LabelOwner").textContent;
 		        	}
-		        	if (document.getElementById("LabelAttendant")) {
-		            	printAttendant = document.getElementById("LabelAttendant").textContent;
+		        	if (document.querySelector("#LabelAttendant span")) {
+		            	printAttendant = document.querySelector("#LabelAttendant span").textContent;
 		        	}
 		        }
 
@@ -573,10 +628,19 @@
 	        	}
 	        }
 	        
+			function mobileDistinction() {
+   				var  userAgent = navigator.userAgent.toLowerCase();
+				
+				if (/iphone|ipod|ipad|android.*mobile/i.test(userAgent) || /tablet|ipad|android/i.test(userAgent) || navigator.maxTouchPoints > 4) {
+					if (window.innerWidth > window.innerHeight) {
+						document.getElementById("EdtorSize").style.height = 436 + "PX";
+					}
+				}
+			}
 	    </script>
 	</head>
 
-	<body class="popup" style="overflow:hidden;">
+	<body class="popup scheduleWrite" style="overflow:hidden;">
 	    <form method="post">
 	        <div id="main_body">
 	            <table id="normalScreen" class="layout">
@@ -633,6 +697,7 @@
                                             <th><spring:message code='ezSchedule.t363'/></th>
                                             <td colspan="3" id="LabelOwner">
                                                 ${strLabelOwner}
+                                                <input type="checkbox" id="topcheck" value="1" style="margin-left:20px;"> <label for="topcheck"><spring:message code='ezSchedule.kwc01'/></label>
                                             </td>
                                         </tr>
                                         </c:if>
@@ -640,6 +705,7 @@
                                             <th><spring:message code='ezSchedule.t363'/></th>
                                             <td colspan="3">
                                             	<select name="ListOwnerID" id="ListOwnerID" onchange="ListOwnerID_Change()" style="height:24px;">${strOwnerID}</select>
+                                            	<input type="checkbox" id="topcheck" value="1"> <label for="topcheck"><spring:message code='ezSchedule.kwc01'/></label>
                                             </td>
                                         </tr>
 	                                    <tr>
@@ -656,7 +722,7 @@
 	                                    </tr>
 	                                    <tr id="periodblockTR">
 	                                        <th><spring:message code='ezSchedule.t368'/></th>
-	                                        <td id="periodblockTD" <c:if test="${scheduleId != ''}">style="width:85%;"</c:if>>
+	                                        <td id="periodblockTD" <c:if test="${scheduleId != ''}">style="width:80%;"</c:if>>
 	                                        	<span id="periodblock">
 	                                            	<input name="checkbox" type="checkbox" id="alldaycheck" onclick="allday_change()" value="1">
 	                                            	<spring:message code='ezSchedule.t369'/>
@@ -705,8 +771,13 @@
                                         <tr id="HolderEdit2">
                                             <th><spring:message code='ezSchedule.t163'/></th>
                                             <td colspan="2">
-                                            	<div style="overflow-y: auto; height: 20px;" id="LabelAttendant">                                                
-													<c:forEach var="item" items="${attendantList}" varStatus="status">	                                		  		
+                                            	<div style="overflow-y: auto; height: 100%; width: 100%; vertical-align: middle; display: table-cell;" id="LabelAttendant">                                                
+													<c:forEach var="item" items="${attendantList}" varStatus="status">
+														<script>
+															modAttendIdList.push('${item.attendantId}');
+															modAttendName1List.push('${item.attendantName}');
+															modAttendName2List.push('${item.attendantName2}');
+														</script>                                		  		
 			                                	 		<span title="<spring:message code='ezSchedule.t162'/>" style="cursor:pointer" onclick="show_personinfo('${item.attendantId}')">
 			                                	 			<c:if test="${lang == '1'}"><c:out value="${item.attendantName}" /></c:if>
 			                                	 			<c:if test="${lang != '1'}"><c:out value="${item.attendantName2}" /></c:if>
@@ -839,6 +910,7 @@
 	        </script>
 		    <script type="text/javascript">
 		        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 395 + "PX";
+				mobileDistinction();
 		    </script>
 	    </form>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>

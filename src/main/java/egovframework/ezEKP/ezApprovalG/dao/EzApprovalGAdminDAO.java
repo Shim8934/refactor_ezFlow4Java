@@ -19,9 +19,10 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskDeptInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.ezEKP.ezApprovalG.vo.KEDAuthorUserInfo;
 import egovframework.ezEKP.ezApprovalG.vo.KEDSharedUserInfo;
-import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -182,6 +183,10 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 
 	public Integer getTaskCategoryNodeExist(Map<String, Object> map) throws Exception {
 		return (Integer) select("EzApprovalGAdmin.getTaskCategoryNodeExist", map);
+	}
+
+	public Integer getTaskCategoryNodeCnt(Map<String, Object> map) throws Exception {
+		return (Integer) select("EzApprovalGAdmin.getTaskCategoryNodeCnt", map);
 	}
 
 	public Integer getTaskCodeDuplicate(Map<String, Object> map) throws Exception {
@@ -411,9 +416,10 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 		update("EzApprovalGAdminDAO.moveDocListS", map);
 	}
 	
-	public void deleteDocList(Map<String, Object> map) throws Exception {
+	/* 2024-06-04 홍승비 - 현재 사용되지 않는 쿼리로 확인하여 주석처리 */
+	/*public void deleteDocList(Map<String, Object> map) throws Exception {
 		update("EzApprovalGAdminDAO.deleteDocList", map);
-	}
+	}*/
 	
 	public void deleteDocListjson(Map<String, Object> map) throws Exception {
 		update("EzApprovalGAdminDAO.deleteDocListjson", map);
@@ -457,7 +463,9 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	public void deleteAutoRuleLine(Map<String, Object> map) throws Exception {
 		delete("EzApprovalGAdminDAO.deleteAutoRuleLine", map);
 	}
-
+	
+	/* 2024-04-19 홍승비 - 특수문서함 관련 기능 > 호출되지 않는 URL로 확인, 관련 메서드와 쿼리 전체 주석처리 */
+	/*
 	@SuppressWarnings("unchecked")
 	public List<ApprGContInfoVO> getSpecialContList(Map<String, Object> map) throws Exception {
 		return (List<ApprGContInfoVO>) list("EzApprovalGAdminDAO.getSpecialContList", map);
@@ -495,7 +503,8 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	public void changeSpecialContSN3(ApprGContInfoVO vo) throws Exception {
 		update("EzApprovalGAdminDAO.changeSpecialContSN3", vo);
 	}
-
+	*/
+	
 	public int checkContainer(Map<String, Object> map) throws Exception {
 		return (int) select("EzApprovalGAdminDAO.checkContainer", map);
 	}
@@ -662,7 +671,7 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	public List<ApprGDocListVO> getSearchDocList(Map<String, Object> map) throws Exception{
 		return (List<ApprGDocListVO>) list("EzApprovalGAdminDAO.getSearchDocList", map);
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	public List<HashMap<String, Object>> getAuditApprLineList(Map<String, Object> map) throws Exception {
 		return (List<HashMap<String, Object>>) list("EzApprovalGAdmin.getAuditApprLineList", map);
@@ -719,5 +728,37 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<Map<String, Object>> getCabinetListByExpireYear(Map<String, Object> map) throws Exception {
 		return (List<Map<String, Object>>) list("EzApprovalGAdminDAO.getCabinetListByExpireYear", map);
+	}
+
+	public ArrayList<String> getIronListYear(String companyID, int tenantID) throws Exception {
+		return (ArrayList<String>)list(
+			"EzApprovalGAdminDAO.getIronListYear",
+			new HashMap() {{
+				put("companyID", companyID);
+				put("tenantID", tenantID);
+			}}
+		);
+	}
+
+	/* 2024-07-16 기민혁 - 전자결재 > 양식함 이동 하위 문서함 체크 */
+	@SuppressWarnings("unchecked")
+	public List<String> checkContList(Map<String, Object> map) {
+		return (List<String>) list("EzApprovalGAdminDAO.checkContList", map);
+	}
+	
+	/* 2024-07-16 기민혁 - 전자결재 > 양식함 이동 */
+	public void contMove(Map<String, Object> map) throws Exception {
+		update("EzApprovalGAdmin.contMove", map);
+	}
+
+	/* 2024-07-17 기민혁 - 전자결재 > 양식함 순서조정 리스트 호출  */
+	@SuppressWarnings("unchecked")
+	public List<ApprGFormVO> getSNFContList(Map<String, Object> map){
+		return (List<ApprGFormVO>) list("EzApprovalGAdmin.getSNFContList",map);
+	}
+
+	/* 2024-07-17 기민혁 - 전자결재 > 양식함 순서조정 실행 함수  */
+	public void setContSN(Map<String, Object> map) throws Exception {
+		update("EzApprovalGAdmin.setContSN", map);
 	}
 }

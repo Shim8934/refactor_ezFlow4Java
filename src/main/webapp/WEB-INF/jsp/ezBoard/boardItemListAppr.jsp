@@ -6,7 +6,8 @@
 	<head>
 		<title>BoardItemList</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
-		<link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link href="${util.addVer('/css/previewmail.css')}" rel="stylesheet" type="text/css">
 		<script type="text/javascript" src="${util.addVer('ezBoard.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -73,6 +74,9 @@
 		        var starttime;
 		        var endtime;
 		        var strListInfo = "";
+		        // 2024-10-04 조수빈 - 마이게시판, 게시물 승인 화면의 경우 게시판 id가 없어 오류가 발생하여 추가
+            	var pBoardID = "";
+            	var Read_FG = 'true';
 		        window.onunload = Window_onunload;
 		        var window_onunload_Event = false;
 		
@@ -360,30 +364,30 @@
 		            var strtext;
 		            var PagingHTML = "";
 		            document.getElementById("tblPageRayer").innerHTML = "";
-		            document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + totalCount + "</span>";
+		            document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span class='txt_color'>" + totalCount + "</span>";
 		            strtext = "<div class='pagenavi'>";
 		            PagingHTML += strtext;
 		            var pageNum = CurPage;
 		            if (totalPage > 1 && pageNum != 1) {
-		                strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' ></span>";
+		                strtext = "<span class='btnimg first' onclick= 'return goToPageByNum(1)'></span>";
 		                PagingHTML += strtext;
 		            }
 		            else {
-		                strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>";
+		                strtext = "<span class='btnimg first disabled'></span>";
 		                PagingHTML += strtext;
 		            }
 		            if (totalPage > BlockSize) {
 		                if (pageNum > BlockSize) {
-		                    strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' ></span>";
+		                    strtext = "<span class='btnimg prev' onclick= 'return selbeforeBlock()'></span>";
 		                    PagingHTML += strtext;
 		                }
 		                else {
-		                    strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+		                    strtext = "<span class='btnimg prev disabled'></span>";
 		                    PagingHTML += strtext;
 		                }
 		            }
 		            else {
-		                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+		                strtext = "<span class='btnimg prev disabled'></span>";
 		                PagingHTML += strtext;
 		            }
 		            var MaxNum;
@@ -408,26 +412,26 @@
 		            if (totalPage > BlockSize) {
 		                if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
 		                    strtext = "";
-		                    strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' ></span>";
+		                    strtext = strtext + "<span class='btnimg next' onclick='return selafterBlock()'></span>";
 		                    PagingHTML += strtext;
 		                }
 		                else {
 		                    strtext = "";
-		                    strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+		                    strtext = strtext + "<span class='btnimg next disabled'></span>";
 		                    PagingHTML += strtext;
 		                }
 		            }
 		            else {
 		                strtext = "";
-		                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+		                strtext = strtext + "<span class='btnimg next disabled'></span>";
 		                PagingHTML += strtext;
 		            }
 		            if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-		                strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' ></span>";
+		                strtext = "<span class='btnimg last' onclick='return goToPageByNum(" + totalPage + ")'></span>";
 		                PagingHTML += strtext;
 		            }
 		            else {
-		                strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
+		                strtext = "<span class='btnimg last disabled'></span>";
 		                PagingHTML += strtext;
 		            }
 		            PagingHTML += "</div>";
@@ -796,9 +800,9 @@
 	        }
 	        function search(type) {
 	            if (type == "basic") {
-	
-	                if (document.getElementById("txtTitle").value == "" && document.getElementById("txtAbstract").value == "" && document.getElementById("idDatepicker").value == ""
-	                		&& document.getElementById("_D2").value == "") {
+	            	var txtKeywordVal = document.getElementById("txtKeyword") != null ? document.getElementById("txtKeyword").value : "";
+	                if (document.getElementById("txtTitle").value == "" && document.getElementById("txtAbstract").value == "" 
+	                && txtKeywordVal == "" && document.getElementById("idDatepicker").value == "" && document.getElementById("_D2").value == "") {
 	                    alert("<spring:message code='ezBoard.t192'/>");
 	                    return;
 	                }
@@ -824,14 +828,14 @@
 	            }
 	            CurPage = "1";
 	            BoardSearchOptionHidden();
-	            MakeSubCondition();
+	            MakeSubCondition(type);
 	            getBoardList();
 	        }
 	
-		    function MakeSubCondition() {
+		    function MakeSubCondition(type) {
 		        var TYPE = "";
 		        var DATA = "";
-		        if (document.getElementById("txt_keyword").value != "") {
+		        if (type == "quick") {
 		        	var selectSearch = document.getElementById('selectType');
 	                if (selectSearch.item(0).selected) {
 	                    TYPE += "TITLE;";
@@ -845,6 +849,10 @@
 	                    TYPE += "CONTENT;";
 	                    DATA += "<CONTENT><![CDATA[" + document.getElementById("txt_keyword").value.replace("'", "''") + "]]></CONTENT>";
 	                }
+	                else if (selectSearch.item(3).selected) {
+                        TYPE += "KEYWORD;";
+                        DATA += "<KEYWORD><![CDATA[" + document.getElementById("txt_keyword").value.replace("'", "''") + "]]></KEYWORD>";
+                    }
 		        }
 		        else {
 		            if (document.getElementById("txtTitle").value != "")		// DocTitle
@@ -858,6 +866,13 @@
 		                TYPE += "ABSTRACT;";
 		                DATA += "<ABSTRACT><![CDATA[" + document.getElementById("txtAbstract").value.replace("'", "''") + "]]></ABSTRACT>";
 		            }
+			                
+		            if (document.getElementById("txtKeyword") != null) { // KEYWORD
+                        if (document.getElementById("txtKeyword").value != "") {
+                             TYPE += "KEYWORD;";
+                             DATA += "<KEYWORD><![CDATA[" + document.getElementById("txtKeyword").value.replace("'", "''") + "]]></KEYWORD>";
+                        }
+                    }
 		
 		            if (document.getElementById("idDatepicker").value != "")		// StartDate
 		            {
@@ -995,29 +1010,29 @@
 			   			var tParentWriteDate = itemTR.attr("parentwritedate");
 			   			var tDocNo = itemTR.attr("docno");
 			   			
-			   			// 해당 게시판의 관리자에게 게시알림메일 발송 (게시판 권한설정 > 관리자 권한자인 경우 '게시 메일로 알림' 옵션)
-			   			sendPostNotiMail(tBoardID, tItemID);
+			   			// 해당 게시판의 관리자에게 게시알림 발송 (게시판 권한설정 > 관리자 권한자인 경우 '게시 알림' 옵션)
+			   			sendPostNotiForAdmin(tBoardID, tItemID);
 			   			
 			   			// 답변게시물이 아닌 경우
 			   			if (tParentWriteDate == tDocNo) {
-			   				// 해당 게시판의 일반 사용자(접근 권한자)에게 게시알림메일 발송 (게시판 일반설정 > 메일알림 > '게시알림' 옵션)
-			   				sendBoardAlertMail("new", tBoardID, tItemID, tIsAllGroupBoard);
+			   				// 해당 게시판의 일반 사용자(접근 권한자)에게 게시알림 발송 (게시판 일반설정 > '게시알림' 옵션)
+			   				sendBoardAlert("new", tBoardID, tItemID, tIsAllGroupBoard);
 			   			}
 			   			else { // 답변게시물인 경우
-			   				// 해당 게시물의 부모게시물 작성자에게 답변알림메일 발송 (게시판 일반설정 > 메일알림 > '답변알림' 옵션)
-			   				sendReplyNoticeMail(tBoardID, tItemID, tStrUpperItemIDTree);
+			   				// 해당 게시물의 부모게시물 작성자에게 답변알림 발송 (게시판 일반설정 > '답변알림' 옵션)
+			   				sendReplyNotice(tBoardID, tItemID, tStrUpperItemIDTree);
 			   			}
 		   			}
 		   		}
 		    }
 			
-        	/* 2023-11-17 홍승비 - 관리자 권한자의 '게시 메일로 알림' 옵션에 대한 게시판 메일알림 함수 추가, 비동기로 백그라운드 동작 */
-        	function sendPostNotiMail(pBoardID, pItemID) {
+        	/* 2023-11-17 홍승비 - 관리자 권한자의 '게시 알림' 옵션에 대한 게시 알림 함수 추가, 비동기로 백그라운드 동작 */
+        	function sendPostNotiForAdmin(pBoardID, pItemID) {
         		$.ajax({
         			type : "POST",
         			dataType : "text",
         			async : true,
-        			url : "/ezBoard/sendPostNotiMail.do",
+        			url : "/ezBoard/sendPostNotiForAdmin.do",
         			data : {
         				boardID : pBoardID,
         				itemID : pItemID
@@ -1026,12 +1041,12 @@
         	}
         	
         	/* 2023-11-17 홍승비 - 일반 사용자(접근 권한자)의 '게시알림' 옵션에 대한 게시판 메일알림 함수 추가, 비동기로 백그라운드 동작 */
-        	function sendBoardAlertMail(pMode, pBoardID, pItemID, pIsAllGroupBoard) {
+        	function sendBoardAlert(pMode, pBoardID, pItemID, pIsAllGroupBoard) {
         		$.ajax({
         			type : "POST",
         			dataType : "text",
         			async : true,
-        			url : "/ezBoard/sendBoardAlertMail.do",
+        			url : "/ezBoard/sendBoardAlert.do",
         			data : {
         				mode : pMode,
         				boardID : pBoardID,
@@ -1041,13 +1056,13 @@
         		});
         	}
         	
-        	/* 2023-11-17 홍승비 - 답변게시물의 부모게시물 작성자의 '답변알림' 옵션에 대한 게시판 메일알림 함수 추가, 비동기로 백그라운드 동작 */
-        	function sendReplyNoticeMail(pBoardID, pItemID, pStrUpperItemIDTree) {
+        	/* 2023-11-17 홍승비 - 답변게시물의 부모게시물 작성자의 '답변알림' 옵션에 대한 게시판 알림 함수 추가, 비동기로 백그라운드 동작 */
+        	function sendReplyNotice(pBoardID, pItemID, pStrUpperItemIDTree) {
         		$.ajax({
         			type : "POST",
         			dataType : "text",
         			async : true,
-        			url : "/ezBoard/sendReplyNoticeMail.do",
+        			url : "/ezBoard/sendReplyNotice.do",
         			data : {
         				boardID : pBoardID,
         				itemID : pItemID,
@@ -1065,6 +1080,7 @@
 		    		<option selected value="rad_Subject"><spring:message code='ezBoard.t208'/></option>
 		    		<option value="rad_Writer"><spring:message code='ezBoard.t223'/></option>
 		    		<option value="rad_Content"><spring:message code='ezBoard.garm01'/></option>
+		    		<option value="rad_Keyword"><spring:message code='ezApprovalG.t1200'/></option>
 		    	</select>
 				<input id="txt_keyword" class="searchinputBox" style="height: 27px;border: 1px solid #cbcbcb;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
 				<a class="searchBtn nofilter"><img src="/images/bsearch_new2.png" border="0" onClick="search('quick')"></a>
@@ -1191,6 +1207,10 @@
 	            <th style="text-align:center"><spring:message code='ezBoard.t208'/></th>
 	            <td><input type="text" id="txtTitle" style="width:98%" value=""></td>
 	        </tr>  
+            <tr>
+                <th style="text-align:center"><spring:message code='ezApprovalG.t1200' /></th>
+                <td><input type="text" id="txtKeyword" style="width:100%" value=""></td>
+            </tr>
 	         <tr>
 	            <th style="text-align:center"><spring:message code='ezBoard.t209'/></th>
 	            <td><input type="text" id="txtAbstract" style="width:98%" value=""></td>

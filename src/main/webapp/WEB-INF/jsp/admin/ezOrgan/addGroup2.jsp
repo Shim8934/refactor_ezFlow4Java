@@ -5,7 +5,8 @@
 <html>
 	<head>
 	    <title>권한그룹 추가/편집</title>
-	    <link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+	    <link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('/js/ezEmail/Controls/ezSearchDatePicker.htc')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('main.lhm01', 'msg')}" type="text/css">
@@ -43,9 +44,6 @@
 	    	#countInfo {
 	    		overflow: hidden;
 	    		display: inline-block;
-	    	}
-	    	.countColor {
-	    		color:#017BEC;
 	    	}
 	    </style>
 	    <script>
@@ -127,7 +125,7 @@
 	                    treeView.DataBind("TreeView");
 	                }
 	                else {
-	                    alert("<spring:message code='ezEmail.t13' />" + xmlHTTP.statusText);
+	                    alert("<spring:message code='ezEmail.t13' />" + xmlHTTP.status);
 	                    xmlHTTP = null;
 	                }
 	            }
@@ -321,9 +319,9 @@
 							var strIsLeaf = $("div#" + id + "").attr("isleaf");
 							
 							if (result.containLow == "YES" && strIsLeaf != "TRUE") { //하위가 있고, 표기방식이 [1명/ 전체10명]일 경우
-			        			document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='countColor'>" + result.totalCount + "</span> / <span class='countColor'>" + parseInt(result.totalCount + result.totalCount2) + "</span>";
+			        			document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='txt_color'>" + result.totalCount + "</span> / <span class='txt_color'>" + parseInt(result.totalCount + result.totalCount2) + "</span>";
 							} else {
-								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='countColor'>" + result.totalCount + "</span>";
+								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='txt_color'>" + result.totalCount + "</span>";
 							}
 							//2018-08-01 김보미 - 부서명 [사원수] 가 넘치는지 확인하는 함수
 							deptNameLong(result.containLow, strIsLeaf);
@@ -364,7 +362,7 @@
 	                        check_presence();
 	                    }
 	                } else {
-	                    alert("<spring:message code='ezEmail.t9' />" + g_xmlHTTP.statusText)
+	                    alert("<spring:message code='ezEmail.t9' />" + g_xmlHTTP.status)
 	                }
 	
 	                g_xmlHTTP = null;
@@ -513,7 +511,7 @@
 	                    checkname2_cross_dialogArguments[0] = rgParams;
 	                    checkname2_cross_dialogArguments[1] = deptsearch_click_Complete;
 	                    var OpenWin = window.open("/admin/ezOrgan/checkName2.do", "checkName2_cross", GetOpenWindowfeature(609, 460));
-	                    try { OpenWin.focus(); } catch (e) { }
+	                    try { OpenWin.focus(); } catch (e) {console.log(e);}
 	                } else {
 	                    window.showModalDialog("/admin/ezOrgan/checkName2.do", rgParams, feature);
 	
@@ -550,7 +548,7 @@
 	                            else
 	                                window.dialogArguments["window"].opener.top.organview = loadXMLString(g_xmlHTTP.responseText);
 	                        }
-	                        catch (e) { }
+	                        catch (e) {console.log(e);}
 	                    }
 	
 	                    var treeXML = loadXMLFile("/xml/common/organtree_config2.xml");
@@ -565,7 +563,7 @@
 	                    treeView.DataSource(loadXMLString(g_xmlHTTP.responseText));
 	                    treeView.DataBind("TreeView");
 	                } else {
-	                    alert("<spring:message code='ezEmail.t9' />" + g_xmlHTTP.statusText)
+	                    alert("<spring:message code='ezEmail.t9' />" + g_xmlHTTP.status)
 	                g_xmlHTTP = null;
 	            	}
 	        	}
@@ -649,11 +647,11 @@
 	            var UserListHTML = "";
 
 	           /*  if (SelectDeptNM.getAttribute("countinfo") != "1" && SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length && SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length != "") {
-	                //SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang1 + "</span>]";
+	                //SelectDeptNM.innerHTML += "-[<span class='txt_color'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang1 + "</span>]";
 	                if (SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length ==  getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0])) {
-	        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang1 + "</span>]";
+	        			SelectDeptNM.innerHTML += "-[<span class='txt_color'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang1 + "</span>]";
 	        		} else {
-	        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + "/" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0]) + strLang1 + "</span>]";
+	        			SelectDeptNM.innerHTML += "-[<span class='txt_color'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + "/" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0]) + strLang1 + "</span>]";
 	        		}
 	                
 	                SelectDeptNM.setAttribute("countinfo", "1")
@@ -665,7 +663,7 @@
 	                document.getElementById("Search_txtlist_table").style.display = "none";
 	                
 	                if (pSeach) {
-	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + "<spring:message code='ezEmail.t655' />" + "" + "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang1 + "</span>]";
+	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + "<spring:message code='ezEmail.t655' />" + "" + "-[<span class='txt_color'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang1 + "</span>]";
 	                    SelectDeptNM.setAttribute("countinfo", "1")
 	                }
 	            } else {
@@ -678,7 +676,7 @@
 	                } else {
 	                    document.getElementById("Search_txtlist_table").style.display = "";
 	                    document.getElementById("txtlist_table").style.display = "none";
-	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + "<spring:message code='ezEmail.t655' />" + "" + "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang1 + "</span>]";
+	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + "<spring:message code='ezEmail.t655' />" + "" + "-[<span class='txt_color'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang1 + "</span>]";
 	                    SelectDeptNM.setAttribute("countinfo", "1")
 	                }
 	            }
@@ -1108,7 +1106,7 @@
 		                        MaxCntNum = MaxCntNum + 1;
 		                    }
 
-		                    SetAttribute(objTr, "id", getlistview.GetSelectedRowID(MaxCntNum).substring(0, getlistview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+		                    SetAttribute(objTr, "id", getlistview.GetSelectedRowID(MaxCntNum).substring(0, getlistview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + (MaxID + 1));
 		                    getlistview.AddDataRow(objTr, Resultxml);
 		
 		                    var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
@@ -1156,7 +1154,7 @@
 		                                MaxCntNum = MaxCntNum + 1;
 		                            }
 
-		                            SetAttribute(objTr, "id", getlistview.GetSelectedRowID(MaxCntNum).substring(0, getlistview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+		                            SetAttribute(objTr, "id", getlistview.GetSelectedRowID(MaxCntNum).substring(0, getlistview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + (MaxID + 1));
 		                            getlistview.AddDataRow(objTr, Resultxml);
 		
 		                            var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
@@ -1206,7 +1204,7 @@
 			                        MaxCntNum = MaxCntNum + 1;
 			                    }
 
-			                    SetAttribute(objTr, "id", getlistview.GetSelectedRowID(MaxCntNum).substring(0, getlistview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+			                    SetAttribute(objTr, "id", getlistview.GetSelectedRowID(MaxCntNum).substring(0, getlistview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + (MaxID + 1));
 			                    getlistview.AddDataRow(objTr, Resultxml);
 			                    var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
 
@@ -1260,7 +1258,7 @@
 	                            var objTr = listview.AddRow(InitTr.length);
 	                            if (MaxCntNum != 0)
 	                                MaxCntNum = MaxCntNum + 1;
-	                            SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+	                            SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + (MaxID + 1));
 	                            listview.AddDataRow(objTr, Resultxml);
 	
 	                            _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
@@ -1351,7 +1349,7 @@
 		            xmlHTTP.send("");
 		            
 		            if (xmlHTTP.status != 200) {
-			            alert("<spring:message code='ezEmail.t574' />" + xmlHTTP.statusText);
+			            alert("<spring:message code='ezEmail.t574' />" + xmlHTTP.status);
 		            } else {
 		            	document.getElementById("ListViewGroup").innerHTML = "";
 			            var pListViewGroup = new ListView();
@@ -1493,7 +1491,7 @@
                         MaxCntNum = MaxCntNum + 1;
                     }
 
-                    SetAttribute(objTr, "id", getlistview.GetSelectedRowID(MaxCntNum).substring(0, getlistview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+                    SetAttribute(objTr, "id", getlistview.GetSelectedRowID(MaxCntNum).substring(0, getlistview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + (MaxID + 1));
                     getlistview.AddDataRow(objTr, Resultxml);
 
                     var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;

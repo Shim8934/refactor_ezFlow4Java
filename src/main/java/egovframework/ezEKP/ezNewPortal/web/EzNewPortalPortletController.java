@@ -7,12 +7,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
 import egovframework.ezEKP.ezNewPortal.vo.ChartVO;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -29,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
+import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
@@ -39,7 +42,6 @@ import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
 import egovframework.ezEKP.ezPoll.service.EzPollService;
 import egovframework.ezEKP.ezPortal.service.EzPortalAdminService;
 import egovframework.ezEKP.ezPortal.service.EzPortalService;
-import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -63,9 +65,6 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	
 	@Resource(name = "EzPersonalService")
 	private EzPersonalService ezPersonalService;
-	
-	@Resource(name = "EzQuestionService")
-	private EzQuestionService ezQuestionService;
 	
 	@Resource(name = "EzOrganService")
 	private EzOrganService ezOrganService;
@@ -91,6 +90,9 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	@Resource(name = "EzPollService")
 	private EzPollService ezPollService;
 	
+	@Resource(name = "EzNewPortalService")
+	private EzNewPortalService ezNewPortalService;
+	
 	/**
 	 * 포틀릿 - 공지사항
 	 */
@@ -114,6 +116,10 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
 		param.put("portletId", req.getParameter("portletId"));
+		param.put("currentPage", req.getParameter("currentPage"));
+		param.put("listCntSize", req.getParameter("listCntSize"));
+		param.put("companyId", userInfo.getCompanyID());
+		param.put("deptId", userInfo.getDeptID());
 		String url = "/rest/ezPortal/portlets/notice";
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
@@ -134,7 +140,10 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 					return "json";
 				}
 			}
+			model.addAttribute("totalCnt", data.get("totalCnt"));
+			model.addAttribute("currentPage", data.get("currentPage"));
 		}
+		
 		logger.debug("getPortalNoticePortlet End");		
 		return "json";
 	}
@@ -165,6 +174,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
 		param.put("portletId", req.getParameter("portletId"));
+		param.put("mailCount", req.getParameter("mailCount"));
+		param.put("currPage", req.getParameter("currPage"));
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
 		String result = resultBody.get("status").toString();
@@ -176,6 +187,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 			model.addAttribute("mailboxQuotaStr", data.get("mailboxQuotaStr"));
 			model.addAttribute("mailboxDetail", data.get("mailboxDetail"));
 			model.addAttribute("mailPercent", data.get("mailPercent"));
+			model.addAttribute("currPage", data.get("currPage"));
+			model.addAttribute("totalCount", data.get("totalCount"));
 		}
 		
 		model.addAttribute("userInfo", userInfo);
@@ -183,7 +196,65 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		logger.debug("portalReceivedMailPortlet End");
 		return "json";
 	}
-	
+
+	/**
+	 * 포틀릿 - 외부받은메일
+	 */
+	@RequestMapping(value = "/ezNewPortal/receivedMailPortlet2.do", method=RequestMethod.GET)
+	public String receivedMailPortlet2(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+		logger.debug("portalReceivedMailPortlet2 Start");
+
+		String MailServerURL2 = config.getProperty("config.MailServerURL2");
+		model.addAttribute("portletName", req.getParameter("portletName"));
+		model.addAttribute("usedTheme", commonUtil.isIntNumber(req.getParameter("usedTheme"), 1));
+		model.addAttribute("MailServerURL2", MailServerURL2);
+
+
+		logger.debug("portalReceivedMailPortlet2 End");
+		return "/ezNewPortal/portlets/receivedMailPortlet2";
+	}
+
+	/**
+	 * 포틀릿 - 외부받은메일
+	 */
+	@RequestMapping(value = "/ezNewPortal/receivedMailPortletList2.do", method=RequestMethod.GET)
+	public String receivedMailPortletList2(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+		logger.debug("portalReceivedMailPortlet2 Start");
+		model.addAttribute("userInfo", userInfo);
+
+		try {
+			userInfo = commonUtil.userInfo(loginCookie);
+			String url = "/rest/ezPortal/portlets/receivedMail";
+
+			HashMap<String, Object> param = new HashMap<String, Object>();
+			param.put("userId", userInfo.getId());
+			param.put("portletId", req.getParameter("portletId"));
+			param.put("mailCount", req.getParameter("mailCount"));
+			param.put("currPage", req.getParameter("currPage"));
+			String MailServerURL2 = config.getProperty("config.MailServerURL2");
+
+			JSONObject resultBody = commonUtil.getJsonFromRestApi(MailServerURL2, url, param, req, "get", null);
+			String result = resultBody.get("status").toString();
+			if (result.equals("ok")) {
+				JSONObject data = (JSONObject) resultBody.get("data");
+				model.addAttribute("mailList", data.get("mailList"));
+				model.addAttribute("unreadCount", data.get("unreadCount"));
+				model.addAttribute("mailboxQuotaStr", data.get("mailboxQuotaStr"));
+				model.addAttribute("mailboxDetail", data.get("mailboxDetail"));
+				model.addAttribute("mailPercent", data.get("mailPercent"));
+				model.addAttribute("currPage", data.get("currPage"));
+				model.addAttribute("totalCount", data.get("totalCount"));
+				model.addAttribute("MailServerURL2", MailServerURL2);
+			}
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+
+		model.addAttribute("userInfo", userInfo);
+
+		logger.debug("portalReceivedMailPortlet2 End");
+		return "json";
+	}
 	
 	/**
 	 * 포틀릿 - 투표 포틀릿 
@@ -199,10 +270,15 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
 		param.put("portletId", req.getParameter("portletId"));
+		param.put("companyId", userInfo.getCompanyID());
+		param.put("deptId", userInfo.getDeptID());
+		param.put("rollInfo", userInfo.getRollInfo());
 		String url = "/rest/ezPortal/portlets/vote";
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
 		String status = resultBody.get("status").toString();
+		
+		logger.debug("vote portlet status : " + status);
 		
 		if (status.equals("ok")) {
 			JSONObject data = (JSONObject) resultBody.get("data");
@@ -229,6 +305,9 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
 		param.put("portletId", req.getParameter("portletId"));
+		param.put("companyId", userInfo.getCompanyID());
+		param.put("deptId", userInfo.getDeptID());
+		param.put("rollInfo", userInfo.getRollInfo());
 		String url = "/rest/ezPortal/portlets/vote";
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
@@ -264,6 +343,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
+		param.put("companyId", userInfo.getCompanyID());
+		param.put("deptId", userInfo.getDeptID());
 		String url = "/rest/ezPortal/portlets/poll";
 
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
@@ -303,6 +384,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		param.put("selectDate", request.getParameter("selectDate"));
 		param.put("STARTDATE", request.getParameter("STARTDATE"));
 		param.put("ENDDATE", request.getParameter("ENDDATE"));
+		param.put("companyId", userInfo.getCompanyID());
+		param.put("deptId", userInfo.getDeptID());
 		
 		String url = "/rest/ezportal/portlets/schedulelist";
 		
@@ -333,6 +416,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		model.addAttribute("usedTheme", commonUtil.isIntNumber(req.getParameter("usedTheme"), 1));
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
+		model.addAttribute("portletId", req.getParameter("portletId"));
 		
 		logger.debug("portalApprovalListPortlet ended.");
 		
@@ -351,6 +435,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
 		param.put("type", paramMap.get("type"));
+		param.put("companyId", userInfo.getCompanyID());
 		String url = "/rest/ezportal/portlets/approvallist";
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "get", null);
@@ -368,8 +453,10 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 			model.addAttribute("imgPath", commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId()));
 			
 			//진행중인 문서일 경우에만 aprLines
-			if (data.containsKey("aprLines")) {
-				model.addAttribute("aprLines", (JSONArray) data.get("aprLines"));
+			if (data.containsKey("aprLines0")) {
+				model.addAttribute("aprLines0", (JSONArray) data.get("aprLines0"));
+				model.addAttribute("aprLines1", (JSONArray) data.get("aprLines1"));
+				model.addAttribute("aprLines2", (JSONArray) data.get("aprLines2"));
 			}
 		}
 		
@@ -377,6 +464,32 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		return "json";
 	}
+	
+
+	/**
+	 * 포틀릿 - 전자결재 문서함별 포틀릿
+	 */
+	@RequestMapping(value = "/ezNewPortal/apprPortlet.do", method=RequestMethod.GET)
+	public String portalApprPortlet(HttpServletRequest req, @CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("portalApprovalListPortlet started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String portletId = request.getParameter("portletId");
+		String portletName = request.getParameter("portletName");
+		String cabinetType = request.getParameter("cabinetType");
+
+		model.addAttribute("portletId", portletId);
+		model.addAttribute("portletName", portletName);
+		model.addAttribute("usedTheme", commonUtil.isIntNumber(req.getParameter("usedTheme"), 1));
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("cabinetType", cabinetType);
+		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
+		
+		logger.debug("portalApprovalListPortlet ended.");
+		
+		return "/ezNewPortal/portlets/apprPortlet";
+	}
+	
 	
 	/**
 	 * 포틀릿 - 양식즐겨찾기 포틀릿
@@ -423,6 +536,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
+		param.put("companyId", userInfo.getCompanyID());
+		param.put("deptId", userInfo.getDeptID());
 		String url = "/rest/ezportal/portlets/favoriteforms";
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "get", null);
@@ -483,9 +598,11 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		String portletId = req.getParameter("portletId");
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
-		param.put("startRow", 0);
-		param.put("photoCount", 3);
+		param.put("currentPage", 1);
+		param.put("photoCount", 6);
 		param.put("portletId", portletId);
+		param.put("companyId", userInfo.getCompanyID());
+		param.put("deptId", userInfo.getDeptID());
 		String url = "/rest/ezPortal/portlets/photoBoard";
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
@@ -500,6 +617,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 			
 			if (access.equals("true")) {
 				model.addAttribute("photoBoardList", data.get("photoBoardList"));
+				model.addAttribute("totalCnt", data.get("totalCnt"));
 			}
 		}
 		
@@ -540,7 +658,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("mode", mode);
 		param.put("userId", userId);
-		
+		param.put("companyId", userInfo.getCompanyID());
+
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPortal/portlets/boardFavorites/lists", param, request, "get", null);		
 		
 		String status = resultBody.get("status").toString();
@@ -566,31 +685,28 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	 */
 	@RequestMapping(value="/ezNewPortal/getFavoriteBoardList.do", method=RequestMethod.GET)
 	@ResponseBody
-	public JSONArray getFavoriteBoardList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo, Model model, Locale locale) throws Exception {
+	public JSONObject getFavoriteBoardList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo, Model model, Locale locale) throws Exception {
 		logger.debug("get_favoriteList started");
 
 		userInfo = commonUtil.userInfo(loginCookie);
-    	
     	String userId = userInfo.getId();
     	String boardId = request.getParameter("boardId");
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userId);
 		param.put("boardId", boardId);
-		
+		param.put("currentPage", request.getParameter("currentPage"));
+		param.put("listCnt", request.getParameter("listCnt"));
+		param.put("companyId", userInfo.getCompanyID());
+		param.put("deptId", userInfo.getDeptID());
+
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPortal/portlets/boardFavorites", param, request, "get", null);		
 		
 		String status = resultBody.get("status").toString();
-		JSONArray json = new JSONArray();
+		JSONObject json = new JSONObject();
 		
 		if (status.equals("ok")) {
-			JSONObject data = (JSONObject) resultBody.get("data");
-			
-			if (data.get("favList") != null) {
-					json = (JSONArray) data.get("favList");
-			} else {
-				json = null;
-			}
+			json = (JSONObject) resultBody.get("data");
 		}
 
 		logger.debug("get_favoriteList ended");
@@ -610,6 +726,9 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
+		param.put("companyId", userInfo.getCompanyID());
+		param.put("currentPage", 1);
+		param.put("listSize", 5);
 		String url = "/rest/ezPortal/portlets/community";
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, req, "get", null);
@@ -639,6 +758,9 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
+		param.put("companyId", userInfo.getCompanyID());
+		param.put("currentPage", req.getParameter("currentPage"));
+		param.put("listSize", req.getParameter("listSize"));
 		String url = "/rest/ezPortal/portlets/community";
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, req, "get", null);
@@ -738,7 +860,34 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		param.put("userId", userInfo.getId());
 		param.put("tenantId", userInfo.getTenantId());
 		String url = "/rest/ezPortal/portlets/weather";
-		
+
+		/*
+			한국			-
+			미국			- 뉴욕(5128638) 댈러스(5186266) 덴버(5186794) 로스앤젤레스(5368361) 맨해튼(5664535) 보스턴(4930956) 브롱크스(5110253) 브루클린(5110302) 산호세(5392171) 샌디에이고(4726311)
+						  샌안토니오(4171771) 시카고(4887398) 애틀랜타(4883772) 오스틴(5016884) 워싱턴 D.C.(4140963) 콜롬버스(4188985) 퀸스(5133268) 피닉스(4905873) 필라델피아(5131095) 휴스턴(5194369)
+
+
+			일본			- 도쿄 오사카 오카야마 니가타 나고야 나가모 교토 카고시마 히로시마 후쿠오카 마츠야마 후쿠시마 사포로 아오모리 아사이
+
+
+			중국			- 광저우(1809858) 구이양(1809461) 난닝(1799869) 난징(1799962) 난창(1800163) 란저우(1804430) 베이징(1816670) 상하이(1796236) 선양(2034937) 스자좡(1795268) 지난(1805753) 창사(1815549) 창춘(1815771) 청두(1815286)
+			 			  충칭(1814906) 쿤밍(1804651) 푸저우(1810821) 하얼빈(2037013) 항저우(1808926) 허페이(1808722)
+
+
+			베트남		- 깐토(1586203) 꾸이년(1568574) 냐짱(1572151) 다낭(1905468) 바비(8201616) 비엔호아(1587923) 하노이(1581130) 하이퐁(1581298) 호찌민(1566083) 후에(1580240)
+
+
+			인도네시아	- 덴파사르(1645528) 드폭(8144495) 마카사르(1622786) 메단(1214520) 바탐(8144723) 반다르람풍(1624917) 반둥(1650357) 반자르마신(1650213) 보고르(7780016) 수라바야(8018250) 스마랑(1627896)
+			 			  암본(1651531) 자카르타(1642911) 잠비(1642858) 탕에랑(1625084) 팔렘방(1633070)
+
+
+			TBL_WEATHER
+			  PRIMARYLANG : 날씨 포틀릿에서 현재 selectBox에 선택된 국가에 대한 설정 분기로 사용
+
+			TBL_WEATHER_CITY
+			  USERLOCALLANG : 사용자 설정 언어로 해당 국가의 지역 이름을 번역하여 보여주기 위해 사용
+		*/
+
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, req, "get", null);
 		String result = resultBody.get("status").toString();
 		
@@ -748,6 +897,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 			model.addAttribute("cityList", data.get("cityList"));
 			//sn이 아니라 cityCode 가 와야함
 			model.addAttribute("cityCode", data.get("cityCode"));
+			model.addAttribute("countryCode", data.get("countryCode"));
 			model.addAttribute("displayName", data.get("displayName"));
 			model.addAttribute("currentWeather", data.get("currentWeather"));
 			model.addAttribute("todayWeather", data.get("todayWeather"));
@@ -755,8 +905,21 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		}
 		model.addAttribute("portletName", req.getParameter("portletName"));
 		model.addAttribute("userInfo", userInfo);
-		
-		
+
+		String useJP = ezCommonService.getTenantConfig("useJapanese", userInfo.getTenantId());
+		String useCN = ezCommonService.getTenantConfig("useChinese", userInfo.getTenantId());
+		String useVN = ezCommonService.getTenantConfig("useVietnamese", userInfo.getTenantId());
+		String useID = ezCommonService.getTenantConfig("useIndonesian", userInfo.getTenantId());
+
+		model.addAttribute("useJP", useJP);
+		model.addAttribute("useCN", useCN);
+		model.addAttribute("useVN", useVN);
+		model.addAttribute("useID", useID);
+		model.addAttribute("codeJP", useJP.equals("YES") ? "3" : "");
+		model.addAttribute("codeCN", useCN.equals("YES") ? "4" : "");
+		model.addAttribute("codeVN", useVN.equals("YES") ? "5" : "");
+		model.addAttribute("codeID", useID.equals("YES") ? "6" : "");
+
 		logger.debug("portalWeatherePortlet End");
 		
 		return "/ezNewPortal/portlets/weatherPortlet";
@@ -775,10 +938,12 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		
 		String cityCode = req.getParameter("cityCode");
+		String countryCode = req.getParameter("countryCode");
 		
 		param.put("userId", userInfo.getId());
 		param.put("tenantId", userInfo.getTenantId());
 		param.put("cityCode", cityCode);
+		param.put("countryCode", countryCode);
 		String url = "/rest/ezPortal/portlets/weather";
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, req, "get", null);
@@ -793,40 +958,32 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	/////포틀릿 정보만 가져오기
 	@RequestMapping(value = "/ezNewPortal/getPhotoItemList.do", method=RequestMethod.GET)
 	@ResponseBody
-	public JSONArray portalPhotoItemList(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie,HttpServletResponse resp) throws Exception {
+	public JSONObject portalPhotoItemList(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie,HttpServletResponse resp) throws Exception {
 		logger.debug("portalPhotoItemList Start");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String url = "/rest/ezPortal/portlets/photoBoard";
 		int page = Integer.parseInt(req.getParameter("page"));
 		int photoCount = Integer.parseInt(req.getParameter("photoCount"));
-		int startRow = Math.multiplyExact(Math.subtractExact(page, 1), photoCount);
 		String portletId = req.getParameter("portletId");
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
 		param.put("photoCount", photoCount);
-		param.put("startRow", startRow);
+		param.put("currentPage", page);
 		param.put("portletId", portletId);
+		param.put("companyId", userInfo.getCompanyID());
+		param.put("deptId", userInfo.getDeptID());
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
 		String result = resultBody.get("status").toString();
-		JSONArray json = new JSONArray();
+		JSONObject data = new JSONObject();
 		
 		if (result.equals("ok")) {
-			JSONObject data = (JSONObject) resultBody.get("data");
-			String access = data.get("access").toString();
-			
-			if (access.equals("true")) {
-				if (data.get("photoBoardList") != null) {
-					json = (JSONArray) data.get("photoBoardList");
-				} else {
-					json = null;
-				}
-			}
+			data = (JSONObject) resultBody.get("data");
 		}
 		
 		logger.debug("portalPhotoItemList Ended");
-		return json;
+		return data;
 	}
 	
 	/**
@@ -881,9 +1038,15 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		logger.debug("portalUserInfoPortlet Start");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String lang = commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId());
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
+		param.put("deptId", userInfo.getDeptID());
+		param.put("companyId", userInfo.getCompanyID());
+		param.put("jobId", userInfo.getJobId());
+		param.put("lang", lang);
+		
 		
 		String url = "/rest/ezportal/portlets/userinfomations";
 		
@@ -924,9 +1087,11 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		String portletId = req.getParameter("portletId");
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
-		param.put("startRow", 0);
+		param.put("currentPage", 1);
 		param.put("photoCount", 1);
 		param.put("portletId", portletId);
+		param.put("companyId", userInfo.getCompanyID());
+		param.put("deptId", userInfo.getDeptID());
 		String url = "/rest/ezPortal/portlets/photoBoard";
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
@@ -960,7 +1125,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		model.addAttribute("usedTheme", commonUtil.isIntNumber(req.getParameter("usedTheme"), 1));
 		model.addAttribute("portletName", req.getParameter("portletName"));
-
+		model.addAttribute("resPortletId", ezNewPortalService.getResportletId());
+		
 		logger.debug("portalResourcePortlet End");
 		return "/ezNewPortal/portlets/resourcePortlet";
 	}
@@ -976,13 +1142,26 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		String workspaceHostUrl = ezCommonService.getTenantConfig("workspaceHostUrl", userInfo.getTenantId());
 		String workspaceContextRootUrl = ezCommonService.getTenantConfig("workspaceContextRootUrl", userInfo.getTenantId());
+		
+		/* 2025-03-13 홍승비 - 협업 모듈에 고정된 하드코딩 문자열 제거 (ezWorkspace), 테넌트 컨피그 workspaceAppPath로 협업 웹응용프로그램 경로를 분리하여 사용 ("" 또는 "/ezWork" 등) */
+		String workspaceAppPath = ezCommonService.getTenantConfig("workspaceAppPath", userInfo.getTenantId());
+		
 		model.addAttribute("userId", userInfo.getId());
 		model.addAttribute("usedTheme", Integer.parseInt(req.getParameter("usedTheme")));
 		model.addAttribute("workspaceHostUrl", workspaceHostUrl);
 		model.addAttribute("workspaceContextRootUrl", workspaceContextRootUrl);
+		model.addAttribute("workspaceAppPath", workspaceAppPath);
 		
 		logger.debug("ezWorkspacePortlet End");
 		return "/ezNewPortal/portlets/ezWorkspacePortlet";
+	}
+
+	/**
+	 * 포틀릿 - 협업 디자인용 더미 포틀릿
+	 */
+	@RequestMapping(value="/ezNewPortal/ezWorkspaceDummy.do", method=RequestMethod.GET)
+	public String ezWorkspaceDummy() throws Exception {
+		return "/ezNewPortal/portlets/ezWorkspaceDummy";
 	}
 	
 	/**
@@ -996,11 +1175,16 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String portletId = req.getParameter("portletId");
-		HashMap<String, Object> param = new HashMap<String, Object>();
+		String type = Optional.ofNullable(req.getParameter("type")).orElse("");
+		String fileName = Optional.ofNullable(req.getParameter("fileName")).orElse("");
+		HashMap<String, Object> param = new HashMap<>();
 		param.put("userId", userInfo.getId());
-		param.put("startRow", 0);
+		param.put("companyId", userInfo.getCompanyID());
+		param.put("deptId", userInfo.getDeptID());
+		param.put("currentPage", 1);
 		param.put("photoCount", 5);
 		param.put("portletId", portletId);
+		param.put("fileName", fileName);
 		String url = "/rest/ezPortal/portlets/board";
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
@@ -1019,6 +1203,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		}
 		
 		model.addAttribute("portletId", portletId);
+		model.addAttribute("type", type);
+		model.addAttribute("fileName", fileName);
 		logger.debug("portalBoardPortlet End");
 		
 		return "/ezNewPortal/portlets/boardPortlet";
@@ -1026,35 +1212,35 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	
 	@RequestMapping(value = "/ezNewPortal/getCustomBoardInfo.do", method=RequestMethod.GET)
 	@ResponseBody
-	public JSONArray getCustomBoardInfo(HttpServletRequest req, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
+	public JSONObject getCustomBoardInfo(HttpServletRequest req, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("getCustomBoardInfo Start");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String portletId = req.getParameter("portletId");
+		String fileName = Optional.ofNullable(req.getParameter("fileName")).orElse("");
+		Integer photoCount = Optional.ofNullable(req.getParameter("count")).map(Integer::parseInt).orElse(5);
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
-		param.put("startRow", 0);
-		param.put("photoCount", 5);
+		param.put("companyId", userInfo.getCompanyID());
+		param.put("deptId", userInfo.getDeptID());
+		param.put("currentPage", req.getParameter("currentPage"));
+		param.put("photoCount", photoCount);
 		param.put("portletId", portletId);
+		param.put("fileName", fileName);
 		String url = "/rest/ezPortal/portlets/board";
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
 		String result = resultBody.get("status").toString();
-		JSONArray boardList = new JSONArray();
+		JSONObject data = new JSONObject();
 		
 		if (result.equals("ok")) {
-			JSONObject data = (JSONObject) resultBody.get("data");
-			String access = data.get("access").toString();
-			
-			if (access.equals("true")) {
-				boardList = (JSONArray) data.get("boardList");
-			}
+			data = (JSONObject) resultBody.get("data");
 		}
 		
 		model.addAttribute("portletId", portletId);
 		logger.debug("portalBoardPortlet End");
 		
-		return boardList;
+		return data;
 	}
 	
 	/**
@@ -1069,6 +1255,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
+		param.put("companyId", userInfo.getCompanyID());
+		param.put("deptId", userInfo.getDeptID());
 		
 		String url = "/rest/ezportal/portlets/count/"+ userId;
 		
@@ -1111,6 +1299,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
+		param.put("companyId", userInfo.getCompanyID());
+		param.put("deptId", userInfo.getDeptID());
 		
 		String url = "/rest/ezportal/portlets/count/"+ userId;
 		
@@ -1186,6 +1376,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
+		param.put("currentPage", request.getParameter("currentPage"));
+		param.put("listSize",  request.getParameter("listSize"));
 		
 		String url = "/rest/ezportal/portlets/getWebFolderFileList";
 		
@@ -1207,7 +1399,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	@RequestMapping(value = "/ezNewPortal/surveyPortlet.do", method=RequestMethod.GET)
 	public String portalSurveyPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("portalSurveyPortlet Start");
-		
+		model.addAttribute("portletId", req.getParameter("portletId"));
 		model.addAttribute("portletName", req.getParameter("portletName"));
 		model.addAttribute("usedTheme", commonUtil.isIntNumber(req.getParameter("usedTheme"), 1));
 		
@@ -1237,27 +1429,20 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
 		param.put("portletId", req.getParameter("portletId"));
+		param.put("companyId", userInfo.getCompanyID());
+		param.put("deptId", userInfo.getDeptID());
 		String url = "/rest/ezPortal/portlets/tabBoard";
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
 		String status = resultBody.get("status").toString();
-		int tabNum = 3; // 서브 탭 갯수
-		
 		if (status.equals("ok")) {
 			JSONObject data = (JSONObject) resultBody.get("data");
 			String existence = data.get("existence").toString();
 			
 			if (existence.equals("true")) {
-				for (int i = 1; i <= tabNum; i++) {
-					if (data.get("tabBoardName" + i) != null) {
-						model.addAttribute("tabBoardId" + i		, data.get("tabBoardId" + i)		);
-						model.addAttribute("tabBoard" + i		, data.get("tabBoard" + i)		);
-						model.addAttribute("tabBoardName" + i	, data.get("tabBoardName" + i)	);
-					}
-				}
+				model.addAttribute("tabList", data.get("tabList"));
 				model.addAttribute("portletLang", data.get("portletLang").toString());
 			}
-			
 			model.addAttribute("existence", existence);
 		}
 		
@@ -1284,7 +1469,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	 * */
 	@RequestMapping(value = "/ezNewPortal/getTheme2NotiBoardItemList.do", method = RequestMethod.GET)
 	@ResponseBody
-	public JSONArray getTheme2NotiBoardItemList(HttpServletRequest req, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
+	public JSONObject getTheme2NotiBoardItemList(HttpServletRequest req, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("getTheme2NotiBoardItemList Start");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -1293,12 +1478,15 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
 		param.put("boardID", boardID);
+		param.put("companyId", userInfo.getCompanyID());
+		param.put("deptId", userInfo.getDeptID());
 		
 		String url = "/rest/ezPortal/portlets/theme2NotiBoardItemList";
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
 		String result = resultBody.get("status").toString();
 		JSONArray boardList = new JSONArray();
+		String userLang = userInfo.getLang();
 		
 		if (result.equals("ok")) {
 			JSONObject data = (JSONObject) resultBody.get("data");
@@ -1309,9 +1497,12 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 			}
 		}
 		
+		JSONObject response = new JSONObject();
+		response.put("boardList", boardList);
+		response.put("userLang",userLang );
 		logger.debug("getTheme2NotiBoardItemList End");
-		
-		return boardList;
+
+		return response;
 	}
 
 	/**
@@ -1320,32 +1511,263 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	 */
 	@GetMapping(value = "/ezNewPortal/sampleChartPortlet.do")
 	@ResponseBody
-	public List<List<ChartVO>> sampleChartPortlet() throws Exception {
+	public List<List<ChartVO>> sampleChartPortlet(@CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("sampleChartPortlet Start");
+				
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		int lang = 1;
+		if (userInfo.getLang() != null && !"".equals(userInfo.getLang()) && !"1".equals(userInfo.getLang())) {
+			lang = Integer.parseInt(userInfo.getLang());
+			if (lang > 3) {
+				lang = 2; // 영어, 일본어 외 언어 일 경우 추가
+			}
+		}
+		
+		String[] calendar = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+		String[][] documentLang = {{"Insend", "Outside"},{"内部文書", "外部文書"}}; // 영어 일본어
+		
 		List<List<ChartVO>> wholeList = new ArrayList<>();
 		List<ChartVO> list = new ArrayList<>();
-		SecureRandom random = SecureRandom.getInstanceStrong();
-		for (int i = 1; i <= 12; i++) {
-			ChartVO vo = new ChartVO.ChartVOBuilder(i + "월", random.nextInt(50000))
-					.groupTitle("대내문서")
-					.build();
-			list.add(vo);
-		}
-		for (int i = 1; i <= 12; i++) {
-			ChartVO vo = new ChartVO.ChartVOBuilder(i + "월", random.nextInt(50000))
-					.groupTitle("대외문서")
-					.build();
-			list.add(vo);
-		}
-		wholeList.add(list);
+		SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
+		if (lang == 1) {
+            for (int i = 1; i <= 12; i++) {
+                ChartVO vo = new ChartVO.ChartVOBuilder(i + "월", random.nextInt(50000))
+                        .groupTitle("대내문서")
+                        .build();
+                list.add(vo);
+            }
+            for (int i = 1; i <= 12; i++) {
+                ChartVO vo = new ChartVO.ChartVOBuilder(i + "월", random.nextInt(50000))
+                        .groupTitle("대외문서")
+                        .build();
+                list.add(vo);
+            }
+		    wholeList.add(list);
 
-		List<ChartVO> list2 = new ArrayList<>();
-		for (int i = 0; i <= 2; i++) {
-			list2.add(new ChartVO.ChartVOBuilder(i + "번", random.nextInt(3000)).build());
-		}
-		wholeList.add(list2);
+			List<ChartVO> list2 = new ArrayList<>();
+			for (int i = 0; i <= 2; i++) {
+				list2.add(new ChartVO.ChartVOBuilder(i + "번", random.nextInt(3000)).build());
+			}
+			wholeList.add(list2);
+		} else {
+			String title1 = documentLang[lang-2][0];
+			String title2 = documentLang[lang-2][1];
+			
+			for (int i = 0; i < 12; i++) {
+				ChartVO vo = new ChartVO.ChartVOBuilder(calendar[i], random.nextInt(50000))
+						.groupTitle(title1)
+						.build();
+				list.add(vo);
+			}
+			for (int i = 0; i < 12; i++) {
+				ChartVO vo = new ChartVO.ChartVOBuilder(calendar[i], random.nextInt(50000))
+						.groupTitle(title2)
+						.build();
+				list.add(vo);
+			}
+			wholeList.add(list);
 
+			List<ChartVO> list2 = new ArrayList<>();
+			for (int i = 0; i <= 2; i++) {
+				list2.add(new ChartVO.ChartVOBuilder(i + "", random.nextInt(3000)).build());
+			}
+			wholeList.add(list2);
+		}
+		
 		logger.debug("sampleChartPortlet End");
 		return wholeList;
 	}
+
+	@RequestMapping(value = "/ezNewPortal/iframePortlet.do", method=RequestMethod.GET)
+	public String getIframePortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
+		logger.debug("getIframePortlet Start");
+
+		model.addAttribute("portletName", req.getParameter("portletName"));
+		model.addAttribute("portletId", req.getParameter("portletId"));
+		model.addAttribute("iframeUrl", req.getParameter("iframeUrl"));
+		model.addAttribute("usedTheme", commonUtil.isIntNumber(req.getParameter("usedTheme"), 1));
+
+		logger.debug("getIframePortlet End");
+		return "/ezNewPortal/portlets/iframePortlet";
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/ezNewPortal/getBoardList.do", method=RequestMethod.GET)
+	public JSONObject getBoardList(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("getBoardList Start");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		param.put("companyId", userInfo.getCompanyID());
+		param.put("deptId", userInfo.getDeptID());
+		param.put("boardId", req.getParameter("boardId"));
+		param.put("currentPage", req.getParameter("currentPage"));
+		param.put("listCnt", req.getParameter("listCnt"));
+		
+		String url = "/rest/ezPortal/portlets/boardList";
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
+		String status = resultBody.get("status").toString();
+		
+		JSONObject data = new JSONObject();
+		if (status.equals("ok")) {
+			data = (JSONObject) resultBody.get("data");
+		}
+		
+		logger.debug("getBoardList End");
+		return data;
+	}
+	
+	@RequestMapping(value = "/ezNewPortal/connectionPortlet.do", method=RequestMethod.GET)
+	public String connectionPortlet(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
+		logger.debug("connectionPortlet started");
+		
+		model.addAttribute("portletId", req.getParameter("portletId"));
+		model.addAttribute("portletName", req.getParameter("portletName"));
+		model.addAttribute("usedTheme", commonUtil.isIntNumber(req.getParameter("usedTheme"), 1));
+		
+		logger.debug("connectionPortlet ended");
+		
+		return "/ezNewPortal/portlets/connectPortlet";
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/ezNewPortal/getConnectList.do", method=RequestMethod.GET)
+	public JSONObject getConnectList(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("getConnectList Start");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		param.put("companyId", userInfo.getCompanyID());
+		param.put("deptId", userInfo.getDeptID());
+		param.put("portletId", req.getParameter("portletId"));
+		param.put("currentPage", req.getParameter("currentPage"));
+		param.put("listCnt", req.getParameter("listCnt"));
+		
+		String url = "/rest/ezPortal/portlets/connect/list";
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
+		String status = resultBody.get("status").toString();
+		
+		JSONObject data = null;
+		if (status.equals("ok")) {
+			data = (JSONObject) resultBody.get("data");
+		}
+		
+		logger.debug("getConnectList End");
+		return data;
+	}
+	
+
+	@ResponseBody
+	@RequestMapping(value = "/rest/testConnectPortletJSON.do", method=RequestMethod.POST)
+	public JSONObject testConnectPortletJSON(HttpServletRequest req, @RequestBody Map<String, Object> jsonData) throws Exception {
+		logger.debug("testConnectPortletJSON Start");
+		
+		JSONObject json = new JSONObject();
+		JSONArray jsonArray = new JSONArray();
+		
+		int listCnt = Integer.parseInt(jsonData.get("listCnt").toString());
+		int startRow = Integer.parseInt(jsonData.get("startRow").toString());
+		
+		for (int i = startRow; i < startRow + listCnt && i < 30; i++) {
+			JSONObject jsonVO = new JSONObject();
+			jsonVO.put("title", i + "번째 글");
+			jsonVO.put("writeDate", "2024-08-19 01:12:00");
+			jsonVO.put("writeName", i + "번째 사람");
+			jsonVO.put("linkUrl", "http://localhost:8080/test" + i);
+			jsonVO.put("mobileLinkUrl", "http://localhost:8001/test" + i);
+			
+			jsonArray.add(jsonVO);
+		}
+		
+		json.put("data", jsonArray);
+		json.put("totalCnt", 30);
+		
+		logger.debug("testConnectPortletJSON End");
+		return json;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/rest/testConnectPortletJSONtoXML.do", method=RequestMethod.POST, produces = "application/json;charset=utf-8")
+	public String testConnectPortletJSONtoXML(HttpServletRequest req, @RequestBody Map<String, Object> jsonData) throws Exception {
+		logger.debug("testConnectPortletJSON Start");
+		
+		String xml = "";
+		
+		int listCnt = Integer.parseInt(jsonData.get("listCnt").toString());
+		int startRow = Integer.parseInt(jsonData.get("startRow").toString());
+		xml += "<DATA>";
+		xml += "<ROWS>";
+		for (int i = startRow; i < startRow + listCnt && i < 30; i++) {
+			xml += "<ROW>";
+			xml += "<TITLE>" + i + "번째 글" + "</TITLE>";
+			xml += "<WRITEDATE>" + "2024-08-19 01:12:00" + "</WRITEDATE>";
+			xml += "<WRITENAME>" + i + "번째 사람" + "</WRITENAME>";
+			xml += "<LINKURL>" + "http://localhost:8080/test" + i + "</LINKURL>";
+			xml += "<MOBILELINKURL>" + "http://localhost:8001/test" + i + "</MOBILELINKURL>";
+			xml += "</ROW>";
+		}
+		xml += "</ROWS>";
+		xml += "<TOTALCNT>30</TOTALCNT>";
+		xml += "</DATA>";
+		
+		logger.debug("testConnectPortletJSON End");
+		return xml;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/rest/testConnectPortletXMLtoXML.do", method=RequestMethod.POST, produces = "application/json;charset=utf-8")
+	public String testConnectPortletXMLtoXML(HttpServletRequest req, @RequestBody String xmlData) throws Exception {
+		logger.debug("testConnectPortletJSON Start");
+		
+		String xml = "";
+		
+		Document doc = commonUtil.convertStringToDocument(xmlData);
+		int listCnt = Integer.parseInt(doc.getElementsByTagName("listCnt").item(0).getTextContent());
+		int startRow = Integer.parseInt(doc.getElementsByTagName("startRow").item(0).getTextContent());
+		
+		xml += "<DATA>";
+		xml += "<ROWS>";
+		for (int i = startRow; i < startRow + listCnt && i < 30; i++) {
+			xml += "<ROW>";
+			xml += "<TITLE>" + i + "번째 글" + "</TITLE>";
+			xml += "<WRITEDATE>" + "2024-08-19 01:12:00" + "</WRITEDATE>";
+			xml += "<WRITENAME>" + i + "번째 사람" + "</WRITENAME>";
+			xml += "<LINKURL>" + "http://localhost:8080/test" + i + "</LINKURL>";
+			xml += "<MOBILELINKURL>" + "http://localhost:8001/test" + i + "</MOBILELINKURL>";
+			xml += "</ROW>";
+		}
+		xml += "</ROWS>";
+		xml += "<TOTALCNT>30</TOTALCNT>";
+		xml += "</DATA>";
+		
+		logger.debug("testConnectPortletJSON End");
+		return xml;
+	}
+
+	/**
+	 * 포틀릿 - 식단 포틀릿
+	 */
+	@RequestMapping(value = "/ezNewPortal/mealPlanPortlet.do", method=RequestMethod.GET)
+	public String mealPlanPortlet(HttpServletRequest req, @CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("mealPlanPortlet started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String portletId = request.getParameter("portletId");
+		String portletName = request.getParameter("portletName");
+
+		model.addAttribute("portletId", portletId);
+		model.addAttribute("portletName", portletName);
+		model.addAttribute("companyID", userInfo.getCompanyID());
+		model.addAttribute("tenantID", userInfo.getTenantId());
+		
+		logger.debug("mealPlanPortlet ended.");
+		
+		return "/ezNewPortal/portlets/mealPlanPortlet";
+	}
+	
 }

@@ -146,6 +146,10 @@ public interface EzEmailUserAdminService {
 
 	public int deleteAllUserDistributionForMember(String targetEmail, String domain) throws Exception;
 
-	public void setMailCancelSend(int tenantId, String primary, String pMessageId, String pUserId, String pSubject, List<String> pInnerAddresses, Locale locale) throws Exception;
+	public void setMailCancelSend(int tenantId, String primary, String pMessageId, String pUserId, String pSubject, List<String> pInnerAddresses, Locale locale, String eachCancel) throws Exception;
+
+	public int removeUserMailSetting(String userEmailAddress) throws Exception;
+
+	public int checkUserPrimaryMail(String userEmailAddress, int tenantId) throws Exception;
 
 }

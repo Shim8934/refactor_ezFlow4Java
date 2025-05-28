@@ -7,7 +7,8 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	    <link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
         <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
         <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
         <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>        
@@ -59,7 +60,8 @@
 	        var isOnlyGoogle = "<c:out value='${isOnlyGoogle}' />";
 	        var repetition = "<c:out value='${repetition}' />";
 	        var lang = "<c:out value='${lang}' />";
-	        
+	        var showtop = "<c:out value='${showtop}' />";
+
 	        /* 2021-11-25 홍승비 - 일정완료 관련 데이터 추가 (반복일정 대응) */
 	        var repeatCount = "<c:out value='${repeatCount}' />";
 	        var repStartDate = "<c:out value='${repStartDate}' />";
@@ -136,7 +138,7 @@
 	        		addHeight += 30;
 	        	}
 	            
-            	document.getElementById("message").style.height = (contentHeight - addHeight) + "PX";
+            	document.getElementById("message").style.height = (contentHeight - addHeight - 10) + "PX";
                 document.getElementById("messagetd").style.height = (contentHeight - addHeight) + "PX";
 	        }
 	        
@@ -170,11 +172,11 @@
 					}
 				});
 	        	
-	            var feature = GetOpenPosition(420, 450);
+	            // var feature = GetOpenPosition(420, 450);
 	            if (userid.indexOf('@') > 0)
-	                window.open("/ezCommon/showPersonInfo.do?email=" + userid+"&dept="+deptID, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+	                window.open("/ezCommon/showPersonInfo.do?email=" + userid+"&dept="+deptID, "", GetOpenWindowfeature(420, 450, 1));
 	            else
-	                window.open("/ezCommon/showPersonInfo.do?id=" + userid+"&dept="+deptID, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+	                window.open("/ezCommon/showPersonInfo.do?id=" + userid+"&dept="+deptID, "", GetOpenWindowfeature(420, 450, 1));
 	        }
 	
 			/* function group_info() {
@@ -311,9 +313,32 @@
 					success: function() {
 						alert("<spring:message code='ezSchedule.t213' />");
 						
-		                try { window.opener.RefreshView() } catch (e) { }
-		
-		                if (window.opener.reload != undefined)
+						try {
+		                	if (window.opener != null && window.opener.RefreshView != undefined) {
+		                		window.opener.RefreshView();
+		                	}
+		                 } catch (e) { }
+		                 
+		                try { // 일정 포틀릿 새로고침
+		                    if (parent.opener != null && parent.opener.refreshSchedulePortlet != undefined) {
+		                    	parent.opener.refreshSchedulePortlet();
+		                    }
+	                    } catch (e) {console.log(e);}
+	                    
+	                    try { // 바로가기 테마 새로고침
+		                    if (parent.opener != null && parent.opener.getScheduleList_Top != undefined) {
+		                    	var selectedTd = parent.opener.document.querySelector('#theme2Body #CalendarMini_Top td.select div');
+		                    	if (!selectedTd) {
+		                    		selectedTd = parent.opener.document.querySelector('#theme2Body #CalendarMini_Top td.main_today div');
+		                    	}
+		                    	var selectedDate = selectedTd.getAttribute('dispdate');
+		                    	parent.opener.getScheduleList_Top(selectedDate, 'P');
+		                    	parent.opener.openerCalendarMiniView("CalendarMini_Top");	    		
+		                    	parent.opener.openerCalendarMiniDataSource("Top");
+		                    }
+	                    } catch (e) {console.log(e);}
+	                    
+		                if (window.opener && window.opener.reload != undefined)
 		                    window.opener.reload();
 		                window.close();
 					},
@@ -341,9 +366,32 @@
 					success: function() {
 						alert("<spring:message code='ezSchedule.t213' />");
 						
-		                try { window.opener.RefreshView() } catch (e) { }
-		
-		                if (window.opener.reload != undefined)
+		                try {
+		                	if (parent.opener != null && parent.opener.RefreshView != undefined) {
+		                		parent.opener.RefreshView();
+		                	}
+		                 } catch (e) { }
+						
+		                try { // 일정 포틀릿 새로고침
+		                    if (parent.opener != null && parent.opener.refreshSchedulePortlet != undefined) {
+		                    	parent.opener.refreshSchedulePortlet();
+		                    }
+	                    } catch (e) {console.log(e);}
+	                    
+	                    try { // 바로가기 테마 새로고침
+		                    if (parent.opener != null && parent.opener.getScheduleList_Top != undefined) {
+		                    	var selectedTd = parent.opener.document.querySelector('#theme2Body #CalendarMini_Top td.select div');
+		                    	if (!selectedTd) {
+		                    		selectedTd = parent.opener.document.querySelector('#theme2Body #CalendarMini_Top td.main_today div');
+		                    	}
+		                    	var selectedDate = selectedTd.getAttribute('dispdate');
+		                    	parent.opener.getScheduleList_Top(selectedDate, 'P');
+		                    	parent.opener.openerCalendarMiniView("CalendarMini_Top");	    		
+		                    	parent.opener.openerCalendarMiniDataSource("Top");
+		                    }
+	                    } catch (e) {console.log(e);}
+	                    
+		                if (window.opener && window.opener.reload != undefined)
 		                    window.opener.reload();
 		                window.close();
 					},
@@ -365,7 +413,7 @@
 	            /* 2021-11-25 홍승비 - 일정 수정 시 반복일정의 repeatCount와 repStartDate를 전달 */
 	            if (CrossYN()) {
 	                win = window.open("/ezSchedule/scheduleWrite.do?id=" + encodeURIComponent(id) + "&type=" + scheduletype + "&datetype=" + datetype + "&pattern=" + pattern + "&pageFrom=" + pageFrom + "&otherid=" + _otherid
-	                		+ "&repeatCount=" + repeatCount + "&repStartDate=" + encodeURIComponent(repStartDate), "", "height = 830px, width = 790px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+	                		+ "&repeatCount=" + repeatCount + "&repStartDate=" + encodeURIComponent(repStartDate) + "&showtop=" + showtop, "", "height = 830px, width = 790px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 	            } else {
 	            	win = window.open("/ezSchedule/scheduleWrite.do?id=" + encodeURIComponent(id) + "&type=" + scheduletype + "&datetype=" + datetype + "&pattern=" + pattern + "&pageFrom=" + pageFrom + "&otherid=" + _otherid
 	            			+ "&repeatCount=" + repeatCount + "&repStartDate=" + encodeURIComponent(repStartDate), "", "height = 760px, width = 790px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
@@ -713,6 +761,33 @@
 				});
 				window.close();
 			}
+
+			var writeboardselect_modal_dialogArguments = new Array();
+			function NewItem_onclick() {
+				writeboardselect_modal_dialogArguments[1] = NewItem_onclick_Complete;
+				var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(355, 600));
+				try { OpenWin.focus(); } catch (e) { }
+			}
+
+			function NewItem_onclick_Complete(ret) {
+				if (typeof (ret) != "undefined") {
+					pBoardID = ret[0];
+					if (pBoardID == "" || typeof (pBoardID) == "undefined") {
+						return;
+					}
+					var pheight = window.screen.availHeight;
+					var pwidth = window.screen.availWidth;
+					var pTop = (pheight - 720) / 2;
+					var pLeft = (pwidth - 765) / 2;
+
+					if (ret[2] == "2" || ret[2] == "3" || ret[2] == "4" || ret[2] == "7" || (ret[3] != "null" && ret[3] != null && ret[3] != "")) {
+						alert(ezSchedule_kyj1);
+					}
+					else {
+						window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&mode=new1&pbrdGbn=SiteNewBoard&pFromScreen=Mail&url=" + encodeURIComponent(contentpath) + "&scheduleId=" + scheduleid, '', GetOpenWindowJun(765, 870));
+					}
+				}
+			}
 		</script>
 	</head>
 	
@@ -723,13 +798,16 @@
 	                <td style="height:20px">	                    
 	                    <div id="menu">
 	                        <ul>
-	                        	<c:if test="${_editPosible == 'Y'}">
+	                        	<c:if test="${_editPosible == 'Y' && usage == 'Y'}">
 	                                <li>
 	                                	<span onclick="edit_schedule()"><spring:message code='ezSchedule.t302' /></span>
 	                                </li>
 	                                <li id ="manageli">
 	                                	<span id=managespan onclick="manage_attendant()"><spring:message code='ezSchedule.t303' /></span>
 	                                </li>
+									<li id="btnBoard">
+										<span id="span_btnBoard" onClick="return NewItem_onclick()"><spring:message code='ezApprovalG.t1514'/></span>
+									</li>
 	                                <li>
 	                                	<span class="icon16 popup_icon16_delete" onclick="check_schedule()"></span>
 	                                </li>
@@ -747,7 +825,7 @@
 	                            </c:if>
 								<li>
                             		<span class="icon16 popup_icon16_print" onclick="Print_onClick()"></span>
-                            	</li>                            	
+                            	</li>
 	                        </ul>
 	                    </div>
 	                    <div id="close">
@@ -829,7 +907,7 @@
 	                            <th style="white-space:nowrap">
 	                                <spring:message code='ezSchedule.t311' />
 	                            </th>
-	                            <td colspan="3" width="100%" style="overflow-y:auto; height:30px; padding-top:1px; padding-bottom:1px;">
+	                            <td colspan="3" width="100%" style="overflow-y: auto; height: 100%; width: 100%; vertical-align: middle; display: table-cell;">
 	                                <div style="max-height:30px;" id="LabelAttendant">	                                
 	                                	<c:forEach var="item" items="${attendantList}" varStatus="status">	                                		  		
 	                                	 	<span title="<spring:message code='ezSchedule.t162'/>" style="cursor:pointer" onclick="show_personinfo('${item.attendantId}')">
@@ -863,7 +941,7 @@
 	                                <spring:message code='ezSchedule.t313' />
 	                            </th>
 	                            <td>
-	                                <div style="word-break: break-all; overflow-y: auto; height: 17px; padding-top: 2px" id="LabelLocation">	                                    
+	                                <div style="word-break: break-all; overflow-y: auto; height: 20px; padding-top: 2px" id="LabelLocation">	                                    
 	                                    <c:out value="${scheduleInfo.location }" />
 	                                </div>
 	                            </td>
@@ -873,7 +951,7 @@
 	                                <spring:message code='ezSchedule.t314' />
 	                            </th>
 	                            <td colspan="3">
-	                                <div style="word-break: break-all; overflow-y: auto; height: 17px;" id="LabelSubject">	                                    
+	                                <div style="overflow-y: auto; height: 100%; width: 100%; vertical-align: middle; display: table-cell;" id="LabelSubject">	                                    
 	                                    <c:out value="${scheduleInfo.title}" />
 	                                </div>
 	                            </td>
@@ -883,7 +961,7 @@
 	            </tr>
 	            <tr>
 	                <td class="pad1" style="vertical-align: top; height: 100%" id="messagetd">
-	                    <iframe id="message" style="border: #ddd 1px solid; padding-left: 5px; overflow: auto;width: calc(100% - 7px); padding-top: 6px; height: 370px; background-color: white"></iframe>	                    
+	                    <iframe id="message" style="border: #ddd 1px solid; padding-left: 5px; overflow: auto;width: calc(100% - 7px); padding-top: 6px; height: 350px !important; background-color: white"></iframe>	                    
 	                </td>
 	            </tr>
 	            <tr>

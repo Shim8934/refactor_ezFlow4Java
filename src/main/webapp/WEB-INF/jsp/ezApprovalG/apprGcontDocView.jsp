@@ -7,7 +7,8 @@
 	<head>
 		<title><spring:message code='ezApprovalG.t367'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -21,6 +22,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/sendMail_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/aprmanage_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Office.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/apprGSummary.js')}"></script>
 		<script type="text/javascript" ID="clientEventHandlersJS">
 		    var pDocID = "<c:out value ='${docID}'/>";
 		    var pDocHref = "<c:out value ='${docHref}'/>";
@@ -35,7 +37,7 @@
 		    var NextOpinionFlag = true;
 		    var doctitle = "";
 		    var pOrgAttach = "";
-		    var pendDir = "${endDir}'/>";
+		    var pendDir = "${endDir}";
 		    var xmlhttp = createXMLHttpRequest();
 		    var arr_userinfo = new Array();
 		    arr_userinfo[0]  = "user";
@@ -86,6 +88,12 @@
 
 			// 첨부문서 확인 여부 (첨부문서 창 닫을시 발생하는 오류 방지를 위한 Flag)
 			var isDocAttach = "<c:out value = '${isDocAttach}'/>";
+			
+			// 2024-05-23 김우철 - 헤더 숨기기 기능 사용 여부
+			var useHideHeaderArea = "<c:out value ='${useHideHeaderArea}'/>";
+
+			var tenantID = "<c:out value ='${userInfo.tenantId}'/>";
+			var nonElecRec = "<c:out value ='${nonElecRec}'/>";
 
 		    $(function () {
 		    	/* 2022-07-29 홍승비 - 열람권한 체크는 초기 진입 시 한번만 진행 (관리자 > 전체 완료문서조회 > 관리자는 모든 문서 열람 가능) */
@@ -113,41 +121,38 @@
 					}
 					var val = parseInt($("#selectImg option:selected").val());
 					var divImg = $("#message").contents().find(".divImg");
-					$(divImg).children().css("zoom",100+"%");
 					var pages = $(divImg).children().length;
-					if(selectOp==1){
-						for(var i=1; i<=pages; i++){
-							if(i <= pages){
-								$("#selectImg").append("<option value='" + i + "'>" + i +" / "+pages+ " Page</option>");
+					if (pFormID != "2021000000" ) {
+						if (selectOp == 1) {
+							for (var i = 1; i <= pages; i++) {
+								if (i <= pages) {
+									$("#selectImg").append("<option value='" + i + "'>" + i + " / " + pages + " Page</option>");
+								}
 							}
 						}
+						if (pages > 1) {
+							window.resizeTo(1920, 1200);
+							var sw = screen.width;
+							var sh = screen.height;
+							var cw = document.body.clientWidth;
+							var ch = document.body.clientHeight;
+							var top = sh / 2 - ch / 2 - 100;
+							var left = sw / 2 - cw / 2;
+							$("#officeBtn").css("display", "");
+							var selectNum = $("#message").contents().find(".divImg").find(".imgDiv").index();
+							$("#selectImg option:eq(" + selectNum + ")").prop('selected', true);
+						}
 					}
-					if(pages > 1){
-						window.resizeTo(1920, 1200);
-						var sw = screen.width;
-			    		var sh = screen.height;
-			    		var cw = document.body.clientWidth;
-			    		var ch = document.body.clientHeight;
-			    		var top  = sh / 2 - ch / 2 - 100;
-			    		var left = sw / 2 - cw / 2;
-						$("#officeBtn").css("display","");
-						var selectNum = $("#message").contents().find(".divImg").find(".imgDiv").index();
-						$("#selectImg option:eq("+ selectNum +")").prop('selected', true);
-					}
-					
-					var imgMove = $("#message").contents().find(".divImg").find(".imgDiv");
-					$(imgMove).find(".office-image").css("zoom", 100+"%");
-					if(imgMove.length == 0){
-						$("#zoomIn").css("display","none");
-						$("#zoomOut").css("display","none");
-						$("#zoomReset").css("display","none");
-						$("#prev").css("display","none");
-						$("#next").css("display","none");
-						$("#prevAll").css("display","none");
-						$("#nextAll").css("display","none");
-						$("#selectImg").css("display","none");
-						$("#all").attr("src", "/images/icviewer_downsize.png");
-						
+
+					if(divImg.length > 0){
+					    imgTag = divImg.find("img").get(0);
+                        if(typeof imgTag != "undefined"){
+                            imgTag.onload = function() {
+                                officeImgExist = true;
+                            }
+                        }
+                        setTimeout(satImgCheck,3000);
+
 					}
 				});
 		      	
@@ -297,16 +302,27 @@
 		            }
 		        }
 		        
-		        if ("<c:out value ='${uFlag}'/>" == "m03")
+		        if ("<c:out value ='${uFlag}'/>" == "m03") {
 		            setAttachInfo(pDocID, "APR", lstAttachLink);
-		        else
+		        } else {
 		            setAttachInfo(pDocID, "END", lstAttachLink);
-		
+		        }
+		        
+				/* 2023-12-05 홍승비 - 결재서명 재맵핑 함수 호출 (TBL_SIGNINFO 테이블에 정상적인 서명 데이터가 확정 삽입되는 시점은 테넌트 컨피그로 체크) */
+		        message.startRemapAllAprSign_MHT(pDocID, orgCompanyID);
+		        
+		        // 현재 문서가 수신문이면서 원문서가 존재하는 경우, 원문서의 서명 데이터도 재맵핑
+		        if (docState == "011" && porgDocID != null && typeof(porgDocID) != "undefined" && porgDocID != "") {
+		        	message.startRemapAllAprSign_MHT(porgDocID, orgCompanyID);
+		        }
+		        
 		        hasOpinion = CheckOpinionInfo();
 		        if (hasOpinion) {
 		            var pInformationContent = "<spring:message code='ezApprovalG.t9'/>" + "<br>" +"<spring:message code='ezApprovalG.t170'/>";
 		            OpenInformationUI(pInformationContent, btnOpinion_onclick_Complete);
 		        }
+		        
+		        checkHeaderAction();
 		    }
 	
 		    function btnOpinion_onclick_Complete(Ans) {
@@ -320,7 +336,8 @@
 		
 		    var PrtBodyContent;
 		    function btnPrint_onclick() {
-		        PrintClick("Cross", pDocID, "END");
+		        headerAction("open");
+		    	PrintClick("Cross", pDocID, "END");
 		    }
 		    function btnClose_onclick() {	    
                 window.close();
@@ -425,7 +442,8 @@
 
 			// 2018-07-10 황윤호
 		    function btnMail_onclick() {	   
-		    	if(hasOpinion) {
+		    	headerAction("open");
+				if(hasOpinion) {
 		    		SendMailClick("Cross", pDocID, "END");
 		    	} else {
 		    		attachAppr();
@@ -453,7 +471,7 @@
 		            var pTop = (pheight - 720) / 2;
 		            var pLeft = (pwidth - 765) / 2;
 		            
-		            if (ret[2] == "2" || ret[2] == "3" || ret[2] == "4" || ret[2] == "7" || (ret[3] != "null" && ret[3] != null && ret[3] != "")) {
+		            if (ret[2] == "2" || ret[2] == "3" || ret[2] == "4" || ret[2] == "7" || ret[2] == "8" || (ret[3] != "null" && ret[3] != null && ret[3] != "")) {
 		                alert(strLang1031);
 		            }
 		            else {
@@ -686,7 +704,7 @@
 		        totalsavefileinfo_dialogArguments[0] = "";
 		        totalsavefileinfo_dialogArguments[1] = TotalSave_onclick_Complete;
 		
-		        DivPopUpShow(580, 480, "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=END&orgCompanyID=" + orgCompanyID);
+		        DivPopUpShow(580, 480, "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=" + docAprEnd + "&orgCompanyID=" + orgCompanyID);
 		    }
 		    function TotalSave_onclick_Complete() {
 		        DivPopUpHidden();
@@ -696,12 +714,18 @@
 		    var getformcont_cross_dialogArguments = new Array();
 		    var editable = "";
 		    function btnReuse_onclick(type) {
+		    	if (nonElecRec != "") {
+		    		var pAlertContent = strLangKWC01;
+					OpenAlertUI(pAlertContent);
+					return;
+		    	}
+		    	
 				$.ajax({
 		    		type : "POST",
 		    		dataType : "text",
 		    		data : {
 		    			formID : pFormID,
-		    			companyID : orgCompanyID
+		    			companyID : companyID
 		    		},
 		    		url : "/ezApprovalG/getFormDetail.do",
 		    		success: function(xml){
@@ -714,12 +738,18 @@
 						if (xml.getElementsByTagName("FORMCONNFLAG").length > 0) {
 			                form.connflag = xml.getElementsByTagName("FORMCONNFLAG").item(0).textContent;
 						}
+						
+						if (typeof form.currVersion === "undefined" && docFormVersion == "") {
+							var pAlertContent = strLangKWC02;
+							OpenAlertUI(pAlertContent);
+							return;
+						}
 
-						if(form.currVersion != docFormVersion) {
+						if (form.currVersion != docFormVersion) {
 							var pAlertContent = strLang975;
 							OpenAlertUI(pAlertContent);
 							return;
-						} else if(form.connflag == 'Y') {
+						} else if (form.connflag == 'Y') {
 							var pAlertContent = strLang1150;
 		                    OpenAlertUI(pAlertContent);
 							return;
@@ -764,7 +794,6 @@
 						}
 		    		}        			
 		    	});
-
 		    }
 		    
 		    function openDraftUI(pDraftFlag, pCurSelRow) {
@@ -852,28 +881,31 @@
 		                    return RtnVal;
 		                }
 
-		                if (RtnVal != "NAME") {
+		                if (RtnVal != "NAME") { // 서명이 이미지인 경우 
 		                    try {
 		                        var signWidth = 50;
-		                        //var signHeight = 28;
-		                        var signHeight = 50;
+		                        var signHeight = 50; // 후결승인은 대리결재가 불가능하므로 代 문자의 삽입 없음 (이미지 서명의 높이가 50으로 고정됨)
 		                        var strimg;
-		                        //strimg = "<img src='" + document.location.protocol + "//" + document.location.hostname + "/approvalG/downloadAttach.do?filepath=" + escape(RtnVal) + "' border=0  embedding='1' ";
 		                        strimg = "<img src='" + escape(RtnVal) + "' border=0 embedding='1' ";
 		                        strimg = strimg + " width=" + signWidth;
 		                        
-		                        
-		                        if (signImageType = "NAME") {
-	                            	strimg = strimg + " height=" + signHeight + " spath='" + escape(RtnVal) + "'  imglock >" + "<br>" + arr_userinfo[2];
+		                        if (signImageType == "NAME") {
+	                            	strimg = strimg + " height=" + signHeight + " spath='" + escape(RtnVal) + "'>" + "<br>" + arr_userinfo[2];
 	                            } else {
-	                            	strimg = strimg + " height=" + signHeight + " spath='" + escape(RtnVal) + "'  imglock >";
+	                            	strimg = strimg + " height=" + signHeight + " spath='" + escape(RtnVal) + "'>";
 	                            }
 
 		                        field.innerHTML = strimg;
+		                        
+		                        /* 2024-09-11 홍승비 - 후결승인 시 서명 데이터 DB 저장 형식 수정 */
+		                        var content = RtnVal;
+		                        if (signImageType == "NAME") {
+		                        	content = content + "::" + arr_userinfo[2];
+		                        }
 
 		                        SignType[signCnt] = "IMAGE";
 		                        SignName[signCnt] = signID;
-		                        SignContent[signCnt] = RtnVal;
+		                        SignContent[signCnt] = content;
 
 		                        signCnt = signCnt + 1;
 		                    }
@@ -882,7 +914,7 @@
 		                else {
 		                    strimg = "<p style=\"FONT-WEIGHT:900;FONT-SIZE:10pt;FONT-FAMILY:" + strLang9 + "\">" + arr_userinfo[2] + "</p>";
 		                    field.innerHTML = strimg;
-		                    SignType[signCnt] = "TEXT";
+		                    SignType[signCnt] = "HTML";
 		                    SignName[signCnt] = signID;
 		                    SignContent[signCnt] = strimg;
 		                    signCnt = signCnt + 1;
@@ -998,6 +1030,39 @@
 					}
 				} catch (e) { }
 			}
+			
+			function checkHeaderAction() {
+				if (useHideHeaderArea == "YES" && message.GetListItem(message.GetFieldsList(), "headerArea") != null) {
+					document.getElementById("headerTabTR").style.display = "";
+					$('#headerMenu').hover(function() {
+						$('#headerMenu').css('border-bottom', '3px black solid');
+						$('#headerHide').css({'color':'black', 'font-weight':'bold'});
+					}, function() {
+						$('#headerMenu').css('border-bottom', 'solid 1px #eaeaea');
+						$('#headerHide').css({'color':'#8f8e93', 'font-weight':'normal'});
+					}) 
+				} else if (document.getElementById("headerTabTR") != null) {
+					document.getElementById("headerTabTR").style.display = "none";
+				}
+			}
+			
+			function headerAction(action) {
+	    		if (useHideHeaderArea == "YES") {
+	    			var fields = message.GetFieldsList();
+		    	    var field = message.GetListItem(fields, "headerArea");
+		    	    
+		    	    if (field) {
+		    	        if (field.style.display == "none" || action == "open") {
+		    	        	field.style.display = "";
+		    	            document.getElementById("headerHide").innerHTML = ezApproval_headerHide01;
+		    	        } else {
+		    	            field.style.display = "none";
+		    	            document.getElementById("headerHide").innerHTML = ezApproval_headerHide02;
+		    	        }
+		    	    }
+	    		}
+	    	}
+			
 		</script>
 	</head>
 	<body class="popup" style="OVERFLOW:hidden;height:100%">
@@ -1008,6 +1073,7 @@
 		        <ul <c:if test="${isPreview == 'Y'}">style="display:none"</c:if>>
 		          <li id="btnWhoKyul" style="display:none"><span onClick="return btnWhoKyul_onclick()"><spring:message code='ezApproval.pjj35'/></span></li>
 		          <li id="btnDocInfo"><span id="span_btnDocInfo" onClick="return btnDocInfo_onclick()"><spring:message code='ezApprovalG.t54'/></span></li>
+		          <li id="btnSummary"><span onclick="return btnSummaryView()"><spring:message code='ezApprovalG.t1203'/></span></li> <%-- 요약전 --%>
 		          <li id="btnOpinion"><span id="span_btnOpinion" onClick="return btnOpinion_onclick()"><spring:message code='ezApprovalG.t55'/></span></li>
 				  <%-- 2023-06-26 민지수 - 추가의견 버튼 추가 --%>
 				  <c:if test="${docAprEnd != 'APR'}"> <%-- 2023-07-13 민지수 - 배부대장의 경우 endView(완료문서보기)로 띄우지만 apr(진행중) 문서인 경우 버튼 숨김처리 --%>
@@ -1021,8 +1087,11 @@
 		          <c:if test="${useBoard == 'YES' }">
 				  <li id="btnBoard"><span id="span_btnBoard" onClick="return NewItem_onclick()"><spring:message code='ezApprovalG.t1514'/></span></li>
 				  </c:if>
-				  <c:if test="${approvalFlag != 'G' and orgCompanyID eq userInfo.companyID and formID != '2018000000'}">
+				  <c:if test="${approvalFlag eq 'S' and orgCompanyID eq userInfo.companyID and formID != '2018000000' and docAprEnd != 'APR'}">
 		          	<li id="btnReuse"><span onClick="return btnReuse_onclick('reuse')"><spring:message code='ezApprovalG.t990048'/></span></li>
+				  </c:if>
+				  <c:if test="${approvalFlag eq 'G' and formID != '2018000000' and docAprEnd ne 'APR'}">
+				  	<li id="btnReuse"><span onClick="return btnReuse_onclick('reuse')"><spring:message code='ezApprovalG.t990048'/></span></li>
 				  </c:if>
 				  <li id="btnPrint"><span class="icon16 popup_icon16_print" id="span_btnPrint" onClick="return btnPrint_onclick()"></span></li>
 				  <c:if test="${useExternalMailServer == 'NO'}">
@@ -1042,6 +1111,17 @@
 		        </ul>
 		      </div></td>
 		  </tr>
+			<c:if test="${useHideHeaderArea == 'YES'}">
+			  <tr id="headerTabTR" style="display:none;">
+				<td>
+					  <div id="headerTab" style="width:90%; height:27px; margin:0 auto; border-bottom: solid 1px #eaeaea; box-sizing: border-box;">
+						<div id="headerMenu" style="width:80px; height:100%; cursor:pointer; text-align:center" onclick="headerAction()">
+							<span id="headerHide" style="color:#8f8e93; font-size:14px;"><spring:message code='ezApproval.headerHide01'/></span>
+						</div>
+					  </div>
+				</td>
+			  </tr>
+			</c:if>
 		  <tr>
 		    <td style="padding-bottom:10px;height:90%"> 
 		          <iframe id="message" name="message" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox" style="width: 100%; height:100%" src="ConDocViewContent.do" frameborder="0"></iframe>                

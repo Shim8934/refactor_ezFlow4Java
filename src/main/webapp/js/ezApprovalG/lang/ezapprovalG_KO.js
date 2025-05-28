@@ -684,7 +684,7 @@ var strLang1027 = "의견을 수정하였습니다.";
 var strLang1028 = "년";
 var strLang1029 = "월";
 var strLang1030 = "일";
-var strLang1031 = "익명게시판 또는 포토게시판 또는 URL링크 게시판에는 메일/결재문서 게시를 할 수 없습니다.";
+var strLang1031 = "일반게시판, Q&A게시판에만 게시가 가능합니다.";
 var strLang1038 = "외부발송문서 본문에는 이미지와 링크가 들어갈 수 없습니다.";
 var strLang1039 = "선택한 사용자는 부재중입니다.</br>추가하시겠습니까?";
 
@@ -856,7 +856,7 @@ var strLangFromFile = "/xml/ezApprovalG/ezFormInfo.xml";
 var strLang1105 = "결재문서를 수신하지 않는 부서입니다.<br>추가할 수 없습니다.";
 var strLang1106 = "검색어를 입력해주세요.";
 var strLang1107 = "발송자";
-var strLang1108 = "심사자";
+var strLang1108 = "발송담당자";
 var strLang1109 = "기안자";
 var strLang1110 = "기안일";
 var strLang1111 = "[결재문서회수알림]";
@@ -1164,3 +1164,51 @@ var strLang975 = "양식 버전이 달라 재사용 할 수 없습니다.";
 var strLangJIH01 = "보안 문서는 미리보기 열람이 불가합니다.";
 var strLangJIH02 = "/blank_kr.htm";
 var strLangJIH03 = "대외수신함에서 미리보기 열람은 문서 최초 열람 후 가능합니다.";
+
+/* 2023-05-16 이가은 - 일괄접수 관련 메세지 추가 */
+var strLangLGEAR01 = "일괄접수 완료되었습니다.";
+var strLangLGEAR02 = "일괄접수 중 오류가 발생하였습니다.<br>";
+var strLangLGEAR03 = "일괄접수자전결 완료되었습니다.";
+var strLangLGEAR04 = "일괄접수자전결 중 오류가 발생하였습니다.<br>";
+
+// 2024-04-11 조수빈 - 일괄접수 관련 누락 메세지 추가
+var strLangJSBAP02 = "일괄접수를 진행하시겠습니까?<br>상태가 회송인 문서, 시행문과 합의문, 분리첨부가 존재하는 문서는 대상에서 제외됩니다.";
+var strLangJSBAP03 = "일괄접수자전결을 진행하시겠습니까?<br>상태가 회송인 문서, 시행문과 합의문, 분리첨부가 존재하는 문서는 대상에서 제외됩니다.";
+
+var strJangJIH04 = "시작일을 종료일보다 빠르게 지정해 주십시오."
+
+var strLangKWC01 = "비전자문서는 재사용 할 수 없습니다.";
+var strLangKWC02 = "양식이 삭제되어 재사용 할 수 없습니다.";
+
+/* 2024-12-27 홍승비 - 기록물 배부대장 > 배부한 문서가 삭제된 경우 알러트를 표출하기 위한 메세지 추가 */
+var strLangHSBDR01 = "해당 배부문서는 삭제된 문서입니다. 열람이 불가능합니다.";
+
+var strLangKMH01 = "일괄지정을 진행하시겠습니까?<br>결재상태가 회송인 문서, 문서상태가 합의인 문서는 대상에서 제외됩니다.";
+
+var strLangJJE01 = "는 결재문서를 수신하지 않는 부서입니다.\n즐겨찾기 적용에서 제외됩니다.";
+
+/* 전자결재 헤더 숨기기 기능 */
+var ezApproval_headerHide01 = "헤더 숨기기";
+var ezApproval_headerHide02 = "헤더 펼치기";
+
+/* 2024-12-23 이가은 - 전자결재 일괄배부 기능 추가 */
+var ezApproval_allBeabu01 = "일괄배부를 진행하시겠습니까?";
+var ezApproval_allBeabu02 = "합의문이나 회송된 문서는 대상에서 제외됩니다.";
+
+/* 전자결재 요약전 에디터 기능 */
+var strLangJIH_Summary01 = "요약전 저장이 완료되었습니다.";
+var strLangJIH_Summary02 = "내용이 비어있는 요약전을 저장할 수 없습니다.";
+var strLangJIH_Summary03 = "잘못된 접근입니다.";
+var strLangJIH_Summary04 = "요약전을 불러올 수 없습니다.";
+var strLangJIH_Summary05 = "요약전 정보";
+var strLangJIH_Summary05 = "요약전 정보";
+
+/* 전자결재 사인 그리기 기능 */
+var strLangHIH_signDraw01 = "서명을 작성한 뒤 결재해주세요.";
+
+/* 2025-05-12 김수연 aprmanage_Cross.js 하드코딩 수정 */
+var strLangAssignedList = "지정목록";
+var strLangDeptInbox = "부서수신함";
+
+var strLangAtachHIK_01 = "일반첨부파일은 총"; 
+var strLangAtachHIK_02 = "MB까지 가능합니다."; 

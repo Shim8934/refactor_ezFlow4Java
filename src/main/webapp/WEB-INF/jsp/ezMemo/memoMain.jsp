@@ -9,7 +9,8 @@
 	<head>
 		<title></title>		
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="${util.addVer('ezMemo.c1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link href="${util.addVer('/css/previewmail.css')}" rel="stylesheet" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/jquery-ui.css')}">
 		<link rel="stylesheet" href="${util.addVer('/css/ezMemo/memo.css')}">
@@ -236,9 +237,9 @@
 		        <li><span onClick="memoMove()"><spring:message code='ezMemo.t0022'/></span></li>
 		        <li><span onClick="memoDisplayChange()"><spring:message code='ezMemo.t0017'/></span></li>
 		        <li><span onClick="memoDisplayChange2()"><spring:message code='ezMemo.t0024'/></span></li>
-		        <li><span class="icon16 icon16_search" onClick="doLayerPopup(this);"></span></li>
-		        <li onClick="DeleteItem_onclick()"><span class="icon16 icon16_delete"></span></li>
-		        <li onClick="refresh_onclick()"><span class="icon16 icon16_refresh"></span></li>
+		        <li onClick="doLayerPopup(this);"><span class="icon16 icon16_search switchIcon"></span><span class="iconTexts"><spring:message code='ezMemo.t0016'/></span></li>
+		        <li onClick="DeleteItem_onclick()"><span class="icon16 icon16_delete switchIcon"></span><span class="iconTexts"><spring:message code='ezMemo.t0015'/></span></li>
+		        <li onClick="refresh_onclick()"><span class="icon16 icon16_refresh switchIcon"></span><span class="iconTexts"><spring:message code='ezMemo.t0018'/></span></li>
 		        <div class="sub_frameIcon" style="float:right">
 					<div class="sub_frameIconUL02">
 					  	<p class="frameIconLI"><span mode="off" class="icon16 btn_arrow_down" id="maillistoptiondiv" onclick="MailOptionView(this);"></span></p>  

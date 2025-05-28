@@ -56,7 +56,7 @@ import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.KoreanLunarCalendar;
 import egovframework.let.utl.sim.service.EgovFileScrty;
-import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service("EzPersonalService")
 public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements EzPersonalService{
@@ -797,25 +797,9 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 		logger.debug("setNotiDisabledItems started. userId={}, tenantId={}, items={}", userId, tenantId, items);
 		ezPersonalDAO.clearNotiDisableItems(userId, tenantId);
 		
-		// 2023-07-28 조수빈 - 일정 관리인 경우  일정관리알람테이블(TBL_SCHEDULECONFIG)에도 추가하는 로직.
-		// 일정관리 알림 항목은 4가지이기 때문에 배열 길이 고정
-		String[] scheduleConfigArr = {"Y", "Y", "Y", "Y"};
-		String scheduleConfigStr;
-		
 		if (!items.isEmpty()) {
 			ezPersonalDAO.insertNotiDisableItems(userId, tenantId, items);
-			
-			for (PersonalNotiDisableItemVO vo : items) {
-				// 일정관리인 경우 해당 항목을 N으로 변경한다.
-				if (vo.getMainType() == 4) {
-					scheduleConfigArr[vo.getSubType() - 1] = "N";
-				}
-			}
 		}
-		
-		scheduleConfigStr = String.join(";", scheduleConfigArr);
-		// 일정관리에 대해서만 수행
-		ezScheduleService.setScheduleMailNotiConfig(scheduleConfigStr, userId, tenantId);
 		
 		logger.debug("setNotiDisabledItems ended.");
 	}

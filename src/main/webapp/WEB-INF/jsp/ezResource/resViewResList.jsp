@@ -7,7 +7,8 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code="ezResource.t343" /></title>
-		<link rel="stylesheet" href="${util.addVer('ezResource.e2', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('ezResource.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -221,32 +222,27 @@
 	    	    var strtext;
 	        	var PagingHTML = "";
 	        	document.getElementById("tblPageRayer").innerHTML = "";
-	        	document.getElementById("TitleInfo").innerHTML = " - [" + strLang1002 + "<span style='color:#017BEC;font-weight:bold;'> " + TotalCnt + " </span>" + strLang1003 + "]";
+	        	document.getElementById("TitleInfo").innerHTML = " - [" + strLang1002 + "<span class='txt_color' style='font-weight:bold;'> " + TotalCnt + " </span>" + strLang1003 + "]";
 	        	strtext = "<div class='pagenavi'>";
 	        	PagingHTML += strtext;
 	        	var pageNum = pcurpage;
 	        	if (ptotalPage > 1 && pageNum != 1) {
-		            strtext = "<span class='btnimg'><a onclick= 'return goToPageByNum(1)'>";
-		            strtext = strtext + "<img src='/images/kr/cm/btn_p_prev.gif' /></a></span>";
+					strtext = "<span class='btnimg first' onclick= 'return goToPageByNum(1)'></span>";
 		            PagingHTML += strtext;
 	    	    } else {
-		            strtext = "<span class='btnimg'><a >";
-		            strtext = strtext + "<img src='/images/kr/cm/btn_p_prev01.gif' /></a></span>";
+					strtext = "<span class='btnimg first disabled'></span>";
 		            PagingHTML += strtext;
 	    	    }
 	        	if (ptotalPage > BlockSize) {
 		            if (pageNum > BlockSize) {
-		                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'>";
-		                strtext = strtext + "<img src='/images/kr/cm/btn_prev.gif'></span>";
+		                strtext = "<span class='btnimg prev' onclick= 'return selbeforeBlock()'></span>";
 	    	            PagingHTML += strtext;
 	        	    } else {
-	                	strtext = "<span class='btnimg'>";
-	                	strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif'></span>";
+	                	strtext = "<span class='btnimg prev disabled'></span>";
 	                	PagingHTML += strtext;
 	            	}
 	        	} else {
-	            	strtext = "<span class='btnimg'>";
-	            	strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif'></span>";
+	            	strtext = "<span class='btnimg prev disabled'></span>";
 	            	PagingHTML += strtext;
 	        	}
 	        	var MaxNum;
@@ -268,26 +264,21 @@
 	        	}
 	        	if (ptotalPage > BlockSize) {
 	            	if (ptotalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-		                strtext = "<span class='btnimg' onclick='return selafterBlock()'>";
-		                strtext = strtext + "<img src='/images/kr/cm/btn_next.gif'></span>";
+		                strtext = "<span class='btnimg next' onclick='return selafterBlock()'></span>";
 		                PagingHTML += strtext;
 	    	        } else {
-	                	strtext = "<span class='btnimg'>";
-	                	strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif'></span>";
+	                	strtext = "<span class='btnimg next disabled'></span>";
 	                	PagingHTML += strtext;
 	            	}
 	        	} else {
-	            	strtext = "<span class='btnimg'>";
-	            	strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif'></span>";
+	            	strtext = "<span class='btnimg next disabled'></span>";
 	            	PagingHTML += strtext;
 	        	}
 	        	if (ptotalPage > 1 && ptotalPage != 1 && (ptotalPage != pageNum)) {
-	            	strtext = "<span class='btnimg' onclick='return goToPageByNum(" + ptotalPage + ")'>";
-	            	strtext = strtext + "<img src='/images/kr/cm/btn_n_next.gif' /></span>";
+	            	strtext = "<span class='btnimg last' onclick='return goToPageByNum(" + ptotalPage + ")'></span>";
 	            	PagingHTML += strtext;
 	        	} else {
-	            	strtext = "<span class='btnimg'>";
-	            	strtext = strtext + "<img src='/images/kr/cm/btn_n_next01.gif' /></span>";
+	            	strtext = "<span class='btnimg last disabled'></span>";
 	            	PagingHTML += strtext;
 	        	}
 	        	PagingHTML += "</div>";

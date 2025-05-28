@@ -14,6 +14,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
+import egovframework.ezEKP.ezOrgan.vo.OrganAuth.AdminAuth;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -223,7 +225,9 @@ public class EzAttitudeAdminController {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID(), userInfo.getJobId());
+
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -369,7 +373,9 @@ public class EzAttitudeAdminController {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID(), userInfo.getJobId());
+
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -510,7 +516,9 @@ public class EzAttitudeAdminController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String companyId = request.getParameter("companyId");
 		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID(), userInfo.getJobId());
+
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -532,7 +540,9 @@ public class EzAttitudeAdminController {
 		String attitudetypeId = request.getParameter("typeId");
 		String companyId = request.getParameter("companyId");
 		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID(), userInfo.getJobId());
+
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -687,7 +697,9 @@ public class EzAttitudeAdminController {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID(), userInfo.getJobId());
+
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -809,7 +821,9 @@ public class EzAttitudeAdminController {
 		String selectedUserIdList = request.getParameter("selectedUserIdList");
 		String companyId = request.getParameter("companyId");
 		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID(), userInfo.getJobId());
+
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -937,7 +951,9 @@ public class EzAttitudeAdminController {
 		String offset = userInfo.getOffset();
 		String adminCompany = "";
 		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID(), userInfo.getJobId());
+
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -1095,7 +1111,9 @@ public class EzAttitudeAdminController {
 		String offset = userInfo.getOffset();
 		String adminCompany = "";
 		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID(), userInfo.getJobId());
+
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -1307,7 +1325,9 @@ public class EzAttitudeAdminController {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID(), userInfo.getJobId());
+
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -1458,7 +1478,8 @@ public class EzAttitudeAdminController {
 	@RequestMapping(value = "/admin/ezAttitude/saveAttitudeAuth.do", method = RequestMethod.GET)
 	public String saveAttitudeAuth(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("saveAttitudeAuth started.");
-		
+
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String userId = request.getParameter("userId");
 		String userName = request.getParameter("userName");
 		String companyId = request.getParameter("companyId");
@@ -1476,7 +1497,8 @@ public class EzAttitudeAdminController {
 			UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 					.queryParam("companyId", companyId)
 					.queryParam("isAllDept", isAllDept)
-					.queryParam("userId", userId);
+					.queryParam("userId", userId)
+					.queryParam("lang", userInfo.getLang());
 			
 			RestTemplate rest = new RestTemplate();
 			
@@ -1519,6 +1541,10 @@ public class EzAttitudeAdminController {
 		//조직도 회사,부서 리스트
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = gwServerUrl + "/rest/ezattitude/organtree/depts";
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID(), userInfo.getJobId());
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
+			return "cmm/error/adminDenied";
+		}
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -2121,7 +2147,9 @@ public class EzAttitudeAdminController {
 		String offset = userInfo.getOffset();
 		String offsetMin = commonUtil.getMinuteUTC(offset);
 		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID(), userInfo.getJobId());
+
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -2329,7 +2357,7 @@ public class EzAttitudeAdminController {
 		// 2024-03-12 조수빈 - 파일명 다국어 처리 (한국어의 경우 연차현황관리_양식)
 		String pFileName = egovMessageSource.getMessage("ezAttitude.t237", userInfo.getLocale()) + egovMessageSource.getMessage("ezAttitude.t44", userInfo.getLocale());
 		
-		//header
+		// header
 		row.createCell(0).setCellValue(egovMessageSource.getMessage("ezAttitude.t330", userInfo.getLocale()));
 		row.createCell(1).setCellValue(egovMessageSource.getMessage("ezAttitude.t331", userInfo.getLocale()));
 		row.createCell(2).setCellValue(egovMessageSource.getMessage("ezAttitude.t332", userInfo.getLocale()));
@@ -2337,7 +2365,7 @@ public class EzAttitudeAdminController {
 		row.getCell(1).setCellStyle(headerStyle);
 		row.getCell(2).setCellStyle(headerStyle);
 		
-		//body
+		// body
 		Row row1 = sheet.createRow(1);
 		row1.createCell(0).setCellValue("EX)dev000");
 		row1.createCell(1).setCellValue("2019-07-11");
@@ -2346,7 +2374,7 @@ public class EzAttitudeAdminController {
 		row1.getCell(1).setCellStyle(bodyStyle);
 		row1.getCell(2).setCellStyle(bodyStyle);
 		
-		//width 조정
+		// width 조정
 		sheet.autoSizeColumn(0);
 		sheet.autoSizeColumn(1);
 		sheet.autoSizeColumn(2);
@@ -2788,7 +2816,7 @@ public class EzAttitudeAdminController {
 		// 2024-03-12 조수빈 - 파일명 다국어 처리 (한국어의 경우 YYYY-MM-DD_연차현황관리)
 		String pFileName = EgovDateUtil.getToday("-") + "_" + egovMessageSource.getMessage("ezAttitude.t237", userInfo.getLocale());
 		
-		//header
+		// header
 		row.createCell(0).setCellValue("NO");
 		row.createCell(1).setCellValue(egovMessageSource.getMessage("ezEmail.t263", locale));
 		row.createCell(2).setCellValue(egovMessageSource.getMessage("ezAttitude.t10", locale));
@@ -2810,7 +2838,7 @@ public class EzAttitudeAdminController {
 		row.getCell(8).setCellStyle(headerStyle);
 		row.getCell(9).setCellStyle(headerStyle);
 		
-		//body
+		// body
 		for (int i = 0 ; i < annualList.size(); i++) { 
 			AttitudeAnnualVO vo = annualList.get(i);
 			row = sheet.createRow(i + 1);
@@ -2838,10 +2866,12 @@ public class EzAttitudeAdminController {
 			row.getCell(8).setCellStyle(bodyStyle);
 			row.getCell(9).setCellStyle(bodyStyle);
 		}
-		//width 조정
-		for(int i = 0, len = 10; i < len; i++) {
+		// width 조정
+		for (int i = 0, len = 10; i < len; i++) {
 			sheet.autoSizeColumn(i);
-			sheet.setColumnWidth(i, (sheet.getColumnWidth(i)) + 512);			
+			
+			/* 2024-11-05 홍승비 - 엑셀 파일 저장 시 동적인 너비 계산이 setColumnWidth()에서 허용하는 최대 제한을 넘지 않도록 수정 (255 * 256 = 65280) */
+			sheet.setColumnWidth(i, Math.min(65280, sheet.getColumnWidth(i) + 512));			
 		}
 		
 		response.setHeader("Content-Disposition", "attachment; fileName=\"" +  URLEncoder.encode(pFileName, "UTF-8") + ".xls\"");
@@ -2933,7 +2963,7 @@ public class EzAttitudeAdminController {
 		String orderOption = request.getParameter("orderOption");
 		String secondYear = request.getParameter("secondYear");
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
-		String userLang = userInfo.getLang();
+		String userLang = commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId());
 		if (userId != null) {
 			String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 			String url = gwServerUrl + "/rest/ezattitude/users/" + userId + "/" + userLang +"/annual";
@@ -3060,7 +3090,9 @@ public class EzAttitudeAdminController {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID(), userInfo.getJobId());
+
+		if (!(organAuth.isAuth(AdminAuth.ADMIN_MASTER) || organAuth.isAuth(AdminAuth.COMPANY_MANAGER))) {
 			return "cmm/error/adminDenied";
 		}
 		

@@ -114,7 +114,10 @@ function GetDraftAprLineInfo(ret) {
 	    OrderJobtitle[KyljeaOrder] = KyljeaJobtitle;
 	    OrderReason[KyljeaOrder] = ReasonDoNotApprov;
 	}
-     
+	
+	/* 2023-11-03 홍승비 - G버전에서는 부서합의문서 접수 시에도 기안자의 대결/전결이 가능하므로, 기안자의 결재유형 체크 변수 추가 */
+	CurAprType = OrderType[1];
+	
     //마지막사인Index
     LastSignSN = OrderType.length;
     for(i=1;i<OrderType.length;i++) {
@@ -850,9 +853,8 @@ function SendDraftMappingSign(ret) {
 	var pseumyungcell;
 	var pseumyungdatecell;
 	var signInfo = new Array();
-	var signCnt;
+	var signCnt = 0;
 	var signposition = "1";
-	signCnt = 0;
 	
     if (approvalFlag == "S") {
         if (LastSignSN == 1) {
@@ -880,11 +882,11 @@ function SendDraftMappingSign(ret) {
             signposition = LastSignNo;
         }
     } else {
-    	if ( LastSignSN == "1") 
+    	if (LastSignSN == "1") {
     		signposition = 1;
-    	else if (DraftLastFlag) {
+		} else if (DraftLastFlag) {
     		putJunkyulSign("sign" + signposition);
-    		for(i=1; i<20; i++) {
+    		for (i = 1; i < 20; i++) {
     			if(pDraftFlag == "SUSIN") signID = "sign" + i;
     			else signID = "sign" + i;
     			
@@ -907,25 +909,29 @@ function SendDraftMappingSign(ret) {
 	    pseumyungdatecell = "seumyungdate" + signposition;
 	}
 	
-	//서명일자 
+	// 서명일자 
 	var RtnVal = getGyulJeDate();
 	var CurrentDate = RtnVal.split(".");
 	var s = CurrentDate[1] + "." + CurrentDate[2]; 	  
 
-	var field = message.GetListItem(fields, psigncell);//CKEDITOR-원본 : field = fields.Item(psigncell);
-	var signWidth	= parseInt(field.offsetWidth) - 4 - 15;//CKEDITOR-원본 :var signWidth	= parseInt(field.TagObject.offsetWidth) - 4 - 15; 
-	var signHeight	= parseInt(field.offsetHeight) - 4;//CKEDITOR-원본 :var signHeight	= parseInt(field.TagObject.offsetHeight) - 4;
-	
-	if (message.GetListItem(fields, pseumyungdatecell)) {
-		signWidth = 50;
-    	signHeight = 50;
-    } 
+	var field = message.GetListItem(fields, psigncell); // CKEDITOR-원본 : field = fields.Item(psigncell);
+	var signWidth = 50; // CKEDITOR-원본 :var signWidth	= parseInt(field.TagObject.offsetWidth) - 4 - 15; 
+	var signHeight = 50; // CKEDITOR-원본 :var signHeight	= parseInt(field.TagObject.offsetHeight) - 4;
 	
 	var strimg;
 	var SingFlag = true;
-	 
-	if(ret != "NAME") {
-	    strimg = "<img src='" + encodeURI(ret) + "' border=0 embedding='1' ";
+	var OpinionText = ""; // 합의문서 접수 시에도 대결/전결 문자를 표출하기 위한 변수
+	
+	if (CurAprType == strAprType4) {
+		signHeight = 28;
+		OpinionText = strLang6 + "<br>";
+	} else if (CurAprType == strAprType16) {
+		signHeight = 28;
+		OpinionText = strLang7 + "<br>";
+	}
+	
+	if (ret != "NAME") { // 이미지서명
+	    strimg = OpinionText + "<img src='" + encodeURI(ret) + "' border=0 embedding='1' ";
 	    strimg = strimg + " width=" + signWidth;
 	    
 	    if (signImageType == "NAME") { // 부서합의문 서명 이미지타입일때 이미지랑 부서아이디 같이 들어가는 버그 수정 20200313 윤상원
@@ -933,35 +939,40 @@ function SendDraftMappingSign(ret) {
 	    } else {
 	    	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'> ";
 	    }
-	  	field.innerHTML = strimg;//CKEDITOR-원본 : field.TagObject.innerHTML = strimg;
-	
-	  	//사인정보를 저장한다.(Undo용)
+	    
+	  	field.innerHTML = strimg; // CKEDITOR-원본 : field.TagObject.innerHTML = strimg;
+	  	
+	  	if (signImageType == "NAME") {
+			OpinionText = OpinionText + "::" + arr_userinfo[2];
+        }
+        
+	  	// 사인정보를 저장한다. (Undo용, 서명 데이터 맵핑을 위해서도 사용)
 	  	signInfo[signCnt] = psigncell;
-		SignType[signCnt] = "HTML";
+		SignType[signCnt] = "IMAGE";
 		SignName[signCnt] = psigncell;
-		SignContent[signCnt] = strimg;
+		SignContent[signCnt] = ret + "::" + OpinionText;
 	  	signCnt = signCnt + 1;
 	  	SingFlag = true;
-	} else {
-	  	if(field) {
-	  	    strimg = "<P style=\"FONT-WEIGHT:900;FONT-SIZE:10pt;FONT-FAMILY:" + strLang9 + "\">" + arr_userinfo[2] + "</P>";
+	} else { // 문자서명
+	  	if (field) {
+	  	    strimg = OpinionText + "<P style=\"FONT-WEIGHT:900;FONT-SIZE:10pt;FONT-FAMILY:" + strLang9 + "\">" + arr_userinfo[2] + "</P>";
 	  		field.innerHTML = strimg;//CKEDITOR-원본 : field.TagObject.innerHTML = strimg
-		  
-	  		//사인정보를 저장한다.(Undo용)
+	  		
 	  		signInfo[signCnt] = psigncell;
-			SignType[signCnt] = "TEXT";
+			SignType[signCnt] = "HTML";
 			SignName[signCnt] = psigncell;
 			SignContent[signCnt] = strimg;
 	  		signCnt = signCnt + 1;
 	  		SingFlag = false; 
 	  	}
 	}
+	
     //서명정보를 display해주는 function
-	field = message.GetListItem(fields, pseumyungcell);//CKEDITOR-원본 : field = fields.item(pseumyungcell);
-	if(SingFlag) {
-	  	if(field) {
+	field = message.GetListItem(fields, pseumyungcell); // CKEDITOR-원본 : field = fields.item(pseumyungcell);
+	if (SingFlag) {
+	  	if (field) {
 	  		setNodeText(field , arr_userinfo[3]);
-	  		//사인정보를 저장한다.(Undo용)
+	  		
 	  		signInfo[signCnt] = pseumyungcell;
 			SignType[signCnt] = "TEXT";
 			SignName[signCnt] = pseumyungcell;
@@ -969,9 +980,9 @@ function SendDraftMappingSign(ret) {
 	  		signCnt = signCnt + 1;
 	  	}
 	} else {
-	  	if(field) {
+	  	if (field) {
 	  		setNodeText(field , arr_userinfo[3]);
-	  		//사인정보를 저장한다.(Undo용)
+	  		
 	  		signInfo[signCnt] = pseumyungcell;
 			SignType[signCnt] = "TEXT";
 			SignName[signCnt] = pseumyungcell;
@@ -980,11 +991,11 @@ function SendDraftMappingSign(ret) {
 	  	}
 	}
   
-	//서명일자
-	field = message.GetListItem(fields, pseumyungdatecell);//CKEDITOR-원본 : field = fields.item(pseumyungdatecell)
-	if(field) {
+	// 서명일자
+	field = message.GetListItem(fields, pseumyungdatecell); // CKEDITOR-원본 : field = fields.item(pseumyungdatecell)
+	if (field) {
 		setNodeText(field , s);
-		//사인정보를 저장한다.(Undo용)
+		
 		signInfo[signCnt] = pseumyungdatecell;
 		SignType[signCnt] = "TEXT";
 		SignName[signCnt] = pseumyungdatecell;
@@ -992,7 +1003,7 @@ function SendDraftMappingSign(ret) {
 		signCnt = signCnt + 1;
 	}
     return signInfo;
-  }catch(e){
+  } catch(e) {
     alert("SendDraftMappingSign : " + e.description);
   }
 }
@@ -1103,6 +1114,15 @@ function getDraftUserInfo()
 function getDeptSymbol(DeptID, DeptName)
 {
 	var result = "";
+
+    if (typeof upperDeptCode !== "undefined" && upperDeptCode !== "") {
+        DeptID = upperDeptCode;
+        
+        /* 2024-11-07 홍승비 - 전자결재 > 상위부서문서함 관련 변수 체크 추가 */
+        if (typeof upperDeptName !== "undefined" && upperDeptName !== "") {
+        	DeptName = upperDeptName;
+        }
+    }
 	
 	$.ajax({
 		type : "POST",
@@ -1110,7 +1130,7 @@ function getDeptSymbol(DeptID, DeptName)
 		async : false,
 		url : "/ezOrgan/getADInfos.do",
 		data : {
-			cn : DeptID,
+            cn : DeptID,
 			prop : "extensionAttribute6",
 			cate  : "group"
 		},
@@ -1818,7 +1838,7 @@ function SaveDraftDocInfo() {
         		data : {
         			orgDocID : pOrgDocID,
         			docID    : pDocID,
-        			deptID   : arr_userinfo[4]
+        			deptID   : RECEIPTDEPTID.innerText
         		},
         		success: function(xml){
         			result = xml;
@@ -2078,7 +2098,12 @@ function SaveDraftDocInfo() {
 	
             pOrgDocID = getNodeText(GetElementsByTagName(result, "ORGDOCID")[0]);
             var doctitle = getNodeText(GetElementsByTagName(result, "DOCTITLE")[0]);
-	
+
+            if (CrossYN()) {
+                RECEIPTDEPTID.textContent = getNodeText(GetElementsByTagName(result, "RECEIPTDEPTID")[0]);
+            } else {
+                RECEIPTDEPTID.innerText = getNodeText(GetElementsByTagName(result, "RECEIPTDEPTID")[0]);
+            }
 	   
             switch (pDraftFlag)
             {

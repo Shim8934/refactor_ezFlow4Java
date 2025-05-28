@@ -296,3 +296,38 @@ var strLangHTH01 = "请输入 1 到 31 之间的整数日期。";
 var strLangHTH02 = "请准确输入重复周期天数。";
 var strLangHTH03 = "请准确输入重复周期。";
 var strLangHTH04 = "请输入大于 0 的整数每月间隔。";
+
+// 2024-07-03 김우철 - 관리자 > 현황조회
+var strLangKWC01 = "승인자원 현황";
+var strLangKWC02 = "승인대기자원 현황";
+var strLangKWC03 = "종료자원 현황";
+
+//2024-08-06 유길상 - 자원 즐겨찾기 메세지 표출
+var strLangFvYGS01 = "이동";
+var strLangFvYGS02 = "삭제할 자원을 선택해 주세요.";
+var strLangFvYGS03 = "이미 추가된 자원입니다.";
+var strLangFvYGS04 = "추가 되었습니다.";
+var strLangFvYGS05 = "분류명을 입력하세요.";
+var strLangFvYGS06 = "분류를 선택해 주세요.";
+var strLangFvYGS07 = "하위 트리로 이동할 수 없습니다.";
+var strLangFvYGS08 = "같은 트리로 이동할 수 없습니다.";
+var strLangFvYGS09 = "현재 위치 입니다.";
+var strLangFvYGS10 = "선택한 자원을 삭제하시겠습니까?";
+var strLangFvYGS11 = "즐겨찾기에 추가하시겠습니까?";
+var strLangFvYGS12 = "선택한 분류를 삭제하시겠습니까?";
+var strLangFvYGS13 = "삭제할 대상을 선택해 주세요.";
+var strLangFvYGS14 = "이동할 대상을 선택해 주세요.";
+var strLangFvYGS15 = "수정되었습니다.";
+var strLangFvYGS16 = "삭제되었습니다.";
+var strLangFvYGS17 = "즐겨찾기 그룹이 없습니다.";
+var strLangFvYGS18 = "자원에는 하위를 추가할 수 없습니다.";
+var strLangFvYGS19 = "분류 삭제 시 하위의 모든 자원 및 분류가 삭제됩니다.\n정말 삭제하시겠습니까?";
+
+// 2024-08-26 유길상 - 자원등록 > 최대 예약 가능 기간, 정원
+var strLangMaxYGS01 = "최대 예약 가능 기간을 초과하였습니다.";
+var strLangMaxYGS02 = "정원";
+var strLangMaxYGS03 = "명";
+var strLangMaxYGS04 = "정원을 입력하세요.";
+
+// 2025-05-07 이혜림 - 자원등록 > 최대 예약 가능 기간 제한
+var strLangLHR01 = "최대 예약 가능 기간은 1부터 입력할 수 있습니다.";

@@ -4,7 +4,8 @@
 <html>
 	<head>
 		<title><spring:message code='ezEmail.t331' /></title>
-		<link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<style>
 			.mainlist tr th {
 				border-top : 0px;
@@ -36,7 +37,7 @@
 		                Arguments = opener.checkname_cross_dialogArguments[0];
 		                ReturnFunction = opener.checkname_cross_dialogArguments[1];
 		                CancelFunction = opener.checkname_cross_dialogArguments[2];
-		            } catch (e) { }
+		            } catch (e) {console.log(e);}
 		        }
 		        var emailaddress = "";
 		        var listview = new ListView();

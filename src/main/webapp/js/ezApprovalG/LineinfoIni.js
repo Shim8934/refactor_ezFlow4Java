@@ -957,8 +957,9 @@ function event_displayUserListCC(xml) {
 	}
 	var pUserList = new ListView();
 	pUserList.SetID("DivUserList");
-	pUserList.SetRowOnClick("list3_onSel_Click"); 
-    pUserList.SetRowOnDblClick("list4_onSel_DBclick");
+	pUserList.SetRowOnClick("list3_onSel_Click");
+	/* 2024-12-06 홍승비 - 공람자, 회람자 검색 > 검색결과 더블클릭으로 추가 시 list3_onSel_DBclick 함수로 통일 */
+    pUserList.SetRowOnDblClick("list3_onSel_DBclick");
 	pUserList.SetSelectFlag(false);
 	pUserList.SetHeightFree(true);
 	pUserList.SetTitleIdx(1);
@@ -1246,7 +1247,7 @@ function AddDraftUserFirst() {
     	}
     }
     pparsingXML += "</CELL><CELL>";
-    pparsingXML += "<VALUE>" + strLangAprState1 + "</VALUE>";
+    pparsingXML += "<VALUE>" + strLangAprState2 + "</VALUE>";
     pparsingXML += "</CELL><CELL></CELL></ROW></ROWS></LISTVIEWDATA>";
     return pparsingXML;
 }

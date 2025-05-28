@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezBoard.service;
 import java.util.List;
 import java.util.Map;
 
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezBoard.vo.BoardAttributeVO;
@@ -145,4 +146,20 @@ public interface EzBoardAdminService {
 
 	/* 2020-12-03 박기범 - 탭게시판 레코드 갱신 */
 	public void updateTabBoard(int tabId, String boardID, int tenantId, String companyID, String boardName, String boardName2) throws Exception;
+
+	public String getUseFormFlag(String boardID, int tenantID) throws Exception;
+
+	List<OrganDeptVO> getListCompanyInBoard(String userID, String primary, int tenantID);
+
+	public void deleteMyBoardData(String type, String boardID, int tenantID) throws Exception;
+
+	public int getBoardItemCnt(String boardID, int tenantId) throws Exception;
+
+	public String saveHWP(String boardID, String formContent, String realPath, int tenantID) throws Exception;
+	
+	void deleteScrapBoard(String boardID) throws Exception;
+
+	void deleteScrapContBoard(String boardID) throws Exception;
+	
+	public String getNewGuid() throws Exception;
 }

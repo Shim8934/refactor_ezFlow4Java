@@ -6,7 +6,8 @@
 	<head>
 		<title><spring:message code="ezBoard.t75" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	    <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css" />
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+	    <link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 	    <style>
 	    .mainlist tr th {
 	    	border-top : 0px;
@@ -22,7 +23,7 @@
 					type :	"POST",
 	            	dataType : "text",			
 					url: "/admin/ezBoard/getBackGroundImage.do",
-					data : { type: "ALL", backgroundID: "" },
+					data : { type: "ALL", backgroundID: "", companyID: "<c:out value='${companyID}'/>"},
 					success: function(result){		
 			            var _html = "";
 			            try {

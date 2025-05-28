@@ -5,7 +5,8 @@
 	<head>
 	    <title></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -20,6 +21,10 @@
 		<script type="text/javascript" src="${webHWPUrl}js/hwpctrlapp/utils/util.js"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/hwpCtrlApp.js')}"></script>
     	<script type="text/javascript" src="${webHWPUrl}js/webhwpctrl.js"></script>
+    	
+    	<%-- 2023-12-07 홍승비 - 결재 서명 데이터를 DB(TBL_SIGNINFO)에서 가져와, 문서 상에 다시 그려주는(재맵핑) 함수 적용 --%>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/aprSignRedraw.js')}"></script>
+		
 	    <script language="javascript" type="text/javascript">
 	    	var HwpCtrl;
 	    	var useWebHWP = parent.useWebHWP;
@@ -84,11 +89,15 @@
 	                    
 	                    EditMode(0);
 						SetViewProperties(2, 100);
-	                    ScrollPosInfo(0, 0);
+	                    ScrollPosTop(100);
 	                    
 	                    //  부모창의 문서로딩완료 카운트를 하나 증가시킨다.
                     	parent.docLoadCompleteCnt ++;
                     	
+                    	/* 2023-12-07 홍승비 - 결재서명 재맵핑 함수 호출 (TBL_SIGNINFO 테이블에 정상적인 서명 데이터가 확정 삽입되는 시점은 테넌트 컨피그로 체크) */
+    				    // 일괄기안 웹한글문서는 내부결재가 완료되면 각 안 별로 분리되며, 부서수신함의 수신문도 단일 문서로 접근하게 된다.
+    			        startRemapAllAprSign_WHWP(parent.pDocIDAry[frameNum], orgCompanyID);
+	                    
                     	// 로딩된 문서의 전체 갯수가 재기안 시작 시 가져온 전체 안의 갯수와 일치하는 경우
                     	if (parent.docLoadCompleteCnt == (parent.pDocIDAry.length - 1)) {
             	        	parent.HiddenMailProgress(); // 전부 완료 시 로딩중 이미지 제거
@@ -259,7 +268,20 @@
 	            ScrollPosSet.SetItem("HorzPos", HorzPos);
 	            ScrollPosSet.SetItem("VertPos", VertPos);
 	            HwpCtrl.ScrollPosInfo = ScrollPosSet;
-	        }        
+	        }
+	        
+	        function ScrollPosTop(time) {
+				setTimeout(function() {
+					var ScrollPosSet;
+		            ScrollPosSet = HwpCtrl.ScrollPosInfo;
+		            ScrollPosSet.SetItem("HorzPos", 0);
+		            ScrollPosSet.SetItem("VertPos", 0);
+		            HwpCtrl.ScrollPosInfo = ScrollPosSet;
+					setTimeout(function() {
+						ScrollPosInfo(0, 0);
+					}, 100);
+				}, time);
+			}     
 
 	        function SetToolBar(option, ToolBarID) { //툴바 설정
 	            HwpCtrl.SetToolBar(option, ToolBarID);

@@ -7,7 +7,8 @@
 	<head>
 		<title><spring:message code='ezEmail.multiDomain.ksa01' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
-		<link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>	    
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>		
@@ -92,7 +93,9 @@
 						btnClose();
 					} else if (data == -2) {
 						alert("<spring:message code='ezEmail.multiDomain.ksa10' />");
-					} else {
+					} else if (data == -3) {
+                      	alert("<spring:message code='ezEmail.multiDomain.yja01' />");
+                    }else {
 						alert("<spring:message code='main.sp12' />");
 					}
 				},

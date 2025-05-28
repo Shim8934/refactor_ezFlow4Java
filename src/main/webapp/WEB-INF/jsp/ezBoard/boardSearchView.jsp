@@ -4,8 +4,10 @@
 <!DOCTYPE html>
 <html>
 	<head>
+	    <title><spring:message code="ezBoard.khj1" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<link href="${util.addVer('/css/previewmail.css')}" rel="stylesheet" type="text/css">
 		<script type="text/javascript" src="${util.addVer('ezBoard.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -46,6 +48,8 @@
 			var usepostDate = false;
 			var isSearchPage = true;
 			var g_bPrevShow = false; // 게시물 검색회면에는 미리보기 없음
+			var keyType = "<c:out value='${keyType}'/>";
+			var keyData = "<c:out value='${keyData}'/>";
 			
 			document.onselectstart = function () { return false; };
 			
@@ -73,6 +77,17 @@
 				/* 2018-07-20 홍승비 - 게시판검색 > 검색결과 좌측네모 IE에서 높이조절 */
 		        if (navigator.userAgent.toLowerCase().indexOf('chrome') == -1) {
 					document.getElementsByClassName("h2_dot")[0].style.background = "url(/images/kr/left/left_dot02.gif) no-repeat 0px 67%";
+		        }
+		        
+		        if (keyType != "" && keyData != "") {
+                    CurPage = "1";
+                    var tempData = "<" + keyType + "><![CDATA[" + keyData + "]]></" + keyType + ">";
+                    SQLPARADATA = "<ROOT><TYPE>" + "SEARCHALLBOARD;" + keyType + ";" + "</TYPE><DATA>" + tempData + "</DATA></ROOT>";
+                    document.querySelector('#searchCondition').style.display = "none";
+                    document.querySelector('#divList').style.height = "auto";
+                    document.querySelector('#divList').style.maxHeight = "350px";
+                    document.querySelector('#searchTitle').innerText = "<spring:message code='ezApprovalG.t1200' /> <spring:message code='ezBoard.khj1' />"
+                    getBoardList();
 		        }
 			};
 			
@@ -275,7 +290,8 @@
 				if (type == "basic") {
 					if(usepostDate == false){
 
-			        if (document.getElementById("txtWriterName").value == "" && document.getElementById("txtTitle").value == "" && document.getElementById("txtAbstract").value == "" && document.getElementById("txtContent").value == "") {
+			        if (document.getElementById("txtWriterName").value == "" && document.getElementById("txtTitle").value == "" && document.getElementById("txtAbstract").value == ""
+			         && document.getElementById("txtKeyword").value == "" && document.getElementById("txtContent").value == "") {
 			            alert("<spring:message code='ezBoard.t192' />");
 			            return;
 			        }
@@ -343,6 +359,11 @@
 			            TYPE += "WRITERNAME;";
 			            DATA += "<WRITERNAME><![CDATA[" + MakeXMLString(document.getElementById("txtWriterName").value.replace("'", "''")) + "]]></WRITERNAME>";
 			        }
+			
+                    if (document.getElementById("txtKeyword").value != "") {	    // KEYWORD	
+                            TYPE += "KEYWORD;";
+                            DATA += "<KEYWORD><![CDATA[" + MakeXMLString(document.getElementById("txtKeyword").value.replace("'", "''")) + "]]></KEYWORD>";
+                    }
 			
 			        if (document.getElementById("txtAbstract").value != "")			// ABSTRACT
 			        {
@@ -495,9 +516,8 @@
 	</script>
 </head>
 <body class="mainbody"> 
-	<h1><spring:message code="ezBoard.khj1" /></h1>
-	
-	<table class="content" style="width:100%;">
+	<h1 id="searchTitle"><spring:message code="ezBoard.khj1" /></h1>	
+	<table id="searchCondition" class="content" style="width:100%;">
 		<tr>
 			<th style="text-align: center"><spring:message code='ezBoard.t185' /></th>
 			<td style="text-align: left">
@@ -519,6 +539,10 @@
 			<th style="text-align: center"><spring:message code='ezBoard.garm01' /></th>
 			<td style="width:50%; white-space:nowrap"><input type="text" id="txtContent" style="width: 100%" value="" onkeypress="return search_keypress()"></td>
 		</tr>
+		<tr>
+            <th style="text-align: center"><spring:message code='ezApprovalG.t1200' /></th>
+            <td style="width:50%; white-space:nowrap"><input type="text" id="txtKeyword" style="width: 100%" value="" onkeypress="return search_keypress()"></td>
+        </tr>
 		<tr>	
 			<th style="text-align: center"><spring:message code='ezBoard.t209' /></th>
 			<td style="width:50%; white-space:nowrap"><input type="text" id="txtAbstract" style="width: 100%" value="" onkeypress="return search_keypress()"></td>

@@ -6,7 +6,8 @@
 	<head>
 		<title><spring:message code="ezBoard.t16" /></title>
 	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css" />
-	    <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css" />
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+	    <link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>	    
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -218,7 +219,7 @@
 
 					} else {
 						alert("<spring:message code='ezBoard.t17' />"
-								+ g_xmlHTTP.statusText);
+								+ g_xmlHTTP.status);
 						g_xmlHTTP = null;
 					}
 				}

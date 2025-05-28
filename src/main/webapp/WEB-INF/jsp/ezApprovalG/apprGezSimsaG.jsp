@@ -13,7 +13,8 @@
 			</c:otherwise>
 		</c:choose>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>	
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -468,7 +469,7 @@
 		            var pTop = (pheight - 870) / 2;
 		            var pLeft = (pwidth - 765) / 2;
 		
-		            if (ret[2] == "2" || ret[2] == "3" || ret[2] == "4") {
+		            if (ret[2] == "2" || ret[2] == "3" || ret[2] == "4" || ret[2] == "7" || ret[2] == "8") {
 		                alert(strLang1031);
 		            }
 		            else {
@@ -1109,7 +1110,8 @@
 		    		data : {
 		    			fontFamily : pDefaultFontFamily,
 		    			fontSize : pDefaultFontSize,
-		    			content : text.replace(/"/g,'\\\"')
+		    			content : text.replace(/"/g,'\"').replace(/<div id=\\?"hwpEditorBoardContent\\"[^]*?<\/div>/g, ''),
+		    			docType : "MHT"
 		    		},
 		    		success: function(xml){
 		    			result = loadXMLString(xml);

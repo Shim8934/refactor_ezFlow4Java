@@ -164,8 +164,10 @@ function CabinetTree() {
 			}
 			else {
 				var parentElmt = divTree.parentElement;
-				var listOfImgElmt = [].filter.call(parentElmt.querySelectorAll("img"), function(element){return element.parentNode == parentElmt;});
-				level = (!listOfImgElmt || listOfImgElmt.length == 0) ? 1 : listOfImgElmt.length - 1;
+				var spans = parentElmt.querySelectorAll(':scope > span.sub_iconLNB.tree_blank');
+				level = spans.length + 1;
+				/*var listOfImgElmt = [].filter.call(parentElmt.querySelectorAll("img"), function(element){return element.parentNode == parentElmt;});
+				level = (!listOfImgElmt || listOfImgElmt.length == 0) ? 1 : listOfImgElmt.length - 1;*/
 			}
 		}
 		
@@ -187,7 +189,11 @@ function CabinetTree() {
 		imgElmt2.src       = level > 0 ? _nodeImg : _rootImg;
 		
 		var spanDeptName         = document.createElement("span");
-		spanDeptName.textContent = list[_nodeName];
+		if (typeof(UserLang) != 'undefined' && UserLang != '1' && UserLang.trim() != ""){
+			spanDeptName.textContent = list[_nodeName + "2"];
+		}else {
+			spanDeptName.textContent = list[_nodeName];
+		}
 		spanDeptName.className   = "list_text";
 		spanDeptName.setAttribute("role", list[_nodeId]);
 		
@@ -215,7 +221,11 @@ function CabinetTree() {
 			}
 			
 			imgElmt.src       = _minusImg;
-			imgElmt.className = "cabinetMinus";
+			if (level == 0) {
+				imgElmt.className = "cabinetMinus";
+			} else {
+				imgElmt.className = "sub_iconLNB tree_minus";
+			}
 			
 			var len = list[_nodeSub].length;
 			

@@ -6,7 +6,8 @@
 <head>
 <title><spring:message code='ezStatistics.t1051'/></title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet"  href="${util.addVer('main.e15', 'msg')}" type="text/css">
+<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+<link rel="stylesheet"  href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 <link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
 <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
@@ -18,6 +19,7 @@
 	var strLang3 = "KB";
 	var strLang7 = "<spring:message code='main.t252'/>";
 	var strLang8 = "<spring:message code='ezSystem.kyj2'/>";
+	var strLang9 = "<spring:message code='ezSystem.yja01'/>";
 	var currPage = "";
 	var totalPage = "";
 	var totalCount = "";
@@ -142,30 +144,30 @@
         var PagingHTML = "";
         document.getElementById("tblPageRayer").innerHTML = "";
         document.getElementById("listInfo").innerHTML = " &nbsp;["
-			+ strLang7 + "<span style='color:#017BEC;'> "
+			+ strLang7 + "<span class='txt_color'> "
 			+ totalCount + " </span>" + strLang8 + "]";
         strtext = "<div class='pagenavi'>";
         PagingHTML += strtext;
         var pageNum = currPage;
         
         if (totalPage > 1 && pageNum != 1) {
-            strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' ></span>"
+            strtext = "<span class='btnimg first' onclick= 'return goToPageByNum(1)'></span>"
             PagingHTML += strtext;
         } else {
-            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>"
+            strtext = "<span class='btnimg first disabled'></span>"
             PagingHTML += strtext;
         }
         
         if (totalPage > BlockSize) {
             if (pageNum > BlockSize) {
-                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' ></span>";
+                strtext = "<span class='btnimg prev' onclick= 'return selbeforeBlock()'></span>";
                 PagingHTML += strtext;
             } else {
-                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+                strtext = "<span class='btnimg prev disabled'></span>";
                 PagingHTML += strtext;
             }
         } else {
-            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+            strtext = "<span class='btnimg prev disabled'></span>";
             PagingHTML += strtext;
         }
         
@@ -196,24 +198,24 @@
         if (totalPage > BlockSize) {
             if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
                 strtext = "";
-                strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' ></span>";
+                strtext = strtext + "<span class='btnimg next' onclick='return selafterBlock()'></span>";
                 PagingHTML += strtext;
             } else {
                 strtext = "";
-                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+                strtext = strtext + "<span class='btnimg next disabled'></span>";
                 PagingHTML += strtext;
             }
         } else {
             strtext = "";
-            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+            strtext = strtext + "<span class='btnimg next disabled'></span>";
             PagingHTML += strtext;
         }
         
         if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-            strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' ></span>";
+            strtext = "<span class='btnimg last' onclick='return goToPageByNum(" + totalPage + ")'></span>";
             PagingHTML += strtext;
         } else {
-            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
+            strtext = "<span class='btnimg last disabled'></span>";
             PagingHTML += strtext;
         }
         
@@ -267,7 +269,13 @@
 	//**/ 검색 버튼 클릭시 이벤트
     function search() {
 		$(function() {
-			
+
+			var searchValue = document.getElementById("searchValue").value;
+            if (searchValue.length > 0 && searchValue.length < 2) {
+                alert(strLang9);
+                return false;
+            }
+
 			if ($('#startDatepicker').val() != '' && $('#endDatepicker').val() == '') {
 				alert(strLang5);
 				return false;
@@ -365,8 +373,8 @@
 		   	    				html += "	<td>" + i.recipientName + " (" + i.recipientEmail + ")" + "</td>";
 	   	    				}
 	   	    				
-	   	    				html += "	<td style='width:100%;overflow:hidden;text-overflow:ellipsis;' title='"+i.subject+"'>";
-	   	    				html += "		<nobr>" + i.subject + "</nobr>";
+	   	    				html += "	<td style='width:100%;overflow:hidden;text-overflow:ellipsis;' title='"+escapeHtml(i.subject)+"'>";
+	   	    				html += "		<nobr>" + escapeHtml(i.subject) + "</nobr>";
 	   	    				html += "   </td>";
 	   	    				
 	   	    				if (attStrArr.length > 1) {
@@ -424,7 +432,16 @@
 			}
     	});
     }
-    
+	function escapeHtml(text) {
+		var map = {
+			'&': '&amp;',
+			'<': '&lt;',
+			'>': '&gt;',
+			'"': '&quot;',
+			"'": '&#039;'
+		};
+		return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+	}
 	//**/ 엑셀내려받기 버튼 클릭시 이벤트 호출
     function excelExport() {
 		var pageNo = "-1";
@@ -497,9 +514,9 @@
 				</span> 
 			</td>
 			<td width="5%">
-				<div id="mainmenu" style="height: 28px;margin:3px 0px !important">
+				<div id="mainmenu" style="height: 31px;margin:3px 0px !important">
                     <ul>
-						<li><span style="width: 110px;text-align:center;background-color: white" onclick="javascript:excelExport();"><spring:message code='ezStatistics.t1003'/></span></li>
+						<li><span class="btnexportexcel" style="width: 110px;text-align:center;background-color: white" onclick="javascript:excelExport();"><spring:message code='ezStatistics.t1003'/></span></li>
 					</ul>
 				</div>
 			</td>

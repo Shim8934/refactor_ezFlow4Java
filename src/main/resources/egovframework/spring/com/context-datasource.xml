@@ -26,7 +26,7 @@
     </bean>
 
     <!-- log4j2 에서 JDBC 사용시 필요한 bean-->
-    <bean id="egovConnectionFactory" class="egovframework.rte.fdl.logging.db.EgovConnectionFactory">
+    <bean id="egovConnectionFactory" class="org.egovframe.rte.fdl.logging.db.EgovConnectionFactory">
         <property name="dataSource" ref="dataSource-${Globals.DbType}${Globals.jndi}"/>
     </bean>
     
@@ -50,6 +50,7 @@
         <property name="minEvictableIdleTimeMillis" value="300000"/>
         <property name="testWhileIdle" value="true"/>        
         <property name="maxActive" value="500"/>
+        <property name="maxIdle" value="500"/>
         <property name="maxWait" value="20000"/>
     </bean>
     
@@ -69,6 +70,7 @@
         <property name="minEvictableIdleTimeMillis" value="300000"/>
         <property name="testWhileIdle" value="true"/>        
         <property name="maxActive" value="500"/>
+        <property name="maxIdle" value="500"/>
         <property name="maxWait" value="20000"/>        
     </bean>
 
@@ -88,6 +90,7 @@
         <property name="minEvictableIdleTimeMillis" value="300000"/>
         <property name="testWhileIdle" value="true"/>        
         <property name="maxActive" value="500"/>
+        <property name="maxIdle" value="500"/>
         <property name="maxWait" value="20000"/>     
     </bean>
     

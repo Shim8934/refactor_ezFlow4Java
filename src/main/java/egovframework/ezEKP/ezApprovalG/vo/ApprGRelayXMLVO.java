@@ -1,7 +1,6 @@
 package egovframework.ezEKP.ezApprovalG.vo;
 
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -17,6 +16,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Base64;
 import java.util.TimeZone;
 
 public class ApprGRelayXMLVO {
@@ -227,7 +227,7 @@ public class ApprGRelayXMLVO {
         this.message = null;
 
         try {
-        	this.message = new String(Base64.decodeBase64(xmlDoc.getElementsByTagName("content").item(0).getTextContent()), "euc-kr");
+            this.message =  base64Decode(xmlDoc.getElementsByTagName("content").item(0).getTextContent());
         } catch (Exception e) {
             logger.debug("e.getMessage(): " + e.getMessage());
             logger.debug("e.getStackTrace(): " + e.getStackTrace());
@@ -241,7 +241,7 @@ public class ApprGRelayXMLVO {
         this.acceptName = null;
 
         try {
-        	this.acceptName = new String(Base64.decodeBase64(xmlDoc.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("name").getTextContent()), "euc-kr") + "(" + new String(Base64.decodeBase64(xmlDoc.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("dept").getTextContent()), "euc-kr") + ")";
+        	this.acceptName = base64Decode(xmlDoc.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("name").getTextContent()) + "(" + base64Decode(xmlDoc.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("dept").getTextContent()) + ")";
         } catch (Exception e) {
             logger.debug("e.getMessage(): " + e.getMessage());
             logger.debug("e.getStackTrace(): " + e.getStackTrace());
@@ -267,7 +267,7 @@ public class ApprGRelayXMLVO {
         this.contName = null;
 
         try {
-        	this.contName = new String(Base64.decodeBase64(xmlDoc.getElementsByTagName("content").item(count).getAttributes().getNamedItem("filename").getTextContent()), "euc-kr");
+        	this.contName = base64Decode(xmlDoc.getElementsByTagName("content").item(count).getAttributes().getNamedItem("filename").getTextContent());
         } catch (Exception e) {
             logger.debug("e.getMessage(): " + e.getMessage());
             logger.debug("e.getStackTrace(): " + e.getStackTrace());
@@ -535,7 +535,7 @@ public class ApprGRelayXMLVO {
                 result = xmlDoc.getElementsByTagName("send-id").item(0).getTextContent();
                 break;
             case "title":
-                result = new String(Base64.decodeBase64(xmlDoc.getElementsByTagName("title").item(0).getTextContent().getBytes("UTF-8")), "euc-kr");
+                result = base64DecodeGetBytes(xmlDoc.getElementsByTagName("title").item(0).getTextContent().getBytes("UTF-8"));
                 break;   
             case "xDocID":
                 result = xmlDoc.getElementsByTagName("doc-id").item(0).getTextContent();
@@ -544,16 +544,16 @@ public class ApprGRelayXMLVO {
                 result = xmlDoc.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("type").getTextContent();
                 break;
             case "writerName":
-                result = new String(Base64.decodeBase64(xmlDoc.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("name").getTextContent()), "euc-kr");
+                result = base64Decode(xmlDoc.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("name").getTextContent());
                 break;
             case "writerDept":
-                result = new String(Base64.decodeBase64(xmlDoc.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("dept").getTextContent()), "euc-kr");
+                result = base64Decode(xmlDoc.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("dept").getTextContent());
                 break;
             case "sendName":
-                result = new String(Base64.decodeBase64(xmlDoc.getElementsByTagName("send-name").item(0).getTextContent()), "euc-kr");
+                result = base64Decode(xmlDoc.getElementsByTagName("send-name").item(0).getTextContent());
                 break;
             case "XGW":
-                result = new String(Base64.decodeBase64(xmlDoc.getElementsByTagName("send-gw").item(0).getTextContent()), "euc-kr");
+                result = base64Decode(xmlDoc.getElementsByTagName("send-gw").item(0).getTextContent());
                 break;
             case "DTDVersion":
                 result = xmlDoc.getElementsByTagName("dtd-version").item(0).getTextContent().toString();
@@ -572,5 +572,15 @@ public class ApprGRelayXMLVO {
 
         return result;
     }
-
+    
+    private String base64Decode(String str) throws UnsupportedEncodingException {
+        str = str.replaceAll("\\s+", "");
+        return new String(Base64.getDecoder().decode(str), "euc-kr");
+    }
+    
+    private String base64DecodeGetBytes(byte[] bytes) throws UnsupportedEncodingException {
+        String str =  new String(bytes);
+        str = str.replaceAll("\\s+", "");
+        return new String(Base64.getDecoder().decode(str), "euc-kr");
+    }
 }

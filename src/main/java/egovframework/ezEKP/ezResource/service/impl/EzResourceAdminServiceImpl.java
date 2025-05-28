@@ -1,7 +1,10 @@
 package egovframework.ezEKP.ezResource.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,9 +25,12 @@ import egovframework.ezEKP.ezResource.service.EzResourceAdminService;
 import egovframework.ezEKP.ezResource.service.EzResourceService;
 import egovframework.ezEKP.ezResource.vo.ResBrdListVO;
 import egovframework.ezEKP.ezResource.vo.ResGetClsAclListVO;
+import egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO;
+import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
 import egovframework.ezEKP.ezResource.vo.ResGetSubClsListVO;
+import egovframework.ezEKP.ezResource.vo.ResScheduleRepetitionVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
-import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service("EzResourceAdminService")
 public class EzResourceAdminServiceImpl extends EgovAbstractServiceImpl implements EzResourceAdminService {
@@ -528,7 +534,8 @@ public class EzResourceAdminServiceImpl extends EgovAbstractServiceImpl implemen
 			return true;
 		}
 		
-		List<ResBrdListVO> brdList = ezResourceService.getBrdList(brdCnt, Integer.parseInt(resID), companyID, "OwnDeptNm", "OwnerNm", "OwnerPosition", "Brd_NM", tenantID);
+		/* 2024-08-06 홍승비 - 다국어 처리된 칼럼을 사용하지 않는 호출이므로, 임의 언어 파라미터를 고정하여 전달 (기존 칼럼 셀렉트 유지) */
+		List<ResBrdListVO> brdList = ezResourceService.getBrdList(brdCnt, Integer.parseInt(resID), companyID, "1", tenantID);
 		
 		for(int j=0; j<brdList.size(); j++) {
 			String[] ownerList = brdList.get(j).getOwnerID().split(",");
@@ -623,4 +630,202 @@ public class EzResourceAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		logger.debug("userResPermissionCheck end");
 		return true;
 	}
+	
+	@Override
+	public String getScheduleXML(String xmlStr, String ownerID, String companyID, int tenantID, String pType, String offset) throws Exception {
+		Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
+		String sDate = xmlRes.getElementsByTagName("STARTDATETIME").item(0).getTextContent();
+		String eDate = xmlRes.getElementsByTagName("ENDDATETIME").item(0).getTextContent();
+		String nDate = xmlRes.getElementsByTagName("NOWTIME").item(0).getTextContent();
+		
+		sDate = sDate.replace(".", "-");
+		eDate = eDate.replace(".", "-");
+		
+		String startDateLimit = sDate + " 00:00:01";
+		String endDateLimit = eDate + " 23:59:59";
+		
+		String startDate = commonUtil.getDateStringInUTC(startDateLimit, offset, true);
+		String endDate = commonUtil.getDateStringInUTC(endDateLimit, offset, true);
+		String nowDate = commonUtil.getDateStringInUTC(nDate, offset, true);
+		logger.debug("startDate={}", startDate);
+		logger.debug("endDate={}", endDate);
+		logger.debug("nowDate={}", nowDate);
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		Date now = sdf.parse(nDate);
+		
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_POWNERID", ownerID);
+		map.put("v_PCOMPANYID", companyID);
+		map.put("v_PSTARTDATE", startDate.replace(".", "-"));
+		map.put("v_PENDDATE", endDate.replace(".", "-"));
+		map.put("v_PNOWDATE", nowDate.replace(".", "-"));
+		map.put("v_PTYPE", pType);
+		map.put("tenantID", tenantID);
+		
+		List<ResGetScheduleVO> getScheduleList = ezResourceAdminDAO.getScheduleList(map);
+		List<ResGetScheduleVO> getScheduleListRept = ezResourceAdminDAO.getScheduleListRepetiti(map);
+		
+		if (getScheduleListRept.size() > 0) {
+			
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd");
+			for (int i = 0; i < getScheduleListRept.size(); i++) {
+				String reCompanyID = getScheduleListRept.get(i).getCompanyID();
+				int reNum = getScheduleListRept.get(i).getNum();
+				String reOwnerID = getScheduleListRept.get(i).getOwnerID();
+				
+				// tbl_schedulerepetition에서 정보 가져옴
+				ResGetScheduleRepetitionVO vo = ezResourceService.getRepDateTimes(reOwnerID, reCompanyID, reNum, tenantID);
+				
+				if (vo != null) {
+					
+					vo.setStartDateTime(commonUtil.getDateStringInUTC(vo.getStartDateTime(), offset, false));
+					vo.setEndDateTime(commonUtil.getDateStringInUTC(vo.getEndDateTime(), offset, false));
+					
+					// ResGetScheduleRepetitionVO -> ResScheduleRepetitionVO
+					ResScheduleRepetitionVO rvo = ezResourceService.resStruct(vo);
+					
+					// 반복예약의 반복되는 날짜리스트 뽑아옴
+					List<Date[]> returnRepDateTimes = ezResourceService.getRepDateTimes(rvo, sDate, eDate, offset);
+					
+					// 반복예약 중에 삭제된 예약 가져옴
+					List<String> deletedDateStrList = ezResourceService.getDeletedRepScheduleDate(reNum, reCompanyID, reOwnerID, tenantID);
+					logger.debug("deletedDateStrList.size=" + deletedDateStrList.size());
+					
+					for (int j = 0; j < deletedDateStrList.size(); j++) {
+						deletedDateStrList.set(j, (commonUtil.getDateStringInUTC(deletedDateStrList.get(j), offset, false)).substring(0,10));
+					}
+					
+					for (Date[] dateArr : returnRepDateTimes) {
+						
+						// 삭제된 예약이면 넘어감
+						if (deletedDateStrList.contains(format2.format(dateArr[0]))) {		// 날짜만 비교하도록 수정
+							continue;
+						}
+						
+						if (pType.equals("end")) {
+							if (dateArr[1] == null) {
+								continue;
+							} else {
+								if (dateArr[1].after(now)) {
+									continue;
+								}
+							}
+						} else {
+							if (dateArr[1] == null) {
+								continue;
+							} else {
+								if (dateArr[1].before(now)) {
+									continue;
+								}
+							}
+						}
+						
+						ResGetScheduleVO temp = new ResGetScheduleVO();
+
+						temp.setNum(getScheduleListRept.get(i).getNum());
+						temp.setpNum(getScheduleListRept.get(i).getNum());
+						temp.setOwnerID(getScheduleListRept.get(i).getOwnerID());
+						temp.setTitle(getScheduleListRept.get(i).getTitle());
+						temp.setLocation(getScheduleListRept.get(i).getLocation());
+						temp.setTimeDisplay(getScheduleListRept.get(i).getTimeDisplay());
+						temp.setStartDate(commonUtil.getDateStringInUTC(format.format(dateArr[0]), offset, true));
+						temp.setEndDate(commonUtil.getDateStringInUTC(format.format(dateArr[1]), offset, true));
+						temp.setAlertTime(getScheduleListRept.get(i).getAlertTime());
+						temp.setReFlag(getScheduleListRept.get(i).getReFlag());
+						temp.setGresFlag(getScheduleListRept.get(i).getGresFlag());
+						temp.setWriterID(getScheduleListRept.get(i).getWriterID());
+						temp.setImportance(getScheduleListRept.get(i).getImportance());
+						temp.setEntryList(getScheduleListRept.get(i).getEntryList());
+						temp.setAllDay(getScheduleListRept.get(i).getAllDay());
+						temp.setWriteDay(commonUtil.getDateStringInUTC(getScheduleListRept.get(i).getWriteDay(), offset, true));
+						temp.setAttachFlag(getScheduleListRept.get(i).getAttachFlag());
+						temp.setCharacterID(getScheduleListRept.get(i).getCharacterID());
+						temp.setApproveFlag(getScheduleListRept.get(i).getApproveFlag());
+						temp.setReturnFlag(getScheduleListRept.get(i).getReturnFlag());
+						temp.setOwnerNm(getScheduleListRept.get(i).getOwnerNm());
+						temp.setDeptNm(getScheduleListRept.get(i).getDeptNm());
+						temp.setNowDate(commonUtil.getDateStringInUTC(getScheduleListRept.get(i).getNowDate(), offset, true));
+						temp.setUseApprove(getScheduleListRept.get(i).getUseApprove());
+						temp.setUseReturn(getScheduleListRept.get(i).getUseReturn());
+						
+						getScheduleList.add(temp);
+					}
+				}
+			}
+		}
+		
+		//자원별 일정 정렬
+	    //시간순, 제목순
+        Collections.sort(getScheduleList, new Comparator<ResGetScheduleVO>() {
+			@Override
+			public int compare(ResGetScheduleVO o1, ResGetScheduleVO o2) {
+				if (o1.getAllDay().compareTo(o2.getAllDay()) == 0) {
+					if (o1.getStartDate().compareTo(o2.getStartDate()) == 0) {
+						if (o1.getEndDate().compareTo(o2.getEndDate()) == 0) {
+							return o1.getTitle().compareTo(o2.getTitle());
+						} else {
+							return o1.getEndDate().compareTo(o2.getEndDate());
+						}
+					} else {
+						return o1.getStartDate().compareTo(o2.getStartDate());
+					}	
+				} else {
+					return o1.getAllDay().compareTo(o2.getAllDay());
+				}
+			}
+		});
+		
+		StringBuilder returnScheduleBld = new StringBuilder();
+		returnScheduleBld.append("<DATA>");
+		
+		for (ResGetScheduleVO vo :  getScheduleList) {
+			returnScheduleBld.append(commonUtil.getQueryResult(vo));
+		}
+		
+		returnScheduleBld.append("</DATA>");
+		
+		Document returnDom = commonUtil.convertStringToDocument(returnScheduleBld.toString());
+		
+		StringBuilder returnStr = new StringBuilder();
+		returnStr.append("<DATA>");
+		
+		if (returnDom != null) {
+			for (int m = 0; m < returnDom.getElementsByTagName("ROW").getLength(); m++) {
+				returnStr.append("<ROW>");
+				returnStr.append("<num>" + returnDom.getElementsByTagName("NUM").item(m).getTextContent() + "</num>");
+				returnStr.append("<pnum>" + returnDom.getElementsByTagName("PNUM").item(m).getTextContent() + "</pnum>");
+				returnStr.append("<ownerID>" + returnDom.getElementsByTagName("OWNERID").item(m).getTextContent() + "</ownerID>");
+				returnStr.append("<title><![CDATA[" + returnDom.getElementsByTagName("TITLE").item(m).getTextContent() + "]]></title>");
+				returnStr.append("<location><![CDATA[" + returnDom.getElementsByTagName("LOCATION").item(m).getTextContent() + "]]></location>");
+				returnStr.append("<timeDisplay><![CDATA[" + returnDom.getElementsByTagName("TIMEDISPLAY").item(m).getTextContent() + "]]></timeDisplay>");
+				returnStr.append("<startDate>" + commonUtil.getDateStringInUTC(returnDom.getElementsByTagName("STARTDATE").item(m).getTextContent(), offset, false) + "</startDate>");
+				returnStr.append("<endDate>" + commonUtil.getDateStringInUTC(returnDom.getElementsByTagName("ENDDATE").item(m).getTextContent(), offset, false) + "</endDate>");
+				returnStr.append("<alertTime>" + returnDom.getElementsByTagName("ALERTTIME").item(m).getTextContent() + "</alertTime>");
+				returnStr.append("<reFlag>" + returnDom.getElementsByTagName("REFLAG").item(m).getTextContent() + "</reFlag>");
+				returnStr.append("<gresFlag>" + returnDom.getElementsByTagName("GRESFLAG").item(m).getTextContent() + "</gresFlag>");
+				returnStr.append("<writerID>" + returnDom.getElementsByTagName("WRITERID").item(m).getTextContent() + "</writerID>");
+				returnStr.append("<importance>" + returnDom.getElementsByTagName("IMPORTANCE").item(m).getTextContent() + "</importance>");
+				returnStr.append("<entryList>" + returnDom.getElementsByTagName("ENTRYLIST").item(m).getTextContent() + "</entryList>");
+				returnStr.append("<allDay>" + returnDom.getElementsByTagName("ALLDAY").item(m).getTextContent() + "</allDay>");
+				returnStr.append("<writeDay>" + commonUtil.getDateStringInUTC(returnDom.getElementsByTagName("WRITEDAY").item(m).getTextContent(), offset, false) + "</writeDay>");
+				returnStr.append("<attachFlag>" + returnDom.getElementsByTagName("ATTACHFLAG").item(m).getTextContent() + "</attachFlag>");
+				returnStr.append("<characterID>" + returnDom.getElementsByTagName("CHARACTERID").item(m).getTextContent() + "</characterID>");
+				returnStr.append("<useApprove><![CDATA[" + returnDom.getElementsByTagName("USEAPPROVE").item(m).getTextContent() + "]]></useApprove>");
+				returnStr.append("<useReturn><![CDATA[" + returnDom.getElementsByTagName("USERETURN").item(m).getTextContent() + "]]></useReturn>");
+				returnStr.append("<approveFlag>" + returnDom.getElementsByTagName("APPROVEFLAG").item(m).getTextContent() + "</approveFlag>");
+				returnStr.append("<returnFlag>" + returnDom.getElementsByTagName("RETURNFLAG").item(m).getTextContent() + "</returnFlag>");
+				returnStr.append("<nowDate>" + commonUtil.getDateStringInUTC(returnDom.getElementsByTagName("NOWDATE").item(m).getTextContent(), offset, false) + "</nowDate>");
+				returnStr.append("<ownerNM><![CDATA[" + returnDom.getElementsByTagName("OWNERNM").item(m).getTextContent() + "]]></ownerNM>");
+				returnStr.append("<deptNM><![CDATA[" + returnDom.getElementsByTagName("DEPTNM").item(m).getTextContent() + "]]></deptNM>");
+				returnStr.append("</ROW>");
+			}
+		}
+		
+		returnStr.append("</DATA>");
+		
+		return returnStr.toString();
+	}
+	
 }

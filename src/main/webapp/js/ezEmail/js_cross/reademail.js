@@ -1,5 +1,3 @@
-﻿
-
 var m_bPrevNext = false;
 var real_href = "";
 var minimumWidth = 890;
@@ -43,7 +41,13 @@ function get_mail(flag) {
             }
         }
         catch (e) {
-            alert(e.description);
+            if (flag == "prev") {
+                alert(strLang184);
+            } else if(flag == "next"){
+                alert(strLang185);
+            } else{
+                alert(e.description);
+            }
             self.close();
         }
         m_bPrevNext = false;
@@ -76,6 +80,25 @@ function ReSend(pURL, pEmail) {
     }*/
 }
 
+// 2024.05.24 한슬기 : 수신인 이름을 사용하기위해 오버로딩
+function ReSend(pURL, pEmail, pReader) {
+    var pheight = window.screen.availHeight;
+    var conHeight = pheight * 0.8;
+    var pwidth = window.screen.availWidth;
+    var pTop = (pheight - conHeight) / 2;
+    var pLeft = (pwidth - minimumWidth) / 2;
+    var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no,resizable=1";
+    
+    var requestUrl = "/ezEmail/mailWrite.do?url=" + encodeURIComponent(pURL) + "&cmd=RESEND&msgto=" + encodeURIComponent(pEmail) + "&reciverName=" + encodeURIComponent(pReader);
+    
+	if (typeof(shareId) != "undefined" && shareId != "") {
+		requestUrl += "&shareId=" + encodeURIComponent(shareId);
+	}
+
+    window.open(requestUrl, "", feature);
+    
+}
+
 function encoding_mail() {
     try {
         var infolder = "/exchange/" + CutBeforeText(g_paramURL, "/exchange/");
@@ -93,14 +116,14 @@ function encoding_mail() {
             try {
                 window.opener.MailListRefresh();
             }
-            catch (e) { }
+            catch (e) {console.log(e);}
 
             if (strRetUrl.substr(0, 5) != "ERROR") {
                 document.location.href = "/myoffice/ezEmail/mail_read.aspx?URL=" + encodeURIComponent(strRetUrl);
             }
         }
     }
-    catch (e) { }
+    catch (e) {console.log(e);}
 }
 
 function reply_onClick() {
@@ -258,7 +281,7 @@ function delete_mail() {
 
     }
     catch (e) {
-
+        console.log(e);
     }
 
 
@@ -315,7 +338,7 @@ function event_deletemail_end() {
             window.close();
             try {
                 window.opener.MailListRefresh();
-            } catch (e) { }
+            } catch (e) {console.log(e);}
         }
 
     }
@@ -383,7 +406,7 @@ function event_CopyOrMoveMail() {
                 window.close();
                 try {
                     window.opener.MailListRefresh();
-                } catch (e) { }
+                } catch (e) {console.log(e);}
             }
             else {
                 if (g_copyItemHttp.responseText == "FULL") {
@@ -527,7 +550,7 @@ function func_addaddr_Complete(ret) {
             
             if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
                 if (xmlHTTP.status != 200) {
-                	alert(strLang133 + xmlHTTP.statusText);
+                	alert(strLang133 + xmlHTTP.status);
                 	return;
                 }
                 
@@ -587,7 +610,7 @@ function Get_DupliCateAddressCnt(senderEmail, folderId, type) {
 		xmlHTTP.send(xmlDom);
 		
 		if (xmlHTTP.status != 200){
-			alert(strLang133 + xmlHTTP.statusText);
+			alert(strLang133 + xmlHTTP.status);
 		} else {
 			returnValue = xmlHTTP.responseText;
 		}
@@ -676,7 +699,7 @@ function func_reject_Complete(retVal) {
         xmlHTTP = null;
 
         completeListener();
-    } catch (e) {}
+    } catch (e) {console.log(e);}
     
     return result;
 }
@@ -712,7 +735,7 @@ function receiveCheck_onClick() {
 	}
 	
     var OpenWin = window.open(requestUrl, "mail_readerlist", GetOpenWindowfeature(620, 500));
-    try { OpenWin.focus(); } catch (e) { }
+    try { OpenWin.focus(); } catch (e) {console.log(e);}
 }
 function view_original() {
 	var url = "/ezEmail/mailReadOriginal.do?url=" + encodeURIComponent(g_paramURL);
@@ -765,7 +788,7 @@ function toggle_flag() {
         flagXmlHttp.onreadystatechange = event_toggle_flag_end;
         flagXmlHttp.send(xmlDom);
     }
-    catch (e) { }
+    catch (e) {console.log(e);}
 }
 function event_toggle_flag_end() {
     if (flagXmlHttp != null && flagXmlHttp.readyState == 4) {
@@ -1280,7 +1303,7 @@ function openwindow(wfileLocation, wName, wWeigth, wHeigth) {
         else
             window.open("", wName, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
 
-    } catch (e) { }
+    } catch (e) {console.log(e);}
 }
 
 function mail_link(){
@@ -1363,78 +1386,88 @@ function addIcalSchedule(pURL, shareId) {
 	}
 }
 
-function removeTag(span) {
-	var mailId = g_paramURL.split("/");
-	var folderPath = mailId[0];
-	var mailUid = mailId[1];
-	var tagName = span.innerText;
-	$.ajax({
-		method: "post",
-		url: "/ezEmail/deleteMailTag.do",
-		data: { folderPath: folderPath, mailUid: mailUid, tagName: tagName },
-		success: function(result) {
-			if (result.status == "error") {
-				alert(strLang321);
-				return;
-			}
+function download_Single_mail() {
 
-			if (window.leftMenu) {
-				leftMenu.reloadTags();
-			}
+    var parameters = "url=" + encodeURIComponent(g_paramURL);
+    var fullpath = "/ezEmail/mailExport.do?" + parameters;
 
-			$(span.nextElementSibling).remove();
-			$(span).remove();
-		},
-		error: function() {
-			alert(strLang321);
-		}
-	});
+    AttachDownFrame.location.href = fullpath;
+    AttachDownFrame.target = "_blank";
+
 }
 
-function appendTag(tagName) {
-	var tagContainer = document.getElementById("tag_view");
-	var tagSpan = document.createElement("span");
-	tagSpan.innerText = tagName;
-	var deleteImg = document.createElement("img");
-	deleteImg.src = "/images/icon/oneline_delete.gif";
-	deleteImg.addEventListener("click", function() { removeTag(tagSpan); });
-	tagContainer.appendChild(tagSpan);
-	tagContainer.appendChild(deleteImg);
+var mail_originalEML_cross_dialogArguments = new Array();
+
+function view_OriginalEML() {
+    mail_originalEML_cross_dialogArguments[1] = DivPopUpHiddenReadMail;
+
+    var parameters = "url=" + encodeURIComponent(g_paramURL);
+    var requestUrl = "/ezEmail/getOriginalEML.do?" + parameters;
+
+    if (typeof(shareId) != "undefined" && shareId != "") {
+        requestUrl += "?shareId=" + encodeURIComponent(shareId);
+    }
+
+    DivPopUpShow(620, 600, requestUrl);
 }
 
-function onEnterPreviewTagInput() {
-	var tagInput = document.getElementById("tag_add");
-	var tagName = tagInput.value.trim();
-	if (tagName.length <= 0) return;
-	if ($.grep(document.querySelectorAll("#tag_view > span"), function(span) { return span.innerText == tagName }).length > 0) {
-		alert(strLangTagAlreadyUse);
-		return;
-	}
+function makeWindowPosition(width, height) {
+	var dualScreenLeft = window.screenLeft !== undefined ? window.screenLeft : window.screenX;
+    var dualScreenTop = window.screenTop !== undefined ? window.screenTop : window.screenY;
 
-	var mailId = g_paramURL.split("/");
-	var folderPath = mailId[0];
-	var mailUid = mailId[1];
-	$.ajax({
-		cache: false,
-		async: false,
-		method: 'post',
-		url: "/ezEmail/addMailTag.do",
-		data: { folderPath: folderPath, mailUid: mailUid, tagName: tagName },
-		success: function(result) {
-			if (result.status == "error") {
-				alert(strLang321);
-				return;
-			}
+    var screenWidth = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
+    var screenHeight = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
 
-			if (window.leftMenu) {
-				leftMenu.reloadTags();
-			}
+    var left = (screenWidth - width) / 2 + dualScreenLeft;
+    var top = (screenHeight - height) / 2 + dualScreenTop;
+    
+    var feature = ", left=" + left + ",top=" + top;
+    return feature;
+}
 
-			appendTag(tagName);
-			tagInput.value = "";
-		},
-		error: function() {
-			alert(strLang321);
-		}
-	});
+function openAttendChk() {
+	var height = 470;
+	var width = 800;
+	var feature = makeWindowPosition(width, height);
+    
+    var requestUrl = "/ezSchedule/scheduleReceiveAttendant.do?from=mail";
+    
+    window.open(requestUrl, "", "height=" + height + "px, width= " + width + "px" + feature);
+    
+}
+
+function openScheduleInfo() {
+	var scheduleId = event.target.getAttribute("scheduleId");
+	var repeatCount = event.target.getAttribute("repeatCount");
+	var height = 700;
+	var width = 800;
+	var feature = makeWindowPosition(width, height);
+    var requestUrl = "";
+    if (repeatCount != null) {
+    	requestUrl = "/ezSchedule/scheduleRead.do?id=" + encodeURIComponent(scheduleId) + "&repeatcount=" + repeatCount;
+    } else {
+    	requestUrl = "/ezSchedule/scheduleRead.do?id=" + encodeURIComponent(scheduleId) + "&isReceive=Y";
+    }
+    
+    window.open(requestUrl, "", "height=" + height + "px, width= " + width + "px" + feature);
+}
+
+//2023-09-06 한태훈 - 일정관리 > 미리알림 메일 링크
+function reminderMailLink() {
+	var reminder_link = document.getElementById("reminder_link");
+	var id = reminder_link.getAttribute("scheId");
+	var otherid = reminder_link.getAttribute("otherid");
+	var repeatcount = reminder_link.getAttribute("repeatcount");
+	var date = reminder_link.getAttribute("date");
+	var type = reminder_link.getAttribute("type");
+	var datetype = reminder_link.getAttribute("datetype");
+	var pattern = reminder_link.getAttribute("pattern");
+    var height = 750;
+    var width = 800;
+    
+    var feature = makeWindowPosition(width, height);
+	
+	var url = "/ezSchedule/scheduleRead.do?";
+	url += "id=" + encodeURIComponent(id) + "&otherid=" + encodeURIComponent(otherid) +"&repeatcount=" + encodeURIComponent(repeatcount) + "&date=" + encodeURIComponent(date) + "&type=" + encodeURIComponent(type) + "&datetype=" + encodeURIComponent(datetype) + "&pattern=" + encodeURIComponent(pattern);
+	window.open(url, "", "toolbar=0, location=0, directories=0, status=0, menubar=0, scrollbars=0, resizable=1, height=" + height +"px, width=" + width +"px" + feature);
 }

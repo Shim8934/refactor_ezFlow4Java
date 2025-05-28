@@ -6,7 +6,8 @@
 	<head>
 		<title><spring:message code = 'ezApprovalG.t1241' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -184,7 +185,7 @@
 		        pSealHeight = $("#tbSealHeight").val();
 		
 		        if (pSealWidth == "" || pSealHeight == "" || pSealPath == "") {
-		            var pInformationString = "<spring:message code = 'ezApprovalG.t1260' />";
+		            var pInformationString = "<spring:message code = 'ezApprovalG.pgb13' />";
 		            OpenAlertUI(pInformationString);
 		            return;
 		        }

@@ -8,7 +8,8 @@
 	    <title><spring:message code='ezApprovalG.t1308'/></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -21,6 +22,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/CheckLines_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/Kaoni_ActiveX.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/apprGSummary.js')}"></script>
 	    <script type="text/javascript">
 	        var pDocID = "<c:out value ='${docID}'/>";
 	        var DraftFlag = "<c:out value ='${draftFlag}'/>";
@@ -784,7 +786,8 @@
 					        ezapprovalinfo_dialogArguments[0] = parameter;
 					        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
 						    
-					       	var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + gpGubun + "&orgCompanyID=" + orgCompanyID + "&docType=" + pDocType + "&ext=" + "hwp", "ezApprovalInfo", GetOpenWindowfeature(1144, 750));
+					       	var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + gpGubun + "&orgCompanyID=" + orgCompanyID + "&docType=" + pDocType + "&ext=" + "hwp", 
+									"ezApprovalInfo-" + windowUuid, GetOpenWindowfeature(1144, 750));
 					       	try { OpenWin.focus(); } catch (e) { }
 
 			            }
@@ -870,7 +873,8 @@
 	            <td height="20">
 	                <div id="menu">
 	                    <ul>
-	                        <li id="btntotaldocinfo"><span onclick="return btnApprovalInfo('14')"><spring:message code='ezApprovalG.t1742'/></span></li>
+	                        <li id="btntotaldocinfo"><span onclick="return btnApprovalInfo('15')"><spring:message code='ezApprovalG.t1742'/></span></li>
+	                        <li id="btnSummary"><span onclick="return btnSummaryEdit()"><spring:message code='ezApprovalG.t1203'/></span></li> <%-- 요약전 --%>
 	                        <li id="btnSetAprLine" style="display: none"><span onclick="return btnSetAprLine_onclick()"><spring:message code='ezApprovalG.t153'/></span></li>
 	                        <li id="btnSendDraft"><span onclick="return btnSendDraft_onclick()"><spring:message code='ezApprovalG.t156'/></span></li>
 	                        <li id="btnReturn"><span onclick="return btnReturn_onclick()"><spring:message code='ezApprovalG.t1434'/></span></li>

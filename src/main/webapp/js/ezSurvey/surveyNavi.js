@@ -52,11 +52,7 @@ var SurveyNavi = function() {
 			var spanElmt2     = document.createElement("span");
 			var spanElmt3     = document.createElement("span");
 			var spanElmt4     = document.createElement("span");
-			var imgElmt1      = document.createElement("img");
-			var imgElmt2      = document.createElement("img");
-			var imgElmt3      = document.createElement("img");
-			var imgElmt4      = document.createElement("img");
-			
+
 			spanElmt1.className = _imgClass;
 			spanElmt2.className = _imgClass;
 			spanElmt3.className = _imgClass;
@@ -68,27 +64,22 @@ var SurveyNavi = function() {
 			spanElmt4.onclick = function(e) {goToPageByNum(_totalPages);};
 			
 			if (_totalPages > _blockSize) {
-				imgElmt2.src = pageNum > _blockSize ? "/images/kr/cm/btn_prev.gif" : "/images/kr/cm/btn_prev01.gif";
-				imgElmt3.src = (_totalPages >= parseInt(((parseInt((pageNum - 1) / _blockSize) + 1) * _blockSize) + 1)) ? "/images/kr/cm/btn_next.gif" : "/images/kr/cm/btn_next01.gif";
+				spanElmt2.className = pageNum > _blockSize ? _imgClass + " prev" : _imgClass + " prev disabled";
+				spanElmt3.className = (_totalPages >= parseInt(((parseInt((pageNum - 1) / _blockSize) + 1) * _blockSize) + 1)) ? _imgClass + " next" : _imgClass + " next disabled";
 			}
 			else {
-				imgElmt2.src = "/images/kr/cm/btn_prev01.gif";
-				imgElmt3.src = "/images/kr/cm/btn_next01.gif";
+				spanElmt2.className = _imgClass + " prev";
+				spanElmt3.className = _imgClass + " next";
 			}
 			
 			if (_totalPages > 1) {
-				imgElmt1.src = pageNum != 1           ? "/images/kr/cm/btn_p_prev.gif" : "/images/kr/cm/btn_p_prev01.gif";
-				imgElmt4.src = _totalPages != pageNum ? "/images/kr/cm/btn_n_next.gif" : "/images/kr/cm/btn_n_next01.gif";
+				spanElmt1.className = pageNum != 1 ? _imgClass + " first" : _imgClass + " first disabled";
+				spanElmt4.className = _totalPages != pageNum ? _imgClass + " last" : _imgClass + " last disabled";
 			}
 			else {
-				imgElmt1.src = "/images/kr/cm/btn_p_prev01.gif";
-				imgElmt4.src = "/images/kr/cm/btn_n_next01.gif";
+				spanElmt1.className = _imgClass + " first disabled";
+				spanElmt4.className = _imgClass + " last disabled";
 			}
-			
-			spanElmt1.appendChild(imgElmt1);
-			spanElmt2.appendChild(imgElmt2);
-			spanElmt3.appendChild(imgElmt3);
-			spanElmt4.appendChild(imgElmt4);
 			
 			divElmt.appendChild(spanElmt1);
 			divElmt.appendChild(spanElmt2);

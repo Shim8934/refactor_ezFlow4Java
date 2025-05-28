@@ -28,6 +28,8 @@ var g_searchDate = {
 	endDate: null
 }
 
+var OrderOption = "";
+
 var cabProduceY = ""; // 기록물철등록부에서 기록물보기로 진입한 경우, 선택된 기록물철분류의 생산년도를 담는 변수
 
 /* 2022-12-27 홍승비 - 기록물철 검색 시 생산연도 조건 없는 경우, 반드시 회계연도 '이하' 조건을 사용하기 위한 회계연도 전역변수 추가 */
@@ -93,20 +95,28 @@ function ezCabMunuCtl(MenuType, selRow) {
         pMenuFlag = "";
     else
         pMenuFlag = "none";
+        
+    if (g_sFlag === "m02" && underDeptFlag === "TRUE" && GetSelectVal("rec_underDept2") != "default") {
+        MenuType = "cabinetUnderDept";
+    }
 
     switch (MenuType) {
         case "0":
+            if (typeof (spanElement) != "undefined") {
+                return;
+            }
+        
             if (typeof (tdNewVol) != "undefined" && typeof (tdNewVol) != "unknown") {
                 document.getElementById("tdNewVol").style.display = "none"; // 권호수 안보이게
             }
 
-            if (typeof (tdModifyCab) != "undefined" && typeof (tdModifyCab) != "unknown") {
+            if (typeof (tdModifyCab) != "undefined" && typeof (tdModifyCab) != "unknown" && ListTypeFlag !== "15") {
 
                 document.getElementById("tdModifyCab").style.display = pMenuFlag;
             }
 
             // 20200824 김보혜 기록물철 관련 버튼들 전체적으로 수정 (한사대) 
-            if (g_bDeptCharger || g_bRecAdmin || AdminYN == "TRUE") {
+            if ((g_bDeptCharger || g_bRecAdmin || AdminYN == "TRUE") && ListTypeFlag !== "15") {
                 document.getElementById("tdBtnCabDel").style.display = "";    
             }
 
@@ -156,7 +166,7 @@ function ezCabMunuCtl(MenuType, selRow) {
 
 
             if (typeof (tdSetCharger) != "undefined" && typeof (tdSetCharger) != "unknown") {
-                if (GetCabChargerRight() == "true")
+                if (GetCabChargerRight() == "true" && ListTypeFlag !== "15")
                     document.getElementById("tdSetCharger").style.display = "";
                 else
                     document.getElementById("tdSetCharger").style.display = "none";
@@ -165,8 +175,15 @@ function ezCabMunuCtl(MenuType, selRow) {
             break;
 
         case "1":
+        	
+        	if (typeof (ListTypeFlag) != "undefined" && ListTypeFlag == "25") {
+        		return;
+        	}
+        	if (typeof (spanElement) != "undefined") {
+        	    return;
+        	}
         	/* 2023-06-28 한태훈 - 통합 PC 저장 시 지워졌던 네 개의 버튼 - 등록정보, 공람정보, 철검색, 목록출력 버튼 보이기 (나머지 버튼들은 아래 if문으로 조절됨) */
-			document.getElementById("tDocInfo").style.display = "";
+        	document.getElementById("tDocInfo").style.display = "";
 			document.getElementById("tdViewRecInfo").style.display = "";
 			document.getElementById("tdCabSelect").style.display = "";
 			document.querySelector("#trRecSubMenu #tdDocListPrint").style.display = "";
@@ -327,6 +344,9 @@ function ezCabMunuCtl(MenuType, selRow) {
             }
             
             break;
+            
+            case "cabinetUnderDept" : 
+            break;
     }
 
     if (ListTypeFlag == "9") {
@@ -342,8 +362,8 @@ function SetMenuBtn(sbtnname, sbtnstyle) {
     if (document.getElementById(sbtnname) != null)
         document.getElementById(sbtnname).style.display = sbtnstyle;
 }
-function isDrafter(writerID, writerDeptID) {
-    return writerID === arr_userinfo[1] && writerDeptID === arr_userinfo[4];
+function isDrafter(writerID, writerDeptID) { // 발송의뢰 표출 조건 상위부서 확인하도록 함. 
+    return writerID === arr_userinfo[1] && (writerDeptID === arr_userinfo[4] || writerDeptID === upperDeptCode);
 }
 
 function IsUserDeptRec() {
@@ -434,7 +454,7 @@ function InitGlobals(ListFlag, ListType, MenuType) {
         try {
             if (trSubInfoTab) {
                 document.getElementById("trSubInfoTab").style.display = "";
-                document.getElementById("divList").style.height = "375px";
+                document.getElementById("divList").style.height = "474px";
                 //PageSize = 10;
                 Block_Size = 10;
             }
@@ -570,6 +590,7 @@ function GetCaninetList() {
             GetCaninetListXml();
     }
     listLoading(false);	// 20201211 조진호 로딩바 display:none
+    settingResize();
 }
 
 function GetRecordList() {
@@ -585,17 +606,36 @@ function GetRecordList() {
             nowday = "0" + nowday;
 
         var tempDeptID = DeptID;
-        if (checkRecordAll()) {
-            tempDeptID = "ALL";
+
+        if (typeof underDeptFlag !== "undefined" && underDeptFlag === "TRUE" && GetSelectVal("rec_underDept") != "default") {
+            tempDeptID = GetSelectVal("rec_underDept");
         }
         
+        var selSendStatus = "";
+        var selSendStatusElement = document.getElementById("selSendStatus");
+        if (selSendStatusElement && selSendStatusElement.style.display == "") {
+            selSendStatus = selSendStatusElement.value;
+
+            var deptSelectBox = g_sFlag === "m02" ? "rec_underDept2" : "rec_underDept";
+            var deptSelectBoxCheck = document.getElementById(deptSelectBox);
+            if ((deptSelectBoxCheck && GetSelectVal(deptSelectBox) != "default") || (!deptSelectBoxCheck && underDeptFlag === "TRUE")) {
+                selSendStatus = "";
+            }
+        } else if (typeof(selSendStatusFlag) != "undefined" && selSendStatusFlag == "N") {
+            selSendStatus = "N"
+        }
+        // if (checkRecordAll()) {
+        //  checkRecordAll : 기존 소스를 찾을 수 없어 임시 주석처리
+        //     tempDeptID = "ALL";
+        // }
+
         /* 2022-07-20 홍승비 - 기록물철등록부 > 기록물철 선택 후 기록물보기로 진입한 경우, 선택한 기록물철의 생산 년도를 기준으로 표출 (검색조건 없을 시의 기본 표출) */
         if (typeof(isCabinetToRecordFirst) != "undefined" && isCabinetToRecordFirst == true && typeof(g_sFlag) != "undefined" && g_sFlag == "m02") { // 기록물철등록부의 g_sFlag는 'm02'
         	// 생산년도의 01월 01일부터 12월 31일까지를 검색 범위로 설정
-        	g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE>" + cabProduceY + "-01-01 00:00:00.001</SREGDATE><EREGDATE>" + cabProduceY + "-12-31 23:59:59.999</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
+        	g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE>" + cabProduceY + "-01-01 00:00:00.001</SREGDATE><EREGDATE>" + cabProduceY + "-12-31 23:59:59.999</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE><SELSENDSTATUS>" + selSendStatus + "</SELSENDSTATUS></SEARCHPARAM>";
         }
         else {
-        	g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + " 00:00:00.001</SREGDATE><EREGDATE>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59.999</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";        	
+        	g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + " 00:00:00.001</SREGDATE><EREGDATE>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59.999</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE><SELSENDSTATUS>" + selSendStatus + "</SELSENDSTATUS></SEARCHPARAM>";        	
         }
     } else if (g_isSearching) {
     	var searchParamXml = loadXMLString(g_RecSearchParamXml);
@@ -818,6 +858,10 @@ function GetRecordListXml() {
     createNodeAndInsertText(xmlpara, objNode, "PAGESIZE", PageSize);
     createNodeAndInsertText(xmlpara, objNode, "PAGENO", curpage);
     createNodeAndInsertText(xmlpara, objNode, "ORDERBY", g_OrderBy);
+    if(typeof(selSendStatusFlag) != "undefined" && selSendStatusFlag == "N"){
+        createNodeAndInsertText(xmlpara, objNode, "SELSENDSTATUS", selSendStatusFlag);
+    }
+    
     /**
      *  g_RecSearchParamXml 사용자가 입력한 검색조건
      *  입력한 검색 조건을 XML에 추가
@@ -1087,7 +1131,20 @@ function GetHearderXml() {
 }
 
 function lvtDoclist_HeaderClick(pHeader) {
-    if (pHeader != "")
+    if (DocList_Flag === "RECORD" && pHeader === "") {
+        return;
+    }
+
+    if (OrderCell == pHeader) {
+        if (OrderOption == "")
+            OrderOption = "DESC";
+        else
+            OrderOption = "";
+    }
+    else {
+        OrderCell = pHeader;
+        OrderOption = "";
+    }
         SortList(pHeader);
 }
 
@@ -1262,8 +1319,18 @@ function ViewDoc_onclick() {
     var tr = DocList.GetSelectedRows();
     if (tr.length > 0) {
         var selRow = tr[0];
+        
         // 2023-09-05 기록물 등록대장 미리보기 - 배부대장 문서보기 분기처리 추가, 비공개문서에 대한 누락된 분기처리(전체관리자는 비공개문서 열람할 수 있음) 추가
         if (DocList_Flag == "RECORD" || DocList_Flag == "Delivery") {
+        	
+        	/* 2024-12-27 홍승비 - 기록물 배부대장 > 배부한 문서가 삭제된 경우 알러트를 표출하도록 수정 (회송 후 삭제 시 레코드까지 삭제되므로 대응 / 관리자단에서 삭제 시 레코드는 유지됨) */
+        	if (DocList_Flag == "Delivery" && g_uFlag == "m03") {
+        		if (!isDocExists(selRow.getAttribute("DATA1"), "APR") && !isDocExists(selRow.getAttribute("DATA1"), "END")) {
+        			OpenAlertUI(strLangHSBDR01);
+        			return;
+        		}
+        	}
+        	
             var securityApprovalFlag = DocList_Flag == "RECORD" ? trim_Cross(selRow.getAttribute("DATA14")) : trim_Cross(selRow.getAttribute("DATA8"));
             if (securityApprovalFlag != "null" && securityApprovalFlag != "" && securityApprovalFlag >= GetTodayDate()) {
                 if (CheckAprLine(selRow.getAttribute("DATA1")) == "TRUE" || GetUserRole() != "User" ) {
@@ -1302,7 +1369,9 @@ function ViewDoc_onclick_Complete(Rtn) {
         if (tr.length > 0) {
             var selRow = tr[0];
             if (DocList_Flag == "RECORD") {
-                if (AdminYN != "TRUE" && (!g_bRecAdmin)) {
+               // 2024-09-19 전인하 - 결재선에 존재하였던 유저의 경우 기록물대장에서 비공개문서라도 열람이 가능
+               var checkAprLineFlag = CheckAprLine(trim_Cross(selRow.getAttribute("DATA1")));
+               if (AdminYN != "TRUE" && (!g_bRecAdmin) && checkAprLineFlag !== "TRUE") {
                     if (!HasRecReadRight(trim_Cross(selRow.getAttribute("DATA6")), trim_Cross(selRow.getAttribute("DATA8")), UserID)) {
                         OpenAlertUI(strLang580);
                         return "";
@@ -1387,7 +1456,7 @@ function ViewDoc_onclick_Complete(Rtn) {
 	                openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=" + encodeURI(selRow.getAttribute("DATA5")) + "&orgDocID=";
 	            }
              }
-	            openwindow(openLocation, "", 880, 570);
+	            openwindow(openLocation, "cabinet", 880, 570);
          }
      }
 }
@@ -1612,6 +1681,13 @@ function btnSearchRec_onclick_Complete(rtnVal) {
         $('#rec_year').val("ALL");
         /*$('#rec_year').selectmenu('refresh');*/
     }
+    if (document.getElementById("rec_underDept") != null) {
+        $('#rec_underDept').val("default");
+    }
+
+    if (document.getElementById("selSendStatus") != null) {
+        $('#selSendStatus').val("");
+    }
 }
 
 // 열람권한 멀티지정 START 
@@ -1806,6 +1882,7 @@ function openergetDocInfo() {
         // 선택한 row 유지를 위한 Flag 설정
         selRowChangeFlag = true;
         GetRecordList();
+        listLoading(false);
     }
     else {
         GetDocDeliveryList(g_DeliverySearchParamXml);
@@ -1849,9 +1926,9 @@ function makePageSelPage(pTotalCnt) {
         }
 
         if (!isPeriodYear)
-            document.getElementById("TitleInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;font-weight:bold;'>" + pTotalCnt + "</span>";
+            document.getElementById("TitleInfo").innerHTML = "&nbsp;&nbsp;<span class='txt_color' style='font-weight:bold;'>" + pTotalCnt + "</span>";
         else
-            document.getElementById("TitleInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;font-weight:bold;'>" + pTotalCnt + "</span>&nbsp;/ " + period;
+            document.getElementById("TitleInfo").innerHTML = "&nbsp;&nbsp;<span class='txt_color' style='font-weight:bold;'>" + pTotalCnt + "</span>&nbsp;/ " + period;
 
         if (g_sFlag === "UNTREATED") {
             parent.frames["left"].document.getElementById("COUNTUNTREATED").innerHTML = "&nbsp;&nbsp;" + pTotalCnt;
@@ -1864,30 +1941,30 @@ function makePageSelPage(pTotalCnt) {
     totalPage = Math.ceil(new Number(pTotalCnt / PageSize));
     var pageNum = curpage;
     if (totalPage > 1 && pageNum != 1) {
-        strtext = "<span class='btnimg'><a onclick= 'return goToPageByNum(1)'>";
-        strtext = strtext + "<img src='/images/kr/cm/btn_p_prev.gif' /></a></span>";
+        strtext = "<span class='btnimg first' onclick= 'return goToPageByNum(1)'>";
+        strtext = strtext + "</span>";
         PagingHTML += strtext;
     }
     else {
-        strtext = "<span class='btnimg'><a >";
-        strtext = strtext + "<img src='/images/kr/cm/btn_p_prev01.gif' /></a></span>";
+        strtext = "<span class='btnimg first disabled'><a >";
+        strtext = strtext + "</a></span>";
         PagingHTML += strtext;
     }
     if (totalPage > BlockSize) {
         if (pageNum > BlockSize) {
-            strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'>";
-            strtext = strtext + "<img src='/images/kr/cm/btn_prev.gif' /></span>";
+            strtext = "<span class='btnimg prev' onclick= 'return selbeforeBlock()'>";
+            strtext = strtext + "</span>";
             PagingHTML += strtext;
         }
         else {
-            strtext = "<span class='btnimg'>";
-            strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif' /></span>";
+            strtext = "<span class='btnimg prev disabled'>";
+            strtext = strtext + "</span>";
             PagingHTML += strtext;
         }
     }
     else {
-        strtext = "<span class='btnimg'>";
-        strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif'/></span>";
+        strtext = "<span class='btnimg prev disabled'>";
+        strtext = strtext + "</span>";
         PagingHTML += strtext;
     }
     var MaxNum;
@@ -1915,30 +1992,30 @@ function makePageSelPage(pTotalCnt) {
     }
     if (totalPage > BlockSize) {
         if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-            strtext = "<span class='btnimg' onclick='return selafterBlock()'>";
-            strtext = strtext + "<img src='/images/kr/cm/btn_next.gif'/></span>";
+            strtext = "<span class='btnimg next' onclick='return selafterBlock()'>";
+            strtext = strtext + "</span>";
             PagingHTML += strtext;
         }
         else {
-            strtext = "<span class='btnimg'>";
-            strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif'/></span>";
+            strtext = "<span class='btnimg next disabled'>";
+            strtext = strtext + "</span>";
 
             PagingHTML += strtext;
         }
     }
     else {
-        strtext = "<span class='btnimg'>";
-        strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif' /></span>";
+        strtext = "<span class='btnimg next disabled'>";
+        strtext = strtext + "</span>";
         PagingHTML += strtext;
     }
     if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-        strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'>";
-        strtext = strtext + "<img src='/images/kr/cm/btn_n_next.gif' /></span>";
+        strtext = "<span class='btnimg last' onclick='return goToPageByNum(" + totalPage + ")'>";
+        strtext = strtext + "</span>";
         PagingHTML += strtext;
     }
     else {
-        strtext = "<span class='btnimg'>";
-        strtext = strtext + "<img src='/images/kr/cm/btn_n_next01.gif' /></span>";
+        strtext = "<span class='btnimg last disabled'>";
+        strtext = strtext + "</span>";
         PagingHTML += strtext;
     }
     PagingHTML += "</div>";
@@ -2168,3 +2245,32 @@ function getLineMode(pDocID) {
     return rtnVal;
 }
 
+/* 2024-12-27 홍승비 - 현재 선택한 문서의 docID로 문서정보 레코드가 존재하는지 확인하는 AJAX 함수 추가 */
+function isDocExists(pDocID, pMode) {
+    var rtnVal = false;
+    
+    try {
+		$.ajax({
+			type : "POST",
+			dataType : "text",
+			async : false,
+			url : "/ezApprovalG/getDocData.do",
+			data : {
+				docID : pDocID,
+				mode : pMode,
+				sel : "ALL"
+			},
+			success: function(xml) {
+				var docXml = loadXMLString(xml);
+				
+				if (SelectSingleNodeValueNew(docXml, "DATA/DOCID").trim() != "") {
+					rtnVal = true;
+				}
+			}
+		});
+	} catch (e) {
+		console.error(e);
+	}
+    
+    return rtnVal;
+}

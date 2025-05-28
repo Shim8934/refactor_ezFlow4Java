@@ -1909,11 +1909,12 @@ function SendDraftMappingSign(ret) {
                 }
                 sn = LastSignNo;
             }
-        } else {
-        	if (LastSignSN == 1 || CurAprType == strAprType4 || CurAprType == strAprType16) {
-        		OpinionText = getSignDate() + "<br>";
-        	}
         }
+        
+        /* 2023-10-12 홍승비 - 전자결재 일반버전에서도 기안자의 최종결재가 가능하므로, 서명일자 관련 분기 분리 (결재진행 js와 동일 스펙) */
+    	if (LastSignSN == 1 || CurAprType == strAprType4 || CurAprType == strAprType16) {
+    		OpinionText = getSignDate() + "<br>";
+    	}
 
         psigncell = "sign" + sn;
         pseumyungcell = "jikwe" + sn;
@@ -1926,36 +1927,34 @@ function SendDraftMappingSign(ret) {
 
         field = message.GetListItem(fields, psigncell);
         
-//       if (signImageType == "IMAGE") {
-//       	if (message.GetListItem(fields, "1sign1")) {
-//        		message.GetListItem(fields, "1sign1").height = "65";
-//      	}
-//     }
-        var signWidth = 0;
-        var signHeight = 0;
-        if (field) {
-        	signWidth = parseInt(field.offsetWidth) - 4;
-            signHeight = parseInt(field.offsetHeight) - 4;	
-        }
+        var signWidth = 50;
+        var signHeight = 50;
         
         var field = message.GetListItem(fields, pseumyungcell);
         if (field) {
             setNodeText(field , getNodeText(field) + PositionText);
         } 
-
+        
         var strimg;
         var SingFlag = true;
-
         var DekyulFlag = false;
-
+        
         var field = message.GetListItem(fields, pseumyungdatecell);
         if (field) {
             setNodeText(field , s);
-            signWidth = 50;
-            signHeight = 50;
-        } else {
-        	signWidth = 50;
-            signHeight = 28;
+            
+            /* 2023-10-05 홍승비 - 서명일자가 TBL_SIGNINFO 테이블에 저장되도록 데이터 추가 (서명일자 필드 존재 시) */
+    		signInfo[signCnt] = pseumyungdatecell;
+    		SignName[signCnt] = pseumyungdatecell;
+    		SignType[signCnt] = "TEXT";
+    		SignContent[signCnt] = s;
+    		signCnt = signCnt + 1;
+        }
+        
+        // 서명일자칸이 존재하지 않는 경우, 서명칸에 서명일자를 함께 표출하기 위해 이미지 서명의 높이를 조정 (최종결재일때만 서명칸에 서명일자를 표출)
+        // 대결/전결 메세지는 서명칸에 표출하므로 이미지 서명의 높이를 조정
+        if ((!field && LastSignSN == 1) || CurAprType == strAprType4 || CurAprType == strAprType16) {
+        	signHeight = 28;
         }
         
         // 결재선에 부서가 있는 경우.
@@ -1973,13 +1972,14 @@ function SendDraftMappingSign(ret) {
         if (CurAprType == strAprType16) {
             var field = message.GetListItem(fields, psigncell);
             if (field) {
+            	// 서명일자칸이 존재하는 경우, 서명칸에는 날짜를 표출하지 않음
+    			if (message.GetListItem(fields, pseumyungdatecell)) {
+    			    OpinionText = "<br>";
+    			}
+    			
                 if (ret != "NAME") {
                     strimg = "<img src='" + encodeURI(ret) + "' border=0 embedding='1' ";
                     strimg = strimg + " width=" + signWidth;
-                    
-                    if (message.GetListItem(fields, pseumyungdatecell)) {
-                    	signHeight = "28";
-                    }
                     
 					if (signImageType == "NAME") {
 						strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>" + "<br>" + arr_userinfo[2];
@@ -1987,12 +1987,12 @@ function SendDraftMappingSign(ret) {
 						strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
 					}
 					 
-				   //대결 시 서명 데이트 입력란 없으면 날짜 표시
-					if (!message.GetListItem(fields, pseumyungdatecell)) {
-						 field.innerHTML  = strLang7 + OpinionText + strimg;
-					} else {
-						 field.innerHTML  = strLang7 + strimg;
-					}
+					// 대결 시 서명일자칸 없으면 서명칸에 일자를 함께 표시, 대결 문자 우측에 서명일자 표출하며 서명의 위에 위치
+					field.innerHTML = strLang7 + OpinionText + strimg;
+					
+					if (signImageType == "NAME") {
+						OpinionText = OpinionText + "::" + arr_userinfo[2];
+	                }
 					
                     signInfo[signCnt] = psigncell;
                     SignType[signCnt] = "IMAGE";
@@ -2005,6 +2005,7 @@ function SendDraftMappingSign(ret) {
                 } else {
                     strimg = "<P style=\"FONT-WEIGHT:900;FONT-SIZE:10pt;FONT-FAMILY:" + strLang9 + "\">" + arr_userinfo[2] + "</P>";
                     field.innerHTML = strLang7 + OpinionText + strimg;
+                    
                     signInfo[signCnt] = psigncell;
                     SignType[signCnt] = "HTML";
                     SignName[signCnt] = psigncell;
@@ -2037,6 +2038,11 @@ function SendDraftMappingSign(ret) {
             var field = message.GetListItem(fields, psigncell);
 
             if (field) {
+            	// 서명일자칸이 존재하는 경우, 서명칸에는 날짜를 표출하지 않음
+    			if (message.GetListItem(fields, pseumyungdatecell)) {
+    			    OpinionText = "<br>";
+    			}
+    			
                 if (ret != "NAME") {
                     strimg = "<img src='" + encodeURI(ret) + "' border=0 embedding='1' ";
                     strimg = strimg + " width=" + signWidth;
@@ -2045,23 +2051,28 @@ function SendDraftMappingSign(ret) {
                     } else {
                         strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
                     }
-                    if (message.GetListItem(fields, pseumyungdatecell)) {
-                        OpinionText = "";
+                    
+                    if (CurAprType == strAprType4) { // 전결
+                        OpinionText = strLangAprType4 + OpinionText;
                     }
                     
-                    if (CurAprType == strAprType4)
-                        OpinionText = strLangAprType4 + OpinionText;
-
-                    field.innerHTML = OpinionText + strimg;
-
+					if (OpinionText != "<br>") { // 서명일자 또는 전결 문자가 존재
+                        field.innerHTML = OpinionText + strimg;
+                    }
+                    else { // 서명일자와 전결 문자가 없는 최종결재
+                    	OpinionText = "";
+						field.innerHTML = strimg;
+					}
+					
+					if (signImageType == "NAME") {
+						OpinionText = OpinionText + "::" + arr_userinfo[2];
+	                }
+					
                     signInfo[signCnt] = psigncell;
                     SignType[signCnt] = "IMAGE";
                     SignName[signCnt] = psigncell;
-                    if (OpinionText != "")
-                        SignContent[signCnt] = ret + "::" + OpinionText;
-                    else
-                        SignContent[signCnt] = ret;
-
+                    SignContent[signCnt] = ret + "::" + OpinionText;
+                    
                     message.DocumentBodySetAttribute(psigncell, ret);
                     signCnt = signCnt + 1;
                     SingFlag = true;
@@ -2069,13 +2080,18 @@ function SendDraftMappingSign(ret) {
                     if (field) {
                         strimg = "<P style=\"FONT-WEIGHT:900;FONT-SIZE:10pt;FONT-FAMILY:" + strLang9 + "\">" + arr_userinfo[2] + "</P>";
                         
-                        if (message.GetListItem(fields, pseumyungdatecell)) {
-                            OpinionText = "";
+                        if (CurAprType == strAprType4) {
+                            OpinionText = strLangAprType4 + OpinionText;
                         }
                         
-                        if (CurAprType == strAprType4)
-                            OpinionText = strLangAprType4 + OpinionText;
-                        field.innerHTML = OpinionText + strimg;
+                        if (OpinionText != "<br>") { // 서명일자 또는 전결 문자가 존재
+                        	field.innerHTML = OpinionText + strimg;
+                    	}
+                    	else { // 서명일자와 전결 문자가 없는 최종결재
+                    		OpinionText = "";
+							field.innerHTML = strimg;
+						}
+                        
                         signInfo[signCnt] = psigncell;
                         SignType[signCnt] = "HTML";
                         SignName[signCnt] = psigncell;
@@ -2207,6 +2223,8 @@ function openFormUI_Complete(ret) {
     pDocType = ret[1];
     // 2021-01-21 심기영 오피스결재 추가
     officeFlag = ret[4];
+    
+    checkHeaderAction();
 
     if (pFormHref == "PC") {
         document.getElementById('pFile').click();
@@ -2424,6 +2442,12 @@ function SetAutoPropertyValue() {
         hapyuiCount = 0;
         SignCount = 0;
         gamsaCount = 0;
+        
+        var pDeptName = arr_userinfo[5];
+        if (typeof upperDeptName !== "undefined" && upperDeptName !== "") {
+            pDeptName = upperDeptName;
+        }
+        
         for (var i = 0 ; i < fields.length ; i++) {
             var field = fields[i];
 
@@ -2482,7 +2506,7 @@ function SetAutoPropertyValue() {
                         break;
 
                     case "department":
-                        field.textContent = arr_userinfo[5];
+                        field.textContent = pDeptName;
                         break;
 
                     case "parantdept":
@@ -2854,12 +2878,8 @@ function openAaprDocAttachUI() {
         if (CrossYN()) {
             aprcabinetattach_cross_dialogArguments[0] = parameter;
             aprcabinetattach_cross_dialogArguments[1] = openAaprDocAttachUI_Complete;
-            
-            if(approvalFlag == "G") {
-            	DivPopUpShow(1050, 520, url);
-            } else {
-            	DivPopUpShow(1050, 560, url);
-            }
+
+            DivPopUpShow(1050, 560, url);
         } else {
         	var feature;
         	if(approvalFlag == "G") {
@@ -2976,7 +2996,12 @@ function SaveDraftDocInfo_ilban(pState) {
         createNodeAndInsertText(xmlpara, objNode, "ORGHTML", "");
         createNodeAndInsertText(xmlpara, objNode, "PUSERID", arr_userinfo[1]);
         createNodeAndInsertText(xmlpara, objNode, "PUSERNAME", arr_userinfo[2]);
-        createNodeAndInsertText(xmlpara, objNode, "PDEPTID", arr_userinfo[4]);
+
+        var pDeptID = arr_userinfo[4];
+        if (typeof upperDeptCode !== "undefined" && upperDeptCode !== "") {
+            pDeptID = upperDeptCode;
+        }        
+        createNodeAndInsertText(xmlpara, objNode, "PDEPTID", pDeptID);
 
         createNodeAndInsertText(xmlpara, objNode, "SECURITY", tempSecurity);
         createNodeAndInsertText(xmlpara, objNode, "KEEPPERIOD", tempKeep);
@@ -3077,6 +3102,10 @@ function SaveDraftDocInfo_ilban(pState) {
                 
                 createNodeAndInsertText(xmlpara, objNode, "NONELECREC_SEPERATEATTACH", getXmlString(rtnXml));
     		}
+
+            if (SelectNodes(NonElecXML, "DOCATTACHNAME").length > 0 ) {
+                createNodeAndInsertText(xmlpara, objNode, "DOCATTACHNAME", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "DOCATTACHNAME"));
+            }
     	}
     	
         xmlhttp.open("POST", "/ezApprovalG/doDraft.do", false);
@@ -3765,6 +3794,13 @@ function setFirstDrafter(type, beforDocID) {
     return;
 }
 function delOpinionInfo() {
+	var opinionType = "";
+	if (useRedraftOpinionKeep != "YES") {
+		opinionType = "100"
+	} else {
+		opinionType = "003";
+	}
+
 	$.ajax({
 		type : "POST",
 		dataType : "json",
@@ -3772,7 +3808,7 @@ function delOpinionInfo() {
 		url : "/ezApprovalG/deleteOpinionTypeInfo.do",
 		data : {
 			docID : pDocID,
-			opinionType : "002",
+			opinionType : opinionType
 		},
 		success: function(result) {
 			
@@ -3862,6 +3898,15 @@ function getDeptSymbol(DeptID, DeptName) {
 			}        			
 		});
 	} else {
+        if (typeof upperDeptCode !== "undefined" && upperDeptCode !== "") {
+            DeptID = upperDeptCode;
+            
+            /* 2024-11-07 홍승비 - 전자결재 > 상위부서문서함 관련 변수 체크 추가 */
+            if (typeof upperDeptName !== "undefined" && upperDeptName !== "") {
+            	DeptName = upperDeptName;
+            }
+        }
+        
 		$.ajax({
 			type : "POST",
 			dataType : "text",
@@ -3930,6 +3975,8 @@ function setMenuBar(id, flag) {
  *  mht파일 생성.
  * */
 function SaveFile() {
+	
+	headerAction("open");
 	var result = "";
 	var mhtBody = "";
 	mhtBody = message.Get_EditorBodyHTML();
@@ -4263,6 +4310,7 @@ function UpdateLineHistory() {
 var AutoSave;
 function SaveTMPFile(AutoSave) {
 	
+	headerAction("open");
     var mhtBody = "";
     mhtBody = message.Get_EditorBodyHTML();
     mhtBody = "<HTML>" + GetCKEditerHeader() + mhtBody + "</HTML>";
@@ -4275,6 +4323,11 @@ function SaveTMPFile(AutoSave) {
     else {
     	docID = pDocID
     }
+    
+    if(AutoSave == "autosave" && createAutoDoc == "Y"){
+        docID = autopDocID;
+    }
+    
 	var data = {
 		docID : docID,
         formId : pFormID,
@@ -4309,12 +4362,23 @@ function SaveTMPDocInfo(AutoSave) {
         var xmlpara = createXmlDom();
         var xmlhttp = createXMLHttpRequest();
         var objNode;
+
+        var pAutoTmpDocTitle = trim(message.GetDocTitle());
         createNodeInsert(xmlpara, objNode, "PARAMETER");
 
-        if(Saveflag) 
-        	createNodeAndInsertText(xmlpara, objNode, "DOCID", newpDocID);
-        else
-        	createNodeAndInsertText(xmlpara, objNode, "DOCID", pDocID);
+        if(Saveflag) {
+            if(AutoSave == "autosave" && createAutoDoc == "Y"){
+                createNodeAndInsertText(xmlpara, objNode, "DOCID", autopDocID);
+            }else{
+                createNodeAndInsertText(xmlpara, objNode, "DOCID", newpDocID);
+            }
+        }else {
+            if(AutoSave == "autosave" && createAutoDoc == "Y"){
+                createNodeAndInsertText(xmlpara, objNode, "DOCID", autopDocID);
+            }else{
+                createNodeAndInsertText(xmlpara, objNode, "DOCID", pDocID);
+            }
+        }
         createNodeAndInsertText(xmlpara, objNode, "FORMID", pFormID);
         if (pDraftFlag == "SUSIN" || pDraftFlag == "HAPYUI")
             createNodeAndInsertText(xmlpara, objNode, "ORGDOCID", pOrgDocID);
@@ -4336,7 +4400,11 @@ function SaveTMPDocInfo(AutoSave) {
         createNodeAndInsertText(xmlpara, objNode, "HREF", "/document/doc/" + pDocID + ".htm");
 
         if (AutoSave != "") {
-            createNodeAndInsertText(xmlpara, objNode, "DOCTITLE", message.GetDocTitle());
+            if(pAutoTmpDocTitle != "") {
+                createNodeAndInsertText(xmlpara, objNode, "DOCTITLE", message.GetDocTitle());
+            }else{
+                createNodeAndInsertText(xmlpara, objNode, "DOCTITLE", strLang1133);
+            }
         }
         else {
             createNodeAndInsertText(xmlpara, objNode, "DOCTITLE", strLang1133);
@@ -4404,6 +4472,7 @@ function SaveTMPDocInfo(AutoSave) {
             createNodeAndInsertText(xmlpara, objNode, "SEPERATEATTACHXML", GetSepAttParamXml(g_SepAttachLVXml));
 
         createNodeAndInsertText(xmlpara, objNode, "SUMMARY", pSummery);
+        createNodeAndInsertText(xmlpara, objNode, "SUMMARYPATH", pSummaryPath);
         createNodeAndInsertText(xmlpara, objNode, "SECURITYAPPROVAL", tempSecurityDate);
         createNodeAndInsertText(xmlpara, objNode, "WRITERNAME2", arr_userinfo[12]);
         createNodeAndInsertText(xmlpara, objNode, "WRITERJOBTITLE2", arr_userinfo[14]);
@@ -4418,7 +4487,15 @@ function SaveTMPDocInfo(AutoSave) {
         	createNodeAndInsertText(xmlpara, objNode, "saveFlag", Saveflag);
         	createNodeAndInsertText(xmlpara, objNode, "oldDocID", pDocID);
         }
+        
+        if (AutoSave == "autosave" && createAutoDoc == "Y"){
+            createNodeAndInsertText(xmlpara, objNode, "autopDocSN", autopDocSN);
+            createNodeAndInsertText(xmlpara, objNode, "autoSaveFlag", "Y");
+        }
 
+        if (AutoSave == "autosave"){
+            createNodeAndInsertText(xmlpara, objNode, "FautoSaveFlag", AutoSave);
+        }
         xmlhttp.open("POST", "/ezApprovalG/doDraft.do", false);
         xmlhttp.send(xmlpara);
         
@@ -4909,5 +4986,27 @@ function SReAprLineSingMapping(ret) {
 		
 		hIdx++;
 	}
-	
+}
+
+var checkJobTransferStatus = function(id, deptId, jobId) {
+    var result = false;
+    $.ajax({
+        type : "GET",
+        async : false,
+        url : "/ezApprovalG/checkJobTransferStatus.do",
+        dataType: "text",
+        data : {
+            id: id,
+            deptID : deptId,
+            jobId : jobId
+        },
+        success: function() {
+            result = true;
+        }, error : function (e) {
+            alert(e.responseText);
+            result = false;
+        }
+    });
+
+    return result;
 }

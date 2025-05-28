@@ -6,7 +6,8 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>portalLeftMenu</title>
-		<link rel="stylesheet" href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
 	</head>
 	
@@ -48,11 +49,20 @@
 					<li><span  class = "list_text" onClick="goPage(3)"><spring:message code = 'ezPersonal.hyh1' /></span></li>
 					<li><span  class = "list_text" onClick="goPage(4)"><spring:message code = 'main.t67' /></span></li>
 					<li><span  class = "list_text" onClick="goPage(7)"><spring:message code = 'ezNewPortal.t019' /></span></li>
-					<li><span  class = "list_text" onClick="goPage(9)"><spring:message code = 'main.t10000' /></span></li>
+<%--					<li><span  class = "list_text" onClick="goPage(9)"><spring:message code = 'main.t10000' /></span></li>--%>
 				</c:if>
 				<c:if test="${packageType == 'mail'}"> 
 					<li><span  class = "list_text" onClick="goPage(4)"><spring:message code = 'main.t67' /></span></li>
 				</c:if>
+				</ul>
+				</c:if>
+				<c:if test="${packageType != 'mail'}">
+				<h2 class="off"><span class="sub_iconLNB tree_plus"></span><span class="h2Title" onclick="openFolder()"><spring:message code='ezNewPortal.mobilePortal01' /></span></h2>
+				<ul class="lnbUL off">
+					<li><span  class = "list_text leftMenu_btn" id="MPortlets"><spring:message code='ezNewPortal.t056' /></span></li>
+					<li><span  class = "list_text leftMenu_btn" id="MTheme"><spring:message code='ezNewPortal.mobilePortal02' /></span></li>
+					<li><span  class = "list_text leftMenu_btn" id="MMenus"><spring:message code = 'ezNewPortal.t055' /></span></li>
+					<li><span class = "list_text leftMenu_btn" id = "MLogos"><spring:message code='ezNewPortal.t057' /></span></li>
 				</ul>
 				</c:if>
 			</div>
@@ -82,6 +92,18 @@
 							break;
 						case "logos" :
 							url = "/admin/ezNewPortal/portalLogos.do";
+							break;
+						case "MPortlets" :
+							url = "/admin/ezNewPortal/portalPortlets.do?type=mobile";
+							break;
+						case "MMenus" :
+							url = "/admin/ezNewPortal/portalMenus.do?type=mobile";
+							break;
+						case "MTheme" :
+							url = "/admin/ezNewPortal/portalThemes.do?type=mobile";
+							break;
+						case "MLogos" :
+							url = "/admin/ezNewPortal/portalLogos.do?type=mobile";
 							break;
 					}
 					

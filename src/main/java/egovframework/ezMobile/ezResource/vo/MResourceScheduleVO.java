@@ -77,7 +77,8 @@ public class MResourceScheduleVO {
 	private String repeatYn;
 	/** 승인권한 여부 값*/
 	private String apprAuthYn;
-	
+	/** 자원 관리자 id */
+	private String managerIds;
 	
 	public String getApprAuthYn() {
 		return apprAuthYn;
@@ -320,6 +321,12 @@ public class MResourceScheduleVO {
 	}
 	public void setJobTitle2(String jobTitle2) {
 		this.jobTitle2 = jobTitle2;
+	}
+	public String getManagerIds() {
+		return managerIds;
+	}
+	public void setManagerIds(String managerIds) {
+		this.managerIds = managerIds;
 	}
 	
 }

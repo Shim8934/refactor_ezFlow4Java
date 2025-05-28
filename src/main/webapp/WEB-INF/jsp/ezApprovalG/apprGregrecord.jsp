@@ -7,7 +7,8 @@
 <head>
 <title><spring:message code='ezApprovalG.t1043'/></title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 <script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -139,61 +140,9 @@
             alert("<spring:message code='ezApprovalG.t955'/>");
             return false;
         }
-
-        if (txtRegY.value == "" || txtRegD.value == "" || txtRegM.value == "") {
+        
+        if (regDate.value.trim() == "" || regTime.value.trim() == "") {
             alert("<spring:message code='ezApprovalG.t1045'/>");
-            return false;
-        }
-
-        if (!ValidateYearValue(txtRegY.value)) {
-            alert("<spring:message code='ezApprovalG.t1046'/>");
-            return false;
-        }
-
-        if (!ValidateNumber(txtRegM.value)) {
-            alert("<spring:message code='ezApprovalG.t1047'/>");
-            return false;
-        }
-
-        if (!ValidateNumber(txtRegD.value)) {
-            alert("<spring:message code='ezApprovalG.t1048'/>");
-            return false;
-        }
-
-        if (!ValidateNumber(txtRegH.value)) {
-            alert("<spring:message code='ezApprovalG.t1049'/>");
-            return false;
-        }
-        
-     	// 등록일자의 분에 00을 입력할 경우, 등록되지 않던 버그 수정. 2019-12-03 홍대표.
-        if (!ValidateMinuteNumber(txtRegMi.value)) {
-            alert("<spring:message code='ezApprovalG.t1050'/>");
-            return false;
-        }
-
-        if (!ValidateYearValue(txtExeY.value)) {
-            alert("<spring:message code='ezApprovalG.t1051'/>");
-            return false;
-        }
-        
-        if (!ValidateNumber(txtExeM.value)) {
-            alert("<spring:message code='ezApprovalG.t1052'/>");
-            return false;
-        }
-        
-        /* 2020-09-11 홍승비 - 월과 일의 최대 입력 가능 숫자를 제한 */
-        if (txtExeM.value > 12) {
-            alert("<spring:message code='ezApprovalG.hsbRG01'/>");
-            return false;
-        }
-
-        if (!ValidateNumber(txtExeD.value)) {
-            alert("<spring:message code='ezApprovalG.t1053'/>");
-            return false;
-        }
-        
-        if (txtExeD.value > 31) {
-            alert("<spring:message code='ezApprovalG.hsbRG02'/>");
             return false;
         }
 
@@ -239,7 +188,7 @@
             }
         }
 
-        if (!ValidateNumber(txtTotalPage.value)) {
+        if (!ValidateNumber(txtTotalPage.value, 'Y')) {
             alert("<spring:message code='ezApprovalG.t1060'/>");
             return false;
         }
@@ -311,7 +260,7 @@
     }
     function openFileAttachUI() {
         try {
-            DivPopUpShow(570, 285, "/ezApprovalG/regRecordAttach.do?docID=" + pDocID + "&orgCompanyID=" + orgCompanyID);
+            DivPopUpShow(800, 610, "/ezApprovalG/aprAttach.do?formID=&docID=" + encodeURI(pDocID) + "&draftFlag=DRAFT" + "&orgCompanyID=" + CompanyID + "&ext=" + ext);
         }
         catch (e) {
             alert("openFileAttachUI()" + e.description);
@@ -512,13 +461,12 @@
     
     function GetPublicCode2() {
     	var publicCode2 = "";
-    	if (document.getElementsByName("rdoSecType2")[0].checked) {
-    		publicCode2 = "Y";
-    	} else {
-    		publicCode2 = "N";
-    	}
-    	
-    	return publicCode2;
+        var rdoSecType2SelectBox = document.getElementById("rdoSecType2");
+        if (rdoSecType2SelectBox){
+            publicCode2 = rdoSecType2SelectBox.value;
+        }
+
+        return publicCode2;
     }
     
     /* 2020-09-11 홍승비 - 숫자 이외의 값 입력 방지 함수 */
@@ -545,6 +493,26 @@
 		document.querySelector('input[name=selSecLevel7]').nextSibling.setAttribute('title','법인,단체 또는 개인의 영업상 비밀에 관한 정보로서 공개될 경우 법인 등의 정당한 이익을 해할 우려가 있는 정보'								);
 		document.querySelector('input[name=selSecLevel8]').nextSibling.setAttribute('title','공개될 경우 부동산투기,매점매석 등으로 특정인에게 이익 보는 불이익을 줄 우려가 있는 정보'											);
 	}
+
+    var ezapralert_cross_dialogArguments = new Array();
+    function OpenAlertUI(pAlertContent, CompleteFunction) {
+        var parameter = pAlertContent;
+        var url = "/ezApprovalG/ezAprAlert.do";
+
+        if (CrossYN()) {
+            ezapralert_cross_dialogArguments[0] = parameter;
+            if (CompleteFunction != undefined)
+                ezapralert_cross_dialogArguments[1] = CompleteFunction;
+            else
+                ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
+            DivPopUpShow(330, 205, url);
+        }
+    }
+
+    function OpenAlertUI_Complete() {
+        window.close();
+    }
+    
 </SCRIPT>
 </head>
 <body class="popup">
@@ -622,16 +590,9 @@
               </tr>
               <tr>
                 <th ><spring:message code='ezApprovalG.t831'/></th>
-                <td><input type="text" class="text" style="height:16px;padding:0px;margin:0px;" value="${regY}" name="txtRegY" id="txtRegY" maxlength = "4" size="4" onkeypress="return KeEventControl2(this);" onkeydown="return KeEventControl2(this);" onkeyup="return KeEventControl2(this);">
-                  <span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t456'/></span>
-                  <input type="text" class="text" style="height:16px;padding:0px;margin:0px;" value="${regM}" name="txtRegM"  id="txtRegM" maxlength = "2" size="2" onkeypress="return KeEventControl2(this);" onkeydown="return KeEventControl2(this);" onkeyup="return KeEventControl2(this);">
-                  <span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t968'/></span>
-                  <input type="text" class="text" style="height:16px;padding:0px;margin:0px;" value="${regD}" name="txtRegD"  id="txtRegD" maxlength = "2" size="2" onkeypress="return KeEventControl2(this);" onkeydown="return KeEventControl2(this);" onkeyup="return KeEventControl2(this);">
-                  <span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t662'/></span>
-                  <input type="text" class="text" style="height:16px;padding:0px;margin:0px;" value="${regH}" name="txtRegH"  id="txtRegH" maxlength = "2" size="2" onkeypress="return KeEventControl2(this);" onkeydown="return KeEventControl2(this);" onkeyup="return KeEventControl2(this);">
-                  <span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t977'/></span>
-                  <input type="text" class="text" style="height:16px;padding:0px;margin:0px;" value="${regMi}"  name="txtRegMi"  id="txtRegMi" maxlength = "2" size="2" onkeypress="return KeEventControl2(this);" onkeydown="return KeEventControl2(this);" onkeyup="return KeEventControl2(this);">
-                  <span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t1068'/></span></td>
+                <td>
+                    <input type="date" class="text" name="regDate" id="regDate" /><input type="time" name="regTime" id="regTime" />
+                </td>
               </tr>
               <tr>
                 <th ><spring:message code='ezApprovalG.t979'/></th>
@@ -650,12 +611,9 @@
               </tr>
               <tr>
                 <th ><spring:message code='ezApprovalG.t863'/></th>
-                <td><input type="text" class="text" style="height:16px;padding:0px;margin:0px;" name="txtExeY" id="txtExeY" maxlength="4" size="4" onkeypress="return KeEventControl2(this);" onkeydown="return KeEventControl2(this);" onkeyup="return KeEventControl2(this);">
-                  <span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t456'/></span>
-                  <input type="text" class="text" style="height:16px;padding:0px;margin:0px;" name="txtExeM"  id="txtExeM" maxlength="2" size="2" onkeypress="return KeEventControl2(this);" onkeydown="return KeEventControl2(this);" onkeyup="return KeEventControl2(this);">
-                  <span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t968'/></span>
-                  <input type="text" class="text" style="height:16px;padding:0px;margin:0px;" name="txtExeD"  id="txtExeD" maxlength="2" size="2" onkeypress="return KeEventControl2(this);" onkeydown="return KeEventControl2(this);" onkeyup="return KeEventControl2(this);">
-                  <span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t662'/></span></td>
+                <td>
+                    <input type="date" class="text" name="exeDate" id="exeDate" />
+                </td>
               </tr>
               <tr>
                 <th ><spring:message code='ezApprovalG.t864'/></th>
@@ -738,12 +696,18 @@
               </tr>
                <tr>
                 <th style="border-left: 0px;"><spring:message code='ezApprovalG.t109'/></th>
-                <td><input type="radio" name="rdoSecType2" value="Y" checked onClick="return rdoSecType2_onclick(this.value)" checked  style="height:13px;width:13px;padding:0px;margin:0px;">
+                <td>
+                    <select id="rdoSecType2" name="rdoSecType2" style="WIDTH: 85px">
+                        <option value="Y"><spring:message code='ezApprovalG.kmh03'/></option>
+                        <option value="B"><spring:message code='ezApprovalG.kmh04'/></option>
+                        <option value="N"><spring:message code='ezApprovalG.kmh05'/></option>
+                    </select>
+                  <%--<input type="radio" name="rdoSecType2" value="Y" checked onClick="return rdoSecType2_onclick(this.value)" checked  style="height:13px;width:13px;padding:0px;margin:0px;">
                   <span><spring:message code='ezApprovalG.t47'/></span>
                   <input type="radio" name="rdoSecType2" value="N" onClick="return rdoSecType2_onclick(this.value)"  style="height:13px;width:13px;padding:0px;margin:0px;">
                   <span><spring:message code='ezApprovalG.t1072'/></span>
                   <select id="selSecLevel" style="width:60px;display:none" name="select2">
-                  </select>
+                  </select>--%>
                 </td>
               </tr>
               <tr>
@@ -792,7 +756,8 @@
             <td colspan="2" style="height:20px">
                 <div style="text-align:left; line-height:20px;">
 		      		<img src="/images/i_notice.gif" style="vertical-align: middle;padding-left:1px;">
-		      		<span style="color:#3a76c3;height:18px;display:inline-block;"><spring:message code='ezSystem.HSBAppr02'/>${apprTotalAttachLimit}<spring:message code='ezSystem.HSBAppr03'/></span>
+                    <span style="color:#3a76c3;height:18px;display:inline-block;">${pAttachWarning0}</span><br>
+                    <span style="color:#3a76c3;height:18px;display:${spanDisplayStyle}; margin-left:29px;">${pAttachWarning1}</span>
 		      	</div>
             </td>
         </tr>

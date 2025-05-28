@@ -6,7 +6,8 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>ChangePersonInfo</title>
-		<link rel="stylesheet"  href="${util.addVer('ezPersonal.e3', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 	    <script type="text/javascript" src="${util.addVer('ezOrgan.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezPersonal/controls/datepicker.htc.js')}"></script>
@@ -509,7 +510,7 @@
         		<tr>
             		<th><spring:message code='ezPersonal.t2003'/></th>
             		<td colspan="3" class="manualFlagNotYClickOff">
-                		<input type="text" id="txtBirth" class="manualFlagNotYDisabled" style="width:80px;text-align:center;" value="${txtBirth}" oninput="this.value=this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" onkeydown="return checkKey()">
+                		<input type="text" id="txtBirth" class="manualFlagNotYDisabled" style="width:80px;text-align:center;" value="${txtBirth}" oninput="this.value=this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" onkeydown="return checkKey()" readonly="readonly">
                 			<img id="TempCalImage" src="/images/ImgIcon/calendar-month.png" style="margin-bottom:-5px"/>
                 			&nbsp;&nbsp;
              			   <c:choose>
@@ -541,7 +542,7 @@
     		<c:if test="${ezOffice365Auth == 'NO' && userManualFlag eq 'Y'}">
     		<h2><spring:message code='ezPersonal.t185'/></h2>
     		<div>▒ <spring:message code='ezPersonal.t186'/></div>
-    		<div style="margin-top:3px">${pwPolicyExplain }</div> 		
+    		<div style="font-size:13px;margin-top:3px;">${pwPolicyExplain }</div> 		
     		<table class="content" style="margin-top:5px;width:50%">
         		<!-- 표준모듈 (2007.02.21) 수정 -->
         		<tr>

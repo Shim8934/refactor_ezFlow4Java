@@ -13,9 +13,11 @@ import egovframework.ezEKP.ezSystem.vo.IPBandVO;
 import egovframework.ezEKP.ezSystem.vo.PasswordPolicyVO;
 import egovframework.ezEKP.ezSystem.vo.PermissionInfoVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
+import egovframework.ezEKP.ezSystem.vo.SystemConfigTypeVO;
+import egovframework.ezEKP.ezSystem.vo.SystemConfigVO;
 import egovframework.ezEKP.ezSystem.vo.UserChangeInfoVO;
 import egovframework.let.main.vo.MainVO;
-import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzSystemAdminDAO")
 public class EzSystemAdminDAO extends EgovAbstractDAO {
@@ -163,7 +165,11 @@ public class EzSystemAdminDAO extends EgovAbstractDAO {
 	public void updateAdminIPBand(Map<String, Object> map) throws Exception {
 		update("EzSystemAdminDAO.updateAdminIPBand", map);
 	}
-	
+
+	public Integer isExistSystemAdminIPBand(List<String> ipNoList) throws Exception {
+		return (Integer) select ("EzSystemAdminDAO.isExistSystemAdminIPBand", ipNoList);
+	}
+
 	public void deleteAdminIPBand(List<String> ipNoList) throws Exception {
 		delete ("EzSystemAdminDAO.deleteAdminIPBand", ipNoList);
 	}
@@ -254,4 +260,132 @@ public class EzSystemAdminDAO extends EgovAbstractDAO {
 		insert("EzSystemAdminDAO.insertDeptChangeHist", deptChangeInfoVO);
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<ConnectionInfoVO> getConnectorList(Map<String, Object> map) throws Exception {
+		return (List<ConnectionInfoVO>) list("EzSystemAdminDAO.getConnectorList", map);
+	}
+
+	public int getConnectorListCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzSystemAdminDAO.getConnectorListCount", map);
+	}
+	public void updateResetThemeAllCompany() throws Exception {
+		update("EzSystemAdminDAO.updateResetThemeAllCompany");
+	}
+
+	public void deleteThemeAllUser() throws Exception {
+		delete("EzSystemAdminDAO.deleteThemeAllUser");
+	}
+
+	public void updateResetThemeAllUser() throws Exception {
+		update("EzSystemAdminDAO.updateResetThemeAllUser");
+	}
+
+	public void deletePortletAllUser() throws Exception {
+		delete("EzSystemAdminDAO.deletePortletAllUser");
+	}
+
+	public void deletePortletSizeAllUser() throws Exception {
+		delete("EzSystemAdminDAO.deletePortletSizeAllUser");
+	}
+	
+	public int getSystemConfigListCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzSystemAdminDAO.getSystemConfigListCount", map);
+	}
+	
+	public int getSystemConfigListCountPopup(Map<String, Object> map) throws Exception {
+		return (int) select("EzSystemAdminDAO.getSystemConfigListCountPopup", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<SystemConfigVO> getSystemConfigList (Map<String, Object> map) throws Exception {
+		return (List<SystemConfigVO>) list("EzSystemAdminDAO.getSystemConfigList", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<SystemConfigVO> getSystemConfigListPopup (Map<String, Object> map) throws Exception {
+		return (List<SystemConfigVO>) list("EzSystemAdminDAO.getSystemConfigListPopup", map);
+	}
+	
+	public SystemConfigVO getSystemConfig(Map<String, Object> map) throws Exception {
+		return (SystemConfigVO) select("EzSystemAdminDAO.getSystemConfig", map);
+	}
+	
+	public void deletesyStemConfig(Map<String, Object> map) throws Exception {
+		delete("EzSystemAdminDAO.deletesyStemConfig", map);
+	}
+	
+	public void insertStemConfig(Map<String, Object> map) throws Exception {
+		insert("EzSystemAdminDAO.insertStemConfig", map);
+	}
+	
+	public void updateStemConfig(Map<String, Object> map) throws Exception {
+		update("EzSystemAdminDAO.updateStemConfig", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<SystemConfigTypeVO> getSystemConfigTypeList(Map<String, Object> map) throws Exception {
+		return (List<SystemConfigTypeVO>) list("EzSystemAdminDAO.getSystemConfigTypeList", map);
+	}
+
+	public int getSystemConfigTypeListCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzSystemAdminDAO.getSystemConfigTypeListCount", map);
+	}
+
+	public void deleteSystemConfigType(Map<String, Object> map) throws Exception {
+		delete("EzSystemAdminDAO.deleteSystemConfigType", map);
+	}
+
+	public int checkDuplicateCode(Map<String, Object> map) throws Exception {
+		return (int) select("EzSystemAdminDAO.checkDuplicateCode", map);
+	}
+
+	public void deleteSystemConfigByTypeCode(Map<String, Object> map) throws Exception {
+		delete("EzSystemAdminDAO.deleteSystemConfigByTypeCode", map);
+	}
+
+	public SystemConfigTypeVO getSystemConfigType(Map<String, Object> map) throws Exception {
+		return (SystemConfigTypeVO) select("EzSystemAdminDAO.getSystemConfigType", map);
+	}
+
+	public int checkDuplicateTypeCode(Map<String, Object> map) throws Exception {
+		return (int) select("EzSystemAdminDAO.checkDuplicateTypeCode", map);
+	}
+
+	public void insertSystemConfigType(Map<String, Object> map) {
+		insert("EzSystemAdminDAO.insertSystemConfigType", map);
+	}
+
+	public void updateSystemConfigType(Map<String, Object> map) {
+		update("EzSystemAdminDAO.updateSystemConfigType", map);
+	}
+
+	public void disableDeleteSystemConfig(Map<String, Object> map) {
+		update("EzSystemAdminDAO.disableDeleteSystemConfig", map);
+	}
+
+	public List<IPBandVO> getFidoAuthenticList(Map<String, Object> map) throws Exception {
+		return (List<IPBandVO>) list("EzSystemAdminDAO.getFidoAuthenticList", map);
+	}
+
+	public int getFidoAuthenticInfo(Map<String, Object> map) throws Exception {
+		return (int) select("EzSystemAdminDAO.getFidoAuthenticInfo", map);
+	}
+
+	public IPBandVO getSystemFidoIPBand(String ipNo) throws Exception {
+		int pIpNo = Integer.parseInt(ipNo);
+
+		return (IPBandVO) select("EzSystemAdminDAO.getSystemFidoIPBand", pIpNo);
+	}
+
+	public void insertFidoIPBand(Map<String, Object> map) throws Exception{
+		insert("EzSystemAdminDAO.insertFidoIPBand", map);
+	}
+
+	public void updateFidoIPBand(Map<String, Object> map) throws Exception {
+		update("EzSystemAdminDAO.updateFidoIPBand", map);
+	}
+
+	public void deleteFidoIPBand(List<String> ipNoList) throws Exception {
+		delete ("EzSystemAdminDAO.deleteFidoIPBand", ipNoList);
+	}
 }

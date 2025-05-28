@@ -28,7 +28,7 @@
                 <span class="kr">한국어</span><!-- <span class="us">영어</span><span class="jp">일본어</span><span class="cn">중국어</span> -->
             </dd>
             <!-- 사이트에 나가거나 빌드버전이 바뀐 경우 해당 버전을 변경 하셔야합니다. -->
-            <dd class="ver"><span class="tit03">ezFlow v6.8.2.STD_20231221_E</span></dd>
+            <dd class="ver"><span class="tit03">ezFlow v6.9.8.STD_20250428</span></dd>
             <!--<dd class="logo"></dd>-->
             <!-- <dd class="search">
                 <input type="text" id="txt_Search" class="top_search" placeholder="통합검색" onkeydown="entercheck()">

@@ -9,7 +9,7 @@ var SurveyMessages = {
     strAdd: "Thêm",
     strPublic1: "Mở",
     strPublic2: "Bí mật",
-    
+    strPublic3: "công bố chỉ định",
     strPublic4: "Sau cuộc khảo sát",
     strPublic5: "Ngày",
     strAnoynym1: "Hiển thị tên",
@@ -24,6 +24,9 @@ var SurveyMessages = {
     strUser6: "Công ty",
     
     strUser8: "Cài đặt",
+    strUser9     : "địa vị, chức vụ",
+    strUser10    : "Chức trách",
+    strUser11    : "nhóm",
     strDate1: "Chỉ định ngày bắt đầu nhanh hơn ngày kết thúc.",
     strDate2: "Vui lòng chỉ định ngày kết thúc của cụm từ tìm kiếm.",
     strDate3: "Vui lòng chỉ định ngày bắt đầu của cụm từ tìm kiếm.",
@@ -77,9 +80,13 @@ var SurveyMessages = {
     strSlider8: "Tối thiểu",
     strSlider9: "Tối đa",
     strSlider10: "Đặt số đếm thành số tự nhiên từ 200 trở xuống.",
+    strSlider11  : "개수",
     strOptErr: "Cần ít nhất hai chế độ xem.",
-    strMaxtrix1: "Cần ít nhất một hàng.",
-    strMaxtrix2: "Cần ít nhất một cột.",
+	strOptErr1   : "Không thể sử dụng giá trị trùng lặp.",
+    strMaxtrix1: "Cần ít nhất hai hàng.",
+    strMaxtrix2: "Cần ít nhất hai cột.",
+	strMaxtrix3  : "Nội dung hàng không thể chứa giá trị trùng lặp.",
+	strMaxtrix4  : "Nội dung cột không thể chứa giá trị trùng lặp.",
     
     strURL1: "Vui lòng nhập tên tệp.",
     strURL2: "Vui lòng nhập URL tệp.",
@@ -163,5 +170,21 @@ var SurveyMessages = {
 	srtLangHSBEx02 : "Limited extension upload files.",
     /* 2024-03-26 양지혜 - 게시기간 메시지 추가 */
     strLangYJH01 : "Có thể đăng tối đa ",
-    strLangYJH02 : " ngày."
+    strLangYJH02 : " ngày.",
+	strScheduleOne : "일정(단일선택)",
+	strScheduleMtp : "일정(다중선택)",
+	strScheduleOneDay : "하루일정",
+	strScheduleMtpDay : "기간일정",
+	strScheduleTxt : "텍스트 입력",
+	strScheduleOpt : "옵션은 최대 20개 까지 추가 가능합니다.",
+	strDateFormatValidation : "날짜는 yyyy-mm-dd(년도 네자리-월 두자리-일 두자리)형태의 유효한 날짜로 입력해주세요.",
+	strDateTimeValidation : "시작 날짜는 끝 날짜보다 이전 날짜여야 합니다.",
+	strQuestionImage : "이미지로 질문 대체",
+    strQuestionImageDel : "질문 이미지 삭제",
+	strQuestionFileAttach : "질문에 파일 첨부",
+	strAllowedImageForTitle : "png, jpeg, jpg만 허용가능합니다.",
+    /* 2024-11-25 박기범 - 리스트 상태값 추가 */
+    strLangPGB01 : "참여",
+    strLangPGB02 : "미참여",
+    strNumber : "갯수"
 }

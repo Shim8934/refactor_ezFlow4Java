@@ -284,21 +284,23 @@ function AprSecurity_onClick() {
 
 function getPublicFlag2() {
     var strrtn = "";
-    if (document.getElementsByName("rdoSecType2")[0].checked)
-        strrtn = strrtn + "Y";
-    else 
-        strrtn = strrtn + "N";
+    var rdoSecType2SelectBox = document.getElementById("rdoSecType2");
+    if (rdoSecType2SelectBox){
+        strrtn = rdoSecType2SelectBox.value;
+    }
     return strrtn;
 }
 
 function setPublicFlag2(vPublicFlag2) {
     switch (vPublicFlag2.substring(0, 1)) {
         case "Y":
-            document.getElementsByName("rdoSecType2")[0].checked = true;
+            document.getElementById("rdoSecType2").value = "Y";
+            break;
+        case "B":
+            document.getElementById("rdoSecType2").value = "B";
             break;
         case "N":
-            document.getElementsByName("rdoSecType2")[1].checked = true;
+            document.getElementById("rdoSecType2").value = "N";
             break;
-       
     }
 }

@@ -218,8 +218,8 @@
                 xmlHTTP.open("POST", "/myoffice/ezOrgan/OrganInfo/GetSearchList.aspx", false);
                 xmlHTTP.send(xmlDOM);
     
-                if (xmlHTTP.statusText != "OK") {
-                    alert("" + strLang16 + "" + xmlHTTP.statusText);
+                if (xmlHTTP.status != 200) {
+                    alert("" + strLang16 + "" + xmlHTTP.status);
                     xmlDOM = null;
                     xmlHTTP = null;
                     continue;
@@ -940,7 +940,9 @@
             var listtable;
     
             listtable = dadiframe.document.getElementById("filelist");
-            dadiframe.document.getElementById("lstAttachLink").appendChild(listtable);
+            var lstAttachLink = dadiframe.document.getElementById("lstAttachLink");
+            lstAttachLink.insertBefore(listtable, lstAttachLink.firstChild);
+            dadiframe.document.getElementById("attachInnerNotice").className = "attachInnerNotice_p_off";
     
             var extCheck = false;
             for (i = 0; i < SelectNodes(xml, "ROOT/NODES/DATA").length; i++) {
@@ -953,6 +955,7 @@
                     objTr.setAttribute("DATA", newFileName);
                     objTr.setAttribute("DATA2", pFileName);
                     objTr.setAttribute("DATA3", fileSize);
+                    objTr.setAttribute("draggable", true);
     
                     var objTd = document.createElement("TD");
                     objTd.style.textAlign = "center";

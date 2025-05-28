@@ -1,4 +1,4 @@
-﻿//#############################################################################################################################################사용자리스트 원클릭 이벤트 list2_onSel_Click()
+﻿﻿//#############################################################################################################################################사용자리스트 원클릭 이벤트 list2_onSel_Click()
 function list2_onSel_Click() {
 }
 //#############################################################################################################################################사용자리스트 더블클릭 이벤트 list2_onSel_DBclick()
@@ -40,7 +40,7 @@ function list3_onSel_DBclick() {
         listview.LoadFromID("DivUserList");
 
         var selnode = listview.GetSelectedRows();
-        APRLINEATTENDADDFunctionCC(selnode[0], "PERSON");
+        if (selnode.length != 0) APRLINEATTENDADDFunctionCC(selnode[0], "PERSON");
     }
     catch (e) {
         alert("list3_onSel_DBclick :: " + e.description);
@@ -55,7 +55,7 @@ function list4_onSel_DBclick() {
 		APRLINEATTENDADDFunctionCC(selnode[0], "SEARCH");
 	}
 	catch (e) {
-		alert("list3_onSel_DBclick :: " + e.description);
+		alert("list4_onSel_DBclick :: " + e.description);
 	}
 }
 function list3_onSel_Click() {
@@ -64,6 +64,25 @@ function list3_onSel_Click() {
 //회람
 function AprlineDel_onclickCC() {
     APRLINEATTENDERDELFunctionCC();
+}
+
+//공람 전체삭제
+function list3_deleteAll() {
+	try {
+		var listview = new ListView();
+		listview.LoadFromID("pAPRLINE");
+
+		var pSelectedRow = listview.GetDataRows();
+		if (pSelectedRow.length != 0 && pSelectedRow != null && pSelectedRow[0].getAttribute("id").indexOf("noItems") < 0 && listview.GetSelectedIndexes().split(',')[0] != -1) {
+			for (var i = 0; i < pSelectedRow.length; i++) {
+				if (pSelectedRow[i].cells[5].innerText == strLang72) {
+					DoDeleteCC(pSelectedRow);
+				}
+			}
+		}
+	} catch (e) {
+		alert("list3_deleteAll :: " + e.description);
+	}
 }
 
 //############################################################################################################################################# 결재선 삭제 함수
@@ -212,7 +231,7 @@ function OnSelChange_onclick() {
     					if (child[i].nodeType == 1 && child[i].name != undefined) {
 							child[i].style.display = "";
 						}
-    						
+
     				}
     				if (pReDraftFlag != "HAPYUI" || pReDraftFlag != "HABYUI") {
     					if (GetAttribute(pAPRLINE.GetSelectedRows(0)[0], "DATA9") == "Y") {
@@ -289,6 +308,12 @@ function APRLINEATTENDADDFunction(pCurSelectedRow, Mode) {
 			var pCurSelectedRow = selnode;//TreeView.selectedIndex;
 			var pAlertContent = strLang250 + "<br> " + strLang251;
 			OpenAlertUI(pAlertContent);	  
+		}
+	} else if (Mode == "DEPT") {
+		if (GetEntryInfo(pCurSelectedRow.GetNodeData("CN")) == "N") {
+			var pAlertContent = strLang1105;
+			OpenAlertUI(pAlertContent);
+			return;
 		}
 	}
     
@@ -433,7 +458,14 @@ function APRLINEATTENDADDFunctionCC(pCurSelectedRow, Mode) {
                 DuplicateFlag = true;
         }
         if (DuplicateFlag) {
-            var pAlertContent = strLangS824;
+            var pAlertContent = "";
+
+			if (approvalFlag == "G") {
+				pAlertContent = strLang824;
+			} else {
+				pAlertContent = strLangS824;
+			}
+
             OpenAlertUI(pAlertContent);
             return;
         }
@@ -479,19 +511,36 @@ function aprLineAddDeptUser(mode, xmlData) {
 	            }
 	        }
 	        if (DuplicateFlag) {
-	            var pAlertContent = strLangS824;
+				var pAlertContent = "";
+
+				if (approvalFlag == "G") {
+					pAlertContent = strLang824;
+				} else {
+					pAlertContent = strLangS824;
+				}
+
 	            OpenAlertUI(pAlertContent);
 	            continue;
 	        }
 		
             pparsingXML = "<LISTVIEWDATA><HEADERS>";
-            pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang300 + "</NAME><WIDTH>35</WIDTH></HEADER>";
-            pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang29 + "</NAME><WIDTH>120</WIDTH></HEADER>";
-            pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang28 + "</NAME><WIDTH>50</WIDTH></HEADER>";
-            pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang32 + "</NAME><WIDTH>130</WIDTH></HEADER>";
-            pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang61 + "</NAME><WIDTH>120</WIDTH></HEADER>";
-            pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang125 + "</NAME><WIDTH>70</WIDTH></HEADER>";
-            pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang301 + "</NAME><WIDTH>140</WIDTH></HEADER>";
+            if (approvalFlag == 'S') {
+            	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang300 + "</NAME><WIDTH>35</WIDTH></HEADER>";
+            	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang29 + "</NAME><WIDTH>120</WIDTH></HEADER>";
+            	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang28 + "</NAME><WIDTH>50</WIDTH></HEADER>";
+            	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang32 + "</NAME><WIDTH>130</WIDTH></HEADER>";
+            	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang61 + "</NAME><WIDTH>120</WIDTH></HEADER>";
+            	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang125 + "</NAME><WIDTH>70</WIDTH></HEADER>";
+            	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang301 + "</NAME><WIDTH>140</WIDTH></HEADER>";
+            } else {
+            	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang300 + "</NAME><WIDTH>35</WIDTH></HEADER>";
+            	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang29 + "</NAME><WIDTH>120</WIDTH></HEADER>";
+            	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang28 + "</NAME><WIDTH>100</WIDTH></HEADER>";
+            	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang32 + "</NAME><WIDTH>130</WIDTH></HEADER>";
+            	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang61 + "</NAME><WIDTH>100</WIDTH></HEADER>";
+            	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang125 + "</NAME><WIDTH>80</WIDTH></HEADER>";
+            	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang301 + "</NAME><WIDTH>130</WIDTH></HEADER>";
+            }
             pparsingXML = pparsingXML + "</HEADERS><ROWS><ROW><CELL>";
             pparsingXML = pparsingXML + "<VALUE>" + AprLineAddIndex + "</VALUE>";
             pparsingXML = pparsingXML + "<DATA1>" + "" + "</DATA1>";
@@ -521,7 +570,11 @@ function aprLineAddDeptUser(mode, xmlData) {
             pparsingXML = pparsingXML + "</CELL><CELL>";
             pparsingXML = pparsingXML + "<VALUE><![CDATA[" + getNodeText(GetElementsByTagName(xmlData, "DATA6")[i]) + "]]></VALUE>";
             pparsingXML = pparsingXML + "</CELL><CELL>";
-            pparsingXML = pparsingXML + "<VALUE>" + strLangAprType17 + "</VALUE>";
+            if (approvalFlag == 'S') {
+            	pparsingXML = pparsingXML + "<VALUE>" + strLangAprType17 + "</VALUE>";
+            } else {
+            	pparsingXML = pparsingXML + "<VALUE>" + strLangDocState15 + "</VALUE>";
+            }
             pparsingXML = pparsingXML + "</CELL><CELL>";
             pparsingXML = pparsingXML + "<VALUE>" + strLang72 + "</VALUE>";
             pparsingXML = pparsingXML + "</CELL><CELL><VALUE></VALUE></CELL></ROW></ROWS></LISTVIEWDATA>";	
@@ -615,13 +668,23 @@ function AprLineAddUserCC(Mode, tr, pSelectedRow) {
                 }
 
                 pparsingXML = "<LISTVIEWDATA><HEADERS>";
-                pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang300 + "</NAME><WIDTH>35</WIDTH></HEADER>";
-                pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang29 + "</NAME><WIDTH>120</WIDTH></HEADER>";
-                pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang28 + "</NAME><WIDTH>50</WIDTH></HEADER>";
-                pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang32 + "</NAME><WIDTH>130</WIDTH></HEADER>";
-                pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang61 + "</NAME><WIDTH>120</WIDTH></HEADER>";
-                pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang125 + "</NAME><WIDTH>70</WIDTH></HEADER>";
-                pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang301 + "</NAME><WIDTH>140</WIDTH></HEADER>";
+                if (approvalFlag == 'S') {
+                	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang300 + "</NAME><WIDTH>35</WIDTH></HEADER>";
+                	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang29 + "</NAME><WIDTH>120</WIDTH></HEADER>";
+                	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang28 + "</NAME><WIDTH>50</WIDTH></HEADER>";
+                	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang32 + "</NAME><WIDTH>130</WIDTH></HEADER>";
+                	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang61 + "</NAME><WIDTH>120</WIDTH></HEADER>";
+                	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang125 + "</NAME><WIDTH>70</WIDTH></HEADER>";
+                	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang301 + "</NAME><WIDTH>140</WIDTH></HEADER>";
+                } else {
+                	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang300 + "</NAME><WIDTH>35</WIDTH></HEADER>";
+                	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang29 + "</NAME><WIDTH>120</WIDTH></HEADER>";
+                	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang28 + "</NAME><WIDTH>100</WIDTH></HEADER>";
+                	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang32 + "</NAME><WIDTH>130</WIDTH></HEADER>";
+                	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang61 + "</NAME><WIDTH>100</WIDTH></HEADER>";
+                	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang125 + "</NAME><WIDTH>80</WIDTH></HEADER>";
+                	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang301 + "</NAME><WIDTH>130</WIDTH></HEADER>";
+                }
                 pparsingXML = pparsingXML + "</HEADERS><ROWS><ROW><CELL>";
                 pparsingXML = pparsingXML + "<VALUE>" + AprLineAddIndex + "</VALUE>";
                 pparsingXML = pparsingXML + "<DATA1>" + "" + "</DATA1>";
@@ -651,7 +714,11 @@ function AprLineAddUserCC(Mode, tr, pSelectedRow) {
                 pparsingXML = pparsingXML + "</CELL><CELL>";
                 pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(preDeptName) + "</VALUE>";
                 pparsingXML = pparsingXML + "</CELL><CELL>";
-                pparsingXML = pparsingXML + "<VALUE>" + strLangAprType17 + "</VALUE>";
+                if (approvalFlag == 'S') {
+                	pparsingXML = pparsingXML + "<VALUE>" + strLangAprType17 + "</VALUE>";
+                } else {
+                	pparsingXML = pparsingXML + "<VALUE>" + strLangDocState15 + "</VALUE>";
+                }
                 pparsingXML = pparsingXML + "</CELL><CELL>";
                 pparsingXML = pparsingXML + "<VALUE>" + strLang72 + "</VALUE>";
                 pparsingXML = pparsingXML + "</CELL><CELL><VALUE></VALUE></CELL></ROW></ROWS></LISTVIEWDATA>";
@@ -720,7 +787,11 @@ function AprLineAddUserCC(Mode, tr, pSelectedRow) {
             	pparsingXML = pparsingXML + "</CELL><CELL>";
             	pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(preDeptName) + "</VALUE>";
             	pparsingXML = pparsingXML + "</CELL><CELL>";
-            	pparsingXML = pparsingXML + "<VALUE>" + strLangAprType17 + "</VALUE>";
+            	if (approvalFlag == 'S') {
+            		pparsingXML = pparsingXML + "<VALUE>" + strLangAprType17 + "</VALUE>";
+            	} else {
+            		pparsingXML = pparsingXML + "<VALUE>" + strLangDocState15 + "</VALUE>";
+            	}
             	pparsingXML = pparsingXML + "</CELL><CELL>";
             	pparsingXML = pparsingXML + "<VALUE>" + strLang72 + "</VALUE>";
             	pparsingXML = pparsingXML + "</CELL><CELL><VALUE></VALUE></CELL></ROW></ROWS></LISTVIEWDATA>";
@@ -2112,12 +2183,11 @@ function APRLINEATTENDERDELFunctionCC() {
 
         var pSelectedRow = listview.GetSelectedRows();
         if (pSelectedRow.length != 0 && pSelectedRow != null && listview.GetSelectedIndexes().split(',')[0] != -1) {
-            if (pSelectedRow[0].cells[5].innerText != strLang72) {
-                var pAlertContent = strLang822 + "<br> " + strLang823;
-                OpenAlertUI(pAlertContent);
-                return;
-            }
-            DoDeleteCC(pSelectedRow);
+			for (var i = 0; i < pSelectedRow.length; i++) {
+				if (pSelectedRow[i].cells[5].innerText == strLang72) {
+					DoDeleteCC(pSelectedRow);
+				}
+			}
         }
     } catch (e) {
         alert("APRLINEATTENDERDELFunction :: " + e.description);
@@ -2132,7 +2202,7 @@ function DoDeleteCC(pSelectedRow) {
         listview.LoadFromID("pAPRLINE");
 
         var pTotalRows = listview.GetDataRows();
-        var pSelectedIndex = Number(listview.GetSelectedIndexes().split(',')[0]);
+        var pSelectedIndex = listview.GetSelectedIndexes() == '' ? 0 : Number(listview.GetSelectedIndexes().split(',')[0]);
         var Rtnval = "N";
 
         TIndex = pTotalRows.length;
@@ -2150,7 +2220,7 @@ function DoDeleteCC(pSelectedRow) {
             Rtnval = "Y";
         }
         if (Rtnval == "Y") {
-            var selIdx = listview.GetSelectedRows()[0].getAttribute("id");
+            var selIdx = listview.GetSelectedRows().length == 0 ? listview.GetDataRows()[0].getAttribute("id") : listview.GetSelectedRows()[0].getAttribute("id");
             listview.DeleteRow(selIdx);
         }
         
@@ -4607,37 +4677,37 @@ function APRLINEXMLParsingCC() {
         var AprLineTotalLen;
         AprLineTotalLen = pTotalRowsLen;
 
-        strXML = "<LISTVIEWDATA><HEADERS></HEADERS><ROWS>";
+        	strXML = "<LISTVIEWDATA><HEADERS></HEADERS><ROWS>";
 
-        for (i = 0 ; i < pTotalRowsLen ; i++) {
-            strXML = strXML + "<ROW>";
-            strXML = strXML + "<COLUMN>" + (AprLineTotalLen - k) + "</COLUMN>";
-            for (j = 1 ; j < pTotalColsLen - 1 ; j++)
-                strXML = strXML + "<COLUMN>" + MakeXMLString(pTotalRows[i].cells[j].innerText) + "</COLUMN>";
+        	for (i = 0 ; i < pTotalRowsLen ; i++) {
+        		strXML = strXML + "<ROW>";
+        		strXML = strXML + "<COLUMN>" + (AprLineTotalLen - k) + "</COLUMN>";
+        		for (j = 1 ; j < pTotalColsLen - 1 ; j++)
+        			strXML = strXML + "<COLUMN>" + MakeXMLString(pTotalRows[i].cells[j].innerText) + "</COLUMN>";
 
-            strXML = strXML + "<DATA name='ProcessDate'>" + GetAttribute(pTotalRows[i], "DATA1") + "</DATA>";
-            strXML = strXML + "<DATA name='ReceivedDate'>" + GetAttribute(pTotalRows[i], "DATA2") + "</DATA>";
-            strXML = strXML + "<DATA name='DocID'>" + pDocID + "</DATA>";
-            strXML = strXML + "<DATA name='AprMemberID'>" + GetAttribute(pTotalRows[i], "DATA4") + "</DATA>";
-            strXML = strXML + "<DATA name='AprmemberIsDeptYN'>" + GetAttribute(pTotalRows[i], "DATA5") + "</DATA>";
-            strXML = strXML + "<DATA name='AprMemberDeptID'>" + GetAttribute(pTotalRows[i], "DATA6") + "</DATA>";
-            strXML = strXML + "<DATA name='ReasonDoNotApprov'>" + GetAttribute(pTotalRows[i], "DATA7") + "</DATA>";
-            strXML = strXML + "<DATA name='isProposerYN'>" + GetAttribute(pTotalRows[i], "DATA8") + "</DATA>";
-            strXML = strXML + "<DATA name='isBriefUserYN'>" + GetAttribute(pTotalRows[i], "DATA9") + "</DATA>";
-            strXML = strXML + "<DATA name='companyID'>" + GetAttribute(pTotalRows[i], "DATA10") + "</DATA>";
-            strXML = strXML + "<DATA name='PMemberName'>" + MakeXMLString(GetAttribute(pTotalRows[i], "DATA13")) + "</DATA>";		
-            strXML = strXML + "<DATA name='SMemberName'>" + MakeXMLString(GetAttribute(pTotalRows[i], "DATA14")) + "</DATA>";		
-            strXML = strXML + "<DATA name='PMemberDeptName'>" + MakeXMLString(GetAttribute(pTotalRows[i], "DATA15")) + "</DATA>";		
-            strXML = strXML + "<DATA name='SMemberDeptName'>" + MakeXMLString(GetAttribute(pTotalRows[i], "DATA16")) + "</DATA>";
-            strXML = strXML + "<DATA name='PMemberJobTitle'>" + MakeXMLString(GetAttribute(pTotalRows[i], "DATA17")) + "</DATA>";	
-            strXML = strXML + "<DATA name='SMemberJobTitle'>" + MakeXMLString(GetAttribute(pTotalRows[i], "DATA18")) + "</DATA>";	
-            strXML = strXML + "<DATA name='AprType'>" + MakeXMLString(GetAttribute(pTotalRows[i], "DATA11")) + "</DATA>";
-            strXML = strXML + "<DATA name='AprState'>" + MakeXMLString(GetAttribute(pTotalRows[i], "DATA12")) + "</DATA>";
-            strXML = strXML + "</ROW>";
-            k = k + 1;
-        }
+        		strXML = strXML + "<DATA name='ProcessDate'>" + GetAttribute(pTotalRows[i], "DATA1") + "</DATA>";
+        		strXML = strXML + "<DATA name='ReceivedDate'>" + GetAttribute(pTotalRows[i], "DATA2") + "</DATA>";
+        		strXML = strXML + "<DATA name='DocID'>" + pDocID + "</DATA>";
+        		strXML = strXML + "<DATA name='AprMemberID'>" + GetAttribute(pTotalRows[i], "DATA4") + "</DATA>";
+        		strXML = strXML + "<DATA name='AprmemberIsDeptYN'>" + GetAttribute(pTotalRows[i], "DATA5") + "</DATA>";
+        		strXML = strXML + "<DATA name='AprMemberDeptID'>" + GetAttribute(pTotalRows[i], "DATA6") + "</DATA>";
+        		strXML = strXML + "<DATA name='ReasonDoNotApprov'>" + GetAttribute(pTotalRows[i], "DATA7") + "</DATA>";
+        		strXML = strXML + "<DATA name='isProposerYN'>" + GetAttribute(pTotalRows[i], "DATA8") + "</DATA>";
+        		strXML = strXML + "<DATA name='isBriefUserYN'>" + GetAttribute(pTotalRows[i], "DATA9") + "</DATA>";
+        		strXML = strXML + "<DATA name='companyID'>" + GetAttribute(pTotalRows[i], "DATA10") + "</DATA>";
+        		strXML = strXML + "<DATA name='PMemberName'>" + MakeXMLString(GetAttribute(pTotalRows[i], "DATA13")) + "</DATA>";
+        		strXML = strXML + "<DATA name='SMemberName'>" + MakeXMLString(GetAttribute(pTotalRows[i], "DATA14")) + "</DATA>";
+        		strXML = strXML + "<DATA name='PMemberDeptName'>" + MakeXMLString(GetAttribute(pTotalRows[i], "DATA15")) + "</DATA>";
+        		strXML = strXML + "<DATA name='SMemberDeptName'>" + MakeXMLString(GetAttribute(pTotalRows[i], "DATA16")) + "</DATA>";
+        		strXML = strXML + "<DATA name='PMemberJobTitle'>" + MakeXMLString(GetAttribute(pTotalRows[i], "DATA17")) + "</DATA>";
+        		strXML = strXML + "<DATA name='SMemberJobTitle'>" + MakeXMLString(GetAttribute(pTotalRows[i], "DATA18")) + "</DATA>";
+        		strXML = strXML + "<DATA name='AprType'>" + MakeXMLString(GetAttribute(pTotalRows[i], "DATA11")) + "</DATA>";
+        		strXML = strXML + "<DATA name='AprState'>" + MakeXMLString(GetAttribute(pTotalRows[i], "DATA12")) + "</DATA>";
+        		strXML = strXML + "</ROW>";
+        		k = k + 1;
+        	}
 
-        strXML = strXML + "</ROWS></LISTVIEWDATA>";
+        	strXML = strXML + "</ROWS></LISTVIEWDATA>";
         return strXML;
     } catch (e) {
         alert("APRLINEXMLParsing :: " + e.description);
@@ -4743,7 +4813,7 @@ function event_getAprLineDeptFullTree() {
             treeViewScrollTo("FromTreeView");   //2020-04-24 : 선택된 노드로 트리뷰 커서 이동
         }
         else {
-            alert(strLang249 + g_xmlHTTP.statusText);
+            alert(strLang249 + g_xmlHTTP.status);
             g_xmlHTTP = null;
         }
     }
@@ -4874,7 +4944,7 @@ function event_getReceiptDeptFullTree() {
             treeViewScrollTo("tvTreeView2");   //2020-04-24 : 선택된 노드로 트리뷰 커서 이동
         }
         else {
-            alert(strLang249 + g_xmlHTTP.statusText);
+            alert(strLang249 + g_xmlHTTP.status);
             g_xmlHTTP = null;
         }
     }

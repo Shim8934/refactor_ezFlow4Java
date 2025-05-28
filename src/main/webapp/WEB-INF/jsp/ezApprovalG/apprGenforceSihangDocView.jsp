@@ -7,7 +7,8 @@
 	<head>
 		<title><spring:message code='ezApprovalG.t200'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -73,7 +74,7 @@
 				var pTop = (pheight - 720) / 2;
 				var pLeft = (pwidth - 765) / 2;
 
-				if (ret[2] == "2" || ret[2] == "3" || ret[2] == "4" || ret[2] == "7" || (ret[3] != "null" && ret[3] != null && ret[3] != "")) {
+				if (ret[2] == "2" || ret[2] == "3" || ret[2] == "4" || ret[2] == "7" || ret[2] == "8" || (ret[3] != "null" && ret[3] != null && ret[3] != "")) {
 					alert(strLang1031);
 				} else {
 					window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&mode=new1&pbrdGbn=SiteNewBoard&pFromScreen=Mail&docID=" + pDocID + "&url=" + pDocHref + "&orgCompanyID=" + orgCompanyID, '', GetOpenWindowJun(765, 870));
@@ -216,7 +217,7 @@
 	                }
 	                
 					//2019-09-09 김보미 - 관인생략은 맨 끝자의 한칸 띄고 나타나야함
-	                var sealwidth = (maxwidth - field2.clientWidth) / 2 + field2.clientWidth - getPixel(SealWidth) + 20;
+	                var sealwidth = (maxwidth - chiefwidth) / 2 + chiefwidth - getPixel(SealWidth) + 20;
 	                var field2 = message.GetListItem(fields, "sealwidth");
 	                if (field2)
 	                    field2.width = sealwidth;
@@ -311,7 +312,6 @@
 			$.ajax({
 				type : "POST",
 				dataType : "text",
-				async : false,
 				url : "/ezApprovalG/enforceSihangDocSave.do",
 				data : {
 					pMhtBody : mhtBody,
@@ -319,7 +319,10 @@
 				},
 				success: function(text) {
 					result = text;
-				}        			
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
+					console.error("enforceSihangDocSave error:", textStatus, errorThrown);
+				}
 			});
 			
 			return result;

@@ -9,12 +9,13 @@ import javax.annotation.Resource;
 
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezSystem.vo.CountryVO;
+import egovframework.let.user.login.vo.FidoAuthenticationVO;
 import egovframework.let.user.login.vo.FindPwdInfoVO;
 import egovframework.let.user.login.vo.LoginDeviceVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.user.login.vo.SessionVO;
 import egovframework.let.user.login.vo.TenantServerNameVO;
-import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -172,7 +173,7 @@ public class LoginDAO extends EgovAbstractDAO {
 	}
 
 	public void deleteDbSessionByTime(int dbSessionStoragePeriod) throws Exception {
-		update("loginDAO.deleteFidoSessionByTime", dbSessionStoragePeriod);
+		update("loginDAO.deleteDbSessionByTime", dbSessionStoragePeriod);
 	}
 
 	public List<Integer> getTenantIdList() throws Exception {
@@ -213,6 +214,23 @@ public class LoginDAO extends EgovAbstractDAO {
         return (List<LoginVO>) list("loginDAO.selectAllMemberOfCompany", map);
     }
 	
+	public void setFidoSession(FidoAuthenticationVO vo) throws Exception {
+		update("loginDAO.setFidoSession", vo);
+	}
+
+	public FidoAuthenticationVO getFidoSession(String fidoSessionId) throws Exception {
+		logger.debug("getFidoSession DAO : {}", fidoSessionId);
+		return (FidoAuthenticationVO) select ("loginDAO.getFidoSession", fidoSessionId);
+	}
+
+	public void updateFidoStatus(FidoAuthenticationVO vo) throws Exception {
+		update("loginDAO.updateFidoStatus", vo);
+	}
+
+	public void deleteFidoSessionByTime(int fidoStoragePeriod) throws Exception {
+		update("loginDAO.deleteFidoSessionByTime", fidoStoragePeriod);
+	}
+
 	public LoginDeviceVO getDeviceInfo (Map<String, Object> map) throws Exception {
 		return (LoginDeviceVO) select("loginDAO.getDeviceInfo", map);
 	}
@@ -250,5 +268,7 @@ public class LoginDAO extends EgovAbstractDAO {
 	public int updateLogincnt (LoginVO vo) throws Exception {
 		return update("loginDAO.updateLogincnt", vo);
 	}
-
+	public int userDeviceCnt(Map<String, Object> map) throws Exception {
+		return (int)select("loginDAO.userDeviceCnt", map);
+	}
 }

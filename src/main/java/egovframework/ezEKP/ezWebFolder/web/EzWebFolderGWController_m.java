@@ -83,7 +83,7 @@ public class EzWebFolderGWController_m {
 	/**
 	 * 공유한 리스트 조회
 	 */
-	@RequestMapping(value="/rest/ezwebfolder/users/{userId}/sharing", method=RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolder/users/{userId:.+}/sharing", method=RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getSharingList(@PathVariable String userId, HttpServletRequest request) {
 		logger.debug("getSharingList started.");
 		
@@ -172,7 +172,7 @@ public class EzWebFolderGWController_m {
 	/**
 	 * 특정 폴더 또는 파일에 대한 공유 정보 조회
 	 */
-	@RequestMapping(value="/rest/ezwebfolder/users/{userId}/sharing/{folderFileId}/{folderFileType}/all", method=RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolder/users/{userId:.+}/sharing/{folderFileId:.+}/{folderFileType:.+}/all", method=RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getSharingInfo(@PathVariable String userId, @PathVariable String folderFileId, @PathVariable String folderFileType, HttpServletRequest request) {
 		logger.debug("getSharingInfo started.");
 		
@@ -229,7 +229,7 @@ public class EzWebFolderGWController_m {
 	/**
 	 * 특정 폴더 또는 파일에 대해 특정 사용자가 공유한 정보 조회
 	 */
-	@RequestMapping(value="/rest/ezwebfolder/users/{userId}/sharing/{folderFileId}/{folderFileType:.+}", method=RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolder/users/{userId:.+}/sharing/{folderFileId:.+}/{folderFileType:.+}", method=RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getUserSharingInfo(@PathVariable String userId, @PathVariable String folderFileId, @PathVariable String folderFileType, HttpServletRequest request) {
 		logger.debug("getUserSharingInfo started.");
 		
@@ -292,7 +292,7 @@ public class EzWebFolderGWController_m {
 	/**
 	 * 공유받은 리스트 조회
 	 */
-	@RequestMapping(value="/rest/ezwebfolder/users/{userId}/shared", method=RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolder/users/{userId:.+}/shared", method=RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getSharedList(@PathVariable String userId, HttpServletRequest request) {
 		logger.debug("getSharedList started.");
 		
@@ -383,7 +383,7 @@ public class EzWebFolderGWController_m {
 	/**
 	 * 공유 추가
 	 */
-	@RequestMapping(value="/rest/ezwebfolder/users/{userId}/sharing/{folderFileId}/{folderFileType:.+}", method=RequestMethod.POST, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolder/users/{userId:.+}/sharing/{folderFileId:.+}/{folderFileType:.+}", method=RequestMethod.POST, produces="application/json;charset=utf-8")
 	public JSONObject addShare(@PathVariable String userId, @PathVariable String folderFileId, @PathVariable String folderFileType, HttpServletRequest request) throws Exception {
 		logger.debug("addShare started.");
 		
@@ -443,7 +443,7 @@ public class EzWebFolderGWController_m {
 	/**
 	 * 공유 수정
 	 */
-	@RequestMapping(value="/rest/ezwebfolder/users/{userId}/sharing/{folderFileId}/{folderFileType:.+}", method=RequestMethod.PUT, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolder/users/{userId:.+}/sharing/{folderFileId:.+}/{folderFileType:.+}", method=RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public JSONObject updateShare(@PathVariable String userId, @PathVariable String folderFileId, @PathVariable String folderFileType, HttpServletRequest request) throws Exception {
 		logger.debug("updateShare started.");
 		
@@ -503,7 +503,7 @@ public class EzWebFolderGWController_m {
 	/**
 	 * 공유 삭제
 	 */
-	@RequestMapping(value="/rest/ezwebfolder/users/{userId}/sharing", method=RequestMethod.DELETE, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolder/users/{userId:.+}/sharing", method=RequestMethod.DELETE, produces="application/json;charset=utf-8")
 	public JSONObject deleteShare(@PathVariable String userId, HttpServletRequest request) throws Exception {
 		logger.debug("deleteShare started.");
 		
@@ -571,7 +571,7 @@ public class EzWebFolderGWController_m {
 	/**
 	 * 공유 숨김 리스트 조회
 	 */
-	@RequestMapping(value="/rest/ezwebfolder/users/{userId}/shared-hide", method=RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolder/users/{userId:.+}/shared-hide", method=RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getHiddenSharedList(@PathVariable String userId, HttpServletRequest request) throws Exception {
 		logger.debug("getHiddenSharedList started.");
 		
@@ -641,7 +641,7 @@ public class EzWebFolderGWController_m {
 	/**
 	 * 공유 숨김
 	 */
-	@RequestMapping(value="/rest/ezwebfolder/users/{userId}/shared-hide", method=RequestMethod.POST, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolder/users/{userId:.+}/shared-hide", method=RequestMethod.POST, produces="application/json;charset=utf-8")
 	public JSONObject hideShare(@PathVariable String userId, HttpServletRequest request) throws Exception {
 		logger.debug("hideShare started.");
 		
@@ -712,7 +712,7 @@ public class EzWebFolderGWController_m {
 	/**
 	 * 공유 숨김 취소
 	 */
-	@RequestMapping(value="/rest/ezwebfolder/users/{userId}/shared-hide", method=RequestMethod.DELETE, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolder/users/{userId:.+}/shared-hide", method=RequestMethod.DELETE, produces="application/json;charset=utf-8")
 	public JSONObject showShare(@PathVariable String userId, HttpServletRequest request) throws Exception {
 		logger.debug("showShare started.");
 		
@@ -795,7 +795,7 @@ public class EzWebFolderGWController_m {
 	 * 
 	 * @return JSONObject
 	 */
-	@RequestMapping(value = "/rest/ezwebfolder/users/{userId}/favorites", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezwebfolder/users/{userId:.+}/favorites", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getFavoriteList(@PathVariable String userId, HttpServletRequest request) {
 		logger.debug("G/W WEBFOLDER [GET /rest/ezwebfolder/users/{userId}/favorites] started.");
 		
@@ -928,7 +928,7 @@ public class EzWebFolderGWController_m {
 	 * 
 	 * @return JSONObject
 	 */
-	@RequestMapping(value = "/rest/ezwebfolder/users/{userId}/favorite", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezwebfolder/users/{userId:.+}/favorite", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject addFavorite(@PathVariable String userId, HttpServletRequest request) {
 		logger.debug("G/W WEBFOLDER [POST /rest/ezwebfolder/users/{userId}/favorite] started.");
 		
@@ -1005,7 +1005,7 @@ public class EzWebFolderGWController_m {
 	 * 
 	 * @return JSONObject
 	 */
-	@RequestMapping(value = "/rest/ezwebfolder/users/{userId}/favorite", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezwebfolder/users/{userId:.+}/favorite", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
 	public JSONObject deleteFavorite(@PathVariable String userId, HttpServletRequest request) {
 		logger.debug("G/W WEBFOLDER [DELETE /rest/ezwebfolder/users/{userId}/favorite] started.");
 
@@ -1058,7 +1058,7 @@ public class EzWebFolderGWController_m {
 		return result;
 	}
 	
-	@RequestMapping(value="/rest/ezwebfolder/{userId}/getTrashCanList", method=RequestMethod.POST, produces ="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolder/{userId:.+}/getTrashCanList", method=RequestMethod.POST, produces ="application/json;charset=utf-8")
 	public JSONObject getTrashCanList (@PathVariable String userId, HttpServletRequest request, Locale locale) {
 		String serverName =  orElse(request.getHeader("x-user-host"), "");
 		
@@ -1483,7 +1483,7 @@ public class EzWebFolderGWController_m {
 	 * - 웹폴더 개설 신청 정보, 개설 신청 당시의 구성원, 담당자 목록 저장
 	 * param : folderName, content, memberList
 	 */
-	@RequestMapping(value="/rest/ezwebfolder/{userId}/setApplyHistory", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolder/{userId:.+}/setApplyHistory", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject setApplyHistory (@PathVariable String userId, HttpServletRequest request, @RequestBody JSONObject bodyObj) throws Exception {
 		logger.debug("setApplyHistory Started.");
 		

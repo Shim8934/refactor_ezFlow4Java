@@ -3,12 +3,13 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
 <!DOCTYPE html>
-<html>
+<html style="height: 100%; overflow: hidden;">
 	<head>
 		<title><spring:message code="ezSurvey.t34"/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
-		<link rel="stylesheet" type="text/css" href="${util.addVer('ezSurvey.css', 'msg')                      }">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/jquery-ui.css')                       }">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/dateControls/demos.css')        }">
@@ -42,10 +43,13 @@
 		<script type="text/javascript" src="${util.addVer('ezSurvey.lang', 'msg')}              "></script>
 		<script type="text/javascript">
 			var maxPeriod = Number("${maxPeriod}");
+			var editor = "<c:out value='${editor}'/>";
+			var hwpHTML;
+			var hwpCheck = false;
 		</script>
 	</head>
 	
-	<body class="mainbody srvey">
+	<body class="mainbody srvey" style="height: calc(100% - 15px);overflow: hidden;">
 		<h1><spring:message code='ezSurvey.t34'/></h1>
 		
 		<div class="surveyBtn">
@@ -71,8 +75,8 @@
 			<div class="draft-survey" id="draftBttn"><span><spring:message code='ezSurvey.t111'/></span></div>
 		</div>
 		
-		<div id="bodyPanel">
-			<div id="tab1" class="select-tab">
+		<div id="bodyPanel" style="height: calc(100% - 110px); overflow-y: hidden;">
+			<div id="tab1" class="select-tab" style="overflow-y: auto; height: 100%;">
 				<c:choose>
 					<c:when test="${not empty survey}">
 						<jsp:include page="/WEB-INF/jsp/ezSurvey/listmenu/surveyInfomationReuse.jsp"></jsp:include>
@@ -82,13 +86,13 @@
 					</c:otherwise>
 				</c:choose>
 			</div>
-			<div id="tab2" class="hidden-tab">
+			<div id="tab2" class="hidden-tab" style="overflow-y: auto; height: 100%;">
 				<jsp:include page="/WEB-INF/jsp/ezSurvey/listmenu/surveyQuestion.jsp"></jsp:include>
 			</div>
-			<div id="tab3" class="hidden-tab">
+			<div id="tab3" class="hidden-tab" style="overflow-y: auto; height: 100%;">
 				<jsp:include page="/WEB-INF/jsp/ezSurvey/listmenu/surveyLogic.jsp"></jsp:include>
 			</div>
-			<div id="tab4" class="hidden-tab">
+			<div id="tab4" class="hidden-tab" style="overflow-y: auto; height: 100%;">
 				<jsp:include page="/WEB-INF/jsp/ezSurvey/listmenu/surveyPreview.jsp"></jsp:include>
 			</div>
 		</div>

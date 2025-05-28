@@ -144,21 +144,33 @@ function btn_GroupReceptAdd_onclick(flag){
     var curSelRows = lv.GetSelectedRows();
 
     if (curSelRows.length > 0) {
+        var lv2 = new ListView();
+        lv2.LoadFromID("lvRecGroupDetail")
+        var curSelMemberRows = lv2.GetDataRows();
         if (flag === "each") {
-            var lv2 = new ListView();
-            lv2.LoadFromID("lvRecGroupDetail")
-            var curSelMemberRows = lv2.GetDataRows();
             addSusinGroupMember(curSelMemberRows);
         } else if (flag === "group") {
             var curSelRow = curSelRows[0];
-            addSusinGroup(curSelRow);
+            addSusinGroup(curSelRow, curSelMemberRows);
         }
     } else {
         OpenAlertUI(strLang974);
     }
 }
 
-function addSusinGroup(row) {
+function addSusinGroup(row, mrows) {
+    var TrashList = [];
+    for (var i = 0, ilen = mrows.length; i < ilen; i++) {
+        var mrow = mrows[i];
+        if (mrow.getAttribute("DATA6") == "N" && mrow.getAttribute("DATA7") == "Y") {
+            var deptName = (UserLang == "1") ? mrow.getAttribute("DATA2") : mrow.getAttribute("DATA3");
+            TrashList.push(deptName);
+        }
+    }
+    if (TrashList.length > 0){
+        alert("[" + TrashList.join(",") + "]" + " 부서는 폐지되었습니다. 수신자 리스트에 제외됩니다.");
+    }
+
     var groupId = preSusinGroupStr + row.getAttribute("DATA1");
     var groupName = row.getAttribute("DATA2");
     var extReceptYn = row.getAttribute("DATA3");
@@ -219,14 +231,23 @@ function addSusinGroupMember(rows) {
     var groupMemberNames = [];
     var groupMemberName2s = [];
     var groupMemberExtReceptYns = [];
+    var TrashList = [];
 
     for (var i = 0, ilen = rows.length; i < ilen; i++) {
         var row = rows[i];
+        if (row.getAttribute("DATA6") == "N" && row.getAttribute("DATA7") == "Y") {
+            var deptName = (UserLang == "1") ? row.getAttribute("DATA2") : row.getAttribute("DATA3");
+            TrashList.push(deptName);
+        } else {
+            groupMemberIds.push(row.getAttribute("DATA1"));
+            groupMemberNames.push(row.getAttribute("DATA2"));
+            groupMemberName2s.push(row.getAttribute("DATA3"));
+            groupMemberExtReceptYns.push(row.getAttribute("DATA6"));
+        }
+    }
 
-        groupMemberIds.push(row.getAttribute("DATA1"));
-        groupMemberNames.push(row.getAttribute("DATA2"));
-        groupMemberName2s.push(row.getAttribute("DATA3"));
-        groupMemberExtReceptYns.push(row.getAttribute("DATA6"));
+    if (TrashList.length > 0){
+        alert("[" + TrashList.join(",") + "]" + " 부서는 폐지되었습니다. 수신자 리스트에 제외됩니다.");
     }
 
     addGroupMemberToRecept(groupMemberIds, groupMemberNames, groupMemberName2s, groupMemberExtReceptYns);
@@ -342,18 +363,50 @@ function btn_AprDeptTempletAdd_onclick()
     var pAPRTemplist = new ListView();   
     pAPRTemplist.LoadFromID("lvRecSaveList");
     var ListViewLen = pAPRTemplist.GetSelectedRows();
+
+    /* 2024-04-18 민지수 - 전자결재 > 결재정보 > 수신처 즐겨찾기에 폐지부서 있는지 확인 */
+    var CheckAprTrashDept;
+    var TrashList = [];
+    var RetireList = [];
+    var NonReceivingDeptList = [];
+    var Templist = new ListView();
+    Templist.LoadFromID("lvRecSaveDetail");
+    var TempListLen = Templist.GetDataRows();
    
     if(ListViewLen.length < 1)
 	{
 		return;
 	}
-	
+    
     p_CheckAprDeptTempletSN = ListViewLen[0].getAttribute("DATA1");
     if (p_CheckAprDeptTempletSN == "") {
         var pAlertContent = linealt14;
         OpenAlertUI(pAlertContent);
     }
     else {
+        for (var i = 0; i < TempListLen.length; i ++) {
+            CheckAprTrashDept = TempListLen[i].getAttribute("TRASHDEPT");
+            if (CheckAprTrashDept == "Y") {
+                TrashList.push(TempListLen[i].getAttribute("DATA10"));                
+            }
+            /* 2024-05-10 양지혜 - 전자결재 > 결재정보 > 퇴직자 포함된 즐겨찾기 적용 시 제외 */
+            if (TempListLen[i].getAttribute("RETIRECHK") == "Y") {
+                RetireList.push(TempListLen[i].querySelector("td:nth-child(2)").textContent);
+            }
+            if (approvalFlag === "G" && GetEntryInfo(TempListLen[i].getAttribute("DATA1")) !== "Y") {
+                NonReceivingDeptList.push(TempListLen[i].getAttribute("DATA10"));
+            }
+        }
+        if (TrashList.length > 0){
+            alert("[" + TrashList.join(",") + "]" + " 부서는 폐지되었습니다. 즐겨찾기 적용에서 제외됩니다.");
+        }
+        if (RetireList.length > 0) {
+            alert("[" + RetireList.join(",") + "] 는 퇴직자입니다.\n즐겨찾기 적용에서 제외됩니다.");
+        }
+        if (NonReceivingDeptList.length > 0) {
+            alert("[" + NonReceivingDeptList.join(",") + "] " + strLangJJE01);
+        }
+
         AddToAprDeptFromAprDeptTemplet(p_CheckAprDeptTempletSN);
         pAprDeptTempletUseFlag = false;
         //시행문
@@ -638,27 +691,19 @@ function checkOuterReceiver() {
 	        document.getElementById("inputSummaryOuterReceiverList").focus();
 	        document.getElementById("trSummaryOuterReceiverList").style.display = "";
 	        document.getElementById("btnaddress").style.display = "none";
-	        document.getElementById("btnaddressChange").style.display = "none";
+	        // document.getElementById("btnaddressChange").style.display = "none";
 		} else if (cnt <= 8 && checkOuter == "Y" && checkAddress.indexOf("Address") == -1) {
 	        document.getElementById("trSummaryOuterReceiverList").style.display = "none";
 	        document.getElementById("btnaddress").style.display = "";
-	        if (useReceiveInfoName == '1') {
-//            	document.getElementById("btnaddressChange").style.display = "";
-            } else {
-            	document.getElementById("btnaddressChange").style.display = "";
-            }
+	        // document.getElementById("btnaddressChange").style.display = "";
 		} else if (checkOuter == "Y" && checkAddress.indexOf("Address") != -1) {
 			document.getElementById("trSummaryOuterReceiverList").style.display = "none";
 	        document.getElementById("btnaddress").style.display = "";
-	        if (useReceiveInfoName == '1') {
-//            	document.getElementById("btnaddressChange").style.display = "";
-            } else {
-            	document.getElementById("btnaddressChange").style.display = "";
-            }
+	        // document.getElementById("btnaddressChange").style.display = "";
 		} else {
 			document.getElementById("trSummaryOuterReceiverList").style.display = "none";
 	        document.getElementById("btnaddress").style.display = "";
-	        document.getElementById("btnaddressChange").style.display = "none";
+	        // document.getElementById("btnaddressChange").style.display = "none";
 		}
 	}
 }

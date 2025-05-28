@@ -81,3 +81,6 @@ var strLang80 = "Second"
 var strLang81 = "Third"
 var strLang82 = "Fourth"
 var strLang83 = "Last"
+
+// 2024-06-28 민지수 - 업무관리 > 첨부파일 드래그 앤 드롭 안내 메세지 추가
+var strLangMJS01 = "You can drag and drop to add files and change the order of added files.";

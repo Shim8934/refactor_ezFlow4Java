@@ -4,10 +4,12 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>::: ezEKP Java :::</title>
+		<title>::: ezFlow Java :::</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" id="viewport">
+		<link rel="shortcut icon" href="/images/favicon.ico">
+		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/ezNewPortal/portal.css')}" />
 		<link href="${util.addVer('main.portal', 'msg')}" rel="stylesheet" type="text/css">
-<%-- 		<link rel="stylesheet" href="${util.addVer('ezMemo.c1', 'msg')}" type="text/css"> --%>
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/jquery-ui.css')}">
 		<link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
 		<link rel="stylesheet" href="${util.addVer('/css/ezMemo/memo.css')}">
@@ -73,14 +75,38 @@
 	     	var memoDelay = 200;
 	     	var memoPrevent = false;
 	     	
-			topHeight = "56";
+			topHeight = "60";
 
 		 	window.onresize = function () {
 		        var MainHeight = document.documentElement.clientHeight - parseInt(topHeight);
-		        document.getElementById("mainFrame").style.height = MainHeight + "px";
-		        // 컨텍스트 메뉴 관련
+		        document.getElementById("topFrame").style.height = document.documentElement.clientHeight + "px";
+		        document.getElementById("mainFrame").style.height = "calc(100% - 60px)";
 		        //contextMenuRePosition();
 		    }
+			
+			window.addEventListener('resize', function() {
+				fixLayout();
+			});
+			
+			window.addEventListener('orientationchange', function() {
+				fixLayout();
+			});
+			
+			function fixLayout() {
+				setTimeout(function() {
+					var longSide = window.innerWidth > window.innerHeight ? window.innerWidth : window.innerHeight;
+					var shortSide = window.innerWidth < window.innerHeight ? window.innerWidth : window.innerHeight;
+					
+					if (window.orientation == 0 || window.orientation == 180) {
+						var ratio = longSide / document.body.clientHeight;
+					} else if (window.orientation == 90 || window.orientation == -90) {
+						var ratio = shortSide / document.body.clientHeight;
+					}
+					
+					document.body.style.transformOrigin = 'top left';
+					document.body.style.transform = 'scale('+ratio+')';
+				}, 10);
+			}
 
 		    function Div_Close() {
 		        document.getElementById("popup_layer").style.display = "none";
@@ -126,11 +152,31 @@
 		    	document.getElementById("reloadLogin").submit();
 		    }
 			
+			document.addEventListener("DOMContentLoaded", function () {
+			   var userAgent = navigator.userAgent.toLowerCase();
+			   var isTabletOrMobile = /ipad|iphone|ipod|android|tablet/i.test(userAgent);
+
+			   var metaTag = document.querySelector('meta[name="viewport"]');
+			   if (isTabletOrMobile || navigator.maxTouchPoints > 4) {
+				   metaTag.setAttribute("content", "width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no");
+			   }
+		   });
 		</script>
 	</head>
 	<body style="margin:0px 0px 0px 0px;padding: 0px 0px 0px 0px;overflow:hidden;">
-		<div style="height:56px;"><iframe src="/ezNewPortal/newPortalTopMenu.do" name="top" id="topFrame"  style="margin:0px 0px 0px 0px; padding:0px 0px 0px 0px;border:none;width:100%;min-height:1080px;" frameborder="0"></iframe></div>
-		<iframe src="<c:out value='${mainUrl }'/>" name="main" id="mainFrame" style="margin:0px 0px 0px 0px; padding:0px 0px 0px 0px;border:none;width:100%;height:100%;overflow:auto;" frameborder="0" allowfullscreen="true"></iframe>
+		<div id="iframeShawdowLayer" class="iframeShawdowLayer" onclick = "hidefunc(this)" style="display: none; width:100vw; right:0;">
+			<div id="myNotificationUL" style="padding: 0px; margin: 0px;  width: 390px; height: 603px; right: 50px; z-index:20; position:absolute;">
+				<iframe id="iframeNoti" style="width:100%; height:70vh;" frameborder="0" scrolling="NO" src="/ezNotification/notificationMain.do">
+				</iframe>
+			</div>
+		</div>
+		<div id="noticeLayer" onclick="hidefunc(this)" style="display:none; right: 0px; width: 100%; height: 100vh; background-color: rgba(0, 0, 0, 0.3); z-index: 9999; position: absolute;">
+			<div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);">
+	        	<iframe id="noticeLayerFrame" style="margin:0; padding:0; border:0 none; width:640px; height:430px; border-radius:20px; box-shadow:0 3px 6px rgba(0,0,0,0.16); background:#fff;" src=""></iframe>
+	    	</div>
+    	</div>
+		<div style="height:60px;"><iframe src="/ezNewPortal/newPortalTopMenu.do" name="top" id="topFrame"  style="margin:0px 0px 0px 0px; padding:0px 0px 0px 0px;border:none;width:100%;" frameborder="0"></iframe></div>
+		<iframe src="<c:out value='${mainUrl }'/>" name="main" id="mainFrame" style="margin:0px 0px 0px 0px; padding:0px 0px 0px 0px;border:none;width:100%;overflow:auto;" frameborder="0" allowfullscreen="true"></iframe>
 		<%-- <div style="height:${topHeight}px"><iframe src="${topUrl}" name="top" id="topFrame"  style="margin:0px 0px 0px 0px; padding:0px 0px 0px 0px;border:none;width:100%;" frameborder="0"></iframe></div>
 		<iframe src="${mainUrl}" name="main" id="mainFrame"  style="margin:0px 0px 0px 0px; padding:0px 0px 0px 0px;border:none;width:100%;" frameborder="0"></iframe> --%>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1005; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
@@ -139,61 +185,62 @@
 		</div>
 		<div id="popupArea"><div id="noticePopupLayer"></div></div>
 		<div id="noticePopupArea"></div>
-  		<div id="contextMenuBlock" class="contextMenuBlock" <c:if test="${useContextmenu eq 'NO'}">style="display:none" </c:if>>
-			<div id="contextMenuBtn" class="contextMenuBtn" style="display: block;visibility:hidden;">
-				<div class="contextMenu"></div>
-				
-			</div>
-			<div id="popupMenuBtn" class="popupMenuBtn" style="display: block;visibility:hidden;">
-				<div id="quickMenuBtn" class="quickMenuBtn">
-					<span class="quickMenuTop_memo"><img src="/images/ezNewPortal/quick01.png"></span>
-					<span class="quickMenuMiddle_memo"><img src="/images/ezNewPortal/quick02.png"><img src="/images/ezNewPortal/quick03.png"></span>
-					<span class="quickMenuBottom_memo"><img src="/images/ezNewPortal/quick04.png"><img src="/images/ezNewPortal/quick04.png"></span>
-				</div>
-			</div>			
-		</div>
-		
- 		<!-- memo note -->
-		<div id="noteBlock" class="noteBlock">
-			<!-- 메모 레이어 -->
-			<div id="layer-popup" class="memo_wrap layerControl" style="visibility :hidden;">
-				<div class="memo_header_wrapper">
-					<input type="hidden" id="layerFlag" value="layer" />
-				 	<div class="memo_header">
-				     	<ul class="memoHeaderUL">
-				         	<li class="memoSelect">
-				            	<select id="memoFolderList"></select>
-				            </li>
-							<li class="memoClose memoIcon30"></li>
-			                <li class="memoExpand_s memoIcon30" id="controllable" style="display:none;"></li>
-			                <li class="memoExpand memoIcon30" id="fullScreen"></li>
-			                <li class="memoPlus memoIcon30" id="addMemo"></li>
-				         </ul>
-				     </div>
-			     </div>
-			     
-			     <div class="memoListBox" id="mLBox" style="overflow:hidden;">
-			     	<div class="memo_main" id="memoMain"></div>
-			     </div>
-				 
-			     <div class="memobgBar">
-			     	<div id="slider-range"></div>
-			     </div>
-			</div>
-			
-			<!-- 큰 메모 -->
-			<div id="detailMemo">
-		        <div class="bigTop" id='dMWrapper'>
-		            <dl class="memoTit" id='dMHeader'>
-		                <dt class="mtitText" id="dMTime"></dt>
-		                <dd class="memoIcon memoX" id='closeMemo'></dd>
-		            </dl>
-			        <textarea id="dMContents" style="padding:5px;"></textarea>
-			        <div class="bigBottom_left" id='bottomLeft'></div>
-			        <div class="bigBottom_right" id='bottomRight'></div>
-		        </div>
+		<c:if test="${useMobileMailOnly != 'YES'}">
+  		    <div id="contextMenuBlock" class="contextMenuBlock" <c:if test="${useContextmenu eq 'NO'}">style="display:none" </c:if>>
+               <div id="contextMenuBtn" class="contextMenuBtn" style="display: block;">
+                   <div class="contextMenu"></div>
+
+               </div>
+                <div id="popupMenuBtn" class="popupMenuBtn" style="display: block;">
+                    <div id="quickMenuBtn" class="quickMenuBtn">
+                        <span class="quickMenuTop_memo"><img src="/images/ezNewPortal/quick01.png"></span>
+                        <span class="quickMenuMiddle_memo"><img src="/images/ezNewPortal/quick02.png"><img src="/images/ezNewPortal/quick03.png"></span>
+                        <span class="quickMenuBottom_memo"><img src="/images/ezNewPortal/quick04.png"><img src="/images/ezNewPortal/quick04.png"></span>
+                    </div>
+                </div>
 		    </div>
-		    
+
+            <!-- memo note -->
+            <div id="noteBlock" class="noteBlock">
+                <!-- 메모 레이어 -->
+                <div id="layer-popup" class="memo_wrap layerControl" style="visibility :hidden;">
+                    <div class="memo_header_wrapper">
+                        <input type="hidden" id="layerFlag" value="layer" />
+                        <div class="memo_header">
+                            <ul class="memoHeaderUL">
+                                <li class="memoSelect">
+                                    <select id="memoFolderList"></select>
+                                </li>
+                                <li class="memoClose memoIcon30"></li>
+                                <li class="memoExpand_s memoIcon30" id="controllable" style="display:none;"></li>
+                                <li class="memoExpand memoIcon30" id="fullScreen"></li>
+                                <li class="memoPlus memoIcon30" id="addMemo"></li>
+                             </ul>
+                         </div>
+                     </div>
+
+                     <div class="memoListBox" id="mLBox" style="overflow:hidden;">
+                        <div class="memo_main" id="memoMain"></div>
+                     </div>
+
+                     <div class="memobgBar">
+                        <div id="slider-range"></div>
+                     </div>
+                </div>
+
+                <!-- 큰 메모 -->
+                <div id="detailMemo">
+                    <div class="bigTop" id='dMWrapper'>
+                        <dl class="memoTit" id='dMHeader'>
+                            <dt class="mtitText" id="dMTime"></dt>
+                            <dd class="memoIcon memoX" id='closeMemo'></dd>
+                        </dl>
+                        <textarea id="dMContents" style="padding:5px;"></textarea>
+                        <div class="bigBottom_left" id='bottomLeft'></div>
+                        <div class="bigBottom_right" id='bottomRight'></div>
+                    </div>
+                </div>
+		    </c:if>
 			<%-- <div id="open-memo" class="memoBtn" style="display: none;"><span><spring:message code='ezMemo.t001'/></span></div> --%>
 		</div>
 	</body>
@@ -203,7 +250,7 @@
 	<script type="text/javascript" src="${util.addVer('ezNewPortal.e1', 'msg')}"></script>
   	<script type="text/javascript">
 
-		createContextMenu("${userDeptId}");
+		if(!!createContextMenu) createContextMenu("${userDeptId}");
 		
 	 	$(window).resize(function() {
 	 		//browserResize();
@@ -214,7 +261,7 @@
 	 		
 	 		clearTimeout(window.resizedFinished);
 		    window.resizedFinished = setTimeout(function(){
-		        setContextMenuGadgetPosition();
+		        //setContextMenuGadgetPosition();
 		    }, 750);	 		
 		    
 	 	});	
@@ -327,13 +374,20 @@
 	    		$(".noteBlock").css("pointer-events", "none");
 	    		$(".noteBlock").css("display", "none");
 	    	}
-	    });		
+	    });
+	 	
+	 	function hidefunc(element) {
+	 		element.style.display = "none";
+        }
+	 	
 	</script>
 	<!-- 컨텍스트 메뉴 관련 끝 -->	    	
 	<script type="text/javascript">
     	var Main_DialogArguments = new Array();
     	var MainHeight = document.documentElement.clientHeight - parseInt(topHeight);
     	/* var MainHeight = document.documentElement.clientHeight - parseInt("${topHeight}"); */
+    	
+    	document.getElementById("topFrame").style.height = document.documentElement.clientHeight + "px";
     	document.getElementById("mainFrame").style.height = MainHeight + "px";
 	</script>
 </html>

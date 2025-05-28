@@ -1629,3 +1629,18 @@ function setConnDefaultKey(pDraftFlag) {
         SetDocumentElement("c_susinid", pDocID);
     }
 }
+
+function insertInitConnAttach() {
+    $.ajax({
+        type : "POST",
+        url : "/ezConn/insertInitConnAttach.do",
+        async : false,
+        data : {
+            connKey : pConnKey,
+            docID : pDocID
+        },
+        success: function(result){
+            setAttachInfo(pDocID, "APR", lstAttachLink);
+        }        			
+    });
+}

@@ -11,8 +11,6 @@
     <sqlMap resource="egovframework/sqlmap/ezEKP/ezBoard/EzBoard_SQL_Mysql.xml"/>
     <!-- 조직도 -->
     <sqlMap resource="egovframework/sqlmap/ezEKP/ezOrgan/EzOrgan_SQL_Mysql.xml"/>
-    <!-- 설문조사 -->
-    <sqlMap resource="egovframework/sqlmap/ezEKP/ezQuestion/EzQuestion_SQL_Mysql.xml"/>
     <!-- 투표 -->
     <sqlMap resource="egovframework/sqlmap/ezEKP/ezPoll/EzPoll_SQL_Mysql.xml"/>
     <!-- 이메일 -->
@@ -116,6 +114,8 @@
     <sqlMap resource="egovframework/sqlmap/ezMobile/ezOrgan/EzOrganMobile_SQL_Mysql.xml"/>
     <!-- 하이브리드 앱 노티 발송용 -->
     <sqlMap resource="egovframework/sqlmap/ezMobile/ezTalk/EzTalkMobile_SQL_Mysql.xml" />
+	<!-- 전자설문 -->
+    <sqlMap resource="egovframework/sqlmap/ezMobile/ezSurvey/EzSurveyMobile_SQL_Mysql.xml" />
     
     <!-- 근태관리 모듈관련 SQL쿼리 XML -->
     
@@ -125,4 +125,8 @@
     <sqlMap resource="egovframework/sqlmap/ezEKP/ezAttitude/EzAttitudeAdmin_SQL_Mysql.xml"/>
     <!-- 관리자 main xml -->
     <sqlMap resource="egovframework/sqlmap/let/main/EgovMainAdn_SQL_Mysql.xml"/>
+	
+	<!-- 통합알림 -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezNotification/EzNotification_SQL_Mysql.xml"/>
+    
 </sqlMapConfig>

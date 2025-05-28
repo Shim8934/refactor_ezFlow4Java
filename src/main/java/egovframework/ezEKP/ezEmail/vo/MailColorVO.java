@@ -5,6 +5,13 @@ public class MailColorVO {
 	private String importanceColor;
 	private String inmailColor;
 	private String outmailColor;
+
+	public MailColorVO() {}
+
+	public MailColorVO(String inmailColor, String outmailColor) {
+		this.inmailColor = inmailColor;
+		this.outmailColor = outmailColor;
+	}
 	
 	public String getImportanceColor() {
 		return importanceColor;

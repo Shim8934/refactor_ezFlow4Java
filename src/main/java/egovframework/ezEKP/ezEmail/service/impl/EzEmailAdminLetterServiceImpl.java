@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezEmail.service.impl;
 import java.net.URLEncoder;
 import java.util.Properties;
 
+import egovframework.let.utl.fcc.service.CommonUtil;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -26,7 +27,10 @@ public class EzEmailAdminLetterServiceImpl implements EzEmailAdminLetterService 
 
 	@Autowired
     private Properties config;
-	
+
+	@Autowired
+	private CommonUtil commonUtil;
+
 	@Autowired
     private EzEmailUtil ezEmailUtil;
 	
@@ -141,7 +145,10 @@ public class EzEmailAdminLetterServiceImpl implements EzEmailAdminLetterService 
 			String displayname2, String companyId, String tenantId) throws Exception {
 		logger.debug("insertLetterBox started.");
 		logger.debug("parentLetterboxNo=" + parentLetterboxNo + ",displayname=" + displayname + ",displayname2=" + displayname2 + ",companyId" + companyId + ",tenantId=" + tenantId);
-		
+
+		displayname = displayname != null ? commonUtil.convertTagSymbols(displayname) : displayname;
+		displayname2 = displayname2 != null ? commonUtil.convertTagSymbols(displayname2) : displayname2;
+
 		String tenantStr = "tenantId=" + URLEncoder.encode(tenantId, "UTF-8");
 		String parentLetterBoxNoStr = "parentLetterboxNo=" + URLEncoder.encode(parentLetterboxNo, "UTF-8");
 		String displayNameStr = "displayname=" + URLEncoder.encode(displayname, "UTF-8");
@@ -205,7 +212,10 @@ public class EzEmailAdminLetterServiceImpl implements EzEmailAdminLetterService 
 		logger.debug("updateLetterBox started.");
 		logger.debug("letterBoxNo=" + letterBoxNo + ",parentLetterboxNo=" + parentLetterboxNo 
 				+ ",displayname=" + displayname + ",displayname2=" + displayname2 + ",companyId=" + companyId + ",tenantId=" + tenantId);
-		
+
+		displayname = displayname != null ? commonUtil.convertTagSymbols(displayname) : displayname;
+		displayname2 = displayname2 != null ? commonUtil.convertTagSymbols(displayname2) : displayname2;
+
 		String tenantStr = "tenantId=" + URLEncoder.encode(tenantId, "UTF-8");
 		String letterBoxNoStr = "letterBoxNo=" + URLEncoder.encode(letterBoxNo, "UTF-8");
 		String parentLetterBoxNoStr = "parentLetterboxNo=" + URLEncoder.encode(parentLetterboxNo, "UTF-8");

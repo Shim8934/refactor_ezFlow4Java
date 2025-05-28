@@ -40,6 +40,7 @@
 			) ttn
 		LEFT JOIN tbl_dev_master tdm
 		ON ttn.userid = tdm.userid
+		and ttn.tenantid = tdm.tenantid
 	</select>
 
 	<delete id="MTalkDao.deleteNotifications">
@@ -47,6 +48,11 @@
 		WHERE itemseq IN <iterate property="itemSeqArray" open="(" close=")" conjunction="," >#itemSeqArray[]#</iterate>
 	</delete>
 
+	<update id="MTalkDao.updateBadgeCount" parameterClass="Integer">
+			UPDATE TBL_DEV_MASTER
+			SET BADGE = BADGE + 1
+			WHERE DEVSEQ = #id#
+	</update>
 </sqlMap>
 
 

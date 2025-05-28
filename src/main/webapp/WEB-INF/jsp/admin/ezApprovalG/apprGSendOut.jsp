@@ -7,7 +7,8 @@
 	<head>
 		<title></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<!-- <link rel="stylesheet" href="${util.addVer('/js/jquery/jquery-ui.css')}"> -->
 		<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/css/font-awesome-4.7.0/css/font-awesome.min.css')}" type="text/css"/>
@@ -2379,9 +2380,12 @@
 		        <li id="tbtnforcecallback" style="display:none"><span id="btnforcecallback" onclick="return btnforcecallback_onclick()"><spring:message code='ezApprovalG.t2005'/></span></li>
 				<c:if test="${approvalFlag == 'G'}">
 					<li id="tbtnGongRam"><span id="btnGongRam" onclick="return btnViewDoc_onclick()" ><spring:message code='ezApprovalG.t1442'/></span></li>
+					<%-- 2024-06-04 홍승비 - 버튼 표출 제어 함수 오류를 방지하기 위해 관리자단의 발송현황 내부 페이지에 '일괄공람/일괄회람' 버튼 추가, 실제 동작은 필요하지 않으므로 onclick 속성 제거 --%>
+					<li id="tbtnGongRamALL" style="display:none"><span id="btnGongRamALL"><spring:message code='ezApprovalG.CSJBDA01'/></span></li>
 				</c:if>
 				<c:if test="${approvalFlag != 'G'}">
 					<li id="tbtnGongRam" style="DISPLAY:none"><span id="btnGongRam" onclick="return btnViewDoc_onclick()" ><spring:message code='ezApprovalG.hyj21'/></span></li>
+					<li id="tbtnGongRamALL" style="display:none"><span id="btnGongRamALL"><spring:message code='ezApprovalG.CSJBDA03'/></span></li>
 				</c:if>
 				<li id="tbtnViewDoc" style="DISPLAY:none"><span id="btnViewDoc" onclick="return btnViewDoc_onclick()" ><spring:message code='ezApprovalG.t367'/></span></li>
 		        <li id="tbtnTotalSave" style="DISPLAY:none"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>

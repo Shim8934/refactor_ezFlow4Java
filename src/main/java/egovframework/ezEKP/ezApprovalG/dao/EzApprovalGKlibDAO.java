@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAttachInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGHistoryAttachVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGHistoryDocVO;
-import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 
 /**
  * KlibService에서 전자결재문서 정보를 간단하게 가져오기 위한 DAO 클래스

@@ -4,12 +4,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import egovframework.ezEKP.ezBoard.vo.BoardKeywordVO;
+
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezBoard.vo.BoardAccessVO;
 import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
+import egovframework.ezEKP.ezBoard.vo.BoardAttributeVO;
 import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
 import egovframework.ezEKP.ezBoard.vo.BoardDeleteItemVO;
+import egovframework.ezEKP.ezBoard.vo.BoardDisLikeListVO;
+import egovframework.ezEKP.ezBoard.vo.BoardItemVO;
+import egovframework.ezEKP.ezBoard.vo.BoardKeywordVO;
+import egovframework.ezEKP.ezBoard.vo.BoardLikeListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardLineReplyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
@@ -17,9 +24,15 @@ import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPollConfigVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardReadVO;
+import egovframework.ezEKP.ezBoard.vo.BoardScrapListVO;
+import egovframework.ezEKP.ezBoard.vo.BoardUserScrapContListVO;
+import egovframework.ezEKP.ezBoard.vo.BoardUserScrapContVO;
+import egovframework.ezEKP.ezBoard.vo.BoardThumbnailVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezBoard.vo.MealDataVO;
 import egovframework.let.user.login.vo.LoginVO;
-import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzBoardDAO")
 public class EzBoardDAO extends EgovAbstractDAO{
@@ -649,7 +662,22 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	public void deleteReservedBoard(BoardDeleteItemVO k) throws Exception {
 		delete("EzBoardDAO.deleteReservedBoard", k);
 	}
-	
+
+	public List<BoardDeleteItemVO> deleteItemsScrapList() throws Exception {
+		return (List<BoardDeleteItemVO>) list("EzBoardDAO.deleteItemsScrapList");
+	}
+	public void deleteItemsScrap(BoardDeleteItemVO boardDeleteItemVO) throws Exception {
+		delete("EzBoardDAO.deleteItemsScrap", boardDeleteItemVO);
+	}
+
+	public List<BoardDeleteItemVO> deleteItemsScrapContList() throws Exception {
+		return (List<BoardDeleteItemVO>) list("EzBoardDAO.deleteItemsScrapContList");
+	}
+
+	public void deleteItemsScrapCont(BoardDeleteItemVO boardDeleteItemVO) throws Exception {
+		delete("EzBoardDAO.deleteItemsScrapCont", boardDeleteItemVO);
+	}
+
     //baonk added
 	public BoardPollConfigVO getPollConfig(Map<String, Object> map) throws Exception {
 		return (BoardPollConfigVO) select("EzBoardDAO.getPollConfig", map);
@@ -863,4 +891,349 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	public int checkReplyID(Map<String, Object> map) throws Exception {
 		return (int) select("EzBoardDAO.checkReplyID", map);
 	}
+	
+	/* 2024-04-01 한태훈 - 게시판 즐겨찾기 추가 구성원 리스트 호출 */
+	@SuppressWarnings("unchecked")
+	public List<OrganUserVO> getFavoriteBoardUserList(Map<String, Object> map) throws Exception {
+		return (List<OrganUserVO>) list("EzBoardDAO.getFavoriteBoardUserList", map);
+	}
+
+	public boolean confirmBoardItemDeletion(Map<String, Object> map) throws Exception {
+		return (boolean) select("EzBoardDAO.confirmBoardItemDeletion", map);
+	}
+
+	/* 2023-03-30 이가은 - 게시물 댓글의 답글 작성/수정기능 추가 > 답글을 저장하는 쿼리 */
+	public void saveOneLineChildReply(Map<String, Object> map) throws Exception {
+		insert("EzBoardDAO.saveOneLineChildReply", map);
+	}
+
+	/* 2023-03-30 이가은 - 게시물 댓글의 답글 작성/수정기능 추가 > 댓글, 답글 수정되었을 경우 업데이트하는 쿼리 */
+	public void updateOneLineReply(Map<String, Object> map) throws Exception {
+		update("EzBoardDAO.updateOneLineReply", map);
+	}
+
+	/* 2023-04-12 이가은 - 게시물 댓글의 답글 작성/수정기능 추가 > 댓글 삭제 시 자식 댓글 개수 리턴하는 쿼리 */
+	public int getChildReplyCnt(Map<String, Object> map) throws Exception {
+		return (int) select("EzBoardDAO.getChildReplyCnt", map);
+	}
+
+	/* 2023-04-12 이가은 - 게시물 댓글의 답글 작성/수정기능 추가 > 자식있는 부모댓글 삭제할 경우 해당 댓글 값 NULL로 변경하는 쿼리 */
+	public void updateDelParentReply(Map<String, Object> map) throws Exception {
+		update("EzBoardDAO.updateDelParentReply", map);
+	}
+	
+	/* 2023-04-06 기민혁 - 싫어요 삽입 쿼리*/
+	public void disLikeInsert(Map<String, Object> map) throws Exception {
+		insert("EzBoardDAO.disLikeInsert", map);
+	}
+	
+	/* 2023-04-06 기민혁 - 싫어요 삭제 쿼리*/
+	public void disLikeDelete(Map<String, Object> map) throws Exception {
+		delete("EzBoardDAO.disLikeDelete", map);
+	}
+	
+	/* 2023-04-06 기민혁 - 싫어요 체크 여부 확인 쿼리 */
+	public String disLikeCheck(Map<String, Object> map) throws Exception {
+		return (String) select("EzBoardDAO.disLikeCheck", map);
+	}
+	
+	/* 2023-04-06 기민혁 - 싫어요 갯수 count 쿼리 */
+	public int getDisLikeCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzBoardDAO.getDisLikeCount", map);
+	}
+	/* 2023-04-06 기민혁 - 좋아요 리스트 호출 쿼리 */
+	@SuppressWarnings("unchecked")
+	public List<BoardLikeListVO> getLikeList(Map<String, String> map) throws Exception {
+		return (List<BoardLikeListVO>) list("EzBoardDAO.getLikeList",map);
+	}
+
+	/* 2023-04-06 기민혁 - 싫어요 리스트 호출 쿼리 */
+	@SuppressWarnings("unchecked")
+	public List<BoardDisLikeListVO> getDisLikeList(Map<String, String> map) throws Exception {
+		return (List<BoardDisLikeListVO>) list("EzBoardDAO.getDisLikeList",map);
+	}
+	
+	/* 2023-04-06 기민혁 - 좋아요/싫어요 정보 호출 쿼리 */
+	@SuppressWarnings("unchecked")
+	public List<BoardItemVO> getItemInfoList(Map<String, String> map) throws Exception {
+		return (List<BoardItemVO>) list("EzBoardDAO.getItemInfoList",map);
+	}
+
+	public void insertKeyword(HashMap<String, Object> map) throws Exception {
+		insert("EzBoardDAO.insertKeyword", map);
+	}
+
+	public void deleteBoardItemKeyword(HashMap<String, Object> map) throws Exception {
+		insert("EzBoardDAO.deleteBoardItemKeyword", map);
+	}
+
+	public void insertBoardItemKeyword(List<BoardKeywordVO> list) throws Exception {
+		insert("EzBoardDAO.insertBoardItemKeyword", list);
+	}
+	
+	public List<BoardKeywordVO> selectBoardKeywordByKeywordName(HashMap<String, Object> map) throws Exception {
+		return (List<BoardKeywordVO>) list("EzBoardDAO.selectBoardKeywordByKeywordName", map);
+	}
+
+	public List<BoardKeywordVO> selectBoardKeywordByBoardItem(HashMap<String, Object> map) throws Exception {
+		return (List<BoardKeywordVO>) list("EzBoardDAO.selectBoardKeywordByBoardItem", map);
+	}
+
+	public int getAllBoardItemListCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzBoardDAO.getAllBoardItemListCount", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<HashMap<String, Object>> getAllBoardItemList(Map<String, Object> map) throws Exception {
+		return (List<HashMap<String, Object>>) list("EzBoardDAO.getAllBoardItemList", map);
+	}
+
+	public String getContentlocation(Map<String, Object> map) throws Exception {
+		return (String) select("EzBoardDAO.getContentlocation", map);
+	}
+	
+	/* 2023-05-03 기민혁 - 나의 스크랩 데이터 등록 쿼리 */
+	public void setScrapItem(Map<String, Object> map) throws Exception {
+		insert("EzBoardDAO.setScrapItem", map);
+	}
+
+	/* 2023-05-03 기민혁 - 나의 스크랩 등록 확인 쿼리 */
+	public int getScrapItemCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzBoardDAO.getScrapItemCount", map);
+	}
+	
+	/* 2023-05-03 기민혁 - 나의 스크랩 목록 다중 해제 쿼리 */
+	public void deleteScrapItem(BoardScrapListVO scrapList) throws Exception {
+		delete("EzBoardDAO.deleteScrapItem", scrapList);
+	}
+	
+	/* 2023-05-03 기민혁 - 나의 스크랩 해제 쿼리 */
+	public void delScrapItem(Map<String, Object> map) throws Exception {
+		delete("EzBoardDAO.delScrapItem", map);
+	}
+	
+	/* 2023-05-03 기민혁 - 나의 스크랩 등록 item 리스트 호출 쿼리 */
+	@SuppressWarnings("unchecked")
+	public List<HashMap<String, Object>> getMyBoardListItemScrap(Map<String, Object> map) throws Exception {
+		return (List<HashMap<String, Object>>) list("EzBoardDAO.getMyBoardListItemScrap", map);
+	}
+	
+	/* 2023-05-03 기민혁 - 나의 스크랩 item totalcount 쿼리 */
+	public int getMyBoardTotalItemCountScrap(Map<String, Object> map) throws Exception {
+		return (int) select("EzBoardDAO.getMyBoardTotalItemCountScrap", map);
+	}
+
+	/* 2023-05-03 기민혁 - 나의 스크랩 검색 item totalcount 쿼리 */
+	public int getSearchMyBoardItemCountScrap(Map<String, Object> map) {
+		return (int) select("EzBoardDAO.getSearchMyBoardItemCountScrap", map);		
+	}
+	
+	/* 2023-05-03 기민혁 - 나의 스크랩 검색 item 리스트 호출 쿼리 */
+	@SuppressWarnings("unchecked")
+	public List<HashMap<String, Object>> getSearchMyBoardItemListScrap(Map<String, Object> map) throws Exception {
+		return (List<HashMap<String, Object>>) list("EzBoardDAO.getSearchMyBoardItemListScrap", map);
+	}
+
+	/* 2023-05-03 기민혁 - 게시물 삭제시 scrap 목록 삭제 쿼리 */
+	public void deleteBoardScrapItem(BoardScrapListVO scrapList) throws Exception {
+		delete("EzBoardDAO.deleteBoardScrapItem", scrapList);
+	}
+	
+	/* 2023-05-03 기민혁 - 게시물 scrap 여부 체크 쿼리*/
+	public int isScrapitemCount(BoardScrapListVO scrapList) throws Exception{
+		return (int) select("EzBoardDAO.isScrapitemCount",scrapList);
+	}
+	
+	/* 2023-05-22 기민혁 - 게시물함 폴더 정보 호출 쿼리*/
+	@SuppressWarnings("unchecked")
+	public List<BoardUserScrapContVO> getUserScrapContTree(Map<String, Object> map) throws Exception {
+		return (List<BoardUserScrapContVO>) list("EzBoardDAO.getUserScrapContTree", map);
+	}
+
+	/* 2023-05-22 기민혁 - 게시물함 max ID 생성*/
+	public String getUserScrapContMaxID(Map<String, Object> map) throws Exception {
+		return (String) select("EzBoardDAO.getUserScrapContMaxID", map);
+	}
+
+	/* 2023-05-22 기민혁 - 게시물함  폴더 생성*/
+	public void insertUserScrapCont(Map<String, Object> map) throws Exception {
+		insert("EzBoardDAO.insertUserScrapCont", map);
+	}
+
+	/* 2023-05-22 기민혁 - 게시물함  자식 폴더 표출*/
+	@SuppressWarnings("unchecked")
+	public List<BoardUserScrapContVO> getUserScrapContTreeLeaf(Map<String, Object> map) {
+		return (List<BoardUserScrapContVO>) list("EzBoardDAO.getUserScrapContTreeLeaf", map);
+	}
+
+	/* 2023-05-22 기민혁 - 스크랩함 폴더 변경 */
+	public void updateUserScrapCont(Map<String, Object> map) {
+		update("EzBoardDAO.updateUserScrapCont", map);
+	}
+
+	/* 2023-05-22 기민혁 - 스크랩함 삭제할 폴더의 자식 폴더 개수 count  */
+	public int getUserScrapContSubCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzBoardDAO.getUserScrapContSubCount", map);
+	}
+
+	/* 2023-05-22 기민혁 - 스크랩함 삭제할 폴더의 스크랩 게시물 개수 count  */
+	public int delUserScrapContItemCnt(Map<String, Object> map) throws Exception{
+		return (int) select("EzBoardDAO.delUserScrapContItemCnt", map);
+	}
+
+	/* 2023-05-22 기민혁 - 스크랩함 삭제할 폴더의 게시물 삭제  */
+	public void delUserScrapContList(Map<String, Object> map) throws Exception{
+		delete("EzBoardDAO.delUserScrapContList", map);
+	}
+
+	/* 2023-05-22 기민혁 - 스크랩함 폴더 삭제  */
+	public void delUserScrapCont(Map<String, Object> map) throws Exception{
+		delete("EzBoardDAO.delUserScrapCont", map);
+	}
+
+	/* 2023-05-22 기민혁 - 스크랩함 중복 스크랩 정보 count */
+	public int getOverlapItemCount( BoardUserScrapContListVO boardUserScrapContListVO) throws Exception {
+		return (int) select("EzBoardDAO.getOverlapItemCount", boardUserScrapContListVO);
+	}
+
+	/* 2023-05-22 기민혁 - 스크랩함에 게시물 데이터 insert */
+	public void setUserScrapContItem( BoardUserScrapContListVO boardUserScrapContListVO) throws Exception {
+		insert("EzBoardDAO.setUserScrapContItem", boardUserScrapContListVO);
+	}
+
+	/*2023-05-22 기민혁 - 스크랩함 게시물 스크랩 해제*/
+	public void deleteScrapContItemList(BoardScrapListVO scrapList) throws Exception {
+		delete("EzBoardDAO.deleteScrapContItemList" , scrapList);
+	}
+
+	/*2023-05-22 기민혁 - 스크랩함 스크랩 item totalcount*/
+	public int getUserScrapContlistCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzBoardDAO.getUserScrapContlistCount", map);
+	}
+
+	/*2023-05-22 기민혁 - 스크랩함 리스트 표출 */
+	@SuppressWarnings("unchecked")
+	public List<HashMap<String, Object>> getScrapContItemList(Map<String, Object> map) throws Exception {
+		return (List<HashMap<String, Object>>) list("EzBoardDAO.getScrapContItemList", map);
+	}
+
+	/*2023-05-22 기민혁 - 스크랩함 검색결과 스크랩 item totalcount*/
+	public int getSearchScrapContItemListCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzBoardDAO.getSearchScrapContItemListCount" , map);
+	}
+
+	/*2023-05-22 기민혁 - 나의 스크랩함 검색리스트 표출 */
+	@SuppressWarnings("unchecked")
+	public List<HashMap<String, Object>> getSearchScrapContItemList(Map<String, Object> map) {
+		return (List<HashMap<String, Object>>) list("EzBoardDAO.getSearchScrapContItemList", map);
+	}
+
+	/* 2023-05-22 기민혁 - 게시물 삭제시 scrapcont 목록 삭제*/
+	public void deleteBoardScrapContItem(BoardUserScrapContListVO scrapList) throws Exception {
+		delete("EzBoardDAO.deleteBoardScrapContItem", scrapList);
+	}
+
+	/* 2023-05-02 기민혁 - 게시물 삭제시 스크랩함에 scrap 되어있는지 체크*/
+	public int isScrapContItemCount(BoardUserScrapContListVO scrapList) throws Exception{
+		return (int) select("EzBoardDAO.isScrapContItemCount",scrapList);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<HashMap<String, Object>> getUserScrapBoardList(Map<String, Object> map) throws Exception{
+		return (List<HashMap<String, Object>>) list("EzBoardDAO.getUserScrapBoardList", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<HashMap<String, Object>> getUserScrapContBoardList(Map<String, Object> map) throws Exception{
+		return (List<HashMap<String, Object>>) list("EzBoardDAO.getUserScrapContBoardList", map);
+	}
+	
+	public void saveCommentAttach(Map<String, Object> map) throws Exception {
+		insert("EzBoardDAO.saveCommentAttach", map);
+	}
+	
+	public void deleteCommentAttach(Map<String, Object> map) throws Exception {
+		delete("EzBoardDAO.deleteCommentAttach", map);
+	}
+
+    public void updateMovedItemCommentAttach(Map<String, Object> map) {
+		update("EzBoardDAO.updateMovedItemCommentAttach", map);
+    }
+    
+	@SuppressWarnings("unchecked")
+	public List<BoardThumbnailVO> thumbnailViewDB(Map<String, Object> map) throws Exception{
+		return (List<BoardThumbnailVO>) list("EzBoardDAO.thumbnailViewDB", map);
+	}
+	
+	public void thumbnailUpdate(Map<String, Object> map) throws Exception {
+		update("EzBoardDAO.thumbnailUpdate", map);
+	}
+
+	/* 2024-09-05 이유정 - 게시판 > 최근게시물 리스트 카운트 쿼리 */
+	public int getAllNewItemListCount(Map<String, Object> map) throws Exception{
+		return (int) select("EzBoardDAO.getAllNewItemListCount", map);
+	}
+	
+	/* 2024-09-05 이유정 - 게시판 > 최근게시물 리스트 쿼리 */
+	public List<HashMap<String, Object>> getAllNewItemList(Map<String, Object> map) throws Exception{
+		return (List<HashMap<String, Object>>) list("EzBoardDAO.getAllNewItemList", map);
+	}
+	
+	public List<BoardAttachVO> brdGetPhotoItemAttachmentInfo(Map<String, Object> map) throws Exception{
+		return (List<BoardAttachVO>) list("EzBoardDAO.brdGetPhotoItemAttachmentInfo", map);
+	}
+
+	/* 2024-10-02 이혜림 - 별점 추가하는 쿼리 */
+	public void insertItemStarRating(Map<String, Object> map) throws Exception {
+		insert("EzBoardDAO.insertItemStarRating", map);
+	}
+
+	/* 2024-10-02 이혜림 - 별점 총점, 평균 추가하는 쿼리 */
+	public void insertItemStarRatingSummary(Map<String, Object> map) throws Exception {
+		insert("EzBoardDAO.insertItemStarRatingSummary", map);
+	}
+
+	/* 2024-10-02 이혜림 - 별점 업데이트하는 쿼리 */
+	public void updateItemStarRating(Map<String, Object> map) throws Exception {
+		update("EzBoardDAO.updateItemStarRating", map);
+	}
+
+	/* 2024-10-02 이혜림 - 별점 총점, 평균 업데이트하는 쿼리 */
+	public void updateItemStarRatingSummary(Map<String, Object> map) throws Exception {
+		update("EzBoardDAO.updateItemStarRatingSummary", map);
+	}
+	
+	/* 2024-10-02 이혜림 - 게시물의 별점을 모두 삭제하는 쿼리 */
+	public void deleteStarRating(Map<String, Object> map) throws Exception {
+		delete("EzBoardDAO.deleteStarRating", map);
+	}
+
+	/* 2024-10-02 이혜림 - 게시물의 총점,평균을 삭제하는 쿼리 */
+	public void deleteStarRatingSummary(Map<String, Object> map) throws Exception {
+		delete("EzBoardDAO.deleteStarRatingSummary", map);
+	}
+
+	/* 2024-10-02 이혜림 - 게시물에 대한 사용자의 별점, 총점, 평균 HashMap dm로 리턴하는 쿼리 */
+	@SuppressWarnings("unchecked")
+	public HashMap<String, Object> getItemStarRating(Map<String, Object> map) throws Exception {
+		return (HashMap<String, Object>) select("EzBoardDAO.getItemStarRating", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<MealDataVO> getMealPlanList(Map<String, Object> map) throws Exception{
+		return (List<MealDataVO>) list("EzBoardDAO.getMealPlanList", map);
+	}
+
+	public void saveMealplan(MealDataVO vo) throws Exception{
+		insert("EzBoardDAO.saveMealplan", vo);
+	}
+
+	public MealDataVO getTodayLunch(Map<String, Object> map) {
+		return (MealDataVO) select("EzBoardDAO.getTodayLunch", map);
+	}
+    
+	public String getRealFileNames(Map<String, Object> map) throws Exception {
+		return (String)select("EzBoardDAO.getRealFileNames", map);
+	}
+	
 }

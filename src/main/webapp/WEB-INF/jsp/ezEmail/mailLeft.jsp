@@ -20,7 +20,8 @@
 	    <!-- 재은 수정 -->
 	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/NewMailList.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/unit/openWindowForMail.js')}"></script>
-	    <link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+	    <link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
 	    <script type="text/javascript">
 	        var pUse_Editor = "${useEditor}";
@@ -53,6 +54,16 @@
 			var useSpamSniper = '<c:out value="${useSpamSniper}"/>';
 			var shareCryptResult = "";
 			var configFlag = "false";
+			var shareInfoList = [
+                                <c:forEach items="${shareInfoList}" var="info" varStatus="status">
+                                    {
+                                        shareId: '${info.shareId}',
+                                        deletePermission: '${info.deletePermission}',
+                                        sendPermission: '${info.sendPermission}',
+                                        managePermission: '${info.managePermission}'
+                                    }<c:if test="${!status.last}">,</c:if>
+                                </c:forEach>
+                                ];
 	      	
 	        document.onselectstart = function () { return false; };
 	        window.onresize = function () {
@@ -61,6 +72,7 @@
 	        window.onload = function () {
 	        	detailView();
 				attachTagClickEvent();
+				openTagFolder("on");
 		    	
 	            if (navigator.userAgent.indexOf('Firefox') != -1) {
 	                document.body.style.MozUserSelect = 'none';
@@ -332,7 +344,7 @@
 	            if (subCode != "1" && subCode != "") {
 	                PostTreeView.select(subCode);
 	            } else {
-	                PostTreeView.select(1);
+	                PostTreeView.select(2); // inbox를 defualt로 셀렉트
 	            }
 	            
 	            <c:if test="${not withoutNodeSelect}">
@@ -366,6 +378,8 @@
 											  shareId);
 		        	}
 	        	}
+
+	        	openFolder();
 	        }
 	        
 	        function email_dragdrop(event) {
@@ -379,24 +393,24 @@
 	                if (szCommand == "move" && szSubCommand == "ViewMailListMove") {
 	                    try {
 	                        window.parent.frames("right").move_on_dragdrop(window[treeviewStr].getvalue(event.nodeIdx, "href"));
-	                    } catch (e) { }
+	                    } catch (e) {console.log(e);}
 	                }
 	                else if (szCommand == "copy" && szSubCommand == "ViewMailListMove") {
 	                    try {
 	                        window.parent.frames("right").copy_on_dragdrop(window[treeviewStr].getvalue(event.nodeIdx, "href"));
-	                    } catch (e) { }
+	                    } catch (e) {console.log(e);}
 	                }
 	            }
 	            else {
 	                if (szCommand == "move" && szSubCommand == "ViewMailListMove") {
 	                    try {
 	                        window.parent.frames("right").document.Script.move_on_dragdrop(window[treeviewStr].getvalue(event.nodeIdx, "href"));
-	                    } catch (e) { }
+	                    } catch (e) {console.log(e);}
 	                }
 	                else if (szCommand == "copy" && szSubCommand == "ViewMailListMove") {
 	                    try {
 	                        window.parent.frames("right").document.Script.copy_on_dragdrop(window[treeviewStr].getvalue(event.nodeIdx, "href"));
-	                    } catch (e) { }
+	                    } catch (e) {console.log(e);}
 	                }
 	            }
 	        }
@@ -433,20 +447,23 @@
             		var unreadcount = getNodeText(SelectNodes(xmlHTTP_Unread.responseXML, "FOLDERUNREADCOUNT")[0]);
             		var totalUnreadCount = getNodeText(SelectNodes(xmlHTTP_Unread.responseXML, "TOTALUNREADCOUNT")[0]);
 	                var caption = window[treeviewStr].getvalue(window[treeviewStr].selectedIndex(), "foldername");
+	                var href = window[treeviewStr].getvalue(window[treeviewStr].selectedIndex(), "href");
 	
 	                if (get_unreadend_2010.href == window[treeviewStr].getvalue(window[treeviewStr].selectedIndex(), "href")) {
 	                    if (unreadcount == "0") {
 	                    	window[treeviewStr].putcaption(window[treeviewStr].selectedIndex(), caption);
 	                        //window[treeviewStr].putstyle(window[treeviewStr].selectedIndex(), "font-weight : ''");
-	                    } else {
+	                    } else if ("allMail" != href) {
 	                        // 2023-06-23 황인경 - 디자인 개선 > 메일 > 좌측 메뉴 > 카운트 괄호 추가
 							window[treeviewStr].putcaption(window[treeviewStr].selectedIndex(), caption + "(" + unreadcount + ")");
 	                    }
-						if (typeof parent.frames["right"] != "undefined") {
-							if (parent.frames["right"] != null){
-								var pageSrc = parent.frames["right"].document.location.toString();
+
+						var rightFrame = parent.frames["right"];
+                        if (rightFrame != "undefined" && typeof rightFrame.folderUnreadCount !== 'undefined') {
+                            if (rightFrame != null){
+                                var pageSrc = rightFrame.document.location.toString();
 								if (pageSrc.indexOf("mailList.do") != -1) {
-		                        	try { parent.frames["right"].folderUnreadCount.innerText = " " + unreadcount + " "; } catch (e) { }
+                                    try { rightFrame.folderUnreadCount.innerText = " " + unreadcount + " "; } catch (e) {console.log(e);}
 			                    }
 		                    }
 	                  	}
@@ -523,7 +540,7 @@
                     				if (pageSrc.indexOf("mailList.do") > -1) {
                                     	parent.frames["right"].MailListRefresh();
             	                    }
-                   				} catch (e) { }
+                   				} catch (e) {console.log(e);}
 	                    		
 	                    		applyEllipsisMailTree();
 	                    	} else {
@@ -544,7 +561,7 @@
 	        }
 	        function check_pop3() {
 	            var OpenWin = window.open("/ezEmail/mailGetPop3.do", "mail_getpop3_cross", GetOpenWindowfeature(460, 375));
-	            try { OpenWin.focus(); } catch (e) { }
+	            try { OpenWin.focus(); } catch (e) {console.log(e);}
 	        }
 	        var mail_foldermanage_Cross_dialogArguments = new Array();
 	        function folder_manage() {
@@ -557,7 +574,7 @@
 	            }
 	            
 	            var OpenWin = window.open(requestUrl, "mail_foldermanage_Cross", GetOpenWindowfeature(570, 500));
-	            try { OpenWin.focus(); } catch (e) { }
+	            try { OpenWin.focus(); } catch (e) {console.log(e);}
 	        }
 	        function folder_manager_after(RtnVal) {
 	            setTimeout(function() {
@@ -568,7 +585,7 @@
 		            	window[treeviewStr].update();
 		                
 		                if (window[treeviewStr].selectedIndex() == -1) {
-		                	window[treeviewStr].select(1);
+		                	window[treeviewStr].select(2);
 		                }
 		                
 						// openRightFrameDefault()가능?
@@ -657,7 +674,7 @@
 	                }
 	                
 	                window.open(url, "right");
-	            } catch (e) { }
+	            } catch (e) {console.log(e);}
 	            liSelcted();
 	        }
 	        
@@ -670,7 +687,8 @@
 	                //window.open(url, "right");
 	                url = "https://gwspam.ktbizoffice.com/personal/index.php?email=${credentialForBizmekaSpambox}&init=mail";
 	                window.open(url, "_blank", "width=870, height=500");
-	            } catch (e) {	                
+	            } catch (e) {	              
+					console.log(e);  
 	            }	            
 	        }
 	        
@@ -678,12 +696,30 @@
 				try {
 					window.open(spamOutLoginURI, "right");
 				} catch (e) {
+				    console.log(e);
 				}
 			}
 
-	        function Open_ReservationManage() {
-	            var OpenWin = window.open("/ezEmail/mailReservation.do", "mail_reservation_cross", GetOpenWindowfeature(501, 350));
-	            try { OpenWin.focus(); } catch (e) { }
+		    function Open_ApprMail(t) {
+		    	let url = "";
+		    	switch(t.dataset.type) {
+			    	case "p" : url = "/ezEmail/appr/pendingList.do?startNum=1"; break;
+			    	case "c" : url = "/ezEmail/appr/completeList.do?startNum=1"; break;
+			    	case "r" : url = "/ezEmail/appr/requestList.do?startNum=1"; break;
+		    	}
+		    	
+		    	if($(t).data("id")) {
+		    		url += "&shareId=" + $(t).data("id");
+		    	}
+		    	
+		    	window.open(url, "right");
+		    }
+		    
+	        function Open_ReservationManage(shareId) {
+				var requestUrl = "/ezEmail/mailReservation.do";
+				requestUrl += shareId? "?shareId=" + encodeURIComponent(shareId) : "";
+	            var OpenWin = window.open(requestUrl, "mail_reservation_cross", GetOpenWindowfeature(501, 350));
+	            try { OpenWin.focus(); } catch (e) {console.log(e);}
 	        }
 	        function Open_Restore() {
 	            var pheight = window.screen.availHeight;
@@ -697,7 +733,7 @@
 	                OpenWin = window.open("/myoffice/ezEmail/mail_restore_deleted.aspx?name=" + encodeURIComponent(name) + "&path=" + encodeURIComponent(path), "mail_restore_deleted", GetOpenWindowfeature(700, 490));
 	            else
 	                OpenWin = window.open("/myoffice/ezEmail/mail_restore_deleted_cross.aspx?name=" + encodeURIComponent(name) + "&path=" + encodeURIComponent(path), "mail_restore_deleted", GetOpenWindowfeature(700, 490));
-	            try { OpenWin.focus(); } catch (e) { }
+	            try { OpenWin.focus(); } catch (e) {console.log(e);}
 	        }
 	        function spam_mail() {
 	            frmSpam.target = "right";
@@ -712,6 +748,7 @@
 	        	
 	            parent.frames["right"].location.href = requestUrl;
 	            detailView(shareId);
+	            liSelcted();
 	        }
 	        
 	        function Email_Menu_Click() {
@@ -734,8 +771,9 @@
 				}
 				
 	        	detailView();
-	        	window[treeviewStr].select(1);
+	        	window[treeviewStr].select(2);
 	        	openFolder();
+	        	openTagFolder("on");
 	        }
 	        
 	        function showProgress() {
@@ -807,6 +845,14 @@
 
  			function event_folderMenu(event) {
  				event.preventDefault();
+ 				
+ 				// 전체메일인 경우 실행하지 않는다.
+                var nodeIdx = window[treeviewStr].selectedIndex();
+                var folderPath = window[treeviewStr].getvalue(nodeIdx, "href");
+                
+                if ("allMail" == folderPath) {
+                    return;
+                }
  				
 		    	if (!event) event = window.event;
 		        var EventMouseX = event.clientX;
@@ -1019,7 +1065,6 @@
 		            		alert("<spring:message code='ezEmail.t477' />");
 		            	}
 		            }
-		            
 		        }
 		    }
 		   
@@ -1069,7 +1114,7 @@
 					if (typeof (parent.frames["right"]) != "undefined") {
 						parent.frames["right"].Window_onunload();
 					}
-				} catch (e) { }
+				} catch (e) {console.log(e);}
 
 				// 메일 페이지로 처음 진입 시 (대 메뉴 "메일" 클릭)
 				// : function selectnode(event)이 두 번 실행되어, 첫번째에는 window.open 실행하지 않도록 함. (왜 두 번 실행되는지는 분석 포기)
@@ -1112,7 +1157,8 @@
 				sendPermission = _sendPermission;
 				managePermission = _managePermission;
 				treeviewStr = 'shareTreeView_' + shareId;
-			    
+				var tagtitleId = "tagtitle_"  + shareId;
+
 			    if (document.getElementById(treeviewStr).innerHTML === "") {
 			        var xmlHTTP = createXMLHttpRequest();
 			        var xmlDOM = createXmlDom();
@@ -1126,9 +1172,8 @@
 
 			        var nodeTreeXml = xmlHTTP.responseText.replace("<DATA>", "").replace("</DATA>", "");
 			        LoadEmailTree2(nodeTreeXml);
-			        
 			    } else {
-			    	window[treeviewStr].select(1);
+			    	window[treeviewStr].select(2);
 			    }
 			    
 			    HiddenFolderMenu();
@@ -1143,11 +1188,12 @@
 				    document.getElementById("mailbox_import").style.display = "none";
 				    document.getElementById("mailbox_delete").style.display = "none";
 			    }
-				if (document.getElementById("tagtitle") != null) {
-			    	document.getElementById("tagtitle").style.display="none";
+				if (document.getElementById("tagtitleId") != null) {
+			    	document.getElementById("tagtitleId").style.display="none";
 				}
 			    detailView(shareId);
 			    openFolder();
+			    openTagFolder("on");
 			}
 			
 			function LoadEmailTree2(RootShareFolderXML) {
@@ -1179,7 +1225,7 @@
 			    shareTreeView.config(treeconfig);
 			    shareTreeView.source("<tree><nodes>" + RootShareFolderXML + "</nodes></tree>");
 			    shareTreeView.update();
-			    shareTreeView.select(1);
+			    shareTreeView.select(2);
 			    
 			    selectnode();
 			    previewSubTreeCall();
@@ -1237,7 +1283,7 @@
 			function openFolder() {
 				var h2Id = "h2Mail";
 				var ulId = "ulMail";
-				
+
 				if (shareId != "") {
 					h2Id = "h2_" + shareId;
 					ulId = "ul_" + shareId;
@@ -1251,12 +1297,12 @@
 	        		$("[id='"+ulId+"']").attr("class", "lnbUL");
 	        		$(".tree_arrow_down").attr("class", "sub_iconLNB tree_plus");
 					$("#"+h2Id).children().eq(0).attr("class", "sub_iconLNB tree_arrow_down");
-
 	        	}
 				
+				/* openTagFolder 함수에서 일괄적으로 처리하도록 주석
 				$("#tagtitle").attr("class", "off");
 				$("#tagtitle").children().eq(0).attr("class", "sub_iconLNB tree_plus");
-				$("#tagcontent").attr("class", "lnbUL off");
+				$("#tagcontent").attr("class", "lnbUL off");*/
 				
 	        	/* if ($("#" + h2Id).attr("class") == "off") {
 	        		$(".lnb H2").attr("class", "off");
@@ -1316,22 +1362,37 @@
 	            openWindowForMail("/ezEmail/mailMain.do?funCode=2", "", null);
 			}
 
-			function openTagFolder() {
-				if ($("#tagtitle").attr("class") == "on") {
+			function openTagFolder(param) {
+			    var tagtitleId = "tagtitle";
+                var tagcontentId = "tagcontent";
+                var isOn = param === "on";
+
+                if (shareId != "") {
+                	tagtitleId = "tagtitle_" + shareId;
+                	tagcontentId = "tagcontent_" + shareId;
+                }
+
+                if ($("#" + tagtitleId).attr("class") == "off" || isOn) {
+					/* reloadTags 함수 안에서 처리 하여 주석
 					$("#tagtitle").attr("class", "off");
-					$("#tagtitle").children().eq(0).attr("class", "sub_iconLNB tree_plus");
-					$("#tagcontent").attr("class", "lnbUL off");
+                    $("#tagtitle").children().eq(0).attr("class", "sub_iconLNB tree_plus");
+                    $("#tagcontent").attr("class", "lnbUL off");*/
+                    reloadTags();
 				} else {
-					$("#tagtitle").attr("class", "on")
-					$("#tagtitle").children().eq(0).attr("class", "sub_iconLNB tree_arrow_down");
-					$("#tagcontent").attr("class", "lnbUL");
-					reloadTags();
+				    $("#" + tagtitleId).attr("class", "off");
+                    $("#" + tagtitleId).children().eq(0).attr("class", "sub_iconLNB tree_plus");
+                    $("#" + tagcontentId).attr("class", "lnbUL off");
 				}
 			}
 			
 			function attachTagClickEvent() {
-				$("#tagcontent a").on("click", function() {
-					window.open("/ezEmail/mailList.do?tagName=" + encodeURIComponent(this.innerText), "right");
+                var tagcontentId = "tagcontent";
+
+                if (shareId != "") {
+                    tagcontentId = "tagcontent_" + shareId;
+                }
+				$("#" + tagcontentId + " a").on("click", function() {
+					window.open("/ezEmail/mailList.do?tagName=" + encodeURIComponent(this.innerText) + "&shareId=" + shareId, "right");
 				});
 			}
 
@@ -1339,6 +1400,7 @@
 				$.ajax({
 					cache: false,
 					method: "get",
+					data: { shareId: shareId },
 					url: "/ezEmail/getUserTagList.do",
 					success: function(result) {
 						if (result.status == "error") {
@@ -1347,12 +1409,31 @@
 						}
 
 						var tags = result.data;
-						var tagContentLi = $("#tagcontent > li");
+						var tagtitleId = "tagtitle";
+						var tagcontentId = "tagcontent";
+
+						if (shareId != "") {
+                        	tagtitleId = "tagtitle_" + shareId;
+                        	tagcontentId = "tagcontent_" + shareId;
+                        }
+
+						var tagContentLi = $("#" + tagcontentId + " > li");
+
 						tagContentLi.find("a").remove();
 						tags.forEach(function(tag) {
 							tagContentLi.append("<a data-idx='" + tag.idx + "'>" + tag.name + "</a> ");
 						});
 						attachTagClickEvent();
+
+						if (tags.length == 0) {
+						    $("#" + tagtitleId).attr("class", "off");
+						    $("#" + tagtitleId).children().eq(0).attr("class", "sub_iconLNB tree_blank");
+						    $("#" + tagcontentId).attr("class", "lnbUL off");
+						} else {
+						    $("#" + tagtitleId).attr("class", "on")
+                            $("#" + tagtitleId).children().eq(0).attr("class", "sub_iconLNB tree_minus");
+                            $("#" + tagcontentId).attr("class", "lnbUL");
+						}
 					},
 					error: function() { alert(strLang321); }
 				});
@@ -1475,6 +1556,7 @@
 				try {
 					OpenWin.focus();
 				} catch (e) {
+				    console.log(e);
 				}
 			}
 
@@ -1489,7 +1571,7 @@
 							LoadAddressTree();
 						},
 						error : function(ee) {
-							alert("error: " + ee.statusText);
+							alert("error: " + ee.status);
 						}
 					});
 				}
@@ -1511,15 +1593,27 @@
 			
 			// 2023-06-28 황인경 - 디자인 개선 > 메일 > 좌측메뉴 > 트리구조 메일함/하단 메뉴 선택시 클래스 제어
 			function liSelcted() {
-	            $("#PostTreeView span.node_selected").attr("class", "node_normal");
+                var treeViewValue = "PostTreeView";
+                var tagtitleId = "tagtitle";
+                var tagcontentId = "tagcontent";
+
+                if (shareId != "") {
+                    treeViewValue = "shareTreeView_" + shareId;
+                    tagtitleId = "tagtitle_" + shareId;
+                    tagcontentId = "tagcontent_" + shareId;
+                }
+
+	            $("#" + treeViewValue + " span.node_selected").attr("class", "node_normal");
 	            $(".list_text.node_selected").removeClass("node_selected");
+
 	            var mailBoxMenu = $(event.target);
-	            
+
+	            <%-- 2024-06-12 이사라 - 계정 별로 태그를 지원하기 위해 위치 변경하여 아래 태그조건이 맞지 않아 주석처리
 	            if (mailBoxMenu.prop("tagName") == "LI") {
 	            	mailBoxMenu.children().attr("class", "list_text node_selected");
 	            } else {
 	            	mailBoxMenu.attr("class", "list_text node_selected");
-	            }
+	            }--%>
 			}
 	    </script>
 		<style type="text/css">
@@ -1544,9 +1638,29 @@
 			#mCSB_1 {
  				height: calc(100% - 90px);
 			}
-			#tagcontent { word-break: break-all; line-height: 215%; }
+			/* tag css */
+            .tag_area{margin: 13px 20px 13px 24px; border-top: 1px solid #E9E9E9; padding-top: 10px;}
+            .tag_normal{font-size: 14px; height: 26px; line-height: 26px; color: #333; display: inline-block; padding: 0px 0px 0px 3px; font-family: 'Noto Sans KR', sans-serif; cursor: pointer; width: 76%; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; box-sizing: border-box;}
+            .lnbUL li.tagcontent{padding: 0px 6px 0px 8px; margin: 0px 10px; width: 100%;}
+            .tag_area .lnbUL{padding: 2px 0px 10px 0px;}
+            .tagcontent {word-break: keep-all;}
+            .tagcontent a {
+                padding: 3px 5px;
+                border-radius: 4px;
+                display: inline-block;
+                max-width: 89%;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                line-height: normal;
+                background: #e8eef2;
+                float: left;
+                margin: 0 5px 5px 0;
+            }
+            .tagcontent a:hover {background: #c7d6e5; color: #000000;}
+			/*#tagcontent { word-break: break-all; line-height: 215%; }
 			#tagcontent a { padding: 4px; border-radius: 4px; }
-			#tagcontent a:hover { background: #c0ccd5; color: #0470e4; }
+			#tagcontent a:hover { background: #c0ccd5; color: #0470e4; }*/
 		</style>
 	</head>
 	<body class="newLeft">
@@ -1565,7 +1679,7 @@
         	<div class="taskListBox" style="overflow:hidden; padding-right: 0;">
 		        <h2 class="on" id="h2Mail" onclick="Email_Menu_Click();">
 		        	<span class="sub_iconLNB tree_arrow_down"></span>
-		        	<span class="h2Title" id="h2TitleMail" style="display:inline-block"><spring:message code="ezEmail.t99000012" /></span><span id="totalUnreadCount" style="color:#0470e4; position:absolute;"></span>
+		        	<span class="h2Title" id="h2TitleMail" style="display:inline-block"><spring:message code="ezEmail.t99000012" /></span><span id="totalUnreadCount" class="txt_color" style="position:absolute;"></span>
 		        </h2>
 		        <ul class="lnbUL" id="ulMail">
 		        	<div class="tree" id="PostTreeView" oncontextmenu="event_folderMenu(event); return false;" onclick="HiddenFolderMenu();"></div>
@@ -1588,6 +1702,32 @@
 		            <c:if test="${useSpamOut}">
 		            	<li onclick="oepnSpamOutBox()"><span class="list_text"><spring:message code="ezEmail.ldh01" /></span></li>
 		            </c:if>
+		            <br/>
+		            <c:if test="${useApprMail}"> <% // 승인메일 정책에서 하나라도 사용이면 true %>
+		            	<c:if test="${isApprMailApprover}">
+							<li onclick="Open_ApprMail(this)" data-type="p"><span class="list_text"><spring:message code="email.appr.title.pending" /></span></li> <% // 발송승인대기 %>
+	                        <li onclick="Open_ApprMail(this)" data-type="c"><span class="list_text"><spring:message code="email.appr.title.complete" /></span></li> <% // 발송완료목록 %>
+	                    </c:if>
+                        <li onclick="Open_ApprMail(this)" data-type="r"><span class="list_text"><spring:message code="email.appr.title.request" /></span></li> <% // 발송요청목록 %>
+	            	</c:if>
+		            <%-- 태그 --%>
+		            <c:if test="${useMailTag}">
+                        <div class="tag_area">
+                            <span>
+                                <div id="tagtitle" class="on" onclick='openTagFolder();'>
+                                    <span class="sub_iconLNB tree_blank"></span>
+                                    <span class="tag_normal" style="width: 156px; text-align: justify;"><spring:message code="ezEmail.tag" /></span>
+                                </div>
+                                <ul class="lnbUL" id="tagcontent">
+                                    <li class="tagcontent">
+                                        <c:forEach items="${tags}" var="tag">
+                                            <a data-idx="${tag.idx}" ><c:out value="${tag.name}" /></a>
+                                        </c:forEach>
+                                    </li>
+                                </ul>
+                            </span>
+                        </div>
+                    </c:if>
 		        </ul>
 		        <!-- 주소록 -->
 		        <c:if test="${dotNetIntegration eq 'YES'}">
@@ -1634,25 +1774,47 @@
 			        		 onclick="Share_Menu_Click('${shareInfo.shareId}', '${shareInfo.deletePermission}', '${shareInfo.sendPermission}', '${shareInfo.managePermission}');">
 			        		<span class="sub_iconLNB tree_plus"></span>
 			        		<span class="h2Title" id="h2Title_${shareInfo.shareId}" style="display:inline-block"><c:out value="${shareInfo.shareName}" /></span>
-			        		<span id="totalUnreadCount_${shareInfo.shareId}" style="color:#0470e4; position:absolute;">
+			        		<span id="totalUnreadCount_${shareInfo.shareId}" class="txt_color" style="position:absolute;">
 			        			<c:if test="${shareInfo.totalUnreadCount != '0'}">(${shareInfo.totalUnreadCount})</c:if>
 			        		</span>
 			        	</h2>
 			        	<ul class="lnbUL off" id="ul_${shareInfo.shareId}">
 			        		<div class="tree" id="shareTreeView_${shareInfo.shareId}" oncontextmenu="event_folderMenu(event); return false;" onclick="HiddenFolderMenu();"></div>
 			        		<li onclick="Open_Search();"><span class="list_text"><spring:message code="ezEmail.t641" /></span></li>
+			        		<c:if test="${shareInfo.sendPermission eq 'Y'}">
+								<li onclick="Open_ReservationManage('${shareInfo.shareId}')"><span class="list_text"><spring:message code="ezEmail.t605" /></span></li>
+			        		</c:if>
 			        		<c:if test="${shareInfo.managePermission eq 'Y'}">
-			        			<li onclick="mail_Config('${shareInfo.shareId}')"></span><span class="list_text"><spring:message code="ezEmail.t99000044" /></span></li>
+			        			<li onclick="mail_Config('${shareInfo.shareId}')"><span class="list_text"><spring:message code="ezEmail.t99000044" /></span></li>
 			        		</c:if>
 			        		<c:if test="${useSpamSniper ne null && useSpamSniper != '' && useSpamSniper != 'NO'}">
 				            	<li onclick="shareMailAddress()"><span class="list_text">스팸편지함</span></li>
 				            </c:if>		
+				            <br/>
+				            <c:if test="${useApprMail}"> <% // 승인메일 정책에서 하나라도 사용이면 true %>
+		                        <li onclick="Open_ApprMail(this)" data-id="${shareInfo.shareId}" data-type="r"><span class="list_text"><spring:message code="email.appr.title.request" /></span></li> <% // 발송요청목록 %>
+			            	</c:if>
+                            <%-- 태그 --%>
+                            <c:if test="${shareInfo.enable eq '1'}">
+                                <div class="tag_area">
+                                    <span>
+                                        <div id="tagtitle_${shareInfo.shareId}" class="on" onclick='openTagFolder();'>
+                                            <span class="sub_iconLNB tree_blank"></span>
+                                            <span class="tag_normal" style="width: 156px; text-align: justify;"><spring:message code="ezEmail.tag" /></span>
+                                        </div>
+                                        <ul class="lnbUL" id="tagcontent_${shareInfo.shareId}">
+                                            <li class="tagcontent"></li>
+                                        </ul>
+                                    </span>
+                                </div>
+                            </c:if>
 			        	</ul>
 			        	<script>
 			        		setTotalUnreadCount("${shareInfo.shareId}", parseInt("${shareInfo.totalUnreadCount}"));
 			        	</script>
 			        </c:forEach>
 		        </c:if>
+				<%-- 2024-06-14 이사라 - 태그 계정별로 지원하여 위치 변경
 				<c:if test="${useMailTag}">
 					<h2 id="tagtitle" onclick='openTagFolder();'>
 						<span class="sub_iconLNB tree_plus"></span>
@@ -1665,7 +1827,7 @@
 							</c:forEach>
 						</li>
 					</ul>
-				</c:if>
+				</c:if>--%>
 	        </div>
 	        <xml id="RootFolderXML" style="display: none;">
 		    	${rootFolderXML}

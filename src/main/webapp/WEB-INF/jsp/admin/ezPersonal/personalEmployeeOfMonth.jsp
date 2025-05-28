@@ -7,7 +7,8 @@
 	<head>
 		<title>EmployeeofMonth</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezPersonal.e3', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('/css/ezPersonal/slick.css')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/css/ezPersonal/slick-theme.css')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('main.e4', 'msg')}" type="text/css" />
@@ -62,7 +63,9 @@
 	</head>
 	<body class = "mainbody">
 		<form id="form1">
-			<h1><spring:message code = 'ezPersonal.t299' /></h1>
+			<h1><spring:message code = 'ezPersonal.t299' />
+				<jsp:include page="/WEB-INF/jsp/admin/companySelect.jsp"/>
+			</h1>
 			<div style="width:100%;">
 				<!-- 달력슬라이더 영역 -->
 				<div class="regular calSlider" id="regular"></div>

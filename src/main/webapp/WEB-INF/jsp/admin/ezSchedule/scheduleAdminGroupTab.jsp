@@ -6,7 +6,8 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
-		<link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
 	    <style>
 	    	.mainlist tr th {
@@ -181,23 +182,23 @@
 					var pageNum = CurPage;
 
 					if (totalPage > 1 && pageNum != 1) {
-						strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' ></span>"
+						strtext = "<span class='btnimg first' onclick= 'return goToPageByNum(1)'></span>"
 						PagingHTML += strtext;
 					} else {
-						strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>"
+						strtext = "<span class='btnimg first disabled'></span>"
 						PagingHTML += strtext;
 					}
 
 					if (totalPage > BlockSize) {
 						if (pageNum > BlockSize) {
-							strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' ></span>";
+							strtext = "<span class='btnimg prev' onclick= 'return selbeforeBlock()'></span>";
 							PagingHTML += strtext;
 						} else {
-							strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+							strtext = "<span class='btnimg prev disabled'></span>";
 							PagingHTML += strtext;
 						}
 					} else {
-						strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+						strtext = "<span class='btnimg prev disabled'></span>";
 						PagingHTML += strtext;
 					}
 
@@ -227,28 +228,28 @@
 								/ BlockSize) + 1) * BlockSize) + 1)) {
 							strtext = "";
 							strtext = strtext
-									+ "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' ></span>";
+									+ "<span class='btnimg next' onclick='return selafterBlock()'></span>";
 							PagingHTML += strtext;
 						} else {
 							strtext = "";
 							strtext = strtext
-									+ "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+									+ "<span class='btnimg next disabled'></span>";
 							PagingHTML += strtext;
 						}
 					} else {
 						strtext = "";
 						strtext = strtext
-								+ "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+								+ "<span class='btnimg next disabled'></span>";
 						PagingHTML += strtext;
 					}
 
 					if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-						strtext = "<span class='btnimg' onclick='return goToPageByNum("
+						strtext = "<span class='btnimg last' onclick='return goToPageByNum("
 								+ totalPage
-								+ ")'><img src='/images/sub/btn_n_next.gif' ></span>";
+								+ ")'></span>";
 						PagingHTML += strtext;
 					} else {
-						strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
+						strtext = "<span class='btnimg last disabled'></span>";
 						PagingHTML += strtext;
 					}
 
@@ -305,7 +306,8 @@
 						searchValue : document.getElementById("txt_SearchQuery").value,
 						startDate : searchStartTime,
 						endDate : searchEndTime,
-						pageNum : pageNum
+						pageNum : pageNum,
+						company : encodeURIComponent(companySelectID)
 		    		},
 		    		async : false,
 		    		url : "/admin/ezSchedule/scheduleGroupList.do",		    		
@@ -635,11 +637,16 @@
 
 			}
 
-			  
+			var changeCompany = function() {
+				reset();
+				reload();
+			};
 		</script>
 	</head>
 	<body class="mainbody">		
-	    <h1><spring:message code='ezSchedule.shb12' /></h1><br />
+	    <h1><spring:message code='ezSchedule.shb12' />
+			<jsp:include page="/WEB-INF/jsp/admin/companySelect.jsp"/>
+		</h1><br />
 	    <div class="txt">▒ <spring:message code='ezSchedule.shb15' /></div>
 	    <div class="txt" style="margin-top:3px">▒ <spring:message code='ezSchedule.t00006' /></div>
 	    <div class="txt" style="margin-top:3px">▒ <spring:message code='ezSchedule.t00007' /></div>

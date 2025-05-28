@@ -18,7 +18,8 @@
 	    <!-- 재은 수정 -->
 	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/NewMailList.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
-	    <link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+	    <link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
 	    <link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
 	    <style type="text/css">
@@ -96,9 +97,8 @@
 	        			var customWidth = 170 - (14 * imgCnt);
 	        			$(element).css("width", customWidth+"px");
 	        			$(element).css("text-align", "justify");
-	        			$(element).attr("title", title);	
 	        		}
-							
+					$(element).attr("title", title);
 	        	});
 	        }	        
 	        
@@ -339,7 +339,7 @@
 	        function address_foldermanage() {
 	            address_foldermanage_dialogArguments[1] = address_foldermanage_Complete;
 	            var OpenWin = window.open("/ezAddress/addressFolderManage.do", "address_foldermanage", GetOpenWindowfeature(500, 500));
-	            try { OpenWin.focus(); } catch (e) { }
+	            try { OpenWin.focus(); } catch (e) {console.log(e);}
 	        }
 	        function address_foldermanage_Complete(ret) {
 	            if (ret != undefined) {
@@ -351,7 +351,7 @@
 	            			document.getElementById("AddressFolderXML").innerHTML = data;
 	     	            	LoadAddressTree();
 	            		}, error : function(ee) {
-	            			alert("error: " + ee.statusText);
+	            			alert("error: " + ee.status);
 	            		}
 	            	});
 	            	

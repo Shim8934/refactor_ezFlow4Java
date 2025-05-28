@@ -6,7 +6,8 @@
 	<head>
 		<title><spring:message code='ezResource.t9900013'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-		<link rel="stylesheet" href="${util.addVer('ezResource.e2', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<style type="text/css">
 		
 		.content tr{
@@ -484,6 +485,8 @@
 	                xmlHTTP = null;
 
 	                if (rtnValue == "True") {
+	                	createNodeAndInsertText(xmlDOM, objNode, "STARTDATETIME", sDT);
+	                	createNodeAndInsertText(xmlDOM, objNode, "ENDDATETIME", eDT);
 	                    xmlHTTP = createXMLHttpRequest();
 	                    xmlHTTP.open("POST", "/ezResource/sendMailToUser.do", false);
 	                    xmlHTTP.send(xmlDOM);
@@ -499,7 +502,7 @@
 
 	                xmlDOM = null;
 	                
-	                if (window.opener != null) {
+	                if (window.opener.btnRefresh_onclick != null) {
 	                    window.opener.btnRefresh_onclick();
 	                }
 	                window.close();
@@ -640,7 +643,7 @@
 		        		<tr>
 		            		<th><spring:message code='ezResource.t224' /></th>
 		            		<td colspan="3">
-		                		<div id="titleDIV"> <c:out value='${title}' /></div>
+		                		<div id="titleDIV"> <c:out value='${title}' escapeXml='false'/></div>
 		            		</td>
 		        		</tr>	        			
 	        		</table>

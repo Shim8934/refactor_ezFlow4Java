@@ -63,4 +63,6 @@ public interface MApprovalGService {
 
 	public HashMap<String, Object> getAprMemberBySn(String docID, String aprMemberSN, String lang, String companyID, int tenantID) throws Exception;
 	
+	/* 2024-10-31 이가은 - 모바일 보낸공람문서 > 공람회수 기능  */
+	public String gongRamCancel(String docID, int count, int aprMemberSN, String companyID, int tenantId) throws Exception;
 }

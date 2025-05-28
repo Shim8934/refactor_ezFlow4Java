@@ -8,17 +8,26 @@
 <html>
 <head>
 </head>
+<script type="text/javascript">
+	$(function() {
+		var portletName = "<c:out value='${portletName }'/>";
+		ellipsisTitle(portletName, 4);
+		var portletText = $("#4Portlet .portletText");
+		portletText.append(' (');
+		var spanElement = $('<span>').attr('id', 'voteCount');
+		var voteCnt = "<c:out value='${voteCount }'/>";
+		spanElement.append(voteCnt);
+		portletText.append(spanElement);
+		portletText.append(')');
+	});
+</script>
 <body>
 	<article class="vote box_shadow">
 		<div id="voteDiv" class="layDiv voteLay">
 			<dl class="portlet_title sortablePortlet">
 				<dt class="portletText">
-					<c:out value="${portletName }" />
-					(<span id="voteCount"><c:out value='${voteCount }' /></span>)
 				</dt>
-				<dd class="portletPlus" id="votePlus">
-					<img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png">
-				</dd>
+				<dd class="portletPlus plus" id="votePlus"></dd>
 			</dl>
 			<c:choose>
 				<c:when test="${voteCount ne 0 }">
@@ -27,9 +36,9 @@
                         <p class="voteTitle"><c:out value="${title}"/></p>
                         <p class="voteBtn votePortlet" id="V<c:out value='${qstId}'/>"><spring:message code="main.t2001"/></p>
                     </div>
-					<ul class="voteList">
+					<ul class="portlet_list voteList">
 						<c:forEach items="${pollAnswer }" var="poll" varStatus="status">
-							<c:if test="${status.index lt 4 }">
+<%--							<c:if test="${status.index lt 4 }">--%>
 								<li class="voteList_0${status.index + 1 }">
 									<div class="voteT">
 										<span class="Vnum">${status.index + 1 }</span> <span class="Vtext"><c:out value='${poll.content}'/></span>
@@ -55,7 +64,7 @@
 										</c:choose>
 									</div>
 								</li>
-							</c:if>
+<%--							</c:if>--%>
 						</c:forEach>
 					</ul>
 					</div>
@@ -76,4 +85,23 @@
 		</div>
 	</article>
 </body>
+<script>
+
+var colors = ["#e04343", "#f79f3f", "#a9cd40", "#00b4c8", "#898cff", "#ff89b5", "#ffdc89",
+				"#90d4f7", "#71e096", "#f5a26f", "#668de5", "#ed6d79", "#5ad0e5", "#da97e0",
+				"#cff381", "#ff96e3", "#bb96ff", "#67eebd", "#fa9928", "#ef3924", "#d41e47",
+				"#4c64ae", "#01539c", "#f05f7c", "#00b3ca", "#bd8139", "#d9c622", "#4a2431",
+				"#d41e47", "#eb148d"];
+
+var voteNodeList = document.querySelectorAll('[class^="voteList_0"]');
+var voteElemList = Array.prototype.slice.call(voteNodeList);
+
+// 선택된 요소들을 순회합니다.
+for (var i = 0; i < voteElemList.length; i++) {
+    var element = voteElemList[i];
+    var aaElements = element.getElementsByClassName("Vtext")[0];
+	aaElements.style.color = colors[i % 30];
+}
+
+</script>
 </html>

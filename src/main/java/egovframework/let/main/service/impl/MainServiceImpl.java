@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import egovframework.let.main.dao.MainDAO;
 import egovframework.let.main.service.MainService;
 import egovframework.let.main.vo.MainVO;
-import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service("mainService")
 public class MainServiceImpl extends EgovAbstractServiceImpl implements MainService {

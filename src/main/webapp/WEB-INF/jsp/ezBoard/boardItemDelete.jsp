@@ -7,7 +7,8 @@
 	<head>
 	    <title><spring:message code='ezBoard.t1003'/></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
-	    <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+	    <link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript">
@@ -70,7 +71,7 @@
 	            if (resultText == "OK") {
 	                alert("<spring:message code='ezBoard.t1019'/>");
 	                
-	                sendBoardAlertMail("modify", BoardID, ItemID, isAllGroupBoard);
+	                sendBoardAlert("modify", BoardID, ItemID, isAllGroupBoard);
 	                
 	                /* 2019-01-15 홍승비 - 사진삭제 후 DB에 게시물 수정일자 업데이트 */
                     $.ajax({
@@ -134,12 +135,12 @@
 	        }
 	        
 	        /* 2021-06-22 홍승비 - 게시판 메일알림 함수 추가, 비동기로 백그라운드 동작 */
-	        function sendBoardAlertMail(pMode, pBoardID, pItemID, pIsAllGroupBoard) {
+	        function sendBoardAlert(pMode, pBoardID, pItemID, pIsAllGroupBoard) {
 		        $.ajax({
 					type : "POST",
 					dataType : "text",
 					async : true,
-					url : "/ezBoard/sendBoardAlertMail.do",
+					url : "/ezBoard/sendBoardAlert.do",
 					data : {
 						mode : pMode,
 						boardID : pBoardID,
@@ -173,7 +174,7 @@
 	        </tr>
 	        <tr>
 	            <td>
-	                <div class="layout" style="padding-top:10px;padding-bottom:10px;overflow-y:scroll;height:410px;" id="allImageList">
+	                <div class="layout" style="padding-top:10px;padding-bottom:5px;overflow-y:auto;height:410px;" id="allImageList">
 	                	<c:set var="result" value="${fn:split(listImages, '|')}"/>
 	                	<c:set var="imageID" value="${fn:split(imageID, ';')}"/>
 	                	<c:set var="content" value="${fn:split(imageContent, ';')}"/>

@@ -5,7 +5,8 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezCabinet.css', 'msg')      }" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('/css/ezCabinet/cabinet.css')}" type="text/css">
 	</head>
 	<body class="popup cabAddRelated" style="overflow: hidden;">
@@ -889,9 +890,9 @@
 				
 				function getUserIdFromInline(elmtObj, divide) {
 					var clickStr    = elmtObj.getAttribute("onclick");
-					var start       = clickStr.indexOf(divide);
-					var end         = clickStr.lastIndexOf(divide);
-					return clickStr.substring(start + 1, end);
+					var start       = clickStr ? clickStr.indexOf(divide) : null;
+					var end         = clickStr ? clickStr.lastIndexOf(divide) : null;
+					return clickStr ? clickStr.substring(start + 1, end) : null;
 				}
 				
 				function getScheduleTypeName(schType) {

@@ -1,7 +1,7 @@
 package egovframework.ezEKP.ezApprovalG.dao;
 
 import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovCsvVO;
-import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

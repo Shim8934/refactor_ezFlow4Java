@@ -6,7 +6,8 @@
 	<head>
 		<title></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezPersonal.e3', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('main.e4', 'msg')}" type="text/css" />
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/thumbnailGrid/default.css')}" />
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/thumbnailGrid/component.css')}" />
@@ -39,13 +40,15 @@
 		</script>
 	</head>
 	<body class="mainbody">
-		<h1><spring:message code ="ezPersonal.khj1" /></h1>
-
+		<h1><spring:message code="ezPersonal.khj1"/>
+			<jsp:include page="/WEB-INF/jsp/admin/companySelect.jsp"/>
+		</h1>
 		<!-- 빠른 링크 리스트 영역 -->
 		<div class="admin_quicklink">
 			<ul id="mainlist"></ul>
 		</div>	
-		
+		<input type="hidden" id="quickUserLang" value="<c:out value='${userLang}'/>">
+		<input type="hidden" id="quickUserPrimanry" value="<c:out value='${userPrimanryLang}'/>">
 		<!-- 빠른 링크 추가 영역 -->
 		<xml id="listviewheader" style="display: none;"></xml>
 		<iframe name="ifrm" src="about:blank" style="display: none;"></iframe>

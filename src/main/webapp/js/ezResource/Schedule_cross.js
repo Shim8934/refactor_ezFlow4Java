@@ -385,7 +385,7 @@ function show_repetition_info() {
 	switch (szType) {
 		case "4":
 			var selType = getNodeText(SelectNodes(xmlinDoc, "recurrence/selType")[0]);
-			repetition = selType;
+			repetition = "0";
 			if(selType == "0") {			// 매일마다
 				var interval = getNodeText(SelectNodes(xmlinDoc, "recurrence/interval")[0]);
 				
@@ -397,7 +397,7 @@ function show_repetition_info() {
 				}
 				repetition += "|" + interval;
 			}
-			else {
+			else {			// 매일반복(평일)
 				repeatinfo += "" + strLang551;
 				repetition += "|0" ;
 			}
@@ -885,7 +885,7 @@ function SaveSchedule_onClick( cmd , resItem) {
 	var objNode ;
 	
 	createNodeInsert(xmlDoc, objNode, "PARAMETER");	
-	createNodeAndInsertText(xmlDoc, objNode, "TITLE", document.getElementById("title").value);
+	createNodeAndInsertText(xmlDoc, objNode, "TITLE", ConvertCharToEntityReference(document.getElementById("title").value));
     createNodeAndInsertText(xmlDoc, objNode, "LOC", ""); // 2011-04 : 자원 항목 등록시 자원 사용하지 않음.
     createNodeAndInsertText(xmlDoc, objNode, "T_DISPLAY", document.getElementById("timeDisplay").value);
    
@@ -978,7 +978,10 @@ function SaveSchedule_onClick( cmd , resItem) {
 	    // 2009.11.26 - 자원등록시 자원관리자에게 자원등록 알림메일 발송
 	    xmlHttp = null;
 	    if(cmd == "add" && objNode23 == "0")
-	    {
+	    {	
+		    var returnNodes = SelectNodes(resultXML,"RTN_DATA")[0];
+	    	var pNum = getNodeText(GetChildNodes(returnNodes)[0]);//objNodes.item(0).text;
+	    	createNodeAndInsertText(xmlDoc, objNode, "RSSCHEDULENUM", pNum);
 	        xmlHttp = createXMLHttpRequest();
 			xmlHttp.open("POST", "/ezResource/sendMail.do", false);
 			xmlHttp.send(xmlDoc);				        
@@ -1133,6 +1136,9 @@ function OnlySaveSchedule(resItem) {
     if (typeof (resultXML) != "undefined" && getXmlString(resultXML) != "") {
         xmlHttp = null;
         if (cmd == "add" && objNode23 == "0") {
+        	var returnNodes = SelectNodes(resultXML,"RTN_DATA")[0];
+	    	var pNum = getNodeText(GetChildNodes(returnNodes)[0]);//objNodes.item(0).text;
+	    	createNodeAndInsertText(xmlDoc, objNode, "RSSCHEDULENUM", pNum);
             xmlHttp = createXMLHttpRequest();
             xmlHttp.open("POST", "/ezResource/sendMail.do", false);
             xmlHttp.send(xmlDoc);
@@ -2084,6 +2090,8 @@ function CheckUseInterval() {
 var setApprovFlag = false;
 
 function SetApproval_onClick(pCmd, pFlag) {
+	var startDateTime = "";
+	var endDateTime = "";
     if (pFlag == "1") {
         setApprovFlag = true;
         var result = btn_Save();
@@ -2145,9 +2153,26 @@ function SetApproval_onClick(pCmd, pFlag) {
 		
 		if (rtnValue == "True") {
 		    //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%//
-	        // 2009.11.26 - 자원승인시 사용자에게 자원승인 알림메일 발송	        
-	        	        
+	        // 2009.11.26 - 자원승인시 사용자에게 자원승인 알림메일 발송
+			if (pCmd == 'mod' && pFlag == '0') {
+				startDateTime = sDT2;
+				endDateTime = eDT2;
+			} else if (pCmd == 'mod' && pFlag == '1') {
+				if (document.getElementById("AllDay").checked == true) {
+					startDateTime = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00:01";
+					endDateTime = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 23:59:59";
+				} else {
+					startDateTime = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val() + ":00";
+					endDateTime = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val() + ":00";
+				}
+			} else {
+				startDateTime = sDT2;
+				endDateTime = eDT2;
+			}
+			
 	        xmlHTTP = createXMLHttpRequest();
+	        createNodeAndInsertText(xmlDOM, objNode, "STARTDATETIME", startDateTime);
+        	createNodeAndInsertText(xmlDOM, objNode, "ENDDATETIME", endDateTime);
 			xmlHTTP.open("POST", "/ezResource/sendMailToUser.do", false);
 			xmlHTTP.send(xmlDOM);				        
 			var ResponseXML = xmlHTTP.responseXML;

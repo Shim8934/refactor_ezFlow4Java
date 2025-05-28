@@ -91,8 +91,26 @@ public class EzPMSController {
 	 * 프로젝트 관리 메인화면 호출함수
 	 */
 	@RequestMapping(value = "/ezPMS/pmsMain.do")
-	public String main() {
+	public String main(HttpServletRequest request, Model model) {
 		logger.debug("ezPMS main page started");
+
+		String leftFrameWidth = "220";
+		int width = 0;
+
+		if (request.getParameter("__wwidth") != null) {
+			String widthParam = request.getParameter("__wwidth");
+
+			try {
+				width = Integer.parseInt(widthParam);
+
+				leftFrameWidth = width < 1180 ? "0" : "220";
+			} catch (NumberFormatException e) {
+				width = 0;
+			}
+		}
+
+		model.addAttribute("leftFrameWidth", leftFrameWidth);
+		
 		logger.debug("ezPMS main page ended");
 		return "ezPMS/pmsMain";
 	}

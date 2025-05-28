@@ -9,309 +9,55 @@
 <title>PortalPage</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="${util.addVer('/css/orbit-1.2.3.css')}" type="text/css" />
+<link href="${util.addVer('/css/ezNewPortal/swiper.min.css')}" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezNewPortal/swiper.min.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/fixBoard.js')}"></script>
+<link rel="stylesheet" type="text/css" href="${util.addVer('/css/ezNewPortal/portal.css')}" />
 <link href="${util.addVer('main.portal', 'msg')}" rel="stylesheet" type="text/css">
-<style type="text/css">
-	.notEmptySlider {
-		width : 280px;
-		height : 450px;
-		cursor : pointer;
-		z-index:-1;
-		margin: 20px;
-	} 
-	
-	.notEmptySlider.noSliderUrl {
-		cursor : default;
-	}
-	
-	#myImg {
-		width : 36px;
-		height : 36px;
-	}
-	
-	#userList li {
-		cursor : pointer;
-		display: block;
-	}
-	.slider_section {height:490px; width:320px;}
-	.right_float {float:right;}
-	#nodata_NewBirth {display:none;}
-	#featured {background : none;}
-	.box_shadow {width:100%; margin:0px;}
-	.portlet {height:250px; margin:20px 0px 0px 20px; background-color:#ffffff; border-radius:5px;}
-	.infoImg img {width:60px; height:60px;}
-	.attitudePtl {border:none;}
-	.orbit-wrapper .timer {display:none;}
-	.linkIcon {display: block; margin: 0 auto; padding: 9px 0px 5px 0px; text-align: center;}
-	.linkTxt {display: block; width: 78px; text-align: center; color: #333; font-size: 12px; height: 27px; letter-spacing: 0px; overflow: hidden;margin: 0 auto; padding: 2px 0px 0px 0px; word-break: break-all; line-height: 15px; text-overflow: ellipsis; white-space: nowrap;}
-	.two_column1750 {width : 48.3%;}
-	.two_column1593 {width : 48.2%;}
-	.two_column1468 {width : 48%;}
-	.two_column1369 {width : 47.8%;}
-	.two_column1327 {width : 47.5%;}
-	.two_column1326 {width : 47.4%;}
-</style>
 </head>
-<body class="mainbg" id="theme1Body">
-	<div id="center">
-	<c:if test="${usedFrame eq 'Frame2'  || usedFrame eq 'Frame4'}">
-		<section class="section_left right_float" style="height:1130px;">
-	</c:if>
-	<c:if test="${usedFrame eq 'Frame1'  || usedFrame eq 'Frame3'}">
-		<section class="section_left" style="height:1130px;">
-	</c:if>
-			<article class="rolling_info">
-			<div class="slider_section">
-				<div class="rolling" id="featured">
-            	<c:choose>
-	            	<c:when test="${not empty sliderList}">
-	            		<c:forEach items="${sliderList}" var="slider">
-		            		<c:choose>
-		            			<c:when test="${slider.url eq '' }">
-									<img src="${slider.imagePath}" class="notEmptySlider noSliderUrl" onclick="windowOpen('${slider.url}')" style="margin:20px;"/>
-		            			</c:when>
-		            			<c:when test="${fn:substring(slider.url, 0, 4) eq 'http' }">
-		            				<img src="${slider.imagePath}" class="notEmptySlider" onclick="windowOpen('${slider.url}')" style="margin:20px;"/>
-		            			</c:when>
-		           		 		<c:otherwise> 
-									<img src="${slider.imagePath}" class="notEmptySlider" onclick="windowOpen('${slider.url}')" style="margin:20px;"/>
-								</c:otherwise>
-							</c:choose>
-						</c:forEach>
-	           		</c:when>
-	            	<c:otherwise>
-		            	<img src="/images/ezNewPortal/rolling01.png" width="280" height="450" style="margin:20px;"/>
-		            	<img src="/images/ezNewPortal/rolling01.png" width="280" height="450" style="margin:20px;"/>
-	            	</c:otherwise>
-	            </c:choose>
-				<span class="mask" style="width:100%; height:100%; background:white; z-index:0;"></span>
-           	 	</div>
-			</div>
-           	 	<dl class="info">
-            		<dt class="infoImg"><c:if test='${userPhoto == ""}'><img src="/images/ezNewPortal/info_pic_none.png"  width="36px" height="36px" style="width:36px;height:36px;" /></c:if><c:if test='${userPhoto != ""}'><img id="myImg" src="/ezCommon/downloadAttach.do?filePath=${userPhoto }"></c:if></dt>
-               		<dd class="infoName">${userName} ${userTitle}</dd>
-                	<dd class="infoTeam">${deptName}</dd>
-                	<dd class = "infoTeam"><spring:message code="main.t00016" /> ${lastLogin }</dd>
-                	<%-- <dd class="infoTeam"><spring:message code="main.t00016" /> ${lastLogin }</dd> --%>
-                	<%--<dd class="infoSet" id="personalEnv"><img src="/images/kr/main/info_set.png"></dd>
-                	<dd class="infoSet" id="portletEnv" style="color:white;right : 30px;"><img src="/images/admin/frameSetting.png" /></dd> --%>
-           		</dl>
-           		<%-- 기존 아이콘 버튼 -> 메세지를 표출하는 설정 버튼으로 분리 --%>
-                <div class="info_btn">
-                    <span class="info_portal" id="portletEnv"><span class="info_portal_icon"></span><spring:message code='ezNewPortal.HSBPT01'/></span><%-- 포탈설정 --%>
-                    <span class="info_set" id="personalEnv"><span class="info_set_icon"></span><spring:message code='ezNewPortal.t006'/></span><%-- 환경설정 --%>
+<body class="mainbg" id="theme1Body" style="padding-bottom:20px;">
+    <section class="section_main" style="height:100%;">
+        <!-- 상단 고정부분 html start -->
+        <div class="top_info_area">
+            <div class="my_info_wrap">
+                <div class="my_info" id="myInfo">
+                    <span class="name">${userName} ${userTitle}</span>
+                    <span class="team">${deptName}</span>
                 </div>
-			</article>
-			<article class="main_time_check">
-				<c:choose>
-					<c:when test="${useAttitude eq 'YES' }">
-						<div id="timeinput" class="main_presentTime">
-	               			<p class="main_timeTit" id="todayTime"><spring:message code='ezNewPortal.t012' /></p>
-							<div id="timeFlow" class="main_timeText"></div>
-			    		</div>
-			   			<div id="atti_area" class="main_main_time">
-	            			<dl class="main_timeCheckIn">
-	                			<dd id="inAttiBtn" class="main_out" type="A01" datetype="2" onclick="checkHoliday(this, '${usedTheme}')" style="font-size:11px;"><spring:message code='ezNewPortal.t013' /></dd>
-	                		</dl>
-	                		<dl class="main_timeCheckOut">
-	                   			<dd id="outAttiBtn" class="main_out" type="A03" datetype="2" onclick="checkHoliday(this, '${usedTheme}')" style="font-size:11px;"><spring:message code='ezNewPortal.t014' /></dd>
-	                		</dl>
-		    			</div>
-					</c:when>
-					<c:otherwise>
-						<div id="timeinput" class="main_presentTime presentTime_commuteNone">
-	               			<p class="main_timeTit" id="todayTime"><spring:message code='ezNewPortal.t012' /></p>
-							<div id="timeFlow" class="main_timeText"></div>
-			    		</div>
-					</c:otherwise>
-				</c:choose>
-			</article>
-				
-				<article class="countingIcon">
-					<div class="countingIcon01">
-						<c:choose>
-							<c:when test="${useMail eq 'NO'}"> <!-- 메일 권한이 없을때 disable 아이콘 나타남 -->
-								<dl id="NewMail" class="icon_disabled">
-									<dt class="iconCircle_none"><span class="iconCommon"></span></dt>
-									<dd class="iconText"></dd>
-								</dl>
-							</c:when>
-							<c:otherwise>
-								<dl id="NewMail">
-                					<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon01.png"></dt>
-                    				<dd class="iconText"><spring:message code='ezNewPortal.t015' /></dd>
-                    				<dd id="unreadMailCount" class="iconCount_none">0</dd>
-                				</dl>
-							</c:otherwise>
-						</c:choose>
-						<c:choose>
-							<c:when test="${useApproval eq 'NO'}"> <!-- 전자결재 권한이 없을 때 disable 아이콘 나타남 -->
-								<dl id="AprSign" class="icon_disabled">
-									<dt class="iconCircle_none"><span class="iconCommon"></span></dt>
-									<dd class="iconText"></dd>
-								</dl>
-							</c:when>
-							<c:otherwise>
-                				<dl id="AprSign">
-                    				<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon03.png"></dt>
-                    				<dd class="iconText"><spring:message code='ezNewPortal.t016' /></dd>
-                    				<dd id="approvalCount" class="iconCount_none">0</dd>
-                				</dl>
-							</c:otherwise>
-						</c:choose>
-						<c:choose>
-							<c:when test="${useSchedule eq 'NO'}"> <!-- 일정 권한이 없을 때 disable 아이콘 나타남 -->
-								<dl id="Schedule" class="icon_disabled">
-									<dt class="iconCircle_none"><span class="iconCommon"></span></dt>
-									<dd class="iconText"></dd>
-								</dl>
-							</c:when>
-							<c:otherwise>
-                				<dl id="Schedule">
-                  		  			<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon02.png"></dt>
-                    				<dd class="iconText"><spring:message code='ezNewPortal.gu3' /></dd>
-                		  	  	<dd id="scheduleCount" class="iconCount_none">0</dd>
-               					</dl>
-							</c:otherwise>
-						</c:choose>
-					</div>
-					<c:choose>
-						<c:when test="${useEzWorkspace}">
-							<div class="countingIcon02" style="width:258px;">
-						</c:when>
-						<c:otherwise>
-							<div class="countingIcon02">
-						</c:otherwise>
-					</c:choose>
-					<c:choose>
-						<%-- 
-						<c:when test="${useQuestion eq 'NO'}"> <!-- 전자설문 권한이 없을 때 disable 아이콘 나타남 -->
-							<dl id="Poll" class="icon_disabled">
-								<dt class="iconCircle_none"><span class="iconCommon"></span></dt>
-								<dd class="iconText"></dd>
-							</dl>
-						</c:when>
-						<c:otherwise>
-            				<dl id="Poll">
-                    			<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon05.png"></dt>
-                    			<dd class="iconText"><spring:message code='ezNewPortal.gu4' /></dd>                        
-                    			<dd id="pollCount" class="iconCount_none">0</dd>
-                			</dl>
-						</c:otherwise>
-						 --%>
-						<c:when test="${useSurvey eq 'NO'}"> <!-- 전자설문 권한이 없을 때 disable 아이콘 나타남 -->
-							<dl id="Survey" class="icon_disabled">
-								<dt class="iconCircle_none"><span class="iconCommon"></span></dt>
-								<dd class="iconText"></dd>
-							</dl>
-						</c:when>
-						<c:otherwise>
-            				<dl id="Survey">
-                    			<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon04.png"></dt>
-                    			<dd class="iconText"><spring:message code='ezNewPortal.gu4' /></dd>                        
-                    			<dd id="surveyCount" class="iconCount_none">0</dd>
-                			</dl>
-						</c:otherwise>
-					</c:choose>
-					<c:choose>
-						<c:when test="${useCircular eq 'NO'}"> <!-- 회람판 권한이 없을 때 disable 아이콘 나타남 -->
-							<dl id="Circular" class="icon_disabled">
-								<dt class="iconCircle_none"><span class="iconCommon"></span></dt>
-								<dd class="iconText"></dd>
-							</dl>
-						</c:when>
-						<c:otherwise>
-                			<dl id="Circular"> 
-                    			<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon05.png"></dt>
-                    			<dd class="iconText"><spring:message code='ezNewPortal.gu5' /></dd>
-                    			<dd id="circularCount" class="iconCount_none">0</dd>
-                			</dl>
-						</c:otherwise>
-					</c:choose>
-					<c:if test="${useEzWorkspace}">
-                		<dl id="ezWorkspace"> 
-                    		<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon06.png"></dt>
-                    		<dd class="iconText"><spring:message code='ezNewPortal.pjg01' /></dd>
-                    		<dd class="iconCount_none" id="workspaceCnt">0</dd>
-                		</dl>
-                	</c:if>
-                	</div>
-				</article>
-				<article class="birthday">
-					<div class="birthTit">
-               			<p class="birthText"><span id="curMon"></span><spring:message code='ezNewPortal.t017' /></p>
-           	    		<span class="birthRighttbtn" id="birthdayNext"><img src="/images/ezNewPortal/birthday_next.png"></span>
-                		<span class="birthLeftbtn" id="birthdayPrev"><img src="/images/ezNewPortal/birthday_pre.png"></span>
-            		</div>
-            		<div id="birthcont" style="display: none;">
-            			<ul class="birthList" id="userList"></ul>
-            		</div>
-            		<div id="nodata_NewBirth" style="">
-            			<dl class="nodata">
-	            			<dt style="padding-top:33px"><img src="/images/kr/main/noData_sIcon.png"></dt>
-	            			<dd><spring:message code='ezNewPortal.t018' /></dd>
-            			</dl>
-            		</div>
-				</article>
-				<article id="bestEmployee" class="bestEmployee">
-					<p class="emPic" id="emPic"><img src="/images/ezNewPortal/bestEmployee_pic_none.png"></p>
-					<dl class="emDL">
-            			<dt class="emTit"><spring:message code='ezNewPortal.t019' /></dt>
-            		</dl>
-				</article>
-			</section>
-		</div>
-		<div style="position:relative;">
-			<aside id="quickSide" style="width:0px">	
-				<p class="linkBtn_close" id="linkBtn_open"><img id="quicklinkBtn" src="/images/ezNewPortal/linkBtn_open.png"></p>
-				<div class="aside_quick">
-					<p class="quickmenu_title"><spring:message code='ezNewPortal.t020' /></p>
-					<ul class="quickmenu" id="quickmenu">
-<%-- 						<li id="quickMailwrite"><span class="icon"><img src="/images/ezNewPortal/quick01.png"></span><span class="txt"><spring:message code='ezNewPortal.t021' /></span></li>
-						<li id="quickApprovalwrite"><span class="icon"><img src="/images/ezNewPortal/quick02.png"></span><span class="txt"><spring:message code='ezNewPortal.t022' /></span></li>
-						<li id="quickSchedulewrite"><span class="icon"><img src="/images/ezNewPortal/quick03.png"></span><span class="txt"><spring:message code='ezNewPortal.t023' /></span></li>
-						<li id="quickOrgan"><span class="icon"><img src="/images/ezNewPortal/quick04.png"></span><span class="txt"><spring:message code='ezNewPortal.t024' /></span></li>
-						<li id="quickMailwrite"><span class="icon"><img src="/images/ezNewPortal/quick01.png"></span><span class="txt"><spring:message code='ezNewPortal.t021' /></span></li>
-						<li id="quickApprovalwrite"><span class="icon"><img src="/images/ezNewPortal/quick02.png"></span><span class="txt"><spring:message code='ezNewPortal.t022' /></span></li>
-						<li id="quickSchedulewrite"><span class="icon"><img src="/images/ezNewPortal/quick03.png"></span><span class="txt"><spring:message code='ezNewPortal.t023' /></span></li> --%>
-					</ul>				
-				</div>
-				<div class="aside_link">
-					<div class="linkBtn">
-						<p class="btnLay" id="btnLay">
-						</p>
-					</div>
-				</div>				
-<%-- 				<div class="aside_quick">
-					<p class="quickmenu_title"><spring:message code='ezNewPortal.t020' /></p>
-					<ul class="quickmenu">
-						<li id="quickMailwrite"><span class="icon"><img src="/images/ezNewPortal/quick01.png"></span><span class="txt"><spring:message code='ezNewPortal.t021' /></span></li>
-						<li id="quickApprovalwrite"><span class="icon"><img src="/images/ezNewPortal/quick02.png"></span><span class="txt"><spring:message code='ezNewPortal.t022' /></span></li>
-						<li id="quickSchedulewrite"><span class="icon"><img src="/images/ezNewPortal/quick03.png"></span><span class="txt"><spring:message code='ezNewPortal.t023' /></span></li>
-						<li id="quickOrgan"><span class="icon"><img src="/images/ezNewPortal/quick04.png"></span><span class="txt"><spring:message code='ezNewPortal.t024' /></span></li>
-					</ul>
-				</div>
-				<div class="aside_link">
-					<p class="linkmenu_title"><spring:message code='ezNewPortal.t025' /></p>
-					<ul class="linkmenu" id="QuickUl">
-					</ul>
-					<div class="linkBtn">
-						<p class="btnLay" id="btnLay">
-						</p>
-					</div>
-				</div> --%>
-			</aside>
-		</div>
-		<%-- 2021-10-20 홍승비 - 테마1에서 가장 아래 포틀릿의 하단 그림자 css가 잘리므로, 패딩 추가 --%>
-		<section class="section_main" style="padding-bottom: 6px;">
-			<div id="portletArea" class="portlet_area">
-			</div>
-		</section>
-		
-		<div style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; z-index: 1005; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
-			
-		<div class="layerpopup"  style="z-index: 2000; position: fixed;display: none;" id="iFramePanel">
-			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
-		</div>
+
+                <div class="portal_setting" onclick="viewPortletEnv()"><spring:message code = 'ezNewPortal.HSBPT01' /></div>
+                    <div class="news_setting">
+                        <input type="checkbox" id="portal_set" onchange="displayFixPortlet()">
+                        <label for="portal_set"><span></span><spring:message code='ezNewPortal.topMenu.hth13'/></label>
+                    </div>
+
+                <%-- <div class="info_logout" onclick="infoLogoutClick()"><spring:message code = 'ezNewPortal.t008' /></div> --%>
+            </div>
+            <ul>
+                <li>
+                    <div class="noti" id="noti"></div>
+                </li>
+                <li>
+                    <span class="mail" onclick="openPageOfPortal(this.className)"><span><spring:message code = 'ezNewPortal.topMenu.unReadMail' /></span><em id="unReadMailCount"></em></span>
+                    <span class="appr" onclick="openPageOfPortal(this.className)"><span><spring:message code = 'ezNewPortal.gu2' /></span><em id="approvalCnt"></em></span>
+                    <span class="board" onclick="openPageOfPortal(this.className)"><span><spring:message code = 'ezBoard.t480' /></span><em id="newBoardCnt"></em></span>
+                </li>
+            </ul>
+        </div>
+        <!-- 상단 고정부분 html end -->
+        <div id="fixBoardArea"></div>
+        <div id="dummyArea"></div>
+        <div id="portletArea" class="portlet_area"></div>
+    </section>
+
+    <div style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; z-index: 1005; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
+
+    <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+        <iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+    </div>
+
+    <div class="title_tooltip"></div>
 <%-- script line --%>
 <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery-ui.min.js')}"></script>
@@ -326,6 +72,13 @@
 <script type="text/javascript" src="${util.addVer('ezNewPortal.e1', 'msg')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezNewPortal/newPortal_common.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/Holiday.js')}"></script>
+
+<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}"/>
+<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}"/>
+<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>
+
 <!-- 일정관리 -->
 <script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>
 <c:choose>
@@ -337,8 +90,13 @@
 	</c:otherwise>
 </c:choose>
 <!-- 일정관리 끝 -->
+<script type="text/javascript" src="${util.addVer('/js/ezPortlet/web-animations.min.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezPortlet/muuri.min.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezPortlet/portlet-util.js')}"></script>
+<link rel="stylesheet" href="${util.addVer('/css/ezPortlet/portlet.css')}" type="text/css" />
 <script type="text/javascript">
 	var portletOrder = JSON.parse('${portletOrder}');
+	var fixedPortletList = JSON.parse('${fixedPortletList}');
 	var photoBoardPage = 1;
 	var photoCount = 3;
  	var nowAttiTime = "";
@@ -355,11 +113,24 @@
  	var timer;
  	var frameId = "<c:out value='${usedFrame}'/>";
  	var usedTheme = "<c:out value='${usedTheme}'/>";
+ 	var usePaging = "<c:out value='${usePaging}'/>";
  	var WorkspaceUrl = "${workspaceHostUrl}"; // 협업이 그룹웨어와 별도의 Url로 서비스 되는 경우에만 설정
     var workspaceContextRootUrl = "${workspaceContextRootUrl}";
+    /* 2025-03-13 홍승비 - 협업 모듈에 고정된 하드코딩 문자열 제거 (ezWorkspace), 테넌트 컨피그 workspaceAppPath로 협업 웹응용프로그램 경로를 분리하여 사용 ("" 또는 "/ezWork" 등) */
+    var workspaceAppPath = "${workspaceAppPath}";
     var userLang = "<c:out value='${userLang}'/>";
     var userLang2 = "<c:out value='${userLang2}'/>";
- 	
+	var usePortletSize = "<c:out value='${usePortletSize}'/>" === "Y";
+	var portletInfoMap = {};
+	var useWebHWP = "<c:out value='${useWebHWP}'/>";
+	var companyID = "<c:out value='${companyID}'/>";
+	var userID = "<c:out value='${userId}'/>";
+	var apprPortletIDs = [];
+	var apprPortletTypes = [];
+	var strBoardPassword =  "<spring:message code='ezBoard.private.pgb05' />";
+	var strBoardOk =  "<spring:message code='ezBoard.private.pgb06' />";
+	var strWrongPassword =  "<spring:message code='ezBoard.t267' />";
+    
  	var quickLinkPage = {
  		current: 1,
  		total: 1,
@@ -367,19 +138,10 @@
 	
  	window.onresize = function(event) {
  		frameSetting(frameId);
-		leftResize();
  	}
 	
  	//반복문 forEach
 	HTMLCollection.prototype.forEach = Array.prototype.forEach;
-	
- 	var leftResize = function() {
-		var wwh = document.getElementsByClassName("section_main")[0].scrollHeight + 30;
-		var sectionLeft = document.getElementsByClassName("section_left");
-		
-		sectionLeft[0].style.height = wwh + "px";
-		sectionLeft[0].style.minHeight = "1133px";
-	}
  	
  	// 퀵링크 셋팅 
  	var setQuickLinkList = function (data) {
@@ -514,170 +276,18 @@
  		xhr.setRequestHeader('Content-Type', 'application/json');
  		xhr.send();
  	}
- 	
-	$(function() {
-		$("#featured").orbit();
-		if (portletOrder != null && portletOrder.length != 0) {
-			var portletCount = portletOrder.length;
-			var portletHTML = "";
-			
-			for (var i = 0; i < portletCount; i++) {
-				portletHTML += "<div class='portlet' id='" + portletOrder[i].portletId + "Portlet'></div>";
-			}
-			
-			//$(".portlet_area").html(portletHTML);
-			document.getElementsByClassName("portlet_area")[0].innerHTML = portletHTML;
-	 		frameSetting(frameId);
-			
-	 		//포틀릿별로 정보 및 포틀릿 jsp불러오기
-			for (var i = 0; i < portletCount; i++) {
-				var portletId = portletOrder[i].portletId;
-				var portletUrl = portletOrder[i].portletUrl;
-				var portletName = portletOrder[i].portletName;
-				var portletCode = portletOrder[i].portletCode;
-				
-				/* if (portletUrl.indexOf("ezNewPortal") != -1) { */
-			  		(function (portletId, portletUrl, portletName, portletCode) {
-						$.ajax({
-							type : "GET",
-							dataType : "html",
-							data : {"uniq_param" : (new Date()).getTime(), "portletId" : portletId, "portletName" : portletName, "usedTheme" : usedTheme},
-							url : portletUrl,
-							tryCount : 0,
-							retryLimit : 3,
-							success : function(result) {
-								$("#" + portletId + "Portlet").append(result);
-								
-								if (portletId == 6) {
-									document.getElementById(portletId + "Portlet").style.background = "none";
-								}
-								
-								eventSetting(portletId, usedTheme, portletCode, false);
-								
-								if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1) {
-									sortableEvent();
-								}
-							},
-							error : function() {
-								this.url = "/ezNewPortal/errorPortlet.do";
-								this.tryCount++;
-								
-								if (this.tryCount <= this.retryLimit) {
-									//try again
-									$.ajax(this);
-									return;
-								}
-								
-								if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1) {
-									sortableEvent();
-								}
-								
-								return;
-							}
-						});
-					}(portletId, portletUrl, portletName, portletCode));
-				/* } */
-			}
-		} 
 
-		var useQuestion = "<c:out value='${useQuestion}'/>";
-		var useSurvey = "<c:out value='${useSurvey}'/>";
-		var useCircular = "<c:out value='${useCircular}'/>";
-		var useMail = "<c:out value='${useMail}'/>";
-		var useApproval = "<c:out value='${useApproval}'/>";
-		var useSchedule = "<c:out value='${useSchedule}'/>";
-		
-		//메뉴 이동(왼쪽)
-		if (useMail !== "NO") {
-			document.getElementById("NewMail").addEventListener('click', function(){quickMenuOpen('NewMail');}, false);
-		}
-		
-		if (useSchedule !== "NO") {
-			document.getElementById("Schedule").addEventListener('click', function(){quickMenuOpen('Schedule');}, false);
-		}
-		/* 
-		if (useQuestion !== "NO") {
-			document.getElementById("Poll").addEventListener('click', function(){quickMenuOpen('Poll');}, false);
-		}
-		 */
-		if (useSurvey !== "NO") {
-			document.getElementById("Survey").addEventListener('click', function(){quickMenuOpen('Survey');}, false);
-		}
-		
-		if (useCircular !== "NO") {
-			document.getElementById("Circular").addEventListener('click', function(){quickMenuOpen('Circular');}, false);
-		}
-		
-		if (useApproval !== "NO") {
-			document.getElementById("AprSign").addEventListener('click', function(){quickMenuOpen('ApprG');}, false);
-		}
-		
-		//ajax로 count 불러오기
-		//getUnreadCounts(useQuestion, useCircular, useMail, useApproval, useSchedule);
-		getUnreadCounts(useSurvey, useCircular, useMail, useApproval, useSchedule);
-		
-		//근태관리 연동
-		var useAttitude = "<c:out value='${useAttitude}'/>";
-		
-		if (useAttitude === "YES") {
-			parseDate(usedTheme);
-			attiClock();
-			setAttiBtnHover();
-			getAttitudeList(usedTheme);
-			getHolidayList();
-		} else {
-			parseDate(usedTheme);
-			attiClock();
-			//$(".time_check").css("display", "none");
-		}
-		
-		//생일자 조회 기능 연동
-		document.getElementById("birthdayNext").addEventListener('click', function(){getMonthlyBirthdayEmployees(true);});
-		document.getElementById("birthdayPrev").addEventListener('click', function(){getMonthlyBirthdayEmployees(false);});
-		
-		//이번달 생일자 목록 불러오기
-		getMonthlyBirthdayEmployees();
-		
-		//이달의 우수사원 불러오기
-		getMonthlyBestEmployee();
-		
-		//개인환경설정으로 이동 동작 연결
-		document.getElementById("personalEnv").addEventListener('click', viewPersonalEnv);
-		document.getElementById("portletEnv").addEventListener('click', viewPortletEnv);
-
-		
-		//퀵메뉴 on/off 버튼
-		document.getElementById("quicklinkBtn").addEventListener('click', viewQuick);
-		
-		//퀵메뉴 이동(오른쪽)
-// 		document.getElementById("quickMailwrite").addEventListener('click', function(){quickMenuOpenRight('mail');}, false);
-// 		document.getElementById("quickApprovalwrite").addEventListener('click', function(){quickMenuOpenRight('appr');}, false);
-// 		document.getElementById("quickSchedulewrite").addEventListener('click', function(){quickMenuOpenRight('schedule');}, false);
-// 		document.getElementById("quickOrgan").addEventListener('click', function(){quickMenuOpenRight('organ');}, false);
-
-		// 프레임에 따라 퀵링크 위치 변경
-		if(frameId === 'Frame2' || frameId === 'Frame4' ) {
-			var quickSide = document.getElementById('quickSide');
-			quickSide.style.cssFloat = 'left';
-			
-			var linkBtnOpen = document.getElementById('linkBtn_open');
-			linkBtnOpen.style.right = '';
-			linkBtnOpen.style.left = '0px';
-			
-		}
-		// 퀵링크 호출
-		getQuickLink();		
-		var tryCount = 0;
-		
-		//포틀릿 드래그 앤 드롭
-		if (navigator.userAgent.toLowerCase().indexOf("firefox") == -1) {
-			sortableEvent();
-		}
-		/* $(".portlet_area").disableSelection(); */
-
-		leftResize();
-		
+    $(function() {
+        makePortletsShell(portletOrder)
+		if (!!fixedPortletList) {
+            makeFixPortlet(fixedPortletList);
+        }
+		makePortlets(portletOrder);
 		setPortalRefresh();
+		
+		setPortalCount();		// 포탈 카운트 세팅
+		setBoardItemListToTopMenu("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}");
+		makeSwiperByTopMenu();
 	});
 	
 	var refreshInterval = "<c:out value='${usePortalAutoRefreshInterval}'/>";
@@ -772,55 +382,11 @@
 	function getCurrentTime() {
         return new Date().getTime();		        
     }
-	
-	/* var settingPortalInterval = function () {
-		var refreshInterval = "<c:out value='${usePortalAutoRefreshInterval}'/>";
-		
-		if (refreshInterval != null && refreshInterval != "0") {
-			window.setInterval(function() {
-				var request = new XMLHttpRequest();
-				request.open('GET', '/ezNewPortal/getPortalInfo.do' , false);
-				request.setRequestHeader('Content-Type', 'application/json');
 
-				request.onload = function() {
-					if (request.status >= 200 && request.status < 400) {
-						if (request.responseText == null) {
-							return;
-						}
-						
-						var result = JSON.parse(request.responseText);
-						var refreshTheme = result.usedTheme;
-						var refreshFrame = result.usedFrame;
-						
-						if (refreshTheme == usedTheme && frameId == refreshFrame) {
-							parent.document.getElementById("mainFrame").contentWindow.location.reload(true);
-							/* portletOrder = result.portletOrder;
-							var useQuestion = result.useQuestion;
-							var useCircular = result.useCircular;
-							var useMail = result.useMail;
-							var useApproval = result.useApproval;
-							var useSchedule = result.useSchedule;
-							var useAttitude = result.useAttitude;
-							refreshPortlet(useQuestion, useCircular, useMail, useApproval, useSchedule, useAttitude);
-						} else {
-							parent.document.getElementById("mainFrame").contentWindow.location.reload(true);
-						}
-					}
-				};
-
-				request.onerror = function() {
-				  // There was a connection error of some sort
-				};
-				
-				request.send();
-			}, Number(refreshInterval) * 60000);
-		}
-	} */
-	
 	var tryCount = 0;
 	
 	var sortableEvent = function () {
-		
+		if (usePortletSize) return false;
 		//포틀릿 드래그 앤 드롭
 		try {
 			$("#portletArea").sortable({
@@ -868,7 +434,8 @@
 				var infoRight = document.getElementsByClassName("info_right");
 				
 				portletList.forEach(function(item, index) {
-					portletList[index].setAttribute("class", "portlet two_column1750");
+					portletList[index].className = portletList[index].className.replace(/two_column\d+/, "");
+					portletList[index].className += " two_column1750";
 				});
 				
 				infoLeft.forEach(function(item, index) {
@@ -888,7 +455,8 @@
 				var infoRight = document.getElementsByClassName("info_right");
 				
 				portletList.forEach(function(item, index) {
-					portletList[index].setAttribute("class", "portlet two_column1593");
+					portletList[index].className = portletList[index].className.replace(/two_column\d+/, "");
+					portletList[index].className += " two_column1593";
 				});
 				
 				infoLeft.forEach(function(item, index) {
@@ -909,7 +477,8 @@
 				var infoRight = document.getElementsByClassName("info_right");
 				
 				portletList.forEach(function(item, index) {
-					portletList[index].setAttribute("class", "portlet two_column1468");
+					portletList[index].className = portletList[index].className.replace(/two_column\d+/, "");
+					portletList[index].className += " two_column1468";
 				});
 				
 				infoLeft.forEach(function(item, index) {
@@ -930,7 +499,8 @@
 				var infoRight = document.getElementsByClassName("info_right");
 				
 				portletList.forEach(function(item, index) {
-					portletList[index].setAttribute("class", "portlet two_column1369");
+					portletList[index].className = portletList[index].className.replace(/two_column\d+/, "");
+					portletList[index].className += " two_column1369";
 				});
 				
 				infoLeft.forEach(function(item, index) {
@@ -948,7 +518,8 @@
 				var infoRight = document.getElementsByClassName("info_right");
 				
 				portletList.forEach(function(item, index) {
-					portletList[index].setAttribute("class", "portlet two_column1327");
+					portletList[index].className = portletList[index].className.replace(/two_column\d+/, "");
+					portletList[index].className += " two_column1327";
 				});
 				
 				infoLeft.forEach(function(item, index) {
@@ -965,7 +536,8 @@
 				var infoRight = document.getElementsByClassName("info_right");
 				
 				portletList.forEach(function(item, index) {
-					portletList[index].setAttribute("class", "portlet two_column1326");
+					portletList[index].className = portletList[index].className.replace(/two_column\d+/, "");
+					portletList[index].className += " two_column1326";
 				});
 				
 				infoLeft.forEach(function(item, index) {
@@ -979,21 +551,223 @@
 			}
 		}
 	}
-	
-	var windowOpen = function(url) {
-		if (url != "") {
-			if (url.substring(0, 4) === 'http') {
-				window.open(url);
-			} else {
-				window.open("http://" + url);
-			}
-		}
-	}
+    
+//     window.onload = function() {
+//         setPortalCount();		// 포탈 카운트 세팅
+//         setBoardItemListToTopMenu("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}");
+//         makeSwiperByTopMenu();
+//         // callAllUserTab();
+//     }
+
+    function setPortalCount(){
+        var reqURL = "/ezNewPortal/allCount.do";
+        $.ajax({
+            method : "GET",
+            url : reqURL,
+            dataType : "text",
+            success : function(retData){
+                var jsonData = JSON.parse(retData);
+                if(jsonData.status != "ok")	{
+                    console.log(jsonData.message);
+                    return;
+                }
+                
+                var newBoardCnt = jsonData.newBoardCnt;
+                var unReadMailCount = jsonData.unreadMailCount;
+                var approvalCnt = jsonData.approvalCnt;
+
+                if(typeof newBoardCnt == "undefined") newBoardCnt = 0;
+                if(typeof unReadMailCount == "undefined") unReadMailCount = 0;
+                if(typeof approvalCnt == "undefined") approvalCnt = 0;
+
+                document.getElementById("newBoardCnt").innerText = newBoardCnt;
+                document.getElementById("unReadMailCount").innerText = unReadMailCount;
+                document.getElementById("approvalCnt").innerText = approvalCnt;
+            },
+            error : function(e){
+                console.log(e);
+            }
+        });
+    }
+
+    function openPageOfPortal(className){
+        if(className === null || typeof className == "undefined" || !className) return;
+
+        var target = "main";
+
+        switch(className){
+            case "mail":
+                quickMenuOpen('NewMail');
+                break;
+            case "appr":
+                quickMenuOpen('ApprG');
+                break;
+            case "board":
+                var mainHref = "";
+                var mainBoardHref = "";
+                try {
+                    mainHref = window.parent.main.location.href;
+                } catch (e) {
+                    window.open('/ezBoard/boardMainRedirect.do?boardID="' + encodeURIComponent('{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}') + '"', "main", "");
+                    break;
+                }
+                try {
+                    mainBoardHref = window.parent.mainBoard.location.href;
+                } catch (e) {
+                    window.open('/ezBoard/boardMainRedirect.do?boardID="'+ encodeURIComponent('{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}') + '"', "main", "");
+                    break;
+                }
+
+                var portalURL = "/ezNewPortal/newPortalPortalPage";
+
+                if (mainHref.indexOf(portalURL) > -1 && mainHref != 'about:blank'){ // 메인영역이 포탈로 활성화되어 있고 메인보드 영역이 비어있을때
+                    target = "main";
+                } else if(mainHref == 'about:blank' && mainBoardHref != 'about:blank'){ // 메인영역이 비어 있고 메인보드 영역이 비어있지 않을때
+                    target = "mainBoard";
+                }
+                window.open('/ezBoard/boardMainRedirect.do?boardID="'+ encodeURIComponent('{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}') + '"', target, "");
+                break;
+
+            default: break;
+        }
+    }
+
+    function setBoardItemListToTopMenu(boardId) {
+        if(!boardId) {
+            return;
+        }
+
+        $.ajax({
+            url : "/ezNewPortal/boardItemListToTopMenu.do",
+            method : "GET",
+            data : {"boardId" : boardId},
+            contentType : "text",
+            success : function(obj){
+                if(obj.status == "ok"){
+                    var len = obj.boardList.length;
+                    if(len > 0){
+                        var target = document.getElementById("noti");
+                        target.innerHTML = "";
+
+                        var swDiv = document.createElement("div");
+                        swDiv.classList.add('swiper');
+                        swDiv.classList.add('mySwiper');
+                        swDiv.classList.add('swiper-container');
+                        swDiv.classList.add('swiper-container-initialized');
+                        swDiv.classList.add('swiper-container-horizontal');
+                        
+                        var swWrap = document.createElement("div");
+                        swWrap.classList.add('swiper-wrapper');
+                        swWrap.style.cssText = 'transform : translate3d(0px, 0px, 0px)';
+                        swDiv.append(swWrap);
+                        target.append(swDiv);
+                        makeSlideByTopMenu(obj.boardList);
+                    }else{
+                        var target = document.getElementById("noti");
+                        target.innerHTML = "";
+                        var noItemText = "<spring:message code = 'ezNewPortal.topMenu.newBoardItem' />";
+                        var div = document.createElement("div");
+                        div.id = "noItemArea";
+                        div.innerText = noItemText;
+                        target.append(noItemText);
+                    }
+                } else {
+                    var target = document.getElementById("noti");
+                    target.innerHTML = "";
+                    var noItemText = "<spring:message code = 'ezNewPortal.topMenu.newBoardItem' />";
+                    var div = document.createElement("div");
+                    div.id = "noItemArea";
+                    div.innerText = noItemText;
+                    target.append(noItemText);
+                }
+            },
+            error : function(e){
+                var target = document.getElementById("noti");
+                target.innerHTML = "";
+                var noItemText = "<spring:message code = 'ezNewPortal.topMenu.newBoardItem' />";
+                var div = document.createElement("div");
+                div.id = "noItemArea";
+                div.innerText = noItemText;
+                target.append(noItemText);
+                console.log(e)
+            }
+        });
+    }
+
+    var makeSlideByTopMenu = function (bList) {
+        var noidDiv = document.getElementById('noti');
+        var wrapper = noidDiv.querySelector(".swiper-wrapper");
+
+        var max = bList.length;
+        for (var i = 0; i < max; i++) {
+            const board = bList[i];
+            const slide = document.createElement('div');
+            slide.classList.add('swiper-slide');
+            if (i===0) {
+                slide.classList.add('swiper-slide-active');
+            } else {
+                slide.classList.add('swiper-slide-next');
+            }
+            wrapper.appendChild(slide);
+            const divText = document.createElement('div');
+            divText.classList.add('swiper_txt');
+            slide.appendChild(divText);
+            var textNode = document.createTextNode(board.title);
+            divText.appendChild(textNode);
+        }
+
+        wrapper.addEventListener("click", function (event) {
+            if (!event.target.closest('.swiper-slide')) return;
+            var index = event.target.closest('.swiper-slide').getAttribute('data-swiper-slide-index');
+            openBoard(bList[index].itemID,bList[index].guBun,bList[index].boardID);
+        });
+        
+        makeSwiperByTopMenu();
+    }
+
+    var makeSwiperByTopMenu = function () {
+        var swiper = new Swiper(".mySwiper", {
+            loop: true,
+            autoplay: {
+                delay: 5000,
+                disableOnInteraction: false,
+            }
+        });
+    }
+
+    function getCookie(Name) {
+        var search = Name + "="
+        if (document.cookie.length > 0) { // 쿠키가 설정되어 있다면
+            offset = document.cookie.indexOf(search)
+
+            if (offset != -1) { // 쿠키가 존재하면
+                offset += search.length
+                // set index of beginning of value
+                end = document.cookie.indexOf(";", offset);
+                // 쿠키 값의 마지막 위치 인덱스 번호 설정
+                if (end == -1)
+                    end = document.cookie.length
+                return unescape(document.cookie.substring(offset, end))
+            }
+        }
+    }
+
+    // 고정포틀릿 on/off
+    function displayFixPortlet() {
+        var onOff = document.getElementById("portal_set").checked;
+        var fixArea = document.getElementById("fixBoardArea");
+        
+        if (onOff) {
+            fixArea.classList.add("hidden");
+        } else {
+            fixArea.classList.remove("hidden");
+        }
+    }
 </script>
 <!-- 협업 시작-->
 <c:if test="${useEzWorkspace}">
-    <script type="text/javascript" src="${workspaceContextRootUrl}/ezWorkspace/Scripts/moment.min.js"></script>
-    <script type="text/javascript" src="${workspaceContextRootUrl}/ezWorkspace/Scripts/Groupwareapi.js"></script>
+    <script type="text/javascript" src="${workspaceContextRootUrl}/Scripts/moment.min.js"></script>
+    <script type="text/javascript" src="${workspaceContextRootUrl}/Scripts/Groupwareapi.js"></script>
     <script type="text/javascript">
 	    var g_UserID = "${userId}"; // GW 사용자 Id, 가온누리 Java버전엔 이미 선언되어 있음
 	    /* var WorkspaceUrl = "${workspaceHostUrl}"; // 협업이 그룹웨어와 별도의 Url로 서비스 되는 경우에만 설정
@@ -1005,7 +779,7 @@
 	    var g_bEzWorkspaceJava = true; // 협업 자바버전 변경을 위한 변수
 	    	    
     	ezWorkspaceData(workspaceContextRootUrl);
-    </script>		
+    </script>
 </c:if>	
 <!-- 협업 끝 -->	
 	</body>

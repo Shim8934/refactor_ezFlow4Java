@@ -6,16 +6,21 @@
 <html>
 <head>
 </head>
+<script type="text/javascript">
+    $(function() {
+        var portletName = "<c:out value='${portletName }'/>";
+        var portletId = "<c:out value='${resPortletId}'/>";
+        ellipsisTitle(portletName, portletId);
+    });
+</script>
 <body>
 <article class="resources_portlet box_shadow">
     <div class="layDIV">
         <dl class="portlet_title sortablePortlet">
-            <dt class="portletText"><spring:message code="main.t00034"/></dt>
-            <dd class="portletPlus" id="resourcePlus"><img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png"></dd>
-            <dd class="resources_setting" id="resourceSetting" style="<c:if test='${usedTheme == 3}'>display:none;</c:if>">
-            	<img src="/images/ezNewPortal/resources_setting.png">
-            </dd>
-            <dd class="resources_calendal" style="<c:if test='${usedTheme == 3}'>display:none;</c:if>">
+            <dt class="portletText"></dt>
+            <dd class="portletPlus plus" id="resourcePlus"></dd>
+            <dd class="portletPlus setting" id="resourceSetting"></dd>
+            <dd class="resources_calendal">
                 <input type="text" class="DatePicker_class" name="Datepicker_name" id="Sdatepicker" style="padding-right:18px;" size="10" readonly="readonly">
             </dd>
         </dl>
@@ -33,57 +38,8 @@
 		<IMG align="absmiddle" border="0" height="16" id="img_StartTime" src="/images/arr_right.gif" style="CURSOR: hand; POSITION: relative; display:none;" width="16">
 
 
-<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}"/>
-<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}"/>
-<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
-<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
-<script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>
 <script>
-	var dSun = "<spring:message code='main.t0621' />";
-	var dMon = "<spring:message code='main.t0622' />";
-	var dTue = "<spring:message code='main.t0623' />";
-	var dWed = "<spring:message code='main.t0624' />";
-	var dThu = "<spring:message code='main.t0625' />";
-	var dFri = "<spring:message code='main.t0626' />";
-	var dSat = "<spring:message code='main.t0627' />";
 	
-	$("#Sdatepicker").datepicker({
-		changeMonth: true,
-		changeYear: true,
-		autoSize: true,
-		showOn: "both",
-		buttonImage: "/images/ezNewPortal/calIcon.png",
-		buttonImageOnly: true
-	});
-	
-	
-	var SDate = new Date();
-	$("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
-	$("#Sdatepicker").datepicker('setDate', SDate);
-
-	$.datepicker.regional[messages.strLang602] = {
-		closeText: messages.strLang601,
-		prevText: messages.strLang599,
-		nextText: messages.strLang600,
-		currentText: messages.strLang598,
-		monthNames: [messages.strLang586, messages.strLang587, messages.strLang588, messages.strLang589, messages.strLang590, messages.strLang591, messages.strLang592, messages.strLang593, messages.strLang594, messages.strLang595, messages.strLang596, messages.strLang597],
-		monthNamesShort: [messages.strLang586, messages.strLang587, messages.strLang588, messages.strLang589, messages.strLang590, messages.strLang591, messages.strLang592, messages.strLang593, messages.strLang594, messages.strLang595, messages.strLang596, messages.strLang597],
-		dayNames: [dSun, dMon, dTue, dWed, dThu, dFri, dSat],
-		dayNamesShort: [dSun, dMon, dTue, dWed, dThu, dFri, dSat],
-		dayNamesMin: [dSun, dMon, dTue, dWed, dThu, dFri, dSat],
-		weekHeader: "Wk",
-		dateFormat: "yy-mm-dd",
-		firstDay: 0,
-		isRTL: false,
-		duration: 200,
-		showAnim: "show",
-		showMonthAfterYear: true,
-		onSelect: function(dateText, inst) {
-			var date = $(this).val();
-			getPersPortlet();
-		}
-	};
-	$.datepicker.setDefaults($.datepicker.regional[messages.strLang602]);
 </script>
 </body>
 </html>

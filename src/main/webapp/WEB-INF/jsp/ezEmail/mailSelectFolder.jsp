@@ -6,7 +6,8 @@
 	<head>
 	    <title><spring:message code='ezEmail.t169' /></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	    <link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+	    <link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
 	    <script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -23,6 +24,7 @@
 	        var retVal = new Array();
 	        retVal["isFolderChanged"] = false;
 	        var shareId = "${shareId}";
+			var treeconfig = "";
 	        
 	        document.onselectstart = function () {
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -105,7 +107,16 @@
 	                alert("<spring:message code='ezEmail.t158' />");
 	                return;
 	            }
-	            inputNameDlg_cross_dialogArguments[0] = "";
+				
+				// 폴더 뎁스 레벨
+				var folderUrl = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
+
+				if (folderUrl.split(".").length > 5) {
+					alert("<spring:message code='ezEmail.ksaMailBox01' />");
+					return;
+				}
+
+				inputNameDlg_cross_dialogArguments[0] = "";
 	            inputNameDlg_cross_dialogArguments[1] = add_onclick_Complete;
 	            inputNameDlg_cross_dialogArguments[2] = DivPopUpHidden_sub;
 	            DivPopUpShow_sub(330, 150, "/ezEmail/inputNameDlg.do");
@@ -132,7 +143,8 @@
 	            
 	            var childxml = get_childXML(PostTreeView.getvalue(PostTreeView.selectedIndex(), "href"), false, false, false);
                 PostTreeView.putchildxml(PostTreeView.selectedIndex(), childxml);
-                
+
+				LoadAddressTree(PostTreeView.selectedIndex());
                 retVal["isFolderChanged"] = true;
 	        }
 	        
@@ -141,6 +153,12 @@
 	            PostTreeView.source("<tree><nodes>" + get_childXML("", true, false, false) + "</nodes></tree>");
 	            PostTreeView.update();
 	            PostTreeView.toggle(SelectIndex);
+
+				if (typeof getAllSubTree === 'undefined' || getAllSubTree === false) {
+					getAllSubTree = true;
+				}
+				var openTree = document.getElementById('toggleTreeNode')
+				openTree.className = openTree.className.replace('on', 'off');
 	        }
 
 	        function ReplaceText(orgStr, findStr, replaceStr) {
@@ -157,9 +175,13 @@
 	            <li><span onclick="Window_Close()"></span></li>
 	        </ul>
 	    </div>
-	    <table class="popuplist" style="width: 100%;">
+		<table class="popuplist" style="width:100%;margin-top:5px; height: 100%">
 	        <tr>
 	            <td>
+					<div onclick="toggleTreeNode(false)" class="toggleTreeNode off" id="toggleTreeNode">
+						<span class="treeNode_toggle_icon"></span>
+						<spring:message code='ezEmail.kdh06' />
+					</div>
 	                <div style="border: 0px solid #ddd; behavior: url(/js/ezEmail/Controls/treeview.htc); height: 235px; width: 100%; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF; padding-left: 4px; padding-top: 5px;" id="PostTreeView" onrequestdata="requestdata()">
 	                </div>
 	            </td>
@@ -169,7 +191,11 @@
 	    	<a class="imgbtn"><span onclick="add_onclick()"><spring:message code='ezEmail.t308' /></span></a>
         	<a class="imgbtn"><span onclick="btn_Select_onclick()"><spring:message code='ezEmail.t38' /></span></a>
         </div>	
+		
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel_sub">&nbsp;</div>
+		<div style="border:0px solid red;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="MailProgress">
+			<img src="/images/email/progress_img.gif" style="vertical-align:middle;"/>
+		</div>
 	    <div class="layerpopup" style="z-index: 2000; position: absolute; display: none;" id="iFramePanel_sub">
 	        <iframe src="<spring:message code='main.kms4' />" style="border: none;" id="iFrameLayer_sub"></iframe>
 	    </div>

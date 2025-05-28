@@ -6,7 +6,8 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	    <link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
         <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
         <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
         <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -35,6 +36,12 @@
 			    parentwin = RetValue;
 			    
 			    showDateType();
+			    
+			    var checks2 = document.getElementById("receivelist").getElementsByTagName("input");
+				if( checks2.length == 0)	{
+					alert("<spring:message code='ezSchedule.mail.hth34'/>");
+					window.close();
+				}
 			}
 	
 			function accept_schedule(status)
@@ -56,7 +63,8 @@
 					    data.dateType = GetAttribute(checks.item(i).parentElement.parentElement.lastElementChild, 'dateType');
 					    data.startDate = GetAttribute(checks.item(i).parentElement.parentElement.lastElementChild, 'startdate');
 					    data.endDate = GetAttribute(checks.item(i).parentElement.parentElement.lastElementChild, 'enddate');
-					    
+					    data.showtop = GetAttribute(checks.item(i).parentElement.parentElement.lastElementChild, 'showtop');
+					    data.repetition = GetAttribute(checks.item(i).parentElement.parentElement.lastElementChild, 'repetition');
 					    creatorList.push(data);
 					}
 				}
@@ -109,10 +117,14 @@
 				});
 				var checks2 = document.getElementById("receivelist").getElementsByTagName("input");
 				if( checks2.length==0 )	{
-					ReturnFunction("success");
+					if (ReturnFunction != null) {
+						ReturnFunction("success");
+					}
+					
 					window.close();
 				}
-				if(parent.parent.frames["right"].groupcount == "0") {
+				
+				if(parent.parent.frames["right"].groupcount != null && parent.parent.frames["right"].groupcount == "0") {
 					parent.parent.frames["left"].document.body.removeAttribute('style');
 				}
 			}
@@ -126,7 +138,10 @@
 					
 					ReturnFunction("cancel");
 					window.close();
+				} else {
+					window.close();
 				}
+				
 			}
 			
 // 			window.onbeforeunload = function () {
@@ -140,6 +155,7 @@
 					var dateType = $( this ).attr('dateType');
 					var startDate = $( this ).attr('startDate');
 					var endDate = $( this ).attr('endDate');
+					var showtop = $( this ).attr('showtop');
 					var timeString = "";
 					switch (dateType) {
 						case "1":
@@ -376,6 +392,13 @@
 		        window.open("/ezSchedule/scheduleRead.do?id=" + encodeURIComponent(scheduleid) + "&isReceive=" + encodeURIComponent(isReceive), "",
 					"height = 670px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		    }
+			
+			function show_personinfo(userid) {
+		        var feature = GetOpenPosition(420, 450);
+		        window.open("/ezCommon/showPersonInfo.do?id=" + userid, "",
+				    "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		    }
+			
 		</script>
 	</head>
 	
@@ -389,7 +412,7 @@
 	            </ul>
 	        </div> 
 	
-	        <div id="receivelist" style="OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:100%; HEIGHT:370px"> 
+	        <div id="receivelist" style="OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:100%;">
 	            <table class="popuplist" style="WIDTH: 100%">
 	                <tr>
 	                    <th style="white-space:nowrap; text-align:center; width:20px"><spring:message code='ezSchedule.t190' /></th> 
@@ -403,8 +426,15 @@
 	              	<tr> 
 	                    <td style="text-align:center">
 	                    	<input type='checkbox' value="1" scheduleid='${item.scheduleId}' creatorId='${item.creatorId}' creatorName='${item.creatorName}' />
-	                    </td> 
-	                    <td title="<spring:message code='ezSchedule.t162' />" style="cursor:pointer; text-align:center;" onClick="parentwin.show_personinfo('${item.creatorId}')">
+	                    </td>
+	                    <c:choose>
+	                    	<c:when test = "${from == 'mail'}">
+	                    	<td title="<spring:message code='ezSchedule.t162' />" style="cursor:pointer; text-align:center;" onClick="show_personinfo('${item.creatorId}')">
+	                    	</c:when>
+	                    	<c:otherwise>
+	                    	<td title="<spring:message code='ezSchedule.t162' />" style="cursor:pointer; text-align:center;" onClick="parentwin.show_personinfo('${item.creatorId}')">
+	                    	</c:otherwise>
+	                    </c:choose>
 	                    	<c:if test="${userInfo.primary == '1'}">${item.creatorName}</c:if>
 	                    	<c:if test="${userInfo.primary != '1'}">${item.creatorName2}</c:if>	                    
 	                    </td> 
@@ -414,7 +444,7 @@
 	                    </td> 
 	                    <td style="text-align:center;"><c:out value="${item.location }" /></td> 
 	                    <td title="<spring:message code='ezSchedule.t342' />" style="word-break:break-all; cursor:pointer; text-overflow:ellipsis; overflow:hidden; text-align:center;" onClick="open_schedule_in_receiveAttendant('${item.scheduleId}', 'Y')"><c:out value="${item.title}" /></td> 
-	                    <td class="showDateType" style="white-space:nowrap; text-align:center;" startDate="${item.startDate}" endDate="${item.endDate}" dateType="${item.dateType}" repetition="${item.repetition}"></td> 
+	                    <td class="showDateType" style="white-space:nowrap; text-align:center;" startDate="${item.startDate}" endDate="${item.endDate}" dateType="${item.dateType}" repetition="${item.repetition}" showtop="${item.showtop}"></td>
 	                </tr>	              		
 	              	</c:forEach>	                 
 	            </table>

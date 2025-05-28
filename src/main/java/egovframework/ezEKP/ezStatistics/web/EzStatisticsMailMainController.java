@@ -66,19 +66,9 @@ public class EzStatisticsMailMainController {
 		
 		if (user == null) {
 			return "cmm/error/adminDenied";
-		}		
-				
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(user.getPrimary(), user.getTenantId());
-		
-		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-		
-		for (int i = 0 ; i < list.size() ; i++) {
-			OrganDeptVO vo = list.get(i);
-			
-			if (user.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(user.getCompanyID())) {
-				resultList.add(vo);
-			}
 		}
+
+		List<OrganDeptVO> resultList = ezOrganAdminService.getAdminCompanyList(user.getId(), user.getTenantId(), user.getPrimary(), user.getDeptID(), user.getJobId());
 		
 		model.addAttribute("list", resultList);
 		model.addAttribute("userCompany", user.getCompanyID());

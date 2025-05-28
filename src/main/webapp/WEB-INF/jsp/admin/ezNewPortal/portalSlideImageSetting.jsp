@@ -7,7 +7,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title><spring:message code='ezNewPortal.t104' /></title>
-<link rel="stylesheet"  href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css">
+<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 
 <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery-ui.min.js')}"></script>
@@ -25,7 +26,7 @@
 .theme {position:relative;background-color : white; width : 390px; height : 270px; text-align : center; border: 1px solid #cecece; cursor: pointer;}
 .themeHr {margin-top : 10px;width : 85%;margin-left : 30px;}
 .themeTitle {margin-top : 9px;}
-.themeName {margin-left : 10px;font-size : 14px;font-weight : bold;}
+.themeName {margin-left : 5px;font-size : 14px;font-weight : bold; display:inline-block; white-space:normal; overflow-y:auto; max-width:325px; height:24px; word-wrap:break-word;}
 .hideDetails {display : none;}
 .showDetails {display : block;}
 .close {margin-top : 6px;}
@@ -75,10 +76,10 @@ dd {margin : 20px; padding: 0px; font-size: 13px; color: #c0c0c0; font-weight: b
 					<tbody>
 						<tr>
 							<th><spring:message code='ezNewPortal.t107' /></th>
-							<td><input type="text" id="imageUrl" style="width: 100%"></td>
+							<td><input type="text" id="imageUrl" style="width: 100%" tabindex="1"></td>
 						</tr>
 						<tr>
-							<th><a class="imgbtn"><span onclick="ImageUploadBtn()"><spring:message code='ezNewPortal.t108' /></span></a>
+							<th><a class="imgbtn" tabindex="2"><span onclick="ImageUploadBtn()"><spring:message code='ezNewPortal.t108' /></span></a>
 							</th>
 							<td id="tdNormalImage">
 								<img id="UploadSliderImage" src="" onload="imgdisplay()" style="width:100%; height: 100%; display: none">
@@ -155,7 +156,7 @@ var getSlideImage = function () {
 					if (item.url == null || item.url == "") {
 						slideImageHTML += "<span class='themeName'>url : <spring:message code='ezNewPortal.t089'/></span>";
 					} else {
-						slideImageHTML += "<span class='themeName'>url : " + item.url + "</span>";
+						slideImageHTML += "<span class='themeName'>url : </span><span class='themeName'>" + item.url + "</span></span>";
 					}
 					slideImageHTML += "</div></div></div>";
 					slideImageHTML += "</li>";

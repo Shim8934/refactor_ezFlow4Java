@@ -8,7 +8,8 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>${vo.title}</title>
-	<link rel="stylesheet" href="${util.addVer('ezLadder.e2', 'msg')}" type="text/css">
+	<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 	<link rel="stylesheet" href="${util.addVer('/css/ezLadder/ladder_CSS.css')}" type="text/css">
 	<link rel="stylesheet" href="${util.addVer('/css/ezPoll/vote.css')}" type="text/css">
 	<link rel="stylesheet" href="${util.addVer('/css/ezLadder/ladderPreList.css')}" type="text/css">

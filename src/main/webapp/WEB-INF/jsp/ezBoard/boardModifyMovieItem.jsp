@@ -35,7 +35,8 @@
 	         	vertical-align:middle;
 	         }  
 	    </style>
-        <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
+        <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+        <link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
         <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezBoard/AttachMain_CK.js')}"></script>
@@ -54,6 +55,10 @@
 	        var pGubun = "${guBun}";
 	        var pNoneActiveX = "YES";
 	        var isAllGroupBoard = "${boardInfo.isAllGroupBoard}";
+	        var addThumbnail = "${addThumbnail}";
+	        var thumbnailExt = "${thumbnailExt}";
+	        var movieUrl = "${movieUrl}";
+	        var isChange = false;
 	        
 	        function window_onload() {
 	            var ua = navigator.userAgent;
@@ -72,6 +77,7 @@
 	        
 	        function MovieTemp_onclick() {
 	        	if (document.form.file1.value != "") {
+	        		isChange = true;
 	        		var fd = new FormData();
 	        		var file1val = document.getElementById("file1").files[0].name;
 	        		var exIndex = file1val.lastIndexOf('.');
@@ -95,6 +101,10 @@
 	        }
 	        
 	        function btn_MovieSave() {
+	        	if (!isChange) {
+	        		alert("<spring:message code ='ezBoard.thumbnail.kwc008'/>");
+	        		return;
+	        	}
 				pFlag = "Y"; // 동영상게시물은 무조건 메인플래그 사용(썸네일 이미지가 하나이므로)
                 var nodes;
                 var rtnMode;
@@ -120,20 +130,23 @@
                     }
                 }
                 
-                // 저장조건체크 이후, 동영상에서 썸네일 추출하여 업로드 (동기적으로 사용하므로 false 처리)
-	            var fd2 = new FormData();
-		        var thumbnail = makeThumbnail("mainVideo");
-		        fd2.append("thumbnail", thumbnail);
-		        
-		        xhr2 = new XMLHttpRequest();
-	            xhr2.open("POST", "/ezBoard/boardMovieThumb.do?thumbnailID=" + encodeURIComponent(movieFileName) + "&fileLimit=" + AttachLimit, false);
-	            xhr2.send(fd2);
+                if (addThumbnail == "N") {
+                	// 저장조건체크 이후, 동영상에서 썸네일 추출하여 업로드 (동기적으로 사용하므로 false 처리)
+    	            var fd2 = new FormData();
+    		        var thumbnail = makeThumbnail("mainVideo");
+    		        fd2.append("thumbnail", thumbnail);
+    		        
+    		        xhr2 = new XMLHttpRequest();
+    	            xhr2.open("POST", "/ezBoard/boardMovieThumb.do?thumbnailID=" + encodeURIComponent(movieFileName) + "&fileLimit=" + AttachLimit + "&isThumbnailUp=" + addThumbnail, false);
+    	            xhr2.send(fd2);
+                }
 	            
                 var strXML = "";
                 strXML = "<DATA>";
                 strXML += "<NODE>";
                 strXML += "<IMAGEID>" + movieID + "</IMAGEID>"; // 기존 IMAGEID(movieID)를 조건으로 걸어 PHOTO테이블 업데이트
                 strXML += "<BOARDID>" + pBoardID + "</BOARDID>";
+                strXML += "<ITEMID>" + pItemID + "</ITEMID>";
                 if (moviePath == undefined) {
                     strXML += "<FILEPATH></FILEPATH>";
                 }
@@ -144,6 +157,9 @@
                 strXML += "<MAINFG>" + pFlag + "</MAINFG>";
                 strXML += "<ITEMID>" + pItemID + "</ITEMID>";
                 strXML += "<OFILENAME>" + orgFileName + "</OFILENAME>";
+                strXML += "<ADDTHUMBNAIL>" + addThumbnail + "</ADDTHUMBNAIL>";
+                strXML += "<EXT>" + thumbnailExt + "</EXT>";
+                strXML += "<ORGTHUMB>" + movieUrl.split("/")[7] + "</ORGTHUMB>";
                 strXML += "</NODE>";
                 strXML += "</DATA>";
 
@@ -154,15 +170,16 @@
                 xmldom.preserveWhiteSpace = true;
                 xmldom = loadXMLString(strXML);
 
-                xmlhttp.open("POST", "/ezBoard/deleteImageItem.do?mod=" + pMod + "&gubun=" + pGubun, false);
+                xmlhttp.open("POST", "/ezBoard/deleteImageItem.do?mod=" + pMod + "&gubun=" + pGubun + "&modifyMovie=Y", false);
                 xmlhttp.send(xmldom);
 
                 if (xmlhttp.responseText == "OK") {
-                	sendBoardAlertMail("modify", pBoardID, pItemID, isAllGroupBoard); // 창이 닫히기 전 지연 시간이 필요하므로 alert 이전에 동작시킴
+                	sendBoardAlert("modify", pBoardID, pItemID, isAllGroupBoard); // 창이 닫히기 전 지연 시간이 필요하므로 alert 이전에 동작시킴
                 	
                     alert("<spring:message code='ezBoard.hsb08'/>");
                     
                     window.opener.window_reload();
+                    window.opener.opener.getBoardList();
                     window.close();
                 }
                 else {
@@ -194,7 +211,7 @@
 	        
 	        /* 2018-11-05 홍승비 - HTML5 지원 동영상파일 확장자체크 추가 */
 		    function compareExtension(check, extension) {
-	    		var filterExtension = new Array("mp4", "ogg", "webm");
+	    		var filterExtension = new Array("mp4", "webm");
 	    		for (var i = 0; i < filterExtension.length; i++) {
 	        		if (extension.toLowerCase() == filterExtension[i]) {
 	            		check = true;
@@ -208,21 +225,21 @@
 		    function makeThumbnail(videoID) {
 			    var canvas = document.createElement("CANVAS");
 			    var video = document.getElementById(videoID);
-			 	// 썸네일 이미지의 크기는 71.4px * 50px
-			 	canvas.width = 71.4;
-			 	canvas.height = 50;
-			    canvas.getContext("2d").drawImage(video, 0, 0, 71.4, 50);
+			 	// 썸네일 이미지의 크기는 200px * 160px
+			 	canvas.width = 200;
+			 	canvas.height = 160;
+			    canvas.getContext("2d").drawImage(video, 0, 0, 200, 160);
 			    
 			 	return canvas.toDataURL();
 			}
 		    
 		    /* 2021-06-22 홍승비 - 게시판 메일알림 함수 추가, 비동기로 백그라운드 동작 */
-	        function sendBoardAlertMail(pMode, pBoardID, pItemID, pIsAllGroupBoard) {
+	        function sendBoardAlert(pMode, pBoardID, pItemID, pIsAllGroupBoard) {
 		        $.ajax({
 					type : "POST",
 					dataType : "text",
 					async : true,
-					url : "/ezBoard/sendBoardAlertMail.do",
+					url : "/ezBoard/sendBoardAlert.do",
 					data : {
 						mode : pMode,
 						boardID : pBoardID,

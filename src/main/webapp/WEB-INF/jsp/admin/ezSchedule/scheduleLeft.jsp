@@ -7,7 +7,8 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>left_schedule</title>
-		<link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
 		<style>
 			#mCSB_1_container {
@@ -51,7 +52,16 @@
 				        break;   
 				    case 6: 
 				        url = "/admin/ezSchedule/scheduleAdminGroupTab.do";
-				        break;  
+				        break; 
+				    case 7:
+				    	url = "/admin/ezSchedule/scheduleReminderSetting.do";
+				    	break;
+					case 8:
+						url = "/admin/ezSchedule/scheduleAdminExecutiveManage.do"
+						break;
+					case 9:
+					    url = "/admin/ezSchedule/scheduleAdminCompanySchedule.do";
+					    break;
 				}			
 				window.open(url,"right");
 				
@@ -83,13 +93,16 @@
 		<div id="left" class="lnb" style="overflow: auto">
   			<div class="admin_left_title" title="<spring:message code='ezSchedule.t14' />"><spring:message code='ezSchedule.t1010' /></div> 
   			<div class="adminListBox" style="overflow:hidden; padding-right: 0;">
-	  			<h2 class="on"><span style="display:inline-block;width:100%;" onClick="goPage(2)"><spring:message code='ezSchedule.t36' /></span></h2>
-	  			<h2><span style="display:inline-block;width:100%;" onClick="goPage(3)"><spring:message code='ezSchedule.t4003' /></span></h2>
+	  			<h2 class="on"><span class="h2Title" style="display:inline-block;width:100%;" onClick="goPage(2)"><spring:message code='ezSchedule.t36' /></span></h2>
+	  			<h2><span class="h2Title" style="display:inline-block;width:100%;" onClick="goPage(3)"><spring:message code='ezSchedule.t4003' /></span></h2>
 	  			<c:if test="${lang != 3}">
-		  			<h2><span style="display:inline-block;width:100%;" onClick="goPage(4)"><spring:message code='ezSchedule.t6000' /></span></h2>
+		  			<h2><span class="h2Title" style="display:inline-block;width:100%;" onClick="goPage(4)"><spring:message code='ezSchedule.t6000' /></span></h2>
 	  			</c:if>
-	  			<h2><span style="display:inline-block;width:100%;" onClick="goPage(5)"><spring:message code='ezSchedule.t9990007' /></span></h2>
-	  			<h2><span style="display:inline-block;width:100%;" onClick="goPage(6)"><spring:message code='ezSchedule.shb12' /></span></h2>
+	  			<h2><span class="h2Title" style="display:inline-block;width:100%;" onClick="goPage(5)"><spring:message code='ezSchedule.t9990007' /></span></h2>
+	  			<h2><span class="h2Title" style="display:inline-block;width:100%;" onClick="goPage(6)"><spring:message code='ezSchedule.shb12' /></span></h2>
+	  			<h2><span class="h2Title" style="display:inline-block;width:100%;" onClick="goPage(7)"><spring:message code='ezSchedule.admin.hth10' /></span></h2>
+				<h2><span class="h2Title" style="display:inline-block;width:100%;" onClick="goPage(8)"><spring:message code='ezSchedule.lyj01' /></span></h2>
+				<h2><span class="h2Title" style="display:inline-block;width:100%;" onClick="goPage(9)"><spring:message code='ezSchedule.companySc01' /></span></h2>
   			</div>
 		</div>
 	</body>

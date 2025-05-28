@@ -1,6 +1,7 @@
 package egovframework.ezMobile.ezResource.web;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +30,7 @@ import com.ibm.icu.util.Calendar;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezNotification.service.EzNotificationService;
 import egovframework.ezEKP.ezResource.service.EzResourceService;
 import egovframework.ezEKP.ezResource.vo.ResAdminVO;
 import egovframework.ezEKP.ezResource.vo.ResBrdVO;
@@ -79,6 +81,9 @@ public class MResourceGWController extends EgovFileMngUtil {
 	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
+	
+	@Resource(name="EzNotificationService")
+	private EzNotificationService ezNotificationService;
 	
 	/**
 	 * 모바일 G/W 자원관리 [get] 자원예약리스트조회
@@ -562,8 +567,31 @@ public class MResourceGWController extends EgovFileMngUtil {
 				approveFlag =  "0";
 			}
 			
-	    	mResourceService.addResSch(ownerId, companyId, tenantId, pNum, writerId, deptNm, ownerNm, title, location, timeDisplay, utcStartDate, utcEndDate, allDay, alterTime, content, importance, writeDay, entryList, attachFlag, approveFlag, reFlag, scheduleId);
-
+	    	int num = mResourceService.addResSch(ownerId, companyId, tenantId, pNum, writerId, deptNm, ownerNm, title, location, timeDisplay, utcStartDate, utcEndDate, allDay, alterTime, content, importance, writeDay, entryList, attachFlag, approveFlag, reFlag, scheduleId);
+	    	
+	    	if (startDate.length() == 16) {
+	    		startDate += ":00";
+	    	}
+	    	
+	    	if (endDate.length() == 16) {
+	    		endDate += ":00";
+	    	}
+	    	
+	    	String linkUrl = "/ezResource/scheduleRead.do?cmd=mod&from=schedule&num=" + num + "&ownerID=" + ownerId + "&type=Master&startDate=" + startDate.substring(0,10) + "&endDate=" + endDate.substring(0,10);
+	    	String linkUrlMobile = "/mobile/ezResource/SearchResSchDetail.do?ownerId=" + ownerId + "&num=" + num + "&startDate=" + startDate.substring(0,19) + "&endDate=" + endDate.substring(0,19) + "&type=" + "res";
+	    	List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
+	    	
+	    	String[] managerArray = resVO.getManagerIds().split(",");
+	    	
+	    	for (String manager : managerArray) {
+	    		Map<String, Object> recipientMap = new HashMap<String, Object>();
+	    		recipientMap.put("userType", "PERSON");
+	    		recipientMap.put("companyId", info.getCompanyId());
+	    		recipientMap.put("cn", manager);
+	    		notiRecipientList.add(recipientMap);
+	    	}
+	    	
+	    	ezNotificationService.sendNoti(request, userId, info.getUserName(), notiRecipientList, "RESOURCE", "RESERVE", resVO.getBrdNm() + " - " + title, "popup", "760", "750", linkUrl, linkUrlMobile, "notChkSetting");	    	
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", "");	
@@ -957,6 +985,11 @@ public class MResourceGWController extends EgovFileMngUtil {
 			String serverName = request.getHeader("x-user-host");
 			String userId = jsonObject.get("userId").toString();
 			String approve = jsonObject.get("approveType").toString();
+			String ownerId = jsonObject.get("ownerId").toString();
+			String startDate = jsonObject.get("startDate").toString();
+			String endDate = jsonObject.get("endDate").toString();
+			String num = request.getParameter("num");
+			String title = jsonObject.get("title").toString();
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			
 			logger.debug("resourceId: " + resourceId);
@@ -965,7 +998,40 @@ public class MResourceGWController extends EgovFileMngUtil {
 	    	logger.debug("approve: " + approve);
 			
 			ezResourceService.updateSchedule(Integer.parseInt(scheduleId), resourceId, info.getCompanyId(), approve, info.getTenantId());
-
+			
+			if (startDate.length() == 16) {
+	    		startDate += ":00";
+	    	}
+	    	
+	    	if (endDate.length() == 16) {
+	    		endDate += ":00";
+	    	}
+	    	MResourceScheduleVO resVO = mResourceService.getResScheduleDetail(resourceId, scheduleId, info.getCompanyId(), info.getTenantId(), info.getLang());
+	    	String linkUrl = "/ezResource/scheduleRead.do?cmd=mod&from=schedule&num=" + num + "&ownerID=" + ownerId + "&type=Master&startDate=" + startDate.substring(0,10) + "&endDate=" + endDate.substring(0,10);
+	    	String linkUrlMobile = "/mobile/ezResource/SearchResSchDetail.do?ownerId=" + ownerId + "&num=" + num + "&startDate=" + startDate.substring(0,19) + "&endDate=" + endDate.substring(0,19) + "&type=" + "res";
+	    	
+	    	String notiSubType = "";
+	    	switch (approve) {
+			case "0":
+				notiSubType = "CANCEL";
+				break;
+			case "1":
+				notiSubType = "APPROVE";
+				break;
+			case "2":
+				notiSubType = "REJECT";
+				break;
+			}
+	    	
+	    	List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
+			Map<String, Object> recipientMap = new HashMap<String, Object>();
+			recipientMap.put("userType", "PERSON");
+			recipientMap.put("companyId", info.getCompanyId());
+			recipientMap.put("cn", resVO.getWriterId());
+			notiRecipientList.add(recipientMap);
+			
+	    	ezNotificationService.sendNoti(request, userId, info.getUserName(), notiRecipientList, "RESOURCE", notiSubType, resVO.getBrdNm() + " - " + title, "popup", "760", "750", linkUrl, linkUrlMobile, "");	    	
+			
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", "");

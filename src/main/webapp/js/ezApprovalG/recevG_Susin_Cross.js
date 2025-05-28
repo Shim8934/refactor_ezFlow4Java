@@ -57,7 +57,7 @@ function setPublicFlag2() {
     var PublicType = pPublicityYN.substring(0, 1);
 
     var PublicText = "";
-    if (PublicType == "Y")
+    if (PublicType == "Y" || PublicType == "B")
         PublicText = strLang82;
     else if (PublicType == "N")
         PublicText = strLang84;
@@ -1197,12 +1197,12 @@ function SendDraftMappingSign(ret) {
                 }
                 sn = LastSignNo;
             }
-        } else {
-        	if (LastSignSN == 1 || CurAprType == strAprType4 || CurAprType == strAprType16) 
-        	{
-        		OpinionText = getSignDate() + "<br>";
-        	}
         }
+        
+        /* 2023-11-22 홍승비 - 전자결재 일반버전에서도 접수기안자의 최종결재가 가능하므로, 서명일자 관련 분기 분리 (내부기안 js와 동일 스펙) */
+    	if (LastSignSN == 1 || CurAprType == strAprType4 || CurAprType == strAprType16) {
+    		OpinionText = getSignDate() + "<br>";
+    	}
         
         signCnt = 0;
         if (pDraftFlag == "SUSIN" || pDocState == "011") {
@@ -1223,26 +1223,26 @@ function SendDraftMappingSign(ret) {
         var s = CurrentDate[1] + "." + CurrentDate[2];
 
         var field = message.GetListItem(fields, psigncell);
-        var signWidth = field.offsetWidth;
-        var signHeight = field.offsetHeight;
-
-        if (signWidth > signHeight) {
-            signHeight = signHeight - 15;
-            signWidth = signHeight;
-        } else {
-            signWidth = signWidth - 15;
-            sighHeight = signWidth;
-        }
+        var signWidth = 50; // 이미지 서명의 크기를 기본 50으로 고정하므로, 의미없는 사이즈 계산 코드 제거
+        var signHeight = 50;
         
         var field = message.GetListItem(fields, pseumyungdatecell);
-
+        
         if (field) {
             setNodeText(field , s);
-            signWidth = 50;
-            signHeight = 50;
-        } else {  
-	        signWidth = 50;
-	        signHeight = 28;
+            
+            /* 2023-10-06 홍승비 - 서명일자가 TBL_SIGNINFO 테이블에 저장되도록 데이터 추가 (서명일자 필드 존재 시) */
+    		signInfo[signCnt] = pseumyungdatecell;
+    		SignName[signCnt] = pseumyungdatecell;
+    		SignType[signCnt] = "TEXT";
+    		SignContent[signCnt] = s;
+    		signCnt = signCnt + 1;
+        }
+        
+        // 서명일자칸이 존재하지 않는 경우, 서명칸에 서명일자를 함께 표출하기 위해 이미지 서명의 높이를 조정 (최종결재일때만 서명칸에 서명일자를 표출)
+        // 대결/전결 메세지는 서명칸에 표출하므로 이미지 서명의 높이를 조정
+        if ((!field && LastSignSN == 1) || CurAprType == strAprType4 || CurAprType == strAprType16) {
+        	signHeight = 28;
         }
         
         // 결재칸에 부서 추가
@@ -1269,26 +1269,26 @@ function SendDraftMappingSign(ret) {
         if (CurAprType == strAprType16) {
             var field = message.GetListItem(fields, psigncell);
             if (field) {
+            	// 서명일자칸이 존재하는 경우, 서명칸에는 날짜를 표출하지 않음
+    			if (message.GetListItem(fields, pseumyungdatecell)) {
+    			    OpinionText = "<br>";
+    			}
+    			
                 if (ret != "NAME") {
                     strimg = "<img src='" + encodeURI(ret) + "' border=0 embedding='1' ";
                     strimg = strimg + " width=" + signWidth;
                     
-                    if (message.GetListItem(fields, pseumyungdatecell)) {
-                    	signHeight = 28;
-                    }
-                   
                     if (signImageType == "NAME") {
                     	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>" + "<br>" + arr_userinfo[2];
                     } else {
                     	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
                     }
                     
-                    //대결 시 서명 데이트 입력란 없으면 날짜 표시
-					if (!message.GetListItem(fields, pseumyungdatecell)) {
-						 field.innerHTML  = strLang7 + OpinionText + strimg;
-					} else {
-						 field.innerHTML  = strLang7 + strimg;
-					}
+                    field.innerHTML = strLang7 + OpinionText + strimg;
+                    
+                    if (signImageType == "NAME") {
+            			OpinionText = OpinionText + "::" + arr_userinfo[2];
+                    }
 
                     signInfo[signCnt] = psigncell;
                     SignType[signCnt] = "IMAGE";
@@ -1301,6 +1301,7 @@ function SendDraftMappingSign(ret) {
                 else {
                     strimg = "<P style=\"FONT-WEIGHT:900;FONT-SIZE:10pt;FONT-FAMILY:" + strLang9 + "\">" + arr_userinfo[2] + "</P>";
                     field.innerHTML = strLang7 + OpinionText + strimg;
+                    
                     signInfo[signCnt] = psigncell;
                     SignType[signCnt] = "HTML";
                     SignName[signCnt] = psigncell;
@@ -1322,8 +1323,7 @@ function SendDraftMappingSign(ret) {
             }
         }
 
-        if (DekyulFlag && NextAprType == strAprType4)
-        {
+        if (DekyulFlag && NextAprType == strAprType4) {
             var field = message.GetListItem(fields, psigncell);
             if (field) {
                 field.innerHTML = strLangAprType4;
@@ -1340,7 +1340,11 @@ function SendDraftMappingSign(ret) {
         else {
             var field = message.GetListItem(fields, psigncell);
             if (field) {
-                
+            	// 서명일자칸이 존재하는 경우, 서명칸에는 날짜를 표출하지 않음
+    			if (message.GetListItem(fields, pseumyungdatecell)) {
+    			    OpinionText = "<br>";
+    			}
+    			
                 if (ret != "NAME") {
                     strimg = "<img src='" + encodeURI(ret) + "' border=0 embedding='1' ";
                     strimg = strimg + " width=" + signWidth;
@@ -1349,15 +1353,23 @@ function SendDraftMappingSign(ret) {
                     } else {
                     	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
                     }
-
-                    if (message.GetListItem(fields, pseumyungdatecell))
-                        OpinionText = "";
                     
-                    if (CurAprType == strAprType4)
+                    if (CurAprType == strAprType4) { // 전결
                         OpinionText = strLangAprType4 + OpinionText;
-
-                    field.innerHTML = OpinionText + strimg;
-
+                    }
+                    
+					if (OpinionText != "<br>") { // 서명일자 또는 전결 문자가 존재
+                        field.innerHTML = OpinionText + strimg;
+                    }
+                    else { // 서명일자와 전결 문자가 없는 최종결재
+                    	OpinionText = "";
+						field.innerHTML = strimg;
+					}
+					
+					if (signImageType == "NAME") {
+						OpinionText = OpinionText + "::" + arr_userinfo[2];
+			        }
+					
                     signInfo[signCnt] = psigncell;
                     SignType[signCnt] = "IMAGE";
                     SignName[signCnt] = psigncell;
@@ -1370,12 +1382,18 @@ function SendDraftMappingSign(ret) {
                     if (field) {
                         strimg = "<P style=\"FONT-WEIGHT:900;FONT-SIZE:10pt;FONT-FAMILY:" + strLang9 + "\">" + arr_userinfo[2] + "</P>";
                         
-                        if (message.GetListItem(fields, pseumyungdatecell))
-                            OpinionText = "";
-                        
-                        if (CurAprType == strAprType4)
+                        if (CurAprType == strAprType4) {
                             OpinionText = strLangAprType4 + OpinionText;
-                        field.innerHTML = OpinionText + strimg;
+                        }
+                        
+                        if (OpinionText != "<br>") { // 서명일자 또는 전결 문자가 존재
+                        	field.innerHTML = OpinionText + strimg;
+                    	}
+                    	else { // 서명일자와 전결 문자가 없는 최종결재
+                    		OpinionText = "";
+							field.innerHTML = strimg;
+						}
+                        
                         signInfo[signCnt] = psigncell;
                         SignType[signCnt] = "HTML";
                         SignName[signCnt] = psigncell;
@@ -1942,17 +1960,13 @@ function openOpinionUI_New_Complete(ret) {
 	}
 }
 
+var aprattach_cross_dialogArguments = new Array();
 function openFileAttachUI() {
     try {
-        var parameter = pDocID;
-        var url = "../ezAPRATTACH/Aprattach_Cross.aspx";
-        var feature = "status:no;dialogWidth:390px;dialogHeight:285px;edge:sunken;scroll:no"; 
-        var ret = window.showModalDialog(url, parameter, feature);
+        aprattach_cross_dialogArguments[0] = "";
+        aprattach_cross_dialogArguments[1] = "";
 
-        if (ret != "cancel") {
-            setAttachInfo(pDocID, "APR", lstAttachLink);
-        }
-        return ret;
+        DivPopUpShow(800, 610, "/ezApprovalG/aprAttach.do?formID=" + encodeURI(pFormID) + "&docID=" + encodeURI(pDocID) + "&draftFlag=" + pDraftFlag + "&orgCompanyID=" + orgCompanyID + "&ext=" + ext);
     } catch (e) {
         alert("openFileAttachUI : " + e.description);
     }
@@ -2108,7 +2122,9 @@ function SaveDraftDocInfo_susin() {
     		}
     		
     		// 분리첨부가 존재할 경우
-    		if (SelectNodes(NonElecXML, "NONELECRECINFO/NONELECREC/SEPERATEATTACH/LISTVIEWDATA/ROWS/ROW").length > 0) {
+            var tempSepNodes = SelectNodes(NonElecXML, "NONELECRECINFO/NONELECREC/SEPERATEATTACH");
+            var sepChildNode = typeof tempSepNodes[0].children[0] == "undefined" ? "" : tempSepNodes[0].children[0].tagName;
+    		if (sepChildNode != "" && sepChildNode == "LISTVIEWDATA" && SelectNodes(NonElecXML, "NONELECRECINFO/NONELECREC/SEPERATEATTACH/LISTVIEWDATA/ROWS/ROW").length > 0) {
     			var sepAtt, Data, i;
     			var rtnXml = createXmlDom();
     	        var root = createNodeInsert(rtnXml, root, "SEPATTACHINFO");
@@ -2124,6 +2140,28 @@ function SaveDraftDocInfo_susin() {
                     Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "REGTYPE", SelectSingleNodeValue(rows[i].childNodes[0], "DATA2"));
                     Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "SUMMARY", SelectSingleNodeValue(rows[i].childNodes[6], "VALUE"));
                     Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "AVTYPE", SelectSingleNodeValue(rows[i].childNodes[0], "DATA3"));
+                }
+                createNodeAndInsertText(xmlpara, objNode, "NONELECREC_SEPERATEATTACH", getXmlString(rtnXml));
+    		} else if (sepChildNode != "" && sepChildNode == "ROWS" && SelectNodes(NonElecXML, "NONELECRECINFO/NONELECREC/SEPERATEATTACH/ROWS/ROW").length > 0) {
+                var sepAtt, Data, i;
+                var rtnXml = createXmlDom();
+                var root = createNodeInsert(rtnXml, root, "SEPATTACHINFO");
+                var sepLVXml = createXmlDom();
+                sepLVXml = loadXMLString(nonElecRecInfoXml);
+                var rows = SelectNodes(sepLVXml, "NONELECRECINFO/NONELECREC/SEPERATEATTACH/ROWS/ROW");
+
+                for (i = 0; i < rows.length; i++) {
+                    sepAtt = createNodeAndAppandNode(sepLVXml, root, sepAtt, "SEPATTACH");
+                    if (SelectSingleNodeValue(rows[i], "SEPCABINETID") != "") {
+                        Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "CABINETID", SelectSingleNodeValue(rows[i], "SEPCABINETID"));
+                    } else {
+                        Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "CABINETID", SelectSingleNodeValue(rows[i], "CABINETID"));
+                    }
+                    Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "TITLE", SelectSingleNodeValue(rows[i], "SEPTITLE"));
+                    Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "NUMOFPAGE", SelectSingleNodeValue(rows[i], "SEPNUMOFPAGE"));
+                    Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "REGTYPE", SelectSingleNodeValue(rows[i], "SEPREGTYPE"));
+                    Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "SUMMARY", SelectSingleNodeValue(rows[i], "SEPSUMMARY"));
+                    Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "AVTYPE", SelectSingleNodeValue(rows[i], "SEPRECORDTYPE"));
                 }
                 createNodeAndInsertText(xmlpara, objNode, "NONELECREC_SEPERATEATTACH", getXmlString(rtnXml));
     		}
@@ -2187,7 +2225,7 @@ function btnAddSepAttach_onclick() {
 	} else if (deptCheckFlag == "4") {
 		alert(strLanggarm06 + " '" + "'" + strLanggarm08);
 		return;
-	} else if (deptCheckFlag == "2") {
+	} else if (deptCheckFlag == "2" && upperDeptCode == "") {
 		alert("타부서의 철정보로 설정되어있습니다. \n'" + arr_userinfo[5] + "'부서의 철로 변경해주시기바랍니다.");
 		return;
 	}
@@ -2868,20 +2906,51 @@ function setFirstDrafter() {
     return;
 }
 
-
+var aprcabinetattach_cross_dialogArguments = new Array();
 function openAaprDocAttachUI() {
     try {
-        var parameter = pUserID;
-        var url = "../ezAprDocAttach/aprDocAttach_Cross.aspx";
-        var feature = "status:no;dialogWidth:574px;dialogHeight:385px;edge:sunken;scroll:no";
-        var ret = window.showModalDialog(url, parameter, feature);
-
-        if (ret != "cancel") {
-            setAttachInfo(pDocID, "APR", lstAttachLink);
+        var parameter = pDocID;
+        var url ;
+        
+        if(approvalFlag == "G") {
+        	url = "/ezApprovalG/aprCabinetAttach.do?" + "draftFlag=" + pDraftFlag;
+        } else {
+        	url = "/ezApprovalG/aprDocAttach.do?orgCompanyID=" + orgCompanyID;
         }
-        return ret;
+        	
+        if (CrossYN()) {
+            aprcabinetattach_cross_dialogArguments[0] = parameter;
+            aprcabinetattach_cross_dialogArguments[1] = openAaprDocAttachUI_Complete;
+            
+            if(approvalFlag == "G") {
+            	DivPopUpShow(1050, 560, url);
+            } else {
+            	DivPopUpShow(1050, 560, url);
+            }
+        } else {
+        	var feature;
+        	if(approvalFlag == "G") {
+        		feature = "status:no;dialogWidth:805px;dialogHeight:395px;edge:sunken;scroll:no;help:no";
+        		feature = feature + GetShowModalPosition(675, 395);
+        	} else {
+        		feature = "status:no;dialogWidth:1050px;dialogHeight:660px;edge:sunken;scroll:no";
+        	}
+           
+            var ret = window.showModalDialog(url, parameter, feature);
+            if (ret != "cancel") {
+                setAttachInfo(pDocID, "APR", lstAttachLink);
+            }
+            return ret;
+        }
     } catch (e) {
-        alert("openAaprDocAttachUI : " + e.description);
+        alert("openAaprDocAttachUI()" + e.description);
+    }
+}
+
+function openAaprDocAttachUI_Complete(ret) {
+    DivPopUpHidden();
+    if (ret != "cancel") {
+        setAttachInfo(pDocID, "APR", lstAttachLink);
     }
 }
 

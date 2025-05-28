@@ -15,6 +15,11 @@ public class BoardItemVO {
 	private String filePath;
 	/** 2017.12.29 강민수92 추가 */
 	private String boardID;
+
+	private String addThumbnail;
+	private String thumbnailExt;
+	private String thumbnailPath;
+
 	public String getItemID() {
 		return itemID;
 	}
@@ -58,4 +63,27 @@ public class BoardItemVO {
 		this.boardID = boardID;
 	}
 	
+	public String getAddThumbnail() {
+		return addThumbnail;
+	}
+	
+	public void setAddThumbnail(String addThumbnail) {
+		this.addThumbnail = addThumbnail;
+	}
+	
+	public String getThumbnailExt() {
+		return thumbnailExt;
+	}
+	
+	public void setThumbnailExt(String thumbnailExt) {
+		this.thumbnailExt = thumbnailExt;
+	}
+	
+	public String getThumbnailPath() {
+		return thumbnailPath;
+	}
+	
+	public void setThumbnailPath(String thumbnailPath) {
+		this.thumbnailPath = thumbnailPath;
+	}
 }

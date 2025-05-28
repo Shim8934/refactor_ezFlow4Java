@@ -5,14 +5,30 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-		<link rel="stylesheet" href="${util.addVer('ezJournal.c1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
-		<style>
+        <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
+        <script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery.multipleSortable.js')}"></script>
+        <style>
 			#lstAttachLink {
 				height: 117px;
 				border: 1px solid #d2d2d2;
 			}
+
+            .attachInnerNotice_p_on {
+                text-align: center;
+                margin: 10px 0 0 0;
+            }
+
+            .attachInnerNotice_p_off {
+                display: none;
+            }
+
+            .attachInnerNotice_span {
+                line-height: 55px;
+            }
 		</style>
 		<script type="text/javascript">
 			var lstAttachLink = document.getElementById("lstAttachLink");
@@ -123,7 +139,9 @@
 	
 		        oTable.appendChild(objTr);
 		        document.getElementById("lstAttachLink").appendChild(oTable);
-		        
+                document.getElementById("lstAttachLink").appendChild(getAttachInnerNoticeObject());
+
+                setAttachSortable();
 		    }
 	
 		    function uploadComplete(evt) {
@@ -152,7 +170,9 @@
 		            var extCheck = false; 
 
 		            listtable = document.getElementById("filelist");
-		            document.getElementById("lstAttachLink").appendChild(listtable);
+                    var lstAttachLink = document.getElementById("lstAttachLink");
+                    lstAttachLink.insertBefore(listtable, lstAttachLink.firstChild);
+                    document.getElementById("attachInnerNotice").className = "attachInnerNotice_p_off";
 
 		            for (i = 0; i < filelist.length; i++) {
 		                var newFileName = filelist[i].pUploadSN;
@@ -162,6 +182,7 @@
 		                if (filelist[i].resultUpload == "true") {
 		                    objTr = document.createElement("TR");
 		                    objTr.setAttribute("fileInfo", newFileName + ":" + pFileName + ":" + fileSize);
+                            objTr.setAttribute("draggable", true);
 
 		                    var objTd = document.createElement("TD");
 		                    objTd.style.textAlign = "center";
@@ -249,6 +270,7 @@
 	
 		                isFileDelete = true;
 		            }
+                    showAttachInnerNotice();
 		        }
 	
 		        if (!isFileDelete) {
@@ -323,10 +345,56 @@
 		        xhr.send(fd);
 		        document.getElementById('progdiv').style.display = "inline-block";
 		    }
+
+            function defaultenter(evt) {
+                evt.dataTransfer.dropEffect = "none";
+                evt.stopPropagation();
+                evt.preventDefault();
+            }
+
+            function setAttachSortable() {
+                $("#lstAttachLink").multipleSortable({
+                    items : "tr[fileinfo]",
+                    opacity: 0.3,
+                    start : function(event, elem) {
+                        $("#lstAttachLink tr").removeClass("multiple-sortable-selected");
+                        $("#lstAttachLink tr").removeClass("ui-sortable-helper");
+                    },
+                    click : function(event) {
+                        $("#lstAttachLink tr").removeClass("multiple-sortable-selected");
+                        $("#lstAttachLink tr").removeClass("ui-sortable-helper");
+                    },
+                    stop : function(event, elem) {
+                    }
+                });
+            }
+
+            function getAttachInnerNoticeObject() {
+                var pElem = document.createElement("p");
+                pElem.id = "attachInnerNotice";
+                pElem.className = "attachInnerNotice_p_on";
+
+                var spanElem = document.createElement("span");
+                spanElem.innerText = "<spring:message code='ezJournal.AttachMJS01'/>";
+                spanElem.className = "attachInnerNotice_span";
+
+                pElem.appendChild(spanElem);
+
+                return pElem;
+            }
+
+            function showAttachInnerNotice() {
+                var fileCnt = document.querySelectorAll("#filelist tr[fileinfo]").length;
+                if (fileCnt > 0) {
+                    document.getElementById("attachInnerNotice").className = "attachInnerNotice_p_off";
+                } else {
+                    document.getElementById("attachInnerNotice").className = "attachInnerNotice_p_on";
+                }
+            }
 		
 		</script>
 	</head>
-    <body style ="width:100%;height:100%;overflow:hidden">   
+    <body ondragover ="defaultenter(event)" ondragenter ="defaultenter(event)" style ="width:100%;height:100%;overflow:hidden">   
         <div style="width:100%;white-space:nowrap;display:inline-block;height:22px">
             <div style="float:left">
                 <a class="imgbtn imgbck" onclick="btnfileup()"><span><spring:message code='ezJournal.t82'/></span></a>
@@ -337,7 +405,7 @@
             </div>
             <div style="clear:both"></div>
         </div>
-        <div id="lstAttachLink" ondragenter="onDragEnter(event)"  ondragover="onDragOver(event)" ondrop="onDrop(event)" style="overflow:auto;">
+        <div id="lstAttachLink" class="ui-sortable" ondragenter="onDragEnter(event)"  ondragover="onDragOver(event)" ondrop="onDrop(event)" style="overflow:auto;">
         </div>
         <input id="file" type="file" onchange="filechange(event)" multiple="multiple" style="width:1px; height:1px; display:none;" />
         <input type="hidden" onclick ="fileupload()" />

@@ -79,7 +79,7 @@ function Get_AddressList() {
     ShowMailProgress();
 }
 function Get_SearchAddressList() {
-    try { HiddenMailProgress(); } catch (e) {}
+    try { HiddenMailProgress(); } catch (e) {console.log(e);}
     ListXML = null;
     listContentArry = new Array();
     if (document.getElementById("ListViewType").value == "list") {
@@ -107,7 +107,7 @@ function Get_SearchAddressList() {
     xmlHTTPAddressList.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
     xmlHTTPAddressList.onreadystatechange = Complete_Get_AddressList;
     xmlHTTPAddressList.send(xmlDom);
-    try { ShowMailProgress(); } catch (e) {}
+    try { ShowMailProgress(); } catch (e) {console.log(e);}
     
     document.getElementById("HeaderAllCheckBox").checked = false;
 }
@@ -568,27 +568,27 @@ function makePageSelPage() {
     totalPage = Math.ceil(pTotalCnt / pPageSize);
     var pageNum = pCurrentPage;
     if (!searchFlag || strLang_1 == "")
-        document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + pTotalCnt + "</span>";
+        document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span class='txt_color'>" + pTotalCnt + "</span>";
     else {
         document.getElementById("mailBoxInfo").className = "h2_dot"; 
         document.getElementById("mailBoxInfo").innerHTML = strLang_1 + "&nbsp;<span class='point'>" + pTotalCnt + "</span> " + strLang_2;
     }
     if (totalPage > 1 && pageNum != 1) {
-        PagingHTML += "<span class=\"btnimg\" onclick= 'return goToPageByNum(1)'><img src=\"/images/kr/cm/btn_p_prev.gif\"></span>";
+        PagingHTML += "<span class=\"btnimg first\" onclick= 'return goToPageByNum(1)'></span>";
     }
     else {
-        PagingHTML += "<span class=\"btnimg\"><img src=\"/images/kr/cm/btn_p_prev01.gif\"></span>";
+        PagingHTML += "<span class=\"btnimg first disabled\"></span>";
     }
     if (totalPage > BlockSize) {
         if (pageNum > BlockSize) {
-            PagingHTML += "<span class=\"btnimg\" onclick= 'return selbeforeBlock()'><img src=\"/images/kr/cm/btn_prev.gif\"></span>";
+            PagingHTML += "<span class=\"btnimg prev\" onclick= 'return selbeforeBlock()'></span>";
         }
         else {
-            PagingHTML += "<span class=\"btnimg\" ><img src=\"/images/kr/cm/btn_prev01.gif\"></span>";
+            PagingHTML += "<span class=\"btnimg prev disabled\" ></span>";
         }
     }
     else {
-        PagingHTML += "<span class=\"btnimg\" ><img src=\"/images/kr/cm/btn_prev01.gif\"></span>";
+        PagingHTML += "<span class=\"btnimg prev disabled\" ></span>";
     }
     var MaxNum;
     var i;
@@ -614,20 +614,20 @@ function makePageSelPage() {
     	
     if (totalPage > BlockSize) {
         if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-            PagingHTML += "<span class=\"btnimg\" onclick='return selafterBlock()'><img src=\"/images/kr/cm/btn_next.gif\"></span>";
+            PagingHTML += "<span class=\"btnimg next\" onclick='return selafterBlock()'></span>";
         }
         else {
-            PagingHTML += "<span class=\"btnimg\"><img src=\"/images/kr/cm/btn_next01.gif\"></span>";
+            PagingHTML += "<span class=\"btnimg next disabled\"></span>";
         }
     }
     else {
-        PagingHTML += "<span class=\"btnimg\"><img src=\"/images/kr/cm/btn_next01.gif\"></span>";
+        PagingHTML += "<span class=\"btnimg next disabled\"></span>";
     }
     if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-        PagingHTML += "<span class=\"btnimg\" onclick='return goToPageByNum(" + totalPage + ")'><img src=\"/images/kr/cm/btn_n_next.gif\"></span>";
+        PagingHTML += "<span class=\"btnimg last\" onclick='return goToPageByNum(" + totalPage + ")'></span>";
     }
     else {
-        PagingHTML += "<span class=\"btnimg\"><img src=\"/images/kr/cm/btn_n_next01.gif\"></span>";
+        PagingHTML += "<span class=\"btnimg last disabled\"></span>";
     }
     PagingHTML += "</div>";
     td_Create1(PagingHTML);

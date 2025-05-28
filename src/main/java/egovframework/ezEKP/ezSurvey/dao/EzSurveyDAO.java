@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezSurvey.dao;
 import java.util.List;
 import java.util.Map;
 
+import egovframework.ezEKP.ezSurvey.vo.ResultViewPermissionVO;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezSurvey.vo.AttachVO;
@@ -16,7 +17,7 @@ import egovframework.ezEKP.ezSurvey.vo.SurveyGeneralVO;
 import egovframework.ezEKP.ezSurvey.vo.SurveyItemSearchVO;
 import egovframework.ezEKP.ezSurvey.vo.SurveyParticipantVO;
 import egovframework.ezEKP.ezSurvey.vo.SurveyVO;
-import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 
 @SuppressWarnings("unchecked")
 @Repository("EzSurveyDAO")
@@ -49,9 +50,10 @@ public class EzSurveyDAO extends EgovAbstractDAO {
 		return (List<SimpleUserVO>)list("EzSurveyDAO.getDeptMemberList", map);
 	}
 	
+	/*
 	public int getTotalSearchMembers(Map<String, Object> map) {
 		return (int)select("EzSurveyDAO.getTotalSearchMembers", map);
-	}
+	}*/
 	
 	public SurveyGeneralVO getUserPreviewConfig(Map<String, Object> map) {
 		return (SurveyGeneralVO)select("EzSurveyDAO.getUserPreviewConfig", map);
@@ -61,9 +63,10 @@ public class EzSurveyDAO extends EgovAbstractDAO {
 		insert("EzSurveyDAO.saveUserConfig", map);
 	}
 	
+	/*
 	public List<SimpleUserVO> getSearchMemberList(Map<String, Object> map) {
 		return (List<SimpleUserVO>)list("EzSurveyDAO.getSearchMemberList", map);
-	}
+	}*/
 
 	public List<SimpleUserVO> getSearchMemberListByAttr(Map<String, Object> map) {
 		return (List<SimpleUserVO>)list("EzSurveyDAO.getSearchMemberListByAttr", map);
@@ -246,8 +249,16 @@ public class EzSurveyDAO extends EgovAbstractDAO {
 		return (int) select("EzSurveyDAO.getMailSentFlag", survey);
 	}
 	
+	public int getTotalNotiSentFlag(SurveyVO survey) {
+		return (int) select("EzSurveyDAO.getTotalNotiSentFlag", survey);
+	}
+	
 	public void updateMailSentFlag(Map<String, Object> map) {
 		update("EzSurveyDAO.updateMailSentFlag", map);
+	}
+	
+	public void updateTotalNotiSentFlag(Map<String, Object> map) {
+		update("EzSurveyDAO.updateTotalNotiSentFlag", map);
 	}
 	
 	public long checkRespondent(Map<String, Object> map) {
@@ -273,5 +284,35 @@ public class EzSurveyDAO extends EgovAbstractDAO {
 
 	public String checkTenantConfig(Map<String, Object> map) throws Exception{
 		return (String) select("EzSurveyDAO.checkTenantConfig", map);
+	}
+	
+	public void setPreviewFlag(Map<String, Object> map) {
+		update("EzSurveyDAO.setPreviewFlag", map);
+	}
+
+	public boolean comfirmSurveyDeletion(Map<String, Object> map) throws Exception {
+		boolean isDeletedSurvey = (boolean) select("EzSurveyDAO.comfirmSurveyDeletion", map);
+		
+		return isDeletedSurvey;
+	}
+
+	// 2024-07-12 전인하 - 설문 > 설문결과 지정공개 대상자 저장
+	public void saveSurveyResultViewTarget(Map<String, Object> map) {
+		insert("EzSurveyDAO.saveSurveyResultViewTarget", map);
+	}
+
+	// 2024-07-12 전인하 - 설문 > 설문결과 지정공개 대상자 리스트 조회
+	public List<ResultViewPermissionVO> selectResultViewPermission(Map<String, Object> map) {
+		return (List<ResultViewPermissionVO>) list("EzSurveyDAO.selectResultViewPermission", map);
+	}
+
+	// 2024-07-12 전인하 - 설문 > 설문결과 지정공개 대상자 삭제
+	public void deleteResultViewPermission(Map<String, Object> map) {
+		delete("EzSurveyDAO.deleteResultViewPermission", map);
+	}
+
+	// 2024-07-12 전인하 - 설문 > 사용자가 결과조회 가능한 설문 id 조회
+	public List<Long> getReceivedSurveyResultList(Map<String, Object> map) {
+		return (List<Long>)list("EzSurveyDAO.getReceivedSurveyResultList", map);
 	}
 }

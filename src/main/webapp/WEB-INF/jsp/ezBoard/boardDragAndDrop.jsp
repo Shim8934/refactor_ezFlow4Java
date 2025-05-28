@@ -4,17 +4,34 @@
 <html ondragover="bodydragover(event)">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-		<link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<style>
 			#lstAttachLink {
 			height: 115px;
 			border: 1px solid #d2d2d2;
 			}
+
+            .attachInnerNotice_p_on {
+                text-align: center;
+                margin: 10px 0 0 0;
+            }
+
+            .attachInnerNotice_p_off {
+                display: none;
+            }
+
+            .attachInnerNotice_span {
+                line-height: 55px;
+            }
+            
 		</style>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezBoard.e1', 'msg')}"></script>
-		<script type="text/javascript">
+        <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
+        <script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery.multipleSortable.js')}"></script>
+        <script type="text/javascript">
 		    var lstAttachLink = document.getElementById("lstAttachLink");
 		    var isfileup = false;
 		    var attachFileNameMaxLength = Number("${attachFileNameMaxLength}");
@@ -125,6 +142,9 @@
 		
 		        oTable.appendChild(objTr);
 		        document.getElementById("lstAttachLink").appendChild(oTable);
+                document.getElementById("lstAttachLink").appendChild(getAttachInnerNoticeObject());
+
+                setAttachSortable();
 		    };
 		
 		    function uploadComplete(evt) {
@@ -134,20 +154,31 @@
 		        window.parent.returnvalue(xhr.responseText);
 		        
 		        var strRet = "";
+		        var fileNamesStr = "";
 		        var pBoardID = window.parent.pBoardID;
 		        var filecnt = document.getElementById("filelist").childNodes.length;
+		        var tempxmldom = loadXMLString(xhr.responseText);
 		        
 		        /* 2021-04-29 홍승비 - 새로운 첨부파일 업로드 완료 후, 파일경로(DATA2) 속성을 갱신하도록 수정 */
 		        for (var i = 0; i < filecnt - 1; i++) {
 		            var filepath = document.getElementById("filelist").childNodes[i + 1].getAttribute("DATA2");
+		            var realFileName = document.getElementById("filelist").childNodes[i + 1].getAttribute("REALFILENAME");
+		            
 		            if (filepath.indexOf(pBoardID) != -1) {
 		                strRet += filepath + "|";
+		                fileNamesStr += realFileName + "|";
 		            } else {
-		                strRet += "tempUploadFile/" + filepath + "|";
-		                document.getElementById("filelist").childNodes[i + 1].setAttribute("DATA2", "tempUploadFile/" + filepath);
+                        var tempUploadFileStr = '';
+                        if (filepath.split('/')[0]  != "tempUploadFile") {
+                            tempUploadFileStr = 'tempUploadFile/';
+                        }
+		                strRet += tempUploadFileStr + filepath + "|";
+		                fileNamesStr += realFileName + "|";
+		                document.getElementById("filelist").childNodes[i + 1].setAttribute("DATA2", tempUploadFileStr + filepath);
 		            }
 		        }
 		        window.parent.attachxml = strRet;
+		        window.parent.realFileNames = fileNamesStr;
 		        isfileup = false;
 		        
 		        if (CrossYN()) {
@@ -180,6 +211,7 @@
 		        var filecnt = document.getElementById("filelist").childNodes.length;
 		        var pBoardID = window.parent.pBoardID;
 		        var strRet = "";
+                var fileNamesStr = "";
 		        var checkedFileCnt = $("input[name='fileSelect']:checked").length; // 실제로 삭제하기 위해 체크된 파일 갯수
 		        
 		        if (checkedFileCnt <= 0) {
@@ -212,18 +244,25 @@
 		        filecnt = document.getElementById("filelist").childNodes.length;
 		        for (var i = 1; i < filecnt; i++) {
 		            var filepath = document.getElementById("filelist").childNodes[i].getAttribute("DATA2");
+		            var realFileName = document.getElementById("filelist").childNodes[i].getAttribute("REALFILENAME");
+		            
 		            if (filepath.indexOf(pBoardID) != -1) {
 		                strRet += filepath + "|";
+		                fileNamesStr += realFileName + "|";
 		            }
 		            else if (filepath.indexOf("tempUploadFile") != -1)
 		            {
 		                strRet += filepath + "|";
+		                fileNamesStr += realFileName + "|";
 		            }
 		            else {
 		                strRet += pBoardID + "/uploadFile/" + filepath + "|";
+		                fileNamesStr += realFileName + "|";
 		            }
 		        }
 		        window.parent.attachxml = strRet;
+		        window.parent.realFileNames = fileNamesStr;
+                showAttachInnerNotice();
 		    }
 		
 		    function checkall() {
@@ -292,9 +331,93 @@
 		    		}
 		    	});
 		    }
+
+            function defaultenter(evt) {
+                evt.dataTransfer.dropEffect = "none";
+                evt.stopPropagation();
+                evt.preventDefault();
+            }
+            
+            function setAttachSortable() {
+                $("#lstAttachLink").multipleSortable({
+                    items : "tr[data2]",
+                    opacity: 0.3,
+                    start : function(event, elem) {
+                        $("#lstAttachLink tr").removeClass("multiple-sortable-selected");
+                        $("#lstAttachLink tr").removeClass("ui-sortable-helper");
+                    },
+                    click : function(event) {
+                        $("#lstAttachLink tr").removeClass("multiple-sortable-selected");
+                        $("#lstAttachLink tr").removeClass("ui-sortable-helper");
+                    },
+                    stop : function(event, elem) {
+                    }
+                });
+            }
+
+            function moveAttachFileOrder(fileList, attachxml) {
+                var fileIdxArr = [].map.call(fileList, function(fileNode){
+                    return fileNode.getAttribute("_fileindex");
+                });
+
+                for (var i = 0; i < fileIdxArr.length; i++) {
+                    if (i != fileIdxArr[i]) {
+                        saveAttachFileOrder();
+                        break;
+                    }
+                }
+            }
+
+            function getAttachInnerNoticeObject() {
+                var pElem = document.createElement("p");
+                pElem.id = "attachInnerNotice";
+                pElem.className = "attachInnerNotice_p_on";
+
+                var spanElem = document.createElement("span");
+                spanElem.innerText = strLangMJS01;
+                spanElem.className = "attachInnerNotice_span";
+
+                pElem.appendChild(spanElem);
+
+                return pElem;
+            }
+
+            function saveAttachFileOrder(){
+                var pBoardID = window.parent.pBoardID;
+                var strRet = "";
+                var filecnt = document.getElementById("filelist").childNodes.length;
+                var realFileNames = "";
+                
+                for (var i = 1; i < filecnt; i++) {
+                    var filepath = document.getElementById("filelist").childNodes[i].getAttribute("DATA2");
+                    if (filepath.indexOf(pBoardID) != -1) {
+                        strRet += filepath + "|";
+                    }
+                    else if (filepath.indexOf("tempUploadFile") != -1)
+                    {
+                        strRet += filepath + "|";
+                    }
+                    else {
+                        strRet += pBoardID + "/uploadFile/" + filepath + "|";
+                    }
+
+                    realFileNames += document.getElementById("filelist").childNodes[i].getAttribute("realfilename") + "|";
+                }
+                window.parent.attachxml = strRet;
+                window.parent.realFileNames = realFileNames;
+            }
+
+            function showAttachInnerNotice() {
+                var fileCnt = document.querySelectorAll("#filelist tr[data2]").length;
+                if (fileCnt > 0) {
+                    document.getElementById("attachInnerNotice").className = "attachInnerNotice_p_off";
+                } else {
+                    document.getElementById("attachInnerNotice").className = "attachInnerNotice_p_on";
+                }
+            }
 		</script>
 	</head>  
-	<body style ="width:100%;height:100%;overflow:hidden">
+	<body ondragover ="defaultenter(event)" ondragenter ="defaultenter(event)" style ="width:100%;height:100%;overflow:hidden">
         <div style="width:100%;white-space:nowrap;display:inline-block; height: 23px;">
             <div style="float:left">
                 <a class="imgbtn imgbck" onclick="btnfileup()"><span><spring:message code='ezBoard.t440' /></span></a>
@@ -304,7 +427,7 @@
              	<P class="prog_bar"><span id="prog_bar" style="width:0%"></span></P> <span class="prog_num"><strong id ="prog_num">0</strong>%</span>
              </div>
         </div>
-        <div id="lstAttachLink" ondragenter="onDragEnter(event)"  ondragover="onDragOver(event)" ondrop="onDrop(event)" style="overflow:auto;">
+        <div id="lstAttachLink" class="ui-sortable" ondragenter="onDragEnter(event)"  ondragover="onDragOver(event)" ondrop="onDrop(event)" style="overflow:auto;">
         </div>
         <input id="file" type="file" onchange="filechange(event)" multiple style="display:none"/>
         <input type="hidden" value="upload" onclick ="fileupload()" />

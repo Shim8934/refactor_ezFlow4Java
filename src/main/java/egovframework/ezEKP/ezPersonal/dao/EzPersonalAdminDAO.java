@@ -14,7 +14,7 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalPopupUserVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalPopupVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalQuickLinkVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
-import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzPersonalAdminDAO")
 public class EzPersonalAdminDAO extends EgovAbstractDAO {

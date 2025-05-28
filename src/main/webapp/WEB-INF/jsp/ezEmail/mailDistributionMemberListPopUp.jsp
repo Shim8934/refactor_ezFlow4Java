@@ -4,7 +4,8 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<link rel="stylesheet" href="${util.addVer('ezPersonal.e3', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 		<title><spring:message code='ezEmail.userDL14'/></title>
@@ -16,7 +17,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<style>
-			.countColor { color:#017BEC; font-weight:bold; }
+			.txt_color {font-weight:bold; }
 			.DL_title {
 				box-sizing: border-box;
 				height: 31px;
@@ -55,7 +56,7 @@
   				<div class="DL_title">
   					<div class="DL_title_sub">
   						<span data-id="${cn} ">${dlName}</span>
-  						<span id="countInfo">&nbsp;&nbsp;<span class="countColor">${memberListCnt}</span><spring:message code='main.t20000' /></span>
+  						<span id="countInfo">&nbsp;&nbsp;<span class="txt_color">${memberListCnt}</span><spring:message code='main.t20000' /></span>
   					</div>
   					
   					<div class="DL_title_Btn" style="float:right;">

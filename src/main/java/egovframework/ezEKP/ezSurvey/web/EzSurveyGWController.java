@@ -182,7 +182,7 @@ public class EzSurveyGWController {
 		return result;
 	}
 	
-	@RequestMapping(value="/rest/ezsurvey/list-type/userid/{userid}/get", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezsurvey/list-type/userid/{userid:.+}/get", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getUserListType(@PathVariable(value="userid") String userId, HttpServletRequest request) throws Exception {
 		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
 		JSONObject result = new JSONObject();
@@ -213,6 +213,8 @@ public class EzSurveyGWController {
 		return result;
 	}
 	
+	/* 2024-07-01 홍승비 - surveyUser.js 파일 내부의 getUsers() 함수에서만 호출되는 URL로, 해당 js파일이 사용되지 않아 전체 주석처리 */
+	/*
 	@RequestMapping(value="/rest/ezsurvey/search-member", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getSearchMember(Locale locale, HttpServletRequest request) {
 		String serverName = request.getHeader("host-name")      != null ? request.getHeader("host-name")                        : "";
@@ -263,7 +265,7 @@ public class EzSurveyGWController {
 		}
 		
 		return result;
-	}
+	}*/
 	
 	@RequestMapping(value="/rest/ezsurvey/attachfile/file-upload", method= RequestMethod.POST, produces="application/json;charset=utf-8")
 	public JSONObject postFileUploadGW(@RequestParam("data") String dataList, @RequestParam("files") List<MultipartFile> multiFileLists, Locale locale, HttpServletRequest request) throws Exception {
@@ -453,6 +455,8 @@ public class EzSurveyGWController {
 			String serverName   = request.getHeader("host-name") != null ? request.getHeader("host-name")         : "";
 			String userId       = surveyItem.get("userId")       != null ? surveyItem.get("userId").toString()    : "";
 			
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			
 			if (serverName.equals("") || userId.equals("") || ((questions == null || questions.isEmpty()) && draftMode == 0) || infor == null || infor.toJSONString().equals("")) {
 				logger.debug("Parameter error!");
 				result.put("status", "error");
@@ -475,19 +479,25 @@ public class EzSurveyGWController {
 			int useStatus           = infor.get("status")     != null ? ((Long)infor.get("status")).intValue()     : 1;
 			JSONArray attchList     = infor.get("attach")     != null ? (JSONArray)infor.get("attach")             : null;
 			JSONArray users         = infor.get("users")      != null ? (JSONArray)infor.get("users")              : null;
+			JSONArray resultViewTarget = infor.get("resultViewTarget") != null ? (JSONArray) infor.get("resultViewTarget") : null;
 			int userFlag            = (users == null || users.size() == 0) ? 0 : 1;
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 			
-			if (title.equals("") || purpose.equals("") || startDate.equals("") || endDate.equals("") || format.parse(startDate).compareTo(format.parse(endDate)) > 0 || publicFlag == -1 || anonymousFlag == -1 || multipleFlag == -1 || (publicFlag == 1 && publicDays == -1)) {
+			// 2025-02-10 조수빈 - 설문 목적은 필수 값에서 제외하기로 했음
+			if (title.equals("") || startDate.equals("") || endDate.equals("") || format.parse(startDate).compareTo(format.parse(endDate)) > 0 || publicFlag == -1 || anonymousFlag == -1 || multipleFlag == -1 || (publicFlag == 1 && publicDays == -1)) {
 				logger.debug("Parameter error!");
 				result.put("status", "error");
 				result.put("code", 1);
 				return result;
 			}
 			
-			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			String realPath  = request.getServletContext().getRealPath("");
-			result           = surveyService.saveSurveyItem(realPath, questions, title, purpose, startDate, endDate, publicFlag, anonymousFlag, multipleFlag, userFlag, publicDays, attchList, users, useStatus, surveyId, draftMode, userInfo, mailFlag, popupFlag);
+			result           = surveyService.saveSurveyItem(request, realPath, questions, title, purpose, startDate, endDate, publicFlag, anonymousFlag, multipleFlag, userFlag, publicDays, attchList, users, useStatus, surveyId, draftMode, userInfo, mailFlag, popupFlag);
+		
+			if (publicFlag == 2 && resultViewTarget != null) {
+				Long NewSurveyId = (Long) result.get("survey_id");
+				surveyService.saveSurveyResultViewTarget(userInfo, NewSurveyId, resultViewTarget);
+			}
 		}
 		catch (Exception e) {
 			logger.error(e.getMessage(), e);
@@ -511,10 +521,10 @@ public class EzSurveyGWController {
 		String order         = request.getParameter("order")       != null ? request.getParameter("order")                         : "";
 		String srchMode      = request.getParameter("srchMode")    != null ? request.getParameter("srchMode")                      : "";
 		String srchOption    = request.getParameter("srchOption")  != null ? request.getParameter("srchOption")                    : "";
+		String filterStatus    = request.getParameter("filterStatus")  != null ? request.getParameter("filterStatus")                    : "";
 		int listCntSize      = request.getParameter("listCntSize") != null ? Integer.parseInt(request.getParameter("listCntSize")) : -1;
 		int currentPage      = request.getParameter("currentPage") != null ? Integer.parseInt(request.getParameter("currentPage")) : -1;
 		int userMode         = request.getParameter("userMode")    != null ? Integer.parseInt(request.getParameter("userMode"))    : -1;
-		String sqlQuery      = "";
 		JSONObject result    = new JSONObject();
 		
 		logger.debug("pageMode: " + pageMode + " || Title: " + title + " || Creator name: " + creatorName + " || Start Date: " + startDate + " || End Date: " + endDate + " || Column: " + column + " || Order: " + order + " || Search mode: " + srchMode + " || Search option: " + srchOption + " || List count: " + listCntSize + " || userMode: " + userMode);
@@ -528,7 +538,7 @@ public class EzSurveyGWController {
 		
 		try {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
-			result = surveyService.getItemsBySearching(pageMode, currentPage, listCntSize, title, creatorName, startDate, endDate, sqlQuery, srchMode, srchOption, order, column, userInfo, userMode);
+			result = surveyService.getItemsBySearching(pageMode, currentPage, listCntSize, title, creatorName, startDate, endDate, srchMode, srchOption, order, column, userInfo, userMode, filterStatus);
 		}
 		catch (Exception e) {
 			logger.error(e.getMessage(), e);

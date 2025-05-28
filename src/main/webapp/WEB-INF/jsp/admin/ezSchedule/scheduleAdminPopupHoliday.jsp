@@ -6,7 +6,8 @@
 <html>
 	<head>		
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />		
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
 		<style type="text/css">
 			.ui-datepicker-month {
@@ -46,9 +47,11 @@
 		            document.getElementById("add").style.display = "none";
 		            document.getElementById("mod").style.display = "";		            
 	
-		            if (issolar != "1")
+		            if (issolar != "" && issolar != "1") {
 		                document.getElementById("date2").checked = true;
-	
+						document.getElementById("lunarRadio").style.display = "none";
+		            }
+		            
 		            if (isrepeat == "1")
 		                document.getElementById("repeat").checked = true;
 	
@@ -56,10 +59,19 @@
 		                document.getElementById("rest").checked = true;
 		        }
 	            if (holidayType == "s") {
-	            	document.getElementById("repeat").checked = true;
-	            	$('#repeat').attr('disabled', true); 
-	            	document.getElementById("rest").checked = true;
-	            	$('#rest').attr('disabled', true);
+	                if (issolar != "" && issolar != "1") {
+                        document.getElementById("date2").checked = true;
+	                	document.getElementById("lunarRadio").style.display = "none";
+	                }
+	                
+                    if (isrepeat == "1")
+                        document.getElementById("repeat").checked = true;
+	            	    //$('#repeat').attr('disabled', true);
+
+                    if (isrest == "1")
+                        document.getElementById("rest").checked = true;
+	            	    //$('#rest').attr('disabled', true);
+
 	            }
 		        //음력 양력 숨기기
 		        if (lang != "1")

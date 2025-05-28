@@ -103,7 +103,7 @@ public interface EzJournalService {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<JournalAuthorVO> getAuthDeptList (int tenantId, String userId,String lang) throws Exception;
+	public List<JournalAuthorVO> getAuthDeptList (int tenantId, String userId,String lang, String userCompany) throws Exception;
 	
 	/**
 	 * 조직도에 쓸 부서 리스트 가져오기
@@ -228,9 +228,10 @@ public interface EzJournalService {
 	 * 해당사원의 업무일지 환경설정
 	 * @param userId
 	 * @param tenantId
+	 * @param lang
 	 * @return
 	 */
-	public JournalEnvVO getUserJournalEnv(String userId, int tenantId) throws Exception;
+	public JournalEnvVO getUserJournalEnv(String userId, String lang, int tenantId) throws Exception;
 	
 	/**
 	 * 마지막 사용양식 아이디 가져오기
@@ -423,18 +424,24 @@ public interface EzJournalService {
 	public void deleteJournaltype(String companyId, int tenantId) throws Exception;
 
 	/**
-	 * 일지 열람 구너한 체크
-	 * @param map
+	 * 일지 열람 권한 체크
+	 * @param userId
+	 * @param journalId
+	 * @param tenantId
 	 * @return
 	 * @throws Exception
 	 */
-	public JournalAuthCheckVO checkJournalAuth(String userId,String journalId,int tenantId) throws Exception; 
+	public JournalAuthCheckVO checkJournalAuth(String userId, String journalId, int tenantId) throws Exception; 
 	
 	/**
 	 * 내가 부서장인 부서들과 그 하위 부서 리스트
-	 * @param map
+	 * @param userId
+	 * @param lang
+	 * @param tenantId
 	 * @return
 	 * @throws Exception
 	 */
-	public List<DeptViewVO> getCheifBoss(String userId, int tenantId) throws Exception; 
+	public List<DeptViewVO> getCheifBoss(String userId, String lang, int tenantId) throws Exception; 
+	
+	public JournalEnvVO getUserJournalMailInfo(String userId, int tenantId, String lang) throws Exception;
 }

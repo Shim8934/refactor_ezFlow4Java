@@ -29,6 +29,29 @@ function InitAttach(pDocID) {
     }
     return Resultxml;
 }
+
+function orgInitAttach(pDocID) {
+	var result = "";
+	var returnXml = "";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/attachRequest.do",
+		data : {
+			docID : pDocID,
+			orgCompanyID : orgCompanyID,
+			mode : "END"
+		},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
+	
+    returnXml = loadXMLString(result);
+    return returnXml;
+}
 function GetAttachSN(Resultxml) {
     var rows = 0;
     if (SelectNodes(Resultxml, "LISTVIEWDATA/ROWS/ROW").length != 0) {
@@ -92,6 +115,8 @@ function APRAttachXMLParsing(ATTACH, pDocID) {
         	isBigAttachDel = "Y";
         }
         GetXml = GetXml + "<ISBIGATTACHDEL>" + isBigAttachDel + "</ISBIGATTACHDEL>";
+        
+        GetXml = GetXml + "<DELETE>" + MakeXMLString(GetAttribute(AttachRow[i], "DELETE")) + "</DELETE>";
 
         for (j = 1 ; j < pCurCellLen ; j++) {
             GetXml = GetXml + "<COLUMN>" + MakeXMLString(GetChildNodes(AttachRow[i])[j].innerHTML) + "</COLUMN>";
@@ -406,6 +431,10 @@ function InsertAttachFileInfo(ATTACH, Resultxml) {
     else {
         var objTr = listview.AddRow(MaxID);
         listview.AddDataRow(objTr, Resultxml);
+
+        const trElements = document.querySelectorAll('tr');
+        const filteredTrElements = Array.from(trElements).filter(tr => tr.id.startsWith('attachList_TR_'));
+        filteredTrElements.forEach(tr => tr.setAttribute("draggable", true));
     }
 }
 function orderListView_id() {
@@ -592,3 +621,29 @@ function UpdateAttachHistory(tempAttachSN, pModifyFlag) {
 		}	
 	});
 }
+
+function setAttachSortable() {
+    $("#ATTACH").multipleSortable({
+        items : "tr[data1]",
+        opacity: 0.3,
+        start : function(event, elem) {
+            $("#ATTACH tr").removeClass("multiple-sortable-selected");
+            $("#ATTACH tr").removeClass("ui-sortable-helper");
+        },
+        click : function(event) {
+            $("#ATTACH tr").removeClass("multiple-sortable-selected");
+            $("#ATTACH tr").removeClass("ui-sortable-helper");
+        },
+        stop : function(event, elem) {
+            var listview = new ListView();
+            listview.LoadFromID("attachList");
+            var afterRows = listview.GetDataRows();
+            var cnt = listview.GetRowCount();
+            for (var j = 0; j < cnt; j++) {
+                SetAttribute(afterRows[j], "ID", ("attachList_TR_" + j));
+            }
+        }
+    });
+    
+}
+

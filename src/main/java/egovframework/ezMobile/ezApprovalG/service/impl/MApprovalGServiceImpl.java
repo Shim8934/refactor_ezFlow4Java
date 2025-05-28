@@ -17,7 +17,7 @@ import egovframework.ezMobile.ezApprovalG.vo.*;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezOption.vo.MOptionVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
-import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.io.FileUtils;
@@ -93,7 +93,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("id", userIDS);
+		map.put("userIds", userIDS.replace(" ", "").replace("\'", "").split(","));
 		map.put("tenantID", userInfo.getTenantId());
 		map.put("companyID", userInfo.getCompanyId());
 		map.put("offset", commonUtil.getMinuteUTC(userInfo.getOffSet()));
@@ -130,7 +130,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("id", userIDS);
+		map.put("userIds", userIDS.replace(" ", "").replace("\'", "").split(","));
 		map.put("tenantID", userInfo.getTenantId());
 		map.put("companyID", userInfo.getCompanyId());
 		map.put("searchText", searchText);
@@ -439,7 +439,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		}
 
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("id", userIDS);
+		map.put("userIds", userIDS.replace(" ", "").replace("\'", "").split(","));
 		map.put("userId", userId);
 		map.put("tenantID", userInfo.getTenantId());
 		map.put("companyID", userInfo.getCompanyId());
@@ -549,8 +549,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 						MApprovalGAprLineInfoVO targetVo = approvalGAprLineInfoVOs.get(approvalGAprLineInfoVOs.size() - 1);
 						targetUserId = targetVo.getAprMemberId();
 
-						if (!ezPersonalService.canReceiveNotification(targetUserId, tenantId)
-								|| ezPersonalService.hasNotiDiableItem(targetUserId, NotiType.APPROVAL_COMPLETE, NotiPlatform.MAIL, tenantId)) {
+						if (ezPersonalService.hasNotiDiableItem(targetUserId, NotiType.APPROVAL_COMPLETE, NotiPlatform.MAIL, tenantId)) {
 							break;
 						}
 
@@ -577,8 +576,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 						MApprovalGAprLineInfoVO targetVo = approvalGAprLineInfoVOs.get(approvalGAprLineInfoVOs.size() - 1);
 						targetUserId = targetVo.getAprMemberId();
 
-						if (!ezPersonalService.canReceiveNotification(targetUserId, tenantId)
-								|| ezPersonalService.hasNotiDiableItem(targetUserId, NotiType.APPROVAL_COMPLETE, NotiPlatform.MAIL, tenantId)) {
+						if (ezPersonalService.hasNotiDiableItem(targetUserId, NotiType.APPROVAL_COMPLETE, NotiPlatform.MAIL, tenantId)) {
 							break;
 						}
 
@@ -674,7 +672,6 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 
 						// 결재유형이 참조인 경우에만 메일을 보내는 오류 분기 수정 (!"007".equalsIgnoreCase(vo.getAprType()) OR조건에서 제거)
 						if (!"002".equals(vo.getAprState())
-								|| !ezPersonalService.canReceiveNotification(targetUserId, tenantId)
 								|| ezPersonalService.hasNotiDiableItem(targetUserId, NotiType.APPROVAL_ARRIVE, NotiPlatform.MAIL, tenantId)) {
 							continue;
 						}
@@ -722,11 +719,11 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 						}
 						
 						// 2023-05-17 이사라 : NullPointerException 시큐어코딩
-						String contentBuilderChamValue = !Objects.isNull(contentBuilderCham) ? contentBuilderCham.toString() : "";
+						String contentBuilderValue = !Objects.isNull(contentBuilder) ? contentBuilder.toString() : "";
 
 						// 참조자가 아닌 경우, 개별로 결재에 관련된 속성(targetUserId, targetUserName 등)을 부여한 결재알림메일을 루프 내부에서 발송한다.
 						if (toList.size() > 0) {
-							ezEmailService.sendMail(userEmail, password, locale, from, toList.toArray(new InternetAddress[toList.size()]), null, null, subject, commonUtil.createNotiMailContent(contentBuilderChamValue, tenantId, locale), false, EmailImportance.NORMAL);
+							ezEmailService.sendMail(userEmail, password, locale, from, toList.toArray(new InternetAddress[toList.size()]), null, null, subject, commonUtil.createNotiMailContent(contentBuilderValue, tenantId, locale), false, EmailImportance.NORMAL);
 							toList.clear(); // 결재자에게 메일 발송 후 리스트 초기화 -> 다음 루프에서 참조자가 아닌 결재자가 존재한다면 다시 메일 발송하도록 add() 후 초기화를 반복함
 						}
 					}
@@ -735,7 +732,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 
 					// 참조자인 경우, 메일 내부에 결재 관련 속성이 없으므로 한꺼번에 참조메일을 발송한다.
 					if (toListCham.size() > 0) {
-						ezEmailService.sendMail(userEmail, password, locale, from, toListCham.toArray(new InternetAddress[toList.size()]), null, null, subject, commonUtil.createNotiMailContent(contentBuilderChamValue, tenantId, locale), false, EmailImportance.NORMAL);
+						ezEmailService.sendMail(userEmail, password, locale, from, toListCham.toArray(new InternetAddress[toListCham.size()]), null, null, subject, commonUtil.createNotiMailContent(contentBuilderChamValue, tenantId, locale), false, EmailImportance.NORMAL);
 					}
 				}
 
@@ -745,8 +742,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 				MApprovalGAprLineInfoVO targetVo = approvalGAprLineInfoVOs.get(approvalGAprLineInfoVOs.size() - 1);
 				targetUserId = targetVo.getAprMemberId();
 
-				if (!ezPersonalService.canReceiveNotification(targetUserId, tenantId)
-						|| ezPersonalService.hasNotiDiableItem(targetUserId, NotiType.APPROVAL_REJECT, NotiPlatform.MAIL, tenantId)) {
+				if (ezPersonalService.hasNotiDiableItem(targetUserId, NotiType.APPROVAL_REJECT, NotiPlatform.MAIL, tenantId)) {
 					break;
 				}
 
@@ -832,7 +828,6 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 					// 회수알림 발송 대상자에서 기안자(회수자)를 제외하고, 현재 결재진행/승인상태가 아닌 경우도 제외함
 					if ((!"002".equals(vo.getAprState()) && !"003".equals(vo.getAprState()))
 							|| approvalGAprLineInfoVOs.indexOf(vo) == approvalGAprLineInfoVOs.size() - 1
-							|| !ezPersonalService.canReceiveNotification(targetUserId, tenantId)
 							|| ezPersonalService.hasNotiDiableItem(targetUserId, NotiType.APPROVAL_RETURN, NotiPlatform.MAIL, tenantId)) {
 						continue;
 					}
@@ -1558,5 +1553,50 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		
 		logger.debug("getAprMemberBySn ended");
 		return result;
+	}
+
+	@Override
+	public String gongRamCancel(String docID, int count, int aprMemberSN, String companyID, int tenantId) throws Exception {
+		logger.debug("gongRamCancel started.");
+
+        Map<String, Object> map = new HashMap<String, Object>();
+
+        map.put("v_DocID", docID);
+        map.put("v_gongRamDocID", docID);
+        map.put("companyID", companyID);
+        map.put("v_TENANTID", tenantId);
+        map.put("v_AprMemberSN", aprMemberSN);
+
+        try {
+            if (count == aprMemberSN) {
+                if (count == 1) {
+                    ezApprovalGDAO.aprDeleteDocInfo(map);
+                    ezApprovalGDAO.aprDeleteDocInfo2(map);
+                    ezApprovalGDAO.aprDeleteDocInfo5(map);
+                    ezApprovalGDAO.aprDeleteDocInfo6(map);
+                    ezApprovalGDAO.aprDeleteDocInfo7(map);
+                    ezApprovalGDAO.aprDeleteDocInfo8(map);
+                    ezApprovalGDAO.aprDeleteDocInfo9(map);
+                } else {
+                    ezApprovalGDAO.deleteGongRamSaveExpAprLine(map);
+                    ezApprovalGDAO.deleteGongRamSaveAprLineInfo(map);
+                }
+            } else {
+                ezApprovalGDAO.deleteGongRamSaveExpAprLine(map);
+                ezApprovalGDAO.deleteGongRamSaveAprLineInfo(map);
+
+                for (int i = aprMemberSN + 1; i <= count; i++) {
+                    map.put("v_AprMemberSN", i);
+
+                    ezApprovalGDAO.updateOtherGongRamExpAprLine(map);
+                    ezApprovalGDAO.updateOtherGongRamAprLineInfo(map);
+                }
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return "FALSE";
+        }
+        logger.debug("gongRamCancel ended.");
+        return "TRUE";
 	}
 }

@@ -27,7 +27,7 @@ import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezMobile.ezEmail.service.MEmailService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
-import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service("MEmailService")
 public class MEmailServiceImpl extends EgovAbstractServiceImpl implements MEmailService {
@@ -188,6 +188,8 @@ public class MEmailServiceImpl extends EgovAbstractServiceImpl implements MEmail
 			}
 					
 			folder.close(false);
+		} catch (NumberFormatException e) {
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		} finally {
@@ -214,6 +216,8 @@ public class MEmailServiceImpl extends EgovAbstractServiceImpl implements MEmail
 				
 		Folder folder = ia.getFolder(folderId);	
 		return folder.getUnreadMessageCount();
+		} catch (RuntimeException e) { 
+		return -1;		
 		} catch (Exception e) { 
 		return -1;	
 		}  finally {
@@ -277,10 +281,10 @@ public class MEmailServiceImpl extends EgovAbstractServiceImpl implements MEmail
 				malFolderList.add(folder);
 			}
 			
-		} catch (Exception e) {
-			
+		} catch (RuntimeException e) {
 			logger.error(e.getMessage(), e);
-			
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();

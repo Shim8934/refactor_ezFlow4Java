@@ -8,7 +8,8 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>left_schedule</title>
 	    <link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css" />
-		<link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />		
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 	    <link rel="stylesheet" href="${util.addVer('/css/ezSchedule/Calendar_cross.css')}" type="text/css" />
 	    <link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
 	    <style>
@@ -32,12 +33,12 @@
 	        /* 2018-08-03 김보미 - 그룹명이 길 경우 처리 */
 	        .IDcontainer { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-family: Malgun Gothic, malgun gothic; font-size: 13px; padding-top: 0px; padding-left:0px; margin: 0px; }
 	
-	        .IDcontainer span { font-family: Malgun Gothic, malgun gothic; }
-	
 	        /* 2018-08-03 김보미 - 클릭시마다 앞의 체크박스 ui 틀어지는 현상 막기 */
 	        .IDcontainer .checkSelect { display: none; }
 	
 	        #mCSB_1_container { margin-right: 0px; }
+
+			.node_selected { width: inherit; }
 	    </style>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/Holiday.js')}"></script>
@@ -85,7 +86,7 @@
 			        chk_DisplayChange2();
 			    }
 			    liSelected();
-			}   
+			}
 			function FindByAttributeValue(attribute, value, element_type)    {
 				element_type = element_type || "*";
 			   	var All = document.getElementsByTagName(element_type);
@@ -108,52 +109,88 @@
 						$("input[name=chk_schedule]").each(function(index){
 							var chk_eachVal1 = $(this).val();
 							var chk_type=$(this).data("schedule-type")
-							
-							$('.td_list td[ownerid = "'+chk_eachVal1+'"][scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){							
-								$(value).addClass('chk_noneDisplay');
-							});
+
+							if (chk_type == "10" || chk_type == "1") {
+								$('.td_list td[scheduletype = "' + chk_type + '"]', parent.frames["right"].document).each(function (index, value) {
+									$(value).addClass('chk_noneDisplay');
+								});
+							} else {
+								$('.td_list td[ownerid = "' + chk_eachVal1 + '"][scheduletype = "' + chk_type + '"]', parent.frames["right"].document).each(function (index, value) {
+									$(value).addClass('chk_noneDisplay');
+								});
+							}
 						});
 						$("input[name=chk_schedule]:checked").each(function(index) {
 							var test = $(this).val();
 							var chk_type = $(this).data("schedule-type");
 							
-							$('.td_list td[ownerid = "'+test+'"][scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
-								$(value).removeClass('chk_noneDisplay');
-							});
+							if (chk_type == "10" || chk_type == "1") {
+								$('.td_list td[scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
+									$(value).removeClass('chk_noneDisplay');
+								});
+							} else {
+								$('.td_list td[ownerid = "' + test + '"][scheduletype = "' + chk_type + '"]', parent.frames["right"].document).each(function (index, value) {
+									$(value).removeClass('chk_noneDisplay');
+								});
+							}
 						});					
 					} else if (typeCal == 1) {
 						$("input[name=chk_schedule]").each(function(index){
 							var chk_eachVal1 = $(this).val();
 							var chk_type = $(this).data("schedule-type");
-							
-							$('div[ownerid = "'+chk_eachVal1+'"][scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
-								$(value).addClass('chk_noneDisplay');
-							});
+
+							if (chk_type == "10" || chk_type == "1") {
+								$('div[scheduletype = "' + chk_type + '"]', parent.frames["right"].document).each(function (index, value) {
+									$(value).addClass('chk_noneDisplay');
+								});
+							} else {
+								$('div[ownerid = "' + chk_eachVal1 + '"][scheduletype = "' + chk_type + '"]', parent.frames["right"].document).each(function (index, value) {
+									$(value).addClass('chk_noneDisplay');
+								});
+							}
 						});
 						$("input[name=chk_schedule]:checked").each(function(index) {
 							var test = $(this).val();
 							var chk_type = $(this).data("schedule-type");
-							
-							$('div[ownerid = "'+test+'"][scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
-								$(value).removeClass('chk_noneDisplay');
-							});
+
+							if (chk_type == "10" || chk_type == "1") {
+								$('div[scheduletype = "' + chk_type + '"]', parent.frames["right"].document).each(function (index, value) {
+									$(value).removeClass('chk_noneDisplay');
+								});
+							} else {
+								$('div[ownerid = "' + test + '"][scheduletype = "' + chk_type + '"]', parent.frames["right"].document).each(function (index, value) {
+									$(value).removeClass('chk_noneDisplay');
+								});
+							}
 						});	
 					} else {
 						$("input[name=chk_schedule]").each(function(index){
 							var chk_eachVal1 = $(this).val();
 							var chk_type = $(this).data("schedule-type");
-							
-							$('div[ownerid = "'+chk_eachVal1+'"][scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
-								$(value).addClass('chk_noneDisplay');
-							});
+
+							if (chk_type == "10" || chk_type == "1") {
+								$('div[scheduletype = "' + chk_type + '"]', parent.frames["right"].document).each(function (index, value) {
+									$(value).addClass('chk_noneDisplay');
+								});
+							} else {
+								$('div[ownerid = "' + chk_eachVal1 + '"][scheduletype = "' + chk_type + '"]', parent.frames["right"].document).each(function (index, value) {
+									$(value).addClass('chk_noneDisplay');
+								});
+							}
 						});
 						$("input[name=chk_schedule]:checked").each(function(index) {
 							var test = $(this).val();
 							var chk_type = $(this).data("schedule-type");
-							
-							$('div[ownerid = "'+test+'"][scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
-								$(value).removeClass('chk_noneDisplay');
-							});						
+
+							if (chk_type == "10" || chk_type == "1") {
+								$('div[scheduletype = "' + chk_type + '"]', parent.frames["right"].document).each(function (index, value) {
+									$(value).removeClass('chk_noneDisplay');
+								});
+							} else {
+								$('div[ownerid = "' + test + '"][scheduletype = "' + chk_type + '"]', parent.frames["right"].document).each(function (index, value) {
+									$(value).removeClass('chk_noneDisplay');
+								});
+							}
 						});	
 					}
 					
@@ -338,6 +375,9 @@
 	                else if ("5" == _funCode) {
 	                	Function_Flag(5);
 	                }
+					else if ("13" == _funCode) {
+						Function_Flag(13);
+					}
 	            }
 	            else {	                
 	                if ("2" == _funCode) {
@@ -362,6 +402,9 @@
 	                else if ("5" == _funCode) {
 	                	Function_Flag(5);
 	                }
+					else if ("13" == _funCode) {
+						Function_Flag(13);
+					}
 	            }
 	            $(".scheduleListBox").mCustomScrollbar({
 	        		theme : "dark"
@@ -387,7 +430,8 @@
 				        });
 		            	isCalendarView = false;
 		            	$('#select-all').prop('checked',false);
-		                window.open("/ezSchedule/scheduleManageGroup.do", "right")
+		                window.open("/ezSchedule/scheduleManageGroup.do", "right");
+						//liSelected();
 		                break;
 
 		            case 6:		// schedule search
@@ -397,7 +441,7 @@
 				        });
 		            	isCalendarView = false;
 		            	$('#select-all').prop('checked',false);
-		                window.open("/ezSchedule/scheduleSearch.do", "right")
+		                window.open("/ezSchedule/scheduleSearch.do", "right");
 		                break;
 
 		            case 7:		// Search Task
@@ -421,6 +465,24 @@
 		            	$('#select-all').prop('checked',false);
 		                window.open("/ezSchedule/scheduleConfigMain.do?flag=schedule", "right");
 		                break;
+					case 12:		// Search User Calendar
+						$('.checkSelect').each(function() {
+							$(this).prop('checked',false);
+						});
+						isCalendarView = false;
+						$('#select-all').prop('checked',false);
+						liSelected();
+						window.open("/ezSchedule/scheduleUserCalendarSearch.do", "right");
+						break;
+					case 13:	// 일정 모아보기, Gathering Schedule
+						$('.checkSelect').each(function() {
+							$(this).prop('checked',false);
+						});
+						isCalendarView = false;
+						$('#select-all').prop('checked',false);
+						window.open("/ezSchedule/scheduleGatherMain.do", "right")
+						//liSelected();
+						break;
 		        }
 		    }
 	        
@@ -444,7 +506,11 @@
 	        	//frm.submit();
 	        	window.location.href = "/ezSchedule/scheduleLeft.do?funCode=5";
 	        }
-	      	
+
+			function gatherRefresh() {
+				window.location.href = "/ezSchedule/scheduleLeft.do?funCode=13";
+			}
+
 	        // 일정그룹 초대 수락 시
 	        $( window ).resize(function() {
 	        	leftResize();
@@ -499,20 +565,116 @@
 					chk_str += $('#select-all').val();
 				}
 	        }
-	        
+
 	        // 2023-06-30 황인경 - 디자인 개선 > 일정관리 > 좌측메뉴 > 일정검색, 공개일정검색 선택 항목 클래스 제어
 	        function liSelected() {
 	        	$(".list_text.node_selected").removeClass("node_selected");
 
 	        	var liSelected = $(event.target);
-	        	
+
 	            if (liSelected.prop("tagName") == "LI") {
 	            	liSelected.children().addClass("node_selected");
 	            } else {
-	            	liSelected .addClass("node_selected");
+	            	liSelected.addClass("node_selected");
 	            }
 	        }
-	        
+
+			/* 2023-10-05 임정은 - 모아보기 그룹 클릭 이벤트 추가 (기존 참석자 초대 버튼 이벤트 참고 및 수정) */
+			var schedule_add_user_cross_dialogArguments = new Array();
+			function Add_UserInfo_onclick(obj) {
+				$('.checkSelect').each(function() {
+					$(this).prop('checked',false);
+				});
+				liSelected();
+				isCalendarView = false;
+				$('#select-all').prop('checked',false);
+
+				var rtn = {"id": new Array(), "name": new Array(), "deptname": new Array()};
+				var g_param = new Array();
+				g_param["groupName"] = obj.getAttribute('data2');
+
+				$.ajax({
+					type: "GET",
+					dataType: "xml",
+					async: false,
+					data: {
+						groupID: obj.getAttribute('data1')
+					},
+					url: "/ezSchedule/getGatherDetail.do",
+					success: function (text) {
+						var totalLen = SelectNodes(text, "MEMBERID").length;
+
+						for (var i = 0; i < totalLen; i++) {
+							rtn["id"][i] = SelectNodes(text, "MEMBERID").item(i).textContent;
+							if (uselang == "1") {
+								rtn["name"][i] = SelectNodes(text, "MEMBERNAME").item(i).textContent;
+								rtn["deptname"][i] = SelectNodes(text, "DESCRIPTION").item(i).textContent;
+							} else {
+								rtn["name"][i] = SelectNodes(text, "MEMBERNAME2").item(i).textContent;
+								rtn["deptname"][i] = SelectNodes(text, "DESCRIPTION2").item(i).textContent;
+							}
+						}
+					}
+				});
+
+				g_param["startTime"] = "";
+				g_param["endTime"] = "";
+				g_param["entryList"] = rtn;
+
+				schedule_add_user_cross_dialogArguments[0] = g_param;
+				schedule_add_user_cross_dialogArguments[1] = Add_UserInfo_onclick_Complete;
+
+				if (CrossYN()) {
+					window.open("/ezSchedule/scheduleShowGatherList.do", "right");
+				} else {
+					var reParam = window.open("/ezSchedule/scheduleShowGatherList.do", "right");
+					if (typeof (reParam) != "undefined" && reParam != null) {
+						idDatepicker.vtLocalDate = reParam["startTime"];
+						idDatepicker.vtLocalEndDate = reParam["endTime"];
+
+						if (reParam["entryList"] != "") {
+							xmpEntryEmailList.innerText = reParam["entryList"];
+							DisplayEntryList();
+						}
+					}
+				}
+			}
+			function Add_UserInfo_onclick_Complete(reParam) {
+				idDatepicker.vtLocalDate = reParam["startTime"];
+				idDatepicker.vtLocalEndDate = reParam["endTime"];
+
+				if (reParam["entryList"] != "") {
+					xmpEntryEmailList.innerText = reParam["entryList"];
+					DisplayEntryList();
+				}
+			}
+
+			function openFolder() {
+				var h2Title;
+
+				if ($(event.target).context.classList.contains('doNotOpen')) {
+					return;
+				}
+
+				if ($(event.target).get(0).nodeName == 'H2') {
+					h2Title = $(event.target);
+				} else {
+					h2Title = $(event.target).parent();
+				}
+
+				if (h2Title.hasClass("on")) {
+					h2Title.attr("class", "off");
+					h2Title.next().addClass("off");
+					h2Title.children().eq(0).attr("class", "sub_iconLNB tree_plus");
+				} else {
+					$("h2.on").attr("class", "off");
+					$(".lnbUL").attr("class", "lnbUL off");
+					h2Title.attr("class", "on");
+					h2Title.next().removeClass("off");
+					$(".tree_arrow_down").attr("class", "sub_iconLNB tree_plus");
+					h2Title.children().eq(0).attr("class", "sub_iconLNB tree_arrow_down");
+				}
+			}
 		</script>
 	</head>
 
@@ -530,7 +692,7 @@
 	        </div>
         	<div class="scheduleListBox" style="overflow:hidden; padding-right: 0;">
 		        <%-- 2023-06-23 황인경 - 디자인 개선 > 일정관리 > 좌측메뉴 > 최상위 '일정관리' 메뉴 표시 추가 --%>
-	        	<h2 class="on">
+	        	<h2 class="on" onclick="openFolder()">
 			            <span class="sub_iconLNB tree_arrow_down"></span><span class="h2Title" id="" onclick="('')"><spring:message code='ezSchedule.t1010'/></span>
 		        </h2>
 		        <ul class="lnbUL">
@@ -551,7 +713,7 @@
 					  		<span class="list_text"><spring:message code='ezSchedule.t221'/></span>
 						</label>
 					</li>	
-					<c:if test='${!empty scheSec}'>
+					<%--<c:if test='${!empty scheSec}'>
 						<c:forEach var="sec" items="${scheSec}">
 							<li>
 								<label class="IDcontainer" onchange="chk_DisplayChange()">
@@ -561,7 +723,7 @@
 								</label>
 							</li>	
 						</c:forEach>
-					</c:if>
+					</c:if>--%>
 					<c:if test="${isGoogleSync == 'Y'}">
 						<li>
 							<label class="IDcontainer" onchange="chk_DisplayChange()">
@@ -629,10 +791,37 @@
 							</li>	
 						</c:forEach>
 					</c:if>
+					<li>
+						<label class="IDcontainer" onchange="chk_DisplayChange()">
+							<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="10" value="${loginVO.id}" class="checkSelect">
+							<span class="checkmark mr5" style="background:rgb(255, 174, 0); margin-top: 7px;"></span>
+							<span class="list_text"><spring:message code='ezSchedule.lyj14'/></span>
+						</label>
+					</li>
 					<%-- 2023-06-23 황인경 - 디자인 개선 > 일정관리 > 좌측메뉴 > LNB 이미지, 구조 수정 --%>
                   	<li class="ul_2Box"></span><span class="list_text" onClick="Function_Flag(6)"><spring:message code='ezSchedule.t1018'/></span></li>
                   	<li><span class="list_text" onClick="Function_Flag(10)"><spring:message code='ezSchedule.t1021'/></span></li>
+					<li><span class="list_text" onClick="Function_Flag(12)"><spring:message code='ezSchedule.kmh01'/></span></li>
 		        </ul>
+				<%-- 2024-06-05 임정은 - 일정 모아보기 기능 --%>
+				<h2 class="off" onclick="openFolder()">
+					<span class="sub_iconLNB tree_plus"></span>
+					<span class="h2Title">
+						<spring:message code='ezSchedule.ljeGs001'/>
+						<span onclick="Function_Flag(13)" class="sub_iconLNB tree_manage doNotOpen"></span>
+					</span>
+				</h2>
+				<ul class="lnbUL off">
+					<c:if test='${!empty gatherList}'>
+						<c:forEach var="group" items="${gatherList}">
+							<li>
+								<label class="IDcontainer">
+									<span class="list_text" data1="${fn:escapeXml(group.groupId)}" data2="${fn:escapeXml(group.groupName)}" onclick="Add_UserInfo_onclick(this)">${fn:escapeXml(group.groupName)}</span>
+								</label>
+							</li>
+						</c:forEach>
+					</c:if>
+				</ul>
 <%-- 		    <ul class="lnbUL">
 	            	<li><span class="sub_iconLNB tree_search"></span><span class="list_text" onClick="Function_Flag(6)"><spring:message code='ezSchedule.t1018'/></span></li>
     	        	<li><span class="sub_iconLNB tree_pims_search_open"></span><span class="list_text" onClick="Function_Flag(10)"><spring:message code='ezSchedule.t1021'/></span></li>

@@ -7,7 +7,27 @@
 <html ondragover="bodydragover(event)">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" type="text/css" href="${util.addVer('ezCommunity.i1', 'msg')}">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
+		<style>
+			#lstAttachLink {
+				height: 115px;
+				border: 1px solid #d2d2d2;
+			}
+
+			.attachInnerNotice_p_on {
+				text-align: center;
+				margin: 10px 0 0 0;
+			}
+
+			.attachInnerNotice_p_off {
+				display: none;
+			}
+
+			.attachInnerNotice_span {
+				line-height: 55px;
+			}
+		</style>
 		<script type="text/javascript" src="${util.addVer('ezCommunity.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezCommunity/ConvertSaveImage.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -41,7 +61,9 @@
 		<!-- time picker -->
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/timeControls/jquery.timepicker.css')}" />
 		<script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>
-
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery.multipleSortable.js')}"></script>
+		
 		<c:choose>
 			<c:when test="${pMode == 'new' || pUrl != ''}">
 				<title><spring:message code='ezCommunity.t1128' /></title>
@@ -109,6 +131,9 @@
 			var mailShareId = "<c:out value = '${mailShareId}'/>";
 			var mailFG_Post = "<c:out value = '${boardInfo.mailFG_Post}'/>"; // 게시알림
 			var mailFG_Mod = "<c:out value = '${boardInfo.mailFG_Mod}'/>"; // 수정알림
+			var editor = "<c:out value = '${editor}'/>";
+			var isfileup = false;
+			var xhr = new XMLHttpRequest();
 			
 			<c:if test="${isCrossBrowser != true}">
 			    var objMHT = new ActiveXObject("MhtFormat.Convert");
@@ -167,6 +192,7 @@
 		        InitializeSettings();
 		        ChkPermanent();
 		        rsa.setPublic(document.getElementById('publicModulus').value, document.getElementById('publicExponent').value);
+				setAttachSortable();
 		    }
 			
 			$(function(){
@@ -367,10 +393,12 @@
 		    	
 		    	saveFlag == true;
 		    	
-		        if(MHTLoadComplete != "true") {
-		            alert("<spring:message code='ezCommunity.t1138'/>");		
-		            return;
-		        }
+		    	if (editor != "HWP") {
+		    		if(MHTLoadComplete != "true") {
+			            alert("<spring:message code='ezCommunity.t1138'/>");		
+			            return;
+			        }	
+		    	}
 							
 		        var strXML = "";
 		        var newID = "";
@@ -515,30 +543,38 @@
 		            	obj[i].removeAttribute('className');
 		            }
 		        }
-	
-		        if (pDocID != "") {
-		        	message.SetEditorContent(message.GetEditorContent() + "<hr><br/><div contenteditable='false' >" + GetBODY(document.getElementById('docContent')).innerHTML) + "</div>";
-		        }
-
-		        var strBody = message.GetEditorContent();
 		        
-		        /* 2019-04-02 홍승비 - MHT파일 변환 및 저장 시 예외처리 추가 */
-		        try {
-			        if (trim_Cross(strBody) != "" || pDocID == "") {
-			            strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(strBody) + "</BODY>" + "</HTML>");
-			        } else {
-			            if (pDocID == "") {
-			            	strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(strBody) + "</BODY>" + "</HTML>");
-			            } else {
-			                var tempstr = strBody + "<hr><br/>" + GetBODY(document.getElementById('docContent')).innerHTML;
-			                strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(tempstr) + "</BODY>" + "</HTML>");
-			            }
+		        if (editor != "HWP") {
+		        	if (pDocID != "") {
+			        	message.SetEditorContent(message.GetEditorContent() + "<hr><br/><div contenteditable='false' >" + GetBODY(document.getElementById('docContent')).innerHTML) + "</div>";
 			        }
-		        } catch (e) {
-		        	alert("<spring:message code='ezCommunity.lhj04'/>");
-      				return;
+
+			        var strBody = message.GetEditorContent();
+			        
+			        /* 2019-04-02 홍승비 - MHT파일 변환 및 저장 시 예외처리 추가 */
+			        try {
+				        if (trim_Cross(strBody) != "" || pDocID == "") {
+				            strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(strBody) + "</BODY>" + "</HTML>");
+				        } else {
+				            if (pDocID == "") {
+				            	strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(strBody) + "</BODY>" + "</HTML>");
+				            } else {
+				                var tempstr = strBody + "<hr><br/>" + GetBODY(document.getElementById('docContent')).innerHTML;
+				                strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(tempstr) + "</BODY>" + "</HTML>");
+				            }
+				        }
+			        } catch (e) {
+			        	alert("<spring:message code='ezCommunity.lhj04'/>");
+	      				return;
+			        }
+			        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "CONTENT", strBody);
+		        } else {
+		        	hwpHtml = hwpHtml.replace(/&quot;/gi, "\'");
+		        	if (hwpHtml.indexOf("url(\'/") > -1) {
+		        		hwpHtml = hwpHtml.replace("url(\'/", "url(\'");
+	      			}
+		        	createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "CONTENT", hwpHtml.replace(/\r\n/g, "@r!n@"));
 		        }
-		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "CONTENT", strBody);
 		        
 		        if (gubun == "2") {
 		        	createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DOCPASSWORD", rsa.encrypt(document.getElementById('txtPassWord').value));
@@ -825,65 +861,71 @@
             }
 						
             function Editor_Complete() {
-            	if (flag == false) {
-	                flag = true;
-	                
-	                if (pMode == "new" || pModeOld == "loadpc") {
-	                    document.getElementById("txtTitle").focus();
-	                    message.SetEditorContent("");
-	                } else {
-						if (pUrl == "") {
-	                        var fullPath = strContentLocation;
-	                        
-	                        if (pMode == "reply") {
-	                            var htmlData = message.GetEditorContentURL(fullPath);
-	                            htmlData = ReplaceText(htmlData, "class=&quot;FIELD&quot;", "");
-	                            htmlData = ReplaceText(htmlData, "class=FIELD", "");
-	        		            
-	                            htmlData = "<body free>" + htmlData + "</body>";
-	                            
-	                            if (gubun != "2") {
-	                            	var tempWriteDate = strWriteDate;
-	                            	
-	                            	if(strParentWriteDate > strWriteDate) {
-	                            		tempWriteDate = strParentWriteDate;
-	                            	}
-	                            	
-	                            	var replyHeader = "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
-		                        	replyHeader += "<p " + defaultFontAndSize + ">-----<B>[&nbsp;<spring:message code='ezCommunity.t1161' /></B>-----</p>";
-		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezCommunity.t1162' /></B>" + tempWriteDate + "</p>";
-		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezCommunity.t1163' /></B>" + strWriterName + "(" + strWriterTitle + "," + strWriterDeptName + "," + strWriterCompanyName + ")</p>";
-		                        	// 2021-06-22 김은실 - htmlData 이후 => 에디터에 옮겨지면서, 특수문자<>와 영문 혼용 시 태그로 인식함. 특수코드로(&lt; 등) 보내면 -> 에디터에서 알아서 변경하기 때문에, 특수코드로 보내는 것이 나음. 
-		                        	//					에디터에 따라 다를 경우, 경우를 나눠 추가작업을 요망.
-		                        	// replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezCommunity.t885' /></B>" + ConvMakeXMLString("<c:out value = '${item.title}' />") + "</p>";
-		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezCommunity.t885' /></B><c:out value = '${item.title}' /></p>";
-		                        	replyHeader += "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
-		                        	htmlData = replyHeader + htmlData;
-	                            
-	                            } else {
-	                            	var replyHeader = "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
-		                        	replyHeader += "<p " + defaultFontAndSize + ">-----<B>[&nbsp;<spring:message code='ezCommunity.t1161' /></B>-----</p>";
-		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezCommunity.t1162' /></B>" + strWriteDate + "</p>";
-		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezCommunity.t1163' /></B>" + strWriterName + "</p>";
-		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezCommunity.t885' /></B><c:out value = '${item.title}' /></p>";
-		                        	replyHeader += "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
-		                        	htmlData = replyHeader + htmlData;
-	                            }
-	                            
-	                            message.SetEditorContent(htmlData);
-	                        } else {
-	                            message.SetEditorContentURL(fullPath);
-	                        }
-	                    } else {
-	                        if (pDocID == "") {
-	                            if (InsertMailInfo() == -1) {
-	                            	window.close();
-	                            }
-	                        }
-	                    }
-	                }
-	                MHTLoadComplete = "true";
-                }
+            	if (editor != "HWP") {
+            		if (flag == false) {
+    	                flag = true;
+    	                
+    	                if (pMode == "new" || pModeOld == "loadpc") {
+    	                    document.getElementById("txtTitle").focus();
+    	                    message.SetEditorContent("");
+    	                } else {
+    						if (pUrl == "") {
+    	                        var fullPath = strContentLocation;
+    	                        
+    	                        if (pMode == "reply") {
+    	                            var htmlData = message.GetEditorContentURL(fullPath);
+    	                            htmlData = ReplaceText(htmlData, "class=&quot;FIELD&quot;", "");
+    	                            htmlData = ReplaceText(htmlData, "class=FIELD", "");
+    	        		            
+    	                            htmlData = "<body free>" + htmlData + "</body>";
+    	                            
+    	                            if (gubun != "2") {
+    	                            	var tempWriteDate = strWriteDate;
+    	                            	
+    	                            	if(strParentWriteDate > strWriteDate) {
+    	                            		tempWriteDate = strParentWriteDate;
+    	                            	}
+    	                            	
+    	                            	var replyHeader = "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
+    		                        	replyHeader += "<p " + defaultFontAndSize + ">-----<B>[&nbsp;<spring:message code='ezCommunity.t1161' /></B>-----</p>";
+    		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezCommunity.t1162' /></B>" + tempWriteDate + "</p>";
+    		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezCommunity.t1163' /></B>" + strWriterName + "(" + strWriterTitle + "," + strWriterDeptName + "," + strWriterCompanyName + ")</p>";
+    		                        	// 2021-06-22 김은실 - htmlData 이후 => 에디터에 옮겨지면서, 특수문자<>와 영문 혼용 시 태그로 인식함. 특수코드로(&lt; 등) 보내면 -> 에디터에서 알아서 변경하기 때문에, 특수코드로 보내는 것이 나음. 
+    		                        	//					에디터에 따라 다를 경우, 경우를 나눠 추가작업을 요망.
+    		                        	// replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezCommunity.t885' /></B>" + ConvMakeXMLString("<c:out value = '${item.title}' />") + "</p>";
+    		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezCommunity.t885' /></B><c:out value = '${item.title}' /></p>";
+    		                        	replyHeader += "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
+    		                        	htmlData = replyHeader + htmlData;
+    	                            
+    	                            } else {
+    	                            	var replyHeader = "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
+    		                        	replyHeader += "<p " + defaultFontAndSize + ">-----<B>[&nbsp;<spring:message code='ezCommunity.t1161' /></B>-----</p>";
+    		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezCommunity.t1162' /></B>" + strWriteDate + "</p>";
+    		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezCommunity.t1163' /></B>" + strWriterName + "</p>";
+    		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezCommunity.t885' /></B><c:out value = '${item.title}' /></p>";
+    		                        	replyHeader += "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
+    		                        	htmlData = replyHeader + htmlData;
+    	                            }
+    	                            
+    	                            message.SetEditorContent(htmlData);
+    	                        } else {
+    	                            message.SetEditorContentURL(fullPath);
+    	                        }
+    	                    } else {
+    	                        if (pDocID == "") {
+    	                            if (InsertMailInfo() == -1) {
+    	                            	window.close();
+    	                            }
+    	                        }
+    	                    }
+    	                }
+    	                MHTLoadComplete = "true";
+                    }
+            	} else {
+            		var URL;
+                    URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=";
+                    message.Open(URL, "", "", function (res) { FieldsAvailable(res.result) }, null);
+            	}
 			}
 
             function btn_AttachSelect_onclick() {
@@ -970,6 +1012,61 @@
 		    		}
 		    	});
 		    }
+	        
+	        function FieldsAvailable(isTrue) {
+	        	if (isTrue) {
+	        		if (pMode == "new") {
+            			message.SetMargin(3000);
+            		}
+	        		message.EditMode(1);
+            		message.SetViewProperties(2, 100);
+		            message.ScrollPosInfo(0, 0);
+		            message.ShowToolBar(true);
+		            message.ShowRibbon(true);
+		            message.FoldRibbon(true);
+		            window.onresize();
+	        	}
+	        }
+	        
+	        window.onresize = function () {
+				var mHeight = document.getElementById("EdtorSize").clientHeight - 5 + "px";
+								
+				if (gubun != "2") {
+					document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 335 + "PX";
+					document.getElementById("message").style.height = document.documentElement.clientHeight - 335 + "PX";
+				} else {
+					document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 365 + "PX";
+					document.getElementById("message").style.height = document.documentElement.clientHeight - 365 + "PX";
+				}
+
+				if (editor == "HWP") {
+					message.Resize(mHeight);
+				}
+
+				mobileDistinction();
+			};
+		    
+		    function SaveItemHWP() {
+		    	GetHTML(before_saveItem);
+		    }
+		    
+		    function GetHTML(callback) {
+                ingFlag = true;
+			    message.GetTextFile("HWP", "", function (data) { ingFlag = false; callback(data); });
+			}
+		    
+		    var hwpHtml = "";
+            function before_saveItem(html, pMode) {
+            	hwpHtml = html;
+            	SaveItem();
+            }
+            
+            function Editor_Modify_Complete() {
+		    	var URL;
+                URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(strContentLocation);
+                message.Open(URL, "", "", function (res) { FieldsAvailable(res.result) }, null);
+		    }
+	        
 		</script>
 
 		<script type="text/javascript" FOR="EzHTTPTrans" EVENT="AttachAddFile(filename)">
@@ -983,7 +1080,12 @@
 					<div id="menu">
 						<ul>
 							<!-- 2018-05-30 구해안 그룹웨어 모듈 '등록','저장후닫기' => '저장'으로 통일  ezCommunity.t155 => t20 -->
-							<li><span onclick="SaveItem();"><spring:message	code='ezCommunity.t20' /></span></li>
+							<c:if test="${editor ne 'HWP'}">
+								<li><span onclick="SaveItem();"><spring:message	code='ezCommunity.t20' /></span></li>
+							</c:if>
+							<c:if test="${editor eq 'HWP'}">
+								<li><span onclick="SaveItemHWP();"><spring:message	code='ezCommunity.t20' /></span></li>
+							</c:if>
 							<!-- 2017-12-27 장진혁 - 미리보기가 필요하지 않아 보임 주석처리함 -->
 							<%-- <li><span onclick="PreviewItem();"><spring:message code='ezCommunity.t1167' /></span></li> --%>
 						</ul>
@@ -1106,9 +1208,16 @@
 			</tr>
 			<tr>
 				<td style="height: 100%; vertical-align: top;" id="EdtorSize">
-					<iframe id="message" class="viewbox" name="message"
+					<c:if test="${editor ne 'HWP'}">
+						<iframe id="message" class="viewbox" name="message"
 						src="/ezEditor/selectEditor.do"
 						style="padding: 0; height: 100%; width: 100%; overflow: auto;margin-top:-1px;"></iframe>
+					</c:if>
+					<c:if test="${editor eq 'HWP'}">
+						<iframe id="message" class="viewbox" name="message"
+						src="/ezCommunity/WHWPEditor.do?type=${pMode}"
+						style="padding: 0; height: 100%; width: 100%; overflow: auto;"></iframe>
+					</c:if>
 				</td>
 			</tr>
 			<tr id="docTR" style="display: none">
@@ -1127,17 +1236,21 @@
 						<c:when test="${isCrossBrowser != true}">
 							<table class="file">
 								<form name="multicheck">
-									<tr>
-										<th><spring:message code='ezCommunity.t141' /></th>
-										<td class="pos1"><script type="text/javascript">EzHTTPTrans_ActiveX2("EzHTTPTrans", "125%", "100%");</script>
-											<div id="lstAttachLink"
-												style="display: none; OVERFLOW: auto; HEIGHT: 50px;">&nbsp;</div>
-										</td>
-										<td class="pos2">
-											<a class="imgbtn imgbck"><span id="btn_AttachAdd" onClick="return btn_AttachAdd_onclick()"><spring:message code='ezCommunity.t1177' /></span></a><br>
-											<a class="imgbtn imgbck"><span id="btn_AttachDel" onClick="return btn_AttachDel_onclick()"><spring:message code='ezCommunity.t1178' /></span></a>
-										</td>
-									</tr>
+									<div style="width:100%;white-space:nowrap;display:inline-block; height: 23px;">
+										<div style="float:left">
+											<a class="imgbtn imgbck" id="btn_AttachAdd" onclick="btn_AttachSelect_onclick()"><span><spring:message code='ezCommunity.t1177' /></span></a>
+											<a class="imgbtn imgbck" id="btn_AttachDel" onclick="btn_AttachDel_onclick()"><span><spring:message code='ezCommunity.t1178' /></span></a>
+										</div>
+										<div id="progdiv" class="progarea" style="display:none">
+											<P class="prog_bar"><span id="prog_bar" style="width:0%"></span></P> <span class="prog_num"><strong id ="prog_num">0</strong>%</span>
+										</div>
+									</div>
+										<%--<th><spring:message code='ezCommunity.t141' /></th>--%>
+									<div id="lstAttachLink" class="ui-sortable" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)" style="overflow:auto;">
+										<table id="filelist" class="sublist" style="width: 100%;"><tr><th style="width: 15px;"><input type="checkbox" id="checkboxall"></th><th style="width: 87%;"><spring:message code='ezCommunity.t1135' /></th><th style="width: 13%;"><spring:message code='ezCommunity.t1136' /></th></tr></table>
+										<p id="attachInnerNotice" class="attachInnerNotice_p_on"><span class="attachInnerNotice_span"><spring:message code='ezJournal.AttachMJS01' /></span></p></div>
+									<input id="file" type="file" onchange="filechange(event)" multiple="" style="display:none">
+									<input type="hidden" value="upload" onclick="fileupload()">
 								</form>
 							</table>
 						</c:when>
@@ -1151,21 +1264,21 @@
 								<input type="hidden" name="cnt" id="cnt" />
 								<input type="hidden" name="mailGubun" id="mailgubun" />
 							</form>
-							<table class="file">
-								<form name="multicheck">
-									<tr>
-										<th><spring:message code='ezCommunity.t141' /></th>
-										<td class="pos1">
-											<div id="lstAttachLink">&nbsp;</div>
-										</td>
-										<td class="pos2" style ="white-space:normal;">
-											<a class="imgbtn imgbck" style="margin-bottom: 3px !important;"><span id="btn_AttachAdd" onclick="return btn_AttachSelect_onclick()"><spring:message code='ezCommunity.t1177' /></span></a>
-											<br>
-											<a class="imgbtn imgbck"><span id="btn_AttachDel" onclick="return btn_AttachDel_onclick()"><spring:message code='ezCommunity.t1178' /></span></a>
-										</td>
-									</tr>
-								</form>
-							</table>
+									<div style="width:100%;white-space:nowrap;display:inline-block; height: 23px;">
+										<div style="float:left">
+											<a class="imgbtn imgbck" id="btn_AttachAdd" onclick="btn_AttachSelect_onclick()"><span><spring:message code='ezCommunity.t1177' /></span></a>
+											<a class="imgbtn imgbck" id="btn_AttachDel" onclick="btn_AttachDel_onclick()"><span><spring:message code='ezCommunity.t1178' /></span></a>
+										</div>
+										<div id="progdiv" class="progarea" style="display:none">
+											<P class="prog_bar"><span id="prog_bar" style="width:0%"></span></P> <span class="prog_num"><strong id ="prog_num">0</strong>%</span>
+										</div>
+									</div>
+										<%--<th><spring:message code='ezCommunity.t141' /></th>--%>
+											<div id="lstAttachLink" class="ui-sortable" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)" style="overflow:auto;">
+												<table id="filelist" class="sublist" style="width: 100%;"><tr><th style="width: 15px;"><input type="checkbox" id="checkboxall"></th><th style="width: 87%;"><spring:message code='ezCommunity.t1135' /></th><th style="width: 13%;"><spring:message code='ezCommunity.t1136' /></th></tr></table>
+												<p id="attachInnerNotice" class="attachInnerNotice_p_on"><span class="attachInnerNotice_span"><spring:message code='ezJournal.AttachMJS01' /></span></p></div>
+											<input id="file" type="file" onchange="filechange(event)" multiple="" style="display:none">
+											<input type="hidden" value="upload" onclick="fileupload()">
 						</c:otherwise>
 					</c:choose>	
 				</td>
@@ -1184,6 +1297,19 @@
 	    	<c:if test="${boardInfo.gubun == '2'}">
 	            document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 365 + "PX";
 	    	</c:if>
+			
+			function mobileDistinction() {
+   				var  userAgent = navigator.userAgent.toLowerCase();
+				
+				if (/iphone|ipod|ipad|android.*mobile/i.test(userAgent) || /tablet|ipad|android/i.test(userAgent) || navigator.maxTouchPoints > 4) {
+					if (window.innerWidth > window.innerHeight) {
+						document.getElementById("EdtorSize").style.height = 436 + "PX";
+						document.getElementById("message").style.height = 436 + "PX";
+					}
+				}
+			}
+			
+			mobileDistinction();
 		</script>
 
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0, 0, 0, 0.7); display: none;"	id="mailPanel">&nbsp;</div>

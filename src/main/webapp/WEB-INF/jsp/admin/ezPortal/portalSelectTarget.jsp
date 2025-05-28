@@ -6,7 +6,8 @@
 	<head>
 		<title><spring:message code='ezPortal.t13'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
 		<style>
 			.box {
@@ -25,9 +26,6 @@
 	    	#countInfo {
 	    		overflow: hidden;
 	    		display: inline-block;
-	    	}
-	    	.countColor {
-	    		color:#017BEC;
 	    	}
 		</style>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -266,9 +264,9 @@
 							var strIsLeaf = $("div#" + id + "").attr("isleaf");
 							
 							if (result.containLow == "YES" && strIsLeaf != "TRUE") { //하위가 있고, 표기방식이 [1명/ 전체10명]일 경우
-			        			document.getElementById("countInfo").innerHTML += "-[<span class='countColor'>" + result.totalCount + strLang1 + "</span>/<spring:message code='ezAddress.t362' /> <span class='countColor'>" + result.totalCount2 + strLang1 + "</span>]";
+			        			document.getElementById("countInfo").innerHTML += "-[<span class='txt_color'>" + result.totalCount + strLang1 + "</span>/<spring:message code='ezAddress.t362' /> <span class='txt_color'>" + result.totalCount2 + strLang1 + "</span>]";
 							} else {
-								document.getElementById("countInfo").innerHTML += "-[<span class='countColor'>" + result.totalCount + strLang1 + "</span>]";
+								document.getElementById("countInfo").innerHTML += "-[<span class='txt_color'>" + result.totalCount + strLang1 + "</span>]";
 							}
 							//2018-08-01 김보미 - 부서명 [사원수] 가 넘치는지 확인하는 함수
 							deptNameLong(result.containLow, strIsLeaf);
@@ -290,7 +288,7 @@
 	                    DisplayUserImageList();
 	                }
 	                else
-	                    alert("<spring:message code='ezPortal.t14'/>" + g_xmlHTTP.statusText)
+	                    alert("<spring:message code='ezPortal.t14'/>" + g_xmlHTTP.status)
 
 	            g_xmlHTTP = null;
 	        }
@@ -383,11 +381,11 @@
 	        }
 	        var UserListHTML = "";
 	        /* if (SelectDeptNM.getAttribute("countinfo") != "1" && SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length && SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length != "") {
-	            //SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang1 + "</span>]";
+	            //SelectDeptNM.innerHTML += "-[<span class='txt_color'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang1 + "</span>]";
 	            if (SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length ==  getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0])) {
-        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang1 + "</span>]";
+        			SelectDeptNM.innerHTML += "-[<span class='txt_color'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang1 + "</span>]";
         		} else {
-        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + "/" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0]) + strLang1 + "</span>]";
+        			SelectDeptNM.innerHTML += "-[<span class='txt_color'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + "/" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0]) + strLang1 + "</span>]";
         		}
 	            
 	            SelectDeptNM.setAttribute("countinfo", "1")
@@ -398,7 +396,7 @@
 	            document.getElementById("txtlist_table").style.display = "none";
 	            document.getElementById("Search_txtlist_table").style.display = "none";
 	            if (pSeach) {
-	                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + strLang2 + "" + "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang1 + "</span>]";
+	                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + strLang2 + "" + "-[<span class='txt_color'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang1 + "</span>]";
 	                SelectDeptNM.setAttribute("countinfo", "1")
 	            }
 	        }
@@ -412,7 +410,7 @@
 	            else {
 	                document.getElementById("Search_txtlist_table").style.display = "";
 	                document.getElementById("txtlist_table").style.display = "none";
-	                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + strLang2 + "" + "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang1 + "</span>]";
+	                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + strLang2 + "" + "-[<span class='txt_color'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang1 + "</span>]";
 	                SelectDeptNM.setAttribute("countinfo", "1")
 	            }
 	        }
@@ -674,7 +672,7 @@
 	                }
 	            }
 	            else
-	                alert("<spring:message code='ezPortal.t14'/>" + g_xmlHTTP.statusText)
+	                alert("<spring:message code='ezPortal.t14'/>" + g_xmlHTTP.status)
 
 	            g_xmlHTTP = null;
 	        }
@@ -767,7 +765,7 @@
 	                treeView.DataBind("TreeView");
 	            }
 	            else {
-	                alert("<spring:message code='ezPortal.t14'/>" + g_xmlHTTP.statusText)
+	                alert("<spring:message code='ezPortal.t14'/>" + g_xmlHTTP.status)
 	                g_xmlHTTP = null;
 	            }
 	        }

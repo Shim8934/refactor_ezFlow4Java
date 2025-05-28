@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezLadder.web;
 
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
@@ -72,8 +73,25 @@ public class EzLadderController {
 	 * 사다리게임 메인 화면 호출 함수
 	 */
 	@RequestMapping(value="/ezLadder/ladderMainPage.do", method=RequestMethod.GET)
-	public String qstMain() throws Exception{
+	public String qstMain(HttpServletRequest request, Model model) throws Exception{
 		logger.debug("ladderMainPage Start");
+
+		String leftFrameWidth = "220";
+		int width = 0;
+
+		if (request.getParameter("__wwidth") != null) {
+			String widthParam = request.getParameter("__wwidth");
+
+			try {
+				width = Integer.parseInt(widthParam);
+
+				leftFrameWidth = width < 1180 ? "0" : "220";
+			} catch (NumberFormatException e) {
+				width = 0;
+			}
+		}
+
+		model.addAttribute("leftFrameWidth", leftFrameWidth);
 		
 		logger.debug("ladderMainPage End");
 		return "/ezLadder/ladderMainPage";
@@ -428,13 +446,11 @@ public class EzLadderController {
 		
 		RestTemplate rest = new RestTemplate();
 		
-		Object obj = BMUserVO.getUserIds();
-		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("tenant_id", userInfo.getTenantId())
 				.queryParam("bmName", BMVO.getBmName())
 				.queryParam("writerId", userInfo.getId())
-				.queryParam("userIds", obj)
+				.queryParam("userIds", (Object[]) BMUserVO.getUserIds())
 				.queryParam("userNames", (Object[]) BMUserVO.getUserNames())
 				.queryParam("userName2s", (Object[]) BMUserVO.getUserName2s())
 				.queryParam("lang", userInfo.getLang())

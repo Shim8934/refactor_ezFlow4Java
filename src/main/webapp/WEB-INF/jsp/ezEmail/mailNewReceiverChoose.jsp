@@ -6,7 +6,8 @@
 	<head>
 	    <title><spring:message code='ezEmail.t572' /></title>
 	    <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
-	    <link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+	    <link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 	    <style>
 	    	.mainlist tr td:first-child {
@@ -29,9 +30,6 @@
 				overflow: hidden;
 				display: inline-block;
 			}
-			.countColor {
-				color:#017BEC;
-			}
 
 			.multiple-sortable-selected td{
 				color: #0684f9 !important;
@@ -43,6 +41,9 @@
 			
 			.popup h2{padding-top:4px !important;}
 			.receiver_tltype01{line-height:28px;}
+
+			.mainlist tr td[style*="display: none"]:first-child.none + td{padding-left:15px;}
+
 	    </style>
 	    <script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -160,7 +161,7 @@
 	                try {
 	                    RetValue = opener.mail_newreceiverchoose_dialogArguments[0];
 	                    ReturnFunction = opener.mail_newreceiverchoose_dialogArguments[1];
-	                } catch (e) { }
+	                } catch (e) {console.log(e);}
 	            }
 	            if (navigator.userAgent.indexOf('Firefox') != -1) {
 	                document.body.style.MozUserSelect = 'none';
@@ -236,7 +237,7 @@
 	                document.getElementById("ListMsgTo").setAttribute("rowspan", "3");
 	                document.getElementById("ListMsgCC").style.display = "none";
 	                document.getElementById("ListMsgBCC").style.display = "none";
-	                document.getElementById("ListViewMsgTo").style.height = "510px";
+	                document.getElementById("ListViewMsgTo").style.height = "477px";
 	                SelectReceiverWindow(ToTitle, ListViewMsgTo);
 	            }
 	            else if (type == "rule") {
@@ -282,14 +283,16 @@
 					remove_key_event();
 	
 	                document.getElementById("dept_select").style.display = "none";
-	            }
+ 	            }
 	            else {
 	                document.getElementById("h1Title").style.marginBottom = "0px";
 	                document.getElementById("mailReceiverInfoTxt").style.display = "block";
 	                
-	                window.resizeTo(window.outerWidth, window.outerHeight+18);
-	                
-	                SelectReceiverWindow(eval('<c:out value="${defaultWin}"/>' + "Title"), eval("ListViewMsg" + '<c:out value="${defaultWin}"/>'));
+	                // 2024.07.25 한슬기 : 새로고침시 화면 사이즈가 계속 늘어나는 문제가 있어 변경
+	                window.resizeTo(window.outerWidth, window.outerHeight);
+	                //window.resizeTo(window.outerWidth, window.outerHeight+18);
+
+	                SelectReceiverWindow(document.getElementById('<c:out value="${defaultWin}"/>' + "Title"), document.getElementById("ListViewMsg" + '<c:out value="${defaultWin}"/>'));
 	            }
 	            
 	            // (수신자 설정 시 drag, drop으로 순서 조정)
@@ -378,7 +381,7 @@
 		                            opener.opener.top.organview = loadXMLString(g_xmlHTTP.responseText);
 		                        else
 		                            window.dialogArguments["window"].opener.top.organview = loadXMLString(g_xmlHTTP.responseText);
-		                    } catch (e) { }
+		                    } catch (e) {console.log(e);}
 		                }
 		
 		                var treeXML = loadXMLFile("/xml/common/organtree_config2.xml");
@@ -395,7 +398,7 @@
 		                treeView.DataBind("TreeView");
 		            }
 		            else {
-		                alert("<spring:message code='ezEmail.t17' />" + g_xmlHTTP.statusText)
+		                alert("<spring:message code='ezEmail.t17' />" + g_xmlHTTP.status)
 		                g_xmlHTTP = null;
 		            }
 		        }
@@ -695,7 +698,7 @@
 		            xmlHTTP.send("");
 		            
 		            if (xmlHTTP.status != 200) {
-			            alert("<spring:message code='ezEmail.sharedMailbox07' />" + xmlHTTP.statusText);
+			            alert("<spring:message code='ezEmail.sharedMailbox07' />" + xmlHTTP.status);
 		            } else {
 		            	document.getElementById("ListViewSharedMailbox").innerHTML = "";
 			            var pListViewSharedMailbox = new ListView();
@@ -718,10 +721,11 @@
 			                    dataRows[i].ondragstart = function (event) { event_listdragstart(this); event.dataTransfer.setData('text/plain', 'dragged'); };
 			                else
 			                    dataRows[i].ondragstart = function (event) { event_listdragstart(this); };
-			
-			                if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-			                    dataRows[i].ondragend = function (event) { event_listdragend(event); };
-			                }
+
+							// 2024-07-05 김대현 #140902 사파리만 event_listdragend 넣어 중복으로 InsertReceiver()를 실행하여 생기는 현상으로 지워도 동작하기 때문에 해당 함수 주석처리 
+			                // if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
+			                //     dataRows[i].ondragend = function (event) { event_listdragend(event); };
+			                // }
 			            }
 			            
 			            changeCheckBox();
@@ -751,7 +755,7 @@
 	            ListViewTD.style.display = "none";
 	            ListViewDLTD.style.display = "none";
 	            ListViewSharedMailboxTD.style.display = "none";
-	            ListViewINPUT.style.display = "block";
+	            ListViewINPUT.style.display = "";
 	            dlmember.style.display = "none";
 	            sharedMailboxMember.style.display = "none";
 	            AddrSearch.style.display = "none";
@@ -963,7 +967,7 @@
 	                    inputAddress();
 	                    return;
 	                }
-	            } catch (e) { }
+	            } catch (e) {console.log(e);}
 				var al_Include = 0;
 	            
 	            if (m_selectedTree == AddressListView) {
@@ -1054,7 +1058,7 @@
 	                            var objTr = listview.AddRow(InitTr.length);
 	                            if (MaxCntNum != 0)
 	                                MaxCntNum = MaxCntNum + 1;
-	                            SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+	                            SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + (MaxID + 1));
 	                            listview.AddDataRow(objTr, Resultxml);
 	
 	                            document.getElementById(listid).className = "receiver_list";
@@ -1146,7 +1150,7 @@
 	                            var objTr = listview.AddRow(InitTr.length);
 	                            if (MaxCntNum != 0)
 	                                MaxCntNum = MaxCntNum + 1;
-	                            SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+	                            SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + (MaxID + 1));
 	                            listview.AddDataRow(objTr, Resultxml);
 	
 	                            document.getElementById(listid).className = "receiver_list";
@@ -1236,7 +1240,7 @@
 	                            var objTr = listview.AddRow(InitTr.length);
 	                            if (MaxCntNum != 0)
 	                                MaxCntNum = MaxCntNum + 1;
-	                            SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+	                            SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + (MaxID + 1));
 	                            listview.AddDataRow(objTr, Resultxml);
 	
 	                            document.getElementById(listid).className = "receiver_list";
@@ -1328,7 +1332,7 @@
 	                        var objTr = listview.AddRow(InitTr.length);
 	                        if (MaxCntNum != 0)
 	                            MaxCntNum = MaxCntNum + 1;
-	                        SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+	                        SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + (MaxID + 1));
 	                        listview.AddDataRow(objTr, Resultxml);
 	
 	                        document.getElementById(listid).className = "receiver_list";
@@ -1406,7 +1410,7 @@
 	                                Resultxml = loadXMLString(pparsingXML2);
 	
 	                                var objTr = listview.AddRow(trSize);
-	                                SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+	                                SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + (MaxID + 1));
 	                                listview.AddDataRow(objTr, Resultxml);
 	
 	                                document.getElementById(listid).className = "receiver_list";
@@ -1485,7 +1489,7 @@
 	                            var objTr = listview.AddRow(InitTr.length);
 	                            if (MaxCntNum != 0)
 	                                MaxCntNum = MaxCntNum + 1;
-	                            SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+	                            SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + (MaxID + 1));
 	                            listview.AddDataRow(objTr, Resultxml);
 	
 	                            document.getElementById(listid).className = "receiver_list";
@@ -1784,9 +1788,9 @@
 							var strIsLeaf = $("div#" + id + "").attr("isleaf");
 							
 							if (result.containLow == "YES" && strIsLeaf != "TRUE") { //하위가 있고, 표기방식이 [1명/ 전체10명]일 경우
-								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='countColor'>" + result.totalCount + "</span> / <span class='countColor'>" + parseInt(result.totalCount + result.totalCount2) + "</span>";
+								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='txt_color'>" + result.totalCount + "</span> / <span class='txt_color'>" + parseInt(result.totalCount + result.totalCount2) + "</span>";
 							} else {
-								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='countColor'>" + result.totalCount + "</span>";
+								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='txt_color'>" + result.totalCount + "</span>";
 							}
 							//2018-08-01 김보미 - 부서명 [사원수] 가 넘치는지 확인하는 함수
 							deptNameLong(result.containLow, strIsLeaf);
@@ -1992,9 +1996,9 @@
 		        var UserListHTML = "";
 		        /* if (SelectDeptNM.getAttribute("countinfo") != "1" && getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) != null && getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0])!= "") {
 		            if (getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) ==  getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0])) {
-	        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang300 + "</span>]";
+	        			SelectDeptNM.innerHTML += "-[<span class='txt_color'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang300 + "</span>]";
 	        		} else {
-	        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "/" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0]) + strLang300 + "</span>]";
+	        			SelectDeptNM.innerHTML += "-[<span class='txt_color'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "/" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0]) + strLang300 + "</span>]";
 	        		}
 		            
 		            SelectDeptNM.setAttribute("countinfo", "1")
@@ -2008,7 +2012,7 @@
 		            
 		            if (typeof pSeach !== "undefined") {
 			            if (pSeach) {
-			                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + strLang_2 + "" + "&nbsp;&nbsp;<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "</span>";
+			                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + strLang_2 + "" + "&nbsp;&nbsp;<span class='txt_color'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "</span>";
 			                SelectDeptNM.setAttribute("countinfo", "1")
 			            }
 		            }
@@ -2026,7 +2030,7 @@
 			            else {
 			                document.getElementById("Search_txtlist_table").style.display = "";
 			                document.getElementById("txtlist_table").style.display = "none";
-			                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + strLang_2 + "" + "&nbsp;&nbsp;<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "</span>";
+			                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + strLang_2 + "" + "&nbsp;&nbsp;<span class='txt_color'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "</span>";
 			                SelectDeptNM.setAttribute("countinfo", "1")
 							<c:if test="${useShowAllCompanies eq 'YES'}">
 								resizeWindowWidth();
@@ -2051,7 +2055,11 @@
 		                MainTable.style.marginRight = "auto";
 		                var M_TR = document.createElement("TR");
 		                M_TR.setAttribute("id", "MailUserlist_" + i);
-		                M_TR.style.cursor = "pointer";
+						if ("${cursorType}" === "p" ) {
+							M_TR.style.cursor = "pointer"; // 메일 환경설정 > 도착한메일 전달 > 메일계정설정 커서 설정(image)
+						} else {
+							M_TR.style.cursor = "move"; // [수신자 설정] 사원명함보기란 DeptUserImgList
+						}
 		                M_TR.onmouseover = function () { event_listMover(this); };
 		                M_TR.onmouseout = function () { event_listMout(this); };
 		                M_TR.onclick = function () { event_listclick(this); };
@@ -2064,10 +2072,11 @@
 		                    M_TR.ondragstart = function (event) { event_listdragstart(this); event.dataTransfer.setData('text/plain', 'dragged'); };
 		                else
 		                    M_TR.ondragstart = function (event) { event_listdragstart(this); };
-		
-		                if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-		                    M_TR.ondragend = function (event) { event_listdragend(event); };
-		                }
+						
+						// 2024-07-05 김대현 #140902 사파리만 event_listdragend 넣어 중복으로 InsertReceiver()를 실행하여 생기는 현상으로 지워도 동작하기 때문에 해당 함수 주석처리 
+		                // if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
+		                //     M_TR.ondragend = function (event) { event_listdragend(event); };
+		                // }
 		                if (CrossYN()) {
 		                    for (var NodeCount = 0; NodeCount < row.item(i).childNodes.item(0).childNodes.length; NodeCount++) {
 		                        if (row.item(i).childNodes.item(0).childNodes.item(NodeCount).nodeName != "#text") {
@@ -2169,7 +2178,11 @@
 		            else {
 		                var M_TR = document.createElement("TR");
 		                M_TR.setAttribute("id", "MailUserlist_" + i);
-		                M_TR.style.cursor = "pointer";
+						if ("${cursorType}" === "p" ) {
+							M_TR.style.cursor = "pointer"; // 메일 환경설정 > 도착한메일 전달 > 메일계정설정 커서 설정(text)
+						} else {
+							M_TR.style.cursor = "move"; // [수신자 설정] 사원리스트란 orglistView (text)
+						}
 		                M_TR.onmouseover = function () { event_listMover(this); };
 		                M_TR.onmouseout = function () { event_listMout(this); };
 		                M_TR.onclick = function () { event_listclick(this); };
@@ -2182,10 +2195,11 @@
 		                    M_TR.ondragstart = function (event) { event_listdragstart(this); event.dataTransfer.setData('text/plain', 'dragged'); };
 		                else
 		                    M_TR.ondragstart = function (event) { event_listdragstart(this); };
-		
-		                if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-		                    M_TR.ondragend = function (event) { event_listdragend(event); };
-		                }
+
+						// 2024-07-05 김대현 #140902 사파리만 event_listdragend 넣어 중복으로 InsertReceiver()를 실행하여 생기는 현상으로 지워도 동작하기 때문에 해당 함수 주석처리 
+						// if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
+						//     M_TR.ondragend = function (event) { event_listdragend(event); };
+						// }
 		                
 		                if (CrossYN()) {
 		                    for (var NodeCount = 0; NodeCount < row.item(i).childNodes.item(0).childNodes.length; NodeCount++) {
@@ -2326,10 +2340,7 @@
 		        }
 		        
 		        if (selTab == "orglistView" && $(".txtlist_DeptTD").length > 0) {
-		        	$(".txtlist_DeptTD").css("display", "none");
-			        $(".txtlist_DeptTD").css("padding-left", "4px");
-
-			        $(".mainlist > tbody > tr:first-child > td:nth-child(2)").css("padding-left", "15px");
+		        	$(".none").css("display", "none");
 		        }
 		    }
 	        function show_member() {
@@ -2544,10 +2555,11 @@
 	                    addressList.GetDataRows()[i].ondragstart = function (event) { event_listdragstart(this); event.dataTransfer.setData('text/plain', 'dragged'); };
 	                else
 	                    addressList.GetDataRows()[i].ondragstart = function (event) { event_listdragstart(this); };
-	
-	                if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-	                    addressList.GetDataRows()[i].ondragend = function (event) { event_listdragend(event); };
-	                }
+
+					// 2024-07-05 김대현 #140902 사파리만 event_listdragend 넣어 중복으로 InsertReceiver()를 실행하여 생기는 현상으로 지워도 동작하기 때문에 해당 함수 주석처리 
+	                // if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
+	                //     addressList.GetDataRows()[i].ondragend = function (event) { event_listdragend(event); };
+	                // }
 	            }
 	            addressList = null;
 	            document.getElementById('totalcount').textContent = xmlDom.getElementsByTagName("PAGECOUNT").item(0).firstChild.nodeValue;
@@ -2786,7 +2798,7 @@
                                 var objTr = listview.AddRow(InitTr.length);
                                 if (MaxCntNum != 0)
                                     MaxCntNum = MaxCntNum + 1;
-                                SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+                                SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + (MaxID + 1));
                                 listview.AddDataRow(objTr, Resultxml);
 
                                 document.getElementById("MsgToList").className = "receiver_list";
@@ -2844,7 +2856,7 @@
                                 var objTr = listview.AddRow(InitTr.length);
                                 if (MaxCntNum != 0)
                                     MaxCntNum = MaxCntNum + 1;
-                                SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+                                SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + (MaxID + 1));
                                 listview.AddDataRow(objTr, Resultxml);
 
                                 document.getElementById("MsgCCList").className = "receiver_list";
@@ -2902,7 +2914,7 @@
                                 var objTr = listview.AddRow(InitTr.length);
                                 if (MaxCntNum != 0)
                                     MaxCntNum = MaxCntNum + 1;
-                                SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+                                SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + (MaxID + 1));
                                 listview.AddDataRow(objTr, Resultxml);
 
                                 document.getElementById("MsgBCCList").className = "receiver_list";
@@ -3025,7 +3037,7 @@
 	                                MaxID = curnum;
 	                        }
 	                        var objTr = listview.AddRow(InitTr.length);
-	                        SetAttribute(objTr, "id", listview.GetSelectedRowID(InitTr.length).substring(0, listview.GetSelectedRowID(InitTr.length).lastIndexOf('_') + 1) + eval(MaxID + 1));
+	                        SetAttribute(objTr, "id", listview.GetSelectedRowID(InitTr.length).substring(0, listview.GetSelectedRowID(InitTr.length).lastIndexOf('_') + 1) + (MaxID + 1));
 	                        listview.AddDataRow(objTr, Resultxml);
 	
 	                        document.getElementById(listid).className = "receiver_list";
@@ -3094,7 +3106,7 @@
 	                                MaxID = curnum;
 	                        }
 	                        var objTr = listview.AddRow(InitTr.length);
-	                        SetAttribute(objTr, "id", listview.GetSelectedRowID(InitTr.length).substring(0, listview.GetSelectedRowID(InitTr.length).lastIndexOf('_') + 1) + eval(MaxID + 1));
+	                        SetAttribute(objTr, "id", listview.GetSelectedRowID(InitTr.length).substring(0, listview.GetSelectedRowID(InitTr.length).lastIndexOf('_') + 1) + (MaxID + 1));
 	                        listview.AddDataRow(objTr, Resultxml);
 	
 	                        document.getElementById(listid).className = "receiver_list";
@@ -3191,7 +3203,7 @@
 	                    }
 	
 	                    var objTr = listview.AddRow(InitTr.length);
-	                    SetAttribute(objTr, "id", listview.GetSelectedRowID(InitTr.length).substring(0, listview.GetSelectedRowID(InitTr.length).lastIndexOf('_') + 1) + eval(MaxID + 1));
+	                    SetAttribute(objTr, "id", listview.GetSelectedRowID(InitTr.length).substring(0, listview.GetSelectedRowID(InitTr.length).lastIndexOf('_') + 1) + (MaxID + 1));
 	                    listview.AddDataRow(objTr, Resultxml);
 	
 	                    document.getElementById(listid).className = "receiver_list";
@@ -3328,10 +3340,11 @@
 	                    addressList.GetDataRows()[i].ondragstart = function (event) { event_listdragstart(this); event.dataTransfer.setData('text/plain', 'dragged'); };
 	                else
 	                    addressList.GetDataRows()[i].ondragstart = function (event) { event_listdragstart(this); };
-	
-	                if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-	                    addressList.GetDataRows()[i].ondragend = function (event) { event_listdragend(event); };
-	                }
+
+					// 2024-07-05 김대현 #140902 사파리만 event_listdragend 넣어 중복으로 InsertReceiver()를 실행하여 생기는 현상으로 지워도 동작하기 때문에 해당 함수 주석처리 
+	                // if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
+	                //     addressList.GetDataRows()[i].ondragend = function (event) { event_listdragend(event); };
+	                // }
 	            }
 	            addressList = null;
 	            addrsearh = false;
@@ -3403,21 +3416,21 @@
                 strtext = "<div class=\"pagenavi\">";
                 PagingHTML += strtext;
                 if (totalPage > 1 && pageNum != 1) {
-                    PagingHTML += "<span class=\"btnimg\" onclick= 'return goToPageByNum(1)'><img src=\"/images/kr/cm/btn_p_prev.gif\"></span>";
+                    PagingHTML += "<span class=\"btnimg first\" onclick= 'return goToPageByNum(1)'></span>";
                 }
                 else {
-                    PagingHTML += "<span class=\"btnimg\"><img src=\"/images/kr/cm/btn_p_prev01.gif\"></span>";
+                    PagingHTML += "<span class=\"btnimg first disabled\"></span>";
                 }
                 if (totalPage > BlockSize) {
                     if (parseInt(pageNum) > parseInt(BlockSize)) {
-                        PagingHTML += "<span class=\"btnimg\" onclick= 'return selbeforeBlock()'><img src=\"/images/kr/cm/btn_prev.gif\"></span>";
+                        PagingHTML += "<span class=\"btnimg prev\" onclick= 'return selbeforeBlock()'></span>";
                     }
                     else {
-                        PagingHTML += "<span class=\"btnimg\" ><img src=\"/images/kr/cm/btn_prev01.gif\"></span>";
+                        PagingHTML += "<span class=\"btnimg prev disabled\" ></span>";
                     }
                 }
                 else {
-                    PagingHTML += "<span class=\"btnimg\" ><img src=\"/images/kr/cm/btn_prev01.gif\"></span>";
+                    PagingHTML += "<span class=\"btnimg prev disabled\" ></span>";
                 }
                 var MaxNum;
                 var i;
@@ -3441,20 +3454,20 @@
                 }
                 if (totalPage > BlockSize) {
                     if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-                        PagingHTML += "<span class=\"btnimg\" onclick='return selafterBlock()'><img src=\"/images/kr/cm/btn_next.gif\"></span>";
+                        PagingHTML += "<span class=\"btnimg next\" onclick='return selafterBlock()'></span>";
                     }
                     else {
-                        PagingHTML += "<span class=\"btnimg\"><img src=\"/images/kr/cm/btn_next01.gif\"></span>";
+                        PagingHTML += "<span class=\"btnimg next disabled\"></span>";
                     }
                 }
                 else {
-                    PagingHTML += "<span class=\"btnimg\"><img src=\"/images/kr/cm/btn_next01.gif\" ></span>";
+                    PagingHTML += "<span class=\"btnimg next disabled\"></span>";
                 }
                 if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-                    PagingHTML += "<span class=\"btnimg\" onclick='return goToPageByNum(" + totalPage + ")'><img src=\"/images/kr/cm/btn_n_next.gif\" ></span>";
+                    PagingHTML += "<span class=\"btnimg last\" onclick='return goToPageByNum(" + totalPage + ")'></span>";
                 }
                 else {
-                    PagingHTML += "<span class=\"btnimg\"><img src=\"/images/kr/cm/btn_n_next01.gif\" ></span>";
+                    PagingHTML += "<span class=\"btnimg last disabled\"></span>";
                 }
                 PagingHTML += "</div>";
                 td_Create1(PagingHTML);
@@ -3631,7 +3644,7 @@
                         MaxID = curnum;
                 }
                 var objTr = listview.AddRow(InitTr.length);
-                SetAttribute(objTr, "id", listview.GetSelectedRowID(InitTr.length).substring(0, listview.GetSelectedRowID(InitTr.length).lastIndexOf('_') + 1) + eval(MaxID + 1));
+                SetAttribute(objTr, "id", listview.GetSelectedRowID(InitTr.length).substring(0, listview.GetSelectedRowID(InitTr.length).lastIndexOf('_') + 1) + (MaxID + 1));
                 listview.AddDataRow(objTr, Resultxml);
 
                 document.getElementById(listid).className = "receiver_list";
@@ -3732,25 +3745,25 @@
                 PagingHTML2 += strtext2;
                 var pageNum2 = CurPage;
                 if (totalPage2 > 1 && pageNum2 != 1) {
-                    strtext2 = "<span class='btnimg' onclick= 'return goToPageByNum2(1)'><img src='/images/sub/btn_p_prev.gif' ></span>";
+                    strtext2 = "<span class='btnimg first' onclick= 'return goToPageByNum2(1)'></span>";
                     PagingHTML2 += strtext2;
                 }
                 else {
-                    strtext2 = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>";
+                    strtext2 = "<span class='btnimg first disabled'></span>";
                     PagingHTML2 += strtext2;
                 }
                 if (totalPage2 > BlockSize2) {
                     if (pageNum2 > BlockSize2) {
-                        strtext2 = "<span class='btnimg' onclick= 'return selbeforeBlock2()'><img src='/images/sub/btn_prev.gif' ></span>";
+                        strtext2 = "<span class='btnimg prev' onclick= 'return selbeforeBlock2()'></span>";
                         PagingHTML2 += strtext2;
                     }
                     else {
-                        strtext2 = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+                        strtext2 = "<span class='btnimg prev disabled'></span>";
                         PagingHTML2 += strtext2;
                     }
                 }
                 else {
-                    strtext2 = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+                    strtext2 = "<span class='btnimg prev disabled'></span>";
                     PagingHTML2 += strtext2;
                 }
                 var MaxNum2;
@@ -3778,26 +3791,26 @@
                 if (totalPage2 > BlockSize2) {
                     if (totalPage2 >= parseInt(((parseInt((pageNum2 - 1) / BlockSize2) + 1) * BlockSize2) + 1)) {
                         strtext2 = "";
-                        strtext2 = strtext2 + "<span class='btnimg' onclick='return selafterBlock2()'><img src='/images/sub/btn_next.gif' ></span>";
+                        strtext2 = strtext2 + "<span class='btnimg next' onclick='return selafterBlock2()'></span>";
                         PagingHTML2 += strtext2;
                     }
                     else {
                         strtext2 = "";
-                        strtext2 = strtext2 + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+                        strtext2 = strtext2 + "<span class='btnimg next disabled'></span>";
                         PagingHTML2 += strtext2;
                     }
                 }
                 else {
                     strtext2 = "";
-                    strtext2 = strtext2 + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+                    strtext2 = strtext2 + "<span class='btnimg next disabled'></span>";
                     PagingHTML2 += strtext2;
                 }
                 if (totalPage2 > 1 && totalPage2 != 1 && (totalPage2 != pageNum2)) {
-                    strtext2 = "<span class='btnimg' onclick='return goToPageByNum2(" + totalPage2 + ")'><img src='/images/sub/btn_n_next.gif' ></span>";
+                    strtext2 = "<span class='btnimg last' onclick='return goToPageByNum2(" + totalPage2 + ")'></span>";
                     PagingHTML2 += strtext2;
                 }
                 else {
-                    strtext2 = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
+                    strtext2 = "<span class='btnimg last disabled'></span>";
                     PagingHTML2 += strtext2;
                 }
                 PagingHTML2 += "</div>";
@@ -4021,7 +4034,7 @@
 		            xmlHTTP.send("");
 		            
 		            if (xmlHTTP.status != 200) {
-			            alert("<spring:message code='ezEmail.t574' />" + xmlHTTP.statusText);
+			            alert("<spring:message code='ezEmail.t574' />" + xmlHTTP.status);
 		            } else {
 		            	document.getElementById("ListViewDL").innerHTML = "";
 			            var pListViewDL = new ListView();
@@ -4044,10 +4057,11 @@
 			                    dataRows[i].ondragstart = function (event) { event_listdragstart(this); event.dataTransfer.setData('text/plain', 'dragged'); };
 			                else
 			                    dataRows[i].ondragstart = function (event) { event_listdragstart(this); };
-			
-			                if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-			                    dataRows[i].ondragend = function (event) { event_listdragend(event); };
-			                }
+
+							// 2024-07-05 김대현 #140902 사파리만 event_listdragend 넣어 중복으로 InsertReceiver()를 실행하여 생기는 현상으로 지워도 동작하기 때문에 해당 함수 주석처리 
+				            //     if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
+			                //     dataRows[i].ondragend = function (event) { event_listdragend(event); };
+			                // }
 			            }
 			            
 			            changeCheckBox();
@@ -4151,8 +4165,6 @@
 		        m_selectedTree = orglistView;
 
 		        $(".txtlist_DeptTD").css("display", "table-cell");
-		        $(".txtlist_DeptTD").css("padding-left", "15px");
-		        $(".mainlist tr td:nth-child(2)").css("padding-left", "4px");
 		        
 		        orgJobMasterListSet(tabType);
 	        }
@@ -4246,7 +4258,7 @@
 						document.getElementById("SelectDeptNM").innerHTML 
 							= "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px; \" >"
 			            	+ "<span id='spn_deptName' title='" + jobName + "'>" + jobName + "</span>"
-			            	+ "<span id='countInfo'>&nbsp;<span class='countColor'> " + totalCnt + "</span></span>";
+			            	+ "<span id='countInfo'>&nbsp;<span class='txt_color'> " + totalCnt + "</span></span>";
 						
 		                pSeach = false;
 		                DisplayUserImageList();
@@ -4670,7 +4682,7 @@
 	                                        <div id="txtlist_Layer" style="vertical-align: top; width: 100%; height: 395px; overflow: auto;" >
 	                                            <table style="width: 100%; border: 1px solid #ddd; display: none;" id="txtlist_table" class="mainlist">
 	                                                <tr>
-	                                                    <td style="width: 100px;color:#333;background-color: #f1f3f5; display:none;"  class="txtlist_DeptTD"><spring:message code='ezEmail.t26' /></td>
+	                                                    <td style="width: 100px;color:#333;background-color: #f1f3f5;"  class="txtlist_DeptTD none"><spring:message code='ezEmail.t26' /></td>
 	                                                    <td style="width: 120px;color:#333;background-color: #f1f3f5"><spring:message code='ezEmail.t31' /></td>
 	                                                    <td style="width: 90px;color:#333;background-color: #f1f3f5"><spring:message code='ezEmail.t28' /></td>
 	                                                    <td style="color:#333;background-color: #f1f3f5"><spring:message code='ezEmail.t99000045' /></td>
@@ -4739,20 +4751,20 @@
 	                    </tr>
 	                    <tr>
 	                        <td>
-	                            <div id="AddressTreeView" style="overflow-x: auto; overflow-y: auto; width: 221px; height: 472px;  border: 1px solid #ddd; background-color: #FFFFFF; margin-top: 3px;padding-top:5px;border-right:0px;"></div>
+	                            <div id="AddressTreeView" style="overflow-x: auto; overflow-y: auto; width: 221px; height: 472px;  border: 1px solid #ddd; background-color: #FFFFFF; padding-top:5px;border-right:0px;"></div>
 	                        </td>
 	                        <td></td>
 	                        <td style="vertical-align: top; width: 100%;">
-	                            <div style="margin-top: 3px; vertical-align: middle; border: 1px solid #ddd; border-bottom: 0px; height: 23px; padding-top: 7px; padding-left: 5px;">
+	                            <div style="vertical-align: middle; border: 1px solid #ddd; border-bottom: 0px; height: 23px; padding-top: 7px; padding-left: 5px;">
 	                                <img src="" align="absmiddle" hspace="2" style="cursor: pointer; margin-right:0px;" />
 	                                <span id="addressFolderName" style="font-weight: normal;"></span>
-	                                &nbsp;<span id="addressFolderCnt" style="color: #017BEC;"></span>
+	                                &nbsp;<span id="addressFolderCnt" class='txt_color'></span>
 	                            </div>
 	                            <div id="AddressListView" class="border_gray" style="height: 399px; overflow: auto; background-color: #ffffff; border-bottom:0px; border-top: 1px solid #eaeaea">
 	                            </div>
 	                            <div id="tblPageRayer" style="left: 446px; vertical-align: middle; border: 1px solid #ddd; border-top: 0px; width:auto !important"></div>
 	                            <div id="tblpage" style="display: none; padding-top: 2px; text-align: center; vertical-align: middle; left: 446px; border: 1px solid #ddd; border-top: 0px; height: 27px;">
-	                                <spring:message code='ezEmail.t588' /><span style="color: #017BEC; font-weight: bold;" id="totalcount"></span>
+	                                <spring:message code='ezEmail.t588' /><span class='txt_color' style="font-weight: bold;" id="totalcount"></span>
 	                                <spring:message code='ezEmail.t589' /><span id="td_Previous" onclick="pagemove(-1)"><img src="/images/kr/cm/btn_prev.gif"
 	                                    width="15" height="15" align="absmiddle" hspace="2" style="cursor: pointer"></span><spring:message code='ezEmail.t590' /><span
 	                                        id="td_pageCount"></span>
@@ -4801,7 +4813,7 @@
 	                                    </table>
 	                                </div>
 	                            </div>
-	                            <div style="width: 100%; height: 477px; overflow: auto; background-color: #ffffff; margin-top: 3px;" id="ListViewDL" class="border_gray" data-type="dist">
+	                            <div style="width: 100%; height: 474px; overflow: auto; background-color: #ffffff; margin-top: 3px;" id="ListViewDL" class="border_gray" data-type="dist">
 	                            </div>
 	                        </td>
 	                    </tr>
@@ -4821,15 +4833,15 @@
 	                                    </table>
 	                                </div>
 	                            </div>
-	                            <div style="width: 100%; height: 477px; overflow: auto; background-color: #ffffff; margin-top: 3px;" id="ListViewSharedMailbox" class="border_gray" data-type="shared">
+	                            <div style="width: 100%; height: 474px; overflow: auto; background-color: #ffffff; margin-top: 3px;" id="ListViewSharedMailbox" class="border_gray" data-type="shared">
 	                            </div>
 	                        </td>
 	                    </tr>
 	                </table>
-	                <table id="ListViewINPUT" style="display: none">
+	                <table id="ListViewINPUT" style="width: 100%; display: none">
 	                    <tr>
 	                        <td>
-	                            <div id="ManualView" style="HEIGHT: 504px; width: 667px;" class="box">
+	                            <div id="ManualView" style="HEIGHT: 507px;" class="box">
 	                                <table class="content" style="margin:5px">
 	                                    <tr>
 	                                        <th><spring:message code='ezEmail.t31' /></th>

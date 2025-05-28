@@ -198,3 +198,112 @@ function CreateFolder(url) {
     xmlHttp = null;
 }
 
+var treeviewStr = "PostTreeView";
+var g_childid = treeviewStr + '_child_';
+let getAllSubTree = true; // 트리구조 전체를 가져오는 로직을 호출해야할때
+function previewSubTreeCall(isFolderManager) {
+	var treePlusElements = $('#' + treeviewStr + ' .tree_plus');
+	var element = treePlusElements[0];
+	var getSubtree = $(element).attr('name');
+	
+	if (getSubtree  === undefined) {
+		return;
+	}
+	
+	if (getAllSubTree) {
+		ShowMailProgress();
+		setTimeout(function() {
+			while (treePlusElements.length > 0) {
+				var firstElement = treePlusElements.eq(0);
+				var getSubtree = firstElement.attr('name');
+				var idx = getSubtree.split(treeviewStr + '_img_');
+
+				if (typeof idx[1] !== "undefined") {
+					
+					if (!isFolderManager) {
+						var childxml = get_childXML(window[treeviewStr].getvalue(idx[1], "href"), false, true, false);
+					} else {
+						//편지함 관리일때
+						var childxml = get_childXML(window[treeviewStr].getvalue(idx[1], "href"), false, false, true);
+					}
+					
+					window[treeviewStr].putchildxml(idx[1], childxml);
+					$('#' + treeviewStr + '_img_' + idx[1]).attr("class", "sub_iconLNB tree_minus");
+				}
+
+				treePlusElements = $('#' + treeviewStr + ' .tree_plus');
+			}
+			getAllSubTree = false;
+			HiddenMailProgress();
+		}, 5); // 5ms 후에 실행
+	} else {
+		for (var i = 0; i < treePlusElements.length; i++) {
+			var currentElement = treePlusElements.eq(i);
+			var currentGetSubtree = currentElement.attr('name');
+			var currentIdx = currentGetSubtree.split(treeviewStr + '_img_');
+
+			var currentChildId = g_childid + currentIdx[1];
+			document.getElementById(currentChildId).style.display = "inline-block";
+
+			if (document.getElementById(currentGetSubtree).className.indexOf("sub_iconLNB tree_plus") >= 0)
+				document.getElementById(currentGetSubtree).className = "sub_iconLNB tree_minus";
+			else
+				document.getElementById(currentGetSubtree).className = "sub_iconLNB tree_minus";
+		}
+	}
+}
+
+// 접기 기능 추가
+function collapseSubTree() {
+	var treeMinusElements = $('#' + treeviewStr + ' .tree_minus');
+
+	for (var i = 0; i < treeMinusElements.length ; i++) {
+		var element = treeMinusElements[i];
+		var getSubtree = $(element).attr('name');
+		var idx = getSubtree.split(treeviewStr + '_img_');
+		var g_childid = treeviewStr + '_child_';
+
+		if (typeof idx[1] !== "undefined") {
+			document.getElementById(g_childid + idx[1]).style.display = "none";
+			if (document.getElementById(getSubtree).className.indexOf("sub_iconLNB tree_minus") >= 0)
+				document.getElementById(getSubtree).className = "sub_iconLNB tree_plus";
+			else
+				document.getElementById(getSubtree).className = "sub_iconLNB tree_plus";
+		}
+	}
+}
+
+// 접기와 펼치기를 모두 포함하는 함수
+function toggleTreeNode(isFolderManager) {
+
+	var openTree = document.getElementById('toggleTreeNode')
+	if (openTree.className.indexOf('on') === -1) {
+		previewSubTreeCall(isFolderManager);
+		openTree.className = openTree.className.replace('off', 'on');
+	} else {
+		collapseSubTree();
+		openTree.className = openTree.className.replace('on', 'off');
+	}
+
+}
+
+function HiddenMailProgress() {
+	var mailPanel = document.getElementById("mailPanel");
+	if (mailPanel) {
+		document.getElementById("mailPanel").style.display="none";
+	} else {
+		document.getElementById("mailPanel_sub").style.display="none";
+	}
+	document.getElementById("MailProgress").style.display = "none";
+}
+function ShowMailProgress() {
+	var mailPanel = document.getElementById("mailPanel");
+	if (mailPanel) {
+		document.getElementById("mailPanel").style.display='';
+	} else {
+		document.getElementById("mailPanel_sub").style.display='';
+	} 
+	document.getElementById("MailProgress").style.top = (document.body.clientHeight / 2) + "px";
+	document.getElementById("MailProgress").style.width = (document.body.clientWidth) + "px";
+	document.getElementById("MailProgress").style.display = '';
+}

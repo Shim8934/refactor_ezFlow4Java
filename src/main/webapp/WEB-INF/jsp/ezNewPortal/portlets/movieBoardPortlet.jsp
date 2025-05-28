@@ -75,13 +75,24 @@
 					<c:forEach items="${movieBoardList}" var="movie" varStatus="status">
 						<li id="li_${status.index}" style="width:100%; height:100%; padding:0px; display:inline-flex; background-color:black;">
 							<div style="position:relative; width:100%;">
-								<video style="width:100%; height:100%;" id="mainVideo" src="${movie.filePath}" data1="${movie.boardID}" data2="${movie.itemID}" preload="metadata"/>
+								<c:choose>
+									<c:when test="${movie.addThumbnail eq 'Y'}">
+										<img id="thumbnail" style="width:100%; height:100%;" class="handle-movie" src="${movie.thumbnailPath}">
+										<video style="width:100%; height:100%; display:none;" id="mainVideo" class="handle-movie" src="${movie.filePath}" data1="${movie.boardID}" data2="${movie.itemID}" preload="metadata"/>
+									</c:when>
+									
+									<c:otherwise>
+										<video style="width:100%; height:100%;" id="mainVideo" class="handle-movie" src="${movie.filePath}" data1="${movie.boardID}" data2="${movie.itemID}" preload="metadata"/>
+									</c:otherwise>
+								</c:choose>
 								<img id="playButton" src="/images/playButton.png" style="position:absolute; width:64px; left:calc(50% - 32px); top:34%; cursor:pointer; opacity:0.9;" onclick="moviePlay()"/>
 								<div id="titleDiv" class="noti_portlet_list" style="position:absolute; width:100%; height:55px; margin:-57px 0px 0px 0px; padding:0px;
-								 text-align:center; line-height:58px; color:white; background-color:rgba(0, 0, 0, 0.5);">
+								 text-align:center; line-height:58px; color:white; background-color:rgba(0, 0, 0, 0.5); overflow:hidden;">
 								 	<span style="width:90%; text-overflow:ellipsis; white-space:nowrap; overflow:hidden; display:inline-block;"><c:out value='${movie.title}'/></span>
 								 </div>
 							 </div>
+							 <div style="display:none;" id="addThumbnail" value="${movie.addThumbnail}"></div>
+							 <div style="display:none;" id="thumbnailExt" value="${movie.thumbnailExt}"></div>
 						</li>
 					</c:forEach>
 				</c:when>

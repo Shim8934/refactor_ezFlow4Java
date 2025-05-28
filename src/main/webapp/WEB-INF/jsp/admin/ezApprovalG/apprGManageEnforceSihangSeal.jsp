@@ -6,7 +6,8 @@
 	<head>
 		<title><spring:message code = 'ezApprovalG.t1279' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<style>
 			.mainlist_free tr th { border-top:0px }
 		</style>

@@ -5,7 +5,8 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezPersonal.e3', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
@@ -13,6 +14,8 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezOrgan/TreeView.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/string_component.js')}"></script>		
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
+		<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 		<script type="text/javascript">
 			var m_orgImg = { "normal": "/images/tab_org1.gif", "select": "/images/tab_org.gif" };
 	        var m_dlImg = { "normal": "/images/tab_dl1.gif", "select": "/images/tab_dl.gif" };
@@ -33,6 +36,11 @@
 	        var strAddJob = "<spring:message code='ezOrgan.psb03'/> ";
 	        var ReturnFunction;
 	        var RetValue;
+			var CurPage = 1;
+			var Tab1_SelectID = "1tab1";
+			var type = "new";
+			// 설정된 권한목록
+			var quickLinkAuths = new Array();
 	        
 	        $(document).ready(function () {
 	            try{
@@ -98,7 +106,7 @@
 		                treeView.DataSource(g_xmlHTTP.responseXML);
 		                treeView.DataBind("TreeView");
 		            } else {
-		                alert("<spring:message code = 'ezPersonal.t17' />" + g_xmlHTTP.statusText);
+		                alert("<spring:message code = 'ezPersonal.t17' />" + g_xmlHTTP.status);
 		                g_xmlHTTP = null;
 		            }
 		        }
@@ -111,17 +119,37 @@
 	
 	                var totalRows = listView.GetDataRows();
 	                var totalLen = totalRows.length;
-	                dialogArgData1 = RetValue["DATA1"];
-	                dialogArgData2 = RetValue["DATA2"];
-	                dialogArgData3 = RetValue["DATA3"];
-	                dialogArgData5 = RetValue["DATA5"];
+					accessName = RetValue["accessName"];
+					accessName2 = RetValue["accessName2"];
+					accessId = RetValue["accessId"];
+					accessYN = RetValue["accessYN"];
+					subdeptPermitted = RetValue["subdeptPermitted"];
+					userType = RetValue["userType"];
 	                
-	                for (var i = 0; i < dialogArgData1.length; i++) {
+	                for (var i = 0; i < accessId.length; i++) {
+						var ACCESSNAME = accessName[i];
+						var ACCESSNAME2 = accessName2[i];
+						var ACCESSID = accessId[i];
+						var ACCESSYN = accessYN[i];
+						var SUBDEPTPERMITTED = subdeptPermitted[i];
+						var USERTYPE = userType[i];
+
+						var quickLinkAuth = {
+							"userId": accessId[i],
+							"accessYN": accessYN[i],
+							"userName": accessName[i],
+							"userName2": accessName2[i],
+							"userType": userType[i],
+							"subdeptPermitted": subdeptPermitted[i]
+						};
+						quickLinkAuths.push(quickLinkAuth);
+
+						/*
 	                    var ACCESSNAME = dialogArgData1[i];
 	                    var ACCESSNAME2 = dialogArgData2[i];
 	                    var ACCESSID = dialogArgData3[i];
 	                    var PERMISSIONS = dialogArgData5[i];
-	
+
 	                    pparsingXML2 = "";
 	                    pparsingXML = "";
 	                    pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
@@ -129,25 +157,25 @@
 	                    pparsingXML = pparsingXML + "<DATA2>" + MakeXMLString(ACCESSNAME) + "</DATA2>";
 	                    pparsingXML = pparsingXML + "<DATA3>" + MakeXMLString(ACCESSNAME2) + "</DATA3>";
 	                    pparsingXML = pparsingXML + "<DATA5>" + PERMISSIONS + "</DATA5>";
-	
+
 	                    if (userLang == "") {
 	                        pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(ACCESSNAME) + "</VALUE>";
 	                    } else {
 	                        pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(ACCESSNAME2) + "</VALUE>";
 	                    }
-	                    
+
 	                    pparsingXML = pparsingXML + "</CELL>";
-	                    pparsingXML = pparsingXML + "<CELL><VALUE>" + PERMISSIONS + "</VALUE></CELL></ROW>"; 
+	                    pparsingXML = pparsingXML + "<CELL><VALUE>" + PERMISSIONS + "</VALUE></CELL></ROW>";
 	                    pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
-	
+
 	                    Resultxml = loadXMLString(pparsingXML2);
-	
+
 	                    var listview = new ListView();
 	                    listview.LoadFromID("ListViewMsgToView");
-	
+
 	                    var MaxID = 0;
 	                    var InitTr = listview.GetDataRows();
-	
+
 	                    for (var j = 0  ; j < InitTr.length  ; j++) {
 	                        var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
 	                        if (MaxID < curnum)
@@ -156,11 +184,16 @@
 	                    var objTr = listview.AddRow(MaxID);
 	                    SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxID).substring(0, listview.GetSelectedRowID(MaxID).lastIndexOf('_') + 1) + eval(MaxID + 1));
 	                    listview.AddDataRow(objTr, Resultxml);
-	
+
+						 */
+
 	                }
+					/*
 	                var listview2 = new ListView();
 	                listview2.LoadFromID("ListViewMsgToView");
 	                var InitTr2 = listview2.GetDataRows();
+
+					 */
 	
 	
 	                /* for (var i = 0; i < InitTr2.length; i++) {
@@ -170,15 +203,119 @@
 	                } */
 	
 	            }
+				drawAuths();
 	        }
+
+			var drawAuths = function() {
+				$( '#ListViewMsgToView > tbody').empty();
+				quickLinkAuths.forEach(function(item, index) {
+					var ACCESSNAME = item.userName;
+					var ACCESSNAME2 = item.userName2;
+					var ACCESSID = item.userId;
+					var ACCESSYN = item.accessYN;
+					var SUBDEPTPERMITTED = item.subdeptPermitted;
+					var USERTYPE = item.userType;
+
+					pparsingXML2 = "";
+					pparsingXML = "";
+					pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
+					pparsingXML = pparsingXML + "<ROW><CELL><DATA>" + escapeHtml(ACCESSNAME) + "</DATA>";
+					pparsingXML = pparsingXML + "<DATA1>" + escapeHtml(ACCESSNAME2) + "</DATA1>";
+					pparsingXML = pparsingXML + "<DATA2>" + MakeXMLString(ACCESSID) + "</DATA2>";
+					pparsingXML = pparsingXML + "<DATA3>" + MakeXMLString(ACCESSYN) + "</DATA3>";
+					pparsingXML = pparsingXML + "<DATA4>" + MakeXMLString(USERTYPE) + "</DATA4>";
+					pparsingXML = pparsingXML + "<DATA5>" + MakeXMLString(SUBDEPTPERMITTED) + "</DATA5>";
+
+					pparsingXML = pparsingXML + "<VALUE>";
+					if (item.userType == "USER") {
+					} else if(item.userType == "DEPT") {
+						pparsingXML +=  "<spring:message code='ezBoard.t9'/>" + " : ";
+					} else if (item.userType == "JIKWI"){
+						pparsingXML += "<spring:message code='ezEmail.t28'/>" + " : ";
+					} else if (item.userType == "JIKCHEK") {
+						pparsingXML += "<spring:message code='ezEmail.t281'/>" + " : ";
+					} else if (item.userType == "GROUP") {
+						pparsingXML += "<spring:message code='ezPersonal.yej05'/>" + " : ";
+					}
+
+					if (userLang == "") {
+						pparsingXML = pparsingXML + escapeHtml(ACCESSNAME) + "</VALUE>";
+					} else {
+						pparsingXML = pparsingXML + escapeHtml(ACCESSNAME2) + "</VALUE>";
+					}
+
+					pparsingXML = pparsingXML + "</CELL>";
+					pparsingXML = pparsingXML + "<CELL><VALUE>" + ACCESSYN + "</VALUE></CELL></ROW>";
+					pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
+
+					Resultxml = loadXMLString(pparsingXML2);
+
+					var listview = new ListView();
+					listview.LoadFromID("ListViewMsgToView");
+
+					var MaxID = 0;
+					var InitTr = listview.GetDataRows();
+
+					for (var j = 0  ; j < InitTr.length  ; j++) {
+						var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
+						if (MaxID < curnum)
+							MaxID = curnum;
+					}
+					var objTr = listview.AddRow(MaxID);
+					SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxID).substring(0, listview.GetSelectedRowID(MaxID).lastIndexOf('_') + 1) + eval(MaxID + 1));
+					listview.AddDataRow(objTr, Resultxml);
+
+
+				});
+				var listview2 = new ListView();
+				listview2.LoadFromID("ListViewMsgToView");
+				var InitTr2 = listview2.GetDataRows();
+			}
+
+			function applyReceiver() {
+				var selId = "";
+
+				if (Tab1_SelectID === "1tab1") {
+					selId = $("#txtlist_Layer").find(".selectTR");
+					var isUser = true;
+
+					if (selId.length == 0) {
+						isUser = false;
+					}
+
+					if (isUser) {
+						setAuthorViewUser("user");
+					} else {
+						setAuthorViewUser("dept");
+					}
+				} else if (Tab1_SelectID === "1tab2") {
+					selId = $("#pListViewJikwi_TBODY").find(".selectTR");
+
+					if (selId.length != 0) {
+						setAuthorViewUser("jikwi");
+					}
+				} else if (Tab1_SelectID === "1tab3") {
+					selId = $("#pListViewJikchek_TBODY").find(".selectTR");
+
+					if (selId.length != 0) {
+						setAuthorViewUser("jikchek");
+					}
+				} else if (Tab1_SelectID === "1tab4") {
+					selId = $("#pListViewGroup_TBODY").find(".selectTR");
+
+					if (selId.length != 0) {
+						setAuthorViewUser("group");
+					}
+				}
+			}
+
 	        function applyCurrentData() {
-	            var xmldoc;
-	            xmldoc = loadXMLString(RetValue["selectTargetListXML"]);
-	
+	            var xmldoc = loadXMLString(RetValue["selectTargetListXML"]);
 	            var i = 0;
-	            var username, useremail;
+	            var username;
 	        	var username2;
-	        	
+				var useremail;
+
 	        	for (i = 0; i < GetElementsByTagName(xmldoc, "CN").length; i++) {
 		            if (CrossYN()) {
 		                username = GetElementsByTagName(xmldoc, "NAME")[i].textContent;
@@ -265,15 +402,17 @@
 		        listview.LoadFromID("ListViewMsgToView");
 		        var listviewSelected = listview.GetDataRows();
 		        var selectTargetListXML = "<NODES>";
-		        
-		        for (var nCnt1 = 0; nCnt1 < listviewSelected.length; nCnt1++) {
+
+				quickLinkAuths.forEach(function(item, index) {
 		            selectTargetListXML += "<NODE>";
-		            selectTargetListXML += "<ACCESSID>" + listviewSelected[nCnt1].getAttribute("data1") + "</ACCESSID>";
-		            selectTargetListXML += "<ACCESSNAME>" + MakeXMLString(listviewSelected[nCnt1].getAttribute("data2")) + "</ACCESSNAME>";
-		            selectTargetListXML += "<ACCESSNAME2>" + MakeXMLString(listviewSelected[nCnt1].getAttribute("data3")) + "</ACCESSNAME2>";
-		            selectTargetListXML += "<PERMISSIONS>" + listviewSelected[nCnt1].getAttribute("data5") + "</PERMISSIONS>";
+		            selectTargetListXML += "<ACCESSID>" + item.userId + "</ACCESSID>";
+		            selectTargetListXML += "<ACCESSNAME>" + escapeHtml(item.userName) + "</ACCESSNAME>";
+		            selectTargetListXML += "<ACCESSNAME2>" + escapeHtml(item.userName2) + "</ACCESSNAME2>";
+		            selectTargetListXML += "<USERTYPE>" + item.userType + "</USERTYPE>";
+		            selectTargetListXML += "<PERMISSIONS>" + item.accessYN + "</PERMISSIONS>";
+		            selectTargetListXML += "<SUBDEPTPERMITTED>" + item.subdeptPermitted + "</SUBDEPTPERMITTED>";
 		            selectTargetListXML += "</NODE>";
-		        }
+		        });
 		        
 		        selectTargetListXML += "</NODES>";
 		        
@@ -405,7 +544,18 @@
 		    function DeleteReceiver(pListView) {
 		        var listView = new ListView();
 		        listView.LoadFromID("ListViewMsgToView");
-		        listView.DeleteRow(listView.GetSelectedRows()[0].id);
+		        // listView.DeleteRow(listView.GetSelectedRows()[0].id);
+				if(listView.GetSelectedRows()[0] == null) {
+					return;
+				}
+				var selectedAuthId = listView.GetSelectedRows()[0].getAttribute("data2");
+				quickLinkAuths.some(function(item, index) {
+					if (item.userId === selectedAuthId) {
+						quickLinkAuths.splice(index, 1);
+					}
+				});
+
+				drawAuths();
 		    }
 		    
 		    function switchOnAndOff(e) {
@@ -422,8 +572,15 @@
 		        pListViewDL.LoadFromID("ListViewMsgToView");
 		        var arrRows = pListViewDL.GetSelectedRows();
 		        if (arrRows == "") return;
-		        SetAttribute(arrRows[0], "DATA5", checkFlag);
-		
+		        SetAttribute(arrRows[0], "DATA3", checkFlag);
+
+				var userId = GetAttribute(arrRows[0], "DATA2");
+				quickLinkAuths.forEach(function(item, index) {
+					if (item.userId == userId) {
+						quickLinkAuths[index].accessYN = checkFlag;
+					}
+				});
+
 		        /* if (checkFlag == "N") {
 		            if (CrossYN())
 		                SetAttribute(arrRows[0].childNodes[0], "style", "color:red;");
@@ -461,7 +618,15 @@
 		        var arrRows = pListViewDL.GetSelectedRows();
 		        if (arrRows == "") return;
 		        SetAttribute(arrRows[0], "DATA5", checkFlag);
-		
+
+				var userId = GetAttribute(arrRows[0], "DATA2");
+
+				quickLinkAuths.forEach(function(item, index) {
+					if (item.userId == userId) {
+						quickLinkAuths[index].subdeptPermitted = checkFlag;
+					}
+				});
+
 		        /* if (checkFlag == "N") {
 		            if (CrossYN())
 		                SetAttribute(arrRows[0].childNodes[0], "style", "color:red;");
@@ -480,7 +645,7 @@
 		        pListViewDL.LoadFromID("ListViewMsgToView");
 		        var arrRows = pListViewDL.GetSelectedRows();
 		        if (arrRows.length > 0) {
-		            var permissionsFlag = GetAttribute(arrRows[0], "data5");
+		            var permissionsFlag = GetAttribute(arrRows[0], "data3");
 		            /* if (permissionsFlag == "Y") {
 		                admin_OK.checked = true;
 		                admin_NO.checked = false;
@@ -489,6 +654,25 @@
 		                admin_NO.checked = true;
 		                admin_OK.checked = false;
 		            } */
+					if (GetAttribute(arrRows[0], "data4") == "DEPT") {
+						document.getElementById("admin_OK").disabled = false;
+						document.getElementById("admin_NO").disabled = false;
+						var subdeptPermitted = GetAttribute(arrRows[0], "DATA5")
+
+						if (subdeptPermitted == "Y" || subdeptPermitted == "true") {
+							document.getElementById("admin_OK").checked = true;
+							document.getElementById("admin_NO").checked = false;
+						} else {
+							document.getElementById("admin_OK").checked = false;
+							document.getElementById("admin_NO").checked = true;
+							SetAttribute(arrRows[0], "DATA5", "N");
+						}
+					} else {
+						document.getElementById("admin_OK").disabled = true;
+						document.getElementById("admin_OK").checked = false;
+						document.getElementById("admin_NO").disabled = true;
+						document.getElementById("admin_NO").checked = true;
+					}
 		        }
 		
 		        for (var count = 0; count < m_receiverTitleList.length; count++) {
@@ -515,6 +699,8 @@
 		    }
 		
 		    function displayUserList(DeptID) {
+				setUserList("DEPARTMENT", DeptID);
+				/*
 		    	$.ajax({
 		    		type : 'POST',
 		    		url : '/ezOrgan/getDeptMemberList.do',
@@ -539,9 +725,134 @@
 		    			alert("<spring:message code = 'ezPersonal.t22' />" + textStatus);
 		    		}
 		    	});
+		    	*/
 		    }
-		
-		    function ListViewNodeDblClick() {
+
+			//사원 리스트 뿌리기
+			var setUserList = function(key, value, deptName) {
+				if(key === undefined && value === undefined && deptName === undefined) {
+					key = "DEPARTMENT";
+					var organTree = new TreeView();
+					organTree.LoadFromID("TreeViewList");
+					var nodeIdx = organTree.GetSelectNode();
+					value = nodeIdx.GetNodeData("CN");
+				}
+
+				var listType = getOrganListType();
+
+				$.ajax({
+					type:"post",
+					dataType:"html",
+					url:"/admin/ezNewPortal/userList.do",
+					data:{"key" : key, "value" : value, "deptName" : deptName, "companyId":"<c:out value='${userInfo.companyID}'/>", "listType" : listType, "curPage" : CurPage },
+					success: function(result){
+						var picList = $(result).find(".organwrap");
+						if(picList.length == 0 && key != "DEPARTMENT"){
+							alert("<spring:message code='ezCommunity.t1379'/>");
+							issearch = false;
+						}
+						$("#OrganListView").empty();
+						$("#OrganListView").html(result);
+						/**
+						 2018-07-10 페이징 기능 추가.
+						 */
+						$("#OrganListView").append("<div id='tblPageRayer' style='text-align:center;'></div>");
+						totalPage = Math.ceil($("#totalCount").val() / 50 );
+						makePageSelPage();
+					}
+				});
+			}
+
+			var BlockSize = 10;
+			var td_Create1 = function(strtext) {
+				document.getElementById("tblPageRayer").innerHTML = strtext;
+			}
+
+			var makePageSelPage = function() {
+				var strtext;
+				var PagingHTML = "";
+				document.getElementById("tblPageRayer").innerHTML = "";
+				strtext = "<div class='pagenavi'>";
+				PagingHTML += strtext;
+				var pageNum = CurPage;
+				if (totalPage > 1 && pageNum != 1) {
+					strtext = "<span class='btnimg first' onclick= 'return goToPageByNum(1)'></span>";
+					PagingHTML += strtext;
+				} else {
+					strtext = "<span class='btnimg first disabled'></span>";
+					PagingHTML += strtext;
+				}
+				if (totalPage > BlockSize) {
+					if (pageNum > BlockSize) {
+						strtext = "<span class='btnimg prev' onclick= 'return selbeforeBlock()'></span>";
+						PagingHTML += strtext;
+					} else {
+						strtext = "<span class='btnimg prev disabled'></span>";
+						PagingHTML += strtext;
+					}
+				} else {
+					strtext = "<span class='btnimg prev disabled'></span>";
+					PagingHTML += strtext;
+				}
+				var MaxNum;
+				var i;
+				var startNum = (parseInt((pageNum - 1) / BlockSize) * BlockSize) + 1;
+				if (totalPage >= (startNum + parseInt(BlockSize))) {
+					MaxNum = (startNum + parseInt(BlockSize)) - 1;
+				} else {
+					MaxNum = totalPage;
+				}
+				for (i = startNum; i <= MaxNum; i++) {
+					if (i == pageNum) {
+						strtext = "<span class='on'>" + i + "</span>";
+						PagingHTML += strtext;
+					} else {
+						strtext = "<span onclick='goToPageByNum(" + i + ")'>" + i + "</span>";
+						PagingHTML += strtext;
+					}
+				}
+				if (totalPage > BlockSize) {
+					if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
+						strtext = "";
+						strtext = strtext + "<span class='btnimg next' onclick='return selafterBlock()'></span>";
+						PagingHTML += strtext;
+					} else {
+						strtext = "";
+						strtext = strtext + "<span class='btnimg next disabled'></span>";
+						PagingHTML += strtext;
+					}
+				} else {
+					strtext = "";
+					strtext = strtext + "<span class='btnimg next disabled'></span>";
+					PagingHTML += strtext;
+				}
+				if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
+					strtext = "<span class='btnimg last' onclick='return goToPageByNum(" + totalPage + ")'></span>";
+					PagingHTML += strtext;
+				} else {
+					strtext = "<span class='btnimg last disabled'></span>";
+					PagingHTML += strtext;
+				}
+				PagingHTML += "</div>";
+				td_Create1(PagingHTML);
+			}
+
+			function getOrganListType() {
+				var organListType = "TXT";
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					url : "/ezOrgan/getListType.do",
+					async : false,
+					success : function(result) {
+						organListType = result;
+					}
+				});
+
+				return organListType;
+			}
+
+			function ListViewNodeDblClick() {
 		        if (m_selectedWindow != null)
 		            InsertReceiver(m_selectedWindow);
 		    }
@@ -600,8 +911,8 @@
 		        try {
 		            xmlHTTP.open("POST", "/ezOrgan/getSearchList.do", false);
 		            xmlHTTP.send(xmlDOM);
-		            if (xmlHTTP.statusText != "OK") {
-		                alert("<spring:message code = 'ezPersonal.t24' />" + xmlHTTP.statusText);
+		            if (xmlHTTP.status != 200) {
+		                alert("<spring:message code = 'ezPersonal.t24' />" + xmlHTTP.status);
 		                xmlDOM = null;
 		                xmlHTTP = null;
 		            }
@@ -651,12 +962,18 @@
 		    }
 		
 		    function infoview_click() {
-		        if (OrganListView.multiSelects.length < 1) {
-		            alert("<spring:message code = 'ezPersonal.t26' />");
+		        if (selUserId == null || selUserId == "") {
+		            alert("<spring:message code = 'ezCircular.t148' />");
 		            return;
 		        }
-		        var cn = OrganListView.multiSelects.item(0).cells[0].DATA2;
-		        window.dialogArguments["window"].document.Script.open_userinfo(cn);
+		        // var cn = OrganListView.multiSelects.item(0).cells[0].DATA2;
+		        // window.dialogArguments["window"].document.Script.open_userinfo(cn);
+				var pheight = window.screen.availHeight;
+				var pwidth = window.screen.availWidth;
+				var pTop = (pheight - 450) / 2;
+				var pLeft = (pwidth - 420) / 2;
+
+				window.open("/ezCommon/showPersonInfo.do?id=" + selUserId + "&dept=" + selDeptId, "", "height=450px,width=420px,  top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		    }
 		
 		    function dlmember_click() {
@@ -677,7 +994,20 @@
 		            row.cells[0].parentElement.style.backgroundColor = m_titleSelectedColor;
 		        }
 		    }
+
+			var mail_select_groupmember_cross_dialogArguments = new Array();
 		    function groupmember_click() {
+				var selectGroup = document.getElementById("pListViewGroup").querySelector(".selectTR");
+				if (selectGroup == null || selectGroup == undefined) {
+					alert("<spring:message code = 'ezOrgan.zNo003' />");
+					return;
+				}
+				var groupID = selectGroup.getAttribute("data1");
+				mail_select_groupmember_cross_dialogArguments[0] = DivPopUpHidden;
+				var companyId = "<c:out value='${userInfo.companyID}'/>";
+				DivPopUpShow(601, 470, "/admin/ezOrgan/permissionGroupUserListView.do?groupID=" + groupID + "&companyID=" + companyId);
+
+				/*
 		        if (AddressListView.multiSelects.length < 1) {
 		            alert("<spring:message code = 'ezPersonal.t28' />");
 		            return;
@@ -698,6 +1028,7 @@
 		            row.cells[1].innerText = rtnValue["email"][i];
 		            row.cells[0].parentElement.style.backgroundColor = m_titleSelectedColor;
 		        }
+		        */
 		    }
 		    function dept_select() {
 		        var nodeIdx = TreeView.selectedIndex;
@@ -745,12 +1076,313 @@
 		    function Cancel_onclick() {
 		        window.close();
 		    }
+
+			//검색
+			function fn_serach(type) {
+				var value = $("#keyword").val().trim();
+				if (value == '' || value == undefined) {
+					alert("<spring:message code='ezSchedule.t8'/>");
+				} else {
+					search_click(type);
+				}
+			}
+
+			var issearch = false;
+			var searchKey = "";
+			function search_click(type) {
+				var key = $("#search_type").val();
+
+				if ($("#keyword").val().trim()!= '' && $("#keyword").val().trim() != undefined) {
+					searchKey = $("#keyword").val().trim();
+				}
+
+				if(searchKey){
+					if(type === "search") {
+						CurPage = 1;            // 검색을 할 때마다 curPage 초기화
+						issearch = true;
+					}
+					setUserList(key, searchKey);
+				} else {
+					alert("<spring:message code='ezSchedule.t8'/>")
+				}
+			}
+
+			// 조직도 사원목록 클릭이벤트 적용
+			function setUserAuthorDept(elem) {
+				if ($(elem).parent().parent().parent().attr("id") === "txtlist_Layer") {
+					$("#txtlist_Layer tr").removeClass("selectTR");
+				} else if ($(elem).parent().parent().parent().attr("id") === "DeptUserImgList") {
+					$("#DeptUserImgList tr").removeClass("selectTR");
+				}
+
+				$(elem).addClass("selectTR");
+				selUserId = $(elem).attr("id");
+				selUserName = $(elem).attr("name");
+				selDeptId = $(elem).attr("deptId");
+				//user / dept 구분
+			}
+
+			// 선택한 사람을 수신자에 추가
+			function setAuthorViewUser(isUser) {
+				var receiverId = "";
+				var userType = 1;
+
+				if (isUser == undefined) {
+					isUser = "user";
+				}
+
+				if (isUser == "dept"){
+					var organTree = new TreeView();
+					organTree.LoadFromID("TreeViewList");
+					var nodeIdx = organTree.GetSelectNode();
+					receiverId = nodeIdx.GetNodeData("CN");
+					// receiverId = receiverId.substring(0, receiverId.lastIndexOf("_anchor"));
+					userType = "DEPT";
+					userName = nodeIdx.GetNodeData("DISPLAYNAME1");
+					userName2 = nodeIdx.GetNodeData("DISPLAYNAME2");
+					// userDeptName = $(".jstree-clicked").text();
+				} else if (isUser == "jikwi") {
+					userType = "JIKWI";
+					var selectedElem = document.getElementById("pListViewJikwi_TBODY").querySelector(".selectTR");
+					receiverId = selectedElem.getAttribute("data1");
+					userName = selectedElem.getAttribute("data3");
+					userName2 = selectedElem.getAttribute("data3");
+				} else if (isUser == "jikchek") {
+					userType = "JIKCHEK";
+					var selectedElem = document.getElementById("pListViewJikchek_TBODY").querySelector(".selectTR");
+					receiverId = selectedElem.getAttribute("data1");
+					userName = selectedElem.getAttribute("data3");
+					userName2 = selectedElem.getAttribute("data3");
+				} else if (isUser == "group") {
+					userType = "GROUP";
+					var selectedElem = document.getElementById("pListViewGroup_TBODY").querySelector(".selectTR");
+					receiverId = selectedElem.getAttribute("data1");
+					userName = selectedElem.getAttribute("data3");
+					userName2 = selectedElem.getAttribute("data3");
+				} else if (isUser == "user") {
+					receiverId = selUserId;
+					userType = "USER";
+					userName = selUserName;
+					userName2 = selUserName;
+				}
+
+				var chkFlag = true;
+				for(var i = 0; i < quickLinkAuths.length; i++) {
+					if (quickLinkAuths[i].userId == receiverId) {
+						chkFlag = false;
+					}
+				}
+
+				if (chkFlag) {
+					quickLinkAuths.push({"userId" : receiverId, "accessYN" : "N", "userName" : userName, "userName2" : userName2, "userType" : userType, "subdeptPermitted" : "N"});
+				} else {
+					alert("<spring:message code='ezJournal.t127'/>");
+				}
+
+				drawAuths();
+			}
+
+			function Tab1_MouseClick(obj) {
+				obj.className = "tabon";
+				if (obj.id != Tab1_SelectID) {
+					if (Tab1_SelectID != "" && document.getElementById(Tab1_SelectID) != null) {
+						document.getElementById(Tab1_SelectID).className = "";
+					}
+					obj.className = "tabon";
+					Tab1_SelectID = obj.id;
+					ChangeTab(obj);
+				}
+			}
+
+			function ChangeTab(obj) {
+				var pSelectTab = GetAttribute(obj, "tdname");
+				curTab = pSelectTab;
+
+				switch (pSelectTab) {
+					case "portalOrgan":
+						document.getElementById("portalOrgan_content").style.display = "";
+						document.getElementById("portalJikwi_content").style.display = "none";
+						document.getElementById("portalJikchek_content").style.display = "none";
+						document.getElementById("portalGroup_content").style.display = "none";
+						break;
+					case "portalJikwi":
+						document.getElementById("portalOrgan_content").style.display = "none";
+						document.getElementById("portalJikwi_content").style.display = "";
+						document.getElementById("portalJikchek_content").style.display = "none";
+						document.getElementById("portalGroup_content").style.display = "none";
+						getTitleList('001');
+						break;
+					case "portalJikchek":
+						document.getElementById("portalOrgan_content").style.display = "none";
+						document.getElementById("portalJikwi_content").style.display = "none";
+						document.getElementById("portalJikchek_content").style.display = "";
+						document.getElementById("portalGroup_content").style.display = "none";
+						getTitleList('002');
+						break;
+					case "portalGroup":
+						document.getElementById("portalOrgan_content").style.display = "none";
+						document.getElementById("portalJikwi_content").style.display = "none";
+						document.getElementById("portalJikchek_content").style.display = "none";
+						document.getElementById("portalGroup_content").style.display = "";
+						getPermissionGroup();
+						break;
+				}
+				selMainListUserId = "";
+				selUserId = "";
+			}
+
+			var getTitleList = function(type) {
+				var request = new XMLHttpRequest();
+				request.open('POST', '/admin/ezNewPortal/getTitleList.do', true);
+				request.setRequestHeader('Content-Type', 'application/json');
+
+				request.onload = function() {
+					if (this.status >= 200 && this.status < 400) {
+						var titleList = JSON.parse(request.responseText);
+						var titleListCount = titleList.length;
+
+						if (type == "001") {
+							document.getElementById("pListViewJikwi_TBODY").innerHTML = "";
+						} else {
+							document.getElementById("pListViewJikchek_TBODY").innerHTML = "";
+						}
+
+						for (var i = 0; i < titleListCount; i++) {
+							var titleTR = document.createElement("tr");
+							var titleTD = document.createElement("td");
+							titleTR.className="titleListTR";
+							titleTR.id = "title_" + titleList[i].jobID + "_" + titleList[i].type;
+							titleTR.setAttribute("data1", titleList[i].jobID);
+							titleTR.setAttribute("data2", titleList[i].type);
+							titleTR.setAttribute("data3", titleList[i].displayName);
+							titleTR.setAttribute("ondblclick", "applyReceiver()");
+							titleTR.setAttribute("onclick", "setSelectTR(this)");
+							titleTD.textContent = titleList[i].displayName;
+							titleTD.style.height = "24px";
+
+							titleTR.appendChild(titleTD);
+
+							if (type == "001") {
+								document.getElementById("pListViewJikwi_TBODY").appendChild(titleTR);
+							} else {
+								document.getElementById("pListViewJikchek_TBODY").appendChild(titleTR);
+							}
+						}
+					} else {
+						alert("<spring:message code='ezJournal.t127'/>");
+					}
+				};
+
+				request.onerror = function() {
+					alert("<spring:message code='ezJournal.t149'/>");
+					return;
+				};
+
+				var data = JSON.stringify({
+					companyId : "<c:out value='${userInfo.companyID}'/>",
+					type : type
+				});
+
+				request.send(data);
+			}
+
+			var getPermissionGroup = function() {
+				var request = new XMLHttpRequest();
+				request.open('POST', '/admin/ezNewPortal/getGroupList.do', true);
+				request.setRequestHeader('Content-Type', 'application/json');
+
+				request.onload = function() {
+					if (this.status >= 200 && this.status < 400) {
+						var groupList = JSON.parse(request.responseText);
+						//pListViewJikwi_TBODY
+						var groupListCount = groupList.length;
+						document.getElementById("pListViewGroup_TBODY").innerHTML = "";
+
+						for (var i = 0; i < groupListCount; i++) {
+							var groupTR = document.createElement("tr");
+							var groupTD = document.createElement("td");
+							groupTR.className="groupListTR";
+							groupTR.id = "group_" + groupList[i].groupID;
+							groupTR.setAttribute("data1", groupList[i].groupID);
+							groupTR.setAttribute("data3", groupList[i].groupName);
+							groupTR.setAttribute("ondblclick", "applyReceiver()");
+							groupTR.setAttribute("onclick", "setSelectTR(this)");
+							groupTD.textContent = groupList[i].groupName;
+							groupTD.style.height = "24px";
+
+							groupTR.appendChild(groupTD);
+							document.getElementById("pListViewGroup_TBODY").appendChild(groupTR);
+						}
+					} else {
+						alert("<spring:message code='ezJournal.t149'/>");
+						return;
+					}
+				};
+
+				request.onerror = function() {
+					alert("<spring:message code='ezJournal.t149'/>");
+					return;
+				};
+
+				var data = JSON.stringify({
+					companyId : "<c:out value='${userInfo.companyID}'/>",
+					type : type
+				});
+
+				request.send(data);
+			}
+
+			function tabover(tabObj) {
+				tabObj.setAttribute("class", "tabon");
+			}
+			function tabout(tabObj) {
+				if (tabObj.id != Tab1_SelectID) {
+					tabObj.setAttribute("class", "");
+				}
+			}
+
+			var setSelectTR = function(elem) {
+				$(".selectTR").removeClass("selectTR");
+				$(elem).addClass("selectTR");
+			}
+
+			var goToPageByNum = function(Value) {
+				CurPage = Value;
+				makePageSelPage();
+				movePage(CurPage);
+			}
+
+			var movePage = function(newPage) {
+				if (parseInt(newPage) > 0 && parseInt(newPage) <= parseInt(totalPage)) {
+					CurPage = newPage;
+					if(issearch) {
+						search_click();
+					} else {
+						setUserList();
+					}
+				}
+			}
+
+			function journalKeywordClear(elem){
+				$(elem).val("");
+			}
+
 		</script>
 		<style type="text/css">
 			.switch {
 				margin-left:21px;
 			}
-			
+			tr.hover:not(.selectTR):hover {
+				background:#eee;
+				color:#fff;
+			}
+			.selectTR{
+				background-color: rgb(237, 244, 253);
+			}
+			#portalJikwi, #portalJikchek {width: 100%; height: 510px; overflow: auto; background-color: #ffffff;}
+			#portalGroup {height:478px;width: 100%; overflow: auto; background-color: #ffffff;}
+			#portalGroup_btn {width:100%;padding:0;}
+			.titleListTR:hover, .groupListTR:hover {background-color : #f4f5f5; cursor:pointer;}
 		</style>
 		
 	</head>
@@ -793,7 +1425,7 @@
 		  	</LISTVIEWDATA>
 		</xml>
 		
-	    <h1><spring:message code = 'ezPersonal.t1018' /></h1>
+	    <h1 style="height:20px;"><spring:message code = 'ezNewPortal.t070' /></h1>
 	    <div id="close">
             <ul>
                 <li><span onclick="return window.close()"></span></li>
@@ -804,50 +1436,144 @@
 	            <td rowspan="1" valign="top">
 	                <table border="0" cellspacing="0" cellpadding="0">
 	                    <tr>
-	                        <td align="center" id="TreeViewTD" valign="top">
+	                        <td id="TreeViewTD" valign="top">
+								<div class="portlet_tabpart01" style="width: 680px; text-align: center;">
+									<div class="portlet_tabpart01_top" id="tab1" style="margin-top: 25px;margin-bottom: 2px;">
+										<p><span id="1tab1" tdname="portalOrgan" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)" onmouseover="tabover(this)" onmouseout="tabout(this)" class="tabon"><spring:message code='ezNewPortal.t024' /></span></p>
+										<p><span id="1tab2" tdname="portalJikwi" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)" onmouseover="tabover(this)" onmouseout="tabout(this)" class=""><spring:message code='ezEmail.t28'/></span></p>
+										<p><span id="1tab3" tdname="portalJikchek" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)" onmouseover="tabover(this)" onmouseout="tabout(this)" class=""><spring:message code='ezEmail.t281'/></span></p>
+										<p><span id="1tab4" tdname="portalGroup" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)" onmouseover="tabover(this)" onmouseout="tabout(this)" class=""><spring:message code='ezPersonal.yej05'/></span></p>
+									</div>
+								</div>
+								<div id="portalOrgan_content">
+									<div class="portlet_tabpart03" style="background-color: #f8f8fa; margin-top: 2px; padding:0px; border-top: none;">
+										<div class="portlet_tabpart03_top" id="tab1" style="border: 1px solid #eaeaea;">
+											<table style="margin-top: 3px; width: 100%;">
+												<tr>
+													<td>
+														<div style="float: left; margin-left: 5px;">
+															<select id="search_type" style="height:22px">
+																<option selected value="displayname"><spring:message code='ezOrgan.t67'/></option>
+																<option value="cn"><spring:message code='ezOrgan.t94'/></option>
+																<option value="description"><spring:message code='ezOrgan.t68'/></option>
+																<option value="title"><spring:message code='ezOrgan.t69'/></option>
+																<option value="telephonenumber"><spring:message code='ezOrgan.t95'/></option>
+																<option value="mobile"><spring:message code='ezOrgan.t96'/></option>
+																<option value="HomePhone"><spring:message code='ezOrgan.t97'/></option>
+																<option value="facsimileTelephoneNumber"><spring:message code='ezOrgan.t98'/></option>
+																<option value="mail"><spring:message code='ezOrgan.t99'/></option>
+																<option value="streetAddress" style="display:none"><spring:message code='ezOrgan.t100'/></option>
+															</select>
+															<input id="keyword" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){fn_serach('search'); return false;}" value="" style="width: 130px; margin: 0px;height:22px" />
+															<a class="imgbtn"><span onclick="fn_serach('search')"><spring:message code='ezOrgan.t101'/></span></a>
+														</div>
+													</td>
+													<td>
+														<div style="float: right; margin-right: 5px; position: relative;">
+															<a class="imgbtn"><span onclick="setAuthorViewUser('dept')"><spring:message code='ezNewPortal.t071' /></span></a>
+															<a class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezCircular.t161' /></span></a>
+														</div>
+													</td>
+													<td></td>
+												</tr>
+											</table>
+										</div>
+									</div>
 	                            <table>
 	                                <tr>
 	                                    <td>
-	                                        <div style="overflow-y: auto; overflow-x: auto; WIDTH: 225px; HEIGHT: 370px; BACKGROUND-COLOR: #ffffff;" id="TreeView" onrequestdata="RequestData()" onnodeselect="TreeViewNodeClick()" onnodedblclick="TreeView.toggle(TreeView.selectedIndex)" class="box"></div>
+	                                        <div style="overflow-y: auto; overflow-x: auto; WIDTH: 250px; HEIGHT: 482px; BACKGROUND-COLOR: #ffffff;" id="TreeView" onrequestdata="RequestData()" onnodeselect="TreeViewNodeClick()" onnodedblclick="TreeView.toggle(TreeView.selectedIndex)" class="box"></div>
 	                                    </td>
 	                                    <td>
 	                                        <div class="listview" style="margin-left: 2px;">
-	                                            <div id="OrganListView" style="OVERFLOW: auto; WIDTH: 358px; HEIGHT: 372px; border: 0;"></div>
+	                                            <div id="OrganListView" style="OVERFLOW: auto; WIDTH: 426px; HEIGHT: 482px; border: 0;"></div>
 	                                        </div>
 	                                    </td>
 	                                </tr>
 	                            </table>
+								</div>
+								<div id="portalJikwi_content" style="display:none;">
+									<div>
+										<div id="portalJikwi" class="border_gray">
+											<table id="pListViewJikwi" cellspacing="0" cellpadding="0" multiselectable="true" useocs="false" rowondblclick="InsertReceiver" width="100%" border="0" class="mainlist">
+												<thead id="pListViewJikwi_THEAD">
+												<tr id="pListViewJikwi_TH">
+													<th id="pListViewJikwi_TH_0" class="h4_center" bgcolor="#CCCCCC" width="70px"><spring:message code='ezPersonal.yej07'/></th>
+												</tr>
+												</thead>
+												<tbody id="pListViewJikwi_TBODY"></tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+								<div id="portalJikchek_content" style="display:none;">
+									<div>
+										<div id="portalJikchek" class="border_gray">
+											<table id="pListViewJikchek" cellspacing="0" cellpadding="0" multiselectable="true" useocs="false" rowondblclick="InsertReceiver" width="100%" border="0" class="mainlist">
+												<thead id="pListViewJikchek_THEAD">
+												<tr id="pListViewJikchek_TH">
+													<th id="pListViewJikchek_TH_0" class="h4_center" bgcolor="#CCCCCC" width="70px"><spring:message code='ezPersonal.yej07'/></th>
+												</tr>
+												</thead>
+												<tbody id="pListViewJikchek_TBODY"></tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+								<div id="portalGroup_content" style="display:none;">
+									<table id="portalGroup_btn" class="mainlist">
+										<tr>
+											<td>
+												<a class="imgbtn" style="float: right; margin-right: 5px;"><span onclick="groupmember_click()"><spring:message code='ezEmail.t598' /></span></a>
+											</td>
+										</tr>
+									</table>
+									<div class="border_gray">
+										<div id="portalGroup">
+											<table id="pListViewGroup" cellspacing="0" cellpadding="0" multiselectable="true" useocs="false" rowondblclick="InsertReceiver" width="100%" border="0" class="mainlist">
+												<thead id="pListViewGroup_THEAD">
+												<tr id="pListViewGroup_TH">
+													<th id="pListViewGroup_TH_0" class="h4_center" bgcolor="#CCCCCC" width="70px"><spring:message code='ezPersonal.yej07'/></th>
+												</tr>
+												</thead>
+												<tbody id="pListViewGroup_TBODY"></tbody>
+											</table>
+										</div>
+									</div>
+								</div>
 	                        </td>
 	                    </tr>
 	                </table>
 	            </td>
 	            <td width="30" align="center">
-	                <img style="cursor: pointer" src="/images/kr/cm/arr_right.gif" alt="" border="0" onclick="InsertReceiver(ListViewMsgTo)" width="16" height="16">
-	                <img style="cursor: pointer" src="/images/kr/cm/arr_left.gif" alt="" border="0" onclick="DeleteReceiver(ListViewMsgTo)" width="16" height="16">
+	                <img style="cursor: pointer" src="/images/kr/cm/arr_right.gif" alt="" border="0" onclick="applyReceiver()" width="16" height="16">
+	                <img style="cursor: pointer" src="/images/kr/cm/arr_left.gif" alt="" border="0" onclick="DeleteReceiver()" width="16" height="16">
 	            </td>
 	            <td>
 	            	<table>
-	                    <tr style="DISPLAY: none">
-	                        <td id="ToTitle" colspan="2"><spring:message code = 'ezPersonal.t43' /></td>
+	                    <tr>
+	                        <td id="ToTitle" colspan="2" class="receiver_tltype01" style="padding-top:25px;">
+								<span><spring:message code = 'ezNewPortal.t072' /></span>
+							</td>
 	                    </tr>
 	                    <tr>
 	                        <td colspan="2">
 	                            <div class="listview">
-	                                <div id="ListViewMsgTo" style="BORDER: 0; HEIGHT: 371px; WIDTH: 200px; overflow: auto"></div>
+	                                <div id="ListViewMsgTo" style="BORDER: 0; HEIGHT: 482px; WIDTH: 250px; overflow: auto"></div>
 	                            </div>
 	                        </td>
 	                    </tr>
-	                    <%-- <tr>
+	                    <tr>
 	                        <table class="content" style="width:100%; margin-top:2px;">
 	                            <tr>
-	                                <th><spring:message code = 'ezPersonal.t1019' /></th>
+	                                <th><spring:message code = 'ezBoard.t999025' /></th>
 	                                <td>
-	                                    <input type="checkbox" id="admin_OK" onclick="checkbox_onclick(event)">&nbsp;<spring:message code = 'ezPersonal.t1020' />
-	                                    <input type="checkbox" id="admin_NO" onclick="checkbox_onclick(event)">&nbsp;<spring:message code = 'ezPersonal.t1021' />
+	                                    <input type="checkbox" id="admin_OK" disabled onclick="checkbox_onclick(event)">&nbsp;<spring:message code = 'ezPersonal.t1020' />
+	                                    <input type="checkbox" id="admin_NO" disabled onclick="checkbox_onclick(event)">&nbsp;<spring:message code = 'ezPersonal.t1021' />
 	                                </td>
 	                            </tr>
 	                        </table>
-	                    </tr> --%>
+	                    </tr>
 	                </table>
 	            </td>
 	        </tr>
@@ -855,5 +1581,9 @@
 	    <div class="btnpositionNew" style="float: center">
 	        <a class="imgbtn"><span onclick="confirm_onClick()"><spring:message code = 'ezPersonal.t12' /></span></a>
 	    </div>
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
+		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+		</div>
 	</body>
 </html>

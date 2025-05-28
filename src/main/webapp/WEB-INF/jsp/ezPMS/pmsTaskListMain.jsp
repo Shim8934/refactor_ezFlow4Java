@@ -9,7 +9,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title><spring:message code='ezPMS.t153' /></title>
-<link rel="stylesheet" href="${util.addVer('ezPMS.e1', 'msg')}" type="text/css" />
+<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 <link rel="stylesheet" href="${util.addVer('/css/ezPMS/default/style.css')}" type="text/css" />
 <link rel="stylesheet" href="${util.addVer('/css/ezPMS/pms.css')}" type="text/css" />
 <link rel="stylesheet" href="${util.addVer('/js/jquery/jquery.modal.css')}" type="text/css" />
@@ -297,7 +298,7 @@
 		}
 		
 		$("#taskNameArea").html(taskName);
-		$("#mailBoxInfo").html("<spring:message code='ezPMS.t3' /> <span style='color:#017BEC;' id='totalCount'>" + totalCount + " </span><spring:message code='ezPMS.t4' /></span>");
+		$("#mailBoxInfo").html("<spring:message code='ezPMS.t3' /> <span class='txt_color' id='totalCount'>" + totalCount + " </span><spring:message code='ezPMS.t4' /></span>");
 	}
 	 
 	function searchStatus(status) {

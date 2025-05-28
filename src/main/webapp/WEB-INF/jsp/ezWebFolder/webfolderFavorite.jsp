@@ -6,7 +6,8 @@
 <head>
 <title>Insert title here</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" href="${util.addVer('ezWebFolder.i1', 'msg')}" type="text/css">
+<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 <script type="text/javascript" src="${util.addVer('ezWebFolder.e1', 'msg')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -544,7 +545,7 @@
 	}
 
 	function setMailBoxInfo(folderCount, fileCount) {
-		dom.mailBoxInfo.innerHTML = "&nbsp;&nbsp; " + messages.strLang15 + " <span style='color:#017BEC;'>" + folderCount + " </span> / " + messages.strLang16 + " <span style='color:#017BEC;'> " + fileCount + " </span>";
+		dom.mailBoxInfo.innerHTML = "&nbsp;&nbsp; " + messages.strLang15 + " <span class='txt_color'>" + folderCount + " </span> / " + messages.strLang16 + " <span class='txt_color'> " + fileCount + " </span>";
 		$("#listcount").val(pagination.listSize()).prop("selected", true);
 	}
 

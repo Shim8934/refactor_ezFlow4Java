@@ -6,6 +6,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import egovframework.ezEKP.ezSystem.vo.CountryVO;
+import egovframework.let.user.login.vo.FidoAuthenticationVO;
 import egovframework.let.user.login.vo.LoginDeviceVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.user.login.vo.SessionVO;
@@ -93,6 +94,14 @@ public interface LoginService {
 	
 	public List<LoginVO> selectAllMemberOfCompany(String companyID, int tenantID) throws Exception;
 
+	void setFidoSession(FidoAuthenticationVO vo) throws Exception;
+
+	FidoAuthenticationVO getFidoSession(String fidoSessionId) throws Exception;
+	
+	void updateFidoStatus(FidoAuthenticationVO vo) throws Exception;
+
+	void deleteFidoSessionByTime() throws Exception;
+
 	public String chkADAndUpdatePassword(String uid, String upwd, int tenantId) throws Exception;
 	
 	public LoginDeviceVO getDeviceInfo(String devId) throws Exception;
@@ -115,4 +124,5 @@ public interface LoginService {
 	
 	public String setPasswordByCertification(String sabun, String certificationNum, String password, LoginVO loginVO) throws Exception;
 
+	boolean userDeviceCnt(String cn) throws Exception;
 }

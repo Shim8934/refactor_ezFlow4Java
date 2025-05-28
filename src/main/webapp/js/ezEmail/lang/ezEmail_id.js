@@ -11,7 +11,7 @@ var strLang10 = "Tanggal dihapus";
 var strLang11 = "Ke";                                                                                                                                         
 var strLang12 = "Ukuran";                                                                                                                                     
 var strLang13 = "Dengan Subyek";                                                                                                                              
-var strLang14 = "SAYA";                                                                                                                                       
+var strLang14 = "SAYA";
 var strLang15 = "PM";                                                                                                                                         
 var strLang16 = "Matahari";                                                                                                                                   
 var strLang17 = "Senin";                                                                                                                                      
@@ -247,7 +247,7 @@ var strLang332 = "Anda tidak dapat menghapus folder tingkat atas.";
 var strLang333 = "Apakah Anda yakin ingin menghapus secara permanen semua file di dalam Folder?"; 
 var strLang334 = "Pilih Folder."; 
 var strLang336 = "Jalan tidak ditemukan.";
-var strLang337 = "Tidak dapat memposting email/dokumen persetujuan ke papan foto atau papan anonim atau papan tautan URL."; 
+var strLang337 = "Postingan hanya diperbolehkan di papan umum dan tanya jawab.";
 var strLang338 = "Harap daftar sertakan kata-kata subjek atau badan. Contoh) \"beriklan\""; 
 var strLang339 = "Dalam subjek atau badan pesan"; 
 var strLang340 = "Terapkan ke semua pesan"; 
@@ -266,6 +266,13 @@ var strLang353 = "Ada domain atau alamat email yang sama.";
 var strLang354 = "Silakan masukkan nama domain."; 
 var strLang355 = "Besar"; 
 var strLang359 = "Pindah selesai."; 
+var strLangLDH01 = "이 메일에 대한 열람을 차단하시겠습니까?";
+var strLangLDH02 = "이 메일에 대한 열람차단을 해제하시겠습니까?";
+var strLangLDH03 = "차단되었습니다.";
+var strLangLDH04 = "차단 중 오류가 발생했습니다.";
+var strLangLDH05 = "해제되었습니다.";
+var strLangLDH06 = "해제 중 오류가 발생했습니다.";
+var strLangLDH07 = "관리자에 의해 열람차단된 메일입니다.";
 var strLangLHM01 = "Silakan masukkan nama domain.";                                                                                                                     
 var strLangLHM02 = "Tidak ada admin.";                                                                                                                                  
 var strLangLHM03 = "Tidak ada ID Daftar yang ditentukan.";                                                                                                              
@@ -307,6 +314,7 @@ var strLangLS02 = "Tidak ada surat yang dipilih. \nAnda yakin ingin menyimpan se
 var strLangLS03 = "Semua email di kotak surat tersebut akan diunduh sebagai satu file zip terkompresi.\nIni mungkin memakan waktu lama. Apakah Anda ingin melanjutkan?"
 var strLangLS04 = ".";
 var strLangLS05 = "';' cannot be contained."
+var strLangAllmailSaveAlert = "선택된 메일이 없습니다. \n메일을 선택하거나 메일 검색 후 저장해 주세요."
 
 /* 2018-07-03 홍승비 - 승인게시물, 커뮤니티 답변메일 companyID 관련 처리*/
 var strLangHSB01 = "Pos ini dapat dilihat di ";
@@ -341,6 +349,52 @@ var strLangKWCHd01 = "An error occurred while saving security HWP document. Plea
 
 var strLangNJK01 = "Restricted special characters for an email folder name(";
 var strLangNJK02 = "are included.";
+
+// 스팸신고
+var strLangHSG01 = "Laporan spam tidak dapat dilakukan karena alamat email tidak ditemukan.";
+var strLangHSG02 = "Laporan spam tidak diproses dengan berhasil.";
+
+// 2024.04.29 한슬기 : 메일 관련 메시지
+var strLangHSG03 = "Kolom subjek kosong.";
+
+var strLangKDH01 = "Baca info";
+
+//new ui
+const strLangFolderManage = "Manage folder";
+const strLangSubscribe = "Subscribe";
+const strLangPlzCheckSearchInput = "Enter search term.";
+const strLangSearchFetchError = "Error occurred while retrieving search results. -";
+const strLangNoSuchDept = "There is no department found.";
+const strLangDistributionFetchError = "Error occurred while retrieving public distribution group list. -";
+const strLangAddJobSimplyMark = "(Concurrent) ";
+const strLangCompany = "Company";
+const strLangDistributionAdd = "Add distribution list";// ezEmail.t60 = 배포목록추가
+const strLangAddressFetchError = "Error occurred while reading address list";// ezEmail.t585 = 주소목록을 읽는중에 오류발생
+const strLangPlzSelectGroupMail = "Select group message.";// ezEmail.t581 = 그룹메일을 선택해주세요.
+const strLangPlzSelectDistribution = "Select public distribution group.";// ezEmail.t580 = 공용배포그룹을 선택해주세요.
+const strLangNotAllowedSpecialChar = "The special character can't be entered.";
+
+const strLangSelectDept = "Pilih Departemen";
+const strLangSelectTitle = "Pemilihan Posisi";
+const strLangSelectRole = "Seleksi Langsung";
+const strLangPlzCheckSearchNameInput = "Masukkan nama untuk mencari.";
+const strLangOrgFetchError = "- Terjadi kesalahan saat mengunggah.\\n\\nKesalahan Server";
+const strLangSelectProxyApproverWarning = "Pilih seseorang untuk wakil.";
+
+const strLangTempSaveAttachmentsWarning = "File yang dilampirkan akan dihapus saat disimpan. Apakah Anda ingin menyimpan?";
+
+var strNoSubject = "Kolom subjek kosong."; 
+var strSendOK = "Email telah berhasil dikirim.";
+var strUreadDelChk = "Apakah Anda yakin ingin menghapus semua email yang belum dibaca di kotak masuk ini?"
+var strUreadDelSearch = "Apakah Anda yakin ingin menghapus semua email yang belum dibaca di hasil pencarian?"
+var strUreadDelPermenant = "Setelah dihapus, email tidak dapat dipulihkan.\nApakah Anda yakin ingin menghapus semua email yang belum dibaca secara permanen di kotak masuk?"
+var strUreadDelSearchPermenant = "Setelah dihapus, email tidak dapat dipulihkan.\nApakah Anda yakin ingin menghapus semua email yang belum dibaca secara permanen di hasil pencarian?";
+
+const strLangTagLimit = "Anda dapat mendaftar hingga 5 tag.";
+const strLangTagadd = "메일에 태그 추가 :";
+
+const strLangChangeButton = "Switch";
+const strLangChangeLimit = "Cannot switch because the attachment size exceeds the limit.";
 
 function GetLocalTime(Offset , pDateTime)
 {

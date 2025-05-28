@@ -283,9 +283,9 @@
 			tenant_id = #tenantId#
 	</update>
 
+	<!-- 2024-07-16 홍승비 - SQL Injection 수정 > $ 기호 제거 -->
 	<!-- 관리자단 양식 리스트 -->
 	<select id="getFormListAdmin" parameterClass="map" resultMap="JournalFormInfo">
-		<![CDATA[
 			select
 				a.form_id,
 				a.form_name,
@@ -295,7 +295,12 @@
 				a.form_status,
 				a.type_id,
 				b.dept_id,
-				ifnull(d.DISPLAYNAME$lang$,(select DISPLAYNAME$lang$ from tbl_deptmaster dd where dd.CN=#companyId# and dd.tenant_id=#tenantId#)) as dept_name
+				ifnull(CASE #lang# WHEN '2' THEN d.DISPLAYNAME2 ELSE d.DISPLAYNAME END,
+						(select
+							CASE #lang# WHEN '2' THEN DISPLAYNAME2 ELSE DISPLAYNAME END
+						from
+							tbl_deptmaster dd where dd.CN = #companyId# and dd.tenant_id = #tenantId#)
+						) as dept_name
 			from 
 				tbl_journal_form a 
 			left join 
@@ -310,8 +315,10 @@
 				a.tenant_id = #tenantId#
 			and
 				a.form_del_flag is null
-			order by a.form_id desc, d.DISPLAYNAME$lang$ asc
-		]]>
+			order by
+				a.form_id desc,
+				<isEqual property="lang" compareValue="2">d.DISPLAYNAME2</isEqual>
+				<isNotEqual property="lang" compareValue="2">d.DISPLAYNAME</isNotEqual>
 	</select>
 
 	<!-- 양식 리스트 셀렉트 -->
@@ -341,30 +348,34 @@
 		</isEmpty>
 		<isNotEmpty property="deptId">
 			<![CDATA[
-				select
-					a.form_id,
-					a.form_name,
-					a.form_status,
-					a.type_id,
-					case
-						when form_status = 'basic' then 0
-						else 1
-					end as orderNo
-				from 
-					tbl_journal_form a left join tbl_journal_form_use_dept b 
-				on 
-					(a.form_id = b.form_id and a.tenant_id = b.tenant_id)
-				where 
-					(b.dept_id = #deptId# or b.dept_id is null)
-				and
-					a.type_id = #typeId#
-				and
-					a.tenant_id = #tenantId#
-				and
-					a.company_id = #companyId#
-				and
-					a.form_del_flag is null
-				order by orderNo, form_id
+				select a.form_id,
+					   a.form_name,
+					   a.form_status,
+					   a.type_id,
+					   case
+						   when form_status = 'basic' then 0
+						   else 1
+						   end as orderNo
+				from tbl_journal_form a
+						 left join tbl_journal_form_use_dept b
+								   on
+									   (a.form_id = b.form_id and a.tenant_id = b.tenant_id)
+						 join tbl_deptmaster d
+							  on
+								  (d.TENANT_ID = a.tenant_id
+									  and d.cn = #deptId#
+									  and d.EXTENSIONATTRIBUTE2 = a.company_id)
+				where (b.dept_id = #deptId# or b.dept_id is null)
+			]]>
+			<isNotEqual property="typeId" compareValue="basic">
+						   and
+					   a.type_id = #typeId#
+			</isNotEqual>
+			<![CDATA[	  
+						   and
+					   a.tenant_id = #tenantId#
+						   and
+					   a.form_del_flag is null order by orderNo, form_id
 			]]>
 		</isNotEmpty>
 	</select>
@@ -373,7 +384,7 @@
 	<select id="getFormUseDeptList" parameterClass="map" resultMap="deptInfoVO">
 		select
 			b.dept_id,
-			a.DISPLAYNAME$lang$ as dept_name
+			CASE #lang# WHEN '2' THEN a.DISPLAYNAME2 ELSE a.DISPLAYNAME END AS dept_name
 		from
 			tbl_deptmaster a join tbl_journal_form_use_dept b on a.CN = b.dept_id
 		where
@@ -406,17 +417,18 @@
 		)
 	</insert>
 
+	<!-- 2024-07-17 홍승비 - parent 칼럼의 잘못된 null값 비교 수정 (= null -> is null) -->
 	<!-- 조직도 만들기 위한 쿼리 -->
 	<select id="selectDeptList" parameterClass="map" resultMap="deptViewMap">
 		select 
 			d.CN as id,
-			IF(d.extensionattribute1 = null
+			IF(d.extensionattribute1 is null
 			<isNotEmpty property="companyId">
-				or d.CN=#companyId#
+				or d.CN = #companyId#
 			</isNotEmpty>
 			,'##', d.EXTENSIONATTRIBUTE1) as parent,
 			d.extensionattribute2 as companyId,
-			d.DISPLAYNAME$lang$ as text,
+			CASE #lang# WHEN '2' THEN d.DISPLAYNAME2 ELSE d.DISPLAYNAME END AS text,
 			case d.CN
 				when d.extensionattribute2 then 'comp'
 				else 'dept'
@@ -434,31 +446,26 @@
 		where 
 			d.tenant_id = #tenantId#
 		and 
-		 u.CN = #userId#
+		 	u.CN = #userId#
 		and
 			u.tenant_id = #tenantId#
-		and 
-			(
-				((substr(u.EXTENSIONATTRIBUTE1, 3, 1) = 0 
-			and 
-				d.extensionattribute2 = u.PHYSICALDELIVERYOFFICENAME))
-			or
-				(substr(u.EXTENSIONATTRIBUTE1, 3, 1) = 1)
-			)
 		and
 			not((d.extensionattribute1 is null or d.extensionattribute1 = '') and d.cn <![CDATA[<>]]> d.extensionattribute2)
 			<isNotEmpty property="companyId">
 			and 
 				d.EXTENSIONATTRIBUTE2 = #companyId#
 			</isNotEmpty>
-		ORDER BY lpad(ifnull(d.EXTENSIONATTRIBUTE15, 0), 6, 0), d.DISPLAYNAME$lang$
+		ORDER BY
+			lpad(ifnull(d.EXTENSIONATTRIBUTE15, 0), 6, 0),
+			<isEqual property="lang" compareValue="2">d.DISPLAYNAME2</isEqual>
+			<isNotEqual property="lang" compareValue="2">d.DISPLAYNAME</isNotEqual>
 	</select>
 
 	<!-- 회사 리스트를 가져오는 쿼리 -->
 	<select id="selectCompanyList" resultClass="journalCompanyVO" parameterClass="map">
 		select 
 			d.CN as companyId,
-			d.DISPLAYNAME$lang$ as companyName,
+			CASE #lang# WHEN '2' THEN d.DISPLAYNAME2 ELSE d.DISPLAYNAME END AS companyName,
 			case d.CN
 				when #companyId# then 'selected'
 				else 'no'
@@ -483,17 +490,20 @@
 			)
 		and 
 			d.extensionattribute2 = d.CN
-		order by lpad(ifnull(d.EXTENSIONATTRIBUTE15, 0), 6, 0), d.DISPLAYNAME$lang$
+		order by
+			lpad(ifnull(d.EXTENSIONATTRIBUTE15, 0), 6, 0),
+			<isEqual property="lang" compareValue="2">d.DISPLAYNAME2</isEqual>
+			<isNotEqual property="lang" compareValue="2">d.DISPLAYNAME</isNotEqual>
 	</select>
 
-	<!-- 권한자 목록 세럭트 -->
+	<!-- 권한자 목록 셀렉트 -->
 	<select id="selectAuthorList" parameterClass="Map" resultMap="authorMap">
 		select
 			a.user_id as user_id,
-			u.DISPLAYNAME$lang$ as user_name,
-			u.title$lang$ as jikwi,
-			du.DISPLAYNAME$lang$ as dept_name,
-			group_concat(d.DISPLAYNAME$lang$ order by 1 separator '%') as auth_dept
+			CASE #lang# WHEN '2' THEN u.DISPLAYNAME2 ELSE u.DISPLAYNAME END AS user_name,
+			CASE #lang# WHEN '2' THEN u.TITLE2 ELSE u.TITLE END AS jikwi,
+			CASE #lang# WHEN '2' THEN du.DISPLAYNAME2 ELSE du.DISPLAYNAME END AS dept_name,
+			group_concat(CASE #lang# WHEN '2' THEN d.DISPLAYNAME2 ELSE d.DISPLAYNAME END order by 1 separator '%') as auth_dept
 		from 
 			tbl_usermaster u 
 		inner join
@@ -512,7 +522,7 @@
 	<!-- 권한자의 권한 부서 리스트 -->
 	<select id="selectAuthorDept" resultMap="deptMap" parameterClass="Map">
 		select
-			d.DISPLAYNAME$lang$ dept_name,
+			CASE #lang# WHEN '2' THEN d.DISPLAYNAME2 ELSE d.DISPLAYNAME END AS dept_name,
 			d.CN dept_id,
 			'no' as mine
 		from 
@@ -523,9 +533,11 @@
 			a.user_id = #userId#
 		and 
 			a.tenant_id = #tenantId#
+		and 
+		    d.EXTENSIONATTRIBUTE2 = #userCompany#
 		union
 		select
-			d.DISPLAYNAME$lang$ dept_name,
+			CASE #lang# WHEN '2' THEN d.DISPLAYNAME2 ELSE d.DISPLAYNAME END AS dept_name,
 			d.CN dept_id,
 			'yes' as mine
 		from 
@@ -536,9 +548,11 @@
 			u.CN = #userId#
 		and 
 			u.TENANT_ID = #tenantId#
+		and
+			d.EXTENSIONATTRIBUTE2 = #userCompany#
 		union
 		select
-			d.DISPLAYNAME$lang$ dept_name,
+			CASE #lang# WHEN '2' THEN d.DISPLAYNAME2 ELSE d.DISPLAYNAME END AS dept_name,
 			d.CN dept_id,
 			'add' as mine
 		from 
@@ -549,19 +563,21 @@
 			a.CN = #userId#
 		and 
 			a.TENANT_ID = #tenantId#
+		and
+			d.EXTENSIONATTRIBUTE2 = #userCompany#
 		order by dept_name
 	</select>
 
 	<!-- 해당부서의 사원리스트 -->
 	<select id="selectUserList" parameterClass="Map" resultMap="userMap" remapResults="true">
 		select * from 
-		(	select
-				DISPLAYNAME$lang$ as user_name,
+			(select
+				CASE #lang# WHEN '2' THEN DISPLAYNAME2 ELSE DISPLAYNAME END AS user_name,
 				CN as user_id,
-				TITLE$lang$ as jikwi,
+				CASE #lang# WHEN '2' THEN TITLE2 ELSE TITLE END AS jikwi,
 				MAIL as mail,
 				DEPARTMENT as dept_id,
-				DESCRIPTION$lang$ as dept_name,
+				CASE #lang# WHEN '2' THEN DESCRIPTION2 ELSE DESCRIPTION END AS dept_name,
 				EXTENSIONATTRIBUTE2 as user_img,
 				CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15,
 				'user' as userType
@@ -573,22 +589,30 @@
 				PHYSICALDELIVERYOFFICENAME = #companyId#
 			and
 			    CN not in (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#) 
-			<isNotEqual property="key" compareValue="DEPARTMENT">
-				and 
-					$key$ like concat('%', #value#, '%')
-			</isNotEqual>
-			<isEqual property="key" compareValue="DEPARTMENT">
-				and 
-					$key$ = #value#
+			<isEqual property="key" compareValue="DEPARTMENT" prepend="AND">
+				DEPARTMENT = #value#
 			</isEqual>
+			<isNotEqual property="key" compareValue="DEPARTMENT" prepend="AND">
+				<isEqual property="key" compareValue="DISPLAYNAME">DISPLAYNAME</isEqual>
+				<isEqual property="key" compareValue="CN">CN</isEqual>
+				<isEqual property="key" compareValue="DESCRIPTION">DESCRIPTION</isEqual>
+				<isEqual property="key" compareValue="TITLE">TITLE</isEqual>
+				<isEqual property="key" compareValue="TELEPHONENUMBER">TELEPHONENUMBER</isEqual>
+				<isEqual property="key" compareValue="MOBILE">MOBILE</isEqual>
+				<isEqual property="key" compareValue="HOMEPHONE">HOMEPHONE</isEqual>
+				<isEqual property="key" compareValue="FACSIMILETELEPHONENUMBER">FACSIMILETELEPHONENUMBER</isEqual>
+				<isEqual property="key" compareValue="MAIL">MAIL</isEqual>
+				<isEqual property="key" compareValue="STREETADDRESS">STREETADDRESS</isEqual>
+					like concat('%', #value#, '%')
+			</isNotEqual>
 		union all 
 			select
-	        	A.DISPLAYNAME$lang$ as user_name,
+				CASE #lang# WHEN '2' THEN A.DISPLAYNAME2 ELSE A.DISPLAYNAME END AS user_name,
 				A.CN as user_id,
-				B.TITLE$lang$ as jikwi,
+				CASE #lang# WHEN '2' THEN B.TITLE2 ELSE B.TITLE END AS jikwi,
 				A.MAIL as mail,
 				B.DEPTID as dept_id,
-				C.DISPLAYNAME$lang$ as dept_name,
+				CASE #lang# WHEN '2' THEN C.DISPLAYNAME2 ELSE C.DISPLAYNAME END AS dept_name,
 				A.EXTENSIONATTRIBUTE2 as user_img,
 				CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(A.EXTENSIONATTRIBUTE15, '0'))), IFNULL(A.EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15,
 				'addJob' as userType
@@ -600,23 +624,32 @@
 				tbl_deptmaster C on B.DEPTID = C.CN and B.TENANT_ID = C.TENANT_ID
 			where
 				B.TENANT_ID = #tenantId#
-			<isNotEqual property="key" compareValue="DEPARTMENT">
-				and 
-					A.$key$ like concat('%', #value#, '%')
-			</isNotEqual>
-			<isEqual property="key" compareValue="DEPARTMENT">
-				and 
-					B.DEPTID = #value#
+			<isEqual property="key" compareValue="DEPARTMENT" prepend="AND">
+				B.DEPTID = #value#
 			</isEqual>
+			<isNotEqual property="key" compareValue="DEPARTMENT" prepend="AND">
+				<isEqual property="key" compareValue="DISPLAYNAME">A.DISPLAYNAME</isEqual>
+				<isEqual property="key" compareValue="CN">A.CN</isEqual>
+				<isEqual property="key" compareValue="DESCRIPTION">A.DESCRIPTION</isEqual>
+				<isEqual property="key" compareValue="TITLE">A.TITLE</isEqual>
+				<isEqual property="key" compareValue="TELEPHONENUMBER">A.TELEPHONENUMBER</isEqual>
+				<isEqual property="key" compareValue="MOBILE">A.MOBILE</isEqual>
+				<isEqual property="key" compareValue="HOMEPHONE">A.HOMEPHONE</isEqual>
+				<isEqual property="key" compareValue="FACSIMILETELEPHONENUMBER">A.FACSIMILETELEPHONENUMBER</isEqual>
+				<isEqual property="key" compareValue="MAIL">A.MAIL</isEqual>
+				<isEqual property="key" compareValue="STREETADDRESS">A.STREETADDRESS</isEqual>
+					like concat('%', #value#, '%')
+			</isNotEqual>
 		) AA
 		ORDER BY 8 ASC, 1 ASC
-		LIMIT $curPage$, $pageSize$
+		LIMIT
+			#curPage#, #pageSize#
 	</select>
 	
 	<!-- 해당부서의 사원수 -->
 	<select id="getDeptUserListCount" parameterClass="Map" resultClass="Integer">
-			select count(*) AS count from 
-		(	select
+		select count(*) AS count from
+			(select
 				CN as user_id
 			from 
 				tbl_usermaster
@@ -626,14 +659,22 @@
 				PHYSICALDELIVERYOFFICENAME = #companyId#
 			and
 			    CN not in (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#) 
-			<isNotEqual property="key" compareValue="DEPARTMENT">
-				and 
-					$key$ like concat('%', #value#, '%')
-			</isNotEqual>
-			<isEqual property="key" compareValue="DEPARTMENT">
-				and 
-					$key$ = #value#
+			<isEqual property="key" compareValue="DEPARTMENT" prepend="AND">
+				DEPARTMENT = #value#
 			</isEqual>
+			<isNotEqual property="key" compareValue="DEPARTMENT" prepend="AND">
+				<isEqual property="key" compareValue="DISPLAYNAME">DISPLAYNAME</isEqual>
+				<isEqual property="key" compareValue="CN">CN</isEqual>
+				<isEqual property="key" compareValue="DESCRIPTION">DESCRIPTION</isEqual>
+				<isEqual property="key" compareValue="TITLE">TITLE</isEqual>
+				<isEqual property="key" compareValue="TELEPHONENUMBER">TELEPHONENUMBER</isEqual>
+				<isEqual property="key" compareValue="MOBILE">MOBILE</isEqual>
+				<isEqual property="key" compareValue="HOMEPHONE">HOMEPHONE</isEqual>
+				<isEqual property="key" compareValue="FACSIMILETELEPHONENUMBER">FACSIMILETELEPHONENUMBER</isEqual>
+				<isEqual property="key" compareValue="MAIL">MAIL</isEqual>
+				<isEqual property="key" compareValue="STREETADDRESS">STREETADDRESS</isEqual>
+					like concat('%', #value#, '%')
+			</isNotEqual>
 		union all 
 			select
 	        	A.CN as user_id
@@ -645,14 +686,22 @@
 				tbl_deptmaster C on B.DEPTID = C.CN and B.TENANT_ID = C.TENANT_ID
 			where
 				B.TENANT_ID = #tenantId#
-			<isNotEqual property="key" compareValue="DEPARTMENT">
-				and 
-					A.$key$ like concat('%', #value#, '%')
-			</isNotEqual>
-			<isEqual property="key" compareValue="DEPARTMENT">
-				and 
-					B.DEPTID = #value#
+			<isEqual property="key" compareValue="DEPARTMENT" prepend="AND">
+				B.DEPTID = #value#
 			</isEqual>
+			<isNotEqual property="key" compareValue="DEPARTMENT" prepend="AND">
+				<isEqual property="key" compareValue="DISPLAYNAME">A.DISPLAYNAME</isEqual>
+				<isEqual property="key" compareValue="CN">A.CN</isEqual>
+				<isEqual property="key" compareValue="DESCRIPTION">A.DESCRIPTION</isEqual>
+				<isEqual property="key" compareValue="TITLE">A.TITLE</isEqual>
+				<isEqual property="key" compareValue="TELEPHONENUMBER">A.TELEPHONENUMBER</isEqual>
+				<isEqual property="key" compareValue="MOBILE">A.MOBILE</isEqual>
+				<isEqual property="key" compareValue="HOMEPHONE">A.HOMEPHONE</isEqual>
+				<isEqual property="key" compareValue="FACSIMILETELEPHONENUMBER">A.FACSIMILETELEPHONENUMBER</isEqual>
+				<isEqual property="key" compareValue="MAIL">A.MAIL</isEqual>
+				<isEqual property="key" compareValue="STREETADDRESS">A.STREETADDRESS</isEqual>
+					like concat('%', #value#, '%')
+			</isNotEqual>
 		) AA
 	</select>
 
@@ -715,6 +764,7 @@
 			tenant_id = #tenantId#
 	</update>
 
+	<!-- 2024-07-17 홍승비 - SQL Injection 수정 > 불필요한 다국어 처리 제거 (기존부터 lang값을 전달하지 않고 있었음) -->
 	<!-- 사원의 열람권한을 저장하는 쿼리 -->
 	<insert id="insertAuthDept" parameterClass="Map">
 		insert into tbl_journal_auth (
@@ -724,7 +774,7 @@
 			#userId#, 	#deptId#, 	#tenantId#
 		from dual where not exists (
 			select
-				DISPLAYNAME$lang$
+				DISPLAYNAME
 			from 
 				tbl_usermaster 
 			where 
@@ -752,7 +802,8 @@
 			count(j.journal_id)
 		from 
 			tbl_journal_recv r
-		inner join tbl_journal j on (r.journal_id = j.journal_id and r.tenant_id = j.tenant_id)
+		inner join
+			tbl_journal j on (r.journal_id = j.journal_id and r.tenant_id = j.tenant_id)
 		where 
 			r.user_id = #userId#
 		and 
@@ -767,7 +818,7 @@
 			NULLIF(j.journal_status ,'') is null
 	</select>
 
-	<!-- 일지 리스트 글수! -->
+	<!-- 일지 리스트 글(게시물) 수 -->
 	<select id="selectJournalListCount" parameterClass="Map" resultClass="String">
 		select 
 			count(j.journal_id) as totalCount
@@ -808,7 +859,7 @@
 			and f.form_id = #formId#
 		</isNotEmpty>
 		<isNotEmpty property="writerName">
-			and u.DISPLAYNAME$lang$ like concat('%', #writerName#, '%')
+			and CASE #lang# WHEN '2' THEN u.DISPLAYNAME2 ELSE u.DISPLAYNAME END like concat('%', #writerName#, '%')
 		</isNotEmpty>
 		<isNotEmpty property="journalTitle">
 			and j.journal_title like concat('%', #journalTitle#, '%')
@@ -845,21 +896,22 @@
 			j.journal_title as journal_title,
 			DATE_ADD(DATE_FORMAT(j.journal_date, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as journal_date,
 			j.dept_share as dept_share,
-			u.DISPLAYNAME$lang$ as writer_name,
-			d.DISPLAYNAME$lang$ as dept_name,
+			CASE #lang# WHEN '2' THEN u.DISPLAYNAME2 ELSE u.DISPLAYNAME END as writer_name,
+			CASE #lang# WHEN '2' THEN d.DISPLAYNAME2 ELSE d.DISPLAYNAME END as dept_name,
 			f.form_name as form_name,
 			f.type_id as type_id,
 			(select 
 				count(*) 
 			from 
 				tbl_journal_reply jr 
-			where jr.journal_id=j.journal_id and jr.tenant_id=j.tenant_id) as reply_count,
+			where
+				jr.journal_id = j.journal_id and jr.tenant_id = j.tenant_id) as reply_count,
 			(select 
 				count(*) 
 			from 
 				tbl_journal_file jf 
 			where
-				jf.journal_id=j.journal_id and jf.tenant_id=j.tenant_id) as file_count,
+				jf.journal_id = j.journal_id and jf.tenant_id = j.tenant_id) as file_count,
 			(select 
 				count(*) 
 			from 
@@ -917,7 +969,7 @@
 		inner join 
 			tbl_deptmaster d on (j.journal_dept = d.CN and d.TENANT_ID = j.tenant_id <isNotEmpty property="deptId"> and d.CN = #deptId# </isNotEmpty>)
 		inner join 
-			tbl_usermaster u on (j.journal_writer = u.CN and u.TENANT_ID=j.tenant_id)
+			tbl_usermaster u on (j.journal_writer = u.CN and u.TENANT_ID = j.tenant_id)
 		<isNotEmpty property="recvUser">
 			left join 
 				tbl_journal_recv r on (r.journal_id = j.journal_id and r.tenant_id = j.tenant_id)
@@ -941,7 +993,7 @@
 			and f.form_id = #formId#
 		</isNotEmpty>
 		<isNotEmpty property="writerName">
-			and u.DISPLAYNAME$lang$ like concat('%',#writerName#,'%')
+			and CASE #lang# WHEN '2' THEN u.DISPLAYNAME2 ELSE u.DISPLAYNAME END like concat('%',#writerName#,'%')
 		</isNotEmpty>
 		<isNotEmpty property="journalTitle">
 			and j.journal_title like concat('%',#journalTitle#,'%')
@@ -974,13 +1026,27 @@
 			order by 3 desc
 			</isEmpty>
 		</isEmpty>
+		<!-- 2024-07-17 홍승비 - SQL Injection 수정 > $ 기호 제거 -->
 		<isNotEmpty property="orderNum">
 			<isNotEmpty property="orderHow">
-			order by $orderNum$ $orderHow$
+			order by
+			<isEqual property="orderNum" compareValue="2">2</isEqual>
+			<isEqual property="orderNum" compareValue="3">3</isEqual>
+			<isEqual property="orderNum" compareValue="4">4</isEqual>
+			<isEqual property="orderNum" compareValue="5">5</isEqual>
+			<isEqual property="orderNum" compareValue="6">6</isEqual>
+			<isEqual property="orderNum" compareValue="7">7</isEqual>
+			<isEqual property="orderNum" compareValue="8">8</isEqual>
+			<isEqual property="orderNum" compareValue="10">10</isEqual>
+			<isEqual property="orderNum" compareValue="11">11</isEqual>
+			<isEqual property="orderNum" compareValue="12">12</isEqual>
+			<isEqual property="orderNum" compareValue="14">14</isEqual>
+			<isEqual property="orderNum" compareValue="16">16</isEqual>
+			<isEqual property="orderHow" compareValue="desc">desc</isEqual>
 			</isNotEmpty>
 		</isNotEmpty>
 		limit
-		$startCount$,$listCnt$
+			#startCount#, #listCnt#
 	</select>
 
 	<!-- 수신자 즐겨찾기 추가 -->
@@ -1021,17 +1087,17 @@
 
 	<!-- 즐겨찾기 아이디에 해당되는 수신자리스트 가져오기 -->
 	<select id="getFavoriteUserList" parameterClass="map" resultMap="receiverMap">
-		select 
-			a.DISPLAYNAME$lang$ as user_name,
+		select
+			CASE #lang# WHEN '2' THEN a.DISPLAYNAME2 ELSE a.DISPLAYNAME END AS user_name,
 			a.CN as user_id,
-			a.TITLE$lang$ as jikwi,
+			CASE #lang# WHEN '2' THEN a.TITLE2 ELSE a.TITLE END AS jikwi,
 			a.MAIL as mail,
-			a.DESCRIPTION$lang$ as dept_name
-		from 
-			tbl_usermaster a join tbl_journal_recv_favorite_list b 
-		on 
+			CASE #lang# WHEN '2' THEN a.DESCRIPTION2 ELSE a.DESCRIPTION END AS dept_name
+		from
+			tbl_usermaster a join tbl_journal_recv_favorite_list b
+		on
 			(a.CN = b.user_id and a.TENANT_ID = b.tenant_id)
-		where 
+		where
 			b.favorite_id = #favoriteId#
 		and
 			a.tenant_id = #tenantId#
@@ -1083,7 +1149,7 @@
 			ifnull(e.preview_wcontent,'50') as preview_wcontent,
 			ifnull(e.preview_hcontent,'50') as preview_hcontent,
 			u.mail as mail,
-			u.DISPLAYNAME$lang$ as name
+			CASE #lang# WHEN '2' THEN u.DISPLAYNAME2 ELSE u.DISPLAYNAME END AS name
 		from 
 			tbl_usermaster u
 		left join 
@@ -1164,24 +1230,24 @@
 
 	<!-- 최근사용양식 아이디 가져오기 -->
 	<select id="getJournalLastFormId" parameterClass="map" resultClass="String">
-		select
-			a.form_id
-		from
-			tbl_journal a join tbl_journal_form b
-		on
-			(a.form_id = b.form_id and a.tenant_id = b.tenant_id)
-		where
-			a.journal_writer = #userId#
-		and
-			b.type_id = #typeId#
-		and
-			a.tenant_id = #tenantId#
-		and
-			b.form_del_flag is null 
-		order by a.journal_id desc limit 1
+		select a.form_id
+		from tbl_journal a
+				 join tbl_journal_form b
+					  on
+						  (a.form_id = b.form_id and a.tenant_id = b.tenant_id)
+				 join tbl_deptmaster d
+					  on
+						  (d.TENANT_ID = a.tenant_id and d.cn = a.journal_dept)
+		where a.journal_writer = #userId#
+		  and b.type_id = #typeId#
+		  and a.tenant_id = #tenantId#
+		  and d.EXTENSIONATTRIBUTE2 = #companyId#
+		  and b.form_del_flag is null
+		order by a.journal_id desc
+		limit 1
 	</select>
 
-	<!-- 일지 뷰 정보 저장 -->
+	<!-- 일지 조회자(수신자) 정보 저장을 위한 사용자 ID 리턴 -->
 	<select id="selectRecvUser" parameterClass="map" resultClass="String">
 		select 
 			user_id
@@ -1227,7 +1293,7 @@
 			j.journal_title as journal_title, 
 			j.journal_content as journal_content, 
 			DATE_ADD(DATE_FORMAT(j.journal_date, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as journal_date,
-			u.DISPLAYNAME$lang$ as writer_name, 
+			CASE #lang# WHEN '2' THEN u.DISPLAYNAME2 ELSE u.DISPLAYNAME END as writer_name,
 			f.form_name as form_name, 
 			f.type_id as type_id,
 			j.journal_sum as journal_sum,
@@ -1311,7 +1377,8 @@
 			,journal_date = #writeDate# 
 			</isEqual>
 			<isEqual property="isTemp" compareValue="Y">
-			,journal_date = #writeDate# 
+			,journal_date = #writeDate#
+			,journal_dept = #deptId#
 			</isEqual>
 		where
 			journal_id = #journalId#
@@ -1369,7 +1436,7 @@
 			r.reply_id as reply_id,
 			r.reply_content as reply_content,
 			DATE_ADD(DATE_FORMAT(r.reply_date, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as reply_date,
-			u.DISPLAYNAME$lang$ as reply_writer_name,
+			CASE #lang# WHEN '2' THEN u.DISPLAYNAME2 ELSE u.DISPLAYNAME END as reply_writer_name,
 			u.CN as reply_writer,
 			case u.CN
 				when #userId# then 'Y' 
@@ -1436,9 +1503,9 @@
 	<select id="getReceiverList" parameterClass="map" resultMap="receiverVO">
 		select
 			b.user_id as user_id,
-			a.DISPLAYNAME$lang$ as user_name,
-			a.DESCRIPTION$lang$ as dept_name,
-			a.TITLE$lang$ as jikwi,
+			CASE #lang# WHEN '2' THEN a.DISPLAYNAME2 ELSE a.DISPLAYNAME END as user_name,
+			CASE #lang# WHEN '2' THEN a.DESCRIPTION2 ELSE a.DESCRIPTION END as dept_name,
+			CASE #lang# WHEN '2' THEN a.TITLE2 ELSE a.TITLE END as jikwi,
 			ifnull(DATE_ADD(DATE_FORMAT(b.recieve_date, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '-') as date
 		from 
 			tbl_usermaster a join tbl_journal_recv b 
@@ -1450,11 +1517,13 @@
 			a.tenant_id = #tenantId#
 		and
 			b.user_id in (select CN from tbl_usermaster)
-		order by lpad(ifnull(a.EXTENSIONATTRIBUTE15,0),6,0) ,a.DISPLAYNAME$lang$
+		order by
+			lpad(ifnull(a.EXTENSIONATTRIBUTE15,0), 6, 0),
+			CASE #lang# WHEN '2' THEN a.DISPLAYNAME2 ELSE a.DISPLAYNAME END
 		<isNotEmpty property="startCount">
 			<isNotEmpty property="listCnt">
 				limit
-				$startCount$, $listCnt$
+					#startCount#, #listCnt#
 			</isNotEmpty>
 		</isNotEmpty>
 	</select>
@@ -1472,7 +1541,8 @@
 				tbl_usermaster u on(v.tenant_id = u.TENANT_ID and u.CN = v.user_id)
 			where 
 				v.journal_id = #journalId#
-			and v.tenant_id = #tenantId#
+			and 
+				v.tenant_id = #tenantId#
 			and 
 				not(v.user_id = (select journal_writer from tbl_journal where journal_id = #journalId# and tenant_id = #tenantId#))
 <!-- 			union -->
@@ -1495,30 +1565,11 @@
 	
 	<!-- 조회자 리스트 가져오기 -->
 	<select id="getViewerList" parameterClass="map" resultMap="receiverVO">
-<!-- 		(select -->
-<!-- 			b.user_id as user_id, -->
-<!-- 			a.DISPLAYNAME$lang$ as user_name, -->
-<!-- 			a.DESCRIPTION$lang$ as dept_name, -->
-<!-- 			a.TITLE$lang$ as jikwi, -->
-<!-- 			DATE_ADD(DATE_FORMAT(b.recieve_date, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as date -->
-<!-- 		from  -->
-<!-- 			tbl_usermaster a join tbl_journal_recv b  -->
-<!-- 		on  -->
-<!-- 			(a.CN = b.user_id and a.TENANT_ID = b.tenant_id) -->
-<!-- 		where  -->
-<!-- 			b.journal_id = #journalId# -->
-<!-- 		and -->
-<!-- 			a.tenant_id = #tenantId# -->
-<!-- 		and -->
-<!-- 			b.user_id in (select CN from tbl_usermaster) -->
-<!--         and -->
-<!-- 			b.recieve_date is not null) -->
-<!-- 		union -->
 		select
 			u.cn as user_id,
-			u.DISPLAYNAME$lang$ as user_name,
-			u.DESCRIPTION$lang$ as dept_name,
-			u.TITLE$lang$ as jikwi,
+			CASE #lang# WHEN '2' THEN u.DISPLAYNAME2 ELSE u.DISPLAYNAME END as user_name,
+			CASE #lang# WHEN '2' THEN u.DESCRIPTION2 ELSE u.DESCRIPTION END as dept_name,
+			CASE #lang# WHEN '2' THEN u.TITLE2 ELSE u.TITLE END as jikwi,
 			DATE_ADD(DATE_FORMAT(v.view_date, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as date
 		from 
 			tbl_journal_view v
@@ -1534,7 +1585,7 @@
 			not(v.user_id = (select journal_writer from tbl_journal where journal_id = #journalId# and tenant_id = #tenantId#))
 		order by 5 desc
 		limit
-			$startCount$, $listCnt$
+			#startCount#, #listCnt#
 	</select>
 	
 	<!-- 일지 조회가능 유무 체크 -->
@@ -1552,13 +1603,11 @@
 		from 
 			tbl_journal j
 		left join 
-			tbl_journal_recv r on(j.journal_id = r.journal_id and j.tenant_id = r.tenant_id)
+			tbl_journal_recv r on(j.journal_id = r.journal_id and j.tenant_id = r.tenant_id and r.user_id = #userId#)
 		where
 			j.journal_id = #journalId#
 		and 
 			j.tenant_id = #tenantId#
-		and 
-			r.user_id = #userId#
 	</select>
 	
 	<!-- 취합할 일지들 가져오기 -->
@@ -1571,7 +1620,10 @@
 		where 
 			tenant_id = #tenantId#
 		and 
-			journal_id in ($journalIdS$)
+			journal_id in
+			<iterate property="journalIdS" open="(" close=")" conjunction=",">
+	   			#journalIdS[]#
+	   		</iterate>
 	</select>
 	
 	<!-- 내가 부서장인 부서 리스트 -->
@@ -1580,7 +1632,7 @@
 		d.CN as id,
 		'##' as parent,
 		d.extensionattribute2 as companyId,
-		d.DISPLAYNAME$lang$ as text,
+		CASE #lang# WHEN '2' THEN d.DISPLAYNAME2 ELSE d.DISPLAYNAME END AS text,
 		case d.CN
 			when (select dept_id from tbl_journal_auth where tenant_id = #tenantId# and user_id=#userId# and dept_id = d.CN)
 			then 'Y'
@@ -1597,32 +1649,36 @@
 			d.tenant_id = #tenantId#
 		and 	
 			d.EXTENSIONATTRIBUTE9 = #userId#
-		ORDER BY lpad(ifnull(d.EXTENSIONATTRIBUTE15, 0), 6, 0), d.DISPLAYNAME
+		ORDER BY
+			lpad(ifnull(d.EXTENSIONATTRIBUTE15, 0), 6, 0),
+			CASE #lang# WHEN '2' THEN d.DISPLAYNAME2 ELSE d.DISPLAYNAME END
 	</select>
 	
 	<!-- 내가 부서장인 부서의 하위 부서 리스트 -->
 	<select id="selectCheifBoss" parameterClass="map" resultMap="deptViewMap">
 		select 
-		d.CN as id,
-		d.extensionattribute1 as parent,
-		d.extensionattribute2 as companyId,
-		d.DISPLAYNAME$lang$ as text,
-		case d.CN
-			when (select dept_id from tbl_journal_auth where tenant_id = #tenantId# and user_id=#userId# and dept_id = d.CN)
-			then 'Y'
-			else 'N'
-		end as isComp,
-		case d.CN
-			when (select department from tbl_usermaster where tenant_id = #tenantId# and cn=#userId#) then 'yes'
-			when (select deptid from tbl_addjobmaster where tenant_id = #tenantId# and cn=#userId# and deptid=d.CN) then 'add'
-			else 'no'
-		end as myDept
+			d.CN as id,
+			d.extensionattribute1 as parent,
+			d.extensionattribute2 as companyId,
+			CASE #lang# WHEN '2' THEN d.DISPLAYNAME2 ELSE d.DISPLAYNAME END AS text,
+			case d.CN
+				when (select dept_id from tbl_journal_auth where tenant_id = #tenantId# and user_id = #userId# and dept_id = d.CN)
+				then 'Y'
+				else 'N'
+			end as isComp,
+			case d.CN
+				when (select department from tbl_usermaster where tenant_id = #tenantId# and cn = #userId#) then 'yes'
+				when (select deptid from tbl_addjobmaster where tenant_id = #tenantId# and cn = #userId# and deptid = d.CN) then 'add'
+				else 'no'
+			end as myDept
 		from
 			tbl_deptmaster d 
 		where 
 			d.tenant_id = #tenantId#
 		and DEPT_CD_PATH like concat('%,', #deptId#, ',%') 
-		ORDER BY lpad(ifnull(d.EXTENSIONATTRIBUTE15, 0), 6, 0), d.DISPLAYNAME
+		ORDER
+			BY lpad(ifnull(d.EXTENSIONATTRIBUTE15, 0), 6, 0),
+			CASE #lang# WHEN '2' THEN d.DISPLAYNAME2 ELSE d.DISPLAYNAME END
 	</select>
 	
 	<!-- 권한 부서 한개 삭제 -->
@@ -1636,4 +1692,21 @@
 		and
 			dept_id = #deptId#
 	</delete>
+	
+	<select id="selectJournalMailInfo" parameterClass="Map" resultClass="journalEnvVO">
+		select 
+			u.mail as mail,
+		<isNotEqual property="lang" compareValue="2">
+			u.DISPLAYNAME as name
+		</isNotEqual>
+		<isEqual property="lang" compareValue="2">
+			u.DISPLAYNAME2 as name
+		</isEqual>
+		from 
+			tbl_usermaster u
+		where 
+			u.CN = #userId#
+		and 
+			u.tenant_id = #tenantId#
+	</select>
 </sqlMap>

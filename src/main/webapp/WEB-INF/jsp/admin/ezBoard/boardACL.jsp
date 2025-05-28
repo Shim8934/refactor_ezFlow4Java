@@ -6,7 +6,8 @@
 	<head>
 		<title><spring:message code="ezBoard.t75" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	    <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css" />
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+	    <link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 	    <style>
 	    <%-- 2018-07-26 홍승비 - 관리자 > 게시판 권한설정 헤더 겹치는 부분, 가로 축소 시 스크롤 수정 --%>
 	    	#AccessListView {
@@ -44,6 +45,10 @@
 	
 	        window.onload = function () {
 	            FillAccessList();
+	            
+	            if (pBoardID == "{MMMMMMMM-MMMM-MMMM-MMMM-MMMMMMMMMMMM}") {
+	            	PostSpan.style.display = "none";
+	            }
 	        }
 	
 	        /* 2018-07-19 홍승비 - 권한설정 정보 리스트로 표출하는 분기 스크립트 오류 수정 */
@@ -292,6 +297,10 @@
 	                reply_OK.checked = true;
 	                delete_OK.checked = true;
 	                PostSpan.style.display = "";
+	                
+		            if (pBoardID == "{MMMMMMMM-MMMM-MMMM-MMMM-MMMMMMMMMMMM}") {
+		            	PostSpan.style.display = "none";
+		            }
 	
 	                access_NO.checked = false;
 	                list_NO.checked = false;
@@ -374,6 +383,11 @@
 	            if (pSrcElementID == "admin_NO" && admin_NO.checked == false) {
 	                admin_OK.checked = true;
 	                PostSpan.style.display = "";
+	                
+		            if (pBoardID == "{MMMMMMMM-MMMM-MMMM-MMMM-MMMMMMMMMMMM}") {
+		            	PostSpan.style.display = "none";
+		            }
+		            
 	                PostNotice.checked = false;
 	            }
 	            if (pSrcElementID == "access_NO" && access_NO.checked) access_OK.checked = false;
@@ -576,6 +590,11 @@
 	            if (getNodeText(SelectNodes(xmldom, "NODES/NODE/BOARDADMIN")[0]) == "true") {
 	                admin_OK.checked = true;
 	                PostSpan.style.display = "";
+	                
+		            if (pBoardID == "{MMMMMMMM-MMMM-MMMM-MMMM-MMMMMMMMMMMM}") {
+		            	PostSpan.style.display = "none";
+		            }
+		            
 	                PostNotice.checked = false;
 	            } else {
 	                admin_NO.checked = true;
@@ -735,7 +754,7 @@
 	            pwidth = parseInt(pwidth) / 2;
 	            pheigth = pheigth - 192;
 	            pwidth = pwidth - 260;
-	            window.open("/admin/ezBoard/boardUnderGroupCopy.do?boardID=" + encodeURIComponent(pBoardID) + "&isAllGroupBoard=${isAllGroupBoard}", "", "height=170,width=458px, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=" + pheigth + ",left = " + pwidth, "");
+	            window.open("/admin/ezBoard/boardUnderGroupCopy.do?boardID=" + encodeURIComponent(pBoardID) + "&isAllGroupBoard=${isAllGroupBoard}", "", "height=170,width=510px, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=" + pheigth + ",left = " + pwidth, "");
 	        }
 	        
 	        /* 2019-09-19 홍승비 - 권한그룹이 추가된 새로운 권한설정 기능 추가 */
@@ -932,9 +951,13 @@
                 <!-- <li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li> -->
             <%-- 2019-01-22 홍승비 - 그룹사게시판 -> 권한설정기능 표출, 권한복사 숨김 --%>
 			<c:if test="${isAllGroupBoard != 'Y'}">
+			<c:if test="${isBoardAdmin == 'YES'}">
             	<li><span onclick="AclCopy()"><spring:message code='ezBoard.t604'/></span></li>
 			</c:if>
+			</c:if>
+			<c:if test="${isBoardAdmin == 'YES'}">
             	<li><span onclick="UnderBoardCopy()"><spring:message code='ezBoard.t605'/></span></li>
+			</c:if>
             	<li><span onclick="DeleteACL('type')"><spring:message code='ezBoard.t603'/></span></li>
             	<li><span onclick="DeleteACL('one')"><spring:message code='ezBoard.t89'/></span></li>
             	<!-- <li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li> -->
@@ -996,7 +1019,7 @@
                     <input type="checkbox" id="admin_NO" onclick="checkbox_onclick(event)">
                     &nbsp;<spring:message code='ezBoard.t100'/><span id="PostSpan">
                         <input type="checkbox" id="PostNotice" onclick="checkbox_onclick(event)">
-                        &nbsp;<spring:message code='ezBoard.t101'/></span></td>
+                        &nbsp;<spring:message code='ezNotification.hth36'/></span></td>
             </tr>
             <tr>
                 <th><spring:message code='ezBoard.t83'/></th>

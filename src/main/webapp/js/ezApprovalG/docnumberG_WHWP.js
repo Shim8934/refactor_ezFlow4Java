@@ -192,11 +192,14 @@ function getDocNumberNew(pDeptID, pPrefix, docNumZeroCnt) {
 	var fields;
 	var docnumber;
 	var SN = "";
-	
 	name = pPrefix + "docnumber";
 	
 	try {
 		if (approvalFlag == "G") {
+			if (typeof upperDeptCode !== "undefined" && upperDeptCode !== "") {
+				pDeptID = upperDeptCode;
+			}
+			
 			if (pDraftFlag == "SUSIN" && useReceiveDocNo == "NO") {
 				name = "receiptnumber";
 				
@@ -303,9 +306,7 @@ function getDocNumberNew(pDeptID, pPrefix, docNumZeroCnt) {
 			}
 		} else {
 			/* 2022-08-22 홍승비 - 문서번호 필드가 없으면 문서번호 부여 로직이 스킵되어 결재가 정상 진행되는 분기 오류 수정 (파일 백지화 현상과도 관련있음) */
-			fields = message.GetFieldsList();
-        	var field = message.GetListItem(fields, name);
-        	if (!field) {
+        	if (!message.FieldExist(name)) {
 				if (name == "bedocnumber") { // 기안 시 사용할 수 있는 bedocnumber 필드의 경우, 없으면 그대로 기안 진행
 					return true;
 				} else {
@@ -313,10 +314,27 @@ function getDocNumberNew(pDeptID, pPrefix, docNumZeroCnt) {
 				}
         	}
         	
-        	fractionsymbol = field.textContent;
+        	fractionsymbol = message.GetFieldText(name);
         	
 			if (pDraftFlag == "HABYUI" || pDraftFlag == "HAPYUI") {
-				fractionsymbol = arr_userinfo[5] + "-";
+                $.ajax({
+                    type : "POST",
+                    dataType : "text",
+                    async : false,
+                    url : "/ezApprovalG/getChaebunDept.do",
+                    data : {
+                        deptID : pDeptID,
+                        orgCompanyID : orgCompanyID
+                    },
+                    success: function(xml){
+                        result = xml;
+                        if(result != null) {
+                            dataNodes = GetChildNodes(loadXMLString(result).documentElement);
+                            fractionsymbol = getNodeText(dataNodes[0]) + "-";
+                            pDeptID = getNodeText(dataNodes[2]);
+                        }
+                    }
+                });
 			}
         	
         	var result = getCabinetSN(pDeptID);
@@ -333,23 +351,22 @@ function getDocNumberNew(pDeptID, pPrefix, docNumZeroCnt) {
         				tempNumString = "0" + tempNumString;
         			}
         			
-        			field.textContent = fractionsymbol + tempNumString;
+        			message.PutFieldText(name, fractionsymbol + tempNumString);
         		} else {
-        			field.textContent = fractionsymbol + tempNumString
+        			message.PutFieldText(name, fractionsymbol + tempNumString);
         		}
         		 
-        		message.DocumentBodySetAttribute("regnumbercode", tempNumString);
-        		message.DocumentBodySetAttribute("deptid", pDeptID);
+        		SetDocumentElement("regnumbercode", tempNumString);
+                SetDocumentElement("deptid", pDeptID);
         		
-        		var field = message.GetListItem(fields, "enforcedate");
-        		if (field) {
-        			if (trim(field.textContent) == "") {
-        				field.textContent = getGyulJeDate();
+        		if (message.FieldExist("enforcedate")) {
+        			if (trim(message.GetFieldText("enforcedate")) == "") {
+        				message.GetFieldText("enforcedate", getGyulJeDate());
         			}
         		}
         		return true;
 	        }
-		}
+        }
 	} catch (e) {
 		frontLogging("getDocNumberNew", e, e.stack);
 		if (SN != "") {
@@ -382,6 +399,10 @@ function rollbackDocNumber(pDeptID, pPrefix, pDocID) {
         }
 
     	var result = "";
+
+		if (typeof upperDeptCode !== "undefined" && upperDeptCode !== "") {
+			pDeptID = upperDeptCode;
+		}
     	
     	$.ajax({
     		type : "POST",

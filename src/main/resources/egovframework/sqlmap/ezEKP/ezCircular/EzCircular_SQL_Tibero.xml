@@ -55,7 +55,7 @@
                 B.updateStatus,
                 A.title,
                 A.memberid,
-                A.membername,
+                CASE WHEN #lang# = '1' THEN A.membername ELSE A.membername2 END AS membername,
                 TO_CHAR(TO_DATE(A.regdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') AS regdate,
                 B.status AS confirmstatus,
                 NVL(TO_CHAR(TO_DATE(B.confirmdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), ' ') AS confirmdate,
@@ -130,10 +130,18 @@
         	</isEqual>
         	
         	<isEqual property="searchType" compareValue="writer">
-	        	<![CDATA[
-	        		AND
-	        			A.membername LIKE '%'||#searchValue#||'%'
-	        	]]>
+				<isEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername LIKE '%'||#searchValue#||'%'
+					]]>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername2 LIKE '%'||#searchValue#||'%'
+	        		]]>
+				</isNotEqual>
         	</isEqual>
         </isNotEqual>
 		
@@ -152,23 +160,27 @@
             AND
                 A.tenantid = #tenantID#
         ]]>
+        
+        <!-- 2024-07-01 홍승비 - SQL Injection 수정 > 정렬 조건에서 $ 기호 제거 -->
         <isNotEqual property="orderCell" compareValue="">
-        	<![CDATA[    
-				
-            	order by  
-	            	$orderOption1$
-	           
-            ]]>
+        	ORDER BY
+			<isEqual property="orderCell" compareValue="IMPORTANCE">IMPORTANCE</isEqual>
+			<isEqual property="orderCell" compareValue="CONFIRMSTATUS">CONFIRMSTATUS</isEqual>
+			<isEqual property="orderCell" compareValue="COMMENTSTATUS">COMMENTSTATUS</isEqual>
+			<isEqual property="orderCell" compareValue="HASFILE">HASFILE</isEqual>
+			<isEqual property="orderCell" compareValue="TITLE">TITLE</isEqual>
+			<isEqual property="orderCell" compareValue="MEMBERNAME">MEMBERNAME</isEqual>
+			<isEqual property="orderCell" compareValue="REGDATE">REGDATE</isEqual>
+			<isEqual property="orderCell" compareValue="STATUS">STATUS</isEqual>
+			<isEqual property="orderOption" compareValue="DESC">DESC</isEqual>
       	</isNotEqual>
        
         <isEqual property="orderCell" compareValue="">
         	<![CDATA[
-		      
         		order by     
 	            	B.updatedate DESC,
 	            	totalstatus DESC,
 	            	A.regdate DESC
-        
             ]]>
         </isEqual>    
         <![CDATA[        
@@ -217,10 +229,18 @@
         	</isEqual>
         	
         	<isEqual property="searchType" compareValue="writer">
-	        	<![CDATA[
-	        		AND
-	        			A.membername LIKE '%'||#searchValue#||'%'
-	        	]]>
+				<isEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername LIKE '%'||#searchValue#||'%'
+					]]>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername2 LIKE '%'||#searchValue#||'%'
+	        		]]>
+				</isNotEqual>
         	</isEqual>
         </isNotEqual>
         
@@ -247,7 +267,7 @@
                 TO_CHAR(TO_DATE(A.enddate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') AS enddate,
                 A."option",
                 A."content",
-                A.memberName,
+				CASE WHEN #lang# = '1' THEN A.membername ELSE A.membername2 END AS membername,
                 NVL(C.confirmcount, '0') AS confirmcount,
 				D.confirmtotalcount,
 				B.status confirmstatus,
@@ -528,14 +548,14 @@
 				A.status,
 				A.title,
 				A.memberid,
-				A.membername,
+				CASE WHEN #lang# = '1' THEN A.membername ELSE A.membername2 END AS membername,
 				TO_CHAR(TO_DATE(A.regdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') AS regdate,
 				B.status AS confirmstatus,
 				NVL(TO_CHAR(TO_DATE(B.confirmdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), ' ') AS confirmdate,
 				NVL(TO_CHAR(TO_DATE(B.updatedate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), ' ') AS updatedate,
 				B.updatestatus,
                 NVL(C.confirmcount, '0') AS confirmcount,
-				D.confirmtotalcount
+				NVL(D.confirmtotalcount, '0') AS confirmtotalcount
 							
 			FROM
 				TBL_CIRCULAR A
@@ -560,7 +580,7 @@
 				WHERE
 					BB.status = 1
 				AND
-					BB.tenantid = #TENANTID#
+					BB.tenantid = #tenantID#
 				GROUP BY
 					BB.circularid) C
 			ON
@@ -578,7 +598,7 @@
 				AND
 					AA.tenantid = BB.tenantid
 				WHERE
-					BB.tenantid = #TENANTID#
+					BB.tenantid = #tenantID#
 				GROUP BY
 					BB.circularid) D
 			ON
@@ -605,10 +625,18 @@
 	        	]]>
         	</isEqual>
         	<isEqual property="searchType" compareValue="writer">
-	        	<![CDATA[
-	        		AND
-	        			A.membername LIKE '%'||#searchValue#||'%'
-	        	]]>
+				<isEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername LIKE '%'||#searchValue#||'%'
+					]]>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername2 LIKE '%'||#searchValue#||'%'
+	        		]]>
+				</isNotEqual>
         	</isEqual>
         </isNotEqual>
         
@@ -622,25 +650,27 @@
 	       
 	    </isNotEqual>
 	   
-		<isNotEqual property="orderCell" compareValue="">
-        	<![CDATA[
-				
-        		ORDER BY
-            		$orderOption1$
-				
-            ]]>
-        </isNotEqual>
+		<!-- 2024-07-01 홍승비 - SQL Injection 수정 > 정렬 조건에서 $ 기호 제거 -->
+        <isNotEqual property="orderCell" compareValue="">
+        	ORDER BY
+			<isEqual property="orderCell" compareValue="IMPORTANCE">IMPORTANCE</isEqual>
+			<isEqual property="orderCell" compareValue="CONFIRMSTATUS">CONFIRMSTATUS</isEqual>
+			<isEqual property="orderCell" compareValue="COMMENTSTATUS">COMMENTSTATUS</isEqual>
+			<isEqual property="orderCell" compareValue="HASFILE">HASFILE</isEqual>
+			<isEqual property="orderCell" compareValue="TITLE">TITLE</isEqual>
+			<isEqual property="orderCell" compareValue="MEMBERNAME">MEMBERNAME</isEqual>
+			<isEqual property="orderCell" compareValue="REGDATE">REGDATE</isEqual>
+			<isEqual property="orderCell" compareValue="STATUS">STATUS</isEqual>
+			<isEqual property="orderOption" compareValue="DESC">DESC</isEqual>
+      	</isNotEqual>
         
         <isEqual property="orderCell" compareValue="">
         	<![CDATA[
-			
         		ORDER BY
             		A.regdate DESC
-			
             ]]>
         </isEqual>
-	
-	        
+        
 		<![CDATA[
 	       )AAA
 	       WHERE
@@ -688,10 +718,18 @@
         	</isEqual>
         	
         	<isEqual property="searchType" compareValue="writer">
-	        	<![CDATA[
-	        		AND
-	        			A.membername LIKE '%'||#searchValue#||'%'
-	        	]]>
+				<isEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername LIKE '%'||#searchValue#||'%'
+					]]>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername2 LIKE '%'||#searchValue#||'%'
+	        		]]>
+				</isNotEqual>
         	</isEqual>
         </isNotEqual>
         
@@ -738,10 +776,18 @@
         	</isEqual>
         	
         	<isEqual property="searchType" compareValue="writer">
-	        	<![CDATA[
-	        		AND
-	        			A.membername LIKE '%'||#searchValue#||'%'
-	        	]]>
+				<isEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername LIKE '%'||#searchValue#||'%'
+					]]>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername2 LIKE '%'||#searchValue#||'%'
+	        		]]>
+				</isNotEqual>
         	</isEqual>
         </isNotEqual>
         
@@ -768,7 +814,7 @@
                 A.status,
                 A.title,
                 A.memberid,
-                A.membername,
+                CASE WHEN #lang# = '1' THEN A.membername ELSE A.membername2 END AS membername,
                 B.status AS confirmstatus,
                 TO_CHAR(TO_DATE(A.regdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') AS regdate,
                 NVL(TO_CHAR(TO_DATE(B.confirmdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), ' ') AS confirmdate,
@@ -828,7 +874,7 @@
             AND
              	B.updatestatus IN (0, 1)
              AND
-            	A.companyid =#companyID#
+            	A.companyid = #companyID#
 		]]>
 		
 		<isNotEqual property="searchValue" compareValue="">
@@ -839,10 +885,18 @@
 	        	]]>
         	</isEqual>
         	<isEqual property="searchType" compareValue="writer">
-	        	<![CDATA[
-	        		AND
-	        			A.membername LIKE '%'||#searchValue#||'%'
-	        	]]>
+				<isEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+	        				A.membername LIKE '%'||#searchValue#||'%'
+					]]>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+	        				A.membername2 LIKE '%'||#searchValue#||'%'
+					]]>
+				</isNotEqual>
         	</isEqual>
         </isNotEqual>
         
@@ -864,24 +918,26 @@
         
            <!--  GROUP BY
             	A.circularID -->
+        <!-- 2024-07-01 홍승비 - SQL Injection 수정 > 정렬 조건에서 $ 기호 제거 -->
         <isNotEqual property="orderCell" compareValue="">
-        	<![CDATA[    
-		
-        		order by 
-            	$orderOption1$
-      
-            ]]>
-        </isNotEqual>
+        	ORDER BY
+			<isEqual property="orderCell" compareValue="IMPORTANCE">IMPORTANCE</isEqual>
+			<isEqual property="orderCell" compareValue="CONFIRMSTATUS">CONFIRMSTATUS</isEqual>
+			<isEqual property="orderCell" compareValue="COMMENTSTATUS">COMMENTSTATUS</isEqual>
+			<isEqual property="orderCell" compareValue="HASFILE">HASFILE</isEqual>
+			<isEqual property="orderCell" compareValue="TITLE">TITLE</isEqual>
+			<isEqual property="orderCell" compareValue="MEMBERNAME">MEMBERNAME</isEqual>
+			<isEqual property="orderCell" compareValue="REGDATE">REGDATE</isEqual>
+			<isEqual property="orderCell" compareValue="STATUS">STATUS</isEqual>
+			<isEqual property="orderOption" compareValue="DESC">DESC</isEqual>
+      	</isNotEqual>
         
         <isEqual property="orderCell" compareValue="">
         	<![CDATA[    
-	
             	order by 	
             	A.regdate DESC
-		        
             ]]>
         </isEqual>
-              
         
        	<![CDATA[	
            )AAA
@@ -942,10 +998,18 @@
 	        	]]>
         	</isEqual>
         	<isEqual property="searchType" compareValue="writer">
-	        	<![CDATA[
-	        		AND
-	        			A.membername LIKE '%'||#searchValue#||'%'
-	        	]]>
+				<isEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+	        				A.membername LIKE '%'||#searchValue#||'%'
+					]]>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+							A.membername2 LIKE '%'||#searchValue#||'%'
+					]]>
+				</isNotEqual>
         	</isEqual>
 		</isNotEqual>
 		
@@ -963,7 +1027,6 @@
         <![CDATA[
 			SELECT 
 				*
-			
 			FROM
 			(SELECT AAA.*, rownum as rNum FROM
 			(SELECT
@@ -973,7 +1036,7 @@
 				A.status,
 				A.title,
 				A.memberid,
-				A.membername,
+				CASE WHEN #lang# = '1' THEN A.membername ELSE A.membername2 END AS membername,
 				TO_CHAR(TO_DATE(A.regdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') AS regdate,
 				B.status AS confirmstatus,
 				NVL(TO_CHAR(TO_DATE(B.confirmdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), ' ') AS confirmdate,
@@ -981,8 +1044,6 @@
 				B.updatestatus,
 				NVL(C.confirmcount, '0') AS confirmcount,
 				D.confirmtotalcount
-				
-		
 			FROM
 				TBL_CIRCULAR A
 			JOIN
@@ -1049,10 +1110,18 @@
 	        	]]>
         	</isEqual>
         	<isEqual property="searchType" compareValue="writer">
-	        	<![CDATA[
-	        		AND
-	        			A.membername LIKE '%'||#searchValue#||'%'
-	        	]]>
+				<isEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+	        				A.membername LIKE '%'||#searchValue#||'%'
+					]]>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+	        				A.membername2 LIKE '%'||#searchValue#||'%'
+					]]>
+				</isNotEqual>
         	</isEqual>
         </isNotEqual>
         
@@ -1073,21 +1142,24 @@
 			
 		]]>
 		
-		<isNotEqual property="orderCell" compareValue="">
-        	<![CDATA[    
-	       		ORDER BY 
-				
-            		$orderOption1$
-
-            ]]>
-        </isNotEqual>
+		<!-- 2024-07-01 홍승비 - SQL Injection 수정 > 정렬 조건에서 $ 기호 제거 -->
+        <isNotEqual property="orderCell" compareValue="">
+        	ORDER BY
+			<isEqual property="orderCell" compareValue="IMPORTANCE">IMPORTANCE</isEqual>
+			<isEqual property="orderCell" compareValue="CONFIRMSTATUS">CONFIRMSTATUS</isEqual>
+			<isEqual property="orderCell" compareValue="COMMENTSTATUS">COMMENTSTATUS</isEqual>
+			<isEqual property="orderCell" compareValue="HASFILE">HASFILE</isEqual>
+			<isEqual property="orderCell" compareValue="TITLE">TITLE</isEqual>
+			<isEqual property="orderCell" compareValue="MEMBERNAME">MEMBERNAME</isEqual>
+			<isEqual property="orderCell" compareValue="REGDATE">REGDATE</isEqual>
+			<isEqual property="orderCell" compareValue="STATUS">STATUS</isEqual>
+			<isEqual property="orderOption" compareValue="DESC">DESC</isEqual>
+      	</isNotEqual>
         
         <isEqual property="orderCell" compareValue="">
         	<![CDATA[
-		
         		order by 
         			A.regdate DESC
-		       
         	]]>
         </isEqual>
 		<![CDATA[ 		
@@ -1130,7 +1202,7 @@
                 A.status,
                 A.title,
                 A.memberid,
-                A.membername,
+                CASE WHEN #lang# = '1' THEN A.membername ELSE A.membername2 END AS membername,
                 NVL(TO_CHAR(TO_DATE(A.regdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), ' ') AS regdate,
                 B.status AS confirmstatus,
                 NVL(TO_CHAR(TO_DATE(B.confirmdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), ' ') AS confirmdate,
@@ -1138,8 +1210,6 @@
 				NVL(C.confirmcount, '0') AS confirmcount,
 				D.confirmtotalcount,
                 B.updatestatus
-                
-      
             FROM
                 TBL_CIRCULAR A
 			JOIN
@@ -1205,38 +1275,43 @@
         	</isEqual>
         	
         	<isEqual property="searchType" compareValue="writer">
-	        	<![CDATA[
-	        		AND
-	        			A.membername LIKE '%'||#searchValue#||'%'
-	        	]]>
+				<isEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+	        				A.membername LIKE '%'||#searchValue#||'%'
+					]]>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+	        				A.membername2 LIKE '%'||#searchValue#||'%'
+					]]>
+				</isNotEqual>
         	</isEqual>
         </isNotEqual>
-				        
            <!--  GROUP BY
 				A.circularid -->
-        <![CDATA[
-				
-		]]>
-        
+        <!-- 2024-07-01 홍승비 - SQL Injection 수정 > 정렬 조건에서 $ 기호 제거 -->
         <isNotEqual property="orderCell" compareValue="">
-        	<![CDATA[    
-           
-        		order by 
-       	     		$orderOption1$
-     		
-            ]]>
-        </isNotEqual>
+        	ORDER BY
+			<isEqual property="orderCell" compareValue="IMPORTANCE">IMPORTANCE</isEqual>
+			<isEqual property="orderCell" compareValue="CONFIRMSTATUS">CONFIRMSTATUS</isEqual>
+			<isEqual property="orderCell" compareValue="COMMENTSTATUS">COMMENTSTATUS</isEqual>
+			<isEqual property="orderCell" compareValue="HASFILE">HASFILE</isEqual>
+			<isEqual property="orderCell" compareValue="TITLE">TITLE</isEqual>
+			<isEqual property="orderCell" compareValue="MEMBERNAME">MEMBERNAME</isEqual>
+			<isEqual property="orderCell" compareValue="REGDATE">REGDATE</isEqual>
+			<isEqual property="orderCell" compareValue="STATUS">STATUS</isEqual>
+			<isEqual property="orderOption" compareValue="DESC">DESC</isEqual>
+      	</isNotEqual>
         
         <isEqual property="orderCell" compareValue="">
         	<![CDATA[    
-	            
             	order by 
             		A.regdate DESC
-      		
             ]]>
         </isEqual>
        	<![CDATA[		
-				
 				
 		)AAA
 		WHERE
@@ -1278,10 +1353,18 @@
 	        	]]>
         	</isEqual>
         	<isEqual property="searchType" compareValue="writer">
-	        	<![CDATA[
-	        		AND
-	        			A.membername LIKE '%'||#searchValue#||'%'
-	        	]]>
+				<isEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+	        				A.membername LIKE '%'||#searchValue#||'%'
+					]]>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+					<![CDATA[
+						AND
+	        				A.membername2 LIKE '%'||#searchValue#||'%'
+					]]>
+				</isNotEqual>
         	</isEqual>
         </isNotEqual>
     </select>
@@ -1325,10 +1408,18 @@
         	</isEqual>
         	
         	<isEqual property="searchType" compareValue="writer">
-	        	<![CDATA[
-	        			A.membername LIKE '%'||#searchValue#||'%'
-	        		AND
-	        	]]>
+				<isEqual property="lang" compareValue="1">
+					<![CDATA[
+	        				A.membername LIKE '%'||#searchValue#||'%'
+						AND
+					]]>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+					<![CDATA[
+	        				A.membername2 LIKE '%'||#searchValue#||'%'
+						AND
+					]]>
+				</isNotEqual>
         	</isEqual>
         </isNotEqual>
         
@@ -1361,7 +1452,7 @@
 				A.status,
 				A.title,
 				A.memberid,
-				A.membername,
+                CASE WHEN #lang# = '1' THEN A.membername ELSE A.membername2 END AS membername,
 				NVL(TO_CHAR(TO_DATE(A.regdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), ' ') AS regdate,
 				d.status as confirmstatus,
 				NVL(TO_CHAR(TO_DATE(D.confirmdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), ' ') AS confirmdate,
@@ -1440,10 +1531,18 @@
 	        	]]>
         	</isEqual>
         	<isEqual property="searchType" compareValue="writer">
-	        	<![CDATA[
-	        			A.membername LIKE '%'||#searchValue#||'%'
-	        		AND
-	        	]]>
+				<isEqual property="lang" compareValue="1">
+					<![CDATA[
+	        				A.membername LIKE '%'||#searchValue#||'%'
+						AND
+					]]>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+					<![CDATA[
+	        				A.membername2 LIKE '%'||#searchValue#||'%'
+						AND	
+					]]>
+				</isNotEqual>
         	</isEqual>
         </isNotEqual>
         
@@ -1466,21 +1565,24 @@
 				A.companyid = #companyID#
 		]]>
         
+        <!-- 2024-07-01 홍승비 - SQL Injection 수정 > 정렬 조건에서 $ 기호 제거 -->
         <isNotEqual property="orderCell" compareValue="">
-        	<![CDATA[    
-			
-        		order by 
-            		$orderOption1$
-		       
-            ]]>
-        </isNotEqual>
+        	ORDER BY
+			<isEqual property="orderCell" compareValue="IMPORTANCE">IMPORTANCE</isEqual>
+			<isEqual property="orderCell" compareValue="CONFIRMSTATUS">CONFIRMSTATUS</isEqual>
+			<isEqual property="orderCell" compareValue="COMMENTSTATUS">COMMENTSTATUS</isEqual>
+			<isEqual property="orderCell" compareValue="HASFILE">HASFILE</isEqual>
+			<isEqual property="orderCell" compareValue="TITLE">TITLE</isEqual>
+			<isEqual property="orderCell" compareValue="MEMBERNAME">MEMBERNAME</isEqual>
+			<isEqual property="orderCell" compareValue="REGDATE">REGDATE</isEqual>
+			<isEqual property="orderCell" compareValue="STATUS">STATUS</isEqual>
+			<isEqual property="orderOption" compareValue="DESC">DESC</isEqual>
+      	</isNotEqual>
         
         <isEqual property="orderCell" compareValue="">
         	<![CDATA[    
-			
         		order by 
             		A.regdate DESC
-		       
             ]]>
         </isEqual>
         
@@ -1566,6 +1668,7 @@
 					circularcomment,
 					memberid,
 					membername,
+					membername2,
 					TO_CHAR(TO_DATE(regdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') AS regdate,
 					status,
 					tenantid
@@ -1600,6 +1703,7 @@
 					A.circularcomment,
 					A.memberid,
 					A.membername,
+					membername2,
 					TO_CHAR(TO_DATE(A.regdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') AS regdate,
 					A.status,
 					B.status AS confirmStatus,

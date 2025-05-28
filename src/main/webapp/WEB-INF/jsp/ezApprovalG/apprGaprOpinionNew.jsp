@@ -6,7 +6,8 @@
 	<head>
 		<title><spring:message code='ezApprovalG.t55'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -42,7 +43,9 @@
 		var isSihangReject = "N"; // 시행문의 반송기능을 위한 구분값
 
 		var opMode = "<c:out value='${opMode}'/>"; // 추가의견 버튼 클릭 시 창 모드값 저장 (ADD)
-		
+
+		var designationUsed = "<c:out value='${DesignationUsed}'/>" // 2024-06-24 양지혜 - 지정반송 기능 사용여부
+
 		window.onload = function () {
 			if (navigator.userAgent.indexOf("Safari") > 0 && navigator.userAgent.indexOf("Chrome") == -1) {
 			    KeEventControl(document.getElementById("txt_OpinionContent"));
@@ -222,11 +225,19 @@
 			var parameter = new Array();
 	        parameter[0] = "ADD";
 	        parameter[1] = "";
+			// 2024-06-24 양지혜 - 전자결재 > 지정반송 > 파라미터 추가
+			parameter[2] = designationUsed;
+			parameter[3] = parent.returnChk;
+			parameter[4] = parent.OrgAprUserName;
 	        
 			opinionPopup_cross_dialogArguments[0] = parameter;
 			opinionPopup_cross_dialogArguments[1] = opinionPopup_complete;
-			
-			DivPopUpShow(510, 380, "/ezApprovalG/aprOpinionPopup.do");
+
+			if (designationUsed == 'NO' || parameter[3] == "N" || parameter[3] == null) {
+				DivPopUpShow(510, 380, "/ezApprovalG/aprOpinionPopup.do");
+			} else {
+				DivPopUpShow(510, 500, "/ezApprovalG/aprOpinionPopup.do?docID=" + pDocID);
+			}
 		}
 		
 		//[수정] 버튼 클릭
@@ -295,6 +306,7 @@
 				
 				if (ret[0] == "ADD") {
 					result = addOpinionContent(ret[1]);
+					parent.returnUserSN = ret[3];
 				} else if (ret[0] == "MOD") {
 					result = modOpinionContent(ret[1]);
 				}

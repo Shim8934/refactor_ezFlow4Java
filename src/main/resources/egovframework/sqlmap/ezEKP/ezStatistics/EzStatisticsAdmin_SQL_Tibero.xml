@@ -5,6 +5,7 @@
 	<typeAlias  alias="StatDailyDocCountLogVO" 	type="egovframework.ezEKP.ezStatistics.vo.StatDailyDocCountLogVO"/>
 	<typeAlias  alias="StatApprVO" 				type="egovframework.ezEKP.ezStatistics.vo.StatApprVO"/>
 	<typeAlias  alias="StatConnVO" 				type="egovframework.ezEKP.ezStatistics.vo.StatConnVO"/>
+	<typeAlias  alias="StatisticVO" 			type="egovframework.ezEKP.ezStatistics.vo.StatisticVO"/>
 	
 	<resultMap class="StatConnVO" id="StatConnInfoVO">
 		<result property="day"			column="DAY"				/>
@@ -388,6 +389,7 @@
 		]]>
 	</select>
 	
+	<!-- 2024-07-05 홍승비 - SQL Injection 수정 > $ 기호 제거 -->
 	<select id="EzStatisticsAdminDAO.getFormInfo" parameterClass="StatApprVO" resultClass="StatDailyDocCountLogVO">
 		<![CDATA[
 			SELECT
@@ -422,7 +424,16 @@
    				REGDATE >= #startDate#
    			AND 
    				REGDATE <= #endDate# 
-   			$searchList$ 
+		]]>	
+		<isEqual prepend="AND" property="type" compareValue="1">
+			(DRAFTINGCNT != 0 OR DRAFTENDCNT != 0 OR SUSININGCNT != 0 OR SUSINENDCNT != 0 OR RETURNCNT != 0)
+		</isEqual>
+		<isNotEqual prepend="AND" property="type" compareValue="1">
+			(DRAFTTIME != 0)
+		</isNotEqual>
+		<isNotEmpty prepend="AND" property="searchList">
+			A.FORMNAME LIKE '%' || #searchList# || '%'
+		</isNotEmpty>
    			GROUP BY 
    				A.FORMID, 
    				B.FORMNAME, 
@@ -430,7 +441,6 @@
    			ORDER BY 
    				B.FORMNAME, 
    				B.FORMNAME2
-		]]>
 	</select>
 	
 	<select id="EzStatisticsAdminDAO.getSearchList_F" parameterClass="StatApprVO" resultClass="StatDailyDocCountLogVO">
@@ -661,6 +671,7 @@
 		]]>
 	</select>
 	
+	<!-- 2024-07-05 홍승비 - SQL Injection 수정 > $ 기호 유지, 해당 오라클 쿼리에서 $가 아닌 # 파라미터 사용 시 에러 발생 (offSet으로는 숫자값만 전달되므로 SQL Injection 오류는 방지됨) -->
 	<select id="EzStatisticsAdminDAO.getConnInfo" parameterClass="StatApprVO" resultMap="StatConnInfoVO">
 		<![CDATA[
 		    SELECT 
@@ -713,8 +724,6 @@
         	ORDER BY 
         		A.DATE_,
            	    A.DAY
-           	    
-           	
 		]]>
 	</select>
 	
@@ -1863,4 +1872,229 @@
 		  AND
 			COMPANYID = #companyID#
 	</select>
+
+	<insert id="EzStatisticsAdminDAO.upsertStatMenuUser" parameterClass="StatisticVO">
+		MERGE INTO TBL_STAT_MENU_USER a
+			USING (SELECT NVL(#userId#, #ip#) AS USER_ID,
+						  #ip#                AS IPADDRESS,
+						  #tenantId#          AS TENANT_ID,
+						  #companyId#         AS COMPANY_ID,
+						  #year#              AS YEAR,
+						   #month#             AS MONTH,
+						  #day#               AS DAY,
+						  #hour#              AS HOUR,
+						  #timeCode#          AS TIME_CODE,
+						  #menuId#            AS MENU_ID,
+						  #code#              AS CODE,
+					   1                   AS STAT_COUNT
+				   FROM dual) b
+			ON (A.USER_ID = B.USER_ID AND A.TENANT_ID = B.TENANT_ID AND A.COMPANY_ID = B.COMPANY_ID AND
+				A.TIME_CODE = B.TIME_CODE
+				AND A.MENU_ID = B.MENU_ID)
+			WHEN MATCHED THEN
+				UPDATE
+					SET a.STAT_COUNT = a.STAT_COUNT + 1
+			WHEN NOT MATCHED THEN
+				INSERT (USER_ID, IPADDRESS, TENANT_ID, COMPANY_ID, YEAR, MONTH, DAY, HOUR, TIME_CODE, MENU_ID, CODE,
+						STAT_COUNT)
+					VALUES (b.USER_ID, b.IPADDRESS, b.TENANT_ID, b.COMPANY_ID, b.YEAR, b.MONTH, b.DAY, b.HOUR,
+							b.TIME_CODE, b.MENU_ID, b.CODE, b.STAT_COUNT)
+	</insert>
+
+	<insert id="EzStatisticsAdminDAO.upsertStatMenuUserMonth" parameterClass="StatisticVO">
+		MERGE INTO TBL_STAT_MENU_USER_MONTH a
+			USING (SELECT NVL(#userId#, #ip#) AS USER_ID,
+						  #ip#                AS IPADDRESS,
+						  #tenantId#          AS TENANT_ID,
+						  #companyId#         AS COMPANY_ID,
+						  #year#              AS YEAR,
+						   #month#             AS MONTH,
+						  #monthCode#          AS TIME_CODE,
+						  #menuId#            AS MENU_ID,
+						  #code#              AS CODE,
+					   1                   AS STAT_COUNT
+				   FROM dual) b
+			ON (A.USER_ID = B.USER_ID AND A.TENANT_ID = B.TENANT_ID AND A.COMPANY_ID = B.COMPANY_ID AND
+				A.TIME_CODE = B.TIME_CODE AND A.MENU_ID = B.MENU_ID)
+			WHEN MATCHED THEN
+				UPDATE
+					SET a.STAT_COUNT = a.STAT_COUNT + 1
+			WHEN NOT MATCHED THEN
+				INSERT (USER_ID, IPADDRESS, TENANT_ID, COMPANY_ID, YEAR, MONTH, TIME_CODE, MENU_ID, CODE,
+						STAT_COUNT)
+					VALUES (b.USER_ID, b.IPADDRESS, b.TENANT_ID, b.COMPANY_ID, b.YEAR, b.MONTH,
+							b.TIME_CODE, b.MENU_ID, b.CODE, b.STAT_COUNT)
+	</insert>
+
+	<select id="EzStatisticsAdminDAO.getStatMenuUser" resultClass="StatisticVO">
+		SELECT YEAR,
+			MONTH,
+			DAY,
+			HOUR,
+			MENU_ID    AS menuId,
+			STAT_COUNT AS statCount
+		FROM TBL_STAT_MENU_USER
+		WHERE TENANT_ID = #tenantId#
+		  AND COMPANY_ID = #companyId#
+		  AND USER_ID = #userId#
+		    <![CDATA[
+		  AND TIME_CODE >= #startTime#
+		  AND TIME_CODE <= #endTime#
+		    ]]>
+		ORDER BY TIME_CODE, MENU_ID
+	</select>
+
+	<select id="EzStatisticsAdminDAO.getStatMenuUserMonth" resultClass="StatisticVO">
+		SELECT YEAR,
+			MONTH,
+			MENU_ID    AS menuId,
+			STAT_COUNT AS statCount
+		FROM TBL_STAT_MENU_USER_MONTH
+		WHERE TENANT_ID = #tenantId#
+		  AND COMPANY_ID = #companyId#
+		  AND USER_ID = #userId#
+		    <![CDATA[
+		  AND TIME_CODE >= #startTime#
+		  AND TIME_CODE <= #endTime#
+		    ]]>
+		ORDER BY TIME_CODE, MENU_ID
+	</select>
+
+	<select id="EzStatisticsAdminDAO.getStatMenuUserDay" resultClass="StatisticVO">
+		SELECT YEAR,
+			MONTH,
+			DAY,
+			MENU_ID         AS menuId,
+			SUM(STAT_COUNT) AS statCount
+		FROM TBL_STAT_MENU_USER
+		WHERE TENANT_ID = #tenantId#
+		  AND COMPANY_ID = #companyId#
+		  AND USER_ID = #userId#
+		    <![CDATA[
+		  AND TIME_CODE >= #startTime#
+		  AND TIME_CODE <= #endTime#
+		    ]]>
+		GROUP BY YEAR, MONTH, DAY, MENU_ID
+		ORDER BY YEAR, MONTH, DAY, MENU_ID
+	</select>
+
+	<insert id="EzStatisticsAdminDAO.upsertStatMenuDept" parameterClass="StatisticVO">
+		MERGE INTO TBL_STAT_MENU_DEPT a
+			USING (SELECT #deptId#    AS DEPT_ID,
+						  #tenantId#  AS TENANT_ID,
+						  #companyId# AS COMPANY_ID,
+						  #year#      AS YEAR,
+						   #month#     AS MONTH,
+						  #day#       AS DAY,
+						  #hour#      AS HOUR,
+						  #timeCode#  AS TIME_CODE,
+						  #menuId#    AS MENU_ID,
+						  #code#      AS CODE,
+					   1           AS STAT_COUNT
+				   FROM dual) b
+			ON (A.DEPT_ID = B.DEPT_ID AND A.TENANT_ID = B.TENANT_ID AND A.COMPANY_ID = B.COMPANY_ID AND
+				A.TIME_CODE = B.TIME_CODE AND A.MENU_ID = B.MENU_ID)
+			WHEN MATCHED THEN
+				UPDATE
+					SET a.STAT_COUNT = a.STAT_COUNT + 1
+			WHEN NOT MATCHED THEN
+				INSERT (DEPT_ID, TENANT_ID, COMPANY_ID, YEAR, MONTH, DAY, HOUR, TIME_CODE, MENU_ID, CODE,
+						STAT_COUNT)
+					VALUES (b.DEPT_ID, b.TENANT_ID, b.COMPANY_ID, b.YEAR, b.MONTH, b.DAY, b.HOUR,
+							b.TIME_CODE, b.MENU_ID, b.CODE, b.STAT_COUNT)
+	</insert>
+
+	<insert id="EzStatisticsAdminDAO.upsertStatMenuDeptMonth" parameterClass="StatisticVO">
+		MERGE INTO TBL_STAT_MENU_DEPT_MONTH a
+			USING (SELECT #deptId#    AS DEPT_ID,
+						  #tenantId#  AS TENANT_ID,
+						  #companyId# AS COMPANY_ID,
+						  #year#      AS YEAR,
+						   #month#     AS MONTH,
+						  #monthCode#  AS TIME_CODE,
+						  #menuId#    AS MENU_ID,
+						  #code#      AS CODE,
+					   1           AS STAT_COUNT
+				   FROM dual) b
+			ON (A.DEPT_ID = B.DEPT_ID AND A.TENANT_ID = B.TENANT_ID AND A.COMPANY_ID = B.COMPANY_ID AND
+				A.TIME_CODE = B.TIME_CODE AND A.MENU_ID = B.MENU_ID)
+			WHEN MATCHED THEN
+				UPDATE
+					SET a.STAT_COUNT = a.STAT_COUNT + 1
+			WHEN NOT MATCHED THEN
+				INSERT (DEPT_ID, TENANT_ID, COMPANY_ID, YEAR, MONTH, TIME_CODE, MENU_ID, CODE,
+						STAT_COUNT)
+					VALUES (b.DEPT_ID, b.TENANT_ID, b.COMPANY_ID, b.YEAR, b.MONTH,
+							b.TIME_CODE, b.MENU_ID, b.CODE, b.STAT_COUNT)
+	</insert>
+
+	<select id="EzStatisticsAdminDAO.getStatMenuDept" resultClass="StatisticVO">
+		SELECT YEAR,
+			MONTH,
+			DAY,
+			HOUR,
+			MENU_ID    AS menuId,
+			STAT_COUNT AS statCount
+		FROM TBL_STAT_MENU_DEPT
+		WHERE TENANT_ID = #tenantId#
+		  AND COMPANY_ID = #companyId#
+		  AND DEPT_ID = #deptId#
+		    <![CDATA[
+		  AND TIME_CODE >= #startTime#
+		  AND TIME_CODE <= #endTime#
+		    ]]>
+		ORDER BY TIME_CODE, MENU_ID
+	</select>
+
+	<select id="EzStatisticsAdminDAO.getStatMenuDeptMonth" resultClass="StatisticVO">
+		SELECT YEAR,
+			MONTH,
+			MENU_ID    AS menuId,
+			STAT_COUNT AS statCount
+		FROM TBL_STAT_MENU_DEPT_MONTH
+		WHERE TENANT_ID = #tenantId#
+		  AND COMPANY_ID = #companyId#
+		  AND DEPT_ID = #deptId#
+		    <![CDATA[
+		  AND TIME_CODE >= #startTime#
+		  AND TIME_CODE <= #endTime#
+		    ]]>
+		ORDER BY TIME_CODE, MENU_ID
+	</select>
+
+	<select id="EzStatisticsAdminDAO.getStatMenuDeptDay" resultClass="StatisticVO">
+		SELECT YEAR,
+			MONTH,
+			DAY,
+			MENU_ID         AS menuId,
+			SUM(STAT_COUNT) AS statCount
+		FROM TBL_STAT_MENU_DEPT
+		WHERE TENANT_ID = #tenantId#
+		  AND COMPANY_ID = #companyId#
+		  AND DEPT_ID = #deptId#
+		    <![CDATA[
+		  AND TIME_CODE >= #startTime#
+		  AND TIME_CODE <= #endTime#
+		    ]]>
+		GROUP BY YEAR, MONTH, DAY, MENU_ID
+		ORDER BY YEAR, MONTH, DAY, MENU_ID
+	</select>
+
+	<delete id="EzStatisticsAdminDAO.deleteStatMenuUser" parameterClass="StatisticVO">
+		DELETE
+		FROM TBL_STAT_MENU_USER
+		WHERE
+		    <![CDATA[
+			TIME_CODE < #timeCode#
+		]]>
+	</delete>
+
+	<delete id="EzStatisticsAdminDAO.deleteStatMenuDept" parameterClass="StatisticVO">
+		DELETE
+		FROM TBL_STAT_MENU_DEPT
+		WHERE
+		    <![CDATA[
+			TIME_CODE < #timeCode#
+		]]>
+	</delete>
 </sqlMap>

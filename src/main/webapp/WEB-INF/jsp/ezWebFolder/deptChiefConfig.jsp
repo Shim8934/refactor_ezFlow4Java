@@ -5,7 +5,8 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<link rel="stylesheet" href="${util.addVer('ezWebFolder.i1', 'msg')}" type="text/css">
+	<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 	<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css"/>
 	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/organJson.js')}"   ></script>
@@ -88,8 +89,8 @@
 				</div>
 			</td>
 			<td style="min-width: 60px; border-top: none; border-bottom: none;">
-				<div style="text-align: center;"><img src="/images/arr_right.gif" width="16" height="16" vspace="3" onclick="add_dept2();" style="cursor:pointer"></div>
-				<div style="text-align: center;"><img src="/images/arr_left.gif"  width="16" height="16" vspace="3" onclick="unselect_dept2();" style="cursor:pointer"></div>
+				<div style="text-align: center;"><img src="/images/kr/cm/arr_right.gif" width="16" height="16" vspace="2" onclick="add_dept2();" style="cursor:pointer"></div>
+				<div style="text-align: center;"><img src="/images/kr/cm/arr_left.gif"  width="16" height="16" vspace="2" onclick="unselect_dept2();" style="cursor:pointer"></div>
 			</td>
 			<td style="min-width: 240px; padding: 0px;">
 				<div id="selectedDepts" style="width: 100%; height: 350px; overflow: auto;">
@@ -100,8 +101,8 @@
 	</table>
  	<br/>
 	<div style="width:623px;text-align:center;">      
-		<a class="webfolderBttn" onclick="changeClick()"><span><spring:message code="ezWebFolder.t133" /></span></a>
-		<a class="webfolderBttn" onclick="cancel_Click()"><span><spring:message code="ezWebFolder.t112" /></span></a>
+		<a class="imgbtn" onclick="changeClick()"><span><spring:message code="ezWebFolder.t133" /></span></a>
+		<a class="imgbtn" onclick="cancel_Click()"><span><spring:message code="ezWebFolder.t112" /></span></a>
 	</div>
 </body>
 </html>

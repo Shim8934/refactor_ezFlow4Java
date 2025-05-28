@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.security.SecureRandom;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +14,11 @@ import java.util.StringJoiner;
 
 import javax.annotation.Resource;
 
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+
+import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +40,9 @@ import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
-import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
+
+import static egovframework.ezEKP.ezOrgan.vo.OrganAuth.*;
 
 @Service("EzBoardAdminService")
 public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements EzBoardAdminService {	
@@ -43,7 +52,10 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 	
 	@Autowired
 	private CommonUtil commonUtil;
-	
+
+	@Autowired
+	private EzOrganAdminService ezOrganAdminService;
+
 	private static final Logger logger = LoggerFactory.getLogger(EzBoardAdminServiceImpl.class);
 
 	@Override
@@ -221,7 +233,7 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		map.put("v_STRLANG", pStrLang);
+		map.put("v_STRLANG", pStrLang); // "", 2, 3, 4
 		map.put("v_PQUERY", pQuery);
 		map.put("v_TENANTID", tenantID);
 
@@ -354,16 +366,11 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 	@Override
 	public List<BoardTreeVO> get_Admin_TopBoardList(String parentBoardID, String lang, String companyID, int tenantID, boolean isCompanyAdmin) throws Exception {
 		logger.debug("get_Admin_TopBoardList started");
-
-		// 2023-11-27 조소정 - 게시판그룹이름, 게시판이름도 다국어 작업 처리 위해 사용자 설정 언어로 셋팅
-		if (lang.equals("1")) {
-			lang = "";
-		}
-
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("parentBoardID", parentBoardID);
-		map.put("lang", lang);
+		map.put("lang", lang); // "", 2, 3, 4
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		map.put("isCompanyAdmin", isCompanyAdmin);
@@ -468,11 +475,17 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		if (boardPropertyVO.getGuBun().equals("99")) {
 			map.put("isAllGroupBoard", "Y");
 		}
+
+		boolean accessSave = true;
+		if (boardPropertyVO.getAccessID() != null) {
+			if ("NONE".equals(boardPropertyVO.getAccessID())) accessSave = false;
+		}
 		
 		ezBoardAdminDAO.createBoardGroup(map);
 		
 		/* 2019-01-22 홍승비 - 그룹사게시판(그룹) 생성 시, 최상위 회사(Top)에만 '접근'권한을 부여한다. */
-		ezBoardAdminDAO.createBoardGroup2(map);
+		if (accessSave)
+			ezBoardAdminDAO.createBoardGroup2(map);
 		
 		trunkBoard(boardPropertyVO.getTenantID());
 
@@ -500,6 +513,9 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		
 		/* 2018-10-15 홍승비 - 게시판그룹의 그룹사게시판 여부를 체크하여 하위게시판 등록하도록 수정 */
 		map.put("isAllGroupBoard", boardPropertyVO.getIsAllGroupBoard());
+		
+		String type = (boardPropertyVO.getType() != null && "DEPT".equals(boardPropertyVO.getType())) ? "DEPT" : "PERSON";
+		map.put("v_TYPE", type);
 		
 		ezBoardAdminDAO.createBoard_I(map);
 		
@@ -698,11 +714,18 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_PAPPRFLAG", boardPropertyVO.getApprFlag());
 		map.put("v_PAPPRMAILFLAG", boardPropertyVO.getApprMailFlag());
 		map.put("v_LIKEFLAG", boardPropertyVO.getLikeFlag());
+		map.put("v_DISLIKEFLAG", boardPropertyVO.getDisLikeFlag());
 		map.put("v_MAILFG_POST", boardPropertyVO.getMailFG_Post());
 		map.put("v_MAILFG_MOD", boardPropertyVO.getMailFG_Mod());
 		map.put("v_MAILFG_COMMENT", boardPropertyVO.getMailFG_Comment());
 		map.put("v_TENANTID", boardPropertyVO.getTenantID());
 		map.put("v_REACTFLAG", boardPropertyVO.getReactFlag());
+		map.put("v_USEKEYWORD", boardPropertyVO.getUseKeyword());
+		map.put("v_ATTACHMENTFLAG", boardPropertyVO.getAttachmentFlag());
+        map.put("v_PUBLICFLAG", boardPropertyVO.getPublicFlag());
+		map.put("v_ALLNEWBOARDFLAG", boardPropertyVO.getAllNewBoardFlag());
+		map.put("v_WRITERFLAG", boardPropertyVO.getWriterFlag());
+		map.put("v_STARRATINGFLAG", boardPropertyVO.getStarRatingFlag());
 		
 		/* 2018-10-18 홍승비 - 게시판'그룹' 이름변경 시 하위게시판처럼 데이터가 업데이트되는 부분 수정 */
 		if (boardPropertyVO.getParentBoardID().equals("top")) {
@@ -940,8 +963,8 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 			String upperBoardList = getBoardTreePath(map);
 			// 상위 게시판이 존재할 경우.
 			if(upperBoardList != null) {
-				upperBoardList = "'" + upperBoardList.replaceAll(",", "','") + "'";
-				map.put("v_upperBoadList", upperBoardList);
+				/* 이유정 - [웹취약점] EzBoardAdminDAO.saveACLIncludeUppderBoard 관련 파라미터 수정 */
+				map.put("v_upperBoadList", upperBoardList.split(","));
 				// 상위 게시판에 접근 권한만 주기.
 				ezBoardAdminDAO.saveACLIncludeUppderBoard(map);
 			}
@@ -960,8 +983,7 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 			String upperBoardList = getBoardTreePath(map);
 			// 상위 게시판이 존재할 경우.
 			if(upperBoardList != null) {
-				upperBoardList = "'" + upperBoardList.replaceAll(",", "','") + "'";
-				map.put("v_upperBoadList", upperBoardList);
+				map.put("v_upperBoadList", upperBoardList.split(","));
 				// 상위 게시판에 접근 권한만 주기.
 				ezBoardAdminDAO.saveACLIncludeUppderBoard(map);
 			}			
@@ -1084,14 +1106,6 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 			String copyList = doc.getElementsByTagName("COPYLIST").item(0).getTextContent();
 			String[] copyListArray = copyList.split(",");
 			int copyListSize = copyListArray.length;
-			StringBuilder  buf = new StringBuilder ();
-			
-			for (String k : copyListArray) {
-				buf.append("'" + k + "',");
-			}
-			
-			String tempCopyList = buf.toString();
-			tempCopyList = tempCopyList.substring(0, tempCopyList.length() - 1);
 			
 			Map<String, Object> map = new HashMap<String, Object>();
 			
@@ -1110,7 +1124,8 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 				map.put("v_pBoardID", boardID);
 				map.put("v_PDEFAULTBOARDID", defaultBoardID);
 				map.put("v_PPARENTBOARDID", parentBoardID);
-				map.put("tempCopyList", tempCopyList);
+				/* 이유정 - [웹취약점] EzBoardAdminDAO.copyBoardAcl 관련 파라미터 수정 */
+				map.put("copyListArray", copyListArray);
 				
 				// 기존 TBL_Board_BoardManage 테이블에 존재하는 권한 레코드(테넌트+게시판ID 조건)를 삭제한다.
 				ezBoardAdminDAO.deleteBoardManage(map);
@@ -1384,4 +1399,153 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		
 		logger.debug("updateTabBoard ended");
 	}
+
+	@Override
+	public String getUseFormFlag(String boardID, int tenantID) throws Exception {
+		return ezBoardAdminDAO.getUseFormFlag(boardID, tenantID);
+	}
+
+	/**
+	 * 게시판 내의 관리용 회사 목록을 가져 옴.
+	 * @return OrganDeptVO 객체들의 목록. 에러 발생 시 빈 목록 반환
+	 * 사용자가 ADMIN_MASTER 권한을 가지고 있지 않다면,
+	 * 사용자가 COMPANY_MANAGER 또는 BOARD_MANAGER의 권한을 가지고 있지 않은 회사를 목록에서 제거합니다.
+	 * 에러 발생 시 빈 목록을 반환합니다.
+	 **/
+	@Override
+	public List<OrganDeptVO> getListCompanyInBoard(String userID, String primary, int tenantID) {
+		try {
+			List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(primary, tenantID);
+
+			/*OrganAuth organAuth = commonUtil.makeOrganAuth(userID, tenantID);
+
+			if (!organAuth.isAuth(AdminAuth.ADMIN_MASTER, "")) {
+				list.removeIf(vo
+						-> !organAuth.isAuth(AdminAuth.COMPANY_MANAGER, vo.getCn())
+						&& !organAuth.isAuth(AdminAuth.BOARD_MANAGER, vo.getCn()));
+			}*/
+
+			return list;
+		} catch (Exception e) {
+			return Collections.emptyList();
+		}
+	}
+	
+	@Override
+	public void deleteMyBoardData(String type, String boardID, int tenantID) throws Exception {
+	    logger.debug("deleteMyBoardData started");
+
+	    Map<String, Object> map = new HashMap<String, Object>();
+	    map.put("boardID", boardID);
+	    map.put("tenantID", tenantID);
+
+	    if ("MyBoards".equals(type)) {
+	        ezBoardAdminDAO.deleteMyBoardsOnCategoryChange(map);
+	    } else if ("MyBoardTree".equals(type)) {
+	        ezBoardAdminDAO.deleteMyBoardTreeOnCategoryChange(map);
+	    }
+
+	    logger.debug("deleteMyBoardData ended");
+	}
+
+	@Override
+	public int getBoardItemCnt(String boardID, int tenantId) throws Exception {
+	    logger.debug("getBoardItemCnt started");
+
+	    Map<String, Object> map = new HashMap<String, Object>();
+	    map.put("boardID", boardID);
+	    map.put("tenantID", tenantId);
+
+	    int result = ezBoardAdminDAO.getBoardItemCnt(map);
+	    
+	    logger.debug("getBoardItemCnt ended");
+	    return result;
+	}
+	
+	public String saveHWP(String boardID, String formContent, String realPath, int tenantID) throws Exception {
+		logger.debug("saveHWP started");
+
+		InputStream stream = null;
+		OutputStream bos = null;
+		String hwpFilePath = "";
+		String dbPath = "";
+		
+		try {			
+			String docPath = commonUtil.getUploadPath("upload_board.FORM", tenantID) + commonUtil.separator;
+			String fullPath = realPath + commonUtil.detectPathTraversal(docPath);
+			File doc = new File(fullPath);
+			
+			/* 2020-01-09 홍승비 - 파일경로 폴더 생성 방식 수정 (존재하지 않는 상위폴더를 전부 생성하도록 수정) */
+			if (!doc.exists() || !doc.isDirectory()) {
+				doc.mkdirs();
+			}
+			
+			dbPath = docPath + boardID + ".hwp";
+			hwpFilePath = realPath + commonUtil.detectPathTraversal(dbPath);
+			File hwp = new File(hwpFilePath);
+			
+			if (hwp.exists()) {
+				hwp.delete();
+			}
+			
+			stream = new ByteArrayInputStream(Base64.decodeBase64(formContent));
+			bos = new FileOutputStream(hwpFilePath);
+			
+			int bytesRead = 0;
+			byte[] buffer = new byte[2048];
+			
+			while ((bytesRead = stream.read(buffer, 0, 2048)) != -1) {
+				bos.write(buffer, 0, bytesRead);
+			}
+		} catch(Exception e) {
+			logger.error(e.getMessage(), e);
+		} finally {
+			if(bos != null){
+				try {
+					bos.close();
+				} catch (Exception ignore) {
+						logger.debug("IGNORED: {}", ignore.getMessage());
+				}
+			}
+			
+			if(stream != null){
+				try {
+					stream.close();
+				} catch (Exception ignore) {
+					logger.debug("IGNORED: {}", ignore.getMessage());
+				}
+			}
+		}
+
+		logger.debug("saveHWP ended");
+		return dbPath;
+	}
+
+	@Override
+	public void deleteScrapBoard(String boardID) throws Exception {
+		ezBoardAdminDAO.deleteScrapBoard(boardID);
+	}
+
+	@Override
+	public void deleteScrapContBoard(String boardID) throws Exception {
+		ezBoardAdminDAO.deleteScrapContBoard(boardID);
+	}
+
+	@Override
+	public String getNewGuid() throws Exception {
+		logger.debug("getNewGuid started.");
+
+		String result = randomHexPart() + randomHexPart() + "-" + randomHexPart() + "-" + randomHexPart() + "-" + randomHexPart() + "-" + randomHexPart() + randomHexPart() + randomHexPart();
+				
+		logger.debug("getNewGuid ended. GUID = " + result);
+		return result;
+	}
+	
+	public String randomHexPart() throws Exception {
+		SecureRandom secureRandom = new SecureRandom();
+		int randomValue = secureRandom.nextInt(0x10000);
+		
+		return String.format("%04x", randomValue);
+	}
+
 }

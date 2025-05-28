@@ -111,6 +111,22 @@ var SurveyItem = function() {
 			default:
 				return;
 		}
+		setPreviewFlag();
+	}
+	
+	function setPreviewFlag() {
+		var prevMode = crrPreMode;
+		
+		$.ajax({
+			type : "POST",
+			dataType : "text",
+			async : true,
+			url : "/ezSurvey/setPreviewFlag.do",
+			data : { prevMode : prevMode },
+			success: function(result){
+			}     			
+		});
+		
 	}
 	/* Preview option end */
 	
@@ -210,6 +226,9 @@ var SurveyItem = function() {
 		
 		document.getElementById("sltView").addEventListener("click"      , function(e) {toggleOptionView(this);}, false);
 		document.getElementById("listcount").addEventListener("change"   , function(e) {startSearchSurvey("1");}, false);
+		
+		var filterStatus = document.getElementById("filterStatus");
+		if (filterStatus) {filterStatus.addEventListener("change"   , function(e) {startSearchSurvey("1");}, false);}
 		
 		var topFrame    = window.parent.parent.document.getElementById("topFrame"); 
 		var leftFrame   = window.parent.document.getElementsByName("left")[0];
@@ -384,6 +403,7 @@ var SurveyItem = function() {
 		var orderInf  = surveyTable.getOrderInfo();
 		var listCnt   = document.getElementById("listcount").value;
 		var searchOpt = document.getElementById("searchCheck").value;
+		var filterStatus = document.getElementById("filterStatus") ? document.getElementById("filterStatus").value : "";
 		
 		$.ajax({
 			type: "GET",
@@ -399,7 +419,8 @@ var SurveyItem = function() {
 				order       : orderInf.ord ? orderInf.ord : "",
 				srchMode    : searchMode,
 				srchOption  : searchOpt,
-				listCntSize : listCnt
+				listCntSize : listCnt,
+				filterStatus : filterStatus
 			},
 			dataType: "JSON",
 			async: false,
@@ -478,7 +499,9 @@ var SurveyItem = function() {
 				var trElmt     = document.createElement("tr");
 				var tdElmt1    = document.createElement("td");
 				var tdElmt2    = document.createElement("td");
+				var tdSurveyId = document.createElement("td");
 				var tdElmt3    = document.createElement("td");
+				var tdPeriod    = document.createElement("td");
 				var tdElmt4    = document.createElement("td");
 				var tdElmt5    = document.createElement("td");
 				var tdElmt6    = document.createElement("td");
@@ -486,6 +509,10 @@ var SurveyItem = function() {
 				var tdElmt8    = document.createElement("td");
 				var tdElmt9    = document.createElement("td");
 				var tdElmt10   = document.createElement("td");
+				// 참여자수
+				var tdParticipants   = document.createElement("td");
+				// 참여여부
+				var tdParticipation   = document.createElement("td");
 //				var tdElmt11   = document.createElement("td");
 				var endDateStr = itemList[i]["endDate"].substring(0, 10);
 				var today      = new Date();
@@ -511,15 +538,32 @@ var SurveyItem = function() {
 					imgAttch.src  = "/images/newAttach.gif";
 					tdElmt2.appendChild(imgAttch);
 				}
+
+				tdSurveyId.textContent = itemList[i]["surveyId"];
+				tdPeriod.textContent = itemList[i]["startDate"].substring(0, 10) + " ~ " + endDateStr;
 				
 				tdElmt3.textContent  = itemList[i]["title"];
 				tdElmt4.textContent  = itemList[i]["creatorName"];
 				tdElmt5.textContent  = itemList[i]["createDate"].substring(0, 10);
 				tdElmt6.textContent  = itemList[i]["paritipateFlag"] == 0   ? SurveyMessages.strUser2    : SurveyMessages.strUser8;
-				tdElmt7.textContent  = itemList[i]["resultPublicFlag"] == 1 ? SurveyMessages.strPublic1  : SurveyMessages.strPublic2;
+				if (itemList[i]["resultPublicFlag"] == 0) {
+				    tdElmt7.textContent = SurveyMessages.strPublic2;
+				} else if (itemList[i]["resultPublicFlag"] == 1) {
+				    tdElmt7.textContent = SurveyMessages.strPublic1;
+				} else if (itemList[i]["resultPublicFlag"] == 2) {
+				    tdElmt7.textContent = SurveyMessages.strPublic3;
+				}
 				tdElmt8.textContent  = itemList[i]["anonymousFlag"]    == 0 ? SurveyMessages.strAnoynym1 : SurveyMessages.strAnoynym2;
 				tdElmt9.textContent  = endDateStr;
-				
+				var participantsCnt = itemList[i]["participants"] || '0';
+				tdParticipants.textContent  = participantsCnt + ' ' + SurveyMessages.strUser3;
+				var participationCnt = itemList[i]["participation"] || 0;
+				tdParticipation.textContent  = participationCnt > 0 ? SurveyMessages.strLangPGB01 : SurveyMessages.strLangPGB02;
+
+				tdSurveyId.setAttribute("title", tdSurveyId.textContent);
+				tdPeriod.setAttribute("title", tdPeriod.textContent);
+				tdParticipants.setAttribute("title", tdParticipants.textContent);
+				tdParticipation.setAttribute("title", tdParticipation.textContent);
 				tdElmt3.setAttribute("title", tdElmt3.textContent);
 				tdElmt4.setAttribute("title", tdElmt4.textContent);
 				tdElmt5.setAttribute("title", tdElmt5.textContent);
@@ -588,25 +632,33 @@ var SurveyItem = function() {
 				tdElmt10.textContent = statusStr;
 				tdElmt1.className    = "inputTh";
 				tdElmt2.className    = "inputTh";
+				tdSurveyId.className    = "numTh";
 				tdElmt3.className    = "ttlTh";
+				tdPeriod.className 	= "createTh";
 				tdElmt4.className    = "createTh";
 				tdElmt5.className    = "endDateTh";
 				tdElmt6.className    = "targetTh";
 				tdElmt7.className    = "publicTh";
 				tdElmt8.className    = "anoynmTh";
 				tdElmt9.className    = "endDateTh";
+				tdParticipants.className   = "statusTh";
+				tdParticipation.className   = "statusTh";
 				tdElmt10.className   = "statusTh";
 //				tdElmt11.className   = "statisTh";
 				
 				trElmt.appendChild(tdElmt1);
 				trElmt.appendChild(tdElmt2);
+				trElmt.appendChild(tdSurveyId);
 				trElmt.appendChild(tdElmt3);
-				trElmt.appendChild(tdElmt4);
-				trElmt.appendChild(tdElmt5);
-				trElmt.appendChild(tdElmt6);
-				trElmt.appendChild(tdElmt7);
-				trElmt.appendChild(tdElmt8);
-				trElmt.appendChild(tdElmt9);
+				// trElmt.appendChild(tdElmt4);
+				// trElmt.appendChild(tdElmt5);
+				// trElmt.appendChild(tdElmt9);
+				trElmt.appendChild(tdPeriod);
+				// trElmt.appendChild(tdElmt6);
+				// trElmt.appendChild(tdElmt7);
+				// trElmt.appendChild(tdElmt8);
+				trElmt.appendChild(tdParticipants);
+				trElmt.appendChild(tdParticipation);
 				trElmt.appendChild(tdElmt10);
 //				trElmt.appendChild(tdElmt11);
 				
@@ -968,10 +1020,20 @@ var SurveyItem = function() {
 			}
 		});
 	}
+    
+    function moreBtnResize() {
+       var srchBttn2        = document.querySelector(".layer_select .searchBttn2");
+       var delBttn2         = document.querySelector(".layer_select .deleteBttn2");
+       var analysisBttn2    = document.querySelector(".layer_select .analysisBttn2");
+       if (srchBttn2)       {srchBttn2.firstElementChild.onclick        = function(e) {toggleSearchPanel()     ;};}
+       if (delBttn2)        {delBttn2.firstElementChild.onclick         = function(e) {deleteFileConfirm()     ;};}
+       if (analysisBttn2)   {analysisBttn2.firstElementChild.onclick    = function(e) {analysisSurveyConfirm() ;};}
+    }
 	
 	return {
 		start      : initEvents,
 		reload     : refreshAllFrames,
-		getContent : getIframeContent
+		getContent : getIframeContent,
+		btnResize : moreBtnResize
 	};
 }();

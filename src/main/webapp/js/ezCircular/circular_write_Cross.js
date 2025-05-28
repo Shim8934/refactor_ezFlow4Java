@@ -412,13 +412,13 @@ function manage_attendant_Complete(rtn) {
         
         for (var i = 0; i < rtn["id"].length; i++) {
             if (i == 0) {
-            	document.getElementById("receiverlist").innerHTML = rtn["name"][i];
+            	document.getElementById("receiverlist").innerHTML = rtn["name1"][i];
             	document.getElementById("receiverID").innerHTML = rtn["id"][i];
-            	document.getElementById("receiverlist2").innerHTML = rtn["name1"][i];
+            	document.getElementById("receiverlist2").innerHTML = rtn["name2"][i];
             } else {
-            	document.getElementById("receiverlist").innerHTML += ", " + rtn["name"][i];
+            	document.getElementById("receiverlist").innerHTML += ", " + rtn["name1"][i];
             	document.getElementById("receiverID").innerHTML += ", " + rtn["id"][i];
-            	document.getElementById("receiverlist2").innerHTML += ", " + rtn["name1"][i];
+            	document.getElementById("receiverlist2").innerHTML += ", " + rtn["name2"][i];
             }
 
             g_attendant["name"][i] = rtn["name"][i];
@@ -1443,7 +1443,9 @@ function setAttachFileInfo(strXML) {
         var listtable;
 
         listtable = dadiframe.document.getElementById("filelist");
-        dadiframe.document.getElementById("lstAttachLink").appendChild(listtable);
+        var lstAttachLink = dadiframe.document.getElementById("lstAttachLink");
+        lstAttachLink.insertBefore(listtable, lstAttachLink.firstChild);        
+        dadiframe.document.getElementById("attachInnerNotice").className = "attachInnerNotice_p_off";
 
         var extCheck = false;
         for (i = 0; i < SelectNodes(xml, "ROOT/NODES/DATA").length; i++) {
@@ -1459,6 +1461,8 @@ function setAttachFileInfo(strXML) {
                 objTr.setAttribute("DATA", newFileName);//UUID
                 objTr.setAttribute("DATA2", pFileName);//파일명
                 objTr.setAttribute("DATA3", fileSize);//파일사이즈
+                objTr.setAttribute("draggable", true);
+                objTr.setAttribute("_fileIndex", i);
 
                 var objTd = document.createElement("TD");
                 objTd.style.textAlign = "center";

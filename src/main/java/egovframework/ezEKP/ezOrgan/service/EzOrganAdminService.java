@@ -1,10 +1,13 @@
 package egovframework.ezEKP.ezOrgan.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletResponse;
 
+import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganGroupVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganJobVO;
@@ -45,6 +48,8 @@ public interface EzOrganAdminService {
 	
 	public void updateProperty(String cn, String column, String number, String pClass, int tenantID) throws Exception;
 
+	public void updateJobTitleOrder(int jobId, int sortOrder, int tenantID) throws Exception;
+	
 	public int companyCheck(String cn, int tenantID) throws Exception;
 	
 	public int companyChildCheck(String cn, int tenantID) throws Exception;
@@ -81,7 +86,7 @@ public interface EzOrganAdminService {
 
 	public String changePasswordWithEmailSystem(String cn, int tenantId, String decryptedOldPassword, String decryptedNewPassword) throws Exception;
 	
-	public void retireEntry(String cn, String domain, String adminPassword, int tenantID, String offset) throws Exception;
+	public void retireEntry(String cn, String domain, int tenantID, String offset) throws Exception;
 
 	public void updateDBData_user(OrganUserVO vo) throws Exception;
 
@@ -105,6 +110,8 @@ public interface EzOrganAdminService {
 			String companyId, String sortColumn, String sortType, boolean[] searchFor) throws Exception;
 	
 	public int getUserCount(int tenantID, String keycode, String keyword, boolean[] searchFor, String companyId) throws Exception;
+	
+	public String createExcelTotalUsers(String realPath, String dirPath, List<OrganUserVO> exportUserlist, String primary, Locale locale) throws Exception;
 	
 	public void updateProperty(String cn, String column, String number, String pClass, int tenantID, String mCondition) throws Exception;
 	
@@ -196,7 +203,7 @@ public interface EzOrganAdminService {
 
 	public List<OrganUserVO> getExportPermissionsList(String primary, String companyId, int tenantId) throws Exception;
 
-	public String createExcelPermissionsList(String realPath, String pDirPath, List<OrganUserVO> exportPermissionList, String primary, Locale locale) throws Exception;
+	public String createExcelPermissionsList(String realPath, String pDirPath, List<OrganUserVO> exportPermissionList, String primary, Locale locale, boolean isRollC) throws Exception;
 	
 	// 2023-08-25 전인하 - 해당 유저가 원직인지 겸직인지 확인 메소드
 	String isThisAddJob(String cn, int tenant_id, String DeptId, String jobId) throws Exception;
@@ -211,4 +218,17 @@ public interface EzOrganAdminService {
 
 	// 2024-01-15 김혜지 - 지정된 부서에 속한 퇴직자 수를 반환한다.
 	int retireUserCountCheck(String cn, int tenantID) throws Exception;
+
+	Optional<String> getJobIdForFirstUser(String userId, int tenantId) throws Exception;
+
+	List<OrganDeptVO> getAdminCompanyList(String id, int tenantID, String primary, String deptId, String jobId) throws Exception;
+	
+	// 2024-05-27 관리자 > 조직도 > 겸직 사용자 상세정보 내용 호출 함수
+	public String getEntryAddJobInfo(String cn, String deptId, String jobId, String language, int tenantID, String prop) throws Exception;
+	
+	public void updateAddJobInfo(String cn, String deptId, String jobId, int tenantID, String orderBy, String userTreeFlag) throws Exception;
+
+	public void updateUserMailAddress(String cn, String mailAddress, int tenantID) throws Exception;
+	
+	public void resetLoginCnt(String cn, int tenantID) throws Exception;
 }

@@ -481,8 +481,26 @@ public class EzAttitudeController {
 	 * attitude Main
 	 */
 	@RequestMapping(value = "/ezAttitude/attitudeMain.do", method = RequestMethod.GET)
-	public String attitudeMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	public String attitudeMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("/ezAttitude/attitudeMain started");
+
+		String leftFrameWidth = "220";
+		int width = 0;
+
+		if (request.getParameter("__wwidth") != null) {
+			String widthParam = request.getParameter("__wwidth");
+
+			try {
+				width = Integer.parseInt(widthParam);
+
+				leftFrameWidth = width < 1180 ? "0" : "220";
+			} catch (NumberFormatException e) {
+				width = 0;
+			}
+		}
+		
+		model.addAttribute("leftFrameWidth", leftFrameWidth);
+		
 		logger.debug("/ezAttitude/attitudeMain ended");
 		return "/ezAttitude/attitudeMain";
 	}
@@ -1631,8 +1649,9 @@ public class EzAttitudeController {
 		      
 		String pFileName = "";
 		String strDate = EgovDateUtil.getToday("-");
-		// 2024-03-12 조수빈 - 파일명 다국어 처리 (한국어의 경우 'YYYY-MM-DD_수정신청관리')
-		pFileName = strDate + "_" + egovMessageSource.getMessage("ezAttitude.t7", userInfo.getLocale());
+		// 2025-02-20 조수빈 - #155515 근태관리 > [엑셀다운로드] 시 파일명 수정 필요
+		String saveFileName = request.getParameter("saveFileName");
+		pFileName = strDate + "_" + null == saveFileName || saveFileName.equals("") ? egovMessageSource.getMessage("ezAttitude.t1", userInfo.getLocale()) : saveFileName;
 		  
 		String StrAnalysisDate = request.getParameter("saveExcelData").trim().replaceAll("&nbsp;", "").replaceAll("\r\n", "").replaceAll("\n", "").replaceAll("\t", "");
 		Document analysisData = commonUtil.convertStringToDocument(StrAnalysisDate);
@@ -3083,7 +3102,7 @@ public class EzAttitudeController {
 			if (reqType.equals("check")) {
 	//			근태조회엑셀
 				// 2024-03-12 조수빈 - 파일명 다국어 처리 (한국어의 경우 'YYYY-MM-DD_근태입력관리')
-				pFileName = EgovDateUtil.getToday("-") + "_" + egovMessageSource.getMessage("ezAttitude.t5", locale);
+				pFileName = EgovDateUtil.getToday("-") + "_" + egovMessageSource.getMessage("ezAttitude.t5", locale).replaceAll(" ", "_");
 				
 				//header
 				row.createCell(0).setCellValue("NO.");
@@ -3154,7 +3173,7 @@ public class EzAttitudeController {
 							if(attitudeList.get(i).getTypeId().equals("A01")) { //출근
 								avo.setStartDate(attitudeList.get(i).getStartDate().split("\\.")[0]);
 							}else if(attitudeList.get(i).getTypeId().equals("A02")) { //지각
-								avo.setStartDate(attitudeList.get(i).getStartDate().split("\\.")[0] + " (" + egovMessageSource.getMessage("ezAttitude.t113") + ")");
+								avo.setStartDate(attitudeList.get(i).getStartDate().split("\\.")[0] + " (" + egovMessageSource.getMessage("ezAttitude.t113", locale) + ")");
 							}else if(attitudeList.get(i).getTypeId().equals("A03")) { //퇴근
 								avo.setEndDate(attitudeList.get(i).getStartDate().split("\\.")[0]);
 							}else if(attitudeList.get(i).getTypeId().equals("A25")) { //전일퇴근
@@ -3162,7 +3181,7 @@ public class EzAttitudeController {
 								String dayAfter = commonUtil.getDayAfter(startDate[0]);
 								avo.setEndDate(dayAfter + " " + startDate[1].split("\\.")[0]);
 							}else if(attitudeList.get(i).getTypeId().equals("A08")) { //조퇴
-								avo.setEndDate(attitudeList.get(i).getStartDate().split("\\.")[0] + " (" + egovMessageSource.getMessage("ezAttitude.t114") + ")");
+								avo.setEndDate(attitudeList.get(i).getStartDate().split("\\.")[0] + " (" + egovMessageSource.getMessage("ezAttitude.t114", locale) + ")");
 							}else if(attitudeList.get(i).getTypeId().equals("A07")) { //휴근
 								String date = avo.getWorkingHoliday() == null ? attitudeList.get(i).getStartDate().split("\\.")[0] + " ~ " + attitudeList.get(i).getEndDate() : avo.getWorkingHoliday() + "\r\n" + attitudeList.get(i).getStartDate().split("\\.")[0] + " ~ " + attitudeList.get(i).getEndDate();
 								avo.setWorkingHoliday(date);
@@ -3215,7 +3234,7 @@ public class EzAttitudeController {
 							if(attitudeList.get(i).getTypeId().equals("A01")) { //출근
 								avo.setStartDate(attitudeList.get(i).getStartDate().split("\\.")[0]);
 							}else if(attitudeList.get(i).getTypeId().equals("A02")) { //지각
-								avo.setStartDate(attitudeList.get(i).getStartDate().split("\\.")[0] + " (" + egovMessageSource.getMessage("ezAttitude.t113") + ")");
+								avo.setStartDate(attitudeList.get(i).getStartDate().split("\\.")[0] + " (" + egovMessageSource.getMessage("ezAttitude.t113", locale) + ")");
 							}else if(attitudeList.get(i).getTypeId().equals("A03")) { //퇴근
 								avo.setEndDate(attitudeList.get(i).getStartDate().split("\\.")[0]);
 							}else if(attitudeList.get(i).getTypeId().equals("A25")) { //전일퇴근
@@ -3223,7 +3242,7 @@ public class EzAttitudeController {
 								String dayAfter = commonUtil.getDayAfter(startDate[0]);
 								avo.setEndDate(dayAfter + " " + startDate[1].split("\\.")[0]);
 							}else if(attitudeList.get(i).getTypeId().equals("A08")) { //조퇴
-								avo.setEndDate(attitudeList.get(i).getStartDate().split("\\.")[0] + " (" + egovMessageSource.getMessage("ezAttitude.t114") + ")");
+								avo.setEndDate(attitudeList.get(i).getStartDate().split("\\.")[0] + " (" + egovMessageSource.getMessage("ezAttitude.t114", locale) + ")");
 							}else if(attitudeList.get(i).getTypeId().equals("A07")) { //휴근
 								String date = avo.getWorkingHoliday() == null ? attitudeList.get(i).getStartDate().split("\\.")[0] + " ~ " + attitudeList.get(i).getEndDate() : avo.getWorkingHoliday() + "\r\n" + attitudeList.get(i).getStartDate().split("\\.")[0] + " ~ " + attitudeList.get(i).getEndDate();
 								avo.setWorkingHoliday(date);
@@ -3280,7 +3299,7 @@ public class EzAttitudeController {
 						if(attitudeList.get(i).getTypeId().equals("A01")) { //출근
 							avo.setStartDate(attitudeList.get(i).getStartDate().split("\\.")[0]);
 						}else if(attitudeList.get(i).getTypeId().equals("A02")) { //지각
-							avo.setStartDate(attitudeList.get(i).getStartDate().split("\\.")[0] + " (" + egovMessageSource.getMessage("ezAttitude.t113") + ")");
+							avo.setStartDate(attitudeList.get(i).getStartDate().split("\\.")[0] + " (" + egovMessageSource.getMessage("ezAttitude.t113", locale) + ")");
 						}else if(attitudeList.get(i).getTypeId().equals("A03")) { //퇴근
 							avo.setEndDate(attitudeList.get(i).getStartDate().split("\\.")[0]);
 						}else if(attitudeList.get(i).getTypeId().equals("A25")) { //전일퇴근
@@ -3288,7 +3307,7 @@ public class EzAttitudeController {
 							String dayAfter = commonUtil.getDayAfter(startDate[0]);
 							avo.setEndDate(dayAfter + " " + startDate[1].split("\\.")[0]);
 						}else if(attitudeList.get(i).getTypeId().equals("A08")) { //조퇴
-							avo.setEndDate(attitudeList.get(i).getStartDate().split("\\.")[0] + " (" + egovMessageSource.getMessage("ezAttitude.t114") + ")");
+							avo.setEndDate(attitudeList.get(i).getStartDate().split("\\.")[0] + " (" + egovMessageSource.getMessage("ezAttitude.t114", locale) + ")");
 						}else if(attitudeList.get(i).getTypeId().equals("A07")) { //휴근
 							String date = avo.getWorkingHoliday() == null ? attitudeList.get(i).getStartDate().split("\\.")[0] + " ~ " + attitudeList.get(i).getEndDate() : avo.getWorkingHoliday() + "\r\n" + attitudeList.get(i).getStartDate().split("\\.")[0] + " ~ " + attitudeList.get(i).getEndDate();
 							avo.setWorkingHoliday(date);
@@ -3389,17 +3408,19 @@ public class EzAttitudeController {
 					row.getCell(22).setCellStyle(bodyStyle);
 				}
 				
-				//width 조정
-				for(int i = 0, len = 23; i < len; i++) {
+				// width 조정
+				for (int i = 0, len = 23; i < len; i++) {
 					sheet.autoSizeColumn(i);
-					sheet.setColumnWidth(i, (sheet.getColumnWidth(i)) + 512);
+					
+					/* 2024-11-05 홍승비 - 엑셀 파일 저장 시 동적인 너비 계산이 setColumnWidth()에서 허용하는 최대 제한을 넘지 않도록 수정 (255 * 256 = 65280) */
+					sheet.setColumnWidth(i, Math.min(65280, sheet.getColumnWidth(i) + 512));
 				}			
-			} else if (reqType.equals("absent")){
+			} else if (reqType.equals("absent")) {
 	//			미입력자조회엑셀
 				// 2024-03-12 조수빈 - 파일명 다국어 처리 (한국어의 경우 'YYYY-MM-DD_미입력자관리')
 				pFileName = EgovDateUtil.getToday("-") + "_" + egovMessageSource.getMessage("ezAttitude.t6", locale);
 				
-				//header
+				// header
 				row.createCell(0).setCellValue("NO");
 				row.createCell(1).setCellValue(egovMessageSource.getMessage("ezAttitude.t133", locale));
 				row.createCell(2).setCellValue(egovMessageSource.getMessage("ezAttitude.t10", locale));
@@ -3411,7 +3432,7 @@ public class EzAttitudeController {
 				row.getCell(3).setCellStyle(headerStyle);
 				row.getCell(4).setCellStyle(headerStyle);
 				
-				//body
+				// body
 				for (int i = 0 ; i < attitudeList.size(); i++) { 
 					AdminAttitudeVO vo = attitudeList.get(i);
 					row = sheet.createRow(i + 1);
@@ -3429,7 +3450,7 @@ public class EzAttitudeController {
 					row.getCell(4).setCellStyle(bodyStyle);
 	
 				}
-				//width 조정
+				// width 조정
 				sheet.autoSizeColumn(0);
 				sheet.autoSizeColumn(1);
 				sheet.autoSizeColumn(2);
@@ -3441,7 +3462,7 @@ public class EzAttitudeController {
 				sheet.setColumnWidth(3, (sheet.getColumnWidth(3)) + 512);
 				sheet.setColumnWidth(4, (sheet.getColumnWidth(4)) + 512);
 				
-			} else if (reqType.equals("history")){
+			} else if (reqType.equals("history")) {
 	//			관리내역조회엑셀
 				// 2024-03-12 조수빈 - 파일명 다국어 처리 (한국어의 경우 'YYYY-MM-DD_관리내역')
 				pFileName = EgovDateUtil.getToday("-") + "_" + egovMessageSource.getMessage("ezAttitude.t57", locale);
@@ -3561,10 +3582,10 @@ public class EzAttitudeController {
 	    String searchlist = request.getParameter("search").trim();
 		String celllist = request.getParameter("cell");
 		String proplist = request.getParameter("prop");
-		String listtype = request.getParameter("type");
+		String listtype = request.getParameter("type"); // 항상 "user"로 고정
 		String companyID = request.getParameter("companyID") == null ? userInfo.getCompanyID() : request.getParameter("companyID");
 		String lang = userInfo.getPrimary();
-		String page = request.getParameter("page");
+		String page = request.getParameter("page") == null ? "1" : request.getParameter("page");
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = gwServerUrl + "/rest/ezAttitude/getSearchList.do";
@@ -3714,7 +3735,7 @@ public class EzAttitudeController {
 		
 		String userId = userInfo.getId();
 		String companyId = userInfo.getCompanyID();
-		String userLang = userInfo.getLang();
+		String userLang = commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId());
 		String startDate = request.getParameter("startDate");
 		String endDate = request.getParameter("endDate");
 		String orderCell = request.getParameter("orderCell");
@@ -3890,7 +3911,7 @@ public class EzAttitudeController {
 		String pFileName = "";
 		pFileName = EgovDateUtil.getToday("-") +"_annualReport";
 		
-		//header
+		// header
 		row.createCell(0).setCellValue("NO");
 		row.createCell(1).setCellValue(egovMessageSource.getMessage("ezAttitude.t107", locale));
 		row.createCell(2).setCellValue(egovMessageSource.getMessage("ezAttitude.t35", locale));
@@ -3902,7 +3923,7 @@ public class EzAttitudeController {
 		row.getCell(3).setCellStyle(headerStyle);
 		row.getCell(4).setCellStyle(headerStyle);
 		
-		//body
+		// body
 		for (int i = 0 ; i < annualList.size(); i++) { 
 			AdminAttitudeVO vo = annualList.get(i);
 			row = sheet.createRow(i + 1);
@@ -3926,7 +3947,7 @@ public class EzAttitudeController {
 			row.getCell(3).setCellStyle(bodyStyle);
 			row.getCell(4).setCellStyle(bodyStyle);
 		}
-		//width 조정
+		// width 조정
 		sheet.autoSizeColumn(0);
 		sheet.autoSizeColumn(1);
 		sheet.autoSizeColumn(2);
@@ -3936,7 +3957,7 @@ public class EzAttitudeController {
 		sheet.setColumnWidth(1, (sheet.getColumnWidth(1)) + 512);
 		sheet.setColumnWidth(2, (sheet.getColumnWidth(2)) + 512);
 		sheet.setColumnWidth(3, (sheet.getColumnWidth(3)) + 512);
-//		sheet.setColumnWidth(4, (sheet.getColumnWidth(4)) + 512); //내용은 길어질 수 있으므로 하지 않는다. 최댓값을 넘을 경우 에러나기 때문
+//		sheet.setColumnWidth(4, (sheet.getColumnWidth(4)) + 512); // 내용은 길어질 수 있으므로 하지 않는다. 최댓값을 넘을 경우 에러나기 때문
 			
 		response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
 		workbook.write(response.getOutputStream());
@@ -4016,7 +4037,7 @@ public class EzAttitudeController {
 	}
 	
 	/**
-	 * 연차수정신청
+	 * 연차수정(취소)신청
 	 */
 	@RequestMapping(value = "/ezAttitude/getAttitudeAprInfo.do")
 	public String getAttitudeAprInfo(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
@@ -4777,6 +4798,7 @@ public class EzAttitudeController {
 		return data;
 	}
 
+	/* 2024-07-31 홍승비 - 소스코드 상에서 실제로 호출되지 않는 URL로 확인 */
 	/** 
 	* 개인 연차 총/사용연차 수 (휴가계 기안시 사용)
 	*/

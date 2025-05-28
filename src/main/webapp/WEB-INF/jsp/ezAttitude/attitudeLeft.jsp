@@ -7,8 +7,9 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<title>left_attitude</title>
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
 	    <link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css" />
-		<link rel="stylesheet" href="${util.addVer('main.e15', 'msg')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css"/>
 		<link rel="stylesheet" href="${util.addVer('/css/main.css')}" type="text/css"/>	
 		<link rel="stylesheet" href="${util.addVer('/css/ezAttitude/clockTemp1.css')}" type="text/css" />
 <%-- 		<link rel="stylesheet" href="${util.addVer('/css/ezAttitude/timecheck.css')}" type="text/css" />	 --%>
@@ -507,7 +508,7 @@
 			    	if (result == "0") { 
 			    		result = "";
 			    	} else {
-			    		result = "&nbsp;" + result;
+			    		result = "(" + result + ")";
 			    	}
 			    	try {
 						document.getElementById("attCount").innerHTML = result;
@@ -528,7 +529,7 @@
 			    	if (result == "0") { 
 			    		result = "";
 			    	} else {
-			    		result = "&nbsp;" + result;
+			    		result = "(" + result + ")";
 			    	}
 			    	try {
 						document.getElementById("annualCount").innerHTML = result;
@@ -591,16 +592,12 @@
 		        <ul class="lnbUL off">
                		<li><span class="list_text" onclick="functionFlag(4)"><spring:message code='ezAttitude.t166'/></span></li>
                    	<c:if test="${attitudeAdminCheck == true}">
-                   		<li><span class="list_text" onclick="functionFlag(5)"><spring:message code='ezAttitude.t7'/>
-                   			<c:if test="${totalAtt != 0 }">
-								<span id="attCount" class="attCount">&nbsp;${totalAtt}</span>
-							</c:if>
-                   		</span></li>
-                   		<li><span class="list_text" onclick="functionFlag(6)"><spring:message code='ezAttitude.t275'/>
-	                   		<c:if test="${totalAnnual != '0' }">
-								<span id="annualCount" class="attCount">&nbsp;${totalAnnual}</span>
-							</c:if>
-                   		</span></li>
+                   		<li>
+							<span class="list_text" onclick="functionFlag(5)"><spring:message code='ezAttitude.t7'/><c:if test="${totalAtt != 0 }"><span id="attCount" class="attCount">(${totalAtt})</span></c:if></span>
+						</li>
+                   		<li>
+							<span class="list_text" onclick="functionFlag(6)"><spring:message code='ezAttitude.t275'/><c:if test="${totalAnnual != '0' }"><span id="annualCount" class="attCount">(${totalAnnual})</span></c:if></span>
+						</li>
                     </c:if>
 		        </ul>
 		        <c:if test="${attitudeAdminCheck == true}">

@@ -7,7 +7,8 @@
 <html>
 <head>
 <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
-<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css"> 
+<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
  
 	<style>
 	   	.mainlist tr td:first-child {
@@ -23,9 +24,6 @@
 	   	#countInfo {
 	   		overflow: hidden;
 	   		display: inline-block;
-	   	}
-	   	.countColor {
-	   		color:#017BEC;
 	   	}
 	   	.pt-10
 	   	{

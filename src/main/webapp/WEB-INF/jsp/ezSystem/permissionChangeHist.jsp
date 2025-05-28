@@ -6,7 +6,8 @@
 	<head>
 		<title><spring:message code='ezOrgan.ls06'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet"  href="${util.addVer('main.e15', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet"  href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
@@ -195,29 +196,29 @@
 				var strtext;
 				var PagingHTML = "";
 				document.getElementById("tblPageRayer").innerHTML = "";
-				document.getElementById("listInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + totalCount + "</span>";
+				document.getElementById("listInfo").innerHTML = "&nbsp;&nbsp;<span class='txt_color'>" + totalCount + "</span>";
 				strtext = "<div class='pagenavi'>";
 				PagingHTML += strtext;
 				var pageNum = CurPage;
 
 				if (totalPage > 1 && pageNum != 1) {
-					strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' ></span>"
+					strtext = "<span class='btnimg first' onclick= 'return goToPageByNum(1)'></span>"
 					PagingHTML += strtext;
 				} else {
-					strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>"
+					strtext = "<span class='btnimg first disabled'></span>"
 					PagingHTML += strtext;
 				}
 
 				if (totalPage > BlockSize) {
 					if (pageNum > BlockSize) {
-						strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' ></span>";
+						strtext = "<span class='btnimg prev' onclick= 'return selbeforeBlock()'>>";
 						PagingHTML += strtext;
 					} else {
-						strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+						strtext = "<span class='btnimg prev disabled'></span>";
 						PagingHTML += strtext;
 					}
 				} else {
-					strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+					strtext = "<span class='btnimg prev disabled'></span>";
 					PagingHTML += strtext;
 				}
 
@@ -247,28 +248,28 @@
 							/ BlockSize) + 1) * BlockSize) + 1)) {
 						strtext = "";
 						strtext = strtext
-								+ "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' ></span>";
+								+ "<span class='btnimg next' onclick='return selafterBlock()'>-</span>";
 						PagingHTML += strtext;
 					} else {
 						strtext = "";
 						strtext = strtext
-								+ "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+								+ "<span class='btnimg next disabled'></span>";
 						PagingHTML += strtext;
 					}
 				} else {
 					strtext = "";
 					strtext = strtext
-							+ "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+							+ "<span class='btnimg next disabled'></span>";
 					PagingHTML += strtext;
 				}
 
 				if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-					strtext = "<span class='btnimg' onclick='return goToPageByNum("
+					strtext = "<span class='btnimg last' onclick='return goToPageByNum("
 							+ totalPage
-							+ ")'><img src='/images/sub/btn_n_next.gif' ></span>";
+							+ ")'></span>";
 					PagingHTML += strtext;
 				} else {
-					strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
+					strtext = "<span class='btnimg last disabled'></span>";
 					PagingHTML += strtext;
 				}
 
@@ -496,6 +497,7 @@
 					case 'wf'	: adminTypeVal = '<spring:message code="ezOrgan.t303"/>'; break; <!--웹폴더관리자-->
 					case 'e='	: adminTypeVal = '<spring:message code="ezOrgan.kbm01"/>'; break; <!--근태관리자-->
 					case 's='	: adminTypeVal = '<spring:message code="ezOrgan.t9904"/>'; break; <!--준법지원인-->
+					case 'v='	: adminTypeVal = '<spring:message code="ezOrgan.lhr01"/>'; break; <!--일정관리자-->
 				}
 				return adminTypeVal;
 			}
@@ -600,6 +602,10 @@
 								</c:if>
 									<option value="e"<c:if test="${!use_attitude}">style="display:none;"</c:if>><spring:message code="ezOrgan.kbm01"></spring:message></option>
 									<option value="s"<c:if test="${approvalFlag == 'S'}">style="display:none;"</c:if>><spring:message code="ezOrgan.t9904"></spring:message></option>
+							</c:if>
+							<!-- 2025.04.03 한슬기 : 일정관리자옵션 추가 -->
+							<c:if test="${useSchedule}">
+								<option value="v"><spring:message code="ezOrgan.lhr01"></spring:message></option>
 							</c:if>
 						</select>	&nbsp;
 						<spring:message code="ezStatistics.t1062"></spring:message> : &nbsp;

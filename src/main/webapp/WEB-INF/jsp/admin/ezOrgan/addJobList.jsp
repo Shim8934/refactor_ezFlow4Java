@@ -6,7 +6,8 @@
 	<head>
 		<title></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
-	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e2', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('/css/previewmail.css')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
@@ -217,29 +218,29 @@
 		        var strtext;
 		        var PagingHTML = "";
 		        document.getElementById("tblPageRayer").innerHTML = "";
-		        document.getElementById("mailBoxInfo").innerHTML = "&nbsp;<span style='color:#017BEC;'>" + totalCnt + "</span>";
+		        document.getElementById("mailBoxInfo").innerHTML = "&nbsp;<span class='txt_color'>" + totalCnt + "</span>";
 		        strtext = "<div class='pagenavi'>";
 		        PagingHTML += strtext;
 		        var pageNum = CurPage;
 		        
 		        if (totalPage > 1 && pageNum != 1) {
-		            strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' /></span>";
+		            strtext = "<span class='btnimg first' onclick= 'return goToPageByNum(1)'></span>";
 		            PagingHTML += strtext;
 		        } else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' /></span>";
+		            strtext = "<span class='btnimg first disabled'></span>";
 		            PagingHTML += strtext;
 		        }
 		        
 		        if (totalPage > BlockSize) {
 		            if (pageNum > BlockSize) {
-		                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' /></span>";
+		                strtext = "<span class='btnimg prev' onclick= 'return selbeforeBlock()'></span>";
 		                PagingHTML += strtext;
 		            } else {
-		                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' /></span>";
+		                strtext = "<span class='btnimg prev disabled'></span>";
 		                PagingHTML += strtext;
 		            }
 		        } else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' /></span>";
+		            strtext = "<span class='btnimg prev disabled'></span>";
 		            PagingHTML += strtext;
 		        }
 		        
@@ -271,24 +272,24 @@
 		        if (totalPage > BlockSize) {
 		            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
 		                strtext = "";
-		                strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' /></span>";
+		                strtext = strtext + "<span class='btnimg next' onclick='return selafterBlock()'></span>";
 		                PagingHTML += strtext;
 		            } else {
 		                strtext = "";
-		                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' /></span>";
+		                strtext = strtext + "<span class='btnimg next disabled'></span>";
 		                PagingHTML += strtext;
 		            }
 		        } else {
 		            strtext = "";
-		            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' /></span>";
+		            strtext = strtext + "<span class='btnimg next disabled'></span>";
 		            PagingHTML += strtext;
 		        }
 		        
 		        if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-		            strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' /></span>";
+		            strtext = "<span class='btnimg last' onclick='return goToPageByNum(" + totalPage + ")'></span>";
 		            PagingHTML += strtext;
 		        } else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' /></span>";
+		            strtext = "<span class='btnimg last disabled'></span>";
 		            PagingHTML += strtext;
 		        }
 		        
@@ -813,7 +814,7 @@
 	            addjob_config_dialogArguments[0] = Params;
 	            addjob_config_dialogArguments[1] = AddJob_Add_Complete;
 	            var OpenWin = window.open("/admin/ezOrgan/addJobConfig.do?companyID=" + document.getElementById("ListCompany").value, "AddJob_Config", GetOpenWindowfeature(970, 600));
-	            try { OpenWin.focus(); } catch (e) { }
+	            try { OpenWin.focus(); } catch (e) {console.log(e);}
 		        /* } else {
 		            window.showModalDialog("AddJob_Config.aspx?companyid=" + document.getElementById("ListCompany").value, Params, "dialogHeight:600px; dialogWidth:970px; status:no;scroll:no; help:no; edge:sunken; resizable:no" + GetShowModalPosition(970, 600));
 		            window.location.reload(false);
@@ -844,7 +845,7 @@
 	            addjob_config_dialogArguments = new Array();
 	            addjob_config_dialogArguments[1] = AddJob_Add_Complete;		            
 	            var OpenWin = window.open("/admin/ezOrgan/addJobUserModify.do?userID=" + encodeURI(id) + "&userName=" + encodeURI(name) + "&companyID=" + document.getElementById("ListCompany").value, "AddJob_Config", GetOpenWindowfeature(350, 570));
-	            try { OpenWin.focus(); } catch (e) { }
+	            try { OpenWin.focus(); } catch (e) {console.log(e);}
 		    }
 		    
 		    function email_onclick() {

@@ -643,29 +643,33 @@ var listExcelDown = function(params) {
 };
 
 function escapeHtml(text) {
+    text = text ?? "";
     var map = {
         '&': '&amp;',
         '<': '&lt;',
         '>': '&gt;',
         '"': '&quot;',
         '"': '&#034;',
-        "'": '&#039;'
+        "'": '&#039;',
+        "'": '&apos;'
     };
 
     return text.replace(/[&<>"']/g, function(m) { return map[m]; });
 }
 
 function unEscapeHtml(text) {
+    text = text ?? "";
     var map = {
         '&amp;' : '&',
         '&lt;' : '<',
         '&gt;' : '>',
         '&quot;' : '"',
         '&#034;' : '"',
-        '&#039;' : "'"
+        '&#039;' : "'",
+        '&apos;' : "'"
     };
 
-    return text.replace(/&amp;|&lt;|&gt;|&quot;|&#034;|&#039;/g, function(m) { return map[m]; });
+    return text.replace(/&amp;|&lt;|&gt;|&quot;|&#034;|&#039;|&apos;/g, function(m) { return map[m]; });
 }
 
 function adjustFontSizeToFitWidth(node, desiredWidth, desiredHeight) {
@@ -679,4 +683,320 @@ function adjustFontSizeToFitWidth(node, desiredWidth, desiredHeight) {
         node.style.fontSize = fontSize + 'px';
     }
     node.style.fontSize = (fontSize - 1) + 'px';
+}
+
+/*
+    IE에서 지원하지 않는 메소드
+    polyfill 추가
+ */
+if (!Element.prototype.matches) {
+    Element.prototype.matches =
+        Element.prototype.msMatchesSelector ||
+        Element.prototype.webkitMatchesSelector;
+}
+
+if (!Element.prototype.closest) {
+    Element.prototype.closest = function(s) {
+        var el = this;
+        do {
+            if (el.matches(s)) return el;
+            el = el.parentElement || el.parentNode;
+        } while (!!el && el.nodeType === 1);
+        return null;
+    };
+}
+
+if (!Element.prototype.remove) {
+    Element.prototype.remove = function() {
+        if (this.parentNode) {
+            this.parentNode.removeChild(this);
+        }
+    };
+}
+
+if (!Node.prototype.append) {
+    Node.prototype.append = function() {
+        var docFrag = document.createDocumentFragment();
+
+        Array.prototype.forEach.call(arguments, function(arg) {
+            var child = arg instanceof Node ? arg : document.createTextNode(String(arg));
+            docFrag.appendChild(child);
+        });
+
+        this.appendChild(docFrag);
+    };
+}
+
+// classList 관련 polyfill. IIFE 풀지 말 것.
+!(function() {
+    'use strict';
+
+    var c1 = 'c1';
+    var c2 = 'c2';
+    var testElement = document.createElement('_');
+
+    // Polyfill for IE 10/11 and Firefox <26, where classList.add and
+    // classList.remove exist but support only one argument at a time.
+    testElement.classList.add(c1, c2);
+    if (!testElement.classList.contains(c2)) {
+        var createMethod = function(method) {
+            var _method = DOMTokenList.prototype[method];
+
+            DOMTokenList.prototype[method] = function(token) {
+                for (var i = -1, len = arguments.length; ++i < len;) {
+                    token = arguments[i];
+                    _method.call(this, token);
+                }
+            };
+        };
+        createMethod('add');
+        createMethod('remove');
+    }
+    testElement.className = "";
+
+    // Polyfill for IE 10 and Firefox <24, where classList.toggle does not
+    // support the second argument.
+    testElement.classList.toggle(c1, false);
+    if (!!testElement.classList.contains(c1)) {
+        var _toggle = DOMTokenList.prototype.toggle;
+
+        DOMTokenList.prototype.toggle = function(token, force) {
+            if (1 in arguments && !this.contains(token) === !force) {
+                return force;
+            }
+            return _toggle.call(this, token);
+        };
+    }
+    testElement.className = "";
+
+    // Polyfill for classList.replace
+    testElement.classList.add(c1);
+    try {
+        testElement.classList.replace(c1, c2);
+    } catch (e) {
+        console.log('make classList.replace polyfill');
+        DOMTokenList.prototype.replace = function(oldToken, newToken) {
+            if (this.contains(oldToken)) {
+                this.remove(oldToken);
+                this.add(newToken);
+                return true;
+            }
+            return false;
+        };
+    }
+
+    testElement = null;
+}());
+
+if (!Array.prototype.fill) {
+    Object.defineProperty(Array.prototype, 'fill', {
+        value: function(value) {
+
+            // Steps 1-2.
+            if (this == null) {
+                throw new TypeError('this is null or not defined');
+            }
+
+            var O = Object(this);
+
+            // Steps 3-5.
+            var len = O.length >>> 0;
+
+            // Steps 6-7.
+            var start = arguments[1];
+            var relativeStart = start >> 0;
+
+            // Step 8.
+            var k = relativeStart < 0 ?
+                Math.max(len + relativeStart, 0) :
+                Math.min(relativeStart, len);
+
+            // Steps 9-10.
+            var end = arguments[2];
+            var relativeEnd = end === undefined ?
+                len : end >> 0;
+
+            // Step 11.
+            var final = relativeEnd < 0 ?
+                Math.max(len + relativeEnd, 0) :
+                Math.min(relativeEnd, len);
+
+            // Step 12.
+            while (k < final) {
+                O[k] = value;
+                k++;
+            }
+
+            // Step 13.
+            return O;
+        }
+    });
+}
+// polyfill end
+
+
+// 쓰로틀링 함수 - 어떤 함수가 자주 발생하더라도 일정 시간('limit' ms)에 한번만 실행되도록 제한하는 함수
+// 사용 예시
+// function example() {console.log('함수 실행!');}
+// var examLogFunction = throttle(example, 100); // 0.1 초에 한번만 실행되도록 제한
+// var examLogFunction = throttle(example, 3000, true); // 3초에 한번만 실행되도록 제한.한번 호출하면 3초후 다시 호출 하기 전까지 실행x
+// 제한시간에 실행되지 않은 경우 마지막 딜레이가 끝날때 실행
+// ex) 처음호출시:실행 -> 1.5초뒤 호출:실행x -> 2초뒤 호출:실행x -> 3초뒤 호출하지 않아도 딜레이 되어 있던 작업이 자동으로 실행
+function throttle(fn, limit, last) {
+    var lastFunc;
+    var lastRan;
+    var lastExec = last || false;
+
+    return function() {
+        const context = this;
+        const args = arguments;
+
+        if (!lastRan) {
+            fn.apply(context, args);
+            lastRan = Date.now();
+        } else {
+            if (lastExec) {
+                clearTimeout(lastFunc);
+                lastFunc = setTimeout(function () {
+                    if ((Date.now() - lastRan) >= limit) {
+                        fn.apply(context, args);
+                        lastRan = Date.now();
+                    }
+                }, limit - (Date.now() - lastRan));
+            } else if ((Date.now() - lastRan) >= limit) {
+                fn.apply(context, args);
+                lastRan = Date.now();
+            }
+        }
+    };
+}
+
+/**
+ * URLSearchParams 이 사용되지 않는 환경에서 사용(⭐파라미터, 동작은 URLSearchParams 과 다름)
+ * @param {string} url - URL 또는 ?로 시작하는 쿼리스트링
+ * @returns {object} URLSearchParams 객체
+ * @example var urlParams = URLParamsUtils('http://example.com?param1=value1&param2=value2');
+ * @example var urlParams = URLParamsUtils('param1=value1&param2=value2');
+ */
+function URLParamsUtils(url) {
+    var instance = Object.create(URLParamsUtilsProto);
+    instance.url = url;
+    instance._hasQ = url.indexOf('?') > -1;
+    instance.base = url.split('?')[0];
+    instance.queryString = instance._hasQ ? url.substring(url.indexOf('?') + 1) : '';
+    return instance;
+}
+
+URLParamsUtilsProto = {
+    /**
+     * 특정 key에 해당하는 value를 가져온다.
+     * @param {string} key - 가져올 value의 key
+     * @returns {string} key에 해당하는 value
+     * @example var urlParams = URLParamsUtils('http://example.com?param1=value1&param2=value2');
+     *  urlParams.get('param1'); -> 'value1'
+     */
+    get : function (key) {
+        var pattern = new RegExp('(?:\\?|&)' + key + '=([^&#]*)');
+        var results = pattern.exec('?' + this.queryString);
+        if (results == null) {
+            return "";
+        } else {
+            return decodeURIComponent(results[1]) || "";
+        }
+    },
+    /**
+     * 특정 key에 value를 설정한다.
+     * @param {string} key - 설정할 value의 key
+     * @param {string} value - 설정할 value
+     * @returns this
+     * @example var urlParams = URLParamsUtils('http://example.com?param1=value1&param2=value2');
+     *  urlParams.put('param1', 'value3'); -> 'http://example.com?param1=value3&param2=value2'
+     */
+    put : function (key, value) {
+        var newParams = [];
+        var found = false;
+
+        if (!key || typeof value === 'undefined') {
+            return this.url;
+        }
+
+        if (this.queryString) {
+            var params = this.queryString.split('&');
+            for (var i = 0; i < params.length; i++) {
+                var param = params[i].split('=');
+                if (param[0] === key) {
+                    newParams.push(key + '=' + encodeURIComponent(value));
+                    found = true;
+                } else {
+                    newParams.push(params[i]);
+                }
+            }
+        }
+
+        if (!found) {
+            newParams.push(key + '=' + encodeURIComponent(value));
+        }
+        this.queryString = newParams.join('&');
+        this.url = this.base;
+        this.url += !!this.queryString || this._hasQ ? '?' + this.queryString : '';
+        return this;
+    },
+    getFullUrl : function () {
+        var fullUrl = this.base;
+        if (this.queryString) fullUrl += '?' + this.queryString;
+        return fullUrl;
+    }
+}
+
+/**
+ * c:out 으로 escape된 문자를 parsing 하여 스트링만 추출
+ */
+var parserForHtmlParser = new DOMParser();
+function htmlParser(text) {
+    var dom = parserForHtmlParser.parseFromString(
+        text, 'text/html');
+    return dom.body.textContent;
+}
+
+
+
+function getRandomId() {
+    if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+        return crypto.randomUUID();
+    }
+
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        const r = Math.random() * 16 | 0;
+        const v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+}
+
+function changeSelectBoxByVal(selectElement, value) {
+    if (typeof selectElement === 'string') {
+        selectElement = document.getElementById(selectElement);
+    }
+
+    if (!selectElement || selectElement.tagName !== 'SELECT') {
+        console.error('유효한 select 요소가 아닙니다.');
+        return false;
+    }
+
+    const options = selectElement.options;
+    var found = false;
+
+    for (var i = 0; i < options.length; i++) {
+        if (options[i].value === value + '') {
+            // 해당 옵션으로 선택 변경
+            selectElement.selectedIndex = i;
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        console.warn(`"${value}" 값을 가진 옵션을 찾을 수 없습니다.`);
+        return false;
+    }
+    return true;
 }

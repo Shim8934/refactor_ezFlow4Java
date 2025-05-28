@@ -5,11 +5,13 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" type="text/css" href="${util.addVer('ezCabinet.css', 'msg')                     }" >
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/ezCabinet/cabinet.css')               }">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/jquery-ui.css')                       }">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/dateControls/demos.css')        }">
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<style>
 			.cabPrevItemJP dd {
 				padding: 0px 0px 2px 68px;
@@ -200,6 +202,28 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezCabinet/cabinetTree.js')   }"></script>
 		<script type="text/javascript">
 			var lang = "<c:out value='${lang}'/>";
+			// 자식창에서 공유자 리스트 받아옴.
+			window.addEventListener('message', (event) => {
+				if (event.data[0] === 'end') {
+					var firstList = event.data[1]; // 최초 공유자 리스트
+					var cabinetID = event.data[2];
+
+					$.ajax({
+						type: "POST",
+						url: "/ezCabinet/saveShareUserList.do",
+						data: {
+							"cabinetId": cabinetID,
+							"userList": JSON.stringify(firstList)
+						},
+						dataType: "JSON",
+						async: false,
+						success: function (data) {
+						},
+						error: function (error) {
+						}
+					});
+				}
+			});
 		
 			$(function () {
 				$.datepicker.regional["<spring:message code='main.t0619' />"] = {

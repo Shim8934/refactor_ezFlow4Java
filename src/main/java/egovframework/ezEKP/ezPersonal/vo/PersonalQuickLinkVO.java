@@ -37,6 +37,10 @@ public class PersonalQuickLinkVO {
 	private String displayName;
 	/** 사용자명(다국어)(JOIN)*/
 	private String displayName2;
+	/** 유저타입*/
+	private String userType;
+	/** 하위부서 허용 여부*/
+	private String subdeptPermitted;
 	public String getQuickLinkID() {
 		return quickLinkID;
 	}
@@ -144,5 +148,17 @@ public class PersonalQuickLinkVO {
 	}
 	public void setDisplayName2(String displayName2) {
 		this.displayName2 = displayName2;
+	}
+	public String getUserType() {
+		return userType;
+	}
+	public void setUserType(String userType) {
+		this.userType = userType;
+	}
+	public String getSubdeptPermitted() {
+		return subdeptPermitted;
+	}
+	public void setSubdeptPermitted(String subdeptPermitted) {
+		this.subdeptPermitted = subdeptPermitted;
 	}
 }

@@ -6,7 +6,8 @@
 	<head>
 		<title><spring:message code='ezBoard.t350'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<%-- <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css" /> --%>
 		<link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
 		<style>
@@ -140,7 +141,7 @@
 			        /* 2023-11-16 홍승비 - 복사 대상 게시판의 승인여부를 체크한 다음 게시알림 메일을 발송 */
 			        if (apprFlag != "Y") {
 			        	/* 2019-12-17 홍승비 - 게시물 복사 시에도 게시알림 메일을 보내도록 수정 */
-			        	sendNotiMail(pDestBoardID, returnItemIDStr);
+			        	sendPostNotiForAdmin(pDestBoardID, returnItemIDStr);
 			        }
 // 		            window.close();
 		        } 
@@ -362,7 +363,7 @@
 					 	if (result == "Y") {
 							for (var i = 0; i < itemIDs.length - 1 ;i++) {
 			                    xmlhttp = createXMLHttpRequest();
-			                    xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + encodeURIComponent(pDestBoardID) + "&itemID=" + encodeURIComponent(itemIDs[i]), true);
+			                    xmlhttp.open("POST", "/ezBoard/sendApprNotice.do?boardID=" + encodeURIComponent(pDestBoardID) + "&itemID=" + encodeURIComponent(itemIDs[i]), true);
 			                    xmlhttp.send();
 			                    xmlhttp = null;
 							}
@@ -371,14 +372,14 @@
 				});
 		    }
 		    
-		    /* 2019-12-17 홍승비 - 게시물 복사 시에도 게시알림 메일을 보내도록 수정 */
-	        function sendNotiMail(pDestBoardID, returnItemIDStr) {
+		    /* 2019-12-17 홍승비 - 게시물 복사 시에도 게시알림을 보내도록 수정 */
+	        function sendPostNotiForAdmin(pDestBoardID, returnItemIDStr) {
 				var xmlhttp;
 				var itemIDs = returnItemIDStr.split(";");
 				
 				for (var i = 0; i < itemIDs.length - 1 ;i++) {
 					xmlhttp = createXMLHttpRequest();
-	                xmlhttp.open("POST", "/ezBoard/sendPostNotiMail.do?boardID=" + encodeURIComponent(pDestBoardID) + "&itemID=" + encodeURIComponent(itemIDs[i]), true);
+	                xmlhttp.open("POST", "/ezBoard/sendPostNotiForAdmin.do?boardID=" + encodeURIComponent(pDestBoardID) + "&itemID=" + encodeURIComponent(itemIDs[i]), true);
 	                xmlhttp.send();
 	                xmlhttp = null;
 				}

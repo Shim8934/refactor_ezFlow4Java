@@ -5,7 +5,8 @@
 <html style="height: 99%;">
 	<head>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	    <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+	    <link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 	    <!-- <link rel="stylesheet" href="${util.addVer('/css/tab_over.css')}" type="text/css"> -->
 	    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -33,6 +34,7 @@
 	        var lang = "${userInfo.lang}";
 	        var xmlhttp = createXMLHttpRequest();
 	        var timer = null;
+			var useRunTime = "${useRunTime}"
 	        
 			window.onresize = function () {
 				var delay = 100;
@@ -48,6 +50,13 @@
 			
 	        window.onload = function () {
 	            GetMyBoardItem();
+				/* 2024-07-09 김유진 - RunTime 표시 기능 사용 시 즐겨찾기 페이지 높이 조절 */
+				if (document.getElementById("FBoard_ifrm") != null) {
+					var FBoardHeight = document.getElementById("FBoard_ifrm").clientHeight;
+					var newHeight = FBoardHeight - 22 - document.getElementById("tab1").offsetHeight;
+					document.getElementById("FBoard_ifrm").style.height = newHeight + "px";
+
+				}
 	        };
 	        
 	        /**
@@ -185,7 +194,7 @@
 	                                var _li = document.createElement("LI");
 	                                _li.setAttribute("DATA1", BoardId);
 	                                _li.setAttribute("DATA5", BoardType);
-	                                _li.textContent = BoardName;
+	                                _li.textContent = ReplaceHTML(BoardName);
 	                                _li.onclick = function () { Tab1_MouseClick2(this); };
 	                                _li.style.cursor = "pointer";
 	                                _ul.appendChild(_li);
@@ -198,7 +207,7 @@
 	                            }
 	                            else {
 	                                var _li = document.createElement("LI");
-	                                _li.textContent = BoardName;
+	                                _li.textContent = ReplaceHTML(BoardName);
 	                                _li.setAttribute("DATA1", BoardId);
 	                                _li.setAttribute("DATA5", BoardType);
 	                                _li.style.cursor = "pointer";
@@ -377,6 +386,16 @@
 		        	obj.style.height = (document.documentElement.clientHeight - 85) + "px";
 		        } else {
 		        	obj.style.height = "100%";
+					/* 2024-07-09 김유진 - RunTime 표시 기능 사용 시 즐겨찾기 페이지 높이 조절 */
+					if (obj != null) {
+// 						var FBoardHeight = obj.clientHeight;
+// 						var newHeight = FBoardHeight - 22;
+// 						obj.style.height = ((newHeight / FBoardHeight) * 100) + "%";
+	 					var FBoardHeight = document.getElementById("FBoard_ifrm").clientHeight;
+	 					var newHeight = FBoardHeight - document.getElementById("tab1").offsetHeight;
+// 	 					document.getElementById("FBoard_ifrm").style.height = newHeight + "px";
+	 					document.getElementById("FBoard_ifrm").style.height = ((newHeight / FBoardHeight) * 100) + "%";
+					}
 		        }
 	        }
 	        

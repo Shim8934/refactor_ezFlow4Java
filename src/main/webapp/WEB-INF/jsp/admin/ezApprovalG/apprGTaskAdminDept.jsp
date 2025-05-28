@@ -6,7 +6,8 @@
 	<head>
 		<title><spring:message code = 'ezApprovalG.t713' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<%-- <link rel="stylesheet" href="${util.addVer('ezApprovalG.e3', 'msg')}" type="text/css"> --%>
 		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
 		<style>
@@ -48,6 +49,9 @@
 		    var curpage = 1;
 		    var PageSize = 20;
 		    var totalPage = Math.ceil(taskCount/PageSize);
+            var searchTitle = '';
+            var searchCode = '';
+            var searchFlag = '';
 		    
 		    $(document).ready(function(){
 		        document.getElementById("ListCompany").value = CompanyID;
@@ -109,7 +113,7 @@
 		        DeptID = treeNode.GetNodeData("CN");
 		        deptName = treeNode.GetNodeData("VALUE");
 		        curpage = 1;
-		        makePagenationBar();
+		        makePagenationBar(null, null, 0);
 		    }
 		    
 		    function TreeViewNodeDbClick() {

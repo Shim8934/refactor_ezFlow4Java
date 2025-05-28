@@ -5,8 +5,9 @@
 <html style="height:100%">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	   	<link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
-	    <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+	    <link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 	    <link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
 	    <style>
 	    	.groupBoard {
@@ -90,15 +91,15 @@
 	</head>
 	<body class="newLeft">
 		<div id="left" class="lnb" style="overflow: auto">
-	    	<div class="left_title" title="<spring:message code='ezBoard.l001'/>">
-	    		<spring:message code="ezBoard.l001" />
+	    	<div class="left_title" title="<spring:message code='ezLadder.t001'/>">
+	    		<spring:message code="ezLadder.t001" />
 	        </div>
 	        <div class="btn_writeBox">
 	        	<p class="btn_write01" onclick="ladderWrite();"><spring:message code="ezLadder.t018"/></p>
 	        </div>
 	        <div class="boardListBox" style="overflow:hidden; padding-right: 0;">
 				<ul class="lnbUL" style="background: #F8F9FB; padding-top: 17px;">
-					<li class="ladder" style="margin: 0px 20px 0px 20px; height: 26px; line-height: 26px;"><span class="node_selected" onclick="ladderClick(this);" mode="all"><spring:message code="ezLadder.t011" /> <spring:message code="ezBoard.l001" /></span></li>
+					<li class="ladder" style="margin: 0px 20px 0px 20px; height: 26px; line-height: 26px;"><span class="node_selected" onclick="ladderClick(this);" mode="all"><spring:message code="ezLadder.t011" /> <spring:message code="ezLadder.t001" /></span></li>
 					<li class="ladder" style="margin: 0px 20px 0px 20px; height: 26px; line-height: 26px;"><span class="node_normal" onclick="ladderClick(this);" mode="part"><spring:message code="ezLadder.t108" /></span></li>
 				</ul>	
 			</div>	        

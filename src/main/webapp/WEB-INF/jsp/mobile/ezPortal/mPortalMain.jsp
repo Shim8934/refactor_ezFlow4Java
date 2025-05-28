@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>::: ezEKP Java :::</title>
+		<title>::: ezFlow Java :::</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />		
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery.mobile/jquery.mobile-1.4.5.min.css')}" />		
     	<link rel="stylesheet" type="text/css" href="${util.addVer('/css/mobile/mobile.css')}" />

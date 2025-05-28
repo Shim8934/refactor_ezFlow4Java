@@ -46,6 +46,8 @@ public class ApprGReceiptVO {
 	private String deptName2;
 	/** */
 	private String companyID;
+	/* 수신처 상위부서 경로 */
+	private String dept_Cd_Path;
 	
 	public String getDocID() {
 		return docID;
@@ -178,5 +180,11 @@ public class ApprGReceiptVO {
 	}
 	public void setCompanyID(String companyID) {
 		this.companyID = companyID;
+	}
+	public String getDept_Cd_Path() {
+		return dept_Cd_Path;
+	}
+	public void setDept_Cd_Path(String dept_Cd_Path) {
+		this.dept_Cd_Path = dept_Cd_Path;
 	}
 }

@@ -7,7 +7,8 @@
 	<head>
 		<title><spring:message code='ezSchedule.t286' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
-		<link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />		
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/timeControls/jquery.timepicker.css')}" type="text/css" />
 		<style>
@@ -298,6 +299,7 @@
 		    			<c:if test="${item.scheduleType == '6'}"><spring:message code='ezSchedule.t281'/></c:if>
 		    			<c:if test="${item.scheduleType == '7'}"><spring:message code='ezSchedule.t282'/></c:if>
 		    			<c:if test="${item.scheduleType == '8'}"><spring:message code='ezSchedule.t12'/></c:if>
+						<c:if test="${item.scheduleType == '10'}"><spring:message code='ezSchedule.lyj09'/></c:if>
 		    		</td>
 		    		<c:if test="${primary == '1'}">
 		    			<td style="width:80px">${item.ownerName}</td> 

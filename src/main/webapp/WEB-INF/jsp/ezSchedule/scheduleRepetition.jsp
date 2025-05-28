@@ -7,7 +7,8 @@
 	<head>
 		<title><spring:message code='ezSchedule.t59' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />		
-		<link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />		
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
         <link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}" type="text/css" >
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}" type="text/css" >
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/timeControls/jquery.timepicker.css')}" type="text/css" />
@@ -44,6 +45,12 @@
 		    var eTimeTemp = "";
 		    window.onload = function()
 		    {   
+				if (navigator.maxTouchPoints > 4) {
+					// 태블릿 기기이면 높이 조정하여 하단 잘림 방지
+					document.getElementById("tblwrap").style.height = (document.documentElement.clientHeight - 100) + 'px';
+					document.getElementById("tblwrap").style.overflowY = 'auto';
+				}
+		    	
 		        try {
 		            RetValue = parent.schedule_repetition_cross_dialogArguments[0];
 		            ReturnFunction = parent.schedule_repetition_cross_dialogArguments[1];
@@ -341,8 +348,12 @@
 		    	if (alldaycheck.checked == true) {
 		    		repetition += "|1";
 		    		allDayString = strLang39;
+		    		// 반복일정 상단표시
+		    		window.parent.document.getElementById("topcheck").checked = false;
+		    		window.parent.document.getElementById("topcheck").disabled = true;
 		    	} else {
 		    		repetition += "|0";
+                    window.parent.document.getElementById("topcheck").disabled = false;
 		    	}
 		    		
 		    	if (mpDaily.checked == true) {		    		
@@ -965,8 +976,36 @@
 					setTimePickerReadOnly();
 		    	}else if(sTimeTemp != null){
 		    		setTimePickerModifiable();
-		    		$('#Stimepicker').timepicker("setTime", sTimeTemp);
-		    		$('#Etimepicker').timepicker("setTime", eTimeTemp == "23:59" ? "23:30" : eTimeTemp);
+		    		// 종일일정 해제 후 현재시각에 맞게 설정
+		    		var now = new Date();
+
+                    //시작시간
+                    var startTime;
+                    var hour = RetValue["SDATE"].split(" ")[1].split(":")[0];
+                    var time = RetValue["SDATE"].split(" ")[1].split(":")[1];
+
+                    if (parseInt(time) < 30) {
+                        startTime = hour + ":00:00";
+                    } else {
+                        startTime = hour + ":30:00";
+                    }
+
+                    //종료시간
+                    var endTime;
+                    var hour = RetValue["EDATE"].split(" ")[1].split(":")[0];
+                    var time = RetValue["EDATE"].split(" ")[1].split(":")[1];
+
+                    if (parseInt(time) < 30) {
+                        endTime = hour + ":00:00";
+                    } else {
+                        endTime = hour + ":30:00";
+                    }
+
+		    		$('#Stimepicker').timepicker("setTime", startTime);
+		    		$('#Etimepicker').timepicker("setTime", eTimeTemp == "23:59" ? "23:30" :endTime);
+
+		    		//$('#Stimepicker').timepicker("setTime", sTimeTemp);
+		    		//$('#Etimepicker').timepicker("setTime", eTimeTemp == "23:59" ? "23:30" : eTimeTemp);
 		    	}
 		    	else {
 		    		setTimePickerModifiable();
@@ -1040,205 +1079,207 @@
                 <li><span onclick="windows_close()"></span></li>
             </ul>
         </div>
-		<div id="TB_Promise">
-			<h2><spring:message code='ezSchedule.t67' /></h2>
-		  	<table class="content">
-		    	<tr>
-		      		<th><spring:message code='ezSchedule.t68' /></th>
-		      		<td>
-		      			<div>
-		          			<input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:3px;text-align:center" onkeypress="return KeEventControl(this);" onkeydown="return KeEventControl(this);" onkeyup="return KeEventControl(this);" onmousedown="return false"/>
-		        			<label for="btnT1"></label>
-		        			<input type="checkbox" value="1" id="alldaycheck" NAME="alldaycheck" onChange="allDayTime()"/>
-		        			<spring:message code='ezSchedule.t69' />
-		        		</div>
+	        <div id="tblwrap">
+			<div id="TB_Promise">
+				<h2><spring:message code='ezSchedule.t67' /></h2>
+			  	<table class="content">
+			    	<tr>
+			      		<th><spring:message code='ezSchedule.t68' /></th>
+			      		<td>
+			      			<div>
+			          			<input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:3px;text-align:center" onkeypress="return KeEventControl(this);" onkeydown="return KeEventControl(this);" onkeyup="return KeEventControl(this);" onmousedown="return false"/>
+			        			<label for="btnT1"></label>
+			        			<input type="checkbox" value="1" id="alldaycheck" NAME="alldaycheck" onChange="allDayTime()"/>
+			        			<spring:message code='ezSchedule.t69' />
+			        		</div>
+			        	</td>
+			    	</tr>
+				    <tr>
+				    	<th><spring:message code='ezSchedule.t70' /></th>
+				      	<td>
+				        	<input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:3px;text-align:center" onkeypress="return KeEventControl(this);" onkeydown="return KeEventControl(this);" onkeyup="return KeEventControl(this);" onmousedown="return false"/>
+				        	<label for="btnT2"></label>
+				      	</td>
+				    </tr>
+				</table>
+			</div><br/>		
+			<h2><spring:message code='ezSchedule.t71' /></h2>
+			<table width="100%" class="content">
+		  		<tr>
+		    		<td>
+		    			<input id="mpDaily" style="margin-top: -2px;" type="radio" name="optMainPattern" value="radiobutton" onClick='showMainPattern(0);' />
+		      			<label for="mpDaily"><spring:message code='ezSchedule.t72' /></label>
+		      			<input id="mpWeekly" style="margin-top: -2px;" type="radio" name="optMainPattern" value="radiobutton" checked onClick='showMainPattern(1);' />
+		      			<label for="mpWeekly"><spring:message code='ezSchedule.t73' /></label>
+		      			<input id="mpMonthly" style="margin-top: -2px;" type="radio" name="optMainPattern" value="radiobutton" onClick='showMainPattern(2);' />
+		      			<label for="mpMonthly"><spring:message code='ezSchedule.t74' /></label>
+		      			<input id="mpYearly" style="margin-top: -2px;" type="radio" name="optMainPattern" value="radiobutton" onClick='showMainPattern(3);' />
+		      			<label for="mpYearly"><spring:message code='ezSchedule.t75' /></label>
+		    		</td>
+		  		</tr>
+		  		<tr id='divRecurPatterns' style="display:none">
+		    		<td  style="padding:10px;height:85px">
+		    			<div>
+			    			<input id="id0D1" type="radio" name="optDaily" checked />
+		    				<label for="txt_De">
+		            			<input name="text" type="text" id="txt_De" style="Width:40px;text-align:center;" onFocus='window.document.all["optDaily"][0].checked=true;' value="1" maxlength='3' />
+		          				&nbsp;<spring:message code='ezSchedule.t77' />
+		          			</label>
+		          		</div>
+		          		<div style="margin-top:3px">	
+	        				<input id="id0D2" type="radio" name="optDaily" />
+	        				<label for="id0D2"><spring:message code='ezSchedule.t78' /></label>
+	        			</div>	
 		        	</td>
-		    	</tr>
-			    <tr>
-			    	<th><spring:message code='ezSchedule.t70' /></th>
-			      	<td>
-			        	<input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:3px;text-align:center" onkeypress="return KeEventControl(this);" onkeydown="return KeEventControl(this);" onkeyup="return KeEventControl(this);" onmousedown="return false"/>
-			        	<label for="btnT2"></label>
-			      	</td>
-			    </tr>
+		  		</tr>
+		  		<tr id='divRecurPatterns'>
+		    		<td style="padding:10px;height:85px">
+		    			<span style="margin-left:4px"><spring:message code='ezSchedule.t79' /></span>	    			
+		      			<label for="txt_We">
+		      				<input id="txt_We" type="text" name="textfield222" class="textarea" style="width:50px;text-align:center;" value="1" />
+		      				<spring:message code='ezSchedule.t80' />
+		      			</label>
+		      			<div id="daytable">
+		      				<input type="checkbox" name="day" id="day0" value="0" />
+		            		<spring:message code='ezSchedule.t81' />
+							<input type="checkbox" name="day" id="day1" value="1" />
+		            		<spring:message code='ezSchedule.t82' />
+							<input type="checkbox" name="day" id="day2" value="2" />
+				            <spring:message code='ezSchedule.t83' />
+							<input type="checkbox" name="day" id="day3" value="3" />
+				            <spring:message code='ezSchedule.t84' /><br>
+				            <input type="checkbox" name="day" id="day4" value="4" />
+				            <spring:message code='ezSchedule.t85' />
+							<input type="checkbox" name="day"id="day5"  value="5" />
+				            <spring:message code='ezSchedule.t86' />
+							<input type="checkbox" name="day" id="day6" value="6" />
+				            <spring:message code='ezSchedule.t87' />
+						</div>
+					</td>
+		  		</tr>
+		  		<tr id='divRecurPatterns' style="display:none">
+		    		<td style="padding:10px;height:85px">
+		    			<div>
+		    				<input type="radio" name='optMonthly' id="idOM1" checked />
+		            		<label for="idOM1" ><spring:message code='ezSchedule.t88' />&nbsp;</label>	            	
+			            	<input name="Input" id="list_MonthInterval" style="Width:40px;text-align:center;" onFocus='window.document.all["optMonthly"][0].checked=true;' value="1" maxlength="3" />
+							&nbsp;<spring:message code='ezSchedule.t89' />
+			            	<input name="Input" id="list_MonthlyDays" style="Width:40px;text-align:center;" onFocus='window.document.all["optMonthly"][0].checked=true;' maxlength="2" />
+							&nbsp;<spring:message code='ezSchedule.t90' />
+						</div>
+						<div style="margin-top:3px">						
+							<input id="id0M2" type="radio" name='optMonthly' />
+							<label for="id0M2" ><spring:message code='ezSchedule.t91' />&nbsp;</label>
+			            	<input name="Input" id="list_MonthInterval2" style="Width:40px;text-align:center;" onFocus='window.document.all["optMonthly"][1].checked=true;' value="1" maxlength="3" />
+							&nbsp;<spring:message code='ezSchedule.t89' />
+			            	<select name="select" id="list_MonthlyEach" onFocus='window.document.all["optMonthly"][1].checked=true;'>
+								<option value="1"><spring:message code='ezSchedule.t92' /></option>
+								<option value="2"><spring:message code='ezSchedule.t93' /></option>
+								<option value="3"><spring:message code='ezSchedule.t94' /></option>
+								<option value="4"><spring:message code='ezSchedule.t95' /></option>
+								<option value="5"><spring:message code='ezSchedule.t96' /></option>
+			            	</select>
+			            	<select name="select" id="list_MonthlyDay" onFocus='window.document.all["optMonthly"][1].checked=true;'>
+			              		<option value="0"><spring:message code='ezSchedule.t81' /></option>
+								<option value="1"><spring:message code='ezSchedule.t82' /></option>
+								<option value="2"><spring:message code='ezSchedule.t83' /></option>
+								<option value="3"><spring:message code='ezSchedule.t84' /></option>
+								<option value="4"><spring:message code='ezSchedule.t85' /></option>
+								<option value="5"><spring:message code='ezSchedule.t86' /></option>
+								<option value="6"><spring:message code='ezSchedule.t97' /></option>
+			            	</select>
+							&nbsp;<spring:message code='ezSchedule.t98' />
+						</div>	
+					</td>
+				</tr>
+		  		<tr id='divRecurPatterns' style="display:none">
+		    		<td style="padding:10px;height:85px">
+		    			<div>
+			    			<input id="optY1" type="radio" name="optYearly" value="radiobutton" checked />
+			            	<label for="optY1"></label>
+			            	<select name="select" id="list_Month" onFocus='window.document.all["optYearly"][0].checked=true;'>
+								<option value="1"><spring:message code='ezSchedule.t382' /></option>
+								<option value="2"><spring:message code='ezSchedule.t383' /></option>
+								<option value="3"><spring:message code='ezSchedule.t384' /></option>
+								<option value="4"><spring:message code='ezSchedule.t385' /></option>
+								<option value="5"><spring:message code='ezSchedule.t386' /></option>
+								<option value="6"><spring:message code='ezSchedule.t387' /></option>
+								<option value="7"><spring:message code='ezSchedule.t388' /></option>
+								<option value="8"><spring:message code='ezSchedule.t389' /></option>
+								<option value="9"><spring:message code='ezSchedule.t390' /></option>
+								<option value="10"><spring:message code='ezSchedule.t391' /></option>
+								<option value="11"><spring:message code='ezSchedule.t392' /></option>
+								<option value="12"><spring:message code='ezSchedule.t393' /></option>
+			            	</select>		            
+			            	<input name="Input" class="text" id="list_YearlyDays" style="Width:40px;text-align:center;" onFocus='window.document.all["optYearly"][0].checked=true;' maxlength="2" />
+							&nbsp;<spring:message code='ezSchedule.t100' />
+						</div>
+			            <div style="margin-top:3px">	
+							<input id="optY2" type="radio" name="optYearly" value="radiobutton" />
+							<label for="optY2"></label>
+			            	<select name="select" id="list_Month2" onFocus='window.document.all["optYearly"][1].checked=true;'>
+								<option value="1"><spring:message code='ezSchedule.t382' /></option>
+								<option value="2"><spring:message code='ezSchedule.t383' /></option>
+								<option value="3"><spring:message code='ezSchedule.t384' /></option>
+								<option value="4"><spring:message code='ezSchedule.t385' /></option>
+								<option value="5"><spring:message code='ezSchedule.t386' /></option>
+								<option value="6"><spring:message code='ezSchedule.t387' /></option>
+								<option value="7"><spring:message code='ezSchedule.t388' /></option>
+								<option value="8"><spring:message code='ezSchedule.t389' /></option>
+								<option value="9"><spring:message code='ezSchedule.t390' /></option>
+								<option value="10"><spring:message code='ezSchedule.t391' /></option>
+								<option value="11"><spring:message code='ezSchedule.t392' /></option>
+								<option value="12"><spring:message code='ezSchedule.t393' /></option>
+			            	</select>
+			            	<select name="select" id="list_YearlyEach" onFocus='window.document.all["optYearly"][1].checked=true;'>
+								<option value="1"><spring:message code='ezSchedule.t92' /></option>
+								<option value="2"><spring:message code='ezSchedule.t93' /></option>
+								<option value="3"><spring:message code='ezSchedule.t94' /></option>
+								<option value="4"><spring:message code='ezSchedule.t95' /></option>
+								<option value="5"><spring:message code='ezSchedule.t96' /></option>
+			            	</select>
+			            	<select name="select" id="list_YearlyDay" onFocus='window.document.all["optYearly"][1].checked=true;'>
+			              		<option value="0"><spring:message code='ezSchedule.t81' /></option>
+			              		<option value="1"><spring:message code='ezSchedule.t82' /></option>
+			              		<option value="2"><spring:message code='ezSchedule.t83' /></option>
+			              		<option value="3"><spring:message code='ezSchedule.t84' /></option>
+			              		<option value="4"><spring:message code='ezSchedule.t85' /></option>
+			              		<option value="5"><spring:message code='ezSchedule.t86' /></option>
+			              		<option value="6"><spring:message code='ezSchedule.t87' /></option>
+			            	</select>
+							&nbsp;<spring:message code='ezSchedule.t98' />
+						</div>	
+					</td>
+		  		</tr>
 			</table>
-		</div><br/>		
-		<h2><spring:message code='ezSchedule.t71' /></h2>
-		<table width="100%" class="content">
-	  		<tr>
-	    		<td>
-	    			<input id="mpDaily" style="margin-top: -2px;" type="radio" name="optMainPattern" value="radiobutton" onClick='showMainPattern(0);' />
-	      			<label for="mpDaily"><spring:message code='ezSchedule.t72' /></label>
-	      			<input id="mpWeekly" style="margin-top: -2px;" type="radio" name="optMainPattern" value="radiobutton" checked onClick='showMainPattern(1);' />
-	      			<label for="mpWeekly"><spring:message code='ezSchedule.t73' /></label>
-	      			<input id="mpMonthly" style="margin-top: -2px;" type="radio" name="optMainPattern" value="radiobutton" onClick='showMainPattern(2);' />
-	      			<label for="mpMonthly"><spring:message code='ezSchedule.t74' /></label>
-	      			<input id="mpYearly" style="margin-top: -2px;" type="radio" name="optMainPattern" value="radiobutton" onClick='showMainPattern(3);' />
-	      			<label for="mpYearly"><spring:message code='ezSchedule.t75' /></label>
-	    		</td>
-	  		</tr>
-	  		<tr id='divRecurPatterns' style="display:none">
-	    		<td  style="padding:10px;height:85px">
-	    			<div>
-		    			<input id="id0D1" type="radio" name="optDaily" checked />
-	    				<label for="txt_De">
-	            			<input name="text" type="text" id="txt_De" style="Width:40px;text-align:center;" onFocus='window.document.all["optDaily"][0].checked=true;' value="1" maxlength='3' />
-	          				&nbsp;<spring:message code='ezSchedule.t77' />
-	          			</label>
-	          		</div>
-	          		<div style="margin-top:3px">	
-        				<input id="id0D2" type="radio" name="optDaily" />
-        				<label for="id0D2"><spring:message code='ezSchedule.t78' /></label>
-        			</div>	
-	        	</td>
-	  		</tr>
-	  		<tr id='divRecurPatterns'>
-	    		<td style="padding:10px;height:85px">
-	    			<span style="margin-left:4px"><spring:message code='ezSchedule.t79' /></span>	    			
-	      			<label for="txt_We">
-	      				<input id="txt_We" type="text" name="textfield222" class="textarea" style="width:50px;text-align:center;" value="1" />
-	      				<spring:message code='ezSchedule.t80' />
-	      			</label>
-	      			<div id="daytable">
-	      				<input type="checkbox" name="day" id="day0" value="0" />
-	            		<spring:message code='ezSchedule.t81' />
-						<input type="checkbox" name="day" id="day1" value="1" />
-	            		<spring:message code='ezSchedule.t82' />
-						<input type="checkbox" name="day" id="day2" value="2" />
-			            <spring:message code='ezSchedule.t83' />
-						<input type="checkbox" name="day" id="day3" value="3" />
-			            <spring:message code='ezSchedule.t84' /><br>
-			            <input type="checkbox" name="day" id="day4" value="4" />
-			            <spring:message code='ezSchedule.t85' />
-						<input type="checkbox" name="day"id="day5"  value="5" />
-			            <spring:message code='ezSchedule.t86' />
-						<input type="checkbox" name="day" id="day6" value="6" />
-			            <spring:message code='ezSchedule.t87' />
-					</div>
-				</td>
-	  		</tr>
-	  		<tr id='divRecurPatterns' style="display:none">
-	    		<td style="padding:10px;height:85px">
-	    			<div>
-	    				<input type="radio" name='optMonthly' id="idOM1" checked />
-	            		<label for="idOM1" ><spring:message code='ezSchedule.t88' />&nbsp;</label>	            	
-		            	<input name="Input" id="list_MonthInterval" style="Width:40px;text-align:center;" onFocus='window.document.all["optMonthly"][0].checked=true;' value="1" maxlength="3" />
-						&nbsp;<spring:message code='ezSchedule.t89' />
-		            	<input name="Input" id="list_MonthlyDays" style="Width:40px;text-align:center;" onFocus='window.document.all["optMonthly"][0].checked=true;' maxlength="2" />
-						&nbsp;<spring:message code='ezSchedule.t90' />
-					</div>
-					<div style="margin-top:3px">						
-						<input id="id0M2" type="radio" name='optMonthly' />
-						<label for="id0M2" ><spring:message code='ezSchedule.t91' />&nbsp;</label>
-		            	<input name="Input" id="list_MonthInterval2" style="Width:40px;text-align:center;" onFocus='window.document.all["optMonthly"][1].checked=true;' value="1" maxlength="3" />
-						&nbsp;<spring:message code='ezSchedule.t89' />
-		            	<select name="select" id="list_MonthlyEach" onFocus='window.document.all["optMonthly"][1].checked=true;'>
-							<option value="1"><spring:message code='ezSchedule.t92' /></option>
-							<option value="2"><spring:message code='ezSchedule.t93' /></option>
-							<option value="3"><spring:message code='ezSchedule.t94' /></option>
-							<option value="4"><spring:message code='ezSchedule.t95' /></option>
-							<option value="5"><spring:message code='ezSchedule.t96' /></option>
-		            	</select>
-		            	<select name="select" id="list_MonthlyDay" onFocus='window.document.all["optMonthly"][1].checked=true;'>
-		              		<option value="0"><spring:message code='ezSchedule.t81' /></option>
-							<option value="1"><spring:message code='ezSchedule.t82' /></option>
-							<option value="2"><spring:message code='ezSchedule.t83' /></option>
-							<option value="3"><spring:message code='ezSchedule.t84' /></option>
-							<option value="4"><spring:message code='ezSchedule.t85' /></option>
-							<option value="5"><spring:message code='ezSchedule.t86' /></option>
-							<option value="6"><spring:message code='ezSchedule.t97' /></option>
-		            	</select>
-						&nbsp;<spring:message code='ezSchedule.t98' />
-					</div>	
-				</td>
-			</tr>
-	  		<tr id='divRecurPatterns' style="display:none">
-	    		<td style="padding:10px;height:85px">
-	    			<div>
-		    			<input id="optY1" type="radio" name="optYearly" value="radiobutton" checked />
-		            	<label for="optY1"></label>
-		            	<select name="select" id="list_Month" onFocus='window.document.all["optYearly"][0].checked=true;'>
-							<option value="1"><spring:message code='ezSchedule.t382' /></option>
-							<option value="2"><spring:message code='ezSchedule.t383' /></option>
-							<option value="3"><spring:message code='ezSchedule.t384' /></option>
-							<option value="4"><spring:message code='ezSchedule.t385' /></option>
-							<option value="5"><spring:message code='ezSchedule.t386' /></option>
-							<option value="6"><spring:message code='ezSchedule.t387' /></option>
-							<option value="7"><spring:message code='ezSchedule.t388' /></option>
-							<option value="8"><spring:message code='ezSchedule.t389' /></option>
-							<option value="9"><spring:message code='ezSchedule.t390' /></option>
-							<option value="10"><spring:message code='ezSchedule.t391' /></option>
-							<option value="11"><spring:message code='ezSchedule.t392' /></option>
-							<option value="12"><spring:message code='ezSchedule.t393' /></option>
-		            	</select>		            
-		            	<input name="Input" class="text" id="list_YearlyDays" style="Width:40px;text-align:center;" onFocus='window.document.all["optYearly"][0].checked=true;' maxlength="2" />
-						&nbsp;<spring:message code='ezSchedule.t100' />
-					</div>
-		            <div style="margin-top:3px">	
-						<input id="optY2" type="radio" name="optYearly" value="radiobutton" />
-						<label for="optY2"></label>
-		            	<select name="select" id="list_Month2" onFocus='window.document.all["optYearly"][1].checked=true;'>
-							<option value="1"><spring:message code='ezSchedule.t382' /></option>
-							<option value="2"><spring:message code='ezSchedule.t383' /></option>
-							<option value="3"><spring:message code='ezSchedule.t384' /></option>
-							<option value="4"><spring:message code='ezSchedule.t385' /></option>
-							<option value="5"><spring:message code='ezSchedule.t386' /></option>
-							<option value="6"><spring:message code='ezSchedule.t387' /></option>
-							<option value="7"><spring:message code='ezSchedule.t388' /></option>
-							<option value="8"><spring:message code='ezSchedule.t389' /></option>
-							<option value="9"><spring:message code='ezSchedule.t390' /></option>
-							<option value="10"><spring:message code='ezSchedule.t391' /></option>
-							<option value="11"><spring:message code='ezSchedule.t392' /></option>
-							<option value="12"><spring:message code='ezSchedule.t393' /></option>
-		            	</select>
-		            	<select name="select" id="list_YearlyEach" onFocus='window.document.all["optYearly"][1].checked=true;'>
-							<option value="1"><spring:message code='ezSchedule.t92' /></option>
-							<option value="2"><spring:message code='ezSchedule.t93' /></option>
-							<option value="3"><spring:message code='ezSchedule.t94' /></option>
-							<option value="4"><spring:message code='ezSchedule.t95' /></option>
-							<option value="5"><spring:message code='ezSchedule.t96' /></option>
-		            	</select>
-		            	<select name="select" id="list_YearlyDay" onFocus='window.document.all["optYearly"][1].checked=true;'>
-		              		<option value="0"><spring:message code='ezSchedule.t81' /></option>
-		              		<option value="1"><spring:message code='ezSchedule.t82' /></option>
-		              		<option value="2"><spring:message code='ezSchedule.t83' /></option>
-		              		<option value="3"><spring:message code='ezSchedule.t84' /></option>
-		              		<option value="4"><spring:message code='ezSchedule.t85' /></option>
-		              		<option value="5"><spring:message code='ezSchedule.t86' /></option>
-		              		<option value="6"><spring:message code='ezSchedule.t87' /></option>
-		            	</select>
-						&nbsp;<spring:message code='ezSchedule.t98' />
-					</div>	
-				</td>
-	  		</tr>
-		</table>
-		<br/>
-		<h2><spring:message code='ezSchedule.t102' /></h2>
-			<!-- 2018-05-16 구해안 반복설정 UI 수정(테이블 td rowspan="4") 및 시작일 -->
-		<table class="content">
-			<tr>
-		    	<th align="right" rowspan="4">&nbsp;&nbsp;&nbsp;<spring:message code='ezTask.t65' />&nbsp;&nbsp;&nbsp;</th>
-		    	<td width="100%">
-		    		<span style="margin-left: 5px;" class="repeatRange"><spring:message code='ezTask.t121' /></span>
-		        	<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"/>
-		    	</td>
-		  	</tr>
-		  	<tr>
-		    	<td><input type="radio" name="optRangeEnd" style="margin-top: -2px;" value="radiobutton" value="-1" checked><spring:message code='ezSchedule.t111' /></td>
-		  	</tr>
-		  	<tr>
-		    	<td>
-		    		<input type="radio" id="Instances" name="optRangeEnd" style="margin-top: -2px;" value="radiobutton" value="1"/><spring:message code='ezSchedule.t112' />
-		      		<input id="list_ReCount" maxlength="3" onFocus="Instances.checked = true" style="text-align:center;" size="4" value='10' /><spring:message code='ezSchedule.t113' />		      		
-		      	</td>
-		  	</tr>
-		  	<tr>
-		    	<td>
-		    		<input id="EndTimeSet" type="radio" name="optRangeEnd" style="margin-top: -2px;" value="radiobutton" value="0"/><spring:message code='ezSchedule.t114' />
-		      		<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"/>
-		    	</td>
-		  	</tr>
-		</table>
+			<br/>
+			<h2><spring:message code='ezSchedule.t102' /></h2>
+				<!-- 2018-05-16 구해안 반복설정 UI 수정(테이블 td rowspan="4") 및 시작일 -->
+			<table class="content">
+				<tr>
+			    	<th align="right" rowspan="4">&nbsp;&nbsp;&nbsp;<spring:message code='ezTask.t65' />&nbsp;&nbsp;&nbsp;</th>
+			    	<td width="100%">
+			    		<span style="margin-left: 5px;" class="repeatRange"><spring:message code='ezTask.t121' /></span>
+			        	<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"/>
+			    	</td>
+			  	</tr>
+			  	<tr>
+			    	<td><input type="radio" name="optRangeEnd" style="margin-top: -2px;" value="radiobutton" value="-1" checked><spring:message code='ezSchedule.t111' /></td>
+			  	</tr>
+			  	<tr>
+			    	<td>
+			    		<input type="radio" id="Instances" name="optRangeEnd" style="margin-top: -2px;" value="radiobutton" value="1"/><spring:message code='ezSchedule.t112' />
+			      		<input id="list_ReCount" maxlength="3" onFocus="Instances.checked = true" style="text-align:center;" size="4" value='10' /><spring:message code='ezSchedule.t113' />		      		
+			      	</td>
+			  	</tr>
+			  	<tr>
+			    	<td>
+			    		<input id="EndTimeSet" type="radio" name="optRangeEnd" style="margin-top: -2px;" value="radiobutton" value="0"/><spring:message code='ezSchedule.t114' />
+			      		<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"/>
+			    	</td>
+			  	</tr>
+			</table>
+		</div>
 		<div class="btnpositionNew"> 
 		    <a class="imgbtn" onClick="ok_click()" ><span><spring:message code='ezSchedule.t4' /></span></a>
 		    <a class="imgbtn" onClick="remove_click()" ><span><spring:message code='ezSchedule.t115' /></span></a>

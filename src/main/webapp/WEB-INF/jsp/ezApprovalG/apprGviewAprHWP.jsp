@@ -7,7 +7,8 @@
 	<head>
 	    <title><spring:message code='ezApprovalG.t367'/></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -103,7 +104,7 @@
 			    pDocHref = docHref;
 			    pOpinionFlag = opinionFlag;
 			    pListTypeValue = listTypeValue;
-			    if (pListTypeValue == "4")
+			    if (pListTypeValue == "4" || pListTypeValue == "97")
 			        pListSusin = listSusin;
 			
 			    if (pDocHref != "") {
@@ -154,7 +155,7 @@
 			function btnClose_onclick() {
 				//2019.02.21 유은정 : 포탈개인화 결재리스트에서 포틀릿 정보 가져오는 매서드 추가
 		        if (parent.opener != null && parent.opener.getApprovalList != undefined) {
-		        	parent.opener.getApprovalList("draft");
+		        	parent.opener.clearAbsence(true);
 		        }
 			
 			    window.close();

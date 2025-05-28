@@ -13,7 +13,8 @@
 			</c:otherwise>
 		</c:choose>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
 		<style>
 			.mainlist tr th {
@@ -33,7 +34,7 @@
 		<script type="text/javascript">
 		    var OrderCell = "";
 		    var companyID = "<c:out value = '${userInfo.companyID}' />";
-		    var langType = "<c:out value = '${userInfo.lang}' />";
+		    var langType = "<c:out value = '${userInfo.primary}' />";
 		    var primary = "<c:out value = '${userInfo.primary}' />";
 		    var approvalFlag = "<c:out value = '${approvalFlag}' />";
 		    var listview = new ListView();
@@ -247,8 +248,7 @@
 		                alert(pAlertContent);
 		                return;
 		            }
-		            
-		            //일반일때 getTaskCategoryNodeExist  수정해야함니다~ 
+
 		            var tempVal = GetTaskCategoryNodeExist(pLevel, pGroupID);
 		            
 		            if (tempVal != "FALSE") {

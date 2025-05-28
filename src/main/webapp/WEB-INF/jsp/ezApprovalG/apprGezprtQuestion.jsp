@@ -6,7 +6,8 @@
 	<head>
 		<title><spring:message code='ezApprovalG.t10018'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
@@ -16,6 +17,7 @@
 		    var eopinion = "<c:out value ='${opinion}'/>";
 		    var eAttach = "<c:out value ='${attach}'/>";
 		    var rvalue = new Array();
+			var messageFrame = "";
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
 		            window.focus();
@@ -37,7 +39,12 @@
 		        if (eAttach != "true") {
 		            att.disabled = true;
 		        }
-				var pages = parent.document.getElementById("message").contentWindow.document.getElementById("body").getElementsByClassName("divImg").length;
+				if (parent.draftAllFlag != "undefined" && parent.draftAllFlag == "Y") {
+					messageFrame = parent.document.getElementById("ifrm" + parent.currentTabIdx);
+				} else {
+					messageFrame = parent.document.getElementById("message");
+				}
+				var pages = messageFrame.contentWindow.document.getElementById("body").getElementsByClassName("divImg").length;
 		        if(pages <= 0){
 		        	$("#Submit4").css("display", "none");
 		        }
@@ -55,6 +62,7 @@
 		            rvalue[1] = "N";
 		
 		        rvalue[2] = "Y";
+		        rvalue[3] = "Y";
 		
 		        if (ReturnFunction != null) {
 		            ReturnFunction(rvalue);
@@ -86,8 +94,13 @@
 		            rvalue[2] = "Y";
 		        else
 		            rvalue[2] = "N";
+		            
+                if (summary.checked == true)
+		            rvalue[3] = "Y";
+		        else
+		            rvalue[3] = "N";
 		
-		        if (opi.checked != true && att.checked != true && line.checked != true) {
+		        if (opi.checked != true && att.checked != true && line.checked != true && summary.checked != true) {
 		            if (CrossYN()) {
 		                OpenInformationUI(strLang1001);
 		                return;
@@ -146,7 +159,7 @@
 		    }
 		
 		    function only_click() {
-		    	var imgDiv = parent.document.getElementById("message").contentWindow.document.getElementById("body").getElementsByClassName("imgDiv");
+		    	var imgDiv = messageFrame.contentWindow.document.getElementById("body").getElementsByClassName("imgDiv");
 		    	var imgDiv2 = $(imgDiv).nextAll();
 				var imgDiv3 = $(imgDiv).prevAll();
 				$(imgDiv2).css("display", "");
@@ -165,7 +178,7 @@
 		    }
 			
 		    function all_pages() {
-		    	var imgDiv = parent.document.getElementById("message").contentWindow.document.getElementById("body").getElementsByClassName("imgDiv");
+		    	var imgDiv = messageFrame.contentWindow.document.getElementById("body").getElementsByClassName("imgDiv");
 		    	var imgDiv2 = $(imgDiv).nextAll();
 				var imgDiv3 = $(imgDiv).prevAll();
 				$(imgDiv2).css("display", "");
@@ -226,6 +239,8 @@
 			<td><span id="ext2"><spring:message code='ezApprovalG.t10021'/></span></td> </tr>
 			<tr><th ><input id='line' name='line' type='checkbox'></th>
 			<td><span id="ext3"><spring:message code='ezApprovalG.t10022'/></span></td> </tr>
+            <tr><th ><input id='summary' name='summary' type='checkbox'></th>
+			<td><span id="ext3"><spring:message code='ezApprovalG.summary01'/></span></td> </tr>
 		</table>
 		<div class="btnposition btnpositionNew">
 		    <a id="Submit1" class="imgbtn" onClick="return all_click()"><span><spring:message code='ezApprovalG.t10023'/></span></a>

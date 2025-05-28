@@ -1,23 +1,37 @@
 package egovframework.ezEKP.ezSurvey.web;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.PrintWriter;
 import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.annotation.Resource;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import egovframework.ezEKP.ezSurvey.service.EzSurveyService;
+import egovframework.ezEKP.ezSurvey.vo.SurveyItemSearchVO;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.ss.usermodel.ClientAnchor;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.Drawing;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -44,10 +58,13 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezSurvey.service.EzSurveyRestService;
+import egovframework.ezEKP.ezSurvey.vo.AttachVO;
 import egovframework.ezEKP.ezSurvey.vo.OptionVO;
 import egovframework.ezEKP.ezSurvey.vo.QuestionVO;
 import egovframework.ezEKP.ezSurvey.vo.ResponseVO;
+import egovframework.ezEKP.ezSurvey.vo.SurveyGeneralVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @SuppressWarnings("unchecked")
@@ -73,6 +90,24 @@ public class EzSurveyController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezSurvey/surveyMain.do", method = RequestMethod.GET)
 	public String jspGetSurveyMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, Model model) {
 		logger.debug("jspGetSurveyMain started");
+
+		String leftFrameWidth = "220";
+		int width = 0;
+
+		if (req.getParameter("__wwidth") != null) {
+			String widthParam = req.getParameter("__wwidth");
+
+			try {
+				width = Integer.parseInt(widthParam);
+
+				leftFrameWidth = width < 1180 ? "0" : "220";
+			} catch (NumberFormatException e) {
+				width = 0;
+			}
+		}
+
+		model.addAttribute("leftFrameWidth", leftFrameWidth);
+		
 		logger.debug("jspGetSurveyMain ended");
 		return "ezSurvey/mainmenu/surveyMain";
 	}
@@ -158,12 +193,17 @@ public class EzSurveyController extends EgovFileMngUtil {
 		logger.debug("jspGetCreateSurveyPage started");
 
 		/* 2024-03-26 양지혜 - 설문종료 후 게시기간 제한 */
-		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		LoginVO user = commonUtil.userInfo(loginCookie);
 		String maxPeriod = ezSurveyService.checkTenantConfig("SurveyPostingMaxPeriod", user.getTenantId());
 		if (maxPeriod == null || maxPeriod.equals("")) {
 			maxPeriod = "999";
 		}
+		
+		String editor = ezSurveyService.checkTenantConfig("MODULEEDITOR", user.getTenantId());
+		
 		model.addAttribute("maxPeriod", maxPeriod);
+		model.addAttribute("companyId", user.getCompanyID());
+		model.addAttribute("editor", editor);
 
 		logger.debug("jspGetCreateSurveyPage ended");
 
@@ -173,7 +213,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezSurvey/reuseItem.do", method = RequestMethod.GET)
 	public String jspGetReuseSurveyPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetReuseSurveyPage started");
-		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		LoginVO user = commonUtil.userInfo(loginCookie);
 		String itemId      = request.getParameter("itemId") != null ? request.getParameter("itemId") : "";
 		
 		if (itemId.equals("")) {
@@ -209,6 +249,8 @@ public class EzSurveyController extends EgovFileMngUtil {
 			maxPeriod = "999";
 		}
 		model.addAttribute("maxPeriod", maxPeriod);
+		model.addAttribute("companyId", user.getCompanyID());
+		model.addAttribute("editor", ezSurveyService.checkTenantConfig("MODULEEDITOR", user.getTenantId()));
 
 		logger.debug("jspGetReuseSurveyPage ended");
 		return "ezSurvey/listmenu/surveyCreate";
@@ -217,7 +259,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezSurvey/modifyItem.do", method = RequestMethod.GET)
 	public String jspGetModifySurveyPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetModifySurveyPage started");
-		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		LoginVO user = commonUtil.userInfo(loginCookie);
 		String itemId      = request.getParameter("itemId") != null ? request.getParameter("itemId") : "";
 		
 		if (itemId.equals("")) {
@@ -246,6 +288,14 @@ public class EzSurveyController extends EgovFileMngUtil {
 			model.addAttribute("reasonMessage", messageCode);
 			return "ezSurvey/surveyAccessDenied";
 		}
+		model.addAttribute("editor", ezSurveyService.checkTenantConfig("MODULEEDITOR", user.getTenantId()));
+		
+		model.addAttribute("companyId", user.getCompanyID());
+		String maxPeriod = ezSurveyService.checkTenantConfig("SurveyPostingMaxPeriod", user.getTenantId());
+		if (maxPeriod == null || maxPeriod.equals("")) {
+			maxPeriod = "999";
+		}
+		model.addAttribute("maxPeriod", maxPeriod);
 		
 		logger.debug("jspGetModifySurveyPage ended");
 		return "ezSurvey/listmenu/surveyCreate";
@@ -285,6 +335,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 				case 1 : messageCode = "ezSurvey.err1"; break;
 				case 2 : messageCode = "ezSurvey.err2"; break;
 				case 3 : messageCode = "ezSurvey.err3"; break;
+				case -1 : messageCode = "ezSurvey.err4"; break;
 				default: messageCode = "ezSurvey.err1"; break;
 			}
 			
@@ -344,7 +395,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezSurvey/selectUsers.do", method = RequestMethod.GET)
 	public String jspGetSelectUesrPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetSelectUesrPage started");
-		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		LoginVO user = commonUtil.userInfo(loginCookie);
 		
 		JSONObject result = surveyRestService.getUserListType(request, user.getId());
 		if (result.get("status").toString().equals("ok")) {
@@ -352,6 +403,8 @@ public class EzSurveyController extends EgovFileMngUtil {
 			model.addAttribute("listType", listType);
 		}
 		
+		// survey - 설문대상자 선택, result - 설문결과 지정공개 대상자 선택
+		model.addAttribute("mode", request.getParameter("mode"));
 		model.addAttribute("cn",user.getId());
 		model.addAttribute("companyId",user.getCompanyID());
 		model.addAttribute("dept",user.getDeptID());
@@ -465,7 +518,8 @@ public class EzSurveyController extends EgovFileMngUtil {
 	@ResponseBody
 	public JSONObject jsonSaveSurveyItem(@RequestBody JSONObject surveyItem, @CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jsonSaveSurveyItem started");
-		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
+		
+		LoginVO user   = commonUtil.userInfo(loginCookie);
 		surveyItem.put("userId", user.getId());
 		
 		JSONObject resultObj = surveyRestService.saveSurveyItem(request, surveyItem);
@@ -478,7 +532,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 	@ResponseBody
 	public JSONObject jsonDeleteItems(@CookieValue("loginCookie") String loginCookie, @RequestParam(value = "itemList") List<String> itemList, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonDeleteItems start");
-		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
+		LoginVO user   = commonUtil.userInfo(loginCookie);
 		JSONObject resultObj = new JSONObject();
 		
 		if (itemList.size() == 0) {
@@ -509,6 +563,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 		String srchMode      = request.getParameter("srchMode")    != null ? request.getParameter("srchMode")    : "";
 		String srchOption    = request.getParameter("srchOption")  != null ? request.getParameter("srchOption")  : "";
 		String listCntSize   = request.getParameter("listCntSize") != null ? request.getParameter("listCntSize") : "";
+		String filterStatus   = request.getParameter("filterStatus") != null ? request.getParameter("filterStatus") : "";
 		JSONObject userObj = surveyRestService.getUserInformation(request, user.getId());
 		int userMode = 0;
 		
@@ -536,7 +591,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 			return resultObj;
 		}
 		
-		resultObj = surveyRestService.getSurveyItems(request, user.getId(), pageMode, title, creatorName, startDate, endDate, column, order, srchMode, srchOption, listCntSize, currentPage, userMode);
+		resultObj = surveyRestService.getSurveyItems(request, user.getId(), pageMode, title, creatorName, startDate, endDate, column, order, srchMode, srchOption, listCntSize, currentPage, userMode, filterStatus);
 		
 		logger.debug("jsonGetSurveyItems end");
 		return resultObj;
@@ -637,6 +692,8 @@ public class EzSurveyController extends EgovFileMngUtil {
 		return resultObj;
 	}
 	
+	/* 2024-07-01 홍승비 - surveyUser.js 파일 내부의 getUsers() 함수에서만 호출되는 URL로, 해당 js파일이 사용되지 않아 전체 주석처리 */
+	/*
 	@RequestMapping(value="/ezSurvey/getSearchMember.do", method=RequestMethod.POST)
 	@ResponseBody
 	public JSONObject jsonGetSearchMember(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
@@ -661,7 +718,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 		logger.debug("jsonGetSearchMember ended");
 		logger.debug(resultObj.toString());
 		return resultObj;
-	}
+	}*/
 	
 	@RequestMapping(value="/ezSurvey/uploadAttachFile.do", method = RequestMethod.POST)
 	@ResponseBody
@@ -969,16 +1026,99 @@ public class EzSurveyController extends EgovFileMngUtil {
 				row.createCell(0).setCellValue(egovMessageSource.getMessage("ezSurvey.t103", locale) + qVO.getLevel() + " (" + egovMessageSource.getMessage("ezSurvey.t100" + qVO.getType(), locale) + ")");
 				
 				row.getCell(0).setCellStyle(headerStyle);
-				row.createCell(1).setCellValue(qVO.getContent());
+				
+				AttachVO imgTitle = qVO.getImgTitle();
+				double imgTitleWidth = 0; 
+				double imgTitleHeight = 0;
+				ClientAnchor anchor = null;
+				if (imgTitle == null) {
+					row.createCell(1).setCellValue(qVO.getContent());
+				} else {
+					row.createCell(1);
+					String realPath = request.getServletContext().getRealPath("");
+					realPath = commonUtil.detectPathTraversal(realPath);
+					File imageFile = new File(realPath + commonUtil.separator + imgTitle.getFpath());
+					try (ImageInputStream imageInputStream = ImageIO.createImageInputStream(imageFile);) {
+						Iterator<ImageReader> readers = ImageIO.getImageReaders(imageInputStream);
+						if (readers.hasNext()) {
+			                ImageReader reader = readers.next();
+			                reader.setInput(imageInputStream);
+			                imgTitleWidth = reader.getWidth(0);
+			                imgTitleWidth = imgTitleWidth / 8.54; // (너비 1 포인트 = 약 8.54 픽셀)
+			                imgTitleHeight = reader.getHeight(0);
+			                imgTitleHeight = imgTitleHeight / 1.33; // (높이 1포인트 = 1.33 픽셀)
+			            }
+					}
+					
+					byte[] bytes = null;
+			        try (FileInputStream fis = new FileInputStream(imageFile);
+			            ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+			            byte[] buffer = new byte[1024];
+			            int bytesRead;
+			            while ((bytesRead = fis.read(buffer)) != -1) {
+			                bos.write(buffer, 0, bytesRead);
+			            }
+			            bytes = bos.toByteArray();
+			        }
+			        
+			        String filename = imgTitle.getFname();
+			        String fileExtension = "";
+			        int dotIndex = filename.lastIndexOf('.');
+			        if (dotIndex > 0 && dotIndex < filename.length() - 1) {
+			        	fileExtension = filename.substring(dotIndex + 1);
+			        }
+			        
+			        int pictureIndex = 0;
+			        
+			        if (fileExtension.toUpperCase().equals("PNG")) {
+			        	pictureIndex = workbook.addPicture(bytes, Workbook.PICTURE_TYPE_PNG);
+			        } else if (fileExtension.toUpperCase().equals("JPG") || fileExtension.toUpperCase().equals("JPEG")) {
+			        	pictureIndex = workbook.addPicture(bytes, Workbook.PICTURE_TYPE_JPEG);
+			        }
+			        
+				    CreationHelper helper = workbook.getCreationHelper();
+		            Drawing drawing = sheet.createDrawingPatriarch();
+		             anchor = helper.createClientAnchor();
+		            anchor.setCol1(1); // 이미지 시작 열
+		            anchor.setRow1(rowCount); // 이미지 시작 행
+		            anchor.setCol2(14); // 이미지 끝 열
+		            anchor.setRow2(rowCount + 2); // 이미지 끝 행
+		            // 이미지 삽입
+		            drawing.createPicture(anchor, pictureIndex);
+		            
+				}
+				
 				row.getCell(1).setCellStyle(headerStyle);
 				for(int i = 2; i<=13;  i++) {
 					row.createCell(i);
 					row.getCell(i).setCellStyle(headerStyle);
 				}
+				
 				row = sheet.createRow(rowCount+1);
 				for(int i = 0; i<=13;  i++) {
 					row.createCell(i);
 					row.getCell(i).setCellStyle(headerStyle);
+				}
+				
+				
+				if (imgTitle != null) {
+					double cellWidthInPoint = 8.43; //영문은 8.43 한글은 8.38. 너비의 포인트는 너비에 들어갈 수 있는 글자 수를 말함.
+			        double totalWidth = 0;
+		            totalWidth += cellWidthInPoint * 13; // 제목 칸 너비의 최대 길이 (1칸에 8.43 포인트)
+					
+					if (imgTitleWidth < totalWidth) {
+						int col2Idx = anchor.getCol1() + 1;
+						col2Idx = (int) (imgTitleWidth / cellWidthInPoint) > 0 ? anchor.getCol1() + (int) (imgTitleWidth / cellWidthInPoint) : col2Idx;
+						anchor.setCol2(col2Idx);
+			        }
+					
+					Row temp1Row =sheet.getRow(rowCount);
+					Row temp2Row = sheet.getRow(rowCount + 1);
+					if (imgTitleHeight > 33) { // row 하나의 높이는 16.5포인트 정도. 제목  열의 높이는 33포인트.
+						temp1Row.setHeightInPoints((int)imgTitleHeight / 2);
+						temp2Row.setHeightInPoints((int)imgTitleHeight / 2);
+					}
+			        
 				}
 				
 				boolean isFirstRow = true;
@@ -993,6 +1133,8 @@ public class EzSurveyController extends EgovFileMngUtil {
 					case 1: // 단일선택 질문
 					case 2: // 다중선택 질문
 					case 9: // 드롭다운 질문
+					case 10: //일정단일 선택 질문
+					case 11: //일정 다중 선택 질문
 						resultTot = 0;
 	
 						// 질문 응답 전체 참여자
@@ -1388,5 +1530,27 @@ public class EzSurveyController extends EgovFileMngUtil {
 		
 		logger.debug("jsonUpdateResponse ended");
 		return resultObj;
+	}
+	
+	@RequestMapping(value="/ezSurvey/setPreviewFlag.do", method = RequestMethod.POST)
+	public String setPreviewFlag(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("setPreviewFlag start");
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		String prevMode = request.getParameter("prevMode") != null ? request.getParameter("prevMode") : "";
+		
+		SurveyGeneralVO userConfig  = ezSurveyService.getUserPreviewConfig(user.getId(), user.getCompanyID(), user.getTenantId());
+		try {
+			if (userConfig == null) {
+				ezSurveyService.saveUserConfig(prevMode, 10, 50, 50, user.getId(), user.getCompanyID(), user.getTenantId());
+			} else {
+				ezSurveyService.setPreviewFlag(prevMode, user.getId(), user.getCompanyID(), user.getTenantId());
+			}	
+			
+			logger.debug("setPreviewFlag end");
+			return "OK";
+		} catch (Exception e) {
+			logger.debug(e.getMessage());
+			return "NO";
+		}
 	}
 }

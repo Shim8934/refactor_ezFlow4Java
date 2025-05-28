@@ -13,7 +13,8 @@
 	    	</c:if>
 	    </title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	    <link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 	    <style>
@@ -776,6 +777,14 @@
 		            
 		            /* 2019-11-28 홍승비 - 기안창과 회람발송 팝업창에서의 회람자 즐겨찾기 순번을 통일 (내림차순) */
 		            var i = 1;
+					/* 2024-05-10 양지혜 - 기록물등록대장 > 공람발송 > 퇴직자 포함된 즐겨찾기 적용 시 제외 */
+					var RetireList = [];
+					document.querySelectorAll('[id^="lvRecSaveDetail_TR_"]').forEach(function(element) {
+						if (element.getAttribute('RETIRECHK') == "Y") {
+							RetireList.push(element.querySelector("td:nth-child(3)").textContent)
+						}
+					});
+					var sn = listnodes.length-RetireList.length;
 		            for (var cnt = listnodes.length-1; cnt >= 0; cnt-- ) {
 		            	//2018-10-11 김보미 - 공람자 순번 오름차순에서 내림차순으로 변경.(즐겨찾기 적용 후 공람자 추가시 순번이 이상하게 되기 때문)
  		            	var preDeptName = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[9], "DATA9");
@@ -786,8 +795,8 @@
  		                var preWriterName2 = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[2])[0], "VALUE");
  		                var preDeptJobTitle1 = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[7], "DATA7");
  		                var preDeptJobTitle2 = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[7], "DATA7");
- 		               var preDeptID = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[8], "DATA8");
- 		               var preUserID = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[5], "DATA5");
+ 		                var preDeptID = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[8], "DATA8");
+ 		                var preUserID = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[5], "DATA5");
 /* 		            	var preDeptName = getNodeText(GetChildNodes(GetChildNodes(listnodes[i-1])[0])[9], "DATA9");
 		                var preDeptJobTitle = getNodeText(GetChildNodes(GetChildNodes(listnodes[i-1])[0])[7], "DATA7");
 		                var preDeptName1 = getNodeText(GetChildNodes(GetChildNodes(listnodes[i-1])[0])[9], "DATA9");
@@ -798,48 +807,51 @@
 		                var preDeptJobTitle2 = getNodeText(GetChildNodes(GetChildNodes(listnodes[i-1])[0])[7], "DATA7");
 		                var preDeptID = getNodeText(GetChildNodes(GetChildNodes(listnodes[i-1])[0])[8], "DATA8");
 		                var preUserID = getNodeText(GetChildNodes(GetChildNodes(listnodes[i-1])[0])[5], "DATA5"); */
-		                
-		                strRows += "<ROW>";
-		                strRows += "<CELL>";
-		                //2018-10-11 김보미
- 		                //strRows += "<VALUE>" + i + "</VALUE>";
-		                strRows += "<VALUE>" + (cnt + 1) + "</VALUE>";
-		                strRows += "<DATA1>" + "" + "</DATA1>";
-		                strRows += "<DATA2>" + "" + "</DATA2>";
-		                strRows += "<DATA3>" + pDocID + "</DATA3>";
-		                strRows += "<DATA4>" + preUserID + "</DATA4>";
-		                strRows += "<DATA5>" + "N" + "</DATA5>";
-		                strRows += "<DATA6>" + preDeptID + "</DATA6>";
-		                strRows += "<DATA7>" + "" + "</DATA7>";
-		                strRows += "<DATA8>" + "N" + "</DATA8>";
-		                strRows += "<DATA9>" + "N" + "</DATA9>";
-		                strRows += "<DATA10>7001388</DATA10>";
-		                strRows += "<DATA11>015</DATA11>";
-		                strRows += "<DATA12>001</DATA12>";
-		                strRows += "<DATA13>" + MakeXMLString(preWriterName1) + "</DATA13>";
-		                strRows += "<DATA14>" + MakeXMLString(preWriterName2) + "</DATA14>";
-		                strRows += "<DATA15>" + MakeXMLString(preDeptName1) + "</DATA15>";
-		                strRows += "<DATA16>" + MakeXMLString(preDeptName2) + "</DATA16>";
-		                strRows += "<DATA17>" + MakeXMLString(preDeptJobTitle1) + "</DATA17>";
-		                strRows += "<DATA18>" + MakeXMLString(preDeptJobTitle2) + "</DATA18>";
-		                strRows += "</CELL><CELL>";
-		                strRows += "<VALUE>" + MakeXMLString(preWriterName1) + "</VALUE>";
-		                strRows += "</CELL><CELL>";
-		                strRows += "<VALUE>" + MakeXMLString(preDeptJobTitle) + "</VALUE>";
-		                strRows += "</CELL><CELL>";
-		                strRows += "<VALUE>" + MakeXMLString(preDeptName) + "</VALUE>";
-		                strRows += "</CELL><CELL>";
-		                
-		                if(approvalFlag == "G"){
-		                	strRows += "<VALUE>" + strLangDocState15 + "</VALUE>";
-		                } else {
-		                	strRows += "<VALUE>" + strLangAprType17 + "</VALUE>";
-		                }
-		                
-		                strRows += "</CELL><CELL>";
-		                strRows += "<VALUE>" + strLang72 + "</VALUE>";
-		                strRows += "</CELL><CELL><VALUE></VALUE></CELL></ROW>";
-		                
+						var RetireChk = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[10], "RETIRECHK");
+
+						if (RetireChk == "N") {
+							strRows += "<ROW>";
+							strRows += "<CELL>";
+							//2018-10-11 김보미
+							//strRows += "<VALUE>" + i + "</VALUE>";
+							strRows += "<VALUE>" + sn + "</VALUE>";
+							strRows += "<DATA1>" + "" + "</DATA1>";
+							strRows += "<DATA2>" + "" + "</DATA2>";
+							strRows += "<DATA3>" + pDocID + "</DATA3>";
+							strRows += "<DATA4>" + preUserID + "</DATA4>";
+							strRows += "<DATA5>" + "N" + "</DATA5>";
+							strRows += "<DATA6>" + preDeptID + "</DATA6>";
+							strRows += "<DATA7>" + "" + "</DATA7>";
+							strRows += "<DATA8>" + "N" + "</DATA8>";
+							strRows += "<DATA9>" + "N" + "</DATA9>";
+							strRows += "<DATA10>7001388</DATA10>";
+							strRows += "<DATA11>015</DATA11>";
+							strRows += "<DATA12>001</DATA12>";
+							strRows += "<DATA13>" + MakeXMLString(preWriterName1) + "</DATA13>";
+							strRows += "<DATA14>" + MakeXMLString(preWriterName2) + "</DATA14>";
+							strRows += "<DATA15>" + MakeXMLString(preDeptName1) + "</DATA15>";
+							strRows += "<DATA16>" + MakeXMLString(preDeptName2) + "</DATA16>";
+							strRows += "<DATA17>" + MakeXMLString(preDeptJobTitle1) + "</DATA17>";
+							strRows += "<DATA18>" + MakeXMLString(preDeptJobTitle2) + "</DATA18>";
+							strRows += "</CELL><CELL>";
+							strRows += "<VALUE>" + MakeXMLString(preWriterName1) + "</VALUE>";
+							strRows += "</CELL><CELL>";
+							strRows += "<VALUE>" + MakeXMLString(preDeptJobTitle) + "</VALUE>";
+							strRows += "</CELL><CELL>";
+							strRows += "<VALUE>" + MakeXMLString(preDeptName) + "</VALUE>";
+							strRows += "</CELL><CELL>";
+
+							if (approvalFlag == "G") {
+								strRows += "<VALUE>" + strLangDocState15 + "</VALUE>";
+							} else {
+								strRows += "<VALUE>" + strLangAprType17 + "</VALUE>";
+							}
+
+							strRows += "</CELL><CELL>";
+							strRows += "<VALUE>" + strLang72 + "</VALUE>";
+							strRows += "</CELL><CELL><VALUE></VALUE></CELL></ROW>";
+							sn--;
+						}
 		                i++;
 		            }
 		            
@@ -858,6 +870,10 @@
 		            pAPRLINE.SetHeightFree(true);
 		            pAPRLINE.DataSource(objXML);
 		            pAPRLINE.DataBind("APRLINE");
+
+					if (RetireList.length > 0) {
+						alert("[" + RetireList.join(",") + "] 는 퇴직자입니다.\n즐겨찾기 적용에서 제외됩니다.");
+					}
 		        } catch (e) {
 		            alert("AprGongRamLine_Cross_SetGongRamList::" + e.description);
 		        }
@@ -1207,7 +1223,7 @@
 	                	<table style="width:100%;table-layout: fixed">
 	                    	<tr>
 	                            <td style="text-align: left; height: 30px;">
-									<input id="textUser" style="height:22px" name="textUser" onkeypress="return textUser_onkeypress()" tabindex="1">&nbsp;<a class="imgbtn imgbck"><span id="btn_searchUser" onkeypress="return btn_searchUser_onclick()" onclick="return btn_searchUser_onclick()"><spring:message code='ezApprovalG.t234'/></span></a>
+									<input id="textUser" class="textUser" style="height:22px" name="textUser" onkeypress="return textUser_onkeypress()" tabindex="1">&nbsp;<a class="imgbtn imgbck"><span id="btn_searchUser" onkeypress="return btn_searchUser_onclick()" onclick="return btn_searchUser_onclick()"><spring:message code='ezApprovalG.t234'/></span></a>
 									<a class="imgbtn imgbck"><span onclick="return btnAprLineSearchDept_onClick()" ><spring:message code='ezApprovalG.t250'/></span></a>
 	                            	<a class="imgbtn imgbck"><span id="btn_addDept" onclick="return btn_addDepartment()"><spring:message code='ezApproval.t1101'/></span></a>
 	                            </td>

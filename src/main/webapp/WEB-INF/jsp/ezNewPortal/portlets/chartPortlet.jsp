@@ -10,32 +10,50 @@
 <script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/moment.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/chart.js')}"></script>
 <style>
-#chartPortletList{
-	display: flex;
-	align-items: center;
-	width: 100%;
-}
-
 #chartLeft{
 	z-index: 0;
-	width: 25%;
-	height: 100%;
-	position: relative;
+	width: 0;
+	height: calc(100% - 20px);;
+	display: none;
+	box-sizing: border-box;
 }
 
 #chartRight{
+	padding: 10px;
+	width: 100%;
+	height: 100%;
+	border: none;
+	box-sizing: border-box;
+}
+
+.one_by_two #chartLeft {display: block; width: 25%;}
+.one_by_two #chartRight {width: 75%;}
+
+.one_by_two #chartRight:before {
 	border-left: 1px solid #dbdbdb;
-    padding: 10px;
-	width: calc(100% - 20px);
-	height: 100%;
+	content : "";
+	position: absolute;
+	height: calc(100% - 85px);
 }
 
-.layDIV {
-	height: 100%;
+.two_by_one #chartLeft {
+	display: block;
+	width: 100%;
+	height: calc(50% - 40px);
+	margin:20px 0;
+}
+.two_by_one #chartRight {width: 100%; height: 50%;}
+.two_by_one #chartPortletList {
+	align-items: center;
+	justify-content: space-around;
+	flex-direction: column;
 }
 
-.portlet_list {
-	height: calc(100% - 70px);
+#chartPortletList {
+	display: flex;
+	align-items: center;
+	height: calc(100% - 63px);
+	width: 100%;
 }
 </style>
 </head>
@@ -47,7 +65,7 @@
            		<dt class="portletText"><c:out value='${portletName }'/></dt>
            </dl>
 			<div class="portlet_list" id="chartPortletList">
-	           <div id="chartLeft" style="display: none">
+	           <div id="chartLeft">
 	           		<canvas id="canvas2"></canvas>
 	           </div>
 	           <div id="chartRight">
@@ -75,13 +93,9 @@
 		request.onload = function () {
 			if (request.status >= 200 && request.status < 400) {
 				var jsonArr = JSON.parse(request.response);
-				if (frameId === "Frame3" || frameId === "Frame4" || frameId === "Frame7"){
-					document.getElementById("chartLeft").style.display = '';
-					document.getElementById("chartRight").style.width = 'calc(75% - 20px)';
-					var canvas2 =  document.getElementById("canvas2");
-					var douChart = new EzChartPortlet();
-					douChart.draw(canvas2).initDou(jsonArr[1]).count();
-				}
+				var canvas2 =  document.getElementById("canvas2");
+				var douChart = new EzChartPortlet();
+				douChart.draw(canvas2).initDou(jsonArr[1]).count();
 				var canvas = document.getElementById("canvas");
 				var stackChart = new EzChartPortlet();
 				stackChart.draw(canvas).initStackBar(jsonArr[0]);

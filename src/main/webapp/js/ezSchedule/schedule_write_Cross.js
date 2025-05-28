@@ -117,6 +117,10 @@ function save_schedule(pageFrom)
 	        }
     	}
     }
+	/* 2024-06-25 김유진 - 반복일정인 경우, 반복설정에서 날짜를 체크하고 넘어오기에 timeCheck값 true로 변경 */
+	if (repetition != "") {
+		timeCheck = 'true';
+	}
     //2018.01.30 김기반복설정시 기본 날짜 사용안하고 반복 설정된 날짜 사용
     if(!timeCheck)
     {
@@ -239,7 +243,14 @@ function save_schedule(pageFrom)
 	createNodeAndInsertText(xmlDom, objNode, "CREATORNAME2", username2);
 	createNodeAndInsertText(xmlDom, objNode, "CHANGEKEY", changekey);
 	createNodeAndInsertText(xmlDom, objNode, "SCHEDULETYPE", scheduletype);
-	
+    // 반복일정 상단표시
+    var showtop = "N";
+    if (document.getElementById("topcheck").checked == true) {
+        createNodeAndInsertText(xmlDom, objNode, "SHOWTOP", "Y");
+    } else {
+        createNodeAndInsertText(xmlDom, objNode, "SHOWTOP", "N");
+    }
+
 	var patternType = "";
 	if (scheduleid != "") {
 	    if (repetition != "" && pattern == "0")
@@ -280,6 +291,9 @@ function save_schedule(pageFrom)
 	        case "8": //겸직일정
 	            patternType = "8";
 	            break;
+			case "10": // 임원일정
+				patternType = "10";
+				break;
 	    }
 	    setNodeText(xmlDom.getElementsByTagName("SCHEDULETYPE")[0], patternType)
 	}
@@ -339,6 +353,13 @@ function save_schedule(pageFrom)
 			createNodeAndInsertText(xmlDom, objNode, "STARTDATE", $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + stime);
 			createNodeAndInsertText(xmlDom, objNode, "ENDDATE", $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + etime);
 		}
+
+		// 상단표시
+		if (document.getElementById("topcheck").checked == true) {
+            createNodeAndInsertText(xmlDom, objNode, "SHOWTOP", "Y");
+        } else {
+            createNodeAndInsertText(xmlDom, objNode, "SHOWTOP", "N");
+        }
 	}
 	else
 	{
@@ -398,6 +419,15 @@ function save_schedule(pageFrom)
 		}
 	}
 	
+	/* 2023-09-22 한태훈 수정 시 참석자에게 메일 보내기 용.*/
+	if (modAttendIdList.length > 0) {
+		for (var k = 0; k<modAttendIdList.length; k++) {
+			createNodeAndAppandNodeText(xmlDom, objRow, objRows , "ATTENDANTID", modAttendIdList[k]);
+			createNodeAndAppandNodeText(xmlDom, objRow, objRows , "ATTENDANTNAME1", modAttendName1List[k]);
+			createNodeAndAppandNodeText(xmlDom, objRow, objRows , "ATTENDANTNAME2", modAttendName2List[k]);
+		}
+	}
+	
 	/* 2021-11-25 홍승비 - 일정 수정 시, 일정 완료여부 파라미터 전달 */
 	if (scheduleid != "") {
 		if (document.getElementById("completeFG_one").checked == true || document.getElementById("completeFG_repOne").checked == true) { // 단일 일정, 현재 반복일정
@@ -448,6 +478,19 @@ function save_schedule(pageFrom)
 	    } else{
 	    	try { window.opener.RefreshView() } catch (e) { }
 	    }
+	    
+	    try { // 바로가기 테마 새로고침
+            if (parent.opener != null && parent.opener.getScheduleList_Top != undefined) {
+            	var selectedTd = parent.opener.document.querySelector('#theme2Body #CalendarMini_Top td.select div');
+            	if (!selectedTd) {
+            		selectedTd = parent.opener.document.querySelector('#theme2Body #CalendarMini_Top td.main_today div');
+            	}
+            	var selectedDate = selectedTd.getAttribute('dispdate');
+            	parent.opener.getScheduleList_Top(selectedDate, 'P');
+            	parent.opener.openerCalendarMiniView("CalendarMini_Top");	    		
+            	parent.opener.openerCalendarMiniDataSource("Top");
+            }
+        } catch (e) {console.log(e);}
 	    
 	    window.close();
 	}
@@ -737,6 +780,8 @@ function allday_change()
 {
     if (document.getElementById("alldaycheck").checked == true)
 	{
+        document.getElementById("topcheck").checked = false;
+        document.getElementById("topcheck").disabled = true;
         document.getElementById("Stimepicker").style.display = "none";
         document.getElementById("Etimepicker").style.display = "none";
         if($("#Stimepicker").val() == "00:00" && $("#Etimepicker").val() == "23:59") {
@@ -752,6 +797,7 @@ function allday_change()
 	}
 	else
 	{
+        document.getElementById("topcheck").disabled = false;
         document.getElementById("Stimepicker").style.display = "";
         document.getElementById("Etimepicker").style.display = "";
         timeSelect = false;
@@ -1100,9 +1146,14 @@ function show_repetition_info()
 	if (info[1] == "1") {					// 하루종일 일정
 		repeatinfo += strLang39;
 		document.getElementById("alldaycheck").checked = true;
+		// 반복일정 상단표시
+		document.getElementById("topcheck").checked = false;
+        document.getElementById("topcheck").disabled = true;
 	}
 	else
 	{
+        document.getElementById("topcheck").disabled = false;
+
 		var sdate, edate;
 		if (g_sdate == null)
 		{	
@@ -1297,21 +1348,31 @@ function ListOwnerID_Change()
 	        }
     	}
     }
-	
+
 	if (pListOwnerID != "1") {
 	    receiverlist.innerHTML = "";
 	    document.getElementById("publicSelect").disabled = true;
 	    document.getElementById("publicSelect").value = "Y";
 	    g_attendant = null;
 	}
-	else {
-	    document.getElementById("publicSelect").disabled = false;
-	    document.getElementById("publicSelect").value = "N";
+	else { // chkPublic이 OFF일 경우 비공개가 기본값임.
+		if (chkPublic == "OFF") {
+			document.getElementById("publicSelect").disabled = true;
+			document.getElementById("publicSelect").value = "N";
+		} else {
+			document.getElementById("publicSelect").disabled = false;
+			document.getElementById("publicSelect").value = "N";
+		}
 	}
     //6 : 비서(대리인) 비서일 경우 참석자 초대 가능
 	if (pListOwnerID == "1" || pListOwnerID == "6") {
-	    document.getElementById("publicSelect").value = "N";
-	    document.getElementById("publicSelect").disabled = false;
+		if (chkPublic == "OFF") {
+			document.getElementById("publicSelect").value = "N";
+			document.getElementById("publicSelect").disabled = true;
+		} else {
+			document.getElementById("publicSelect").value = "N";
+			document.getElementById("publicSelect").disabled = false;
+		}
 	    document.getElementById("receiverinput").disabled = false;
 	    document.getElementById("imgbutton").disabled = false;
 	    document.getElementById("imgbutton").style.display = "";
@@ -1426,6 +1487,38 @@ function config_repeat_resource() {
         alert(strLang109);
         return;
     }
+
+	var check = false;
+	$.ajax({
+		type : "GET",
+		async : false,
+		data : {"resIDArray" : g_resource[0]},
+		url : "/ezResource/repeatFlagCheck.do",
+		success : function(result) {
+			if(result.repeatResult == "false"){
+				check = true;
+				var repeatCheckList = result.repeatCheckList;
+				var repeatCheckName = [];
+				
+				if (repeatCheckList && repeatCheckList.length > 0) {
+					for (var i = 0; i < repeatCheckList.length; i++) {
+						var checkIndex = g_resource[0].indexOf(repeatCheckList[i]);
+						repeatCheckName.push(g_resource[1][checkIndex]);
+					}
+				}
+				alert("[" + repeatCheckName.join(", ") + "] " + strLangKMH1);
+				
+			}else if(result.repeatResult == "error"){
+				check = true;
+				alert(strLangKMH2);
+			}
+		},
+		error : function(){}
+	});
+	
+	if(check){
+		return;
+	}
     
     g_data["REPETITION"] = repetition;
 
@@ -1483,8 +1576,40 @@ function config_repeat_resource() {
     
     schedule_repetition_cross_dialogArguments[0] = g_data;
     schedule_repetition_cross_dialogArguments[1] = config_repeat_resource_Complete;
+	resMaxDate = getMinResourceUseDate();
+    DivPopUpShow(450, 550, "/ezResource/scheduleRepetition.do?resMaxDate=" + resMaxDate);
+}
 
-    DivPopUpShow(450, 550, "/ezResource/scheduleRepetition.do");
+function getMinResourceUseDate() {
+	var resourceArray = g_resource[0];
+
+	return resourceArray.reduce((minDate, item) => {
+		var resourceMaxDate = getResourceMaxDate(item);
+		if (resourceMaxDate !== 0 && (minDate === 0 || resourceMaxDate < minDate)) {
+			minDate = resourceMaxDate;
+		}
+		return minDate;
+	}, 0);
+}
+
+function getResourceMaxDate(item) {
+	var result = 0;
+
+	$.ajax({
+		url: '/ezResource/checkResoruceMaxDate.do',
+		type: 'POST',
+		dataType: 'json',
+		async : false,
+		cache : false,
+		contentType: "application/json",
+		data: JSON.stringify({
+			brdId: item
+		}),
+		success: function(data) {
+			result = data;
+		}
+	});
+	return result;
 }
 
 function config_repeat_resource_Complete(rgParams) {
@@ -1746,6 +1871,20 @@ function SaveSchedule_onClick(cmd, resItem, resDate) {
     createNodeAndInsertText(xmlDoc, objNode, "ownerNM", replaceSingleQuotation(username));
 
     var objNode23;
+    
+    $.ajax({
+		type : "GET",
+		dataType : "text",
+		async : false,
+		url : "/ezResource/checkApprovalFlag.do",
+		data : {
+			resID  : resItem		    			
+		},
+		success: function(result) {
+			ApproveFlag = result;
+		}
+    });
+    
     if (ApproveFlag == "1") {
         if (cmd == "add")
             objNode23 = "0";
@@ -1787,9 +1926,13 @@ function SaveSchedule_onClick(cmd, resItem, resDate) {
     	
         xmlHttp = null;
         if (cmd == "add" && objNode23 == "0") {
+        	var returnNodes = SelectNodes(resultXML,"RTN_DATA")[0];
+ 	    	var pNum = getNodeText(GetChildNodes(returnNodes)[0]);//objNodes.item(0).text;
+ 	    	createNodeAndInsertText(xmlDoc, objNode, "RSSCHEDULENUM", pNum);
+        	
             xmlHttp = createXMLHttpRequest();
             xmlHttp.open("POST", "/ezResource/sendMail.do", false);
-            xmlHttp.send(xmlDoc.xml);
+            xmlHttp.send(xmlDoc);
             xmlHttp = null;
         }
         
@@ -1903,7 +2046,9 @@ function setAttachFileInfo(strXML) {
         var listtable;
 
         listtable = dadiframe.document.getElementById("filelist");
-        dadiframe.document.getElementById("lstAttachLink").appendChild(listtable);
+		var lstAttachLink = dadiframe.document.getElementById("lstAttachLink");
+		lstAttachLink.insertBefore(listtable, lstAttachLink.firstChild);
+		dadiframe.document.getElementById("attachInnerNotice").className = "attachInnerNotice_p_off";
 
         var extCheck = false;
         for (i = 0; i < SelectNodes(xml, "ROOT/NODES/DATA").length; i++) {
@@ -1914,6 +2059,7 @@ function setAttachFileInfo(strXML) {
                 objTr = document.createElement("TR");
                 objTr.setAttribute("fileinfo", fileinfo);
                 objTr.setAttribute("attid", attid);
+				objTr.setAttribute("draggable", true);
 
                 var objTd = document.createElement("TD");
                 objTd.style.textAlign = "center";
@@ -2145,7 +2291,11 @@ function getFirstDateInfo(startDate, endDate) {
 	    }
 	}
 	else {
-		returnValue = xmlHTTP.responseText;
+		if ("firstScheduleDateNotFound" == xmlHTTP.responseText) {
+			alert(ezSchedule_kyj2);
+		} else {
+			returnValue = xmlHTTP.responseText;
+		}
 	}
 	
 	return returnValue;

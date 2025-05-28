@@ -92,7 +92,7 @@ public class EzApprovalScheduler extends EgovFileMngUtil {
 		logger.debug("dailyApprFileManage scheduler ended.");
 	}
 	
-	@Scheduled(cron = "00 0/1 * * * *")
+	@Scheduled(fixedDelayString = "${config.fixedDelay.susinScheduler}")
 	public void susinScheduler() throws Exception{
 		if(checkTimer()) {
 			logger.debug("susinScheduler started.");

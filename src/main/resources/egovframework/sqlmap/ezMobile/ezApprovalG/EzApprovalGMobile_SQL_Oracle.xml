@@ -14,15 +14,20 @@
 	
 	<select id="MApprovalG.getDoApproveList" parameterClass="Map" resultClass="MApprGDocInfoVO" remapResults="true">
 		<isEqual property="type" compareValue="DO">
-			<![CDATA[
 			SELECT A.* FROM (
 			SELECT LIST.* FROM (
 				SELECT 
 					VAPRDOINGDOCLIST.DOCID,
 					DOCTITLE,
 					TO_CHAR(STARTDATE + (#offset# / (60 * 24)),'YYYY-MM-DD HH24:MI:SS') STARTDATE, 
-					WRITERNAME$lang$ WRITERNAME,
-					WRITERDEPTNAME$lang$ WRITERDEPTNAME,
+					<isEqual property="lang" compareValue="2">
+						WRITERNAME2 WRITERNAME,
+                        WRITERDEPTNAME2 WRITERDEPTNAME,
+                    </isEqual>
+                    <isNotEqual property="lang" compareValue="2">
+                        WRITERNAME WRITERNAME,
+                        WRITERDEPTNAME WRITERDEPTNAME,
+                    </isNotEqual>
 					HASATTACHYN,
 					HASOPINIONYN,
 					APRTYPE,
@@ -71,10 +76,16 @@
 							)
 				AND
 					NVL(GRP.TABSN, 1) = 1
+			<![CDATA[
 	   			AND
 	   				STARTDATE < TO_DATE(#lastDate#, 'YYYY-MM-DD HH24:MI:SS')
-	   			AND
-	   				APRMEMBERID IN ($id$) 
+	   		]]>
+	   		<isNotEmpty property="userIds" prepend="AND">
+                <iterate prepend="APRMEMBERID IN" property="userIds" open="(" close=")" conjunction=",">
+                    #userIds[]#
+                </iterate>
+            </isNotEmpty>
+	   		<![CDATA[
 	   			AND 
 	   				APRTYPE <> '015'
 	   			AND
@@ -85,15 +96,20 @@
 					OR 
 				WRITERNAME LIKE CONCAT(CONCAT('%', #searchText#), '%'))
 			</isNotEmpty>
-			<![CDATA[
 				UNION ALL
 				
 				SELECT 
 					VENDCHAMJODOCINFO.DOCID,
 					DOCTITLE,
 					TO_CHAR(STARTDATE + (#offset# / (60 * 24)),'YYYY-MM-DD HH24:MI:SS') STARTDATE,
-					WRITERNAME$lang$ WRITERNAME,
-					WRITERDEPTNAME$lang$ WRITERDEPTNAME,
+					<isEqual property="lang" compareValue="2">
+                        WRITERNAME2 WRITERNAME,
+                        WRITERDEPTNAME2 WRITERDEPTNAME,
+                    </isEqual>
+                    <isNotEqual property="lang" compareValue="2">
+                        WRITERNAME WRITERNAME,
+                        WRITERDEPTNAME WRITERDEPTNAME,
+                    </isNotEqual>
 					HASATTACHYN,
 					HASOPINIONYN,
 					APRTYPE,
@@ -142,10 +158,16 @@
 							)
 				AND
 					NVL(GRP.TABSN, 1) = 1
+			<![CDATA[
 	   			AND
 	   				STARTDATE < TO_DATE(#lastDate#, 'YYYY-MM-DD HH24:MI:SS')
-	   			AND
-	   				APRMEMBERID IN ($id$) 
+	   		]]>
+	   		<isNotEmpty property="userIds" prepend="AND">
+                <iterate prepend="APRMEMBERID IN" property="userIds" open="(" close=")" conjunction=",">
+                    #userIds[]#
+                </iterate>
+            </isNotEmpty>
+	   		<![CDATA[
 	   			AND 
 	   				APRTYPE <> '015'
 	   			AND
@@ -166,14 +188,19 @@
 			]]>
 		</isEqual>
 		<isEqual property="type" compareValue="DRAFT">
-			<![CDATA[
 			SELECT A.* FROM (
 				SELECT 
 					VAPRWILLDOCLIST.DOCID,
 					DOCTITLE,
 					TO_CHAR(STARTDATE + (#offset# / (60 * 24)),'YYYY-MM-DD HH24:MI:SS') STARTDATE,
-					WRITERNAME$lang$ WRITERNAME,
-					WRITERDEPTNAME$lang$ WRITERDEPTNAME,
+					<isEqual property="lang" compareValue="2">
+						WRITERNAME2 WRITERNAME,
+						WRITERDEPTNAME2 WRITERDEPTNAME,
+					</isEqual>
+					<isNotEqual property="lang" compareValue="2">
+						WRITERNAME WRITERNAME,
+						WRITERDEPTNAME WRITERDEPTNAME,
+					</isNotEqual>
 					HASATTACHYN,
 					HASOPINIONYN,
 					FUNCTIONTYPE,
@@ -219,6 +246,7 @@
 							)
 				AND
 					NVL(GRP.TABSN, 1) = 1
+			<![CDATA[
 	   			AND
 	   				STARTDATE < TO_DATE(#lastDate#, 'YYYY-MM-DD HH24:MI:SS')
 	   			AND 
@@ -229,6 +257,8 @@
 	   				APRTYPE <> '015'
 	   			AND 
 		         	DocState <> '017'
+		        AND
+	   			    FUNCTIONTYPE <> '004'
 			]]>
 			<isNotEmpty property="searchText" prepend="AND">
 				(DOCTITLE LIKE CONCAT(CONCAT('%', #searchText#), '%') 
@@ -245,14 +275,19 @@
 			]]>
 		</isEqual>
 		<isEqual property="type" compareValue="ING">
-			<![CDATA[
 			SELECT A.* FROM (
 				SELECT 
 					DISTINCT VAPRWILLDOCLIST.DOCID,
 					DOCTITLE,
 					TO_CHAR(STARTDATE + (#offset# / (60 * 24)),'YYYY-MM-DD HH24:MI:SS') STARTDATE,
-					WRITERNAME$lang$ WRITERNAME,
-					WRITERDEPTNAME$lang$ WRITERDEPTNAME,
+					<isEqual property="lang" compareValue="2">
+                        WRITERNAME2 WRITERNAME,
+                        WRITERDEPTNAME2 WRITERDEPTNAME,
+                    </isEqual>
+                    <isNotEqual property="lang" compareValue="2">
+                        WRITERNAME WRITERNAME,
+                        WRITERDEPTNAME WRITERDEPTNAME,
+                    </isNotEqual>
 					HASATTACHYN,
 					HASOPINIONYN,
 					APRTYPE,
@@ -299,12 +334,15 @@
 							)
 				AND
 					NVL(GRP.TABSN, 1) = 1
+			<![CDATA[
 	   			AND
 	   				STARTDATE < TO_DATE(#lastDate#, 'YYYY-MM-DD HH24:MI:SS')
 	   			AND
 	   				APRMEMBERID = #userId# 
 	   			AND 
 	   				APRTYPE <> '015'
+	   			AND
+	   			    FUNCTIONTYPE <> '004'
 			]]>
 			<isEqual property="mainViewYN" compareValue="YES">
 				AND	    
@@ -329,8 +367,14 @@
 				DISTINCT A.DOCID,
 				A.DOCTITLE,
 				TO_CHAR(STARTDATE + (#offset# / (60 * 24)),'YYYY-MM-DD HH24:MI:SS') STARTDATE,
-				A.WRITERNAME$lang$ WRITERNAME,
-				A.WRITERDEPTNAME$lang$ WRITERDEPTNAME,
+				<isEqual property="lang" compareValue="2">
+                    A.WRITERNAME2 WRITERNAME,
+                    A.WRITERDEPTNAME2 WRITERDEPTNAME,
+                </isEqual>
+                <isNotEqual property="lang" compareValue="2">
+                    A.WRITERNAME WRITERNAME,
+                    A.WRITERDEPTNAME WRITERDEPTNAME,
+                </isNotEqual>
 				A.HASATTACHYN,
 				A.HASOPINIONYN,
 				B.APRTYPE,
@@ -466,15 +510,20 @@
 			]]>
 		</isEqual>
 		<isEqual property="type" compareValue="SHARE">
-			<![CDATA[
 			SLEECT A.* FROM (
 			SELECT LIST.* FROM (
 				SELECT 
 					DOCID,
 					DOCTITLE,
 					TO_CHAR(STARTDATE + (#offset# / (60 * 24)),'YYYY-MM-DD HH24:MI:SS') STARTDATE,
-					WRITERNAME$lang$ WRITERNAME,
-					WRITERDEPTNAME$lang$ WRITERDEPTNAME,
+					<isEqual property="lang" compareValue="2">
+                        WRITERNAME2 WRITERNAME,
+                        WRITERDEPTNAME2 WRITERDEPTNAME,
+                    </isEqual>
+                    <isNotEqual property="lang" compareValue="2">
+                        WRITERNAME WRITERNAME,
+                        WRITERDEPTNAME WRITERDEPTNAME,
+                    </isNotEqual>
 					HASATTACHYN,
 					HASOPINIONYN,
 					APRTYPE,
@@ -513,6 +562,7 @@
 							AND
 								TENANT_ID = #tenantID# 
 							)
+			<![CDATA[
 	   			AND
 	   				STARTDATE < TO_DATE(#lastDate#, 'YYYY-MM-DD HH24:MI:SS')
 	   			AND
@@ -527,15 +577,20 @@
 					OR 
 				WRITERNAME LIKE CONCAT(CONCAT('%', #searchText#), '%'))
 			</isNotEmpty>
-			<![CDATA[
 				UNION ALL
 				
 				SELECT 
 					DOCID,
 					DOCTITLE,
 					TO_CHAR(STARTDATE + (#offset# / (60 * 24)),'YYYY-MM-DD HH24:MI:SS') STARTDATE,
-					WRITERNAME$lang$ WRITERNAME,
-					WRITERDEPTNAME$lang$ WRITERDEPTNAME,
+					<isEqual property="lang" compareValue="2">
+                        WRITERNAME2 WRITERNAME,
+                        WRITERDEPTNAME2 WRITERDEPTNAME,
+                    </isEqual>
+                    <isNotEqual property="lang" compareValue="2">
+                        WRITERNAME WRITERNAME,
+                        WRITERDEPTNAME WRITERDEPTNAME,
+                    </isNotEqual>
 					HASATTACHYN,
 					HASOPINIONYN,
 					APRTYPE,
@@ -574,6 +629,7 @@
 							AND
 								TENANT_ID = #tenantID# 
 							)
+			<![CDATA[
 	   			AND
 	   				STARTDATE < TO_DATE(#lastDate#, 'YYYY-MM-DD HH24:MI:SS')
 	   			AND
@@ -598,14 +654,19 @@
 			]]>
 		</isEqual>
 		<isEqual property="type" compareValue="GR">
-			<![CDATA[
 			SELECT A.* FROM (
 				SELECT
 					DOCID,
 					DOCTITLE,
 					TO_CHAR(STARTDATE + (#offset# / (60 * 24)),'YYYY-MM-DD HH24:MI:SS') STARTDATE,
-					WRITERNAME$lang$ WRITERNAME,
-					WRITERDEPTNAME$lang$ WRITERDEPTNAME,
+					<isEqual property="lang" compareValue="2">
+                        WRITERNAME2 WRITERNAME,
+                        WRITERDEPTNAME2 WRITERDEPTNAME,
+                    </isEqual>
+                    <isNotEqual property="lang" compareValue="2">
+                        WRITERNAME WRITERNAME,
+                        WRITERDEPTNAME WRITERDEPTNAME,
+                    </isNotEqual>
 					HASATTACHYN,
 					HASOPINIONYN,
 					APRTYPE,
@@ -643,6 +704,7 @@
 							AND
 								TENANT_ID = #tenantID# 
 							)
+			<![CDATA[
 				AND
 					STARTDATE < TO_DATE(#lastDate#, 'YYYY-MM-DD HH24:MI:SS')
 				AND 
@@ -665,19 +727,23 @@
 			]]>
 		</isEqual>
 		<isEqual property="type" compareValue="GREND">
-			<![CDATA[
 			SELECT A.* FROM (
 				SELECT
 					TBL_APRDOCINFO.DOCID,
 					TBL_APRDOCINFO.DOCTITLE,
 					TO_CHAR(TBL_APRDOCINFO.STARTDATE + (#offset# / (60 * 24)),'YYYY-MM-DD HH24:MI:SS') STARTDATE,
-					TBL_APRDOCINFO.WRITERNAME$lang$ WRITERNAME,
-					TBL_APRDOCINFO.WRITERDEPTNAME$lang$ WRITERDEPTNAME,
+					<isEqual property="lang" compareValue="2">
+                        TBL_APRDOCINFO.WRITERNAME2 WRITERNAME,
+                        TBL_APRDOCINFO.WRITERDEPTNAME2 WRITERDEPTNAME,
+                    </isEqual>
+                    <isNotEqual property="lang" compareValue="2">
+                        TBL_APRDOCINFO.WRITERNAME WRITERNAME,
+                        TBL_APRDOCINFO.WRITERDEPTNAME WRITERDEPTNAME,
+                    </isNotEqual>
 					TBL_APRDOCINFO.HASATTACHYN,
 					TBL_APRDOCINFO.HASOPINIONYN,
 					TBL_APRLINEINFO.APRTYPE,
 					TBL_APRDOCINFO.FUNCTIONTYPE,
-					TBL_APRLINEINFO.APRMEMBERSN,
 					TBL_EXPAPRDOCINFO.URGENTAPPROVAL,
 					TBL_APRDOCINFO.COMPANYID
 				FROM
@@ -698,8 +764,17 @@
 					TBL_APRDOCINFO.TENANT_ID = TBL_EXPAPRDOCINFO.TENANT_ID
 				AND
 					TBL_APRDOCINFO.COMPANYID = TBL_EXPAPRDOCINFO.COMPANYID
+				LEFT JOIN
+					(SELECT DOCID, TENANT_ID, COMPANYID FROM TBL_GONGRAMDELETEHISTORY) TBL_GONGRAMDELETEHISTORY
+				ON
+					TBL_APRDOCINFO.DOCID = TBL_GONGRAMDELETEHISTORY.DOCID
+				AND
+					TBL_APRDOCINFO.TENANT_ID = TBL_GONGRAMDELETEHISTORY.TENANT_ID
+				AND
+					TBL_APRDOCINFO.COMPANYID = TBL_GONGRAMDELETEHISTORY.COMPANYID
 				WHERE
 					TBL_APRDOCINFO.TENANT_ID = #tenantID#
+			<![CDATA[
 				AND
 					TBL_APRDOCINFO.STARTDATE < TO_DATE(#lastDate#, 'YYYY-MM-DD HH24:MI:SS')
 				AND 
@@ -708,6 +783,282 @@
 					TBL_APRLINEINFO.APRSTATE = '010'
 				AND
 					TBL_APRLINEINFO.APRMEMBERID = #userId#
+				AND 
+					TBL_GONGRAMDELETEHISTORY.DOCID IS NULL
+				AND
+					TBL_APRDOCINFO.COMPANYID IN (
+							SELECT 
+								EXTENSIONATTRIBUTE2 
+							FROM 
+								TBL_DEPTMASTER 
+							INNER JOIN 
+								TBL_ADDJOBMASTER 
+							ON
+								(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+								AND 
+								TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+							WHERE 
+								TBL_ADDJOBMASTER.TENANT_ID = #tenantID# 
+							AND 
+								TBL_ADDJOBMASTER.CN = #userId#
+							UNION ALL
+							SELECT 
+								PHYSICALDELIVERYOFFICENAME
+							FROM
+								TBL_USERMASTER
+							WHERE
+								CN = #userId#
+							AND
+								TENANT_ID = #tenantID# 
+							)
+			]]>
+			<isNotEmpty property="searchText" prepend="AND">
+				(DOCTITLE LIKE CONCAT(CONCAT('%', #searchText#), '%') 
+					OR 
+				WRITERNAME LIKE CONCAT(CONCAT('%', #searchText#), '%'))
+			</isNotEmpty>
+			<![CDATA[
+				ORDER BY
+					STARTDATE DESC
+			) A
+			WHERE 
+				ROWNUM <= #listSize#
+				
+			]]>
+		</isEqual>
+		<isEqual property="type" compareValue="BAN">
+			SELECT A.* FROM (
+			SELECT LIST.* FROM (
+				SELECT
+					VAPRDOINGDOCLIST.DOCID,
+					DOCTITLE,
+					TO_CHAR(STARTDATE + (#offset# / (60 * 24)),'YYYY-MM-DD HH24:MI:SS') STARTDATE,
+					<isEqual property="lang" compareValue="2">
+						WRITERNAME2 WRITERNAME,
+						WRITERDEPTNAME2 WRITERDEPTNAME,
+					</isEqual>
+					<isNotEqual property="lang" compareValue="2">
+						WRITERNAME WRITERNAME,
+						WRITERDEPTNAME WRITERDEPTNAME,
+					</isNotEqual>
+					HASATTACHYN,
+					HASOPINIONYN,
+					APRTYPE,
+					FUNCTIONTYPE,
+					APRMEMBERSN,
+					URGENTAPPROVAL,
+					'APR' "MODE",
+					VAPRDOINGDOCLIST.companyID
+				FROM
+					VAPRDOINGDOCLIST
+				LEFT OUTER JOIN
+					TBL_APRDOCGROUPINFO GRP
+				ON
+					VAPRDOINGDOCLIST.TENANT_ID = GRP.TENANT_ID
+				AND
+					VAPRDOINGDOCLIST.COMPANYID = GRP.COMPANYID
+				AND
+					VAPRDOINGDOCLIST.DOCID = GRP.DOCID
+	   			WHERE
+	   				VAPRDOINGDOCLIST.TENANT_ID = #tenantID#
+	   			AND
+					VAPRDOINGDOCLIST.COMPANYID IN (
+							SELECT
+								EXTENSIONATTRIBUTE2
+							FROM
+								TBL_DEPTMASTER
+							INNER JOIN
+								TBL_ADDJOBMASTER
+							ON
+								(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID
+								AND
+								TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID)
+							WHERE
+								TBL_ADDJOBMASTER.TENANT_ID = #tenantID#
+							AND
+								TBL_ADDJOBMASTER.CN = #userId#
+							UNION ALL
+							SELECT
+								PHYSICALDELIVERYOFFICENAME
+							FROM
+								TBL_USERMASTER
+							WHERE
+								CN = #userId#
+							AND
+								TENANT_ID = #tenantID#
+							)
+				AND
+					NVL(GRP.TABSN, 1) = 1
+				<isNotEmpty property="userIds" prepend="AND">
+					<iterate prepend="APRMEMBERID IN" property="userIds" open="(" close=")" conjunction=",">
+						#userIds[]#
+					</iterate>
+				</isNotEmpty>
+			<![CDATA[
+	   			AND
+	   				STARTDATE < TO_DATE(#lastDate#, 'YYYY-MM-DD HH24:MI:SS')
+	   			AND
+	   				APRTYPE <> '015'
+	   			AND
+	   				FUNCTIONTYPE = '004'
+			]]>
+			<isNotEmpty property="searchText" prepend="AND">
+				(DOCTITLE LIKE CONCAT(CONCAT('%', #searchText#), '%')
+				OR
+				WRITERNAME LIKE CONCAT(CONCAT('%', #searchText#), '%'))
+			</isNotEmpty>
+				UNION ALL
+
+				SELECT
+					VENDCHAMJODOCINFO.DOCID,
+					DOCTITLE,
+					TO_CHAR(STARTDATE + (#offset# / (60 * 24)),'YYYY-MM-DD HH24:MI:SS') STARTDATE,
+					<isEqual property="lang" compareValue="2">
+						WRITERNAME2 WRITERNAME,
+						WRITERDEPTNAME2 WRITERDEPTNAME,
+					</isEqual>
+					<isNotEqual property="lang" compareValue="2">
+						WRITERNAME WRITERNAME,
+						WRITERDEPTNAME WRITERDEPTNAME,
+					</isNotEqual>
+					HASATTACHYN,
+					HASOPINIONYN,
+					APRTYPE,
+					FUNCTIONTYPE,
+					APRMEMBERSN,
+					URGENTAPPROVAL,
+					'END' "MODE",
+					VENDCHAMJODOCINFO.companyID
+				FROM
+					VENDCHAMJODOCINFO
+				LEFT OUTER JOIN
+					TBL_APRDOCGROUPINFO GRP
+				ON
+					VENDCHAMJODOCINFO.TENANT_ID = GRP.TENANT_ID
+				AND
+					VENDCHAMJODOCINFO.COMPANYID = GRP.COMPANYID
+				AND
+					VENDCHAMJODOCINFO.DOCID = GRP.DOCID
+	   			WHERE
+	   				VENDCHAMJODOCINFO.TENANT_ID = #tenantID#
+	   			AND
+					VENDCHAMJODOCINFO.COMPANYID IN (
+							SELECT
+								EXTENSIONATTRIBUTE2
+							FROM
+								TBL_DEPTMASTER
+							INNER JOIN
+								TBL_ADDJOBMASTER
+							ON
+								(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID
+								AND
+								TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID)
+							WHERE
+								TBL_ADDJOBMASTER.TENANT_ID = #tenantID#
+							AND
+								TBL_ADDJOBMASTER.CN = #userId#
+							UNION ALL
+							SELECT
+								PHYSICALDELIVERYOFFICENAME
+							FROM
+								TBL_USERMASTER
+							WHERE
+								CN = #userId#
+							AND
+								TENANT_ID = #tenantID#
+							)
+				AND
+					NVL(GRP.TABSN, 1) = 1
+				<isNotEmpty property="userIds" prepend="AND">
+					<iterate prepend="APRMEMBERID IN" property="userIds" open="(" close=")" conjunction=",">
+						#userIds[]#
+					</iterate>
+				</isNotEmpty>
+			<![CDATA[
+	   			AND
+	   				STARTDATE < TO_DATE(#lastDate#, 'YYYY-MM-DD HH24:MI:SS')
+	   			AND
+	   				APRTYPE <> '015'
+	   			AND
+	   				FUNCTIONTYPE = '004'
+			]]>
+			<isNotEmpty property="searchText" prepend="AND">
+				(DOCTITLE LIKE CONCAT(CONCAT('%', #searchText#), '%')
+				OR
+				WRITERNAME LIKE CONCAT(CONCAT('%', #searchText#), '%'))
+			</isNotEmpty>
+			<![CDATA[
+				) LIST
+				ORDER BY
+					LIST.STARTDATE DESC
+				) A
+				WHERE
+					ROWNUM <= #listSize#
+			]]>
+		</isEqual>
+		<isEqual property="type" compareValue="GRSEND">
+			<![CDATA[
+			SELECT A.* FROM (
+				SELECT
+					TBL_APRDOCINFO.DOCID,
+					TBL_APRDOCINFO.DOCTITLE,
+					TO_CHAR(TBL_APRDOCINFO.STARTDATE + (#offset# / (60 * 24)),'YYYY-MM-DD HH24:MI:SS') STARTDATE,
+					TBL_APRDOCINFO.WRITERNAME$lang$ WRITERNAME,
+					TBL_APRDOCINFO.WRITERDEPTNAME$lang$ WRITERDEPTNAME,
+					TBL_APRDOCINFO.HASATTACHYN,
+					TBL_APRDOCINFO.HASOPINIONYN,
+					TBL_APRLINEINFO.APRTYPE,
+					TBL_APRDOCINFO.FUNCTIONTYPE,
+					TBL_EXPAPRDOCINFO.URGENTAPPROVAL,
+					TBL_APRDOCINFO.COMPANYID
+				FROM
+					TBL_APRDOCINFO
+				INNER JOIN
+					TBL_APRLINEINFO
+				ON
+					TBL_APRDOCINFO.DOCID = TBL_APRLINEINFO.DOCID
+				AND
+    				TBL_APRLINEINFO.APRMEMBERSN = 1
+				AND
+					TBL_APRDOCINFO.TENANT_ID = TBL_APRLINEINFO.TENANT_ID
+				AND
+					TBL_APRDOCINFO.COMPANYID = TBL_APRLINEINFO.COMPANYID
+				INNER JOIN
+					TBL_EXPAPRDOCINFO
+				ON
+					TBL_APRDOCINFO.DOCID = TBL_EXPAPRDOCINFO.DOCID
+				AND
+					TBL_APRDOCINFO.TENANT_ID = TBL_EXPAPRDOCINFO.TENANT_ID
+				AND
+					TBL_APRDOCINFO.COMPANYID = TBL_EXPAPRDOCINFO.COMPANYID
+				INNER JOIN
+					(SELECT DOCID, DOCSTATE, TENANT_ID, COMPANYID FROM TBL_ENDAPRDOCINFO) TBL_ENDAPRDOCINFO
+				ON
+					TBL_APRDOCINFO.ORGDOCID = TBL_ENDAPRDOCINFO.DOCID
+				AND
+					TBL_APRDOCINFO.TENANT_ID = TBL_ENDAPRDOCINFO.TENANT_ID
+				AND
+					TBL_APRDOCINFO.COMPANYID = TBL_ENDAPRDOCINFO.COMPANYID
+				INNER JOIN
+					TBL_ENDAPRLINEINFO
+				ON 
+					TBL_ENDAPRDOCINFO.DOCID = TBL_ENDAPRLINEINFO.DOCID
+				AND
+					TBL_ENDAPRLINEINFO.APRMEMBERSN = 1
+				AND
+					TBL_ENDAPRDOCINFO.TENANT_ID = TBL_ENDAPRLINEINFO.TENANT_ID
+				AND
+					TBL_ENDAPRDOCINFO.COMPANYID = TBL_ENDAPRLINEINFO.COMPANYID
+				WHERE
+					TBL_APRDOCINFO.TENANT_ID = #tenantID#
+				AND
+					TBL_APRDOCINFO.STARTDATE < TO_DATE(#lastDate#, 'YYYY-MM-DD HH24:MI:SS')
+				AND 
+					TBL_APRDOCINFO.DOCSTATE = '015'
+				AND
+					((TBL_ENDAPRDOCINFO.DOCSTATE = '011' AND TBL_ENDAPRLINEINFO.APRMEMBERID = #userId#)
+				OR
+					(TBL_ENDAPRDOCINFO.DOCSTATE != '011' AND TBL_APRDOCINFO.WRITERID = #userId#))
 				AND
 					TBL_APRDOCINFO.COMPANYID IN (
 							SELECT 
@@ -753,7 +1104,6 @@
 	
 	<select id="MApprovalG.getDoApproveListCount" parameterClass="Map" resultClass="Integer" remapResults="true">
 		<isEqual property="type" compareValue="DO">
-			<![CDATA[
 				SELECT 
 					COUNT(*)
 				FROM ( 
@@ -799,8 +1149,12 @@
 							)
 				AND
 					NVL(GRP.TABSN, 1) = 1
-	   			AND 
-	   				APRMEMBERID IN ($id$) 
+					<isNotEmpty property="userIds" prepend="AND">
+						<iterate prepend="APRMEMBERID IN" property="userIds" open="(" close=")" conjunction=",">
+							#userIds[]#
+						</iterate>
+					</isNotEmpty>
+			<![CDATA[
 	   			AND 
 	   				STARTDATE < TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
 	   			AND
@@ -813,7 +1167,6 @@
 					OR 
 				WRITERNAME LIKE CONCAT(CONCAT('%', #searchText#), '%'))
 			</isNotEmpty>
-			<![CDATA[
 				UNION ALL
 				
 				SELECT 
@@ -858,10 +1211,16 @@
 							)
 				AND
 					NVL(GRP.TABSN, 1) = 1
+			<![CDATA[
 	   			AND
 	   				STARTDATE < TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
-	   			AND
-	   				APRMEMBERID IN ($id$) 
+	   		]]>
+			<isNotEmpty property="userIds" prepend="AND">
+                <iterate prepend="APRMEMBERID IN" property="userIds" open="(" close=")" conjunction=",">
+                    #userIds[]#
+                </iterate>
+            </isNotEmpty>
+	   		<![CDATA[
 	   			AND 
 	   				APRTYPE <> '015'
 	   			AND
@@ -928,6 +1287,8 @@
 	   				APRTYPE <> '015'
 	   			AND 
 		         	DocState <> '017'
+		        AND
+	   			    FUNCTIONTYPE <> '004'
 			]]>
 			<isNotEmpty property="searchText" prepend="AND">
 				(DOCTITLE LIKE CONCAT(CONCAT('%', #searchText#), '%') 
@@ -987,6 +1348,8 @@
 	   				STARTDATE < TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
 	   			AND
 	   				APRTYPE <> '015'
+	   			AND
+	   			    FUNCTIONTYPE <> '004'
 			]]>
 			<isEqual property="mainViewYN" compareValue="YES">
 				AND	    
@@ -1064,7 +1427,7 @@
 			    AND 
 			  		A.TENANT_ID = G.TENANT_ID
                 AND 
-                	A.COMPANYID = G.COMPANYID              
+                	A.COMPANYID = G.COMPANYID
 		   	</isEqual>
 		   	<![CDATA[
 	   			WHERE
@@ -1233,11 +1596,11 @@
 							INNER JOIN 
 								TBL_ADDJOBMASTER 
 							ON
-								(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+								(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID
 								AND 
-								TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+								TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID)
 							WHERE 
-								TBL_ADDJOBMASTER.TENANT_ID = #tenantID# 
+								TBL_ADDJOBMASTER.TENANT_ID = #tenantID#
 							AND 
 								TBL_ADDJOBMASTER.CN = #userId#
 							UNION ALL
@@ -1258,7 +1621,7 @@
 					APRTYPE = '015'
 			]]>
 			<isNotEmpty property="searchText" prepend="AND">
-				(DOCTITLE LIKE CONCAT(CONCAT('%', #searchText#), '%') 
+				(DOCTITLE LIKE CONCAT(CONCAT('%', #searchText#), '%')
 					OR 
 				WRITERNAME LIKE CONCAT(CONCAT('%', #searchText#), '%'))
 			</isNotEmpty>
@@ -1285,6 +1648,14 @@
 					TBL_APRDOCINFO.TENANT_ID = TBL_EXPAPRDOCINFO.TENANT_ID
 				AND
 					TBL_APRDOCINFO.COMPANYID = TBL_EXPAPRDOCINFO.COMPANYID
+				LEFT JOIN
+					(SELECT DOCID, TENANT_ID, COMPANYID FROM TBL_GONGRAMDELETEHISTORY) TBL_GONGRAMDELETEHISTORY
+				ON
+					TBL_APRDOCINFO.DOCID = TBL_GONGRAMDELETEHISTORY.DOCID
+				AND 
+					TBL_APRDOCINFO.TENANT_ID = TBL_GONGRAMDELETEHISTORY.TENANT_ID
+				AND 
+					TBL_APRDOCINFO.COMPANYID = TBL_GONGRAMDELETEHISTORY.COMPANYID
 	   			WHERE
 	   				TBL_APRDOCINFO.TENANT_ID = #tenantID#
 	   			AND
@@ -1321,6 +1692,221 @@
 					TBL_APRLINEINFO.APRTYPE = '015'
 				AND
 					TBL_APRLINEINFO.APRSTATE = '010'
+				AND
+					TBL_GONGRAMDELETEHISTORY.DOCID IS NULL
+			]]>
+			<isNotEmpty property="searchText" prepend="AND">
+				(DOCTITLE LIKE CONCAT(CONCAT('%', #searchText#), '%') 
+					OR 
+				WRITERNAME LIKE CONCAT(CONCAT('%', #searchText#), '%'))
+			</isNotEmpty>
+		</isEqual>
+		<isEqual property="type" compareValue="BAN">
+				SELECT
+					COUNT(*)
+				FROM (
+				SELECT
+					VAPRDOINGDOCLIST.DOCID
+				FROM
+					VAPRDOINGDOCLIST
+				LEFT OUTER JOIN
+					TBL_APRDOCGROUPINFO GRP
+				ON
+					VAPRDOINGDOCLIST.TENANT_ID = GRP.TENANT_ID
+				AND
+					VAPRDOINGDOCLIST.COMPANYID = GRP.COMPANYID
+				AND
+					VAPRDOINGDOCLIST.DOCID = GRP.DOCID
+	   			WHERE
+	   				VAPRDOINGDOCLIST.TENANT_ID = #tenantID#
+	   			 AND
+					VAPRDOINGDOCLIST.COMPANYID IN (
+							SELECT
+								EXTENSIONATTRIBUTE2
+							FROM
+								TBL_DEPTMASTER
+							INNER JOIN
+								TBL_ADDJOBMASTER
+							ON
+								(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID
+								AND
+								TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID)
+							WHERE
+								TBL_ADDJOBMASTER.TENANT_ID = #tenantID#
+							AND
+								TBL_ADDJOBMASTER.CN = #userId#
+							UNION ALL
+							SELECT
+								PHYSICALDELIVERYOFFICENAME
+							FROM
+								TBL_USERMASTER
+							WHERE
+								CN = #userId#
+							AND
+								TENANT_ID = #tenantID#
+							)
+				AND
+					NVL(GRP.TABSN, 1) = 1
+	   			<isNotEmpty property="userIds" prepend="AND">
+				    <iterate prepend="APRMEMBERID IN" property="userIds" open="(" close=")" conjunction=",">
+					    #userIds[]#
+				    </iterate>
+			    </isNotEmpty>
+			<![CDATA[
+	   			AND
+	   				STARTDATE < TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+	   			AND
+	   				APRTYPE <> '015'
+	   			AND
+	   				FUNCTIONTYPE = '004'
+			]]>
+			<isNotEmpty property="searchText" prepend="AND">
+				(DOCTITLE LIKE CONCAT(CONCAT('%', #searchText#), '%')
+				OR
+				WRITERNAME LIKE CONCAT(CONCAT('%', #searchText#), '%'))
+			</isNotEmpty>
+				UNION ALL
+
+				SELECT
+					VENDCHAMJODOCINFO.DOCID
+				FROM
+					VENDCHAMJODOCINFO
+				LEFT OUTER JOIN
+					TBL_APRDOCGROUPINFO GRP
+				ON
+					VENDCHAMJODOCINFO.TENANT_ID = GRP.TENANT_ID
+				AND
+					VENDCHAMJODOCINFO.COMPANYID = GRP.COMPANYID
+				AND
+					VENDCHAMJODOCINFO.DOCID = GRP.DOCID
+	   			WHERE
+	   				VENDCHAMJODOCINFO.TENANT_ID = #tenantID#
+	   			AND
+					VENDCHAMJODOCINFO.COMPANYID IN (
+							SELECT
+								EXTENSIONATTRIBUTE2
+							FROM
+								TBL_DEPTMASTER
+							INNER JOIN
+								TBL_ADDJOBMASTER
+							ON
+								(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID
+								AND
+								TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID)
+							WHERE
+								TBL_ADDJOBMASTER.TENANT_ID = #tenantID#
+							AND
+								TBL_ADDJOBMASTER.CN = #userId#
+							UNION ALL
+							SELECT
+								PHYSICALDELIVERYOFFICENAME
+							FROM
+								TBL_USERMASTER
+							WHERE
+								CN = #userId#
+							AND
+								TENANT_ID = #tenantID#
+							)
+				AND
+					NVL(GRP.TABSN, 1) = 1
+				<isNotEmpty property="userIds" prepend="AND">
+					<iterate prepend="APRMEMBERID IN" property="userIds" open="(" close=")" conjunction=",">
+						#userIds[]#
+					</iterate>
+				</isNotEmpty>
+			<![CDATA[
+	   			AND
+	   				STARTDATE < TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+	   			AND
+	   				APRTYPE <> '015'
+	   			AND
+	   				FUNCTIONTYPE = '004'
+			]]>
+			<isNotEmpty property="searchText" prepend="AND">
+				(DOCTITLE LIKE CONCAT(CONCAT('%', #searchText#), '%')
+				OR
+				WRITERNAME LIKE CONCAT(CONCAT('%', #searchText#), '%'))
+			</isNotEmpty>
+			) LIST
+		</isEqual>
+		<isEqual property="type" compareValue="GRSEND">
+			<![CDATA[
+				SELECT 
+					COUNT(TBL_APRDOCINFO.DOCID)
+				FROM 
+					TBL_APRDOCINFO
+				INNER JOIN
+					TBL_APRLINEINFO
+				ON
+					TBL_APRDOCINFO.DOCID = TBL_APRLINEINFO.DOCID
+				AND
+    				TBL_APRLINEINFO.APRMEMBERSN = 1
+				AND
+					TBL_APRDOCINFO.TENANT_ID = TBL_APRLINEINFO.TENANT_ID
+				AND
+					TBL_APRDOCINFO.COMPANYID = TBL_APRLINEINFO.COMPANYID
+				INNER JOIN
+					TBL_EXPAPRDOCINFO
+				ON
+					TBL_APRDOCINFO.DOCID = TBL_EXPAPRDOCINFO.DOCID
+				AND
+					TBL_APRDOCINFO.TENANT_ID = TBL_EXPAPRDOCINFO.TENANT_ID
+				AND
+					TBL_APRDOCINFO.COMPANYID = TBL_EXPAPRDOCINFO.COMPANYID
+				INNER JOIN 
+					(SELECT DOCID, DOCSTATE, TENANT_ID, COMPANYID FROM TBL_ENDAPRDOCINFO) TBL_ENDAPRDOCINFO 
+				ON 
+					TBL_APRDOCINFO.ORGDOCID = TBL_ENDAPRDOCINFO.DOCID
+				AND 
+					TBL_APRDOCINFO.TENANT_ID = TBL_ENDAPRDOCINFO.TENANT_ID
+				AND 
+					TBL_APRDOCINFO.COMPANYID = TBL_ENDAPRDOCINFO.COMPANYID
+				INNER JOIN
+					TBL_ENDAPRLINEINFO
+				ON 
+					TBL_ENDAPRDOCINFO.DOCID = TBL_ENDAPRLINEINFO.DOCID
+				AND
+					TBL_ENDAPRLINEINFO.APRMEMBERSN = 1
+				AND
+					TBL_ENDAPRDOCINFO.TENANT_ID = TBL_ENDAPRLINEINFO.TENANT_ID
+				AND
+					TBL_ENDAPRDOCINFO.COMPANYID = TBL_ENDAPRLINEINFO.COMPANYID
+	   			WHERE
+	   				TBL_APRDOCINFO.TENANT_ID = #tenantID#
+	   			AND
+					TBL_APRDOCINFO.COMPANYID IN (
+							SELECT 
+								EXTENSIONATTRIBUTE2 
+							FROM 
+								TBL_DEPTMASTER 
+							INNER JOIN 
+								TBL_ADDJOBMASTER 
+							ON
+								(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+								AND 
+								TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+							WHERE 
+								TBL_ADDJOBMASTER.TENANT_ID = #tenantID# 
+							AND 
+								TBL_ADDJOBMASTER.CN = #userId#
+							UNION ALL
+							SELECT 
+								PHYSICALDELIVERYOFFICENAME
+							FROM
+								TBL_USERMASTER
+							WHERE
+								CN = #userId#
+							AND
+								TENANT_ID = #tenantID# 
+							)
+	   			AND 
+	   				TBL_APRDOCINFO.STARTDATE < TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+	   			AND
+	   				((TBL_ENDAPRDOCINFO.DOCSTATE = '011' AND TBL_ENDAPRLINEINFO.APRMEMBERID = #userId#)
+            	OR
+                	(TBL_ENDAPRDOCINFO.DOCSTATE != '011' AND TBL_APRDOCINFO.WRITERID = #userId#))
+				AND 
+					TBL_APRDOCINFO.DOCSTATE = '015'
 			]]>
 			<isNotEmpty property="searchText" prepend="AND">
 				(DOCTITLE LIKE CONCAT(CONCAT('%', #searchText#), '%') 
@@ -1331,7 +1917,6 @@
 	</select>
 	
 	<select id="MApprovalG.getLeftCount" parameterClass="Map" resultClass="MApprGLeftVO">
-		<![CDATA[
 			SELECT
 				(	SELECT 
 						COUNT(*)
@@ -1352,8 +1937,12 @@
 		   				VAPRDOINGDOCLIST.TENANT_ID = #tenantID#
 		   			AND
 		   				VAPRDOINGDOCLIST.COMPANYID = #companyID#
-		   			AND 
-		   				APRMEMBERID IN ($id$) 
+					<isNotEmpty property="userIds" prepend="AND">
+                        <iterate prepend="APRMEMBERID IN" property="userIds" open="(" close=")" conjunction=",">
+                            #userIds[]#
+                        </iterate>
+                    </isNotEmpty> 
+		   			<![CDATA[
 		   			AND 
 	   					STARTDATE < TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
 		   			AND
@@ -1383,8 +1972,13 @@
 		   				VENDCHAMJODOCINFO.COMPANYID = #companyID#
 		   			AND
 	   					STARTDATE < TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
-		   			AND
-		   				APRMEMBERID IN ($id$) 
+	   				]]>
+		   			<isNotEmpty property="userIds" prepend="AND">
+                        <iterate prepend="APRMEMBERID IN" property="userIds" open="(" close=")" conjunction=",">
+                            #userIds[]#
+                        </iterate>
+                    </isNotEmpty>
+                    <![CDATA[
 		   			AND 
 		   				APRTYPE <> '015'
 		   			AND
@@ -1417,12 +2011,14 @@
 		   				APRTYPE <> '015'
 		   			AND 
 			         	DocState <> '017'
+		   			AND
+		   			    FUNCTIONTYPE <> '004'
 			        AND
 						NVL(GRP.TABSN, 1) = 1 ) aprDraftCount,
 			(
 				SELECT COUNT(*)
 				FROM (
-				SELECT 
+					SELECT 
 						DISTINCT VAPRWILLDOCLIST.DOCID, APRTYPE
 					FROM 
 						VAPRWILLDOCLIST 
@@ -1445,8 +2041,10 @@
 		   			AND
 		   				APRTYPE <> '015'
 		   			AND
+		   			    FUNCTIONTYPE <> '004'
+		   			AND
 						NVL(GRP.TABSN, 1) = 1
-			]]>
+					]]>
 					<isEqual property="mainViewYN" compareValue="YES">
 						AND	    
 							AprState != '001'
@@ -1461,7 +2059,27 @@
 			FROM
 				TBL_ENDAPRDOCINFO A
 			LEFT OUTER JOIN
-	   			TBL_ENDAPRLINEINFO B
+			(
+				SELECT
+					*
+				FROM
+					tbl_endaprlineinfo exa
+				JOIN (
+					SELECT
+						MAX(exb.APRMEMBERSN) as MAX_APRMEMBERSN,
+						exb.DOCID as MAX_DOCID
+					FROM
+						tbl_endaprlineinfo exb
+					WHERE
+						exb.APRMEMBERID = #userId#
+					GROUP BY
+						DOCID
+				) exc
+				ON
+					exa.APRMEMBERSN = exc.MAX_APRMEMBERSN
+				AND
+					exa.DOCID = exc.MAX_DOCID
+			) B
 		   	ON
 	   			A.DOCID = B.DOCID
 		   	AND
@@ -1599,6 +2217,14 @@
 					TBL_APRDOCINFO.TENANT_ID = TBL_EXPAPRDOCINFO.TENANT_ID
 				AND
 					TBL_APRDOCINFO.COMPANYID = TBL_EXPAPRDOCINFO.COMPANYID
+				LEFT JOIN
+					(SELECT DOCID, TENANT_ID, COMPANYID FROM TBL_GONGRAMDELETEHISTORY) TBL_GONGRAMDELETEHISTORY
+				ON
+					TBL_APRDOCINFO.DOCID = TBL_GONGRAMDELETEHISTORY.DOCID
+				AND
+					TBL_APRDOCINFO.TENANT_ID = TBL_GONGRAMDELETEHISTORY.TENANT_ID
+				AND
+					TBL_APRDOCINFO.COMPANYID = TBL_GONGRAMDELETEHISTORY.COMPANYID
 				WHERE
 					TBL_APRDOCINFO.TENANT_ID = #tenantID#
 				AND
@@ -1610,9 +2236,133 @@
 				AND
 					TBL_APRLINEINFO.APRTYPE = '015'
 				AND
-					TBL_APRLINEINFO.APRSTATE = '010' ) gongRamEndCount
-		   	FROM DUAL
+					TBL_APRLINEINFO.APRSTATE = '010'
+				AND
+					TBL_GONGRAMDELETEHISTORY.DOCID IS NULL ) gongRamEndCount
 		]]>
+			,(	SELECT
+						COUNT(*)
+					FROM
+					(SELECT
+						VAPRDOINGDOCLIST.DOCID
+					FROM
+						VAPRDOINGDOCLIST
+					LEFT OUTER JOIN
+						TBL_APRDOCGROUPINFO GRP
+					ON
+						VAPRDOINGDOCLIST.TENANT_ID = GRP.TENANT_ID
+					AND
+						VAPRDOINGDOCLIST.COMPANYID = GRP.COMPANYID
+					AND
+						VAPRDOINGDOCLIST.DOCID = GRP.DOCID
+		   			WHERE
+		   				VAPRDOINGDOCLIST.TENANT_ID = #tenantID#
+		   			AND
+		   				VAPRDOINGDOCLIST.COMPANYID = #companyID#
+					<isNotEmpty property="userIds" prepend="AND">
+						<iterate prepend="APRMEMBERID IN" property="userIds" open="(" close=")" conjunction=",">
+							#userIds[]#
+						</iterate>
+					</isNotEmpty>
+				<![CDATA[
+		   			AND
+	   					STARTDATE < TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+		   			AND
+		   				APRTYPE <> '015'
+				]]>
+		   			AND
+		   				FUNCTIONTYPE = '004'
+		   			AND
+						NVL(GRP.TABSN, 1) = 1
+
+		   			UNION ALL
+
+					SELECT
+						VENDCHAMJODOCINFO.DOCID
+					FROM
+						VENDCHAMJODOCINFO
+					LEFT OUTER JOIN
+						TBL_APRDOCGROUPINFO GRP
+					ON
+						VENDCHAMJODOCINFO.TENANT_ID = GRP.TENANT_ID
+					AND
+						VENDCHAMJODOCINFO.COMPANYID = GRP.COMPANYID
+					AND
+						VENDCHAMJODOCINFO.DOCID = GRP.DOCID
+		   			WHERE
+		   				VENDCHAMJODOCINFO.TENANT_ID = #tenantID#
+		   			AND
+		   				VENDCHAMJODOCINFO.COMPANYID = #companyID#
+					<isNotEmpty property="userIds" prepend="AND">
+						<iterate prepend="APRMEMBERID IN" property="userIds" open="(" close=")" conjunction=",">
+							#userIds[]#
+						</iterate>
+					</isNotEmpty>
+				<![CDATA[
+		   			AND
+	   					STARTDATE < TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+		   			AND
+		   				APRTYPE <> '015'
+				]]>
+		   			AND
+		   				FUNCTIONTYPE = '004'
+		   			AND
+						NVL(GRP.TABSN, 1) = 1 ) LIST ) as aprBanCount
+				,(SELECT 
+					COUNT(TBL_APRDOCINFO.DOCID)
+				FROM 
+					TBL_APRDOCINFO
+				INNER JOIN
+					TBL_APRLINEINFO
+				ON
+					TBL_APRDOCINFO.DOCID = TBL_APRLINEINFO.DOCID
+				AND
+					TBL_APRLINEINFO.APRMEMBERSN = 1
+				AND
+					TBL_APRDOCINFO.TENANT_ID = TBL_APRLINEINFO.TENANT_ID
+				AND
+					TBL_APRDOCINFO.COMPANYID = TBL_APRLINEINFO.COMPANYID
+				INNER JOIN
+					TBL_EXPAPRDOCINFO
+				ON
+					TBL_APRDOCINFO.DOCID = TBL_EXPAPRDOCINFO.DOCID
+				AND
+					TBL_APRDOCINFO.TENANT_ID = TBL_EXPAPRDOCINFO.TENANT_ID
+				AND
+					TBL_APRDOCINFO.COMPANYID = TBL_EXPAPRDOCINFO.COMPANYID
+				INNER JOIN 
+					(SELECT DOCID, DOCSTATE, TENANT_ID, COMPANYID FROM TBL_ENDAPRDOCINFO) TBL_ENDAPRDOCINFO 
+				ON 
+					TBL_APRDOCINFO.ORGDOCID = TBL_ENDAPRDOCINFO.DOCID
+				AND 
+					TBL_APRDOCINFO.TENANT_ID = TBL_ENDAPRDOCINFO.TENANT_ID
+				AND 
+					TBL_APRDOCINFO.COMPANYID = TBL_ENDAPRDOCINFO.COMPANYID
+				INNER JOIN
+					TBL_ENDAPRLINEINFO
+				ON
+					TBL_ENDAPRDOCINFO.DOCID = TBL_ENDAPRLINEINFO.DOCID
+				AND
+					TBL_ENDAPRLINEINFO.APRMEMBERSN = 1
+				AND
+					TBL_ENDAPRDOCINFO.TENANT_ID = TBL_ENDAPRLINEINFO.TENANT_ID
+				AND
+					TBL_ENDAPRDOCINFO.COMPANYID = TBL_ENDAPRLINEINFO.COMPANYID
+				WHERE
+					TBL_APRDOCINFO.TENANT_ID = #tenantID#
+				AND
+					TBL_APRDOCINFO.COMPANYID = #companyID#
+				AND
+					((TBL_ENDAPRDOCINFO.DOCSTATE = '011' AND TBL_ENDAPRLINEINFO.APRMEMBERID = #userId#)
+				OR
+					(TBL_ENDAPRDOCINFO.DOCSTATE != '011' AND TBL_APRDOCINFO.WRITERID = #userId#))
+				<![CDATA[
+				AND 
+					TBL_APRDOCINFO.STARTDATE < TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+				]]>
+				AND
+					TBL_APRDOCINFO.DOCSTATE = '015' ) gongRamSendCount
+		   	FROM DUAL
 	</select>
 	
 	<select id="MApprovalG.getAprLineInfo" parameterClass="Map" resultClass="MApprGAprLineInfoVO">
@@ -1621,32 +2371,42 @@
 				A.APRMEMBERID,
 	          	A.APRSTATE,
 	          	A.APRTYPE,
-	          	CASE 
-					WHEN (A.APRMEMBERNAME$lang$ = '' OR A.APRMEMBERNAME$lang$ IS NULL) THEN A.APRMEMBERNAME
-					ELSE A.APRMEMBERNAME$lang$
-				END APRMEMBERNAME,
-	          	CASE 
-					WHEN (A.APRMEMBERJOBTITLE$lang$ = '' OR A.APRMEMBERJOBTITLE$lang$ IS NULL) THEN A.APRMEMBERJOBTITLE
-					ELSE A.APRMEMBERJOBTITLE$lang$
-				END APRMEMBERJOBTITLE,
-	          	CASE 
-					WHEN (A.APRMEMBERDEPTNAME$lang$ = '' OR A.APRMEMBERDEPTNAME$lang$ IS NULL) THEN A.APRMEMBERDEPTNAME
-					ELSE A.APRMEMBERDEPTNAME$lang$
-				END APRMEMBERDEPTNAME,
-	          	TO_CHAR(A.RECEIVEDDATE + (#offset# / (60 * 24)),'YYYY-MM-DD HH24:MI:SS') RECEIVEDDATE,
-	          	TO_CHAR(A.PROCESSDATE + (#offset# / (60 * 24)),'YYYY-MM-DD HH24:MI:SS') PROCESSDATE,
-				CASE 
-					WHEN (B.PROXYUSERNAME$lang$ = '' OR B.PROXYUSERNAME$lang$ IS NULL) THEN B.PROXYUSERNAME
-					ELSE B.PROXYUSERNAME$lang$
-				END PROXYUSERNAME,
-				CASE 
-					WHEN (B.PROXYUSERJOBTITLE$lang$ = '' OR B.PROXYUSERJOBTITLE$lang$ IS NULL) THEN B.PROXYUSERJOBTITLE
-					ELSE B.PROXYUSERJOBTITLE$lang$
-				END PROXYUSERJOBTITLE,
-				CASE 
-					WHEN (B.PROXYUSERDEPTNAME$lang$ = '' OR B.PROXYUSERDEPTNAME$lang$ IS NULL) THEN B.PROXYUSERDEPTNAME
-					ELSE B.PROXYUSERDEPTNAME$lang$
-				END PROXYUSERDEPTNAME,
+	          	<isEqual property="lang" compareValue="2">
+	                CASE
+	                    WHEN (A.APRMEMBERNAME2 = '' OR A.APRMEMBERNAME2 IS NULL) THEN APRMEMBERNAME
+	                    ELSE A.APRMEMBERNAME2
+	                END AS APRMEMBERNAME,
+	                CASE
+	                    WHEN (A.APRMEMBERJOBTITLE2 = '' OR A.APRMEMBERJOBTITLE2 IS NULL) THEN APRMEMBERJOBTITLE
+	                    ELSE A.APRMEMBERJOBTITLE2
+	                END AS APRMEMBERJOBTITLE,
+	                CASE
+	                    WHEN (A.APRMEMBERDEPTNAME2 = '' OR A.APRMEMBERDEPTNAME2 IS NULL) THEN APRMEMBERDEPTNAME
+	                    ELSE A.APRMEMBERDEPTNAME2
+	                END AS APRMEMBERDEPTNAME,
+	                CASE
+	                    WHEN (B.PROXYUSERNAME2 = '' OR B.PROXYUSERNAME2 IS NULL) THEN PROXYUSERNAME
+	                    ELSE B.PROXYUSERNAME2
+	                END AS PROXYUSERNAME,
+	                CASE
+	                    WHEN (B.PROXYUSERJOBTITLE2 = '' OR B.PROXYUSERJOBTITLE2 IS NULL) THEN PROXYUSERJOBTITLE
+	                    ELSE B.PROXYUSERJOBTITLE2
+	                END AS PROXYUSERJOBTITLE,
+	                CASE
+	                    WHEN (B.PROXYUSERDEPTNAME2 = '' OR B.PROXYUSERDEPTNAME2 IS NULL) THEN PROXYUSERDEPTNAME
+	                    ELSE B.PROXYUSERDEPTNAME2
+	                END AS PROXYUSERDEPTNAME,
+	            </isEqual>
+	            <isNotEqual property="lang" compareValue="2">
+					A.APRMEMBERNAME,
+	                A.APRMEMBERJOBTITLE,
+	                A.APRMEMBERDEPTNAME,
+	                B.PROXYUSERNAME,
+	                B.PROXYUSERJOBTITLE,
+	                B.PROXYUSERDEPTNAME,
+	            </isNotEqual>
+				TO_CHAR(A.RECEIVEDDATE + (#offset# / (60 * 24)),'YYYY-MM-DD HH24:MI:SS') RECEIVEDDATE,
+				TO_CHAR(A.PROCESSDATE + (#offset# / (60 * 24)),'YYYY-MM-DD HH24:MI:SS') PROCESSDATE,
 				(SELECT 
 					EXTENSIONATTRIBUTE2
 				FROM
@@ -1654,7 +2414,8 @@
 				WHERE
 					TENANT_ID = #tenantID#
 				AND
-					CN = A.APRMEMBERID) APRMEMBERPHOTO
+					CN = A.APRMEMBERID) APRMEMBERPHOTO,
+				A.APRMEMBERSN
 	        FROM 
 	           	TBL_APRLINEINFO A 
 	        INNER JOIN 
@@ -1681,32 +2442,42 @@
 				A.APRMEMBERID,
 	          	A.APRSTATE,
 	          	A.APRTYPE,
-	          	CASE 
-					WHEN (A.APRMEMBERNAME$lang$ = '' OR A.APRMEMBERNAME$lang$ IS NULL) THEN A.APRMEMBERNAME
-					ELSE A.APRMEMBERNAME$lang$
-				END APRMEMBERNAME,
-	          	CASE 
-					WHEN (A.APRMEMBERJOBTITLE$lang$ = '' OR A.APRMEMBERJOBTITLE$lang$ IS NULL) THEN A.APRMEMBERJOBTITLE
-					ELSE A.APRMEMBERJOBTITLE$lang$
-				END APRMEMBERJOBTITLE,
-	          	CASE 
-					WHEN (A.APRMEMBERDEPTNAME$lang$ = '' OR A.APRMEMBERDEPTNAME$lang$ IS NULL) THEN A.APRMEMBERDEPTNAME
-					ELSE A.APRMEMBERDEPTNAME$lang$
-				END APRMEMBERDEPTNAME,
-	          	TO_CHAR(A.RECEIVEDDATE + (#offset# / (60 * 24)),'YYYY-MM-DD HH24:MI:SS') RECEIVEDDATE,
+				<isEqual property="lang" compareValue="2">
+	                CASE
+	                    WHEN (A.APRMEMBERNAME2 = '' OR A.APRMEMBERNAME2 IS NULL) THEN APRMEMBERNAME
+	                    ELSE A.APRMEMBERNAME2
+	                END AS APRMEMBERNAME,
+	                CASE
+	                    WHEN (A.APRMEMBERJOBTITLE2 = '' OR A.APRMEMBERJOBTITLE2 IS NULL) THEN APRMEMBERJOBTITLE
+	                    ELSE A.APRMEMBERJOBTITLE2
+	                END AS APRMEMBERJOBTITLE,
+	                CASE
+	                    WHEN (A.APRMEMBERDEPTNAME2 = '' OR A.APRMEMBERDEPTNAME2 IS NULL) THEN APRMEMBERDEPTNAME
+	                    ELSE A.APRMEMBERDEPTNAME2
+	                END AS APRMEMBERDEPTNAME,
+	                CASE
+	                    WHEN (B.PROXYUSERNAME2 = '' OR B.PROXYUSERNAME2 IS NULL) THEN PROXYUSERNAME
+	                    ELSE B.PROXYUSERNAME2
+	                END AS PROXYUSERNAME,
+	                CASE
+	                    WHEN (B.PROXYUSERJOBTITLE2 = '' OR B.PROXYUSERJOBTITLE2 IS NULL) THEN PROXYUSERJOBTITLE
+	                    ELSE B.PROXYUSERJOBTITLE2
+	                END AS PROXYUSERJOBTITLE,
+	                CASE
+	                    WHEN (B.PROXYUSERDEPTNAME2 = '' OR B.PROXYUSERDEPTNAME2 IS NULL) THEN PROXYUSERDEPTNAME
+	                    ELSE B.PROXYUSERDEPTNAME2
+	                END AS PROXYUSERDEPTNAME,
+	            </isEqual>
+	            <isNotEqual property="lang" compareValue="2">
+	                A.APRMEMBERNAME,
+	                A.APRMEMBERJOBTITLE,
+	                A.APRMEMBERDEPTNAME,
+	                B.PROXYUSERNAME,
+	                B.PROXYUSERJOBTITLE,
+	                B.PROXYUSERDEPTNAME,
+	            </isNotEqual>
+				TO_CHAR(A.RECEIVEDDATE + (#offset# / (60 * 24)),'YYYY-MM-DD HH24:MI:SS') RECEIVEDDATE,
 	          	TO_CHAR(A.PROCESSDATE + (#offset# / (60 * 24)),'YYYY-MM-DD HH24:MI:SS') PROCESSDATE,
-				CASE 
-					WHEN (B.PROXYUSERNAME$lang$ = '' OR B.PROXYUSERNAME$lang$ IS NULL) THEN B.PROXYUSERNAME
-					ELSE B.PROXYUSERNAME$lang$
-				END PROXYUSERNAME,
-				CASE 
-					WHEN (B.PROXYUSERJOBTITLE$lang$ = '' OR B.PROXYUSERJOBTITLE$lang$ IS NULL) THEN B.PROXYUSERJOBTITLE
-					ELSE B.PROXYUSERJOBTITLE$lang$
-				END PROXYUSERJOBTITLE,
-				CASE 
-					WHEN (B.PROXYUSERDEPTNAME$lang$ = '' OR B.PROXYUSERDEPTNAME$lang$ IS NULL) THEN B.PROXYUSERDEPTNAME
-					ELSE B.PROXYUSERDEPTNAME$lang$
-				END PROXYUSERDEPTNAME,
 				(SELECT 
 					EXTENSIONATTRIBUTE2
 				FROM
@@ -1714,7 +2485,8 @@
 				WHERE
 					TENANT_ID = #tenantID#
 				AND
-					CN = A.APRMEMBERID) APRMEMBERPHOTO
+					CN = A.APRMEMBERID) APRMEMBERPHOTO,
+				A.APRMEMBERSN
 	        FROM 
 	           	TBL_ENDAPRLINEINFO A 
 	        INNER JOIN 
@@ -1887,6 +2659,36 @@
 	   				ROWNUM = 1
 			]]>
 		</isEqual>
+		<isEqual property="type" compareValue="BAN">
+				SELECT
+					HREF
+				FROM
+					VAPRDOINGDOCLIST
+				WHERE
+					TENANT_ID = #tenantID#
+				AND
+					COMPANYID = #companyID#
+				AND
+					DOCID = #docID#
+				AND
+					ROWNUM = 1
+		</isEqual>
+		<isEqual property="type" compareValue="GRSEND">
+			<![CDATA[
+				SELECT 
+					HREF
+				FROM
+					TBL_APRDOCINFO
+	   			WHERE
+	   				TENANT_ID = #tenantID#
+	   			AND
+	   				COMPANYID = #companyID#
+	   			AND
+	   				DOCID = #docID#
+	   			AND
+	   				ROWNUM = 1
+			]]>
+		</isEqual>
 	</select>
 	
 	<select id="MApprovalG.getAprCommentCount" parameterClass="Map" resultClass="String">
@@ -1923,72 +2725,76 @@
 	<!-- 2023-03-13 전인하 - 전자결재 > 모바일 의견 기능 개선 - 의견 정보 테이블에서 PK중 하나인 OpinionSN을 추가 조회 -->
 	<select id="MApprovalG.getOpinionInfo" parameterClass="Map" resultClass="MApprGOpinionInfoVO">
 		<isEqual property="type" compareValue="END">
-			<![CDATA[
-				SELECT 
-					 CONTENT,
-					 OPINIONGB,
-					 USERID,
-					 OPINIONSN,
-					 CASE 
-	   					WHEN (USERNAME$lang$ = '' OR USERNAME$lang$ IS NULL) 
-	   					THEN USERNAME
-	   					ELSE USERNAME$lang$
-	   				 END USERNAME,
-	   				 CASE 
-	   					WHEN (USERJOBTITLE$lang$ = '' OR USERJOBTITLE$lang$ IS NULL) 
-	   					THEN USERJOBTITLE
-	   					ELSE USERJOBTITLE$lang$
-	   				 END USERJOBTITLE,
-	   				 CASE 
-	   					WHEN (USERDEPTNAME$lang$ = '' OR USERDEPTNAME$lang$ IS NULL) 
-	   					THEN USERDEPTNAME
-	   					ELSE USERDEPTNAME$lang$
-	   				 END USERDEPTNAME
-				FROM 
-					TBL_ENDAPROPINIONINFO  
-				WHERE 
-					TENANT_ID =#tenantID#
-				AND
-					COMPANYID = #companyID#	
-				AND 
-					DOCID = #docID#
-				ORDER BY 
-					OPINIONSN DESC
-			]]>
+			SELECT 
+				CONTENT,
+				OPINIONGB,
+				USERID,
+				OPINIONSN,
+			<isEqual property="lang" compareValue="2">
+                CASE
+                    WHEN (USERNAME2 IS NULL OR USERNAME2 = '') THEN USERNAME
+                    ELSE USERNAME2
+                END AS USERNAME,
+                CASE
+                    WHEN (USERNAME2 IS NULL OR USERNAME2 = '') THEN USERJOBTITLE
+                    ELSE USERJOBTITLE2
+                END AS USERJOBTITLE,
+                CASE
+                    WHEN (USERDEPTNAME2 IS NULL OR USERDEPTNAME2 = '') THEN USERDEPTNAME
+                    ELSE USERDEPTNAME2
+                END AS USERDEPTNAME
+            </isEqual>
+            <isNotEqual property="lang" compareValue="2">
+                USERNAME,
+                USERJOBTITLE,
+                USERDEPTNAME
+            </isNotEqual>
+			FROM
+				TBL_ENDAPROPINIONINFO
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+			AND 
+				DOCID = #docID#
+			ORDER BY
+				OPINIONSN DESC
 		</isEqual>
 		<isNotEqual property="type" compareValue="END">
-			<![CDATA[
-				SELECT 
-					 CONTENT,
-					 OPINIONGB,
-					 USERID,
-					 OPINIONSN,
-					 CASE 
-	   					WHEN (USERNAME$lang$ = '' OR USERNAME$lang$ IS NULL) 
-	   					THEN USERNAME
-	   					ELSE USERNAME$lang$
-	   				 END USERNAME,
-	   				 CASE 
-	   					WHEN (USERJOBTITLE$lang$ = '' OR USERJOBTITLE$lang$ IS NULL) 
-	   					THEN USERJOBTITLE
-	   					ELSE USERJOBTITLE$lang$
-	   				 END USERJOBTITLE,
-	   				 CASE 
-	   					WHEN (USERDEPTNAME$lang$ = '' OR USERDEPTNAME$lang$ IS NULL) 
-	   					THEN USERDEPTNAME
-	   					ELSE USERDEPTNAME$lang$
-	   				 END USERDEPTNAME
-				FROM 
-					TBL_APROPINIONINFO  
-				WHERE 
-					TENANT_ID =#tenantID#
-				AND
-					COMPANYID = #companyID#	
-				AND 
-					DOCID = #docID#
-				ORDER BY 
-					OPINIONSN DESC
-			]]>
+			SELECT
+				CONTENT,
+				OPINIONGB,
+				USERID,
+				OPINIONSN,
+			<isEqual property="lang" compareValue="2">
+				CASE
+                    WHEN (USERNAME2 IS NULL OR USERNAME2 = '') THEN USERNAME
+                    ELSE USERNAME2
+                END AS USERNAME,
+                CASE
+                    WHEN (USERNAME2 IS NULL OR USERNAME2 = '') THEN USERJOBTITLE
+                    ELSE USERJOBTITLE2
+                END AS USERJOBTITLE,
+                CASE
+                    WHEN (USERDEPTNAME2 IS NULL OR USERDEPTNAME2 = '') THEN USERDEPTNAME
+                    ELSE USERDEPTNAME2
+                END AS USERDEPTNAME
+            </isEqual>
+            <isNotEqual property="lang" compareValue="2">
+                USERNAME,
+                USERJOBTITLE,
+                USERDEPTNAME
+            </isNotEqual>
+			FROM
+				TBL_APROPINIONINFO
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				DOCID = #docID#
+			ORDER BY
+				OPINIONSN DESC
 		</isNotEqual>
 	</select>
 	
@@ -2122,7 +2928,6 @@
 	<select id="MApprovalG.getAprDocInfo" parameterClass="Map" resultClass="MApprGDocInfoVO">
 		<isEqual property="type" compareValue="DO">
 			<isEqual property="mode" compareValue="APR">
-				<![CDATA[
 					SELECT
 						DOCID,
 						ORGDOCID,
@@ -2135,19 +2940,26 @@
 						APRMEMBERDEPTID,
 						DOCSTATE,
 						DOCTITLE,
-						CASE 
-		   					WHEN (WRITERNAME$lang$ = '' OR WRITERNAME$lang$ IS NULL) THEN WRITERNAME
-		   					ELSE WRITERNAME$lang$
-		   				END WRITERNAME,
-		   				CASE 
-		   					WHEN (WRITERDEPTNAME$lang$ = '' OR WRITERDEPTNAME$lang$ IS NULL) THEN WRITERDEPTNAME
-		   					ELSE WRITERDEPTNAME$lang$
-		   				END WRITERDEPTNAME,
-		   				CASE 
-		   					WHEN (WRITERJOBTITLE$lang$ = '' OR WRITERJOBTITLE$lang$ IS NULL) THEN WRITERJOBTITLE
-		   					ELSE WRITERJOBTITLE$lang$
-		   				END WRITERJOBTITLE,
-		   				TO_CHAR(STARTDATE + (#offset# / (60 * 24)),'YYYY-MM-DD HH24:MI:SS') STARTDATE
+					<isEqual property="lang" compareValue="2">
+	                    CASE
+	                        WHEN (WRITERNAME2 IS NULL OR WRITERNAME2 = '') THEN WRITERNAME
+	                        ELSE WRITERNAME2
+	                    END AS WRITERNAME,
+	                    CASE
+	                        WHEN (WRITERDEPTNAME2 IS NULL OR WRITERDEPTNAME2 = '') THEN WRITERDEPTNAME
+	                        ELSE WRITERDEPTNAME2
+	                    END AS WRITERDEPTNAME,
+	                    CASE
+	                        WHEN (WRITERJOBTITLE2 IS NULL OR WRITERJOBTITLE2 = '') THEN WRITERJOBTITLE
+	                        ELSE WRITERJOBTITLE2
+	                    END AS WRITERJOBTITLE,
+	                </isEqual>
+	                <isNotEqual property="lang" compareValue="2">
+	                    WRITERNAME,
+	                    WRITERDEPTNAME,
+	                    WRITERJOBTITLE,
+	                </isNotEqual>
+		   				TO_CHAR(STARTDATE + (#offset# / (60 * 24)), 'YYYY-MM-DD HH24:MI:SS') STARTDATE
 					FROM
 						VAPRDOINGDOCLIST
 					WHERE
@@ -2156,7 +2968,6 @@
 						COMPANYID = #companyID#
 					AND
 						DOCID = #docID#
-				]]>
 				<isNotEmpty property="aprMemberSN" prepend="AND">
 					APRMEMBERSN = #aprMemberSN#
 				</isNotEmpty>
@@ -2164,7 +2975,6 @@
 		   				ROWNUM = 1
 			</isEqual>
 			<isNotEqual property="mode" compareValue="APR">
-				<![CDATA[
 					SELECT
 						DOCID,
 						ORGDOCID,
@@ -2177,19 +2987,26 @@
 						APRMEMBERDEPTID,
 						DOCSTATE,
 						DOCTITLE,
-						CASE 
-		   					WHEN (WRITERNAME$lang$ = '' OR WRITERNAME$lang$ IS NULL) THEN WRITERNAME
-		   					ELSE WRITERNAME$lang$
-		   				END WRITERNAME,
-		   				CASE 
-		   					WHEN (WRITERDEPTNAME$lang$ = '' OR WRITERDEPTNAME$lang$ IS NULL) THEN WRITERDEPTNAME
-		   					ELSE WRITERDEPTNAME$lang$
-		   				END WRITERDEPTNAME,
-		   				CASE 
-		   					WHEN (WRITERJOBTITLE$lang$ = '' OR WRITERJOBTITLE$lang$ IS NULL) THEN WRITERJOBTITLE
-		   					ELSE WRITERJOBTITLE$lang$
-		   				END WRITERJOBTITLE,
-		   				TO_CHAR(STARTDATE + (#offset# / (60 * 24)),'YYYY-MM-DD HH24:MI:SS') STARTDATE
+					<isEqual property="lang" compareValue="2">
+                        CASE
+                            WHEN (WRITERNAME2 IS NULL OR WRITERNAME2 = '') THEN WRITERNAME
+                            ELSE WRITERNAME2
+                        END AS WRITERNAME,
+                        CASE
+                            WHEN (WRITERDEPTNAME2 IS NULL OR WRITERDEPTNAME2 = '') THEN WRITERDEPTNAME
+                            ELSE WRITERDEPTNAME2
+                        END AS WRITERDEPTNAME,
+                        CASE
+                            WHEN (WRITERJOBTITLE2 IS NULL OR WRITERJOBTITLE2 = '') THEN WRITERJOBTITLE
+                            ELSE WRITERJOBTITLE2
+                        END AS WRITERJOBTITLE,
+                    </isEqual>
+                    <isNotEqual property="lang" compareValue="2">
+                        WRITERNAME,
+                        WRITERDEPTNAME,
+                        WRITERJOBTITLE,
+                    </isNotEqual>
+		   				TO_CHAR(STARTDATE + (#offset# / (60 * 24)), 'YYYY-MM-DD HH24:MI:SS') STARTDATE
 					FROM
 						VENDCHAMJODOCINFO
 					WHERE
@@ -2198,7 +3015,6 @@
 						COMPANYID = #companyID#
 					AND
 						DOCID = #docID#
-				]]>
 				<isNotEmpty property="aprMemberSN" prepend="AND">
 					APRMEMBERSN = #aprMemberSN#
 				</isNotEmpty>
@@ -2209,7 +3025,6 @@
 			</isNotEqual>
 		</isEqual>
 		<isEqual property="type" compareValue="ING">
-			<![CDATA[
 				SELECT
 					DOCID,
 					ORGDOCID,
@@ -2222,19 +3037,26 @@
 					APRMEMBERDEPTID,
 					DOCSTATE,
 					DOCTITLE,
-					CASE 
-	   					WHEN (WRITERNAME$lang$ = '' OR WRITERNAME$lang$ IS NULL) THEN WRITERNAME
-	   					ELSE WRITERNAME$lang$
-	   				END WRITERNAME,
-	   				CASE 
-	   					WHEN (WRITERDEPTNAME$lang$ = '' OR WRITERDEPTNAME$lang$ IS NULL) THEN WRITERDEPTNAME
-	   					ELSE WRITERDEPTNAME$lang$
-	   				END WRITERDEPTNAME,
-	   				CASE 
-	   					WHEN (WRITERJOBTITLE$lang$ = '' OR WRITERJOBTITLE$lang$ IS NULL) THEN WRITERJOBTITLE
-	   					ELSE WRITERJOBTITLE$lang$
-	   				END WRITERJOBTITLE,
-					TO_CHAR(STARTDATE + (#offset# / (60 * 24)),'YYYY-MM-DD HH24:MI:SS') STARTDATE
+				<isEqual property="lang" compareValue="2">
+                    CASE
+                        WHEN (WRITERNAME2 IS NULL OR WRITERNAME2 = '') THEN WRITERNAME
+                        ELSE WRITERNAME2
+                    END AS WRITERNAME,
+                    CASE
+                        WHEN (WRITERDEPTNAME2 IS NULL OR WRITERDEPTNAME2 = '') THEN WRITERDEPTNAME
+                        ELSE WRITERDEPTNAME2
+                    END AS WRITERDEPTNAME,
+                    CASE
+                        WHEN (WRITERJOBTITLE2 IS NULL OR WRITERJOBTITLE2 = '') THEN WRITERJOBTITLE
+                        ELSE WRITERJOBTITLE2
+                    END AS WRITERJOBTITLE,
+                </isEqual>
+                <isNotEqual property="lang" compareValue="2">
+                    WRITERNAME,
+                    WRITERDEPTNAME,
+                    WRITERJOBTITLE,
+                </isNotEqual>
+					TO_CHAR(STARTDATE + (#offset# / (60 * 24)), 'YYYY-MM-DD HH24:MI:SS') STARTDATE
 				FROM
 					VAPRWILLDOCLIST
 				WHERE
@@ -2245,10 +3067,8 @@
 					DOCID = #docID#
 	   			AND
 	   				ROWNUM = 1
-			]]>
 		</isEqual>
 		<isEqual property="type" compareValue="DRAFT">
-			<![CDATA[
 				SELECT
 					DOCID,
 					ORGDOCID,
@@ -2261,19 +3081,26 @@
 					APRMEMBERDEPTID,
 					DOCSTATE,
 					DOCTITLE,
-					CASE 
-	   					WHEN (WRITERNAME$lang$ = '' OR WRITERNAME$lang$ IS NULL) THEN WRITERNAME
-	   					ELSE WRITERNAME$lang$
-	   				END WRITERNAME,
-	   				CASE 
-	   					WHEN (WRITERDEPTNAME$lang$ = '' OR WRITERDEPTNAME$lang$ IS NULL) THEN WRITERDEPTNAME
-	   					ELSE WRITERDEPTNAME$lang$
-	   				END WRITERDEPTNAME,
-	   				CASE 
-	   					WHEN (WRITERJOBTITLE$lang$ = '' OR WRITERJOBTITLE$lang$ IS NULL) THEN WRITERJOBTITLE
-	   					ELSE WRITERJOBTITLE$lang$
-	   				END WRITERJOBTITLE,
-					TO_CHAR(STARTDATE + (#offset# / (60 * 24)),'YYYY-MM-DD HH24:MI:SS') STARTDATE
+				<isEqual property="lang" compareValue="2">
+	                CASE
+	                    WHEN (WRITERNAME2 IS NULL OR WRITERNAME2 = '') THEN WRITERNAME
+	                    ELSE WRITERNAME2
+	                END AS WRITERNAME,
+	                CASE
+	                    WHEN (WRITERDEPTNAME2 IS NULL OR WRITERDEPTNAME2 = '') THEN WRITERDEPTNAME
+	                    ELSE WRITERDEPTNAME2
+	                END AS WRITERDEPTNAME,
+	                CASE
+	                    WHEN (WRITERJOBTITLE2 IS NULL OR WRITERJOBTITLE2 = '') THEN WRITERJOBTITLE
+	                    ELSE WRITERJOBTITLE2
+	                END AS WRITERJOBTITLE,
+	            </isEqual>
+	            <isNotEqual property="lang" compareValue="2">
+	                WRITERNAME,
+	                WRITERDEPTNAME,
+	                WRITERJOBTITLE,
+	            </isNotEqual>
+					TO_CHAR(STARTDATE + (#offset# / (60 * 24)), 'YYYY-MM-DD HH24:MI:SS') STARTDATE
 				FROM
 					VAPRWILLDOCLIST
 				WHERE
@@ -2284,7 +3111,6 @@
 					DOCID = #docID#
 	   			AND
 	   				ROWNUM = 1
-			]]>
 		</isEqual>
 		<isEqual property="type" compareValue="END">
 			SELECT
@@ -2299,19 +3125,26 @@
 				B.APRMEMBERDEPTID,
 				A.DOCSTATE,
 				A.DOCTITLE,
-				CASE 
-   					WHEN (A.WRITERNAME$lang$ = '' OR A.WRITERNAME$lang$ IS NULL) THEN WRITERNAME
-   					ELSE A.WRITERNAME$lang$
-   				END WRITERNAME,
-   				CASE 
-   					WHEN (A.WRITERDEPTNAME$lang$ = '' OR A.WRITERDEPTNAME$lang$ IS NULL) THEN WRITERDEPTNAME
-   					ELSE A.WRITERDEPTNAME$lang$
-   				END WRITERDEPTNAME,
-   				CASE 
-   					WHEN (A.WRITERJOBTITLE$lang$ = '' OR A.WRITERJOBTITLE$lang$ IS NULL) THEN WRITERJOBTITLE
-   					ELSE A.WRITERJOBTITLE$lang$
-   				END WRITERJOBTITLE,
-				TO_CHAR(STARTDATE + (#offset# / (60 * 24)),'YYYY-MM-DD HH24:MI:SS') STARTDATE
+			<isEqual property="lang" compareValue="2">
+                CASE
+                    WHEN (A.WRITERNAME2 IS NULL OR A.WRITERNAME2 = '') THEN A.WRITERNAME
+                    ELSE A.WRITERNAME2
+                END AS WRITERNAME,
+                CASE
+                    WHEN (A.WRITERDEPTNAME2 IS NULL OR A.WRITERDEPTNAME2 = '') THEN A.WRITERDEPTNAME
+                    ELSE A.WRITERDEPTNAME2
+                END AS WRITERDEPTNAME,
+                CASE
+                    WHEN (A.WRITERJOBTITLE2 IS NULL OR A.WRITERJOBTITLE2 = '') THEN A.WRITERJOBTITLE
+                    ELSE A.WRITERJOBTITLE2
+                END AS WRITERJOBTITLE,
+            </isEqual>
+            <isNotEqual property="lang" compareValue="2">
+                A.WRITERNAME,
+                A.WRITERDEPTNAME,
+                A.WRITERJOBTITLE,
+            </isNotEqual>
+				TO_CHAR(STARTDATE + (#offset# / (60 * 24)), 'YYYY-MM-DD HH24:MI:SS') STARTDATE
 			FROM
 				TBL_ENDAPRDOCINFO A
 			LEFT OUTER JOIN
@@ -2375,7 +3208,6 @@
 		</isEqual>
 		<isEqual property="type" compareValue="SHARE">
 			<isEqual property="mode" compareValue="APR">
-				<![CDATA[
 					SELECT
 						DOCID,
 						ORGDOCID,
@@ -2388,19 +3220,26 @@
 						APRMEMBERDEPTID,
 						DOCSTATE,
 						DOCTITLE,
-						CASE 
-		   					WHEN (WRITERNAME$lang$ = '' OR WRITERNAME$lang$ IS NULL) THEN WRITERNAME
-		   					ELSE WRITERNAME$lang$
-		   				END WRITERNAME,
-		   				CASE 
-		   					WHEN (WRITERDEPTNAME$lang$ = '' OR WRITERDEPTNAME$lang$ IS NULL) THEN WRITERDEPTNAME
-		   					ELSE WRITERDEPTNAME$lang$
-		   				END WRITERDEPTNAME,
-		   				CASE 
-		   					WHEN (WRITERJOBTITLE$lang$ = '' OR WRITERJOBTITLE$lang$ IS NULL) THEN WRITERJOBTITLE
-		   					ELSE WRITERJOBTITLE$lang$
-		   				END WRITERJOBTITLE,
-		   				TO_CHAR(STARTDATE + (#offset# / (60 * 24)),'YYYY-MM-DD HH24:MI:SS') STARTDATE
+					<isEqual property="lang" compareValue="2">
+                        CASE
+                            WHEN (WRITERNAME2 IS NULL OR WRITERNAME2 = '') THEN WRITERNAME
+                            ELSE WRITERNAME2
+                        END AS WRITERNAME,
+                        CASE
+                            WHEN (WRITERDEPTNAME2 IS NULL OR WRITERDEPTNAME2 = '') THEN WRITERDEPTNAME
+                            ELSE WRITERDEPTNAME2
+                        END AS WRITERDEPTNAME,
+                        CASE
+                            WHEN (WRITERJOBTITLE2 IS NULL OR WRITERJOBTITLE2 = '') THEN WRITERJOBTITLE
+                            ELSE WRITERJOBTITLE2
+                        END AS WRITERJOBTITLE,
+                    </isEqual>
+                    <isNotEqual property="lang" compareValue="2">
+                        WRITERNAME,
+                        WRITERDEPTNAME,
+                        WRITERJOBTITLE,
+                    </isNotEqual>
+		   				TO_CHAR(STARTDATE + (#offset# / (60 * 24)), 'YYYY-MM-DD HH24:MI:SS') STARTDATE
 					FROM
 						VAPRDOINGDOCLIST
 					WHERE
@@ -2409,7 +3248,6 @@
 						COMPANYID = #companyID#
 					AND
 						DOCID = #docID#
-				]]>
 				<isNotEmpty property="aprMemberSN" prepend="AND">
 					APRMEMBERSN = #aprMemberSN#
 				</isNotEmpty>
@@ -2417,7 +3255,6 @@
 		   				ROWNUM = 1
 			</isEqual>
 			<isNotEqual property="mode" compareValue="APR">
-				<![CDATA[
 					SELECT
 						DOCID,
 						ORGDOCID,
@@ -2430,19 +3267,26 @@
 						APRMEMBERDEPTID,
 						DOCSTATE,
 						DOCTITLE,
-						CASE 
-		   					WHEN (WRITERNAME$lang$ = '' OR WRITERNAME$lang$ IS NULL) THEN WRITERNAME
-		   					ELSE WRITERNAME$lang$
-		   				END WRITERNAME,
-		   				CASE 
-		   					WHEN (WRITERDEPTNAME$lang$ = '' OR WRITERDEPTNAME$lang$ IS NULL) THEN WRITERDEPTNAME
-		   					ELSE WRITERDEPTNAME$lang$
-		   				END WRITERDEPTNAME,
-		   				CASE 
-		   					WHEN (WRITERJOBTITLE$lang$ = '' OR WRITERJOBTITLE$lang$ IS NULL) THEN WRITERJOBTITLE
-		   					ELSE WRITERJOBTITLE$lang$
-		   				END WRITERJOBTITLE,
-		   				TO_CHAR(STARTDATE + (#offset# / (60 * 24)),'YYYY-MM-DD HH24:MI:SS') STARTDATE
+	                <isEqual property="lang" compareValue="2">
+	                    CASE
+	                        WHEN (WRITERNAME2 IS NULL OR WRITERNAME2 = '') THEN WRITERNAME
+	                        ELSE WRITERNAME2
+	                    END AS WRITERNAME,
+	                    CASE
+	                        WHEN (WRITERDEPTNAME2 IS NULL OR WRITERDEPTNAME2 = '') THEN WRITERDEPTNAME
+	                        ELSE WRITERDEPTNAME2
+	                    END AS WRITERDEPTNAME,
+	                    CASE
+	                        WHEN (WRITERJOBTITLE2 IS NULL OR WRITERJOBTITLE2 = '') THEN WRITERJOBTITLE
+	                        ELSE WRITERJOBTITLE2
+	                    END AS WRITERJOBTITLE,
+	                </isEqual>
+	                <isNotEqual property="lang" compareValue="2">
+	                    WRITERNAME,
+	                    WRITERDEPTNAME,
+	                    WRITERJOBTITLE,
+	                </isNotEqual>
+		   				TO_CHAR(STARTDATE + (#offset# / (60 * 24)), 'YYYY-MM-DD HH24:MI:SS') STARTDATE
 					FROM
 						VENDCHAMJODOCINFO
 					WHERE
@@ -2451,7 +3295,6 @@
 						COMPANYID = #companyID#
 					AND
 						DOCID = #docID#
-				]]>
 				<isNotEmpty property="aprMemberSN" prepend="AND">
 					APRMEMBERSN = #aprMemberSN#
 				</isNotEmpty>
@@ -2460,7 +3303,6 @@
 			</isNotEqual>
 		</isEqual>
 		<isEqual property="type" compareValue="GR">
-			<![CDATA[
 				SELECT
 					DOCID,
 					ORGDOCID,
@@ -2473,19 +3315,26 @@
 					APRMEMBERDEPTID,
 					DOCSTATE,
 					DOCTITLE,
-					CASE 
-	   					WHEN (WRITERNAME$lang$ = '' OR WRITERNAME$lang$ IS NULL) THEN WRITERNAME
-	   					ELSE WRITERNAME$lang$
-	   				END WRITERNAME,
-	   				CASE 
-	   					WHEN (WRITERDEPTNAME$lang$ = '' OR WRITERDEPTNAME$lang$ IS NULL) THEN WRITERDEPTNAME
-	   					ELSE WRITERDEPTNAME$lang$
-	   				END WRITERDEPTNAME,
-	   				CASE 
-	   					WHEN (WRITERJOBTITLE$lang$ = '' OR WRITERJOBTITLE$lang$ IS NULL) THEN WRITERJOBTITLE
-	   					ELSE WRITERJOBTITLE$lang$
-	   				END WRITERJOBTITLE,
-					TO_CHAR(STARTDATE + (#offset# / (60 * 24)),'YYYY-MM-DD HH24:MI:SS') STARTDATE
+	            <isEqual property="lang" compareValue="2">
+	                CASE
+		                WHEN (WRITERNAME2 IS NULL OR WRITERNAME2 = '') THEN WRITERNAME
+		                ELSE WRITERNAME2
+	                END AS WRITERNAME,
+	                CASE
+		                WHEN (WRITERDEPTNAME2 IS NULL OR WRITERDEPTNAME2 = '') THEN WRITERDEPTNAME
+		                ELSE WRITERDEPTNAME2
+	                END AS WRITERDEPTNAME,
+	                CASE
+		                WHEN (WRITERJOBTITLE2 IS NULL OR WRITERJOBTITLE2 = '') THEN WRITERJOBTITLE
+		                ELSE WRITERJOBTITLE2
+	                END AS WRITERJOBTITLE,
+	            </isEqual>
+	            <isNotEqual property="lang" compareValue="2">
+	                WRITERNAME,
+	                WRITERDEPTNAME,
+	                WRITERJOBTITLE,
+	            </isNotEqual>
+					TO_CHAR(STARTDATE + (#offset# / (60 * 24)), 'YYYY-MM-DD HH24:MI:SS') STARTDATE
 				FROM
 					VGONGRAMAPRDOINGDOCLIST
 				WHERE
@@ -2496,9 +3345,104 @@
 					DOCID = #docID#
 	   			AND
 	   				ROWNUM = 1
-			]]>
 		</isEqual>
 		<isEqual property="type" compareValue="GREND">
+				SELECT
+					TBL_APRDOCINFO.DOCID,
+					TBL_APRDOCINFO.ORGDOCID,
+					TBL_APRDOCINFO.FORMID,
+					TBL_APRDOCINFO.HREF,
+					TBL_APRDOCINFO.HASATTACHYN,
+					TBL_APRLINEINFO.APRMEMBERID,
+					TBL_APRLINEINFO.APRMEMBERNAME,
+					TBL_APRLINEINFO.APRMEMBERNAME2,
+					TBL_APRLINEINFO.APRMEMBERDEPTID,
+					TBL_APRDOCINFO.DOCSTATE,
+					TBL_APRDOCINFO.DOCTITLE,
+				<isEqual property="lang" compareValue="2">
+	                CASE
+	                    WHEN (TBL_APRDOCINFO.WRITERNAME2 IS NULL OR TBL_APRDOCINFO.WRITERNAME2 = '') THEN TBL_APRDOCINFO.WRITERNAME
+	                    ELSE TBL_APRDOCINFO.WRITERNAME2
+	                END AS WRITERNAME,
+	                CASE
+	                    WHEN (TBL_APRDOCINFO.WRITERDEPTNAME2 IS NULL OR TBL_APRDOCINFO.WRITERDEPTNAME2 = '') THEN TBL_APRDOCINFO.WRITERDEPTNAME
+	                    ELSE TBL_APRDOCINFO.WRITERDEPTNAME2
+	                END AS WRITERDEPTNAME,
+	                CASE
+	                    WHEN (TBL_APRDOCINFO.WRITERJOBTITLE2 IS NULL OR TBL_APRDOCINFO.WRITERJOBTITLE2 = '') THEN TBL_APRDOCINFO.WRITERJOBTITLE
+	                    ELSE TBL_APRDOCINFO.WRITERJOBTITLE2
+	                END AS WRITERJOBTITLE,
+	            </isEqual>
+	            <isNotEqual property="lang" compareValue="2">
+	                TBL_APRDOCINFO.WRITERNAME,
+	                TBL_APRDOCINFO.WRITERDEPTNAME,
+	                TBL_APRDOCINFO.WRITERJOBTITLE,
+	            </isNotEqual>
+					TO_CHAR(TBL_APRDOCINFO.STARTDATE + (#offset# / (60 * 24)),'YYYY-MM-DD HH24:MI:SS') STARTDATE
+				FROM
+					TBL_APRDOCINFO
+				INNER JOIN
+					TBL_APRLINEINFO
+				ON
+					TBL_APRDOCINFO.DOCID = TBL_APRLINEINFO.DOCID
+				AND
+					TBL_APRDOCINFO.TENANT_ID = TBL_APRLINEINFO.TENANT_ID
+				AND
+					TBL_APRDOCINFO.COMPANYID = TBL_APRLINEINFO.COMPANYID
+				WHERE
+					TBL_APRDOCINFO.TENANT_ID = #tenantID#
+				AND
+					TBL_APRDOCINFO.COMPANYID = #companyID#
+				AND
+					TBL_APRDOCINFO.DOCID = #docID#
+	   			AND
+	   				ROWNUM = 1
+		</isEqual>
+		<isEqual property="type" compareValue="BAN">
+				SELECT
+					DOCID,
+					ORGDOCID,
+					FORMID,
+					HREF,
+					HASATTACHYN,
+					APRMEMBERID,
+					APRMEMBERNAME,
+					APRMEMBERNAME2,
+					APRMEMBERDEPTID,
+					DOCSTATE,
+					DOCTITLE,
+				<isEqual property="lang" compareValue="2">
+					CASE
+						WHEN (WRITERNAME2 IS NULL OR WRITERNAME2 = '') THEN WRITERNAME
+						ELSE WRITERNAME2
+					END AS WRITERNAME,
+					CASE
+						WHEN (WRITERDEPTNAME2 IS NULL OR WRITERDEPTNAME2 = '') THEN WRITERDEPTNAME
+						ELSE WRITERDEPTNAME2
+					END AS WRITERDEPTNAME,
+					CASE
+						WHEN (WRITERJOBTITLE2 IS NULL OR WRITERJOBTITLE2 = '') THEN WRITERJOBTITLE
+						ELSE WRITERJOBTITLE2
+					END AS WRITERJOBTITLE,
+				</isEqual>
+                <isNotEqual property="lang" compareValue="2">
+                    WRITERNAME,
+                    WRITERDEPTNAME,
+                    WRITERJOBTITLE,
+                </isNotEqual>
+					TO_CHAR(STARTDATE + (#offset# / (60 * 24)),'YYYY-MM-DD HH24:MI:SS') STARTDATE
+				FROM
+					VAPRDOINGDOCLIST
+				WHERE
+					TENANT_ID = #tenantID#
+				AND
+					COMPANYID = #companyID#
+				AND
+					DOCID = #docID#
+				AND
+					ROWNUM = 1
+		</isEqual>
+		<isEqual property="type" compareValue="GRSEND">
 			<![CDATA[
 				SELECT
 					TBL_APRDOCINFO.DOCID,
@@ -2592,20 +3536,20 @@
 		</isNotEqual>
 	</insert>
    
-   <update id="MApprovalG.updateDocOpinionInfo" parameterClass="Map">
-   		<![CDATA[
-   			UPDATE
-	   			TBL_APRDOCINFO
-	   		SET
-	   			HASOPINIONYN = #hasOpinionYN#
-	   		WHERE
-	   			TENANT_ID = #tenantID#
-	   		AND
-	   			COMPANYID = #companyID#
-	   		AND
-	   			DOCID = #docID#
+	<update id="MApprovalG.updateDocOpinionInfo" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_APRDOCINFO
+			SET
+				HASOPINIONYN = #hasOpinionYN#
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				DOCID = #docID#
 		]]>
-   </update>
+	</update>
    
 	<!-- 2023-03-13 전인하 - 전자결재 > 모바일 의견 기능 개선 - 의견 update 쿼리 -->
 	<update id="MApprovalG.updateOpinionInfo" parameterClass="Map">
@@ -2672,46 +3616,51 @@
    </delete>
    
    <select id="MApprovalG.getAprMemberSn" parameterClass="Map" resultClass="MApprGDocInfoVO">
-			<![CDATA[
-				SELECT
-					DOCID,
-					ORGDOCID,
-					FORMID,
-					HREF,
-					HASATTACHYN,
-					APRMEMBERID,
-					APRMEMBERNAME,
-					APRMEMBERNAME2,
-					APRMEMBERDEPTID,
-					DOCSTATE,
-					DOCTITLE,
-					APRMEMBERSN,
-					CASE 
-	   					WHEN (WRITERNAME$lang$ = '' OR WRITERNAME$lang$ IS NULL) THEN WRITERNAME
-	   					ELSE WRITERNAME$lang$
-	   				END WRITERNAME,
-	   				CASE 
-	   					WHEN (WRITERDEPTNAME$lang$ = '' OR WRITERDEPTNAME$lang$ IS NULL) THEN WRITERDEPTNAME
-	   					ELSE WRITERDEPTNAME$lang$
-	   				END WRITERDEPTNAME,
-	   				CASE 
-	   					WHEN (WRITERJOBTITLE$lang$ = '' OR WRITERJOBTITLE$lang$ IS NULL) THEN WRITERJOBTITLE
-	   					ELSE WRITERJOBTITLE$lang$
-	   				END WRITERJOBTITLE
-				FROM
-					VAPRDOINGDOCLIST
-				WHERE
-					TENANT_ID = #tenantID#
-				AND
-					COMPANYID = #companyID#
-				AND
-					DOCID = #docID#
-				AND
-					APRMEMBERSN IN (SELECT APRMEMBERSN FROM TBL_APRDOCINFO WHERE APRMEMBERID = #userID#)
-	   			AND
-	   				ROWNUM = 1
-		]]>
-		</select>
+		SELECT
+			DOCID,
+			ORGDOCID,
+			FORMID,
+			HREF,
+			HASATTACHYN,
+			APRMEMBERID,
+			APRMEMBERNAME,
+			APRMEMBERNAME2,
+			APRMEMBERDEPTID,
+			DOCSTATE,
+			DOCTITLE,
+		<isEqual property="lang" compareValue="2">
+			CASE
+				WHEN (WRITERNAME2 = '' OR WRITERNAME2 IS NULL) THEN WRITERNAME
+				ELSE WRITERNAME2
+			END AS WRITERNAME,
+			CASE
+				WHEN (WRITERDEPTNAME2 = '' OR WRITERDEPTNAME2 IS NULL) THEN WRITERDEPTNAME
+				ELSE WRITERDEPTNAME2
+			END AS WRITERDEPTNAME,
+			CASE
+				WHEN (WRITERJOBTITLE2 = '' OR WRITERJOBTITLE2 IS NULL) THEN WRITERJOBTITLE
+				ELSE WRITERJOBTITLE2
+			END AS WRITERJOBTITLE
+		</isEqual>
+		<isNotEqual property="lang" compareValue="2">
+			WRITERNAME,
+			WRITERDEPTNAME,
+			WRITERJOBTITLE
+		</isNotEqual>
+	   		APRMEMBERSN
+		FROM
+			VAPRDOINGDOCLIST
+		WHERE
+			TENANT_ID = #tenantID#
+		AND
+			COMPANYID = #companyID#
+		AND
+			DOCID = #docID#
+		AND
+			APRMEMBERSN IN (SELECT APRMEMBERSN FROM TBL_APRDOCINFO WHERE APRMEMBERID = #userID#)
+		AND
+			ROWNUM = 1
+	</select>
 	<select id="MApprovalG.getCheckAprState" parameterClass="Map" resultClass="Integer">
 		<isEqual property="mode" compareValue="APR">
 			<![CDATA[
@@ -2950,31 +3899,31 @@
 	</update>
 	<update id="MApprovalG.updateDocInfoEx" parameterClass="Map">
 		UPDATE TBL_EXPAPRDOCINFO SET
-		DOCID = #DOCID#,
-		SECURITYCODE = #SECURITYCODE#,
-		STORAGEPERIOD = #STORAGEPERIOD#,
-		KEYWORD = #KEYWORD#,
-		FORMNAME = #FORMNAME#,
-		COMPANYID = #COMPANYID#,
-		ITEMCODE = #ITEMCODE#,
-		ITEMNAME = #ITEMNAME#,
-		URGENTAPPROVAL = #URGENTAPPROVAL#,
-		SECURITYAPPROVAL = #SECURITYAPPROVAL#,
-		TEMPATTRIBUTE = #TEMPATTRIBUTE#,
-		STATUS = #STATUS#,
-		SPECIALRECORDCODE = #SPECIALRECORDCODE#,
-		PUBLICITYCODE = #PUBLICITYCODE#,
-		LIMITRANGE = #LIMITRANGE#,
-		PAGENUM = #PAGENUM#,
-		CABINETID = #CABINETID#,
-		TASKCODE = #TASKCODE#,
-		SEPERATEATTACHXML = #SEPERATEATTACHXML#,
-		SUMMARY = #SUMMARY#,
-		FORMNAME2 = #FORMNAME2#,
-		ITEMNAME2 = #ITEMNAME2#,
-		TENANT_ID = #TENANT_ID#,
-		PUBLICITYYN = #PUBLICITYYN#,
-		FORMVERSION = #FORMVERSION#
+			DOCID = #DOCID#,
+			SECURITYCODE = #SECURITYCODE#,
+			STORAGEPERIOD = #STORAGEPERIOD#,
+			KEYWORD = #KEYWORD#,
+			FORMNAME = #FORMNAME#,
+			COMPANYID = #COMPANYID#,
+			ITEMCODE = #ITEMCODE#,
+			ITEMNAME = #ITEMNAME#,
+			URGENTAPPROVAL = #URGENTAPPROVAL#,
+			SECURITYAPPROVAL = #SECURITYAPPROVAL#,
+			TEMPATTRIBUTE = #TEMPATTRIBUTE#,
+			STATUS = #STATUS#,
+			SPECIALRECORDCODE = #SPECIALRECORDCODE#,
+			PUBLICITYCODE = #PUBLICITYCODE#,
+			LIMITRANGE = #LIMITRANGE#,
+			PAGENUM = #PAGENUM#,
+			CABINETID = #CABINETID#,
+			TASKCODE = #TASKCODE#,
+			SEPERATEATTACHXML = #SEPERATEATTACHXML#,
+			SUMMARY = #SUMMARY#,
+			FORMNAME2 = #FORMNAME2#,
+			ITEMNAME2 = #ITEMNAME2#,
+			TENANT_ID = #TENANT_ID#,
+			PUBLICITYYN = #PUBLICITYYN#,
+			FORMVERSION = #FORMVERSION#
 		WHERE
 			DOCID = #DOCID# 
 		AND 
@@ -2985,131 +3934,131 @@
 	<insert id="MApprovalG.insertDocLineInfo" parameterClass="Map">
 		INSERT INTO TBL_APRLINEINFO 
 		(
-		DOCID,
-		APRMEMBERSN,
-		APRTYPE,
-		APRSTATE,
-		APRMEMBERID,
-		APRMEMBERISDEPTYN,
-		APRMEMBERNAME,
-		APRMEMBERJOBTITLE,
-		APRMEMBERDEPTID,
-		APRMEMBERDEPTNAME,
-		APRMEMBERLDAPPATH,
-		RECEIVEDDATE,
-		PROCESSDATE,
-		REASONDONOTAPPROV,
-		ISPROPOSERYN,
-		ISBRIEFUSERYN,
-		APRMEMBERNAME2,
-		APRMEMBERJOBTITLE2,
-		APRMEMBERDEPTNAME2,
-		TENANT_ID,
-		COMPANYID
+			DOCID,
+			APRMEMBERSN,
+			APRTYPE,
+			APRSTATE,
+			APRMEMBERID,
+			APRMEMBERISDEPTYN,
+			APRMEMBERNAME,
+			APRMEMBERJOBTITLE,
+			APRMEMBERDEPTID,
+			APRMEMBERDEPTNAME,
+			APRMEMBERLDAPPATH,
+			RECEIVEDDATE,
+			PROCESSDATE,
+			REASONDONOTAPPROV,
+			ISPROPOSERYN,
+			ISBRIEFUSERYN,
+			APRMEMBERNAME2,
+			APRMEMBERJOBTITLE2,
+			APRMEMBERDEPTNAME2,
+			TENANT_ID,
+			COMPANYID
 		)
 		VALUES
 		(
-		#DOCID#,
-		#APRMEMBERSN#,
-		#APRTYPE#,
-		#APRSTATE#,
-		#APRMEMBERID#,
-		#APRMEMBERISDEPTYN#,
-		#APRMEMBERNAME#,
-		#APRMEMBERJOBTITLE#,
-		#APRMEMBERDEPTID#,
-		#APRMEMBERDEPTNAME#,
-		#APRMEMBERLDAPPATH#,
-		TO_DATE(#RECEIVEDDATE#, 'YYYY-MM-DD HH24:MI:SS'),
-		TO_DATE(#PROCESSDATE#, 'YYYY-MM-DD HH24:MI:SS'),
-		#REASONDONOTAPPROV#,
-		#ISPROPOSERYN#,
-		#ISBRIEFUSERYN#,
-		#APRMEMBERNAME2#,
-		#APRMEMBERJOBTITLE2#,
-		#APRMEMBERDEPTNAME2#,
-		#TENANT_ID#,
-		#COMPANYID#
+			#DOCID#,
+			#APRMEMBERSN#,
+			#APRTYPE#,
+			#APRSTATE#,
+			#APRMEMBERID#,
+			#APRMEMBERISDEPTYN#,
+			#APRMEMBERNAME#,
+			#APRMEMBERJOBTITLE#,
+			#APRMEMBERDEPTID#,
+			#APRMEMBERDEPTNAME#,
+			#APRMEMBERLDAPPATH#,
+			TO_DATE(#RECEIVEDDATE#, 'YYYY-MM-DD HH24:MI:SS'),
+			TO_DATE(#PROCESSDATE#, 'YYYY-MM-DD HH24:MI:SS'),
+			#REASONDONOTAPPROV#,
+			#ISPROPOSERYN#,
+			#ISBRIEFUSERYN#,
+			#APRMEMBERNAME2#,
+			#APRMEMBERJOBTITLE2#,
+			#APRMEMBERDEPTNAME2#,
+			#TENANT_ID#,
+			#COMPANYID#
 		)
 	</insert>
 	<insert id="MApprovalG.insertDocLineInfoEx" parameterClass="Map">
 		INSERT INTO TBL_EXPAPRLINE 
 		(
-		DOCID,
-		APRMEMBERSN,
-		ORGUSERID,
-		PROXYUSERID,
-		PROXYUSERNAME,
-		PROXYUSERJOBTITLE,
-		PROXYUSERDEPTID,
-		PROXYUSERDEPTNAME,
-		PROXYUSERNAME2,
-		PROXYUSERJOBTITLE2,
-		PROXYUSERDEPTNAME2,
-		TENANT_ID,
-		COMPANYID
+			DOCID,
+			APRMEMBERSN,
+			ORGUSERID,
+			PROXYUSERID,
+			PROXYUSERNAME,
+			PROXYUSERJOBTITLE,
+			PROXYUSERDEPTID,
+			PROXYUSERDEPTNAME,
+			PROXYUSERNAME2,
+			PROXYUSERJOBTITLE2,
+			PROXYUSERDEPTNAME2,
+			TENANT_ID,
+			COMPANYID
 		)
 		VALUES
 		(
-		#DOCID#,
-		#APRMEMBERSN#,
-		#ORGUSERID#,
-		#PROXYUSERID#,
-		#PROXYUSERNAME#,
-		#PROXYUSERJOBTITLE#,
-		#PROXYUSERDEPTID#,
-		#PROXYUSERDEPTNAME#,
-		#PROXYUSERNAME2#,
-		#PROXYUSERJOBTITLE2#,
-		#PROXYUSERDEPTNAME2#,
-		#TENANT_ID#,
-		#COMPANYID#
+			#DOCID#,
+			#APRMEMBERSN#,
+			#ORGUSERID#,
+			#PROXYUSERID#,
+			#PROXYUSERNAME#,
+			#PROXYUSERJOBTITLE#,
+			#PROXYUSERDEPTID#,
+			#PROXYUSERDEPTNAME#,
+			#PROXYUSERNAME2#,
+			#PROXYUSERJOBTITLE2#,
+			#PROXYUSERDEPTNAME2#,
+			#TENANT_ID#,
+			#COMPANYID#
 		)
 	</insert>
 	<insert id="MApprovalG.insertDocRecvInfo" parameterClass="Map">
 		INSERT INTO TBL_RECEIPTPOINTINFO 
 		(
-		DOCID,
-		RECEIPTPOINTID,
-		RECEIPTPOINTNAME,
-		EXTRECEPTYN,
-		PROCESSYN,
-		PROCESSSN,
-		CANEDITYN,
-		EXTRECEPTEMAIL,
-		RECEIPTMEMBERID,
-		RECEIPTMEMBERNAME,
-		PROCESSDATE,
-		RECEIPTMEMBERJOBTITLE,
-		DEPTMEMBERSN,
-		RECEIPTPOINTNAME2,
-		RECEIPTMEMBERJOBTITLE2,
-		RECEIPTMEMBERNAME2,
-		ROUTEYN,
-		TENANT_ID,
-		COMPANYID
+			DOCID,
+			RECEIPTPOINTID,
+			RECEIPTPOINTNAME,
+			EXTRECEPTYN,
+			PROCESSYN,
+			PROCESSSN,
+			CANEDITYN,
+			EXTRECEPTEMAIL,
+			RECEIPTMEMBERID,
+			RECEIPTMEMBERNAME,
+			PROCESSDATE,
+			RECEIPTMEMBERJOBTITLE,
+			DEPTMEMBERSN,
+			RECEIPTPOINTNAME2,
+			RECEIPTMEMBERJOBTITLE2,
+			RECEIPTMEMBERNAME2,
+			ROUTEYN,
+			TENANT_ID,
+			COMPANYID
 		)
 		VALUES
 		(
-		#DOCID#,
-		#RECEIPTPOINTID#,
-		#RECEIPTPOINTNAME#,
-		#EXTRECEPTYN#,
-		#PROCESSYN#,
-		#PROCESSSN#,
-		#CANEDITYN#,
-		#EXTRECEPTEMAIL#,
-		#RECEIPTMEMBERID#,
-		#RECEIPTMEMBERNAME#,
-		#PROCESSDATE#,
-		#RECEIPTMEMBERJOBTITLE#,
-		#DEPTMEMBERSN#,
-		#RECEIPTPOINTNAME2#,
-		#RECEIPTMEMBERJOBTITLE2#,
-		#RECEIPTMEMBERNAME2#,
-		#ROUTEYN#,
-		#TENANT_ID#,
-		#COMPANYID#
+			#DOCID#,
+			#RECEIPTPOINTID#,
+			#RECEIPTPOINTNAME#,
+			#EXTRECEPTYN#,
+			#PROCESSYN#,
+			#PROCESSSN#,
+			#CANEDITYN#,
+			#EXTRECEPTEMAIL#,
+			#RECEIPTMEMBERID#,
+			#RECEIPTMEMBERNAME#,
+			#PROCESSDATE#,
+			#RECEIPTMEMBERJOBTITLE#,
+			#DEPTMEMBERSN#,
+			#RECEIPTPOINTNAME2#,
+			#RECEIPTMEMBERJOBTITLE2#,
+			#RECEIPTMEMBERNAME2#,
+			#ROUTEYN#,
+			#TENANT_ID#,
+			#COMPANYID#
 		)
 	</insert>
 	
@@ -3127,48 +4076,48 @@
 	</select>
 	
 	<select id="MApprovalG.getUserInfo" parameterClass="Map" resultClass="HashMap">
-	SELECT
-		CN,
-		DISPLAYNAME,
-		MAIL,
-		DEPARTMENT,
-		DESCRIPTION,
-		DESCRIPTION2,
-		PHYSICALDELIVERYOFFICENAME,
-		COMPANY,
-		COMPANY2,
-		TITLE,
-		TITLE2,
-		TELEPHONENUMBER,
-		HOMEPHONE,
-		FACSIMILETELEPHONENUMBER,
-		MOBILE,
-		POSTALCODE,
-		STREETADDRESS,
-		POSITIONCD,
-		BIRTH,
-		BIRTHTYPE,
-		IPADDRESS,
-		LASTLOGIN,
-		LOGINCNT,
-		TENANT_ID,
-		MANUAL_FLAG,
-		LISTTYPE,
-		PASSWORD_UPDATEDT,
-		EXTENSIONPHONE,
-		OFFICEMOBILE
-	FROM
-	 	TBL_USERMASTER	
-	WHERE
-		CN = #v_CN# 
-	AND 
-		TENANT_ID = #v_TENANTID#
+		SELECT
+			CN,
+			DISPLAYNAME,
+			MAIL,
+			DEPARTMENT,
+			DESCRIPTION,
+			DESCRIPTION2,
+			PHYSICALDELIVERYOFFICENAME,
+			COMPANY,
+			COMPANY2,
+			TITLE,
+			TITLE2,
+			TELEPHONENUMBER,
+			HOMEPHONE,
+			FACSIMILETELEPHONENUMBER,
+			MOBILE,
+			POSTALCODE,
+			STREETADDRESS,
+			POSITIONCD,
+			BIRTH,
+			BIRTHTYPE,
+			IPADDRESS,
+			LASTLOGIN,
+			LOGINCNT,
+			TENANT_ID,
+			MANUAL_FLAG,
+			LISTTYPE,
+			PASSWORD_UPDATEDT,
+			EXTENSIONPHONE,
+			OFFICEMOBILE
+		FROM
+		 	TBL_USERMASTER	
+		WHERE
+			CN = #v_CN# 
+		AND 
+			TENANT_ID = #v_TENANTID#
 	</select>
 	<select id="MApprovalG.informationSchemaColumns" parameterClass="Map" resultClass="HashMap">
 		SELECT
-		*
+			*
 		FROM
-		INFORMATION_SCHEMA.COLUMNS
+			INFORMATION_SCHEMA.COLUMNS
 		WHERE 
 			TABLE_NAME = #v_TABLENAME#
 	</select>
@@ -3227,7 +4176,12 @@
 	<select id ="MApprovalG.getAprMemberBySn" parameterClass="map" resultClass="HashMap">
       	SELECT 
       		APRMEMBERID,
-      		NVL(APRMEMBERNAME$v_LANG$, '') AS APRMEMBERNAME
+      		<isEqual property="v_LANG" compareValue="2">
+				NVL(APRMEMBERNAME2, '') AS APRMEMBERNAME
+			</isEqual>
+			<isNotEqual property="v_LANG" compareValue="2">
+				NVL(APRMEMBERNAME, '') AS APRMEMBERNAME
+			</isNotEqual>
       	FROM 
       		TBL_APRLINEINFO
 		WHERE 

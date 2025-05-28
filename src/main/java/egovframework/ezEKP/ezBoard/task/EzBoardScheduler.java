@@ -55,6 +55,8 @@ public class EzBoardScheduler {
 			ezBoardService.deleteExpiredItems(realPath);
 			ezBoardService.deleteReservedBoard(realPath);
 			ezBoardService.deleteReservedBoardItem(realPath);
+			ezBoardService.deleteItemsScrap();
+			ezBoardService.deleteItemsScrapCont();
 		}
 		catch (Exception e) {
 			logger.error(e.getMessage(), e);

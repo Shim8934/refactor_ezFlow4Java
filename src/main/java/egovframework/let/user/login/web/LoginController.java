@@ -7,6 +7,10 @@ import java.net.URLEncoder;
 import java.security.PrivateKey;
 import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -14,6 +18,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.Random;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -24,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import org.apache.commons.codec.binary.Base32;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang3.StringUtils;
@@ -37,6 +43,7 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -54,13 +61,16 @@ import de.taimos.totp.TOTP;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService.Device;
+import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
+import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
 import egovframework.ezEKP.ezSystem.vo.AccessIdVO;
 import egovframework.ezEKP.ezSystem.vo.CountryVO;
 import egovframework.ezEKP.ezSystem.vo.IPBandVO;
 import egovframework.let.user.login.service.LoginService;
+import egovframework.let.user.login.vo.FidoAuthenticationVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.user.login.vo.SessionVO;
 import egovframework.let.utl.fcc.service.ClientUtil;
@@ -107,6 +117,9 @@ public class LoginController {
     
     @Resource(name="EzSystemAdminService")
 	private EzSystemAdminService ezSystemAdminService;
+
+    @Autowired
+	private EzEmailService ezEmailService;
         
     /** CRYPTO */
     @Resource(name="crypto") 
@@ -124,6 +137,9 @@ public class LoginController {
     @Autowired
     private LocaleResolver localeResolver;
     
+    @Autowired
+    private EzNewPortalService ezNewPortalService;
+    
 	/**
 	 * 로그인 화면으로 들어간다
 	 * @param vo - 로그인후 이동할 URL이 담긴 LoginVO
@@ -132,7 +148,7 @@ public class LoginController {
 	 */
     
     @RequestMapping(value="/user/login/login.do", method={RequestMethod.GET, RequestMethod.POST})
-	public String loginView(HttpServletRequest request,	HttpServletResponse response, ModelMap model, Locale locale) throws Exception {
+	public String loginView(HttpServletRequest request,	HttpServletResponse response, ModelMap model, Locale locale, @RequestParam(required = false) String usefidoforce) throws Exception {
         String serverName = request.getServerName();
         int tenantId = loginService.getTenantId(serverName);
         // 2023-03-27 이사라 : [TFA] 2-factor 인증 사용 여부 체크하여, otp입력란 표출 여부 결정
@@ -143,7 +159,7 @@ public class LoginController {
     	String mobileRedirection = ezCommonService.getTenantConfig("mobileRedirection", tenantId);
     	String userOs = ClientUtil.getClientInfo(request, "os");
     	
-    	if (userOs.equals("iOS") || userOs.equals("Android") || userOs.equals("BlackBerry") || userOs.equals("iPod") || userOs.equals("iPad")) {
+    	if (userOs.equals("iOS") || userOs.equals("Android") || userOs.equals("BlackBerry") || userOs.equals("iPod")) {
     		logger.debug("mobileRedirection : " + mobileRedirection);
     		if (!mobileRedirection.equals("") && !mobileRedirection.equals("*")) {
     			response.sendRedirect(mobileRedirection);
@@ -179,6 +195,10 @@ public class LoginController {
 		if(StringUtils.isNotEmpty(request.getParameter("loginSessionFlag"))){
 			model.addAttribute("message", "loginSessionFlag");
 		}
+
+		if(StringUtils.isNotEmpty(request.getParameter("organInfoChangedFlag"))){
+			model.addAttribute("message", "organInfoChangedFlag");
+		}
     	
     	String pbm = egovFileScrty.getPbm();
     	
@@ -209,6 +229,13 @@ public class LoginController {
     	
     	String usePasswordReset = ezCommonService.getTenantConfig("usePasswordReset", tenantId);
     	
+		// fido test
+		model.addAttribute("usefidoforce", "false");
+
+		if (StringUtils.isNotBlank(usefidoforce)) {
+			model.addAttribute("usefidoforce", "true");
+		}
+
 		model.addAttribute("publicModulus", pbm);
 		model.addAttribute("publicExponent", "10001");
 		model.addAttribute("logoUrl", logo);
@@ -239,7 +266,8 @@ public class LoginController {
     	String chkADpass = "";
     	String prm = egovFileScrty.getPrm();
     	String pre = egovFileScrty.getPre();
-    	
+		String formatedNow = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+		
 		PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
 
 		String _uid = EgovFileScrty.decryptRsa(pk, loginVO.getEncryptID());
@@ -277,7 +305,6 @@ public class LoginController {
 		boolean useOTP = "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useOTP", tenantId));
 		boolean hasOTP = false;
 		boolean isRightOTP = true;
-		//model.addAttribute("useOTP", useOTP);
 		
 		// 비밀번호 '다음에 변경하기'는 이미 로그인 정보(OTP포함) 인증을 마친 상태에서 나타나기 때문에
 		// useOTP를 false로 하여 Id와 password로 로그인 되도록 함
@@ -291,6 +318,20 @@ public class LoginController {
 			// OTP를 등록한 사용자인지 체크
 			hasOTP = loginService.searchOtpKey(loginVO);
 		}
+
+		// 2023-11-21 이사라 : [TFA] FIDO 인증
+		//boolean useFido = "YES".equalsIgnoreCase(ezCommonService.getCompanyConfig(tenantId, companyId, "useFidoSession"));
+		boolean useFido = false;
+		boolean isFidoAuth = StringUtils.isNotBlank(loginVO.getFidoSessionId()); // fido인증을 완료한 후 로그인 진행하는 경우를 구분하기 위함
+		boolean passedFidoAuthentication =  false;
+		boolean userDeviceChk = loginService.userDeviceCnt(loginVO.getId());
+
+		if (isFidoAuth) {
+			FidoAuthenticationVO fidoVo = loginService.getFidoSession(loginVO.getFidoSessionId());
+			passedFidoAuthentication = loginVO.getId().equals(fidoVo.getId()); // 대소문자까지 일치
+		}
+
+		logger.debug("passedFidoAuthentication : {}", passedFidoAuthentication);
 
 		// 사용자 ID & 사원번호 자체가 발견되지 않는 경우
 		if (resultVO == null || resultVO.getId() == null || resultVO.getId().equals("")) {
@@ -333,7 +374,11 @@ public class LoginController {
 					
 			// 로그인 후 IP 주소 체크
         	boolean ipAddressChk = ipAccessCheck(resultVO);
-        	logger.debug("ipAddressChk=" + ipAddressChk);
+			useFido = fidoNotAccessIpCheck(resultVO);
+			if (!useFido && "usefidoforce".equalsIgnoreCase(loginVO.getPassword())) { // fido test를 위한 코드 - useFido가 이미 true라면 if문을 굳이 실행할 이유가 없기때문에 !useFido로 한정 함
+				useFido = true;
+			}
+			logger.debug("useFido : {}, ipAddressChk : {}", useFido, ipAddressChk);
         	
         	// 2018.10.22 이석화 추가 - useSession row 유무 확인
     		useSession = ezCommonService.getTenantConfig("useSession", tenantId);
@@ -403,6 +448,7 @@ public class LoginController {
     				if (useEmpNumberLogin.equals("YES") && !resultVO.getId().equals("")) {
     					
     					String orgId = resultVO.getId();
+						_uid = orgId;
     					
     					// useMasteradminLogin이 YES일 경우 masteradmin의 암호로 로그인 가능하도록 한다.
     					if (useMasteradminLogin.equals("YES")) {
@@ -433,7 +479,7 @@ public class LoginController {
 							}
 
     						// 실제 사용자 ID를 사용해 암호가 맞는 지 확인한다.
-    						_uid = orgId;
+    						// _uid = orgId;
     						_pwd = EgovFileScrty.encryptPassword(rpwd, _uid);
     			        	loginVO.setId(_uid);
     			        	loginVO.setPassword(_pwd);
@@ -470,12 +516,19 @@ public class LoginController {
 		
 		// 로그인 실패 최대 허용 횟수를 구한다.
 		String maxAllowedCountOfLoginFail = ezCommonService.getCompanyConfig(tenantId, companyId, "MaxAllowedCountOfLoginFail");
-		logger.debug("companyId=" + companyId + ", maxAllowedCountOfLoginFail=" + maxAllowedCountOfLoginFail);
+		String loginLockedDuration = ezCommonService.getCompanyConfig(tenantId, companyId, "LoginLockedDuration");
+		String loginLockedDate = ezCommonService.getUserConfigInfo(tenantId, _uid, "LoginLockedDate");
+		logger.debug("companyId : {}, maxAllowedCountOfLoginFail : {}, loginLockedDuration : {}, loginLockedDate : {}", companyId, maxAllowedCountOfLoginFail, loginLockedDuration, loginLockedDate);
 		// String maxAllowedCountOfLoginFail = ezCommonService.getTenantConfig("MaxAllowedCountOfLoginFail", tenantId);
 				
 		if (!maxAllowedCountOfLoginFail.equals("")) {
 			try {
 				numberOfLoginFailPermit = Integer.parseInt(maxAllowedCountOfLoginFail);
+				// 암호 오류 최대 횟수를 기존에 사용하고 있는 경우 계정 잠금 처리 config를 추가
+				if (loginLockedDuration.equals("")){
+					ezCommonService.insertCompanyConfig(tenantId, companyId, "LoginLockedDuration", "5");
+					loginLockedDuration = ezCommonService.getCompanyConfig(tenantId, companyId, "LoginLockedDuration");
+				}
 			} catch (NumberFormatException e) {
 				logger.error(e.getMessage(), e);
 			}
@@ -511,7 +564,7 @@ public class LoginController {
 				String ezSessionId = createLoginCookie(_uid, rpwd, _pwd, tenantId, request, response, deptId, companyId);
 
 				String sessionCode = getSessionId(request, ezSessionId);
-				logger.debug("Login sessionCode : {} masteradminLogin = ", _uid, sessionCode);
+				logger.debug("Login sessionCode : {} masteradminLogin : {}", _uid, sessionCode);
 	        	
         		//접속 로그정보 저장
         		resultVO.setIp(ClientUtil.getClientIP(request));
@@ -542,6 +595,15 @@ public class LoginController {
         	} else {
         		//Check login state of the user
             	int check = checkState(tenantId, _uid, numberOfLoginFailPermit);
+				boolean check1 = false;
+
+				if (!loginLockedDate.equals("") && !loginLockedDate.equals("0")) {
+					check1 = checkLockedDate(tenantId, _uid, loginLockedDuration, loginLockedDate, formatedNow);
+
+					if (check == -3 && check1) {
+						check = 0;
+					}
+				}
             	
             	// 해당 사용자의 로그인이 블록되지 않은 경우
             	if (check != -3) {
@@ -627,6 +689,23 @@ public class LoginController {
     	        			return "forward:/user/login/login.do";
     	        		}
     	        	}
+
+					// 비밀번호 초기화한 사용자 분기 처리
+					String resetPassword = ezCommonService.getUserConfigInfo(tenantId,resultVO.getId(),"resetPassword");
+					if ( resetPassword != null && "Y".equals(resetPassword)) {
+						String pwPolicyExplain = commonUtil.getPwPolicyExplain(companyId, tenantId, locale);
+
+						model.addAttribute("isExpireDate", "Y");
+						model.addAttribute("userId", _uid);
+						model.addAttribute("encryptID", loginVO.getEncryptID());
+						model.addAttribute("encryptPass", loginVO.getEncryptPass());
+						model.addAttribute("loginId", loginId);
+						model.addAttribute("companyId", companyId);
+						model.addAttribute("pwPolicyExplain", pwPolicyExplain);
+						model.addAttribute("resetPassword", resetPassword);
+
+						return "forward:/user/login/login.do";
+					}
     	        	
     				//0보다 작아지면 패스워드 변경기한 Expired
     	        	//패스워드 다음에 변경 기능 추가. 2019-09-17 홍대표
@@ -657,7 +736,56 @@ public class LoginController {
     	        		model.addAttribute("pwPolicyExplain", pwPolicyExplain);
     					
     		        	return "forward:/user/login/login.do";
-    				} else {			
+					} else if (useFido && !passedFidoAuthentication) {
+						//logger.debug("useFido in : {}", useFido); // 운영시 주석 처리
+
+						if (userDeviceChk) {
+							// fido session 생성하여 tbl에 넣기
+							String fidoSessionId = UUID.randomUUID().toString();
+							FidoAuthenticationVO fidoVO = new FidoAuthenticationVO();
+	
+							fidoVO.setFidoSessionId(fidoSessionId);
+							fidoVO.setId(loginVO.getId());
+							fidoVO.setIp(ClientUtil.getClientIP(request));
+							fidoVO.setStatus("requesting");
+	
+							loginService.setFidoSession(fidoVO);
+	
+							// jgw-server 에 talk_tblnotification 넣어서 push 메시지 전달
+							String linkUrl = "/mobile/user/login/mFidoAuthentication.do?" + "fidoSessionId=" + fidoSessionId + "&encryptId=" + loginVO.getEncryptID() + "&encryptPass=" + loginVO.getEncryptPass();
+
+							String userId = loginVO.getId();
+							String useSaas = ezCommonService.getTenantConfig("useSaas", tenantId);
+							if ("Y".equalsIgnoreCase(useSaas)){
+								String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
+								userId = new StringBuilder(loginVO.getId()).append("@").append(domainName).toString();
+							}
+
+							boolean insertTalkNotification = ezEmailService.addEzTalkNotification(
+									userId,
+									egovMessageSource.getMessage("main.fido010", locale),
+									egovMessageSource.getMessage("main.fido011", locale),
+									"23", "", linkUrl);
+	
+							if (!insertTalkNotification) {
+								logger.debug("useFido but insertTalkNotification failed, id={}", loginVO.getId());
+								return "forward:/user/login/login.do";
+							}
+	
+							// Fido 인증요청 화면 호출 + 필요한 parameter 전달
+							String timeLimit = ezCommonService.getTenantConfig("FidoTimeLimit", tenantId);
+	
+							model.addAttribute("timeLimit", timeLimit);
+							model.addAttribute("fidoSessionId", fidoSessionId);
+							model.addAttribute("encryptId", loginVO.getEncryptID());
+							model.addAttribute("encryptPassword", loginVO.getEncryptPass());
+	
+							return "user/login/fidoAuthentication";
+						} else {
+							// 모바일 기기 등록 안내 화면 호출
+							return "user/login/deviceRegisterNotice";
+						}
+					} else {
     					String ip = ClientUtil.getClientIP(request);		
     					loginVO.setIp(ip);
     					
@@ -668,7 +796,7 @@ public class LoginController {
 						String ezSessionId = createLoginCookie(_uid, rpwd, _pwd, tenantId, request, response, deptId, companyId);
 
 						String sessionCode = getSessionId(request, ezSessionId);
-						logger.debug("Login sessionCode : {} user = ", _uid, sessionCode);
+						logger.debug("Login sessionCode : {} user : {} ", _uid, sessionCode);
     		        	
     					//접속 로그정보 저장
     					resultVO.setIp(ip);
@@ -718,9 +846,9 @@ public class LoginController {
         			//Show block message
 					// model.addAttribute("message", egovMessageSource.getMessageExtend("fail.common.login.block", new Object[] {numberOfLoginFailPermit}, locale));
 
-					model.addAttribute("message1", egovMessageSource.getMessageExtend("fail.common.login.block", new Object[] { numberOfLoginFailPermit }, locale));
-					model.addAttribute("message2", egovMessageSource.getMessage("fail.common.login", locale));
-					model.addAttribute("threeLineMSG", "Y");
+					model.addAttribute("message1", egovMessageSource.getMessageExtend("fail.common.login.block", new Object[] { numberOfLoginFailPermit, loginLockedDuration }, locale));
+					model.addAttribute("message2", egovMessageSource.getMessageExtend("fail.common.login.block1", new Object[] { loginLockedDuration }, locale));
+					model.addAttribute("message", "loginBlock");
                 	
                 	// 2021-12-21 이사라 : 접속 로그정보 저장 (실패)
                 	resultVO.setIp(ClientUtil.getClientIP(request));
@@ -765,6 +893,16 @@ public class LoginController {
         	
         	//Check login state of the user 
         	int check = checkState(tenantId, _uid, numberOfLoginFailPermit);
+			boolean check1 = false;
+
+			if(!loginLockedDate.equals("") && !loginLockedDate.equals("0")) {
+				check1 = checkLockedDate(tenantId, _uid, loginLockedDuration, loginLockedDate, formatedNow);
+				
+				if (check == -3 && check1) {
+					check = 0;
+				}
+			}
+			
         	String errorMsg1 = "";
         	String errorMsg2 = "";
         	String errorMsg3 = "";
@@ -776,10 +914,13 @@ public class LoginController {
 				case -3: 
 	    			//Show block message
 	            	//model.addAttribute("message", egovMessageSource.getMessageExtend("fail.common.login.block", new Object[] {numberOfLoginFailPermit}, locale));
-
-					model.addAttribute("message1", egovMessageSource.getMessageExtend("fail.common.login.block", new Object[] { numberOfLoginFailPermit }, locale));
-					model.addAttribute("message2", egovMessageSource.getMessage("fail.common.login", locale));
-					model.addAttribute("threeLineMSG", "Y");
+					if(loginLockedDate.equals("")) {
+						ezCommonService.insertUserConfigInfo(tenantId, _uid, "LoginLockedDate", formatedNow);
+					}
+					
+					model.addAttribute("message1", egovMessageSource.getMessageExtend("fail.common.login.block", new Object[] { numberOfLoginFailPermit, loginLockedDuration }, locale));
+					model.addAttribute("message2", egovMessageSource.getMessageExtend("fail.common.login.block1", new Object[] { loginLockedDuration }, locale));
+					model.addAttribute("message", "loginBlock");
 
 	            	return "forward:/user/login/login.do";
     			case -2:
@@ -791,7 +932,7 @@ public class LoginController {
 	        		errorMsg2 = egovMessageSource.getMessage("fail.common.login.warning2", locale);
 	        		errorMsg3 = egovMessageSource.getMessageExtend("fail.common.login.warning3", new Object[] {1}, locale);
 	        		errorMsg4 = egovMessageSource.getMessage("fail.common.login.warning4", locale);
-	        		errorMsg5 = egovMessageSource.getMessageExtend("fail.common.login.warning5", new Object[] {numberOfLoginFailPermit}, locale);
+	        		errorMsg5 = egovMessageSource.getMessageExtend("fail.common.login.warning5", new Object[] {numberOfLoginFailPermit, loginLockedDuration}, locale);
 	        		
 	        		model.addAttribute("message1", errorMsg1);
 	            	model.addAttribute("message2", errorMsg2);
@@ -813,10 +954,16 @@ public class LoginController {
         			if (check >= numberOfLoginFailPermit - 1) {
         				//Show block message
 						// model.addAttribute("message", egovMessageSource.getMessageExtend("fail.common.login.block", new Object[] {numberOfLoginFailPermit}, locale));
+						
+						if(loginLockedDate.equals("")) {
+							ezCommonService.insertUserConfigInfo(tenantId, _uid, "LoginLockedDate", formatedNow);
+						} else {
+							ezCommonService.updateUserConfigInfo(tenantId, _uid, "LoginLockedDate", formatedNow);
+						}
 
-						model.addAttribute("message1", egovMessageSource.getMessageExtend("fail.common.login.block", new Object[] { numberOfLoginFailPermit }, locale));
-						model.addAttribute("message2", egovMessageSource.getMessage("fail.common.login", locale));
-						model.addAttribute("threeLineMSG", "Y");
+						model.addAttribute("message1", egovMessageSource.getMessageExtend("fail.common.login.block", new Object[] { numberOfLoginFailPermit, loginLockedDuration }, locale));
+						model.addAttribute("message2", egovMessageSource.getMessageExtend("fail.common.login.block1", new Object[] { loginLockedDuration }, locale));
+						model.addAttribute("message", "loginBlock");
 
                     	return "forward:/user/login/login.do";
         			} else {
@@ -825,7 +972,7 @@ public class LoginController {
     	        		errorMsg2 = egovMessageSource.getMessage("fail.common.login.warning2", locale);
     	        		errorMsg3 = egovMessageSource.getMessageExtend("fail.common.login.warning3", new Object[] {check + 1}, locale);
     	        		errorMsg4 = egovMessageSource.getMessage("fail.common.login.warning4", locale);
-    	        		errorMsg5 = egovMessageSource.getMessageExtend("fail.common.login.warning5", new Object[] {numberOfLoginFailPermit}, locale);
+    	        		errorMsg5 = egovMessageSource.getMessageExtend("fail.common.login.warning5", new Object[] {numberOfLoginFailPermit, loginLockedDuration}, locale);
     	        		
     	        		model.addAttribute("message1", errorMsg1);
     	            	model.addAttribute("message2", errorMsg2);
@@ -940,7 +1087,7 @@ public class LoginController {
 			if (useDbSession && StringUtils.isNotBlank(ezSessionId)) { // 로그인
 				sessionCode = ezSessionId;
 			} else if (useDbSession && StringUtils.isBlank(ezSessionId)) { // 로그아웃
-				sessionCode = loginCookie.getValue();
+				sessionCode = loginCookie.getValue() != null ? loginCookie.getValue() : "";
 			} else {
 				sessionCode = request.getSession().getId();
 			}
@@ -1055,7 +1202,98 @@ public class LoginController {
         	return returnValue;
     	}
     }
-    
+	
+	public boolean fidoNotAccessIpCheck(LoginVO loginVO) throws Exception {
+		logger.debug("ipAccessCheck start");
+		try {
+			boolean returnValue = false;
+
+			int tenantId = loginVO.getTenantId();
+			String companyId = loginVO.getCompanyID();
+			String useFido = Optional.ofNullable(ezCommonService.getCompanyConfig(tenantId, companyId, "useFidoSession")).orElseGet(() -> "NO");
+			
+			logger.debug("useFido=" + useFido);
+
+			if (useFido.equalsIgnoreCase("NO")) {
+				return false;
+			} else if (useFido.equalsIgnoreCase("YES")) {
+				String clientIP[] = loginVO.getIp().split("\\.");
+
+				List<IPBandVO> notAccessFidoIpList = ezSystemAdminService.getFidoAuthenticList(tenantId, companyId);
+
+				if (notAccessFidoIpList != null && notAccessFidoIpList.size() != 0) {
+					String ipBandAddr = "";
+					String getAccess = "NO";
+					int checkCnt = 0;
+					boolean checkIp = ezSystemAdminService.getFidoAuthenticInfo(tenantId, companyId, loginVO.getIp()) > 0;
+					
+					for (IPBandVO ipBandVo : notAccessFidoIpList) {
+						ipBandAddr = ipBandVo.getIpAddress();
+						getAccess = ipBandVo.getAccess();
+						logger.debug("ipBandAddr=" + ipBandAddr + ", getAccess=" + getAccess);
+
+						String ipListIp[] = ipBandAddr.split("\\."); // *(대역)이 있을 수도 있으니 하나하나 검사해야됨
+						for (int j = 0; j < clientIP.length; j++) {
+							if (ipListIp[j].equals("*") || ipListIp[j].equals(clientIP[j])) {
+								checkCnt++;
+							}
+						}
+
+						logger.debug("checkCnt : {}, checkIp : {} ", checkCnt, checkIp);
+						if (checkCnt == 4) {
+							if (checkIp && getAccess.equals("YES")) {
+								returnValue = false;
+								break;
+							} else if (!checkIp) {
+								returnValue = true;
+								break;
+							}
+						}	else if (checkCnt < 4) {
+							returnValue = true;
+						} 
+						checkCnt = 0;
+					} // for_end
+				} else {
+					returnValue = true;
+				} // notAccessFidoIpList if_end
+			}
+
+			logger.debug("returnValue=" + returnValue);
+			return returnValue;
+		} catch(Exception e) {
+			logger.error(e.getMessage(), e);
+			return false;
+		}
+	}
+	
+	@ResponseBody
+	@PostMapping(value = "/user/login/getFidoSessionStatus.do")
+	public String getFidoSessionStatus(@RequestParam String fidoSessionId) throws Exception {
+		logger.debug("checkFidoAuthentication started");
+
+		FidoAuthenticationVO vo = loginService.getFidoSession(fidoSessionId);
+
+		logger.debug("checkFidoAuthentication ended : {}", vo.getStatus());
+
+		return vo.getStatus();
+	}
+
+	@ResponseBody
+	@PostMapping(value = "/user/login/expireFidoSession.do")
+	public String expireFidoSession(@RequestParam String fidoSessionId) throws Exception {
+		logger.debug("expireFidoSession started");
+
+		FidoAuthenticationVO vo = new FidoAuthenticationVO();
+		vo.setFidoSessionId(fidoSessionId);
+		vo.setStatus("expired");
+
+		loginService.updateFidoStatus(vo);
+
+		logger.debug("expireFidoSession ended : {}", vo.getStatus());
+
+		return vo.getStatus();
+	}
+
     // 2023-03-22 이사라 : [TFA] OTP 번호 확인을 위해 호출
 	public String getTOTPCode(String otpKey) {
 		Base32 base32 = new Base32();
@@ -1140,7 +1378,7 @@ public class LoginController {
 		    	twoLetterLang = commonUtil.getTwoLetterLangFromLangNum(primaryLang);
 		    }
 			
-		    lang = commonUtil.getLangNumFromTwoLetterLang(twoLetterLang);
+		    lang = commonUtil.getLangNumFromTwoLetterLang(twoLetterLang, tenantId);
 		    
 		    //브라우저 언어가 한국어/영어/일본어/인도네시아어가 아닐 경우 시스템 언어로 설정
 		    if (lang.equals("")) {						
@@ -1151,6 +1389,8 @@ public class LoginController {
 				if ("YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useSecondaryLang", tenantId))) {
 					lang = "2";
 				}
+				
+				twoLetterLang = commonUtil.getTwoLetterLangFromLangNum(lang);
 			}
 			
 		    String primaryTimeZone = ezCommonService.getTenantConfig("PrimaryTimeZone", tenantId);
@@ -1177,8 +1417,9 @@ public class LoginController {
 		}
 		
 		// Cookie 생성
-		//2019-09-16 김보미 - 사용하지 않으므로 패스워드 부분 주석 : userPw 값이 '/'로 끝나면 나중에 "///"으로 split할때 locale앞에 '/'가 붙어 문제 발생 
-		String cInfo = serverName + "///" + userId + "///" + "encryptedUserPw" + "///" + ipAddress + "///" + "userPw" + "///" + locale + "///" + lang + "///" + timeZone + "///" + tenantId+ "///" + deptID + "///" + companyID;
+		//2019-09-16 김보미 - 사용하지 않으므로 패스워드 부분 주석 : userPw 값이 '/'로 끝나면 나중에 "///"으로 split할때 locale앞에 '/'가 붙어 문제 발생
+		String jobId = ezOrganAdminService.getJobIdForFirstUser(userId, tenantId).orElse("");
+		String cInfo = serverName + "///" + userId + "///" + "encryptedUserPw" + "///" + ipAddress + "///" + "userPw" + "///" + locale + "///" + lang + "///" + timeZone + "///" + tenantId+ "///" + deptID + "///" + companyID + "///" + jobId;
 		String loginCookie = egovFileScrty.encryptAES(cInfo);
 		
 		// DB 기반 세션 방식 적용하는 경우
@@ -1250,8 +1491,13 @@ public class LoginController {
 	        	session.setMaxInactiveInterval(sessionTime*60); // 세션의 유지 시간 설정
         	}
     	}    	
-
-    	return ezSessionId;
+		
+		// 2024-08-28 조수빈 - 유저 색상 테마 정보
+		Cookie useColor = new Cookie("useColor", Integer.toString(ezNewPortalService.getUserColor(userId, companyID, tenantId)));
+		useColor.setPath("/");
+		response.addCookie(useColor);
+		
+		return ezSessionId;
     }
     
 	// 2023-03-22 이사라 : [TFA] 2-factor 설정화면
@@ -1304,7 +1550,7 @@ public class LoginController {
 			// 오류가 발생한 경우 otpKey 비워 줌
 			ezCommonService.updateUserConfigInfo(tenantId, userId, "otpKey", "");
 
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			return "fail";
 		}
 
@@ -1472,7 +1718,8 @@ public class LoginController {
 
 		String encPass = request.getParameter("OLDPASSWORD");
 		String encNewPass = request.getParameter("NEWPASSWORD");
-
+		String resetPasswordFlag = request.getParameter("RESETPASSWORDFLAG");
+		
 		String rpwd = EgovFileScrty.decryptRsa(pk, encPass);
 		String epwd = EgovFileScrty.decryptRsa(pk, encNewPass);
 
@@ -1508,6 +1755,9 @@ public class LoginController {
 		String ip = ClientUtil.getClientIP(request);
 		loginVO.setIp(ip);
 		loginService.updateUser(loginVO);
+		if ("Y".equals(resetPasswordFlag)) {
+			ezCommonService.deleteUserConfigInfo(tenantId,_uid,"resetPassword");
+		}
 
 		logger.debug("=========================================== changePassword ended ============================================");
 		return "OK";
@@ -1543,6 +1793,12 @@ public class LoginController {
 
 		PasswordCheckPolicyResult result = commonUtil.checkPwPolicy(pwStr, companyId, tenantId, userId);
 		chkPwPolicy = result.succeeded() ? "OK" : result.getMessage();
+
+		if ("PREVERROR". equals(chkPwPolicy)) {
+			String rememberPWCountConfig = ezCommonService.getCompanyConfig(tenantId, companyId, "RememberPWCount");
+			int rememberPWCount = rememberPWCountConfig == null || "".equalsIgnoreCase(rememberPWCountConfig) ? 0 : Integer.parseInt(rememberPWCountConfig);
+			chkPwPolicy += "|"+rememberPWCount;
+		}
  		
  		logger.debug("checkPasswordPolicy ended. chkPwPolicy=" + chkPwPolicy);
  		return chkPwPolicy;
@@ -1768,4 +2024,144 @@ public class LoginController {
 
     	return matcher.matches();
     }
+	
+	//2024-07-01 김대현 비밀번호 초기화 기능
+	@RequestMapping(value="/user/login/resetPw/resetPwInfo.do", method = RequestMethod.GET)
+	public String resetPassword (HttpServletRequest request, HttpServletResponse response) {
+		logger.debug("resetPassword");
+
+		return "/user/login/resetPwInfo";
+	}
+
+
+	@ResponseBody
+	@RequestMapping(value = "/user/login/resetPw/checkUserInfo.do", method = RequestMethod.POST)
+	public String checkUserInfo (HttpServletRequest request, HttpServletResponse response) throws Exception{
+		logger.debug("checkUserInfo started");
+		String result = "NOEXIST";
+
+		String cn = request.getParameter("cn");
+		String serverName = request.getServerName();
+		int tenantId = loginService.getTenantId(serverName);
+
+		LoginVO loginVO = new LoginVO();
+		loginVO.setId(cn);
+		loginVO.setTenantId(tenantId);
+		loginVO.setDn("NOPASSWORD");
+
+		LoginVO resultVO = loginService.selectUser(loginVO);
+
+		if (resultVO != null && resultVO.getId()!= null && !"".equals(resultVO.getId())) {
+			// 사용자가 존재할때
+			String userName = request.getParameter("userName");
+
+			result = userName != null && userName.equals(resultVO.getDisplayName()) ? "OK" : "DIFFNAME";
+		}
+
+		logger.debug("checkUserInfo ended");
+		return result;
+	}
+
+	@RequestMapping(value = "/user/login/resetPw/authNumberPage.do", method = RequestMethod.GET)
+	public String authNumberPage (HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
+		logger.debug("authNumberPage started");
+		String cn = request.getParameter("cn");
+		String userName = request.getParameter("userName");
+
+		String serverName = request.getServerName();
+		int tenantId = loginService.getTenantId(serverName);
+
+		LoginVO loginVO = new LoginVO();
+		loginVO.setId(cn);
+		loginVO.setTenantId(tenantId);
+		loginVO.setDn("NOPASSWORD");
+
+		LoginVO resultVO = loginService.selectUser(loginVO);
+
+		String mobileNo = resultVO.getMobile();
+
+		boolean useShowAuthCode = "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useShowAuthCode", tenantId));
+		model.addAttribute("useShowAuthCode", useShowAuthCode);
+
+		model.addAttribute("mobileNo", mobileNo);
+		model.addAttribute("cn", cn);
+		model.addAttribute("userName", userName);
+
+		logger.debug("authNumberPage ended");
+		return "/user/login/authNumberPage";
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/user/login/resetPw/sendAuthCodeBySMS.do")
+	public String sendAuthCodeBySMS (HttpServletRequest request, HttpServletResponse response, ModelMap map) throws Exception {
+		logger.debug("sendAuthCodeBySMS started");
+		String result = "ERROR";
+
+		String serverName = request.getServerName();
+		int tenantId = loginService.getTenantId(serverName);
+		String cn = request.getParameter("cn");
+
+		String type = request.getParameter("type");
+		String mobileNo = request.getParameter("mobileNo");
+		mobileNo = mobileNo.replaceAll("-", "");
+
+		Random random = new Random();
+		String randomValue = "";
+		// 화면에 인증코드와 임시비밀번호를 표시해주는 Flag값
+		boolean useShowAuthCode = "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useShowAuthCode", tenantId));
+
+		if ("authCode".equals(type)) {
+			// 인증코드
+			randomValue = Integer.toString(random.nextInt(888888) + 111111);
+			result = commonUtil.sendSMS(mobileNo,randomValue,type) ? randomValue : "FAIL";
+			result = useShowAuthCode? randomValue : result;
+		} else {
+			// 임시비밀번호
+			String tempPassword = commonUtil.getTempPassword(8);
+
+			try {
+				String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
+				logger.debug("domain=" + domain);
+				
+				ezOrganAdminService.setPasswordWithEmailSystem(cn, domain, tempPassword, tenantId);
+				// 비밀번호 초기화 컨피그
+				String getPropertyValue = ezCommonService.getUserConfigInfo(tenantId, cn, "resetPassword");
+
+				if (!getPropertyValue.equals("")) {
+					ezCommonService.updateUserConfigInfo(tenantId, cn, "resetPassword", "Y");
+				} else {
+					ezCommonService.insertUserConfigInfo(tenantId, cn, "resetPassword", "Y");
+				}
+
+				result = commonUtil.sendSMS(mobileNo,tempPassword,type) ? tempPassword : "FAILSMS";
+				result = useShowAuthCode? tempPassword : result;
+
+			} catch (Exception e) {
+				logger.error(e.getMessage(), e);
+			}
+
+		}
+
+		logger.debug("sendAuthCodeBySMS ended={}",result);
+		return result;
+	}
+	
+	private boolean checkLockedDate(int tenantID, String userId, String loginLockedDuration, String lockedDate, String nowDate) throws Exception {
+		String diff = String.valueOf(commonUtil.getTimeDifference(lockedDate, nowDate));
+
+		int remainTime = Integer.parseInt(loginLockedDuration) - Integer.parseInt(diff);
+		
+		try {
+			if (remainTime <= 0) {
+				// 잠금 잔여 시간이 지난 이후 로그인 실패 카운터 초기화 및 시간 초기화 
+				commonUtil.resetLoginFailAttempts(userId, tenantID);
+				ezCommonService.updateUserConfigInfo(tenantID, userId, "LoginLockedDate", "0");
+				return true;
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+		
+		return false;
+	}
 }

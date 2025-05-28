@@ -6,7 +6,8 @@
 	<head>
 		<title>mail_distributionlist</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<style>
 			.mainlist tr td {
 				padding:0px;
@@ -28,7 +29,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript">
-			var companyId = "${userCompany}";
+			var companyId = "${companyId}";
 			var searchFlag = false;
 			
 			document.onselectstart = function () {
@@ -38,11 +39,11 @@
 		            return true;
 		    };
 		    window.onload = function () {
-		        if (document.all("ListCompany") != null && document.all("ListCompany").length == 0)
+		        <%--if (document.all("ListCompany") != null && document.all("ListCompany").length == 0)
 		            alert("<spring:message code='ezEmail.t49' />");
-		        else {
+		        else {--%>
 		            company_change();
-		        }
+		        <%--}--%>
 		        
 		        var searchInput = $("#searchInputWrap input");
 		        var searchBtn = $("#searchInputWrap .imgbtn");
@@ -50,7 +51,7 @@
 		        searchInput.width(searchInputW + "px");
 		    }
 		    function company_change() {
-		    	companyId = document.all("ListCompany") == null ? companyId : document.all("ListCompany").value;
+		    	//companyId = document.all("ListCompany") == null ? companyId : document.all("ListCompany").value;
 		    	document.getElementsByClassName("shared_boxesTable")[0].style.display = "none";
 		
 		        var xmlDom = createXmlDom();
@@ -110,7 +111,7 @@
 		        var objNode = "";
 		        createNodeInsert(xmlDom, objNode, "DATA");
 		        createNodeAndInsertText(xmlDom, objNode, "CN", GetAttribute(listview.GetSelectedRows()[0], "DATA1"));
-		        createNodeAndInsertText(xmlDom, objNode, "COMPID", document.all("ListCompany").value);
+		        createNodeAndInsertText(xmlDom, objNode, "COMPID", companyId);
 		        xmlHTTP.open("POST", "/admin/ezEmail/mailViewDistributionList.do", true);
 		        xmlHTTP.onreadystatechange = getDistributionMember_after;
 		        xmlHTTP.send(xmlDom);
@@ -207,7 +208,7 @@
 		            mail_add_distributionlist_cross_dialogArguments[0] = companyId;
 		            mail_add_distributionlist_cross_dialogArguments[1] = add_dl_Complete;
 		            var OpenWin = window.open("/admin/ezEmail/mailAddDistributionList.do?companyId=" + companyId, "", GetOpenWindowfeature(970, 670));
-		            try { OpenWin.focus(); } catch (e) { }
+		            try { OpenWin.focus(); } catch (e) {console.log(e);}
 		        }
 		        else {
 		            var rtnValue = window.showModalDialog("/admin/ezEmail/mailAddDistributionList.do", companyId,
@@ -243,7 +244,7 @@
 		            mail_add_distributionlist_cross_dialogArguments[0] = companyId;
 		            mail_add_distributionlist_cross_dialogArguments[1] = mod_dl_Complete;
 		            var OpenWin = window.open("/admin/ezEmail/mailAddDistributionList.do?cn=" + DeptID + "&name=" + encodeURIComponent(selnode[0].innerText) + "&companyId=" + companyId, "", GetOpenWindowfeature(970, 690));
-		            try { OpenWin.focus(); } catch (e) { }
+		            try { OpenWin.focus(); } catch (e) {console.log(e);}
 		        }
 		        else {
 		            var rtnValue = window.showModalDialog("/admin/ezEmail/mailAddDistributionList.do?cn=" + DeptID +
@@ -350,9 +351,28 @@
 		        var url = "/admin/ezOrgan/configEmail.do?id=" + selectId + "&type=ml" + "&companyId=" + companyId;
 			    window.open(url , "", "height=315px,width=462px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(462, 315));
 			}
+
+			function excelExport() {
+				//companyId = document.all("ListCompany") == null ? companyId : document.getElementById("ListCompany").value;
+				var dvGroupListObj = $("[id^='lvUserList_TR_']").get();
+				var dvGroupList = new Array();
+
+				if(dvGroupListObj.length > 0) {
+					dvGroupListObj.forEach(function (e, i) {
+						dvGroupList.push(e.getAttribute('data1'));
+					});
+				}
+
+				var params = {'companyID' : companyId, 'dvGroupList' : dvGroupList};
+				var paramsString = Object.entries(params).map(item => item.join('=').replace(/,/g, '&'+item[0]+'=')).join('&');
+				var pURL = "/admin/ezEmail/mailExcelExportDistributionList.do" + "?" + paramsString;
+				saveExcel.location.href = pURL;
+
+			}
 		</script>
 	</head>
-	<body class="mainbody">
+	<body class="">
+	<iframe id=saveExcel name=saveExcel style="display:none"></iframe>
 	<xml id="listviewheader" style="display:none">
 	  <LISTVIEWDATA>
 	    <HEADERS>
@@ -364,7 +384,7 @@
 	  </LISTVIEWDATA>
 	</xml>
 	<form id="Form1" method="post">
-		<h1>
+		<%--<h1>
 			<spring:message code='ezEmail.t58' />
 			<span class="title_bar"><img src="/images/name_bar.gif"></span>
 			
@@ -373,13 +393,14 @@
 	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 	            	</c:forEach>	      		
 	      	</select>
-		</h1>
+		</h1>--%>
 		<div id="mainmenu">
 			<ul>
 				<li class="important"><span onClick="add_dl()"><spring:message code='ezEmail.t60' /></span></li>
 		    	<li><span onClick="mod_dl()"><spring:message code='ezEmail.t61' /></span></li>
 		      	<li><span class="icon16 icon16_delete" onClick="del_dl()"></span></li>
 		      	<li><span onClick="mail_manage()"><spring:message code='ezOrgan.t91' /></span></li>
+				<li onclick="excelExport();"><span><spring:message code='ezStatistics.t1003' /></span></li>
 		    </ul>
 	  </div>
 	  <script type="text/javascript">
@@ -389,7 +410,7 @@
 		<!-- 검색 -->
 		<div style="border: 1px solid #e8e8e8; WIDTH:100%; height: 34px; box-sizing: border-box; line-height: 33px; margin-bottom:3px;">
 			<div id="jobTotalInfoRayer" style="line-height: 30px; display: inline-block;">
-				<span>&nbsp;[<spring:message code='main.t252'/> <span style="color:#017BEC; font-weight:bold;" id="listCount"></span> <spring:message code='ezSystem.kyj2'/>]</span>
+				<span>&nbsp;[<spring:message code='main.t252'/> <span class='txt_color' style="font-weight:bold;" id="listCount"></span> <spring:message code='ezSystem.kyj2'/>]</span>
 			</div>
 			<div id="userSearchRayer" style="float:right; display: inline-block;">
 				<div style="display: inline-block; float:left;">

@@ -4,8 +4,10 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezStatistics.service.EzStatisticsAdminService;
 import egovframework.ezEKP.ezStatistics.vo.StatApprVO;
+import egovframework.let.user.login.vo.LoginVO;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -52,6 +54,9 @@ public class EzStatisticsController {
 
 	@Resource(name = "EzStatisticsAdminService")
 	private EzStatisticsAdminService ezStatisticsAdminService;
+
+	@Resource(name="egovMessageSource")
+	private EgovMessageSource egovMessageSource;
 	
 	/**
 	 * 통계 메인화면 호출 함수
@@ -791,5 +796,15 @@ public class EzStatisticsController {
 		logger.debug("callYearlyDocCount ended ");
 
 		return "success";
+	}
+
+	@RequestMapping(value = "/ezStatistics/saveExcel.do", method = RequestMethod.POST)
+	@ResponseBody
+	public void saveExcel(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String StrAnalysisDate = request.getParameter("saveExcelData").trim().replaceAll("&nbsp;", "")
+				.replaceAll("\r\n", "").replaceAll("\n", "").replaceAll("\t", "");
+		String fileName = egovMessageSource.getMessage("ezStatistics.pgb02", userInfo.getLocale());
+		commonUtil.downloadHtmlTableAsExcel(StrAnalysisDate, response, fileName);
 	}
 }

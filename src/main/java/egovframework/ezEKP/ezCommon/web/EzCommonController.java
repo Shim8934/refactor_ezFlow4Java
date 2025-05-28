@@ -10,12 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -39,6 +41,7 @@ import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 
 /** 
  * @Description [Controller] 공통
@@ -71,6 +74,9 @@ public class EzCommonController extends EgovFileMngUtil{
 	
 	@Resource(name="loginService")
 	private LoginService loginService;
+
+	@Resource(name = "EzApprovalGService")
+	private EzApprovalGService ezApprovalGService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzCommonController.class);
 	
@@ -156,8 +162,8 @@ public class EzCommonController extends EgovFileMngUtil{
 //            System.Runtime.InteropServices.Marshal.ReleaseComObject(doc);
 //        }
         // reform - end
-        
-        strHTML = commonUtil.cleanScriptValue(strHTML, request.getParameter("type"));
+
+        strHTML = commonUtil.cleanScriptValue(strHTML);
         
         String mhtData = ezCommonService.startHtml2Mht(strHTML, realPath, userInfo.getLocale());
         
@@ -204,7 +210,7 @@ public class EzCommonController extends EgovFileMngUtil{
 	public String mhtToHTML(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale) throws Exception{
 		logger.debug("mhtToHTML started");
 
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String filePath = "";
         String uploadModule = commonUtil.getUploadPath("upload_common.MHTIMAGE", userInfo.getTenantId()) + commonUtil.separator; 
         String realPath = commonUtil.getRealPath(request);
@@ -217,6 +223,24 @@ public class EzCommonController extends EgovFileMngUtil{
     	}
     	
         logger.debug("strURL="+strURL + ",uploadModule="+uploadModule);
+
+		/* 2024-05-08 양지혜 - 공개문서에서 파라미터 조작으로 접근 취약점 보완. 경로에 문서(doc) 디렉토리가 포함된 경우 열람권한 체크 */
+		if (strURL.contains("/doc/")) {
+			String[] tmpUrl = strURL.split("doc/");
+			if (userInfo.getRollInfo().indexOf("c=1") == -1 && (userInfo.getRollInfo().indexOf("m=1") == -1 && !tmpUrl[1].contains(userInfo.getCompanyID()))) {
+				String accessInfo = ezCommonService.getTenantConfig("UserInfo_ApprovalG_VIEW", userInfo.getTenantId());
+				String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+				String[] tmpStr = strURL.split("/");
+				String docID = tmpStr[tmpStr.length - 1].substring(0, 20);
+				String aprPass = "";
+				String endPass = "";
+				aprPass = ezApprovalGService.getAccessYNGforAPR(docID, accessInfo, approvalFlag, userInfo);
+				endPass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag, userInfo.getDeptID());
+				if (aprPass.contains("FALSE") || endPass.contains("FALSE")) {
+					return "NoAccess";
+				}
+			}
+		}
         
         filePath = realPath + uploadModule;
         
@@ -334,8 +358,12 @@ public class EzCommonController extends EgovFileMngUtil{
 			userName = request.getParameter("userName");
 		}
 		
-		logger.debug("id=" + id + ", email=" + email + ", dept=" + pDeptID + ", userType=" + userType + ", userName=" + userName);
-		
+		String jobId = Optional.ofNullable(request.getParameter("jobId")).orElse("");
+		String type = Optional.ofNullable(request.getParameter("type")).orElse("");
+
+		logger.debug("id=" + id + ", email=" + email + ", dept=" + pDeptID + ", userType=" + userType + ", userName="
+				+ userName + ", jobId=" + jobId + ", type=" + type);
+
 		OrganUserVO userCheckVO = ezOrganService.getUserInfo(id, "1", loginVO.getTenantId());
 		if (userCheckVO != null) {
 			logger.debug(id + " is member.");
@@ -461,7 +489,8 @@ public class EzCommonController extends EgovFileMngUtil{
 						literalPhoto = "<IMG SRC='" + egovMessageSource.getMessage("main.e14", locale) + "' width=119 height=128>";
 					} else {
 						if (!pDeptID.equals("") && !xmldom.getElementsByTagName("DEPARTMENT").item(0).getTextContent().equals(pDeptID)) {
-							String infoXML2 = ezOrganService.getUserAddjobInfo(id, pDeptID, loginVO.getPrimary(), loginVO.getTenantId());
+							// 2024.05.16 장혜연 직원 상세정보 조회시 jobId도 고려되도록 추가
+							String infoXML2 = ezOrganService.getUserAddjobInfoWithJobId(id, pDeptID, loginVO.getPrimary(), jobId, loginVO.getTenantId());
 							
 							if (infoXML2 != null && !infoXML2.equals("") && !infoXML2.equals("<DATA></DATA>")) {
 								Document xmldom2 = commonUtil.convertStringToDocument(infoXML2);
@@ -482,8 +511,14 @@ public class EzCommonController extends EgovFileMngUtil{
 							literalDept = xmldom.getElementsByTagName("DESCRIPTION").item(0).getTextContent();
 							literalTitle= xmldom.getElementsByTagName("TITLE").item(0).getTextContent();
 							literalRole= xmldom.getElementsByTagName("EXTENSIONATTRIBUTE10").item(0).getTextContent();
+							// 겸직자의 상세보기 화면 표출 시 jobid를 통하여 직위,직책 값을 가져옴
+							if (type.equals("addJob")) {
+								OrganUserVO userAddJob = ezOrganService.getAddJobInfo(id, pDeptID, jobId, loginVO.getTenantId());
+								literalTitle = userAddJob.getTitle();
+								literalRole = userAddJob.getRole();
+							}
 						}
-						
+
 						if (!xmldom.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent().equals("") && xmldom.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent().contains(".")) {
 							literalPhoto = "<IMG SRC='/admin/ezOrgan/getPersonalInfo.do?fileName=" + xmldom.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent() + "' width=119 height=128>";
 						} else {

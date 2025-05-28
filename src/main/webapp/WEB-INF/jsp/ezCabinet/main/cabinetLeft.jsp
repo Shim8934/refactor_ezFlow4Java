@@ -6,7 +6,8 @@
 <html style="height:100%">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezCabinet.css', 'msg')}"       type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('/css/ezCabinet/cabinet.css')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
@@ -72,6 +73,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezCabinet/cabinetTree.js')         }"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
 		<script type="text/javascript">
+			var UserLang =  "<c:out value = '${UserLang} '/>";
 			var CabUserLeft = function() {
 				var cabinetTree = new CabinetTree();
 				var relatedTree = new CabinetTree();
@@ -106,6 +108,16 @@
 					});
 					
 					cabinetTree.makeTree({cabinetNode : "root"});
+					var targetSpan = "";
+					var checkInterval = setInterval(function() {
+						targetSpan = document.querySelector("#cabinetTree div span.list_text[level='0']");
+						if (targetSpan) {
+							targetSpan.className = "list_text node_selected selectedNode";
+							var cabinetId = targetSpan.getAttribute("role");
+							window.parent.frames["right"].location.href = "/ezCabinet/myCabinet.do?cabinetId=" + cabinetId;
+							clearInterval(checkInterval);
+						}
+					}, 100);
 					
 					document.getElementById("myCabinet"        ).addEventListener("click", function(e) {getMyCabinet();     }, false);
 					document.getElementById("cabinetConfig"    ).addEventListener("click", function(e) {getConfigPage();    }, false);

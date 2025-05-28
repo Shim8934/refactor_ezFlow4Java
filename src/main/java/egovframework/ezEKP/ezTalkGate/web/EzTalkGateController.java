@@ -1,6 +1,9 @@
 package egovframework.ezEKP.ezTalkGate.web;
 
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -203,7 +206,7 @@ public class EzTalkGateController {
 	        int serverPort = request.getServerPort();
 	        int tenantId = loginService.getTenantId(serverName);
 	        logger.debug("serverName=" + serverName + ",serverPort=" + serverPort + ",tenantId=" + tenantId);
-			
+
 			String userId = ezTalkGateUtil.decryptEzTalkAES(ezTalkId);
 			String userPw = ezTalkGateUtil.decryptEzTalkAES(ezTalkPw);
 			type = (type == null) ? "" : type;
@@ -213,8 +216,45 @@ public class EzTalkGateController {
 			logger.debug("isUserExists=" + isUserExists);
 			
 			if (isUserExists) {
-				result = "OK";
-				// 2018.10.25 yjks - 모바일 사용 설정 확인 추가 
+				// 2023.09.22 한슬기 : 비밀번호가 만료되었는지 체크.
+				LoginVO loginVO = new LoginVO();
+				loginVO.setId(userId);
+				loginVO.setTenantId(tenantId);
+				loginVO.setDn("NOPASSWORD");
+				LoginVO resultVO = loginService.selectUser(loginVO);
+				
+				String companyId = resultVO.getCompanyID();
+				
+				// 비밀번호 만료 주기 (일 단위, 0:사용안함)
+				String expirePassPeriod = ezCommonService.getCompanyConfig(tenantId, companyId, "ExpirePassPeriod");
+				expirePassPeriod = expirePassPeriod.trim().equals("") ? "0" : expirePassPeriod;
+
+				// 비밀번호 만료기한 설정을 사용 하지 않을 경우
+                if ("0".equals(expirePassPeriod.trim())) {
+                    result = "OK";
+                } else {	// 비밀번호 만료기한 설정을 사용 할 경우
+					Date baseDT = getExpiryDeadline(expirePassPeriod,"yyyy-MM-dd HH:mm:ss");
+					Date passwordUpdateDT = resultVO.getPassword_updatedt();
+
+					if (passwordUpdateDT == null) {
+						passwordUpdateDT = resultVO.getUpdateDT();
+					}
+
+					logger.debug("passwordUpdateDT : {}", passwordUpdateDT);
+					logger.debug("baseDT : {}", baseDT);
+
+					// 마지막 개인정보 수정일자 - 오늘 날짜 >= 0 -> 경우 비밀번호 만료기한이 지난 것
+					int diff = EgovDateUtil.getDaysDiff(baseDT, passwordUpdateDT);
+					logger.debug("diff : {}", diff);
+
+					if (diff <= 0) {
+						result = "PASSWORD_EXPIRED";
+					} else {
+						result = "OK";
+					}
+				}
+
+                // 2018.10.25 yjks - 모바일 사용 설정 확인 추가
 				// type이 M이면 모바일 로그인
 				if (type.equals("M")) {
 					String useMobileManagemant = ezCommonService.getTenantConfig("useMobileManagemant", tenantId);
@@ -265,7 +305,23 @@ public class EzTalkGateController {
 		logger.debug("ezTalkLogin ended. mobile=" + result);
 		return result;
     }
-    
+
+	private Date getExpiryDeadline(String expirePassPeriod, String pattern) throws Exception {
+		int realPeriod = Integer.parseInt("-" + expirePassPeriod.trim());
+
+		Calendar cal = Calendar.getInstance();
+		SimpleDateFormat date = new SimpleDateFormat(pattern);
+
+		String baseStr = commonUtil.getTodayUTCTime("");
+		Date baseDT = date.parse(baseStr);
+
+		cal.setTime(baseDT);
+		cal.add(Calendar.DATE, realPeriod);
+
+		baseDT = cal.getTime();
+		return baseDT;
+	}
+
 	@RequestMapping("/ezTalkGate/main.do")
 	public String ezTalkGateMain(
 					@RequestParam String ezTalkId,
@@ -500,7 +556,7 @@ public class EzTalkGateController {
 		logger.debug("ezTalkGateNoticeBoardId=" + ezTalkGateNoticeBoardId);
 		
 		List<HashMap<String, Object>> boardItemList = ezBoardService.getBoardListItem(ezTalkGateNoticeBoardId, 
-				userInfo.getId(), 1, 5, 0, "", "", "1", userInfo.getTenantId());		
+				userInfo.getId(), 1, 5, 0, "", "", new HashMap<String, String>(), "1", userInfo.getTenantId());		
 		logger.debug("boardItemList=" + boardItemList);
 		
 		String nowDate = commonUtil.getTodayUTCTime("");
@@ -539,7 +595,7 @@ public class EzTalkGateController {
 		
 		logger.debug("ezTalkGateNoticeBoardId2=" + ezTalkGateNoticeBoardId2);
 		
-		List<HashMap<String, Object>> boardItemList = ezBoardService.getBoardListItem(ezTalkGateNoticeBoardId2, userInfo.getId(), 1, 5, 0, "", "", "1", userInfo.getTenantId());		
+		List<HashMap<String, Object>> boardItemList = ezBoardService.getBoardListItem(ezTalkGateNoticeBoardId2, userInfo.getId(), 1, 5, 0, "", "", new HashMap<String, String>(), "1", userInfo.getTenantId());		
 		
 		String nowDate = commonUtil.getTodayUTCTime("");
 	    nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
@@ -742,17 +798,20 @@ public class EzTalkGateController {
 		boolean isUserExists = false;
 		
 		LoginVO loginVO = new LoginVO();	
-		tenantId = 0;
+		//tenantId = 0;
 		loginVO.setId(id);
 		loginVO.setTenantId(tenantId);
 
 		if (pw == null) {
 			loginVO.setDn("NOPASSWORD");
 		} else {
-			String encryptedPw = EgovFileScrty.encryptPassword(pw, id);
+			//String encryptedPw = EgovFileScrty.encryptPassword(pw, id);
+			loginVO.setDn("NOPASSWORD");
+			LoginVO resultVO = loginService.selectUser(loginVO);
+			String encryptedPw = EgovFileScrty.encryptPassword(pw, resultVO.getId());
 
 			logger.debug("encryptedPw=" + encryptedPw);
-
+			loginVO.setDn("PASSWORD");
 			loginVO.setPassword(encryptedPw);
 		}
 		

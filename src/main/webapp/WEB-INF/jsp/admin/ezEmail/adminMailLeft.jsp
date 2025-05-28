@@ -6,7 +6,8 @@
 	<head>
 		<title><spring:message code="main.t23" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">	   	   	
-		<link rel="stylesheet" href="${util.addVer('main.e15', 'msg')}" type="text/css">	
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">	
 		<link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">	
 		<style>
 			#mCSB_1_container {margin-right: 0px;} 
@@ -45,7 +46,8 @@
 				switch(idx){
 
 					case 2:
-						url = "/admin/ezEmail/mailDistributionList.do";
+						//url = "/admin/ezEmail/mailDistributionList.do";
+						url = "/admin/ezEmail/mailDistributionMain.do";
 						break;
 					case 3:
 						url = "/admin/ezEmail/mailDefaultQuota.do" ;
@@ -125,6 +127,12 @@
 					case 36:
 						url = "/admin/ezEmail/companyMultiDomain.do";
 						break;
+					case 37:
+						url = "/admin/ezEmail/appr/allHands/main.do";
+						break;
+					case 38:
+						url = "/admin/ezEmail/appr/main.do";
+						break;
 				}
 				window.open(url,"right");
 				
@@ -171,54 +179,66 @@
   			</div>
   			<div class="adminListBox" style="overflow:hidden; padding-right: 0;">
 				<h2 class="on">
-					<span onClick="goPage(22)" style="display:inline-block;width:100%;"><spring:message code="ezEmail.lsd01" /></span>
+					<span class="h2Title" onClick="goPage(22)" style="display:inline-block;width:100%;"><spring:message code="ezEmail.lsd01" /></span>
 				</h2>
+				
+				<c:if test="${useApprMail}">
+				<h2>
+					<% // 전체메일승인 %>
+					<span class="h2Title" onClick="goPage(37)" style="display:inline-block;width:100%;"><spring:message code="email.appr.menu.allhands" /></span>
+				</h2>
+				<h2>
+					<% // 메일승인관리 %>
+					<span class="h2Title" onClick="goPage(38)" style="display:inline-block;width:100%;"><spring:message code="email.appr.menu.normal" /></span>
+				</h2>
+				</c:if>
+				
 				<c:if test="${cChk == '1'}">
 				<h2>
-					<span onClick="goPage(9)" style="display:inline-block;width:100%;"><spring:message code='main.t00027' /></span>
+					<span class="h2Title" onClick="goPage(9)" style="display:inline-block;width:100%;"><spring:message code='main.t00027' /></span>
 				</h2>
 				<h2>
-					<span onClick="goPage(3)" style="display:inline-block;width:100%;"><spring:message code='main.t58' /></span>
+					<span class="h2Title" onClick="goPage(3)" style="display:inline-block;width:100%;"><spring:message code='main.t58' /></span>
 				</h2>  
 				</c:if>
 				<h2>
-					<span onClick="goPage(2)" style="display:inline-block;width:100%;"><spring:message code='main.t57' /></span>
+					<span class="h2Title" onClick="goPage(2)" style="display:inline-block;width:100%;"><spring:message code='main.t57' /></span>
 				</h2>  
 				<c:if test="${useSharedMailbox == 'YES'}">
 					<h2>
-						<span onClick="goPage(33)" style="display:inline-block;width:100%;"><spring:message code='ezEmail.sharedMailbox01' /></span>
+						<span class="h2Title" onClick="goPage(33)" style="display:inline-block;width:100%;"><spring:message code='ezEmail.sharedMailbox01' /></span>
 						<ul></ul>
 					</h2>
 				</c:if>
 				<c:if test="${cChk == '1'}">
 				<h2>
-					<span onClick="goPage(35)" style="display:inline-block;width:100%;"><spring:message code='ezEmail.multiDomain.ksa01' /></span>
+					<span class="h2Title" onClick="goPage(35)" style="display:inline-block;width:100%;"><spring:message code='ezEmail.multiDomain.ksa01' /></span>
 				</h2> 
 				<h2>
-					<span onClick="goPage(36)" style="display:inline-block;width:100%;"><spring:message code='ezEmail.multiDomain.ksa02' /></span>
+					<span class="h2Title" onClick="goPage(36)" style="display:inline-block;width:100%;"><spring:message code='ezEmail.multiDomain.ksa02' /></span>
 				</h2>
 	  			</c:if>
 				<!-- 2018-02-20 재은 수정 (편지지 등록) -->
 				<c:if test="${useLetter == 'YES'}">
 					<h2>
-						<span onClick="goPage(30)" style="display:inline-block;width:100%;"><spring:message code='main.t374' /></span>
+						<span class="h2Title" onClick="goPage(30)" style="display:inline-block;width:100%;"><spring:message code='main.t374' /></span>
 						<ul></ul>
 					</h2>
 				</c:if>
 				<c:if test="${useSignatureTemplate == 'YES'}">
 					<h2>
-						<span onClick="goPage(32)" style="display:inline-block;width:100%;"><spring:message code='ezEmail.jje05'/></span>
+						<span class="h2Title" onClick="goPage(32)" style="display:inline-block;width:100%;"><spring:message code='ezEmail.jje05'/></span>
 						<ul></ul>
 					</h2>
 				</c:if>
 				<c:if test="${dotNetIntegration == 'YES' && cChk == '1'}">
-					<h2><span id="PARAMETER" style="display:inline-block;width:100%;" onClick="goPage(14)" ><spring:message code='main.kms1' /></span>
+					<h2><span class="h2Title" id="PARAMETER" style="display:inline-block;width:100%;" onClick="goPage(14)" ><spring:message code='main.kms1' /></span>
 					<ul class="on"></ul>
 					</h2>		
 				</c:if>
 				<c:if test="${dotNetIntegration == 'YES'}">
 					<h2 class="off" id="menu2H2">
-						<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" id="MAIL" onClick="openFolder('menu2')"><spring:message code='ezStatistics.t2' /></span>
+						<span class="h2Title" class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" id="MAIL" onClick="openFolder('menu2')"><spring:message code='ezStatistics.t2' /></span>
 					</h2>
 					<ul class="lnbUL off" id="menu2UL">
 						<li><span class="sub_iconLNB tree_admin_stats"></span><span class="h2_text" onClick="goPage(23)"><spring:message code='ezStatistics.t1001' /></span></li>
@@ -234,7 +254,7 @@
 				</c:if>
 				<c:if test="${useCopyrightMenu == 'YES'}">
 	  			<h2>
-					<span onClick="goPage(34)" style="display:inline-block;width:100%;"><spring:message code='ezEmail.ksa06'/></span>
+					<span  class="h2Title" onClick="goPage(34)" style="display:inline-block;width:100%;"><spring:message code='ezEmail.ksa06'/></span>
 				    <ul></ul>
 				</h2>
 				</c:if>

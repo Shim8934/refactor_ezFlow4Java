@@ -6,7 +6,8 @@
 	<head>
 		<title>mail_pop3</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/encode_component.js')}"></script>
@@ -121,7 +122,7 @@
 		        mail_selectfolder_cross_dialogArguments[2] = idx;
 		
 		        var OpenWin = GetOpenWindow("/ezEmail/mailSelectFolder.do", "mail_selectfolder_cross", 470, 355);
-		        try { OpenWin.focus(); } catch (e) { }
+		        try { OpenWin.focus(); } catch (e) {console.log(e);}
 		    }
 		    function search_mailbox_complete(mailBoxInfo) {
 		        if (typeof (mailBoxInfo) == "undefined")
@@ -131,6 +132,7 @@
 	        		try {
 	        			parent.parent.frames["left"].mailbox_treeview_reload();
 	        		} catch (e) {
+	        		    console.log(e);
 	        		}
 	        	}
 	        	
@@ -248,7 +250,7 @@
 		            if (xmlHTTP.status == 200)
 		            	alert("<spring:message code='ezEmail.t42' />");
 		            else
-		            	alert("<spring:message code='ezEmail.t228' />" + xmlHTTP.statusText);
+		            	alert("<spring:message code='ezEmail.t228' />" + xmlHTTP.status);
 		
 		            xmlHTTP = null;
 		        }
@@ -420,7 +422,7 @@
 				            }
 				        }
 				        else
-				        	alert("<spring:message code='ezEmail.t237' />" + xmlHTTP.statusText);
+				        	alert("<spring:message code='ezEmail.t237' />" + xmlHTTP.status);
 		        	}
 		        }
 		        xmlHTTP.send(popXML);
@@ -469,7 +471,7 @@
 		<c:set var="tableWidth" value="720" />
 		</c:otherwise>
 		</c:choose>
-	<body onload="javascript:window_onload()" style="margin-left:10px;margin-right:10px;">
+	<body onload="javascript:window_onload()" style="margin-left:10px;margin-right:10px;" class="mailPop3">
 		<br>
 		<div class="txt" style="margin-bottom:25px">
 			<div>▒ <spring:message code='ezEmail.t239' /></div> 

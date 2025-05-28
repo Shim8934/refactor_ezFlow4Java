@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezCommunity.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -7,7 +8,9 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
+import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +23,11 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityCBoardVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCComCloseVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityClubVO;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezNotification.service.EzNotificationService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
-import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service("EzCommunityAdminService")
 public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl implements EzCommunityAdminService{
@@ -36,26 +40,30 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 	@Autowired
 	private EzEmailService ezEmailService;
 	
+	@Autowired
+	private EzNotificationService ezNotificationService;
+	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzCommunityAdminServiceImpl.class);
 
-	/* 2020-01-06 홍승비 - 폐쇄사유 검색옵션 추가 */
+	/* 2020-01-06 홍승비 - 관리자 > 폐쇄승인 커뮤니티 카운트 (폐쇄사유 검색옵션 추가) */
 	@Override
 	public int aspCloseComGet2(String searchValue, String searchType, String searchType2, String lang, String companyID, int tenantID) throws Exception {
 		logger.debug("aspCloseComGet2 started.");
 		//logger.debug("v_S_RADIO=" + searchType + ", v_SEARCHTYPE2=" + searchType2);
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_KEYWORD",  searchValue);
-		map.put("v_S_RADIO",  searchType);
-		map.put("v_SEARCHTYPE2",  searchType2);
+		map.put("v_KEYWORD", searchValue);
+		map.put("v_S_RADIO", searchType);
+		map.put("v_SEARCHTYPE2", searchType2);
 		map.put("v_USERINFO_LANG", lang);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
 		int result = 0;
 		
+		// 2024-07-16 기준으로 searchType의 디폴트 값은 항상 "0"으로 전달됨 (aspCloseComGet2Select2 쿼리를 타지 않음)
 		if (!searchValue.equals("") || !searchType.equals("")) {
 			result = ezCommunityAdminDAO.aspCloseComGet2Select1(map);
 		} else {
@@ -76,7 +84,7 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_KEYWORD", searchValue);
 		map.put("v_S_RADIO", searchType);
-		map.put("v_SEARCHTYPE2",  searchType2);
+		map.put("v_SEARCHTYPE2", searchType2);
 		map.put("v_USERINFO_LANG", lang);
 		map.put("v_STARTROW", 10 * (pageNum - 1));
 		map.put("v_OFFSETMIN", offSetMin);
@@ -207,6 +215,7 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 		
 		int result = 0;
 		
+		// 2024-07-16 기준으로 searchType의 디폴트 값은 항상 "0"으로 전달됨 (aspAdmitComGet2Select2 쿼리를 타지 않음)
 		if (!searchValue.equals("") || !searchType.equals("")) { // 검색어 또는 검색용 카테고리 존재
 			result = ezCommunityAdminDAO.aspAdmitComGet2Select1(map);
 		} else { // 검색어 없음
@@ -460,7 +469,7 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 	}
 
 	@Override
-	public void createCommunityAdmitSendMail(String loginCookie, LoginVO userInfo, List<HashMap<String, Object>> recipientList,
+	public void createCommunityAdmitSendMail(HttpServletRequest request, String loginCookie, LoginVO userInfo, List<HashMap<String, Object>> recipientList,
 			boolean isAdmit) throws Exception {
 		logger.debug("createCommunityAdmitSendMail started.");
 		//logger.debug("isAdmit=" + isAdmit);
@@ -475,38 +484,64 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
         	from.setAddress(userInfo.getEmail());
 			
 			for (HashMap<String, Object> recipient : recipientList) {
+				List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
+				Map<String, Object> recipientMap = new HashMap<String, Object>();
+				recipientMap.put("userType", "PERSON");
+				recipientMap.put("companyId", userInfo.getCompanyID());
+				recipientMap.put("cn", (String) recipient.get("USERID"));
+				notiRecipientList.add(recipientMap);
+				
+				String notiContent = (String)recipient.get("C_CLUBNAME");
+				String c_clubno = (String)recipient.get("C_CLUBNO");
+				String notiSubType = isAdmit ? "CREATE_ADMIT" : "CREATE_REJECT";
+				String linkUrl = isAdmit ? "/ezCommunity/checkCommHome.do?communityCD=" + c_clubno : "";
 				//logger.debug("recipient=" + (String)recipient.get("USERNAME") + ", " + (String)recipient.get("C_CLUBNAME") + ", " + (String)recipient.get("EMAIL"));
 				
 				InternetAddress to = new InternetAddress();
 				to.setPersonal((String)recipient.get("USERNAME"), "UTF-8");
 				to.setAddress((String)recipient.get("EMAIL"));
-				
-				StringBuilder subject = new StringBuilder();
-				subject.append(egovMessageSource.getMessage("ezCommunity.t51", locale));
-				subject.append("[\"");
-				subject.append((String)recipient.get("C_CLUBNAME"));
-				subject.append("\"] ");
-				
-				if (isAdmit == true) {
-					subject.append(egovMessageSource.getMessage("ezCommunity.lhj09", locale));
-				} else {
-					subject.append(egovMessageSource.getMessage("ezCommunity.lhj10", locale));
-				}
-				
+
+				StringBuilder subject = buildMessage("ezCommunity.t51", "ezCommunity.lhj09", "ezCommunity.lhj10",
+						(String) recipient.get("C_CLUBNAME"), isAdmit, locale);
+
 				/*String subject = egovMessageSource.getMessage("ezCommunity.t51", locale)
 						+ "[\"" + (String)recipient.get("C_CLUBNAME") + "\"] "
 						+ egovMessageSource.getMessage("ezCommunity.t52", locale) 
 						+ pDivi 
 						+ egovMessageSource.getMessage("ezCommunity.t54", locale);*/
-								
+
+				StringBuilder mailBody = buildMessage("ezCommunity.t51", "ezCommunity.lhj09", "ezCommunity.lhj10",
+						StringEscapeUtils.escapeHtml4((String) recipient.get("C_CLUBNAME")), isAdmit, locale);
+
 				// 2018-11-07 김민성 - 커뮤니티 승인 메일 폰트 수정
-				String content = commonUtil.createNotiMailContent(subject.toString(), userInfo.getTenantId(), userInfo.getLocale());
+				String content = commonUtil.createNotiMailContent(mailBody.toString(), userInfo.getTenantId(), userInfo.getLocale());
 				
 				ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject.toString(), content, false);
+				
+				String linkUrlMobile = "";
+				String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientList, "COMMUNITY", notiSubType, notiContent, "popup", "1300", "900", linkUrl, linkUrlMobile, "notChkSetting");
+				logger.debug("community " +  notiSubType + " noti status : " + notiStatus);
 			}
 		}
 		
 		logger.debug("createCommunityAdmitSendMail ended.");
+	}
+
+	private StringBuilder buildMessage(String prefixMessage, String admitMessage, String rejectMessage,
+									   String clubName, boolean isAdmit, Locale locale) {
+		StringBuilder message = new StringBuilder();
+		message.append(egovMessageSource.getMessage(prefixMessage, locale));
+		message.append("[\"");
+		message.append(clubName);
+		message.append("\"] ");
+
+		if (isAdmit) {
+			message.append(egovMessageSource.getMessage(admitMessage, locale));
+		} else {
+			message.append(egovMessageSource.getMessage(rejectMessage, locale));
+		}
+
+		return message;
 	}
 
 	@Override

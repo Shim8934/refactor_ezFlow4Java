@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezNewPortal.vo;
 
 public class QuickLinkVO {
 
+	private String quickLinkId; //퀵링크 ID
 	private String quickLinkName; //퀵링크 이름
 	private String quickLinkName2; //퀵링크 이름 영어
 	private String quickLinkName3; //퀵링크 이름 일본어
@@ -12,7 +13,15 @@ public class QuickLinkVO {
 	private String linkTypeUrl; //퀵링크 유형 url
 	private String url; //퀵링크 url
 	private String quickSize; // 퀵링크 사이즈
-	private String viewflag;
+	private String viewflag; // 퀵링크 접근권한
+	private String user_type; // 접근 유저 타입
+
+	public String getQuickLinkId() {
+		return quickLinkId;
+	}
+	public void setQuickLinkId(String quickLinkId) {
+		this.quickLinkId = quickLinkId;
+	}
 	
 	public String getQuickLinkName() {
 		return quickLinkName;
@@ -51,6 +60,12 @@ public class QuickLinkVO {
 	public void setViewflag(String viewflag) {
 		this.viewflag = viewflag;
 	}
+	public String getUser_type() {
+		return user_type;
+	}
+	public void setUser_type(String user_type) {
+		this.user_type = user_type;
+	}
 	public String getQuickLinkName2() {
 		return quickLinkName2;
 	}
@@ -84,7 +99,7 @@ public class QuickLinkVO {
 	
 	@Override
 	public String toString() {
-		return "QuickLinkVO [quickLinkName=" + quickLinkName + ", linkType=" + linkType + ", linkTypeUrl=" + linkTypeUrl
-				+ ", url=" + url + ", quicksize=" + quickSize + ", viewflag=" + viewflag + "]";
+		return "QuickLinkVO [quickLinkId=" + quickLinkId + ", quickLinkName=" + quickLinkName + ", linkType=" + linkType + ", linkTypeUrl=" + linkTypeUrl
+				+ ", url=" + url + ", quicksize=" + quickSize + ", viewflag=" + viewflag + ", user_type=" + user_type + "]";
 	}
 }

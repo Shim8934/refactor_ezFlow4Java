@@ -7,7 +7,8 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<title>Create Poll</title>	
 		
-	<link rel="stylesheet" href="${util.addVer('ezPoll.i1', 'msg')}" type="text/css">	
+	<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+	<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">	
 	<link rel="stylesheet" href="${util.addVer('/css/ezPoll/sort.css')}" type="text/css">	
 	<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/timeControls/jquery.timepicker.css')}" />
 	<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}"/>
@@ -17,6 +18,19 @@
 			background-color:white;
 		}
 		.qstSettingSpan{width: 130px !important;}
+
+		.attachInnerNotice_p_on {
+			text-align: center;
+			margin: 10px 0 0 0;
+		}
+
+		.attachInnerNotice_p_off {
+			display: none;
+		}
+
+		.attachInnerNotice_span {
+			line-height: 55px;
+		}
 	</style>
 	 
 	<script src="${util.addVer('/js/jquery/jquery.min.js')}"></script> 
@@ -27,7 +41,9 @@
 	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezPoll/dropzone.js')}"></script>
   	<script src="${util.addVer('/js/jquery-ui/jquery-ui.js')}"></script>
-  	<script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>	  
+  	<script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery.multipleSortable.js')}"></script>
 	<script type="text/javascript">	
 		var messageCode1	  = '<spring:message code="ezPoll.t164"/>';
 		var messageCode2	  = '<spring:message code="ezPoll.t165"/>';
@@ -92,8 +108,9 @@
 		    	}
 				
 		    });
-			
+			document.getElementById("lstAttachLink").appendChild(getAttachInnerNoticeObject());
 			fileUploadStart();
+			setAttachSortable();
 		}
 
 		window.addEventListener('popstate', function(event) {
@@ -694,7 +711,9 @@
 	        return document.getElementById("RangeXMLStr").value;
 	    }
     	    	
-    	function fun_OK() {
+    	function fun_OK(element) {
+			element.style.pointerEvents = 'none';
+			try {
     		$('#numberOfOptions').val($('#columnsbnk li').length); 
     		
 /*     		if (!$('#endDate').is(':checked')) {    			
@@ -778,6 +797,7 @@
 	        }
 	        
     		if (form_check() == false) {
+				element.style.pointerEvents = '';
         		return;
         	} 
     		else {        		
@@ -819,6 +839,10 @@
             	document.frmCreate.message = encodeURIComponent(document.frmCreate.message);             	
             	document.frmCreate.submit();
         	}
+			} catch (e) {
+				console.log(e);
+				element.style.pointerEvents = '';
+			}
     	}    	
     	
     	function checkOption() {
@@ -1222,7 +1246,7 @@
 							</div>
 							<div style="clear: both"></div>
 						</div>
-						<div id="lstAttachLink" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)" style="height: 92px;border: 1px solid #ddd;overflow: auto; margin:8px 0px 0px 0px;">
+						<div id="lstAttachLink" class="ui-sortable" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)" style="height: 120px;border: 1px solid #ddd;overflow: auto; margin:8px 0px 0px 0px;">
 							<div id="addFile" class="pollAddFile">
 								<img src="/images/poll/pollAddFile_Addicon.png" style="height:23px;width:20px;vertical-align:middle; margin:-4px 5px 0px 0px; padding:0px; cursor: pointer;" onclick="uploadbtn()">
 								<spring:message code="ezPoll.t151"/>
@@ -1381,7 +1405,7 @@
 				</tr>						
 			</table>			
 			<div class="btnpositionJsp">				
-				<a class="imgbtn" onclick="fun_OK()"><span><spring:message code="ezPoll.kje01" /></span></a>				
+				<a class="imgbtn" onclick="fun_OK(this)"><span><spring:message code="ezPoll.kje01" /></span></a>
 				<a class="imgbtn" onclick="fun_Cancel()"><span><spring:message code="ezPoll.t139" /></span></a>				
 			</div>
 		</div>	

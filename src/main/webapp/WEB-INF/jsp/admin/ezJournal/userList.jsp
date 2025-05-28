@@ -7,7 +7,8 @@
 	<head>
 		<title></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezJournal.c1', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('/css/jstree/style.css')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	   	<script type="text/javascript">
@@ -74,12 +75,12 @@
 					var expanded = $("li[aria-selected=true]").eq(0).attr("aria-expanded");
 
 					if (expanded != null && expanded != "") { //하위가 있으면
-						html += "&nbsp;&nbsp;<span style='color:#017BEC;'>" + totalCount + "</span> / <span style='color:#017BEC;'>" + totalCount2 + "</span>";
+						html += "&nbsp;&nbsp;<span class='txt_color'>" + totalCount + "</span> / <span class='txt_color'>" + totalCount2 + "</span>";
 	        		} else { //하위가 없으면
-	        			html += "&nbsp;&nbsp;<span style='color:#017BEC;'>" + totalCount +"</span>";
+	        			html += "&nbsp;&nbsp;<span class='txt_color'>" + totalCount +"</span>";
 	        		}
 				} else {
-					html += "&nbsp;&nbsp;<span style='color:#017BEC;'>" + totalCount + "</span>";
+					html += "&nbsp;&nbsp;<span class='txt_color'>" + totalCount + "</span>";
 				}
 				$("#selectDeptNM").html(html);
 	        }
@@ -94,13 +95,13 @@
 			    		<span id="selectDeptNM" style="font-weight: normal; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;" countinfo="1">
 <!-- 			    			<img src="/images/OrganTree_cross/ic-open.gif" style="vertical-align:middle;padding-right: 3px;"> -->
 <%-- 			    			<c:out value='${keyword }'/>-[ --%>
-<!-- 			    				<span style="color:#017BEC;"> -->
+<!-- 			    				<span class='txt_color'> -->
 <%-- 				    				<c:choose> --%>
 <%-- 				    					<c:when test="${containLow eq 'NO' }"> --%>
 <%-- 				    						<c:out value='${totalCount }'/> --%>
 <%-- 				    					</c:when> --%>
 <%-- 				    					<c:otherwise> --%>
-<%-- 				    						<c:out value='${totalCount }'/><spring:message code='main.t20000'/></span>/<span style="color:#017BEC;"><c:out value='${totalCount2 }'/> --%>
+<%-- 				    						<c:out value='${totalCount }'/><spring:message code='main.t20000'/></span>/<span class='txt_color'><c:out value='${totalCount2 }'/> --%>
 <%-- 				    					</c:otherwise> --%>
 <%-- 				    				</c:choose> --%>
 <%-- 				    				<spring:message code='main.t20000'/> --%>
@@ -238,7 +239,9 @@
 								<td style="width: 75%;">
 									<table class="organinfo">
 										<tr>
-											<td class="name" style="text-align: left;"><c:out value='${user.userName }'/></td>
+											<td class="name" style="text-align: left;">
+												<c:out value='${user.userName }'/><c:if test="${not empty user.jikwi}">[<c:out value="${user.jikwi}"/>]</c:if>
+											</td>
 										</tr>
 										<tr>
 											<td style="text-align: left;"><c:out value='${user.deptName }'/></td>

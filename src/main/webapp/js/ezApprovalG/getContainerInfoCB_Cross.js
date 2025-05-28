@@ -295,6 +295,7 @@ function GetDocDeliveryList(g_DeliverySearchParamXml) {
     createNodeAndInsertText(xmlpara, objNode, "pOrderOption", OrderOption);
     createNodeAndInsertText(xmlpara, objNode, "pQuery", "");	
     createNodeAndInsertText(xmlpara, objNode, "ISDOCPRINT", "FALSE");
+    createNodeAndInsertText(xmlpara, objNode, "UPPERDEPTCODE", upperDeptCode);
     if (g_DeliverySearchParamXml != "" && g_DeliverySearchParamXml != undefined) {
         createNodeAndInsertText(xmlpara, objNode, "search", "1");
         var oSParam = loadXMLString(g_DeliverySearchParamXml);
@@ -459,6 +460,9 @@ function processRowClick(tr) {
         WriterDeptID = GetAttribute(tr, "DATA11");
         WriterID = GetAttribute(tr, "DATA3");
         publicityYN = GetAttribute(tr, "DATA16");
+        if (!HasRecReadRight(GetAttribute(tr,"DATA6"), GetAttribute(tr,"DATA8"), UserID)) {
+            publicityYN = "N";
+        }
         
         ChkCabRoleInfo(tr);
         

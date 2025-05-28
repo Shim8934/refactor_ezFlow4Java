@@ -100,6 +100,7 @@ function ListView() {
     this.GetTableWidth = GetTableWidth;
     this.SetTableWidth = SetTableWidth;
     this.SetListType = SetListType;
+    this.SetCheckBoxFlag = SetCheckBoxFlag; // 체크박스 추가 (true : 사용, false : 미사용)
     
     //사용자 정의 이벤트 지정
     this.SetHeaderOnClick = SetHeaderOnClick;
@@ -132,10 +133,11 @@ function ListView() {
     var _SecIdx = null;
     var _TableWidth = 0;
     var _WidthFlag = true;
-    var _SelectFlag = true;
+    var _SelectFlag = true; // 체크박스 추가
     var _firstRowID = "";
     var _AlignLeft = null;
     var _UrgentFlag = false;
+    var _CheckBoxFlag = false;
     var _Align = new Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     var _ListType = 0;
     var _SetHeightFree = false;
@@ -180,7 +182,12 @@ function ListView() {
     function SetUrgentFlag(flag) {
         _UrgentFlag = flag;
     }
-
+    
+    // 체크박스 추가
+    function SetCheckBoxFlag(flag) {
+        _CheckBoxFlag = flag;
+    } 
+    
     // 리스트헤더 정렬 배열
     function SetAlignArr(arry) {
         _Align = arry;
@@ -322,7 +329,10 @@ function ListView() {
 
             oTable.setAttribute("multiselectable", _isMultiSelectable);
             oTable.setAttribute("useocs", _useOcs);
-
+            
+            if (_CheckBoxFlag)  // 체크박스 추가
+                oTable.setAttribute("checkBox", _CheckBoxFlag);   
+            
             if (_rowonclick != null)
                 oTable.setAttribute("rowonclick", _rowonclick);
 
@@ -526,6 +536,16 @@ function ListView() {
                 oWidths = null;
             }
         }
+        
+        if (_CheckBoxFlag) {
+            var objTd = document.createElement("TH");
+            objTd.width = "21px";
+            var checkEle = document.createElement("INPUT");
+            checkEle.setAttribute("type", "checkbox");
+            checkEle.onclick = new Function("SetAllSelect('" + _thisID + "', this)");
+            objTd.appendChild(checkEle);
+            objTr.insertBefore(objTd, objTr.childNodes.item(0));
+        } 
 
         var objTheader = document.createElement("THEAD");
         objTheader.id = _thisID + "_THEAD";
@@ -547,7 +567,10 @@ function ListView() {
         
         var oHeaders = _dataSource.getElementsByTagName("HEADER");
         var colCount = oHeaders.length;
-
+        
+        if (_CheckBoxFlag)  // 체크박스 추가
+            colCount += 1;  
+        
        if(_rowCount == 0)
         {
             var objTr = document.createElement("TR");
@@ -565,6 +588,7 @@ function ListView() {
         for (var i = 0; i < oRows.length; i++) {
             var objTr = document.createElement("TR");
             objTr.setAttribute("id", _thisID + "_TR_" + i);
+            objTr.setAttribute("name", _thisID + "_TR"); // 체크박스 추가
             objTr.style.cursor = "pointer";
 
             objTr.onmouseover = new Function("tr_mouseover(this)");
@@ -582,12 +606,14 @@ function ListView() {
                 objTr.oncontextmenu = new Function(_contextHandler + "(this.id);");
 
             var oCells = GetElementsByTagName(oRows[i], "CELL");
-
+            
+            var checked = "";
             if (_SelectFlag && i == 0) {   //첫번째 row 선택지정 or 특정 row 선택
                 objTr.setAttribute("selected", "true");
                 objTr.style.backgroundColor = m_strColorSelect;
 
-                _firstRowID = _thisID + "_TR_" + i;      
+                _firstRowID = _thisID + "_TR_" + i;
+                checked = " checked='checked' ";
             }
             else {
                 objTr.setAttribute("selected", "false");
@@ -607,6 +633,17 @@ function ListView() {
             }
 
             oTbody.appendChild(objTr);
+            
+          //2020-04-27 : 체크박스 추가
+			if (_CheckBoxFlag) {
+                var objTd = document.createElement("TD");
+                objTd.style.width = "21px";
+			    objTd.innerHTML = "<INPUT TYPE='CHECKBOX' id='" + _thisID + "_TD_CheckBox_" + i + "' onclick='SelectCheckBox(\"" + _thisID + "\", " + i + ", event);' " + checked + ">";
+                objTd.onmouseover = new Function("td_mouseover(this)");
+                objTd.onmouseout = new Function("td_mouseout(this)");
+                objTr.appendChild(objTd);
+            }             
+
 
             for (var j = 0; j < oCells.length; j++) {
                 var strValue = SelectSingleNodeValue(oCells[j], "VALUE");
@@ -724,7 +761,20 @@ function ListView() {
 
             objTr.setAttribute(strData, strValue);
         }
+        
+        // 체크박스 추가
+        if (document.getElementById(_thisID).getAttribute("checkBox") == "true") {
+            var objTd = document.createElement("TD");
+            objTd.style.width = "21px";
+            var checkBoxIndex = objTr.id.split("_")[2];
 
+            objTd.innerHTML = "<INPUT TYPE='CHECKBOX' id='" + _thisID + "_TD_CheckBox_" + checkBoxIndex + "' onclick='SelectCheckBox(\"" + _thisID + "\", " + checkBoxIndex + ", event);' >";
+            objTd.onmouseover = new Function("td_mouseover(this)");
+            objTd.onmouseout = new Function("td_mouseout(this)");
+            objTr.appendChild(objTd);
+            objTr.setAttribute("name", _thisID + "_TR");
+        }   
+        
         for (var j = 0; j < oCells.length; j++) {
             var strValue = SelectSingleNodeValue(oCells[j], "VALUE");
             var strStyle = SelectSingleNodeValue(oCells[j], "STYLE");
@@ -1207,7 +1257,12 @@ function tr_select(pRowID, pTableID, callbackFunc) {
 
     //각 리스트마다 마지막으로 선택한 ID를 보관한다.
     oList.setAttribute("lastSelectedRowID", pRowID);
-
+    
+    // 체크박스 추가
+    var rowCheckBox = document.getElementById(pRowID.split("_")[0] + "_TD_CheckBox_" + pRowID.split("_")[2]);
+    if (rowCheckBox != null)
+        rowCheckBox.checked = true; 
+    
     oList = null;
     oSourceTr = null;
 
@@ -1238,6 +1293,11 @@ function tr_unselectedAll(pTableID) {
         var objTr = document.getElementById(strID);
 
         if (objTr) {
+        	// 체크박스 추가
+            if (document.getElementById(pTableID + "_TD_CheckBox_" + i) != null) {
+                document.getElementById(pTableID + "_TD_CheckBox_" + i).checked = false;
+            }
+            
             objTr.setAttribute("selected", false);
             objTr.className = "";
             objTr.style.backgroundColor =  m_strColorDefault;
@@ -1284,6 +1344,10 @@ function tr_selectBlock(pRowID, pTableID) {
         }
 
         objTr = null;
+        // 체크박스 추가
+        var rowCheckBox = document.getElementById(strID.split("_")[0] + "_TD_CheckBox_" + strID.split("_")[2]);
+        if (rowCheckBox != null)
+            rowCheckBox.checked = true;
     }
 }
 
@@ -1366,7 +1430,7 @@ try {
 	);
 }
 catch (e)
-{ }
+{console.log(e);}
 String.prototype.trim = function() {
     var str = this.replace(/(\s+$)/g, "");
     return str.replace(/(^\s*)/g, "");
@@ -1418,4 +1482,72 @@ function getOriginXML(pTagetID)
         xmlBody += "</CELL></ROW>";
     } 
     //alert(xmlHeader + "\r\n" + xmlBody);
+}
+
+function SetAllSelect(pTableID, _this) {
+    try {
+        if (_this.checked) {
+            var thisObj = document.getElementsByName(pTableID + "_TR");
+
+            if (thisObj) {
+                for (var i = 0; i < thisObj.length; i++) {
+                    var pRowID = thisObj.item(i).getAttribute("id");
+
+                    var oList = document.getElementById(pTableID);
+                    if (!oList)
+                        return;
+
+                    var oSourceTr = document.getElementById(pRowID);
+                    if (!oSourceTr)
+                        return;
+
+                    oSourceTr.setAttribute("selected", "true");
+                    oSourceTr.style.backgroundColor = m_strColorSelect;
+
+                    document.getElementById(pTableID + "_TD_CheckBox_" + i).checked = true;
+
+                    oList.removeAttribute("lastSelectedRowID");
+
+                    oList = null;
+                    oSourceTr = null;
+                }
+            }
+        } else {
+            tr_unselectedAll(pTableID);
+        }
+        
+    } catch (e) {
+
+    }
+}
+
+function SelectCheckBox(pTableID, pRowSN, event) {
+    event.stopPropagation();
+
+    var pSelCheckBox = document.getElementById(pTableID + "_TD_CheckBox_" + pRowSN);
+    var oSourceTr = document.getElementById(pTableID + "_TR_" + pRowSN);
+
+    var oList = document.getElementById(pTableID);
+    if (!oList)
+        return;
+
+    if (!oSourceTr)
+        return;
+
+    if (pSelCheckBox.checked) {
+        oSourceTr.setAttribute("selected", "true");
+        oSourceTr.style.backgroundColor = m_strColorSelect;
+        
+        /* 2023-06-30 한태훈 > 기록물 등록대장 미리보기 창에 선택한 열의 정보를 보이게 하기 위해서 추가.
+		      현재 결재 문서에서 체크 박스 클릭 시 처음 선택한 행의 미리보기를 보여주는데, 결재 문서 스펙과 동일하게 맞추기 위해 주석 처리함. 
+         if (typeof g_sFlag != "undefined") {
+        	if (g_sFlag == "m01" || g_sFlag == "docShare") {
+        		processRowClick(oSourceTr);
+        	}
+        } */
+    } else {
+        oSourceTr.setAttribute("selected", "false");
+        oSourceTr.style.backgroundColor = m_strColorDefault;
+    }
+    
 }

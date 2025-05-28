@@ -4,7 +4,8 @@ public enum NotiPlatform {
 
 	MAIL(1),
 	PC_TALK(2),
-	MOBILE_WEBAPP(3);
+	MOBILE_WEBAPP(3),
+	TOTAL_NOTI(4);
 
 	private final int intValue;
 

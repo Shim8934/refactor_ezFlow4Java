@@ -7,7 +7,8 @@
 	<head>
 		<title>popupCommHome</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezCommunity.i1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/css/community.css')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
 		<style>
@@ -31,6 +32,19 @@
 	    		overflow-x:hidden;
 	    		overflow-y:auto;
 	    	}
+			.admin_menu {
+				width:100px;
+			}
+			#totalSearch {
+				margin: auto;
+				color: white;
+				background: black;
+				width: 40px;
+				height: 25px;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			}
 		</style>
 		<script type="text/javascript" src="${util.addVer('/js/ezCommunity/TreeView.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -925,6 +939,39 @@
 		        }
 	        }
 	        
+			function commuTotalSearch() {
+				var searchWord = document.getElementById("searchWord").value;
+				
+				if (searchWord.trim().length < 1) {
+					alert("<spring:message code='ezCommunity.t504'/>");
+					return;
+				}
+				
+				document.getElementById("copmaindesc").style.display = "none";
+				document.getElementById("rightfrm").style.display = "";
+				document.getElementById("mainboard").style.display = "none";
+				document.getElementById("makeguide").style.display = "none";
+				
+				// 2024-10-17 조수빈 - 왼쪽 메뉴 중 열려있는 메뉴가 있다면 닫기
+				var leftMenus = document.getElementById("left");
+				var openMenus = leftMenus.getElementsByClassName('on');
+				
+				if (openMenus) {
+					for (var i = 0; i < openMenus.length; i++) {
+						if (openMenus[i]) {
+							if (openMenus[i].tagName.toLowerCase() == "h2") {
+								openMenus[i].click();
+							} else {
+								openMenus[i].classList.add("off");
+								openMenus[i].classList.remove("on");
+							}
+						}
+					}
+				}
+				
+				document.getElementById("totalSearchForm").submit();
+				document.getElementById("searchWord").value = "";
+			}
 		</script>
 	</head>
 	
@@ -954,7 +1001,7 @@
 		                </div>
 		                
 		                <c:if test="${checkSysop }">
-		                	<div class="admin_menu" style="height:auto; width:75px;"><span id="btn_Manager" onclick ="go_menu(this)"><spring:message code='ezCommunity.t565' /></span></div>
+		                	<div class="admin_menu" style="height:auto;width: auto;"><span id="btn_Manager" onclick ="go_menu(this)"><spring:message code='ezCommunity.t565' /></span></div>
 		                </c:if>
 		                
 		            </div>
@@ -988,6 +1035,16 @@
          				<h3 id="btn_MemberOut" onclick ="go_menu(this)"><spring:message code='ezCommunity.t1108' /></h3>
          			</c:if>
       			</div>
+				<div style="border: 1px solid #ddd;margin-top: 5px;display: flex;justify-content: center; width: 203px;">
+				    <form id="totalSearchForm" method="post" target="rightfrm" action="/ezCommunity/communitySearchResult.do">
+					    <input name="searchType" type="hidden" value="title">
+					    <input name="code" type="hidden" value="<c:out value='${code }'/>">
+					    <input id="searchWord" name="searchWord" type="text" style="margin: 5px 10px; width: 126px;">
+				    </form>
+				    <span id="totalSearch" onclick="commuTotalSearch()">
+						<spring:message code='ezCommunity.t31'/>
+				    </span>
+				</div>
   			</div>
     		<div class="cmhome_right">
         		<div id="copmaindesc" class="introduce">
@@ -995,7 +1052,7 @@
             		<p id="copdesc"></p>
 		        </div>
         		<div id="mainboard" style="overflow:auto; display:none;"></div>
-        		<iframe id="rightfrm" style="width:100%; height:560px; border:0; display:none" frameborder="0"></iframe>
+				<iframe id="rightfrm" name="rightfrm" style="width:100%; height:650px; border:0; display:none" frameborder="0"></iframe>
         		<div class="makeguide" id="makeguide" style="display: none;">
             		<p><img src="<spring:message code='ezCommunity.i5' />"></p>
             		<p><a id="btn_Manager_home1" onclick ="go_menu(this)"><img src="<spring:message code='ezCommunity.i6' />" alt="<spring:message code='ezCommunity.t2010' />"></a></p>
@@ -1005,4 +1062,12 @@
     		</div>
     	</div>
 	</body>
+	<script>
+	    document.getElementById('searchWord').addEventListener('keydown', function(event) {
+	        if (event.key === 'Enter') {
+	            event.preventDefault();
+	            commuTotalSearch();
+	        }
+	    });
+	</script>
 </html>

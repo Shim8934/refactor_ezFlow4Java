@@ -6,7 +6,8 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	    <link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
         <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
         <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
         <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>        
@@ -35,8 +36,8 @@
 					}
 				});
 		    	
-		        var feature = GetOpenPosition(420, 450);
-		        window.open("/ezCommon/showPersonInfo.do?id=" + userid + "&dept="+deptID, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		        // var feature = GetOpenPosition(420, 450);
+		        window.open("/ezCommon/showPersonInfo.do?id=" + userid + "&dept="+deptID, "", GetOpenWindowfeature(420, 450, 1));
 		    }
 			
 		    var OpenWin;

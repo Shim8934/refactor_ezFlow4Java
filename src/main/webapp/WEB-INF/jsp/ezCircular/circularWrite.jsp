@@ -16,7 +16,8 @@
 			</c:otherwise>
 		</c:choose>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezCircular.c1', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezCircular.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -41,6 +42,7 @@
 	    	var listSize = "<c:out value='${listSize}'/>";
 	    	var defaultFontAndSize  = "<c:out value='${defaultFontAndSize}'/>";
 	    	var strAttach = "${strAttach}";
+	    	var lang = "${userInfo.lang}";
 	    	
 	    	if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
@@ -84,10 +86,21 @@
 		        	}
 		        	
 				}
+				
+				if (lang == 1) {
+					document.getElementById("receiverlist").style.display = "inline";
+					document.getElementById("receiverlist2").style.display = "none";
+				} else {
+					document.getElementById("receiverlist").style.display = "none";
+					document.getElementById("receiverlist2").style.display = "inline";
+				}
 		    }
 		    
 			window.onresize = function () {
 				document.getElementById("EdtorSize").style.height = document.body.clientHeight - 340 + "PX";
+				document.getElementById("message").style.height = document.body.clientHeight - 340 + "PX";
+				
+				mobileDistinction();
 			}
 			
 	    	function FieldsAvailable() {
@@ -389,6 +402,16 @@
 		        return str;
 		    }
 		    
+			function mobileDistinction() {
+   				var  userAgent = navigator.userAgent.toLowerCase();
+				
+				if (/iphone|ipod|ipad|android.*mobile/i.test(userAgent) || /tablet|ipad|android/i.test(userAgent) || navigator.maxTouchPoints > 4) {
+					if (window.innerWidth > window.innerHeight) {
+						document.getElementById("EdtorSize").style.height = 436 + "PX";
+						document.getElementById("message").style.height = 436 + "PX";
+					}
+				}
+			}
 		</script>
 	</head>
 	
@@ -490,8 +513,8 @@
 						<tr>
 	         				<td colspan="3" id ="itemList" style="border-bottom:0px">
 	         					<input name="Input" id="receiverinput" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box; display:none;" onkeyup="return on_keydown(event)">
-	         					<div id="receiverlist" style="OVERFLOW-Y: auto; HEIGHT: 28px; display: inline;"></div>
-	         					<div id="receiverlist2" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
+	         					<div id="receiverlist" style="OVERFLOW-Y: auto; HEIGHT: 28px; display: none;"></div>
+	         					<div id="receiverlist2" style="OVERFLOW-Y: auto; HEIGHT: 17px; display: none;"></div>
 	         					<div id="receiverID" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
 	         				</td>
 	       				</tr>
@@ -543,6 +566,7 @@
 
 		<script type="text/javascript">
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
+			mobileDistinction(); 
 		</script>
 	</body>
 </html>

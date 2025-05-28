@@ -6,7 +6,8 @@
 	<head> 
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code='ezApproval.t934'/></title>
-		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/jquery-ui.css')}">
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Common_Function.js')}"></script>
@@ -197,7 +198,7 @@
 				<span style="margin-left: 12px; font-size: 15px;">
 					※ <spring:message code='ezApproval.t935'/>
 				</span>
-				<a class="imgbtn" onclick="btnfileup()" style="vertical-align: middle; height: 15px; padding: 3px 8px">
+				<a class="imgbtn" onclick="btnfileup()" style="vertical-align: middle; /*height: 15px;*/ padding: 3px 8px">
 					<spring:message code='ezPortal.t45'/>
 				</a>
 			</div>	

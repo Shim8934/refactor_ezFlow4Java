@@ -1,11 +1,11 @@
 var Headers;
 
-function GetTaskFullList() {
+function GetTaskFullList(pTitle, pCode, pFlag) {
     var ListName;
 
     listLoading(true);  // 20201215 강승구 로딩바 display:none
-    Resultxml = GetTaskFullListXml();
-    taskCount = getTaskCount();
+    Resultxml = GetTaskFullListXml(pTitle, pCode, pFlag);
+    taskCount = getTaskCount(pTitle, pCode, pFlag);
     ListName = strLang440;
 
     if (Resultxml != null) {
@@ -16,9 +16,9 @@ function GetTaskFullList() {
             if (NodeListLen == null) {
             		NodeListLen = 0;
             }
-            
+
             if (pageAdminFlag == 'admin') {
-                document.getElementById("listcount").innerHTML = "<b>" + deptName + "</b>의 단위업무 : <span style='color:#017BEC;font-weight:bold;'>" + taskCount + "</span> 개";
+                document.getElementById("listcount").innerHTML = "<b>" + deptName + "</b>의 단위업무 : <span class='txt_color' style='font-weight:bold;'>" + taskCount + "</span> 개";
             } else {
                 document.getElementById("listcount").innerHTML = taskCount;
             }
@@ -55,28 +55,22 @@ function btnFindTaskFullList_onclick() {
 
 function btnFindTaskFullList_onclick_Complete(rtn) {
     if (rtn[0] == "TRUE") {
-        FindFullTask(rtn[1], rtn[2], "1", DeptID);
-    }
-    removeAllChildNode($('#tblPageRayer')[0]);
-}
+        curpage = 1;
+        searchTitle = rtn[1];
+        searchCode = rtn[2];
+        searchFlag = "1";
+        makePagenationBar(rtn[1], rtn[2], "1");
 
-function FindFullTask(pTitle, pCode, pFlag, pDeptCode) {
-    curpage = 1;
-    totalPage = 0;
-
-    Resultxml = GetFindTaskListXml(pTitle, pCode, pFlag, pDeptCode);
-
-    if (getXmlString(Resultxml) != "") {
-        var dataNodes = GetChildNodes(Resultxml);
-        if (getNodeText(dataNodes[0]) == "FALSE") {
-            alert(strLang449);
-        } else {
-            DisplayTaskList(Resultxml);
-            document.getElementById("listcount").innerHTML = strLang450 + GetChildNodes(NodeList).length + strLang451;
-        }
+    } else if (rtn[0] == "FALSE") {
+        curpage = 1;
+        searchTitle = '';
+        searchCode = '';
+        searchFlag = '';
+        makePagenationBar(null, null, '0');
+    } else {
+        alert(strLang449);
     }
 }
-
 
 function DisplayTaskList(Resultxml) {
     ListViewData = SelectSingleNodeNew(Resultxml, "LISTVIEWDATA");
@@ -107,10 +101,14 @@ function DisplayTaskList(Resultxml) {
         var DocList = new ListView();                           
         DocList.SetID("DocList");                               
         DocList.SetMulSelectable(true);                        
-                                  
-        DocList.SetRowOnClick("lvtDoclist_onselchanged");           
-        DocList.SetRowOnDblClick("btnViewTask_onclick");      
-        DocList.SetTitleIdx(0);                                  
+
+        if (pageAdminFlag == undefined || pageAdminFlag == null || pageAdminFlag !== 'admin') {
+            DocList.SetHeaderOnClick("lvtDoclist_HeaderClick");
+        }
+        DocList.SetRowOnClick("lvtDoclist_onselchanged");
+        DocList.SetRowOnDblClick("btnViewTask_onclick");
+        DocList.SetOrderbyCol("COLNAME");
+        DocList.SetTitleIdx(0);
 
         DocList.DataSource(xmlDoc);                             
         DocList.DataBind("lvtDoclist");                          
@@ -134,8 +132,12 @@ function DisplayTaskList(Resultxml) {
         DocList.SetID("DocList");                               
         DocList.SetMulSelectable(true);                        
                                   
-        DocList.SetRowOnClick("lvtDoclist_onselchanged");           
-        DocList.SetRowOnDblClick("btnViewTaskInfo_onclick");      
+        if (pageAdminFlag == undefined || pageAdminFlag == null || pageAdminFlag !== 'admin') {
+            DocList.SetHeaderOnClick("lvtDoclist_HeaderClick");
+        }
+        DocList.SetRowOnClick("lvtDoclist_onselchanged");
+        DocList.SetRowOnDblClick("btnViewTaskInfo_onclick");
+        DocList.SetOrderbyCol("COLNAME");
         DocList.SetTitleIdx(0);                                  
 
         DocList.DataSource(xmlDoc);                             
@@ -145,13 +147,24 @@ function DisplayTaskList(Resultxml) {
     listLoading(false); // 20201215 강승구 로딩바 display:none
 }
 
-function GetTaskFullListXml() {
+function GetTaskFullListXml(pTitle, pCode, pFlag) {
 	var tempRet;
 	$.ajax({
 		type : "GET",
 		url : "/admin/ezApprovalG/getTaskFullList.do",
 		async : false,
-		data : {deptCode : DeptID, companyID : CompanyID, pageSize : PageSize, pageNo : curpage, langType : UserLang},
+		data : {
+		    deptCode : DeptID,
+		    companyID : CompanyID,
+		    pageSize : PageSize,
+		    pageNo : curpage,
+		    langType : UserLang,
+		    title 	   : pTitle,
+            code       : pCode,
+            flag       : pFlag,
+		    orderOption1: g_SortField,
+		    orderOption2 : g_SortType
+        },
 		success : function (result) {
 			tempRet = loadXMLString(result);
 		},
@@ -187,14 +200,20 @@ function btnViewTaskHistoryInfo_onclick() {
 }
 
 // 단위업무 갯수 호출 함수
-function getTaskCount() {
+function getTaskCount(pTitle, pCode, pFlag) {
     var tempRet;
     $.ajax({
 		type : "GET",
 		dataType: 'json',
 		url : "/admin/ezApprovalG/getTaskCount.do",
 		async : false,
-		data : {deptCode : DeptID, companyID : CompanyID},
+		data : {
+                    deptCode : DeptID, 
+                    companyID : CompanyID,
+                    title : pTitle,
+                    code : pCode,
+                    flag : pFlag
+		        },
 		success : function(result) {
 			tempRet = result.taskCount;
 		},
@@ -215,45 +234,43 @@ function removeAllChildNode(element) {
 }
 
 // 페이지네이션 함수
-function makePagenationBar() {
+function makePagenationBar(pTitle, pCode, pFlag) {
     var pageNavBox = $("<div class='pagenavi'>");
     pageNum = curpage;
-    
-    var getFirstBtn = $('<span class="btnimg">');
-    var getPrevBlockBtn = $('<span class="btnimg">');
-    var getNextBlockBtn = $('<span class="btnimg">');
-    var getLastBtn = $('<span class="btnimg">');
-    
+    taskCount = getTaskCount(pTitle, pCode, pFlag);
+    totalPage = Math.ceil(taskCount/PageSize) > 1 ? Math.ceil(taskCount/PageSize) : 1;
+
+    var getFirstBtn = $('<span class="btnimg first">');
+    var getPrevBlockBtn = $('<span class="btnimg prev">');
+    var getNextBlockBtn = $('<span class="btnimg next">');
+    var getLastBtn = $('<span class="btnimg last">');
+
     if (curpage != 1) {
-        $(getFirstBtn).on("click", getFirstPage);
-        $(getFirstBtn).append("<img src='/images/kr/cm/btn_p_prev.gif'>");
+        $(getFirstBtn).on("click", {pTitle:pTitle, pCode:pCode, pFlag:pFlag}, getFirstPage);
     } else {
-        $(getFirstBtn).append("<img src='/images/kr/cm/btn_p_prev01.gif'>");
-    } 
+        $(getFirstBtn).addClass("disabled");
+    }
     if (curpage != totalPage) {
-        $(getLastBtn).on("click", getLastPage);
-        $(getLastBtn).append('<img src="/images/kr/cm/btn_n_next.gif">');
+        $(getLastBtn).on("click", {pTitle:pTitle, pCode:pCode, pFlag:pFlag}, getLastPage);
     } else {
-        $(getLastBtn).append('<img src="/images/kr/cm/btn_n_next01.gif">');
+        $(getLastBtn).addClass("disabled");
     }
-             
+
     if (Math.ceil(curpage/10) < Math.ceil(totalPage/10)) {
-        $(getNextBlockBtn).on("click", getNextBlockPage);
-        $(getNextBlockBtn).append('<img src="/images/kr/cm/btn_next.gif">')
+        $(getNextBlockBtn).on("click", {pTitle:pTitle, pCode:pCode, pFlag:pFlag}, getNextBlockPage);
     } else {
-        $(getNextBlockBtn).append('<img src="/images/kr/cm/btn_next01.gif">')
+        $(getNextBlockBtn).addClass("disabled");
     }
-    
+
     if (Math.ceil(curpage/10) > 1) {
-        $(getPrevBlockBtn).on("click", getPrevBlockPage);
-        $(getPrevBlockBtn).append('<img src="/images/kr/cm/btn_prev.gif">')
+        $(getPrevBlockBtn).on("click", {pTitle:pTitle, pCode:pCode, pFlag:pFlag}, getPrevBlockPage);
     } else {
-        $(getPrevBlockBtn).append('<img src="/images/kr/cm/btn_prev01.gif">')
+        $(getPrevBlockBtn).addClass("disabled");
     }
 
     removeAllChildNode($('#tblPageRayer')[0]); // 기존 네비 삭제
-    
-    $(pageNavBox).append(getFirstBtn); 
+
+    $(pageNavBox).append(getFirstBtn);
     $(pageNavBox).append(getPrevBlockBtn);
     for (let i = 1 ; i < 11 ; i++) {
         var btnPageNum = Math.floor(curpage/10)*10 + i;
@@ -264,7 +281,7 @@ function makePagenationBar() {
         if (btnPageNum == curpage) {
              $(pageBtn).addClass('on');
         } else {
-            $(pageBtn).on("click", goToPageByNumTask);
+            $(pageBtn).on("click", {pTitle:pTitle, pCode:pCode, pFlag:pFlag}, goToPageByNumTask);
         }
         $(pageBtn).text(btnPageNum);
         $(pageNavBox).append(pageBtn);
@@ -272,30 +289,45 @@ function makePagenationBar() {
     $(pageNavBox).append(getNextBlockBtn);
     $(pageNavBox).append(getLastBtn);
     $('#tblPageRayer').append(pageNavBox);
-    GetTaskFullList();
+    GetTaskFullList(pTitle, pCode, pFlag);
 }
 
-function getFirstPage() {
+function getFirstPage(event) {
     curpage = 1;
-    makePagenationBar();
+    var pTitle = event.data.pTitle;
+    var pCode = event.data.pCode;
+    var pFlag = event.data.pFlag;
+    makePagenationBar(pTitle, pCode, pFlag);
 }
 
-function getLastPage() {
+function getLastPage(event) {
     curpage = totalPage;
-    makePagenationBar();
+    var pTitle = event.data.pTitle;
+    var pCode = event.data.pCode;
+    var pFlag = event.data.pFlag;
+    makePagenationBar(pTitle, pCode, pFlag);
 }
 
-function getPrevBlockPage() {
+function getPrevBlockPage(event) {
     curpage = (Math.ceil(curpage/10) - 2)*10 + 1;
-    makePagenationBar();
+    var pTitle = event.data.pTitle;
+    var pCode = event.data.pCode;
+    var pFlag = event.data.pFlag;
+    makePagenationBar(pTitle, pCode, pFlag);
 }
 
-function getNextBlockPage() {
+function getNextBlockPage(event) {
     curpage = (Math.ceil(curpage/10))*10 + 1;
-    makePagenationBar();
+    var pTitle = event.data.pTitle;
+    var pCode = event.data.pCode;
+    var pFlag = event.data.pFlag;
+    makePagenationBar(pTitle, pCode, pFlag);
 }
 
-function goToPageByNumTask() {
+function goToPageByNumTask(event) {
     curpage = $(event.target).text();
-    makePagenationBar();
+    var pTitle = event.data.pTitle;
+    var pCode = event.data.pCode;
+    var pFlag = event.data.pFlag;
+    makePagenationBar(pTitle, pCode, pFlag);
 }

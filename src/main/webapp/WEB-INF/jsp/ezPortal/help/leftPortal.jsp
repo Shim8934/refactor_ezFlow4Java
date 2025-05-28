@@ -4,7 +4,8 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 	</head>
 	<link href="${util.addVer('/css/help.css')}" rel="stylesheet" type="text/css">
 	<script src="${util.addVer('/js/mouseeffect.js')}" type="text/javascript" ></script>

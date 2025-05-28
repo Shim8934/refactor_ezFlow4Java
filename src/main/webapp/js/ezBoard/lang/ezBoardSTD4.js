@@ -1,4 +1,4 @@
-﻿﻿// \ ezBoardSTD \ admin \ OrganAdmin \ SelectTarget.aspx1.js
+﻿// \ ezBoardSTD \ admin \ OrganAdmin \ SelectTarget.aspx1.js
 // \ ezBoardSTD \ admin \ BoardACL.aspx1.js
 // \ ezBoardSTD \ js \ AttachItem.js
 var strLang1 = "附件名称";
@@ -86,6 +86,34 @@ var strLang189 = "请输入";
 var strLangKWCHd01 = "An error occurred while saving security HWP document. Please try again.";
 
 // 2023-03-08 이가은 추가
-var strLangLGE188 = "본인의 댓글에는 '좋아요'를 하실 수 없습니다.";
-var strLangLGE189 = "본인의 댓글에는 '싫어요'를 하실 수 없습니다.";
-var strLangLGE190 = "이미 삭제된 댓글입니다.";
+var strLangLGE188 = "您不能对自己的评论点赞。";
+var strLangLGE189 = "您不能对自己的评论点踩。";
+var strLangLGE190 = "该评论已被删除。";
+
+// 2023-03-30 이가은 추가
+var strLangLGE01 = "写回复";
+var strLangLGE02 = "收起回复";
+var strLangLGE03 = "注册";
+var strLangLGE04 = "取消";
+var strLangLGE05 = "发布密码";
+var strLangLGE06 = "匿名";
+var strLangLGE07 = "已被作者删除的评论。";
+/* 2024-08-26 전인하 - 게시판 > 키워드 > 특문입력제한 */
+var strLangKeywordJIH01 = "역슬래시, 작은따옴표, 큰따옴표, 부등호기호, 해시기호(#)를 입력할 수 없습니다."
+var strLangKeywordJIH02 = "오류가 발생하였습니다."
+var strLangKeywordJIH03 = "해당 게시물을 그룹웨어에서 접근하지 않았거나, 해당 게시물을 접근한 그룹웨어 페이지에 변경사항이 발생하여 키워드를 검색할 수 없습니다."
+var strLangKeywordJIH04 = "보고 있는 게시물 팝업을 닫겠습니까?"
+var strLangKeywordJIH05 = "게시물 혹은 메일 보기 팝업을 통하여 열람한 게시글, 관리자 화면을 통하여 열람한 게시글에서는 키워드를 검색할 수 없습니다.";
+
+var strLangAttachJIH01 = "첨부";
+var strLangAttachJIH02 = "파일명은 ";
+var strLangAttachJIH03 = "자를 넘을 수 없습니다.";
+var strLangAttachJIH04 = "에러가 발생하였습니다.";
+
+// 2024-06-28 민지수 - 게시판 > 첨부파일 드래그 앤 드롭 안내 메세지 추가
+var strLangMJS01 = "拖曳和拖放可以更改文件的顺序。";
+
+// 2024-10-02 이혜림 추가
+var strLangLHR001 = "0점은 평가할 수 없습니다.";
+var strLangLHR002 = "기존과 동일한 점수로는 평가하기를 할 수 없습니다.";
+var strLangLHR003 = "별점이 성공적으로 저장되었습니다.";

@@ -7,7 +7,8 @@
 	<head>
 		<title><spring:message code='ezSchedule.t133' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />		
-		<link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />			    
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>		
@@ -17,6 +18,7 @@
 			var starttime = "<c:out value='${scheduleConfigVO.startTime}'/>";
 			var endtime = "<c:out value='${scheduleConfigVO.endTime}'/>";
 			var autodelete = "<c:out value='${scheduleConfigVO.isAutoDelete}'/>";
+			var reminderTime = "<c:out value='${scheduleConfigVO.reminderTime}'/>";
 			var primary = "<c:out value='${lang}'/>";
 			
 		    document.onselectstart = function () { return false; };
@@ -38,6 +40,10 @@
 		                document.getElementById("CheckDelete").checked = false;
 		                document.getElementById("TextDelete").value = autodelete;
 		            }
+		        }
+		        
+		        if (reminderTime != "") {
+		        	document.getElementById("reminderTime").value = reminderTime;
 		        }
 		    }
 					
@@ -87,7 +93,8 @@
 		    			AUTODELETE : (document.getElementById("TextDelete").value == "" ? "0" : document.getElementById("TextDelete").value),
 		    			DISPLAYNAME : "<c:out value='${displayName1}'/>",
 		    			DISPLAYNAME2 : "<c:out value='${displayName2}'/>",
-		    			LISTSECRETARY : JSON.stringify(listSecretary)
+		    			LISTSECRETARY : JSON.stringify(listSecretary),
+		    			REMINDERTIME : document.getElementById("reminderTime").value
 		    		},
 		    		url : "/ezSchedule/scheduleSaveConfig.do",
 		    		success: function(text){
@@ -261,6 +268,22 @@
 				        	<a class="imgbtn imgbck" style="margin-top: -1px !important; height: 22px"><span onClick="ModifySecretary()"><spring:message code='ezSchedule.t153' /></span></a>
 			        	</div>
 			        </td>
+			    </tr>
+			    <!-- 2023-08-25 한태훈 - 미리알림 추가 -->
+			    <tr>
+			    	<th><spring:message code='ezSchedule.hth01' /></th>
+			    	<td>
+			    		<select name="reminderTime" id="reminderTime">
+			    			<option value="0"><spring:message code='ezSchedule.t404' /></option>
+			    			<option value="30">30<spring:message code='ezSchedule.hth02' /></option>
+			    			<option value="60">1<spring:message code='ezSchedule.hth03' /></option>
+			    			<option value="120">2<spring:message code='ezSchedule.hth04' /></option>
+			    			<option value="180">3<spring:message code='ezSchedule.hth04' /></option>
+			    			<option value="360">6<spring:message code='ezSchedule.hth04' /></option>
+			    			<option value="720">12<spring:message code='ezSchedule.hth04' /></option>
+			    			<option value="1440"><spring:message code='ezSchedule.hth09' /></option>
+			    		</select>
+			    	</td>
 			    </tr>
 		    	<tr style="display:none">
 		      		<th><spring:message code='ezSchedule.t154' /></th>

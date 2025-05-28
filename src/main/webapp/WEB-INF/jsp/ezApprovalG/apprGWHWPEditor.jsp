@@ -6,11 +6,18 @@
 	<head>
 		<title><spring:message code='ezApprovalG.t518' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${webHWPUrl}js/hwpctrlapp/utils/util.js"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/hwpCtrlApp.js')}"></script>
     	<script type="text/javascript" src="${webHWPUrl}js/webhwpctrl.js"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/conn_WHWP.js')}"></script>
+		
+		<%-- 2023-12-07 홍승비 - 결재 서명 데이터를 DB(TBL_SIGNINFO)에서 가져와, 문서 상에 다시 그려주는(재맵핑) 함수 적용 --%>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/aprSignRedraw.js')}"></script>
+		
 		<script type="text/javascript">
 		    var HwpCtrl;
 	        var splitChar = "\x02";
@@ -129,6 +136,10 @@
 	        function Clear() {
 	            HwpCtrl.Clear(1);
 	        }
+	        
+            function FreeUndoHistory() {
+			    HwpCtrl.FreeUndoHistory();
+            }
 
 	        function EditMode(option) {
 	            HwpCtrl.EditMode = option;

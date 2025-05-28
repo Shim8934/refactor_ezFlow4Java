@@ -5,7 +5,8 @@
 	<head>
 		<title><spring:message code='main.t00037'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf=8">
-		<link rel="stylesheet" href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<style type="text/css">
 			td,a {font-family: Arial, malgun gothic;font-size: 9pt;word-break:keep-all; white-space:nowrap; color:#555555; text-decoration:none}
 			.over{

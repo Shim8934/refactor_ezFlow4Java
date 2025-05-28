@@ -72,10 +72,10 @@ function PreviewRayerChange(pGubun) {
             document.getElementById("MailListRayer").style.width = "100%";
             if (navigator.userAgent.indexOf('Firefox') != -1) {
                 document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
-                document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 100) + "px";
+                document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 103) + "px";
             } else {
                 document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
-                document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 100) + "px"; 
+                document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 103) + "px"; 
             }
             g_bPrevShow = false;
         }
@@ -169,10 +169,10 @@ function PreviewRayerChange(pGubun) {
             
             if (navigator.userAgent.indexOf('Firefox') != -1) {
                 document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
-            	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 100) + "px";
+            	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 103) + "px";
             } else
                 document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
-            	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 100) + "px";
+            	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 103) + "px";
             /*document.getElementById("divList").style.overflow = "auto";*/
             document.getElementById("PreviewRayerH").style.width = (pMailPreWidthH - 70) + "px";
             document.getElementById("PreContent_RayerH").style.width = (pMailPreWidthH - 10) + "px";
@@ -199,7 +199,9 @@ function PreviewRayerChange(pGubun) {
         
         isPreviewChange = false;
         scroll();
-    } catch (e) { }
+    } catch (e) {
+    	console.log(e);
+    }
 }
 var SetConfig = true;
 function PreviewRayerChange_photo(pGubun) {
@@ -230,7 +232,7 @@ function PreviewRayerChange_photo(pGubun) {
             document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
             /* 2019-04-11 홍승비 - 앨범형식 보기 시 사용하지 않는 div 분기처리 */
             // if (document.getElementById("BoardList_BODY") != null) {
-            // 	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 100) + "px";
+            // 	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 103) + "px";
             // }
             g_bPrevShow = false;
         }
@@ -273,9 +275,17 @@ function PreviewRayerChange_photo(pGubun) {
             document.getElementById("PreviewRayerH").style.height = CurrentHeight + "px";
             /* 2018-04-25 홍승비 - 크로스 브라우징 중복 코드 삭제 */
 			document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
+			
+//			if (document.getElementById("BoardList_BODY") != null) {
+//			    document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 100) + "px";
+//			}
+			
+			if (document.getElementById("ifrmPreViewH")) {
+				document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 68) + "px";
+			}
 			/* 2019-04-11 홍승비 - 앨범형식 보기 시 사용하지 않는 div 분기처리 */
 			// if (document.getElementById("BoardList_BODY") != null) {
-			// 	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 100) + "px";
+			// 	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 103) + "px";
 			// }
 
             /*document.getElementById("divList").style.overflow = "auto";*/
@@ -300,7 +310,9 @@ function PreviewRayerChange_photo(pGubun) {
         	Set_BoardConfig();
         }
         scroll();
-    } catch (e) { }
+    } catch (e) {
+    	console.log(e);
+    }
 }
 
 function PreviewMode_ChangeBtn() {
@@ -353,14 +365,17 @@ function ItemPreviewRead_click(obj) {
 var xmlhttp = createXMLHttpRequest();
 var xmlhttp2 = createXMLHttpRequest();
 function ItemPreviewRead(obj) {
-	
-	for (var i = 0; i < obj.childNodes.length; i++) {
-		if (obj.childNodes[i].style.fontWeight == "bold") {
-			obj.childNodes[i].style.fontWeight = "normal";
-		} else {
-			obj.childNodes[i].style.fontWeight = "normal";
-		}
-	}
+	var noticeObj = ["0", "5", "M"].includes(pBoardType) && obj.getAttribute("DATA9") == "1";
+    
+	if (!noticeObj) {
+        for (var i = 0; i < obj.childNodes.length; i++) {
+            if (obj.childNodes[i].style.fontWeight == "bold") {
+                obj.childNodes[i].style.fontWeight = "normal";
+            } else {
+                obj.childNodes[i].style.fontWeight = "normal";
+            }
+        }
+    }
 
     var pboardid = obj.getAttribute("DATA1");
     var pitemid = obj.getAttribute("DATA2");
@@ -401,6 +416,13 @@ function ItemPreviewRead(obj) {
         xmlhttp2.onreadystatechange = event_ItemPreviewRead;
         xmlhttp2.send();
     }
+
+    if (obj.getAttribute("gubun") == "2" && BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && obj.getAttribute("publicflag") == "N") {
+        document.getElementById('openPassword').setAttribute('data-id', obj.getAttribute("DATA2"));
+        document.getElementById('openPassword').setAttribute('data-board', obj.getAttribute("DATA1"));
+        $('#openPassword').val('');
+        $('#chkPass').modal();
+    }
 }
 var ItemID;
 var WriterID;
@@ -419,10 +441,13 @@ function event_ItemPreviewRead_photo() {
             var xmldom = loadXMLString(xmlhttp.responseText)
             if (document.getElementById("PreViewBottom") != null)
                 document.getElementById("PreViewBottom").style.display = "none";
+            
             if (SelectSingleNodeValueNew(xmldom, "DATA") == "NO") {
-                alert(strLang173);
-                return;
-            }
+            	alert(strLang173);
+                document.getElementById("userImgH").src = "/images/kr/main/bestEmployee_pic_none.png";
+                document.getElementById("userImgW").src = "/images/kr/main/bestEmployee_pic_none.png";
+            } 
+            
             var WriterID = SelectSingleNodeValueNew(xmldom, "NODES/NODE/WriterID");
             var WriterName = SelectSingleNodeValueNew(xmldom, "NODES/NODE/WriterName");
             var WriterDeptID = SelectSingleNodeValueNew(xmldom, "NODES/NODE/WriterDeptID");
@@ -434,9 +459,10 @@ function event_ItemPreviewRead_photo() {
             var GuBun = SelectSingleNodeValueNew(xmldom, "NODES/NODE/GUBUN");
             var UserIMG =  SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/UserIMG");
             var LikeCount = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/LikeCount");
+            var DisLikeCount = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/DisLikeCount");
 
             if (pPreviewShow_HOW.trim() == "W") {
-                PreviewRayerChange_photo("H");
+                PreviewRayerChange_photo("W");
                 document.getElementById("Preview_HeaderW").style.display = "none";
                 document.getElementById("Preview_HeaderH").style.display = "";
             }
@@ -450,10 +476,10 @@ function event_ItemPreviewRead_photo() {
                 document.getElementById("Preview_HeaderH").style.display = "none";
             }
             
-            if (document.getElementById("userImgH") != null) {
+            if (document.getElementById("userImgH") != null && UserIMG != "") {
             	document.getElementById("userImgH").src = UserIMG;
             }
-            if (document.getElementById("userImgW") != null) {
+            if (document.getElementById("userImgW") != null && UserIMG != "") {
             	document.getElementById("userImgW").src = UserIMG;
             }
             
@@ -490,12 +516,12 @@ function event_ItemPreviewRead_photo() {
             	 if (location.href.toLowerCase().indexOf('temp') > -1)
  	                document.getElementById('ifrmPreViewH_photo').src = "/ezBoard/boardItemPreViewMovieContent.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(selobj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(selobj.getAttribute("DATA1")) + "&mode=" + pMode + "&location=TEMP";
  	            else
- 	                document.getElementById('ifrmPreViewH_photo').src = "/ezBoard/boardItemPreViewMovieContent.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(selobj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(selobj.getAttribute("DATA1")) + "&mode=" + pMode + "&likeCount=" + LikeCount + "&location=GENERAL";
+ 	                document.getElementById('ifrmPreViewH_photo').src = "/ezBoard/boardItemPreViewMovieContent.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(selobj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(selobj.getAttribute("DATA1")) + "&mode=" + pMode + "&likeCount=" + LikeCount + "&disLikeCount=" + DisLikeCount + "&location=GENERAL";
             } else {
 	            if (location.href.toLowerCase().indexOf('temp') > -1)
 	                document.getElementById('ifrmPreViewH_photo').src = "/ezBoard/boardItemPreViewPhotoContent.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(selobj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(selobj.getAttribute("DATA1")) + "&mode=" + pMode + "&location=TEMP";
 	            else
-	                document.getElementById('ifrmPreViewH_photo').src = "/ezBoard/boardItemPreViewPhotoContent.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(selobj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(selobj.getAttribute("DATA1")) + "&mode=" + pMode + "&likeCount=" + LikeCount + "&location=GENERAL";
+	                document.getElementById('ifrmPreViewH_photo').src = "/ezBoard/boardItemPreViewPhotoContent.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(selobj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(selobj.getAttribute("DATA1")) + "&mode=" + pMode + "&likeCount=" + LikeCount + "&disLikeCount=" + DisLikeCount + "&location=GENERAL";
             }
         }
     }
@@ -512,9 +538,19 @@ function event_ItemPreviewRead() {
             }
      
             if (SelectSingleNodeValue(xmlhttp.responseXML, "DATA") == "NO") {
-                alert(strLang173);
-                return;
+                if (!g_bPrevShow) { //미리보기 아닐 때만 alert
+            	    alert(strLang173);
+                }    
+            	document.querySelector('#PreH_sub_subject').textContent = "";
+            	document.querySelector('#PreH_MailReceiver').textContent = "";
+            	document.querySelector('#PreH_date').textContent = "";
+            	document.getElementById("userImgH").src = "/images/kr/main/bestEmployee_pic_none.png";
+            	document.querySelector('#PreW_sub_subject').textContent = "";
+            	document.querySelector('#PreW_MailReceiver').textContent = "";
+            	document.querySelector('#PreW_date').textContent = "";
+            	document.getElementById("userImgW").src = "/images/kr/main/bestEmployee_pic_none.png";
             }
+            
             ItemID = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/ItemID");
             WriterID = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriterID");
             WriterName = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriterName");
@@ -527,29 +563,55 @@ function event_ItemPreviewRead() {
             UserIMG =  SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/UserIMG");
             BoardID = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/BoardID");
             LikeCount = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/LikeCount");
+            DisLikeCount = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/DisLikeCount");
             /* 2019-11-06 홍승비 - 게시물 미리보기 시 댓글옵션 표출용 변수 추가 */
             OneLineReplyFlag = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/ONELINEREPLY");
-           
+            if (!!document.getElementById('ifrmPreViewH_photo') && document.getElementById('ifrmPreViewH_photo').style.display != "none") {
+            	document.getElementById('ifrmPreViewH_photo').style.display = "none";
+            }
+            
+            if (!!document.getElementById('ifrmPreViewW_photo') && document.getElementById('ifrmPreViewW_photo').style.display != "none") {
+            	document.getElementById('ifrmPreViewW_photo').style.display = "none";
+            }
+            
+            if (document.getElementById('ifrmPreViewH').style.display != "none") {
+            	document.getElementById('ifrmPreViewH').style.display = "none";
+            }
+            
+            if (document.getElementById('ifrmPreViewW').style.display != "none") {
+            	document.getElementById('ifrmPreViewW').style.display = "none";
+            }
+            
             if (pPreviewShow_HOW.trim() == "W") {
                 document.getElementById("Preview_HeaderW").style.display = "";
                 document.getElementById("Preview_HeaderH").style.display = "none";
-                document.getElementById("ifrmPreViewW").src = "/ezBoard/boardItemPreviewContent.do?itemID=" + encodeURIComponent(ItemID) + "&boardID=" + encodeURIComponent(BoardID) + "&likeCount=" + LikeCount + "&OneLineReplyFlag=" + OneLineReplyFlag;
+                if(typeof tempLocation !== "undefined" && tempLocation == "Y"){
+                    document.getElementById("ifrmPreViewW").src = "/ezBoard/boardItemPreviewContent.do?itemID=" + encodeURIComponent(ItemID) + "&boardID=" + encodeURIComponent(BoardID) + "&likeCount=" + LikeCount + "&disLikeCount=" + DisLikeCount + "&OneLineReplyFlag=" + OneLineReplyFlag + "&tempLocation=" + tempLocation;
+                }else{
+                    document.getElementById("ifrmPreViewW").src = "/ezBoard/boardItemPreviewContent.do?itemID=" + encodeURIComponent(ItemID) + "&boardID=" + encodeURIComponent(BoardID) + "&likeCount=" + LikeCount + "&disLikeCount=" + DisLikeCount + "&OneLineReplyFlag=" + OneLineReplyFlag;
+                }
+                document.getElementById('ifrmPreViewW').style.display = "";
             }
             else if (pPreviewShow_HOW.trim() == "H") {
                 document.getElementById("Preview_HeaderW").style.display = "none";
                 document.getElementById("Preview_HeaderH").style.display = "";
-                document.getElementById("ifrmPreViewH").src = "/ezBoard/boardItemPreviewContent.do?itemID=" + encodeURIComponent(ItemID) + "&boardID=" + encodeURIComponent(BoardID) + "&likeCount=" + LikeCount + "&OneLineReplyFlag=" + OneLineReplyFlag;
+                if(typeof tempLocation !== "undefined" && tempLocation == "Y"){
+                    document.getElementById("ifrmPreViewH").src = "/ezBoard/boardItemPreviewContent.do?itemID=" + encodeURIComponent(ItemID) + "&boardID=" + encodeURIComponent(BoardID) + "&likeCount=" + LikeCount + "&disLikeCount=" + DisLikeCount + "&OneLineReplyFlag=" + OneLineReplyFlag + "&tempLocation=" + tempLocation;
+                }else {
+                    document.getElementById("ifrmPreViewH").src = "/ezBoard/boardItemPreviewContent.do?itemID=" + encodeURIComponent(ItemID) + "&boardID=" + encodeURIComponent(BoardID) + "&likeCount=" + LikeCount + "&disLikeCount=" + DisLikeCount + "&OneLineReplyFlag=" + OneLineReplyFlag;
+                }
+                document.getElementById('ifrmPreViewH').style.display = "";
             }
             else {
                 document.getElementById("Preview_HeaderW").style.display = "none";
                 document.getElementById("Preview_HeaderH").style.display = "none";
             }
             
-            if (document.getElementById("userImgH") != null) {
-            	document.getElementById("userImgH").src = UserIMG;
+            if (document.getElementById("userImgH") != null && UserIMG != "") {
+                document.getElementById("userImgH").src = UserIMG;
             }
-            if (document.getElementById("userImgW") != null) {
-            	document.getElementById("userImgW").src = UserIMG;
+            if (document.getElementById("userImgW") != null && UserIMG != "") {
+                document.getElementById("userImgW").src = UserIMG;
             }
         }
     }
@@ -963,10 +1025,10 @@ function Window_resize() {
                 document.getElementById("MailListRayer").style.width = pMailListWidthH + "px";
                 if (navigator.userAgent.indexOf('Firefox') != -1) {
                     document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
-                	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 100) + "px";
+                	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 103) + "px";
                 } else
                     document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
-                	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 100) + "px";
+                	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 103) + "px";
 
                 /*document.getElementById("divList").style.overflow = "auto";*/
                 document.getElementById("PreviewRayerH").style.width = (pMailPreWidthH - 70) + "px";
@@ -985,10 +1047,10 @@ function Window_resize() {
                 document.getElementById("MailListRayer").style.width = "100%";
                 if (navigator.userAgent.indexOf('Firefox') != -1) {
                     document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
-                	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 100) + "px";
+                	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 103) + "px";
                 } else
                     document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
-                	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 100) + "px";
+                	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 103) + "px";
                 	/*document.getElementById("divList").style.overflow = "auto";*/
             }
         }
@@ -1069,7 +1131,7 @@ function Window_resize_photo() {
                 
                 /* 2022-03-17 홍승비 - 리사이즈 시 포토게시판에만 스크롤이 발생하도록 분기처리 (썸네일, 동영상게시판은 다른 방식으로 스크롤이 발생함) */
                 if (window.location.href.indexOf("/ezBoard/boardItemListPhoto.do") > -1) {
-                	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 100) + "px";
+                	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 103) + "px";
                 }
                 document.getElementById("ifrmPreViewH_photo").style.height = (CurrentHeight - 77) + "px";
                 
@@ -1086,7 +1148,7 @@ function Window_resize_photo() {
                 document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
                 
                 if (window.location.href.indexOf("/ezBoard/boardItemListPhoto.do") > -1) {
-                	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 100) + "px";
+                	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 103) + "px";
                 }
             }
         }

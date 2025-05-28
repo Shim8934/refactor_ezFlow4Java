@@ -6,7 +6,8 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
-		<link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />		
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/timeControls/jquery.timepicker.css')}" type="text/css" />
 		<style>
@@ -127,16 +128,22 @@
 		    	//	return;
 		    	//}
 		    	
-		        if (document.getElementById("keyword").value.trim() == "" && document.getElementById("usedate").checked == false) {
-		            alert("<spring:message code='ezSchedule.t346'/>");
-		            document.getElementById("keyword").focus();
-		            return;
-		        }
-		        		
+                // 2024-06-27 전인하 - 일정관리 > 검색 > 전체검색, 지역검색 추가
+                // 로직 변경에 따른 미사용 변수 삭제 (searchColumn, searchData)
 		        var sdate = "";
 		        var edate = "";
 		        var keyword = "";
-		        var filter = "ScheduleID=ScheduleID";		        
+
+		        var all = document.getElementById("all").value.trim();
+		        var title = document.getElementById("title").value.trim();
+		        var location = document.getElementById("location").value.trim();
+		        
+		        if (document.getElementById("usedate").checked == false && all == "" && title == "" && location == "")  {
+		            alert("<spring:message code='ezSchedule.t346'/>");
+                    return;
+		        }
+		        
+		        var filter = "search";		        
 		        var useDate = document.getElementById("usedate").checked;
 		        if (document.getElementById("usedate").checked) {
 		            sdate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
@@ -146,14 +153,8 @@
 		        if (sdate > edate) {
 		        	alert("<spring:message code='ezResource.dateChk' />");
 		        	return;
-		        }
-			
-		        if (document.getElementById("keyword").value != "") {
-		            filter = document.getElementsByName("search_field")[0].value;
-		            keyword = document.getElementById("keyword").value;
-		        }
-		        
-		        window.location.href = "/ezSchedule/scheduleSearch.do?sdate=" + sdate + "&edate=" + edate + "&filter=" + encodeURIComponent(filter) + "&keyword=" + encodeURIComponent(keyword);
+		        }		        
+		        window.location.href = "/ezSchedule/scheduleSearch.do?sdate=" + sdate + "&edate=" + edate + "&filter=" + encodeURIComponent(filter) + "&pAll=" + encodeURIComponent(all) + "&pTitle=" + encodeURIComponent(title) + "&pLocation=" + encodeURIComponent(location);
 		        
 		    }
 		
@@ -206,8 +207,10 @@
 		    }
 			
 		    function RefreshView() {
-		    	keyword = document.getElementById("keyword").value;
-		        window.location.href = "/ezSchedule/scheduleSearch.do?sdate=" + startdate + "&edate=" + enddate + "&filter=" + encodeURIComponent(filter) + "&keyword=" + encodeURIComponent(keyword);
+                var all = document.getElementById("all").value.trim();
+                var title = document.getElementById("title").value.trim();
+                var location = document.getElementById("location").value.trim();
+		        window.location.href = "/ezSchedule/scheduleSearch.do?sdate=" + sdate + "&edate=" + edate + "&filter=" + encodeURIComponent(filter) + "&pAll=" + all + "&pTitle=" + title + "&pLocation=" + location;
 		    }
 			
 		    function onmouseOver(elem) {
@@ -240,6 +243,31 @@
 		        }
 		    }
 			//////////////////
+			
+			// 2024-06-27 전인하 - 일정 > 일정검색 > 전체검색, 지역검색 추가
+            // 전체검색 / 상세검색 토글버튼
+			function detailSearch() {
+			    $('.detailSearch').toggleClass('on');
+                $('#detailSearchBtn').toggleClass('on');
+                
+                if ($('.detailSearch').hasClass('on')) {
+                    $('.detailSearch').show();
+                } else {
+                    $('.detailSearch').hide();
+                }
+                
+                if ($('#detailSearchBtn').hasClass('on')) {
+                    $('#all').val('');
+                    $('#all').prop('disabled', true);
+                } else {
+                    $('#all').prop('disabled', false);
+                    $('#title').val('');
+                    $('#location').val('');
+                    if ($('#usedate').is(':checked')) {
+                        $('#usedate').trigger('click');
+                    }
+                }
+			}
 		</script>
 	</head>
 	<body class="mainbody"> 
@@ -247,19 +275,39 @@
 			<h1><spring:message code='ezSchedule.t347'/></h1> 
 		  	<table style="width:100%" class="content">  
 		    	<tr> 
-		      		<th><spring:message code='ezSchedule.t348'/></th> 
+		      		<th><spring:message code='ezSchedule.t267'/><spring:message code='ezSchedule.t24'/></th> 
 		      		<td style="width:100%">
 		      			<div style="vertical-align: middle;height: 83%;width: 100%;">
+		      			    <%-- 2024-06-27 전인하 - 일정관리 > 검색 > 전체검색, 지역검색 추가
 			      			<select name="search_field" style="WIDTH: 70px;height:22px"> 
+			      			    <option value="all" <c:if test="${filter eq 'all' }">selected</c:if>><spring:message code='ezSchedule.t267'/></option> 
 			          			<option value="title" <c:if test="${filter eq 'title' }">selected</c:if>><spring:message code='ezSchedule.t272'/></option> 
 			          			<option value="location" <c:if test="${filter eq 'location' }">selected</c:if>><spring:message code='ezSchedule.t273'/></option> 
 			        		</select> 
-			        		<input type="text" id="keyword" size="21" value="<c:out value="${keyword}"/>" onkeypress="return search_keypress(event)" style="height:22px;vertical-align: top" /> 
-			        		<a class="imgbtn imgbck" style="height: 22px;"><span onClick="search()"><spring:message code='ezSchedule.t24'/></span></a>
+			        		--%>
+			        		<input type="text" id="all" size="30" maxlength="20" value="<c:out value='${keyword}'/>" onkeypress="return search_keypress(event)" style="height:22px;vertical-align: top" /> 
+			        		<a class="imgbtn imgbck" style="height: 22px;" id="detailSearchBtn"><span onClick="detailSearch()"><spring:message code='ezEmail.pyy02'/></span></a>
 		        		</div>
 		        	</td> 
 		    	</tr> 
-		    	<tr> 
+		    	<%-- 2024-06-27 전인하 - 일정관리 > 검색 > 전체검색, 지역검색 추가 --%>
+		    	<tr class="detailSearch" style="display: none;"> 
+                    <th><spring:message code='ezSchedule.t272'/><spring:message code='ezSchedule.t24'/></th> 
+                    <td style="width:100%">
+                        <div style="vertical-align: middle;height: 83%;width: 100%;">
+                            <input type="text" id="title" size="30" maxlength="20" value="<c:out value='${keyword}'/>" onkeypress="return search_keypress(event)" style="height:22px;vertical-align: top" />
+                        </div>
+                    </td> 
+                </tr> 
+                <tr class="detailSearch" style="display: none;"> 
+                    <th><spring:message code='ezSchedule.t273'/><spring:message code='ezSchedule.t24'/></th> 
+                    <td style="width:100%">
+                        <div style="vertical-align: middle;height: 83%;width: 100%;">
+                            <input type="text" id="location" size="30" maxlength="20" value="<c:out value='${keyword}'/>" onkeypress="return search_keypress(event)" style="height:22px;vertical-align: top" />
+                        </div>
+                    </td> 
+                </tr> 
+		    	<tr class="detailSearch" style="display: none;"> 
 		      		<th><spring:message code='ezSchedule.t349'/></th>
 		      		<td>
 		      			<input type="checkbox" value="1" id="usedate" onclick="DateSearch_Click();" style="margin-top: 1px;" /><label for="usedate"><spring:message code='ezSchedule.t350'/></label>
@@ -280,6 +328,9 @@
 			  	</tr>
 		  	</table> 
 		 	<br/>
+		 	<div style="text-align: center;">
+		 	    <a class="imgbtn imgbck" style="height: 30px; line-height: 30px; "><span style="vertical-align: middle;" onClick="search()"><spring:message code='ezSchedule.t24'/></span></a>
+		 	</div>
 		 	<h2 class="h2_dot">
 		 		<spring:message code='ezSchedule.t295'/>&nbsp;<span class="point">${fn:length(scheduleList)}</span>&nbsp;<span id="resultCount"></span><spring:message code='ezSchedule.t296'/>
 		    </h2>		
@@ -324,6 +375,7 @@
 		    			<c:if test="${item.scheduleType == '7'}"><spring:message code='ezSchedule.t282'/></c:if>
 		    			<c:if test="${item.scheduleType == '8'}"><spring:message code='ezSchedule.t12'/></c:if>
 		    			<c:if test="${item.scheduleType == '9'}"><spring:message code='ezSchedule.google12'/></c:if>
+						<c:if test="${item.scheduleType == '10'}"><spring:message code='ezSchedule.lyj09'/></c:if>
 		    		</td>
 		    		<c:if test="${primary == '1'}">
 		    			<td style="width:80px">${item.ownerName}</td> 

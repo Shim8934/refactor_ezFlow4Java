@@ -40,11 +40,12 @@ public class MWebfolderGWController {
 	 * @param folderId
 	 *            접근하려는 폴더 아이디를 넣는다. null이 들어올 경우에 기본 목록을 보여준다.
 	 */
-	@RequestMapping(value = "/mobile/ezwebfolder/users/{userId}/files/{pageType:company|department|user|shared|sharing|favorite}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/mobile/ezwebfolder/users/{userId:.+}/files/{pageType:company|department|user|shared|sharing|favorite}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public Result getFileList(HttpServletRequest request,
 			@PathVariable String userId, @PathVariable String pageType, @RequestParam(defaultValue = "") String folderId,
 			@RequestParam int page, @RequestParam int size, @RequestParam int offset,
-			@RequestParam(defaultValue = "") String search, @RequestParam(defaultValue = "") String filter) {
+			@RequestParam(defaultValue = "") String search, @RequestParam(defaultValue = "") String filter, 
+		    @RequestParam(required = false) String lang) {
 		logger.debug("MOBILE G/W WEBFOLDER [GET /mobile/ezwebfolder/users/{userId}/files/{pageType}] started.");
 		logger.debug("userId: {}, pageType: {}, folderId: {}", userId, pageType, folderId);
 
@@ -53,6 +54,8 @@ public class MWebfolderGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO common = mOptionService.commonInfoWeb(serverName, userId);
+
+			if (lang != null) common.setLang(lang);
 
 			MWebfolderFetchInfo fetchInfo = new MWebfolderFetchInfo();
 			fetchInfo.setServerName(serverName);
@@ -76,7 +79,7 @@ public class MWebfolderGWController {
 	/**
 	 * 폴더 트리 조회
 	 */
-	@RequestMapping(value = "/mobile/ezwebfolder/users/{userId}/tree/{pageType:company|department|user|shared|sharing|favorite}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/mobile/ezwebfolder/users/{userId:.+}/tree/{pageType:company|department|user|shared|sharing|favorite}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public Result getFolderTree(@PathVariable String userId, @PathVariable String pageType, @RequestParam(defaultValue = "") String folderId, HttpServletRequest request) {
 		logger.debug("MOBILE G/W WEBFOLDER [GET /mobile/ezwebfolder/users/{userId}/tree/{pageType}] started.");
 		logger.debug("userId: {}, pageType: {}, folderId: {}", userId, pageType, folderId);

@@ -50,6 +50,9 @@ public class EzEmailWebSocketController {
         try {
         	// 클라이언트 연결을 확인하고 시작을 알린다.(유저의 고유문자를 전송)
         	this.handleMessage(jsonStr, session);
+        } catch (RuntimeException e) {
+        	logger.debug("[WebSocket] handleOpen error occured.");
+        	logger.error(e.getMessage(), e);
         } catch (Exception e) {
         	logger.debug("[WebSocket] handleOpen error occured.");
         	logger.error(e.getMessage(), e);

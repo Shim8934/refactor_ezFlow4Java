@@ -53,6 +53,7 @@
 		]]>
 	</select>
 	
+	<!-- 2024-07-03 홍승비 - SQL Injection 수정 > $ 기호 제거, WRITERNAME 다국어 칼럼 추가로 셀렉트 -->
 	<select id="EzLadderDAO.getLadderList" remapResults="true" resultClass="LadderVO">
 		<![CDATA[
 			SELECT
@@ -60,7 +61,8 @@
 				E.TYPE, 
 				E.TITLE,
 				E.WRITERID, 
-				E.WRITERNAME$lang$, 
+				CASE #lang# WHEN '2' THEN E.WRITERNAME2 ELSE E.WRITERNAME END AS WRITERNAME,
+				E.WRITERNAME2,
 				DATE_FORMAT(DATE_ADD(E.WRITEDATE, INTERVAL #offset# MINUTE),'%Y-%m-%d %H:%i:%s') WRITEDATE,
 				E.STATUS, 
 				E.SECRETFLAG, 
@@ -85,7 +87,6 @@
 			WHERE 
 			]]>
 			<isEqual property="mode" compareValue="all">
-				<![CDATA[
 				A.SECRETFLAG = 0 or A.LADDERID = ANY(
 												SELECT 
 													B.LADDERID 
@@ -98,67 +99,44 @@
 												WHERE 
 													C.USERID = #userId#)
 			OR
-			]]>
 			</isEqual>
-				<![CDATA[
-					A.WRITERID = #userId#
+				A.WRITERID = #userId#
             )
             ORDER BY
-            ]]>
             <isEqual property="sort" compareValue="basic">
-            <![CDATA[
 				E.WRITEDATE 
-			]]>
 			</isEqual> 
             <isEqual property="sort" compareValue="type">
-            <![CDATA[
 				E.TYPE 
-			]]>
 			</isEqual>
 			<isEqual property="sort" compareValue="title">
-            <![CDATA[
 				E.TITLE 
-			]]>
 			</isEqual>
 			<isEqual property="sort" compareValue="writerName">
-            <![CDATA[
 				E.WRITERNAME
-			]]>
 			</isEqual>
 			<isEqual property="sort" compareValue="writeDate">
-            <![CDATA[
 				E.WRITEDATE 
-			]]>
 			</isEqual>
 			<isEqual property="sort" compareValue="status">
-            <![CDATA[
 				E.STATUS 
-			]]>
 			</isEqual>
 			<isEqual property="sort" compareValue="secretFlag">
-            <![CDATA[
 				E.SECRETFLAG 
-			]]>
 			</isEqual>
 			<isEqual property="sort" compareValue="deleteFlag">
-            <![CDATA[
 				(
 					CASE E.WRITERID
 					WHEN #userId# THEN 2
 					ELSE 1
 					END
 				)
-			]]>
 			</isEqual>
 			<isEqual property="sortFlag" compareValue="desc">
-            <![CDATA[
 				DESC, E.LADDERID DESC
-			]]>
 			</isEqual>
 			<isNotEqual property="sortFlag" compareValue="desc">
-			 <![CDATA[
 				ASC, E.LADDERID ASC
-			]]>
 			</isNotEqual>
 			LIMIT 
 				#startPoint#, #endPoint# 
@@ -199,7 +177,8 @@
 				A.TYPE, 
 				A.TITLE,
 				A.WRITERID, 
-				A.WRITERNAME$lang$, 
+				CASE #lang# WHEN '2' THEN A.WRITERNAME2 ELSE A.WRITERNAME END AS WRITERNAME,
+				A.WRITERNAME2,
 				DATE_FORMAT(DATE_ADD(A.WRITEDATE, INTERVAL #offset# MINUTE),'%Y-%m-%d %H:%i:%s') WRITEDATE,
 				A.STATUS, 
 				A.SECRETFLAG, 
@@ -229,63 +208,42 @@
 			ORDER BY
 			 ]]>
 			<isEqual property="sort" compareValue="basic">
-            <![CDATA[
 				A.WRITEDATE 
-			]]>
 			</isEqual>   
             <isEqual property="sort" compareValue="type">
-            <![CDATA[
 				A.TYPE 
-			]]>
 			</isEqual>
 			<isEqual property="sort" compareValue="title">
-            <![CDATA[
 				A.TITLE 
-			]]>
 			</isEqual>
 			<isEqual property="sort" compareValue="writerName">
-            <![CDATA[
 				A.WRITERNAME
-			]]>
 			</isEqual>
 			<isEqual property="sort" compareValue="writeDate">
-            <![CDATA[
 				A.WRITEDATE 
-			]]>
 			</isEqual>
 			<isEqual property="sort" compareValue="status">
-            <![CDATA[
 				A.STATUS 
-			]]>
 			</isEqual>
 			<isEqual property="sort" compareValue="secretFlag">
-            <![CDATA[
 				A.SECRETFLAG 
-			]]>
 			</isEqual>
 			<isEqual property="sort" compareValue="deleteFlag">
-            <![CDATA[
 				(
 					CASE A.WRITERID
 					WHEN #userId# THEN 2
 					ELSE 1
 					END
 				)
-			]]>
 			</isEqual>
 			<isEqual property="sortFlag" compareValue="desc">
-            <![CDATA[
 				DESC, A.LADDERID DESC
-			]]>
 			</isEqual>
 			<isNotEqual property="sortFlag" compareValue="desc">
-			 <![CDATA[
 				ASC, A.LADDERID ASC
-			]]>
 			</isNotEqual>
 			LIMIT 
 				#startPoint#, #endPoint# 
-	
 	</select>
 	
 	<select id="EzLadderDAO.searchSPartLadderCount" resultClass="Integer">
@@ -379,6 +337,7 @@
         </isNotEqual> 
 	</select>
 	
+	<!-- 2024-07-03 홍승비 - SQL Injction 수정 > $ 기호 제거 -->
 	<select id="EzLadderDAO.searchPartLadderList" remapResults="true" resultClass="LadderVO">
 		<isEqual property="searchSelect" compareValue="participant">
 		<![CDATA[
@@ -388,7 +347,8 @@
 				A.TYPE, 
 				A.TITLE,
 				A.WRITERID, 
-				A.WRITERNAME$lang$, 
+				CASE #lang# WHEN '2' THEN A.WRITERNAME2 ELSE A.WRITERNAME END AS WRITERNAME,
+				A.WRITERNAME2,
 				DATE_FORMAT(DATE_ADD(A.WRITEDATE, INTERVAL #offset# MINUTE),'%Y-%m-%d %H:%i:%s') WRITEDATE,
 				A.STATUS, 
 				A.SECRETFLAG, 
@@ -426,64 +386,42 @@
 			ORDER BY 
 			 ]]>
 			<isEqual property="sort" compareValue="basic">
-            <![CDATA[
 				A.WRITEDATE 
-			]]>
 			</isEqual>   
             <isEqual property="sort" compareValue="type">
-            <![CDATA[
 				A.TYPE 
-			]]>
 			</isEqual>
 			<isEqual property="sort" compareValue="title">
-            <![CDATA[
 				A.TITLE 
-			]]>
 			</isEqual>
 			<isEqual property="sort" compareValue="writerName">
-            <![CDATA[
 				A.WRITERNAME
-			]]>
 			</isEqual>
 			<isEqual property="sort" compareValue="writeDate">
-            <![CDATA[
 				A.WRITEDATE 
-			]]>
 			</isEqual>
 			<isEqual property="sort" compareValue="status">
-            <![CDATA[
 				A.STATUS 
-			]]>
 			</isEqual>
 			<isEqual property="sort" compareValue="secretFlag">
-            <![CDATA[
 				A.SECRETFLAG 
-			]]>
 			</isEqual>
 			<isEqual property="sort" compareValue="deleteFlag">
-            <![CDATA[
 				(
 					CASE A.WRITERID
 					WHEN #userId# THEN 2
 					ELSE 1
 					END
 				)
-			]]>
 			</isEqual>
 			<isEqual property="sortFlag" compareValue="desc">
-            <![CDATA[
 				DESC, A.LADDERID DESC
-			]]>
 			</isEqual>
 			<isNotEqual property="sortFlag" compareValue="desc">
-			 <![CDATA[
 				ASC, A.LADDERID ASC
-			]]>
 			</isNotEqual>
-			<![CDATA[
 			LIMIT 
 				#startPoint#, #endPoint# 
-		]]>
 		</isEqual>
 		<isNotEqual property="searchSelect" compareValue="participant">
 			<![CDATA[
@@ -492,7 +430,8 @@
 					A.TYPE, 
 					A.TITLE,
 					A.WRITERID, 
-					A.WRITERNAME$lang$, 
+					CASE #lang# WHEN '2' THEN A.WRITERNAME2 ELSE A.WRITERNAME END AS WRITERNAME,
+					A.WRITERNAME2,
 					DATE_FORMAT(DATE_ADD(A.WRITEDATE, INTERVAL #offset# MINUTE),'%Y-%m-%d %H:%i:%s') WRITEDATE,
 					A.STATUS, 
 					A.SECRETFLAG, 
@@ -541,68 +480,44 @@
 					LIKE CONCAT('%', #searchInput#, '%')
 				]]>	  
 				</isEqual>
-				<![CDATA[
-					ORDER BY 
-				 ]]>
+				ORDER BY 
 			<isEqual property="sort" compareValue="basic">
-            <![CDATA[
 				A.WRITEDATE 
-			]]>
 			</isEqual> 	  
             <isEqual property="sort" compareValue="type">
-            <![CDATA[
 				A.TYPE 
-			]]>
 			</isEqual>
 			<isEqual property="sort" compareValue="title">
-            <![CDATA[
 				A.TITLE 
-			]]>
 			</isEqual>
 			<isEqual property="sort" compareValue="writerName">
-            <![CDATA[
 				A.WRITERNAME
-			]]>
 			</isEqual>
 			<isEqual property="sort" compareValue="writeDate">
-            <![CDATA[
 				A.WRITEDATE 
-			]]>
 			</isEqual>
 			<isEqual property="sort" compareValue="status">
-            <![CDATA[
 				A.STATUS 
-			]]>
 			</isEqual>
 			<isEqual property="sort" compareValue="secretFlag">
-            <![CDATA[
 				A.SECRETFLAG 
-			]]>
 			</isEqual>
 			<isEqual property="sort" compareValue="deleteFlag">
-            <![CDATA[
 				(
 					CASE A.WRITERID
 					WHEN #userId# THEN 2
 					ELSE 1
 					END
 				)
-			]]>
 			</isEqual>
 			<isEqual property="sortFlag" compareValue="desc">
-            <![CDATA[
 				DESC, A.LADDERID DESC
-			]]>
 			</isEqual>
 			<isNotEqual property="sortFlag" compareValue="desc">
-			 <![CDATA[
 				ASC, A.LADDERID ASC
-			]]>
 			</isNotEqual>
-			<![CDATA[
-					LIMIT 
-						#startPoint#, #endPoint# 
-				]]>
+				LIMIT 
+					#startPoint#, #endPoint# 
         </isNotEqual> 
 	</select>
 	
@@ -722,6 +637,7 @@
         </isNotEqual> 
 	</select>
 	
+	<!-- 2024-07-03 홍승비 - SQL Injction 수정 > $ 기호 제거 -->
 	<select id="EzLadderDAO.searchAllLadderList" remapResults="true" resultClass="LadderVO">
 		<isEqual property="searchSelect" compareValue="participant">
 		<![CDATA[
@@ -731,7 +647,8 @@
 				D.TYPE, 
 				D.TITLE,
 				D.WRITERID, 
-				D.WRITERNAME$lang$, 
+				CASE #lang# WHEN '2' THEN D.WRITERNAME2 ELSE D.WRITERNAME END AS WRITERNAME,
+				D.WRITERNAME2,
 				DATE_FORMAT(DATE_ADD(D.WRITEDATE, INTERVAL #offset# MINUTE),'%Y-%m-%d %H:%i:%s') WRITEDATE,
 				D.STATUS, 
 				D.SECRETFLAG, 
@@ -778,64 +695,42 @@
 			ORDER BY
 			 ]]>
 			<isEqual property="sort" compareValue="basic">
-            <![CDATA[
 				D.WRITEDATE 
-			]]>
 			</isEqual>   
             <isEqual property="sort" compareValue="type">
-            <![CDATA[
 				D.TYPE 
-			]]>
 			</isEqual>
 			<isEqual property="sort" compareValue="title">
-            <![CDATA[
 				D.TITLE 
-			]]>
 			</isEqual>
 			<isEqual property="sort" compareValue="writerName">
-            <![CDATA[
 				D.WRITERNAME
-			]]>
 			</isEqual>
 			<isEqual property="sort" compareValue="writeDate">
-            <![CDATA[
 				D.WRITEDATE 
-			]]>
 			</isEqual>
 			<isEqual property="sort" compareValue="status">
-            <![CDATA[
 				D.STATUS 
-			]]>
 			</isEqual>
 			<isEqual property="sort" compareValue="secretFlag">
-            <![CDATA[
 				D.SECRETFLAG 
-			]]>
 			</isEqual>
 			<isEqual property="sort" compareValue="deleteFlag">
-            <![CDATA[
 				(
 					CASE D.WRITERID
 					WHEN #userId# THEN 2
 					ELSE 1
 					END
 				)
-			]]>
 			</isEqual>
 			<isEqual property="sortFlag" compareValue="desc">
-            <![CDATA[
 				DESC, D.LADDERID DESC
-			]]>
 			</isEqual>
 			<isNotEqual property="sortFlag" compareValue="desc">
-			 <![CDATA[
 				ASC, D.LADDERID ASC
-			]]>
 			</isNotEqual>
-			<![CDATA[
 			LIMIT 
 				#startPoint#, #endPoint# 
-		]]>
 		</isEqual>
 		<isNotEqual property="searchSelect" compareValue="participant">
 			<![CDATA[
@@ -844,7 +739,8 @@
 					D.TYPE, 
 					D.TITLE,
 					D.WRITERID,
-					D.WRITERNAME$lang$,
+					CASE #lang# WHEN '2' THEN D.WRITERNAME2 ELSE D.WRITERNAME END AS WRITERNAME,
+					D.WRITERNAME2,
 					DATE_FORMAT(DATE_ADD(D.WRITEDATE, INTERVAL #offset# MINUTE),'%Y-%m-%d %H:%i:%s') WRITEDATE,
 					D.STATUS, 
 					D.SECRETFLAG, 
@@ -884,10 +780,8 @@
 								OR
 								]]>
 								</isEqual>
-									<![CDATA[
 									A.WRITERID = #userId#
 								)
-				]]>
 				<isEqual property="searchSelect" compareValue="title">
 			  	<![CDATA[
 			  		AND
@@ -909,68 +803,44 @@
 					LIKE CONCAT('%', #searchInput#, '%')
 				]]>	  
 				</isEqual>
-				<![CDATA[
-					ORDER BY 
-					 ]]>
+				ORDER BY 
 			<isEqual property="sort" compareValue="basic">
-            <![CDATA[
 				D.WRITEDATE 
-			]]>
 			</isEqual> 		  
             <isEqual property="sort" compareValue="type">
-            <![CDATA[
 				D.TYPE 
-			]]>
 			</isEqual>
 			<isEqual property="sort" compareValue="title">
-            <![CDATA[
 				D.TITLE 
-			]]>
 			</isEqual>
 			<isEqual property="sort" compareValue="writerName">
-            <![CDATA[
 				D.WRITERNAME
-			]]>
 			</isEqual>
 			<isEqual property="sort" compareValue="writeDate">
-            <![CDATA[
 				D.WRITEDATE 
-			]]>
 			</isEqual>
 			<isEqual property="sort" compareValue="status">
-            <![CDATA[
 				D.STATUS 
-			]]>
 			</isEqual>
 			<isEqual property="sort" compareValue="secretFlag">
-            <![CDATA[
 				D.SECRETFLAG 
-			]]>
 			</isEqual>
 			<isEqual property="sort" compareValue="deleteFlag">
-            <![CDATA[
 				(
 					CASE D.WRITERID
 					WHEN #userId# THEN 2
 					ELSE 1
 					END
 				)
-			]]>
 			</isEqual>
 			<isEqual property="sortFlag" compareValue="desc">
-            <![CDATA[
 				DESC, D.LADDERID DESC
-			]]>
 			</isEqual>
 			<isNotEqual property="sortFlag" compareValue="desc">
-			 <![CDATA[
 				ASC, D.LADDERID ASC
-			]]>
 			</isNotEqual>
-			<![CDATA[
-					LIMIT 
-						#startPoint#, #endPoint# 
-				]]>
+				LIMIT 
+					#startPoint#, #endPoint# 
         </isNotEqual> 
 	</select>
 
@@ -991,6 +861,7 @@
 		]]>
 	</update>
 	
+	<!-- 2024-07-03 홍승비 - SQL Injection 수정 > $ 기호 제거, WRITERNAME 및 DEPTNAME 다국어 칼럼 추가로 셀렉트 -->
 	<select id="EzLadderDAO.ladderContent"  remapResults="true" resultClass="LadderVO" parameterClass="map">
 		<![CDATA[
 			SELECT
@@ -998,24 +869,26 @@
 				TYPE, 
 				TITLE,
 				WRITERID, 
-				WRITERNAME$lang$, 
+				CASE #lang# WHEN '2' THEN WRITERNAME2 ELSE WRITERNAME END AS WRITERNAME,
+				WRITERNAME2,
 				DATE_FORMAT(DATE_ADD(WRITEDATE, INTERVAL #offset# MINUTE),'%Y-%m-%d %H:%i:%s') WRITEDATE, 
 				STATUS, 
 				SECRETFLAG, 
 				DELETEFLAG,
-				DEPTNAME$lang$,
+				CASE #lang# WHEN '2' THEN DEPTNAME2 ELSE DEPTNAME END AS DEPTNAME,
+				DEPTNAME2,
 				LINECNT,
 				LINEARRAY,
 				L.TENANT_ID,
 				EXTENSIONATTRIBUTE2 AS PIC,
 				COMPANYID,
 				DEPTID,
-				COMPANY$lang$ AS COMPANYNAME
+				CASE #lang# WHEN '2' THEN COMPANY2 ELSE COMPANY END AS COMPANYNAME
 			FROM
 				TBL_LADDER L
 			LEFT JOIN(
 				SELECT
-					CN, TENANT_ID, EXTENSIONATTRIBUTE2, COMPANY$lang$
+					CN, TENANT_ID, EXTENSIONATTRIBUTE2, COMPANY, COMPANY2
 				FROM
 					TBL_USERMASTER
 				WHERE
@@ -1042,7 +915,7 @@
 		]]>
 	</select> 
 	
-	<!-- boh -->
+	<!-- 2024-07-03 홍승비 - SQL Injection 수정 > $ 기호 제거 -->
 	<select id="EzLadderDAO.selectSearchUser" parameterClass="map" resultClass="LadderLineVO" remapResults="true">
 		SELECT 
 			A.CN AS USERID, C.DISPLAYNAME AS USERNAME, C.DISPLAYNAME2 AS USERNAME2, B.DISPLAYNAME AS DEPTNAME, B.DISPLAYNAME2 AS DEPTNAME2, C.EXTENSIONATTRIBUTE2 AS PIC, C.TENANT_ID
@@ -1057,7 +930,7 @@
 				WHERE
 					D.TENANT_ID = #tenant_id#
 				AND 
-					D.DISPLAYNAME$lang$ = #name#)
+					CASE #lang# WHEN '2' THEN D.DISPLAYNAME2 ELSE D.DISPLAYNAME END = #name#)
 				AND
 					C.TENANT_ID = #tenant_id#
 				AND
@@ -1065,11 +938,11 @@
 				AND
 					C.DISPLAYNAME NOT IN (
 											SELECT
-												E.DISPLAYNAME$lang$
+												CASE #lang# WHEN '2' THEN E.DISPLAYNAME2 ELSE E.DISPLAYNAME END
 											FROM
 												TBL_USERMASTER_RETIRE E
 											WHERE 
-												E.DISPLAYNAME$lang$ = #name#
+												CASE #lang# WHEN '2' THEN E.DISPLAYNAME2 ELSE E.DISPLAYNAME END = #name#
 											AND
 												E.TENANT_ID = #tenant_id#
 											AND
@@ -1089,11 +962,11 @@
 		AND
 			F.DISPLAYNAME NOT IN (
 										SELECT
-											G.DISPLAYNAME$lang$
+											CASE #lang# WHEN '2' THEN G.DISPLAYNAME2 ELSE G.DISPLAYNAME END
 										FROM
 											TBL_USERMASTER_RETIRE G
 										WHERE 
-											G.DISPLAYNAME$lang$ = #name#
+											CASE #lang# WHEN '2' THEN G.DISPLAYNAME2 ELSE G.DISPLAYNAME END = #name#
 										AND
 											G.TENANT_ID = #tenant_id#
 										AND
@@ -1429,18 +1302,7 @@
 			USERID = #userId#
 	</delete>
 	
-	<!-- <delete id="EzLadderDAO.deleteLadderBMUser" parameterClass="LadderBmUserVO">
-		DELETE FROM 
-			TBL_LADDER_BMUSER
-		WHERE 
-			TENANT_ID = #tenant_id#
-		AND 
-			LADDERBMID = #ladderBmId#
-		AND 
-			USERID = #userId#
-		AND 
-			USERNAME$lang$ = #userName#
-	</delete> -->
+	<!-- 2024-07-03 홍승비 - 사용되지 않는 사다리게임 쿼리 제거 (EzLadderDAO.deleteLadderBMUser) -->
 	
 	<delete id="EzLadderDAO.deleteLadderBMUserAll" parameterClass="LadderBmVO">
 		DELETE FROM 

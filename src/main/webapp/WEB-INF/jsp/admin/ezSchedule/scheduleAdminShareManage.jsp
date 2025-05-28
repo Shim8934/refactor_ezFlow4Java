@@ -6,7 +6,8 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
-		<link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css" />		
 		<script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>	    
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -54,9 +55,10 @@
 	                        for (var i = 0; i < SelectNodes(XmlNode, "DATA/ROW").length; i++) {
 	                            var _Value;
 	                            _html += "<tr id='" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "IDX")[0].textContent + "' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_click(this);' ondblclick='event_dbclick(this);'>";
-	                            _html += "<td style='width:38%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "USERNAME")[0].textContent + "</td>";
-	                            _html += "<td style='width:32%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "DESCRIPTION")[0].textContent + "</td>";
-	                            _html += "<td style='width:30%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "DEPTNAME")[0].textContent + "</td>";
+	                            _html += "<td style='width:50%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "USERNAME")[0].textContent + "</td>";
+								// 사간 겸직기능을 추가하며 기능상의 이상은 없으나, 표출 부서가 무조건 본직기준이므로 표출 부서를 제거 함.
+	                            // _html += "<td style='width:32%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "DESCRIPTION")[0].textContent + "</td>";
+	                            _html += "<td style='width:50%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "DEPTNAME")[0].textContent + "</td>";
 	                            _html += "</tr>";
 	                            _html += "</html>";
 	                            document.getElementById("contentlist").innerHTML = _html;
@@ -87,14 +89,14 @@
 		        if (obj != _RowObject) {
 		            obj.childNodes.item(0).style.backgroundColor = "#EDEDED";
 		            obj.childNodes.item(1).style.backgroundColor = "#EDEDED";
-		            obj.childNodes.item(2).style.backgroundColor = "#EDEDED";
+		            // obj.childNodes.item(2).style.backgroundColor = "#EDEDED";
 		        }
 		    }
 		    function event_Mout(obj) {
 		        if (obj != _RowObject) {
 		            obj.childNodes.item(0).style.backgroundColor = "#FFFFFF";
 		            obj.childNodes.item(1).style.backgroundColor = "#FFFFFF";
-		            obj.childNodes.item(2).style.backgroundColor = "#FFFFFF";
+		            // obj.childNodes.item(2).style.backgroundColor = "#FFFFFF";
 		        }
 		    }
 		    var _RowObject = null;
@@ -102,13 +104,13 @@
 		        if (_RowObject != null && _RowObject.childNodes.length != 0) {
 		            _RowObject.childNodes.item(0).style.backgroundColor = "#ffffff";
 		            _RowObject.childNodes.item(1).style.backgroundColor = "#ffffff";
-		            _RowObject.childNodes.item(2).style.backgroundColor = "#ffffff";
+		            // _RowObject.childNodes.item(2).style.backgroundColor = "#ffffff";
 		        }
-		
+
 		        _RowObject = obj;
 		        obj.childNodes.item(0).style.backgroundColor = "#f1f8ff";
 		        obj.childNodes.item(1).style.backgroundColor = "#f1f8ff";
-		        obj.childNodes.item(2).style.backgroundColor = "#f1f8ff";
+		       //  obj.childNodes.item(2).style.backgroundColor = "#f1f8ff";
 		    }
 		
 		    function event_dbclick() {}
@@ -186,9 +188,9 @@
                     <div style="border: 1px solid #e8e8e8;border-top:0px;border-bottom:0px; width: 750px; height: 500px;">
                         <table class="mainlist" style="width: 100%;">
                             <tr>
-                                <th style="width: 38%;"><span><spring:message code='ezSchedule.t999' /></span></th>
-                                <th style="width: 32%;"><span><spring:message code='ezSchedule.t12' /></span></th>
-                                <th style="width: 30%;"><span><spring:message code='ezSchedule.t205' /><spring:message code='ezSchedule.t12' /></span></th>
+                                <th style="width: 50%;"><span><spring:message code='ezSchedule.t999' /></span></th>
+<%--                                <th style="width: 32%;"><span><spring:message code='ezSchedule.t12' /></span></th>--%>
+                                <th style="width: 50%;"><span><spring:message code='ezSchedule.t205' /><spring:message code='ezSchedule.t12' /></span></th>
                             </tr>
                         </table>
                         <div id="contentlist" name="contentlist" style="height: 468px; overflow-y: auto;">

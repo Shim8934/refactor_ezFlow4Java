@@ -6,7 +6,8 @@
     <head>
     <title><spring:message code='ezStatistics.t2' /></title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <link rel="stylesheet" href="${util.addVer('ezStatistics.e2', 'msg')}" type="text/css" />
+    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+	<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
     <link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
 	<style>
 		#mCSB_1_container {
@@ -33,7 +34,7 @@
     	if (cChk == "1") {
         	parent.frames[1].location.href = "/admin/ezSystem/systemMainMenu.do";        
     	} else {
-    		parent.frames[1].location.href = "/admin/ezSystem/systemLoginHist.do";
+			parent.frames[1].location.href = "/admin/ezSystem/systemConnectorHist.do";
     	}
     };
 	
@@ -49,8 +50,11 @@
 	    switch(this_menu)
 	    {	
 	    	case "PARAMETER":
-           		parent.frames[1].location.href = "/admin/ezSystem/systemMainMenu.do";
-           	 	break;
+				parent.frames[1].location.href = "/admin/ezSystem/systemMainMenu.do";
+				break;
+			case "CONNECTORLIST":
+				parent.frames[1].location.href = "/admin/ezSystem/systemConnectorHist.do";
+				break;
 	    	case "LOGINHIST":
 	    		parent.frames[1].location.href = "/admin/ezSystem/systemLoginHist.do";
 	    		break;
@@ -90,13 +94,14 @@
 				fileExtensionViewType = 0;
 				parent.frames[1].location.href = "/admin/ezSystem/systemFileExtension.do";
 				break;
+			case "SYSTEMCONFIG":
+				parent.frames[1].location.href = "/admin/ezSystem/systemConfigList.do";
+				break;
+			case "FIDOMANAGER":
+				parent.frames[1].location.href = "/admin/ezSystem/fidoAuthenticationManager.do";
+				break;
 	    }
 	    
-	    $("#left .adminListBox h2 span").click(function(){
-			$("#left .adminListBox h2").removeClass("on");
-			$(this).parent().addClass("on");
-		})
-				
     }
 
 //     function goPage(idx)
@@ -117,13 +122,18 @@
 	        $(".adminListBox").mCustomScrollbar({
 	    		theme : "dark"
 	    	});
+	        
+	        $("#left .adminListBox h2 span").click(function(){
+				$("#left .adminListBox h2").removeClass("on");
+				$(this).parent().addClass("on");
+			});
 		});
         
-        function leftResize(){
-        	$(".adminListBox").height(window.innerHeight-58);
+        function leftResize() {
+        	$(".adminListBox").height(window.innerHeight - 58);
         }
         
-        $( window ).resize(function() {
+        $(window).resize(function() {
         	leftResize();
     	});
 
@@ -135,33 +145,38 @@
 		    <div class="adminListBox" style="overflow:hidden; padding-right: 0;">
 		    	<c:choose>
 		            <c:when test="${cChk == '1' }">
-		            	<h2 class="on"><span id="PARAMETER" style="display:inline-block;width:100%;" onClick="menu_change('PARAMETER')" ><spring:message code='main.kms1' /></span></h2>
+		            	<h2 class="on"><span class="h2Title" id="PARAMETER" style="display:inline-block;width:100%;" onClick="menu_change('PARAMETER')" ><spring:message code='main.kms1' /></span></h2>
 			            <h2>
 		            </c:when>
 		            <c:otherwise>
 		            	<h2 class="on">
 		            </c:otherwise>
 	            </c:choose>
-	            <span id="LOGINHIST" style="display:inline-block;width:100%;" onClick="menu_change('LOGINHIST')" ><spring:message code='ezSystem.x0021' /></span></h2>
-	            <h2><span id="ADMINACCESSHIST" style="display:inline-block;width:100%;" onClick="menu_change('ADMINACCESSHIST')" ><spring:message code='ezSystem.ls07' /></span></h2>
-				<h2><span id="USERCHANGEHIST" style="display:inline-block;width:100%;" onClick="menu_change('USERCHANGEHIST')" ><spring:message code='ezSystem.jhy01' /></span></h2>
-				<h2><span id="DEPTCHANGEHIST" style="display:inline-block;width:100%;" onClick="menu_change('DEPTCHANGEHIST')" ><spring:message code='ezSystem.jhy10' /></span></h2>
-				<h2><span id="PERMISSIONCHHIST" style="display:inline-block;width:100%;" onClick="menu_change('PERMISSIONCHHIST')" ><spring:message code='ezOrgan.ls06' /></span></h2>
+	            <span id="CONNECTORLIST" class="h2Title" style="display:inline-block;width:100%;" onClick="menu_change('CONNECTORLIST')" ><spring:message code='ezSystem.jhy17' /></span></h2>
+	            <h2><span id="LOGINHIST" class="h2Title" style="display:inline-block;width:100%;" onClick="menu_change('LOGINHIST')" ><spring:message code='ezSystem.x0021' /></span></h2>
+	            <h2><span id="ADMINACCESSHIST" class="h2Title" style="display:inline-block;width:100%;" onClick="menu_change('ADMINACCESSHIST')" ><spring:message code='ezSystem.ls07' /></span></h2>
+				<h2><span id="USERCHANGEHIST" class="h2Title" style="display:inline-block;width:100%;" onClick="menu_change('USERCHANGEHIST')" ><spring:message code='ezSystem.jhy01' /></span></h2>
+				<h2><span id="DEPTCHANGEHIST" class="h2Title" style="display:inline-block;width:100%;" onClick="menu_change('DEPTCHANGEHIST')" ><spring:message code='ezSystem.jhy10' /></span></h2>
+				<h2><span id="PERMISSIONCHHIST" class="h2Title" style="display:inline-block;width:100%;" onClick="menu_change('PERMISSIONCHHIST')" ><spring:message code='ezOrgan.ls06' /></span></h2>
 	            <c:if test="${cChk == '1' }">
-	            <h2><span id="ADMINIPMANAGER" style="display:inline-block;width:100%;" onClick="menu_change('ADMINIPMANAGER')" ><spring:message code='ezSystem.ksa08'/></span></h2>
+	            <h2><span id="ADMINIPMANAGER" class="h2Title" style="display:inline-block;width:100%;" onClick="menu_change('ADMINIPMANAGER')" ><spring:message code='ezSystem.ksa08'/></span></h2>
 	            </c:if>
+				<c:if test="${useFidoAccessMenu == 'YES' }">						
+					<h2><span id="FIDOMANAGER" class="h2Title" style="display:inline-block;width:100%;" onClick="menu_change('FIDOMANAGER')" ><spring:message code='ezSystem.fido012'/></span></h2>
+				</c:if>		
 	            <c:if test="${useIPAccessMenu == 'YES'}">
-	            	<h2><span id="IPMANAGER" style="display:inline-block;width:100%;" onClick="menu_change('IPMANAGER')" ><spring:message code='ezSystem.ksa02'/></span></h2>
+	            	<h2><span id="IPMANAGER" class="h2Title" style="display:inline-block;width:100%;" onClick="menu_change('IPMANAGER')" ><spring:message code='ezSystem.ksa02'/></span></h2>
 	            </c:if>
-	            <h2><span id="MULTILOGIN" style="display:inline-block;width:100%;" onClick="menu_change('MULTILOGIN')" ><spring:message code="ezSystem.kbh08" /></span></h2>
-	            <h2><span id="PASSWORDPOLICY" style="display:inline-block;width:100%;" onClick="menu_change('PASSWORDPOLICY')" ><spring:message code='ezSystem.ksaPwPolicy01' /></span></h2>
+	            <h2><span id="MULTILOGIN" class="h2Title" style="display:inline-block;width:100%;" onClick="menu_change('MULTILOGIN')" ><spring:message code="ezSystem.kbh08" /></span></h2>
+	            <h2><span id="PASSWORDPOLICY" class="h2Title" style="display:inline-block;width:100%;" onClick="menu_change('PASSWORDPOLICY')" ><spring:message code='ezSystem.ksaPwPolicy01' /></span></h2>
 	            <c:if test="${cChk == '1' && useSystemMonitor != 'NO'}">
-	            	<h2><span id="SYSMONITOR" style="display:inline-block;width:100%;" onClick="menu_change('SYSMONITOR')" ><spring:message code='ezSystem.pjg08' /></span></h2>
+	            	<h2><span id="SYSMONITOR" class="h2Title" style="display:inline-block;width:100%;" onClick="menu_change('SYSMONITOR')" ><spring:message code='ezSystem.pjg08' /></span></h2>
 	            </c:if>
 	            <c:if test="${useModuleUsage == 'YES'}">
-	            	<h2><span id="MODMONITOR" style="display:inline-block;width:100%;" onClick="menu_change('MODMONITOR')" ><spring:message code='ezSystem.kbh21' /></span></h2>
+	            	<h2><span id="MODMONITOR" class="h2Title" style="display:inline-block;width:100%;" onClick="menu_change('MODMONITOR')" ><spring:message code='ezSystem.kbh21' /></span></h2>
 	            </c:if>
-				<h2><span id="FILEEXTENSION" style="display:inline-block;width:100%;" onClick="menu_change('FILEEXTENSION')" ><spring:message code='ezSystem.x0009' /></span></h2>
+				<h2><span id="FILEEXTENSION" class="h2Title" style="display:inline-block;width:100%;" onClick="menu_change('FILEEXTENSION')" ><spring:message code='ezSystem.x0009' /></span></h2>
+		        <h2><span id="SYSTEMCONFIG" class="h2Title" style="display:inline-block;width:100%;" onClick="menu_change('SYSTEMCONFIG')" >SYSTEM CONFIG</span></h2>
 			</div>
       	</div>
     </body>

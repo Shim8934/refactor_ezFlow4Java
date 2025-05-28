@@ -6,7 +6,8 @@
 	<head>
 		<title><spring:message code="ezResource.t142"/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezResource.e2', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript">
 			var strBrd_ID = "${strBrdID}";
@@ -31,15 +32,21 @@
 					document.getElementById("preview2").style.width = "200px";
 					document.getElementById("preview2").style.height = "200px";
 				}
-				adjustTextareaHeight();
                 window.addEventListener('resize', adjustTextareaHeight);
 			}
-			function adjustTextareaHeight() {
-                var secondRowFirstTD = document.getElementById('secondRowFirstTd');
-                var windowHeight = window.innerHeight;
-                var newHeight = windowHeight < 599 ? 183 : windowHeight - document.querySelector('tbody tr:first-child').offsetHeight - 25;
-                secondRowFirstTD.style.height = newHeight + 'px';
 
+			function adjustTextareaHeight() {
+                var viewScale = window.devicePixelRatio;
+                var windowHeight = window.innerHeight;
+                if (viewScale < 0.9 || windowHeight > 700) {
+                    var secondRowFirstTD = document.getElementById('secondRowFirstTd');
+                    var newHeight = windowHeight - document.getElementById('firstRowFirstTrTable').offsetHeight - 125;
+                    secondRowFirstTD.style.height = newHeight + 'px';
+                } else {
+                    var secondRowFirstTD = document.getElementById('secondRowFirstTd');
+                    var newHeight = 183;
+                    secondRowFirstTD.style.height = newHeight + 'px';
+                }
             }
 
 			function btnClose_Click(){
@@ -57,7 +64,7 @@
           					<li><span onClick="btnClose_Click()"></span></li>
         				</ul>
       				</div>
-      				<table class="content">
+      				<table id="firstRowFirstTrTable" class="content">
         				<tr>
         				<th> <spring:message code="ezResource.t153"/></th>
           					<td colspan="2"  name="Owner" idval="${ownerID}" nmval="${strBrdNm}">
@@ -105,6 +112,17 @@
           					<th> <spring:message code="ezResource.t148"/></th>
           					<td colspan="2" name="ResLocation"> ${resLocation} </td>
         				</tr>
+						<tr>
+							<th> <spring:message code="ezResource.lyj01"/></th>
+							<td colspan="3">
+								<c:if test="${repeatFlag eq 1}">
+									<spring:message code="ezResource.lyj02"/>
+								</c:if>
+								<c:if test="${repeatFlag eq 0}">
+									<spring:message code="ezResource.lyj03"/>
+								</c:if>
+							</td>
+						</tr>
         				<tr>
           					<th> <spring:message code="ezResource.t149"/></th>
           					<td colspan="2">
@@ -141,7 +159,7 @@
       			</td>
   			</tr>
   			<tr>
-    			<td id="secondRowFirstTd" style="padding-bottom:1px; height: 190px; padding-right:12px">
+    			<td id="secondRowFirstTd" style="padding-bottom:1px; height: 100%; padding-right:12px">
     			    <textarea name="Brd_Explain" style="width:100%; height: 100%; resize:none" readonly><c:out value='${brdExplain}' /></textarea>
     			</td>
   			</tr>

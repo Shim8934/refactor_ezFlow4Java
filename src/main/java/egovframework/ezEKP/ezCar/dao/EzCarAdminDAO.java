@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezCar.vo.CarGetClsAclListVO;
 import egovframework.ezEKP.ezCar.vo.CarGetSubClsListVO;
-import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzCarAdminDAO")
 public class EzCarAdminDAO extends EgovAbstractDAO {

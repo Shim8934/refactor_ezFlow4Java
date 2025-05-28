@@ -7,7 +7,8 @@
 	<head>
 		<title><spring:message code="ezEmail.t177"/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/previewmail.css')}">
 		<link href="${util.addVer('/js/jquery/jquery.modal.css')}" rel="stylesheet" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('/css/jquery-ui.css')}" type="text/css">
@@ -32,9 +33,10 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/leftmenu-util.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.modal.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/email_tag.js')}"></script>
 		<script type="text/javascript">
 		    var g_bdraft = false;
-		    var g_moveUrl = "<c:out value='${url}'/>";
+		    var g_moveUrl = "<c:out value='${url}' escapeXml='false'/>";
 		    var g_servername = "${serverName}";	
 			var g_expath = "exchange";
 			var g_userID = "${userId}";
@@ -122,6 +124,7 @@
 		    var useMailConfirm = "${useMailConfirm}";
 		    var mailsearchDetail = "N";
 		    var mailSearchDetailCheck = "N";// 메일 검색을 위해 height를 200을 줄였는지 체크하는 config
+		    var pDeleteBoxID = "${pDeleteBoxID}";
 		    var offsetMin = "${offsetMin}";
 		    var searchCArray = new Array();
 			var searchKArray = new Array();
@@ -282,6 +285,9 @@
 		    		document.getElementById("toggle_flag_btn").style.display = "none"; 
 		    		document.getElementById("read_stat").style.display = "none";
 		    		document.getElementById("unread_stat").style.display = "none";
+		    		document.getElementById("deleteone").style.display = "none";
+		    		document.getElementById("trashBtn").style.display = "none";
+		    		document.getElementById("trashUnreadBtn").style.display = "none";
 		    		$('#liReSend').css('display', 'block');
 		    		document.getElementById("MailHeader").style.minWidth = "600px";
 		    		document.getElementById("contentlist").style.minWidth = "600px";
@@ -299,6 +305,10 @@
 		        CurrenWidth = document.body.clientWidth;
 		        
 		        switch (g_foldertype) {
+		            case "allMail":
+		                trashUnreadBtn.style.display = 'none';
+		                importBtn.style.display = 'none';
+		                break;
 		            case "sent":
 		                receivecheck.style.display = "";
 		                reply.style.display = 'none';
@@ -331,6 +341,11 @@
 		            	break;
 					case "tag":
 						p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFileTagTable.xml";
+						// 2024-08-13 안읽은 메일 일괄삭제 기능은 태그 지원 안함
+                        // 태그는 기본적으로 읽은 메일이며, 중요도 높은 메일로 본 기능과 연관성이 매우 낮음
+                        // 하지만 스팩 변경의 경우를 대비하여 function과 backend에는 코드 남겨둠
+						document.getElementById("trashUnreadBtn").style.display = "none";
+						importBtn.style.display = 'none';
 						break;
 		        }
 		        
@@ -358,6 +373,7 @@
 		        	importBtn.style.display = 'none';
 		        	moveBtn.style.display = 'none';
 		        	trashBtn.style.display = 'none';
+		        	trashUnreadBtn.style.display = 'none';
 		        	deleteone.style.display = 'none';
 		        	deleteall.style.display = 'none';
 		        	moveMenu.style.display = 'none';
@@ -470,7 +486,7 @@
 
 				// 미리보기에서 태그 인풋 엔터시 추가
 				$("#pre_h_tag_add, #pre_w_tag_add").on("keydown", function(e) {
-					if (e.keyCode == 13) onEnterPreviewTagInput();
+					if (e.keyCode == 13) onEnterPreviewTagInput_previewShow();
 				}).each(function(i, element) {
 					inputUtil.makeNotAllowTyping(element, /[!@#$%^&()\\\/:*?"<>|'`]/g);
 					inputUtil.makeReplaceTyping(element, /\s/g, '_');
@@ -498,11 +514,79 @@
 					},
 					minLength: 2,
 					selectFirst: true,
-					autoFocus: false,
+					//autoFocus: false,
+				}).on("input", function(e) {
+					var pageType = pPreviewShow_HOW == "H" ? "_h" : "_w";
+					var inputWrap = document.getElementById("input_wrap"+pageType);
+
+					// 클래스에 "on"이 있으면 제거
+					if (inputWrap.classList.contains("on")) {
+						inputWrap.classList.remove("on");
+					}
 				});
 
-				$("#pre_h_tag_add + .imgbtn, #pre_w_tag_add + .imgbtn").on("click", onEnterPreviewTagInput);
-		    }
+				$("#input_wrap_h + .imgbtn, #input_wrap_w + .imgbtn").on("click", onEnterPreviewTagInput_previewShow);
+
+				var layerSelect = null;
+				var viewMore = null;
+
+				function hideLayer(event) {
+					if (!event || !event.target) {
+						layerSelect.style.display = 'none';
+						viewMore.classList.remove('on');
+						return;
+					}
+					
+					if (layerSelect && !event.target.closest('.layer_select')) {
+						layerSelect.style.display = 'none'; 
+						viewMore.classList.remove('on');
+					}
+				}
+
+				function showLayer(layer, targetElement) {
+					if (viewMore.classList.contains('on')) {
+						hideLayer();
+						viewMore.classList.remove('on');
+						return;
+					}
+
+					var rect = targetElement.getBoundingClientRect();
+					
+					layer.style.position = 'fixed';
+					layer.style.display = 'block';
+					layer.style.top = rect.bottom + "px";
+					layer.style.left = rect.left + "px";
+					viewMore.classList.add('on'); 
+
+				}
+
+				function setUpLayerToggle() {
+					viewMore = document.querySelector('.view_more');
+					layerSelect = document.querySelector('.layer_select');
+					if (!viewMore || !layerSelect) return;
+
+					window.parent.parent.parent.frames['topFrame'].contentWindow.document.addEventListener('click', hideLayer);
+					
+					window.parent.frames['left'].document.addEventListener('click', hideLayer);
+
+					document.addEventListener('click', hideLayer);
+					
+					Array.from(window.frames).forEach((frame) => {
+						try {
+							frame.document.addEventListener('click', hideLayer);
+						} catch (e) {
+							console.error('frame error :', e);
+						}
+					});
+
+					viewMore.addEventListener('click', (event) => {
+						event.stopPropagation(); 
+						showLayer(layerSelect, viewMore); 
+					});
+				}
+
+				setUpLayerToggle();
+			}
 		    
 		    $(document).ready(function() {
 		    	var clickOutside;
@@ -544,7 +628,6 @@
 				dragDropAreaElmt.ondragenter = function(e) {onDragEnter(e)};
 				dragDropAreaElmt.ondragover  = function(e) {onDragOver(e)};
 				dragDropAreaElmt.ondrop      = function(e) {onDrop(e)};
-		    	
 		    });
 		    
 		    function ReSendWithURLOnly(pURL) {
@@ -599,8 +682,14 @@
 	            createNodeAndInsertText(xmlpara, objNode, "PREVIEWHCONTENT", parseInt(pMailPreVDiv_H));
 	            createNodeAndInsertText(xmlpara, objNode, "PREVIEWSUBTREE", previewSubTree);
 	            createNodeAndInsertText(xmlpara, objNode, "PREVIEWMAILIMAGE", previewMailImage);
+	            createNodeAndInsertText(xmlpara, objNode, "PREVIEWMAIL", "${mailGeneral.previewMail}");
 	            createNodeAndInsertText(xmlpara, objNode, "MAILSEARCHPERIOD", mailSearchPeriod);
+	            createNodeAndInsertText(xmlpara, objNode, "MAILSENDRESULT", "${mailGeneral.mailSendResult}");
 	            createNodeAndInsertText(xmlpara, objNode, "TEXTOPTION", "${mailGeneral.textOption}");
+	            createNodeAndInsertText(xmlpara, objNode, "DEFAULTCURSORPOSITION", "${mailGeneral.defaultCursorPosition}");
+	            createNodeAndInsertText(xmlpara, objNode, "DEFAULTSEPARATESEND", "${mailGeneral.defaultSeparateSend}");
+				createNodeAndInsertText(xmlpara, objNode, "EDITORFONTFAMILY", "${mailGeneral.editorFontFamily}");
+				createNodeAndInsertText(xmlpara, objNode, "EDITORFONTSIZE", "${mailGeneral.editorFontSize}");	            
 	            
 	            xmlhttp.open("POST", "/ezEmail/mailGeneralSave.do", true);
 	            xmlhttp.onreadystatechange = function() {
@@ -645,7 +734,12 @@
 		        ContextMenuHidden();
 		    	searchMode = true;
 		        var inputkeyword = document.getElementsByName('keyword').item(0);
-		        
+
+		        if(inputkeyword.value.length == 1) {
+		            alert("<spring:message code='ezSystem.yja01' />");
+		            return;
+		        }
+
 		        if (inputkeyword.value.indexOf("%") != -1) {
 		            alert("'%'" + strLang148);
 		            return;
@@ -663,13 +757,17 @@
 		        var searchField = document.getElementById("searchCheck");
 		        SearchKeyword = searchField.value + "=" + inputkeyword.value;
 		        
-		        if (inputkeyword.value != null){
+		        if (inputkeyword.value){
 		      		searchCArray.push(TrimText(searchField.value));
 		  			searchKArray.push(TrimText(inputkeyword.value));
 	    		}
 		        mailsearchDetail = "N";
 		        
 		        goToPageByNum("1");
+				try {
+					if (document.getElementById("HeaderAllCheckBox") != null)
+						document.getElementById("HeaderAllCheckBox").checked = false;
+				} catch (e) {console.log(e);}
 		    }
 		    
 		    function start_search() {
@@ -1435,7 +1533,8 @@
 			function cancleProgress(){
 	        	HiddenMailProgressNew();
 	        	mailboxProgressFun(false);
-	        	webSocket.close();
+	        	// 편지함 가져오기 업로드 도중 취소가 안되는 문제 수정
+	        	//webSocket.close();
 	        	location.reload();
 			}
 			
@@ -1500,54 +1599,73 @@
 					document.getElementById("file").value = null;
 				}
 			}
-			
+
 			// 20200407 조진호 - 한국고용정보원에서 개발된 해킹의심메일 신고 기능 표준 적용
 			var xmlhttp_HackinMail;
+			var hacking_mail_report_message_cross_dialogArguments = new Array();
 			function moveHackingMail() {
-				
+
 				if (listContentArry.length < 1) {
-					alert("<spring:message code='ezEmail.zno001' />");
+					alert(strLang42);
 					return;
 				}
-				
-				var szItemID = "";
-		        for (var i = 0; i < listContentArry.length; i++) {
-		            szItemID += document.getElementById(listContentArry[i]).getAttribute("_href") + ",";
-		        }
-				
-				var xmlpara = createXmlDom();
-			    var objNode;
-			    xmlhttp_HackinMail = createXMLHttpRequest();
-			    createNodeInsert(xmlpara, objNode, "DATA");
-			    createNodeAndInsertText(xmlpara, objNode, "CMD", "MOVE");
-			    createNodeAndInsertText(xmlpara, objNode, "UNIQUEID", szItemID);
-			    
-			    var requestUrl = "/ezEmail/hackingMailMoveAndSend.do";
 
-			    xmlhttp_HackinMail.open("POST", requestUrl, true);
-			    xmlhttp_HackinMail.onreadystatechange = moveHackingMail_complete;
-			    xmlhttp_HackinMail.send(xmlpara);
+				var szItemID = "";
+				var message = new Array;
+				for (var i = 0; i < listContentArry.length; i++) {
+					szItemID += document.getElementById(listContentArry[i]).getAttribute("_href") + ",";
+				}
+
+				message['message'] = "";
+				message['szItemID'] = szItemID;
+
+				hacking_mail_report_message_cross_dialogArguments[0] = message;
+				hacking_mail_report_message_cross_dialogArguments[1] = reportHackingMessage_complete;
+				hacking_mail_report_message_cross_dialogArguments[2] = DivPopUpHidden_sub;
+
+				DivPopUpShow_sub(450, 320, "/ezEmail/hackingMailReportMessage.do");
+				$("<div id='blockLeft' class='blockLeft' style='position:fixed; width:100%;height:100%; overflow:hidden;'></div>").appendTo(parent.frames["left"].document.body);
+
 			}
-			
+
+			function reportHackingMessage_complete(rtn) {
+				$(parent.frames["left"].document.getElementById("blockLeft")).remove();
+				var message = rtn['message'];
+				var szItemID = rtn['szItemID'];
+				var xmlpara = createXmlDom();
+				var objNode;
+				xmlhttp_HackinMail = createXMLHttpRequest();
+				createNodeInsert(xmlpara, objNode, "DATA");
+				createNodeAndInsertText(xmlpara, objNode, "CMD", "MOVE");
+				createNodeAndInsertText(xmlpara, objNode, "MESSAGE", message);
+				createNodeAndInsertText(xmlpara, objNode, "UNIQUEID", szItemID);
+
+				var requestUrl = "/ezEmail/hackingMailMoveAndSend.do";
+
+				xmlhttp_HackinMail.open("POST", requestUrl, true);
+				xmlhttp_HackinMail.onreadystatechange = moveHackingMail_complete;
+				xmlhttp_HackinMail.send(xmlpara);
+			}
+
 			function moveHackingMail_complete() {
-			    if (xmlhttp_HackinMail != null && xmlhttp_HackinMail.readyState == 4) {
-			        if (xmlhttp_HackinMail.status >= 200 && xmlhttp_HackinMail.status < 300) {
-			        	pRtnMessage = xmlhttp_HackinMail.responseText;
-			        	
-			        	if (pRtnMessage.indexOf("NO COPY processing failed.") > -1) {
-			        		alert(strLang241);
-			        	} else if ("OK") {
-				        	MailListRefresh();
-				            prevShow_Clear();
-				            alert("<spring:message code='ezEmail.zno003' />");
-			        	} else {
-			        		alert(strLang5);
-			        	}
-			        }
-			        else {
-			            alert(strLang5);
-			        }
-			    }
+				if (xmlhttp_HackinMail != null && xmlhttp_HackinMail.readyState == 4) {
+					if (xmlhttp_HackinMail.status >= 200 && xmlhttp_HackinMail.status < 300) {
+						pRtnMessage = xmlhttp_HackinMail.responseText;
+
+						if (pRtnMessage.indexOf("NO COPY processing failed.") > -1) {
+							alert(strLang241);
+						} else if (pRtnMessage.indexOf("OK") > -1) {
+							MailListRefresh();
+							prevShow_Clear();
+							alert("<spring:message code='ezEmail.zno003' />");
+						} else {
+							alert(strLang5);
+						}
+					}
+					else {
+						alert(strLang5);
+					}
+				}
 			}
 			function addSearch() {
 				if($("#moreSearch").css("display") == "none"){   
@@ -1563,7 +1681,7 @@
 				    $("#searchButton").css("display", "none");   
 				    document.getElementsByName("keyword")[0].disabled = false;
 				    document.getElementById("searchCheck").disabled = false;
-				    document.getElementById("searchCheck").style.backgroundColor="rgb(248 248 248)";
+				    document.getElementById("searchCheck").style.backgroundColor="rgb(255,255,255)";
 				} 
 			}
 			function doLayerPopup() {
@@ -1651,7 +1769,7 @@
 	    			data : {"userKey" : userKey}
 		    	});
 		    }
-		    
+			
 		</script>	
 		<style>
 			<c:if test="${useMailTag}">
@@ -1813,7 +1931,7 @@
 								<li class="content_layout_center">
 									<span id="datepickerData">
 										<input type="text" id="Sdatepicker" style="height:30px;" disabled="" readonly size="10" readonly> ~ 
-			    						<input type="text" id="Edatepicker" style="height:30px;" size="10" disabled="" readonly></span>
+			    						<input type="text" id="Edatepicker" style="height:30px;" size="10" disabled="" readonly>
 									</span>
 								</li>
 							</ul>
@@ -1839,24 +1957,30 @@
 	          <li id="relayBtn" class="important"><span onClick="transmission_mail_onclick()"><spring:message code="ezEmail.t513" /></span></li>
 	          <!-- <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
 	          <li id="read_stat"><span onClick="Read_StatusChange('R');" ><spring:message code="ezEmail.t99000006" /></span></li>
-	          <li id="unread_stat"><span onClick="Read_StatusChange('U');"><spring:message code="ezEmail.t99000007" /></span></li>
-	          <li onClick="mail_export();" id="EmailPCSave"><span><spring:message code="ezEmail.t378" /></span></li>
-              <li id="importBtn" onClick="mail_import_onclick();"><span><spring:message code="ezEmail.t407" /></span></li>
 	          <li id="moveBtn"><span onClick="move_mail_onclick()"><spring:message code="ezEmail.t482" /></span></li>
 	          <!-- <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
 	          <li id="deleteone"><span onClick="deleteWork(true)"><spring:message code="ezEmail.t156" /></span></li>
 	          <li id="deleteall" style="display:none"><span onClick="delAllFile()"><spring:message code="ezEmail.t514" /></span></li>
 	          <li id="receivecheck" style="display:none" ><span onClick="receiveCheck_onClick()"><spring:message code="ezEmail.t516" />/<spring:message code="ezEmail.t549" /></span></li>
-	          <li id="btnReject" style="display:none"><span onClick="reject_onclick()"><spring:message code="ezEmail.t270" /></span></li>
-	          <c:if test="${useMailConfirm == 'YES'}">
-	          <li onClick="mailConfirm_flag_btn()"><span><spring:message code="ezEmail.ksa13" /></span></li>
-			  </c:if>
 	          <li id="toggle_flag_btn" onClick="toggle_flag();" ><span class="icon16 icon16_star"></span></li>
 	          <li id="trashBtn"><span class="icon16 icon16_delete" onClick="deleteWork(false)"></span></li>
+              <li id="trashUnreadBtn" title="<spring:message code="ezEmail.unread.delete" />"><span class="icon16 icon16_unreadMail_del" onClick="deleteUnreadWork()"></span></li>
 	          <li onClick="MailListRefresh()"><span class="icon16 icon16_refresh"></span></li>
 	          <c:if test="${useHackingMailReport == 'YES'}">
 			  <li id="hackingMail" title="<spring:message code="ezEmail.zno002" />"><span class="icon16 icon16_spam" onClick="moveHackingMail()"></span></li>		
 			  </c:if>
+			  <li class="view_more">
+				  <span class="view_icon"><img src="/images/ImgIcon/view_more.png"></span>
+				  <ul class="layer_select">
+					  <li id="unread_stat" onClick="Read_StatusChange('U');"><spring:message code="ezEmail.t99000007" /></li>
+					  <li id="EmailPCSave" onClick="g_moveUrl === 'allMail' ? mail_export_exec(true) : mail_export()"><spring:message code="ezEmail.t378" /></li>
+					  <li id="importBtn" onClick="mail_import_onclick();"><spring:message code="ezEmail.t407" /></li>
+					  <li id="btnReject" onClick="reject_onclick()" style="display:none"><spring:message code="ezEmail.t270" /></li>
+					  <c:if test="${useMailConfirm == 'YES'}">
+						  <li onClick="mailConfirm_flag_btn()"><spring:message code="ezEmail.ksa13" /></li>
+					  </c:if>
+				  </ul>
+			  </li>
 	          
 			 <!--  <li id="right">
 	          	<img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onclick="PreviewRayerChange('NONE')">
@@ -1904,7 +2028,7 @@
 	                    </select>
 	                </td>
                   </tr>
-                  <tr>
+                  <tr id="selectViewList">
                     <th><spring:message code="ezEmail.t99000035" /></th>
                     <td>
                     	<select name="select" id="select" onChange="on_changeViewList(this.value)" style="height:20px;width:120px;">       
@@ -1920,6 +2044,7 @@
                     		<option VALUE="SECUREMAIL"><spring:message code="ezEmail.yja001" /></option>
                    		</c:if>
                     		<option VALUE="IMPORTANT"><spring:message code="ezEmail.kes047" /></option>
+                    		<option VALUE="ATTACH"><spring:message code="ezEmail.t557"/> </option>
                     	</select>
 	                </td>
                   </tr>
@@ -2002,8 +2127,16 @@
 				                    </li>
 									<c:if test="${useMailTag}">
 										<li class="preT_list tagli"><span class="cblack"><spring:message code="ezEmail.tag" /></span>
-											<input id="pre_h_tag_add" type="text" maxlength="100" />
-											<a class="imgbtn"><span><spring:message code="ezEmail.tag.user.addbtn" /></span></a>
+											<span class="input_select">
+												<sapn class="input_wrap" id="input_wrap_h">
+													<input id="pre_h_tag_add" type="text" maxlength="100" />
+													<span class="input_select_arrow" onclick="$('#input_wrap_h').toggleClass('on');getTagList('h')"></span>
+												</sapn>
+												<a class="imgbtn"><span><spring:message code="ezEmail.tag.user.addbtn" /></span></a>
+												<ul class="layer_select" id="layer_select_h">
+
+												</ul>
+											</span>
 											<div id="pre_h_tag_view" style="padding-left: 60px;"></div>
 										</li>
 									</c:if>
@@ -2071,8 +2204,16 @@
 				                    </li>
 									<c:if test="${useMailTag}">
 										<li class="preT_list tagli"><span class="cblack"><spring:message code="ezEmail.tag" /></span>
-											<input id="pre_w_tag_add" type="text" maxlength="100" />
-											<a class="imgbtn"><span><spring:message code="ezEmail.tag.user.addbtn" /></span></a>
+											<span class="input_select">
+												<sapn class="input_wrap" id="input_wrap_w" style="float: revert">
+													<input id="pre_w_tag_add" type="text" maxlength="100" />
+													<span class="input_select_arrow" onclick="$('#input_wrap_w').toggleClass('on');getTagList('w')"></span>
+												</sapn>
+												<a class="imgbtn"><span><spring:message code="ezEmail.tag.user.addbtn" /></span></a>
+												<ul class="layer_select" id="layer_select_w">
+
+												</ul>
+											</span>
 											<div id="pre_w_tag_view" style="padding-left: 60px;"></div>
 										</li>
 									</c:if>
@@ -2155,8 +2296,12 @@
 	        <input type="file" name="file1" id="file1" accept=".zip" onchange="mailbox_attach_import()" style="display: none"/>
 	    </form>
 	    <div class="layerpopup"  style="z-index: 10000; position: absolute;display: none;" id="iFramePanel">
-	    <iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+	    	<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 	    </div>
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel_sub">&nbsp;</div>
+		<div class="layerpopup"  style="z-index:2000; position:absolute; display:none; overflow:hidden;" id="iFramePanel_sub">
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer_sub"></iframe>
+		</div>
 	    <div style="width:200px;height:50px;border:0px solid red;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="MailProgress">
 		    <img src="/images/email/progress_img.gif" style="vertical-align:middle;"/>
 		</div>
@@ -2204,7 +2349,12 @@
 		} else {
 			this.usepostDate = true;
 		}
-    	
+
+    	if (TrimText(prekeywordDetail1.value).length == 1 || TrimText(prekeywordDetail2.value).length == 1 || TrimText(prekeywordDetail3.value).length == 1) {
+    	    alert("<spring:message code='ezSystem.yja01' />");
+    	    return;
+    	}
+
    		if (!TrimText(prekeywordDetail1.value) && !TrimText(prekeywordDetail2.value) && !TrimText(prekeywordDetail3.value) && !this.usepostDate ) {
     		alert(strLang254);
             return;

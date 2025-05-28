@@ -11,6 +11,7 @@ import javax.annotation.Resource;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -589,7 +590,9 @@ public class EzEmailUserAdminServiceImpl implements EzEmailUserAdminService {
 					}					
 				}
 			}						
-		} catch (Exception e) {
+		} catch (ParseException e) {
+			logger.error(e.getMessage(), e);
+        } catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
 		
@@ -621,6 +624,8 @@ public class EzEmailUserAdminServiceImpl implements EzEmailUserAdminService {
 					reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
 				}
 			}	
+		} catch (ParseException e) {
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -699,7 +704,7 @@ public class EzEmailUserAdminServiceImpl implements EzEmailUserAdminService {
 	}
 	
 	@Override
-	public void setMailCancelSend(int tenantId, String primary, String pMessageId, String pUserId, String pSubject, List<String> pInnerAddresses, Locale locale) throws Exception {
+	public void setMailCancelSend(int tenantId, String primary, String pMessageId, String pUserId, String pSubject, List<String> pInnerAddresses, Locale locale, String eachCancel) throws Exception {
 		logger.debug("setMailCancelSend started.");
 		logger.debug("tenantId=" + tenantId + ",primary=" + primary + ",pMessageId=" + pMessageId + ",pUserId=" + pUserId + ",pSubject=" + pSubject);
 		
@@ -736,11 +741,77 @@ public class EzEmailUserAdminServiceImpl implements EzEmailUserAdminService {
 		
 		//회수처리 함수 호출(비동기)
 		if (recallIdx != null && !recallIdx.equals("") && !recallIdx.equals("0")) {
-			ezEmailAsync.cancelMailDelete(recallIdx, tenantId, locale);
+			ezEmailAsync.cancelMailDelete(recallIdx, tenantId, locale, pUserId, eachCancel, recallIdx);
 		} else {
 			throw new Exception("Cannot get recallIdx. So, cannot call cancelMailDelete method(Async).");
 		}
 		
 		logger.debug("setMailCancelSend ended.");
+	}
+
+	@Override
+	public int removeUserMailSetting(String userEmailAddress) throws Exception {
+		logger.debug("removeUserMailSetting started. userEmailAddress=" + userEmailAddress);
+
+		String inputParams = "userEmailAddress=" + URLEncoder.encode(userEmailAddress, "UTF-8");
+
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/removeUserMailSet";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+		logger.debug("response=" + response);
+
+		String resultCode = "Error";
+		int reasonCode = -100;
+
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject) jsonParser.parse(response);
+
+			resultCode = (String) responseObj.get("resultCode");
+
+			if (resultCode.equals("OK")) {
+				reasonCode = ((Long) responseObj.get("reasonCode")).intValue();
+			}
+		}
+
+		logger.debug("retireUser ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+
+		return reasonCode;
+	}
+	
+	@Override
+	public int checkUserPrimaryMail(String userEmailAddress, int tenantId) throws Exception {
+		logger.debug("checkUserPrimaryMail started. userEmailAddress=" + userEmailAddress);
+
+		String userIdParam = "userEmailAddress=" + URLEncoder.encode(userEmailAddress, "UTF-8") + "&tenantId="
+				+ URLEncoder.encode(Integer.toString(tenantId), "UTF-8");
+		String inputParams = userIdParam;
+
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/checkUserPrimaryMail";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+		logger.debug("response=" + response);
+
+		String resultCode = "Error";
+		int reasonCode = -100; // 웹서비스로부터 아무런 응답을 받지 못하거나 OK 응답이 오지 않은 경우를 의미
+
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject) jsonParser.parse(response);
+
+			resultCode = (String) responseObj.get("resultCode");
+
+			if (resultCode.equals("OK")) {
+				reasonCode = ((Long) responseObj.get("reasonCode")).intValue();
+			}
+		}
+
+		logger.debug("checkUserPrimaryMail ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+
+		return reasonCode;
 	}
 }

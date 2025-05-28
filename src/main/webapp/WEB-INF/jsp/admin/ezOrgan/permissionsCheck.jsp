@@ -6,7 +6,8 @@
 	<head>
 		<title><spring:message code='ezOrgan.t00004' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
-	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e2', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
 	    <style>
 	    	.box {
@@ -25,9 +26,6 @@
 	    	#countInfo {
 	    		overflow: hidden;
 	    		display: inline-block;
-	    	}
-	    	.countColor {
-	    		color:#017BEC;
 	    	}
 	    </style>
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -73,7 +71,7 @@
 		    $(document).ready(function(){
 		    	try {
 	                ReturnFunction = opener.permissions_check_dialogArguments[1];
-	            } catch (e) {}	        
+	            } catch (e) {console.log(e);}
 
 		        try {
 		            var ua = navigator.userAgent;
@@ -86,11 +84,11 @@
 		                    }
 		                }
 		            }
-		        } catch (e) {}
+		        } catch (e) {console.log(e);}
 	
 		        popupTitle();
-		        
-		        var strQuery = "<DATA><DEPTID><c:out value='${userInfo.deptID}'/></DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP></PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
+				var top = (type ==='c=1') ? "top" : deptTreeTopId + "/organ"
+		        var strQuery = "<DATA><DEPTID></DEPTID><TOPID>" + top + "</TOPID><PROP></PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT><ADMINORGAN>y</ADMINORGAN></DATA>";
 		        xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		        xmlHTTP.onreadystatechange = event_GetDeptTreeInfo;
 		        xmlHTTP.send(strQuery);
@@ -173,6 +171,7 @@
 		        createNodeAndInsertText(xmlpara, objNode, "DEPTID", deptID);
 		        createNodeAndInsertText(xmlpara, objNode, "PROP", "mail;displayName");
 		        createNodeAndInsertText(xmlpara, objNode, "DISPLAY_TRASH_DEPT", "");
+				createNodeAndInsertText(xmlpara, objNode, "ADMINORGAN", "y");
 
 		        xmlHTTP.open("POST", "/ezOrgan/getDeptSubTreeInfo.do", false);
 		        xmlHTTP.send(xmlpara);
@@ -248,7 +247,7 @@
 		        	type : "POST",
 		        	dataType : "text",
 		        	url : "/ezOrgan/getDeptMemberList.do",
-		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;extensionAttribute1;usertype;department;extensionAttribute7", type : "user", noAddJob : "Y"},
+		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;extensionAttribute1;usertype;department;extensionAttribute7", type : "user", noAddJob : "Y", adminOrgan : 'y'},
 		        	success : function(xml){
 		        		result=loadXMLString(xml);
 		        		var headerData = createXmlDom();
@@ -289,9 +288,9 @@
 							var strIsLeaf = $("div#" + id + "").attr("isleaf");
 							
 							if (result.containLow == "YES" && strIsLeaf != "TRUE") { //하위가 있고, 표기방식이 [1명/ 전체10명]일 경우
-			        			document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='countColor'>" + result.totalCount + "</span> / <span class='countColor'>" + result.totalCount2 + "</span>";
+			        			document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='txt_color'>" + result.totalCount + "</span> / <span class='txt_color'>" + result.totalCount2 + "</span>";
 							} else {
-								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='countColor'>" + result.totalCount + "</span>";
+								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='txt_color'>" + result.totalCount + "</span>";
 							}
 							//2018-08-01 김보미 - 부서명 [사원수] 가 넘치는지 확인하는 함수
 							deptNameLong(result.containLow, strIsLeaf);
@@ -322,11 +321,11 @@
 		        
 		        var UserListHTML = "";
 		        /* if (SelectDeptNM.getAttribute("countinfo") != "1") {
-		            //SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang24 + "</span>]";
+		            //SelectDeptNM.innerHTML += "-[<span class='txt_color'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang24 + "</span>]";
 		            if (SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length ==  getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0])) {
-	        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang24 + "</span>]";
+	        			SelectDeptNM.innerHTML += "-[<span class='txt_color'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang24 + "</span>]";
 	        		} else {
-	        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + "/" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0]) + strLang24 + "</span>]";
+	        			SelectDeptNM.innerHTML += "-[<span class='txt_color'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + "/" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0]) + strLang24 + "</span>]";
 	        		}
 		            
 		            SelectDeptNM.setAttribute("countinfo", "1")
@@ -339,7 +338,7 @@
 		            document.getElementById("Search_txtlist_table").style.display = "none";
 		            
 		            if (pSeach) {
-	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px;\" >" + "<span id='spn_deptName'>" + "<spring:message code='ezOrgan.t101' />" + "</span>" + "<span id='countInfo' style='color:#017BEC;'>&nbsp;&nbsp;<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + "</span></span>";
+	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px;\" >" + "<span id='spn_deptName'>" + "<spring:message code='ezOrgan.t101' />" + "</span>" + "<span id='countInfo' class='txt_color'>&nbsp;&nbsp;<span class='txt_color'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + "</span></span>";
 		                SelectDeptNM.setAttribute("countinfo", "1");
 		            }
 		        } else {
@@ -352,7 +351,7 @@
 	                } else {
 	                    document.getElementById("Search_txtlist_table").style.display = "";
 	                    document.getElementById("txtlist_table").style.display = "none";
-	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px;\" >" + "<span id='spn_deptName'>" + "<spring:message code='ezOrgan.t101' />" + "</span>" + "<span id='countInfo' style='color:#017BEC;'>&nbsp;&nbsp;<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + "</span></span>";
+	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px;\" >" + "<span id='spn_deptName'>" + "<spring:message code='ezOrgan.t101' />" + "</span>" + "<span id='countInfo' class='txt_color'>&nbsp;&nbsp;<span class='txt_color'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + "</span></span>";
 	                    SelectDeptNM.setAttribute("countinfo", "1")
 	                }
 	            }
@@ -847,7 +846,7 @@
 		            		var objTr = listview.AddRow(InitTr.length);
 		        		    if (MaxCntNum != 0)
 				                MaxCntNum = MaxCntNum + 1;
-		            		SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+		            		SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + (MaxID + 1));
 		            		listview.AddDataRow(objTr, Resultxml);
 	            }
 	        	
@@ -1024,9 +1023,9 @@
 		            g_xmlHTTP = createXMLHttpRequest();
 
 		            if (CrossYN()) {
-		                var strQuery = "<DATA><DEPTID>" + xmlDOM.getElementsByTagName("DATA2").item(0).textContent + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP></PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
+		                var strQuery = "<DATA><DEPTID>" + xmlDOM.getElementsByTagName("DATA2").item(0).textContent + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP></PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT><ADMINORGAN>y</ADMINORGAN></DATA>";
 		            } else {
-		                var strQuery = "<DATA><DEPTID>" + xmlDOM.getElementsByTagName("DATA2").item(0).text + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP></PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
+		                var strQuery = "<DATA><DEPTID>" + xmlDOM.getElementsByTagName("DATA2").item(0).text + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP></PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT><ADMINORGAN>y</ADMINORGAN></DATA>";
 		            }
 		            g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		            g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
@@ -1039,7 +1038,7 @@
 		                checkname2_cross_dialogArguments[0] = rgParams;
 		                checkname2_cross_dialogArguments[1] = deptsearch_click_Complete;		                
 		                var OpenWin = window.open("/admin/ezOrgan/checkName2.do", "checkName2_Cross", GetOpenWindowfeature(598, 340));
-		                try { OpenWin.focus(); } catch (e) { }
+		                try { OpenWin.focus(); } catch (e) {console.log(e);}
 		            }else{
 		                var feature = "dialogHeight:320px; dialogWidth:600px; status:no;scroll:no; help:no; edge:sunken";
 		                feature = feature + GetShowModalPosition(600, 320);
@@ -1048,7 +1047,7 @@
 		                if (rgParams["deptid"] != "") {
 		                    bSearch = true;
 		                    g_xmlHTTP = createXMLHttpRequest();
-		                    var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>mail</PROP></DATA>";
+		                    var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>mail</PROP><ADMINORGAN>y</ADMINORGAN></DATA>";
 		                    g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		                    g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 		                    g_xmlHTTP.send(strQuery);
@@ -1061,7 +1060,7 @@
 		        if (rgParams["deptid"] != "") {
 		            bSearch = true;
 		            g_xmlHTTP = createXMLHttpRequest();
-		            var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>mail</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
+		            var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>mail</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT><ADMINORGAN>y</ADMINORGAN></DATA>";
 		            g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		            g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 		            g_xmlHTTP.send(strQuery);
@@ -1079,7 +1078,7 @@
 		                        } else {
 		                            window.dialogArguments["window"].opener.top.organview = loadXMLString(g_xmlHTTP.responseText);
 		                        }
-		                    } catch (e) { }
+		                    } catch (e) {console.log(e);}
 		                }
 
 		                var treeXML = loadXMLFile("/xml/common/organtree_config3.xml");
@@ -1384,8 +1383,38 @@
 	        	var titleTxt_f = "<spring:message code='ezOrgan.t303' />";
 	        	var titleTxt_e = "<spring:message code='ezOrgan.kbm01' />";
 	        	var titleTxt_s = "<spring:message code='ezOrgan.t9904' />";	// 준법지원인
+	        	var titleTxt_v = "<spring:message code='ezOrgan.lhr01' />";
 	        	
-	        	var titleTxt = eval("titleTxt_" + delType);
+	        	var titleTxt = "";
+
+	        	if (delType == "c") {
+	        	    titleTxt = titleTxt_c;
+	        	} else if (delType == "k") {
+	        	    titleTxt = titleTxt_k;
+	        	} else if (delType == "g") {
+	        	    titleTxt = titleTxt_g;
+	        	} else if (delType == "a") {
+	        	    titleTxt = titleTxt_a;
+	        	} else if (delType == "i") {
+	        	    titleTxt = titleTxt_i;
+	        	} else if (delType == "n") {
+	        	    titleTxt = titleTxt_n;
+	        	} else if (delType == "l") {
+	        	    titleTxt = titleTxt_l;
+	        	} else if (delType == "w") {
+	        	    titleTxt = titleTxt_w;
+	        	} else if (delType == "m") {
+	        	    titleTxt = titleTxt_m;
+	        	} else if (delType == "q") {
+	        	    titleTxt = titleTxt_q;
+	        	} else if (delType == "f") {
+	        	    titleTxt = titleTxt_f;
+	        	} else if (delType == "e") {
+	        	    titleTxt = titleTxt_e;
+	        	} else if (delType == "s") {
+	        	    titleTxt = titleTxt_s;
+	        	}
+
 	        	document.getElementById("subtitle").innerText = titleTxt;
 	        	document.getElementById("PermissionStr").innerText = titleTxt;
 	        }

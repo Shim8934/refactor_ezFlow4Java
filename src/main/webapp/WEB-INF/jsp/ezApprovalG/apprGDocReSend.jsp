@@ -6,7 +6,9 @@
 	<head>
 	    <title><spring:message code='ezApproval.t157'/></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	    <link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
+		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -53,6 +55,9 @@
 	        var pUse_Editor = "<c:out value ='${useEditor}'/>";
 	        var orgCompanyID = "";
 	        var preSusinGroupStr = "<c:out value ='${preSusinGroupStr}'/>"; // 수신처그룹 구분 관련 파라미터
+
+			// 창마다 고유한 id 지정용
+			var windowUuid = getRandomId();
 	        
 	        document.onselectstart = function () {
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -475,7 +480,7 @@
 	            ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
 		        
 	            var url = "/ezApprovalG/ezApprovalInfo.do?guBun=" + pGubun + "&ext=" + "mht";
-	            var result = GetOpenWindow(url, "ezApprovalInfo", 1200, 750, "NO");
+	            var result = GetOpenWindow(url, "ezApprovalInfo-" + windowUuid, 1210, 750, "NO");
 	        }
 	        function btnApprovalInfo_Complete(RtnVal)
 	        {

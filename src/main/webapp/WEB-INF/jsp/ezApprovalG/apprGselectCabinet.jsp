@@ -6,7 +6,8 @@
 	<head>
 	    <title><spring:message code='ezApprovalG.t711'/></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	    <link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -53,7 +54,16 @@
 	        //반송,회송 대장등록시 기록물철 선택해주기 위해 추가
 	        var hesongFlag = "<c:out value='${hesongFlag}'/>";
 	        var regDocId = "<c:out value='${regDocId}'/>";
+	        var receiptFlag = '';
 	        
+	        // 2023-08-29 조수빈 - 일괄접수자전결인 경우에만 opener가 있고 접수자전결은 없기 때문에 null로 인한 에러 처리를 위해 추가
+	        if (opener) {
+	        	receiptFlag = opener.receiptFlag;
+	        }
+
+			/* 2024-07-18 양지혜 - 상위부서문서함 관련 */
+			var upperDeptCode = "<c:out value ='${upperDeptCode}'/>";
+
 	        window.onload = function () {
 	            try {
 	                RetValue = parent.selectcabinet_cross_dialogArguments[0];
@@ -98,6 +108,19 @@
 	            $("#selYear").val(nowYear).prop("selected", true);
 	            InitCategorySelection();
 	            selTaskCategory_onchange();
+	            
+	            if (receiptFlag == 'J') {
+	            	// 2024-05-21 조수빈 - 일괄접수 시 문서 정보가 유지됨을 안내하는 문구 추가
+             		var h1_header = document.getElementById("h1Title");
+             		h1_header.parentNode.style.display = 'flex';
+	             	var newH2 = document.createElement('h1');
+	             	var h2Text = document.createTextNode("<spring:message code='ezApprovalG.jsb01'/>");
+	             	newH2.appendChild(h2Text);
+	             	newH2.style.marginLeft = '10px';
+	             	newH2.style.color = 'red';
+	             	
+	             	h1_header.parentNode.insertBefore(newH2, h1_header.nextSibling);
+	            }
 	        };
 	        function KeEventControl(obj) {
 	            useragt = navigator.userAgent.toUpperCase();
@@ -232,12 +255,12 @@
 	            row += "</CELL>"
 	            row += "<CELL>";
 	            row += "<VALUE><![CDATA[";
-	            row += getNodeText(selRow.cells[2]);
+	            row += getNodeText(selRow.cells[4]);
 	            row += "]]></VALUE>";
 	            row += "</CELL>";
 	            row += "<CELL>";
 	            row += "<VALUE><![CDATA[";
-	            row += getNodeText(selRow.cells[3]);
+	            row += getNodeText(selRow.cells[5]);
 	            row += "]]></VALUE>";
 	            row += "</CELL>";
 	            row += "</ROW>";
@@ -379,14 +402,69 @@
 			    		}
 	            	});
 	            }
-	            
-	            if (ReturnFunction != null && (regDocId == null || regDocId == undefined || regDocId == "")) {
-	                ReturnFunction(rtnVal);
-	                window.close();
-	            }
-	            else {
-	                window.close();
-	            }
+	         // 일괄접수, 일괄접수자전결일 경우에는 결재정보창 유지
+                if (receiptFlag == '' || typeof receiptFlag == 'undefined') {
+                	if (ReturnFunction != null && (regDocId == null || regDocId == undefined || regDocId == "")) {
+    	                ReturnFunction(rtnVal);
+    	                window.close();
+    	            } else {
+		                window.close();
+    	            }
+                } else if (receiptFlag == 'J') {
+			    	showLoadingProgress();
+                	ReturnFunction(rtnVal);
+                	setTimeout(function() {
+	                	var RtnVal = opener.receiptAll_btnSendDraft();
+	                	hideLoadingProgress();
+						var arrRtnVal = RtnVal.split("/");
+	    		        
+	     		        if (arrRtnVal[0] == "OK") {
+	     		            pAlertContent = strLang933 + (Number(arrRtnVal[1])) + strLang934_1 + "<br/>";
+
+	     		            if (arrRtnVal[2] != 0) {
+		     		            pAlertContent += strLang935 + arrRtnVal[2] + strLang934_1;
+							}
+	     		            
+	     		            if (arrRtnVal[3] != 0) {
+	     		            	
+	     		            	if (arrRtnVal[2] != 0) {
+	     		            		pAlertContent += " / ";
+	     		            	}
+	     		                
+	     		            	pAlertContent += strLang936 + arrRtnVal[3] + strLang934_1;
+	     		            }
+
+	     		            if (arrRtnVal[4] != 0) {
+	     		            	
+	     		            	if (arrRtnVal[2] != 0 || arrRtnVal[3] != 0) {
+	     		            		pAlertContent += " / ";
+	     		            	}
+	     		                
+	     		            	pAlertContent += strLang938 + arrRtnVal[4] + strLang934_1;
+	     		            }
+	     		            
+	     		            if (receiptFlag == "R") {
+	     			            pAlertContent += "<br/>" + strLangLGEAR01;
+	     		            } else {
+	     			            pAlertContent += "<br/>" + strLangLGEAR03;
+	     		            }
+	     		            
+	     		        } else {
+     			            pAlertContent = strLangLGEAR04;
+	     		        }
+	     		        
+     		        	// 2023-08-22 조수빈 - 작업을 완료한 후에는 부서수신함을 리로딩
+						if (window.opener && window.opener.pListTypeValue) {
+							if (window.opener.pListTypeValue == "97") {
+								window.opener.parent.frames[0].convMain('97', '');
+							} else {
+								window.opener.parent.frames[0].convMain('4', '');
+							}
+						}
+	     		        OpenAlertUIDiv(pAlertContent, window.close);
+	     		        
+                	},0);
+                }
 	        }
 	        else {
 	            alert("<spring:message code='ezApprovalG.t1117'/>");
@@ -593,7 +671,9 @@
             </ul>
         </div>
 		<%-- <h1 style="height: 30px;"><spring:message code='ezApprovalG.t711'/></h1> --%>
-	    <h1 id="h1Title"><spring:message code='ezApprovalG.t711'/></h1>
+	    <div>
+		    <h1 id="h1Title"><spring:message code='ezApprovalG.t711'/></h1>
+	    </div>
 	    <div id="close">
             <ul>
                 <li><span onclick="return cmdCancel_onclick()"></span></li>
@@ -741,9 +821,12 @@
 	            <a class="imgbtn" style="vertical-align: middle;" onclick="return cmdConfirm_onclick()"><span><spring:message code='ezApprovalG.t20'/></span></a>
 	        </h2>
 	    </div>
-	    <div style="width: 1000px; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
+	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
+		<div style="width: 200px; height: 50px; border: 0px solid red; text-align: center; vertical-align: middle; display: none; z-index: 9000; position: absolute;" id="loadingLayer">
+	        <img src="/images/email/progress_img.gif" style="vertical-align: middle;" />
+	    </div>
 	</body>
 </html>

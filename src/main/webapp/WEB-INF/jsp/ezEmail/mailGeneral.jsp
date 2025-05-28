@@ -6,7 +6,8 @@
 	<head>
 		<title>mail_general</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
         <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
         <script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
         <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -19,6 +20,7 @@
 		    var previewSubTree = "${previewSubTree}";
 		    var usePreviewSubTree = "${usePreviewSubTree}";
 		    var dotnetFlag = "<c:out value='${dotnetFlag}'/>";
+			var useEachMailDefault = "${useEachMailDefault}"
 		    
 		    window.onload = function()
 		    {
@@ -106,7 +108,13 @@
 			            ExtName += ExtName == "" ? pOptionValue : "|!-@-!|" + pOptionValue;
 			        }
 			    }
-
+				
+			    // 2024.09.09 한슬기 : 개별발신 기본 여부. 관리자 > 시스템 > 패라메터 > 개별발신 디폴트 사용이 '아니요'일 경우 사용자 설정에 선택된 값을 저장
+			    var defaultSeparateSendVal = "";
+			    if (useEachMailDefault === "NO"){
+			    	defaultSeparateSendVal = document.getElementById("defaultSeparateSend").value;
+			    }
+			    
 				var xmlHTTP = createXMLHttpRequest();
 				var url = "/ezEmail/mailGeneralSave.do?MODE=ALL" ;
 			    var previewSubTreeSlb = $("#previewSubTreeSlb option:selected").val();
@@ -120,8 +128,14 @@
 				                "<PREVIEWHCONTENT>" + document.getElementById("HPreUser").value + "</PREVIEWHCONTENT>" +
 				                "<MAILSENDERNM>" + MakeXMLString(ExtName) + "</MAILSENDERNM>" +
 				                "<PREVIEWMAILIMAGE>" + document.getElementById("previewMailImage").value + "</PREVIEWMAILIMAGE>" +
+				                "<PREVIEWMAIL>" + document.getElementById("previewMail").value + "</PREVIEWMAIL>" +
 				                "<MAILSEARCHPERIOD>" + document.getElementById("searchPeriod").value + "</MAILSEARCHPERIOD>" +
-				                "<TEXTOPTION>" + textOptionVal + "</TEXTOPTION>";
+				                "<TEXTOPTION>" + textOptionVal + "</TEXTOPTION>" + 
+				                "<DEFAULTCURSORPOSITION>"+ document.getElementById("defaultCursorPosition").value + "</DEFAULTCURSORPOSITION>" +
+								"<DEFAULTSEPARATESEND>"+ defaultSeparateSendVal + "</DEFAULTSEPARATESEND>" +
+				                "<MAILSENDRESULT>" + document.getElementById("sendResult").value + "</MAILSENDRESULT>" + 
+								"<EDITORFONTFAMILY>" + document.getElementById("editorFontFamily").value + "</EDITORFONTFAMILY>" +
+								"<EDITORFONTSIZE>" + document.getElementById("editorFontSize").value + "</EDITORFONTSIZE>";
 				
                 if (usePreviewSubTree == "YES") {
                 	sendStr +=  "<PREVIEWSUBTREE>" + previewSubTreeSlb + "</PREVIEWSUBTREE>";
@@ -155,7 +169,7 @@
 				    if (xmlHTTP.status == 200)
 				        alert("<spring:message code='ezEmail.t42' />");
 				    else
-				        alert("<spring:message code='ezEmail.t176' />" + xmlHTTP.statusText);
+				        alert("<spring:message code='ezEmail.t176' />" + xmlHTTP.status);
 				}
 			}
 			
@@ -212,14 +226,16 @@
 				for (var i = 0; i < document.getElementById("ExtSenderNM").childNodes.length; i++) {
 			        if (document.getElementById("ExtSenderNM").childNodes.item(i).nodeName == "OPTION") {
 			            var pOptionValue = document.getElementById("ExtSenderNM").childNodes.item(i).value;
-			            Conitems.innerHTML += "<div style='font-family:" + "<spring:message code='main.t246' />" + ";font-size:small;height:18px;line-height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;padding:1px;' ondblclick='pop_modify(this);' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + pOptionValue + "'><nobr>" + pOptionValue + "</nobr><div>";
+			            var pOptionText = document.getElementById("ExtSenderNM").childNodes.item(i).textContent;
+			            // if(pOptionValue.startsWith("___")) pOptionText += " (default)";
+			            Conitems.innerHTML += "<div style='font-family:" + "<spring:message code='main.t246' />" + ";font-size:small;height:18px;line-height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;padding:1px;' ondblclick='pop_modify(this);' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + pOptionValue + "'><nobr>" + pOptionText + "</nobr><div>";
 			        }
 			    }  
 	            senderNMData = Conitems.innerHTML;
 				mailSenderNM[1] = senderNMData;
 				mailSenderNM[2] = event_mailSenderNM;
 				var OpenWin = window.open("/ezEmail/mailExtSenderNM.do", "mail_NewInboxRule_cross", GetOpenWindowfeature(500, 392));
-		        try { OpenWin.focus(); } catch (e) { }
+		        try { OpenWin.focus(); } catch (e) {console.log(e);}
 		        
 		        
 			}
@@ -319,7 +335,8 @@
 			    for (var i = 0; i < Conitems.childNodes.length; i++) {
 			        if (Conitems.childNodes.item(i).nodeName == "DIV") {
 			            var _NewOption = document.createElement("OPTION");
-			            _NewOption.value = Conitems.childNodes.item(i).innerText;
+			            _NewOption.value = Conitems.childNodes.item(i).getAttribute("value");
+			            if(_NewOption.value.startsWith("___")) _NewOption.selected = true;
 			            _NewOption.innerHTML = Conitems.childNodes.item(i).innerText;
 			            document.getElementById("ExtSenderNM").appendChild(_NewOption);
 			        }
@@ -465,6 +482,16 @@
 		  	</td>
 		  </tr>
 		  <tr>
+            <th><spring:message code="ezEmail.preview.before.send"/></th>
+            <td>
+                <select id="previewMail" style="width:100px;">
+                    <option value="N" <c:if test="${previewMail == 'N'}">selected</c:if>><spring:message code='ezEmail.t99000009' /></option>
+                    <option value="P" <c:if test="${previewMail == 'P'}">selected</c:if>><spring:message code='ezEmail.general.priority' /> </option>
+                    <option value="Y" <c:if test="${previewMail == 'Y'}">selected</c:if>><spring:message code='ezEmail.general.all' /></option>
+                </select>
+            </td>
+          </tr>
+		  <tr>
 		      <th><spring:message code="ezEmail.lhm80"/></th>
 		      <td>
 		          <select id="textOptionSlb" style="width:100px;">
@@ -485,6 +512,56 @@
 		          </select>
 		      </td>
 		  </tr>
+		  <!-- 2024.08.06 한슬기 : 메일쓰기화면 커서 위치 설정-->
+		  <tr>
+		      <th><spring:message code="ezEmail.general.defaultCursorPosition"/></th>
+		      <td>
+		          <select id="defaultCursorPosition" style="width:100px;">
+		            <option value=recipient <c:if test="${defaultCursorPosition == 'recipient'}">selected</c:if>><spring:message code='ezEmail.t66' /></option>
+		            <option value=content <c:if test="${defaultCursorPosition == 'content'}">selected</c:if>><spring:message code='ezPersonal.t155' /></option>
+		            <option value=subject <c:if test="${defaultCursorPosition == 'subject'}">selected</c:if>><spring:message code='ezEmail.t98' /></option>
+		          </select>
+		      </td>
+		  </tr>
+		  
+		  <!-- 2024.08.06 한슬기 : 개별발신 기본 여부. 관리자 > 시스템 > 패라메터 > 개별발신 디폴트 사용이 '아니요'일 경우만 보임-->
+		  <c:if test="${useEachMailDefault eq 'NO'}">
+			  <tr>
+			      <th><spring:message code="ezEmail.general.defaultSeparateSend"/></th>
+			      <td>
+			          <select id="defaultSeparateSend" style="width:100px;">
+			            <option value="N" <c:if test="${defaultSeparateSend eq 'N' || defaultSeparateSend == null}">selected</c:if>><spring:message code='ezEmail.t99000009' /></option>
+			            <option value="Y" <c:if test="${defaultSeparateSend eq 'Y'}">selected</c:if>><spring:message code="ezEmail.t808"/></option>
+			          </select>
+			      </td>
+			  </tr>
+		  </c:if>
+		  <tr>
+              <th><spring:message code="ezEmail.send.result"/></th>
+              <td>
+                  <select id="sendResult" style="width:100px;">
+                    <option value=failure <c:if test="${mailSendResult == 'failure'}">selected</c:if>><spring:message code="ezEmail.general.fail" /></option>
+                    <option value=always <c:if test="${mailSendResult == 'always'}">selected</c:if>><spring:message code="ezEmail.general.always" /></option>
+                  </select>
+              </td>
+          </tr>
+		  <c:if test="${primaryLang == '1'}">
+			  <tr>
+				  <th><spring:message code="ezEmail.general.editorFontStyle"/></th>
+				  <td>
+					  <select id="editorFontFamily" style="width:150px;">
+						  <c:forEach var="font" items="${defaultFontFamilyList}">
+							  <option value="${font.trim()}" <c:if test="${editorFontFamily == font}">selected</c:if>>${font.trim()}</option>
+						  </c:forEach>
+					  </select>
+					  <select id="editorFontSize" style="width:100px;">
+						  <c:forEach var="size" items="${defaultFontSizeList}">
+							  <option value="${size}" <c:if test="${editorFontSize == size}">selected</c:if>>${size}</option>
+						  </c:forEach>
+					  </select>
+				  </td>
+			  </tr>
+		  </c:if>
 		</table>
 		<div align="center" style="width:680px;">
 			<div class="btnpositionJsp">

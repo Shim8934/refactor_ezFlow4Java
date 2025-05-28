@@ -1,12 +1,18 @@
 package egovframework.ezMobile.ezOption.web;
 
 import java.security.PrivateKey;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
+import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
 import org.apache.commons.lang3.StringUtils;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -48,6 +54,8 @@ public class MOptionGWController extends EgovFileMngUtil {
 	@Resource(name = "EzCommonService")
 	private EzCommonService ezCommonService;
 
+	@Resource(name = "EzNewPortalService")
+	private EzNewPortalService ezNewPortalService;
 	/**
 	 * 모바일 G/W 환경설정 [get] 환경설정조회
 	 */
@@ -174,11 +182,15 @@ public class MOptionGWController extends EgovFileMngUtil {
 		try {
 			// 1. 변수
 			// 환경설정
-			String timeZone = jsonObject.get("timeZone").toString();
+			//String timeZone = jsonObject.get("timeZone").toString();
+			String timeZone = jsonObject.get("timeZone") == null ? "" : jsonObject.get("timeZone").toString().trim();
 			String lang = jsonObject.get("lang").toString();
 			String mainType = jsonObject.get("mainType").toString();
 			String listCnt = jsonObject.get("listCnt").toString();
-			String useSecurity = jsonObject.get("useSecurity").toString();
+			String useSecurity = "";
+			if (jsonObject.get("useSecurity") != null){
+				useSecurity = jsonObject.get("useSecurity").toString();
+			}
 
 			// 사용자 정보
 			String serverName = request.getHeader("x-user-host");
@@ -209,6 +221,35 @@ public class MOptionGWController extends EgovFileMngUtil {
 					, userId, timeZone, lang, mainType, listCnt, useSecurity, tenantId
 					, deviceId, pinState, pin, biometric, pinChange);
 
+			// 2024-08-09 황인경 - 모바일 환경설정 포틀릿 개인 설정 수정
+			Object portletVO = new JSONObject();
+			portletVO = jsonObject.get("portletVO");
+			JSONArray jsonArray = new JSONArray();
+			
+			int themeId = 4; // 모바일 테마
+
+			if (portletVO instanceof ArrayList) {
+				ArrayList<LinkedHashMap<String, Object>> portletJsonList = (ArrayList<LinkedHashMap<String, Object>>) portletVO;
+
+				for (LinkedHashMap<String, Object> map : portletJsonList) {
+					JSONObject portletObj = new JSONObject(map);
+					jsonArray.add(portletObj);
+				}
+
+				String companyID = info.getCompanyId();
+
+				ezNewPortalService.updatePortletOrderUser(userId, companyID, tenantId, jsonArray, info.getLang(), themeId);
+
+				JSONObject portletJObj = new JSONObject();
+				portletJObj.put("frameId", 9);
+				portletJObj.put("themeId", "4");
+				portletJObj.put("portletList", null);
+				jsonObject.put("param", portletJObj);
+
+				ezNewPortalService.updateUserUsedFrame(userId, tenantId, companyID, jsonObject);
+
+			}
+
 			// 2. 수행
 			mOptionService.updateOption(userId, timeZone, lang, mainType, listCnt, useSecurity, tenantId
 					, deviceId, pinState, pin, biometric, pinChange);
@@ -231,4 +272,38 @@ public class MOptionGWController extends EgovFileMngUtil {
 		return result;
 	}
 
+	// 2024-08-09 황인경 - 모바일 환경설정 포틀릿 개인 설정 조회
+	@RequestMapping(value = "/mobile/ezOption/portlet/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getOptionPortletList(HttpServletRequest request, @PathVariable String userId) throws Exception {
+		logger.debug("MOBILE G/W getOptionPortletList started.");
+		JSONObject result = new JSONObject();
+
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			int tenantId = info.getTenantId();
+			String companyId = request.getParameter("companyId");
+			String deptId = info.getDeptId();
+			String portletLang = info.getLang();
+
+			JSONObject data = new JSONObject();
+
+			int themeId = 4;
+
+			List<PortletInfoVO> portletList = ezNewPortalService.getUserPortletList(themeId, portletLang, userId, tenantId, companyId, deptId, true);
+
+			data.put("portletList", portletList);
+
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", data);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		logger.debug("MOBILE G/W getOptionPortletList ended.");
+		return result;
+	}
 }

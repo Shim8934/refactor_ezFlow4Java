@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,7 @@ import egovframework.ezEKP.ezSchedule.dao.EzScheduleDAO;
 import egovframework.ezEKP.ezSchedule.service.EzScheduleGoogleService;
 import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
 import egovframework.ezEKP.ezSchedule.service.impl.EzScheduleCompareUtilPublic;
+import egovframework.ezEKP.ezSchedule.vo.AttendantListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleCumulerVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleDeptVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
@@ -43,7 +45,7 @@ import egovframework.ezMobile.ezSchedule.vo.MScheduleInfoVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
-import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service("MScheduleService")
 public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MScheduleService{
@@ -72,7 +74,7 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 	private CommonUtil commonUtil;
 
 	@Override
-	public int insertSchedule(JSONObject jsonParam, String utcStartDate, String utcEndDate, int tenantId, String realPath, Locale locale) throws Exception {
+	public int insertSchedule(JSONObject jsonParam, String utcStartDate, String utcEndDate, int tenantId, String realPath, Locale locale, String offSet, String lang) throws Exception {
 		//본문내용 MHT 저장
 		String mhtPath = commonUtil.separator + "doc";
 		/*String uploadFilePath = commonUtil.separator + "uploadFile";*/
@@ -123,6 +125,18 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 			//일정 정보 저장
 			schedulePath = mhtPath + schedulePath;
 			
+			String cycleSet = "";
+			String repetitionCycle = "";
+			String isAllday = "2".equals(jsonParam.get("dateType").toString()) ? "1" : "0";
+			
+			cycleSet = jsonParam.containsKey("cycleSet") ? jsonParam.get("cycleSet").toString() : "";
+			repetitionCycle = jsonParam.containsKey("repetitionCycle") ? (jsonParam.get("repetitionCycle").toString()).replaceAll(",", "|") : "";
+			
+			String repetition = "";
+			if (cycleSet != "" && repetitionCycle != "") {
+				repetition = cycleSet + "|" + isAllday + "|" + repetitionCycle;
+			}
+			
 			Map<String, Object> map = new HashMap<String, Object>();
 			
 			map.put("v_OWNERID", jsonParam.get("ownerId").toString());
@@ -140,7 +154,7 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 			map.put("v_DATETYPE", jsonParam.get("dateType").toString());
 			map.put("v_STARTDATE", utcStartDate);
 			map.put("v_ENDDATE", utcEndDate);
-			map.put("v_REPETITION", "");
+			map.put("v_REPETITION", repetition);
 			map.put("v_TITLE", jsonParam.get("title").toString());
 			map.put("v_LOCATION", jsonParam.get("location").toString());
 			map.put("v_CONTENTPATH", schedulePath);
@@ -180,6 +194,15 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 				
 				insertScheduleAttendant(Integer.toString(scheduleId), v_attendantId, v_attendantName, v_attendantName2, v_attendantDeptName, v_attendantDeptName2, tenantId);
 			}*/
+			// 2023-09-04 한태훈 - 개인 일정의 경우 미리알림 스케줄러에 데이터 추가
+			if (jsonParam.get("scheduleType").toString().equals("1")) {
+				map.put("v_SCHEDULEID", scheduleId);
+				map.put("v_REMINDERSTATUS", "0");
+				map.put("v_OFFSET", offSet);
+				map.put("v_LANG", lang);
+				map.put("v_OFFSETMIN", commonUtil.getMinuteUTC(offSet));
+				ezScheduleDAO.insertReminderSchedule(map);
+			}
 			
 			sID = scheduleId;			
 		} catch (Exception e) {
@@ -192,7 +215,7 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 	}
 
 	@Override
-	public int insertBoardSchedule(JSONObject jsonParam, String utcStartDate, String utcEndDate, int tenantId, String realPath, Locale locale) throws Exception {
+	public int insertBoardSchedule(JSONObject jsonParam, String utcStartDate, String utcEndDate, int tenantId, String realPath, Locale locale, String offSet, String lang) throws Exception {
 		//본문내용 MHT 저장
 		String mhtPath = commonUtil.separator + "doc";
 		/*String uploadFilePath = commonUtil.separator + "uploadFile";*/
@@ -293,6 +316,15 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 				
 				insertScheduleAttendant(Integer.toString(scheduleId), v_attendantId, v_attendantName, v_attendantName2, v_attendantDeptName, v_attendantDeptName2, tenantId);
 			}*/
+			// 2023-09-04 한태훈 - 개인 일정의 경우 미리알림 스케줄러에 데이터 추가
+			if (jsonParam.get("scheduleType").toString().equals("1")) {
+				map.put("v_SCHEDULEID", scheduleId);
+				map.put("v_REMINDERSTATUS", "0");
+				map.put("v_OFFSET", offSet);
+				map.put("v_LANG", lang);
+				map.put("v_OFFSETMIN", commonUtil.getMinuteUTC(offSet));
+				ezScheduleDAO.insertReminderSchedule(map);
+			}
 			
 			sID = scheduleId;			
 		} catch (Exception e) {
@@ -375,12 +407,28 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 			
 			ezScheduleDAO.insertScheduleAttach(attachMap);
 		}	*/
+		
+		// 2023-09-15 - 한태훈 : 일정관리 > 미리알림 스케줄러 미완료 상태로 변경.
+		map.put("v_REMINDERSTATUS", "0");
+		ezScheduleDAO.updateReminderSchedule(map);
 	}
 
 	@Override
-	public void deleteSchedule(String scheduleId, int tenantId) throws Exception {
-		ezScheduleService.deleteSchedule(scheduleId, tenantId);				
-
+	public void deleteSchedule(HttpServletRequest request, String scheduleId, int tenantId, MCommonVO info) throws Exception {
+		List<AttendantListVO> attendantList = new ArrayList<>();
+		ScheduleInfoVO scheduleInfo = ezScheduleService.getScheduleInfo(scheduleId, commonUtil.getMinuteUTC(info.getOffSet()), info.getTenantId(), info.getCompanyId());
+		
+		String hasAttendant = scheduleInfo.getHasAttendant();
+        if (hasAttendant.equals("Y")) {            	
+            String parentId = (scheduleInfo.getParentId().equals("0") ? scheduleId : scheduleInfo.getParentId());    
+            attendantList = ezScheduleService.getAttendantList(parentId, commonUtil.getMinuteUTC(info.getOffSet()), info.getTenantId(), info.getCompanyId());
+        }
+        
+		if (attendantList != null && attendantList.size() > 0) {
+			ezScheduleService.sendInviteScheDelNotiForMobile(request, attendantList, scheduleInfo, info);
+		}
+		
+		ezScheduleService.deleteSchedule(scheduleId, tenantId);
 		/*ezScheduleService.deleteResource(scheduleId, tenantId);*/		
 	}
 
@@ -412,11 +460,14 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 	}
 
 	@Override
-	public List<ScheduleInfoVO> scheduleList(MCommonVO info, String startDate, String endDate, String searchTitle, String searchColumn, String searchData) throws Exception {								
+	public List<ScheduleInfoVO> scheduleList(MCommonVO info, String startDate, String endDate, String searchTitle, String searchLocation, String searchAll, String filter) throws Exception {
 		String utcStartTime = commonUtil.getDateStringInUTC(startDate, info.getOffSet(), true);
 		String utcEndTime = commonUtil.getDateStringInUTC(endDate, info.getOffSet(), true);
-		
-		String pidList = "'" + info.getUserId() + "'," + "'" + info.getDeptId() + "'," + "'" + info.getCompanyId() + "'";
+
+		String indiList = "'" + info.getUserId() + "'";
+		String pidList = "";
+		String pidListSub = "";
+		String indiListSub = "";
 		String offSetMin = commonUtil.getMinuteUTC(info.getOffSet());
 		//2020-02-24 김정언
 		String useAnnualScheduleYN = ezCommonService.getTenantConfig("useAnnualScheduleYN", info.getTenantId());
@@ -424,57 +475,74 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 		List<ScheduleSecretaryVO> tList = ezScheduleService.getPublicScheduleSec(info.getUserId(), info.getLang(), info.getTenantId() ,info.getCompanyId());
 		List<ScheduleDeptVO> dList = ezScheduleService.getPublicScheduleDept(info.getUserId(), info.getLang(), info.getTenantId() ,info.getCompanyId());
 		List<ScheduleCumulerVO> cList = ezScheduleService.getPublicScheduleCumuler(info.getUserId(), info.getLang(), info.getTenantId() ,info.getCompanyId());
-		
-		for (int i = 0; i < gList.size(); i++) {
-			if (i == 0) {
-				pidList += ",";
+
+		if(tList != null && tList.size()>0){
+			for (int i = 0; i < tList.size(); i++) {
+				if (i == 0) {
+					indiListSub += ",";
+				}
+				ScheduleSecretaryVO data = tList.get(i);
+				indiListSub += "\'" + data.getSecId()+ "\',";
 			}
-			ScheduleGroupListVO data = gList.get(i);
-			pidList += "'" + data.getGroupId() + "'";
-			
-			if (i != gList.size()-1) {
-				pidList += ",";
-			}	
-		}
-		
-		for (int i = 0; i < tList.size(); i++) {
-			if (i == 0) {
-				pidList += ",";
-			}
-			ScheduleSecretaryVO data = tList.get(i);
-			pidList += "'" + data.getSecId() + "'";
-			
-			if (i != tList.size()-1) {
-				pidList += ",";
-			}	
-		}
-		
-		for (int i = 0; i < dList.size(); i++) {
-			if (i == 0) {
-				pidList += ",";
-			}
-			ScheduleDeptVO data = dList.get(i);
-			pidList += "'" + data.getDeptId() + "'";
-			
-			if (i != dList.size()-1) {
-				pidList += ",";
-			}	
-		}
-		
-		for (int i = 0; i < cList.size(); i++) {
-			if (i == 0) {
-				pidList += ",";
-			}
-			ScheduleCumulerVO data = cList.get(i);
-			pidList += "'" + data.getDeptId() + "'";
-			
-			if (i != cList.size()-1) {
-				pidList += ",";
-			}	
 		}
 
-		List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(pidList,"\'\'", searchColumn, utcStartTime, utcEndTime, startDate, endDate, searchData, offSetMin, searchTitle, info.getTenantId(), info.getCompanyId(), info.getUserId(), info.getDeptId(), useAnnualScheduleYN);
-		
+		pidList = "'" + info.getDeptId() + "'," + "'" + info.getCompanyId() + "'";
+
+
+		if(dList != null && dList.size()>0){
+			for (int i = 0; i < dList.size(); i++) {
+				if (i == 0) {
+					pidListSub += ",";
+				}
+				ScheduleDeptVO data = dList.get(i);
+				pidListSub += "\'" + data.getDeptId()+ "\',";
+			}
+		}
+
+		if(cList != null && cList.size()>0 ){
+			for (int i = 0; i < cList.size(); i++) {
+				if(dList == null || dList.size()<=0){
+					if (i == 0) {
+						pidListSub += ",";
+					}
+				}
+				ScheduleCumulerVO data = cList.get(i);
+				pidListSub += "\'" + data.getDeptId()+ "\',";
+			}
+		}
+
+		for (int i = 0; i < gList.size(); i++) {
+			if((dList == null || dList.size()<=0) && (cList == null || cList.size()<=0)){
+				if (i == 0) {
+					pidListSub += ",";
+				}
+			}
+			ScheduleGroupListVO data = gList.get(i);
+			pidListSub += "\'" + data.getGroupId() + "\',";
+
+				/*if (i != gList.size()-1) {
+					pidListSub += ",";
+				}*/
+		}
+
+		if(indiListSub.equals("") || indiListSub == null){
+			indiListSub = ",\'\'";
+		}else{
+			indiListSub = indiListSub.substring(0, indiListSub.length()-1);
+		}
+
+		indiList += indiListSub;
+
+		if(pidListSub.equals("") || pidListSub == null){
+			pidListSub = ",\'\'";
+		}else{
+			pidListSub = pidListSub.substring(0, pidListSub.length()-1);
+		}
+
+		pidList += pidListSub;
+
+		List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(indiList, pidList, filter, utcStartTime, utcEndTime, startDate, endDate, offSetMin, searchTitle, searchLocation, searchAll, info.getTenantId(), info.getCompanyId(), info.getUserId(), info.getDeptId(), useAnnualScheduleYN);
+
 		Collections.sort(sList, new EzScheduleCompareUtilPublic());
 		
 		return sList;
@@ -519,7 +587,7 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 		String startDate = sdf.format(cal.getTime()) + " 00:00:00";
 		String endDate = sdf.format(cal.getTime()) + " 23:59:59";
 		
-		List<ScheduleInfoVO> sList = scheduleList(info, startDate, endDate, "", "", "");
+		List<ScheduleInfoVO> sList = scheduleList(info, startDate, endDate, "", "", "", "");
 		
 		String useGoogleCalendar = ezCommonService.getTenantConfig("useGoogleCalendar", info.getTenantId());
 		if(useGoogleCalendar.equals("YES")) {
@@ -567,7 +635,108 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 		
 		return jo;
 	}
-	
-	
+
+	@Override
+	public List<ScheduleInfoVO> scheduleUserSearchList(MCommonVO info, String startDate, String endDate, String searchTitle) throws Exception {
+		String utcStartTime = commonUtil.getDateStringInUTC(startDate, info.getOffSet(), true);
+		String utcEndTime = commonUtil.getDateStringInUTC(endDate, info.getOffSet(), true);
+
+		String indiList = "'" + info.getUserId() + "'";
+		String pidList = "";
+		String pidListSub = "";
+		String indiListSub = "";
+		String offSetMin = commonUtil.getMinuteUTC(info.getOffSet());
+
+		//근태현황 일정관리 연동 x
+		String useAnnualScheduleYN = "0";
+		//일정 그룹 사용
+		List<ScheduleGroupListVO> gList = ezScheduleService.getScheduleGroupList(info.getUserId(), info.getTenantId(), info.getCompanyId());
+		//List<ScheduleGroupListVO> gList = new ArrayList<ScheduleGroupListVO>();
+
+		//일정 비서 사용 x
+		//List<ScheduleSecretaryVO> tList = ezScheduleService.getPublicScheduleSec(info.getUserId(), info.getLang(), info.getTenantId() ,info.getCompanyId());
+		List<ScheduleSecretaryVO> tList = new ArrayList<ScheduleSecretaryVO>();
+
+		//공유 부서 사용 x
+		//List<ScheduleDeptVO> dList = ezScheduleService.getPublicScheduleDept(info.getUserId(), info.getLang(), info.getTenantId() ,info.getCompanyId());
+		List<ScheduleDeptVO> dList = new ArrayList<ScheduleDeptVO>();
+
+		//겸직 부서 사용 x
+		//List<ScheduleCumulerVO> cList = ezScheduleService.getPublicScheduleCumuler(info.getUserId(), info.getLang(), info.getTenantId() ,info.getCompanyId());
+		List<ScheduleCumulerVO> cList = new ArrayList<ScheduleCumulerVO>();
+
+		if(tList != null && tList.size()>0){
+			for (int i = 0; i < tList.size(); i++) {
+				if (i == 0) {
+					indiListSub += ",";
+				}
+				ScheduleSecretaryVO data = tList.get(i);
+				indiListSub += "\'" + data.getSecId()+ "\',";
+			}
+		}
+
+		pidList = "'" + info.getDeptId() + "'," + "'" + info.getCompanyId() + "'";
+
+
+		if(dList != null && dList.size()>0){
+			for (int i = 0; i < dList.size(); i++) {
+				if (i == 0) {
+					pidListSub += ",";
+				}
+				ScheduleDeptVO data = dList.get(i);
+				pidListSub += "\'" + data.getDeptId()+ "\',";
+			}
+		}
+
+		if(cList != null && cList.size()>0 ){
+			for (int i = 0; i < cList.size(); i++) {
+				if(dList == null || dList.size()<=0){
+					if (i == 0) {
+						pidListSub += ",";
+					}
+				}
+				ScheduleCumulerVO data = cList.get(i);
+				pidListSub += "\'" + data.getDeptId()+ "\',";
+			}
+		}
+
+		for (int i = 0; i < gList.size(); i++) {
+			if((dList == null || dList.size()<=0) && (cList == null || cList.size()<=0)){
+				if (i == 0) {
+					pidListSub += ",";
+				}
+			}
+			ScheduleGroupListVO data = gList.get(i);
+			pidListSub += "\'" + data.getGroupId() + "\',";
+
+					/*if (i != gList.size()-1) {
+						pidListSub += ",";
+					}*/
+		}
+
+		if(indiListSub.equals("") || indiListSub == null){
+			indiListSub = ",\'\'";
+		}else{
+			indiListSub = indiListSub.substring(0, indiListSub.length()-1);
+		}
+
+		indiList += indiListSub;
+
+		if(pidListSub.equals("") || pidListSub == null){
+			pidListSub = ",\'\'";
+		}else{
+			pidListSub = pidListSub.substring(0, pidListSub.length()-1);
+		}
+
+		pidList += pidListSub;
+
+		List<ScheduleInfoVO> sList = ezScheduleService.getUserSearchScheduleList(indiList, pidList, "", utcStartTime, utcEndTime, startDate, endDate, "", offSetMin, searchTitle, info.getTenantId(), info.getCompanyId(), info.getUserId(), info.getDeptId(), useAnnualScheduleYN);
+
+		Collections.sort(sList, new EzScheduleCompareUtilPublic());
+
+		return sList;
+	}
+
+
 }
 

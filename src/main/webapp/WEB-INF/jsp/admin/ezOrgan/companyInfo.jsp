@@ -6,7 +6,8 @@
 	<head>
 		<title><spring:message code="ezOrgan.t112" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
-	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e2', 'msg')}" type="text/css">		
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>	    
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -22,7 +23,7 @@
 			    	try {
 			        	ReturnFunction = opener.companyinfo_dialogArguments[1];
 			            RetValue = opener.companyinfo_dialogArguments[0];
-			        } catch(e) {}
+			        } catch(e) {console.log(e);}
 			    } else {
 			    	RetValue = window.dialogArguments;
 			    }
@@ -71,17 +72,19 @@
 			function Check_ID(pValue, isAdd) {
 				// 인사연동 시 회사 ID에 대문자가 포함되어 있는 경우가 있어, 회사 추가 시에만 대문자를 넣지 못하도록 함.
 				var regex = /^[a-zA-Z0-9\_\-\.]+$/;
-				
-				if (isAdd) {
-					regex = /^[a-z0-9\_\-\.]+$/;
-				}
-				
-				return regex.test(pValue);
-			}
 
-			function OK_Click(){
-				if (CompanyID.value == "") {
-					OpenAlertUI("<spring:message code='ezOrgan.t113'/>");
+			/* 2024.09.02 부서와 회사의 경우 대문자 허용
+               if (isAdd) {
+                   regex = /^[a-z0-9\_\-\.]+$/;
+               }
+			*/
+               
+               return regex.test(pValue);
+           }
+
+           function OK_Click(){
+               if (CompanyID.value == "") {
+                   OpenAlertUI("<spring:message code='ezOrgan.t113'/>");
 					return;
 				}
 
@@ -108,8 +111,8 @@
 					return;
 				}
 				
-				if (CompanyName.value.indexOf("\"") > -1 || CompanyName.value.indexOf("'") > -1) {
-					OpenAlertUI("<spring:message code='ezOrgan.t215'/> [\"], ['] <spring:message code='ezOrgan.t260' />");
+				if (CompanyName.value.indexOf("\"") > -1 || CompanyName.value.indexOf("'") > -1 || CompanyName.value.indexOf("\\") > -1) {
+					OpenAlertUI("<spring:message code='ezOrgan.t215'/> [\"], ['] , [\\] <spring:message code='ezOrgan.t260' />");
 					return;
 				}
 				

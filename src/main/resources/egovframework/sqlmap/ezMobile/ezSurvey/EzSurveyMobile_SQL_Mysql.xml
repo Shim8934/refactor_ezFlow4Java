@@ -1,0 +1,655 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ezSurveyMobile">
+	<typeAlias  alias="MSurveySearchVO"	   type="egovframework.ezMobile.ezSurvey.vo.MSurveyItemSearchVO"/>
+	<typeAlias alias="MSurveyVO"           type="egovframework.ezMobile.ezSurvey.vo.MSurveyVO"/>
+	<typeAlias alias="MParticipantVO"      type="egovframework.ezMobile.ezSurvey.vo.MSurveyParticipantVO" />
+	<typeAlias alias="MAttachVO"           type="egovframework.ezMobile.ezSurvey.vo.MAttachVO"            />
+	<typeAlias alias="MSurveySimpleDeptVO" type="egovframework.ezMobile.ezSurvey.vo.MSimpleDeptVO"        />
+	<typeAlias alias="MSurveySimpleUserVO" type="egovframework.ezMobile.ezSurvey.vo.MSimpleUserVO"        />
+	<typeAlias alias="MQuestionVO"         type="egovframework.ezMobile.ezSurvey.vo.MQuestionVO"          />
+	<typeAlias alias="MSurveyOptionVO"     type="egovframework.ezMobile.ezSurvey.vo.MOptionVO"            />
+	<typeAlias alias="MResponseVO"         type="egovframework.ezMobile.ezSurvey.vo.MResponseVO"          />
+	<typeAlias alias="MRespondentVO"         type="egovframework.ezMobile.ezSurvey.vo.MRespondentVO"          />
+	
+	<!-- MSurveyVO resultMap -->
+	<resultMap id="MsurveyVO" class="MSurveyVO">
+		<result property="surveyId"         column="survey_id"           columnIndex="1" />
+		<result property="companyId"        column="company_id"          columnIndex="2" />
+		<result property="tenantId"         column="tenant_id"           columnIndex="3" />
+		<result property="title"            column="title"               columnIndex="4" />
+		<result property="purpose"          column="purpose"             columnIndex="5" />
+		<result property="creatorId"        column="user_id"             columnIndex="6" />
+		<result property="createDate"       column="create_date"         columnIndex="7" />
+		<result property="updateDate"       column="update_date"         columnIndex="8" />
+		<result property="startDate"        column="start_date"          columnIndex="9" />
+		<result property="endDate"          column="end_date"            columnIndex="10"/>
+		<result property="creatorName"      column="user_name"           columnIndex="11"/>
+		<result property="creatorName1"     column="user_name1"          columnIndex="12"/>
+		<result property="creatorName2"     column="user_name2"          columnIndex="13"/>
+		<result property="deleteUser"       column="delete_user"         columnIndex="14"/>
+		<result property="updateUser"       column="update_user"         columnIndex="15"/>
+		<result property="useStatus"        column="use_status"          columnIndex="16"/>
+		<result property="openDays"         column="open_days"           columnIndex="17"/>
+		<result property="resultPublicFlag" column="result_public_flag"  columnIndex="18"/>
+		<result property="anonymousFlag"    column="anonymous_flag"      columnIndex="19"/>
+		<result property="multiAnswerFlag"  column="multi_answer_flag"   columnIndex="20"/>
+		<result property="paritipateFlag"   column="participate_flag"    columnIndex="21"/>
+		<result property="attachFlag"       column="attach_flag"         columnIndex="22"/>
+		<result property="modifyFlag"       column="modify_flag"         columnIndex="23"/>
+		<result property="draftFlag"        column="draft_flag"          columnIndex="24"/>
+		<result property="responseFlag"     column="response_flag"       columnIndex="25"/>
+		<result property="totalUser"        column="total_user"          columnIndex="26"/>
+		<result property="mailFlag"         column="mail_flag"           columnIndex="27"/>
+		<result property="popupFlag"        column="popup_flag"          columnIndex="28"/>
+		
+	</resultMap>
+	
+	<!-- MAttachVO resultMap -->
+	<resultMap id="MattachVO" class="MAttachVO">
+		<result property="attachId"         column="att_file_id"           columnIndex="1"/>
+		<result property="targetId"         column="target_id"             columnIndex="2"/>
+		<result property="targetType"       column="target_type"           columnIndex="3"/>
+		<result property="fname"            column="file_nm"               columnIndex="4"/>
+		<result property="fileSize"         column="file_size"             columnIndex="5"/>
+		<result property="fpath"            column="file_path"             columnIndex="6"/>
+		<result property="furl"             column="file_url"              columnIndex="7"/>
+		<result property="companyId"        column="company_id"            columnIndex="8"/>
+		<result property="tenantId"         column="tenant_id"             columnIndex="9"/>
+	</resultMap>
+	
+	<!-- MParticipantVO resultMap -->
+	<resultMap id="MparticipantVO" class="MParticipantVO">
+		<result property="participantId"    column="participant_id"        columnIndex="1" />
+		<result property="surveyId"         column="survey_id"             columnIndex="2" />
+		<result property="userType"         column="user_type"             columnIndex="3" />
+		<result property="userId"           column="user_id"               columnIndex="4" />
+		<result property="userName"         column="user_name"             columnIndex="5" />
+		<result property="userName1"        column="user_name1"            columnIndex="6" />
+		<result property="userName2"        column="user_name2"            columnIndex="7" />
+		<result property="email"            column="email"                 columnIndex="8" />
+		<result property="deptId"           column="dept_id"               columnIndex="9" />
+		<result property="deptName"         column="dept_name"             columnIndex="10"/>
+		<result property="deptName1"        column="dept_name1"            columnIndex="11"/>
+		<result property="deptName2"        column="dept_name2"            columnIndex="12"/>
+		<result property="companyId"        column="company_id"            columnIndex="13"/>
+		<result property="tenantId"         column="tenant_id"             columnIndex="14"/>
+		<result property="subDeptYN"         column="SUBDEPTYN"             columnIndex="15"/>
+	</resultMap>
+	
+	<!-- MSurveySimpleUserVO resultMap -->
+	<resultMap id="MdeptMemberInfo" class="MSurveySimpleUserVO">
+		<result property="userId"           column="cn"                     columnIndex="1" />
+		<result property="position"         column="position"               columnIndex="2" />
+		<result property="userName"         column="displayName"            columnIndex="3" />
+		<result property="userName1"        column="displayName1"           columnIndex="4" />
+		<result property="userName2"        column="displayName2"           columnIndex="5" />
+		<result property="deptId"           column="department"             columnIndex="6" />
+		<result property="deptName"         column="departmentName"         columnIndex="7" />
+		<result property="deptName1"        column="departmentName1"        columnIndex="8" />
+		<result property="deptName2"        column="departmentName2"        columnIndex="9" />
+		<result property="telNumber"        column="telephoneNumber"        columnIndex="10"/>
+		<result property="mail"             column="mail"                   columnIndex="11"/>
+		<result property="userImg"          column="userImage"              columnIndex="12"/>
+	</resultMap>
+	
+	<!-- MsimpleDeptVO resultMap -->
+	<resultMap id="MsimpleDeptVO" class="MSurveySimpleDeptVO">
+		<result property="deptId"            column="dept_id"                columnIndex="1"/>
+		<result property="deptName"          column="dept_name"              columnIndex="2"/>
+		<result property="deptName1"         column="dept_name1"             columnIndex="3"/>
+		<result property="deptName2"         column="dept_name2"             columnIndex="4"/>
+		<result property="mail"              column="mail"                   columnIndex="5"/>
+		<result property="level"             column="dept_level"             columnIndex="6"/>
+		<result property="hasSub"            column="has_sub"                columnIndex="7"/>
+	</resultMap>
+	
+	<!-- MQuestionVO resultMap -->
+	<resultMap id="MquestionVO" class="MQuestionVO">
+		<result property="questionId"       column="question_id"           columnIndex="1" />
+		<result property="surveyId"         column="survey_id"             columnIndex="2" />
+		<result property="type"             column="question_type"         columnIndex="3" />
+		<result property="content"          column="title"                 columnIndex="4" />
+		<result property="level"            column="levels"                columnIndex="5" />
+		<result property="useStatus"        column="use_status"            columnIndex="6" />
+		<result property="required"         column="required_flag"         columnIndex="7" />
+		<result property="logicFlag"        column="logic_flag"            columnIndex="8" />
+		<result property="sliderLogicPoint" column="slider_logic_point"    columnIndex="9" />
+		<result property="skipFlag"         column="skip_flag"             columnIndex="10"/>
+		<result property="skip"             column="skip_num"              columnIndex="11"/>
+		<result property="unit"             column="unit"                  columnIndex="12"/>
+		<result property="companyId"        column="company_id"            columnIndex="13"/>
+		<result property="tenantId"         column="tenant_id"             columnIndex="14"/>
+	</resultMap>
+	
+	<!-- OptionVO resultMap -->
+	<resultMap id="MsurveyOptionVO" class="MSurveyOptionVO">
+		<result property="optionId"         column="option_id"           columnIndex="1" />
+		<result property="surveyId"         column="survey_id"           columnIndex="2" />
+		<result property="questionId"       column="question_id"         columnIndex="3" />
+		<result property="questionType"     column="question_type"       columnIndex="4" />
+		<result property="questionLevel"    column="question_level"      columnIndex="5" />
+		<result property="content"          column="content"             columnIndex="6" />
+		<result property="level"            column="levels"              columnIndex="7" />
+		<result property="otherFlag"        column="other_flag"          columnIndex="8" />
+		<result property="logic"            column="logic_num"           columnIndex="9" />
+		<result property="rowLevel"         column="row_level"           columnIndex="10"/>
+		<result property="colLevel"         column="column_level"        columnIndex="11"/>
+		<result property="companyId"        column="company_id"          columnIndex="12"/>
+		<result property="tenantId"         column="tenant_id"           columnIndex="13"/>
+	</resultMap>
+	
+	<!-- ResponseVO resultMap -->
+	<resultMap id="MresponseVO" class="MResponseVO">
+		<result property="responseId"          column="response_id"          columnIndex="1" />
+		<result property="surveyId"            column="survey_id"            columnIndex="2" />
+		<result property="questionLevel"       column="question_level"       columnIndex="3" />
+		<result property="questionType"        column="question_type"        columnIndex="4" />
+		<result property="responsorId"         column="user_id"              columnIndex="5" />
+		<result property="optionId"            column="option_id"            columnIndex="6" />
+		<result property="texts"               column="texts"                columnIndex="7" />
+		<result property="rowId"               column="row_id"               columnIndex="8" />
+		<result property="columnId"            column="column_id"            columnIndex="9" />
+		<result property="rankingLevel"        column="ranking_level"        columnIndex="10"/>
+		<result property="sliderValue"         column="slider_value"         columnIndex="11"/>
+		<result property="image"               column="image"                columnIndex="12"/>
+		<result property="responseDate"        column="response_date"        columnIndex="13"/>
+		<result property="userName"            column="user_name"            columnIndex="14"/>
+		<result property="deptName"            column="dept_name"            columnIndex="15"/>
+		<result property="imageFilePath"       column="imageFilePath"        columnIndex="16"/>
+	</resultMap>
+	
+	<sql id="MsurveySelect">
+		select
+			survey_id,
+			company_id,
+			tenant_id,
+			title,
+			purpose,
+			user_id,
+			date_add(create_date, interval #offset# minute) as create_date,
+			date_add(update_date, interval #offset# minute) as update_date,
+			date_add(start_date, interval #offset# minute)  as start_date,
+			date_add(end_date, interval #offset# minute)    as end_date,
+			case when #primary# = '1' then user_name1 else user_name2 end as user_name,
+			user_name1,
+			user_name2,
+			delete_user,
+			update_user,
+			use_status,
+			open_days,
+			result_public_flag,
+			anonymous_flag,
+			multi_answer_flag,
+			participate_flag,
+			attach_flag,
+			modify_flag,
+			draft_flag,
+			response_flag,
+			total_user,
+			mail_flag,
+			popup_flag
+		from tbl_survey
+	</sql>
+	
+	<sql id="MsurveyItemList">
+		where use_status = 1 and tenant_id = #tenantId# and modify_flag = 0
+		<isNotEmpty property="title"       prepend=" and ">title like concat('%', concat(#title#, '%'))</isNotEmpty>
+		<isNotEmpty property="endDate" prepend=" and ">
+					<![CDATA[(create_date <= #endDate#)]]>
+		</isNotEmpty>
+		<isEqual property="pageMode" compareValue="all">
+			<isEqual property="userMode" compareValue="0" prepend=" and ">
+				draft_flag = 0
+			</isEqual>
+			<isEmpty property="surveyIds" prepend=" and ">(survey_id = -1 or user_id = #userId#)</isEmpty>
+			<isNotEmpty property="surveyIds" prepend=" and ">
+				(survey_id in <iterate property="surveyIds" open="(" close=")" conjunction=",">#surveyIds[]#</iterate>)
+			</isNotEmpty>
+		</isEqual>
+		<isEqual property="pageMode" compareValue="processing" prepend=" and ">
+			<![CDATA[(start_date <= #today# and end_date >= #today#)]]>
+			<isEmpty property="surveyIds" prepend=" and ">(survey_id = -1)</isEmpty>
+			<isNotEmpty property="surveyIds" prepend=" and ">
+				(survey_id in <iterate property="surveyIds" open="(" close=")" conjunction=",">#surveyIds[]#</iterate>)
+			</isNotEmpty>
+			and draft_flag = 0
+		</isEqual>
+		<isEqual property="pageMode" compareValue="finish" prepend=" and ">
+			<![CDATA[(end_date < #today#)]]>
+			<isEmpty property="surveyIds" prepend=" and ">(survey_id = -1)</isEmpty>
+			<isNotEmpty property="surveyIds" prepend=" and ">
+				(survey_id in <iterate property="surveyIds" open="(" close=")" conjunction=",">#surveyIds[]#</iterate>)
+			</isNotEmpty>
+			and draft_flag = 0
+		</isEqual>
+		
+		<isEqual property="pageMode" compareValue="my" prepend=" and ">
+			user_id = #userId# and draft_flag = 0
+		</isEqual>
+	</sql>
+	
+	<!-- 2021-11-22 홍승비 - 전자설문 하위부서 허용여부 추가로 회사ID 가져오지 않도록 수정 -->
+	<select id="MSurveyDAO.getUserDepartmentIdList" parameterClass="Map" resultClass="String">
+        select
+			d4.cn
+		from
+			(
+				select * from tbl_deptmaster d1 where d1.cn = #deptId# and d1.tenant_id = #tenantId#
+				union
+				select d3.* from tbl_deptmaster d3 join tbl_addjobmaster a on d3.cn = a.deptid and a.cn = #userId# and d3.tenant_id = a.tenant_id
+				where d3.tenant_id = #tenantId#
+			) d4
+    </select>
+    
+    <select id="MSurveyDAO.getUserAllDepartmentIdList" resultClass="String">
+		select
+			d4.DEPT_CD_PATH
+		from
+			(
+				select * from tbl_deptmaster d1 where d1.cn = #deptId# and d1.tenant_id = #tenantId#
+				union
+				select * from tbl_deptmaster d2 where d2.cn = #companyId# and d2.tenant_id = #tenantId#
+				union
+				select d3.* from tbl_deptmaster d3 join tbl_addjobmaster a on d3.cn = a.deptid and a.cn = #userId# and d3.tenant_id = a.tenant_id
+				where d3.tenant_id = #tenantId#
+			) d4
+	</select>
+	
+	<select id="MSurveyDAO.getReceivedSurveyList" resultClass="Long">
+		SELECT
+			DISTINCT(survey_id)
+		FROM tbl_survey_participant a join tbl_usermaster b 
+			on 
+				a.tenant_id = b.tenant_id 
+			and 
+				a.company_id = b.PHYSICALDELIVERYOFFICENAME
+			and 
+				b.cn = #userId#
+		WHERE
+		(
+			(user_id = #userId# AND user_type = 'user')
+			OR
+			(user_id IN
+				<iterate property="deptList" open="(" close=")" conjunction=",">
+					#deptList[]#
+				</iterate> and (user_type = 'dept' OR user_type = 'comp')
+			)
+			OR
+			(user_id IN
+				<iterate property="allDeptList" open="(" close=")" conjunction=",">
+					#allDeptList[]#
+				</iterate>
+				and (user_type = 'dept' OR user_type = 'comp')
+				AND
+					 SUBDEPTYN = 'Y'
+			)
+			OR
+			(a.user_type = 'jikchek' and (b.extensionattribute8 = a.user_id
+				or a.user_id in (select jobid from tbl_addjobmaster where cn = #userId# and tenant_id = #tenantId#) ))
+			OR
+			(a.user_type = 'jikwi' and (b.extensionattribute7 = a.user_id 
+				or a.user_id in (select jobid from tbl_addjobmaster where cn = #userId# and tenant_id = #tenantId#) )   )
+			OR
+			(user_type = 'group' and a.user_id  in 
+				(
+					select 
+						distinct c.group_id 
+					from
+						tbl_permissiongroupinfo c
+					join
+						tbl_usermaster d
+					on
+						d.tenant_id = c.tenant_id
+					and 
+						d.tenant_id = #tenantId#
+					AND 
+						c.company_id = #companyId#	
+					and 
+						d.cn = #userId#
+					where
+						c.group_id = a.user_id
+					and
+						(
+							(c.member_type = 'JIKCHEK' and (d.extensionattribute8 = c.member_id
+								or c.member_id in (select jobid from tbl_addjobmaster where cn = #userId# and tenant_id = #tenantId#) ))
+						or
+							(c.member_type = 'JIKWI' and (d.extensionattribute7 = c.member_id 
+								or c.member_id in (select jobid from tbl_addjobmaster where cn = #userId# and tenant_id = #tenantId#) ))
+						or
+							(c.member_type = 'ORGAN' and d.physicaldeliveryofficename = c.member_id)
+						or
+						
+							(c.member_type = 'USER' and d.CN = c.member_id)
+						or
+						
+							(c.member_type = 'DEPT' and (d.department = c.member_id
+								or c.member_id in (select deptid from tbl_addjobmaster where cn = #userId# and tenant_id = #tenantId#) ))
+						)
+				)
+            )
+		)
+		AND 
+			a.tenant_id = #tenantId# 
+		AND 
+			a.company_id = #companyId#	
+			
+		<isNotEmpty property="surveyId" prepend=" and ">survey_id = #surveyId#</isNotEmpty>	
+			
+	</select>
+	
+	<select id="MSurveyDAO.getTotalReceivedSurveyItemsCnt" resultClass="Integer">
+		<![CDATA[select count(survey_id) from tbl_survey]]>
+		<include refid="MsurveyItemList"/>
+	</select>
+	
+	<select id="MSurveyDAO.getTotalReceivedSurveyItems" resultMap="MsurveyVO">
+		<include refid="MsurveySelect"/>
+		<include refid="MsurveyItemList"/>
+			order by
+				update_date desc, survey_id desc
+			limit #startPoint#, #listCount#
+	</select>
+	
+	<select id="MSurveyDAO.getSurveyListForPermission" resultMap="MsurveyVO">
+		select
+			s2.*
+		from
+			(
+				<include refid="MsurveySelect"/>
+				where survey_id in
+					<iterate property="surveyList" open="(" close=")" conjunction=",">#surveyList[]#</iterate>
+					<![CDATA[and use_status != 0 and tenant_id = #tenantId# and company_id = #companyId#]]>
+			) s2
+	</select>
+	
+	<select id="MSurveyDAO.getSurveyInfo" resultMap="MsurveyVO">
+		<include refid="MsurveySelect"/>
+			where survey_id = #surveyId# and company_id = #companyId# and tenant_id = #tenantId#
+	</select>
+	
+	<select id="MSurveyDAO.getUsersForSurvey" resultMap="MparticipantVO">
+		select
+			participant_id,
+			survey_id,
+			user_type,
+			user_id,
+			case when #primary# = '1' then user_name1 else user_name2 end as user_name,
+			user_name1,
+			user_name2,
+			email,
+			dept_id,
+			case when #primary# = '1' then dept_name1 else dept_name2 end as dept_name,
+			dept_name1,
+			dept_name2,
+			company_id,
+			tenant_id,
+			SUBDEPTYN
+		from tbl_survey_participant 
+			where survey_id = #surveyId# and company_id = #companyId# and tenant_id = #tenantId#
+			and ( (user_type = 'user' and user_id in (select cn from tbl_usermaster where tenant_id = #tenantId#)) 
+				or
+				  user_type != 'user' )
+	</select>
+	
+	<select id="MSurveyDAO.getAttachForSurvey" resultMap="MattachVO">
+		select * from tbl_survey_attachfile where target_id = #surveyId# and target_type = 'survey' and company_id = #companyId# and tenant_id = #tenantId#
+	</select>
+	
+	<update id="MSurveyDAO.updateSurveyItem">
+		update tbl_survey set
+		<isEqual property="updateMode" compareValue="0">
+			title              = #title#,
+			purpose            = #purpose#,
+			user_id            = #creatorId#,
+			create_date        = #createDate#,
+			start_date         = #startDate#,
+			end_date           = #endDate#,
+			user_name1         = #creatorName1#,
+			user_name2         = #creatorName2#,
+			use_status         = #useStatus#,
+			open_days          = #openDays#,
+			result_public_flag = #resultPublicFlag#,
+			anonymous_flag     = #anonymousFlag#,
+			multi_answer_flag  = #multiAnswerFlag#,
+			participate_flag   = #paritipateFlag#,
+			attach_flag        = #attachFlag#,
+			modify_flag        = #modifyFlag#,
+			draft_flag         = #draftFlag#,
+			response_flag      = #responseFlag#,
+			total_user         = #totalUser#,
+			delete_user        = #deleteUser#,
+			update_user        = #updateUser#,
+			update_date        = #updateDate#,
+			mail_flag		   = #mailFlag#,
+			popup_flag		   = #popupFlag#
+		</isEqual>
+		<isEqual property="updateMode" compareValue="1">
+			use_status         = #useStatus#,
+			open_days          = #openDays#,
+			result_public_flag = #resultPublicFlag#,
+			anonymous_flag     = #anonymousFlag#,
+			multi_answer_flag  = #multiAnswerFlag#,
+			participate_flag   = #paritipateFlag#,
+			attach_flag        = #attachFlag#,
+			modify_flag        = #modifyFlag#,
+			draft_flag         = #draftFlag#,
+			response_flag      = #responseFlag#,
+			delete_user        = #deleteUser#,
+			update_user        = #updateUser#,
+			update_date        = #updateDate#
+		</isEqual>
+		<isEqual property="updateMode" compareValue="2">
+			result_public_flag = #resultPublicFlag#,
+			anonymous_flag     = #anonymousFlag#,
+			multi_answer_flag  = #multiAnswerFlag#,
+			participate_flag   = #paritipateFlag#,
+			attach_flag        = #attachFlag#,
+			modify_flag        = #modifyFlag#,
+			draft_flag         = #draftFlag#,
+			response_flag      = #responseFlag#
+		</isEqual>
+		where
+			survey_id = #surveyId# and tenant_id = #tenantId# and company_id = #companyId#
+	</update>
+	
+	<select id="MSurveyDAO.getUserResponseCntForSurvey" resultClass="Integer">
+		<![CDATA[select count(response_id) from tbl_survey_response where user_id = #userId# and survey_id = #surveyId# and company_id = #companyId# and tenant_id = #tenantId#]]>
+	</select>
+	
+	<select id="MSurveyDAO.getSurveyUserInfo" parameterClass="Map" resultMap="MdeptMemberInfo">
+		SELECT 
+			cn																	as cn
+			, case when #primary# = '1'then title else title2 end           	as position
+			, case when #primary# = '1' then displayname else displayname2 end	as displayName
+			, displayname														as displayName1
+			, displayname2														as displayName2
+			, department														as department
+			, case when #primary# = '1' then description else description2 end 	as departmentName
+			, description														as departmentName1
+			, description2														as departmentName2
+			, telephonenumber                                               	as telephonenumber
+			, mail																as mail
+			, extensionattribute2                                            	as userimage
+		FROM 
+			tbl_usermaster
+		WHERE
+			cn = #userId#
+		AND
+			physicaldeliveryofficename = #companyId#
+		AND
+			tenant_id = #tenantId#
+	</select>
+	
+	<select id="MSurveyDAO.getSurveyUserInfoAddJob" parameterClass="Map" resultMap="MdeptMemberInfo">
+		SELECT 
+			U.cn																	as cn
+			, case when #primary# = '1'then A.title else A.title2 end           	as position
+			, case when #primary# = '1' then U.displayname else U.displayname2 end	as displayName
+			, U.displayname														as displayName1
+			, U.displayname2														as displayName2
+			, A.DEPTID														as department
+			, case when #primary# = '1' then D.displayname else D.displayname2 end 	as departmentName
+			, D.displayname														as departmentName1
+			, D.displayname2														as departmentName2
+			, U.telephonenumber                                               	as telephonenumber
+			, U.mail																as mail
+			, U.extensionattribute2                                            	as userimage
+		FROM 
+			tbl_usermaster U
+		INNER JOIN
+			TBL_ADDJOBMASTER A
+		ON
+			U.CN = A.CN
+		AND
+			U.TENANT_ID = A.TENANT_ID
+		INNER JOIN
+			TBL_DEPTMASTER D
+		ON
+			A.DEPTID = D.CN
+		AND
+			A.TENANT_ID = D.TENANT_ID
+		WHERE
+			A.CN = #userId#
+		AND
+			A.DEPTID = #deptID#
+		AND
+			D.EXTENSIONATTRIBUTE2 = #companyId#
+		AND
+			U.TENANT_ID = #tenantId#
+	</select>
+	
+	<select id="MSurveyDAO.getSurveyDeptInfo" parameterClass="Map" resultMap="MsimpleDeptVO">
+		select
+			a.cn                                                                                                                                        as dept_id,
+			case when '1' = '1' then a.displayname else a.displayname2 end                                                                        		as dept_name,
+			a.displayname                                                                                                                               as dept_name1,
+			a.displayname2                                                                                                                              as dept_name2,
+			a.mail                                                                                                                                      as mail, 
+		    a.deptlevel																																	as dept_level,
+			case when (select count(b.cn) from jmocha.tbl_deptmaster b where a.cn = b.extensionattribute1 and a.tenant_id = b.tenant_id) = 0 then 0 else 1 end as has_sub
+		from
+			tbl_deptmaster a
+		where
+			a.cn = #deptId# 
+		and 
+			a.tenant_id = #tenantId#
+	</select>
+	
+	<select id="MSurveyDAO.getAllQuestionsOfSurvey" resultMap="MquestionVO">
+		select * from tbl_survey_question where survey_id = #surveyId# and company_id = #companyId# and tenant_id = #tenantId# order by levels asc
+	</select>
+	
+	<select id="MSurveyDAO.getAllOptionsOfSurvey" resultMap="MsurveyOptionVO">
+		select * from tbl_survey_option where survey_id = #surveyId# and company_id = #companyId# and tenant_id = #tenantId# order by question_id asc, levels asc, column_level asc, row_level asc 
+	</select>
+	
+	<select id="MSurveyDAO.getAllAttachForQsAndOpt" resultMap="MattachVO">
+		select * from tbl_survey_attachfile 
+		where
+			(
+				(
+					target_id in <iterate property="questionIds" open="(" close=")" conjunction=",">#questionIds[]#</iterate>
+					and target_type = 'question'
+				)
+			 or (
+			 		target_id in <iterate property="questionIds" open="(" close=")" conjunction=",">#questionIds[]#</iterate>
+					and target_type = 'title'
+				)
+			 or (
+			 		target_id in <iterate property="optionIds" open="(" close=")" conjunction=",">#optionIds[]#</iterate>
+			 		and target_type = 'option'
+				)
+			) and company_id = #companyId# and tenant_id = #tenantId#
+		order by target_type desc, target_id asc
+	</select>
+	
+	<select id="MSurveyDAO.getAllResponsesForSurvey" resultMap="MresponseVO">
+		<![CDATA[
+			select * from 
+					(
+						select
+								r.response_id,
+								r.survey_id,
+								r.question_level,
+								r.question_type,
+								r.user_id,
+								r.option_id,
+								r.texts,
+								r.row_id,
+								r.column_id,
+								r.ranking_level,
+								r.slider_value,
+								(select extensionattribute2 from TBL_USERMASTER u where d.user_id = u.cn and d.tenant_id = u.tenant_id) as image,
+								date_add(d.response_date, interval #offset# minute) as response_date,
+								case when #primary# = '1' then d.user_name1 else d.user_name2 end as user_name,
+								case when #primary# = '1' then d.dept_name1 else d.dept_name2 end as dept_name,
+								concat(#userImageFilePath#, (select extensionattribute2 from TBL_USERMASTER u where d.user_id = u.cn and d.tenant_id = u.tenant_id)) as imageFilePath
+						from 
+							tbl_survey_response r 
+						join 
+							tbl_survey_respondent d on r.response_id = d.response_id
+						and 
+							r.company_id = d.company_id and r.tenant_id = d.tenant_id
+					 	where 
+					 		r.survey_id = #surveyId# and r.company_id = #companyId# and r.tenant_id = #tenantId#
+					) rs
+				order by question_level asc, response_id asc
+		]]>
+	</select>
+	
+	<select id="MSurveyDAO.getMaxResponseId" resultClass="Long">
+		<![CDATA[select ifnull(max(response_id) + 1, 1) from tbl_survey_response]]>
+	</select>
+	
+	<delete id="MSurveyDAO.deleteRespondents" parameterClass="Map">
+		<![CDATA[
+			delete from 
+				tbl_survey_respondent 
+			where
+				survey_id = #surveyId# 
+			and 
+				user_id = #userId#
+		]]>
+	</delete>
+	
+	<delete id="MSurveyDAO.deleteResponseItems" parameterClass="Map">
+		<![CDATA[
+			delete from 
+				tbl_survey_response 
+			where
+				survey_id = #surveyId# 
+			and 
+				user_id = #userId#
+		]]>
+	</delete>
+	
+	<insert id="MSurveyDAO.saveResponseItem" parameterClass="MResponseVO">
+		<![CDATA[
+			insert into tbl_survey_response (
+				response_id, survey_id, question_level, question_type, user_id, texts,
+				row_id, column_id, option_id, ranking_level, slider_value, company_id, tenant_id
+			)
+			values (
+				#responseId#, #surveyId#, #questionLevel#, #questionType#, #responsorId#, #texts#,
+				#rowId#, #columnId#, #optionId#, #rankingLevel#, #sliderValue#, #companyId#, #tenantId#
+			)
+		]]>
+	</insert>
+	
+	<insert id="MSurveyDAO.saveRespondent" parameterClass="MRespondentVO">
+		<![CDATA[
+			insert into tbl_survey_respondent (
+			)
+			values (
+				#responseId#, #surveyId#, #userId#, #userName1#, #userName2#, #email#, #image#, #deptId#, #deptName1#, #deptName2#, #responseDate#, #companyId#, #tenantId#
+			)
+		]]>
+	</insert>
+	
+	<select id="MSurveyDAO.getTotalRespondents" resultClass="Integer">
+		<![CDATA[select count(distinct user_id) from tbl_survey_respondent where survey_id = #surveyId# and company_id = #companyId# and tenant_id = #tenantId#]]>
+	</select>
+	
+</sqlMap>

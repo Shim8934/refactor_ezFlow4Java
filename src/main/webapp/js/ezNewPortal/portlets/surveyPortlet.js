@@ -1,4 +1,48 @@
 // plus 버튼 클릭 이벤트
+
+var surveyPortletObj = {};
+
+function initSurveyPortletInfo(surveyPortletId) {
+	var newObj = (function() {
+		var portletId = surveyPortletId;
+		var perCount = getSurveyPagePerCount(portletId); 
+		var obj = {};
+		obj.page = new Paging().setPageStart(1).init(perCount);
+		obj.page.getPagePerCount = function () {
+			return getSurveyPagePerCount(portletId);
+		}
+		obj.portletCode = "survey";
+		obj.getPortletList = function () {
+			var currentPage = obj.page.getPage();
+			getPotletSurveyList(currentPage);
+		}
+		
+		return obj;
+	})();
+	
+	portletInfoMap["portlet" + surveyPortletId] = newObj;
+	surveyPortletObj.portletId = surveyPortletId;
+	
+	getPotletSurveyList(1);
+}
+
+function reloadSurveyPage() {
+	portletInfoMap["portlet" + surveyPortletObj.portletId].getPortletList();
+}
+
+function getSurveyPagePerCount(surveyPortletId) {
+	var portletSize = getPortletSize(surveyPortletId);
+	var count = 0;
+	
+	if (portletSize === GridSize.TWO_BY_ONE || portletSize === GridSize.TWO_BY_TWO) {
+		count = 7;
+	} else {
+		count = 3;
+	}
+
+	return count;
+}
+
 var plusBtn = document.getElementById("surveyPlus");
 plusBtn.addEventListener('click', goSurveyPage, false);
 
@@ -7,12 +51,11 @@ function goSurveyPage() {
 }
 
 // 진행중인 설문 데이터 가져오기
-function getPotletSurveyList() {
+function getPotletSurveyList(currentPage) {
 	var searchObj = {
-			currentPage : 1,
+			currentPage : currentPage,
 			pageMode 	: 'processing',
 			srchMode 	: 0,
-			listCnt  	: 5,
 			title       : "",
 			creatorName : "",
 			startDate   : "",
@@ -21,7 +64,7 @@ function getPotletSurveyList() {
 			order       : "",
 			srchMode    : 0,
 			srchOption  : "title",
-			listCntSize : 5
+			listCntSize : getSurveyPagePerCount(surveyPortletObj.portletId)
 			};
 	
 	$.ajax({
@@ -29,10 +72,11 @@ function getPotletSurveyList() {
 		url: "/ezSurvey/getSurveyItems.do",
 		data: searchObj,
 		dataType: "JSON",
-		async: false,
-		cache: false,
 		success : function(data) {
 			setListByDataList(data.itemList);
+			var totalCnt = data.totalRows;
+			var currentPage = data.currentPage;
+			resetPortletPaging(surveyPortletObj.portletId, totalCnt, currentPage, "");
 		},
 		error : function(error) {
 			alert(messages.strLang2 + error);
@@ -58,7 +102,7 @@ function setListByDataList(surveys) {
 			
 			if (survey.useStatus === 1) {
 				title = survey.title;
-				endDate = "~ " + survey.endDate.substr(5, 5);
+				endDate = "~" + survey.endDate.substr(5, 5).replace(/-/g, ".");
 				creator = survey.creatorName;
 				
 				var liEl = document.createElement("li");
@@ -109,7 +153,6 @@ function setListByDataList(surveys) {
 		
 		ulEl.appendChild(dlEl);
 	}
-	
 }
 
 // 응답 안 한 설문은 굵게 표시

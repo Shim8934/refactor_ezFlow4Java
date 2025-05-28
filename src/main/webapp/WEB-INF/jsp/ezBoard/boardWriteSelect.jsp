@@ -5,7 +5,8 @@
 	<head>
 		<title><spring:message code='ezBoard.t135'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
 		<style>
 			.groupBoard {
@@ -52,6 +53,12 @@
 					DivPopUpShow(330, 205, pUrl);
 		            return;
 		        }
+				/* 2023-11-03 민지수 - 카테고리게시판 > 게시물 등록 불가 */
+				if (SelectedBoardType == "10") {
+					var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.MJSCAT02' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.MJSCAT02'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+					DivPopUpShow(330, 205, pUrl);
+					return;
+				}
 		
 		        if (CheckIfCanWrite(SelectedBoardID) == false) {
 		        	var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.t354' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.t354'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");

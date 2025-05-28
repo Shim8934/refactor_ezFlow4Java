@@ -5,7 +5,8 @@
 <html>
 	<head>
 	    <title>mail_outofoffice</title>
-	    <link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+	    <link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -156,7 +157,7 @@
 		                 $("#Etimepicker").on("focus", function(){
 							$(this).trigger("blur");
 						});
-		            } catch (e) { }
+		            } catch (e) {console.log(e);}
 		          
 		            if (g_oofstate == "disabled") {
 		                document.getElementById("SetRadio0").defaultChecked = true;
@@ -187,15 +188,15 @@
 		        	if (tbContentElement1.editorLoadFlag) {
 			            tbContentElement1.SetEditorContent(document.getElementById("BujaeBody1").innerHTML);
 		        	}
-		        } catch (e) { }
+		        } catch (e) {console.log(e);}
 		        
 		        try {
 		        	if (tbContentElement2.editorLoadFlag) {
 			            tbContentElement2.SetEditorContent(document.getElementById("BujaeBody2").innerHTML);
 		        	}
-		        } catch (e) { }
+		        } catch (e) {console.log(e);}
 		        
-		        try {document.body.scrollTop = 0;} catch (e) {}
+		        try {document.body.scrollTop = 0;} catch (e) {console.log(e);}
 		    }
 		    function SetToggle(param) {
 		        document.getElementById("Stimepicker").disabled = true;

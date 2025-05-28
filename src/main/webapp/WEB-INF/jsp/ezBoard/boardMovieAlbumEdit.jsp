@@ -3,9 +3,11 @@
 <html>
 	<head>
 	    <title><spring:message code='ezBoard.t1005'/></title>
-		<link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezBoard/common.js')}"></script>
 		<script type="text/javascript">
 		    var pBoardID = "";
 		    var pItemID = "";
@@ -13,6 +15,8 @@
 		    var pContent = "";
 		    var pMode = "";
 		    var isAllGroupBoard = "";
+		    var useKeyword = ""; // 키워드 사용여부(Y/N)
+		    var keywordArr = []; // 키워드 배열
 		    var ReturnFunction;
 		    
 		    window.onload = function () {
@@ -24,6 +28,8 @@
 		            pContent = parent.photoalbumedit_dialogArguments[0][3];
 		            pMode = parent.photoalbumedit_dialogArguments[0][4];
 		            isAllGroupBoard = parent.photoalbumedit_dialogArguments[0][5];
+                    useKeyword = parent.photoalbumedit_dialogArguments[0][6];
+                    keywordArr = parent.photoalbumedit_dialogArguments[0][7];
 		        } catch (e) {
 		            pBoardID = dialogArguments[0];
 		            pItemID = dialogArguments[1];
@@ -31,6 +37,8 @@
 		            pContent = dialogArguments[3];
 		            pMode = dialogArguments[4];
 		            isAllGroupBoard = dialogArguments[5];
+                    useKeyword = dialogArguments[6];
+                    keywordArr = dialogArguments[7];
 		        }
 		
 		        try {
@@ -51,6 +59,13 @@
 		        }
 		        document.getElementById("title").value = pTitle;
 		        document.getElementById("content").value = pContent;
+		        if (useKeyword != null && useKeyword == "Y") {
+		            document.querySelector('#keywordView').style.display = '';
+                    for (let key of keywordArr) {
+                        var keywordObj = makeKeywordSpanObj(key, "edit");
+                        document.querySelector('#txtKeyword').before(keywordObj)
+                    }
+                }
 		    };
 		    
 		    function updatealbum() {
@@ -73,6 +88,15 @@
 		        strXML += "<ITEMID>" + pItemID + "</ITEMID>";
 		        strXML += "<TITLE><![CDATA[" + pTitle + "]]></TITLE>";
 		        strXML += "<CONTENT><![CDATA[" + pContent + "]]></CONTENT>";
+                /* 2024-08-13 전인하 - 키워드 추가 */
+                if (useKeyword != null && useKeyword == 'Y') {
+                    strXML += "<KEYWORDS>";
+                    for (var keyword of keywordArr) {
+                        // createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "KEYWORD", keyword);
+                        strXML += "<KEYWORD>" + keyword + "</KEYWORD>";
+                    }
+                    strXML += "</KEYWORDS>";
+                }
 		        strXML += "</NODE>";
 		        strXML += "</DATA>";
 		
@@ -84,7 +108,7 @@
 		        xmlhttp.send(xmldom);
 		        
 		        if (xmlhttp.responseText == "OK") {
-		        	sendBoardAlertMail("modify", pBoardID, pItemID, isAllGroupBoard);
+		        	sendBoardAlert("modify", pBoardID, pItemID, isAllGroupBoard);
 		        	
 		            alert("<spring:message code='ezBoard.t1015'/>");
 		            if (CrossYN())
@@ -106,12 +130,12 @@
 		    }
 		    
 		    /* 2021-06-22 홍승비 - 게시판 메일알림 함수 추가, 비동기로 백그라운드 동작 */
-	        function sendBoardAlertMail(pMode, pBoardID, pItemID, pIsAllGroupBoard) {
+	        function sendBoardAlert(pMode, pBoardID, pItemID, pIsAllGroupBoard) {
 		        $.ajax({
 					type : "POST",
 					dataType : "text",
 					async : true,
-					url : "/ezBoard/sendBoardAlertMail.do",
+					url : "/ezBoard/sendBoardAlert.do",
 					data : {
 						mode : pMode,
 						boardID : pBoardID,
@@ -146,6 +170,14 @@
 	                        <th style="width:80px"><spring:message code='ezBoard.t291'/></th>
 	                        <td style="width:100%"><input type="text" id="title" value="" style="width:100%;" maxlength="100" /></td>
 	                    </tr>
+	                    <!-- 키워드 시작 -->
+                        <tr id='keywordView' style='display:none'>
+                            <th><spring:message code="ezApprovalG.t1200" /></th>
+                            <td colspan="3" id="keyWordResult">
+                                <input type="text" id="txtKeyword" style="WIDTH: 20%; word-wrap: break-word; word-break: break-all;" value="" maxlength="100" onkeyup="keyword_onkeyUp(event)" >
+                            </td>
+                        </tr>
+                        <!-- 키워드 끝 -->
 	                    <tr>
 	                        <th style="width:80px"><spring:message code='ezQuestion.t180'/><spring:message code='ezCommunity.t18'/></th>
 	                        <td style="width:100%;"><textarea id="content" style="height:100px;margin:2px;width:99%; resize:none;"></textarea></td>

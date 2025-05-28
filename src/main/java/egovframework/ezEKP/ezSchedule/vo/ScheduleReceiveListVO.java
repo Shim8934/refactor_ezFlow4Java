@@ -13,8 +13,10 @@ public class ScheduleReceiveListVO {
 	private String endDate;
 	private String status;
 	private String repetition;
-	
-	
+	private String showtop;
+
+	public String getShowtop() { return showtop; }
+	public void setShowtop(String showtop) { this.showtop = showtop; }
 	public String getRepetition() {
 		return repetition;
 	}

@@ -7,7 +7,8 @@
 	<head>
 	<title><spring:message code='ezJournal.t53'/></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <link rel="stylesheet" href="${util.addVer('ezCircular.c1', 'msg')}" type="text/css">
+    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
     <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css" />
     <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
     <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -152,16 +153,6 @@
                 case "JournalEnv_div1":
                 	if (document.getElementById("JournalEnv_content1").style.display == "none") {
                 		document.getElementById("JournalEnv_content1").style.display = "";
-                		document.getElementById("JournalEnv_content2").style.display = "none";
-                		<c:if test="${fn:length(deptList) ne 0}">
-                		document.getElementById("JournalEnv_content3").style.display = "none";
-                		</c:if>
-                	}
-                    break;
-                case "JournalEnv_div2":
-                	if (document.getElementById("JournalEnv_content2").style.display == "none") {
-                		document.getElementById("JournalEnv_content2").style.display = "";
-                		document.getElementById("JournalEnv_content1").style.display = "none";
                 		<c:if test="${fn:length(deptList) ne 0}">
                 		document.getElementById("JournalEnv_content3").style.display = "none";
                 		</c:if>
@@ -171,7 +162,6 @@
                 	if (document.getElementById("JournalEnv_content3").style.display == "none") {
                 		document.getElementById("JournalEnv_content3").style.display = "";
                 		document.getElementById("JournalEnv_content1").style.display = "none";
-                		document.getElementById("JournalEnv_content2").style.display = "none";
                 	}
                     break;
             }
@@ -265,26 +255,6 @@
  			});       
     	}
     	
-        // 메일알림 옵션 저장
-    	function saveMailAlert() {
-    		var recvAlert = ($("#recvMail").is(":checked")) ? "Y" : "N";
-    		var replyAlert = ($("#replyMail").is(":checked")) ? "Y" : "N";
-    		
-    		$.ajax({
-    			type : "POST",
-    			dataType : "text",
-    			url : "/ezJournal/saveJournalEnv.do",
-    			data : {
-    				recvAlert : recvAlert,
-    				replyAlert : replyAlert
-    			},
-    			success : function() {
-    				alert("<spring:message code='ezJournal.t137'/>");
-    			}
-    		});
-    		
-    	}
-        
         function changePreviewVal(elem){
         	var elemId = $(elem).attr("id");
         	var targetId = elemId.substring(0,1);
@@ -302,7 +272,6 @@
     <div class="portlet_tabpart01">
         <div class="portlet_tabpart01_top" id="tab1">
             <p id="JournalEnv_sub1"><span divname="JournalEnv_div1" id="1tab1"><spring:message code="ezJournal.t115" /></span></p>
-            <p id="JournalEnv_sub2"><span divname="JournalEnv_div2" id="1tab2"><spring:message code="ezJournal.t116" /></span></p>
             <c:if test="${fn:length(deptList) ne 0}">
             	<p id="JournalEnv_sub3"><span divname="JournalEnv_div3" id="1tab3"><spring:message code="ezJournal.t174" /></span></p>
             </c:if>
@@ -370,38 +339,8 @@
        		<a class="imgbtn" onclick="saveListEnv()"><span><spring:message code="ezJournal.t26" /></span></a>
        		<a class="imgbtn" onclick="Cancel_Click()"><span><spring:message code="ezJournal.t16" /></span></a>
    		</div>
-	</div>		
-    <div id="JournalEnv_content2" style="margin-left:10px; width:100%;height:90%; padding-top:10px; display:none">
-	    <br/>	
-   		<%-- <h2><spring:message code="ezJournal.t116" /></h2> --%>
-   		<span class="txt"><spring:message code="ezJournal.t121" /></span>
-       	<br />    
-    	<table class="content" style="width:480px; margin-top:5px">
-    		<tr>
-    			<th style="white-space: nowrap;">
-    				<input type="checkbox" id="recvMail"
-    					<c:if test="${journalEnv.recvAlert eq 'Y'}">
-	    					checked
-    					</c:if> 
-    				>	
-    			</th>
-    			<td>&nbsp;<spring:message code="ezJournal.t122"/></td>
-    		</tr>
-    		<tr>
-    			<th style="white-space: nowrap;">
-    				<input type="checkbox" id="replyMail"
-    					<c:if test="${journalEnv.replyAlert eq 'Y'}">
-	    					checked
-    					</c:if> 
-    				>	
-    			</th>
-    			<td>&nbsp;<spring:message code="ezJournal.t123"/></td>
-    		</tr>
-    	</table>
-    	<div style="width:466px;" class="btnpositionJsp">      
-       		<a class="imgbtn" onclick="saveMailAlert()"><span><spring:message code="ezJournal.t26" /></span></a>
-   		</div>
-	</div>	
+	</div>
+
 	<c:if test="${fn:length(deptList) ne 0}">
 	    <div id="JournalEnv_content3" style="margin-left:10px; width:100%;height:90%; padding-top:10px; display:none">
 		    <br/>

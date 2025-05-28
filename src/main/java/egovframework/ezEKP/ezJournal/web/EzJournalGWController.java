@@ -16,15 +16,23 @@ import java.util.Base64;
 import java.util.Base64.Decoder;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
+import egovframework.ezEKP.ezPersonal.type.NotiType;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
@@ -89,6 +97,9 @@ public class EzJournalGWController {
 	@Resource(name="EzOrganService")
 	private EzOrganService ezOrganService;
 	
+	@Resource(name="EzPersonalService")
+	private EzPersonalService ezPersonalService;
+	
 	/**
 	 * 업무일지 G/W [POST] 일지함 생성
 	 */
@@ -126,6 +137,8 @@ public class EzJournalGWController {
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("G/W JOURNAL [POST /rest/ezjournal/types] ended.");
@@ -159,6 +172,8 @@ public class EzJournalGWController {
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("G/W JOURNAL [DELETE /rest/ezjournal/types] ended.");
@@ -197,6 +212,8 @@ public class EzJournalGWController {
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("G/W JOURNAL [GET /rest/ezjournal/types] ended.");
@@ -229,6 +246,8 @@ public class EzJournalGWController {
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("G/W JOURNAL [PUT /rest/ezjournal/types] ended.");
@@ -264,7 +283,7 @@ public class EzJournalGWController {
 				formList = ezJournalService.getFormListAdmin(typeId, deptId, companyId, info.getTenantId(), info.getOffSet(), lang);
 			} else {
 				// 사용자단의 양식리스트 (부서사용양식, 기본양식)
-				formList = ezJournalService.getFormList(typeId, deptId, info.getCompanyId(), info.getTenantId());
+				formList = ezJournalService.getFormList(typeId, deptId, "", info.getTenantId());
 			}
 			
 			result.put("data", formList);
@@ -275,6 +294,8 @@ public class EzJournalGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		logger.debug("ezJournal G/W journalFormList ended.");
 		
@@ -306,6 +327,8 @@ public class EzJournalGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W insertForm ended.");
@@ -333,10 +356,12 @@ public class EzJournalGWController {
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", "");
-		} catch(Exception e) {
+		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W updateForm ended.");
@@ -369,6 +394,8 @@ public class EzJournalGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W deleteForm ended.");
@@ -416,6 +443,8 @@ public class EzJournalGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W viewForm ended.");
@@ -447,6 +476,8 @@ public class EzJournalGWController {
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W authorsList ended.");
@@ -457,7 +488,7 @@ public class EzJournalGWController {
 	 * 업무일지 G/W [GET] 열람권한 상세정보
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/rest/ezjournal/users/{userId}/author-depts", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/rest/ezjournal/users/{userId:.+}/author-depts", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject authorDepts(@PathVariable String userId, HttpServletRequest request) throws Exception {
 		logger.debug("ezJournal G/W authorDepts started.");
 		logger.debug("userId=" + userId);
@@ -468,7 +499,9 @@ public class EzJournalGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String lang = request.getParameter("lang") != null ? commonUtil.getMultiData(request.getParameter("lang"), info.getTenantId()) : commonUtil.getMultiData(info.getLang(), info.getTenantId());
-			List<JournalAuthorVO> deptList = ezJournalService.getAuthDeptList(info.getTenantId(), userId, lang);
+			String userCompany = request.getParameter("userCompany") != null ? request.getParameter("userCompany") : "";
+			
+			List<JournalAuthorVO> deptList = ezJournalService.getAuthDeptList(info.getTenantId(), userId, lang, userCompany);
 	
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -477,6 +510,8 @@ public class EzJournalGWController {
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W authorDepts ended.");
@@ -507,6 +542,7 @@ public class EzJournalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 			
+			logger.error(e.getMessage(), e);
 		}
 		logger.debug("ezJournal G/W insertAuthorDepts ended.");
 		return result;
@@ -535,6 +571,8 @@ public class EzJournalGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W deleteAuthorDepts ended.");
@@ -557,9 +595,15 @@ public class EzJournalGWController {
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			Map<String, Object> param = new HashMap<String, Object>();
 			
+			/* 2024-07-17 홍승비 - SQL Injection 수정 > 페이징을 위한 startCount, listCnt 값은 정수로 전달하도록 수정 */
 			for (String key : request.getParameterMap().keySet()) {
-				param.put(key, request.getParameter(key));
+				if (key.equalsIgnoreCase("startCount") || key.equalsIgnoreCase("listCnt")) {
+					param.put(key, Integer.parseInt(request.getParameter(key)));
+				} else {
+					param.put(key, request.getParameter(key));
+				}
 			}
+			
 			param.put("tenantId", info.getTenantId());
 			param.put("lang", lang);
 			param.put("offset", commonUtil.getMinuteUTC(info.getOffSet()));
@@ -572,6 +616,8 @@ public class EzJournalGWController {
 			result.put("data", "");
 			result.put("status", "error");
 			result.put("code", 1);
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W journals ended.");
@@ -599,6 +645,8 @@ public class EzJournalGWController {
 			}
 			param.put("tenantId", info.getTenantId());
 			param.put("offset", commonUtil.getMinuteUTC(info.getOffSet()));
+			param.put("lang", commonUtil.getMultiData(info.getLang(), info.getTenantId()));
+			
 			String totalCount = ezJournalService.getTotalListCount(param);
 			
 			result.put("data", totalCount);
@@ -608,6 +656,8 @@ public class EzJournalGWController {
 			result.put("data", "");
 			result.put("status", "error");
 			result.put("code", 1);
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W journals-count ended.");
@@ -628,9 +678,10 @@ public class EzJournalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, jsonParam.get("userId").toString());
+			String deptId = String.valueOf(jsonParam.get("deptId"));
 			String realPath = commonUtil.getRealPath(request);
 			
-			String journalId = ezJournalService.insertJournal(jsonParam, info.getDeptId(), info.getTenantId(), realPath);
+			String journalId = ezJournalService.insertJournal(jsonParam, deptId, info.getTenantId(), realPath);
 			
 			result.put("data", journalId);
 			result.put("status", "ok");
@@ -640,6 +691,8 @@ public class EzJournalGWController {
 			result.put("data", "");
 			result.put("status", "error");
 			result.put("code", 1);
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W insertJournal ended.");
@@ -678,6 +731,8 @@ public class EzJournalGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W journalsSumContent ended.");
@@ -709,6 +764,12 @@ public class EzJournalGWController {
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			JournalVO journal = ezJournalService.getJournal(journalId, userId, info.getTenantId(), lang, info.getOffSet(), pPreviewShow_HOW);
 			
+			if (journal == null) {
+				result.put("data", "");
+				result.put("status", "empty");
+				result.put("code", -1);
+			}
+			
 			if (journal.getFileList().size() > 0) {
 				List<JournalFileVO> fileList = journal.getFileList();
 				
@@ -722,7 +783,7 @@ public class EzJournalGWController {
 					String fileSize = commonUtil.getSizeWithUnit(vo.getFileSize());
 					vo.setFileTransSize(fileSize);
 					
-					fileTotalSizeLong+=vo.getFileSize();
+					fileTotalSizeLong += vo.getFileSize();
 					
 					logger.debug("##fileType: " + vo.getFileType() + ", EncodeFileName: " + vo.getFileEncodeName() + ", transSize: " + vo.getFileTransSize());
 				}
@@ -740,6 +801,7 @@ public class EzJournalGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W viewJournal ended.");
@@ -775,6 +837,8 @@ public class EzJournalGWController {
 			result.put("data", "");
 			result.put("status", "error");
 			result.put("code", 1);
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W updateJournal ended.");
@@ -830,6 +894,8 @@ public class EzJournalGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W deleteJournalList ended.");
@@ -867,6 +933,8 @@ public class EzJournalGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W receiveOKJournal ended.");
@@ -1028,6 +1096,8 @@ public class EzJournalGWController {
 			result.put("data", "");
 			result.put("status", "error");
 			result.put("code", 0);
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W uploadFile ended.");
@@ -1159,6 +1229,8 @@ public class EzJournalGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W deleteFile ended.");
@@ -1264,6 +1336,8 @@ public class EzJournalGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W downloadFile ended.");
@@ -1319,6 +1393,8 @@ public class EzJournalGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W downloadFile ended.");
@@ -1352,6 +1428,8 @@ public class EzJournalGWController {
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W getReceiverList ended.");
@@ -1385,6 +1463,8 @@ public class EzJournalGWController {
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W getReceiverCount ended.");
@@ -1395,7 +1475,7 @@ public class EzJournalGWController {
 	 * 업무일지 G/W [GET] 수신자 즐겨찾기 리스트
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/rest/ezjournal/users/{userId}/favorites", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/rest/ezjournal/users/{userId:.+}/favorites", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject getFavoriteList(@PathVariable String userId, HttpServletRequest request) throws Exception {
 		logger.debug("ezJournal G/W getFavoriteList started.");
 		logger.debug("userId=" + userId);
@@ -1415,6 +1495,8 @@ public class EzJournalGWController {
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W getFavoriteList ended.");
@@ -1425,7 +1507,7 @@ public class EzJournalGWController {
 	 * 업무일지 G/W [POST] 수신자 즐겨찾기 저장
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/rest/ezjournal/users/{userId}/favorites", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/rest/ezjournal/users/{userId:.+}/favorites", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
 	public JSONObject saveFavorite(@PathVariable String userId, @RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
 		logger.debug("ezJournal G/W saveFavorite started.");
 		logger.debug("userId=" + userId);
@@ -1446,6 +1528,8 @@ public class EzJournalGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W saveFavorite ended.");
@@ -1456,7 +1540,7 @@ public class EzJournalGWController {
 	 * 업무일지 G/W [PUT] 수신자 즐겨찾기 수정
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/rest/ezjournal/users/{userId}/favorites/{favoriteId:.+}", method= RequestMethod.PUT, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/rest/ezjournal/users/{userId:.+}/favorites/{favoriteId:.+}", method= RequestMethod.PUT, produces="application/json;charset=UTF-8")
 	public JSONObject updateFavorite(@PathVariable String userId, @PathVariable String favoriteId, @RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
 		logger.debug("ezJournal G/W updateFavorite started.");
 		logger.debug("userId=" + userId + ",favoriteId=" + favoriteId);
@@ -1478,6 +1562,7 @@ public class EzJournalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W updateFavorite ended.");
@@ -1488,7 +1573,7 @@ public class EzJournalGWController {
 	 * 업무일지 G/W [DELETE] 수신자 즐겨찾기 삭제
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/rest/ezjournal/users/{userId}/favorites/{favoriteId:.+}", method= RequestMethod.DELETE, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/rest/ezjournal/users/{userId:.+}/favorites/{favoriteId:.+}", method= RequestMethod.DELETE, produces="application/json;charset=UTF-8")
 	public JSONObject deleteFavorite(@PathVariable String userId, @PathVariable String favoriteId, HttpServletRequest request) throws Exception {
 		logger.debug("ezJournal G/W deleteFavorite started.");
 		logger.debug("userId=" + userId + ",favoriteId=" + favoriteId);
@@ -1509,6 +1594,7 @@ public class EzJournalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W deleteFavorite ended.");
@@ -1519,7 +1605,7 @@ public class EzJournalGWController {
 	 * 업무일지 G/W [GET] 수신자 즐겨찾기 유저 리스트
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/rest/ezjournal/users/{userId}/favorites/{favoriteId}/users", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/rest/ezjournal/users/{userId:.+}/favorites/{favoriteId}/users", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject getFavoriteUserList(@PathVariable String userId, @PathVariable String favoriteId, HttpServletRequest request) throws Exception {
 		logger.debug("ezJournal G/W getFavoriteUserList started.");
 		logger.debug("userId=" + userId + ",favoriteId=" + favoriteId);
@@ -1540,6 +1626,8 @@ public class EzJournalGWController {
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W getFavoriteUserList ended.");
@@ -1572,6 +1660,8 @@ public class EzJournalGWController {
 			result.put("data", "");
 			result.put("status", "error");
 			result.put("code", 1);
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W getReplies ended.");
@@ -1606,6 +1696,8 @@ public class EzJournalGWController {
 			result.put("data", "");
 			result.put("status", "error");
 			result.put("code", 1);
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W saveReply ended.");
@@ -1638,6 +1730,8 @@ public class EzJournalGWController {
 			result.put("data", "");
 			result.put("status", "error");
 			result.put("code", 1);
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W deleteReply ended.");
@@ -1648,7 +1742,7 @@ public class EzJournalGWController {
 	 * 업무일지 G/W [POST] 환경설정 정보 저장
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/rest/ezjournal/users/{userId}/options", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/rest/ezjournal/users/{userId:.+}/options", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
 	public JSONObject saveOption(@RequestParam Map<String,Object> param, @PathVariable String userId, HttpServletRequest request) throws Exception {
 		logger.debug("ezJournal G/W saveOption started.");
 
@@ -1669,6 +1763,8 @@ public class EzJournalGWController {
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W saveOption ended.");
@@ -1679,7 +1775,7 @@ public class EzJournalGWController {
 	 * 업무일지 G/W [GET] 환경설정 정보 조회
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/rest/ezjournal/users/{userId}/options", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/rest/ezjournal/users/{userId:.+}/options", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject getOption(@PathVariable String userId, HttpServletRequest request) throws Exception {
 		logger.debug("ezJournal G/W getOption started.");
 		
@@ -1690,9 +1786,9 @@ public class EzJournalGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
-			JournalEnvVO journalOpt = ezJournalService.getUserJournalEnv(userId, info.getTenantId());
-			
-			List<DeptViewVO> deptList = ezJournalService.getCheifBoss(userId, info.getTenantId());
+			/* 2024-07-17 홍승비 - SQL Injection 수정 > 알림 메일 발송을 위한 사용자명 다국어 처리 정상 동작하도록 lang 파라미터 추가 */
+			JournalEnvVO journalOpt = ezJournalService.getUserJournalEnv(userId, commonUtil.getMultiData(info.getLang(), info.getTenantId()), info.getTenantId());
+			List<DeptViewVO> deptList = ezJournalService.getCheifBoss(userId, commonUtil.getMultiData(info.getLang(), info.getTenantId()), info.getTenantId());
 			
 			data.put("journalOpt", journalOpt);
 			data.put("deptList", deptList);
@@ -1704,6 +1800,8 @@ public class EzJournalGWController {
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W getOption ended.");
@@ -1714,7 +1812,7 @@ public class EzJournalGWController {
 	 * 업무일지 G/W [GET] 수신일지개수 
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/rest/ezjournal/users/{userId}/recv-count", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/rest/ezjournal/users/{userId:.+}/recv-count", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject getRecvJournalCount(@PathVariable String userId,HttpServletRequest request) throws Exception {
 		logger.debug("ezJournal G/W getRecvJournalCount started.");
 		
@@ -1733,6 +1831,8 @@ public class EzJournalGWController {
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W getRecvJournalCount ended.");
@@ -1765,6 +1865,8 @@ public class EzJournalGWController {
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W getRecvJournalCount ended.");
@@ -1795,6 +1897,8 @@ public class EzJournalGWController {
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W getRecvJournalCount ended.");
@@ -1825,6 +1929,8 @@ public class EzJournalGWController {
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W checkJournalAuth ended.");
@@ -1860,6 +1966,8 @@ public class EzJournalGWController {
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W getCompanyList ended.");
@@ -1880,7 +1988,8 @@ public class EzJournalGWController {
 			String userId = request.getParameter("userId");
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			
+			List<OrganUserVO> allUserinfo = ezOrganService.getAllUserinfo(userId, info.getTenantId());
+
 			logger.debug("userId : " + userId);
 			String companyId = request.getParameter("companyId");
 			
@@ -1889,7 +1998,17 @@ public class EzJournalGWController {
 			}
 			String lang = request.getParameter("lang") != null ? commonUtil.getMultiData(request.getParameter("lang"), info.getTenantId()) : commonUtil.getMultiData(info.getLang(), info.getTenantId());;
 			List<DeptViewVO> deptList = ezJournalService.getDeptViewList(userId, companyId, info.getTenantId(),lang);
-			
+
+			if (deptList.stream().noneMatch(vo -> "yes".equals(vo.getMyDept()))) {
+				Set<String> set = allUserinfo.stream()
+						.map(OrganUserVO::getDepartment)
+						.collect(Collectors.toSet());
+                deptList.stream()
+						.filter(vo -> set.contains(vo.getId()))
+						.findFirst()
+						.ifPresent(vo -> vo.setMyDept("yes"));
+			}
+
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", deptList);
@@ -1897,6 +2016,8 @@ public class EzJournalGWController {
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W getDeptList ended.");
@@ -1946,9 +2067,45 @@ public class EzJournalGWController {
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("ezJournal G/W getUserList ended.");
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/rest/ezjournal/users/{userId:.+}/noti/options", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	public JSONObject getNotiOption(@PathVariable String userId, HttpServletRequest request) throws Exception {
+		logger.debug("ezJournal G/W getNotiOption started.");
+		
+		JSONObject result = new JSONObject();
+		JSONObject data = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			String notiName = request.getParameter("notiName");
+			NotiType notiType = NotiType.fromString(notiName);
+			List<Integer> disablePlatformList = ezPersonalService.getAllPlatformFromNotiDisableItem(userId, notiType, info.getTenantId());
+			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
+			JournalEnvVO journalMailInfo = ezJournalService.getUserJournalMailInfo(userId, info.getTenantId(), lang);
+			
+			data.put("journalMailInfo", journalMailInfo);
+			data.put("disablePlatformList", disablePlatformList);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", data);
+		} catch (Exception e) {
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+			logger.error(e.getMessage(), e);
+		}
+		
+		logger.debug("ezJournal G/W getNotiOption ended.");
 		return result;
 	}
 	

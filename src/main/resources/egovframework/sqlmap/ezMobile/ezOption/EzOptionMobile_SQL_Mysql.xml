@@ -27,6 +27,8 @@
       <result property="email"       		column="email"   							columnIndex="17"/>
       <result property="phone"       		column="telephonenumber"   					columnIndex="18"/>
       <result property="lastLogin"     		column="lastLogin"      					columnIndex="19"/>
+	  <result property="jobId"     			column="extensionattribute7"      			columnIndex="20"/>
+	  <result property="roleId"     		column="extensionattribute8"      			columnIndex="21"/>
     </resultMap>
     
     <resultMap class="MOptionVO" id="MOptionVO">
@@ -60,7 +62,9 @@
                 b.extensionattribute2 as userFileUrl,
                 b.mail as email,
                 b.telephonenumber,
-                DATE_FORMAT(b.lastlogin, '%Y-%c-%d %T') as lastLogin
+                DATE_FORMAT(b.lastlogin, '%Y-%c-%d %T') as lastLogin,
+				b.extensionattribute7,
+				b.extensionattribute8
 			FROM
 				TBL_USERMOBILEINFO a right join TBL_USERMASTER b ON a.userid = b.cn AND a.tenant_id = b.tenant_id
 			WHERE
@@ -91,15 +95,12 @@
   	
   	<select id="EzOptionDAO.getTimeLineList" parameterClass="Map" resultClass="MPortalTimeLineVO">
   		<isEqual property="approvalAccess" compareValue="true" >
-   		<![CDATA[
    			(SELECT 
 				DOCTITLE as title,
 				DATE_ADD(DATE_FORMAT(STARTDATE,'%Y-%m-%d %H:%i'), INTERVAL #offset# MINUTE) STARTDATE,
 				1 as module,
-		]]>	
 				<isEqual property="primary" compareValue="1"> WRITERNAME, </isEqual>
 				<isNotEqual property="primary" compareValue="1"> WRITERNAME2 as WRITERNAME, </isNotEqual>
-		<![CDATA[
 				VAPRDOINGDOCLIST.DOCID as APPRID,
 				APRMEMBERSN as APRMEMBERSN,
 				'' as BOARDID,
@@ -147,7 +148,11 @@
 			AND
 				NVL(GRP.TABSN, 1) = 1
 			AND 
-				APRMEMBERID IN ($userIDS$)
+				APRMEMBERID IN
+				<iterate property="userIDS" open="(" close=")" conjunction=",">
+					#userIDS[]#
+				</iterate>
+		<![CDATA[
 			AND 
 				APRTYPE <> '015' 
 			AND
@@ -164,7 +169,6 @@
 		]]>	
 				<isEqual property="primary" compareValue="1"> WRITERNAME, </isEqual>
 				<isNotEqual property="primary" compareValue="1"> WRITERNAME2 as WRITERNAME, </isNotEqual>
-		<![CDATA[
 				VENDCHAMJODOCINFO.DOCID as APPRID,
 				APRMEMBERSN as APRMEMBERSN,
 				'' as BOARDID,
@@ -212,7 +216,11 @@
 			AND
 				NVL(GRP.TABSN, 1) = 1
 			AND 
-				APRMEMBERID IN ($userIDS$)
+				APRMEMBERID IN
+				<iterate property="userIDS" open="(" close=")" conjunction=",">
+					#userIDS[]#
+				</iterate>
+		<![CDATA[
 			AND 
 				APRTYPE <> '015' 
 			AND
@@ -329,7 +337,9 @@
                 b.extensionattribute2 as userFileUrl,
                 b.mail as email,
                 b.telephonenumber,
-                DATE_FORMAT(b.lastlogin, '%Y-%c-%d %T') as lastLogin
+                DATE_FORMAT(b.lastlogin, '%Y-%c-%d %T') as lastLogin,
+                b.extensionattribute7,
+                b.extensionattribute8
 			FROM
 				TBL_USERLOCALINFO a right join TBL_USERMASTER b ON a.userid = b.cn AND a.tenant_id = b.tenant_id
 			WHERE
@@ -353,9 +363,13 @@
   		   <![CDATA[
 				UPDATE TBL_USERMOBILEINFO
 				SET 
-					LANG = #lang#	
-					,TIMEZONE = #timeZone#
-					,MAINTYPE = #mainType#
+					LANG = #lang#
+   			]]>
+			  <isNotEmpty property = "timeZone">
+				  ,TIMEZONE = #timeZone#
+			  </isNotEmpty>
+			<![CDATA[
+				  ,MAINTYPE = #mainType#
 					,LISTCNT = #listCnt#					
 					,USESECURITY = #useSecurity#	
 				WHERE 

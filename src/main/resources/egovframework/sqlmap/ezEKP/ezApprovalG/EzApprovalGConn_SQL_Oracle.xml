@@ -12,8 +12,16 @@
         <result property="DOCID" jdbcType="VARCHAR" javaType="String" />
         <result property="UPDATEDATE" jdbcType="VARCHAR" javaType="String" />
     </resultMap>
+    <resultMap id="connAttachMap" class="HashMap">
+        <result property="KEYID" column="KEYID" jdbcType="VARCHAR" javaType="String" />
+        <result property="ATTACHSN" column="ATTACHSN" jdbcType="VARCHAR" javaType="String" />
+        <result property="ATTACHFILENAME" column="ATTACHFILENAME" jdbcType="VARCHAR" javaType="String" />
+        <result property="ATTACHFILEHREF" column="ATTACHFILEHREF" jdbcType="VARCHAR" javaType="String" />
+        <result property="ATTACHFILESIZE" column="ATTACHFILESIZE" jdbcType="VARCHAR" javaType="String" />
+        <result property="ATTACHUSERID" column="ATTACHUSERID" jdbcType="VARCHAR" javaType="String" />
+    </resultMap>
     <select id="ezApprovalGConn.getConnData" parameterClass="Map" resultMap="connDataMap">
-        SELECT KEYID, FORMID AS FORMCODE, LOWER(USERID) AS USERID, LOWER(DEPTCD) AS DEPTID, TITLE, BODYXML AS BODY, STATUS, DOCID, TO_DATE(UPDATEDATE ,'yyyy-mm-dd hh24:mi:ss') AS UPDATEDATE
+        SELECT KEYID, FORMID AS FORMCODE, LOWER(USERID) AS USERID, LOWER(DEPTID) AS DEPTID, TITLE, BODYHTML AS BODY, STATUS, DOCID, TO_DATE(UPDATEDATE ,'yyyy-mm-dd hh24:mi:ss') AS UPDATEDATE
         FROM TBL_CONNDATA
         WHERE KEYID = #keyId#
         AND FORMID = #formCode#
@@ -48,4 +56,25 @@
         AND TENANT_ID = #tenantId#
         AND COMPANYID = #companyId#
     </select>
+
+    <insert id = "EzApprovalGConnDAO.registConnData" parameterClass = "Map">
+        INSERT INTO TBL_CONNDATA (KEYID, USERID, DEPTID, TITLE, FORMID, BODYHTML, STATUS, UPDATEDATE)
+        VALUES(#KEYID#, #USERID#, #DEPTID#, #TITLE#, #FORMID#, #BODYHTML#, 'INT', TO_DATE(#v_SYSDATE#, 'YYYY-MM-DD HH24:MI:SS'))
+    </insert>
+
+    <select id="ezApprovalGConn.getConnAttachData" parameterClass="String" resultMap="connAttachMap">
+        SELECT KEYID, ATTACHSN, ATTACHFILENAME, ATTACHFILEHREF, ATTACHFILESIZE, ATTACHUSERID
+        FROM TBL_CONNATTACHINFODATA
+        WHERE KEYID = #keyId#
+    </select>
+
+    <insert id="ezApprovalGConn.insertConnAttachData" parameterClass="Map">
+        INSERT INTO TBL_CONNATTACHINFODATA (KEYID, ATTACHSN, ATTACHFILENAME, ATTACHFILEHREF, ATTACHFILESIZE, ATTACHUSERID)
+        VALUES(#KEYID#, #ATTACHSN#, #ATTACHFILENAME#, #ATTACHFILEHREF#, #ATTACHFILESIZE#, #ATTACHUSERID#)
+    </insert>
+
+    <delete id="ezApprovalGConn.deleteConnAttachData" parameterClass="String">
+        DELETE FROM TBL_CONNATTACHINFODATA
+        WHERE KEYID = #KEYID#
+    </delete>
 </sqlMap>

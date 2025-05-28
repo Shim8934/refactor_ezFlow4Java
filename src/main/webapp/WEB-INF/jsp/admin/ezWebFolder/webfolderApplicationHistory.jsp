@@ -6,7 +6,8 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
-		<link rel="stylesheet" href="${util.addVer('ezWebFolder.i1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('/css/ezWebFolder/webfolder.css')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/jquery.modal.css')}" type="text/css" />
@@ -58,7 +59,7 @@
 		<h1>
 			<spring:message code="ezWebFolder.ksa02"/>
 			
-			<span id="mailBoxInfo"><span style="color:#017BEC;">0</span></span>
+			<span id="mailBoxInfo"><span class='txt_color'>0</span></span>
 		</h1>
 		
 		<div id="companySelect" style="margin-left: 5px;">
@@ -554,10 +555,10 @@
 			var pageNaviRayerDIV = $("#tblPageRayer");
 			var pageNaviDiv = $("<div class='pagenavi'></div>");
 				
-			var pPrevSpan = $("<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif'></span>");
-			var prevSpan = $("<span class='btnimg'><img src='/images/sub/btn_prev01.gif'></span>");
-			var nextSpan = $("<span class='btnimg'><img src='/images/sub/btn_next01.gif'></span>");
-			var nNextSpan = $("<span class='btnimg'><img src='/images/sub/btn_n_next01.gif'></span>");
+			var pPrevSpan = $("<span class='btnimg first disabled'></span>");
+			var prevSpan = $("<span class='btnimg prev disabled'></span>");
+			var nextSpan = $("<span class='btnimg next disabled'></span>");
+			var nNextSpan = $("<span class='btnimg last disabled'></span>");
 
 			$(pPrevSpan).click(function() {setPage(1) });
 			$(nNextSpan).click(function() { setPage(pageBtnTotalSize) });
@@ -668,16 +669,22 @@
 		function setDim(dim) {
 			var dimPanelDIV = document.getElementById("dimPanel");
 			
-			if (typeof leftFrame.dimBlockLeft == "undefined") {
-				$("<div id=\"dimBlockLeft\" class=\"blockLeft\" style=\"width:100%; height:100%; display: none; z-index: 10;\"></div>").appendTo(leftFrame.document.body);
+			if (!!leftFrame) {
+				if (typeof leftFrame.dimBlockLeft == "undefined") {
+					$("<div id=\"dimBlockLeft\" class=\"blockLeft\" style=\"width:100%; height:100%; display: none; z-index: 10;\"></div>").appendTo(leftFrame.document.body);
+				}
 			}
 			
 			if (dim) {
 				dimPanelDIV.style.display = "block";
-				leftFrame.dimBlockLeft.style.display = "block";
+				if (!!leftFrame) {
+					leftFrame.dimBlockLeft.style.display = "block";
+				}
 			} else {
 				dimPanelDIV.style.display = "none";
-				leftFrame.dimBlockLeft.style.display = "none";
+				if (!!leftFrame) {
+					leftFrame.dimBlockLeft.style.display = "none";
+				}
 			}
 		}
 		

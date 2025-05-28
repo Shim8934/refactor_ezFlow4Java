@@ -25,15 +25,17 @@ if (useSurvey === "YES") {
 	document.getElementById("Survey3").addEventListener("click", function(){quickMenuOpen('Survey');});
 }
 
-if (useCircular === 'YES') {
-	document.getElementById("Circular3").addEventListener('click', function(){quickMenuOpen('Circular');});
-}
+// 2024-05-28 조수빈 - 디자인 개선에서 회람판 버튼이 제거되어 주석처리
+//if (useCircular === 'YES') {
+//	document.getElementById("Circular3").addEventListener('click', function(){quickMenuOpen('Circular');});
+//}
 
 if (useApproval === 'YES') {
 	document.getElementById("AprSign3").addEventListener('click', function(){quickMenuOpen('ApprG');});
 	document.getElementById("AprProcessing").addEventListener('click', function(){quickMenuOpen('AprProcessing');});
 	document.getElementById("AprDraft").addEventListener('click', function(){quickMenuOpen('AprDraft');});
-	document.getElementById("AprDeptSusin").addEventListener('click', function(){quickMenuOpen('AprDeptSusin');});
+	// 2024-05-28 조수빈 - 디자인 개선에서 부서수신함 버튼이 제거되어 주석처리
+	//	document.getElementById("AprDeptSusin").addEventListener('click', function(){quickMenuOpen('AprDeptSusin');});
 }
 
 var getCountList = function () {

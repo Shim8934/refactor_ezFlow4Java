@@ -11,7 +11,7 @@
 	<article class="box_shadow">
 	<div class="layDIV">
 		<dl class="portlet_title sortablePortlet" style="position: relative; width: 100%; bottom: 0px; z-index: 1000; border-bottom: none; background: none;"></dl>
-		<div style="position: relative; top: -50px; height: 100%; overflow: hidden;">
+		<div style="position: relative; top: -53px; height: 100%; overflow: hidden;">
 			<div class="rolling" id="roll_featured">
 				<c:choose>
 					<c:when test="${not empty sliderList}">
@@ -21,10 +21,10 @@
 									<img src="${slider.imagePath}" class="notEmptySlider noSliderUrl" onclick="portletWindowOpen('${slider.url}')" />
 		            			</c:when>
 								<c:when test="${fn:substring(slider.url, 0, 4) eq 'http' }">
-									<img src="${slider.imagePath}" class="notEmptySlider" onclick="portletWindowOpen('${slider.url }')" />
+									<img src="${slider.imagePath}" class="notEmptySlider sliderUrl" onclick="portletWindowOpen('${slider.url }')" />
 								</c:when>
 								<c:otherwise>
-									<img src="${slider.imagePath}" class="notEmptySlider" onclick="portletWindowOpen('${slider.url }')" />
+									<img src="${slider.imagePath}" class="notEmptySlider sliderUrl" onclick="portletWindowOpen('${slider.url }')" />
 								</c:otherwise>
 							</c:choose>
 						</c:forEach>

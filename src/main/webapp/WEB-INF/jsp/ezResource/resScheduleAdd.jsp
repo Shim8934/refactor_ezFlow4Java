@@ -7,7 +7,8 @@
 	<head>
 		<title><spring:message code="ezResource.t171"/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezResource.e2', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('ezResource.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezResource/Schedule_cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -70,6 +71,8 @@
 		    var allday_chk, onck = "1";	
 	    	var sDT				="${startDateTime}";
 	    	var eDT				="${endDateTime}";
+	    	var sDT2				="${startDateTime2}";
+	    	var eDT2				="${endDateTime2}";
 	    	var flag = false;
 	    	var startDateTimeRepeat = "${startDateTimeRepeat}";
 	    	var endDateTimeRepeat = "${endDateTimeRepeat}";
@@ -85,6 +88,8 @@
 	    	var userDisplayName2 = "${userInfo.displayName2}";
 	    	var repetition = "";
 	    	var offSetMin = "<c:out value='${offSetMin}'/>";
+			// 반복예약허용 Flag
+			var repeatFlag       = "${repeatFlag}";
 	    	
 	    	// 메인페이지의 onload실행과 initLoad함수의 실행 속도 차이로 setTimeout함수 사용
 	    	var onloadflag = false;
@@ -114,7 +119,7 @@
 	        	if (cmd == "mod") {
 	        		/* 2018-07-10 김민성 - 자원 수정시 특수문자 처리 */
 	            	document.getElementById("importance1").value = "${importance}";
-	            	document.getElementById("title").value = ConvMakeXMLString("<c:out value='${title}'/>");
+					document.getElementById("title").value = ConvMakeXMLString(ReplaceHTML('<c:out value="${title}" escapeXml="false"/>'));
 	            	document.getElementById("loc").value = ConvMakeXMLString("<c:out value='${loc}'/>");
 	            	
 	            	if(allDay == "1") {
@@ -211,12 +216,13 @@
 		    }
 			
 		    window.onresize = function () {
-		    	if(cmd == "add") {
-		   	    	 document.getElementById("Iframe1").style.height = document.documentElement.clientHeight - 240 + "PX";
-		    	}
-		    	else {
-		    		document.getElementById("Iframe1").style.height = document.documentElement.clientHeight - 220 + "PX";
-		    	}
+				mobileDistinction();
+				
+				var editorFrame = document.getElementById('Iframe1');
+				var editorTd = document.getElementById('EdtorSize');
+				
+				editorFrame.style.height = editorTd.style.height;
+				
 	    	}
 		    
 		    window.onunload = function () {
@@ -429,8 +435,19 @@
 	    	
 	    	var SaveScheduleId = "";
 	    	function btn_Save() {
-
+			if(doubleSubmitFlag) return;
+			
 	        	var check = true;
+				// 반복예약허용 유무 체크
+				if (repeatFlag != '1' && (g_data["recurrence"] || g_data["repetition"])) {
+					check = false;
+				}
+
+				if (!check) {
+					alert("<spring:message code="ezResource.lyj04"/>");
+					return;
+				}
+
 	        	if (ItemArray[0].length == 0) {
 	            	alert(strLang252);
 	            	return;
@@ -557,7 +574,7 @@
 	    		var pageFrom = "";
 	    		var xmlHTTP = createXMLHttpRequest();
 	    		var xmlDom = createXmlDom();    
-	    		var objNode;
+	    		var objNode, objRow, objRows;
 
 	    		objNode = createNodeInsert(xmlDom, objNode, "DATA");
 	    		createNodeAndInsertText(xmlDom, objNode, "SCHEDULEID", "");
@@ -572,9 +589,20 @@
 	    		createNodeAndInsertText(xmlDom, objNode, "IMPORTANCE", document.getElementById("importance1").value);
 	    		createNodeAndInsertText(xmlDom, objNode, "ISPUBLIC", "N");
 	    		createNodeAndInsertText(xmlDom, objNode, "REPETITION", repetition);
-	    		createNodeAndInsertText(xmlDom, objNode, "TITLE", document.getElementById("title").value);
+				createNodeAndInsertText(xmlDom, objNode, "TITLE", document.getElementById("title").value);
 	    		createNodeAndInsertText(xmlDom, objNode, "LOCATION", "");
 	    		createNodeAndInsertText(xmlDom, objNode, "CONTENTPATH", "");
+	    		
+	    		objRow = createNodeAndAppandNode(xmlDom, objNode, objRow, "ATTENDANTLIST");
+                if (g_attendant != null) {
+                    for (var i=0; i<g_attendant["id"].length; i++) {
+                        createNodeAndAppandNodeText(xmlDom, objRow, objRows , "ATTENDANTID", g_attendant["id"][i]);
+                        createNodeAndAppandNodeText(xmlDom, objRow, objRows , "ATTENDANTNAME1", g_attendant["name1"][i]);
+                        createNodeAndAppandNodeText(xmlDom, objRow, objRows , "ATTENDANTNAME2", g_attendant["name2"][i]);
+                        createNodeAndAppandNodeText(xmlDom, objRow, objRows , "ATTENDANTDEPTNAME", g_attendant["deptname"][i]);
+                        createNodeAndAppandNodeText(xmlDom, objRow, objRows , "ATTENDANTDEPTNAME2", g_attendant["deptname2"][i]);
+                    }
+                }
 	    		
 	    		var Doc_ContentHtml = document.createElement("DIV");
 	    	    var strBody = message.GetEditorContent();
@@ -703,6 +731,50 @@
 		        return str;
 		    }
 	        
+            function useScheduleOnclick() {
+                if ($("#useSchedule").is(":checked")) {
+                    $("#attendantTr").show();
+                } else {
+                    $("#attendantTr").hide();
+                }
+            }
+		    
+		    var g_attendant = null;
+            var schedule_select_attendant_dialogArguments = new Array();
+            function manage_attendant() {
+                var StartTime = $("#Sdatepicker").datepicker({dateFormat: 'yy-mm-dd'}).val()
+                var EndTime = $("#Edatepicker").datepicker({dateFormat: 'yy-mm-dd'}).val()
+            
+                schedule_select_attendant_dialogArguments[0] = g_attendant;
+                schedule_select_attendant_dialogArguments[1] = manage_attendant_Complete;
+            
+                GetOpenWindow("/ezSchedule/scheduleSelectAttendant.do?title=" + encodeURI("<spring:message code='ezSchedule.t234'/>") + "&StartTime=" + StartTime + "&EndTime=" + EndTime + "&ownerid=" + s_userID, "schedule_select_attendant", 970, 655);
+            }
+            
+            function manage_attendant_Complete(rtn) {
+                if (typeof (rtn) != "undefined") {
+                    g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array() };
+                    document.getElementById("receiverinput").innerText = "";
+                    
+                    var receiverList = "";
+                    for (var i = 0; i < rtn["id"].length; i++) {
+                        if (i != 0) {
+                            receiverList += ", ";
+                        }
+                        receiverList += rtn["name"][i];
+                      
+                        g_attendant["name"][i] = rtn["name"][i];
+                        g_attendant["id"][i] = rtn["id"][i];
+                        g_attendant["deptname"][i] = rtn["deptname"][i];
+                        g_attendant["name1"][i] = rtn["name1"][i];
+                        g_attendant["name2"][i] = rtn["name2"][i];
+                        g_attendant["deptname2"][i] = rtn["deptname2"][i];
+                        g_attendant["jikwe"][i] = rtn["jikwe"][i];
+                        g_attendant["phone"][i] = rtn["phone"][i];
+                    }
+                    document.getElementById("receiverinput").innerText = receiverList;
+                }
+            }
 		</script>
 	</head>
 	<xmp id="sigBody" style="display: none;">${content}</xmp>
@@ -723,7 +795,7 @@
 	          							<li><span onClick="btn_Save()"> <spring:message code="ezResource.t114"/></span></li>
 	          							<li id="deletebtbn" style="display:none"><span class="icon16 popup_icon16_delete" onClick="delSchedule_onClick('${num}','${ownerID}')"></span></li>
 	          							
-	       								<c:if test="${typeVal ne 'Instance' && typeVal ne 'Readonly'}" >
+	       								<c:if test="${typeVal ne 'Instance' && typeVal ne 'Readonly' && repeatFlag ne '0'}" >
 	       									<li><span id="Span2" name="ScheRep" id="ScheRep" name="ScheRep" onClick="Schedule_Repetition_onclick()"> <spring:message code="ezResource.t195"/></span></li>
 	       								</c:if>
 	
@@ -838,12 +910,20 @@
 						</tr>
 						<tr>
 	         				<th> <spring:message code="ezResource.t224"/></th>
-	         				<td colspan="3"><input type="text" id="title" name="title" maxlength="100"  style="width: 100%" value="" /></td>		<!-- 2018-07-13 김민성 - 자원예약 이름 글자수 제한 25->100자로 변경 -->
+							<td colspan="3"><input type="text" id="title" name="title" maxlength="100"  style="width: 100%" value="<c:out value='${title}' escapeXml="false"/>" /></td>		<!-- 2018-07-13 김민성 - 자원예약 이름 글자수 제한 25->100자로 변경 -->
 	       				</tr>
 	       				<c:if test="${useSchedule && cmdStr eq 'add'}">
 	       				<tr>
 	         				<th><spring:message code="ezSchedule.t214"/></th>
-	         				<td colspan="3"><input type="checkbox" id="useSchedule" name="useSchedule">          </td>
+	         				<td colspan="3"><input type="checkbox" id="useSchedule" name="useSchedule" onclick="useScheduleOnclick()"></td>
+	       				</tr>
+	       				<tr id="attendantTr" style="display:none;">
+	         				<th><spring:message code="ezSchedule.t163"/></th>
+	         				<td colspan="3">
+	         				    <span id="clickbtn" class="imgbtn" style="padding: 0px 10px;" onclick="manage_attendant()"><spring:message code="ezSchedule.t364"/></span>
+	         				    <!-- <input type="text" id="receiverinput" /> -->
+	         				    <span id="receiverinput" style="vertical-align:middle; margin-left: 5px;"></span>
+                            </td>
 	       				</tr>
 	       				</c:if>
       				</table>
@@ -957,6 +1037,19 @@
 		    	else {
 		    		document.getElementById("Iframe1").style.height = document.documentElement.clientHeight - 220 + "PX";
 		    	}
+				
+				function mobileDistinction() {
+	   				var  userAgent = navigator.userAgent.toLowerCase();
+					
+					if (/iphone|ipod|ipad|android.*mobile/i.test(userAgent) || /tablet|ipad|android/i.test(userAgent) || navigator.maxTouchPoints > 4) {
+						if (window.innerWidth > window.innerHeight) {
+							document.getElementById("EdtorSize").style.height = 436 + "PX";
+							document.getElementById("Iframe1").style.height = 436 + "PX";
+						}
+					}
+				}
+				
+				mobileDistinction();
     	</script>
 	</body>
 </html>

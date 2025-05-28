@@ -5,7 +5,8 @@
 	<head>
 		<title><spring:message code='ezBoard.t135'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -45,6 +46,8 @@
 		    var ReturnFunction;
 		    var rtnVal = "";
 		    
+		    var popupMsg;
+		    
 		    /* 2018-08-06 홍승비 - 대상게시판선택 레이어팝업 추가, 게시물 이동+복사 팝업창과 같도록 UI 통일 */
 		    var board_alertArguments = new Array();
 			function Select()
@@ -58,7 +61,11 @@
 				
 				if (CheckIfCanWrite(SelectedBoardID) == false)
 				{
-					var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.t354' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.t354'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+					if (SelectedBoardType !== "10") {
+						popupMsg = "<spring:message code='ezBoard.t354' />";
+					}
+
+					var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent(popupMsg) + "&MESSAGE=" + encodeURIComponent(popupMsg) + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
 					
 					/* 2022-01-05 홍승비 - 홈페이지 게시판에 작성 시 알러트 메세지 추가 (홈페이지 게시판은 관리자만 작성이 가능합니다.) */
 					if (SelectedBoardType == "8") {
@@ -107,6 +114,11 @@
 			
 			function CheckIfCanWrite(pBoardID)
 			{
+				if (SelectedBoardType === "10") {
+			        popupMsg = "<spring:message code='ezBoard.MJSCAT02' />";
+			        return false;
+			    }
+
 				xmlhttp.open("POST", "/ezBoard/getACL.do?boardID=" + encodeURIComponent(pBoardID), false);
 				xmlhttp.send();
 				var ret = xmlhttp.responseText;

@@ -24,7 +24,7 @@ import egovframework.ezEKP.ezPMS.vo.ProjectTaskVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectUserVO;
 import egovframework.ezEKP.ezPMS.vo.TaskLogListVO;
 import egovframework.ezEKP.ezPMS.vo.TaskMemberVO;
-import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzPMSDAO")
 public class EzPMSDAO extends EgovAbstractDAO {

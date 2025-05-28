@@ -6,7 +6,8 @@
 	<head>
 		<title><spring:message code='ezAttitude.t51'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezAttitude.i1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -257,6 +258,8 @@
 							$("#region").siblings("th").text("<spring:message code='ezAttitude.t47'/>");
 							$("#mobile").siblings("th").text("<spring:message code='ezOrgan.t285'/>");
 							$("#bizsub").siblings("th").text("<spring:message code='ezAttitude.t311'/>");
+							$("#bizsub").siblings("th").text("<spring:message code='ezAttitude.t311'/>");
+							document.querySelector('#periodblock input[type="checkbox"]').nextSibling.nodeValue = "<spring:message code='ezAttitude.t333'/>";
 						}
 						editorResize();
 					}

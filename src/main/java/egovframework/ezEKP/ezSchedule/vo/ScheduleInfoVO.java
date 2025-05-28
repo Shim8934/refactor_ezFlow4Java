@@ -88,6 +88,8 @@ public class ScheduleInfoVO {
 	
 	private String groupColor;
 
+	private String showTop;
+
 	public String getRealEndDate() {
 		return realEndDate;
 	}
@@ -613,6 +615,11 @@ public class ScheduleInfoVO {
 	public void setGroupColor(String groupColor) {
 		this.groupColor = groupColor;
 	}
+
+	public String getShowTop() { return showTop; }
+
+	public void setShowTop(String showTop) { this.showTop = showTop; }
+
 	@Override
 	public String toString() {
 		return "ScheduleInfoVO [scheduleId=" + scheduleId + ", parentId="

@@ -132,9 +132,9 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public List<CircularListVO> getCircularList(String memberID, String searchValue, String searchType, String sdate, String edate, int startRow, int endRow, int tenantID, String offset, String orderCell, String orderOption1, String companyID) throws Exception {
+	public List<CircularListVO> getCircularList(String memberID, String searchValue, String searchType, String sdate, String edate, int startRow, int endRow, int tenantID, String offset, String orderCell, String orderOption, String companyID, String lang) throws Exception {
 		logger.debug("getCircularList started.");
-		logger.debug("memberID = " + memberID + " || searchValue = " + searchValue + " || searchType =  " + searchType + " || startRow = " + startRow + " || endRow = " + endRow + " || orderCell = " + orderCell + " || orderOption1 = " + orderOption1 + " || tenantID = " + tenantID + " || companyID = " + companyID);
+		logger.debug("memberID = " + memberID + " || searchValue = " + searchValue + " || searchType =  " + searchType + " || startRow = " + startRow + " || endRow = " + endRow + " || orderCell = " + orderCell + " || orderOption = " + orderOption + " || tenantID = " + tenantID + " || companyID = " + companyID);
 		
 		if (!sdate.equals("")) {
 			sdate += " 00:00:00";
@@ -152,8 +152,9 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("tenantID", tenantID);
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("orderCell", orderCell);
-		map.put("orderOption1", orderOption1);
+		map.put("orderOption", orderOption);
 		map.put("companyID", companyID);
+		map.put("lang", lang);
 		
 		List<CircularListVO> list = ezCircularDAO.getCircularList(map);
 		
@@ -387,7 +388,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public CircularListVO getCircular(String circularID, String memberID, String offset, int tenantID, String type) throws Exception {
+	public CircularListVO getCircular(String circularID, String memberID, String offset, int tenantID, String type, String lang) throws Exception {
 		logger.debug("getCircular started.");
 		logger.debug("circularID = " + circularID + " || memberID = " + memberID + " || type = " + type + " || tenantID = " + tenantID);
 		
@@ -396,6 +397,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("memberID", memberID);
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("tenantID", tenantID);
+		map.put("lang", lang);
 		
 		CircularListVO vo = ezCircularDAO.getCircular(map);
 		
@@ -785,7 +787,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public int getCircularListCount(String memberID, String searchValue, String searchType, String sdate, String edate, String offset, int tenantID, String companyID) throws Exception {
+	public int getCircularListCount(String memberID, String searchValue, String searchType, String sdate, String edate, String offset, int tenantID, String companyID, String lang) throws Exception {
 		logger.debug("getCircularListCount started.");
 		logger.debug("memberID = " + memberID + " || searchValue = " + searchValue + " || searchType = " + searchType + " || sdate = " + sdate + " || edate = " + edate + " || tenantID = " + tenantID + " || companyID =" + companyID);
 		
@@ -803,6 +805,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("tenantID", tenantID);
 		map.put("companyID", companyID);
+		map.put("lang", lang);
 		
 		int result = ezCircularDAO.getCircularListCount(map);
 		
@@ -999,9 +1002,9 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public List<CircularListVO> getCircularCompleteList(String memberID, String searchValue, String searchType, String sdate, String edate, int startRow, int endRow, int tenantID, String offset, String orderCell, String orderOption1, String companyID) throws Exception {
+	public List<CircularListVO> getCircularCompleteList(String memberID, String searchValue, String searchType, String sdate, String edate, int startRow, int endRow, int tenantID, String offset, String orderCell, String orderOption, String companyID, String lang) throws Exception {
 		logger.debug("getCircularCompleteList started.");
-		logger.debug("memberID = " + memberID + " || searchValue = " + searchValue + " || searchType = " + searchType + " || startRow = " + startRow + " || endRow = " + endRow + " || orderCell = " + orderCell + " || orderOption1 = " + orderOption1 + " || tenantID = " + tenantID + " || companyID = " + companyID);
+		logger.debug("memberID = " + memberID + " || searchValue = " + searchValue + " || searchType = " + searchType + " || startRow = " + startRow + " || endRow = " + endRow + " || orderCell = " + orderCell + " || orderOption = " + orderOption + " || tenantID = " + tenantID + " || companyID = " + companyID);
 
 		if (!sdate.equals("")) {
 			sdate += " 00:00:00";
@@ -1019,8 +1022,9 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("tenantID", tenantID);
 		map.put("orderCell", orderCell);
-		map.put("orderOption1", orderOption1);
+		map.put("orderOption", orderOption);
 		map.put("companyID", companyID);
+		map.put("lang", lang);
 		
 		List<CircularListVO> list = ezCircularDAO.getCircularCompleteList(map);
 		
@@ -1030,7 +1034,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public int getCircularCompleteListCount(String memberID, String searchValue, String searchType, String sdate, String edate, String offset, int tenantID, String companyID) throws Exception {
+	public int getCircularCompleteListCount(String memberID, String searchValue, String searchType, String sdate, String edate, String offset, int tenantID, String companyID, String lang) throws Exception {
 		logger.debug("getCircularCompleteListCount started.");
 		logger.debug("memberID = " + memberID + " || searchValue = " + searchValue + " || searchType = " + searchType + " || sdate = " + sdate + " || edate = " + edate + " || tenantID = " + tenantID + " || companyID = " + companyID);
 
@@ -1048,6 +1052,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("tenantID", tenantID);
 		map.put("companyID", companyID);
+		map.put("lang", lang);
 		
 		int result = ezCircularDAO.getCircularCompleteListCount(map);
 		
@@ -1057,7 +1062,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public int getCircularTempListCount(String memberID, String searchValue, String searchType, String sdate, String edate, String offset, int tenantID, String companyID) throws Exception {
+	public int getCircularTempListCount(String memberID, String searchValue, String searchType, String sdate, String edate, String offset, int tenantID, String companyID, String lang) throws Exception {
 		logger.debug("getCircularTempListCount started.");
 		logger.debug("memberID = " + memberID + " || searchValue = " + searchValue + " || searchType = " + searchType + " || sdate = " + sdate + " || edate = " + edate + " || tenantID = " + tenantID + " || companyID = " + companyID);
 		
@@ -1075,6 +1080,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("tenantID", tenantID);
 		map.put("companyID", companyID);
+		map.put("lang", lang);
 		
 		int result = ezCircularDAO.getCircularTempListCount(map);
 		
@@ -1084,9 +1090,9 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public List<CircularListVO> getCircularTempList(String memberID, String searchValue, String searchType, String sdate, String edate, int startRow, int endRow, String offset, int tenantID, String orderCell, String orderOption1, String companyID) throws Exception {
+	public List<CircularListVO> getCircularTempList(String memberID, String searchValue, String searchType, String sdate, String edate, int startRow, int endRow, String offset, int tenantID, String orderCell, String orderOption, String companyID, String lang) throws Exception {
 		logger.debug("getCircularTempList started.");
-		logger.debug("memberID = " + memberID + " || searchValue = " + searchValue + " || searchType =  " + searchType + " || startRow = " + startRow + " || endRow = " + endRow + " || orderCell = " + orderCell + " || orderOption1 = " + orderOption1 + " || tenantID = " + tenantID + " || companyID = " + companyID);
+		logger.debug("memberID = " + memberID + " || searchValue = " + searchValue + " || searchType =  " + searchType + " || startRow = " + startRow + " || endRow = " + endRow + " || orderCell = " + orderCell + " || orderOption = " + orderOption + " || tenantID = " + tenantID + " || companyID = " + companyID);
 		
 		if (!sdate.equals("")) {
 			sdate += " 00:00:00";
@@ -1104,8 +1110,9 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("tenantID", tenantID);
 		map.put("orderCell", orderCell);
-		map.put("orderOption1", orderOption1);
+		map.put("orderOption", orderOption);
 		map.put("companyID", companyID);
+		map.put("lang", lang);
 		
 		List<CircularListVO> list = ezCircularDAO.getCircularTempList(map);
 		
@@ -1115,7 +1122,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public int getMyCircularListCount(String memberID, String searchValue, String searchType, String sdate, String edate, String offset, int tenantID, String companyID) throws Exception {
+	public int getMyCircularListCount(String memberID, String searchValue, String searchType, String sdate, String edate, String offset, int tenantID, String companyID, String lang) throws Exception {
 		logger.debug("getMyCircularListCount started.");
 		logger.debug("memberID = " + memberID + " || searchValue = " + searchValue + " || searchType = " + searchType + " || sdate = " + sdate + " || edate = " + edate + " || tenantID = " + tenantID + " || companyID = " + companyID);
 		
@@ -1133,6 +1140,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("tenantID", tenantID);
 		map.put("companyID", companyID);
+		map.put("lang", lang);
 		
 		int result = ezCircularDAO.getMyCircularListCount(map);
 		
@@ -1142,9 +1150,9 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public List<CircularListVO> getMyCircularList(String memberID, String searchValue, String searchType, String sdate, String edate, int startRow, int endRow, String offset, int tenantID, String orderCell, String orderOption1, String companyID) throws Exception {
+	public List<CircularListVO> getMyCircularList(String memberID, String searchValue, String searchType, String sdate, String edate, int startRow, int endRow, String offset, int tenantID, String orderCell, String orderOption, String companyID, String lang) throws Exception {
 		logger.debug("getMyCircularList started.");
-		logger.debug("memberID = " + memberID + " || searchValue = " + searchValue + " || searchType =  " + searchType + " || startRow = " + startRow + " || endRow = " + endRow + " || orderCell = " + orderCell + " || orderOption1 = " + orderOption1 + " || tenantID = " + tenantID + " || companyID = " + companyID);
+		logger.debug("memberID = " + memberID + " || searchValue = " + searchValue + " || searchType =  " + searchType + " || startRow = " + startRow + " || endRow = " + endRow + " || orderCell = " + orderCell + " || orderOption = " + orderOption + " || tenantID = " + tenantID + " || companyID = " + companyID);
 
 		if (!sdate.equals("")) {
 			sdate += " 00:00:00";
@@ -1162,8 +1170,9 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("tenantID", tenantID);
 		map.put("orderCell", orderCell);
-		map.put("orderOption1", orderOption1);
+		map.put("orderOption", orderOption);
 		map.put("companyID", companyID);
+		map.put("lang", lang);
 		
 		List<CircularListVO> list = ezCircularDAO.getMyCircularList(map);
 		
@@ -1241,7 +1250,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public int getCircularTDListCount(String memberID, String searchValue, String searchType, int tenantID, String companyID) throws Exception {
+	public int getCircularTDListCount(String memberID, String searchValue, String searchType, int tenantID, String companyID, String lang) throws Exception {
 		logger.debug("getCircularTDListCount started.");
 		logger.debug("memberID = " + memberID + " || searchValue = " + searchValue + " || tenantID = " + tenantID + " || companyID = " + companyID);
 		
@@ -1251,6 +1260,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("searchValue", searchValue.trim());
 		map.put("tenantID", tenantID);
 		map.put("companyID", companyID);
+		map.put("lang", lang);
 		
 		int result = ezCircularDAO.getCircularTDListCount(map);
 		
@@ -1260,9 +1270,9 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public List<CircularListVO> getCircularTDList(String memberID, String searchValue, String searchType, int startRow, int endRow, int tenantID, String offset, String orderCell, String orderOption1, String companyID) throws Exception {
+	public List<CircularListVO> getCircularTDList(String memberID, String searchValue, String searchType, int startRow, int endRow, int tenantID, String offset, String orderCell, String orderOption, String companyID, String lang) throws Exception {
 		logger.debug("getCircularTDList started.");
-		logger.debug("memberID = " + memberID + " || searchValue = " + searchValue + " || searchType =  " + searchType + " || startRow = " + startRow + " || endRow = " + endRow + " || orderCell = " + orderCell + " || orderOption1 = " + orderOption1 + " || tenantID = " + tenantID + " || companyID = " + companyID);
+		logger.debug("memberID = " + memberID + " || searchValue = " + searchValue + " || searchType =  " + searchType + " || startRow = " + startRow + " || endRow = " + endRow + " || orderCell = " + orderCell + " || orderOption = " + orderOption + " || tenantID = " + tenantID + " || companyID = " + companyID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("memberID", memberID);
@@ -1272,9 +1282,10 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("rowCount", endRow-(startRow-1));
 		map.put("tenantID", tenantID);
 		map.put("orderCell", orderCell);
-		map.put("orderOption1", orderOption1);
+		map.put("orderOption", orderOption);
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("companyID", companyID);
+		map.put("lang", lang);
 		
 		List<CircularListVO> list = ezCircularDAO.getCircularTDList(map);
 		
@@ -1328,7 +1339,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public int getFolderCircularListCount(String folderID, String memberID, String searchValue, String searchType, String sdate, String edate, String offset, int tenantID, String companyID) throws Exception {
+	public int getFolderCircularListCount(String folderID, String memberID, String searchValue, String searchType, String sdate, String edate, String offset, int tenantID, String companyID, String lang) throws Exception {
 		logger.debug("getFolderCircularListCount started.");
 		logger.debug("folderID = " + folderID + " || memberID = " + memberID + " || searchValue = " + searchValue + " || searchType = " + searchType + " || sdate = " + sdate + " || edate = " + edate + " || tenantID = " + tenantID + " || companyID = " + companyID);
 		
@@ -1347,6 +1358,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("tenantID", tenantID);
 		map.put("companyID", companyID);
+		map.put("lang", lang);
 		
 		int result = ezCircularDAO.getFolderCircularListCount(map);
 		
@@ -1356,9 +1368,9 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public List<CircularListVO> getFolderCircularList(String folderID, String memberID, int startRow, int endRow, String searchValue, String searchType, String sdate, String edate, String offset, int tenantID, String orderCell, String orderOption1, String companyID) throws Exception {
+	public List<CircularListVO> getFolderCircularList(String folderID, String memberID, int startRow, int endRow, String searchValue, String searchType, String sdate, String edate, String offset, int tenantID, String orderCell, String orderOption, String companyID, String lang) throws Exception {
 		logger.debug("getFolderCircularList started.");
-		logger.debug("memberID = " + memberID + " || searchValue = " + searchValue + " || searchType =  " + searchType + " || startRow = " + startRow + " || endRow = " + endRow + " || orderCell = " + orderCell + " || orderOption1 = " + orderOption1 + " || tenantID = " + tenantID + " || companyID = " + companyID);
+		logger.debug("memberID = " + memberID + " || searchValue = " + searchValue + " || searchType =  " + searchType + " || startRow = " + startRow + " || endRow = " + endRow + " || orderCell = " + orderCell + " || orderOption = " + orderOption + " || tenantID = " + tenantID + " || companyID = " + companyID);
 		
 		if (!sdate.equals("")) {
 			sdate += " 00:00:00";
@@ -1376,9 +1388,10 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("edate", edate);
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("orderCell", orderCell);
-		map.put("orderOption1", orderOption1);
+		map.put("orderOption", orderOption);
 		map.put("tenantID", tenantID);
 		map.put("companyID", companyID);
+		map.put("lang", lang);
 		
 		List<CircularListVO> list = ezCircularDAO.getFolderCircularList(map);
 		
@@ -1409,14 +1422,14 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public String getItemXML(String circularID, String memberID, String offset, int tenantID) throws Exception {
+	public String getItemXML(String circularID, String memberID, String offset, int tenantID, String lang) throws Exception {
 		logger.debug("getItemXML started.");
 		logger.debug("circularID = " + circularID + " || memberID = " + memberID + " || tenantID = " + tenantID);
 		
 		StringBuilder sb = new StringBuilder();
 		
 		if (circularID != null) {
-			CircularListVO itemInfo  = getCircular(circularID, memberID, offset, tenantID, "read");
+			CircularListVO itemInfo  = getCircular(circularID, memberID, offset, tenantID, "read", lang);
 			
 			sb.append("<NODES>");
 			sb.append("<NODE>");
@@ -1502,7 +1515,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("nowDate", nowDate);
 		map.put("tenantID", userInfo.getTenantId());
     	
-		CircularListVO circularVO = getCircular(vo.getCircularID(), vo.getCircularUserID(), userInfo.getOffset(), userInfo.getTenantId(), "comment");
+		CircularListVO circularVO = getCircular(vo.getCircularID(), vo.getCircularUserID(), userInfo.getOffset(), userInfo.getTenantId(), "comment", userInfo.getLang());
     	List<CircularCommentVO> list = getCircularCommentUserList(vo.getCircularID(), vo.getCircularUserID(), userInfo.getTenantId(), "circularComment");
     	
 		String circularCommentID = ezCircularDAO.insertComment(map);
@@ -1781,7 +1794,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		CircularListVO circularVO = getCircular(circularID, userInfo.getId(), userInfo.getOffset(), userInfo.getTenantId(), "comment");
+		CircularListVO circularVO = getCircular(circularID, userInfo.getId(), userInfo.getOffset(), userInfo.getTenantId(), "comment", userInfo.getLang());
 		
 		String nowDate = commonUtil.getTodayUTCTime("");
 		int tenantID = userInfo.getTenantId();
@@ -1810,7 +1823,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 				updateCommentState(circularID, circularCommentID, memberID, 0, nowDate, tenantID);
 			}
 			
-			circularVO = getCircular(circularID, memberID, userInfo.getOffset(), userInfo.getTenantId(), "comment");
+			circularVO = getCircular(circularID, memberID, userInfo.getOffset(), userInfo.getTenantId(), "comment", userInfo.getLang());
 			
 			if (circularVO.getUpdateStatus() == 2) {
 				map = new HashMap<String, Object>();

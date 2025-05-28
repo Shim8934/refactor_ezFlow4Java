@@ -33,6 +33,8 @@
 .calendar_month .td_list td .company{border-radius: 7px;display:inline-block;width: 5px;height: 5px;border:1px solid #ff1c71;background:#ff1c71;overflow:hidden;margin:-2px 5px 0px 0px;padding:0;vertical-align:middle;}/* 회사 */
 .calendar_month .td_list td.Group{color:#666666;}
 .calendar_month .td_list td .Group{border-radius:7px; display:inline-block; width:5px; height:5px; border:1px solid #e9de13; background:#e9de13; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 그룹 */
+.calendar_month .td_list td.executive{color:#666666;}
+.calendar_month .td_list td .executive{border-radius:7px; display:inline-block; width:5px; height:5px; border:1px solid #ffae00; background:#ffae00; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 임원 */
 /* //개인,부서,회사 색상 */
 .calendar_month .td_list td .icon_h{display:inline-block; width:13px; height:13px; background:url(/images/calendar/i_h.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 중요도 상 화살표 */
 .calendar_month .td_list td .icon_l{display:inline-block; width:13px; height:13px; background:url(/images/calendar/i_l.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 중요도 하 화살표 */
@@ -57,15 +59,15 @@
 .calendar_week_navi th .btn_next{display: inline-block; vertical-align: top; margin: 3px 0px 0px 12px; height:17px;cursor:pointer;}
 .calendar_week_title{table-layout:fixed; height:26px; line-height:26px; vertical-align:top; border-bottom:1px solid rgb(181, 181, 181);}
 .calendar_week_title th{background:#f6f6f6; border-top:1px solid #cbcbcb; border-right:1px solid #cbcbcb; border-bottom:1px solid #ddd; border-left:1px solid #cbcbcb; padding:0; margin:0;}
-.calendar_week_title .calendar_th_time{width:69px;background: #e4e8ec;border: 1px solid #c8ccd0;margin:0;text-align:left;}
+.calendar_week_title .calendar_th_time{width:90px;background: #e4e8ec;border: 1px solid #c8ccd0;margin:0;text-align:left;}
 .calendar_week_title .calendar_th_list{color:#2f2f2f;background: #e4e8ec;height: 32px;border: 1px solid #c8ccd0;padding:0px 0px 0px 0px;margin:0;font-weight: normal;}
-.calendar_week_title .calendar_th_last{width:16px; background:#fff; border:1px solid #e0e0e2; padding:0px 0px 0px 0px; margin:0; text-align:left;}/* 20130412추가 th last영역 */
-.calendar_week_title .calendar_td_last{width:16px; border-top:0 none; border-right:1px solid #dedede; border-bottom:1px solid #dedede; border-left:1px solid #dedede; padding:0px 0px 0px 0px; margin:0; text-align:left;}/* 20130412추가 td last영역 */
+.calendar_week_title .calendar_th_last{width:11px; background:#fff; border:1px solid #e0e0e2; padding:0px 0px 0px 0px; margin:0; text-align:left;}/* 20130412추가 th last영역 */
+.calendar_week_title .calendar_td_last{width:11px; border-top:0 none; border-right:1px solid #dedede; border-bottom:1px solid #dedede; border-left:1px solid #dedede; padding:0px 0px 0px 0px; margin:0; text-align:left;}/* 20130412추가 td last영역 */
 .calendar_week_title .sun{color:#ee1c25; }
 .calendar_week_title .sat{color:rgb(0, 72, 149);}
 .calendar_week_title .today{background:rgb(233, 240, 255);}
-.calendar_week_title .calendar_time{width:69px; border-top:0 none; border-right:1px solid #dedede; border-left:1px solid #dedede; background:#f8f8fa; vertical-align: top;}
-.calendar_week_title .calendar_time .calendar_row{table-layout:fixed;vertical-align:top; margin:0; padding:0; width:69px; }
+.calendar_week_title .calendar_time{width:90px; border-top:0 none; border-right:1px solid #dedede; border-left:1px solid #dedede; background:#f8f8fa; vertical-align: top;}
+.calendar_week_title .calendar_time .calendar_row{table-layout:fixed;vertical-align:top; margin:0; padding:0; width:90px; }
 .calendar_week_title .calendar_time .calendar_row td{height:22px; color:#898989; text-align:right; padding:0px 8px 0px 0px;}
 .calendar_week_title .calendar_time .calendar_row .calendar_t_time{height:21px; }
 .calendar_week_title .calendar_time .calendar_row td .point{color:#656565; font-weight:normal;}
@@ -76,8 +78,8 @@
 .calendar_week_title .td_list .calendar_row .calendar_t_text{vertical-align:top;}
 
 .calendar_week{table-layout:fixed; width:100%;}
-.calendar_week .calendar_time{width:69px; border-top:0 none; border-right:1px solid #dedede; border-left:1px solid #dedede; background:#f8f8fa; vertical-align: top;}
-.calendar_week .calendar_time .calendar_row{table-layout:fixed;vertical-align:top; margin:0; padding:0; width:69px; border-bottom:1px solid #dedede;}
+.calendar_week .calendar_time{width:90px; border-top:0 none; border-right:1px solid #dedede; border-left:1px solid #dedede; background:#f8f8fa; vertical-align: top;}
+.calendar_week .calendar_time .calendar_row{table-layout:fixed;vertical-align:top; margin:0; padding:0; width:90px; border-bottom:1px solid #dedede;}
 .calendar_week .calendar_time .calendar_row td{height:22px; color:#898989; text-align:right; padding:0px 8px 0px 0px;}
 .calendar_week .calendar_time .calendar_row .calendar_t_time{height:21px; border-bottom:1px solid #dedede;}
 .calendar_week .calendar_time .calendar_row td .point{color:#656565; font-weight:normal;}
@@ -115,6 +117,12 @@
 .calendar_data_company .company{border-radius: 7px;display:inline-block;width: 5px;height: 5px;border:1px solid #ff1c71;background:#ff1c71;overflow:hidden;margin:-2px 5px 0px 0px;padding:0;vertical-align:middle;}/* 회사 */
 .calendar_data_company .icon_h{display:inline-block; width:13px; height:13px; background:url(/images/calendar/i_h.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 중요도 상 화살표 */
 .calendar_data_company .icon_l{display:inline-block; width:13px; height:13px; background:url(/images/calendar/i_l.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 중요도 하 화살표 */
+
+.calendar_data_executive{height:18px; background:#f2f2f2; border:1px solid #f2f2f2; line-height:150%; color:black;}/* PIMS 데이터 백그라운드 회사 */
+.calendar_data_executive table td{background-color:#eaeaea !important;color:black;}
+.calendar_data_executive .executive{border-radius: 7px;display:inline-block;width: 5px;height: 5px;border:1px solid #ffae00;background:#ffae00;overflow:hidden;margin:-2px 5px 0px 0px;padding:0;vertical-align:middle;}/* 회사 */
+.calendar_data_executive .icon_h{display:inline-block; width:13px; height:13px; background:url(/images/calendar/i_h.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 중요도 상 화살표 */
+.calendar_data_executive .icon_l{display:inline-block; width:13px; height:13px; background:url(/images/calendar/i_l.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 중요도 하 화살표 */
 /* //주보기 */
 
 /*.calendar_data_individual{height:18px; background:#939ea4; border:1px solid #3398ea; line-height:150%; color:#ffffff;}/* PIMS 데이터 백그라운드 개인 */
@@ -127,9 +135,9 @@
 .calendar_day_title th{height:33px; line-height:25px; padding:0px 0px 2px 0px; font-family:Malgun Gothic, Meiryo UI; border-top:1px solid #d1ddec; border-right:1px solid #d1ddec; border-bottom:1px solid #d1ddec; border-left:1px solid #d1ddec; margin:0; color:#2f2f2f; background-color: #f0f6ff;}
 .calendar_day_title th .btn_prev{display: inline-block; vertical-align: top; margin: 3px 12px 0px; height:17px;cursor:pointer;}
 .calendar_day_title th .btn_next{display: inline-block; vertical-align: top; margin: 3px 0px 0px 12px; height:17px;cursor:pointer;}
-.calendar_day_title .calendar_time{width:61px; border:1px solid #e0e0e2; background:#f8f8fa; border-bottom:1px solid rgb(181, 181, 181); vertical-align: top;}
+.calendar_day_title .calendar_time{width:90px; border:1px solid #e0e0e2; background:#f8f8fa; border-bottom:1px solid rgb(181, 181, 181); vertical-align: top;}
 .calendar_day_title .td_list{border:1px solid #e0e0e2; vertical-align:top;}
-.calendar_day_title .calendar_time .calendar_row{vertical-align:top; margin:0; padding:0; width:69px; }
+.calendar_day_title .calendar_time .calendar_row{vertical-align:top; margin:0; padding:0; width:90px; }
 .calendar_day_title .calendar_time .calendar_row td{height:22px; padding:0px 8px 0px 0px; text-align:right; color:#898989;}
 .calendar_day_title .calendar_time .calendar_row .calendar_t_time{height:21px; }
 .calendar_day_title .calendar_time .calendar_row td .point{color:#656565; font-weight:normal;}
@@ -139,9 +147,9 @@
 .calendar_day_title .td_list .calendar_row .calendar_t_text{vertical-align:top;}
 .calendar_day_title .td_list .today td{background:rgb(233, 240, 255);}
 .calendar_day{vertical-align:top;}
-.calendar_day .calendar_time{width:61px; border:1px solid #dedede; border-right:1px solid #dedede; border-top:0 none; background:#f8f8fa;vertical-align: top;}
+.calendar_day .calendar_time{width:90px; border:1px solid #dedede; border-right:1px solid #dedede; border-top:0 none; background:#f8f8fa;vertical-align: top;}
 .calendar_day .td_list{width:100%; border:1px solid #dedede; border-left:0 none; border-top:0 none; vertical-align:top;}
-.calendar_day .calendar_time .calendar_row{vertical-align:top; margin:0; padding:0; width:69px; border-bottom:1px solid #dedede;}
+.calendar_day .calendar_time .calendar_row{vertical-align:top; margin:0; padding:0; width:90px; border-bottom:1px solid #dedede;}
 .calendar_day .calendar_time .calendar_row td{height:22px; padding:0px 8px 0px 0px; text-align:right; color:#898989;}
 .calendar_day .calendar_time .calendar_row .calendar_t_time{height:21px; border-bottom:1px solid #dedede;}
 .calendar_day .calendar_time .calendar_row td .point{color:#656565; font-weight:normal;}

@@ -1040,6 +1040,21 @@ reformUseProc.onLoadHandler = function() {
 			}
 		}
 		
+		var lang = "ko";
+		if (stageName == "draft" && typeof(userLang) != "undefined") {
+			switch (userLang) {
+		    	case "1": 
+		    		lang = "ko";
+		    		break;
+		    	case "3": 
+		    		lang = "ja";
+		    		break;
+		    	default :
+		    		lang = "ko";
+		    		break;
+	    	}
+		}
+		
 		$.datepicker.regional['ko'] = {
 			closeText: '닫기',
 			prevText: '이전달',
@@ -1058,7 +1073,26 @@ reformUseProc.onLoadHandler = function() {
 			showAnim: 'show',
 			showMonthAfterYear: true
 		};
-		$.datepicker.setDefaults($.datepicker.regional['ko']);
+		
+		$.datepicker.regional['ja'] = {
+			closeText: '閉じる',
+			prevText: '前月',
+			nextText: '来月',
+			currentText: '今日',
+			monthNames: [ '1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月' ],
+			monthNamesShort: [ '1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月' ],
+			dayNames: [ '日', '月', '火', '水', '木', '金', '土' ],
+			dayNamesShort: [ '日', '月', '火', '水', '木', '金', '土'  ],
+			dayNamesMin: [ '日', '月', '火', '水', '木', '金', '土'  ],
+			weekHeader: 'Wk',
+			dateFormat: 'yy-mm-dd',
+			firstDay: 0,
+			isRTL: false,
+			duration: 200,
+			showAnim: 'show',
+			showMonthAfterYear: true
+		};
+		$.datepicker.setDefaults($.datepicker.regional[lang]);
 	}
 	
 	// set up time picker controls

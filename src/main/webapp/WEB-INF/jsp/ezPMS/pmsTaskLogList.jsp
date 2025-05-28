@@ -9,7 +9,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title><spring:message code='ezPMS.t153' /></title>
-<link rel="stylesheet" href="${util.addVer('ezPMS.e1', 'msg')}" type="text/css" />
+<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 <link rel="stylesheet" href="${util.addVer('/css/previewmail.css')}" type="text/css" />
 <link rel="stylesheet" href="${util.addVer('/css/ezPMS/default/style.css')}" type="text/css" />
 <link rel="stylesheet" href="${util.addVer('/css/ezPMS/pms.css')}" type="text/css" />
@@ -153,18 +154,18 @@ $(function() {
 	<div class="pagenavi">   
 		<c:choose>
 				<c:when test="${paging.currentPage gt 1}">   
-					<span onclick="goToPageByNum(1)" class="btnimg"><img src="/images/sub/btn_p_prev.gif" ></span>            
+					<span onclick="goToPageByNum(1)" class="btnimg first"></span>            
 				</c:when>
 				<c:otherwise>
-					<span class="btnimg"><img src="/images/sub/btn_p_prev01.gif" ></span>            
+					<span class="btnimg first disabled"></span>            
 				</c:otherwise>         
 		</c:choose>
 		<c:choose>
 			<c:when test="${paging.startPage gt 1}">
-				<span onclick="goToPageByNum(${paging.startPage-1})" class="btnimg"><img src="/images/sub/btn_prev.gif" ></span>              
+				<span onclick="goToPageByNum(${paging.startPage-1})" class="btnimg prev"></span>              
 			</c:when>
 			<c:otherwise>
-				<span class="btnimg"><img src="/images/sub/btn_prev01.gif" ></span>              
+				<span class="btnimg prev disabled"></span>              
 			</c:otherwise>                                                                    
 		</c:choose>
 		<%-- <span class="ptxt" onclick="<c:if test="${paging.currentPage gt 1 }">goToPageByNum(${paging.currentPage-1})</c:if>"><spring:message code='ezApproval.t931'/></span> --%>                                   
@@ -181,18 +182,18 @@ $(function() {
 		<%-- <span class="ptxt" onclick="<c:if test="${paging.totalPage gt paging.currentPage }">goToPageByNum(${paging.currentPage+1})</c:if>"><spring:message code='ezApproval.t932'/></span> --%>
 		<c:choose>
 			<c:when test="${paging.totalPage gt paging.endPage }">
-				<span class="btnimg" onclick="goToPageByNum(${paging.endPage+1})"><img src="/images/sub/btn_next.gif" ></span>
+				<span class="btnimg next" onclick="goToPageByNum(${paging.endPage+1})"></span>
 			</c:when>
 			<c:otherwise>
-				<span class="btnimg"><img src="/images/sub/btn_next01.gif" ></span>
+				<span class="btnimg next disabled"></span>
 			</c:otherwise>
 		</c:choose>
 		<c:choose>
 			<c:when test="${paging.totalPage gt paging.currentPage }">
-				<span class="btnimg" onclick="goToPageByNum(${paging.totalPage})"><img src="/images/sub/btn_n_next.gif" ></span>
+				<span class="btnimg last" onclick="goToPageByNum(${paging.totalPage})"></span>
 			</c:when>
 			<c:otherwise>
-				<span class="btnimg"><img src="/images/sub/btn_n_next01.gif" ></span>
+				<span class="btnimg last disabled"></span>
 			</c:otherwise>
 		</c:choose>
 	</div>
@@ -201,13 +202,13 @@ $(function() {
 <c:otherwise>
 <div id="tblPageRayer" style="width:470px; margin:6px auto; font-size:0">
 	<div class="pagenavi">  
-		<span class="btnimg"><img src="/images/sub/btn_p_prev01.gif" ></span>
-		<span class="btnimg"><img src="/images/sub/btn_prev01.gif" ></span>
+		<span class="btnimg first disabled"></span>
+		<span class="btnimg prev disabled"></span>
 		<%-- <span class="ptxt"> <spring:message code='ezApproval.t931'/></span> --%>  
 		<span class="on">1</span> 
 		<%-- <span class="ptxt"><spring:message code='ezApproval.t932'/></span> --%>
-		<span class="btnimg"><img src="/images/sub/btn_next01.gif" ></span>
-		<span class="btnimg"><img src="/images/sub/btn_n_next01.gif" ></span>
+		<span class="btnimg next disabled"></span>
+		<span class="btnimg last disabled"></span>
 	</div>
 </div>
 </c:otherwise>

@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezPersonal.web;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +33,7 @@ public class EzPersonalGWController {
 	 * @param mainType {@link NotiType} 참고
 	 * @param subType {@link NotiType} 참고
 	 */
-	@GetMapping("/rest/ezPersonal/{userId}/disable-notifications/platforms")
+	@GetMapping("/rest/ezPersonal/{userId:.+}/disable-notifications/platforms")
 	public Result getPlatformsWithDisableNotification(@RequestHeader("x-user-host") String serverName, @PathVariable String userId, @RequestParam int mainType, @RequestParam int subType) {
 		logger.debug("getPlatformsWithDisableNotification started. userId: {}, mainType: {}, subType: {}", userId, mainType, subType);
 		Result result;
@@ -39,14 +41,20 @@ public class EzPersonalGWController {
 		try {
 			int tenantId = loginService.getTenantId(serverName);
 
-			if (ezPersonalService.canReceiveNotification(userId, tenantId)) {
-				NotiType notiType = NotiType.valueOf(mainType, subType);
-				logger.debug("notiType: {}", notiType);
-
-				result = Result.success(ezPersonalService.getAllPlatformFromNotiDisableItem(userId, notiType, tenantId));
-			} else {
-				result = Result.successWithCode(-1);
+			NotiType notiType = NotiType.valueOf(mainType, subType);
+			logger.debug("notiType: {}", notiType);
+			List<Integer> disableItemList = ezPersonalService.getAllPlatformFromNotiDisableItem(userId, notiType, tenantId);
+			if (!ezPersonalService.canReceiveNotification(userId, tenantId)) {
+				if (disableItemList != null && disableItemList.contains(3)) {
+					disableItemList.remove(disableItemList.indexOf(3));
+				}
+				
+				disableItemList.add(3);
+				
 			}
+			
+			result = Result.success(disableItemList);
+			
 		} catch (Exception ex) {
 			logger.error(ex.getMessage(), ex);
 			result = Result.failure();

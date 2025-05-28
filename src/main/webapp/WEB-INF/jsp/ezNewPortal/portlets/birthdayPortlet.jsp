@@ -13,42 +13,22 @@
 		<input type="hidden" id="nowMonth" value="${nowMonth}">
 		<dl class="portlet_title photo_board sortablePortlet">
 			<dt class="portletText">
-				<span id="curMonth"><c:out value="${nowMonth }" /></span><spring:message code='ezNewPortal.yej04'/><c:out value='${portletName }'/>
+<%--				<span id="curMonth"><c:out value="${nowMonth }" /></span><spring:message code='ezNewPortal.yej04'/><c:out value='${portletName }'/>--%>
+				<span id="curMonth"></span><spring:message code='ezNewPortal.birthPortlet01'/><c:out value='${portletName }'/>
 			</dt>
 			<!-- 		<dd class="portletPlus"><img src="/images/ezNewPortal/portlet_Plus.png"></dd> -->
-			<dd id="birthNext" class="nextBtn">
-				<c:choose>
-					<c:when test="${usedTheme eq 3 }">
-						<img src="/images/ezNewPortal/photo_next.png">
-					</c:when>
-					<c:otherwise>
-						<img src="/images/ezNewPortal/photo_next.png">
-					</c:otherwise>
-				</c:choose>
-			</dd>
-			<dd id="birthPrev" class="preBtn">
-				<c:choose>
-					<c:when test="${usedTheme eq 3 }">
-						<img src="/images/ezNewPortal/photo_pre.png">
-					</c:when>
-					<c:otherwise>
-						<img src="/images/ezNewPortal/photo_pre.png">
-					</c:otherwise>
-				</c:choose>
-			</dd>
+<!-- 			<dd id="birthNext" class="portletPlus nextBtn"> -->
+<!-- 				<img src="/images/ezNewPortal/photo_next.png"> -->
+<!-- 			</dd> -->
+<!-- 			<dd id="birthPrev" class="portletPlus preBtn"> -->
+<!-- 				<img src="/images/ezNewPortal/photo_pre.png"> -->
+<!-- 			</dd> -->
 		</dl>
-		<div style="height:100%;">
+		<div style="height:calc(100% - 73px);">
 			<div class="birthdayList" id="birthcount" style="display: none;">
-			<c:choose>
-				<c:when test="${usedTheme eq 1 }">
-					<ul class="birthList" id="birthdayList" style="overflow-y:auto; overflow-x:hidden; width:94%; height:180px; padding-left: 4%; padding-right: 10px;"></ul>
-				</c:when>
-				<c:otherwise>
-					<ul class="birthList" id="birthdayList" style="overflow-y:auto; overflow-x:hidden; width:100%; height:180px; padding-left: 25px; padding-right: 10px;"></ul>
-				</c:otherwise>
-			</c:choose>
+				<ul class="birthList portletPagingArea" id="birthdayList"></ul>
 			</div>
-			<div id="nodata_NewBirthday" class="nodata_newBirthday" style="padding-top: 15px;display:none;">
+			<div id="nodata_NewBirthday" class="nodata_newBirthday" style="display:none;">
 				<dl class='nodata'>
 					<dt><img src='/images/kr/main/noData_sIcon.png'></dt>
 					<dd><spring:message code='ezNewPortal.t018' /></dd>
@@ -56,6 +36,11 @@
 			</div>
 		</div>
 	</div>
+	<div class="portletPageNav">
+		<span class="portlet_list_nav prev"></span>
+		<span class="portlet_list_nav next"></span>
+	</div>
+	</article>
 	</article>
 </body>
 </html>

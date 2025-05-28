@@ -309,45 +309,42 @@
 	
 	<select id="EzPersonalAdmin.EZSP_GETQUICKLINK_ACL" parameterClass="Map"		resultClass="PersonalQuickLinkVO">
 		<![CDATA[
-			(SELECT
+			SELECT
 				QUICKLINKID ,
              	ACCESSID ,
-             	(U.DISPLAYNAME || '(' || DESCRIPTION || ')') AS ACCESSNAME ,
-             	(U.DISPLAYNAME2 || '(' || DESCRIPTION2 || ')') AS ACCESSNAME2 ,
-             	VIEW_FLAG 
+				NVL(CASE
+						WHEN USER_TYPE = 'USER'
+							THEN (SELECT displayname FROM TBL_USERMASTER WHERE tenant_id = #tenantID# AND cn = ACCESSID)
+						WHEN USER_TYPE = 'DEPT'
+							THEN (SELECT displayname FROM TBL_DEPTMASTER WHERE tenant_id = #tenantID# AND cn = ACCESSID)
+						WHEN USER_TYPE = 'JIKWI'
+							THEN (SELECT displayname FROM TBL_USER_JOBMASTER WHERE tenant_id = #tenantID# AND jobid = ACCESSID AND type = '001')
+						WHEN USER_TYPE = 'JIKCHEK'
+							THEN (SELECT displayname FROM TBL_USER_JOBMASTER WHERE tenant_id = #tenantID# AND jobid = ACCESSID AND type = '002')
+						WHEN USER_TYPE = 'GROUP'
+							THEN (SELECT group_name FROM tbl_permissiongrouplist WHERE tenant_id = #tenantID# AND group_id = ACCESSID)
+						END, '') AS ACCESSNAME,
+				NVL(CASE
+						WHEN USER_TYPE = 'USER'
+							THEN (SELECT displayname2 FROM TBL_USERMASTER WHERE tenant_id = #tenantID# AND cn = ACCESSID)
+						WHEN USER_TYPE = 'DEPT'
+							THEN (SELECT displayname2 FROM TBL_DEPTMASTER WHERE tenant_id = #tenantID# AND cn = ACCESSID)
+						WHEN USER_TYPE = 'JIKWI'
+							THEN (SELECT displayname2 FROM TBL_USER_JOBMASTER WHERE tenant_id = #tenantID# AND jobid = ACCESSID AND type = '001')
+						WHEN USER_TYPE = 'JIKCHEK'
+							THEN (SELECT displayname2 FROM TBL_USER_JOBMASTER WHERE tenant_id = #tenantID# AND jobid = ACCESSID AND type = '002')
+						WHEN USER_TYPE = 'GROUP'
+							THEN (SELECT group_name FROM tbl_permissiongrouplist WHERE tenant_id = #tenantID# AND group_id = ACCESSID)
+						END, '') AS ACCESSNAME2,
+             	VIEW_FLAG,
+				USER_TYPE as userType,
+				SUBDEPT_PERMITTED as subdeptPermitted
         	FROM
-        		TBL_PS_QUICKLINK_ACL P
-        	INNER JOIN
-        		TBL_USERMASTER U
-			ON
-				P.TENANT_ID = U.TENANT_ID
-			AND
-				P.ACCESSID = U.CN
+        		TBL_PS_QUICKLINK_ACL
        		WHERE
        			QUICKLINKID = #v_QUICKLINKID#
        		AND
-       			P.TENANT_ID = #tenantID#)
-       			
-       		UNION
-       		
-			(SELECT
-				QUICKLINKID ,
-             	ACCESSID ,
-             	D.DISPLAYNAME AS ACCESSNAME ,
-             	D.DISPLAYNAME2 AS ACCESSNAME2 ,
-             	VIEW_FLAG 
-        	FROM
-        		TBL_PS_QUICKLINK_ACL P
-        	INNER JOIN
-        		TBL_DEPTMASTER D
-			ON
-				P.TENANT_ID = D.TENANT_ID
-			AND
-				P.ACCESSID = D.CN
-       		WHERE
-       			QUICKLINKID = #v_QUICKLINKID#
-       		AND
-       			P.TENANT_ID = #tenantID#)
+       			TENANT_ID = #tenantID#
 		]]>
 	</select>
 	
@@ -550,7 +547,7 @@
             WHERE
                 Q.TENANT_ID = #tenantID#
             AND
-                U.PHYSICALDELIVERYOFFICENAME = #companyID#
+                Q.COMPANYID = #companyID#
             ORDER BY
                 Q.LINKORDER ASC                
 		]]>
@@ -628,9 +625,9 @@
 		<![CDATA[
 			INSERT INTO
 				TBL_PS_QUICKLINK
-        		( QUICKLINKID, QUICKLINKNAME, QUICKLINKNAME2, QUICKLINKNAME3, QUICKLINKNAME4, QUICKLINKNAME5, QUICKLINKNAME6, LINKTYPE, LINKTYPEURL, URL, REGDATE, REGUSERID, SIZE_, LINKORDER, TENANT_ID )
+                ( QUICKLINKID, QUICKLINKNAME, QUICKLINKNAME2, QUICKLINKNAME3, QUICKLINKNAME4, QUICKLINKNAME5, QUICKLINKNAME6, LINKTYPE, LINKTYPEURL, URL, REGDATE, REGUSERID, SIZE_, LINKORDER, TENANT_ID, COMPANYID )
         	VALUES
-        		( #v_QUICKLINKID#, #v_QUICKLINKNAME#, #v_QUICKLINKNAME2#, #v_QUICKLINKNAME3#, #v_QUICKLINKNAME4#, #v_QUICKLINKNAME5#, #v_QUICKLINKNAME6#, #v_LINKTYPE#, #v_LINKTYPEURL#, #v_URL#, #v_NOWDATE#, #v_REGUSERID#, #v_SIZE#, #LINKORDER#, #tenantID# )
+                ( #v_QUICKLINKID#, #v_QUICKLINKNAME#, #v_QUICKLINKNAME2#, #v_QUICKLINKNAME3#, ' ', #v_QUICKLINKNAME5#, #v_QUICKLINKNAME6#, #v_LINKTYPE#, #v_LINKTYPEURL#, #v_URL#, #v_NOWDATE#, #v_REGUSERID#, #v_SIZE#, #LINKORDER#, #tenantID#, #companyID# )
 		]]>
 	</insert>
 	
@@ -653,7 +650,8 @@
        		WHERE
        			QUICKLINKID = #v_QUICKLINKID#
        		AND
-       			TENANT_ID = #tenantID#	
+       			TENANT_ID = #tenantID#
+       		AND COMPANYID = #companyID#
 		]]>
 	</update>
 	
@@ -672,9 +670,25 @@
 		<![CDATA[
 			INSERT INTO
 				TBL_PS_QUICKLINK_ACL
-        		( QUICKLINKID, ACCESSID, ACCESSNAME, ACCESSNAME2, VIEW_FLAG, TENANT_ID )
-        	VALUES
-        		( #v_QUICKLINKID#, #v_ACCESSID#, #v_ACCESSNAME#, #v_ACCESSNAME2#, #v_VIEW_FLAG#, #tenantID# )
+        		( QUICKLINKID, ACCESSID, ACCESSNAME, ACCESSNAME2, VIEW_FLAG, USER_TYPE, SUBDEPT_PERMITTED, TENANT_ID )
+			SELECT
+				#v_QUICKLINKID#, #v_ACCESSID#,
+				CASE
+					WHEN #v_USER_TYPE# = 'USER' THEN (SELECT displayname FROM TBL_USERMASTER WHERE tenant_id = #tenantID# AND cn = #v_ACCESSID#)
+					WHEN #v_USER_TYPE# = 'DEPT' THEN (SELECT displayname FROM TBL_DEPTMASTER WHERE tenant_id = #tenantID# AND cn = #v_ACCESSID#)
+					WHEN #v_USER_TYPE# = 'JIKWI' THEN (SELECT displayname FROM TBL_USER_JOBMASTER WHERE tenant_id = #tenantID# AND jobid = #v_ACCESSID# AND type = '001')
+					WHEN #v_USER_TYPE# = 'JIKCHEK' THEN (SELECT displayname FROM TBL_USER_JOBMASTER WHERE tenant_id = #tenantID# AND jobid = #v_ACCESSID# AND type = '002')
+					WHEN #v_USER_TYPE# = 'GROUP' THEN (SELECT group_name FROM tbl_permissiongrouplist WHERE tenant_id = #tenantID# AND group_id = #v_ACCESSID#)
+					END,
+				CASE
+					WHEN #v_USER_TYPE# = 'USER' THEN (SELECT displayname2 FROM TBL_USERMASTER WHERE tenant_id = #tenantID# AND cn = #v_ACCESSID#)
+					WHEN #v_USER_TYPE# = 'DEPT' THEN (SELECT displayname2 FROM TBL_DEPTMASTER WHERE tenant_id = #tenantID# AND cn = #v_ACCESSID#)
+					WHEN #v_USER_TYPE# = 'JIKWI' THEN (SELECT displayname2 FROM TBL_USER_JOBMASTER WHERE tenant_id = #tenantID# AND jobid = #v_ACCESSID# AND type = '001')
+					WHEN #v_USER_TYPE# = 'JIKCHEK' THEN (SELECT displayname2 FROM TBL_USER_JOBMASTER WHERE tenant_id = #tenantID# AND jobid = #v_ACCESSID# AND type = '002')
+					WHEN #v_USER_TYPE# = 'GROUP' THEN (SELECT group_name FROM tbl_permissiongrouplist WHERE tenant_id = #tenantID# AND group_id = #v_ACCESSID#)
+					END,
+				#v_VIEW_FLAG#, #v_USER_TYPE#, #v_SUBDEPT_PERMITTED#, #tenantID#
+			FROM DUAL
 		]]>
 	</insert>
 	
@@ -832,7 +846,7 @@
 	                 	TITLE ,
 	                 	TITLE2 ,
 	                 	#v_pTerm# ,
-	                 	to_date('$v_pTerm$', 'YYYY-MM') ,
+	                 	to_date(#v_pTerm#, 'YYYY-MM') ,
 	                 	TENANT_ID
           			FROM
           				TBL_USERMASTER
@@ -840,6 +854,12 @@
            				CN = #v_pUserID#
                     AND
                     	DEPARTMENT = #v_pDeptID#
+        ]]>
+		<isNotEmpty property="jobName">
+					AND
+						TITLE = #jobName#
+		</isNotEmpty>
+		<![CDATA[
                     AND
                     	TENANT_ID = #tenantID#
                     AND
@@ -858,7 +878,7 @@
                  		A.TITLE ,
                  		A.TITLE2 ,
                  		#v_pTerm# ,
-                 		to_date('$v_pTerm$', 'YYYY-MM') ,
+                 		to_date(#v_pTerm#, 'YYYY-MM') ,
                  		A.TENANT_ID
           			FROM
           				TBL_ADDJOBMASTER A
@@ -878,6 +898,12 @@
            				B.CN = #v_pUserID#
                     AND
                     	A.DEPTID = #v_pDeptID#
+        ]]>
+		<isNotEmpty property="jobName">
+					AND
+						A.TITLE = #jobName#
+		</isNotEmpty>
+		<![CDATA[
                     AND
                     	A.TENANT_ID = #tenantID#
                     AND
@@ -1291,7 +1317,6 @@
 	</update>
 
 	<delete id="EzPersonalAdmin.EZSP_UPDATE_RESULT" parameterClass="Map" >
-		<![CDATA[
 			DELETE FROM
 				TBL_PS_LIGHTPOLLRESULT
 			WHERE
@@ -1299,8 +1324,10 @@
 			AND
 				TENANT_ID = #tenantID#
 			AND
-				RESULT IN ($sbQuery$)
-		]]>
+				RESULT IN
+				<iterate property="sbQuery" open="(" close=")" conjunction=",">
+   					#sbQuery[]#
+   				</iterate>
 	</delete>
 
 	<select id="EzPersonalAdmin.EZSP_CheckJoinPoll" parameterClass="Map" resultClass="Integer">
@@ -1377,6 +1404,7 @@
         ]]>
     </update>
     
+    <!-- 2024-07-03 홍승비 - SQL Injection 수정 > $ 기호 제거 -->
     <select id="EzPersonalAdmin.getPopupUserList" parameterClass="Map" resultClass="PersonalPopupUserVO">
         <![CDATA[
             SELECT
@@ -1385,13 +1413,21 @@
                 A.user_type as usertype,
                 CASE 
                     WHEN user_type = 'USER'
-                        THEN NVL((SELECT displayname$lang$ FROM TBL_USERMASTER WHERE tenant_id = #tenantId# AND cn = user_id), '')
+                        THEN NVL(
+                        	(SELECT CASE #lang# WHEN '2' THEN displayname2 ELSE displayname END
+                        	FROM TBL_USERMASTER WHERE tenant_id = #tenantId# AND cn = user_id), '')
                     WHEN user_type = 'DEPT' 
-                        THEN NVL((SELECT displayname$lang$ FROM TBL_DEPTMASTER WHERE tenant_id = #tenantId# AND extensionattribute2 = #companyId# AND cn = user_id), '')
+                        THEN NVL(
+                        	(SELECT CASE #lang# WHEN '2' THEN displayname2 ELSE displayname END
+                        	FROM TBL_DEPTMASTER WHERE tenant_id = #tenantId# AND extensionattribute2 = #companyId# AND cn = user_id), '')
                     WHEN user_type = 'JIKWI'
-                        THEN NVL((SELECT displayname$lang$ FROM TBL_USER_JOBMASTER WHERE tenant_id = #tenantId# AND companyid = #companyId# AND jobid = user_id AND type = '001'), '')
+                        THEN NVL(
+                        	(SELECT CASE #lang# WHEN '2' THEN displayname2 ELSE displayname END
+                        	FROM TBL_USER_JOBMASTER WHERE tenant_id = #tenantId# AND companyid = #companyId# AND jobid = user_id AND type = '001'), '')
                     WHEN user_type = 'JIKCHEK'
-                        THEN NVL((SELECT displayname$lang$ FROM TBL_USER_JOBMASTER WHERE tenant_id = #tenantId# AND companyid = #companyId# AND jobid = user_id AND type = '002'), '')
+                        THEN NVL(
+                        	(SELECT CASE #lang# WHEN '2' THEN displayname2 ELSE displayname END
+                        	FROM TBL_USER_JOBMASTER WHERE tenant_id = #tenantId# AND companyid = #companyId# AND jobid = user_id AND type = '002'), '')
                     WHEN user_type = 'GROUP'
                         THEN NVL((SELECT group_name FROM tbl_permissiongrouplist WHERE tenant_id = #tenantId# AND company_id = #companyId# AND group_id = user_id), '')
                 END AS username,

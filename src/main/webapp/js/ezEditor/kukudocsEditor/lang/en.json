@@ -24,7 +24,6 @@
     "title": "Settings",
     "pageTitleLabel": "Page title",
     "encodingLabel": "Page encoding",
-    "encodingLabelDri": "인코딩 직접입력",
     "encodingTypes": {
       "utf-8": "Unicode (UTF-8)",
       "euc-kr": "Korean (EUC)",
@@ -408,8 +407,6 @@
     "image_alt": "Image description",
     "image_width": "Width",
     "image_height": "Height",
-    "image_org_width": "원본 너비",
-    "image_org_height": "원본 높이",
     "image_margin_left": "Left margin",
     "image_margin_right": "Right margin",
     "image_margin_top": "Top margin",

@@ -2,12 +2,14 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 	<head>
 		<title><spring:message code='ezCommunity.t570' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" type="text/css" href="${util.addVer('ezCommunity.i1', 'msg')}">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/css/community.css')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezCommunity/common.js')}"></script>
@@ -22,6 +24,29 @@
 		        font:bold;
 		        color:#017bec;
 	        }
+			.witterReply td {
+				padding-top: 10px;
+				height: 24px;
+			}
+			.editReply {
+				border: 1px solid rgb(221, 221, 221);
+				width: 97%;
+				background: #fff;
+			}
+			.editSubmit {
+				text-align: right;
+				padding: 0 20px 10px 0;
+			}
+			
+			.blankSpan{
+				margin : 0 10px;
+				color:gray;
+			}
+			
+			.contText {
+				word-wrap: break-word;
+				white-space: pre-wrap;
+			} 
 		</style>
 
 		<script type="text/javascript">
@@ -32,6 +57,7 @@
 		    var multiData = '<c:out value="${multiData}" />';
 			
 		    var xmlDoc = loadXMLString('${strXML}');
+			var chkId = '<c:out value="${chkId}" />';
 
 		    window.onload = function () {
 		        makePageSelPage();
@@ -39,11 +65,11 @@
 		        var html = "";
 
 		        for(var i = 0; i < SelectNodes(xmlDoc, "DATA/ROW").length; i++) {
-		        	html += "<table class=\"content\" style=\"margin-top:10px;margin-bottom:12px;border-left:1px solid #dfdfdf;border-right:1px solid #dfdfdf;\">";
+		        	html += "<table id='guestRp_" + SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "NO") + "' class=\"content\" style=\"margin-top:10px;margin-bottom:12px;border-left:1px solid #dfdfdf;border-right:1px solid #dfdfdf;\">";
 		        	html += "<tr style=\"border:1px solid #dfdfdf;\" >";
 		        	html += "<th style=\"height:25px; border:1px solid #dfdfdf; width:20px;\" nowrap><input type=\"checkbox\" name=\"c_no\" value=\"" + SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "C_NO") + "\"></th>";
 		        	/* html += "<th style=\"border-left:1px solid none;border-right:1px solid none;width:50px;\" nowrap>" + SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "C_NO") + "</th>"; */
-		        	html += "<th style=\"width:100%; text-align:left;border:1px solid #dfdfdf; font-weight:normal\" >";
+		        	html += "<th style=\"width:90%; text-align:left;border:1px solid #dfdfdf; border-right: 1px solid transparent; font-weight:normal\" >";
 		        	
 		        	if(SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "NEW") == 'NEW') {
 		        		html += "<img src=\"/images/i_new.gif\" border=\"0\" hspace=\"5\" align=\"absmiddle\">";
@@ -54,7 +80,8 @@
 					/* 2019-10-25 홍승비 - 커뮤니티 방명록에서 초단위 삭제 (타 모듈과 통일) */
 					var writeDate = SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "WRITEDAY");
 					html += writeDate.substring(0, writeDate.length - 3);
-					html += "<spring:message code='ezCommunity.t588' /></th>";
+					html += " <spring:message code='ezCommunity.t588' /></th>";
+					html += "<th style='width:20%;'><a id='replyDisplay" + SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "NO") + "' class='imgbtn replyDisplay' style='vertical-align: middle;'><span onclick='replyLayerDisplay(" + SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "NO") + ")'><spring:message code="ezCommunity.reply.hik01" /></span></a></th>";
 					html += "</tr>";
 					html += "<tr style=\"border-left:1px solid #dfdfdf;border-right:1px solid #dfdfdf;\">";
 					html += "<td  colspan=\"3\" style=\"word-break:break-all; height:100px; border:1px solid #dfdfdf;\">";
@@ -64,6 +91,53 @@
 //					html += "<textarea style=\"padding:7px;height:100px;width:98%; border:0; overflow-y:auto; resize:none;\" readonly=\"readonly\" id=textarea1 name=textarea1></textarea></td>";
 					html += "</tr>";
 					html += "</table>";
+
+					// 2024-10-30 황인경 - 커뮤니티 > 방명록 > 댓글 추가
+					html += "<div style='height:auto;'>";
+					html += "<table id='replyLayerTable_" + SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "NO") + "' class='mainlist emoticonLayerStaticPosition' style='width: 100%; display: none'>";
+					html += "<tbody><tr>";
+					html += "<th style='text-align:left; border: #fff; width: 85%;'>";
+					html += "<textarea id='onelinereply"+ SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "NO") +"' rows='2' style='resize:none; margin-left: 10px; margin-top: 4px; width: 95%;' maxLength='300'></textarea>";
+					html += "<th style='text-align:center; border: #fff; width: 15%;'>";
+					html += '<a class="imgbtn" style="vertical-align: middle"><span onclick="guestOneLineReply(\'new\' ,' + SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "NO") + ')"><spring:message code="ezBoard.t321" /></span></a>';
+					html += '<a class="imgbtn" style="vertical-align: middle; margin-left:5px;"><span onclick="guestOneLineReply(\'cancel\' ,' + SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "NO") + ')"><spring:message code="ezCommunity.t109" /></span></a>';
+					html += "</th>";
+					html += "</th>";
+					html += "</tr></tbody>";
+					html += "</table>";
+
+					if ((SelectNodes(xmlDoc, "DATA/ROW")[i]).getElementsByTagName("C_REPLY")[0]) {
+						html += "<table class='witterReply' id='writtenReply_"+ SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "NO") +"' style='margin-top: 10px; width: 100%; border: 1px solid rgb(225, 225, 225);'>";
+						for(var j = 0; j < SelectNodes(SelectNodes(xmlDoc, "DATA/ROW")[i], "C_REPLY/ROW2").length; j++) {
+							if (j%2 == 0) {
+								html += "<tbody>";
+							} else {
+								html += "<tbody style='background-color: #fafafa'>";
+							}
+
+							html += "<tr style='border-top: 1px solid rgb(225, 225, 225);'>";
+							html += "<td style='width: 15%; padding-left: 10px; font-weight: bold'>"+ SelectSingleNodeValue(SelectNodes(SelectNodes(xmlDoc, "DATA/ROW")[i], "C_REPLY/ROW2")[j], "RUSERNAME" + multiData) + "</td>";
+							html += "<td style='width: 15%;'>" + (SelectSingleNodeValue(SelectNodes(SelectNodes(xmlDoc, "DATA/ROW")[i], "C_REPLY/ROW2")[j], "WRITEDATE")).slice(0, 16) + "</td>";
+							html += "<td style='text-align: right; padding-right: 15px;'>";
+
+							if (chkId == SelectSingleNodeValue(SelectNodes(SelectNodes(xmlDoc, "DATA/ROW")[i], "C_REPLY/ROW2")[j], "RUSERID")) {
+								html += "<div class='buttonChk' imgbtnid='"+ SelectSingleNodeValue(SelectNodes(SelectNodes(xmlDoc, "DATA/ROW")[i], "C_REPLY/ROW2")[j], "REPLYID") +"'>";
+								html += '<a class="imgbtn" style="vertical-align: middle"><span onclick="guestOneLineReply(\'edit\' ,' + SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "NO") + ', \'' + SelectSingleNodeValue(SelectNodes(SelectNodes(xmlDoc, "DATA/ROW")[i], "C_REPLY/ROW2")[j], "REPLYID") + '\')"><spring:message code='ezCommunity.t6' /></span></a>';
+								html += '<a class="imgbtn" style="vertical-align: middle; margin-left: 5px;"><span onclick="guestOneLineReply(\'del\' ,' + SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "NO") + ', \'' + SelectSingleNodeValue(SelectNodes(SelectNodes(xmlDoc, "DATA/ROW")[i], "C_REPLY/ROW2")[j], "REPLYID") + '\')"><spring:message code='ezCommunity.t208' /></span></a>';
+								html += "<div>";
+							}
+
+							html += "</td>";
+							html += "</tr>";
+							html += "<tr>";
+							html += "<td replyId="+ SelectSingleNodeValue(SelectNodes(SelectNodes(xmlDoc, "DATA/ROW")[i], "C_REPLY/ROW2")[j], "REPLYID") + " colspan='3' style='padding: 10px 0 10px 10px;'><span class='contText'>" + SelectSingleNodeValue(SelectNodes(SelectNodes(xmlDoc, "DATA/ROW")[i], "C_REPLY/ROW2")[j], "RCONTENT").replace(/<br>/gi, "\n").replace(/&dquot;/gi, "\"").replace(/&quot;/gi, "\'") + "</span></td>";
+							html += "</tr>";
+							html += "</tbody>";
+						}
+
+						html += "</table>";
+					}
+					html += "</div>";
 		        }
 		        
 		        if (SelectNodes(xmlDoc, "DATA/ROW").length == 0) {
@@ -93,7 +167,7 @@
 		        // 2018-02-14 천성준
 		        $(document).keydown(function(e) {
 		        	// input 박스를 제외한 나머지에서 backspace 입력을 막는다.(IE뒤로가기 방지)
-		            if(e.target.nodeName != "INPUT") {
+		            if(e.target.nodeName != "INPUT" && e.target.nodeName != "TEXTAREA") {
 		                if(e.keyCode === 8) {return false;}
 		            }
 		        });
@@ -222,30 +296,30 @@
 	            var strtext;
 	            var PagingHTML = "";
 	            document.getElementById("tblPageRayer").innerHTML = "";
-	            document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + totalCount + "</span>";
+	            document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span class='txt_color'>" + totalCount + "</span>";
 	            strtext = "<div class='pagenavi'>";
 	            PagingHTML += strtext;
 	            
 	            var pageNum = CurPage;
 	            
 	            if (totalPage > 1 && pageNum != 1) {
-	                strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' ></span>";
+	                strtext = "<span class='btnimg first' onclick= 'return goToPageByNum(1)'></span>";
 	                PagingHTML += strtext;
 	            } else {
-	                strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>";
+	                strtext = "<span class='btnimg first disabled'></span>";
 	                PagingHTML += strtext;
 	            }
 	            
 	            if (totalPage > BlockSize) {
 	                if (pageNum > BlockSize) {
-	                    strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' ></span>";
+	                    strtext = "<span class='btnimg prev' onclick= 'return selbeforeBlock()'></span>";
 	                    PagingHTML += strtext;
 	                } else {
-	                    strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+	                    strtext = "<span class='btnimg prev disabled'></span>";
 	                    PagingHTML += strtext;
 	                }
 	            } else {
-	                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+	                strtext = "<span class='btnimg prev disabled'></span>";
 	                PagingHTML += strtext;
 	            }
 	            
@@ -276,24 +350,24 @@
 	            if (totalPage > BlockSize) {
 	                if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
 	                    strtext = "";
-	                    strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' ></span>";
+	                    strtext = strtext + "<span class='btnimg next' onclick='return selafterBlock()'></span>";
 	                    PagingHTML += strtext;
 	                } else {
 	                    strtext = "";
-	                    strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+	                    strtext = strtext + "<span class='btnimg next disabled'></span>";
 	                    PagingHTML += strtext;
 	                }
 	            } else {
 	                strtext = "";
-	                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+	                strtext = strtext + "<span class='btnimg next disabled'></span>";
 	                PagingHTML += strtext;
 	            }
 	            
 	            if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-	                strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' ></span>";
+	                strtext = "<span class='btnimg last' onclick='return goToPageByNum(" + totalPage + ")'></span>";
 	                PagingHTML += strtext;
 	            } else {
-	                strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
+	                strtext = "<span class='btnimg last disabled'></span>";
 	                PagingHTML += strtext;
 	            }
 	            
@@ -345,7 +419,7 @@
 	    		var href = "/ezCommunity/guestOne.do?bName=" + encodeURIComponent('<c:out value="${mode}"/>')
 				            + "&sRadio=" + encodeURIComponent("${sRadio}")
 				            + "&code=" + encodeURIComponent(code)
-				            + "&keyword=" + "${keyword}"
+							+ "&keyword=" + encodeURIComponent("${fn:escapeXml(keyword)}");
 				            + "&block=" + encodeURIComponent("${nowBlock}");
 				            
 	            if (parseInt(newPage) > 0 && parseInt(newPage) <= parseInt(totalPage)) {
@@ -358,7 +432,7 @@
 		        var href = "/ezCommunity/guestOne.do?bName=" + encodeURIComponent("${mode}")
 					+ "&sRadio=" + encodeURIComponent('<c:out value="${sRadio}"/>')
 					+ "&code=" + encodeURIComponent('<c:out value="${code}"/>')
-					+ "&keyword=" + '<c:out value="${keyword}"/>'
+					+ "&keyword=" + encodeURIComponent("${fn:escapeXml(keyword)}");
 					+ "&block=" + encodeURIComponent("${nowBlock}");
 
 		        if (page == "front") {
@@ -398,6 +472,208 @@
 		        
 		        window.location.href = url;
 		    }
+
+			// 2024-10-30 황인경 - 커뮤니티 > 방명록 > 댓글작성 버튼 이벤트
+			function replyLayerDisplay(guestNo) {
+				var replyDisplay = document.querySelectorAll(".imgbtn.replyDisplay");
+				for (var i = 0; i < replyDisplay.length; i++) {
+					replyDisplay[i].style.display = "";
+				}
+
+				var cont = document.querySelectorAll(".contText");
+				for (var i = 0; i < cont.length; i++) {
+					cont[i].style.display = "";
+				}
+
+				var aButton = document.getElementById('replyDisplay' + guestNo);
+				aButton.style.display = "none";
+				var writerArea = document.querySelectorAll(".mainlist.emoticonLayerStaticPosition");
+
+				for (var i = 0; i < writerArea.length; i++) {
+					writerArea[i].style.display = "none";
+				}
+
+				var relplyLayer = document.getElementById("replyLayerTable_" + guestNo);
+				relplyLayer.style.display = "table";
+				var span = document.querySelector("#writtenReply_" + guestNo +" .contText");
+				var editAreaText = document.querySelectorAll(".editReply");
+				var buttons = document.querySelectorAll(".buttonChk");
+
+				for (var i = 0; i < buttons.length; i++) {
+					buttons[i].style.display = "none";
+				}
+
+				for (var i = 0; i < editAreaText.length; i++) {
+					editAreaText[i].parentNode.removeChild(editAreaText[i]);
+				}
+
+				if (span) {
+					span.style.display = "";
+				}
+			}
+
+			// 2024-10-30 황인경 - 커뮤니티 > 방명록 > 댓글 등록
+			function guestOneLineReply(mode, guestNo, replyNo) {
+				if (mode == 'new') {
+					var content = document.getElementById("onelinereply" + guestNo).value.trim();
+
+					if (content) {
+						$.ajax({
+							type: "POST",
+							url: "/ezCommunity/guestOneLineReply.do",
+							data: {
+								c_no: guestNo,
+								code: code,
+								memo: encodeURIComponent(content)
+							},
+							success: function (result) {
+								goPage(2);
+							}
+						});
+					} else {
+						alert("<spring:message code='ezCommunity.t569' />");
+						document.getElementById("onelinereply" + guestNo).focus();
+					}
+				} else if (mode == "cancel") { // 등록 취소
+					var relplyLayer = document.getElementById("replyLayerTable_" + guestNo);
+					relplyLayer.style.display = "none";
+					var aButton = document.getElementById('replyDisplay' + guestNo);
+					aButton.style.display = "";
+					var replyArea = document.getElementById("onelinereply" + guestNo);
+					replyArea.value = "";
+					var buttons = document.querySelectorAll(".buttonChk");
+
+					for (var i = 0; i < buttons.length; i++) {
+						buttons[i].style.display = "";
+					}
+				} else if (mode == "edit") { // 수정 버튼
+					var buttonChk = document.querySelectorAll(".buttonChk");
+
+					for (var i = 0; i < buttonChk.length; i++) {
+						buttonChk[i].style.display = "";
+					}
+
+					var beforeEditReplyDiv = document.querySelectorAll(".editReply");
+					for (var i = 0; i < beforeEditReplyDiv.length; i++) {
+						beforeEditReplyDiv[i].parentNode.removeChild(beforeEditReplyDiv[i]);
+					}
+
+					var beforeContText = document.querySelectorAll(".contText");
+					for (var i = 0; i < beforeContText.length; i++) {
+						beforeContText[i].style.display = "";
+					}
+
+					var editButtons = document.querySelector('[imgbtnid="' + replyNo + '"]');
+					editButtons.style.display = "none";
+
+					var editReply = document.createElement("textarea");
+					var editReplyDiv = document.createElement("div");
+					var editReplyTotalDiv = document.createElement("div");
+
+					editReplyTotalDiv.className = "editReply";
+					editReply.style.width = "97%";
+					editReply.style.resize = "none";
+					editReply.setAttribute("maxlength", "300");
+
+					var replyTextArea = document.querySelector('[replyId="' + replyNo + '"]');
+					var span = replyTextArea.querySelector("span");
+					var replyContext = span.textContent;
+
+					editReply.value = replyContext;
+					editReply.id = "editReply" + guestNo;
+					editReply.name = replyNo;
+					editReply.style.border = "none";
+					span.style.display = "none";
+					editReplyDiv.appendChild(editReply);
+					editReplyTotalDiv.appendChild(editReplyDiv);
+					replyTextArea.appendChild(editReplyTotalDiv);
+
+					var editReplyOkDiv = document.createElement("div");
+					var editReplyOkA = document.createElement("a");
+					var editReplyCancelA = document.createElement("a");
+					var blankSpan = document.createElement("span");
+
+					editReplyOkA.setAttribute("onclick", "editReplySave('" + replyNo + "', '" + guestNo + "')");
+					editReplyCancelA.setAttribute("onclick", "editCancel('"+ replyNo +"')");
+					editReplyOkA.textContent = "<spring:message code='ezCommunity.t958' />";
+					editReplyCancelA.textContent = "<spring:message code='ezCommunity.t109' />";
+					editReplyOkDiv.className = "editSubmit";
+					blankSpan.textContent = "|";
+					blankSpan.className = "blankSpan";
+
+					editReplyOkDiv.appendChild(editReplyCancelA);
+					editReplyOkDiv.appendChild(blankSpan);
+					editReplyOkDiv.appendChild(editReplyOkA);
+					editReplyTotalDiv.appendChild(editReplyOkDiv);
+				} else if (mode == "del") { // 삭제
+					if (confirm("<spring:message code='ezCommunity.t426' />")){
+						$.ajax({
+							type : "POST",
+							url : "/ezCommunity/deleteGuestOneLineReply.do",
+							data : {replyNo : replyNo},
+							success : function(result) {
+								goPage(2);
+							}
+						});
+					}
+				}
+			}
+
+			// 2024-10-30 황인경 - 커뮤니티 > 방명록 > 댓글 수정 저장
+			function editReplySave(replyNo, guestNo) {
+				var editReplyContent = document.getElementById("editReply" + guestNo).value.trim();
+
+				if (editReplyContent) {
+					$.ajax({
+						type: "POST",
+						url: "/ezCommunity/modifyGuestOneLineReply.do",
+						data: {
+							replyNo: replyNo,
+							content: encodeURIComponent(editReplyContent)
+						},
+						success: function (result) {
+							var contentTd = document.querySelector('[replyid="' + replyNo + '"]');
+							var editReply = contentTd.querySelector(".editReply");
+							var content = contentTd.querySelector("span");
+							content.textContent = editReplyContent;
+							content.style.display = "";
+
+							if (editReply && editReply.parentNode) {
+								editReply.parentNode.removeChild(editReply);
+							}
+
+							var buttons = document.querySelectorAll(".buttonChk");
+							for (var i = 0; i < buttons.length; i++) {
+								buttons[i].style.display = "";
+							}
+						}
+					});
+				} else {
+					alert("<spring:message code='ezCommunity.t569' />");
+					document.getElementById("editReply" + guestNo).focus();
+				}
+			}
+
+			// 2024-10-30 황인경 - 커뮤니티 > 방명록 > 댓글 수정 취소
+			function editCancel(replyNo) {
+				var editButtons = document.querySelector('[imgbtnid="' + replyNo + '"]');
+				editButtons.style.display = "";
+
+				var contentTd = document.querySelector('[replyid="' + replyNo + '"]');
+				var content = contentTd.querySelector("span");
+				content.style.display = "";
+
+				var editArea = contentTd.querySelector("div");
+				if (editArea && editArea.parentNode) {
+					editArea.parentNode.removeChild(editArea);
+				}
+
+				var editReply = document.querySelectorAll(".editReply");
+				for (var i = 0; i < editReply.length; i++) {
+					editReply[i].parentNode.removeChild(editReply[i]);
+				}
+			}
+			
 		</script>
 	</head>
 	<body class="cmhome_body" style = "margin-bottom:0px;">

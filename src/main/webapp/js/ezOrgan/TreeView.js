@@ -4,9 +4,9 @@ var TreeIcons       = new Array();
 var TreeIconSizes   = new Array();
 var TreeClasses     = new Array();
 var TreeImages      = new Array();
-
+// 부서 숨김표시 플레그
+var useOrganHideFlag;
 var _depth = 0;
-
 //###########################################################################################
 // TreeNode 클래스 시작
 function TreeNode() {
@@ -199,7 +199,15 @@ function TreeNode() {
 
         //노드 이름 SPAN 생성
         var spnNode = document.createElement("SPAN");
+        
+        // 숨김부서 뒤에 X 표시
+        var strDeptTreeFlag = GetAttribute(treeDiv, "deptTreeFlag");
         var nodeText = document.createTextNode(this.NodeName);
+
+        if ("YES" === useOrganHideFlag) {
+            nodeText = strDeptTreeFlag === 'N' ? document.createTextNode(this.NodeName+"(X)") : document.createTextNode(this.NodeName);
+        } 
+        
         spnNode.appendChild(nodeText);
 
         spnNode.id = "spn_" + this.NodeID;
@@ -643,7 +651,11 @@ function treeicon_toggle(pNodeID, pTreeID, callbackFunc, pNodeIconID) {
         callbackFunc(pNodeID, pTreeID);
 }
 
+window.currentListMode = "dept"; // dept: 트리뷰에서 부서 선택해서 보이는 리스트일 때, search: 검색 결과로 나타난 리스트일 때
 function node_select(pNodeID, pNodeNM, pTreeID, callbackFunc) {
+    window.currentListMode = "dept";
+    pSeach = false;
+    
     var treeDiv = document.getElementById(pTreeID);
     var preSelectID = GetAttribute(treeDiv, "SELECTNODEID");
 

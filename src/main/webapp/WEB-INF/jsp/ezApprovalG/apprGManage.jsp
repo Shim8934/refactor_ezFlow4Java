@@ -7,7 +7,8 @@
 	<head>
 		<title></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<!-- <link rel="stylesheet" href="${util.addVer('/js/jquery/jquery-ui.css')}"> -->
 		<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/css/font-awesome-4.7.0/css/font-awesome.min.css')}" type="text/css"/>
@@ -144,6 +145,33 @@
 
 			var selectYearVal = "ALL";
         	
+        	/* 2023-04-20 이가은 - 일괄접수 기능을 위한 변수 추가 */
+        	var isReceiptAll = "";
+        	var pCurSelRowSend = [];
+        	var minSignCountInfo = [];
+        	var minSignCount = 0;
+        	var receiptFlag = "";
+        	var retValue = [];
+        	var OpenPopupWin;
+        	
+        	// 2023-08-24 조수빈 - 누락된 변수 추가
+        	var tempSecurity = "";
+		    var tempKeep = "";
+		    var tempPublic = "Y";
+		    var tempUrgent = "N";
+		    var tempKeyword = "";
+		    var tempItemCode = "";
+		    var tempItemName = "";
+		    var tempItemName2 = "";
+		    var pSpecialRecordCode = "";
+		    var pPublicityCode = "";
+		    var pPublicityYN = "";
+		    var pLimitRange = "";
+		    var pPageNum = "";
+		    var cabinetID = "";
+		    var TaskCode = "";	    
+		    var useReceiveInfoName = "<c:out value ='${useReceiveInfoName}'/>"; // 수신처 뒤에 "장"을 붙이는지 여부 (0 : 안붙임 / 1 : 붙임 / 2: 상위부서 + 수신처장)
+
 		    document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
 		            return false;
@@ -178,7 +206,7 @@
 		            
 		            var pAlertContent = "";
 		            
-		            if (userLang == "1") {
+		            if (userLang == "1" || userLang == "3") {
 			            pAlertContent = arr_userinfo[2] + "<spring:message code='ezApprovalG.t1721'/>" + "<br>" + tmpStartDate + "~" + tmpEndDate + "<br>" + "<spring:message code='ezApprovalG.t1723'/>" + "<br>" + " <spring:message code='ezApprovalG.t1724'/>";
 		            }
 		            else if (userLang == "2") {
@@ -199,7 +227,7 @@
 		        		
 		        		var pAlertContent = "";
 		        		
-			            if (userLang == "1") {
+			            if (userLang == "1" || userLang == "3") {
 				            pAlertContent = arr_userinfo[2] + "<spring:message code='ezApprovalG.t1721'/>" + "<br>" + tmpStartDate + "~" + tmpEndDate + "<br>" + "<spring:message code='ezApprovalG.t1723'/>" + "<br>" + " <spring:message code='ezApprovalG.t1724'/>";
 			            }
 			            else if (userLang == "2") {
@@ -300,14 +328,21 @@
 		        else if (pListTypeValue == "21") {
 		            getDocList();
 		        }
+				else if (pListTypeValue == "24") {
+					getDocList();
+				}
 		        else if (pListTypeValue == "99") {
 		            getDocList();
 		        }
 		        else if (pListTypeValue == "11") {
 		        	getDocList();
 		        }
-		        
-		        
+				else if (pListTypeValue == "97") {
+					getReceivedDocList();
+				}	
+		        else if (pListTypeValue == "98") {
+		            getDocList();
+		        }
 		        try {
 		            parent.frames["left"].getAprCount();
 		            parent.frames["left"].setPresentValue("");
@@ -586,13 +621,13 @@
 		        if (pListTypeValue == "1") {
 		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t1422"/>', "002");
 		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t50"/>', "005");
-		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t49"/>', "004");
+					<%-- AddOption(sel_status, '<spring:message code="ezApprovalG.t49"/>', "004"); // 2023-03-13 양지혜 - 반송된문서 추가 > 결재할문서에서 반송 상태 제외 --%>
 		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t66"/>', "006");
 		        	AddOption(sel_status, '<spring:message code="ezApproval.t497"/>', "015");
 		        } else if (pListTypeValue == "2" || pListTypeValue == "3") {
 		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t1422"/>', "002");
 		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t50"/>', "005");
-		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t49"/>', "004");
+		        	<%-- AddOption(sel_status, '<spring:message code="ezApprovalG.t49"/>', "004"); // 2023-04-12 양지혜 - 반송된문서 추가 > 결재진행문서, 기안한문서에서 반송 상태 제외 --%>
 		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t66"/>', "006");
 		        } else if (pListTypeValue == "4") {
 		        	AddOption(sel_status, '<spring:message code="ezApprovalG.garm06"/>', "011");
@@ -611,7 +646,10 @@
 		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t49"/>', "004");
 		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t66"/>', "006");
 		        	AddOption(sel_status, '<spring:message code="ezApproval.t497"/>', "015");
-		        } else {
+		        } else if (pListTypeValue == "97") {
+					AddOption(sel_status, '<spring:message code="ezApprovalG.garm06"/>', "011");
+					AddOption(sel_status, '<spring:message code="ezApprovalG.t1430"/>', "012");
+				} else {
 		        	$('#sel_status_div').closest("li").hide();
 		        }
 		        
@@ -663,7 +701,7 @@
 		        else if (pListTypeValue == "3") {
 		            getDocList();
 		        }
-		        else if (pListTypeValue == "4" || pListTypeValue == "5") {
+		        else if (pListTypeValue == "4" || pListTypeValue == "5" || pListTypeValue == "97") {
 		            getReceivedDocList();
 		        }
 		        else if (pListTypeValue == "6") {
@@ -693,13 +731,19 @@
 		        else if (pListTypeValue == "11") {
 		        	getDocList();
 		        }
+				else if (pListTypeValue == "24") {
+					getDocList();
+				}
+				else if (pListTypeValue == "98") {
+					getDocList();
+				}
 		    }
 		    
 		    function onSelect_Status() {
 		    	pageNum = 1;
 		        if (pListTypeValue == "1" || pListTypeValue == "2" || pListTypeValue == "3" || pListTypeValue == "11") {
 		            getDocList();
-		        } else if (pListTypeValue == "4") {
+		        } else if (pListTypeValue == "4" || pListTypeValue == "97") {
 		        	getReceivedDocList();
 		        } else if (pListTypeValue == "9") {
 		        	getSendOutDocList();
@@ -798,7 +842,7 @@
 		                }
 		                else
 		                    btnRedraft_onclick();
-		            } else if (pListTypeValue == "4" || pListTypeValue == "5") {
+		            } else if (pListTypeValue == "4" || pListTypeValue == "5" || pListTypeValue == "97") {
 		                if (pSusinManagerFlag == "admin" || pCurSelRow.getAttribute("DATA8") == pUserID) {
 		                    var pDraftFlag;
 		                    var tmpDocState = pCurSelRow.getAttribute("DATA9");
@@ -1041,16 +1085,15 @@
                 var DocList = new ListView();
                 DocList.LoadFromID("DocList");
                 var oArrRows = DocList.GetSelectedRows();
-                
+				var pCurSelRow = oArrRows[0];
+				orgCompanyID = pCurSelRow.getAttribute("ORGCOMPANYID");
                 // 2024-02-19 전인하 - 문서보기 버튼 - 선택된 문서가 없을 시 알림 추가
                 if (oArrRows.length == 0) {
                     OpenInformationUI(strLang930 + "<br>" + strLang336);
                     return;
                 }
                 
-		        if (pListTypeValue != "5") {   
-		            var pCurSelRow = oArrRows[0];
-			        orgCompanyID = pCurSelRow.getAttribute("ORGCOMPANYID");
+		        if (pListTypeValue != "5") {
 		            if (oArrRows.length > 0)
 		                openViewDocInfo();
 		            else {
@@ -1060,29 +1103,37 @@
 		            }
 		        }
 		        else {
-		            var para = new Array();
-		            para[0] = pDocID;
-		            para[1] = pURL;
-		            var openLocation;
-		            var ext = getOriginalFileExtension(pURL);
-		            if (ext == "hwp") {
-		            	if(useWebHWP == "NO") {
-			            	if (isIE()) {
-				            	openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
-			                } else {
-			                	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
-			                	alert(pAlertContent);
-			                    
-			                    return;
-			                }
-		            	} else {
-		            		openLocation = "/ezApprovalG/ezViewEnd_WHWP.do";
-		            	}
-		            } else {
-	                    openLocation = "/ezApprovalG/contDocView.do";
-		            }
-		            openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pURL) + "&listSusin=" + "&orgCompanyID=" + orgCompanyID;
-		            openwindow(openLocation, "", 880, 570);
+					// 대외수신함 문서보기
+					var pURL = pCurSelRow.getAttribute("DATA3");
+					var pDocID = pCurSelRow.getAttribute("DATA1").trim();
+					var docHref = pURL.substr(pURL.length - 3, pURL.length).toLowerCase();
+					var isMht = docHref == "mht" || (docHref != "hwp" && g_RelayG_Type.toUpperCase() == "MHT");
+					if (isMht) {
+						openLocation = "";
+
+						if (pCurSelRow.getAttribute("DATA15") == "001") {
+							openLocation = "/ezApprovalG/recevG.do";
+						} else {
+							openLocation = "/ezApprovalG/recevGSusin.do";
+						}
+
+						openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&draftFlag=" + encodeURI("SUSIN");
+						openLocation = openLocation + "&uOrgID=" + encodeURI(pCurSelRow.getAttribute("DATA7")) + "&orgCompanyID=" + orgCompanyID + "&viewDoc=Y";
+					} else {
+						if(useWebHWP == "NO") {
+							if (/chrome/i.test(navigator.userAgent)) {
+								alert(strLang1103);
+								return;
+							} else {
+								if (docHref == "hwp" || g_RelayG_Type.toUpperCase() == "HWP") {
+									openLocation = "/ezApprovalG/ezRecevGSusinHWP.do?docID=" + escape(pDocID) + "&draftFlag=" + escape("SUSIN") + "&uOrgID=" + encodeURI(pCurSelRow.getAttribute("DATA7")) + "&orgCompanyID=" + orgCompanyID + "&viewDoc=Y";
+								}
+							}
+						} else {
+							openLocation = "/ezApprovalG/ezRecevGSusinWHWP.do?docID=" + escape(pDocID) + "&draftFlag=" + escape("SUSIN") + "&uOrgID=" + encodeURI(pCurSelRow.getAttribute("DATA7")) + "&orgCompanyID=" + orgCompanyID + "&viewDoc=Y";
+						}
+					}
+					openwindow(openLocation, "receive", 880, 550)
 		        }
 		    }
 		    
@@ -1196,8 +1247,8 @@
 		        		
 		        		// 내부결재가 아닌 수신문(011), 합의문(012)의 경우 삭제 불가능, 재기안만 가능함 + 임시보관함의 경우 전부 삭제 가능
 		        		// 부서수신함과 발송의뢰문서(pListTypeValue == "4"/"6")의 경우, 회송된 수신문과 합의문 모두 삭제 가능함 (G버전은 부서수신함에서 회송 시 상태만 변하고 문서는 리스트 상에 남아있음)
-				        if ((pListTypeValue == "21") ||
-				        		((pFunctionType == "004" || pFunctionType == "006" || pFunctionType == "015") && ((pListTypeValue == "4") || (pListTypeValue == "6") || (GetAttribute(pCurSelRow, "DATA9") == "0" && pDocState != "011" && pDocState != "012")))) {
+				        if ((pListTypeValue == "21") || (pListTypeValue == "10") ||
+				        		((pFunctionType == "004" || pFunctionType == "006" || pFunctionType == "015") && ((pListTypeValue == "4" || pListTypeValue == "97") || (pListTypeValue == "6") || (GetAttribute(pCurSelRow, "DATA9") == "0" && pDocState != "011" && pDocState != "012")))) {
 					        if (pListTypeValue == "1" || pListTypeValue == "11" || pListTypeValue == "2") {
 								if (checkAprState(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("DATA12"), pCurSelRow.getAttribute("DATA4"), pCurSelRow.getAttribute("APRMEMBERSN"), pCurSelRow.getAttribute("ORGCOMPANYID"))){
 									alert("<spring:message code='ezApprovalG.bhs23'/>");
@@ -1229,14 +1280,16 @@
 			                else {
 					            if (pListTypeValue == "21") {  //[한양대] 추가 사항 (서버 임시저장하기)
 					                RemoveTmpDoc(pCurSelRow.getAttribute("DATA1"));
-					            } else {
+					            } else if (pListTypeValue == "10") {	// 공람완료문서 삭제기능
+									RemoveGongramDoc(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("aprmembersn"));
+								} else {
 					                RemoveDoc(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("orgcompanyid"));
 					            }
 			                }
 				        }
 		        	}
 		            
-		            if (pListTypeValue == "4") {
+		            if (pListTypeValue == "4" || pListTypeValue == "97") {
 		                getReceivedDocList();
 		            } else if (pListTypeValue == "6") {
 		                getSimsaDocList();
@@ -1314,6 +1367,772 @@
 		        	var pAlertContent = "<spring:message code='ezApprovalG.t1533'/>";
 		        	alert(pAlertContent);
 		            return;
+		        }
+		    }
+		    
+		    // 2024-04-18 조수빈 - 일괄접수 / 일괄접수전결에서 제외할 문서 카운트
+		    function excludeBulkRecv(selectedRows) {
+		    	var count = 0;
+		    	
+		    	for (var i = 0; i < selectedRows.length; i++) {
+		    		// 문서의 상태가 회송이거나 문서에 분리첨부가 있는 경우이거나 시행문이거나 합의문인 경우 카운트
+		    		if (selectedRows[i].getAttribute('DATA10') == '015' || selectedRows[i].getAttribute("SEPERATEATTACHXML") == 'Y'
+		    			|| (approvalFlag == "S" && selectedRows[i].getAttribute('DATA15') == "004")
+		    			|| (approvalFlag == "G" && selectedRows[i].getAttribute('DATA15') == "001")
+		    			|| selectedRows[i].getAttribute('DATA9') == "012") {
+		    			count++;
+		    		}
+		    	}
+		    	return count;
+		    }
+		    
+		    function btnRJunkyulAll_onclick() {
+		    	receiptFlag = "J";
+		    	var DocList = new ListView();
+				DocList.LoadFromID("DocList");
+				pCurSelRow = DocList.GetSelectedRows();
+				if (pCurSelRow.length == 0) {
+					var pAlertContent = strLang930 + "<br>" + strLang336;
+					OpenAlertUI(pAlertContent);
+					return;
+				} else {
+					OpenInformationUI(strLangJSBAP03, btnRJunkyulAll_onclick_Complete);
+				}
+		    }
+		    
+		    function btnRJunkyulAll_onclick_Complete(rtn) {
+		    	DivPopUpHidden();
+		    	var DocList = new ListView();
+				DocList.LoadFromID("DocList");
+				pCurSelRowSend = DocList.GetSelectedRows();
+				
+				// 2024-04-18 조수빈 - 선택된 문서들이 모두 회송 상태 또는 분리첨부가 있는 문서들인 경우 alert 띄우고 더이상 진행하지 않음.
+				if (rtn && (pCurSelRowSend.length == excludeBulkRecv(pCurSelRowSend))) {
+					OpenAlertUI(strLang721);
+					return;
+				}
+				
+		    	if (rtn) {
+		    		for (var i = pCurSelRowSend.length - 1; i >= 0; i--) {
+			    		if (pSusinManagerFlag == "admin" || pCurSelRowSend[i].getAttribute("DATA8") == pUserID) {
+							pDocID = pCurSelRowSend[i].getAttribute('DATA1');
+							pURL = pCurSelRowSend[i].getAttribute('DATA3');
+							pAprState = pCurSelRowSend[i].getAttribute('DATA10');
+							var seperateAttachXml = pCurSelRowSend[i].getAttribute("SEPERATEATTACHXML");
+							var docType = pCurSelRowSend[i].getAttribute('DATA15');
+							var docState = pCurSelRowSend[i].getAttribute('DATA9');
+				    		isReceiptAll = "Y";
+		                    var pDraftFlag = "SUSIN";
+				    		var pOrgDocID = pCurSelRowSend[i].getAttribute('DATA7');
+				    		var docUrlType = (pURL.substr(pURL.length-3, pURL.length)).toUpperCase(); 
+							var ajaxUrl = "";
+							
+					        var Resultxml;
+					        var d = new Date();
+					        var RecieveDay = d.getFullYear() + "." + (d.getMonth() + 1) + "." + d.getDate();
+					        Resultxml = "<LISTVIEWDATA><ROWS><ROW>";
+					        Resultxml = Resultxml + "<COLUMN>1</COLUMN>";
+					        Resultxml = Resultxml + "<COLUMN>" + MakeXMLString(arr_userinfo[2]) + "</COLUMN>";
+					        Resultxml = Resultxml + "<COLUMN>" + MakeXMLString(arr_userinfo[3]) + "</COLUMN>";
+					        
+					        /* 2021-06-03 홍승비 - 부서명에 특수문자를 허용 + c:out 처리되었으므로 특수문자 역 인코딩 및 CDATA 처리 진행 */
+					        Resultxml = Resultxml + "<COLUMN><![CDATA[" + ConvMakeXMLString(arr_userinfo[5]) + "]]></COLUMN>";
+					
+					        Resultxml = Resultxml + "<COLUMN>" + "<spring:message code='ezApprovalG.t25'/>" + "</COLUMN>";
+					        Resultxml = Resultxml + "<COLUMN>" + "<spring:message code='ezApprovalG.t1422'/>" + "</COLUMN>";
+					        Resultxml = Resultxml + "<DATA name='ProcessDate'>" + "" + "</DATA>";
+					        Resultxml = Resultxml + "<DATA name='ReceivedDate'>" + RecieveDay + "</DATA>";
+					        Resultxml = Resultxml + "<DATA name='DocID'>" + pDocID + "</DATA>";
+					        Resultxml = Resultxml + "<DATA name='AprMemberID'>" + pUserID + "</DATA>";
+					        Resultxml = Resultxml + "<DATA name='AprmemberIsDeptYN'>N</DATA>";
+					        Resultxml = Resultxml + "<DATA name='AprMemberDeptID'>" + arr_userinfo[4] + "</DATA>";
+					        Resultxml = Resultxml + "<DATA name='ReasonDoNotApprov'></DATA>";
+					        Resultxml = Resultxml + "<DATA name='isProposerYN'>N</DATA>";
+					        Resultxml = Resultxml + "<DATA name='isBriefUserYN'>N</DATA>";
+					        Resultxml = Resultxml + "<DATA name='isCompanyID'>" + companyID + "</DATA>";
+					
+					        Resultxml = Resultxml + "<DATA name='AprType'>" + strAprType4 + "</DATA>";
+					        Resultxml = Resultxml + "<DATA name='AprState'>" + strAprState2 + "</DATA>";
+					        Resultxml = Resultxml + "<DATA name='PMemberName'>" + MakeXMLString(arr_userinfo[11]) + "</DATA>";
+					        Resultxml = Resultxml + "<DATA name='SMemberName'>" + MakeXMLString(arr_userinfo[12]) + "</DATA>";
+					        Resultxml = Resultxml + "<DATA name='PMemberDeptName'><![CDATA[" + ConvMakeXMLString(arr_userinfo[15]) + "]]></DATA>";
+					        Resultxml = Resultxml + "<DATA name='SMemberDeptName'><![CDATA[" + ConvMakeXMLString(arr_userinfo[16]) + "]]></DATA>";
+					        Resultxml = Resultxml + "<DATA name='PMemberJobTitle'>" + MakeXMLString(arr_userinfo[13]) + "</DATA>";
+					        Resultxml = Resultxml + "<DATA name='SMemberJobTitle'>" + MakeXMLString(arr_userinfo[14]) + "</DATA>";
+					
+					        Resultxml = Resultxml + "</ROW></ROWS></LISTVIEWDATA>";
+							
+					        // 문서의 상태가 회송이거나 분리첨부가 있거나 합의문 혹은 시행문인 경우에는 결재선 저장 안하는 분기
+					        if (pAprState != '015' || !seperateAttachXml || (approvalFlag == "S" && docType == "004") || (approvalFlag == "G" && docType == "001") || docState == "012") {
+						        $.ajax({
+				            		type : "POST",
+				            		dataType : "text",
+				            		async : false,
+				            		url : "/ezApprovalG/aprLineSave.do",
+				            		data : {
+			            				ret : Resultxml
+		            				}
+				            	});
+					        }
+					    		
+				    		if (docUrlType == "MHT") {
+				    			ajaxUrl = "/ezApprovalG/recevGSusin.do";
+				    		} else if (docUrlType == "HWP") {
+				    			ajaxUrl = "/ezApprovalG/ezRecevGSusinHWP.do";
+				    		} else if (docUrlType == "WHWP") {
+				    			ajaxUrl = "/ezApprovalG/ezRecevGSusinWHWP.do";
+				    		}
+					    		
+			    			// 수신문서 열어주는 작업
+				    		$.ajax({
+				    			type : "GET",
+				    			dataType : "text",
+				    			async : false,
+				    			url : ajaxUrl,
+				    			data : {
+				    				docID : pDocID,
+				    				uOrgID : pOrgDocID,
+				    				isReDraft : "",
+				    				draftFlag : pDraftFlag,
+				    				retFlag : "",
+				    				isPreview : "Y"
+				    			},
+					    		success : function(result) {
+					    		}
+				    		});
+			    			
+		                } else {
+		                    var pAlertContent = "<spring:message code='ezApprovalG.t1730'/>";
+		                    OpenInformationUI(pAlertContent);
+		                }
+		    		}
+		    		
+	    			if (approvalFlag == "G") {
+		    		
+				    	getDocInfo();
+				        var para = new Array();
+				        para[0] = cabinetID;
+				        var url = "/ezApprovalG/selectCabinet.do?initFlag=1";
+				
+				        selectcabinet_cross_dialogArguments[0] = para;
+				        selectcabinet_cross_dialogArguments[1] = btnCabinet_onclick_Complete;
+				
+				        OpenPopupWin = window.open(url, "SelectCabinet_Cross", GetOpenWindowfeature(1000, 620));
+			            try { OpenPopupWin.focus(); } catch (e) { }
+	    			} else {
+	    				btnRJunkyulAll_after();
+	    			}
+		    	}
+		    }
+		    
+		    function btnRJunkyulAll_after() {
+				listLoading(true);
+				
+				setTimeout(function() {
+                	var RtnVal = receiptAll_btnSendDraft();
+                	listLoading(false);
+					var arrRtnVal = RtnVal.split("/");
+    		        
+     		        if (arrRtnVal[0] == "OK") {
+     		        	pAlertContent = strLang933 + (Number(arrRtnVal[1])) + strLang934_1 + "<br/>";
+
+     		            if (arrRtnVal[2] != 0) {
+	     		            pAlertContent += strLang935 + arrRtnVal[2] + strLang934_1;
+						}
+     		            
+     		            if (arrRtnVal[3] != 0) {
+     		            	
+     		            	if (arrRtnVal[2] != 0) {
+     		            		pAlertContent += " / ";
+     		            	}
+     		                
+     		            	pAlertContent += strLang936 + arrRtnVal[3] + strLang934_1;
+     		            }
+
+     		            if (arrRtnVal[4] != 0) {
+     		            	
+     		            	if (arrRtnVal[2] != 0 || arrRtnVal[3] != 0) {
+     		            		pAlertContent += " / ";
+     		            	}
+     		                
+     		            	pAlertContent += strLang938 + arrRtnVal[4] + strLang934_1;
+     		            }
+     		            
+     		            if (receiptFlag == "R") {
+     			            pAlertContent += "<br/>" + strLangLGEAR01;
+     		            } else {
+     			            pAlertContent += "<br/>" + strLangLGEAR03;
+     		            }
+     		            
+     		        } else {
+     		        	
+     		        	if (receiptFlag == "R") {
+     			            pAlertContent = strLangLGEAR02;
+     		        	} else {
+     			            pAlertContent = strLangLGEAR04;
+     		        	}
+     		        	
+     		        }
+     		        
+   		        	// 2023-08-22 조수빈 - 작업을 완료한 후에는 부서수신함을 리로딩
+  		        	OpenAlertUI(pAlertContent, btnRJunkyulAll_after_complete);
+            	}, 0);
+		    }
+		    
+		    
+		    function btnRJunkyulAll_after_complete() {
+		    	listLoading(false);
+	     		window.parent.frames[0].mailPanel_left.style.display = "none";
+				 if(pListTypeValue && pListTypeValue == "97"){
+					 window.parent.frames[0].convMain('97', '');
+				 }else{
+					 window.parent.frames[0].convMain('4', '');
+				 }
+		    }
+		    
+		    function btnCabinet_onclick_Complete(rtn) {
+		        DivPopUpHidden();
+		        
+		        if (rtn[0] == "TRUE") {
+		            var g_SelCabXml = rtn[1];
+		            var xmlCab = createXmlDom();
+		            xmlCab = loadXMLString(g_SelCabXml);
+
+		            cabinetID = getNodeText(SelectSingleNodeNew(xmlCab, "CABINETINFO/CABINET/CABINETID"));
+		            TaskCode = getNodeText(SelectSingleNodeNew(xmlCab, "CABINETINFO/CABINET/TASKCODE"));
+		        }
+		
+		        if (cabinetID != "") {
+		        	LastSignSN = "1";
+		        }
+		    }
+		    
+		    function btnReceiptAll_onclick() {
+		    	receiptFlag = "R";
+				var DocList = new ListView();
+				DocList.LoadFromID("DocList");
+				var pCurSelRow = DocList.GetSelectedRows();
+				
+				if (pCurSelRow.length == 0) {
+					var pAlertContent = strLang930 + "<br>" + strLang336;
+					OpenAlertUI(pAlertContent);
+					return;
+				} else{
+					OpenInformationUI(strLangJSBAP02, btnReceiptAll_onclick_Complete);
+				}
+		    }
+		    
+	    	var ezapprovalinfo_dialogArguments = new Array();
+	    	
+		    function btnReceiptAll_onclick_Complete(rtn) {
+		    	DivPopUpHidden();
+		    	var DocList = new ListView();
+		    	var pOrgDocID = "";
+                var pDraftFlag = "SUSIN";
+				DocList.LoadFromID("DocList");
+				pCurSelRowSend = DocList.GetSelectedRows();
+				pDocID = pCurSelRowSend[0].getAttribute('DATA1');
+				pURL = pCurSelRowSend[0].getAttribute('DATA3');
+				orgCompanyID = pCurSelRowSend[0].getAttribute('orgcompanyid');
+	    		pDocType = pCurSelRowSend[0].getAttribute('DATA15');
+	    		pFormID = pCurSelRowSend[0].getAttribute('DATA16');
+	    		pOrgDocID = pCurSelRowSend[0].getAttribute('DATA7');
+	    		isReceiptAll = "Y";
+	    		pGubun = "11";
+		    	var chkReceivedDoc = 0;
+
+				// 2024-04-18 조수빈 - 선택된 문서들이 모두 회송 상태 또는 분리첨부가 있는 문서들인 경우 alert 띄우고 더이상 진행하지 않음.
+				if (rtn && (pCurSelRowSend.length == excludeBulkRecv(pCurSelRowSend))) {
+					OpenAlertUI(strLang721);
+					return;
+				}
+				
+		    	if (rtn) {
+		    		
+		    		for (var i = pCurSelRowSend.length - 1; i >= 0; i--) {
+			    		
+		    			if (pSusinManagerFlag == "admin" || pCurSelRowSend[i].getAttribute("DATA8") == pUserID) {
+							pDocID = pCurSelRowSend[i].getAttribute('DATA1');
+							pURL = pCurSelRowSend[i].getAttribute('DATA3');
+							orgCompanyID = pCurSelRowSend[i].getAttribute('orgcompanyid');
+				    		pDocType = pCurSelRowSend[i].getAttribute('DATA15');
+				    		pFormID = pCurSelRowSend[i].getAttribute('DATA16');
+				    		pOrgDocID = pCurSelRowSend[i].getAttribute('DATA7');
+				    		var docUrlType = (pURL.substr(pURL.length-3, pURL.length)).toUpperCase(); 
+				    		var ajaxUrl = "";
+				    		
+				    		if (docUrlType == "MHT") {
+				    			ajaxUrl = "/ezApprovalG/recevGSusin.do";
+				    		} else if (docUrlType == "HWP") {
+				    			ajaxUrl = "/ezApprovalG/ezRecevGSusinHWP.do";
+				    		} else if (docUrlType == "WHWP") {
+				    			ajaxUrl = "/ezApprovalG/ezRecevGSusinWHWP.do";
+				    		}
+					    		
+				    		// 수신문서 열어주는 작업 - 수신 파일을 만들어주기 위해서.
+				    		$.ajax({
+				    			type : "GET",
+				    			dataType : "text",
+				    			async : false,
+				    			url : ajaxUrl,
+				    			data : {
+				    				docID : pDocID,
+				    				uOrgID : pOrgDocID,
+				    				isReDraft : "",
+				    				draftFlag : pDraftFlag,
+				    				retFlag : "",
+				    				isPreview : "Y"
+				    			},
+				    			success : function(result) {
+				 					if (getSignCount(pCurSelRowSend[i]) != undefined){
+				 						pCurSelRowSend.push(pCurSelRowSend[i]);
+				 					}
+				    			}
+				    		});
+		                } else {
+		                    var pAlertContent = "<spring:message code='ezApprovalG.t1730'/>";
+		                    alert(pAlertContent);
+		                }
+			    	
+				    	// 접수된 문서인지 확인하기
+				    	$.ajax({
+				    		type : "POST",
+				    		dataType : "text",
+				    		async : false,
+				    		url : "/ezApprovalG/isReceivedDoc.do",
+				    		data : {
+				    			docID : pDocID
+				    		},
+				    		success : function(result) {
+				    			
+				    			if (result > 0) {
+				    				chkReceivedDoc++;
+				    			}
+				    		}
+				    		
+				    	});
+		    		}
+		    		
+		    		// 결재정보 창을 띄우기 위한 임시 정보 세팅
+					getDocInfo();
+					nonElecRec = "";
+			        var onlydocinfiview = false;
+			        var parameter = new Array();
+			        parameter[0] = pDocID;
+			        parameter[1] = pFormID;
+			        parameter[2] = "4"; // SignCount
+			        parameter[3] = ";;;;;"; // SignInfo
+			        parameter[4] = "4"; // hapyuiCount
+			        parameter[5] = "SUSIN";
+			        parameter[6] = "N";
+			        parameter[7] = "Y";
+			        parameter[8] = "4";	// gongramCount
+			        parameter[9] = false;
+			        parameter[10] = pDocType;
+			        parameter[11] = "";
+			        parameter[12] = "RECV";
+			        parameter[28] = onlydocinfiview;
+			        parameter[30] = cabinetID;
+			        parameter[31] = tempSecurity;
+			        parameter[32] = tempUrgent;
+			        parameter[33] = pSummery;
+			        parameter[34] = pSpecialRecordCode;
+			        parameter[35] = pPublicityCode;
+			        parameter[36] = pLimitRange;
+			        parameter[37] = pPageNum;
+			        parameter[38] = tempSecurityDate;
+			        parameter[39] = "";	// SummaryFlag
+			        parameter[45] = pPublicityYN;
+			        parameter[46] = nonElecRec;
+			        
+			        if (nonElecRec == "Y") {
+			        	
+			        	if (pGubun == "11") {
+				        	parameter[47] = cabinetID;
+			        	} else {
+				        	parameter[47] = "nonElecRecTempCabinet";
+			        	}
+			        	
+				        parameter[48] = nonElecRecInfoXml; // 기록물 기본등록 정보
+				        parameter[49] = nonSepAttachLVXml; // 분첨
+				        parameter[50] = g_szSCListXml; // 특수목록
+				        parameter[51] = sepAttachCheckYN; // 특수목록
+			        }
+			        
+			        if (approvalFlag == "S") {
+			            parameter[19] = "ING";
+			            parameter[20] = tempKeep;
+			            parameter[23] = tempPublic;
+			            parameter[25] = tempItemCode;
+				        parameter[29] = TaskCode;
+				        parameter[33] = pSummery;
+				        // 2023-08-23 조수빈 - 일반 접수의 경우 분류코드 이름, 분류코드다국어 이름이 들어감.
+				        parameter[41] = tempItemName;
+				        parameter[42] = tempItemName2;
+			        }
+
+			        if (tempItemCode != "")
+			            tempdocnumcode = tempItemCode;
+			
+			        ezapprovalinfo_dialogArguments[0] = parameter;
+			        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
+			
+			        if (chkReceivedDoc != 0) {
+			        	alert("<spring:message code='ezApprovalG.pjg04'/>");
+			        	window.close();
+			        } else {
+			        	OpenPopupWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&orgCompanyID=" + orgCompanyID + "&docType=" + pDocType, "ezApprovalInfo", GetOpenWindowfeature(1210, 750));
+			        	try { OpenPopupWin.focus(); } catch (e) { }
+			        }
+		    	}
+		    }
+		    
+		    function btnApprovalInfo_Complete(ret) {
+		    	retValue = ret;
+		    	
+			        if (ret && ret[0] == "OK") {
+			            
+			        	try {
+			                
+			        		if (pGubun != "5" && pGubun != "7" && pGubun != "10") {
+			                    
+			        			if (ret[1] != false) {
+			                    	$.ajax({
+			                    		type : "POST",
+			                    		dataType : "json",
+			                    		async : false,
+			                    		url : "/ezApprovalG/aprLineSave.do",
+			                    		data : {
+			                    				ret    : ret[1]
+			                    				},
+			                    		success : function(result){
+			                    			
+			                    		}
+			                    	});
+			
+			                        IsSkipDrafter = "FALSE";
+			                        btnSendDraftEnable = "true";
+			                    }
+			                    savexmlhttp = null;
+			                    savexmlhttp = createXMLHttpRequest();
+			                }
+			
+			                if (pGubun != "6" && pGubun != "7" && pGubun != "9" && pGubun != "11" && pGubun != "12" && pGubun != "13") {
+			                	$.ajax({
+		                    		type : "POST",
+		                    		dataType : "text",
+		                    		async : false,
+		                    		url : "/ezApprovalG/aprDeptSave.do",
+		                    		data : {
+		                    				aprDeptInfo : ret[2]
+		                    				},
+		                    		success : function(result){
+		                    			if (result == 'TRUE') {
+		                    				
+		                    			} else {
+		                    				alert(strLang163);
+		                    			}
+		                    		}
+		                    	});
+			                	
+			                    btnReceivLineEnable = false;
+			                    setRecevInfo(ret[3]);
+			                }
+			
+			                if (pGubun != "5" && pGubun != "6" && pGubun != "7" && pGubun != "8" && pGubun != "9" && pGubun != "10") {
+			                    var g_SelCabXml = ret[4];
+			                    var xmlCab = createXmlDom();
+			                    xmlCab = loadXMLString(g_SelCabXml);
+			                    cabinetID = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/CABINETID");
+			                    TaskCode = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/TASKCODE");
+			                }
+
+							tempKeyword = ret[6]; 				// 2021-03-10 박기범 - 키워드 추가
+			                tempSecurity = ret[7];                // 보안등급 관련
+			                tempUrgent = ret[8];                  // 긴급 결재 여부
+			                pSummery = ret[9];                    // 요약 내용 관련
+			                tempSecurityDate = ret[14];           // 보안 결재 체크 관련
+			                pPublicityCode = ret[11];             // 대민공개여부 및 공개등급 관련 
+			                pPublicityYN = ret[21];             // 공개여부 및 공개등급 관련 
+			                pSpecialRecordCode = ret[10];
+			                pLimitRange = ret[12];
+			                pPageNum = ret[13];
+			                
+			                if (nonElecRec == "Y") {
+				            	nonElecRecInfoXml = ret[23];
+				            	nonSepAttachLVXml = ret[24];
+				            	g_szSCListXml = ret[25];
+						        sepAttachCheckYN = ret[26];
+				            	
+						        if (ext == "hwp") {
+					            	setNonElecRecInfo_whwp(nonElecRecInfoXml);
+				            	}
+				            }
+
+
+						SummaryFlag = true;
+			            savexmlhttp = null;
+			            }
+			            catch (e) {
+			                alert("저장시 오류 발생");
+			            }
+			        }
+		    }
+		    
+		    function receiptAll_btnSendDraft() {
+	    	    var xmlpara = createXmlDom();
+	    	    var objRoot, objNode, doc, objNode2, objNodes, objDocinfoNode;
+	    	    objRoot = createNodeInsert(xmlpara, objRoot, "PARAMETER");
+	    	    createNodeAndInsertText(xmlpara, objNode, "USERID", arr_userinfo[1]);
+	    	    createNodeAndInsertText(xmlpara, objNode, "DISPLAYNAME", arr_userinfo[2]);
+	    	    createNodeAndInsertText(xmlpara, objNode, "TITLE", arr_userinfo[3]);
+	    	    createNodeAndInsertText(xmlpara, objNode, "DEPTID", arr_userinfo[4]);
+	    	    createNodeAndInsertText(xmlpara, objNode, "DEPTNAME", arr_userinfo[5]);
+	    	    createNodeAndInsertText(xmlpara, objNode, "JIKCHEK", arr_userinfo[6]);
+	    	    createNodeAndInsertText(xmlpara, objNode, "COMPANYID", companyID);
+	    	    createNodeAndInsertText(xmlpara, objNode, "PASSWD", "");
+	    	    createNodeAndInsertText(xmlpara, objNode, "LANGTYPE", "1");
+	    	    var list = createNodeAndAppandNode(xmlpara, objRoot, list, "DOCIDS");
+	    	    
+	    	    // 결재선 저장
+	    	    if (receiptFlag == 'R') {
+		    	    for (var i = 0; i < pCurSelRowSend.length; i++) {
+			    		pDocID = pCurSelRowSend[i].getAttribute('DATA1');
+		    	    	
+			    		var aprLine = "";
+				    	
+				    	for (var j = 0; j < (retValue[1].split('<ROW>').length -1); j++) {
+				    		aprLine += retValue[1].split('<ROW>')[j] + "<ROW>";
+				    	}
+				    	aprLine += retValue[1].split('<ROW>')[retValue[1].split('<ROW>').length -1];
+					    	
+				    	var xmlParser = new DOMParser();
+				    	var xmlDoc = xmlParser.parseFromString(aprLine, "text/xml");
+				    	var value = xmlDoc.getElementsByTagName("DATA");
+				    	pAprState = pCurSelRowSend[i].getAttribute('DATA10');
+				    	
+				    	for (var j = 0; j < value.length; j++) {
+				    		if (xmlDoc.getElementsByTagName("DATA")[j].attributes[0].value == "DocID") {
+						    	xmlDoc.getElementsByTagName("DATA")[j].innerHTML = pDocID;
+				    		}
+				    	}
+				    	
+				    	if (pAprState != '015' || !seperateAttachXml || (approvalFlag == "S" && docType == "004") || (approvalFlag == "G" && docType == "001") || docState == "012") {
+					    	$.ajax({
+		                		type : "POST",
+		                		dataType : "text",
+		                		async : false,
+		                		url : "/ezApprovalG/aprLineSave.do",
+		                		data : {
+	               					ret    : getXmlString(xmlDoc)
+	               				}
+			                });
+				    	}
+		    	    }
+	    	    }
+		    	for (var i = 0; i < pCurSelRowSend.length; i++) {
+		    		pDocID = pCurSelRowSend[i].getAttribute('DATA1');
+		    		pHasAttachYN = pCurSelRowSend[i].getAttribute('DATA4');
+		    		pHasOpinionYN = pCurSelRowSend[i].getAttribute('DATA5');
+		    		pOrgDocID = pCurSelRowSend[i].getAttribute('DATA7');
+		    		pDocTitle = pCurSelRowSend[i].children[1].title;
+		    		pFormID = pCurSelRowSend[i].getAttribute('DATA16');
+		    		pOrgCompanyID = pCurSelRowSend[i].getAttribute('orgcompanyid');
+		    		pUrl = pCurSelRowSend[i].getAttribute('DATA3');
+		    		pDocState = pCurSelRowSend[i].getAttribute('DATA9');
+		    		pAprState = pCurSelRowSend[i].getAttribute('DATA10');
+		    		docUrlType = (pUrl.substr(pUrl.length-3, pUrl.length)).toUpperCase(); 
+		    		pDocType = pCurSelRowSend[i].getAttribute('DATA15');
+		    		var curDeptId = pCurSelRowSend[i].getAttribute("DATA6");
+		    		var curAprMemberSN = 1;
+		    		var curAprType = "";
+		    		var pMode = "";
+		    		var seperateAttachXml = pCurSelRowSend[i].getAttribute("SEPERATEATTACHXML");
+		    		var writerId = pCurSelRowSend[i].getAttribute("WRITERID");
+		    		
+		    		doc = createNodeAndAppandNode(xmlpara, list, doc, "DOC");
+		            $.ajax({
+		                  type : "POST",
+		                  dataType : "text",
+		                  async : false,
+		                  url : "/ezApprovalG/getLineMode.do",
+		                  data : {
+		                          docID : pDocID,
+		                          orgCompanyID : pOrgCompanyID
+		                          },
+		                  success: function(xml){
+		                      pMode = xml;
+		                  }        			
+		            }); 
+		            createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "DOCID", pDocID);
+		            createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "FORMID", pFormID);
+		            createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "ORGDOCID", pOrgDocID);
+		            createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "DOCTYPE", pDocType);
+		            createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "DOCSTATE", pDocState);
+		            createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "FUNCTIONTYPE", strAprState2);
+		            createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "HREF", pUrl); 
+		            createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "DOCTITLE", pDocTitle);
+		            createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "DOCNO", "");
+		            createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "HASATTACHYN", pHasAttachYN);
+		            createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "HASOPINIONYN", pHasOpinionYN);
+		            createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "STARTDATE", "DRAFT");
+		            createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "ENDDATE", "DRAFT");
+		            createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "WRITERID", writerId);
+		            createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "WRITERNAME", "");
+		            createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "WRITERJOBTITLE", "");
+		            createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "WRITERDEPTID", "");
+		            createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "WRITERDEPTNAME", "");
+		            createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "HTML", "");
+		            createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "ORGHTML", "");
+		            createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "PUSERID", arr_userinfo[1]);
+		            createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "PUSERNAME", arr_userinfo[2]);
+		            createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "PDEPTID", arr_userinfo[4]);
+		            createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "SECURITY", tempSecurity);
+		            createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "KEEPPERIOD", tempKeep);
+		            createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "PUBLICATION", tempPublic);
+		            createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "PUBLIC", "");
+		    		createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "ITEMCODE", tempItemCode);
+		    		createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "ITEMNAME", tempItemName);
+		    		createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "URGENTAPPROVAL", tempUrgent);
+		    		createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "KEYWORD", tempKeyword);
+		    		createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "XDOCID", "");
+		    		createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "SPECIALRECORDCODE", pSpecialRecordCode);
+		    		createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "PUBLICITYCODE", pPublicityCode);
+		    		createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "PUBLICITYYN", pPublicityYN);
+		    		createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "LIMITRANGE", pLimitRange);
+		    		createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "PAGENUM", pPageNum);
+		    		createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "CABINETID", cabinetID);
+		    		createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "TASKCODE", TaskCode);
+		    		createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "DOCNUMCODE", "");
+		    		createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "ORGDOCNUMCODE", "");
+		    		createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "SUMMARY", "");
+		    		createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "SECURITYAPPROVAL", "");
+		    		createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "WRITERNAME2", "");
+		    		createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "WRITERJOBTITLE2", "");
+		    		createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "WRITERDEPTNAME2", "");
+		            createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "PUSERNAME2", arr_userinfo[1]);
+		            createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "ITEMNAME2", "");
+		            createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "CURDOCNUM", "");
+		            createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "PASSAPRLINE", "");
+		            createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "ORGAPRUSERID", writerId);
+		            createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "TYPE", docUrlType);
+		            createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "orgCompanyID", pOrgCompanyID);
+		            createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "APRMEMBERSN", curAprMemberSN);
+		            createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "APRSTATE", pAprState);
+		            createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "SEPERATEATTACHXML", "");
+		            createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "SEPERATEATTACHXMLFLAG", seperateAttachXml);
+		            createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "RECEIPTFLAG", receiptFlag);
+
+		            createNodeAndInsertText(xmlpara, objNode, "MODE", pMode);   
+		    	}
+		    	
+		    	xmlhttp = createXMLHttpRequest();
+		        xmlhttp.open("POST", "/ezApprovalG/receiptAllG.do", false);
+		        xmlhttp.send(xmlpara);
+		        var RtnVal = xmlhttp.responseText;
+
+		        return RtnVal;
+		    }
+		    
+		    // 사인칸 수 추출 및 저장
+		    function getSignCount(selectRow) {
+		    	var url = selectRow.getAttribute('DATA3');
+		    	var urlType = url.substring(url.length-3).toUpperCase();
+		    	var str = "";
+		    	var signYn = false;
+		    	var isreceiptNumber = false;
+		    	var signCount = 0;
+		    	
+		    	if (urlType == "MHT") {
+			    	str = ConvertMHTtoHTML(url);
+			    	signYn = str.includes('1sign');
+			    	isreceiptNumber = str.includes('receiptnumber');
+			    	signCount = 0;
+			    	
+			    	if (signYn) { 
+			    		signCount = (str.match(/1sign/g)).length;
+		    		}
+		    	} else {
+		    		var key = "1sign";
+		    		 $.ajax({
+		    			type : "POST",
+		     			dataType : "text",
+		     			async : false,
+		        		url : "/ezApprovalG/getHwpSignCount.do",
+		        		data : {
+			        				key : key,
+			        				href : url 
+		        				},
+		        		success: function(result){
+		        			signCount = result;
+		        		}        			
+			        });
+		    	}
+		    	
+	    		if (signCount == 0) {
+	    			return;
+	    		}
+	    		
+	    		if (minSignCount == 0) { 
+	    			minSignCount = signCount;
+	    		}
+	    		
+	    		if (minSignCount >= signCount) {
+	    			minSignCountInfo = [];
+			    	var formTitle = (selectRow.childNodes[7]).getAttribute('title');
+			    	minSignCountInfo.push(signCount, formTitle);
+			    	minSignCount = signCount;
+	    		}
+		    }
+		    
+		    function getDocInfo() {
+		    	var result = "";
+		    	
+		        $.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezApprovalG/getDocInfo.do",
+		    		data : {
+		    			docID : pDocID
+		    		},
+		    		success: function(xml){
+		    			result = loadXMLString(xml);
+		    		}        			
+		    	});
+		        
+		        xmldoc = result;
+
+		        var objNodes = GetChildNodes(result.documentElement);
+		        if (objNodes) {
+		            pOrgDocID = getNodeText(objNodes[2]);
+		            if (getNodeText(objNodes[10]) == "Y" || getNodeText(objNodes[10]) == "O")
+		                pHasOpinionYN = "Y";
+		            tempSecurity = getNodeText(objNodes[19]);
+		            tempKeep = getNodeText(objNodes[20]);
+		            tempUrgent = getNodeText(objNodes[21]);
+		            tempPublic = getNodeText(objNodes[18]);
+		            tempKeyword = getNodeText(objNodes[25]);
+		            tempItemCode = getNodeText(objNodes[23]);
+		            tempItemName = getNodeText(objNodes[24]);
+		            tempItemName2 = getNodeText(objNodes[37]);
+		            pSummery = getNodeText(objNodes[35]);
+		            pSpecialRecordCode = getNodeText(objNodes[26]);
+		            pPublicityCode = getNodeText(objNodes[27]);
+		            pLimitRange = getNodeText(objNodes[28]);
+		            pPageNum = getNodeText(objNodes[29]);
+		            pPublicityYN = getNodeText(objNodes[41]);
+		            
+		            if (approvalFlag == "G") {
+		            	cabinetID = "";
+		            	TaskCode = "";
+		            } else {
+		            	cabinetID = getNodeText(objNodes[30]);
+		            	TaskCode = getNodeText(objNodes[31]);
+		            }
+
+		            tempSecurityDate = getNodeText(objNodes[36]);
+
 		        }
 		    }
 		    
@@ -1700,7 +2519,7 @@
 			            	alert("'" + tr.getAttribute("DATA7") + "'부서의 문서입니다. \n'" + tr.getAttribute("DATA7") + "'부서로 겸직변경 후 대장등록해주시기 바랍니다.");
 			            	return;
 			            }
-					} else if (pListTypeValue == "4") {
+					} else if (pListTypeValue == "4" || pListTypeValue == "97") {
 			            if (arr_userinfo[4] != tr.getAttribute("DATA6")) {
 			            	alert("'" + tr.getAttribute("DATA6") + "'부서의 문서입니다. \n'" + tr.getAttribute("DATA6") + "'부서로 겸직변경 후 대장등록해주시기 바랍니다.");
 			            	return;
@@ -1787,7 +2606,13 @@
 		            var width = window.screen.availWidth;
 		            var left = (parseInt(width) - 1155) / 2;
 		            var top = (parseInt(heigth) - 460) / 2;
-		            window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr.getAttribute("DATA1") + "&deptID=&docState=015", "", "height=460px,width=1155px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+					var openDocID = "";
+					if (pListTypeValue == "98") {
+						openDocID = tr.getAttribute("DATA2");
+					} else {
+						openDocID = tr.getAttribute("DATA1");
+					}
+		            window.open("/ezApprovalG/ezLineInfo.do?docID=" + openDocID + "&deptID=&docState=015", "", "height=460px,width=1155px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		        }
 		    }
 		    function GetBujaeFlag() {
@@ -1836,7 +2661,7 @@
 		            OpenAlertUI(pAlertContent);
 		            return;
 				}else{
-					OpenInformationUI("<spring:message code='ezApprovalG.t900002'/>" + "<br><spring:message code='ezApprovalG.kbh03'/>", btnApproveALL_onclick_Complete);
+					OpenInformationUI("<spring:message code='ezApprovalG.t900002'/>" + "<spring:message code='ezApprovalG.kbh03'/>", btnApproveALL_onclick_Complete);
 				}
 			}
 
@@ -2007,7 +2832,7 @@
 		            else if (pListTypeValue == "3") {
 		                getDocList();
 		            }
-		            else if (pListTypeValue == "4" || pListTypeValue == "5") {
+		            else if (pListTypeValue == "4" || pListTypeValue == "5" || pListTypeValue == "97") {
 		                getReceivedDocList();
 		            }
 		            else if (pListTypeValue == "6") {
@@ -2056,6 +2881,7 @@
 			        if (SearchCond[1] != "" && SearchCond[1] !== undefined)		// DocTitle
 			        {
 			            TYPE += "DOCTITLE;";
+						SearchCond[1] = SearchCond[1].replace(/\\/g, "\\\\");
 			            DATA += "<DOCTITLE>" + SearchCond[1] + "</DOCTITLE>";
 			        }
 			
@@ -2123,6 +2949,7 @@
 
 				    if (condition[1] != "" && condition[1] !== undefined) {
 				        TYPE += "DOCTITLE;"
+						condition[1] = condition[1].replace(/\\/g, "\\\\");
 				        DATA += "<DOCTITLE>" + condition[1] + "</DOCTITLE>";
 				    }
 
@@ -2213,6 +3040,7 @@
 
 				/* 2022-06-24 홍승비 - 우측 미리보기 영역을 위한 리사이즈 동작 추가 */
 		    	Window_resize();
+		    	adjustLayerAlertPosition("iFramePanel");
 		    };
 		
 		    function ShowMailProgress() {
@@ -2314,7 +3142,7 @@
 		        else if (pListTypeValue == "3") {
 		            getDocList();
 		        }
-		        else if (pListTypeValue == "4" || pListTypeValue == "5") {
+		        else if (pListTypeValue == "4" || pListTypeValue == "5" || pListTypeValue == "97") {
 		            getReceivedDocList();
 		        }
 		        else if (pListTypeValue == "6") {
@@ -2650,7 +3478,128 @@
 					DivPopUpHidden();
 				}
 			}
+            
+			var ezreceivejijungall_cross_dialogArguments = new Array();
+			function btnJiJungAll_onclick() {
+				var DocList = new ListView();
+				DocList.LoadFromID("DocList");
+				var selRows = DocList.GetSelectedRows();
+
+				if (selRows.length == 0) {
+					var pAlertContent = strLang930 + "<br>" + strLang336;
+					OpenAlertUI(pAlertContent);
+					return;
+				} else{
+					OpenInformationUI(strLangKMH01, btnJiJungAll_onclick_Complete);
+				}
+			}
+
+			function btnJiJungAll_onclick_Complete(rtn) {
+				if(rtn) {
+					DivPopUpHidden();
+					var DocList = new ListView();
+					DocList.LoadFromID("DocList");
+					var selRows = DocList.GetSelectedRows();
+
+					var progressCount = selRows.length;
+					var excludeCount = 0;
+
+					var JDocID = "";
+					var JSusinSN = "";
+					var JAprState = "";
+					var JDocState = "";
+					var JOrgCompanyID = "";
+
+					for (var i = 0; i < progressCount; i++) {
+						if ((selRows[i].getAttribute("data1") == null || selRows[i].getAttribute("data1") === undefined || selRows[i].getAttribute("data1").trim() === "") || (selRows[i].getAttribute("data2") == null || selRows[i].getAttribute("data2") === undefined || selRows[i].getAttribute("data2").trim() === "")) {
+							OpenAlertUI(strLang721);
+							return; 
+						}
+						
+						JDocID += selRows[i].getAttribute("data1") + ",";
+						JSusinSN += selRows[i].getAttribute("data2") + ",";
+						JAprState += selRows[i].getAttribute("data10") && selRows[i].getAttribute("data10").trim() !== "" ? selRows[i].getAttribute("data10") + "," : "[Nodata],";
+						JDocState += selRows[i].getAttribute("data9") && selRows[i].getAttribute("data9").trim() !== "" ? selRows[i].getAttribute("data9") + "," : "[Nodata],";
+						JOrgCompanyID += selRows[i].getAttribute("orgcompanyid") && selRows[i].getAttribute("orgcompanyid").trim() !== "" ? selRows[i].getAttribute("orgcompanyid") + "," : "[Nodata],";
+						
+						if (selRows[i].getAttribute("data10") == "015" || selRows[i].getAttribute("data9") == "012") {
+							excludeCount++;
+						}
+					}
+
+					if (excludeCount == progressCount) {
+						OpenAlertUI(strLang721);
+						return;
+					}
+
+					var parameter = new Array();
+					parameter[0] = JDocID;
+					parameter[1] = JSusinSN;
+					parameter[2] = JAprState;
+					parameter[3] = JDocState;
+					parameter[4] = "";
+					parameter[5] = JOrgCompanyID;
+					ezreceivejijungall_cross_dialogArguments[0] = parameter;
+
+					DivPopUpHidden();
+					OpenPopupWin = window.open("/ezApprovalG/ezReceiveAssignUI.do?mode=ALL", "", GetOpenWindowfeature(800, 620));
+					try { OpenPopupWin.focus(); } catch (e) { }
+				} else {
+					DivPopUpHidden();
+				}
+			}
 			
+			/* 2024-06-28 양지혜 - 전자결재 > 부서수신함 > 지정목록 */
+			var assignChk = "N";
+			var assignPermission = "<c:out value = '${assignPermission}'/>";
+			function btnAssignList_onclick() {
+				assignChk = "Y";
+				getReceivedDocList();
+				$('#sel_status_div').closest("li").hide();
+			}
+			function btnDeptRecevList_onclick() {
+				assignChk = "N";
+				getReceivedDocList();
+				$('#sel_status_div').closest("li").show();
+			}
+
+			/* 2024-06-28 양지혜 - 전자결재 > 부서수신함 > 지정목록 > 지정
+			* 리스트에서 선택한 문서를 바로 지정할 수 있도록 함 */
+			var ezreceiveassignui_cross_dialogArguments = new Array();
+			function btnAssign_onclick2() {
+				var DocList = new ListView();
+				DocList.LoadFromID("DocList");
+				var oArrRows = DocList.GetSelectedRows();
+				var pCurSelRow = oArrRows[0];
+
+				var parameter = new Array();
+				parameter[0] = pCurSelRow.getAttribute("DATA1"); //pDocID;
+				parameter[1] = pCurSelRow.getAttribute("DATA2"); //pSusinSN;
+				parameter[2] = pCurSelRow.getAttribute("DATA10") //pAprState;
+				parameter[3] = pCurSelRow.getAttribute("DATA9"); //pDocState;
+				parameter[4] = ""; //REDIRECTYN
+				parameter[5] = pCurSelRow.getAttribute("ORGCOMPANYID") //orgCompanyID;
+
+				ezreceiveassignui_cross_dialogArguments[0] = parameter;
+				ezreceiveassignui_cross_dialogArguments[1] = btnAssign_onclick_Complete;
+
+				DivPopUpShow(800, 600, "/ezApprovalG/ezReceiveAssignUI.do");
+				// 지정선택 창 떠있는 동안은 스크롤 비활성화
+				parent.frames[1].frameElement.setAttribute('scrolling','no');
+			}
+
+			function btnAssign_onclick_Complete(ret) {
+				parent.frames[1].frameElement.setAttribute('scrolling','auto'); // 스크롤 활성화
+				DivPopUpHidden();
+				if (ret == "OK") {
+					var pAlertContent = "<spring:message code='ezApprovalG.t1420'/>";
+					OpenAlertUI(pAlertContent, OpenAlertUI_Close_Complete);
+				} else if (ret == "DUPL") {
+					alert("<spring:message code='ezApprovalG.bhs23'/>");
+					window.close();
+				}
+			}
+
 		</script>
 	</head>
 	<body class="mainbody" style="margin-top:0px; overflow:auto;" marginwidth="0" marginheight="0" onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">	
@@ -2679,18 +3628,28 @@
 				<li id="tbtnApprove2" style="DISPLAY:none"><span  id=btnApprove2  onClick ="return  btnApprove_onclick('2')" ><spring:message code='ezApprovalG.t1740'/></span></li>
 				<li id="tbtnReceipt"  style="DISPLAY:none"><span id="btnReceipt" onclick="return btnReceipt_onclick()" ><spring:message code='ezApprovalG.t1308'/></span></li>
 				<li id="tbtnSimsa" style="DISPLAY:none"><span id="btnSimsa" onclick="return btnSimsa_onclick()" ><spring:message code='ezApprovalG.t214'/></span></li>
+				<li id="tbtnReceiptAll" style="DISPLAY:none"><span id="btnReceiptAll" onclick="return btnReceiptAll_onclick()" ><spring:message code='ezApprovalG.lgeAR01'/></span></li>
+				<li id="tbtnRJunkyulAll" style="DISPLAY:none"><span id="btnRJunkyulAll" onclick="return btnRJunkyulAll_onclick()" ><spring:message code='ezApprovalG.lgeAR02'/></span></li>
+				<li id="tbtnJiJungAll" style="DISPLAY:none"><span id="btnJiJunglAll" onclick="return btnJiJungAll_onclick()" ><spring:message code='ezApprovalG.JKMH01'/></span></li>
+				<li id="tbtnBebuAll" style="DISPLAY:none"><span id="btnBebuAll" onclick="return btnBaeBuAll_onclick()" ><spring:message code='ezApprovalG.bebuAll01'/></span></li>
 				<li id="tbtnRegList" class="approvalG"><span id="btnAddCabinet" onclick="return btnAddCabinet_onclick()" ><spring:message code='ezApprovalG.t933'/></span></li>
 				<li id="tbtnUserInfo" style="DISPLAY:none"><span id="btnUserInfo" onclick="return btnUserInfo_onclick()" ><spring:message code='ezApprovalG.t1741'/></span></li>
-				<li id="tDocInfo"  class="approvalG"><span id="DocInfo" onclick="return GongRamDocInfo()" ><spring:message code='ezApprovalG.t946'/></span></li>		
 				<c:if test="${approvalFlag == 'G'}">
+					<li id="tDocInfo"  class="approvalG"><span id="DocInfo" onclick="return GongRamDocInfo()" ><spring:message code='ezApprovalG.t946'/></span></li>
+					<li id="tdGongRam" style="display:none"><span id="GongRam" onclick="return btnSendAround_onclick()"><spring:message code='ezApprovalG.t1428'/></span></li>		
 					<li id="tbtnGongRam"><span id="btnGongRam" onclick="return btnViewDoc_onclick()" ><spring:message code='ezApprovalG.t1442'/></span></li>
 					<li id="tbtnGongRamALL" style="display:none"><span id="btnGongRamALL" onclick="return btnGongRamALL_onclick()" ><spring:message code='ezApprovalG.CSJBDA01'/></span></li>
 				</c:if>
 				<c:if test="${approvalFlag != 'G'}">
+					<li id="tDocInfo"  class="approvalG"><span id="DocInfo" onclick="return GongRamDocInfo()" ><spring:message code='ezApprovalG.sendGongram03'/></span></li>
+					<li id="tdGongRam" style="display:none"><span id="GongRam" onclick="return btnSendAround_onclick()"><spring:message code='ezApprovalG.hyj25'/></span></li>		
 					<li id="tbtnGongRam" style="DISPLAY:none"><span id="btnGongRam" onclick="return btnViewDoc_onclick()" ><spring:message code='ezApprovalG.hyj21'/></span></li>
 					<li id="tbtnGongRamALL" style="display:none"><span id="btnGongRamALL" onclick="return btnGongRamALL_onclick()" ><spring:message code='ezApprovalG.CSJBDA03'/></span></li>
 				</c:if>
 				<li id="tbtnViewDoc" style="DISPLAY:none"><span id="btnViewDoc" onclick="return btnViewDoc_onclick()" ><spring:message code='ezApprovalG.t367'/></span></li>
+				<li id="tbtnAssignList" style="display:none"><span id="btnAssignList" onclick="return btnAssignList_onclick()"><spring:message code='ezApprovalG.yjh06'/></span></li>
+				<li id="tbtnAssign" style="display:none"><span id="btnAssign" onClick="return btnAssign_onclick2()"><spring:message code='ezApprovalG.t1430'/></span></li>
+				<li id="tbtnDeptRecevList" style="display:none"><span id="btnDeptRecevList" onclick="return btnDeptRecevList_onclick()"><spring:message code='ezApprovalG.t1749'/></span></li>
 		        <li id="tbtnTotalSave" style="DISPLAY:none"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 		        <li id="tSearchCondi" style="DISPLAY:none"><span class="icon16 icon16_search" id="SearchCondi" onclick="return SearchCondi_onclick()"></span></li>
 		        <%-- <li id="tSecondApproval" class="approvalG"><span id="btnSecondApproval" onclick="return btnSecondApproval()"><spring:message code='ezApprovalG.t26'/><spring:message code='ezApprovalG.t54'/></span></li> --%>
@@ -2717,7 +3676,7 @@
 			        	</select>  
 		        	</div>
 		        </li>
-		        <c:if test="${fn:length(companyList) gt 1 and listType ne '4' and listType ne '21'}">
+		        <c:if test="${fn:length(companyList) gt 1 and listType ne '4' and listType ne '21' and listType ne '97'}">
 			        <li style="vertical-align: middle; float:right">		        	
 						<select id="selectCompany" onchange="getDocListByCompany();">
 							<option value="">
@@ -2755,16 +3714,19 @@
 				    <p><span id="tagsub2"><spring:message code='ezApprovalG.t950'/></span></p>
 				    <p><span id="tagsub3"><spring:message code='ezApprovalG.t56'/></span></p>
 				    <p><span id="tagsub4"><spring:message code='ezApprovalG.t55'/></span></p>
-				    <c:if test="${approvalFlag != 'G'}">
+					<c:if test="${approvalFlag != 'G'}">
 					   	<p><span id="tagsub5"><spring:message code='ezApprovalG.hyj24'/></span></p>
-				    </c:if>
-			  	</div>	
+					</c:if>
+					<c:if test="${approvalFlag == 'G'}">
+					   	<p><span id="tagsub5"><spring:message code='ezApprovalG.LJEAppr06'/></span></p>
+					</c:if>
+			  	</div>
 			</div>
 			
-			<div style="WIDTH:100%;HEIGHT:241px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
+			<div style="WIDTH:100%;HEIGHT:171px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
 				<div id="lvAprLine" ></div>
 			</div>
-			<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
+			<div style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 			<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 				<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 			</div>
@@ -2775,7 +3737,7 @@
 	    
 	    <%-- 전자결재 우측 미리보기 영역 --%>
 	    <div id="PreviewRayerH" style="border:0px; width:500px; height:100%; overflow:hidden; vertical-align:top; display:none; margin-left:-5px;">
-	        <div class="previewmail_bar_h" id="previewmail_bar_h" onmousedown="PreviewH_onMouserDown(event);" style="cursor: w-resize; display: inline-block; height:738px;">
+	        <div class="previewmail_bar_h" id="previewmail_bar_h" onmousedown="PreviewH_onMouserDown(event);" style="cursor: w-resize; display: inline-block; height:753px;">
 	            <p class="hbar_dotted">
 	                <img src="/images/prevview_hbar_dotted.gif">
 	            </p>
@@ -2788,6 +3750,11 @@
 	        </div>
 	    </div>
 	    
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
+		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+		<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+		</div>
+		
 	    <script type="text/javascript">
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 			//selToggleList(document.getElementById("tabnav"), "ul", "li", "1");

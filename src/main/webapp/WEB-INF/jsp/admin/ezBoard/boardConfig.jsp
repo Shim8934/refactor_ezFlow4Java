@@ -5,7 +5,8 @@
 <html>
 	<head>		
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	    <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css" />
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+	    <link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 	    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css" />
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>	    
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -16,7 +17,8 @@
 	        var pBoardType = "<c:out value='${boardType}'/>";
 	        var pParentBoardID = "<c:out value='${parentBoardID}'/>";
 	        var TabId = "<c:out value='${tabID}'/>";
-	        
+			let useFormFlag = "${ useFormFlag }";
+
 	        document.onselectstart = function () { return false; };
 	        window.onresize = window_resize;
 	        
@@ -26,14 +28,24 @@
 	                document.body.style.WebkitUserSelect = 'none';
 	                document.body.style.khtmlUserSelect = 'none';
 	                document.body.style.oUserSelect = 'none';
-	                document.body.style.UserSelect = 'none';3333-01-1864112
-	            }   	
+	                document.body.style.UserSelect = 'none';
+	            }
+	            
+				if (pBoardType == 10){ // 카테고리 게시판인 경우 게시물 리스트 숨김처리 및 일반설정탭으로 로드되도록 조건 설정
+					document.getElementById("BoardEnv_sub1").style.display = "none";
+					TabId = "1tab2";
+				} else {
+					TabId = "1tab1";
+				}
+				
 	            document.getElementById(TabId).setAttribute("class", "tabon");
 	            Tab1_SelectID = TabId;
 
 	            ChangeTab(document.getElementById(TabId));
 	            window_resize();
-	        });	        
+
+				setMenuBtnDisplay();
+	        });
 
 	        function window_resize() {
 	            document.getElementById("BoardEnv_ifrm").style.height = (document.documentElement.clientHeight - 85) + "PX";
@@ -113,6 +125,12 @@
 	                }
 	            }
 	        }
+
+			function setMenuBtnDisplay() {
+				let configFormBtn = document.getElementById("1tab5");	// 양식 설정 탭
+
+				configFormBtn.style.display = useFormFlag === "Y" ? "" : "none";
+			}
 	    </script>
 	</head>
 	<body class="mainbody" style="margin:0px;overflow-y:hidden">

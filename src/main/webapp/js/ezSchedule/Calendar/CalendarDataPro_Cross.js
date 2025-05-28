@@ -1,15 +1,19 @@
 ﻿var wTable;
 var xmlhttp;
+var chk_usersearch = "";
 
 var delFlag = false;
 
 function CalViewSource(chk_str) {
 	xmlhttp = createXMLHttpRequest();
 	var xmlpara;
-    
-    xmlpara ="STARTDATE="+sStartDate+"&ENDDATE="+sEndDate+"&APP="+chk_str+"&GROUPID="+groupid+"&IDLIST=T";
-    
-    
+
+    if(chk_usersearch == "UserSearch"){
+        xmlpara = "STARTDATE=" + sStartDate + "&ENDDATE=" + sEndDate + "&APP=" + chk_str + "&GROUPID=" + groupid + "&IDLIST=T" + "&resultUserID=" + encodeURIComponent(resultUserID) + "&chk_usersearch=" + encodeURIComponent(chk_usersearch) + "&resultDeptName=" + encodeURIComponent(resultDeptName)+ "&resultDeptID=" + encodeURIComponent(resultDeptID)+ "&resultCompanyID=" + encodeURIComponent(resultCompanyID);
+    }else {
+        xmlpara = "STARTDATE=" + sStartDate + "&ENDDATE=" + sEndDate + "&APP=" + chk_str + "&GROUPID=" + groupid + "&IDLIST=T";
+    }
+
     if (!delFlag) {
     	xmlhttp.open("POST", "/ezSchedule/scheduleGetList.do", true);
     } else {
@@ -227,6 +231,9 @@ function getCalWeekViewSource_after() {
                             tempData[k] = tempInsert(objNodes, DataSDT, DataEDT);
                             aheadDataCell(tempData[k], k)
                             CalWeekDataBind(tempData[k], k);
+                            if (SelectSingleNodeValue(objNodes, "SHOWTOP") == "Y") {
+                                CalWeekTopDataBind(tempData[k], k);
+                            }
                             DataSDT.setDate(DataSDT.getDate() + 1);
                             k += 1;
                         }
@@ -234,6 +241,9 @@ function getCalWeekViewSource_after() {
                         tempData[k] = tempInsert(objNodes, DataSDT, DataEDT);
                         aheadDataCell(tempData[k], k)
                         CalWeekDataBind(tempData[k], k);
+                        if (SelectSingleNodeValue(objNodes, "SHOWTOP") == "Y") {
+                            CalWeekTopDataBind(tempData[k], k);
+                        }
                         k += 1;
                     }
             }
@@ -272,28 +282,30 @@ function getCalWeekViewSource_after() {
         tempData = null;
         chk_scheduleCSS();
         
-        //2018-11-05 김혜정  주보기화면에서 드래그앤드롭을 위해 추가 - 하루종일
-      if(objNodes != undefined && SelectSingleNodeValue(objNodes, "scheduleFlag") != "google") {
-        $("div[id$='ALL'").children().draggable({
-        	addClasses: false,
-        	revert : "invalid",
-        	helper : function(event) {
-        		return $(event.target).clone().css({
-        			width: $(event.target).width()
-        		});
-        	},
-        	appendTo: "body",
-        	containment: "#calTR"
-        });
-        
-      //2018-11-05 김혜정  주보기화면에서 드래그앤드롭을 위해 추가 - 시간지정
-      $("#dayDiv").find("div[id^='div_']").draggable({
-        	addClasses: false,
-        	cursorAt: { top: 1, left: 1 },
-        	scroll: false,
-        	handle: "td", 
-        	helper: "clone"
-        });
+      if(chk_usersearch != "UserSearch") {
+          //2018-11-05 김혜정  주보기화면에서 드래그앤드롭을 위해 추가 - 하루종일
+          if (objNodes != undefined && SelectSingleNodeValue(objNodes, "scheduleFlag") != "google") {
+              $("div[id$='ALL'").children().draggable({
+                  addClasses: false,
+                  revert: "invalid",
+                  helper: function (event) {
+                      return $(event.target).clone().css({
+                          width: $(event.target).width()
+                      });
+                  },
+                  appendTo: "body",
+                  containment: "#calTR"
+              });
+
+              //2018-11-05 김혜정  주보기화면에서 드래그앤드롭을 위해 추가 - 시간지정
+              $("#dayDiv").find("div[id^='div_']").draggable({
+                  addClasses: false,
+                  cursorAt: {top: 1, left: 1},
+                  scroll: false,
+                  handle: "td",
+                  helper: "clone"
+              });
+          }
       }
     }
     catch (e) {
@@ -326,46 +338,52 @@ function getCalDayViewSource_after() {
             OrgDataSDT = new Date(DataSDT);
             OrgDataEDT = new Date(DataEDT);
             if (SelectSingleNodeValue(objNodes, "DATETYPE") != "2") {
-                    if (_Dtstart.substring(0, 10) != _Dtend.substring(0, 10)) { 
+                if (_Dtstart.substring(0, 10) != _Dtend.substring(0, 10)) {
 
-                        var betweenDay = new Date(_Dtend.substring(0, 4), parseInt(_Dtend.substring(5, 7), 10) - 1, parseInt(_Dtend.substring(8, 10), 10)) - new Date(_Dtstart.substring(0, 4), parseInt(_Dtstart.substring(5, 7), 10) - 1, parseInt(_Dtstart.substring(8, 10), 10));
-                        var day = 1000 * 60 * 60 * 24;
-                        betweenDay = parseInt(betweenDay / day, 10);
-                        for (var j = 0; j <= betweenDay; j++) {
-                            var toDay = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2)
-                            var DataDay = DataSDT.getFullYear() + "-" + leadingZeros((DataSDT.getMonth() + 1), 2) + "-" + leadingZeros(DataSDT.getDate(), 2)
-                            if (toDay == DataDay) {
-                                if (betweenDay >= 1) {
-                                    if (j == 0) {
-                                        DataEDT.setHours(23);
-                                        DataEDT.setMinutes(59);
-                                    }
-                                    else if (j < betweenDay) {
-                                        DataSDT.setHours(0);
-                                        DataSDT.setMinutes(0);
-                                        DataEDT.setHours(23);
-                                        DataEDT.setMinutes(59);
-                                    }
-                                    else {
-                                        DataSDT.setHours(0);
-                                        DataSDT.setMinutes(0);
-                                        DataEDT = new Date(_Dtend.substring(0, 4), parseInt(_Dtend.substring(5, 7), 10) - 1, parseInt(_Dtend.substring(8, 10), 10), parseInt(_Dtend.substring(11, 13), 10), parseInt(_Dtend.substring(14, 16), 10));
-                                    }
+                    var betweenDay = new Date(_Dtend.substring(0, 4), parseInt(_Dtend.substring(5, 7), 10) - 1, parseInt(_Dtend.substring(8, 10), 10)) - new Date(_Dtstart.substring(0, 4), parseInt(_Dtstart.substring(5, 7), 10) - 1, parseInt(_Dtstart.substring(8, 10), 10));
+                    var day = 1000 * 60 * 60 * 24;
+                    betweenDay = parseInt(betweenDay / day, 10);
+                    for (var j = 0; j <= betweenDay; j++) {
+                        var toDay = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2)
+                        var DataDay = DataSDT.getFullYear() + "-" + leadingZeros((DataSDT.getMonth() + 1), 2) + "-" + leadingZeros(DataSDT.getDate(), 2)
+                        if (toDay == DataDay) {
+                            if (betweenDay >= 1) {
+                                if (j == 0) {
+                                    DataEDT.setHours(23);
+                                    DataEDT.setMinutes(59);
                                 }
-                                tempData[k] = tempInsert(objNodes, DataSDT, DataEDT);
-                                aheadDataCell(tempData[k], k);
-                                CalDayDataBind(tempData[k], k);
-
-                                k += 1;
+                                else if (j < betweenDay) {
+                                    DataSDT.setHours(0);
+                                    DataSDT.setMinutes(0);
+                                    DataEDT.setHours(23);
+                                    DataEDT.setMinutes(59);
+                                }
+                                else {
+                                    DataSDT.setHours(0);
+                                    DataSDT.setMinutes(0);
+                                    DataEDT = new Date(_Dtend.substring(0, 4), parseInt(_Dtend.substring(5, 7), 10) - 1, parseInt(_Dtend.substring(8, 10), 10), parseInt(_Dtend.substring(11, 13), 10), parseInt(_Dtend.substring(14, 16), 10));
+                                }
                             }
-                            DataSDT.setDate(DataSDT.getDate() + 1);
+                            tempData[k] = tempInsert(objNodes, DataSDT, DataEDT);
+                            aheadDataCell(tempData[k], k);
+                            CalDayDataBind(tempData[k], k);
+                            if (SelectSingleNodeValue(objNodes, "SHOWTOP") == "Y") {
+                                CalDayTopDataBind(tempData[k], k);
+                            }
+
+                            k += 1;
                         }
-                    } else {
-                        tempData[k] = tempInsert(objNodes, DataSDT, DataEDT);
-                        aheadDataCell(tempData[k], k);
-                        CalDayDataBind(tempData[k], k);
-                        k += 1;
+                        DataSDT.setDate(DataSDT.getDate() + 1);
                     }
+                } else {
+                    tempData[k] = tempInsert(objNodes, DataSDT, DataEDT);
+                    aheadDataCell(tempData[k], k);
+                    CalDayDataBind(tempData[k], k);
+                    if (SelectSingleNodeValue(objNodes, "SHOWTOP") == "Y") {
+                        CalDayTopDataBind(tempData[k], k);
+                    }
+                    k += 1;
+                }
             }
             else {
                 if (_Dtstart.substring(0, 10) != _Dtend.substring(0, 10)) { 
@@ -404,14 +422,16 @@ function getCalDayViewSource_after() {
         }        
         tempData = null;
         chk_scheduleCSS();
-        if(objNodes != undefined && SelectSingleNodeValue(objNodes, "scheduleFlag") != "google") {
-        //2018-11-05 김혜정  일보기화면에서 드래그앤드롭을 위해 추가 - 시간지정
-        $("#CalDiv").find("div[id^='div_']").draggable({
-        	addClasses: false,
-        	scroll: true,
-        	helper : "clone",
-        	cursorAt: { top: 1, left: 1 }
-        });
+        if(chk_usersearch != "UserSearch") {
+            if (objNodes != undefined && SelectSingleNodeValue(objNodes, "scheduleFlag") != "google") {
+                //2018-11-05 김혜정  일보기화면에서 드래그앤드롭을 위해 추가 - 시간지정
+                $("#CalDiv").find("div[id^='div_']").draggable({
+                    addClasses: false,
+                    scroll: true,
+                    helper: "clone",
+                    cursorAt: {top: 1, left: 1}
+                });
+            }
         }
     }
     catch (e) {
@@ -766,8 +786,10 @@ function CalMonthDataBind(oAppointment) {
         else if (oAppointment.ScheduleType == 4) {
             oTd.className = "collaboration";
             oSpan.className = "collaboration";
-        }
-        else {
+        } else if (oAppointment.ScheduleType == 10) { // 임원일정
+            oTd.className = "executive";
+            oSpan.className = "executive";
+        } else {
             oTd.className = "department";
             oSpan.className = "department";
         }
@@ -857,21 +879,26 @@ function CalMonthDataBind(oAppointment) {
         // 2020-02-24 김정언 - 근태 현황일 경우에는 근태 상세보기로 이동 (DateType 4 : 근태 현황)
         if(oAppointment.DateType == 4) {
         	var divID = "\"" + oAppointment.ScheduleID + ":" + oAppointment.ParentID + "\"";
+            oTd.setAttribute("onclick", "ReadAttitude(" + divID + ")");
         	oTd.setAttribute("ondblclick", "ReadAttitude(" + divID + ")");
         }
         else {
         	var divID = "\"div_" + oAppointment.trID + "_" + oAppointment.ScheduleID + "\"";
-        	if(oAppointment.scheduleFlag == "google") {
-        		oTd.setAttribute("isGoogle", "Y");
-        		oTd.setAttribute("googleId", oAppointment.googleId);
-        		oTd.setAttribute("onclick", "ReadGoogleSchedule(" + divID + ")");
-        		oTd.setAttribute("ondblclick", "ReadGoogleSchedule(" + divID + ")");
-      	    } else {
-        		oTd.setAttribute("onclick", "ReadSchedule(" + divID + ")");
-        		oTd.setAttribute("ondblclick", "ReadSchedule(" + divID + ")");
-        	}
-        	oTd.onmouseover = function (event) { TooltipMouseOver(this, event); };
-        	oTd.setAttribute("onmouseout", "hideTooltip(this)");
+            if (window.location.href.indexOf('schedulePrintCalendar') == -1) {
+                if(oAppointment.scheduleFlag == "google") {
+                    oTd.setAttribute("isGoogle", "Y");
+                    oTd.setAttribute("googleId", oAppointment.googleId);
+                        oTd.setAttribute("onclick", "ReadGoogleSchedule(" + divID + ")");
+                        oTd.setAttribute("ondblclick", "ReadGoogleSchedule(" + divID + ")");
+                } else {
+                        oTd.setAttribute("onclick", "ReadSchedule(" + divID + ")");
+                        oTd.setAttribute("ondblclick", "ReadSchedule(" + divID + ")");
+                }
+                if (window.location.href.indexOf('schedulePrintCalendar') == -1) {
+                    oTd.onmouseover = function (event) { TooltipMouseOver(this, event); };
+                    oTd.setAttribute("onmouseout", "hideTooltip(this)");
+                } 
+            }
         }
         
         // 일정완료 시 취소선 표출하기 위해 span 추가
@@ -889,20 +916,24 @@ function CalMonthDataBind(oAppointment) {
         
         oTr.appendChild(oTd);
         objElm.appendChild(oTr);
-        
-        //2018-11-05 김혜정 월보기
-        if (oAppointment.scheduleFlag != 'google') {
-        $("#" + "div_" + oAppointment.trID + "_" + oAppointment.ScheduleID).parent("tr").draggable({
-        	addClasses: false,
-        	containment: $("#dayDiv"),
-        	revert : "invalid",
-        	helper : function(event) {
-        		return $(event.target).clone().css({
-        			width: $(event.target).width()
-        		});
-        	},
-        	scroll : false
-        });
+
+        if (window.location.href.indexOf('schedulePrintCalendar') == -1) {
+            if(chk_usersearch != "UserSearch") {
+                //2018-11-05 김혜정 월보기
+                if (oAppointment.scheduleFlag != 'google') {
+                    $("#" + "div_" + oAppointment.trID + "_" + oAppointment.ScheduleID).parent("tr").draggable({
+                        addClasses: false,
+                        containment: $("#dayDiv"),
+                        revert: "invalid",
+                        helper: function (event) {
+                            return $(event.currentTarget).clone().css({
+                                width: $(event.currentTarget).width()
+                            });
+                        },
+                        scroll: false
+                    });
+                }
+            }
         }
     }
     objElm = null;
@@ -964,8 +995,10 @@ function CalWeekDataBind(oAppointment, order) {
         else if (oAppointment.ScheduleType == 4) {
         	oDiv.className = "calendar_data_collaboration";
         	oSpan.className = "collaboration";
-        }
-        else {
+        } else if (oAppointment.ScheduleType == 10) { // 임원일정
+            oDiv.className = "calendar_data_executive";
+            oSpan.className = "executive";
+        } else {
             oDiv.className = "calendar_data_department";
             oSpan.className = "department";
         }
@@ -1051,17 +1084,19 @@ function CalWeekDataBind(oAppointment, order) {
         
         oTd.setAttribute("completefg", oAppointment.CompleteFG);
         
-        oDiv.onmouseover = function (event) { TooltipMouseOver(this, event); };
-        oDiv.setAttribute("onmouseout", "hideTooltip(this)");
-        var divID = "\"div_" + oAppointment.trID + "_" + oAppointment.ScheduleID + "\"";
-        if(oAppointment.scheduleFlag == "google") {
-        	oDiv.setAttribute("isGoogle", "Y");
-        	oDiv.setAttribute("googleId", oAppointment.googleId);
-        	oDiv.setAttribute("onclick", "event.cancelBubble=true;ReadGoogleSchedule(" + divID + ")");
-        	oDiv.setAttribute("ondblclick", "event.cancelBubble=true;ReadGoogleSchedule(" + divID + ")");
-        } else {
-        	oDiv.setAttribute("onclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
-        	oDiv.setAttribute("ondblclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
+        if (window.location.href.indexOf('schedulePrintCalendar') == -1) {
+            oDiv.onmouseover = function (event) { TooltipMouseOver(this, event); };
+            oDiv.setAttribute("onmouseout", "hideTooltip(this)");
+            var divID = "\"div_" + oAppointment.trID + "_" + oAppointment.ScheduleID + "\"";
+            if(oAppointment.scheduleFlag == "google") {
+                oDiv.setAttribute("isGoogle", "Y");
+                oDiv.setAttribute("googleId", oAppointment.googleId);
+                oDiv.setAttribute("onclick", "event.cancelBubble=true;ReadGoogleSchedule(" + divID + ")");
+                oDiv.setAttribute("ondblclick", "event.cancelBubble=true;ReadGoogleSchedule(" + divID + ")");
+            } else {
+                oDiv.setAttribute("onclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
+                oDiv.setAttribute("ondblclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
+            }
         }
         
         if (objDivE) {
@@ -1082,7 +1117,7 @@ function CalWeekDataBind(oAppointment, order) {
         oDiv.style.top = "0";
         oDiv.style.overflow = "hidden";
         oDiv.style.width = "95%"
-        oDiv.style.height = hSize - 3 + "px";
+        oDiv.style.height = hSize - 5 + "px";
         oDiv.style.position = "absolute";
         oDiv.style.zIndex = "1";
         oDiv.style.textOverflow = "ellipsis";
@@ -1126,8 +1161,10 @@ function CalWeekAllDataBind(oAppointment, order) {
         else if (oAppointment.ScheduleType == 4) {
             oDiv.className = "calendar_data_collaboration";
             oSpan.className = "collaboration";
-        }
-        else {
+        } else if (oAppointment.ScheduleType == 10) { // 임원일정
+            oDiv.className = "calendar_data_executive";
+            oSpan.className = "executive";
+        } else {
             oDiv.className = "calendar_data_department";
             oSpan.className = "department";
         }
@@ -1208,17 +1245,159 @@ function CalWeekAllDataBind(oAppointment, order) {
         
         oDiv.setAttribute("completefg", oAppointment.CompleteFG);
         
-        oDiv.onmouseover = function (event) { TooltipMouseOver(this, event); };
-        oDiv.setAttribute("onmouseout", "hideTooltip(this)");
-        var divID = "\"div_" + oAppointment.trID + "_" + oAppointment.ScheduleID + "\"";
-        if(oAppointment.scheduleFlag == "google") {
-        	oDiv.setAttribute("isGoogle", "Y");
-        	oDiv.setAttribute("googleId", oAppointment.googleId);
-        	oDiv.setAttribute("onclick", "event.cancelBubble=true;ReadGoogleSchedule(" + divID + ")");
-            oDiv.setAttribute("ondblclick", "event.cancelBubble=true;ReadGoogleSchedule(" + divID + ")");
+        if (window.location.href.indexOf('schedulePrintCalendar') == -1) {
+            oDiv.onmouseover = function (event) { TooltipMouseOver(this, event); };
+            oDiv.setAttribute("onmouseout", "hideTooltip(this)");
+            
+            var divID = "\"div_" + oAppointment.trID + "_" + oAppointment.ScheduleID + "\"";
+            
+            if(oAppointment.scheduleFlag == "google") {
+                oDiv.setAttribute("isGoogle", "Y");
+                oDiv.setAttribute("googleId", oAppointment.googleId);
+                oDiv.setAttribute("onclick", "event.cancelBubble=true;ReadGoogleSchedule(" + divID + ")");
+                oDiv.setAttribute("ondblclick", "event.cancelBubble=true;ReadGoogleSchedule(" + divID + ")");
+            } else {
+                oDiv.setAttribute("onclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
+                oDiv.setAttribute("ondblclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
+            }
+        }
+        objDivS.appendChild(oDiv);
+
+    }
+    objDivS = null;
+    oAppointment = null;
+}
+
+// 상단표시 (주보기)
+function CalWeekTopDataBind(oAppointment, order) {
+
+    var objDivS = document.getElementById(oAppointment.trID.substring(0, 10) + "TOP");
+    if (objDivS) {
+
+        var oDiv = document.createElement("DIV");
+        oDiv.style.whiteSpace = "noWrap";
+        oDiv.style.overflow = "hidden";
+        var oSpan = document.createElement("SPAN");
+
+        if (oAppointment.ScheduleType == 3) {
+
+            oDiv.className = "calendar_data_company";
+            oSpan.className = "company";
+        }
+        else if (oAppointment.ScheduleType == 1 || oAppointment.ScheduleType == 5 || oAppointment.ScheduleType == 9) {
+            oDiv.className = "calendar_data_individual";
+            oSpan.className = "individual";
+        }
+        else if (oAppointment.ScheduleType == 6) {
+            oDiv.className = "calendar_data_individual";
+            oSpan.className = "individual";
+        }
+        else if (oAppointment.ScheduleType == 7) {
+            oDiv.className = "calendar_data_Group";
+            oSpan.className = "Group";
+        }
+        else if (oAppointment.ScheduleType == 4) {
+            oDiv.className = "calendar_data_collaboration";
+            oSpan.className = "collaboration";
+        } else if (oAppointment.ScheduleType == 10) { // 임원일정
+            oDiv.className = "calendar_data_executive";
+            oSpan.className = "executive";
         } else {
-        	oDiv.setAttribute("onclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
-            oDiv.setAttribute("ondblclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
+            oDiv.className = "calendar_data_department";
+            oSpan.className = "department";
+        }
+
+        for (var i = 0; i < publicIds.length; i++) {
+        	if (oAppointment.OwnerID == publicIds[i].id) {
+                oSpan.className = "public_department";
+                break;
+        	}
+        }
+
+        oDiv.appendChild(oSpan);
+        oDiv.style.overflow = "hidden";
+        oDiv.style.textOverflow = "ellipsis";
+        if (oAppointment.Importance == 1) {
+            var oSpan = document.createElement("SPAN");
+            oSpan.className = "icon_l";
+            oDiv.appendChild(oSpan);
+        } else if (oAppointment.Importance == 3) {
+            var oSpan = document.createElement("SPAN");
+            oSpan.className = "icon_h";
+            oDiv.appendChild(oSpan);
+        }
+
+        var pTime = "";
+        var pSubject;
+
+        if (oAppointment.DateType != 2) {
+            pTime = oAppointment.dtstartDisplay + " - " + oAppointment.dtendDisplay
+            pSubject = oAppointment.dtstartDisplay + " - " + oAppointment.dtendDisplay + " " + oAppointment.Subject;
+        }
+        else {
+            pTime = strLang39;
+            pSubject = oAppointment.Subject;
+        }
+
+        var oTextSpan = document.createElement("SPAN");
+        var oText = document.createTextNode(pSubject);
+
+    	if (oAppointment.CompleteFG == "Y" && ((oAppointment.RepStartDate == oAppointment.StartDateNoTZ && oAppointment.IsAllRep == "N") || (oAppointment.IsAllRep == "Y"))) {
+    		oTextSpan.style.textDecoration = "line-through";
+    	}
+
+        //oDiv.innerHTML += pSubject;
+    	oTextSpan.appendChild(oText);
+    	oDiv.appendChild(oTextSpan);
+
+        oDiv.setAttribute("ID", "div_" + oAppointment.trID + "_" + oAppointment.ScheduleID);
+        oDiv.setAttribute("ScheduleID", oAppointment.ScheduleID);
+        oDiv.setAttribute("ScheduleChangeKey", oAppointment.ScheduleChangeKey);
+        oDiv.setAttribute("ParentID", oAppointment.ParentID);
+        oDiv.setAttribute("OwnerID", oAppointment.OwnerID);
+        oDiv.setAttribute("CreatorID", oAppointment.CreatorID);
+        oDiv.setAttribute("ModifierID", oAppointment.ModifierID);
+        oDiv.setAttribute("ScheduleType", oAppointment.ScheduleType);
+        oDiv.setAttribute("Importance", oAppointment.Importance);
+        oDiv.setAttribute("IsReadOnly", oAppointment.IsReadOnly);
+        oDiv.setAttribute("DateType", oAppointment.DateType);
+        oDiv.setAttribute("Subject", oAppointment.Subject);
+        oDiv.setAttribute("StartDate", oAppointment.StartDate);
+        oDiv.setAttribute("EndDate", oAppointment.EndDate);
+        oDiv.setAttribute("RepeatCount", oAppointment.RepeatCount);
+        oDiv.setAttribute("Location", oAppointment.Location);
+        oDiv.setAttribute("dtstartUTC", oAppointment.dtstartUTC);
+        oDiv.setAttribute("dtendUTC", oAppointment.dtendUTC);
+        oDiv.setAttribute("dtstartHour", oAppointment.dtstartHour);
+        oDiv.setAttribute("dtstartMinute", oAppointment.dtstartMinute);
+        oDiv.setAttribute("dtendHour", oAppointment.dtendHour);
+        oDiv.setAttribute("dtendMinute", oAppointment.dtendMinute);
+        oDiv.setAttribute("dtstartDisplay", oAppointment.dtstartDisplay);
+        oDiv.setAttribute("dtendDisplay", oAppointment.dtendDisplay);
+
+        oDiv.setAttribute("OrgStartDate", oAppointment.OrgStartDate);
+        oDiv.setAttribute("OrgEndDate", oAppointment.OrgEndDate);
+
+        oDiv.setAttribute("command", "open");
+        oDiv.setAttribute("ptime", pTime);
+
+        oDiv.setAttribute("completefg", oAppointment.CompleteFG);
+        
+        if (window.location.href.indexOf('schedulePrintCalendar') == -1) {
+            oDiv.onmouseover = function (event) { TooltipMouseOver(this, event); };
+            oDiv.setAttribute("onmouseout", "hideTooltip(this)");
+            
+            var divID = "\"div_" + oAppointment.trID + "_" + oAppointment.ScheduleID + "\"";
+            
+            if(oAppointment.scheduleFlag == "google") {
+                oDiv.setAttribute("isGoogle", "Y");
+                oDiv.setAttribute("googleId", oAppointment.googleId);
+                oDiv.setAttribute("onclick", "event.cancelBubble=true;ReadGoogleSchedule(" + divID + ")");
+                oDiv.setAttribute("ondblclick", "event.cancelBubble=true;ReadGoogleSchedule(" + divID + ")");
+            } else {
+                oDiv.setAttribute("onclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
+                oDiv.setAttribute("ondblclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
+            }
         }
         objDivS.appendChild(oDiv);
 
@@ -1278,8 +1457,10 @@ function CalDayDataBind(oAppointment, order) {
         else if (oAppointment.ScheduleType == 4) {
             oDiv.className = "calendar_data_collaboration";
             oSpan.className = "collaboration";
-        }
-        else {
+        } else if (oAppointment.ScheduleType == 10) { // 임원일정
+            oDiv.className = "calendar_data_executive";
+            oSpan.className = "executive";
+        } else {
             oDiv.className = "calendar_data_department";
             oSpan.className = "department";
         }
@@ -1368,18 +1549,21 @@ function CalDayDataBind(oAppointment, order) {
         /* 2021-11-26 홍승비 - 일정완료여부 데이터 추가 */
         oDiv.setAttribute("completefg", oAppointment.CompleteFG)
         
-        oDiv.onmouseover = function (event) { TooltipMouseOver(this, event); };
-        oDiv.setAttribute("onmouseout", "hideTooltip(this)");
-        var divID = "\"div_" + oAppointment.trID + "_" + oAppointment.ScheduleID + "\"";
-
-        if(oAppointment.scheduleFlag == "google") {
-        	oDiv.setAttribute("isGoogle", "Y");
-        	oDiv.setAttribute("googleId", oAppointment.googleId);
-        	oDiv.setAttribute("onclick", "event.cancelBubble=true;ReadGoogleSchedule(" + divID + ")");
-            oDiv.setAttribute("ondblclick", "event.cancelBubble=true;ReadGoogleSchedule(" + divID + ")");
-        } else {
-        	oDiv.setAttribute("onclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
-            oDiv.setAttribute("ondblclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
+        if (window.location.href.indexOf('schedulePrintCalendar') == -1) {
+            oDiv.onmouseover = function (event) { TooltipMouseOver(this, event); };
+            oDiv.setAttribute("onmouseout", "hideTooltip(this)");
+            
+            var divID = "\"div_" + oAppointment.trID + "_" + oAppointment.ScheduleID + "\"";
+         
+            if(oAppointment.scheduleFlag == "google") {
+                oDiv.setAttribute("isGoogle", "Y");
+                oDiv.setAttribute("googleId", oAppointment.googleId);
+                oDiv.setAttribute("onclick", "event.cancelBubble=true;ReadGoogleSchedule(" + divID + ")");
+                oDiv.setAttribute("ondblclick", "event.cancelBubble=true;ReadGoogleSchedule(" + divID + ")");
+            } else {
+                oDiv.setAttribute("onclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
+                oDiv.setAttribute("ondblclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
+            }
         }
         
         if (objDivE) {
@@ -1400,7 +1584,7 @@ function CalDayDataBind(oAppointment, order) {
         oDiv.style.top = "0";
         oDiv.style.overflow = "hidden";
         oDiv.style.width = "95%"
-        oDiv.style.height = hSize - 3 + "px";
+        oDiv.style.height = hSize - 5 + "px";
         oDiv.style.position = "absolute";
         oDiv.style.zIndex = "1";
         var sItem = document.getElementById(oAppointment.ScheduleID + "0" + order);
@@ -1442,8 +1626,10 @@ function CalDayAllDataBind(oAppointment, order) {
         else if (oAppointment.ScheduleType == 4) {
             oDiv.className = "calendar_data_collaboration";
             oSpan.className = "collaboration";
-        }
-        else {
+        } else if (oAppointment.ScheduleType == 10) { // 임원일정
+            oDiv.className = "calendar_data_executive";
+            oSpan.className = "executive";
+        } else {
             oDiv.className = "calendar_data_department";
             oSpan.className = "department";
         }
@@ -1523,19 +1709,159 @@ function CalDayAllDataBind(oAppointment, order) {
         
         oDiv.setAttribute("completefg", oAppointment.CompleteFG);
         
-        oDiv.onmouseover = function (event) { TooltipMouseOver(this, event); };
-        oDiv.setAttribute("onmouseout", "hideTooltip(this)");
-        var divID = "\"div_" + oAppointment.trID + "_" + oAppointment.ScheduleID + "\"";
-        if(oAppointment.scheduleFlag == "google") {
-        	oDiv.setAttribute("isGoogle", "Y");
-        	oDiv.setAttribute("googleId", oAppointment.googleId);
-        	oDiv.setAttribute("onclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
-	        oDiv.setAttribute("ondblclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
-        } else {
-	        oDiv.setAttribute("onclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
-	        oDiv.setAttribute("ondblclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
+        if (window.location.href.indexOf('schedulePrintCalendar') == -1) {
+            oDiv.onmouseover = function (event) { TooltipMouseOver(this, event); };
+            oDiv.setAttribute("onmouseout", "hideTooltip(this)");
+            
+            var divID = "\"div_" + oAppointment.trID + "_" + oAppointment.ScheduleID + "\"";
+            
+            if(oAppointment.scheduleFlag == "google") {
+                oDiv.setAttribute("isGoogle", "Y");
+                oDiv.setAttribute("googleId", oAppointment.googleId);
+                oDiv.setAttribute("onclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
+                oDiv.setAttribute("ondblclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
+            } else {
+                oDiv.setAttribute("onclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
+                oDiv.setAttribute("ondblclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
+            }
         }
+        objDivS.appendChild(oDiv);
+
+    }
+    objDivS = null;
+    oAppointment = null;
+}
+
+// 상단표시 (일보기)
+function CalDayTopDataBind(oAppointment, order) {
+
+    var objDivS = document.getElementById(oAppointment.trID.substring(0, 10) + "TOP");
+    if (objDivS) {
+
+        var oDiv = document.createElement("DIV");
+
+        var oSpan = document.createElement("SPAN");
+
+        if (oAppointment.ScheduleType == 3) {
+
+            oDiv.className = "calendar_data_company";
+            oSpan.className = "company";
+        }
+        else if (oAppointment.ScheduleType == 1 || oAppointment.ScheduleType == 5 || oAppointment.ScheduleType == 9) {
+            oDiv.className = "calendar_data_individual";
+            oSpan.className = "individual";
+        }
+        else if (oAppointment.ScheduleType == 6) {
+            oDiv.className = "calendar_data_individual";
+            oSpan.className = "individual";
+        }
+        else if (oAppointment.ScheduleType == 7) {
+            oDiv.className = "calendar_data_Group";
+            oSpan.className = "Group";
+        }
+        else if (oAppointment.ScheduleType == 4) {
+            oDiv.className = "calendar_data_collaboration";
+            oSpan.className = "collaboration";
+        } else if (oAppointment.ScheduleType == 10) { // 임원일정
+            oDiv.className = "calendar_data_executive";
+            oSpan.className = "executive";
+        } else {
+            oDiv.className = "calendar_data_department";
+            oSpan.className = "department";
+        }
+
+        for (var i = 0; i < publicIds.length; i++) {
+        	if (oAppointment.OwnerID == publicIds[i].id) {
+                oSpan.className = "public_department";
+                break;
+        	}
+        }
+
+        oDiv.appendChild(oSpan);
+
+        if (oAppointment.Importance == 1) {
+            var oSpan = document.createElement("SPAN");
+            oSpan.className = "icon_l";
+            oDiv.appendChild(oSpan);
+        } else if (oAppointment.Importance == 3) {
+            var oSpan = document.createElement("SPAN");
+            oSpan.className = "icon_h";
+            oDiv.appendChild(oSpan);
+        }
+
+        var pTime = "";
+        var pSubject;
+
+        if (oAppointment.DateType != 2) {
+            pTime = oAppointment.dtstartDisplay + " - " + oAppointment.dtendDisplay
+            pSubject = oAppointment.dtstartDisplay + " - " + oAppointment.dtendDisplay + " " + oAppointment.Subject;
+        }
+        else {
+            pTime = strLang39;
+            pSubject = oAppointment.Subject;
+        }
+
+        var oTextSpan = document.createElement("SPAN");
+        var oText = document.createTextNode(pSubject);
         
+    	if (oAppointment.CompleteFG == "Y" && ((oAppointment.RepStartDate == oAppointment.StartDateNoTZ && oAppointment.IsAllRep == "N") || (oAppointment.IsAllRep == "Y"))) {
+    		oTextSpan.style.textDecoration = "line-through";
+    	}
+    	
+        //oDiv.innerHTML += pSubject;
+    	oTextSpan.appendChild(oText);
+    	oDiv.appendChild(oTextSpan);
+       
+        oDiv.setAttribute("ID", "div_" + oAppointment.trID + "_" + oAppointment.ScheduleID);
+        oDiv.setAttribute("ScheduleID", oAppointment.ScheduleID);
+        oDiv.setAttribute("ScheduleChangeKey", oAppointment.ScheduleChangeKey);
+        oDiv.setAttribute("ParentID", oAppointment.ParentID);
+        oDiv.setAttribute("OwnerID", oAppointment.OwnerID);
+        oDiv.setAttribute("CreatorID", oAppointment.CreatorID);
+        oDiv.setAttribute("ModifierID", oAppointment.ModifierID);
+        oDiv.setAttribute("ScheduleType", oAppointment.ScheduleType);
+        oDiv.setAttribute("Importance", oAppointment.Importance);
+        oDiv.setAttribute("IsReadOnly", oAppointment.IsReadOnly);
+        oDiv.setAttribute("DateType", oAppointment.DateType);
+        oDiv.setAttribute("Subject", oAppointment.Subject);
+        oDiv.setAttribute("StartDate", oAppointment.StartDate);
+        oDiv.setAttribute("EndDate", oAppointment.EndDate);
+        oDiv.setAttribute("RepeatCount", oAppointment.RepeatCount);
+        oDiv.setAttribute("Location", oAppointment.Location);
+        oDiv.setAttribute("dtstartUTC", oAppointment.dtstartUTC);
+        oDiv.setAttribute("dtendUTC", oAppointment.dtendUTC);
+        oDiv.setAttribute("dtstartHour", oAppointment.dtstartHour);
+        oDiv.setAttribute("dtstartMinute", oAppointment.dtstartMinute);
+        oDiv.setAttribute("dtendHour", oAppointment.dtendHour);
+        oDiv.setAttribute("dtendMinute", oAppointment.dtendMinute);
+        oDiv.setAttribute("dtstartDisplay", oAppointment.dtstartDisplay);
+        oDiv.setAttribute("dtendDisplay", oAppointment.dtendDisplay);
+        oDiv.setAttribute("showtop", oAppointment.showtop);
+
+        oDiv.setAttribute("OrgStartDate", oAppointment.OrgStartDate);
+        oDiv.setAttribute("OrgEndDate", oAppointment.OrgEndDate);
+
+        oDiv.setAttribute("command", "open");
+        oDiv.setAttribute("ptime", pTime);
+        
+        oDiv.setAttribute("completefg", oAppointment.CompleteFG);
+        
+        if (window.location.href.indexOf('schedulePrintCalendar') == -1) {
+            oDiv.onmouseover = function (event) { TooltipMouseOver(this, event); };
+            oDiv.setAttribute("onmouseout", "hideTooltip(this)");
+            
+            var divID = "\"div_" + oAppointment.trID + "_" + oAppointment.ScheduleID + "\"";
+            
+            if(oAppointment.scheduleFlag == "google") {
+                oDiv.setAttribute("isGoogle", "Y");
+                oDiv.setAttribute("googleId", oAppointment.googleId);
+                oDiv.setAttribute("onclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
+                oDiv.setAttribute("ondblclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
+            } else {
+                oDiv.setAttribute("onclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
+                oDiv.setAttribute("ondblclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
+            }
+        }
         objDivS.appendChild(oDiv);
 
     }
@@ -1591,8 +1917,10 @@ function showTooltip(thisID, e, pTime, pSubject, pScheduleType, pScheduleID) {
     else if (pScheduleType == "7") {
         sSpan.className = "Group";
         sTd.className = "Group";
-    }
-    else {
+    } else if (pScheduleType == "10") { // 임원일정
+        sSpan.className = "executive";
+        sTd.className = "executive";
+    } else {
         sSpan.className = "department";
         sTd.className = "department";
     }
@@ -1852,8 +2180,13 @@ function TooltipMouseOver(obj, event) {
     var eDateMD = (eDate.getMonth() + 1) + "." + eDate.getDate();
 
     if (GetAttribute(obj, "datetype") != "2") {
-        if (sDateMD != eDateMD)
+        if (sDateMD != eDateMD) {
             pTime = sDateMD + " " + GetAttribute(obj, "dtstartDisplay") + " - " + eDateMD + " " + GetAttribute(obj, "dtendDisplay");
+        } else {
+            if (pTime == "00:00 - 23:59") {
+                pTime = strLang39;
+            }
+        }
     }
 
     showTooltip_MouseOver(id, event, pTime, subject, scheduletype, scheduleid, location);

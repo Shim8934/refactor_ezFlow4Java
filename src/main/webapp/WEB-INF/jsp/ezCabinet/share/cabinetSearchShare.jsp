@@ -7,7 +7,8 @@
 	<head>
 		<title><spring:message code="ezCabinet.t136"/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" type="text/css" href="${util.addVer('ezCabinet.css', 'msg')      }">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/ezCabinet/cabinet.css')}">
 	</head>
 	<body class="popup cabShareFile">
@@ -70,7 +71,37 @@
 					selected : "bnkCabSelect",
 					mode     : "received"
 				});
-				
+				var status;
+				var remainList;
+				var beforeList;
+				// 부모창에서 메세지 받아옴.
+				window.addEventListener('message', function(event) {
+					remainList = event.data[0]; // 검색결과 이외의 공유자 리스트
+					beforeList = event.data[1]; // 이전 공유자 리스트
+				});
+
+				window.onbeforeunload = function() {
+					// 버튼을 통해 창을 닫지 않는 경우 부모창으로 메세지 보냄.
+					if (status == undefined) {
+						window.opener.postMessage('closed', '*');
+					}
+				}
+
+				function saveData(sendList) {
+					$.ajax({
+						type: "POST",
+						url: "/ezCabinet/saveShareUserList.do",
+						data: {
+							"cabinetId" : cabinetId,
+							"userList"  : JSON.stringify(sendList)
+						},
+						dataType: "JSON",
+						async: false,
+						success: function(data) {},
+						error: function(error) {}
+					});
+				}
+
 				function initEvents(cabId) {
 					cabinetId               = cabId;
 					document.onselectstart  = function () { return false;};
@@ -88,21 +119,39 @@
 				
 				function deleteShareUsers() {
 					var shareTable = document.getElementById("sharedTable");
-					var listTr     = shareTable.querySelectorAll("tr[class='bnkCabSelect']");
-					if (!listTr || listTr.length == 0) {alert(CabinetMessages.strSelect2); return;}
+					var listSelTr  = shareTable.querySelectorAll("tr[class='bnkCabSelect']");
+					var listTr     = shareTable.querySelectorAll("tr[class='bnkCabNormal']");
+					if (!listSelTr || listSelTr.length == 0) {alert(CabinetMessages.strSelect2); return;}
 						
 					if (confirm(CabinetMessages.strDelete4)) {
 						var userList = [];
-						
-						for(var i = 0, len = listTr.length; i < len; i++) {
-							var userId   = listTr[i].getAttribute("role");
-							var userType = convertUserType(listTr[i].getAttribute("userType"));
+						var otherList = [];
+
+						// 검색결과 중 사용자가 선택한 삭제할 공유자 리스트
+						for(var i = 0, len = listSelTr.length; i < len; i++) {
+							var userId   = listSelTr[i].getAttribute("role");
+							var userType = convertUserType(listSelTr[i].getAttribute("userType"));
 							userList.push({userId: userId, userType : userType});
 						}
-						
+
+						// 검색결과 중 삭제할 공유자를 제외한 나머지 공유자 리스트
+						for (var i = 0, len = listTr.length; i < len; i++) {
+							var userId   = listTr[i].getAttribute("role");
+							var userType = convertUserType(listTr[i].getAttribute("userType"));
+							var perSlBox = listTr[i].children[2].firstElementChild;
+							var subSlBox = listTr[i].children[3].firstElementChild;
+							var permiss  = perSlBox.options[perSlBox.selectedIndex].value;
+							var subPerm  = subSlBox.options[subSlBox.selectedIndex].value;
+							otherList.push({userId: userId, userType : userType, permis: permiss, subPerm: subPerm, searchFlag: 'N'});
+						}
+						// 검색결과 이외의 공유자와 함께 저장해줌.
+						var allList = remainList.concat(otherList);
+						saveData(allList);
+
 						var url  = "/ezCabinet/modifyShareUserList.do";
 						var data = {"cabinetId" : cabinetId, "mode" : "delete", "userList" : JSON.stringify(userList)};
 						makeAjaxCall(data, "POST", url, handleModify, null, null, null);
+						status = "delete";
 					}
 				}
 				
@@ -127,20 +176,29 @@
 					var shareTable = document.getElementById("sharedTable");
 					var listTr     = shareTable.rows;
 					var userList   = [];
-					
-					for (var i = 1, len = listTr.length; i < len; i++) {
-						var userId   = listTr[i].getAttribute("role");
-						var userType = convertUserType(listTr[i].getAttribute("userType"));
-						var perSlBox = listTr[i].children[2].firstElementChild;
-						var subSlBox = listTr[i].children[3].firstElementChild;
-						var permiss  = perSlBox.options[perSlBox.selectedIndex].value;
-						var subPerm  = subSlBox.options[subSlBox.selectedIndex].value;
-						userList.push({userId: userId, userType : userType, permis: permiss, subPerm: subPerm});
+					if (listTr[1].textContent.includes(CabinetMessages.strNoData)) {
+						alert("저장할 공유자가 없습니다.");
+						return;
+					} else {
+						for (var i = 1, len = listTr.length; i < len; i++) {
+							var userId   = listTr[i].getAttribute("role");
+							var userType = convertUserType(listTr[i].getAttribute("userType"));
+							var perSlBox = listTr[i].children[2].firstElementChild;
+							var subSlBox = listTr[i].children[3].firstElementChild;
+							var permiss  = perSlBox.options[perSlBox.selectedIndex].value;
+							var subPerm  = subSlBox.options[subSlBox.selectedIndex].value;
+							userList.push({userId: userId, userType : userType, permis: permiss, subPerm: subPerm, searchFlag: 'N'});
+						}
+						// 검색결과 이외의 공유자와 함께 저장해줌.
+						var allList = remainList.concat(userList);
+						saveData(allList);
+						afterModifySuccessfully();
+
+						/*var url  = "/ezCabinet/modifyShareUserList.do";
+						var data = {"cabinetId" : cabinetId, "mode" : "change", "userList" : JSON.stringify(userList)};
+						makeAjaxCall(data, "POST", url, afterModifySuccessfully, null, null, null);*/
+						status = "change";
 					}
-					
-					var url  = "/ezCabinet/modifyShareUserList.do";
-					var data = {"cabinetId" : cabinetId, "mode" : "change", "userList" : JSON.stringify(userList)};
-					makeAjaxCall(data, "POST", url, afterModifySuccessfully, null, null, null);
 				}
 				
 				function makeAjaxCall(ajaxData, ajaxType, ajaxUrl, handleSuccess, handleError, asyncMode, moreParam) {

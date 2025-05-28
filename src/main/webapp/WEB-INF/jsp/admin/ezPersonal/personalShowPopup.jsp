@@ -6,7 +6,8 @@
 	<head>
 		<title><spring:message code = 'ezPersonal.t157' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezPersonal.e3', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -27,7 +28,7 @@
 				line-height:36px;
 		    }
 		    .popup_notice .notice_btnClose {right:8px;top:8px;}
-		    .empty_btn {height:44px;}
+		    .empty_btn {height:44px; background-color:#fff;}
 		</style>
 		
 		<script type="text/javascript">
@@ -104,7 +105,7 @@
 		</script>
 		
 	</head>
-	<body class = "popup_notice popup_type${skinValue}">
+	<body class = "popup_notice popup_type${skinValue}" style="overflow:hidden;">
 		<!--  popup 해더 사이즈 : 33px;	bottom 사이즈 : 49px;본문 내용 위아래 여백 : 54px;	총 height 사이즈 : 136px; -->
 		<form style="height:100%;">
 		<div class="popup_noticeLayout">
@@ -114,6 +115,9 @@
 			</dl>
 			<div class='popup_noticeList'>${content }</div>
 			<div class="empty_btn">
+				<div class="empty_div" style="height:425px;background-color:#fff;"></div>
+				<div class="notice_btn" style="border-radius:0px 0px 0px 0px"><p class="btn_checkbox">
+					<input type="checkbox" name="checkbox" class="inp_noticeCheck"><label class="name_type2" style="position:relative;top:4px;">하루 이 창 열지않기</label></p></div>
 			</div>
 		</div>
 		</form>

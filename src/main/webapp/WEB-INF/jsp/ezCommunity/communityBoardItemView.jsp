@@ -6,7 +6,8 @@
 	<head>
 		<title><spring:message code='ezBoard.t293' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" type="text/css" href="${util.addVer('ezCommunity.i1', 'msg')}">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezCommunity/common.js')}"></script>
@@ -62,38 +63,41 @@
 	    	var treeCtrl = "<c:out value='${treeCtrl}' />";
 	    	
 	    	window.onload = function () {
-	    	    try {
-	    	    	var html = "";
-					$.ajax({
-						type : "POST",
-						dataType : "text",
-						async : false,
-						url : "/ezCommon/mhtToHTMLContent.do",
-						data : { type	:	"COMMUNITYCONTENT", 
-								 href	:	strContentLocation,
-								 itemID	:	pItemID
-							   },
-						success: function(result){
-							html = result;
-						}
-					});
-					var doc = document.getElementById('message').contentWindow.document;
-					doc.open();
-					doc.write(html);
-					doc.close();
-					
-					/* 2020-01-15 홍승비 - 게시물 본문의 스타일 적용 시점 변경 */
-		    		$("#message").contents().find("body").css("word-wrap", "break-word");
-		    		//$("#message").contents().find("body").css("font-family", "Gulim, arial, verdana");
-					$("#message").contents().find("body").css("font-size", "13px");
-					
-// 					if (gubun == "2") {
-// 						$("#messagePad").css("height","460px");
-// 					} else {
-// 						$("#messagePad").contents().find("body").css("height", "430px");
-// 					}
-					
-	    	        AddLinkTarget();
+	    		try {
+	    			if (pUse_Editor != "HWP") {
+	    				var html = "";
+						$.ajax({
+							type : "POST",
+							dataType : "text",
+							async : false,
+							url : "/ezCommon/mhtToHTMLContent.do",
+							data : { type	:	"COMMUNITYCONTENT", 
+									 href	:	strContentLocation,
+									 itemID	:	pItemID
+								   },
+							success: function(result){
+								html = result;
+							}
+						});
+						var doc = document.getElementById('message').contentWindow.document;
+						doc.open();
+						doc.write(html);
+						doc.close();
+						
+						/* 2020-01-15 홍승비 - 게시물 본문의 스타일 적용 시점 변경 */
+			    		$("#message").contents().find("body").css("word-wrap", "break-word");
+			    		//$("#message").contents().find("body").css("font-family", "Gulim, arial, verdana");
+						$("#message").contents().find("body").css("font-size", "13px");
+						
+//	 					if (gubun == "2") {
+//	 						$("#messagePad").css("height","460px");
+//	 					} else {
+//	 						$("#messagePad").contents().find("body").css("height", "430px");
+//	 					}
+						
+		    	        AddLinkTarget();	
+		    	    }
+	    	        
 	    	        SetAttachmentInfo();
 
 	    	        if (OneLineReplyFlag == "1") {
@@ -118,19 +122,24 @@
 			
 	    	/* 2018-08-03 홍승비 - 커뮤니티 게시물(포토게시물 제외) 리사이즈 수정*/
 		    window.onresize = function () {
-		        if (gubun != "3") { 
-		            var contentHeight;
-		            if (gubun == "2") {
-		                contentHeight = document.documentElement.clientHeight - 261;
-		            } else {
-		                contentHeight = document.documentElement.clientHeight - 281;
-		            }
-		            if(contentHeight < 40){
-		            	contentHeight = 40;
-		            }
-		            document.getElementById("messagePad").style.height = contentHeight + "PX";
-		            document.getElementById("message").style.height = contentHeight + "PX";
-		        }
+		    	if (pUse_Editor != "HWP") {
+		    		if (gubun != "3") { 
+			            var contentHeight;
+			            if (gubun == "2") {
+			                contentHeight = document.documentElement.clientHeight - 261;
+			            } else {
+			                contentHeight = document.documentElement.clientHeight - 281;
+			            }
+			            if(contentHeight < 40){
+			            	contentHeight = 40;
+			            }
+			            document.getElementById("messagePad").style.height = contentHeight + "PX";
+			            document.getElementById("message").style.height = contentHeight + "PX";
+			        }
+		    	} else {
+		    		var mHeight = document.getElementById("messagePad").clientHeight - 27 + "px";
+		    		message.Resize(mHeight);
+		    	}
 		    };
 	    	
 	        function AddLinkTarget() {
@@ -481,7 +490,7 @@
 	                var protocol = window.location.protocol;
 	                var serverName = window.location.hostname;
 
-	                strAttach = strAttach + "<input type='checkbox' name='fileSelect' value='" + filenameView + "' filehref=\"/ezCommunity/getCommunityAttachInfo.do?fileName=" + encodeURIComponent(filenameOrg) + "&filePath=" + encodeURIComponent(filepath)  + "\">";
+	                strAttach = strAttach + "<input type='checkbox' name='fileSelect' value='" + filenameView + "' filepath='"+ filepath +"' filehref=\"/ezCommunity/getCommunityAttachInfo.do?fileName=" + encodeURIComponent(filenameOrg) + "&filePath=" + encodeURIComponent(filepath)  + "\">";
 	                strAttach = strAttach + "<img src='" + fileImage + "'> <a href=/ezCommunity/getCommunityAttachInfo.do?fileName=" + encodeURIComponent(filenameOrg) + "&filePath=" + encodeURIComponent(filepath) + ">";
 	                strAttach = strAttach + filenameView + "&nbsp;(" + filesize + ")</a><br>";
 	            }
@@ -519,25 +528,14 @@
 	        }
 
 	        function attach_Download_Cross() {
-	            var param = { "href": new Array(), "name": new Array() };
-	            var count = 0;
-
-	            var checks = document.getElementById('lstAttachLink').getElementsByTagName("input");
-
-	            for (var i = 0; i < checks.length; i++) {
-	                if (checks.item(i).checked == true) {
-	                    count++;
-	                }
-	            }
-	            if (count == 0) {
-	                alert("<spring:message code='ezCommunity.t184'/>");
-				    return;
-				}
-	            downloadAll(checks);
+		        var checks = document.getElementById('lstAttachLink');
+		        //downloadAll(checks);
+		        AttachAllDownload(checks);
 	        }
 
 	        var suffix = 0;
 	        function downloadAll(checks) {
+	        	checks = checks.getElementsByTagName("input");
 	            if (checks.item(suffix)) {
 	                if (checks.item(suffix).checked) {
 	                    location.href = checks.item(suffix++).getAttribute("filehref");
@@ -552,6 +550,45 @@
 	                suffix = 0;
 	        }
 
+		    /* 2020-01-30 홍승비 - 체크한 파일이 1개 이상인 경우, zip 파일로 다운받는 함수 */
+	        function AttachAllDownload(checks) {
+	            var checkedFiles = $("#lstAttachLink").find("input:checkbox[name='fileSelect']:checked");
+	            var checkedFilesLength = checkedFiles.length;
+	            var filePath = ""; // 전체파일경로
+	            var filePathTemp = "";
+				var fileNames = ""; // 파일이름
+				var fileNamesUID = ""; // 파일이름(UID 포함)
+				
+				if (checkedFilesLength == 1) { // 하나만 저장
+					downloadAll(checks);
+				}
+				else if (checkedFilesLength > 1) { // 여러개는 zip으로 저장
+					filePath = GetAttribute(checkedFiles.get(0), "filepath");
+					filePath = filePath.substr(0, filePath.lastIndexOf("/") + 1);
+					
+					for (var i = 0; i < checkedFilesLength; i++) {
+						filePathTemp = GetAttribute(checkedFiles.get(i), "filepath"); // 각 파일의 풀경로
+						fileNames += MakeXMLString(checkedFiles.get(i).value) + ":"; // 각 파일의 이름을 :로 이어붙인 것
+						fileNamesUID += MakeXMLString(filePathTemp.substr(filePathTemp.lastIndexOf("/"), filePathTemp.length)) + ":"; // 각 파일의 이름+UID를 :로 이어붙인 것
+					}
+					
+					var $frm = $("<form></form>");
+			    	$frm.attr('action', "/ezCommunity/downloadAttachAll.do");
+			    	$frm.attr('method', 'post');
+			    	$frm.appendTo('body');
+			
+			    	param1 = $('<input type="hidden" value="' + filePath + '" name="filePath" />');
+			    	param2 = $("<input type='hidden' value='" + fileNames + "' name='fileNames' />");
+			    	param3 = $("<input type='hidden' value='" + fileNamesUID + "' name='fileNamesUID' />");
+			    	
+			    	$frm.append(param1).append(param2).append(param3);
+			    	$frm.submit();
+				}
+				else { // 체크된 파일 없음
+					return;
+				}
+	        }
+		    
 	        function MemberInfo_onclick(pUserID) {
 	            var feature = "height=290px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
 	            feature = feature + GetOpenPosition(420, 290);
@@ -923,6 +960,23 @@
 			    });
 	        }
 	        
+	        function Editor_Complete() {
+	        	var URL;
+                URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(strContentLocation);
+                message.Open(URL, "", "", function (res) { FieldsAvailable(res.result) }, null);
+	        }
+	        
+	        function FieldsAvailable(isTrue) {
+	        	if (isTrue) {
+	        		message.EditMode(0);
+	        		message.ShowToolBar(false);
+	        		message.ShowRibbon(false);
+					message.SetViewProperties(2, 100);
+		            message.ScrollPosInfo(0, 0);
+		            window.onresize();
+	        	}
+	        }
+	        
 		</script>
 	</head>
 	<body class = "popup">
@@ -1109,18 +1163,34 @@
 	            </td>
 	        </tr>
 	        <tr> 
-	        <c:choose>
-	        	<c:when test="${boardInfo.gubun == '2'}"> 
-	            	<td class="pad1" id="messagePad" style="vertical-align:top; height:460px">
-	          			<iframe id="message" class="viewbox" name="message" style="padding:0; height:100%; width:100%; overflow:auto; border:1px solid #ddd;"></iframe>
-	            	</td>
-            	</c:when>
-            	<c:otherwise>
-	           		<td class="pad1" id="messagePad" style="vertical-align:top; height:440px">
-	          			<iframe id="message" class="viewbox" name="message" style="padding:0; height:100%; width:100%; overflow:auto; border:1px solid #ddd;"></iframe>
-	            	</td>
-            	</c:otherwise>
-			</c:choose>
+		        <c:if test="${useEditor ne 'HWP'}">
+		        	<c:choose>
+			        	<c:when test="${boardInfo.gubun == '2'}"> 
+			            	<td class="pad1" id="messagePad" style="vertical-align:top; height:460px">
+			          			<iframe id="message" class="viewbox" name="message" style="padding:0; height:100%; width:100%; overflow:auto; border:1px solid #ddd;"></iframe>
+			            	</td>
+		            	</c:when>
+		            	<c:otherwise>
+			           		<td class="pad1" id="messagePad" style="vertical-align:top; height:440px">
+			          			<iframe id="message" class="viewbox" name="message" style="padding:0; height:100%; width:100%; overflow:auto; border:1px solid #ddd;"></iframe>
+			            	</td>
+		            	</c:otherwise>
+					</c:choose>
+		        </c:if>
+		        <c:if test="${useEditor eq 'HWP'}">
+		        	<c:choose>
+			        	<c:when test="${boardInfo.gubun == '2'}"> 
+			            	<td class="pad1" id="messagePad" style="vertical-align:top; height:460px">
+			          			<iframe id="message" class="viewbox" src="/ezCommunity/WHWPEditor.do?type=${mode}" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto; border:1px solid #ddd;"></iframe>
+			            	</td>
+		            	</c:when>
+		            	<c:otherwise>
+			           		<td class="pad1" id="messagePad" style="vertical-align:top; height:440px">
+			          			<iframe id="message" class="viewbox" src="/ezCommunity/WHWPEditor.do?type=${mode}" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto; border:1px solid #ddd;"></iframe>
+			            	</td>
+		            	</c:otherwise>
+					</c:choose>
+		        </c:if>
 	        </tr>
 
 			<tr>

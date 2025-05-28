@@ -4,7 +4,8 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<link rel="stylesheet" href="${util.addVer('ezPersonal.e3', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -78,6 +79,7 @@
 		            case "bujaeGTab": ManageBujaeG_ini(); break;
 		            case "signTab": sign_ini(); break;
 		            case "shareTab": ManageShare_ini(); break;
+					case "autoSaveTab": ManageAutoSave_ini(); break;
 		        }
 		    }
 		    
@@ -100,6 +102,10 @@
 		    function ManageShare_ini() {
 		    	document.getElementById("mainframe").src = "/ezPersonal/manageShare.do";
 		    }
+
+			function ManageAutoSave_ini() {
+				document.getElementById("mainframe").src = "/ezPersonal/manageAutoSave.do";
+			}
 		</script>
 	    <title><spring:message code='ezPersonal.t999900008'/></title>
 	</head>
@@ -113,6 +119,9 @@
 	            <c:if test="${useShareApproval == 'YES' && approvalFlag == 'S'}">
 		            <p><span id="1tab6" divname="shareTab"><spring:message code='ezApprovalG.bhs19'/></span></p>
 	            </c:if>
+				<c:if test="${approvalFlag == 'G' && autoSaveFlag == 'YES'}">
+					<p><span id="1tab7" divname="autoSaveTab"><spring:message code='ezApprovalG.kmh08'/></span></p>
+				</c:if>
 	        </div>
 	    </div>
 	    <div>

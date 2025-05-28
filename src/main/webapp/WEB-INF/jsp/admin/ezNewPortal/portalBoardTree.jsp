@@ -7,7 +7,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title><spring:message code='ezNewPortal.t048' /></title>
-<link rel="stylesheet"  href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css">
+<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 <link rel="stylesheet"  href="${util.addVer('/js/dist/themes/default/style.min.css')}" type="text/css">
 
 <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -47,6 +48,10 @@
     </div>
 <script type="text/javascript">
 var board_alertArguments = new Array();
+var portletCode = "<c:out value="${portletCode}"/>"
+var portletBoardId = "<c:out value="${portletBoardId}"/>"
+var portletBoardGroupID = "<c:out value="${portletBoardGroupID}"/>"
+var findBoard = false;
 
 $(function(){
 	$("#close").on("click", function(){
@@ -54,7 +59,72 @@ $(function(){
 	});
 	
 	eventSetting();
+
+	/* 2025-01-23 김유진 - 게시판그룹명 > div -> li 기존 게시판 id 찾기 */
+	if (portletBoardId !== "" && portletBoardGroupID !== "" ) {
+		var h2s = document.getElementById("TopBoards").getElementsByClassName("boardTop");
+		for (var i = 0 ; i < h2s.length ; i++) {
+			if (h2s[i].getAttribute("data1") == portletBoardGroupID) {
+				LoadTreeViewByPath(h2s[i], portletBoardId, portletBoardGroupID);
+			}
+		}
+		return;
+	}
 });
+
+function LoadTreeViewByPath(pObjSpan, pBoardID, pBoardGroupID) {
+	pObjSpan.click();
+	setTimeout(function() {
+		divId = pObjSpan.getAttribute("id").replace("board", "boardSub");
+		var lis = document.getElementById(divId).getElementsByClassName("jstree-node");
+	
+		var cnt = lis.length;
+		for (var i = 0; i < cnt; i++) {
+			if (findBoard) {
+				break;
+			}
+			
+			if (portletBoardId === lis[i].getAttribute("id")) {
+				document.getElementById(portletBoardId + "_anchor").click();
+				findBoard = true;
+				break;
+			}
+			else {
+				// 하위 게시판들에서 기존 게시판 id 찾기
+				clickUntilLeaf(lis[i]);
+			}
+		}
+	}, 900);
+}
+
+function clickUntilLeaf(node) {
+	if (!node.classList.contains("jstree-leaf")) {
+		var jstreeOcl = node.querySelector("i.jstree-ocl");
+		if (jstreeOcl) {
+			jstreeOcl.click();
+			var childNodes = node.querySelectorAll("ul > li");
+			for (var i = 0; i < childNodes.length; i++) {
+				if (findBoard) {
+					break;
+				}
+				if (portletBoardId === childNodes[i].getAttribute("id")) {
+					if (document.getElementById(portletBoardId + "_anchor")) {
+						document.getElementById(portletBoardId + "_anchor").click();
+					}
+					findBoard = true;
+					break;
+				} else {
+					// 하위 게시판들에서 기존 게시판 id 찾기
+					clickUntilLeaf(childNodes[i]);
+					// 열려있어야 하위 폴더트리 사용 가능, 다 사용 후 닫아주기
+					if (!findBoard && i === childNodes.length-1) {
+						jstreeOcl.click();
+					}
+				}
+			}
+		}
+	}
+}
 
 var eventSetting = function() {
 	$("#selBoard").on("click", selectBoard);
@@ -87,7 +157,7 @@ var selectBoard = function(event) {
 			var portletId = "<c:out value='${portletId}'/>";
 			var gubun = selBoard.attr("gubun");
 		
-			if (portletId == 9 && (gubun != 3 && gubun != 4)) {
+			if ((portletId == 9 || portletCode == "mPhotoboard") && (gubun != 3 && gubun != 4)) {
 		    	var url = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezNewPortal.t051' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezNewPortal.t051' />") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
 				DivPopUpShow(330, 205, url);
 				return;
@@ -110,6 +180,16 @@ var selectBoard = function(event) {
 				window.opener.document.getElementById("portletBoard" + portletId).value =  boardName;
 				window.opener.document.getElementById("portletBoard" + portletId).setAttribute("value", boardName);
 				window.opener.document.getElementById("portletBoard" + portletId).setAttribute("data1", selBoard);
+			}
+
+			// 게시판 포틀릿 형태 관련 on off
+			if (!!window.opener.switchBoardViewTypeRow) {
+				var id = portletId !== "null" ? portletId : "";
+				window.opener.switchBoardViewTypeRow(id, false);
+				window.opener.resetBoardUrl(id);
+				if (gubun == 0) {
+					window.opener.switchBoardViewTypeRow(id, true);
+				}
 			}
 			
 			window.close();

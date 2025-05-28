@@ -536,7 +536,7 @@ function onrscGetDeclineRequest()
 		}
 		else
 		{
-			alert("Error " + m_xmlHTTP.status +	": " + m_xmlHTTP.statusText);		 
+			alert("Error " + m_xmlHTTP.status);
 		}
 	}
 }

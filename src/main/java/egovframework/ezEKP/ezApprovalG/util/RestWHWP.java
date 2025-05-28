@@ -2,7 +2,6 @@ package egovframework.ezEKP.ezApprovalG.util;
 
 import com.google.gson.*;
 import org.apache.commons.lang3.StringUtils;
-import org.hsqldb.lib.StringUtil;
 import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
@@ -89,7 +88,7 @@ public class RestWHWP {
     }
 
     public RestWHWP savePdf(String outFilePath) {
-        if (StringUtil.isEmpty(outFilePath)) {
+        if (outFilePath == null || outFilePath.trim().isEmpty()) {
             throw new IllegalArgumentException("outFilePath is empty");
         } else if (!StringUtils.substringAfterLast(outFilePath, ".").equalsIgnoreCase("pdf")) {
             throw new IllegalArgumentException("savePdf() outFilePath must be end with .pdf");
@@ -98,7 +97,7 @@ public class RestWHWP {
     }
 
     public RestWHWP saveHwp(String outFilePath) {
-        if (StringUtil.isEmpty(outFilePath)) {
+        if (outFilePath == null || outFilePath.trim().isEmpty()) {
             throw new IllegalArgumentException("outFilePath is empty");
         } else if (!StringUtils.substringAfterLast(outFilePath, ".").equalsIgnoreCase("hwp")) {
             throw new IllegalArgumentException("savePdf() outFilePath must be end with .hwp");

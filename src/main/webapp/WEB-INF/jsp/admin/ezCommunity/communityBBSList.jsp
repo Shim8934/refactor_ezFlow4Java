@@ -7,7 +7,8 @@
 	<head>
 		<title><spring:message code = 'ezCommunity.t28' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezCommunity.i1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<style> 
 	        .pagetd {
 	        	padding-top:6px;
@@ -53,7 +54,7 @@
 			function refresh_onclick() {
 				window.location.reload(false);
 			}
-			
+
 			function search() {
 				if (document.page.s_radio.value == "title" ) {
 					var strSearch = "sRadio=title&keyword=" + encodeURIComponent(document.page.keyword.value);
@@ -66,7 +67,12 @@
 				
 				// key파마리터 없어도 되므로 삭제
 				strSearch = strSearch + "&code=" + "<c:out value = '${code}' />" + "&bName=" + "<c:out value = '${bName}' />";
-				window.location.href = "/admin/ezCommunity/bbsList.do?" + strSearch;
+				window.location.href = "/admin/ezCommunity/bbsList.do?" + strSearch + "&companyID=" + encodeURIComponent(companySelectID);
+			}
+
+			function changeCompany() {
+				document.page.keyword.value = "";
+				search();
 			}
 	
 			function comm_searchCheck() {
@@ -90,29 +96,29 @@
 	            var strtext;
 	            var PagingHTML = "";
 	            document.getElementById("tblPageRayer").innerHTML = "";
-	            document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + totalCount + "</span>";
+	            document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span class='txt_color'>" + totalCount + "</span>";
 	            strtext = "<div class='pagenavi'>";
 	            PagingHTML += strtext;
 	            var pageNum = CurPage;
 	            
 	            if (totalPage > 1 && pageNum != 1) {
-	                strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif'></span>";
+	                strtext = "<span class='btnimg first' onclick= 'return goToPageByNum(1)'></span>";
 	                PagingHTML += strtext;
 	            } else {
-	                strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif'></span>";
+	                strtext = "<span class='btnimg first disabled'></span>";
 	                PagingHTML += strtext;
 	            }
 	            
 	            if (totalPage > BlockSize) {
 	                if (pageNum > BlockSize) {
-	                    strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif'></span>";
+	                    strtext = "<span class='btnimg prev' onclick= 'return selbeforeBlock()'></span>";
 	                    PagingHTML += strtext;
 	                } else {
-	                    strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif'></span>";
+	                    strtext = "<span class='btnimg prev disabled'></span>";
 	                    PagingHTML += strtext;
 	                }
 	            } else {
-	                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif'></span>";
+	                strtext = "<span class='btnimg prev disabled'></span>";
 	                PagingHTML += strtext;
 	            }
 	            
@@ -143,24 +149,24 @@
 	            if (totalPage > BlockSize) {
 	                if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
 	                    strtext = "";
-	                    strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif'></span>";
+	                    strtext = strtext + "<span class='btnimg next' onclick='return selafterBlock()'></span>";
 	                    PagingHTML += strtext;
 	                } else {
 	                    strtext = "";
-	                    strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+	                    strtext = strtext + "<span class='btnimg next disabled'></span>";
 	                    PagingHTML += strtext;
 	                }
 	            } else {
 	                strtext = "";
-	                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif'></span>";
+	                strtext = strtext + "<span class='btnimg next disabled'></span>";
 	                PagingHTML += strtext;
 	            }
 	            
 	            if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-	                strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif'></span>";
+	                strtext = "<span class='btnimg last' onclick='return goToPageByNum(" + totalPage + ")'></span>";
 	                PagingHTML += strtext;
 	            } else {
-	                strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif'></span>";
+	                strtext = "<span class='btnimg last disabled'></span>";
 	                PagingHTML += strtext;
 	            }
 	            
@@ -231,9 +237,9 @@
 			    feature = feature + GetOpenPosition(760, 720);
 			    
 			    if (CrossYN()) {
-			        window.open("/ezCommunity/board/bbsEditNew.do?mode=write&bName=" + bName, "", feature);
+			        window.open("/ezCommunity/board/bbsEditNew.do?mode=write&companyID=" + encodeURIComponent(companySelectID) + "&bName=" + bName, "", feature);
 			    } else {
-		            window.open("/ezCommunity/board/bbsEditNew.do?mode=write&bName=" + bName, "", feature);
+		            window.open("/ezCommunity/board/bbsEditNew.do?mode=write&companyID=" + encodeURIComponent(companySelectID) + "&bName=" + bName, "", feature);
 			    }
 			}
 			
@@ -263,17 +269,24 @@
 	</head>
 	
 	<body class="mainbody">
+	<h1>
 		<c:choose>
 			<c:when test="${bName == 'tbl_c_notice' }">
-				<h1><spring:message code='ezCommunity.khj07'/><span id="mailBoxInfo"></span></h1>
+				<spring:message code='ezCommunity.khj07'/>
 			</c:when>
 			<c:when test="${bName == 'tbl_c_board' }">
-				<h1><spring:message code='ezCommunity.khj07'/><span id="mailBoxInfo"></span></h1>
+				<spring:message code='ezCommunity.khj07'/>
 			</c:when>
 			<c:otherwise>
-				<h1><c:out value = '${titleName}' /><span id="mailBoxInfo"></span></h1>
+				<c:out value='${titleName}'/>
 			</c:otherwise>
 		</c:choose>
+		<span id="mailBoxInfo"></span>
+		<jsp:include page="/WEB-INF/jsp/admin/companySelect.jsp">
+			<jsp:param name="companySelectID" value="${companySelectID}"/>
+		</jsp:include>
+	</h1>
+	</body>
 	
 		<div id="mainmenu">
   			<ul>

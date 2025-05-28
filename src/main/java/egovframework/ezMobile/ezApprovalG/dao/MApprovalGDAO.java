@@ -9,7 +9,7 @@ import egovframework.ezMobile.ezApprovalG.vo.*;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
-import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("MApprovalGDAO")
 public class MApprovalGDAO extends EgovAbstractDAO {

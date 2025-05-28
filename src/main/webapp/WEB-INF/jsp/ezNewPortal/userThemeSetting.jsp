@@ -7,7 +7,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>User Theme Setting</title>
-<link rel="stylesheet"  href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css">
+<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 <link rel="stylesheet"  href="${util.addVer('/css/ezNewPortal/jquery.flipster.min.css')}" type="text/css">
 <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezNewPortal/jquery-flipster-master/dist/jquery.flipster.min.js')}"></script>
@@ -120,20 +121,22 @@ function updateUserThemeSetting(event) {
 	<div id="themeList">
 		<ul>
 			<c:forEach items="${themeList }" var="theme">
-				<li data-flip-title="${theme.themeName }" id="T${theme.themeId }">
-					<div class="themeImage">
-						<img src="/images/ezNewPortal/themeImg/${imgFolder }/Theme${theme.themeId }.png" class="themeImg">
-						<c:choose>
-							<c:when test="${theme.themeId eq usedTheme }">
-								<div id="usedTheme"><span>"<spring:message code='ezNewPortal.t036' />"</span></div>	
-							</c:when>
-							<c:otherwise>
-								<div class="btnpositionJsp"><a class="imgbtn"><span><spring:message code='ezNewPortal.t037' /></span></a></div>
-							</c:otherwise>
-						</c:choose>
-					</div>
-					<p class="themeContent">${theme.themeContent}</p>
-				</li>
+				<c:if test="${theme.themeId ne 4}">
+					<li data-flip-title="${theme.themeName }" id="T${theme.themeId }">
+						<div class="themeImage">
+							<img src="/images/ezNewPortal/themeImg/${imgFolder }/Theme${theme.themeId }.png" class="themeImg">
+							<c:choose>
+								<c:when test="${theme.themeId eq usedTheme }">
+									<div id="usedTheme"><span>"<spring:message code='ezNewPortal.t036' />"</span></div>	
+								</c:when>
+								<c:otherwise>
+									<div class="btnpositionJsp"><a class="imgbtn"><span><spring:message code='ezNewPortal.t037' /></span></a></div>
+								</c:otherwise>
+							</c:choose>
+						</div>
+						<p class="themeContent">${theme.themeContent}</p>
+					</li>
+				</c:if>
 			</c:forEach>
 		</ul>
 	</div>

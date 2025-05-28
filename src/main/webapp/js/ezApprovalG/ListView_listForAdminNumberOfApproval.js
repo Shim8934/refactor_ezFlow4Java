@@ -821,7 +821,7 @@ function ListView() {
                     }
                     else if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "ISPUBLIC") {
                         objTd.style.textAlign = "center";
-                        if (SelectSingleNodeValue(oCells[j], "ISPUBLIC") != "Y") {
+                        if (SelectSingleNodeValue(oCells[j], "ISPUBLIC") == "N") {
                             var _img = document.createElement("img");
                             _img.src = "/images/icon_lock.png";
                             objTd.appendChild(_img);

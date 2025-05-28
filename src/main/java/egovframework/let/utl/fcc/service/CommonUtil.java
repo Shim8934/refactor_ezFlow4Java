@@ -36,19 +36,23 @@ import java.lang.reflect.Method;
 import java.math.BigInteger;
 import java.net.URI;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.MessageDigest;
+import java.security.SecureRandom;
 import java.text.DecimalFormat;
 import java.text.Normalizer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -61,10 +65,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.Random;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import javax.annotation.PostConstruct;
@@ -91,16 +97,33 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
+import egovframework.ezEKP.ezOrgan.vo.OrganAuth.AdminAuth;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.logging.log4j.util.Strings;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.XML;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -114,10 +137,12 @@ import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
+import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.web.util.WebUtils;
 import org.w3c.dom.Document;
@@ -296,17 +321,34 @@ public class CommonUtil {
 				
 		return src;		
 	}
+
+    public Matcher getMatcherForStripScriptTagsAndFunctions(String src) {
+		// dhlee: 20240420 - ( 뿐 아니라 ` 기호일 때도 alert 함수가 실행되어 ` 문자도 추가함
+		// dhlee: 20240718 - (가 &#40;로 변경된 경우가 있어 &#40;와 &#41;에 대한 처리를 추가함
+		Pattern p = Pattern.compile("<(object|applet|script).*?>|</(object|applet|script).*?>|alert([ ]*?/\\*.*?\\*/[ ]*?)?[(`].*?[)`]|alert([ ]*?/\\*.*?\\*/[ ]*?)?&#40;.*?&#41;|confirm([ ]*?/\\*.*?\\*/[ ]*?)?[(`].*?[)`]|confirm([ ]*?/\\*.*?\\*/[ ]*?)?&#40;.*?&#41;|prompt([ ]*?/\\*.*?\\*/[ ]*?)?[(`].*?[)`]|prompt([ ]*?/\\*.*?\\*/[ ]*?)?&#40;.*?&#41;|window.*?location",
+						Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+		return p.matcher(src);
+	}
     
-    public String stripScriptTagsAndFunctions(String src) {
-    	if (src != null && !src.isEmpty()) {
-	        Pattern p = Pattern.compile("<(object|applet|script).*?>|</(object|applet|script).*?>|alert([ ]*?/\\*.*?\\*/[ ]*?)?\\(.*?\\)|confirm([ ]*?/\\*.*?\\*/[ ]*?)?\\(.*?\\)|prompt([ ]*?/\\*.*?\\*/[ ]*?)?\\(.*?\\)|window.*?location",
-	        				Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
-	        Matcher m = p.matcher(src);
+	public String stripScriptTagsAndFunctions(String src) {
+		if (src != null && !src.isEmpty()) {
+			Matcher m = getMatcherForStripScriptTagsAndFunctions(src);
 	        src = m.replaceAll("");
     	}
 
         return src;
     }
+
+    public boolean hasStripScriptTagsAndFunctions(String src) {
+		Matcher m = getMatcherForStripScriptTagsAndFunctions(src);
+		boolean result = m.matches();
+
+		if (result) {
+			logger.debug("src={}", src);
+		}
+
+		return result;
+	}
 
 	public String stripTagSymbols(String src) {
 		if (src != null && !src.isEmpty()) {
@@ -315,7 +357,15 @@ public class CommonUtil {
 
 		return src;
 	}
-    
+
+	public String convertTagSymbols(String src) {
+		if (src != null && !src.isEmpty()) {
+			src = src.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+		}
+
+		return src;
+	}
+
 	public byte[] readBytesFromFile(Path path) throws IOException {
 		String pathStr = path.toString();
 
@@ -370,7 +420,7 @@ public class CommonUtil {
 		try{
 			String decData = getDecryptedLoginCookie(loginCookie);
 
-			String[] decDataArray = decData.split("///");
+			String[] decDataArray = decData.split("///", -1);
 			String serverName = decDataArray[0];
 			String userID = decDataArray[1];
 			String locale = decDataArray[5];
@@ -380,19 +430,34 @@ public class CommonUtil {
             String tenantIdStr = "0";
             
             String deptID = "";
-            
+			String companyID = "";
+			String jobID = "";
+			String roleID = "";
+
             if (decDataArray.length >= 9) {
                 tenantIdStr = decDataArray[8];	
             }
             if(decDataArray.length >= 10) {
             	deptID = decDataArray[9];
             }
+			if(decDataArray.length >= 11) {
+				companyID = decDataArray[10];
+			}
+			if(decDataArray.length >= 12) {
+				jobID = decDataArray[11];
+			}
+			if(decDataArray.length >= 13) {
+				roleID = decDataArray[12];
+			}
 			
 			LoginVO login = new LoginVO();
 			login.setId(userID);
 			login.setDn("NOPASSWORD");
 			login.setTenantId(Integer.parseInt(tenantIdStr));
 			login.setDeptID(deptID);
+			login.setCompanyID(companyID);
+			login.setJobId(jobID);
+			login.setRoleId(roleID);
 			
 			LoginVO user = loginService.selectUser(login);
 	
@@ -471,9 +536,7 @@ public class CommonUtil {
 		String decData = "";
 
 		try {
-			boolean useDbSession = "YES".equalsIgnoreCase(config.getProperty("config.UseDbSession"));
-
-			if (useDbSession) {
+			if (loginCookie.length() == 36) {
 				String ezSessionId = loginCookie;
 				SessionVO resultVO = loginService.getSession(ezSessionId);
 
@@ -570,15 +633,39 @@ public class CommonUtil {
 			return new LoginVO();
 		}
 	}
+
+	public LoginVO checkAdminOld(String loginCookie){
+		try{
+			LoginVO user = userInfo(loginCookie);
+
+			if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1){
+				return null;
+			}else{
+				return user;
+			}
+		}catch(Exception e){
+			return null;
+		}
+	}
 	
 	public LoginVO checkAdmin(String loginCookie){
 		try{
 			LoginVO user = userInfo(loginCookie);
+			
+			// ezSyncServer가 ezFlow를 호출하는 경우엔 loginCookie에 부서 아이디가 없어
+			// 이 경우엔 이전 방식으로 관리자 권한을 체크하도록 함
+			if (user.getDeptID() == null || user.getDeptID().isEmpty()) {
+				return checkAdminOld(loginCookie);
+			}
+			
+			OrganAuth organAuth = makeOrganAuth(user.getId(), user.getTenantId(), user.getDeptID(), user.getJobId());
 	
-			if (!isAdmin(user.getId(), user.getTenantId(), user.getRollInfo(), "c;k")) {
-				return null;
-			}else{
+			if (organAuth.isAuth(AdminAuth.ADMIN_MASTER)) {
 				return user;
+			} else if (organAuth.isAuth(AdminAuth.COMPANY_MANAGER)){
+				return user;
+			} else {
+				return null;
 			}
 		}catch(Exception e){
 			return null;
@@ -786,31 +873,45 @@ public class CommonUtil {
 		boolean useDbSession = "YES".equalsIgnoreCase(config.getProperty("config.UseDbSession"));
 
 		if (!useDbSession && (!usingSession || usingAsAPI || isLoopbackRequest)) {
-			return validLoginCookie(request, response);
+			return "0".equals(validLoginCookie(request, response));
 		}
 
 		return validSessionLoginCookie(request, response);
 	}
 
-	private boolean validLoginCookie(HttpServletRequest request,  HttpServletResponse response) {
+	private String validLoginCookie(HttpServletRequest request,  HttpServletResponse response) {
+		
+		String result = "0"; //  0 : 유효한 쿠키 , 1 : 세션 만료 , 2 :  쿠키 만료 및 예외 , 3 :  부서 및 직위 등 조직도 정보 변경
+		
 		Cookie loginCookie = WebUtils.getCookie(request, "loginCookie");
 
 		if (loginCookie == null) {
-			return false;
+			result = "2";
+			
+			return result;
 		}
 
 		try {
 			String ip = ClientUtil.getClientIP(request);
 			String decryptedLoginCookie = getDecryptedLoginCookie(loginCookie.getValue());
 
+			// 2024-09-02 - db 세션 사용 시에는 ip check 생략 함
+			if ("YES".equalsIgnoreCase(config.getProperty("config.UseDbSession"))) {
+				return checkDeptId(decryptedLoginCookie) ? "0" : "3"; // 조직도 정보 변경 여부
+			}
+
 			// 복호화된 로그인 쿠키는 "///" 구분자로 여러 정보가 담겨있으며 그 중 4번째가 클라이언트의 IP이다.
-			return decryptedLoginCookie.split("///")[3].equals(ip) && checkDeptId(decryptedLoginCookie);
+			if(!decryptedLoginCookie.split("///")[3].equals(ip)){
+				result = "2";
+			} else {
+				result = checkDeptId(decryptedLoginCookie) ? "0" : "3"; // 조직도 정보 변경 여부
+			}
 		} catch (Exception e) {
 			clearAllCookies(request, response); // 오류발생 시 쿠키를 삭제하도록 수정
 			logger.error(e.getMessage(), e);
 		}
 
-		return false;
+		return result;
 	}
 
 	private boolean validSessionLoginCookie(HttpServletRequest request, HttpServletResponse response) {
@@ -823,7 +924,7 @@ public class CommonUtil {
 			return false;
 		}
 
-		return validLoginCookie(request, response);
+		return "0".equals(validLoginCookie(request, response));
 	}
 
 	private void clearAllCookies(HttpServletRequest request, HttpServletResponse response) {
@@ -854,26 +955,30 @@ public class CommonUtil {
 	}
 
 	public boolean checkDeptId(String cValue){
-		String[] decDataArray = cValue.split("///");
+		String[] decDataArray = cValue.split("///", -1);
 		
 		String userID = decDataArray[1];
         String tenantId = "0";
         String deptID = "";
-        
+		String jobID = "";
+		
         if (decDataArray.length >= 9) {
             tenantId = decDataArray[8];	
         }
         if(decDataArray.length >= 10) {
         	deptID = decDataArray[9];
         }
-        
+		if(decDataArray.length >= 12) {
+			jobID = decDataArray[11];
+		}
+		
         // ezSyncServer에서 ezFlow를 호출하는 경우에는 쿠키안에 부서 아이디가 포함되어 있지 않으므로
         // 이 경우엔 true를 반환한다.
         if ("".equals(deptID)) {
         	return true;
         }
         
-		int isDept = ezCommonService.checkDeptId(userID, deptID, tenantId);
+		int isDept = ezCommonService.checkDeptId(userID, deptID, tenantId, jobID);
 		
 		if(isDept>0){
 			return true;
@@ -1004,7 +1109,7 @@ public class CommonUtil {
 	}
 		
 	public String getMultiData(String lang, int tenantID) throws Exception{
-		if (!lang.equals(ezCommonService.getTenantConfig("PrimaryLang", tenantID))) {
+		if (lang != null && !lang.equals(ezCommonService.getTenantConfig("PrimaryLang", tenantID))) {
 			return "2";
 		} else {
 			return "";
@@ -1055,13 +1160,8 @@ public class CommonUtil {
 		return value;
 	}
 	
-	public String cleanScriptValue(String htmlCode, String type) {
-        if("clean".equals(type)){
-        	//htmlCode = htmlCode.replaceAll("</?script>", "&lt;sciprt&gt;");
-        	htmlCode = stripScriptTagsAndFunctions(htmlCode);
-        }
-		
-		return htmlCode;
+	public String cleanScriptValue(String htmlCode) {
+		return stripScriptTagsAndFunctions(htmlCode);
 	}
 	
 	// 2016.09.06 by kgs: Property value의 값을 변환
@@ -1305,12 +1405,28 @@ public class CommonUtil {
 		return returnValue;
 	}
 	
-	public String getLangNumFromTwoLetterLang(String twoLetterLang) {
+	public String getLangNumFromTwoLetterLang(String twoLetterLang, int tenantId) {
 		String returnValue = "";
 		
 		if (twoLetterLang == null) {
 			logger.error("twoLetterLang is null.");
 			return null;
+		}
+
+		String useJapanese = "";
+		String useChinese = "";
+		String useVietnamese = "";
+		String useIndonesian = "";
+		
+		try {
+			useJapanese = ezCommonService.getTenantConfig("useJapanese", tenantId);
+			useChinese = ezCommonService.getTenantConfig("useChinese", tenantId);
+			useVietnamese = ezCommonService.getTenantConfig("useVietnamese", tenantId);
+			useIndonesian = ezCommonService.getTenantConfig("useIndonesian", tenantId);
+		} catch (DataAccessException e) {
+			logger.error(e.getMessage(), e);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
 		}
 		
 		// 2018-02-28 skyblue0o0 : 중국어(zh)는 아직 지원하지 않으므로 주석처리
@@ -1319,14 +1435,14 @@ public class CommonUtil {
 			returnValue = "1";
 		} else if (twoLetterLang.equalsIgnoreCase("en")) {
 			returnValue = "2";
-		} else if (twoLetterLang.equalsIgnoreCase("ja")) {
+		} else if (twoLetterLang.equalsIgnoreCase("ja") && "YES".equalsIgnoreCase(useJapanese)) {
 			returnValue = "3";
-		} else if (twoLetterLang.equalsIgnoreCase("zh")) {
+		} else if (twoLetterLang.equalsIgnoreCase("zh") && "YES".equalsIgnoreCase(useChinese)) {
 			returnValue = "4";
-		} else if (twoLetterLang.equalsIgnoreCase("vi")) {
+		} else if (twoLetterLang.equalsIgnoreCase("vi") && "YES".equalsIgnoreCase(useVietnamese)) {
 			returnValue = "5";
-		} else if (twoLetterLang.equalsIgnoreCase("id")) {
-			returnValue = "6";
+		} else if (twoLetterLang.equalsIgnoreCase("id") && "YES".equalsIgnoreCase(useIndonesian)) {
+			returnValue = "6"; 
 		} else {
 			logger.error("Invalid twoLetterLang.");
 		}
@@ -1530,6 +1646,8 @@ public class CommonUtil {
 		html = html.replace("&oslash;", "ø");
 		html = html.replace("&thorn;", "þ");
 		html = html.replace("&amp;", "&");
+		html = html.replace("&#034;", "\"");
+		html = html.replace("&#039;", "'");
 		
 		String result = html;
 		
@@ -2076,6 +2194,20 @@ public class CommonUtil {
 		
 		return String.format("<DIV id=\"msgBody\" style=\"font-size: %s; font-family: %s;\" name=\"urn:schemas:httpmail:textdescription\">%s</DIV>", fontSize, fontFamily, content);
 	}
+
+	/** 
+	 * <p>
+	 * 자동 발신 알림 메일 내용 생성:승인메일용<br>
+	 * 메일로 보낼 내용을 받아서 에디터 기본 폰트스타일과 감싸는 태그를 붙여 리턴함
+	 * </p>
+	 * @param content
+	 * @param tenantID
+	 * @param locale
+	 * @return 완성된 html 태그 스트링
+	 */
+	public String createNotiMailContentForApprMail(String content, int tenantID, Locale locale) throws Exception {
+		return String.format("<DIV id=\"msgBody\" style=\"padding: 10px 0;margin: 40px 0 20px;background:#E4F2FF;border-radius:5px;color: #004B8E;font-size: 18px;text-align: center;width: 80%%;font-weight: 400;font-family: 'Noto Sans KR','Malgun Gothic', 맑은 고딕, Dotum,돋움, Gulim, 굴림, Arial, Helvetica, sans-serif;\"  name=\"urn:schemas:httpmail:textdescription\">%s</DIV>", content);
+	}
 	
 	public List<CountryVO> getCountryInfo(String ip) throws Exception {
 		List<CountryVO> countryInfo = new ArrayList<CountryVO>();
@@ -2187,15 +2319,30 @@ public class CommonUtil {
 			boolean useChkPrevPwd = "YES".equalsIgnoreCase(ezCommonService.getCompanyConfig(tenantId, companyId, "useChkPrevPwd"));
 
 			if (checkPrevPassword && useChkPrevPwd && StringUtils.isNotBlank(userId)) {
-
+				// 2024-07-17 김대현 : 가장 최근 암호 사용금지 -> 기억할 암호 수에 따른 사용금지 변경
 				String encryptedNewPassword = EgovFileScrty.encryptPassword(pwStr, userId);
-				String prevPassword = ezCommonService.getPrevPwd(tenantId, userId);
+				String[] prevPasswords = ezCommonService.getPrevPwd(tenantId, userId).split(":");
 
-				if (encryptedNewPassword.equals(prevPassword)) {
-					logger.debug("checkPrevPassword error - equals. : newDecryptPassword={}, prevPassword={}", pwStr, prevPassword);
-					eResult = PasswordCheckPolicyResult.USE_PREVIOUS_PASSWORD_NOT_ALLOWED;
-					break process;
+				String rememberPWCountConfig = ezCommonService.getCompanyConfig(tenantId, companyId, "RememberPWCount");
+				int rememberPWCount = rememberPWCountConfig == null || "".equalsIgnoreCase(rememberPWCountConfig) ? 0 : Integer.parseInt(rememberPWCountConfig);
+				int startIdx = Math.max(0, prevPasswords.length - rememberPWCount);
+
+				for (int i = prevPasswords.length - 1; i >= startIdx; i--) {
+					String prevPassword = prevPasswords[i];
+					
+					if (encryptedNewPassword.equals(prevPassword)) {
+						logger.debug("checkPrevPassword error - equals. : newDecryptPassword={}, prevPassword={}", pwStr, prevPassword);
+						eResult = PasswordCheckPolicyResult.USE_PREVIOUS_PASSWORD_NOT_ALLOWED;
+						break process;
+					}
 				}
+//				for (String prevPassword : prevPasswords) {
+//					if (encryptedNewPassword.equals(prevPassword)) {
+//						logger.debug("checkPrevPassword error - equals. : newDecryptPassword={}, prevPassword={}", pwStr, prevPassword);
+//						eResult = PasswordCheckPolicyResult.USE_PREVIOUS_PASSWORD_NOT_ALLOWED;
+//						break process;
+//					}
+//				}
 			}
 
 			// 0-2. 2023-06-09 이사라 : 패스워드 설정 시 연속숫자, 생일, 전화번호 방지 기능
@@ -2222,7 +2369,15 @@ public class CommonUtil {
 				}
 
 				// 스트림은 한번만 소비할 수 있어서 List로 변환해둠. *참고 https://yeon-kr.tistory.com/192, https://devyoseph.tistory.com/156
-				List<String> propList = propStream.map(prop -> StringUtils.defaultString(prop.replaceAll("\\D", "").trim())).filter(StringUtils::isNotBlank).collect(Collectors.toList());
+				List<String> propList = propStream
+						.map(prop -> StringUtils.defaultString(prop.replaceAll("\\D", "").trim()))
+						.filter(StringUtils::isNotBlank)
+						.collect(Collectors.toList());
+
+				// 휴대폰번호가 "010"으로 시작하는 경우, "010"은 제외하고 비교
+				if (propList.size() > 1 && propList.get(1).startsWith("010")) {
+					propList.set(1, propList.get(1).substring(3));
+				}
 
 				// 패스워드 설정 시 연속숫자, 생일, 전화번호 방지 기능
 				for (int i = 0; i < pwStr.length() - 2; i++) {
@@ -2324,7 +2479,7 @@ public class CommonUtil {
             }
 
             // 4. 특수문자 사용
-            bSpecialChar = Pattern.compile("[~!@#$%^&*()=+|\\/:;?\"<>']").matcher(pwStr).find();
+            bSpecialChar = Pattern.compile("[-_~!@#$%^&*()=+\\/:;?\"<>']").matcher(pwStr).find();
             if (useSpecial != null && useSpecial.equalsIgnoreCase("N")) {
                 if (bSpecialChar){
         			logger.debug("commonUtil. checkPwPolicy ended. (useSpecial)");
@@ -2385,8 +2540,8 @@ public class CommonUtil {
 		String sResult = "";
 		String patternContent = "";
 		int patternCount = 0;
-		String patternContentTemp = "<p>▒ " + egovMessageSource.getMessage("ezSystem.ksaPwPolicy36", locale) + " : ${str}</p>";
-		String patternContentTemp2 = "<br/> <span>&nbsp;&nbsp;&nbsp; > ${str}</span>";
+		String patternContentTemp = "<div>▒ " + egovMessageSource.getMessage("ezSystem.ksaPwPolicy36", locale) + " : ${str}</div>";
+		String patternContentTemp2 = "<span>${str}</span>";
 		
 		// 1. 암호 정책관리 사용 여부 확인
 		String usePasswordPatternPolicy = ezCommonService.getCompanyConfig(tenantId, companyId, "UsePasswordPatternPolicy");
@@ -2450,23 +2605,26 @@ public class CommonUtil {
             	patternContent += (patternCount + 1) + ". " + egovMessageSource.getMessage("ezSystem.ksaPwPolicy18", locale);
             	patternCount += 1;
             }
-            
+			patternContent += "</div><div style='gap:5px;color:#777'>";
             // 5. 패턴 사용 수, 글자수 확인
             if (pwPolicyPattern != null && pwPolicyPattern.size() > 0) {
         		String patternMsg1 = egovMessageSource.getMessage("ezSystem.ksaPwPolicy19", locale);
-            	for (Map<String, Object> pwPattern : pwPolicyPattern) {
-            		int patternCnt = Integer.parseInt(String.valueOf(pwPattern.get("USE_PATTERN_COUNT")));
-            		int numberOfChar = Integer.parseInt(String.valueOf(pwPattern.get("NUMBER_OF_CHAR")));
+				for (int i = 0; i < pwPolicyPattern.size(); i++) {
+					int patternCnt = Integer.parseInt(String.valueOf(pwPolicyPattern.get(i).get("USE_PATTERN_COUNT")));
+					int numberOfChar = Integer.parseInt(String.valueOf(pwPolicyPattern.get(i).get("NUMBER_OF_CHAR")));
 
             		String patternMsgTemp = patternMsg1.replace("{0}", Integer.toString(patternCnt)) + " ";
             		
             		if (numberOfChar <= 0) {
             			patternMsgTemp += egovMessageSource.getMessage("ezSystem.ksaPwPolicy21", locale);
             		} else {
-            			patternMsgTemp += numberOfChar + egovMessageSource.getMessage("ezSystem.ksaPwPolicy26", locale);
+            			patternMsgTemp += numberOfChar + " " + egovMessageSource.getMessage("ezSystem.ksaPwPolicy26", locale) + " ";
             		}
             		
             		patternContent += patternContentTemp2.replace("${str}", patternMsgTemp);
+					if (i != pwPolicyPattern.size() - 1) {
+						patternContent += "<span>&nbsp;/&nbsp;</span>";
+					}
             	} // for end.
             }
             
@@ -2494,26 +2652,19 @@ public class CommonUtil {
 				try {
     				if (menuCode.equals("workspace")) {//협업
 						String useEzWorkspace = ezNewPortalService.isUseEzWorkspace(companyId, tenantId, userId, deptId);
-						List<MenuInfoVO> menuFilter = menuList.stream().filter(menuInfo -> menuInfo.getMenuUrl().contains("ezWorkspace"))
-								.collect(Collectors.toList());
 						
-						if (useEzWorkspace.equals("NO")) {
-							menuAccess = false;
-						} else {
-							if (menuFilter.size() > 0) {
-								menuAccess = true;
-							}
-						}
+						/* 2025-02-27 홍승비 - 포탈 > 협업 메뉴 사용 여부 판별 시 URL이 아닌 메뉴코드를 사용하도록 수정 (쿼리에서 판별) */
+						menuAccess = useEzWorkspace.equals("YES");
     				} else if(menuCode.equals("mail") || menuCode.equals("address")) {		// 메일, 주소록
 						String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", tenantId);
 						menuAccess = useExternalMailServer.equals("NO");
-    				} else if (menuCode.equals("board")) {//게시판
+    				} else if (menuCode.equals("board")) { //게시판
 						String useBoard = ezCommonService.getTenantConfig("useBoard", tenantId);
 						menuAccess = useBoard.equals("YES");
-    				} else if (menuCode.equals("schedule")) {//일정
+    				} else if (menuCode.equals("schedule")) { //일정
 						String useSchedule = ezCommonService.getTenantConfig("useSchedule", tenantId);
 						menuAccess = useSchedule.equals("YES");
-    				} else if (menuCode.equals("resource")) {//자원
+    				} else if (menuCode.equals("resource")) { //자원
 						String useResource = ezCommonService.getTenantConfig("useResource", tenantId);
 						menuAccess = useResource.equals("YES");
     				} else if (menuCode.equals("community")) {
@@ -3001,7 +3152,7 @@ public class CommonUtil {
 	/** 2021-12-08 홍승비 - HTML5 지원 웹 동영상 파일 확장자 체크용 공통 메서드 추가 */
 	public boolean checkMovExtension(String fileExt) {
 		boolean result = false;
-		String[] movExts = {"mp4", "ogg", "webm"};
+		String[] movExts = {"mp4", "webm"};
 		
 		if (fileExt != null && ArrayUtils.contains(movExts, fileExt)) {
 			result = true;
@@ -3122,7 +3273,7 @@ public class CommonUtil {
 	
 	public String loginCookieExists(HttpServletRequest request, HttpServletResponse response) {
 		boolean usingSession = false;
-		String  result = "null"; //  0 : 세션 유지 , 1 : 세션 만료 , 2 :  쿠키 만료 및 예외
+		String  result = "null"; //  0 : 세션 유지 , 1 : 세션 만료 , 2 :  쿠키 만료 및 예외 , 3 :  부서 및 직위 등 조직도 정보 변경
 
 		try {
 			String serverName = request.getServerName();
@@ -3142,11 +3293,7 @@ public class CommonUtil {
 		boolean isLoopbackRequest = request.getRemoteAddr().equals("127.0.0.1");
 
 		if (!usingSession || usingAsAPI || isLoopbackRequest) {
-			if(validLoginCookie(request, response)){
-				return "0";
-			}else{
-				return "2";
-			}
+			return validLoginCookie(request, response);
 		}
 
 		if(validSessionLoginCookie(request, response)){
@@ -3216,5 +3363,317 @@ public class CommonUtil {
 			}
 		}
 		return adminCount > 0;
+	}
+
+	private static final String CHARPOOL = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz123456789";
+	public String getTempPassword (int length) throws Exception {
+		Random random = new SecureRandom();
+		StringBuilder rs;
+		do {
+			rs = new StringBuilder();
+			for (int i = 0; i < length; i++) {
+				int index = random.nextInt(CHARPOOL.length());
+				rs.append(CHARPOOL.charAt(index));
+			}
+		} while (!hasConsecutiveCharsAndValidFormat(rs.toString(), 3));
+		return rs.toString();
+	}
+
+	private boolean hasConsecutiveCharsAndValidFormat(String source, int sequenceLength) {
+		// 연속된문자 체크 및 대소문자숫자 포함여부
+		boolean hasConsecutiveChars = source.matches("(.)\\1{" + (sequenceLength - 1) + "}");
+		boolean hasUpperCase = source.matches(".*[A-Z].*");
+		boolean hasLowerCase = source.matches(".*[a-z].*");
+		boolean hasDigit = source.matches(".*\\d.*");
+
+		return !(hasConsecutiveChars || !hasUpperCase || !hasLowerCase || !hasDigit);
+	}
+
+	private static final String INSERTSMS = "insert into em_tran(tran_phone, tran_callback, tran_status, tran_date, tran_msg , tran_type) values(?, ?, '1', GETDATE(), ? ,4)";
+
+	/**
+	 * 2024-07-03 김대현
+	 * 	sendSMS 메소드는 SMS로 인증번호와 임시비밀번호를 전송할때 커스터마이징 하기위해 만들어짐.
+	 * 	각 프로젝트에서 해당 메소드 바디 부분을 수정하여 사용하면 됨.
+	 * @param mobileNo 이동전화 번호
+	 * @param randomValue 랜덤값
+	 * @param type 인증번호, 임시비밀번호 타입
+	 * @return
+	 * @throws Exception
+	 */
+	public Boolean sendSMS (String mobileNo, String randomValue, String type) throws Exception {
+		logger.debug("sendSMS Started:mobileNo={},randomValue={},type={}",mobileNo,randomValue,type);
+		boolean result = false;
+//		String tran_msg = "";
+//		String tran_phone = mobileNo; // 받는전화
+//		String tran_callback = ""; // 보낸전화
+//		String tran_status = "1"; // 1
+//		String tran_date = ""; // 발송시간
+//
+//		if ("authCode".equals(type)) {
+//			// 인증번호
+//			tran_msg = "인증번호:[" + randomValue + "]'\n그룹웨어에서 보낸 인증번호 입니다.";
+//		} else {
+//			// 임시 비밀번호
+//			tran_msg = "임시비밀번호:[" + randomValue + "]'\n그룹웨어에서 보낸 임시비밀번호 입니다.";
+//		}
+//
+//		tran_callback = "02-000-0000";
+//
+//		logger.debug("sendSMS Started:randomValue={},tran_phone={},tran_callback{}",randomValue,tran_phone,tran_callback);
+//
+//		if (StringUtils.isBlank(randomValue) || StringUtils.isBlank(tran_phone) || StringUtils.isBlank(tran_callback) ) {
+//			result = false;
+//		} else {
+//			String smsDriverClassName = globals.getProperty("Globals.SMSDriverClassName");
+//			String smsUrl = globals.getProperty("Globals.SMSUrl");
+//			String smsUserName = globals.getProperty("Globals.SMSUserName");
+//			String smsPassword = globals.getProperty("Globals.SMSPassword");
+//
+//
+//			Connection conn = null;
+//			PreparedStatement pstmt = null;
+//
+//			String sqlQuery = INSERTSMS;
+//
+//			try {
+//				Class.forName(smsDriverClassName);
+//				conn = DriverManager.getConnection(smsUrl,smsUserName,smsPassword);
+//
+//				pstmt = conn.prepareStatement(sqlQuery);
+//				pstmt.setObject(1, tran_phone);
+//				pstmt.setObject(2, tran_callback);
+//				pstmt.setObject(3, tran_msg);
+//				int count = pstmt.executeUpdate();
+//
+//				if (count != 0) {
+//					result = true;
+//				}
+//
+//			} catch (Exception e){
+//				logger.error(e.getMessage(), e);
+//
+//			} finally {
+//				closeQuietly(pstmt, conn);
+//			}
+//		}
+		result = true;
+		logger.debug("sendSMS ended={}",result);
+		return result;
+	}
+
+	public static void closeQuietly(AutoCloseable... closeables) {
+		for (AutoCloseable closeable : closeables) {
+			if (closeable == null) {
+				continue;
+			}
+
+			try {
+				closeable.close();
+			} catch (Exception ignore) {}
+		}
+	}
+
+	/**
+	 * 테넌트 컨피그 boolean 설정 값 확인용
+	 */
+	public boolean checkTenantConfigBool(int tenantId, String propertyName, String defaultValue) throws Exception {
+		return BooleanUtils.toBoolean(StringUtils.defaultIfBlank(ezCommonService.getTenantConfig(propertyName, tenantId), defaultValue));
+	}
+	public OrganAuth makeOrganAuth(String userId, int tenantId, String deptId, String jobId) throws Exception {
+		List<OrganUserVO> allUserinfo = ezOrganService.getAllUserinfo(userId, tenantId);
+		OrganAuth organAuth = new OrganAuth();
+		
+		// 현재 권한만 체크하도록 변경
+		// jobid가 null이거나, 공백인 경우가 있어 같이 공백 or null 이거나 string equal 인 조건으로 변경 
+		for (OrganUserVO user : allUserinfo) {
+			if (user.getDepartment().equalsIgnoreCase(deptId) &&
+					((StringUtils.isBlank(user.getJobID()) && StringUtils.isBlank(jobId)) ||
+					user.getJobID().equalsIgnoreCase(jobId))) {
+				organAuth.addAuth(user.getRoleInfo(), user.getDepartment(), user.getCompanyId());
+				break;
+			}
+		}
+		
+        return organAuth;
+	}
+	
+	public String makeLocalDateToUTCDate(int minusYear, boolean isFrom, String offset) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime nowMinusOneYear = now.minusYears(minusYear);
+		String timeStr = isFrom ? " 00:00:00" : " 23:59:59";
+		String utcDate = getDateStringInUTC(nowMinusOneYear.format(formatter) + timeStr, offset, false);
+
+		return utcDate;
+	}
+
+	public String makeUrl(String path, MultiValueMap queryParam) throws Exception {
+		UriComponents uriComponents = UriComponentsBuilder.newInstance()
+				.path(path)
+				.queryParams(queryParam)
+				.build();
+
+		return uriComponents.toUriString();
+	}
+
+	public String makeSSOUrl(String url, int tenantId) throws Exception {
+		if (!"".equals(url) && url != null) {
+			String serverUrl = ezCommonService.getTenantConfig("serverName", tenantId);
+			url = serverUrl + url;
+		}
+		return url;
+	}
+	
+	// 이스케이프용 문자 백슬래시(\) 삽입
+	// 오라클에서 특수문자 검색을 가능케 할 때 사용함
+	public String insertEscapeCharBackslash(String str) {
+		if (Strings.isBlank(str)) {
+			return str;
+		}
+		str.replace("%", "\\%")
+                    .replace("_", "\\_")
+                    .replace("&", "\\&")
+                    .replace("|", "\\|")
+                    .replace("'", "\\'")
+                    .replace("\"", "\\\"")
+                    .replace("\\", "\\\\")
+                    .replace("#", "\\#")
+                    .replace(";", "\\;");
+		
+		return str;
+	}
+
+	/**
+	 * PrimaryLang 컨피그에 해당하는 Locale 반환
+	 */
+	public Locale getPrimaryLocale(int tenantId) throws Exception {
+		Locale locale;
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
+		
+		try {
+			switch (primaryLang) {
+				case "1":
+					locale = Locale.KOREA;
+					break;
+				case "2":
+					locale = Locale.US;
+					break;
+				case "3":
+					locale = Locale.JAPAN;
+					break;
+				default:
+					locale = Locale.getDefault();
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			locale = Locale.KOREA; // 보안 제한 등으로 getDefault() 오류 시 한국으로 세팅
+		}
+		
+		return locale;
+	}
+
+	public static List<String> getMonthList(Locale locale, TextStyle textStyle) {
+		return IntStream.range(1, 13).boxed().map(m -> {
+			return Month.of(m).getDisplayName(textStyle, locale);
+		}).collect(Collectors.toList());
+	}
+
+	/**
+	 * 표를 엑셀로 변환 다운로드
+	 */
+	public void downloadHtmlTableAsExcel(String htmlTable, HttpServletResponse response, String fileName) throws Exception {
+		org.jsoup.nodes.Document doc = Jsoup.parse(htmlTable);
+		Element table = doc.selectFirst("table");
+		if (table == null) {
+			throw new Exception("Table does not exist");
+		}
+		Elements rows = table.select("tr");
+		String encodedFileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8.toString())
+				.replaceAll("\\+", "%20");
+
+		try (XSSFWorkbook workbook = new XSSFWorkbook()) {
+			Sheet sheet = workbook.createSheet("data");
+			XSSFCellStyle headerStyle= workbook.createCellStyle();
+			headerStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+			headerStyle.setFillPattern(XSSFCellStyle.SOLID_FOREGROUND);
+			headerStyle.setBorderBottom(XSSFCellStyle.BORDER_THIN);
+			headerStyle.setBorderTop(XSSFCellStyle.BORDER_THIN);
+			headerStyle.setBorderRight(XSSFCellStyle.BORDER_THIN);
+			headerStyle.setBorderLeft(XSSFCellStyle.BORDER_THIN);
+			headerStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+			headerStyle.setAlignment(HorizontalAlignment.CENTER);
+			headerStyle.setWrapText(true);
+
+			XSSFCellStyle bodyStyle= workbook.createCellStyle();
+			bodyStyle.setBorderBottom(XSSFCellStyle.BORDER_THIN);
+			bodyStyle.setBorderTop(XSSFCellStyle.BORDER_THIN);
+			bodyStyle.setBorderRight(XSSFCellStyle.BORDER_THIN);
+			bodyStyle.setBorderLeft(XSSFCellStyle.BORDER_THIN);
+			bodyStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+			bodyStyle.setAlignment(HorizontalAlignment.CENTER);
+			bodyStyle.setWrapText(true);
+
+			Map<String, CellRangeAddress> mergedCells = new HashMap<>();
+
+			int rowIndex = 0;
+			for (Element row : rows) {
+				Row excelRow = sheet.createRow(rowIndex);
+				Elements cells = row.select("th, td");
+
+				int colIndex = 0;
+				for (Element cell : cells) {
+					int rowSpan = cell.hasAttr("rowspan") ? Integer.parseInt(cell.attr("rowspan")) : 1;
+					int colSpan = cell.hasAttr("colspan") ? Integer.parseInt(cell.attr("colspan")) : 1;
+
+					while (isCellMerged(mergedCells, rowIndex, colIndex)) {
+						colIndex++;
+					}
+
+					Cell excelCell = excelRow.createCell(colIndex);
+					String cellText = cell.text().trim();
+					excelCell.setCellValue(cellText);
+					excelCell.setCellStyle(cell.is("th") ? headerStyle : bodyStyle);
+
+					if (rowSpan > 1 || colSpan > 1) {
+						CellRangeAddress region = new CellRangeAddress(
+								rowIndex, rowIndex + rowSpan - 1,
+								colIndex, colIndex + colSpan - 1
+						);
+						sheet.addMergedRegion(region);
+
+						for (int r = region.getFirstRow(); r <= region.getLastRow(); r++) {
+							for (int c = region.getFirstColumn(); c <= region.getLastColumn(); c++) {
+								if (r != rowIndex || c != colIndex) {
+									mergedCells.put(r + ":" + c, region);
+								}
+							}
+						}
+					}
+
+					colIndex += colSpan;
+				}
+				rowIndex++;
+			}
+
+			double unit = 2.0;
+			for (int i = 0; i < 30; i++) {
+				sheet.autoSizeColumn(i);
+
+				int currentWidth = sheet.getColumnWidth(i);
+				if (currentWidth > 0) {
+					System.out.println(1);
+					int newWidth = (int)(currentWidth * unit);
+					sheet.setColumnWidth(i, Math.min(65280, newWidth));
+				}
+			}
+
+			response.setHeader("Content-Disposition","attachment; filename=\"" + encodedFileName + ".xlsx\"");
+			workbook.write(response.getOutputStream());
+		}
+	}
+	
+	private boolean isCellMerged(Map<String, CellRangeAddress> mergedCells, int row, int col) {
+		return mergedCells.containsKey(row + ":" + col);
 	}
 }

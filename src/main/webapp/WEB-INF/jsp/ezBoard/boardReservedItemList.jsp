@@ -7,7 +7,8 @@
 	<head>
 		<title></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<style>
 			<%-- 2018-07-20 홍승비 - 예약게시물 헤더 스타일 등 수정 --%>
 			#chk, #HeaderAllCheckBox {
@@ -36,6 +37,9 @@
 		    var pUse_Editor = "<c:out value='${useEditor}'/>";
 		    var pAdminType = "<c:out value='${adminType}'/>";
 		    var useRunTime = "<c:out value='${useRunTime}'/>";
+	        // 2024-10-04 조수빈 - 마이게시판, 게시물 승인 화면의 경우 게시판 id가 없어 오류가 발생하여 추가
+        	var pBoardID = "";
+        	var Read_FG = 'true';
 		    window.onload = function ()
 		    {
 		    	if (useRunTime != "YES") {
@@ -269,6 +273,27 @@
 		    function ReplaceString(pOrgString) {
 		        return ReplaceText(ReplaceText(ReplaceText(pOrgString, "&amp;", "&"), "&lt;", "<"), "&gt;", ">");
 		    }
+		    
+		    function downloadBoardFile(downURL) {
+		    	
+		        if (Read_FG != "true") {
+		        	alert(strLang175);
+		            return;
+		        }
+		        
+		    	window.location = downURL;
+		    }
+
+		    function selectToDownloadFiles(boardID, itemID) {
+		    	
+		    	if (Read_FG != "true") {
+		    		alert(strLang175);
+		    		return;
+		    	}
+		        
+		    	var url = "/ezBoard/selectToDownloadFiles.do?boardID=" + javaURLEncode(boardID) + "&itemID=" + javaURLEncode(itemID);
+		        window.open(url, "", "status=no,help=no,width=580px,height=480px" + GetOpenPosition(580, 480));
+		    }
 		</script>
 	</head>
 	<c:choose>
@@ -386,7 +411,50 @@
 		    	<td <c:if test="${status.first}">style="height:23px;"</c:if>><input type='checkbox' name='chk' id='chk' onclick='checkBox_checked("${reservedList.boardID}", "${reservedList.itemID}", event)'></td>
 		    	<c:choose>
 		    		<c:when test="${reservedList.attachments != '0'}">
-		    			<td style="text-align:center;"><img src='/images/i_save01.gif'></td>
+		    			<td style="text-align:center;">
+				    	<c:choose>
+				    		<c:when test="${!fn:contains(reservedList.fileName, 'MANY')}">
+				    	    <c:url value="/ezBoard/boardAttachDown.do" var="url">
+				    	    	<c:param name="filePath" value="${reservedList.filePath}"/>
+				    	    	<c:param name="fileName" value="${reservedList.fileName}"/>
+			    	    	</c:url>
+						        <a href="${url}">
+						        <c:choose>
+					    		<c:when test="${fn:contains(reservedList.fileName, '.jpg') || fn:contains(reservedList.fileName, '.jpeg') || fn:contains(reservedList.fileName, '.bmp') || fn:contains(reservedList.fileName, '.gif') || fn:contains(reservedList.fileName, '.png') || fn:contains(reservedList.fileName, '.tif') || fn:contains(reservedList.fileName, '.tiff')}">
+							        <img src='/images/image.png'>
+					    		</c:when>
+					    		<c:when test="${fn:contains(reservedList.fileName, '.doc') || fn:contains(reservedList.fileName, '.docx')}">
+							        <img src='/images/doc.png'>
+					    		</c:when>
+					    		<c:when test="${fn:contains(reservedList.fileName, '.xls') || fn:contains(reservedList.fileName, '.xlsx')}">
+							        <img src='/images/xls.png'>
+					    		</c:when>
+					    		<c:when test="${fn:contains(reservedList.fileName, '.ppt') || fn:contains(reservedList.fileName, '.pptx')  || fn:contains(reservedList.fileName, '.pps') || fn:contains(reservedList.fileName, '.ppsx')}">
+							        <img src='/images/ppt.png'>
+					    		</c:when>
+					    		<c:when test="${fn:contains(reservedList.fileName, '.txt')}">
+							        <img src='/images/txt.png'>
+					    		</c:when>
+					    		<c:when test="${fn:contains(reservedList.fileName, '.zip')}">
+							        <img src='/images/zip.png'>
+					    		</c:when>
+					    		<c:when test="${fn:contains(reservedList.fileName, '.pdf')}">
+							        <img src='/images/pdf.png'>
+					    		</c:when>
+					    		<c:when test="${fn:contains(reservedList.fileName, '.ecm')}">
+							        <img src='/images/ecm.png'>
+					    		</c:when>
+					    		<c:otherwise>
+							        <img src='/images/email/mail_006.gif'>
+					    		</c:otherwise>
+					    	    </c:choose>
+					    	    </a>
+				    	    </c:when>
+				    	    <c:otherwise>
+				    	    	<img src='/images/disk_icon.png' style='cursor:pointer' onclick="selectToDownloadFiles('<c:out value="${reservedList.boardID}"/>', '<c:out value="${reservedList.itemID}"/>')">
+				    	    </c:otherwise>
+				    	</c:choose>
+		    			</td>
 		    		</c:when>
 		    		<c:otherwise>
 		    			<td></td>

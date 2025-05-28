@@ -8,7 +8,8 @@
 	<head>
 		<title></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
-	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e2', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -230,7 +231,7 @@
 			        selectdept_cross_dialogArguments[0] = strLang8;
 			        selectdept_cross_dialogArguments[1] = Restore_onclick_Complete;
 			        var OpenWin = window.open("/admin/ezOrgan/selectDept.do", "SelectDept_Cross", GetOpenWindowfeature(302, 390));
-			        try { OpenWin.focus(); } catch (e) { }
+			        try { OpenWin.focus(); } catch (e) {console.log(e);}
 				}
 			}
 			
@@ -258,13 +259,23 @@
 			        	    // } else if (result == "DIFF_COMPANY") {
 			        	    //	alert(strLangLHM01);
 			        	    } else {
-			        	        alert(strLang10);
-			        	    }
-			        	},
-			        	error : function(){
-			        		alert(strLang10);	
-			        	}
-			        });
+								if (result == "EMAIL_ERROR") {
+										alert("<spring:message code='ezOrgan.t269' />");
+									} else if (result == "NO_LICENSE_KEY") {
+										alert("<spring:message code='ezOrgan.x0010' />");
+									} else if (result == "INVALID_LICENSE_KEY") {
+										alert("<spring:message code='ezOrgan.x0011' />");
+									} else if (result == "MAX_USER_REACHED") {
+										alert("<spring:message code='ezOrgan.x0012' />");
+									} else {
+										alert(strLang10);
+								}
+							}
+								},
+								error : function() {
+									alert(strLang10);
+								}
+						});
 
 			        retireUserList();
 			    }
@@ -286,7 +297,7 @@
 		        inputpassword_dialogArguments[0] = length + "<spring:message code='ezOrgan.t40' />";
 		        inputpassword_dialogArguments[1] = mod_password_Complete;
 		        var OpenWin = window.open("/admin/ezOrgan/inputPassword.do?companyId=" + userComId, "InputPassword", GetOpenWindowfeature(467, 192));
-		        try { OpenWin.focus(); } catch (e) { }			    
+		        try { OpenWin.focus(); } catch (e) {console.log(e);}
 			}
 			
 		    function mod_password_Complete(rtnValue) {
@@ -345,29 +356,29 @@
                 var strtext;
                 var PagingHTML = "";
                 document.getElementById("tblPageRayer").innerHTML = "";
-                document.getElementById("TitleInfo").innerHTML = "&nbsp;<span style='color:#017BEC;'>" + totalCount + "</span>";
+                document.getElementById("TitleInfo").innerHTML = "&nbsp;<span class='txt_color'>" + totalCount + "</span>";
                 strtext = "<div class='pagenavi'>";
                 PagingHTML += strtext;
                 var pageNum = CurPage;
                 
                 if (totalPage > 1 && pageNum != 1) {
-                    strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif'></span>";
+                    strtext = "<span class='btnimg first' onclick= 'return goToPageByNum(1)'></span>";
                     PagingHTML += strtext;
                 } else {
-                    strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>";
+                    strtext = "<span class='btnimg first disabled'></span>";
                     PagingHTML += strtext;
                 }
                 
                 if (totalPage > BlockSize) {
                     if (pageNum > BlockSize) {
-                        strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' ></span>";
+                        strtext = "<span class='btnimg prev' onclick= 'return selbeforeBlock()'></span>";
                         PagingHTML += strtext;
                     } else {
-                        strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+                        strtext = "<span class='btnimg prev disabled'></span>";
                         PagingHTML += strtext;
                     }
                 } else {
-                    strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+                    strtext = "<span class='btnimg prev disabled'></span>";
                     PagingHTML += strtext;
                 }
                 
@@ -398,24 +409,24 @@
                 if (totalPage > BlockSize) {
                     if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
                         strtext = "";
-                        strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif'></span>";
+                        strtext = strtext + "<span class='btnimg next' onclick='return selafterBlock()'></span>";
                         PagingHTML += strtext;
                     } else {
                         strtext = "";
-                        strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+                        strtext = strtext + "<span class='btnimg next disabled'></span>";
                         PagingHTML += strtext;
                     }
                 } else {
                     strtext = "";
-                    strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+                    strtext = strtext + "<span class='btnimg next disabled'></span>";
                     PagingHTML += strtext;
                 }
                 
                 if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-                    strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' ></span>";
+                    strtext = "<span class='btnimg last' onclick='return goToPageByNum(" + totalPage + ")'></span>";
                     PagingHTML += strtext;
                 } else {
-                    strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif'></span>";
+                    strtext = "<span class='btnimg last disabled'></span>";
                     PagingHTML += strtext;
                 }
                 
@@ -678,9 +689,6 @@
 				<c:if test="${dotNetIntegration != 'YES'}">
 		    		<li><span onClick="Restore_onclick()"><spring:message code='ezOrgan.t312'/></span></li>
 		    	</c:if>		        
-		        <c:if test="${dotNetIntegration != 'YES'}">
-                	<li><span onClick="mod_password()"><spring:message code='ezOrgan.t90'/></span></li>
-                </c:if>
                 <li><span class="icon16 icon16_delete" onClick="Delete_onclick()"></span></li>
                 <li><span class="icon16 icon16_refresh" onClick="reload()"></span></li>
 		  	</ul>

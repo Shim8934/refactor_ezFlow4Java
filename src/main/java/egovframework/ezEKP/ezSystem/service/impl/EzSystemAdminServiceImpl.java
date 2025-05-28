@@ -35,11 +35,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
+import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.dao.EzCommonDAO;
-import egovframework.ezEKP.ezOrgan.dao.EzOrganAdminDAO;
-import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezSystem.dao.EzSystemAdminDAO;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
 import egovframework.ezEKP.ezSystem.util.EzSystemUtil;
@@ -53,6 +52,8 @@ import egovframework.ezEKP.ezSystem.vo.ModuleSizeVO;
 import egovframework.ezEKP.ezSystem.vo.PasswordPolicyVO;
 import egovframework.ezEKP.ezSystem.vo.PermissionInfoVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
+import egovframework.ezEKP.ezSystem.vo.SystemConfigTypeVO;
+import egovframework.ezEKP.ezSystem.vo.SystemConfigVO;
 import egovframework.ezEKP.ezSystem.vo.UserChangeInfoVO;
 import egovframework.let.main.vo.MainVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -112,13 +113,18 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 					// continue; 2022-10-20 이사라 - PackageType 값이 동일하면 for문을 빠져나가는 오류로 주석처리
 				} else {
 					// 바뀌었을때 새로운 packageType으로 디비 메뉴 맞춰줘야하는 것 추가
-					updateNewPortalMenuByPackageType(newPackageType, tenantID, companyID);
+					//updateNewPortalMenuByPackageType(newPackageType, tenantID, companyID);
 				}
 			}
 
 			if (paramName.equals("useSession") || paramName.equals("useSessionMobile")) {
 				int sessionParam = Integer.parseInt(paramValue);
 				paramValue = Integer.toString(sessionParam);
+			}
+			
+			if (paramName.equals("notiPollingInterval")) {
+				int notiIntervalParam = Integer.parseInt(paramValue) * (1000 * 60);
+				paramValue = Integer.toString(notiIntervalParam);
 			}
 			
 			sysParamVO.setName(paramName);
@@ -888,6 +894,48 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		return 0;
 	}
 	
+	// 2024.10.14 한슬기 : 회사생성시 암호정책 디폴트값 설정 (암호패턴 사용, 영문 대/소문자 패턴구분안함, 3개패턴 사용, 8글자 이상)
+	@Override
+	public String insertDefaultPwPolicy(int tenantID, String companyID) throws Exception {
+		String result = "ERROR";
+		PasswordPolicyVO pwPolicyVO = new PasswordPolicyVO();
+		pwPolicyVO.setTenantId(tenantID);
+		pwPolicyVO.setCompanyId(companyID);
+		pwPolicyVO.setEngCharType("N");
+		pwPolicyVO.setUseCapitalLetter("Y");
+		pwPolicyVO.setUseSmallLetter("Y");
+		pwPolicyVO.setUseNumber("Y");
+		pwPolicyVO.setUseSpecial("Y");
+		
+		logger.debug("insertPwPolicy. pwPolicyVO={}", pwPolicyVO);
+		ezSystemAdminDAO.insertPwPolicy(pwPolicyVO);
+		
+		// 패턴 -> 영문 대/소문자, 숫자, 특수문자
+		int patternNumber = 0; // 패턴사용시 글자수 제한(사용안함)
+		int settingNumber = 8; // 패턴사용시 글자수 제한(8글자 이상)
+		int pattrernCount = 3; // 사용패턴갯수
+		
+		Map<String, Object> patternMap = new HashMap<>();
+		for (int i = 1; i <= pattrernCount; i++) {
+			if (i == pattrernCount) {
+				patternNumber = settingNumber;
+			}
+			// tbl_password_policy_pattern
+			patternMap.put("tenantId", tenantID);
+			patternMap.put("companyId", companyID);
+			patternMap.put("settingCnt", i); // number_of_char
+			patternMap.put("settingNumber", patternNumber); // use_pattern_count
+			
+			logger.debug("insertPwPolicyPattern. patternMap=" + patternMap.toString());
+			ezSystemAdminDAO.insertPwPolicyPattern(patternMap);
+			
+		}
+		
+		result = "OK";
+		
+		return result;
+	}
+	
 	// companyConfig 저장
 	@Override
 	public void updateCompanyConfigParam(int tenantID, List<Map<String, String>> list, String companyID) throws Exception {
@@ -902,7 +950,7 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 			String paramValue = list.get(i).get("value");
 			logger.debug("paramName:" + paramName + ", paramValue:" + paramValue);
 			
-			if (paramName.equals("ExpirePassPeriod") || paramName.equals("MaxAllowedCountOfLoginFail")) {
+			if (paramName.equals("ExpirePassPeriod") || paramName.equals("MaxAllowedCountOfLoginFail") || paramName.equals("LoginLockedDuration")) {
 				int changeInt = Integer.parseInt(paramValue);
 				paramValue = Integer.toString(changeInt);
 			}
@@ -1057,8 +1105,86 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		ezSystemAdminDAO.updateAdminIPBand(params);
 		
 		logger.debug("updateAdminIPBand ended.");
-	} 
-	
+	}
+
+	@Override
+	public int isExistSystemAdminIPBand(String ipNo) throws Exception {
+		logger.debug("isExistSystemAdminIPBand started.");
+		logger.debug("ipNo=" + ipNo);
+
+		String[] ipNoList = ipNo.split(",");
+		List<String> list = new ArrayList<String>();
+
+		for (int i = 0; i < ipNoList.length; i++) {
+			list.add(ipNoList[i]);
+		}
+
+		int isExist = ezSystemAdminDAO.isExistSystemAdminIPBand(list);
+
+		logger.debug("isExistSystemAdminIPBand ended.");
+
+		return isExist;
+	}
+
+	@Override
+	public String isExistSystemAccess(String deleteList, String type, String useIPAccess, int tenantID) throws Exception {
+		logger.debug("isExistSystemAccess started.");
+		logger.debug("useIPAccess=" + useIPAccess +", deleteList="+deleteList);
+
+		if ("YES".equalsIgnoreCase(useIPAccess)){
+			List<String> userList = getAllAccessListCom(tenantID);
+			String countryCodeList = getAccessCountryList(tenantID);
+			List<IPBandVO> ipList = getAllIPBand(tenantID);
+			int accessIp = 0;
+			for(int i = 0; i < ipList.size(); i++) {
+				if ("YES".equalsIgnoreCase(ipList.get(i).getAccess())){
+					accessIp += 1;
+				}
+			}
+			boolean existCountryList = "".equalsIgnoreCase(countryCodeList) ? false : true;
+			boolean existIdList = userList.size() == 0 ? false : true;
+			boolean existIpList = accessIp == 0 ? false : true;
+
+			if ("id".equalsIgnoreCase(type)){
+				String [] deleteCodeArr = deleteList.isEmpty() ? new String[0] : deleteList.split(",");
+				if (deleteCodeArr.length == userList.size()){ //지우려는 거랑 현재 목록 숫자 같은경우
+					existIdList = false;
+				}
+			} else if ("ip".equalsIgnoreCase(type)) {
+				String [] deleteCodeArr = deleteList.isEmpty() ? new String[0] : deleteList.split(",");
+				for (int i = 0; i < ipList.size(); i++) {
+					for (int j = 0; j < deleteCodeArr.length; j++) {
+						if (ipList.get(i).getIpNo().equalsIgnoreCase(deleteCodeArr[j])){
+							ipList.remove(i);
+						}
+					}
+				}
+				int remainAccessIp = 0;
+				for(int i = 0; i < ipList.size(); i++) {
+					if ("YES".equalsIgnoreCase(ipList.get(i).getAccess())){
+						remainAccessIp += 1;
+					}
+				}
+				if (remainAccessIp == 0){ //지우고 남은 것중에 허용ip 수가 0인경우
+					existIpList = false;
+				}
+			} else {
+				String [] deleteCodeArr = deleteList.isEmpty() ? new String[0] : deleteList.split(";");
+				if (deleteCodeArr.length == 0){ //국가의 경우 전체 목록을 가져오므로 해당 목록이 0인 경우 false
+					existCountryList = false;
+				} //국가가 목록이 추가되는 순간은 다른 목록(ip,id)들이 있어서 굳이 true로 변환 안해도 됨
+			}
+
+			if (!existIdList && !existCountryList && !existIpList){
+				return "setAccess";
+			}
+		}
+
+		logger.debug("isExistSystemAccess ended.");
+
+		return "success";
+	}
+
 	@Override
 	public void deleteAdminIPBand(String ipNo) throws Exception {
 		logger.debug("deleteIPBand started.");
@@ -1377,4 +1503,534 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 
 		ezSystemAdminDAO.insertDeptChangeHist(deptChangeInfoVO);
 	}
+
+	@Override
+	public List<ConnectionInfoVO> getConnectorList(int tenantID, String offset, int startPage, int maxItemPerPage,
+			String keycode, String keyword, String lang, String startDate, String endDate, String companyId)
+			throws Exception {
+		logger.debug("getConnectorList started. tenantID : " + tenantID);
+
+		String companyOracleStr = "";
+
+		if (companyId != null && !companyId.equals("Top/organ")) {
+			companyOracleStr = " AND COMPANYID ='" + companyId + "'";
+		}
+
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("v_tenantID", tenantID);
+		params.put("offset", offset);
+		params.put("v_start", startPage);
+		params.put("pageCount", maxItemPerPage);
+		params.put("search_keycode", keycode);
+		params.put("search_keyword", keyword);
+		params.put("lang", lang); // primary:기본명 / 1:영문명
+		params.put("startDate", startDate);
+		params.put("endDate", endDate);
+		params.put("companyId", companyId);
+		params.put("companyOracleStr", companyOracleStr);
+
+		logger.debug("getConnectorList ended.");
+		List<ConnectionInfoVO> list = ezSystemAdminDAO.getConnectorList(params);
+
+		return list;
+	}
+
+	@Override
+	public int getConnectorListCount(int tenantID, String offset, String keycode, String keyword, String lang,
+			String startDate, String endDate, String companyId) throws Exception {
+
+		logger.debug("getConnectorListCount started. tenantID : " + tenantID);
+
+		String companyOracleStr = "";
+
+		if (companyId != null && !companyId.equals("Top/organ")) {
+			companyOracleStr = " AND COMPANYID ='" + companyId + "'";
+		}
+
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("v_tenantID", tenantID);
+		params.put("offset", offset);
+		params.put("search_keycode", keycode);
+		params.put("search_keyword", keyword);
+		params.put("lang", lang);
+		params.put("startDate", startDate);
+		params.put("endDate", endDate);
+		params.put("companyId", companyId);
+		params.put("companyOracleStr", companyOracleStr);
+
+		logger.debug("getConnectorListCount ended.");
+
+		return ezSystemAdminDAO.getConnectorListCount(params);
+	}
+
+	@Override
+	public void resetThemeAllUser() throws Exception {
+		logger.debug("resetThemeAllUser started.");
+
+		ezSystemAdminDAO.updateResetThemeAllCompany(); // 모든 회사 테마 리셋
+		ezSystemAdminDAO.deleteThemeAllUser();
+		ezSystemAdminDAO.updateResetThemeAllUser();
+
+		logger.debug("resetThemeAllUser ended.");
+	}
+
+	@Override
+	public void resetPortletAllUser() throws Exception {
+		logger.debug("resetPortletAllUser started.");
+
+		ezSystemAdminDAO.deletePortletAllUser();
+		ezSystemAdminDAO.deletePortletSizeAllUser();
+
+		logger.debug("resetPortletAllUser ended.");
+	}
+	
+	@Override
+	public int getSystemConfigListCount(String searchValue, String typeCode, String companyID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_TENANT_ID", tenantID);
+		map.put("searchValue", searchValue);
+		map.put("companyID", companyID);
+		map.put("typeCode", typeCode);
+		
+		return ezSystemAdminDAO.getSystemConfigListCount(map);
+	}
+	
+	@Override
+	public int getSystemConfigListCountPopup(String searchValue, String typeCode, String companyID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_TENANT_ID", tenantID);
+		map.put("searchValue", searchValue);
+		map.put("companyID", companyID);
+		map.put("typeCode", typeCode);
+		
+		return ezSystemAdminDAO.getSystemConfigListCountPopup(map);
+	}
+	
+	@Override
+	public List<SystemConfigVO> getSystemConfigList(String searchValue, String typeCode, String offset, int startRow, int pageCount, String companyID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("searchValue", searchValue);
+		map.put("typeCode", typeCode);
+		map.put("offset", offset);
+		map.put("v_STARTNUM", startRow);
+		map.put("v_COUNT", pageCount);
+		map.put("v_TENANT_ID", tenantID);
+		map.put("companyID", companyID);
+		
+		return (List<SystemConfigVO>) ezSystemAdminDAO.getSystemConfigList(map);
+	}
+	
+	@Override
+	public List<SystemConfigVO> getSystemConfigListPopup(String searchValue, String typeCode, String offSet, int startRow, int pageCount, String companyID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("searchValue", searchValue);
+		map.put("typeCode", typeCode);
+		map.put("offSet", offSet);
+        map.put("v_STARTNUM", startRow);
+        map.put("v_COUNT", pageCount);
+		map.put("v_TENANT_ID", tenantID);
+		map.put("companyID", companyID);
+		
+		return (List<SystemConfigVO>) ezSystemAdminDAO.getSystemConfigListPopup(map);
+	}
+	
+	@Override
+	public SystemConfigVO getSystemConfig(String CODE, String offset, String companyID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("CODE", CODE);
+		map.put("v_TENANT_ID", tenantID);
+		map.put("companyID", companyID);
+		map.put("offset", offset);
+		
+		return (SystemConfigVO) ezSystemAdminDAO.getSystemConfig(map);
+	}
+	
+	@Override
+	public void deletesyStemConfig(String sCode, String companyID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("CODE", sCode);
+		map.put("v_TENANT_ID", tenantID);
+		map.put("companyID", companyID);
+		
+		ezSystemAdminDAO.deletesyStemConfig(map);
+	}
+	
+	@Override
+	public String insertStemConfig(Document doc, String WRITERID, String WRITERNAME, int tenantID) throws Exception {
+		logger.debug("insertStemConfig started");
+		
+		String CODE = doc.getElementsByTagName("CODE").item(0).getTextContent();
+		String CODEVALUE = doc.getElementsByTagName("CODEVALUE").item(0).getTextContent();
+		String DESCRIPTION = doc.getElementsByTagName("DESCRIPTION").item(0).getTextContent();
+		String companyID = doc.getElementsByTagName("COMPANYID").item(0).getTextContent();
+		String typeCode = doc.getElementsByTagName("TYPECODE").item(0).getTextContent();
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("CODE", CODE);
+		map.put("CODEVALUE", CODEVALUE);
+		map.put("DESCRIPTION", DESCRIPTION);
+		map.put("WRITERID", WRITERID);
+		map.put("WRITERNAME", WRITERNAME);
+		map.put("WRITEDATE", commonUtil.getTodayUTCTime(""));
+		map.put("v_TENANT_ID", tenantID);
+		map.put("companyID", companyID);
+		map.put("typeCode", typeCode);
+		try {
+			ezSystemAdminDAO.insertStemConfig(map);
+
+			logger.debug("insertStemConfig ended");
+			return "OK";
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			return "ERROR : " + e.getMessage();
+		}
+	}
+	
+	@Override
+	public String updateStemConfig(Document doc, String WRITERID, String WRITERNAME, int tenantID) throws Exception {
+		logger.debug("updateStemConfig started");
+		
+		String CODE = doc.getElementsByTagName("CODE").item(0).getTextContent();
+		String CODEVALUE = doc.getElementsByTagName("CODEVALUE").item(0).getTextContent();
+		String DESCRIPTION = doc.getElementsByTagName("DESCRIPTION").item(0).getTextContent();
+		String companyID = doc.getElementsByTagName("COMPANYID").item(0).getTextContent();
+		String typeCode = doc.getElementsByTagName("TYPECODE").item(0).getTextContent();
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("CODE", CODE);
+		map.put("CODEVALUE", CODEVALUE);
+		map.put("DESCRIPTION", DESCRIPTION);
+		map.put("WRITERID", WRITERID);
+		map.put("WRITERNAME", WRITERNAME);
+		map.put("v_TENANT_ID", tenantID);
+		map.put("companyID", companyID);
+		map.put("WRITEDATE", commonUtil.getTodayUTCTime(""));
+		map.put("typeCode", typeCode);
+	
+		try {
+			ezSystemAdminDAO.updateStemConfig(map);
+
+			logger.debug("updateStemConfig ended");
+			return "OK";
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			return "ERROR : " + e.getMessage();
+		}
+	}
+
+	@Override
+	public String getSystemConfigTypeList(String searchValue, String offset, int startRow, int pageSize, String searchMode, String primary, String companyID, int tenantId) throws Exception {
+		logger.debug("getSystemConfigTypeList started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("searchValue", searchValue);
+		map.put("startRow", startRow);
+		map.put("pageSize", pageSize);
+		map.put("v_TENANT_ID", tenantId);
+		map.put("companyID", companyID);
+		map.put("offset", offset);
+		map.put("searchMode", searchMode);
+		
+		int cnt = getSystemConfigTypeListCount(searchValue, companyID, tenantId);
+		List<SystemConfigTypeVO> configTypeList = ezSystemAdminDAO.getSystemConfigTypeList(map);
+		
+		StringBuilder result = new StringBuilder("<LISTVIEWDATA>");
+		result.append("<ROWS>");
+		result.append("<TOTALCNT>");
+		result.append(cnt);
+		result.append("</TOTALCNT>");
+		
+		for (int i = 0; i < configTypeList.size(); i++) {
+        	SystemConfigTypeVO vo = configTypeList.get(i);
+        	result.append("<ROW>");
+        	result.append("<CELL>");
+        	result.append("<VALUE>" + commonUtil.cleanValue(vo.getTypeCode()) + "</VALUE>");
+        	result.append("<DATA1>" + commonUtil.cleanValue(vo.getTypeCode()) + "</DATA1>");
+            result.append("<DATA2>" + commonUtil.cleanValue(vo.getTypeName()) + "</DATA2>");
+            result.append("<DATA3>" + commonUtil.cleanValue(vo.getTypeName2()) + "</DATA3>");
+            result.append("<DATA4>" + commonUtil.cleanValue(vo.getDescription()) + "</DATA4>");
+            if (primary.equals("1")) {
+            	result.append("<DATA5>" + commonUtil.cleanValue(vo.getWriterName()) + "</DATA5>");
+            } else {
+            	result.append("<DATA5>" + commonUtil.cleanValue(vo.getWriterName2()) + "</DATA5>");
+            }
+            result.append("<DATA6>" + commonUtil.cleanValue(vo.getWriteDate()) + "</DATA6>");
+            result.append("</CELL>");
+            result.append("<CELL>");
+            result.append("<VALUE>" + commonUtil.cleanValue(vo.getTypeName()) + "</VALUE>");
+            result.append("</CELL>");
+            result.append("<CELL>");
+            result.append("<VALUE>" + commonUtil.cleanValue(vo.getTypeName2()) + "</VALUE>");
+            result.append("</CELL>");
+            result.append("<CELL>");
+            result.append("<VALUE>" + commonUtil.cleanValue(vo.getDescription()) + "</VALUE>");
+            result.append("</CELL>");
+            result.append("<CELL>");
+            result.append("<VALUE>" + commonUtil.cleanValue(vo.getWriterName()) + "</VALUE>");
+            result.append("</CELL>");
+            result.append("<CELL>");
+            result.append("<VALUE>" + commonUtil.cleanValue(vo.getWriteDate().substring(0,10)) + "</VALUE>");
+            result.append("</CELL>");
+            result.append("</ROW>");
+        }
+        result.append("</ROWS>");
+        result.append("</LISTVIEWDATA>");
+		
+		logger.debug("getSystemConfigTypeList ended");
+		return result.toString();
+	}
+	
+	@Override
+	public List<SystemConfigTypeVO> getSystemConfigTypeListNotXml(String searchValue, String offset, int startRow, int pageSize, String searchMode, String companyID, int tenantId) throws Exception {
+		logger.debug("getSystemConfigTypeListNotXml started");
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("searchValue", searchValue);
+		map.put("startRow", startRow);
+		map.put("pageSize", pageSize);
+		map.put("v_TENANT_ID", tenantId);
+		map.put("companyID", companyID);
+		map.put("offset", offset);
+		map.put("searchMode", searchMode);
+		List<SystemConfigTypeVO> configTypeList = ezSystemAdminDAO.getSystemConfigTypeList(map);
+		
+		logger.debug("getSystemConfigTypeListNotXml ended");
+		return configTypeList;
+	}
+
+	@Override
+	public int getSystemConfigTypeListCount(String searchValue, String companyID, int tenantId) throws Exception {
+		logger.debug("getSystemConfigTypeListCount started");
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("serarchValue", searchValue);
+		map.put("v_TENANT_ID", tenantId);
+		map.put("companyID", companyID);
+		
+		int cnt = ezSystemAdminDAO.getSystemConfigTypeListCount(map);
+		logger.debug("getSystemConfigTypeListCount ended");
+		return cnt;
+	}
+
+	@Override
+	public void deleteSystemConfigType(String typeCode, String companyID, int tenantId) throws Exception {
+		logger.debug("deleteSystemConfigType started");
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("v_TENANT_ID", tenantId);
+		map.put("companyID", companyID);
+		map.put("typeCode", typeCode);
+		ezSystemAdminDAO.deleteSystemConfigByTypeCode(map);
+		ezSystemAdminDAO.deleteSystemConfigType(map);
+		logger.debug("deleteSystemConfigType ended");
+	}
+
+	@Override
+	public String checkDuplicateCode(String code, int tenantId, String companyID) throws Exception {
+		logger.debug("checkDuplicateCode started");
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("v_TENANT_ID", tenantId);
+		map.put("companyID", companyID);
+		map.put("code", code);
+		
+		int codeCnt = ezSystemAdminDAO.checkDuplicateCode(map);
+		String result = "";
+		
+		if (codeCnt >= 1) {
+			result = "DUPLICATE";
+		} else {
+			result = "AVAILABLE";
+		}
+		logger.debug("checkDuplicateCode ended");
+		return result;
+	}
+
+	@Override
+	public SystemConfigTypeVO getSystemConfigType(String typeCode, String offset, String companyID, int tenantId) throws Exception {
+		logger.debug("getSystemConfigType started");
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("v_TENANT_ID", tenantId);
+		map.put("companyID", companyID);
+		map.put("offset", offset);
+		map.put("typeCode", typeCode);
+		
+		SystemConfigTypeVO result = ezSystemAdminDAO.getSystemConfigType(map);
+		logger.debug("getSystemConfigType ended");
+		return result;
+	}
+
+	@Override
+	public String checkDuplicateTypeCode(String typeCode, int tenantId, String companyID) throws Exception {
+		logger.debug("checkDuplicateTypeCode started");
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("v_TENANT_ID", tenantId);
+		map.put("companyID", companyID);
+		map.put("typeCode", typeCode);
+		
+		int codeCnt = ezSystemAdminDAO.checkDuplicateTypeCode(map);
+		String result = "";
+		
+		if (codeCnt >= 1) {
+			result = "DUPLICATE";
+		} else {
+			result = "AVAILABLE";
+		}
+		logger.debug("checkDuplicateTypeCode ended");
+		return result;
+	}
+
+	@Override
+	public void insertSystemConfigType(String typeCode, String typeName, String typeName2, String description, String writerId, String writerName, String writerName2, int tenantId, String companyId) throws Exception {
+		logger.debug("insertSystemConfigType started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("typeCode", typeCode);
+		map.put("typeName", typeName);
+		map.put("typeName2", typeName2);
+		map.put("description", description);
+		map.put("writeDate", commonUtil.getTodayUTCTime(""));
+		map.put("writerId", writerId);
+		map.put("writerName", writerName);
+		map.put("writerName2", writerName2);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		
+		ezSystemAdminDAO.insertSystemConfigType(map);
+
+		logger.debug("insertSystemConfigType ended");
+	}
+
+	@Override
+	public void updateSystemConfigType(String typeCode, String typeName, String typeName2, String description, String writerId, String writerName, String writerName2, int tenantId, String companyId) throws Exception {
+		logger.debug("updateSystemConfigType started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("typeCode", typeCode);
+		map.put("typeName", typeName);
+		map.put("typeName2", typeName2);
+		map.put("description", description);
+		map.put("writeDate", commonUtil.getTodayUTCTime(""));
+		map.put("writerId", writerId);
+		map.put("writerName", writerName);
+		map.put("writerName2", writerName2);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		
+		ezSystemAdminDAO.updateSystemConfigType(map);
+		
+		logger.debug("updateSystemConfigType ended");
+	}
+
+	@Override
+	public void disableDeleteSystemConfig(String sCode, String companyID, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("code", sCode);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyID);
+		
+		ezSystemAdminDAO.disableDeleteSystemConfig(map);
+	}
+
+	@Override
+	public List<IPBandVO> getFidoAuthenticList(int tenantID, String companyId) throws Exception {
+		logger.debug("getFidoAuthenticList started. tenantID : {},  companyId : {}", tenantID, companyId);
+
+		Map<String, Object> map = new HashMap<>();
+		map.put("tenantID", tenantID);
+		map.put("companyId", companyId);
+
+		List<IPBandVO> list = ezSystemAdminDAO.getFidoAuthenticList(map);
+
+		logger.debug("getFidoAuthenticList ended.");
+		return list;
+	}
+	
+	public int getFidoAuthenticInfo(int tenantID, String companyId, String ipAddress) throws Exception {
+		logger.debug("getFidoAuthenticInfo started. tenantID : {} companyId : {} ipAddress : {}" + tenantID, companyId, ipAddress);
+
+		Map<String,Object> map = new HashMap<>();
+		map.put("tenantID", tenantID);
+		map.put("companyId", companyId);
+		map.put("ipAddress", ipAddress);
+
+		logger.debug("getFidoAuthenticInfo ended.");
+		return ezSystemAdminDAO.getFidoAuthenticInfo(map);
+		
+	}
+	
+	@Override
+	public IPBandVO getSystemFidoIPBand(String ipNo) throws Exception {
+		logger.debug("getSystemFidoIPBand started.");
+		logger.debug("ipNo=" + ipNo);
+
+		IPBandVO ipBand = ezSystemAdminDAO.getSystemFidoIPBand(ipNo);
+
+		logger.debug("getSystemFidoIPBand ended.");
+
+		return ipBand;
+	}
+	
+	@Override
+	public void insertFidoIPBand(int tenantID, String companyId, String ipAddress, String access, String explanation) throws Exception {
+		logger.debug("inserFidoIPBand started.");
+		logger.debug("tenantID=" + tenantID + ", companyId=" + companyId + ", ipAddress=" + ipAddress +  ", access=" + access + " explanation=" + explanation);
+
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("tenantID", tenantID);
+		params.put("companyId", companyId);
+		params.put("access", access);
+		params.put("ipAddress", ipAddress);
+		params.put("explanation", explanation);
+
+		ezSystemAdminDAO.insertFidoIPBand(params);
+
+		logger.debug("inserFidoIPBand ended.");
+	}
+	
+	@Override
+	public void updateFidoIPBand(String ipNo, String ipAddress, String access, String explanation) throws Exception {
+		logger.debug("updateFidoIPBand started.");
+		logger.debug("ipNo=" + ipNo + ", ipAddress=" + ipAddress +  ", access=" + access + ", explanation=" + explanation);
+
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("ipNo", ipNo);
+		params.put("ipAddress", ipAddress);
+		params.put("access", access);
+		params.put("explanation", explanation);
+
+		ezSystemAdminDAO.updateFidoIPBand(params);
+
+	}
+	
+	@Override
+	public void deleteFidoIPBand(String ipNo) throws Exception {
+		logger.debug("deleteFidoIPBand started.");
+		logger.debug("ipNo=" + ipNo);
+
+		String[] ipNoList = ipNo.split(",");
+		List<String> list = new ArrayList<String>();
+
+		for (int i = 0; i < ipNoList.length; i++) {
+			list.add(ipNoList[i]);
+		}
+
+		ezSystemAdminDAO.deleteFidoIPBand(list);
+
+		logger.debug("deleteFidoIPBand ended.");
+	}
+
 }

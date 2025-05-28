@@ -5,7 +5,8 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" href="${util.addVer('ezJournal.c1', 'msg')}" type="text/css">
+<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 <link href="${util.addVer('/css/previewmail.css')}" rel="stylesheet" type="text/css">
 <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -667,7 +668,8 @@
 			function setFormName() {
 				var url = "/ezJournal/getFormList.do?typeId=" + typeId;
 				if(listType == "department" || listType == "mine"){
-					url += "&deptId=" + $("#dept").val();
+					url += "&deptId=";
+					url += $("#dept").length > 0 ? $("#dept").val() : "";
 				}
 				$.ajax({
 	   				type : "post",
@@ -679,6 +681,7 @@
 	   						opts += "<option value=" + this.formId + ">" + this.formName + "</option>";
 	   					})
 	   					$("#formId").html(opts);
+						resizableMenu();
 	   				}
 	   			});
 			}
@@ -1067,10 +1070,10 @@
 	</c:if>
 	<c:choose>
 		<c:when test="${listType eq 'recv' }">
-			<span id="mailBoxInfo">&nbsp;<span id="recvCount" style="color: #017BEC;"></span> / <span id="totalCount"></span></span>
+			<span id="mailBoxInfo">&nbsp;<span id="recvCount" class='txt_color'></span> / <span id="totalCount"></span></span>
 		</c:when>
 		<c:otherwise>
-			<span id="mailBoxInfo">&nbsp;<span id="totalCount" style="color: #017BEC;"></span></span>
+			<span id="mailBoxInfo">&nbsp;<span id="totalCount" class='txt_color'></span></span>
 		</c:otherwise>
 	</c:choose>
 	<span class="searchForm">
@@ -1088,31 +1091,31 @@
 		<ul>
 			<!-- 		  	일지쓰기 -->
 			<c:if test="${listType eq 'department' or listType eq 'mine' }">
-				<li class="important"><span onClick="writejournal()"><spring:message code='ezJournal.t57' /></span></li>
+				<li class="important" onClick="writejournal()"><span><spring:message code='ezJournal.t57' /></span></li>
 			</c:if>
 			<!-- 		  	확인완료 -->
 			<c:if test="${listType eq 'recv' }">
-				<li><span onClick="doViewJournal();"><spring:message code='ezJournal.t58' /></span></li>
+				<li onClick="doViewJournal();"><span><spring:message code='ezJournal.t58' /></span></li>
 			</c:if>
 			<!-- 		  	읽음표시 -->
 			<c:if test="${listType eq 'department' or listType eq 'mine'}">
-				<li><span onClick="doViewJournal();"><spring:message code='ezJournal.t58' /></span></li>
+				<li onClick="doViewJournal();"><span><spring:message code='ezJournal.t58' /></span></li>
 			</c:if>
 			<!-- 		  	수정 -->
 			<c:if test="${listType eq 'temp' }">
-				<li><span onClick="modifyJournal()"><spring:message code='ezJournal.t107' /></span></li>
+				<li onClick="modifyJournal()"><span><spring:message code='ezJournal.t107' /></span></li>
 			</c:if>
 			<c:if test="${listType eq 'department' or listType eq 'recv' or listType eq 'mine'}">
 				<!-- 		  	취합 -->
-				<li><span onClick="doSelectSumJournal();"><spring:message code='ezJournal.t60' /></span></li>
-				<li><span class="icon16 icon16_search" id="SearchOption" onClick="doLayerPopup(this);" mode="off"></span></li>
+				<li onClick="doSelectSumJournal();"><span><spring:message code='ezJournal.t60' /></span></li>
+				<li onClick="doLayerPopup(this)"><span class="icon16 icon16_search switchIcon" id="SearchOption" onClick="doLayerPopup(this);" mode="off"></span><span class="iconTexts"><spring:message code='ezJournal.t43'/></span></li>
 			</c:if>
-			<li onClick="deleteJournal()"><span class="icon16 icon16_delete"></span></li>
+			<li onClick="deleteJournal()"><span class="icon16 icon16_delete switchIcon"></span><span class="iconTexts" onClick="DeleteItem_onclick()"><spring:message code='ezJournal.t108'/></span></li>
 			<c:if test="${listType eq 'department'}">
 				<li style="background: none"><select id="dept" onchange="goToPageByDeptId();" style="height:29px;">
 					<c:forEach items="${deptList}" var="dept">
 						<option value="${dept.deptId}"
-							<c:if test="${dept.mine eq 'yes' }">selected</c:if>>${dept.deptName }
+							<c:if test="${dept.deptId eq userDept}">selected</c:if>>${dept.deptName }
 						</option>
 					</c:forEach>
 				</select></li>

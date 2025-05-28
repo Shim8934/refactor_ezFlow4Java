@@ -17,8 +17,8 @@
     }
 	
     //기록물철 기능(분류) 정보를 가져오기 위한 처리과 코드를 초기화
-    g_DeptCode=arr_userinfo[4];
-    g_DeptName=arr_userinfo[5];
+    g_DeptCode = upperDeptCode === "" ? arr_userinfo[4] : upperDeptCode;
+    g_DeptName = upperDeptName === "" ? arr_userinfo[5] : upperDeptName;
                 
     var oList, ListViewData, Headers, Header, HName, HWidth, Rows, node;	
     oList = createXmlDom();
@@ -510,7 +510,8 @@ function MyCabinet_List() {
 		url : "/ezApprovalG/getMyTaskCode.do",
 		data : {
 			deptID    : arr_userinfo[4],
-			userID    : arr_userinfo[1]
+			userID    : arr_userinfo[1],
+            upperDeptCode : upperDeptCode
 		},
 		success: function(xml){
 			MyCabinet_ini(loadXMLString(xml));

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezCommunity.vo.CommunityCComCloseVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityClubVO;
-import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzCommunityAdminDAO")
 public class EzCommunityAdminDAO extends EgovAbstractDAO {
@@ -86,10 +86,11 @@ public class EzCommunityAdminDAO extends EgovAbstractDAO {
 		update("EzCommunityAdminDAO.aspCommAdmitOkSet1Update", map);
 	}
 	
-	@SuppressWarnings("unchecked")
+	/* 2024-07-16 홍승비 - 사용되지 않는 구버전 커뮤니티 쿼리 주석처리 및 제거 */
+	/*@SuppressWarnings("unchecked")
 	public List<HashMap<String, Object>> aspCommAdmitokSet1Select(Map<String, Object> map) throws Exception {
 		return (List<HashMap<String, Object>>) list("EzCommunityAdminDAO.aspCommAdmitokSet1Select", map);
-	}
+	}*/
 	
 	public void aspCommAdmitOkSet1Delete(Map<String, Object> map) throws Exception {
 		delete("EzCommunityAdminDAO.aspCommAdmitOkSet1Delete", map);

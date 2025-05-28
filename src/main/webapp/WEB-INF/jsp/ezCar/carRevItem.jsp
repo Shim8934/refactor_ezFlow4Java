@@ -7,7 +7,8 @@
 	<head>
 		<title><spring:message code="ezCar.smb16"/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezResource.e2', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript">
 			var strBrd_ID = "${strBrdID}";
@@ -23,7 +24,7 @@
 			var car_nm = "${car_nm}";
 			
 			/* window.onload = function () { 
-		    	document.getElementById("TitleInfo").innerHTML = " - [" + strLang1002 + "<span style='color:#017BEC;font-weight:bold;'> " + TotalCnt + " </span>" + strLang1003 + "]";
+		    	document.getElementById("TitleInfo").innerHTML = " - [" + strLang1002 + "<span class='txt_color' style='font-weight:bold;'> " + TotalCnt + " </span>" + strLang1003 + "]";
 			} */
 			
 			function btnClose_Click(){

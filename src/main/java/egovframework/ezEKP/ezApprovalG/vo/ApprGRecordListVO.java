@@ -77,6 +77,34 @@ public class ApprGRecordListVO {
 	private String relayFormID;
 	private boolean joinEndReceiptPointInfo;
 	
+	/* 이유정 - SQL Injection 웹취약점 수정 작업으로 EzApprovalG.getRecordList 관련 파라미터 추가 */
+	private String[] cabinetIDArr;
+	private String[] chargerArr;
+	private String sort;
+	private String dispRegisterNo;
+	private String recTitle;
+	private String dispClassNo;
+	private String reSendFlag;
+	private String registerDate;
+	private String numOfPage;
+	private String registerYear;
+	private String transYear;
+	private String displayReason;
+	private String sepTitle;
+	
+	private String formID;
+	
+	private String drafterDept;
+	
+	private String orgDocNum;
+	
+	private String docNum;
+	
+	private String selSendStatus;
+	
+	/* 상위부서아이디 */
+	private String upperDeptCode;
+
 	public int getTenantID() {
 		return tenantID;
 	}
@@ -305,5 +333,111 @@ public class ApprGRecordListVO {
     public void setJoinEndReceiptPointInfo(boolean joinEndReceiptPointInfo) {
         this.joinEndReceiptPointInfo = joinEndReceiptPointInfo;
     }
+	public String[] getCabinetIDArr() {
+		return cabinetIDArr;
+	}
+	public void setCabinetIDArr(String[] cabinetIDArr) {
+		this.cabinetIDArr = cabinetIDArr;
+	}
+	public String[] getChargerArr() {
+		return chargerArr;
+	}
+	public void setChargerArr(String[] chargerArr) {
+		this.chargerArr = chargerArr;
+	}
+	public String getSort() {
+		return sort;
+	}
+	public void setSort(String sort) {
+		this.sort = sort;
+	}
+	public String getDispRegisterNo() {
+		return dispRegisterNo;
+	}
+	public void setDispRegisterNo(String dispRegisterNo) {
+		this.dispRegisterNo = dispRegisterNo;
+	}
+	public String getRecTitle() {
+		return recTitle;
+	}
+	public void setRecTitle(String recTitle) {
+		this.recTitle = recTitle;
+	}
+	public String getDispClassNo() {
+		return dispClassNo;
+	}
+	public void setDispClassNo(String dispClassNo) {
+		this.dispClassNo = dispClassNo;
+	}
+	public String getReSendFlag() {
+		return reSendFlag;
+	}
+	public void setReSendFlag(String reSendFlag) {
+		this.reSendFlag = reSendFlag;
+	}
+	public String getRegisterDate() {
+		return registerDate;
+	}
+	public void setRegisterDate(String registerDate) {
+		this.registerDate = registerDate;
+	}
+	public String getNumOfPage() {
+		return numOfPage;
+	}
+	public void setNumOfPage(String numOfPage) {
+		this.numOfPage = numOfPage;
+	}
+	public String getRegisterYear() {
+		return registerYear;
+	}
+	public void setRegisterYear(String registerYear) {
+		this.registerYear = registerYear;
+	}
+	public String getTransYear() {
+		return transYear;
+	}
+	public void setTransYear(String transYear) {
+		this.transYear = transYear;
+	}
+	public String getDisplayReason() {
+		return displayReason;
+	}
+	public void setDisplayReason(String displayReason) {
+		this.displayReason = displayReason;
+	}
+	public String getSepTitle() {
+		return sepTitle;
+	}
+	public void setSepTitle(String sepTitle) {
+		this.sepTitle = sepTitle;
+	}
 	
+	public String getFormID() { return formID; }
+
+	public void setFormID(String formID) { this.formID = formID; }
+
+	public String getDrafterDept() { return drafterDept; }
+
+	public void setDrafterDept(String drafterDept) { this.drafterDept = drafterDept; }
+
+	public String getOrgDocNum() { return orgDocNum; }
+
+	public void setOrgDocNum(String orgDocNum) { this.orgDocNum = orgDocNum; }
+
+	public String getDocNum() { return docNum; }
+
+	public void setDocNum(String docNum) { this.docNum = docNum; }
+
+	public String getSelSendStatus() { return selSendStatus; }
+	
+	public void setSelSendStatus(String selSendStatus) { this.selSendStatus = selSendStatus; }
+	
+	
+	public String getupperDeptCode() {
+		return upperDeptCode;
+	}
+	
+	public void setupperDeptCode(String upperDeptCode) {
+		this.upperDeptCode = upperDeptCode;
+	}
 }

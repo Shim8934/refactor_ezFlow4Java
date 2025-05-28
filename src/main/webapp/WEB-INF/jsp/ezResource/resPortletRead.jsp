@@ -6,7 +6,8 @@
 	<head>
 		<title><spring:message code='ezResource.t9900013'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-		<link rel="stylesheet" href="${util.addVer('ezResource.e2', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<style type="text/css">
 		
 		.content tr{
@@ -452,6 +453,8 @@
 
 	                if (rtnValue == "True") {
 	                    xmlHTTP = createXMLHttpRequest();
+	                    createNodeAndInsertText(xmlDOM, objNode, "STARTDATETIME", sDT);
+	                	createNodeAndInsertText(xmlDOM, objNode, "ENDDATETIME", eDT);
 	                    xmlHTTP.open("POST", "/ezResource/sendMailToUser.do", false);
 	                    xmlHTTP.send(xmlDOM);
 	                    var ResponseXML = xmlHTTP.responseXML;

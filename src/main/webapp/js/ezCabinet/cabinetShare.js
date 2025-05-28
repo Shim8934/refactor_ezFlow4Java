@@ -10,7 +10,7 @@ var CabinetShareItem = function() {
 	var ancesPopup   = null;
 	var cabinetId    = null;
 	var ownId        = null;
-	
+
 	var userTable = new CabinetTable({
 		normal   : "bnkCabNormal2",
 		selected : "bnkCabSelect2",
@@ -50,7 +50,7 @@ var CabinetShareItem = function() {
 		var cabShareBttnElmt    = document.getElementById("cabShareBttn");
 		var listBttns           = cabShareBttnElmt.children;
 		listBttns[0].onclick    = function(e) {saveShareUsers();};
-		listBttns[1].onclick    = function(e) {closeWindow();};
+		listBttns[1].onclick    = function(e) {close();};
 		document.getElementById("cabRlClose"   ).addEventListener("click", function(e) {closeWindow()        ;}, false);
 		document.getElementById("txtSpanView"  ).addEventListener("click", function(e) {changeListView('TXT');}, false);
 		document.getElementById("imgSpanView"  ).addEventListener("click", function(e) {changeListView('IMG');}, false);
@@ -356,21 +356,108 @@ var CabinetShareItem = function() {
 		document.getElementById("searchResult").textContent = CabinetMessages.strResult;
 		getUsers("1");
 	}
-	
+
+	window.addEventListener('message', function(event) {
+		// 자식창에서 메세지를 받아와 'closed'일 경우에만 수행
+		// 버튼을 통해 창을 닫지 않는 경우 최초 공유자 리스트로 갱신 (공유자 수정사항 원복)
+		if (event.data === 'closed') {
+			var selectedUsers = document.getElementById("sharedTable");
+			var listTr        = selectedUsers.rows;
+			var userList      = [];
+
+			for (var i = 1, len = listTr.length; i < len; i++) {
+				var userId   = listTr[i].getAttribute("role");
+				var userType = listTr[i].getAttribute("userType");
+				var perSlBox = listTr[i].children[2].firstElementChild;
+				var subSlBox = listTr[i].children[3].firstElementChild;
+				var permiss  = perSlBox.options[perSlBox.selectedIndex].value;
+				var subPerm  = subSlBox.options[subSlBox.selectedIndex].value;
+				userList.push({userId: userId, userType : userType, permis: permiss, subPerm: subPerm, searchFlag : 'N'});
+			}
+
+			$.ajax({
+				type: "POST",
+				url: "/ezCabinet/saveShareUserList.do",
+				data: {
+					"cabinetId" : cabinetId,
+					"userList"  : JSON.stringify(userList)
+				},
+				dataType: "JSON",
+				async: false,
+				success: function(data) {},
+				error: function(error) {}
+			});
+		}
+	});
+
 	function searchShareList() {
 		var searchValue2 = document.getElementById("keyword2").value;
 		if (!searchValue2.replace(/\s/g,'')) {alert(CabinetMessages.strNoInput); return;}
 		var searchOpt2 = document.getElementById("searchType2").value;
-		
+
 		if (sharePopup) {sharePopup.close();}
-		
+
+		// div에 추가된 모든 공유자 리스트를 검색가능하도록 검색시 DB에 저장해줌.
+		var selectedUsers = document.getElementById("sharedTable");
+		var listTr        = selectedUsers.rows;
+		userList      = [];
+
+		for (var i = 1, len = listTr.length; i < len; i++) {
+			var userId   = listTr[i].getAttribute("role");
+			var userType = listTr[i].getAttribute("userType");
+			var userName = listTr[i].getAttribute("username");
+			var deptName = listTr[i].getAttribute("deptname");
+			var perSlBox = listTr[i].children[2].firstElementChild;
+			var subSlBox = listTr[i].children[3].firstElementChild;
+			var permiss  = perSlBox.options[perSlBox.selectedIndex].value;
+			var subPerm  = subSlBox.options[subSlBox.selectedIndex].value;
+			userList.push({userId: userId, userType : userType, permis: permiss, subPerm: subPerm, searchFlag: 'Y', displayname: userName, description: deptName});
+		}
+
+		// 검색결과에 해당하는 공유자만 추출
+		var searchedList = userList.filter(function(user) {
+			if (user.hasOwnProperty(searchOpt2)) {
+				var userValue = user[searchOpt2].toString();
+				return userValue.includes(searchValue2);
+			}
+			return false;
+		});
+
+		// 검색결과 이외의 공유자만 추출
+		var remainList = userList.filter(a => !searchedList.some(b => b.userId === a.userId));
+
+		// searchFlag 'N'으로 변경
+		remainList.forEach(function(item) {
+			if (item.searchFlag == 'Y') {
+				item.searchFlag = 'N';
+			}
+		});
+
+		// 검색결과에 해당하는 공유자만 데이터 갱신
+		$.ajax({
+			type: "POST",
+			url: "/ezCabinet/saveShareUserList.do",
+			data: {
+				"cabinetId" : cabinetId,
+				"userList"  : JSON.stringify(searchedList)
+			},
+			dataType: "JSON",
+			async: false,
+			success: function(data) {},
+			error: function(error) {}
+		});
+
 		var width        = 470;
 		var height       = 450;
 		var leftPosition = (window.screen.width / 2) - ((width / 2) + 10);
 		var topPosition  = (window.screen.height / 2) - ((height / 2) + 50);
 		var option       = "height=" + height + ",width=" + width + ", left=" + leftPosition + ",top=" + topPosition + ",screenX=" + leftPosition + ",screenY=" + topPosition + ", status = no, toolbar=no, menubar=no,location=no, resizable=1";
-		
-		sharePopup = window.open("/ezCabinet/getSearchShareList.do?cabinetId=" + cabinetId + "&searchOpt=" + searchOpt2 + "&searchValue=" + searchValue2, "", option);
+
+		sharePopup = window.open("/ezCabinet/getSearchShareList.do?cabinetId=" + cabinetId + "&searchOpt=" + searchOpt2 + "&searchValue=" + searchValue2 + "&searchFlag=Y", "", option);
+		// 자식창으로 메세지 전달
+		setTimeout(function() {
+			sharePopup.postMessage([remainList, userList], "*");
+		}, 500);
 	}
 	
 	function setUserListType(pListType) {
@@ -475,7 +562,8 @@ var CabinetShareItem = function() {
 		if (sharePopup) {sharePopup.close();}
 		if (ancesPopup) {ancesPopup.close();}
 	}
-	
+
+	var temp; // 상태값 구분을 위한 변수
 	function saveShareUsers() {
 		var selectedUsers = document.getElementById("sharedTable");
 		var listTr        = selectedUsers.rows;
@@ -488,9 +576,9 @@ var CabinetShareItem = function() {
 			var subSlBox = listTr[i].children[3].firstElementChild;
 			var permiss  = perSlBox.options[perSlBox.selectedIndex].value;
 			var subPerm  = subSlBox.options[subSlBox.selectedIndex].value;
-			userList.push({userId: userId, userType : userType, permis: permiss, subPerm: subPerm});
+			userList.push({userId: userId, userType : userType, permis: permiss, subPerm: subPerm, searchFlag : 'N'});
 		}
-		
+		temp = "save";
 		$.ajax({
 			type: "POST",
 			url: "/ezCabinet/saveShareUserList.do",
@@ -535,7 +623,34 @@ var CabinetShareItem = function() {
 	}
 	
 	function closeWindow() {window.close();}
-	
+
+	// [취소] 버튼 클릭시 한번 더 확인 후 최초 공유자 리스트로 갱신 (공유자 수정사항 원복)
+	function close() {
+		if(confirm('공유자 저장을 취소하시겠습니까?')) {
+			temp = "close";
+			$.ajax({
+				type: "POST",
+				url: "/ezCabinet/saveShareUserList.do",
+				data: {
+					"cabinetId" : cabinetId,
+					"userList"  : JSON.stringify(firstList)
+				},
+				dataType: "JSON",
+				async: false,
+				success: function(data) {},
+				error: function(error) {}
+			});
+			closeWindow();
+		}
+	}
+
+	// 버튼을 통해 창을 닫지 않는 경우 부모창으로 메세지 보냄.
+	window.onbeforeunload = function() {
+		if (temp == undefined) {
+			window.opener.postMessage(["end", firstList, cabinetId], '*');
+		}
+	}
+
 	function convertUserType(userType) {
 		var type = "";
 		

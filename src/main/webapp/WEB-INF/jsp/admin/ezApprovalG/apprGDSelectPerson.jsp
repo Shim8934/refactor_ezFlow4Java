@@ -13,7 +13,8 @@
 			</c:otherwise>
 		</c:choose>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="${util.addVer('ezPersonal.e3', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('/css/organ_tree.css')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -332,7 +333,7 @@
 		                treeView.DataBind("TreeView");
 		            }
 		            else {
-		                alert("<spring:message code='ezPersonal.t17'/>" + g_xmlHTTP.statusText);
+		                alert("<spring:message code='ezPersonal.t17'/>" + g_xmlHTTP.status);
 		                g_xmlHTTP = null;
 		            }
 		        }

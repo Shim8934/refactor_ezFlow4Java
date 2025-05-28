@@ -6,7 +6,8 @@
 	<head>
 		<title><spring:message code='ezApprovalG.t1124'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}"  type="text/css">
 		<style type="text/css">
 			.mainlist tr th {
@@ -71,6 +72,7 @@
 		
 		        arrDeptInfo[0] = treeNode.GetNodeData("CN");
 		        arrDeptInfo[1] = treeNode.GetNodeData("VALUE");
+				arrDeptInfo[2] = treeNode.GetNodeData("USEUPPERDEPTBOX");
 		        document.getElementById("tdSelDept").innerHTML = ReplaceText(arrDeptInfo[1], "&", "&amp;");
 		    }
 		    function btSearchDept_onclick() {
@@ -80,7 +82,7 @@
 		        else {
 		            var pSearchList = "displayname::" + textDeptName.value + ";;EXACT_extensionAttribute2::" + CompanyID;
 		            var pCellList = "displayname;extensionAttribute3";
-		            var pPropList = "";
+		            var pPropList = "useupperdeptbox";
 		            var pClass = "group";
 		            DisplayOrganSearchList(pSearchList, pCellList, pPropList, pClass);
 		        }
@@ -97,6 +99,7 @@
 		        var tr = selnode[0];
 		        arrDeptInfo[0] = GetAttribute(tr, "DATA2");
 		        arrDeptInfo[1] = tr.cells[0].innerText;
+				arrDeptInfo[2] = GetAttribute(tr, "USEUPPERDEPTBOX");
 		        if(CrossYN())
 		            tdSelDept.textContent = arrDeptInfo[1];
 		        else
@@ -122,6 +125,9 @@
 		        else if (arrDeptInfo[0] == "") {
 		        	OpenAlertUI("<spring:message code='ezApprovalG.t1126'/>");
 		        }
+				else if (arrDeptInfo[2] == "Y") { // 상위부서문서함 사용여부 확인
+					OpenAlertUI("<spring:message code='ezApprovalG.yjh07'/>");
+				}
 		        else {
 		            rtnVal[0] = "TRUE";
 		            rtnVal[1] = arrDeptInfo[0];

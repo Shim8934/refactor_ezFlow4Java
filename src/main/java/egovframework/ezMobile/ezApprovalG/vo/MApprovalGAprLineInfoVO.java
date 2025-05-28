@@ -25,6 +25,8 @@ public class MApprovalGAprLineInfoVO {
 	private String aprMemberPhoto;
 	/** 결재자Id*/
 	private String aprMemberId;
+	/** 결재자순번*/
+	private String aprMemberSn;
 	
 	public String getAprState() {
 		return aprState;
@@ -94,4 +96,11 @@ public class MApprovalGAprLineInfoVO {
 	}
 	public String getAprMemberId() { return aprMemberId; }
 	public void setAprMemberId(String aprMemberId) { this.aprMemberId = aprMemberId; }
+	
+	public String getAprMemberSn() {
+		return aprMemberSn;
+	}
+	public void setAprMemberSn(String aprMemberSn) {
+		this.aprMemberSn = aprMemberSn;
+	}
 }

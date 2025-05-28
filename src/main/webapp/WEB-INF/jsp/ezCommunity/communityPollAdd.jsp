@@ -6,7 +6,8 @@
 	<head></head>
 		<title>poll_add</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" type="text/css" href="${util.addVer('ezCommunity.i1', 'msg')}">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/css/community.css')}" type="text/css">
 		<style>
 			.disableSelIE {
@@ -78,7 +79,7 @@
 	                }
 	                document.getElementById('Sdatepicker').value = StartDateTime;
 	                document.getElementById('Edatepicker').value = EndDateTime;	                
-	                document.getElementById('pollSubject').value = "<c:out value='${pSubject}' />";
+// 	                document.getElementById('pollSubject').value = "<c:out value='${pSubject}' />";
 	            }
 	        }
 	        
@@ -453,7 +454,7 @@
 	    	<table class="content" style="margin-top:12px">
 	            <tr>
 	                <th><spring:message code='ezCommunity.t599' /></th>
-	                <td style="padding:3px"><textarea id="pollSubject" name="pollSubject" style="width: 98%; height: 130px; resize:none;" runat="server" onkeyup="ismaxlength(this)" value = "${pSubject}"></textarea></td>
+	                <td style="padding:3px"><textarea id="pollSubject" name="pollSubject" style="width: 98%; height: 130px; resize:none;" runat="server" onkeyup="ismaxlength(this)"><c:out value='${pSubject}' /></textarea></td>
 	            </tr>
 	            <tr>
 	                <th><spring:message code='ezCommunity.t600' /></th>

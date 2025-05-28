@@ -17,7 +17,7 @@ import egovframework.ezEKP.ezJournal.vo.JournalReplyVO;
 import egovframework.ezEKP.ezJournal.vo.JournalVO;
 import egovframework.ezEKP.ezJournal.vo.JournaltypeVO;
 import egovframework.ezEKP.ezJournal.vo.ReceiverFavoriteVO;
-import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("ezJournalDAO")
 public class EzJournalDAO extends EgovAbstractDAO{
@@ -555,6 +555,10 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	 */
 	public void deleteAuthDeptOne(Map<String, Object> map) {
 		delete("deleteAuthDeptOne", map);
+	}
+
+	public JournalEnvVO selectJournalMailInfo(Map<String, Object> map) throws Exception {
+		return (JournalEnvVO) select("selectJournalMailInfo",map);
 	}
 
 }

@@ -41,6 +41,8 @@ public class LoginVO implements Serializable {
 	private String passwordCnsr;
 	/** otp */
 	private String otp;
+	/** fidoSessionId */
+	private String fidoSessionId;
 	/** 사용자구분 */
 	private String userSe;
 	/** 조직(부서)ID */
@@ -155,6 +157,8 @@ public class LoginVO implements Serializable {
     private String extensionattribute5;
 	/** 직위 ID */
 	private String jobId;
+	/** 직책 ID */
+	private String roleId;
     
 	// 생성자 대신 활용도 높게 setter로 정의함.
 	public void setForSelectUser(String id, String dn, int tenantId) {
@@ -176,6 +180,12 @@ public class LoginVO implements Serializable {
 		setForInsertLog(null, agent, os, browser, tenantId, status);
 	}
 
+	public String getFidoSessionId() {
+		return fidoSessionId;
+	}
+	public void setFidoSessionId(String fidoSessionId) {
+		this.fidoSessionId = fidoSessionId;
+	}
 	public String getOtp() {
 		return otp;
 	}
@@ -574,5 +584,13 @@ public class LoginVO implements Serializable {
 	}
 	public void setJobId(String jobId) {
 		this.jobId = jobId;
+	}
+
+	public String getRoleId() {
+		return roleId;
+	}
+
+	public void setRoleId(String roleId) {
+		this.roleId = roleId;
 	}
 }

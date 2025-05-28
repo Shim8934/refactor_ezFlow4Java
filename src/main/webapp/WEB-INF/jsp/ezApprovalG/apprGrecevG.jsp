@@ -9,7 +9,8 @@
 		<style>
 			.IMG_BTN { behavior:url("/css/include/ImgBtn.htc") }
 		</style>
-		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -23,6 +24,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/escapenew.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/conn_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/appandbody_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/apprGSummary.js')}"></script>
 		<script type="text/javascript"ID="clientEventHandlersJS">
 		    var pWriterDeptID;
 		    var pDocID = "<c:out value = '${docID}'/>";
@@ -117,7 +119,16 @@
 		    var pSusinAdmin = "<c:out value = '${susinAdmin}'/>";
 		    
 			var useRedraftOpinionKeep = "<c:out value='${useRedraftOpinionKeep}'/>";
-			
+
+			// 문서정보 조회시 사용됨.
+			var orgCompanyID_ = "<c:out value = '${orgCompanyID}'/>";
+
+			var isRelay = GetRelayDocInfo(); // 중계문서인지의 여부를 true/false로 반환;
+
+			/* 2024-07-18 양지혜 - 상위부서문서함 관련 */
+			var upperDeptCode = "<c:out value ='${upperDeptCode}'/>";
+			var allowDeptIDs = "<c:out value ='${allowDeptIDs}'/>"
+
 		    function process_AfterOpen() {
 		        try {
 		            if (pFormHref == "") {
@@ -196,7 +207,6 @@
 		    }
 		
 		    function FieldsAvailable() {
-	            var isRelay = GetRelayDocInfo();
 	            if (isRelay) {
 	            	document.getElementById("btnReqReSend").style.display = ""; 
 	            }
@@ -282,7 +292,7 @@
 		                    pGubun = "11";
 		                    setProperty();
 		                    setAutoProperty();
-		                    updateReceivedDept();
+		                    // updateReceivedDept();
 		                }
 		            }
 		        }
@@ -512,11 +522,13 @@
 		            return;
 		        }
 		    }
-		    function btnMail_onclick() {
-		        var feature = "height=700,width=690,resizable=yes,scrollbars=no";
-		        feature = feature + GetOpenPosition(690, 700);
-		        window.open("/myoffice/ezEmail/newmail_CK.aspx?cmd=docsend&docID=" + "<c:out value = '${docID}'/>" + "&docHref=" + pFormHref, '', feature);
-		    }
+			function btnMail_onclick() {
+ 			    /*var feature = "height=700,width=690,resizable=yes,scrollbars=no";
+				feature = feature + GetOpenPosition(690, 700);
+				window.open("/myoffice/ezEmail/newmail_CK.aspx?cmd=docsend&docID=" + "<c:out value = '${docID}'/>" + "&docHref=" + pFormHref, '', feature);*/
+
+				window.open("/ezEmail/mailWrite.do?docHref=" + pFormHref + "&cmd=docsend&docID=" + pDocID + "&TARGET=APPROVALG", "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(890, window.screen.availHeight * 0.8));
+			}
 		    
 		    var selectcabinet_cross_dialogArguments = new Array();
 		    function btnCabinet_onclick() {
@@ -673,7 +685,7 @@
 		            var pTop = (pheight - 870) / 2;
 		            var pLeft = (pwidth - 765) / 2;
 		
-		            if (ret[2] == "2" || ret[2] == "3" || ret[2] == "4") {
+		            if (ret[2] == "2" || ret[2] == "3" || ret[2] == "4" || ret[2] == "7" || ret[2] == "8") {
 		                alert(strLang1031);
 		            }
 		            else {
@@ -1488,6 +1500,61 @@
 	            });
 	            return result;
             }
+			function getDocMode() {
+				var rtnVal = "APR";
+
+				try {
+					$.ajax({
+						type : "POST",
+						dataType : "text",
+						async : false,
+						url : "/ezApprovalG/getLineMode.do",
+						data : {
+							docID : pDocID,
+							orgCompanyID : orgCompanyID_
+						},
+						success: function(result) {
+							rtnVal = result;
+						}
+					});
+				} catch (e) {
+					alert("getDocMode() :: " + e.description);
+				}
+
+				return rtnVal;
+			}
+			var ezdocinfog_view_cross_dialogArguments = new Array();
+			function btnDocInfo_onclick() {
+				ezdocinfog_view_cross_dialogArguments[0] = "";
+				ezdocinfog_view_cross_dialogArguments[1] = btnDocInfo_onclick_Complete;
+
+				var mode = getDocMode();
+				DivPopUpShow(430, 530, "/ezApprovalG/ezDocInfoView.do?docID=" + pDocID + "&ingFlag=" + mode);
+			}
+			function btnDocInfo_onclick_Complete() {
+				DivPopUpHidden();
+			}
+			function ReplaceString(Origin, Source, Target) {
+				return Origin.split(Source).join(Target);
+			}
+			var ezaprhistory_cross_dialogArguments = new Array();
+			function btnhistory_onclick() {
+				//회람 변경내역 볼 시 원본 내역을 봐야 하기 때문에 변경
+				if (pDocState == strDocState15) {
+					var URL = "/ezApprovalG/ezAprHistory.do?docID=" + pOrgDocID + "&ext=" + "mht";
+				} else {
+					var URL = "/ezApprovalG/ezAprHistory.do?docID=" + pDocID + "&ext=" + "mht";
+				}
+
+				ezaprhistory_cross_dialogArguments[0] = "";
+				ezaprhistory_cross_dialogArguments[1] = getHistory_Complete;
+
+				DivPopUpShow(740, 450, URL);
+			}
+
+			function getHistory_Complete() {
+				DivPopUpHidden();
+			}
 		</script>
 	</head>
 	<body class="popup" style="height:100%">
@@ -1497,18 +1564,33 @@
 			<div id="menu">
 				<%-- 2022-06-23 홍승비 - 전자결재 미리보기 영역에서 문서보기 페이지 접근 시, 모든 버튼을 ul 태그부터 숨김처리 --%>
 				<ul <c:if test="${isPreview == 'Y'}">style="display:none"</c:if>>
-			        <li id="btntotaldocinfo"><span onClick="return btnApprovalInfo()" ><spring:message code='ezApprovalG.t1742'/></span></li>        
-			        <li id="btnSendDraft"><span onClick="return btnSendDraft_onclick()"><spring:message code='ezApprovalG.t156'/></span></li>
-			        <li id="btnRJunkyul" ><span  onClick="return btnRJunkyul_onclick()"><spring:message code='ezApprovalG.t1427'/></span></li>
-				    <li id=btnCabinet style="display:none"><span  onClick="return btnCabinet_onclick()" ><spring:message code='ezApprovalG.t1406'/></span></li>
-				    <li id=btnAssign><span  onClick="return btnAssign_onclick()" ><spring:message code='ezApprovalG.t1430'/></span></li>
-				    <li id=btnReAssign style="display:none"><span  onClick="return btnReAssign_onclick()" ><spring:message code='ezApprovalG.t1431'/></span></li>
-				    <li id=btnDistribute><span  onClick="return btnDistribute_onclick()" ><spring:message code='ezApprovalG.t1432'/></span></li>
-				    <li id=btnReDistribute style="display:none"><span  onClick="return btnReDistribute_onclick()" ><spring:message code='ezApprovalG.t1433'/></span></li>
-				    <li id=btnOpinion><span  onClick="return btnOpinion_onclick()" ><spring:message code='ezApprovalG.t55'/></span></li>
-				    <li id="btnReqReSend" style="display:none"><span  onClick="return btnReqReSend_onclick()" ><spring:message code='ezApprovalG.t1435'/></span></li>
-				    <li id=btnPrint><span  onClick="return btnPrint_onclick()" ><spring:message code='ezApprovalG.t60'/></span></li>
-			        <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
+					<c:choose>
+						<%-- 문서보기 버튼으로 창을 open할 경우 (viewDocFlag 문서보기 Flag)--%>
+						<c:when test="${viewDocFlag eq 'Y'}">
+							<li id="btnReqReSend"><span onclick="return btnReqReSend_onclick()"><spring:message code='ezApprovalG.t1435'/></span></li>
+							<li id="btnOpinion"><span onclick="return btnOpinion_onclick()"><spring:message code='ezApprovalG.t55'/></span></li>
+							<li id="btnDocInfo"><span onclick="return btnDocInfo_onclick()"><spring:message code='ezApprovalG.t54'/></span></li>
+							<li id="btnhistory"><span id="span_btnhistory" onClick="btnhistory_onclick()"><spring:message code='ezApprovalG.t61'/></span></li>
+						</c:when>
+						<c:otherwise>
+							<li id="btntotaldocinfo"><span onClick="return btnApprovalInfo()" ><spring:message code='ezApprovalG.t1742'/></span></li>
+							<li id="btnSummary"><span onclick="return btnSummaryEdit()"><spring:message code='ezApprovalG.t1203'/></span></li> <%-- 요약전 --%>
+							<li id="btnSendDraft"><span onClick="return btnSendDraft_onclick()"><spring:message code='ezApprovalG.t156'/></span></li>
+							<li id="btnRJunkyul" ><span  onClick="return btnRJunkyul_onclick()"><spring:message code='ezApprovalG.t1427'/></span></li>
+							<li id=btnCabinet style="display:none"><span  onClick="return btnCabinet_onclick()" ><spring:message code='ezApprovalG.t1406'/></span></li>
+							<li id=btnAssign><span  onClick="return btnAssign_onclick()" ><spring:message code='ezApprovalG.t1430'/></span></li>
+							<li id=btnReAssign style="display:none"><span  onClick="return btnReAssign_onclick()" ><spring:message code='ezApprovalG.t1431'/></span></li>
+							<li id=btnDistribute><span  onClick="return btnDistribute_onclick()" ><spring:message code='ezApprovalG.t1432'/></span></li>
+							<li id=btnReDistribute style="display:none"><span  onClick="return btnReDistribute_onclick()" ><spring:message code='ezApprovalG.t1433'/></span></li>
+							<li id=btnOpinion><span  onClick="return btnOpinion_onclick()" ><spring:message code='ezApprovalG.t55'/></span></li>
+							<li id="btnReqReSend" style="display: none"><span onclick="return btnReqReSend_onclick()"><spring:message code='ezApprovalG.t1435'/></span></li>
+						</c:otherwise>
+					</c:choose>
+					<li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
+					<li id="btnPrint"><span class="icon16 popup_icon16_print" onclick="return btnPrint_onclick()"></span></li>
+					<c:if test="${useExternalMailServer == 'NO'}">
+						<li id="btnMail"><span class="icon16 popup_icon16_mail_gray" onclick="return btnMail_onclick()"></span></li>
+					</c:if>
 				</ul>
 				<ul <c:if test="${isPreview != 'Y'}">style="display:none"</c:if>>
 		        	<li><img src='/images/kr/cm/btn_newpopup.gif' title=<spring:message code='ezEmail.t99000001'/> alt=<spring:message code='ezEmail.t99000001'/> onclick='return parent.btn_newpopup()'></li>

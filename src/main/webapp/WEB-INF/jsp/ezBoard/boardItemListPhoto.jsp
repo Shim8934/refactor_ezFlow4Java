@@ -6,7 +6,8 @@
 	<head>
 		<title>BoardItemListPhoto</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
-		<link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<link href="${util.addVer('/css/previewmail.css')}" rel="stylesheet" type="text/css">
 		<script type="text/javascript" src="${util.addVer('ezBoard.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -74,6 +75,7 @@
 		    var Write_FG = "${boardInfo.write_FG}";
 		    var Reply_FG = "${boardInfo.reply_FG}";
 		    var Delete_FG = "${boardInfo.delete_FG}";
+			var Edit_FG = "${boardInfo.edit_FG}";
 		    var BrdName = "${boardName}";
 		    var BoardGroupAdmin_FG = "${boardInfo.boardGroupAdmin_FG}";
 		    var pSortBy = "<c:out value='${boardInfo.sortBy}'/>";
@@ -122,8 +124,14 @@
 		    var endtime;
 		    var isAllGroupBoard = "${boardInfo.isAllGroupBoard}";
 		    var likeFlag = "${boardInfo.likeFlag}";
+		    var disLikeFlag = "${boardInfo.disLikeFlag}";
 		    var useNotReadCnt = "${useNotReadCnt}";
 		    var BoardGroupID = "${boardInfo.boardGroupID}";
+            var boardViewType = '1'; // 2024-05-24 전인하 - 기본보기(1) / 안읽은 게시물(2) / 만료게시물(3) 확인 플래그
+		    var isOpenWindow;
+            var useKeywordFlag = "<c:out value='${useKeyword}'/>"; // 키워드 사용여부 (Y/N)
+            var myBoardScrapFlag = "<c:out value='${MyBoardScrapFlag}'/>" // 스크랩 테넌트 컨피그 (TYPE1 / TYPE2 /NONE)
+			var SSDeptID = "<c:out value='${userInfo.deptID}'/>";
 		    
 		    window.onresize = Window_resize;
 		    document.onselectstart = function () { return false; };
@@ -302,17 +310,14 @@
 		    });		
 		
 		    var xmlhttp = createXMLHttpRequest();
-		    function getBoardList(type) {
-		        if (type == "1") {
-		            SQLPARADATA = "";
-		        }
+		    function getBoardList() {    
 		        starttime = new Date().getTime();
-		        if(document.getElementById("viewtype") != null)
-		        	type = document.getElementById("viewtype").value;
-		        if (SQLPARADATA != ""){
+		        
+		        if (SQLPARADATA != "") {
+		            document.getElementById('viewtype')[0].selected = true;
+		            boardViewType = '1';
 		        	url = "/ezBoard/getSearchBoardList.do";
-		        }
-		        else{
+		        } else {
 		        	url = "/ezBoard/getBoardList.do";
 		        }
 		        $.ajax({
@@ -326,8 +331,9 @@
 							 orderCell 	 : OrderCell, 
 							 orderOption : OrderOption,
 							 searchQuery : SQLPARADATA,
-							 type 		 : type,
-							 likeFlag : likeFlag
+							 type 		 : boardViewType,
+							 likeFlag 	 : likeFlag,
+							 disLikeFlag : disLikeFlag
 							},
 					success: function(xml){
 						getBoardList_after(loadXMLString(xml));
@@ -417,12 +423,12 @@
 	            endtime = new Date().getTime();
 	            document.getElementById("runtime").innerHTML = "RunTime : <span style='color:black;font-weight:bold'>" + (endtime - starttime) / 1000 + "</span> Sec";
 	            scroll();
-
+                MailOptionHidden();
 				Window_resize();
 		    }
 		
 		
-		    function MakeSubCondition() {
+		    function MakeSubCondition(type) {
 		        var TYPE = "";
 		        var DATA = "";
 		
@@ -432,7 +438,7 @@
 		            TYPE += "SEARCHSUBBOARD;";
 		        }
 		
-		        if (document.getElementById("txt_keyword").value != "") {
+		        if (type == "quick") {
 		        	var selectSearch = document.getElementById('selectType');
 	                if (selectSearch.item(0).selected) {
 	                    TYPE += "TITLE;";
@@ -442,6 +448,10 @@
 	                    TYPE += "WRITERNAME;";
 	                    DATA += "<WRITERNAME><![CDATA[" + MakeXMLString(document.getElementById("txt_keyword").value) + "]]></WRITERNAME>";
 	                }
+	                 else if (selectSearch.item(2).selected) {
+                        TYPE += "KEYWORD;";
+                        DATA += "<KEYWORD><![CDATA[" + document.getElementById("txt_keyword").value.replace("'", "''") + "]]></KEYWORD>";
+                    }
 		        }
 		        else {
 		            if (document.getElementById("txtTitle").value != "")		// DocTitle
@@ -456,12 +466,13 @@
 		                DATA += "<WRITERNAME><![CDATA[" + MakeXMLString(document.getElementById("txtWriterName").value) + "]]></WRITERNAME>";
 		            }
 		
-		            /* if (document.getElementById("txtAbstract").value != "")		// ABSTRACT
-		            {
-		                TYPE += "ABSTRACT;";
-		                DATA += "<ABSTRACT>" + document.getElementById("txtAbstract").value + "</ABSTRACT>";
-		            } */
-		
+		            if (document.getElementById("txtKeyword") != null) { // KEYWORD
+                        if (document.getElementById("txtKeyword").value != "") {
+                             TYPE += "KEYWORD;";
+                             DATA += "<KEYWORD><![CDATA[" + document.getElementById("txtKeyword").value.replace("'", "''") + "]]></KEYWORD>";
+                        }
+                    }
+                   
 		            if ($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "")		// StartDate
 		            {
 		                TYPE += "STARTDATE;";
@@ -596,7 +607,7 @@
 		        }	
 		        // if (tr != null && oArrRows.length > 0) {
 		
-		        window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height + ",width=790,top=" + pTop + ",left=" + pLeft, "");
+		        isOpenWindow = window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height + ",width=890,top=" + pTop + ",left=" + pLeft, "");
 		        //}       
 		    }
 		    /*  2019-04-12 홍승비 - 사용되지 않는 함수 주석처리 */
@@ -614,7 +625,7 @@
 		        var pTop = (pheight - 720) / 2;
 		        var pLeft = (pwidth - 790) / 2;
 		
-		        window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=780,width=790,top=" + pTop + ",left=" + pLeft, "");
+		        window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=780,width=890,top=" + pTop + ",left=" + pLeft, "");
 		
 		    } */
 		    
@@ -749,12 +760,19 @@
 		        var i = 0;
 		
 		        arrList = strListInfo.split(";");
-		        for (i = 0; i < arrList.length - 1; i++) {
-		            if (arrList[i].split(",")[1] != SSUserID) {
-		                arrList = null;
-		                return false;
-		            }
-		        }
+				for (i = 0; i < arrList.length - 1; i++) {
+					if (arrList[i].split(",")[3] == '1') {
+						if (arrList[i].split(",")[2] != SSDeptID) {
+							arrList = null;
+							return false;
+						}
+					} else {
+						if (arrList[i].split(",")[1] != SSUserID) {
+							arrList = null;
+							return false;
+						}
+					}
+				}
 		        arrList = null;
 		        return true;
 		    }
@@ -1035,7 +1053,9 @@
 		
 			function search(type) {
 			    if (type == "basic") {
-			    	if (document.getElementById("txtWriterName").value == "" && document.getElementById("txtTitle").value == "" && $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
+			    	var txtKeywordVal = document.getElementById("txtKeyword") != null ? document.getElementById("txtKeyword").value : "";
+			    	if (document.getElementById("txtWriterName").value == "" && document.getElementById("txtTitle").value == "" && txtKeywordVal == "" 
+			    	&& $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
 		                alert("<spring:message code='ezBoard.t192' />");
 		                return;
 		            }
@@ -1061,7 +1081,7 @@
 			    CurPage = "1";
 			    BoardSearchOptionHidden();
 		
-			    MakeSubCondition();
+			    MakeSubCondition(type);
 			    getBoardList();
 			}
 		    function check_presence() {
@@ -1112,7 +1132,7 @@
 		    	configmyboard_dialogArguments[0] = "";
 		    	
 		        if (CrossYN()) {
-		            var OpenWin = GetOpenWindow("/ezBoard/myBoardConfig.do?type=ADD&boardID=" + encodeURIComponent(pBoardID), "MyBoardConfig", 525, 418);
+		            var OpenWin = GetOpenWindow("/ezBoard/myBoardConfig.do?type=ADD&boardID=" + encodeURIComponent(pBoardID), "MyBoardConfig", 600, 418);
 		            try { 
 		            	OpenWin.focus();
 		            	
@@ -1133,7 +1153,7 @@
 					} catch (e) { }
 		        }
 		        else
-		            showModalDialog("/ezBoard/myBoardConfig.do?type=ADD&boardID=" + encodeURIComponent(pBoardID), null, "dialogHeight:418px; dialogWidth:525px; status:no; help:no; scroll:no; edge:sunken");
+		            showModalDialog("/ezBoard/myBoardConfig.do?type=ADD&boardID=" + encodeURIComponent(pBoardID), null, "dialogHeight:418px; dialogWidth:600px; status:no; help:no; scroll:no; edge:sunken");
 		    }
 		
 		    function SetBoardAcl() {
@@ -1191,6 +1211,119 @@
 				});
 	    	}
 	    	
+	    	// 2024-05-29 전인하 - 리스트설정 셀렉트박스 선택 동작 메서드
+            function selectBoardViewType(obj) {
+                boardViewType = obj.value;
+                CurPage = 1;
+                SQLPARADATA = "";
+                getBoardList();
+            }
+	    	
+	    	/* 2023-04-06 기민혁 - 좋아요/싫어요 리스트 출력 openWindow 호출 메소드 */
+		    function likeAndDisLikeList() {
+		    	
+		    	var pheight = window.screen.availHeight;
+		        var pwidth = window.screen.availWidth;
+		        var pTop = (pheight - 450) / 2;
+		        var pLeft = (pwidth - 315) / 2;
+		        
+		        var arrList = new Array();
+	            var strItemList = "";
+	            var i = 0;
+	            arrList = strListInfo.split(";");
+	            console.log(arrList);
+	            if(arrList.length == "1"){
+	            	alert("<spring:message code='ezBoard.kmh01'/>");
+	            	return;
+	            } 
+	            
+	            for (i = 0; i < arrList.length - 1; i++) {
+	                strItemList += arrList[i].split(",")[0] + ";";
+	            }
+	            arrList = null;
+		        
+		        GetOpenWindow("/ezBoard/boardLikeAndDisLikeList.do?boardID=" + encodeURIComponent(pBoardID)+ "&itemIDList=" + encodeURIComponent(strItemList), "likeAndDisLikeList", 920, 850);
+		    	
+		    }
+	    	
+		    /* 2023-04-06 기민혁 - itemview창이 열려있을때 미리보기 창이 열려 있으면  미리보기에서 좋아요 싫어요 이미지 및 개수 변경  */
+	    	function refreshLikeAndDisLike(result,checked,gubun) {
+	    		if($("#PreviewRayerH").css("display") == "none"){
+	    			return;
+	    		}else if ($("#PreviewRayerH").css("display") != "none"){
+					var refreshLikeAndDisLikeH = document.getElementById("ifrmPreViewH_photo");
+	    			refreshLikeAndDisLikeH.contentWindow.refreshLikeAndDisLike(result,checked,gubun);    			    			
+	    		}
+	    	}
+		    
+	    	/* 2023-04-06 기민혁 - itemview창이 열려있을때 미리보기 에서 좋아요 싫어요 클릭시 itemview 이미지 및 개수 변경  */
+	    	function refreshLikeAndDisLikeOpen(result,checked,gubun) {
+	    		if(isOpenWindow != undefined ){
+	    			isOpenWindow.refreshLikeAndDisLikeOpen(result,checked,gubun);
+	    		}else{
+	    			return;
+	    		}
+	    	}
+	    	
+		    /*  2023-05-22 기민혁 - 나의스크랩함 나의스크랩 추가 버튼 클릭시 동작 */
+    	    function SaveScrapMyBoard() {
+    	    	var arrList = new Array();
+	            var strItemList = "";
+	            var i = 0;
+	            arrList = strListInfo.split(";");
+
+				if (Read_FG != "true") {
+					alert("<spring:message code='ezBoard.t202' />");
+					return;
+				}
+	            
+	            if(arrList.length == "1"){
+	            	alert("<spring:message code='ezBoard.kmh15'/>");
+	            	return;
+	            }
+	            
+	            for (i = 0; i < arrList.length - 1; i++) {
+		            strItemList += arrList[i].split(",")[0] + ";";
+		        }
+	            
+               if (myBoardScrapFlag == "TYPE1") {
+                   $.ajax({
+                       type : "GET",
+                       dataType : "json",
+                       async : false,
+                       url : "/ezBoard/setScrapItemAll.do",
+                       data : { 
+                               itemIDList  : strItemList,
+                               boardID     : pBoardID
+                               },
+                       success: function(result) {
+                            if (result.status != "error") {
+                                if (result.failCount > 0) {
+                                    var pAlertContent = "<spring:message code='ezBoard.kmh44'/> " + result.failCount + "<spring:message code='ezBoard.kmh45'/>";
+                                    alert(pAlertContent);
+                                } else {
+                                    alert("<spring:message code='ezBoard.kmh47' />");
+                                }
+                            } else {
+                                alert("<spring:message code='ezBoard.kmh46' />");
+                            }
+                       },
+                       error : function(error) {
+                           console.log(error);
+                       }			
+                   });
+               
+               } else if (myBoardScrapFlag == "TYPE2") {
+                   var url = "/ezBoard/selUserScrapCont.do";
+                   ContOpen = GetOpenWindow(url + "?itemID=" + encodeURIComponent(strItemList) + "&boardID=" + encodeURIComponent(pBoardID), "selUserCont", 500, 460, "NO");
+                   try { 
+                       ContOpen.focus()
+                   } catch (e) { 
+                       console.log(e);
+                   }
+               }
+    	    }
+	    	
 		</script>
 	</head>
 	<c:choose>
@@ -1212,6 +1345,9 @@
 				    	<select id="selectType" class="text" style="width:80px; height:27px; border-color: #c8c8c8;">
 				    		<option selected value="rad_Subject"><spring:message code='ezBoard.t208'/></option>
 				    		<option value="rad_Writer"><spring:message code='ezBoard.t223'/></option>
+				    		<c:if test ="${useKeyword eq 'Y'}">
+                                <option value="rad_Keyword"><spring:message code='ezApprovalG.t1200'/></option>
+                            </c:if>
 				    	</select>
 						<input id="txt_keyword" class="searchinputBox" style="height: 27px;border: 1px solid #cbcbcb;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
 				        <a class="searchBtn nofilter"><img src="/images/bsearch_new2.png" border="0" onClick="search('quick')"></a>
@@ -1227,6 +1363,9 @@
 					<select id="selectType" class="text" style="width:80px; height:27px; border-color: #c8c8c8;">
 						<option selected value="rad_Subject"><spring:message code='ezBoard.t208'/></option>
 			    		<option value="rad_Writer"><spring:message code='ezBoard.t223'/></option>
+                        <c:if test ="${useKeyword eq 'Y'}">
+                            <option value="rad_Keyword"><spring:message code='ezApprovalG.t1200'/></option>
+                        </c:if>
 			    	</select>
 					<input id="txt_keyword" class="searchinputBox" style="height: 27px;border: 1px solid #cbcbcb;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
 			        <a class="searchBtn nofilter"><img src="/images/bsearch_new2.png" border="0" onClick="search('quick')"></a>
@@ -1239,6 +1378,12 @@
 		        <li class="important"><span onClick="NewItem_onclick()"><spring:message code='ezBoard.hsbJP02'/></span></li>
 		        <li><span onclick="SetRead_onclick()"><spring:message code='ezBoard.t204'/></span></li>
 		        <li><span onClick="SaveMyBoard()"><spring:message code='ezBoard.t10052'/></span></li>
+		        <c:if test="${boardInfo.boardAdmin_FG == true && (boardInfo.likeFlag == 'Y' || boardInfo.disLikeFlag == 'Y')}">
+		        	<li id="likeAndDisLikeBtn" ><span onClick="likeAndDisLikeList()"><spring:message code='ezBoard.kmh09' /></span></li> 
+		        </c:if>
+		        <c:if test="${MyBoardScrapFlag ne 'NONE'}">
+		        	<li><span onClick="SaveScrapMyBoard()"><spring:message code='ezBoard.kmh13' /></span></li>
+			    </c:if>
 			    <!-- <li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->		        
 			    <!-- <li id="Li1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" align="absmiddle"></li> -->
 			    <c:if test="${boardInfo.boardAdmin_FG == 'true'}">
@@ -1248,16 +1393,16 @@
 				<%-- 2020-06-15 홍승비 - 즐겨찾기 여부에 따라 별모양 아이콘 스타일 수정 --%>
 		        <c:choose>
 					<c:when test="${isMyBoard == 'YES'}">
-			        	<li><span class="icon16 icon16_star" id="myBoardIconSpan" onClick="AddToMyBoards()"></span></li>
+			        	<li onClick="AddToMyBoards()"><span class="icon16 icon16_star switchIcon" id="myBoardIconSpan"></span><span class="iconTexts"><spring:message code='ezBoard.t10051'/></span></li>
 					</c:when>
 					<c:otherwise>
-			        	<li><span class="no_yellowStar" id="myBoardIconSpan" onClick="AddToMyBoards()"></span></li>
+			        	<li onClick="AddToMyBoards()"><span class="no_yellowStar switchIcon" id="myBoardIconSpan"></span><span class="iconTexts"><spring:message code='ezBoard.t10051'/></span></li>
 			        </c:otherwise>
 		        </c:choose>
 		        
-		        <li onClick="doLayerPopup(this)"><span class="icon16 icon16_search" id="SearchOption" mode="off"></span></li>
-		        <li onClick="DeleteItem_onclick()"><span class="icon16 icon16_delete"></span></li>
-		        <li onClick="refresh_onclick()"><span class="icon16 icon16_refresh"></span></li> 
+		        <li onClick="doLayerPopup(this)"><span class="icon16 icon16_search switchIcon" id="SearchOption" mode="off"></span><span class="iconTexts"><spring:message code='ezBoard.t188'/></span></li>
+		        <li onClick="DeleteItem_onclick()"><span class="icon16 icon16_delete switchIcon"></span><span class="iconTexts"><spring:message code='ezBoard.t113'/></span></li>
+		        <li onClick="refresh_onclick()"><span class="icon16 icon16_refresh switchIcon"></span><span class="iconTexts"><spring:message code='ezBoard.t205'/></span></li> 
 		        <!-- <li id="right">
 	            	<img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onclick="PreviewRayerChange('NONE')">
 					<img src="/images/kr/cm/btn_leftframe.gif" width="22" height="20" class="btnimg" id="PreViewleft" onclick="PreviewRayerChange('H')">
@@ -1302,10 +1447,9 @@
                     <tr>
 		            	<th><spring:message code="ezEmail.t99000035" /></th>
 	                        <td>
-	                            <select id="viewtype" onchange="getBoardList('1')">
+	                            <select id="viewtype" onchange="selectBoardViewType(this)">
 					                <option value="1"><spring:message code='ezBoard.t4001' /></option>
 					                <option value="2"><spring:message code='ezBoard.t4002' /></option>
-					                <option value="3"><spring:message code='ezBoard.t4003' /></option>
 	            				</select>
 	                        </td>
 					</tr>
@@ -1405,7 +1549,13 @@
 				        <tr>
 				            <th style="text-align:center"><spring:message code='ezBoard.t208' /></th>
 				            <td><input type="text" id="txtTitle" style="width:100%" value=""></td>
-				        </tr>  
+				        </tr>
+                        <c:if test ="${useKeyword eq 'Y'}">
+                            <tr>
+                                <th style="text-align:center"><spring:message code='ezApprovalG.t1200' /></th>
+                                <td><input type="text" id="txtKeyword" style="width:100%" value=""></td>
+                            </tr> 
+                        </c:if>
 				        <%--  포토게시판 -> 내용, 게시요약 없고 앨범소개, 사진소개 있음
 				         <tr>
 				            <th style="text-align:center"><spring:message code='ezBoard.garm01' /></th>

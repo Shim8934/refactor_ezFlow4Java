@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezBoard.dao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +13,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
-import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzBoardAdminDAO")
 public class EzBoardAdminDAO extends EgovAbstractDAO {	
@@ -371,4 +372,33 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 	public void deleteAllTabBoard(Map<String, Object> map) throws Exception {
 		delete("EzBoardAdminDAO.deleteAllTabBoard", map);
 	}
+
+	public String getUseFormFlag(String boardID, int tenantID) throws Exception {
+		HashMap<String, String> map = new HashMap() {{
+			put("boardID", boardID);
+			put("tenantID", tenantID);
+		}};
+
+		return (String)select("EzBoardAdminDAO.getUseFormFlag", map);
+	}
+	
+	public void deleteMyBoardsOnCategoryChange(Map<String, Object> map) throws Exception {
+		delete("EzBoardAdminDAO.deleteMyBoardsOnCategoryChange", map);
+	}
+
+	public void deleteMyBoardTreeOnCategoryChange(Map<String, Object> map) throws Exception {
+		delete("EzBoardAdminDAO.deleteMyBoardTreeOnCategoryChange", map);
+	}
+
+	public int getBoardItemCnt(Map<String, Object> map) throws Exception {
+		return (int) select("EzBoardAdminDAO.getBoardItemCnt", map);
+	}
+	public void deleteScrapBoard(String boardID) throws Exception {
+		delete("EzBoardAdminDAO.deleteScrapBoard", boardID);
+	}
+
+	public void deleteScrapContBoard(String boardID) throws Exception {
+		delete("EzBoardAdminDAO.deleteScrapContBoard", boardID);
+	}
+
 }

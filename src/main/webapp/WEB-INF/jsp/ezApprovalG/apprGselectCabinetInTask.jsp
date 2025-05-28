@@ -7,7 +7,8 @@
 	<head>
 		<title><spring:message code='ezApprovalG.t711'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<style type="text/css">
 			.mainlist tr th {
 				border-top :0px;
@@ -54,6 +55,8 @@
 		    var UserLang = "<c:out value='${userInfo.lang}'/>";
 		    var ReturnFunction;
 		    var CancelFunction;
+		    var openYear = "<c:out value='${openYear}'/>";
+		    var currYear = "<c:out value='${currYear}'/>";
 		    window.onload = function () {
 		        var objWinDlgArgs;
 		
@@ -95,6 +98,23 @@
 		            }
 		        }
 		        GetCabinetSimpleList(arr_userinfo[4], "", arrTask[0], "", "1");
+
+		        var selectSYear = document.getElementById("selSYear");
+
+                //전체목록 option 추가
+                var selSYearOption = document.createElement("option");
+                selSYearOption.value = '';
+                selSYearOption.text = '전체';
+                selectSYear.add(selSYearOption);
+
+                //생산연도 별 option 추가
+                for (var year = currYear; year >= openYear; year--) {
+                    selSYearOption = document.createElement("option");
+                    selSYearOption.value = year;
+                    selSYearOption.text = year;
+                    selectSYear.add(selSYearOption);
+                }
+
 		    };
 		    function AddPreSelectedCabient(objCabInfoXml) {
 		        var oList, ListViewData, Headers, Header, HName, HWidth, Rows, Row, Cell, Value, Data, node;
@@ -535,6 +555,10 @@
 		        var i, j = 0, x, a = MM_swapImage.arguments; document.MM_sr = new Array; for (i = 0; i < (a.length - 2) ; i += 3)
 		            if ((x = MM_findObj(a[i])) != null) { document.MM_sr[j++] = x; if (!x.oSrc) x.oSrc = x.src; x.src = a[i + 2]; }
 		    }
+
+		    function onChange_SYear(obj) {
+            	GetCabinetSimpleList(arr_userinfo[4], document.getElementById("selSYear").value, arrTask[0], g_SelCabID, g_InitFlag);
+            }
 		</script>
 	</head>
 	<body class="popup" style="margin-left:10px;margin-top:8px">
@@ -552,9 +576,12 @@
         </div>
         <table>
         	<tr>
-        		<td>
-        			<h2 class="h2_dot" style="font-weight: normal">
+        		<td style="display: flex; align-items: center;">
+        			<h2 class="h2_dot" style="font-weight: normal; margin: 0; display: flex; align-items: center; padding: 0; line-height: 1.2;">
         				<spring:message code='ezApprovalG.t711'/>
+        				<span style="display: flex; align-items: center;">
+        				    <select name="selSYear" id="selSYear" onchange="onChange_SYear(this)" style="width: 80px; margin-left: 5px; text-align: center;"></select>
+        				</span>
 <!--         				<span id="trCreateCab"> -->
 <%-- 	        				<a class="imgbtn imgbck" style="margin:-4px 0px 0px 228px;"><span onClick="return btnCreateCab_onclick()"><spring:message code='ezApprovalG.t1118'/></span></a> --%>
 <%-- 					  		<a class="imgbtn imgbck" style="display:none;"><span onClick="return btnNewVolume_onclick()" ><spring:message code='ezApprovalG.t894'/></span></a> --%>

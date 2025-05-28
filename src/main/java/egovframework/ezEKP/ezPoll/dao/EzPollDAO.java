@@ -11,7 +11,7 @@ import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
 import egovframework.ezEKP.ezPoll.vo.PollUserAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollUserVO;
 import egovframework.let.user.login.vo.LoginVO;
-import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzPollDAO")
 public class EzPollDAO extends EgovAbstractDAO {

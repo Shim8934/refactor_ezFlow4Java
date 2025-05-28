@@ -247,7 +247,7 @@ var strLang332 = "Bạn không thể xóa thư mục cấp cao nhất.";
 var strLang333 = "Bạn có chắc chắn muốn xóa vĩnh viễn tất cả các tệp trong Thư mục không?";
 var strLang334 = "Chọn thư mục.";
 var strLang336 = "Không tìm thấy đường dẫn.";
-var strLang337 = "Không thể gửi e-mail / phê duyệt-tài liệu lên bảng ảnh hoặc bảng ẩn danh hoặc URL-link-board.";
+var strLang337 = "Chỉ đăng bài trên các diễn đàn chung và diễn đàn hỏi đáp.";
 var strLang338 = "Vui lòng đăng ký bao gồm các từ của chủ đề hoặc cơ thể. Ví dụ) \"quảng cáo\"";
 var strLang339 = "Trong chủ đề hoặc nội dung thư ";
 var strLang340 = "Áp dụng cho tất cả các thư";
@@ -266,6 +266,13 @@ var strLang353 = "Cùng một tên miền hoặc địa chỉ email tồn tại.
 var strLang354 = "Vui lòng nhập tên miền.";
 var strLang355 = "Lớn";
 var strLang359 = "Di chuyển đã hoàn thành.";
+var strLangLDH01 = "이 메일에 대한 열람을 차단하시겠습니까?";
+var strLangLDH02 = "이 메일에 대한 열람차단을 해제하시겠습니까?";
+var strLangLDH03 = "차단되었습니다.";
+var strLangLDH04 = "차단 중 오류가 발생했습니다.";
+var strLangLDH05 = "해제되었습니다.";
+var strLangLDH06 = "해제 중 오류가 발생했습니다.";
+var strLangLDH07 = "관리자에 의해 열람차단된 메일입니다.";
 var strLangLHM01 = "Vui lòng nhập tên miền.";
 var strLangLHM02 = "Không có quản trị viên.";
 var strLangLHM03 = "Không có ID danh sách được chỉ định.";
@@ -307,6 +314,7 @@ var strLangLS02 = "No mail selected. \nAre you sure you want to save all retriev
 var strLangLS03 = "The search results will be downloaded as a single zip file. \nThis process may take a while. Do you want to proceed?"
 var strLangLS04 = ".";
 var strLangLS05 = "';' cannot be contained."
+var strLangAllmailSaveAlert = "선택된 메일이 없습니다. \n메일을 선택하거나 메일 검색 후 저장해 주세요."
 
 /* 2018-07-03 홍승비 - 승인게시물, 커뮤니티 답변메일 companyID 관련 처리*/
 var strLangHSB01 = "Bài đăng này có thể được xem trên ";
@@ -340,6 +348,52 @@ var strLangKWCHd01 = "An error occurred while saving security HWP document. Plea
 
 var strLangNJK01 = "Restricted special characters for an email folder name(";
 var strLangNJK02 = "are included.";
+
+// 스팸신고
+var strLangHSG01 = "Không thể báo cáo rác vì không tìm thấy địa chỉ email.";
+var strLangHSG02 = "Báo cáo rác không được xử lý thành công.";
+
+// 2024.04.29 한슬기 : 메일 관련 메시지
+var strLangHSG03 = "Trường chủ đề trống.";
+
+var strLangKDH01 = "Đọc thông tin";
+
+//new ui
+const strLangFolderManage = "Manage folder";
+const strLangSubscribe = "Subscribe";
+const strLangPlzCheckSearchInput = "Enter search term.";
+const strLangSearchFetchError = "Error occurred while retrieving search results. -";
+const strLangNoSuchDept = "There is no department found.";
+const strLangDistributionFetchError = "Error occurred while retrieving public distribution group list. -";
+const strLangAddJobSimplyMark = "(Concurrent) ";
+const strLangCompany = "Company";
+const strLangDistributionAdd = "Add distribution list";// ezEmail.t60 = 배포목록추가
+const strLangAddressFetchError = "Error occurred while reading address list";// ezEmail.t585 = 주소목록을 읽는중에 오류발생
+const strLangPlzSelectGroupMail = "Select group message.";// ezEmail.t581 = 그룹메일을 선택해주세요.
+const strLangPlzSelectDistribution = "Select public distribution group.";// ezEmail.t580 = 공용배포그룹을 선택해주세요.
+const strLangNotAllowedSpecialChar = "The special character can't be entered.";
+
+const strLangSelectDept = "Chọn Bộ phận";
+const strLangSelectTitle = "Select Title";
+const strLangSelectRole = "Select Role";
+const strLangPlzCheckSearchNameInput = "Nhập tên để tìm kiếm.";
+const strLangOrgFetchError = "Lỗi xảy ra trong khi tìm kiếm sơ đồ tổ chức. -";
+const strLangSelectProxyApproverWarning = "Chọn một người cho cấp phó.";
+
+const strLangTempSaveAttachmentsWarning = "Các tệp đính kèm sẽ bị xóa khi lưu. Bạn có muốn lưu không?";
+
+var strNoSubject = "Ô tiêu đề còn trống."; 
+var strSendOK = "Email đã được gửi thành công.";
+var strUreadDelChk = "Bạn có chắc chắn muốn xóa tất cả email chưa đọc trong hộp thư này không?"
+var strUreadDelSearch = "Bạn có chắc chắn muốn xóa tất cả email chưa đọc trong kết quả tìm kiếm không?"
+var strUreadDelPermenant = "Khi xóa, email sẽ không thể khôi phục.\nBạn có chắc chắn muốn xóa vĩnh viễn tất cả email chưa đọc trong hộp thư không?";
+var strUreadDelSearchPermenant = "Khi xóa, email sẽ không thể khôi phục.\nBạn có chắc chắn muốn xóa vĩnh viễn tất cả email chưa đọc trong kết quả tìm kiếm không?";
+
+const strLangTagLimit = "Bạn có thể đăng ký tối đa 5 thẻ.";
+const strLangTagadd = "메일에 태그 추가 :";
+
+const strLangChangeButton = "Switch";
+const strLangChangeLimit = "Cannot switch because the attachment size exceeds the limit.";
 
 function GetLocalTime(Offset , pDateTime)
 {

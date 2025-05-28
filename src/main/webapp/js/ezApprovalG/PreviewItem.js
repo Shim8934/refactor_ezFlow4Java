@@ -288,7 +288,7 @@ function ItemPreviewRead(obj, page) {
 				pre_openApprovUI();
 			else
 				pre_btnRedraft_onclick();
-		} else if (pListTypeValue == "4") {
+		} else if (pListTypeValue == "4" || pListTypeValue == "97") {
 			if (pSusinManagerFlag == "admin" || selobj.getAttribute("DATA8") == pUserID) {
 				var pDraftFlag;
 				var tmpDocState = selobj.getAttribute("DATA9");
@@ -349,6 +349,9 @@ function ItemPreviewRead(obj, page) {
 			openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pURL) + "&listSusin=" +"&orgCompanyID=" + orgCompanyID;
 			/* 2022-06-23 홍승비 - 전자결재 문서보기 페이지가 미리보기로 열린 경우, 기존 버튼 영역을 로딩 시점부터 표출하지 않도록 하기 위한 플래그 추가 */
 			openLocation +=  "&isPreview=Y";
+			if (typeof g_sFlag != 'undefined' && g_sFlag != null) {
+			    openLocation +=  "&sFlag=" + g_sFlag;
+			}
 			
 			document.getElementById("ifrmPreViewH").src = openLocation;
 		}	
@@ -448,7 +451,7 @@ function pre_openViewDocInfo(type) {
     pArgument[0] = DocID;
     pArgument[1] = formURL;
 
-    if (pListTypeValue == "4") {
+    if (pListTypeValue == "4" || pListTypeValue == "97") {
         pArgument[2] = GetAttribute(tr, "DATA5");
         pArgument[3] = "VIEW";
         pArgument[4] = pSusinManagerFlag;
@@ -1039,6 +1042,7 @@ function Window_resize() {
             		    } 
             		}
             	}
+                document.getElementById("MailListRayer").style.width = "100%";
             }
             if (pPreviewShow_HOW.trim() == "H") {
                 if (pMailListDiv_H == 0 || pMailPreVDiv_H == 0) {
@@ -1216,7 +1220,7 @@ function pre_chk_Passwd_Complete(Rtn)
         }
         openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=" + encodeURI(formid) + "&orgDocID=" + encodeURI(orgdocid) + "&docState=" + docState + "&orgCompanyID=" + encodeURI(orgCompanyID);
         if (typeof g_sFlag != 'undefined' && ["m03", "m14"].includes(g_sFlag)) { // 2023-09-25 전인하 - 미리보기에서 문서 열람 시 메뉴 플래그 전달
-            openLocation += "uFlag=" + g_sFlag;
+            openLocation += "&uFlag=" + g_sFlag;
         }
         if (share && share == 'share') {
         	openLocation += "&share=Y";

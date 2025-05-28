@@ -6,7 +6,8 @@
 	<head>
 		<title><spring:message code="ezOrgan.t250" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
-	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e2', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css" />
 	    <script type="text/javascript" src="${util.addVer('ezOrgan.e1', 'msg')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -130,7 +131,8 @@
 		            }
 		        }catch (e){ }
 		        */
-	
+				document.getElementById("userTreeFlag").checked = true;
+				
 		        if (RetValue[2] == "") {
 		            document.getElementById("DeptName").value = RetValue[1];
 		            // 수정(2007.06.26) : 사용자 추가 시 부서명(P/S)이 제대로 보이지 않는 문제 수정
@@ -138,6 +140,8 @@
 		            DeptID = RetValue[0];	
 		            document.getElementById('btn_PhotoAdd').style.display = "none";
 		            document.getElementById('btn_PhotoDel').style.display = "none";
+		            document.getElementById('btn_PasswordReset').style.display = "none";
+					document.getElementById("CompanyName").value = RetValue[6];
 		            
 		            getJobInfoInit();
 		            
@@ -161,7 +165,7 @@
 						dataType : "text",
 						url : "/admin/ezOrgan/getEntryInfo.do",
 						async : false,
-						data : {cn : document.getElementById("UserID").value, prop : "description;extensionAttribute10;extensionAttribute14;displayName;title;extensionAttribute15;telephoneNumber;homePhone;facsimileTelephoneNumber;mobile;postalCode;streetAddress;mail;extensionAttribute1;extensionAttribute2;extensionAttribute6;birth;birthType;extensionAttribute7;extensionAttribute8;furigana;extensionPhone;officeMobile", pMode : "user" },
+						data : {cn : document.getElementById("UserID").value, prop : "description;extensionAttribute10;extensionAttribute14;displayName;title;company;extensionAttribute15;telephoneNumber;homePhone;facsimileTelephoneNumber;mobile;postalCode;streetAddress;mail;extensionAttribute1;extensionAttribute2;extensionAttribute6;birth;birthType;extensionAttribute7;extensionAttribute8;furigana;extensionPhone;officeMobile;userTreeFlag", pMode : "user" },
 						success : function(result){
 							xmlDom = loadXMLString(result);
 							document.getElementById("UserName").value = SelectSingleNodeValueNew(xmlDom, "DATA/DISPLAYNAME1").trim();
@@ -181,12 +185,22 @@
 			                document.getElementById("DeptName").value = SelectSingleNodeValueNew(xmlDom, "DATA/DESCRIPTION1").trim();
 			                document.getElementById("DeptName2").value = SelectSingleNodeValueNew(xmlDom, "DATA/DESCRIPTION2").trim();
 			                document.getElementById("SocialNum").value = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE14").trim();
+			                document.getElementById("CompanyName").value = SelectSingleNodeValueNew(xmlDom, "DATA/COMPANY").trim();
 			                document.getElementById("txtBirth").value = SelectSingleNodeValueNew(xmlDom, "DATA/BIRTH").trim();
 			                document.getElementById("userPhotoYN").value = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE2").trim();
 			                document.getElementById("furigana").value = SelectSingleNodeValueNew(xmlDom, "DATA/FURIGANA").trim();
 			                document.getElementById("txtExtensionPhone").value = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONPHONE").trim();
 			                document.getElementById("txtOfficeMobile").value = SelectSingleNodeValueNew(xmlDom, "DATA/OFFICEMOBILE").trim();
-			                
+
+							var userHide = SelectSingleNodeValueNew(xmlDom, "DATA/USERTREEFLAG").trim();
+							if (userHide === 'Y') {
+								var userTreeFlagTag = document.getElementById("userTreeFlag");
+								userTreeFlagTag.checked = true;
+							} else {
+								var userTreeFlagTag = document.getElementById("userTreeFlag");
+								userTreeFlagTag.checked = false;
+							}
+							
 			                try {
 				                if (SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE7").trim() != "") {
 				                	pUserTitleID = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE7").trim();
@@ -214,19 +228,19 @@
 			                positionChange();
 			                
 			                if (SelectSingleNodeValueNew(xmlDom, "DATA/BIRTHTYPE").trim() == "Y" || SelectSingleNodeValueNew(xmlDom, "DATA/BIRTHTYPE").trim() == ""){
-			                    eval("birth_S").checked = true;
+			                    document.getElementById("birth_S").checked = true;
 			                }else{
-			                    eval("birth_N").checked = true;
+			                    document.getElementById("birth_N").checked = true;
 			                }
 			                var AclList = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE1").toLowerCase().trim();
 			                document.getElementById("SecurityLevel").value = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE6").trim();
 			                
 			                for (var i = 1; i < 13; i++) {
 			                    try {
-			                        if (AclList.indexOf(eval("Check" + i).value + "=1") > -1){
-			                            eval("Check" + i).checked = true;
+			                        if (AclList.indexOf(document.getElementById("Check" + i).value + "=1") > -1){
+			                            document.getElementById("Check" + i).checked = true;
 			                        }
-			                    } catch (e) { }
+			                    } catch (e) {console.log(e);}
 			                }
 			                if (SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE2").trim() != ""){
 			                    document.getElementById("UserPhotoDiv").innerHTML = "<IMG style='width:119px; height:128px;' SRC='/admin/ezOrgan/getPersonalInfo.do?fileName=" + SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE2") + "'>";
@@ -234,9 +248,20 @@
 						}
 		            });
 		        }
+				if (RetValue[8] != "" && typeof RetValue[8] != "undefined") {
+					document.getElementById('pwPolicyExplain').innerHTML = RetValue[8];
+				}
 		        if (locale != 'ko') {
 		        	$(".onlyUseKo").css("display", "none");
 		        }
+				
+				var useOrganHideFlag = "${useOrganHideFlag}";
+				var treeFlagClass = document.querySelectorAll(".treeFlag");
+				if ("NO" === useOrganHideFlag) {
+					treeFlagClass.forEach(function (treeFlag) {
+						treeFlag.style.display = "none";
+					});
+				}
 			});
 			
 			function KeEventControl(obj) {
@@ -423,7 +448,7 @@
 				}else{
 					mailNickName = MailAlias.value;
 				}				
-				if (eval("birth_S").checked == true){
+				if (document.getElementById("birth_S").checked == true){
 					birthtype = "Y";
 				}else{
 					birthtype = "N";
@@ -450,6 +475,13 @@
 				if(jobPositionID == "") {
 					jobPositionID = "0";
 				}
+
+				var userTreeFlag = document.getElementById("userTreeFlag");
+				var checkUserTreeFlag = userTreeFlag.checked;
+				var userTreeFlagValue = "N";
+				if (checkUserTreeFlag) {
+					userTreeFlagValue = "Y";
+				}
 				
 				$.ajax({
 					type : "POST",
@@ -463,7 +495,7 @@
 						    birthType : birthtype, birth : document.getElementById("txtBirth").value, manualFlag : "Y", extensionAttribute7 : jobTitleID, extensionAttribute8 : jobPositionID ,
 			    			officeMobile : document.getElementById("txtOfficeMobile").value,
 			    			extensionPhone : document.getElementById("txtExtensionPhone").value,
-			    			furigana : document.getElementById("furigana").value
+			    			furigana : document.getElementById("furigana").value, userTreeFlag : userTreeFlagValue
 					},
 					success : function(result) {
 					    if (useBizmekaSpambox == "YES") {
@@ -736,6 +768,44 @@
 					return false;
 				}
 			}
+
+			function passwordReset() {
+				var getBirth = document.getElementById("txtBirth").value;
+
+				if(getBirth.length != 0) {
+					var newPassword = getBirth.replace(/-/g, '');
+					var data = document.getElementById("UserID").value;
+
+					$.ajax({
+						type: "POST",
+						dataType: "xml",
+						url: "/admin/ezOrgan/changePassword.do",
+						async: false,
+						data: {password: newPassword, cn: data},
+						success: function (result) {
+							$.ajax({
+								type: "POST",
+								dataType: "xml",
+								url: "/admin/ezOrgan/loginCntReset.do",
+								async: false,
+								data: {password: newPassword, cn: data},
+								success: function (result) {
+									alert("<spring:message code='ezOrgan.hyh02' />");
+								},
+								error: function () {
+									alert("<spring:message code='ezOrgan.t41' />");
+								}
+							});
+
+						},
+						error: function () {
+							alert("<spring:message code='ezOrgan.t41' />");
+						}
+					});
+				} else {
+					alert("<spring:message code='ezOrgan.khj004' />");
+				}
+			}
 	    </script>
 	</head>
 	<body class="popup">
@@ -744,6 +814,7 @@
 	            <li><span onclick="OK_Click()"><spring:message code='ezOrgan.t167' /></span></li>
 	            <li id="btn_PhotoAdd"><span onclick="btnPhoto_onclick()"><spring:message code='ezOrgan.t281' /></span></li>
 	            <li id="btn_PhotoDel"><span onclick="deleteImg()"><spring:message code='ezOrgan.t282' /></span></li>
+	            <li id="btn_PasswordReset"><span onclick="passwordReset()"><spring:message code='ezOrgan.khj003' /></span></li>
 	        </ul>
 	    </div>
 	    <div id="close">
@@ -753,7 +824,8 @@
 	    </div>
 
 	    <div style="margin-top:4px;margin-bottom:2px"><span style="color:red;"><spring:message code='ezOrgan.t00018' /></span></div>
-	    <table id="Tbl_UserInfo" class="content" style="width:800px">
+		<div id='pwPolicyExplain' style="font-size:13px;margin-top: 3px;"></div>
+		<table id="Tbl_UserInfo" class="content" style="width:800px">
 	        <tr>
 	            <td rowspan="<c:out value="${primaryLang eq '3' ? 7 : 6}" />" id="UserPhotoDiv" style="width:119px; height:180px; text-align:center; min-width:119px;">
 	                <b><spring:message code='ezOrgan.t272' /></b> 
@@ -792,7 +864,7 @@
 	                </table>
 	            </td>
 	            <th style="width: 71px; text-align:center"><spring:message code='ezOrgan.t278' /></th>
-	            <td style="width: 240px; padding: 0">
+	            <td style="width: 320px; padding: 0">
 	                <table style="width:100%">
 	                    <tr class="primary">
 	                        <th><c:out value='${primary}'/></th>
@@ -833,8 +905,8 @@
 	        </tr>       
 	        <tr>
 	            <th style="width: 71px; text-align:center"><spring:message code='ezOrgan.t00003' /></th>
-	            <td style="width: 240px;">
-	                <input type="text" id="txtBirth" style="width:80px;text-align:center;" onkeydown="return checkKey()"/>
+	            <td style="width: 260px;">
+	                <input type="text" id="txtBirth" style="width:80px;text-align:center;" onkeydown="return checkKey()" readonly="readonly" autocomplete="off"/>
 	                <input type="radio" id="birth_S" name="BirthType" Checked /><spring:message code='ezOrgan.t00001' />
 	                <input type="radio" id="birth_N" name="BirthType" /><spring:message code='ezOrgan.t00002' />
 	            </td>
@@ -852,7 +924,18 @@
 	            <td style="width: 240px;">
 	                <input id="SortNum" style="width: 100%" maxlength="10" />
 	            </td>
-	        </tr>         
+	        </tr>
+	        </tr>
+			<tr>
+				<th style="width: 71px; text-align:center"><spring:message code='ezOrgan.khj002' /></th>
+				<td style="width: 240px;">
+					<input id="CompanyName" style="width: 100%" readonly="readonly" maxlength="50"/>
+				</td>
+				<th class="treeFlag" style="width: 71px; text-align:center"><spring:message code='ezOrgan.kdh07' /></th>
+				<td class="treeFlag" style="width: 240px;">
+					<input type="checkbox" id="userTreeFlag"/>
+				</td>
+			</tr>
 	    </table>
 	    <br />
 	    <table id="Tbl_Contract" class="content" style="width:800px;">

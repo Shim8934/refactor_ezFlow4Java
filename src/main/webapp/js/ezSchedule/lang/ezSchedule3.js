@@ -139,6 +139,7 @@ var strLang128 = "時";
 var strLang129 = "分";
 var strLang130 = "グループスケジュール";
 var strLang130_1 = "グループスケジュール";
+var strLang131 = "上部に表示";
 
 var strLang253 = "選択した設備がありません。"
 var strLang254 = "選択した設備は削除できません。"
@@ -214,6 +215,25 @@ var strLang127_2 = "会社";
 var strLang130_2 = "グループ";
 var strLang131_2 = "協業";
 var strLang141_2 = "グーグル";
-var strLangHSBScPt1 = "年";
-var strLangHSBScPt2 = "月";
+var strLangHSBScPt1 = ".";
+var strLangHSBScPt2 = ".";
 var strLangHSBScPt3 = "日";
+
+/* 2024-05-21 김유진 - 일정 게시판 게시 메세지 추가 */
+var ezSchedule_kyj1 = "匿名掲示板、フォト掲示板、サムネイル掲示板、URLリンク掲示板は選択することができません。";
+
+/* 2024-06-24 김유진 - 일정관리 안내 메세지 추가 */
+var ezSchedule_kyj2 = "繰り返し周期をもう一度確認してください。";
+
+/* 2024-07-18 조소정 - 일정관리 > 그룹일정 관리 > 작성 권한 기능 추가 */
+var ezSchedule_csj1 = "書き込み可能";
+
+/* 2024-08-06 이유정 - 임원일정 메세지 추가 */
+var strLang151_2 = "役員";
+
+// 2024-06-28 민지수 - 일정 > 첨부파일 드래그 앤 드롭 안내 메세지 추가
+var strLangMJS01 = "Drag＆Dropでファイルを追加および追加したファイルの並び順を変更できます。";
+
+/* 2025-02-07 기민혁 - 반복자원 체크 메세지 추가 */
+var strLangKMH1 = "このリソースは、繰り返し予約を許可しないリソースです。";
+var strLangKMH2 = "エラーが発生しました";

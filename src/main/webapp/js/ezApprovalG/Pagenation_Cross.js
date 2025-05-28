@@ -13,6 +13,8 @@ function paging(p_page, p_nowblock) {
         createNodeAndInsertText(xmlpara, objNode, "NODE", document.getElementById("selSContName").value);
         createNodeAndInsertText(xmlpara, objNode, "BlockNum", p_page);
         createNodeAndInsertText(xmlpara, objNode, "PageSize", PageSize);
+        createNodeAndInsertText(xmlpara, objNode, "SortHeader", SortHeader == null ? "" : SortHeader);
+        createNodeAndInsertText(xmlpara, objNode, "sortType", sortType);
 
         xmlhttp.open("POST", "/ezApprovalG/aprDocAttachList.do", false);
         xmlhttp.send(xmlpara);
@@ -44,6 +46,7 @@ function paging(p_page, p_nowblock) {
             listview.DataSource(ListViewXml[0]);
             listview.DataBind("lvSDoc");
             pagingCount(curpage, nowblock);
+            setHeaderEventHandler();
         }
         pChackYN = "FALSE"
     }

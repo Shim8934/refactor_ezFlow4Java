@@ -11,7 +11,7 @@ import egovframework.ezEKP.ezLadder.vo.LadderCommentVO;
 import egovframework.ezEKP.ezLadder.vo.LadderLineVO;
 import egovframework.ezEKP.ezLadder.vo.LadderOrderVO;
 import egovframework.ezEKP.ezLadder.vo.LadderVO;
-import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzLadderDAO")
 public class EzLadderDAO extends EgovAbstractDAO {

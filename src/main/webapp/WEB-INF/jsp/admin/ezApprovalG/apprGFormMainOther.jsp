@@ -7,7 +7,8 @@
 		<title><c:out value = '${title}' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
-		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
@@ -75,6 +76,8 @@
 			
 			/* 2022-01-07 홍승비 - 일괄기안 옵션 추가 */
 			var useDraftAll = "<c:out value='${useDraftAll}'/>";
+			
+			var useReceiveInfoName = "<c:out value='${useReceiveInfoName}'/>";
 		
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
@@ -333,13 +336,13 @@
 									document.getElementById("setOpenGovFlag").checked = true;	
 								}
 								
-								/* 2022-01-07 홍승비 - 전자결재G 일괄기안 옵션 추가 */
-								if (result.vo.formDraftAllFlag == "Y") {
-		        					document.getElementById("setDraftAllFlag").checked = true;
-		        					$("input:checkbox[id='setConnFlag']").attr("disabled", true);
-		        					$("input:checkbox[id='setPassAprLineFlag']").attr("disabled", true);
-		        				}
 							}
+                            /* 2022-01-07 홍승비 - 전자결재G 일괄기안 옵션 추가 2024-07-04 S 버전도 사용 */
+                            if (result.vo.formDraftAllFlag == "Y") {
+                                document.getElementById("setDraftAllFlag").checked = true;
+                                $("input:checkbox[id='setConnFlag']").attr("disabled", true);
+                                $("input:checkbox[id='setPassAprLineFlag']").attr("disabled", true);
+                            }
 
 							var formXslt = result.vo.formXslt;
 							if(formXslt) {
@@ -507,6 +510,7 @@
 		
 		    function TreeViewNodeClick(pNodeID, pNodeNM) {
 		        TreeIdx = pNodeID;
+		        nodeIdx = pNodeID;
 		        treeNode = new TreeNode();
 		        treeNode.LoadFromID(TreeIdx);
 		        displayUserList(treeNode.GetNodeData("CN"));
@@ -572,11 +576,13 @@
 		    		return;
 		    	}		    	
 		    	
-		        var pAlertContent = "<spring:message code='ezApprovalG.t1361'/><br><spring:message code='ezApprovalG.t1362'/>";
-		        var Ans = OpenInformationUI(pAlertContent, insertAllCont_complete);
+		    	if (isReceiverChk(deptid)) {
+                    var pAlertContent = "<spring:message code='ezApprovalG.t1361'/><spring:message code='ezApprovalG.t1362'/>";
+                    var Ans = OpenInformationUI(pAlertContent, insertAllCont_complete);
 		        
-		        if (!Ans) {
-		            return;
+		        } else {
+		            var pAlertContent = strLang1101+strLang1102;
+                    var Ans = OpenInformationUI(pAlertContent, insertAllCont_complete);
 		        }
 		    }
 		    
@@ -589,32 +595,44 @@
 		    	chkAllDept(treeNode.GetNodeData("CN"), treeNode.GetNodeData("VALUE"));
 		    	DivPopUpHidden();
 		    }
-		
+		    
+		    var nodeIdx;
 		    function chkAllDept(aDeptID, aDeptName) {
 		        try {
-		            var DuplicateFlag = DuplicateAprDeptCheck(aDeptID);
-		            if (DuplicateFlag && isReceiverChk(aDeptID))
-		                AprLineAddDept(aDeptName, aDeptID, "D");
-		
-		            var xmlHTTP = createXMLHttpRequest();
-		            var xmlpara = createXmlDom();
-		
-		            var objNode;
-		            createNodeInsert(xmlpara, objNode, "DATA");
-		            createNodeAndInsertText(xmlpara, objNode, "DEPTID", aDeptID);
-		            createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute2;displayName1;displayName2");
-		
-		            xmlHTTP.open("POST", "/ezOrgan/getDeptSubTreeInfo.do", false);
-		            xmlHTTP.send(xmlpara);
-		
-		            var xmlNodes = createXmlDom();
-		            xmlNodes = loadXMLString(xmlHTTP.responseText);
-		
-		            var objNodes = SelectNodes(xmlNodes, "NODES/NODE");
-		            if (objNodes.length > 0) {
-		                for (var i = 0; i < objNodes.length; i++) {
-		                    chkAllDept(objNodes[i].getElementsByTagName("CN")[0].childNodes[0].nodeValue, objNodes[i].getElementsByTagName("VALUE")[0].childNodes[0].nodeValue);
-		                }
+		            if (nodeIdx != "") {
+		                if (isExistDept(true)) {
+                            var pAlertContent = strLang244 + "</br>" + strLang245;
+                            OpenAlertUI(pAlertContent);
+                            return;
+                        }
+		            
+                        var treeNode = new TreeNode();
+                        treeNode.LoadFromID(nodeIdx);
+                    
+                        var DuplicateFlag = DuplicateAprDeptCheck(aDeptID);
+                        if (DuplicateFlag && isReceiverChk(aDeptID))
+                            AprLineAddDept(aDeptName, aDeptID, "D");
+            
+                        var xmlHTTP = createXMLHttpRequest();
+                        var xmlpara = createXmlDom();
+            
+                        var objNode;
+                        createNodeInsert(xmlpara, objNode, "DATA");
+                        createNodeAndInsertText(xmlpara, objNode, "DEPTID", aDeptID);
+                        createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute2;displayName1;displayName2");
+            
+                        xmlHTTP.open("POST", "/ezOrgan/getDeptSubTreeInfo.do", false);
+                        xmlHTTP.send(xmlpara);
+            
+                        var xmlNodes = createXmlDom();
+                        xmlNodes = loadXMLString(xmlHTTP.responseText);
+            
+                        var objNodes = SelectNodes(xmlNodes, "NODES/NODE");
+                        if (objNodes.length > 0) {
+                            for (var i = 0; i < objNodes.length; i++) {
+                                chkAllDept(objNodes[i].getElementsByTagName("CN")[0].childNodes[0].nodeValue, objNodes[i].getElementsByTagName("VALUE")[0].childNodes[0].nodeValue);
+                            }
+                        }
 		            }
 		            return;
 		        }
@@ -636,6 +654,28 @@
 		        }
 		        return true;
 		    }
+		    
+		    function isExistDept(ExtFlag) {
+                var listview = new ListView();
+                listview.LoadFromID("lvtForm");
+                var CurSelRow = listview.GetDataRows();
+                var rtnVal = false;
+                for (i = 0; i < CurSelRow.length; i++) {
+                    if (ExtFlag) {
+                        if (GetAttribute(CurSelRow[0], "DATA3") == "Y")
+                            rtnVal = true;
+                    }
+                    else {
+                        if (GetAttribute(CurSelRow[0], "DATA3") == "N")
+                            rtnVal = true;
+                    }
+            
+                    if (GetAttribute(CurSelRow[0], "DATA1") == "Address1") {
+                        rtnVal = true;
+                    }
+                }
+                return rtnVal;
+            }
 		
 		    function AprLineAddDept(TNAME, TID, TYPE) {
 		        var Resultxml = createXmlDom();
@@ -646,8 +686,40 @@
 		        	Resultxml = loadXMLString("<LISTVIEWDATA><ROWS><ROW><CELL><VALUE></VALUE><DATA1></DATA1></CELL></ROW></ROWS></LISTVIEWDATA>");
 		        }
 		        
+		        //2015-05-08 추가 - KSK
+                if (GetEntryInfo(TID) == "N") {
+                    return;
+                }
+        
+                if (!isgetUser(TID)) {
+                    return;
+                }
+        
+                if (!isReceiverChk(TID)) {
+                    return;
+                }
+		        
 		        var objNodes = SelectNodes(Resultxml, "LISTVIEWDATA/ROWS/ROW/CELL");
-		        setNodeText(GetChildNodes(objNodes[0])[0], TNAME);
+		        //setNodeText(GetChildNodes(objNodes[0])[0], TNAME); //연본
+		        
+                var upperDeptName = getParentDeptNameForDB(TID);
+                if (useReceiveInfoName == '1') {
+                    //현재부서명 + 장
+                    setNodeText(GetChildNodes(objNodes[0])[0], TNAME + strLang93);
+                } else if (useReceiveInfoName == '2') {
+                    // 상위부서명(현재부서명 + 장)
+
+                    if (!upperDeptName || TID === companyID) { // 회사
+                        reName = TNAME + strLang93
+                    } else { // 부서
+                        reName = upperDeptName + "(" + TNAME + strLang93 + ")";
+                    }
+                    setNodeText(GetChildNodes(objNodes[0])[0], reName);
+                } else {
+                    //default
+                    setNodeText(GetChildNodes(objNodes[0])[0], TNAME);
+                }
+		        
 		        setNodeText(GetChildNodes(objNodes[0])[1], TID);
 		        
 		        if (approvalFlag == 'S') {
@@ -1118,14 +1190,14 @@
 			    	$("input:checkbox[id='setPassAprLineFlag']").attr("checked", false);
 			    	$("input:checkbox[id='setPassAprLineFlag']").attr("disabled", true);
 			    	
- 			    	if (approvalFlag === "G" && useDraftAll == "YES") {
+ 			    	if (useDraftAll == "YES") {
 				    	$("input:checkbox[id='setDraftAllFlag']").attr("checked", false);
 				    	$("input:checkbox[id='setDraftAllFlag']").attr("disabled", true);
 			    	}
 		    	} else {
 		    		$("input:checkbox[id='setPassAprLineFlag']").attr("disabled", false);
 		    		
- 		    		if (approvalFlag === "G" && useDraftAll == "YES") {
+ 		    		if (useDraftAll == "YES") {
 		    			$("input:checkbox[id='setDraftAllFlag']").attr("disabled", false);
 		    		}
 		    	}
@@ -1146,14 +1218,14 @@
 		    function changePassAprLineFlag() {
 		    	if ($("input:checkbox[id='setPassAprLineFlag']").is(":checked")) {
  		    		
-		    		if (approvalFlag === "G" && useDraftAll == "YES") {
+		    		if (useDraftAll == "YES") {
 			    		$("input:checkbox[id='setDraftAllFlag']").attr("checked", false);
 				    	$("input:checkbox[id='setDraftAllFlag']").attr("disabled", true);
 		    		}
 			    	$("input:checkbox[id='setConnFlag']").attr("checked", false);
 			    	$("input:checkbox[id='setConnFlag']").attr("disabled", true);
 		    	} else {
- 		    		if (approvalFlag === "G" && useDraftAll == "YES") {
+ 		    		if (useDraftAll == "YES") {
 			    		$("input:checkbox[id='setDraftAllFlag']").attr("disabled", false);
 		    		}
 		    		$("input:checkbox[id='setConnFlag']").attr("disabled", false);
@@ -1268,6 +1340,29 @@
 					});
 				}
 			}
+            
+            function getParentDeptNameForDB(deptID) {
+                var rtnVal = "";
+                
+                $.ajax({
+                    type : "GET",
+                    dataType : "json",
+                    async : false,
+                    url : "/ezOrgan/getUpperDeptName.do",
+                    data : {
+                        deptID : deptID
+                    },
+                    success: function(result) {
+                        rtnVal = result.upperDeptName;
+                    },
+                    error: function(xhr, status, error){
+                        console.log(error);
+                        alert(strLang199);
+                    },
+                });
+                
+                return rtnVal;
+            }
 		</script>
 		<!-- FormBuilder -->
 		<c:if test="${useReform}">
@@ -1355,11 +1450,11 @@
                 </tr>
                 <c:if test="${useEditor == 'WebHWP' && formID eq null}">
                 <tr>
-                    <th style="width:100px; text-align:center">한글파일</th>
+                    <th style="width:100px; text-align:center"><spring:message code = 'ezApprovalG.KMH10' /></th>
                     <td style="width:40%;" colspan="7">
                     	<input type="text" readonly="" id="tbFilename" name="tbFilename" style="width: 350px;">
                     	<a class="imgbtn imgbck" style="margin-top:1px;">
-        					<span onclick="btnfileup()">본문첨부</span>
+        					<span onclick="btnfileup()"><spring:message code = 'ezApprovalG.nonElecAt03' /></span>
         				</a>
                     </td>
                 </tr>
@@ -1385,9 +1480,9 @@
 							<input type="checkbox" id="officeFlag" name="officeFlag">
 							<label for="officeFlag"><span><spring:message code='ezApproval.t933'/></span></label>
 						</c:if>
-                        <span style="<c:if test="${useOpenGov != 'YES' || approvalFlag != 'G'}">display:none;</c:if>"><input type="checkbox" id="setOpenGovFlag" /> 원문정보공개</span>
+                        <span style="<c:if test="${useOpenGov != 'YES' || approvalFlag != 'G'}">display:none;</c:if>"><input type="checkbox" id="setOpenGovFlag" /> <spring:message code='ezApprovalG.openGovK01'/></span>
                         <%-- 2022-01-07 홍승비 - 전자결재G 웹한글 일괄기안 기능 표준모듈 반영 --%>
-                         <span style="<c:if test="${useEditor != 'WebHWP' || useDraftAll != 'YES' || approvalFlag != 'G'}">display:none;</c:if>"><input type="checkbox" id="setDraftAllFlag" onclick="changeDraftAllFlag()" /> 일괄기안</span> 
+                         <span style="<c:if test="${useDraftAll != 'YES'}">display:none;</c:if>"><input type="checkbox" id="setDraftAllFlag" onclick="changeDraftAllFlag()" /> <spring:message code='ezApprovalG.groupdocK01'/></span>
 						<span style="<c:if test="${usePassAprLine != 'YES'}">display:none;</c:if>"><input type="checkbox" id="setPassAprLineFlag" onclick="changePassAprLineFlag()"/> <spring:message code='ezApprovalG.garm09'/></span>
 					</td>
 				</tr>
@@ -1558,7 +1653,7 @@
                         <img style="cursor:pointer;margin-bottom:50px;<c:if test="${approvalFlag != 'S' }">display:none;</c:if>" src="/images/arr_r.gif" width="24" height="24" onclick="return insertContUser_onclick()">
                     </td>
                     <td style="width:600px; vertical-align:top; padding-top:5px; border-left:none;">
-                        <h2><spring:message code='ezApproval.t61'/><c:if test="${useReceiveInfoName == '1' }"><a class="imgbtn imgbck" style="float: right; margin-bottom: 0px;"><span id="Span6" onclick="return btnaddressChange()"><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t348'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApproval.t1104'/></c:if></span></a></c:if></h2>
+                        <h2><spring:message code='ezApproval.t61'/><a class="imgbtn imgbck" style="float: right; margin-bottom: 0px;"><span id="Span6" onclick="return btnaddressChange()"><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t348'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApproval.t1104'/></c:if></span></a></h2>
                         <div class="div_scroll" style="border:none; height:775px;">
                             <div id="divlvtForm" style="WIDTH: 100%; HEIGHT: 100%;overflow-x: auto; overflow-y: auto; BORDER: #ddd 1px solid; BACKGROUND-COLOR: #ffffff;border-top:none"></div>
                         </div>

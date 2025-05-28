@@ -190,11 +190,16 @@ function getDocNumberNew(pDeptID, pPrefix, docNumZeroCnt) {
 	var fields;
 	var docnumber;
 	var SN = "";
-	
+
 	name = pPrefix + "docnumber";
 	
 	try {
 		if (approvalFlag == "G") {
+			
+			if (typeof upperDeptCode !== "undefined" && upperDeptCode !== "") {
+				pDeptID = upperDeptCode;
+			}
+			
 			if (pDraftFlag == "SUSIN" && useReceiveDocNo == "NO") {
 				name = "receiptnumber";
 				
@@ -469,6 +474,10 @@ function rollbackDocNumber(pDeptID, pPrefix, pDocID) {
         docnumber = docnumber.replace(fractionsymbol, "");
 
     	var result = "";
+
+		if (typeof upperDeptCode !== "undefined" && upperDeptCode !== "") {
+			pDeptID = upperDeptCode;
+		}
     	
     	$.ajax({
     		type : "POST",

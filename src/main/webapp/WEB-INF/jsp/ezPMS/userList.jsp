@@ -8,7 +8,8 @@
 	<head>
 		<title></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezPMS.e1', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('/css/jstree/style.css')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	   	<script type="text/javascript">
@@ -34,7 +35,7 @@
 			<tbody>
 				<tr>
 			    	<th style="white-space:normal">
-			    		<span id="selectDeptNM" style="font-weight: bold; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;" countinfo="1"><img src="/images/OrganTree_cross/ic-open.gif" style="vertical-align:middle;">${keyword }-[<span style="color:#017BEC;"><spring:message code='ezPMS.t44' arguments='${userCount}'/></span>]</span>
+			    		<span id="selectDeptNM" style="font-weight: bold; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;" countinfo="1"><img src="/images/OrganTree_cross/ic-open.gif" style="vertical-align:middle;">${keyword }-[<span class="txt_color"><spring:message code='ezPMS.t44' arguments='${userCount}'/></span>]</span>
 			    		<span style="float:right;">
                            <span onclick="ChangeListView_onClick('TXT');"><img src="/images/kr/cm/btn_onlist.gif" class="icon_btn" id="txtlist"></span>
                            <span onclick="ChangeListView_onClick('IMG');"><img src="/images/kr/cm/btn_imglist.gif" class="icon_btn" id="imglist"></span>

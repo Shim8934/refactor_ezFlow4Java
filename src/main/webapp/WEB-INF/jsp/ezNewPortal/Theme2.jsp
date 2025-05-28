@@ -9,34 +9,22 @@
 <title>PortalPage</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="${util.addVer('/css/orbit-1.2.3.css')}" type="text/css" />
+<link href="${util.addVer('/css/ezNewPortal/swiper.min.css')}" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezNewPortal/swiper.min.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/fixBoard.js')}"></script>
+<link rel="stylesheet" type="text/css" href="${util.addVer('/css/ezNewPortal/portal.css')}" />
 <link href="${util.addVer('main.portal', 'msg')}" rel="stylesheet" type="text/css">
 <style type="text/css">
 	#theme2Body .two_column{width:48%;}
 	/*#main_portletEnv {position:absolute;top:0px;right:30px;display:inline-block;cursor:pointer;}*/
 	.top_two_column {margin : 0px 0px 25px 0px;}
-	.orbit-wrapper .timer {display:none;}
 	.linkIcon {display: block; margin: 0 auto; padding: 9px 0px 5px 0px; text-align: center;}
 	.linkTxt {display: block; width: 78px; text-align: center; color: #333; font-size: 12px; height: 27px; letter-spacing: 0px; overflow: hidden;margin: 0 auto; padding: 2px 0px 0px 0px; word-break: break-all; line-height: 15px; text-overflow: ellipsis; white-space: nowrap;}
 </style>
 </head>
 
 <body class="mainbg" id="theme2Body">
-	<div style="position:relative;">
-		<aside id="quickSide" style="width:0px">
-			<p class="linkBtn_close" id="linkBtn_open"><img id="quicklinkBtn" src="/images/ezNewPortal/linkBtn_open.png"></p>
-			<div class="aside_quick">
-				<p class="quickmenu_title"><spring:message code='ezNewPortal.t020' /></p>
-				<ul class="quickmenu" id="quickmenu">
-				</ul>
-			</div>
-			<div class="aside_link">
-				<div class="linkBtn">
-					<p class="btnLay" id="btnLay">
-					</p>
-				</div>
-			</div>
-		</aside>
-	</div>   
 <div class="section1_bg">
 	<section class="section1">
     <div class="sec1Layout_left">
@@ -50,7 +38,7 @@
                 		<span class="info_name">${userName} ${userTitle}</span>
                 		<span class="info_icon">
 							<span class="info_set" id="main_personalEnv"><img src="/images/admin/infoSetting.png" alt=""></span>
-							<span id="main_portletEnv"><img src="/images/admin/frameSetting.png"></span>
+							<span class="info_portlet" id="main_portletEnv"><img src="/images/admin/frameSetting.png"></span>
                 		</span>
                 	</dt>
                     <dd><spring:message code='ezNewPortal.yej06'/> <span>${lastLogin}</span></dd>
@@ -97,8 +85,8 @@
                    		</c:when>
                    		<c:otherwise>
                    		<li>
-                       		<dl class="writebannerDL" id="NewMail">
-                       		 	<dt><img src="/images/ezNewPortal/theme2Img/writebanner01.png" alt="<spring:message code='ezNewPortal.t015' />"></dt>
+                       		<dl class="writebannerDL banner_mail" id="NewMail">
+                       		 	<dt class="banner_img"></dt>
                            		<dt><spring:message code='ezNewPortal.t015' /></dt>
                            		<dd id="unreadMailCount" class="iconCount_none">0</dd>
                        		</dl>
@@ -115,8 +103,8 @@
                    		</c:when>
                    		<c:otherwise>
                    		<li>
-                       		<dl class="writebannerDL" id="AprSign">
-                           		<dt><img src="/images/ezNewPortal/theme2Img/writebanner02.png" alt="<spring:message code='ezNewPortal.t016' />"></dt>
+                       		<dl class="writebannerDL banner_apr" id="AprSign">
+                           		<dt class="banner_img"></dt>
                            		<dt><spring:message code='ezNewPortal.t016' /></dt>
                            		<dd id="approvalCount" class="iconCount_none">0</dd>
                        		</dl>
@@ -133,8 +121,8 @@
                    		</c:when>
                    		<c:otherwise>
                    		<li>
-                       		<dl class="writebannerDL" id="Schedule">
-                           		<dt><img src="/images/ezNewPortal/theme2Img/writebanner03.png" alt="<spring:message code='ezNewPortal.gu3' />"></dt>
+                       		<dl class="writebannerDL banner_schedule" id="Schedule">
+                           		<dt class="banner_img"></dt>
                            		<dt><spring:message code='ezNewPortal.gu3' /></dt>
                            		<dd id="scheduleCount" class="iconCount_none">0</dd>
                        		</dl>
@@ -166,8 +154,8 @@
                    		</c:when>
                    		<c:otherwise>
                    		<li>
-                       		<dl class="writebannerDL" id="Survey">
-                           		<dt><img src="/images/ezNewPortal/theme2Img/writebanner04.png" alt="<spring:message code='ezNewPortal.gu4' />"></dt>
+                       		<dl class="writebannerDL banner_survey" id="Survey">
+                           		<dt class="banner_img"></dt>
                            		<dt><spring:message code='ezNewPortal.gu4' /></dt>
                            		<dd id="surveyCount" class="iconCount_none">0</dd>
                       		</dl>
@@ -184,8 +172,8 @@
 								</dl>
                     		</c:when>
                     		<c:otherwise>
-                        		<dl class="writebannerDL" id="Circular">
-                            		<dt><img src="/images/ezNewPortal/theme2Img/writebanner05.png" alt="<spring:message code='ezNewPortal.gu5' />"></dt>
+                        		<dl class="writebannerDL banner_circular" id="Circular">
+                            		<dt class="banner_img"></dt>
                             		<dt><spring:message code='ezNewPortal.gu5' /></dt>
                             		<dd id="circularCount" class="iconCount_none">0</dd>
                         		</dl>
@@ -194,8 +182,8 @@
                     </li>
 					<c:if test="${useEzWorkspace}">
 					<li>
-	                    <dl class="writebannerDL" id="ezWorkspace">
-	                        <dt><img src="/images/ezNewPortal/theme2Img/writebanner05.png" alt="협업"></dt>
+	                    <dl class="writebannerDL banner_workspace" id="ezWorkspace">
+	                        <dt class="banner_img"></dt>
 	                        <dt><spring:message code='ezNewPortal.pjg01' /></dt>
 	                        <dd class="iconCount_none" id="workspaceCnt">0</dd>
 	                    </dl>
@@ -203,23 +191,23 @@
                 	</c:if>                        
                     <%-- 조직도, 커뮤니티, 메모 영역 추가 (카운트 없음) --%>
 					<li>
-                    <dl class="writebannerDL" id="Organ">
-                        <dt><img src="/images/ezNewPortal/theme2Img/writebanner06.png" alt="조직도"></dt>
+                    <dl class="writebannerDL banner_organ" id="Organ">
+                        <dt class="banner_img"></dt>
                         <dt><spring:message code='ezNewPortal.t024'/></dt>
                     </dl>
                     </li>
                     <c:if test="${useCommunity eq 'YES'}">
 					<li>
-	                    <dl class="writebannerDL" id="Community">
-	                        <dt><img src="/images/ezNewPortal/theme2Img/writebanner07.png" alt="커뮤니티"></dt>
+	                    <dl class="writebannerDL banner_community" id="Community">
+	                        <dt class="banner_img"></dt>
 	                        <dt><spring:message code='main.t1006'/></dt>
 	                    </dl>
                     </li>
                     </c:if>
                     <c:if test="${useMemo eq 'YES'}">
 					<li>
-	                    <dl class="writebannerDL" id="Memo">
-	                        <dt><img src="/images/ezNewPortal/theme2Img/writebanner08.png" alt="메모"></dt>
+	                    <dl class="writebannerDL banner_memo" id="Memo">
+	                        <dt class="banner_img"></dt>
 	                        <dt><spring:message code='ezMemo.t001'/></dt>
 	                    </dl>
                     </li>
@@ -233,10 +221,8 @@
 	<c:if test="${useBoard eq 'YES'}">
     <div class="sec1Layout_btm_left">
         <dl class="portlet_title">
-            <dt class="portletText"><img src="/images/ezNewPortal/theme2Img/sec1_noti.png" alt=""><spring:message code='main.t65'/></dt>
-            <dd class="portletPlus" id="theme2Sec1NoticePlusBtn">
-                <img src="/images/ezNewPortal/portlet_Plus1.png">
-            </dd>
+			<dt class="portletText"><span></span><spring:message code='main.t65'/></dt>
+            <dd class="portletPlus plus" id="theme2Sec1NoticePlusBtn"></dd>
         </dl>
         <ul id="theme2Sec1NoticeBoardUL" class="portlet_list">
 			<dl class="nodata">
@@ -288,6 +274,12 @@
 	                <p class="mGraph"><span id="mGraphSpanPortal"></span></p><span class="mGraph_text" id="useMailBoxPortal"></span>
 	            </dd>
 	        </dl>
+	        <%-- <dl class="portlet_title">
+                <dt class="portletText"><spring:message code='ezNewPortal.t015' /></dt>
+                <dd class="mailGraph" id="mailGraphPortal2">
+                    <p class="mGraph"><span id="mGraphSpanPortal2"></span></p><span class="mGraph_text" id="useMailBoxPortal2"></span>
+                </dd>
+            </dl> --%>
 	        </c:if>
 	        <c:if test="${useWebfolder eq 'YES'}">
 	        <dl class="portlet_title">
@@ -301,12 +293,12 @@
         <article class="exellentEmployee">
 			<dl class="portlet_title">
 	            <dt class="portletText">
-	                <img src="/images/ezNewPortal/theme2Img/icon_excellent.png"><spring:message code='ezNewPortal.t127'/> <spring:message code='ezNewPortal.t128'/>
+	                <span></span><spring:message code='ezNewPortal.t127'/> <spring:message code='ezNewPortal.t128'/>
 	            </dt>
 	        </dl>
             <dl class="excellent_info" id="excellentcontent">
-                <dt id="exellentEmpName" style="font-size:15px"></dt>
-                <dt id="exellentDeptName" style="font-size:13px; color:#777; font-weight: normal"></dt>
+                <dt id="exellentEmpName"></dt>
+                <dt id="exellentDeptName"></dt>
                 <dd id="emPic"><%-- <img src="/images/ezNewPortal/best_month.png"> --%></dd>
             </dl>
         </article>
@@ -315,16 +307,19 @@
 </div>
 <div class="section_main">
 	<section>
-		<div class="portlet_area">
+		<div id="fixBoardArea"></div>
+		<div id="dummyArea"></div>
+		<div id="portletArea" class="portlet_area">
 		</div>
 	</section>
 </div>
 
 	<div style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; z-index: 1005; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
 			
-	<div class="layerpopup"  style="z-index: 2000; position: fixed;display: none;" id="iFramePanel">
+	<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 		<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
-	</div>	
+	</div>
+	<div class="title_tooltip"></div>
 <%-- script line --%>
 <script type="text/javascript" src="${util.addVer('/js/ezPortal/string_component.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezPortal/functionLib.js')}"></script>
@@ -339,9 +334,15 @@
 <script type="text/javascript" src="${util.addVer('ezNewPortal.e1', 'msg')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezNewPortal/newPortal_common.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/Holiday.js')}"></script>
+
+<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}"/>
+<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}"/>
+<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>
+
 <!-- 일정관리 -->
 <script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>
-<script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/schedulePortlet.js')}"></script>		
 <c:choose>
 	<c:when test="${checkBrowser == true}">
 		<script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/sCalendarMini_Portal_IEEIP.js')}"></script>
@@ -360,7 +361,13 @@
 </c:choose> --%>
 <%-- 2023-06-07 홍승비 - 테마2 > 상단 사용자 정보 영역 좌측 하단 > 회사별 공지사항 게시판 표출 영역 추가 --%>
 <script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/boardPortletTheme2Upper.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezPortlet/web-animations.min.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezPortlet/muuri.min.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezPortlet/portlet-util.js')}"></script>
+<link rel="stylesheet" href="${util.addVer('/css/ezPortlet/portlet.css')}" type="text/css" />
 <script type="text/javascript">
+	var fixedPortletList = JSON.parse('${fixedPortletList}');
 	var portletOrder = JSON.parse('${portletOrder}');
 	var photoBoardPage = 1;
 	var photoCount = 3;
@@ -378,12 +385,25 @@
  	var timer;
  	var frameId = "<c:out value='${usedFrame}'/>";
  	var usedTheme = "<c:out value='${usedTheme}'/>";
+ 	var usePaging = "<c:out value='${usePaging}'/>";
  	var theme2 = true;
  	var WorkspaceUrl = "${workspaceHostUrl}"; // 협업이 그룹웨어와 별도의 Url로 서비스 되는 경우에만 설정
     var workspaceContextRootUrl = "${workspaceContextRootUrl}";
+    /* 2025-03-13 홍승비 - 협업 모듈에 고정된 하드코딩 문자열 제거 (ezWorkspace), 테넌트 컨피그 workspaceAppPath로 협업 웹응용프로그램 경로를 분리하여 사용 ("" 또는 "/ezWork" 등) */
+    var workspaceAppPath = "${workspaceAppPath}";
     var userLang = "<c:out value='${userLang}'/>";
     var userLang2 = "<c:out value='${userLang2}'/>";
- 	
+	var usePortletSize = "<c:out value='${usePortletSize}'/>" === "Y";
+	var portletInfoMap = {};
+	var useWebHWP = "<c:out value='${useWebHWP}'/>";
+	var companyID = "<c:out value='${companyID}'/>";
+	var userID = "<c:out value='${userId}'/>";
+	var apprPortletIDs = [];
+	var apprPortletTypes = [];
+	var strBoardPassword =  "<spring:message code='ezBoard.private.pgb05' />";
+	var strBoardOk =  "<spring:message code='ezBoard.private.pgb06' />";
+	var strWrongPassword =  "<spring:message code='ezBoard.t267' />";
+	
  	var quickLinkPage = {
  		current: 1,
  		total: 1,
@@ -401,7 +421,6 @@
 
 	var frameSetting = function (frameSetId) {
 		frameId = frameSetId;
-		console.log(frameSetId);
 		if (frameSetId == "Frame2") {
 			var media1921 = window.matchMedia("only screen and (min-width: 1921px)");
 			var media1686 = window.matchMedia("only screen and (max-width :1920px) and (min-width :1686px)");
@@ -774,7 +793,7 @@
         		li.textContent = item.title + " : " + item.creatorName;
             	li.style.cursor = "pointer";
             	*/
-            	span.innerText = (item.title + " : " + item.creatorName);
+            	span.innerText = (ConvertCharToEntityReference(item.title) + " : " + item.creatorName);
             	
             	li.addEventListener('click', function() {  			    
             		if (CrossYN()) {
@@ -791,7 +810,7 @@
         		li.textContent = '['+ item.startDate.substring(11, 16) + ' ~ ' + item.endDate.substring(11, 16) + '] ' + item.title;
 	        	li.style.cursor = "pointer";
 	        	*/
-	        	span.innerHTML = ("<span>[" + item.startDate.substring(11, 16) + " ~ " + item.endDate.substring(11, 16) + "]</span> " + item.title);
+	        	span.innerHTML = ("<span>[" + item.startDate.substring(11, 16) + " ~ " + item.endDate.substring(11, 16) + "]</span> " + ConvertCharToEntityReference(item.title));
 	        	
 	        	li.addEventListener('click', function() {
 				    var wWeight = "760";
@@ -809,7 +828,7 @@
 	        	li.textContent = '['+ item.startDate.substring(11, 16) + ' ~ ' + item.endDate.substring(11, 16) + '] ' + item.title;
 	        	li.style.cursor = "pointer";
 	        	*/
-	        	span.innerHTML = ("<span>[" + item.startDate.substring(11, 16) + " ~ " + item.endDate.substring(11, 16) + "]</span> " + item.title);
+	        	span.innerHTML = ("<span>[" + item.startDate.substring(11, 16) + " ~ " + item.endDate.substring(11, 16) + "]</span> " + ConvertCharToEntityReference(item.title));
 	        	
 	        	li.addEventListener('click', function() {
 				    var wWeight = "760";
@@ -890,6 +909,7 @@
 	
 	var sortableEvent = function () {
 		//포틀릿 드래그 앤 드롭
+		if (usePortletSize) return false;
 		try {
 			$(".portlet_area").sortable({
 				handle : ".sortablePortlet",
@@ -994,64 +1014,10 @@
 			}, Number(refreshInterval) * 60000);
 		}
 	} */
-	
+
 	$(function() {
-		$("#featured").orbit();
-		
-		var portletCount = portletOrder.length;
-		var portletHTML = "";
-		
-		for (var i = 0; i < portletCount; i++) {
-			portletHTML += "<div class='portlet' id='" + portletOrder[i].portletId + "Portlet'></div>";
-		}
-		
-		$(".portlet_area").html(portletHTML);
- 		frameSetting(frameId);
-		
-		for (var i = 0; i < portletCount; i++) {
-			var portletId = portletOrder[i].portletId;
-			var portletUrl = portletOrder[i].portletUrl;
-			var portletName = portletOrder[i].portletName;
-			var portletCode = portletOrder[i].portletCode;
-			
-			/* if (portletUrl.indexOf("ezNewPortal") != -1) { */
-				(function (portletId, portletUrl, portletName, portletCode) {
-					$.ajax({
-						type : "GET",
-						dataType : "html",
-						data : {"portletId" : portletId, "portletName" : portletName, "usedTheme" : usedTheme},
-						url : portletUrl,
-						tryCount : 0,
-						retryLimit : 3,
-						success : function(result) {
-							$("#" + portletId + "Portlet").append(result);
-							
-							eventSetting(portletId, usedTheme, portletCode, false);
-							
-							if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1) {
-								sortableEvent();
-							}
-						},
-						error : function() {
-							this.url = "/ezNewPortal/errorPortlet.do";
-							this.tryCount++;
-							
-							if (this.tryCount <= this.retryLimit) {
-								//try again
-								$.ajax(this);
-								return;
-							}
-							
-							if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1) {
-								sortableEvent();
-							}
-							
-							return;
-						}
-					});
-				}(portletId, portletUrl, portletName, portletCode));
-			/* } */
-		}
+		makePortletsShell(portletOrder)
+		makePortlets(portletOrder);
 
 		var useQuestion = "<c:out value='${useQuestion}'/>";
 		var useSurvey = "<c:out value='${useSurvey}'/>";
@@ -1066,6 +1032,7 @@
 		//메뉴 이동(위) --- 권한이 YES일 때만 버튼 동작
 		if (useMail !== "NO") {
 			document.getElementById("NewMail").addEventListener('click', function(){quickMenuOpen('NewMail');}, false);
+			//document.getElementById("NewMail").addEventListener('click', function(){Mailmore_btnClick2('${MailServerURL2}');}, false);
 		}
 		
 		if (useSchedule !== "NO") {
@@ -1132,7 +1099,7 @@
 		document.getElementById("main_portletEnv").addEventListener('click', viewPortletEnv);
 
 		//퀵메뉴 on/off 버튼
-		document.getElementById("quicklinkBtn").addEventListener('click', viewQuick);
+		//document.getElementById("quicklinkBtn").addEventListener('click', viewQuick); 2024-05-23 링크 아이콘 삭제.
 		
 		//퀵메뉴 이동(오른쪽)
 // 		document.getElementById("quickMailwrite").addEventListener('click', function(){quickMenuOpenRight('mail');}, false);
@@ -1141,7 +1108,7 @@
 // 		document.getElementById("quickOrgan").addEventListener('click', function(){quickMenuOpenRight('organ');}, false);
 
 		// 퀵링크 호출
-		getQuickLink();		
+		//getQuickLink();		
 		
 		//포틀릿 드래그 앤 드롭
 		if (navigator.userAgent.toLowerCase().indexOf("firefox") == -1) {
@@ -1202,7 +1169,17 @@
 	        					 + "\/"+GetChildNodes(SelectNodes(mailCapacityInfo, "DATA/ROW")[0])[0].textContent);
 	        mGraphSpanPortal.css('width', GetChildNodes(SelectNodes(mailCapacityInfo, "DATA/ROW")[0])[2].textContent);
 		}
-		
+
+		// var getMailCapacity2 = function() {
+        //     var mailCapacityInfo2 = loadXMLString("${mailCapacityInfo2}");
+        //     var mGraphSpanPortal2 = $("#mGraphSpanPortal2");
+        //     var useMailBoxPortal2 = $("#useMailBoxPortal2");
+        //     useMailBoxPortal2.text(GetChildNodes(SelectNodes(mailCapacityInfo2, "DATA/ROW")[0])[1].textContent
+        //                          + "\/"+GetChildNodes(SelectNodes(mailCapacityInfo2, "DATA/ROW")[0])[0].textContent);
+        //     mGraphSpanPortal2.css('width', GetChildNodes(SelectNodes(mailCapacityInfo2, "DATA/ROW")[0])[2].textContent);
+        // }
+        // getMailCapacity2();
+
 		getMailCapacity();
 		
 		// 2023-06-20 한슬기 - 테마2 > 상단에 웹폴더(개인) 용량 표시 추가 
@@ -1261,8 +1238,8 @@
 </script>
 <!-- 협업 시작-->
 <c:if test="${useEzWorkspace}">
-    <script type="text/javascript" src="${workspaceContextRootUrl}/ezWorkspace/Scripts/moment.min.js"></script>
-    <script type="text/javascript" src="${workspaceContextRootUrl}/ezWorkspace/Scripts/Groupwareapi.js"></script>
+    <script type="text/javascript" src="${workspaceContextRootUrl}/Scripts/moment.min.js"></script>
+    <script type="text/javascript" src="${workspaceContextRootUrl}/Scripts/Groupwareapi.js"></script>
     <script type="text/javascript">
 	    var g_UserID = "${userId}"; // GW 사용자 Id, 가온누리 Java버전엔 이미 선언되어 있음
 	    /* var WorkspaceUrl = "${workspaceHostUrl}"; // 협업이 그룹웨어와 별도의 Url로 서비스 되는 경우에만 설정

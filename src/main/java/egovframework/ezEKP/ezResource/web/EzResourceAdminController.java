@@ -1,6 +1,8 @@
 package egovframework.ezEKP.ezResource.web;
 
+import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -11,9 +13,18 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
+import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import org.apache.commons.lang3.StringUtils;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -22,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -35,6 +47,7 @@ import egovframework.ezEKP.ezResource.vo.ResGetSubClsListVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 /** 
@@ -108,20 +121,13 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 			return "cmm/error/adminDenied";
 		}
 		
-		String selectNo = "";
-		String adminYN = "";
-		
-		if (req.getParameter("flag") != null) {
-			selectNo = req.getParameter("selectNo");
-		}
-		
-		if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
-			adminYN = "YES";
-		}
+		String selectNo = req.getParameter("flag") != null ? req.getParameter("selectNo") : "";
+		String adminYN = "YES";
 		
 		model.addAttribute("adminYN", adminYN);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("selectNo", selectNo);
+		model.addAttribute("selectedCompany", Optional.ofNullable(req.getParameter("selCompany")).orElse(""));
 		return "admin/ezResource/resGwBoardListManageListLeft";
 	}
 	
@@ -433,8 +439,13 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 			String memberNam2 = xmlRet.getElementsByTagName("NODE").item(i).getChildNodes().item(5).getTextContent();
 
 			//2023-08-16 이주원 - 언어설정에 따른 권한대상 텍스트
+			String lang = "1";
+			if (commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()) != null){
+				lang = commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId());
+			};
+			
 			if (accessLvl.equals("1")) {
-				if (userInfo.getLang().equals("1")){
+				if ("1".equals(lang)){
 					strVal = memberNam + " - (" + egovMessageSource.getMessage("ezResource.t115", locale);
 				} else {
 					strVal = memberNam2 + " - (" + egovMessageSource.getMessage("ezResource.t115", locale);
@@ -443,7 +454,7 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 				optAdmLvl = "checked";
 				optUserLvl = "";
 			} else if (accessLvl.equals("2")) {
-				if (userInfo.getLang().equals("1")){
+				if ("1".equals(lang)){
 					strVal = memberNam + " - (" + egovMessageSource.getMessage("ezResource.t116", locale);
 				} else {
 					strVal = memberNam2 + " - (" + egovMessageSource.getMessage("ezResource.t116", locale);
@@ -488,6 +499,9 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 		String useOCS = config.getProperty("config.USE_OCS");
 		model.addAttribute("useOCS", useOCS);
 		model.addAttribute("userLang", userInfo.getLang());
+		model.addAttribute("company",
+				Optional.ofNullable(req.getParameter("company"))
+						.orElse(userInfo.getCompanyID()));
 		return "admin/ezResource/popup/resGwBoardPostRegBoardRight";
 	}
 	
@@ -806,5 +820,127 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 		boolean result = ezResourceAdminService.saveACLLst(xmlStr, userInfo.getTenantId());
 		
 		return String.valueOf(result);
+	}
+	
+	@RequestMapping(value = "/admin/ezResource/gwBoardListStatus.do", method = RequestMethod.GET)
+	public String gwBoardListStatus(@CookieValue("loginCookie") String loginCookie,HttpServletRequest req,Model model) throws Exception {
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+		
+		String selectNo = "";
+		String adminYN = "";
+		
+		if (req.getParameter("flag") != null) {
+			selectNo = req.getParameter("selectNo");
+		}
+		
+		if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
+			adminYN = "YES";
+		}
+		
+		model.addAttribute("adminYN", adminYN);
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("selectNo", selectNo);
+		model.addAttribute("deptPathCode", userInfo.getDeptPathCode());
+		model.addAttribute("selectedCompany", Optional.ofNullable(req.getParameter("selCompanyID")).orElse(userInfo.getCompanyID()));
+		return "admin/ezResource/resGwBoardListStatus";
+	}
+	
+	@RequestMapping(value = "/admin/ezResource/scheduleGet.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String scheduleGet(@RequestBody String xmlStr, HttpServletRequest req, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("scheduleGet Start");
+		logger.debug("xmlStr=" + xmlStr);
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String reVal = "";
+		String resID = "";
+		String type = "";
+		String resultXML = "";
+		int page = 0;
+		
+		if (req.getParameter("resID") != null) {
+			resID = req.getParameter("resID");
+		}
+		if (req.getParameter("pType") != null) {
+			type = req.getParameter("pType");
+		}
+		if (req.getParameter("page") != null) {
+			page = Integer.parseInt(req.getParameter("page"));
+		}
+		
+		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
+		
+		// 2023-05-25 이사라 : 시큐어코딩 문자열 비교 오류 수정
+		if(StringUtils.isEmpty(xmlDom.getElementsByTagName("STARTDATETIME").item(0).getTextContent())) {
+			return "";
+		} else if(StringUtils.isEmpty(xmlDom.getElementsByTagName("ENDDATETIME").item(0).getTextContent())) {
+			return "";
+		}
+		
+		xmlDom.getElementsByTagName("STARTDATETIME").item(0).setTextContent(xmlDom.getElementsByTagName("STARTDATETIME").item(0).getTextContent().substring(0, 10));
+		xmlDom.getElementsByTagName("ENDDATETIME").item(0).setTextContent(xmlDom.getElementsByTagName("ENDDATETIME").item(0).getTextContent().substring(0, 10));
+		xmlDom.getElementsByTagName("NOWTIME").item(0).setTextContent(xmlDom.getElementsByTagName("NOWTIME").item(0).getTextContent());
+		
+		//스케줄 정보 가져옴
+		reVal = ezResourceAdminService.getScheduleXML(commonUtil.convertDocumentToString(xmlDom), resID, userInfo.getCompanyID(), userInfo.getTenantId(), type, userInfo.getOffset());
+		logger.debug("getScheduleXML=" + reVal);
+		
+		Document tempXML = commonUtil.convertStringToDocument(reVal);
+			
+		for (int i = 0; i < tempXML.getElementsByTagName("ROW").getLength(); i++) {
+			Element count = tempXML.createElement("count");
+			count.setTextContent(i + "");
+			tempXML.getElementsByTagName("ROW").item(i).appendChild(count);
+		}
+			
+		reVal = commonUtil.convertDocumentToString(tempXML);
+			
+		resultXML += "<root>";
+		for (int i = 0; i < tempXML.getElementsByTagName("ROW").getLength(); i++) {
+			int startCount = Math.multiplyExact(Math.subtractExact(page, 1), 20);
+			int endCount = Math.multiplyExact(page, 20);
+
+			if (Integer.parseInt(tempXML.getElementsByTagName("count").item(i).getTextContent()) >= startCount && Integer.parseInt(tempXML.getElementsByTagName("count").item(i).getTextContent())< endCount) {
+				resultXML += "<appointment>";
+				resultXML += "<num>" + tempXML.getElementsByTagName("num").item(i).getTextContent() + "</num>";
+				resultXML += "<pnum>" + tempXML.getElementsByTagName("pnum").item(i).getTextContent() + "</pnum>";
+				resultXML += "<ownerID>" + tempXML.getElementsByTagName("ownerID").item(i).getTextContent() + "</ownerID>";
+				resultXML += "<title>" + tempXML.getElementsByTagName("title").item(i).getTextContent() + "</title>";
+				resultXML += "<location>" + tempXML.getElementsByTagName("location").item(i).getTextContent() + "</location>";
+				resultXML += "<timeDisplay>" + tempXML.getElementsByTagName("timeDisplay").item(i).getTextContent() + "</timeDisplay>";
+				resultXML += "<startDate>" + tempXML.getElementsByTagName("startDate").item(i).getTextContent() + "</startDate>";
+				resultXML += "<endDate>" + tempXML.getElementsByTagName("endDate").item(i).getTextContent() + "</endDate>";
+				resultXML += "<alertTime>" + tempXML.getElementsByTagName("alertTime").item(i).getTextContent() + "</alertTime>";
+				resultXML += "<reFlag>" + tempXML.getElementsByTagName("reFlag").item(i).getTextContent() + "</reFlag>";
+				resultXML += "<gresFlag>" + tempXML.getElementsByTagName("gresFlag").item(i).getTextContent() + "</gresFlag>";
+				resultXML += "<writerID>" + tempXML.getElementsByTagName("writerID").item(i).getTextContent() + "</writerID>";
+				resultXML += "<importance>" + tempXML.getElementsByTagName("importance").item(i).getTextContent() + "</importance>";
+				resultXML += "<entryList>" + tempXML.getElementsByTagName("entryList").item(i).getTextContent() + "</entryList>";
+				resultXML += "<allDay>" + tempXML.getElementsByTagName("allDay").item(i).getTextContent() + "</allDay>";
+				resultXML += "<writeDay>" + tempXML.getElementsByTagName("writeDay").item(i).getTextContent() + "</writeDay>";
+				resultXML += "<attachFlag>" + tempXML.getElementsByTagName("attachFlag").item(i).getTextContent() + "</attachFlag>";
+				resultXML += "<characterID>" + tempXML.getElementsByTagName("characterID").item(i).getTextContent() + "</characterID>";
+				resultXML += "<approveFlag>" + tempXML.getElementsByTagName("approveFlag").item(i).getTextContent() + "</approveFlag>";
+				resultXML += "<returnFlag>" + tempXML.getElementsByTagName("returnFlag").item(i).getTextContent() + "</returnFlag>";
+				resultXML += "<useApprove>" + tempXML.getElementsByTagName("useApprove").item(i).getTextContent() + "</useApprove>";
+				resultXML += "<useReturn>" + tempXML.getElementsByTagName("useReturn").item(i).getTextContent() + "</useReturn>";
+				resultXML += "<nowDate>" + tempXML.getElementsByTagName("nowDate").item(i).getTextContent() + "</nowDate>";
+				resultXML += "<ownerNM>" + tempXML.getElementsByTagName("ownerNM").item(i).getTextContent() + "</ownerNM>";
+				resultXML += "<deptNM>" + tempXML.getElementsByTagName("deptNM").item(i).getTextContent() + "</deptNM>";
+				resultXML += "<count>" + tempXML.getElementsByTagName("count").item(i).getTextContent() + "</count>";
+				resultXML += "</appointment>";
+			}
+		}
+		resultXML += "<totalcount>" + tempXML.getElementsByTagName("ROW").getLength() + "</totalcount>";
+		resultXML += "</root>";
+		reVal = resultXML;
+				
+		logger.debug("scheduleGet End");
+		return reVal;
 	}
 }

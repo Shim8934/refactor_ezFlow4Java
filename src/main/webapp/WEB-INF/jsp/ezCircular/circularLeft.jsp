@@ -15,7 +15,8 @@
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
 		
-	    <link rel="stylesheet" href="${util.addVer('ezCircular.c1', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 	    <link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
 	    <link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
 		<style>
@@ -34,6 +35,9 @@
 	    	#mCSB_1_container {
 				margin-right: 0px;
 			}  	
+			#newCircularCount, #circularCompleteCount, #myCircularCount, #circularTempCount, #circularDeleteCount{  
+				pointer-events: none;
+			}
 		</style>
 	    <script type="text/javascript">
 	        document.onselectstart = function () { return false; };
@@ -230,11 +234,9 @@
 						if (result.count == "0") {
 							rcnt = "";	
 						} else {
-							rcnt = result.count;
-							// 2023-06-22 황인경 - 디자인 개선 > 회람판 > 좌측메뉴 > 카운트 괄호 추가
-							$("#newCircularCount").html("(" + rcnt + ")");
+							rcnt = "(" + result.count + ")";
 						}
-						//$("#newCircularCount").html("&nbsp;" + rcnt);
+						$("#newCircularCount").html(rcnt);
 					}
 				});
 	        }

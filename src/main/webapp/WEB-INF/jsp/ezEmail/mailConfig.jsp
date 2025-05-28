@@ -5,7 +5,8 @@
 <html>
 	<head>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	    <link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+	    <link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/newMail_Cross.js')}"></script>
@@ -68,9 +69,26 @@
 	            window_resize();
 	        }
 	        window.onresize = window_resize;
+	        
 	        function window_resize() {
-	            document.getElementById("MailEnv_ifrm").style.height = (document.documentElement.clientHeight - 120) + "PX";
-	        }
+				var titleH = parseFloat(window.getComputedStyle(document.getElementById("confTitle")).marginTop);
+				titleH += parseFloat(window.getComputedStyle(document.getElementById("confTitle")).marginBottom);
+				titleH += document.getElementById("confTitle").clientHeight;
+				var tabH = document.getElementById("tab1").clientHeight;
+				var pTags = document.getElementById("tab1").querySelectorAll('p');
+				var totalWidthP = 0 ;
+				
+				for (var i = 0; i < pTags.length; i++) {
+					totalWidthP += pTags[i].getBoundingClientRect().width;
+				}
+				
+				if (totalWidthP > document.body.clientWidth) {
+					tabH += 28;
+					}
+				
+				document.getElementById("MailEnv_ifrm").style.height = (document.documentElement.clientHeight - titleH - tabH - 15) + "PX";
+				}
+			
 	        function ChangeTab(obj) {
 	            var pSelectTab = obj.getAttribute("divname");
 	            switch (pSelectTab) {
@@ -128,7 +146,8 @@
 	                    document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailUserDistribution.do";
 	                    break;
 	                case "tag":
-	                    document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailTagConfig.do";
+	                    var requestUrl = shareId != "" ? "/ezEmail/mailTagConfig.do?shareId=" + encodeURIComponent(shareId) : "/ezEmail/mailTagConfig.do";
+                        document.getElementById("MailEnv_ifrm").src = requestUrl;
 	                    break;
 	            }
 	        }
@@ -515,7 +534,7 @@
 					document.getElementById("mailPanel").style.backgroundColor = "";
 		            document.getElementById("iFramePanel").style.display = "none";
 		            document.getElementById("iFrameLayer").src = "/blank.htm";
-		        } catch (e) {}
+		        } catch (e) {console.log(e);}
 		    }
 		    
 		    var inputNameDlg_cross_dialogArguments = new Array();
@@ -656,13 +675,48 @@
 		    	});
 		    }
 		    
+		 	// 2024.08.12 한슬기 : 메일 환경설정 > 편지함관리 > 가져오기 추가
+			function mailbox_attach_import(pwd, tempId, userkey, folderPath, frm) {
+				var encryptPw = (typeof pwd != "undefined") ? pwd : "";
+		    	var path = (typeof tempId != "undefined") ? tempId : "";
+		    	var tempname = "";
+	            socketUserkey = mailbox_getUserKey();
+		        
+				showDim();
+	        	ShowMailProgressNew();
+	        	
+	            if (path != "") {
+	            	ShowPercent(dec);
+	            } else {
+		            ShowPercent(uploading);
+	            }
+	            mailboxProgressFun(true, socketUserkey);
+	  
+	            var requestUrl = "/ezEmail/mailboxImportZip.do?folderPath="
+					+ encodeURIComponent(folderPath) 
+					+ "&userkey=" + encodeURIComponent(socketUserkey)
+					+ "&encryptPw=" + encodeURIComponent(encryptPw)
+					+ "&tempId=" + encodeURIComponent(path);
+		        
+		        if (typeof(shareId) != "undefined" && shareId != "") {
+		        	requestUrl += "&shareId=" + encodeURIComponent(shareId);
+		    	}
+		        
+		        setTimeout(function() {
+		            frm.action = requestUrl;
+		            frm.submit();
+		        }, 100); 
+
+			}
+			// 2024.08.12 한슬기 : 메일 환경설정 > 편지함관리 > 가져오기 추가 end
+		    
 	    </script>
 	    <title><spring:message code='ezEmail.t904' /></title>
 	</head>
 	<body class="mainbody" style="min-width: 835px">
 		<c:choose>
 			<c:when test="${flag eq 'email'}">
-		    	<h1><spring:message code='ezEmail.t904' /><c:if test="${shareName != null}"> - <c:out value="${shareName}" /></c:if></h1>
+				<h1 id="confTitle"><spring:message code='ezEmail.t904' /><c:if test="${shareName != null}"> - <c:out value="${shareName}" /></c:if></h1>
 		    </c:when>
 		    <c:otherwise>
 				<h1><spring:message code='ezAddress.hyh001' /></h1>
@@ -697,8 +751,8 @@
 							<p id = "MailEnv_sub2"><span divname="MailEnv_div2" id="1tab1"><spring:message code='ezPersonal.yej01' /></span></p>
 					    </c:otherwise>
 				    </c:choose>	
-					<%--24.04.22 김대현 공유사서함 경우 tag탭 사라지게 처리--%>
-					<c:if test="${useMailTag and flag ne 'address' and shareId == null}">
+					<%--24.06.12 이사라 - 공유사서함 태그 지원--%>
+					<c:if test="${useMailTag and flag ne 'address'}">
 						<p><span divname="tag" id="1tab12"><spring:message code='ezEmail.tag.config' /></span></p>
 					</c:if>
 	            </div>

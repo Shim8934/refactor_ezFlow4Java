@@ -23,7 +23,7 @@
             <props>
                 <prop key="org.springframework.dao.DataAccessException">cmm/error/dataAccessFailure</prop>
                 <prop key="org.springframework.transaction.TransactionException">cmm/error/transactionFailure</prop>
-                <prop key="egovframework.rte.fdl.cmmn.exception.EgovBizException">cmm/error/egovError</prop>
+                <prop key="org.egovframe.rte.fdl.cmmn.exception.EgovBizException">cmm/error/egovError</prop>
                 <prop key="org.springframework.security.AccessDeniedException">cmm/error/accessDenied</prop>
             </props>
         </property>
@@ -48,6 +48,8 @@
             <mvc:mapping path="/admin/**"/>
             <mvc:mapping path="/ez*/**"/>
             <mvc:exclude-mapping path="/user/login/actionLogin.do"/>
+            <mvc:exclude-mapping path="/user/login/getFidoSessionStatus.do"/>
+            <mvc:exclude-mapping path="/user/login/expireFidoSession.do"/>
             <mvc:exclude-mapping path="/user/login/actionLogoutWithRedirectUri.do"/>            
             <mvc:exclude-mapping path="/user/login/login.do"/>
             <mvc:exclude-mapping path="/user/login/setTFA.do"/>
@@ -129,6 +131,7 @@
 				<mvc:mapping path="/admin/ezOrgan/loginStop.do"/>
 				<mvc:mapping path="/admin/ezOrgan/groupList.do"/>
             	<!-- 메일 -->
+				<mvc:mapping path="/admin/ezEmail/appr/*main.do"/>
             	<mvc:mapping path="/admin/ezEmail/mailDistributionList.do"/>
 				<mvc:mapping path="/admin/ezEmail/mailDefaultQuota.do"/>
 				<mvc:mapping path="/myoffice/ezEmail/Admin/mail_spamfilter_category.aspx"/>
@@ -221,6 +224,7 @@
 				<mvc:mapping path="/ezStatistics/statisticsAttitudeMain.do"/>
             <!-- adminAccessBlockPage -->
             <mvc:exclude-mapping path="/admin/accessBlockToAdmin.do"/>
+			<mvc:exclude-mapping path="/admin/adminDenied.do"/>
 		    <bean class="egovframework.com.cmm.interceptor.AdminAccessInterceptor" />
         </mvc:interceptor>
         
@@ -229,6 +233,7 @@
             <mvc:mapping path="/rest/**"/>
             <mvc:exclude-mapping path="/rest/ezwebfolder/**"/>
             <mvc:exclude-mapping path="/rest/ezwebfolderadmin/**"/>
+			<mvc:exclude-mapping path="/rest/MenuSchedule"/>
 		    <bean class="egovframework.com.cmm.interceptor.MAuthenticInterceptor" />
         </mvc:interceptor>    
 
@@ -239,6 +244,14 @@
             <mvc:exclude-mapping path="/rest/ezwebfolder/file/sat" />
 		    <bean class="egovframework.com.cmm.interceptor.WebfolderAuthenticInterceptor" />
         </mvc:interceptor>
+
+		<mvc:interceptor>
+			<mvc:mapping path="/admin/ezEmail/appr/allHands/*.do"/>
+			<mvc:mapping path="/admin/ezEmail/appr/*.do"/>
+			<mvc:mapping path="/ezEmail/appr/*.do"/>
+			<mvc:exclude-mapping path="/ezEmail/appr/checkApprPolicy.do"/>
+			<bean class="egovframework.com.cmm.interceptor.ApprMailAuthenticInterceptor" />
+		</mvc:interceptor>
 
 		<mvc:interceptor>
 			<mvc:mapping path="/" />

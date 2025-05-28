@@ -6,7 +6,8 @@
 	<head>
 		<title></title>		
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
 		<style>
 			.mainlist tr th { border-top:0px }
@@ -33,10 +34,9 @@
 		    var sDeptID;
 	        
 		    $(document).ready(function(){
-		    	document.getElementById("SCompID").value = CompanyID;
 	            InitListView();
 	            Tree_setconfig();
-	            TreeViewinitialize("", CompanyID, "extensionAttribute2", "<c:out value='${serverName}'/>", "", CompanyID, true);
+				changeCompany();
 		    });
 		    
 		    function Tree_setconfig() {
@@ -100,9 +100,9 @@
 		        listview.DataBind("lvtForm");
 		    }
 		    
-		    function selectCompanyID() {
-		        if (CompanyID != document.getElementById("SCompID").value) {
-		            CompanyID = document.getElementById("SCompID").value;
+		    function changeCompany() {
+		        if (CompanyID != document.getElementById("ListCompany").value) {
+		            CompanyID = document.getElementById("ListCompany").value;
 		            
 		            TreeViewinitialize("", CompanyID, "extensionAttribute2", "<c:out value='${serverName}'/>", "", CompanyID, true);
 		        }
@@ -279,11 +279,7 @@
 		<h1>
 			<spring:message code='ezApprovalG.t1591'/>
 		    <span class="title_bar"><img src="/images/name_bar.gif"></span>
-			<select class="companySelect" id="SCompID" name="SCompID" onchange="selectCompanyID()" style="height:29px">
-	    		<c:forEach var="item" items="${list}">
-            		<option value="<c:out value='${item.cn}'/>" ${item.cn == companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-            	</c:forEach>
-            </select>
+			<jsp:include page="/WEB-INF/jsp/admin/companySelect.jsp"/>
 		</h1>
 	    <table style="margin-top:30px">
 	        <tr>

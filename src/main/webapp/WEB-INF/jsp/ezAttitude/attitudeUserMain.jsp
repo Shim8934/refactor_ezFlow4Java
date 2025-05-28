@@ -5,7 +5,8 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-		<link rel="stylesheet" href="${util.addVer('ezAttitude.i1', 'msg')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('/css/ezAttitude/Calendar_cross.css')}" type="text/css" />
 <%-- 		<link rel="stylesheet" href="${util.addVer('/css/ezAttitude/timecheck.css')}" type="text/css" /> --%>
 		<link rel="stylesheet" href="${util.addVer('ezAttitude.i2', 'msg')}" type="text/css"/>
@@ -1713,13 +1714,39 @@
 			/**
 			* [부서근태현황] 권한에따라 버튼 보이기 유무
 			*/
-			function authBtn() {
+			function authBtn() { // 권한이 없을 때
 				if ($("#authDeptList option:selected").attr("authType") == "" || $("#authDeptList option:selected").attr("authType") == null || $("#authDeptList option:selected").attr("authType") == "R") {
-					$("#btnAbsentedList").css("display","none");
-					$("#btnExcelDown").css("display","none");
-				} else {
-					$("#btnAbsentedList").css("display","");
-					$("#btnExcelDown").css("display","");
+					if ($("#btnAbsentedList")) {
+						$("#btnAbsentedList").remove();
+						$("#btnExcelDown").remove();
+					}
+				} else { // 권한이 있을 때
+					if (!$("#btnAbsentedList")) { // 이미 버튼이 있을때
+						var absentedList = $("<li>", { id: "btnAbsentedList" }).append(
+							$("<span>", {
+								on: {
+									click: function () {
+										popupAbsentedList();
+									}
+								}
+							}).append(
+								$("<spring\\:message>", { code: "ezAttitude.t6" })
+							)
+						);
+						var excelDown = $("<li>", { id: "btnExcelDown" }).append(
+							$("<span>", {
+								on: {
+									click: function () {
+										excelDown();
+									}
+								}
+							}).append(
+								$("<spring\\:message>", { code: "ezAttitude.t145" })
+							)
+						);
+						$("#mainmenu .on").append(absentedList);
+						$("#mainmenu .on").append(excelDown);
+					}
 				}
 			}
 			
@@ -2322,7 +2349,7 @@
 			}
 		</script>
 	</head>
-	<body class="mainbody" marginwidth="0" marginheight="0" onselectstart="return false">
+	<body class="mainbody" marginwidth="0" marginheight="0" onselectstart="return false" style="min-width: 950px;">
 		<c:if test="${deptFlag != 'true'}">
 			<h1 id="titleimg"><spring:message code='ezAttitude.t143'/></h1>
 		</c:if>
@@ -2360,7 +2387,7 @@
 			</ul>
 		</div>
 
-		<div class="calendar_pagenav" style="width:180px;margin-left:-89px;">
+		<div class="calendar_pagenav" style="width:180px;margin-left:-89px; left: max(50%, 550px);">
 	        <ul class="contentlayout">
 	            <li class="contentlayout_left" id="preM"></li>
 	            <li class="contentlayout_right" id="preN"></li>
@@ -2476,6 +2503,12 @@
 		
 
 		<form id="formAgent" name="formAgent" method="POST" target="saveExcel" action="/ezAttitude/saticGetXlsAtt.do">
+		<c:if test="${deptFlag != 'true'}">
+	        <input type="hidden" id="saveFileName" name="saveFileName" value="<spring:message code='ezAttitude.t143'/>"/>
+		</c:if>
+		<c:if test="${deptFlag == 'true'}">
+	        <input type="hidden" id="saveFileName" name="saveFileName" value="<spring:message code='ezAttitude.t144'/>"/>
+		</c:if>
 	        <input type="hidden" id="saveExcelData" name="saveExcelData" value=""/>
 	        <input type="hidden" id="userAgent" name="userAgent" value=""/>
 	    </form>
@@ -2643,7 +2676,7 @@
 			</div>
 		</div>
 		<!-- NO,일시,내용 - 외출,조퇴,결근,휴가유형들  -->
- 		<div id="contentPopup" class="popupwrap1" style="display:none;margin-bottom:50px;<c:if test="${deptFlag == 'true'}">max-width:600px;</c:if><c:if test="${deptFlag != 'true'}">max-width:500px;</c:if>">
+ 		<div id="contentPopup" class="popupwrap1" style="display:none;margin-bottom:50px;<c:if test="${deptFlag == 'true'}">max-width:600px;</c:if><c:if test="${deptFlag != 'true'}">max-width:550px;</c:if>">
 			<div class="popupJQLayer">
 				<div id="contentPopup_title" class="title"><spring:message code='ezAttitude.t141'/></div>
 				<div id="close">

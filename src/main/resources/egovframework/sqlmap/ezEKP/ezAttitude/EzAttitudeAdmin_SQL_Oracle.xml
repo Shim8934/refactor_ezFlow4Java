@@ -35,15 +35,15 @@
 	</resultMap>
 	
 	<resultMap class="java.util.HashMap" id="annualConfigMap">
-		<result property="companyId" 					column="COMPANY_ID" 				columnIndex="1"/>
-		<result property="tenantId" 				column="TENANT_ID" 			columnIndex="2"/>
-		<result property="annualCancelRule"			column="ANNUAL_CANCEL_RULE"			columnIndex="3"/>
-		<result property="useAnnualAutoGnrt"				column="USE_ANNUAL_AUTO_GNRT"			columnIndex="4"/>
-		<result property="annualGnrtStd"				column="ANNUAL_GNRT_STD"				columnIndex="5"/>
-		<result property="initialDate"				column="INITIAL_DATE"				columnIndex="6"/>
+		<result property="companyId" 				column="COMPANY_ID" 			columnIndex="1"/>
+		<result property="tenantId" 				column="TENANT_ID" 				columnIndex="2"/>
+		<result property="annualCancelRule"			column="ANNUAL_CANCEL_RULE"		columnIndex="3"/>
+		<result property="useAnnualAutoGnrt"		column="USE_ANNUAL_AUTO_GNRT"	columnIndex="4"/>
+		<result property="annualGnrtStd"			column="ANNUAL_GNRT_STD"		columnIndex="5"/>
+		<result property="initialDate"				column="INITIAL_DATE"			columnIndex="6"/>
 		<result property="useMinusAnnual"			column="USE_MINUS_ANNUAL"		columnIndex="7"/>
-		<result property="useAnnualTmnt"		column="USE_ANNUAL_TMNT"	columnIndex="8"/>
-		<result property="roundOffRule"		column="ROUND_OFF_RULE"	columnIndex="9"/>
+		<result property="useAnnualTmnt"			column="USE_ANNUAL_TMNT"		columnIndex="8"/>
+		<result property="roundOffRule"				column="ROUND_OFF_RULE"			columnIndex="9"/>
 		<result property="confSetDate"				column="CONF_SET_DATE"			columnIndex="10"/>
 	</resultMap>
 	
@@ -73,34 +73,34 @@
 	</resultMap>
 	
 	<resultMap class="java.util.HashMap" id="annualHistMap">
-		<result property="userId" 					column="USER_ID" 					columnIndex="1"/>
-		<result property="originAnnualCnt" 					column="ORIGIN_ANNUAL_CNT" 				columnIndex="2"/>
-		<result property="changeAnnualCnt" 				column="CHANGE_ANNUAL_CNT" 			columnIndex="3"/>
-		<result property="changeReason" 				column="CHANGE_REASON" 			columnIndex="4"/>
+		<result property="userId" 					column="USER_ID" 				columnIndex="1"/>
+		<result property="originAnnualCnt" 			column="ORIGIN_ANNUAL_CNT" 		columnIndex="2"/>
+		<result property="changeAnnualCnt" 			column="CHANGE_ANNUAL_CNT" 		columnIndex="3"/>
+		<result property="changeReason" 			column="CHANGE_REASON" 			columnIndex="4"/>
 		<result property="changeDate" 				column="CHANGE_DATE" 			columnIndex="5"/>
-		<result property="changeUserId" 				column="CHANGE_USER_ID" 			columnIndex="6"/>
-		<result property="changeUserName" 				column="CHANGE_USER_NAME" 			columnIndex="7"/>
+		<result property="changeUserId" 			column="CHANGE_USER_ID" 		columnIndex="6"/>
+		<result property="changeUserName" 			column="CHANGE_USER_NAME" 		columnIndex="7"/>
 		<result property="companyId" 				column="COMPANY_ID" 			columnIndex="8"/>
-		<result property="tenantId" 				column="TENANT_ID" 			columnIndex="9"/>
+		<result property="tenantId" 				column="TENANT_ID" 				columnIndex="9"/>
 	</resultMap>
 	
 	<resultMap class="java.util.HashMap" id="annualUserMap">
-		<result property="userId" 					column="USER_ID" 					columnIndex="1"/>
-		<result property="companyId" 					column="COMPANY_ID" 				columnIndex="2"/>
-		<result property="tenantId" 				column="TENANT_ID" 			columnIndex="3"/>
-		<result property="joinDate" 				column="JOIN_DATE" 			columnIndex="4"/>
+		<result property="userId" 					column="USER_ID" 				columnIndex="1"/>
+		<result property="companyId" 				column="COMPANY_ID" 			columnIndex="2"/>
+		<result property="tenantId" 				column="TENANT_ID" 				columnIndex="3"/>
+		<result property="joinDate" 				column="JOIN_DATE" 				columnIndex="4"/>
 	</resultMap>
 	
 	<resultMap class="java.util.HashMap" id="annualConfigMap">
-		<result property="companyId" 					column="COMPANY_ID" 				columnIndex="1"/>
-		<result property="tenantId" 				column="TENANT_ID" 			columnIndex="2"/>
-		<result property="annualCancelRule"			column="ANNUAL_CANCEL_RULE"			columnIndex="3"/>
-		<result property="useAnnualAutoGnrt"				column="USE_ANNUAL_AUTO_GNRT"			columnIndex="4"/>
-		<result property="annualGnrtStd"				column="ANNUAL_GNRT_STD"				columnIndex="5"/>
-		<result property="initialDate"				column="INITIAL_DATE"				columnIndex="6"/>
+		<result property="companyId" 				column="COMPANY_ID" 			columnIndex="1"/>
+		<result property="tenantId" 				column="TENANT_ID" 				columnIndex="2"/>
+		<result property="annualCancelRule"			column="ANNUAL_CANCEL_RULE"		columnIndex="3"/>
+		<result property="useAnnualAutoGnrt"		column="USE_ANNUAL_AUTO_GNRT"	columnIndex="4"/>
+		<result property="annualGnrtStd"			column="ANNUAL_GNRT_STD"		columnIndex="5"/>
+		<result property="initialDate"				column="INITIAL_DATE"			columnIndex="6"/>
 		<result property="useMinusAnnual"			column="USE_MINUS_ANNUAL"		columnIndex="7"/>
-		<result property="useAnnualTmnt"		column="USE_ANNUAL_TMNT"	columnIndex="8"/>
-		<result property="roundOffRule"		column="ROUND_OFF_RULE"	columnIndex="9"/>
+		<result property="useAnnualTmnt"			column="USE_ANNUAL_TMNT"		columnIndex="8"/>
+		<result property="roundOffRule"				column="ROUND_OFF_RULE"			columnIndex="9"/>
 		<result property="confSetDate"				column="CONF_SET_DATE"			columnIndex="10"/>
 	</resultMap>
 	
@@ -108,7 +108,7 @@
 		<![CDATA[
 			SELECT 
 				D.CN,
-				D.DISPLAYNAME$lang$ AS DISPLAYNAME
+				CASE #lang# WHEN '2' THEN D.DISPLAYNAME2 ELSE D.DISPLAYNAME END AS DISPLAYNAME
 			FROM 
 				TBL_DEPTMASTER D
 			LEFT JOIN
@@ -131,8 +131,7 @@
 				D.EXTENSIONATTRIBUTE2 = d.CN
 			ORDER BY 
 				LPAD(NVL(D.EXTENSIONATTRIBUTE15, 0), 6, 0),
-				D.DISPLAYNAME$lang$
-				
+				CASE #lang# WHEN '2' THEN D.DISPLAYNAME2 ELSE D.DISPLAYNAME END
 		]]>
 	</select>
 	
@@ -187,9 +186,9 @@
 						TBL_USERMASTER.cn AS userid,
 						DECODE(TBL_ATTITUDE_USER_CONF.work_starttime, null, SUBSTR(TO_CHAR(TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM-DD') || ' ' || TBL_ATTITUDE_CONF.work_starttime, 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5), SUBSTR(TO_CHAR(TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM-DD') || ' ' || TBL_ATTITUDE_USER_CONF.work_starttime, 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5)) AS workstarttime,
 						DECODE(TBL_ATTITUDE_USER_CONF.work_endtime, null, SUBSTR(TO_CHAR(TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM-DD') || ' ' || TBL_ATTITUDE_CONF.work_endtime, 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5), SUBSTR(TO_CHAR(TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM-DD') || ' ' || TBL_ATTITUDE_USER_CONF.work_endtime, 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5)) AS workendtime,
-						TBL_USERMASTER.title$primary$ AS usertitle,
-						TBL_USERMASTER.displayname$primary$ AS userName,
-						TBL_USERMASTER.description$primary$ AS deptName,
+						NVL(CASE #primary# WHEN '2' THEN TBL_USERMASTER.title2 ELSE TBL_USERMASTER.title END, ' ') AS usertitle,
+						CASE #primary# WHEN '2' THEN TBL_USERMASTER.displayname2 ELSE TBL_USERMASTER.displayname END AS userName,
+						CASE #primary# WHEN '2' THEN TBL_USERMASTER.description2 ELSE TBL_USERMASTER.description END AS deptName,
 						CASE 
 							WHEN (TBL_ATTITUDE_USER_CONF.work_starttime is null OR TBL_ATTITUDE_USER_CONF.work_endtime is null) 
 							THEN '0' 
@@ -218,18 +217,17 @@
 					AND
 						TBL_USERMASTER.DEPARTMENT NOT LIKE 'shared_mailbox_%'
 				]]>
-				
 				<isNotEmpty prepend="AND" property="companyId">
 					TBL_USERMASTER.physicaldeliveryofficename = #companyId#
 				</isNotEmpty>
 				<isNotEmpty prepend="AND" property="searchDeptName">
-					TBL_USERMASTER.description$primary$ LIKE '%' || #searchDeptName# || '%'
+					CASE #primary# WHEN '2' THEN TBL_USERMASTER.description2 ELSE TBL_USERMASTER.description END LIKE '%' || #searchDeptName# || '%'
 				</isNotEmpty>
 				<isNotEmpty prepend="AND" property="searchUserName">
-					TBL_USERMASTER.displayname$primary$ LIKE '%' || #searchUserName# || '%'
+					CASE #primary# WHEN '2' THEN TBL_USERMASTER.displayname2 ELSE TBL_USERMASTER.displayname END LIKE '%' || #searchUserName# || '%'
 				</isNotEmpty>
 				<isNotEmpty prepend="AND" property="searchTitle">
-					TBL_USERMASTER.title$primary$ LIKE '%' || #searchTitle# || '%'
+					CASE #primary# WHEN '2' THEN TBL_USERMASTER.title2 ELSE TBL_USERMASTER.title END LIKE '%' || #searchTitle# || '%'
 				</isNotEmpty>
 				<isNotEmpty prepend="AND" property="searchStartTime">
 					<![CDATA[
@@ -248,21 +246,23 @@
 								        ELSE '1' 
 								    END 
 				</isNotEmpty>
-				
-				<isNotEmpty property="orderCell">
 					ORDER BY
-						$orderCell$ $orderOption$,
-						TBL_USERMASTER.displayname$primary$
+				<isNotEmpty property="orderCell">
+					<isEqual property="orderCell" compareValue="DISPLAYNAME">DISPLAYNAME</isEqual>
+					<isEqual property="orderCell" compareValue="TITLE">TITLE</isEqual>
+					<isEqual property="orderCell" compareValue="DESCRIPTION">DESCRIPTION</isEqual>
+					<isEqual property="orderCell" compareValue="WORKSTARTTIME">WORKSTARTTIME</isEqual>
+					<isEqual property="orderCell" compareValue="GUBUN">GUBUN</isEqual>
+					<isEqual property="orderOption" compareValue="DESC">DESC</isEqual>,
 				</isNotEmpty>
-				<isEmpty property="orderCell">
-					ORDER BY TBL_USERMASTER.displayname$primary$
-				</isEmpty>
+					CASE #primary# WHEN '2' THEN TBL_USERMASTER.displayname2 ELSE TBL_USERMASTER.displayname END
 				<![CDATA[
 					) T1
-				) WHERE 
-					   RN >= #startRow#
-				  AND
-				  	   RN <= #endRow#
+				)
+			WHERE 
+				RN >= #startRow#
+			AND
+				RN <= #endRow#
 				]]>
 	</select>
 	
@@ -330,9 +330,9 @@
 				TYPE_ID AS typeId,
 				COMPANY_ID AS companyId,
 				TENANT_ID AS tenantId,
-				TYPE_NAME$primary$ AS typeName,
+				CASE #primary# WHEN '2' THEN TYPE_NAME2 ELSE TYPE_NAME END AS typeName,
 				ISUSE AS isuse,
-				NVL(PARENT_ID,'') AS parentId,
+				NVL(PARENT_ID, '') AS parentId,
 				FORM_ID AS formId,
 				ISADD AS isAdd,
 				IMG_PATH AS imgPath
@@ -343,28 +343,20 @@
 			AND
 				TENANT_ID = #tenantId#
 		]]>
-			<isNotEmpty prepend="AND" property="isuse">
-			<![CDATA[
-				ISUSE = #isuse#
-			]]>
-			</isNotEmpty>
-			<isNotEmpty prepend="AND" property="isAdmin">
-			<![CDATA[
-				PARENT_ID = 'A05'
-			]]>
-			</isNotEmpty>
-			<isNotEmpty prepend="AND" property="statistics">
-			<![CDATA[
-				TYPE_ID NOT IN ('A01', 'A03', 'A05', 'A25')
-			]]>
-			</isNotEmpty>
-			<isNotEmpty prepend="AND" property="typeIdArr">
-			<iterate prepend="TYPE_ID IN" property="typeIdArr" open="(" close=")" conjunction=",">
-			<![CDATA[
-				#typeIdArr[]#
-			]]>
-			</iterate>
-			</isNotEmpty>
+		<isNotEmpty prepend="AND" property="isuse">
+			ISUSE = #isuse#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="isAdmin">
+			PARENT_ID = 'A05'
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="statistics">
+			TYPE_ID NOT IN ('A01', 'A03', 'A05', 'A25')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="typeIdArr">
+		<iterate prepend="TYPE_ID IN" property="typeIdArr" open="(" close=")" conjunction=",">
+			#typeIdArr[]#
+		</iterate>
+		</isNotEmpty>
 			AND
 				ISDEL = '0'
 	</select>
@@ -520,7 +512,7 @@
 	</select>
 		
 	<!-- 조직도 만들기 위한 쿼리 -->
-   <select id="ezAttitudeAdminDAO.selectDeptList" parameterClass="map" resultMap="deptViewMap">
+	<select id="ezAttitudeAdminDAO.selectDeptList" parameterClass="map" resultMap="deptViewMap">
 		select 
 			d.CN as ID,
 			case 
@@ -532,7 +524,7 @@
 				else d.EXTENSIONATTRIBUTE1 
 			end as PARENT,
 			d.EXTENSIONATTRIBUTE2 as COMPANYID,
-			d.DISPLAYNAME$primary$ as TEXT,
+			CASE #primary# WHEN '2' THEN d.DISPLAYNAME2 ELSE d.DISPLAYNAME END AS TEXT,
 			case 
 				when d.CN = d.extensionattribute2 then 'COMP'
 				else 'DEPT'
@@ -550,38 +542,29 @@
 		where 
 			d.TENANT_ID = #tenantId#
 		and 
-		 u.CN = #userId#
+			u.CN = #userId#
 		and
 			u.TENANT_ID = #tenantId#
-		and 
-			(
-				((substr(u.EXTENSIONATTRIBUTE1, 3, 1) = 0 
-			and 
-				d.extensionattribute2 = u.PHYSICALDELIVERYOFFICENAME))
-			or
-				(substr(u.EXTENSIONATTRIBUTE1, 3, 1) = 1)
-			)
 		<isNotEmpty property="companyId">
-		<![CDATA[
-			AND 
-				d.EXTENSIONATTRIBUTE2 = #companyId#
-		]]>
+		AND 
+			d.EXTENSIONATTRIBUTE2 = #companyId#
 		</isNotEmpty>
-		<![CDATA[
-		    ORDER BY lpad(NVL(d.EXTENSIONATTRIBUTE15, 0), 6, 0), d.DISPLAYNAME$primary$			
-		]]>
+	    ORDER BY
+		    lpad(NVL(d.EXTENSIONATTRIBUTE15, 0), 6, 0),
+		    CASE #primary# WHEN '2' THEN d.DISPLAYNAME2 ELSE d.DISPLAYNAME END		
 	</select>
    
+	<!-- 2024-07-29 홍승비 - SQL Injection 수정 > 해당 쿼리 호출되지 않음, 업무일지 모듈의 쿼리가 대신 호출되고 있음 -->
 	<!-- 조직도 부서별 사원 리스트 -->
 	<select id="ezAttitudeAdminDAO.getDeptUserList" parameterClass="Map" resultMap="userMap" remapResults="true">
 		SELECT * FROM 
 		(	SELECT
-				DISPLAYNAME$lang$ AS USER_NAME,
+				CASE #lang# WHEN '2' THEN DISPLAYNAME2 ELSE DISPLAYNAME END AS USER_NAME,
 				CN AS USER_ID,
-				TITLE$lang$ AS JIKWI,
+				CASE #lang# WHEN '2' THEN TITLE2 ELSE TITLE END AS JIKWI,
 				MAIL AS MAIL,
 				DEPARTMENT AS DEPT_ID,
-				DESCRIPTION$lang$ AS DEPT_NAME,
+				CASE #lang# WHEN '2' THEN DESCRIPTION2 ELSE DESCRIPTION END AS DEPT_NAME,
 				EXTENSIONATTRIBUTE2 AS USER_IMG,
 				SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') AS EXTENSIONATTRIBUTE15
 			FROM 
@@ -591,23 +574,31 @@
 			AND
 				PHYSICALDELIVERYOFFICENAME = #companyId#
 			AND
-			    CN not in (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#) 
-			<isNotEqual property="key" compareValue="DEPARTMENT">
-				AND 
-					$key$ like '%' || #value# || '%'
+			    CN not in (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
+			<isNotEqual property="key" compareValue="DEPARTMENT" prepend="AND">
+				<isEqual property="key" compareValue="DISPLAYNAME">DISPLAYNAME</isEqual>
+				<isEqual property="key" compareValue="CN">CN</isEqual>
+				<isEqual property="key" compareValue="DESCRIPTION">DESCRIPTION</isEqual>
+				<isEqual property="key" compareValue="TITLE">TITLE</isEqual>
+				<isEqual property="key" compareValue="TELEPHONENUMBER">TELEPHONENUMBER</isEqual>
+				<isEqual property="key" compareValue="MOBILE">MOBILE</isEqual>
+				<isEqual property="key" compareValue="HOMEPHONE">HOMEPHONE</isEqual>
+				<isEqual property="key" compareValue="FACSIMILETELEPHONENUMBER">FACSIMILETELEPHONENUMBER</isEqual>
+				<isEqual property="key" compareValue="MAIL">MAIL</isEqual>
+				<isEqual property="key" compareValue="STREETADDRESS">STREETADDRESS</isEqual>
+				like '%' || #value# || '%'
 			</isNotEqual>
-			<isEqual property="key" compareValue="DEPARTMENT">
-				AND 
-					$key$ = #value#
+			<isEqual property="key" compareValue="DEPARTMENT" prepend="AND">
+				DEPARTMENT = #value#
 			</isEqual>
 		UNION ALL 
 			SELECT
-	        	A.DISPLAYNAME$lang$ AS USER_NAME,
+	        	CASE #lang# WHEN '2' THEN A.DISPLAYNAME2 ELSE A.DISPLAYNAME END AS USER_NAME,
 				A.CN AS USER_ID,
-				B.TITLE$lang$ AS JIKWI,
+				CASE #lang# WHEN '2' THEN B.TITLE2 ELSE B.TITLE END AS JIKWI,
 				A.MAIL AS MAIL,
 				B.DEPTID AS DEPT_ID,
-				C.DISPLAYNAME$lang$ AS DEPT_NAME,
+				CASE #lang# WHEN '2' THEN C.DISPLAYNAME2 ELSE C.DISPLAYNAME END AS DEPT_NAME,
 				A.EXTENSIONATTRIBUTE2 AS USER_IMG,
 				SUBSTR('0000000000', 1, 10 - LENGTH(NVL(A.EXTENSIONATTRIBUTE15, '0'))) || NVL(A.EXTENSIONATTRIBUTE15, '0') AS EXTENSIONATTRIBUTE15               	
 			FROM
@@ -618,13 +609,21 @@
 				TBL_DEPTMASTER C on B.DEPTID = C.CN and B.TENANT_ID = C.TENANT_ID
 			WHERE
 				B.TENANT_ID = #tenantId#
-			<isNotEqual property="key" compareValue="DEPARTMENT">
-				AND 
-					A.$key$ like '%' || #value# || '%'
+			<isNotEqual property="key" compareValue="DEPARTMENT" prepend="AND">
+				<isEqual property="key" compareValue="DISPLAYNAME">A.DISPLAYNAME</isEqual>
+				<isEqual property="key" compareValue="CN">A.CN</isEqual>
+				<isEqual property="key" compareValue="DESCRIPTION">A.DESCRIPTION</isEqual>
+				<isEqual property="key" compareValue="TITLE">A.TITLE</isEqual>
+				<isEqual property="key" compareValue="TELEPHONENUMBER">A.TELEPHONENUMBER</isEqual>
+				<isEqual property="key" compareValue="MOBILE">A.MOBILE</isEqual>
+				<isEqual property="key" compareValue="HOMEPHONE">A.HOMEPHONE</isEqual>
+				<isEqual property="key" compareValue="FACSIMILETELEPHONENUMBER">A.FACSIMILETELEPHONENUMBER</isEqual>
+				<isEqual property="key" compareValue="MAIL">A.MAIL</isEqual>
+				<isEqual property="key" compareValue="STREETADDRESS">A.STREETADDRESS</isEqual>
+				like '%' || #value# || '%'
 			</isNotEqual>
-			<isEqual property="key" compareValue="DEPARTMENT">
-				AND 
-					B.DEPTID = #value#
+			<isEqual property="key" compareValue="DEPARTMENT" prepend="AND">
+				B.DEPTID = #value#
 			</isEqual>
 		) AA
 		ORDER BY 8 ASC, 1 ASC
@@ -741,10 +740,10 @@
 						A.ip,
 						A.date_type AS datetype,
 						A.type_id AS typeid,
-						B.type_name$primary$ AS typename,
-						C.displayname$primary$ AS username,
-		                C.description$primary$ AS deptname,
-		                C.title$primary$ AS usertitle
+						CASE #primary# WHEN '2' THEN B.type_name2 ELSE B.type_name END AS typename,
+						CASE #primary# WHEN '2' THEN C.displayname2 ELSE C.displayname END AS username,
+						CASE #primary# WHEN '2' THEN C.description2 ELSE C.description END AS deptname,
+						CASE #primary# WHEN '2' THEN C.title2 ELSE C.title END AS usertitle
 					FROM
 						TBL_ATTITUDE A
 					JOIN
@@ -777,32 +776,39 @@
 						)
 					AND A.modappl <> 5
 				]]>
-					
-				<isNotEmpty property="searchAttitudeType">	
+				<isNotEmpty property="searchAttitudeType">
 					<isNotEqual prepend="AND" property="searchAttitudeType" compareValue="total">
-						<![CDATA[
+						<isEqual property="searchAttitudeType" compareValue="A03">
+							A.type_id in ('A03', 'A25')
+						</isEqual>
+						<isNotEqual property="searchAttitudeType" compareValue="A03">
 							A.type_id = #searchAttitudeType#
-						]]>
+						</isNotEqual>
 					</isNotEqual>
 				</isNotEmpty>
 				<isNotEmpty prepend="AND" property="searchDeptId">
 					C.department = #searchDeptId#
 				</isNotEmpty>
 				<isNotEmpty prepend="AND" property="searchDeptName">
-					C.description$primary$ LIKE '%' || #searchDeptName# || '%'
+					CASE #primary# WHEN '2' THEN C.description2 ELSE C.description END LIKE '%' || #searchDeptName# || '%'
 				</isNotEmpty>
 				<isNotEmpty prepend="AND" property="searchUserName">
-					C.displayname$primary$ LIKE '%' || #searchUserName# || '%'
+					CASE #primary# WHEN '2' THEN C.displayname2 ELSE C.displayname END LIKE '%' || #searchUserName# || '%'
 				</isNotEmpty>
 				<isNotEmpty prepend="AND" property="searchTitle">
-					C.title$primary$ LIKE '%' || #searchTitle# || '%'
+					CASE #primary# WHEN '2' THEN C.title2 ELSE C.title END LIKE '%' || #searchTitle# || '%'
 				</isNotEmpty>
 				<iterate prepend="AND C.department IN" property="deptIdList" open="(" close=")" conjunction=",">
 					#deptIdList[]#
 				</iterate>
 				<isNotEmpty property="orderCell">
 					ORDER BY
-						$orderCell$ $orderOption$,
+					<isEqual property="orderCell" compareValue="DISPLAYNAME">DISPLAYNAME</isEqual>
+					<isEqual property="orderCell" compareValue="TITLE">TITLE</isEqual>
+					<isEqual property="orderCell" compareValue="DESCRIPTION">DESCRIPTION</isEqual>
+					<isEqual property="orderCell" compareValue="START_DATE">START_DATE</isEqual>
+					<isEqual property="orderCell" compareValue="TYPE_NAME">TYPE_NAME</isEqual>
+					<isEqual property="orderOption" compareValue="DESC">DESC</isEqual>,
 						startdate DESC,
 						enddate DESC,
 						starttime DESC
@@ -888,9 +894,9 @@
 		<![CDATA[
 			SELECT
 				A.cn AS writerid,
-				A.displayname$lang$ AS username,
-                A.description$lang$ AS deptname,
-                A.title$lang$ AS usertitle,
+				CASE #lang# WHEN '2' THEN A.displayname2 ELSE A.displayname END AS username,
+				CASE #lang# WHEN '2' THEN A.description2 ELSE A.description END AS deptname,
+				NVL(CASE #lang# WHEN '2' THEN A.title2 ELSE A.title END, ' ') AS usertitle,
                 A.mail AS useremail,
                 SUBSTR(TO_CHAR(TO_DATE(#searchStartDate#, 'YYYY-MM-DD HH24:MI:SS') + (#offsetMin#/(60*24)), 'YYYY-MM-DD HH24:MI:SS'), 1, 10) as startdate
 			FROM
@@ -927,15 +933,14 @@
 			AND
 				B.start_date IS NULL
 		]]>
-			
 		<isNotEmpty prepend="AND" property="searchDeptName">
-			A.description$primary$ LIKE '%' || #searchDeptName# || '%'
+			CASE #lang# WHEN '2' THEN A.description2 ELSE A.description END LIKE '%' || #searchDeptName# || '%'
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchUserName">
-			A.displayname$primary$ LIKE '%' || #searchUserName# || '%'
+			CASE #lang# WHEN '2' THEN A.displayname2 ELSE A.displayname END LIKE '%' || #searchUserName# || '%'
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchTitle">
-			A.title$primary$ LIKE '%' || #searchTitle# || '%'
+			CASE #lang# WHEN '2' THEN A.title2 ELSE A.title END LIKE '%' || #searchTitle# || '%'
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchDeptId">
 			A.department = #searchDeptId#
@@ -948,15 +953,24 @@
 	</select>
 
 	<select id="ezAttitudeAdminDAO.getAttitudeAuthList" parameterClass="Map" resultClass="AttitudeAuthorVO">
-		<![CDATA[
 			SELECT 
 				A.USER_ID AS userId,
-			    B.DISPLAYNAME$primary$ AS userName,
-			    B.TITLE$primary$ AS jikwi,
-			    B.DESCRIPTION$primary$ AS deptName,
-			    LISTAGG(A.AUTH_DEPT_ID, ',') WITHIN GROUP (order by C.DISPLAYNAME$primary$) AS authDeptId,
-			    LISTAGG(cast(C.DISPLAYNAME$primary$ as varchar(500)), ',') WITHIN GROUP (order by C.DISPLAYNAME$primary$) AS authDeptName,
-    			LISTAGG(A.AUTH_TYPE, ',') WITHIN GROUP (order by C.DISPLAYNAME$primary$) AS authType
+			<isEqual property="primary" compareValue="2">
+				B.DISPLAYNAME2 AS userName,
+				NVL(B.TITLE2, ' ') AS jikwi,
+				B.DESCRIPTION2 AS deptName,
+			</isEqual>
+			<isNotEqual property="primary" compareValue="2">
+				B.DISPLAYNAME AS userName,
+				NVL(B.TITLE, ' ') AS jikwi,
+				B.DESCRIPTION AS deptName,
+			</isNotEqual>
+			    LISTAGG(A.AUTH_DEPT_ID, ',')
+			    	WITHIN GROUP (order by CASE #primary# WHEN '2' THEN C.DISPLAYNAME2 ELSE C.DISPLAYNAME END) AS authDeptId,
+			    LISTAGG(cast(CASE #primary# WHEN '2' THEN C.DISPLAYNAME2 ELSE C.DISPLAYNAME END as varchar(500)), ',')
+			    	WITHIN GROUP (order by CASE #primary# WHEN '2' THEN C.DISPLAYNAME2 ELSE C.DISPLAYNAME END) AS authDeptName,
+    			LISTAGG(A.AUTH_TYPE, ',')
+    				WITHIN GROUP (order by CASE #primary# WHEN '2' THEN C.DISPLAYNAME2 ELSE C.DISPLAYNAME END) AS authType
 			FROM 
 				TBL_ATTITUDE_AUTH A
 			INNER JOIN
@@ -976,10 +990,11 @@
 			AND
 				A.TENANT_ID = #tenantId#
 			GROUP BY 
-				A.USER_ID, B.DISPLAYNAME, B.TITLE, B.DESCRIPTION
+				A.USER_ID,
+			<isEqual property="primary" compareValue="2">B.DISPLAYNAME2, B.TITLE2, B.DESCRIPTION2</isEqual>
+			<isNotEqual property="primary" compareValue="2">B.DISPLAYNAME, B.TITLE, B.DESCRIPTION</isNotEqual>
 			ORDER BY
 				userName
-		]]>
 	</select>
 	
 	<delete id="ezAttitudeAdminDAO.deleteAttitudeAuth" parameterClass="Map">
@@ -999,7 +1014,7 @@
 		select * from 
 			(
 				SELECT
-					D.DISPLAYNAME$primary$ AS deptName,
+					CASE #lang# WHEN '1' THEN D.DISPLAYNAME ELSE D.DISPLAYNAME2 END AS deptName,
 					D.CN AS deptId,
 					'no' AS mine,
 					TO_CHAR(A.AUTH_TYPE) AS authType
@@ -1017,7 +1032,7 @@
 					A.TENANT_ID = #tenantId#
 				UNION
 				SELECT
-					D.DISPLAYNAME$primary$ AS deptName,
+					CASE #lang# WHEN '1' THEN D.DISPLAYNAME ELSE D.DISPLAYNAME2 END AS deptName,
 					D.CN AS deptId,
 					'yes' AS mine,
 					'' AS authType
@@ -1035,7 +1050,7 @@
 					U.TENANT_ID = #tenantId#
 				UNION
 				SELECT
-					D.DISPLAYNAME$primary$ AS deptName,
+					CASE #lang# WHEN '1' THEN D.DISPLAYNAME ELSE D.DISPLAYNAME2 END AS deptName,
 					D.CN AS deptId,
 					'yes' AS mine,
 					'' AS authType
@@ -1060,7 +1075,7 @@
 	<select id="ezAttitudeAdminDAO.getAttitudeAuthDeptList_hyo" parameterClass="Map" resultClass="AttitudeAuthorVO">
 		<isEqual property="userAuthType" compareValue="all">
 			SELECT
-				displayname$primary$ AS deptname,
+				CASE #primary# WHEN '2' THEN DISPLAYNAME2 ELSE DISPLAYNAME END AS deptname,
 				cn AS deptid,
 				'no' AS mine,
 				'M' AS authtype
@@ -1082,7 +1097,7 @@
 			UNION
 			
 			SELECT
-				displayname$primary$ AS deptname,
+				CASE #primary# WHEN '2' THEN DISPLAYNAME2 ELSE DISPLAYNAME END AS deptname,
 				cn AS deptid,
 				'yes' AS mine,
 				'M' AS authtype
@@ -1107,7 +1122,7 @@
 		
 		<isEqual property="userAuthType" compareValue="dept">
 			SELECT
-				TBL_DEPTMASTER.displayname$primary$ AS deptname,
+				CASE #primary# WHEN '2' THEN TBL_DEPTMASTER.DISPLAYNAME2 ELSE TBL_DEPTMASTER.DISPLAYNAME END AS deptname,
 				TBL_DEPTMASTER.cn AS deptid,
 				'no' AS mine,
 				TBL_ATTITUDE_AUTH.auth_type AS authtype
@@ -1139,7 +1154,7 @@
 			</isEqual>
 			UNION
 			SELECT
-				displayname$primary$ AS deptname,
+				CASE #primary# WHEN '2' THEN DISPLAYNAME2 ELSE DISPLAYNAME END AS deptname,
 				cn AS deptid,
 				'yes' AS mine,
 				unistr('M') AS authtype
@@ -1165,7 +1180,7 @@
 							TBL_USERMASTER.cn = #userId#)
 			UNION
 			SELECT
-				D.DISPLAYNAME$primary$ AS dept_name,
+				CASE #primary# WHEN '2' THEN D.DISPLAYNAME2 ELSE D.DISPLAYNAME END AS deptname,
 				D.CN AS dept_id,
 				'add' AS mine,
 				unistr('M') AS authtype
@@ -1187,7 +1202,7 @@
 		
 		<isEqual property="userAuthType" compareValue="">
 			SELECT
-				TBL_DEPTMASTER.displayname$primary$ AS deptname,
+				CASE #primary# WHEN '2' THEN TBL_DEPTMASTER.DISPLAYNAME2 ELSE TBL_DEPTMASTER.DISPLAYNAME END AS deptname,
 				TBL_DEPTMASTER.cn AS deptid,
 				'no' AS mine,
 				TBL_ATTITUDE_AUTH.auth_type AS authtype
@@ -1221,7 +1236,7 @@
 			</isEqual>
 			UNION
 			SELECT
-				displayname$primary$ AS deptname,
+				CASE #primary# WHEN '2' THEN DISPLAYNAME2 ELSE DISPLAYNAME END AS deptname,
 				cn AS deptid,
 				'yes' AS mine,
 				NVL((SELECT
@@ -1260,7 +1275,7 @@
 							TBL_USERMASTER.cn = #userId#)
 			UNION
 			SELECT
-				D.DISPLAYNAME$primary$ AS dept_name,
+				CASE #primary# WHEN '2' THEN D.DISPLAYNAME2 ELSE D.DISPLAYNAME END AS deptname,
 				D.CN AS dept_id,
 				'add' AS mine,
 				NVL((SELECT
@@ -1359,22 +1374,20 @@
 	</select>
 	
 	<select id="ezAttitudeAdminDAO.getCompanyDeptList" parameterClass="Map" resultClass="AttitudeAuthorVO">
-		<![CDATA[
-			SELECT 
-				CN AS deptId,
-				DISPLAYNAME$primary$ AS deptName
-		]]>
+		SELECT 
+			CN AS deptId,
+			CASE #lang# WHEN '1' THEN DISPLAYNAME ELSE DISPLAYNAME2 END AS deptName
 		<isNotEmpty prepend="," property="isAllDept">
 			'M' AS authType
 		</isNotEmpty>
-			FROM
-				TBL_DEPTMASTER
-			WHERE 
-				TENANT_ID = #tenantId#
-			AND 
-				EXTENSIONATTRIBUTE2 = #companyId#
-			ORDER BY 
-				deptName
+		FROM
+			TBL_DEPTMASTER
+		WHERE
+			TENANT_ID = #tenantId#
+		AND
+			EXTENSIONATTRIBUTE2 = #companyId#
+		ORDER BY
+			deptName
 	</select>
 	
 	<select id="ezAttitudeAdminDAO.checkUseAttitudeType" parameterClass="Map" resultClass="Integer">
@@ -1417,16 +1430,16 @@
 				FROM
 					(SELECT
 					    attitude_id AS attitudeId,
-					    writer_name$primary$ AS writerName,
-					    writer_title$primary$ AS writerTitle,
-					    writer_dept_name$primary$ AS writerDeptName,
+					    CASE #primary# WHEN '2' THEN writer_name2 ELSE writer_name END AS writerName,
+						CASE #primary# WHEN '2' THEN writer_title2 ELSE writer_title END AS writerTitle,
+						CASE #primary# WHEN '2' THEN writer_dept_name2 ELSE writer_dept_name END AS writerDeptName,
                         TO_CHAR(origin_startdate + #offsetMin#/(60*24), 'YYYY-MM-DD HH24:MI') AS originstartdate,
                         TO_CHAR(origin_enddate + #offsetMin#/(60*24), 'YYYY-MM-DD HH24:MI') AS origin_enddate,
                         NVL(TO_CHAR(change_startdate + #offsetMin#/(60*24), 'YYYY-MM-DD HH24:MI'),'') AS changestartdate,
                         NVL(TO_CHAR(change_enddate + #offsetMin#/(60*24), 'YYYY-MM-DD HH24:MI'),'') AS changeenddate,
-					    origin_type_name$primary$ AS origintypename,
-					    NVL(change_type_name$primary$, '') AS changetypename,
-					    appr_user_name$primary$ AS apprusername,
+						CASE #primary# WHEN '2' THEN origin_type_name2 ELSE origin_type_name END AS origintypename,
+					    NVL(CASE #primary# WHEN '2' THEN change_type_name2 ELSE change_type_name END, '') AS changetypename,
+					    CASE #primary# WHEN '2' THEN appr_user_name2 ELSE appr_user_name END AS apprusername,
                         TO_CHAR(appr_date + #offsetMin#/(60*24), 'YYYY-MM-DD HH24:MI') AS apprdate
 					FROM
 						TBL_ATTITUDE_MODAPPL_HISTORY
@@ -1442,14 +1455,10 @@
 						writer_id NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
 				]]>
 				<isNotEmpty prepend="AND" property="searchUserName">
-					<![CDATA[
-						writer_name$primary$ LIKE '%' || #searchUserName# || '%'
-					]]>
+					CASE #primary# WHEN '2' THEN writer_name2 ELSE writer_name END LIKE '%' || #searchUserName# || '%'
 				</isNotEmpty>
 				<isNotEmpty prepend="AND" property="searchTitle">
-					<![CDATA[
-						writer_title$primary$ LIKE '%' || #searchTitle# || '%'
-					]]>
+					CASE #primary# WHEN '2' THEN writer_title2 ELSE writer_title END LIKE '%' || #searchTitle# || '%'
 				</isNotEmpty>
 				<isNotEmpty prepend="AND" property="deptId">
 					WRITER_DEPT_ID = #deptId#
@@ -1458,22 +1467,23 @@
 					#deptIdList[]#
 				</iterate>
 				<isNotEmpty property="orderCell">
-					<![CDATA[
-						ORDER BY
-							$orderCell$ $orderOption$
-					]]>
+					ORDER BY
+					<isEqual property="orderCell" compareValue="WRITER_NAME">WRITER_NAME</isEqual>
+					<isEqual property="orderCell" compareValue="WRITER_TITLE">WRITER_TITLE</isEqual>
+					<isEqual property="orderCell" compareValue="WRITER_DEPT_NAME">WRITER_DEPT_NAME</isEqual>
+					<isEqual property="orderCell" compareValue="CHANGE_STARTDATE">CHANGE_STARTDATE</isEqual>
+					<isEqual property="orderCell" compareValue="CHANGE_TYPE_NAME">CHANGE_TYPE_NAME</isEqual>
+					<isEqual property="orderCell" compareValue="APPR_USER_NAME">APPR_USER_NAME</isEqual>
+					<isEqual property="orderCell" compareValue="APPR_DATE">APPR_DATE</isEqual>
+					<isEqual property="orderOption" compareValue="DESC">DESC</isEqual>
 				</isNotEmpty>
 				<isEmpty property="orderCell">
-					<![CDATA[
-						ORDER BY
-							changestartdate DESC,
-							writerName
-					]]>
+					ORDER BY
+						changestartdate DESC,
+						writerName
 				</isEmpty>
-			<![CDATA[
-						) T1
+					) T1
 				)
-			]]>
 			<isNotEmpty property="startRow">
 				<![CDATA[
 					where
@@ -1537,37 +1547,37 @@
 				A.DEPARTMENT NOT LIKE 'shared\_mailbox\_%'
 		]]>
 		<isNotEmpty prepend="AND" property="searchDeptName">
-			<![CDATA[
-				A.description$primary$ LIKE '%' || #searchDeptName# || '%'
-			]]>
+			CASE #primary# WHEN '2' THEN A.description2 ELSE A.description END LIKE '%' || #searchDeptName# || '%'
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchUserName">
-			<![CDATA[
-				A.displayname$primary$ LIKE '%' || #searchUserName# || '%'
-			]]>
+			CASE #primary# WHEN '2' THEN A.displayname2 ELSE A.displayname END LIKE '%' || #searchUserName# || '%'
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchTitle">
-			<![CDATA[
-				A.title$primary$ LIKE '%' || #searchTitle# || '%'
-			]]>
+			CASE #primary# WHEN '2' THEN A.title2 ELSE A.title END LIKE '%' || #searchTitle# || '%'
 		</isNotEmpty>
 	</select>
 	
 	<select id="ezAttitudeAdminDAO.getAttitudeAnnualList" parameterClass="Map" resultClass="AttitudeAnnualVO">
-		<![CDATA[
 		select
 			*
 		from
 			(SELECT
 				T1.*,
 				rownum AS RN
-				FROM
-					(
+				FROM (
 				SELECT 
 					A.CN AS userId,
-			    	A.DISPLAYNAME$primary$ AS userName,
-			    	A.TITLE$primary$ AS userTitle,
-			    	A.DESCRIPTION$primary$ AS userDeptName,
+				<isEqual property="primary" compareValue="2">
+					A.DISPLAYNAME2 AS userName,
+					NVL(A.TITLE2, ' ') AS userTitle,
+					A.DESCRIPTION2 AS userDeptName,
+				</isEqual>
+				<isNotEqual property="primary" compareValue="2">
+					A.DISPLAYNAME AS userName,
+					NVL(A.TITLE, ' ') AS userTitle,
+					A.DESCRIPTION AS userDeptName,
+				</isNotEqual>
+				<![CDATA[
 			    	A.PHYSICALDELIVERYOFFICENAME AS companyId,
 			    	(NVL(B.MONTHLY_HOLIDAY_CNT, 0) + NVL(B.ANNUAL_HOLIDAY_CNT, 0) + NVL(B.ADDITIONAL_HOLIDAY_CNT, 0)) AS basicAnnualCnt,
 					NVL((SUM(
@@ -1597,7 +1607,7 @@
 						   ELSE 0
 						END
 					)), 0) AS useAnnualCnt,
-					Nvl(B.ADDITIONAL_HOLIDAY_CNT, 0) as additionalAnnualCnt,
+					NVL(B.ADDITIONAL_HOLIDAY_CNT, 0) as additionalAnnualCnt,
 					NVL(TO_CHAR(B.JOIN_DATE, 'YYYY-MM-DD'), 0) AS joinDate
 				FROM 
 					TBL_USERMASTER A
@@ -1647,40 +1657,41 @@
 					A.DEPARTMENT NOT LIKE 'shared\_mailbox\_%'	
 			]]>
 			<isNotEmpty prepend="AND" property="searchDeptName">
-				<![CDATA[
-					A.description$primary$ LIKE '%' || #searchDeptName# || '%'
-				]]>
+				CASE #primary# WHEN '2' THEN A.DESCRIPTION2 ELSE A.DESCRIPTION END LIKE '%' || #searchDeptName# || '%'
 			</isNotEmpty>
 			<isNotEmpty prepend="AND" property="searchUserName">
-				<![CDATA[
-					A.displayname$primary$ LIKE '%' || #searchUserName# || '%'
-				]]>
+				CASE #primary# WHEN '2' THEN A.DISPLAYNAME2 ELSE A.DISPLAYNAME END LIKE '%' || #searchUserName# || '%'
 			</isNotEmpty>
 			<isNotEmpty prepend="AND" property="searchTitle">
-				<![CDATA[
-					A.title$primary$ LIKE '%' || #searchTitle# || '%'
-				]]>
+				CASE #primary# WHEN '2' THEN A.TITLE2 ELSE A.TITLE END LIKE '%' || #searchTitle# || '%'
 			</isNotEmpty>
 			
-			GROUP BY A.CN, A.DISPLAYNAME$primary$, A.TITLE$primary$, A.DESCRIPTION$primary$, A.PHYSICALDELIVERYOFFICENAME,
-			(NVL(B.MONTHLY_HOLIDAY_CNT, 0) + NVL(B.ANNUAL_HOLIDAY_CNT, 0) + NVL(B.ADDITIONAL_HOLIDAY_CNT, 0)), B.JOIN_DATE
+			GROUP BY
+				A.CN,
+				<isEqual property="primary" compareValue="2">A.DISPLAYNAME2, A.TITLE2, A.DESCRIPTION2,</isEqual>
+				<isNotEqual property="primary" compareValue="2">A.DISPLAYNAME, A.TITLE, A.DESCRIPTION,</isNotEqual>
+				A.PHYSICALDELIVERYOFFICENAME,
+				(NVL(B.MONTHLY_HOLIDAY_CNT, 0) + NVL(B.ANNUAL_HOLIDAY_CNT, 0) + NVL(B.ADDITIONAL_HOLIDAY_CNT, 0)),
+				NVL(B.ADDITIONAL_HOLIDAY_CNT, 0),
+				B.JOIN_DATE
 			
 			<isNotEmpty property="orderCell">
-				<![CDATA[
-					ORDER BY
-						$orderCell$ $orderOption$
-				]]>
+				ORDER BY
+				<isEqual property="orderCell" compareValue="DISPLAYNAME">userName</isEqual>
+				<isEqual property="orderCell" compareValue="TITLE">userTitle</isEqual>
+				<isEqual property="orderCell" compareValue="DESCRIPTION">userDeptName</isEqual>
+				<isEqual property="orderCell" compareValue="JOINDATE">JOINDATE</isEqual>
+				<isEqual property="orderCell" compareValue="BASICANNUALCNT">BASICANNUALCNT</isEqual>
+				<isEqual property="orderCell" compareValue="ADDITIONALANNUALCNT">ADDITIONALANNUALCNT</isEqual>
+				<isEqual property="orderCell" compareValue="USEANNUALCNT">USEANNUALCNT</isEqual>
+				<isEqual property="orderOption" compareValue="DESC">DESC</isEqual>
 			</isNotEmpty>
 			<isEmpty property="orderCell">
-				<![CDATA[
-					ORDER BY
-						userName
-				]]>
+				ORDER BY
+					userName
 			</isEmpty>	
-		<![CDATA[
-						) T1
+					) T1
 				)
-			]]>
 		<isNotEmpty property="startRow">
 			<![CDATA[
 				where
@@ -1708,17 +1719,21 @@
 	</select>
 	
 	<insert id="ezAttitudeAdminDAO.insertAnnualHistory" parameterClass="Map">
-		<![CDATA[
 			INSERT INTO tbl_attitude_annual_history
 				(ANNUAL_HISTORY_ID, USER_ID, ORIGIN_ANNUAL_CNT, CHANGE_ANNUAL_CNT, CHANGE_REASON, CHANGE_DATE, CHANGE_USER_ID, COMPANY_ID, TENANT_ID)
 			SELECT
 				SEQ_TBL_ATTITUDE_HISTORY.NEXTVAL AS ANNUAL_HISTORY_ID,
 				A.CN AS USER_ID,
 				(NVL(B.MONTHLY_HOLIDAY_CNT, 0) + NVL(B.ANNUAL_HOLIDAY_CNT, 0) + NVL(B.ADDITIONAL_HOLIDAY_CNT, 0)) AS ORIGIN_ANNUAL_CNT,
-				(NVL(B.MONTHLY_HOLIDAY_CNT, 0) + NVL(B.ANNUAL_HOLIDAY_CNT, 0) + '$annualCnt$') AS CHANGE_ANNUAL_CNT,
-				'$changeReason$' AS CHANGE_REASON,
+				<isEqual property="flagCheck" compareValue="excelChange">
+					(NVL(B.MONTHLY_HOLIDAY_CNT, 0) + NVL(B.ANNUAL_HOLIDAY_CNT, 0)) AS CHANGE_ANNUAL_CNT,
+				</isEqual>
+				<isNotEqual property="flagCheck" compareValue="excelChange">
+					(NVL(B.MONTHLY_HOLIDAY_CNT, 0) + NVL(B.ANNUAL_HOLIDAY_CNT, 0) + #annualCnt#) AS CHANGE_ANNUAL_CNT,
+				</isNotEqual>
+				#changeReason# AS CHANGE_REASON,
 				SYSDATE AS CHANGE_DATE,
-				'$changeUserId$' AS CHANGE_USER_ID,
+				#changeUserId# AS CHANGE_USER_ID,
 				A.PHYSICALDELIVERYOFFICENAME AS COMPANY_ID,
 				A.TENANT_ID AS TENANT_ID
 			FROM
@@ -1737,7 +1752,6 @@
 				A.PHYSICALDELIVERYOFFICENAME = #companyId#
 			AND
 				A.CN = #userId#
-		]]>
 	</insert>
 	
 	<update id ="ezAttitudeAdminDAO.updateAnnualHistory" parameterClass ="Map">
@@ -1766,11 +1780,11 @@
 				</isNotEqual>
 				<isEqual property="attendanceRateCondition" compareValue="3">
 					MONTHLY_HOLIDAY_CNT + ANNUAL_HOLIDAY_CNT + ADDITIONAL_HOLIDAY_CNT AS ORIGIN_ANNUAL_CNT,
-					'0' AS CHANGE_ANNUAL_CNT ,
+					'0' AS CHANGE_ANNUAL_CNT,
 				</isEqual>
-				'$changeReason$' AS CHANGE_REASON,
+				#changeReason# AS CHANGE_REASON,
 				SYSDATE AS CHANGE_DATE,
-				'$changeUserId$' AS CHANGE_USER_ID,
+				#changeUserId# AS CHANGE_USER_ID,
 				COMPANY_ID AS COMPANY_ID,
 				TENANT_ID AS TENANT_ID
 			FROM
@@ -1789,7 +1803,7 @@
 				(USER_ID, ADDITIONAL_HOLIDAY_CNT, COMPANY_ID, TENANT_ID)
 			SELECT
 				CN AS USER_ID,
-				'$annualCnt$' AS TOTAL_ANNUAL_CNT,
+				#annualCnt# AS TOTAL_ANNUAL_CNT,
 				physicaldeliveryofficename AS COMPANY_ID,
 				TENANT_ID AS TENANT_ID
 			FROM
@@ -1824,10 +1838,10 @@
 				(USER_ID, MONTHLY_HOLIDAY_CNT, ANNUAL_HOLIDAY_CNT, ADDITIONAL_HOLIDAY_CNT, JOIN_DATE, COMPANY_ID, TENANT_ID)
 			SELECT
 				CN AS USER_ID,
-				'$annualCnt$' AS MONTHLY_HOLIDAY_CNT,
+				#annualCnt# AS MONTHLY_HOLIDAY_CNT,
 				'0' AS ANNUAL_HOLIDAY_CNT,
 				'0' AS ADDITIONAL_HOLIDAY_CNT,
-				'$joinDate$' AS JOIN_DATE,
+				#joinDate# AS JOIN_DATE,
 				physicaldeliveryofficename AS COMPANY_ID,
 				TENANT_ID AS TENANT_ID
 			FROM
@@ -1869,17 +1883,25 @@
 	</insert>
 	
 	<select id="ezAttitudeAdminDAO.getUserAnnual" parameterClass="Map" resultClass="AdminAttitudeVO">
-		<![CDATA[
 			SELECT
 				A.CN AS userId,
-			    A.DISPLAYNAME$primary$ AS userName,
-			    A.TITLE$primary$ AS userTitle,
-			    A.DESCRIPTION$primary$ AS deptName,
+			<isEqual property="primary" compareValue="2">
+				A.DISPLAYNAME2 AS userName,
+				A.TITLE2 AS userTitle,
+				A.DESCRIPTION2 AS deptName,
+				D.TYPE_NAME2 AS typeName,
+			</isEqual>
+			<isNotEqual property="primary" compareValue="2">
+				A.DISPLAYNAME AS userName,
+				A.TITLE AS userTitle,
+				A.DESCRIPTION AS deptName,
+				D.TYPE_NAME AS typeName,
+			</isNotEqual>
+			<![CDATA[
 			    A.EXTENSIONATTRIBUTE2 AS imgPath,
 			    C.START_DATE + #offsetMin# / (24 * 60) AS startDate,
 			    C.END_DATE + #offsetMin# / (24 * 60) AS endDate,
 			    C.TYPE_ID AS typeId,
-			    D.TYPE_NAME$primary$ AS typeName,
 			    C.ATTITUDE_ID AS attitudeId,
 			    C.CONTENT AS content,
 			    C.MODAPPL AS modAppl,
@@ -1975,32 +1997,56 @@
 				A.PHYSICALDELIVERYOFFICENAME = #companyId#
 			AND 
 				A.cn = #userId#
-			GROUP BY
-				A.CN,A.DISPLAYNAME,A.TITLE,A.DESCRIPTION,A.EXTENSIONATTRIBUTE2,C.TYPE_ID,D.TYPE_NAME,C.ATTITUDE_ID,C.CONTENT,C.MODAPPL, C.START_DATE,C.END_DATE, NVL(F.ANNUAL_APPR_STATUS, -1),(Nvl(b.monthly_holiday_cnt, 0) + Nvl(b.annual_holiday_cnt, 0) + Nvl(b.additional_holiday_cnt, 0)),F.ANNUAL_DOC_ID
-		]]>
-		<isNotEmpty property="orderCell">
-			<![CDATA[
-				ORDER BY
-					$orderCell$ $orderOption$
 			]]>
+			GROUP BY
+				A.CN,
+			<isEqual property="primary" compareValue="2">
+				A.DISPLAYNAME2, A.TITLE2, A.DESCRIPTION2, D.TYPE_NAME2,
+			</isEqual>
+			<isNotEqual property="primary" compareValue="2">
+				A.DISPLAYNAME, A.TITLE, A.DESCRIPTION, D.TYPE_NAME,
+			</isNotEqual>
+				A.EXTENSIONATTRIBUTE2,
+				C.TYPE_ID,
+				C.ATTITUDE_ID,
+				C.CONTENT,
+				C.MODAPPL,
+				C.START_DATE,
+				C.END_DATE,
+				NVL(F.ANNUAL_APPR_STATUS, -1),
+				(Nvl(b.monthly_holiday_cnt, 0) + Nvl(b.annual_holiday_cnt, 0) + Nvl(b.additional_holiday_cnt, 0)),
+				F.ANNUAL_DOC_ID
+		<isNotEmpty property="orderCell">
+			ORDER BY
+			<isEqual property="orderCell" compareValue="STARTDATE">STARTDATE</isEqual>
+			<isEqual property="orderCell" compareValue="TYPENAME">TYPENAME</isEqual>
+			<isEqual property="orderCell" compareValue="ANNUALCNT">ANNUALCNT</isEqual>
+			<isEqual property="orderCell" compareValue="ANNUALAPPRSTATUS">ANNUALAPPRSTATUS</isEqual>
+			<isEqual property="orderCell" compareValue="MODAPPL">MODAPPL</isEqual>
+			<isEqual property="orderOption" compareValue="DESC">DESC</isEqual>
 		</isNotEmpty>
 		<isEmpty property="orderCell">
-			<![CDATA[
-				ORDER BY
-					START_DATE, TYPENAME, CONTENT
-			]]>
-		</isEmpty>	
-	</select>	
+			ORDER BY
+				START_DATE, TYPENAME, CONTENT
+		</isEmpty>
+	</select>
 
 	<select id="ezAttitudeAdminDAO.getAnnualCnt" parameterClass="Map" resultClass="AttitudeAnnualVO">
-		<![CDATA[
 			SELECT 
 					A.CN AS userId,
-			    	A.DISPLAYNAME$primary$ AS userName,
-			    	A.TITLE$primary$ AS userTitle,
-			    	A.DESCRIPTION$primary$ AS userDeptName,
+		    	<isEqual property="primary" compareValue="2">
+					A.DISPLAYNAME2 AS userName,
+					A.TITLE2 AS userTitle,
+					A.DESCRIPTION2 AS userDeptName,
+				</isEqual>
+				<isNotEqual property="primary" compareValue="2">
+					A.DISPLAYNAME AS userName,
+					A.TITLE AS userTitle,
+					A.DESCRIPTION AS userDeptName,
+				</isNotEqual>
 			    	A.PHYSICALDELIVERYOFFICENAME AS companyId,
 			    	(NVL(B.MONTHLY_HOLIDAY_CNT, 0) + NVL(B.ANNUAL_HOLIDAY_CNT, 0) + NVL(B.ADDITIONAL_HOLIDAY_CNT, 0)) AS totalAnnualCnt,
+ 		<![CDATA[
 					NVL((SUM(
 				       TRUNC(
 				        TO_DATE( 
@@ -2074,10 +2120,20 @@
 					A.CN = #userId#
 		]]>
 		
-		GROUP BY A.CN, A.DISPLAYNAME$primary$, A.TITLE$primary$, A.DESCRIPTION$primary$, A.PHYSICALDELIVERYOFFICENAME,
-		(NVL(B.MONTHLY_HOLIDAY_CNT, 0) + NVL(B.ANNUAL_HOLIDAY_CNT, 0) + NVL(B.ADDITIONAL_HOLIDAY_CNT, 0)), B.JOIN_DATE
-		
-		
+		GROUP BY
+			A.CN,
+			<isEqual property="primary" compareValue="2">
+				A.DISPLAYNAME2,
+				A.TITLE2,
+				A.DESCRIPTION2,
+			</isEqual>
+			<isNotEqual property="primary" compareValue="2">
+				A.DISPLAYNAME,
+				A.TITLE,
+				A.DESCRIPTION,
+			</isNotEqual>
+			A.PHYSICALDELIVERYOFFICENAME,
+			(NVL(B.MONTHLY_HOLIDAY_CNT, 0) + NVL(B.ANNUAL_HOLIDAY_CNT, 0) + NVL(B.ADDITIONAL_HOLIDAY_CNT, 0)), B.JOIN_DATE
 	</select>
 	
 	<select id="ezAttitudeAdminDAO.getAnnualHistoryList" parameterClass="Map" resultMap="annualHistMap">
@@ -2089,7 +2145,10 @@
 				CHANGE_REASON AS CHANGE_REASON,
 				TO_CHAR(CHANGE_DATE, 'YYYY-MM-DD HH24:MI:SS') AS CHANGE_DATE,
 				CHANGE_USER_ID AS CHANGE_USER_ID,
-				(SELECT DISPLAYNAME$primary$ FROM tbl_usermaster WHERE CN = CHANGE_USER_ID AND TENANT_ID = #tenantId#) AS CHANGE_USER_NAME,
+				(SELECT
+					CASE #primary# WHEN '2' THEN DISPLAYNAME2 ELSE DISPLAYNAME END
+				FROM
+					tbl_usermaster WHERE CN = CHANGE_USER_ID AND TENANT_ID = #tenantId#) AS CHANGE_USER_NAME,
 				COMPANY_ID AS COMPANY_ID,
 				TENANT_ID AS TENANT_ID
 			FROM
@@ -2119,20 +2178,18 @@
 			AND
     			TBL_USERMASTER.DEPARTMENT NOT LIKE 'shared\_mailbox\_%'
 			]]>
-		<isNotEmpty prepend="AND" property="userId">
-			<![CDATA[
+			<isNotEmpty prepend="AND" property="userId">
 				CN = #userId#
-			]]>
-		</isNotEmpty>
-		<isNotEmpty prepend="AND" property="searchDeptName">
-				description$primary$ LIKE '%' || #searchDeptName# || '%'
-		</isNotEmpty>
-		<isNotEmpty prepend="AND" property="searchUserName">
-				displayname$primary$ LIKE '%' || #searchUserName# || '%'
-		</isNotEmpty>
-		<isNotEmpty prepend="AND" property="searchTitle">
-				title$primary$ LIKE '%' || #searchTitle# || '%'
-		</isNotEmpty>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="searchDeptName">
+				CASE #primary# WHEN '2' THEN description2 ELSE description END LIKE '%' || #searchDeptName# || '%'
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="searchUserName">
+				CASE #primary# WHEN '2' THEN displayname2 ELSE displayname END LIKE '%' || #searchUserName# || '%'
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="searchTitle">
+				CASE #primary# WHEN '2' THEN title2 ELSE title END LIKE '%' || #searchTitle# || '%'
+			</isNotEmpty>
 	</select>
 	
 	<insert id="ezAttitudeAdminDAO.saveJoinDate" parameterClass="Map">

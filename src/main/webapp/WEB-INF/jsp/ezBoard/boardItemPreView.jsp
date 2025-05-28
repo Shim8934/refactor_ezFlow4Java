@@ -7,7 +7,8 @@
 	<head>
 		<title><spring:message code='ezBoard.t282'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/css/previewBoard.css')}" type="text/css">
 		<style type="text/css">
 			#txtContent h1, #txtContent h2 , #txtContent h3 , #txtContent h4 , #txtContent h5 , #txtContent h6 {
@@ -22,9 +23,11 @@
 			#txtContent h5 {font-size:0.83em; margin-top:1.67em; margin-bottom:1.67em;}
 			#txtContent h6 {font-size:0.67em; margin-top:2.33em; margin-bottom:2.33em;}
 			.popup h1, .popup h2 {height:auto;}
+			div#txtContent{margin-left:0px; margin-right:0px;}
 		</style>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezBoard/common.js')}"></script>
 		<script type="text/javascript">
 		
 		var curFontSize = 1;
@@ -45,7 +48,8 @@
 		        var pUse_Editor = "${useEditor}";
 		        var Title = window.opener.document.getElementById('txtTitle').value;
 		        var Content = window.opener.document.getElementById('message').contentWindow.GetEditorContent();
-		
+				var writerNameType = "<c:out value = '${writerNameType}'/>"; // 2025-01-21 임정은 - 게시자명선택 타입 (0 : 이름, 1 : 부서명)
+				
 		        if (gubun != 3) {
 		        	if (CrossYN()) {
 			            var _tempList = document.createElement("table");
@@ -116,7 +120,11 @@
 		        	}
 		        }
 		        if (gubun != "2") {
-		        	document.getElementById('WriteUserNM').innerHTML = WriterName;
+					if (writerNameType == "1") {
+						document.getElementById('WriteUserNM').innerHTML = WriterDeptName;
+					} else {
+						document.getElementById('WriteUserNM').innerHTML = WriterName;
+					}
 		        } else { // 익명게시판의 게시자명 특문처리 대응
 		        	document.getElementById('WriteUserNM').innerText = window.opener.document.getElementById('txtNickName').value;
 		        }
@@ -137,7 +145,11 @@
 		        document.getElementById('EndDate').innerHTML = pEndDate;
 		        if (gubun != 2) {
 		            document.getElementById('User_DeptNM').innerHTML = MakeXMLString(WriterDeptName);
-		            document.getElementById('User_JobTitle').innerHTML = WriterTitle;
+					if (writerNameType == "1") {
+						document.getElementById('User_JobTitle').innerHTML = WriterDeptName;
+					} else {
+		            	document.getElementById('User_JobTitle').innerHTML = WriterTitle;
+					}
 		            document.getElementById('Telephone').innerHTML = WriterPhone;
 		        }
 		        document.getElementById('txtTitle').innerHTML = MakeXMLString(Title);
@@ -158,8 +170,10 @@
 		                    for (var j = 0; j < paremtElement.length; j++) {
 		                        if ((paremtElement[j].type == "radio" || paremtElement[j].type == "checkbox") && paremtElement[j].checked) { // 라디오버튼 또는 체크박스
 		                            WriterValue += paremtElement[j].value + ",";
-		                        } else if (paremtElement[j].type == "text") { // 텍스트
+		                        } else if (paremtElement[j].type == "text" || paremtElement[j].getAttribute('type') == "textArea") { // 텍스트
 		                        	WriterValue = paremtElement[j].value;
+		                        } else if (paremtElement[j].getAttribute('type') == "people") {
+		                            WriterValue = paremtElement[j].innerText;
 		                        }
 		                    }
 			                
@@ -168,6 +182,16 @@
 		                	}
 		                    document.getElementById("extensionAttribute" + (i + 6)).innerText = WriterValue;
 		                }
+		            }
+		        }
+		        
+		        // 2024-08-23 전인하 - 게시판 > 미리보기 시 키워드 값 삽입
+		        var keywords = window.opener.keywordArr;
+		        if (keywords.length > 0) {
+		            document.querySelector('#cKeywordTr').style.display = '';
+		            for (let i = 0; i < keywords.length; i++) {
+		                var keywordObj = makeKeywordSpanObj(keywords[i], "print");
+                        document.querySelector('#cKeyword').append(keywordObj);
 		            }
 		        }
 		    };
@@ -311,6 +335,18 @@
 					                <td colspan="5" id="${boardAttributeVO.tableCol}">
 					                </td>
 	       						</c:when>
+	       						<c:when test="${boardAttributeVO.colType == 'people'}">
+                                    <td colspan="5" id="${boardAttributeVO.tableCol}">
+                                    </td>
+                                </c:when>
+                                <c:when test="${boardAttributeVO.colType == 'textArea'}">
+                                    <td colspan="5" id="${boardAttributeVO.tableCol}">
+                                    </td>
+                                </c:when>
+								<c:when test="${boardAttributeVO.colType == 'cal'}">
+									<td colspan="5" id="${boardAttributeVO.tableCol}">
+									</td>
+								</c:when>
 	       					</c:choose>
 	       				</tr>
 	       			</c:forEach>
@@ -319,6 +355,12 @@
 		          <th><spring:message code='ezBoard.t291'/></th>
 		          <td id="cTitle" style="WORD-WRAP: break-word" colSpan="5"><div id="txtTitle" style="OVERFLOW-Y: auto; WIDTH: 100%; vertical-align: middle"></div></td>
 		        </tr>
+		         <!-- 키워드 -->
+                 <tr id="cKeywordTr" style="display:none">
+                     <th><spring:message code="ezApprovalG.t1200" /></th>
+                     <td width="100%" id="cKeyword" style="WORD-WRAP: break-word;word-break:break-all; line-height:16px;" colspan=5>
+                     </td>
+                 </tr>
 			      </table>
 		      </td>
 		  </tr>

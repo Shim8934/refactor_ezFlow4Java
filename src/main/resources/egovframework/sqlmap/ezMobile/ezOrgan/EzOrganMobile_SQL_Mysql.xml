@@ -180,7 +180,13 @@
 	  					THEN DISPLAYNAME
 	  					ELSE DISPLAYNAME$lang$
 	  				END DEPTNAME,
-				    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN)) AS ISLAST,
+				    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN
+			]]>
+					<isEqual property="useOrganHideFlag" compareValue="YES" prepend="and">
+						DEPTTREEFLAG = 'Y'
+					</isEqual>
+			<![CDATA[
+				)) AS ISLAST,
 				    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND A.CN = #deptID#)) AS EXPAND,
 				    DEPTLEVEL as DEPTTYPE,
 		   			EXTENSIONATTRIBUTE1 as HIGHDEPTID
@@ -201,7 +207,13 @@
 	  					THEN DISPLAYNAME
 	  					ELSE DISPLAYNAME$lang$
 	  				END DEPTNAME,
-				    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN)) AS ISLAST,
+				    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN
+			]]>
+						<isEqual property="useOrganHideFlag" compareValue="YES" prepend="and">
+							DEPTTREEFLAG = 'Y'
+						</isEqual>
+			<![CDATA[
+				)) AS ISLAST,
 				    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND A.CN = #deptID#)) AS EXPAND,
 				    DEPTLEVEL as DEPTTYPE,
 		   			EXTENSIONATTRIBUTE1 as HIGHDEPTID
@@ -234,7 +246,13 @@
   					THEN DISPLAYNAME
   					ELSE DISPLAYNAME$lang$
   				END DEPTNAME,
-			    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN)) AS ISLAST,
+			    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN
+		]]>
+				<isEqual property="useOrganHideFlag" compareValue="YES" prepend="and">
+					DEPTTREEFLAG = 'Y'
+				</isEqual>
+		<![CDATA[
+				)) AS ISLAST,
 			    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND A.CN = #deptID#)) AS EXPAND,
 			    DEPTLEVEL as DEPTTYPE,
 	   			EXTENSIONATTRIBUTE1 as HIGHDEPTID
@@ -244,6 +262,11 @@
 				TENANT_ID = #tenantID#
 			AND
 				EXTENSIONATTRIBUTE1 = #deptID#
+		]]>
+			<isEqual property="useOrganHideFlag" compareValue="YES" prepend="and">
+				DEPTTREEFLAG = 'Y'
+			</isEqual>
+		<![CDATA[
 			ORDER BY
         		A.EXTENSIONATTRIBUTE15, 
         		A.DISPLAYNAME
@@ -266,7 +289,9 @@
 					    TENANT_ID,
 					    'dept' as TYPE,
 						'' as mobile,
-						'' as telephoneNumber
+						'' as telephoneNumber,
+						'' as jobId,
+						EXTENSIONATTRIBUTE2 as userCompanyID
 					FROM
 						TBL_DEPTMASTER
 					WHERE
@@ -298,7 +323,9 @@
 				    TENANT_ID,
 					'user' as TYPE,
 					mobile,
-					telephoneNumber
+					telephoneNumber,
+					'' as jobId,
+					PHYSICALDELIVERYOFFICENAME as userCompanyID
 				FROM
 					TBL_USERMASTER
 				WHERE
@@ -316,6 +343,11 @@
 									TENANT_ID = #tenantID#)
 				AND
 					TENANT_ID = #tenantID#
+			]]>
+				<isEqual property="useOrganHideFlag" compareValue="YES" prepend="and">
+					USERTREEFLAG = 'Y'
+				</isEqual>
+			<![CDATA[
 				AND 
 					DEPARTMENT NOT IN (SELECT 
 										CN 
@@ -329,6 +361,11 @@
 									</isEqual>
 				<![CDATA[
 								)
+				 ]]> 
+				<isEqual property="userSearch" compareValue="userSearch" prepend="and">
+					PHYSICALDELIVERYOFFICENAME = #companyId#
+				</isEqual>
+				<![CDATA[
 				)
 				UNION ALL
 				
@@ -344,7 +381,9 @@
 				    B.TENANT_ID,
 					'addJobUser' as TYPE,
 					B.mobile,
-					B.telephoneNumber
+					B.telephoneNumber,
+					A.JOBID as jobId,
+		    		D.EXTENSIONATTRIBUTE2 as userCompanyID
 				FROM
 					TBL_ADDJOBMASTER A
 				JOIN
@@ -361,10 +400,20 @@
 					(B.DISPLAYNAME$lang$ LIKE CONCAT('%', #deptIDEscape#, '%')
 					OR
 					D.DISPLAYNAME$lang$ LIKE CONCAT('%', #deptIDEscape#, '%'))	
+		 	]]>
+				<isEqual property="userSearch" compareValue="userSearch" prepend="and">
+					D.EXTENSIONATTRIBUTE2 = #companyId#
+				</isEqual>
+			<![CDATA[
 				AND
 					B.TENANT_ID = #tenantID#
 		    	AND 
-		    		B.PHYSICALDELIVERYOFFICENAME = #companyId# 
+		    		B.PHYSICALDELIVERYOFFICENAME = #companyId#
+			]]>
+				<isEqual property="useOrganHideFlag" compareValue="YES" prepend="and">
+					A.USERTREEFLAG = 'Y'
+				</isEqual>
+			<![CDATA[
 		    	AND 
 		    		D.DEPT_CD_PATH NOT LIKE '%trash\_dept%')
 				ORDER BY 
@@ -387,7 +436,9 @@
 					    TENANT_ID,
 					    'dept' as TYPE,
 						'' as mobile,
-						'' as telephoneNumber
+						'' as telephoneNumber,
+						'' as jobId,
+						EXTENSIONATTRIBUTE2 as userCompanyID
 					FROM
 						TBL_DEPTMASTER
 					WHERE
@@ -413,7 +464,9 @@
 				    TENANT_ID,
 					'user' as TYPE,
 					mobile,
-					telephoneNumber
+					telephoneNumber,
+					'' as jobId,
+	    		    PHYSICALDELIVERYOFFICENAME as userCompanyID
 				FROM
 					TBL_USERMASTER
 				WHERE
@@ -429,6 +482,11 @@
 									TENANT_ID = #tenantID#)
 				AND
 					DEPARTMENT NOT IN (SELECT CN FROM TBL_DEPTMASTER WHERE DEPT_CD_PATH LIKE '%trash\_dept%' AND TENANT_ID = #tenantID#)
+			]]>
+				<isEqual property="useOrganHideFlag" compareValue="YES" prepend="and">
+					USERTREEFLAG = 'Y'
+				</isEqual>
+			<![CDATA[
 				AND
 					TENANT_ID = #tenantID#)
 				UNION ALL
@@ -445,7 +503,9 @@
 				    B.TENANT_ID,
 					'addJobUser' as TYPE,
 					B.mobile,
-					B.telephoneNumber
+					B.telephoneNumber,
+					A.JOBID as jobId,
+				    D.EXTENSIONATTRIBUTE2 as userCompanyID
 				FROM
 					TBL_ADDJOBMASTER A
 				JOIN
@@ -460,6 +520,11 @@
 					A.DEPTID = D.CN
 				WHERE
 					A.DEPTID = #deptID#
+			]]>
+				<isEqual property="useOrganHideFlag" compareValue="YES" prepend="and">
+					A.USERTREEFLAG = 'Y'
+				</isEqual>
+			<![CDATA[
 				AND
 					B.TENANT_ID = #tenantID#) 
 				ORDER BY 
@@ -479,7 +544,13 @@
 	  					THEN DISPLAYNAME
 	  					ELSE DISPLAYNAME$lang$
 	  				END DEPTNAME,
-				    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN)) AS ISLAST,
+				    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN
+			]]>
+						<isEqual property="useOrganHideFlag" compareValue="YES" prepend="and">
+							DEPTTREEFLAG = 'Y'
+						</isEqual>
+			<![CDATA[
+				    )) AS ISLAST,
 				    0 AS EXPAND,
 				    DEPTLEVEL as DEPTTYPE,
 		   			EXTENSIONATTRIBUTE1 as HIGHDEPTID,
@@ -491,7 +562,13 @@
 				AND
 					DEPT_CD_PATH NOT LIKE '%trash\_dept%'
 				AND
-					CN = 'Top')
+					CN = 'Top'
+				]]>
+				<isEqual property="useOrganHideFlag" compareValue="YES" prepend="and">
+					DEPTTREEFLAG = 'Y'
+				</isEqual>
+				<![CDATA[
+				)
 					
 				UNION ALL
 				
@@ -502,7 +579,13 @@
 	  					THEN DISPLAYNAME
 	  					ELSE DISPLAYNAME$lang$
 	  				END DEPTNAME,
-				    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN)) AS ISLAST,
+				    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN
+			    ]]>
+					<isEqual property="useOrganHideFlag" compareValue="YES" prepend="and">
+						DEPTTREEFLAG = 'Y'
+					</isEqual>
+				<![CDATA[
+				    )) AS ISLAST,
 				    0 AS EXPAND,
 				    DEPTLEVEL as DEPTTYPE,
 		   			EXTENSIONATTRIBUTE1 as HIGHDEPTID,
@@ -513,6 +596,11 @@
 					TENANT_ID = #tenantID#
 				AND
 					DEPT_CD_PATH NOT LIKE '%trash\_dept%'
+			]]>
+				<isEqual property="useOrganHideFlag" compareValue="YES" prepend="and">
+					DEPTTREEFLAG = 'Y'
+				</isEqual>
+			<![CDATA[
 				AND
 					EXTENSIONATTRIBUTE1 = 'Top')
 				ORDER BY 
@@ -530,7 +618,13 @@
 	  					THEN DISPLAYNAME
 	  					ELSE DISPLAYNAME$lang$
 	  				END DEPTNAME,
-				    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN)) AS ISLAST,
+				    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN
+		   ]]>
+				<isEqual property="useOrganHideFlag" compareValue="YES" prepend="and">
+					DEPTTREEFLAG = 'Y'
+				</isEqual>
+			<![CDATA[
+				        )) AS ISLAST,
 				    0 AS EXPAND,
 				    DEPTLEVEL as DEPTTYPE,
 		   			EXTENSIONATTRIBUTE1 as HIGHDEPTID,
@@ -541,6 +635,11 @@
 					TENANT_ID = #tenantID#
 				AND
 					DEPT_CD_PATH NOT LIKE '%trash\_dept%'
+			]]>
+				<isEqual property="useOrganHideFlag" compareValue="YES" prepend="and">
+					DEPTTREEFLAG = 'Y'
+				</isEqual>
+			<![CDATA[
 				AND
 					CN = #companyID#)
 					
@@ -553,7 +652,36 @@
 	  					THEN DISPLAYNAME
 	  					ELSE DISPLAYNAME$lang$
 	  				END DEPTNAME,
-				    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN)) AS ISLAST,
+				    CASE
+					WHEN #userSearch# = 'userSearch' 
+						THEN 
+							(SELECT 1 FROM DUAL 
+							WHERE EXISTS (
+								SELECT CN 
+								FROM TBL_DEPTMASTER B 
+								WHERE TENANT_ID = #tenantID# 
+									AND EXTENSIONATTRIBUTE1 = A.CN 
+									AND DEPTLEVEL != '1'
+								]]>
+									<isEqual property="useOrganHideFlag" compareValue="YES" prepend="and">
+										DEPTTREEFLAG = 'Y'
+									</isEqual>
+								<![CDATA[
+							))
+						ELSE 
+							(SELECT 1 FROM DUAL 
+							WHERE EXISTS (
+								SELECT CN
+								FROM TBL_DEPTMASTER B 
+								WHERE TENANT_ID = #tenantID# 
+									AND EXTENSIONATTRIBUTE1 = A.CN
+								]]>
+									<isEqual property="useOrganHideFlag" compareValue="YES" prepend="and">
+										DEPTTREEFLAG = 'Y'
+									</isEqual>
+								<![CDATA[
+							))
+					END ISLAST,
 				    0 AS EXPAND,
 				    DEPTLEVEL as DEPTTYPE,
 		   			EXTENSIONATTRIBUTE1 as HIGHDEPTID,
@@ -562,8 +690,18 @@
 					TBL_DEPTMASTER A
 				WHERE
 					TENANT_ID = #tenantID#
+			]]>
+				<isEqual property="userSearch" compareValue="userSearch" prepend="and">
+					DEPTLEVEL != '1'
+				</isEqual>
+			<![CDATA[
 				AND
 					DEPT_CD_PATH NOT LIKE '%trash\_dept%'
+			]]>
+				<isEqual property="useOrganHideFlag" compareValue="YES" prepend="and">
+					DEPTTREEFLAG = 'Y'
+				</isEqual>
+			<![CDATA[
 				AND
 					EXTENSIONATTRIBUTE1 = #companyID#)
 				ORDER BY 
@@ -583,7 +721,13 @@
   					THEN DISPLAYNAME
   					ELSE DISPLAYNAME$lang$
   				END DEPTNAME,
-			    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN)) AS ISLAST,
+			    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN
+			]]>
+					<isEqual property="useOrganHideFlag" compareValue="YES" prepend="and">
+						DEPTTREEFLAG = 'Y'
+					</isEqual>
+		<![CDATA[
+				)) AS ISLAST,
 			    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND A.CN = #deptID#)) AS EXPAND,
 	   			DEPTLEVEL as DEPTTYPE,
 	   			EXTENSIONATTRIBUTE1 as HIGHDEPTID,
@@ -594,6 +738,11 @@
 				TENANT_ID = #tenantID#
 			AND
 				DEPT_CD_PATH NOT LIKE '%trash\_dept%'
+		]]>
+			<isEqual property="useOrganHideFlag" compareValue="YES" prepend="and">
+				DEPTTREEFLAG = 'Y'
+			</isEqual>
+		<![CDATA[
 			AND
 				CN = #deptID#)
 				
@@ -606,7 +755,36 @@
   					THEN DISPLAYNAME
   					ELSE DISPLAYNAME$lang$
   				END DEPTNAME,
-			    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN)) AS ISLAST,
+    		    CASE
+				WHEN #userSearch# = 'userSearch' 
+					THEN 
+						(SELECT 1 FROM DUAL 
+						WHERE EXISTS (
+							SELECT CN 
+							FROM TBL_DEPTMASTER B 
+							WHERE TENANT_ID = #tenantID# 
+								AND EXTENSIONATTRIBUTE1 = A.CN 
+								AND DEPTLEVEL != '1'
+							]]>
+								<isEqual property="useOrganHideFlag" compareValue="YES" prepend="and">
+									DEPTTREEFLAG = 'Y'
+								</isEqual>
+							<![CDATA[
+						))
+					ELSE 
+						(SELECT 1 FROM DUAL 
+						WHERE EXISTS (
+							SELECT CN
+							FROM TBL_DEPTMASTER B 
+							WHERE TENANT_ID = #tenantID# 
+								AND EXTENSIONATTRIBUTE1 = A.CN
+							]]>
+								<isEqual property="useOrganHideFlag" compareValue="YES" prepend="and">
+									DEPTTREEFLAG = 'Y'
+								</isEqual>
+							<![CDATA[
+						))
+				END ISLAST,
 			    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND A.CN = #deptID#)) AS EXPAND,
 			    DEPTLEVEL as DEPTTYPE,
 	   			EXTENSIONATTRIBUTE1 as HIGHDEPTID,
@@ -615,8 +793,18 @@
 				TBL_DEPTMASTER A
 			WHERE
 				TENANT_ID = #tenantID#
+		]]>
+			<isEqual property="userSearch" compareValue="userSearch" prepend="and">
+				DEPTLEVEL != '1'
+			</isEqual>
+		<![CDATA[
 			AND
 				DEPT_CD_PATH NOT LIKE '%trash\_dept%'
+		]]>
+			<isEqual property="useOrganHideFlag" compareValue="YES" prepend="and">
+				DEPTTREEFLAG = 'Y'
+			</isEqual>
+		<![CDATA[
 			AND
 				EXTENSIONATTRIBUTE1 = #deptID#)
 			ORDER BY 
@@ -637,7 +825,13 @@
 		  					THEN DISPLAYNAME
 		  					ELSE DISPLAYNAME$lang$
 		  				END DEPTNAME,
-					    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN)) AS ISLAST,
+					    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN	
+				]]>
+							<isEqual property="useOrganHideFlag" compareValue="YES" prepend="and">
+								DEPTTREEFLAG = 'Y'
+							</isEqual>
+				<![CDATA[
+						)) AS ISLAST,
 					    0 AS EXPAND,
 					    DEPTLEVEL as DEPTTYPE,
 			   			EXTENSIONATTRIBUTE1 as HIGHDEPTID
@@ -649,6 +843,11 @@
 						DEPT_CD_PATH NOT LIKE '%trash\_dept%'
 					AND
 						EXTENSIONATTRIBUTE1 = 'Top'
+								]]>
+				<isEqual property="useOrganHideFlag" compareValue="YES" prepend="and">
+					DEPTTREEFLAG = 'Y'
+				</isEqual>
+				<![CDATA[
 					ORDER BY
 		        		A.EXTENSIONATTRIBUTE15,
 		        		DEPTNAME
@@ -663,7 +862,13 @@
 		  					THEN DISPLAYNAME
 		  					ELSE DISPLAYNAME$lang$
 		  				END DEPTNAME,
-					    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN)) AS ISLAST,
+					    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN
+				]]>
+							<isEqual property="useOrganHideFlag" compareValue="YES" prepend="and">
+								DEPTTREEFLAG = 'Y'
+							</isEqual>
+				<![CDATA[
+				)) AS ISLAST,
 					    1 AS EXPAND,
 					    DEPTLEVEL as DEPTTYPE,
 			   			EXTENSIONATTRIBUTE1 as HIGHDEPTID,
@@ -682,7 +887,13 @@
 								WHERE
 									TENANT_ID = #tenantID#
 								AND
-									CN = #deptID#))
+									CN = #deptID#)
+						]]>
+								<isEqual property="useOrganHideFlag" compareValue="YES" prepend="and">
+									DEPTTREEFLAG = 'Y'
+								</isEqual>
+						<![CDATA[
+									)
 						
 					UNION ALL
 					
@@ -693,7 +904,13 @@
 		  					THEN DISPLAYNAME
 		  					ELSE DISPLAYNAME$lang$
 		  				END DEPTNAME,
-					    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN)) AS ISLAST,
+					    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN
+						]]>
+							<isEqual property="useOrganHideFlag" compareValue="YES" prepend="and">
+								DEPTTREEFLAG = 'Y'
+							</isEqual>
+						<![CDATA[
+				)) AS ISLAST,
 					    0 AS EXPAND,
 					    DEPTLEVEL as DEPTTYPE,
 			   			EXTENSIONATTRIBUTE1 as HIGHDEPTID,
@@ -712,7 +929,13 @@
 												WHERE
 													TENANT_ID = #tenantID#
 												AND
-													CN = #deptID#))
+													CN = #deptID#)
+											]]>
+												<isEqual property="useOrganHideFlag" compareValue="YES" prepend="and">
+													DEPTTREEFLAG = 'Y'
+												</isEqual>
+											<![CDATA[
+											)
 					ORDER BY 
 						FIELD(DEPTID, ( SELECT
 											EXTENSIONATTRIBUTE1
@@ -736,7 +959,13 @@
 	  					THEN DISPLAYNAME
 	  					ELSE DISPLAYNAME$lang$
 	  				END DEPTNAME,
-				    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN)) AS ISLAST,
+				    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN
+			]]>
+						<isEqual property="useOrganHideFlag" compareValue="YES" prepend="and">
+							DEPTTREEFLAG = 'Y'
+						</isEqual>	
+			<![CDATA[
+				)) AS ISLAST,
 				    1 AS EXPAND,
 				    DEPTLEVEL as DEPTTYPE,
 		   			EXTENSIONATTRIBUTE1 as HIGHDEPTID,
@@ -756,6 +985,11 @@
 								TENANT_ID = #tenantID#
 							AND
 								CN = #deptID#)
+						]]>
+							<isEqual property="useOrganHideFlag" compareValue="YES" prepend="and">
+								DEPTTREEFLAG = 'Y'
+							</isEqual>
+						<![CDATA[
 				AND
 					CN != #companyID#)
 					
@@ -768,8 +1002,37 @@
 	  					THEN DISPLAYNAME
 	  					ELSE DISPLAYNAME$lang$
 	  				END DEPTNAME,
-				    (SELECT 1 FROM DUAL WHERE EXISTS (SELECT CN FROM TBL_DEPTMASTER B WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE1 = A.CN)) AS ISLAST,
-				    0 AS EXPAND,
+					CASE
+					WHEN (#userSearch# = 'userSearch' AND #deptType# = '2')
+						THEN 
+							(SELECT 1 FROM DUAL 
+							WHERE EXISTS (
+								SELECT CN 
+								FROM TBL_DEPTMASTER B 
+								WHERE TENANT_ID = #tenantID# 
+									AND EXTENSIONATTRIBUTE1 = A.CN 
+									AND DEPTLEVEL != '1'
+								]]>
+									<isEqual property="useOrganHideFlag" compareValue="YES" prepend="and">
+										DEPTTREEFLAG = 'Y'
+									</isEqual>
+								<![CDATA[
+							))
+						ELSE 
+							(SELECT 1 FROM DUAL 
+							WHERE EXISTS (
+								SELECT CN
+								FROM TBL_DEPTMASTER B 
+								WHERE TENANT_ID = #tenantID# 
+									AND EXTENSIONATTRIBUTE1 = A.CN
+								]]>
+									<isEqual property="useOrganHideFlag" compareValue="YES" prepend="and">
+										DEPTTREEFLAG = 'Y'
+									</isEqual>
+								<![CDATA[
+							))
+					END ISLAST,
+					0 AS EXPAND,
 				    DEPTLEVEL as DEPTTYPE,
 		   			EXTENSIONATTRIBUTE1 as HIGHDEPTID,
 		   			CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15
@@ -777,6 +1040,11 @@
 					TBL_DEPTMASTER A
 				WHERE
 					TENANT_ID = #tenantID#
+			]]>
+				<isEqual property="userSearch" compareValue="userSearch" prepend="and">
+					DEPTLEVEL != '1'
+				</isEqual>
+			<![CDATA[
 				AND
 					DEPT_CD_PATH NOT LIKE '%trash\_dept%'
 				AND
@@ -787,7 +1055,13 @@
 											WHERE
 												TENANT_ID = #tenantID#
 											AND
-												CN = #deptID#))
+												CN = #deptID#)
+										]]>
+											<isEqual property="useOrganHideFlag" compareValue="YES" prepend="and">
+												DEPTTREEFLAG = 'Y'
+											</isEqual>
+										<![CDATA[
+										)
 				ORDER BY 
 					FIELD(DEPTID, ( SELECT
 										EXTENSIONATTRIBUTE1
@@ -838,7 +1112,12 @@
                 WHEN '1'
                 THEN EXTENSIONATTRIBUTE3
                 ELSE COMPNM2
-                END COMPANY 
+                END COMPANY,
+                CASE $lang$
+                WHEN '1'
+                THEN ROLE
+                ELSE ROLE2
+                END ROLE
         	FROM
         		TBL_ADDJOBMASTER A
         	JOIN
@@ -847,6 +1126,8 @@
         		A.CN = #userID#
         	AND
         		A.DEPTID = #deptID#
+			AND
+				A.JOBID = #jobID#
         	AND
         		A.TENANT_ID = #tenantID#	
 		]]>

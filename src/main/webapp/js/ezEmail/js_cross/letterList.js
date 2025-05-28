@@ -183,7 +183,7 @@ function addLetterList(jsonArr) {
 								boxNameTag = "<b title='" + boxName + "'>" + boxName + "</b>";
 							}
 						});
-					} catch(e) {}
+					} catch(e) {console.log(e);}
 				}	
 				
 				letterListHtml += "<span style='width:100%'>" + langDisplayName + "</span>" + boxNameTag;

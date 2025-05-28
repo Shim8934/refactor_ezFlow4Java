@@ -1,7 +1,9 @@
 package egovframework.ezMobile.ezBoard.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import org.json.simple.JSONObject;
 
@@ -10,6 +12,7 @@ import egovframework.ezMobile.ezBoard.vo.MBoardFavoriteVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardInfoVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardItemVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardListHeaderVO;
+import egovframework.ezMobile.ezBoard.vo.MBoardListVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardNewListVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardTreeVO;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
@@ -99,5 +102,34 @@ public interface MBoardService {
 	int getQNABoardItemListCount(String boardID, MBoardInfoVO mBoardInfoVO, String userID, String guBun, int tenantID, String pSearchText) throws Exception;
 
 	/* 2022-11-18 홍승비 - 모바일 게시판 댓글 저장 기능 추가 */
-	public void saveOneLineReply(String itemID, String replyID, String boardID, String userID, String displayName, String displayName2, int tenantID, String companyID, String content) throws Exception;
+	public void saveOneLineReply(String itemID, String replyID, String boardID, String userID, String displayName, String displayName2, int tenantID, String companyID, String content, String imageContent) throws Exception;
+
+	/* 2023-11-13 전인하 - 모바일 게시판 댓글 수정 */
+	public void updateOneLineReply(String contentId, String replyID, String content, int tenantId, String imageContent) throws Exception;
+
+	/* 2023-11-13 전인하 - 모바일 게시판 대댓글 삽입 */
+	public void saveOneLineReReply(String contentId, String boardId, String replyID, String parentReplyID, String content, String password, MCommonVO info, String imageContent) throws Exception;
+
+	/* 2023-11-13 전인하 - 부모댓글인지 체크 (자식댓글 갯수 반환) */
+	public int checkThisReplyExist(String replyId, String itemId, int tenantId) throws Exception;
+	
+	public String getGubun(String BoardID) throws Exception;
+
+	public int getAllBoardItemListCount(String userId, String companyId, int tenantId) throws Exception;
+
+	List<MBoardListVO> getAllBoardItemList(String userId, String lastDate, String deptId, String companyId, int tenantId, String offSet) throws Exception;
+
+	/* 2023-11-21 기민혁 - 모바일 스크랩 리스트 호출 */
+	List<MBoardNewListVO> getScrapBoardList(String userID, String deptID, String companyID, int tenantID, String offset, String pSearchText, ArrayList<String> scrapBoardListView_FG) throws Exception;
+
+	/* 2023-11-21 기민혁 - 모바일 스크랩 리스트 count */
+	Integer getScrapBoardListCount(String userID, String companyID, int tenantID, String pSearchText, ArrayList<String> scrapBoardListView_FG) throws Exception;
+
+	public Map<String, ArrayList<String>> getScrapBoardListReadView_FG(MCommonVO info) throws Exception;
+
+	/* 2024-09-09 이유정 - 모바일 게시판 > 최근게시물 리스트 카운트 */
+	Integer getAllNewBoardListCount(String userID, String startDate, String companyID, int tenantID, String pSearchText) throws Exception;
+	
+	/* 2024-09-09 이유정 - 모바일 게시판 > 최근게시물 리스트 */
+	List<MBoardNewListVO> getAllNewBoardList(String userID, String lastDate, String deptID, String companyID, int tenantID, String offset, String pSearchText) throws Exception;
 }

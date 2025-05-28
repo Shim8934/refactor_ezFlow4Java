@@ -978,6 +978,33 @@ function ListView() {
             objTd.appendChild(oText);
             objTr.appendChild(objTd);
 
+			/* 2024-07-18 조소정 - 일정관리 > 그룹일정 작성 권한 기능 추가 */
+            if (typeof type !== 'undefined' && type == "group") {
+			    var extTd = document.createElement("TD");
+			    var cb = document.createElement("INPUT");
+			    var curID = getNodeText(GetElementsByTagName(addXml, "DATA1")[0]);
+			    cb.id = "cb_" + curID;
+			    cb.type = "checkbox";
+			    cb.setAttribute("destID", curID);
+			    
+			    if (typeof mList !== 'undefined' && Array.isArray(mList)) {
+			    	var member = mList.find(function(m) {
+			        	return m.memberId === curID;
+			    	});
+			
+			    	if (member && member.writePermission === "Y") {
+			    		cb.setAttribute("checked", "checked");
+			    	}
+			    }
+			    else {
+			    	cb.setAttribute("checked", "checked");
+			    }
+			    
+			    extTd.appendChild(cb);
+			    extTd.innerHTML += ezSchedule_csj1;
+			    objTr.appendChild(extTd);
+            }
+            
             objTd = null;
             oText = null;
         }

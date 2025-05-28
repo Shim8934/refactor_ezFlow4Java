@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>::: ezEKP Java :::</title>
+		<title>::: ezFlow Java :::</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />				
 		<meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width" />
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery.mobile/jquery.mobile-1.4.5.min.css')}" />
@@ -56,104 +56,104 @@
 						<div>
 						     <label class="select" for="select-choice-mini">타임존</label>
 						          <select name="select-custom-1" id="select-custom-1" data-native-menu="false">
-						            <option value="000|-12:00">(GMT-12:00) <spring:message code='ezPersonal.s5'/></option>
-		          					<option value="001|-11:00">(GMT-11:00) <spring:message code='ezPersonal.s6'/></option>
-		          					<option value="002|-10:00">(GMT-10:00) <spring:message code='ezPersonal.s7'/></option>
-		          					<option value="003|-09:00">(GMT-09:00) <spring:message code='ezPersonal.s8'/></option>
-		          					<option value="004|-08:00">(GMT-08:00) <spring:message code='ezPersonal.s9'/></option>
-		          					<option value="015|-07:00">(GMT-07:00) <spring:message code='ezPersonal.s12'/></option>
-		          					<option value="013|-07:00">(GMT-07:00) <spring:message code='ezPersonal.s11'/></option>
-		          					<option value="010|-07:00">(GMT-07:00) <spring:message code='ezPersonal.s10'/></option>
-		          					<option value="030|-06:00">(GMT-06:00) <spring:message code='ezPersonal.s15'/></option>
-		          					<option value="033|-06:00">(GMT-06:00) <spring:message code='ezPersonal.s16'/></option>
-		          					<option value="025|-06:00">(GMT-06:00) <spring:message code='ezPersonal.s14'/></option>
-		          					<option value="020|-06:00">(GMT-06:00) <spring:message code='ezPersonal.s13'/></option>
-		          					<option value="040|-05:00">(GMT-05:00) <spring:message code='ezPersonal.s18'/></option>
-		          					<option value="035|-05:00">(GMT-05:00) <spring:message code='ezPersonal.s17'/></option>
-		          					<option value="045|-05:00">(GMT-05:00) <spring:message code='ezPersonal.s19'/></option>
-		          					<option value="055|-04:30">(GMT-04:30) <spring:message code='ezPersonal.s21'/></option>
-		          					<option value="050|-04:00">(GMT-04:00) <spring:message code='ezPersonal.s20'/></option>
-		          					<option value="056|-04:00">(GMT-04:00) <spring:message code='ezPersonal.s22'/></option>
-		          					<option value="056|-04:00">(GMT-04:00) <spring:message code='ezPersonal.s905'/></option>
-		          					<option value="056|-04:00">(GMT-04:00) <spring:message code='ezPersonal.s906'/></option>
-		          					<option value="056|-04:00">(GMT-04:00) <spring:message code='ezPersonal.s907'/></option>
-		          					<option value="060|-03:30">(GMT-03:30) <spring:message code='ezPersonal.s23'/></option>
-		          					<option value="070|-03:00">(GMT-03:00) <spring:message code='ezPersonal.s25'/></option>
-		          					<option value="056|-03:00">(GMT-03:00) <spring:message code='ezPersonal.s908'/></option>
-		          					<option value="073|-03:00">(GMT-03:00) <spring:message code='ezPersonal.s26'/></option>
-		          					<option value="073|-03:00">(GMT-03:00) <spring:message code='ezPersonal.s909'/></option>
-		          					<option value="073|-03:00">(GMT-03:00) <spring:message code='ezPersonal.s910'/></option>
-		          					<option value="065|-03:00">(GMT-03:00) <spring:message code='ezPersonal.s24'/></option>
-		          					<option value="075|-02:00">(GMT-02:00) <spring:message code='ezPersonal.s27'/></option>
-							        <option value="080|-01:00">(GMT-01:00) <spring:message code='ezPersonal.s28'/></option>
-							        <option value="083|-01:00">(GMT-01:00) <spring:message code='ezPersonal.s29'/></option>
-							        <option value="090|+00:00">(GMT) <spring:message code='ezPersonal.s31'/></option >
-							        <option value="090|+00:00">(GMT) <spring:message code='ezPersonal.s911'/></option >
-							        <option value="085|+00:00">(GMT) <spring:message code='ezPersonal.s30'/></option >
-							        <option value="100|+01:00">(GMT+01:00) <spring:message code='ezPersonal.s33'/></option >
-							        <option value="105|+01:00">(GMT+01:00) <spring:message code='ezPersonal.s34'/></option >
-							        <option value="105|+01:00">(GMT+01:00) <spring:message code='ezPersonal.s912'/></option >
-							        <option value="110|+01:00">(GMT+01:00) <spring:message code='ezPersonal.s35'/></option >
-							        <option value="113|+01:00">(GMT+01:00) <spring:message code='ezPersonal.s36'/></option >
-							        <option value="095|+01:00">(GMT+01:00) <spring:message code='ezPersonal.s32'/></option >
-							        <option value="115|+02:00">(GMT+02:00) <spring:message code='ezPersonal.s913'/></option >
-							        <option value="115|+02:00">(GMT+02:00) <spring:message code='ezPersonal.s914'/></option >
-							        <option value="115|+02:00">(GMT+02:00) <spring:message code='ezPersonal.s915'/></option >
-							        <option value="115|+02:00">(GMT+02:00) <spring:message code='ezPersonal.s37'/></option >
-							        <option value="140|+02:00">(GMT+02:00) <spring:message code='ezPersonal.s42'/></option >
-							        <option value="120|+02:00">(GMT+02:00) <spring:message code='ezPersonal.s38'/></option >
-							        <option value="125|+02:00">(GMT+02:00) <spring:message code='ezPersonal.s39'/></option >
-							        <option value="115|+02:00">(GMT+02:00) <spring:message code='ezPersonal.s916'/></option >
-							        <option value="130|+02:00">(GMT+02:00) <spring:message code='ezPersonal.s40'/></option >
-							        <option value="135|+02:00">(GMT+02:00) <spring:message code='ezPersonal.s41'/></option >
-							        <option value="158|+03:00">(GMT+03:00) <spring:message code='ezPersonal.s46'/></option >
-							        <option value="145|+03:00">(GMT+03:00) <spring:message code='ezPersonal.s43'/></option >
-							        <option value="145|+03:00">(GMT+03:00) <spring:message code='ezPersonal.s917'/></option >
-							        <option value="145|+03:00">(GMT+03:00) <spring:message code='ezPersonal.s918'/></option >
-							        <option value="150|+03:00">(GMT+03:00) <spring:message code='ezPersonal.s44'/></option >
-							        <option value="160|+03:30">(GMT+03:30) <spring:message code='ezPersonal.s47'/></option >
-							        <option value="155|+04:00">(GMT+04:00) <spring:message code='ezPersonal.s45'/></option >
-							        <option value="170|+04:00">(GMT+04:00) <spring:message code='ezPersonal.s49'/></option >
-							        <option value="165|+04:00">(GMT+04:00) <spring:message code='ezPersonal.s48'/></option >
-							        <option value="165|+04:00">(GMT+04:00) <spring:message code='ezPersonal.s919'/></option >
-							        <option value="165|+04:00">(GMT+04:00) <spring:message code='ezPersonal.s920'/></option >
-							        <option value="165|+04:00">(GMT+04:00) <spring:message code='ezPersonal.s921'/></option >
-							        <option value="175|+04:30">(GMT+04:30) <spring:message code='ezPersonal.s50'/></option >
-							        <option value="180|+05:00">(GMT+05:00) <spring:message code='ezPersonal.s51'/></option >
-							        <option value="185|+05:00">(GMT+05:00) <spring:message code='ezPersonal.s52'/></option >
-							        <option value="190|+05:30">(GMT+05:30) <spring:message code='ezPersonal.s53'/></option >
-							        <option value="190|+05:30">(GMT+05:30) <spring:message code='ezPersonal.s922'/></option >
-							        <option value="193|+05:45">(GMT+05:45) <spring:message code='ezPersonal.s54'/></option >
-							        <option value="195|+06:00">(GMT+06:00) <spring:message code='ezPersonal.s55'/></option >
-							        <option value="200|+06:00">(GMT+06:00) <spring:message code='ezPersonal.s56'/></option >
-							        <option value="201|+06:00">(GMT+06:00) <spring:message code='ezPersonal.s57'/></option >
-							        <option value="203|+06:30">(GMT+06:30) <spring:message code='ezPersonal.s58'/></option >
-							        <option value="207|+07:00">(GMT+07:00) <spring:message code='ezPersonal.s60'/></option >
-							        <option value="205|+07:00">(GMT+07:00) <spring:message code='ezPersonal.s59'/></option >
-							        <option value="210|+08:00">(GMT+08:00) <spring:message code='ezPersonal.s61'/></option >
-							        <option value="215|+08:00">(GMT+08:00) <spring:message code='ezPersonal.s62'/></option >
-							        <option value="225|+08:00">(GMT+08:00) <spring:message code='ezPersonal.s64'/></option >
-							        <option value="225|+08:00">(GMT+08:00) <spring:message code='ezPersonal.s923'/></option >
-							        <option value="227|+08:00">(GMT+08:00) <spring:message code='ezPersonal.s65'/></option >
-							        <option value="220|+08:00">(GMT+08:00) <spring:message code='ezPersonal.s63'/></option >
-							        <option value="235|+09:00">(GMT+09:00) <spring:message code='ezPersonal.s67'/></option >
-							        <option value="230|+09:00">(GMT+09:00) <spring:message code='ezPersonal.s66'/></option >
-							        <option value="240|+09:00">(GMT+09:00) <spring:message code='ezPersonal.s68'/></option >
-							        <option value="250|+09:30">(GMT+09:30) <spring:message code='ezPersonal.s70'/></option >
-							        <option value="245|+09:30">(GMT+09:30) <spring:message code='ezPersonal.s69'/></option >
-							        <option value="265|+10:00">(GMT+10:00) <spring:message code='ezPersonal.s73'/></option >
-							        <option value="255|+10:00">(GMT+10:00) <spring:message code='ezPersonal.s71'/></option >
-							        <option value="255|+10:00">(GMT+10:00) <spring:message code='ezPersonal.s924'/></option >
-							        <option value="260|+10:00">(GMT+10:00) <spring:message code='ezPersonal.s72'/></option >
-							        <option value="270|+10:00">(GMT+10:00) <spring:message code='ezPersonal.s74'/></option >
-							        <option value="275|+11:00">(GMT+11:00) <spring:message code='ezPersonal.s75'/></option >
-							        <option value="280|+11:00">(GMT+11:00) <spring:message code='ezPersonal.s76'/></option >
-							        <option value="281|+12:00">(GMT+12:00) <spring:message code='ezPersonal.s900'/></option >
-							        <option value="285|+12:00">(GMT+12:00) <spring:message code='ezPersonal.s77'/></option >
-							        <option value="290|+12:00">(GMT+12:00) <spring:message code='ezPersonal.s78'/></option >
-							        <option value="290|+12:00">(GMT+12:00) <spring:message code='ezPersonal.s925'/></option >
-							        <option value="300|+13:00">(GMT+13:00) <spring:message code='ezPersonal.s79'/></option >
-							        <option value="300|+13:00">(GMT+13:00) <spring:message code='ezPersonal.s926'/></option >
+						            <option value="000|-12:00">(UTC-12:00) <spring:message code='ezPersonal.s5'/></option>
+		          					<option value="001|-11:00">(UTC-11:00) <spring:message code='ezPersonal.s6'/></option>
+		          					<option value="002|-10:00">(UTC-10:00) <spring:message code='ezPersonal.s7'/></option>
+		          					<option value="003|-09:00">(UTC-09:00) <spring:message code='ezPersonal.s8'/></option>
+		          					<option value="004|-08:00">(UTC-08:00) <spring:message code='ezPersonal.s9'/></option>
+		          					<option value="015|-07:00">(UTC-07:00) <spring:message code='ezPersonal.s12'/></option>
+		          					<option value="013|-07:00">(UTC-07:00) <spring:message code='ezPersonal.s11'/></option>
+		          					<option value="010|-07:00">(UTC-07:00) <spring:message code='ezPersonal.s10'/></option>
+		          					<option value="030|-06:00">(UTC-06:00) <spring:message code='ezPersonal.s15'/></option>
+		          					<option value="033|-06:00">(UTC-06:00) <spring:message code='ezPersonal.s16'/></option>
+		          					<option value="025|-06:00">(UTC-06:00) <spring:message code='ezPersonal.s14'/></option>
+		          					<option value="020|-06:00">(UTC-06:00) <spring:message code='ezPersonal.s13'/></option>
+		          					<option value="040|-05:00">(UTC-05:00) <spring:message code='ezPersonal.s18'/></option>
+		          					<option value="035|-05:00">(UTC-05:00) <spring:message code='ezPersonal.s17'/></option>
+		          					<option value="045|-05:00">(UTC-05:00) <spring:message code='ezPersonal.s19'/></option>
+		          					<option value="055|-04:30">(UTC-04:30) <spring:message code='ezPersonal.s21'/></option>
+		          					<option value="050|-04:00">(UTC-04:00) <spring:message code='ezPersonal.s20'/></option>
+		          					<option value="056|-04:00">(UTC-04:00) <spring:message code='ezPersonal.s22'/></option>
+		          					<option value="056|-04:00">(UTC-04:00) <spring:message code='ezPersonal.s905'/></option>
+		          					<option value="056|-04:00">(UTC-04:00) <spring:message code='ezPersonal.s906'/></option>
+		          					<option value="056|-04:00">(UTC-04:00) <spring:message code='ezPersonal.s907'/></option>
+		          					<option value="060|-03:30">(UTC-03:30) <spring:message code='ezPersonal.s23'/></option>
+		          					<option value="070|-03:00">(UTC-03:00) <spring:message code='ezPersonal.s25'/></option>
+		          					<option value="056|-03:00">(UTC-03:00) <spring:message code='ezPersonal.s908'/></option>
+		          					<option value="073|-03:00">(UTC-03:00) <spring:message code='ezPersonal.s26'/></option>
+		          					<option value="073|-03:00">(UTC-03:00) <spring:message code='ezPersonal.s909'/></option>
+		          					<option value="073|-03:00">(UTC-03:00) <spring:message code='ezPersonal.s910'/></option>
+		          					<option value="065|-03:00">(UTC-03:00) <spring:message code='ezPersonal.s24'/></option>
+		          					<option value="075|-02:00">(UTC-02:00) <spring:message code='ezPersonal.s27'/></option>
+							        <option value="080|-01:00">(UTC-01:00) <spring:message code='ezPersonal.s28'/></option>
+							        <option value="083|-01:00">(UTC-01:00) <spring:message code='ezPersonal.s29'/></option>
+							        <option value="090|+00:00">(UTC) <spring:message code='ezPersonal.s31'/></option >
+							        <option value="090|+00:00">(UTC) <spring:message code='ezPersonal.s911'/></option >
+							        <option value="085|+00:00">(UTC) <spring:message code='ezPersonal.s30'/></option >
+							        <option value="100|+01:00">(UTC+01:00) <spring:message code='ezPersonal.s33'/></option >
+							        <option value="105|+01:00">(UTC+01:00) <spring:message code='ezPersonal.s34'/></option >
+							        <option value="105|+01:00">(UTC+01:00) <spring:message code='ezPersonal.s912'/></option >
+							        <option value="110|+01:00">(UTC+01:00) <spring:message code='ezPersonal.s35'/></option >
+							        <option value="113|+01:00">(UTC+01:00) <spring:message code='ezPersonal.s36'/></option >
+							        <option value="095|+01:00">(UTC+01:00) <spring:message code='ezPersonal.s32'/></option >
+							        <option value="115|+02:00">(UTC+02:00) <spring:message code='ezPersonal.s913'/></option >
+							        <option value="115|+02:00">(UTC+02:00) <spring:message code='ezPersonal.s914'/></option >
+							        <option value="115|+02:00">(UTC+02:00) <spring:message code='ezPersonal.s915'/></option >
+							        <option value="115|+02:00">(UTC+02:00) <spring:message code='ezPersonal.s37'/></option >
+							        <option value="140|+02:00">(UTC+02:00) <spring:message code='ezPersonal.s42'/></option >
+							        <option value="120|+02:00">(UTC+02:00) <spring:message code='ezPersonal.s38'/></option >
+							        <option value="125|+02:00">(UTC+02:00) <spring:message code='ezPersonal.s39'/></option >
+							        <option value="115|+02:00">(UTC+02:00) <spring:message code='ezPersonal.s916'/></option >
+							        <option value="130|+02:00">(UTC+02:00) <spring:message code='ezPersonal.s40'/></option >
+							        <option value="135|+02:00">(UTC+02:00) <spring:message code='ezPersonal.s41'/></option >
+							        <option value="158|+03:00">(UTC+03:00) <spring:message code='ezPersonal.s46'/></option >
+							        <option value="145|+03:00">(UTC+03:00) <spring:message code='ezPersonal.s43'/></option >
+							        <option value="145|+03:00">(UTC+03:00) <spring:message code='ezPersonal.s917'/></option >
+							        <option value="145|+03:00">(UTC+03:00) <spring:message code='ezPersonal.s918'/></option >
+							        <option value="150|+03:00">(UTC+03:00) <spring:message code='ezPersonal.s44'/></option >
+							        <option value="160|+03:30">(UTC+03:30) <spring:message code='ezPersonal.s47'/></option >
+							        <option value="155|+04:00">(UTC+04:00) <spring:message code='ezPersonal.s45'/></option >
+							        <option value="170|+04:00">(UTC+04:00) <spring:message code='ezPersonal.s49'/></option >
+							        <option value="165|+04:00">(UTC+04:00) <spring:message code='ezPersonal.s48'/></option >
+							        <option value="165|+04:00">(UTC+04:00) <spring:message code='ezPersonal.s919'/></option >
+							        <option value="165|+04:00">(UTC+04:00) <spring:message code='ezPersonal.s920'/></option >
+							        <option value="165|+04:00">(UTC+04:00) <spring:message code='ezPersonal.s921'/></option >
+							        <option value="175|+04:30">(UTC+04:30) <spring:message code='ezPersonal.s50'/></option >
+							        <option value="180|+05:00">(UTC+05:00) <spring:message code='ezPersonal.s51'/></option >
+							        <option value="185|+05:00">(UTC+05:00) <spring:message code='ezPersonal.s52'/></option >
+							        <option value="190|+05:30">(UTC+05:30) <spring:message code='ezPersonal.s53'/></option >
+							        <option value="190|+05:30">(UTC+05:30) <spring:message code='ezPersonal.s922'/></option >
+							        <option value="193|+05:45">(UTC+05:45) <spring:message code='ezPersonal.s54'/></option >
+							        <option value="195|+06:00">(UTC+06:00) <spring:message code='ezPersonal.s55'/></option >
+							        <option value="200|+06:00">(UTC+06:00) <spring:message code='ezPersonal.s56'/></option >
+							        <option value="201|+06:00">(UTC+06:00) <spring:message code='ezPersonal.s57'/></option >
+							        <option value="203|+06:30">(UTC+06:30) <spring:message code='ezPersonal.s58'/></option >
+							        <option value="207|+07:00">(UTC+07:00) <spring:message code='ezPersonal.s60'/></option >
+							        <option value="205|+07:00">(UTC+07:00) <spring:message code='ezPersonal.s59'/></option >
+							        <option value="210|+08:00">(UTC+08:00) <spring:message code='ezPersonal.s61'/></option >
+							        <option value="215|+08:00">(UTC+08:00) <spring:message code='ezPersonal.s62'/></option >
+							        <option value="225|+08:00">(UTC+08:00) <spring:message code='ezPersonal.s64'/></option >
+							        <option value="225|+08:00">(UTC+08:00) <spring:message code='ezPersonal.s923'/></option >
+							        <option value="227|+08:00">(UTC+08:00) <spring:message code='ezPersonal.s65'/></option >
+							        <option value="220|+08:00">(UTC+08:00) <spring:message code='ezPersonal.s63'/></option >
+							        <option value="235|+09:00">(UTC+09:00) <spring:message code='ezPersonal.s67'/></option >
+							        <option value="230|+09:00">(UTC+09:00) <spring:message code='ezPersonal.s66'/></option >
+							        <option value="240|+09:00">(UTC+09:00) <spring:message code='ezPersonal.s68'/></option >
+							        <option value="250|+09:30">(UTC+09:30) <spring:message code='ezPersonal.s70'/></option >
+							        <option value="245|+09:30">(UTC+09:30) <spring:message code='ezPersonal.s69'/></option >
+							        <option value="265|+10:00">(UTC+10:00) <spring:message code='ezPersonal.s73'/></option >
+							        <option value="255|+10:00">(UTC+10:00) <spring:message code='ezPersonal.s71'/></option >
+							        <option value="255|+10:00">(UTC+10:00) <spring:message code='ezPersonal.s924'/></option >
+							        <option value="260|+10:00">(UTC+10:00) <spring:message code='ezPersonal.s72'/></option >
+							        <option value="270|+10:00">(UTC+10:00) <spring:message code='ezPersonal.s74'/></option >
+							        <option value="275|+11:00">(UTC+11:00) <spring:message code='ezPersonal.s75'/></option >
+							        <option value="280|+11:00">(UTC+11:00) <spring:message code='ezPersonal.s76'/></option >
+							        <option value="281|+12:00">(UTC+12:00) <spring:message code='ezPersonal.s900'/></option >
+							        <option value="285|+12:00">(UTC+12:00) <spring:message code='ezPersonal.s77'/></option >
+							        <option value="290|+12:00">(UTC+12:00) <spring:message code='ezPersonal.s78'/></option >
+							        <option value="290|+12:00">(UTC+12:00) <spring:message code='ezPersonal.s925'/></option >
+							        <option value="300|+13:00">(UTC+13:00) <spring:message code='ezPersonal.s79'/></option >
+							        <option value="300|+13:00">(UTC+13:00) <spring:message code='ezPersonal.s926'/></option >
 						        </select>
 						</div>
 					  </div>

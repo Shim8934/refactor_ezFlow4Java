@@ -7,7 +7,8 @@
 	<head>
 		<title><spring:message code='ezCommunity.t202' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezCommunity.i1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('ezCommunity.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -31,39 +32,48 @@
 			var fileName = "<c:out value='${fileName}'/>";
 			var defaultFont  = "${defaultFont}";
 			var defaultSize  = "${defaultSize}";
+			var useEditor  = "<c:out value='${useEditor}'/>";
+			var contentLocation = "<c:out value='${strContentLocation}'/>";
+			var realPath = "<c:out value='${realPath}'/>";
+			var pathMiddle = "";
 			
 			window.onload = function () {
 		        GetFileURL();
-		      
-				var html = "";
-				$.ajax({
-					type : "POST",
-					dataType : "text",
-					async : false,
-					url : "/ezCommon/mhtToHTMLContent.do",
-					data : { type	:	"COMMUNITYNOTI", 
-							 href	:	"<c:out value='${strContentLocation}'/>",
-							 itemID	:	encodeURIComponent(no)
-						   },
-					success: function(result){
-						html = result;
-					}        			
-				});
-				
-				/* 2019-10-28 홍승비 - 커뮤니티 공지사항에 기본 폰트와 사이즈 적용 */
-				var defaultStyleTag = "<HTML><META content='text/html; charset=utf-8' http-equiv='Content-Type'><STYLE>";
-				defaultStyleTag += "P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px; font-family:" + defaultFont + "; font-size:" + defaultSize + "}";
-				defaultStyleTag += "DIV { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;}</STYLE>";
-				
-				html = (defaultStyleTag + html.replace("<HTML>", ""));
-				
-				var doc = document.getElementById('message').contentWindow.document;
-				doc.open();
-				doc.write(html);
-				doc.close();
+		      	
+		        if (useEditor != "HWP") {
+		        	var html = "";
+					$.ajax({
+						type : "POST",
+						dataType : "text",
+						async : false,
+						url : "/ezCommon/mhtToHTMLContent.do",
+						data : { type	:	"COMMUNITYNOTI", 
+								 href	:	contentLocation,
+								 itemID	:	encodeURIComponent(no)
+							   },
+						success: function(result){
+							html = result;
+						}        			
+					});
+					
+					/* 2019-10-28 홍승비 - 커뮤니티 공지사항에 기본 폰트와 사이즈 적용 */
+					var defaultStyleTag = "<HTML><META content='text/html; charset=utf-8' http-equiv='Content-Type'><STYLE>";
+					defaultStyleTag += "P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px; font-family:" + defaultFont + "; font-size:" + defaultSize + "}";
+					defaultStyleTag += "DIV { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;}</STYLE>";
+					
+					html = (defaultStyleTag + html.replace("<HTML>", ""));
+					
+					var doc = document.getElementById('message').contentWindow.document;
+					doc.open();
+					doc.write(html);
+					doc.close();
+					
+					$("#message").contents().find("body").css("word-wrap", "break-word");
+		        }
 		        
-				$("#message").contents().find("body").css("word-wrap", "break-word");
-		    }
+		        SetAttachmentInfo();
+				window.onresize();
+			}
 			
 			function btn_Delete_Onclick() {
 		        var result;
@@ -214,8 +224,174 @@
 		                strReturn = "mainboard";
 		                break;
 		        }
+		        pathMiddle = strReturn;
 		        strContentLocation = "/upload_community/filedata/" + strReturn + "/" + fileName;
 		    }
+		    
+		    function Editor_Complete() {
+		    	var URL;
+		    	var completePath = realPath + "/" + pathMiddle + "/" + contentLocation;
+                URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(completePath);
+                message.Open(URL, "", "", function (res) { FieldsAvailable(res.result) }, null);
+		    }
+		    
+		    function FieldsAvailable(isTrue) {
+		    	if (isTrue) {
+		    		message.EditMode(0);
+	        		message.ShowToolBar(false);
+	        		message.ShowRibbon(false);
+					message.SetViewProperties(2, 100);
+		            message.ScrollPosInfo(0, 0);
+		            window.onresize();
+		    	}
+		    }
+		    
+		    window.onresize = function () {
+		    	if (useEditor == "HWP") {
+	            	var contentHeight = document.documentElement.clientHeight - 220;
+	            	document.getElementById("ItemOverflow").style.height = contentHeight + "PX";
+	            	message.Resize(contentHeight + "PX");
+	            } else {
+	            	var contentHeight = document.documentElement.clientHeight - 220;
+		            document.getElementById("ItemOverflow").style.height = contentHeight + "PX";
+		            document.getElementById("message").style.height = contentHeight + "PX";
+	            }
+		    };
+		    
+		    function SetAttachmentInfo() {
+	            var xmlhttp = createXMLHttpRequest();
+	            var xmldom = createXmlDom();
+
+	            xmlhttp.open("GET", "/ezCommunity/getItemAttachments.do?itemID=" + encodeURIComponent(no), false);
+	            xmlhttp.send();
+
+	            xmldom = loadXMLString(xmlhttp.responseText);
+	            xmlhttp = null;
+
+	            var i = 0;
+	            var pos = 0;
+	            var filepath = "";
+	            var filenameOrg = "";
+		        var filenameView = "";
+	            var strAttach = "";
+	            var fileImage = "";
+
+	            var xmldomNodes = SelectNodes(xmldom, "NODES/NODE");
+	            var regData = GetbrowserLanguage();
+
+	            for (i = 0; i < xmldomNodes.length; i++) {
+	                filepath = getNodeText(SelectSingleNode(xmldomNodes[i], "FilePath"));
+	                /* 2018-04-30 홍승비 - 커뮤니티 게시판 첨부파일명 특문처리 수정 */
+	                filenameOrg = getNodeText(SelectSingleNode(xmldomNodes[i], "FileName"));
+		            filenameView = ReplaceText(ReplaceText(ReplaceText(filenameOrg, ">", "&gt;"), "<", "&lt;"), "&", "&amp;");		           
+	                filesize = getNodeText(SelectSingleNode(xmldomNodes[i], "FileSize"));
+	                var strTarget = "target='_blank'";
+	                var strFileExt = filepath.substr(filepath.lastIndexOf('.')).toLowerCase();
+
+	                if (strFileExt == ".xls" || strFileExt == ".doc" || strFileExt == ".ppt" ||
+	                    strFileExt == ".eml" || strFileExt == ".pdf" || strFileExt == ".hwp" ||
+	                    strFileExt == ".ppt" || strFileExt == ".docx" || strFileExt == ".pptx" ||
+	                    strFileExt == ".xlsx" || strFileExt == ".rtf" || strFileExt == ".mht") {
+	                    strTarget = "target=''";
+	                }
+
+	                if (strFileExt.indexOf(".jpg") != -1 || strFileExt.indexOf(".jpeg") != -1 || strFileExt.indexOf(".bmp") != -1 || strFileExt.indexOf(".gif") != -1 || strFileExt.indexOf(".png") != -1 || strFileExt.indexOf(".tif") != -1 || strFileExt.indexOf(".tiff") != -1)
+	                    fileImage = "/images/image.png";
+	                else if (strFileExt.indexOf(".doc") != -1 || strFileExt.indexOf(".docx") != -1)
+	                    fileImage = "/images/doc.png";
+	                else if (strFileExt.indexOf(".xls") != -1 || strFileExt.indexOf(".xlsx") != -1)
+	                    fileImage = "/images/xls.png";
+	                else if (strFileExt.indexOf(".ppt") != -1 || strFileExt.indexOf(".pptx") != -1 || strFileExt.indexOf(".pps") != -1 || strFileExt.indexOf(".ppsx") != -1)
+	                    fileImage = "/images/ppt.png";
+	                else if (strFileExt.indexOf(".txt") != -1)
+	                    fileImage = "/images/txt.png";
+	                else if (strFileExt.indexOf(".zip") != -1)
+	                    fileImage = "/images/zip.png";
+	                else if (strFileExt.indexOf(".pdf") != -1)
+	                    fileImage = "/images/pdf.png";
+	                else if (strFileExt.indexOf(".ecm") != -1)
+	                    fileImage = "/images/ecm.png";
+	                else if (strFileExt.indexOf(".mht") != -1)
+	                    fileImage = "/images/mht.png";
+	                else
+	                    fileImage = "/images/email/mail_006.gif";
+
+	                var protocol = window.location.protocol;
+	                var serverName = window.location.hostname;
+
+	                strAttach = strAttach + "<input type='checkbox' name='fileSelect' value='" + filenameView + "' filepath='"+ filepath +"' filehref=\"/ezCommunity/getCommunityAttachInfo.do?fileName=" + encodeURIComponent(filenameOrg) + "&filePath=" + encodeURIComponent(filepath)  + "\">";
+	                strAttach = strAttach + "<img src='" + fileImage + "'> <a href=/ezCommunity/getCommunityAttachInfo.do?fileName=" + encodeURIComponent(filenameOrg) + "&filePath=" + encodeURIComponent(filepath) + ">";
+	                strAttach = strAttach + filenameView + "&nbsp;(" + filesize + ")</a><br>";
+	            }
+	            document.getElementById('lstAttachLink').innerHTML = strAttach;
+	        }
+		    
+		    function attach_Download_Cross() {
+	            var checks = document.getElementById('lstAttachLink');
+	            AttachAllDownload(checks);
+	        }
+
+	        var suffix = 0;
+	        function downloadAll(checks) {
+	        	checks = checks.getElementsByTagName("input");
+	            if (checks.item(suffix)) {
+	                if (checks.item(suffix).checked) {
+	                    location.href = checks.item(suffix++).getAttribute("filehref");
+	                    setTimeout(function () { downloadAll(checks) }, 1000);
+	                }
+	                else {
+	                    suffix++;
+	                    downloadAll(checks);
+	                }
+	            }
+	            else
+	                suffix = 0;
+	        }
+	        
+	        function attach_SelectAll() {
+	            var checks = document.getElementById('lstAttachLink').getElementsByTagName("input");
+	            for (var i = 0; i < checks.length; i++)
+	                checks.item(i).checked = true;
+	        }
+	        
+	        function AttachAllDownload(checks) {
+	            var checkedFiles = $("#lstAttachLink").find("input:checkbox[name='fileSelect']:checked");
+	            var checkedFilesLength = checkedFiles.length;
+	            var filePath = ""; // 전체파일경로
+	            var filePathTemp = "";
+				var fileNames = ""; // 파일이름
+				var fileNamesUID = ""; // 파일이름(UID 포함)
+				
+				if (checkedFilesLength == 1) { // 하나만 저장
+					downloadAll(checks);
+				}
+				else if (checkedFilesLength > 1) { // 여러개는 zip으로 저장
+					filePath = GetAttribute(checkedFiles.get(0), "filepath");
+					filePath = filePath.substr(0, filePath.lastIndexOf("/") + 1);
+					
+					for (var i = 0; i < checkedFilesLength; i++) {
+						filePathTemp = GetAttribute(checkedFiles.get(i), "filepath"); // 각 파일의 풀경로
+						fileNames += MakeXMLString(checkedFiles.get(i).value) + ":"; // 각 파일의 이름을 :로 이어붙인 것
+						fileNamesUID += MakeXMLString(filePathTemp.substr(filePathTemp.lastIndexOf("/"), filePathTemp.length)) + ":"; // 각 파일의 이름+UID를 :로 이어붙인 것
+					}
+					
+					var $frm = $("<form></form>");
+			    	$frm.attr('action', "/ezCommunity/downloadAttachAll.do");
+			    	$frm.attr('method', 'post');
+			    	$frm.appendTo('body');
+			
+			    	param1 = $('<input type="hidden" value="' + filePath + '" name="filePath" />');
+			    	param2 = $("<input type='hidden' value='" + fileNames + "' name='fileNames' />");
+			    	param3 = $("<input type='hidden' value='" + fileNamesUID + "' name='fileNamesUID' />");
+			    	
+			    	$frm.append(param1).append(param2).append(param3);
+			    	$frm.submit();
+				}
+				else { // 체크된 파일 없음
+					return;
+				}
+	        }
+	        
 		</script>
 	</head>
 	<body class="popup" style="overflow:hidden;">
@@ -228,10 +404,10 @@
 				<td style="height: 10px; vertical-align: top;">
 					<div id="menu">
 						<ul>
-							<c:if test="${bName == 'tbl_c_board'}">
-								<li id="btn_Reply"><span onclick="btn_Reply_Onclick()" ><spring:message code='ezCommunity.t207' /></span></li>
-							</c:if>
+							<%--<c:if test="${bName == 'tbl_c_board'}">
+							</c:if>--%>
 							<c:if test="${strWriterID == userInfo.id ||fn:indexOf(userInfo.rollInfo, 'c=1') > -1 || fn:indexOf(userInfo.rollInfo, 'k=1') > -1}">
+								<li id="btn_Reply"><span onclick="btn_Reply_Onclick()" ><spring:message code='ezCommunity.t207' /></span></li>
 								<li id="btn_Modify"><span  onclick="btn_Modify_Onclick()" ><spring:message code='ezCommunity.t6' /></span></li>
 								<li id="btn_Delete"><span class="icon16 popup_icon16_delete" onclick="btn_Delete_Onclick()"></span></li>
 		          			</c:if>
@@ -266,10 +442,34 @@
   			</tr>
   			<tr>
 				<td style="padding-top:10px;height:580px" id="ItemOverflow">
-					<iframe id="message" class="viewbox" name="message" style="padding:0; height:100%; width:100%; overflow:auto; border:1px solid #ddd;"></iframe>
+					<c:if test="${useEditor ne 'HWP'}">
+						<iframe id="message" class="viewbox" name="message" style="padding:0; height:100%; width:100%; overflow:auto; border:1px solid #ddd;"></iframe>
+					</c:if>
+					<c:if test="${useEditor eq 'HWP'}">
+						<iframe id="message" class="viewbox" src="/ezCommunity/WHWPEditor.do" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto; border:1px solid #ddd;"></iframe>
+					</c:if>
+					
     			</td>
   			</tr>
-  			<!-- 2018-05-04 홍승비 - 그룹게시판 다음글, 이전글 테이블 삭제 -->			
+  			<!-- 2018-05-04 홍승비 - 그룹게시판 다음글, 이전글 테이블 삭제 -->	
+  			
+  			<tr>
+				<td class="pad1" style="height:20px; vertical-align:top">
+			   		<table class="file">
+			   			<tr>
+			        		<th><spring:message code='ezCommunity.t141'/></th>
+			               	<td class="pos1">
+			               		<div align="left" style="OVERFLOW: auto; HEIGHT: 50px; background-color: white" id="lstAttachLink"></div>
+			              	</td>
+		                  	<td class="pos2" style ="white-space:normal;">
+		                   		<a class="imgbtn imgbck" style="margin-bottom: 3px !important;"><span onclick="attach_SelectAll()" style="width:70px;"><spring:message code='ezCommunity.t962'/></span></a>
+		                        <br>
+		                        <a class="imgbtn imgbck"><span onclick="attach_Download_Cross()" style="width:70px;"><spring:message code='ezCommunity.t20'/></span></a>
+		               		</td>
+			           	</tr>
+			       	</table>
+			    </td>
+			</tr>		
 		</table>
 				
 		<form style="display:none" method="post" name="del" action="/ezCommunity/board/bbsDelOk.do">

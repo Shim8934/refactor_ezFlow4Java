@@ -86,444 +86,505 @@ function eventSetting(portletId, themeId, portletCode, isReload) { //포틀릿 �
 	var nowTheme = themeId;
 	var url = "";
 	
-	switch (portletCode) {
-	case "receivedmail" : // 메일
-		if (isReload) {
-			getMailList();
-		} else {
-			url = "/js/ezNewPortal/portlets/receivedMailPortlet.js";
-			
-			$.getScript(url)
-			.done(function(script, textStatus) {
-				try {
-					getMailList();
-				} catch(err) {
-					console.log(err);
-				}
-			})
-			.fail(function(jqxhr, settings, exception) {
-				console.log(exception);
-			});
-		}
-		
-		break;
-	case "notice" : // 공지사항
-		if (isReload) {
-			noticePortletLoadFunc();
-		} else {
-			url = "/js/ezNewPortal/portlets/noticePortlet.js";
-			
-			$.getScript(url)
-			.done(function (script, textStatus) {
-				try {
-					noticePortletLoadFunc();
-				} catch(err) {
-					console.log(err);
-				}
-				
-			})
-			.fail(function(jqxhr, settings, exception) {
-				console.log(exception);
-			});
-		}
-		
-		break;
-	case "vote" : // 투표
-		if (isReload) {
-			getVoteInfo();
-		} else {
-			url = "/js/ezNewPortal/portlets/votePortlet.js";
-			
-			$.getScript(url)
-			.done(function(script, textStatus) {
-				try {
-					$("#" + portletId + "Portlet").find("#votePlus").on("click", viewQstList);
-					$("#" + portletId + "Portlet").find(".voteBtn").on("click", votePoll);
-				} catch(err) {
-					console.log(err);
-				}
-			})
-			.fail(function(jqxhr, settings, exception) {
-				console.log(exception);
-			});
-		}
-		
-		break;
-	case "poll" : // 설문조사
-		if (isReload) {
-			pollPortletLoadFunc();
-		} else {
-			url = "/js/ezNewPortal/portlets/pollPortlet.js";
-			
-			$.getScript(url)
-			.done(function (script, textStatus) {
-				try {
-					pollPortletLoadFunc();
-				} catch(err) {
-					console.log(err);
-				}
-				
-			})
-			.fail(function(jqxhr, settings, exception) {
-				console.log(exception);
-			});
-		}
-		
-		break;
-	case "schedule" : // 일정관리
-		if (isReload) {	
-			getScheduleList(newDate, "P");
-		} else {
-			url = "/js/ezNewPortal/portlets/schedulePortlet.js";
-			
-			$.getScript(url)
-			.done(function (script, textStatus) {
-				try {
-					openerCalendarMiniView = CalendarMiniView;
-					openerCalendarMiniDataSource = CalendarMiniDataSource;
-					schedule_get_holiday();
-				    
-//					today();
-					
-					getScheduleList(nowDay, "P");
-					
-				    if (navigator.userAgent.indexOf('Firefox') != -1) {
-				    	document.body.style.MozUserSelect = 'none';
-				    	document.body.style.WebkitUserSelect = 'none';
-				    	document.body.style.khtmlUserSelect = 'none';
-				    	document.body.style.oUserSelect = 'none';
-				    	document.body.style.UserSelect = 'none';
-				    }
-				    
-				    if (nowTheme == 3) {
-				    	$("#6portlet").css("background","");
-				    }
-				} catch(err) {
-					console.log(err);
-				}
-				
-			})
-			.fail(function(jqxhr, settings, exception) {
-				console.log(exception);
-			});
-		}
-		
-		break;
-	case "photoboard" : //포토게시판
-		if (isReload) {
-			photoBoardMovePage();
-		} else {
-			url = "/js/ezNewPortal/portlets/photoBoardPortlet.js";
-			
-			$.getScript(url)
-			.done(function(script, textStatus) {
-				try {
-					$("#" + portletId + "Portlet").find(".nextBtn").on("click", {isNext : true}, photoBoardMovePage);
-					$("#" + portletId + "Portlet").find(".preBtn").on("click", {isNext : false}, photoBoardMovePage);
-					$("#" + portletId + "Portlet").find("#photoBoardPlus").on("click", viewPhotoBoardList);
-				} catch(err) {
-					console.log(err);
-				}
-			})
-			.fail(function(jqxhr, settings, exception) {
-				console.log(exception);
-			});
-		}
-		
-		break;
-	case "favoriteboard" : // 즐겨찾기
-		if (isReload) {
-			getTabList();
-		} else {
-			url = "/js/ezNewPortal/portlets/favoriteBoardPortlet.js";
-			
-			$.getScript(url)
-			.done(function(script, textStatus) {
-				try {
-					getTabList();
-				} catch(err) {
-					console.log(err);
-				}
-			})
-			.fail(function(jqxhr, settings, exception) {
-				console.log(exception);
-			});
-		}
-		
-		break;
-	case "community" : // 커뮤니티
-		if (isReload) {
-			getCommunityList();
-		} else {
-			url = "/js/ezNewPortal/portlets/communityPortlet.js";
-			
-			$.getScript(url)
-			.done(function(script, textStatus) {
-				try {
-					$("#communityPlus").on("click", viewCommuList);
-					
-					for (var i=1; i < 3; i ++) {
-						$('.comListDL0'+i).on("click", view_bestCommunity);
-					}
-				} catch(err) {
-					console.log(err);
-				}
-			})
-			.fail(function(jqxhr, settings, exception) {
-				console.log(exception);
-			});
-		}
-		
-		break;
-	case "help" : // 도움말
-		if (!isReload) {
-			url = "/js/ezNewPortal/portlets/helpPortlet.js";
-			
-			$.getScript(url)
-			.done(function (script, textStatus) {
-				try {
-					helpPortletLoadFunc();
-				} catch(err) {
-					console.log(err);
-				}
-				
-			})
-			.fail(function(jqxhr, settings, exception) {
-				console.log(exception);
-			});
-		}
-		
-		break;	
-	case "birthday" : // 생일자
-		if (isReload) {
-			ptlGetMonthlyBirthday();
-		} else {
-			url = "/js/ezNewPortal/portlets/birthdayPortlet.js";
-			
-			$.getScript(url)
-			.done(function (script, textStatus) {
-				try {
-					//생일자 조회 기능 연동
-					$("#birthNext").on("click", {isNext : true}, ptlGetMonthlyBirthday);
-					$("#birthPrev").on("click", {isNext : false}, ptlGetMonthlyBirthday);
-					
-					//이번달 생일자 목록 불러오기
-					ptlGetMonthlyBirthday();
-				} catch(err) {
-					console.log(err);
-				}
-				
-			})
-			.fail(function(jqxhr, settings, exception) {
-				console.log(exception);
-			});
-		}
-		
-		break;	
-	case "slideimage" : // 슬라이드 이미지
-		if (isReload) {
-			
-		} else {
-			url = "/js/ezNewPortal/portlets/slideImagePortlet.js";
-			
-			$.getScript(url)
-			.done(function (script, textStatus) {
-				try {
-					$("#roll_featured").orbit(); //슬라이드 포틀릿
-					
-					imageSizeControl(); //이미지 사이즈 조절
-				} catch(err) {
-					console.log(err);
-				}
-				
-			})
-			.fail(function(jqxhr, settings, exception) {
-				console.log(exception);
-			});
-		}
-		
-		break;	
-	case "userinfo" : // 유저정보
-		if (isReload) {
-			
-		} else {
-			url = "/js/ezNewPortal/portlets/userInfoPortlet.js";
-			
-			$.getScript(url)
-			.done(function (script, textStatus) {
-				try {
-					//근태관리 연동
-					var useAttitude = $("#useAttitude").val();
-					
-					if (useAttitude === "YES") {
-						ptlParseDate();
-						ptlAttiClock();
-						ptlGetAttitudeList(nowTheme);
-						getHolidayList();
-						ptlAmPmCheck(ptlNowAttiTime.getHours());
-					} else {
-						//$(".time_check .main_time").css("display", "none");
-						//$(".time_check .presentTime").addClass("presentTime_commuteNone");
-						ptlParseDate();
-						ptlAttiClock();
-						ptlAmPmCheck(ptlNowAttiTime.getHours());
-					}
-					
-					if (nowTheme == 3) {
-						$("#36portlet").css("background","");
-					}
-			 		frameSetting(frameId);
-				} catch(err) {
-					console.log(err);
-				}
-				
-			})
-			.fail(function(jqxhr, settings, exception) {
-				console.log(exception);
-			});
-		}
-		
-		break;
-	case "count" : //미독 포틀릿
-		if (isReload) {
-			getCountList();
-		} else {
-			url = "/js/ezNewPortal/portlets/cntPortlet.js";
-			
-			$.getScript(url)
-			.done(function(script, textStatus) {
-				try {
-					
-				} catch(err) {
-					console.log(err);
-				}
-			})
-			.fail(function(jqxhr, settings, exception) {
-				console.log(exception);
-			});
-		}
-		
-		break;
-	case "movieboard" : //동영상게시판
-		if (isReload) {
-			
-		} else {
-			url = "/js/ezNewPortal/portlets/movieBoardPortlet.js";
-			
-			$.getScript(url)
-			.done(function(script, textStatus) {
-				/*try {
-					$("#" + portletId + "Portlet").find(".nextBtn").on("click", {isNext : true}, photoBoardMovePage);
-					$("#" + portletId + "Portlet").find(".preBtn").on("click", {isNext : false}, photoBoardMovePage);
-					$("#" + portletId + "Portlet").find("#movieBoardPlus").on("click", viewMovieBoardList);
-				} catch(err) {
-					console.log(err);
-					alert(messages.strLang2);
-				}*/
-			})
-			.fail(function(jqxhr, settings, exception) {
-				console.log(exception);
-			});
-		}
-		
-		break;
-	case "favoriteforms" : //즐겨찾기 양식
-		if (isReload) {
-			getFavoriteForms();
-			getApprovalStatistics();
-		}
-		
-		break;
-
-	case "webfolder" : // 웹폴더
-		url = "/js/ezNewPortal/portlets/webFolderPortlet.js";
-		
-		$.getScript(url)
-		.done(function(script, textStatus) {
-			try {
-				getWebFolderFileList();
-			} catch(err) {
-				console.log(err);
-			}
-		})
-		.fail(function(jqxhr, settings, exception) {
-			console.log(exception);
+	var portletDiv = document.getElementById(portletId + "Portlet");
+	var portletPagingArea = portletDiv.querySelector('.portletPagingArea');
+	var prevBtn = portletDiv.querySelector('.portlet_list_nav.prev');
+	var nextBtn = portletDiv.querySelector('.portlet_list_nav.next');
+	if (portletPagingArea) {
+		prevBtn.addEventListener('click', function(event) {
+			portletMovePage(portletId, 'prev');
 		});
 		
-		break;
-		
-	case "resource" : // 자원관리
-		url = "/js/ezNewPortal/portlets/resourcePortlet.js";
-		
-		$.getScript(url)
-		.done(function(script, textStatus) {
-			try {
-				viewResource();
-				showPersResource();
-				getPersPortlet();
-			} catch(err) {
-				console.log(err);
-			}
-		})
-		.fail(function(jqxhr, settings, exception) {
-			console.log(exception);
+		nextBtn.addEventListener('click', function(event) {
+			portletMovePage(portletId, 'next');
 		});
-		
-		break;
-		
-	case "survey" : // 전자설문
-		url = "/js/ezNewPortal/portlets/surveyPortlet.js";
-		
-		$.getScript(url)
-		.done(function (script, textStatus) {
-			try {
-				getPotletSurveyList();
-			} catch(err) {
-				console.log(err);
-			}
-			
-		})
-		.fail(function(jqxhr, settings, exception) {
-			console.log(exception);
-		});
-		
-		break;
+	}
 	
-	case "tabBoard" : // 탭게시판
-		url = "/js/ezNewPortal/portlets/tabBoardPortlet.js";
-		
-		$.getScript(url)
-		.done(function (script, textStatus) {
-			try {
-				getTabBoard();
-			} catch(err) {
-				console.log(err);
+	switch (portletCode) {
+		case "receivedmail" : // 메일
+			if (isReload) {
+				getMailList();
+			} else {
+				url = "/js/ezNewPortal/portlets/receivedMailPortlet.js";
+
+				$.getScript(url)
+					.done(function (script, textStatus) {
+						try {
+							initMailPortletInfo(portletId);
+						} catch (err) {
+							console.log(err);
+						}
+					})
+					.fail(function (jqxhr, settings, exception) {
+						console.log(exception);
+					});
 			}
-			
-		})
-		.fail(function(jqxhr, settings, exception) {
-			console.log(exception);
-		});
-		
-		break;
 
-	case "chart" : // 차트 2021-02-22 박기범
-		url = "/js/ezNewPortal/portlets/chartPortlet.js";
+			break;
+        case "receivedmail2" : // 메일
+            if (isReload) {
+                getMailList2();
+            } else {
+                url = "/js/ezNewPortal/portlets/receivedMailPortlet2.js";
 
-		$.getScript(url)
-			.done(function (script, textStatus) {
-				try {
-					initChartPortlet();
-				} catch(err) {
-					console.log(err);
-				}
+                $.getScript(url)
+                .done(function(script, textStatus) {
+                    try {
+                        initMailPortletInfo2(portletId);
+                    } catch(err) {
+                        console.log(err);
+                    }
+                })
+                .fail(function(jqxhr, settings, exception) {
+                    console.log(exception);
+                });
+            }
 
-			})
-			.fail(function(jqxhr, settings, exception) {
-				console.log(exception);
-			});
+            break;
+		case "notice" : // 공지사항
+			if (isReload) {
+				initNoticePortletInfo(portletId);
+			} else {
+				url = "/js/ezNewPortal/portlets/noticePortlet.js";
 
-		break;
+				$.getScript(url)
+					.done(function (script, textStatus) {
+						try {
+							initNoticePortletInfo(portletId);
+						} catch (err) {
+							console.log(err);
+						}
+
+					})
+					.fail(function (jqxhr, settings, exception) {
+						console.log(exception);
+					});
+			}
+
+			break;
+		case "vote" : // 투표
+			if (isReload) {
+				getVoteInfo();
+			} else {
+				url = "/js/ezNewPortal/portlets/votePortlet.js";
+
+				$.getScript(url)
+					.done(function (script, textStatus) {
+						try {
+							$("#" + portletId + "Portlet").find("#votePlus").on("click", viewQstList);
+							$("#" + portletId + "Portlet").find(".voteBtn").on("click", votePoll);
+						} catch (err) {
+							console.log(err);
+						}
+					})
+					.fail(function (jqxhr, settings, exception) {
+						console.log(exception);
+					});
+			}
+
+			break;
+		case "poll" : // 설문조사
+			if (isReload) {
+				pollPortletLoadFunc();
+			} else {
+				url = "/js/ezNewPortal/portlets/pollPortlet.js";
+
+				$.getScript(url)
+					.done(function (script, textStatus) {
+						try {
+							pollPortletLoadFunc();
+						} catch (err) {
+							console.log(err);
+						}
+
+					})
+					.fail(function (jqxhr, settings, exception) {
+						console.log(exception);
+					});
+			}
+
+			break;
+		case "schedule" : // 일정관리
+			if (isReload) {
+				getScheduleList(newDate, "P");
+			} else {
+				url = "/js/ezNewPortal/portlets/schedulePortlet.js";
+
+				$.getScript(url)
+					.done(function (script, textStatus) {
+						try {
+							settingScheduleCalendar();
+							
+							openerCalendarMiniView = CalendarMiniView;
+							openerCalendarMiniDataSource = CalendarMiniDataSource;
+							schedule_get_holiday();
+
+//					today();
+
+							getScheduleList(nowDay, "P");
+
+							if (navigator.userAgent.indexOf('Firefox') != -1) {
+								document.body.style.MozUserSelect = 'none';
+								document.body.style.WebkitUserSelect = 'none';
+								document.body.style.khtmlUserSelect = 'none';
+								document.body.style.oUserSelect = 'none';
+								document.body.style.UserSelect = 'none';
+							}
+
+							if (nowTheme == 3) {
+								$("#6portlet").css("background", "");
+							}
+						} catch (err) {
+							console.log(err);
+						}
+
+					})
+					.fail(function (jqxhr, settings, exception) {
+						console.log(exception);
+					});
+			}
+
+			break;
+		case "photoboard" : //포토게시판
+			if (isReload) {
+				reloadPhotoPortlet();
+			} else {
+				url = "/js/ezNewPortal/portlets/photoBoardPortlet.js";
+
+				$.getScript(url)
+					.done(function (script, textStatus) {
+						try {
+							initPhotoBoardPortlet(portletId);
+							/*
+							$("#" + portletId + "Portlet").find(".nextBtn").on("click", {isNext: true}, photoBoardMovePage);
+							$("#" + portletId + "Portlet").find(".preBtn").on("click", {isNext: false}, photoBoardMovePage);
+							*/
+							$("#" + portletId + "Portlet").find("#photoBoardPlus").on("click", viewPhotoBoardList);
+						} catch (err) {
+							console.log(err);
+						}
+					})
+					.fail(function (jqxhr, settings, exception) {
+						console.log(exception);
+					});
+			}
+
+			break;
+		case "favoriteboard" : // 즐겨찾기
+			if (isReload) {
+				initFavoritePortlet(portletId);
+			} else {
+				url = "/js/ezNewPortal/portlets/favoriteBoardPortlet.js";
+
+				$.getScript(url)
+					.done(function (script, textStatus) {
+						try {
+							initFavoritePortlet(portletId);
+						} catch (err) {
+							console.log(err);
+						}
+					})
+					.fail(function (jqxhr, settings, exception) {
+						console.log(exception);
+					});
+			}
+
+			break;
+		case "community" : // 커뮤니티
+			if (isReload) {
+				reloadCommunityPortlet();
+			} else {
+				url = "/js/ezNewPortal/portlets/communityPortlet.js";
+
+				$.getScript(url)
+					.done(function (script, textStatus) {
+						try {
+							initCommunityPortletInfo(portletId);
+							$("#communityPlus").on("click", viewCommuList);
+							var communityPortletListSize = document.querySelectorAll('.communityPortletList').length;
+							for (var i = 1; i <= communityPortletListSize; i++) {
+								$('.comListDL0' + i).on("click", view_bestCommunity);
+							}
+						} catch (err) {
+							console.log(err);
+						}
+					})
+					.fail(function (jqxhr, settings, exception) {
+						console.log(exception);
+					});
+			}
+
+			break;
+		case "help" : // 도움말
+			if (!isReload) {
+				url = "/js/ezNewPortal/portlets/helpPortlet.js";
+
+				$.getScript(url)
+					.done(function (script, textStatus) {
+						try {
+							helpPortletLoadFunc();
+						} catch (err) {
+							console.log(err);
+						}
+
+					})
+					.fail(function (jqxhr, settings, exception) {
+						console.log(exception);
+					});
+			}
+
+			break;
+		case "birthday" : // 생일자
+			if (isReload) {
+				initbirthdayPortletInfo(portletId);
+			} else {
+				url = "/js/ezNewPortal/portlets/birthdayPortlet.js";
+
+				$.getScript(url)
+					.done(function (script, textStatus) {
+						try {
+							//생일자 조회 기능 연동
+							// 2024-06-14 조수빈 - 해당하는 달에 대해서만 해당 포틀릿을 사용하는 것으로 요구사항 변경됨에 따라 호출 함수 변경
+//							$("#birthNext").on("click", {isNext: true}, ptlGetMonthlyBirthday);
+//							$("#birthPrev").on("click", {isNext: false}, ptlGetMonthlyBirthday);
+
+							initbirthdayPortletInfo(portletId);
+						} catch (err) {
+							console.log(err);
+						}
+
+					})
+					.fail(function (jqxhr, settings, exception) {
+						console.log(exception);
+					});
+			}
+
+			break;
+		case "slideimage" : // 슬라이드 이미지
+			if (isReload) {
+
+			} else {
+				url = "/js/ezNewPortal/portlets/slideImagePortlet.js";
+
+				$.getScript(url)
+					.done(function (script, textStatus) {
+						try {
+							$("#roll_featured").orbit(); //슬라이드 포틀릿
+
+							imageSizeControl(); //이미지 사이즈 조절
+						} catch (err) {
+							console.log(err);
+						}
+
+					})
+					.fail(function (jqxhr, settings, exception) {
+						console.log(exception);
+					});
+			}
+
+			break;
+		case "userinfo" : // 유저정보
+			if (isReload) {
+
+			} else {
+				url = "/js/ezNewPortal/portlets/userInfoPortlet.js";
+
+				$.getScript(url)
+					.done(function (script, textStatus) {
+						try {
+							//근태관리 연동
+							var useAttitude = $("#useAttitude").val();
+
+							if (useAttitude === "YES") {
+								ptlParseDate();
+								ptlAttiClock();
+								ptlGetAttitudeList(nowTheme);
+								getHolidayList();
+								ptlAmPmCheck(ptlNowAttiTime.getHours());
+							} else {
+								//$(".time_check .main_time").css("display", "none");
+								//$(".time_check .presentTime").addClass("presentTime_commuteNone");
+								ptlParseDate();
+								ptlAttiClock();
+								ptlAmPmCheck(ptlNowAttiTime.getHours());
+							}
+
+							if (nowTheme == 3) {
+								$("#36portlet").css("background", "");
+							}
+							frameSetting(frameId);
+						} catch (err) {
+							console.log(err);
+						}
+
+					})
+					.fail(function (jqxhr, settings, exception) {
+						console.log(exception);
+					});
+			}
+
+			break;
+		case "count" : //미독 포틀릿
+			if (isReload) {
+				getCountList();
+			} else {
+				url = "/js/ezNewPortal/portlets/cntPortlet.js";
+
+				$.getScript(url)
+					.done(function (script, textStatus) {
+						try {
+
+						} catch (err) {
+							console.log(err);
+						}
+					})
+					.fail(function (jqxhr, settings, exception) {
+						console.log(exception);
+					});
+			}
+
+			break;
+		case "movieboard" : //동영상게시판
+			if (isReload) {
+
+			} else {
+				url = "/js/ezNewPortal/portlets/movieBoardPortlet.js";
+
+				$.getScript(url)
+					.done(function (script, textStatus) {
+						/*try {
+                            $("#" + portletId + "Portlet").find(".nextBtn").on("click", {isNext : true}, photoBoardMovePage);
+                            $("#" + portletId + "Portlet").find(".preBtn").on("click", {isNext : false}, photoBoardMovePage);
+                            $("#" + portletId + "Portlet").find("#movieBoardPlus").on("click", viewMovieBoardList);
+                        } catch(err) {
+                            console.log(err);
+                            alert(messages.strLang2);
+                        }*/
+					})
+					.fail(function (jqxhr, settings, exception) {
+						console.log(exception);
+					});
+			}
+
+			break;
+		case "favoriteforms" : //즐겨찾기 양식
+			if (isReload) {
+				getFavoriteForms();
+				getApprovalStatistics();
+			}
+
+			break;
+
+		case "webfolder" : // 웹폴더
+			url = "/js/ezNewPortal/portlets/webFolderPortlet.js";
+
+			$.getScript(url)
+				.done(function (script, textStatus) {
+					try {
+						initWebFolderPortletInfo(portletId);
+					} catch (err) {
+						console.log(err);
+					}
+				})
+				.fail(function (jqxhr, settings, exception) {
+					console.log(exception);
+				});
+
+			break;
+
+		case "resource" : // 자원관리
+			url = "/js/ezNewPortal/portlets/resourcePortlet.js";
+
+			$.getScript(url)
+				.done(function (script, textStatus) {
+					try {
+						settingResourceCalendar();
+						viewResource();
+						showPersResource();
+						getPersPortlet();
+					} catch (err) {
+						console.log(err);
+					}
+				})
+				.fail(function (jqxhr, settings, exception) {
+					console.log(exception);
+				});
+
+			break;
+
+		case "survey" : // 전자설문
+			url = "/js/ezNewPortal/portlets/surveyPortlet.js";
+
+			$.getScript(url)
+				.done(function (script, textStatus) {
+					try {
+						initSurveyPortletInfo(portletId);
+					} catch (err) {
+						console.log(err);
+					}
+
+				})
+				.fail(function (jqxhr, settings, exception) {
+					console.log(exception);
+				});
+
+			break;
+
+		case "tabBoard" : // 탭게시판
+			url = "/js/ezNewPortal/portlets/tabBoardPortlet.js";
+
+			$.getScript(url)
+				.done(function (script, textStatus) {
+					try {
+						initTabPortletInfo(portletId);
+					} catch (err) {
+						console.log(err);
+					}
+
+				})
+				.fail(function (jqxhr, settings, exception) {
+					console.log(exception);
+				});
+
+			break;
+
+		case "chart" : // 차트 2021-02-22 박기범
+			url = "/js/ezNewPortal/portlets/chartPortlet.js";
+
+			$.getScript(url)
+				.done(function (script, textStatus) {
+					try {
+						initChartPortlet();
+					} catch (err) {
+						console.log(err);
+					}
+
+				})
+				.fail(function (jqxhr, settings, exception) {
+					console.log(exception);
+				});
+
+			break;
+		case "connectPortlet" : // 연계 포틀릿 추가
+			if (isReload) {
+				getConnectList();
+			} else {
+				url = "/js/ezNewPortal/portlets/connectPortlet.js";
+
+				$.getScript(url)
+					.done(function (script, textStatus) {
+						try {
+							initConnectionPortlet(portletId);
+						} catch (err) {
+							console.log(err);
+						}
+
+					})
+					.fail(function (jqxhr, settings, exception) {
+						console.log(exception);
+					});
+			}
+			break;
 	}
 }
 
@@ -885,7 +946,7 @@ function viewPortletEnv() {
 	
 //	DivPopUpShow($('body').prop('scrollWidth') * 0.9, 435, "/ezNewPortal/portletSetting.do", "",
 //		"height = 435px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
-	DivPopUpShow(1000, 700, "/ezNewPortal/portletSetting.do", "",
+	DivPopUpShow(1000, 590, "/ezNewPortal/portletSetting.do", "",
 		"height = 435px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);	
 }
 
@@ -938,6 +999,7 @@ function getAttitudeList(themeId) {
 					if ($('#36Portlet')) {
 						$("#ptlInAttiBtn").attr("onclick", "").unbind("mouseenter");
 						$("#ptlInAttiBtn").removeClass("out").addClass("lateIn");
+						$("#ptlInAttiBtn").addClass("commute_on");
 						$("#ptlInAttiBtn dt").css("margin-bottom","5px");
 						$("#ptlInAttiBtn dd").text(result[i].startDate.split(" ")[1].substring(0,5));
  					}
@@ -962,6 +1024,7 @@ function getAttitudeList(themeId) {
 					if ($('#36Portlet')) {
 //						$("#ptlOutAttiBtn").attr("onclick", "").unbind("mouseenter");
 						$("#ptlOutAttiBtn").removeClass("out").addClass("in");
+						$("#ptlOutAttiBtn").addClass("commute_on");
 						$("#ptlOutAttiBtn dt").css("margin-bottom","5px");
 						$("#ptlOutAttiBtn dd").text(result[i].startDate.split(" ")[1].substring(0,5));
  					}
@@ -1219,12 +1282,6 @@ function quickMenuOpen(menu) {
 			url = "/ezSchedule/scheduleIndex.do?funCode=2";
 			location = "main";
 			break;
-		/*
-		case "Poll" :
-			url = "/ezQuestion/qstMain.do";
-			location = "main";
-			break;
-		*/
 		case "Survey" :
 			url = "/ezSurvey/surveyMain.do";
 			location = "main";
@@ -1280,10 +1337,12 @@ function viewQuick() {
 		if(leftSide) {
 			$(".linkBtn_close").animate({left: openPx}, function(){
 				$(".linkBtn_close").attr("class", "linkBtn_open");
+				viewQuickResizePortlet();
 			});			
 		} else {
 			$(".linkBtn_close").animate({right: openPx}, function(){
 				$(".linkBtn_close").attr("class", "linkBtn_open");
+				viewQuickResizePortlet();
 			});			
 		}
 	} else {
@@ -1291,12 +1350,20 @@ function viewQuick() {
 		if(leftSide) {
 			$(".linkBtn_open").animate({left: closePx}, function(){
 				$(".linkBtn_open").attr("class", "linkBtn_close");
+				viewQuickResizePortlet();
 			});					
 		} else {
 			$(".linkBtn_open").animate({right: closePx}, function(){
 				$(".linkBtn_open").attr("class", "linkBtn_close");
+				viewQuickResizePortlet();
 			});	
 		}
+	}
+}
+
+function viewQuickResizePortlet() {
+	if (typeof usePortletSize != 'undefined' && usePortletSize && typeof resizePortlet != 'undefined') {
+		resizePortlet();
 	}
 }
 
@@ -1420,7 +1487,10 @@ function viewQuick() {
 
 // 협업 관련 추가
 function ezWorkspaceData(workspaceContextRootUrl) {
-	    //협업 카운트
+	var workSpace = document.getElementById('ezWorkspace');
+	if (!workSpace) return;
+
+	//협업 카운트
 	if (typeof (GetWorkspaceUserActLogCount) === "function") {
 	    GetWorkspaceUserActLogCount("workspaceCnt", 1);
 	}
@@ -1428,7 +1498,7 @@ function ezWorkspaceData(workspaceContextRootUrl) {
 	var checkBrowser = function () {
 		var agent = navigator.userAgent.toLowerCase();
 		
-	  	if(agent.indexOf('msie') !== -1) {
+	  	if (agent.indexOf('msie') !== -1) {
 	   		return false;
 	   	} else {
 	   		return true;
@@ -1436,7 +1506,7 @@ function ezWorkspaceData(workspaceContextRootUrl) {
 	};
 	   
 	// ie 10일 경우는 다르게 해야겠음.		
-	if(!checkBrowser()) {
+	if (!checkBrowser()) {
 		$("#workspaceCnt").one("DOMSubtreeModified", function() {
 		   	var workspaceCnt = document.getElementById("workspaceCnt").innerHTML * 1;
 		   	if (workspaceCnt > 999) {
@@ -1455,7 +1525,7 @@ function ezWorkspaceData(workspaceContextRootUrl) {
 		});		    	
 	} else {
 		var target = document.getElementById('workspaceCnt');
-		   
+
 		var observer = new MutationObserver(function(mutations) {
 			mutations.forEach(function(mutation) {
 	  		    var workspaceCnt = mutation.target.innerHTML * 1;
@@ -1479,9 +1549,10 @@ function ezWorkspaceData(workspaceContextRootUrl) {
 		var config = { attributes: true, childList: true, characterData: true };
 		observer.observe(target, config);		    	
 	}
-	
-	document.getElementById('ezWorkspace').addEventListener('click', function() {
-		window.open(workspaceContextRootUrl + "/ezWorkspace/Account/SSO", "main", "");
+
+	workSpace.addEventListener('click', function() {
+		/* 2025-03-13 홍승비 - 협업 모듈에 고정된 하드코딩 문자열 제거 (ezWorkspace) */
+		window.open(workspaceContextRootUrl + "/Account/SSO", "main", "");
 	});	
 
 }
@@ -1620,23 +1691,28 @@ var refreshPortlet = function(useQuestion, useCircular, useMail, useApproval, us
 	
 	//메뉴 이동(왼쪽)
 	if (useMail !== "NO") {
-		document.getElementById("NewMail").addEventListener('click', function(){quickMenuOpen('NewMail');}, false);
+		var newMailDom = document.getElementById("NewMail");
+		if (!!newMailDom) newMailDom.addEventListener('click', function(){quickMenuOpen('NewMail');}, false);
 	}
 	
 	if (useSchedule !== "NO") {
-		document.getElementById("Schedule").addEventListener('click', function(){quickMenuOpen('Schedule');}, false);
+		var scheduleDom = document.getElementById("Schedule");
+		if (!!scheduleDom) scheduleDom.addEventListener('click', function(){quickMenuOpen('Schedule');}, false);
 	}
 	
 	if (useQuestion !== "NO") {
-		document.getElementById("Poll").addEventListener('click', function(){quickMenuOpen('Poll');}, false);
+		var pollDom = document.getElementById("Poll");
+		if (!!pollDom) pollDom.addEventListener('click', function(){quickMenuOpen('Poll');}, false);
 	}
 	
 	if (useCircular !== "NO") {
-		document.getElementById("Circular").addEventListener('click', function(){quickMenuOpen('Circular');}, false);
+		var circularDom = document.getElementById("Circular");
+		if (!!circularDom) circularDom.addEventListener('click', function(){quickMenuOpen('Circular');}, false);
 	}
 	
 	if (useApproval !== "NO") {
-		document.getElementById("AprSign").addEventListener('click', function(){quickMenuOpen('ApprG');}, false);
+		var aprDraftDom = document.getElementById("AprDraft");
+		if (!!aprDraftDom) aprDraftDom.addEventListener('click', function(){quickMenuOpen('AprDraft');}, false);
 	}
 	
 	//ajax로 count 불러오기
@@ -1664,5 +1740,59 @@ var refreshPortlet = function(useQuestion, useCircular, useMail, useApproval, us
 	//포틀릿 드래그 앤 드롭
 	if (navigator.userAgent.toLowerCase().indexOf("firefox") == -1) {
 		sortableEvent();
+	}
+}
+
+// 포탈에서 게시판 팝업 오픈 용
+var openBoard = function (pItemID, pType, oBoardID, password) {
+	var pheight = window.screen.availHeight;
+	var pwidth = window.screen.availWidth;
+	var pTop = (pheight - 720) / 2;
+	var pLeft = (pwidth - 765) / 2;
+
+	/* 2018-09-19 홍승비 - 포탈 포틀릿에서 포토/썸네일게시물 보기 시 창 크기 수정 */
+	if (pType == "3" || pType == "4") {
+		if (navigator.userAgent.toLowerCase().indexOf("chrome") != -1) {
+			var height = 789;
+		} else {
+			var height = 785;
+		}
+
+		pTop = (pheight - 789) / 2;
+		pLeft = (pwidth - 826) / 2;
+
+		window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(oBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height + ",width=826,top=" + pTop + ",left=" + pLeft, "");
+	} else if (pType == "7") {
+		var height = 679;
+		pTop = (pheight - 679) / 2;
+		pLeft = (pwidth - 764) / 2;
+		window.open("/ezBoard/boardItemViewMovie.do?showAdjacent=&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(oBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height + ",width=764,top=" + pTop + ",left=" + pLeft, "");
+	} else {
+		var parser = new DOMParser();
+		var normalHeight = 720;
+		var normalWidth = 765;
+		pTop = (pheight - normalHeight) / 2;
+		pLeft = (pwidth - normalWidth) / 2;
+
+		$.ajax({
+			url: "/ezBoard/boardItemView.do?showAdjacent=&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(oBoardID),
+			headers: !!password ? {
+				'Authorization': 'Basic ' + btoa(password)
+			} : {},
+			success: function(response) {
+				var returnDom = parser.parseFromString(response, "text/xml")
+				if (!returnDom || returnDom.querySelector('title').textContent ==="warning") {
+					alert(!!password ? strWrongPassword : strLang1132);
+					return;
+				}
+				var newWindow = window.open("", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + normalHeight + ",width=" + normalWidth + ",top=" + pTop + ",left=" + pLeft);
+				newWindow.document.write("<html> <head> <style> html, body { margin: 0; padding: 0; height: 100%; overflow-y: scroll; } </style> </head> <body> </body> </html>");
+				newWindow.document.write(response);
+				newWindow.document.close();
+			},
+			error: function(xhr, status, error) {
+				console.error('Error:', error);
+			}
+		});
 	}
 }

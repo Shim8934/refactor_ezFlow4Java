@@ -11,16 +11,18 @@ function getDocNumberNew(pDeptID, pPrefix, docNumZeroCnt, currIdx) {
 	var docnumber;
 	var SN = "";
 	//var currIfrm = document.getElementById("ifrm" + currIdx); // 각 안별 웹한글기안기 iframe을 사용 (해당 함수는 자식창이 아닌 부모창에서 호출된다.)
-	
 	name = pPrefix + "docnumber";
 	
 	try {
-		if (approvalFlag == "G") {
+//		if (approvalFlag == "G") {
 			/*
 			if (pDraftFlag == "SUSIN" && useReceiveDocNo == "NO") { // 일괄기안창에서는 타지 않는 분기이므로 주석처리
 				name = "receiptnumber";
 			}
 			*/
+			if (typeof upperDeptCode !== "undefined" && upperDeptCode !== "") {
+				pDeptID = upperDeptCode;
+			}
 			
 			/* 2022-08-19 홍승비 - 접수문서가 아닌 경우, 문서번호 필드가 없으면 문서번호 부여 로직이 스킵되어 결재가 정상 진행되는 분기 오류 수정 (파일 백지화 현상과도 관련있음) */
 			if (!FieldExist(name)) {
@@ -121,7 +123,7 @@ function getDocNumberNew(pDeptID, pPrefix, docNumZeroCnt, currIdx) {
 				
 				return true;
 			}
-		}
+//		}
 		// 일괄기안은 G버전 웹한글 전용으로 개발됨
 		/*
 		else {
@@ -199,6 +201,10 @@ function rollbackDocNumber(pDeptID, pPrefix, pDocID, currIdx) {
         }
 
     	var result = "";
+
+		if (typeof upperDeptCode !== "undefined" && upperDeptCode !== "") {
+			pDeptID = upperDeptCode;
+		}
     	
     	$.ajax({
     		type : "POST",

@@ -6,7 +6,8 @@
 	<head>
 		<title><spring:message code="ezResource.t171"/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezResource.e2', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('ezResource.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezResource/Schedule_cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -84,6 +85,8 @@
 	    	var timeSelect = false;
 	    	var userDisplayName2 = "${userInfo.displayName2}";
 	    	var repetition = "";
+			// 반복예약허용 Flag
+			var repeatFlag       = "${repeatFlag}";
 	    	
 	    	// 메인페이지의 onload실행과 initLoad함수의 실행 속도 차이로 setTimeout함수 사용
 	    	var onloadflag = false;
@@ -406,6 +409,16 @@
 	    	function btn_Save() {
 
 	        	var check = true;
+				// 반복예약허용 유무 체크
+				if (repeatFlag != '1' && (g_data["recurrence"] || g_data["repetition"])) {
+					check = false;
+				}
+
+				if (!check) {
+					alert("<spring:message code="ezResource.lyj04"/>");
+					return;
+				}
+
 	        	if (ItemArray[0].length == 0) {
 	            	alert(strLang252);
 	            	return;
@@ -642,7 +655,7 @@
 	          							<li><span onClick="btn_Save()"> <spring:message code="ezResource.t114"/></span></li>
 	          							<li id="deletebtbn" style="display:none"><span class="icon16 popup_icon16_delete" onClick="delSchedule_onClick('${num}','${ownerID}')"></span></li>
 	          							
-	       								<c:if test="${typeVal ne 'Instance' && typeVal ne 'Readonly'}" >
+	       								<c:if test="${typeVal ne 'Instance' && typeVal ne 'Readonly' && repeatFlag ne '0'}" >
 	       									<li><span id="Span2" name="ScheRep" id="ScheRep" name="ScheRep" onClick="Schedule_Repetition_onclick()"> <spring:message code="ezResource.t195"/></span></li>
 	       								</c:if>
 	

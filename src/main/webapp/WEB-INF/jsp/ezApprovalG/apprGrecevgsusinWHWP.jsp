@@ -7,7 +7,8 @@
 	<head>
 		<title><spring:message code='ezApprovalG.t1308'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -24,6 +25,8 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/AutoAprLine_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/nonElecRec.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Circulation.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/apprGSummary.js')}"></script>
 		<script type="text/javascript">
 		    var pWriterDeptID;
 		    var pDocID = "<c:out value = '${docID}'/>";
@@ -143,7 +146,28 @@
 	        
 	     	// 2023-05-25 조수빈 - 전자결재 첨부파일 미리보기 사용 여부
 			var useAprFilePrvw = "<c:out value ='${useAprFilePrvw}'/>";
+
+			// 문서정보 조회시 사용됨.
+			var orgCompanyID_ = "<c:out value = '${orgCompanyID}'/>";
+
+			// 2024-06-04 김우철 - 부서수신함에서 첨부, 문서첨부 기능 사용여부
+			var useReceiptDeptFileAttach = "<c:out value ='${useReceiptDeptFileAttach}'/>";
+
+			// 문서보기 Flag
+			var viewDoc = "<c:out value = '${viewDocFlag}'/>";
+
+			var type = "ING"; // 2023-07-24 임정은 - 공람 추가
 			
+			var junGyulFlag = "<c:out value = '${junGyulFlag}'/>";
+            var passAprLine = "";
+            var wAprMemberSN = "1";
+			var isRelay = GetRelayDocInfo(); // 중계문서인지의 여부를 true/false로 반환;
+						
+			/* 2024-07-18 양지혜 - 상위부서문서함 관련 */
+			var upperDeptCode = "<c:out value ='${upperDeptCode}'/>";
+			var upperDeptName = "<c:out value ='${upperDeptName}'/>";
+			var allowDeptIDs = "<c:out value ='${allowDeptIDs}'/>"
+
 		    function process_AfterOpen() {
 		        try {
 		            if (pFormHref == "") {
@@ -163,13 +187,22 @@
 		                    GetAprDocFormID();
 		                    setAttachInfo(pDocID, "APR", lstAttachLink);
 		                    getDocInfo();
-		
+		                    
+		                    /* 2023-12-07 홍승비 - 결재서명 재맵핑 함수 호출 (TBL_SIGNINFO 테이블에 정상적인 서명 데이터가 확정 삽입되는 시점은 테넌트 컨피그로 체크) */
+					        message.startRemapAllAprSign_WHWP(pDocID, orgCompanyID);
+		                    
+							// 현재 문서가 수신문이므로 원문서가 존재하는 경우, 원문서의 서명 데이터도 재맵핑
+					        if (pOrgDocID != null && typeof(pOrgDocID) != "undefined" && pOrgDocID != "") {
+					        	message.startRemapAllAprSign_WHWP(pOrgDocID, orgCompanyID);
+					        }
+							
 		                    if (pHasOpinionYN == "Y") {
-		                        if (pAprState == "006")
+		                        if (pAprState == "006") {
 		                            pInformationContent = "<spring:message code='ezApprovalG.t124'/><br> <spring:message code='ezApprovalG.t10'/>";
-		                        else
+		                        } else {
 		                            pInformationContent = "<spring:message code='ezApprovalG.t126'/><br> <spring:message code='ezApprovalG.t10'/>";
-		
+		                        }
+		                        
 		                        OpenInformationUI(pInformationContent, process_AfterOpen_Complete);
 		                    }
 		
@@ -181,17 +214,25 @@
 		                    GetAprDocFormID();
 		                    setAttachInfo(pDocID, "APR", lstAttachLink);
 		                    getDocInfo();
-		
+		                    
+		                    /* 2023-12-07 홍승비 - 결재서명 재맵핑 함수 호출 (TBL_SIGNINFO 테이블에 정상적인 서명 데이터가 확정 삽입되는 시점은 테넌트 컨피그로 체크) */
+					        message.startRemapAllAprSign_WHWP(pDocID, orgCompanyID);
+		                    
+					     	// 현재 문서가 수신문이면서 원문서가 존재하는 경우, 원문서의 서명 데이터도 재맵핑
+					        if (pDraftFlag == "SUSIN" && pOrgDocID != null && typeof(pOrgDocID) != "undefined" && pOrgDocID != "") {
+					        	message.startRemapAllAprSign_WHWP(pOrgDocID, orgCompanyID);
+					        }
+					        
 		                    if (g_DraftFlag == "REDRAFT") {
 // 		                        setMenuBar("btnAssign", false);
 // 		                        setMenuBar("btnDistribute", false);
 		                    }
 
-		                    if (pOrg_orgDocID == "") {
+		                    if (pOrg_orgDocID == "" && viewDoc != 'Y') {
 		                        setMenuBar("btnReturn", false);
 		                    }
 		
-		                    if (g_RetFlag == "Y") {
+		                    if (g_RetFlag == "Y" && viewDoc != 'Y') {
 		                        btnReturn_onclick();
 		                    }
 		                    else {
@@ -301,7 +342,11 @@
 		    	
 				// 일반첨부, 대용량첨부파일 관련 가이드 메세지 추가
 				setAttachGuideText();
-                
+
+				if (useReceiptDeptFileAttach == "YES") {
+					document.getElementById("btnFileAttach").style.display = "";
+					document.getElementById("btnAprDocAttach").style.display = "";
+				}
 		    }
 		
 			function window_onload2() {
@@ -311,6 +356,8 @@
 			
 			        getReceiveDocInfo();
 			        
+                	document.getElementById("btnAddSepAttach").style.display = "";
+                	
 			        if (nonElecRec == "Y") {
 				        getNonElecInfoSusinInit();
 	                	document.getElementById("btnAddSepAttach").style.display = "none";
@@ -367,7 +414,6 @@
 			        } */
 			    } else {
 			        if (pFormHref == "") {
-			            var isRelay = GetRelayDocInfo();
 			            if (isRelay) {
 			                try {
 			                    if (getNodeText(pRelayDocInfo.getElementsByTagName("isPKI").item(0)) == "Y") {
@@ -433,24 +479,29 @@
 			
 			        setAutoProperty();
 			        process_AfterOpen();
-			        setFirstDrafter();
-					connInit();
-			
-			        if (SignCount < 1) { // 수신사인칸이 없음
-			            pGubun = "12";
-			            btntotaldocinfo.style.display = "none";
-			            btnSendDraft.style.display = "none";
-			            setNodeText(btnRJunkyul.childNodes[0], "<spring:message code='ezApprovalG.t1406'/>");
+					// 문서보기로 창을 열었을 경우 제외
+					if (viewDoc != "Y") {
+						setFirstDrafter();
+						connInit();
 
-						setBtnEnable();
-			        } else {
-	                    pGubun = "11";
-						
-						setBtnEnable();
-	                }
-			
-			        getGongRamDocInfo();
-			
+						if (SignCount < 1) { // 수신사인칸이 없음
+						    if (approvalFlag == "G") {
+                                pGubun = "12";
+                                btntotaldocinfo.style.display = "none";
+                                btnSendDraft.style.display = "none";
+                                setNodeText(btnRJunkyul.childNodes[0], "<spring:message code='ezApprovalG.t1406'/>");
+                            }else
+			                    setNodeText(btnRJunkyul.childNodes[0], "<spring:message code='ezApprovalG.csj001'/>");
+
+							setBtnEnable();
+						} else {
+							pGubun = "11";
+
+							setBtnEnable();
+						}
+
+						getGongRamDocInfo();
+					}
 			        var g_SepAttachLVXml = "";
 			        g_SepAttachLVXml = GetDocumentElement("sepattachlvxml", true);
 			
@@ -493,6 +544,7 @@
 		        if(useExternalMailServer == "NO") {
 			    	$("#btnMail").css("display","");
 			    }
+			    message.FreeUndoHistory();
 			}
 		
 			function btnSetAprLine_onclick() {
@@ -508,7 +560,11 @@
 			        btnSendDraftEnable = "true"
 			        IsSkipDrafter = "FALSE";
 			        btnSendDraft.Enable = "true";
-			        GetDraftAprLineInfo(ret);
+		            if (approvalFlag == "S") {
+	                    SGetDraftAprLineInfo(ret);
+                    } else {
+	                    GetDraftAprLineInfo(ret);
+                    }
 			    }
 			    else {
 			        if (ret[2] == "cancel") {
@@ -545,12 +601,18 @@
 				} else if (deptCheckFlag == "4") {
 					alert("접수창의 부서정보가 '" + arr_userinfo[5] + "'부서로 되어있습니다. \n사용자의 부서가 변경되거나 겸직이 삭제되었으니 접수창을 새로 띄워주시기바랍니다.");
 					return;
-				} else if (deptCheckFlag == "2") {
+				} else if (deptCheckFlag == "2" && upperDeptCode == "") {
 					alert("타부서의 철정보로 설정되어있습니다. \n'" + arr_userinfo[5] + "'부서의 철로 변경해주시기바랍니다.");
 					return;
 				}	
 			
 			    try {
+		        	if (isReDraft == "Y" && checkAprState()) {
+		        		alert("<spring:message code='ezApprovalG.bhs23'/>");
+		    			window.close();
+		    			return;
+			    	}
+
 			        if (btnSendDraftEnable == "false") {
 			            var pAlertContent = "<spring:message code='ezApprovalG.t1408'/>";
 			            OpenAlertUI(pAlertContent, check_btnSendDraft);
@@ -672,7 +734,8 @@
 			 function saveSuSinDocInfo(html) {
 		     	pOrgHtml = html;
 	          	var rtnval = true;
-                rtnval = getRecvDocNumber(arr_userinfo[4], docNumZeroCnt);
+	          	if (approvalFlag == "G")
+                    rtnval = getRecvDocNumber(arr_userinfo[4], docNumZeroCnt);
                 if (!rtnval) {
                     UndoSignInfo(rtnSignInfo);
                     
@@ -973,6 +1036,12 @@
 			  }
 		
 			  function btnOpinion_onclick() {
+                if (isReDraft == "Y" && checkAprState()) {
+                    alert("<spring:message code='ezApprovalG.bhs23'/>");
+                    window.close();
+                    return;
+                }
+
 			      //var ret = openOpinionUI("N");
 				  openOpinionUI_New("");
 			  }
@@ -1028,10 +1097,16 @@
 				  } else if (deptCheckFlag == "4") {
 				  	  alert("접수창의 부서정보가 '" + arr_userinfo[5] + "'부서로 되어있습니다. \n사용자의 부서가 변경되거나 겸직이 삭제되었으니 접수창을 새로 띄워주시기바랍니다.");
 				  	  return;
-			  	  } else if (deptCheckFlag == "2") {
+			  	  } else if (deptCheckFlag == "2" && upperDeptCode == "") {
 				  	  alert("타부서의 철정보로 설정되어있습니다. \n'" + arr_userinfo[5] + "'부서의 철로 변경해주시기바랍니다.");
 					  return;
-				  }  
+				  }
+
+                    if (isReDraft == "Y" && checkAprState()) {
+                        alert("<spring:message code='ezApprovalG.bhs23'/>");
+                        window.close();
+                        return;
+                    }
 			  
 			      var parameter = new Array();
 			      parameter[0] = pDocID;
@@ -1072,7 +1147,13 @@
 				  } else if (deptCheckFlag == "4") {
 					  alert("접수창의 부서정보가 '" + arr_userinfo[5] + "'부서로 되어있습니다. \n사용자의 부서가 변경되거나 겸직이 삭제되었으니 접수창을 새로 띄워주시기바랍니다.");
 					  return;
-				  }  
+				  }
+
+                    if (isReDraft == "Y" && checkAprState()) {
+                        alert("<spring:message code='ezApprovalG.bhs23'/>");
+                        window.close();
+                        return;
+                    }
 			  
 			      var parameter = new Array();
 			      parameter[0] = pDocID;
@@ -1112,10 +1193,16 @@
 				} else if (deptCheckFlag == "4") {
 					alert("접수창의 부서정보가 '" + arr_userinfo[5] + "'부서로 되어있습니다. \n사용자의 부서가 변경되거나 겸직이 삭제되었으니 접수창을 새로 띄워주시기바랍니다.");
 					return;
-				} else if (deptCheckFlag == "2") {
+				} else if (deptCheckFlag == "2" && upperDeptCode == "") {
 					alert("타부서의 철정보로 설정되어있습니다. \n'" + arr_userinfo[5] + "'부서의 철로 변경해주시기바랍니다.");
 					return;
-				}	
+				}
+
+				if (isReDraft == "Y" && checkAprState()) {
+                    alert("<spring:message code='ezApprovalG.bhs23'/>");
+                    window.close();
+                    return;
+                }
 			
 			    if (message.FieldExist("receiptnumber")) {
 			        var fieldValue = trim(message.GetFieldText("receiptnumber"));
@@ -1151,6 +1238,11 @@
 			
 			function btnReturn_onclick_Complete(ret) {
 				DivPopUpHidden();
+				if (isReDraft == "Y" && checkAprState()) {
+                    alert("<spring:message code='ezApprovalG.bhs23'/>");
+                    window.close();
+                    return;
+                }
 				
 			    var hesongok = true;
 				if (ret != "cancel" && ret != undefined) {
@@ -1219,10 +1311,16 @@
 				} else if (deptCheckFlag == "4") {
 					alert("접수창의 부서정보가 '" + arr_userinfo[5] + "'부서로 되어있습니다. \n사용자의 부서가 변경되거나 겸직이 삭제되었으니 접수창을 새로 띄워주시기바랍니다.");
 					return;
-				} else if (deptCheckFlag == "2") {
+				} else if (deptCheckFlag == "2" && upperDeptCode == "") {
 					alert("타부서의 철정보로 설정되어있습니다. \n'" + arr_userinfo[5] + "'부서의 철로 변경해주시기바랍니다.");
 					return;
-				}	
+				}
+
+				if (isReDraft == "Y" && checkAprState()) {
+                    alert("<spring:message code='ezApprovalG.bhs23'/>");
+                    window.close();
+                    return;
+                }
 			
 			    var Resultxml;
 			    var UserID = "<c:out value = '${userInfo.id}'/>";
@@ -1294,8 +1392,9 @@
 	                        } else {
 	    	                    GetDraftAprLineInfo(retvalue);
 	                        }
+	                        passAprLine = "N";
 	    		            btnSendDraftEnable = "true";
-	    		            CurAprType = "<spring:message code='ezApprovalG.t25'/>";
+	    		            CurAprType = strAprType4; // 결재유형을 '전결' 문자가 아닌 코드(004)로 수정
 	    		            LastSignSN = "1";
 	    		            btnSendDraft_onclick();
             			} else {
@@ -1313,7 +1412,7 @@
 // 			    window.open("/myoffice/ezEmail/mail_write.aspx?DocHref=" + pFormHref + "&cmd=docsend&DocID=" + pDocID + "&TARGET=APPROVALG", "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(890, window.screen.availHeight * 0.8));
 		        window.open("/ezEmail/mailWrite.do?docHref=" + pFormHref + "&cmd=docsend&docID=" + pDocID + "&TARGET=APPROVALG", "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(890, window.screen.availHeight * 0.8));
 			}
-		
+
 			var tempSecurity = "";
 			var tempKeep = "";
 			var tempUrgent = "N";
@@ -1321,10 +1420,23 @@
 			var tempKeyword = "";
 			var tempItemCode = "";
 			var tempItemName = "";
+            var tempItemName2 = "";
 			var tempdocnumcode = "<spring:message code='ezApprovalG.t45'/>";
 			var tempSecurityDate = "";
-		
+
+			var ezdocinfog_view_cross_dialogArguments = new Array();
 			function btnDocInfo_onclick() {
+				ezdocinfog_view_cross_dialogArguments[0] = "";
+				ezdocinfog_view_cross_dialogArguments[1] = btnDocInfo_onclick_Complete;
+
+				var mode = getDocMode();
+				DivPopUpShow(430, 530, "/ezApprovalG/ezDocInfoView.do?docID=" + pDocID + "&ingFlag=" + mode);
+			}
+			function btnDocInfo_onclick_Complete() {
+				DivPopUpHidden();
+			}
+
+			/*function btnDocInfo_onclick() {
 			    var parameter = new Array();
 			    parameter[0] = tempSecurity;
 			    parameter[1] = tempUrgent;
@@ -1349,7 +1461,7 @@
 			    tempSecurityDate = RtnVal[7];
 			
 			    SummaryFlag = true;
-			}
+			}*/
 		
 			function btnSendAround_onclick() {
 			    var para = new Array();
@@ -1397,7 +1509,7 @@
 				} else if (deptCheckFlag == "4") {
 					alert("접수창의 부서정보가 '" + arr_userinfo[5] + "'부서로 되어있습니다. \n사용자의 부서가 변경되거나 겸직이 삭제되었으니 접수창을 새로 띄워주시기바랍니다.");
 					return;
-				} else if (deptCheckFlag == "2") {
+				} else if (deptCheckFlag == "2" && upperDeptCode == "") {
 					alert("타부서의 철정보로 설정되어있습니다. \n'" + arr_userinfo[5] + "'부서의 철로 변경해주시기바랍니다.");
 					return;
 				}
@@ -1441,7 +1553,10 @@
 			function JiJungBeBuDisable() {
 			    btnAssign.style.display = "none";
 			    btnDistribute.style.display = "none";
-			    btnReturn.style.display = "none";
+				var btnReturn = document.getElementById("btnReturn");
+				if (btnReturn) {
+					btnReturn.style.display = "none";
+				}
 			}
 		
 			function getGongRamDocInfo() {
@@ -1496,7 +1611,13 @@
 				} else if (deptCheckFlag == "4") {
 					alert("접수창의 부서정보가 '" + arr_userinfo[5] + "'부서로 되어있습니다. \n사용자의 부서가 변경되거나 겸직이 삭제되었으니 접수창을 새로 띄워주시기바랍니다.");
 					return;
-				}	
+				}
+
+				if (isReDraft == "Y" && checkAprState()) {
+                    alert("<spring:message code='ezApprovalG.bhs23'/>");
+                    window.close();
+                    return;
+                }
 			
 			    var onlydocinfiview = false;
 			    var parameter = new Array();
@@ -1557,6 +1678,17 @@
 			        parameter[50] = g_szSCListXml; // 특수목록
 			        parameter[51] = sepAttachCheckYN; // 분첨 확인여부
 		        }
+
+                if (approvalFlag == "S") {
+                    parameter[19] = "ING";
+                    parameter[20] = tempKeep;
+                    parameter[23] = tempPublic;
+                    parameter[25] = tempItemCode;
+                    parameter[29] = TaskCode;
+                    parameter[33] = pSummery;
+                    parameter[41] = tempItemName;
+                    parameter[42] = tempItemName2;
+                }
 			    
 			    if (useOpenGov == "YES") {
 			        parameter[52] = basis;
@@ -1569,7 +1701,8 @@
 			    if (tempItemCode != "") {
 			        tempdocnumcode = tempItemCode;
 			    }
-			    
+
+			    parameter[60] = passAprLine;
 			    parameter[61] = tempKeyword;
 			    
 		        ezapprovalinfo_dialogArguments[0] = parameter;
@@ -1579,7 +1712,7 @@
 		        	alert("<spring:message code='ezApprovalG.pjg04'/>");
 		        	window.close();
 		        } else {
-		        	var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&orgCompanyID=" + orgCompanyID + "&docType=" + pDocType + "&ext=" + "hwp", "ezApprovalInfo", GetOpenWindowfeature(1194, 750));
+		        	var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&orgCompanyID=" + orgCompanyID + "&docType=" + pDocType + "&ext=" + "hwp", "ezApprovalInfo", GetOpenWindowfeature(1210, 750));
 		        	try { OpenWin.focus(); } catch (e) { }
 					  
 		        }
@@ -1695,6 +1828,14 @@
 	                            reason = ret[30];
 	                            limitDate = ret[31];
 							}
+
+							// 2023-07-24 임정은 - 공람 추가
+							if (ret[22] == "noItem") {
+								delAprLineInfoCC();
+							} else if (ret[22] == "sameItem") {
+							} else {
+								SaveAprLineInfoCC(ret[22]);
+							}
 		                } else {
 		                	tempKeep = ret[16];
 		                	tempItemName = ret[17];
@@ -1705,7 +1846,7 @@
 		                	tempPublic = ret[11];
 		                	SetDocOption(ret[20]);
 		                }
-		                
+		                passAprLine = ret[32];
 		                
 		                SummaryFlag = true;
 		                message.EditMode(3);
@@ -1894,6 +2035,93 @@
 					}, 0);
 				}
 			}
+
+			var ezaprhistory_cross_dialogArguments = new Array();
+			function btnhistory_onclick() {
+				//회람 변경내역 볼 시 원본 내역을 봐야 하기 때문에 변경
+				if (pDocState == strDocState15) {
+					var URL = "/ezApprovalG/ezAprHistory.do?docID=" + pOrgDocID + "&ext=" + "mht";
+				} else {
+					var URL = "/ezApprovalG/ezAprHistory.do?docID=" + pDocID + "&ext=" + "mht";
+				}
+
+				ezaprhistory_cross_dialogArguments[0] = "";
+				ezaprhistory_cross_dialogArguments[1] = getHistory_Complete;
+
+				DivPopUpShow(740, 450, URL);
+			}
+
+			function getHistory_Complete() {
+				DivPopUpHidden();
+			}
+
+			var totalsavefileinfo_dialogArguments = new Array();
+			function TotalSave_onclick() {
+				totalsavefileinfo_dialogArguments[0] = "";
+				totalsavefileinfo_dialogArguments[1] = TotalSave_onclick_Complete;
+
+				var mode = getDocMode();
+				DivPopUpShow(580, 480, "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=" + mode + "&orgCompanyID=" + orgCompanyID);
+
+			}
+			function TotalSave_onclick_Complete() {
+				DivPopUpHidden();
+			}
+			function getDocMode() {
+				var rtnVal = "APR";
+
+				try {
+					$.ajax({
+						type : "POST",
+						dataType : "text",
+						async : false,
+						url : "/ezApprovalG/getLineMode.do",
+						data : {
+							docID : pDocID,
+							orgCompanyID : orgCompanyID_
+						},
+						success: function(result) {
+							rtnVal = result;
+						}
+					});
+				} catch (e) {
+					alert("getDocMode() :: " + e.description);
+				}
+
+				return rtnVal;
+			}
+			
+			//S전용
+            function SetDocOption(pkeeperiodvaltemp, tempSecurityValue) {
+                putText(["keepperiod"], pkeeperiodvaltemp, "");
+                putText(["securitylevel"], tempSecurityValue, "");
+                putText(["publication"], tempPublic == "N" ? "비공개" : "공개", "");
+            }
+
+            function checkAprState() {
+                var result = "";
+
+                if (approvalFlag == "S") {
+                    $.ajax({
+                        type : "POST",
+                        dataType : "text",
+                        async : false,
+                        url : "/ezApprovalG/checkAprState.do",
+                        data : {
+                            docID : pDocID,
+                            docState : pDocState,
+                            userID : '',
+                            aprMemberSN : wAprMemberSN,
+                            orgCompanyID : orgCompanyID
+                        },
+                        success : function(text) {
+                            result = text;
+                        }
+                    });
+                }
+
+                return result == "FALSE" ? true : false;
+            }
 		</script>
 	</head>
 	
@@ -1904,41 +2132,50 @@
 	                <div id="menu">
 						<%-- 2022-06-23 홍승비 - 전자결재 미리보기 영역에서 문서보기 페이지 접근 시, 모든 버튼을 ul 태그부터 숨김처리 --%>
 						<ul <c:if test="${isPreview == 'Y'}">style="display:none"</c:if>>
-	                        <li id="btntotaldocinfo"><span onclick="return btnApprovalInfo()"><spring:message code='ezApprovalG.t1742'/></span></li>
-	                        <span style="display: none">
-	                            <li id="btnSetAprLine"><span onclick="return btnSetAprLine_onclick()"><spring:message code='ezApprovalG.t153'/></span></li>
-	                        </span>
-	                        <span style="display: none">
-	                            <li id="btnSetReceivLine" style="display: none"><span onclick="return btnSetReceivLine_onclick()"><spring:message code='ezApprovalG.t154'/></span></li>
-	                        </span>
-	                        <li id="btnSendDraft"><span onclick="return btnSendDraft_onclick()"><spring:message code='ezApprovalG.t156'/></span></li>
-	                        <li id="btnRJunkyul"><span onclick="return btnRJunkyul_onclick()"><spring:message code='ezApprovalG.t1427'/></span></li>
-	                        <li id="btnSendAround" style="display: none"><span onclick="return btnSendAround_onclick()"><spring:message code='ezApprovalG.t1428'/></span></li>
-	                        <span style="display: none">
-	                            <li id="btnSetTaskCode"><span onclick="btnSetTaskCode_onclick()"><spring:message code='ezApprovalG.t9994'/></span></li>
-	                        </span>
-	                        <span style="display: none">
-	                            <li id="btnDocInfo"><span onclick="return btnDocInfo_onclick()"><spring:message code='ezApprovalG.t54'/></span></li>
-	                        </span>
-	                        <li id="btnAssign" style="display: none"><span onclick="return btnAssign_onclick()"><spring:message code='ezApprovalG.t1430'/></span></li>
-	                        <li id="btnReAssign" style="display: none"><span onclick="return btnReAssign_onclick()"><spring:message code='ezApprovalG.t1431'/></span></li>
-	                        <li id="btnDistribute" style="display: none"><span onclick="return btnDistribute_onclick()"><spring:message code='ezApprovalG.t1432'/></span></li>
-	                        <li id="btnReDistribute" style="display: none"><span onclick="return btnReDistribute_onclick()"><spring:message code='ezApprovalG.t1433'/></span></li>
-	                        <li id="btnReqReSend" style="display: none"><span onclick="return btnReqReSend_onclick()"><spring:message code='ezApprovalG.t1435'/></span></li>
-	                        <li id="btnOpinion"><span onclick="return btnOpinion_onclick()"><spring:message code='ezApprovalG.t55'/></span></li>
-	                        <li id="btnFileAttach" style="display: none"><span onclick="return btnFileAttach_onclick()"><spring:message code='ezApprovalG.t56'/></span></li>
-	                        <li id="btnAprDocAttach" style="display: none"><span onclick="return btnAprDocAttach_onclick()"><spring:message code='ezApprovalG.t1429'/></span></li>
-	                        <li id="btnAddSepAttach" style="display: none"><span onclick="btnAddSepAttach_onclick()"><spring:message code='ezApprovalG.t58'/></span></li>
-	                        <c:choose>
-		                        <c:when test="${isNonElecRec eq 'Y'}">
-			                        <li id="btnDel"><span onclick="return btnDel_onclick()">삭제</span></li>
-			                        <li id="btnReturn" style="display: none"><span onclick="return btnReturn_onclick()"><spring:message code='ezApprovalG.t1434'/></span></li>
-		                        </c:when>
-		                        <c:otherwise>
-			                        <li id="btnReturn" style="display: none"><span onclick="return btnReturn_onclick()"><spring:message code='ezApprovalG.t1434'/></span></li>
-		                        </c:otherwise>
-	                        </c:choose>
-	                        <li id="btnEdit" style="display: none"><span onclick="return btnEdit_onclick()"><spring:message code='ezApprovalG.t44'/></span></li>
+							<c:choose>
+								<%-- 문서보기 버튼으로 창을 open할 경우 (viewDocFlag 문서보기 Flag)--%>
+								<c:when test="${viewDocFlag eq 'Y'}">
+									<li id="btnReqReSend"><span onclick="return btnReqReSend_onclick()"><spring:message code='ezApprovalG.t1435'/></span></li>
+									<li id="btnOpinion"><span onclick="return btnOpinion_onclick()"><spring:message code='ezApprovalG.t55'/></span></li>
+									<li id="btnDocInfo"><span onclick="return btnDocInfo_onclick()"><spring:message code='ezApprovalG.t54'/></span></li>
+									<li id="btnhistory"><span id="span_btnhistory" onClick="btnhistory_onclick()"><spring:message code='ezApprovalG.t61'/></span></li>
+									<li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
+								</c:when>
+								<c:otherwise>
+									<li id="btntotaldocinfo"><span onclick="return btnApprovalInfo()"><spring:message code='ezApprovalG.t1742'/></span></li>
+									<li id="btnSummary"><span onclick="return btnSummaryEdit()"><spring:message code='ezApprovalG.t1203'/></span></li> <%-- 요약전 --%>
+									<span style="display: none">
+	                            		<li id="btnSetAprLine"><span onclick="return btnSetAprLine_onclick()"><spring:message code='ezApprovalG.t153'/></span></li>
+	                        		</span>
+									<span style="display: none">
+	                            		<li id="btnSetReceivLine" style="display: none"><span onclick="return btnSetReceivLine_onclick()"><spring:message code='ezApprovalG.t154'/></span></li>
+	                        		</span>
+									<li id="btnSendDraft"><span onclick="return btnSendDraft_onclick()"><spring:message code='ezApprovalG.t156'/></span></li>
+									<li id="btnRJunkyul"><span onclick="return btnRJunkyul_onclick()"><spring:message code='ezApprovalG.t1427'/></span></li>
+									<li id="btnSendAround" style="display: none"><span onclick="return btnSendAround_onclick()"><spring:message code='ezApprovalG.t1428'/></span></li>
+									<span style="display: none">
+										<li id="btnSetTaskCode"><span onclick="btnSetTaskCode_onclick()"><spring:message code='ezApprovalG.t9994'/></span></li>
+									</span>
+									<li id="btnAssign" style="display: none"><span onclick="return btnAssign_onclick()"><spring:message code='ezApprovalG.t1430'/></span></li>
+									<li id="btnReAssign" style="display: none"><span onclick="return btnReAssign_onclick()"><spring:message code='ezApprovalG.t1431'/></span></li>
+									<li id="btnDistribute" style="display: none"><span onclick="return btnDistribute_onclick()"><spring:message code='ezApprovalG.t1432'/></span></li>
+									<li id="btnReDistribute" style="display: none"><span onclick="return btnReDistribute_onclick()"><spring:message code='ezApprovalG.t1433'/></span></li>
+									<li id="btnReqReSend" style="display: none"><span onclick="return btnReqReSend_onclick()"><spring:message code='ezApprovalG.t1435'/></span></li>
+									<li id="btnOpinion"><span onclick="return btnOpinion_onclick()"><spring:message code='ezApprovalG.t55'/></span></li>
+									<li id="btnFileAttach" style="display: none"><span onclick="return btnFileAttach_onclick()"><spring:message code='ezApprovalG.t56'/></span></li>
+									<li id="btnAprDocAttach" style="display: none"><span onclick="return btnAprDocAttach_onclick()"><spring:message code='ezApprovalG.t1429'/></span></li>
+									<li id="btnAddSepAttach" style="display: none"><span onclick="btnAddSepAttach_onclick()"><spring:message code='ezApprovalG.t58'/></span></li>
+								</c:otherwise>
+							</c:choose>
+							<c:choose>
+								<c:when test="${isNonElecRec eq 'Y'}">
+									<li id="btnDel"><span onclick="return btnDel_onclick()"><spring:message code='ezApprovalG.t266'/></span></li>
+								</c:when>
+							</c:choose>
+							<c:if test="${isNonElecRec != 'Y'}">
+								<li id="btnReturn" style="display: none"><span onclick="return btnReturn_onclick()"><spring:message code='ezApprovalG.t1434' /></span></li>
+							</c:if>
+							<li id="btnEdit" style="display: none"><span onclick="return btnEdit_onclick()"><spring:message code='ezApprovalG.t44'/></span></li>
 	                        <li id="btnPrint"><span class="icon16 popup_icon16_print" onclick="return btnPrint_onclick()"></span></li>
 	                        <c:if test="${useExternalMailServer == 'NO'}">
 	                        	<li id="btnMail" style="display:none"><span class="icon16 popup_icon16_mail_gray" onclick="return btnMail_onclick()"></span></li>
@@ -1979,7 +2216,7 @@
 								<div id="lstAttachLinkDoc" style="height:70px;"></div>
 							</td>
 							<td class="pos2" style="width:8%; background:#fffcfa;">
-								<a class="imgbtn imgbck" style="width:70px;"><span style="height:24px;" onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
+-								<a class="imgbtn imgbck" style="width:70px;"><span style="height:24px;" onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
 								<a class="imgbtn imgbck" style="width:70px;"><span style="height:24px;" onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a><br/>
 							</td>
 	                    </tr>

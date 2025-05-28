@@ -27,6 +27,7 @@ var dayOfWeeks;
 var idtype = "T";
 var idlist = "";
 var groupid = "";
+var chk_usersearch = "";
 
 var monthHeight = ((parseInt(document.documentElement.clientHeight, 10) - 260) / 6) - 11;
 
@@ -67,6 +68,15 @@ function CalendarView(pTagetID,chk_str) {
             oTable.setAttribute("cellspacing", "0");
             oTable.setAttribute("border", "0");
             oTable.setAttribute("width", "100%");
+
+            // 상단표시 (일보기)
+            var otTable = document.createElement("TABLE");
+            var otTBody = document.createElement("TBODY");
+            var otTr = document.createElement("TR");
+            otTable.setAttribute("cellpadding", "0");
+            otTable.setAttribute("cellspacing", "0");
+            otTable.setAttribute("border", "0");
+            otTable.setAttribute("width", "100%");
             //oTh.setAttribute("id", "calTitle");
             //oTh.style.fontSize = "15px";
             //oTh.colSpan = "2";
@@ -86,6 +96,8 @@ function CalendarView(pTagetID,chk_str) {
                 }
 
                 oTable.className = "calendar_day_title";
+                otTable.className = "calendar_day_title";
+
                 if (tempyear > 1800 && tempyear <= 2101) {
                     var isholiday = false;
                     var holidayname = "";;
@@ -167,6 +179,7 @@ function CalendarView(pTagetID,chk_str) {
             	document.getElementById("calTitle").style.color = "black"
             	
                 oTable.className = "calendar_month_navi";
+                otTable.className = "calendar_month_navi";
                 var dayText = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2);
             }
             
@@ -253,14 +266,18 @@ function CalendarView(pTagetID,chk_str) {
                 dTd.className = "calendar_t_time";
                 var dDiv = document.createElement("DIV")
                 dDiv.setAttribute("id", dayText.substring(0,10) + "ALL");
-                dDiv.setAttribute("onclick", "WriteDateSchedule(this)");
-                dDiv.setAttribute("ondblclick", "WriteDateSchedule(this)");
+                if(chk_usersearch != "UserSearch"){
+                    dDiv.setAttribute("onclick", "WriteDateSchedule(this)");
+                    dDiv.setAttribute("ondblclick", "WriteDateSchedule(this)");
+                }
                 dDiv.setAttribute("dispDate", dayText.substring(0,10));
                 dDiv.style.width = "100%"
                 dDiv.style.height = "100px";
                 dDiv.style.overflowY = "auto";
                 //2018-06-28 구해안 종일일정 클릭시에도 글 쓸 수 있도록 변경
-                dDiv.setAttribute("ondblclick", "WriteDateSchedule(this)");
+                if(chk_usersearch != "UserSearch"){
+                    dDiv.setAttribute("ondblclick", "WriteDateSchedule(this)");
+                }
                 dTd.appendChild(dDiv);
                 dTr.appendChild(dTd);
                 dTable.appendChild(dTr);
@@ -274,6 +291,68 @@ function CalendarView(pTagetID,chk_str) {
                 oTd.appendChild(dTable);
                 oTr.appendChild(oTd);
                 oTBody.appendChild(oTr);
+
+                // 상단표시 (일보기)
+                var otTr = document.createElement("TR");
+                otTr.setAttribute("id", "topTR");
+                var otTd = document.createElement("TD");
+                otTd.className = "calendar_time";
+
+                var dtTable = document.createElement("TABLE")
+                var dtTbody = document.createElement("TBODY");
+                dtTable.setAttribute("cellpadding", "0");
+                dtTable.setAttribute("cellspacing", "0");
+                dtTable.setAttribute("border", "0");
+                dtTable.setAttribute("width", "100%");
+                dtTable.className = "calendar_row";
+                var dtTr = document.createElement("TR")
+                var dtTd = document.createElement("TD")
+                dtTd.className = "calendar_t_time";
+                dtTd.innerHTML = "<span class=\"point\">" + strLang131 + "</span>";
+                dtTr.appendChild(dtTd);
+                dtTbody.appendChild(dtTr);
+                var dtTr = document.createElement("TR")
+                var dtTd = document.createElement("TD")
+                dtTr.appendChild(dtTd);
+                dtTbody.appendChild(dtTr);
+                dtTable.appendChild(dtTbody);
+                otTd.appendChild(dtTable);
+                otTr.appendChild(otTd);
+
+                var otTd = document.createElement("TD");
+                otTd.className = "td_list";
+                var dtTable = document.createElement("TABLE")
+                dtTable.setAttribute("cellpadding", "0");
+                dtTable.setAttribute("cellspacing", "0");
+                dtTable.setAttribute("border", "0");
+                dtTable.setAttribute("width", "100%");
+                dtTable.className = "calendar_row";
+                var dtTr = document.createElement("TR")
+                var dtTd = document.createElement("TD")
+                dtTd.className = "calendar_t_time";
+                var dtDiv = document.createElement("DIV")
+                dtDiv.setAttribute("id", dayText.substring(0,10) + "TOP");
+                dtDiv.setAttribute("onclick", "WriteDateSchedule(this)");
+                dtDiv.setAttribute("ondblclick", "WriteDateSchedule(this)");
+                dtDiv.setAttribute("dispDate", dayText.substring(0,10));
+                dtDiv.style.width = "100%"
+                dtDiv.style.height = "100px";
+                dtDiv.style.overflowY = "auto";
+                //2018-06-28 구해안 종일일정 클릭시에도 글 쓸 수 있도록 변경
+                dtDiv.setAttribute("ondblclick", "WriteDateSchedule(this)");
+                dtTd.appendChild(dtDiv);
+                dtTr.appendChild(dtTd);
+                dtTable.appendChild(dtTr);
+                /*var dTr = document.createElement("TR")
+                var dTd = document.createElement("TD")
+                dTd.className = "calendar_t_text";
+                dTd.setAttribute("dispDate", dayText);
+                dTd.setAttribute("ondblclick", "WriteDateSchedule(this)");
+                dTr.appendChild(dTd);
+                dTable.appendChild(dTr);*/
+                otTd.appendChild(dtTable);
+                otTr.appendChild(otTd);
+                otTBody.appendChild(otTr);
             }
 
             oTable.appendChild(oTBody);
@@ -281,6 +360,14 @@ function CalendarView(pTagetID,chk_str) {
             if (typeCal == 2) {
                 var oDiv = document.createElement("DIV");
                 oDiv.setAttribute("id", "CalDiv")
+            }
+
+            //상단표시 (일보기)
+            otTable.appendChild(otTBody);
+            objElm.appendChild(otTable);
+            if (typeCal == 2) {
+                var otDiv = document.createElement("DIV");
+                otDiv.setAttribute("id", "TopDiv")
             }
 
         }
@@ -475,89 +562,95 @@ function CalendarView(pTagetID,chk_str) {
     		}
         });
     }
-    //2018-11-05 김혜정 월보기화면에서 드래그앤드롭을 위해 추가
-    $("td[id^='index_']").droppable({
-    	tolerance: "pointer",
-    	drop: function(event, ui) {
-    		var typeCal = 0;
-    		var dragId  = ui.draggable.children().attr("scheduleid");
-    		var dragDay = ui.draggable.children().attr("id");
-    		var dragType = ui.draggable.children().attr("datetype");
-    		var dropDay = $(this).attr("day");
-    		
-    		if (dragDay.substring(4, 14) == dropDay) {
-    			return;
-    		}
-    		
-    		if (dragType == "2") {
-    			dragDay += "ALL";
-    		}
-    		
-    		if (updateDragSchedule(typeCal, dragId, dragDay, dropDay)) {
-    			RefreshView();
-    		}
-    	}
-    });
-    //2018-11-05 김혜정 주보기화면에서 드래그앤드롭을 위해 추가 - 하루종일
-    $("div[id$='ALL'").droppable({
-    	tolerance: "pointer",
-    	addClasses: false,
-    	drop: function(event, ui) {
-    		var dataType = ui.draggable.attr("datetype");
-    		
-    		if (dataType == "1") {
-    			ui.draggable.draggable("option", "revert", true);
-    		}
-    		else {
-    			var typeCal = 1;
-    			var dragId  = ui.draggable.attr("scheduleid");
-    			var dropDay = $(this).attr("id");
-    			var dragDay = ui.draggable.attr("id");
-    			
-    			if (dragDay.substring(4, 14) == dropDay.substring(0, 10)) {
-    				return;
-    			}
-    			
-    			dragDay = dragDay.substring(4, dragDay.lastIndexOf("_"));	
-    			dragDay = changeDateFormat(dragDay);
-    			
-    			if (updateDragSchedule(typeCal, dragId, dragDay, dropDay)) {
-    				RefreshView();
-    			}
-    		}
-    	}
-    });
-    //2018-11-06 김혜정 주보기/일보기 화면에서 드래그앤드롭을 위해 추가 - 시간지정
-    $("td[id^='TD_'][id$='_Value']").droppable({ //뒤에가 Value로 끝나는
-    	tolerance: "pointer",
-    	drop: function(event, ui) {
-    		var dataType = ui.draggable.attr("datetype");
-    		
-    		if (dataType == "2") {
-    			ui.draggable.draggable("option", "revert", true);
-    		}
-    		else {
-    			var typeCal = 1;
-    			var dragId  = ui.draggable.attr("scheduleid");
-    			var dropId  = $(this).attr("Id");
-    			var dropDay = dropId.substring(3, dropId.indexOf("_Value"));
-    			var dragDay = ui.draggable.attr("id");
-    			
-    			dragDay = dragDay.substring(4, dragDay.lastIndexOf("_"));
-    			
-    			if (dragDay == dropDay) {
-    				return;
-    			}
-    			
-    			dragDay = changeDateFormat(dragDay);
-    			dropDay = changeDateFormat(dropDay);
-    			
-    			if (updateDragSchedule(typeCal, dragId, dragDay, dropDay)) {
-    				RefreshView();
-    			}
-    		}
-    	}
-    });
+    
+    if(chk_usersearch != "UserSearch"){
+        //2018-11-05 김혜정 월보기화면에서 드래그앤드롭을 위해 추가
+        $("td[id^='index_']").droppable({
+            tolerance: "pointer",
+            drop: function(event, ui) {
+                var typeCal = 0;
+                var dragId  = ui.draggable.children().attr("scheduleid");
+                var dragDay = ui.draggable.children().attr("id");
+                var dragType = ui.draggable.children().attr("datetype");
+                var dropDay = $(this).attr("day");
+                var completeFG = ui.draggable.attr("completefg");
+                
+                if (dragDay.substring(4, 14) == dropDay) {
+                    return;
+                }
+
+                if (dragType == "2") {
+                    dragDay += "ALL";
+                }
+
+                if (updateDragSchedule(typeCal, dragId, dragDay, dropDay, completeFG)) {
+                    RefreshView();
+                }
+            }
+        });
+        //2018-11-05 김혜정 주보기화면에서 드래그앤드롭을 위해 추가 - 하루종일
+        $("div[id$='ALL'").droppable({
+            tolerance: "pointer",
+            addClasses: false,
+            drop: function(event, ui) {
+                var dataType = ui.draggable.attr("datetype");
+
+                if (dataType == "1") {
+                    ui.draggable.draggable("option", "revert", true);
+                }
+                else {
+                    var typeCal = 1;
+                    var dragId  = ui.draggable.attr("scheduleid");
+                    var dropDay = $(this).attr("id");
+                    var dragDay = ui.draggable.attr("id");
+                    var completeFG = ui.draggable.attr("completefg");
+
+                    if (dragDay.substring(4, 14) == dropDay.substring(0, 10)) {
+                        return;
+                    }
+
+                    dragDay = dragDay.substring(4, dragDay.lastIndexOf("_"));
+                    dragDay = changeDateFormat(dragDay);
+
+                    if (updateDragSchedule(typeCal, dragId, dragDay, dropDay, completeFG)) {
+                        RefreshView();
+                    }
+                }
+            }
+        });
+        //2018-11-06 김혜정 주보기/일보기 화면에서 드래그앤드롭을 위해 추가 - 시간지정
+        $("td[id^='TD_'][id$='_Value']").droppable({ //뒤에가 Value로 끝나는
+            tolerance: "pointer",
+            drop: function(event, ui) {
+                var dataType = ui.draggable.attr("datetype");
+
+                if (dataType == "2") {
+                    ui.draggable.draggable("option", "revert", true);
+                }
+                else {
+                    var typeCal = 1;
+                    var dragId  = ui.draggable.attr("scheduleid");
+                    var dropId  = $(this).attr("Id");
+                    var dropDay = dropId.substring(3, dropId.indexOf("_Value"));
+                    var dragDay = ui.draggable.attr("id");
+
+                    dragDay = dragDay.substring(4, dragDay.lastIndexOf("_"));
+
+                    if (dragDay == dropDay) {
+                        return;
+                    }
+
+                    dragDay = changeDateFormat(dragDay);
+                    dropDay = changeDateFormat(dropDay);
+
+                    if (updateDragSchedule(typeCal, dragId, dragDay, dropDay)) {
+                        RefreshView();
+                    }
+                }
+            }
+        });
+    }
+    
 }
 function GetMonthBodyObj() {
 	// 2018-06-08 구해안 mini에서 호출하는 부분 삭제
@@ -573,7 +666,8 @@ function GetMonthBodyObj() {
 
     var oBeforeMaxDay = oBeforeDate.getDate();
     var startThisDay = oThisDate.getDay();
-    oThisMonth = oThisDate.getMonth() + 1;
+    /* 2024-08-22 김유진 - 윈도우 표준시간대 변경 시 달력에 회색 영역 표시 관련해서 oBeforeDate에서 month 추출 */
+    oThisMonth = oBeforeDate.getMonth() + 1;
 
     if (oThisMonth == 12) {
         oThisMonth = 0;
@@ -748,9 +842,11 @@ function MonthData(oThisDate, TDIndex) {
 
     objTd.setAttribute("id", "index_" + TDIndex);
     objTd.setAttribute("day", cell_ID);
-    objTd.onmousedown = function (event) { MultiSelectStart(this, event); };
-    objTd.onmouseup = function (event) { MultiSelectEnd(this, event); };
-    //objTd.onmouseover = function (event) { MultiSelectItems(this, event); };
+    if (window.location.href.indexOf('schedulePrintCalendar') == -1) {
+        objTd.onmousedown = function (event) { MultiSelectStart(this, event); };
+        objTd.onmouseup = function (event) { MultiSelectEnd(this, event); };
+        //objTd.onmouseover = function (event) { MultiSelectItems(this, event); };
+    }
     var subTable = document.createElement("TABLE")
     var subTr = document.createElement("TR")
     var subTd = document.createElement("TD")
@@ -761,8 +857,10 @@ function MonthData(oThisDate, TDIndex) {
     subTd.setAttribute("id", "TD_" + cell_ID + "_Day");
     subTd.setAttribute("onmouseover", "MonthlyViewHeader_onMouseOver(this)");
     subTd.setAttribute("onmouseout", "MonthlyViewHeader_onMouseOut(this)");
-    subTd.setAttribute("onclick", "WriteDateSchedule(this)");
-    subTd.setAttribute("ondblclick", "WriteDateSchedule(this)");
+    if (chk_usersearch != "UserSearch" || window.location.href.indexOf('schedulePrintCalendar') == -1){ 
+        subTd.setAttribute("onclick", "WriteDateSchedule(this)");
+        subTd.setAttribute("ondblclick", "WriteDateSchedule(this)");
+    }
     subTd.setAttribute("dispDate", cell_ID);
     
     if (tempyear > 1800 && tempyear <= 2101) {
@@ -931,7 +1029,35 @@ function GetWeekTopObj() {
     objTd.appendChild(dTable);
     objTr.appendChild(objTd);
 
+    // 상단표시 (주보기)
+     var objtTr = document.createElement("TR");
+    objtTr.setAttribute("id", "topTR");
+    var objtTd = document.createElement("TD");
+    objtTd.className = "calendar_time";
+
+    var dtTable = document.createElement("TABLE")
+    var dtTbody = document.createElement("TBODY");
+    dtTable.setAttribute("cellpadding", "0");
+    dtTable.setAttribute("cellspacing", "0");
+    dtTable.setAttribute("border", "0");
+    dtTable.setAttribute("width", "100%");
+    dtTable.className = "calendar_row";
+    var dtTr = document.createElement("TR")
+    var dtTd = document.createElement("TD")
+    dtTd.className = "calendar_t_time";
+    dtTd.innerHTML = "<span class=\"point\">" + strLang131 + "</span>";
+    dtTr.appendChild(dtTd);
+    dtTbody.appendChild(dtTr);
+    var dtTr = document.createElement("TR")
+    var dtTd = document.createElement("TD")
+    dtTr.appendChild(dtTd);
+    dtTbody.appendChild(dtTr);
+    dtTable.appendChild(dtTbody);
+    objtTd.appendChild(dtTable);
+    objtTr.appendChild(objtTd);
+
     oTBody.appendChild(objTr);
+    oTBody.appendChild(objtTr);
     oTable.appendChild(oTBody);
 
     return oTable;
@@ -1029,6 +1155,14 @@ function GetWeekBodyObj() {
         var objTd = document.createElement("TD");
         objTd.className = "calendar_td_last"
         calTr.appendChild(objTd);
+    }
+    // 상단표시 (주보기)
+    var topTr = document.getElementById("topTR");
+    topTr.setAttribute("style","border-top: 1px solid #dedede")
+    if (topTr) {
+        var objtTd = document.createElement("TD");
+        objtTd.className = "calendar_td_last"
+        topTr.appendChild(objtTd);
     }
     oTbody.appendChild(oTr);
     oTr = null;
@@ -1159,15 +1293,19 @@ function WeekData(startOfWeek, dayOfWeek, pCnt) {
         dTd.className = "calendar_t_time";
         var dDiv = document.createElement("DIV")
         dDiv.setAttribute("id", divID + "ALL");
-        dDiv.setAttribute("onclick", "WriteDateSchedule(this)");
-        dDiv.setAttribute("ondblclick", "WriteDateSchedule(this)");
+        if(chk_usersearch != "UserSearch"){
+            dDiv.setAttribute("onclick", "WriteDateSchedule(this)");
+            dDiv.setAttribute("ondblclick", "WriteDateSchedule(this)");
+        }
         dDiv.setAttribute("dispDate", divID);
         dDiv.style.height = "100px";
         dDiv.style.overflowY = "auto";
         dDiv.style.overflowN = "hidden";
         dDiv.style.whiteSpace = "noWrap";
         //2018-06-28 구해안 종일일정 클릭시에도 글 쓸 수 있도록 변경
-        dDiv.setAttribute("ondblclick", "WriteDateSchedule(this)");
+        if(chk_usersearch != "UserSearch"){
+            dDiv.setAttribute("ondblclick", "WriteDateSchedule(this)");
+        }
         dTd.appendChild(dDiv);
         dTr.appendChild(dTd);
         dTable.appendChild(dTr);
@@ -1180,6 +1318,50 @@ function WeekData(startOfWeek, dayOfWeek, pCnt) {
         dTable.appendChild(dTr);*/
         tTd.appendChild(dTable);
         calTr.appendChild(tTd);
+    }
+
+    // 상단표시 (주보기)
+    var objtTd = document.createElement("TD");
+    objtTd.className = "td_list";
+
+    var topTr = document.getElementById("topTR");
+    if (topTr) {
+
+        var ttTd = document.createElement("TD");
+        ttTd.className = "td_list";
+
+        var dtTable = document.createElement("TABLE")
+        dtTable.setAttribute("cellpadding", "0");
+        dtTable.setAttribute("cellspacing", "0");
+        dtTable.setAttribute("border", "0");
+        dtTable.setAttribute("width", "100%");
+        dtTable.className = "calendar_row";
+        var dtTr = document.createElement("TR")
+        var dtTd = document.createElement("TD")
+        dtTd.className = "calendar_t_time";
+        var dtDiv = document.createElement("DIV")
+        dtDiv.setAttribute("id", divID + "TOP");
+        dtDiv.setAttribute("onclick", "WriteDateSchedule(this)");
+        dtDiv.setAttribute("ondblclick", "WriteDateSchedule(this)");
+        dtDiv.setAttribute("dispDate", divID);
+        dtDiv.style.height = "100px";
+        dtDiv.style.overflowY = "auto";
+        dtDiv.style.overflowN = "hidden";
+        dtDiv.style.whiteSpace = "noWrap";
+        //2018-06-28 구해안 종일일정 클릭시에도 글 쓸 수 있도록 변경
+        dtDiv.setAttribute("ondblclick", "WriteDateSchedule(this)");
+        dtTd.appendChild(dtDiv);
+        dtTr.appendChild(dtTd);
+        dtTable.appendChild(dtTr);
+/*        var dTr = document.createElement("TR")
+        var dTd = document.createElement("TD")
+        dTd.className = "calendar_t_text";
+        dTd.setAttribute("dispDate", divID);
+        dTd.setAttribute("ondblclick", "WriteDateSchedule(this)");
+        dTr.appendChild(dTd);
+        dTable.appendChild(dTr);*/
+        ttTd.appendChild(dtTable);
+        topTr.appendChild(ttTd);
     }
 
     for (var k = 0; k < 24; k++) {
@@ -1196,8 +1378,10 @@ function WeekData(startOfWeek, dayOfWeek, pCnt) {
         var dTd = document.createElement("TD")
         dTd.className = "calendar_t_time";
         dTd.setAttribute("id", "TD_" + divID + "_" + k + ":0_Value");
-        dTd.setAttribute("onclick", "WriteDateSchedule(this)");
-        dTd.setAttribute("ondblclick", "WriteDateSchedule(this)");
+        if(chk_usersearch != "UserSearch"){
+            dTd.setAttribute("onclick", "WriteDateSchedule(this)");
+            dTd.setAttribute("ondblclick", "WriteDateSchedule(this)");
+        }
         dTd.setAttribute("dispTime", divID + " " + leadingZeros(k, 2) + ":00:00");
         dTr.appendChild(dTd);
         dTable.appendChild(dTr);
@@ -1205,8 +1389,10 @@ function WeekData(startOfWeek, dayOfWeek, pCnt) {
         var dTd = document.createElement("TD")
         dTd.className = "calendar_t_text";
         dTd.setAttribute("id", "TD_" + divID + "_" + k + ":3_Value");
-        dTd.setAttribute("onclick", "WriteDateSchedule(this)");
-        dTd.setAttribute("ondblclick", "WriteDateSchedule(this)");
+        if(chk_usersearch != "UserSearch"){
+            dTd.setAttribute("onclick", "WriteDateSchedule(this)");
+            dTd.setAttribute("ondblclick", "WriteDateSchedule(this)");
+        }
         dTd.setAttribute("dispTime", divID + " " + leadingZeros(k, 2) + ":30:00");
         dTr.appendChild(dTd);
         dTable.appendChild(dTr);
@@ -1289,16 +1475,20 @@ function DayData(j) {
     var s_Td = document.createElement("TD");
     s_Td.className = "calendar_t_time";
     s_Td.setAttribute("id", "TD_" + divID + "_" + j + ":0_Value");
-    s_Td.setAttribute("onclick", "WriteDateSchedule(this)");
-    s_Td.setAttribute("ondblclick", "WriteDateSchedule(this)");
+    if(chk_usersearch != "UserSearch"){
+        s_Td.setAttribute("onclick", "WriteDateSchedule(this)");
+        s_Td.setAttribute("ondblclick", "WriteDateSchedule(this)");
+    }
     s_Td.setAttribute("dispTime", divID + " " + leadingZeros(j, 2) + ":00:00");
     s_Tr.appendChild(s_Td);
     sTable.appendChild(s_Tr);
     var s_Tr = document.createElement("TR");
     var s_Td = document.createElement("TD");
     s_Td.className = "calendar_t_text";
-    s_Td.setAttribute("onclick", "WriteDateSchedule(this)");
-    s_Td.setAttribute("ondblclick", "WriteDateSchedule(this)");
+    if(chk_usersearch != "UserSearch"){
+        s_Td.setAttribute("onclick", "WriteDateSchedule(this)");
+        s_Td.setAttribute("ondblclick", "WriteDateSchedule(this)");
+    }
     s_Td.setAttribute("id", "TD_" + divID + "_" + j + ":3_Value");
     s_Td.setAttribute("dispTime", divID + " " + leadingZeros(j, 2) + ":30:00");
     s_Tr.appendChild(s_Td);
@@ -1553,7 +1743,28 @@ function memorialDayCheck(solarDate, lunarDate) {
         				memorialDays[i].solarLunar == 1) {
         			tempmemorialDays.push(memorialDays[i]);
         		}
-        		if (memorialDays[i].month == lunarDate.month &&
+        		
+        		if (memorialDays[i].month == "12" && memorialDays[i].day == "30" && memorialDays[i].solarLunar == 2 && !memorialDays[i].leapMonth
+        			&& (lunarDate.month == "12" && lunarDate.day == "29")) {
+        			var tempDate = new Date(solarDate.getTime());
+    				tempDate.setDate(tempDate.getDate() + 1);
+    				var tempLunarDate = lunarCalc(tempDate.getFullYear(), tempDate.getMonth() + 1, tempDate.getDate(), 1);
+                    var tempLunarDatemonth = tempLunarDate.month;
+                    var tempLunarDateday = tempLunarDate.day;
+                    
+                    if (!(tempLunarDatemonth == "12" && tempLunarDateday == "30")) {
+                    	var tempMemorial = {}
+                    	var keys = Object.keys(memorialDays[i]);
+                        
+                        for (var j = 0; j < keys.length; j++) {
+                            var key = keys[j];
+                            tempMemorial[key] = memorialDays[i][key];
+                        }
+                        tempMemorial.day = "29"
+                    	tempmemorialDays.push(tempMemorial);
+                    }
+    				
+    			} else if (memorialDays[i].month == lunarDate.month &&
         				memorialDays[i].day == lunarDate.day &&
         				memorialDays[i].solarLunar == 2 &&
         				!memorialDays[i].leapMonth) {
@@ -1584,7 +1795,28 @@ function yearmemorialDayCheck(solarDate, lunarDate) {
         				yearmemorialDays[i].solarLunar == 1) {
         			tempyearmemorialDays.push(yearmemorialDays[i]);
         		}
-        		if (yearmemorialDays[i].year == lunarDate.year &&
+        		
+        		if (yearmemorialDays[i].year == lunarDate.year && yearmemorialDays[i].month == "12" && yearmemorialDays[i].day == "30" && yearmemorialDays[i].solarLunar == 2 && !yearmemorialDays[i].leapMonth
+        			&& (lunarDate.month == "12" && lunarDate.day == "29")) {
+        			var tempDate = new Date(solarDate.getTime());
+    				tempDate.setDate(tempDate.getDate() + 1);
+    				var tempLunarDate = lunarCalc(tempDate.getFullYear(), tempDate.getMonth() + 1, tempDate.getDate(), 1);
+                    var tempLunarDatemonth = tempLunarDate.month;
+                    var tempLunarDateday = tempLunarDate.day;
+                    
+                    if (!(tempLunarDatemonth == "12" && tempLunarDateday == "30")) {
+                    	var tempMemorial = {}
+                    	var keys = Object.keys(yearmemorialDays[i]);
+                        
+                        for (var j = 0; j < keys.length; j++) {
+                            var key = keys[j];
+                            tempMemorial[key] = yearmemorialDays[i][key];
+                        }
+                        tempMemorial.day = "29"
+                        tempyearmemorialDays.push(tempMemorial);
+                    }
+        				
+        		} else if (yearmemorialDays[i].year == lunarDate.year &&
         				yearmemorialDays[i].month == lunarDate.month &&
         				yearmemorialDays[i].day == lunarDate.day &&
         				yearmemorialDays[i].solarLunar == 2 &&
@@ -2190,7 +2422,7 @@ function myDate(year, month, day, leapMonth) {
     this.day = day;
     this.leapMonth = leapMonth;
 }
-function updateDragSchedule(typeCal, dragId, dragDay, dropDay) {
+function updateDragSchedule(typeCal, dragId, dragDay, dropDay, completeFG) {
 	var rtv = true;
 	
 	$.ajax({
@@ -2202,7 +2434,8 @@ function updateDragSchedule(typeCal, dragId, dragDay, dropDay) {
 			typeCal: typeCal,
 			dragId : dragId,
 			dragDay: dragDay,
-			dropDay: dropDay
+			dropDay: dropDay,
+			completeFG: completeFG
 		},
 		success: function(text){
 			if (text == "1") { //권한 없음

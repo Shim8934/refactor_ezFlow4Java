@@ -237,7 +237,6 @@
 							 AND TENANT_ID = #tenantID#
 							 AND DELFLAG = 0
 							 ]]>
-							<![CDATA[
 							  ) SUB_RESCNT,
 						   '0' ACCESS_LVL
 					FROM TBL_CAR A
@@ -247,9 +246,11 @@
 					AND A.DELFLAG = 0
 					ORDER BY CAR_GB, CAR_STEP)B JOIN TBL_CAR_ACL C 
 					ON B.CAR_ID = C.CAR_ID
- 					AND C.MEMBER_ID IN ($jobss$)
+ 					AND C.MEMBER_ID IN
+					<iterate property="jobss" open="(" close=")" conjunction=",">
+						#jobss[]#
+					</iterate>
  					GROUP BY B.CAR_ID, B.CAR_NAME, B.CAR_NAME2, B.CAR_LEVEL, B.CAR_STEP, B.CAR_UPPER, B.CAR_GB, B.CAR_URL, B.CAR_EXPLAIN, B.CAR_ACCESS, B.SUB_CLSCNT, B.SUB_RESCNT, B.ACCESS_LVL
-				]]>
 				</isEqual>
 				<isNotEqual property="v_P_ParentID" compareValue="1"> 
 					<![CDATA[
@@ -292,7 +293,6 @@
 			</isEqual>
 			<isNotEqual property="v_P_TreeType" compareValue="0"> 
 				<isEqual property="v_P_ParentID" compareValue="1">
-				<![CDATA[
 				SELECT B.CAR_ID, B.CAR_NAME, B.CAR_NAME2, B.CAR_LEVEL, B.CAR_STEP, B.CAR_UPPER, B.CAR_GB, B.CAR_URL, B.CAR_EXPLAIN, B.CAR_ACCESS, B.SUB_CLSCNT, B.SUB_RESCNT, B.ACCESS_LVL
 				FROM 
 				(
@@ -329,9 +329,11 @@
 					AND A.DELFLAG = 0
 					ORDER BY CAR_STEP )B JOIN TBL_CAR_ACL C 
 					ON B.CAR_ID = C.CAR_ID
- 					AND C.MEMBER_ID IN ($jobss$)
+ 					AND C.MEMBER_ID IN
+					<iterate property="jobss" open="(" close=")" conjunction=",">
+						#jobss[]#
+					</iterate>
  					GROUP BY B.CAR_ID, B.CAR_NAME, B.CAR_NAME2, B.CAR_LEVEL, B.CAR_STEP, B.CAR_UPPER, B.CAR_GB, B.CAR_URL, B.CAR_EXPLAIN, B.CAR_ACCESS, B.SUB_CLSCNT, B.SUB_RESCNT, B.ACCESS_LVL
-				]]>
 				</isEqual>
 				<isNotEqual property="v_P_ParentID" compareValue="1"> 
 					<![CDATA[
@@ -1105,8 +1107,7 @@
 
 
 
-<select id="EzCarDAO.getDeptAcl" parameterClass="Map"  resultMap="resGetClsAclListVO">
-		<![CDATA[
+	<select id="EzCarDAO.getDeptAcl" parameterClass="Map"  resultMap="resGetClsAclListVO">
 			SELECT
 				DEPT_YN , 
 				SDA_YN ,
@@ -1124,11 +1125,13 @@
        		AND
        			SDA_Yn = 'Y'
        		AND
-       			MEMBER_ID in ( $v_PUSERID$ )
-		]]>
+       			MEMBER_ID IN
+				<iterate property="v_PUSERID" open="(" close=")" conjunction=",">
+					#v_PUSERID[]#
+				</iterate>
 	</select>
 
-<select id="EzCarDAO.getAdmFlag" parameterClass="Map" resultMap="resGetAdminFlagVO">
+	<select id="EzCarDAO.getAdmFlag" parameterClass="Map" resultMap="resGetAdminFlagVO">
 		<![CDATA[
 			SELECT
 				*

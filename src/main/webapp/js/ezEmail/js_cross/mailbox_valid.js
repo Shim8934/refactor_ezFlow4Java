@@ -3,15 +3,19 @@
         // commit efc6d3598e
         szName = szName.replace(/&/g, "＆");		// global : 문자열 내의 모든 패턴 변경.
         szName = szName.replace(/'/g, "＇");
+        szName = szName.replace(/\./g, "․");
+        szName = szName.replace(/'/g, "＇");
+        szName = szName.replace(/\*/g, "＊");
+        szName = szName.replace(/%/g, "％");
 
         return szName;
     }
 
     function checkBadFolderName(szName) {
-        var szBadChars = /[\<\>\#\%\*\"\+\|\\\.\/]/;	// 체크용이기 때문에 global 하지 않음.
+        var szBadChars = /[\<\>\"\\\/]/;	// 체크용이기 때문에 global 하지 않음.
 
         if (szBadChars.test(szName)) {
-            alert(strLangNJK01 + "< # % * \" + | \\ . / >)" + strLangNJK02);
+            alert(strLangNJK01 + "< \" \\ / >)" + strLangNJK02);
             return true;
         }
         //"＇＇" 들어올 시, 이름 없는 메일함이 생성되는 버그 발생 : imap 프로토콜단 또는 james 특유의 문제인데, 현재로썬 원인을 정확히 파악하기 어렵다.

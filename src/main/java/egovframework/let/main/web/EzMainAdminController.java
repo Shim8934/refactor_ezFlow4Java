@@ -6,6 +6,7 @@ import java.util.Properties;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,12 +62,8 @@ public class EzMainAdminController {
 		loginVO.setTenantId(tenantId);
 		loginVO.setDn("NOPASSWORD");
 
-		LoginVO resultVO = loginService.selectUser(loginVO);
-
-		boolean rollC = resultVO.getRollInfo().contains("c=1");
-		boolean rollK = resultVO.getRollInfo().contains("k=1");
-
-		if (rollC || rollK) {
+		OrganAuth organAuth = commonUtil.makeOrganAuth(uid, tenantId, user.getDeptID(), user.getJobId());
+		if (organAuth.isAuth(OrganAuth.AdminAuth.ADMIN_MASTER) || organAuth.isAuth(OrganAuth.AdminAuth.COMPANY_MANAGER) || organAuth.isAuth(OrganAuth.AdminAuth.WEB_FOLDER_MANAGER)) {
 			adminVO.setUserid(uid);
 			adminVO.setTenant_id(tenantId);
 			adminVO.setAccessip(ClientUtil.getClientIP(request));
@@ -152,7 +149,9 @@ public class EzMainAdminController {
 		if (use_community == null || use_community.equals("")) {
 			model.addAttribute("use_community", "YES");
 		}
-		if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1 ){
+
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID(), userInfo.getJobId());
+		if (organAuth.isAuth(OrganAuth.AdminAuth.ADMIN_MASTER) || organAuth.isAuth(OrganAuth.AdminAuth.COMPANY_MANAGER) || organAuth.isAuth(OrganAuth.AdminAuth.WEB_FOLDER_MANAGER)) {
 			model.addAttribute("admin", "admin");
 		} 
 		
@@ -205,5 +204,10 @@ public class EzMainAdminController {
 		model.addAttribute("blockMsg", blockMsg);
 		
 		return "cmm/error/accessBlock";
+	}
+	
+	@RequestMapping(value="/admin/adminDenied.do")
+	public String adminDeniedPage(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) throws Exception{
+		return "cmm/error/adminDenied";
 	}
 }

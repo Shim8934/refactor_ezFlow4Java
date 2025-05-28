@@ -5,21 +5,30 @@
 <html style="height: 99%;">
 	<head>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	    <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+	    <link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">	
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript">
 	    	var Tab1_SelectID = "";
 			var useIPAccess = "${useIPAccess}";
-	    	
+	    	var rollInfo = "${rollInfo}";
+
 	        window.onload = function () {
 	        	if (useIPAccess === "NO") {
 					document.getElementById("ipRadio0").checked = true;
 				} else {
 					document.getElementById("ipRadio1").checked = true;
 				}
-	        	
+                if (rollInfo.indexOf("c=1") == -1) {
+                    var btnList = $("body [id^=btn]");
+
+                    for (var i = 0; i < btnList.length; i++) {
+                        btnList[i].onclick = function() { alert("<spring:message code='ezSystem.jje7' />"); return; };
+                    }
+                }
+
 	        	Tab_init_select(document.getElementById("tagsub1"));
 	        	Tab1_NewTabIni("tab1");
 	        };
@@ -162,7 +171,11 @@
 						console.log(data);
 						alert("<spring:message code='ezCommunity.t283'/>");
 					},
-					complete : function(data) {
+					success : function(data) {
+					    if(data == "setAccess"){
+					        alert("<spring:message code='ezSystem.yja03' />");
+					        return;
+					    }
 						alert("<spring:message code='ezCommunity.t282'/>");
 						
 						if (useIPAccess == "NO") {

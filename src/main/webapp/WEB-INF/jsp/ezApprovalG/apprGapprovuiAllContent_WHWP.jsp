@@ -1,11 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!DOCTYPE html>
 <html>
 	<head>
 	    <title></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -23,13 +25,17 @@
 		<script type="text/javascript" src="${webHWPUrl}js/hwpctrlapp/utils/util.js"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/hwpCtrlApp.js')}"></script>
     	<script type="text/javascript" src="${webHWPUrl}js/webhwpctrl.js"></script>
+    	
+    	<%-- 2023-12-07 홍승비 - 결재 서명 데이터를 DB(TBL_SIGNINFO)에서 가져와, 문서 상에 다시 그려주는(재맵핑) 함수 적용 --%>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/aprSignRedraw.js')}"></script>
+		
 	    <script language="javascript" type="text/javascript">
 	    	var HwpCtrl;
 	    	var useWebHWP = parent.useWebHWP;
-	    	var frameNum = "${frameNum}"; // 프레임 번호
+	    	var frameNum = "<c:out value ='${frameNum}'/>"; // 프레임 번호
 	    	var ListType = parent.ListType; // 임시저장 등 분기처리를 위한 ListType
-	    	var docID = "${docID}"; // 재기안시 문서 id
-	    	var docHref = "${docHref}"; // 사실상 양식의 formHref임
+	    	var docID = "<c:out value ='${docID}'/>"; // 재기안시 문서 id
+	    	var docHref = "<c:out value ='${docHref}'/>"; // 사실상 양식의 formHref임
 	    	var formID = ""; // 양식 ID
 	    	var pUserID = "";
 	    	var pingUserID = parent.pingUserID;
@@ -71,6 +77,9 @@
 			/* 2023-04-20 홍승비 - 일괄기안된 문서는 모든 안에 대해 결재선이 동일하므로, 부모창의 값을 자식 프레임에서 그대로 사용 */
 			var pModeForAllDocInfo = "APR";
 			var pModeForAllAttachInfo = "APR";
+			
+			/* 2024-12-27 홍승비 - MHT 양식의 일괄기안 기능이 추가되며 발생한 사이드 이펙트 수정 (isHWP 변수 추가, 항상 Y) */
+			var isHWP = "<c:out value ='${isHWP}'/>";
 	    
 	    	$(document).ready(function() {
 	    		pDocHref = parent.pDocHrefAry[frameNum];
@@ -130,7 +139,7 @@
 	                    
 	                    EditMode(0);
 						SetViewProperties(2, 100);
-	                    ScrollPosInfo(0, 0);
+	                    ScrollPosTop(100);
 	                    
 	                    // 부모창의 문서로딩완료 카운트를 하나 증가시킨다.
                     	parent.docLoadCompleteCnt ++;
@@ -239,6 +248,11 @@
 				        parent.pGubun = "6";
 				    }
 				    else { */
+				    
+			    	/* 2023-12-07 홍승비 - 결재서명 재맵핑 함수 호출 (TBL_SIGNINFO 테이블에 정상적인 서명 데이터가 확정 삽입되는 시점은 테넌트 컨피그로 체크) */
+				    // 일괄기안 웹한글문서는 내부결재가 완료되면 각 안 별로 분리되며, 부서수신함의 수신문도 단일 문서로 접근하게 된다.
+			        startRemapAllAprSign_WHWP(parent.pDocIDAry[frameNum], orgCompanyID);
+				    
 			        pSuSinFlag = "N";
 			        
 			        var RtnVal = FieldExist("recipient");
@@ -436,7 +450,20 @@
 	            ScrollPosSet.SetItem("HorzPos", HorzPos);
 	            ScrollPosSet.SetItem("VertPos", VertPos);
 	            HwpCtrl.ScrollPosInfo = ScrollPosSet;
-	        }        
+	        }
+	        
+	        function ScrollPosTop(time) {
+				setTimeout(function() {
+					var ScrollPosSet;
+		            ScrollPosSet = HwpCtrl.ScrollPosInfo;
+		            ScrollPosSet.SetItem("HorzPos", 0);
+		            ScrollPosSet.SetItem("VertPos", 0);
+		            HwpCtrl.ScrollPosInfo = ScrollPosSet;
+					setTimeout(function() {
+						ScrollPosInfo(0, 0);
+					}, 100);
+				}, time);
+			}     
 
 	        function SetToolBar(option, ToolBarID) { //툴바 설정
 	            HwpCtrl.SetToolBar(option, ToolBarID);

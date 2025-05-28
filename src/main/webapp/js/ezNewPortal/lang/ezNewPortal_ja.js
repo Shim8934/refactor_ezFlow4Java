@@ -54,5 +54,17 @@ var messages = {
 	strLang599 : "<前",
 	strLang600 : "次>",
 	strLang601 : "閉じる",
-	strLang602 : "ja"
+	strLang602 : "ja",
+	strLangSchedule01 : "日;月;火;水;木;金;土",
+	strLangFavorPortlet : "お気に入り",
+	strLangCommunity01 : "メンバー数",
+	strLangCommunity02 : "人",
+	apprPortlet001 : "まで不在に設定されています。",
+	apprPortlet002 : "不在設定を解除",
+	apprPortlet003 : "データが存在しません",
+	apprPortlet004 : "起案",
+	apprPortlet005 : "他の会社から提案した文書は再起案することができません。",
+	apprPortlet006 : "日本語の様式は IE からのみ見られます。",
+	apprPortlet007 : "連動様式は再起案することができません。",
+	apprPortlet008 : "不在設定を解除しますか？"
 }

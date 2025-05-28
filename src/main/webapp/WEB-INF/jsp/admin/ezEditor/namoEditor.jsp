@@ -36,6 +36,7 @@
         function CE_OnMouseActive(e) {
             if (e.type == "mouseup") {
                 if (parent.Attribute_Write != undefined) {
+                	parent.Attribute_Write("");
                     View_CellProperty2();
                     var parentTag = e.targetNode;
                     if (parentTag.tagName == "TD")

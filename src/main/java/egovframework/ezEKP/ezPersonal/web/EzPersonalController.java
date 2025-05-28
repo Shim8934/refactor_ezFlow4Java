@@ -231,9 +231,11 @@ public class EzPersonalController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String useShareApproval = ezCommonService.getTenantConfig("useShareApproval", userInfo.getTenantId());
+		String autoSaveFlag = ezCommonService.getTenantConfig("AprAutoSaveFlag", userInfo.getTenantId());
 		
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("useShareApproval", useShareApproval);
+		model.addAttribute("autoSaveFlag", autoSaveFlag);
 		
 		logger.debug("ezApprovalConfig ended");
 		return "ezPersonal/persEzApprovalConfig";
@@ -443,7 +445,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String type = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("type")));
 		String dept = request.getParameter("dept"); 
 		String tagName = request.getParameter("tagName");
-		
+		String companyID = Optional.ofNullable(request.getParameter("companyID")).orElse(userInfo.getCompanyID());
+
 		String uploadPortalPath = commonUtil.getUploadPath("upload_portal.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		
 		userInfo.setDeptID(dept);
@@ -452,6 +455,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		model.addAttribute("type", type);
 		model.addAttribute("tagName", tagName);
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("companyID", companyID);
 		model.addAttribute("uploadPortalPath", uploadPortalPath);
 
 		logger.debug("selectPerson ended");
@@ -1528,7 +1532,11 @@ public class EzPersonalController extends EgovFileMngUtil {
 				cookieValue1 = commonUtil.getDecryptedLoginCookie(loginCookie);
 
 				//loginCookie에 lang값, locale값 설정
-				String cInfo = userInfo.getServerName() + "///" + cookieValue1.split("///")[1] + "///" + cookieValue1.split("///")[2] + "///" + cookieValue1.split("///")[3] + "///" + cookieValue1.split("///")[4] + "///" + returnValue + "///" + lang + "///" + timeZone  + "///" + userInfo.getTenantId() + "///" + userInfo.getDeptID() +  "///" + userInfo.getCompanyID();
+				String cInfo = userInfo.getServerName() + "///" + cookieValue1.split("///")[1] + "///" + cookieValue1.split("///")[2]
+						+ "///" + cookieValue1.split("///")[3] + "///" + cookieValue1.split("///")[4] + "///" + returnValue + "///"
+						+ lang + "///" + timeZone  + "///" + userInfo.getTenantId() + "///" + userInfo.getDeptID() +  "///" + userInfo.getCompanyID()
+						+ "///" + Optional.ofNullable(userInfo.getJobId()).orElse("");
+
 				loginCookie = egovFileScrty.encryptAES(cInfo);
 				
 				if (useDbSession) {
@@ -2485,6 +2493,13 @@ public class EzPersonalController extends EgovFileMngUtil {
 		model.addAttribute("useEzTalkNotification", "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useEzTalkNotification", user.getTenantId())));
 		model.addAttribute("useExternalMailServer", "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useExternalMailServer", user.getTenantId())));
 		model.addAttribute("disableItemFinder", new PersonalNotiDisableItemVO.Finder(ezPersonalService.getAllNotiDisableItem(user.getId(), user.getTenantId())));
+
+		String packageType = commonUtil.getPackageType(user.getTenantId());
+		model.addAttribute("packageType",packageType);
+		
+		model.addAttribute("usePassAprLine", "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("usePassAprLine", user.getTenantId())));
+		model.addAttribute("useBallotSystem", "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useBallotSystem", user.getTenantId())));
+		
 		logger.debug("notificationItemTab ended.");
 		return "/ezPersonal/noti/notificationItemTab";
 	}
@@ -2536,7 +2551,6 @@ public class EzPersonalController extends EgovFileMngUtil {
 		return result;
 	}
 
-	// gbp-todo 다른 개발자가 부재중 설정 관련 개발중이라 기존의 로직을 그대로 쓰는 것으로 임시 처리.
 	@PostMapping("/ezPersonal/clearAbsence.do")
 	@ResponseBody
 	public String clearAbsence(@CookieValue("loginCookie") String loginCookie) {
@@ -2561,5 +2575,47 @@ public class EzPersonalController extends EgovFileMngUtil {
 			return "false";
 		}
 		return "true";
+	}
+
+	/**
+	 * 공유결재자 설정 화면 호출 Method
+	 */
+	@RequestMapping(value = "/ezPersonal/manageAutoSave.do", method = RequestMethod.GET)
+	public String manageAutoSave(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req, Locale locale) throws Exception {
+		logger.debug("manageAutoSave started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+
+		String autoSaveFlag =  ezCommonService.getUserConfigInfo(userInfo.getTenantId(), userInfo.getId(), "autoSave");
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("autoSaveFlag", autoSaveFlag);
+		
+		logger.debug("manageAutoSave ended");
+		
+		return "/ezPersonal/persManageAutoSave";
+	}
+
+	/**
+	 * 공유결재자 추가 Method
+	 */
+	@RequestMapping(value = "/ezPersonal/addAutoSave.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String addAutoSave(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
+		logger.debug("addAutoSave started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+
+		String autoSaveTime = req.getParameter("autoSaveTime");
+		String getPropertyValue = ezCommonService.getUserConfigInfo(userInfo.getTenantId(), userInfo.getId(), "autoSave");
+
+		if (!getPropertyValue.equals("")) {
+			ezCommonService.updateUserConfigInfo(userInfo.getTenantId(), userInfo.getId(), "autoSave", autoSaveTime);
+		} else {
+			ezCommonService.insertUserConfigInfo(userInfo.getTenantId(), userInfo.getId(), "autoSave", autoSaveTime);
+		}
+
+		logger.debug("addAutoSave ended");
+		return "OK";
 	}
 }

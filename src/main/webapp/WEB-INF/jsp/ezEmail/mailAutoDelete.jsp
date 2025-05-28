@@ -7,7 +7,8 @@
 	<head>
 		<title>mail_autodelete</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
@@ -95,7 +96,7 @@
 		        var OpenWin = window.open(requestUrl, "mail_selectfolder_Cross", GetOpenWindowfeature(465, 355));
 		        
 		        
-		        try { OpenWin.focus(); } catch (e) { }
+		        try { OpenWin.focus(); } catch (e) {console.log(e);}
 		    }
 		    function getFolder_Complete(mailBoxInfo) {
 		        if (typeof (mailBoxInfo) == "undefined")
@@ -105,6 +106,7 @@
 	        		try {
 	        			parent.parent.frames["left"].mailbox_treeview_reload();
 	        		} catch (e) {
+	        		    console.log(e);
 	        		}
 	        	}
 		        

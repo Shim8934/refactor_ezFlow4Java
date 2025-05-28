@@ -59,7 +59,35 @@ public class ApprGReceiveDocVO {
 	private String writerName;
 	/** 기안자(다국어)*/
 	private String writerName2;
-	
+	/** 양식이름*/
+	private String formID;
+	/* 분리첨부 */
+	private String seperateAttachXml;
+	/* 기안자ID */
+	private String writerId;
+	/* 진행자 이름 */
+	private String processorName;
+	/* 진행자 이름 2*/
+	private String processorName2;
+
+	/** 작성자 부서명 */
+	private String writerDeptName;
+
+	/** 작성자 부서명 2 */
+	private String writerDeptName2;
+
+	public String getWriterDeptName() {
+		return writerDeptName;
+	}
+	public void setWriterDeptName(String writerDeptName) {
+		this.writerDeptName = writerDeptName;
+	}
+	public String getWriterDeptName2() {
+		return writerDeptName2;
+	}
+	public void setWriterDeptName2(String writerDeptName2) {
+		this.writerDeptName2 = writerDeptName2;
+	}
 	public String getCompanyID() {
 		return companyID;
 	}
@@ -234,5 +262,34 @@ public class ApprGReceiveDocVO {
 	public void setWriterName2(String writerName2) {
 		this.writerName2 = writerName2;
 	}
-	
+	public String getFormID() {
+		return formID;
+	}
+	public void setFormID(String formID) {
+		this.formID = formID;
+	}
+	public String getSeperateAttachXml() {
+		return seperateAttachXml;
+	}
+	public void setSeperateAttachXml(String seperateAttachXml) {
+		this.seperateAttachXml = seperateAttachXml;
+	}
+	public String getWriterId() {
+		return writerId;
+	}
+	public void setWriterId(String writerId) {
+		this.writerId = writerId;
+	}
+	public String getProcessorName() { 
+		return processorName; 
+	}
+	public void setProcessorName(String processorName) { 
+		this.processorName = processorName; 
+	}
+	public String getProcessorName2() { 
+		return processorName2; 
+	}
+	public void setProcessorName2(String processorName2) {
+		this.processorName2 = processorName2;
+	}
 }

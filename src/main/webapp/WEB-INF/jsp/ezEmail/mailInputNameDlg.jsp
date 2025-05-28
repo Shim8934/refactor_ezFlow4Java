@@ -6,7 +6,8 @@
 	<head>
 	    <title><spring:message code='ezEmail.t348' /></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	    <link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+	    <link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <script src="${util.addVer('/js/ezEmail/js_cross/string_component.js')}"></script>
@@ -25,15 +26,17 @@
 	                InputValue = parent.inputNameDlg_cross_dialogArguments[0];
 	                ReturnFunction = parent.inputNameDlg_cross_dialogArguments[1];
 	                CancelFunction = parent.inputNameDlg_cross_dialogArguments[2];
-	            } catch (e) { }
+	            } catch (e) {
+	                console.log(e);
+	            }
 	            if (InputValue != "") {
 	                txt_FolderName.value = InputValue;
 	            }
 	            try {
 	                txt_FolderName.focus();
+	            } catch (e) {
+	                console.log(e);
 	            }
-	            catch (e)
-	            { }
 	        }
 	        function btn_ok_onclick() {
 	            var szInput;
@@ -44,13 +47,7 @@
 	                alert("<spring:message code='ezEmail.t349' />");
 	                return;
 	            }
-	            var szCheckPermit = szInput;
-	            szCheckPermit = ReplaceText(szInput, "=", "");
-	
-	            if (szInput != szCheckPermit) {
-	                alert("<spring:message code='ezEmail.t351' />");
-	                return;
-	            }
+
 	            ReturnFunction(txt_FolderName.value);
 	        }
 	        function btn_cancel_onclick() {

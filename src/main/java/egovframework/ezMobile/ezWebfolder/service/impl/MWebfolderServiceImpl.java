@@ -280,6 +280,7 @@ public class MWebfolderServiceImpl implements MWebfolderService {
 		webfolderResult.setFileCount(countInfo.get("fileCount").intValue());
 		webfolderResult.setTotalPages(countInfo.get("totalPage").intValue());
 		webfolderResult.setFolderCount(countInfo.get("folderCount").intValue());
+		Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(user.getLang()));
 		webfolderResult.setFolderName(egovMessageSource.getMessage(folderNameMessageKey,
 				new Locale(commonUtil.getTwoLetterLangFromLangNum(user.getLang()))));
 
@@ -290,6 +291,8 @@ public class MWebfolderServiceImpl implements MWebfolderService {
 		FolderTreeVO folderTree = new FolderTreeVO();
 		folderTree.setFolderLevel("1");
 		folderTree.setFolderName1(egovMessageSource.getMessage(nameKey, new Locale(commonUtil.getTwoLetterLangFromLangNum(lang))));
+		// 2024-12-09 김대현 folderName2에 값이 없어서 모바일 웹폴더 목록리스트에 null이 출력되는 현상 수정 foldername2는 영어로 나오게 수정함
+		folderTree.setFolderName2(egovMessageSource.getMessage(nameKey, new Locale(commonUtil.getTwoLetterLangFromLangNum("2"))));
 
 		return Collections.singletonList(folderTree);
 	}

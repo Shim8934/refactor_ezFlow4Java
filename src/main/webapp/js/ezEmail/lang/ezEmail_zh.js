@@ -41,7 +41,7 @@ var strLang44 = "请选择一个电子邮件。";
 var strLang52 = "在复制邮件时出错。"
 var strLang53 = "已复制";
 var strLang54 = "已删除信箱的信箱和信件将被永久删除 。\n 确定继续吗？"
-var strLang58 = "确定要永久删除此邮件吗？";
+var strLang58 = "一旦删除，此邮件将无法恢复。\n 确定要永久删除此邮件吗？";
 var strLang59 = "确定要删除这条邮件吗？";
 var strLang61 = "拒绝收信登记处理已完成。";
 var strLang62 = "登记到垃圾邮件列表中时，发生错误。";
@@ -247,7 +247,7 @@ var strLang332 = "顶级文件夹不能被删除。";
 var strLang333 = "你确定要永久删除文件夹中的所有文件？";
 var strLang334 = "请选择一个文件夹。";
 var strLang336 = "找不到路径。";
-var strLang337 = "不得在匿名公告栏、照片公告栏或URL链接公告栏上发布邮件/审批文件。";
+var strLang337 = "您只能在普通公告栏和问答公告栏上发帖。";
 var strLang338 = "请登记包含在标题或正文中的单子 例如）\"单词广告\"";
 var strLang339 = "的标题或正文";
 var strLang340 = "所有消息";
@@ -266,6 +266,13 @@ var strLang353 = "存在相同域名或电子邮件地址。";
 var strLang354 = "请输入你的域名。";
 var strLang355 = "超大";
 var strLang359 = "已经移动";
+var strLangLDH01 = "이 메일에 대한 열람을 차단하시겠습니까?";
+var strLangLDH02 = "이 메일에 대한 열람차단을 해제하시겠습니까?";
+var strLangLDH03 = "차단되었습니다.";
+var strLangLDH04 = "차단 중 오류가 발생했습니다.";
+var strLangLDH05 = "해제되었습니다.";
+var strLangLDH06 = "해제 중 오류가 발생했습니다.";
+var strLangLDH07 = "관리자에 의해 열람차단된 메일입니다.";
 var strLangLHM01 = "请输入你的域名。";
 var strLangLHM02 = "您没有管理权限。";
 var strLangLHM03 = "列表的ID未指定";
@@ -307,6 +314,7 @@ var strLangLS02 = "No mail selected. \nAre you sure you want to save all retriev
 var strLangLS03 = "The search results will be downloaded as a single zip file. \nThis process may take a while. Do you want to proceed?"
 var strLangLS04 = ".";
 var strLangLS05 = "';' cannot be contained."
+var strLangAllmailSaveAlert = "선택된 메일이 없습니다. \n메일을 선택하거나 메일 검색 후 저장해 주세요."
 
 /* 2018-07-03 홍승비 - 승인게시물, 커뮤니티 답변메일 companyID 관련 처리*/
 var strLangHSB01 = "此公告 在 ";
@@ -340,6 +348,59 @@ var strLangKWCHd01 = "An error occurred while saving security HWP document. Plea
 
 var strLangNJK01 = "Restricted special characters for an email folder name(";
 var strLangNJK02 = "are included.";
+
+//승인메일
+var strLangAppr01 = "因为没有全体管理者，所以不能申请全公司邮件批准。";
+var strLangAppr02 = "批准者不存在。";
+var strLangAppr03 = "发生批准邮件错误";
+var strLangAppr04 = "批准邮件不能预约发送。";
+var strLangAppr05 = "发给全公司的邮件要经过经理的批准才能真正发送。 确定要发送吗？";
+
+// 스팸신고
+var strLangHSG01 = "由于找不到电子邮件地址，无法进行垃圾邮件举报。";
+var strLangHSG02 = "垃圾邮件举报未能成功处理。";
+
+// 2024.04.29 한슬기 : 메일 관련 메시지
+var strLangHSG03 = "主题栏为空。";
+
+var strLangKDH01 = "收信确认";
+
+//new ui
+const strLangFolderManage = "管理文件夹";
+const strLangSubscribe = "订阅";
+const strLangPlzCheckSearchInput = "请输入搜索词。";
+const strLangSearchFetchError = "获取搜索结果时出错 。 -";
+const strLangNoSuchDept = "没有搜索到的部门。";
+const strLangDistributionFetchError = "获取公用分配组列表时发生错误 。 -";
+const strLangAddJobSimplyMark = "(谦) ";
+const strLangCompany = "公司";
+const strLangDistributionAdd = "添加发布列表";
+const strLangAddressFetchError = "读取地址列表时出错";
+const strLangPlzSelectGroupMail = "请选择群发邮件。";
+const strLangPlzSelectDistribution = "请选择公用分配组。";
+const strLangNotAllowedSpecialChar = "名称中不能输入相应的特殊字符";
+
+const strLangSelectDept = "选择部门";
+const strLangSelectTitle = "职位选择";
+const strLangSelectRole = "选岗";
+const strLangPlzCheckSearchNameInput = "请输入要搜索的名称。";
+const strLangOrgFetchError = "获取组织图时发生错误";
+const strLangSelectProxyApproverWarning = "请选择一名指定为代理裁决者";
+
+const strLangTempSaveAttachmentsWarning = "保存时将删除附加文件。您要保存吗？";
+
+var strNoSubject = "主题栏为空。"; 
+var strSendOK = "邮件已成功发送。";
+var strUreadDelChk = "您确定要删除该邮箱中的所有未读邮件吗？"
+var strUreadDelSearch = "您确定要删除搜索结果中的所有未读邮件吗？"
+var strUreadDelPermenant = "删除后邮件无法恢复。\n您确定要永久删除邮箱中的所有未读邮件吗？";
+var strUreadDelSearchPermenant = "删除后邮件无法恢复。\n您确定要永久删除搜索结果中的所有未读邮件吗？";
+
+const strLangTagLimit = "最多可以注册5个标签。";
+const strLangTagadd = "메일에 태그 추가 :";
+
+const strLangChangeButton = "Switch";
+const strLangChangeLimit = "Cannot switch because the attachment size exceeds the limit.";
 
 function GetLocalTime(Offset , pDateTime)
 {

@@ -61,21 +61,25 @@ public class EzLadderGWController {
 		int block = newBlock;
 		pages[0] = (int) Math.ceil(total/(double) block);	// totalPage
 		pages[0] = pages[0] == 0 ? 1 : pages[0];
-		if( currPage > pages[0]) {
+		
+		if (currPage > pages[0]) {
 			currPage = pages[0];
 		}
+		
 		pages[1] = Math.multiplyExact(Math.subtractExact(currPage, 1), block); // startPoint
 		pages[2] = 0;	//endPoint
-		if(currPage == pages[0]) {
+		
+		if (currPage == pages[0]) {
 			pages[2] = total%block;
-			if(pages[2]==0) {
+			if (pages[2] == 0) {
 				pages[2] = block;
 			}
 		} else {
-			pages[2] =block;
+			pages[2] = block;
 		}
+		
 		pages[3] = currPage; // currPage
-		return  pages;
+		return pages;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -102,12 +106,12 @@ public class EzLadderGWController {
 		
 		try {
 			List<LadderVO> list;
-			if(searchSelect.equals("")) {	// 비검색
-				if(mode.equals("part")){		// 일부 참여자 선택
+			if (searchSelect.equals("") || searchSelect.equalsIgnoreCase("none")) {	// 비검색
+				if (mode.equals("part")) {		// 일부 참여자 선택
 					totalLadder = ezLadderService.partLadderCount(vo);
 					pages = paging(page, totalLadder, listNumPerPage);
 					list = ezLadderService.getPartLadderList(vo, pages[1], pages[2], sort, sortFlag);
-				} else if(mode.equals("pre")) { // 이전 사다리 리스트 출력 
+				} else if (mode.equals("pre")) { // 이전 사다리 리스트 출력 
 					listNumPerPage = 20;
 					totalLadder = ezLadderService.ladderCount(vo, mode);
 					pages = paging(page, totalLadder, listNumPerPage);
@@ -118,7 +122,7 @@ public class EzLadderGWController {
 					list = ezLadderService.getLadderList(vo, pages[1], pages[2], mode, sort, sortFlag);
 				}
 			} else {							// 검색
-				if(mode.equals("pre")) {
+				if (mode.equals("pre")) {
 					listNumPerPage = 20;
 				}
 				List<String> allData = new ArrayList<String>();
@@ -139,6 +143,7 @@ public class EzLadderGWController {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("web G/W LADDER [GET /rest/ladder/ladder-list/users/" + userId + "] ended.");
@@ -156,7 +161,6 @@ public class EzLadderGWController {
 		JSONObject result = new JSONObject();
 		
 		try {
-			
 			List<LadderLineVO> resultUser = ezLadderService.selectSearchUser(searchUserName, ladVO);
 			
 			result.put("status", "ok");
@@ -165,6 +169,7 @@ public class EzLadderGWController {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("web G/W LADDER [GET /rest/ladder/ladders/writers/" + writerId + "/searchUser] ended.");
@@ -215,6 +220,7 @@ public class EzLadderGWController {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("web G/W LADDER [POST /rest/ladder/ladders/writers/" + writerId + "] ended.");
@@ -242,6 +248,7 @@ public class EzLadderGWController {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("web G/W LADDER [GET /rest/ladder/BMs/users/" + userId + "] ended.");
@@ -269,6 +276,7 @@ public class EzLadderGWController {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("web G/W LADDER [GET /rest/ladder/BMs/" + ladderBmId + "/users/" + userId + "] ended.");
@@ -324,6 +332,7 @@ public class EzLadderGWController {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("web G/W LADDER [PUT /rest/ladder/BMs/" + ladderBmId + "/users/" + userId + "] ended.");
@@ -351,6 +360,7 @@ public class EzLadderGWController {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("web G/W LADDER [DELETE /rest/ladder/BMs/" + ladderBmId + "/users/" + userId + "] ended.");
@@ -379,6 +389,7 @@ public class EzLadderGWController {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("web G/W LADDER [GET /rest/ladder/ladders/" + ladderId + "/comment/users/" + userId + "] ended.");
@@ -415,6 +426,7 @@ public class EzLadderGWController {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("web G/W LADDER [POST /rest/ladder/ladders/" + ladderId + "/comment/users/" + userId + "] ended.");
@@ -444,6 +456,7 @@ public class EzLadderGWController {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("web G/W LADDER [PUT /rest/ladder/ladders/" + ladderId + "/comment/users/" + userId + "] ended.");
@@ -472,6 +485,7 @@ public class EzLadderGWController {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("web G/W LADDER [DELETE /rest/ladder/ladders/" + ladderId + "/comment/users/" + userId + "] ended.");
@@ -523,6 +537,7 @@ public class EzLadderGWController {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("web G/W LADDER [PUT /rest/ladder/ladder-list/users/" + userId + "] ended.");
@@ -559,6 +574,7 @@ public class EzLadderGWController {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("web G/W LADDER [Get /rest/ladder/ladders/" + ladderId + "/users/" + userId + "] ended.");
@@ -595,6 +611,7 @@ public class EzLadderGWController {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("web G/W LADDER [GET /rest/ladder/delete/" + userId + "] ended.");
@@ -629,6 +646,7 @@ public class EzLadderGWController {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("web G/W LADDER [PUT /rest/ladder/ladders/" + ladderId + "users/" + userId + "] ended.");

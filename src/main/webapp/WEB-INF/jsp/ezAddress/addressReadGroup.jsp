@@ -6,7 +6,8 @@
 	<head>
 		<title><spring:message code='ezAddress.t302' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="${util.addVer('ezAddress.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -36,6 +37,7 @@
 			        try {
 			        	ReturnFunction = opener.address_group_edit_dialogArguments[0];
 			        } catch (e) {
+			            console.log(e);
 			        }
 			    }
 			    

@@ -16,7 +16,8 @@
 			</c:otherwise>
 		</c:choose>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="${util.addVer('ezPersonal.e3', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -28,6 +29,7 @@
 		    var tagName = "${tagName}";
 		    var ReturnFunction;
 		    var userID = "${userInfo.id}";
+		    var companyID = "${companyID}";
 		    window.onload = function () {
 		        try {
 		            ReturnFunction = parent.selectperson_cross_dialogArguments[1];
@@ -72,7 +74,13 @@
 		            	
 		                createNodeAndInsertText(xmlpara, objNode, "PROP", "");
 		            }
-		            else {
+					else if (type === "EMP") {
+						createNodeInsert(xmlpara, objNode, "DATA");
+						createNodeAndInsertText(xmlpara, objNode, "DEPTID", companyID);
+						createNodeAndInsertText(xmlpara, objNode, "TOPID", companyID);
+						createNodeAndInsertText(xmlpara, objNode, "ADMINCHK", true);
+						createNodeAndInsertText(xmlpara, objNode, "PROP", "");
+					} else {
 		                createNodeInsert(xmlpara, objNode, "DATA");
 		                createNodeAndInsertText(xmlpara, objNode, "DEPTID", "${userInfo.deptID}");
 		                createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top");
@@ -223,7 +231,7 @@
 		    		data : {
 		    			search : document.getElementById("search_type").value + "::" + document.getElementById("keyword").value.trim(),
 		    			cell   : "company;description;displayname;title;telephonenumber;extensionAttribute5",
-		    			prop   : "department",
+		    			prop   : "department;userType",
 		    			type   : "user"
 		    		},
 		    		success: function(xml){

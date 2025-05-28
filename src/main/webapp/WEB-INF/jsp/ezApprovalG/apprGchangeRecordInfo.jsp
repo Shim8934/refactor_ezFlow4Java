@@ -7,7 +7,8 @@
 <head>
 <title><spring:message code='ezApprovalG.t969'/></title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 <script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -35,17 +36,9 @@
         var ua = navigator.userAgent;
         if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
             KeEventControl(document.getElementById("txtTitle"));
-            KeEventControl(document.getElementById("txtRegY"));
-            KeEventControl(document.getElementById("txtRegM"));
-            KeEventControl(document.getElementById("txtRegD"));
-            KeEventControl(document.getElementById("txtRegH"));
-            KeEventControl(document.getElementById("txtRegMi"));
             KeEventControl(document.getElementById("txtTotalPage"));
             KeEventControl(document.getElementById("txtAprMemberTitle"));
             KeEventControl(document.getElementById("txtDrafter"));
-            KeEventControl(document.getElementById("txtExeY"));
-            KeEventControl(document.getElementById("txtExeM"));
-            KeEventControl(document.getElementById("txtExeD"));
             KeEventControl(document.getElementById("txtReceiptMember"));
             KeEventControl(document.getElementById("txtChangeReason"));
             KeEventControl(document.getElementById("txtLimitRange"));
@@ -137,28 +130,10 @@
             if (!g_ArrPageInitFlag[0])
             {
                 txtTitle.value = getNodeText(objXml.documentElement.getElementsByTagName("TITLE")[0]);
-                var RegDate = getNodeText(objXml.documentElement.getElementsByTagName("REGISTERDATERAW")[0]);
-
-                var reHipon = /-/g;
-                var reSemiColon = /:/g;
-                var reSpace = / /g;
-
-                RegDate = RegDate.replace(reHipon, "").replace(reSemiColon, "").replace(reSpace, "").replace("<spring:message code='ezApprovalG.t971'/>", "").replace("<spring:message code='ezApprovalG.t972'/>", "");
-
-                if (RegDate.length == 12 || RegDate.length == 14) {
-                    txtRegY.value = RegDate.slice(0, 4);
-                    txtRegM.value = RegDate.slice(4, 6);
-                    txtRegD.value = RegDate.slice(6, 8);
-                    txtRegH.value = RegDate.slice(8, 10);
-                    txtRegMi.value = RegDate.slice(10, 12);
-                }
-                else if (RegDate.length == 13) {
-                    txtRegY.value = RegDate.slice(0, 4);
-                    txtRegM.value = RegDate.slice(4, 6);
-                    txtRegD.value = RegDate.slice(6, 8);
-                    txtRegH.value = RegDate.slice(8, 9);
-                    txtRegMi.value = RegDate.slice(9, 11);
-                }
+                var regDateTemp = getNodeText(objXml.documentElement.getElementsByTagName("REGISTERDATERAW")[0]);
+                regDate.value = regDateTemp.substring(0, 10);
+                regTime.value = regDateTemp.substring(11, 16);
+               
                 txtTotalPage.value = getNodeText(objXml.documentElement.getElementsByTagName("NUMOFPAGE")[0]);
 
                 if (UserLang == "1") {
@@ -182,12 +157,7 @@
                     txtReceiptMember2.value = getNodeText(objXml.documentElement.getElementsByTagName("RECEIPTMEMBER")[0]);
 
                 }
-                var ExeDate = getNodeText(objXml.documentElement.getElementsByTagName("EXECUTEDATE")[0]);
-                if (ExeDate.length == 8) {
-                    txtExeY.value = ExeDate.slice(0, 4);
-                    txtExeM.value = ExeDate.slice(4, 6);
-                    txtExeD.value = ExeDate.slice(6, 8);
-                }
+                    exeDate.value = getNodeText(objXml.documentElement.getElementsByTagName("EXECUTEDATE")[0]);
 
 
                 var EletronicFlag = getNodeText(objXml.documentElement.getElementsByTagName("ELECTRONICRECFLAG")[0]);
@@ -236,16 +206,10 @@
                 txtTitle.disabled = true;
                 txtTitle.style.backgroundColor = "#E5E5E5";
 
-                txtRegY.disabled = true;
-                txtRegY.style.backgroundColor = "#E5E5E5";
-                txtRegM.disabled = true;
-                txtRegM.style.backgroundColor = "#E5E5E5";
-                txtRegD.disabled = true;
-                txtRegD.style.backgroundColor = "#E5E5E5";
-                txtRegH.disabled = true;
-                txtRegH.style.backgroundColor = "#E5E5E5";
-                txtRegMi.disabled = true;
-                txtRegMi.style.backgroundColor = "#E5E5E5";
+                regDate.disabled = true;
+                regDate.style.backgroundColor = "#E5E5E5";
+                regTime.disabled = true;
+                regTime.style.backgroundColor = "#E5E5E5";
 
                 txtAprMemberTitle.disabled = true;
                 txtAprMemberTitle.style.backgroundColor = "#E5E5E5";
@@ -253,12 +217,8 @@
                 txtDrafter.disabled = true;
                 txtDrafter.style.backgroundColor = "#E5E5E5";
 
-                txtExeY.disabled = true;
-                txtExeY.style.backgroundColor = "#E5E5E5";
-                txtExeM.disabled = true;
-                txtExeM.style.backgroundColor = "#E5E5E5";
-                txtExeD.disabled = true;
-                txtExeD.style.backgroundColor = "#E5E5E5";
+                exeDate.disabled = true;
+                exeDate.style.backgroundColor = "#E5E5E5";
 
                 txtReceiptMember.disabled = true;
                 txtReceiptMember.style.backgroundColor = "#E5E5E5";
@@ -271,16 +231,10 @@
                 break;
 
             case "2":
-                txtRegY.disabled = true;
-                txtRegY.style.backgroundColor = "#E5E5E5";
-                txtRegM.disabled = true;
-                txtRegM.style.backgroundColor = "#E5E5E5";
-                txtRegD.disabled = true;
-                txtRegD.style.backgroundColor = "#E5E5E5";
-                txtRegH.disabled = true;
-                txtRegH.style.backgroundColor = "#E5E5E5";
-                txtRegMi.disabled = true;
-                txtRegMi.style.backgroundColor = "#E5E5E5";
+                regDate.disabled = true;
+                regDate.style.backgroundColor = "#E5E5E5";
+                regTime.disabled = true;
+                regTime.style.backgroundColor = "#E5E5E5";
 
                 txtAprMemberTitle.disabled = true;
                 txtAprMemberTitle.style.backgroundColor = "#E5E5E5";
@@ -288,12 +242,8 @@
                 txtDrafter.disabled = true;
                 txtDrafter.style.backgroundColor = "#E5E5E5";
 
-                txtExeY.disabled = true;
-                txtExeY.style.backgroundColor = "#E5E5E5";
-                txtExeM.disabled = true;
-                txtExeM.style.backgroundColor = "#E5E5E5";
-                txtExeD.disabled = true;
-                txtExeD.style.backgroundColor = "#E5E5E5";
+                exeDate.disabled = true;
+                exeDate.style.backgroundColor = "#E5E5E5";
 
                 txtReceiptMember.disabled = true;
                 txtReceiptMember.style.backgroundColor = "#E5E5E5";
@@ -360,13 +310,7 @@
     }
     function InitPublicCode2(pCode) {
         var objCode = new String(pCode);
-		if (objCode == "N") {
-// 			document.getElementsByName("rdoSecType2")[1].checked = true;
-			$("#rdoSecType2N").prop("checked", true)
-		} else {
-// 			document.getElementsByName("rdoSecType2")[0].checked = true;
-			$("#rdoSecType2Y").prop("checked", true)
-		}
+        document.getElementById("rdoSecType2").value = objCode;
     }
     function GetRecordSimpleInfo(pRecID) {
         var XmlHttp = createXMLHttpRequest();
@@ -396,13 +340,17 @@
     }
 
     function btnReset_onclick() {
-        // 2024-02-20 양지혜 - 재입력 시 선택/수정 내용을 초기화
-        var checkboxes = document.querySelectorAll('input[type="checkbox"][name^="special"], input[type="checkbox"][name^="selSecLevel"]');
-        checkboxes.forEach(function(checkbox) {
-          checkbox.checked = false;
-        });
-
-        g_ArrPageInitFlag[1] = false;
+        if (g_ModifyFlag == "0") {
+            g_ArrPageInitFlag[0] = false;
+        } else if (g_ModifyFlag == "1") {
+            // 2024-08-23 전인하 - 분류등록사항 재입력 시에만 체크박스 내용 초기화
+            // 2024-02-20 양지혜 - 재입력 시 선택/수정 내용을 초기화
+            var checkboxes = document.querySelectorAll('input[type="checkbox"][name^="special"], input[type="checkbox"][name^="selSecLevel"]');
+            checkboxes.forEach(function(checkbox) {
+              checkbox.checked = false;
+            });
+            g_ArrPageInitFlag[1] = false;
+        }
         InitRecordInfo();
 
         document.getElementById("txtChangeReason").value = "";
@@ -433,15 +381,11 @@
             return;
         }
         
-        /* 2020-09-11 홍승비 - 월과 일의 최대 입력 가능 숫자를 제한 */
-        if (txtExeM.value > 12) {
-        	OpenAlertUI("<spring:message code='ezApprovalG.hsbRG01'/>");
-            return;
-        }
-        
-        if (txtExeD.value > 31) {
-        	OpenAlertUI("<spring:message code='ezApprovalG.hsbRG02'/>");
-            return;
+        if (g_bRecAdmin) {
+            if (regDate.value.trim() == "" || regTime.value.trim() == "") {
+                alert("<spring:message code='ezApprovalG.t1045'/>");
+                return;
+            }
         }
 
         if (ChangeCabinetInfo()) {
@@ -654,11 +598,10 @@
     
     function GetPublicCode2() {
     	var publicCode2 = "";
-    	if (document.getElementsByName("rdoSecType2")[0].checked) {
-    		publicCode2 = "Y";
-    	} else {
-    		publicCode2 = "N";
-    	}
+        var rdoSecType2SelectBox = document.getElementById("rdoSecType2");
+        if (rdoSecType2SelectBox){
+          publicCode2 = rdoSecType2SelectBox.value;
+        }
     	
     	return publicCode2;
     }
@@ -702,16 +645,9 @@
     </tr>
     <tr>
       <th><spring:message code='ezApprovalG.t831'/></th>
-      <td><input type="text" style="height:25px;" name="txtRegY" id="txtRegY" maxlength = "4" size="4" onkeypress="return KeEventControl2(this);" onkeydown="return KeEventControl2(this);" onkeyup="return KeEventControl2(this);">
-        <spring:message code='ezApprovalG.t456'/>
-        <input type="text" style="height:25px;" name="txtRegM"  id="txtRegM" maxlength = "2" size="2" onkeypress="return KeEventControl2(this);" onkeydown="return KeEventControl2(this);" onkeyup="return KeEventControl2(this);">
-        <spring:message code='ezApprovalG.t968'/>
-        <input type="text" style="height:25px;" name="txtRegD"  id="txtRegD" maxlength = "2" size="2" onkeypress="return KeEventControl2(this);" onkeydown="return KeEventControl2(this);" onkeyup="return KeEventControl2(this);">
-        <spring:message code='ezApprovalG.t662'/>
-        <input type="text" style="height:25px;" name="txtRegH"  id="txtRegH" maxlength = "2" size="2" onkeypress="return KeEventControl2(this);" onkeydown="return KeEventControl2(this);" onkeyup="return KeEventControl2(this);">
-        <spring:message code='ezApprovalG.t977'/>
-        <input type="text" style="height:25px;" name="txtRegMi"  id="txtRegMi" maxlength = "2" size="2" onkeypress="return KeEventControl2(this);" onkeydown="return KeEventControl2(this);" onkeyup="return KeEventControl2(this);">
-        <spring:message code='ezApprovalG.t978'/></td>
+      <td>
+        <input type="date" class="text" name="regDate" id="regDate" /><input type="time" name="regTime" id="regTime" />
+      </td>
     </tr>
     <tr>
       <th ><spring:message code='ezApprovalG.t979'/></th>
@@ -730,12 +666,9 @@
     </tr>
     <tr>
       <th ><spring:message code='ezApprovalG.t863'/></th>
-      <td ><input type="text" style="height:25px;" name="txtExeY" id="txtExeY" maxlength = "4" size="4" onkeypress="return KeEventControl2(this);" onkeydown="return KeEventControl2(this);" onkeyup="return KeEventControl2(this);">
-        <spring:message code='ezApprovalG.t456'/>
-        <input type="text" style="height:25px;" name="txtExeM"  id="txtExeM" maxlength = "2" size="2" onkeypress="return KeEventControl2(this);" onkeydown="return KeEventControl2(this);" onkeyup="return KeEventControl2(this);">
-        <spring:message code='ezApprovalG.t968'/>
-        <input type="text" style="height:25px;" name="txtExeD"  id="txtExeD" maxlength = "2" size="2" onkeypress="return KeEventControl2(this);" onkeydown="return KeEventControl2(this);" onkeyup="return KeEventControl2(this);">
-        <spring:message code='ezApprovalG.t643'/></td>
+      <td>
+        <input type="date" class="text" name="exeDate" id="exeDate" />
+      </td>
     </tr>
     <tr>
       <th ><spring:message code='ezApprovalG.t864'/></th>
@@ -810,13 +743,19 @@
         </table></td>
     </tr>
     <tr>
-      <th ><spring:message code='ezApprovalG.t109'/></th>
-      <td><Input type="radio" name="rdoSecType2" id="rdoSecType2Y" value="Y" checked >
+      <th ><spring:message code='ezApprovalG.t944'/></th>
+      <td>
+        <select id="rdoSecType2" name="rdoSecType2" style="WIDTH: 85px">
+          <option value="Y"><spring:message code='ezApprovalG.kmh03'/></option>
+          <option value="B"><spring:message code='ezApprovalG.kmh04'/></option>
+          <option value="N"><spring:message code='ezApprovalG.kmh05'/></option>
+        </select>
+        <%--<Input type="radio" name="rdoSecType2" id="rdoSecType2Y" value="Y" checked >
         <span style="vertical-align:middle;"><spring:message code='ezApprovalG.t47'/></span>  
         <Input type="radio"  name="rdoSecType2" id="rdoSecType2N" value="N">
         <span style="vertical-align:middle;"><spring:message code='ezApprovalG.t988'/></span>
         <Select id="selSecLevel" style="width:60px;display:none">
-        </Select>
+        </Select>--%>
       </td>
     </tr>
     

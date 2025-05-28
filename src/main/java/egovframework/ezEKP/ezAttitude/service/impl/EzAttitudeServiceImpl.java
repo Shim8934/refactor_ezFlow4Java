@@ -371,6 +371,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		if (lang.equals("1")) {
 			lang = "";
+		}else {
+			lang = "2";
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -716,8 +718,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("searchGubun", searchGubun);
 		map.put("limit", limit);
 		map.put("listSize", Integer.parseInt(listSize));
-		map.put("orderCell", orderCell);
-		map.put("orderOption", orderOption);
+		map.put("orderCell", orderCell.toUpperCase()); // 이름(DISPLAYNAME), 직위(TITLE), 부서(DESCRIPTION), 근무시간(WORKSTARTTIME), 구분(GUBUN)
+		map.put("orderOption", orderOption.toUpperCase()); // ASC, DESC
 		map.put("offsetMin", offsetMin);
 		map.put("startRow", limit + 1);
 		map.put("endRow", limit + Integer.parseInt(listSize));
@@ -824,19 +826,30 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		}
 		map.put("lang", lang);
 		map.put("offset", offset);
-		map.put("startPoint", startPoint);
-		map.put("endPoint", endPoint);
+		
+		if (startPoint != null) {
+			map.put("startPoint", Integer.parseInt(startPoint));
+		}
+		if (endPoint != null) {
+			map.put("endPoint", Integer.parseInt(endPoint));
+		}
+		
 		map.put("type", type);
+		
 		if (startPoint != null && endPoint != null && !startPoint.equals("") && !endPoint.equals("")) {
 			map.put("startRow", Integer.parseInt(startPoint) + 1);
 			map.put("endRow", Integer.parseInt(startPoint) + Integer.parseInt(endPoint));
 		}
 		
-		if (adminFlag.equals("false")){
+		if (adminFlag.equals("false")) {
 			map.put("userId", userId);
 		}
-		if (order !=null) {
-			map.put("order", order.trim());
+		
+		/* 2024-07-23 홍승비 - SQL Injection 수정 > $ 기호 제거, 정렬 조건 분리 */
+		// 일자(START_DATE), 신청자(WRITER_NAME), 신청부서(WRITER_DEPT_NAME), 승인상태(APPR_STATUS), 승인자(APPR_USER_NAME), 신청일자(APPL_DATE)
+		if (order != null && !order.trim().equals("")) {
+			map.put("orderColumn", order.trim().split(" ")[0]);
+			map.put("orderSort", order.trim().split(" ")[1]);
 		}
 		
 		List<AttitudeApplicationVO> attAppList = ezAttitudeDAO.getUsersModiyAtt(map); 
@@ -1117,8 +1130,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("searchAttitudeType", searchAttitudeType);
 		map.put("searchStartDate", searchStartDate);
 		map.put("searchEndDate", searchEndDate);
-		map.put("orderCell", orderCell);
-		map.put("orderOption", orderOption);
+		map.put("orderCell", orderCell.toUpperCase());
+		map.put("orderOption", orderOption.toUpperCase());
 		map.put("listSize", StringUtils.isBlank(listSize) ? null : Integer.parseInt(listSize));
 		map.put("offsetMin", offsetMin);
 		map.put("companyId", companyId);
@@ -1910,7 +1923,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 	@Override
 	public List<AttitudeAuthorVO> getAttitudeAuthDeptList(int tenantId, String companyId,
-			String userId, String isAllDept, String primary) throws Exception {
+			String userId, String isAllDept, String lang) throws Exception {
 		logger.debug("getAttitudeAuthDeptList started");
 		
 		List<AttitudeAuthorVO> list = new ArrayList<AttitudeAuthorVO>();
@@ -1920,10 +1933,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("userId", userId);
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
-		if (primary.equals("1")) {
-			primary = "";
-		}
-		map.put("primary", primary);
+		map.put("lang", lang);
 		
 		if (!isAllDept.equals("Y")) {
 			list = ezAttitudeDAO.getAttitudeAuthDeptList(map);
@@ -2086,8 +2096,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("searchTitle", searchTitle);
 		map.put("searchStartDate", searchStartDate);
 		map.put("searchEndDate", searchEndDate);
-		map.put("orderCell", orderCell);
-		map.put("orderOption", orderOption);
+		map.put("orderCell", orderCell.toUpperCase());
+		map.put("orderOption", orderOption.toUpperCase());
 		map.put("listSize", StringUtils.isBlank(listSize) ? null : Integer.parseInt(listSize));
 		map.put("offsetMin", commonUtil.getMinuteUTC(offset));
 		map.put("companyId", companyId);
@@ -2163,6 +2173,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		logger.debug("insertAdminAttHistory ended.");
 	}
 	
+	/* 2024-07-25 홍승비 - 미사용 메서드 주석처리 */
+	/*
 	@Override
 	public String getSearchList(String pSearchList, String pCellList, String pPropList, String pClass, int pLimit, String primary, int tenantID) throws Exception {
 		logger.debug("getSearchList started");
@@ -2293,140 +2305,77 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		return memberlist2.toString();
 	}
+	*/
 	
     @Override
     public String getSearchListPagination(String pSearchList, String pCellList, String pPropList, String pClass, int pLimit, String pLangCode, String page, int tenantID, List<String> deptIdList) throws Exception {
     	logger.debug("getSearchListPagination started");
 
-    	String strSQL = "";
-    	int i = 0;
-    	String[] searchList;
-    	String[] searchInfo;
+    	String searchColumn;
+    	String searchParam = "";
     	String ListInfo = "";
-    	String[] searchParam = null;
-    	String type = "";
     	StringBuilder memberlist2 = null;
+    	Map<String , Object> map = new HashMap<String , Object>();
 
     	try {
+    		// 2024-07-25 기준으로 근태입력관리 > 근태입력대상 설정 기능의 조직도 검색조건은 하나만 전달됨 (검색칼럼::검색어 형태) 
     		if (!pSearchList.equals("")) {
-    			pSearchList = pSearchList.replace(";;", "##");
-    			pSearchList = pSearchList.replace("::", "@@");
-    			searchList  = pSearchList.split("##");
-
-    			searchParam = new String[searchList.length];
-
-    			logger.debug("searchList.length=" + searchList.length);
-
-    			for (i = 0; i < searchList.length; i++) {
-    				searchInfo = searchList[i].split("@@");
-    				searchParam[i] = searchInfo[1].replace("'", "\\'");
-                    String escapedSearchParam = searchInfo[1].replace("%", "\\%").replace("'", "\\'");
-    				
-    				if (i == 0) {
-    					if (checkSearchField(searchInfo[0])) {
-    						if (searchInfo[0].toUpperCase().equals("DISPLAYNAME") && searchParam[0].toString().equals(":")){
-    							strSQL = strSQL + " WHERE (" + searchInfo[0].toLowerCase() + " = UPPER('" + searchParam[i] + "') OR " + searchInfo[0].toLowerCase() + "2 = UPPER('" + searchParam[i] + "'))";
-    							searchParam[0] = searchParam[0].substring(0, searchParam[0].length() - 1);
-    						} else {
-    							strSQL = strSQL + " WHERE (" + searchInfo[0].toLowerCase() + " LIKE  '%" + escapedSearchParam + "%' OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%')";
-    						}
-    					} else {
-    						if (searchInfo[0].indexOf("EXACT_") == 0) {
-    							strSQL = strSQL + " WHERE " + searchInfo[0].substring(6).toLowerCase() + "=UPPER('" + searchParam[i] + "') ";
-    						} else if (searchInfo[0].indexOf("LEFT_") == 0) {
-    							strSQL = strSQL + " WHERE " + searchInfo[0].substring(5).toLowerCase() + " LIKE '" + escapedSearchParam + "%' ";
-    						} else if (searchInfo[0].indexOf("RIGHT_") == 0) {
-    							strSQL = strSQL + " WHERE " + searchInfo[0].substring(5).toLowerCase() + " LIKE '%" + escapedSearchParam + "%'";
-    						} else {
-    							strSQL = strSQL + " WHERE " + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%'";
-    						}
-    					}
-    				} else {
-    					if (checkSearchField(searchInfo[0])) {
-    						strSQL = strSQL + " AND (" + searchInfo[0].toLowerCase() + " LIKE  '%" + escapedSearchParam + "%' OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%')";
-    					} else {
-    						if (searchInfo[0].indexOf("EXACT_") == 0) {
-    							strSQL = strSQL + " AND " + searchInfo[0].substring(6).toLowerCase() + "=UPPER('" + searchParam[i] + "') ";
-    						} else if (searchInfo[0].indexOf("LEFT_") == 0) {
-    							strSQL = strSQL + " AND " + searchInfo[0].substring(5).toLowerCase() + " LIKE '" + escapedSearchParam + "%' ";
-    						} else if (searchInfo[0].indexOf("RIGHT_") == 0) {
-    							strSQL = strSQL + " AND " + searchInfo[0].substring(5).toLowerCase() + " LIKE '%" + escapedSearchParam + "%'";
-    						} else {
-    							strSQL = strSQL + " AND " + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%'";
-    						}
-    					}
-    				}
-    			}
+    			/* 2024-07-25 홍승비 - SQL Injection 수정 > 검색조건을 전체 문자열이 아닌 map으로 전달하도록 수정, 불필요한 검색분기 제거 (전부 LIKE로 비교) */
+    			searchColumn = pSearchList.split("::")[0].toUpperCase(); // 검색칼럼
+    			searchParam = pSearchList.split("::")[1].replace("%", "\\%").replace("'", "\\'"); // 검색조건 값 (검색어)
+    			
+    			map.put("v_SEARCHCOL", searchColumn);
+    			map.put("v_SEARCHPARAM", searchParam);
     		}
-
-    		if (pClass.equals("user") || pClass.equals("all")) {
-    			strSQL = strSQL.replace("cn", "a.cn");
-    			strSQL = strSQL.replace("title", "a.title");
-
-    			type = "U";
-    		} else {
-    			type = "G";
-    		}
-
+    		
     		if (page == null || page.equals("")) {
     			page = "1";
     		}
-
+    		
     		int startRow = (Integer.parseInt(page) - 1) * 50 + 1;
     		int endRow = Integer.parseInt(page) * 50 + 1;
-
-    		Map<String , Object> map = new HashMap<String , Object>();
-
-    		map.put("strSQL" , strSQL);
+    		
     		map.put("deptIdList", deptIdList);
-    		map.put("type", type);
-    		map.put("class", pClass);
     		map.put("startRow", startRow);
     		map.put("endRow", endRow);
     		map.put("v_TENANT_ID", tenantID);
     		map.put("startRowForMySQL", startRow - 1);
-    		map.put("count", 50);              
-
-    		logger.debug("strSQL=" + strSQL);
-
+    		map.put("count", 50);
+    		
     		List<OrganDeptVO> list = ezAttitudeDAO.attOrganSearchList(map);
 
-    		if (pClass.equals("user")) {
-    			int totalcount = ezAttitudeDAO.getSearchListCount(map);
-    			memberlist2 = new StringBuilder("<LISTVIEWDATA>");
-    			memberlist2.append("<TOTALCOUNT>" + totalcount + "</TOTALCOUNT><ROWS>");
-    		} else {
-    			memberlist2 = new StringBuilder("<LISTVIEWDATA><ROWS>");
-    		}
+			int totalcount = ezAttitudeDAO.getSearchListCount(map);
+			memberlist2 = new StringBuilder("<LISTVIEWDATA>");
+			memberlist2.append("<TOTALCOUNT>" + totalcount + "</TOTALCOUNT><ROWS>");
 
     		for (int j = 0; j < list.size(); j++) {
     			Map<String, Object> map1 = new HashMap<String, Object>();           
     			OrganDeptVO organVO = list.get(j);
     			Object result = null;           
-
+    			
     			if (organVO.getCn() != null && !organVO.getCn().equals("")) {
     				StringBuilder sb = new StringBuilder();
     				sb.append("<DATA>");
-
-    				if (organVO.getType().equals("user")) {
-    					map1.put("v_CN", organVO.getCn());
-    					map1.put("v_DEPTCD", organVO.getDisplayName());
-    					map1.put("v_LANGDATA", pLangCode);
-    					map1.put("v_TENANT_ID", tenantID);
-
-    					result = ezOrganDAO.getTBLUserMaster(map1);                 
-    				} else {
-    					map1.put("v_CN", organVO.getCn());
-    					map1.put("v_LANGDATA", pLangCode);
-    					map1.put("v_TENANT_ID", tenantID);
-
-    					result = ezOrganDAO.getTBLDeptMaster(map1);                 
-    				}
-
+    				
+    				// 검색한 결과 
+					map1.put("v_CN", organVO.getCn());
+					map1.put("v_DEPTCD", organVO.getDisplayName()); // 사용자명이 아닌 부서ID를 전달
+					map1.put("v_LANGDATA", pLangCode);
+					map1.put("v_TENANT_ID", tenantID);
+					
+					/* 2024-07-25 홍승비 - 겸직 사용자 검색 분기 추가 (기존 type 파라미터를 USER, ADDJOB으로 구분 / JOBID(직책ID), ROLEID(직위ID) 추가) */
+					if (organVO.getType().equals("ADDJOB")) {
+						map1.put("IS_ADDJOB", "Y");
+						map1.put("JOBID", organVO.getJobId());
+    					map1.put("ROLEID", organVO.getRoleId());
+					}
+					
+					result = ezOrganDAO.getTBLUserMaster(map1);
+					
     				sb.append(commonUtil.getQueryResult(result));
     				sb.append("</DATA>");
-
-    				ListInfo = getMemberInfo(sb.toString(), pCellList, pPropList, "", organVO.getType());
+    				
+    				ListInfo = getMemberInfo(sb.toString(), pCellList, pPropList, "", "user");
     				memberlist2.append(ListInfo);
     			}
     		}
@@ -2676,7 +2625,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("tenantId", tenantId);
-		map.put("key", key);
+		map.put("key", key.toUpperCase());
 		map.put("value", value);
 		map.put("companyId", companyId);
 		if (lang.equals("1")) {
@@ -2736,8 +2685,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("searchDeptName", searchDeptName);
 		map.put("searchTitle", searchTitle);
 		map.put("listSize", StringUtils.isBlank(listSize) ? 0 : Integer.parseInt(listSize));
-		map.put("orderCell", orderCell);
-		map.put("orderOption", orderOption);
+		map.put("orderCell", orderCell.toUpperCase());
+		map.put("orderOption", orderOption.toUpperCase());
 		map.put("offsetMin", offsetMin);
 		
 		if (primary.equals("1")) {
@@ -2767,8 +2716,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		String changeUserId = (String) map.get("changeUserId");
 		String changeReason = (String) map.get("changeReason");
 		
-		if(userList != null) {
-			for(Map<String, Object> userMap : userList) {
+		if (userList != null) {
+			for (Map<String, Object> userMap : userList) {
 				userMap.put("annualCnt", annualCnt);
 				userMap.put("changeUserId", changeUserId);
 				userMap.put("changeReason", changeReason);
@@ -2784,7 +2733,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		logger.debug("changeAnnual started");
 		
 		ezAttitudeDAO.insertAnnualHistory(map);
-		if(ezAttitudeDAO.getSimpleAnnualCnt(map) == 0) {
+		if (ezAttitudeDAO.getSimpleAnnualCnt(map) == 0) {
 			ezAttitudeDAO.insertAnnual(map);
 		} else {
 			//ezAttitudeDAO.changeAnnualHistory(map);
@@ -2802,7 +2751,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		ezAttitudeDAO.deleteAnnualHistory(map);
 		ezAttitudeDAO.insertAnnualHistory(map);
 		
-		if(ezAttitudeDAO.getSimpleAnnualCnt(map) == 0) {
+		if (ezAttitudeDAO.getSimpleAnnualCnt(map) == 0) {
 			ezAttitudeDAO.excelInsertAnnual(map);
 		} else {
 			//ezAttitudeDAO.changeAnnualHistory(map);
@@ -2847,8 +2796,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
-		map.put("orderCell", orderCell);
-		map.put("orderOption", orderOption);
+		map.put("orderCell", orderCell.toUpperCase());
+		map.put("orderOption", orderOption.toUpperCase());
 		map.put("startTime", startTime);
 		map.put("endTime", endTime);
 		map.put("offsetMin", commonUtil.getMinuteUTC(offset));
@@ -2862,7 +2811,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		List<AdminAttitudeVO> list = ezAttitudeDAO.getUserAnnual(map);
 		
-		if(secondYear.equals("Y") || secondYear.equals("T")) {
+		if (secondYear.equals("Y") || secondYear.equals("T")) {
 			Map<String, Object> map2 = new HashMap<String, Object>();
 			map2.put("userId", userId);
 			map2.put("companyId", companyId);
@@ -2876,7 +2825,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			
 			String searchStartTime = null;
 			
-			if(secondYear.equals("Y")) {
+			if (secondYear.equals("Y")) {
 				searchStartTime = (Integer.parseInt(startDate.substring(0, 4)) - 1) + startDate.substring(4, 10) + " 00:00:00";
 			} else {
 				searchStartTime = (Integer.parseInt(startDate.substring(0, 4)) - 2) + startDate.substring(4, 10) + " 00:00:00";
@@ -2889,7 +2838,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			AttitudeAnnualVO v = getAnnualCnt(map2);
 			
 			double useAnnualCnt = Double.parseDouble(v.getUseAnnualCnt());
-			if(useAnnualCnt > 11.0) {
+			if (useAnnualCnt > 11.0) {
 				useAnnualCnt = 11.0;
 			}
 			double totalAnnualCnt = Double.parseDouble(v.getTotalAnnualCnt());
@@ -2915,22 +2864,20 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		String totalAnnualCnt = null;
 		int userCnt = 0;
 		
-		for(int i=1; i<excelList.size(); i++) {
+		for (int i=1; i<excelList.size(); i++) {
 			
 			excelVo = excelList.get(i);
-			
 			userId = (String) excelVo.get("A");
 			joinDate = (String) excelVo.get("B");
 			totalAnnualCnt = (String) excelVo.get("C");
 			
-			
-			if(!excelCellRef.nullCheck(excelCellRef.validateCheck(i+1, messageSource.getMessage("ezAttitude.t289", locale), joinDate, 10, "4", locale))) {
+			if (!excelCellRef.nullCheck(excelCellRef.validateCheck(i+1, messageSource.getMessage("ezAttitude.t289", locale), joinDate, 10, "4", locale))) {
 				return excelCellRef.validateCheck(i+1, messageSource.getMessage("ezAttitude.t289", locale), joinDate, 10, "4", locale);
 			}
-			if(!excelCellRef.nullCheck(excelCellRef.validateCheck(i+1, messageSource.getMessage("ezEmail.t263", locale), userId, 80, "2", locale))) {
+			if (!excelCellRef.nullCheck(excelCellRef.validateCheck(i+1, messageSource.getMessage("ezEmail.t263", locale), userId, 80, "2", locale))) {
 				return excelCellRef.validateCheck(i+1, messageSource.getMessage("ezEmail.t263", locale), userId, 80, "2", locale);
 			}
-			if(!excelCellRef.nullCheck(excelCellRef.validateCheck(i+1, messageSource.getMessage("ezAttitude.t239", locale), totalAnnualCnt, 8, "3", locale))) {
+			if (!excelCellRef.nullCheck(excelCellRef.validateCheck(i+1, messageSource.getMessage("ezAttitude.t239", locale), totalAnnualCnt, 8, "3", locale))) {
 				return excelCellRef.validateCheck(i+1, messageSource.getMessage("ezAttitude.t239", locale), totalAnnualCnt, 5, "3", locale);
 			}
 			
@@ -2938,16 +2885,16 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			map1.put("userId", userId);
 			map1.put("companyId", companyId);
 			map1.put("tenantId", tenantId);
-			if(ezAttitudeDAO.getUserList(map1) != null) {
+			if (ezAttitudeDAO.getUserList(map1) != null) {
 				userCnt = ezAttitudeDAO.getUserList(map1).size();
 			}
 			
-			if(userCnt == 0) {
+			if (userCnt == 0) {
 				return i+1 + messageSource.getMessage("ezAttitude.t319", locale) + userId + messageSource.getMessage("ezAttitude.t326", locale);
 			}
 		}
 		
-		for(int i=1; i<excelList.size(); i++) {
+		for (int i=1; i<excelList.size(); i++) {
 			excelVo = excelList.get(i);
 			
 			map2 = new HashMap<String, Object>();
@@ -3507,19 +3454,30 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		}
 		map.put("lang", lang);
 		map.put("offset", offset);
-		map.put("startPoint", startPoint);
-		map.put("endPoint", endPoint);
-		map.put("type", type);
-		if (startPoint != null && endPoint != null && !startPoint.equals("") && !endPoint.equals("")) {
-			map.put("startRow", Integer.valueOf(startPoint) + 1);
-			map.put("endRow", Integer.valueOf(startPoint) + Integer.valueOf(endPoint));
+		
+		if (startPoint != null) {
+			map.put("startPoint", Integer.parseInt(startPoint));
+		}
+		if (endPoint != null) {
+			map.put("endPoint", Integer.parseInt(endPoint));
 		}
 		
-		if (adminFlag.equals("false")){
+		map.put("type", type);
+		
+		if (startPoint != null && endPoint != null && !startPoint.equals("") && !endPoint.equals("")) {
+			map.put("startRow", Integer.parseInt(startPoint) + 1);
+			map.put("endRow", Integer.parseInt(startPoint) + Integer.parseInt(endPoint));
+		}
+		
+		if (adminFlag.equals("false")) {
 			map.put("userId", userId);
 		}
-		if (order !=null) {
-			map.put("order", order.trim());
+		
+		/* 2024-07-23 홍승비 - SQL Injection 수정 > $ 기호 제거, 정렬 조건 분리 */
+		// 휴가일자(START_DATE), 신청자(WRITER_NAME), 신청부서(WRITER_DEPT_NAME), 휴가유형(TYPE_NAME), 승인상태(APPR_STATUS), 승인자(APPR_USER_NAME), 신청일자(APPL_DATE)
+		if (order != null && !order.trim().equals("")) {
+			map.put("orderColumn", order.trim().split(" ")[0]);
+			map.put("orderSort", order.trim().split(" ")[1]);
 		}
 		
 		List<AttitudeApplicationVO> attAppList = ezAttitudeDAO.getUsersCancelAnn(map); 

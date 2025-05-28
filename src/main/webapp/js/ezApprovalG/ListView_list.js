@@ -1,4 +1,4 @@
-﻿//컨트롤키나 쉬프트 키가 눌려졌음을 체크하는 FLAG
+﻿﻿//컨트롤키나 쉬프트 키가 눌려졌음을 체크하는 FLAG
 var PressCtrlKey = false;
 var PressShiftKey = false;
 //모질라 계열의 브라우저에서는 event.ctrlKey 등이 작동하지 않는다.
@@ -386,7 +386,7 @@ function ListView() {
 
             var oTHeader = GetTableHeaderObj();
             var oTBody = GetTableBodyObj();
-
+            
             if (_SelectFlag && _firstRowID != "") {
                 oTable.setAttribute("lastSelectedRowID", _firstRowID);
             }
@@ -431,6 +431,11 @@ function ListView() {
                     oTable.width = "100%";
             }
 
+            var targetTr = oTBody.querySelector('#DocList_TR_noItems');
+            if (oTable.id == "DocList" && targetTr) {
+               oTable.style.tableLayout = "auto";
+            }
+            
             objElm.appendChild(oTable);
 
             //2020-04-27 : 드래그앤드랍 추가
@@ -480,7 +485,9 @@ function ListView() {
         // 2023-06-26 민지수 - 기록물등록대장 (g_sFlag) == 'm01' 조건 추가
         // 부서공유함 (g_sFlag) == 'docShare' 조건 추가
         // S,G 버전 구분하지 않고 의견 아이콘 표시 > approvalFlag 조건 (S/G) 제거
-        if ((_thisID == "DocList" && typeof(approvalFlag) != "undefined" && typeof(g_sFlag) == "undefined")  || (_thisID == "DocList" && typeof(g_sFlag) != "undefined" && g_sFlag == "m01") || (_thisID == "DocList" && typeof(g_sFlag) != "undefined" && g_sFlag == "docShare")) {
+        if ((_thisID == "DocList" && typeof(approvalFlag) != "undefined" && typeof(g_sFlag) == "undefined") 
+            || (_thisID == "DocList" && typeof(g_sFlag) != "undefined" && g_sFlag == "m01")
+            || (_thisID == "DocList" && typeof(g_sFlag) != "undefined" && g_sFlag == "docShare")) {
         	if (showOpinionImg) {
                 var objTd = document.createElement("TH");
                 objTd.id = _thisID + "_TH_OP";
@@ -562,7 +569,7 @@ function ListView() {
                 if (strColName == "HASATTACHYN")
                     objTd.style.textAlign = "center";
                 
-                if (strColName == "ISPUBLIC") {
+                if (strColName == "ISPUBLIC" || strColName == "IsPublic") {
                 	objTd.style.textAlign = "center";
                 }
                 
@@ -715,7 +722,7 @@ function ListView() {
             }
             
             // 2020-02-18 천성준 - 결재문서리스트 의견표시여부
-            if (_thisID == "DocList" && typeof(approvalFlag) != "undefined" && approvalFlag == "S") {
+            if (_thisID == "DocList" && typeof(approvalFlag) != "undefined") {
             	if (showOpinionImg) {
             		colCount++;
             	}
@@ -786,7 +793,9 @@ function ListView() {
                 // 2023-06-26 민지수 - 기록물등록대장 (g_sFlag) == 'm01' 조건 추가
                 // 부서공유함 (g_sFlag) == 'docShare' 조건 추가
                 // S,G 버전 구분하지 않고 의견 아이콘 표시 > approvalFlag 조건 (S/G) 제거
-                if ((_thisID == "DocList" && typeof(approvalFlag) != "undefined" && typeof(g_sFlag) == "undefined") || (_thisID == "DocList" && typeof(g_sFlag) != "undefined" && g_sFlag == "m01") || (_thisID == "DocList" && typeof(g_sFlag) != "undefined" && g_sFlag == "docShare")) {
+                if ((_thisID == "DocList" && typeof(approvalFlag) != "undefined" && typeof(g_sFlag) == "undefined") 
+                    || (_thisID == "DocList" && typeof(g_sFlag) != "undefined" && g_sFlag == "m01")
+                    || (_thisID == "DocList" && typeof(g_sFlag) != "undefined" && g_sFlag == "docShare")) {
                 	if (showOpinionImg) {
                 		if (strData == "HASOPINIONYN" && strValue == "Y") {
                 			hasOpinionFlag = true;
@@ -827,7 +836,9 @@ function ListView() {
             // 2023-06-26 민지수 - 기록물등록대장 (g_sFlag) == 'm01' 조건 추가
             // 부서공유함 (g_sFlag) == 'docShare' 조건 추가
             // S,G 버전 구분하지 않고 의견 아이콘 표시 > approvalFlag 조건 (S/G) 제거
-            if ((_thisID == "DocList" && typeof(approvalFlag) != "undefined" && typeof(g_sFlag) == "undefined") || (_thisID == "DocList" && typeof(g_sFlag) != "undefined" && g_sFlag == "m01") || (_thisID == "DocList" && typeof(g_sFlag) != "undefined" && g_sFlag == "docShare")) {
+            if ((_thisID == "DocList" && typeof(approvalFlag) != "undefined" && typeof(g_sFlag) == "undefined") 
+                || (_thisID == "DocList" && typeof(g_sFlag) != "undefined" && g_sFlag == "m01")
+                || (_thisID == "DocList" && typeof(g_sFlag) != "undefined" && g_sFlag == "docShare")) {
             	if (showOpinionImg) {
                     var objTd = document.createElement("TD");
                     objTd.className = "OpIcon"
@@ -839,7 +850,7 @@ function ListView() {
                         oI.className = "fa fa-comments-o";
                         oI.style.fontSize = "17px";
                         /* 2023-06-26 민지수 - 완료문서 추가의견 존재 여부로 아이콘 파란색 style 부여 */
-                        if (oDatas.length > 17 && oDatas[17].tagName == "ADDOPINION" && oDatas[17].textContent == "TRUE") { //기록물등록대장
+                        if (oDatas.length > 18 && oDatas[18].tagName == "ADDOPINION" && oDatas[18].textContent == "TRUE") { //기록물등록대장
                             oI.style.color = "blue";
                         } else if (oDatas.length > 14 && oDatas[14].tagName == "ADDOPINION" && oDatas[14].textContent == "TRUE") { // 완료문서
                             oI.style.color = "blue";
@@ -979,9 +990,9 @@ function ListView() {
                             objTd.appendChild(_img);
                         }
                     }
-                    else if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "ISPUBLIC") {
+                    else if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "ISPUBLIC" || SelectSingleNodeValue(oHeaders[j], "COLNAME") == "IsPublic") {
                         objTd.style.textAlign = "center";
-                        if (SelectSingleNodeValue(oCells[j], "ISPUBLIC") != "Y") {
+                        if (SelectSingleNodeValue(oCells[j], "ISPUBLIC") == "N") {
                             var _img = document.createElement("img");
                             _img.src = "/images/icon_lock.png";
                             objTd.appendChild(_img);
@@ -997,7 +1008,11 @@ function ListView() {
                         oText = document.createTextNode(strValue);
                         objTd.appendChild(oText);
                     }
-                	// 전자결재G 한글로 하드코딩 해도 되겠지? 2018-07-03
+                    else if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "RESENDFLAG" || SelectSingleNodeValue(oHeaders[j], "COLNAME") == "ReSendFlag") {
+                        objTd.style.textAlign = "center";
+                        oText = document.createTextNode(strValue);
+                    	objTd.appendChild(oText);
+                    }
                     else if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "CreateDate" || SelectSingleNodeValue(oHeaders[j], "NAME") == "등록일") {
                     	objTd.style.textAlign = "left";
                     	oText = document.createTextNode(strValue);
@@ -1631,6 +1646,7 @@ function tr_unselectedAll(pTableID) {
         }
         objTr = null;
     }
+    checkboxBtnShowCtl();
 }
 
 //컨트롤 혹은 쉬프트 키를 이용한 멀티 선택 함수
@@ -1905,13 +1921,21 @@ function SelectCheckBox(pTableID, pRowSN, event) {
 function checkboxBtnShowCtl() {
 	var DocList = new ListView();
     DocList.LoadFromID("DocList");
+    
+    // 체크박스 컨트롤 동작은 DocList 리스트뷰에 체크박스가 존재할 때에만 작동
+    if (document.querySelectorAll('#DocList td:first-child input[type="checkbox"]').length == 0) {
+        return;
+    }
+    
     var oArrRows = DocList.GetSelectedRows();
     
     // 2023-03-07 한태훈 - 기록물등록대장에서도 사용하기 위해서 내용 추가. 
 	if (typeof g_sFlag != "undefined") {
 		if (g_sFlag == "m01" || g_sFlag == "docShare") { // 기록물 등록 대장 or 부서공유함일 경우.
-			if (oArrRows.length == 1) {
-				lvtDoclist_SelChange();
+			if (oArrRows.length <= 1) {
+                // 선택된 row가 있을 경우 그 row, 아닐 경우 맨 첫번째 row를 기준으로 상단 메뉴버튼 표출여부를 컨트롤
+                var selRowTemp = oArrRows.length == 1 ? oArrRows[0] : document.querySelector("#DocList tbody tr:first-child");
+                ChkCabRoleInfo(selRowTemp);
 			} else if (oArrRows.length > 1) {
 				document.getElementById("tdichange_Rec").style.display = "none";
 				document.getElementById("tdichangeS_Rec").style.display = "none";
@@ -1940,7 +1964,7 @@ function checkboxBtnShowCtl() {
     var isRedraftShow = true;
     var pFunctionType = "";
     var pDocState = "";
-    if (oArrRows.length > 0) {
+    if (oArrRows.length >= 0) {
     	for (var i = 0; i < oArrRows.length; i++) {
     		pFunctionType = GetAttribute(oArrRows[i], "DATA10"); // DATA10 = APRSTATE(FUNCTIONTYPE)
     		pDocState = GetAttribute(oArrRows[i], "DATA12"); // DATA9 = 수신문 관련 플래그, DATA12 = DOCSTATE
@@ -1949,13 +1973,17 @@ function checkboxBtnShowCtl() {
     		if (pFunctionType == "004" || pFunctionType == "006" || pFunctionType == "015") {
 				document.getElementById("tbtnApprove1").style.display = "none";
     			// 내부결재가 아닌 수신문(011), 합의문(012)의 경우 삭제 불가능, 재기안 가능 (현재 체크박스가 결재할문서에만 존재하므로, 부서수신함 등의 다른 문서함은 고려하지 않음)
-    			if (GetAttribute(oArrRows[i], "DATA9") == "0" && pDocState != "011" && pDocState != "012") {
-    				isDelShow = isDelShow == true ? true : false;
-    			} else {
+				// 2024-04-18 조수빈 - 부서수신함의 삭제버튼 제어 (일괄접수 / 일괄접수자전결로 체크박스 추가됨) 
+    			if ((GetAttribute(oArrRows[i], "DATA9") == "0" && pDocState != "011" && pDocState != "012") 
+    					|| ((pListTypeValue == '4' || pListTypeValue == '97') && pDocState != "011" && pDocState != "012")) {
+					isDelShow = isDelShow == true ? true : false;
+				} else {
     				isDelShow = false;
     			}
     			isRedraftShow = oArrRows.length == 1 ? true : false;
-    		} else {
+    		} else if (pDocState == "015" && pListTypeValue == "10") {
+				isDelShow = true;
+			} else {
     			isDelShow = false;
     			isRedraftShow = false;
     		}
@@ -1966,27 +1994,42 @@ function checkboxBtnShowCtl() {
     	} else {
     		document.getElementById("tbtnRemoveDoc").style.display = "none";
     	}
-    	if (isRedraftShow == true) {
-    		document.getElementById("tbtnRedraft").style.display = "";
+    	if (isRedraftShow == true && oArrRows.length == 1) {
+    		if (pListTypeValue != 4 && pListTypeValue != '97') {
+    			document.getElementById("tbtnRedraft").style.display = "";
+    		}
     	} else {
     		document.getElementById("tbtnRedraft").style.display = "none";
     	}
     	
     	document.getElementById("tbtnApprove").style.display = "none";
+    	document.getElementById("tbtnReceipt").style.display = "none";
+    	document.getElementById("tbtnNonElecRec").style.display = "none";
 		//document.getElementById("tbtnApprove1").style.display = "";
     	document.getElementById("tbtnGongRam").style.display = "none";
     	
-    	if(oArrRows.length == 1) {
+    	if(oArrRows.length <= 1) {
     		document.getElementById("tbtnViewDoc").style.display = "";
         	document.getElementById("tbtnTotalSave").style.display = "";
         	if (isDelShow == false && isRedraftShow == false) {
-        		document.getElementById("tbtnApprove").style.display = "";
+        		if (pListTypeValue != "4" && pListTypeValue != "97") {
+        			document.getElementById("tbtnApprove").style.display = "";
+        		} else if (pListTypeValue == "4" || pListTypeValue == "97") {
+        			document.getElementById("tbtnReceipt").style.display = "";
+        			
+        			if (approvalFlag == "G"){
+        				document.getElementById("tbtnNonElecRec").style.display = "";
+        			}
+        		}
 //				document.getElementById("tbtnApprove1").style.display = "";
         		document.getElementById("tbtnGongRam").style.display = "";
         		
+        		// 2024-05-29 조수빈 - js는 첫 번째 참인 조건의 식만 수행하기 때문에 분리
         		if (pListTypeValue != "1") {
         			document.getElementById("tbtnApprove").style.display = "none";
-        		} else if (pListTypeValue != "99") {
+        		}
+
+        		if (pListTypeValue != "99") {
         			document.getElementById("tbtnGongRam").style.display = "none";
         		}
         	}

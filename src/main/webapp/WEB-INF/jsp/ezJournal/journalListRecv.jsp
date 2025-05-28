@@ -95,6 +95,7 @@
 						<spring:message code='${journal.typeId}'/>
 					</td>
 					<td	onclick="selectedTR(this); goJournalDetailOneClick(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:35%;">
+						<div style="display:flex; align-items:center;">
 						<div style='float:left; overflow: hidden; text-overflow: ellipsis; display: block; max-width: 95;'>
 							<jsp:useBean id="toDay" class="java.util.Date" />
 							<fmt:formatDate value="${toDay}" pattern="yyyy-MM-dd" var="nowDay"/>
@@ -110,6 +111,7 @@
 							<span style="color: #c64200">[<c:out value='${journal.replyCount }'/>]</span>
 <!-- 							</a> -->
 						</c:if>
+						</div>
 					</td>
 					<td style="width:20px; "></td>
 					<td	onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:10%;">
@@ -146,18 +148,18 @@
 	<div class="pagenavi">   
 		<c:choose>
 				<c:when test="${paging.currentPage gt 1}">   
-					<span onclick="goToPageByNum(1)" class="btnimg"><img src="/images/sub/btn_p_prev.gif" ></span>            
+					<span onclick="goToPageByNum(1)" class="btnimg first"></span>       
 				</c:when>
 				<c:otherwise>
-					<span class="btnimg"><img src="/images/sub/btn_p_prev01.gif" ></span>            
+					<span class="btnimg first disabled"></span> 
 				</c:otherwise>         
 		</c:choose>
 		<c:choose>
 			<c:when test="${paging.startPage gt 1}">
-				<span onclick="goToPageByNum(${paging.startPage-1})" class="btnimg"><img src="/images/sub/btn_prev.gif" ></span>              
+				<span onclick="goToPageByNum(${paging.startPage-1})" class="btnimg prev"></span>
 			</c:when>
 			<c:otherwise>
-				<span class="btnimg"><img src="/images/sub/btn_prev01.gif" ></span>              
+				<span class="btnimg prev disabled"></span>
 			</c:otherwise>                                                                    
 		</c:choose>
 		<%-- <span class="ptxt" onclick="<c:if test="${paging.currentPage gt 1 }">goToPageByNum(${paging.currentPage-1})</c:if>"><spring:message code='ezApproval.t931'/></span> --%>                                   
@@ -174,18 +176,18 @@
 		<%-- <span class="ptxt" onclick="<c:if test="${paging.totalPage gt paging.currentPage }">goToPageByNum(${paging.currentPage+1})</c:if>"><spring:message code='ezApproval.t932'/></span> --%>
 		<c:choose>
 			<c:when test="${paging.totalPage gt paging.endPage }">
-				<span class="btnimg" onclick="goToPageByNum(${paging.endPage+1})"><img src="/images/sub/btn_next.gif" ></span>
+				<span class="btnimg next" onclick="goToPageByNum(${paging.endPage+1})"></span>
 			</c:when>
 			<c:otherwise>
-				<span class="btnimg"><img src="/images/sub/btn_next01.gif" ></span>
+				<span class="btnimg next disabled"></span>
 			</c:otherwise>
 		</c:choose>
 		<c:choose>
 			<c:when test="${paging.totalPage gt paging.currentPage }">
-				<span class="btnimg" onclick="goToPageByNum(${paging.totalPage})"><img src="/images/sub/btn_n_next.gif" ></span>
+				<span class="btnimg last" onclick="goToPageByNum(${paging.totalPage})"></span>
 			</c:when>
 			<c:otherwise>
-				<span class="btnimg"><img src="/images/sub/btn_n_next01.gif" ></span>
+				<span class="btnimg last disabled"></span>
 			</c:otherwise>
 		</c:choose>
 	</div>
@@ -194,13 +196,13 @@
 <c:otherwise>
 <div id="tblPageRayer" style="width:470px; margin:6px auto; font-size:0">
 	<div class="pagenavi">  
-		<span class="btnimg"><img src="/images/sub/btn_p_prev01.gif" ></span>
-		<span class="btnimg"><img src="/images/sub/btn_prev01.gif" ></span>
+		<span class="btnimg first disabled"></span>
+		<span class="btnimg prev disabled"></span>
 		<%-- <span class="ptxt"> <spring:message code='ezApproval.t931'/></span> --%>  
 		<span class="on">1</span> 
 		<%-- <span class="ptxt"><spring:message code='ezApproval.t932'/></span> --%>
-		<span class="btnimg"><img src="/images/sub/btn_next01.gif" ></span>
-		<span class="btnimg"><img src="/images/sub/btn_n_next01.gif" ></span>
+		<span class="btnimg next disabled"></span>
+		<span class="btnimg last disabled"></span>
 	</div>
 </div>
 </c:otherwise>

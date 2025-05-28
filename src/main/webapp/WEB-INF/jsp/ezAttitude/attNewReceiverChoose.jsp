@@ -7,7 +7,8 @@
 	<head>
 	    <title><spring:message code='ezAttitude.t109'/></title>
 	    <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
-	    <link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+	    <link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 	    <style>
 	    	.mainlist tr td:first-child {
@@ -461,7 +462,7 @@
 		        
 		        var UserListHTML = "";
 		        if (SelectDeptNM.getAttribute("countinfo") != "1") {
-		            SelectDeptNM.innerHTML += "&nbsp;&nbsp;<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "</span>";
+		            SelectDeptNM.innerHTML += "&nbsp;&nbsp;<span class='txt_color'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "</span>";
 		            SelectDeptNM.setAttribute("countinfo", "1")
 		        }
 		        if (pListType == "IMG") {
@@ -471,7 +472,7 @@
 		            document.getElementById("txtlist_table").style.display = "none";
 		            document.getElementById("Search_txtlist_table").style.display = "none";
 		            if (pSeach) {
-		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle; margin-right:3px; margin-top:-2px;\" >" + strLang_2 + "" + "&nbsp;&nbsp;<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "</span>";
+		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle; margin-right:3px; margin-top:-2px;\" >" + strLang_2 + "" + "&nbsp;&nbsp;<span class='txt_color'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "</span>";
 		                SelectDeptNM.setAttribute("countinfo", "1")
 		            }
 		        }
@@ -486,7 +487,7 @@
 		            else {
 		                document.getElementById("Search_txtlist_table").style.display = "";
 		                document.getElementById("txtlist_table").style.display = "none";
-		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle; margin-right:3px; margin-top:-2px;\" >" + strLang_2 + "" + "&nbsp;&nbsp;<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "</span>";
+		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle; margin-right:3px; margin-top:-2px;\" >" + strLang_2 + "" + "&nbsp;&nbsp;<span class='txt_color'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "</span>";
 		                SelectDeptNM.setAttribute("countinfo", "1")
 		            }
 		        }
@@ -774,45 +775,9 @@
 	            PressShiftKey = false;
 	            
 	        }
-
-	        function cnsearch_press() {
-	            if (window.event.keyCode == "13")
-	                cnsearch_click();
-	        }
-	        function cnsearch_click() {
-	            if (document.getElementById("cnkeyword").value == "") {
-	                alert("<spring:message code='ezEmail.t576' />");
-	                document.getElementById("cnkeyword").focus();
-	                return;
-	            }
-	            
-	            $.ajax({
-		        	type : "POST",
-		        	dataType : "text",
-		        	url : "/ezOrgan/getSearchList.do",
-		        	async : true,
-		        	data : {search : "displayname::" + document.getElementById("cnkeyword").value, cell : "displayName;description;title;telephoneNumber", prop : "mail", type : "user"},
-		        	success : function(result){	
-		        		pListXML_Info = loadXMLString(result);
-		        		if (pListXML_Info.getElementsByTagName("ROW").length == 0) {
-		        		    issearch = false;
-	                        alert(strLang155);
-		        		} else {
-	                        listContentArry = new Array();
-	                        pSeach = true;
-	                        DisplayUserImageList();
-	                        makePageSelPage2();
-	                    }
-		        	},
-		        	error : function(error){
-		        		alert("<spring:message code='ezEmail.t578' />" + error);
-		        	}
-		        });
-	            
-	        }
-	        function make_searchstring(orgStr) {
-	            return ReplaceText(ReplaceText(ReplaceText(ReplaceText(orgStr, "'", "''"), "\\[", "[[]"), "%", "[%]"), "_", "[_]");
-	        }
+	        
+	        /* 2024-07-25 홍승비 - 사용하지 않는 기존 조직도 검색 함수 제거 (현재는 /ezOrgan/getSearchList.do가 아닌 /ezAttitude/getSearchList.do를 사용함) */
+	        
 	        function ReplaceText(orgStr, findStr, replaceStr) {
 	            var re = new RegExp(findStr, "gi");
 	
@@ -886,25 +851,25 @@
                 PagingHTML2 += strtext2;
                 var pageNum2 = CurPage;
                 if (totalPage2 > 1 && pageNum2 != 1) {
-                    strtext2 = "<span class='btnimg' onclick= 'return goToPageByNum2(1)'><img src='/images/sub/btn_p_prev.gif' ></span>";
+                    strtext2 = "<span class='btnimg first' onclick= 'return goToPageByNum2(1)'></span>";
                     PagingHTML2 += strtext2;
                 }
                 else {
-                    strtext2 = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>";
+                    strtext2 = "<span class='btnimg first disabled'></span>";
                     PagingHTML2 += strtext2;
                 }
                 if (totalPage2 > BlockSize2) {
                     if (pageNum2 > BlockSize2) {
-                        strtext2 = "<span class='btnimg' onclick= 'return selbeforeBlock2()'><img src='/images/sub/btn_prev.gif' ></span>";
+                        strtext2 = "<span class='btnimg prev' onclick= 'return selbeforeBlock2()'></span>";
                         PagingHTML2 += strtext2;
                     }
                     else {
-                        strtext2 = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+                        strtext2 = "<span class='btnimg prev disabled'</span>";
                         PagingHTML2 += strtext2;
                     }
                 }
                 else {
-                    strtext2 = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+                    strtext2 = "<span class='btnimg prev disabled'></span>";
                     PagingHTML2 += strtext2;
                 }
                 var MaxNum2;
@@ -929,26 +894,26 @@
                 if (totalPage2 > BlockSize2) {
                     if (totalPage2 >= parseInt(((parseInt((pageNum2 - 1) / BlockSize2) + 1) * BlockSize2) + 1)) {
                         strtext2 = "";
-                        strtext2 = strtext2 + "<span class='btnimg' onclick='return selafterBlock2()'><img src='/images/sub/btn_next.gif'></span>";
+                        strtext2 = strtext2 + "<span class='btnimg next' onclick='return selafterBlock2()'></span>";
                         PagingHTML2 += strtext2;
                     }
                     else {
                         strtext2 = "";
-                        strtext2 = strtext2 + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+                        strtext2 = strtext2 + "<span class='btnimg next disabled'></span>";
                         PagingHTML2 += strtext2;
                     }
                 }
                 else {
                     strtext2 = "";
-                    strtext2 = strtext2 + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+                    strtext2 = strtext2 + "<span class='btnimg next disabled'></span>";
                     PagingHTML2 += strtext2;
                 }
                 if (totalPage2 > 1 && totalPage2 != 1 && (totalPage2 != pageNum2)) {
-                    strtext2 = "<span class='btnimg' onclick='return goToPageByNum2(" + totalPage2 + ")'><img src='/images/sub/btn_n_next.gif' ></span>";
+                    strtext2 = "<span class='btnimg last' onclick='return goToPageByNum2(" + totalPage2 + ")'></span>";
                     PagingHTML2 += strtext2;
                 }
                 else {
-                    strtext2 = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
+                    strtext2 = "<span class='btnimg last disabled'></span>";
                     PagingHTML2 += strtext2;
                 }
                 PagingHTML2 += "</div>";

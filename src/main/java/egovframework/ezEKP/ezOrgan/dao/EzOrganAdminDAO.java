@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.TimeZone;
 
@@ -21,6 +22,7 @@ import javax.naming.directory.ModificationItem;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 
+import egovframework.ezEKP.ezOrgan.vo.OrganAddJobVO;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -38,7 +40,7 @@ import egovframework.ezEKP.ezOrgan.vo.OrganLoginStopUserVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezSystem.vo.PermissionInfoVO;
 import egovframework.let.user.login.vo.LoginVO;
-import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 
 @SuppressWarnings("unused")
 @Repository("EzOrganAdminDAO")
@@ -782,6 +784,10 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         update("EzOrganAdminDAO.updateProperty_addJob", map);
 	}
 
+	public void updateJobTitleOrder(Map<String, Object> map) throws Exception{
+		update("EzOrganAdminDAO.updateJobTitleOrder", map);
+	}
+
     /*private void restoreRetireEntryForJMocha(Map<String, Object> map) throws Exception {
         int tenantId = (Integer)map.get("v_TENANT_ID");        
         String userId = (String)map.get("v_CN");
@@ -817,7 +823,8 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     }*/
 	
     private void restoreRetireEntryForLocal(Map<String, Object> map) throws Exception {
-        moveGroupUser_U(map);
+        //moveGroupUser_U(map);
+    	restoreRetireEntry_I(map);
     }
 	
 	public void restoreRetireEntry(Map<String, Object> map) throws Exception{
@@ -1003,6 +1010,10 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	    retireDBDataForJMocha(map);
 	}*/
 	
+	public void retireDBData(Map<String, Object> map) throws Exception {
+		delete("EzOrganAdminDAO.retireDBData", map);
+	}
+	
     private void setAddJobForLocal(Map<String, Object> map) throws Exception {
         delete("EzOrganAdminDAO.setAddJob", map);
     }
@@ -1057,6 +1068,10 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	
 	public void restoreRetireEntry_D (Map<String, Object> map) throws Exception {
 		delete("EzOrganAdminDAO.restoreRetireEntry_D", map);
+	}
+
+	public void restoreRetireEntry_I (Map<String, Object> map) throws Exception {
+		insert("EzOrganAdminDAO.restoreRetireEntry", map);
 	}
 							
 	public void moveGroupUser_U (Map<String, Object> map) throws Exception {
@@ -1206,7 +1221,27 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	public void deleteCompany_D34(Map<String, Object> map) throws Exception {
 		delete("EzOrganAdminDAO.deleteCompany_D34", map);
 	}
-
+	
+	public void deleteCompany_D35(Map<String, Object> map) throws Exception {
+		delete("EzOrganAdminDAO.deleteCompany_D35", map);
+	}
+	
+	public void deleteCompany_D36(Map<String, Object> map) throws Exception {
+		delete("EzOrganAdminDAO.deleteCompany_D36", map);
+	}
+	
+	public void deleteCompany_D37(Map<String, Object> map) throws Exception {
+		delete("EzOrganAdminDAO.deleteCompany_D37", map);
+	}
+	
+	public void deleteCompany_D38(Map<String, Object> map) throws Exception {
+		delete("EzOrganAdminDAO.deleteCompany_D38", map);
+	}
+	
+	public void deleteCompany_D39(Map<String, Object> map) throws Exception {
+		delete("EzOrganAdminDAO.deleteCompany_D39", map);
+	}
+	
 	public void deleteCompanyInfo_IKMS7(Map<String, Object> map) throws Exception {
 		delete("EzOrganAdminDAO.deleteCompanyInfo_IKMS7", map);
 	}
@@ -2355,5 +2390,46 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 		logger.debug("retireUserCountCheckForLocal started. userCount=" + userCount);
 
 		return userCount;
+	}
+	
+	public String getUserExtension15(Map<String, Object> map) throws Exception {
+		return (String) Optional.ofNullable(select("EzOrganAdminDAO.getUserExtension15",map)).orElseGet(() -> "0");
+	}
+
+	public String getDeptExtension15(Map<String, Object> map) throws Exception {
+		 return (String) Optional.ofNullable(select("EzOrganAdminDAO.getDeptExtension15",map)).orElseGet(() -> "0");
+	}
+
+	// 2024-05-17 한태훈 > 회사 탑메뉴 설정 위치 기본값 세팅 (기본값 : 0 = 메뉴 위치 상단)
+	public void insertCompanyTopMenuInfo(Map<String, Object> map) {
+		insert("EzOrganAdminDAO.insertCompanyTopMenuInfo", map);
+	}
+
+	// 2024-05-27 관리자 > 조직도 > 겸직 사용자 상세정보 내용 호출 함수
+	public OrganAddJobVO getAddJobPorpValue(Map<String, Object> map) throws Exception {
+		return (OrganAddJobVO) select("EzOrganAdminDAO.getAddJobPorpValue", map);
+	}
+	
+	public void updateAddJobInfo(Map<String, Object> map) throws Exception {
+		update("EzOrganAdminDAO.updateAddJobInfo", map);
+	}
+	
+	// 2024-07-23 한태훈 > 회사 추가시 연계메뉴 및 기본 시스템 컨피그 추가
+	public void insertConnectMenuForNewCompany(Map<String, Object> map) {
+		insert("EzOrganAdminDAO.insertConnectMenuForCompany", map);
+		insert("EzOrganAdminDAO.insertConnectMenuAuthForCompany", map);
+		insert("EzOrganAdminDAO.insertConnectionMenuNameForCompany", map);
+		insert("EzOrganAdminDAO.insertSystemConfigTypeForCompany", map);
+		insert("EzOrganAdminDAO.insertDefaultSystemConfigForCompany", map);
+	}
+
+	public void insertMobileMenuForNewCompany(Map<String, Object> map) throws Exception {
+		insert("EzOrganAdminDAO.insertMobileMenuForNewComp", map);
+		insert("EzOrganAdminDAO.insertMobileMenuAuthForNewComp", map);
+		insert("EzOrganAdminDAO.insertMobileMenuNameForNewComp", map);
+	}
+
+	public void resetLoginCnt(Map<String, Object> map) throws Exception {
+		update("EzOrganAdminDAO.updateResetLoginCnt", map);
 	}
 }

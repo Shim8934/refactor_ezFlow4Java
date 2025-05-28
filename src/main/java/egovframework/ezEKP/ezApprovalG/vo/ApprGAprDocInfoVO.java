@@ -42,7 +42,7 @@ public class ApprGAprDocInfoVO {
 	
 	private String writerJobTitle2;
 	
-	
+	private String docType;
 	
 	public String getWriterJobTitle() {
 		return writerJobTitle;
@@ -164,4 +164,11 @@ public class ApprGAprDocInfoVO {
 	public void setFormName2(String formName2) {
 		this.formName2 = formName2;
 	}
+	public String getDocType() {
+		return docType;
+	}
+	public void setDocType(String docType) {
+		this.docType = docType;
+	}
+	
 }

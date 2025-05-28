@@ -5,10 +5,11 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezOption.vo.MOptionVO;
 import egovframework.ezMobile.ezPortal.vo.MPortalTimeLineVO;
-import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("MOptionDAO")
 public class MOptionDAO extends EgovAbstractDAO {
@@ -46,6 +47,11 @@ public class MOptionDAO extends EgovAbstractDAO {
 			logger.error(e.getMessage(), e);
 		}
 		return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<MenuInfoVO> getMenuForUser(Map<String, Object> map) throws Exception {
+		return (List<MenuInfoVO>) list("ezNewPortal.getMenuForUser", map);
 	}
 	
 }

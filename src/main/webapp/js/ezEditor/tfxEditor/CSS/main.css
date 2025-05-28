@@ -10,12 +10,45 @@ td.xfeToolbar span.off div span {
 	opacity: 0.30;
 }
 
+td.xfeMenubar > nav div.off,
+td.xfeMenubar > nav button.off {
+
+	filter: alpha(opacity=30);
+	opacity: 0.30;
+}
+
+
+
 
 .xfe-context-menu td.text.hover {
-	background-color : #EBF7FF;
+	background-color : #e7f0ff;
 	color : #000000;
 	font-weight : bold;
 }
+
+
+.xfe-context-menu td.text.hover_40 {
+	background-color : #fff2e5;	
+	color : #000000;
+	/*font-weight : bold;*/
+}
+
+.xfe-context-menu td.icon.hover_40 {
+	background-color : #fff2e5 !important;	
+}
+
+
+.xfe-context-menu td.text.hover_50 {
+	background-color : #e0f3e0 !important;	
+	color : #000000;
+	/*font-weight : bold;*/
+}
+
+.xfe-context-menu td.icon.hover_50 {
+	background-color : #e0f3e0 !important;	
+}
+
+
 
 div.xfeBottomButton.off {
 	filter: alpha(opacity=30);
@@ -23,5 +56,29 @@ div.xfeBottomButton.off {
 }
 
 div.xfe-sub-menu span.hover {
-	background-color : #D9E5FF;
+	/*background-color : #D9E5FF;*/
+	background-color : rgb(255, 242, 229);
+	border: 1px solid rgb(244, 166, 69) !important;
 }
+
+div.xfe-sub-menu span.xfe50.hover {
+	/*background-color : #D9E5FF;*/
+	background-color : rgb(224, 243, 224);
+	border: 1px solid rgb(152, 191, 152) !important;
+}
+
+
+td.xfeMenubar li.off {
+
+	filter: alpha(opacity=30) !important;
+	opacity: 0.30 !important;
+	
+}
+
+td.xfeMenubar ul.xfe-menubar-title-ul.off {
+
+	filter: alpha(opacity=30) !important;
+	opacity: 0.30 !important;
+}
+
+

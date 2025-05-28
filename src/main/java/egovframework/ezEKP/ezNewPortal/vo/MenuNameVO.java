@@ -5,6 +5,7 @@ public class MenuNameVO {
 	private int menuId; //메뉴 아이디
 	private String menuLang; //메뉴명의 언어
 	private String menuName; //메뉴명
+	private int openType; // 메뉴 여는 방식
 	
 	public int getMenuId() {
 		return menuId;
@@ -23,6 +24,12 @@ public class MenuNameVO {
 	}
 	public void setMenuName(String menuName) {
 		this.menuName = menuName;
+	}
+	public int getOpenType() {
+		return openType;
+	}
+	public void setOpenType(int openType) {
+		this.openType = openType;
 	}
 	
 	@Override

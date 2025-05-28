@@ -48,8 +48,12 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezNotification.service.EzNotificationService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
+import egovframework.ezEKP.ezPersonal.type.NotiPlatform;
+import egovframework.ezEKP.ezPersonal.type.NotiType;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
@@ -87,6 +91,12 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 
 	@Autowired
 	private EzEmailService ezEmailService;
+	
+	@Autowired
+	private EzNotificationService ezNotificationService;
+	
+	@Autowired
+	private EzPersonalService ezPersonalService;
 
 	@Autowired
 	private Rest rest;
@@ -459,10 +469,18 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
 		String adminFlag = request.getParameter("adminFlag") == null ? "admin" : request.getParameter("adminFlag");
 		logger.debug("adminFlag:" + adminFlag);
-		if (!checkWfAdmin(request, user.getId()).get("status").toString().equals("ok")) {
-			return "cmm/error/adminDenied";
+
+		// 2024.05.08 장혜연 : adminFlag값이 user 일 경우 담당하는 그룹폴더가 존재하는 지 확인
+		if (adminFlag.equals("user")) {
+			if (ezWebFolderAdminService
+					.getFolderIdsByManagerUserId(user.getId(), "", user.getCompanyID(), user.getTenantId()).size() <= 0)
+				return "cmm/error/adminDenied";
+		} else {
+			if (!checkWfAdmin(request, user.getId()).get("status").toString().equals("ok")) {
+				return "cmm/error/adminDenied";
+			}
 		}
-		
+
 		String gwServerUrl   = config.getProperty("config.webFolderGwServerURL");
 		String url           = gwServerUrl + "/rest/ezwebfolderadmin/company-list/" + user.getId();
 		
@@ -727,17 +745,31 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		return type;
 	}
 
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezWebFolder/getFileLogs.do", method = RequestMethod.POST)
 	@ResponseBody
 	public JSONObject getFileLogs(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getFileLogs start");
 		LoginSimpleVO user     = commonUtil.userInfoSimple(loginCookie);
-		JSONObject resultCheck = (JSONObject) checkWfAdmin(request, user.getId());
+		String adminFlag     = defaultString(request.getParameter("adminFlag"));
 		
-		if (!resultCheck.get("status").toString().equals("ok")) {
-			return resultCheck;
+		// 2024.05.08 장혜연 : adminFlag값이 user 일 경우 담당하는 그룹폴더가 존재하는 지 확인
+		if (adminFlag.equals("user")) {
+			if (ezWebFolderAdminService
+					.getFolderIdsByManagerUserId(user.getId(), "", user.getCompanyID(), user.getTenantId())
+					.size() <= 0) {
+				JSONObject resultCheck = new JSONObject();
+				resultCheck.put("code", 3);
+				return resultCheck;
+			}
+		} else {
+			JSONObject resultCheck = (JSONObject) checkWfAdmin(request, user.getId());
+
+			if (!resultCheck.get("status").toString().equals("ok")) {
+				return resultCheck;
+			}
 		}
-		
+
 		String currPage      = request.getParameter("currentPage");
 		String companyId     = request.getParameter("companyId");
 		String column        = request.getParameter("column");
@@ -752,7 +784,6 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		String actionType    = defaultString(request.getParameter("actionType"));
 		String sortType    	 = defaultString(request.getParameter("sortType"));
 		String sortColumn    = defaultString(request.getParameter("sortColumn"));
-		String adminFlag     = defaultString(request.getParameter("adminFlag"));
 		String folderId      = defaultString(request.getParameter("folderId"));
 		
 		logger.debug("Current page: " + currPage + " || CompanyId: " + companyId + " || Column: " + column + " || Order: " + order + " || ListCount: " + listCnt + " || StartDate: " + startDate 
@@ -1593,17 +1624,31 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		return resultBody;
 	}
 
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/admin/ezWebFolder/exportFileLogs.do", method = RequestMethod.POST)
 	@ResponseBody
 	public JSONObject exportFileLogs(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response, Locale locale) throws Exception {
 		logger.debug("exportFileLogs start");
 		LoginSimpleVO user     = commonUtil.userInfoSimple(loginCookie);
-		JSONObject resultCheck = (JSONObject) checkWfAdmin(request, user.getId());
-		
-		if (!resultCheck.get("status").toString().equals("ok")) {
-			return resultCheck;
+		String adminFlag     = request.getParameter("adminFlag")  != null ? request.getParameter("adminFlag")  : "";
+
+		// 2024.05.08 장혜연 : adminFlag값이 user 일 경우 담당하는 그룹폴더가 존재하는 지 확인
+		if (adminFlag.equals("user")) {
+			if (ezWebFolderAdminService
+					.getFolderIdsByManagerUserId(user.getId(), "", user.getCompanyID(), user.getTenantId())
+					.size() <= 0) {
+				JSONObject resultCheck = new JSONObject();
+				resultCheck.put("code", 3);
+				return resultCheck;
+			}
+		} else {
+			JSONObject resultCheck = (JSONObject) checkWfAdmin(request, user.getId());
+
+			if (!resultCheck.get("status").toString().equals("ok")) {
+				return resultCheck;
+			}
 		}
-		
+
 		String companyId     = request.getParameter("companyId");
 		String column        = request.getParameter("column");
 		String order         = request.getParameter("order");
@@ -1614,7 +1659,6 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		String userName      = request.getParameter("userName")   != null ? request.getParameter("userName")   : "";
 		String fileType      = request.getParameter("fileType")   != null ? request.getParameter("fileType")   : "";
 		String actionType    = request.getParameter("actionType") != null ? request.getParameter("actionType") : "";
-		String adminFlag     = request.getParameter("adminFlag")  != null ? request.getParameter("adminFlag")  : "";
 		String folderId      = request.getParameter("folderId")   != null ? request.getParameter("folderId")   : "";
 		String sortType    	 = request.getParameter("sortType")   != null ? request.getParameter("sortType")   : "";
 		String sortColumn    = request.getParameter("sortColumn") != null ? request.getParameter("sortColumn") : "";
@@ -1870,15 +1914,32 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 			folderName = commonUtil.cleanValueUnescape(folderName);
 			
 			if (reStatus.equalsIgnoreCase("OK")) {
-				List<OrganUserVO> toUserList = new ArrayList<OrganUserVO>();
-				toUserList.add(ezOrganService.getUserInfo(applicantId, lang, tenantId));
+	        	String notiSubType = "OPEN_ADMIT";
+	        	
+	        	List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
+	        	Map<String, Object> recipientMap = new HashMap<String, Object>();
+	        	recipientMap.put("userType", "PERSON");
+	        	recipientMap.put("companyId", userInfo.getCompanyID());
+	        	recipientMap.put("cn", applicantId);
+	        	notiRecipientList.add(recipientMap);
+	        	
+				String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientList, "WEBFOLDER", notiSubType, folderName, "", "", "", "", "", "");
+				logger.debug("webfolder " +  notiSubType + " noti status : " + notiStatus);
 				
-				String mailSubject = egovMessageSource.getMessage("ezWebFolder.ksa54", locale);
-				String mailContent = egovMessageSource.getMessage("ezWebFolder.ksa58", locale);
-				mailSubject = String.format(mailSubject, folderName);
-				mailContent = String.format(mailContent, folderName);
+				if (!ezPersonalService.hasNotiDiableItem(applicantId, NotiType.fromString("WEBFOLDER_OPEN_ADMIT"), NotiPlatform.MAIL, tenantId)) {
+					List<OrganUserVO> toUserList = new ArrayList<OrganUserVO>();
+					toUserList.add(ezOrganService.getUserInfo(applicantId, lang, tenantId));
+					
+					String mailSubject = egovMessageSource.getMessage("ezWebFolder.ksa54", locale);
+					String mailContent = egovMessageSource.getMessage("ezWebFolder.ksa58", locale);
+					mailSubject = String.format(mailSubject, folderName);
+					mailContent = String.format(mailContent, folderName);
+					
+					reStatus = sendNotiMail(loginCookie, toUserList, mailSubject, mailContent, locale); // OK, EMAIL_ERROR
+				} else {
+					reStatus = "OK";
+				}
 				
-				reStatus = sendNotiMail(loginCookie, toUserList, mailSubject, mailContent, locale); // OK, EMAIL_ERROR
 			}
 		}
 		
@@ -1917,15 +1978,33 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 			folderName = commonUtil.cleanValueUnescape(folderName);
 			
 			if (reStatus.equalsIgnoreCase("OK")) {
-				List<OrganUserVO> toUserList = new ArrayList<OrganUserVO>();
-				toUserList.add(ezOrganService.getUserInfo(applicantId, lang, tenantId));
+				String notiSubType = "OPEN_REJECT";
 				
-				String mailSubject = egovMessageSource.getMessage("ezWebFolder.ksa55", locale);
-				String mailContent = egovMessageSource.getMessage("ezWebFolder.ksa60", locale);
-				mailSubject = String.format(mailSubject, folderName);
-				mailContent = String.format(mailContent, folderName, reasonContent);
+				List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
+
+				Map<String, Object> recipientMap = new HashMap<String, Object>();
+				recipientMap.put("userType", "PERSON");
+				recipientMap.put("companyId", userInfo.getCompanyID());
+				recipientMap.put("cn", applicantId);
+				notiRecipientList.add(recipientMap);
+				String notiStatus = ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientList, "WEBFOLDER", notiSubType, folderName, "", "", "", "", "", "");
+				logger.debug("webfolder " +  notiSubType + " noti status : " + notiStatus);
 				
-				reStatus = sendNotiMail(loginCookie, toUserList, mailSubject, mailContent, locale); // OK, EMAIL_ERROR
+				
+				if (!ezPersonalService.hasNotiDiableItem(applicantId, NotiType.fromString("WEBFOLDER_OPEN_REJECT"), NotiPlatform.MAIL, tenantId)) {
+					List<OrganUserVO> toUserList = new ArrayList<OrganUserVO>();
+					toUserList.add(ezOrganService.getUserInfo(applicantId, lang, tenantId));
+					
+					String mailSubject = egovMessageSource.getMessage("ezWebFolder.ksa55", locale);
+					String mailContent = egovMessageSource.getMessage("ezWebFolder.ksa60", locale);
+					mailSubject = String.format(mailSubject, folderName);
+					mailContent = String.format(mailContent, folderName, reasonContent);
+					
+					reStatus = sendNotiMail(loginCookie, toUserList, mailSubject, mailContent, locale); // OK, EMAIL_ERROR
+				} else {
+					reStatus = "OK";
+				}
+				
 			}
 		}
 		

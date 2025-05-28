@@ -134,7 +134,8 @@ var strLang128 = ".";
 var strLang129 = "";
 var strLang130 = "Lịch trình nhóm";
 var strLang130_1 = "Lịch trình nhóm";
- 
+var strLang131 = "hiển thị ở trên cùng";
+
 var strLang253 = "Không có tài nguyên được chọn."
 var strLang254 = "Không thể xóa tài nguyên đã chọn."
 var strLang255 = "Dự trữ tài nguyên không thành công."
@@ -210,6 +211,25 @@ var strLang127_2 = "Company";
 var strLang130_2 = "Group";
 var strLang131_2 = "Collabo";
 var strLang141_2 = "Google";
-var strLangHSBScPt1 = "-";
+var strLangHSBScPt1 = ".";
 var strLangHSBScPt2 = ".";
 var strLangHSBScPt3 = "";
+
+/* 2024-05-21 김유진 - 일정 게시판 게시 메세지 추가 */
+var ezSchedule_kyj1 = "Không thể gửi lịch trình đến liệu lên bảng ảnh hoặc bảng ẩn danh hoặc URL-link-board.";
+
+/* 2024-06-24 김유진 - 일정관리 안내 메세지 추가 */
+var ezSchedule_kyj2 = "Vui lòng kiểm tra lại chu kỳ lặp lại một lần nữa.";
+
+/* 2024-07-18 조소정 - 일정관리 > 그룹일정 관리 > 작성 권한 기능 추가 */
+var ezSchedule_csj1 = "Có thể viết";
+
+/* 2024-08-06 이유정 - 임원일정 메세지 추가 */
+var strLang151_2 = "Giám đốc điều hành";
+
+// 2024-06-28 민지수 - 일정 > 첨부파일 드래그 앤 드롭 안내 메세지 추가
+var strLangMJS01 = "Bạn có thể kéo và thả để thêm tệp và thay đổi thứ tự của các tệp đã thêm.";
+
+/* 2025-02-07 기민혁 - 반복자원 체크 메세지 추가 */
+var strLangKMH1 = "Tài nguyên này không cho phép đặt chỗ lặp lại.";
+var strLangKMH2 = "Đã xảy ra lỗi";

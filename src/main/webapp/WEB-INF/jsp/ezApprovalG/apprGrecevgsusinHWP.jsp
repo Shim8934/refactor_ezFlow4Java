@@ -7,7 +7,8 @@
 	<head>
 		<title><spring:message code='ezApprovalG.t1308'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -25,6 +26,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/Kaoni_ActiveX.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/nonElecRec.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/apprGSummary.js')}"></script>
 		<script type="text/javascript">
 		    var pWriterDeptID;
 		    var pDocID = "<c:out value = '${docID}'/>";
@@ -131,6 +133,8 @@
 			
 			//문서유통 재배부요청 처리하기 위해 추가. 2020-05-14 홍대표.
 			var pSusinAdmin = "<c:out value = '${pSusinAdmin}'/>";
+			
+			var isRelay = GetRelayDocInfo(); // 중계문서인지의 여부를 true/false로 반환;
 		    
 		    function process_AfterOpen() {
 		        try {
@@ -312,7 +316,6 @@
 			        }
 			        
 			        //2019-02-28 중계문서일경우 재전송요청 뜨게 수정
-			        var isRelay = GetRelayDocInfo();
 			        if (isRelay) {
 			        	document.getElementById("btnReqReSend").style.display = "";
 // 	                    document.getElementById("btnReqReturn").style.display = "";
@@ -378,7 +381,6 @@
 			        }
 			    } else {
 			        if (pFormHref == "") {
-			            var isRelay = GetRelayDocInfo();
 			            if (isRelay) {
 			                try {
 			                	/* 재발송기능 display:none처리 2018-08-25 */
@@ -451,15 +453,11 @@
 			            setNodeText(btnRJunkyul.childNodes[0], "<spring:message code='ezApprovalG.t1406'/>");
 			
 			            if (pDocType == "001") {
-			                btnReturn.style.display = "none";
-			
-			                var NewIsRelay = GetRelayDocInfo();
-			                if (NewIsRelay) {
-			                	/* 재발송기능 display:none처리 */
-			                    btnReqReSend.style.display = "";
-			                } else {
-			                    btnReqReSend.style.display = "none";
-			                }
+							var btnReturn = document.getElementById("btnReturn");
+							if (btnReturn) {
+								btnReturn.style.display = "none";
+							}
+                            btnReqReSend.style.display = isRelay ? "" : "none";
 			
 			                if (pAprState == "011") {
 			                    btnDistribute.style.display = "";
@@ -492,15 +490,12 @@
 	        	            if (g_DraftFlag == "REDRAFT" && pDraftFlag == "SUSIN") {
 	        	                setMenuBar("btnDistribute", false);
 	        	            }
-	                    	
-	                        btnReturn.style.display = "none";
 
-	                        var NewIsRelay = GetRelayDocInfo();
-	                        if (NewIsRelay) {
-	                            btnReqReSend.style.display = "";
-	                        } else {
-	                            btnReqReSend.style.display = "none";
-	                        }
+							var btnReturn = document.getElementById("btnReturn");
+							if (btnReturn) {
+								btnReturn.style.display = "none";
+							}
+                            btnReqReSend.style.display = isRelay ? "" : "none";
 
 	                        if (pAprState == "011") {
 	                            btnDistribute.style.display = "";
@@ -1398,7 +1393,10 @@
 			function JiJungBeBuDisable() {
 			    btnAssign.style.display = "none";
 			    btnDistribute.style.display = "none";
-			    btnReturn.style.display = "none";
+				var btnReturn = document.getElementById("btnReturn");
+				if (btnReturn) {
+					btnReturn.style.display = "none";
+				}
 			}
 		
 			function getGongRamDocInfo() {
@@ -1709,7 +1707,7 @@
 			
 			function btnDel_onclick() {
 				if (nonElecRec == "Y") {
-					if (confirm("삭제하시겠습니까 ?")) {
+					if (confirm(strLang962)) {
 						RemoveSusinNonElecRecDoc(pDocID);
 					}
 				}
@@ -1776,6 +1774,7 @@
 	                <div id="menu">
 	                    <ul>
 	                        <li id="btntotaldocinfo"><span onclick="return btnApprovalInfo()"><spring:message code='ezApprovalG.t1742'/></span></li>
+	                        <li id="btnSummary"><span onclick="return btnSummaryEdit()"><spring:message code='ezApprovalG.t1203'/></span></li> <%-- 요약전 --%>
 	                        <span style="display: none">
 	                            <li id="btnSetAprLine"><span onclick="return btnSetAprLine_onclick()"><spring:message code='ezApprovalG.t153'/></span></li>
 	                        </span>
@@ -1801,12 +1800,12 @@
 	                        <li id="btnReDistribute" style="display: none"><span onclick="return btnReDistribute_onclick()"><spring:message code='ezApprovalG.t1433'/></span></li>
 	                        <c:choose>
 		                        <c:when test="${isNonElecRec eq 'Y'}">
-			                        <li id="btnDel"><span onclick="return btnDel_onclick()">삭제</span></li>
+			                        <li id="btnDel"><span onclick="return btnDel_onclick()"><spring:message code='ezApprovalG.t266'/></span></li>
 		                        </c:when>
-		                        <c:otherwise>
-			                        <li id="btnReturn"><span onclick="return btnReturn_onclick()"><spring:message code='ezApprovalG.t1434'/></span></li>
-		                        </c:otherwise>
 	                        </c:choose>
+							<c:if test="${isNonElecRec != 'Y'}">
+								<li id="btnReturn"><span onclick="return btnReturn_onclick()"><spring:message code='ezApprovalG.t1434'/></span></li>
+							</c:if>
 	                        <li id="btnReqReSend" style="display: none"><span onclick="return btnReqReSend_onclick()"><spring:message code='ezApprovalG.t1435'/></span></li>
 	                        <li id="btnEdit"><span onclick="return btnEdit_onclick()"><spring:message code='ezApprovalG.t44'/></span></li>
 	                        <li id="btnPrint"><span onclick="return btnPrint_onclick()"><spring:message code='ezApprovalG.t60'/></span></li>

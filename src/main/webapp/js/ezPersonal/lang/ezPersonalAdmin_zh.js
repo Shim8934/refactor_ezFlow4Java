@@ -50,3 +50,5 @@ var srtLangHSBEx01 = "Unacceptable extension.";
 
 /* 2022-11-22 조소정 - 관리자 > 포탈 > 빠른링크 > 중국어 버전 추가 */
 var strLangCSJQL01 = "汉语";
+
+var strLangQuickLinkSize01 = "&nbsp&nbsp&nbsp(图片尺寸为100*50像素。)";

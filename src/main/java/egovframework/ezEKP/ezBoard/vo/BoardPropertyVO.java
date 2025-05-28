@@ -107,6 +107,8 @@ public class BoardPropertyVO {
 	private String	reply_FG;
 	/** 게시물을 삭제할 수 있는지 여부(true/false)*/
 	private String	delete_FG;
+	/** 작성자가 게시물을 수정/이동 할 수 있는지 여부(true/false) 현재는 delete_FG에 종속 됨*/
+	private String	edit_FG;
 	/** 권한을 하위로 상속할 것인지 여부(true/false)*/
 	private String	inherit_FG;
 	/** 게시를 알릴 것인지 여부(true/false)(사용안함)*/
@@ -153,6 +155,20 @@ public class BoardPropertyVO {
 	private String mailFG_Comment;
 	/** 2023-07-13 임정은 - 게시판 댓글 좋아요, 싫어요 기능 플래그 추가 */
 	private String reactFlag;
+	/** 2023-04-06 기민혁 - 게시판 싫어요 기능 플래그 추가 */
+	private String disLikeFlag;
+	/** 키워드 기능 사용여부 */
+	private String useKeyword;
+	/** 2024-10-23 정지은 - 첨부파일 사용여부**/
+	private String attachmentFlag;
+	
+	private String publicFlag = "N";
+	/** 2024-10-22 정지은 - 최근게시물 사용여부**/
+	private String allNewBoardFlag;
+	/** 2025-01-21 임정은 - 게시자명선택 사용여부 플래그 **/
+	private String writerFlag;
+	/** 2024-09-30 이혜림 - 게시판 별점 기능 플래그 추가**/
+	private String starRatingFlag;
 	
 	public int getSs_board_maxRows() {
 		return ss_board_maxRows;
@@ -405,6 +421,7 @@ public class BoardPropertyVO {
 	}
 	public void setDelete_FG(String delete_FG) {
 		this.delete_FG = delete_FG;
+		this.edit_FG = delete_FG;
 	}
 	public String getInherit_FG() {
 		return inherit_FG;
@@ -597,12 +614,59 @@ public class BoardPropertyVO {
 	public void setMailFG_Comment(String mailFG_Comment) {
 		this.mailFG_Comment = mailFG_Comment;
 	}
-
 	public String getReactFlag() {
 		return reactFlag;
 	}
 	public void setReactFlag(String reactFlag) {
 		this.reactFlag = reactFlag;
 	}
+	public String getDisLikeFlag() {
+		return disLikeFlag;
+	}
+	public void setDisLikeFlag(String disLikeFlag) {
+		this.disLikeFlag = disLikeFlag;
+	}
+    public String getEdit_FG() {
+        return delete_FG;
+    }
+    public String getPublicFlag() {
+        return publicFlag;
+    }
+    public void setPublicFlag(String publicFlag) {
+        this.publicFlag = publicFlag;
+    }
+	public String getUseKeyword() {
+		return useKeyword;
+	}
+	public void setUseKeyword(String useKeyword) {
+		this.useKeyword = useKeyword;
+	}
 	
+	public String getAttachmentFlag() {
+		return attachmentFlag;
+	}
+
+	public void setAttachmentFlag(String attachmentFlag) {
+		this.attachmentFlag = attachmentFlag;
+	}
+	public String getAllNewBoardFlag() {
+		return allNewBoardFlag;
+	}
+
+	public void setAllNewBoardFlag(String allNewBoardFlag) {
+		this.allNewBoardFlag = allNewBoardFlag;
+	}
+	public String getWriterFlag() {
+		return writerFlag;
+	}
+	public void setWriterFlag(String writerFlag) {
+		this.writerFlag = writerFlag;
+	}
+	public String getStarRatingFlag() {
+		return starRatingFlag;
+	}
+
+	public void setStarRatingFlag(String starRatingFlag) {
+		this.starRatingFlag = starRatingFlag;
+	}
 }

@@ -5,7 +5,8 @@
 <html>
 	<head>
 	    <title><spring:message code="ezPersonal.yej04"/></title>
-	    <link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+	    <link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('/js/ezEmail/Controls/ezSearchDatePicker.htc')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('main.lhm01', 'msg')}" type="text/css">
@@ -43,9 +44,6 @@
 	    	#countInfo {
 	    		overflow: hidden;
 	    		display: inline-block;
-	    	}
-	    	.countColor {
-	    		color:#017BEC;
 	    	}
 	    </style>
 	    <script>
@@ -97,12 +95,8 @@
                 var objNode;
                 
                 createNodeInsert(xmlpara, objNode, "DATA");
-                createNodeAndInsertText(xmlpara, objNode, "DEPTID", deptId);
-                if (companyId == "Top") {
-                	createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top/organ");
-	            } else {
-	            	createNodeAndInsertText(xmlpara, objNode, "TOPID", companyId);
-	            }
+                createNodeAndInsertText(xmlpara, objNode, "DEPTID", "");
+				createNodeAndInsertText(xmlpara, objNode, "TOPID", companyId + "/organ");
                 
                 createNodeAndInsertText(xmlpara, objNode, "PROP", "");
 /*                 createNodeAndInsertText(xmlpara, objNode, "ADMINDIST", "true");
@@ -125,7 +119,7 @@
 	                    treeView.DataBind("TreeView");
 	                }
 	                else {
-	                    alert("<spring:message code='ezEmail.t13' />" + xmlHTTP.statusText);
+	                    alert("<spring:message code='ezEmail.t13' />" + xmlHTTP.status);
 	                    xmlHTTP = null;
 	                }
 	            }
@@ -373,9 +367,9 @@
 							var strIsLeaf = $("div#" + id + "").attr("isleaf");
 							
 							if (result.containLow == "YES" && strIsLeaf != "TRUE") { //하위가 있고, 표기방식이 [1명/ 전체10명]일 경우
-			        			document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='countColor'>" + result.totalCount + "</span> / <span class='countColor'>" + parseInt(result.totalCount + result.totalCount2) + "</span>";
+			        			document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='txt_color'>" + result.totalCount + "</span> / <span class='txt_color'>" + parseInt(result.totalCount + result.totalCount2) + "</span>";
 							} else {
-								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='countColor'>" + result.totalCount + "</span>";
+								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='txt_color'>" + result.totalCount + "</span>";
 							}
 							//2018-08-01 김보미 - 부서명 [사원수] 가 넘치는지 확인하는 함수
 							deptNameLong(result.containLow, strIsLeaf);
@@ -416,7 +410,7 @@
 	                        check_presence();
 	                    }
 	                } else {
-	                    alert("<spring:message code='ezEmail.t9' />" + g_xmlHTTP.statusText)
+	                    alert("<spring:message code='ezEmail.t9' />" + g_xmlHTTP.status)
 	                }
 	
 	                g_xmlHTTP = null;
@@ -622,7 +616,7 @@
 	                    treeView.DataSource(loadXMLString(g_xmlHTTP.responseText));
 	                    treeView.DataBind("TreeView");
 	                } else {
-	                    alert("<spring:message code='ezEmail.t9' />" + g_xmlHTTP.statusText)
+	                    alert("<spring:message code='ezEmail.t9' />" + g_xmlHTTP.status)
 	                g_xmlHTTP = null;
 	            	}
 	        	}
@@ -658,7 +652,7 @@
 	            	if (subDept == null || subDept == undefined) {
 	            		subDept = false;
 	            	} else {
-	            		if (subDept == "Y") {
+	            		if (subDept == "Y" || subDept == "true") {
 	            			subDept = true;
 	            		} else {
 	            			subDept = false
@@ -693,11 +687,11 @@
 	            var UserListHTML = "";
 
 	           /*  if (SelectDeptNM.getAttribute("countinfo") != "1" && SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length && SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length != "") {
-	                //SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang1 + "</span>]";
+	                //SelectDeptNM.innerHTML += "-[<span class='txt_color'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang1 + "</span>]";
 	                if (SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length ==  getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0])) {
-	        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang1 + "</span>]";
+	        			SelectDeptNM.innerHTML += "-[<span class='txt_color'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang1 + "</span>]";
 	        		} else {
-	        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + "/" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0]) + strLang1 + "</span>]";
+	        			SelectDeptNM.innerHTML += "-[<span class='txt_color'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + "/" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0]) + strLang1 + "</span>]";
 	        		}
 	                
 	                SelectDeptNM.setAttribute("countinfo", "1")
@@ -709,7 +703,7 @@
 	                document.getElementById("Search_txtlist_table").style.display = "none";
 	                
 	                if (pSeach) {
-	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + "<spring:message code='ezEmail.t655' />" + "" + "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang1 + "</span>]";
+	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + "<spring:message code='ezEmail.t655' />" + "" + "-[<span class='txt_color'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang1 + "</span>]";
 	                    SelectDeptNM.setAttribute("countinfo", "1")
 	                }
 	            } else {
@@ -722,7 +716,7 @@
 	                } else {
 	                    document.getElementById("Search_txtlist_table").style.display = "";
 	                    document.getElementById("txtlist_table").style.display = "none";
-	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + "<spring:message code='ezEmail.t655' />" + "" + "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang1 + "</span>]";
+	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + "<spring:message code='ezEmail.t655' />" + "" + "-[<span class='txt_color'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang1 + "</span>]";
 	                    SelectDeptNM.setAttribute("countinfo", "1")
 	                }
 	            }
@@ -1571,7 +1565,7 @@
 		            xmlHTTP.send("");
 		            
 		            if (xmlHTTP.status != 200) {
-			            alert("<spring:message code='ezEmail.t574' />" + xmlHTTP.statusText);
+			            alert("<spring:message code='ezEmail.t574' />" + xmlHTTP.status);
 		            } else {
 		            	document.getElementById("ListViewGroup").innerHTML = "";
 			            var pListViewGroup = new ListView();
@@ -2072,7 +2066,7 @@
 		            xmlHTTP.send("");
 		            
 		            if (xmlHTTP.status != 200) {
-			            alert("<spring:message code='ezEmail.t574' />" + xmlHTTP.statusText);
+			            alert("<spring:message code='ezEmail.t574' />" + xmlHTTP.status);
 		            } else {
 		            	document.getElementById("ListViewJikwi").innerHTML = "";
 			            var pListViewJikwi = new ListView();
@@ -2116,7 +2110,7 @@
 		            xmlHTTP.send("");
 		            
 		            if (xmlHTTP.status != 200) {
-			            alert("<spring:message code='ezEmail.t574' />" + xmlHTTP.statusText);
+			            alert("<spring:message code='ezEmail.t574' />" + xmlHTTP.status);
 		            } else {
 		            	document.getElementById("ListViewJikchek").innerHTML = "";
 			            var pListViewJikchek = new ListView();
@@ -2367,8 +2361,8 @@
 						                	<tr>
 						                    	<th><spring:message code='ezBoard.t999025' /></th>
 						                    	<td>
-							                        <input type="checkbox" id="admin_OK" name="admin_OK" onclick="checkbox_onclick(event)">&nbsp;<spring:message code='ezSurvey.t51' />
-							                        <input type="checkbox" id="admin_NO" name="admin_NO" onclick="checkbox_onclick(event)">&nbsp;<spring:message code='ezSurvey.t50' />
+							                        <input type="checkbox" id="admin_OK" disabled name="admin_OK" onclick="checkbox_onclick(event)">&nbsp;<spring:message code='ezSurvey.t51' />
+							                        <input type="checkbox" id="admin_NO" disabled name="admin_NO" onclick="checkbox_onclick(event)">&nbsp;<spring:message code='ezSurvey.t50' />
 							                    </td>
 						                	</tr>
 						            	</tbody>

@@ -5,7 +5,8 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezPersonal.e3', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
@@ -97,7 +98,7 @@
 		                treeView.DataSource(g_xmlHTTP.responseXML);
 		                treeView.DataBind("TreeView");
 		            } else {
-		                alert("<spring:message code = 'ezPersonal.t17' />" + g_xmlHTTP.statusText);
+		                alert("<spring:message code = 'ezPersonal.t17' />" + g_xmlHTTP.status);
 		                g_xmlHTTP = null;
 		            }
 		        }
@@ -565,8 +566,8 @@
 		        try {
 		            xmlHTTP.open("POST", "/ezOrgan/getSearchList.do", false);
 		            xmlHTTP.send(xmlDOM);
-		            if (xmlHTTP.statusText != "OK") {
-		                alert("<spring:message code = 'ezPersonal.t24' />" + xmlHTTP.statusText);
+		            if (xmlHTTP.status != 200) {
+		                alert("<spring:message code = 'ezPersonal.t24' />" + xmlHTTP.status);
 		                xmlDOM = null;
 		                xmlHTTP = null;
 		            }

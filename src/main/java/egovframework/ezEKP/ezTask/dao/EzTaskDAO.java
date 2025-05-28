@@ -11,7 +11,7 @@ import egovframework.ezEKP.ezTask.vo.TaskConfigVO;
 import egovframework.ezEKP.ezTask.vo.TaskGeneralVO;
 import egovframework.ezEKP.ezTask.vo.TaskInfoVO;
 import egovframework.ezEKP.ezTask.vo.TaskShareVO;
-import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzTaskDAO")
 public class EzTaskDAO extends EgovAbstractDAO {

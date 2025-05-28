@@ -476,6 +476,7 @@ function CalendarView(pTagetID,chk_str) {
     		var dragDay = ui.draggable.children().attr("id");
     		var dragType = ui.draggable.children().attr("datetype");
     		var dropDay = $(this).attr("day");
+    		var completeFG = ui.draggable.children().attr("completefg");
     		
     		if (dragDay.substring(4, 14) == dropDay) {
     			return;
@@ -485,7 +486,7 @@ function CalendarView(pTagetID,chk_str) {
     			dragDay += "ALL";
     		}
     		
-    		if (updateDragSchedule(typeCal, dragId, dragDay, dropDay)) {
+    		if (updateDragSchedule(typeCal, dragId, dragDay, dropDay, completeFG)) {
     			RefreshView();
     		}
     	}
@@ -505,6 +506,7 @@ function CalendarView(pTagetID,chk_str) {
     			var dragId  = ui.draggable.attr("scheduleid");
     			var dropDay = $(this).attr("id");
     			var dragDay = ui.draggable.attr("id");
+    			var completeFG = ui.draggable.attr("completefg");
     			
     			if (dragDay.substring(4, 14) == dropDay.substring(0, 10)) {
     				return;
@@ -513,7 +515,7 @@ function CalendarView(pTagetID,chk_str) {
     			dragDay = dragDay.substring(4, dragDay.lastIndexOf("_"));	
     			dragDay = changeDateFormat(dragDay);
     			
-    			if (updateDragSchedule(typeCal, dragId, dragDay, dropDay)) {
+    			if (updateDragSchedule(typeCal, dragId, dragDay, dropDay, completeFG)) {
     				RefreshView();
     			}
     		}
@@ -534,6 +536,7 @@ function CalendarView(pTagetID,chk_str) {
     			var dropId  = $(this).attr("Id");
     			var dropDay = dropId.substring(3, dropId.indexOf("_Value"));
     			var dragDay = ui.draggable.attr("id");
+    			var completeFG = ui.draggable.attr("completefg");
     			
     			dragDay = dragDay.substring(4, dragDay.lastIndexOf("_"));
     			
@@ -544,7 +547,7 @@ function CalendarView(pTagetID,chk_str) {
     			dragDay = changeDateFormat(dragDay);
     			dropDay = changeDateFormat(dropDay);
     			
-    			if (updateDragSchedule(typeCal, dragId, dragDay, dropDay)) {
+    			if (updateDragSchedule(typeCal, dragId, dragDay, dropDay, completeFG)) {
     				RefreshView();
     			}
     		}
@@ -683,7 +686,7 @@ function GetMonthBodyObj() {
 
     var oBeforeMaxDay = oBeforeDate.getDate();
     var startThisDay = oThisDate.getDay();
-    oThisMonth = oThisDate.getMonth() + 1;
+    oThisMonth = oBeforeDate.getMonth() + 1;
 
     if (oThisMonth == 12) {
         oThisMonth = 0;
@@ -1665,7 +1668,28 @@ function memorialDayCheck(solarDate, lunarDate) {
         				memorialDays[i].solarLunar == 1) {
         			tempmemorialDays.push(memorialDays[i]);
         		}
-        		if (memorialDays[i].month == lunarDate.month &&
+        		
+        		if (memorialDays[i].month == "12" && memorialDays[i].day == "30" && memorialDays[i].solarLunar == 2 && !memorialDays[i].leapMonth
+        			&& (lunarDate.month == "12" && lunarDate.day == "29")) {
+        			var tempDate = new Date(solarDate.getTime());
+    				tempDate.setDate(tempDate.getDate() + 1);
+    				var tempLunarDate = lunarCalc(tempDate.getFullYear(), tempDate.getMonth() + 1, tempDate.getDate(), 1);
+                    var tempLunarDatemonth = tempLunarDate.month;
+                    var tempLunarDateday = tempLunarDate.day;
+                    
+                    if (!(tempLunarDatemonth == "12" && tempLunarDateday == "30")) {
+                    	var tempMemorial = {}
+                    	var keys = Object.keys(memorialDays[i]);
+                        
+                        for (var j = 0; j < keys.length; j++) {
+                            var key = keys[j];
+                            tempMemorial[key] = memorialDays[i][key];
+                        }
+                        tempMemorial.day = "29"
+                    	tempmemorialDays.push(tempMemorial);
+                    }
+    				
+    			} else if (memorialDays[i].month == lunarDate.month &&
         				memorialDays[i].day == lunarDate.day &&
         				memorialDays[i].solarLunar == 2 &&
         				!memorialDays[i].leapMonth) {
@@ -1696,7 +1720,28 @@ function yearmemorialDayCheck(solarDate, lunarDate) {
         				yearmemorialDays[i].solarLunar == 1) {
         			tempyearmemorialDays.push(yearmemorialDays[i]);
         		}
-        		if (yearmemorialDays[i].year == lunarDate.year &&
+        		
+        		if (yearmemorialDays[i].year == lunarDate.year && yearmemorialDays[i].month == "12" && yearmemorialDays[i].day == "30" && yearmemorialDays[i].solarLunar == 2 && !yearmemorialDays[i].leapMonth
+        			&& (lunarDate.month == "12" && lunarDate.day == "29")) {
+        			var tempDate = new Date(solarDate.getTime());
+    				tempDate.setDate(tempDate.getDate() + 1);
+    				var tempLunarDate = lunarCalc(tempDate.getFullYear(), tempDate.getMonth() + 1, tempDate.getDate(), 1);
+                    var tempLunarDatemonth = tempLunarDate.month;
+                    var tempLunarDateday = tempLunarDate.day;
+                    
+                    if (!(tempLunarDatemonth == "12" && tempLunarDateday == "30")) {
+                    	var tempMemorial = {}
+                    	var keys = Object.keys(yearmemorialDays[i]);
+                        
+                        for (var j = 0; j < keys.length; j++) {
+                            var key = keys[j];
+                            tempMemorial[key] = yearmemorialDays[i][key];
+                        }
+                        tempMemorial.day = "29"
+                        tempyearmemorialDays.push(tempMemorial);
+                    }
+        				
+        		} else if (yearmemorialDays[i].year == lunarDate.year &&
         				yearmemorialDays[i].month == lunarDate.month &&
         				yearmemorialDays[i].day == lunarDate.day &&
         				yearmemorialDays[i].solarLunar == 2 &&
@@ -2302,7 +2347,7 @@ function myDate(year, month, day, leapMonth) {
     this.day = day;
     this.leapMonth = leapMonth;
 }
-function updateDragSchedule(typeCal, dragId, dragDay, dropDay) {
+function updateDragSchedule(typeCal, dragId, dragDay, dropDay, completeFG) {
 	var rtv = true;
 	
 	$.ajax({
@@ -2314,7 +2359,8 @@ function updateDragSchedule(typeCal, dragId, dragDay, dropDay) {
 			typeCal: typeCal,
 			dragId : dragId,
 			dragDay: dragDay,
-			dropDay: dropDay
+			dropDay: dropDay,
+			completeFG: completeFG
 		},
 		success: function(text){
 			if (text == "1") { //권한 없음

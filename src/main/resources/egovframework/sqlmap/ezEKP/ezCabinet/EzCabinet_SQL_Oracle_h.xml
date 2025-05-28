@@ -34,6 +34,7 @@
 		<result property="useStatus"        column="use_status"           columnIndex="11" />
 		<result property="companyId"        column="company_id"           columnIndex="12" />
 		<result property="tenantId"         column="tenant_id"            columnIndex="13" />
+		<result property="saveFlag"         column="saveFlag"             columnIndex="14" />
 	</resultMap>
 	
 	<!-- OrganDeptVO resultMap -->
@@ -224,8 +225,8 @@
 		]]>
 	</select>
 	
+	<!-- 2024-07-31 홍승비 - SQL Injection 수정 > $ 기호 제거 -->
 	<select id="EzCabinetDAO_h.getSearchMemberList" resultMap="deptMemberInfo">
-		<![CDATA[
 			SELECT
 				*
 			FROM
@@ -263,18 +264,30 @@
 							AND
 								TENANT_ID = #tenantId#
 							AND
-								$srchOption$ LIKE concat('%', concat(#srchValue#, '%'))
+							<isEqual property="srchOption" compareValue="DISPLAYNAME">DISPLAYNAME</isEqual>
+							<isEqual property="srchOption" compareValue="DISPLAYNAME2">DISPLAYNAME2</isEqual>
+							<isEqual property="srchOption" compareValue="CN">CN</isEqual>
+							<isEqual property="srchOption" compareValue="DESCRIPTION">DESCRIPTION</isEqual>
+							<isEqual property="srchOption" compareValue="DESCRIPTION2">DESCRIPTION2</isEqual>
+							<isEqual property="srchOption" compareValue="TITLE">TITLE</isEqual>
+							<isEqual property="srchOption" compareValue="TELEPHONENUMBER">TELEPHONENUMBER</isEqual>
+							<isEqual property="srchOption" compareValue="MOBILE">MOBILE</isEqual>
+							<isEqual property="srchOption" compareValue="HOMEPHONE">HOMEPHONE</isEqual>
+							<isEqual property="srchOption" compareValue="FACSIMILETELEPHONENUMBER">FACSIMILETELEPHONENUMBER</isEqual>
+							<isEqual property="srchOption" compareValue="MAIL">MAIL</isEqual>
+							<isEqual property="srchOption" compareValue="STREETADDRESS">STREETADDRESS</isEqual>
+								LIKE concat('%', concat(#srchValue#, '%'))
 						) AA
 						ORDER BY
 							EXTENSIONATTRIBUTE15 ASC,
 							DISPLAYNAME ASC
+		<![CDATA[
 				) k WHERE ROWNUM <= #startPoint# + #listCount#
 			) WHERE RNUM >= #startPoint# + 1
 		]]>
 	</select>
 	
 	<select id="EzCabinetDAO_h.getTotalSearchMembers" resultClass="Integer">
-		<![CDATA[
 			SELECT
 				COUNT(AA.CN)
 			FROM (
@@ -288,10 +301,21 @@
 					CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
 				AND
 					TENANT_ID = #tenantId#
-				AND 
-					$srchOption$ LIKE concat('%', concat(#srchValue#, '%'))
+				AND
+				<isEqual property="srchOption" compareValue="DISPLAYNAME">DISPLAYNAME</isEqual>
+				<isEqual property="srchOption" compareValue="DISPLAYNAME2">DISPLAYNAME2</isEqual>
+				<isEqual property="srchOption" compareValue="CN">CN</isEqual>
+				<isEqual property="srchOption" compareValue="DESCRIPTION">DESCRIPTION</isEqual>
+				<isEqual property="srchOption" compareValue="DESCRIPTION2">DESCRIPTION2</isEqual>
+				<isEqual property="srchOption" compareValue="TITLE">TITLE</isEqual>
+				<isEqual property="srchOption" compareValue="TELEPHONENUMBER">TELEPHONENUMBER</isEqual>
+				<isEqual property="srchOption" compareValue="MOBILE">MOBILE</isEqual>
+				<isEqual property="srchOption" compareValue="HOMEPHONE">HOMEPHONE</isEqual>
+				<isEqual property="srchOption" compareValue="FACSIMILETELEPHONENUMBER">FACSIMILETELEPHONENUMBER</isEqual>
+				<isEqual property="srchOption" compareValue="MAIL">MAIL</isEqual>
+				<isEqual property="srchOption" compareValue="STREETADDRESS">STREETADDRESS</isEqual>
+					LIKE concat('%', concat(#srchValue#, '%'))
 			) AA
-		]]>
 	</select>
 	
 	<!--***********************************************************************************
@@ -321,9 +345,12 @@
 					tbl_cb_share s join tbl_usermaster u on s.shared_id = u.cn and s.tenant_id = u.tenant_id and s.shared_type = 2
 				where s.cabinet_id = #cabinetId# and s.sharer_id = #userId# and s.tenant_id = #tenantId# and s.use_status = 1
 		]]>
+		<isEmpty property="searchFlag">
+			and s.saveflag = 1
+		</isEmpty>
 		<![CDATA[
 				union
-				
+
 				select
 					d.cn                                                                 as cn,
 					s1.shared_type                                                       as shared_type,
@@ -336,11 +363,18 @@
 					tbl_cb_share s1 join tbl_deptmaster d on s1.shared_id = d.cn and s1.tenant_id = d.tenant_id and (s1.shared_type = 0 or s1.shared_type = 1)
 				where s1.cabinet_id = #cabinetId# and s1.sharer_id = #userId# and s1.tenant_id = #tenantId# and s1.use_status = 1
 		]]>
+		<isEmpty>
+			and s1.saveflag = 1
+		</isEmpty>
 		<![CDATA[
 			) s2
 		]]>
 		<isNotEmpty property="searchValue">
-			where $sqlQuery$ like concat('%', concat(#searchValue#, '%'))
+			where
+			<isEqual property="sqlQuery" compareValue="DISPLAY_NAME">display_name</isEqual>
+			<isEqual property="sqlQuery" compareValue="CN">cn</isEqual>
+			<isEqual property="sqlQuery" compareValue="DEPARTMENT_NAME">department_name</isEqual>
+			like concat('%', concat(#searchValue#, '%'))
 		</isNotEmpty>
 		order by s2.share_date asc
 	</select>
@@ -410,32 +444,61 @@
 	
 	<insert id="EzCabinetDAO_h.saveShareUserList">
 		<selectKey keyProperty="temp" resultClass="Integer">
-			<![CDATA[ select 1 from dual where not exists (select share_id, cabinet_id from tbl_cb_share where cabinet_id = #cabinetId# and sharer_id = #userId# and shared_id = #sharedId# and shared_type = #shareType# and tenant_id = #tenantId#)]]>
+			select count(*) from tbl_cb_share where cabinet_id = #cabinetId# and sharer_id = #userId# and shared_id = #sharedId# and shared_type = #shareType# and tenant_id = #tenantId#
 		</selectKey>
-		<isEqual property="temp" compareValue="1">
-			<![CDATA[
-				insert into tbl_cb_share (
-					share_id,   cabinet_id,  sharer_id,        sharer_name1, sharer_name2, shared_id,  shared_type, 
-					permission, share_date,  child_permission, use_status,   company_id,   tenant_id
-				)
-				values (
-					#shareId#,    #cabinetId#, #userId#,          #userName1#, #userName2#, #sharedId#, #shareType#,
-					#permission#, to_date(#shareDate#, 'YYYY-MM-DD HH24:MI:SS'), #childPermission#, 1,           #company#,   #tenantId#
-				)
-			]]>
-		</isEqual>
-		<isNotEqual property="temp" compareValue="1">
-			<![CDATA[
-				update
-					tbl_cb_share 
-				set
-					use_status       = 1,
-					permission       = #permission#,
-					child_permission = #childPermission#
-				where
-					cabinet_id = #cabinetId# and sharer_id = #userId# and shared_id = #sharedId# and shared_type = #shareType# and tenant_id = #tenantId#
-			]]>
-		</isNotEqual>
+		<isLessThan property="temp"  compareValue="1">
+			<isEqual property="searchFlag" compareValue="Y">
+				<![CDATA[
+					insert into tbl_cb_share (
+						share_id,   cabinet_id,  sharer_id,        sharer_name1, sharer_name2, shared_id,  shared_type,
+						permission, share_date,  child_permission, use_status, saveflag, company_id,   tenant_id
+					)
+					values (
+						#shareId#,    #cabinetId#, #userId#,          #userName1#, #userName2#, #sharedId#, #shareType#,
+						#permission#, to_date(#shareDate#, 'YYYY-MM-DD HH24:MI:SS'), #childPermission#, 1, 0,          #company#,   #tenantId#
+					)
+				]]>
+			</isEqual>
+			<isEqual property="searchFlag" compareValue="N">
+				<![CDATA[
+					insert into tbl_cb_share (
+						share_id,   cabinet_id,  sharer_id,        sharer_name1, sharer_name2, shared_id,  shared_type,
+						permission, share_date,  child_permission, use_status, saveflag, company_id,   tenant_id
+					)
+					values (
+						#shareId#,    #cabinetId#, #userId#,          #userName1#, #userName2#, #sharedId#, #shareType#,
+						#permission#, to_date(#shareDate#, 'YYYY-MM-DD HH24:MI:SS'), #childPermission#, 1, 1,          #company#,   #tenantId#
+					)
+				]]>
+			</isEqual>
+		</isLessThan>
+		<isGreaterThan property="temp" compareValue="0">
+			<isEqual property="searchFlag" compareValue="Y">
+				<![CDATA[
+					update
+						tbl_cb_share
+					set
+						use_status       = 1,
+						permission       = #permission#,
+						child_permission = #childPermission#
+					where
+						cabinet_id = #cabinetId# and sharer_id = #userId# and shared_id = #sharedId# and shared_type = #shareType# and tenant_id = #tenantId#
+				]]>
+			</isEqual>
+			<isEqual property="searchFlag" compareValue="N">
+				<![CDATA[
+					update
+						tbl_cb_share
+					set
+						use_status       = 1,
+						permission       = #permission#,
+						child_permission = #childPermission#,
+						saveflag         = 1
+					where
+						cabinet_id = #cabinetId# and sharer_id = #userId# and shared_id = #sharedId# and shared_type = #shareType# and tenant_id = #tenantId#
+				]]>
+			</isEqual>
+		</isGreaterThan>
 	</insert>
 	
 	<update id="EzCabinetDAO_h.modifyShareUserList">

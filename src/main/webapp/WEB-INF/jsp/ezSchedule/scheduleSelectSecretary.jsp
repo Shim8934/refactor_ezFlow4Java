@@ -7,7 +7,8 @@
 	<head>
 		<title><spring:message code='ezApprovalG.F0054' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
-	    <link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css" />	    
 	    <script type="text/javascript" src="${util.addVer('ezOrgan.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>
@@ -26,7 +27,7 @@
 		            ReturnFunction = opener.schedule_select_secretary_cross_dialogArguments[1];
 		        } catch (e) {}
 		        
-		        getDeptFullTree('${deptID}');
+		        getDeptFullTree('${companyID}');
 		    }
 	
 		    function Tree_setconfig() {
@@ -40,9 +41,10 @@
 		        }
 		    }
 	
-		    function getDeptFullTree(deptid) {
+		    function getDeptFullTree(text) {
+				var companyId = text;
 		        g_xmlHTTP = createXMLHttpRequest();
-		        var strQuery = "<DATA><DEPTID></DEPTID><TOPID>"+companyID+"/other</TOPID><PROP></PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
+		        var strQuery = "<DATA><DEPTID></DEPTID><TOPID>"+companyId+"/other</TOPID><PROP></PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
 	
 		        g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		        g_xmlHTTP.onreadystatechange = event_getDeptFullTree;

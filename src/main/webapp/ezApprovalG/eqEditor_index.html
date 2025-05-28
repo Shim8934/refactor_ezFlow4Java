@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <base id="baseHref" href="">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+        <title></title>
+        <script>
+            var baseUrl = new URLSearchParams(window.location.search).get("baseurl");
+            if (baseUrl) {
+                document.getElementById("baseHref").setAttribute("href", baseUrl);
+            } else {
+                document.getElementById("baseHref").setAttribute("href", "http://127.0.0.1:8080/webhwpctrl/");
+            }
+        </script>
+        <script type="text/javascript" data-type="css/app" data-framework="aori|lab" src="js/loadVersion.js"></script>
+        <script type="text/javascript" data-type="css/app" data-framework="aori|lab" src="js/loadHead.js"></script>
+        <script data-main="js/eqEditorMain" data-bundle="dist/eq_bundle" src="commonFrame/js/loadMain.js"></script>
+    </head>
+    <body>
+    </body>
+</html>

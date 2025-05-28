@@ -6,7 +6,8 @@
 	<head>
 		<title><spring:message code="ezBoard.t999029"/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	    <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css" />	        
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+	    <link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />	        
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezBoard/ListView_list_admin.js')}"></script>
@@ -197,7 +198,8 @@
 
 		    /* 2018-11-30 홍승비 - 확장칼럼 항목타입 초기 옵션 value 분기 수정 */
 		    function radioType_onClick(pValue) {
-		    	if (pValue == "text" || pValue == null || pValue == "" || pValue == "cal") {
+		        var noAttrFlag = ["text", "cal", "textArea", "people", "", null];
+		    	if (noAttrFlag.includes(pValue)) {
 		            document.getElementById("AddDel").style.display = "none";
 		            document.getElementById("Gubun").innerHTML = "";
 		        }
@@ -544,7 +546,7 @@
 		        var tr2 = listview2.GetSelectedRows();
                 var langTDName ="";
 
-                if (${lang_user} == 1 ) {
+                if (${lang_user} == 1 || ${lang_user} == 3 || ${lang_user} == 4 ) {
                     langTDName = getNodeText(tr2[0].cells[0]);
                 } else if (${lang_user} == 2 ) {
                     langTDName = getNodeText(tr2[0].cells[1])
@@ -855,6 +857,8 @@
 				                <option value="check"><spring:message code='ezBoard.hyj08'/></option>
 								<option value="cal"><spring:message code='ezBoard.MJSBC01'/></option>
 								<option value="select"><spring:message code='ezBoard.MJSBC02'/></option>
+								<option value="people"><spring:message code='ezBoard.extensionAttr.JIH01'/></option>
+								<option value="textArea"><spring:message code='ezBoard.extensionAttr.JIH02'/></option>
 				            </select>
 				        </td>
 				        <td colspan="4">

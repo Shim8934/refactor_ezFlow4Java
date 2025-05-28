@@ -6,7 +6,8 @@
 	<head>
 		<title><spring:message code="ezOrgan.t208" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
-	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e2', 'msg')}" type="text/css">		
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>	    
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -19,13 +20,14 @@
 			var isAdd = true;
 			var pageType = "${pageType}";
 	        var selectDomain = "${companyMailDomain}";
+			var isDocReceived = "";
 			
 			$(document).ready(function(){
 			    if (CrossYN()){
 			    	try {
 			        	ReturnFunction = opener.deptinfo_dialogArguments[1];
 			            RetValue = opener.deptinfo_dialogArguments[0];
-			        }catch(e){}
+			        }catch(e){console.log(e);}
 			    }else{
 			    	RetValue = window.dialogArguments;
 			    }
@@ -36,17 +38,22 @@
 			    	
 			    	var windowHeight = window.outerHeight - window.innerHeight;
 			    	windowHeight += content.offsetTop;
-			    	windowHeight += content.offsetHeight + 10;
+			    	windowHeight += content.offsetHeight + 40;
 			    	windowHeight += btnSpace.offsetHeight;
 			    	
 			    	window.resizeTo(window.outerWidth, windowHeight);
 			    }
 
+				document.getElementById("deptTreeFlag").checked = true;
+				
 			    if(RetValue[1] == ""){
 					subtitle.innerText = "<spring:message code='ezOrgan.t80' />";
 			        ParentID.value = RetValue[0];
 					if(approvalFlag == 'G') {
 				    	document.getElementById("ouDoumentReceiveYN").checked = true;
+						if (RetValue[2] == "1") {
+							document.getElementById("tr_upperDeptBoxYN").style.display = "";
+						}
 					}
 				}else{
 			    	isAdd = false;
@@ -64,7 +71,7 @@
 						dataType : "text",
 						url : "/admin/ezOrgan/getEntryInfo.do",
 						async : false,
-						data : {cn : DeptID.value, prop : "displayName;extensionAttribute9;extensionAttribute1;extensionAttribute2;extensionAttribute3;extensionAttribute4;extensionAttribute5;extensionAttribute6;extensionAttribute8;extensionAttribute10;extensionAttribute15;extensionAttribute11", pMode : "dept" },
+						data : {cn : DeptID.value, prop : "displayName;extensionAttribute9;extensionAttribute1;extensionAttribute2;extensionAttribute3;extensionAttribute4;extensionAttribute5;extensionAttribute6;extensionAttribute8;extensionAttribute10;extensionAttribute15;extensionAttribute11;deptTreeFlag;useupperdeptbox;deptLevel", pMode : "dept" },
 						success : function(result){
 							xmlDom = loadXMLString(result);
 							DeptName.value = SelectSingleNodeValueNew(xmlDom,"DATA/DISPLAYNAME1").trim();
@@ -77,16 +84,28 @@
 							SortNum.value = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE15").trim();
 							ParentID.value = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE1").trim();
 							DocManage.value = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE4").trim();
-					
+							
+							var deptTreeFlag = SelectSingleNodeValueNew(xmlDom,"DATA/DEPTTREEFLAG").trim();
+							var deptTreeFlagTag = document.getElementById("deptTreeFlag");
+							deptTreeFlagTag.checked = deptTreeFlag === 'Y' ? true : false;
+							
 							if (SelectSingleNodeValueNew(xmlDom,"DATA/EXTENSIONATTRIBUTE8") == "1"){
 								if(approvalFlag == 'G') {
 									InsDept.checked = true;	
 								}
 							}
 				            /* 2015-06-30 표준모듈:추가(결재문서수신여부) - KSK */
-							if (SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE11") == "Y"){
+							isDocReceived = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE11");
+							if (isDocReceived == "Y"){
 								if(approvalFlag == 'G') {
 							    	document.getElementById("ouDoumentReceiveYN").checked = true;
+								}
+							}
+							if (approvalFlag == 'G' && SelectSingleNodeValueNew(xmlDom, "DATA/DEPTLEVEL") > 2) {
+									document.getElementById("tr_upperDeptBoxYN").style.display = "";
+								if (SelectSingleNodeValueNew(xmlDom, "DATA/USEUPPERDEPTBOX") == "Y") {
+									document.getElementById("upperDeptBoxYN").checked = true;
+									document.getElementById("ouDoumentReceiveYN").disabled = true;
 								}
 							}
 						}
@@ -114,15 +133,25 @@
 			   if(approvalFlag === "S") {
 			   	$(".onlyUseG").css("display", "none");
 			   }
+
+				var useOrganHideFlag = "${useOrganHideFlag}";
+				var treeFlagClass = document.querySelectorAll(".treeFlag");
+				if ("NO" === useOrganHideFlag) {
+					treeFlagClass.forEach(function (treeFlag) {
+						treeFlag.style.display = "none";
+					});
+				}
 			});
 			
 			function Check_ID(pValue, isAdd) {
 				// 인사연동 시 부서 ID에 대문자가 포함되어 있는 경우가 있어, 부서 추가 시에만 대문자를 넣지 못하도록 함.
 				var regex = /^[a-zA-Z0-9\_\-\.]+$/;
-				
-				if (isAdd) {
-					regex = /^[a-z0-9\_\-\.]+$/;
-				}
+
+				/* 2024.09.02 부서와 회사의 경우 대문자 허용
+                   if (isAdd) {
+                       regex = /^[a-z0-9\_\-\.]+$/;
+                   }
+                */
 				
 				return regex.test(pValue);
 			}
@@ -153,8 +182,8 @@
 					return;
 				}
 				
-				 if (DeptName.value.indexOf("\"") > -1 ) {
-					OpenAlertUI("<spring:message code='ezOrgan.t214'/> [\"] <spring:message code='ezOrgan.t260' />");
+				 if (DeptName.value.indexOf("\"") > -1 || DeptName.value.indexOf("\\") > -1) {
+					OpenAlertUI("<spring:message code='ezOrgan.t214'/> [\"], [\\] <spring:message code='ezOrgan.t260' />");
 					return;
 				}
 				
@@ -168,6 +197,8 @@
 				var extensionattribute8 = "0";
 				/* 2017-12-29 장진혁 - 조직도에서 기본적으로 해당 부서를 수신처로 등록할 수 있게 수정 */
 				var extensionattribute11 = "";
+				/* 2024-07-01 양지혜 - 조직도 > 부서정보 수정 > 상위부서문서함 사용여부 */
+				var useUpperDeptBox = "";
 				
 				if (OldDeptName == ""){
 					parentCn = ParentID.value;
@@ -185,7 +216,22 @@
 					} else {
 						extensionattribute11 = "N";
 					}
+
+					if (document.getElementById("upperDeptBoxYN").checked){
+						useUpperDeptBox = "Y";
+					} else {
+						useUpperDeptBox = "N";
+					}
 				}
+
+				// var deptHide = document.getElementById("deptHide");
+				// var checkDeptHide = deptHide.checked;
+				// var deptHideValue = "N";
+				// if (checkDeptHide) {
+				// 	deptHideValue = "Y";
+				// }
+				var deptTreeFlag = document.getElementById("deptTreeFlag");
+				var deptTreeFlagValue = deptTreeFlag.checked ? 'Y' : 'N';
 				
 				$.ajax({
 					type : "POST",
@@ -195,12 +241,12 @@
 					data : {parentCn: parentCn, cn: DeptID.value, displayName: DeptName.value.trim(), displayName2: DeptName2.value.trim(), extensionAttribute10: SusinSymbol.value, 
 						    extensionAttribute15: SortNum.value, extensionAttribute9: Manager.value, extensionAttribute5: BalsinPerson.value, extensionAttribute6: SimpleName.value, 
 						    extensionAttribute4: DocManage.value, extensionAttribute8: extensionattribute8, extensionAttribute11: extensionattribute11, manualFlag: "Y",
-						    selectDomain: selectDomain, histParentCn: histParentCn},
+						    selectDomain: selectDomain, histParentCn: histParentCn, deptTreeFlag: deptTreeFlagValue, useUpperDeptBox: useUpperDeptBox},
 					success : function(result){						
 						if (result == "PRE"){
 							OpenAlertUI("<spring:message code='ezOrgan.t119'/>");
 						}else if (result == "EMAIL_ERROR"){
-							OpenAlertUI("<spring:message code='ezOrgan.t217'/>");//TODO: 적절한 메시지 넣기
+							OpenAlertUI("<spring:message code='ezOrgan.t217'/>");
 						}else{
 							if (ReturnFunction != null){
 					            ReturnFunction(DeptID.value);
@@ -238,7 +284,7 @@
 	            selectperson_cross_dialogArguments[1] = selectDeptMasterComplete;
 	            
 	            var OpenWin = window.open("/ezPersonal/selectPerson.do?type=" + type, "selDeptMaster", GetOpenWindowfeature(860, 535));
-	            try { OpenWin.focus(); } catch (e) { }
+	            try { OpenWin.focus(); } catch (e) {console.log(e);}
 	        }
 	
 	        function selectDeptMasterComplete(rtnValue) {
@@ -254,6 +300,16 @@
 		    $(document).on("change", "#selectDomain", function() {
 	        	selectDomain = $(this).val();
 	        });
+			
+			function disableDocReceive() {
+				if (document.getElementById("upperDeptBoxYN").checked) {
+					document.getElementById("ouDoumentReceiveYN").checked = false;
+					document.getElementById("ouDoumentReceiveYN").disabled = true;
+				} else {
+					document.getElementById("ouDoumentReceiveYN").checked = (isDocReceived === "Y");
+					document.getElementById("ouDoumentReceiveYN").disabled = false;
+				}
+			}
 	    </script>
 	</head>
 	<body class="popup">
@@ -341,8 +397,16 @@
 		    <tr> 
 		    	<th><spring:message code='ezOrgan.t990' /></th> 
 		    	<td><input type="checkbox" id="ouDoumentReceiveYN" value="checkbox"></td> 
-		  	</tr> 
+		  	</tr>
+			<tr id="tr_upperDeptBoxYN" style="display: none">
+				<th><spring:message code='ezOrgan.jhy001' /></th>
+				<td><input type="checkbox" id="upperDeptBoxYN" value="checkbox" onclick="disableDocReceive()"></td>
+			</tr>
 		  	</c:if>
+			<tr class="treeFlag">
+				<th ><spring:message code='ezOrgan.kdh07' /></th>
+				<td><input type="checkbox" id=deptTreeFlag></td>
+			</tr>
 		</table> 
 		<div class="btnpositionNew">
 		    <a class="imgbtn" id=bt_OK  onClick="OK_Click()"><span><spring:message code='ezOrgan.t124' /></span></a>

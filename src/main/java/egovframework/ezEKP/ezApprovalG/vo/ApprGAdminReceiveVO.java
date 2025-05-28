@@ -16,7 +16,9 @@ public class ApprGAdminReceiveVO {
 	/** 수신처 그룹 회사ID */
 	private String companyID;
     /** 수신처 내부/외부 플래그 */
-    private String extReceptYn;	
+    private String extReceptYn;
+	/* 수신처 상위부서 경로 */
+	private String dept_Cd_Path;
 	
 	public String getMainID() {
 		return mainID;
@@ -66,5 +68,10 @@ public class ApprGAdminReceiveVO {
     public void setExtReceptYn(String extReceptYn) {
         this.extReceptYn = extReceptYn;
     }
-	
+	public String getDept_Cd_Path() {
+		return dept_Cd_Path;
+	}
+	public void setDept_Cd_Path(String dept_Cd_Path) {
+		this.dept_Cd_Path = dept_Cd_Path;
+	}
 }

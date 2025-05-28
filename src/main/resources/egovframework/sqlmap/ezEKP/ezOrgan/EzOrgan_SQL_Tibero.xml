@@ -5,7 +5,7 @@
 
 	<typeAlias alias="OrganDeptVO"							    type="egovframework.ezEKP.ezOrgan.vo.OrganDeptVO"/>
 	<typeAlias alias="OrganUserVO"								type="egovframework.ezEKP.ezOrgan.vo.OrganUserVO"/>	
-	<typeAlias alias="OrganProxyVO"								type="egovframework.ezEKP.ezOrgan.vo.OrganProxyVO"/>	
+	<typeAlias alias="OrganProxyVO"								type="egovframework.ezEKP.ezOrgan.vo.OrganProxyVO"/>
 	
 	<resultMap id="deptTreeInfo" class="OrganDeptVO">
 		<result property="cn" 									column="cn" 							columnIndex="1"/>
@@ -84,12 +84,16 @@
 		<result property="role" 						  	    column="role" 						    columnIndex="45"  nullValue=""/>
 		<result property="role1" 							    column="role1" 						    columnIndex="46"  nullValue=""/>
 		<result property="role2" 							    column="role2" 						    columnIndex="47"  nullValue=""/>
+		<result property="physicalDeliveryOfficeName1" 			column="physicalDeliveryOfficeName1" 	columnIndex="44"/>
+		<result property="userTreeFlag" 						column="usertreeflag" 					columnIndex="48"/>
+		<result property="companyId" 			                column="companyId" 	                    columnIndex="49"/>
 	</resultMap>
 	
 	<resultMap id="userAddJobInfo" class="OrganUserVO">
 		<result property="title"								column="title" 							columnIndex="1"/>
 		<result property="displayName" 							column="displayName" 					columnIndex="2"/>	
 		<result property="company" 								column="company" 					columnIndex="3"/>			
+		<result property="role" 								column="role" 							columnIndex="4"/>
 	</resultMap>
 
 	<resultMap id="userInfoForRoles" class="OrganUserVO">
@@ -115,10 +119,11 @@
 		<result property="company2" 							column="company2" 						columnIndex="13"/>
 	</resultMap>
 
+
 	<sql id="organSearchTrashDept_user">
 		<isNotEqual property="adminOrgan" compareValue="y">
 			<![CDATA[
-				AND DEPARTMENT NOT IN (SELECT CN FROM TBL_DEPTMASTER WHERE DEPT_CD_PATH LIKE '%trash\_dept%' ESCAPE '\' ) 
+				AND DEPARTMENT NOT IN (SELECT CN FROM TBL_DEPTMASTER WHERE DEPT_CD_PATH LIKE '%trash\_dept%' ESCAPE '\' AND TENANT_ID = #v_TENANT_ID#) 
 			]]>
 		</isNotEqual>
 	</sql>
@@ -185,9 +190,195 @@
 		</isEqual>
 		
 		<isNotEqual property="v_FIELD" compareValue="EXTENSIONATTRIBUTE1">
-			<![CDATA[
 				SELECT
-					$v_FIELD$
+					<!--$v_FIELD$-->
+					<isEqual property="v_FIELD"  compareValue="CN">
+						CN
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="DISPLAYNAME">
+						DISPLAYNAME
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="DISPLAYNAME2">
+						DISPLAYNAME2
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="MAIL">
+						MAIL
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="MAILNICKNAME">
+						MAILNICKNAME
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="UPNNAME">
+						UPNNAME
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="DEPARTMENT">
+						DEPARTMENT
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="DESCRIPTION">
+						DESCRIPTION
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="DESCRIPTION2">
+						DESCRIPTION2
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="DESCRIPTION3">
+						DESCRIPTION3
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="PHYSICALDELIVERYOFFICENAME">
+						PHYSICALDELIVERYOFFICENAME
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="COMPANY">
+						COMPANY
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="COMPANY2">
+						COMPANY2
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="TITLE">
+						TITLE
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="TITLE2">
+						TITLE2
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="TELEPHONENUMBER">
+						TELEPHONENUMBER
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="HOMEPHONE">
+						HOMEPHONE
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="FACSIMILETELEPHONENUMBER">
+						FACSIMILETELEPHONENUMBER
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="MOBILE">
+						MOBILE
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="POSTALCODE">
+						POSTALCODE
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="STREETADDRESS">
+						STREETADDRESS
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="INFO">
+						INFO
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE2">
+						EXTENSIONATTRIBUTE2
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE3">
+						EXTENSIONATTRIBUTE3
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE4">
+						EXTENSIONATTRIBUTE4
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE5">
+						EXTENSIONATTRIBUTE5
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE6">
+						EXTENSIONATTRIBUTE6
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE7">
+						EXTENSIONATTRIBUTE7
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE8">
+						EXTENSIONATTRIBUTE8
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE9">
+						EXTENSIONATTRIBUTE9
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE10">
+						EXTENSIONATTRIBUTE10
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE102">
+						EXTENSIONATTRIBUTE102
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE11">
+						EXTENSIONATTRIBUTE11
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE12">
+						EXTENSIONATTRIBUTE12
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE13">
+						EXTENSIONATTRIBUTE13
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE14">
+						EXTENSIONATTRIBUTE14
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE15">
+						EXTENSIONATTRIBUTE15
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="ADSPATH">
+						ADSPATH
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="SIPURI">
+						SIPURI
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="UPDATEDT">
+						UPDATEDT
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="CREATEDT">
+						CREATEDT
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="MOBILE_ENABLE">
+						MOBILE_ENABLE
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="MOBILE_NOTUSE">
+						MOBILE_NOTUSE
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="MOBILE_PIN">
+						MOBILE_PIN
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="POSITIONCD">
+						POSITIONCD
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="BIRTH">
+						BIRTH
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="BIRTHTYPE">
+						BIRTHTYPE
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="PASSWORD">
+						PASSWORD
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="IPADDRESS">
+						IPADDRESS
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="LASTLOGIN">
+						LASTLOGIN
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="LOGINCNT">
+						LOGINCNT
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="TENANT_ID">
+						TENANT_ID
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="MANUAL_FLAG">
+						MANUAL_FLAG
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="LISTTYPE">
+						LISTTYPE
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="PASSWORD_UPDATEDT">
+						PASSWORD_UPDATEDT
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="FURIGANA">
+						FURIGANA
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="EXTENSIONPHONE">
+						EXTENSIONPHONE
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="OFFICEMOBILE">
+						OFFICEMOBILE
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="MAILBOXQUOTA">
+						MAILBOXQUOTA
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="MAILBOXUSAGE">
+						MAILBOXUSAGE
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="PASSWORD2">
+						PASSWORD2
+					</isEqual>
+					<isEqual property="v_FIELD"  compareValue="PHOTO_UPDATEDT">
+						PHOTO_UPDATEDT
+					</isEqual>
+				<![CDATA[
 				FROM
 					TBL_USERMASTER
 				WHERE
@@ -199,9 +390,198 @@
 	</select>
 	
 	<select id="EzOrganDAO.getPropertyValue_S4" parameterClass="Map" resultClass="String" remapResults="true">
-		<![CDATA[
 			SELECT
-				$v_FIELD$
+				<!--$v_FIELD$-->
+				<isEqual property="v_FIELD"  compareValue="CN">
+					CN
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="DISPLAYNAME">
+					DISPLAYNAME
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="DISPLAYNAME2">
+					DISPLAYNAME2
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="MAIL">
+					MAIL
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="MAILNICKNAME">
+					MAILNICKNAME
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="UPNNAME">
+					UPNNAME
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="DEPARTMENT">
+					DEPARTMENT
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="DESCRIPTION">
+					DESCRIPTION
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="DESCRIPTION2">
+					DESCRIPTION2
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="DESCRIPTION3">
+					DESCRIPTION3
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="PHYSICALDELIVERYOFFICENAME">
+					PHYSICALDELIVERYOFFICENAME
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="COMPANY">
+					COMPANY
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="COMPANY2">
+					COMPANY2
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="TITLE">
+					TITLE
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="TITLE2">
+					TITLE2
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="TELEPHONENUMBER">
+					TELEPHONENUMBER
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="HOMEPHONE">
+					HOMEPHONE
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="FACSIMILETELEPHONENUMBER">
+					FACSIMILETELEPHONENUMBER
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="MOBILE">
+					MOBILE
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="POSTALCODE">
+					POSTALCODE
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="STREETADDRESS">
+					STREETADDRESS
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="INFO">
+					INFO
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE1">
+					EXTENSIONATTRIBUTE1
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE2">
+					EXTENSIONATTRIBUTE2
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE3">
+					EXTENSIONATTRIBUTE3
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE4">
+					EXTENSIONATTRIBUTE4
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE5">
+					EXTENSIONATTRIBUTE5
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE6">
+					EXTENSIONATTRIBUTE6
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE7">
+					EXTENSIONATTRIBUTE7
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE8">
+					EXTENSIONATTRIBUTE8
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE9">
+					EXTENSIONATTRIBUTE9
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE10">
+					EXTENSIONATTRIBUTE10
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE102">
+					EXTENSIONATTRIBUTE102
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE11">
+					EXTENSIONATTRIBUTE11
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE12">
+					EXTENSIONATTRIBUTE12
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE13">
+					EXTENSIONATTRIBUTE13
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE14">
+					EXTENSIONATTRIBUTE14
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE15">
+					EXTENSIONATTRIBUTE15
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="ADSPATH">
+					ADSPATH
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="SIPURI">
+					SIPURI
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="UPDATEDT">
+					UPDATEDT
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="CREATEDT">
+					CREATEDT
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="MOBILE_ENABLE">
+					MOBILE_ENABLE
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="MOBILE_NOTUSE">
+					MOBILE_NOTUSE
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="MOBILE_PIN">
+					MOBILE_PIN
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="POSITIONCD">
+					POSITIONCD
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="BIRTH">
+					BIRTH
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="BIRTHTYPE">
+					BIRTHTYPE
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="PASSWORD">
+					PASSWORD
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="IPADDRESS">
+					IPADDRESS
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="LASTLOGIN">
+					LASTLOGIN
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="LOGINCNT">
+					LOGINCNT
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="TENANT_ID">
+					TENANT_ID
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="MANUAL_FLAG">
+					MANUAL_FLAG
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="LISTTYPE">
+					LISTTYPE
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="PASSWORD_UPDATEDT">
+					PASSWORD_UPDATEDT
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="FURIGANA">
+					FURIGANA
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONPHONE">
+					EXTENSIONPHONE
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="OFFICEMOBILE">
+					OFFICEMOBILE
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="MAILBOXQUOTA">
+					MAILBOXQUOTA
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="MAILBOXUSAGE">
+					MAILBOXUSAGE
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="PASSWORD2">
+					PASSWORD2
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="PHOTO_UPDATEDT">
+					PHOTO_UPDATEDT
+				</isEqual>
+		<![CDATA[
 			FROM
 				TBL_USERMASTER
 			WHERE
@@ -212,9 +592,111 @@
 	</select>
 	
 	<select id="EzOrganDAO.getPropertyValue_S5" parameterClass="Map" resultClass="String" remapResults="true">
-		<![CDATA[
 			SELECT
-				$v_FIELD$
+				<!--$v_FIELD$-->
+				<isEqual property="v_FIELD"  compareValue="CN">
+					CN
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="DISPLAYNAME">
+					DISPLAYNAME
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="DISPLAYNAME2">
+					DISPLAYNAME2
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="USEFLAG">
+					USEFLAG
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="MAIL">
+					MAIL
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="COMPNM2">
+					COMPNM2
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="DEPTLEVEL">
+					DEPTLEVEL
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="DEPT_CD_PATH">
+					DEPT_CD_PATH
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="DEPT_NM_PATH">
+					DEPT_NM_PATH
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE1">
+					EXTENSIONATTRIBUTE1
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE2">
+					EXTENSIONATTRIBUTE2
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE3">
+					EXTENSIONATTRIBUTE3
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE4">
+					EXTENSIONATTRIBUTE4
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE5">
+					EXTENSIONATTRIBUTE5
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE6">
+					EXTENSIONATTRIBUTE6
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE7">
+					EXTENSIONATTRIBUTE7
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE8">
+					EXTENSIONATTRIBUTE8
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE9">
+					EXTENSIONATTRIBUTE9
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE10">
+					EXTENSIONATTRIBUTE10
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE11">
+					EXTENSIONATTRIBUTE11
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE12">
+					EXTENSIONATTRIBUTE12
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE13">
+					EXTENSIONATTRIBUTE13
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE14">
+					EXTENSIONATTRIBUTE14
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="EXTENSIONATTRIBUTE15">
+					EXTENSIONATTRIBUTE15
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="ADFLAG">
+					ADFLAG
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="ADSPATH">
+					ADSPATH
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="UPDATEDT">
+					UPDATEDT
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="CREATEDT">
+					CREATEDT
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="TENANT_ID">
+					TENANT_ID
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="MANUAL_FLAG">
+					MANUAL_FLAG
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="DEPTTREEFLAG">
+					DEPTTREEFLAG
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="USEUPPERDEPTBOX">
+					USEUPPERDEPTBOX
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="DEPTTREEFLAG">
+					DEPTTREEFLAG
+				</isEqual>
+				<isEqual property="v_FIELD"  compareValue="USEUPPERDEPTBOX">
+					USEUPPERDEPTBOX
+				</isEqual>
+			<![CDATA[
 			FROM
 				TBL_DEPTMASTER
 			WHERE
@@ -291,6 +773,12 @@
 		              				CN NOT LIKE 'trash\_dept\_%' ESCAPE '\'
 		              		]]>
               			</isEmpty>
+		 				<isEqual property="adminOrgan" compareValue="n">
+			 				<![CDATA[ 
+								 AND 
+									DEPTTREEFLAG = 'Y'
+							 ]]>
+		 				</isEqual>
               			
               			AND
               				TENANT_ID = #v_TENANT_ID#	 ) A
@@ -332,6 +820,12 @@
 									CN NOT LIKE 'trash\_dept\_%' ESCAPE '\'
 							]]>
 						</isEmpty>
+						<isEqual property="adminOrgan" compareValue="n">
+							<![CDATA[ 
+								 AND 
+									DEPTTREEFLAG = 'Y'
+							 ]]>
+						</isEqual>
 		<![CDATA[
                			AND
                				TENANT_ID = #v_TENANT_ID#	 ) A
@@ -371,6 +865,14 @@
                                 CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)
                        		AND
                        			TENANT_ID = #v_TENANT_ID#	
+			]]>
+			<isEqual property="adminOrgan" compareValue="n">
+				<![CDATA[ 
+							 AND 
+								USERTREEFLAG = 'Y'
+						]]>
+			</isEqual>
+			<![CDATA[
                        	UNION ALL 
                        		SELECT
                        			A.CN ,
@@ -397,7 +899,16 @@
                   			WHERE
                   				B.DEPTID = #v_CN#
                   			AND
-                  				B.TENANT_ID = #v_TENANT_ID#	 ) AA
+                  				B.TENANT_ID = #v_TENANT_ID#
+					]]>
+			<isEqual property="adminOrgan" compareValue="n">
+				<![CDATA[ 
+							 AND 
+								B.USERTREEFLAG = 'Y'
+						]]>
+			</isEqual>
+			<![CDATA[ 	
+                  			) AA
                   			ORDER BY
                   				EXTENSIONATTRIBUTE15 ASC,
                   			DISPLAYNAME ASC
@@ -628,7 +1139,15 @@
                                         AND 
                                             CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)
                                 		AND
-                                			TENANT_ID = #v_TENANT_ID#	
+                                			TENANT_ID = #v_TENANT_ID#
+                                					]]>
+			<isEqual property="adminOrgan" compareValue="n">
+				<![CDATA[ 	
+										 AND 
+											USERTREEFLAG = 'Y'
+				]]>
+			</isEqual>
+			<![CDATA[
 	                               UNION ALL 
                                			SELECT
                                				A.CN ,
@@ -654,7 +1173,16 @@
                               			WHERE
                               				B.DEPTID = #v_CN#
                               			AND
-                              				B.TENANT_ID = #v_TENANT_ID#	 ) AA ) BB
+                              				B.TENANT_ID = #v_TENANT_ID#	 
+		  	]]>
+			<isEqual property="adminOrgan" compareValue="n">
+				<![CDATA[ 
+										 AND 
+											B.USERTREEFLAG = 'Y'
+									]]>
+			</isEqual>
+			<![CDATA[ 
+ 							) AA ) BB
                   			WHERE
                   				ROWNUM_ >= #v_STARTROW#
                   			AND
@@ -820,7 +1348,15 @@
                     AND 
                         CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)
                		AND
-               			TENANT_ID = #v_TENANT_ID#	
+               			TENANT_ID = #v_TENANT_ID#
+		]]>
+		<isNotEqual property="adminOrgan" compareValue="y">
+			<![CDATA[ 
+					 AND 
+						USERTREEFLAG = 'Y'
+				]]>
+		</isNotEqual>
+		<![CDATA[
 	              UNION ALL 
 		            SELECT
 		            	B.CN 
@@ -831,8 +1367,15 @@
               		WHERE
               			B.DEPTID = #v_CN#
               		AND
-              			B.TENANT_ID = #v_TENANT_ID#) AA
+              			B.TENANT_ID = #v_TENANT_ID#
 		]]>
+		<isNotEqual property="adminOrgan" compareValue="y">
+			<![CDATA[ 
+					AND 
+						B.USERTREEFLAG = 'Y'
+		]]>
+		</isNotEqual>
+		) AA
 	</select>
 	
 	<select id="EzOrganDAO.getMemberListCount2" parameterClass="Map" resultClass="Integer">
@@ -841,44 +1384,6 @@
 				COUNT(CN) TOTALCOUNT  
         	FROM
         		(
-		]]>
-		
-		<isEqual property="containConfig" compareValue="YES">
-			<![CDATA[
-				SELECT
-					CN 
-				FROM
-					TBL_USERMASTER 
-				WHERE
-					DEPARTMENT = #deptCN#
-				AND
-					CN <> 'masteradmin'
-				AND 
-					CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantID#)
-				AND
-					TENANT_ID = #tenantID#	
-				UNION ALL
-				 
-				SELECT
-					B.CN 
-				FROM
-					TBL_ADDJOBMASTER B
-				JOIN
-					TBL_USERMASTER A
-				ON
-					A.CN = B.CN
-				AND
-					A.TENANT_ID = B.TENANT_ID
-				WHERE
-					B.DEPTID = #deptCN#
-				AND
-					B.TENANT_ID = #tenantID#
-					
-				UNION ALL
-			]]>
-		</isEqual>
-		
-		<![CDATA[
 			SELECT
 				C.cn
 			FROM
@@ -900,8 +1405,15 @@
 				AND
 					(INSTR(dept_cd_path, (SELECT CONCAT(dept_cd_path, ',') from TBL_DEPTMASTER where tenant_id = #tenantID# AND cn = #deptCN#)) = 1
 				OR
-					extensionattribute1 = #deptCN#))
-					
+					extensionattribute2 = #deptCN#))
+		]]>
+		<isNotEqual property="adminOrgan" compareValue="y">
+			<![CDATA[
+				 AND
+					C.USERTREEFLAG = 'Y'
+			]]>
+		</isNotEqual>
+		<![CDATA[
 			UNION ALL
 			
 			SELECT
@@ -924,10 +1436,21 @@
 					TBL_DEPTMASTER
 				WHERE
 					D.tenant_id = #tenantID#
+				AND 
+					DEPT_CD_PATH NOT LIKE 'shared_mailbox_%'
 				AND
 					(INSTR(dept_cd_path, (SELECT CONCAT(dept_cd_path, ',') FROM TBL_DEPTMASTER WHERE tenant_id = #tenantID# AND cn = #deptCN#)) = 1)
 				OR
-					extensionattribute1 = #deptCN#)) AA
+					extensionattribute2 = #deptCN#)
+		]]>
+		<isNotEqual property="adminOrgan" compareValue="y">
+			<![CDATA[
+				 AND
+					D.USERTREEFLAG = 'Y'
+			]]>
+		</isNotEqual>
+		<![CDATA[
+					) AA
 		]]>
 	</select>
 	
@@ -1032,7 +1555,9 @@
 		            ADSPATH ,
 		            UPDATEDT ,
 		            'dept' TYPE ,
-		            TENANT_ID as tenantId
+		            TENANT_ID as tenantId,
+	            	DEPTTREEFLAG,
+		            USEUPPERDEPTBOX
 				FROM
 		        	TBL_DEPTMASTER 
 		       WHERE
@@ -1096,7 +1621,8 @@
 		            ADSPATH ,
 		            UPDATEDT ,
 		            'dept' TYPE ,
-		            TENANT_ID as tenantId
+		            TENANT_ID as tenantId,
+	            	DEPTTREEFLAG
 				FROM
 		        	TBL_DEPTMASTER 
 		       WHERE
@@ -1223,7 +1749,8 @@
 	            'user' TYPE  ,
 	            SIPURI ,
 	            POSITIONCD ,
-	            'user' USERTYPE
+	            'user' USERTYPE,
+	            PHYSICALDELIVERYOFFICENAME AS COMPANYID
 	        FROM
 	        	TBL_USERMASTER 
 	       WHERE
@@ -1339,7 +1866,8 @@
              'user' TYPE  ,
              SIPURI ,
              B.POSITIONCD ,
-	         'addJob' USERTYPE
+	         'addJob' USERTYPE,
+	         C.EXTENSIONATTRIBUTE2 AS COMPANYID
         	FROM
         		TBL_ADDJOBMASTER B
             JOIN
@@ -1449,7 +1977,7 @@
                 ELSE
                 	EXTENSIONATTRIBUTE102
                 END
-                	EXTENSIONATTRIBUTE10 ,
+                	EXTENSIONATTRIBUTE10,
 	            EXTENSIONATTRIBUTE11 ,
 	            EXTENSIONATTRIBUTE12 ,
 	            EXTENSIONATTRIBUTE13 ,
@@ -1460,7 +1988,10 @@
 	            'user' TYPE  ,
 	            SIPURI ,
 	            POSITIONCD ,
-	            'user' USERTYPE
+	            PHYSICALDELIVERYOFFICENAME AS PHYSICALDELIVERYOFFICENAME1 ,
+	            'user' USERTYPE,
+	            USERTREEFLAG,
+	            PHYSICALDELIVERYOFFICENAME AS COMPANYID
 	        FROM
 	        	TBL_USERMASTER 
 	       WHERE
@@ -1503,6 +2034,7 @@
 	         C.DISPLAYNAME DESCRIPTION1  ,
      	     C.DISPLAYNAME2 DESCRIPTION2  ,
           	 A.PHYSICALDELIVERYOFFICENAME ,
+          	 C.EXTENSIONATTRIBUTE2 AS PHYSICALDELIVERYOFFICENAME1  ,
              CASE
              	#v_LANGDATA#
              WHEN
@@ -1537,7 +2069,7 @@
              	B.ROLE2
              END
              	EXTENSIONATTRIBUTE10 ,
-			 B.ROLE ROLE ,
+			 B.ROLE ROLE,
 			 B.ROLE ROLE1 ,
 	         B.ROLE2 ROLE2 ,
              A.TELEPHONENUMBER ,
@@ -1547,7 +2079,7 @@
              A.STREETADDRESS ,
              A.INFO ,
             ]]>
-			<!-- 2023-08-22 전인하 - 유저 겸직 부서/사용자 기준 설정 - 
+			<!-- 2023-08-22 전인하 - 유저 겸직 부서/사용자 기준 설정 -
 			permissionBasisDeptYN 옵션에 따라 addJobMaster 테이블에 ROLLINFO 컬럼 사용시 분기 처리, JOBID 정보를 정확한 ID로 호출 -->
 			<isEqual property="permissionBasisDeptYN" compareValue="Y">
 				B.ROLL_INFO AS EXTENSIONATTRIBUTE1 ,
@@ -1555,25 +2087,25 @@
 			<isNotEqual  property="permissionBasisDeptYN" compareValue="Y">
 				A.EXTENSIONATTRIBUTE1 ,
 			</isNotEqual>
-			<![CDATA[     
+			<![CDATA[
              A.EXTENSIONATTRIBUTE2 ,
              A.EXTENSIONATTRIBUTE3 ,
              A.EXTENSIONATTRIBUTE4 ,
              CAST(B.PROXY AS NVARCHAR2(200)) AS EXTENSIONATTRIBUTE5 ,
              A.EXTENSIONATTRIBUTE6 ,
              B.JOBID as EXTENSIONATTRIBUTE7 ,
-             A.EXTENSIONATTRIBUTE8 ,
+             B.ROLEID as EXTENSIONATTRIBUTE8 ,
              A.EXTENSIONATTRIBUTE9 ,
              CASE
              	#v_LANGDATA#
              WHEN
              	'1'
              THEN
-             	 A.EXTENSIONATTRIBUTE10
+             	A.EXTENSIONATTRIBUTE10
              ELSE
-             	 A.EXTENSIONATTRIBUTE102
+             	A.EXTENSIONATTRIBUTE102
              END
-             	 ORIGIN_ROLE,  
+             	ORIGIN_ROLE, 
              A.EXTENSIONATTRIBUTE11 ,
              A.EXTENSIONATTRIBUTE12 ,
              A.EXTENSIONATTRIBUTE13 ,
@@ -1584,7 +2116,9 @@
              'user' TYPE  ,
              SIPURI ,
              B.POSITIONCD ,
-	         'addJob' USERTYPE
+	         'addJob' USERTYPE,
+	         B.USERTREEFLAG,
+	         C.EXTENSIONATTRIBUTE2 AS COMPANYID
         	FROM
         		TBL_ADDJOBMASTER B
             JOIN
@@ -1747,7 +2281,17 @@
                 ELSE
                 	COMPNM2
                 END
-                	COMPANY   
+                	COMPANY,
+                CASE
+					#v_LANGDATA#
+                WHEN
+					'1'
+				THEN
+					ROLE
+                ELSE
+					ROLE2
+                END
+					ROLE
         	FROM
         		TBL_ADDJOBMASTER A
         	JOIN
@@ -1759,14 +2303,345 @@
         	AND
         		A.TENANT_ID = #v_TENANT_ID#	
 		]]>
+			<isNotEmpty property="v_jobID">
+				AND A.JOBID = #v_jobID#
+			</isNotEmpty>
+	</select>
+
+	<select id="EzOrganDAO.getAddJobInfo" parameterClass="Map" resultClass="OrganUserVO">
+		SELECT
+			TITLE,
+			TITLE2,
+			ROLE,
+			ROLE2
+		FROM
+			TBL_ADDJOBMASTER
+		WHERE
+			CN = #userID#
+		AND
+			TENANT_ID = #tenantID#
+		AND
+			DEPTID = #dept#
+		AND
+			JOBID = #jobID#
 	</select>
 
 	<update id="EzOrganDAO.updateProperty" parameterClass="Map">
-		<![CDATA[
 			UPDATE
 				TBL_USERMASTER
 			SET
-				$v_PROPNAME$ = #v_PROPVALUE#
+				<!--$v_PROPNAME$ = #v_PROPVALUE#-->
+				<isEqual property="v_PROPNAME"  compareValue="CN">
+					<![CDATA[
+						CN = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="DISPLAYNAME">
+					<![CDATA[
+						 DISPLAYNAME = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="DISPLAYNAME2">
+					<![CDATA[
+						 DISPLAYNAME2 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="MAIL">
+					<![CDATA[
+						 MAIL = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="MAILNICKNAME">
+					<![CDATA[
+						 MAILNICKNAME = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="UPNNAME">
+					<![CDATA[
+						 UPNNAME = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="DEPARTMENT">
+					<![CDATA[
+						 DEPARTMENT = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="DESCRIPTION">
+					<![CDATA[
+						 DESCRIPTION = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="DESCRIPTION2">
+					<![CDATA[
+						 DESCRIPTION2 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="DESCRIPTION3">
+					<![CDATA[
+						 DESCRIPTION3 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="PHYSICALDELIVERYOFFICENAME">
+					<![CDATA[
+						 PHYSICALDELIVERYOFFICENAME = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="COMPANY">
+					<![CDATA[
+						 COMPANY = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="COMPANY2">
+					<![CDATA[
+						 COMPANY2 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="TITLE">
+					<![CDATA[
+						 TITLE = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="TITLE2">
+					<![CDATA[
+						 TITLE2 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="TELEPHONENUMBER">
+					<![CDATA[
+						 TELEPHONENUMBER = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="HOMEPHONE">
+					<![CDATA[
+						 HOMEPHONE = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="FACSIMILETELEPHONENUMBER">
+					<![CDATA[
+						 FACSIMILETELEPHONENUMBER = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="MOBILE">
+					<![CDATA[
+						 MOBILE = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="POSTALCODE">
+					<![CDATA[
+						 POSTALCODE = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="STREETADDRESS">
+					<![CDATA[
+						 STREETADDRESS = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="INFO">
+					<![CDATA[
+						 INFO = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE1">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE1 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE2">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE2 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE3">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE3 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE4">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE4 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE5">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE5 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE6">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE6 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE7">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE7 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE8">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE8 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE9">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE9 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE10">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE10 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE102">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE102 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE11">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE11 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE12">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE12 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE13">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE13 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE14">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE14 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="ADSPATH">
+					<![CDATA[
+						 ADSPATH = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="SIPURI">
+					<![CDATA[
+						 SIPURI = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="CREATEDT">
+					<![CDATA[
+						 CREATEDT = TO_DATE(#v_PROPVALUE#, 'YYYY-MM-DD HH24:MI:SS')
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="MOBILE_ENABLE">
+					<![CDATA[
+						 MOBILE_ENABLE = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="MOBILE_NOTUSE">
+					<![CDATA[
+						 MOBILE_NOTUSE = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="MOBILE_PIN">
+					<![CDATA[
+						 MOBILE_PIN = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="POSITIONCD">
+					<![CDATA[
+						 POSITIONCD = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="BIRTH">
+					<![CDATA[
+						 BIRTH = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="BIRTHTYPE">
+					<![CDATA[
+						 BIRTHTYPE = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="PASSWORD">
+					<![CDATA[
+						 PASSWORD = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="IPADDRESS">
+					<![CDATA[
+						 IPADDRESS = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="LASTLOGIN">
+					<![CDATA[
+						 LASTLOGIN = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="LOGINCNT">
+					<![CDATA[
+						 LOGINCNT = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="TENANT_ID">
+					<![CDATA[
+						 TENANT_ID = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="MANUAL_FLAG">
+					<![CDATA[
+						 MANUAL_FLAG = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="LISTTYPE">
+					<![CDATA[
+						 LISTTYPE = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="PASSWORD_UPDATEDT">
+					<![CDATA[
+						 PASSWORD_UPDATEDT = TO_DATE(#v_PROPVALUE#, 'YYYY-MM-DD HH24:MI:SS')
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="FURIGANA">
+					<![CDATA[
+						 FURIGANA = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONPHONE">
+					<![CDATA[
+						 EXTENSIONPHONE = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="OFFICEMOBILE">
+					<![CDATA[
+						 OFFICEMOBILE = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="MAILBOXQUOTA">
+					<![CDATA[
+						 MAILBOXQUOTA = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="MAILBOXUSAGE">
+					<![CDATA[
+						 MAILBOXUSAGE = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="PASSWORD2">
+					<![CDATA[
+						 PASSWORD2 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="PHOTO_UPDATEDT">
+					<![CDATA[
+						 PHOTO_UPDATEDT = TO_DATE(#v_PROPVALUE#, 'YYYY-MM-DD HH24:MI:SS')
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME" compareValue="EXTENSIONATTRIBUTE15">
+					<![CDATA[
+						EXTENSIONATTRIBUTE15 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+		<![CDATA[
 			WHERE
 				CN = #v_CN#
 			AND
@@ -1775,11 +2650,161 @@
 	</update>
 	
 	<update id="EzOrganDAO.updateProperty_U" parameterClass="Map">
-		<![CDATA[
 			UPDATE
 				TBL_DEPTMASTER
 			SET
-				$v_PROPNAME$ = #v_PROPVALUE# 
+				<!--$v_PROPNAME$ = #v_PROPVALUE#-->
+				<isEqual property="v_PROPNAME"  compareValue="CN">
+					<![CDATA[
+						 CN = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="DISPLAYNAME">
+					<![CDATA[
+						 DISPLAYNAME = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="DISPLAYNAME2">
+					<![CDATA[
+						 DISPLAYNAME2 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="USEFLAG">
+					<![CDATA[
+						 USEFLAG = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="MAIL">
+					<![CDATA[
+						 MAIL = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="COMPNM2">
+					<![CDATA[
+						 COMPNM2 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="DEPTLEVEL">
+					<![CDATA[
+						 DEPTLEVEL = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="DEPT_CD_PATH">
+					<![CDATA[
+						 DEPT_CD_PATH = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="DEPT_NM_PATH">
+					<![CDATA[
+						 DEPT_NM_PATH = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE1">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE1 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE2">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE2 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE3">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE3 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE4">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE4 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE5">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE5 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE6">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE6 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE7">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE7 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE8">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE8 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE9">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE9 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE10">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE10 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE11">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE11 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE12">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE12 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE13">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE13 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE14">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE14 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="EXTENSIONATTRIBUTE15">
+					<![CDATA[
+						 EXTENSIONATTRIBUTE15 = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="ADFLAG">
+					<![CDATA[
+						 ADFLAG = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="ADSPATH">
+					<![CDATA[
+						 ADSPATH = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="UPDATEDT">
+					<![CDATA[
+						 UPDATEDT = TO_DATE(#v_PROPVALUE#, 'YYYY-MM-DD HH24:MI:SS')
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="CREATEDT">
+					<![CDATA[
+						 CREATEDT = TO_DATE(#v_PROPVALUE#, 'YYYY-MM-DD HH24:MI:SS')
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="TENANT_ID">
+					<![CDATA[
+						 TENANT_ID = #v_PROPVALUE#
+					]]>
+				</isEqual>
+				<isEqual property="v_PROPNAME"  compareValue="MANUAL_FLAG">
+					<![CDATA[
+						 MANUAL_FLAG = #v_PROPVALUE#
+					]]>
+				</isEqual>
+		<![CDATA[
 			WHERE
 				CN = #v_CN#
 			AND
@@ -1843,17 +2868,33 @@
 	</delete>
 
 	<select id="EzOrganDAO.getBirthUserList" parameterClass="Map" resultClass="OrganUserVO">
-		<![CDATA[
 			SELECT
 				*
 			FROM
 				(
 				SELECT
-					displayname$lang$ AS displayname, 
+					<isEqual property="lang"  compareValue="">
+						<![CDATA[
+							cn,
+							title AS title,
+							birth,
+							birthtype
+						]]>
+					</isEqual>
+					<isEqual property="lang"  compareValue="2">
+						<![CDATA[
+							cn,
+							title2 AS title,
+							birth,
+							birthtype
+						]]>
+					</isEqual>
+					<!--displayname$lang$ AS displayname,
 					cn,
 					title$lang$ AS title,
 					birth,
-					birthtype
+					birthtype-->
+			<![CDATA[
 				FROM
 					TBL_USERMASTER
 				WHERE
@@ -1868,13 +2909,32 @@
 					cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE tenant_id = #tenantId#)
 					
 				UNION ALL
-				
+			]]>
 				SELECT
-					C.displayname$lang$ AS displayname, 
+					<isEqual property="lang"  compareValue="">
+						<![CDATA[
+							C.displayname AS displayname,
+							A.cn,
+							A.title AS title,
+							C.birth,
+							C.birthtype AS birthtype
+						]]>
+					</isEqual>
+					<isEqual property="lang"  compareValue="2">
+						<![CDATA[
+							C.displayname2 AS displayname,
+							A.cn,
+							A.title2 AS title,
+							C.birth,
+							C.birthtype AS birthtype
+						]]>
+					</isEqual>
+					<!--C.displayname$lang$ AS displayname,
 					A.cn,
 					A.title$lang$ AS title,
 					C.birth,
-					C.birthtype AS birthtype
+					C.birthtype AS birthtype-->
+		<![CDATA[
 				FROM
 					TBL_ADDJOBMASTER A
 				JOIN
@@ -1918,7 +2978,7 @@
 				'user' as type,
 				displayname as NAME,
                 TO_CHAR(extensionAttribute7) JOBID,
-				'ROLEID' ROLEID,
+				'' ROLEID,
                 '' ISADDJOB 			
 			FROM 
 	    		TBL_USERMASTER A 
@@ -1929,13 +2989,30 @@
             	DEPARTMENT NOT LIKE 'shared\_mailbox\_%' ESCAPE '\' 
 			<include refid="organSearchTrashDept_user"/>
             AND 
-                A.TENANT_ID = #v_TENANT_ID# $strSQLCom$
+                A.TENANT_ID = #v_TENANT_ID# <!--$strSQLCom$-->
+				<isNotEmpty property="companyId">
+					<isEqual property="type" compareValue="G">
+						<![CDATA[
+							AND EXTENSIONATTRIBUTE2 = #companyId#
+						]]>
+					</isEqual>
+					<isNotEqual property="type" compareValue="G">
+						<![CDATA[
+							AND PHYSICALDELIVERYOFFICENAME = #companyId#
+						]]>
+					</isNotEqual>
+				</isNotEmpty>
 	    	<![CDATA[
 	           	AND
 	           		CN <> 'masteradmin'
             ]]>
-	    	
-	    	<isNotEmpty property="companyId">
+			<isNotEqual property="adminOrgan" compareValue="y">
+				<![CDATA[
+					 AND
+						USERTREEFLAG = 'Y'
+				]]>
+			</isNotEqual>
+			<isNotEmpty property="companyId">
 		    	AND 
 		    		PHYSICALDELIVERYOFFICENAME IN 
 		    		(SELECT  CN     FROM    TBL_DEPTMASTER     WHERE      EXTENSIONATTRIBUTE2 = #companyId#)   
@@ -1955,15 +3032,29 @@
 	                'Y' ISADDJOB	
 		      	FROM	
 					TBL_USERMASTER B INNER JOIN TBL_ADDJOBMASTER A ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID 
-	            $strGyumjikForOracle$ 
+	            $strGyumjikForOracle$
+				<isNotEqual property="adminOrgan" compareValue="y">
+					<![CDATA[
+					 AND
+						A.USERTREEFLAG = 'Y'
+				]]>
+				</isNotEqual>
 	            AND DEPARTMENT NOT LIKE 'shared\_mailbox\_%' ESCAPE '\'
 				<include refid="organSearchTrashDept_user"/>
 	            AND A.TENANT_ID = #v_TENANT_ID#
-				$strSQLAddjobCom$
+				<!--$strSQLAddjobCom$-->
 				<isNotEmpty property="companyId">
+					<isEqual property="strSQLAddjobCom" compareValue="description">
+						AND B.PHYSICALDELIVERYOFFICENAME IN
+						(SELECT CN FROM TBL_DEPTMASTER WHERE EXTENSIONATTRIBUTE2 = #companyId# AND TENANT_ID = #v_TENANT_ID#)
+					</isEqual>
+					<isNotEqual property="strSQLAddjobCom" compareValue="description">
+						AND A.DEPTID IN
+						(SELECT CN FROM TBL_DEPTMASTER WHERE EXTENSIONATTRIBUTE2 = #companyId# AND TENANT_ID = #v_TENANT_ID#)
+					</isNotEqual>
 			    	AND 
 			    		A.DEPTID IN 
-		    		(SELECT  CN     FROM    TBL_DEPTMASTER     WHERE      EXTENSIONATTRIBUTE2 = #companyId#) 
+		    		(SELECT  CN     FROM    TBL_DEPTMASTER     WHERE      EXTENSIONATTRIBUTE2 = #companyId# AND TENANT_ID = #v_TENANT_ID#)
 		    	</isNotEmpty>
 		    	
 		    	<!-- <isNotEqual property="class" compareValue="all">
@@ -1982,6 +3073,7 @@
 					'group' as type,
 					displayname as NAME,
 	                '' JOBID,
+	                '' ROLEID,
 	                '' ISADDJOB
 				FROM
 					TBL_DEPTMASTER 
@@ -1995,9 +3087,15 @@
 	    			EXTENSIONATTRIBUTE2 = #companyId#
 		    	</isNotEmpty>
 			</isEqual>	  
+			
+			<!--$strSize$-->
+			<isNotEqual property="pLimit" compareValue="0">
+				<![CDATA[
+					AND ROWNUM <= #pLimit#
+				]]>
+			</isNotEqual>
 			<!-- 2023-08-30 전인하 - 리스트에 겸직, 원직 함께 나타날 때 원직을 상위에, 겸직을 하위에 나타나게 함 -->
-			$strSize$
-			) ORDER BY type DESC, ISADDJOB DESC, NAME ASC	 			
+			) ORDER BY type DESC, ISADDJOB DESC, NAME ASC
 	    </isEqual>
 	    <isEqual property="type" compareValue="G">
 	    	SELECT
@@ -2006,13 +3104,32 @@
 	    		n'' as extensionAttribute15,
 	    		'group' as type,
                 '' JOBID,
+				'' ROLEID,
                 '' ISADDJOB
 	    	FROM
 	    		TBL_DEPTMASTER 
             $strSQL$ 
             AND CN NOT LIKE 'shared\_mailbox\_%' ESCAPE '\'
+			<isEqual property="adminOrgan" compareValue="n">
+				<![CDATA[ 
+					 AND 
+						DEPTTREEFLAG = 'Y'
+				]]>
+			</isEqual>
 			<include refid="organSearchTrashDept_dept"/>
-            AND TENANT_ID = #v_TENANT_ID# $strSQLCom$
+            AND TENANT_ID = #v_TENANT_ID# <!--$strSQLCom$-->
+			<isNotEmpty property="companyId">
+				<isEqual property="type" compareValue="G">
+					<![CDATA[
+					AND EXTENSIONATTRIBUTE2 = #companyId#
+				]]>
+				</isEqual>
+				<isNotEqual property="type" compareValue="G">
+					<![CDATA[
+					AND PHYSICALDELIVERYOFFICENAME = #companyId#
+				]]>
+				</isNotEqual>
+			</isNotEmpty>
 	    </isEqual>
 	</select>
 
@@ -2045,7 +3162,21 @@
 			             FROM  
 			             	TBL_USERMASTER A
                          $strSQL$
-                         $strSQLCom$
+                        ]]>
+						<!--$strSQLCom$-->
+						<isNotEmpty property="companyId">
+							<isEqual property="type" compareValue="G">
+							<![CDATA[
+								AND EXTENSIONATTRIBUTE2 = #companyId#
+							]]>
+							</isEqual>
+							<isNotEqual property="type" compareValue="G">
+								<![CDATA[
+									AND PHYSICALDELIVERYOFFICENAME = #companyId#
+								]]>
+							</isNotEqual>
+						</isNotEmpty>
+						<![CDATA[
                          AND 
                              CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)                                                                                                                                                                                                
                          AND 
@@ -2055,6 +3186,12 @@
 			       		 AND
 		            		 CN <> 'masteradmin'
 						]]>
+			<isEqual property="adminOrgan" compareValue="n">
+				<![CDATA[
+						 AND
+							A.USERTREEFLAG = 'Y'
+				]]>
+			</isEqual>
 							<include refid="organSearchTrashDept_user"/>
 						<![CDATA[
 		            		 
@@ -2079,11 +3216,27 @@
 							$strSQL$ 
 							AND DEPARTMENT NOT LIKE 'shared\_mailbox\_%' ESCAPE '\'
 						]]>
+				<isEqual property="adminOrgan" compareValue="n">
+					<![CDATA[
+							 AND
+								A.USERTREEFLAG = 'Y'
+							]]>
+				</isEqual>
 							<include refid="organSearchTrashDept_user"/>
-						<![CDATA[
-							AND A.TENANT_ID = #v_TENANT_ID#
-							$strSQLAddjobCom$
+						AND A.TENANT_ID = #v_TENANT_ID#
+						<!--$strSQLAddjobCom$-->
+						<isNotEmpty property="companyId">
+							<isEqual property="strSQLAddjobCom" compareValue="description">
+								AND B.PHYSICALDELIVERYOFFICENAME IN
+								(SELECT CN FROM TBL_DEPTMASTER WHERE EXTENSIONATTRIBUTE2 = #companyId# AND TENANT_ID = #v_TENANT_ID#)
+							</isEqual>
+							<isNotEqual property="strSQLAddjobCom" compareValue="description">
+								AND A.DEPTID IN
+								(SELECT CN FROM TBL_DEPTMASTER WHERE EXTENSIONATTRIBUTE2 = #companyId# AND TENANT_ID = #v_TENANT_ID#)
+							</isNotEqual>
+						</isNotEmpty>
 						)  A
+					<![CDATA[
 						ORDER BY
 							A.addJobflag, A.userName
 					
@@ -2149,7 +3302,9 @@
 					    '' ROLEID,
 		                '' ISADDJOB
 					FROM
-						TBL_DEPTMASTER $strSize$ 
+					]]>
+						TBL_DEPTMASTER <!--$strSize$  넘겨주는 값이 없어 주석처리만 함-->
+			  		<![CDATA[
 					AND CN NOT LIKE 'shared\_mailbox\_%' ESCAPE '\'
 					]]>
 						<include refid="organSearchTrashDept_dept"/>
@@ -2201,6 +3356,12 @@
 					DEPARTMENT NOT LIKE 'shared\_mailbox\_%' ESCAPE '\'
 				]]>
 					<include refid="organSearchTrashDept_user"/>
+		<isEqual property="adminOrgan" compareValue="n">
+			<![CDATA[
+					 AND
+						A.USERTREEFLAG = 'Y'
+				]]>
+		</isEqual>
 				<![CDATA[
 				AND 
 					A.TENANT_ID = #v_TENANT_ID#
@@ -2219,6 +3380,12 @@
 				AND 
 					DEPARTMENT NOT LIKE 'shared\_mailbox\_%' ESCAPE '\'
 				]]>
+		<isEqual property="adminOrgan" compareValue="n">
+			<![CDATA[
+					 AND
+						B.USERTREEFLAG = 'Y'
+				]]>
+		</isEqual>
 					<include refid="organSearchTrashDept_user"/>
 				<![CDATA[
 				AND 
@@ -2243,6 +3410,12 @@
 		      			extensionattribute2 <> CN
 			     ]]> 
     		</isEmpty>
+			<isEqual property="adminOrgan" compareValue="n">
+				<![CDATA[
+      				AND
+      		    		DEPTTREEFLAG = 'Y'
+      			]]>
+			</isEqual>
     		<![CDATA[
       		AND
       			tenant_id = #tenantId#	
@@ -2308,7 +3481,10 @@
 	            extensionattribute15 ,
 	            adspath ,
 	            updatedt ,
-	            'dept' type  
+	            'dept' type,
+				deptTreeFlag,
+				deptlevel,
+				useupperdeptbox
 			FROM 
 				TBL_DEPTMASTER 
 			WHERE  
@@ -2593,6 +3769,7 @@
 		</isNotEmpty>	
 	</select>
 	
+	<!-- 2021-12-14 홍승비 - getOrgUserInfo 쿼리에 오라클을 위한 NVL 추가 --> 
 	<select id="EzOrganDAO.getOrgUserInfo" parameterClass="Map" resultClass="OrganUserVO">
 		SELECT 
 			CN
@@ -2700,4 +3877,233 @@
 			JM."TYPE", JM.SORT, (CASE #v_LANGDATA# WHEN '1' THEN D.DISPLAYNAME ELSE D.DISPLAYNAME2 END) ASC
 	</select>
 
+    <select id="EzOrganDAO.getAllUserInfo" parameterClass="Map" resultClass="OrganUserVO" remapResults="true">
+        SELECT CN,
+               CASE
+                   #v_LANGDATA#
+                   WHEN
+                       '1'
+                       THEN
+                       DISPLAYNAME
+                   ELSE
+                       DISPLAYNAME2
+                   END
+                                                     DISPLAYNAME,
+               DISPLAYNAME                           DISPLAYNAME1,
+               DISPLAYNAME2,
+               MAIL,
+               DEPARTMENT,
+               CASE
+                   #v_LANGDATA#
+                   WHEN
+                       '1'
+                       THEN
+                       DESCRIPTION
+                   ELSE
+                       DESCRIPTION2
+                   END
+                                                     DESCRIPTION,
+               DESCRIPTION                           DESCRIPTION1,
+               DESCRIPTION2,
+			   PHYSICALDELIVERYOFFICENAME AS COMPANYID,
+               CASE
+                   #v_LANGDATA#
+                   WHEN
+                       '1'
+                       THEN
+                       COMPANY
+                   ELSE
+                       COMPANY2
+                   END
+                                                     COMPANY,
+               COMPANY                               COMPANY1,
+               COMPANY2,
+               CASE
+                   #v_LANGDATA#
+                   WHEN
+                       '1'
+                       THEN
+                       TITLE
+                   ELSE
+                       TITLE2
+                   END
+                                                     TITLE,
+               TITLE                                 TITLE1,
+               TITLE2                                TITLE2,
+               TELEPHONENUMBER,
+               HOMEPHONE,
+               MOBILE,
+               FACSIMILETELEPHONENUMBER,
+               STREETADDRESS,
+               INFO,
+               EXTENSIONATTRIBUTE1,
+               EXTENSIONATTRIBUTE2,
+               EXTENSIONATTRIBUTE3,
+               EXTENSIONATTRIBUTE4,
+               (CASE
+                    WHEN EXTENSIONATTRIBUTE5 IS NULL
+                        THEN CAST('' AS NVARCHAR2(200))
+                    ELSE EXTENSIONATTRIBUTE5 END) AS EXTENSIONATTRIBUTE5,
+               EXTENSIONATTRIBUTE6,
+               EXTENSIONATTRIBUTE7,
+               EXTENSIONATTRIBUTE8,
+               EXTENSIONATTRIBUTE9,
+               EXTENSIONATTRIBUTE10,
+               EXTENSIONATTRIBUTE11,
+               EXTENSIONATTRIBUTE12,
+               EXTENSIONATTRIBUTE13,
+               EXTENSIONATTRIBUTE14,
+               EXTENSIONATTRIBUTE15,
+               ADSPATH,
+               UPDATEDT,
+               'user'                                TYPE,
+               SIPURI,
+               POSITIONCD,
+               'user'                                USERTYPE,
+			   NVL(EXTENSIONATTRIBUTE7, '')          JOBID,
+			   CAST('' AS NVARCHAR2(50))		JOBTYPE,
+			   EXTENSIONATTRIBUTE8                  AS ROLEID,
+			   EXTENSIONATTRIBUTE1 AS ROLEINFO
+        FROM TBL_USERMASTER
+        WHERE CN = #v_CN#
+          AND TENANT_ID = #v_TENANT_ID#
+        UNION ALL
+        SELECT A.CN,
+               CASE
+                   #v_LANGDATA#
+                   WHEN
+                       '1'
+                       THEN
+                       A.DISPLAYNAME
+                   ELSE
+                       A.DISPLAYNAME2
+                   END
+                                                  DISPLAYNAME,
+               A.DISPLAYNAME                      DISPLAYNAME1,
+               A.DISPLAYNAME2,
+               A.MAIL,
+               C.CN                               DEPARTMENT,
+               CASE
+                   #v_LANGDATA#
+                   WHEN
+                       '1'
+                       THEN
+                       C.DISPLAYNAME
+                   ELSE
+                       C.DISPLAYNAME2
+                   END
+                                                  DESCRIPTION,
+               C.DISPLAYNAME                      DESCRIPTION1,
+               C.DISPLAYNAME2                     DESCRIPTION2,
+			   C.EXTENSIONATTRIBUTE2 COMPANYID,
+               CASE
+                   #v_LANGDATA#
+                   WHEN
+                       '1'
+                       THEN
+                       C.EXTENSIONATTRIBUTE3
+                   ELSE
+                       C.COMPNM2
+                   END
+                                                  COMPANY,
+               C.EXTENSIONATTRIBUTE3              COMPANY1,
+               C.COMPNM2                          COMPANY2,
+               CASE
+                   #v_LANGDATA#
+                   WHEN
+                       '1'
+                       THEN
+                       B.TITLE
+                   ELSE
+                       B.TITLE2
+                   END
+                                                  TITLE,
+               B.TITLE                            TITLE1,
+               B.TITLE2                           TITLE2,
+               A.TELEPHONENUMBER,
+               A.HOMEPHONE,
+               A.MOBILE,
+               A.FACSIMILETELEPHONENUMBER,
+               A.STREETADDRESS,
+               A.INFO,
+			   CAST(B.ROLL_INFO AS NVARCHAR2(200))  AS EXTENSIONATTRIBUTE1,
+               A.EXTENSIONATTRIBUTE2,
+               A.EXTENSIONATTRIBUTE3,
+               A.EXTENSIONATTRIBUTE4,
+               CAST(B.PROXY AS NVARCHAR2(200)) AS EXTENSIONATTRIBUTE5,
+               A.EXTENSIONATTRIBUTE6,
+               A.EXTENSIONATTRIBUTE7,
+               A.EXTENSIONATTRIBUTE8,
+               A.EXTENSIONATTRIBUTE9,
+               A.EXTENSIONATTRIBUTE10,
+               A.EXTENSIONATTRIBUTE11,
+               A.EXTENSIONATTRIBUTE12,
+               A.EXTENSIONATTRIBUTE13,
+               A.EXTENSIONATTRIBUTE14,
+               A.EXTENSIONATTRIBUTE15,
+               A.ADSPATH,
+               A.UPDATEDT,
+               'user'                             TYPE,
+               SIPURI,
+               B.POSITIONCD,
+               'addJob'                           USERTYPE,
+			   CAST(B.JOBID AS NVARCHAR2(200))                       AS JOBID,
+			   J.TYPE                        AS JOBTYPE,
+			   CAST(B.ROLEID AS NVARCHAR2(200))                       AS ROLEID,
+			   CAST(B.ROLL_INFO AS NVARCHAR2(200)) AS ROLEINFO
+        FROM TBL_ADDJOBMASTER B
+                 JOIN
+             TBL_USERMASTER A ON B.CN = A.CN AND B.TENANT_ID = A.TENANT_ID
+                 JOIN
+			 TBL_DEPTMASTER C ON C.CN = B.DEPTID AND C.TENANT_ID = B.TENANT_ID
+				 JOIN
+			 TBL_USER_JOBMASTER J ON J.JOBID = B.JOBID AND J.TENANT_ID = B.TENANT_ID
+        WHERE B.CN = #v_CN#
+          AND B.TENANT_ID = #v_TENANT_ID#
+    </select>
+
+    <select id="EzOrganDAO.getRetireUserMail" parameterClass="Integer" resultClass="OrganUserVO">
+        SELECT MAIL FROM
+            TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#
+    </select>
+
+	<select id="EzOrganDAO.getUserInfoMap" parameterClass="Map" resultClass="HashMap">
+		SELECT
+			U.DISPLAYNAME AS N
+			, U.DISPLAYNAME2 AS N2
+			, D.DISPLAYNAME AS T
+			, D.DISPLAYNAME2 AS T2
+			, (
+				SELECT
+					D2.DISPLAYNAME
+				FROM
+					TBL_DEPTMASTER D2
+				WHERE
+					D2.CN = D.EXTENSIONATTRIBUTE1
+				AND
+					D2.TENANT_ID = #v_TENANT_ID#
+			) AS D
+			, (
+				SELECT
+					D2.DISPLAYNAME2
+				FROM
+					TBL_DEPTMASTER D2
+				WHERE
+					D2.CN = D.EXTENSIONATTRIBUTE1
+				AND
+					D2.TENANT_ID = #v_TENANT_ID#
+			) AS D2
+		FROM
+			TBL_USERMASTER U
+		JOIN
+			TBL_DEPTMASTER D
+		ON
+			U.DEPARTMENT = D.CN
+		AND
+			U.TENANT_ID = D.TENANT_ID
+		WHERE
+			U.CN = #v_CN#
+		AND
+			U.TENANT_ID = #v_TENANT_ID#
+	</select>
 </sqlMap>

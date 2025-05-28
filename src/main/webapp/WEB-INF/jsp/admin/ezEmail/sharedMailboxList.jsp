@@ -6,7 +6,8 @@
 	<head>
 		<title>shared_mailbox_list</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<style>
 			.mainlist tr td {
 				padding:0px;
@@ -228,7 +229,7 @@
 		        if (CrossYN()) {
 		            sharedMailboxDialogArguments[0] = addSharedMailboxComplete;
 		            var OpenWin = window.open("/admin/ezEmail/showAddSharedMailbox.do?compId=" + companyId, "", GetOpenWindowfeature(1080, 670));
-		            try { OpenWin.focus(); } catch (e) { }
+		            try { OpenWin.focus(); } catch (e) {console.log(e);}
 		        } else {
 		            var rtnValue = window.showModalDialog("/admin/ezEmail/showAddSharedMailbox.do?compId=" + companyId, feature);
 		            if (typeof (rtnValue) != "undefined") {
@@ -261,7 +262,7 @@
 		        if (CrossYN()) {
 		        	sharedMailboxDialogArguments[0] = modSharedMailboxComplete;
 		            var OpenWin = window.open("/admin/ezEmail/showAddSharedMailbox.do?shareId=" + encodeURIComponent(shareId) + "&compId=" + encodeURIComponent(companyId), "", GetOpenWindowfeature(1080, 690));
-		            try { OpenWin.focus(); } catch (e) { }
+		            try { OpenWin.focus(); } catch (e) {console.log(e);}
 		        } else {
 		            var rtnValue = window.showModalDialog("/admin/ezEmail/showAddSharedMailbox.do?shareId=" + encodeURIComponent(shareId) + "&compId=" + encodeURIComponent(companyId), feature);
 		            
@@ -294,7 +295,7 @@
 		        inputpassword_dialogArguments[0] = strLangSharedMailbox02;
 		        inputpassword_dialogArguments[1] = mod_password_Complete;
 		        var OpenWin = window.open("/admin/ezOrgan/inputPassword.do?companyId=" + userComId, "InputPassword", GetOpenWindowfeature(467, 185));
-		        try { OpenWin.focus(); } catch (e) { }
+		        try { OpenWin.focus(); } catch (e) {console.log(e);}
 			}
 			
 		    function mod_password_Complete(rtnValue) {
@@ -453,7 +454,7 @@
 		<!-- 검색 -->
 		<div style="border: 1px solid #e8e8e8; WIDTH:100%; height: 34px; box-sizing: border-box; line-height: 33px; margin-bottom:3px;">
 			<div id="jobTotalInfoRayer" style="display: inline-block;">
-				<span>&nbsp;[<spring:message code='main.t252'/> <span style="color:#017BEC; font-weight:bold;" id="listCount"></span> <spring:message code='ezSystem.kyj2'/>]</span>
+				<span>&nbsp;[<spring:message code='main.t252'/> <span class="txt_color" style="font-weight:bold;" id="listCount"></span> <spring:message code='ezSystem.kyj2'/>]</span>
 			</div>
 			<div id="userSearchRayer" style="float:right; display: inline-block;">
 				<div style="display: inline-block; float:left;">

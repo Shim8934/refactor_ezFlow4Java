@@ -24,8 +24,8 @@ function setSignSlash(pSignKinds, pSusin) {
         if (field) {
             fieldvalue = trim(getNodeText(field));
             if (trim(fieldvalue) == "" && (trim(field.innerHTML) == "&nbsp;" || trim(field.innerHTML) == "" || trim(field.innerHTML) == "<br>")) {
-                var signWidth = parseInt(pSignImage_Size.split('/')[0]);
-                var signHeight = parseInt(pSignImage_Size.split('/')[1]);
+                var signWidth = typeof pSignImage_Size == "undefined" ? field.width : parseInt(pSignImage_Size.split('/')[0]);
+                var signHeight = typeof pSignImage_Size == "undefined" ? field.height : parseInt(pSignImage_Size.split('/')[1]);
                 var strimg;
                 var ret = "/images/signimgs/200.gif";
                 strimg = "<img src='" + ret + "' border=0 embedding='1' ";

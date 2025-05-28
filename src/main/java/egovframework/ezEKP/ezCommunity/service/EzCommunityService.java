@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardInfoVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityBoardItemAttachmentVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardItemVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardListVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardPropertyVO;
@@ -185,7 +186,7 @@ public interface EzCommunityService {
 
 	public String newItem(Document xmlData, String pMode, String realPath, LoginVO userInfo) throws Exception;
 	
-	public String getItemAttachmentXML(String itemID, int tenantID) throws Exception;
+	public String getItemAttachmentXML(String itemID, int tenantID, String realPath, String pMode) throws Exception;
 	
 	public String getReservedItemListXML(String id, int pStartRow, int pEndRow, String pSortBy, String primary, int tenantID, String offset) throws Exception;
 
@@ -201,7 +202,7 @@ public interface EzCommunityService {
 	
 	public String categoryPrint(String c_Cate_A, String c_Cate_B, String c_Cate_C, LoginVO userInfo) throws Exception;
 
-	public String commOutOk(String loginCookie, String code, String reason) throws Exception;
+	public String commOutOk(HttpServletRequest request, String loginCookie, String code, String reason) throws Exception;
 
 	public String adminBasicGet1(String code, int tenantID) throws Exception;
 
@@ -326,7 +327,7 @@ public interface EzCommunityService {
 
 	public void joinOkInsert(String companyID, String userID, String userName, String userName2, String companyName, String companyName2, String companyZip, String companyAddress, String deptName, String deptName2, String companyTel, String companyFax, String homeTel, String handPhone, String eMail, String birthDay, String gender, int tenantID) throws Exception;
 
-	public boolean communityConnCHK(String id, String clubID, String boardID, String rollInfo, int mode, HttpServletResponse response, LoginVO userInfo) throws Exception;
+	public boolean communityConnCHK(String id, String clubID, String boardID, String rollInfo, int mode, HttpServletResponse response, LoginVO userInfo, String type) throws Exception;
 
 	public void updateLastDate(String strNow, String code, String id, int tenantID) throws Exception;
 
@@ -364,9 +365,9 @@ public interface EzCommunityService {
 
 	public void adminLogoUploadIE9(String code, String type, String imageSrc, String logoPath, String fileName, String fileData, int tenantID) throws Exception;
 
-	public void joinOkSendMail(String loginCookie, LoginVO userInfo, CommunityClubVO clubVO) throws Exception;
+	public void joinOkSendMail(HttpServletRequest request, String loginCookie, LoginVO userInfo, CommunityClubVO clubVO) throws Exception;
 	
-	public void okNoSetSendMail(String loginCookie, LoginVO userInfo, String flag, String code, String cID) throws Exception;
+	public void okNoSetSendMail(HttpServletRequest request, String loginCookie, LoginVO userInfo, String flag, String code, String cID) throws Exception;
 
 	public void deleteExpiredItems(String realPath) throws Exception;
 
@@ -374,7 +375,7 @@ public interface EzCommunityService {
 
 	public void deleteReservedBoardItem(String realPath)throws Exception;
 
-	public void sendReplyNoticeMail(String boardID, String itemID, String itemTreeID, String loginCookie) throws Exception;
+	public void sendReplyNoticeMail(HttpServletRequest request, String boardID, String itemID, String itemTreeID, String loginCookie) throws Exception;
 
 	public String getOneLineReplyCount(String pBoardID, String pItemID,int tenantId) throws Exception;
 	
@@ -387,4 +388,32 @@ public interface EzCommunityService {
 	public String getIsNewItemExists(String boardID, String userID, int tenantID) throws Exception;
 
 	public boolean checkUserInCommunity(String clubNo, String userID, int tenantID) throws Exception;
+	
+	public String encodeURIComponent(String url) throws Exception; 
+
+	public String popularBoardItem(LoginVO userInfo) throws Exception;
+	
+	public boolean saveHWP(String strHTML, String strFileName, String strBoardID, String strFilePath, String realPath) throws Exception;
+
+	public void insertGuestOneLineReply(int itemID, String clubNo, String companyID, int tenantID, String content, LoginVO userInfo) throws Exception;
+
+	public void deleteGuestOneLineReply(String replyId, int tenantID) throws Exception;
+
+	public void modifyGuestOneLineReply(String replyId, String content, int tenantID) throws Exception;
+
+	// 2024-10-17 조수빈 - 커뮤니티 내의 게시글 통합 검색 목록 반환 메소드
+	public String commBoardTotalSearchList(List<Map<String, String>> searchMaps, LoginVO userInfo, String sortBy, String pageNum, String code) throws Exception;
+
+	// 2024-10-17 조수빈 - 커뮤니티 내의 게시글 통합 검색 카운트 반환 메소드
+	public int commuTotalSearchCount(List<Map<String, String>> searchMaps, LoginVO userInfo, String sortBy, String pageNum, String code) throws Exception;
+
+	// 2024-10-17 조수빈 - 커뮤니티 내의 게시글 통합 검색 카운트 반환 메소드
+	public List<CommunityBoardItemAttachmentVO> getItemAttachmentInfo(String itemID, int tenantId) throws Exception;
+
+	// 2024-10-17 조수빈 - 게시판 조회 권한 체크 메소드
+	public String getReadFlag(String boardID, LoginVO userInfo) throws Exception;
+	
+	public String getClubNameLocalization(String userLang, CommunityClubVO clubVO) throws Exception;
+
+	public String getClubBoardNameLocalization(String userLang, CommunityBoardPropertyVO clubBoardVO) throws Exception;
 }

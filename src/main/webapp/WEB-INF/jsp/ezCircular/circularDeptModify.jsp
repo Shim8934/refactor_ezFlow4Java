@@ -7,7 +7,8 @@
 	<head>
 		<title><spring:message code='ezCircular.t43' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezCircular.c1', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('ezCircular.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -31,8 +32,11 @@
     		
 	    	window.onload = function() {				
 	    		window.resizeTo(450 + (window.outerWidth - window.innerWidth), 275 + (window.outerHeight - window.innerHeight));
-	    		
-	    		document.getElementById("title").value = "<c:out value='${title}'/>";
+
+				var temp = document.createElement('span');
+				temp.innerHTML = "<c:out value='${title}'/>";
+				document.getElementById("title").value = temp.innerText;
+				
 	    		if(lang == "1") {
 	    			document.getElementById("receiverlist").innerHTML = "<c:out value='${userName}'/>";
 	    		}

@@ -24,6 +24,7 @@
 	<typeAlias alias="CommunityCComCloseVO"				type="egovframework.ezEKP.ezCommunity.vo.CommunityCComCloseVO"/>
 	<typeAlias alias="CommunityMyCommunityVO"			type="egovframework.ezEKP.ezCommunity.vo.CommunityMyCommunityVO"/>
 	<typeAlias alias="CommunityBoardDeleteItemVO" 		type="egovframework.ezEKP.ezCommunity.vo.CommunityBoardDeleteItemVO"/>
+	<typeAlias alias="CommunityCClubGuestReplyVO" 		type="egovframework.ezEKP.ezCommunity.vo.CommunityCClubGuestReplyVO"/>
 	<typeAlias alias="OrganUserVO"						type="egovframework.ezEKP.ezOrgan.vo.OrganUserVO"/>
 	
 	<resultMap class="CommunityCBoardVO" id="LeftBBSList">
@@ -110,6 +111,19 @@
 		<result property="closeState2"					column="CLOSESTATE2"				columnIndex="9"/>
 	</resultMap>
 	
+	<resultMap class="CommunityCClubGuestReplyVO" id="communityCClubGuestReplyVO">
+		<result property="itemId"						column="ITEMID"						columnIndex="1"/>
+		<result property="replyId"						column="REPLYID"					columnIndex="2"/>
+		<result property="c_clubNo"						column="C_CLUBNO"					columnIndex="3"/>
+		<result property="userId"						column="USERID"						columnIndex="4"/>
+		<result property="userName"						column="USERNAME"					columnIndex="5"/>
+		<result property="userName2"					column="USERNAME2"					columnIndex="6"/>
+		<result property="writeDate"					column="WRITEDATE"					columnIndex="7"/>
+		<result property="content"						column="CONTENT"					columnIndex="8"/>
+		<result property="tenantID"						column="TENANT_ID"					columnIndex="9"/>
+		<result property="companyID"					column="COMPANYID"					columnIndex="10"/>
+	</resultMap>
+    
 <!-- 	<procedure id="EzCommunityDAO.brdBoardTree"					parameterClass="Map"		resultMap="BoardTreeList"> -->
 <!-- 		{CALL EZSP_BRDBOARDTREE(#v_pRootBoardID#, #v_pUserID#, #v_pDeptID#, #v_pCompanyID#, #v_pMode#, #v_pSelectBy#, #v_pExcludeBoardID#, #v_pClubNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
@@ -266,13 +280,21 @@
 <!-- 	<procedure id="EzCommunityDAO.bbsListGet2"					parameterClass="Map"		resultClass="CommunityCBoardVO"				remapResults="true"> -->
 <!-- 		{CALL EZSP_BBS_LIST_GET2(#v_BNAME#, #v_USERINFO_LANG#, #v_KEYWORD#, #v_S_RADIO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
+	<!-- 2024-07-09 홍승비 - SQL Injection 수정 > $ 기호 제거, 접근 테이블 분기 처리 (현재 커뮤니티 공지사항 기능은 TBL_C_BOARD 테이블만 사용) -->
 	<select id="EzCommunityDAO.bbsListGet2"						parameterClass="Map"		resultClass="CommunityCBoardVO"				remapResults="true">
 		<isEqual property="v_S_RADIO" compareValue="TITLECONTENT">
-			<![CDATA[
 				SELECT
 					* 
 	            FROM
-	            	$v_BNAME$
+	            <isEqual property="v_BNAME" compareValue="TBL_C_BOARD">
+	            	TBL_C_BOARD
+	            </isEqual>
+	            <isEqual property="v_BNAME" compareValue="TBL_C_NOTICE">
+	            	TBL_C_NOTICE
+	            </isEqual>
+	            <isEqual property="v_BNAME" compareValue="TBL_C_CLUBNOTICE">
+	            	TBL_C_CLUBNOTICE
+	            </isEqual>
 	            WHERE
 	            	(title LIKE '%' ||#v_KEYWORD#|| '%'
 	           	 	OR
@@ -281,85 +303,82 @@
 	            	tenant_id = #tenantID#
 	            AND
 	            	COMPANYID = #companyID#
-			]]>
 		</isEqual>
 		<isNotEqual property="v_S_RADIO" compareValue="TITLECONTENT">
 			<isEqual property="v_S_RADIO" compareValue="TITLE">
-				<![CDATA[
 					SELECT
 						* 
 					FROM
-						$v_BNAME$
+					<isEqual property="v_BNAME" compareValue="TBL_C_BOARD">
+		            	TBL_C_BOARD
+		            </isEqual>
+		            <isEqual property="v_BNAME" compareValue="TBL_C_NOTICE">
+		            	TBL_C_NOTICE
+		            </isEqual>
+		            <isEqual property="v_BNAME" compareValue="TBL_C_CLUBNOTICE">
+		            	TBL_C_CLUBNOTICE
+		            </isEqual>
 					WHERE
 						title LIKE '%'||#v_KEYWORD#||'%'
 					AND
 	            		tenant_id = #tenantID#
 	            	AND
 	            		COMPANYID = #companyID#
-				]]>
 			</isEqual>
-			
 			<isNotEqual property="v_S_RADIO" compareValue="TITLE">
 				<isEqual property="v_S_RADIO" compareValue="WRITER">
-					<![CDATA[
 						SELECT
 							* 
 						FROM
-							$v_BNAME$
+						<isEqual property="v_BNAME" compareValue="TBL_C_BOARD">
+			            	TBL_C_BOARD
+			            </isEqual>
+			            <isEqual property="v_BNAME" compareValue="TBL_C_NOTICE">
+			            	TBL_C_NOTICE
+			            </isEqual>
+			            <isEqual property="v_BNAME" compareValue="TBL_C_CLUBNOTICE">
+			            	TBL_C_CLUBNOTICE
+			            </isEqual>
 						WHERE
 							CASE WHEN #primary# = '1' THEN username ELSE username2 END LIKE '%'||#v_KEYWORD#||'%'
 						AND
 	            			tenant_id = #tenantID#
 	            		AND
 	            			COMPANYID = #companyID#
-					]]>
 				</isEqual>
 				<isNotEqual property="v_S_RADIO" compareValue="WRITER">
-					<![CDATA[
 						SELECT
 							* 
 	                    FROM
-	                    	$v_BNAME$
+	                    <isEqual property="v_BNAME" compareValue="TBL_C_BOARD">
+			            	TBL_C_BOARD
+			            </isEqual>
+			            <isEqual property="v_BNAME" compareValue="TBL_C_NOTICE">
+			            	TBL_C_NOTICE
+			            </isEqual>
+			            <isEqual property="v_BNAME" compareValue="TBL_C_CLUBNOTICE">
+			            	TBL_C_CLUBNOTICE
+			            </isEqual>
 	                    WHERE
             				tenant_id = #tenantID#
             			AND
 	            			COMPANYID = #companyID#
-					]]>
 				</isNotEqual>
 			</isNotEqual>
 		</isNotEqual>
-		
-		
-		<isEqual property="v_BNAME" compareValue="tbl_c_clubnotice">
-			<![CDATA[
-				ORDER BY
-					no DESC
-			]]>
-		</isEqual>
-		
-		<isEqual property="v_BNAME" compareValue="tbl_c_notice">
-			<![CDATA[
-				ORDER BY
-   					no DESC
-   			]]>
-		</isEqual>
-		
-		<isNotEqual property="v_BNAME" compareValue="tbl_c_clubnotice">
-			<isNotEqual property="v_BNAME" compareValue="tbl_c_notice">
-				<![CDATA[
-					ORDER BY
-		   				ref DESC,
-		   				step ASC
-		   		]]>
-			</isNotEqual>
+		ORDER BY
+		<isEqual property="v_BNAME" compareValue="TBL_C_NOTICE">no DESC</isEqual>
+		<isEqual property="v_BNAME" compareValue="TBL_C_CLUBNOTICE">no DESC</isEqual>
+		<isNotEqual property="v_BNAME" compareValue="TBL_C_NOTICE">
+			<isNotEqual property="v_BNAME" compareValue="TBL_C_CLUBNOTICE">ref DESC, step ASC</isNotEqual>
 		</isNotEqual>
 	</select>
 	
 <!-- 	<procedure id="EzCommunityDAO.bbsViewNewGet1"				parameterClass="Map"		resultClass="CommunityCBoardVO"				remapResults="true"> -->
 <!-- 		{CALL EZSP_BBS_VIEW_NEW_GET1(#v_BNAME#, #v_NO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
+	<!-- 2024-07-09 홍승비 - SQL Injection 수정 > $ 기호 제거, 접근 테이블 분기 처리 (현재 커뮤니티 공지사항 기능은 TBL_C_BOARD 테이블만 사용) -->
 	<select id="EzCommunityDAO.bbsViewNewGet1"					parameterClass="Map"		resultClass="CommunityCBoardVO"				remapResults="true">
-		<![CDATA[
 			SELECT
 				title,
 				step,
@@ -374,19 +393,25 @@
 				id,
 				no
 			FROM
-				$v_BNAME$
+			<isEqual property="v_BNAME" compareValue="TBL_C_BOARD">
+            	TBL_C_BOARD
+            </isEqual>
+            <isEqual property="v_BNAME" compareValue="TBL_C_NOTICE">
+            	TBL_C_NOTICE
+            </isEqual>
+            <isEqual property="v_BNAME" compareValue="TBL_C_CLUBNOTICE">
+            	TBL_C_CLUBNOTICE
+            </isEqual>
 			WHERE
 				no = TO_NUMBER(#v_NO#)
 			AND
 				tenant_id = #tenantID#
-		]]>
 	</select>
 	
 <!-- 	<procedure id="EzCommunityDAO.bbsEditNew"					parameterClass="Map"		resultClass="CommunityCBoardVO"				remapResults="true"> -->
 <!-- 		{CALL EZSP_BBS_EDIT_NEW(#v_BNAME#, #v_NO#, #v_USERINFO_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzCommunityDAO.bbsEditNew"						parameterClass="Map"		resultClass="CommunityCBoardVO"				remapResults="true">
-		<![CDATA[
 			SELECT
 				title,
 				step,
@@ -400,28 +425,41 @@
 				id,
 				no
 			FROM
-				$v_BNAME$
+			<isEqual property="v_BNAME" compareValue="TBL_C_BOARD">
+            	TBL_C_BOARD
+            </isEqual>
+            <isEqual property="v_BNAME" compareValue="TBL_C_NOTICE">
+            	TBL_C_NOTICE
+            </isEqual>
+            <isEqual property="v_BNAME" compareValue="TBL_C_CLUBNOTICE">
+            	TBL_C_CLUBNOTICE
+            </isEqual>
 			WHERE
 				no = TO_NUMBER(#v_NO#)
 			AND
 				tenant_id = #tenantID#
-		]]>
 	</select>
 	
 <!-- 	<procedure id="EzCommunityDAO.bbsEditOkGet1"				parameterClass="Map"		resultClass="CommunityCBoardVO"				remapResults="true"> -->
 <!-- 		{CALL EZSP__BBS_EDIT_OK_GET1(#v_BNAME#, #v_GANT#, #v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzCommunityDAO.bbsEditOkGet1"					parameterClass="Map"		resultClass="CommunityCBoardVO"				remapResults="true">
-		<![CDATA[
 			SELECT
 				* 
 			FROM
-				$v_BNAME$
+			<isEqual property="v_BNAME" compareValue="TBL_C_BOARD">
+            	TBL_C_BOARD
+            </isEqual>
+            <isEqual property="v_BNAME" compareValue="TBL_C_NOTICE">
+            	TBL_C_NOTICE
+            </isEqual>
+            <isEqual property="v_BNAME" compareValue="TBL_C_CLUBNOTICE">
+            	TBL_C_CLUBNOTICE
+            </isEqual>
 			WHERE
 				no = TO_NUMBER(#v_NO#)
 			AND
 				tenant_id = #tenantID#
-		]]>
 		<isNotNull property="v_CODE">
 			<isNotEqual property="v_CODE" compareValue="">
 				<![CDATA[
@@ -436,17 +474,22 @@
 <!-- 		{CALL EZSP_BBS_DEL_OK_GET(#v_BNAME#, #v_NO#, #v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzCommunityDAO.getbbsDelOkGet"					parameterClass="Map"		resultClass="CommunityCBoardVO"				remapResults="true">
-		<![CDATA[
 			SELECT
 				*
 			FROM
-				$v_BNAME$
+			<isEqual property="v_BNAME" compareValue="TBL_C_BOARD">
+            	TBL_C_BOARD
+            </isEqual>
+            <isEqual property="v_BNAME" compareValue="TBL_C_NOTICE">
+            	TBL_C_NOTICE
+            </isEqual>
+            <isEqual property="v_BNAME" compareValue="TBL_C_CLUBNOTICE">
+            	TBL_C_CLUBNOTICE
+            </isEqual>
 			WHERE
 				no = TO_NUMBER(#v_NO#)
 			AND
 				tenant_id = #tenantID# 
-		]]>
-		
 		<isNotNull property="v_CODE">
 			<isNotEqual property="v_CODE" compareValue="">
 				<![CDATA[
@@ -487,7 +530,7 @@
 			FROM
 				TBL_C_CLUB
 			WHERE
-				c_clubname$v_USERINFO_LANG$ = #v_CLUBNAME#
+				CASE #v_USERINFO_LANG# WHEN '2' THEN c_clubname2 ELSE c_clubname END = #v_CLUBNAME#
 			AND
 				RTRIM(c_cate_a) = #v_C_CATE_A#
 			AND
@@ -497,7 +540,6 @@
 			AND
 				tenant_id = #tenantID#
 		]]>
-		
 	</select>
 	
 <!-- 	<procedure id="EzCommunityDAO.aspCommInfoGet1"				parameterClass="Map"		resultClass="CommunityClubVO"> -->
@@ -563,10 +605,14 @@
 				TBL_C_CLUBUSER B
 			ON
 				A.c_clubno = B.c_clubno
+			AND
+				A.tenant_id = B.tenant_id
 			JOIN
 				TBL_COMM_BOARDINFO C
 			ON
 				A.c_clubno = C.c_clubno
+			AND
+				A.tenant_id = C.tenant_id
 			WHERE
 				boardid = #v_PBOARDID#
 			AND
@@ -760,6 +806,8 @@
    					AND
    						ITEMID = A.ItemID) ONELINECNT,
    					A.attachments,
+					F.EXT,
+					F.FILEPATH,
    					A.itemlevel,
    					A.abstract,
    					CASE WHEN D.totalcount IS NULL THEN 0 ELSE 1 END READFLAG
@@ -786,6 +834,26 @@
 					A.itemid = D.itemid
 				AND
 					A.tenant_id = D.tenant_id
+				LEFT OUTER JOIN (
+					SELECT
+						CASE
+							WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+							WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILENAME))
+							ELSE 'MANY'
+						END AS EXT,
+						CASE
+							WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+							WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILEPATH))
+							ELSE 'MANY'
+						END AS FILEPATH,
+						TENANT_ID,
+						itemid
+					FROM TBL_COMM_ITEM_ATTACHMENTS
+					GROUP BY
+						ITEMID,
+						TENANT_ID ) F ON
+					A.ITEMID = F.ITEMID
+					AND A.TENANT_ID = F.TENANT_ID
   				WHERE 
 					boardid = #v_PBOARDID#
 				AND
@@ -795,7 +863,6 @@
 				AND
 					A.tenant_id = #tenantID#
 		]]>
-		
 		<isEqual property="v_PSORTBY" compareValue="">
 			<![CDATA[
 				ORDER BY
@@ -805,15 +872,20 @@
 				)
 			]]>
 		</isEqual>
-		
+		<!-- 2024-07-11 홍승비 - SQL Injection 수정 > $ 기호 제거 -->
 		<isNotEqual property="v_PSORTBY" compareValue="">
-			<![CDATA[
-				ORDER BY
-					$v_PSORTBY$
-				)
-			]]>
-		</isNotEqual>
-		
+        	ORDER BY
+			<isEqual property="v_orderCell" compareValue="BOARDNAME">BOARDNAME</isEqual>
+			<isEqual property="v_orderCell" compareValue="A.TITLE">A.TITLE</isEqual>
+			<isEqual property="v_orderCell" compareValue="A.WRITERCOMPANYNAME">A.WRITERCOMPANYNAME</isEqual>
+			<isEqual property="v_orderCell" compareValue="A.WRITERDEPTNAME">A.WRITERDEPTNAME</isEqual>
+			<isEqual property="v_orderCell" compareValue="A.WRITERNAME">A.WRITERNAME</isEqual>
+			<isEqual property="v_orderCell" compareValue="A.WRITEDATE">A.WRITEDATE</isEqual>
+			<isEqual property="v_orderCell" compareValue="A.ATTACHMENTS">A.ATTACHMENTS</isEqual>
+			<isEqual property="v_orderCell" compareValue="A.READCOUNT">A.READCOUNT</isEqual>
+			<isEqual property="v_orderSort" compareValue="DESC">DESC</isEqual>
+			)
+      	</isNotEqual>
 		<![CDATA[
 			WHERE
 				ROWNUM <= #v_PENDROW#
@@ -831,10 +903,10 @@
 				(SELECT
 					A.itemid,
 					A.writerid,
-					A.writername$v_strLang$ AS writername,
+					CASE #v_strLang# WHEN '2' THEN A.writername2 ELSE A.writername END AS writername,
 					A.writerDeptID,
-					A.writerdeptname$v_strLang$ AS writerdeptname,
-					A.writercompanyname$v_strLang$ AS writercompanyname,
+					CASE #v_strLang# WHEN '2' THEN A.writerdeptname2 ELSE A.writerdeptname END AS writerdeptname,
+					CASE #v_strLang# WHEN '2' THEN A.writercompanyname2 ELSE A.writercompanyname END AS writercompanyname,
 					A.parentwritedate,
 					A.writedate,
 					A.startdate,
@@ -875,36 +947,30 @@
 				AND
 					startdate <= #v_pNow#
 		]]>
-		
 		<isNotEqual property="v_pTitle" compareValue="">
 			AND
 				title LIKE '%' ||#v_pTitle#|| '%'
 		</isNotEqual>
-		
 		<isNotEqual property="v_pWriterName" compareValue="">
 			AND
-				writername$v_strLang$ LIKE '%' ||#v_pWriterName#|| '%'
+				CASE #v_strLang# WHEN '2' THEN writername2 ELSE writername END LIKE '%' ||#v_pWriterName#|| '%'
 		</isNotEqual>
-		
 		<isNotEqual property="v_pAbstract" compareValue="">
 			AND
 				abstract LIKE '%' ||#v_pAbstract#|| '%'
 		</isNotEqual>
-		
 		<isNotEqual property="v_pStartDate" compareValue="">
 			<![CDATA[
 				AND
 					startdate >= #v_pStartDate#
 			]]>
 		</isNotEqual>
-		
 		<isNotEqual property="v_pEndDate" compareValue="">
 			<![CDATA[
 				AND
 					startdate <= #v_pEndDate#
 			]]>
 		</isNotEqual>
-		
 		<![CDATA[
 			ORDER BY
 				A.parentwritedate DESC,
@@ -926,12 +992,12 @@
 				(SELECT
 		            A.itemid,
 		            A.boardid,
-		            B.boardname$v_strLang$,
+					CASE #v_strLang# WHEN '2' THEN B.boardname2 ELSE B.boardname END AS boardname,
 		            A.writerid,
-		            A.writername$v_strLang$,
+		            CASE #v_strLang# WHEN '2' THEN A.writername2 ELSE A.writername END AS writername,
 		            A.writerDeptID,
-		            A.writerdeptname$v_strLang$,
-		            A.writercompanyname$v_strLang$,
+		            CASE #v_strLang# WHEN '2' THEN A.writerdeptname2 ELSE A.writerdeptname END AS writerdeptname,
+		            CASE #v_strLang# WHEN '2' THEN A.writercompanyname2 ELSE A.writercompanyname END AS writercompanyname,
 		            A.parentwritedate,
 		            A.writedate,
 		            A.startdate,
@@ -947,7 +1013,8 @@
 	            INNER JOIN
 	            	(SELECT
 	            		boardid,
-	           			boardname$v_strLang$,
+	           			boardname,
+	           			boardname2,
 	           			tenant_id
 					FROM
 						TBL_COMM_BOARDINFO
@@ -982,36 +1049,30 @@
 	            AND
 	            	enddate > #v_pNow#
 		]]>
-		
 		<isNotEqual property="v_pTitle" compareValue="">
 			AND
 				title LIKE '%' ||#v_pTitle#|| '%'
 		</isNotEqual>
-		
 		<isNotEqual property="v_pWriterName" compareValue="">
 			AND
-				writername$v_strLang$ LIKE '%' ||#v_pWriterName#|| '%'
+				CASE #v_strLang# WHEN '2' THEN writername2 ELSE writername END LIKE '%' ||#v_pWriterName#|| '%'
 		</isNotEqual>
-		
 		<isNotEqual property="v_pAbstract" compareValue="">
 			AND
 				abstract LIKE '%' ||#v_pAbstract#|| '%'
 		</isNotEqual>
-		
 		<isNotEqual property="v_pStartDate" compareValue="">
 			<![CDATA[
 				AND
 					startdate >= #v_pStartDate#
 			]]>
 		</isNotEqual>
-		
 		<isNotEqual property="v_pEndDate" compareValue="">
 			<![CDATA[
 				AND
 					startdate <= #v_pEndDate#
 			]]>
 		</isNotEqual>
-		
 		<![CDATA[
 			ORDER BY
 				A.parentwritedate DESC,
@@ -1030,11 +1091,11 @@
 			SELECT
 				itemid,
 				writerid,
-				writername$v_strLang$ AS writername,
+				CASE #v_strLang# WHEN '2' THEN writername2 ELSE writername END AS writername,
 				writerdeptid,
-				writerdeptname$v_strLang$ AS writerdeptname,
+				CASE #v_strLang# WHEN '2' THEN writerdeptname2 ELSE writerdeptname END AS writerdeptname,
 				writercompanyid,
-				writercompanyname$v_strLang$ AS writercompanyname,
+				CASE #v_strLang# WHEN '2' THEN writercompanyname2 ELSE writercompanyname END AS writercompanyname,
 				TO_DATE(writedate, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) AS writedate,
 				TO_DATE(parentwritedate, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) AS parentwritedate,
 				importance,
@@ -1049,7 +1110,7 @@
 				copieditem,
 				extensionattribute1,
 				extensionattribute2,
-				extensionattribute3$v_strLang$ AS extensionattribute3,
+				CASE #v_strLang# WHEN '2' THEN extensionattribute32 ELSE extensionattribute3 END AS extensionattribute3,
 				extensionattribute4,
 				extensionattribute5 
 			FROM
@@ -1858,11 +1919,11 @@
 
 <!-- 	<procedure id="EzCommunityDAO.commOutOkGet2"				parameterClass="Map"		resultMap="communityCOutApplicationVO"> -->
 <!-- 		{CALL EZSP_COMM_OUT_OK_GET2(#v_CODE#, #v_USERINFO_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 	</procedure> -->	
+<!-- 	</procedure> -->
 	<select id="EzCommunityDAO.commOutOkGet2"					parameterClass="Map"		resultClass="CommunityClubVO" remapResults="true">
 		<![CDATA[
 			SELECT
-				TBL_C_CLUB.c_clubname$v_userInfo_lang$ c_clubname,
+				CASE #v_userInfo_lang# WHEN '2' THEN TBL_C_CLUB.c_clubname2 ELSE TBL_C_CLUB.c_clubname END AS c_clubname,
 				TBL_C_CLUB.c_sysopid,
 				TBL_C_MEMBERINFO.email,
 				TBL_C_MEMBERINFO.username
@@ -2173,7 +2234,7 @@
 		<![CDATA[
 			SELECT
 				c_clubgubun,
-				c_clubname$v_USERINFO_LANG$ AS c_clubname,
+				CASE #v_USERINFO_LANG# WHEN '2' THEN c_clubname2 ELSE c_clubname END AS c_clubname,
 				c_membercnt,
 				c_clubconfirmtype
 			FROM
@@ -2475,7 +2536,6 @@
 <!-- 	</procedure> -->
 	<select id="EzCommunityDAO.searchCop"						parameterClass="Map"		resultClass="CommunityClubVO" remapResults="true">
 		<isEqual property="v_mode" compareValue="SEA">
-			<![CDATA[
 			SELECT
 				*
 			FROM	
@@ -2513,7 +2573,10 @@
 					AND
 						T3.C_CAT = 'a'
 					WHERE
-						$v_searchName$ LIKE '%' || #v_searchValue# || '%'
+					<isEqual property="v_searchName" compareValue="C_CLUBNAME">C_CLUBNAME</isEqual>
+					<isEqual property="v_searchName" compareValue="C_CLUBNAME2">C_CLUBNAME2</isEqual>
+					<isEqual property="v_searchName" compareValue="C_CLUBDESC">C_CLUBDESC</isEqual>
+						LIKE '%' || #v_searchValue# || '%'
 					AND
 						T1.companyid = #companyID#
 					AND
@@ -2522,11 +2585,8 @@
 						T1.C_ADMINCONFIRM = 'Y'
 					)
 				) X
-			]]>
 		</isEqual>
-		
 		<isNotEqual property="v_mode" compareValue="SEA">
-			<![CDATA[
 				SELECT
 					NVL(COUNT(*), 0) AS COPCNT
 				FROM
@@ -2551,7 +2611,10 @@
 					AND
 						T1.tenant_id = T2.tenant_id
 					WHERE
-						$v_searchName$ LIKE '%' || #v_searchValue# || '%'
+					<isEqual property="v_searchName" compareValue="C_CLUBNAME">C_CLUBNAME</isEqual>
+					<isEqual property="v_searchName" compareValue="C_CLUBNAME2">C_CLUBNAME2</isEqual>
+					<isEqual property="v_searchName" compareValue="C_CLUBDESC">C_CLUBDESC</isEqual>
+						LIKE '%' || #v_searchValue# || '%'
 					AND
 						T1.companyid = #companyID#
 					AND
@@ -2559,7 +2622,6 @@
 					AND
 						T1.C_ADMINCONFIRM = 'Y'
 					)
-			]]>
 		</isNotEqual>
 	</select>
 	
@@ -2606,9 +2668,9 @@
 				(SELECT
 					A.itemid,
 					A.writerid,
-					A.writername$v_USERINFO_LANG$,
-					A.writerdeptname$v_USERINFO_LANG$,
-					A.writercompanyname$v_USERINFO_LANG$,
+					CASE #v_USERINFO_LANG# WHEN '2' THEN A.writername2 ELSE A.writername END AS writername,
+					CASE #v_USERINFO_LANG# WHEN '2' THEN A.writerdeptname2 ELSE A.writerdeptname END AS writerdeptname,
+					CASE #v_USERINFO_LANG# WHEN '2' THEN A.writercompanyname2 ELSE A.writercompanyname END AS writercompanyname,
 					A.startdate,
 					TO_DATE(A.writedate, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) AS writedate,
 					A.parentwritedate,
@@ -2661,19 +2723,25 @@
 				AND
 					A.tenant_id = #tenantID#
 		]]>
-		
 		<isEqual property="v_PSORTBY" compareValue="">
 			ORDER BY
 				A.parentwritedate DESC,
 				A.docno DESC,
 				TO_CHAR(A.upperitemidtree)
 		</isEqual>
-		
+		<!-- 2024-07-11 홍승비 - SQL Injection 수정 > $ 기호 제거 (현재 포토게시판은 리스트 헤더 정렬 기능이 없고, v_PSORTBY 정렬 조건으로 공백만 전달됨) -->
 		<isNotEqual property="v_PSORTBY" compareValue="">
 			ORDER BY
-				#v_PSORTBY#
+			<isEqual property="v_orderCell" compareValue="BOARDNAME">BOARDNAME</isEqual>
+			<isEqual property="v_orderCell" compareValue="A.TITLE">A.TITLE</isEqual>
+			<isEqual property="v_orderCell" compareValue="A.WRITERCOMPANYNAME">A.WRITERCOMPANYNAME</isEqual>
+			<isEqual property="v_orderCell" compareValue="A.WRITERDEPTNAME">A.WRITERDEPTNAME</isEqual>
+			<isEqual property="v_orderCell" compareValue="A.WRITERNAME">A.WRITERNAME</isEqual>
+			<isEqual property="v_orderCell" compareValue="A.WRITEDATE">A.WRITEDATE</isEqual>
+			<isEqual property="v_orderCell" compareValue="A.ATTACHMENTS">A.ATTACHMENTS</isEqual>
+			<isEqual property="v_orderCell" compareValue="A.READCOUNT">A.READCOUNT</isEqual>
+			<isEqual property="v_orderSort" compareValue="DESC">DESC</isEqual>
 		</isNotEqual>
-		
 		<![CDATA[
 			)
 			WHERE
@@ -2836,31 +2904,26 @@
 <!-- 		{CALL EZSP_BBS_VIEW_NEW_GET2(#v_BNAME#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzCommunityDAO.bbsViewNewGet2"					parameterClass="Map"		resultClass="CommunityCBoardVO"				remapResults="true">
-		<![CDATA[
 			SELECT
 				no,
 				title
 			FROM
-				$v_BNAME$
+			<isEqual property="v_BNAME" compareValue="TBL_C_BOARD">
+				TBL_C_BOARD
+			</isEqual>
+			<isEqual property="v_BNAME" compareValue="TBL_C_NOTICE">
+				TBL_C_NOTICE
+			</isEqual>
+			<isEqual property="v_BNAME" compareValue="TBL_C_CLUBNOTICE">
+				TBL_C_CLUBNOTICE
+			</isEqual>
 			WHERE
 				tenant_id = #tenantID#
-		]]>
-		
 		<isNotEqual property="v_BNAME" compareValue="">
-			<isNotEqual property="v_BNAME" compareValue="">
-				ORDER BY ref DESC,step ASC
-			</isNotEqual>
-			<isEqual property="v_BNAME" compareValue="">
-				ORDER BY ref DESC,step ASC
-			</isEqual>
+			ORDER BY ref DESC,step ASC
 		</isNotEqual>
 		<isEqual property="v_BNAME" compareValue="">
-			<isNotEqual property="v_BNAME" compareValue="">
-				ORDER BY ref DESC,step ASC
-			</isNotEqual>
-			<isEqual property="v_BNAME" compareValue="">
-				ORDER BY no DESC
-			</isEqual>
+			ORDER BY no DESC
 		</isEqual>
 	</select>
 	
@@ -3264,7 +3327,7 @@
 				*
 			FROM
 				(SELECT
-					(SUBSTR(c_clubname$v_USERINFO_LANG$, 1, 18)) AS c_clubname,
+					(SUBSTR(CASE #v_USERINFO_LANG# WHEN '2' THEN c_clubname2 ELSE c_clubname END, 1, 18)) AS c_clubname,
 					T1.c_clubno,
 					c_clubgubun,
 					c_clubdesc,
@@ -3325,7 +3388,7 @@
 				*
 			FROM
 				(SELECT
-					c_clubname$v_USERINFO_LANG$ AS c_clubname,
+					CASE #v_USERINFO_LANG# WHEN '2' THEN c_clubname2 ELSE c_clubname END AS c_clubname,
 					c_clubno,
 					c_sysopid,
 					c_clubgubun,
@@ -3380,7 +3443,9 @@
 		<![CDATA[
 			SELECT
 				c_sysopid,
-				companyid
+				companyid,
+				c_clubname,
+				c_clubname2
 			FROM
 				TBL_C_CLUB
 			WHERE
@@ -3394,7 +3459,8 @@
 		<![CDATA[
 			SELECT
 				B.mail email,
-				B.displayname username
+				B.displayname username,
+				B.cn userid
 			FROM
 				TBL_C_CLUBUSER A
 			JOIN
@@ -3707,31 +3773,43 @@
 <!-- 		{CALL EZSP_BBS_EDIT_GET1(#v_BNAME#, #v_NO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzCommunityDAO.bbsEditGet1"						parameterClass="Map"		resultClass="String"	remapResults="true">
-		<![CDATA[
 			SELECT
 				filename
-			FROM 
-				$v_BNAME$
+			FROM
+			<isEqual property="v_BNAME" compareValue="TBL_C_BOARD">
+				TBL_C_BOARD
+			</isEqual>
+			<isEqual property="v_BNAME" compareValue="TBL_C_NOTICE">
+				TBL_C_NOTICE
+			</isEqual>
+			<isEqual property="v_BNAME" compareValue="TBL_C_CLUBNOTICE">
+				TBL_C_CLUBNOTICE
+			</isEqual>
 			WHERE
 				no = TO_NUMBER(#v_NO#)
 			AND
 				tenant_id = #tenantID#
-		]]>
 	</select>
 	
 <!-- 	<procedure id="EzCommunityDAO.bbsEditOkGet2"				parameterClass="Map"		resultClass="String"> -->
 <!-- 		{CALL EZSP__BBS_EDIT_OK_GET2(#v_MAXIDFIELDNAME#, #v_BNAME#, #v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
+	<!-- 2024-07-11 홍승비 - SQL Injection 수정 > 의미없는 칼럼 셀렉트 분기처리 제거 (maxIdFieldName값은 항상 C_NO 칼럼을 전달함) -->
 	<select id="EzCommunityDAO.bbsEditOkGet2"					parameterClass="Map"		resultClass="Integer" remapResults="true">
-		<![CDATA[
 			SELECT
-				NVL(MAX($v_MAXIDFIELDNAME$),0) 
+				NVL(MAX(C_NO),0)
 			FROM
-				$v_BNAME$
+			<isEqual property="v_BNAME" compareValue="TBL_C_BOARD">
+				TBL_C_BOARD
+			</isEqual>
+			<isEqual property="v_BNAME" compareValue="TBL_C_NOTICE">
+				TBL_C_NOTICE
+			</isEqual>
+			<isEqual property="v_BNAME" compareValue="TBL_C_CLUBNOTICE">
+				TBL_C_CLUBNOTICE
+			</isEqual>
 			WHERE
 				tenant_id = #tenantID#
-		]]>
-		
 		<isNotNull property="v_CODE">
 			<isNotEqual property="v_CODE" compareValue="">
 		 		AND
@@ -3744,24 +3822,28 @@
 <!-- 		{CALL EZSP__BBS_EDIT_OK_GET3(#v_MAXIDFIELDNAME#, #v_BNAME#, #v_CODE#, #v_STRMAXNUM#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzCommunityDAO.bbsEditOkGet3"					parameterClass="Map"		resultClass="String" remapResults="true">
-		<![CDATA[
 			SELECT 
 				filename
 			FROM
-				$v_BNAME$
+			<isEqual property="v_BNAME" compareValue="TBL_C_BOARD">
+				TBL_C_BOARD
+			</isEqual>
+			<isEqual property="v_BNAME" compareValue="TBL_C_NOTICE">
+				TBL_C_NOTICE
+			</isEqual>
+			<isEqual property="v_BNAME" compareValue="TBL_C_CLUBNOTICE">
+				TBL_C_CLUBNOTICE
+			</isEqual>
 			WHERE
-				$v_MAXIDFIELDNAME$ = #v_STRMAXNUM#
+				C_NO = #v_STRMAXNUM#
 			AND
 				tenant_id = #tenantID#
-		]]>
-		
 		<isNotNull property="v_CODE">
 			<isNotEqual property="v_CODE" compareValue="">
 		 		AND
 		 			RTRIM(c_clubno) = #v_CODE#
 		 	</isNotEqual>
 		</isNotNull>
-		
 	</select>
 	
 <!-- 	<procedure id="EzCommunityDAO.commMakeOkGet6"				parameterClass="Map"		resultClass="String"> -->
@@ -3977,7 +4059,6 @@
 			AND
 				A.tenant_id = #tenantID#
 		]]>
-		
 		<isNotEqual property="v_pTitle" compareValue="">
 			AND
 				title LIKE '%' ||#v_pTitle#|| '%'
@@ -3985,21 +4066,18 @@
 		
 		<isNotEqual property="v_pWriterName" compareValue="">
 			AND
-				writername LIKE '%' ||#v_pWriterName#|| '%'
+				CASE #v_strLang# WHEN '2' THEN writername2 ELSE writername END LIKE '%' ||#v_pWriterName#|| '%'
 		</isNotEqual>
-		
 		<isNotEqual property="v_pAbstract" compareValue="">
 			AND
 				abstract LIKE '%' ||#v_pAbstract#|| '%'
 		</isNotEqual>
-		
 		<isNotEqual property="v_pStartDate" compareValue="">
 			<![CDATA[
 				AND
 					startdate >= #v_pStartDate#
 			]]>
 		</isNotEqual>
-		
 		<isNotEqual property="v_pEndDate" compareValue="">
 			<![CDATA[
 				AND
@@ -4024,29 +4102,24 @@
 			AND
 				A.tenant_id = #tenantID#
 		]]>
-		
 		<isNotEqual property="v_pTitle" compareValue="">
 			AND
 				title LIKE '%' ||#v_pTitle#|| '%'
 		</isNotEqual>
-		
 		<isNotEqual property="v_pWriterName" compareValue="">
 			AND
-				writername LIKE '%' ||#v_pWriterName#|| '%'
+				CASE #v_strLang# WHEN '2' THEN writername2 ELSE writername END LIKE '%' ||#v_pWriterName#|| '%'
 		</isNotEqual>
-		
 		<isNotEqual property="v_pAbstract" compareValue="">
 			AND
 				abstract LIKE '%' ||#v_pAbstract#|| '%'
 		</isNotEqual>
-		
 		<isNotEqual property="v_pStartDate" compareValue="">
 			<![CDATA[
 				AND
 					startdate >= #v_pStartDate#
 			]]>
 		</isNotEqual>
-		
 		<isNotEqual property="v_pEndDate" compareValue="">
 			<![CDATA[
 				AND
@@ -4470,7 +4543,7 @@
 	<select id="EzCommunityDAO.join1Get"						parameterClass="Map"		resultClass="String"	remapResults="true">
 		<![CDATA[
 			SELECT
-				c_clubname$v_USERINFO_LANG$ AS c_clubname
+				CASE #v_USERINFO_LANG# WHEN '2' THEN c_clubname2 ELSE c_clubname END AS c_clubname
 			FROM
 				TBL_C_CLUB
 			WHERE
@@ -4486,7 +4559,7 @@
 	<select id="EzCommunityDAO.joinGet1"						parameterClass="Map"		resultClass="String"	remapResults="true">
 		<![CDATA[
 			SELECT
-				c_clubname$v_USERINFO_LANG$ AS c_clubname
+				CASE #v_USERINFO_LANG# WHEN '2' THEN c_clubname2 ELSE c_clubname END AS c_clubname
 			FROM
 				TBL_C_CLUB
 			WHERE
@@ -4502,7 +4575,7 @@
 	<select id="EzCommunityDAO.joinGet2"						parameterClass="Map"		resultClass="String"	remapResults="true">
 		<![CDATA[
 			SELECT
-				username$v_USERINFO_LANG$ AS username
+				CASE #v_USERINFO_LANG# WHEN '2' THEN username2 ELSE username END AS username
 			FROM
 				TBL_C_MEMBERINFO
 			WHERE
@@ -4979,63 +5052,84 @@
 <!-- 	</procedure> -->
 	<select id="EzCommunityDAO.bbsListGet1"						parameterClass="Map"		resultClass="Integer"		remapResults="true">
 		<isEqual property="v_S_RADIO" compareValue="TITLECONTENT">
-			<![CDATA[
 				SELECT
 					NVL(COUNT(title), 0) 
 				FROM
-					$v_BNAME$ 
+				<isEqual property="v_BNAME" compareValue="TBL_C_BOARD">
+	            	TBL_C_BOARD
+	            </isEqual>
+	            <isEqual property="v_BNAME" compareValue="TBL_C_NOTICE">
+	            	TBL_C_NOTICE
+	            </isEqual>
+	            <isEqual property="v_BNAME" compareValue="TBL_C_CLUBNOTICE">
+	            	TBL_C_CLUBNOTICE
+	            </isEqual>
 				WHERE
 					(title LIKE  '%'||#v_KEYWORD#||'%' OR content LIKE '%'||#v_KEYWORD#||'%')
 				AND
 					tenant_id = #tenantID#
 				AND
 					companyid = #companyID#
-			]]>
 		</isEqual>
-		
 		<isNotEqual property="v_S_RADIO" compareValue="TITLECONTENT">
 			<isEqual property="v_S_RADIO" compareValue="TITLE">
-				<![CDATA[
 					SELECT
 						NVL(COUNT(title), 0)
 					FROM
-						$v_BNAME$
+					<isEqual property="v_BNAME" compareValue="TBL_C_BOARD">
+		            	TBL_C_BOARD
+		            </isEqual>
+		            <isEqual property="v_BNAME" compareValue="TBL_C_NOTICE">
+		            	TBL_C_NOTICE
+		            </isEqual>
+		            <isEqual property="v_BNAME" compareValue="TBL_C_CLUBNOTICE">
+		            	TBL_C_CLUBNOTICE
+		            </isEqual>
 					WHERE
 						title LIKE '%'||#v_KEYWORD#||'%'
 					AND
 						tenant_id = #tenantID#
 					AND
 						companyid = #companyID#
-				]]>
 			</isEqual>
-			
 			<isNotEqual property="v_S_RADIO" compareValue="TITLE">
 				<isEqual property="v_S_RADIO" compareValue="WRITER">
-					<![CDATA[
 						SELECT
 							NVL(COUNT(CASE WHEN #primary# = '1' THEN username ELSE username2 END), 0) 
 						FROM
-							$v_BNAME$ 
+						<isEqual property="v_BNAME" compareValue="TBL_C_BOARD">
+			            	TBL_C_BOARD
+			            </isEqual>
+			            <isEqual property="v_BNAME" compareValue="TBL_C_NOTICE">
+			            	TBL_C_NOTICE
+			            </isEqual>
+			            <isEqual property="v_BNAME" compareValue="TBL_C_CLUBNOTICE">
+			            	TBL_C_CLUBNOTICE
+			            </isEqual> 
 						WHERE
 							CASE WHEN #primary# = '1' THEN username ELSE username2 END LIKE '%'||#v_KEYWORD#||'%'
 						AND
 							tenant_id = #tenantID#
 						AND
 							companyid = #companyID#
-					]]>
 				</isEqual>
-				
 				<isNotEqual property="v_S_RADIO" compareValue="WRITER">
-					<![CDATA[
 						SELECT
 							NVL(COUNT(*), 0)
 						FROM
-							$v_BNAME$
+						<isEqual property="v_BNAME" compareValue="TBL_C_BOARD">
+			            	TBL_C_BOARD
+			            </isEqual>
+			            <isEqual property="v_BNAME" compareValue="TBL_C_NOTICE">
+			            	TBL_C_NOTICE
+			            </isEqual>
+			            <isEqual property="v_BNAME" compareValue="TBL_C_CLUBNOTICE">
+			            	TBL_C_CLUBNOTICE
+			            </isEqual>
 						WHERE
 							tenant_id = #tenantID#
 						AND
 							companyid = #companyID#
-					]]>
 				</isNotEqual>
 			</isNotEqual>
 		</isNotEqual>
@@ -5273,29 +5367,25 @@
 <!-- 	<procedure id="EzCommunityDAO.bbsEditOkSet1"				parameterClass="Map"> -->
 <!-- 		{CALL EZSP__BBS_EDIT_OK_SET1(#v_BNAME#, #v_TITLE#, #v_GANT#, #v_CODE#, #v_ATTACHLIST#, #v_TEXTCONTENT#)} -->
 <!-- 	</procedure> -->
+	<!-- SQL Injection 수정 > $ 기호 제거, 사용되지 않는 파라미터와 칼럼 접근 제거 (2024-07-11 기준 v_ATTACHLIST는 전달되지 않는 파라미터로 확인) -->
 	<update id="EzCommunityDAO.bbsEditOkSet1"					parameterClass="Map">
-		<![CDATA[
 			UPDATE
-				$v_BNAME$
+			<isEqual property="v_BNAME" compareValue="TBL_C_BOARD">
+            	TBL_C_BOARD
+            </isEqual>
+            <isEqual property="v_BNAME" compareValue="TBL_C_NOTICE">
+            	TBL_C_NOTICE
+            </isEqual>
+            <isEqual property="v_BNAME" compareValue="TBL_C_CLUBNOTICE">
+            	TBL_C_CLUBNOTICE
+            </isEqual>
 			SET
 				title = #v_TITLE#,
 				content = #v_TEXTCONTENT#
-		]]>
-		
-		<isEqual property="v_BNAME" compareValue="tbl_c_clubpds">
-			, charfilename = #v_ATTACHLIST#
-		</isEqual>
-		<isEqual property="v_BNAME" compareValue="tbl_c_clubpds1">
-			, charfilename = #v_ATTACHLIST#
-		</isEqual>
-		
-		<![CDATA[
 			WHERE
 				no = TO_NUMBER(#v_NO#)
 			AND
 				tenant_id = #tenantID#
-		]]>
-		
 		<isNotNull property="v_CODE">
 			<isNotEqual property="v_CODE" compareValue="">
 				AND
@@ -5308,73 +5398,72 @@
 <!-- 		{CALL EZSP__BBS_EDIT_OK_SET2(#v_BNAME#, #v_MYREF#, #v_MYSTEP#, #v_CODE#)} -->
 <!-- 	</procedure> -->
 	<update id="EzCommunityDAO.bbsEditOkSet2"					parameterClass="Map">
-		<![CDATA[
-			UPDATE $v_bName$ 
+			UPDATE
+			<isEqual property="v_BNAME" compareValue="TBL_C_BOARD">
+            	TBL_C_BOARD
+            </isEqual>
+            <isEqual property="v_BNAME" compareValue="TBL_C_NOTICE">
+            	TBL_C_NOTICE
+            </isEqual>
+            <isEqual property="v_BNAME" compareValue="TBL_C_CLUBNOTICE">
+            	TBL_C_CLUBNOTICE
+            </isEqual>
 			SET
-				step = STEP + 1 
+				step = STEP + 1
 			WHERE
-				ref=#v_myRef#
+				ref = #v_myRef#
 			AND
-				step > #v_myStep#
+			<![CDATA[step > #v_myStep#]]>
 			AND
-				$v_bName$.tenant_id = #tenantID#
-		]]>
-		
+				tenant_id = #tenantID#
 		<isNotNull property="v_code">
 			<isNotEqual property="v_code" compareValue="">
 				AND
 					RTRIM(c_clubno) = #v_code#
 			</isNotEqual>
 		</isNotNull>
-		
 	</update>
 	
 <!-- 	<procedure id="EzCommunityDAO.bbsEditOkInsert"				parameterClass="Map"> -->
 <!-- 		{CALL EZSP_BBS_EDIT_OK_INSERT(#v_BNAME#, #v_MYREF#, #v_NEWSTEP#, #v_NEWLEVEL#, #v_ATTACHLIST#, #v_NUMBER#, #v_TEXTCONTENT#, #v_DATETIME_NOW#, #v_FILENAME#, #v_CODE#, #v_USERINFO_COMPANYID#, #v_USERINFO_USERID#, #v_USERNM#, #v_USERNM2#, #v_TITLE#, #v_MAXIDFIELDNAME#)} -->
 <!-- 	</procedure> -->
+	<!-- 2024-07-11 홍승비 - SQL Injection 수정 > 의미없는 칼럼 분기처리 제거 (maxIdFieldName값은 항상 C_NO 칼럼을 전달함) -->
+	<!-- 오라클 쿼리의 selectKey 사용을 위해 분기처리 없이 실제로 접근하는 테이블을 명시 (현재 커뮤니티 공지사항 기능은 TBL_C_BOARD 테이블만 사용) -->
 	<insert id="EzCommunityDAO.bbsEditOkInsert"					parameterClass="Map">
 		<selectKey keyProperty="no" resultClass="Integer">
-			<![CDATA[
-				SELECT
-					NVL(MAX(no), 0) + 1 as NO
-				FROM 
-					$v_BNAME$
-				WHERE
-					tenant_id = #tenantID#
-			]]>
+			SELECT
+				NVL(MAX(no), 0) + 1 as NO
+			FROM
+				TBL_C_BOARD
+			WHERE
+				tenant_id = #tenantID#
 		</selectKey>
-		
-		<![CDATA[
-			INSERT INTO $v_BNAME$
+			INSERT INTO
+            	TBL_C_BOARD
 				(no,
 				companyid,
 				id,
 				username,
 				username2,
 				title,
-		]]>
-		
-		<isNotEqual property="v_BNAME" compareValue="tbl_c_clubnotice">
+		<isNotEqual property="v_BNAME" compareValue="TBL_C_CLUBNOTICE">
 			ref,
 			step,
 			re_level,
 		</isNotEqual>
-		<isEqual property="v_BNAME" compareValue="tbl_c_clubnotice">
-			<isNotEqual property="v_BNAME" compareValue="tbl_c_notice">
+		<isEqual property="v_BNAME" compareValue="TBL_C_CLUBNOTICE">
+			<isNotEqual property="v_BNAME" compareValue="TBL_C_NOTICE">
 				ref,
 				step,
 				re_level,
 			</isNotEqual>
 		</isEqual>
-		
 		<isEqual property="v_BNAME" compareValue="TBL_C_BOARD">
 			<isNotEmpty property="v_NO">
 				UPPERNO,
 			</isNotEmpty>
 		</isEqual>
-		
-		<![CDATA[
-			$v_MAXIDFIELDNAME$,
+			C_NO,
 			content,
 			readnum,
 			writeday,
@@ -5388,28 +5477,23 @@
 				#v_USERINFO_DISPLAYNAME1#,
 				#v_USERINFO_DISPLAYNAME2#,
 				#v_TITLE#
-		]]>
-		
-		<isNotEqual property="v_BNAME" compareValue="tbl_c_clubnotice">
+		<isNotEqual property="v_BNAME" compareValue="TBL_C_CLUBNOTICE">
 			,#v_MYREF#,
 			#v_NEWSTEP#,
 			#v_NEWLEVEL#
 		</isNotEqual>
-		<isEqual property="v_BNAME" compareValue="tbl_c_clubnotice">
-			<isNotEqual property="v_BNAME" compareValue="tbl_c_notice">
+		<isEqual property="v_BNAME" compareValue="TBL_C_CLUBNOTICE">
+			<isNotEqual property="v_BNAME" compareValue="TBL_C_NOTICE">
 				,#v_MYREF#,
 				#v_NEWSTEP#,
 				#v_NEWLEVEL#
 			</isNotEqual>
 		</isEqual>
-	
 		<isEqual property="v_BNAME" compareValue="TBL_C_BOARD">
 			<isNotEmpty property="v_NO">
 				,#v_NO#
 			</isNotEmpty>
 		</isEqual>
-			
-		<![CDATA[
 			,#v_NUMBER#,
 			#v_TEXTCONTENT#,
 			0,
@@ -5417,23 +5501,27 @@
 			#v_FILENAME#,
 			#v_CODE#,
 			#tenantID#)
-		]]>
 	</insert>
 	
 <!-- 	<procedure id="EzCommunityDAO.bbsDelOkDel"					parameterClass="Map"> -->
 <!-- 		{CALL EZSP_BBS_DEL_OK_DEL(#v_CODE#, #v_BNAME#, #v_DOG#)} -->
 <!-- 	</procedure> -->
 	<delete id="EzCommunityDAO.bbsDelOkDel"						parameterClass="Map">
-		<![CDATA[
 			DELETE
 			FROM
-				$v_BNAME$ 
+			<isEqual property="v_BNAME" compareValue="TBL_C_BOARD">
+            	TBL_C_BOARD
+            </isEqual>
+            <isEqual property="v_BNAME" compareValue="TBL_C_NOTICE">
+            	TBL_C_NOTICE
+            </isEqual>
+            <isEqual property="v_BNAME" compareValue="TBL_C_CLUBNOTICE">
+            	TBL_C_CLUBNOTICE
+            </isEqual>
 			WHERE
 				no = TO_NUMBER(#v_NO#)
 			AND
 				tenant_id = #tenantID# 
-		]]>
-		
 		<isNotNull property="v_CODE">
 			<isNotEqual property="v_CODE" compareValue="">
 				AND
@@ -7069,16 +7157,22 @@
 <!-- 		{CALL EZSP_BBS_VIEW_NEW_UPDATE(#v_BNAME#, #v_NO#)} -->
 <!-- 	</procedure> -->
 	<update id="EzCommunityDAO.bbsViewNewUpdate"				parameterClass="Map">
-		<![CDATA[
 			UPDATE
-				$v_BNAME$
+			<isEqual property="v_BNAME" compareValue="TBL_C_BOARD">
+            	TBL_C_BOARD
+            </isEqual>
+            <isEqual property="v_BNAME" compareValue="TBL_C_NOTICE">
+            	TBL_C_NOTICE
+            </isEqual>
+            <isEqual property="v_BNAME" compareValue="TBL_C_CLUBNOTICE">
+            	TBL_C_CLUBNOTICE
+            </isEqual>
 			SET
 				readnum = READNUM + 1
 			WHERE
 				no = TO_NUMBER(#v_NO#)
 			AND
 				tenant_id = #tenantID#
-		]]>
 	</update>
 	
 <!-- 	<procedure id="EzCommunityDAO.pollDeleteDel2"				parameterClass="Map"> -->
@@ -7663,7 +7757,7 @@
 	<select id="EzCommunityDAO.joinOkSendMailGet2"				parameterClass="Map"	resultClass="LoginVO" remapResults="true">
 		<![CDATA[
 			SELECT
-				displayname$v_userInfo_lang$ displayName,
+				CASE #v_userInfo_lang# WHEN '2' THEN displayName2 ELSE displayName END AS displayName,
 				mail email
 			FROM
 				TBL_USERMASTER
@@ -7923,5 +8017,613 @@
 				PERMIT != 0
 		]]>
 	</select>
- 	
+
+	<select id="EzCommunityDAO.myCommunityPopGet" parameterClass="Map" resultClass="String">
+		<![CDATA[
+		SELECT
+			DISTINCT c_clubno
+		FROM
+			(SELECT
+				 *
+			 FROM
+				 (SELECT
+					  T1.c_clubno,
+					  writedate,
+					  T1.companyid,
+					  T1.tenant_id
+				  FROM
+					  (SELECT
+						   DISTINCT TBL_C_CLUBUSER.c_clubno,
+									MAX(writedate) WRITEDATE,
+									TBL_C_CLUB.companyid,
+									TBL_C_CLUBUSER.tenant_id
+					   FROM
+						   TBL_C_CLUBUSER
+							   JOIN
+						   TBL_C_CLUB
+						   ON
+							   TBL_C_CLUBUSER.c_clubno = TBL_C_CLUB.c_clubno
+								   AND
+							   TBL_C_CLUBUSER.tenant_id = TBL_C_CLUB.tenant_id
+							   JOIN
+						   TBL_COMM_BOARDINFO
+						   ON
+							   TBL_COMM_BOARDINFO.c_clubno = TBL_C_CLUBUSER.c_clubno
+								   AND
+							   TBL_COMM_BOARDINFO.tenant_id = TBL_C_CLUBUSER.tenant_id
+							   JOIN
+						   TBL_COMM_ITEM
+						   ON
+							   TBL_COMM_ITEM.boardid = TBL_COMM_BOARDINFO.boardid
+								   AND
+							   TBL_COMM_ITEM.tenant_id = TBL_COMM_BOARDINFO.tenant_id
+					   WHERE
+						   RTRIM(TBL_C_CLUBUSER.c_id) = #v_USERID#
+						 AND
+						   TBL_C_CLUB.c_adminconfirm = 'Y'
+						 AND
+						   TBL_C_CLUBUSER.permit <> 0
+						 AND
+						   TBL_C_CLUBUSER.companyid = #companyID#
+						 AND
+						   TBL_C_CLUBUSER.tenant_id = #tenantID#
+					   GROUP BY
+						   TBL_C_CLUBUSER.c_clubno, TBL_C_CLUBUSER.tenant_id, TBL_C_CLUB.companyid
+					   UNION
+					   SELECT
+						   TBL_C_CLUB.c_clubno,
+						   TBL_COMM_ITEM.WRITEDATE,
+						   TBL_C_CLUB.companyid,
+						   TBL_C_CLUB.tenant_id
+					   FROM
+						   TBL_C_CLUB
+							   JOIN
+						   TBL_COMM_BOARDINFO
+						   ON
+							   TBL_COMM_BOARDINFO.c_clubno = TBL_C_CLUB.c_clubno
+								   AND
+							   TBL_COMM_BOARDINFO.tenant_id = TBL_C_CLUB.tenant_id
+							   JOIN
+						   TBL_COMM_ITEM
+						   ON
+							   TBL_COMM_ITEM.boardid = TBL_COMM_BOARDINFO.boardid
+								   AND
+							   TBL_COMM_ITEM.tenant_id = TBL_COMM_BOARDINFO.tenant_id
+					   WHERE
+						   TBL_C_CLUB.c_adminconfirm = 'Y'
+						 AND
+						   TBL_C_CLUB.companyid = #companyID#
+						 AND
+						   TBL_C_CLUB.tenant_id =#tenantID#
+						 AND
+						   TBL_C_CLUB.c_clubgubun = '2'
+					   GROUP BY
+						   TBL_C_CLUB.c_clubno, TBL_C_CLUB.tenant_id, TBL_C_CLUB.companyid, TBL_COMM_ITEM.WRITEDATE
+					  ) T1
+				 ) T2
+			 WHERE
+				 T2.companyid = #companyID#
+			   AND
+				 T2.tenant_id = #tenantID#
+			) X
+		]]>
+	</select>
+	
+	<select id="EzCommunityDAO.myCommunityPopItemGet" parameterClass="Map" resultClass="CommunityMyCommunityVO">
+		<![CDATA[
+			SELECT
+				* 
+			FROM
+				(SELECT
+					a.c_clubno,
+					boardname,
+					boardname2,
+					itemid,
+					gubun,
+					writerid,
+					writername,
+					writername2,
+					writerdeptname,
+					TO_DATE(writedate, 'YYYY-MM-DD HH24:MI:SS') + (#offset#/(60*24)) AS writedate,
+					title,
+					c_clubname,
+					c_clubname2,
+					a.boardid,
+					readcount,
+					(SELECT 
+						COUNT(*)  
+					FROM 
+						tbl_comm_onelinereply
+					WHERE  
+						TENANT_ID = B.TENANT_ID
+					AND
+						ITEMID = B.ItemID) ONELINECNT
+					FROM
+						TBL_COMM_BOARDINFO A
+					JOIN
+						TBL_COMM_ITEM B
+					ON
+						A.boardid = B.boardid
+					AND
+						A.tenant_id = B.tenant_id
+					AND 
+						TO_DATE(B.writedate, 'YYYY-MM-DD HH24:MI:SS') > (SYSDATE - INTERVAL '90' DAY) + (#offset# / (60 * 24))
+					CROSS JOIN
+					(SELECT
+						NVL(COUNT(*), 0) itemcnt
+					FROM
+						TBL_COMM_BOARDINFO A
+					JOIN
+						TBL_COMM_ITEM B
+					ON
+						A.boardid = B.boardid
+					AND
+						A.tenant_id = B.tenant_id
+					]]>
+		<iterate prepend="WHERE RTRIM(A.c_clubno) IN" property="v_copNo" open="(" close=")" conjunction=",">
+			#v_copNo[]#
+		</iterate>
+		<![CDATA[
+						AND
+							A.parentboardid != 'top'
+						AND
+							A.tenant_id = #tenantID#
+						AND 
+							TO_DATE(B.writedate, 'YYYY-MM-DD HH24:MI:SS') > (SYSDATE - INTERVAL '90' DAY) + (#offset# / (60 * 24))
+						) T1
+						CROSS JOIN
+						(SELECT
+							c_clubno,
+							c_clubname,
+							c_clubname2,
+							c_membercnt
+						FROM
+							TBL_C_CLUB
+					]]>
+		<iterate prepend="WHERE RTRIM(c_clubno) IN" property="v_copNo" open="(" close=")" conjunction=",">
+			#v_copNo[]#
+		</iterate>
+		<![CDATA[
+						AND
+						TBL_C_CLUB.tenant_id = #tenantID#
+						) T3
+					]]>
+		<iterate prepend="WHERE RTRIM(A.c_clubno) IN" property="v_copNo" open="(" close=")" conjunction=",">
+			#v_copNo[]#
+		</iterate>
+		<![CDATA[
+						AND
+							T3.c_clubno = A.c_clubno
+						AND
+							A.parentboardid != 'top'
+						AND
+							B.startdate <= #v_pNow#
+						AND
+							B.enddate > #v_pNow#
+						AND
+							A.tenant_id = #tenantID#
+						AND 
+							TO_DATE(B.writedate, 'YYYY-MM-DD HH24:MI:SS') > (SYSDATE - INTERVAL '90' DAY) + (#offset# / (60 * 24))
+						ORDER BY
+							B.READCOUNT DESC, B.writedate DESC
+				)
+			WHERE 
+			    ROWNUM <= 5
+		]]>
+	</select>
+
+	<select id="EzCommunityDAO.getRecentNo" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				no
+      		FROM
+      			TBL_C_BOARD
+      		WHERE
+      			tenant_id = #tenantID#
+      		AND
+      			c_no = #v_cNo#
+		]]>
+	</select>
+	
+	<update id="EzCommunityDAO.updateAttachments" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_C_BOARD
+			SET
+				attachments = #pHasAttach#
+			WHERE
+				no = #v_pItemID#
+			AND
+				tenant_id = #tenantID#
+		]]>
+	</update>
+	
+	<delete id="EzCommunityDAO.bbsDelOkDelAttach" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_COMM_ITEM_ATTACHMENTS
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				itemid = #v_NO#
+		]]>
+	</delete>
+	
+	<select id="EzCommunityDAO.chkGuestReplyCnt" parameterClass="Map" resultClass="Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			TBL_C_CLUBGUEST_ONELINEREPLY
+		WHERE
+			ITEMID = #itemID#
+		  AND
+			COMPANYID = #companyID#
+		  AND
+			TENANT_ID = #tenantID#
+		  AND
+			C_CLUBNO = #clubNo#
+	</select>
+
+	<insert id="EzCommunityDAO.insertGuestOneLineReply" parameterClass="Map">
+		<![CDATA[
+		INSERT INTO TBL_C_CLUBGUEST_ONELINEREPLY(
+			ITEMID,	REPLYID, C_CLUBNO, USERID, USERNAME, USERNAME2,	WRITEDATE, CONTENT,	TENANT_ID, COMPANYID)
+		VALUES
+			(
+				#itemID#, #replyId#, #clubNo#, #userId#, #userName#, #userName2#, TO_DATE(#v_pNow#, 'YYYY-MM-DD HH24:MI:SS'), #content#, #tenantID#, #companyID#
+			)
+		]]>
+	</insert>
+
+	<select id="EzCommunityDAO.getGuestOneLineReply" parameterClass="Map" resultMap="communityCClubGuestReplyVO">
+		<![CDATA[
+		SELECT
+			*
+		FROM
+			TBL_C_CLUBGUEST_ONELINEREPLY
+		WHERE
+			ITEMID = #itemId#
+		  AND
+			C_CLUBNO = #clubNo#
+		  AND
+			TENANT_ID = #tenantID#
+		  AND
+			COMPANYID = #companyID#
+		ORDER BY
+			WRITEDATE ASC
+		]]>
+	</select>
+
+	<delete id="EzCommunityDAO.deleteGuestOneLineReply" parameterClass="Map">
+		<![CDATA[
+		DELETE FROM
+			TBL_C_CLUBGUEST_ONELINEREPLY
+		WHERE
+			REPLYID = #replyId#
+		AND
+		TENANT_ID = #tenantID#
+		]]>
+	</delete>
+
+	<update id="EzCommunityDAO.modifyGuestOneLineReply" parameterClass="Map">
+		<![CDATA[
+		UPDATE
+			TBL_C_CLUBGUEST_ONELINEREPLY
+		SET
+			CONTENT = #content#,
+			WRITEDATE = TO_DATE(#v_pNow#, 'YYYY-MM-DD HH24:MI:SS')
+		WHERE
+			REPLYID = #replyId#
+		  AND
+			tenant_id = #tenantID#
+		]]>
+	</update>
+	
+	<select id="EzCommunityDAO.commuTotalSearchList"	parameterClass="Map"	resultClass="CommunityBoardListVO" remapResults="true">
+		<![CDATA[
+			SELECT
+					*
+			FROM
+					(
+				SELECT
+						rownum AS paging_rn,
+						A.itemid,
+						A.writerid,
+						CASE
+							WHEN #primary# = '1' THEN A.writername
+						ELSE A.writername2
+					END AS writername,
+						CASE
+							WHEN #primary# = '1' THEN A.writerdeptname
+						ELSE A.writerdeptname2
+					END AS writerdeptname,
+						CASE
+							WHEN #primary# = '1' THEN A.writercompanyname
+						ELSE A.writercompanyname2
+					END AS writercompanyname,
+						A.writerDeptID,
+						A.writedate,
+						A.BoardID,
+						B.BoardName,
+						A.importance,
+						A.title,
+						A.readcount,
+						(
+					SELECT
+							COUNT(*)
+					FROM
+							tbl_comm_onelinereply
+					WHERE
+							TENANT_ID = A.TENANT_ID
+						AND ITEMID = A.ItemID
+			    ) ONELINECNT,
+						A.attachments,
+						F.EXT,
+						F.FILEPATH,
+						A.itemlevel,
+						A.abstract,
+						M.read_fg,
+						CASE
+							WHEN D.totalcount IS NULL THEN 0
+						ELSE 1
+					END READFLAG
+				FROM
+						TBL_COMM_ITEM A
+				LEFT OUTER JOIN (
+					SELECT
+							NVL(COUNT(userid), 0) AS TOTALCOUNT,
+							itemid,
+							tenant_id
+					FROM
+							TBL_COMM_ITEM_READ
+					WHERE
+							userid = #v_PUSERID#
+						AND tenant_id = 0
+					GROUP BY
+							itemid,
+							tenant_id
+			) D ON
+						A.itemid = D.itemid
+					AND A.tenant_id = D.tenant_id
+				JOIN TBL_COMM_BOARDINFO B ON
+						A.TENANT_ID = B.TENANT_ID
+					AND A.BOARDID = B.BOARDID
+				JOIN (
+					SELECT
+							a.BOARDID,
+							boardname,
+							accessid,
+							accessname,
+							boardadmin_fg,
+							listview_fg,
+							read_fg,
+							write_fg,
+							ROW_NUMBER() OVER (
+					            PARTITION BY a.BOARDID
+					ORDER BY
+						CASE
+							WHEN a.ACCESSID = #v_PUSERID# THEN 1
+							WHEN a.ACCESSID = #v_pDeptID# THEN 2
+							WHEN a.ACCESSID = #v_pCompanyID# THEN 3
+							WHEN a.ACCESSID = 'everyone' THEN 4
+						END
+			        ) AS board_rn
+					FROM
+							TBL_COMM_BOARDMANAGE a
+					JOIN TBL_COMM_BOARDINFO B ON
+							A.TENANT_ID = B.TENANT_ID
+						AND A.BOARDID = B.BOARDID
+					WHERE
+							a.ACCESSID IN (#v_PUSERID#, #v_pDeptID#, #v_pCompanyID#, 'everyone')
+							AND a.LISTVIEW_FG = 'true'
+							AND B.C_CLUBNO = #code#
+			) M ON
+						M.BOARDID = A.BOARDID
+				LEFT OUTER JOIN (
+					SELECT
+						CASE
+							WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+							WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILENAME))
+							ELSE 'MANY'
+						END AS EXT,
+						CASE
+							WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+							WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILEPATH))
+							ELSE 'MANY'
+						END AS FILEPATH,
+						TENANT_ID,
+						itemid
+					FROM TBL_COMM_ITEM_ATTACHMENTS
+					GROUP BY
+						ITEMID,
+						TENANT_ID ) F ON
+					A.ITEMID = F.ITEMID
+					AND A.TENANT_ID = F.TENANT_ID
+				WHERE
+						startdate <= #v_pNow#
+					AND enddate > #v_pNow#
+					AND A.tenant_id = #tenantID#
+					AND M.board_rn = 1
+		]]>
+		<iterate property="searchMaps">
+			<isEqual  property="searchMaps[].searchType" compareValue="title">
+				AND A.TITLE LIKE '%' || #searchMaps[].searchWord# || '%'
+			</isEqual>
+			<isEqual  property="searchMaps[].searchType" compareValue="writer">
+				AND
+					(CASE WHEN #primary# = '1'
+						THEN A.writername
+						ELSE A.writername2
+					END) LIKE '%' || #searchMaps[].searchWord# || '%'
+			</isEqual>
+		</iterate>
+		<isEqual property="v_PSORTBY" compareValue="">
+			<![CDATA[
+				ORDER BY
+					A.parentwritedate DESC,
+					TO_CHAR(A.upperitemidtree),
+					A.itemlevel
+				)
+			]]>
+		</isEqual>
+		<isNotEqual property="v_PSORTBY" compareValue="">
+			ORDER BY
+			<isEqual property="v_orderCell" compareValue="BOARDNAME">BOARDNAME</isEqual>
+			<isEqual property="v_orderCell" compareValue="A.TITLE">A.TITLE</isEqual>
+			<isEqual property="v_orderCell" compareValue="A.WRITERCOMPANYNAME">A.WRITERCOMPANYNAME</isEqual>
+			<isEqual property="v_orderCell" compareValue="A.WRITERDEPTNAME">A.WRITERDEPTNAME</isEqual>
+			<isEqual property="v_orderCell" compareValue="A.WRITERNAME">A.WRITERNAME</isEqual>
+			<isEqual property="v_orderCell" compareValue="A.WRITEDATE">A.WRITEDATE</isEqual>
+			<isEqual property="v_orderCell" compareValue="A.ATTACHMENTS">A.ATTACHMENTS</isEqual>
+			<isEqual property="v_orderCell" compareValue="A.READCOUNT">A.READCOUNT</isEqual>
+			<isEqual property="v_orderSort" compareValue="DESC">DESC</isEqual>
+			)
+		</isNotEqual>
+		<![CDATA[
+			WHERE
+				paging_rn <= #endRow#
+			AND
+				paging_rn > #startRow#
+		]]>
+	</select>
+    
+	<select id="EzCommunityDAO.commuTotalSearchCount"	parameterClass="Map"	resultClass="Integer">
+		<![CDATA[
+			SELECT
+					count(*)
+			FROM
+					(
+				SELECT
+						rownum AS paging_rn,
+						A.itemid,
+						A.writerid,
+						A.writername,
+						A.writerdeptname,
+						A.writercompanyname,
+						A.writerDeptID,
+						A.writedate,
+						A.BoardID,
+						B.BoardName,
+						A.importance,
+						A.title,
+						A.readcount,
+						(
+					SELECT
+							COUNT(*)
+					FROM
+							tbl_comm_onelinereply
+					WHERE
+							TENANT_ID = A.TENANT_ID
+						AND ITEMID = A.ItemID
+			    ) ONELINECNT,
+						A.attachments,
+						A.itemlevel,
+						A.abstract,
+						M.read_fg,
+						CASE
+							WHEN D.totalcount IS NULL THEN 0
+						ELSE 1
+					END READFLAG
+				FROM
+						TBL_COMM_ITEM A
+				LEFT OUTER JOIN (
+					SELECT
+							NVL(COUNT(userid), 0) AS TOTALCOUNT,
+							itemid,
+							tenant_id
+					FROM
+							TBL_COMM_ITEM_READ
+					WHERE
+							userid = #v_PUSERID#
+						AND tenant_id = 0
+					GROUP BY
+							itemid,
+							tenant_id
+			) D ON
+						A.itemid = D.itemid
+					AND A.tenant_id = D.tenant_id
+				JOIN TBL_COMM_BOARDINFO B ON
+						A.TENANT_ID = B.TENANT_ID
+					AND A.BOARDID = B.BOARDID
+				JOIN (
+					SELECT
+							a.BOARDID,
+							boardname,
+							accessid,
+							accessname,
+							boardadmin_fg,
+							listview_fg,
+							read_fg,
+							write_fg,
+							ROW_NUMBER() OVER (
+					            PARTITION BY a.BOARDID
+					ORDER BY
+						CASE
+							WHEN a.ACCESSID = #v_PUSERID# THEN 1
+							WHEN a.ACCESSID = #v_pDeptID# THEN 2
+							WHEN a.ACCESSID = #v_pCompanyID# THEN 3
+							WHEN a.ACCESSID = 'everyone' THEN 4
+						END
+			        ) AS board_rn
+					FROM
+							TBL_COMM_BOARDMANAGE a
+					JOIN TBL_COMM_BOARDINFO B ON
+							A.TENANT_ID = B.TENANT_ID
+						AND A.BOARDID = B.BOARDID
+					WHERE
+							a.ACCESSID IN (#v_PUSERID#, #v_pDeptID#, #v_pCompanyID#, 'everyone')
+							AND a.LISTVIEW_FG = 'true'
+							AND B.C_CLUBNO = #code#
+			) M ON
+						M.BOARDID = A.BOARDID
+				WHERE
+						startdate <= #v_pNow#
+					AND enddate > #v_pNow#
+					AND A.tenant_id = #tenantID#
+					AND M.board_rn = 1
+		]]>
+		<iterate property="searchMaps">
+			<isEqual  property="searchMaps[].searchType" compareValue="title">
+				AND A.TITLE LIKE '%' || #searchMaps[].searchWord# || '%'
+			</isEqual>
+			<isEqual  property="searchMaps[].searchType" compareValue="writer">
+				AND
+					(CASE WHEN #primary# = '1'
+						THEN A.writername
+						ELSE A.writername2
+					END) LIKE '%' || #searchMaps[].searchWord# || '%'
+			</isEqual>
+		</iterate>
+		)
+	</select>
+	
+	<select id="EzCommunityDAO.getReadFlag" parameterClass="Map" resultClass="String">
+		SELECT
+				READ_FG
+		FROM	(
+					SELECT
+							READ_FG,
+							ROW_NUMBER() OVER (
+								PARTITION BY BOARDID
+									ORDER BY
+										CASE
+											WHEN ACCESSID = #userID# THEN 1
+											WHEN ACCESSID = #deptID# THEN 2
+											WHEN ACCESSID = #companyID# THEN 3
+											WHEN ACCESSID = 'everyone' THEN 4
+										END
+							) AS BOARD_RN
+					FROM
+						TBL_COMM_BOARDMANAGE
+					WHERE
+						ACCESSID IN (#userID#, #deptID#, #companyID#, 'everyone')
+					AND
+						TENANT_ID = #tenantID#
+					AND
+						BOARDID = #boardID#
+		)
+		WHERE
+			BOARD_RN = 1
+	</select>
+    
 </sqlMap>

@@ -8,7 +8,8 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
 	   	<%-- <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css"> --%>
-	    <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+	    <link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 	    <link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
 	    <style>
 	    	.tree {
@@ -24,9 +25,32 @@
 			#mCSB_1_container {
 				margin-right: 0px;
 			}
+
+			.companySelect {
+				position: relative;
+				display: inline-block;
+				width: 100px; /* 원하는 너비로 조정하세요 */
+			}
+			
+			/* IE10+ 에서 화살표 제거 */
+			.companySelect select::-ms-expand {
+				display: none;
+			}
+
+			/* 크로스 브라우저 화살표 스타일링 */
+			.companySelect::after {
+				content: "\25BC";
+				position: absolute;
+				top: 50%;
+				right: 5px;
+				transform: translateY(-50%);
+				pointer-events: none;
+			}
+			
 	    </style>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/TreeView.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
@@ -49,7 +73,7 @@
 	        var RedirectBoardGroupID = "<c:out value='${redirectBoardGroupID}'/>";
 	        var RedirectBoardID = "<c:out value='${redirectBoardID}'/>";	   
 	        var useLeftCnt = "${useLeftCnt}";
-	        
+
 	        window.onload = function () {
 	            if (RedirectBoardID != "") {
 	                if (RedirectBoardGroupID != "") {
@@ -274,7 +298,10 @@
 	        /* 2018-10-16 홍승비 - 관리자단에서 좌측게시판리스트 하위에 접근하는지 판단하는 플래그 추가  */
 	        function GetSubBoard(pRootBoardID, pSubFlag) {
 		    	var xmlhttp3 = createXMLHttpRequest();
-		        xmlhttp3.open("POST", "/ezBoard/getSubBoards.do?rootBoardID=" + encodeURIComponent(pRootBoardID) + "&subFlag=" + pSubFlag + "&selectFlag=0&isAdminLeft=Y", false);
+				var urlUtil = URLParamsUtils("/ezBoard/getSubBoards.do?");
+				var url = urlUtil.put("rootBoardID", pRootBoardID).put("subFlag", pSubFlag)
+						.put("selectFlag", "0").put("isAdminLeft", "Y").put("companyID",companySelectID).getFullUrl();
+		        xmlhttp3.open("POST", url, false);
 		        xmlhttp3.send();
 		        var ret = xmlhttp3.responseXML;
 		        xmlhttp3 = null;
@@ -308,17 +335,20 @@
 
 	        function OpenRightMenu(pIndex) {
 	            curMenuIndex = pIndex;
+				// 선택된 게시판/그룹이 있어야 하는 경우
+				var needSelected = [2,3,4,5,6,7];
+				// 선택된 게시판이 그룹이 아니어야 할경우
+				var needNotGroup = [4];
 
-	            // 그룹생성, 배경이미지관리, 트리캐시 일괄생성을 제외한 기능들은 먼저 게시판을 선택해야 함
-	            if (SelectedBoardID == "" && pIndex != 1 && pIndex != 8 && pIndex != 9) {
-	                alert("<spring:message code='ezBoard.t56' />");
-	                return;
-	            }
+				if (needSelected.indexOf(pIndex) > -1 && !SelectedBoardID) {
+					alert("<spring:message code='ezBoard.t56' />");
+					return;
+				}
 
-	            if (SelectedBoardID == SelectedBoardGroupID && pIndex != 1 && pIndex != 2 && pIndex != 3 && pIndex != 5 && pIndex != 6 && pIndex != 7 && pIndex != 8 && pIndex != 9) {
-	                alert("<spring:message code='ezBoard.t138' />");
-	                return;
-	            }
+				if (needNotGroup.indexOf(pIndex) > -1 && SelectedBoardID === SelectedBoardGroupID) {
+					alert("<spring:message code='ezBoard.t138' />");
+					return;
+				}
 
 	            switch (pIndex) {
 	                case 1:
@@ -343,19 +373,20 @@
 	                    window.open("/admin/ezBoard/boardACL.do?parentNeed=Y&boardID=" + encodeURIComponent(SelectedBoardID) + "&parentBoardID=" + encodeURIComponent(SelectedBoardParentBoardID) + "&accessLevel=" + AccessLevel, "board_main");
 	                    break;
 	                case 8:
-	                    window.open("/admin/ezBoard/boardBackGround.do?parentNeed=Y&boardID=" + encodeURIComponent(SelectedBoardID) + "&parentBoardID=" + encodeURIComponent(SelectedBoardParentBoardID), "board_main");
+	                    window.open("/admin/ezBoard/boardBackGround.do?parentNeed=Y&boardID=" + encodeURIComponent(SelectedBoardID) + "&companyID=" + encodeURIComponent(companySelectID) + "&parentBoardID=" + encodeURIComponent(SelectedBoardParentBoardID), "board_main");
 	                    break;
 					/* 2022-09-27 홍승비 - 트리캐시 일괄생성기능 추가 */
 	                case 9:
 	                    window.open("/admin/ezBoard/boardMakeAllTreeCache.do", "board_main");
 	                    break;
 	                default:
+						window.open("/admin/ezBoard/boardRight.do", "board_main");
 	                    break;
 	            }
 
         		// 2023-07-03 황인경 - 디자인 개선 > 관리자 > 게시판 > 좌측메뉴 하단 영역 > 메뉴 선택 시 on class 제어
-    	        $("li.on").attr("class", "");
-    			$(event.target).parent().attr("class", "on");
+    	        $("li.on").removeClass("on");
+				if (!!event) $(event.target).parent().addClass("on");
 	        }
 	        
 	        /* 2018-12-28 홍승비 - '+/-' 아이콘 > img -> span 태그로 변경된 부분 id 찾도록 수정 */
@@ -446,14 +477,33 @@
 		       	}
 		    }
 		    
+		    function manageMealPlan() {
+				window.open('/admin/ezBoard/boardACL.do?parentNeed=Y&boardID=%7BMMMMMMMM-MMMM-MMMM-MMMM-MMMMMMMMMMMM%7D&parentBoardID=None&accessLevel=1', 'board_main');
+	            $("h2.on").attr("class","off");
+	            $("#TopBoard .lnbUL").attr("class","lnbUL off");
+	            $("#TreeCtrl_MyBoardTree_ul").attr("class","lnbUL off");
+                $(".tree_arrow_down").attr("class", "sub_iconLNB tree_plus");
+		    }
 	    </script>
 	</head>
 	<body class="newLeft">
 	    <div id="left" class="lnb" style="overflow: auto">
-	        <div class="admin_left_title"><spring:message code="ezBoard.t58" /></div>
+            <%--<select id="ListCompany" class="companySelect adminBoardLeft" onchange="changeCompany()">
+                <c:forEach var="item" items="${listCompany}">
+                    <option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+                </c:forEach>
+            </select>--%>
+            <div class="admin_left_title">
+                <spring:message code="ezBoard.t58" />
+            </div>
 	        <div class="adminListBox" style="overflow:hidden; padding-right: 0;">
 	        	<div class="lnb_lay">
 		        	<div id="TopBoard"></div>
+					<c:if test="${useMealPlan == 'YES'}">
+		        	<h2 id="mealPlan" onclick="manageMealPlan()">
+						<span class="h2Title"><spring:message code='ezMealPlan.jsb001' /></span>
+					</h2>
+					</c:if>
 		        	<ul class="lnbUL">
                        	<li><span class="list_text" onclick="OpenRightMenu(1)"><spring:message code="ezBoard.t122" /></span></li>
                        	<li><span class="list_text" onclick="OpenRightMenu(6)"><spring:message code="ezBoard.t60" /></span></li>
@@ -471,35 +521,51 @@
 		</div>
 		<script>		
 	    	var strHTML = "", data = "";
-			var cnt = 0;	        		
-			
-			$.ajax({
-				type : "POST",
-				dataType : "json",
-				async : false,
-				url : "/admin/ezBoard/get_Admin_TopBoardList.do",	        			
-				data : { boardType : "top"},
-				success: function(result){
-					$.each(result, function(idx, item){	        					
-						$.each(item, function(idx, i){
-							strHTML += "<h2 class='off'><span class='sub_iconLNB tree_plus'></span><span AccessLevel='1' class='h2Title' id='TreeCtr" + idx + "' value='" + i.boardId;
-	                        strHTML += "' onclick=\"TopBoard_onclick('TreeCtrl" + idx + "','" + i.boardId + "')\">";
-	                        strHTML += i.boardName + "</span></h2>";
-	                        strHTML += "<ul class='lnbUL off'><div class='tree onlytree' name='BoardTree' id='TreeCtrl" + idx + "obj'>";
-	                        strHTML += "</div></ul>";
+			var cnt = 0;
+			var companySelectID = '<c:out value="${userCompany}" />';
+
+			window.onload = function () {
+				initLeft();
+			};
+
+			function initLeft() {
+				strHTML = "";
+				$.ajax({
+					type: "POST",
+					dataType: "json",
+					async: false,
+					url: "/admin/ezBoard/get_Admin_TopBoardList.do",
+					data: {boardType: "top", company: encodeURIComponent(companySelectID)},
+					success: function (result) {
+						$.each(result, function (idx, item) {
+							$.each(item, function (idx, i) {
+								strHTML += "<h2 class='off'><span class='sub_iconLNB tree_plus'></span><span AccessLevel='1' class='h2Title' id='TreeCtr" + idx + "' value='" + i.boardId;
+								strHTML += "' onclick=\"TopBoard_onclick('TreeCtrl" + idx + "','" + i.boardId + "')\">";
+								strHTML += i.boardName + "</span></h2>";
+								strHTML += "<ul class='lnbUL off'><div class='tree onlytree' name='BoardTree' id='TreeCtrl" + idx + "obj'>";
+								strHTML += "</div></ul>";
+							});
+							cnt = item.length;
+							data = item[0].boardId;
 						});
-						cnt = item.length;
-						data = item[0].boardId;
-					});
-					$("#TopBoard").html(strHTML);
-	
-	                /* if (cnt > 0){         	
-						TopBoard_onclick("TreeCtrl0", data);
-	                } */
-				}        			
-			});
+						$("#TopBoard").html(strHTML);
+					}
+				});
+			}
+
+			function changeCompany() {
+				companySelectID = document.querySelector("#ListCompany").value;
+				refreshLeft();
+			}
+
+			function refreshLeft() {
+				SelectedBoardID = "";
+				SelectedBoardGroupID = "";
+				SelectedBoardParentBoardID = "";
+				initLeft();
+				OpenRightMenu();
+			}
 			
-			//initToggleList(document.getElementById("left"), "h2", "ul", "li");
-		</script>	    
+		</script>
 	</body>
 </html>

@@ -6,7 +6,8 @@
 	<head>
 		<title>close_com</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezCommunity.i1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<style>
 		.mainlist tr th:first-child{
 			padding-left: 10px;
@@ -83,29 +84,29 @@
                 var strtext;
                 var PagingHTML = "";
                 document.getElementById("tblPageRayer").innerHTML = "";
-                document.getElementById("TitleInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;font-weight:bold;'>" + totalCount + "</span>";
+                document.getElementById("TitleInfo").innerHTML = "&nbsp;&nbsp;<span class='txt_color' style='font-weight:bold;'>" + totalCount + "</span>";
                 strtext = "<div class='pagenavi'>";
                 PagingHTML += strtext;
                 var pageNum = sCurPage;
                 
                 if (sTotalPage > 1 && pageNum != 1) {
-                    strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif'></span>";
+                    strtext = "<span class='btnimg first' onclick= 'return goToPageByNum(1)'></span>";
                     PagingHTML += strtext;
                 } else {
-                    strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>";
+                    strtext = "<span class='btnimg first disabled'></span>";
                     PagingHTML += strtext;
                 }
                 
                 if (sTotalPage > BlockSize) {
                     if (pageNum > BlockSize) {
-                        strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' ></span>";
+                        strtext = "<span class='btnimg prev' onclick= 'return selbeforeBlock()'></span>";
                         PagingHTML += strtext;
                     } else {
-                        strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+                        strtext = "<span class='btnimg prev disabled'></span>";
                         PagingHTML += strtext;
                     }
                 } else {
-                    strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+                    strtext = "<span class='btnimg prev disabled'></span>";
                     PagingHTML += strtext;
                 }
                 
@@ -136,24 +137,24 @@
                 if (sTotalPage > BlockSize) {
                     if (sTotalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
                         strtext = "";
-                        strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif'></span>";
+                        strtext = strtext + "<span class='btnimg next' onclick='return selafterBlock()'></span>";
                         PagingHTML += strtext;
                     } else {
                         strtext = "";
-                        strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+                        strtext = strtext + "<span class='btnimg next disabled'></span>";
                         PagingHTML += strtext;
                     }
                 } else {
                     strtext = "";
-                    strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+                    strtext = strtext + "<span class='btnimg next disabled'></span>";
                     PagingHTML += strtext;
                 }
                 
                 if (sTotalPage > 1 && sTotalPage != 1 && (sTotalPage != pageNum)) {
-                    strtext = "<span class='btnimg' onclick='return goToPageByNum(" + sTotalPage + ")'><img src='/images/sub/btn_n_next.gif' ></span>";
+                    strtext = "<span class='btnimg last' onclick='return goToPageByNum(" + sTotalPage + ")'></span>";
                     PagingHTML += strtext;
                 } else {
-                    strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif'></span>";
+                    strtext = "<span class='btnimg last disabled'></span>";
                     PagingHTML += strtext;
                 }
                 

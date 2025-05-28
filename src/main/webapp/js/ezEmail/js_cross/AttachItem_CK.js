@@ -130,9 +130,9 @@ function AddAttachFileInfoXmlParsing(resultXML, reuseAttach) {
         pstrXML += "</HEADERS><ROWS>";
         for (i = 0; i < nodes.length; i++) {
             if (getNodeText(GetChildNodes(nodes[i])[1]) != "denied") {
-                pstrXML += "<ROW><CELL><VALUE>" + getNodeText(GetChildNodes(nodes[i])[2]).replace(re, "&amp;") + "</VALUE>";
-                pstrXML += "<DATA1>" + getNodeText(GetChildNodes(nodes[i])[2]).replace(re, "&amp;") + "</DATA1>";
-                pstrXML += "<DATA2>" + getNodeText(GetChildNodes(nodes[i])[0]).replace(re, "&amp;") + "</DATA2>";
+                pstrXML += "<ROW><CELL><VALUE>" + getNodeText(GetChildNodes(nodes[i])[2]).replace(re, "&amp;").replace("<","&lt;").replace(">","&gt;")  + "</VALUE>";
+                pstrXML += "<DATA1>" + getNodeText(GetChildNodes(nodes[i])[2]).replace(re, "&amp;").replace("<","&lt;").replace(">","&gt;") + "</DATA1>";
+                pstrXML += "<DATA2>" + getNodeText(GetChildNodes(nodes[i])[0]).replace(re, "&amp;").replace("<","&lt;").replace(">","&gt;") + "</DATA2>";
                 pstrXML += "<DATA3></DATA3>";
                 pstrXML += "<DATA4></DATA4>";
                 pstrXML += "<DATA5>Y</DATA5>";

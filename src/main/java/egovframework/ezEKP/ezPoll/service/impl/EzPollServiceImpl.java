@@ -28,6 +28,9 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
+import egovframework.ezEKP.ezPersonal.type.NotiPlatform;
+import egovframework.ezEKP.ezPersonal.type.NotiType;
 import egovframework.ezEKP.ezPoll.dao.EzPollDAO;
 import egovframework.ezEKP.ezPoll.service.EzPollService;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
@@ -68,7 +71,10 @@ public class EzPollServiceImpl implements EzPollService{
 	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
-
+	
+	@Autowired
+	EzPersonalService ezPersonalService;
+	
 	@Override
 	public String getQuestionSeq(int tenantID) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();		
@@ -163,12 +169,13 @@ public class EzPollServiceImpl implements EzPollService{
 	}
 
 	@Override
-	public List<PollQuestionVO> getQuestionsTest(String userID, String deptPath, String companyID, int tenantID, String searchStr, String primary, String mode) throws Exception {		
+	public List<PollQuestionVO> getQuestionsTest(String userID, String deptPath, String companyID, String deptID, int tenantID, String searchStr, String primary, String mode) throws Exception {		
 		Map<String,Object> map = new HashMap<String, Object>();	
 		String[] deptArr = deptPath.split(",");
 		map.put("user_id", userID);
 		map.put("v_deptPath", deptPath);
 		map.put("company_id", companyID);
+		map.put("dept_id", deptID);
 		map.put("tenant_id", tenantID);	
 		map.put("search_str", searchStr);	
 		map.put("primary", primary);
@@ -504,6 +511,7 @@ public class EzPollServiceImpl implements EzPollService{
 		map.put("tenant_id", tenantID);
 		map.put("companyid", loginvo.getCompanyID());
 		map.put("user_id", loginvo.getId());
+		map.put("dept_id", loginvo.getDeptID());
 		String companyID = loginvo.getCompanyID();
 		
 		//Check if user has admin privilege
@@ -512,10 +520,9 @@ public class EzPollServiceImpl implements EzPollService{
 			String deptID = loginvo.getDeptID();
 			String userID = loginvo.getId();			
 			
-			
 			try {
 				String depPath = ezOrganService.getDeptPath(deptID, tenantID);
-				listOfQuestion = getQuestionsTest(userID, depPath, companyID, tenantID, searchStr, primary, mode);
+				listOfQuestion = getQuestionsTest(userID, depPath, companyID, deptID, tenantID, searchStr, primary, mode);
 			}
 			catch (Exception e) {
 				logger.error(e.getMessage(), e);
@@ -555,8 +562,8 @@ public class EzPollServiceImpl implements EzPollService{
 		
 		try {
 			String depPath = ezOrganService.getDeptPath(deptID, tenantID);
-			listOfQuestion = getQuestionsTest(userID, depPath, companyID, tenantID, searchStr, primary, mode);
-		}
+			listOfQuestion = getQuestionsTest(userID, depPath, companyID, deptID, tenantID, searchStr, primary, mode);
+		} 
 		catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -777,6 +784,10 @@ public class EzPollServiceImpl implements EzPollService{
 				AccessUserGroupInfo = ezOrganService.getDeptInfo(receiverId, userInfo.getPrimary(), userInfo.getTenantId());
 			}
 			
+			if (ezPersonalService.hasNotiDiableItem(receiverId, NotiType.fromString("POLL_NEW"), NotiPlatform.MAIL, tenantId)) {
+				continue;
+			}
+			
 			from.setPersonal(userInfo.getDisplayName(), "UTF-8");
 			from.setAddress(userInfo.getEmail());
 			
@@ -794,8 +805,9 @@ public class EzPollServiceImpl implements EzPollService{
 			to.setAddress(toAddress);
 			toArr[i] = to;
 		}
-		
-		ezEmailService.sendMail(loginCookie, from, toArr, null, null, subject, content, false);
+		if (toArr != null && toArr.length > 0) {
+			ezEmailService.sendMail(loginCookie, from, toArr, null, null, subject, content, false);
+		}
 	}
 
 	@Override
@@ -818,6 +830,35 @@ public class EzPollServiceImpl implements EzPollService{
 				getAllMemberOfDept(list, subDeptId, tenantID);
 			}
 		}		
+	}
+
+	@Override
+	public void getAllUserForQuestion(LoginVO loginVO, int questionID, Set<LoginVO> set) throws Exception {
+		//Check if this question is for all members
+		int target = checkTargetOfQst(questionID, loginVO.getTenantId());
+		List<LoginVO> list = new ArrayList<LoginVO>();
+
+		if (target == 0) {
+			list = loginService.selectAllMemberOfCompany(loginVO.getCompanyID(), loginVO.getTenantId());
+		}
+		else {
+			List<String> departIdList = getListOfUserIdForQst(questionID, loginVO.getTenantId(), "dept");
+
+			for (String deptId : departIdList) {
+				getAllMemberOfDept(list, deptId, loginVO.getTenantId());
+			}
+
+			List<String> userIdList = getListOfUserIdForQst(questionID, loginVO.getTenantId(), "user");
+
+			for (String _userID : userIdList) {
+				LoginVO user = loginService.selectReceiver(_userID, loginVO.getTenantId());
+				if(user != null){
+					list.add(user);
+				}
+			}
+		}
+
+		set.addAll(list);
 	}
 
 	//tbl_vote_user_and_question 의 모든 유저 정보를 가져옴.
@@ -962,6 +1003,10 @@ public class EzPollServiceImpl implements EzPollService{
 	public void deleteQstImages(Map<String, Object> map) throws Exception {
 		String realPath = (String)map.get("realPath");
 		String content = getContent((int)map.get("qst_id"), (int)map.get("tenant_id"));
+		
+		if (content == null) {
+			content = "";
+		}
 
 		Document document = Jsoup.parse(content);
 		Elements elements = document.getElementsByTag("img");

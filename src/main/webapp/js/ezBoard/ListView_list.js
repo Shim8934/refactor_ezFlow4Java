@@ -1,4 +1,4 @@
-﻿//컨트롤키나 쉬프트 키가 눌려졌음을 체크하는 FLAG
+//컨트롤키나 쉬프트 키가 눌려졌음을 체크하는 FLAG
 var PressCtrlKey = false;
 var PressShiftKey = false;
 //모질라 계열의 브라우저에서는 event.ctrlKey 등이 작동하지 않는다.
@@ -9,7 +9,7 @@ var m_strColorDefault =  "#FFFFFF";
 var m_strColorOver = "#f4f5f5";
 var m_UrgentColor = "#E9101A";
 var listEventCheckbox = false;
-
+var scrapBoard = "NO"
 function add_key_event() {
     remove_key_event();
 
@@ -590,7 +590,7 @@ function ListView() {
                     objTd.setAttribute("writerindex", i);
                 }
                 
-                if (strColName == "ATTACHMENTS" || strColName == "READCOUNT" || strColName == "LIKECOUNT") {
+                if (strColName == "ATTACHMENTS" || strColName == "READCOUNT" || strColName == "LIKECOUNT" || strColName == "DISLIKECOUNT") {
                 	objTd.style.textAlign = "CENTER";
                 }
                 
@@ -787,14 +787,22 @@ function ListView() {
                     objTd.style.overflow = "hidden";
                     objTd.style.whiteSpace = "nowrap";
                     objTd.style.textOverflow = "ellipsis";
-                    
-                    /* 2018-12-27 홍승비 - 세로 중앙정렬을 위해 답글 아이콘, 새게시물 아이콘, 댓글 태그 수정 및 스타일 추가 */
-                    for (var k = 1; k < parseInt(getNodeText(oDatas[7])) ; k++) {
-                        titleImage = titleImage + "&nbsp;&nbsp;&nbsp;";
-                        
-                        if (k == parseInt(getNodeText(oDatas[7])) - 1)
-                            titleImage = titleImage + "<img style='vertical-align:middle; display:inline-block;' src='/images/i_rep.gif'>&nbsp;";
+
+                    if(scrapBoard != "YES"){
+                        /* 2018-12-27 홍승비 - 세로 중앙정렬을 위해 답글 아이콘, 새게시물 아이콘, 댓글 태그 수정 및 스타일 추가 */
+                        for (var k = 1; k < parseInt(getNodeText(oDatas[7])) ; k++) {
+                            titleImage = titleImage + "&nbsp;&nbsp;&nbsp;";
+
+                            if (k == parseInt(getNodeText(oDatas[7])) - 1)
+                                titleImage = titleImage + "<img style='vertical-align:middle; display:inline-block;' src='/images/i_rep.gif'>&nbsp;";
+                        }
+                    }else{
+                        for (var k = 1; k < parseInt(getNodeText(oDatas[7])) ; k++) {
+                            if (k == parseInt(getNodeText(oDatas[7])) - 1)
+                                titleImage = titleImage + "<img style='vertical-align:middle; display:inline-block;' src='/images/i_rep2.gif'>&nbsp;";
+                        }
                     }
+                   
 //                    if (getNodeText(oDatas[3]) == "1") {  // 2018-01-10 강민수92  긴급게시물일 경우 빨간 느낌표 이미지 타이틀에 안뜨게 주석
 //                        titleImage = titleImage + "<img src='/images/i_urgency.gif'>&nbsp;";
 //                    }
@@ -810,7 +818,7 @@ function ListView() {
                         objTd.style.fontWeight = "BOLD";
                     }
                     if (getNodeText(oDatas[10]) != "0" && Use_OneLineCount == "YES")
-                        titleOneLineCnt = "<span style='color:#c64200; padding-left:3px;'>[" + getNodeText(oDatas[10]) + "]</span>";
+                        titleOneLineCnt = "<span style='color:#c64200; padding-left:3px; flex-shrink: 0;'>[" + getNodeText(oDatas[10]) + "]</span>";
                     
                     /* 2021-03-19 홍승비 - 원클릭 이벤트를 "제목" 칼럼에만 적용 */
                     objTd.onclick = function () {
@@ -848,7 +856,39 @@ function ListView() {
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "ATTACHMENTS") {
                     objTd.style.textAlign = "center";  
                     if (strValue == "1") {
-                        titleImage = titleImage + "<img src='/images/newAttach.gif'>";
+                    	var fileExt = SelectSingleNodeValue(oCells[0], "EXT");
+                    	var filePath = SelectSingleNodeValue(oCells[0], "FILEPATH");
+                    	var ITEMREAD_FG = SelectSingleNodeValue(oCells[0], "ITEMREAD_FG");
+                    	var downURL = "/ezBoard/boardAttachDown.do?filePath=" + javaURLEncode(filePath) +  "&fileName=" + javaURLEncode(fileExt);
+                    	var fileExtTypes = fileExt.lastIndexOf('.');
+
+                    	if (fileExt.indexOf("MANY") != -1) {
+                    		titleImage = titleImage + "<img src='/images/disk_icon.png' onclick='selectToDownloadFiles(\"" + SelectSingleNodeValue(oCells[0], "DATA1") + "\", \"" + SelectSingleNodeValue(oCells[0], "DATA2") +"\", \"" + ITEMREAD_FG +"\")'>";
+                    	} else if (fileExtTypes !== -1) {
+                            var fileExtType = fileExt.slice(fileExtTypes + 1); 
+                            if (fileExtType.indexOf("jpg") != -1 || fileExtType.indexOf("jpeg") != -1 || fileExtType.indexOf("bmp") != -1 || fileExtType.indexOf("gif") != -1 || fileExtType.indexOf("png") != -1 || fileExtType.indexOf("tif") != -1 || fileExtType.indexOf("tiff") != -1) {
+                                titleImage = titleImage + "<img src='/images/image.png' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                            } else if (fileExtType.indexOf("doc") != -1 || fileExtType.indexOf("docx") != -1) {
+                                titleImage = titleImage + "<img src='/images/doc.png' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                            } else if (fileExtType.indexOf("xls") != -1 || fileExtType.indexOf("xlsx") != -1) {
+                                titleImage = titleImage + "<img src='/images/xls.png' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                            } else if (fileExtType.indexOf("ppt") != -1 || fileExtType.indexOf("pptx") != -1 || fileExtType.indexOf("pps") != -1 || fileExtType.indexOf("ppsx") != -1) {
+                                titleImage = titleImage + "<img src='/images/ppt.png' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                            } else if (fileExtType.indexOf("txt") != -1) {
+                                titleImage = titleImage + "<img src='/images/txt.png' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                            } else if (fileExtType.indexOf("zip") != -1) {
+                                titleImage = titleImage + "<img src='/images/zip.png' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                            }else if (fileExtType.indexOf("pdf") != -1) {
+                                titleImage = titleImage + "<img src='/images/pdf.png' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                            } else if (fileExtType.indexOf("ecm") != -1) {
+                                titleImage = titleImage + "<img src='/images/ecm.png' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                    	    } else {
+        		                titleImage = titleImage + "<img src='/images/email/mail_006.gif' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                    	    } 
+                    	} else {
+        		            titleImage = titleImage + "<img src='/images/email/mail_006.gif' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+						}
+                    	
                         strValue = "";
                     }
                     else
@@ -870,14 +910,18 @@ function ListView() {
                         strValue = "";
                 }
 
-                if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "READCOUNT" || SelectSingleNodeValue(oHeaders[j], "COLNAME") == "LIKECOUNT") {
+                if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "READCOUNT" || SelectSingleNodeValue(oHeaders[j], "COLNAME") == "LIKECOUNT" || SelectSingleNodeValue(oHeaders[j], "COLNAME") == "DISLIKECOUNT") {
                     objTd.style.textAlign = "center";
                 }
                 
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "ITEMID") {
                     var _TDCheckBox_Sub = document.createElement("INPUT");
                     _TDCheckBox_Sub.type = "checkbox";
-                    _TDCheckBox_Sub.id = strValue + "," + getNodeText(oDatas[2]) + ";";
+                    
+                    // 게시물 리스트 체크박스 id에 writerDeptId, writerNameType 추가
+                    var _TDCheckBox_writerDeptId = getNodeText(oDatas.find(node => node.tagName === "WRITERDEPTID"));
+                    var _TDCheckBox_writerNameType = getNodeText(oDatas.find(node => node.tagName === "WRITERNAMETYPE"));
+                    _TDCheckBox_Sub.id = strValue + "," + getNodeText(oDatas[2]) + "," + _TDCheckBox_writerDeptId + "," + _TDCheckBox_writerNameType + ";";
 					_TDCheckBox_Sub.setAttribute("style", "width: 13px; height: 13px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle");
 					
                     _TDCheckBox_Sub.onclick = new Function("chk_onselect(this)");
@@ -911,12 +955,14 @@ function ListView() {
                     	}
                     } else if (SelectSingleNodeValue(oHeaders[j], "COLNAME").indexOf('TITLE') > -1) { //2018-01-09 강민수92 공지일 때 docNo 안보이게
                     	/* 2018-12-27 홍승비 - 새게시물, 답변아이콘, 댓글 제목에 붙는 위치 변경 (IE에서의 말줄임표 오류 수정) */
+                        var publicFlagImg = SelectSingleNodeValue(oCells[0], "PUBLICFLAG") == "N" ? " <div class='board_private'></div>" : "";
                     	if (getNodeText(oDatas[10]) != "0") {
-                    		objTd.innerHTML = "<div style='overflow: hidden; text-overflow: ellipsis; display: inline-block; vertical-align:middle; width:100%;'>" + titleImage + MakeXMLString(strValue) + titleOneLineCnt + "</div> ";
+                    		objTd.innerHTML = "<div style='display:flex; align-items:center;'>" + titleImage + "<span style='display:block; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;'>" 
+                                + MakeXMLString(strValue) + "</span>" + titleOneLineCnt + publicFlagImg + "</div> ";
                         } else if (getNodeText(oDatas[6]) == "Y") {
-                        	objTd.innerHTML = "<div style='overflow: hidden; text-overflow: ellipsis; display: inline-block; vertical-align:middle; width:100%;'>" + titleImage + MakeXMLString(strValue) + "</div> ";
+                        	objTd.innerHTML = "<div style='overflow: hidden; text-overflow: ellipsis; display: inline-block; vertical-align:middle; width:100%;'>" + titleImage + MakeXMLString(strValue) + publicFlagImg + "</div> ";
                         } else {
-                        	objTd.innerHTML = titleImage + MakeXMLString(strValue);
+                        	objTd.innerHTML = titleImage + MakeXMLString(strValue) + publicFlagImg;
                         }
                     } else {
                         if (getNodeText(oDatas[10]) != "0"){
@@ -1766,3 +1812,27 @@ function getOriginXML(pTagetID)
     //alert(xmlHeader + "\r\n" + xmlBody);
 }
 
+function downloadBoardFile(downURL, itemRead) {
+	
+    if (itemRead == "N") {
+    	alert(strLang175);
+        return;
+    }
+    
+	window.location = downURL;
+}
+
+function selectToDownloadFiles(boardID, itemID, itemRead) {
+    
+	if (itemRead == "N") {
+		alert(strLang175);
+		return;
+	}
+    
+    if (boardID == null || boardID == "") { // 나의 스크랩
+        boardID = event.target.parentElement.parentElement.getAttribute("data1");
+    }
+    
+	var url = "/ezBoard/selectToDownloadFiles.do?boardID=" + javaURLEncode(boardID) + "&itemID=" + javaURLEncode(itemID);
+    window.open(url, "", "status=no,help=no,width=580px,height=480px" + GetOpenPosition(580, 480));
+}

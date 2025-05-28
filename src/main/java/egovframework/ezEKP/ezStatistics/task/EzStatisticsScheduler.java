@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezStatistics.task;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,9 @@ import egovframework.ezEKP.ezStatistics.service.EzStatisticsAdminService;
 import egovframework.ezEKP.ezStatistics.vo.StatApprVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
+import java.time.LocalDateTime;
+import java.util.Properties;
+
 @Component
 public class EzStatisticsScheduler {
 	@Autowired
@@ -23,6 +27,9 @@ public class EzStatisticsScheduler {
 	
 	@Autowired
 	private EzEmailScheduler ezEmailScheduler;
+
+	@Autowired
+	private Properties config;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzStatisticsScheduler.class);
 	
@@ -50,4 +57,9 @@ public class EzStatisticsScheduler {
 		logger.debug("apprStatisticsDailybatch ended");
 	}
 
+	@Scheduled(cron = "${config.cron.deleteStatMenu}")
+	public void deleteStatMenu() {
+		LocalDateTime ago = LocalDateTime.now().minusMonths(3);
+		ezStatisticsAdminService.deleteStatMenuBeforeTime(ago);
+	}
 }

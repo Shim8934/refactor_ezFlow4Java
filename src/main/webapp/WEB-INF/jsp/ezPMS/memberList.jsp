@@ -8,7 +8,8 @@
 	<head>
 		<title></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezPMS.e1', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('/css/jstree/style.css')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezPMS/ListView_list.js')}"></script>
@@ -26,7 +27,7 @@
 			<tbody>
 				<tr>
 			    	<th style="white-space:normal">
-			    		<span id="selectDeptNM" countinfo="1"><img src="/images/OrganTree_cross/ic-open.gif" style="vertical-align:middle;">[<span style="color:#017BEC;">${memberList.size()}</span>명]</span>
+			    		<span id="selectDeptNM" countinfo="1"><img src="/images/OrganTree_cross/ic-open.gif" style="vertical-align:middle;">[<span class="txt_color">${memberList.size()}</span>명]</span>
 			    		<span style="float:right;">
                        </span>
 			        </th>

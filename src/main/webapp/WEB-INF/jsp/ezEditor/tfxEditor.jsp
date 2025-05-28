@@ -15,16 +15,7 @@
 			
 			function SetEditorContent(Data) {
 	            try {
-	            	// 메인페이지의 onload실행과 initLoad함수의 실행 속도 차이로 setTimeout함수 사용
-	            	if (parent.onloadflag || typeof parent.onloadflag === "undefined") {
-	            		if (Data === "") {
-							Data = "<p " + defaultFontAndSize + "><br></p>";
-						}
-	            		
-		                xfe.setHtmlValue(Data);
-	            	} else {
-	            		setTimeout(parent.Editor_Complete, 10);
-	            	}
+	                xfe.setHtmlValue(Data);
 	            } catch (e) { }
 	        }
 		
@@ -181,11 +172,19 @@
 	        function GetEditorBody() {
 	        	return xfe.getDom().body;
 	        }
-	        
-			window.onresize = function () {
-	            try {
-	                xfe.setWidth("100%");
-	                xfe.setHeight((document.documentElement.clientHeight - 1) + "px");
+	        const xfeHeight = (document.documentElement.clientHeight - 1) ;
+
+			window.onresize =  function () {
+	             try {
+	                setTimeout(function(){
+                         let height = document.documentElement.clientHeight - 220;
+
+                            xfe.setWidth("100%");
+                            xfe.setHeight(height+ "px");
+	                },100);
+
+                    //xfe.setWidth("100%");
+                    //xfe.setHeight((document.documentElement.clientHeight - 1) + "px");
 	            } catch (e) { }
 	        }
 			
@@ -243,14 +242,16 @@
 	        	lang : lang,
 	            basePath : "/js/ezEditor/tfxEditor",
 	            width : "100%",
-	            height : (document.documentElement.clientHeight - 1) + "px",
+	            height : xfeHeight + "px",
 	            initFontFamilyMenu : initFontFamilyMenu,
 	            initFontFamily : defaultFontFamily,
 	            initFontSize : defaultFontSize,
 	            skin : "classic",
 	            uploadFilePath : uploadFilePath,
 	            uploadPasteContentsPath : uploadPasteContentsPath,
-	            autoFocus : false
+	            autoFocus : false,
+	            rootFrameId : 'tbContentElement',
+	            ignoreMinHeight : true
 	        });
 	        
 	        xfe.render('xfe');
@@ -264,11 +265,27 @@
 	        if (useHTMLMode == "NO") {
 	        	xfe.showTab(1, false);
 	        }
-	        
-	        window.onload = function() {
-	        	editorLoadFlag = true;
-	        	parent.Editor_Complete();
-	        };
+
+			window.onload = function() {
+				editorLoadFlag = true;
+				if (parent && (parent.onloadflag || typeof parent.onloadflag === "undefined")) {
+					if (typeof parent.Editor_Complete === "function") {
+						parent.Editor_Complete();
+					} 
+				} else {
+					setTimeout(OnInitCompleted, 10);
+				}
+			};
+
+			function OnInitCompleted() {
+				if (parent && (parent.onloadflag || typeof parent.onloadflag === "undefined")) {
+					if (typeof parent.Editor_Complete === "function") {
+						parent.Editor_Complete();
+					} 
+				} else {
+					setTimeout(OnInitCompleted, 10);
+				}
+			}
 	    </script>
 	</body>
 </html>

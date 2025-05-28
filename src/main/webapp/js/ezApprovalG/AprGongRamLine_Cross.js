@@ -1016,7 +1016,7 @@ function event_getAprLineDeptFullTree() {
             treeViewScrollTo("FromTreeView");   //2020-04-24 : 선택된 노드로 트리뷰 커서 이동
         }
         else {
-            alert(strLang249 + g_xmlHTTP.statusText);
+            alert(strLang249 + g_xmlHTTP.status);
             g_xmlHTTP = null;
         }
     }

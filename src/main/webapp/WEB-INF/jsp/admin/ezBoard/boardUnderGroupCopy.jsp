@@ -6,14 +6,16 @@
 	<head>
 		<title><spring:message code="ezBoard.jjh01" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	    <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css" />	     
+	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+	    <link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />	     
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>	    	    
 		<script type="text/javascript" language="javascript">
 			var pBoardID = "<c:out value='${boardID}'/>";
 			var isAllGroupBoard = "${isAllGroupBoard}";
-	    	
+	    	var save_check = false;
+			
 	    	$(document).ready(function(){
 	    		if (navigator.userAgent.indexOf('Firefox') != -1) {
 	                document.getElementById("div1").style.margin = "15px";
@@ -21,6 +23,9 @@
 	    	});
 	    	
 	    	function Save_Acl() {
+				if (save_check) return;
+				save_check = true;
+				
 	    		var objRoot, objNode, radio;
 	            radio = document.getElementsByName("radioAcl");
 
@@ -33,6 +38,7 @@
 	            $.ajax({
 	            	type : "POST",
 	            	dataType : "text",
+					async: false,
 	            	url : "/admin/ezBoard/setUnderBoardAcl.do",
 	            	data : {
 	            		boardID : pBoardID,
@@ -44,6 +50,7 @@
 		                window.close();
 	            	},
 	            	error : function(error){
+						save_check = false;
 	            		alert("Error : " + error);
 	            	}
 	            });

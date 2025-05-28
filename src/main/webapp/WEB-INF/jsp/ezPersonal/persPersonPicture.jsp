@@ -6,7 +6,8 @@
 	<head>
 		<title><spring:message code = 'ezPersonal.t183' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezPersonal.e3', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript">
@@ -16,6 +17,11 @@
 	        window.onload = function () {
 	            try {
 	                ReturnFunction = opener.personpicture_cross_dialogArguments[1];
+	                
+	                // 2025-02-14 조수빈 - 기존 등록된 이미지 나타나지 않는 결함 수정 (#154694)
+	                if (window.opener.document.getElementById('myimg')) {
+		                document.getElementById('preview').src = window.opener.document.getElementById('myimg').src;
+	                }
 	            } catch (e) {
 	            }
 	        }
@@ -150,6 +156,15 @@
 					var fileName = document.getElementById("imagefile").value;
 					fileName = fileName.substr(fileName.lastIndexOf("/") + 1);
 					
+					// 2024.09.02 한슬기 : 저장 버튼을 여러 번 누를 경우 오류 발생. 저장버튼 누르면 이미지등록, 저장버튼 비활성화.
+					var saveButton = document.getElementsByClassName("imgbtn");
+					
+					for (var i = 0; i < saveButton.length; i++){
+						saveButton[i].style.pointerEvents = "none";
+						saveButton[i].style.backgroundColor = "#cccccc"; 
+						saveButton[i].style.color = "#666666";
+					}
+					
 			        $.ajax({
 			    		type : "POST",
 			    		url : "/ezPersonal/photoUploadByUser.do",
@@ -157,6 +172,7 @@
 				    			fileName: fileName
 			    		},
 			    		success: function(){
+			    			
 			    			cancel_onclick();
 			    		}        			
 			    	});

@@ -6,7 +6,8 @@
 	<head>
 		<title><spring:message code="ezResource.t330" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-		<link rel="stylesheet" href="${util.addVer('ezResource.e2', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link type="text/css" rel="stylesheet" href="${util.addVer('/css/style.css')}" />
 		<link type="text/css" rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" />
 		<link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
@@ -41,6 +42,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezResource/ResTreeInfo_cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezResource/resFavoriteLeft.js')}"></script>
 		
 		<script type="text/javascript" id="clientEventHandlersJS" >
 		    var brdId		= "${brdID}";			
@@ -205,18 +207,49 @@
 	        $( window ).resize(function() {
 	        	leftResize();
         	});
+	        
+	        // 2024-08-23 유길상 - 자원관리 즐겨찾기 메뉴 트리
+	        function ShowMyFavResItem(e) {
+	        	if ($("#myFavList").attr("class") == "off") {
+	        		$("#myFavList").attr("class", "on");
+	        		$("#TreeCtrl_MyFavTree_ul").attr("class", "lnbUL");
+	        		$(".tree_arrow_down").attr("class", "sub_iconLNB tree_plus");
+	        		$("#myFavList").children().eq(0).attr("class", "sub_iconLNB tree_arrow_down");
+	        	} else {
+	        		$("#myFavList").attr("class", "off");
+	        		$("#TreeCtrl_MyFavTree_ul").attr("class", "lnbUL off");
+	        		$(".list_text.node_selected").removeClass("node_selected");
+	        		$("#myFavList").children().eq(0).attr("class", "sub_iconLNB tree_plus");
+	        	}
+	        	getFavoriteList("");
+	        }
+	        
 	</script>
 	</head>
 	<body class="newLeft">
 		<div id="left" class="lnb" style="overflow: auto">
-	    	<!-- <div class="lnb_btn"></div> -->
-	        <!-- <div class="lnb_btn_hidden"></div> lnb 숨기기 버튼-->
-	    	<div class="left_title" title="<spring:message code="main.t28" />">
-	    		<spring:message code="main.t28" />
-	        </div>
-	        <div class="btn_writeBox">
-	        	<p class="btn_write01" onclick='resourceWrite()'><spring:message code="main.t00034" /></p>
-	        </div>
+			<!-- <div class="lnb_btn"></div> -->
+			<!-- <div class="lnb_btn_hidden"></div> lnb 숨기기 버튼-->
+			<div class="left_title" title="<spring:message code="main.t28" />">
+				<spring:message code="main.t28" />
+			</div>
+			<div class="btn_writeBox">
+				<p class="btn_write01" onclick='resourceWrite()'>
+					<spring:message code="main.t00034" />
+				</p>
+			</div>
+			<div style="border-bottom: 1px black;">
+				<h2 class="off" id="myFavList" onclick="ShowMyFavResItem(event);">
+					<span class="sub_iconLNB tree_plus"></span> <span class="h2Title" style="display: inline-block;"><spring:message code="ezResource.resFav.ygs01" />
+						</span><span id="fav_manage" class="sub_iconLNB tree_manage"></span>
+				</h2>
+				<ul class="lnbUL off" id="TreeCtrl_MyFavTree_ul" style="margin-bottom: 5px solid white;">
+					<ul class="lnbUL resLnb_tree">
+					<div class="tree onlytree" style="overflow-y: hidden; height: 100%;  padding-left: 10px;" id='TreeCtrl_MyFavoriteTree'>
+						</div>
+					</ul>
+				</ul>
+			</div>
 	        <div class="resourceListBox" style="overflow:hidden; padding-right: 0;">
 		        <ul class="lnbUL resLnb_tree">
 		        	<div class="tree onlytree" id="TreeView" style="overflow-y: hidden; height: 100%;"></div>

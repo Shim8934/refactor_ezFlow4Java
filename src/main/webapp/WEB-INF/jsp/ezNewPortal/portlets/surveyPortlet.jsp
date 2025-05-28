@@ -6,24 +6,32 @@
 <html>
 <head>
 </head>
+<script type="text/javascript">
+	$(function() {
+		var portletId = "<c:out value='${portletId }'/>";
+		var portletName = "<c:out value='${portletName }'/>";
+		ellipsisTitle(portletName, portletId);
+	});
+</script>
 <body>
-	<article class="box_shadow">
-		<div class="layDiv pollLay">
+	<article class="box_shadow survey">
+		<div class="layDIV pollLay">
 			<dl class="portlet_title sortablePortlet">
 				<dt class="portletText">
-					<c:out value='${portletName }'/>
 				</dt>
-				<dd class="portletPlus" id="surveyPlus">
-					<img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png">
-				</dd>
+				<dd class="portletPlus plus" id="surveyPlus"></dd>
 			</dl>
 			<div class="vote_contents">
 				<div id="surveyInfo">
-					<ul id="surveyUl" class="portlet_list">
+					<ul id="surveyUl" class="portlet_list portletPagingArea">
 						<!-- <li class="mail_open" ></li> -->
 					</ul>
 				</div>
 			</div>
+		</div>
+		<div class="portletPageNav">
+			<span class="portlet_list_nav prev"></span>
+			<span class="portlet_list_nav next"></span>
 		</div>
 	</article>
 </body>

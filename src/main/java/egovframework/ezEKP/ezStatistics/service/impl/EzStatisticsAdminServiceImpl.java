@@ -1,7 +1,14 @@
 package egovframework.ezEKP.ezStatistics.service.impl;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.Year;
+import java.time.YearMonth;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -9,9 +16,20 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
+import javax.annotation.Nullable;
 import javax.annotation.Resource;
 
+import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
+import egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO;
+import egovframework.ezEKP.ezStatistics.vo.StatChartVO;
+import egovframework.ezEKP.ezStatistics.vo.StatChartVO.Dataset;
+import egovframework.ezEKP.ezStatistics.vo.StatisticVO;
+import egovframework.let.user.login.vo.LoginVO;
+import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -28,6 +46,8 @@ import egovframework.ezEKP.ezStatistics.vo.StatConnVO;
 import egovframework.ezEKP.ezStatistics.vo.StatDailyDocCountLogVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
+import static egovframework.ezEKP.ezStatistics.vo.StatisticVO.Code.ACCESS;
+
 @Service("EzStatisticsAdminService")
 public class EzStatisticsAdminServiceImpl implements EzStatisticsAdminService {
 	
@@ -39,6 +59,12 @@ public class EzStatisticsAdminServiceImpl implements EzStatisticsAdminService {
 	
 	@Autowired
 	private EzEmailUtil ezEmailUtil;
+	
+	@Autowired
+	private EzNewPortalService ezNewPortalService;
+	
+	@Autowired
+	private EgovMessageSource egovMessageSource;
 	
 	@Resource(name="EzStatisticsAdminDAO")
 	private EzStatisticsAdminDAO ezStatisticsAdminDAO;
@@ -124,26 +150,14 @@ public class EzStatisticsAdminServiceImpl implements EzStatisticsAdminService {
 	@Override
 	public String getFormInfo(StatApprVO statApprVO) {
 		String rtnValue = "";
-		String subQuery = "";
 		
 		if (statApprVO.getDate() != null && !statApprVO.getDate().equals("")) {
 			statApprVO.setStartDate(statApprVO.getDate() + "-01-01");
 			statApprVO.setEndDate(statApprVO.getDate() + "-12-31");
 		}
 		
+		/* 2024-07-05 홍승비 - SQL Injection 수정 > 검색 조건은 문자열로 전달하지 않고 쿼리 내부에서 분기처리하도록 수정 */
 		try {
-			if (statApprVO.getType().equals("1")) {
-				subQuery = " AND (DRAFTINGCNT != 0 OR DRAFTENDCNT != 0 OR SUSININGCNT != 0 OR SUSINENDCNT != 0 OR RETURNCNT != 0) ";
-			} else {
-				subQuery = " AND (DRAFTTIME != 0) ";
-			}
-			
-			if (statApprVO.getSearchList() != null && !statApprVO.getSearchList().equals("")) {
-				subQuery += " AND A.FORMNAME LIKE '%" + statApprVO.getSearchList() + "%'";
-			}
-			
-			statApprVO.setSearchList(subQuery);
-			
 			List<StatDailyDocCountLogVO> docCountLogVOs = ezStatisticsAdminDAO.getFormInfo(statApprVO);
 			StringBuilder memberlist2 = new StringBuilder("<LISTVIEWDATA><ROWS>");
 			
@@ -386,6 +400,10 @@ public class EzStatisticsAdminServiceImpl implements EzStatisticsAdminService {
 					map.put("attachedFileName", obj.get("attachedFileName"));
 					map.put("subject", obj.get("subject"));
 					map.put("mailSize", obj.get("mailSize"));
+					// 2020-09-04 김은실-(빗썸코리아)메일삭제를 위한 messageId 추가
+					map.put("messageId", obj.get("messageId"));
+					map.put("isNullInSearchId", obj.get("isNullInSearchId"));
+					map.put("isBlocked", obj.get("isBlocked"));
 					
 					mailLogList.add(map);
 					
@@ -458,5 +476,600 @@ public class EzStatisticsAdminServiceImpl implements EzStatisticsAdminService {
 
 		logger.debug("getYearlyDocCount ended/result : " + result.get("result").toString());
 		return result;
+	}
+
+	@Override
+	public void collectAccessEvent(StatisticVO statisticVO) {
+		try {
+			statisticVO.setCode(ACCESS);
+			statisticVO.setTimeNow();
+			ezStatisticsAdminDAO.upsertStatMenuUser(statisticVO);
+			ezStatisticsAdminDAO.upsertStatMenuUserMonth(statisticVO);
+			if (StringUtils.isNotBlank(statisticVO.getDeptId())) {
+				ezStatisticsAdminDAO.upsertStatMenuDept(statisticVO);
+				ezStatisticsAdminDAO.upsertStatMenuDeptMonth(statisticVO);
+			}
+		} catch (RuntimeException e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public StatChartVO getStatMenuUserMonthly(LoginVO userInfo, String targetCompanyId, String targetUserId, Year year, @Nullable String menuId) throws Exception {
+		logger.info("getStatMenuUserMonthly start");
+		
+		StatChartVO chartData = new StatChartVO();
+		List<String> monthList = CommonUtil.getMonthList(userInfo.getLocale(), TextStyle.SHORT);
+		chartData.setLabels(monthList);
+		
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("tenantId", userInfo.getTenantId());
+		map.put("userId", targetUserId);
+		map.put("companyId", targetCompanyId);
+		map.put("startTime", year.getValue() + "01");
+		map.put("endTime", year.getValue() + "13");
+
+		
+		Map<Integer, String> menuNames = getMenuNameUsed(userInfo, targetCompanyId);
+
+		List<StatisticVO> statMenuUser = ezStatisticsAdminDAO.getStatMenuUserMonth(map);
+		List<Dataset> datasets = new ArrayList<>();
+		
+		String label = StringUtils.isBlank(menuId) ? egovMessageSource.getMessage("ezStatistics.pgb01", userInfo.getLocale()) : menuNames.get(Integer.parseInt(menuId));
+		
+		List<Integer> data = IntStream.rangeClosed(1, 12).boxed()
+				.map(month -> statMenuUser.stream()
+						.filter(m -> menuNames.containsKey(m.getMenuId()) 
+								&& (StringUtils.isBlank(menuId) || m.getMenuId() == Integer.parseInt(menuId)))
+						.collect(Collectors.groupingBy(
+								StatisticVO::getMonth,
+								Collectors.summingInt(StatisticVO::getStatCount)
+						)).getOrDefault(month, 0))
+				.collect(Collectors.toList());
+		datasets.add(new Dataset(label, data, "bar"));
+		
+		if (!StringUtils.isBlank(menuId)) {
+			List<Double> listAvg = IntStream.rangeClosed(1, 12).boxed()
+					.map(month -> statMenuUser.stream()
+							.filter(m -> menuNames.containsKey(m.getMenuId()))
+							.collect(Collectors.groupingBy(
+									StatisticVO::getMonth,
+									Collectors.summingDouble(StatisticVO::getStatCount)))
+							.getOrDefault(month, 0D))
+					.map(sum -> new BigDecimal(new BigDecimal(sum / menuNames.size()).setScale(2, RoundingMode.HALF_UP).doubleValue()).setScale(2, RoundingMode.HALF_UP).doubleValue())
+					.collect(Collectors.toList());
+			datasets.add(new Dataset(egovMessageSource.getMessage("ezStatistics.pgb03", userInfo.getLocale()), listAvg,"line"));
+		}
+		
+		chartData.setDatasets(datasets);
+
+		logger.info("getStatMenuUserMonthly ended");
+		return chartData;
+	}
+
+	@Override
+	public StatChartVO getStatMenuUserDaily(LoginVO userInfo, String targetCompanyId, String targetUserId,
+											Year year, Month month, @Nullable String menuId) throws Exception {
+		logger.info("getStatMenuUserDaily start");
+		
+		StatChartVO chartData = new StatChartVO();
+		int monthLength = YearMonth.of(year.getValue(), month).lengthOfMonth();
+		List<Integer> dayList = IntStream.rangeClosed(1, monthLength).boxed().collect(Collectors.toList());
+		chartData.setLabels(dayList);
+
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("tenantId", userInfo.getTenantId());
+		map.put("userId", targetUserId);
+		map.put("companyId", targetCompanyId);
+		map.put("startTime", year.getValue() + String.format("%02d",month.getValue()) + "0100");
+		map.put("endTime", year.getValue() + String.format("%02d",month.getValue()) + "3200");
+		
+		if (!StringUtils.isBlank(menuId)) {
+			map.put("menuId", menuId);
+		}
+		
+		Map<Integer, String> menuNames = getMenuNameUsed(userInfo, targetCompanyId);
+		List<StatisticVO> statMenuUser = ezStatisticsAdminDAO.getStatMenuUserDay(map);
+		List<Dataset> datasets = new ArrayList<>();
+		String label = StringUtils.isBlank(menuId) ? egovMessageSource.getMessage("ezStatistics.pgb01", userInfo.getLocale()) : menuNames.get(Integer.parseInt(menuId));
+
+		List<Integer> data = dayList.stream()
+				.map(day -> statMenuUser.stream()
+						.filter(m -> menuNames.containsKey(m.getMenuId())
+								&& (StringUtils.isBlank(menuId) || m.getMenuId() == Integer.parseInt(menuId)))
+						.collect(Collectors.groupingBy(
+								StatisticVO::getDay,
+								Collectors.summingInt(StatisticVO::getStatCount)
+						)).getOrDefault(day, 0))
+				.collect(Collectors.toList());
+		datasets.add(new Dataset(label, data, "bar"));
+
+		if (!StringUtils.isBlank(menuId)) {
+			List<Double> listAvg = dayList.stream().parallel()
+					.map(day -> statMenuUser.stream().parallel()
+							.filter(m -> menuNames.containsKey(m.getMenuId()))
+							.collect(Collectors.groupingBy(
+									StatisticVO::getDay,
+									Collectors.summingDouble(StatisticVO::getStatCount)
+							)).getOrDefault(day, 0D))
+					.map(sum -> new BigDecimal(sum / menuNames.size()).setScale(2, RoundingMode.HALF_UP).doubleValue())
+					.collect(Collectors.toList());
+			datasets.add(new Dataset(egovMessageSource.getMessage("ezStatistics.pgb03", userInfo.getLocale()), listAvg,"line"));
+		}
+
+		chartData.setDatasets(datasets);
+
+		logger.info("getStatMenuUserDaily ended");
+		return chartData;
+	}
+	
+	@Override
+	public StatChartVO getStatMenuUserHourly(LoginVO userInfo, String targetCompanyId, String targetUserId,
+									  Year year, Month month, int day, @Nullable String menuId) throws Exception {
+		logger.info("getStatMenuUserHourly start");
+		
+		StatChartVO chartData = new StatChartVO();
+		List<Integer> hourList = IntStream.rangeClosed(0, 23).boxed().collect(Collectors.toList());
+		
+		chartData.setLabels(hourList.stream()
+				.map(h -> h + "~" + (h + 1))
+				.collect(Collectors.toList()));
+
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("tenantId", userInfo.getTenantId());
+		map.put("userId", targetUserId);
+		map.put("companyId", targetCompanyId);
+		map.put("startTime", year.getValue() + String.format("%02d",month.getValue()) + String.format("%02d",day) + "00");
+		map.put("endTime", year.getValue() + String.format("%02d", month.getValue()) + String.format("%02d",day) + "25");
+
+		if (!StringUtils.isBlank(menuId)) {
+			map.put("menuId", menuId);
+		}
+
+		Map<Integer, String> menuNames = getMenuNameUsed(userInfo, targetCompanyId);
+		List<StatisticVO> statMenuUser = ezStatisticsAdminDAO.getStatMenuUser(map);
+		List<Dataset> datasets = new ArrayList<>();
+		String label = StringUtils.isBlank(menuId) ? egovMessageSource.getMessage("ezStatistics.pgb01", userInfo.getLocale()) : menuNames.get(Integer.parseInt(menuId));
+
+		List<Integer> data = hourList.stream()
+				.map(h -> statMenuUser.stream()
+						.filter(m -> menuNames.containsKey(m.getMenuId())
+								&& (StringUtils.isBlank(menuId) || m.getMenuId() == Integer.parseInt(menuId)))
+						.collect(Collectors.groupingBy(
+								StatisticVO::getHour,
+								Collectors.summingInt(StatisticVO::getStatCount)
+						)).getOrDefault(h, 0))
+				.collect(Collectors.toList());
+		datasets.add(new Dataset(label, data, "bar"));
+
+		if (!StringUtils.isBlank(menuId)) {
+			List<Double> listAvg = hourList.stream().parallel()
+					.map(h -> statMenuUser.stream().parallel()
+							.filter(m -> menuNames.containsKey(m.getMenuId()))
+							.collect(Collectors.groupingBy(
+									StatisticVO::getHour,
+									Collectors.summingDouble(StatisticVO::getStatCount)
+							)).getOrDefault(h, 0D))
+					.map(sum -> new BigDecimal(sum / menuNames.size()).setScale(2, RoundingMode.HALF_UP).doubleValue())
+					.collect(Collectors.toList());
+			datasets.add(new Dataset(egovMessageSource.getMessage("ezStatistics.pgb03", userInfo.getLocale()), listAvg,"line"));
+		}
+
+		chartData.setDatasets(datasets);
+
+		logger.info("getStatMenuUserHourly ended");
+		return chartData;
+	}
+
+	@Override
+	public StatChartVO getStatMenuDeptMonthly(LoginVO userInfo, String targetCompanyId, String targetDeptId, Year year, @Nullable String menuId) throws Exception {
+		logger.info("getStatMenuDeptMonthly start");
+		
+		StatChartVO chartData = new StatChartVO();
+		List<String> monthList = CommonUtil.getMonthList(userInfo.getLocale(), TextStyle.SHORT);
+		chartData.setLabels(monthList);
+
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("tenantId", userInfo.getTenantId());
+		map.put("deptId", targetDeptId);
+		map.put("companyId", targetCompanyId);
+		map.put("startTime", year.getValue() + "01");
+		map.put("endTime", year.getValue() + "13");
+
+
+		Map<Integer, String> menuNames = getMenuNameUsed(userInfo, targetCompanyId);
+
+		List<StatisticVO> statMenuUser = ezStatisticsAdminDAO.getStatMenuDeptMonth(map);
+		List<Dataset> datasets = new ArrayList<>();
+
+		String label = StringUtils.isBlank(menuId) ? egovMessageSource.getMessage("ezStatistics.pgb01", userInfo.getLocale()) : menuNames.get(Integer.parseInt(menuId));
+
+		List<Integer> data = IntStream.rangeClosed(1, 12).boxed()
+				.map(month -> statMenuUser.stream()
+						.filter(m -> menuNames.containsKey(m.getMenuId())
+								&& (StringUtils.isBlank(menuId) || m.getMenuId() == Integer.parseInt(menuId)))
+						.collect(Collectors.groupingBy(
+								StatisticVO::getMonth,
+								Collectors.summingInt(StatisticVO::getStatCount)
+						)).getOrDefault(month, 0))
+				.collect(Collectors.toList());
+		datasets.add(new Dataset(label, data, "bar"));
+
+		if (!StringUtils.isBlank(menuId)) {
+			List<Double> listAvg = IntStream.rangeClosed(1, 12).boxed()
+					.map(month -> statMenuUser.stream()
+							.filter(m -> menuNames.containsKey(m.getMenuId()))
+							.collect(Collectors.groupingBy(
+									StatisticVO::getMonth,
+									Collectors.summingDouble(StatisticVO::getStatCount)
+							)).getOrDefault(month, 0D))
+					.map(sum -> new BigDecimal(sum / menuNames.size()).setScale(2, RoundingMode.HALF_UP).doubleValue())
+					.collect(Collectors.toList());
+			datasets.add(new Dataset(egovMessageSource.getMessage("ezStatistics.pgb03", userInfo.getLocale()), listAvg,"line"));
+		}
+
+		chartData.setDatasets(datasets);
+
+		logger.info("getStatMenuDeptMonthly ended");
+		return chartData;
+	}
+
+	@Override
+	public StatChartVO getStatMenuDeptDaily(LoginVO userInfo, String targetCompanyId, String targetDeptId,
+											Year year, Month month, @Nullable String menuId) throws Exception {
+		logger.info("getStatMenuDeptDaily start");
+		
+		StatChartVO chartData = new StatChartVO();
+		int monthLength = YearMonth.of(year.getValue(), month).lengthOfMonth();
+		List<Integer> dayList = IntStream.rangeClosed(1, monthLength).boxed().collect(Collectors.toList());
+		chartData.setLabels(dayList);
+
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("tenantId", userInfo.getTenantId());
+		map.put("deptId", targetDeptId);
+		map.put("companyId", targetCompanyId);
+		map.put("startTime", year.getValue() + String.format("%02d",month.getValue()) + "0100");
+		map.put("endTime", year.getValue() + String.format("%02d",month.getValue()) + "3200");
+
+		if (!StringUtils.isBlank(menuId)) {
+			map.put("menuId", menuId);
+		}
+
+		Map<Integer, String> menuNames = getMenuNameUsed(userInfo, targetCompanyId);
+		List<StatisticVO> statMenuUser = ezStatisticsAdminDAO.getStatMenuDeptDay(map);
+		List<Dataset> datasets = new ArrayList<>();
+		String label = StringUtils.isBlank(menuId) ? egovMessageSource.getMessage("ezStatistics.pgb01", userInfo.getLocale()) : menuNames.get(Integer.parseInt(menuId));
+
+		List<Integer> data = dayList.stream()
+				.map(day -> statMenuUser.stream()
+						.filter(m -> menuNames.containsKey(m.getMenuId())
+								&& (StringUtils.isBlank(menuId) || m.getMenuId() == Integer.parseInt(menuId)))
+						.collect(Collectors.groupingBy(
+								StatisticVO::getDay,
+								Collectors.summingInt(StatisticVO::getStatCount)
+						)).getOrDefault(day, 0))
+				.collect(Collectors.toList());
+		datasets.add(new Dataset(label, data, "bar"));
+
+		if (!StringUtils.isBlank(menuId)) {
+			List<Double> listAvg = dayList.stream().parallel()
+					.map(day -> statMenuUser.stream().parallel()
+							.filter(m -> menuNames.containsKey(m.getMenuId()))
+							.collect(Collectors.groupingBy(
+									StatisticVO::getDay,
+									Collectors.summingDouble(StatisticVO::getStatCount)
+							)).getOrDefault(day, 0D))
+					.map(sum -> new BigDecimal(sum / menuNames.size()).setScale(2, RoundingMode.HALF_UP).doubleValue())
+					.collect(Collectors.toList());
+			datasets.add(new Dataset(egovMessageSource.getMessage("ezStatistics.pgb03", userInfo.getLocale()), listAvg,"line"));
+		}
+
+		chartData.setDatasets(datasets);
+
+		logger.info("getStatMenuDeptDaily ended");
+		return chartData;
+	}
+
+	@Override
+	public StatChartVO getStatMenuDeptHourly(LoginVO userInfo, String targetCompanyId, String targetDeptId,
+											 Year year, Month month, int day, @Nullable String menuId) throws Exception {
+		logger.info("getStatMenuDeptHourly start");
+		
+		StatChartVO chartData = new StatChartVO();
+		List<Integer> hourList = IntStream.rangeClosed(0, 23).boxed().collect(Collectors.toList());
+
+		chartData.setLabels(hourList.stream()
+				.map(h -> h + "~" + (h + 1))
+				.collect(Collectors.toList()));
+
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("tenantId", userInfo.getTenantId());
+		map.put("deptId", targetDeptId);
+		map.put("companyId", targetCompanyId);
+		map.put("startTime", year.getValue() + String.format("%02d",month.getValue()) + String.format("%02d",day) + "00");
+		map.put("endTime", year.getValue() + String.format("%02d", month.getValue()) + String.format("%02d",day) + "25");
+
+		if (!StringUtils.isBlank(menuId)) {
+			map.put("menuId", menuId);
+		}
+
+		Map<Integer, String> menuNames = getMenuNameUsed(userInfo, targetCompanyId);
+		List<StatisticVO> statMenuUser = ezStatisticsAdminDAO.getStatMenuDept(map);
+		List<Dataset> datasets = new ArrayList<>();
+		String label = StringUtils.isBlank(menuId) ? egovMessageSource.getMessage("ezStatistics.pgb01", userInfo.getLocale()) : menuNames.get(Integer.parseInt(menuId));
+
+		List<Integer> data = hourList.stream()
+				.map(h -> statMenuUser.stream()
+						.filter(m -> menuNames.containsKey(m.getMenuId())
+								&& (StringUtils.isBlank(menuId) || m.getMenuId() == Integer.parseInt(menuId)))
+						.collect(Collectors.groupingBy(
+								StatisticVO::getHour,
+								Collectors.summingInt(StatisticVO::getStatCount)
+						)).getOrDefault(h, 0))
+				.collect(Collectors.toList());
+		datasets.add(new Dataset(label, data, "bar"));
+
+		if (!StringUtils.isBlank(menuId)) {
+			List<Double> listAvg = hourList.stream().parallel()
+					.map(h -> statMenuUser.stream().parallel()
+							.filter(m -> menuNames.containsKey(m.getMenuId()))
+							.collect(Collectors.groupingBy(
+									StatisticVO::getHour,
+									Collectors.summingDouble(StatisticVO::getStatCount)
+							)).getOrDefault(h, 0D))
+					.map(sum -> new BigDecimal(sum / menuNames.size()).setScale(2, RoundingMode.HALF_UP).doubleValue())
+					.collect(Collectors.toList());
+			datasets.add(new Dataset(egovMessageSource.getMessage("ezStatistics.pgb03", userInfo.getLocale()), listAvg,"line"));
+		}
+
+		chartData.setDatasets(datasets);
+		
+		logger.info("getStatMenuDeptHourly ended");
+		return chartData;
+	}
+
+	@Override
+	public StatChartVO getStatMenuUserForMonth(LoginVO userInfo, String targetCompanyId, String targetUserId, Year year, Month month) throws Exception {
+		logger.info("getStatMenuUserForMonth start");
+		
+		StatChartVO chartData = new StatChartVO();
+		List<String> labels = new ArrayList<>();
+
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("tenantId", userInfo.getTenantId());
+		map.put("userId", targetUserId);
+		map.put("companyId", targetCompanyId);
+		map.put("startTime", year.getValue() + String.format("%02d",month.getValue()));
+		map.put("endTime", year.getValue() + String.format("%02d",month.getValue()));
+
+		Map<Integer, String> menuNames = getMenuNameUsed(userInfo, targetCompanyId);
+
+		List<StatisticVO> statMenuUser = ezStatisticsAdminDAO.getStatMenuUserMonth(map);
+		List<Integer> data = new ArrayList<>();
+
+		statMenuUser.forEach(vo -> {
+			int id = vo.getMenuId();
+			if (menuNames.containsKey(id)) {
+				labels.add(menuNames.get(id));
+				data.add(vo.getStatCount());
+			}
+		});
+		
+		chartData.setLabels(labels);
+		List<Dataset> datasets = new ArrayList<>();
+		datasets.add(new Dataset(data));
+		chartData.setDatasets(datasets);
+		
+		logger.info("getStatMenuUserForMonth ended");
+		return chartData;
+	}
+
+	@Override
+	public StatChartVO getStatMenuUserForDay(LoginVO userInfo, String targetCompanyId, String targetUserId, Year year, Month month, int day) throws Exception {
+		logger.info("getStatMenuUserForMonth start");
+		
+		StatChartVO chartData = new StatChartVO();
+		List<String> labels = new ArrayList<>();
+
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("tenantId", userInfo.getTenantId());
+		map.put("userId", targetUserId);
+		map.put("companyId", targetCompanyId);
+		map.put("startTime", year.getValue() + String.format("%02d",month.getValue()) + String.format("%02d",day) + "00");
+		map.put("endTime", year.getValue() + String.format("%02d", month.getValue()) + String.format("%02d",day) + "25");
+
+		Map<Integer, String> menuNames = getMenuNameUsed(userInfo, targetCompanyId);
+
+		List<StatisticVO> statMenuUser = ezStatisticsAdminDAO.getStatMenuUserDay(map);
+		List<Integer> data = new ArrayList<>();
+
+		statMenuUser.forEach(vo -> {
+			int id = vo.getMenuId();
+			if (menuNames.containsKey(id)) {
+				labels.add(menuNames.get(id));
+				data.add(vo.getStatCount());
+			}
+		});
+
+		chartData.setLabels(labels);
+		List<Dataset> datasets = new ArrayList<>();
+		datasets.add(new Dataset(data));
+		chartData.setDatasets(datasets);
+
+		logger.info("getStatMenuUserForMonth ended");
+		return chartData;
+	}
+
+	@Override
+	public StatChartVO getStatMenuUserForHour(LoginVO userInfo, String targetCompanyId, String targetUserId, Year year, Month month, int day, int hour) throws Exception {
+		logger.info("getStatMenuUserForHour start");
+		
+		StatChartVO chartData = new StatChartVO();
+		List<String> labels = new ArrayList<>();
+
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("tenantId", userInfo.getTenantId());
+		map.put("userId", targetUserId);
+		map.put("companyId", targetCompanyId);
+		map.put("startTime", year.getValue() + String.format("%02d",month.getValue()) + String.format("%02d",day) + String.format("%02d",hour));
+		map.put("endTime", year.getValue() + String.format("%02d", month.getValue()) + String.format("%02d",day) + String.format("%02d",hour));
+
+		Map<Integer, String> menuNames = getMenuNameUsed(userInfo, targetCompanyId);
+
+		List<StatisticVO> statMenuUser = ezStatisticsAdminDAO.getStatMenuUserDay(map);
+		List<Integer> data = new ArrayList<>();
+
+		statMenuUser.forEach(vo -> {
+			int id = vo.getMenuId();
+			if (menuNames.containsKey(id)) {
+				labels.add(menuNames.get(id));
+				data.add(vo.getStatCount());
+			}
+		});
+
+		chartData.setLabels(labels);
+		List<Dataset> datasets = new ArrayList<>();
+		datasets.add(new Dataset(data));
+		chartData.setDatasets(datasets);
+
+		logger.info("getStatMenuUserForHour ended");
+		return chartData;
+	}
+
+	@Override
+	public StatChartVO getStatMenuDeptForMonth(LoginVO userInfo, String targetCompanyId, String targetDeptId, Year year, Month month) throws Exception {
+		logger.info("getStatMenuDeptForMonth start");
+		
+		StatChartVO chartData = new StatChartVO();
+		List<String> labels = new ArrayList<>();
+
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("tenantId", userInfo.getTenantId());
+		map.put("deptId", targetDeptId);
+		map.put("companyId", targetCompanyId);
+		map.put("startTime", year.getValue() + String.format("%02d",month.getValue()));
+		map.put("endTime", year.getValue() + String.format("%02d", month.getValue()));
+
+		Map<Integer, String> menuNames = getMenuNameUsed(userInfo, targetCompanyId);
+
+		List<StatisticVO> statMenuUser = ezStatisticsAdminDAO.getStatMenuDeptMonth(map);
+		List<Integer> data = new ArrayList<>();
+
+		statMenuUser.forEach(vo -> {
+			int id = vo.getMenuId();
+			if (menuNames.containsKey(id)) {
+				labels.add(menuNames.get(id));
+				data.add(vo.getStatCount());
+			}
+		});
+
+		chartData.setLabels(labels);
+		List<Dataset> datasets = new ArrayList<>();
+		datasets.add(new Dataset(data));
+		chartData.setDatasets(datasets);
+
+		logger.info("getStatMenuDeptForMonth ended");
+		return chartData;
+	}
+
+	@Override
+	public StatChartVO getStatMenuDeptForDay(LoginVO userInfo, String targetCompanyId, String targetDeptId, Year year, Month month, int day) throws Exception {
+		logger.info("getStatMenuDeptForDay start");
+		
+		StatChartVO chartData = new StatChartVO();
+		List<String> labels = new ArrayList<>();
+
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("tenantId", userInfo.getTenantId());
+		map.put("deptId", targetDeptId);
+		map.put("companyId", targetCompanyId);
+		map.put("startTime", year.getValue() + String.format("%02d",month.getValue()) + String.format("%02d",day) + "00");
+		map.put("endTime", year.getValue() + String.format("%02d", month.getValue()) + String.format("%02d",day) + "25");
+
+		Map<Integer, String> menuNames = getMenuNameUsed(userInfo, targetCompanyId);
+
+		List<StatisticVO> statMenuUser = ezStatisticsAdminDAO.getStatMenuDeptDay(map);
+		List<Integer> data = new ArrayList<>();
+
+		statMenuUser.forEach(vo -> {
+			int id = vo.getMenuId();
+			if (menuNames.containsKey(id)) {
+				labels.add(menuNames.get(id));
+				data.add(vo.getStatCount());
+			}
+		});
+
+		chartData.setLabels(labels);
+		List<Dataset> datasets = new ArrayList<>();
+		datasets.add(new Dataset(data));
+		chartData.setDatasets(datasets);
+
+		logger.info("getStatMenuDeptForDay ended");
+		return chartData;
+	}
+
+	@Override
+	public StatChartVO getStatMenuDeptForHour(LoginVO userInfo, String targetCompanyId, String targetDeptId, Year year, Month month, int day, int hour) throws Exception {
+		logger.info("getStatMenuDeptForHour start");
+		
+		StatChartVO chartData = new StatChartVO();
+		List<String> labels = new ArrayList<>();
+
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("tenantId", userInfo.getTenantId());
+		map.put("deptId", targetDeptId);
+		map.put("companyId", targetCompanyId);
+		map.put("startTime", year.getValue() + String.format("%02d",month.getValue()) + String.format("%02d",day) + String.format("%02d",hour));
+		map.put("endTime", year.getValue() + String.format("%02d", month.getValue()) + String.format("%02d",day) + String.format("%02d",hour));
+
+		Map<Integer, String> menuNames = getMenuNameUsed(userInfo, targetCompanyId);
+
+		List<StatisticVO> statMenuUser = ezStatisticsAdminDAO.getStatMenuDeptDay(map);
+		List<Integer> data = new ArrayList<>();
+
+		statMenuUser.forEach(vo -> {
+			int id = vo.getMenuId();
+			if (menuNames.containsKey(id)) {
+				labels.add(menuNames.get(id));
+				data.add(vo.getStatCount());
+			}
+		});
+
+		chartData.setLabels(labels);
+		List<Dataset> datasets = new ArrayList<>();
+		datasets.add(new Dataset(data));
+		chartData.setDatasets(datasets);
+
+		logger.info("getStatMenuDeptForHour ended");
+		return chartData;
+	}
+
+	private Map<Integer, String> getMenuNameUsed(LoginVO userInfo, String targetCompanyId) throws Exception {
+		logger.info("getMenuNameUsed start");
+		
+		List<MenuInfoVO> menuInfos = ezNewPortalService.getMenus(targetCompanyId, userInfo.getTenantId(), userInfo.getLang(), "");
+
+		logger.info("getMenuNameUsed ended");
+		return menuInfos.stream()
+				// 사용중인 메뉴중 메뉴id가 양수인 것만 집계. 변경시 필터만 변경.
+				.filter(m -> m.getMenuId() > 0 && m.isMenuUsed())
+				.collect(Collectors.toMap(
+						MenuInfoVO::getMenuId, MenuInfoVO::getMenuName
+				));
+	}
+	
+	public void deleteStatMenuBeforeTime(LocalDateTime time) {
+		logger.debug("deleteStatMenuBeforeTime start");
+		
+		try {
+			StatisticVO vo = new StatisticVO();
+			vo.setTime(time);
+			ezStatisticsAdminDAO.deleteStatMenuUser(vo);
+			ezStatisticsAdminDAO.deleteStatMenuDept(vo);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+
+		logger.debug("deleteStatMenuBeforeTime ended");
 	}
 }

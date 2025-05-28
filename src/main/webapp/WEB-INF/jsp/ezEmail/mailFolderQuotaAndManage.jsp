@@ -5,7 +5,8 @@
 	<head>
 		<title>mail_filter</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/newMail_Cross.js')}"></script>
@@ -28,6 +29,8 @@
 			var host = defineHost(protocol) + window.location.host + '/websocket/${userId}';
 			var userId = '${userId}';
 			var folderDep = "";
+			var dec = "decrypt";
+			var uploading = "uploading";
 			
 			function defineHost(protocol){
 	    		var host = "";
@@ -110,6 +113,7 @@
 			    		if (mailboxNameSpl["length"] > 1){
 				    		_html += "<td style='width:100%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;'>" 
 				    			+ "<a class='imgbtn imgbck mr3' style='margin-left:3px'><span style='text-align:center;' onclick=folderIdSelect('"+mailbox+"');mailbox_exportUp();><spring:message code='ezEmail.kyj04' /></span></a>"
+				    			+ "<a class='imgbtn imgbck mr3' style='margin-left:3px'><span style='text-align:center;' onclick=folderIdSelect('"+mailbox+"');mail_import_onclick();><spring:message code='ezEmail.kyj05' /></span></a>" // 메일 가져오기
 				    			+ "<a class='imgbtn imgbck mr3' style='margin-left:3px'><span style='text-align:center;' onclick=folderIdSelect('"+mailbox+"');add_onclickUp();><spring:message code='ezEmail.t308' /></span></a>"
 				    			+ "<a class='imgbtn imgbck mr3' style='margin-left:3px'><span style='text-align:center;' onclick=folderIdSelect('"+mailbox+"');modify_onclickUp(); "
 				    				+ "folderIdSelect('"+ mailbox +"');><spring:message code='ezEmail.t149' /></span></a>"
@@ -117,8 +121,9 @@
 				    			+ "<a class='imgbtn imgbck mr3' style='margin-left:3px'><span style='text-align:center;' onclick=folderIdSelect('"+mailbox+"');delete_mail_onclick();><spring:message code='ezEmail.pyy09' /></span></a>"
 				    			+ "<a class='imgbtn imgbck mr3' style='margin-left:3px'><span style='text-align:center;' onclick=folderIdSelect('"+mailbox+"');folder_ReadChange('R');><spring:message code='ezEmail.jyh01' /></span></a></td></tr>";
 			    		} else {
-				    		_html += "<td style='width:100%; text-overflow:ellipsis; overflow:hidden;'>" 
+							_html += "<td style='width:100%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;'>"
 				    			+ "<a class='imgbtn imgbck mr3' style='margin-left:3px'><span style='text-align:center;' onclick=folderIdSelect('"+mailbox+"');mailbox_exportUp();><spring:message code='ezEmail.kyj04' /></span></a>"
+				    			+ "<a class='imgbtn imgbck mr3' style='margin-left:3px'><span style='text-align:center;' onclick=folderIdSelect('"+mailbox+"');mail_import_onclick();><spring:message code='ezEmail.kyj05' /></span></a>" // 메일 가져오기
 				    			+ "<a class='imgbtn imgbck mr3' style='margin-left:3px'><span style='text-align:center;' onclick=folderIdSelect('"+mailbox+"');add_onclickUp();><spring:message code='ezEmail.t308' /></span></a>"
 				    			+ "<a class='imgbtn imgbck mr3' style='margin-left:3px'><span style='text-align:center;' onclick=folderIdSelect('"+mailbox+"');delete_mail_onclick();><spring:message code='ezEmail.pyy09' /></span></a>"
 				    			+ "<a class='imgbtn imgbck mr3' style='margin-left:3px'><span style='text-align:center;' onclick=folderIdSelect('"+mailbox+"');folder_ReadChange('R');><spring:message code='ezEmail.jyh01' /></span></a></td></tr>";
@@ -245,12 +250,17 @@
 		        var deleteURL = selectFolderName;
 		        ShowMailProgress();
 		        
+		        var mailConfigFrame = parent.parent.document.getElementsByName("right")[0].contentWindow;
+		        mailConfigFrame.showDim();
+		        
+		        
 		      	//지운편지함의 메일 영구삭제
 		        if (deleteURL == trashBoxURL) {
 		            if (confirm("<spring:message code='ezEmail.t470' />")) {
 		                delete_mail(deleteURL, true, "");
 		            } else {
 		            	HiddenMailProgress();
+				        mailConfigFrame.hiddenDim();
 		            }
 		        }
 		      	//편지함의 메일 지운편지함으로 이동
@@ -259,6 +269,7 @@
 		                delete_mail(deleteURL, false, trashBoxURL);
 		            } else {
 		            	HiddenMailProgress();
+				        mailConfigFrame.hiddenDim();
 		            }
 		        }
 		    }
@@ -295,6 +306,7 @@
 		    function delete_mail_complete() {
 				if (xmlHTTP2 != null && deltype != null && xmlHTTP2.readyState == 4) {
 					var href =selectFolderName;
+					var mailConfigFrame = parent.parent.document.getElementsByName("right")[0].contentWindow;
 					
 		            //지운편지함의 메일 영구삭제
 		            if (deltype == "MAILREALDEL") {
@@ -312,7 +324,8 @@
 		            //편지함의 메일 지운편지함으로 이동
 					else {
 						if (xmlHTTP2.status >= 200 && xmlHTTP2.status < 300) {
-							if (xmlHTTP2.responseText == "OK") {
+							if (xmlHTTP2.responseText == "OK" || xmlHTTP2.responseText === "MAIL_NOT_EXISTS") {
+								// 이미 비워져있는 상태도 성공 처리
 								alert("<spring:message code='ezEmail.t478' />");
 		            		} else if (xmlHTTP2.responseText.indexOf("NO COPY processing failed.") > -1) {
 		            			alert(strLang241);
@@ -327,6 +340,7 @@
 		        }
 				requestFolderList();
 				HiddenMailProgress();
+				mailConfigFrame.hiddenDim();
 		    }
             
 		    
@@ -496,7 +510,83 @@
                     }
                 });        	    
 	        }	        
+		 
+		// 2024.08.12 한슬기 : 메일 환경설정 > 편지함관리 > 가져오기 추가
+		function mail_import_onclick() {
+			document.getElementById("file1").click();
+		}
+		 
+		function mailbox_attach_import(pwd, tempId, userkey){
+			// 파일 포맷 체크
+			if (pwd == "" || typeof pwd == "undefined") {
+        		tempname =	document.importMailboxform.file1.value;
+				
+        		if (tempname == "") {
+					return;
+				}
+        		
+				var last = tempname.split(".").length;
+				var extension = tempname.split(".")[last - 1];
 
+				if (extension.toUpperCase() != "ZIP") {
+					// 파일의 포맷이 올바르지 않습니다.
+					alert("<spring:message code='ezEmail.lhm34' />");
+
+					return;
+				}
+			}
+			
+			var splFolder = "mailBoxId_" + selectFolderId;
+			var element = document.getElementById(splFolder);
+		
+           	var folderPath = element.getAttribute("data-realfoldername");
+			
+			var mailConfigFrame = parent.parent.document.getElementsByName("right")[0].contentWindow;
+			var frm = document.getElementById("importMailboxform");
+			mailConfigFrame.mailbox_attach_import(pwd, tempId, userkey, folderPath, frm);
+			
+		}
+		 
+        function mailboxImportComplete(result, tempId, userkey) {
+        	
+        	var mailConfigFrame = parent.parent.document.getElementsByName("right")[0].contentWindow;
+        	mailConfigFrame.HiddenMailProgressNew();
+        	mailConfigFrame.mailboxProgressFun(false);
+			
+			if (result == "NOTSUPPORT"){ // 암호화된 파일 지원하지 않음
+				alert("<spring:message code='ezEmail.kyj08' />");
+				document.importMailboxform.file1.value = "";
+			}
+			
+			if (result == "ERROR") { // 에러발생
+				alert("<spring:message code='ezEmail.lhm35' />");
+				document.importMailboxform.file1.value = "";
+			}
+			
+			if (result == "ABORT") { // marformd 에러  
+				alert("<spring:message code='ezEmail.kyj15' />");
+				document.importMailboxform.file1.value = "";
+			}
+			
+			if (result == "ZEROEML") { // eml파일이 없을 경우
+				alert("<spring:message code='ezEmail.kyj16' />");
+				document.importMailboxform.file1.value = "";
+			}
+
+			if (result == "NO_APPEND") { // 메일용량 초과시
+				alert("<spring:message code='ezEmail.ksa16' />");
+				document.importMailboxform.file1.value = "";
+			}
+			
+			if (result == "OK") {
+				document.importMailboxform.file1.value = "";
+			}
+			
+			requestFolderList();
+			
+		}
+     	// 2024.08.12 한슬기 : 메일 환경설정 > 편지함관리 > 가져오기 추가 end
+		
 		</script>
 	</head>
 	<body style="margin-left:10px;margin-right:10px;" id="mainmenu"> 
@@ -516,10 +606,22 @@
 				</tbody>
 			</table>
 		</form> 
-		<div style="width:100%;height:100%;position:absolute;top:0;left:0;display:none;z-index:5000;" id="mailPanel" onclick="" oncontextmenu="event_listContextMenuAndId(event); return false;">&nbsp;</div>
-		<div style="width:200px;height:50px;border:0px solid red;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="MailProgress">
+		
+		<!-- 가져오기 -->
+		<iframe name="importMailboxIframe" src="about:blank" style="display: none"></iframe>
+		<form method="post" id="importMailboxform" name="importMailboxform" enctype="multipart/form-data" target="importMailboxIframe">
+	        <input type="file" name="file1" id="file1" accept=".zip" onchange="mailbox_attach_import()" style="display: none"/>
+	    </form>
+		
+		<div style="width:100%;height:100%;position:absolute;top:0;left:0;display:none;z-index:5000;" id="mailPanel" onclick="" oncontextmenu="event_listContextMenuAndId(event); return false;">&nbsp;
+		</div>
+		
+		<div style="width:200px;height:100px;border:0px solid red;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="MailProgress">
 		    <img src="/images/email/progress_img.gif" style="vertical-align:middle;"/>
 		</div>
+		
+		
+		
 	</body>
 	
 </html>

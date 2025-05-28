@@ -1805,3 +1805,40 @@ function chk_onselect(obj) {
     }
     listEventCheckbox = true;
 }
+
+function show_groupinfo3(obj) {
+    var checkRealID = "";
+    var checkCnt = 0;
+    var feature = GetOpenPosition(540, 180);
+    var allChild = $("#GroupListView")[0].childNodes[1];
+
+    for (var i = 0; i < allChild.childNodes.length; i++) {
+        if (allChild.childNodes[i].getElementsByTagName("td").item(0).childNodes.item(0).checked) {
+            checkCnt++;
+        }
+    }
+
+    if (checkCnt == 0) {
+        alert(strLang266);
+        return;
+    }
+
+    if (obj == 'show') {
+        var checkId = $('#GroupListView tbody input:checked')
+
+        if (checkId.length > 1) {
+            alert(strLang276);
+            return;
+        } else if (checkId.length == 0) {
+            alert(strLang266);
+            return;
+        } else {
+            checkRealID = checkId[0].id.substring(0,checkId[0].id.length -1);
+            window.open("/ezSchedule/scheduleGatherMember.do?groupID=" + checkRealID, "schedule_group_modify", "height = 180px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + feature);
+            return;
+        }
+    } else {
+        var selectedTr = document.getElementById(obj);
+        window.open("/ezSchedule/scheduleGatherMember.do?groupID=" + selectedTr.getAttribute("data1"), "", "height = 180px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + feature);
+    }
+}

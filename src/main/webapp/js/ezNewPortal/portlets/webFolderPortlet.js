@@ -1,27 +1,74 @@
 // 파일 리스트 불러옴
-function getWebFolderFileList() {
-	var webFolderId;
+
+var webFolderPortletObj = {};
+
+function initWebFolderPortletInfo(webFolderPortletId) {
+	var newObj = {};
+	var perCount = getwebFolderPerCount(webFolderPortletId);
+	newObj.page = new Paging().setPageStart(1).init(perCount);
+	newObj.page.getPagePerCount = function () {
+		return getwebFolderPerCount(webFolderPortletId);
+	}
+	newObj.portletCode = "webfolder";
+    
+    portletInfoMap["portlet" + webFolderPortletId] = newObj;
+    webFolderPortletObj.portletId = webFolderPortletId;
+    
+    newObj.getPortletList = function () {
+        getWebFolderFileList(newObj.page.getPage());
+    }
+
+    var currentPage = portletInfoMap["portlet" + webFolderPortletId].page.getPage();
+    getWebFolderFileList(currentPage);
+
+}
+
+function getwebFolderPerCount(webFolderPortletId) {
+	var portletSize = getPortletSize(webFolderPortletId);
+	var count = 0;
+	
+	if (portletSize === GridSize.TWO_BY_ONE || portletSize === GridSize.TWO_BY_TWO) {
+		count = 6;
+	} else {
+		count = 3;
+	}
+
+	return count;
+}
+
+function getWebFolderFileList(currentPage) {
+	var webFolderId = "";
+    var listSize = getwebFolderPerCount(webFolderPortletObj.portletId);
 	$.ajax({
 		type : "GET",
 		url : "/ezNewPortal/getWebFolderFileList.do",
 		dataType : "JSON",
+		data : {
+            "currentPage" : currentPage,
+            "listSize" : listSize
+		}, 
 		async : false,
 		success : function(result) {
-			webFolderId = result.data.folderId
+			webFolderId = result.data.folderId;
 			var folderId = result.data.folderId;
+			var totalCnt = result.data.totalCnt;
+			currentPage = result.data.currentPage;
 			
 			$("#webFolderId").val(folderId);
 			var ulEl = document.getElementById('webfolderUl');
 			
 			var fileList = result.data.fileList;
 			var fileLength = fileList.length;
-			
+			$(ulEl).empty();
+            
 			/* 2023-06-01 홍승비 - 홈 > 웹폴더 포틀릿 > 디자인 개선을 위해 파일은 최대 4개까지만 표출하도록 수정 */
 			if (fileLength != 0) {
+				document.querySelector(".fileListWrapper").classList.remove('empty')
 				fileList.forEach(function(file, index) {
-					if (index < 4) {
+					if (index >= 0 ) {
 						var liEl = document.createElement('li');
 						liEl.className = 'webFolderLi';
+                        
 						liEl.setAttribute('targetId', file.fileId);
 						liEl.addEventListener('click', function(event) {webFolderFileDownLoad(event, this)}, false);
 						
@@ -41,7 +88,7 @@ function getWebFolderFileList() {
 						
 						dtEl.textContent = file.fileName;
 						ddEl1.textContent = userLang == '1'? file.createName1 : file.createName2; 
-						ddEl2.textContent = file.updateDate.substr(0, 10);
+						ddEl2.textContent = file.updateDate.substr(0, 10).replace(/-/g, ".");
 						
 						dlEl.appendChild(dtEl);
 						dlEl.appendChild(ddEl1);
@@ -54,6 +101,7 @@ function getWebFolderFileList() {
 					}
 				});
 			} else {
+				document.querySelector(".fileListWrapper").classList.add('empty');
 				var dlEl = document.createElement('dl');
 				dlEl.className = 'nodata';
 				
@@ -68,7 +116,11 @@ function getWebFolderFileList() {
 				dlEl.appendChild(ddEl);
 				
 				ulEl.appendChild(dlEl);
+				ulEl.classList.add("empty");
 			}
+            
+            resetPortletPaging(webFolderPortletObj.portletId, totalCnt, currentPage, "");   
+            loadCapacity(webFolderId);
 		},
 		error : function () {
 			alert("웹폴더 포틀릿 생성중 에러가 발생했습니다.");
@@ -76,7 +128,6 @@ function getWebFolderFileList() {
 		
 	});
 	
-	loadCapacity(webFolderId);
 }
 
 // 파일 형식에 따라 이미지 불러옴
@@ -192,10 +243,10 @@ function loadCapacity(webFolderId) {
 			var newSize = getFileSize(usedCapacity);
 			
 			var html = "";
-			html += newSize + "<span>/" + totalCapacity + "G</span>"
+			html += newSize + "<span class='sortablePortlet'>/" + totalCapacity + "G</span>"
 			
 			$("#usingCpacity").html(html);
-
+			
 			$("#usedRate").css("backgroundColor", progressColor);
 			$("#usedRate").stop().animate({width: usedRate + "%"},{duration: 500});
 			

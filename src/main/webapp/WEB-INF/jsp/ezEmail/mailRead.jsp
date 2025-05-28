@@ -6,7 +6,8 @@
 	<head>
 		<title>${title}</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/css/jquery-ui.css')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -23,6 +24,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/reademail.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/string_component.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/leftmenu-util.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/email_tag.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
 		<script type="text/javascript">	
 		    var g_paramURL = "${url}";
@@ -64,6 +66,7 @@
 		    var sendPermission = "${sendPermission}";
 		    var managePermission = "${managePermission}";
 		    var mailWritePreview = "${mailWritePreview}"; // 메일 작성 > 미리보기
+		    var mailWritePreviewSend = "${mailWritePreviewSend}"; // 메일 작성 > 발송 전 미리보기
 		    var g_uid = "${uid}";
 		    var countryName = "${countryName}";
 		    var countryIP = "${countryIP}";
@@ -71,6 +74,7 @@
 		    var systemCountryCode = "${systemCountryCode}";
 		    var useCountryIP = "${useCountryIP}";
 		    var useShowSystemCountry = "${useShowSystemCountry}";
+			var mailBox = "${mailBox}";
 		    
 		    window.onresize = window_onresize;
 		    
@@ -83,6 +87,14 @@
 			    if (useReSend == "YES" && sentItems.toUpperCase() == "TRUE") {
 		    		$('#liReSend').css('display', 'block');
 		   		}
+				
+				$(parent.document).mouseup(function (e) {
+					hiddenMoreMenu(e);
+				});
+				
+				$(document).mouseup(function (e) {
+					hiddenMoreMenu(e);
+				});
 			    
 			    if (g_notiSSO == "1")
 				{
@@ -136,7 +148,7 @@
 		        	btnDelete.style.display = "none";
 		        }
 		        
-		        if (useCountryIP == "YES" && mailWritePreview != "true") {
+		        if (useCountryIP == "YES" && (mailWritePreview != "true" ||  mailWritePreviewSend == "false")) {
 		        	if (useShowSystemCountry == "YES" || (useShowSystemCountry != "YES" && countryCode != systemCountryCode)) {
 			        	
 		        		if (document.getElementById("nationalFlag") != null) {
@@ -154,10 +166,14 @@
 		                opener.refreshUnreadCount();
 		            }
 		        } 
-			    catch (e) { }
+			    catch (e) {console.log(e);}
 			    
 			    if (mailWritePreview == "true") {
 			    	$("#menu > ul:first-child").css("display","none");
+			    	$("#menu > ul:nth-child(2)").css("display", "none");
+			    } else if (mailWritePreviewSend == "true") {
+			        $("#menu > ul:first-child").css("display","none");
+			        $("#menu > ul:nth-child(2)").css("display", "block");
 			    }
 
 				<c:if test="${useMailTag}">
@@ -169,9 +185,9 @@
 					tagAddInput.addEventListener("keydown", function(e) {
 						if (e.keyCode == 13) onEnterPreviewTagInput();
 					});
-					document.querySelector("#tag_add + .imgbtn").addEventListener("click", function(e) { onEnterPreviewTagInput(); });
+					document.querySelector(".input_wrap + .imgbtn").addEventListener("click", function(e) { onEnterPreviewTagInput(); });
 					// 태그 X 버튼 클릭시 삭제
-					$("#tag_view > img").on("click", function() { removeTag(this.previousElementSibling); });
+					$(".tag_del").on("click", function() { removeTag(this.nextElementSibling); });
 
 					// 태그 추가 시 자동완성
 					$(tagAddInput).autocomplete({
@@ -198,10 +214,25 @@
 						},
 						minLength: 2,
 						selectFirst: true,
-						autoFocus: true,
+						// autoFocus: true,
+					});
+
+					tagAddInput.addEventListener("input", function() {
+						var inputWrap = document.getElementById("input_wrap");
+	
+						// 클래스에 "on"이 있으면 제거
+						if (inputWrap.classList.contains("on")) {
+							inputWrap.classList.remove("on");
+						}
 					});
 				</c:if>
 			}
+
+			function send() {
+			    window.opener.Send_onClick();
+			    window.close();
+			}
+
 		    function btnPrint_onClick()
 		    {
 		        var pheight = window.screen.availHeight;
@@ -236,7 +267,17 @@
 				<c:if test="${useMailTag}">
 				resizeHeight -= document.getElementById("tag_td").clientHeight;
 				</c:if>
-				document.getElementById("message").style.height = resizeHeight + "px";
+
+				if(sentItems.toUpperCase() == "TRUE") {
+					document.getElementById("message").style.height = resizeHeight + "px";
+					var messeageValue = document.getElementById("message");
+					var messeageHeight = messeageValue.style.height
+					messeageHeight = parseFloat(messeageHeight) - parseFloat("14");
+					messeageValue.style.setProperty('height', messeageHeight + 'px', 'important');
+				} else {
+					document.getElementById("message").style.height = resizeHeight + parseFloat("14") + "px";
+				}
+				
 		        mailPrevSentDateChk();
 		    }	
 			
@@ -259,7 +300,7 @@
 			{
 			    var url = document.location.protocol + "//" + document.location.hostname + "/myoffice/ezKMS/kasset/KAssetConvert_Cross.aspx?Mode=new&Flag=email&url=" + encodeURIComponent(g_paramURL);
 			    var OpenWin = window.open(url, "mail_foldermanage_Cross", GetOpenWindowfeature(800, 780));
-			    try { OpenWin.focus(); } catch (e) { }
+			    try { OpenWin.focus(); } catch (e) {console.log(e);}
 			}
 			
 			function OnBtnClose()
@@ -293,7 +334,7 @@
 		        {                 	 
 		            window.open("/myoffice/ezPortal/SSO/SSO_Link.aspx?TYPE=ITSMAPPDOC&DOCTITLE=" + encodeURIComponent(g_itsmtitle) + "&EMAIL=" + encodeURIComponent(ITSMEmail) + "&NAME=" + encodeURIComponent(ITSMName) + "&DEPT=", '', '');
 		        } 
-		        catch(e) {}
+		        catch(e) {console.log(e);}
 			}
 			
 			function SecurityFG()
@@ -433,7 +474,7 @@
 			            var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(355, 600));
 		            }
 		            
-		            try { OpenWin.focus(); } catch (e) { }
+		            try { OpenWin.focus(); } catch (e) {console.log(e);}
 		        }
 		        else {
 		            var wWeight = "355";
@@ -460,7 +501,7 @@
 		                    return;
 		                }
 		
-		                if (ret[2] == "2" || ret[2] == "3" || ret[2] == "4" || ret[2] == "7" || ret[3] != "") {
+		                if (ret[2] == "2" || ret[2] == "3" || ret[2] == "4" || ret[2] == "7" || ret[2] == "8" || (ret[3] != "null" && ret[3] != null && ret[3] != "")) {
 		                    alert(strLang337);
 		                }
 		                else {
@@ -497,7 +538,7 @@
 		            var pTop = (pheight - boardWidth) / 2;
 		            var pLeft = (pwidth - boardHeight) / 2;
 		
-		            if (ret[2] == "2" || ret[2] == "3" || ret[2] == "4" || ret[2] == "7") {
+		            if (ret[2] == "2" || ret[2] == "3" || ret[2] == "4" || ret[2] == "7" || ret[2] == "8") {
 		                alert(strLang337);
 		            }
 		            else {
@@ -585,10 +626,11 @@
 		    }
 		    
 		    function mailWritePreviewDel() {
-		    	if (mailWritePreview != "true") {return; }
-		    	// 메일 작성 > 미리보기 메일 삭제
-				window.opener.parent.delDrafts(g_uid);
-				window.parent.opener.parent.previewChk = false;
+		    	if (mailWritePreview == "true" || mailWritePreviewSend == "true") {
+                    // 메일 작성 > 미리보기 메일 삭제
+                    window.opener.parent.delDrafts(g_uid);
+                    window.parent.opener.parent.previewChk = false;
+				}
 		    }
 		    
 		    /* 2020-08-31 홍승비 - 메일 커뮤니티 게시판에 게시 기능 추가 */
@@ -598,7 +640,7 @@
 				writeCommboardselect_modal_dialogArguments[1] = NewItemCommu_onclick_Complete; // 커뮤니티 게시판 선택 완료 시의 동작
 	           
 				var OpenWin = window.open("/ezCommunity/communityBoardSelectForMail.do", "communityBoardSelectForMail", GetOpenWindowfeature(355, 600));
-				try { OpenWin.focus(); } catch (e) { }
+				try { OpenWin.focus(); } catch (e) {console.log(e);}
 		    }
 		    
 		    function NewItemCommu_onclick_Complete(ret) {
@@ -628,6 +670,39 @@
                 	window.open(requestUrl, boardTarget, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + boardHeight + ",width=" + boardWidth + ",top=" + pTop + ",left=" + pLeft, "");
 		        }
 		    }
+			
+			function toggleMoreMenu() {
+				document.getElementById("view_more").classList.toggle('on');
+				var element = document.getElementById("layer_menu");
+				if (element) {
+					if (element.style.display === 'none') {
+						element.style.display = '';
+					} else {
+						element.style.display = 'none';
+					}
+				}
+			}
+			
+			function hiddenMoreMenu(e) {
+				var element = document.getElementById("layer_menu");
+				var clickedElementClass = e.target.className;
+
+				if (element) {
+					if (element.style.display !== 'none' && !clickedElementClass.includes('view_more')) {
+						document.getElementById("view_more").classList.remove('on');
+						element.style.display = 'none';
+					}
+				}
+				var tagLayerElement = document.getElementById("layer_select");
+				if (tagLayerElement) {
+					tagLayerElement.scroll({top:0});
+					var tagLayerStyle = getComputedStyle(tagLayerElement);
+					if (tagLayerStyle.display !== 'none' && !clickedElementClass.includes('input_select_arrow')) {
+						document.getElementById("input_wrap").classList.remove("on");
+					}
+				}
+			}
+			
 	    </script>
 		    
 		<%-- 웹폴더 첨부 레이어팝업을 위한 스크립트 추가--%>
@@ -654,28 +729,38 @@
 		                    <li id="liReSend" style="display: none;"><span id="btnReSend" onClick="reSend_onClick()"><spring:message code="ezEmail.kyj19" /></span></li>
 		                    <li><span id="btnMove" onClick="move_onClick()"><spring:message code="ezEmail.t482" /></span></li>
 		                    <li id="PcSave"><span id="btnSave" onClick="download_mail()">PC <spring:message code="ezEmail.t48" /></span></li>
-		                    <c:if test="${packageType != 'mail'}">
-		                    	<li id="BoardItem"><span id="btnBoard" onClick="NewItem_onclick()"><spring:message code="ezEmail.t548" /></span></li>
-		                    	<c:if test="${useMailToCommunity == 'YES'}">
-		                    	<li id="CommunityItem"><span id="btnCommunity" onClick="NewItemCommu_onclick()"><spring:message code="ezEmail.hsbCM01" /></span></li>
-		                    	</c:if>
-		                    </c:if>
-		                    <li id="HolderSent"><span id="btnReceiveList" onClick="receiveCheck_onClick()"><spring:message code="ezEmail.t516" />/<spring:message code="ezEmail.t549" /></span></li>
-		                    <li id="HolderElse"><span id="btnViewWeb" onClick="view_original()"><spring:message code="ezEmail.t551" /></span></li>          
-		                    <c:if test="${useCabinet == 'YES'}">
-		                    	<li><span id="addCabinet" onclick="addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
-		                    </c:if>
-		                    <c:if test="${isSecureMail == true}">
-		                    	<li><span id="btnSecureInfo" onClick="secureInfo_onClick()"><spring:message code="ezEmail.lhm44" /></span></li>
-		                    </c:if>
-		                    <li><span class="icon16 popup_icon16_star" id="btnBookmark" onClick="toggle_flag()"></span></li>
-		                    <li><span class="icon16 popup_icon16_delete" id="btnDelete" onClick="delete_mail()"></span></li>
-		                    <li><span class="icon16 popup_icon16_print" id="btnPrint" onClick="btnPrint_onClick()"></span></li>
+							<li><span class="icon16 popup_icon16_star" id="btnBookmark" onClick="toggle_flag()"></span></li>
+							<li><span class="icon16 popup_icon16_delete" id="btnDelete" onClick="delete_mail()"></span></li>
+							<li><span class="icon16 popup_icon16_print" id="btnPrint" onClick="btnPrint_onClick()"></span></li>
 		                    <c:if test="${pnFlag=='Y'}">
 			                    <li id="iprev"><span id="btnpre" onclick="get_mail('prev')" style="padding-top:0px;"><img src="/images/ImgIcon/prev.gif" alt="<spring:message code='ezEmail.t1000' />"  /></span></li>
 			                    <li id="inext" ><span id="btnnext" onclick="get_mail('next')" style="padding-top:0px;"><img src="/images/ImgIcon/next.gif" alt="<spring:message code='ezEmail.t1001' />" /></span></li>
 		                    </c:if>
+							<li class="view_more" onclick="toggleMoreMenu()"><span class="view_more" id="view_more"><img class="view_more" src="/images/ImgIcon/view_more.png"></span>
+								<ul class="layer_select" id="layer_menu" style="display: none">
+									<c:if test="${packageType != 'mail'}">
+										<li id="BoardItem"><span id="btnBoard" onClick="NewItem_onclick()"><spring:message code="ezEmail.t548" /></span></li>
+										<c:if test="${useMailToCommunity == 'YES'}">
+											<li id="CommunityItem"><span id="btnCommunity" onClick="NewItemCommu_onclick()"><spring:message code="ezEmail.hsbCM01" /></span></li>
+										</c:if>
+									</c:if>
+									<li id="HolderSent"><span id="btnReceiveList" onClick="receiveCheck_onClick()"><spring:message code="ezEmail.t516" />/<spring:message code="ezEmail.t549" /></span></li>
+									<li id="HolderElse"><span id="btnViewWeb" onClick="view_original()"><spring:message code="ezEmail.t551" /></span></li>
+									<c:if test="${useCabinet == 'YES'}">
+										<li><span id="addCabinet" onclick="addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
+									</c:if>
+									<c:if test="${isSecureMail == true && mailBox == 'Sent'}">
+										<li><span id="btnSecureInfo" onClick="secureInfo_onClick()"><spring:message code="ezEmail.lhm44" /></span></li>
+									</c:if>
+									<li id="btnViewOriginText"><span onclick="view_OriginalEML()"><spring:message code='ezEmail.kdh03' /></span></li>
+									<li id="btnExport"><span onclick="download_Single_mail()"><spring:message code="ezEmail.t378" /></span></li>
+								</ul>
+							</li>
 		                </ul>
+		                <ul style="display:none">
+                            <li><span id="" onClick="send()"><spring:message code='ezEmail.t674' /></span></li>
+                            <li><span id="" onClick="OnBtnClose()"><spring:message code='ezEmail.t39' /></span></li>
+                        </ul>
 		            </div>
 		            <div id="close"><ul><li><span onClick="OnBtnClose()"></span></li></ul></div>	
 		        </td> 
@@ -726,13 +811,11 @@
 		                        <span id="LabelReceiveDate">${dateStr}</span> 
 		                        </div>
 		                    </td>
-		                    <td nowrap class="pos2" id="btnInsertAddr">
-		                    	<c:if test="${mailWritePreview != true}">
+		                    <td nowrap class="pos2" id="btnInsertAddr" <c:if test="${mailWritePreview == true || mailWritePreviewSend == true}">style="display:none"</c:if>>
 			                    	<a style="margin-right:5px;"><span onClick="func_addaddr()" id="btn_addaddr"><img title="<spring:message code='ezEmail.t554' />" src="/images/email/icon_address_add.png" style="border:0px" /></span></a>
 		                    		<c:if test="${(shareId == null) || (shareId ne '' && managePermission eq 'Y')}">
 		                    			<a style="margin-right:5px;"><span onClick="func_reject()" id="btn_reject"><img title="<spring:message code='ezEmail.t270' />" src="/images/email/icon_mail_refusal.png" style="border:0px" /></span></a>
 			                    	</c:if>
-			                    </c:if>
 		                    </td>
 		                </tr>
 		                <tr>
@@ -780,11 +863,23 @@
 							<tr>
 								<th><spring:message code='ezEmail.tag' /></th>
 								<td id="tag_td" colspan="4">
-									<input id="tag_add" type="text" maxlength="100" />
-									<a class="imgbtn"><span><spring:message code="ezEmail.tag.user.addbtn" /></span></a>
+									<div class="input_select">
+										<div class="input_wrap" id="input_wrap">
+											<input id="tag_add" type="text" maxlength="100"/>
+											<span class="input_select_arrow" onclick="$('.input_wrap').toggleClass('on');getTagList()"></span>
+										</div>
+										<a class="imgbtn"><span><spring:message code="ezEmail.tag.user.addbtn" /></span></a>
+										<ul class="layer_select" id="layer_select">
+
+										</ul>
+									</div>
+									
 									<div id="tag_view">
 										<c:forEach items="${tags}" var="name">
-											<span>${name}</span><img src="/images/icon/oneline_delete.gif" />
+											<div class="tag_list">
+												<span class="tag_del" id="tag_del"></span>
+												<span class="tag_name" id="tag_name">${name}</span>
+											</div>
 										</c:forEach>
 									</div>
 								</td>
@@ -803,6 +898,8 @@
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
 			window_onresize();
 		</script>
+		<%-- 메일 다운로드 iframe--%>
+		<iframe name="AttachDownFrame" id="AttachDownFrame" width="0" height="0" frameborder="0" marginheight="0" marginwidth="0" scrolling="no" style="display:none"></iframe>
 		<form name="form1" action="mailReadContent.do" method="post" target="message" >
 			<input  type="hidden" id="iptFolderPath"  name="iptFolderPath" value="">
 		    <input  type="hidden" id="iptURL"  name="iptURL" value="">

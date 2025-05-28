@@ -4,6 +4,60 @@
 var CommuSize = $('#CommuSize').val();
 var userId = $('#userId').val();
 
+var communityPortletObj = {};
+
+function initCommunityPortletInfo(communityPortletId) {
+	var newObj = {};
+	var perCount = getCommmunityPagePerCount(communityPortletId);
+	newObj.page = new Paging().setPageStart(1).init(perCount);
+	newObj.portletCode = "community";
+	newObj.page.getPagePerCount = function () {
+		return getCommmunityPagePerCount(communityPortletId);
+	}
+	newObj.getPortletList = function () {
+		var currentPage = portletInfoMap["portlet" + communityPortletId].page.getPage();
+		getCommunityList(currentPage);
+	}
+
+	portletInfoMap["portlet" + communityPortletId] = newObj;
+	
+	communityPortletObj.portletId = communityPortletId;
+	var totalCnt = CommuSize;
+	var currentPage = 1;
+	resetPortletPaging(communityPortletObj.portletId, totalCnt, currentPage, "");
+}
+
+function reloadCommunityPortlet() {
+	var portletId = communityPortletObj.portletId;
+
+	var newObj = {};
+	var perCount = getCommmunityPagePerCount(portletId);
+	newObj.page = new Paging().setPageStart(1).init(perCount);
+	newObj.portletCode = "community";
+	newObj.page.getPagePerCount = function () {
+		return getCommmunityPagePerCount(portletId);
+	}
+	newObj.getPortletList = function () {
+		var currentPage = portletInfoMap["portlet" + portletId].page.getPage();
+		getCommunityList(currentPage);
+	}
+
+	getCommunityList(1);
+}
+
+function getCommmunityPagePerCount(communityPortletId) {
+	var portletSize = getPortletSize(communityPortletId);
+	var count = 0;
+	
+	if (portletSize === GridSize.TWO_BY_ONE || portletSize === GridSize.TWO_BY_TWO) {
+		count = 5;
+	} else {
+		count = 2;
+	}
+
+	return count;
+}
+
 function view_bestCommunity(event) {
 	var $target = $(event.target);
 	$target = $target.is('dl') ? $target : $target.closest('dl');
@@ -19,7 +73,6 @@ function view_bestCommunity(event) {
 				clubNo	:	$target.data("clubno"),
 			   },
 		success: function(result){
-			console.log('clubType : ' + result);
 			clubType = result;
 		}
 	});
@@ -33,7 +86,6 @@ function view_bestCommunity(event) {
 				 uID	:	userId
 		},
 		success: function(result){
-			console.log('OK or ERR      :     ' + result);
 			if (result == "ERR" && clubType != "1") {
 				OpenAlertUI(messages.strLang11+"<br>"+messages.strLang12, null, "/ezPortal/wpNewCommunity.do.OpenAlertUI");
 			} else {
@@ -80,9 +132,15 @@ function OpenAlertUI(NewWinContent, NewWinCallFunction, NewWinName) {
     }
 }
 
-var getCommunityList = function() {
+function OpenAlertUI_Complete() {
+    //Source Code...
+}
+
+var getCommunityList = function(currentPage) {
+    var listSize = getCommmunityPagePerCount(communityPortletObj.portletId);
+
 	var request = new XMLHttpRequest();
-	request.open('GET', '/ezNewPortal/getCommunityList.do', false);
+	request.open('GET', '/ezNewPortal/getCommunityList.do?currentPage=' + currentPage + "&listSize=" + listSize, false);
 	request.setRequestHeader('Content-Type', 'application/json');
 	var companiesHTML = "";
 
@@ -93,39 +151,29 @@ var getCommunityList = function() {
 			}
 			
 			var result = JSON.parse(request.responseText);
-			
-			var size = result.CommuSize;
+
 			var commuPath = result.commuPath;
 			
 			var commuElem = document.getElementById("communityList");
 			commuElem.innerHTML = "";
 			
-			if (size == 0) {
-				var list1 = setCommunityNoData("01");
-				var list2 = setCommunityNoData("02");
-				
-				var portletListUL = document.createElement("portlet_list");
-				portletListUL.appendChild(list1);
-				portletListUL.appendChild(list2);
-				commuElem.appendChild(portletListUL);
-			} else if (size == 1) {
-				var communityList = result.CommunityList;
-				var list1 = setCommunityData(communityList[0], commuPath, "01");
-				var list2 = setCommunityNoData();
-				commuElem.appendChild(list1);
-				commuElem.appendChild(list2);
+			if (result.CommuSize == 0) {
+				var noDataList = setCommunityNoData();
+				commuElem.appendChild(noDataList);
 			} else {
 				var communityList = result.CommunityList;
 				
-				for (var i = 0; i < size; i++) {
+				for (var i = 0; i < communityList.length; i++) {
 					var list = setCommunityData(communityList[i], commuPath, "0" + (i + 1));
 					commuElem.appendChild(list);
+					$('.comListDL0'+i).on("click", view_bestCommunity);
 				}
 			}
+
+			var totalCnt = result.CommuSize;
+			var currentPage = result.currentPage;
+			resetPortletPaging(communityPortletObj.portletId, totalCnt, currentPage, "");
 			
-			for (var i=1; i < 3; i ++) {
-				$('.comListDL0'+i).on("click", view_bestCommunity);
-			}
 		}
 	};
 
@@ -136,15 +184,13 @@ var getCommunityList = function() {
 	request.send();
 }
 
-var setCommunityNoData = function(classTag) {
+var setCommunityNoData = function() {
 	var comListDL = document.createElement("dl");
-	comListDL.className = "comListDL" + classTag;
+	comListDL.className = "nodata";
 	var comDT = document.createElement("dt");
-	comDT.className = "comPic";
 	var noImage = document.createElement("img");
-	noImage.src = "/images/kr/main/comImg_none.png";
+	noImage.src = "/images/kr/main/noData_sIcon.png";
 	var titleDD = document.createElement("dd");
-	titleDD.className = "comTit_none";
 	titleDD.textContent = messages.strLang1;
 	
 	comDT.appendChild(noImage);
@@ -155,6 +201,9 @@ var setCommunityNoData = function(classTag) {
 }
 
 var setCommunityData = function(commuInfo, commuPath, classTag) {
+	var communityPortletPage = portletInfoMap["portlet" + communityPortletObj.portletId].page;
+	var currentPage = communityPortletPage.getPage();
+
 	var comListDL = document.createElement("dl");
 	comListDL.className = "comListDL" + classTag;
 	comListDL.style.cursor = "pointer";
@@ -162,7 +211,7 @@ var setCommunityData = function(commuInfo, commuPath, classTag) {
 	var comDT = document.createElement("dt");
 	comDT.className = "comPic";
 	
-	if (classTag === "01") {
+	if (classTag === "01" && currentPage == 1) {
 		var comSpan = document.createElement("span");
 		comSpan.className = "best";
 		var bestImg = document.createElement("img");
@@ -180,17 +229,22 @@ var setCommunityData = function(commuInfo, commuPath, classTag) {
 	
 	
 	var comTitle = document.createElement("dd");
-	comTitle.textContent = '"' + commuInfo.c_ClubName + '"';
+	comTitle.textContent = commuInfo.c_ClubName;
 	comTitle.className = "comTit";
 	var comText = document.createElement("dd");
 	comText.textContent = commuInfo.c_ClubDesc;
 	comText.className = "comText";
+	
+	var comPerson = document.createElement("dd");
+	comPerson.textContent = messages.strLangCommunity01 + " " + commuInfo.c_memberCnt + messages.strLangCommunity02;
+	comPerson.className = "comPerson";
 	
 	comDT.appendChild(comImg);
 	
 	comListDL.appendChild(comDT);
 	comListDL.appendChild(comTitle);
 	comListDL.appendChild(comText);
+	comListDL.appendChild(comPerson);
 	
 	return comListDL;
 }

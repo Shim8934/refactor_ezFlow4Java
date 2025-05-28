@@ -14,21 +14,21 @@ import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzCircularService {
 
-	public List<CircularListVO> getCircularList(String memberID, String searchValue, String searchType, String sdate, String edate, int startRow, int endRow, int tenantId, String offset, String orderCell, String orderOption1, String companyID) throws Exception;
+	public List<CircularListVO> getCircularList(String memberID, String searchValue, String searchType, String sdate, String edate, int startRow, int endRow, int tenantId, String offset, String orderCell, String orderOption, String companyID, String lang) throws Exception;
 
-	public List<CircularListVO> getCircularCompleteList(String memberID, String searchValue, String searchType, String sdate, String edate, int startRow, int endRow, int tenantId, String offset, String orderCell, String orderOption1, String companyID) throws Exception;
+	public List<CircularListVO> getCircularCompleteList(String memberID, String searchValue, String searchType, String sdate, String edate, int startRow, int endRow, int tenantId, String offset, String orderCell, String orderOption, String companyID, String lang) throws Exception;
 	
 	public List<CircularListVO> getCircularUserList(int circularID, String searchType, String searchValue, int tenantID, String offset) throws Exception;
 	
 	public List<CircularListVO> getCircularDeptUserList(int circularBMId, int tenantId) throws Exception;
 	
-	public List<CircularListVO> getCircularTempList(String memberID, String searchValue, String searchType, String sdate, String edate, int startRow, int endRow, String offset, int tenantId, String orderCell, String orderOption1, String companyID) throws Exception;
+	public List<CircularListVO> getCircularTempList(String memberID, String searchValue, String searchType, String sdate, String edate, int startRow, int endRow, String offset, int tenantId, String orderCell, String orderOption, String companyID, String lang) throws Exception;
 
-	public List<CircularListVO> getMyCircularList(String memberID, String searchValue, String searchType, String sdate, String edate, int startRow, int endRow, String offset, int tenantID, String orderCell, String orderOption1, String companyID) throws Exception;
+	public List<CircularListVO> getMyCircularList(String memberID, String searchValue, String searchType, String sdate, String edate, int startRow, int endRow, String offset, int tenantID, String orderCell, String orderOption, String companyID, String lang) throws Exception;
 	
-	public List<CircularListVO> getCircularTDList(String memberID, String searchValue, String searchType, int startRow, int endRow, int tenantID, String offset, String orderCell, String orderOption1, String companyID) throws Exception;
+	public List<CircularListVO> getCircularTDList(String memberID, String searchValue, String searchType, int startRow, int endRow, int tenantID, String offset, String orderCell, String orderOption, String companyID, String lang) throws Exception;
 	
-	public List<CircularListVO> getFolderCircularList(String folderId, String memberId, int startRow, int endRow, String offset, String searchValue, String searchType, String sdate, String edate, int tenantId, String orderCell, String orderOption1, String companyID) throws Exception;
+	public List<CircularListVO> getFolderCircularList(String folderId, String memberId, int startRow, int endRow, String offset, String searchValue, String searchType, String sdate, String edate, int tenantId, String orderCell, String orderOption, String companyID, String lang) throws Exception;
 	
 	public List<CircularListVO> getUserList(String memberID, int tenantID) throws Exception;
 	
@@ -50,7 +50,7 @@ public interface EzCircularService {
 	
 	public CircularConfigVO getCircularList_Config(String memberId, int tenantId) throws Exception;
 	
-	public CircularListVO getCircular(String circularID, String memberID, String offset, int tenantID, String type) throws Exception;
+	public CircularListVO getCircular(String circularID, String memberID, String offset, int tenantID, String type, String lang) throws Exception;
 
 	public CircularAttachVO getAttachInfo(String circularFileID, int tenantId) throws Exception;
 
@@ -58,21 +58,21 @@ public interface EzCircularService {
 
 	public String getFolderInfo(int folderId, String memberId, int tenantId) throws Exception;
 
-	public String getItemXML(String pcircularId, String pmemberId, String offset, int tenantId) throws Exception;
+	public String getItemXML(String pcircularId, String pmemberId, String offset, int tenantId, String lang) throws Exception;
 
-	public int getCircularListCount(String memberID, String searchValue, String searchType, String sdate, String edate, String offset, int tenantID, String companyID) throws Exception;
+	public int getCircularListCount(String memberID, String searchValue, String searchType, String sdate, String edate, String offset, int tenantID, String companyID, String lang) throws Exception;
 
 	public int checkUpdateStatus(int circularID, String memberID, int tenantID) throws Exception;
 
-	public int getCircularCompleteListCount(String memberID, String searchValue, String searchType, String sdate, String edate, String offset, int tenantID, String companyID) throws Exception;
+	public int getCircularCompleteListCount(String memberID, String searchValue, String searchType, String sdate, String edate, String offset, int tenantID, String companyID, String lang) throws Exception;
 
-	public int getCircularTempListCount(String memberID, String searchValue, String searchType, String sdate, String edate, String offset, int tenantId, String companyID) throws Exception;
+	public int getCircularTempListCount(String memberID, String searchValue, String searchType, String sdate, String edate, String offset, int tenantId, String companyID, String lang) throws Exception;
 
-	public int getMyCircularListCount(String memberID, String searchValue, String searchType, String sdate, String edate, String offset, int tenantId, String companyID) throws Exception;
+	public int getMyCircularListCount(String memberID, String searchValue, String searchType, String sdate, String edate, String offset, int tenantId, String companyID, String lang) throws Exception;
 
-	public int getCircularTDListCount(String memberID, String searchValue, String searchType, int tenantID, String companyID) throws Exception;
+	public int getCircularTDListCount(String memberID, String searchValue, String searchType, int tenantID, String companyID, String lang) throws Exception;
 
-	public int getFolderCircularListCount(String folderId, String memberId, String searchValue, String searchType, String sdate, String edate, String offset, int tenantId, String companyID) throws Exception;
+	public int getFolderCircularListCount(String folderId, String memberId, String searchValue, String searchType, String sdate, String edate, String offset, int tenantId, String companyID, String lang) throws Exception;
 	
 	public int getCommentCount(String circularID, String memberID, String type, int tenantID) throws Exception;
 	
