@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezEmail.web;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -347,6 +348,8 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 
 				String companyDomainName = ezCommonService.getCompanyConfig(loginInfo.getTenantId(), loginInfo.getCompanyID(), "DomainName");
 
+				cancelList.sort(Comparator.comparing(MailCancelVO::getReaderName));
+				
 				// cancelList
 				for (MailCancelVO vo : cancelList) {
 					if (!tempMailList.contains(vo.getReaderEmail())) {

@@ -297,7 +297,7 @@
 	                if (pGubun == "ALL") {
 						fragment.appendChild(TR);
 	                }
-	                else if (pGubun == "READ" && reader.ReadDate != "UNREAD" && reader.CancelStatus == "2") {
+	                else if (pGubun == "READ" && reader.ReadDate != "UNREAD") {
 						fragment.appendChild(TR);
 	                }
 	                else if (pGubun == "UNREAD" && reader.ReadDate == "UNREAD") {
