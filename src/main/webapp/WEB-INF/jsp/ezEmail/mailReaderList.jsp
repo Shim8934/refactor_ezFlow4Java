@@ -116,6 +116,7 @@
 	                        break;
 	                }
 	            }
+				hideDim();
 	        }
 
 	        window.onload = function () {
