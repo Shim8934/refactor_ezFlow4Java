@@ -876,7 +876,7 @@ public class CommonUtil {
 			return "0".equals(validLoginCookie(request, response));
 		}
 
-		return validSessionLoginCookie(request, response);
+		return "0".equals(validSessionLoginCookie(request, response));
 	}
 
 	private String validLoginCookie(HttpServletRequest request,  HttpServletResponse response) {
@@ -914,17 +914,17 @@ public class CommonUtil {
 		return result;
 	}
 
-	private boolean validSessionLoginCookie(HttpServletRequest request, HttpServletResponse response) {
+	private String validSessionLoginCookie(HttpServletRequest request, HttpServletResponse response) {
 		HttpSession session = request.getSession(false);
 		boolean useDbSession = "YES".equalsIgnoreCase(config.getProperty("config.UseDbSession"));
 
 		if (!useDbSession && session == null) {
 			clearAllCookies(request, response);
 
-			return false;
+			return "1";
 		}
 
-		return "0".equals(validLoginCookie(request, response));
+		return validLoginCookie(request, response);
 	}
 
 	private void clearAllCookies(HttpServletRequest request, HttpServletResponse response) {
@@ -3296,7 +3296,9 @@ public class CommonUtil {
 			return validLoginCookie(request, response);
 		}
 
-		if(validSessionLoginCookie(request, response)){
+		result = validSessionLoginCookie(request, response);
+		
+		if("0".equals(result)) {
 			boolean useDbSession = "YES".equalsIgnoreCase(config.getProperty("config.UseDbSession"));
 
 			if (useDbSession) {
@@ -3340,8 +3342,6 @@ public class CommonUtil {
 				result = "0";
 			}
 
-		}else {
-			result = "1";
 		}
 
 		return result;
