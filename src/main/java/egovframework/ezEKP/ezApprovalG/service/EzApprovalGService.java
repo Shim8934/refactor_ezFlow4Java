@@ -256,7 +256,7 @@ public interface EzApprovalGService {
 
     /* 2024-02-23 홍승비 - SQL Injection 제거 > 검색 쿼리를 문자열이 아닌 맵으로 전달, 사용하지 않는 Document xmlDomSub 파라미터 제거 */
     public String getReceiveDocList(String userID, String deptID, String receiveDocMode, String pageSize, String pageNum, String orderCell, String orderOption, String companyID, String userLang,
-			Map<String, Object> searchQueryMap, int tenantID, String offset, String assignChk) throws Exception;
+									Map<String, Object> searchQueryMap, int tenantID, String offset, String assignChk, String userPrimary) throws Exception;
 
     public String gongRamDocInfo(String docID, String companyID, int tenantID) throws Exception;
 

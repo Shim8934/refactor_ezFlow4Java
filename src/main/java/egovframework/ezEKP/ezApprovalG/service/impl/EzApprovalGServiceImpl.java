@@ -12423,7 +12423,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	@Override
 	// 수신 문서와 심사 문서를 같이 가져온다. admin, user = 수신문서, simsa = 심사문서
 	public String getReceiveDocList(String userID, String deptID, String mode, String pageSize, String pageNum, String sortHeader, String sortOption, String companyID, String userLang,
-			Map<String, Object> searchQueryMap, int tenantID, String offset, String assignChk) throws Exception {
+			Map<String, Object> searchQueryMap, int tenantID, String offset, String assignChk, String userPrimary) throws Exception {
 		logger.debug("getReceiveDocList started");
 
 		StringBuilder resultXML = new StringBuilder();
@@ -12518,8 +12518,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
                 /* 2024-06-28 양지혜 - 부서수신함 > 지정목록 > 결재상태에 진행자명을 함께 표출 */
                 if (fieldName.equals("APRSTATE") && assignChk != null && assignChk.equals("Y")) {
-                    resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, userLang, tenantID, offset))
-                            + "(" + docXML.getElementsByTagName("PROCESSORNAME").item(k).getTextContent() + ")</VALUE>");
+                	if (userPrimary.equals("1")) {
+                		resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, userLang, tenantID, offset))
+                		+ "(" + docXML.getElementsByTagName("PROCESSORNAME").item(k).getTextContent() + ")</VALUE>");
+                	}else {
+                		resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, userLang, tenantID, offset))
+                		+ "(" + docXML.getElementsByTagName("PROCESSORNAME2").item(k).getTextContent() + ")</VALUE>");
+                	}
                 } else {
                     resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, userLang, tenantID, offset)) + "</VALUE>");
                 }

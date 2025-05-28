@@ -9052,6 +9052,7 @@
 	      			TBL_APRDOCINFO.FORMID
                 <isEqual property="assignChk" compareValue="Y">
                     , TBL_APRRECEIPTPROCESSINFO.PROCESSORNAME as PROCESSORNAME
+                    , TBL_APRRECEIPTPROCESSINFO.PROCESSORNAME2 as PROCESSORNAME2
                 </isEqual>
 	      		FROM 
 	      			TBL_APRRECEIPTPROCESSINFO 
