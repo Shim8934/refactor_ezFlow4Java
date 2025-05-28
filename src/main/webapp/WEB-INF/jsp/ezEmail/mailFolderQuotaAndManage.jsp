@@ -543,11 +543,14 @@
 			
 			var mailConfigFrame = parent.parent.document.getElementsByName("right")[0].contentWindow;
 			var frm = document.getElementById("importMailboxform");
-			mailConfigFrame.mailbox_attach_import(pwd, tempId, userkey, folderPath, frm);
+			mailConfigFrame.mailbox_attach_import(pwd, tempId, userkey, folderPath, frm, mailboxImportStateHandler);
 			
 		}
 		 
-        function mailboxImportComplete(result, tempId, userkey) {
+        function mailboxImportStateHandler(progress, result, userkey) {
+			if (!result) {
+				return;
+			}
         	
         	var mailConfigFrame = parent.parent.document.getElementsByName("right")[0].contentWindow;
         	mailConfigFrame.HiddenMailProgressNew();

@@ -1,9 +1,11 @@
 package egovframework.ezEKP.ezEmail.dao;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import egovframework.ezEKP.ezEmail.vo.MailboxProgressVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -253,9 +255,17 @@ public class EzEmailDAO extends EgovAbstractDAO {
 	public int updateMailboxProgress(Map<String, Object> map) {
 		return update("EzEmailDAO.updateMailboxProgress", map);
 	}
-	
-	public String getMailboxProgress(Map<String, Object> map) {
-		return (String) select("EzEmailDAO.getMailboxProgress", map);
+
+	public int updateMailboxProgressState(String userKey, String state, String stateDescription) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("userKey", userKey);
+		map.put("state", state);
+		map.put("stateDescription", stateDescription);
+		return update("EzEmailDAO.updateMailboxProgressState", map);
+	}
+
+	public MailboxProgressVO getMailboxProgress(Map<String, Object> map) {
+		return (MailboxProgressVO) select("EzEmailDAO.getMailboxProgress", map);
 	}
 	
 	public int deleteMailboxProgress(Map<String, Object> map) {

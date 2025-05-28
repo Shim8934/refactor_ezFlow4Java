@@ -36,6 +36,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 
+import egovframework.ezEKP.ezEmail.vo.MailboxProgressVO;
 import egovframework.let.utl.fcc.service.KlibUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -4790,16 +4791,22 @@ public class EzEmailServiceImpl implements EzEmailService {
 	}
 
 	@Override
-	public int getMailboxProgress(String userKey) throws Exception {
+	public int updateMailboxProgressState(String userKey, String state, String stateDescription) {
+		return ezEmailDAO.updateMailboxProgressState(userKey, state, stateDescription);
+	}
+
+	@Override
+	public MailboxProgressVO getMailboxProgress(String userKey) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userKey", userKey);
-		
-		String progressCnt = ezEmailDAO.getMailboxProgress(map);
-		if (progressCnt == null || progressCnt.equals("")) {
-			progressCnt = "-100";
+
+		MailboxProgressVO mailboxProgressVO = Optional.ofNullable(ezEmailDAO.getMailboxProgress(map))
+				.orElse(new MailboxProgressVO());
+		if (mailboxProgressVO.getProgress() == null) {
+			mailboxProgressVO.setProgress(-100);
 		}
-		
-		return Integer.parseInt(progressCnt);
+
+		return mailboxProgressVO;
 	}
 
 	@Override

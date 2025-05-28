@@ -10,6 +10,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
+import egovframework.ezEKP.ezEmail.vo.MailboxProgressVO;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -184,7 +185,8 @@ public interface EzEmailService {
 	
 	public void setMailboxProgress(String userKey, String userId, String action, int tenantId, int percent) throws Exception;
 	public int updateMailboxProgress(String userKey, int percent) throws Exception;
-	public int getMailboxProgress(String userKey) throws Exception;
+	int updateMailboxProgressState(String userKey, String state, String stateDescription);
+	MailboxProgressVO getMailboxProgress(String userKey) throws Exception;
 	public int delMailboxProgress(String userKey) throws Exception;
 	
 	public JSONArray getMailOutOfOfficeTemplateList(String userEmail) throws Exception;

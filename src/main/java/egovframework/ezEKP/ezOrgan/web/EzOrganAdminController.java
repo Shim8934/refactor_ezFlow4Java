@@ -385,6 +385,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.createGongramDeleteHistory(); // 2024-12-27 이가은 - 공람완료문서 삭제 히스토리 테이블 생성
 			ezCommonService.addMemberDeptIdScheduleGroupMember(); // 2024-12-27 한태훈 - 일정관리 > 일정 그룹 테이블에 부서컬럼 추가
 			ezCommonService.addMemberDeptIdScheduleGatherMember(); // 2024-12-27 한태훈 - 일정관리 > 일정 모아보기 그룹 테이블에 부서컬럼 추가
+			ezCommonService.addMailboxProgressStateColumns(); // 2025-05-23 메일 내보내기/가져오기 비동기 컬럼 추가
 		} catch (Exception e) {
     		logger.error(e.getMessage(), e);
     	}

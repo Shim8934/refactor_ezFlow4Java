@@ -221,7 +221,9 @@ public interface EzCommonService {
 	public void createMailTemplateSequence() throws Exception;
 
 	public void createJmochaMailboxProgress() throws Exception;
-	
+
+	void addMailboxProgressStateColumns();
+
 	public void createWebfolderFileUserTable();
 	
 	public void insertApprContainterConfig() throws Exception;

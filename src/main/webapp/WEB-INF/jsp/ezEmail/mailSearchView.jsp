@@ -993,17 +993,29 @@
             var pgSetTimeout;
             var pgSetTime = 2000;
             var psSetTimeFlag = false;
-            function mailboxProgressFun(act, userKey) { // mailboxProgress start or stop
-                psSetTimeFlag = act;
-                if (act) {
-                    mailboxProgress(userKey);
-                } else {
-                    clearTimeout(pgSetTimeout);
-                    mailboxProgressDel(socketUserkey);
-                }
-            }
 
-            function mailboxProgress(userKey) { // get mailbox Export or Import progress
+			/** @callback ProgressStateHandler
+			 * @param {number} progress
+			 * @param {string} state
+			 * @param {string} stateDescription
+			 * 메일함 작업 진행상황 체크 시마다 호출되는 핸들러 */
+
+			/** @param {boolean} act 작동 시 true, 취소 시 false
+			 * @param {string} userKey
+			 * @param {ProgressStateHandler} stateHandler */
+			function mailboxProgressFun(act, userKey, stateHandler) { // mailboxProgress start or stop
+				psSetTimeFlag = act;
+				if (act) {
+					mailboxProgress(userKey, stateHandler);
+				} else {
+					clearTimeout(pgSetTimeout);
+					mailboxProgressDel(socketUserkey);
+				}
+			}
+
+			/** @param {string} userKey
+			 * @param {ProgressStateHandler} stateHandler */
+			function mailboxProgress(userKey, stateHandler) { // get mailbox Export or Import progress
                 var uk = userKey;
 
                 pgSetTimeout = setTimeout(function getMailboxProgress() {
@@ -1025,6 +1037,10 @@
                             if (pg < 100) {
                                 setTimeout(getMailboxProgress, pgSetTime);
                             }
+
+							if (stateHandler) {
+								stateHandler(pg, data.state, data.stateDescription);
+							}
                         }, error : function(e) {
                             alert("error. " + e.status);
                         }
@@ -1043,7 +1059,7 @@
             function cancleProgress(){
                 HiddenMailProgressNew();
                 mailboxProgressFun(false);
-                webSocket.close();
+                // webSocket.close();
                 location.reload();
             }
 

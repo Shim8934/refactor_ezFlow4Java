@@ -14052,6 +14052,8 @@ CREATE TABLE `jmocha_mailbox_progress` (
   `USER_ID` varchar(80) NOT NULL,
   `ACT` varchar(15) NOT NULL,
   `PERCENT` mediumint(100) NOT NULL,
+  `STATE` varchar(20),
+  `STATE_DESCRIPTION` varchar(100),
   `UPDATEDT` datetime DEFAULT current_timestamp(),
   PRIMARY KEY (`USER_KEY`,`TENANT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

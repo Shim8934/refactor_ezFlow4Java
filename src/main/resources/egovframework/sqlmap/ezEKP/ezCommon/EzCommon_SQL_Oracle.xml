@@ -7618,4 +7618,13 @@
 		    )
 		)
     </statement>
+
+	<select id="EzCommonDAO.checkMailboxProgressStateColumns" resultClass="String">
+		SELECT STATE FROM JMOCHA_MAILBOX_PROGRESS WHERE ROWNUM = 1
+	</select>
+
+	<statement id="EzCommonDAO.addMailboxProgressStateColumns">
+		ALTER TABLE JMOCHA_MAILBOX_PROGRESS
+			ADD (STATE NVARCHAR2(20), STATE_DESCRIPTION NVARCHAR2(100))
+	</statement>
 </sqlMap>

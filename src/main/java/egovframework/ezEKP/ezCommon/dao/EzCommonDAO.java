@@ -3454,4 +3454,13 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createUserScheduleTypeConfigTable");
 		}
 	}
+
+	public void addMailboxProgressStateColumns() {
+		try {
+			select("EzCommonDAO.checkMailboxProgressStateColumns");
+		} catch (Exception ignore) {
+			logger.debug("JMOCHA_MAILBOX_PROGRESS.STATE, STATE_DESCRIPTION column doesn't exist. creating the column...");
+			update("EzCommonDAO.addMailboxProgressStateColumns");
+		}
+	}
 }

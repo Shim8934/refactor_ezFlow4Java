@@ -354,11 +354,22 @@
 				USER_KEY = #userKey#
 		]]>
 	</update>
-	
-	<select id="EzEmailDAO.getMailboxProgress" parameterClass="Map" resultClass="String">
+
+	<update id="EzEmailDAO.updateMailboxProgressState" parameterClass="Map">
+		UPDATE
+			JMOCHA_MAILBOX_PROGRESS
+		SET
+			STATE = #state#, STATE_DESCRIPTION = #stateDescription#, UPDATEDT = SYSDATE
+		WHERE
+			USER_KEY = #userKey#
+	</update>
+
+	<select id="EzEmailDAO.getMailboxProgress" parameterClass="Map" resultClass="egovframework.ezEKP.ezEmail.vo.MailboxProgressVO">
 		<![CDATA[
-			SELECT 
-				PERCENT
+			SELECT
+				PERCENT AS PROGRESS,
+				STATE,
+				STATE_DESCRIPTION AS STATEDESCRIPTION
 			FROM 
 				JMOCHA_MAILBOX_PROGRESS 
 			WHERE 

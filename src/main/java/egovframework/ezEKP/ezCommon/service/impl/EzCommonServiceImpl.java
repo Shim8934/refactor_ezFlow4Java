@@ -3337,7 +3337,12 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void createJmochaMailboxProgress() throws Exception {
 		ezCommonDAO.createMailboxProgressTable();
 	}
-	
+
+    @Override
+    public void addMailboxProgressStateColumns() {
+        ezCommonDAO.addMailboxProgressStateColumns();
+    }
+
 	// webfolder
 	@Override
 	public List<String> getPermissionGroupIdListOfUser(String userId, String deptId, String companyId, int tenantId) throws Exception {

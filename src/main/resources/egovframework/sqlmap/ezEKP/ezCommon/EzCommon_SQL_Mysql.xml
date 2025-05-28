@@ -7103,4 +7103,14 @@
 		    PRIMARY KEY (USERID, COMPANYID, TENANT_ID, SCHEDULETYPE, RELATEDID)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
     </statement>
+
+	<select id="EzCommonDAO.checkMailboxProgressStateColumns" resultClass="String">
+		SELECT STATE FROM JMOCHA_MAILBOX_PROGRESS LIMIT 1
+	</select>
+
+	<statement id="EzCommonDAO.addMailboxProgressStateColumns">
+		ALTER TABLE JMOCHA_MAILBOX_PROGRESS
+			ADD STATE varchar(20),
+			ADD STATE_DESCRIPTION varchar(100)
+	</statement>
 </sqlMap>
