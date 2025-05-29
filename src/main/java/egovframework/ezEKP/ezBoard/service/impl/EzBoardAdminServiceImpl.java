@@ -91,6 +91,9 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 	@Resource(name = "EzEmailService")
 	private EzEmailService ezEmailService;
 
+	@Resource(name = "jspw")
+	private String jspw;
+
 	private static final Logger logger = LoggerFactory.getLogger(EzBoardAdminServiceImpl.class);
 
 	@Override
@@ -1676,7 +1679,7 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 					InternetAddress to = new InternetAddress();
 					to.setPersonal(userInfo.getDisplayName(), "UTF-8");
 					to.setAddress(userInfo.getEmail());
-					ezEmailService.sendMail(userInfo.getEmail(), userInfo.getPassword(), userInfo.getLocale(), to, new InternetAddress[]{to}, null, null, subject, content, false, EmailImportance.NORMAL);
+					ezEmailService.sendMail(userInfo.getEmail(), jspw, userInfo.getLocale(), to, new InternetAddress[]{to}, null, null, subject, content, false, EmailImportance.NORMAL);
 
 					logger.debug("Sending board mail ends.");
 
