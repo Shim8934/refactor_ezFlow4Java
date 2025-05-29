@@ -681,7 +681,7 @@
 	   						opts += "<option value=" + this.formId + ">" + this.formName + "</option>";
 	   					})
 	   					$("#formId").html(opts);
-						resizableMenu();
+						resizableMenu(url);
 	   				}
 	   			});
 			}
