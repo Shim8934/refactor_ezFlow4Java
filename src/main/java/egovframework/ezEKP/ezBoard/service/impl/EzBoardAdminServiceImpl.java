@@ -1663,25 +1663,25 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 					notiRecipientList.add(recipientMap);
 					
 					//메일 발송
-					logger.debug("Sending board mail starts.");
-					String strURL = "javascript:Item_View_APPR('" + boardID + "','" + itemID + "','" + gubun + "');";
-					strURL = "<a id='board_a' style='color:blue;text-decoration:underline;cursor:pointer;' onClick=" + strURL + ">";
-
-					String subject = "[" + egovMessageSource.getMessage("ezBoard.lhr02", userInfo.getLocale()) + "] " + boardName + " - " + infoMap.get("TITLE") + " 게시글 공지 기간 만료";
-					
-					StringBuilder bodyContent = new StringBuilder();
-					bodyContent.append("<br>" + egovMessageSource.getMessage("ezBoard.lhr03", userInfo.getLocale()));
-					bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t251", userInfo.getLocale()) + commonUtil.cleanValue(boardName)); // 게 시 판
-					bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t254", userInfo.getLocale()) + strURL + commonUtil.cleanValue(title) + "</a>"); // 제 목
-
-					String content = commonUtil.createNotiMailContent(bodyContent.toString(), tenantId, userInfo.getLocale());
-					
-					InternetAddress to = new InternetAddress();
-					to.setPersonal(userInfo.getDisplayName(), "UTF-8");
-					to.setAddress(userInfo.getEmail());
-					ezEmailService.sendMail(userInfo.getEmail(), jspw, userInfo.getLocale(), to, new InternetAddress[]{to}, null, null, subject, content, false, EmailImportance.NORMAL);
-
-					logger.debug("Sending board mail ends.");
+//					logger.debug("Sending board mail starts.");
+//					String strURL = "javascript:Item_View_APPR('" + boardID + "','" + itemID + "','" + gubun + "');";
+//					strURL = "<a id='board_a' style='color:blue;text-decoration:underline;cursor:pointer;' onClick=" + strURL + ">";
+//
+//					String subject = "[" + egovMessageSource.getMessage("ezBoard.lhr02", userInfo.getLocale()) + "] " + boardName + " - " + infoMap.get("TITLE") + " 게시글 공지 기간 만료";
+//					
+//					StringBuilder bodyContent = new StringBuilder();
+//					bodyContent.append("<br>" + egovMessageSource.getMessage("ezBoard.lhr03", userInfo.getLocale()));
+//					bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t251", userInfo.getLocale()) + commonUtil.cleanValue(boardName)); // 게 시 판
+//					bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t254", userInfo.getLocale()) + strURL + commonUtil.cleanValue(title) + "</a>"); // 제 목
+//
+//					String content = commonUtil.createNotiMailContent(bodyContent.toString(), tenantId, userInfo.getLocale());
+//					
+//					InternetAddress to = new InternetAddress();
+//					to.setPersonal(userInfo.getDisplayName(), "UTF-8");
+//					to.setAddress(userInfo.getEmail());
+//					ezEmailService.sendMail(userInfo.getEmail(), jspw, userInfo.getLocale(), to, new InternetAddress[]{to}, null, null, subject, content, false, EmailImportance.NORMAL);
+//
+//					logger.debug("Sending board mail ends.");
 
 					// 통합알림
 					String notiContent = boardName + " - " + title;
