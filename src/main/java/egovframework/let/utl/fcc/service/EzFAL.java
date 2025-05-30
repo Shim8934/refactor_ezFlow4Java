@@ -52,7 +52,9 @@ public class EzFAL {
     private static List<String> localFolderPathList
         = Arrays.asList("/files/upload_common", "/tempFileUpload", "/files/upload_mail/templist",
                         "/tempUploadFile", "/files/upload_personal/photo/temp", "/files/upload_approvalG/form",
-                        "/files/sealImg");
+                        "/files/sealImg", "\\files\\upload_common", "\\tempFileUpload", "\\files\\upload_mail\\templist",
+                        "\\tempUploadFile", "\\files\\upload_personal\\photo\\temp", "\\files\\upload_approvalG\\form",
+                        "\\files\\sealImg");
     private static String startFolderPath = "fileroot";
 
     private static AmazonS3 s3Client;
@@ -337,6 +339,7 @@ public class EzFAL {
             if (isObjectStorageMode()) {
                 if (localFolderPathList.stream().filter(file.getFile().getPath()::contains).count() == 0) {
                     String key = file.getFile().getPath();
+                    key = key.replace("\\", "/");
                     key = key.substring(key.indexOf(startFolderPath));
                     ois = s3Client.getObject(bucketName, key).getObjectContent();
                     // 임시 파일을 생성하는 용도인 upload_common 폴더를 대상으로 할 경우엔
@@ -453,6 +456,7 @@ public class EzFAL {
 
                     InputStream is = new FileInputStream(file.getFile());
                     String key = file.getFile().getPath();
+                    key = key.replace("\\", "/");
                     key = key.substring(key.indexOf(startFolderPath));
                     s3Client.putObject(bucketName, key, is, meta);
 
