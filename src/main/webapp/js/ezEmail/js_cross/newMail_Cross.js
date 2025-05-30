@@ -2272,7 +2272,7 @@ function GetDocumentInfo(DocID, DocHref, ImagCnt, Target) {
         	attach_Add_OtherModule(ofileName, ofileHref, ofileAttachSize, ofileTypeCode);
         }
 	            
-/*=======
+/*========
         document.title = getNodeText(GetElementsByTagName(ReturnXML, "DOCTITLE")[0]);
         
         var AttachRows = SelectNodes(ReturnXML, "ATTACHINFO/DATA/ROW");

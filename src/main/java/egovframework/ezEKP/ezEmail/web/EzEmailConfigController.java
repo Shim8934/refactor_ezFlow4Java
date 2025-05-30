@@ -235,6 +235,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			defaultFontFamilyList = Arrays.asList(egovMessageSource.getMessage("main.t0620", new Locale("id", "ID")).split(";"));
 		}
 		List<String> defaultFontSizeList = Arrays.asList("8pt,9pt,10pt,11pt,12pt,13pt,14pt,16pt,18pt,20pt,24pt,30pt,36pt,54pt,72pt".split(","));
+		String selfCcOption = mailGeneralVO.getSelfCcOption() == null ? "none" : mailGeneralVO.getSelfCcOption(); // 나를 항상 참조에 포함 선택. none : 사용안함(default) / cc : 나를 항상 참조에 포함 / bcc : 나를 항상 숨은참조에 포함
 
 		String fontFamily = egovMessageSource.getMessage("main.t246", locale);
 		String fontSize = "10pt";
@@ -316,7 +317,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		model.addAttribute("primaryLang", primaryLang);
 		model.addAttribute("defaultFontFamilyList", defaultFontFamilyList);
 		model.addAttribute("defaultFontSizeList", defaultFontSizeList);
-		
+		model.addAttribute("selfCcOption", selfCcOption);
+
 		logger.debug("mailGeneral ended.");
 		
 		return "ezEmail/mailGeneral";
@@ -420,6 +422,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			MailGeneralVO mailGeneralVO = ezEmailService.getMailGeneral(userInfo.getTenantId(), userInfo.getId()).get(0);
 			defaultSeparateSend = StringUtils.defaultString(mailGeneralVO.getDefaultSeparateSend());
 		}
+		// 2025.02.11 한슬기 : 나를 항상 참조에 포함 선택. none : 사용안함(default) / cc : 나를 항상 참조에 포함 / bcc : 나를 항상 숨은참조에 포함
+		String selfCcOption = doc.getElementsByTagName("SELFCCOPTION").item(0).getTextContent();
 
 		logger.debug("userId=" + userInfo.getId() + ",listCount=" + listCount + ",refreshInterval=" + refreshInterval 
 				+ ",keepDeleteLength=" + keepDeleteLength + ",previewMode=" + previewMode 
@@ -432,7 +436,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 				+ ",previewMail=" +  previewMail 
 				+ ",mailSendResult=" + mailSendResult
 				+ ",editorFontFamily=" + editorFontFamily + ",editorFontSize=" + editorFontSize
-				);
+				+ ",selfCcOption=" + selfCcOption
+		);
 
 		String rtnValue= "OK";
 
@@ -458,6 +463,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			mailGeneral.setMailSendResult(mailSendResult);
 			mailGeneral.setEditorFontFamily(editorFontFamily);
 			mailGeneral.setEditorFontSize(editorFontSize);
+			mailGeneral.setSelfCcOption(selfCcOption);
 
 			ezEmailService.setMailGeneral(userInfo.getTenantId(), userInfo.getId(), mailGeneral, mode);
 		} catch (RuntimeException e) {
