@@ -3615,4 +3615,38 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createTblCommunityGradeTable");
 		}
 	}
+
+	public void delCommBrdManageData() throws Exception {
+		try {
+			select("EzCommonDAO.checkCommBrdManageData1");
+		} catch (Exception e) {
+			logger.debug("Deleting data from TBL_COMM_BOARDMANAGE...");
+
+			delete("EzCommonDAO.delCommBrdManageData");
+		}
+	}
+
+	public void updateCommBrdManageData() throws Exception {
+		try {
+			select("EzCommonDAO.checkCommBrdManageData2");
+		} catch (Exception e) {
+			logger.debug("Updating data from TBL_COMM_BOARDMANAGE...");
+
+			update("EzCommonDAO.updateCommBrdManageData");
+		}
+	}
+
+	public void updateClubUserGrade() throws Exception {
+		try {
+			select("EzCommonDAO.checkClubUserGrade");
+		} catch (Exception e) {
+			logger.debug("Updating data from TBL_C_CLUBUSER...");
+
+			update("EzCommonDAO.updateClubUserGrade");
+		}
+	}
+
+	public List<Map<String, Object>> selectClubsNotInGradeList() throws Exception {
+		return (List<Map<String, Object>>) list("EzCommonDAO.selectClubsNotInGradeList");
+	}
 }

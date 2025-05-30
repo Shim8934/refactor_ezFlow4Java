@@ -84,7 +84,7 @@ function CustomRandom() {
 // 2018-01-10 강민수92
 function openCommunityBoardComment() {
 	DivPopUpShow($('body').prop('scrollWidth') * 0.95, $('body').prop('scrollHeight') * 0.95, "/ezCommunity/communityCommentPopup.do?itemID=" 
-			+ encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pBoardID) + "&gubun=" + gubun);
+			+ encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pBoardID) + "&gubun=" + gubun + "&code=" + encodeURIComponent(code));
 }
 
 //강민수92

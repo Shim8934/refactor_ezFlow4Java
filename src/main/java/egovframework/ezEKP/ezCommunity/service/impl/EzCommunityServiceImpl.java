@@ -700,7 +700,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		int pPage = 1, totalCount = 0, totalPage = 0;
 		String pBoardID = request.getParameter("boardID");
 		
-		if (boardInfo.getListView_FG().equals("10")) {
+		if (boardInfo.getListView_FG().equals("true")) {
 			url = boardInfo.getUrl();
 			
 			if (request.getParameter("sortBy") != null) {
@@ -1803,7 +1803,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		/* 2021-08-17 홍승비 - 데이터가 없는 경우 tr 추가 */
 		if (userList ==  null || userList.size() == 0) {
 			sb.append("<tr>");
-			sb.append("<td colspan=\"8\" style=\"width:100%; height:30px; text-align:center;\">" + egovMessageSource.getMessage("ezOrgan.hdp25", userInfo.getLocale()) + "</td>");
+			sb.append("<td colspan=\"7\" style=\"width:100%; height:30px; text-align:center;\">" + egovMessageSource.getMessage("ezOrgan.hdp25", userInfo.getLocale()) + "</td>");
 			sb.append("</tr>");
 		}
 		else {
@@ -1823,13 +1823,15 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	
 	        	if (iOutputCount > comNoPerPage * curPage - 10) {
 					CommunityMemberInfoVO memberInfo = commViewMemberGet3(user.getC_ID().trim(), user.getCompanyID(), primary, userInfo.getTenantId());
-					
+					String memGradeName = getMemberGradeName(code, user.getGrade(), user.getCompanyID(), userInfo.getTenantId());
+
 					sb.append("<tr>");
-					if (!user.getPermit().equals("4")) {
+					sb.append("<td style=\"width:55; height:23; align:center;\">" + (userList.indexOf(user) + 1) + "</td>");
+					/*if (!user.getPermit().equals("4")) {
 						sb.append("<td style=\"width:55; height:23; align:center;\"><input type=\"CHECKBOX\" id=\"checkbox" + iOutputCount + "\" class=\"selectMember\" onclick=\"selectMember('" + user.getC_ID() + "', " + iOutputCount + ");\"></td>");
 					} else {
 						sb.append("<td style=\"width:55; height:23; align:center;\"></td>");
-					}
+					}*/
 					sb.append("<td>");
 					
 					if (user.getC_ID().trim().equals(strSysopID)) {
@@ -1839,6 +1841,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 					// CommunityMemberInfoVO를 수정해서 부서ID를 가져오도록 하자.
 					sb.append("<a href=\"javascript:openinfo1('" + code + "','" + user.getC_ID().trim() + "','" + user.getCompanyID() + "','" + user.getDeptID() + "');\" valign=\"bottom\">" + commonUtil.cleanValue(memberInfo.getUserName()) + "</a></td>");
 					// 가입한 당시 겸직한 부서이름(deptName)/또는 겸직하지 않은 상태의 부서이름을 나타낸다. 쿼리 내부에서 다국어 처리한 것(case~primary)임.
+					sb.append("<td>" + commonUtil.cleanValue(memGradeName) + "</td>");
 					sb.append("<td>" + commonUtil.cleanValue(user.getDeptName()) + "</td>");
 					sb.append("<td>" + commonUtil.cleanValue(user.getC_ID().trim()) + "</td>");
 					sb.append("<td>" + user.getC_inDate().substring(0, 10) + "</td>");
@@ -2729,7 +2732,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 	
 	@Override
-	public CommunityBoardPropertyVO getBoardInfo(LoginVO userInfo, String pBoardID) throws Exception {
+	public CommunityBoardPropertyVO getBoardInfo(LoginVO userInfo, String pBoardID, String code) throws Exception {
 		CommunityBoardPropertyVO boardInfo = new CommunityBoardPropertyVO();
 
 		if (pBoardID.equals("")) {
@@ -2737,88 +2740,73 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			boardInfo.setBoardName2(egovMessageSource.getMessage("ezCommunity.t91", userInfo.getLocale()));
 			return boardInfo;
 		}
-		
-		String userDeptPath = userInfo.getDeptPathCode() + ",everyone";
-		
-		CommunityBoardPropertyVO boardInfoTemp = null;
-		
-		for (int i=0; i<userDeptPath.split(",").length; i++) {
-			boardInfoTemp = brdGetACL(pBoardID, userDeptPath.split(",")[i].trim(), userInfo.getTenantId());
-			
-			if (boardInfoTemp != null) {
-				break;
+
+		if (!"".equals(code)) {
+			CommunityBoardPropertyVO boardInfoTemp = null;
+			boardInfoTemp = brdGetACL(pBoardID, "everyone", userInfo.getTenantId());
+
+			// 사용자 회원등급
+			String userGrade = getUserGrade(code, userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId()) != null ? getUserGrade(code, userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId()) : "10";
+
+			if (userGrade.equals("1")) {
+				boardInfo.setBoardGroupAdmin_FG("OK");
+			} else {
+				boardInfo.setBoardGroupAdmin_FG("NO");
 			}
-		}
-		
-		String boardGroupAdmin_FG = checkIfBoardGroupAdmin(pBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getTenantId());
-		boardInfo.setBoardGroupAdmin_FG(boardGroupAdmin_FG);
-		boardInfo.setSs_Board_MaxRows(10);
-		boardInfo.setSs_SearchBoard_MaxRows(10);
-		
-		if (pBoardID.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
-	    	boardInfo.setAccess_FG("1");
-			boardInfo.setBoardAdmin_FG("false");
-			boardInfo.setListView_FG("true");
-			boardInfo.setRead_FG("true");
-			boardInfo.setWrite_FG("true");
-			boardInfo.setReply_FG("true");
-			boardInfo.setDelete_FG("true");
-		} else if (commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), userInfo.getRollInfo(), "c;k;t")) {
-			boardInfo.setAccess_FG("1");
-			boardInfo.setBoardAdmin_FG("true");
-			boardInfo.setListView_FG("true");
-			boardInfo.setRead_FG("true");
-			boardInfo.setWrite_FG("true");
-			boardInfo.setReply_FG("true");
-			boardInfo.setDelete_FG("true");
-		} else if (boardInfo.getBoardGroupAdmin_FG().equals("OK")) {
-			boardInfo.setAccess_FG("1");
-			boardInfo.setBoardAdmin_FG("true");
-			boardInfo.setListView_FG("true");
-			boardInfo.setRead_FG("true");
-			boardInfo.setWrite_FG("true");
-			boardInfo.setReply_FG("true");
-			boardInfo.setDelete_FG("true");
-		// 2023-05-15 이사라 : NullPointerException 시큐어코딩
-		} else if (!Objects.isNull(boardInfoTemp)) {
-			if (StringUtils.isEmpty(boardInfoTemp.getBoardAdmin_FG())) {
+			boardInfo.setSs_Board_MaxRows(10);
+			boardInfo.setSs_SearchBoard_MaxRows(10);
+
+			if (pBoardID.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
 				boardInfo.setAccess_FG("1");
 				boardInfo.setBoardAdmin_FG("false");
-				boardInfo.setListView_FG("false");
-				boardInfo.setRead_FG("false");
-				boardInfo.setWrite_FG("false");
-				boardInfo.setReply_FG("false");
-				boardInfo.setDelete_FG("false");
+				boardInfo.setListView_FG("true");
+				boardInfo.setRead_FG("true");
+				boardInfo.setWrite_FG("true");
+				boardInfo.setReply_FG("true");
+				boardInfo.setDelete_FG("true");
+			} else if (commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), userInfo.getRollInfo(), "c;k;t")) { // 전체관리자, 회사관리자
+				boardInfo.setAccess_FG("1");
+				boardInfo.setBoardAdmin_FG("true");
+				boardInfo.setListView_FG("true");
+				boardInfo.setRead_FG("true");
+				boardInfo.setWrite_FG("true");
+				boardInfo.setReply_FG("true");
+				boardInfo.setDelete_FG("true");
+			} else if (boardInfo.getBoardGroupAdmin_FG().equals("OK")) { // 마스터
+				boardInfo.setAccess_FG("1");
+				boardInfo.setBoardAdmin_FG("true");
+				boardInfo.setListView_FG("true");
+				boardInfo.setRead_FG("true");
+				boardInfo.setWrite_FG("true");
+				boardInfo.setReply_FG("true");
+				boardInfo.setDelete_FG("true");
+			// 2023-05-15 이사라 : NullPointerException 시큐어코딩
+			} else if (!Objects.isNull(boardInfoTemp)) {
+				if (Integer.parseInt(userGrade) <= Integer.parseInt(boardInfoTemp.getRead_FG())) { // 읽기권한 등급과 사용자 등급 비교
+					boardInfo.setRead_FG("true");
+				} else {
+					boardInfo.setRead_FG("false");
+				}
+				if (Integer.parseInt(userGrade) <= Integer.parseInt(boardInfoTemp.getWrite_FG())) { // 쓰기권한 등급과 사용자 등급 비교
+					boardInfo.setWrite_FG("true");
+					boardInfo.setReply_FG("true");
+				} else {
+					boardInfo.setWrite_FG("false");
+					boardInfo.setReply_FG("false");
+				}
+				if (Integer.parseInt(userGrade) <= Integer.parseInt(boardInfoTemp.getDelete_FG())) { // 삭제권한 등급과 사용자 등급 비교
+					boardInfo.setDelete_FG("true");
+				} else {
+					boardInfo.setDelete_FG("false");
+				}
+				boardInfo.setAccess_FG("1");
+				boardInfo.setBoardAdmin_FG("false");
+				boardInfo.setListView_FG("true");
 			} else {
-				boardInfo.setAccess_FG(Integer.toString(boardInfoTemp.getAccess_()));
-				boardInfo.setBoardAdmin_FG(boardInfoTemp.getBoardAdmin_FG().toLowerCase());
-				boardInfo.setListView_FG(boardInfoTemp.getListView_FG().toLowerCase());
-				boardInfo.setRead_FG(boardInfoTemp.getRead_FG());
-				boardInfo.setWrite_FG(boardInfoTemp.getWrite_FG());
-				boardInfo.setReply_FG(boardInfoTemp.getReply_FG());
-				boardInfo.setDelete_FG(boardInfoTemp.getDelete_FG());
+				throw new NullPointerException("getBoardInfo boardInfoTemp is null");
 			}
-		} else {
-			throw new NullPointerException("getBoardInfo boardInfoTemp is null");
 		}
-		/*} else if (boardInfoTemp.getBoardAdmin_FG() == null || boardInfoTemp.getBoardAdmin_FG().equals("")) {
-			boardInfo.setAccess_FG("1");
-			boardInfo.setBoardAdmin_FG("false");
-			boardInfo.setListView_FG("false");
-			boardInfo.setRead_FG("false");
-			boardInfo.setWrite_FG("false");
-			boardInfo.setReply_FG("false");
-			boardInfo.setDelete_FG("false");
-		} else {
-			boardInfo.setAccess_FG(Integer.toString(boardInfoTemp.getAccess_()));
-			boardInfo.setBoardAdmin_FG(boardInfoTemp.getBoardAdmin_FG().toLowerCase());
-			boardInfo.setListView_FG(boardInfoTemp.getListView_FG().toLowerCase());
-			boardInfo.setRead_FG(boardInfoTemp.getRead_FG());
-			boardInfo.setWrite_FG(boardInfoTemp.getWrite_FG());
-			boardInfo.setReply_FG(boardInfoTemp.getReply_FG());
-			boardInfo.setDelete_FG(boardInfoTemp.getDelete_FG());
-		}*/
-		
+
 		CommunityBoardPropertyVO strProp = getBoardProperty(pBoardID, userInfo.getTenantId());
 		
 		if (strProp != null) {
@@ -3522,7 +3510,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		String[] u_Name = egovMessageSource.getMessage("ezCommunity.t115", userInfo.getLocale()).split(";");
 		
-		CommunityBoardPropertyVO boardInfo = getBoardInfo(userInfo, pBoardID);
+		CommunityBoardPropertyVO boardInfo = getBoardInfo(userInfo, pBoardID, "");
 		
 		if (boardInfo.getGubun() != null) {
 			/* 2024-01-18 홍승비 - 커뮤니티 게시판 > 익명게시판의 경우, 댓글 등록 시 사용자ID 저장하지 않도록 수정 (게시판 모듈과 동일) */
@@ -8146,7 +8134,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		CommunityBoardPropertyVO boardInfo = getBoardInfo(userInfo, boardID);
+		CommunityBoardPropertyVO boardInfo = getBoardInfo(userInfo, boardID, "");
 		
 		if (boardInfo.getReplyNotify().equals("1")) {
 			CommunityBoardItemVO itemVO = getItemXML(boardID, itemID, userInfo);

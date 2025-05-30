@@ -637,4 +637,7 @@ public interface EzCommonService {
 
 	// 2025-07-10 이유정 - 커뮤니티 > 회원등급 테이블 추가
 	public void createTblCommunityGradeTable() throws Exception;
+
+	// 2025-07-10 이유정 - 커뮤니티 > 기존 데이터 회원등급에 맞춰 세팅
+	public void settingCommunityGradeData() throws Exception;
 }

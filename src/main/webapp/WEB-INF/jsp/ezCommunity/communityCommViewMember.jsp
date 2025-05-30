@@ -414,7 +414,7 @@
 							<a class="imgbtn" style="vertical-align: middle;height:22px;margin:0px"><span onClick="searchList()" style="height:22px;line-height:22px"><spring:message code = 'ezCommunity.t724' /></span></a>
 						</c:if>
 					</td>
-					<td style="border:0px;width:150px;text-align: right;">
+					<td style="border:0px;width:150px;text-align: right;display:none">
 						<span style="font-size: 13px;vertical-align: middle;"><spring:message code = 'ezCommunity.lyj29' /></span>
 						<select id="selGradeList" style="font-size: 13px;vertical-align: middle;cursor: pointer;MIN-WIDTH: 60px;height: 20px;" onchange="viewGradeList()">
 							<option value="0"><spring:message code = 'ezCommunity.lyj30' /></option>
@@ -435,7 +435,8 @@
 		<div  style = "height:370px;">
 		<table id="tblList" class="cmhomelist" style="width:100%;margin-top:10px">
 			<tr> 
-				<th style="width:40px"><input type="checkbox" id="HeaderAllCheckBox" class="selectMember" onclick="allCheck(this)"></th>
+				<%--<th style="width:40px"><input type="checkbox" id="HeaderAllCheckBox" class="selectMember" onclick="allCheck(this)"></th>--%>
+				<th style="width:40px"><spring:message code = 'ezCommunity.t32' /></th>
 				<th style="width:110px"><spring:message code = 'ezCommunity.t10' /></th>
 				<th style="width:100px"><spring:message code = 'ezCommunity.lyj16' /></th>
 				<th style="width:100px"><spring:message code = 'ezCommunity.t241' /></th>

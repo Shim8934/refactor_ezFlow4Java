@@ -488,7 +488,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		String userGrade = ezCommunityService.getUserGrade(code, userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId()) != null ? ezCommunityService.getUserGrade(code, userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId()) : "10";
 
-		if (!checkSysop && Integer.parseInt(userGrade) <= 2) {
+		if (!checkSysop && Integer.parseInt(userGrade) <= 2) { // 마스터 및 운영자 등급만 관리메뉴 표출되도록 함.
 			checkSysop = true;
 		}
 		
@@ -587,7 +587,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			return "cmm/error/egovError";
 		}
 		
-		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
+		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID, code);
 		CommunityBoardListVO boardList = ezCommunityService.boardItemListGet1(boardID, userInfo.getId(), userInfo.getTenantId());
 		ezCommunityService.boardItemList(userInfo, model, request, response, boardInfo, boardList);
 		
@@ -669,7 +669,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			pSortBy = request.getParameter("pSortBy");
 		}
 
-		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
+		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID, code);
 		// 20100119 보안처리 관련 추가작업(권한체크)
         if (!ezCommunityService.communityConnCHK(userInfo.getId(), code, boardID, userInfo.getRollInfo(), 0, response, userInfo, "")) {
         	return "cmm/error/egovError";
@@ -762,7 +762,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			searchConfig += egovMessageSource.getMessage("ezCommunity.t1471", userInfo.getLocale()) + "'" + searchEnd.substring(0, 10) + "' " + egovMessageSource.getMessage("ezCommunity.t1473", userInfo.getLocale());
 		}
 		
-		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
+		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID, "");
 
         String strXML = "";
 		
@@ -872,7 +872,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			}
 		}
 		
-		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, pBoardID);
+		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, pBoardID, "");
 		/* 2020-06-24 홍승비 - 게시판명 다국어, 기본언어("1")와 멀티언어("2") 처리 */
 		String multiBoardName = "";
 		if (commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()).equals("1")) {
@@ -1209,7 +1209,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			return "cmm/error/egovError";
 		}
 		
-		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, pBoardID);
+		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, pBoardID, code);
 		CommunityBoardItemVO item = ezCommunityService.getItemXML(pBoardID, pItemID, userInfo);
 		
 		ezCommunityService.setAsRead(userInfo, pBoardID, pItemID);		
@@ -1436,7 +1436,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String boardID = request.getParameter("boardID");
 		
 		String boardName = egovMessageSource.getMessage("ezCommunity.t91", userInfo.getLocale());
-		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
+		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID, "");
 		
 		boardInfo.setSs_Board_MaxRows(10);
 		
@@ -1648,7 +1648,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String pBoardID = request.getParameter("boardID");
 		String ret = "";
 		
-		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, pBoardID);
+		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, pBoardID, "");
 
 		if (StringUtils.isNotBlank(boardInfo.getUrl()) || "2".equals(boardInfo.getGubun()) || "3".equals(boardInfo.getGubun())) {
 			ret = "anonyboard";
@@ -2976,7 +2976,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			return "cmm/error/egovError";
 		}
 		
-		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
+		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID, "");
 		CommunityBoardPropertyVO boardProp = ezCommunityService.getBoardProperty(boardID, userInfo.getTenantId());
 		
 		if (boardProp.getDeleteAfter() == null) {
@@ -3096,7 +3096,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String boardGroupID = request.getParameter("boardGroupID");
 		String boardID = request.getParameter("boardID");
 		
-		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
+		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID, "");
 		
 		/* 2020-06-24 홍승비 - 커뮤니티 게시판명에 다국어 기본언어, 멀티언어 적용 */
 		String multiBoardName = "";
@@ -3177,7 +3177,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String boardGroupID = request.getParameter("boardGroupID");
 		String code = request.getParameter("code");
 		
-		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
+		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID, "");
 		
 		/* 2020-06-24 홍승비 - 커뮤니티 게시판명에 다국어 기본언어, 멀티언어 적용 */
 		String multiBoardName = "";
@@ -3233,7 +3233,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String boardGroupID = request.getParameter("boardGroupID");
 		String code = request.getParameter("code");
 		
-		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
+		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID, "");
 		
 		/* 2020-06-24 홍승비 - 커뮤니티 게시판명에 다국어 기본언어, 멀티언어 적용 */
 		String multiBoardName = "";
@@ -3292,7 +3292,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String boardGroupID = request.getParameter("boardGroupID");
 		String code = request.getParameter("code");
 		
-		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
+		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID, "");
 		
 		/* 2020-06-24 홍승비 - 커뮤니티 게시판명에 다국어 기본언어, 멀티언어 적용 */
 		String multiBoardName = "";
@@ -3371,7 +3371,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			searchEnd = request.getParameter("searchEnd");
 		}
 		
-		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
+		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID, code);
 		
 		/* 2020-06-24 홍승비 - 커뮤니티 게시판명에 다국어 기본언어, 멀티언어 적용 */
 		String multiBoardName = "";
@@ -4340,7 +4340,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			return "cmm/error/egovError";
 		}
 		
-		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
+		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID, code);
 		
 		
 		CommunityClubVO club = ezCommunityService.boardItemListPhotoGet1(userInfo.getId(), boardID, userInfo.getTenantId());
@@ -4443,7 +4443,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			return "cmm/error/egovError";
 		}
 
-		boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
+		boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID, "");
 		
 		/* 2020-06-24 홍승비 - 커뮤니티 게시판명에 다국어 기본언어, 멀티언어 적용 */
 		String multiBoardName = "";
@@ -4581,7 +4581,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			return "cmm/error/egovError";
 		}
 		
-		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
+		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID, code);
 		
 		if (!boardInfo.getRead_FG().equals("true")) {
 			response.getWriter().print("<html><head><title>" + egovMessageSource.getMessage("ezCommunity.t175", userInfo.getLocale()) + "</title></head><body><table border=0 width=100% height=100%><tr><td align=center valign=center>" + egovMessageSource.getMessage("ezCommunity.t980", userInfo.getLocale()) + "</td></tr></table></body></html>");
@@ -4693,7 +4693,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			pReservedItem = request.getParameter("pReservedItem");
 		}
 
-		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
+		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID, "");
 		CommunityBoardItemVO item = ezCommunityService.getItemXML(boardID, itemID, userInfo);
 		
 		if (item.getParentWriteDate().compareTo(item.getWriteDate()) > 0) {
@@ -4924,13 +4924,14 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String pBoardID = boardItemVO.getBoardID();
 		String pItemID = boardItemVO.getItemID();
 		String gubun  = boardItemVO.getGubun();
+		String code  = boardItemVO.getCode();
 		String publicModulus = egovFileScrty.getPbm();
         String publicExponent = "10001";
 		
         // 댓글 작성자의 deptID를 가져온다. companyID 조건 추가.
 		List<CommunityOneLineReplyVO> oneLineReplyList = ezCommunityService.readOneLineReply(userInfo.getPrimary(), pBoardID, pItemID, userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getOffset(), gubun);
 		
-		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, pBoardID);
+		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, pBoardID, code);
 		
     	model.addAttribute("gubun", gubun);
     	model.addAttribute("boardInfo", boardInfo);
@@ -5000,7 +5001,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String boardID = request.getParameter("boardID");
 		String result = "";
 		
-		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
+		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID, "");
 		
 		if(boardInfo != null) {
 			if (boardInfo.getParentBoardID() != null && !boardInfo.getParentBoardID().equals("")) {

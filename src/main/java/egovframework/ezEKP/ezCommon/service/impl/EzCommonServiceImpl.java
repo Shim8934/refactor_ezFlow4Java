@@ -12,6 +12,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
+import egovframework.ezEKP.ezCommunity.dao.EzCommunityDAO;
 import egovframework.ezEKP.ezCommon.dao.EzCommonDAO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
@@ -113,6 +114,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 
     @Resource(name = "MOptionDAO")
     private MOptionDAO mOptionDAO;
+
+    @Resource(name = "EzCommunityDAO")
+    private EzCommunityDAO ezCommunityDAO;
 
 	@Resource(name = "EzBoardService")
 	private EzBoardService ezBoardService;
@@ -8696,5 +8700,23 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 
     public void createTblCommunityGradeTable() throws Exception {
         ezCommonDAO.createTblCommunityGradeTable();
+    }
+
+    @Override
+    public void settingCommunityGradeData() throws Exception {
+        ezCommonDAO.delCommBrdManageData(); // accessID가 everyone이 아닌 데이터 삭제
+        ezCommonDAO.updateCommBrdManageData(); // boardadmin_fg ~ inherit_fg 컬럼 데이터 true/false -> 등급으로 변경
+        ezCommonDAO.updateClubUserGrade(); // 기존 마스터인 사용자의 등급을 1로 update
+
+        List<Map<String, Object>> commuList = ezCommonDAO.selectClubsNotInGradeList();
+
+        for (Map<String, Object> comm : commuList) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("v_CODE", comm.get("c_clubno"));
+            map.put("companyID", comm.get("companyid"));
+            map.put("tenantID", comm.get("tenant_id"));
+
+            ezCommunityDAO.insertClubGrade(map); // 기존 커뮤니티에 기본 등급 insert
+        }
     }
 }

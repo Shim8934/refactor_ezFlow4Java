@@ -55,6 +55,7 @@
 					}
 					
 					newOption.textContent = input.value;
+					input.readOnly = false;
 					
 					ul.appendChild(newSpan);
 					selectGrade.appendChild(newOption);
@@ -211,6 +212,9 @@
 					input.type = 'text';  
 					input.size = '30'; 
 					input.value = gradeList[i].gradeName;
+					if (i < 2) { <%-- 마스터 및 운영자 등급명은 변경 불가 --%>
+						input.readOnly = true;
+					}
 
 					li.appendChild(img);
 					li.appendChild(input);
@@ -257,15 +261,15 @@
 		<div class="level">
 			<ul id="gradeLevel" style="margin-left: -40px;">
 				<span id="ans1" style="display: block;">
-					<li class="gradeList"><img src="../images/icon/icon_yellowstar.gif"/><input style="margin-left:5px;" name="gradeNm1" type="text" size="30" value="마스터"/></li>
+					<li class="gradeList"><img src="../images/icon/icon_yellowstar.gif"/><input style="margin-left:5px;" name="gradeNm1" type="text" size="30" value="마스터" readonly/></li>
 				</span>
 				<span id="ans2" style="display: block;margin-top:5px;">
-					<li class="gradeList"><img src="../images/icon/icon_yellowstar.gif"/><input style="margin-left:5px;" name="gradeNm2" type="text" size="30" value="운영자"/></li>
+					<li class="gradeList"><img src="../images/icon/icon_yellowstar.gif"/><input style="margin-left:5px;" name="gradeNm2" type="text" size="30" value="운영자" readonly/></li>
 				</span>
 				<span id="ans3" style="display: block;margin-top:5px;">
 					<li class="gradeList">
 						<img src="../images/icon/icon_yellowstar.gif"/><input style="margin-left:5px;" name="gradeNm3" type="text" size="30" value="정회원"/>
-						<a href="javascript:addGrade()" style="width: 31px;padding-left: 7px;" class="imgbtn imgbck" title="추가"><spring:message code = 'ezCommunity.lyj26' /></a> <a href="javascript:removeGrade()" style="width: 31px;padding-left: 7px;" class="imgbtn imgbck" title="삭제"><spring:message code = 'ezCommunity.lyj27' /></a> 
+						<a href="javascript:addGrade()" style="width: 31px;padding-left: 7px;" class="imgbtn imgbck" title="추가"><spring:message code = 'ezCommunity.lyj26' /></a> <a href="javascript:removeGrade()" style="width: 31px;padding-left: 7px;" class="imgbtn imgbck" title="삭제"><spring:message code = 'ezCommunity.lyj27' /></a>
 					</li>
 				</span>
 				<span id="ans4" style="display: block;margin-top:5px;">

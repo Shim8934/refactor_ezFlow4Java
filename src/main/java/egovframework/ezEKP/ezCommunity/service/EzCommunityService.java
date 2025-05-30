@@ -91,7 +91,7 @@ public interface EzCommunityService {
 	
 	public CommunityClubVO leftCommunityGet4(String code, String companyID, int tenantID)throws Exception;
 	
-	public CommunityBoardPropertyVO getBoardInfo(LoginVO userInfo, String pBoardID) throws Exception;
+	public CommunityBoardPropertyVO getBoardInfo(LoginVO userInfo, String pBoardID, String code) throws Exception;
 	
 	public CommunityBoardPropertyVO brdGetACL(String pBoardID, String pAccessID, int tenantID) throws Exception;
 

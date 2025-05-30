@@ -8329,7 +8329,7 @@
 		ALTER TABLE
 			TBL_C_CLUBUSER
 			ADD
-				GRADE NCHAR(10) DEFAULT '4' NOT NULL
+				GRADE VARCHAR2(10) DEFAULT '4' NOT NULL
 	</statement>
 
 	<select id="EzCommonDAO.checkTblClubJoinGradeColumn" resultClass="Integer">
@@ -8347,8 +8347,8 @@
 		ALTER TABLE
 			TBL_C_CLUB
 			ADD (
-				JOIN_GRADE bigint(10) DEFAULT 4 NOT NULL,
-				MEMLIST_READGRADE varchar(10) DEFAULT '4' NOT NULL
+				JOIN_GRADE number(10) DEFAULT 4 NOT NULL,
+				MEMLIST_READGRADE varchar2(10) DEFAULT '4' NOT NULL
 		    )
 	</statement>
 
@@ -8369,8 +8369,106 @@
 			 GRADECODE VARCHAR2(50) NOT NULL,
 			 GRADENAME VARCHAR2(100) NOT NULL,
 			 COMPANYID VARCHAR2(40) NOT NULL,
-			 TENANT_ID NUMBER(5) NOT NULL DEFAULT 0,
-			 PRIMARY KEY PK_TBL_C_GRADE PRIMARY KEY (C_CLUBNO, GRADECODE, COMPANYID, TENANT_ID)
+			 TENANT_ID NUMBER(5) DEFAULT 0 NOT NULL,
+			 CONSTRAINT PK_TBL_C_GRADE PRIMARY KEY (C_CLUBNO, GRADECODE, COMPANYID, TENANT_ID)
 		)
 	</statement>
+
+	<select id="EzCommonDAO.checkCommBrdManageData1" resultClass="String">
+		<![CDATA[
+			SELECT
+				*
+			from
+				tbl_comm_boardmanage
+			where
+				accessid != 'everyone'
+					and tenant_id = 0
+					and ROWNUM <= 1
+		]]>
+	</select>
+
+	<delete id="EzCommonDAO.delCommBrdManageData">
+		delete
+		from
+			tbl_comm_boardmanage
+		where
+			accessid != 'everyone'
+			and tenant_id = 0
+	</delete>
+
+	<select id="EzCommonDAO.checkCommBrdManageData2" resultClass="String">
+		<![CDATA[
+			SELECT
+				*
+			from
+				tbl_comm_boardmanage
+			where
+				(boardadmin_fg = 'true'
+					or boardadmin_fg = 'false')
+			  and tenant_id = 0
+			  and ROWNUM <= 1
+		]]>
+	</select>
+
+	<update id="EzCommonDAO.updateCommBrdManageData">
+		update
+			tbl_comm_boardmanage
+		set
+			boardadmin_fg = '1',
+			listview_fg = '10',
+			read_fg = '4',
+			write_fg = '3',
+			reply_fg = '3',
+			delete_fg = '2',
+			inherit_fg = '1'
+		where
+			(boardadmin_fg = 'true'
+				or boardadmin_fg = 'false')
+		  and tenant_id = 0
+	</update>
+
+	<select id="EzCommonDAO.checkClubUserGrade" resultClass="String">
+		<![CDATA[
+		SELECT
+			*
+		from
+			tbl_c_clubuser
+		where
+			grade = '4'
+		  and permit = '4'
+		  and TENANT_ID = 0
+		  and ROWNUM <= 1
+		]]>
+	</select>
+
+	<update id="EzCommonDAO.updateClubUserGrade">
+		update
+			tbl_c_clubuser
+		set
+			grade = '1'
+		where
+			grade = '4'
+		  and permit = '4'
+		  and TENANT_ID = 0
+	</update>
+
+	<select id="EzCommonDAO.selectClubsNotInGradeList" resultClass="HashMap">
+		select
+			c.c_clubno,
+			c.companyid,
+			c.tenant_id
+		from
+			tbl_c_club c
+		where
+			not exists (
+				select
+					1
+				from
+					tbl_c_grade g
+				where
+					g.c_clubno = c.c_clubno
+				  and g.companyid = c.companyid
+				  and g.TENANT_ID = c.TENANT_ID
+			)
+	</select>
 </sqlMap>
