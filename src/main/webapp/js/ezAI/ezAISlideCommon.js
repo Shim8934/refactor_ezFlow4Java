@@ -106,6 +106,28 @@ function getSubModuleType() {
 }
 
 let isAiRequestInProgress = false;
+
+// chatInput 요소에 키다운 이벤트 리스너
+document.addEventListener('DOMContentLoaded', function() {
+    const chatInput = document.getElementById("chatInput");
+    if (chatInput) {
+        chatInput.addEventListener('keydown', function(event) {
+            // AI 요청이 진행 중이고 Enter키가 눌렸을 때
+            if (isAiRequestInProgress && event.key === 'Enter') {
+                event.preventDefault(); // Enter키 기본 동작(줄바꿈) 차단
+                console.warn('AI request in progress. Input is temporarily disabled.');
+                return false;
+            }
+
+            // AI 요청이 진행 중이 아닐 때는 기존 Enter 처리 로직 유지
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                userInput(); // 기존 사용자 입력 함수 호출
+            }
+        });
+    }
+});
+
 // 추천 promt 동작
 function simplePrompt(element) {
     // 이미 요청이 진행 중인 경우 차단
