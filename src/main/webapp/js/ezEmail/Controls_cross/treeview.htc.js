@@ -567,7 +567,9 @@
 
             var elementid = targetEl.id;
             if (elementid.indexOf(g_nodeid) == 0 && g_baseClass["hover"] != "") {
-                document.getElementById(elementid).setAttribute('class', (g_selectedIdx == elementid.split(g_nodeid)[1] ? g_baseClass["selected"] : g_baseClass["normal"]));
+                // 이게 꼭 필요한 건지? (TODO: 무엇을 위한 건지 확인 필요.)
+                // 메일,주소록>left> div.tree 영역 밖의 '메일검색'등을 클릭한 후 div.tree 영역에 hover 시 selected가 원복되는 현상 발생.
+                // document.getElementById(elementid).setAttribute('class', (g_selectedIdx == elementid.split(g_nodeid)[1] ? g_baseClass["selected"] : g_baseClass["normal"]));
             }
 
         }).call(this, event) :
