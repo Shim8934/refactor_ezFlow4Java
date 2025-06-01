@@ -878,6 +878,11 @@
 		}
 		
 		var getSurveyPopupList = function() {
+			// 라이센스 메일인 경우, 전자설문 사용하지 않음.
+			if ('${packageType}' == 'mail') {
+				return {};
+			}
+
 			var returnObj = {};
 			
 			$.ajax({
