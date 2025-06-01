@@ -2370,28 +2370,28 @@ function getCookie(name) {
     return null;
 }
 
+var cssMap = new Map();
+cssMap.set('1', '/css/ezPortal/skin_blue.css');
+cssMap.set('2', '/css/ezPortal/skin_red.css');
+cssMap.set('3', '/css/ezPortal/skin_dark.css');
+
 function setColorMode() {
 	
-	if (window.location.href.indexOf('/admin/') > 0) {
+	if (window.location.href.split('?')[0].indexOf('/admin/') > 0) { // 관리자 페이지를 제외하기 위한 것이므로(commit a5e39f367ee) ? 이전 url만 파악한다. (파라메터에 admin이 있는 경우를 제외하기 위함)
 		return;
 	}
-	
+
 	var useColor = getCookie('useColor');
-	if (useColor) {
-		var link = document.createElement('link');
-		link.rel = 'stylesheet';
-		link.id = "skinCss";
-
-		if (useColor == 1) {
-			link.href = '/css/ezPortal/skin_blue.css';
-		} else if (useColor == 2) {
-			link.href = '/css/ezPortal/skin_red.css';
-		} else if (useColor == 3) {
-			link.href = '/css/ezPortal/skin_dark.css';
-		}
-
-		document.head.appendChild(link);
+	if (!useColor) {
+		return;
 	}
+
+	var link = document.createElement('link');
+	link.rel = 'stylesheet';
+	link.id = "skinCss";
+	link.href = cssMap.get(useColor);
+
+	document.head.appendChild(link);
 }
 
 document.addEventListener('DOMContentLoaded', function() {
