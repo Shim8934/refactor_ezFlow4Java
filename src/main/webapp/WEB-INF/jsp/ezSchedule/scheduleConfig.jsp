@@ -78,6 +78,7 @@
 		        
 		        if (defaultviewcheck != "N") {
 		        	defaultViewCheckBox.checked = true;
+		        	DefaultViewSelect.style.display = 'inline-block';
 		        }
 		        
 		        var personalScheConfigList = JSON.parse(decodeHtml(jsonPersonalScheConfigList));
