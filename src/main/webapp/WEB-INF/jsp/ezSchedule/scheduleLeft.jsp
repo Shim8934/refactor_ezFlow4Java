@@ -370,6 +370,8 @@
 		    function Function_Flag(v_data, subfolder) {
 		    	v_data = parseInt(v_data);
 		        _funCode = v_data;
+		        
+		        liSelected();
 
 		        switch (v_data) {
 		            case 2:		// Schedule		            
@@ -478,15 +480,26 @@
 				}
 	        }
 
+	        // 2023-06-30 황인경 - 디자인 개선 > 일정관리 > 좌측메뉴 > 일정검색, 공개일정검색 선택 항목 클래스 제어
+	        function liSelected() {
+	        	$(".list_text.node_selected").removeClass("node_selected");
+
+	        	var liSelected = $(event.target);
+
+	            if ((liSelected.prop("tagName") == "SPAN") && (liSelected.hasClass('list_text'))) {
+	            	liSelected.addClass("node_selected");
+	            }
+	        }
+
 			/* 2023-10-05 임정은 - 모아보기 그룹 클릭 이벤트 추가 (기존 참석자 초대 버튼 이벤트 참고 및 수정) */
 			var schedule_add_user_cross_dialogArguments = new Array();
 			function Add_UserInfo_onclick(obj) {
-				$('.checkSelect').each(function() {
-					$(this).prop('checked',false);
-				});
+// 				$('.checkSelect').each(function() {
+// 					$(this).prop('checked',false);
+// 				});
 				liSelected();
-				isCalendarView = false;
-				$('#select-all').prop('checked',false);
+// 				isCalendarView = false;
+// 				$('#select-all').prop('checked',false);
 
 				var rtn = {"id": new Array(), "name": new Array(), "deptname": new Array()};
 				var g_param = new Array();

@@ -53,8 +53,11 @@
 		            document.body.style.oUserSelect = 'none';
 		            document.body.style.UserSelect = 'none';
 		        }
+		        
+		        var DefaultViewSelect = document.getElementById("DefaultViewSelect");
+		        
 		        if (defaultview != "") {
-		            document.getElementById("DefaultViewSelect").value = defaultview;
+		        	DefaultViewSelect.value = defaultview;
 		            document.getElementById("StartDaySelect").value = startday;
 		            document.getElementById("StartTimeSelect").value = starttime;
 		            document.getElementById("EndTimeSelect").value = endtime;
@@ -69,8 +72,14 @@
 		        	document.getElementById("reminderTime").value = reminderTime;
 		        }
 		        
+		        var defaultViewCheckBox = document.getElementById('defaultViewCheckBox');
+		        
+		        defaultViewCheckBox.addEventListener('change', function () {
+		        	DefaultViewSelect.style.display = this.checked ? 'inline-block' : 'none';
+		        });
+		        
 		        if (defaultviewcheck != "N") {
-		        	$('#defaultViewCheckBox').attr('checked', 'checked');
+		        	defaultViewCheckBox.checked = true;
 		        }
 		        
 		        var personalScheConfigList = JSON.parse(decodeHtml(jsonPersonalScheConfigList));
@@ -273,12 +282,12 @@
 		    	<tr>
 		      		<th><spring:message code='ezSchedule.t139' /></th>
 		      		<td>
-		      			<select name="DefaultViewSelect" id="DefaultViewSelect" style="width:65px">
+		      			<label style="margin-right: 10px;"><input type="checkbox" id="defaultViewCheckBox" name="defaultViewCheckBox"><spring:message code="ezSchedule.t402" /></input></label>
+		      			<select name="DefaultViewSelect" id="DefaultViewSelect" style="width:65px; display: none;">
 		          			<option value="0"><spring:message code='ezSchedule.t140' /></option>
 		          			<option value="1"><spring:message code='ezSchedule.t141' /></option>
 		          			<option value="2" selected><spring:message code='ezSchedule.t142' /></option>
 		        		</select>
-		      			<input type="checkbox" id="defaultViewCheckBox" name="defaultViewCheckBox"><spring:message code="ezSchedule.t402" /></input>
 		      		</td>
 		    	</tr>
 		    	<tr>
