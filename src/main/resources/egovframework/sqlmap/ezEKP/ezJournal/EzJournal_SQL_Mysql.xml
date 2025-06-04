@@ -1765,4 +1765,20 @@
 		and
 		    tenant_id = #tenantId#
 	</select>
+	
+	<select id="getFormLang2" parameterClass="Map" resultClass="Integer">
+		select 
+		    form_lang
+		from
+		    tbl_journal_form
+		where
+		    company_id = #companyId#
+		and
+		    tenant_id = #tenantId#
+		and 
+		    type_id = 'ezJournal.t05'
+		and 
+		    form_status = 'basic'
+		limit 1
+	</select>
 </sqlMap>

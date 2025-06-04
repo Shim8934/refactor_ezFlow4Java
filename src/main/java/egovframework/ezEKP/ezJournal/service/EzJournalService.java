@@ -448,4 +448,6 @@ public interface EzJournalService {
 	public String updateJournulListLangChanege(String companyId, int tenantId, String form_lang) throws Exception;
 	
 	public int getFormLang(String formId, String companyId, int tenantId) throws Exception;
+	
+	public int getFormLang2(String companyId, int tenantId) throws Exception;
 }
