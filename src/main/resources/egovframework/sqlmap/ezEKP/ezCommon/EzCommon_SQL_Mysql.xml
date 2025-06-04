@@ -6954,4 +6954,115 @@
 		AND
 			b.TENANT_ID = #tenantID#
 	</select>
+	<select id="EzCommonDAO.checkJournallListLang" resultClass="String">
+		SELECT
+			form_lang
+		FROM
+			TBL_JOURNAL_FORM
+		LIMIT 1
+	</select>
+	<statement id="EzCommonDAO.createJournalListLang">
+		ALTER TABLE
+		TBL_JOURNAL_FORM
+		ADD
+		COLUMN form_lang MEDIUMINT(5) DEFAULT 1 COMMENT '기본양식사용설정된 언어(defult:1 한국어, 2:영어, 3:일본어, 4:중국어, 5:베트남어, 6:인도네시아어)',
+		ADD
+		COLUMN form_content2 TEXT DEFAULT NULL COMMENT '기본양식(영어)',
+		ADD
+		COLUMN form_content3 TEXT DEFAULT NULL COMMENT '기본양식(일본어)',
+		ADD
+		COLUMN form_content4 TEXT DEFAULT NULL COMMENT '기본양식(중국어)',
+		ADD
+		COLUMN form_content5 TEXT DEFAULT NULL COMMENT '기본양식(베트남어)',
+		ADD
+		COLUMN form_content6 TEXT DEFAULT NULL COMMENT '기본양식(인도네시아어)'
+	</statement>
+	
+	<select id="EzCommonDAO.countJournalListLang" resultClass="Integer">
+		SELECT count(form_content2)
+		FROM TBL_JOURNAL_FORM
+		WHERE form_status = 'basic'
+	</select>
+	
+	<update id="EzCommonDAO.insertDailyJournalListLang">
+		<![CDATA[
+		UPDATE TBL_JOURNAL_FORM 
+		SET form_content2 = #form_content2#,
+		form_content3 = #form_content3#, 
+		form_content4 = #form_content4#, 
+		form_content5 = #form_content5#, 
+		form_content6 = #form_content6# 
+		WHERE 
+			type_id = 'ezJournal.t05'
+		AND 
+			form_status ='basic' ]]>
+	</update>
+	
+	<update id="EzCommonDAO.insertWeekJournalListLang">
+		<![CDATA[
+		UPDATE TBL_JOURNAL_FORM 
+		SET form_content2 = #form_content2#, 
+			form_content3 = #form_content3#,
+			form_content4 = #form_content4#,
+			form_content5 = #form_content5#, 
+			form_content6 = #form_content6#
+		WHERE 
+			type_id = 'ezJournal.t06'
+		AND
+			form_status = 'basic' ]]>
+	</update>
+	
+	<update id="EzCommonDAO.insertMonthlyJournalListLang">
+		<![CDATA[
+		UPDATE TBL_JOURNAL_FORM 
+		SET form_content2 = #form_content2#,
+		form_content3 = #form_content3#,
+		form_content4 = #form_content4#,
+		form_content5 = #form_content5#,
+		form_content6 = #form_content6#
+		WHERE 
+			type_id = 'ezJournal.t07'
+		AND
+			form_status = 'basic' ]]>
+	</update>
+	
+	<update id="EzCommonDAO.insertQuarterJournalListLang">
+		<![CDATA[
+		UPDATE TBL_JOURNAL_FORM 
+		SET form_content2 = #form_content2#,
+		form_content3 = #form_content3#,
+		form_content4 = #form_content4#,
+		form_content5 = #form_content5#,
+		form_content6 = #form_content6#
+		WHERE 
+			type_id = 'ezJournal.t08' 
+		AND 
+			form_status = 'basic' ]]>
+	</update>
+	<update id="EzCommonDAO.insertHalfYearJournalListLang">
+		<![CDATA[
+		UPDATE TBL_JOURNAL_FORM 
+		SET form_content2 = #form_content2#,
+		form_content3 = #form_content3#,
+		form_content4 = #form_content4#,
+		form_content5 = #form_content5#,
+		form_content6 = #form_content6#
+		WHERE 
+			type_id = 'ezJournal.t09' 
+		AND 
+			form_status = 'basic' 	 ]]>
+	</update>
+	<update id="EzCommonDAO.insertAnnualJournalListLang">
+		<![CDATA[ 
+		UPDATE TBL_JOURNAL_FORM 
+		SET  form_content2 = #form_content2#,
+			form_content3 = #form_content3#,
+			form_content4 = #form_content4#,
+			form_content5 = #form_content5#,
+			form_content6 = #form_content6#
+		WHERE
+			type_id = 'ezJournal.t10' 
+		AND 
+			form_status = 'basic' ]]>
+	</update>
 </sqlMap>

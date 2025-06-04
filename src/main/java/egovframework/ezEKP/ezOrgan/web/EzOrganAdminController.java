@@ -270,6 +270,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.addBoardWriterFlagAndWriterNameType(); // 2025-01-16 임정은 - 게시판 게시물 게시자명선택 사용여부 플래그 및 게시자명선택 타입 컬럼 추가
 			ezCommonService.alterTalkNotiTenant(); /* 2025-03-10 유지아 - 톡알림 테이블 tenantId추가 */
 			ezCommonService.alterServerNameMain(); /* 2025-05-22 유지아 - servername 테이블 mainyn 추가 */
+			ezCommonService.createJournalListLang(); // 2025-05-28 황인경 - 업무일지 양식 다국어 관련 컬럼 추가
+			ezCommonService.insertJournalListLang(); // 2025-05-28 황인경 - 업무일지 양식 다국어 관련 데이터 추가
 
 			// tenant config
 	    	ezCommonService.insertTblTenantConfig(); // 2020-01-28 useMailConfirm 컨피그 추가 >> 2020-04-28 tbl_tenant_config add

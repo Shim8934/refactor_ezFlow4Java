@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -205,9 +206,19 @@ public class EzJournalGWController {
 
 			List<JournaltypeVO> typeList = ezJournalService.getJournaltypeList(companyId, info.getTenantId(), used);
 	
+			// 2025-05-27 황인경 - 업무일지 기본양식 다국어 처리 > 사용할 수 있는 다국어
+			List<Map<String, String>> useLangList = new ArrayList<>();
+			Map<String, String> map = new HashMap<>();
+			map.put("useJP", ezCommonService.getTenantConfig("useJapanese", info.getTenantId()));
+			map.put("useZh", ezCommonService.getTenantConfig("useChinese", info.getTenantId()));
+			map.put("useVi", ezCommonService.getTenantConfig("useVietnamese", info.getTenantId()));
+			map.put("useId", ezCommonService.getTenantConfig("useIndonesian", info.getTenantId()));
+			useLangList.add(map);
+			
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", typeList);
+			result.put("useLangList", useLangList);
 		} catch (Exception e) {
 			result.put("code", 1);
 			result.put("status", "error");
@@ -271,6 +282,9 @@ public class EzJournalGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			String deptId = request.getParameter("deptId");
+			String localeParam = request.getParameter("locale");
+			Locale locale = (localeParam != null && !localeParam.isEmpty()) ? new Locale(localeParam): Locale.getDefault();
+
 			if (deptId == null || deptId.equals("")) {
 				deptId = "";
 			}
@@ -284,6 +298,19 @@ public class EzJournalGWController {
 			} else {
 				// 사용자단의 양식리스트 (부서사용양식, 기본양식)
 				formList = ezJournalService.getFormList(typeId, deptId, "", info.getTenantId());
+			}
+			
+			for (JournalFormInfoVO form : formList) {
+				if ("basic".equals(form.getFormStatus())) {
+					String formTypeId = form.getTypeId();
+					if (formTypeId != null && formTypeId.startsWith("ezJournal.t")) {
+						String typeName = egovMessageSource.getMessage(formTypeId, locale);
+						String journalName = egovMessageSource.getMessage("ezJournal.journalList03", locale);
+						
+						form.setFormName(typeName + " (" + journalName + ")");
+						form.setFormInfo(journalName + typeName);
+					}
+				}
 			}
 			
 			result.put("data", formList);
@@ -432,7 +459,22 @@ public class EzJournalGWController {
 				result.put("data", selId);
 			// 선택된 양식 가져오기	
 			} else {
-				JournalFormInfoVO journalFormInfoVO = ezJournalService.getJournalFormInfo(formId, companyId, info.getTenantId(), lang);
+				int formLang = ezJournalService.getFormLang(formId, companyId, info.getTenantId());
+
+				JournalFormInfoVO journalFormInfoVO = ezJournalService.getJournalFormInfo(formId, companyId, info.getTenantId(), lang, formLang);
+				
+				String localeParam = request.getParameter("locale");
+				Locale locale = (localeParam != null && !localeParam.isEmpty()) ? new Locale(localeParam): Locale.getDefault();
+				
+				if ("basic".equals(journalFormInfoVO.getFormStatus())) {
+					String formTypeId = journalFormInfoVO.getTypeId();
+					if (formTypeId != null && formTypeId.startsWith("ezJournal.t")) {
+						String typeName = egovMessageSource.getMessage(formTypeId, locale);
+						String journalName = egovMessageSource.getMessage("ezJournal.journalList03", locale);
+
+						journalFormInfoVO.setFormName(typeName + " (" + journalName + ")");
+					}
+				}
 				
 				result.put("status", "ok");
 				result.put("code", 0);
@@ -609,6 +651,22 @@ public class EzJournalGWController {
 			param.put("offset", commonUtil.getMinuteUTC(info.getOffSet()));
 			
 			List<JournalVO> journalList = ezJournalService.getJournalList(param);
+			
+			String localeParam = request.getParameter("locale");
+			Locale locale = (localeParam != null && !localeParam.isEmpty()) ? new Locale(localeParam): Locale.getDefault();
+			
+			for (JournalVO form : journalList) {
+				if ("basic".equals(form.getFormStatus())) {
+					String typeId = form.getTypeId();
+					if (typeId != null && typeId.startsWith("ezJournal.t")) {
+						String typeName = egovMessageSource.getMessage(typeId, locale);
+						String journalName = egovMessageSource.getMessage("ezJournal.journalList03", locale);
+						
+						form.setFormName(typeName + " (" + journalName + ")");
+					}
+				}
+			}
+			
 			result.put("data", journalList);
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -723,6 +781,20 @@ public class EzJournalGWController {
 			
 			JournalFormInfoVO journalFormInfoVO = ezJournalService.getJournalDivideThisNext(journalIdList, formId, companyId,userId, info.getTenantId());
 			
+			String localeParam = request.getParameter("locale");
+			Locale locale = (localeParam != null && !localeParam.isEmpty()) ? new Locale(localeParam): Locale.getDefault();
+			
+			if ("basic".equals(journalFormInfoVO.getFormStatus())) {
+				String typeId = journalFormInfoVO.getTypeId();
+				if (typeId != null && typeId.startsWith("ezJournal.t")) {
+					String typeName = egovMessageSource.getMessage(typeId, locale);
+					String journalName = egovMessageSource.getMessage("ezJournal.journalList03", locale);
+					
+					journalFormInfoVO.setFormName(typeName + " (" + journalName + ")");
+					journalFormInfoVO.setFormInfo(journalName + typeName);
+				}
+			}
+	
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", journalFormInfoVO);
@@ -768,6 +840,19 @@ public class EzJournalGWController {
 				result.put("data", "");
 				result.put("status", "empty");
 				result.put("code", -1);
+			}
+			
+			String localeParam = request.getParameter("locale");
+			Locale locale = (localeParam != null && !localeParam.isEmpty()) ? new Locale(localeParam): Locale.getDefault();
+			
+			if ("basic".equals(journal.getFormStatus())) {
+				String typeId = journal.getTypeId();
+				if (typeId != null && typeId.startsWith("ezJournal.t")) {
+					String typeName = egovMessageSource.getMessage(typeId, locale);
+					String journalName = egovMessageSource.getMessage("ezJournal.journalList03", locale);
+					
+					journal.setFormName(typeName + " (" + journalName + ")");
+				}
 			}
 			
 			if (journal.getFileList().size() > 0) {
@@ -2109,4 +2194,38 @@ public class EzJournalGWController {
 		return result;
 	}
 	
+	// 2025-05-30 황인경 - 관리자 > 업무일지 양식 다국어 설정 
+	@RequestMapping(value = "/rest/ezjournal/journulListLangChanege", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	public Object journulListLangChanege(HttpServletRequest request) throws Exception {
+		logger.debug("G/W JOURNAL [POST /rest/ezjournal/journulListLangChanege] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			logger.debug( request.getParameter("userId"));
+			
+			String companyId = request.getParameter("companyId");
+			String form_lang = request.getParameter("form_lang");
+			int tenantId = info.getTenantId();
+			
+			logger.debug("companyId : " + companyId + " , lang : " + form_lang);
+			
+			String data = ezJournalService.updateJournulListLangChanege(companyId, tenantId, form_lang);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", data);
+		} catch (Exception e) {
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+			
+			logger.error(e.getMessage(), e);
+		}
+		
+		logger.debug("G/W JOURNAL [POST /rest/ezjournal/journulListLangChanege] ended.");
+		return result;
+	}
 }
