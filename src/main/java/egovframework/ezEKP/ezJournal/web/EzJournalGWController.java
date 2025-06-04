@@ -213,6 +213,9 @@ public class EzJournalGWController {
 			map.put("useZh", ezCommonService.getTenantConfig("useChinese", info.getTenantId()));
 			map.put("useVi", ezCommonService.getTenantConfig("useVietnamese", info.getTenantId()));
 			map.put("useId", ezCommonService.getTenantConfig("useIndonesian", info.getTenantId()));
+			
+			String formLang = String.valueOf(ezJournalService.getFormLang2(companyId, info.getTenantId()));
+			map.put("formLang", formLang);
 			useLangList.add(map);
 			
 			result.put("status", "ok");

@@ -163,6 +163,25 @@
 					});
 				}
 			}
+			
+			window.addEventListener("DOMContentLoaded", function () {
+				var savedValue = ${useFormLang}; 
+				var langMap = {
+				  "1": "ko",
+				  "2": "en",
+				  "3": "jp",
+				  "4": "zh",
+				  "5": "vi",
+				  "6": "id"
+				};
+				
+				if (langMap[savedValue]) {
+				  savedValue = langMap[savedValue];
+				}
+
+				var select = document.getElementById('journalListLang');
+				if (select) select.value = savedValue;
+			});
 		</script>
 		<style>
 			ul.formType {

@@ -568,4 +568,8 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	public int getFormLang(Map<String, Object> map) throws Exception {
 		return (int) select("getFormLang",map);
 	}
+	
+	public int getFormLang2(Map<String, Object> map) throws Exception {
+		return (int) select("getFormLang2",map);
+	}
 }

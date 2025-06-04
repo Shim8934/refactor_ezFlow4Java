@@ -1341,4 +1341,24 @@ public class EzJournalServiceImpl implements EzJournalService {
 		return formLang;
 	}
 	
+	@Override
+	public int getFormLang2(String companyId, int tenantId) throws Exception {
+		logger.debug("getFormLang2 started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		int formLang = 1;
+		
+		try {
+			formLang = ezJournalDAO.getFormLang2(map);
+		} catch (Exception e) {
+			logger.debug("getFormLang2 is fail");
+		}
+		
+		logger.debug("getFormLang2 ended");
+		return formLang;
+	}
+	
 }

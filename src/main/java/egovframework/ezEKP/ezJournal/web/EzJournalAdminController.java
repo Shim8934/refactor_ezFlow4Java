@@ -195,6 +195,7 @@ public class EzJournalAdminController {
 		String useZh = "";
 		String useId = "";
 		String useVi = "";
+		String useFormLang = "1";
 		
 		if (status.equals("ok")) {
 			JSONArray typeList = (JSONArray) result.get("data");
@@ -206,6 +207,7 @@ public class EzJournalAdminController {
 				useZh = (String) langInfo.get("useZh");
 				useId = (String) langInfo.get("useId");
 				useVi = (String) langInfo.get("useVi");
+				useFormLang = (String) langInfo.get("formLang");
 			}
 		}
 
@@ -213,6 +215,7 @@ public class EzJournalAdminController {
 		model.addAttribute("useZh", useZh);
 		model.addAttribute("useId", useId);
 		model.addAttribute("useVi", useVi);
+		model.addAttribute("useFormLang", useFormLang);
 		model.addAttribute("selectedCompany" , companyId);
 		logger.debug("formMain ended");
 		return "/admin/ezJournal/formMain";
