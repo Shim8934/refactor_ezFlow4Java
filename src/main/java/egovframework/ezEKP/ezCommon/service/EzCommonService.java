@@ -588,5 +588,9 @@ public interface EzCommonService {
 	public void insertUseSaasYN() throws Exception;
 
 	public void inserExtLargeFilesever() throws Exception;
+	
+	public void createJournalListLang() throws Exception;
+	
+	public void insertJournalListLang() throws Exception;
 
 }

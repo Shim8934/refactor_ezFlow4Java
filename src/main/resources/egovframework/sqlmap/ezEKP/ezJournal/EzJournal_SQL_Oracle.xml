@@ -55,6 +55,7 @@
 		<result property="isSum"	 		column="journal_sum" />
 		<result property="fileList" 		resultMap="ezJournal.fileMap"/>
 		<result property="userImage" 		column="user_image"/>
+		<result property="formStatus" 		column="form_status"/>
 	</resultMap>
 
 	<resultMap class="journalFileVO" id="fileMap">
@@ -158,6 +159,7 @@
 		<result property="formInfo" 		column="form_info" />
 		<result property="formContent" 		column="form_content" 			jdbcType="CLOB" 	javaType="String"/>
 		<result property="formStatus" 		column="form_status" />
+		<result property="typeId" 			column="type_id" />
 	</resultMap>
 
 	<resultMap class="journalDeptInfoVO" id="deptInfoVO">
@@ -300,7 +302,8 @@
 							CASE #lang# WHEN '2' THEN DISPLAYNAME2 ELSE DISPLAYNAME END
 						from
 							tbl_deptmaster dd where dd.CN = #companyId# and dd.tenant_id = #tenantId#)
-					) as dept_name
+					) as dept_name,
+				a.form_lang
 			from 
 				tbl_journal_form a 
 			left join 
@@ -728,8 +731,32 @@
 			form_id,
 			form_name,
 			form_info,
-			form_content,
-			form_status
+			<isEqual property="formLang" compareValue="1">
+				form_content,
+			</isEqual>
+			<isEqual property="formLang" compareValue="2">
+				form_content2 AS form_content,
+			</isEqual>
+			<isEqual property="formLang" compareValue="3">
+				form_content3 AS form_content,
+			</isEqual>
+			<isEqual property="formLang" compareValue="4">
+				form_content4 AS form_content,
+			</isEqual>
+			<isEqual property="formLang" compareValue="5">
+				form_content5 AS form_content,
+			</isEqual>
+			<isEqual property="formLang" compareValue="6">
+				form_content6 AS form_content,
+			</isEqual>
+			<isEqual property="formLang" compareValue="6">
+				form_content6 AS form_content,
+			</isEqual>
+			<isEmpty property="formLang">
+				form_content,
+			</isEmpty>
+			form_status,
+			type_id
 		from
 			tbl_journal_form
 		where
@@ -1365,7 +1392,8 @@
 				else 'no'
 			end as mine,
 			u.CN as writer_id,
-			u.EXTENSIONATTRIBUTE2 as user_image
+			u.EXTENSIONATTRIBUTE2 as user_image,
+			f.form_status
 		from 
 			tbl_journal j
 		inner join	
@@ -1785,5 +1813,33 @@
 			u.CN = #userId#
 		and 
 			u.tenant_id = #tenantId#
+	</select>
+
+	<!-- 2025-05-30 황인경 - 업무일지 기본양식 다국어 적용 -->
+	<update id="updateJournulListLangChanege" parameterClass="Map">
+		update
+		    tbl_journal_form
+		set
+		    form_lang = #form_lang#
+		where
+		    company_id = #companyId#
+		and 
+			tenant_id = #tenantId#
+		and 
+		    form_status = 'basic'
+	</update>
+	
+	<!-- 2025-05-30 황인경 - 업무일지 기본양식 설정된 다국어 -->
+	<select id="getFormLang" parameterClass="Map" resultClass="Integer">
+		select 
+		    form_lang
+		from
+		    tbl_journal_form
+		where
+		    form_id = #formId#
+		and 
+		    company_id = #companyId#
+		and
+		    tenant_id = #tenantId#
 	</select>
 </sqlMap>

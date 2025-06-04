@@ -137,6 +137,32 @@
 		    	
 		    }
 		    
+			// 2025-05-30 황인경 - 업무일지 기본양식 다국어 적용
+			function journalListLangChange() {
+				var selectedLang = $('#journalListLang option:selected').val();
+				if (selectedLang == "none") {
+					alert ("<spring:message code='ezJournal.journalList02'/>");
+				} else {
+					var langMap = { ko: 1, en: 2, jp: 3, zh: 4, vi:5, id: 6};
+					selectedLang = !selectedLang ? 1 : langMap[selectedLang] || 1;
+					
+					$.ajax({
+						type : "POST",
+						url : "/admin/ezJournal/journulListLangChanege.do",
+						data : {"companyId"  : encodeURIComponent(companySelectID),
+							"form_lang"  : selectedLang},
+						success : function (result) {
+							if (result === "ok") {
+								alert("<spring:message code='ezPortal.t119'/>");
+							}
+						},
+						error : function(request, status, error) {
+							// alert("code : " + request.status + "\nerror : " + error);
+							alert("<spring:message code='ezJournal.t149'/>");
+						}
+					});
+				}
+			}
 		</script>
 		<style>
 			ul.formType {
@@ -186,10 +212,30 @@
 			</jsp:include>
 		</h1>
 		<div id="mainmenu" style="padding-left: 5px;">
-            <ul>
+            <ul style="width: 998px;">
             	<li class="important" id="btnInsertForm"><span onclick="return btnInsForm()"><spring:message code='ezJournal.t17' /></span></li>
             	<li id="btnModForm"><span onclick="return btnModForm()"><spring:message code='ezJournal.t18' /></span></li>
             	<li id="btnDeleteForm"><span class="icon16 icon16_delete" onclick="return btnDelForm()"></span></li>
+            	<li style="float: right"><span onclick="journalListLangChange()"><spring:message code='ezJournal.t135' /></span></li>
+				<li style="float: right">
+					<select id="journalListLang">
+						<option value="none"><spring:message code='ezJournal.journalList01' /></option>
+						<option value="ko"><spring:message code='ezPersonal.s81' /></option>
+						<option value="en"><spring:message code='ezPersonal.s82' /></option>
+						<c:if test="${useJp eq 'YES'}">
+							<option value="jp"><spring:message code='ezPersonal.s84' /></option>
+						</c:if>
+						<c:if test="${useZh eq 'YES'}">
+							<option value="zh"><spring:message code='ezPersonal.s85' /></option>
+						</c:if>
+						<c:if test="${useVi eq 'YES'}">
+							<option value="vi"><spring:message code='ezPersonal.s86' /></option>
+						</c:if>
+						<c:if test="${useId eq 'YES'}">
+							<option value="id"><spring:message code='ezPersonal.s87' /></option>
+						</c:if>
+					</select>
+				</li>
             </ul>
 		</div>
 		<script type="text/javascript">

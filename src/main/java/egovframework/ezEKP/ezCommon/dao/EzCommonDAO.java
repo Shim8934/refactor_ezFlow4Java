@@ -3401,4 +3401,28 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 
+	public void createJournalListLang() {
+		try {
+			select("EzCommonDAO.checkJournallListLang");
+		} catch (RuntimeException e) {
+			logger.debug("checkJourlListLang doesn't exist. insert data...");
+		
+			// 컬럼 생성
+			update("EzCommonDAO.createJournalListLang");
+		}
+	}
+	
+	public void insertJournalListLang(Map<String, Object> map1, Map<String, Object> map2, Map<String, Object> map3, Map<String, Object> map4, Map<String, Object> map5, Map<String, Object> map6) {
+		int journalListLangCnt = (int) select("EzCommonDAO.countJournalListLang");
+		
+		// 기본양식 다국어 데이터 삽입
+		if (journalListLangCnt < 1) {
+			update("EzCommonDAO.insertDailyJournalListLang", map1);
+			update("EzCommonDAO.insertWeekJournalListLang", map2);
+			update("EzCommonDAO.insertMonthlyJournalListLang", map3);
+			update("EzCommonDAO.insertQuarterJournalListLang", map4);
+			update("EzCommonDAO.insertHalfYearJournalListLang", map5);
+			update("EzCommonDAO.insertAnnualJournalListLang", map6);
+		}
+	}
 }

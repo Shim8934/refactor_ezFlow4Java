@@ -141,7 +141,7 @@ public interface EzJournalService {
 	 * @return
 	 * @throws Exception
 	 */
-	public JournalFormInfoVO getJournalFormInfo(String formId, String companyId, int tenantId,String lang) throws Exception;
+	public JournalFormInfoVO getJournalFormInfo(String formId, String companyId, int tenantId,String lang, int formLang) throws Exception;
 
 	/**
 	 * 양식 수정
@@ -444,4 +444,8 @@ public interface EzJournalService {
 	public List<DeptViewVO> getCheifBoss(String userId, String lang, int tenantId) throws Exception; 
 	
 	public JournalEnvVO getUserJournalMailInfo(String userId, int tenantId, String lang) throws Exception;
+	
+	public String updateJournulListLangChanege(String companyId, int tenantId, String form_lang) throws Exception;
+	
+	public int getFormLang(String formId, String companyId, int tenantId) throws Exception;
 }
