@@ -647,7 +647,21 @@ public class EzCommonController extends EgovFileMngUtil{
 		logger.debug("showPersonInfo ended");
         return "/ezCommon/showPersonInfo";
 	}
-	
+
+	@RequestMapping(value = "/fileroot/**", method = RequestMethod.GET)
+	@ResponseBody
+	public void downloadFileroot(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("downloadFileroot started.");
+
+		String filePath = URLDecoder.decode(request.getRequestURI(), "utf-8");
+
+		logger.debug("filePath={}", filePath);
+
+		downImage(filePath, request, response);
+
+		logger.debug("downloadFileroot ended.");
+	}
+
 	@RequestMapping(value = "/ezCommon/downloadAttach.do", method = RequestMethod.GET)
 	@ResponseBody
 	public void downloadAttach(HttpServletRequest request, HttpServletResponse response) throws Exception {
