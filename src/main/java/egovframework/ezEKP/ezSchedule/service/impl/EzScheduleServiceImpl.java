@@ -789,7 +789,6 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 						sVo.setGroupColor("rgb(63, 81, 181)");
 						// 협업에 없는 기능으로 연구소에서 default N로 요청함.
 						sVo.setShowTop("N");
-						sVo.setIsAddDeptSchedule("");
 
 						resultList.add(sVo);
 					}

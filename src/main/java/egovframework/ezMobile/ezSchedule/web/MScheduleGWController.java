@@ -524,7 +524,6 @@ public class MScheduleGWController extends EgovFileMngUtil {
 								vo.setScheduleFlag("");
 								// 협업에 없는 기능으로 연구소에서 default N로 요청함.
 								vo.setShowTop("N");
-								vo.setIsAddDeptSchedule("");
 								
 								dataObject.put("scheduleInfo", vo);
 							}
