@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.amazonaws.services.s3.model.CopyObjectRequest;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.PrefixFileFilter;
 import org.slf4j.Logger;
@@ -487,5 +488,29 @@ public class EzFAL {
         .build();		
         EzFAL.bucketName = bucketName;
     }
-
+    
+    /**
+    * 파일 복사 메소드
+    * @param sourceFilePath     복사될 파일 경로 String
+    * @param targetFilePath     복사된 파일 경로 String
+    */
+    public static void copyFile(String sourceFilePath, String targetFilePath) throws Exception {
+            sourceFilePath = sourceFilePath.replace("\\", "/");
+            sourceFilePath = sourceFilePath.substring(sourceFilePath.indexOf(startFolderPath));
+            
+            targetFilePath = targetFilePath.replace("\\", "/");
+            targetFilePath = targetFilePath.substring(targetFilePath.indexOf(startFolderPath));
+            
+            CopyObjectRequest copyObjRequest = new CopyObjectRequest(bucketName, sourceFilePath, bucketName, targetFilePath);
+            s3Client.copyObject(copyObjRequest);
+    }
+    
+    /**
+    * 파일 복사 메소드
+    * @param sourceFile     복사될 파일 EzFile
+    * @param targetFile     복사된 파일 EzFile
+    */
+    public static void copyFile(EzFile sourceFile, EzFile targetFile) throws Exception {
+        copyFile(sourceFile.getFile().getPath(), targetFile.getFile().getPath());
+    }
 }
