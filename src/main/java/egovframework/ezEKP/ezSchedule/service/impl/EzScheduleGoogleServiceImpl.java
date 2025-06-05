@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
+import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,7 +59,7 @@ import org.dmfs.rfc5545.recur.RecurrenceRule;
 import org.dmfs.rfc5545.recur.RecurrenceRule.WeekdayNum;
 
 @Service("EzScheduleGoogleService")
-public class EzScheduleGoogleServiceImpl implements EzScheduleGoogleService {
+public class EzScheduleGoogleServiceImpl extends EgovAbstractServiceImpl implements EzScheduleGoogleService {
 	
 	@Autowired
 	private Properties config;

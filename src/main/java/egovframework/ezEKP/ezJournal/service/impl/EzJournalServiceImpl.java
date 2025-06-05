@@ -8,6 +8,7 @@ import java.util.*;
 import javax.annotation.Resource;
 
 import org.apache.commons.io.FileUtils;
+import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.json.simple.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -38,7 +39,7 @@ import egovframework.ezEKP.ezJournal.vo.ReceiverFavoriteVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("ezJournalService")
-public class EzJournalServiceImpl implements EzJournalService {
+public class EzJournalServiceImpl extends EgovAbstractServiceImpl implements EzJournalService {
 
 	private static final Logger logger = LoggerFactory.getLogger(EzJournalServiceImpl.class);
 

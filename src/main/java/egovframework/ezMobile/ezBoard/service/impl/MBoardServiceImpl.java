@@ -23,6 +23,7 @@ import javax.annotation.Resource;
 
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import org.apache.commons.io.FileUtils;
+import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.json.simple.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -55,7 +56,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 
 @Service("MBoardService")
-public class MBoardServiceImpl implements MBoardService {
+public class MBoardServiceImpl extends EgovAbstractServiceImpl implements MBoardService {
 	private static final Logger logger = LoggerFactory.getLogger(MBoardServiceImpl.class);
 	
 	final public int mobileListSize = 20;
