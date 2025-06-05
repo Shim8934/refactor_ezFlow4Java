@@ -1034,4 +1034,7 @@ public interface EzApprovalGService {
 
     //2025-02-18 박기범 - 프론트에서 문서 편집시, 문서를 오픈한 이후로 다른 문서/결재진행 변화가 있었는지 체크하기 위한 코드
     String getDocumentSnapshotCode(int tenantId, String companyId, String docId) throws Exception;
+    
+    // 2025-05-28 전인하 - 그리기 서명 이미지 저장하는 코드 / 웹한글기안기 문서 지원을 위해 서명 이미지는 외부저장해야 함
+    public String saveSignImg(MultipartFile signImg, String companyID, int tenantID) throws Exception;
 }

@@ -165,14 +165,15 @@ var s = "";
 
         SignNodeList = SelectNodes(result, "LISTVIEWDATA/ROWS/ROW");
 
-        if (SignNodeList.length != 0) {
+        //if (SignNodeList.length != 0) {
             var parameter = pUserID;
 
             aprsign1_cross_dialogArguments[0] = parameter;
             aprsign1_cross_dialogArguments[1] = openSignUI_Complete;
 
             DivPopUpShow(350, 310, "/ezApprovalG/aprSign.do");
-        }
+        /*
+		}
 	    else {
 	        if (CrossYN()) {
 	            openSignUI_Complete("NAME");
@@ -181,6 +182,7 @@ var s = "";
 	            ret = "NAME";
 	        }
 	    }
+		*/
 	
 	    if (ret == null)
 	        ret = "NAME";
