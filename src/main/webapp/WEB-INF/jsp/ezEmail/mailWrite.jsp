@@ -81,6 +81,10 @@
 	    $(document).ready(function() {
 	    	window.resizeTo(990, window.outerHeight);
         });
+
+		window.addEventListener('beforeunload', function () {
+			sessionStorage.removeItem('zipPassword');
+		});
 	    
 	    var shareId = '<c:out value="${shareId}"/>';
 	    var folderPath = "${drafts}";
@@ -1015,6 +1019,8 @@
 	        var objRow;
 	        var objRows;
 	        var objRowRow;
+			var alerted = false;
+			var password = sessionStorage.getItem("zipPassword");
 	        
 	        objNode = createNodeInsert(xmlDoc, objNode, "DATA");
 	        createNodeAndInsertText(xmlDoc, objNode, "CMD", "ADD");
@@ -1030,6 +1036,11 @@
 	                createNodeAndAppandNodeText(xmlDoc, objRows, objRowRow, "BIG", getNodeText(GetChildNodes(nodes[i])[5]));
 	                createNodeAndAppandNodeText(xmlDoc, objRows, objRowRow, "SIZE", getNodeText(GetChildNodes(nodes[i])[3]));
 	                createNodeAndAppandNodeText(xmlDoc, objRows, objRowRow, "ITEMID", "Y");
+
+					if (getNodeText(GetChildNodes(nodes[i])[6]) == "true" && !alerted) {
+						alert("<spring:message code='ezEmail.zipEncryptedFile.001' />");
+						alerted = true;
+					}
 	            }
 	        }
 	        
