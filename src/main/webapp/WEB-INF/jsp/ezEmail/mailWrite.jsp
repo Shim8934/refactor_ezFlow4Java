@@ -275,7 +275,12 @@
 	            fromAddressChange(fromAddressElem);
 	        }
 
-	    	/* 2025-01-08 홍승비 - 전자결재 메일 발송 > 웹한글문서 메일로 전송 시, 웹한글기안기의 로딩 순서를 보장하도록 수정 */
+			// 2025.02.11 한슬기 : 나를 항상 참조에 포함 설정시
+			if (g_cmd != "EDIT" && isMailToMe != "YES"){
+				setSelfCcOrBcc();
+			}
+
+			/* 2025-01-08 홍승비 - 전자결재 메일 발송 > 웹한글문서 메일로 전송 시, 웹한글기안기의 로딩 순서를 보장하도록 수정 */
 	    	// (BuildWebHwpCtrl() 함수 호출부를 Editor_Complete() 내부로 변경)
 	    	
 	        if (!CrossYN()) {

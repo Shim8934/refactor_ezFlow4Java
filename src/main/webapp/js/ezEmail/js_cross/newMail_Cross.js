@@ -12,6 +12,18 @@ function MailToMe_Onclick() {
         	}
         	
             MsgToGot.appendChild(newElem);
+
+
+            // 2025.06.10 한슬기 : 참조/숨은참조에 내가 들어갈 경우 id를 세팅해준다.
+            setIDSelfCcOrBcc(1, g_myemail); // 참조
+            setIDSelfCcOrBcc(2, g_myemail); // 숨은참조
+
+            // 내게쓰기 체크할 경우 참조/숨은참조란에서 나를 삭제한다.
+            var ccOrBccElem = document.getElementById("selfCcOrBcc");
+            if (ccOrBccElem && ccOrBccElem.parentNode) {
+                ccOrBccElem.parentNode.removeChild(ccOrBccElem);
+            }
+
         }
     } else {
 //      if (existMe) {
@@ -4632,4 +4644,45 @@ function checkApprPolicy() {
 			}
 		});
 	});
+}
+    // 2025.02.11 한슬기 : 나를 항상 참조에 포함 설정시 메일쓰기창을 열었을 때 나를 자동으로 참조에 포함
+function setSelfCcOrBcc(){
+    var iWhich = 0;
+    if (selfCcOption == 'cc') {
+        iWhich = 1;
+    } else if (selfCcOption == 'bcc') {
+        iWhich = 2;
+    }
+
+    var newElem = PrepareMailTag(iWhich, "email", g_myname, g_myemail, "");
+
+    newElem.id = "selfCcOrBcc"
+    if (selfCcOption === 'cc'){
+        MsgCCGot.appendChild(newElem);
+    } else if (selfCcOption === 'bcc'){
+        MsgBCCGot.appendChild(newElem);
+    }
+}
+
+/**
+ * 2025.06.09 한슬기
+ * 메일 > 기본환경설정 나를 항상 참조에 포함 설정을 사용하는경우 
+ * -> 내게쓰기시 참조/숨은참조에 나를 넣어줄때 id도 함께 부여한다(내가 중복으로 들어가지 않도록 id를 찾아 지워주기 위해).
+ * @param iWhch 0:수신자 1:참조 2:숨은참조
+ * @param g_myemail 내게쓰기 이메일주소
+ */
+function setIDSelfCcOrBcc(iWhch, g_myemail){
+    var spans = "";
+    if (iWhch == 1) {
+        spans = MsgCCGot.querySelectorAll("span");
+    } else if (iWhch == 2) {
+        spans = MsgBCCGot.querySelectorAll("span");
+    }
+    spans.forEach(span => {
+        var innerSpan = span.querySelector("span[email]");
+        if (innerSpan && innerSpan.getAttribute("email") === g_myemail) {
+            span.id = "selfCcOrBcc";
+        }
+    });
+
 }
