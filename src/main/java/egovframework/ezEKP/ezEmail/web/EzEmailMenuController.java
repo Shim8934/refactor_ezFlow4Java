@@ -2267,17 +2267,17 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		String guid = UUID.randomUUID().toString();
 		String pDirTempPath = tempFileUploadPath + commonUtil.separator + guid;
 		String finalUserAccount = userAccount;
+		String userkey = request.getParameter("userkey");
 
 		new Thread(() -> {
 		Thread.currentThread().setName("mailbox-export-zip-" + userInfo.getId() + "-" + folderPath);
 		IMAPAccess ia = null;
 		ZipOutputStream zos = null;
 		Map<String, Integer> fileNameMap = new HashMap<String, Integer>();
-		
+
 		// Session session = null;
 		boolean sessionFlag = true;
-		String userkey = request.getParameter("userkey");
-				
+
 		try {
 			ezEmailService.setMailboxProgress(userkey, userId, "EXPORT", tenantId, 0);
 			String useEucKr = ezCommonService.getTenantConfig("UseMailZipEucKr", userInfo.getTenantId());
