@@ -338,10 +338,20 @@ function openApprDraftUI(pDraftFlag, pDocID, pHref, pAprMemberID, pAprMemberName
         	openLocation = "/ezApprovalG/recevGSusin.do?docID=";
 			openLocation = openLocation + pDocID + "&uOrgID=" + "&isReDraft=Y" + "&draftFlag=" + pDraftFlag;
     	} else {
-        	openLocation = "/ezApprovalG/draftui.do?formURL=";
+            var isGroupDoc = checkIsGroupDoc(pDocID, encodeURIComponent(pArgument[8])); // 일괄기안문서 여부 체크 (1안 기준의 DOCID 전달)
+
+            if (isGroupDoc == "Y") { // 일괄기안 문서를 여는 경우
+                openLocation = "/ezApprovalG/draftuiAll_WHWP.do?formURL=";
+            } else {
+                openLocation = "/ezApprovalG/draftui.do?formURL=";
+            }
             openLocation = openLocation + encodeURIComponent(pArgument[1]) + "&draftFlag=" + encodeURIComponent(pArgument[2]) + "&formDocType=" + encodeURIComponent(pArgument[3]);
             openLocation = openLocation + "&susinSN=" + encodeURIComponent(pArgument[4]) + "&docState=" + encodeURIComponent(pArgument[5]) + "&listType=1&aprState=" + encodeURIComponent(pArgument[6]);
-            openLocation = openLocation + "&isTmpDoc=" + encodeURIComponent(pArgument[7]);
+            if (isGroupDoc == "Y" && pFunctionType == "004" && pDraftFlag == "REDRAFT") {
+                openLocation = openLocation + "&isTmpDoc=" + encodeURIComponent(pDocID);
+            } else {
+                openLocation = openLocation + "&isTmpDoc=" + encodeURIComponent(pArgument[7]);
+            }
             openLocation += "&orgCompanyID=" + encodeURIComponent(pArgument[8]);
     	}
     } else {
