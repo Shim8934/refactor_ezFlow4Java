@@ -562,7 +562,7 @@
 				var aprUserID = SelectSingleNodeValue(cell, "DATA4");
 				var aprType = SelectSingleNodeValue(cell, "DATA11");
 
-				if (aprUserID === pUserID && aprType === "018") {
+				if (aprUserID === pUserID) {
 					return true;
 				}
 

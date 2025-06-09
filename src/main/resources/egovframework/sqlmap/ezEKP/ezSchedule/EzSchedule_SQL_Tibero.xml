@@ -38,6 +38,7 @@
 		<result property="endTime"			column="ENDTIME"			columnIndex="4"/>
 		<result property="isAutoDelete"		column="AUTODELETE"			columnIndex="5"/>
 		<result property="reminderTime"		column="REMINDERTIME"		columnIndex="5"/>
+		<result property="defaultViewCheck"	column="DEFAULTVIEWCHECK"	columnIndex="6"/>
 	</resultMap>
 	
 	<resultMap class="ScheduleInfoVO" id="scheduleListVO">
@@ -205,7 +206,8 @@
              	STARTTIME,
              	ENDTIME,
              	AUTODELETE,
-             	REMINDERTIME 
+             	REMINDERTIME .
+             	DEFAULTVIEWCHECK
         	FROM 
         		TBL_SCHEDULECONFIG 
        		WHERE  
@@ -316,7 +318,11 @@
 				CONTENTPATH,
 				B.GROUPNAME,
 				A.COMPANYID,
-				B.GROUPCOLOR,
+				CASE WHEN SCHEDULETYPE = 1 THEN 'rgb(1, 138, 249)'
+					 WHEN SCHEDULETYPE = 2 THEN 'rgb(1, 179, 63)'
+					 WHEN SCHEDULETYPE = 3 THEN 'rgb(254, 28, 113)'
+					 WHEN SCHEDULETYPE = 7 THEN B.GROUPCOLOR
+					 ELSE 'rgb(233, 222, 19)' END AS GROUPCOLOR,
 				SHOWTOP
         	FROM 
         		TBL_SCHEDULE A LEFT JOIN TBL_SCHEDULEGROUP B ON A.OWNERID = B.GROUPID
@@ -1308,9 +1314,9 @@
 	<insert id="EzScheduleDAO.insertScheduleConfig" parameterClass="map">
 		<![CDATA[
 			INSERT INTO TBL_SCHEDULECONFIG(
-				userid, 			defaultview, 			startday, 				starttime, 				endtime, 			autodelete,			tenant_id,      remindertime		
+				userid, 			defaultview, 			startday, 				starttime, 				endtime, 			autodelete,			tenant_id,      remindertime, defaultviewcheck
 			) VALUES (
-				#v_USERID#,			#v_DEFAULTVIEW#,		#v_STARTDAY#,			#v_STARTTIME#,			#v_ENDTIME#,		#v_AUTODELETE#,		#v_TENANTID#,   #v_REMINDERTIME# 
+				#v_USERID#,			#v_DEFAULTVIEW#,		#v_STARTDAY#,			#v_STARTTIME#,			#v_ENDTIME#,		#v_AUTODELETE#,		#v_TENANTID#,   #v_REMINDERTIME# , #v_DEFAULTVIEWCHECKBOX#
 			)
    		]]>
 	</insert>
@@ -1428,7 +1434,8 @@
 				starttime = #v_STARTTIME#,
 				endtime = #v_ENDTIME#,
 				autodelete = #v_AUTODELETE#,
-				remindertime = #v_REMINDERTIME#
+				remindertime = #v_REMINDERTIME#,
+				defaultviewcheck = #v_DEFAULTVIEWCHECKBOX#
 			where
 				userid = #v_USERID#
 			and
@@ -2032,7 +2039,11 @@
 				CONTENTPATH,
 				B.GROUPNAME,
 				A.COMPANYID,
-				B.GROUPCOLOR,
+				CASE WHEN SCHEDULETYPE = 1 THEN 'rgb(1, 138, 249)'
+					 WHEN SCHEDULETYPE = 2 THEN 'rgb(1, 179, 63)'
+					 WHEN SCHEDULETYPE = 3 THEN 'rgb(254, 28, 113)'
+					 WHEN SCHEDULETYPE = 7 THEN B.GROUPCOLOR
+					 ELSE 'rgb(233, 222, 19)' END AS GROUPCOLOR,
 				SHOWTOP
         	FROM
         		TBL_SCHEDULE A LEFT JOIN TBL_SCHEDULEGROUP B ON A.OWNERID = B.GROUPID
@@ -2761,4 +2772,180 @@
 		AND
 			TENANT_ID = #v_TENANTID#
 	</update>
+	
+	<update id="EzScheduleDAO.setScheduleViewStatus" parameterClass="Map">
+		UPDATE 
+			tbl_scheduleconfig 
+		SET 
+			DEFAULTVIEW= #status#
+		WHERE 
+			USERID= #userId#
+		AND
+			tenant_id= #tenantId#
+	
+	</update>
+	
+	<select id="EzScheduleDAO.getUserscheduleTypeConfig"  parameterClass="Map" resultClass="egovframework.ezEKP.ezSchedule.vo.ScheduleTypeConfigVO">
+		SELECT
+			USERID,
+			SCHEDULETYPE,
+			RELATEDID,
+			TAGCOLOR,
+			ISCHECKED,
+			TENANT_ID,
+			COMPANYID
+		FROM
+			TBL_USER_SCHEDULE_TYPE_CONFIG
+		WHERE
+			USERID = #userID#
+		AND
+			COMPANYID = #companyID#
+		AND
+			TENANT_ID = #tenantID#
+	</select>
+	
+	<update id="EzScheduleDAO.saveIsTagChecked" parameterClass="Map">
+		MERGE INTO TBL_USER_SCHEDULE_TYPE_CONFIG config
+		USING	(SELECT	#userID# AS USERID,
+						#scheduleType# AS SCHEDULETYPE,
+						#relatedID# AS RELATEDID,
+						#isChecked# AS ISCHECKED,
+						#tenantID# AS TENANT_ID,
+						#companyID# AS COMPANYID
+				FROM DUAL
+				)new
+		ON	(
+				config.USERID = new.USERID
+			AND
+				config.SCHEDULETYPE = new.SCHEDULETYPE
+			AND
+				config.RELATEDID = new.RELATEDID
+			AND
+				config.TENANT_ID = new.TENANT_ID
+			AND
+				config.COMPANYID = new.COMPANYID
+			)
+		WHEN MATCHED THEN
+			UPDATE SET config.ISCHECKED = new.ISCHECKED
+		WHEN NOT MATCHED THEN
+			INSERT
+				(USERID, SCHEDULETYPE, RELATEDID, ISCHECKED, TENANT_ID, COMPANYID)
+			VALUES
+				(new.USERID, new.SCHEDULETYPE, new.RELATEDID, new.ISCHECKED, new.TENANT_ID, new.COMPANYID)
+	</update>
+	
+	<update id="EzScheduleDAO.upsertUserScheTagColor" parameterClass="egovframework.ezEKP.ezSchedule.vo.ScheduleTypeConfigVO">
+		MERGE INTO TBL_USER_SCHEDULE_TYPE_CONFIG config
+		USING	(SELECT	#userId# AS USERID,
+						#scheduleType# AS SCHEDULETYPE,
+						#relatedId# AS RELATEDID,
+						#tagColor# AS TAGCOLOR,
+						#tenantId# AS TENANT_ID,
+						#companyId# AS COMPANYID
+				FROM	DUAL
+				)new
+		ON	(
+				config.USERID = new.USERID
+			AND
+				config.SCHEDULETYPE = new.SCHEDULETYPE
+			AND
+				config.RELATEDID = new.RELATEDID
+			AND
+				config.TENANT_ID = new.TENANT_ID
+			AND
+				config.COMPANYID = new.COMPANYID
+			)
+		WHEN MATCHED THEN
+			UPDATE SET
+				config.TAGCOLOR = new.TAGCOLOR
+		WHEN NOT MATCHED THEN
+			INSERT
+				(USERID, SCHEDULETYPE, RELATEDID, TAGCOLOR, TENANT_ID, COMPANYID)
+			VALUES
+				(new.USERID, new.SCHEDULETYPE, new.RELATEDID, new.TAGCOLOR, new.TENANT_ID, new.COMPANYID)
+	</update>
+	
+	<select id="EzScheduleDAO.getUserScheduleTypeColor"  parameterClass="Map" resultClass="String">
+		SELECT
+			TAGCOLOR
+		FROM
+			TBL_USER_SCHEDULE_TYPE_CONFIG
+		WHERE
+			USERID = #userID#
+		AND
+			COMPANYID = #companyID#
+		AND
+			TENANT_ID = #tenantID#
+		AND
+			SCHEDULETYPE = #scheduleType#
+		AND
+			RELATEDID = #relatedId#
+	</select>
+
+	<select id="EzScheduleDAO.getPublicExceSchedule" parameterClass="map" resultClass="egovframework.ezEKP.ezSchedule.vo.ScheSecretaryVO">
+		<![CDATA[
+			SELECT
+				USERID,
+				USERNAME,
+				USERNAME2
+			FROM
+				TBL_SECRETARY
+			WHERE
+				SECRETARYID = #userID#
+			AND
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+		]]>
+	</select>
+	
+	<select id="EzScheduleDAO.getShareScheduleDept" parameterClass="map" resultClass="egovframework.ezEKP.ezSchedule.vo.ScheDeptVO">
+		<![CDATA[
+			SELECT
+				DEPARTMENTCN AS DEPTID,
+				DEPARTMENTNAME AS DEPTNAME,
+				DEPARTMENTNAME2 AS DEPTNAME2
+			FROM
+				TBL_SCHEDULE_PUBLIC_DEPT
+			WHERE
+				USERCN = #userID#
+			AND
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+		]]>
+	</select>
+	
+	<select id="EzScheduleDAO.getAddJobSchedule" parameterClass="map" resultClass="egovframework.ezEKP.ezSchedule.vo.ScheDeptVO">
+		<![CDATA[
+		SELECT
+			DEPARTMENT AS DEPTID,
+			U.DESCRIPTION AS deptName,
+			U.DESCRIPTION2 AS deptName2
+		FROM
+			TBL_USERMASTER U
+		WHERE
+			U.CN = #userID#
+		AND
+			U.TENANT_ID = #tenantID#
+		AND
+			PHYSICALDELIVERYOFFICENAME = #companyID#
+		UNION ALL
+		SELECT
+			DEPTID,
+			B.DISPLAYNAME AS DEPTNAME,
+			B.DISPLAYNAME2 AS DEPTNAME2
+		FROM
+			TBL_ADDJOBMASTER A
+		JOIN
+			TBL_DEPTMASTER B ON A.DEPTID = B.CN AND A.TENANT_ID = B.TENANT_ID
+		WHERE
+			A.CN = #userID#
+		AND
+			A.TENANT_ID = #tenantID#
+		AND
+			B.EXTENSIONATTRIBUTE2 = #companyID#
+		]]>
+	</select>
+	
 </sqlMap>

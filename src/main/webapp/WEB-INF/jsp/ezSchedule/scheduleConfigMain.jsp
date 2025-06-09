@@ -13,6 +13,8 @@
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>		
 	    <script type="text/javascript">
 	    	var flag = "<c:out value='${flag}' />";
+	        var confCode = parent.left._funCode;
+	        
 		    document.onselectstart = function () { return false; };
 		    window.onload = function () {
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -22,8 +24,18 @@
 		            document.body.style.oUserSelect = 'none';
 		            document.body.style.UserSelect = 'none';
 		        }
+		        
 		        if(flag === "schedule") {
-		        	document.getElementById("1tab1").onclick();	
+			        if (confCode == 5) {
+						// 일정그룹관리
+						document.getElementById("1tab5").onclick();
+			        } else if (confCode == 13) {
+						// 일정 모아보기
+						document.getElementById("1tab13").onclick();
+			        } else {
+						// 기본환경설정
+						document.getElementById("1tab1").onclick();
+			        }
 		        } else {
 		        	document.getElementById("1tab3").onclick();
 		        }
@@ -86,6 +98,8 @@
 		            case "taskGeneral": task_general(); break;
 		            case "addressTab": address_ini(); break;
 		            case "googleTab": Google_ini(); break;
+		            case "scheduleGroupTab": scheduleGroup_ini(); break;
+		            case "scheduleGatheringTab": scheduleGathering_ini(); break;
 		        }
 		    }
 	
@@ -112,6 +126,14 @@
 		    function schedule_noti() {
 	            document.getElementById("mainframe").src = "/ezSchedule/scheduleMailNotiConfig.do";
 		    }
+		    
+		    function scheduleGroup_ini() {
+	            document.getElementById("mainframe").src = "/ezSchedule/scheduleManageGroup.do";
+		    }
+		    
+		    function scheduleGathering_ini() {
+	            document.getElementById("mainframe").src = "/ezSchedule/scheduleGatherMain.do";
+		    }
 		</script>
 	</head>
 	<body class="mainbody">
@@ -128,6 +150,8 @@
        			<c:choose>
        				<c:when test="${flag eq 'schedule'}">
        					<p><span id="1tab1" divname="scheduleTab"><spring:message code='ezPersonal.yej01' /></span></p>
+       					<p><span id="1tab5" divname="scheduleGroupTab"><spring:message code='ezSchedule.shb12' /></span></p>
+						<p><span id="1tab13" divname="scheduleGatheringTab"><spring:message code='ezSchedule.ljeGs001'/></span></p>
 						<%-- 2023-08-01 조수빈 - 환경설정 > 개인설정 > 알림환경설정으로 통합, 일정관리 모듈의 알림메일설정 탭 제거 --%>
 						<%-- <p><span id="1tab4" divname="scheduleMailNotiTab"><spring:message code='ezPersonal.t402' /></span></p> --%>
        				</c:when>

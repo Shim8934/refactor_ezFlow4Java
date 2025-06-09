@@ -3401,4 +3401,57 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 
+	public void createJournalListLang() {
+		try {
+			select("EzCommonDAO.checkJournallListLang");
+		} catch (RuntimeException e) {
+			logger.debug("checkJourlListLang doesn't exist. insert data...");
+		
+			// 컬럼 생성
+			update("EzCommonDAO.createJournalListLang");
+		}
+	}
+	
+	public void insertJournalListLang(Map<String, Object> map1, Map<String, Object> map2, Map<String, Object> map3, Map<String, Object> map4, Map<String, Object> map5, Map<String, Object> map6) {
+		int journalListLangCnt = (int) select("EzCommonDAO.countJournalListLang");
+		
+		// 기본양식 다국어 데이터 삽입
+		if (journalListLangCnt < 1) {
+			update("EzCommonDAO.insertDailyJournalListLang", map1);
+			update("EzCommonDAO.insertWeekJournalListLang", map2);
+			update("EzCommonDAO.insertMonthlyJournalListLang", map3);
+			update("EzCommonDAO.insertQuarterJournalListLang", map4);
+			update("EzCommonDAO.insertHalfYearJournalListLang", map5);
+			update("EzCommonDAO.insertAnnualJournalListLang", map6);
+		}
+	}
+	
+	public void alterScheduleDefaultViewCheck() {
+		try {
+			select("EzCommonDAO.checkScheduleDefaultViewCheck");
+		} catch (Exception e) {
+			logger.debug("tbl_scheduleconfig defaultviewcheck doesn't exist. creating the column...");
+
+			update("EzCommonDAO.addScheduleDefaultViewCheck");
+		}
+	}
+
+	public void createUserScheduleTypeConfigTable() {
+		try {
+			select("EzCommonDAO.checkUserScheduleTypeConfigTable");
+		} catch (Exception e) {
+			logger.debug("TBL_USER_SCHEDULE_TYPE_CONFIG doesn't exist. creating the table...");
+
+			update("EzCommonDAO.createUserScheduleTypeConfigTable");
+		}
+	}
+	
+	public String getMobileLang(String userID, int tenantID)  throws Exception{
+		Map<String, Object> map = new HashMap<String, Object>();
+    	
+    	map.put("userID", userID);
+    	map.put("tenantID", tenantID);
+    	
+        return (String) select("EzCommonDAO.getMobileLang", map);
+	}
 }

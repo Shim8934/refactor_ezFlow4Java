@@ -7182,6 +7182,18 @@
 				ROWNUM = 1
 		]]>
 	</select>
+	
+	<select id="EzCommonDAO.checkScheduleDefaultViewCheck" resultClass="String">
+		<![CDATA[
+			SELECT
+				DEFAULTVIEWCHECK
+			FROM
+				TBL_SCHEDULECONFIG
+			WHERE
+				ROWNUM = 1
+		]]>
+	</select>
+	
 	<statement id="EzCommonDAO.createTblBoardStarRatingItem">
 		CREATE TABLE tbl_board_item_rating (
 		ITEMID varchar2(76) NOT NULL,
@@ -7457,4 +7469,162 @@
 		VALUES (0, 'externalFileServerUrl', '대용량 첨부파일 업로드 서버', 'http://127.0.0.1:8080/', '대용량 첨부파일 동시 업로드할 외부 서버', TO_DATE('2025-05-23 00:00:00', 'yyyy-mm-dd hh24:mi:ss'), '포탈')
 	</insert>
 
+	<select id="EzCommonDAO.checkJournallListLang" resultClass="String">
+		SELECT
+			form_lang
+		FROM
+			TBL_JOURNAL_FORM
+		LIMIT 1
+	</select>
+	<statement id="EzCommonDAO.createJournalListLang">
+		ALTER TABLE TBL_JOURNAL_FORM
+		  ADD (form_lang NUMBER(5) DEFAULT 1,
+			   form_content2 CLOB DEFAULT NULL,
+			   form_content3 CLOB DEFAULT NULL,
+			   form_content4 CLOB DEFAULT NULL,
+			   form_content5 CLOB DEFAULT NULL,
+			   form_content6 CLOB DEFAULT NULL);
+	</statement>
+	
+	<select id="EzCommonDAO.countJournalListLang" resultClass="Integer">
+		SELECT count(form_content2)
+		FROM TBL_JOURNAL_FORM
+		WHERE form_status = 'basic'
+	</select>
+	
+	<update id="EzCommonDAO.insertDailyJournalListLang">
+		<![CDATA[
+		UPDATE TBL_JOURNAL_FORM 
+		SET form_content2 = #form_content2#,
+		form_content3 = #form_content3#, 
+		form_content4 = #form_content4#, 
+		form_content5 = #form_content5#, 
+		form_content6 = #form_content6# 
+		WHERE 
+			type_id = 'ezJournal.t05'
+		AND 
+			form_status ='basic' ]]>
+	</update>
+	
+	<update id="EzCommonDAO.insertWeekJournalListLang">
+		<![CDATA[
+		UPDATE TBL_JOURNAL_FORM 
+		SET form_content2 = #form_content2#, 
+			form_content3 = #form_content3#,
+			form_content4 = #form_content4#,
+			form_content5 = #form_content5#, 
+			form_content6 = #form_content6#
+		WHERE 
+			type_id = 'ezJournal.t06'
+		AND
+			form_status = 'basic' ]]>
+	</update>
+	
+	<update id="EzCommonDAO.insertMonthlyJournalListLang">
+		<![CDATA[
+		UPDATE TBL_JOURNAL_FORM 
+		SET form_content2 = #form_content2#,
+		form_content3 = #form_content3#,
+		form_content4 = #form_content4#,
+		form_content5 = #form_content5#,
+		form_content6 = #form_content6#
+		WHERE 
+			type_id = 'ezJournal.t07'
+		AND
+			form_status = 'basic' ]]>
+	</update>
+	
+	<update id="EzCommonDAO.insertQuarterJournalListLang">
+		<![CDATA[
+		UPDATE TBL_JOURNAL_FORM 
+		SET form_content2 = #form_content2#,
+		form_content3 = #form_content3#,
+		form_content4 = #form_content4#,
+		form_content5 = #form_content5#,
+		form_content6 = #form_content6#
+		WHERE 
+			type_id = 'ezJournal.t08' 
+		AND 
+			form_status = 'basic' ]]>
+	</update>
+	<update id="EzCommonDAO.insertHalfYearJournalListLang">
+		<![CDATA[
+		UPDATE TBL_JOURNAL_FORM 
+		SET form_content2 = #form_content2#,
+		form_content3 = #form_content3#,
+		form_content4 = #form_content4#,
+		form_content5 = #form_content5#,
+		form_content6 = #form_content6#
+		WHERE 
+			type_id = 'ezJournal.t09' 
+		AND 
+			form_status = 'basic' 	 ]]>
+	</update>
+	<update id="EzCommonDAO.insertAnnualJournalListLang">
+		<![CDATA[ 
+		UPDATE TBL_JOURNAL_FORM 
+		SET  form_content2 = #form_content2#,
+			form_content3 = #form_content3#,
+			form_content4 = #form_content4#,
+			form_content5 = #form_content5#,
+			form_content6 = #form_content6#
+		WHERE
+			type_id = 'ezJournal.t10' 
+		AND 
+			form_status = 'basic' ]]>
+	</update>
+	
+	
+	<select id="EzCommonDAO.checkScheduleDefaultViewCheck" resultClass="String">
+		<![CDATA[
+			SELECT
+				DEFAULTVIEWCHECK
+			FROM
+				TBL_SCHEDULECONFIG
+			WHERE
+				ROWNUM = 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addScheduleDefaultViewCheck">
+		ALTER TABLE
+		TBL_SCHEDULECONFIG
+		ADD
+		DEFAULTVIEWCHECK VARCHAR(2) DEFAULT 'N'
+	</statement>
+			
+	<select id="EzCommonDAO.checkUserScheduleTypeConfigTable" resultClass="String">
+		SELECT
+			USERID
+		FROM
+			TBL_USER_SCHEDULE_TYPE_CONFIG
+		WHERE
+			ROWNUM = 1
+	</select>
+
+	<statement id="EzCommonDAO.createUserScheduleTypeConfigTable">
+		CREATE TABLE TBL_USER_SCHEDULE_TYPE_CONFIG (
+		    USERID            VARCHAR2(80)       NOT NULL,
+		    SCHEDULETYPE      NUMBER(5)          NOT NULL,
+		    RELATEDID         VARCHAR2(100)      NOT NULL,
+		    TAGCOLOR          VARCHAR2(10),
+		    ISCHECKED         VARCHAR2(2)        DEFAULT '1' NOT NULL,
+		    TENANT_ID         NUMBER(5)          NOT NULL,
+		    COMPANYID         VARCHAR2(80)       NOT NULL,
+		    CONSTRAINT PK_USER_SCH_TYPE_CONFIG PRIMARY KEY (
+		        USERID, COMPANYID, TENANT_ID, SCHEDULETYPE, RELATEDID
+		    )
+		)
+    </statement>
+    
+	<select id="EzCommonDAO.getMobileLang" parameterClass="Map" resultClass="String">
+		SELECT
+	    		a.LANG
+		FROM
+			TBL_USERMOBILEINFO a RIGHT JOIN TBL_USERMASTER b ON a.USERID = b.CN AND a.TENANT_ID = b.TENANT_ID
+		WHERE
+			b.CN = #userID#
+		AND
+			b.TENANT_ID = #tenantID#
+	</select>
 </sqlMap>

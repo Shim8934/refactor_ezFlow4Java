@@ -411,7 +411,7 @@
 				HOLIDAYNAME = #v_HOLIDAYNAME#,
                 HOLIDAYNAME2 = #v_HOLIDAYNAME2#,
                 HOLIDAYFLAG = #v_HOLIDAYFLAG#,
-                HOLIDAYDATE = #v_HOLIDAYDATE#,
+                HOLIDAYDATE = TO_DATE(#v_HOLIDAYDATE#, 'YYYY-MM-DD'),
                 HOLIDAYREPEAT = #v_HOLIDAYREPEAT#,
                 ISSOLAR = #v_ISSOLAR#,
                 ISREPEAT = #v_ISREPEAT#,

@@ -588,5 +588,16 @@ public interface EzCommonService {
 	public void insertUseSaasYN() throws Exception;
 
 	public void inserExtLargeFilesever() throws Exception;
+	
+	public void createJournalListLang() throws Exception;
+	
+	public void insertJournalListLang() throws Exception;
+	
+	// 2025-03-21 권기혁 - 일정관리환경설정 기본 화면 사용 여부 컬럼 추가
+	public void alterScheduleDefaultViewCheck()throws Exception;
 
+	// 2025-04-21 조수빈 - 기본 일정(개인, 부서, 회사)별 사용자 설정 값 저장 테이블 추가
+	public void createUserScheduleTypeConfigTable() throws Exception;
+
+	public String getMobileLang(String nextUserID, int tenantID) throws Exception;
 }

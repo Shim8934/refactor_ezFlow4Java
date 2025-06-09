@@ -272,7 +272,7 @@
    						alert("<spring:message code='ezSchedule.ljeGs013' />");
    							
 						window.close();
-						opener.parent.left.gatherRefresh();
+						opener.parent.parent.left.gatherRefresh();
 					},
 					error : function(jqXHR, textStatus, errorThrown) {
 						alert("<spring:message code='ezSchedule.ljeGs014' />");

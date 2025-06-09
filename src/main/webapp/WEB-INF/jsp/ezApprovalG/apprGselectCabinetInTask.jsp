@@ -319,8 +319,8 @@
 		        SetAttribute(row.cells[0], "DATA2", GetAttribute(selRow[0], "DATA2"));
 		        SetAttribute(row.cells[0], "DATA3", selRow[0].cells[1].innerHTML);
 		
-		        row.cells[1].innerHTML = selRow[0].cells[2].innerHTML;
-		        row.cells[2].innerHTML = selRow[0].cells[3].innerHTML;
+		        row.cells[1].innerHTML = selRow[0].cells[4].innerHTML;
+		        row.cells[2].innerHTML = selRow[0].cells[5].innerHTML;
 		    }
 		    function DelListRow(objListView) {
 		        var selRow;

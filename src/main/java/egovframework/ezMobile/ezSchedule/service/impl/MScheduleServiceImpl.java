@@ -18,6 +18,7 @@ import java.util.UUID;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,13 +40,14 @@ import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleSecretaryVO;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
+import egovframework.ezMobile.ezResource.vo.ResScheGetHolidayVO;
 import egovframework.ezMobile.ezSchedule.dao.MScheduleDAO;
 import egovframework.ezMobile.ezSchedule.service.MScheduleService;
 import egovframework.ezMobile.ezSchedule.vo.MScheduleInfoVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
-import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import egovframework.let.utl.fcc.service.KoreanLunarCalendar;
 
 @Service("MScheduleService")
 public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MScheduleService{
@@ -97,6 +99,8 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 
 		try (OutputStream bos = new FileOutputStream(contentPath);) {
 			String content = jsonParam.get("content").toString();
+			
+			if (content == "") content = " ";
 			
 			//html -> mht변환
 			String mhtData = ezCommonService.startHtml2Mht(content, realPath, locale);
@@ -159,6 +163,7 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 			map.put("v_LOCATION", jsonParam.get("location").toString());
 			map.put("v_CONTENTPATH", schedulePath);
 			map.put("v_TENANTID", tenantId);
+			map.put("v_SHOWTOP", jsonParam.get("showTop").toString());
 			
 			ezScheduleDAO.insertSchedule(map);
 			
@@ -338,6 +343,18 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 
 	@Override
 	public void updateSchedule(JSONObject jsonParam, String utcStartDate, String utcEndDate, String defaultPath, int tenantId, String realPath, Locale locale) throws Exception {
+		String cycleSet = "";
+		String repetitionCycle = "";
+		String isAllday = "2".equals(jsonParam.get("dateType").toString()) ? "1" : "0";
+
+		cycleSet = jsonParam.containsKey("cycleSet") ? jsonParam.get("cycleSet").toString() : "";
+		repetitionCycle = jsonParam.containsKey("repetitionCycle") ? (jsonParam.get("repetitionCycle").toString()).replaceAll(",", "|") : "";
+
+		String repetition = "";
+		if (cycleSet != "" && repetitionCycle != "") {
+			repetition = cycleSet + "|" + isAllday + "|" + repetitionCycle;
+		}
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		/*String uploadFilePath = commonUtil.separator + "uploadFile";*/
 		
@@ -351,11 +368,12 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 		map.put("v_DATETYPE", jsonParam.get("dateType").toString());
 		map.put("v_STARTDATE", utcStartDate);
 		map.put("v_ENDDATE", utcEndDate);
-		map.put("v_REPETITION", jsonParam.get("repetition").toString());
+		map.put("v_REPETITION", repetition);
 		map.put("v_SCHEDULETYPE", jsonParam.get("scheduleType").toString());
 		map.put("v_TITLE", jsonParam.get("title").toString());
 		map.put("v_LOCATION", jsonParam.get("location").toString());
 		map.put("v_TENANTID", tenantId);
+		map.put("v_SHOWTOP", jsonParam.get("showTop").toString());
 
 		ezScheduleDAO.updateSchedule(map);
 		
@@ -365,6 +383,8 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 		
 		try (OutputStream bos = new FileOutputStream(defaultPath)) {
 			String content = jsonParam.get("content").toString();
+			
+			if (content == "") content = " ";
 			
 			//html -> mht변환
 			String mhtData = ezCommonService.startHtml2Mht(content, realPath, locale);
@@ -736,7 +756,100 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 
 		return sList;
 	}
+	
+	//휴일가져오기
+	@Override
+	public List<ResScheGetHolidayVO> getTholiday(int targetYear, String companyId,String userCompany, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_COMPANYID", companyId);
+		map.put("v_USERCOMPANY", userCompany);
+		map.put("v_TENANTID", tenantId);
+		
+		List<ResScheGetHolidayVO> list = mScheduleDAO.getTholiday(map);
+		
+		KoreanLunarCalendar lunarCalendar = KoreanLunarCalendar.newInstance();
+				
+		for (int i = 0; i < list.size(); i++) {
+			String fullDay = list.get(i).getCalendarDay();
+			int year = Integer.parseInt(fullDay.split("/")[0]);
+			int month = Integer.parseInt(fullDay.split("/")[1]);
+			int day = Integer.parseInt(fullDay.split("/")[2]);
+			
+			if (list.get(i).getIsSolar() == 0) {
+				// 반복 휴일일정이면서 음력일경우
+				if (list.get(i).getIsRepeat() == 1) {
+					year = targetYear;
+				}
+				
+				
+				lunarCalendar.setLunarDate(year, month, day, false);
+				boolean isLeapMonth = lunarCalendar.isIntercalation();
+				if (isLeapMonth) {
+					lunarCalendar.setLunarDate(year, month, day, true);
+				}
+				
+				if ((lunarCalendar.getSolarYear() != targetYear) && list.get(i).getIsRepeat() == 1) {
+					if (lunarCalendar.getSolarYear() < targetYear) {
+						year = targetYear + 1;
+					} else if (lunarCalendar.getSolarYear() > targetYear) {
+						year = targetYear - 1;
+					}
+					if (month == 12 && day == 29) {
+						day = getLastDayOfLunarMonth(lunarCalendar, year, month);
+					}
+					
+					lunarCalendar.setLunarDate(year, month, day, false);
+					isLeapMonth = lunarCalendar.isIntercalation();
+					if (isLeapMonth) {
+						lunarCalendar.setLunarDate(year, month, day, true);
+					}
+					
+				}
+				
+				list.get(i).setHolidayDate(String.format("%04d-%02d-%02d", lunarCalendar.getSolarYear(), lunarCalendar.getSolarMonth(), lunarCalendar.getSolarDay()) + " 00:00:00.0");
+				list.get(i).setCalendarDay(String.format("%04d-%02d-%02d", lunarCalendar.getSolarYear(), lunarCalendar.getSolarMonth(), lunarCalendar.getSolarDay()));
+			} else {
+				// 반복 휴일일정이면서 양력일경우
+				if (list.get(i).getIsRepeat() == 1) {
+					if (list.get(i).getHolidayRepeat() != null) {
+						String holidayRepeat = list.get(i).getHolidayRepeat();
+						int holidayMonth = Integer.parseInt(holidayRepeat.split("\\|")[1]);
+						int holidayWeek = Integer.parseInt(holidayRepeat.split("\\|")[2]);
+						int holidayOfWeek = Integer.parseInt(holidayRepeat.split("\\|")[3]) + 1;
+						
+						Calendar calendar = Calendar.getInstance();
+						calendar.set(targetYear, holidayMonth - 1, 1);
+						
+				        int firstDayOfWeekInMonth = calendar.get(Calendar.DAY_OF_WEEK); 
+				        int daysToAdd = holidayOfWeek - firstDayOfWeekInMonth + (7 * (holidayOfWeek >= firstDayOfWeekInMonth ? holidayWeek - 1 : holidayWeek));
 
+				        calendar.add(Calendar.DAY_OF_MONTH, daysToAdd);
+				        
+				        list.get(i).setHolidayDate(String.format("%04d-%02d-%02d", targetYear, holidayMonth, calendar.get(Calendar.DAY_OF_MONTH)) + " 00:00:00.0");
+				        list.get(i).setCalendarDay(String.format("%04d-%02d-%02d", targetYear, holidayMonth, calendar.get(Calendar.DAY_OF_MONTH)));
+					} else {
+						list.get(i).setHolidayDate(String.format("%04d-%02d-%02d", targetYear, month, day) + " 00:00:00.0");
+						list.get(i).setCalendarDay(String.format("%04d-%02d-%02d", targetYear, month, day));
+					}
+				}
+			}
+		}
+		
+		return list;
+	}
+	
+	// 특정 음력 연도와 월의 마지막 날을 찾는 메서드
+    public static int getLastDayOfLunarMonth(KoreanLunarCalendar lunarCalendar, int year, int month) {
+        int day = 30;
+        while (day > 0) {
+            lunarCalendar.setLunarDate(year, month, day, false);
+            if (lunarCalendar.getLunarDay() == day) {
+                break;
+            }
+            day--;
+        }
+        return day;
+    }
 
 }
 

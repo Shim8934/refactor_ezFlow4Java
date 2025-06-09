@@ -7,11 +7,14 @@ import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
+import org.json.simple.JSONArray;
 import org.w3c.dom.NodeList;
 
 import egovframework.ezEKP.ezSchedule.vo.AttachListVO;
 import egovframework.ezEKP.ezSchedule.vo.AttendantListVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheDeptVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheGetHolidayVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheSecretaryVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleConfigVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleCumulerVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleDeptVO;
@@ -23,6 +26,7 @@ import egovframework.ezEKP.ezSchedule.vo.ScheduleReceiveListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleReminderVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleSecretaryVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleTokenInfoVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleTypeConfigVO;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezSchedule.vo.MScheduleInfoVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -108,8 +112,6 @@ public interface EzScheduleService {
 	public void deleteScheduleConfig(String userID, int tenantID) throws Exception;
 
 	public void deleteSecretary(String userID, int tenantID, String companyID) throws Exception;
-
-	public void insertScheduleConfig(String userID, String defaultView,	String startDay, String startTime, String endTime, String autoDelete, int tenantID, String reminderTime) throws Exception;
 
 	public void insertSecretary(String userID, String displayName, String displayName2, String secretaryID, String secretaryName, int tenantID ,String companyID) throws Exception;
 
@@ -233,4 +235,21 @@ public interface EzScheduleService {
 	/* 2023-10-05 임정은 - 모아보기 그룹 관리 > 그룹 관리 버튼 > 그룹명, 설명 수정 후 저장 버튼 */
 	public void updateScheduleGather(String groupId,String id, String groupName, String description, int tenantId) throws Exception;
 
+	// 권기혁 - 일정보기 상태값 저장(월, 주, 일 보기)
+	public void setScheduleViewStatus(String userId, int tenantId, String status) throws Exception;
+	
+	// 권기혁 - 일정 환경설정 입력
+	public void insertScheduleConfig(String userID, String defaultView, String startDay, String startTime,
+			String endTime, String autoDelete, int tenantID, String reminderTime, String defaultViewCheckBox, List<ScheduleTypeConfigVO> tagColors) throws Exception;
+
+	public List<ScheduleTypeConfigVO> getUserScheduleTypeConfig(String userID, String companyID, int tenantID) throws Exception;
+	
+	// 2025-04-23 조수빈 - 개인의 일정 항목별 체크 여부 저장 메소드
+	public String saveIsTagChecked(String userID, String scheduleType, String relatedID, String isChecked, int tenantID, String companyID);
+
+	public String getUserScheduleTypeColor(String userId, String companyId, int tenantId, String scheduleType, String relatedId);
+	
+	public List<ScheSecretaryVO> getPublicExceSchedule(Map<String, Object> param) throws Exception;
+	public List<ScheDeptVO> getShareScheduleDept(Map<String, Object> param) throws Exception;
+	public List<ScheDeptVO> getAddJobSchedule(Map<String, Object> param) throws Exception;
 }
