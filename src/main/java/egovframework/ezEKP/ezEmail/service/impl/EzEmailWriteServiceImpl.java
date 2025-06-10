@@ -859,7 +859,7 @@ public class EzEmailWriteServiceImpl implements EzEmailWriteService {
 
 // OPTIONS
     @Override
-    public void setDefaultMailOptions(HttpServletRequest request, MailWriteProcessVO writevo, LoginVO loginInfo, String userName2, Locale locale) throws Exception {
+    public void setDefaultMailOptions(HttpServletRequest request, MailWriteProcessVO writevo, LoginVO loginInfo, String userName, Locale locale) throws Exception {
         // loginInfo
         int tenantId = loginInfo.getTenantId();
 		String serverName = loginInfo.getServerName();
@@ -872,7 +872,7 @@ public class EzEmailWriteServiceImpl implements EzEmailWriteService {
         loginInfo.setServerName(serverName);
 
         // 메일 기본환경설정
-        setMailGeneralVO(writevo, loginInfo.getId(), userName2, tenantId, locale);
+        setMailGeneralVO(writevo, loginInfo.getId(), userName, tenantId, locale);
 
         // 메일 서명
         MailSignatureVO sign = ezEmailService.getMailSignature(tenantId, writevo.getMailId());
@@ -927,7 +927,7 @@ public class EzEmailWriteServiceImpl implements EzEmailWriteService {
         general.setKeepDeleteLength(pAutoSaveTime);
 
         // mailSenderNm → mailSendObject: 보내는사람이름
-		String pMailSenderNM = StringUtils.defaultIfBlank(general.getMailSenderNm(), userName2);
+		String pMailSenderNM = general.getMailSenderNm();
 		String mailSendObject = "<option value='NONE'>" + egovMessageSource.getMessage("ezEmail.t99000032", locale) + "</option>";
 
 		if (pMailSenderNM != null && !pMailSenderNM.trim().equals("")) {

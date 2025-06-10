@@ -269,7 +269,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		OrganUserVO userInfo = ezOrganAdminService.getUserInfo(writevo.getMailId(), loginInfo.getPrimary(), loginInfo.getTenantId());
 
 		// 2. set options: 사용자의 설정에 따른 메일쓰기 정보를 세팅 함
-		ezEmailWriteService.setDefaultMailOptions(request, writevo, loginInfo, userInfo.getDisplayName2(), locale);
+		ezEmailWriteService.setDefaultMailOptions(request, writevo, loginInfo, userInfo.getDisplayName(), locale);
 
 		// make mail top level folders: 사용자계정 생성 직후, mail top level folders가 없을 수도 있다. 에러방지.
 		ezEmailUtil.useIMAPAccessWithCallback(IMAPAccess::makeTopLevelFolders, userAccount, password, locale);
