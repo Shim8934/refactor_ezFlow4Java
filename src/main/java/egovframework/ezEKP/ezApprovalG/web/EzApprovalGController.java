@@ -6499,7 +6499,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		
 		// 기존 searchQuery 문자열 대신 searchQueryMap을 사용하여 검색 조건 전달, 사용하지 않는 Document xmlDomSub 파라미터 제거
-		String result = ezApprovalGService.getReceiveDocList(userID, deptID, receiveDocMode, pageSize, pageNum, orderCell, orderOption, userInfo.getCompanyID(), userLang, searchQueryMap, userInfo.getTenantId(), userInfo.getOffset(), assignChk);
+//		String result = ezApprovalGService.getReceiveDocList(userID, deptID, receiveDocMode, pageSize, pageNum, orderCell, orderOption, userInfo.getCompanyID(), userLang, searchQueryMap, userInfo.getTenantId(), userInfo.getOffset(), assignChk);
+		String result = ezApprovalGService.getReceiveDocList(userID, deptID, receiveDocMode, pageSize, pageNum, orderCell, orderOption, userInfo.getCompanyID(), userLang, searchQueryMap, userInfo.getTenantId(), userInfo.getOffset(), assignChk, userInfo.getPrimary());
 		
 		logger.debug("getReceivedDocList ended.");
 		
