@@ -1,8 +1,6 @@
 package egovframework.ezMobile.ezBoard.service.impl;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -22,7 +20,7 @@ import java.util.StringJoiner;
 import javax.annotation.Resource;
 
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
-import org.apache.commons.io.FileUtils;
+import egovframework.let.utl.fcc.service.EzFAL;
 import org.json.simple.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -789,16 +787,16 @@ public class MBoardServiceImpl implements MBoardService {
         			} else {
         				filePath = strFilePath + commonUtil.separator + strAttachments.split("\\|")[i];
         			}
-        			File file = new File(realPath + filePath);
+        			EzFAL.EzFile file = new EzFAL.EzFile(realPath + filePath);
         			fileSize = file.length();
         			
         			if (strAttachments.split("\\|")[i].indexOf("tempUploadFile") > -1) {
         				filePath2 = strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile" + strAttachments.split("\\|")[i].replace("tempUploadFile", "");
         				
-        				File fileinfo = new File(realPath + filePath2);
+        				EzFAL.EzFile fileinfo = new EzFAL.EzFile(realPath + filePath2);
         				
         				if (!fileinfo.exists()) {
-        					FileUtils.moveFile(file, fileinfo);
+        					EzFAL.moveFile(file, fileinfo);
         				}
         			} else if (strAttachments.split("\\|")[i].indexOf("upload_board") > -1) {
         				filePath2 = strAttachments.split("\\|")[i];
@@ -807,15 +805,15 @@ public class MBoardServiceImpl implements MBoardService {
         			}
         			file = null;
         		} else {
-        			File file = new File(realPath + commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", tenantID)  + commonUtil.separator + strAttachments.split("\\|")[i].split("/")[2]);
+        			EzFAL.EzFile file = new EzFAL.EzFile(realPath + commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", tenantID)  + commonUtil.separator + strAttachments.split("\\|")[i].split("/")[2]);
         			fileSize = file.length();
         			
         			filePath2 = strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile" + commonUtil.separator + strAttachments.split("\\|")[i].split("/")[2];
         			
-        			File fileinfo = new File(realPath + filePath2);
+        			EzFAL.EzFile fileinfo = new EzFAL.EzFile(realPath + filePath2);
         			
         			if (!fileinfo.exists()) {
-        				FileUtils.moveFile(file, fileinfo);
+        				EzFAL.moveFile(file, fileinfo);
         				file.delete();
         			}
         			file = null;
@@ -946,11 +944,11 @@ public class MBoardServiceImpl implements MBoardService {
 		
 		String stordFilePathReal = docPath + commonUtil.separator + "doc";
 		
-		File file = new File(realPath + stordFilePathReal);
+		EzFAL.EzFile file = new EzFAL.EzFile(realPath + stordFilePathReal);
 		
 		if (!file.exists()) {
 			boolean _flag = file.mkdirs();
-			file = new File(realPath + docPath + commonUtil.separator + "uploadFile");
+			file = new EzFAL.EzFile(realPath + docPath + commonUtil.separator + "uploadFile");
 			file.mkdirs();
 			
 			if (!_flag) {
@@ -958,12 +956,8 @@ public class MBoardServiceImpl implements MBoardService {
 			}
 		}
 		
-		InputStream stream = null;
-		OutputStream bos = null;
-		
-		try {
-			stream = new ByteArrayInputStream(strHTML.getBytes("UTF-8"));
-			bos = new FileOutputStream(realPath + stordFilePathReal + commonUtil.separator + mhtFilePath);
+		try (InputStream stream = new ByteArrayInputStream(strHTML.getBytes("UTF-8"));
+			 OutputStream bos = new EzFAL.EzFileOutputStream(realPath + stordFilePathReal + commonUtil.separator + mhtFilePath)) {
 			
 			int bytesRead = 0;
 			byte[] buffer = new byte[2048];
@@ -975,13 +969,6 @@ public class MBoardServiceImpl implements MBoardService {
 			ret = true;
 		} catch (Exception e) {
 			ret = false;
-		} finally {
-			if(bos != null){
-				bos.close();
-			}
-			if(stream != null){
-				stream.close();
-			}
 		}
 		
 		logger.debug("saveMHT ended");
@@ -1490,7 +1477,7 @@ public class MBoardServiceImpl implements MBoardService {
 		
 		filePath = realPath + uploadModule;
 		
-	    File file = new File(filePath);
+	    EzFAL.EzFile file = new EzFAL.EzFile(filePath);
 	        
 	    if (!file.exists()) {
 	    	file.mkdirs();

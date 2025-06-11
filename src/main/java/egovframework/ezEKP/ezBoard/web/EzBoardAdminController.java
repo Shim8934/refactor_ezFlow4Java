@@ -56,6 +56,7 @@ import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EzFAL;
 
 /** 
  * @Description [Controller] 관리자 - 게시판관리 
@@ -687,10 +688,10 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		writeUploadedFile(file, "S_" + fileName, realPath + filePath);
 		
 		try {
-			File imageFile = new File(commonUtil.detectPathTraversal(realFullPath));
+			EzFAL.EzFile imageFile = new EzFAL.EzFile(commonUtil.detectPathTraversal(realFullPath));
 			
 			if (imageFile.exists()) {
-				BufferedImage bi = ImageIO.read(new File(commonUtil.detectPathTraversal(realFullPath)));
+				BufferedImage bi = ImageIO.read(imageFile.getFile());
 				width = bi.getWidth();
 				height = bi.getHeight();
 				
@@ -728,7 +729,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 			writeUploadedFile(file, "S_" + fileName, realPath + filePath);
 			
 			try {
-				File tempFile = new File(realPath + tempFilePath + commonUtil.separator + "S_" + commonUtil.detectPathTraversal(fileName));
+				EzFAL.EzFile tempFile = new EzFAL.EzFile(realPath + tempFilePath + commonUtil.separator + "S_" + commonUtil.detectPathTraversal(fileName));
 				
 				if (tempFile.exists()) {
 					tempFile.delete();
@@ -767,7 +768,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		boardBackgroundVO.setTenantID(userInfo.getTenantId());
 		
 		try {
-			File tempFile = new File(realPath + filePath + commonUtil.separator +"S_" + commonUtil.detectPathTraversal(fileName));
+			EzFAL.EzFile tempFile = new EzFAL.EzFile(realPath + filePath + commonUtil.separator +"S_" + commonUtil.detectPathTraversal(fileName));
 			
 			if (tempFile != null) {
 				tempFile.delete();

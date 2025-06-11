@@ -1,10 +1,7 @@
 package egovframework.ezMobile.ezBoard.web;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -32,6 +29,7 @@ import egovframework.ezEKP.ezBoard.dao.EzBoardDAO;
 import egovframework.ezMobile.ezBoard.dao.MBoardDAO;
 import egovframework.ezEKP.ezBoard.vo.BoardKeywordVO;
 import egovframework.let.user.login.vo.LoginVO;
+import egovframework.let.utl.fcc.service.EzFAL;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -1024,8 +1022,8 @@ public class MBoardGWController {
 	        	pDirPath = pDirPath + commonUtil.separator;
 	        }
 			
-			File file = new File(pDirPath);
-	        File file2 = new File(pDirPath + boardID + commonUtil.separator + "uploadFile");
+			EzFAL.EzFile file = new EzFAL.EzFile(pDirPath);
+	        EzFAL.EzFile file2 = new EzFAL.EzFile(pDirPath + boardID + commonUtil.separator + "uploadFile");
 	        
 	        if (!file.exists()) {
 	        	file.mkdirs();
@@ -1045,7 +1043,7 @@ public class MBoardGWController {
                         resultUpload[i] = "denied";
                     } else {
                         String pAttachPath = realPath + commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", info.getTenantId()) + commonUtil.separator;
-                        File fTemp = new File(pAttachPath, sGUID[i] + "." + extStr);
+                        EzFAL.EzFile fTemp = new EzFAL.EzFile(pAttachPath, sGUID[i] + "." + extStr);
                         
                         if (!file.exists()) {
                         	fTemp.mkdirs();
@@ -1102,25 +1100,21 @@ public class MBoardGWController {
      */
     public void mobileBoardWriteUploadedFile(String bytearray, String newName, String stordFilePath) throws Exception {
     	logger.debug("mobileBoardWriteUploadedFile");
-    	
-		InputStream stream = null;
-		OutputStream bos = null;
+		
 		String stordFilePathReal = (stordFilePath==null?"":stordFilePath);
 		
-		try {
-		    File cFile = new File(stordFilePathReal);
-	
-		    if (!cFile.isDirectory()) {
-				boolean _flag = cFile.mkdirs();
-				if (!_flag) {
-				    throw new IOException("Directory creation Failed ");
-				}
-		    }
-	
-		    bos = new FileOutputStream(stordFilePathReal + File.separator + newName);
-		    logger.debug("stordFilePathReal = " + stordFilePathReal + File.separator + newName);
-		    Decoder decoder = Base64.getDecoder();
+		EzFAL.EzFile cFile = new EzFAL.EzFile(stordFilePathReal);
 
+		if (!cFile.isDirectory()) {
+			boolean _flag = cFile.mkdirs();
+			if (!_flag) {
+				throw new IOException("Directory creation Failed ");
+			}
+		}
+		
+		try (OutputStream bos = new EzFAL.EzFileOutputStream(stordFilePathReal + commonUtil.separator + newName)) {
+		    logger.debug("stordFilePathReal = " + stordFilePathReal + commonUtil.separator + newName);
+		    Decoder decoder = Base64.getDecoder();
 		    bos.write(decoder.decode(bytearray));
 
 		} catch (FileNotFoundException fnfe) {
@@ -1129,21 +1123,6 @@ public class MBoardGWController {
 			logger.debug("ioe: {}", ioe);
 		} catch (Exception e) {
 			logger.debug("e: {}", e);
-		} finally {
-		    if (bos != null) {
-				try {
-				    bos.close();
-				} catch (Exception ignore) {
-					logger.debug("IGNORED: {}", ignore.getMessage());
-				}
-		    }
-		    if (stream != null) {
-				try {
-				    stream.close();
-				} catch (Exception ignore) {
-					logger.debug("IGNORED: {}", ignore.getMessage());
-				}
-		    }
 		}
     }
     

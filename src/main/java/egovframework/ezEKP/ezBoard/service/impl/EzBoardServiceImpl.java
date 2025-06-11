@@ -47,6 +47,7 @@ import javax.servlet.http.HttpServletResponse;
 import egovframework.ezEKP.ezBoard.vo.BoardKeywordVO;
 import egovframework.ezEKP.ezBoard.vo.BoardReplyAttachVO;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
+import egovframework.let.utl.fcc.service.EzFAL;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 import org.apache.commons.codec.binary.Base64;
@@ -2565,12 +2566,12 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		if (!boardListVO.getGuBun().equals("7")) {
 			for (int i = 0; i < boardListVO.getImageCount(); i++) {
 				strFilePath = commonUtil.detectPathTraversal(boardListVO.getExtensionAttribute5().split("\\|")[i]);
-				File file = new File(boardListVO.getRealPath() + boardListVO.getFilePath() + commonUtil.separator + strFilePath);
+				EzFAL.EzFile file = new EzFAL.EzFile(boardListVO.getRealPath() + boardListVO.getFilePath() + commonUtil.separator + strFilePath);
 				strFilePath = commonUtil.getUploadPath("upload_board.ROOT", boardListVO.getTenantID()) + commonUtil.separator + boardListVO.getBoardID() + commonUtil.separator + "uploadFile" + boardListVO.getExtensionAttribute5().split("\\|")[i].replace("tempUploadFile", "");
-				File mvFile = new File(boardListVO.getRealPath() + commonUtil.separator + commonUtil.detectPathTraversal(strFilePath));
+				EzFAL.EzFile mvFile = new EzFAL.EzFile(boardListVO.getRealPath() + commonUtil.separator + commonUtil.detectPathTraversal(strFilePath));
 				
 				if(!mvFile.exists()){
-					FileUtils.copyFile(file, mvFile);
+					EzFAL.copyFile(file, mvFile);
 				}
 				
 				map.put("v_pIMAGEID", boardListVO.getImagePath().split(";")[i].trim());
@@ -2602,8 +2603,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			tempFilePath += strFilePath.substring(strFilePath.lastIndexOf("{"), strFilePath.length());
 			tempFilePath = tempFilePath.substring(0, tempFilePath.lastIndexOf(".") + 1) + boardListVO.getThumbnailExt();
 			
-			File file = new File(commonUtil.detectPathTraversal(boardListVO.getRealPath() + boardListVO.getFilePath() + commonUtil.separator + strFilePath));
-			File s_file = new File(commonUtil.detectPathTraversal(boardListVO.getRealPath() + boardListVO.getFilePath() + commonUtil.separator + tempFilePath));
+			EzFAL.EzFile file = new EzFAL.EzFile(commonUtil.detectPathTraversal(boardListVO.getRealPath() + boardListVO.getFilePath() + commonUtil.separator + strFilePath));
+			EzFAL.EzFile s_file = new EzFAL.EzFile(commonUtil.detectPathTraversal(boardListVO.getRealPath() + boardListVO.getFilePath() + commonUtil.separator + tempFilePath));
 			
 			// 썸네일파일의 고유 ID는 동영상 파일과 같고, 파일명에 's_'가 추가된 .png 파일
 			strFilePath = commonUtil.getUploadPath("upload_board.ROOT", boardListVO.getTenantID()) + commonUtil.separator + boardListVO.getBoardID() + commonUtil.separator + "uploadFile" + boardListVO.getExtensionAttribute5().replace("tempUploadFile", "");
@@ -2611,14 +2612,14 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			tempFilePath += strFilePath.substring(strFilePath.lastIndexOf("{"), strFilePath.length());
 			tempFilePath = tempFilePath.substring(0, tempFilePath.lastIndexOf(".") + 1) + boardListVO.getThumbnailExt();
 			
-			File mvFile = new File(commonUtil.detectPathTraversal(boardListVO.getRealPath() + commonUtil.separator + strFilePath));
-			File s_mvfile = new File(commonUtil.detectPathTraversal(boardListVO.getRealPath() + commonUtil.separator + tempFilePath));
+			EzFAL.EzFile mvFile = new EzFAL.EzFile(commonUtil.detectPathTraversal(boardListVO.getRealPath() + commonUtil.separator + strFilePath));
+			EzFAL.EzFile s_mvfile = new EzFAL.EzFile(commonUtil.detectPathTraversal(boardListVO.getRealPath() + commonUtil.separator + tempFilePath));
 			
 			if(!mvFile.exists()){
-				FileUtils.copyFile(file, mvFile);
+				EzFAL.copyFile(file, mvFile);
 			}
 			if(!s_mvfile.exists()) { // 동영상의 썸네일 이미지 파일
-				FileUtils.copyFile(s_file, s_mvfile);
+				EzFAL.copyFile(s_file, s_mvfile);
 			}
 			
 			map.put("v_pIMAGEID", boardListVO.getImagePath().trim());
@@ -3132,7 +3133,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		resultXML.append("<NODES>");
 		
 		if (boardItemVO.getMode().equals("boardAttach")) {
-			File file = new File(boardItemVO.getFilePath() + commonUtil.detectPathTraversal(boardItemVO.getConLocation()));
+			EzFAL.EzFile file = new EzFAL.EzFile(boardItemVO.getFilePath() + commonUtil.detectPathTraversal(boardItemVO.getConLocation()));
 			
 			String fileExtension = boardItemVO.getConLocation().substring(boardItemVO.getConLocation().lastIndexOf("."));
 			//tempUploadFile을 저장할 때 게시판의 제목으로 저장합니다. 이때 파일명으로 사용할 수 없는 특수문자(8개)가 게시판 제목으로 있을 경우 file을 저장할 수 없어 오류가 발생 
@@ -3141,7 +3142,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 					commonUtil.separator + "{" + UUID.randomUUID().toString() + "}_" + commonUtil.detectPathTraversal(boardItemTitle + fileExtension);
 			long mhtSize = file.length();
 			
-			FileUtils.copyFile(file, new File(commonUtil.detectPathTraversal(boardItemVO.getFilePath()) + newFilePath));
+			EzFAL.copyFile(file, new EzFAL.EzFile(commonUtil.detectPathTraversal(boardItemVO.getFilePath()) + newFilePath));
 			
 			resultXML.append("<NODE>");
 			resultXML.append("<ItemID>" + boardItemVO.getItemID() + "</ItemID>");
@@ -3158,7 +3159,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			String newFilePath = commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", boardItemVO.getTenantID()) + commonUtil.separator + "{" + UUID.randomUUID().toString() + "}" + fileExtension;
 			
 			newFilePath = commonUtil.detectPathTraversal(newFilePath);
-			FileUtils.copyFile(new File(commonUtil.detectPathTraversal(boardItemVO.getFilePath()) + filePath), new File(boardItemVO.getFilePath() + newFilePath));
+			EzFAL.copyFile(commonUtil.detectPathTraversal(boardItemVO.getFilePath()) + filePath, boardItemVO.getFilePath() + newFilePath);
 			
 			resultXML.append("<NODE>");
 			resultXML.append("<ItemID>" + boardAttachVOs.get(k).getItemID() + "</ItemID>");
@@ -3213,7 +3214,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		if (useEditor.equals("HWP") && ext.toUpperCase().equals("HWP")) {
 			map.put("tempString", boardItemVO.getItemID());
 			BoardListVO boardContent = ezBoardDAO.getItemInfo(map);
-			File file = new File(boardItemVO.getFilePath() + commonUtil.detectPathTraversal(boardContent.getContentLocation()));
+			EzFAL.EzFile file = new EzFAL.EzFile(boardItemVO.getFilePath() + commonUtil.detectPathTraversal(boardContent.getContentLocation()));
 			long fileSize = file.length();
 			resultXML.append("<NODE>");
 			resultXML.append("<ItemID>" + boardContent.getItemID() + "</ItemID>");
@@ -3336,18 +3337,16 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				String checkFilePath = commonUtil.detectPathTraversal(filePaths[k]);
 				
 				if (checkFilePath.indexOf("s_") == -1) {
-					File file = new File(uploadFilePath + commonUtil.separator + checkFilePath);
+					EzFAL.EzFile file = new EzFAL.EzFile(uploadFilePath + commonUtil.separator + checkFilePath);
 					if (file.exists()) {
 						tempFilePath = uploadFilePath + commonUtil.separator + boardListVO.getBoardID() + commonUtil.separator + "uploadFile" + checkFilePath.replace("tempUploadFile", "");
-						FileUtils.copyFile(file, new File(tempFilePath));
-						FileUtils.deleteQuietly(file);
+						EzFAL.moveFile(uploadFilePath + commonUtil.separator + checkFilePath, tempFilePath);
 					}
 				} else {
-					File file2 = new File(uploadFilePath + commonUtil.separator + checkFilePath.replace("s_", ""));
+					EzFAL.EzFile file2 = new EzFAL.EzFile(uploadFilePath + commonUtil.separator + checkFilePath.replace("s_", ""));
 					if (file2.exists()) {
 						tempFilePath = uploadFilePath + commonUtil.separator + boardListVO.getBoardID() + commonUtil.separator + "uploadFile" + checkFilePath.replace("s_", "").replace("tempUploadFile", "");
-						FileUtils.copyFile(file2, new File(tempFilePath));
-						FileUtils.deleteQuietly(file2);
+						EzFAL.moveFile(file2, new EzFAL.EzFile(tempFilePath));
 					}
 				}
 				
@@ -3600,21 +3599,23 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 						filePath = strFilePath + commonUtil.separator + tempAttachmentPath;
 					}
 					
-					File file = new File(realPath + commonUtil.detectPathTraversal(filePath));
+					EzFAL.EzFile file = new EzFAL.EzFile(realPath + commonUtil.detectPathTraversal(filePath));
 					fileSize = file.length();
 					
 					if (tempAttachmentPath.indexOf("tempUploadFile") > -1) {
 						filePath2 = strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile" + uploadAttachmentPath.replace("tempUploadFile", "");
 						
-						File fileinfo = new File(realPath + commonUtil.detectPathTraversal(filePath2));
+						EzFAL.EzFile fileinfo = new EzFAL.EzFile(realPath + commonUtil.detectPathTraversal(filePath2));
 						
 						if (!fileinfo.exists()) {
 							if (isKlibEncrypted) {
-								byte[] fileBytes = FileUtils.readFileToByteArray(file);
+								byte[] fileBytes = FileUtils.readFileToByteArray(file.getFile());
 								fileBytes = klibUtil.decrypt(fileBytes);
-								FileUtils.writeByteArrayToFile(fileinfo, fileBytes);
+								try (EzFAL.EzFileOutputStream fos = new EzFAL.EzFileOutputStream(fileinfo)) {
+									fos.write(fileBytes);
+								}
 							} else {
-								FileUtils.moveFile(file, fileinfo);
+								EzFAL.moveFile(file, fileinfo);
 							}
 						}
 					} else if (tempAttachmentPath.indexOf("upload_board") > -1) {
@@ -3628,20 +3629,22 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 						fileName = filePath2.replace(strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile", "").substring(40);
 					}
 				} else { // strType : PHOTO
-					File file = new File(realPath + commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", tenantID)  + commonUtil.separator + tempAttachmentPath.split("/")[2]);
+					EzFAL.EzFile file = new EzFAL.EzFile(realPath + commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", tenantID)  + commonUtil.separator + tempAttachmentPath.split("/")[2]);
 					fileSize = file.length();
 					
 					filePath2 = strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile" + commonUtil.separator + uploadAttachmentPath.split("/")[2];
 					
-					File fileinfo = new File(realPath + filePath2);
+					EzFAL.EzFile fileinfo = new EzFAL.EzFile(realPath + filePath2);
 					
 					if (!fileinfo.exists()) {
 						if (isKlibEncrypted) {
-							byte[] fileBytes = FileUtils.readFileToByteArray(file);
+							byte[] fileBytes = FileUtils.readFileToByteArray(file.getFile());
 							fileBytes = klibUtil.decrypt(fileBytes);
-							FileUtils.writeByteArrayToFile(fileinfo, fileBytes);
+							try (EzFAL.EzFileOutputStream fos = new EzFAL.EzFileOutputStream(fileinfo)) {
+								fos.write(fileBytes);
+							}
 						} else {
-							FileUtils.moveFile(file, fileinfo);
+							EzFAL.moveFile(file, fileinfo);
 						}
 						
 						file.delete();
@@ -3690,11 +3693,11 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		String stordFilePathReal = docPath + commonUtil.separator + "doc";
 		
-		File file = new File(realPath + stordFilePathReal);
+		EzFAL.EzFile file = new EzFAL.EzFile(realPath + stordFilePathReal);
 		
 		if (!file.exists()) {
 			boolean _flag = file.mkdirs();
-			file = new File(realPath + docPath + commonUtil.separator + "uploadFile");
+			file = new EzFAL.EzFile(realPath + docPath + commonUtil.separator + "uploadFile");
 			file.mkdirs();
 			
 			if (!_flag) {
@@ -3704,7 +3707,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		try (
 			InputStream stream = new ByteArrayInputStream(strHTML.getBytes("UTF-8"));
-			OutputStream bos = new FileOutputStream(realPath + stordFilePathReal + commonUtil.separator + mhtFilePath)
+			EzFAL.EzFileOutputStream bos = new EzFAL.EzFileOutputStream(realPath + stordFilePathReal + commonUtil.separator + mhtFilePath)
 			) {
 			
 			int bytesRead = 0;
@@ -3886,7 +3889,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 
 					@Override
 					public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-						Files.deleteIfExists(file);
+						new EzFAL.EzFile(file.toString()).delete();
 						//logger.debug("delete File :: " + docPath);
 						return FileVisitResult.CONTINUE;
 					}
@@ -3900,7 +3903,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 					@Override
 					public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
 						if (exc == null) {
-							Files.deleteIfExists(dir);
+							new EzFAL.EzFile(dir.toString()).delete();
 							//logger.debug("delete Directory :: " + docPath);
 							return FileVisitResult.CONTINUE;
 						} else {
@@ -4169,11 +4172,11 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		if (result.equals("OK")) {
 			// 기존의 MHT파일 삭제
 			for (String deleteStr : deleteMHTStr) { // 실제 파일경로를 그대로 사용, 치환 없이 접근 가능
-				FileUtils.deleteQuietly(new File(deleteStr));
+				new EzFAL.EzFile(deleteStr).delete();
 			}
 			// 기존의 첨부파일 삭제
 			for (String deleteAttachStrlog : deleteAttachStr) { // realPath + uploadFilePath + commonUtil.separator 치환 진행
-				FileUtils.deleteQuietly(new File((realPath + uploadFilePath).replace(commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId()), "") + deleteAttachStrlog));
+				new EzFAL.EzFile((realPath + uploadFilePath).replace(commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId()), "") + deleteAttachStrlog).delete();
 			}
 		}
 
@@ -4206,9 +4209,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			}
 			//move 이면 지우고 옮기기
 			if (mode.equals("copy")) {
-				FileUtils.copyFile(new File(commonUtil.detectPathTraversal(orgFilePath)), new File(commonUtil.detectPathTraversal(destFilePath)));
+				EzFAL.copyFile(commonUtil.detectPathTraversal(orgFilePath), commonUtil.detectPathTraversal(destFilePath));
 			} else {
-				FileUtils.moveFile(new File(commonUtil.detectPathTraversal(orgFilePath)), new File(commonUtil.detectPathTraversal(destFilePath)));
+				EzFAL.moveFile(commonUtil.detectPathTraversal(orgFilePath), commonUtil.detectPathTraversal(destFilePath));
 			}
 		}
 
@@ -4472,19 +4475,19 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			destFilePath = path + commonUtil.separator + commonUtil.detectPathTraversal(destBoardID) + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.detectPathTraversal(destItemID) + ".mht";
 		}
 		
-		File file = new File(path + commonUtil.separator + commonUtil.detectPathTraversal(destBoardID));
+		EzFAL.EzFile file = new EzFAL.EzFile(path + commonUtil.separator + commonUtil.detectPathTraversal(destBoardID));
 		
 		if (!file.exists()) {
 			file.mkdirs();
-			new File(path + commonUtil.separator + commonUtil.detectPathTraversal(destBoardID) + commonUtil.separator + "doc").mkdirs();
-			new File(path + commonUtil.separator + commonUtil.detectPathTraversal(destBoardID) + commonUtil.separator + "uploadFile").mkdirs();
+			new EzFAL.EzFile(path + commonUtil.separator + commonUtil.detectPathTraversal(destBoardID) + commonUtil.separator + "doc").mkdirs();
+			new EzFAL.EzFile(path + commonUtil.separator + commonUtil.detectPathTraversal(destBoardID) + commonUtil.separator + "uploadFile").mkdirs();
 		}
 		
 		//move 이면 지우고 옮기기
 		if (mode.equals("copy")) {
-			FileUtils.copyFile(new File(orgFilePath), new File(destFilePath));
+			EzFAL.copyFile(orgFilePath, destFilePath);
 		} else {
-			FileUtils.moveFile(new File(orgFilePath), new File(destFilePath));
+			EzFAL.moveFile(orgFilePath, destFilePath);
 		}
 
 		logger.debug("copyFiles ended");
@@ -5437,7 +5440,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		logger.info("downloadBackgroundItemFile started");
 
 		ZipOutputStream zos = null;
-		FileInputStream fis = null;
+		EzFAL.EzFileInputStream fis = null;
 
 		String saveZipPath = "";
 
@@ -5447,7 +5450,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		logger.info("downloadBackgroundItemFile ended");
 	}
 
-	private String createZipFile(ZipOutputStream zos, FileInputStream fis, String realPath, String filePath, String fileName) throws Exception {
+	private String createZipFile(ZipOutputStream zos, EzFAL.EzFileInputStream fis, String realPath, String filePath, String fileName) throws Exception {
 		logger.info("createZipFile started");
 
 		String saveZipPath = "";
@@ -5461,10 +5464,10 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				saveZipPath = filePath.substring(0, filePath.lastIndexOf("/")) + commonUtil.separator + fileName.substring(0, fileName.lastIndexOf(".")) + ext;
 
 				zos = new ZipOutputStream(
-					new FileOutputStream(realPath + saveZipPath),
+					new EzFAL.EzFileOutputStream(realPath + saveZipPath),
 					StandardCharsets.UTF_8
 				);
-				fis = new FileInputStream(realPath + filePath);
+				fis = new EzFAL.EzFileInputStream(realPath + filePath);
 
 				zos.putNextEntry(new ZipEntry(fileName));
 
@@ -5487,7 +5490,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		return saveZipPath;
 	}
 
-	private void downloadFile(HttpServletRequest request, HttpServletResponse response, ZipOutputStream zos, FileInputStream fis, String filePath, String fileName) throws Exception {
+	private void downloadFile(HttpServletRequest request, HttpServletResponse response, ZipOutputStream zos, EzFAL.EzFileInputStream fis, String filePath, String fileName) throws Exception {
 		logger.info("downloadFile started");
 
 		fileName = fileName.substring(0, fileName.lastIndexOf(".")) + ".zip";
@@ -5498,7 +5501,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 
 		orgFileName = CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), orgFileName);
 
-		File file = new File(commonUtil.detectPathTraversal(downFileName));
+		EzFAL.EzFile file = new EzFAL.EzFile(commonUtil.detectPathTraversal(downFileName));
 
 		if (!file.exists()) {
 			throw new FileNotFoundException(downFileName);
@@ -5510,10 +5513,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 
 		long fSize = file.length();
 		if (fSize > 0) {
-			BufferedInputStream in = null;
 
-			try {
-				in = new BufferedInputStream(new FileInputStream(file));
+			try (BufferedInputStream in = new BufferedInputStream(new EzFAL.EzFileInputStream(file))) {
 
 				String mimetype = "application/octet-stream"; //"application/x-msdownload"
 
@@ -5525,14 +5526,6 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				response.setHeader("Content-Length", Long.toString(fSize));
 
 				FileCopyUtils.copy(in, response.getOutputStream());
-			} finally {
-				if (in != null) {
-					try {
-						in.close();
-					} catch (Exception ignore) {
-						logger.debug("IGNORED: {}", ignore.getMessage());
-					}
-				}
 			}
 			response.getOutputStream().flush();
 			response.getOutputStream().close();
@@ -6028,11 +6021,11 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		String stordFilePathReal = docPath + commonUtil.separator + "doc";
 		
-		File file = new File(realPath + stordFilePathReal);
+		EzFAL.EzFile file = new EzFAL.EzFile (realPath + stordFilePathReal);
 		
 		if (!file.exists()) {
 			boolean _flag = file.mkdirs();
-			file = new File(realPath + docPath + commonUtil.separator + "uploadFile");
+			file = new EzFAL.EzFile(realPath + docPath + commonUtil.separator + "uploadFile");
 			file.mkdirs();
 			
 			if (!_flag) {
@@ -6044,7 +6037,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		try {
 			stream = new ByteArrayInputStream(Base64.decodeBase64(strHTML));
-			bos = new FileOutputStream(finalFilePath);
+			bos = new EzFAL.EzFileOutputStream(finalFilePath);
 			
 			int bytesRead = 0;
 			byte[] buffer = new byte[2048];
@@ -6861,21 +6854,23 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 						uploadAttachmentPath = tempAttachmentPath;
 					}
 
-					File file = new File(realPath + commonUtil.detectPathTraversal(tempAttachmentPath));
+					EzFAL.EzFile file = new EzFAL.EzFile(realPath + commonUtil.detectPathTraversal(tempAttachmentPath));
 					fileSize = file.length();
 
 					if (tempAttachmentPath.indexOf("tempUploadFile") > -1) {
 						filePath = filePathRoot + commonUtil.separator + strBoardID + commonUtil.separator + "uploadCommentlFile" + commonUtil.separator + replyID + commonUtil.separator + uploadAttachmentPath.split("tempUploadFile" + commonUtil.separator)[1];
 
-						File fileinfo = new File(realPath + commonUtil.detectPathTraversal(filePath));
+						EzFAL.EzFile fileinfo = new EzFAL.EzFile(realPath + commonUtil.detectPathTraversal(filePath));
 
 						if (!fileinfo.exists()) {
 							if (isKlibEncrypted) {
-								byte[] fileBytes = FileUtils.readFileToByteArray(file);
+								byte[] fileBytes = FileUtils.readFileToByteArray(file.getFile());
 								fileBytes = klibUtil.decrypt(fileBytes);
-								FileUtils.writeByteArrayToFile(fileinfo, fileBytes);
+								try (EzFAL.EzFileOutputStream fos = new EzFAL.EzFileOutputStream(fileinfo)) {
+									fos.write(fileBytes);
+								}
 							} else {
-								FileUtils.moveFile(file, fileinfo);
+								EzFAL.moveFile(file, fileinfo);
 							}
 						}
 					} else {
