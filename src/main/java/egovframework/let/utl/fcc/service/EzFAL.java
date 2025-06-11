@@ -17,6 +17,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.amazonaws.services.s3.model.CopyObjectRequest;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.PrefixFileFilter;
 import org.slf4j.Logger;
@@ -495,14 +496,32 @@ public class EzFAL {
     * @param targetFilePath     복사된 파일 경로 String
     */
     public static void copyFile(String sourceFilePath, String targetFilePath) throws Exception {
-            sourceFilePath = sourceFilePath.replace("\\", "/");
-            sourceFilePath = sourceFilePath.substring(sourceFilePath.indexOf(startFolderPath));
-            
-            targetFilePath = targetFilePath.replace("\\", "/");
-            targetFilePath = targetFilePath.substring(targetFilePath.indexOf(startFolderPath));
-            
-            CopyObjectRequest copyObjRequest = new CopyObjectRequest(bucketName, sourceFilePath, bucketName, targetFilePath);
-            s3Client.copyObject(copyObjRequest);
+        if (!isObjectStorageMode()) {
+            FileUtils.copyFile(new File(sourceFilePath), new File(targetFilePath));
+            return;
+        }
+        
+        boolean isTargetFileOnS3 = localFolderPathList.stream().filter(targetFilePath::contains).count() == 0;
+        
+        try (InputStream is = new EzFAL.EzFileInputStream(sourceFilePath)) {
+            if (isTargetFileOnS3) { // S3에 저장
+                targetFilePath = targetFilePath.replace("\\", "/").substring(targetFilePath.indexOf(startFolderPath));
+                ObjectMetadata meta = new ObjectMetadata();
+                meta.setContentLength(new EzFile(sourceFilePath).length());
+                s3Client.putObject(bucketName, targetFilePath, is, meta);
+            } else { // 로컬 파일에 저장
+                new File(targetFilePath).createNewFile();
+                try (FileOutputStream os = new FileOutputStream(targetFilePath)) {
+                    byte[] buffer = new byte[8192];
+                    int bytesRead;
+                    while ((bytesRead = is.read(buffer)) != -1) {
+                        os.write(buffer, 0, bytesRead);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            LOGGER.debug(e.getMessage(), e);
+        }
     }
     
     /**
@@ -512,5 +531,25 @@ public class EzFAL {
     */
     public static void copyFile(EzFile sourceFile, EzFile targetFile) throws Exception {
         copyFile(sourceFile.getFile().getPath(), targetFile.getFile().getPath());
+    }
+    
+    /**
+    * 파일 이동 메소드
+    * @param sourceFilePath     복사될 파일 경로 String
+    * @param targetFilePath     복사된 파일 경로 String
+    */
+    public static void moveFile(String sourceFilePath, String targetFilePath) throws Exception {
+        copyFile(sourceFilePath, targetFilePath);
+        EzFile sourceFile = new EzFile(sourceFilePath);
+        sourceFile.delete();
+    }
+    
+    /**
+    * 파일 이동 메소드
+    * @param sourceFile     복사될 파일 EzFile
+    * @param targetFile     복사된 파일 EzFile
+    */
+    public static void moveFile(EzFile sourceFile, EzFile targetFile) throws Exception {
+        moveFile(sourceFile.getFile().getPath(), targetFile.getFile().getPath());
     }
 }
