@@ -62,7 +62,9 @@ public class MScheduleInfoVO {
 	private int repeatCount;					/** 반복횟순 */
 	
 	private String scheduleFlag;				/** 일정 구분값 */
-
+	
+	private String showTop;
+	
 	public String getScheduleId() {
 		return scheduleId;
 	}
@@ -311,4 +313,12 @@ public class MScheduleInfoVO {
 		this.scheduleFlag = scheduleFlag;
 	}
 	
+	public String getShowTop() {
+		return showTop;
+	}
+
+	public void setShowTop(String showTop) {
+		this.showTop = showTop;
+	}
+
 }

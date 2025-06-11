@@ -9955,6 +9955,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         listCountMap.put("relayFormID", recordListVO.getRelayFormID());
         listCountMap.put("joinEndReceiptPointInfo", recordListVO.getJoinEndReceiptPointInfo());
         listCountMap.put("selSendStatus", recordListVO.getSelSendStatus());
+        listCountMap.put("formID", recordListVO.getFormID());
         int docCnt = ezApprovalGDAO.getRecordListCount(listCountMap);
         
 		resultXML.append("<DOCLIST>");
@@ -12422,7 +12423,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	@Override
 	// 수신 문서와 심사 문서를 같이 가져온다. admin, user = 수신문서, simsa = 심사문서
 	public String getReceiveDocList(String userID, String deptID, String mode, String pageSize, String pageNum, String sortHeader, String sortOption, String companyID, String userLang,
-			Map<String, Object> searchQueryMap, int tenantID, String offset, String assignChk) throws Exception {
+			Map<String, Object> searchQueryMap, int tenantID, String offset, String assignChk, String userPrimary) throws Exception {
 		logger.debug("getReceiveDocList started");
 
 		StringBuilder resultXML = new StringBuilder();
@@ -12517,8 +12518,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
                 /* 2024-06-28 양지혜 - 부서수신함 > 지정목록 > 결재상태에 진행자명을 함께 표출 */
                 if (fieldName.equals("APRSTATE") && assignChk != null && assignChk.equals("Y")) {
-                    resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, userLang, tenantID, offset))
-                            + "(" + docXML.getElementsByTagName("PROCESSORNAME").item(k).getTextContent() + ")</VALUE>");
+                	if (userPrimary.equals("1")) {
+                		resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, userLang, tenantID, offset))
+                		+ "(" + docXML.getElementsByTagName("PROCESSORNAME").item(k).getTextContent() + ")</VALUE>");
+                	}else {
+                		resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, userLang, tenantID, offset))
+                		+ "(" + docXML.getElementsByTagName("PROCESSORNAME2").item(k).getTextContent() + ")</VALUE>");
+                	}
                 } else {
                     resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, userLang, tenantID, offset)) + "</VALUE>");
                 }
@@ -19720,65 +19726,96 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					nextUserID = makeListField(ezApprovalGDAO.getDraftUserID(map3));
 				}
 			}
-
-			String notyStr = "";
+			
+			// 2025-03-17 조수빈 - voc #156654 모바일 PUSH> 결재 관련 알림 미번역
+			// 발신인 기준의 언어 설정으로 발송되거나 수신인의 언어 설정이 모바일의 언어와 웹의 언어가 다른 경우가 있으므로 lang 값을 별도 가져옴.
+			
+			String recvWebLang = ezCommonService.selectUserGetLang(nextUserID, tenantID);
+			String recvMobileLang = ezCommonService.getMobileLang(nextUserID, tenantID);
+			
+			// 한 번도 로그인 하지 않은 경우 언어가 없을 수 있으므로 처리
+			String useSecondaryLang = ezCommonService.getTenantConfig("useSecondaryLang", tenantID);
+			String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", tenantID);
+			
+			if ("YES".equals(useSecondaryLang)){
+				primaryLang = "2";
+			}
+			
+			recvWebLang = (null == recvWebLang || "".equals(recvWebLang)) ? primaryLang : recvWebLang;
+			recvMobileLang = (null == recvMobileLang || "".equals(recvMobileLang)) ? primaryLang : recvMobileLang;
+			
+			String webNotyStr = "";
+			String mobileNotyStr = "";
 			NotiType notiType;
 			switch (mode.toUpperCase()) {
 			case "ING" :
-                notyStr = getCode2Name("L06", "002", companyID, lang, tenantID); //"문서도착";
+                webNotyStr = getCode2Name("L06", "002", companyID, recvWebLang, tenantID); //"문서도착";
+                mobileNotyStr = getCode2Name("L06", "002", companyID, recvMobileLang, tenantID); //"문서도착";
                 notiType = NotiType.APPROVAL_ARRIVE;
 				break;
 			case "END" :
-                notyStr = getCode2Name("L06", "003", companyID, lang, tenantID); //"문서완료";
+                webNotyStr = getCode2Name("L06", "003", companyID, recvWebLang, tenantID); //"문서완료";
+                mobileNotyStr = getCode2Name("L06", "003", companyID, recvMobileLang, tenantID); //"문서완료";
                 notiType = NotiType.APPROVAL_COMPLETE;
 				break;
 			case "BAN" :
-                notyStr = getCode2Name("L06", "004", companyID, lang, tenantID); //"문서반송";
+                webNotyStr = getCode2Name("L06", "004", companyID, recvWebLang, tenantID); //"문서반송";
+                mobileNotyStr = getCode2Name("L06", "004", companyID, recvMobileLang, tenantID); //"문서반송";
                 notiType = NotiType.APPROVAL_REJECT;
 				break;
 			case "BOR" :
-                notyStr = getCode2Name("L06", "005", companyID, lang, tenantID); //"문서보류";
+                webNotyStr = getCode2Name("L06", "005", companyID, recvWebLang, tenantID); //"문서보류";
+                mobileNotyStr = getCode2Name("L06", "005", companyID, recvMobileLang, tenantID); //"문서보류";
                 notiType = NotiType.APPROVAL_ARRIVE;
 				break;
 			case "BAL" :
-                notyStr = getCode2Name("L06", "006", companyID, lang, tenantID); //"문서발송";
+                webNotyStr = getCode2Name("L06", "006", companyID, recvWebLang, tenantID); //"문서발송";
+                mobileNotyStr = getCode2Name("L06", "006", companyID, recvMobileLang, tenantID); //"문서발송";
                 notiType = NotiType.APPROVAL_ARRIVE;
 				break;
 			case "SUSIN" :
-                notyStr = getCode2Name("L06", "007", companyID, lang, tenantID); //"수신문서";
+                webNotyStr = getCode2Name("L06", "007", companyID, recvWebLang, tenantID); //"수신문서";
+                mobileNotyStr = getCode2Name("L06", "007", companyID, recvMobileLang, tenantID); //"수신문서";
                 notiType = NotiType.APPROVAL_ARRIVE;
 				break;
 			case "JIJUNG" :
-                notyStr = getCode2Name("L06", "008", companyID, lang, tenantID); //"지정문서";
+                webNotyStr = getCode2Name("L06", "008", companyID, recvWebLang, tenantID); //"지정문서";
+                mobileNotyStr = getCode2Name("L06", "008", companyID, recvMobileLang, tenantID); //"지정문서";
                 notiType = NotiType.APPROVAL_ARRIVE;
 				break;
 			case "BEBU" :
-                notyStr = getCode2Name("L06", "012", companyID, lang, tenantID); //"배부문서"; //012
+                webNotyStr = getCode2Name("L06", "012", companyID, recvWebLang, tenantID); //"배부문서"; //012
+                mobileNotyStr = getCode2Name("L06", "012", companyID, recvMobileLang, tenantID); //"배부문서"; //012
                 notiType = NotiType.APPROVAL_ARRIVE;
 				break;
 			case "HESONG" :
-                notyStr = getCode2Name("L06", "009", companyID, lang, tenantID); //"회송문서";
+                webNotyStr = getCode2Name("L06", "009", companyID, recvWebLang, tenantID); //"회송문서";
+                mobileNotyStr = getCode2Name("L06", "009", companyID, recvMobileLang, tenantID); //"회송문서";
                 notiType = NotiType.APPROVAL_RECEIPT_REJECT;
 				break;
 			case "HESU" :
-                notyStr = getCode2Name("L06", "010", companyID, lang, tenantID); //"문서회수";
+                webNotyStr = getCode2Name("L06", "010", companyID, recvWebLang, tenantID); //"문서회수";
+                mobileNotyStr = getCode2Name("L06", "010", companyID, recvMobileLang, tenantID); //"문서회수";
                 notiType = NotiType.APPROVAL_RETURN;
 				break;
 			case "REJIJUNG" :
-                notyStr = getCode2Name("L06", "013", companyID, lang, tenantID); //"재지정요청"; //013
+                webNotyStr = getCode2Name("L06", "013", companyID, recvWebLang, tenantID); //"재지정요청"; //013
+                mobileNotyStr = getCode2Name("L06", "013", companyID, recvMobileLang, tenantID); //"재지정요청"; //013
                 notiType = NotiType.APPROVAL_ARRIVE;
 				break;
 			case "REBEBU" :
-                notyStr = getCode2Name("L06", "014", companyID, lang, tenantID); //"재배부요청"; //014
+                webNotyStr = getCode2Name("L06", "014", companyID, recvWebLang, tenantID); //"재배부요청"; //014
+                mobileNotyStr = getCode2Name("L06", "014", companyID, recvMobileLang, tenantID); //"재배부요청"; //014
                 notiType = NotiType.APPROVAL_ARRIVE;
 				break;
 			default :
-                notyStr = getCode2Name("L06", "011", companyID, lang, tenantID); //"결재노티";
+                webNotyStr = getCode2Name("L06", "011", companyID, recvWebLang, tenantID); //"결재노티";
+                mobileNotyStr = getCode2Name("L06", "011", companyID, recvMobileLang, tenantID); //"결재노티";
                 notiType = NotiType.APPROVAL_ARRIVE;
 				break;
 			}
 			
-			insertNotifyItem(nextUserID, notyStr, docTitle, "2", docID, tenantID, companyID);
+			insertNotifyItem(nextUserID, webNotyStr, docTitle, "2", docID, tenantID, companyID);
 
 			String useEzTalkNotification = ezCommonService.getTenantConfig("useEzTalkNotification", tenantID);
 
@@ -19791,14 +19828,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                             + "pDocID=" + docID + "&pType=" + mode.toUpperCase() + "&pAprMemberSN=2&pMode=APR&companyID=" + companyID; // pAprMemberSN, pMode 파라메터가 확실치 않음.
                     String domainName = ezCommonService.getTenantConfig("DomainName", tenantID);
                     String userEmail = new StringBuilder(nextUserID).append("@").append(domainName).toString();
-                    ezEmailService.addEzTalkNotification(userEmail, notyStr, docTitle, String.valueOf(notiType.mainType()), String.valueOf(notiType.subType()), linkUrl);
+                    ezEmailService.addEzTalkNotification(userEmail, mobileNotyStr, docTitle, String.valueOf(notiType.mainType()), String.valueOf(notiType.subType()), linkUrl);
                 } else {
                     String linkUrl = "/mobile/ezApprovalG/mApproveDoc.do?"
                             + "pDocID=" + docID + "&pType=" + mode.toUpperCase() + "&pAprMemberSN=2&pMode=APR&companyID=" + companyID; // pAprMemberSN, pMode 파라메터가 확실치 않음.
-                    ezEmailService.addEzTalkNotification(nextUserID, notyStr, docTitle, String.valueOf(notiType.mainType()), String.valueOf(notiType.subType()), linkUrl);
+                    ezEmailService.addEzTalkNotification(nextUserID, mobileNotyStr, docTitle, String.valueOf(notiType.mainType()), String.valueOf(notiType.subType()), linkUrl);
                 }
             }
-
 		}
 		logger.debug("sendMsg ended");
 
@@ -22463,17 +22499,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_LANGTYPE", strMultiData);
 		map.put("v_SEARCHTYPE", searchType);
 		map.put("deptId", deptId);
-
-		if(globals.getProperty("Globals.DbType").equals("mysql")){
-			if (searchName.equals("_")) {
-				map.put("v_SEARCHNAME", "\"" + searchName);
-			} else {
-				map.put("v_SEARCHNAME", searchName);
-			}
-		} else { 
-			map.put("v_SEARCHNAME", searchName);
-		}
-		
+        map.put("v_SEARCHNAME", searchName);
 		map.put("v_TENANTID", tenantID);
 		map.put("companyID", companyID);
         
@@ -39522,7 +39548,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
     public String getSummaryFileContent(ApprGSummaryVO summary) throws Exception {
         logger.debug("getSummaryFileContent started");
         
-        SummaryPath path = new SummaryPath(summary.getDocID(), summary.getCompanyID(), summary.getTenantID());
+        FilePath path = new FilePath(summary.getDocID() + ".mht", "uploadSummary", summary.getCompanyID(), summary.getTenantID());
         byte[] fileBytes = loadFile(path.getFileFullPath());
         
         logger.debug("getSummaryFileContent ended");
@@ -39544,7 +39570,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
        logger.debug("saveSummaryFileContent started");
        
         String status = "";
-        SummaryPath path = new SummaryPath(summary.getDocID(), summary.getCompanyID(), summary.getTenantID());
+        FilePath path = new FilePath(summary.getDocID() + ".mht", "uploadSummary", summary.getCompanyID(), summary.getTenantID());
         
         // 파일 저장
         Files.createDirectories(Paths.get(path.getDirFullPath()));
@@ -39558,7 +39584,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
     public void deleteSummaryFile(String docID, String companyID, int tenantID) throws Exception {
         logger.debug("deleteSummaryFile started");
         
-        SummaryPath path = new SummaryPath(docID, companyID, tenantID);
+        FilePath path = new FilePath(docID + ".mht", "uploadSummary", companyID, tenantID);
         
         File summaryFile = new File(path.getFileFullPath());
         if (summaryFile.exists()) {
@@ -39593,15 +39619,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         }
     }
     
-    private class SummaryPath {
+    private class FilePath {
         private final String fileName;
         private final String dirPath;
         private final String realPath;
         
-        SummaryPath(String docID, String companyID, int tenantID) throws Exception {
+        FilePath(String fileName, String dirName, String companyID, int tenantID) throws Exception {
             String pRealPath = commonUtil.getRealPath(servletContext);
-            String pDirPath = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + companyID + commonUtil.separator + "uploadSummary" + commonUtil.separator;
-            this.fileName = commonUtil.detectPathTraversal(docID + ".mht");
+            String pDirPath = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + companyID + commonUtil.separator + dirName + commonUtil.separator;
+            this.fileName = commonUtil.detectPathTraversal(fileName);
             this.dirPath = commonUtil.detectPathTraversal(pDirPath);
             this.realPath = commonUtil.detectPathTraversal(pRealPath);
         }
@@ -39610,5 +39636,18 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         private String getDirFullPath() { return realPath + dirPath; }
         private String getFilePath() { return dirPath + fileName; };
         private String getFileFullPath() { return realPath + dirPath + fileName; }
+    }
+    
+    @Override
+    public String saveSignImg(MultipartFile signImg, String companyID, int tenantID) throws Exception {
+        logger.debug("saveSignImg started.");
+        String fileName = UUID.randomUUID().toString() + ".jpg";
+        FilePath path = new FilePath(fileName, "drawSignImg", companyID, tenantID);
+        // 파일 저장
+        Files.createDirectories(Paths.get(path.getDirFullPath()));
+        Files.write(Paths.get(path.getFileFullPath()), signImg.getBytes(), StandardOpenOption.CREATE);
+        
+        logger.debug("saveSignImg ended.");
+        return path.getFilePath();
     }
 }

@@ -59,7 +59,9 @@ import egovframework.ezEKP.ezSchedule.dao.EzScheduleDAO;
 import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
 import egovframework.ezEKP.ezSchedule.vo.AttachListVO;
 import egovframework.ezEKP.ezSchedule.vo.AttendantListVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheDeptVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheGetHolidayVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheSecretaryVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleConfigVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleCumulerVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleDeptVO;
@@ -70,6 +72,7 @@ import egovframework.ezEKP.ezSchedule.vo.ScheduleReceiveListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleReminderVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleSecretaryVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleTokenInfoVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleTypeConfigVO;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezSchedule.vo.MScheduleInfoVO;
 import egovframework.ezEKP.ezSystem.dao.EzSystemAdminDAO;
@@ -358,7 +361,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 			ScheduleInfoVO vo = sList.get(i);
 						
 			//반복일정 구현 시작
-			if (vo.getDateType().equals("3")) {
+			if (vo.getDateType().equals("3") && vo.getRepetition() != null && !vo.getRepetition().trim().equals("")) {
 				map.put("v_SCHEDULEID", vo.getScheduleId());
 				
 				List<String> rList = ezScheduleDAO.getScheduleRepeDelList(map);
@@ -710,61 +713,66 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 			useWorkspaceSchedule = "NO";
 		}
 		
-	    // 협업 일정 가져오기
-	    if (useWorkspaceSchedule.equalsIgnoreCase("yes")) {
-	    	String[] sDate = orgStartDate.split("-");
-			String sMon = (sDate[1].length() == 1 ? "0" + sDate[1] : sDate[1]);
-			String sDay = (sDate[2].length() == 1 ? "0" + sDate[2] : sDate[2]);
+		try {
+			// 협업 일정 가져오기
+			if(useWorkspaceSchedule.equalsIgnoreCase("yes")) {
+				String workspaceHostUrl = ezCommonService.getTenantConfig("workspaceHostUrl", tenantId);
 			
-			String startDate = sDate[0] + "-" + sMon + "-" + sDay;
-			
-			String[] eDate = orgEndDate.split("-");		
-			String eMon = (eDate[1].length() == 1 ? "0" + eDate[1] : eDate[1]);
-			String eDay = (eDate[2].length() == 1 ? "0" + eDate[2] : eDate[2]);
-			
-			String endDate = eDate[0] + "-" + eMon + "-" + eDay;
-			
-			String workspaceHostUrl = ezCommonService.getTenantConfig("workspaceHostUrl", tenantId);
-			String workspaceAppPath = ezCommonService.getTenantConfig("workspaceAppPath", tenantId);
-			
-			/* 2025-04-11 전인하 - ezWork 협업을 위해 검색키워드 지정 (전체검색일 경우 키워드 넘김, 상세검색일 경우 제목 넘김. */
-			String ezWorkSearchKeyword = Strings.isBlank(searchAll) && !Strings.isNotBlank(searchTitle) ? searchTitle : searchAll;
-	        
-			/* 2025-03-13 홍승비 - 협업 모듈에 고정된 하드코딩 문자열 제거 (ezWorkspace), 테넌트 컨피그 workspaceAppPath로 협업 웹응용프로그램 경로를 분리하여 사용 ("" 또는 "/ezWork" 등) */
-			String domain = workspaceHostUrl + workspaceAppPath + "/api/GroupwareApi/post/scheduleread/";
-	    	String params = "userAccountId=" + URLEncoder.encode(userID, "UTF-8") + "&startDate=" + URLEncoder.encode(startDate, "UTF-8") 
-	    						+ "&endDate=" + URLEncoder.encode(endDate, "UTF-8") + "&searchTerm=" + ezWorkSearchKeyword + "&bMobile=" + URLEncoder.encode("false", "UTF-8");
-	    	String workspaceScheduleLists = ezEmailUtil.getWebServiceResult(domain, params);
-	    	
-	    	if (workspaceScheduleLists != null && !workspaceScheduleLists.equals("")) {
-		    	JSONParser jsonparser = new JSONParser();
-		    	JSONArray jsonarray = (JSONArray)jsonparser.parse(workspaceScheduleLists);
-		    	
-		    	logger.debug("data.length = " + jsonarray.size());
-		    	
-		    	for (int i=0; i<jsonarray.size(); i++) {
-		    		ScheduleInfoVO sVo = new ScheduleInfoVO();
-		    		JSONObject jsonobject = (JSONObject)jsonarray.get(i);
-		    		
-		    		sVo.setDateType(jsonobject.get("ItemDateType").toString());
-					sVo.setScheduleType("4");
-					sVo.setScheduleId("collaboration:" + jsonobject.get("ItemId").toString());
-					sVo.setParentId("collaboration:" + jsonobject.get("ItemPostId").toString());
-					sVo.setStartDate(jsonobject.get("ItemStartDate").toString().replace("T", " "));
-					sVo.setEndDate(jsonobject.get("ItemEndDate").toString().replace("T", " "));
-					sVo.setCreatorName(jsonobject.get("ItemUserName").toString());
-					sVo.setTitle(jsonobject.get("ItemPostTitle").toString());
-					sVo.setOwnerId(jsonobject.get("ItemUserAccountId").toString());
-					sVo.setOwnerName(jsonobject.get("ItemUserName").toString());
-					sVo.setRepeatCount(Integer.parseInt(jsonobject.get("ItemRepeatCount").toString()));
-					
-					int importance = Integer.parseInt(jsonobject.get("ItemImportance").toString()) + 1;
-					sVo.setImportance(importance + "");
-	
-					resultList.add(sVo);
-		    	}
+				/* 2025-04-11 전인하 - ezWork 협업을 위해 검색키워드 지정 (전체검색일 경우 키워드 넘김, 상세검색일 경우 제목 넘김. */
+				String ezWorkSearchKeyword = Strings.isBlank(searchAll) && !Strings.isNotBlank(searchTitle) ? searchTitle : searchAll;
+
+				String domain = workspaceHostUrl + "/ezWorkspace/api/GroupwareApi/post/scheduleread/";
+				String params = "userAccountId=" + URLEncoder.encode(userID, "UTF-8") + "&startDate=" + URLEncoder.encode(orgStartDate, "UTF-8")
+						+ "&endDate=" + URLEncoder.encode(orgEndDate, "UTF-8") + "&searchTerm=" + ezWorkSearchKeyword + "&bMobile=" + URLEncoder.encode("false", "UTF-8");
+				String workspaceScheduleLists = ezEmailUtil.getWebServiceResult(domain, params);
+
+				if(workspaceScheduleLists != null && !workspaceScheduleLists.equals("")) {
+					JSONParser jsonparser = new JSONParser();
+					JSONArray jsonarray = (JSONArray)jsonparser.parse(workspaceScheduleLists);
+
+					logger.debug("data.length = " + jsonarray.size());
+
+					for(int i=0; i<jsonarray.size(); i++) {
+						ScheduleInfoVO sVo = new ScheduleInfoVO();
+						JSONObject jsonobject = (JSONObject)jsonarray.get(i);
+
+						// 협업에 없는 값들의 경우 null로 반환되기 때문에 ""로 설정해주는 작업 진행
+						sVo.setScheduleId("collaboration:" + jsonobject.get("ItemId"));
+						sVo.setParentId("collaboration:" + jsonobject.get("ItemPostId").toString());
+						sVo.setOwnerId(jsonobject.get("ItemUserAccountId").toString());
+						sVo.setOwnerName(jsonobject.get("ItemUserName").toString());
+						sVo.setCreatorName(jsonobject.get("ItemUserName").toString());
+						// 협업의 api에 createdate가 없기 때문에 updatedate = createdate로 취급
+						sVo.setCreateDate(jsonobject.get("ItemUpdateDate").toString().replace("T", " "));
+						// 협업의 타입은 4로 고정됨.
+						sVo.setScheduleType("4");
+						sVo.setImportance((Integer.parseInt(jsonobject.get("ItemImportance").toString()) + 1) + "");
+						// 협업에 없는 기능으로 연구소에서 default Y로 요청함.
+						sVo.setIsPublic("Y");
+						sVo.setDateType(jsonobject.get("ItemDateType").toString());
+						sVo.setStartDate(jsonobject.get("ItemStartDate").toString().replace("T", " "));
+						sVo.setEndDate(jsonobject.get("ItemEndDate").toString().replace("T", " "));
+						sVo.setRepetition(jsonobject.get("ItemRepetition").toString());
+						sVo.setTitle(jsonobject.get("ItemPostTitle").toString());
+						sVo.setLocation(jsonobject.get("ItemLocation").toString());
+						sVo.setContent(jsonobject.get("ItemContents").toString());
+						sVo.setRepeatCount(Integer.parseInt(jsonobject.get("ItemRepeatCount").toString()));
+						sVo.setRepeatedScheduleOffset(0);
+						sVo.setGroupColor("rgb(63, 81, 181)");
+						// 협업에 없는 기능으로 연구소에서 default N로 요청함.
+						sVo.setShowTop("N");
+
+						resultList.add(sVo);
+					}
+				}
 			}
-	    }
+		} catch (java.net.UnknownHostException e) {
+			logger.error("workspace host error : " + e.getMessage());
+		} catch (java.net.ConnectException e) {
+			logger.error("workspace connect error : " + e.getMessage());
+		} catch (Exception e) {
+			logger.error("error : " + e.getMessage());
+		}
 
 		logger.debug("=====getScheduleList Ended=====");
 		if (tempResultList != null) {
@@ -1499,27 +1507,6 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		map.put("v_COMPANYID", companyID);
 		
 		ezScheduleDAO.deleteSecretary(map);
-	}
-
-	@Override
-	public void insertScheduleConfig(String userID, String defaultView,	String startDay, String startTime, String endTime, String autoDelete, int tenantID, String reminderTime) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_USERID", userID);		
-		map.put("v_DEFAULTVIEW", defaultView);
-		map.put("v_STARTDAY", startDay);
-		map.put("v_STARTTIME", startTime);
-		map.put("v_ENDTIME", endTime);
-		map.put("v_AUTODELETE", autoDelete);
-		map.put("v_TENANTID", tenantID);
-		map.put("v_REMINDERTIME", reminderTime);
-		
-		if(ezScheduleDAO.getUserScheduleConfig(map) == null) {			
-			ezScheduleDAO.insertScheduleConfig(map);
-		}
-		else {
-			ezScheduleDAO.modifyScheduleConfig(map);
-		}
-		
 	}
 
 	@Override
@@ -2295,8 +2282,13 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		
 		if (sList.size() > 0) {
 			for (int i = 0; i < sList.size(); i++) {
-				String isAllRep = "";
 				ScheduleInfoVO tempVO  = sList.get(i);
+				
+				if (tempVO.getScheduleId() != null && tempVO.getScheduleId().startsWith("collaboration:")) {
+					continue;
+				}
+				
+				String isAllRep = "";
 				
 				isAllRep = getScheduleCompleteIsAllRep(tempVO.getScheduleId(), String.valueOf(tempVO.getRepeatCount()), commonUtil.getDateStringInUTC(tempVO.getStartDate().substring(0, 19), offset, true), tempVO.getDateType(), tenantId, companyID) ;
 				
@@ -4447,5 +4439,126 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		ezScheduleDAO.updateScheduleGather(map);
 	}
 
-}
+	@Override
+	public List<ScheSecretaryVO> getPublicExceSchedule(Map<String, Object> param) throws Exception {
+		logger.debug("getPublicExceSchedule started.");
+		
+		List<ScheSecretaryVO> result = ezScheduleDAO.getPublicExceSchedule(param);
+		
+		logger.debug("getPublicExceSchedule ended.");
+		
+		return result;
+	}
+	
+	@Override
+	public void setScheduleViewStatus(String userId, int tenantId, String status) throws Exception {
+		logger.debug("setScheduleViewStatus started");
 
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId",userId);
+		map.put("tenantId",tenantId);
+		map.put("status", status);
+		
+		ezScheduleDAO.setScheduleViewStatus(map);
+		
+		
+		logger.debug("setScheduleViewStatus ended");
+		
+	}
+
+	@Override
+	public void insertScheduleConfig(String userID, String defaultView, String startDay, String startTime,
+			String endTime, String autoDelete, int tenantID, String reminderTime, String defaultViewCheckBox, List<ScheduleTypeConfigVO> tagColors) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_USERID", userID);		
+		map.put("v_DEFAULTVIEW", defaultView);
+		map.put("v_STARTDAY", startDay);
+		map.put("v_STARTTIME", startTime);
+		map.put("v_ENDTIME", endTime);
+		map.put("v_AUTODELETE", autoDelete);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_REMINDERTIME", reminderTime);
+		map.put("v_DEFAULTVIEWCHECKBOX", defaultViewCheckBox);
+		
+		if(ezScheduleDAO.getUserScheduleConfig(map) == null) {			
+			ezScheduleDAO.insertScheduleConfig(map);
+		}
+		else {
+			ezScheduleDAO.modifyScheduleConfig(map);
+		}
+		
+		// 이후 진행되는 로직이 있기 때문에 try-catch 블럭
+		try {
+			for (ScheduleTypeConfigVO vo : tagColors) {
+				ezScheduleDAO.upsertUserScheTagColor(vo);
+			}
+		} catch (Exception e) {
+			logger.debug("Exception occurred in ezScheduleDAO.upsertUserScheTagColor(): {}", e.getMessage());
+		}
+	}
+
+	@Override
+	public List<ScheduleTypeConfigVO> getUserScheduleTypeConfig(String userID, String companyID, int tenantID) throws Exception {
+		Map<String, Object> param = new HashMap<>();
+		param.put("userID", userID);
+		param.put("tenantID", tenantID);
+		param.put("companyID", companyID);
+		
+		return ezScheduleDAO.getUserScheduleTypeConfig(param);
+	}
+
+	@Override
+	public String saveIsTagChecked(String userID, String scheduleType, String relatedID, String isChecked, int tenantID, String companyID) {
+		
+		try {
+			Map<String, Object> param = new HashMap<>();
+			param.put("userID", userID);
+			param.put("scheduleType", scheduleType);
+			param.put("relatedID", relatedID);
+			param.put("isChecked", Integer.parseInt(isChecked));
+			param.put("tenantID", tenantID);
+			param.put("companyID", companyID);
+			
+			ezScheduleDAO.saveIsTagChecked(param);
+		} catch (Exception e) {
+			logger.debug("Error occurred while executing ezScheduleService.saveIsTagChecked(): {}", e.getMessage());
+			return "FALSE";
+		}
+		
+		return "TRUE";
+	}
+
+	@Override
+	public String getUserScheduleTypeColor(String userId, String companyId, int tenantId, String scheduleType, String relatedId) {
+		Map<String, Object> param = new HashMap<>();
+		param.put("userID", userId);
+		param.put("companyID", companyId);
+		param.put("tenantID", tenantId);
+		param.put("scheduleType", scheduleType);
+		param.put("relatedId", relatedId);
+		
+		return ezScheduleDAO.getUserScheduleTypeColor(param);
+	}
+
+	@Override
+	public List<ScheDeptVO> getShareScheduleDept(Map<String, Object> param) throws Exception {
+		logger.debug("getShareScheduleDept started.");
+		
+		List<ScheDeptVO> result = ezScheduleDAO.getShareScheduleDept(param);
+		
+		logger.debug("getShareScheduleDept ended.");
+		
+		return result;
+	}
+
+	@Override
+	public List<ScheDeptVO> getAddJobSchedule(Map<String, Object> param) throws Exception {
+		logger.debug("getAddJobSchedule started.");
+		
+		List<ScheDeptVO> result = ezScheduleDAO.getAddJobSchedule(param);
+		
+		logger.debug("getAddJobSchedule ended.");
+		
+		return result;
+	}
+}

@@ -116,6 +116,7 @@
 	                        break;
 	                }
 	            }
+				hideDim();
 	        }
 
 	        window.onload = function () {
@@ -302,7 +303,7 @@
 	                else if (pGubun == "UNREAD" && reader.ReadDate == "UNREAD") {
 						fragment.appendChild(TR);
 	                }
-	                else if (pGubun == "CANCEL" && reader.CancelStatus != "") {
+	                else if (pGubun == "CANCEL" && reader.CancelStatus != "" && reader.CancelStatus != "2") {
 						fragment.appendChild(TR);
 	                }
 	            });

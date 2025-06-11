@@ -1025,6 +1025,8 @@
 			AND
 				extensionattribute2 = #companyId#
 			AND
+				CN NOT LIKE 'shared_mailbox%'
+			AND
 				cn != (SELECT
 							department
 						FROM
@@ -1046,6 +1048,8 @@
 				tenant_id = #tenantId#
 			AND
 				TBL_DEPTMASTER.extensionattribute2 = #companyId#
+			AND
+				CN NOT LIKE 'shared_mailbox%'
 			AND
 				cn = (SELECT
 							department
@@ -1080,6 +1084,8 @@
 			AND
 				TBL_DEPTMASTER.extensionattribute2 = #companyId#
 			AND
+				TBL_DEPTMASTER.CN NOT LIKE 'shared_mailbox%'
+			AND
 				TBL_DEPTMASTER.cn != (SELECT
 											department
 										FROM
@@ -1103,6 +1109,8 @@
 				tenant_id = #tenantId#
 			AND
 				TBL_DEPTMASTER.extensionattribute2 = #companyId#
+			AND
+				CN NOT LIKE 'shared_mailbox%'
 			AND
 				cn = (SELECT
 							department
@@ -1129,6 +1137,8 @@
 				TBL_ADDJOBMASTER A ON (D.CN = A.DEPTID and A.TENANT_ID = d.TENANT_ID)
 			WHERE 
 				A.CN = #userId#
+			AND
+				CN NOT LIKE 'shared_mailbox%'
 			AND 
 				A.TENANT_ID = #tenantId#
 			<!-- 2023-10-18 전인하 - 근태관리 > 겸직/사용자 기준 권한 설정 기능 사용하면서 권한부서리스트 호출 시 권한정보 체크 -->
@@ -1159,6 +1169,8 @@
 				TBL_DEPTMASTER.tenant_id = #tenantId#
 			AND
 				TBL_DEPTMASTER.extensionattribute2 = #companyId#
+			AND
+				TBL_DEPTMASTER.CN NOT LIKE 'shared_mailbox%'
 			AND
 				TBL_DEPTMASTER.cn != (SELECT
 											department
@@ -1202,6 +1214,8 @@
 			AND
 				TBL_DEPTMASTER.extensionattribute2 = #companyId#
 			AND
+				CN NOT LIKE 'shared_mailbox%'
+			AND
 				cn = (SELECT
 							department
 						FROM
@@ -1240,6 +1254,8 @@
 				TBL_ADDJOBMASTER A ON (D.CN = A.DEPTID and A.TENANT_ID = d.TENANT_ID)
 			WHERE 
 				A.CN = #userId#
+			AND
+				D.CN NOT LIKE 'shared_mailbox%'
 			AND 
 				A.TENANT_ID = #tenantId#
 			ORDER BY deptname

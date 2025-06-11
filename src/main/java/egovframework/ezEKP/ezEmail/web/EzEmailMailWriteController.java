@@ -101,6 +101,7 @@ import org.springframework.ui.Model;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -268,7 +269,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		OrganUserVO userInfo = ezOrganAdminService.getUserInfo(writevo.getMailId(), loginInfo.getPrimary(), loginInfo.getTenantId());
 
 		// 2. set options: 사용자의 설정에 따른 메일쓰기 정보를 세팅 함
-		ezEmailWriteService.setDefaultMailOptions(request, writevo, loginInfo, userInfo.getDisplayName2(), locale);
+		ezEmailWriteService.setDefaultMailOptions(request, writevo, loginInfo, userInfo.getDisplayName(), locale);
 
 		// make mail top level folders: 사용자계정 생성 직후, mail top level folders가 없을 수도 있다. 에러방지.
 		ezEmailUtil.useIMAPAccessWithCallback(IMAPAccess::makeTopLevelFolders, userAccount, password, locale);
@@ -427,10 +428,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			}
 		}
 		String useWebfolder = ezCommonService.getTenantConfig("useWebfolder", userInfo.getTenantId());
+		String useAutoZipEnc = ezCommonService.getTenantConfig("useAutoZipEnc", userInfo.getTenantId());
 		
 		model.addAttribute("useWebfolder", useWebfolder);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
+		model.addAttribute("useAutoZipEnc", useAutoZipEnc);
 		
 		logger.debug("dragAndDropIframe ended.");
 		return "ezEmail/mailDragAndDrop";
@@ -452,6 +455,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String tempFolderName = "";
 		String xmlList = "";
 		String isBigYN = "N";
+		String zipPassword = request.getParameter("zipPassword");
 		List<MultipartFile> multiFile = request.getFiles("fileToUpload");
 		int cnt = 0;
 		
@@ -473,6 +477,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String[] sFileTitle = new String[cnt];
 		String[] sExt = new String[cnt];
 		String pDirTempPath = "";
+		boolean zipFileUploadCheck = false;
+		boolean checkZipFileEncrypted = false;
+		boolean needZipEncryption = zipPassword != null && !zipPassword.isEmpty();
 		long bigMaxSize = 0;
 		long changeSize = 0;
 
@@ -495,6 +502,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		// 업로드 허용 파일 확장자 설정을 조회
 		String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId());
+		String useAutoZipEnc = ezCommonService.getTenantConfig("useAutoZipEnc", userInfo.getTenantId());
 		
 		if (useExtension == null) {
 			useExtension = "";
@@ -526,6 +534,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				
 				if (multiFile.get(i).getSize() == 0) {
 					isEmpty = true;
+				}
+
+				if(sExt[i].equals("zip")) {
+					zipFileUploadCheck = true;
 				}
 			}
 			
@@ -626,19 +638,48 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					multiFile.get(i).transferTo(new File(pDirTempPath, sGUID[i]));
                     fileLocation[i] = pDirTempPath + commonUtil.separator + sGUID[i];
                     resultUpload[i] = "true";
+
+					if(useAutoZipEnc.equals("YES")) {
+						File file = new File(fileLocation[i]);
+
+						if (zipFileUploadCheck) {
+							checkZipFileEncrypted = ezEmailUtil.checkZipEncrypted(file);
+						}
+
+						if (needZipEncryption && !checkZipFileEncrypted) {
+							String zipPath = ezEmailUtil.createEncryptZipFile(file, pFileName[i], zipPassword, pDirTempPath);
+
+							if (zipPath != null) {
+								fileLocation[i] = zipPath;  // 암호화된 zip 경로로 업데이트
+								pFileName[i] = new File(zipPath).getName();
+							}
+						}
+					}
                 }
-                
+
+				
+				boolean isAutoZipEnc = !checkZipFileEncrypted && "YES".equals(useAutoZipEnc);
+				String fileIdentifier = isAutoZipEnc ? pFileName[i] : sGUID[i];
+				String fileLocationValue;
+				
+				if ("Y".equals(pBigFileUpload)) {
+					fileLocationValue = folderDate + "|!|" + fileIdentifier;
+				} else {
+					fileLocationValue = fileIdentifier;
+				}
+				
 				// 업로드된 파일에 대한 정보를 XML 형식으로 클라이언트에게 반환한다.
-                strXML2 += "<NODE><PUPLOADSN><![CDATA[" + sGUID[i] + "]]></PUPLOADSN>";
+				strXML2 += "<NODE><PUPLOADSN><![CDATA[" + fileIdentifier + "]]></PUPLOADSN>";
                 strXML2 += "<RESULTUPLOADA><![CDATA[" + resultUpload[i] + "]]></RESULTUPLOADA>";
                 strXML2 += "<PFILENAME><![CDATA[" + pFileName[i] + "]]></PFILENAME>";
                 strXML2 += "<FILESIZE><![CDATA[" + fileSize[i] + "]]></FILESIZE>";
-                if (pBigFileUpload.equals("Y")) {
-                	strXML2 += "<FILELOCATION><![CDATA[" + folderDate+"|!|"+sGUID[i] + "]]></FILELOCATION>";
-                } else {
-                	strXML2 += "<FILELOCATION><![CDATA[" + sGUID[i] + "]]></FILELOCATION>";
-                }
+				strXML2 += "<FILELOCATION><![CDATA[" + fileLocationValue + "]]></FILELOCATION>";
                 strXML2 += "<PBIGFILEUPLOAD><![CDATA[" + pBigFileUpload + "]]></PBIGFILEUPLOAD>";
+				
+				if (zipFileUploadCheck) {
+					strXML2 += "<CHECKZIPENCRYPTED><![CDATA[" + checkZipFileEncrypted + "]]></CHECKZIPENCRYPTED>";
+				}
+				
                 strXML2 += "</NODE>";
 
 				String useExternalLargeFileServer = ezCommonService.getTenantConfig("useExternalLargeFileServer", userInfo.getTenantId());
@@ -6957,5 +6998,13 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			logger.error("error:", e);
 			return Result.failure();
 		}
+	}
+
+	/**
+	 * 메일쓰기 - 파일업로드 > 암호 입력 화면 호출 함수
+	 */
+	@GetMapping(value="/ezEmail/inputZipFilePassword.do")
+	public String inputZipPassword() throws Exception{
+		return "ezEmail/mailZipPassword";
 	}
 }

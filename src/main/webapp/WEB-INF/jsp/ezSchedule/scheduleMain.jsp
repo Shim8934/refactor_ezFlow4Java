@@ -75,6 +75,8 @@
 		    var publicIds = JSON.parse('${publicIds}');
 		    var LunarUse = false;		    
 		    var primaryLang = "<c:out value='${userInfo.primary}'/>";		// 2018-12-26 김민성 - 일정관리 기념일 다국어 처리
+		    var jsonPersonalScheConfigList = "<c:out value='${jsonPersonalScheConfigList}'/>";
+		    var personalScheConfigList = JSON.parse(decodeHtml(jsonPersonalScheConfigList));
 		    
 		    /* 2020-05-18 협업-일정 연동 관련 추가 */
 		    var WorkspaceUrl = "<c:out value='${workspaceHostUrl}'/>";     // 협업이 그룹웨어와 별도의 Url로 서비스 되는 경우에만 설정
@@ -822,6 +824,18 @@
 		        /* 2018-02-01 김보미 - 일정관리 타이틀 고정. */
 		        //DateChange(szCmd);
 
+		        // 보기 선택값 DB 저장
+		        $.ajax({
+					type : "POST",
+					dataType : "text",
+					url : "/ezSchedule/scheduleSetViewStatus.do",
+					data : {
+							STATUS   : szCmd.toUpperCase()
+							},
+					success: function(text){
+						result = text;
+					}     
+		        });
 		    }
 
 		    function DateChange(szCmd) {
@@ -1537,5 +1551,10 @@
 		<form method="post" id="form" name="form" enctype="multipart/form-data" target="ifrm">
 			<input type="file" name="file1" id="file1" accept=".ics" onchange="btn_AttachAdd_onclick()" style="display: none"/>
 		</form>
+		<div style="width: 200%; height: 200%; position: absolute; top: 0; left: 0; z-index: 1000; background: none; display: none;" id="mailPanel">&nbsp;</div>
+	    <div class="layerpopup" style="z-index: 2000; position: absolute; display: none;" id="iFramePanel">
+	        <iframe src="<spring:message code='main.kms4' />" style="border: none;" id="iFrameLayer"></iframe>
+	    </div>
+		
 	</body>
 </HTML>

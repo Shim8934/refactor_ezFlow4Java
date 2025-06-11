@@ -786,7 +786,12 @@ function deleteWork(bDel) {
     for (var i = 0; i < listSubContentArry.length; i++) {
         szItemID += document.getElementById(listSubContentArry[i]).getAttribute("_href") + ",";
     }
-    Mail_MoveDeletePostSend(cmd, "", szItemID)
+    Mail_MoveDeletePostSend(cmd, "", szItemID);
+    
+    try {
+        if (document.getElementById("HeaderAllCheckBox") != null)
+            document.getElementById("HeaderAllCheckBox").checked = false;
+    } catch (e) {console.log(e);}
 }
 
 function deleteUnreadWork() {

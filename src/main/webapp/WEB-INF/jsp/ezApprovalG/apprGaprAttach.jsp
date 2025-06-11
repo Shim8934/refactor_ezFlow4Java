@@ -1379,7 +1379,7 @@
 		        	<div id="ATTACH" class="ui-sortable" ondragenter="onDragEnter(event)"  ondragover="onDragOver(event)" ondrop="onDrop(event)" STYLE="overflow-x:hidden;HEIGHT:455px;min-width:780px;margin:auto;"></div>
 		      	</div>
 		      	<%-- 2020-11-12 홍승비 - 파일첨부 관련 알림 메세지 영역 --%>
-		      	<div style="text-align:left; line-height:21px;">
+		      	<div style="text-align:left; line-height:21px;margin-bottom: 50px;">
 		      		<img src="/images/i_notice.gif" style="vertical-align: middle;padding-left:1px;" />
 		      		<span style="color:#3a76c3;height:18px;display:inline-block;">${pAttachWarning0}</span><br>
 		      		<span style="color:#3a76c3;height:18px;display:${spanDisplayStyle}; margin-left:29px;">${pAttachWarning1}</span>

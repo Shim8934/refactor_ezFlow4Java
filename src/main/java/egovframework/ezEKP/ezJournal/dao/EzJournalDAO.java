@@ -561,4 +561,15 @@ public class EzJournalDAO extends EgovAbstractDAO{
 		return (JournalEnvVO) select("selectJournalMailInfo",map);
 	}
 
+	public int updateJournulListLangChanege(Map<String, Object> map) throws Exception {
+		return (int) update("updateJournulListLangChanege",map);
+	}
+	
+	public int getFormLang(Map<String, Object> map) throws Exception {
+		return (int) select("getFormLang",map);
+	}
+	
+	public int getFormLang2(Map<String, Object> map) throws Exception {
+		return (int) select("getFormLang2",map);
+	}
 }

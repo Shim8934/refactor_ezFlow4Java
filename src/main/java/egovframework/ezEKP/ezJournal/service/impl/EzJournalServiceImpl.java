@@ -299,7 +299,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 	}
 
 	@Override
-	public JournalFormInfoVO getJournalFormInfo(String formId, String companyId, int tenantId, String lang) throws Exception {
+	public JournalFormInfoVO getJournalFormInfo(String formId, String companyId, int tenantId, String lang, int formLang) throws Exception {
 		logger.debug("getJournalFormInfo started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -307,6 +307,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		map.put("lang", lang);
+		map.put("formLang", formLang);
 		
 		JournalFormInfoVO journalFormInfoVO = ezJournalDAO.getJournalFormInfo(map);
 		
@@ -841,6 +842,9 @@ public class EzJournalServiceImpl implements EzJournalService {
 		param.put("companyId", companyId);
 		param.put("userId", userId);
 		
+		int formLang = getFormLang(formId, companyId, tenantId);
+		param.put("formLang", formLang);
+		
 		JournalFormInfoVO form = ezJournalDAO.getJournalFormInfo(param);
 		String formContent = form.getFormContent();
 		Document formDoc = Jsoup.parseBodyFragment(formContent);
@@ -852,6 +856,9 @@ public class EzJournalServiceImpl implements EzJournalService {
 		
 		/* 2024-07-17 홍승비 - SQL Injection 수정 > 문자열이 아닌 리스트를 파라미터로 전달 */
 		param.put("journalIdS", journalIdList);
+		
+		int formlang = getFormLang(formId, companyId, tenantId);
+		param.put("formlang", formlang);
 		
 		List<JournalVO> journalList = ezJournalDAO.selectSumJournalList(param);
 		
@@ -1289,6 +1296,69 @@ public class EzJournalServiceImpl implements EzJournalService {
 		logger.debug("getUserJournalMailInfo ended");
 		
 		return result;
+	}
+	
+	@Override
+	public String updateJournulListLangChanege(String companyId, int tenantId, String form_lang) throws Exception {
+		logger.debug("updateJournulListLangChanege started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId",tenantId);
+		map.put("companyId",companyId);
+		map.put("form_lang",form_lang);
+		
+		int changeCnt = ezJournalDAO.updateJournulListLangChanege(map);
+		
+		String result = "false";
+		
+		if (changeCnt > 1) {
+			result = "true";
+		}
+		
+		logger.debug("updateJournulListLangChanege ended");
+		
+		return result;
+	}
+	
+	@Override
+	public int getFormLang(String formId, String companyId, int tenantId) throws Exception {
+		logger.debug("getFormLang started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("formId", formId);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		int formLang = 1;
+		
+		try {
+			formLang = ezJournalDAO.getFormLang(map);
+		} catch (Exception e) {
+			logger.debug("getFormLang is fail");
+		}
+		
+		logger.debug("getFormLang ended");
+		return formLang;
+	}
+	
+	@Override
+	public int getFormLang2(String companyId, int tenantId) throws Exception {
+		logger.debug("getFormLang2 started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		int formLang = 1;
+		
+		try {
+			formLang = ezJournalDAO.getFormLang2(map);
+		} catch (Exception e) {
+			logger.debug("getFormLang2 is fail");
+		}
+		
+		logger.debug("getFormLang2 ended");
+		return formLang;
 	}
 	
 }

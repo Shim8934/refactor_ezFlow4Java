@@ -788,7 +788,7 @@
 								AND
 									companyid = #companyID#
 		<isNotEqual property="v_APPROVUSER" compareValue="" prepend="AND">
-					TBL_APRLINEINFO.aprmembername = #v_APPROVUSER#
+					TBL_APRLINEINFO.aprmembername LIKE '%' || #v_APPROVUSER# || '%'
 		</isNotEqual>
 				) aaa
 			ON
@@ -841,10 +841,10 @@
 				formid = #v_FORMID#
 		</isNotEqual>
 		<isNotEmpty property="v_FORMNAME" prepend="AND">
-				(FORMNAME LIKE '%' || #v_FORMNAME# || '%' OR FORMNAME2 LIKE '%' || #v_FORMNAME# || '%')
+				(FORMNAME LIKE '%' || #v_FORMNAME# || '%' OR FORMNAME2 LIKE '%' || #v_FORMNAME# || '%' ESCAPE '\')
 		</isNotEmpty>
 		<isNotEmpty property="v_KEYWORD" prepend="AND">
-				KEYWORD LIKE '%' || #v_KEYWORD# || '%'
+				KEYWORD LIKE '%' || #v_KEYWORD# || '%' ESCAPE '\'
 		</isNotEmpty>
 		<isNotEqual property="v_DOCSTATE" compareValue="" prepend="AND">
 				docstate = #v_DOCSTATE#
@@ -2459,7 +2459,7 @@
 				AND
 					TBL_APRLINEINFO.companyid = #companyID#
 		<isNotEqual property="v_APPROVUSER" compareValue="" prepend="AND">
-					TBL_APRLINEINFO.aprmembername = #v_APPROVUSER#
+					TBL_APRLINEINFO.aprmembername LIKE '%' || #v_APPROVUSER# || '%'
 		</isNotEqual>
 				) aaa
 			ON
@@ -2512,10 +2512,10 @@
 				formid = #v_FORMID#
 		</isNotEqual>
 		<isNotEmpty property="v_FORMNAME" prepend="AND">
-				(FORMNAME LIKE '%' || #v_FORMNAME# || '%' OR FORMNAME2 LIKE '%' || #v_FORMNAME# || '%')
+				(FORMNAME LIKE '%' || #v_FORMNAME# || '%' OR FORMNAME2 LIKE '%' || #v_FORMNAME# || '%' ESCAPE '\')
 		</isNotEmpty>
 		<isNotEmpty property="v_KEYWORD" prepend="AND">
-				KEYWORD LIKE '%' || #v_KEYWORD# || '%'
+				KEYWORD LIKE '%' || #v_KEYWORD# || '%' ESCAPE '\'
 		</isNotEmpty>
 		<isNotEqual property="v_DOCSTATE" compareValue="" prepend="AND">
 				docstate = #v_DOCSTATE#
@@ -5591,13 +5591,13 @@
 			<![CDATA[FORMID = #v_FORMID#]]>
 		</isNotEmpty>
 		<isNotEmpty property="v_FORMNAME" prepend="AND">
-			<![CDATA[(FORMNAME LIKE '%' || #v_FORMNAME# || '%' OR FORMNAME2 LIKE '%' || #v_FORMNAME# || '%')]]>
+			<![CDATA[(FORMNAME LIKE '%' || #v_FORMNAME# || '%' OR FORMNAME2 LIKE '%' || #v_FORMNAME# || '%' ESCAPE '\')]]>
 		</isNotEmpty>
 	   	<isNotEmpty property="v_APPROVUSER" prepend="AND">
 	   		<![CDATA[TBL_ENDAPRLINEINFO.APRMEMBERNAME LIKE '%' || #v_APPROVUSER# || '%']]>
 		</isNotEmpty>
 		<isNotEmpty property="v_KEYWORD" prepend="AND">
-			<![CDATA[KEYWORD LIKE '%' || #v_KEYWORD# || '%']]>
+			<![CDATA[KEYWORD LIKE '%' || #v_KEYWORD# || '%' ESCAPE '\']]>
 		</isNotEmpty>
 		<isNotEmpty property="v_ITEMCODE" prepend="AND">
 			<![CDATA[ITEMCODE = #v_ITEMCODE#]]>
@@ -5709,10 +5709,10 @@
 									<![CDATA[FORMID = #v_FORMID#]]>
 								</isNotEmpty>
 								<isNotEmpty property="v_FORMNAME" prepend="AND">
-									<![CDATA[(FORMNAME LIKE '%' || #v_FORMNAME# || '%' OR FORMNAME2 LIKE '%' || #v_FORMNAME# || '%')]]>
+									<![CDATA[(FORMNAME LIKE '%' || #v_FORMNAME# || '%' OR FORMNAME2 LIKE '%' || #v_FORMNAME# || '%' ESCAPE '\')]]>
 								</isNotEmpty>
 								<isNotEmpty property="v_KEYWORD" prepend="AND">
-									<![CDATA[KEYWORD LIKE '%' || #v_KEYWORD# || '%']]>
+									<![CDATA[KEYWORD LIKE '%' || #v_KEYWORD# || '%'  ESCAPE '\']]>
 								</isNotEmpty>
 								<isNotEmpty property="v_ITEMCODE" prepend="AND">
 									<![CDATA[ITEMCODE = #v_ITEMCODE#]]>

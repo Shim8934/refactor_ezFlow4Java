@@ -872,7 +872,7 @@ function CalWeekDataBind(oAppointment, order, oAppointment2) {
         oTr.appendChild(oTd);
         oTable.appendChild(oTr);
         oDiv.appendChild(oTable);
-        var oText = document.createTextNode(oAppointment2.odtstartDisplay + " - " + oAppointment2.odtendDisplay);
+        var oText = document.createTextNode(oAppointment.odtstartDisplay + " - " + oAppointment.odtendDisplay);
         oDiv.appendChild(oText);
 
         oDiv.setAttribute("ID", "div_" + oAppointment.trID + "_" + oAppointment.oNumber);
@@ -1152,7 +1152,7 @@ function CalDayDataBind(oAppointment, order, oAppointment2) {
         oTable.appendChild(oTr);
 
         oDiv.appendChild(oTable);
-        var oText = document.createTextNode(oAppointment2.odtstartDisplay + " - " + oAppointment2.odtendDisplay);
+        var oText = document.createTextNode(oAppointment.odtstartDisplay + " - " + oAppointment.odtendDisplay);
         oDiv.appendChild(oText);
 
         oDiv.setAttribute("ID", "div_" + oAppointment.trID + "_" + oAppointment.oNumber);

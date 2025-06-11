@@ -442,6 +442,8 @@
 		        if (type == "1") {
 		        	_searchType = document.getElementById('searchoption').selectedIndex;
 		        	_searchName = document.getElementById('forminfo').value;
+		        	_searchName = _searchName.replace(/\\/g, "\\\\").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/%/g, "\\%").replace(/'/g, "\\'").replace(/_/g, "\\_");
+
 		        }
 		        
 		    	$.ajax({
@@ -533,10 +535,6 @@
 		                var KIND = document.getElementById('FromList').value;
 		                var searchtype = document.getElementById('searchoption').selectedIndex;
 		                var searchname = document.getElementById('forminfo').value;
-		                
-		                if (searchname.match('%') == '%') {
-		                	searchname = searchname.concat("\\");
-		                }
 		
 		                GetFormInfo("ALL", KIND, searchtype, searchname);
 		            }
@@ -557,6 +555,8 @@
 				if (type == "1") {
 					_searchType = document.getElementById('searchoption').selectedIndex;
 					_searchName = document.getElementById('forminfo').value;
+					_searchName = _searchName.replace(/\\/g, "\\\\").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/%/g, "\\%").replace(/'/g, "\\'").replace(/_/g, "\\_");
+
 				}
 
 				$.ajax({

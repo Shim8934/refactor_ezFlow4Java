@@ -4277,3 +4277,18 @@ a.commentFileSpan:hover {cursor: pointer; text-decoration: underline;}
 .schedule_list_date .date_arr.date_next{background-image:url(../images/date_next.png); margin-left:65px;}
 
 .boardTxtURL {width: 73%;margin-left: 1.5px;margin-bottom: 1px;}
+
+/* 전자결재 사인 그리기 */
+.btnpositionDraw{
+	margin: 0px 0px 0px -10px;
+	height: 28px !important;
+	background: none;
+	border: none;
+	padding:7px 0px;
+	background-color: #fcfcfc;
+	text-align:center;
+	position: fixed;
+	text-align: center;
+	bottom: 0px;
+	width:100%;
+}

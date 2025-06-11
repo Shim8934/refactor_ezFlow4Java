@@ -969,11 +969,7 @@
                             if (AttachfilenameN1 < 0) {
                                 Attachfilename = encodeURIComponent(tr.cells[1].innerText + AttachUrlA2);
                             } else {
-                            	if (AttachUrlA2 == "mht") { // 마침표가 붙지 않은 확장자를 사용
-		                            Attachfilename = encodeURIComponent(tr.cells[1].innerText + AttachUrlA2);
-	                        	} else {
-		                            Attachfilename = encodeURIComponent(tr.cells[1].innerText);
-	                        	}
+	                            Attachfilename = encodeURIComponent(tr.cells[1].innerText);
                             }
 
                             if (AttachUrl != "null") {
@@ -2949,7 +2945,6 @@
 
 				    if (condition[1] != "" && condition[1] !== undefined) {
 				        TYPE += "DOCTITLE;"
-						condition[1] = condition[1].replace(/\\/g, "\\\\");
 				        DATA += "<DOCTITLE>" + condition[1] + "</DOCTITLE>";
 				    }
 
@@ -3276,7 +3271,7 @@
 		    }
 		    
 		    function replaceCond(condStr){//검색조건 수정(% _ ' 추가)
-		    	return condStr.toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/%/g, "\\%").replace(/'/g, "\\'").replace(/_/g, "\\_");
+		    	return condStr.toString().replace(/\\/g, "\\\\").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/%/g, "\\%").replace(/'/g, "\\'").replace(/_/g, "\\_");
 		    }
 		    
 		    function getDocListByCompany(){

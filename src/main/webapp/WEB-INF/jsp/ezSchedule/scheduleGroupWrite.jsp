@@ -938,11 +938,13 @@
 		        var pAddFlag = false;
 		        if (listContentArry != "") {
 		            for (var i = 0; i < listContentArry.length; i++) {
+						var isSearch = document.getElementById(listContentArry[i]).getAttribute("_data1") == "user" ? "Y" : "N" 
+						
 		                var strId = document.getElementById(listContentArry[i]).getAttribute("_data2");
-		                var strName = document.getElementById(listContentArry[i]).getAttribute("_data11");
+						var strName = isSearch == "Y" ? document.getElementById(listContentArry[i]).getAttribute("_data10") : document.getElementById(listContentArry[i]).getAttribute("_data11");
 		                var strDeptNM = document.getElementById(listContentArry[i]).getAttribute("_data5");
 		                var strEmail = document.getElementById(listContentArry[i]).getAttribute("_data3");
-		                var strName2 = document.getElementById(listContentArry[i]).getAttribute("_data12");
+						var strName2 = isSearch == "Y" ? document.getElementById(listContentArry[i]).getAttribute("_data11") : document.getElementById(listContentArry[i]).getAttribute("_data12");
 		                var strDeptNM2 = document.getElementById(listContentArry[i]).getAttribute("_data13");
 		                var jickwe = document.getElementById(listContentArry[i]).getAttribute("_data14");
 		                var phone = document.getElementById(listContentArry[i]).getAttribute("_data8");

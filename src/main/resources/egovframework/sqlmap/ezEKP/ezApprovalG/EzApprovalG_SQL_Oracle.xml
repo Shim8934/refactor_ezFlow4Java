@@ -248,10 +248,10 @@
                                     AND FormID = #FORMID#
                                 </isEqual>
                                 <isEqual property="formNameSearch" compareValue="1">
-                                    AND (FORMNAME LIKE '%' || #FORMNAME# || '%' OR FORMNAME2 LIKE '%' || #FORMNAME# || '%')
+                                    AND (FORMNAME LIKE '%' || #FORMNAME# || '%' OR FORMNAME2 LIKE '%' || #FORMNAME# || '%' ESCAPE '\')
                                 </isEqual>
                                 <isEqual property="kendSearch" compareValue="1">
-                                    AND VAPRWILLDOCLIST.DOCID IN (SELECT DOCID FROM TBL_EXPENDAPRDOCINFO WHERE KEYWORD LIKE '%' || #KEYWORD# || '%')
+                                    AND VAPRWILLDOCLIST.DOCID IN (SELECT DOCID FROM TBL_EXPENDAPRDOCINFO WHERE KEYWORD LIKE '%' || #KEYWORD# || '%'  ESCAPE '\')
                                 </isEqual>
                                 <isEqual property="caprSearch" compareValue="1">
                                     AND TBL_EXPENDAPRDOCINFO.itemcode = #itemCODE#
@@ -386,10 +386,10 @@
 								    AND FormID = #FORMID#
 								</isEqual>
 								<isEqual property="formNameSearch" compareValue="1">
-								    AND (FORMNAME LIKE '%' || #FORMNAME# || '%' OR FORMNAME2 LIKE '%' || #FORMNAME# || '%')
+								    AND (FORMNAME LIKE '%' || #FORMNAME# || '%' OR FORMNAME2 LIKE '%' || #FORMNAME# || '%' ESCAPE '\')
 								</isEqual>
 								<isEqual property="kendSearch" compareValue="1">
-								    AND VAPRWILLDOCLIST.DOCID IN (SELECT DOCID FROM TBL_EXPENDAPRDOCINFO WHERE KEYWORD LIKE '%' || #KEYWORD# || '%')
+								    AND VAPRWILLDOCLIST.DOCID IN (SELECT DOCID FROM TBL_EXPENDAPRDOCINFO WHERE KEYWORD LIKE '%' || #KEYWORD# || '%'  ESCAPE '\')
 								</isEqual>
 								<isEqual property="caprSearch" compareValue="1">
 								    AND TBL_EXPENDAPRDOCINFO.itemcode = #itemCODE#
@@ -494,10 +494,10 @@
                                         AND FormID = #FORMID#
                                     </isEqual>
                                     <isEqual property="formNameSearch" compareValue="1">
-                                        AND (FORMNAME LIKE '%' || #FORMNAME# || '%' OR FORMNAME2 LIKE '%' || #FORMNAME# || '%')
+                                        AND (FORMNAME LIKE '%' || #FORMNAME# || '%' OR FORMNAME2 LIKE '%' || #FORMNAME# || '%' ESCAPE '\')
                                     </isEqual>
                                     <isEqual property="kendSearch" compareValue="1">
-                                        AND VAPRWILLDOCLIST.DOCID IN (SELECT DOCID FROM TBL_EXPENDAPRDOCINFO WHERE KEYWORD LIKE '%' || #KEYWORD# || '%')
+                                        AND VAPRWILLDOCLIST.DOCID IN (SELECT DOCID FROM TBL_EXPENDAPRDOCINFO WHERE KEYWORD LIKE '%' || #KEYWORD# || '%'  ESCAPE '\')
                                     </isEqual>
                                     <isEqual property="caprSearch" compareValue="1">
                                         AND TBL_EXPENDAPRDOCINFO.itemcode = #itemCODE#
@@ -593,16 +593,16 @@
                                                 AND COMPANYID = #searchCompanyID#
                                             </isEqual>
                                             <isEqual property="keywordSearch" compareValue="2">
-                                                AND DOCID IN (SELECT DOCID FROM TBL_EXPAPRDOCINFO WHERE KEYWORD LIKE '%' || #KEYWORD# || '%')
+                                                AND DOCID IN (SELECT DOCID FROM TBL_EXPAPRDOCINFO WHERE KEYWORD LIKE '%' || #KEYWORD# || '%' ESCAPE '\')
                                             </isEqual>
                                             <isEqual property="formIdSearch" compareValue="1">
                                                 AND FormID = #FORMID#
                                             </isEqual>
                                             <isEqual property="formNameSearch" compareValue="1">
-                                                AND (FORMNAME LIKE '%' || #FORMNAME# || '%' OR FORMNAME2 LIKE '%' || #FORMNAME# || '%')
+                                                AND (FORMNAME LIKE '%' || #FORMNAME# || '%' OR FORMNAME2 LIKE '%' || #FORMNAME# || '%' ESCAPE '\')
                                             </isEqual>
                                             <isEqual property="kendSearch" compareValue="1">
-                                                AND VAPRWILLDOCLIST.DOCID IN (SELECT DOCID FROM TBL_EXPENDAPRDOCINFO WHERE KEYWORD LIKE '%' || #KEYWORD# || '%')
+                                                AND VAPRWILLDOCLIST.DOCID IN (SELECT DOCID FROM TBL_EXPENDAPRDOCINFO WHERE KEYWORD LIKE '%' || #KEYWORD# || '%'  ESCAPE '\')
                                             </isEqual>
                                             <isEqual property="caprSearch" compareValue="1">
                                                 AND TBL_EXPENDAPRDOCINFO.itemcode = #itemCODE#
@@ -829,16 +829,16 @@
                                     AND COMPANYID = #searchCompanyID#
                                 </isEqual>
                                 <isEqual property="keywordSearch" compareValue="2">
-                                    AND DOCID IN (SELECT DOCID FROM TBL_EXPAPRDOCINFO WHERE KEYWORD LIKE '%' || #KEYWORD# || '%')
+                                    AND DOCID IN (SELECT DOCID FROM TBL_EXPAPRDOCINFO WHERE KEYWORD LIKE '%' || #KEYWORD# || '%' ESCAPE '\')
                                 </isEqual>
                                 <isEqual property="formIdSearch" compareValue="1">
                                     AND FormID = #FORMID#
                                 </isEqual>
                                 <isEqual property="formNameSearch" compareValue="1">
-                                    AND (FORMNAME LIKE '%' || #FORMNAME# || '%' OR FORMNAME2 LIKE '%' || #FORMNAME# || '%')
+                                    AND (FORMNAME LIKE '%' || #FORMNAME# || '%' OR FORMNAME2 LIKE '%' || #FORMNAME# || '%' ESCAPE '\')
                                 </isEqual>
                                 <isEqual property="kendSearch" compareValue="1">
-                                    AND VAPRWILLDOCLIST.DOCID IN (SELECT DOCID FROM TBL_EXPENDAPRDOCINFO WHERE KEYWORD LIKE '%' || #KEYWORD# || '%')
+                                    AND VAPRWILLDOCLIST.DOCID IN (SELECT DOCID FROM TBL_EXPENDAPRDOCINFO WHERE KEYWORD LIKE '%' || #KEYWORD# || '%'  ESCAPE '\')
                                 </isEqual>
                                 <isEqual property="caprSearch" compareValue="1">
                                     AND TBL_EXPENDAPRDOCINFO.itemcode = #itemCODE#
@@ -1089,16 +1089,16 @@
                                     AND COMPANYID = #searchCompanyID#
                                 </isEqual>
                                 <isEqual property="keywordSearch" compareValue="2">
-                                    AND DOCID IN (SELECT DOCID FROM TBL_EXPAPRDOCINFO WHERE KEYWORD LIKE '%' || #KEYWORD# || '%')
+                                    AND DOCID IN (SELECT DOCID FROM TBL_EXPAPRDOCINFO WHERE KEYWORD LIKE '%' || #KEYWORD# || '%' ESCAPE '\')
                                 </isEqual>
                                 <isEqual property="formIdSearch" compareValue="1">
                                     AND FormID = #FORMID#
                                 </isEqual>
                                 <isEqual property="formNameSearch" compareValue="1">
-                                    AND (FORMNAME LIKE '%' || #FORMNAME# || '%' OR FORMNAME2 LIKE '%' || #FORMNAME# || '%')
+                                    AND (FORMNAME LIKE '%' || #FORMNAME# || '%' OR FORMNAME2 LIKE '%' || #FORMNAME# || '%' ESCAPE '\')
                                 </isEqual>
                                 <isEqual property="kendSearch" compareValue="1">
-                                    AND VAPRWILLDOCLIST.DOCID IN (SELECT DOCID FROM TBL_EXPENDAPRDOCINFO WHERE KEYWORD LIKE '%' || #KEYWORD# || '%')
+                                    AND VAPRWILLDOCLIST.DOCID IN (SELECT DOCID FROM TBL_EXPENDAPRDOCINFO WHERE KEYWORD LIKE '%' || #KEYWORD# || '%'  ESCAPE '\')
                                 </isEqual>
                                 <isEqual property="caprSearch" compareValue="1">
                                     AND TBL_EXPENDAPRDOCINFO.itemcode = #itemCODE#
@@ -1284,16 +1284,16 @@
                                     AND COMPANYID = #searchCompanyID#
                                 </isEqual>
                                 <isEqual property="keywordSearch" compareValue="2">
-                                    AND DOCID IN (SELECT DOCID FROM TBL_EXPAPRDOCINFO WHERE KEYWORD LIKE '%' || #KEYWORD# || '%')
+                                    AND DOCID IN (SELECT DOCID FROM TBL_EXPAPRDOCINFO WHERE KEYWORD LIKE '%' || #KEYWORD# || '%' ESCAPE '\')
                                 </isEqual>
                                 <isEqual property="formIdSearch" compareValue="1">
                                     AND FormID = #FORMID#
                                 </isEqual>
                                 <isEqual property="formNameSearch" compareValue="1">
-                                    AND (FORMNAME LIKE '%' || #FORMNAME# || '%' OR FORMNAME2 LIKE '%' || #FORMNAME# || '%')
+                                    AND (FORMNAME LIKE '%' || #FORMNAME# || '%' OR FORMNAME2 LIKE '%' || #FORMNAME# || '%' ESCAPE '\')
                                 </isEqual>
                                 <isEqual property="kendSearch" compareValue="1">
-                                    AND VAPRWILLDOCLIST.DOCID IN (SELECT DOCID FROM TBL_EXPENDAPRDOCINFO WHERE KEYWORD LIKE '%' || #KEYWORD# || '%')
+                                    AND VAPRWILLDOCLIST.DOCID IN (SELECT DOCID FROM TBL_EXPENDAPRDOCINFO WHERE KEYWORD LIKE '%' || #KEYWORD# || '%'  ESCAPE '\')
                                 </isEqual>
                                 <isEqual property="caprSearch" compareValue="1">
                                     AND TBL_EXPENDAPRDOCINFO.itemcode = #itemCODE#
@@ -1554,16 +1554,16 @@
                                 AND TBL_APRDOCINFO.COMPANYID = #searchCompanyID#
                             </isEqual>
                             <isEqual property="keywordSearch" compareValue="2">
-                                AND TBL_APRDOCINFO.DOCID IN (SELECT DOCID FROM TBL_EXPAPRDOCINFO WHERE KEYWORD LIKE '%' || #KEYWORD# || '%')
+                                AND TBL_APRDOCINFO.DOCID IN (SELECT DOCID FROM TBL_EXPAPRDOCINFO WHERE KEYWORD LIKE '%' || #KEYWORD# || '%' ESCAPE '\')
                             </isEqual>
                             <isEqual property="formIdSearch" compareValue="1">
                                 AND FormID = #FORMID#
                             </isEqual>
                             <isEqual property="formNameSearch" compareValue="1">
-                                AND (FORMNAME LIKE '%' || #FORMNAME# || '%' OR FORMNAME2 LIKE '%' || #FORMNAME# || '%')
+                                AND (FORMNAME LIKE '%' || #FORMNAME# || '%' OR FORMNAME2 LIKE '%' || #FORMNAME# || '%' ESCAPE '\')
                             </isEqual>
                             <isEqual property="kendSearch" compareValue="1">
-                                AND VAPRWILLDOCLIST.DOCID IN (SELECT DOCID FROM TBL_EXPENDAPRDOCINFO WHERE KEYWORD LIKE '%' || #KEYWORD# || '%')
+                                AND VAPRWILLDOCLIST.DOCID IN (SELECT DOCID FROM TBL_EXPENDAPRDOCINFO WHERE KEYWORD LIKE '%' || #KEYWORD# || '%'  ESCAPE '\')
                             </isEqual>
                             <isEqual property="caprSearch" compareValue="1">
                                 AND TBL_EXPENDAPRDOCINFO.itemcode = #itemCODE#
@@ -1803,7 +1803,7 @@
                                  AND FormID = #FORMID#
                              </isEqual>
                              <isEqual property="formNameSearch" compareValue="1">
-                                 AND (FORMNAME LIKE '%' || #FORMNAME# || '%' OR FORMNAME2 LIKE '%' || #FORMNAME# || '%')
+                                 AND (FORMNAME LIKE '%' || #FORMNAME# || '%' OR FORMNAME2 LIKE '%' || #FORMNAME# || '%' ESCAPE '\')
                              </isEqual>
                              <isEqual property="urgentSearch" compareValue="1">
                                  AND URGENTAPPROVAL = #URGENTAPPROVAL#
@@ -2022,13 +2022,13 @@
 							AND TBL_APRDOCINFO.COMPANYID = #searchCompanyID#
 						</isEqual>
 						<isEqual property="keywordSearch" compareValue="1">
-							AND TBL_APRDOCINFO.DOCID IN (SELECT DOCID FROM TBL_EXPAPRDOCINFO WHERE KEYWORD LIKE '%' || #KEYWORD# || '%')
+							AND TBL_APRDOCINFO.DOCID IN (SELECT DOCID FROM TBL_EXPAPRDOCINFO WHERE KEYWORD LIKE '%' || #KEYWORD# || '%'  ESCAPE '\')
 						</isEqual>
 						<isEqual property="formIdSearch" compareValue="1">
 							AND FormID = #FORMID#
 						</isEqual>
 						<isEqual property="formNameSearch" compareValue="1">
-							AND (FORMNAME LIKE '%' || #FORMNAME# || '%' OR FORMNAME2 LIKE '%' || #FORMNAME# || '%')
+							AND (FORMNAME LIKE '%' || #FORMNAME# || '%' OR FORMNAME2 LIKE '%' || #FORMNAME# || '%' ESCAPE '\')
 						</isEqual>
 						<isEqual property="urgentSearch" compareValue="1">
 							AND URGENTAPPROVAL = #URGENTAPPROVAL#
@@ -2223,10 +2223,10 @@
                                                                 AND FormID = #FORMID#
                                                             </isEqual>
                                                             <isEqual property="formNameSearch" compareValue="1">
-                                                                AND (FORMNAME LIKE '%' || #FORMNAME# || '%' OR FORMNAME2 LIKE '%' || #FORMNAME# || '%')
+                                                                AND (FORMNAME LIKE '%' || #FORMNAME# || '%' OR FORMNAME2 LIKE '%' || #FORMNAME# || '%' ESCAPE '\')
                                                             </isEqual>
                                                             <isEqual property="kendSearch" compareValue="1">
-                                                                AND VAPRWILLDOCLIST.DOCID IN (SELECT DOCID FROM TBL_EXPENDAPRDOCINFO WHERE KEYWORD LIKE '%' || #KEYWORD# || '%')
+                                                                AND VAPRWILLDOCLIST.DOCID IN (SELECT DOCID FROM TBL_EXPENDAPRDOCINFO WHERE KEYWORD LIKE '%' || #KEYWORD# || '%'  ESCAPE '\')
                                                             </isEqual>
                                                             <isEqual property="caprSearch" compareValue="1">
                                                                 AND TBL_EXPENDAPRDOCINFO.itemcode = #itemCODE#
@@ -4474,16 +4474,16 @@
       			<isEqual property="v_SEARCHTYPE" compareValue="0">
       			<isEmpty property="v_LANGTYPE">
       				 AND 
-      				 	TBL_FORMINFO.FORMNAME LIKE '%' || #v_SEARCHNAME# || '%'
+      				 	TBL_FORMINFO.FORMNAME LIKE '%' || #v_SEARCHNAME# || '%' ESCAPE '\'
       			</isEmpty>
       			<isNotEmpty property="v_LANGTYPE">
       				 AND 
-      					TBL_FORMINFO.FORMNAME2 LIKE '%' || #v_SEARCHNAME# || '%'
+      					TBL_FORMINFO.FORMNAME2 LIKE '%' || #v_SEARCHNAME# || '%' ESCAPE '\'
       			</isNotEmpty>
       			</isEqual>
       			<isEqual property="v_SEARCHTYPE" compareValue="1">
       				AND 
-      					TBL_FORMINFO.FORMDESCRIPTION LIKE '%' || #v_SEARCHNAME# || '%'
+      					TBL_FORMINFO.FORMDESCRIPTION LIKE '%' || #v_SEARCHNAME# || '%'  ESCAPE '\'
       			</isEqual>
       				AND 
 						TBL_FORMINFO.TENANT_ID = #v_TENANTID#
@@ -4550,16 +4550,16 @@
           <isEqual property="v_SEARCHTYPE" compareValue="0">
           <isEmpty property="v_LANGTYPE"> 
          	 AND 
-         	 	TBL_FORMINFO.FORMNAME LIKE '%' || #v_SEARCHNAME# || '%'
+         	 	TBL_FORMINFO.FORMNAME LIKE '%' || #v_SEARCHNAME# || '%' ESCAPE '\'
           </isEmpty>
           <isNotEmpty property="v_LANGTYPE"> 
          	AND 
-         		TBL_FORMINFO.FORMNAME2 LIKE '%' || #v_SEARCHNAME# || '%'
+         		TBL_FORMINFO.FORMNAME2 LIKE '%' || #v_SEARCHNAME# || '%' ESCAPE '\'
           </isNotEmpty>
           </isEqual>
           <isEqual property="v_SEARCHTYPE" compareValue="1">
           	AND 
-          		TBL_FORMINFO.FORMDESCRIPTION LIKE '%' || #v_SEARCHNAME# || '%'
+          		TBL_FORMINFO.FORMDESCRIPTION LIKE '%' || #v_SEARCHNAME# || '%'  ESCAPE '\'
           </isEqual>
          	AND 
          		(
@@ -4618,16 +4618,16 @@
 			<isEqual property="v_SEARCHTYPE" compareValue="0">
          	<isEmpty property="v_LANGTYPE"> 
          		AND 
-         			TBL_FORMINFO.FORMNAME LIKE '%' || #v_SEARCHNAME# || '%'
+         			TBL_FORMINFO.FORMNAME LIKE '%' || #v_SEARCHNAME# || '%' ESCAPE '\'
          	</isEmpty>
          	<isNotEmpty property="v_LANGTYPE"> 
          		AND 
-         			TBL_FORMINFO.FORMNAME2 LIKE '%' || #v_SEARCHNAME# || '%'
+         			TBL_FORMINFO.FORMNAME2 LIKE '%' || #v_SEARCHNAME# || '%' ESCAPE '\'
          	</isNotEmpty>
          	</isEqual>
          	<isEqual property="v_SEARCHTYPE" compareValue="1">
          	 	AND 
-         	 		TBL_FORMINFO.FORMDESCRIPTION LIKE '%' || #v_SEARCHNAME# || '%'
+         	 		TBL_FORMINFO.FORMDESCRIPTION LIKE '%' || #v_SEARCHNAME# || '%'  ESCAPE '\'
          	</isEqual>
          		AND
          			TBL_FORMINFO.TENANT_ID = #v_TENANTID#
@@ -9050,6 +9050,7 @@
 	      			TBL_APRDOCINFO.FORMID
                 <isEqual property="assignChk" compareValue="Y">
                     , TBL_APRRECEIPTPROCESSINFO.PROCESSORNAME as PROCESSORNAME
+                    , TBL_APRRECEIPTPROCESSINFO.PROCESSORNAME2 as PROCESSORNAME2
                 </isEqual>
 	      		FROM 
 	      			TBL_APRRECEIPTPROCESSINFO 
@@ -9181,10 +9182,10 @@
 				<![CDATA[TBL_APRDOCINFO.FORMID = #col_where_FORMID#]]>
 			</isNotEmpty>
 			<isNotEmpty property="col_where_FORMNAME" prepend="AND">
-				<![CDATA[TBL_EXPAPRDOCINFO.FORMNAME LIKE '%' || #col_where_FORMNAME# || '%']]>
+				<![CDATA[TBL_EXPAPRDOCINFO.FORMNAME LIKE '%' || #col_where_FORMNAME# || '%' ESCAPE '\']]>
 			</isNotEmpty>
 			<isNotEmpty property="col_where_KEYWORD" prepend="AND">
-				<![CDATA[TBL_EXPAPRDOCINFO.KEYWORD LIKE '%' || #col_where_KEYWORD# || '%']]>
+				<![CDATA[TBL_EXPAPRDOCINFO.KEYWORD LIKE '%' || #col_where_KEYWORD# || '%' ESCAPE '\']]>
 			</isNotEmpty>
 			<isNotEmpty property="col_where_URGENTAPPROVAL" prepend="AND">
 				<![CDATA[TBL_EXPAPRDOCINFO.URGENTAPPROVAL = #col_where_URGENTAPPROVAL#]]>
@@ -10316,7 +10317,7 @@
 									FORMID = #v_FORMID#
 							   	</isNotEmpty>
 								<isNotEmpty property="v_FORMNAME" prepend="AND">
-								    (FORMNAME LIKE '%' || #v_FORMNAME# || '%' OR FORMNAME2 LIKE '%' || #v_FORMNAME# || '%')
+								    (FORMNAME LIKE '%' || #v_FORMNAME# || '%' OR FORMNAME2 LIKE '%' || #v_FORMNAME# || '%' ESCAPE '\')
 								</isNotEmpty>
 							   	<isNotEmpty property="v_STARTDATE1" prepend="AND">
 									<![CDATA[ STARTDATE >= TO_DATE(#v_STARTDATE1#,'YYYY-MM-DD HH24:MI:SS') ]]>
@@ -10418,10 +10419,10 @@
 								   	</isNotEmpty>
 							   	</isEqual>
 							   	<isNotEmpty property="v_KEYWORD" prepend="AND">
-                                    KEYWORD LIKE '%' || #v_KEYWORD# || '%'
+                                    KEYWORD LIKE '%' || #v_KEYWORD# || '%' ESCAPE '\'
                                 </isNotEmpty>
                                 <isNotEmpty property="v_containerFormName" prepend="AND">
-								    TBL_EXPENDAPRDOCINFO.FORMNAME = #v_containerFormName#
+								    TBL_EXPENDAPRDOCINFO.FORMNAME = #v_containerFormName# ESCAPE '\'
 								</isNotEmpty>
 								<isNotEmpty property="v_containerTaskCode" prepend="AND">
 						            TBL_EXPENDAPRDOCINFO.TASKCODE = #v_containerTaskCode#
@@ -11124,7 +11125,7 @@
                 FORMID = #q_Map.qOptionFormId#
             </isNotEmpty>
             <isNotEmpty property="q_Map.qOptionFormName" prepend="AND">
-				(FORMNAME LIKE ('%' || #q_Map.qOptionFormName# || '%') OR FORMNAME2 LIKE ('%' || #q_Map.qOptionFormName# || '%'))
+				(FORMNAME LIKE ('%' || #q_Map.qOptionFormName# || '%') OR FORMNAME2 LIKE ('%' || #q_Map.qOptionFormName# || '%') ESCAPE '\')
 			</isNotEmpty>
             <isNotEmpty property="q_Map.qOptionKeyword" prepend="AND">
                 TBL_EXPENDAPRDOCINFO.KEYWORD LIKE '%' || #q_Map.qOptionKeyword# || '%'
@@ -11589,7 +11590,7 @@
 	      	AND 
 	      		CODE1 = #v_CODE1# 
 	      	AND  
-	      		CODE2 = #v_CODE2#
+	      		TRIM(CODE2) = #v_CODE2#
 	      	ORDER BY 
 	      		CODE2
 			]]>
@@ -11614,7 +11615,7 @@
 	      	AND
 	      		CODE1 = #v_CODE1#
 	      	AND  
-	      		CODE2 = #v_CODE2#
+	      		TRIM(CODE2) = #v_CODE2#
 	      	ORDER BY 
 	      		CODE2
 			]]>
@@ -13367,22 +13368,22 @@
             </isNotEqual>
             <isEqual property="v_LISTTYPE" compareValue="21">
                 <isEqual property="keywordSearch" compareValue="1">
-                    IN (SELECT CONCAT(CONCAT(OWNERID, '@'), SN) FROM TBL_TMPEXPAPRDOCINFO WHERE KEYWORD LIKE CONCAT(CONCAT('%', #KEYWORD#), '%'))
+                    IN (SELECT CONCAT(CONCAT(OWNERID, '@'), SN) FROM TBL_TMPEXPAPRDOCINFO WHERE KEYWORD LIKE CONCAT(CONCAT('%', #KEYWORD#), '%') ESCAPE '\')
                 </isEqual>
             </isEqual>
             <isNotEqual property="v_LISTTYPE" compareValue="21">
                 <isEqual property="keywordSearch" compareValue="2">
-                    IN (SELECT DOCID FROM TBL_EXPAPRDOCINFO WHERE KEYWORD LIKE CONCAT(CONCAT('%', #KEYWORD#), '%'))
+                    IN (SELECT DOCID FROM TBL_EXPAPRDOCINFO WHERE KEYWORD LIKE CONCAT(CONCAT('%', #KEYWORD#), '%') ESCAPE '\')
                 </isEqual>
             </isNotEqual>
             <isEqual property="formIdSearch" compareValue="1" prepend="AND">
                 FormID = #FORMID#
             </isEqual>
             <isEqual property="formNameSearch" compareValue="1" prepend="AND">
-                (FORMNAME LIKE CONCAT(CONCAT('%', #FORMNAME#), '%') OR FORMNAME2 LIKE CONCAT(CONCAT('%', #FORMNAME#), '%'))
+                (FORMNAME LIKE CONCAT(CONCAT('%', #FORMNAME#), '%') OR FORMNAME2 LIKE CONCAT(CONCAT('%', #FORMNAME#), '%') ESCAPE '\')
             </isEqual>
             <isEqual property="kendSearch" compareValue="1" prepend="AND">
-                VAPRWILLDOCLIST.DOCID IN (SELECT DOCID FROM TBL_EXPENDAPRDOCINFO WHERE KEYWORD LIKE CONCAT(CONCAT('%', #KEYWORD#), '%'))
+                VAPRWILLDOCLIST.DOCID IN (SELECT DOCID FROM TBL_EXPENDAPRDOCINFO WHERE KEYWORD LIKE CONCAT(CONCAT('%', #KEYWORD#), '%') ESCAPE '\')
             </isEqual>
             <isEqual property="caprSearch" compareValue="1" prepend="AND">
                 TBL_EXPENDAPRDOCINFO.itemcode = #itemCODE#
@@ -15098,10 +15099,10 @@
 			<![CDATA[TBL_APRDOCINFO.FORMID = #col_where_FORMID#]]>
 		</isNotEmpty>
 		<isNotEmpty property="col_where_FORMNAME" prepend="AND">
-			<![CDATA[TBL_EXPAPRDOCINFO.FORMNAME LIKE '%' || #col_where_FORMNAME# || '%']]>
+			<![CDATA[TBL_EXPAPRDOCINFO.FORMNAME LIKE '%' || #col_where_FORMNAME# || '%' ESCAPE '\']]>
 		</isNotEmpty>
 		<isNotEmpty property="col_where_KEYWORD" prepend="AND">
-			<![CDATA[TBL_EXPAPRDOCINFO.KEYWORD LIKE '%' || #col_where_KEYWORD# || '%']]>
+			<![CDATA[TBL_EXPAPRDOCINFO.KEYWORD LIKE '%' || #col_where_KEYWORD# || '%'  ESCAPE '\']]>
 		</isNotEmpty>
 		<isNotEmpty property="col_where_URGENTAPPROVAL" prepend="AND">
 			<![CDATA[TBL_EXPAPRDOCINFO.URGENTAPPROVAL = #col_where_URGENTAPPROVAL#]]>
@@ -15272,10 +15273,10 @@
 	   		 	FORMID = #v_FORMID#
 	   		</isNotEmpty>
 			<isNotEmpty property="v_FORMNAME" prepend="AND">
-				(FORMNAME LIKE '%' || #v_FORMNAME# || '%' OR FORMNAME2 LIKE '%' || #v_FORMNAME# || '%')
+				(FORMNAME LIKE '%' || #v_FORMNAME# || '%' OR FORMNAME2 LIKE '%' || #v_FORMNAME# || '%' ESCAPE '\')
 			</isNotEmpty>
             <isNotEmpty property="v_KEYWORD" prepend="AND">
-                KEYWORD LIKE '%' || #v_KEYWORD# || '%'
+                KEYWORD LIKE '%' || #v_KEYWORD# || '%' ESCAPE '\'
             </isNotEmpty>
 	   		<isNotEmpty property="v_STARTDATE1" prepend="AND"> 
 	   		<![CDATA[ STARTDATE >= TO_DATE(#v_STARTDATE1#, 'YYYY-MM-DD HH24:MI:SS') ]]>
@@ -15396,10 +15397,10 @@
 		   		</isNotEqual>
 	   		</isNotEmpty>
 	   		<isNotEmpty property="v_KEYWORD" prepend="AND">
-		    	KEYWORD LIKE '%' || #v_KEYWORD# || '%'
+		    	KEYWORD LIKE '%' || #v_KEYWORD# || '%' ESCAPE '\'
 			</isNotEmpty>
 			<isNotEmpty property="v_containerFormName" prepend="AND">
-			    TBL_EXPENDAPRDOCINFO.FORMNAME = #v_containerFormName#
+			    TBL_EXPENDAPRDOCINFO.FORMNAME = #v_containerFormName# ESCAPE '\'
 			</isNotEmpty>
 			<isNotEmpty property="v_containerTaskCode" prepend="AND">
 	            TBL_EXPENDAPRDOCINFO.TASKCODE = #v_containerTaskCode#
@@ -15792,10 +15793,10 @@
             FORMID = #q_Map.qOptionFormId#
         </isNotEmpty>
         <isNotEmpty property="q_Map.qOptionFormName" prepend="AND">
-			(FORMNAME LIKE CONCAT(CONCAT('%', #q_Map.qOptionFormName#), '%') OR FORMNAME2 LIKE CONCAT(CONCAT('%', #q_Map.qOptionFormName#), '%'))
+			(FORMNAME LIKE CONCAT(CONCAT('%', #q_Map.qOptionFormName#), '%') OR FORMNAME2 LIKE CONCAT(CONCAT('%', #q_Map.qOptionFormName#), '%') ESCAPE '\')
 		</isNotEmpty>
         <isNotEmpty property="q_Map.qOptionKeyword" prepend="AND">
-            TBL_EXPENDAPRDOCINFO.KEYWORD LIKE CONCAT(CONCAT('%', #q_Map.qOptionKeyword#), '%')
+            TBL_EXPENDAPRDOCINFO.KEYWORD LIKE CONCAT(CONCAT('%', #q_Map.qOptionKeyword#), '%')  ESCAPE '\'
         </isNotEmpty>
         <isNotEmpty property="q_Map.qOptionItemCode" prepend="AND">
             TBL_EXPENDAPRDOCINFO.ITEMCODE = #q_Map.qOptionItemCode#
@@ -20391,7 +20392,7 @@
        		WHERE  
        			code1 = #v_CODE1#
             AND 
-            	code2 = #v_CODE2#
+            	TRIM(code2) = #v_CODE2#
             AND 
             	TENANT_ID = #v_TENANTID#
             AND
@@ -27408,7 +27409,7 @@
             <![CDATA[ENDDATE <= TO_DATE(#q_Map.qOptionEndDateBF#, 'YYYY-MM-DD HH24:MI:SS')]]>
         </isNotEmpty>
         <isNotEmpty property="q_Map.qOptionFormName" prepend="AND">
-            TBL_EXPENDAPRDOCINFO.FORMNAME LIKE CONCAT(CONCAT('%', #q_Map.qOptionFormName#), '%')
+            TBL_EXPENDAPRDOCINFO.FORMNAME LIKE CONCAT(CONCAT('%', #q_Map.qOptionFormName#), '%') ESCAPE '\'
         </isNotEmpty>
         <isNotEmpty property="q_Map.qOptionWriterDeptName" prepend="AND">
             <isEqual property="q_Map.p_UserLang" compareValue="2">
@@ -27573,7 +27574,7 @@
             <![CDATA[ENDDATE <= TO_DATE(#q_Map.qOptionEndDateBF#, 'YYYY-MM-DD HH24:MI:SS')]]>
         </isNotEmpty>
         <isNotEmpty property="q_Map.qOptionFormName" prepend="AND">
-            TBL_EXPENDAPRDOCINFO.FORMNAME LIKE CONCAT(CONCAT('%', #q_Map.qOptionFormName#), '%')
+            TBL_EXPENDAPRDOCINFO.FORMNAME LIKE CONCAT(CONCAT('%', #q_Map.qOptionFormName#), '%') ESCAPE '\'
         </isNotEmpty>
         <isNotEmpty property="q_Map.qOptionWriterDeptName" prepend="AND">
             <isEqual property="q_Map.p_UserLang" compareValue="2">
@@ -27745,7 +27746,7 @@
             <![CDATA[ENDDATE <= TO_DATE(#q_Map.qOptionEndDateBF#, 'YYYY-MM-DD HH24:MI:SS')]]>
         </isNotEmpty>
         <isNotEmpty property="q_Map.qOptionFormName" prepend="AND">
-            TBL_EXPENDAPRDOCINFO.FORMNAME LIKE CONCAT(CONCAT('%', #q_Map.qOptionFormName#), '%')
+            TBL_EXPENDAPRDOCINFO.FORMNAME LIKE CONCAT(CONCAT('%', #q_Map.qOptionFormName#), '%') ESCAPE '\'
         </isNotEmpty>
         <isNotEmpty property="q_Map.qOptionWriterDeptName" prepend="AND">
             <isEqual property="q_Map.p_UserLang" compareValue="2">
@@ -29830,7 +29831,7 @@
         AND
             CODE1 = #v_CODE1#
         AND
-            CODE2 = #v_CODE2#
+            TRIM(CODE2) = #v_CODE2#
       </select>
 
 	  <select id="EzApprovalG.getDraftDeptID" parameterClass="Map" resultClass="String">
@@ -31842,10 +31843,10 @@
 										FORMID = #v_FORMID#
 							   	</isNotEmpty>
 								<isNotEmpty property="v_FORMNAME" prepend="AND">
-									    (TBL_EXPENDAPRDOCINFO.FORMNAME LIKE '%' || #v_FORMNAME# || '%' OR TBL_EXPENDAPRDOCINFO.FORMNAME2 LIKE '%' || #v_FORMNAME# || '%')
+									    (TBL_EXPENDAPRDOCINFO.FORMNAME LIKE '%' || #v_FORMNAME# || '%' OR TBL_EXPENDAPRDOCINFO.FORMNAME2 LIKE '%' || #v_FORMNAME# || '%' ESCAPE '\')
 								</isNotEmpty>
                                 <isNotEmpty property="v_KEYWORD" prepend="AND">
-                                        KEYWORD LIKE '%' || #v_KEYWORD# || '%'
+                                        KEYWORD LIKE '%' || #v_KEYWORD# || '%'  ESCAPE '\'
                                 </isNotEmpty>
 							   	<isNotEmpty property="v_STARTDATE1" prepend="AND">
 							   	<![CDATA[ STARTDATE >= TO_DATE(#v_STARTDATE1#, 'YYYY-MM-DD HH24:MI:SS') ]]>
@@ -32136,10 +32137,10 @@
    		 	FORMID = #v_FORMID#
    		</isNotEmpty>
 		<isNotEmpty property="v_FORMNAME" prepend="AND">
-   			(TBL_EXPENDAPRDOCINFO.FORMNAME LIKE '%' || #v_FORMNAME# || '%' OR TBL_EXPENDAPRDOCINFO.FORMNAME2 LIKE '%' || #v_FORMNAME# || '%')
+   			(TBL_EXPENDAPRDOCINFO.FORMNAME LIKE '%' || #v_FORMNAME# || '%' OR TBL_EXPENDAPRDOCINFO.FORMNAME2 LIKE '%' || #v_FORMNAME# || '%' ESCAPE '\')
    		</isNotEmpty>
         <isNotEmpty property="v_KEYWORD" prepend="AND">
-            KEYWORD LIKE '%' || #v_KEYWORD# || '%'
+            KEYWORD LIKE '%' || #v_KEYWORD# || '%'  ESCAPE '\'
         </isNotEmpty>
    		<isNotEmpty property="v_STARTDATE1" prepend="AND">
    		<![CDATA[ STARTDATE >= TO_DATE(#v_STARTDATE1#, 'YYYY-MM-DD HH24:MI:SS') ]]>  
@@ -37215,16 +37216,16 @@
         <isEqual property="v_SEARCHTYPE" compareValue="0">
             <isEmpty property="v_LANGTYPE">
                 AND
-                TBL_FORMINFO.FORMNAME LIKE '%' || #v_SEARCHNAME# || '%'
+                TBL_FORMINFO.FORMNAME LIKE '%' || #v_SEARCHNAME# || '%' ESCAPE '\'
             </isEmpty>
             <isNotEmpty property="v_LANGTYPE">
                 AND
-                TBL_FORMINFO.FORMNAME2 LIKE '%' || #v_SEARCHNAME# || '%'
+                TBL_FORMINFO.FORMNAME2 LIKE '%' || #v_SEARCHNAME# || '%' ESCAPE '\'
             </isNotEmpty>
         </isEqual>
         <isEqual property="v_SEARCHTYPE" compareValue="1">
             AND
-            TBL_FORMINFO.FORMDESCRIPTION LIKE '%' || #v_SEARCHNAME# || '%'
+            TBL_FORMINFO.FORMDESCRIPTION LIKE '%' || #v_SEARCHNAME# || '%'  ESCAPE '\'
         </isEqual>
         <![CDATA[               
                     AND

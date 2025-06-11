@@ -781,6 +781,16 @@ function ListView() {
                 	objTd.width = SelectSingleNodeValue(oHeaders[j], "WIDTH");
                 }
                 
+                // mouseover 시 td마다 title 세팅
+                var headerColName = SelectSingleNodeValue(oHeaders[j], "COLNAME");
+                if (headerColName == "TITLE") { // 게시요약 있는 경우 제목 대신 표출
+                    objTd.title = titleStr? titleStr : strValue;
+                } else if (headerColName != "ITEMID" && headerColName != "ATTACHMENTS") {
+                    objTd.title = strValue;
+                } else { // 체크박스, 첨부파일 툴팁 미표출
+                    objTd.title = "";
+                }
+
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "TITLE") {
                     objTd.style.margin = "0";
                     objTd.style.width = "50%";
