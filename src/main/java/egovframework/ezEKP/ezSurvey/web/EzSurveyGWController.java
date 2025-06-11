@@ -482,6 +482,7 @@ public class EzSurveyGWController {
 			JSONArray resultViewTarget = infor.get("resultViewTarget") != null ? (JSONArray) infor.get("resultViewTarget") : null;
 			int userFlag            = (users == null || users.size() == 0) ? 0 : 1;
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+			String closingText      = infor.get("closing")    != null ? infor.get("closing").toString()            : "";
 			
 			// 2025-02-10 조수빈 - 설문 목적은 필수 값에서 제외하기로 했음
 			if (title.equals("") || startDate.equals("") || endDate.equals("") || format.parse(startDate).compareTo(format.parse(endDate)) > 0 || publicFlag == -1 || anonymousFlag == -1 || multipleFlag == -1 || (publicFlag == 1 && publicDays == -1)) {
@@ -492,7 +493,7 @@ public class EzSurveyGWController {
 			}
 			
 			String realPath  = request.getServletContext().getRealPath("");
-			result           = surveyService.saveSurveyItem(request, realPath, questions, title, purpose, startDate, endDate, publicFlag, anonymousFlag, multipleFlag, userFlag, publicDays, attchList, users, useStatus, surveyId, draftMode, userInfo, mailFlag, popupFlag);
+			result           = surveyService.saveSurveyItem(request, realPath, questions, title, purpose, startDate, endDate, publicFlag, anonymousFlag, multipleFlag, userFlag, publicDays, attchList, users, useStatus, surveyId, draftMode, userInfo, mailFlag, popupFlag, closingText);
 		
 			if (publicFlag == 2 && resultViewTarget != null) {
 				Long NewSurveyId = (Long) result.get("survey_id");

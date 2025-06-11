@@ -9,9 +9,6 @@
 </div>
 
 <div class="surveyinfo-wrap" id="surveyInfConfirm">
-	<div class="surveyinfopp-wrap">
-		<div class="survey-purpose" id="cf-purpose"></div>
-	</div>
 	<div class="survey-otherinf">
 		<table class="content surveyContent">
 			<tr>
@@ -69,6 +66,10 @@
             </div>
 		</div>
 	</div>
+
+	<div class="surveyinfopp-wrap">
+		<div class="survey-purpose" id="cf-purpose"></div>
+	</div>
 </div>
 
 <div class="attach-zone off" id="surveyAttConfirm">
@@ -83,6 +84,11 @@
 
 
 <div class="confirmQsArea"></div>
+
+<%--맺음말--%>
+<div class="surveyinfopp-wrap" id="closingArea" style="margin-top: 10px;">
+	<div class="survey-purpose" id="cf-closing"></div>
+</div>
 
 <div class="survey-bttn-panel">
 	<div class="btnpositionSurvey">

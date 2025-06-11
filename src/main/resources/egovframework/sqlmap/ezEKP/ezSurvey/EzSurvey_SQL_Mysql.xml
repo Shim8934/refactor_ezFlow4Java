@@ -82,8 +82,9 @@
 		<result property="totalUser"        column="total_user"          columnIndex="26"/>
 		<result property="mailFlag"         column="mail_flag"           columnIndex="27"/>
 		<result property="popupFlag"        column="popup_flag"          columnIndex="28"/>
-		<result property="participants"        column="participants"          columnIndex="29"/>
-		<result property="participation"        column="participation"          columnIndex="30"/>
+		<result property="participants"     column="participants"        columnIndex="29"/>
+		<result property="participation"    column="participation"       columnIndex="30"/>
+		<result property="closingText"      column="closing_text"        columnIndex="31"/>
 	</resultMap>
 	
 	<!-- AttachVO resultMap -->
@@ -204,7 +205,8 @@
 			mail_flag,
 			popup_flag,
 			IFNULL(PARTICIPANTS, 0) AS PARTICIPANTS,
-			IFNULL(PARTICIPATION, 0) AS PARTICIPATION
+			IFNULL(PARTICIPATION, 0) AS PARTICIPATION,
+			CLOSING_TEXT
 		from tbl_survey
 				 LEFT JOIN (SELECT SURVEY_ID                                           SI,
 								   COUNT(DISTINCT USER_ID)                           PARTICIPANTS,
@@ -721,13 +723,13 @@
 				survey_id,     title,         purpose,            user_id,        create_date,       start_date,        end_date,    user_name1,  user_name2,
 				use_status,    open_days,     result_public_flag, anonymous_flag, multi_answer_flag, participate_flag,  attach_flag,  modify_flag, draft_flag,
 				response_flag, delete_user,   update_user,        update_date,    total_user,        company_id,        tenant_id,
-				mail_flag,     popup_flag
+				mail_flag,     popup_flag,	  closing_text
 			)
 			values (
 				#surveyId#,     #title#,      #purpose#,          #creatorId#,     #createDate#,      #startDate#,      #endDate#,      #creatorName1#, #creatorName2#,
 				#useStatus#,    #openDays#,   #resultPublicFlag#, #anonymousFlag#, #multiAnswerFlag#, #paritipateFlag#, #attachFlag#,   #modifyFlag#,   #draftFlag#,
 				#responseFlag#, #deleteUser#, #updateUser#,       #updateDate#,    #totalUser#,       #companyId#,      #tenantId#,
-				#mailFlag#,     #popupFlag#
+				#mailFlag#,     #popupFlag#,  #closingText#
 			)
 		]]>
 	</insert>
@@ -758,7 +760,8 @@
 			update_user        = #updateUser#,
 			update_date        = #updateDate#,
 			mail_flag		   = #mailFlag#,
-			popup_flag		   = #popupFlag#
+			popup_flag		   = #popupFlag#,
+			closing_text       = #closingText#
 		</isEqual>
 		<isEqual property="updateMode" compareValue="1">
 			use_status         = #useStatus#,

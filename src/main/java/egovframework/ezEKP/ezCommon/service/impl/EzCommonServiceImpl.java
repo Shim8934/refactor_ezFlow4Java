@@ -2850,6 +2850,14 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("AFTER_MYSQL", "DEFAULT NULL COMMENT '요약전 mht파일이 저장되는 경로정보'"); 
             put("AFTER_ORACLE", "DEFAULT NULL");
 		}});
+        // 2025-06-11 양지혜 - 전자설문 > 맺음말 컬럼 추가
+        test.add(new HashMap<String, Object>(){{
+            put("TABLE","TBL_SURVEY");
+            put("COLUMN", "CLOSING_TEXT");
+            put("TYPE_MYSQL", "longtext"); put("TYPE_ORACLE", "NCLOB");
+            put("AFTER_MYSQL", "DEFAULT NULL COMMENT '맺음말'");
+            put("AFTER_ORACLE", "DEFAULT NULL");
+        }});
 		for (Map<String, Object> map : test) {
 			ezCommonDAO.alterTableAddColumns(map);
         }

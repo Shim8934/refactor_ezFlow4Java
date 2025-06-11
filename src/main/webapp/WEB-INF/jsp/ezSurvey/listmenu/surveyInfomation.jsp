@@ -125,6 +125,12 @@
 	</c:if>
 </div>
 
+<%--맺음말--%>
+<div class="survey-otherinf" id="closingWrap">
+	<div><span><spring:message code="ezSurvey.closing01"/></span></div>
+	<textarea id="closingText"></textarea>
+</div>
+
 <div class="survey-bttn-panel">
 	<div class="btnpositionSurvey">
 		<a class="imgbtnSurvey imgbtnSurvey gotoSecondTab"><span><spring:message code='ezSurvey.t89'/></span></a>

@@ -32,6 +32,7 @@
 	<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery-ui.js'        )}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezSurvey/jquery.ddslick.min.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('ezSurvey.lang', 'msg'              )}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 </head>
 	
 <body class="surveyBody">
@@ -87,7 +88,6 @@
 		<div id="svTitle" class="survey-title"><c:out value="${survey.title}"></c:out><span class="srvyTitle_info" id="surveyInfBttn"><img src="/images/ezSurvey/srvyTitle_info.png"></span></div>
 		
 		<div id="svPurpose" class="svPurpose">
-			<div id="ppContent" class="ppContent" style="font-family:${defaultFontFamily}; font-size:${defaultFontSize};">${survey.purpose}</div>
 			<div class="survey-otherinf">
 				<table class="content surveyDtl">
 					<tr>
@@ -118,6 +118,7 @@
 					</tr>
 				</table>
 			</div>
+			<div id="ppContent" class="ppContent" style="font-family:${defaultFontFamily}; font-size:${defaultFontSize};">${survey.purpose}</div>
 			<div class="attach-zone2 off" id="surveyAtt">
 				<div class="mainzone2">
 					<div class="fileList">
@@ -128,6 +129,14 @@
 		</div>
 		
 		<div class="prevQsArea" id="prevQsAreaDIV"></div>
+
+		<%--맺음말--%>
+		<c:if test="${(survey.closingText ne '') && (survey.closingText ne null)}">
+			<div id="svClosing" class="svPurpose">
+				<div id="ppClosing" class="ppContent" style="font-family:${defaultFontFamily}; font-size:${defaultFontSize};"></div>
+			</div>
+		</c:if>
+		
 		<iframe name="attachFrame" id="attachFrame" style="display: none;"></iframe>
 	</div>
 </body>
@@ -628,6 +637,10 @@
 			// 20.05.06 강승구 : 설문응답여부에 따른 처리 코드추가
 			checkQuestionAnswer();
 			isFirstEvent = false;
+
+			if (survey.closingText != null && survey.closingText != "") {
+				document.getElementById("ppClosing").innerHTML = escapeHtml(survey.closingText).replace(/(\r\n|\n|\r)/g, "<br/>");
+			}
 		}
 		// 첨부파일 리스트 나타내기
 		function showAttachList() {
@@ -1868,6 +1881,17 @@
 			}
 		}
 	}
-	
+
+	function escapeHtml(text) {
+		var map = {
+			'&': '&amp;',
+			'<': '&lt;',
+			'>': '&gt;',
+			'"': '&quot;',
+			"'": '&#039;'
+		};
+
+		return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+	}
 </script>
 </html>

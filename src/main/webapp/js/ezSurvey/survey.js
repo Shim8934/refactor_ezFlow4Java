@@ -106,6 +106,8 @@ var SurveyCreate     = function() {
                 setSurveyResultUsers(reuseSurvey["resultViewTarget"]);
                 $("#rspdtList2").addClass('on');
             }
+			if (reuseSurvey["closingText"] != "") {surveyObj["infor"]["closing"] = reuseSurvey["closingText"];}
+			
 			getReuseQuestions();
 		}
 		
@@ -298,6 +300,7 @@ var SurveyCreate     = function() {
 		var popupFlag       = parseInt(document.querySelector('input[name="popupSpan"]:checked').value);
 		var liFileList     = surveyAttWrap.querySelector("ul[class='ulFiles']").children;
 		var attachList     = [];
+		var closingText    = document.getElementById("closingText").value;
 		
 		if (publicFlag == 1) {
 			var daysVal                      = surveyInfoWrap.querySelector("input[class='date-input']").value;
@@ -312,8 +315,9 @@ var SurveyCreate     = function() {
 		surveyObj["infor"]["startDate"] = startDate;
 		surveyObj["infor"]["endDate"]   = endDate;
 		surveyObj["infor"]["userflag"]  = userFlag;
-		surveyObj["infor"]["mail"]  = mailFlag;
-		surveyObj["infor"]["popup"]  = popupFlag;
+		surveyObj["infor"]["mail"]      = mailFlag;
+		surveyObj["infor"]["popup"]     = popupFlag;
+		surveyObj["infor"]["closing"]   = closingText;
 		
 		if (liFileList.length > 0) {
 			for (var i = 0, len = liFileList.length; i < len; i++) {
@@ -4538,6 +4542,13 @@ var SurveyCreate     = function() {
 		document.getElementById("cf-multiple").textContent   = qstInf["multiple"]  == 0 ? SurveyMessages.strMultiple1 : SurveyMessages.strMultiple2;
 		document.getElementById("cf-mail").textContent   = qstInf["mail"]  == 0 ? SurveyMessages.strNotSend : SurveyMessages.strSend;
 		document.getElementById("cf-popup").textContent   = qstInf["popup"]  == 0 ? SurveyMessages.strNotSend : SurveyMessages.strSend;
+		
+		if (qstInf["closing"] != "") {
+			document.getElementById("closingArea").style.display = "";
+			document.getElementById("cf-closing").innerHTML = escapeHtml(qstInf["closing"]).replace(/(\r\n|\n|\r)/g, "<br/>");
+		} else {
+			document.getElementById("closingArea").style.display = "none";
+		}
 		
 		// 설문 최종확인 시 설문결과 타입 표출
 		if (qstInf["public"] == 1) {
