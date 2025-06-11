@@ -8,14 +8,7 @@ public class MailDeleteVO {
 	private String path;
 	private String deleteUnread;
 	private String folderName;
-	private String autoDeletionOption; // 2025.02.18 한슬기 : 편지함 메일 자동삭제 방식 선택옵션(지운편지함으로이동(default) : trash / 영구삭제 : permanently)
-
-	public String getAutoDeletionOption() {
-		return autoDeletionOption;
-	}
-	public void setAutoDeletionOption(String autoDeletionOption) {
-		this.autoDeletionOption = autoDeletionOption;
-	}
+	
 	public String getUserEmail() {
 		return userEmail;
 	}

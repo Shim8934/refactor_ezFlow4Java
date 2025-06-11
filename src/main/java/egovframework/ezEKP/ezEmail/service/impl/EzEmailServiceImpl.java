@@ -453,7 +453,6 @@ public class EzEmailServiceImpl implements EzEmailService {
         		mailDeleteVO.setExpireTime(((Long)obj.get("expireTime")).intValue());
         		mailDeleteVO.setDeleteUnread((String)obj.get("deleteUnread"));
         		mailDeleteVO.setFolderName((String)obj.get("folderName"));
-				mailDeleteVO.setAutoDeletionOption((String) obj.get("autoDeletionOption"));
         		
         		list.add(mailDeleteVO);
         	}
@@ -466,7 +465,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 	}
 	
 	@Override
-	public void setMailDelete(int tenantId, String pUserID, String pPath, int pExpireTime, int pDeleteUnread, String pFolderName, String pAutoDeletionOption) throws Exception {
+	public void setMailDelete(int tenantId, String pUserID, String pPath, int pExpireTime, int pDeleteUnread, String pFolderName) throws Exception {
 		logger.debug("setMailDelete started.");
 		logger.debug("tenantId=" + tenantId + ",pUserID=" + pUserID + ",pPath=" + pPath + ",pExpireTime=" + pExpireTime + ",pDeleteUnread=" + pDeleteUnread + ",pFolderName=" + pFolderName);
 		
@@ -477,9 +476,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 		String expireTimeParam = "expireTime=" + pExpireTime;
 		String deleteUnreadParam = "deleteUnread=" + pDeleteUnread;
 		String folderNameParam = "folderName=" + URLEncoder.encode(pFolderName, "UTF-8");
-		String autoDeletionOptionParam = "autoDeletionOption=" + URLEncoder.encode(pAutoDeletionOption, "UTF-8");
-
-		String inputParams = userIdParam + "&" + folderPathParam + "&" + expireTimeParam + "&" + deleteUnreadParam + "&" + folderNameParam + "&" + autoDeletionOptionParam;
+		
+		String inputParams = userIdParam + "&" + folderPathParam + "&" + expireTimeParam + "&" + deleteUnreadParam + "&" + folderNameParam;
 		logger.debug("inputParams=" + inputParams);
 		
 		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/setMailDelete", inputParams);
@@ -491,7 +489,7 @@ public class EzEmailServiceImpl implements EzEmailService {
         if (!object.get("resultCode").equals("OK") || ((Long)object.get("reasonCode")).intValue() != 0) {
         	throw new Exception("JGwServer ERROR");
         }
-
+        
         logger.debug("setMailDelete ended.");
 	}
 	
@@ -551,8 +549,7 @@ public class EzEmailServiceImpl implements EzEmailService {
         		mailDeleteVO.setExpireTime(((Long)obj.get("expireTime")).intValue());
         		mailDeleteVO.setDeleteUnread((String)obj.get("deleteUnread"));
         		mailDeleteVO.setFolderName((String)obj.get("folderName"));
-				mailDeleteVO.setAutoDeletionOption((String) obj.get("autoDeletionOption"));
-
+        		
         		list.add(mailDeleteVO);
         	}
         }
