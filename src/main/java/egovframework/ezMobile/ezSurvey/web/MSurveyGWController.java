@@ -11,6 +11,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import egovframework.let.utl.fcc.service.EzFAL;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -204,6 +205,8 @@ public class MSurveyGWController {
 		JSONObject result = new JSONObject ();
 		logger.debug("serverName: " + serverName + " ||  filePath: " + filePath + " || UserId: " + userId + " || File Name: " + fileName);
 		
+		LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+		
 		if (filePath.equals("") || fileName.equals("") || serverName.equals("") || userId.equals("")) {
 			logger.debug("Invalid arguments!!!!!!");
 			return result;
@@ -213,7 +216,7 @@ public class MSurveyGWController {
 		String realPath = request.getServletContext().getRealPath("");
 		realPath = commonUtil.detectPathTraversal(realPath);
 		
-		File file = new File(realPath + commonUtil.detectPathTraversal(filePath));
+		EzFAL.EzFile file = new EzFAL.EzFile(realPath + commonUtil.detectPathTraversal(filePath));
 		
 		if (!file.exists()) {
 			throw new FileNotFoundException(fileName);
@@ -223,7 +226,18 @@ public class MSurveyGWController {
 			throw new FileNotFoundException(fileName);
 		}
 		
-		byte[] fileBytes = Files.readAllBytes(file.toPath());
+		String tempDirPath = commonUtil.getUploadPath("upload_survey.ROOT", userInfo.getTenantId()) + commonUtil.separator + "tempUploadFile";
+		EzFAL.EzFile tempDir = new EzFAL.EzFile(tempDirPath);
+		if (!tempDir.exists()) {
+			tempDir.mkdirs();
+		}
+		
+		String tempFilePath = realPath + tempDirPath + realPath;
+		EzFAL.EzFile tempFile = new EzFAL.EzFile(tempFilePath);
+		EzFAL.copyFile(file, tempFile);
+		
+		byte[] fileBytes = Files.readAllBytes(tempFile.toPath());
+		tempFile.delete();
 		
 		JSONObject data = new JSONObject();
 		data.put("bytes", fileBytes);

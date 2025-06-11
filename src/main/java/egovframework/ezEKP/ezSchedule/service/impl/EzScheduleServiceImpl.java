@@ -24,6 +24,7 @@ import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 
+import egovframework.let.utl.fcc.service.EzFAL;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.util.Strings;
@@ -1545,7 +1546,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		String mhtPath = commonUtil.separator + "doc";
 		String uploadFilePath = commonUtil.separator + "uploadFile";
 		String contentPath = commonUtil.detectPathTraversal(defaultPath + mhtPath);
-		File file = new File(contentPath);
+		EzFAL.EzFile file = new EzFAL.EzFile(contentPath);
 
 		if (!file.exists()) {			
 			file.mkdirs();
@@ -1558,7 +1559,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		String schedulePath = commonUtil.separator + "{" + UUID.randomUUID().toString() + "}" + ".mht";
 		contentPath += schedulePath;
 			
-		try (OutputStream bos = new FileOutputStream(commonUtil.detectPathTraversal(contentPath))) {
+		try (OutputStream bos = new EzFAL.EzFileOutputStream(commonUtil.detectPathTraversal(contentPath))) {
 			//byte[] ct = Base64.decode(content);
 			//stream = new ByteArrayInputStream(ct);
 			//bos = new FileOutputStream(contentPath);
@@ -2053,7 +2054,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		logger.debug("copyMhtFile start");
 		logger.debug(defaultPath);
 		
-		File file = new File(commonUtil.detectPathTraversal(defaultPath + mhtPath));
+		EzFAL.EzFile file = new EzFAL.EzFile(commonUtil.detectPathTraversal(defaultPath + mhtPath));
 		if (!file.exists()) {
 			file.mkdirs();
 		}
@@ -2062,7 +2063,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		String orgContentPath  = commonUtil.detectPathTraversal(defaultPath + contentPath);
 		
 		try {
-			FileUtils.copyFile(new File(orgContentPath), new File(newContentPath));
+			EzFAL.copyFile(orgContentPath, newContentPath);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -2075,7 +2076,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	private void copyAttach(int scheduleId, String defaultPath, String attachPath, List<AttachListVO> attachList, int tenantId) throws Exception {
 		logger.debug("copyAttach start");
 		
-		File file = new File(commonUtil.detectPathTraversal(defaultPath + attachPath));
+		EzFAL.EzFile file = new EzFAL.EzFile(commonUtil.detectPathTraversal(defaultPath + attachPath));
 		if (!file.exists()) {
 			file.mkdirs();
 		}
@@ -2100,7 +2101,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 			attachMap.put("v_TENANTID", tenantId);
 			
 			ezScheduleDAO.insertScheduleAttach(attachMap);
-			FileUtils.copyFile(new File(commonUtil.detectPathTraversal(defaultPath + orgFilePath)), new File(commonUtil.detectPathTraversal(defaultPath + destFilePath)));
+			EzFAL.copyFile(commonUtil.detectPathTraversal(defaultPath + orgFilePath), commonUtil.detectPathTraversal(defaultPath + destFilePath));
 		}
 		logger.debug("copyAttach ended");
 	}

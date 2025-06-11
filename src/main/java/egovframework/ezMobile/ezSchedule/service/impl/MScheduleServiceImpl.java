@@ -18,6 +18,7 @@ import java.util.UUID;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import egovframework.let.utl.fcc.service.EzFAL;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -82,7 +83,7 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 		String defaultPath = realPath + commonUtil.getUploadPath("upload_schedule.ROOT", tenantId);		
 		String contentPath = defaultPath + mhtPath;
 		
-		File file = new File(contentPath);
+		EzFAL.EzFile file = new EzFAL.EzFile(contentPath);
 
 		if (!file.exists()) {			
 			file.mkdirs();
@@ -95,7 +96,7 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 		String schedulePath = commonUtil.separator + "{" + UUID.randomUUID().toString() + "}" + ".mht";
 		contentPath += schedulePath;
 
-		try (OutputStream bos = new FileOutputStream(contentPath);) {
+		try (OutputStream bos = new EzFAL.EzFileOutputStream(contentPath);) {
 			String content = jsonParam.get("content").toString();
 			
 			//html -> mht변환
@@ -222,8 +223,8 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 		
 		String defaultPath = realPath + commonUtil.getUploadPath("upload_schedule.ROOT", tenantId);		
 		String contentPath = defaultPath + mhtPath;
-		
-		File file = new File(contentPath);
+
+		EzFAL.EzFile file = new EzFAL.EzFile(contentPath);
 
 		if (!file.exists()) {			
 			file.mkdirs();
@@ -238,8 +239,8 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 			
 		String filePath = jsonParam.get("contentPath").toString();
 		
-		try (FileInputStream fis = new FileInputStream(realPath + filePath); 
-				FileOutputStream fos = new FileOutputStream(contentPath)) {
+		try (EzFAL.EzFileInputStream fis = new EzFAL.EzFileInputStream(realPath + filePath); 
+				EzFAL.EzFileOutputStream fos = new EzFAL.EzFileOutputStream(contentPath)) {
 			
 			//fis = new FileInputStream(realPath + filePath);
 			//fos = new FileOutputStream(contentPath);
@@ -363,7 +364,7 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 		InputStream stream = null;
 		//OutputStream bos = null;		
 		
-		try (OutputStream bos = new FileOutputStream(defaultPath)) {
+		try (OutputStream bos = new EzFAL.EzFileOutputStream(defaultPath)) {
 			String content = jsonParam.get("content").toString();
 			
 			//html -> mht변환
