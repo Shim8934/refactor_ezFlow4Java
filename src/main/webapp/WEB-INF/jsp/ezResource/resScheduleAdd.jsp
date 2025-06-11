@@ -435,7 +435,7 @@
 	    	
 	    	var SaveScheduleId = "";
 	    	function btn_Save() {
-			if(doubleSubmitFlag) return;
+			if(doubleSubmitCheck()) return;
 			
 	        	var check = true;
 				// 반복예약허용 유무 체크
