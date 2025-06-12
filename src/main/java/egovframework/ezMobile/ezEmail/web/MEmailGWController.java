@@ -8044,10 +8044,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			String from = ((InternetAddress)message.getFrom()[0]).getAddress();
 			logger.debug("from=" + from);
 
-			String useFromAddress = StringUtils.defaultIfBlank(ezCommonService.getTenantConfig("Use_FromAddress", userInfo.getTenantId()), "NO");
-			String useDistributionSender = StringUtils.defaultIfBlank(ezCommonService.getCompanyConfig(userInfo.getTenantId(), userInfo.getCompanyId(), "useDistributionSender"), "NO");
-
-			List<String[]> aliasAddressList = ezEmailService.getAliasAddress(mailId, userInfo.getTenantId(), useFromAddress, useDistributionSender);
+			List<String[]> aliasAddressList = ezEmailService.getAliasAddress(mailId, userInfo.getTenantId(), "YES", "NO");
 
 			boolean isUserFrom = false;
 			for (String[] address : aliasAddressList) {
