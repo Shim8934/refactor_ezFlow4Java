@@ -2421,6 +2421,20 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		
 		return newBodyPart;
 	}
+
+	private byte[] readPartContentAsBytes(Part part) throws Exception {
+		try (InputStream is = part.getInputStream();
+			 ByteArrayOutputStream buffer = new ByteArrayOutputStream()) {
+
+			byte[] tmp = new byte[128];
+			int bytesRead;
+			if ((bytesRead = is.read(tmp)) != -1) {
+				buffer.write(tmp, 0, bytesRead);
+			}
+			
+			return buffer.toByteArray();
+		}
+	}
 	
 	/**
 	 * 메일 첨부파일 다운로드 실행 함수
@@ -2554,7 +2568,17 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 								// 자동으로 수행됨.
 								// ezEKP-docs/eml/base64로 인코딩된 eml 첨부파일.eml 참고
 								if ("base64".equalsIgnoreCase(contentTransferEncoding)) {
-									part = getBodyPartWithNewContentType(part, partContentType);
+									// Part의 Content는 실제 base64로 인코딩되어 있지 않으나 Content-Transfer-Encoding이
+									// base64인 경우가 있어 base64 디코딩이 자동으로 수행돼 첨부 eml 파일이 깨진 상태로 다운로드되는 현상이 있어
+									// 실제 base64 인코딩 여부를 체크하도록 수정함
+									byte[] temp = readPartContentAsBytes(part);
+									boolean isBase64 = Base64.isBase64(temp);
+									
+									logger.debug("isBase64={},temp={}", isBase64, new String(temp));
+									
+									if (isBase64) {
+										part = getBodyPartWithNewContentType(part, partContentType);
+									}
 								}
 							}
 						}
