@@ -7566,4 +7566,29 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		logger.debug("getBoardTitle ended.");
 		return title != null ? title : "";
 	}
+
+	@Override
+	public void repostItem(String boardID, String itemID, int tenantID, String hasReply) throws Exception {
+		logger.debug("repostItem started.");
+
+		Map<String, Object> map = new HashMap<>();
+
+		map.put("boardID", boardID);
+		map.put("itemID", itemID);
+		map.put("tenantID", tenantID);
+		map.put("updateDate", commonUtil.getTodayUTCTime(""));
+
+		ezBoardDAO.repostItem(map);
+
+		if (("true").equals(hasReply)) { // 답변이 존재할경우 답변의 PARENTWRITEDATE 값을 재게시된 원글의 DOCNO 값으로 UPDATE
+			List<Map<String, String>> replyList = ezBoardDAO.getAnswerList(map);
+
+			for (Map<String, String> reply : replyList) {
+				map.put("replyItemID", reply.get("ITEMID"));
+				ezBoardDAO.repostReplyItem(map);
+			}
+		}
+
+		logger.debug("repostItem ended.");
+	}
 }

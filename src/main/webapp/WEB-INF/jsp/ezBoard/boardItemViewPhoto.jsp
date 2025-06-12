@@ -78,6 +78,7 @@
 				var strWriteDate = "${boardItem.writeDate}";
 				var strImportance = "${boardItem.importance}";
 				var strEndDate = "${boardItem.endDate}";
+				var strStartDate = "${boardItem.startDate}";
 				var strContentLocation = "${boardItem.contentLocation}";
 				var strAttachList = "${boardItem.attachments}";
 				var SSUserID = "${userInfo.id}";
@@ -1942,7 +1943,37 @@
                     }
                 });
 			}
-			    
+			<%-- 재게시 기능 --%>
+            function btn_Repost_Onclick() {
+                var newStartDate = new Date(strStartDate + " UTC");
+                var newEndDate = new Date(strEndDate);
+                var currentDate = new Date();
+
+                if (newStartDate > currentDate) {
+                    alert("예약게시물은 재게시가 불가능합니다.");
+                    return;
+                }
+
+                if (newEndDate < currentDate) {
+                    alert("게시기간이 만료된 게시물은 재게시가 불가능합니다.");
+                    return;
+                }
+
+                if(confirm("재게시를 하시면 최근 게시물로 등록됩니다.\n재게시 하시겠습니까?")) {
+                    var xmlhttp = createXMLHttpRequest();
+                    xmlhttp.open("POST", "/ezBoard/repostItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID), false);
+                    xmlhttp.send();
+
+                    if (xmlhttp.responseText == "SUCCESS") {
+                        alert("재게시가 완료되었습니다.");
+                        window.location.reload();
+
+                        if (boardItemView == "P") {
+                            window.opener.location.reload();
+                        }
+                    }
+                }
+            }
 		</script>
 	</head>
 	<body  id="bodyPopup" class="popup" style="overflow:hidden; height:100%;">
@@ -1979,6 +2010,9 @@
 			                    <li ID='btn_Delete' ><span  onclick="btn_ImgOnclick('Del')"><spring:message code='ezBoard.t1003'/></span></li>
 			                    <li ID='btn_AllDelete' ><span  onclick="btn_Delete_Onclick()"><spring:message code='ezBoard.t1004'/></span></li>
 			                    <li ID='btn_AlbumModify' ><span  onclick="btn_albumEdit()"><spring:message code='ezBoard.t1005'/></span></li>
+			                    <c:if test="${boardItem.itemLevel == 1 && (boardItem.writerID == userInfo.id || boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK')}"><%-- 답변글은 재게시 버튼 안뜨도록 함 --%>
+                                    <li ID='btn_Repost'><span onclick='btn_Repost_Onclick()'>재게시</span></li>
+                                </c:if>
 		        			</c:if>
 		                    <li ID='btn_Read' ><span  onclick="ReaderList()"><spring:message code='ezBoard.t1006'/></span></li>
 		                    <li ID='btn_down' ><span  onclick="btn_ImgDownload()"><spring:message code='ezBoard.t1007'/></span></li>

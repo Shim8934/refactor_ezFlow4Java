@@ -11431,4 +11431,81 @@
 		  AND ITEMID = #itemID#
 		  AND TENANT_ID = #tenantID#
 	</select>
+
+	<update id="EzBoardDAO.repostItem" parameterClass="map">
+		UPDATE TBL_Board_Item
+		SET
+			UpdateDate = #updateDate#,
+			DOCNO = (
+				SELECT
+					CASE WHEN MAX(DOCNO) IS NULL THEN 1
+					ELSE MAX(DOCNO) + 1
+				END
+				FROM
+					TBL_Board_Item
+				WHERE
+					TENANT_ID = #tenantID#
+				AND
+					BOARDID = #boardID# ),
+			PARENTWRITEDATE = (
+				SELECT
+					CASE WHEN MAX(DOCNO) IS NULL THEN 1
+					ELSE MAX(DOCNO) + 1
+				END
+				FROM
+					TBL_Board_Item
+				WHERE
+					TENANT_ID = #tenantID#
+				AND
+					BOARDID = #boardID# )
+		WHERE
+			TENANT_ID = #tenantID#
+		AND
+			ItemID = #itemID#
+		AND
+			BOARDID = #boardID#
+	</update>
+
+	<select id="EzBoardDAO.getAnswerList" parameterClass="Map" resultClass="HashMap">
+		SELECT
+			ITEMID,
+			TITLE,
+			TO_CHAR(TO_DATE(WRITEDATE, 'YYYY-MM-DD HH24:MI:SS') +  NUMTODSINTERVAL(9, 'HOUR'), 'YYYY/MM/DD') AS WRITEDATE,
+			TO_CHAR(TO_DATE(UPDATEDATE, 'YYYY-MM-DD HH24:MI:SS') +  NUMTODSINTERVAL(9, 'HOUR'), 'YYYY/MM/DD') AS UPDATEDATE
+		FROM
+			TBL_BOARD_ITEM
+		WHERE
+			UPPERITEMIDTREE LIKE (#itemID# || '%')
+		AND
+			<![CDATA[ ITEMLEVEL > 1 ]]>
+		AND
+			BOARDID = #boardID#
+		AND
+			TENANT_ID = #tenantID#
+		ORDER BY
+			WRITEDATE
+	</select>
+
+	<update id="EzBoardDAO.repostReplyItem" parameterClass="map">
+		UPDATE TBL_Board_Item
+		SET
+			PARENTWRITEDATE = (
+				SELECT
+					PARENTWRITEDATE
+				FROM
+					TBL_Board_Item
+				WHERE
+					TENANT_ID = #tenantID#
+				AND
+					BOARDID = #boardID#
+				AND
+					ITEMID = #itemID#
+			)
+		WHERE
+			TENANT_ID = #tenantID#
+		AND
+			ITEMID = #replyItemID#
+		AND
+			BOARDID = #boardID#
+	</update>
 </sqlMap>

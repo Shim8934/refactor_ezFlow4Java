@@ -13643,4 +13643,27 @@ public class EzBoardController extends EgovFileMngUtil{
 		logger.debug("getBoardTitle ended.");
 		return ezBoardService.getBoardTitle(contentLocation, userInfo.getTenantId());
 	}
+
+	/**
+	 * 게시판 > 게시글보기 > 재게시 실행
+	 */
+	@RequestMapping(value = "/ezBoard/repostItem.do", method = RequestMethod.POST, produces = "text/plain; charset=utf-8")
+	@ResponseBody
+	public String repostItem(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
+		logger.debug("repostItem started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+
+		int tenantID = userInfo.getTenantId();
+
+		String boardID = request.getParameter("boardID");
+		String itemID = request.getParameter("itemID");
+		String hasReply = request.getParameter("hasReply");
+
+		ezBoardService.repostItem(boardID, itemID, tenantID, hasReply);
+
+		logger.debug("rePostItem ended, userID = " + userInfo.getId());
+
+		return "SUCCESS";
+	}
 }
