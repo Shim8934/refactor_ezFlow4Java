@@ -238,19 +238,19 @@
 					<spring:message code="main.t00034" />
 				</p>
 			</div>
-			<div style="border-bottom: 1px black;">
-				<h2 class="off" id="myFavList" onclick="ShowMyFavResItem(event);">
-					<span class="sub_iconLNB tree_plus"></span> <span class="h2Title" style="display: inline-block;"><spring:message code="ezResource.resFav.ygs01" />
-						</span><span id="fav_manage" class="sub_iconLNB tree_manage"></span>
-				</h2>
-				<ul class="lnbUL off" id="TreeCtrl_MyFavTree_ul" style="margin-bottom: 5px solid white;">
-					<ul class="lnbUL resLnb_tree">
-					<div class="tree onlytree" style="overflow-y: hidden; height: 100%;  padding-left: 10px;" id='TreeCtrl_MyFavoriteTree'>
-						</div>
-					</ul>
-				</ul>
-			</div>
 	        <div class="resourceListBox" style="overflow:hidden; padding-right: 0;">
+				<div style="border-bottom: 1px black;">
+					<h2 class="off" id="myFavList" onclick="ShowMyFavResItem(event);">
+						<span class="sub_iconLNB tree_plus"></span> <span class="h2Title" style="display: inline-block;"><spring:message code="ezResource.resFav.ygs01" />
+						</span><span id="fav_manage" class="sub_iconLNB tree_manage"></span>
+					</h2>
+					<ul class="lnbUL off" id="TreeCtrl_MyFavTree_ul" style="margin-bottom: 5px solid white;">
+						<ul class="lnbUL resLnb_tree">
+							<div class="tree onlytree" style="overflow-y: hidden; height: 100%;  padding-left: 10px;" id='TreeCtrl_MyFavoriteTree'>
+							</div>
+						</ul>
+					</ul>
+				</div>
 		        <ul class="lnbUL resLnb_tree">
 		        	<div class="tree onlytree" id="TreeView" style="overflow-y: hidden; height: 100%;"></div>
 		        	<!-- <div class="tree">

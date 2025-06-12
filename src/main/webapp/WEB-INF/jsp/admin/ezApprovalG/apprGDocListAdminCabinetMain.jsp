@@ -892,7 +892,7 @@
 		        }
 
 				if (g_sFlag !== "m01" && g_sFlag !== "m05" && g_sFlag !== "m06") {
-					document.getElementById("attachedDraft").style.display = "none";
+					document.getElementById("tdAttachedDraft").style.display = "none";
 				}
 		    }
 		

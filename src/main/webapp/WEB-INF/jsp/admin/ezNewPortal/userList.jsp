@@ -14,7 +14,7 @@
 	   		var totalCount = "<c:out value='${totalCount }'/>";
 	   		var totalCount2 = "<c:out value='${totalCount2 }'/>";
 	   		var keyword = "<c:out value='${keyword }'/>";
-	   	
+	   		var imgFlag = "";
 	   		$(document).ready(function() {
 	   			ChangeListView_onClick(getOrganListType());
 	   			memberCountInfo();
@@ -26,11 +26,13 @@
 	   				$("#DeptUserImgList").css("display","none");
 	   				$("#txtlist").attr("src","/images/kr/cm/btn_onlist.gif");
 	   				$("#imglist").attr("src","/images/kr/cm/btn_imglist.gif");
+					imgFlag = "TXT";
 	   			} else {
 	   				$("#DeptUserImgList").css("display","");
 	   				$("#txtlist_Layer").css("display","none");
 	   				$("#txtlist").attr("src","/images/kr/cm/btn_list.gif");
 	   				$("#imglist").attr("src","/images/kr/cm/btn_onimglist.gif");
+					imgFlag = "IMG";
     			}
 	   			
 	   			setOrganListType(flag);

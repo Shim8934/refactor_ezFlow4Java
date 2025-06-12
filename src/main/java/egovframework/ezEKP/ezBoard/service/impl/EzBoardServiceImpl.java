@@ -7060,18 +7060,17 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	}
 
 	@Override
-	public List<HashMap<String, Object>> getPhotoBoardListItem(String boardID, String userID, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, Map<String, String> orderByMap, String type, int tenantID, String boardType) throws Exception {
+    public List<HashMap<String, Object>> getPhotoBoardListItem(String boardID, String userID, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, Map<String, String> orderByMap, String type, int tenantID, String boardType) throws Exception {
 		logger.debug("getPhotoBoardListItem started");
 		String pType = type;
 
-		String orderByCol2 = "";
-		String orderByCol2Desc = "N";
-		
-		if (orderByMap.get("orderByCol") == null || "".equals(orderByMap.get("orderByCol"))) {
-			orderByMap.put("orderByCol", "PARENTWRITEDATE");
-			orderByMap.put("orderByColDesc", "Y");
-			orderByCol2 = "UPPERITEMIDTREE";
-		}
+        String orderByCol2 = "";
+        String orderByCol2Desc = "N";
+        if (orderByMap.get("orderByCol") == null || "".equals(orderByMap.get("orderByCol"))) {
+            orderByMap.put("orderByCol", "PARENTWRITEDATE");
+            orderByMap.put("orderByColDesc", "Y");
+            orderByCol2 = "UPPERITEMIDTREE";
+        }
 		
 		BoardMyFavoriteVO boardMyFavoriteVO = new BoardMyFavoriteVO();
 		boardMyFavoriteVO.setBoardId(boardID);
@@ -7101,11 +7100,19 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("endRow", endRow);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("tempString", tempString);
-		map.put("iv_PORDERBYCOL2", orderByCol2);
-		map.put("iv_PORDERBYCOL2DESC", orderByCol2Desc);
 		map.put("rowCount", endRow - (startRow - 1));
 		map.put("limit", startRow - 1);
 		map.put("bType", boardType);
+
+		if (orderByMap.get("orderByCol") != null) {
+			map.put("iv_PORDERBYCOL1", orderByMap.get("orderByCol"));
+			if (orderByMap.get("orderByColDesc") != null) {
+				map.put("iv_PORDERBYCOL1DESC", orderByMap.get("orderByColDesc"));
+			}
+		}
+
+		map.put("iv_PORDERBYCOL2", orderByCol2);
+		map.put("iv_PORDERBYCOL2DESC", orderByCol2Desc);
 		
 		logger.debug("getPhotoBoardListItem ended");
 		

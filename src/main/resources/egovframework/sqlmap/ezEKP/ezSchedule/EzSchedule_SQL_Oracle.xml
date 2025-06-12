@@ -363,6 +363,10 @@
 						location like concat(concat('%', #v_SEARCHALL#), '%') ESCAPE '\'
 				)
 			</isNotEmpty>
+			<isEqual property="v_PFILTER" compareValue="ISPUBLIC">
+				AND
+					a.ispublic = 'Y'
+			</isEqual>
             )
             or 
        			(A.OWNERID IN
@@ -431,6 +435,10 @@
 						location like concat(concat('%', #v_SEARCHALL#), '%') ESCAPE '\'
 				)
 			</isNotEmpty>
+			<isEqual property="v_PFILTER" compareValue="ISPUBLIC">
+				AND
+					a.ispublic = 'Y'
+			</isEqual>
         	) ) C
         	ORDER BY C.STARTDATE ASC
 	</select>

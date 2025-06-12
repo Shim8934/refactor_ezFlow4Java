@@ -856,12 +856,13 @@
 	   		
 	   		function applyReceiver() {
 	   			var selId = "";
-	   			
 	   			if (Tab1_SelectID === "1tab1") {
-	   				selId = $("#txtlist_Layer").find(".selectTR");
-		   			
+					if(typeof imgFlag !== "undefined" && imgFlag === "IMG"){
+						selId = $("#DeptUserImgList").find(".selectTR");
+					}else{
+						selId = $("#txtlist_Layer").find(".selectTR");
+					}
 		   			var isUser = true;
-		   			
 		   			if (selId.length == 0) {
 		   				isUser = false;
 		   			}

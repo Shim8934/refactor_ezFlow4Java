@@ -468,10 +468,7 @@
 	                }
 
 	                xmlDOM = null;
-	                
-	                if (window.opener != null) {
-	                    window.opener.btnRefresh_onclick();
-	                }
+					
 	                window.close();
 	            }
 	        }
@@ -664,6 +661,47 @@
 			    DivPopUpHidden();
 			}
 
+			function SetReturnFlag(pFlag) {
+				var msg = ""
+				if (pFlag == "2") {
+					msg = "" + strLang331 + "";
+				} else if(pFlag == "1"){
+					msg = "" + strLang332 + "";
+				} else {
+					msg = "" + strLang333 + "";
+				}
+
+				var result = confirm(msg);
+				if (result) {
+					var xmlHTTP = createXMLHttpRequest();
+					var xmlDOM = createXmlDom();
+					var objNode;
+
+					createNodeInsert(xmlDOM, objNode, "DATA");
+					createNodeAndInsertText(xmlDOM, objNode, "COMPANYID", ss_companyID);
+					createNodeAndInsertText(xmlDOM, objNode, "RESID", document.getElementById("ownerID").value);
+					createNodeAndInsertText(xmlDOM, objNode, "NUM", document.getElementById("num").value);
+					createNodeAndInsertText(xmlDOM, objNode, "RETURN", pFlag);
+
+					xmlHTTP.open("POST", "/ezResource/updateReturnFlag.do", false);
+					xmlHTTP.send(xmlDOM);
+
+					var rtnValue = xmlHTTP.responseText;
+
+					if(pFlag == 2) {
+						alert(strLang334);
+					}
+					else {
+						alert(strLang335);
+					}
+
+					xmlHTTP = null;
+					xmlDOM = null;
+					
+					window.close();
+				}
+			}
+
 		</script>
 	</head>
 	
@@ -695,6 +733,12 @@
 										</c:otherwise>
 									</c:choose>
 								</c:if>
+							</c:if>
+							<c:if test="${writerID eq userInfo.id && resReturnFlag eq '1' && saveApproveFlag eq '1' && returnFlag eq '1'}">
+								<li><span onclick="SetReturnFlag(2)"> <spring:message code='ezResource.kmsr26' /></span></li>
+							</c:if>
+							<c:if test="${adminFg eq 'Y' && resReturnFlag eq '1' && returnFlag eq '2'}">
+								<li><span onclick="SetReturnFlag(0)"> <spring:message code='ezResource.kmsr27' /></span></li>
 							</c:if>
 							<c:if test="${useCabinet == 'YES'}">
 								<li><span onClick="addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>

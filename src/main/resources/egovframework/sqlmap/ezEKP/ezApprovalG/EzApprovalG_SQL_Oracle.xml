@@ -9050,6 +9050,7 @@
 	      			TBL_APRDOCINFO.FORMID
                 <isEqual property="assignChk" compareValue="Y">
                     , TBL_APRRECEIPTPROCESSINFO.PROCESSORNAME as PROCESSORNAME
+                    , TBL_APRRECEIPTPROCESSINFO.PROCESSORNAME2 as PROCESSORNAME2
                 </isEqual>
 	      		FROM 
 	      			TBL_APRRECEIPTPROCESSINFO 
@@ -11589,7 +11590,7 @@
 	      	AND 
 	      		CODE1 = #v_CODE1# 
 	      	AND  
-	      		CODE2 = #v_CODE2#
+	      		TRIM(CODE2) = #v_CODE2#
 	      	ORDER BY 
 	      		CODE2
 			]]>
@@ -11614,7 +11615,7 @@
 	      	AND
 	      		CODE1 = #v_CODE1#
 	      	AND  
-	      		CODE2 = #v_CODE2#
+	      		TRIM(CODE2) = #v_CODE2#
 	      	ORDER BY 
 	      		CODE2
 			]]>
@@ -20391,7 +20392,7 @@
        		WHERE  
        			code1 = #v_CODE1#
             AND 
-            	code2 = #v_CODE2#
+            	TRIM(code2) = #v_CODE2#
             AND 
             	TENANT_ID = #v_TENANTID#
             AND
@@ -29830,7 +29831,7 @@
         AND
             CODE1 = #v_CODE1#
         AND
-            CODE2 = #v_CODE2#
+            TRIM(CODE2) = #v_CODE2#
       </select>
 
 	  <select id="EzApprovalG.getDraftDeptID" parameterClass="Map" resultClass="String">

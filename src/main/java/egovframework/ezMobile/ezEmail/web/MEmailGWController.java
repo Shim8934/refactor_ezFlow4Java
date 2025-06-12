@@ -1202,6 +1202,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			String isDefaultReceiptExternal = ezCommonService.getTenantConfig("isDefaultReceiptExternal", info.getTenantId());
 			String useReceiptExternal = ezCommonService.getTenantConfig("useReceiptExternal", info.getTenantId());
 			String useOnlyInnerMail = ezCommonService.getTenantConfig("UseOnlyInnerMail", info.getTenantId());
+			String useAutoZipEnc = ezCommonService.getTenantConfig("useAutoZipEnc", info.getTenantId());
 			if (useReceiptExternal.equals("YES")) {
 				replyReadTime = "YES".equalsIgnoreCase(isDefaultReceiptExternal) ? "2" : "1";
 			} else {
@@ -1907,6 +1908,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			data.put("signUseFlag", mailSignUseFlag); // 기본 서명 플래그 값
 			data.put("signValue", signValue); // 기본 서명 HTML
 			data.put("totBigSizeMailAttachLimit", totBigSizeMailAttachLimit);// 대용량 첨부파일의 최대 크기
+			data.put("useAutoZipEnc", useAutoZipEnc);// 메일쓰기창 첨부파일 업로드 zip 암호 설정 여부
 			
 	        result.put("status", "ok");
 			result.put("code", 0);			
@@ -1950,6 +1952,10 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 		
 		try {
 			String tempFolderName = "";
+			String zipPassword = jsonObject.get("zipPassword") != null ? (String) jsonObject.get("zipPassword") : "";
+			boolean zipFileUploadCheck = false;
+			boolean checkZipFileEncrypted = false;
+			boolean needZipEncryption = zipPassword != null && !zipPassword.isEmpty();
 			JSONArray fileArray = new JSONArray();
 			int cnt = 0;
 			//int maxsize = 10*1024*1024; // 10MB
@@ -1972,6 +1978,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 		*/
 			logger.debug("####" + tempFolderName + "####");
 			logger.debug("####" + cnt + "####");
+			logger.debug("####" + zipPassword + "####");
 //			logger.debug("####" + maxsize + "####");
 			
 			String serverName = request.getHeader("x-user-host");
@@ -1993,6 +2000,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			long totalFileSize = 0; // 첨부파일 총 용량을 체크할 변수
 
 			String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", info.getTenantId());
+			String useAutoZipEnc = ezCommonService.getTenantConfig("useAutoZipEnc", info.getTenantId());
 		
 			if (useExtension == null) {
 				useExtension = "";
@@ -2019,6 +2027,10 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 					} else {
 						sFileTitle[i] = pFileName[i];
 						sExt[i] = "";
+					}
+
+					if(sExt[i].equals("zip")) {
+						zipFileUploadCheck = true;
 					}
 					
 					if (((Long)((JSONObject)fileArray.get(i)).get("fileSize")).intValue() == 0) {
@@ -2100,16 +2112,41 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 
 						fileLocation[i] = pDirTempPath + commonUtil.separator + sGUID[i];
 						resultUpload[i] = "true";
+
+						if(useAutoZipEnc.equals("YES")) {
+							File f1 = new File(fileLocation[i]);
+
+							if (zipFileUploadCheck) {
+								checkZipFileEncrypted = ezEmailUtil.checkZipEncrypted(f1);
+							}
+
+							if (needZipEncryption && !checkZipFileEncrypted) {
+								String zipPath = ezEmailUtil.createEncryptZipFile(f1, pFileName[i], zipPassword, pDirTempPath);
+
+								if (zipPath != null) {
+									fileLocation[i] = zipPath;  // 암호화된 zip 경로로 업데이트
+									pFileName[i] = new File(zipPath).getName();
+								}
+							}
+						}
 					}
 
 					String pBigFileUpload = "N";
 
-					strXML2 += "<NODE><PUPLOADSN><![CDATA[" + sGUID[i] + "]]></PUPLOADSN>";
+					boolean isAutoZipEnc = !checkZipFileEncrypted && "YES".equals(useAutoZipEnc);
+					String fileIdentifier = isAutoZipEnc ? pFileName[i] : sGUID[i];
+
+					strXML2 += "<NODE><PUPLOADSN><![CDATA[" + fileIdentifier + "]]></PUPLOADSN>";
 					strXML2 += "<RESULTUPLOADA><![CDATA[" + resultUpload[i] + "]]></RESULTUPLOADA>";
 					strXML2 += "<PFILENAME><![CDATA[" + pFileName[i] + "]]></PFILENAME>";
 					strXML2 += "<FILESIZE><![CDATA[" + fileSize[i] + "]]></FILESIZE>";
-					strXML2 += "<FILELOCATION><![CDATA[" + sGUID[i] + "]]></FILELOCATION>";
+					strXML2 += "<FILELOCATION><![CDATA[" + fileIdentifier + "]]></FILELOCATION>";
 					strXML2 += "<PBIGFILEUPLOAD><![CDATA[" + pBigFileUpload + "]]></PBIGFILEUPLOAD>";
+					
+					if (zipFileUploadCheck) {
+						strXML2 += "<CHECKZIPENCRYPTED><![CDATA[" + checkZipFileEncrypted + "]]></CHECKZIPENCRYPTED>";
+					}
+					
 					strXML2 += "</NODE>";
 
 					pDirTempPath = "";
@@ -2349,6 +2386,10 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 		String strXML2 = "";
 		String folderDate = "";
 		String tempFolderName = "";
+		String zipPassword = request.getParameter("zipPassword");
+		boolean zipFileUploadCheck = false;
+		boolean checkZipFileEncrypted = false;
+		boolean needZipEncryption = zipPassword != null && !zipPassword.isEmpty();
 		String xmlList = "";
 
 		JSONObject result = new JSONObject();
@@ -2409,6 +2450,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 
 			String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", info.getTenantId());
+			String useAutoZipEnc = ezCommonService.getTenantConfig("useAutoZipEnc", info.getTenantId());
 
 			if (useExtension == null) {
 				useExtension = "";
@@ -2450,6 +2492,10 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 
 					if (multiFile.get(i).getSize() == 0) {
 						isEmpty = true;
+					}
+
+					if(sExt[i].equals("zip")) {
+						zipFileUploadCheck = true;
 					}
 				}
 
@@ -2556,19 +2602,47 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 						writeUploadedFile(multiFile.get(i), sGUID[i], pDirTempPath);
 						fileLocation[i] = pDirTempPath + commonUtil.separator + sGUID[i];
 						resultUpload[i] = "true";
+
+						if(useAutoZipEnc.equals("YES")) {
+							File f1 = new File(fileLocation[i]);
+
+							if (zipFileUploadCheck) {
+								checkZipFileEncrypted = ezEmailUtil.checkZipEncrypted(f1);
+							}
+
+							if (needZipEncryption && !checkZipFileEncrypted) {
+								String zipPath = ezEmailUtil.createEncryptZipFile(f1, pFileName[i], zipPassword, pDirTempPath);
+
+								if (zipPath != null) {
+									fileLocation[i] = zipPath;  // 암호화된 zip 경로로 업데이트
+									pFileName[i] = new File(zipPath).getName();
+								}
+							}
+						}
 					}
 
+					boolean isAutoZipEnc = !checkZipFileEncrypted && "YES".equals(useAutoZipEnc);
+					String fileIdentifier = isAutoZipEnc ? pFileName[i] : sGUID[i];
+					String fileLocationValue;
+
+					if ("Y".equals(pBigFileUpload)) {
+						fileLocationValue = folderDate + "|!|" + fileIdentifier;
+					} else {
+						fileLocationValue = fileIdentifier;
+					}
+					
 					// 업로드된 파일에 대한 정보를 XML 형식으로 클라이언트에게 반환한다.
-					strXML2 += "<NODE><PUPLOADSN><![CDATA[" + sGUID[i] + "]]></PUPLOADSN>";
+					strXML2 += "<NODE><PUPLOADSN><![CDATA[" + fileIdentifier + "]]></PUPLOADSN>";
 					strXML2 += "<RESULTUPLOADA><![CDATA[" + resultUpload[i] + "]]></RESULTUPLOADA>";
 					strXML2 += "<PFILENAME><![CDATA[" + pFileName[i] + "]]></PFILENAME>";
 					strXML2 += "<FILESIZE><![CDATA[" + fileSize[i] + "]]></FILESIZE>";
-					if (pBigFileUpload.equals("Y")) {
-						strXML2 += "<FILELOCATION><![CDATA[" + folderDate+"|!|"+sGUID[i] + "]]></FILELOCATION>";
-					} else {
-						strXML2 += "<FILELOCATION><![CDATA[" + sGUID[i] + "]]></FILELOCATION>";
-					}
+					strXML2 += "<FILELOCATION><![CDATA[" + fileLocationValue + "]]></FILELOCATION>";
 					strXML2 += "<PBIGFILEUPLOAD><![CDATA[" + pBigFileUpload + "]]></PBIGFILEUPLOAD>";
+
+					if (zipFileUploadCheck) {
+						strXML2 += "<CHECKZIPENCRYPTED><![CDATA[" + checkZipFileEncrypted + "]]></CHECKZIPENCRYPTED>";
+					}
+					
 					strXML2 += "</NODE>";
 				}
 				pDirTempPath = "";

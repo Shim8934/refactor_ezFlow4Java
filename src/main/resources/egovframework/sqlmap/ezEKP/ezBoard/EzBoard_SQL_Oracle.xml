@@ -2942,6 +2942,11 @@
 			<isNotEmpty property="v_SEARCH_TOPWRITERID">
 				AND (TOPWRITERID = #v_SEARCH_TOPWRITERID#  OR EXTENSIONATTRIBUTE2 = '1')
 			</isNotEmpty>
+			<isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
+				AND (TITLE like ('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
+					OR
+					CONTENT like ('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%'))
+			</isNotEmpty>
 			<isEqual property="v_useKeywordFlag" compareValue="Y">
 				<isNotEmpty property="v_KEYWORD">
 					<![CDATA[
@@ -3089,6 +3094,8 @@
 					A.TITLE,
 					A.READCOUNT,
 					A.ATTACHMENTS,
+					EXT,
+					FILEPATH,
 					A.ITEMLEVEL,
 					A.ABSTRACT,
 					CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
@@ -3185,6 +3192,26 @@
 					A.TENANT_ID = I.TENANT_ID
 				AND
 					A.BOARDID = I.BOARDID 					
+                LEFT OUTER JOIN (
+                    SELECT
+					CASE
+						WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+						WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILENAME))
+						ELSE 'MANY'
+					END AS EXT,
+					CASE
+						WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+						WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILEPATH))
+						ELSE 'MANY'
+					END AS FILEPATH,
+					TENANT_ID,
+					itemid
+					FROM TBL_BOARD_ITEM_ATTACHMENTS
+					GROUP BY
+						ITEMID,
+						TENANT_ID ) F ON
+                    A.ITEMID = F.ITEMID
+                	AND A.TENANT_ID = F.TENANT_ID
 				WHERE 
 				<isEqual property="v_PSUBFLAG" compareValue="Y">
 					(A.BOARDID = #v_PBOARDID# OR A.BOARDID IN (SELECT BOARDID FROM TBL_BOARD_BOARDINFO WHERE TENANT_ID = #v_TENANTID# AND PARENTBOARDID = #v_PBOARDID#))
@@ -3227,6 +3254,11 @@
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_TOPWRITERID">
 				AND (TOPWRITERID = #v_SEARCH_TOPWRITERID# OR EXTENSIONATTRIBUTE2 = '1')
+			</isNotEmpty>
+			<isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
+				AND (TITLE like ('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
+					OR
+				CONTENT like ('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%'))
 			</isNotEmpty>
 			<isEqual property="v_useKeywordFlag" compareValue="Y">
 				<isNotEmpty property="v_KEYWORD">
@@ -3312,6 +3344,8 @@
 					A.TITLE,
 					A.READCOUNT,
 					A.ATTACHMENTS,
+					EXT,
+					FILEPATH,
 					A.ITEMLEVEL,
 					A.ABSTRACT,
 					CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
@@ -3363,6 +3397,26 @@
 					A.TENANT_ID = I.TENANT_ID
 				AND
 					A.BOARDID = I.BOARDID 					
+				LEFT OUTER JOIN (
+                    SELECT
+                        CASE
+                            WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+                            WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILENAME))
+                            ELSE 'MANY'
+                        END AS EXT,
+                        CASE
+                            WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+                            WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILEPATH))
+                            ELSE 'MANY'
+                        END AS FILEPATH,
+                        TENANT_ID,
+                        itemid
+                        FROM TBL_BOARD_ITEM_ATTACHMENTS
+                    GROUP BY
+                        ITEMID,
+                        TENANT_ID ) F ON
+                    A.ITEMID = F.ITEMID
+                    AND A.TENANT_ID = F.TENANT_ID
 				WHERE 
 					A.TENANT_ID = #v_TENANTID#
 				AND
@@ -3402,6 +3456,11 @@
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_TOPWRITERID">
 				AND (TOPWRITERID = #v_SEARCH_TOPWRITERID# OR EXTENSIONATTRIBUTE2 = '1')
+			</isNotEmpty>
+			<isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
+				AND (TITLE like ('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
+					OR
+				CONTENT like ('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%'))
 			</isNotEmpty>
 			<isNotEmpty property="v_KEYWORD">
 				<![CDATA[
@@ -3481,6 +3540,8 @@
 					A.TITLE,
 					A.READCOUNT,
 					A.ATTACHMENTS,
+					EXT,
+					FILEPATH,
 					A.ITEMLEVEL,
 					A.ABSTRACT,
 					CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
@@ -3532,6 +3593,26 @@
 					A.TENANT_ID = I.TENANT_ID
 				AND 
 					A.BOARDID = I.BOARDID 
+				LEFT OUTER JOIN (
+					SELECT
+						CASE
+							WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+							WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILENAME))
+							ELSE 'MANY'
+						END AS EXT,
+						CASE
+							WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+							WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILEPATH))
+							ELSE 'MANY'
+						END AS FILEPATH,
+						TENANT_ID,
+						itemid
+						FROM TBL_BOARD_ITEM_ATTACHMENTS
+					GROUP BY
+						ITEMID,
+						TENANT_ID ) F ON
+					A.ITEMID = F.ITEMID
+					AND A.TENANT_ID = F.TENANT_ID
 				WHERE
 					A.TENANT_ID = #v_TENANTID#
 				AND
@@ -3558,6 +3639,11 @@
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_TOPWRITERID">
 				AND (TOPWRITERID = #v_SEARCH_TOPWRITERID# OR EXTENSIONATTRIBUTE2 = '1')
+			</isNotEmpty>
+			<isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
+				AND (TITLE like ('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
+					OR
+					CONTENT like ('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%'))
 			</isNotEmpty>
 			<isNotEmpty property="v_KEYWORD">
 				<![CDATA[
@@ -3636,6 +3722,8 @@
 					A.TITLE,
 					A.READCOUNT,
 					A.ATTACHMENTS,
+					EXT,
+					FILEPATH,
 					A.ITEMLEVEL,
 					A.ABSTRACT,
 					CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
@@ -3691,6 +3779,26 @@
 					TBL_BOARD_APPRLIST APPR
 				ON 
 					A.BOARDID = APPR.BOARDID
+				LEFT OUTER JOIN (
+					SELECT
+						CASE
+							WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+							WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILENAME))
+							ELSE 'MANY'
+						END AS EXT,
+						CASE
+							WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+							WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILEPATH))
+							ELSE 'MANY'
+						END AS FILEPATH,
+						TENANT_ID,
+						itemid
+						FROM TBL_BOARD_ITEM_ATTACHMENTS
+					GROUP BY
+						ITEMID,
+						TENANT_ID ) F ON
+					A.ITEMID = F.ITEMID
+					AND A.TENANT_ID = F.TENANT_ID
 				WHERE
 					A.TENANT_ID = #v_TENANTID#
 				AND
@@ -3725,6 +3833,11 @@
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_TOPWRITERID">
 				AND (TOPWRITERID = #v_SEARCH_TOPWRITERID# OR EXTENSIONATTRIBUTE2 = '1')
+			</isNotEmpty>
+			<isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
+				AND (TITLE like ('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
+					OR
+					CONTENT like ('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%'))
 			</isNotEmpty>
 			<isNotEmpty property="v_KEYWORD">
 				<![CDATA[
@@ -4673,6 +4786,11 @@
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
 			AND (TOPWRITERID = #v_SEARCH_TOPWRITERID# OR EXTENSIONATTRIBUTE2 = '1')
 		</isNotEmpty>
+        <isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
+            AND (TITLE like ('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
+            OR
+            CONTENT like ('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%'))
+        </isNotEmpty>
 		<isEqual property="v_useKeywordFlag" compareValue="Y">
 			<isNotEmpty property="v_KEYWORD">
 				<![CDATA[
@@ -4782,6 +4900,11 @@
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
 			AND (TOPWRITERID = #v_SEARCH_TOPWRITERID# OR EXTENSIONATTRIBUTE2 = '1')
 		</isNotEmpty>
+        <isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
+            AND (TITLE like ('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
+            OR
+            CONTENT like ('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%'))
+        </isNotEmpty>
 		<isNotEmpty property="v_KEYWORD">
 			<![CDATA[
 			AND (
@@ -4846,6 +4969,11 @@
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
 			AND (TOPWRITERID = #v_SEARCH_TOPWRITERID# OR EXTENSIONATTRIBUTE2 = '1')
 		</isNotEmpty>
+        <isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
+            AND (TITLE like ('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
+            OR
+            CONTENT like ('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%'))
+        </isNotEmpty>
 		<isNotEmpty property="v_KEYWORD">
 			<![CDATA[
 			AND (
@@ -5647,6 +5775,11 @@
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
 			AND (TOPWRITERID = #v_SEARCH_TOPWRITERID# OR EXTENSIONATTRIBUTE2 = '1')
 		</isNotEmpty>
+        <isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
+            AND (TITLE like ('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
+            OR
+            CONTENT like ('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%'))
+        </isNotEmpty>
 		<isNotEmpty property="v_KEYWORD">
 			<![CDATA[
 					AND
@@ -7015,6 +7148,8 @@
 					A.TITLE,
 					A.READCOUNT,
 					A.ATTACHMENTS,
+					EXT,
+					F.FILEPATH,
 					A.ITEMLEVEL,
 					A.ABSTRACT,
 					CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
@@ -7093,6 +7228,59 @@
 						TENANT_ID ) F ON
 					A.ITEMID = F.ITEMID
 				AND A.TENANT_ID = F.TENANT_ID
+				<isNotEmpty property="v_SEARCH_CONTENT">
+					INNER JOIN
+						TBL_Photo_ImageItem B
+					ON
+						A.TENANT_ID = B.TENANT_ID
+					AND
+						A.ItemID = B.ItemID
+					JOIN(
+						SELECT *
+						FROM (
+							SELECT
+								A.ITEMID,
+								A.TENANT_ID,
+								A.BOARDID,
+								MAIN_FLAG,
+								B.FILEPATH,
+								CONTENT,
+								FILECONTENT,
+								MAINCONTENT,
+								ROW_NUMBER() OVER (
+									PARTITION BY A.ITEMID
+									ORDER BY
+									CASE
+									WHEN B.MAIN_FLAG = 'Y' THEN 1
+									WHEN GUID IS NOT NULL THEN GUID + 1
+									ELSE 100
+									END
+								) AS SN
+								FROM
+									TBL_BOARD_ITEM_ATTACHMENTS BIT
+								RIGHT JOIN
+									TBL_BOARD_ITEM A
+								ON
+									BIT.ITEMID = A.ITEMID
+								AND
+									BIT.TENANT_ID = A.TENANT_ID
+								LEFT OUTER JOIN
+									TBL_PHOTO_IMAGEITEM B
+								ON
+									A.TENANT_ID = B.TENANT_ID
+								AND
+									A.ITEMID = B.ITEMID
+							) A2
+						WHERE
+							SN = 1
+						) PART
+					ON
+						PART.ITEMID = A.ITEMID
+					AND
+						PART.TENANT_ID = A.TENANT_ID
+					AND
+						B.MAIN_FLAG = PART.MAIN_FLAG
+				</isNotEmpty>
 				WHERE 
 			<isEqual property="v_PSUBFLAG" compareValue="A">
 				(1=1)
@@ -7149,7 +7337,13 @@
 				AND TITLE like '%' || #v_SEARCH_TITLE# || '%'
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_CONTENT">
-				AND CONTENT like '%' || #v_SEARCH_CONTENT# || '%'
+				AND (
+					UPPER(A.CONTENT) like UPPER('%' || #v_SEARCH_CONTENT# || '%')
+				OR
+					UPPER(PART.FILECONTENT) like UPPER('%' || #v_SEARCH_CONTENT# || '%')
+				OR
+					UPPER(PART.MAINCONTENT) like UPPER('%' || #v_SEARCH_CONTENT# || '%')
+				)
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_WRITERNAME">
 				AND (A.WRITERNAME like '%' || #v_SEARCH_WRITERNAME# || '%' OR A.WRITERNAME2 like '%' || #v_SEARCH_WRITERNAME# || '%')
@@ -7166,6 +7360,11 @@
 			<isNotEmpty property="v_SEARCH_TOPWRITERID">
 				AND (TOPWRITERID = #v_SEARCH_TOPWRITERID# OR EXTENSIONATTRIBUTE2 = '1')
 			</isNotEmpty>
+            <isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
+                AND (TITLE like ('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
+                OR
+                CONTENT like ('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%'))
+            </isNotEmpty>
 			<isNotEmpty property="v_KEYWORD">
 				<![CDATA[
 					AND (
@@ -7216,6 +7415,59 @@
 			A.TENANT_ID = I.TENANT_ID
 		AND
 			A.BOARDID = I.BOARDID
+		<isNotEmpty property="v_SEARCH_CONTENT">
+			INNER JOIN
+				TBL_Photo_ImageItem B
+			ON
+				A.TENANT_ID = B.TENANT_ID
+			AND
+				A.ItemID = B.ItemID
+			JOIN(
+				SELECT *
+					FROM (
+					SELECT
+						A.ITEMID,
+						A.TENANT_ID,
+						A.BOARDID,
+						MAIN_FLAG,
+						B.FILEPATH,
+						CONTENT,
+						FILECONTENT,
+						MAINCONTENT,
+						ROW_NUMBER() OVER (
+							PARTITION BY A.ITEMID
+							ORDER BY
+							CASE
+							WHEN B.MAIN_FLAG = 'Y' THEN 1
+							WHEN GUID IS NOT NULL THEN GUID + 1
+							ELSE 100
+							END
+						) AS SN
+					FROM
+						TBL_BOARD_ITEM_ATTACHMENTS BIT
+					RIGHT JOIN
+						TBL_BOARD_ITEM A
+					ON
+						BIT.ITEMID = A.ITEMID
+					AND
+						BIT.TENANT_ID = A.TENANT_ID
+					LEFT OUTER JOIN
+						TBL_PHOTO_IMAGEITEM B
+					ON
+						A.TENANT_ID = B.TENANT_ID
+					AND
+						A.ITEMID = B.ITEMID
+					) A2
+				WHERE
+					SN = 1
+				) PART
+			ON
+				PART.ITEMID = A.ITEMID
+			AND
+				PART.TENANT_ID = A.TENANT_ID
+			AND
+				B.MAIN_FLAG = PART.MAIN_FLAG
+		</isNotEmpty>
 		WHERE
 		<isEqual property="v_PSUBFLAG" compareValue="A">
 			(1=1)
@@ -7273,7 +7525,13 @@
 			AND TITLE like '%' || #v_SEARCH_TITLE# || '%'
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_CONTENT">
-			AND CONTENT like '%' || #v_SEARCH_CONTENT# || '%'
+			AND (
+				UPPER(A.CONTENT) like UPPER('%' || #v_SEARCH_CONTENT# || '%')
+			OR
+				UPPER(PART.FILECONTENT) like UPPER('%' || #v_SEARCH_CONTENT# || '%')
+			OR
+				UPPER(PART.MAINCONTENT) like UPPER('%' || #v_SEARCH_CONTENT# || '%')
+			)
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_WRITERNAME">
 			AND (A.WRITERNAME like '%' || #v_SEARCH_WRITERNAME# || '%' OR A.WRITERNAME2 like '%' || #v_SEARCH_WRITERNAME# || '%')
@@ -7319,6 +7577,11 @@
 					)
 				)
 		</isNotEmpty>
+        <isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
+            AND (TITLE like ('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
+            OR
+            CONTENT like ('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%'))
+        </isNotEmpty>
 	</select>
 	
 	<update id="EzBoardDAO.modUpdateDate" parameterClass="Map">
@@ -9031,6 +9294,8 @@
 	   					A.TITLE,
 	   					A.READCOUNT,
 	   					A.ATTACHMENTS,
+	   					EXT,
+						FILEPATH,
 	   					A.ITEMLEVEL,
 	   					A.ABSTRACT,
 	   					CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
@@ -9091,6 +9356,26 @@
 	   					A.TENANT_ID = I.TENANT_ID
 	   				 AND 
 	   					A.BOARDID = I.BOARDID 
+	   				 LEFT OUTER JOIN (
+						SELECT 	
+							CASE
+								WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+								WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILENAME))
+								ELSE 'MANY'
+							END AS EXT,
+							CASE
+								WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+								WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILEPATH))
+								ELSE 'MANY'
+							END AS FILEPATH,
+							TENANT_ID,
+							itemid
+							FROM TBL_BOARD_ITEM_ATTACHMENTS
+						GROUP BY
+							ITEMID,
+							TENANT_ID ) F ON
+						A.ITEMID = F.ITEMID
+						AND A.TENANT_ID = F.TENANT_ID
 	   				 WHERE
 	   					A.TENANT_ID = #v_TENANTID#
 	   				 AND
@@ -9696,6 +9981,26 @@
 						A.TENANT_ID = I.TENANT_ID
 					AND
 						A.BOARDID = I.BOARDID
+					LEFT OUTER JOIN (
+						SELECT 	
+							CASE
+								WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+								WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILENAME))
+								ELSE 'MANY'
+							END AS EXT,
+							CASE
+								WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+								WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILEPATH))
+								ELSE 'MANY'
+							END AS FILEPATH,
+							TENANT_ID,
+							itemid
+							FROM TBL_BOARD_ITEM_ATTACHMENTS
+						GROUP BY
+							ITEMID,
+							TENANT_ID ) F ON
+						A.ITEMID = F.ITEMID
+						AND A.TENANT_ID = F.TENANT_ID
 					WHERE
 						A.TENANT_ID = #v_TENANTID#
 					AND

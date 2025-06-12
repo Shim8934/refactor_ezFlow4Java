@@ -1321,6 +1321,12 @@
 		    
 		    /* 2020-08-03 홍승비 - 결재자가 한 명인 경우(기안자 = 최종결재자), 수신처 회송 시 기결재기능 사용하지 못하도록 수정 */
 			function btn_OK() {
+
+				if (!window.opener || window.opener.closed) {
+					OpenAlertUI("<spring:message code='ezApprovalG.km03' />", btn_Close2);
+					return;
+				}
+				
 				var chkReceivedDoc = 0;
 
 				/* 2022-04-26 홍승비 - 중복 접수 방지 로직은 접수창(approvalType="RECV")에서만 동작하도록 분기처리 추가 */
@@ -2948,6 +2954,10 @@
 					div.appendChild(imgDiv);
 				}
 				
+			}
+
+			function btn_Close2() {
+				window.close();
 			}
 	    </script>
 	    <style>
