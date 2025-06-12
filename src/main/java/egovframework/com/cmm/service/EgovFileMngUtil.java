@@ -189,12 +189,11 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
      * @throws Exception
      */
     protected void writeUploadedFile(MultipartFile file, String newName, String stordFilePath) throws Exception {
-		InputStream stream = null;
-		EzFAL.EzFileOutputStream bos = null;
 		String stordFilePathReal = (stordFilePath==null?"":stordFilePath);
 		
-		try {
-		    stream = file.getInputStream();
+		try (InputStream stream = file.getInputStream();
+			 EzFAL.EzFileOutputStream bos = new EzFAL.EzFileOutputStream(stordFilePathReal + commonUtil.separator + newName)) {
+			
 			EzFAL.EzFile cFile = new EzFAL.EzFile(stordFilePathReal);
 	
 		    if (!cFile.isDirectory()) {
@@ -203,9 +202,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 				    throw new IOException("Directory creation Failed ");
 				}
 		    }
-	
-		    bos = new EzFAL.EzFileOutputStream(stordFilePathReal + File.separator + newName);
-	
+
 		    int bytesRead = 0;
 		    byte[] buffer = new byte[BUFF_SIZE];
 	
@@ -218,21 +215,6 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 			logger.debug("ioe: {}", ioe);
 		} catch (Exception e) {
 			logger.debug("e: {}", e);
-		} finally {
-		    if (bos != null) {
-				try {
-				    bos.close();
-				} catch (Exception ignore) {
-					logger.debug("IGNORED: {}", ignore.getMessage());
-				}
-		    }
-		    if (stream != null) {
-				try {
-				    stream.close();
-				} catch (Exception ignore) {
-					logger.debug("IGNORED: {}", ignore.getMessage());
-				}
-		    }
 		}
     }
 
@@ -854,7 +836,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 	 * @throws Exception
 	 */
 	public String readFile(String filePath) throws Exception {
-		File file = new File(filePath);
+		EzFAL.EzFile file = new EzFAL.EzFile(filePath);
 		
 		if (!file.exists()) {
 			throw new NoSuchFileException(filePath);
@@ -865,7 +847,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 		String strLine = null;
 		
 		try {
-			br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
+			br = new BufferedReader(new InputStreamReader(new EzFAL.EzFileInputStream(file), "UTF-8"));
 			
 			while ((strLine = br.readLine()) != null) {
 				sb.append(strLine + "\n");

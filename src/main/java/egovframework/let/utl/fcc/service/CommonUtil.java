@@ -381,12 +381,12 @@ public class CommonUtil {
 
 		logger.debug("readBytesFromFile path=" + pathStr);
 
-		File file = new File(pathStr);
+		EzFAL.EzFile file = new EzFAL.EzFile(pathStr);
 		byte[] content = new byte[(int)file.length()];
-		FileInputStream fin = null;		
+		EzFAL.EzFileInputStream fin = null;		
 
 		try {
-			fin = new FileInputStream(file);
+			fin = new EzFAL.EzFileInputStream(file);
 			fin.read(content);
 		} catch (IOException e) {		
 			throw e;
