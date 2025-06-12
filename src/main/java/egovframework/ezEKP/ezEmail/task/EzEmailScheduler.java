@@ -37,6 +37,7 @@ import javax.mail.search.ReceivedDateTerm;
 import javax.mail.search.SearchTerm;
 import javax.servlet.ServletContext;
 
+import egovframework.let.utl.fcc.service.EzFAL;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.json.simple.JSONArray;
@@ -441,8 +442,8 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 		
 		for (int i = 0; i < list.size(); i++) {
 			IMAPAccess ia = null;
-			FileInputStream fis = null;
-			File f = null;
+			EzFAL.EzFileInputStream fis = null;
+			EzFAL.EzFile f = null;
 			File encryptedFile = null; // 보안메일 관련 파일 변수
 			MimeMessage message = null;
 			Locale locale = null;
@@ -475,11 +476,11 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 				String pDirPath = commonUtil.getUploadPath("upload_mail.RESERVED_MAIL_PATH", tenantId);
 				pDirPath = realPath + pDirPath;
 	
-				f = new File(pDirPath + commonUtil.separator + messageId + ".eml");
+				f = new EzFAL.EzFile(pDirPath + commonUtil.separator + messageId + ".eml");
 				logger.debug("filePath=" + pDirPath + commonUtil.separator + messageId + ".eml");
 								
 				if (f.exists()) {
-					fis = new FileInputStream(f);
+					fis = new EzFAL.EzFileInputStream(f);
 	
 					SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
 							userAccount, password);
@@ -1507,18 +1508,18 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 			if (useSeparatedLargeFileFolder.equals("YES")) {
 				pUploadPath += commonUtil.separator + "largeFile";
 			}
-			
-			File file = new File(pUploadPath);
+
+			EzFAL.EzFile file = new EzFAL.EzFile(pUploadPath);
 			logger.debug("path=" + pUploadPath);
 			
 			String bigSizeMailAttachDelDayStr = ezCommonService.getTenantConfig("BigSizeMailAttachDelDay", tenantVO.getTenantId());
 			int bigSizeMailAttachDelDay = Integer.parseInt(bigSizeMailAttachDelDayStr);
 			
 			if (file.exists()) {
-				File[] files = file.listFiles(new DeleteExpireAttachFilter(bigSizeMailAttachDelDay));
+				EzFAL.EzFile[] files = file.listFiles(new DeleteExpireAttachFilter(bigSizeMailAttachDelDay));
 				
-				for (File expiredFile : files) {
-					File[] filelist = expiredFile.listFiles();
+				for (EzFAL.EzFile expiredFile : files) {
+					EzFAL.EzFile[] filelist = expiredFile.listFiles();
 					logger.debug("expired directory name=" + expiredFile.getName());
 					if (deleteDirectory(expiredFile)) {
 						logger.debug(expiredFile.getName() + " is deleted.");

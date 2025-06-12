@@ -55,6 +55,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.JsonElement;
 
+import egovframework.let.utl.fcc.service.EzFAL;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.IOUtils;
@@ -2666,8 +2667,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		try {
 			// get fileId with extension
 			fileId = fileId.substring(0, 36);
-			File directory = new File(realFilePath);
-			File[] files = directory.listFiles((FileFilter) new PrefixFileFilter(fileId));
+			EzFAL.EzFile directory = new EzFAL.EzFile(realFilePath);
+			EzFAL.EzFile[] files = directory.listFiles((FileFilter) new PrefixFileFilter(fileId));
 			
 			// 대용량 첨부파일의 기간이 만료되었을 경우
 			if (files == null) {
@@ -2700,14 +2701,14 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			
 			// get original filename from text file
 			String fileName = "";
-			File originalNameFile = new File(realFilePath + "__.txt");
+			EzFAL.EzFile originalNameFile = new EzFAL.EzFile(realFilePath + "__.txt");
 			
 			if (!originalNameFile.exists()) {
 				logger.error("originalNameFile not found. filePath=" + realFilePath + "__.txt");
 			} else {
 				InputStreamReader isr = null;
 				try {
-					isr = new InputStreamReader(new FileInputStream(originalNameFile));
+					isr = new InputStreamReader(new EzFAL.EzFileInputStream(originalNameFile));
 				    int read = 0;
 					while ((read = isr.read()) != -1) {
 						fileName += (char)read;

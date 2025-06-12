@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
 import egovframework.ezEKP.ezOrgan.vo.OrganAuth.AdminAuth;
 import egovframework.ezEKP.ezOrgan.vo.OrganAddJobVO;
+import egovframework.let.utl.fcc.service.EzFAL;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -1432,21 +1433,21 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			String photoFilePath = photoPath + cn + ".jpg";
 			logger.debug("photoFilePath={}", photoFilePath);
 
-			File photoFile = new File(commonUtil.detectPathTraversal(photoFilePath));
+			EzFAL.EzFile photoFile = new EzFAL.EzFile(commonUtil.detectPathTraversal(photoFilePath));
 			if (photoFile.exists()) {
 				photoFile.delete();
 				logger.debug("photoFile delete.");
 			}
-			/*
+
 			String thumbnailFilePath = thumbnailPath + cn + ".jpg";
 			logger.debug("thumbnailFilePath={}", thumbnailFilePath);
 
-			File thumbnailFile = new File(commonUtil.detectPathTraversal(thumbnailFilePath));
+			EzFAL.EzFile thumbnailFile = new EzFAL.EzFile(commonUtil.detectPathTraversal(thumbnailFilePath));
 			if (thumbnailFile.exists()) {
 				thumbnailFile.delete();
 				logger.debug("thumbnailFile delete.");
 			}
-			*/
+
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}

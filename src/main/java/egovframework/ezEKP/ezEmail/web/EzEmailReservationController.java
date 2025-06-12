@@ -7,6 +7,7 @@ import java.util.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import egovframework.let.utl.fcc.service.EzFAL;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -109,7 +110,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		String realPath = commonUtil.getRealPath(request);
 		String pDirPath = commonUtil.getUploadPath("upload_mail.RESERVED_MAIL_PATH", userInfo.getTenantId());
 		pDirPath = realPath + pDirPath;
-		File f = new File(pDirPath + commonUtil.separator + messageId + ".eml");
+		EzFAL.EzFile f = new EzFAL.EzFile(pDirPath + commonUtil.separator + messageId + ".eml");
 
 		if (f.exists()) {
 			f.delete();

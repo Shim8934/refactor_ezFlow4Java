@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 
+import egovframework.let.utl.fcc.service.EzFAL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -75,8 +76,8 @@ public class EzEmailDAO extends EgovAbstractDAO {
 			long mailUid = mailBlobVO.getMailUid();
 			String headerPath = ezEmailUtil.getMailHeaderPath(mailboxId, mailUid);
 			String bodyPath = ezEmailUtil.getMailBodyPath(mailboxId, mailUid);
-			File headerFile = new File(headerPath);
-			File bodyFile = new File(bodyPath);
+			EzFAL.EzFile headerFile = new EzFAL.EzFile(headerPath);
+			EzFAL.EzFile bodyFile = new EzFAL.EzFile(bodyPath);
 			
 			if (headerFile.exists()) {
 				headerFile.delete();
