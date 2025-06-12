@@ -7,6 +7,7 @@ import java.util.*;
 
 import javax.annotation.Resource;
 
+import egovframework.let.utl.fcc.service.EzFAL;
 import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONObject;
 import org.jsoup.Jsoup;
@@ -726,7 +727,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 				pDirPath = pDirPath + commonUtil.separator;
 			}
 			
-			File file = new File(pDirPath + "uploadFile" + commonUtil.separator + journalId + "_uploadFile");
+			EzFAL.EzFile file = new EzFAL.EzFile(pDirPath + "uploadFile" + commonUtil.separator + journalId + "_uploadFile");
 			
 			if (!file.exists()) {
 				file.mkdirs();
@@ -769,13 +770,13 @@ public class EzJournalServiceImpl implements EzJournalService {
 					//	filePath = "{" + UUID.randomUUID() + "}";
 						reuseFileName = filePath + "." + extension;
 						destFilePath = commonUtil.detectPathTraversal(pDirPath + "uploadFile" + commonUtil.separator + journalId + "_uploadFile" + commonUtil.separator + reuseFileName);
-						
-						FileUtils.copyFile(new File(orgFilePath), new File(destFilePath));
+
+						EzFAL.copyFile(orgFilePath, destFilePath);
 					} catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
 				}
 			
 				try {
-					fileMove(beforeFilePath, afterFilePath);	// Temp 폴더에서 첨부파일 이동
+					EzFAL.moveFile(beforeFilePath, afterFilePath);	// Temp 폴더에서 첨부파일 이동
 				} catch (FileNotFoundException e) {logger.debug("e.message=" + e.getMessage());}
 			}
 			
@@ -811,17 +812,16 @@ public class EzJournalServiceImpl implements EzJournalService {
 		logger.debug("fileMove started.");
 		logger.debug("beforeFilePath = " + beforeFilePath + " || afterFilePath = " + afterFilePath);
 		
-		File srcFile = new File(commonUtil.detectPathTraversal(beforeFilePath));
-		File destFile = new File(commonUtil.detectPathTraversal(afterFilePath));
+		EzFAL.EzFile srcFile = new EzFAL.EzFile(commonUtil.detectPathTraversal(beforeFilePath));
+		EzFAL.EzFile destFile = new EzFAL.EzFile(commonUtil.detectPathTraversal(afterFilePath));
 		
 		try {
 			boolean rename = srcFile.renameTo(destFile);
 			if (!rename) {
-				FileUtils.copyFile(srcFile, destFile);
+				EzFAL.copyFile(srcFile, destFile);
 				if (!srcFile.delete()) {
-					FileUtils.deleteQuietly(destFile);
-					throw new IOException("Failed to delete original file '" + srcFile +
-							"' after copy to '" + destFile + "'");
+					destFile.delete();
+					throw new IOException("Failed to delete original file '" + srcFile + "' after copy to '" + destFile + "'");
 				}
 			}
 		} catch (Exception e) {
@@ -989,7 +989,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 					pDirPath = pDirPath + commonUtil.separator;
 				}
 						
-				File file = new File(pDirPath + "uploadFile" + commonUtil.separator + journalId + "_uploadFile");
+				EzFAL.EzFile file = new EzFAL.EzFile(pDirPath + "uploadFile" + commonUtil.separator + journalId + "_uploadFile");
 						
 				if (!file.exists()) {
 					file.mkdirs();
@@ -999,7 +999,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 				String afterFilePath = pDirPath + "uploadFile" + commonUtil.separator + journalId + "_uploadFile" + commonUtil.separator + filePath + "." + extension;
 				
 				try {
-					fileMove(beforeFilePath, afterFilePath);	// Temp 폴더에서 첨부파일 이동
+					EzFAL.moveFile(beforeFilePath, afterFilePath);	// Temp 폴더에서 첨부파일 이동
 				} catch (FileNotFoundException e) {logger.debug("e.message=" + e.getMessage());}
 			}
 		}
@@ -1050,8 +1050,8 @@ public class EzJournalServiceImpl implements EzJournalService {
 	private void deleteDirectory (String journalId, String pDirpath, int tenantId) throws Exception {
 		logger.debug("deleteDirectory started.");
 		
-		File directoryFile = new File(commonUtil.detectPathTraversal(pDirpath + "uploadFile" + commonUtil.separator + journalId + "_uploadFile"));
-		File[] deleteFileList = directoryFile.listFiles();
+		EzFAL.EzFile directoryFile = new EzFAL.EzFile(commonUtil.detectPathTraversal(pDirpath + "uploadFile" + commonUtil.separator + journalId + "_uploadFile"));
+		EzFAL.EzFile[] deleteFileList = directoryFile.listFiles();
 
 		if (directoryFile.exists()) {
 			// 디렉토리 하위의 파일을 모두 삭제 한뒤 디렉토리 삭제

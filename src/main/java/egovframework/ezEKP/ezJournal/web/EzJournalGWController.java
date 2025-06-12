@@ -34,6 +34,7 @@ import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
 import egovframework.ezEKP.ezPersonal.type.NotiType;
 
+import egovframework.let.utl.fcc.service.EzFAL;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -1023,8 +1024,8 @@ public class EzJournalGWController {
 	        	pDirPath = pDirPath + commonUtil.separator;
 	        }
 	        
-	        File file = new File(pDirPath + "uploadFile");
-	        File tempFile = new File(pDirPath + "tempUploadFile");
+	        EzFAL.EzFile file = new EzFAL.EzFile(pDirPath + "uploadFile");
+	        EzFAL.EzFile tempFile = new EzFAL.EzFile(pDirPath + "tempUploadFile");
 
 	        if (!file.exists()) {
 	        	file.mkdirs();
@@ -1114,22 +1115,18 @@ public class EzJournalGWController {
      */
     public void journalWriteUploadedFile(String bytearray, String newName, String stordFilePath) throws Exception {
     	logger.debug("journalWriteUploadedFile started.");
-    	
-		InputStream stream = null;
-		OutputStream bos = null;
 		String stordFilePathReal = (stordFilePath == null ? "" : commonUtil.detectPathTraversal(stordFilePath));
 		
-		try {
-		    File cFile = new File(stordFilePathReal);
-	
+		try (OutputStream bos = new EzFAL.EzFileOutputStream(stordFilePathReal + File.separator + commonUtil.detectPathTraversal(newName))) {
+		    
+			EzFAL.EzFile cFile = new EzFAL.EzFile(stordFilePathReal);
 		    if (!cFile.isDirectory()) {
 				boolean _flag = cFile.mkdirs();
 				if (!_flag) {
 				    throw new IOException("Directory creation Failed ");
 				}
 		    }
-	
-		    bos = new FileOutputStream(stordFilePathReal + File.separator + commonUtil.detectPathTraversal(newName));
+			
 		    logger.debug("###" + stordFilePathReal + File.separator + newName + "###");
 		    Decoder decoder = Base64.getDecoder();
 
@@ -1141,21 +1138,6 @@ public class EzJournalGWController {
 			logger.debug("ioe: {}", ioe);
 		} catch (Exception e) {
 			logger.debug("e: {}", e);
-		} finally {
-		    if (bos != null) {
-				try {
-				    bos.close();
-				} catch (Exception ignore) {
-					logger.debug("IGNORED: {}", ignore.getMessage());
-				}
-		    }
-		    if (stream != null) {
-				try {
-				    stream.close();
-				} catch (Exception ignore) {
-					logger.debug("IGNORED: {}", ignore.getMessage());
-				}
-		    }
 		}
 		logger.debug("journalWriteUploadedFile ended.");
     }
@@ -1198,7 +1180,7 @@ public class EzJournalGWController {
 						String extension = commonUtil.detectPathTraversal(fileName.substring(fileName.lastIndexOf(".") + 1));
 						logger.debug("sGUID:" + sGUID + ",fileName:" + fileName);
 						
-						File file = new File(pDirPath + commonUtil.separator + filePath + commonUtil.separator + sGUID + "." + extension);
+						EzFAL.EzFile file = new EzFAL.EzFile (pDirPath + commonUtil.separator + filePath + commonUtil.separator + sGUID + "." + extension);
 						if(file.exists()){
 							file.delete();
 						}
@@ -1215,7 +1197,7 @@ public class EzJournalGWController {
 						String extension = commonUtil.detectPathTraversal(fileName.substring(fileName.lastIndexOf(".") + 1));
 						logger.debug("sGUID:" + sGUID + ",fileName:" + fileName);
 						
-						File file = new File(pDirPath + commonUtil.separator + filePath + commonUtil.separator + sGUID + "." + extension);
+						EzFAL.EzFile  file = new EzFAL.EzFile (pDirPath + commonUtil.separator + filePath + commonUtil.separator + sGUID + "." + extension);
 						
 						file.delete();
 					}
@@ -1266,7 +1248,7 @@ public class EzJournalGWController {
 			List<String> fileNameList = Arrays.asList(fileNameS);
 			
 			//zos = new ZipOutputStream(new FileOutputStream(pDirTempPath + ".zip"), Charset.forName("utf-8"));
-		try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(pDirTempPath + ".zip"), Charset.forName("utf-8"))){
+		try (ZipOutputStream zos = new ZipOutputStream(new EzFAL.EzFileOutputStream(pDirTempPath + ".zip"), Charset.forName("utf-8"))){
 			//BufferedInputStream bis = null;
 			
 			for (int i = 0; i < filePathList.size(); i++) {
@@ -1278,7 +1260,7 @@ public class EzJournalGWController {
 					
 					logger.debug("fullFilePath : " + fullFilePath);
 					
-					File file = new File(fullFilePath);
+					EzFAL.EzFile file = new EzFAL.EzFile(fullFilePath);
 					
 					if (!file.exists()) {
 						throw new FileNotFoundException(fullFilePath);
@@ -1288,7 +1270,7 @@ public class EzJournalGWController {
 						throw new FileNotFoundException(fullFilePath);
 					}
 					
-					try (BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file))) {
+					try (BufferedInputStream bis = new BufferedInputStream(new EzFAL.EzFileInputStream(file))) {
 			        ZipEntry zentry = new ZipEntry(fileName);
 			        zentry.setTime(file.lastModified());
 			        zos.putNextEntry(zentry);
@@ -1316,7 +1298,7 @@ public class EzJournalGWController {
 			zos.close();
 			zos = null;*/
 			
-			File file = new File(pDirTempPath + ".zip");
+			EzFAL.EzFile file = new EzFAL.EzFile(pDirTempPath + ".zip");
 			
 			int fileSize = (int)file.length();
 			
@@ -1364,7 +1346,7 @@ public class EzJournalGWController {
 			String fullFilePath = realPath + uploadFilePath + commonUtil.separator + "uploadFile" + commonUtil.detectPathTraversal(filePath);
 			logger.debug("fullFilePath : " + fullFilePath);
 			
-			File file = new File(fullFilePath);
+			EzFAL.EzFile file = new EzFAL.EzFile(fullFilePath);
 			
 			if (!file.exists()) {
 				throw new FileNotFoundException(fullFilePath);
