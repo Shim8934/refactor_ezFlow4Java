@@ -2116,6 +2116,15 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         		logger.error(e.getMessage(), e);
         		result = "EMAIL_ERROR";
         	}
+			try {
+				if ("".equalsIgnoreCase(vo.getExtensionAttribute2())){
+					String realPath = commonUtil.getRealPath(request);
+					ezOrganAdminService.deleteDestUserProfileImage(userInfo.getId(), userInfo.getTenantId(), realPath);
+				}
+			} catch (Exception e) {
+				logger.error(e.getMessage(), e);
+			}
+
 		// 새로운 사용자를 등록한다.
 		} else {
 			String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
