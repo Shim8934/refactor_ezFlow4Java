@@ -1202,7 +1202,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			String isDefaultReceiptExternal = ezCommonService.getTenantConfig("isDefaultReceiptExternal", info.getTenantId());
 			String useReceiptExternal = ezCommonService.getTenantConfig("useReceiptExternal", info.getTenantId());
 			String useOnlyInnerMail = ezCommonService.getTenantConfig("UseOnlyInnerMail", info.getTenantId());
-			String useAutoZipEnc = ezCommonService.getTenantConfig("useAutoZipEnc", info.getTenantId());
+			String useAutoZipEnc = ezCommonService.getTenantConfig("useMobileZipEnc", info.getTenantId());
 
 			// 2025.02.17 한슬기 : 나를 항상 참조에 포함 옵션(none: 사용안함, cc: 참조에 항상 포함, bcc: 숨은참조에 항상 포함)
 			MailGeneralVO mailGeneralVO = ezEmailService.getMailGeneral(info.getTenantId(), info.getUserId()).get(0);
