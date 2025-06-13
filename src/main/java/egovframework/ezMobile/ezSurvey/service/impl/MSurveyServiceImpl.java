@@ -680,16 +680,18 @@ public class MSurveyServiceImpl extends EgovFileMngUtil implements MSurveyServic
 		}
 		
 		//Check date
-		String todayStr = formatter2.format(new Date());
-		String endDateStr = survey.getEndDate().substring(0, 10);
-		String startDateStr = survey.getStartDate().substring(0, 10);
-		Date dToday = formatter2.parse(todayStr);
-		Date dEndDate = formatter2.parse(endDateStr);
-		Date dStartDate = formatter2.parse(startDateStr);
+		String todayStr = formatter.format(new Date());
+		Date dToday = formatter.parse(todayStr);
+		Date dEndDate = formatter.parse(survey.getEndDate());
+		Date dStartDate = formatter.parse(survey.getStartDate());
 		
-		if (dStartDate.compareTo(dToday) > 0 || dToday.compareTo(dEndDate) > 0) {
+		if (dStartDate.compareTo(dToday) > 0) {
 			result.put("status", "error");
 			result.put("code", 7);
+			return result;
+		} else if (dToday.compareTo(dEndDate) > 0) {
+			result.put("status", "error");
+			result.put("code", 8);
 			return result;
 		}
 		

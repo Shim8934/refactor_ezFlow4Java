@@ -2004,4 +2004,18 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		ezSurveyDAO.deleteRespondents(map);
 		ezSurveyDAO.deleteResponseItems(map);
 	}
+
+	@Override
+	public void endSurveyItem(String surveyID, String userId, int tenantId) throws Exception {
+		logger.debug("endSurveyItem started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("surveyID", Integer.parseInt(surveyID));
+		map.put("userID", userId);
+		map.put("updateDate", commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss"));
+		map.put("tenantID", tenantId);
+
+		logger.debug("endSurveyItem ended");
+		ezSurveyDAO.endSurveyItem(map);
+	}
 }

@@ -45,6 +45,9 @@
 				<c:if test="${user == creator.id}">
 					<li class="off"><span id="suvyDlt"><spring:message code="ezSurvey.t21"/></span></li>
 				</c:if>
+				<c:if test="${user == creator.id || adminYN eq 'Y'}">
+					<li class="off"><span id="suvyEnd"><spring:message code="ezSurvey.endSurv01"/></span></li>
+				</c:if>
 				<c:if test="${(survey.draftFlag ne 1) && (participation eq 'yes') && (survey.multiAnswerFlag eq 0) && (resStatus eq true)}">
 					<li class="off"><span id="suvyUdt"><spring:message code="ezSurvey.t118"/></span></li>
 					<li class="off"><span id="suvyDel"><spring:message code="ezSurvey.t117"/></span></li>
@@ -633,6 +636,10 @@
 
 			var deleteBttn = document.getElementById("suvyDel");
 			if (updateBttn) {deleteBttn.onclick = function(e) {deleteSurveyResponses();};}
+
+			/* 2025-06-13 양지혜 - 설문종료 버튼 */
+			var closeBttn = document.getElementById("suvyEnd");
+			if (closeBttn) {closeBttn.onclick = function(e) {endSurvey();};}
 			
 			// 20.05.06 강승구 : 설문응답여부에 따른 처리 코드추가
 			checkQuestionAnswer();
@@ -872,7 +879,7 @@
 				case 6 : alert(SurveyMessages.strNotResp)   ; resposeObj.responses = []; break;
 				case 7 : alert(SurveyMessages.strNotPeriod2); resposeObj.responses = []; break;
 				case 8 : 
-					alert(data.status == 'editing' ? SurveyMessages.strEditingErr : SurveyMessages.strDeletedErr); 
+					alert(data.status == 'editing' ? SurveyMessages.strEditingErr01 : SurveyMessages.strDeletedErr); 
 					resposeObj.responses = []; 
 					refreshOpenerAndClose("Y"); 
 					break;
@@ -1224,7 +1231,7 @@
 		function afterDeleteItem(data) {
 			var code = data.code;
 			switch(code) {
-				case 0 : afterDeleteSuccessfully()        ; break;
+				case 0 : afterActionComplete(SurveyMessages.strDel) ; break;
 				case 1 : alert(SurveyMessages.strParamErr); break;
 				case 2 : alert(SurveyMessages.strError)   ; break;
 				case 3 : alert(SurveyMessages.strPerm)    ; break;
@@ -1232,8 +1239,8 @@
 			}
 		}
 		
-		function afterDeleteSuccessfully() {
-			alert(SurveyMessages.strDel);
+		function afterActionComplete(msg) {
+			alert(msg);
 			if (window.opener && window.opener.openSurveyPopup)    {window.opener.openSurveyPopup("", 600, 600, 0, window.opener.surveyPopupIndex);}
 			
 			if (window.opener != null && window.opener.reloadSurveyPage != undefined) {
@@ -1484,9 +1491,12 @@
 					var updatedSurveyId = JSON.parse(updatedInfo.body).surveyId;
 
 					if (status == "MODIFY" && updatedSurveyId == surveyId) {
-						alert("작성자가 설문내용을 수정하였습니다. 설문을 다시 불러옵니다.");
+						alert(SurveyMessages.strEditingErr02);
 						refreshOpenerAndClose("N");
 						window.location.reload();
+					} else if (status = "END" && updatedSurveyId == surveyId && actionUserYN != "Y") {
+						alert(SurveyMessages.strEndSurv03);
+						refreshOpenerAndClose("Y");
 					}
 				});
 			});
@@ -1497,6 +1507,27 @@
 					window.location.reload();
 				}
 			}, 10000);
+		}
+
+		var actionUserYN = "N";
+		function endSurvey() {
+			actionUserYN = "Y";
+			
+			if (confirm(SurveyMessages.strEndSurv01)) {
+				$.ajax({
+					type: "POST",
+					url: "/ezSurvey/endSurveyItem.do",
+					data: {surveyID : surveyId},
+					dataType: "text",
+					async: false,
+					success : function() {
+						afterActionComplete(SurveyMessages.strEndSurv02);
+					},
+					error : function() {
+						alert(SurveyMessages.strError);
+					}
+				});
+			}
 		}
 	});
 	

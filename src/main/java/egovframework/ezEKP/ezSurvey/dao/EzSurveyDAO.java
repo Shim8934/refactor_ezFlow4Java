@@ -320,4 +320,9 @@ public class EzSurveyDAO extends EgovAbstractDAO {
 	public HashMap<String, Object> checkEditingState(Map<String, Object> map) throws Exception {
 		return (HashMap<String, Object>) select("EzSurveyDAO.checkEditingState", map);
 	}
+
+	// 2025-06-13 양지혜 - 설문 > 진행중 설문 > 설문종료
+    public void endSurveyItem(Map<String, Object> map) throws Exception {
+		update("EzSurveyDAO.endSurveyItem", map);
+    }
 }

@@ -1847,4 +1847,17 @@
 		  AND COMPANY_ID = #companyId#
 		  AND TENANT_ID = #tenantId#
 	</select>
+
+	<update id="EzSurveyDAO.endSurveyItem" parameterClass="map">
+		UPDATE
+			TBL_SURVEY
+		SET
+			END_DATE = #updateDate#,
+			UPDATE_DATE = #updateDate#,
+			UPDATE_USER = #userID#
+		WHERE
+			SURVEY_ID = #surveyID#
+		  AND
+			TENANT_ID = #tenantID#
+	</update>
 </sqlMap>

@@ -514,6 +514,7 @@ var SurveyItem = function() {
 				// 참여여부
 				var tdParticipation   = document.createElement("td");
 //				var tdElmt11   = document.createElement("td");
+				var endDate = new Date(itemList[i]["endDate"].replace(' ', 'T').replace('.0',''));
 				var endDateStr = itemList[i]["endDate"].substring(0, 10);
 				var today      = new Date();
 				var todayStr   = getStringFormatForDate(today);
@@ -613,13 +614,14 @@ var SurveyItem = function() {
 					else {
 						//Check time
 						var startDateStr = itemList[i]["startDate"].substring(0, 10);
+						var startDate = new Date(itemList[i]["startDate"].replace(' ', 'T').replace('.0',''));
 						
-						if (todayStr < startDateStr) {
+						if (today < startDate) {
 							//not started yet (대기)
 							statusStr = SurveyMessages.strWaiting;
 						}
 						else {
-							if (todayStr <= endDateStr) {
+							if (today <= endDate) {
 								statusStr = SurveyMessages.strProcess;
 							}
 							else {

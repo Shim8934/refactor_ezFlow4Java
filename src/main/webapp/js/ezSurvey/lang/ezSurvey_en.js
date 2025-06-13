@@ -193,8 +193,12 @@ var SurveyMessages = {
     strLangPGB01 : "Participation",
     strLangPGB02 : "non-participation",
     strNumber : "Type",
-	strEditingErr : "The survey is currently being edited. Your response cannot be saved.",
+	strEditingErr01 : "The survey is currently being edited. Your response cannot be saved.",
+	strEditingErr02 : "he author has modified the survey. Reloading the survey content.",
 	strDeletedErr : "Survey no longer exists. Response could not be saved. Back to the list.",
 	strDelResponse : "Delete your response? The survey status will change to not participated.",
-	strDelEnd : "Your response has been deleted."
+	strDelEnd : "Your response has been deleted.",
+	strEndSurv01 : "Would you like to end the survey?",
+	strEndSurv02 : "The survey has been closed.",
+	strEndSurv03 : "This survey has been closed and can no longer be answered. The window will now close."
 }

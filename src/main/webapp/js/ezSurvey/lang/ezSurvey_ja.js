@@ -192,8 +192,12 @@ var SurveyMessages = {
     strLangPGB01 : "参加",
 	strLangPGB02 : "未参加",
     strNumber : "数",
-	strEditingErr : "설문 수정이 진행중입니다. 답변을 저장할 수 없습니다.",
+	strEditingErr01 : "설문 수정이 진행중입니다. 답변을 저장할 수 없습니다.",
+	strEditingErr02 : "작성자에 의해 설문이 수정되었습니다. 설문내용을 다시 불러옵니다.",
 	strDeletedErr : "해당 설문이 삭제되어 답변을 저장할 수 없습니다. 리스트로 돌아갑니다.",
 	strDelResponse : "응답한 내용을 삭제하시겠습니까? 삭제 시 해당 설문은 미참여 상태로 변경됩니다.",
-	strDelEnd : "응답 내용이 삭제되었습니다."
+	strDelEnd : "응답 내용이 삭제되었습니다.",
+	strEndSurv01 : "설문을 종료하시겠습니까?",
+	strEndSurv02 : "해당 설문이 종료되었습니다.",
+	strEndSurv03 : "설문이 종료되어 더 이상 응답할 수 없습니다. 현재 창을 닫습니다."
 }
