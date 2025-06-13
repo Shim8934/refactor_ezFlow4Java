@@ -163,7 +163,7 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 			map.put("v_LOCATION", jsonParam.get("location").toString());
 			map.put("v_CONTENTPATH", schedulePath);
 			map.put("v_TENANTID", tenantId);
-			map.put("v_SHOWTOP", jsonParam.get("showTop").toString());
+			map.put("v_SHOWTOP", jsonParam.get("showtop") == null ? "N" : jsonParam.get("showtop").toString());
 			
 			ezScheduleDAO.insertSchedule(map);
 			
@@ -373,7 +373,7 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 		map.put("v_TITLE", jsonParam.get("title").toString());
 		map.put("v_LOCATION", jsonParam.get("location").toString());
 		map.put("v_TENANTID", tenantId);
-		map.put("v_SHOWTOP", jsonParam.get("showTop").toString());
+		map.put("v_SHOWTOP", jsonParam.get("showtop") == null ? "N" : jsonParam.get("showtop").toString());
 
 		ezScheduleDAO.updateSchedule(map);
 		
