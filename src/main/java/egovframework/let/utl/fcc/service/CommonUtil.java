@@ -22,6 +22,7 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -378,28 +379,27 @@ public class CommonUtil {
 
 	public byte[] readBytesFromFile(Path path) throws IOException {
 		String pathStr = path.toString();
-
 		logger.debug("readBytesFromFile path=" + pathStr);
 
 		EzFAL.EzFile file = new EzFAL.EzFile(pathStr);
-		byte[] content = new byte[(int)file.length()];
-		EzFAL.EzFileInputStream fin = null;		
-
-		try {
-			fin = new EzFAL.EzFileInputStream(file);
-			fin.read(content);
-		} catch (IOException e) {		
-			throw e;
-		} finally {
-			if (fin != null) {
-				fin.close();
+	
+		try (EzFAL.EzFileInputStream fin = new EzFAL.EzFileInputStream(file);
+			 ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+	
+			byte[] buffer = new byte[2048];
+			int bytesRead;
+			while ((bytesRead = fin.read(buffer)) != -1) {
+				bos.write(buffer, 0, bytesRead);
 			}
+			
+			logger.debug("readBytesFromFile ended. path=" + pathStr);
+			return bos.toByteArray();
+	
+		} catch (IOException e) {
+			logger.error("Failed to read file: " + pathStr, e);
+			throw e;
 		}
-
-		logger.debug("readBytesFromFile ended. path=" + pathStr);
-
-		return content;
-    }
+	}
 
     public void writeBytesToFile(Path path, byte[] content) throws IOException {
 		String pathStr = path.toString();
