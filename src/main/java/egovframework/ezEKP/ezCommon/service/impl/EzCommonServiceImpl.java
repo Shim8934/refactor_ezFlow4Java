@@ -2023,15 +2023,6 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             put("description","메일쓰기창 첨부파일 업로드시 zip 암호 설정 여부를 옵션화한다. YES: zip 암호 설정 사용, NO: 암호 설정하지 않고 업로드 (default : NO)");
             put("config_type","메일");
         }});
-        
-        test.add(new HashMap<String, Object>(){{
-            put("confName","useMobileZipEnc");
-            put("property_value","NO");
-            put("config_name","모바일 메일쓰기창 첨부파일 업로드시 zip 암호 설정 여부");
-            put("regdate","2025-05-09 00:00:00");
-            put("description","모바일 메일쓰기창 첨부파일 업로드시 zip 암호 설정 여부를 옵션화한다. YES: zip 암호 설정 사용, NO: 암호 설정하지 않고 업로드 (default : NO)");
-            put("config_type","메일");
-        }});
 
 		List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
 		
