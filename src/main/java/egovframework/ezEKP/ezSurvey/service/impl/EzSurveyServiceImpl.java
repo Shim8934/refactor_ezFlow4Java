@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -2017,5 +2018,26 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 
 		logger.debug("endSurveyItem ended");
 		ezSurveyDAO.endSurveyItem(map);
+	}
+
+	@Override
+	public String checkfinishSurvey(String EndStr, String offsetRaw) throws Exception {
+		logger.debug("checkfinishSurvey started");
+		String finishYN = "N";
+		
+		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+		String[] parts = offsetRaw.split("\\|");
+		String offset = parts[1];
+		date.setTimeZone(TimeZone.getTimeZone("GMT" + offset));
+		String nowStr = date.format(new Date());
+		
+		Date nowDate = date.parse(nowStr);
+		Date endDate = date.parse(EndStr);
+		
+		finishYN = nowDate.after(endDate) ? "Y" : "N";
+
+		logger.debug("checkfinishSurvey ended");
+		return finishYN;
 	}
 }

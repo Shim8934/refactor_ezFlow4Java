@@ -39,16 +39,16 @@
 	<div class="header-wrapper">
 		<div class="surveydetail-header">
 			<ul class="on">	
-				<c:if test="${(survey.draftFlag ne 1) && (participation eq 'yes') && (resStatus ne true) || (survey.multiAnswerFlag ne 0)}">
+				<c:if test="${(finishYN eq 'N') && ((survey.draftFlag ne 1) && (participation eq 'yes') && (resStatus ne true) || (survey.multiAnswerFlag ne 0))}">
 					<li class="off"><span id="saveResult"><spring:message code="ezSurvey.t17"/></span></li>
 				</c:if>
 				<c:if test="${user == creator.id}">
 					<li class="off"><span id="suvyDlt"><spring:message code="ezSurvey.t21"/></span></li>
 				</c:if>
-				<c:if test="${user == creator.id || adminYN eq 'Y'}">
+				<c:if test="${(finishYN eq 'N') && (user == creator.id || adminYN eq 'Y')}">
 					<li class="off"><span id="suvyEnd"><spring:message code="ezSurvey.endSurv01"/></span></li>
 				</c:if>
-				<c:if test="${(survey.draftFlag ne 1) && (participation eq 'yes') && (survey.multiAnswerFlag eq 0) && (resStatus eq true)}">
+				<c:if test="${(finishYN eq 'N') && (survey.draftFlag ne 1) && (participation eq 'yes') && (survey.multiAnswerFlag eq 0) && (resStatus eq true)}">
 					<li class="off"><span id="suvyUdt"><spring:message code="ezSurvey.t118"/></span></li>
 					<li class="off"><span id="suvyDel"><spring:message code="ezSurvey.t117"/></span></li>
 				</c:if>
@@ -1528,6 +1528,10 @@
 					}
 				});
 			}
+		}
+		
+		if (resStatus && 'Y' == '${finishYN}') {
+			$('#prevQsAreaDIV input, #prevQsAreaDIV textarea, #prevQsAreaDIV select').prop('disabled', true).css('cursor', 'default');
 		}
 	});
 	

@@ -326,11 +326,13 @@ public class EzSurveyController extends EgovFileMngUtil {
 			String     participation = (String)surveyInf.get("participation");
 			// 20.05.06 강승구 : 설문응답여부 반환
 			String     resStatus 	 = (String)surveyInf.get("resStatus");
+			String	   finishYN      = ezSurveyService.checkfinishSurvey((String)survey.get("endDate"), user.getOffset()); // 설문 종료여부 체크
 			
 			model.addAttribute("survey" , survey);
 			model.addAttribute("creator", creator);
 			model.addAttribute("participation", participation);
 			model.addAttribute("resStatus", resStatus);
+			model.addAttribute("finishYN", finishYN);
 		}
 		else {
 			int reasonCode = ((Long)surveyInf.get("code")).intValue();
