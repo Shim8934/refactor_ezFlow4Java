@@ -468,7 +468,6 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
 		String userEmail = loginInfo.getId() + "@" + domainName;
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", loginInfo.getTenantId());
-		String accountId = loginInfo.getId();
 
 		if (useSharedMailbox.equals("YES")) {
 			String shareId = request.getParameter("shareId");
@@ -482,7 +481,6 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 					return "";
 				}
 
-				accountId = shareId;
 				userEmail = shareId + "@" + domainName;
 			}
 		}
@@ -501,6 +499,8 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			if (folderManamger != null && folderManamger.equals("1")) {
 				isSubscribe = false;
 			}
+
+			boolean showAllMail = request.getParameter("am").equalsIgnoreCase("y");
 
 			StringBuilder subFolderXML = new StringBuilder();
 
@@ -562,7 +562,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 						subFolderXML.append("></node>");
 					}
 				} else {
-					if (isSubscribe) {
+					if (showAllMail) {
 						// 전체메일
 						try {
 							String displayName = egovMessageSource.getMessage("email.allmail", locale);
