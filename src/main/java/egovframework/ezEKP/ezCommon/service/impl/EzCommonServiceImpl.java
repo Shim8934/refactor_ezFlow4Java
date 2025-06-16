@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezCommon.service.impl;
 import egovframework.ezMobile.ezOption.dao.MOptionDAO;
 import egovframework.ezMobile.ezOption.vo.MOptionVO;
 
+import egovframework.let.utl.fcc.service.EzFAL;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.*;
@@ -850,7 +851,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         String domain = request.getServerName() +":" +request.getServerPort();
 
         filePath = realPath + uploadModule;
-        File file = new File(filePath);
+        EzFAL.EzFile file = new EzFAL.EzFile(filePath);
 
         if (!file.exists()) {
         	file.mkdirs();
