@@ -24835,8 +24835,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         map.put("v_ORDERSORT", OrderOption2);
 		
         if (isdocprint.equals("TRUE")) {
-        	map.put("iv_PAGESIZE", pageNum);
-    		map.put("iv_PAGESIZE2", pageSize);
+        	map.put("iv_PAGESIZE", Integer.parseInt(pageNum)-Integer.parseInt(pageSize)+1);
+    		map.put("iv_PAGESIZE2", Integer.parseInt(pageSize)-1);
     		map.put("v_PAGESIZE", Integer.parseInt(pageNum)-Integer.parseInt(pageSize)+1);
     		map.put("v_PAGESIZE2", Integer.parseInt(pageNum)-Integer.parseInt(pageSize)+1);
         } else {

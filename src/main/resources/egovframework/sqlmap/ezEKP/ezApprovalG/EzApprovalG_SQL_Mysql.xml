@@ -21140,9 +21140,9 @@
                                 B.DEPTID = #upperDeptCode#
                             </isNotEmpty>
 				        </isNotEmpty>
-				   		<isEqual property="v_ISDOCPRINT" compareValue="TRUE" prepend="AND">
-				   			B.SN BETWEEN #iv_PAGESIZE2# AND #iv_PAGESIZE#
-				   		</isEqual>
+<!--				   		<isEqual property="v_ISDOCPRINT" compareValue="TRUE" prepend="AND">-->
+<!--				   			B.SN BETWEEN #iv_PAGESIZE2# AND #iv_PAGESIZE#-->
+<!--				   		</isEqual>-->
 				   		<isNotEmpty property="v_MANAGEDEPTID" prepend="AND">
 				   		 	B.MANAGEDEPTID = #v_MANAGEDEPTID#
 				   		</isNotEmpty>
@@ -21182,7 +21182,9 @@
 				   			ORDER BY 
 				   				B.RECEIPTDATE DESC, B.SN DESC
 				   		</isEmpty>
+                    <isNotEqual property="v_ISDOCPRINT" compareValue="TRUE">
 				   		LIMIT #v_PAGESIZE#
+                    </isNotEqual>
 				   		) A
 					<isNotEmpty property="v_ORDERCOL">
 						ORDER BY
@@ -21199,8 +21201,15 @@
 						ORDER BY 
 							RECEIPTDATE, SN
 					</isEmpty>
+                    <isNotEqual property="v_ISDOCPRINT" compareValue="TRUE">
 			   		LIMIT
 			   			#v_PAGESIZE2#
+                    </isNotEqual>
+                    <isEqual property="v_ISDOCPRINT" compareValue="TRUE">
+                    <![CDATA[
+                        LIMIT #iv_PAGESIZE# OFFSET #iv_PAGESIZE2#
+                    ]]>
+                    </isEqual>
 	</select>
 	
 	<select id="EzApprovalG.getCabinetList" parameterClass="ApprGCabinetListVO" resultClass="ApprGCabinetVO" remapResults="true">

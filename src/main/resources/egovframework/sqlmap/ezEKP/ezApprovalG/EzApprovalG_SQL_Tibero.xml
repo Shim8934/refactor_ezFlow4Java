@@ -21123,9 +21123,9 @@
                                 </isNotEmpty>
                         </isNotEmpty>
 				   		<!-- v_SUBQUERY 에 넘어오는 값 없으므로 제거 -->
-				   		<isEqual property="v_ISDOCPRINT" compareValue="TRUE" prepend="AND">
-				   			A.SN BETWEEN #iv_PAGESIZE2# AND #iv_PAGESIZE#
-				   		</isEqual>
+<!--				   		<isEqual property="v_ISDOCPRINT" compareValue="TRUE" prepend="AND">-->
+<!--				   			A.SN BETWEEN #iv_PAGESIZE2# AND #iv_PAGESIZE#-->
+<!--				   		</isEqual>-->
 				   		<isNotEmpty property="v_MANAGEDEPTID" prepend="AND">
 				   		 	A.MANAGEDEPTID = #v_MANAGEDEPTID#
 				   		</isNotEmpty>
@@ -21165,9 +21165,12 @@
 				   			ORDER BY 
 				   				A.RECEIPTDATE DESC, SN DESC
 				   		</isEmpty>
-				   		<![CDATA[	
-				   		) A WHERE ROWNUM <= #v_PAGESIZE# 
+                        ) A
+                        <isNotEqual property="v_ISDOCPRINT" compareValue="TRUE">
+                        <![CDATA[	
+				   		WHERE ROWNUM <= #v_PAGESIZE# 
 				   		]]>
+                        </isNotEqual>
 				   		<isNotEmpty property="v_ORDERCOL">
 						ORDER BY
 						<isEqual property="v_ORDERCOL" compareValue="sn">SN <isEqual property="v_ORDERSORT" compareValue="asc">DESC</isEqual>,</isEqual>
@@ -21183,9 +21186,18 @@
 						ORDER BY 
 							RECEIPTDATE, SN
 					</isEmpty>
+                    ) B
+                    <isNotEqual property="v_ISDOCPRINT" compareValue="TRUE">
 			   		<![CDATA[
-			   		) B WHERE ROWNUM_ <= #v_PAGESIZE2# 
+			   		WHERE ROWNUM_ <= #v_PAGESIZE2# 
 			   		]]>
+                    </isNotEqual>
+                    <isEqual property="v_ISDOCPRINT" compareValue="TRUE">
+                        <![CDATA[
+                        WHERE ROWNUM_ > #iv_PAGESIZE2#
+                        AND ROWNUM_ <= #iv_PAGESIZE# + #iv_PAGESIZE2#
+                        ]]>
+                    </isEqual>
 	</select>
 			
 	<select id="EzApprovalG.getCabinetList" parameterClass="ApprGCabinetListVO" resultClass="ApprGCabinetVO" remapResults="true">
