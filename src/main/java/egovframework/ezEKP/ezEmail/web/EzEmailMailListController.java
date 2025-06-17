@@ -34,6 +34,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import egovframework.com.cmm.service.Globals;
+import egovframework.ezEKP.ezAI.util.AICommonUtil;
 import egovframework.ezEKP.ezEmail.vo.*;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 
@@ -104,6 +105,9 @@ public class EzEmailMailListController {
 
 	@Autowired
 	private Properties config;
+
+	@Autowired
+	private AICommonUtil aICommonUtil;
 
     @Resource(name="egovMessageSource")
     private EgovMessageSource egovMessageSource;    
@@ -302,6 +306,18 @@ public class EzEmailMailListController {
 		model.addAttribute("offsetMin", offsetMin);
 		model.addAttribute("serverName", serverName);
 		model.addAttribute("useSecureMail", useSecureMail);
+
+		// AI 첨부파일 이름 최대 길이 - 기존 메일과 동일한 값 사용
+		String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId());
+		// AI 사용여부 확인
+		boolean useAI = aICommonUtil.checkUseAI(userInfo.getTenantId());
+		// AI 챗봇 첨부파일 최대용량
+		String aiAttachMBSize = "10";//ezCommonService.getTenantConfig("aiAttachMBSize", -99); // 모든 테넌트 공통 값
+
+		model.addAttribute("useAI", useAI);
+		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
+		model.addAttribute("aiAttachMBSize", aiAttachMBSize);
+
 
 		logger.debug("folderName={}, url={}, folderType={}, isSentItems={}, userLang={},"
 					+ " userId={}, domainName={}, useEditor={}, useOcs={}, importanceColor={},"

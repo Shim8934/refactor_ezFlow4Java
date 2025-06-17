@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewBox="0 0 24 24">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="사각형_30536" data-name="사각형 30536" width="23.179" height="19.604" fill="none"/>
+    </clipPath>
+    <linearGradient id="linear-gradient" x1="0.5" x2="0.5" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#feea71"/>
+      <stop offset="1" stop-color="#f7b041"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-2" x1="0.5" x2="0.5" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#aeffe8"/>
+      <stop offset="1" stop-color="#00db9d"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-3" x1="0.5" x2="0.5" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#64dfff"/>
+      <stop offset="1" stop-color="#00a5f7"/>
+    </linearGradient>
+  </defs>
+  <g id="그룹_9301" data-name="그룹 9301" transform="translate(-714 -1508)">
+    <rect id="사각형_29994" data-name="사각형 29994" width="24" height="24" transform="translate(714 1508)" fill="none"/>
+    <g id="그룹_9294" data-name="그룹 9294" transform="translate(714.411 1510.198)">
+      <g id="그룹_9291" data-name="그룹 9291" clip-path="url(#clip-path)">
+        <path id="패스_10029" data-name="패스 10029" d="M5.311,29.048H.868A.864.864,0,0,0,0,29.917v7.146a.864.864,0,0,0,.869.868H5.311a.864.864,0,0,0,.869-.868V29.917c.1-.481-.386-.869-.869-.869" transform="translate(0.001 -18.329)" fill="url(#linear-gradient)"/>
+        <path id="패스_10030" data-name="패스 10030" d="M28.344,0H23.9a.864.864,0,0,0-.869.869V18.735a.864.864,0,0,0,.869.869h4.443a.864.864,0,0,0,.869-.869V.966A.952.952,0,0,0,28.344,0" transform="translate(-14.533)" fill="url(#linear-gradient-2)"/>
+        <path id="패스_10031" data-name="패스 10031" d="M51.376,17.012H46.933a.864.864,0,0,0-.869.869V29.47a.864.864,0,0,0,.869.868h4.443a.864.864,0,0,0,.869-.868V17.881a.864.864,0,0,0-.869-.869" transform="translate(-29.066 -10.734)" fill="url(#linear-gradient-3)"/>
+      </g>
+    </g>
+  </g>
+</svg>

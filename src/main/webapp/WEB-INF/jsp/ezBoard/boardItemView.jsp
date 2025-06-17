@@ -142,6 +142,12 @@
 			var attachLimit = "${boardInfo.attachSizeLimit}"; // 첨부파일 크기 limit
 			var attachFileNameMaxLength = Number("${attachFileNameMaxLength}");// 첨부파일명 글자수 제한 limit
 			var totalFileSize = 0; // 현재 총 첨부파일 사이즈
+			
+            var userLang = "${extenLang}"
+            var boardAttrListTemp = '<c:out value="${boardAttrJson}"/>';
+            var boardAttrListJson = JSON.parse(replaceEntityCodeToStr(boardAttrListTemp));
+            var boardItemTemp = '<c:out value="${boardItemJson}"/>';
+            var boardItemJson = JSON.parse(replaceEntityCodeToStr(boardItemTemp));
 	        
 	        function Bigger(doc) {     
 	            if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -269,12 +275,6 @@
 		            }
 		            
 		            // 2024-07-31 전인하 - 게시판 > 확장컬럼 > peoplePicker 타입, textArea 타입 출력값 가공
-		            var userLang = "${extenLang}"
-		            var boardAttrListTemp = '<c:out value="${boardAttrJson}"/>';
-		            var boardAttrListJson = JSON.parse(replaceEntityCodeToStr(boardAttrListTemp));
-		            var boardItemTemp = '<c:out value="${boardItemJson}"/>';
-                    var boardItemJson = JSON.parse(replaceEntityCodeToStr(boardItemTemp));
-                    
 		            for (let i = 0 ; i < boardAttrListJson.length ; i++ ) {
 		                var boardAttr = boardAttrListJson[i];
 		                if (boardAttr.colType == 'people') {
@@ -1880,7 +1880,7 @@
 					}
 				});
 			}
-
+	
 		</script>
 	</head>
 	<body id="bodyPopup" class="popup" style="overflow:auto; height:100%;">
@@ -2433,5 +2433,8 @@
                 <img id="previewImage" class="previewImage">
             </div>            
         </div>
+        <c:if test="${useAI}">
+            <c:import url="/WEB-INF/jsp/ezAI/aiSlide.jsp" />
+        </c:if>
 	</body>
 </html>

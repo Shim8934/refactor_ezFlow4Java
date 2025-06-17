@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezApprovalG.web;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezAI.util.AICommonUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
@@ -160,6 +161,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 
 	@Autowired
 	private CommonUtil commonUtil;
+	
+ 	@Autowired
+    private AICommonUtil aICommonUtil;
 	
 	@Autowired
 	private Properties config;
@@ -1485,6 +1489,30 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		model.addAttribute("upperDeptCode", upperDeptCode);
 		model.addAttribute("upperDeptName", upperDeptName);
+		
+		String formName = "";
+		String formInfoXml = ezApprovalGService.getFormInfoDetail(formId, userInfo.getCompanyID(), userInfo.getTenantId());
+		Document formInfo = commonUtil.convertStringToDocument(formInfoXml);
+		if ("1".equals(userInfo.getPrimary())) {
+			formName = formInfo.getElementsByTagName("FORMNAME").item(0).getTextContent().trim();
+		} else {
+			formName = formInfo.getElementsByTagName("FORMNAME2").item(0).getTextContent().trim();
+		}
+		
+		// ai 관련 컨피그 추가
+		// AI 첨부파일 이름 최대 길이 - 기존 첨부파일과 동일한 값 사용
+		String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId());
+		// AI 사용여부 확인
+		boolean useAI = aICommonUtil.checkUseAI(userInfo.getTenantId());
+		// AI 챗봇 첨부파일 최대용량
+		String aiAttachMBSize = ezCommonService.getTenantConfig("aiAttachMBSize", userInfo.getTenantId());
+		
+		model.addAttribute("formName", formName);
+		model.addAttribute("moduleType", "approval");
+		model.addAttribute("moduleSubType", "draftDoc");
+		model.addAttribute("useAI", useAI);
+		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
+		model.addAttribute("aiAttachMBSize", aiAttachMBSize);
 
 		logger.debug("draftui ended.");
 
@@ -5552,6 +5580,47 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 	String useReceiptDeptFileAttach = ezCommonService.getTenantConfig("useReceiptDeptFileAttach", userInfo.getTenantId());
 	    // 2024-12-10 기민혁 - 본문버전 변경 기능 사용 여부
 	    String editVersionYN = ezCommonService.getTenantConfig("EditVertionYN",userInfo.getTenantId());
+		
+		// 기안자 정보
+		String aprLinexml = ezApprovalGService.getLineInfo(docID, mode, "", "", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
+		Document aprLineInfo = commonUtil.convertStringToDocument(aprLinexml);
+		String drafterName = "";
+		String drafterDept = "";
+		if ("1".equals(userInfo.getPrimary())) {
+			drafterName = aprLineInfo.getElementsByTagName("DATA13").item(0).getTextContent().trim();
+			drafterDept = aprLineInfo.getElementsByTagName("DATA15").item(0).getTextContent().trim();
+		} else {
+			drafterName = aprLineInfo.getElementsByTagName("DATA14").item(0).getTextContent().trim();
+			drafterDept = aprLineInfo.getElementsByTagName("DATA16").item(0).getTextContent().trim();
+		}
+		
+		model.addAttribute("drafterName", drafterName);
+		model.addAttribute("drafterDept", drafterDept);
+		
+		// 양식 정보
+		String formName = "";
+		String formInfoXml = ezApprovalGService.getFormInfoDetail(formId, userInfo.getCompanyID(), userInfo.getTenantId());
+		Document formInfo = commonUtil.convertStringToDocument(formInfoXml);
+		if ("1".equals(userInfo.getPrimary())) {
+			formName = formInfo.getElementsByTagName("FORMNAME").item(0).getTextContent().trim();
+		} else {
+			formName = formInfo.getElementsByTagName("FORMNAME2").item(0).getTextContent().trim();
+		}
+		
+		// ai 관련 컨피그 추가
+		// AI 첨부파일 이름 최대 길이 - 기존 첨부파일과 동일한 값 사용
+		String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId());
+		// AI 사용여부 확인
+		boolean useAI = aICommonUtil.checkUseAI(userInfo.getTenantId());
+		// AI 챗봇 첨부파일 최대용량
+		String aiAttachMBSize = ezCommonService.getTenantConfig("aiAttachMBSize", userInfo.getTenantId());
+		
+		model.addAttribute("formName", formName);
+		model.addAttribute("moduleType", "approval");
+		model.addAttribute("moduleSubType", "apprDoc");
+		model.addAttribute("useAI", useAI);
+		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
+		model.addAttribute("aiAttachMBSize", aiAttachMBSize);
 
 		model.addAttribute("useAnnualSusinYN", useAnnualSusinYN);
 	    model.addAttribute("optSignDateFormat", optSignDateFormat);

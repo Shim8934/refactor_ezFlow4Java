@@ -119,6 +119,14 @@
             var attachLimit = "${boardInfo.attachSizeLimit}"; // 개별 첨부파일 limit
             var attachFileNameMaxLength = Number("${attachFileNameMaxLength}"); // 첨부파일명 글자수 제한 limit
             var totalFileSize = 0; // 현재 총 첨부파일 사이즈
+            
+			// 확장컬럼 관련 함수 전역변수로 변경함
+            var userLang = "${extenLang}"
+            var pBoardName = '<c:out value="${boardInfo.boardName}"/>';
+            var boardAttrListTemp = '<c:out value="${boardAttr}"/>';
+            var boardAttrListJson = JSON.parse(replaceEntityCodeToStr(boardAttrListTemp));
+            var boardItemTemp = '<c:out value="${boardItem}"/>';
+            var boardItemJson = JSON.parse(replaceEntityCodeToStr(boardItemTemp));
 
 	        window.onload = function () {
 	            document.getElementById("txtContent").style.textAlign = "center";
@@ -822,5 +830,8 @@
                 <img id="previewImage" class="previewImage">
             </div>            
         </div>
+        <c:if test="${useAI}">
+            <c:import url="/WEB-INF/jsp/ezAI/aiSlide.jsp" />
+        </c:if>
 	</body>
 </html>

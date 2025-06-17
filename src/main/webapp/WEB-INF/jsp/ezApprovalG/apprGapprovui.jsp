@@ -226,6 +226,10 @@
 
             // 2025-02-18 박기범 - 프론트에서 문서 편집시, 문서를 오픈한 이후로 다른 문서/결재진행 변화가 있었는지 체크하기 위한 코드
             var snapshotCode = "<c:out value ='${snapshotCode}'/>";
+            
+            var drafterName = "<c:out value ='${drafterName}'/>";
+		    var drafterDept = "<c:out value ='${drafterDept}'/>";
+		    var formName = "<c:out value ='${formName}'/>";
 			
 			window.onload = function () {
 		        if (allFlag == "2") {
@@ -2627,5 +2631,8 @@
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
+        <c:if test="${useAI}">
+            <c:import url="/WEB-INF/jsp/ezAI/aiSlide.jsp" />
+        </c:if>
 	</body>
 </html>

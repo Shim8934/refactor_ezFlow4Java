@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="8" height="13" viewBox="0 0 8 13">
+  <g id="aprLine_arrow_on" transform="translate(0 -200)">
+    <g id="calender_next" transform="translate(-83 40)">
+      <rect id="사각형_1049" data-name="사각형 1049" width="8" height="13" transform="translate(83 160)" fill="none"/>
+      <path id="합치기_12" data-name="합치기 12" d="M5.5,5.5,0,0,5.5,5.5,6,5l-.5.5L6,6l-.5-.5L0,11Z" transform="translate(84 161)" fill="none" stroke="#4c4d4f" stroke-width="1.5"/>
+    </g>
+  </g>
+</svg>

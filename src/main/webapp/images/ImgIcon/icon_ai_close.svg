@@ -1,0 +1,11 @@
+<svg id="icon_ai_close" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="16" height="16" viewBox="0 0 16 16">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="사각형_29928" data-name="사각형 29928" width="16" height="16" fill="none" stroke="#4d5a64" stroke-width="1.2"/>
+    </clipPath>
+  </defs>
+  <g id="그룹_7467" data-name="그룹 7467" clip-path="url(#clip-path)">
+    <line id="선_549" data-name="선 549" x2="11.867" y2="11.868" transform="translate(1.917 1.917)" fill="none" stroke="#4d5a64" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2"/>
+    <line id="선_550" data-name="선 550" x1="11.867" y2="11.868" transform="translate(2.039 2.039)" fill="none" stroke="#4d5a64" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2"/>
+  </g>
+</svg>
