@@ -33,7 +33,7 @@
 		    window.onload = function () {
 		        try {
 		            if (isParentCommonArgsUsed()) {
-						ReturnFunction = parent.ezCommon_cross_dialogArguments[1];
+						ReturnFunction = opener == null ? parent.ezCommon_cross_dialogArguments[1] : opener.ezCommon_cross_dialogArguments[1];
 					} else {
 						ReturnFunction = parent.selectperson_cross_dialogArguments[1];
 					}

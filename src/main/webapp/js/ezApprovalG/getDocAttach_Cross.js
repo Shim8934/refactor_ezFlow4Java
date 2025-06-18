@@ -375,7 +375,11 @@ function openAttachView(wfileLocation, wName, wWeigth, wHeigth) {
         		window.open(wfileLocation, wName, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
         	}
         } else {
-        	window.open(wfileLocation, wName, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
+        	if (!isTeamsDesktop()) {
+                window.open(wfileLocation, wName, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
+            } else {
+                parent.showPopupSlide(wfileLocation, width, heigth, wName, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left, () => parent.hidePopupSlide(2), 2);
+            }
         }
     } catch (e) {
         showAlert("openAttachView :: " + e.description);

@@ -199,7 +199,7 @@
 
 				try {
 					if (isParentCommonArgsUsed()) {
-						ReturnFunction = parent.ezCommon_cross_dialogArguments[1];
+						ReturnFunction = opener == null ? parent.ezCommon_cross_dialogArguments[1] : opener.ezCommon_cross_dialogArguments[1];
 					}
 				} catch (e) { }
 			
@@ -282,7 +282,7 @@
 			
 			function btnMail_onclick() {
 				if(extAry[currentTabIdx] == "hwp")
-					window.open("/ezEmail/mailWrite.do?docHref=" + pDocHrefAry[currentTabIdx] + "&cmd=docsend&docID=" + pDocIDAry[currentTabIdx] + "&target=APPROVALG", "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(890, window.screen.availHeight * 0.8));
+					showPopup("/ezEmail/mailWrite.do?docHref=" + pDocHrefAry[currentTabIdx] + "&cmd=docsend&docID=" + pDocIDAry[currentTabIdx] + "&target=APPROVALG", 890, window.screen.availHeight * 0.8, "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(890, window.screen.availHeight * 0.8), hidePopup);
 				else{
 					html2canvas(document.getElementById("ifrm" + currentTabIdx).contentWindow.document.getElementById("div_Content")).then(function(canvas) {
 						$.ajax({
@@ -369,10 +369,12 @@
 			    try {
 			        window.opener.openergetDocInfo();
 			    }
-			    catch (e) { }
-			    try {
-			        window.opener.Refresh_Window();
-			    } catch (e) { }
+			    catch (e) {
+					window.parent.openergetDocInfo();
+				}
+			    // try {
+			    //     window.opener.Refresh_Window();
+			    // } catch (e) { }
 			}
 	
 			var ezdocinfog_view_cross_dialogArguments = new Array();

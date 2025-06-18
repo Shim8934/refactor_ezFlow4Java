@@ -1138,6 +1138,50 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	}
 	
 	/**
+	 * 전자결재G 작은 크기의 기안양식 호출 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/getMiniFormCont.do", method = RequestMethod.GET)
+	public String getMiniFormCont(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo, Model model) throws Exception{
+		logger.debug("getMiniFormCont started.");
+		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
+		String deptID = userInfo.getDeptID();
+		String pFormType = request.getParameter("pFormType") != null ? request.getParameter("pFormType") : "ALL";
+		String ext = request.getParameter("ext");
+		String docType = ezApprovalGService.getDocType(pFormType, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getLocale(), approvalFlag);
+		String userForm = ezApprovalGService.getOptionInfo("A57", "001", userInfo, "CODE");
+		String docFileType = "";
+		String useEnforceSihang = ezCommonService.getTenantConfig("UseEnforceSihang", userInfo.getTenantId());
+		String reuseFlag = "";
+		String resendFormYN = ezCommonService.getTenantConfig("ResendFormYN", userInfo.getTenantId());
+		
+		if (approvalFlag.equals("S") && useEnforceSihang.equals("YES") && pFormType.equals("004")) {
+			model.addAttribute("onlySihang", "YES");
+		}
+		
+		if (request.getParameter("fileType") != null) {
+			docFileType = request.getParameter("fileType");
+		}
+		
+		if (request.getParameter("reuseFlag") != null) {
+			reuseFlag = request.getParameter("reuseFlag");
+		}
+		
+		model.addAttribute("deptID", deptID);
+		model.addAttribute("docType", docType);
+		model.addAttribute("userForm", userForm);
+		model.addAttribute("docFileType", docFileType);
+		model.addAttribute("ext", ext);
+		model.addAttribute("reuseFlag", reuseFlag);
+		model.addAttribute("resendFormYN", resendFormYN);
+		
+		logger.debug("getMiniFormCont ended.");
+		
+		return "ezApprovalG/apprGMiniFormCont";
+	}
+	
+	/**
 	 * 전자결재G 기안양식 표출 Method
 	 */
 	@RequestMapping(value = "/ezApprovalG/getForm.do", produces="text/xml;charset=utf-8", method = RequestMethod.POST)

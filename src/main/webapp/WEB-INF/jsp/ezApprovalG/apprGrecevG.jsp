@@ -133,7 +133,7 @@
 			$(function () {
 				try {
 					if (isParentCommonArgsUsed()) {
-						ReturnFunction = parent.ezCommon_cross_dialogArguments[1];
+						ReturnFunction = opener == null ? parent.ezCommon_cross_dialogArguments[1] : opener.ezCommon_cross_dialogArguments[1];
 					}
 				} catch (e) { }
 			});
@@ -191,14 +191,14 @@
 		                }
 		            }
 		        } catch (e) {
-		            alert("process_AfterOpen : " + e.description);
+		            showAlert("process_AfterOpen : " + e.description);
 		        }
 		    }
 		    function setAutoProperty() {
 		        try {
 		            SetAutoPropertyValue();
 		        } catch (e) {
-		            alert("setAutoProperty : " + e.description);
+		            showAlert("setAutoProperty : " + e.description);
 		        }
 		    }
 		
@@ -211,7 +211,7 @@
 		            if (!rtnVal) {
 		            }
 		        } catch (e) {
-		            alert("setAutoProperty : " + e.description);
+		            showAlert("setAutoProperty : " + e.description);
 		        }
 		    }
 		
@@ -428,7 +428,7 @@
 					message2.html(html);
 					FieldsAvailable2();
 		   	    } catch (e) {
-		   	        alert(e.description);
+		   	        showAlert(e.description);
 		   	    }
 		        // document.getElementById('message2').src = "/ezCommon/mhtToHTMLContent.do?href=" + URL;
 		        // document.getElementById('message2').setAttribute("onload", "javascript:FieldsAvailable2();");
@@ -454,13 +454,13 @@
 		            window.opener.openergetDocInfo();
 		        }
 		        catch (e) {
+		            window.parent.openergetDocInfo();
 		        }
 		
-		        try {
-		            window.opener.Refresh_Window();
-		        }
-		        catch (e) {
-		        }
+		        // try {
+		        //     window.opener.Refresh_Window();
+		        // }
+		        // catch (e) { }
 		    };
 		    function pzFormProc_InvalidDocument() {
 		        var pAlertContent = "<spring:message code='ezApprovalG.t123'/>";
@@ -472,10 +472,10 @@
 		    	var deptCheckFlag = checkDeptAndCabinetId();
 		    	
 		    	if (deptCheckFlag == "3") {
-		    		alert(strLanggarm06 + " '" + arr_userinfo[5] + "'" +strLanggarm03 + " '" + arr_userinfo[5] + "'" + strLanggarm07 );
+		    		showAlert(strLanggarm06 + " '" + arr_userinfo[5] + "'" +strLanggarm03 + " '" + arr_userinfo[5] + "'" + strLanggarm07 );
 		    		return;
 		    	} else if (deptCheckFlag == "4") {
-		    		alert(strLanggarm06 + " '" + "'" + strLanggarm08);
+		    		showAlert(strLanggarm06 + " '" + "'" + strLanggarm08);
 		    		return;
 		    	}
 		    	
@@ -506,10 +506,10 @@
 		    	var deptCheckFlag = checkDeptAndCabinetId();
 		    	
 		    	if (deptCheckFlag == "3") {
-		    		alert(strLanggarm06 + " '" + arr_userinfo[5] + "'" +strLanggarm03 + " '" + arr_userinfo[5] + "'" + strLanggarm07 );
+		    		showAlert(strLanggarm06 + " '" + arr_userinfo[5] + "'" +strLanggarm03 + " '" + arr_userinfo[5] + "'" + strLanggarm07 );
 		    		return;
 		    	} else if (deptCheckFlag == "4") {
-		    		alert(strLanggarm06 + " '" + "'" + strLanggarm08);
+		    		showAlert(strLanggarm06 + " '" + "'" + strLanggarm08);
 		    		return;
 		    	}
 		    	
@@ -536,7 +536,8 @@
 				feature = feature + GetOpenPosition(690, 700);
 				window.open("/myoffice/ezEmail/newmail_CK.aspx?cmd=docsend&docID=" + "<c:out value = '${docID}'/>" + "&docHref=" + pFormHref, '', feature);*/
 
-				window.open("/ezEmail/mailWrite.do?docHref=" + pFormHref + "&cmd=docsend&docID=" + pDocID + "&TARGET=APPROVALG", "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(890, window.screen.availHeight * 0.8));
+				// window.open("/ezEmail/mailWrite.do?docHref=" + pFormHref + "&cmd=docsend&docID=" + pDocID + "&TARGET=APPROVALG", "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(890, window.screen.availHeight * 0.8));
+				showPopup("/ezEmail/mailWrite.do?docHref=" + pFormHref + "&cmd=docsend&docID=" + pDocID + "&TARGET=APPROVALG", 890, window.screen.availHeight * 0.8, "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(890, window.screen.availHeight * 0.8), hidePopup);
 			}
 		    
 		    var selectcabinet_cross_dialogArguments = new Array();
@@ -544,10 +545,10 @@
 		    	var deptCheckFlag = checkDeptAndCabinetId();
 		    	
 		    	if (deptCheckFlag == "3") {
-		    		alert(strLanggarm06 + " '" + arr_userinfo[5] + "'" +strLanggarm03 + " '" + arr_userinfo[5] + "'" + strLanggarm07 );
+		    		showAlert(strLanggarm06 + " '" + arr_userinfo[5] + "'" +strLanggarm03 + " '" + arr_userinfo[5] + "'" + strLanggarm07 );
 		    		return;
 		    	} else if (deptCheckFlag == "4") {
-		    		alert(strLanggarm06 + " '" + "'" + strLanggarm08);
+		    		showAlert(strLanggarm06 + " '" + "'" + strLanggarm08);
 		    		return;
 		    	}
 		    	
@@ -695,7 +696,7 @@
 		            var pLeft = (pwidth - 765) / 2;
 		
 		            if (ret[2] == "2" || ret[2] == "3" || ret[2] == "4" || ret[2] == "7" || ret[2] == "8") {
-		                alert(strLang1031);
+		                showAlert(strLang1031);
 		            }
 		            else {
 		                window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&mod=new&pbrdGbn=SiteNewBoard&pFromScreen=Mail&docID=" + pDocID + "&url=" + pFormHref, '', "top=" + pTop.toString() + ", left=" + pLeft.toString() + ',height=870,width=765,resizable=yes,scrollbars=no');
@@ -823,7 +824,7 @@
 		    var tempItemName = "";
 		    var tempdocnumcode = "<spring:message code='ezApprovalG.t45'/>";
 		    var tempSecurityDate = "";
-		    var ezapprovalinfo_dialogArguments = new Array();
+		    // var ezapprovalinfo_dialogArguments = new Array();
 		    function btnApprovalInfo() {
 		    	pGubun = 11;
 		        var onlydocinfiview = false;
@@ -863,15 +864,18 @@
 		        if (tempItemCode != "")
 		            tempdocnumcode = tempItemCode;
 				
-		        ezapprovalinfo_dialogArguments[0] = parameter;
-		        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;		
-		
-		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&docType=" + pDocType, "ezApprovalInfo", GetOpenWindowfeature(1144, 750));
-
-		        try { OpenWin.focus(); } catch (e) { }
+		        // ezapprovalinfo_dialogArguments[0] = parameter;
+				// ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;		
+				//
+				// var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&docType=" + pDocType, "ezApprovalInfo", GetOpenWindowfeature(1144, 750));
+				//
+				// try { OpenWin.focus(); } catch (e) { }
+				ezCommon_cross_dialogArguments[0] = parameter;
+				showPopup("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&docType=" + pDocType, 1144, 750, "ezApprovalInfo", GetOpenWindowfeature(1144, 750), btnApprovalInfo_Complete);
 		    }
 		    
 		    function btnApprovalInfo_Complete(ret) {
+				hidePopup();
 		    	if (ret != undefined && ret[0] == "OK") {
 		            try {
 		                var savexmlhttp = createXMLHttpRequest();
@@ -953,7 +957,7 @@
 		                savexmlhttp = null;
 		            }
 		            catch (e) {
-		                alert("<spring:message code='ezApprovalG.pjj02'/>");
+		                showAlert("<spring:message code='ezApprovalG.pjj02'/>");
 		            }
 		        }
 		    }
@@ -973,8 +977,9 @@
 			    		},
 			    		success : function(result) {
 			    			if (result != 0) {
-			    				alert("<spring:message code='ezApprovalG.pjg04'/>");
-			    				window.close();
+			    				showAlert("<spring:message code='ezApprovalG.pjg04'/>", "");
+			    				// window.close();
+								return;
 			    			}
 			    		}
 			    		
@@ -1031,7 +1036,7 @@
 		            catch (e) { }
 		        }
 		        catch (e) {
-		            alert("btnSendDraft_onclick : " + e.description);
+		            showAlert("btnSendDraft_onclick : " + e.description);
 		        }
 		    }
 		    
@@ -1371,7 +1376,7 @@
 		            return result;
 		        } 
 		        catch (e) {
-		            alert("getDocRecevState :: " + e.description);
+		            showAlert("getDocRecevState :: " + e.description);
 		        }
 		    }
 		
@@ -1405,7 +1410,7 @@
 		        }
 		        catch (e) {
 		            return false;
-		            alert("getLastAprLine :: " + e.description);
+		            showAlert("getLastAprLine :: " + e.description);
 		        }
 		    }
 		
@@ -1527,7 +1532,7 @@
 						}
 					});
 				} catch (e) {
-					alert("getDocMode() :: " + e.description);
+					showAlert("getDocMode() :: " + e.description);
 				}
 
 				return rtnVal;

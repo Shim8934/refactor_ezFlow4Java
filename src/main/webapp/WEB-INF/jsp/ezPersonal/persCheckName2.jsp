@@ -16,8 +16,8 @@
 		    window.onload = function () {
 		        try {
 		            if (isParentCommonArgsUsed()) {
-						RetValue = parent.ezCommon_cross_dialogArguments[0];
-						ReturnFunction = parent.ezCommon_cross_dialogArguments[1];
+						RetValue = opener == null ? parent.ezCommon_cross_dialogArguments[0] : opener.ezCommon_cross_dialogArguments[0];
+						ReturnFunction = opener == null ? parent.ezCommon_cross_dialogArguments[1] : opener.ezCommon_cross_dialogArguments[1];
 					} else {
 						RetValue = parent.checkname2_cross_dialogArguments[0];
 						ReturnFunction = parent.checkname2_cross_dialogArguments[1];

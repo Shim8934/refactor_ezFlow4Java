@@ -1,4 +1,4 @@
-﻿var arrySubTab = new Array(0, 9, 4, 3, 4);
+﻿﻿﻿var arrySubTab = new Array(0, 9, 4, 3, 4);
 var subTabLastCol = 1;
 
 function GetDocList(p_FormCd) {
@@ -446,20 +446,21 @@ function btnRemoveDoc_onclick() {
         var InformationString = strLangS385;
         //2018-09-19 김보미 - 알럿창으로 변경
 //        OpenAlertUI(InformationString);
-        alert(InformationString);
+        showAlert(InformationString);
         return;
     } else {
 	    var OpinionContent = strLangS387;
-	    var rtn = OpenInformationUI(OpinionContent, RemoveDoc_Complete, "OPEN");
-	    
-	    if (rtn) {
-	        RemoveDoc_Complete(rtn);
-	    }
+//	    var rtn = OpenInformationUI(OpinionContent, RemoveDoc_Complete, "OPEN");
+	     showConfirm(OpinionContent, RemoveDoc_Complete);
+//	    if (rtn) {
+//	        RemoveDoc_Complete(rtn);
+//	    }
     }
 }
 
 function RemoveDoc_Complete(RtnVal)
 {
+	hideConfirm();
     if (!RtnVal)
         return;
 
@@ -486,17 +487,19 @@ function RemoveDoc_Complete(RtnVal)
             xmlhttp.open("POST", "/ezApprovalG/delDeptContDoc.do", false);
         xmlhttp.send(xmlpara);
     }
-    
-     		 var InformationString = strLang388;
-     	    OpenAlertUI(InformationString);
-
-     	    if (DocListType == "UserContDocList") {
-     	    	GetUserContList();
-     	    } else if (DocListType == "DeptContDocList"){
-     	        GetDeptContList();
-     	    } else {
-     		  alert(strLang803);
-     	 }
+     	
+    var InformationString = strLang802;
+    showAlertUI(InformationString, RemoveDoc_Complete_afterAlert);
+}
+function RemoveDoc_Complete_afterAlert(){
+	DivPopUpHidden();
+    if (DocListType == "UserContDocList") {
+    	GetUserContList();
+    } else if (DocListType == "DeptContDocList"){
+        GetDeptContList();
+    } else {
+    	showAlert(strLang803); 
+    }	
 }
 
 function getsearchDocList_after() {
@@ -1496,6 +1499,6 @@ function openergetDocInfo() {
             return;
         }
     } catch (e) {
-        alert("openergetDocInfo :: " + e.description);
+    	showAlert("openergetDocInfo :: " + e.description);
     }
 }

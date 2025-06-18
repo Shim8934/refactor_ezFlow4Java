@@ -119,8 +119,8 @@
 		                heigth = parseInt(heigth) - 70;
 		                width = parseInt(width) - 10;
 		            }
-		            window.open(wfileLocation, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
-		
+		            // window.open(wfileLocation, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
+					showPopup(wfileLocation, width, heigth, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left, hidePopup);
 		        } catch (e) {
 		            alert("openwindow :: " + e.description);
 		        }
@@ -137,7 +137,8 @@
 	                heigth = parseInt(heigth) - 70;
 	                width = parseInt(width) - 20;
 	                
-		            window.open(wfileLocation, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
+		            // window.open(wfileLocation, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
+					showPopup(wfileLocation, width, heigth, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left, hidePopup);
 		        } catch (e) {
 		            alert("openwindow :: " + e.description);
 		        }
@@ -356,9 +357,11 @@
 		            topPosition = (window.screen.height / 2) - ((height / 2) + 50);
 		
 		            if (tempUserID == tempUserDeptID) {
-		                window.open("/ezApprovalG/ezLineInfo.do?docID=" + tempDocID + "&deptID=" + tempUserDeptID + "&docState=012", "", "height=460px,width=1155px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(1155, 460));
+		                // window.open("/ezApprovalG/ezLineInfo.do?docID=" + tempDocID + "&deptID=" + tempUserDeptID + "&docState=012", "", "height=460px,width=1155px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(1155, 460));
+						showPopup("/ezApprovalG/ezLineInfo.do?docID=" + tempDocID + "&deptID=" + tempUserDeptID + "&docState=012", 1155, 460, "", "height=460px,width=1155px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(1155, 460), hidePopup);
 		            } else {
-		                window.open("/ezCommon/showPersonInfo.do?id=" + tempUserID, "", "height=" + height + ",width=" + width + ", left=" + leftPosition + ",top=" + topPosition + ",screenX=" + leftPosition + ",screenY=" + topPosition + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+		                // window.open("/ezCommon/showPersonInfo.do?id=" + tempUserID, "", "height=" + height + ",width=" + width + ", left=" + leftPosition + ",top=" + topPosition + ",screenX=" + leftPosition + ",screenY=" + topPosition + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+						showPopup("/ezCommon/showPersonInfo.do?id=" + tempUserID, width, height, "", "height=" + height + ",width=" + width + ", left=" + leftPosition + ",top=" + topPosition + ",screenX=" + leftPosition + ",screenY=" + topPosition + ", status = no, toolbar=no, menubar=no,location=no, resizable=1", hidePopup);
 		            }
 		        }
 		        else {

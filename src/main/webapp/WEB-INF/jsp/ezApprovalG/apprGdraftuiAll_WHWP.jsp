@@ -1074,7 +1074,10 @@
 			    try {
 			        if (bAttachProcess == false)
 			            window.opener.openergetDocInfo();
-			    } catch (e) { }
+			    } catch (e) {
+					if (bAttachProcess == false)
+			            window.parent.openergetDocInfo();
+				}
 			
 			    try {
 // 			        if (bAttachProcess == false)
@@ -1086,9 +1089,9 @@
 			        bAttachProcess = true;
 			    } catch (e) { }
 			    
-		        try {
-		            window.opener.getApprGraph("appr");
-		        } catch (e) { }
+		        // try {
+		        //     window.opener.getApprGraph("appr");
+		        // } catch (e) { }
 			}
 	
 			function btn_Attach_onclick() {
@@ -1307,7 +1310,7 @@
 			}
 			
 			var pGubun;
-			var ezapprovalinfo_dialogArguments = new Array();
+			// var ezapprovalinfo_dialogArguments = new Array();
 			function btnApprovalInfo(pGubun) {
 				
 				// 안 추가 없이 결재정보 클릭하는 경우, 알러트 표출
@@ -1396,17 +1399,20 @@
 					parameter[64] = pDocIDAry[currentTabIdx];
 					//parameter[65] = docInfoFlag; // 문서정보 확인여부 플래그 -> 표준모듈에서 결재정보창 내부로 이동됨
 			        
-			        ezapprovalinfo_dialogArguments[0] = parameter;
-	                ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
-			
+			        // ezapprovalinfo_dialogArguments[0] = parameter;
+	                // ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
+					//
 	                var url = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun +"&docType=" + pDocType + "&ext=" + "hwp" + "&formID=" + pFormID + "&draftAllFlag=Y";
-			        var ret = window.open(url, "ezApprovalInfo-" + windowUuid, 'height=750,width=1210,scrollbars=no' + GetOpenPosition(1210, 750));
+			        // var ret = window.open(url, "ezApprovalInfo-" + windowUuid, 'height=750,width=1210,scrollbars=no' + GetOpenPosition(1210, 750));
+					ezCommon_cross_dialogArguments[0] = parameter;
+					showPopup(url, 1210, 750, "ezApprovalInfo-" + windowUuid, 'height=750,width=1210,scrollbars=no' + GetOpenPosition(1210, 750), btnApprovalInfo_Complete);
 			    } catch (e) {
 			        alert("ezdraftui_hwp.btnApprovalInfo()::" + e);
 			    }
 			}
 			
 			function btnApprovalInfo_Complete(ret) {
+				hidePopup();
 				var currIfrm = document.getElementById("ifrm" + currentTabIdx);
 				
 				if (ret != undefined && ret[0] == "OK") {
@@ -1773,13 +1779,15 @@
 	                    window.opener.openergetDocInfo();
 	            }
 	            catch (e)
-	            { }
-	            try {
-	                if (bAttachProcess == false)
-	                    window.opener.Refresh_Window();
-	            }
-	            catch (e)
-	            { }
+	            { 
+					if (bAttachProcess == false)
+	                    window.parent.openergetDocInfo();
+				}
+	            // try {
+	            //     if (bAttachProcess == false)
+	            //         window.opener.Refresh_Window();
+	            // }
+	            // catch (e) { }
 	            try {
 	                bAttachProcess = true;
 	            }

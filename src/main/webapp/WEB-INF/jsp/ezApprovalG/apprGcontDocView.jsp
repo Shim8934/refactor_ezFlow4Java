@@ -112,7 +112,7 @@
 				  
 				try {
 					if (isParentCommonArgsUsed()) {
-						ReturnFunction = parent.ezCommon_cross_dialogArguments[1];
+						ReturnFunction = opener == null ? parent.ezCommon_cross_dialogArguments[1] : opener.ezCommon_cross_dialogArguments[1];
 					}
 				} catch (e) { }
 		      	
@@ -346,13 +346,13 @@
 		        headerAction("open");
 		    	PrintClick("Cross", pDocID, "END");
 		    }
-		    function btnClose_onclick() {
-				if (ReturnFunction != null) {
-					ReturnFunction("cancel");
-				}
-                window.close();
-                window.open('/blank.htm', "_self");
-		    }
+		    // function btnClose_onclick() {
+			// 	if (ReturnFunction != null) {
+			// 		ReturnFunction("cancel");
+			// 	}
+            //     window.close();
+            //     window.open('/blank.htm', "_self");
+		    // }
 		    var ezapropinion_cross_dialogArguments = new Array();
 		    function OpenInformationUI(pInformationContent, CompleteFunction) {
 		        var parameter = pInformationContent;
@@ -461,14 +461,16 @@
 		     	return; 
 		    }
 		 
-		    var writeboardselect_modal_dialogArguments = new Array();
+		    // var writeboardselect_modal_dialogArguments = new Array();
 		    function NewItem_onclick() {
-		        writeboardselect_modal_dialogArguments[1] = NewItem_onclick_Complete;
-		        var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(355, 600));
-		        try { OpenWin.focus(); } catch (e) { }
+		        // writeboardselect_modal_dialogArguments[1] = NewItem_onclick_Complete;
+		        // var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(355, 600));
+		        // try { OpenWin.focus(); } catch (e) { }
+				showPopup("/ezBoard/writeBoardSelectModal.do", 355, 600, "WriteBoardSelect_Modal", GetOpenWindowfeature(355, 600), NewItem_onclick_Complete);
 		    }
 		
 		    function NewItem_onclick_Complete(ret) {
+				hidePopup();
 		        if (typeof (ret) != "undefined") {
 		            pBoardID = ret[0];
 		
@@ -485,7 +487,8 @@
 		                showAlert(strLang1031);
 		            }
 		            else {
-		                window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&mode=new1&pbrdGbn=SiteNewBoard&pFromScreen=Mail&docID=" + pDocID + "&url=" + pDocHref + "&orgCompanyID=" + orgCompanyID, '', GetOpenWindowJun(765, 870));
+		                // window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&mode=new1&pbrdGbn=SiteNewBoard&pFromScreen=Mail&docID=" + pDocID + "&url=" + pDocHref + "&orgCompanyID=" + orgCompanyID, '', GetOpenWindowJun(765, 870));
+						showPopup("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&mode=new1&pbrdGbn=SiteNewBoard&pFromScreen=Mail&docID=" + pDocID + "&url=" + pDocHref + "&orgCompanyID=" + orgCompanyID, 765, 870, "", GetOpenWindowJun(765, 870), hidePopup);
 		            }
 		        }
 		    }
@@ -858,8 +861,13 @@
 		        
 		        openLocation += "&beforeDocID=" + pDocID;
 		        pListTypeValue = temppListTypeValue;
-		        var result = GetOpenWindow(openLocation, "", 1150, 950, "YES");
-		        window.close();
+				
+				if (!isTeamsDesktop()) {
+					var result = GetOpenWindow(openLocation, "", 1150, 950, "YES");
+					window.close();
+				} else {
+					parent.showPopupSlide(openLocation, 1150, 950, "", "", parent.hidePopupSlide);
+				}
 		    }
 		    
 		    var pReceiveSN = "";
@@ -957,14 +965,21 @@
 		    }
 		    
 		    function whoKyulRefresh() {
-		    	window.opener.location.reload();
-		    	window.opener.parent.frames["left"].getAprCountWHO();
-                window.close();
+		    	try {
+					window.opener.location.reload();
+					window.opener.parent.frames["left"].getAprCountWHO();
+				} catch (e) {
+					window.parent.location.reload();
+					window.parent.parent.frames["left"].getAprCountWHO();
+				}
+                // window.close();
+				btnClose_onclick();
 		    }
 			
 			function addRelatedCabinet() {
 				//* moon 2018.07.26
-				window.open("/ezCabinet/cabinetAddRelated.do?module=apprv", "addRelated", getOpenWindowfeature(480, 505));
+// 				window.open("/ezCabinet/cabinetAddRelated.do?module=apprv", "addRelated", getOpenWindowfeature(480, 505));
+				showPopup("/ezCabinet/cabinetAddRelated.do?module=apprv", 480, 505, "addRelated", getOpenWindowfeature(480, 505), hidePopup);
 			}
 			
 			function getOpenWindowfeature(popUpW, popUpH) {
@@ -1042,7 +1057,14 @@
 					} else {
 						return;
 					}
-				} catch (e) { }
+				} catch (e) {
+					if ((window.parent.g_sFlag == undefined && isDocAttach == "false") || (window.parent.g_sFlag != undefined && window.parent.g_sFlag == "m01") || (window.parent.g_sFlag != undefined && window.parent.g_sFlag == "docShare")) {
+						// 전자결재 > 완료문서, 기록물등록대장, 부서공유함에 적용 되도록 조건 추가
+						window.parent.openergetDocInfo();
+					} else {
+						return;
+					}
+				}
 			}
 			
 			function checkHeaderAction() {

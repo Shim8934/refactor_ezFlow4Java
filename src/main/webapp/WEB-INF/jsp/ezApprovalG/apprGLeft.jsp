@@ -690,7 +690,7 @@
 	            if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
 	            	if(useWebHWP == "NO") {
 		                if (!isIE()) {
-		                    alert("한글양식은 Cross Browser 를 지원하지 않습니다.");
+		                    showAlert("한글양식은 Cross Browser 를 지원하지 않습니다.");
 		                    return;
 		                } else {
 		                   var openLocation = "/ezApprovalG/draftuiHWP.do";
@@ -712,8 +712,7 @@
                 openLocation = openLocation + "&susinSN=" + escape(pArgument[4]) + "&docState=" + escape(pArgument[5]) + "&listType=1" + "&aprState=" + escape(pArgument[6]);
                 openLocation = openLocation + "&isTmpDoc=" + escape(pArgument[7]) + "&officeFlag=" + encodeURI(p_officeFlag) + "&attachedDocList=" + (typeof attachedDocList == "undefined" ? "" : attachedDocList);
                 
-	            // openwindow(openLocation, "", 1150, 950);
-				showPopupSlide(openLocation, 1150, 950, "", "", hidePopupSlide, openwindow);
+	            openwindow(openLocation, "", 1150, 950);
 	        }
 		    
 		    function openwindow(wfileLocation, wName, wWeigth, wHeigth) {
@@ -753,10 +752,11 @@
 		                width = parseInt(width) - 10;
 		            }
 
-		            window.open(wfileLocation, wName, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
+		            // window.open(wfileLocation, wName, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
+					showPopupSlide(wfileLocation, width, heigth, wName, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left, hidePopupSlide);
 		        }
 		        catch (e) {
-		            alert("openwindow :: " + e.description);
+		            showAlert("openwindow :: " + e.description);
 		        }
 		    }	
 		

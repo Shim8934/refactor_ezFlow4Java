@@ -269,8 +269,8 @@
 			var upperDeptName = "<c:out value ='${upperDeptName}'/>";
 
 	        $(function () {
-	        	if (navigator.maxTouchPoints > 4) {
-	        		document.getElementById("tblwrap").style.height = (document.documentElement.clientHeight - 130) + 'px';
+	        	if (navigator.maxTouchPoints > 4 || isTeamsDesktop()) {
+	        		document.getElementById("tblwrap").style.height = (document.documentElement.clientHeight - 143) + 'px';
 	        		document.getElementById("tblwrap").style.overflowY = 'auto';
 	        	}
 	        	
@@ -334,7 +334,9 @@
 	            AprTypeXML = loadXMLString(tempAprTypeXML);
 	            ChangeTab(document.getElementById("1tab1"));
 	            
-	            document.getElementById('textUser').focus();            
+				if (!navigator.maxTouchPoints > 4 && isTeamsDesktop()) {
+					document.getElementById('textUser').focus();
+				}
 	            
 	            if (SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES/APRTYPE")[0] == null) {
 	                document.getElementById("deptaddbtn").style.display = "none";
@@ -723,8 +725,13 @@
 	        var ReturnFunction;
 	        function GetDocInfo() {
 	            try {
-	                RetValue = parent.ezapprovalinfo_dialogArguments[0];
-	                ReturnFunction = parent.ezapprovalinfo_dialogArguments[1];
+	                if (isParentCommonArgsUsed()) {
+						RetValue = opener == null ? parent.ezCommon_cross_dialogArguments[0] : opener.ezCommon_cross_dialogArguments[0];
+						ReturnFunction = opener == null ? parent.ezCommon_cross_dialogArguments[1] : opener.ezCommon_cross_dialogArguments[1];
+					} else {
+						RetValue = parent.ezapprovalinfo_dialogArguments[0];
+						ReturnFunction = parent.ezapprovalinfo_dialogArguments[1];
+					}
 	            } catch (e) {
 	                try {
 	                    RetValue = opener.ezapprovalinfo_dialogArguments[0];
@@ -1346,9 +1353,9 @@
 					});
 	
 					if (chkReceivedDoc != 0) {
-						showAlert("<spring:message code='ezApprovalG.pjg04'/>");
-						opener.close();
-						window.close();
+						showAlert("<spring:message code='ezApprovalG.pjg04'/>", "");
+						// opener.close();
+						// window.close();
 						return;
 					}
 				}
@@ -1698,7 +1705,12 @@
 			            /* 2020-07-30 홍승비 - 실제 양식 상에 가변결재선이 없다면, 분기를 타지 않도록 수정 */
 			            /* 2020-10-19 한글버전은 opener 호출시 오류발생, G버전은 가변 결재선을 사용하지 않음 */
 						// 2021-02-19 박희찬 - G버전에도 가변결재선 동작위해 조건문 수정
-						var autoAprLineField = $(opener.document).find("#message").contents().find("td[id^='autoLine']");
+// 						var autoAprLineField = $(opener.document).find("#message").contents().find("td[id^='autoLine']");
+			            try {
+							var autoAprLineField = $(opener.document).find("#message").contents().find("td[id^='autoLine']");
+						} catch (e) {
+							var autoAprLineField = $(parent.document).find("#message").contents().find("td[id^='autoLine']");
+						}
 
 						if (useDynamicAprLine == "1" && autoAprLineField.length > 0) {
 							ret[27] = SAPRLINETEMPLETXMLParsing();
@@ -1895,7 +1907,7 @@
 		        }
 		
 		        if (alertMsg != "") {
-		            showAlert(alertMsg);                 
+		            showAlert(alertMsg);            
 		        }
 		    }
 		
@@ -2959,6 +2971,26 @@
 			function btn_Close2() {
 				window.close();
 			}
+			
+			innerIfrmaeOffset();
+			window.addEventListener("resize", function() {
+				if (navigator.maxTouchPoints > 4 || isTeamsDesktop()) {
+					document.getElementById("tblwrap").style.height = (document.documentElement.clientHeight - 143) + 'px';
+					document.getElementById("tblwrap").style.overflowY = 'auto';
+	        	}
+			})
+			
+			window.addEventListener("message", function (event) {
+				if (navigator.maxTouchPoints > 4 || isTeamsDesktop()) {
+					if (event.data && event.data.type == "height") {
+						var innerIframe = window.parent.document.querySelector("iframe#iFrameLayer");
+						var innerIframe2 = window.parent.document.querySelector(".layerpopup_top");
+						var innerFrameHeight = event.data.value * 0.95;
+						innerIframe.style.height = innerFrameHeight + "px";
+						innerIframe2.style.height = innerFrameHeight + "px";
+					}
+				}
+			});
 	    </script>
 	    <style>
 	    	/* .mainlist_free tr th {text-align:center} */

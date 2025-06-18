@@ -140,7 +140,7 @@
 			window.onload = function () {
 				try {
 					if (isParentCommonArgsUsed()) {
-						ReturnFunction = parent.ezCommon_cross_dialogArguments[1];
+						ReturnFunction = opener == null ? parent.ezCommon_cross_dialogArguments[1] : opener.ezCommon_cross_dialogArguments[0];
 					}
 				} catch (e) { }
 				
@@ -170,7 +170,7 @@
 		            return result;
 		        } 
 		        catch (e) {
-		            alert("getDocRecevState :: " + e.description);
+		        	showAlert("getDocRecevState :: " + e.description);
 		        }
 		    }
 		    
@@ -356,7 +356,7 @@
 			            }
 			        }
 			    } catch (e) {
-			        alert(e.description);
+			    	showAlert(e.description);
 			    }
 			}
 			
@@ -379,7 +379,7 @@
 					return;				
 				}  
 			  }catch(e){  
-			    alert("setAutoProperty : " +e.description);    
+				  showAlert("setAutoProperty : " +e.description);    
 			  }	  
 			}
 			
@@ -597,7 +597,7 @@
 		            }
 		        }
 		        catch (e) {
-		            alert("btnSendDraft_onclick : " + e.description);
+		        	showAlert("btnSendDraft_onclick : " + e.description);
 		        }
 		    }
 		
@@ -864,10 +864,12 @@
 			window.onbeforeunload = function () {
 				try{
 					window.opener.openergetDocInfo();
-				}catch(e){	}	
-				try{
-					window.opener.Refresh_Window();
-				}catch(e){	}	
+				}catch(e){
+					window.parent.openergetDocInfo();
+				}
+				// try{
+				// 	window.opener.Refresh_Window();
+				// }catch(e){ }
 			};
 			
 			//유효한 문서가 아닌경우 
@@ -1008,7 +1010,7 @@
 			    }
 				   
 			}
-		    var ezapprovalinfo_dialogArguments = new Array();
+		    // var ezapprovalinfo_dialogArguments = new Array();
 		    function btnApprovalInfo(pGubun) {
 		        var onlydocinfiview = false;
 		        var parameter = new Array();
@@ -1062,15 +1064,18 @@
 		        if (tempItemCode != "")
 		            tempdocnumcode = tempItemCode;
 		
-		        ezapprovalinfo_dialogArguments[0] = parameter;
-		        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;		
-		
-		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&docType=" + pDocType, "ezApprovalInfo-" + windowUuid, GetOpenWindowfeature(1210, 750));
-
-		        try { OpenWin.focus(); } catch (e) { }
+		        // ezapprovalinfo_dialogArguments[0] = parameter;
+		        // ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;		
+				//
+		        // var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&docType=" + pDocType, "ezApprovalInfo-" + windowUuid, GetOpenWindowfeature(1210, 750));
+				//
+		        // try { OpenWin.focus(); } catch (e) { }
+				ezCommon_cross_dialogArguments[0] = parameter;
+				showPopup("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&docType=" + pDocType, 1210, 750, "ezApprovalInfo-" + windowUuid, GetOpenWindowfeature(1210, 750), btnApprovalInfo_Complete);
 		    }
 		
 		    function btnApprovalInfo_Complete(ret) {
+				hidePopup();
 		        if (ret != undefined && ret[0] == "OK") {
 		            var savexmlhttp = createXMLHttpRequest();
 		            //결재선 저장

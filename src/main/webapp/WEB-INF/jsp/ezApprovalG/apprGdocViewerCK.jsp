@@ -13,9 +13,13 @@
 	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/appandbody_Cross.js')}"></script>
 	    <script type="text/javascript">
 	        var pDocHref = "<c:out value ='${docID}'/>";
-	        
 	        var flag = false;
+			var ReturnFunction;
+			
 	        window.onload = function () {
+				if (isParentCommonArgsUsed()) {
+					ReturnFunction = opener == null ? parent.ezCommon_cross_dialogArguments[1] : opener.ezCommon_cross_dialogArguments[1];
+				}
 	        }
 	        function DocumentComplete() {
 	            if (flag == false) {
@@ -37,9 +41,9 @@
 	
 	        function pzFormProc_InvalidDocument() {
 	        }
-	        function btnClose_onclick() {
-	            window.close();
-	        }
+	        // function btnClose_onclick() {
+	        //     window.close();
+	        // }
 	        function btnSave_onclick() {
 	            var pDocID = "", pDocTitle = "";
 	            try {

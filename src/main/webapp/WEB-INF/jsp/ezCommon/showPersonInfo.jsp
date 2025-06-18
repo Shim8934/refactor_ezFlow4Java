@@ -41,7 +41,7 @@
 				}
 				
 				if (isParentCommonArgsUsed()) {
-					ReturnFunction = parent.ezCommon_cross_dialogArguments[1];
+					ReturnFunction = opener == null ? parent.ezCommon_cross_dialogArguments[1] : opener.ezCommon_cross_dialogArguments[1];
 				}
 			}
 			
@@ -121,12 +121,12 @@
 				window.moveTo(leftPosition, topPosition);
 			}
 
-			function btnClose_onclick() {
-				if (ReturnFunction != null) {
-					ReturnFunction("cancel");
-				}
-				window.close();
-			}
+// 			function btnClose_onclick() {
+// 				if (ReturnFunction != null) {
+// 					ReturnFunction("cancel");
+// 				}
+// 				window.close();
+// 			}
 		</script>
 	</head>
 	

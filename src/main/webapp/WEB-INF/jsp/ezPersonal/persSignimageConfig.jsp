@@ -107,47 +107,8 @@
 		        else
 		            selName = DocList.GetSelectedRows()[0].innerText;
 		
-		        if (!confirm("'" + selName.replace( /(\s*)/g, "") + "'" + "<spring:message code='ezPersonal.t3005'/>"))
-			        return;
-		
-			    var DocList = new ListView();
-			    DocList.LoadFromID("DocList");
-			    var Rowcnt = DocList.GetDataRows();
-			    var curData = DocList.GetSelectedRows();
-		
-			    var imagelist = "";
-			    for (var i = 0; i < Rowcnt.length; i++) {
-			        if (Rowcnt[i].getAttribute("data1") != curData[0].getAttribute("data1")) {
-			            if (imagelist != "")
-			                imagelist += ";" + Rowcnt[i].getAttribute("data1");
-			            else
-			                imagelist = Rowcnt[i].getAttribute("data1");
-			        }
-			    }
-			    
-				$.ajax({
-					type : "POST",
-					dataType : "text",
-					url : "/ezApprovalG/saveSingInfo.do",
-					data : {
-							parentCn 	: "", 
-							cn 			: userid, 
-							prop 		: "", 
-							extensionAttribute3 : imagelist
-							},
-					success : function(result){
-						if(result != "OK"){
-							showAlert("<spring:message code='ezPersonal.t3006' />");
-						}else{
-							showAlert("<spring:message code='ezPersonal.t3007' />");
-							ContentDescription.innerHTML = '<div style="padding-top:80px;">' + "<spring:message code='ezPersonal.t3012'/>" + "</div>";
-							GetSignInfo();
-						}
-					},
-					error : function(){
-						showAlert("<spring:message code='ezPersonal.t189' />");
-					}
-				});
+		        showConfirm("'" + selName.replace( /(\s*)/g, "") + "'" + "<spring:message code='ezPersonal.t3005'/>", btnApprove_onclick_afterConfirm);
+		        return;
 		    }
 		    
 		    function btn_AttachAdd_onclick(obj) {
@@ -247,6 +208,53 @@
 					}
 				});
 		    }
+			
+		    function btnApprove_onclick_afterConfirm(rtn) {
+		    	hideConfirm();
+				if(!rtn) {
+					return;
+				}
+		    	
+			    var DocList = new ListView();
+			    DocList.LoadFromID("DocList");
+			    var Rowcnt = DocList.GetDataRows();
+			    var curData = DocList.GetSelectedRows();
+		
+			    var imagelist = "";
+			    for (var i = 0; i < Rowcnt.length; i++) {
+			        if (Rowcnt[i].getAttribute("data1") != curData[0].getAttribute("data1")) {
+			            if (imagelist != "")
+			                imagelist += ";" + Rowcnt[i].getAttribute("data1");
+			            else
+			                imagelist = Rowcnt[i].getAttribute("data1");
+			        }
+			    }
+			    
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					url : "/ezApprovalG/saveSingInfo.do",
+					data : {
+							parentCn 	: "", 
+							cn 			: userid, 
+							prop 		: "", 
+							extensionAttribute3 : imagelist
+							},
+					success : function(result){
+						if(result != "OK"){
+							showAlert("<spring:message code='ezPersonal.t3006' />");
+						}else{
+							showAlert("<spring:message code='ezPersonal.t3007' />");
+							ContentDescription.innerHTML = '<div style="padding-top:80px;">' + "<spring:message code='ezPersonal.t3012'/>" + "</div>";
+							GetSignInfo();
+						}
+					},
+					error : function(){
+						showAlert("<spring:message code='ezPersonal.t189' />");
+					}
+				});
+		    }
+			
 		</script> 
 	</head>
 	<body> 

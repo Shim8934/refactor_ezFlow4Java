@@ -54,7 +54,7 @@
 	        	
 	            try {
 	                if (isParentCommonArgsUsed()) {
-						ReturnFunction = parent.ezCommon_cross_dialogArguments[1];
+						ReturnFunction = opener == null ? parent.ezCommon_cross_dialogArguments[1] : opener.ezCommon_cross_dialogArguments[1];
 					} else {
 						ReturnFunction = parent.totalsavefileinfo_dialogArguments[1];
 					}
@@ -355,8 +355,8 @@
 	        
 	        function QuitWindow() {
 // 		        OpenAlertUI(strLang929);
-				showAlert(strLang1139);
-				window_close();
+				showAlert(strLang1139, "");
+				// window_close();
 		    }
 	        
 	        /* 2023-05-09 김우철 - 통합PC저장 시 다중 파일을 배포용 문서로 저장할 때, Whwp api가 비동기로 호출되는 것을 제어하기 위한 재귀함수 */

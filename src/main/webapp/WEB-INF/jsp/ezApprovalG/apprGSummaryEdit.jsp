@@ -29,7 +29,7 @@
                 }
                 
                 if (!returnFunction) {
-                    alert(strLangJIH_Summary03);
+                    showAlert(strLangJIH_Summary03);
                     parent.DivPopUpHidden();
                 }
                 document.getElementById("txt_SummaryContent").focus();

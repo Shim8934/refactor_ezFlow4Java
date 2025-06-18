@@ -21,7 +21,7 @@
 			var ReturnFunction;
 			window.onload = function () {
 				if (isParentCommonArgsUsed()) {
-					ReturnFunction = parent.ezCommon_cross_dialogArguments[1];
+					ReturnFunction = opener == null ? parent.ezCommon_cross_dialogArguments[1] : opener.ezCommon_cross_dialogArguments[1];
 				}
 			}
 		</script>

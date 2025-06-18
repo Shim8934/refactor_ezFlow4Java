@@ -61,7 +61,7 @@
 			window.onload = function () {
 				try {
 					if (isParentCommonArgsUsed()) {
-						ReturnFunction = parent.ezCommon_cross_dialogArguments[1];
+						ReturnFunction = opener == null ? parent.ezCommon_cross_dialogArguments[1] : opener.ezCommon_cross_dialogArguments[1];
 					}
 				} catch (e) {
 				}
@@ -852,7 +852,7 @@
 					}
 				}
 				
-				function afterSaveSuccessfully() {showAlert(CabinetMessages.strSave, true); return;}
+				function afterSaveSuccessfully() {showAlert(CabinetMessages.strSave, "true"); return;}
 				
 				function getAllUrlParams(url) {
 					var queryString = url.split('?')[1];

@@ -31,7 +31,7 @@
                 } catch (e) {
                     try {
                         if (isParentCommonArgsUsed()) {
-                            ReturnFunction = parent.ezCommon_cross_dialogArguments[1];
+                            ReturnFunction = opener == null ? parent.ezCommon_cross_dialogArguments[1] : opener.ezCommon_cross_dialogArguments[1];
                         } else {
                             ReturnFunction = parent.mngusercont_dialogArgument[1];
                         }
@@ -50,7 +50,7 @@
                 treeView.DataSource(xmlDom2);
                 treeView.DataBind("divUserContTree");
             } catch (ErrMsg) {
-                alert(ErrMsg.description);
+                showAlert(ErrMsg.description);
             }
         }
         function Tree_setconfig() {
@@ -196,7 +196,7 @@
                     var pAlertContent = "<spring:message code='ezApproval.t309'/>";
                     OpenAlertUI(pAlertContent);
                     TreeViewRefresh();
-                    opener.TreeViewRefresh();
+                    opener != null ? opener.TreeViewRefresh() : parent.parent.left.TreeViewRefresh(); // 레이어팝업 표출 시 부모가 right가 되기 때문에 left로 지정해줌
 	                //선택한 노드 값 초기화
             		nodeIdx = undefined;
                     return;
@@ -293,7 +293,7 @@
     	                        var pAlertContent = "<spring:message code='ezApproval.t300'/>";
     	                        OpenAlertUI(pAlertContent);
     	                        TreeViewRefresh();
-    	                        opener.TreeViewRefresh();
+                                opener != null ? opener.TreeViewRefresh() : parent.parent.left.TreeViewRefresh(); // 레이어팝업 표출 시 부모가 right가 되기 때문에 left로 지정해줌
     	                      	//선택한 노드 값 초기화
            						nodeIdx = undefined;
     	                        return;
@@ -325,7 +325,7 @@
     	                        var pAlertContent = "<spring:message code='ezApproval.t303'/>";
     	                        OpenAlertUI(pAlertContent);
     	                        TreeViewRefresh();
-    	                        opener.TreeViewRefresh();
+                                opener != null ? opener.TreeViewRefresh() : parent.parent.left.TreeViewRefresh(); // 레이어팝업 표출 시 부모가 right가 되기 때문에 left로 지정해줌
     	                        nodeIdx = undefined;
     	                        return;
     	                    }

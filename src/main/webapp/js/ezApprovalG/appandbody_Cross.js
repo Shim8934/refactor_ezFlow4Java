@@ -28,8 +28,8 @@ function PrintClick(Type, DocID, Mode) {
 
     PrtBodyContent = bodycontent;
     var feature = "width=800, height=500, toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1";
-    feature = feature + GetOpenPosition(800, 500);
-    window.open("/ezApprovalG/ezApprovalPrint.do", "", feature);
+    // feature = feature + GetOpenPosition(800, 500);
+    showPopup("/ezApprovalG/ezApprovalPrint.do", 800, 500, "", feature, "");
 }
 /**
  * [인쇄]
@@ -353,7 +353,7 @@ function OpenQuestionUI_Complete(ret) {
         bodycontent = message2.Get_EditorBodyHTML() + rtnVal;
 
     PrtBodyContent = bodycontent;
-    var feature = "width=800, height=500, toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1";
+    var feature = "width=800, height=500, toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1, background=#fff";
     feature = feature + GetOpenPosition(800, 500);
-    window.open("/ezApprovalG/ezApprovalPrint.do", "", feature);
+    showPopup("/ezApprovalG/ezApprovalPrint.do", 800, 500, "", feature, "");
 }

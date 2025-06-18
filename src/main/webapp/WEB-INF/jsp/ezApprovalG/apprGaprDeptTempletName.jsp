@@ -33,17 +33,17 @@
 		            //var pAlertContent = "<spring:message code='ezApprovalG.t309'/>";
 		            //parent.OpenAlertUI(pAlertContent);	
 		           if (approvalFlag == "S") {
-		            	showAlert ("<spring:message code='ezApprovalG.t309'/>");
+		            	showAlert("<spring:message code='ezApprovalG.t309'/>");
 		           } else {
-		        	   showAlert ("<spring:message code='ezApprovalG.t311'/>");
+		        	   showAlert("<spring:message code='ezApprovalG.t311'/>");
 		           }
 		            
-		            TxtAprDeptTempletName.focus();
+		           TxtAprDeptTempletName.focus();
 		        }
 		        else if (p_AprDeptTempletName.length > 20) {
 		            //var pAlertContent = "<spring:message code='ezApprovalG.t310'/>";
 		            //OpenAlertUI(pAlertContent);
-		            showAlert ("<spring:message code='ezApprovalG.t310'/>");
+		            showAlert("<spring:message code='ezApprovalG.t310'/>");
 		            TxtAprDeptTempletName.focus();
 		        } else {
 		            AprDeptTempletNameCheck(p_AprDeptTempletName);

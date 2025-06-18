@@ -210,11 +210,17 @@ function attachAppr() {
       var pTop = (pheight - conHeight) / 2;
       var pLeft = (pwidth - 890) / 2;
       var pURL = "/ezApprovalG/sendToMailApproval.do?cmd=docsend&docID=" + pDocID + "&docHref=" + encodeURIComponent(pDocHref) + "&orgCompanyID=" + orgCompanyID;
-      var newwin = window.open(pURL, "mailsend", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width =890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
       
-      if (document.getElementById("message").contentWindow.document.getElementById("opinionBox") != null) {
-          document.getElementById("message").contentWindow.document.getElementById("opinionBox").remove();
+      if (!isTeamsDesktop()) {
+          var newwin = window.open(pURL, "mailsend", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width =890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+          if (document.getElementById("message").contentWindow.document.getElementById("opinionBox") != null) {
+              document.getElementById("message").contentWindow.document.getElementById("opinionBox").remove();
+          }
+          newwin.focus();
+      } else {
+          showPopup(pURL, 890, conHeight, "mailsend", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width =890px, status = no, toolbar=no, menubar=no,location=no, resizable=1", hidePopup);
+          if (document.getElementById("message").contentWindow.document.getElementById("opinionBox") != null) {
+              document.getElementById("message").contentWindow.document.getElementById("opinionBox").remove();
+          }
       }
-      
-      newwin.focus();
 }

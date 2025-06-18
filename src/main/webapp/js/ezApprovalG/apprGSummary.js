@@ -55,7 +55,8 @@ function btnSummaryPrint_onclick() {
     var feature = "width=800, height=500, toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1";
     var url = "/ezApprovalG/printApprGSummary.do?docID=" + pDocID + "&mode=" + aprOrEndStr;
     feature = feature + GetOpenPosition(800, 500);
-    window.open(url, "", feature);
+//    window.open(url, "", feature);
+    showPopup(url, 800, 500, "", feature, "");
 }
 
 function copySummaryForReuse(orgDocID, docID) {

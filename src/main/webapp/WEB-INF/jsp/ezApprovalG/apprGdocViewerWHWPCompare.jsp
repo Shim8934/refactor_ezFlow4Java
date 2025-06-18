@@ -28,8 +28,13 @@
     <script type="text/javascript">
 	    var pDocHrefBefore = "${docHrefBefore}"; // 편집 전 문서
 	    var pDocHrefAfter = "${docHrefAfter}"; // 편집 후 문서
+        var ReturnFunction;
         
         window.onload = function () {
+            if (isParentCommonArgsUsed()) {
+                ReturnFunction = opener == null ? parent.ezCommon_cross_dialogArguments[1] : opener.ezCommon_cross_dialogArguments[1];
+            }
+            
         	ShowMailProgress();
         }
         
@@ -199,9 +204,9 @@
             }
         }
 	    
-        function btnClose_onclick() {
-            window.close();
-        }
+        // function btnClose_onclick() {
+        //     window.close();
+        // }
 
 	    function btnSave_onclick() {
             var hwpDoctitle = "";

@@ -25,7 +25,7 @@
 		    }
 		    function btn_OpinionOK_onclick() {
 		        if (ReturnFunction != null) {
-		            ReturnFunction(closeParent);
+		            ReturnFunction(callback);
 		            
 		            if (winFlag) {
 		            	window.close();
@@ -37,14 +37,14 @@
 		    }
 		    var ReturnFunction;
 		    var winFlag;
-			var closeParent = false;
+			var callback;
 		    window.onload = function () {
 		        try {
 		            if (isParentCommonArgsUsed()) {
-						RetValue = parent.ezCommon_cross_dialogArguments[0];
-						ReturnFunction = parent.ezCommon_cross_dialogArguments[1];
-						winFlag = parent.ezCommon_cross_dialogArguments[2];
-						closeParent = parent.ezCommon_cross_dialogArguments[3];
+						RetValue = opener == null ? parent.ezCommon_cross_dialogArguments[0] : opener.ezCommon_cross_dialogArguments[0];
+						ReturnFunction = opener == null ? parent.ezCommon_cross_dialogArguments[1] : opener.ezCommon_cross_dialogArguments[1];
+						winFlag = opener == null ? parent.ezCommon_cross_dialogArguments[2] : opener.ezCommon_cross_dialogArguments[2];
+						callback = opener == null ? parent.ezCommon_cross_dialogArguments[3] : opener.opener.ezCommon_cross_dialogArguments[3];
 					} else {
 						RetValue = parent.ezapralert_cross_dialogArguments[0];
 						ReturnFunction = parent.ezapralert_cross_dialogArguments[1];

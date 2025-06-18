@@ -298,7 +298,7 @@
 				listview.LoadFromID("DocList");
 				var selRow = listview.GetSelectedRows()[0];
 				
-				if (selRow.length <= 0) {
+				if (typeof selRow == "undefined" || selRow.length <= 0) {
 					var pAlertContent = "<spring:message code='ezApprovalG.t1533'/>";
 					alert(pAlertContent);
 					return;

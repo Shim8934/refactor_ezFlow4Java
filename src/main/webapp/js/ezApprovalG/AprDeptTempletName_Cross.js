@@ -52,7 +52,7 @@ function AprDeptTempletNameCheck(p_AprDeptTempletName)
 	{
 		//var pAlertContent = strLang232 + "<br> " + strLang233;
 		//OpenAlertUI(pAlertContent);
-		alert(strLang232 + "\r\n" + strLang233);
+		showAlert(strLang232 + "\r\n" + strLang233);
 	    TxtAprDeptTempletName.value = "";
 		TxtAprDeptTempletName.focus();  
 	}

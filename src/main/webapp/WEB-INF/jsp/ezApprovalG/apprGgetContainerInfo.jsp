@@ -660,7 +660,7 @@
 				var url = "/ezApprovalG/setSearchInfo.do";
 				var height = 405;
 				if (para == "usercontlist") height += 45;
-				showPopup(url, 510, height, "setsearchInfo_Cross", "", SearchCondi_onclick_Complete);
+				showPopup(url, 510, height, "setsearchInfo_Cross", GetOpenWindowfeature(510, 405), SearchCondi_onclick_Complete);
 		    }
 		
 		    function SearchCondi_onclick_Complete(returnvalue) {
@@ -748,13 +748,15 @@
 		                    var width = window.screen.availWidth;
 		                    var left = (parseInt(width) - 1155) / 2;
 		                    var top = (parseInt(heigth) - 460) / 2;
-		                    window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr.getAttribute("DATA3") + "&deptID=" + encodeURI(tr.getAttribute("DATA4")) + "&docState=012", "", "height=460px,width=1155px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+// 		                    window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr.getAttribute("DATA3") + "&deptID=" + encodeURI(tr.getAttribute("DATA4")) + "&docState=012", "", "height=460px,width=1155px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+							showPopup("/ezApprovalG/ezLineInfo.do?docID=" + tr.getAttribute("DATA3") + "&deptID=" + encodeURI(tr.getAttribute("DATA4")) + "&docState=012", 1155, 460, "", "height=460px,width=1155px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1", hidePopup);
 		                } else {
 		                	var heigth = window.screen.availHeight;
 				            var width = window.screen.availWidth;
 				            var left = (parseInt(width) - 600) / 2;
 				            var top = (parseInt(heigth) - 450) / 2;
-				            window.open("/ezCommon/showPersonInfo.do?id=" + GetAttribute(tr, "DATA4") + "&dept=" + GetAttribute(tr, "DATA6"), "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1, left=" + left + "px, top=" + top);
+// 				            window.open("/ezCommon/showPersonInfo.do?id=" + GetAttribute(tr, "DATA4") + "&dept=" + GetAttribute(tr, "DATA6"), "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1, left=" + left + "px, top=" + top);
+				            showPopup("/ezCommon/showPersonInfo.do?id=" + GetAttribute(tr, "DATA4") + "&dept=" + GetAttribute(tr, "DATA6"), 420, 450, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1, left=" + left + "px, top=" + top,  hidePopup);
 		                }
 		            } else if (jobState == "RECIPENT") {
 		                var heigth = window.screen.availHeight;
@@ -769,11 +771,13 @@
 // 		                    var feature = "status:no;dialogWidth:555px;dialogHeight:240px;help:no;scroll:no;edge:sunken";
 // 		                    feature = feature + GetShowModalPosition(555, 240);
 // 		                    var ret = window.showModalDialog(url, "", feature);
-		                    var ret = window.open(url, "", "height=300px,width=855px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+// 		                    var ret = window.open(url, "", "height=300px,width=855px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+		                    showPopup(url, 855, 300, "", "height=300px,width=855px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1",  hidePopup);
 		                } else {
 		                	left = (parseInt(width) - 1155) / 2;
 					        top = (parseInt(heigth) - 460) / 2;
-		                    window.open("/ezApprovalG/ezLineInfo.do?docID=" + DocID + "&deptID=" + escape(tr.getAttribute("DATA1")) + "&docState=011" + "&aprState=" + escape(tr.getAttribute("DATA4")), "", "height=460px,width=1155px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+// 		                    window.open("/ezApprovalG/ezLineInfo.do?docID=" + DocID + "&deptID=" + escape(tr.getAttribute("DATA1")) + "&docState=011" + "&aprState=" + escape(tr.getAttribute("DATA4")), "", "height=460px,width=1155px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+		                    showPopup("/ezApprovalG/ezLineInfo.do?docID=" + DocID + "&deptID=" + escape(tr.getAttribute("DATA1")) + "&docState=011" + "&aprState=" + escape(tr.getAttribute("DATA4")), 1155, 460,  "", "height=460px,width=1155px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1", hidePopup);
 		                }
 		            } else if (jobState == "ATTACH") {
 		            	var AttachfilenameA1 = tr.cells[1].innerHTML;
@@ -824,7 +828,8 @@
 	                                    	openLocation = "/ezApprovalG/contDocView.do";
 	                                    }
 	                                    openLocation += "?docID=" + docID + "&docHref=" + AttachUrl + "&formID=&orgDocID=";
-	                                    openwindow(openLocation, "", 880, 570);
+// 	                                    openwindow(openLocation, "", 880, 570);
+	                                    showPopupSlide(openLocation, 1000, 950, "", GetOpenWindowfeature(1000, 950), hidePopupSlide);
 									} else {
 	                                    window.open("/ezApprovalG/downloadAttach.do?fileName=" + Attachfilename + "&filePath=" + AttachUrl, "_self");
 	                                }
@@ -876,7 +881,7 @@
 		            if (CheckAprLine(tr.getAttribute("DATA1")) == "TRUE") {
 		                    chk_Passwd(UserID);
 		            } else {
-		                OpenAlertUI(strLang580,"OPEN","");
+						showAlertUI(strLang580);
 		                return;
 		            }
 		        }
@@ -889,12 +894,12 @@
 		    {
 		        if (Rtn == "FALSE") {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t27'/>";
-		            OpenAlertUI(pAlertContent);
+		            showAlertUI(pAlertContent);
 		            return "";
 		        }
 		        else if (Rtn == "cancel") {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t28'/>";
-		            OpenAlertUI(pAlertContent);
+					showAlertUI(pAlertContent);
 		            return "";
 		        }
 		        else {
@@ -939,7 +944,7 @@
 		            	openLocation += "&share=Y";
 		            }
 		            // openwindow(openLocation, "", 880, 570);
-					showPopupSlide(openLocation, 880, 570, "", "", hidePopupSlide, openwindow);
+					showPopupSlide(openLocation, 1000, 950, "", GetOpenWindowfeature(1000, 950), hidePopupSlide);
 		        }
 		    }
 		    //END
@@ -1052,7 +1057,7 @@
                     var width = window.screen.availWidth;
                     var height = height - 50;
                     var width = width/2;
-	        		window.open(pURL, "", GetOpenWindowfeature(isHwp ? width : 850, isHwp ? height : 900));
+					showPopupSlide(pURL, isHwp ? width : 850, isHwp ? height : 900, "", GetOpenWindowfeature(isHwp ? width : 850, isHwp ? height : 900), hidePopupSlide);
 	        	}
 	        }
 			function Approval_onclick() {
@@ -1276,7 +1281,7 @@
 		
 		        if (selRow.length <= 0) {
 		            var InformationString = "<spring:message code='ezApprovalG.t1520'/>";
-		            OpenAlertUI(InformationString);
+					showAlertUI(InformationString);
 		            return;
 		        }
 		        var param = new Array();
@@ -1314,7 +1319,7 @@
 		
 		                if (xmlhttp3.responseText == "TRUE") {
 		                    var InformationString = "EDMS " + "<spring:message code='ezApprovalG.t1521'/>";
-		                    OpenAlertUI(InformationString);
+							showAlertUI(InformationString);
 		
 		                    if (DocListType == "DocList")
 		                        GetDocList();
@@ -1325,13 +1330,13 @@
 		                }
 		                else {
 		                    var InformationString = "EDMS " + "<spring:message code='ezApprovalG.t1522'/>";
-		                    OpenAlertUI(InformationString);
+							showAlertUI(InformationString);
 		                    return;
 		                }
 		            }
 		            else {
 		                var InformationString = "EDMS " + "<spring:message code='ezApprovalG.t1523'/>";
-		                OpenAlertUI(InformationString);
+						showAlertUI(InformationString);
 		                return;
 		            }
 		        }
@@ -1666,7 +1671,7 @@
 		            if (CheckAprLine(tr[0].getAttribute("DATA1")) == "TRUE") {
 		            	chk_Passwd(UserID, chk_Passwd_CompleteSave);
 		            } else {
-		                OpenAlertUI(strLang580,"OPEN","");
+						showAlertUI(strLang580);
 		                return;
 		            }
 		        } else {
@@ -1678,11 +1683,11 @@
 			function chk_Passwd_CompleteSave(Rtn) {
 		        if (Rtn == "FALSE") {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t27'/>";
-		            OpenAlertUI(pAlertContent);
+					showAlertUI(pAlertContent);
 		        }
 		        else if (Rtn == "cancel") {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t28'/>";
-		            OpenAlertUI(pAlertContent);
+					showAlertUI(pAlertContent);
 		        }
 		        else {
 		        	TotalSave_onclick_complete(pSaveDocID, pSaveOrgCompanyID);
@@ -1806,13 +1811,13 @@
 		            var InformationString = "<spring:message code='ezApproval.t579'/>";
 		            //2018-09-20 김보미 - 팝업창 확인 안닫히는 문제
  		            //OpenAlertUI(InformationString, "OPEN");
-		            OpenAlertUI(InformationString, "OPEN", "");
+					showAlertUI(InformationString);
 		            return;
 		        }
 	
 		        if (GetAttribute(tr[0], "DATA12") == strDocState4) {
 		            var InformationString = "<spring:message code='ezApproval.t580'/>";
-		            OpenAlertUI(InformationString, "OPEN");
+					showAlertUI(InformationString, "OPEN");
 		            return;
 		        }
 	
@@ -1842,7 +1847,8 @@
 		            }
 		            openLocation = openLocation + "?docID=" + escape(DocID) + "&docHref=" + encodeURI(pURL);
 		        }
-		        var result = GetOpenWindow(openLocation, "", 1000, 950, "NO");
+		        // var result = GetOpenWindow(openLocation, "", 1000, 950, "NO");
+				showPopupSlide(openLocation, 1000, 950, "", GetOpenWindowfeature(1000, 950), hidePopupSlide);
 		    }
 		    
 		    var aprgongramline_cross_dialogArguments = new Array();
@@ -1859,7 +1865,7 @@
 	
 		        if (GetAttribute(tr[0], "DATA12") != strDocState1) {
 		            var InformationString = "<spring:message code='ezApprovalG.hyj26'/>";
-		            OpenAlertUI(InformationString, "OPEN");
+					showAlertUI(InformationString, "OPEN");
 		            return;
 		        }
 		        
@@ -1881,7 +1887,7 @@
 		        hidePopup();
 				if (rtn == "OK") {
 		            var pAlertContent = "<spring:message code='ezApprovalG.hyj27'/>";
-		            OpenAlertUI(pAlertContent);
+					showAlertUI(pAlertContent);
 		        }
 		    }
 		    
@@ -2156,6 +2162,9 @@
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+		</div>
+		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel2">
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer2"></iframe>
 		</div>
 	    
 	    <script type="text/javascript">

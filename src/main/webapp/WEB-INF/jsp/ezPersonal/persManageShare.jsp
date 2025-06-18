@@ -158,8 +158,8 @@
 						shareUserId : checkedUserList
 					},
 					success : function() {
-						showAlert("<spring:message code='ezApprovalG.bhs07'/>");
-						shareSetList();
+						showAlert("<spring:message code='ezApprovalG.bhs07'/>", shareSetList);
+						// shareSetList();
 					},
 					error : function() {
 						

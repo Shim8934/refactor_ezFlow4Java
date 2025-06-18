@@ -120,6 +120,10 @@
 			            }
 	            	}
 	            }
+				
+				if (navigator.maxTouchPoints > 4 || isTeamsDesktop()) {
+					document.getElementById("lvSDoc").style.width = document.getElementById("tableSizeChk").offsetWidth - 340 + "px";
+				}
 	        }
 	        function lvTDoc_onSel_Click() {
 	            var listview = new ListView();
@@ -299,9 +303,9 @@
 				listview.LoadFromID("lvSDocList");
 				var selRow = listview.GetSelectedRows()[0];
 
-				if (selRow.length <= 0) {
+				if (typeof selRow == "undefined" || selRow.length <= 0) {
 					var pAlertContent = "<spring:message code='ezApprovalG.t1533'/>";
-					alert(pAlertContent);
+					showAlert(pAlertContent);
 					return;
 				}
 				showDocView_onclick_Complete("True");
@@ -329,7 +333,7 @@
 							openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
 						} else {
 							var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
-							alert(pAlertContent);
+							showAlert(pAlertContent);
 							return;
 						}
 					} else {
@@ -435,6 +439,14 @@
 					cnt++;
 				}
 			}
+			
+			innerIfrmaeOffset();
+			
+			window.addEventListener("resize", function() {
+				if (navigator.maxTouchPoints > 4 || isTeamsDesktop()) {
+					document.getElementById("lvSDoc").style.width = document.getElementById("tableSizeChk").offsetWidth - 340 + "px";
+				}
+			})
 	    </script>
 	    <style>
 			.mainlist tr th {border-top:0px}
@@ -455,7 +467,7 @@
 		    	</HEADERS>
 		  	</LISTVIEWDATA>
 		</xml>
-	    <h1><spring:message code='ezApprovalG.t364'/></h1>
+	    <h1 id="tableSizeChk"><spring:message code='ezApprovalG.t364'/></h1>
 	    <div id="close">
             <ul>
                 <li><span onclick="return bt_Cancel_onclick()"></span></li>

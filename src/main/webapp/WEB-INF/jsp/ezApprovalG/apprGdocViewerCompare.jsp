@@ -17,7 +17,14 @@
 	        var isBeforeDocLoaded = false;
 	        var isAfterDocLoaded = false;
 	        var isPrintDocLoaded = false;
-	        
+			var ReturnFunction;
+
+			window.onload = function () {
+				if (isParentCommonArgsUsed()) {
+					ReturnFunction = opener == null ? parent.ezCommon_cross_dialogArguments[1] : opener.ezCommon_cross_dialogArguments[1];
+				}
+			};
+			
 	        /* 2020-03-03 홍승비 - 결재문서이력의 중복 로드 방지 플래그 추가 */
 	        function DocumentComplete() {
 				if (pDocHrefBefore != "" && pDocHrefAfter != "") {
@@ -65,12 +72,13 @@
 	            
 	            var feature = "width=800, height=500, toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1";
 	            feature = feature + GetOpenPosition(800, 500);
-	            window.open("/ezApprovalG/ezApprovalPrint.do", "", feature);
+	            // window.open("/ezApprovalG/ezApprovalPrint.do", "", feature);
+				showPopup("/ezApprovalG/ezApprovalPrint.do", 800, 500, "", feature, "");
 	        }
 	        
-	        function btnClose_onclick() {
-	            window.close();
-	        }
+	        // function btnClose_onclick() {
+	        //     window.close();
+	        // }
 	        
 	        function btnSave_onclick() {
 	            var pDocID = "", pDocTitle = "";
@@ -215,5 +223,10 @@
 	        selToggleList(document.getElementById("menu"), "ul", "li", "0");
 	    </script>
 	    <iframe name="AttachDownFrame" id="AttachDownFrame" src="about:blank" width="0" height="0" frameborder="0" marginheight="0" marginwidth="0" scrolling="no" style="display: none"></iframe>
+
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
+		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+		</div>
 	</body>
 </html>

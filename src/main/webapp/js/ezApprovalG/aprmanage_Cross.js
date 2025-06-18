@@ -470,7 +470,7 @@ function getReceivedDocList_after(xml) {
         } catch (e) { }
     }
     catch (e) {
-        alert("getReceivedDocList_after" + " " + e.description);
+        showAlert("getReceivedDocList_after" + " " + e.description);
     }
 }
 
@@ -594,7 +594,7 @@ function getSendOutDocList_after(xml) {
         } catch (e) { }
     }
     catch (e) {
-        alert("getSendOutDocList_after" + " " + e.description);
+        showAlert("getSendOutDocList_after" + " " + e.description);
     }
 }
 
@@ -922,7 +922,7 @@ function openDraftUI(pDraftFlag, pCurSelRow,officeFlag) {
     } else {
     	if (useWebHWP == "NO") {
 	    	if (!isIE()) {
-	            alert("한글양식은 IE에서만 기안 할 수 있습니다.");
+	            showAlert("한글양식은 IE에서만 기안 할 수 있습니다.");
 	            return;
 	        } else {
 	        	openLocation = "/ezApprovalG/draftuiHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
@@ -942,8 +942,7 @@ function openDraftUI(pDraftFlag, pCurSelRow,officeFlag) {
     	}
     }
 
-    // openwindow(openLocation, windowName, 890, 560);
-    showPopupSlide(openLocation, 890, 560, windowName, "", hidePopupSlide, openwindow);
+    openwindow(openLocation, windowName, 890, 560);
 }
 
 function openApprovUI(allFlag) {
@@ -1016,8 +1015,7 @@ function openApprovUI(allFlag) {
             openLocation = openLocation + "&id=" + encodeURI(pArgument[1]) + "&name=" + encodeURI(pArgument[2]);
             openLocation = openLocation + "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(GetAttribute(tr[0], "DATA12")) + "&mode=" + encodeURI(mode) + "&orgCompanyID=" + orgCompanyID + "&orgDocID=" + encodeURI(GetAttribute(tr[0], "DATA2")) + "&aprMemberSN=" + pArgument[4];
         }
-        // openwindow(openLocation, "ApprovUI", 880, 550);
-        showPopupSlide(openLocation, 880, 550, "ApprovUI", "", hidePopupSlide, openwindow);
+        openwindow(openLocation, "ApprovUI", 880, 550);
     }
     else {
         var pAlertContent = strLang870;
@@ -1231,8 +1229,7 @@ function openViewDocInfo(type) {
         	openLocation += "&pageType=admin";
         }
     }
-    // openwindow(openLocation, "", 880, 570);
-    showPopupSlide(openLocation, 880, 570, "", "", hidePopupSlide, openwindow);
+    openwindow(openLocation, "", 880, 570);
 }
 
 function OpenReceiveAssignUI(pCurSelRow) {
@@ -1278,8 +1275,7 @@ function OpenReceiveDraftUI(pCurSelRow, pDraftFlag) {
             		openLocation = "/ezApprovalG/ezRecevGSusinWHWP.do?docID=" + escape(pDocID) + "&draftFlag=" + escape(pDraftFlag) + "&uOrgID=" + encodeURI(GetAttribute(pCurSelRow, "DATA7"));
             	}
             }
-            // openwindow(openLocation, "receive", 880, 550);
-            showPopupSlide(openLocation, 880, 550, "receive", "", hidePopupSlide, openwindow);
+            openwindow(openLocation, "receive", 880, 550);
         } else {
             var pURL = GetAttribute(pCurSelRow, "DATA3");
             var pDocID = GetAttribute(pCurSelRow, "DATA1");
@@ -1288,7 +1284,7 @@ function OpenReceiveDraftUI(pCurSelRow, pDraftFlag) {
             if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
             	if(useWebHWP == "NO") {
 	            	if (/chrome/i.test(navigator.userAgent)) {
-	            		alert(strLang1103);
+	            		showAlert(strLang1103);
 	            		return;
 	            	} else {
 	            		openLocation = "/ezApprovalG/ezDeptRecevUI_HWP.do";
@@ -1302,8 +1298,7 @@ function OpenReceiveDraftUI(pCurSelRow, pDraftFlag) {
             	openLocation = "/ezApprovalG/recev.do";
             }
             openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&draftFlag=" + encodeURI(pDraftFlag) + "&orgCompanyID=" + encodeURI(orgCompanyID);
-            // openwindow(openLocation, "receive", 880, 550);
-            showPopupSlide(openLocation, 880, 550, "receive", "", hidePopupSlide, openwindow);
+            openwindow(openLocation, "receive", 880, 550);
         }
     } else {
         var pAlertContent = strLang870;
@@ -1364,8 +1359,7 @@ function OpenReceiveENDDraftUI(pCurSelRow, pDraftFlag) {
             g_selReturn = "N";
         }
 
-        // openwindow(openLocation, "receive", 880, 550);
-        showPopupSlide(openLocation, 880, 550, "receive", "", hidePopupSlide, openwindow);
+        openwindow(openLocation, "receive", 880, 550);
     }
     else {
         var pAlertContent = strLang870;
@@ -1406,7 +1400,7 @@ function OpenOpinionUI(pSelectedRow, pOpinionFlag) {
         var OpenWin = window.open(url, "AprOpinion_Cross", GetOpenWindowfeature(530, 520));
         try { OpenWin.focus(); } catch (e) { }
     } catch (e) {
-        alert("OpenOpinionUI :: " + e.description);
+        showAlert("OpenOpinionUI :: " + e.description);
     }
 }
 
@@ -1454,7 +1448,7 @@ function openOpinionUI_New(pSelectedRow, pOpinionType) {
 		var OpenWin = window.open(url, "AprOpinion_Cross", GetOpenWindowfeature(530, 520));
         try { OpenWin.focus(); } catch (e) { }
 	} catch (e) {
-		alert("openOpinionUI_New ::: " + e.description);
+		showAlert("openOpinionUI_New ::: " + e.description);
 	}
 }
 function openOpinionUI_New_Complete(ret) {
@@ -1484,7 +1478,7 @@ function openOpinionUI_New_Complete(ret) {
 	        }
 	    }
 	} catch (e) {
-		alert("openOpinionUI_New_Complete ::: " + e.description);
+		showAlert("openOpinionUI_New_Complete ::: " + e.description);
 	}
 }
 
@@ -1522,7 +1516,7 @@ function setHeSongHapyuiDocInfo(pSelectedRow) {
        	 }
        } 
     } catch (e) {
-        alert("setHeSongHapyuiDocInfo :: " + e.description);
+        showAlert("setHeSongHapyuiDocInfo :: " + e.description);
     }
 }
 
@@ -1882,10 +1876,11 @@ function openwindow(wfileLocation, wName, wWeigth, wHeigth) {
             width = parseInt(width) - 10;
         }
 
-        window.open(wfileLocation, wName, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
+        // window.open(wfileLocation, wName, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
+        showPopupSlide(wfileLocation, width, heigth, wName, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left, hidePopupSlide);
     }
     catch (e) {
-        alert("openwindow :: " + e.description);
+        showAlert("openwindow :: " + e.description);
     }
 }
 
@@ -3036,7 +3031,7 @@ function openServerDraftUI(pDraftFlag, pCurSelRow) {
     	if(useWebHWP == "NO") {
 	    	if (!isIE()) {
 	    		//노티문구가 잘못되었음. 아무래도 한글양식은 IE에서만 지원가능합니다 라고 바꿔야할듯
-	            alert(strLang1103);
+	            showAlert(strLang1103);
 	            return;
 	        } else {
 	        	openLocation = "/ezApprovalG/draftuiHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
@@ -3056,8 +3051,7 @@ function openServerDraftUI(pDraftFlag, pCurSelRow) {
     	}
     }
     
-    // openwindow(openLocation, windowName, 890, 560);
-    showPopupSlide(openLocation, 890, 560, windowName, "", hidePopupSlide, openwindow);
+    openwindow(openLocation, windowName, 890, 560);
 }
 
 /* 2022-02-10 홍승비 - 일괄기안문서 대응을 위해 알림메세지 및 갱신 분기 추가 */
@@ -3460,7 +3454,7 @@ function openOpinionUI_New_Add(pOpinionType, CompleteFunction) {
 
         DivPopUpShow(530, 520, "/ezApprovalG/aprOpinionNew.do?opMode=ADD");
     } catch (e) {
-        alert("openOpinionUI_New ::: " + e.description);
+        showAlert("openOpinionUI_New ::: " + e.description);
     }
 }
 
@@ -3494,7 +3488,7 @@ function openOpinionUI_New_Complete_Add(ret) {
            // makeOpinionList_Add(objXML);
         }
     } catch (e) {
-        alert("openOpinionUI_New_Complete ::: " + e.description);
+        showAlert("openOpinionUI_New_Complete ::: " + e.description);
     }
 }
 
@@ -3512,12 +3506,15 @@ function btnSendAround_onclick() {
         aprgongramline_cross_dialogArguments[0] = para;
         aprgongramline_cross_dialogArguments[1] = btnSendAround_onclick_Complete;
 
-        var OpenWin = window.open(url, "AprGongRamLine_Cross", GetOpenWindowfeature(1200, 760));
-        try { OpenWin.focus(); } catch (e) { }
+//        var OpenWin = window.open(url, "AprGongRamLine_Cross", GetOpenWindowfeature(1200, 760));
+//        try { OpenWin.focus(); } catch (e) { }
+        ezCommon_cross_dialogArguments[0] = para;
+        showPopup(url, 1200, 760, "AprGongRamLine_Cross", GetOpenWindowfeature(1200, 760), btnSendAround_onclick_Complete);
     }
 }
 
 function btnSendAround_onclick_Complete(rtn) {
+	hidePopup();
     if (rtn == "OK") {
         var pAlertContent = "<spring:message code='ezApprovalG.t1424'/>";
         OpenAlertUI(pAlertContent);
@@ -3547,7 +3544,7 @@ function RemoveGongramDoc(pDocID, pAprmemeberSn) {
     }
 }
 
-var ezreceivedistributeui_cross_dialogArguments = new Array();
+// var ezreceivedistributeui_cross_dialogArguments = new Array();
 function btnBaeBuAll_onclick() {
 	var DocList = new ListView();
 	DocList.LoadFromID("DocList");
@@ -3640,16 +3637,25 @@ function btnBaeBuAll_onclick_Complete(rtn) {
 	
 		var url = "/ezApprovalG/ezReceiveDistributeUI.do?mode=addAll&pdocid=" + DocID;
 	
-		ezreceivedistributeui_cross_dialogArguments[0] = parameter;
-		ezreceivedistributeui_cross_dialogArguments[1] = receiveDistributeAll_Complete;
-	
-		var OpenWin = window.open(url, "ezReceiveDistributeUI_Cross", GetOpenWindowfeature(800, 600));
-		try { OpenWin.focus(); } catch (e) { }
+		// ezreceivedistributeui_cross_dialogArguments[0] = parameter;
+		// ezreceivedistributeui_cross_dialogArguments[1] = receiveDistributeAll_Complete;
+
+		// var OpenWin = window.open(url, "ezReceiveDistributeUI_Cross", GetOpenWindowfeature(800, 600));
+		// try { OpenWin.focus(); } catch (e) { }
+        ezCommon_cross_dialogArguments[0] = parameter;
+        showPopup(url, 800, 600, "ezReceiveDistributeUI_Cross", GetOpenWindowfeature(800, 600), receiveDistributeAll_Complete);
 	}
 
 }
 
 function receiveDistributeAll_Complete(ret){
-	if (ret == "cancel")
-		window.close();
+	hidePopup();
+
+    if (ret == "true") {
+        if (pListTypeValue == "97") {
+            window.parent.frames[0].convMain('97', '');
+        } else {
+            window.parent.frames[0].convMain('4', '');
+        }
+    }
 }

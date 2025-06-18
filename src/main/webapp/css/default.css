@@ -4352,13 +4352,22 @@ body.drag *{user-select:none !important;}
 	z-index: -1 !important;
 	overflow: hidden;
 	transition:all 0.5s;
+	left: auto !important;
 }
 .layerpopup_slider.active{
 	min-width: 947px;
 	width:70% !important;
 	height:100% !important;
-	/*left: auto !important;*/
+	left: auto !important;
 	right:0 !important;
 	z-index:2000 !important;
 	box-shadow: -5px 3px 6px rgba(0,0,0,0.16);
+}
+.layerpopup_top{
+	top: 50% !important;
+	left: 50% !important;
+	transform: translate(-50%, -50%) !important;
+	z-index: 2001 !important;
+	border-radius: 5px;
+	overflow: hidden;
 }

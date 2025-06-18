@@ -1135,25 +1135,31 @@ function window_onbeforeunload() {
             window.opener.openergetDocInfo();
     }
     catch (e)
-    { }
-    try {
-        if (bAttachProcess == false)
-            window.opener.Refresh_Window();
-    }
-    catch (e)
-    { }
+    {
+		if (bAttachProcess == false)
+			window.parent.openergetDocInfo();
+	}
+    // try {
+    //     if (bAttachProcess == false)
+    //         window.opener.Refresh_Window();
+    // }
+    // catch (e)
+    // { }
     try {
     	if (bAttachProcess == false)
     		window.opener.parent.frames["right"].openergetDocInfo();
     } catch (e) 
-    { }
+    {
+		if (bAttachProcess == false)
+			window.parent.parent.frames["right"].openergetDocInfo();
+	}
     try {
         bAttachProcess = true;
     }
     catch (e) { }
-    try {
-        window.opener.getApprGraph("appr");
-    } catch (e) { }
+    // try {
+    //     window.opener.getApprGraph("appr");
+    // } catch (e) { }
 }
 
 function pre_chk_Passwd_Complete(Rtn)

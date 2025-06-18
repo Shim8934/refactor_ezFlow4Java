@@ -55,6 +55,7 @@
 	        var pUse_Editor = "<c:out value ='${useEditor}'/>";
 	        var orgCompanyID = "";
 	        var preSusinGroupStr = "<c:out value ='${preSusinGroupStr}'/>"; // 수신처그룹 구분 관련 파라미터
+			var ReturnFunction;
 
 			// 창마다 고유한 id 지정용
 			var windowUuid = getRandomId();
@@ -66,6 +67,9 @@
 	                return true;
 	        };
 	        window.onload = function () {
+				if (isParentCommonArgsUsed()) {
+					ReturnFunction = opener == null ? parent.ezCommon_cross_dialogArguments[1] : opener.ezCommon_cross_dialogArguments[1];
+				}
 	            if (navigator.userAgent.indexOf('Firefox') != -1) {
 	                document.body.style.MozUserSelect = 'none';
 	                document.body.style.WebkitUserSelect = 'none';
@@ -109,9 +113,9 @@
 	        function btnPrint_onclick() {
 	            PrintClick("Cross", pDocID, "");
 	        }
-	        function btnClose_onclick() {
-	            window.close();
-	        }
+	        // function btnClose_onclick() {
+	        //     window.close();
+	        // }
 	        
 	        function createNewDoc() {
 	            try {
@@ -136,7 +140,7 @@
 	            	});
 	                return result;
 	            } catch (e) {
-	                alert("createNewDoc()" + e.description);
+	                showAlert("createNewDoc()" + e.description);
 	            }
 	        }
 	        var beforeHtml = "";
@@ -155,7 +159,8 @@
 	            }
 	            else {
 	                var pInformationContent = "<spring:message code='ezApproval.t45'/>";
-	                OpenInformationUI(pInformationContent, Edit_Complete);
+	                // OpenInformationUI(pInformationContent, Edit_Complete);
+	                showConfirmUI(pInformationContent, Edit_Complete);
 	            }
 	        }
 	        function Edit_Complete(RtnVal)
@@ -282,11 +287,13 @@
 	        function btnSend_onclick() {
 	            if (!chkReceipt) {
 	                var pAlertContent = "<spring:message code='ezApproval.t144'/><br><spring:message code='ezApproval.t159'/>";
-	                OpenInformationUI(pAlertContent, chkReceipt_Complete);
+	                // OpenInformationUI(pAlertContent, chkReceipt_Complete);
+	                showConfirmUI(pAlertContent, chkReceipt_Complete);
 	            }
 	            else {
 	                var pInformationContent = "<spring:message code='ezApproval.t146'/>";
-	                OpenInformationUI(pInformationContent, Send_Complete, 'resend');
+// 	                OpenInformationUI(pInformationContent, Send_Complete, 'resend');
+	                showConfirmUI(pInformationContent, Send_Complete);
 	            }
 	        }
 	        
@@ -300,7 +307,8 @@
 	        }
 	        
 	        function Send_Complete(RtnVal) {
-	            if (!RtnVal) return;
+	        	hideConfirm();
+	        	if (!RtnVal) return;
 	            //if ("${approvalPWD}" != "N") {
 	            if (CheckUsePassword()) {
 	                chk_Passwd(chk_Passwd_Complete);
@@ -468,7 +476,7 @@
 	            ezchkpasswd_cross_dialogArguments[1] = FunctionName;
 	            DivPopUpShow(350, 225, url);
 	        }
-	        var ezapprovalinfo_dialogArguments = new Array();
+	        // var ezapprovalinfo_dialogArguments = new Array();
 	        function btnApprovalInfo(pGubun) {
 	            var parameter = new Array();
 	            parameter[0] = newDocID;
@@ -476,15 +484,18 @@
 	            parameter[12] = "SEND"
 	            parameter[27] = true;
 	
-	            ezapprovalinfo_dialogArguments[0] = parameter;
-	            ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
+	            // ezapprovalinfo_dialogArguments[0] = parameter;
+	            // ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
 		        
 	            var url = "/ezApprovalG/ezApprovalInfo.do?guBun=" + pGubun + "&ext=" + "mht";
-	            var result = GetOpenWindow(url, "ezApprovalInfo-" + windowUuid, 1210, 750, "NO");
+	            // var result = GetOpenWindow(url, "ezApprovalInfo-" + windowUuid, 1210, 750, "NO");
+				ezCommon_cross_dialogArguments[0] = parameter;
+				showPopup(url, 1210, 750, "ezApprovalInfo-" + windowUuid, "", btnApprovalInfo_Complete);
 	        }
 	        function btnApprovalInfo_Complete(RtnVal)
 	        {
-	            if (RtnVal != undefined && RtnVal[0] == "OK") {
+	            hidePopup();
+				if (RtnVal != undefined && RtnVal[0] == "OK") {
 	                chkReceipt = true;
 	                btnApprovalInfo_save(RtnVal);
 	            }
@@ -508,7 +519,7 @@
             	            	console.log(e);
             	            }
             			} else {
-            				alert(strLangS163 + strLangS164);
+            				showAlert(strLangS163 + strLangS164);
             			}
             		}
             	});

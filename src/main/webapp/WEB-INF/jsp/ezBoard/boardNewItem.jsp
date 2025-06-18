@@ -180,6 +180,7 @@
 
 			var writerFlag = "${boardInfo.writerFlag}"; // 2025-01-21 임정은 - 게시판 게시물 게시자명선택 사용여부 플래그
 			var writerNameType = parseInt("<c:out value='${boardListVO.writerNameType}'/>"); // 2025-01-21 임정은 - 게시자명선택 타입 (0 : 이름, 1 : 부서명)
+			var ReturnFunction;
 
 			var parentItemID = "${parentItemID}";
 
@@ -191,7 +192,9 @@
 			var historyModify = "${ historyModify }";
 
 		    window.onload = function () {
-		    	
+				if (isParentCommonArgsUsed()) {
+					ReturnFunction = opener == null ? parent.ezCommon_cross_dialogArguments[1] : opener.ezCommon_cross_dialogArguments[1];
+				}
 		    	// useHwpDownSecurity가 Y일 때만 Whwp api 호출. 전자결재 일반버전에서는 useHwpDownSecurity의 값에 상관없이 Whwp api 호출하지 않음.
 	        	/*
 	        	if (useHWP == "YES" && useHwpDownSecurity == "Y" && approvalFlag == "G") {
@@ -1306,7 +1309,7 @@
 		                            try {
 		                                var checkboard = window.opener.location.toString();
 		                                if (checkboard.indexOf("mailPreviewContent") > -1) {
-		                                    window.close();
+		                                    btnClose_onclick();
 		                                    return;
 		                                }
 		                                if (checkboard.indexOf("mailReadContent.do") < 0) {
@@ -1394,7 +1397,7 @@
                         if (window.opener) {
                             window.opener.location.reload();
                         }
-                        window.close();
+                        btnClose_onclick();
                     }
 		        } else {
 		            if (getNodeText(GetChildNodes(loadXMLString(xmlhttp.responseText))[0]) == "XSS") {
@@ -1764,7 +1767,7 @@
 	                OpenWin.close();
 	                if (ret == "") {
 	                    if (confirm("<spring:message code='ezBoard.t414' />")) {
-	                        window.close();
+	                        btnClose_onclick();
 	                    }
 	                    else {
 	                        OpenWin = null;
@@ -2041,11 +2044,11 @@
 			                    }
 			                } else {
 			                    if (pDocID == "" && (scheduleId == "" || scheduleId == null)) {
-			                        if (InsertMailInfo() == -1) window.close();
+			                        if (InsertMailInfo() == -1) btnClose_onclick();
 			                    } else if (scheduleId != "" && scheduleId != null) {
-									if (InsertScheduleInfo() == -1) window.close();
+									if (InsertScheduleInfo() == -1) btnClose_onclick();
 								} else {
-			                        if (InsertDocInfo() == -1) window.close();
+			                        if (InsertDocInfo() == -1) btnClose_onclick();
 			                    }
 			                }
 			            }
@@ -2930,11 +2933,11 @@
 		            window.onresize();
 		            if (pUrl != "") {
 	                    if (pDocID == "" && (scheduleId == "" || scheduleId == null)) {
-	                        if (InsertMailInfo() == -1) window.close();
+	                        if (InsertMailInfo() == -1) btnClose_onclick();
 	                    } else if (scheduleId != "" && scheduleId != null) {
-							if (InsertScheduleInfo() == -1) window.close();
+							if (InsertScheduleInfo() == -1) btnClose_onclick();
 						} else {
-	                        if (InsertDocInfo() == -1) window.close();
+	                        if (InsertDocInfo() == -1) btnClose_onclick();
 	                    }
 		            } else if (pMode != "modify" && pMode != "reply") {
 		            	if (pcheckForm.toUpperCase() == "TRUE") {
@@ -3125,7 +3128,7 @@
 					<c:if test = "${ boardInfo.guBun != '9' }">
 	                <div id="close">
 	                    <ul>
-	                        <li><span onclick="window.close();"></span></li>
+	                        <li><span onclick="btnClose_onclick();"></span></li>
 	                    </ul>
 	                </div>
 					</c:if>

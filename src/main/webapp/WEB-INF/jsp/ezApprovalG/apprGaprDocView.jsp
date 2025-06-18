@@ -101,7 +101,7 @@
 	        	}
 
 				if (isParentCommonArgsUsed()) {
-					ReturnFunction = parent.ezCommon_cross_dialogArguments[1];
+					ReturnFunction = opener == null ? parent.ezCommon_cross_dialogArguments[1] : opener.ezCommon_cross_dialogArguments[1];
 				}
 		      	
 		      	$("#message").load(function() {
@@ -400,12 +400,12 @@
 		        headerAction("open");
 		    	PrintClick("Cross", pDocID, "ING");
 		    }
-		    function btnClose_onclick() {
-				if (ReturnFunction != null) {
-					ReturnFunction("cancel");
-				}
-				window.close();
-		    }
+		    // function btnClose_onclick() {
+			// 	if (ReturnFunction != null) {
+			// 		ReturnFunction("cancel");
+			// 	}
+			// 	window.close();
+		    // }
 		
 // 		    function btnMail_onclick() {
 // 		    		  $.ajax({
@@ -455,8 +455,9 @@
 		        var pLeft = (pwidth - 890) / 2;
 			    var pURL = "/ezApprovalG/sendToMailApproval.do?cmd=docsend&docID=" + DocID + "&docHref=" + encodeURIComponent(DocHref)+"&orgCompanyID="+orgCompanyID;
 	 	        //var pURL = "/ezEmail/mailWrite.do?docHref=" +  encodeURIComponent(DocHref) + "&cmd=docsend&docID=" + DocID + "&imageCnt=&target=APPROVALG";
-		        var newwin = window.open(pURL, "mailsend", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width =890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-		        newwin.focus();
+		        // var newwin = window.open(pURL, "mailsend", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width =890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+		        // newwin.focus();
+				showPopup(pURL, 890, conHeight, "mailsend", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width =890px, status = no, toolbar=no, menubar=no,location=no, resizable=1", hidePopup);
 		    }
 		    
 		    function btnhistory_onclick() {
@@ -502,16 +503,20 @@
 				  parent.opener.clearAbsence(true);
 				}
 		    
-		        window.close();
+		        // window.close();
+				btnClose_onclick();
+
 		    }
 		    window.onbeforeunload = function () {
 		        try {
 		            window.opener.openergetDocInfo();
 		        }
-		        catch (e) { }
-		        try {
-		            window.opener.Refresh_Window();
-		        } catch (e) { }
+		        catch (e) {
+		            window.parent.openergetDocInfo();
+		        }
+		        // try {
+		        //     window.opener.Refresh_Window();
+		        // } catch (e) { }
 		    };
 		    var ezdocinfog_view_cross_dialogArguments = new Array();
 		    function btnDocInfo_onclick() {
@@ -752,8 +757,9 @@
 	        }
 	        
 	        function RemoveDoc_Complete() {
-	            try { window.opener.getDocList(); } catch (e) { }
-	            window.close();
+	            try { window.opener.getDocList(); } catch (e) { window.parent.getDocList(); }
+	            // window.close();
+				btnClose_onclick();
 	        }
 	        
 	        //2018-07-10 배현상, 강제회수 분기(btnforcecallback_onclick 생성)
@@ -915,8 +921,8 @@
 		        DivPopUpHidden();
 
 		        if (checkAprState()) {
-		    		showAlert("<spring:message code='ezApprovalG.bhs23'/>");
-	    			window.close();
+		    		showAlert("<spring:message code='ezApprovalG.bhs23'/>", "");
+	    			// window.close();
 	    			return;
 		    	}
 
@@ -1005,20 +1011,22 @@
 	    	}
 			
 			// 게시판 게시 - 공람할문서, 공람완료문서 메뉴에서 사용함
-		    var writeboardselect_modal_dialogArguments = new Array();
+		    // var writeboardselect_modal_dialogArguments = new Array();
 		    function NewItem_onclick() {
-		        writeboardselect_modal_dialogArguments[1] = NewItem_onclick_Complete;
-		        var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(355, 600));
-		        try {
-		        	if (OpenWin) {
-		        		OpenWin.focus(); 
-		        	} 
-		        } catch (e) {
-	        		console.error('OpenWin 접근 실패:', e);
-		        }
+		        // writeboardselect_modal_dialogArguments[1] = NewItem_onclick_Complete;
+		        // var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(355, 600));
+		        // try {
+		        // 	if (OpenWin) {
+		        // 		OpenWin.focus(); 
+		        // 	} 
+		        // } catch (e) {
+	        	// 	console.error('OpenWin 접근 실패:', e);
+		        // }
+				showPopup("/ezBoard/writeBoardSelectModal.do", 355, 600, "WriteBoardSelect_Modal", GetOpenWindowfeature(355, 600), NewItem_onclick_Complete);
 		    }
 		
 		    function NewItem_onclick_Complete(ret) {
+				hidePopup();
 		        if (typeof (ret) != "undefined") {
 		            pBoardID = ret[0];
 		
@@ -1035,7 +1043,8 @@
 		                showAlert(strLang1031);
 		            }
 		            else {
-		                window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&mode=new1&pbrdGbn=SiteNewBoard&pFromScreen=Mail&docID=" + pDocID + "&url=" + pDocHref + "&orgCompanyID=" + orgCompanyID, '', GetOpenWindowJun(765, 870));
+		                // window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&mode=new1&pbrdGbn=SiteNewBoard&pFromScreen=Mail&docID=" + pDocID + "&url=" + pDocHref + "&orgCompanyID=" + orgCompanyID, '', GetOpenWindowJun(765, 870));
+						showPopup("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&mode=new1&pbrdGbn=SiteNewBoard&pFromScreen=Mail&docID=" + pDocID + "&url=" + pDocHref + "&orgCompanyID=" + orgCompanyID, 765, 870, "", GetOpenWindowJun(765, 870), hidePopup);
 		            }
 		        }
 		    }
@@ -1115,8 +1124,13 @@
 	            };
 	            
 	            var openLocation = "/ezApprovalG/draftui.do?" + new URLSearchParams(params);		        
-		        var result = GetOpenWindow(openLocation, "", 1150, 950, "YES");
-		        window.close();
+		        
+				if (!isTeamsDesktop()) {
+					var result = GetOpenWindow(openLocation, "", 1150, 950, "YES");
+					window.close();
+				} else {
+					parent.showPopupSlide(openLocation, 1150, 950, "", "", parent.hidePopupSlide);
+				}
 		    }
 		</script>
 	</head>

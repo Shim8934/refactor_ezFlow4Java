@@ -56,11 +56,41 @@
 	            WebBrowser1.outerHTML = "";
 	            return false;
 	        }
+	        
+	        function close_Click() {
+				parent.DivPopUpHidden();
+			}
+			
+			window.addEventListener("load", function() {
+				if (isTeamsDesktop()) {
+					document.getElementById("close").style.display = "";
+				}
+			})
 	    </script>
+	    <style>
+			#close ul {
+				list-style: none; margin: 0; padding: 0;
+			}
+			#close ul li {
+				text-align: right;
+				margin-left: auto;
+				margin-right: 0;
+			}
+			#close ul li span {
+				display:inline-block;
+				width:25px;
+				height:28px;
+				background-image: url('/images/close_xBtn.png');
+				background-repeat: no-repeat;
+				background-position: 4px 6px;
+				text-align: right;
+			}
+		</style>
 	</head>
-	<body scroll="auto">
+	<body scroll="auto" style="background: #fff">
 	    <div style="margin: 0px 15px;">
             <div class='summaryPrintTtl' colspan='7'><p>▶ <spring:message code='ezApprovalG.apprBlAudit.14'/></p></div>
+            <div id="close" style="display: none"><ul><li><span onclick="return close_Click()"></span></li></ul></div>
             <div class='summaryPrintContent'><p id='docNameContent'></p></div>
             <div class='summaryPrintTtl'><p>▶ <spring:message code='ezApprovalG.summary01'/></p></div>
             <div class='summaryPrintContent' id='summaryContent'></div>

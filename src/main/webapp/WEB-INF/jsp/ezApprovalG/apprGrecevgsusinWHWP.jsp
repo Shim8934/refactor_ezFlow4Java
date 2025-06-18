@@ -320,7 +320,7 @@
 		    function window_onload() {
 				try {
 					if (isParentCommonArgsUsed()) {
-						ReturnFunction = parent.ezCommon_cross_dialogArguments[1];
+						ReturnFunction = opener == null ? parent.ezCommon_cross_dialogArguments[1] : opener.ezCommon_cross_dialogArguments[1];
 					}
 				} catch (e) { }
 				
@@ -1076,12 +1076,19 @@
 			                  delDocInfo();
 			          }
 			      }
-			      catch (e) { }
+			      catch (e) { 
+                      window.parent.openergetDocInfo();
+			          if (!chkOK) {
 			
-			      try {
-			          window.opener.Refresh_Window();
-			      }
-			      catch (e) { }
+			              if (isReDraft == "N")
+			                  delDocInfo();
+			          }
+				  }
+			
+			      // try {
+			      //     window.opener.Refresh_Window();
+			      // }
+			      // catch (e) { }
 			  }
 		
 			  function DeleteLocalFiles() {
@@ -1418,7 +1425,8 @@
 		
 			function btnMail_onclick() {
 // 			    window.open("/myoffice/ezEmail/mail_write.aspx?DocHref=" + pFormHref + "&cmd=docsend&DocID=" + pDocID + "&TARGET=APPROVALG", "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(890, window.screen.availHeight * 0.8));
-		        window.open("/ezEmail/mailWrite.do?docHref=" + pFormHref + "&cmd=docsend&docID=" + pDocID + "&TARGET=APPROVALG", "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(890, window.screen.availHeight * 0.8));
+// 		        window.open("/ezEmail/mailWrite.do?docHref=" + pFormHref + "&cmd=docsend&docID=" + pDocID + "&TARGET=APPROVALG", "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(890, window.screen.availHeight * 0.8));
+				showPopup("/ezEmail/mailWrite.do?docHref=" + pFormHref + "&cmd=docsend&docID=" + pDocID + "&TARGET=APPROVALG", 890, window.screen.availHeight * 0.8, "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(890, window.screen.availHeight * 0.8), hidePopup);
 			}
 
 			var tempSecurity = "";
@@ -1616,7 +1624,7 @@
 			    }
 			}
 		
-		    var ezapprovalinfo_dialogArguments = new Array();
+		    // var ezapprovalinfo_dialogArguments = new Array();
 			function btnApprovalInfo() {
 	        	var deptCheckFlag = checkDeptAndCabinetId();
 	        	
@@ -1720,23 +1728,24 @@
 			    parameter[60] = passAprLine;
 			    parameter[61] = tempKeyword;
 			    
-		        ezapprovalinfo_dialogArguments[0] = parameter;
-		        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
+		        // ezapprovalinfo_dialogArguments[0] = parameter;
+		        // ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
 			    
 			    if (chkReceivedDoc != 0) {
 		        	alert("<spring:message code='ezApprovalG.pjg04'/>");
 		        	window.close();
 		        } else {
-		        	var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&orgCompanyID=" + orgCompanyID + "&docType=" + pDocType + "&ext=" + "hwp", "ezApprovalInfo", GetOpenWindowfeature(1210, 750));
-		        	try { OpenWin.focus(); } catch (e) { }
-					  
+		        	// var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&orgCompanyID=" + orgCompanyID + "&docType=" + pDocType + "&ext=" + "hwp", "ezApprovalInfo", GetOpenWindowfeature(1210, 750));
+		        	// try { OpenWin.focus(); } catch (e) { }
+					ezCommon_cross_dialogArguments[0] = parameter;
+					showPopup("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&orgCompanyID=" + orgCompanyID + "&docType=" + pDocType + "&ext=" + "hwp", 1210, 750, "ezApprovalInfo", GetOpenWindowfeature(1210, 750), btnApprovalInfo_Complete);
 		        }
 			        
 			        
 			    }
 			 
 		    function btnApprovalInfo_Complete(ret) {
-		    
+				hidePopup();
 		    	if (ret != undefined && ret[0] == "OK") {
 		            try {
 		            	//message.EditMode(2);
