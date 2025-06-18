@@ -460,6 +460,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			JSONObject questionObj = (JSONObject)questions.get(i);
 			int requiredFlag       = ((Long)questionObj.get("required")).intValue();
 			int questionType       = ((Long)questionObj.get("type")).intValue();
+			int resOpenFlag        = ((Long)questionObj.get("resOpenFlag")).intValue();
 			JSONObject questionAtt = (JSONObject)questionObj.get("attach");
 			JSONObject imgTitle = (JSONObject)questionObj.get("imgTitle");
 			JSONArray options      = (JSONArray)questionObj.get("option");
@@ -527,6 +528,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			question.setRequired(requiredFlag);
 			question.setSkip(questionSkip);
 			question.setSkipFlag(skipFlag);
+			question.setResOpenFlag(resOpenFlag);
 			
 			if (questionType == 7) {
 				if (questionObj.get("sliderLogicPoint") != null && questionLogic == 1) {
@@ -1653,6 +1655,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		data.put("usersCnt"     , survey.getTotalUser());
 		data.put("respondentCnt", totalRespondents);
 		data.put("title"        , survey.getTitle());
+		data.put("isCreator"	, survey.getCreatorId().equals(userInfo.getId()) ? 1 : 0);
 		
 		result.put("data", data);
 		result.put("status", "ok");

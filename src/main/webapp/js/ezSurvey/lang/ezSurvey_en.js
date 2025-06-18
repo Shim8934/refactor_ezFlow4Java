@@ -200,5 +200,8 @@ var SurveyMessages = {
 	strDelEnd : "Your response has been deleted.",
 	strEndSurv01 : "Would you like to end the survey?",
 	strEndSurv02 : "The survey has been closed.",
-	strEndSurv03 : "This survey has been closed and can no longer be answered. The window will now close."
+	strEndSurv03 : "This survey has been closed and can no longer be answered. The window will now close.",
+	strResOpen01 : "Private Result",
+	strResOpen02 : "Only the creator or admins can view the result if set to private.",
+	strResOpen03 : "This result is private. Only the creator or admins can view it."
 }

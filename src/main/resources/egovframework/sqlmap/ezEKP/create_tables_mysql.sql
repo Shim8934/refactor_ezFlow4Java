@@ -12117,6 +12117,7 @@ CREATE TABLE `tbl_survey_question` (
   `unit` bigint(20) DEFAULT -1 COMMENT '슬라이드 질문의 단위',
   `company_id` varchar(80) NOT NULL COMMENT '컴퍼니 아이디',
   `tenant_id` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
+  `res_open_flag` tinyint(4) DEFAULT 0 COMMENT '질문결과 공개여부',
   PRIMARY KEY (`question_id`,`company_id`,`tenant_id`),
   KEY `FK_SURVEY_QUESTION_idx` (`survey_id`),
   CONSTRAINT `FK_SURVEY_QUESTION` FOREIGN KEY (`survey_id`) REFERENCES `tbl_survey` (`survey_id`) ON DELETE CASCADE ON UPDATE CASCADE

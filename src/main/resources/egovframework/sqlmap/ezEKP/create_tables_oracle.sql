@@ -7235,7 +7235,8 @@ CREATE TABLE "TBL_CAR_FORM" (
 	"SKIP_NUM" NUMBER(11,0) DEFAULT -1, 
 	"UNIT" NUMBER(20,0) DEFAULT -1, 
 	"COMPANY_ID" VARCHAR2(80 BYTE), 
-	"TENANT_ID" NUMBER(5,0)
+	"TENANT_ID" NUMBER(5,0),
+    "RES_OPEN_FLAG" NUMBER(4,0) DEFAULT 0
    ) ;
 --------------------------------------------------------
 --  DDL for Table TBL_SURVEY_RESPONDENT

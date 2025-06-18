@@ -8,7 +8,7 @@ var SurveyCreate     = function() {
 	var lastScrollY  = 0;
 	var scrolled     = true;
 	var questionFile = new SurveyFile("images");
-	var config       = {modify : "modify", required : "required", action : "action",}
+	var config       = {modify : "modify", required : "required", action : "action", resOpenFlag : "resOpenFlag"}
 	var downloadMode = false;
 	// 로직 설정 단계를 건너뛰었는가 여부, 확인 클릭시 Y로 변경
 	var skipLogic    = 'N';
@@ -666,6 +666,7 @@ var SurveyCreate     = function() {
 						var id = level + 1;
 						if ($("#imptt" + id).length != 0) {
 							qstn['required'] = 0;
+							qstn['resOpenFlag'] = 0;
 						}
 					}
 					
@@ -1403,6 +1404,7 @@ var SurveyCreate     = function() {
 		var imgQstUl        = $("<ul class='imgQstUl'></ul>");
 		var imgQuestionFile = $("<input type='file' class='imgQuestionFile' accept='/*'/>");
 		var changeQstTextBtn = $("<input type='button' class='changeQstText' value='" + SurveyMessages.strQuestionImageDel + "'/>");
+		var divResOpenFlag  = $("<div class='resOpenFlag' style='display: none;' title='" + SurveyMessages.strResOpen02 + "'><input type='checkbox'><label>" + SurveyMessages.strResOpen01 + "</label></div>");
 		if (qstImgTitle) {
 			imgQuestionInfo.removeClass("noImg");
 			imgQstUl.append(makeImgTitle(question.imgTitle));
@@ -1420,6 +1422,7 @@ var SurveyCreate     = function() {
 		qstnRow.append(questnTitle);
 		qstnRow.append(changeQstTextBtn);
 		qstnRow.append(divRequired);
+		qstnRow.append(divResOpenFlag);
 		qstnRow.append(ulToolTip);
 		qstnRow.append(selectBox);
 		quesDiv.append(qstnRow);
@@ -1481,6 +1484,7 @@ var SurveyCreate     = function() {
 			var qstnObj = SurveyCreate.getQs();
 			checkResult[config["action"]]   = config["modify"];
 			checkResult[config["required"]] = qstnObj[thisId - 1].required;
+			checkResult[config["resOpenFlag"]] = qstnObj[thisId - 1].resOpenFlag;
 		}
 		
 		return checkResult;
@@ -1501,7 +1505,8 @@ var SurveyCreate     = function() {
 		QuestionForm.append(slt);
 		QuestionForm.append(addtional);
 		grandParent.append(QuestionForm);
-		
+
+		updateResOpenFlagDisplay(grandParent, "none");
 	}
 	
 	// 셀렉트 박스 선택시 만들어지는 질문 폼 행렬 질문 생성
@@ -1513,12 +1518,14 @@ var SurveyCreate     = function() {
 		QuestionForm.append(mtr);
 		QuestionForm.append(addtional);
 		grandParent.append(QuestionForm);
+
+		updateResOpenFlagDisplay(grandParent, "none");
 	}
 	
 	// 버튼 이벤트
 	function addOptEvent() {
 		// question required button click
-		$(".quesBacgr").on("click", ".required", function() {
+		$(".quesBacgr").on("click", ".required, .resOpenFlag", function() {
 			var inputElmt = this.querySelector("input[type='checkbox']");
 			var crrState  = inputElmt.checked;
 			inputElmt.checked = crrState ? false : true;
@@ -2370,8 +2377,8 @@ var SurveyCreate     = function() {
 		var additional    = "";
 		var questionForm  = makeQuestionForm(qstType);
 		var hiddenWrapeer = qstnWrapper.next();
-		
-		handleRequiredQuestion(hiddenWrapeer, question.required);
+
+		handleQuestionCheckOptions(hiddenWrapeer, question, qstType);
 		
 		switch(parseInt(qstType)) {
 			case 1  :
@@ -2400,10 +2407,16 @@ var SurveyCreate     = function() {
 		
 	}
 	
-	function handleRequiredQuestion(qstnWrapper, required) {
+	function handleQuestionCheckOptions(qstnWrapper, question, qType) {
 		var qstnArea      = qstnWrapper.find(".quesDiv");
 		var inputElmt     = qstnArea.find(".required").find("input[type='checkbox']")[0];
-		inputElmt.checked = required ? true : false;
+		inputElmt.checked = question.required ? true : false;
+		
+		if (qType == 5 || qType == 6) { /* 2025-06-18 양지혜 - 주관식 항목은 결과비공개 옵션 표출 */
+			updateResOpenFlagDisplay(qstnWrapper, "");
+			var inputElmt2     = qstnArea.find(".resOpenFlag").find("input[type='checkbox']")[0];
+			inputElmt2.checked = question.resOpenFlag ? true : false;
+		}
 	}
 	
 	// 수정시 새로 생성하는 선택질문
@@ -2850,6 +2863,8 @@ var SurveyCreate     = function() {
 		question["type"]     = parseInt(qstnType);
 		var rqrd             = qstnArea.find(".required").find("input[type='checkbox']");
 		question[config["required"]] = rqrd.is(":checked") == true ? 1 : 0;
+		var resYN			 = qstnArea.find(".resOpenFlag").find("input[type='checkbox']");
+		question[config["resOpenFlag"]] = resYN.is(":checked") == true ? 1 : 0;
 		
 		//Check question attach files
 		var qstnFObj = qstnArea.find(".qstnFileInfo")[0].querySelector("li");
@@ -3089,6 +3104,7 @@ var SurveyCreate     = function() {
 		var content        = question.content;
 		var qstnType       = question.type;
 		var required       = question.required;
+		var resOpenFlag    = question.resOpenFlag;
 		var qstnAtt        = question.attach;
 		var imgTitle       = question.imgTitle;
 		var wrapDiv        = document.createElement("div");
@@ -3124,6 +3140,15 @@ var SurveyCreate     = function() {
 			strongElmt.className   = "imptt";
 			strongElmt.textContent = "*";
 			divHeader.appendChild(strongElmt);
+		}
+		
+		if (resOpenFlag == 1) {
+			var lckIcon			 = document.createElement("img");
+			lckIcon.src			 = "/images/lock_icon.png";
+			var spanElmt         = document.createElement("span");
+			spanElmt.className   = "imptt";
+			spanElmt.appendChild(lckIcon);			
+			divHeader.appendChild(spanElmt);
 		}
 		
 		if (!imgTitle) {
@@ -3624,6 +3649,11 @@ var SurveyCreate     = function() {
 	function makeQuestionForm(questionType) {return $("<div class='qstnForm' questionType='" + questionType + "'>");}
 	
 	function makeTextQuestion(mainDivElmt, questionType, type, checkResult) {
+		updateResOpenFlagDisplay(mainDivElmt, "");
+		if (questionType != mainDivElmt.children(".qstnForm").attr("questiontype")) {
+			mainDivElmt.find(".resOpenFlag").find("input[type='checkbox']")[0].checked = false;
+		}
+		
 		var questionForm = makeQuestionForm(questionType);
 		var textQs = handleModifyTextQuesion(type, "make");
 		var addtional = mkAddtionalPart(checkResult[config["action"]]);
@@ -3641,6 +3671,8 @@ var SurveyCreate     = function() {
 		questionForm.append(slider);
 		questionForm.append(addtional);
 		mainDivElmt.append(questionForm);
+		
+		updateResOpenFlagDisplay(mainDivElmt, "none");
 	}
 	
 	function makeRankingQuestion(mainDivElmt, questionType, checkResult) {
@@ -3650,6 +3682,8 @@ var SurveyCreate     = function() {
 		questionForm.append(raking);
 		questionForm.append(addtional);
 		mainDivElmt.append(questionForm);
+		
+		updateResOpenFlagDisplay(mainDivElmt, "none");
 	}
 	
 	function makeDropdownQuestion(mainDivElmt, questionType, checkResult) {
@@ -3658,7 +3692,9 @@ var SurveyCreate     = function() {
 		var addtional    = mkAddtionalPart(checkResult[config["action"]]);
 		questionForm.append(drdw);
 		questionForm.append(addtional);
-		mainDivElmt.append(questionForm);
+		mainDivElmt.append(questionForm)
+		
+		updateResOpenFlagDisplay(mainDivElmt, "none");
 	}
 	
 	function makeScheduleQuestion(mainDivElmt, questionType, checkResult) {
@@ -3668,7 +3704,19 @@ var SurveyCreate     = function() {
 		questionForm.append(schedule);
 		questionForm.append(addtional);
 		mainDivElmt.append(questionForm);
+		
 		addScheduleInputEvents();
+		updateResOpenFlagDisplay(mainDivElmt, "none");
+	}
+
+	/* 2025-06-18 양지혜 - 결과비공개 옵션 표출 */
+	function updateResOpenFlagDisplay(mainDivElmt, val) {
+		var resOpenFlagEle = mainDivElmt.children(".quesDiv").children(".qstnRow").children(".resOpenFlag");
+		resOpenFlagEle.css("display" , val);
+
+		if (val === "none") {
+			resOpenFlagEle.find("input[type='checkbox']")[0].checked = false;
+		}
 	}
 	
 	function getAttachFileInfo(elmtObj) {
@@ -3769,6 +3817,7 @@ var SurveyCreate     = function() {
 		var content         = question.content;
 		var qstnType        = question.type;
 		var required        = question.required;
+		var resOpenFlag     = question.resOpenFlag;
 		var qstnAtt         = question.attach;
 		var imgTitle        = question.imgTitle;
 		var prevQsContent   = $("<div class='prevQsContent'></div>");
@@ -3778,6 +3827,10 @@ var SurveyCreate     = function() {
 		var qstnHeader      = "";
 		var questionAttach  = "";
 		var imptt           = required == 1 ? "<strong class='imptt'>*</strong>" : "";
+		
+		if(resOpenFlag == 1) {
+			imptt += "<span class='imptt'><img src='/images/lock_icon.png'></span>";
+		}
 		
 		if (imgTitle) {
 			var span         = document.createElement("span");

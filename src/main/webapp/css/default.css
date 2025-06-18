@@ -3407,6 +3407,12 @@ input::-ms-clear {display: none;}
 .required input[type="checkbox"] + label::before{content: ' '; display: inline-block;width:16px; height:14px; background:url(/images/ezSurvey/srvyBg_check.png); vertical-align:middle; margin:-2px 5px 0px 0px; cursor:pointer;}
 .required input[type="checkbox"]:checked + label::before {background:url(/images/ezSurvey/srvyBg_check.png) 16px 0px;}
 
+/* resOpenFlag checkbox label*/
+.resOpenFlag{margin:0px 10px 0px 0px; padding:0px;}
+.resOpenFlag input[type="checkbox"] {display:none;}.required label{cursor:pointer;}
+.resOpenFlag input[type="checkbox"] + label::before{content: ' '; display: inline-block;width:16px; height:14px; background:url(/images/ezSurvey/srvyBg_check.png); vertical-align:middle; margin:-2px 5px 0px 0px; cursor:pointer;}
+.resOpenFlag input[type="checkbox"]:checked + label::before {background:url(/images/ezSurvey/srvyBg_check.png) 16px 0px;}
+
 /* 수정, 취소 버튼 */
 .survey_qsbtn{overflow:hidden; margin:20px 0px 10px 0px; padding:0px; height:40px;}
 .survey_qsbtn li{display:inline-block; width:65px; height:38px; line-height:38px; margin:0px 3px 0px 0px; padding:0px; color:#393939; font-size:12px; font-weight:bold; border:1px solid #c7c7c7; cursor:pointer; border-radius: 3px;}
