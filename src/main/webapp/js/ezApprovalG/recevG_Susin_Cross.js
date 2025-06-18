@@ -591,7 +591,8 @@ function SGetDraftAprLineInfo(ret) {
         }
 
         LastSignSN = OrderType.length;
-
+        
+        CurAprType = OrderType[1];
         for (i = 1; i < OrderType.length; i++) {
             if (OrderType[i] == strAprType1 || OrderType[i] == strAprType4 || OrderType[i] == strAprType3 || OrderType[i] == strAprType40) {
                 LastSignSN = i;
