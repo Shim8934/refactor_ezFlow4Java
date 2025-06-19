@@ -21399,6 +21399,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 					
 					ezApprovalGDAO.deleteHesongExpAprLine(map);
 					ezApprovalGDAO.deleteHesongAprLineInfo(map);
+                    ezApprovalGDAO.deleteSignCheck(map);
 					
 					subSQL = updateSusinResult(orgDocID, docID, deptID, userID, "H", userName, userName2, orgCompanyID, tenantID);
 					
@@ -21432,6 +21433,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 				
 				ezApprovalGDAO.deleteHesongExpAprLine(map);
 				ezApprovalGDAO.deleteHesongAprLineInfo(map);
+                ezApprovalGDAO.deleteSignCheck(map);
 				
 				subSQL = updateSusinResult(orgDocID, docID, deptID, userID, "H", userName, userName2, orgCompanyID, tenantID);
 				
@@ -21593,6 +21595,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 				
 				ezApprovalGDAO.aprDeleteDocInfo(map);
 				ezApprovalGDAO.deleteApprLineInfo(map);
+                ezApprovalGDAO.deleteSignCheck(map);
 				
 				subSQL = updateSusinResult(orgDocID, docID, deptID, userID, "H", userName, userName2, companyID, tenantID);
 				
@@ -21635,6 +21638,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 					
 					ezApprovalGDAO.aprDeleteDocInfo(map);
 					ezApprovalGDAO.deleteApprLineInfo(map);
+                    ezApprovalGDAO.deleteSignCheck(map);
 				} else {
 					return "<RESULT>FALSE</RESULT>"; 
 				}
