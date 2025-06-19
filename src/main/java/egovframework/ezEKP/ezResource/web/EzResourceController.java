@@ -3229,8 +3229,6 @@ public class EzResourceController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezResource/resFavoriteManage.do", method = RequestMethod.GET, produces = "text/xml; charset=utf-8")
 	public String favoriteManage(@CookieValue("loginCookie") String loginCookie, @RequestParam(required = false) String brdId, Model model) throws Exception {
 		logger.debug("favoriteManage start, brdId=" + brdId);
-
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		model.addAttribute("brdId", brdId);
 		model.addAttribute("lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
