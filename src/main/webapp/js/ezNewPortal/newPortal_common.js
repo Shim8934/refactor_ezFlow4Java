@@ -1297,9 +1297,9 @@ function quickMenuOpen(menu) {
 			var height = window.screen.availHeight;
 			var width = window.screen.availWidth;
 			var top = (height - 670) / 2;
-			var left = (width - 750) / 2;
+			var left = (width - 880) / 2;
 			url = '/ezPersonal/personSearch.do';
-			option = 'height=670px,width=750px,top=' + top + ',left = ' + left + ',status = no, toolbar=no, menubar=no, location=no, resizable=0';
+			option = 'height=670px,width=880px,top=' + top + ',left = ' + left + ',status = no, toolbar=no, menubar=no, location=no, resizable=0';
 	    	break;
 	    case "Community":
 	    	url = "/ezCommunity/communityMain.do";

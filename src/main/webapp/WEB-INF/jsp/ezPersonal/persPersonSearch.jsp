@@ -454,6 +454,7 @@
 	                	pDisplayName += M_TR.getAttribute("_DATA4") == "" ? "" : M_TR.getAttribute("_DATA4");
 	                	pDisplayName += M_TR.getAttribute("_DATA6") == "" ? "" : "[" + M_TR.getAttribute("_DATA6") + "]";
 	                	Sub_TD1.innerHTML = pDisplayName;
+	                	Sub_TD1.title = pDisplayName;
 	                	Sub_TR1.appendChild(Sub_TD1);
 
 	                	var Sub_TR2 = document.createElement("TR");
@@ -466,6 +467,7 @@
 						</c:if>
 	                	Sub_TD2.style.textAlign = "left";
 	                	Sub_TD2.innerHTML = descriptionValue;
+	                	Sub_TD2.title = descriptionValue;
 	                	Sub_TR2.appendChild(Sub_TD2);
 
 	                	var Sub_TR3 = document.createElement("TR");
@@ -476,6 +478,7 @@
 	                	Sub_TD3_Img.setAttribute("src", "/images/OrganTree/icon_hp.gif");
 	                	Sub_TD3.appendChild(Sub_TD3_Img);
 	                	Sub_TD3.innerHTML += M_TR.getAttribute("_DATA8") == "" ? " - " : M_TR.getAttribute("_DATA8");
+	                	Sub_TD3.title = M_TR.getAttribute("_DATA8") == "" ? " - " : M_TR.getAttribute("_DATA8");
 	                	Sub_TR3.appendChild(Sub_TD3);
 
 	                	var Sub_TR4 = document.createElement("TR");
@@ -486,6 +489,7 @@
 	                	Sub_TD4_Img.setAttribute("src", "/images/OrganTree/icon_mail.gif");
 	                	Sub_TD4.appendChild(Sub_TD4_Img);
 	                	Sub_TD4.innerHTML += M_TR.getAttribute("_DATA3")
+	                	Sub_TD4.title = M_TR.getAttribute("_DATA3")
 	                	Sub_TR4.appendChild(Sub_TD4);
 
 	                	M_TR_TDS_Table.appendChild(Sub_TR1);
@@ -525,6 +529,7 @@
 	                    	M_TR_TD1.style.whiteSpace = "nowrap";
 	                    	M_TR_TD1.style.width = "110px";
 	                    	M_TR_TD1.innerHTML = M_TR.getAttribute("_DATA5");
+	                    	M_TR_TD1.title = M_TR.getAttribute("_DATA5");
 
 		                    var M_TR_TD2 = document.createElement("TD");
 		                    M_TR_TD2.style.overflow = "hidden";
@@ -533,6 +538,7 @@
 	            	        M_TR_TD2.style.width = "90px";
 	                    	
 	                        M_TR_TD2.innerHTML = M_TR.getAttribute("_DATA4");
+	                        M_TR_TD2.title = M_TR.getAttribute("_DATA4");
 
 	                    	var M_TR_TD3 = document.createElement("TD");
 	                    	
@@ -543,6 +549,7 @@
 	                        
 	                        jobName += M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
 	                        M_TR_TD3.innerHTML = jobName;
+	                        M_TR_TD3.title = jobName;
 	                        M_TR_TD3.style.overflow = "hidden";
 	                        M_TR_TD3.style.textOverflow = "ellipsis";
 	                        M_TR_TD3.style.whiteSpace = "nowrap";
@@ -550,6 +557,7 @@
 
 		                    var M_TR_TD4 = document.createElement("TD");
 							M_TR_TD4.innerHTML = M_TR.getAttribute("_DATA8") == "" ? "" : M_TR.getAttribute("_DATA8");
+							M_TR_TD4.title = M_TR.getAttribute("_DATA8") == "" ? "" : M_TR.getAttribute("_DATA8");
 	                    	M_TR_TD4.style.overflow = "hidden";
 	                    	M_TR_TD4.style.textOverflow = "ellipsis";
 	                    	M_TR_TD4.style.whiteSpace = "nowrap";
@@ -561,6 +569,7 @@
 								companyTd.style.whiteSpace = "nowrap";
 								companyTd.style.width = "110px";
 								companyTd.innerHTML = M_TR.getAttribute("_DATA7");
+								companyTd.title = M_TR.getAttribute("_DATA7");
 								M_TR.appendChild(companyTd);
 							</c:if>
 		                    
@@ -577,9 +586,10 @@
 	                    	M_TR_TD1.style.width = "150px";
 	                    	
 		                    M_TR_TD1.innerHTML = M_TR.getAttribute("_DATA4");
+		                    M_TR_TD1.title = M_TR.getAttribute("_DATA4");
 
 		                    var M_TR_TD2 = document.createElement("TD");
-	    	                M_TR_TD2.style.width = "80px";
+	    	                // M_TR_TD2.style.width = "80px";
 
 	                    	var jobName = "";
 	                        if($(M_TR).attr("_DATA11") == "addJob"){
@@ -588,12 +598,14 @@
 	                        
 	                        jobName += M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
 	                        M_TR_TD2.innerHTML = jobName;
+	                        M_TR_TD2.title = jobName;
 	                        M_TR_TD2.style.overflow = "hidden";
 	                        M_TR_TD2.style.textOverflow = "ellipsis";
 	                        M_TR_TD2.style.whiteSpace = "nowrap";
 
 	            	        var M_TR_TD3 = document.createElement("TD");
 	                	    M_TR_TD3.innerHTML = M_TR.getAttribute("_DATA8") == "" ? "" : M_TR.getAttribute("_DATA8");
+	                	    M_TR_TD3.title = M_TR.getAttribute("_DATA8") == "" ? "" : M_TR.getAttribute("_DATA8");
 	                        M_TR_TD3.style.overflow = "hidden";
 	                        M_TR_TD3.style.textOverflow = "ellipsis";
 	                        M_TR_TD3.style.whiteSpace = "nowrap";
@@ -605,6 +617,7 @@
 								M_TR_DEPT_TD.style.whiteSpace = "nowrap";
 								M_TR_DEPT_TD.style.width = "110px";
 								M_TR_DEPT_TD.innerHTML = M_TR.getAttribute("_DATA5");
+								M_TR_DEPT_TD.title = M_TR.getAttribute("_DATA5");
 								
 			                    M_TR.appendChild(M_TR_DEPT_TD);
 							}
@@ -1298,7 +1311,7 @@
 	        }
 		</script>
 	</head>
-	<body class="popup" style="overflow: auto; width: fit-content; min-width: 720px;">
+	<body class="popup" style="overflow: auto; width: fit-content; min-width: 850px;">
 		<div id="normalScreen">
   			<div id="menu">
     			<ul>
@@ -1384,8 +1397,8 @@
               				<tr>
               					<td style="width:110px;color:#333;background-color: #f8f8fa" class="td_gray txtlist_DeptTD none"><spring:message code='ezPersonal.t305'/></td>
                   				<td style="width:110px;color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezPersonal.t304'/></td>
-                  				<td style="width:80px;color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezPersonal.t69'/></td>
-                  				<td class="td_gray" style="color:#333;background-color: #f8f8fa"><spring:message code='ezPersonal.t177'/></td>
+                  				<td style="color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezPersonal.t69'/></td>
+                  				<td class="td_gray" style="width:100px;color:#333;background-color: #f8f8fa"><spring:message code='ezPersonal.t177'/></td>
               				</tr>
           				</table>
           				<table style="width:100%;border:1px solid #ddd;display:none;" id="Search_txtlist_table" class="mainlist" > 
@@ -1395,8 +1408,8 @@
 								</c:if>
                   				<td style="width:130px;color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezPersonal.t305'/></td>
                   				<td style="width:90px;color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezPersonal.t304'/></td>
-                  				<td style="width:90px;color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezPersonal.t69'/></td>
-                  				<td class="td_gray" style="color:#333;background-color: #f8f8fa"><spring:message code='ezPersonal.t177'/></td>
+                  				<td style="color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezPersonal.t69'/></td>
+                  				<td class="td_gray" style="width:100px;color:#333;background-color: #f8f8fa"><spring:message code='ezPersonal.t177'/></td>
               				</tr>
           				</table>
           			</div>
@@ -1414,8 +1427,8 @@
 			<table style="width:100%;height:auto;border:1px solid #ddd;display:none;" id="Print_txtlist_table" class="mainlist" > 
 				<tr>
                   	<td style="width:150px;font-weight:bold;" class="td_gray"><spring:message code='ezPersonal.t304'/></td>
-                  	<td style="width:80px;font-weight:bold;" class="td_gray"><spring:message code='ezPersonal.t69'/></td>
-                  	<td class="td_gray" style="font-weight:bold;"><spring:message code='ezPersonal.t177'/></td>
+                  	<td style="font-weight:bold;" class="td_gray"><spring:message code='ezPersonal.t69'/></td>
+                  	<td class="td_gray" style="width:100px;font-weight:bold;"><spring:message code='ezPersonal.t177'/></td>
               </tr>
           	</table>
           	<table style="width:100%;height:auto; border:1px solid #ddd;display:none;" id="Print_Search_txtlist_table" class="mainlist" > 
@@ -1425,8 +1438,8 @@
 					</c:if>
                 	<td style="width:110px;font-weight:bold;" class="td_gray"><spring:message code='ezPersonal.t305'/></td>
 					<td style="width:90px;font-weight:bold;" class="td_gray"><spring:message code='ezPersonal.t304'/></td>
-                  	<td style="width:80px;font-weight:bold;" class="td_gray"><spring:message code='ezPersonal.t69'/></td>
-                  	<td class="td_gray" style="font-weight:bold;"><spring:message code='ezPersonal.t177'/></td>
+                  	<td style="font-weight:bold;" class="td_gray"><spring:message code='ezPersonal.t69'/></td>
+                  	<td class="td_gray" style="width:100px;font-weight:bold;"><spring:message code='ezPersonal.t177'/></td>
               	</tr>
           	</table>
 		  	<div style="vertical-align:top;text-align:center;height:auto;display:none;width:425px;" id="Print_DeptUserImgList"></div>

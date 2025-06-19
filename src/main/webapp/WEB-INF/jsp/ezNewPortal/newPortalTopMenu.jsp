@@ -539,9 +539,9 @@
 			var height = window.screen.availHeight;
 			var width = window.screen.availWidth;
 			var top = (height - 670) / 2;
-			var left = (width - 750) / 2;
+			var left = (width - 880) / 2;
 			var url = '/ezPersonal/personSearch.do';
-			var option = 'height=670px,width=750px,top=' + top + ',left = ' + left + ',status = no, toolbar=no, menubar=no, location=no, resizable=0';
+			var option = 'height=670px,width=880px,top=' + top + ',left = ' + left + ',status = no, toolbar=no, menubar=no, location=no, resizable=0';
 			
 			window.open(url, "", option);
 		}
@@ -552,7 +552,7 @@
 			if('${roleInfo}' === 'admin') {
 				setEvent('util_admin', '${utilAdminUrl}', '' ,'');	
 			}
-			setEvent('util_employee_search', '/ezPersonal/personSearch.do', '' ,'height=670px,width=750px,top=' + (window.screen.availHeight - 670)/2 + ',left= ' + (window.screen.availWidth - 750) / 2 + ',status = no, toolbar=no, menubar=no,location=no, resizable=0');
+			setEvent('util_employee_search', '/ezPersonal/personSearch.do', '' ,'height=670px,width=880px,top=' + (window.screen.availHeight - 670)/2 + ',left= ' + (window.screen.availWidth - 880) / 2 + ',status = no, toolbar=no, menubar=no,location=no, resizable=0');
 			//document.getElementById("util_employee_search").addEventListener('click', employeeSearch );
 			setEvent('util_set', '/ezPortal/environmentMain.do', 'main' ,'');
 			//setEvent('util_help', '/ezPortal/help/help.do', 'helpWindow', 'height=700px,width=1000px, status = no, toolbar=no, menubar=no, location=no, resizable=0');

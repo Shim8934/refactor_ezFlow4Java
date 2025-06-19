@@ -1403,7 +1403,7 @@ form{display:inline;margin:0}
 
 
 /* pagenavi */
-#tblPageRayer {width:100% !important}
+#tblPageRayer {width:100% !important; height: 45px;}
 .popup_pagenavi {border-top:1px solid #c8c8c8;}
 .pagenavi {float:none; margin: 0px; padding: 10px 0; line-height: normal; text-align: center; overflow:hidden;}
 .pagenavi span{display:inline-block; min-width:25px; height:25px; line-height:23px; margin:0px 2px; padding:0px 5px; border:1px solid #c8c8c8; border-radius:3px; box-sizing:border-box; font-size: 12px; text-align: center; color: #333; cursor: pointer; background-color:#fff; vertical-align:top;}
