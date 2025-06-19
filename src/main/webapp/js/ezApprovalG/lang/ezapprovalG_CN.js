@@ -1219,3 +1219,8 @@ var strLangKm01 = "문서를 회수하였습니다.";
 
 var strLangKMH02 = "您是否要继续进行批量接收？<br>状态为退回的文件、执行文本和协议文本将被排除在对象之外。";
 var strLangKMH03 = "您是否要继续进行批量接收和最终审批？<br>状态为退回的文件、执行文本和协议文本将被排除在对象之外。";
+
+/* 2025-06-19 김유진 -  전자결재 > 열람권한 */
+var strLangKYJ_IsPublic01 = "全部查看";
+var strLangKYJ_IsPublic02 = "部门查看";
+var strLangKYJ_IsPublic03 = "审批线查看";

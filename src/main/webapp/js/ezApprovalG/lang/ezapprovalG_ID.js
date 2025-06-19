@@ -1221,3 +1221,8 @@ var strLangKm01 = "문서를 회수하였습니다.";
 
 var strLangKMH02 = "Apakah Anda ingin melanjutkan penerimaan secara berkelompok? <br>Dokumen yang statusnya diteruskan, dokumen pelaksanaan dan perjanjian dikecualikan dari target.";
 var strLangKMH03 = "Apakah Anda ingin melanjutkan penerimaan secara berkelompok dan persetujuan akhir? <br>Dokumen yang statusnya diteruskan, dokumen pelaksanaan dan perjanjian dikecualikan dari target.";
+
+/* 2025-06-19 김유진 -  전자결재 > 열람권한 */
+var strLangKYJ_IsPublic01 = "Lihat Semua";
+var strLangKYJ_IsPublic02 = "Lihat Departemen";
+var strLangKYJ_IsPublic03 = "Lihat Jalur Persetujuan";

@@ -183,9 +183,11 @@ function InitClassInfo() {
         }
         
         if (SelectSingleNodeValue(clsInfo, "PUBLICCODE2") == "N") {
-        	InsValueIntoTD(tdPublicYn, strLang84 );
+        	InsValueIntoTD(tdPublicYn, strLangKYJ_IsPublic03 );
+        } else if (SelectSingleNodeValue(clsInfo, "PUBLICCODE2") == "B") {
+            InsValueIntoTD(tdPublicYn, strLangKYJ_IsPublic02 );
         } else {
-        	InsValueIntoTD(tdPublicYn, strLang82 );
+        	InsValueIntoTD(tdPublicYn, strLangKYJ_IsPublic01 );
         }
         InsValueIntoTD(tdLimit, SelectSingleNodeValue(clsInfo, "LIMITRANGE"));
 

@@ -1221,3 +1221,8 @@ var strLangKm01 = "문서를 회수하였습니다.";
 
 var strLangKMH02 = "일괄접수를 진행하시겠습니까?<br>상태가 회송인 문서, 시행문과 합의문 문서는<br>대상에서 제외됩니다.";
 var strLangKMH03 = "일괄접수자전결을 진행하시겠습니까?<br>상태가 회송인 문서, 시행문과 합의문 문서는<br>대상에서 제외됩니다.";
+
+/* 2025-06-19 김유진 -  전자결재 > 열람권한 */
+var strLangKYJ_IsPublic01 = "전체 열람";
+var strLangKYJ_IsPublic02 = "부서 열람";
+var strLangKYJ_IsPublic03 = "결재선 열람";

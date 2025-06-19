@@ -1220,3 +1220,8 @@ var strLangKm01 = "문서를 회수하였습니다.";
 
 var strLangKMH02 = "Bạn có muốn tiếp tục nộp đơn hàng loạt không? <br>Các tài liệu có trạng thái gửi, văn bản thực hiện và thỏa thuận sẽ bị loại trừ khỏi đối tượng.";
 var strLangKMH03 = "Bạn có muốn tiếp tục nộp đơn hàng loạt và phê duyệt cuối cùng không? <br>Các tài liệu có trạng thái gửi, văn bản thực hiện và thỏa thuận sẽ bị loại trừ khỏi đối tượng.";
+
+/* 2025-06-19 김유진 -  전자결재 > 열람권한 */
+var strLangKYJ_IsPublic01 = "Xem tất cả";
+var strLangKYJ_IsPublic02 = "Xem phòng ban";
+var strLangKYJ_IsPublic03 = "Xem tuyến phê duyệt";

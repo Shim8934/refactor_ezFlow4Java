@@ -1220,3 +1220,9 @@ var strLangKm01 = "The document has been retrieved.";
 
 var strLangKMH02 = "Would you like to proceed with batch submission? <br>Documents with forwarding status, implementation statements, and agreements are excluded.";
 var strLangKMH03 = "Would you like to proceed with batch submission and final approval? <br>Documents with forwarding status, implementation statements, and agreements are excluded.";
+
+
+/* 2025-06-19 김유진 -  전자결재 > 열람권한 */
+var strLangKYJ_IsPublic01 = "View All";
+var strLangKYJ_IsPublic02 = "View Department";
+var strLangKYJ_IsPublic03 = "View Approval Line";
