@@ -46,6 +46,19 @@
 			#txtContent h4 {font-size:1em; margin-top:1.33em; margin-bottom:1.33em;}
 			#txtContent h5 {font-size:0.83em; margin-top:1.67em; margin-bottom:1.67em;}
 			#txtContent h6 {font-size:0.67em; margin-top:2.33em; margin-bottom:2.33em;}
+			
+			/* 줌 버튼 */
+            .zoom_btn_p{margin-top:1%; margin-left:1%; touch-action: none; display:flex;}
+            .zoom_btn_p span{
+            display:inline-block; width:50px; height:50px; border:1px solid #d2d2d2; background-repeat:no-repeat; background-position:center; background-color:#f8f8fa; cursor:pointer; background-size:55%; text-indent:-9999px; overflow:hidden;}
+            .zoom_btn_p span.zoom_in_p{border-radius:8px 0 0 8px; background-image:url(../images/zoom_in.svg?v=1);}
+            .zoom_btn_p span.zoom_out_p{border-radius:0 8px 8px 0; background-image:url(../images/zoom_out.svg?v=1);}
+            
+            .zoom_btn_p span:hover{border:1px solid #388CE5;}
+            .zoom_btn_p span.zoom_in_p:hover{background-image:url(../images/zoom_in_hover.svg?v=1);}
+            .zoom_btn_p span.zoom_out_p:hover{background-image:url(../images/zoom_out_hover.svg?v=1);}
+            
+            .zoom_btn.drag span{cursor:grabbing;}
 	    </style>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -60,12 +73,14 @@
 		<script type="text/javascript" src="${util.addVer('/js/rsa/rng.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/rsa/rsa.js')}"></script>
 		<script  type="text/javascript">
-	        var nowZoom = 100;
-	        var maxZoom = 200;
-	        var minZoom = 80;
-	        var MozNowZoom = 1;
-	        var MozMaxZoom = 2;
-	        var MozMinZoom = 0.8;
+	        <%--본문 확대/축소 관련--%>
+            var nowZoom = parseInt("<c:out value='${contentSize}'/>"); // 사용자 설정 본문크기값
+            var maxZoom = 200;
+            var minZoom = 100;
+    
+            var MozNowZoom = parseInt("<c:out value='${mozContentSize}'/>"); // 사용자 설정 본문크기값
+            var MozMaxZoom = 2;
+            var MozMinZoom = 1;
 	
 	        var strLang1 = "<spring:message code='ezBoard.t10025'/>";
 	        var strLang2 = "<spring:message code='ezBoard.t10023'/>";
@@ -73,7 +88,7 @@
 	        
 	        var OneLineReplyFlag = "${OneLineReplyFlag}";
 			var isLikeChecked = "<c:out value='${isLikeChecked}'/>";
-			var likeFlag = "<c:out value='${boardInfo.likeFlag}'/>";
+			 var likeFlag = "<c:out value='${boardInfo.likeFlag}'/>";
 			var likeCount = "<c:out value='${likeCount}'/>";
 			var isDisLikeChecked = "<c:out value='${isDisLikeChecked}'/>";
 			var disLikeFlag = "<c:out value='${boardInfo.disLikeFlag}'/>";
@@ -141,6 +156,13 @@
 	            if (OneLineReplyFlag == "2") {
 	            	getBoardComment();
 	            }
+	            
+	            // 사용자가 설정한 본문크기값으로 세팅 (원글)
+                if (navigator.userAgent.indexOf('Firefox') != -1) {
+                    document.getElementById("txtContent").style.MozTransform = "scale(" + MozNowZoom + ")";
+                } else {
+                    document.getElementById("txtContent").style.zoom = nowZoom + "%";
+                }
 	        };
 	        
 	        /* 2019-11-07 홍승비 - 댓글삭제 레이어팝업 스크롤 위치 관련 */
@@ -174,8 +196,8 @@
 	                } else {
 	                    return;
 	                }
-	                document.getElementById("divContent").style.MozTransform = "scale(" + MozNowZoom + ")";
-	                document.getElementById("divContent").style.MozTransformOrigin = "0 0";
+	                document.getElementById("txtContent").style.MozTransform = "scale(" + MozNowZoom + ")";
+	                document.getElementById("txtContent").style.MozTransformOrigin = "0 0";
 	            }
 	            else {
 	                if (nowZoom < maxZoom) {
@@ -183,7 +205,7 @@
 	                } else {
 	                    return;
 	                }
-	                document.getElementById("divContent").style.zoom = nowZoom + "%";
+	                document.getElementById("txtContent").style.zoom = nowZoom + "%";
 	            }
 	        }
 	
@@ -194,8 +216,8 @@
 	                } else {
 	                    return;
 	                }
-	                document.getElementById("divContent").style.MozTransform = "scale(" + MozNowZoom + ")";
-	                document.getElementById("divContent").style.MozTransformOrigin = "0 0";
+	                document.getElementById("txtContent").style.MozTransform = "scale(" + MozNowZoom + ")";
+	                document.getElementById("txtContent").style.MozTransformOrigin = "0 0";
 	            }
 	            else {
 	                if (nowZoom > minZoom) {
@@ -203,23 +225,15 @@
 	                } else {
 	                    return;
 	                }
-	                document.getElementById("divContent").style.zoom = nowZoom + "%";
+	                document.getElementById("txtContent").style.zoom = nowZoom + "%";
 	            }
 	        }
 	
 	        function makeWriteContent(responseText, AttachText) {
 	            try {
-	                nowZoom = 100;
-	                maxZoom = 200;
-	                minZoom = 80;
-	                MozNowZoom = 1;
-	                MozMaxZoom = 2;
-	                MozMinZoom = 0.8;
 	
 	                document.getElementById("txtContent").style.textAlign = "";
 	                document.getElementById("txtContent").innerHTML = "";
-	                var _img1;
-	                var _img2;
 	                
 	                var xmldom = loadXMLString(AttachText);
 	                var _attchDIV;
@@ -231,28 +245,29 @@
 	                    document.getElementById("txtContent").appendChild(_attchDIV);
 	                }
 	
+	                <%--
+	                var _img1;
+                    var _img2;
 	                _img1 = document.createElement("IMG");
 	                _img1.id = "smallImg";
-	                //_img1.setAttribute("onclick", "Smaller()");
 	                _img1.onclick = function () { Smaller(); };
 	
 	                _img1.style.cursor = "pointer";
 	                _img1.style.margin = "5px 4px 5px 0px";
-	                _img1.src = "/images/minus.png";
+	                _img1.src = "/images/zoom_out.svg?v=1";
 	
 	                _img2 = document.createElement("IMG");
 	                _img2.id = "biglImg";
-	                //_img2.setAttribute("onclick", "Bigger()");
 	                _img2.onclick = function () { Bigger(); };
 	                
 	                
 	                _img2.style.cursor = "pointer";
 	                _img2.style.margin = "5px";
 	                _img2.style.marginLeft = "-4px";
-	                _img2.src = "/images/plus.png";
+	                _img2.src = "/images/zoom_in.svg?v=1";
 	
 	                document.getElementById("txtContent").appendChild(_img1);
-	                document.getElementById("txtContent").appendChild(_img2);
+	                document.getElementById("txtContent").appendChild(_img2);--%>
 	
 	                var _div = document.createElement("DIV");
 	                _div.id = "divContent";
@@ -663,6 +678,10 @@
 	    </script>
 	</head>
 	<body>
+	    <div class="zoom_btn_p">
+            <span class="zoom_in_p" onclick="Bigger()">확대</span>
+            <span class="zoom_out_p" onclick="Smaller()">축소</span>
+        </div>
 		<div id="txtContent" name="txtContent" style="height:100%;margin-left:5px;margin-right:5px;">
 			<span style="margin-top:50px;height:10px;display:inline-block;"></span>
 		</div>

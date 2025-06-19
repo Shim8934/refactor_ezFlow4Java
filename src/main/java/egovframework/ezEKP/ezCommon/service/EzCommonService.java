@@ -610,4 +610,19 @@ public interface EzCommonService {
 	public void insertUseSendOutState() throws Exception;
     
 	public String getMoveItemURL(String type, String gubun, String boardId, String itemId) throws Exception;
+
+    // 2024-09-30 이유정 - 커뮤니티 > 회원등급 추가 (회원테이블 등급컬럼 추가)
+	public void alterTblClubUserGradeColumn() throws Exception;
+
+	// 2024-09-30 이유정 - 커뮤니티 > 회원등급 추가 (커뮤니티테이블 최초가입시 등급, 회원목록 조회등급 컬럼 추가)
+	public void alterTblClubJoinGradeColumn() throws Exception;
+
+	// 2024-09-30 이유정 - 커뮤니티 > 회원등급 테이블 추가
+	public void createTblCommunityGradeTable() throws Exception;
+
+	// 2025-05-30 이유정 - 커뮤니티 > 기존 데이터 회원등급에 맞춰 세팅
+	public void settingCommunityGradeData() throws Exception;
+
+	// 2025-06-16 이혜림 - 게시판 > 본문 크기 컬럼 추가
+	public void addBoardContentSize() throws Exception;
 }

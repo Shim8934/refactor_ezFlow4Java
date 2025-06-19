@@ -4327,6 +4327,21 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		// 2024-10-07 이혜림 - 게시판 > 별점 평가하기 조회
 		Map<String, Object> itemStarRating = ezBoardService.getItemStarRating(itemID, userInfo.getId(), userInfo.getTenantId());
+
+		/* 게시판 환경설정 > 본문크기설정값 적용 */
+		BoardConfigVO boardConfig = ezBoardService.getBoardList_Config(userInfo.getId(), userInfo.getTenantId());
+		int contentSize = 100; // 기본값
+		double mozContentSize = 1; // 기본값
+
+		if (boardConfig != null) { // 사용자 설정값
+			for (int i = 1; i <= 10; i++) {
+				if (boardConfig.getContentSize() == i) {
+					contentSize = 100 + (i * 10);
+					mozContentSize = 1 + (i * 0.1);
+					break;
+				}
+			}
+		}
 		
 		// ai 관련 컨피그 추가
 		// AI 첨부파일 이름 최대 길이 - 기존 첨부파일과 동일한 값 사용
@@ -4384,6 +4399,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("historyModify", request.getParameter("historyModify") == null ? "false" : request.getParameter("historyModify"));
 		model.addAttribute("version", version);
 		model.addAttribute("newestVersionFlag", ezBoardService.checkIsNewestVersion(boardID, itemID, userInfo.getTenantId(), version));
+		model.addAttribute("contentSize", contentSize);
+		model.addAttribute("mozContentSize", mozContentSize);
 		
 		logger.debug("getBoardItemView ended");
         return "ezBoard/boardItemView";
@@ -8127,6 +8144,21 @@ public class EzBoardController extends EgovFileMngUtil{
 		boolean useAI = aICommonUtil.checkUseAI(userInfo.getTenantId());
 		// AI 챗봇 첨부파일 최대용량
 		String aiAttachMBSize = ezCommonService.getTenantConfig("aiAttachMBSize", userInfo.getTenantId());
+
+		/* 게시판 환경설정 > 본문크기설정값 적용 */
+		BoardConfigVO boardConfig = ezBoardService.getBoardList_Config(userInfo.getId(), userInfo.getTenantId());
+		int contentSize = 100; // 기본값
+		double mozContentSize = 1; // 기본값
+
+		if (boardConfig != null) { // 사용자 설정값
+			for (int i = 1; i <= 10; i++) {
+				if (boardConfig.getContentSize() == i) {
+					contentSize = 100 + (i * 10);
+					mozContentSize = 1 + (i * 0.1);
+					break;
+				}
+			}
+		}
 		
 		model.addAttribute("OneLineReplyFlag", OneLineReplyFlag);
 		model.addAttribute("gubun", boardInfo.getGuBun());
@@ -8155,6 +8187,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("useAI", useAI);
 		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
 		model.addAttribute("aiAttachMBSize", aiAttachMBSize);
+		model.addAttribute("contentSize", contentSize);
+		model.addAttribute("mozContentSize", mozContentSize);
 		
 		logger.debug("boardItemPreviewContent ended");
 		return "ezBoard/boardItemPreviewContent";
