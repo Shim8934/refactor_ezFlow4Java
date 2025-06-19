@@ -5300,7 +5300,52 @@
                 A.APRMEMBERID = B.CN
             AND
                 A.TENANT_ID = B.TENANT_ID
-		    WHERE
+            LEFT JOIN (
+                    SELECT
+                        U.PHYSICALDELIVERYOFFICENAME,
+                        U.DEPARTMENT AS DEPTID,
+                        U.TENANT_ID
+                    FROM 
+                        TBL_USERMASTER U
+                    WHERE 
+                        U.EXTENSIONATTRIBUTE1 like '%a=1%'
+                      AND 
+                        U.TENANT_ID = #v_TENANTID#
+                      AND
+                        U.PHYSICALDELIVERYOFFICENAME = #companyID#
+                    union
+                    SELECT
+                        U.PHYSICALDELIVERYOFFICENAME,
+                        AJ.DEPTID AS DEPTID,
+                        U.TENANT_ID
+                    FROM 
+                        TBL_USERMASTER U
+                    LEFT JOIN 
+                        TBL_ADDJOBMASTER AJ
+                    ON 
+                        U.CN = AJ.CN
+                    AND 
+                        U.TENANT_ID = AJ.TENANT_ID
+                <isEqual property="permissionBasisDeptYN" compareValue="Y">
+                    AND
+                        AJ.ROLL_INFO like '%a=1%'
+                </isEqual>
+                <isNotEqual property="permissionBasisDeptYN" compareValue="Y">
+                    AND
+                        U.EXTENSIONATTRIBUTE1 like '%a=1%'
+                </isNotEqual>
+                    WHERE
+                        U.TENANT_ID = #v_TENANTID#
+                    AND 
+                        U.PHYSICALDELIVERYOFFICENAME = #companyID#
+                ) Z
+            ON
+                Z.DEPTID = A.APRMEMBERDEPTID
+            AND
+                Z.PHYSICALDELIVERYOFFICENAME = A.COMPANYID
+            AND
+                Z.TENANT_ID = A.TENANT_ID
+            WHERE
 		     	A.USERID = #v_USERID#
 		    AND
 		     	A.FORMID = #v_FORMID#
@@ -5314,6 +5359,8 @@
 		        (D.DEPT_CD_PATH NOT LIKE '%trash_dept_%' OR D.DEPT_CD_PATH IS NULL)
 		    AND
 		        B.CN IS NULL
+            AND
+                (Z.DEPTID IS NOT NULL OR A.APRMEMBERID != '' OR EXTRECEPTYN = 'Y')
             <isEqual property="approvalFlag" compareValue="G">
                 AND
                     D.EXTENSIONATTRIBUTE11 = 'Y'
@@ -21093,9 +21140,9 @@
                                 B.DEPTID = #upperDeptCode#
                             </isNotEmpty>
 				        </isNotEmpty>
-				   		<isEqual property="v_ISDOCPRINT" compareValue="TRUE" prepend="AND">
-				   			B.SN BETWEEN #iv_PAGESIZE2# AND #iv_PAGESIZE#
-				   		</isEqual>
+<!--				   		<isEqual property="v_ISDOCPRINT" compareValue="TRUE" prepend="AND">-->
+<!--				   			B.SN BETWEEN #iv_PAGESIZE2# AND #iv_PAGESIZE#-->
+<!--				   		</isEqual>-->
 				   		<isNotEmpty property="v_MANAGEDEPTID" prepend="AND">
 				   		 	B.MANAGEDEPTID = #v_MANAGEDEPTID#
 				   		</isNotEmpty>
@@ -21135,7 +21182,9 @@
 				   			ORDER BY 
 				   				B.RECEIPTDATE DESC, B.SN DESC
 				   		</isEmpty>
+                    <isNotEqual property="v_ISDOCPRINT" compareValue="TRUE">
 				   		LIMIT #v_PAGESIZE#
+                    </isNotEqual>
 				   		) A
 					<isNotEmpty property="v_ORDERCOL">
 						ORDER BY
@@ -21152,8 +21201,15 @@
 						ORDER BY 
 							RECEIPTDATE, SN
 					</isEmpty>
+                    <isNotEqual property="v_ISDOCPRINT" compareValue="TRUE">
 			   		LIMIT
 			   			#v_PAGESIZE2#
+                    </isNotEqual>
+                    <isEqual property="v_ISDOCPRINT" compareValue="TRUE">
+                    <![CDATA[
+                        LIMIT #iv_PAGESIZE# OFFSET #iv_PAGESIZE2#
+                    ]]>
+                    </isEqual>
 	</select>
 	
 	<select id="EzApprovalG.getCabinetList" parameterClass="ApprGCabinetListVO" resultClass="ApprGCabinetVO" remapResults="true">

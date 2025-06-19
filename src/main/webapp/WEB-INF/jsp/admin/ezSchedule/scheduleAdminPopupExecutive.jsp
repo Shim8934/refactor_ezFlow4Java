@@ -252,8 +252,10 @@
 		    	<tr>
 					<th style="width: 80px; text-align:center"><spring:message code='ezSchedule.lyj09' /></th>
 					<td>
-						<input id="txtuser" type="text" style="width:84%" onfocus="this.blur();" readonly="readonly">
-						<a class="imgbtn imgbck" id="selectBtn"><span onclick="select_person()"><spring:message code='ezSchedule.t1000' /></span></a>
+						<div style="display: flex; align-items: center; width: 100%;">
+							<input id="txtuser" type="text" style="flex: 1;margin-right:2px;" onfocus="this.blur();" readonly="readonly">
+							<a class="imgbtn imgbck" id="selectBtn"><span onclick="select_person()"><spring:message code='ezSchedule.t1000' /></span></a>
+						</div>
 					</td>
 		        </tr>
 		        <tr>
@@ -272,11 +274,12 @@
 				<tr>
 					<th style="width: 80px; text-align:center"><spring:message code='ezSchedule.t152' /></th>
 					<td>
+						<div style="display: flex; align-items: center; width: 100%;">
 						<c:if test="${cn == ''}">
-							<select name="ListSecretary" id="ListSecretary" style="width:84%;"></select>
+							<select name="ListSecretary" id="ListSecretary" style="flex: 1;margin-right:2px;"></select>
 						</c:if>
 						<c:if test="${cn != ''}">
-							<select name="ListSecretary" id="ListSecretary" style="width:84%;" <c:if test='${selectList eq null || selectList eq "[]"}'> disabled </c:if>>
+							<select name="ListSecretary" id="ListSecretary" style="flex: 1;margin-right:2px;" <c:if test='${selectList eq null || selectList eq "[]"}'> disabled </c:if>>
 								<c:forEach var="item" items="${selectList}">
 									<option value="${item.cn}" name="${item.displayName}" name2="${item.displayName2}" deptname="${item.description}" deptname2="${item.description2}" email="${item.mail}">
 										<c:if test="${lang == 1}">
@@ -290,6 +293,7 @@
 							</select>
 						</c:if>
 						<a class="imgbtn imgbck"><span onclick="ModifySecretary()"><spring:message code='ezSchedule.t1000' /></span></a>
+						</div>
 					</td>
 				</tr>
 		    </table>

@@ -562,7 +562,7 @@
 	<h2 class="h2_dot"><spring:message code="ezEmail.t655" /><span id="mailBoxInfo"></span></h2>
 	    
 	<span id="MailListRayer" style="border: 0px solid blue; width:100%; height: 100%; vertical-align: top; overflow: hidden; display: inline-block;">
-		<div style="width:100%; overflow:AUTO;" id="divList">
+		<div style="width:100%;" id="divList">
 			<div id="lvBoardList"></div>
 		</div>
 		<div id="tblPageRayer" style="text-align:center"></div>
