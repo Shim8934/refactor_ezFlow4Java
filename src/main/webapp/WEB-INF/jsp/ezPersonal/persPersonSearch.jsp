@@ -1298,14 +1298,14 @@
 	        }
 		</script>
 	</head>
-	<body class="popup" style="overflow:hidden;">
+	<body class="popup" style="overflow: auto; width: fit-content; min-width: 720px;">
 		<div id="normalScreen">
   			<div id="menu">
     			<ul>
       				<li><span class="icon16 popup_icon16_print" onClick="Listprint()"></span></li>
     			</ul>
   			</div>
-  			<div id="close">
+  			<div id="close" style="top: 2px;">
     			<ul>
       				<li><span onClick="window.close()"></span></li>
     			</ul>

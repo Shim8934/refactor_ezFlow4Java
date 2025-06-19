@@ -2479,7 +2479,7 @@
 		    }
 	    </script> 
 	</head>
-	<body class="popup" style="overflow: hidden">
+	<body class="popup" style="overflow: auto; width: fit-content; min-width: 400px;">
 	    <xml id="listviewheader" style="display: none;">
 		  <LISTVIEWDATA>
 		    <HEADERS>
@@ -2548,14 +2548,14 @@
 		    </HEADERS>
 		  </LISTVIEWDATA>
 		</xml>
-	    <form id="Form_address_writegroup" name="Form_address_writegroup" method="post">
+	    <form id="Form_address_writegroup" name="Form_address_writegroup" method="post" style="position: relative;">
 	        <div id="menu">
 	            <ul>
 	            <!-- 2018-05-30 구해안 그룹웨어 모듈 '등록','저장후닫기' => '저장'으로 통일  ezAddress.t339 => t300 -->
 	                <li><span onclick="add()"><spring:message code='ezAddress.t300' /></span></li>
 	            </ul>
 	        </div>
-	        <div id="close">
+	        <div id="close" style="top: 2px;">
 	            <ul>
 	                <li><span onclick="close_onclick()"></span></li>
 	            </ul>
