@@ -118,7 +118,7 @@ function getMainTreeUI(catList, treeMain) {
                 }
                 brdIcon.classList.add(classStr);
                 
-                if (lang != "") {
+                if (lang && lang != 1) {
                      brdIcon.classList.add("multiLang");
                 }
                 
@@ -126,10 +126,6 @@ function getMainTreeUI(catList, treeMain) {
                 brdDivTag.appendChild(brdIcon);
 
                 var brdNode = document.createElement("span");
-                
-                // if (!lang) {
-                //     lang = "";
-                // } 
                 
                 brdNode.innerHTML = brdList[j]["brdNm" + lang];
                 brdNode.classList.add("node_normal");

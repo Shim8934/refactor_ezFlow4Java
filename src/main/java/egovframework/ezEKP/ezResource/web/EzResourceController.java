@@ -3231,7 +3231,6 @@ public class EzResourceController extends EgovFileMngUtil {
 		logger.debug("favoriteManage start, brdId=" + brdId);
 		
 		model.addAttribute("brdId", brdId);
-		model.addAttribute("lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 		
 		logger.debug("favoriteManage end");
 		
