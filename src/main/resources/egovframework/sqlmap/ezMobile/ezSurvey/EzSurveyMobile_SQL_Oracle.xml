@@ -203,25 +203,72 @@
 			<isEqual property="userMode" compareValue="0" prepend=" and ">
 				draft_flag = 0
 			</isEqual>
-			<isEmpty property="surveyIds" prepend=" and ">(survey_id = -1 or user_id = #userId#)</isEmpty>
-			<isNotEmpty property="surveyIds" prepend=" and ">
-				(survey_id in <iterate property="surveyIds" open="(" close=")" conjunction=",">#surveyIds[]#</iterate>)
-			</isNotEmpty>
+			<isEqual property="userMode" compareValue="1" prepend=" and ">
+				(
+					survey_id not in ( select survey_id from tbl_survey where draft_flag = 1 and user_id != #userId# and tenant_id = #tenantId# )
+				)
+			</isEqual>
+			AND 
+			(
+				(
+					<isEmpty property="surveyIds"> (survey_id = -1 or user_id = #userId#) </isEmpty>
+					<isNotEmpty property="surveyIds">
+						survey_id in <iterate property="surveyIds" open="(" close=")" conjunction=",">#surveyIds[]#</iterate>
+					</isNotEmpty>
+				)
+				OR
+				(
+					RESULT_PUBLIC_FLAG = 2
+				AND
+					<isEmpty property="surveyResultIds"> (survey_id = -1 or user_id = #userId#) </isEmpty>
+					<isNotEmpty property="surveyResultIds">
+						survey_id in <iterate property="surveyResultIds" open="(" close=")" conjunction=",">#surveyResultIds[]#</iterate>
+					</isNotEmpty>
+				)
+			)
 		</isEqual>
 		<isEqual property="pageMode" compareValue="processing" prepend=" and ">
 			<![CDATA[(start_date <= #today# and end_date >= #today#)]]>
-			<isEmpty property="surveyIds" prepend=" and ">(survey_id = -1)</isEmpty>
-			<isNotEmpty property="surveyIds" prepend=" and ">
-				(survey_id in <iterate property="surveyIds" open="(" close=")" conjunction=",">#surveyIds[]#</iterate>)
-			</isNotEmpty>
+			AND
+			(
+				(
+					<isEmpty property="surveyIds"> (survey_id = -1 or user_id = #userId#) </isEmpty>
+					<isNotEmpty property="surveyIds">
+						survey_id in <iterate property="surveyIds" open="(" close=")" conjunction=",">#surveyIds[]#</iterate>
+					</isNotEmpty>
+				)
+				OR
+				(
+					RESULT_PUBLIC_FLAG = 2
+				AND
+					<isEmpty property="surveyResultIds"> (survey_id = -1 or user_id = #userId#) </isEmpty>
+					<isNotEmpty property="surveyResultIds">
+						survey_id in <iterate property="surveyResultIds" open="(" close=")" conjunction=",">#surveyResultIds[]#</iterate>
+					</isNotEmpty>
+				)
+			)
 			and draft_flag = 0
 		</isEqual>
 		<isEqual property="pageMode" compareValue="finish" prepend=" and ">
 			<![CDATA[(end_date < #today#)]]>
-			<isEmpty property="surveyIds" prepend=" and ">(survey_id = -1)</isEmpty>
-			<isNotEmpty property="surveyIds" prepend=" and ">
-				(survey_id in <iterate property="surveyIds" open="(" close=")" conjunction=",">#surveyIds[]#</iterate>)
-			</isNotEmpty>
+			AND
+			(
+				(
+					<isEmpty property="surveyIds"> (survey_id = -1 or user_id = #userId#) </isEmpty>
+					<isNotEmpty property="surveyIds">
+						survey_id in <iterate property="surveyIds" open="(" close=")" conjunction=",">#surveyIds[]#</iterate>
+					</isNotEmpty>
+				)
+				OR
+				(
+					RESULT_PUBLIC_FLAG = 2
+				AND
+					<isEmpty property="surveyResultIds"> (survey_id = -1 or user_id = #userId#) </isEmpty>
+					<isNotEmpty property="surveyResultIds">
+						survey_id in <iterate property="surveyResultIds" open="(" close=")" conjunction=",">#surveyResultIds[]#</iterate>
+					</isNotEmpty>
+				)
+			)
 			and draft_flag = 0
 		</isEqual>
 		<isEqual property="pageMode" compareValue="my" prepend=" and ">
