@@ -2118,12 +2118,16 @@ var SurveyCreate     = function() {
 			outputElmt.textContent = this.value;
 		});
 		// 질문 정렬
+		var originalIndex = null;
 		$(".quesBacgr").sortable({
 			handle: ".mvBtn",
 			cursor: "move",
 			containment: "parent",
 			tolerance: "pointer",
 			axis: "y",
+			start: function (event, ui) {
+                originalIndex = ui.item.index(); // 드래그 시작 위치 저장
+            },
 			update: function(event, ui) {
 				var selectedDivList = ui.item;
 				var nxtQstDivList   = selectedDivList.next();
@@ -2142,6 +2146,11 @@ var SurveyCreate     = function() {
 							selectedDivList[0].parentElement.insertBefore(prevQstDiv, nextQstDiv);
 						}
 					}
+				}
+				
+				if (prevQstDiv != null && prevQstDiv.getAttribute("id").indexOf("qstn") == -1 && prevQstDiv.querySelector('.modify') == null) {
+				    var allItems = selectedDivList.parent().children();
+                    selectedDivList.detach().insertBefore(allItems.eq(originalIndex));
 				}
 				
 				sortDivElementList();
