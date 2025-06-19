@@ -9,6 +9,7 @@
 		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
 		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/community.css')}" />
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<style>
 			.graphback {
 				background-color: #f8f8fa;
@@ -41,15 +42,41 @@
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript">
 			function sendIt() {
-				if ("${isSave}" == 0) {
-					if (confirm("<spring:message code='ezPoll.t210' />")) {
-						poll_res_ok.submit();
+				var pollStatus = checkPollPeriod();
+				if ('ok' == pollStatus) {
+					if ("${isSave}" == 0) {
+						if (confirm("<spring:message code='ezPoll.t210' />")) {
+							poll_res_ok.submit();
+						}
+					} else {
+						if (confirm("<spring:message code='ezCommunity.t6' /><spring:message code='ezCommunity.t7' />")) {
+							poll_res_ok.submit();
+						}
 					}
 				} else {
-					if (confirm("<spring:message code='ezCommunity.t6' /><spring:message code='ezCommunity.t7' />")) {
-						poll_res_ok.submit();
-					}
+					alert('deleted' == pollStatus ? "<spring:message code='ezCommunity.t682' />" : "<spring:message code='ezCommunity.t683' />");
+					goPage();
 				}
+			}
+			
+			function checkPollPeriod() {
+				var result;
+				
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezCommunity/checkPollPeriod.do",
+					data : {
+						code : '${code}',
+						pollManagerID : '${pollManagerID}'
+					},
+					success: function(res){
+						result = res;
+					}
+				});
+				
+				return result;
 			}
 			
 			function etcview(etc, qID) {

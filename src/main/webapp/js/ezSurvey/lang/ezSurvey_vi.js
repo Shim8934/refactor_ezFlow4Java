@@ -186,5 +186,9 @@ var SurveyMessages = {
     /* 2024-11-25 박기범 - 리스트 상태값 추가 */
     strLangPGB01 : "참여",
     strLangPGB02 : "미참여",
-    strNumber : "갯수"
+    strNumber : "갯수",
+    strEditingErr : "설문 수정이 진행중입니다. 답변을 저장할 수 없습니다.",
+    strDeletedErr : "해당 설문이 삭제되어 답변을 저장할 수 없습니다. 리스트로 돌아갑니다.",
+    strDelResponse : "응답한 내용을 삭제하시겠습니까? 삭제 시 해당 설문은 미참여 상태로 변경됩니다.",
+    strDelEnd : "응답 내용이 삭제되었습니다."
 }

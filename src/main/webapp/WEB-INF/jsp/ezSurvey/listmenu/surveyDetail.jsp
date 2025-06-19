@@ -32,6 +32,7 @@
 	<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery-ui.js'        )}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezSurvey/jquery.ddslick.min.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('ezSurvey.lang', 'msg'              )}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 </head>
 	
 <body class="surveyBody">
@@ -45,7 +46,8 @@
 					<li class="off"><span id="suvyDlt"><spring:message code="ezSurvey.t21"/></span></li>
 				</c:if>
 				<c:if test="${(survey.draftFlag ne 1) && (participation eq 'yes') && (survey.multiAnswerFlag eq 0) && (resStatus eq true)}">
-					<li class="off"><span id="suvyUdt"><spring:message code="ezSurvey.t78"/></span></li>
+					<li class="off"><span id="suvyUdt"><spring:message code="ezSurvey.t118"/></span></li>
+					<li class="off"><span id="suvyDel"><spring:message code="ezSurvey.t117"/></span></li>
 				</c:if>
 			</ul>
 		</div>
@@ -86,7 +88,6 @@
 		<div id="svTitle" class="survey-title"><c:out value="${survey.title}"></c:out><span class="srvyTitle_info" id="surveyInfBttn"><img src="/images/ezSurvey/srvyTitle_info.png"></span></div>
 		
 		<div id="svPurpose" class="svPurpose">
-			<div id="ppContent" class="ppContent" style="font-family:${defaultFontFamily}; font-size:${defaultFontSize};">${survey.purpose}</div>
 			<div class="survey-otherinf">
 				<table class="content surveyDtl">
 					<tr>
@@ -117,6 +118,7 @@
 					</tr>
 				</table>
 			</div>
+			<div id="ppContent" class="ppContent" style="font-family:${defaultFontFamily}; font-size:${defaultFontSize};">${survey.purpose}</div>
 			<div class="attach-zone2 off" id="surveyAtt">
 				<div class="mainzone2">
 					<div class="fileList">
@@ -127,14 +129,30 @@
 		</div>
 		
 		<div class="prevQsArea" id="prevQsAreaDIV"></div>
+
+		<%--맺음말--%>
+		<c:if test="${(survey.closingText ne '') && (survey.closingText ne null)}">
+			<div id="svClosing" class="svPurpose">
+				<div id="ppClosing" class="ppContent" style="font-family:${defaultFontFamily}; font-size:${defaultFontSize};"></div>
+			</div>
+		</c:if>
+		
 		<iframe name="attachFrame" id="attachFrame" style="display: none;"></iframe>
 	</div>
 </body>
 <script type="text/javascript" src="${util.addVer('/js/ezSurvey/surveyFile.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezSurvey/survey.js')}    "></script>
+<script type="text/javascript" src="${util.addVer('/js/ezPoll/stomp.min.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezPoll/sockjs.min.js')}"></script>
 <script type="text/javascript">
 	/* 2021-10-28 홍승비 - 초기 표출 시 다른 분기처리를 위하여 전역변수 설정 */
 	var isFirstEvent = true; // 초기 슬라이드값은 반드시 최소값이므로, 비활성화 방지용 변수
+
+	window.onunload = function() {
+		if (stompClient !== null) {
+			stompClient.disconnect();
+		}
+	};
 	
 	$(function() {
 		var survey       = ${survey};
@@ -148,6 +166,9 @@
 		};
 		// 20.05.06 강승구 : 설문응답여부 코드추가
 		var resStatus	 = ${resStatus};
+
+		getCmtSockConnect(); /* 수정상태 확인을 위해 웹소켓 연결추가 */
+		stompDisConnProcess(); /* 웹소켓 끊어짐 처리 */
 		userEvent();
 		
 		var jsonResult;
@@ -610,9 +631,16 @@
 			var updateBttn = document.getElementById("suvyUdt");
 			if (updateBttn) {updateBttn.onclick = function(e) {saveSurveyResponses();};}
 
+			var deleteBttn = document.getElementById("suvyDel");
+			if (updateBttn) {deleteBttn.onclick = function(e) {deleteSurveyResponses();};}
+			
 			// 20.05.06 강승구 : 설문응답여부에 따른 처리 코드추가
 			checkQuestionAnswer();
 			isFirstEvent = false;
+
+			if (survey.closingText != null && survey.closingText != "") {
+				document.getElementById("ppClosing").innerHTML = escapeHtml(survey.closingText).replace(/(\r\n|\n|\r)/g, "<br/>");
+			}
 		}
 		// 첨부파일 리스트 나타내기
 		function showAttachList() {
@@ -791,35 +819,64 @@
 				resposeObj.responses = [];
 			}
 		}
+
+		/* 2025-05-23 양지혜 - 응답삭제 */
+		function deleteSurveyResponses() {
+			if (confirm(SurveyMessages.strDelResponse)) {
+				$.ajax({
+					type: "POST",
+					url: "/ezSurvey/deleteResponse.do",
+					data: JSON.stringify(resposeObj),
+					contentType: "application/json; charset=utf-8",
+					dataType: "JSON",
+					async: false,
+					cache: false,
+					success : function(data) {
+						afterSaveSuccessfully(data);
+					},
+					error : function() {
+						alert(SurveyMessages.strError);
+					}
+				});
+			};
+		}
+		
+		function refreshOpenerAndClose(closeYN) {
+			if (window.opener.reloadSurveyPage != undefined) {
+				window.opener.reloadSurveyPage();
+				// 일단 현 상황에 맞춰 주석처리 나중에 필요하면 주석 풀면 됨
+				// window.opener.getUnreadCounts('YES', 'YES', 'YES', 'YES', 'YES');
+			}
+
+			if (window.opener.SurveyItem != null) {
+				if (window.opener && window.opener.SurveyItem) {window.opener.SurveyItem.reload();}
+				if (window.opener && window.opener.openSurveyPopup)	{window.opener.openSurveyPopup("", 600, 600, 0, window.opener.surveyPopupIndex);}
+				if (parent && parent.SurveyItem)               {parent.SurveyItem.reload();}
+			}
+
+			if (closeYN == 'Y') {
+				window.close();
+			} else {
+				window.location.reload();
+			}
+		}
 		
 		function afterSaveSuccessfully(data) {
 			var code = data.code;
 			
 			switch(code) {
-				case 0 : alert(SurveyMessages.strSave2)    ;
-						 resposeObj.responses = [];
-						 
-						 if (window.opener.reloadSurveyPage != undefined) {
-							 window.opener.reloadSurveyPage();
-							 // 일단 현 상황에 맞춰 주석처리
-							 // 나중에 필요하면 주석 풀면 됌
-							 // window.opener.getUnreadCounts('YES', 'YES', 'YES', 'YES', 'YES');
-							 window.close();
-						 }
-						 
-						 if (window.opener.SurveyItem != null) {
-							 if (window.opener && window.opener.SurveyItem) {window.opener.SurveyItem.reload();}
-							 if (window.opener && window.opener.openSurveyPopup)	{window.opener.openSurveyPopup("", 600, 600, 0, window.opener.surveyPopupIndex);}
-							 if (parent && parent.SurveyItem)               {parent.SurveyItem.reload();}
-						 } 
-						 
-						 window.close();
-						 break;
+				case 0 : alert(SurveyMessages.strSave2)     ; resposeObj.responses = []; refreshOpenerAndClose("Y"); break;
 				case 1 : alert(SurveyMessages.strParamErr)  ; resposeObj.responses = []; break;
 				case 2 : alert(SurveyMessages.strError)     ; resposeObj.responses = []; break;
 				case 5 : alert(SurveyMessages.strMultiple3) ; resposeObj.responses = []; break;
 				case 6 : alert(SurveyMessages.strNotResp)   ; resposeObj.responses = []; break;
 				case 7 : alert(SurveyMessages.strNotPeriod2); resposeObj.responses = []; break;
+				case 8 : 
+					alert(data.status == 'editing' ? SurveyMessages.strEditingErr : SurveyMessages.strDeletedErr); 
+					resposeObj.responses = []; 
+					refreshOpenerAndClose("Y"); 
+					break;
+				case 9 : alert(SurveyMessages.strDelEnd)	; resposeObj.responses = []; refreshOpenerAndClose("N"); break;
 				default: alert(SurveyMessages.strError)     ; resposeObj.responses = []; return;
 			}
 		}
@@ -1415,6 +1472,32 @@
                 event.target.style.transition = "all 0.5s";
             }
         })
+
+		/* 수정 이벤트 수신을 위한 WebSocket subscribe 설정 */
+		function getCmtSockConnect() {
+			var tenantID = "${tenantId}";
+			var socket = new SockJS('/hello');
+			stompClient = Stomp.over(socket);
+			stompClient.connect({}, function (frame) {
+				stompClient.subscribe('/reply/getSeenUpdateForSurvey' + surveyId + "+" + tenantID, function (updatedInfo) {
+					var status = JSON.parse(updatedInfo.body).status;
+					var updatedSurveyId = JSON.parse(updatedInfo.body).surveyId;
+
+					if (status == "MODIFY" && updatedSurveyId == surveyId) {
+						alert("작성자가 설문내용을 수정하였습니다. 설문을 다시 불러옵니다.");
+						refreshOpenerAndClose("N");
+						window.location.reload();
+					}
+				});
+			});
+		}
+		function stompDisConnProcess() {
+			setInterval(function(){
+				if(stompClient.connected === false){
+					window.location.reload();
+				}
+			}, 10000);
+		}
 	});
 	
 	/* 2021-10-27 홍승비 - 전자설문 분기처리 전체적으로 수정 */
@@ -1798,6 +1881,17 @@
 			}
 		}
 	}
-	
+
+	function escapeHtml(text) {
+		var map = {
+			'&': '&amp;',
+			'<': '&lt;',
+			'>': '&gt;',
+			'"': '&quot;',
+			"'": '&#039;'
+		};
+
+		return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+	}
 </script>
 </html>

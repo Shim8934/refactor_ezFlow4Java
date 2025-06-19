@@ -375,7 +375,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public synchronized JSONObject saveSurveyItem(HttpServletRequest request, String realPath, JSONArray questions, String title, String purpose, String startDate, String endDate, int publicFlag, int anonymousFlag, int multipleFlag, int userFlag, int publicDays, JSONArray attchList, JSONArray users, int useStatus, long surveyId, int draftMode, LoginVO userInfo, int mailFlag, int popupFlag) throws Exception {
+	public synchronized JSONObject saveSurveyItem(HttpServletRequest request, String realPath, JSONArray questions, String title, String purpose, String startDate, String endDate, int publicFlag, int anonymousFlag, int multipleFlag, int userFlag, int publicDays, JSONArray attchList, JSONArray users, int useStatus, long surveyId, int draftMode, LoginVO userInfo, int mailFlag, int popupFlag, String closingText) throws Exception {
 		JSONObject result                    = new JSONObject();
 		int tenantId                         = userInfo.getTenantId();
 		String companyId                     = userInfo.getCompanyID();
@@ -448,7 +448,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		survey.setDraftFlag(draftMode);
 		survey.setMailFlag(mailFlag);
 		survey.setPopupFlag(popupFlag);
-		
+		survey.setClosingText(closingText);
 		
 		if (publicFlag == 1) {
 			survey.setOpenDays(publicDays);
@@ -1453,6 +1453,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 				Map<String, Object> resMap = new HashMap<String, Object>();
 				resMap.put("surveyId", surveyId);
 				resMap.put("userId", userInfo.getId());
+				resMap.put("tenantId", userInfo.getTenantId());
 				
 				ezSurveyDAO.deleteRespondents(resMap);
 				ezSurveyDAO.deleteResponseItems(resMap);
@@ -1969,5 +1970,38 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		result.addAll(setSurveyIds);
 
 		return result;
+	}
+	
+	@Override
+	public int checkEditingState(long surveyId, String companyId, int tenantId) throws Exception {
+		logger.debug("checkEditingState started");
+		int res = 0;
+		
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("surveyId", surveyId);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		// MODIFY_FLAG : 0(미사용) 1(사용) , USE_STATUS 0(삭제) 1(사용)
+		HashMap<String, Object> resMap = ezSurveyDAO.checkEditingState(map);
+		if ("0".equals(resMap.get("USE_STATUS").toString())) {
+			res = -1;
+		} else if ("1".equals(resMap.get("MODIFY_FLAG").toString())) {
+			res = 1;
+		}
+		
+		logger.debug("checkEditingState ended");
+		return res;
+	}
+
+	@Override
+	public void deleteResponseItem(long surveyId, LoginVO userInfo) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("surveyId", surveyId);
+		map.put("userId", userInfo.getId());
+		map.put("tenantId", userInfo.getTenantId());
+
+		ezSurveyDAO.deleteRespondents(map);
+		ezSurveyDAO.deleteResponseItems(map);
 	}
 }

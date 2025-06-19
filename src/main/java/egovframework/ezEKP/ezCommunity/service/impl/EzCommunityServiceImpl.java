@@ -8678,4 +8678,19 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		}
 		return boardName;
 	}
+
+	@Override
+	public int checkPollPeriod(String code, String pollManagerID, LoginVO userInfo) throws Exception {
+		logger.debug("checkPollPeriod started.");
+		String nowDate = commonUtil.getTodayUTCTime("");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("code", code);
+		map.put("pollManagerID", pollManagerID);
+		map.put("tenantID", userInfo.getTenantId());
+		map.put("nowDate", nowDate);
+
+		logger.debug("checkPollPeriod ended.");
+		return ezCommunityDAO.checkPollPeriod(map);
+	}
 }

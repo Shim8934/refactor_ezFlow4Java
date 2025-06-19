@@ -42,6 +42,7 @@ public class SurveyVO {
 	private int totalNotiSentFlag;
 	private String participants; // 참여자수
 	private String participation; // 참여여부 (1, 0)
+	private String closingText; // 맺음말
 	
 	public int getUpdateMode() {
 		return updateMode;
@@ -330,5 +331,13 @@ public class SurveyVO {
 
 	public void setParticipation(String participation) {
 		this.participation = participation;
+	}
+
+	public String getClosingText() {
+		return closingText;
+	}
+
+	public void setClosingText(String closingText) {
+		this.closingText = closingText;
 	}
 }

@@ -6478,11 +6478,13 @@
 				ntstartdate = #notiStart#,
 				ntenddate = #notiEnd#,
 				PUBLICFLAG = #publicFlag#,
-				updaterid = #updaterID#,
+				updaterid = #updaterID#
+		<isNotEqual property="writerNameType" compareValue="" prepend=",">
 				writerId = #writerID#,
 				writerName = #writerName#,
 		        writerName2 = #writerName2#,
 				writerNameType = #writerNameType#
+		</isNotEqual>
     		WHERE  
     			TENANT_ID = #tenantID#
     		AND

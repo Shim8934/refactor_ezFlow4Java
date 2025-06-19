@@ -11987,6 +11987,7 @@ CREATE TABLE `tbl_survey` (
   `mail_flag` tinyint(4) DEFAULT 0,
   `popup_flag` tinyint(4) DEFAULT 0,
   `MAIL_SENT_FLAG` tinyint(4) DEFAULT 0,
+  `CLOSING_TEXT` longtext DEFAULT NULL COMMENT '맺음말',
   PRIMARY KEY (`survey_id`,`tenant_id`,`company_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;

@@ -8489,4 +8489,19 @@
 		WHERE
 			BOARD_RN = 1
 	</select>
+    
+	<select id="EzCommunityDAO.checkPollPeriod" parameterClass="map" resultClass="Integer">
+	<![CDATA[
+		SELECT
+			CASE 
+			    WHEN #nowDate# BETWEEN POLLSTARTDATE AND POLLENDDATE THEN 1
+				ELSE 0
+			END isVoting
+		FROM TBL_C_POLLMANAGER 
+		WHERE 
+		    C_CLUBNO = #code# 
+		  AND MANAGERID = #pollManagerID# 
+		  AND TENANT_ID = #tenantID#
+	]]>
+	</select>
 </sqlMap>

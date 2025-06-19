@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezSurvey.dao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -314,5 +315,9 @@ public class EzSurveyDAO extends EgovAbstractDAO {
 	// 2024-07-12 전인하 - 설문 > 사용자가 결과조회 가능한 설문 id 조회
 	public List<Long> getReceivedSurveyResultList(Map<String, Object> map) {
 		return (List<Long>)list("EzSurveyDAO.getReceivedSurveyResultList", map);
+	}
+
+	public HashMap<String, Object> checkEditingState(Map<String, Object> map) throws Exception {
+		return (HashMap<String, Object>) select("EzSurveyDAO.checkEditingState", map);
 	}
 }

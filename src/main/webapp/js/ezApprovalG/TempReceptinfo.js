@@ -368,6 +368,7 @@ function btn_AprDeptTempletAdd_onclick()
     var CheckAprTrashDept;
     var TrashList = [];
     var RetireList = [];
+    var ReceiverlessList = [];
     var NonReceivingDeptList = [];
     var Templist = new ListView();
     Templist.LoadFromID("lvRecSaveDetail");
@@ -393,6 +394,11 @@ function btn_AprDeptTempletAdd_onclick()
             if (TempListLen[i].getAttribute("RETIRECHK") == "Y") {
                 RetireList.push(TempListLen[i].querySelector("td:nth-child(2)").textContent);
             }
+            if (ListViewLen[0].getAttribute("DATA3") != "Y" && TempListLen[i].children[1] && TempListLen[i].children[1].textContent == '') {
+                if (!isReceiverChk(TempListLen[i].getAttribute("data1"))) {
+                    ReceiverlessList.push(TempListLen[i].getAttribute("DATA10"));
+                }
+            }
             if (approvalFlag === "G" && GetEntryInfo(TempListLen[i].getAttribute("DATA1")) !== "Y") {
                 NonReceivingDeptList.push(TempListLen[i].getAttribute("DATA10"));
             }
@@ -402,6 +408,9 @@ function btn_AprDeptTempletAdd_onclick()
         }
         if (RetireList.length > 0) {
             alert("[" + RetireList.join(",") + "] 는 퇴직자입니다.\n즐겨찾기 적용에서 제외됩니다.");
+        }
+        if (ReceiverlessList.length > 0) {
+            alert("[" + ReceiverlessList.join(",") + "] " + strLang1101 + strLang1102);
         }
         if (NonReceivingDeptList.length > 0) {
             alert("[" + NonReceivingDeptList.join(",") + "] " + strLangJJE01);

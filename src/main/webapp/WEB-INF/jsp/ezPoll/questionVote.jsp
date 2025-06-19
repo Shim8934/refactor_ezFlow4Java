@@ -449,6 +449,7 @@
 			        	
 			            //if (ret == "DELETED" && user != curentUser) {		
 			            if (ret == "DELETED") {
+							alert("<spring:message code = 'ezPoll.t270'/>");
 			            	document.location.href = "/ezPoll/pollList.do?brdID=6";
 					    }
 				    });
