@@ -1564,9 +1564,9 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 						String reStr = ""; 
 								
 						if (cmd.equals("REPLY") || cmd.equals("REPLYALL")) {		
-							reStr = egovMessageSource.getMessage("ezEmail.t511", locale);
+							reStr = egovMessageSource.getMessage("ezEmail.t5111", locale);
 						} else if (cmd.equals("FORWARD")) {
-							reStr = egovMessageSource.getMessage("ezEmail.t513", locale);
+							reStr = egovMessageSource.getMessage("ezEmail.t5131", locale);
 						}
 						
 						if (!subject.startsWith(reStr)) {
