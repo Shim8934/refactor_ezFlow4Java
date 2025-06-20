@@ -308,6 +308,7 @@
 					 WHEN SCHEDULETYPE = 2 THEN 'rgb(1, 179, 63)'
 					 WHEN SCHEDULETYPE = 3 THEN 'rgb(254, 28, 113)'
 					 WHEN SCHEDULETYPE = 7 THEN b.groupcolor
+					 WHEN SCHEDULETYPE = 10 THEN 'rgb(255, 174, 0)'
 					 ELSE 'rgb(233, 222, 19)' END AS GROUPCOLOR,
 				showtop
         	from 
@@ -2108,6 +2109,7 @@
 					 WHEN SCHEDULETYPE = 2 THEN 'rgb(1, 179, 63)'
 					 WHEN SCHEDULETYPE = 3 THEN 'rgb(254, 28, 113)'
 					 WHEN SCHEDULETYPE = 7 THEN b.groupcolor
+					 WHEN SCHEDULETYPE = 10 THEN 'rgb(255, 174, 0)'
 					 ELSE 'rgb(233, 222, 19)' END AS GROUPCOLOR,
 				showtop
         	from
