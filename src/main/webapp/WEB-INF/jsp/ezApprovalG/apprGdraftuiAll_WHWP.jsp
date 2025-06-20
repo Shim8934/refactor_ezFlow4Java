@@ -743,7 +743,7 @@
                 }
                 // 수신문인데 수신처가 설정되지 않은 경우 (결재정보창 내부에서도 한번 확인함)
                 // 몇 안에서 설정이 안되었는지도 알려준다.
-                if (pSuSinFlagAry[currIdx] == "Y" && !btnReceivLineEnableAry[currIdx]) {
+                if (pSuSinFlagAry[currIdx] == "Y" && !btnReceivLineEnableAry[currIdx] && pDocTypeAry[currIdx] != '002') {
                     var pAlertContent = currIdx + "<spring:message code='ezApprovalG.HSBDa04_1'/> " + "<spring:message code='ezApprovalG.t141'/>" + "<br>" + "<spring:message code='ezApprovalG.t142'/>";
                     HiddenMailProgress();
                     if (OpenInformationUI(pAlertContent)) {
