@@ -1,4 +1,4 @@
-﻿﻿var PreviewH_Move = false;
+﻿var PreviewH_Move = false;
 var minimumWidth = 890;
 function PreviewH_onMouserDown(e) {
     curevent = (typeof event == 'undefined' ? e : event)
@@ -737,6 +737,13 @@ function refreshUnreadCount() {
     } catch (e) {console.log(e);}
 }
 function deleteWork(bDel) {
+    
+    if (['pre_h_tag_add', 'pre_w_tag_add'].some(id => {
+        var el = document.getElementById(id);
+        return el && document.activeElement === el;
+    })) return;
+
+
     if (listContentArry.length == 0 && listSubContentArry.length == 0) {
         alert(strLang42);
         return;
