@@ -20,6 +20,12 @@ public class BoardItemVO {
 	private String thumbnailExt;
 	private String thumbnailPath;
 
+	private String attachFilePath;
+	private String attachFileName;
+	private String satCallURL;
+	private String writerID;
+
+//	private String
 	public String getItemID() {
 		return itemID;
 	}
@@ -66,6 +72,29 @@ public class BoardItemVO {
 	public String getAddThumbnail() {
 		return addThumbnail;
 	}
+	public String getAttachFilePath() {
+		return attachFilePath;
+	}
+
+	public void setAttachFilePath(String attachFilePath) {
+		this.attachFilePath = attachFilePath;
+	}
+
+	public String getAttachFileName() {
+		return attachFileName;
+	}
+
+	public void setAttachFileName(String attachFileName) {
+		this.attachFileName = attachFileName;
+	}
+
+	public String getSatCallURL() {
+		return satCallURL;
+	}
+	
+	public void setSatCallURL(String satCallURL) {
+		this.satCallURL = satCallURL;
+	}
 	
 	public void setAddThumbnail(String addThumbnail) {
 		this.addThumbnail = addThumbnail;
@@ -85,5 +114,13 @@ public class BoardItemVO {
 	
 	public void setThumbnailPath(String thumbnailPath) {
 		this.thumbnailPath = thumbnailPath;
+	}
+
+	public String getWriterID() {
+		return writerID;
+	}
+
+	public void setWriterID(String writerID) {
+		this.writerID = writerID;
 	}
 }

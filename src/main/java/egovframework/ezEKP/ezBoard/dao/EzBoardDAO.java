@@ -15,7 +15,6 @@ import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
 import egovframework.ezEKP.ezBoard.vo.BoardDeleteItemVO;
 import egovframework.ezEKP.ezBoard.vo.BoardDisLikeListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardItemVO;
-import egovframework.ezEKP.ezBoard.vo.BoardKeywordVO;
 import egovframework.ezEKP.ezBoard.vo.BoardLikeListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardLineReplyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
@@ -1235,5 +1234,21 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	public String getRealFileNames(Map<String, Object> map) throws Exception {
 		return (String)select("EzBoardDAO.getRealFileNames", map);
 	}
-	
+
+	public BoardItemVO getFileViewerBoardItemID(Map<String, Object> map) throws Exception {
+		return (BoardItemVO) select("EzBoardDAO.getFileViewerBoardItemID", map);
+	}
+
+	public String hasBoardItemFlag(HashMap<String, String> map) throws Exception {
+		return (String)select("EzBoardDAO.hasBoardItemFlag", map);
+	}
+
+	public boolean isPostDuplicated1(Map<String, Object> map) throws Exception {
+		int cnt = (int) select("EzBoardDAO.isPostDuplicated1", map);
+		return cnt > 0;
+	}
+
+	public String isPostDuplicated2(Map<String, Object> map) throws Exception {
+		return (String) select("EzBoardDAO.isPostDuplicated2", map);
+	}
 }

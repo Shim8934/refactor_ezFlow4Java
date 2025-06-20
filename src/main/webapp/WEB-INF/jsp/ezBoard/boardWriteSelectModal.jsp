@@ -45,6 +45,8 @@
 			var pUse_Editor = "${useEditor}";
 		    var ReturnFunction;
 		    var rtnVal = "";
+
+			var popupMsg;
 		    
 		    var popupMsg;
 		    
@@ -61,7 +63,7 @@
 				
 				if (CheckIfCanWrite(SelectedBoardID) == false)
 				{
-					if (SelectedBoardType !== "10") {
+					if (SelectedBoardType !== "9" && SelectedBoardType !== "10") {
 						popupMsg = "<spring:message code='ezBoard.t354' />";
 					}
 
@@ -114,7 +116,10 @@
 			
 			function CheckIfCanWrite(pBoardID)
 			{
-				if (SelectedBoardType === "10") {
+				if (SelectedBoardType === "9") {
+					popupMsg = "<spring:message code = 'ezBoard.fileViewerBoard.msg4' />";
+					return false;
+				} else if (SelectedBoardType === "10") {
 			        popupMsg = "<spring:message code='ezBoard.MJSCAT02' />";
 			        return false;
 			    }

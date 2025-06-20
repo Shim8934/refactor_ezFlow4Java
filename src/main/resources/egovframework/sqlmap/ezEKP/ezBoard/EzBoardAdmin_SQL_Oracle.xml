@@ -394,7 +394,7 @@
 	                AND
 	                	(A.companyid = #v_COMPANYID# OR TRIM(A.companyid) = ''	 OR A.companyid IS NULL)
 	                )
-	              	ORDER BY 
+	              	ORDER BY
 	              		A.TreeViewOrder ASC
 				]]>
 			</isEqual>
@@ -437,7 +437,7 @@
 		          			A.PARENTBOARDID = #v_pRootBoardID#
 		                AND 
 		                	A.BoardID <> #v_pExcludeBoardID#
-		           		ORDER BY 
+		           		ORDER BY
 		           			A.TreeViewOrder ASC
 					]]>
 				</isEqual>
@@ -618,8 +618,7 @@
 <!-- 2018-10-15 홍승비 - 전체관리자는 항상 그룹사게시판을 리스트에 표출하도록 수정 -->
 <!-- 2019-06-04 홍승비 - 전체관리자를 제외한 관리자는 그룹사게시판의 권한을 체크하도록 수정 -->
 			<isEqual property="v_isCompanyAdmin" compareValue="true">
-          		<![CDATA[
-					SELECT 
+					SELECT
 						DISTINCT A.BoardID ,
 	                    A.BoardName ,
 	                    CASE
@@ -651,16 +650,14 @@
 	          		AND
 	          			A.PARENTBOARDID = #v_pRootBoardID#
 	                AND 
-	                	A.BoardID <> #v_pExcludeBoardID#
-	           		ORDER BY 
+	                	<![CDATA[A.BoardID <> #v_pExcludeBoardID#]]>
+	           		ORDER BY
 	           			A.TreeViewOrder ASC
-				]]>
 			</isEqual>
 <!-- 전체관리자가 아닌 일반 관리자인 경우(p_Mode=0 && v_isCompanyAdmin = false), 회사 소속 게시판은 모두 표출 / 그룹사게시판에 대해서만 권한 체크 -->
 <!-- 그룹사게시판이 아닌 회사 소속 게시판은 권한체크 없이 전부 셀렉트 -->
 			<isNotEqual property="v_isCompanyAdmin" compareValue="true">
-          		<![CDATA[
-          			(SELECT 
+          			(SELECT
 						DISTINCT A.BoardID ,
 	                    A.BoardName ,
 	                    CASE
@@ -692,8 +689,8 @@
 	          		AND
 	          			A.PARENTBOARDID = #v_pRootBoardID#
 	                AND 
-	                	A.BoardID <> #v_pExcludeBoardID#)
-	           	]]>
+	                	<![CDATA[A.BoardID <> #v_pExcludeBoardID#]]>
+	          		)
 <!-- 그룹사게시판에 대해서 개별(개인, 직위직책, 부서 단독권한들) 권한 체크하여 UNION -->
 			<isEqual property="v_showAllGroupBoard" compareValue="Y">
 				<![CDATA[
@@ -776,7 +773,7 @@
 		          		AND
 		          			A.PARENTBOARDID = #v_pRootBoardID#
 		                AND 
-		                	A.BoardID <> #v_pExcludeBoardID#	
+		                	A.BoardID <> #v_pExcludeBoardID#
 				]]>
 				<!-- 권한그룹이 아닌 개별 권한(PERSON, JIKWI, JIKCEHK, DEPT)만을 체크 -->
 				<isEqual property="v_boardGroupAdmin_FG" compareValue="NO">

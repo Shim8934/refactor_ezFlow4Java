@@ -27,12 +27,12 @@ public enum WriteType {
 	, RESEND_IN_SENT  (Category.RESEND,null)
 
 	// 회신
-	, REPLY           (Category.REPLY, "ezEmail.t511")
+	, REPLY           (Category.REPLY, "ezEmail.t5111")
 	// 전체회신
-	, REPLYALL        (Category.REPLY, "ezEmail.t511")
+	, REPLYALL        (Category.REPLY, "ezEmail.t5111")
 
 	// 전달
-	, FORWARD         (Category.FORWARD, "ezEmail.t513")
+	, FORWARD         (Category.FORWARD, "ezEmail.t5131")
 
 	, READ            ()
 
