@@ -810,6 +810,9 @@
 							</li>
 						</c:forEach>
 					</c:if>
+					<c:if test="${empty gatherList}">
+					    <li><spring:message code='ezSchedule.kyjGs001'/></<li>
+					</c:if>
 				</ul>
 				<h2 class="off">
 					<span class="sub_iconLNB tree_plus"></span><span class="h2Title" id="" onclick="Function_Flag(6)"><spring:message code='ezSchedule.t1018'/></span>
