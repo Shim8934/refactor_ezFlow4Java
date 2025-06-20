@@ -1174,7 +1174,7 @@
 			        createNodeAndInsertText(xmlDOM, objNode, "URL", "");
 			        createNodeAndInsertText(xmlDOM, objNode, "BCOUNT", "-1");
 			        
-			        xmlHTTP.open("POST", "/ezEmail/getFolderList.do?shareId=" + encodeURIComponent(shareId), false);
+			        xmlHTTP.open("POST", "/ezEmail/getFolderList.do?shareId=" + encodeURIComponent(shareId) + "&am=y", false);
 			        xmlHTTP.send(xmlDOM);
 
 			        var nodeTreeXml = xmlHTTP.responseText.replace("<DATA>", "").replace("</DATA>", "");
