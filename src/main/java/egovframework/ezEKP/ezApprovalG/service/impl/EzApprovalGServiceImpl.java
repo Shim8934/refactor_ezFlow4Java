@@ -15179,6 +15179,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 		String lastState = "";
 		boolean whileFlag = true;
 		String absentReason = "";
+        String bState = "";
 		
 		map3.put("v_DOCID", docID.trim());
 		map3.put("v_TENANTID", userInfo.getTenantId());
@@ -15597,10 +15598,11 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 					}
 						break;
 					case "009":
+                        bState = lastState;
 						lastState = staATByungRyulHyubJo;
 						
 					if (approvalFlag.equals("G")) {
-						if (!curAprType.equals(staATByungRyulHyubJo)) {
+						if (!curAprType.equals(staATByungRyulHyubJo) || (curAprType.equals(staATByungRyulHyubJo) && bState.equals(staATAnHam))) {
                             int userCnt = 0;
                             int passCnt = 0;
                             while (k < dlength && docXML2.getElementsByTagName("APRTYPE").item(k).getTextContent().equals(staATByungRyulHyubJo)) {
@@ -15643,7 +15645,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 							k += 1;
 						}
 					} else {
-						if (!curAprType.equals(staATByungRyulHyubJo)) {
+						if (!curAprType.equals(staATByungRyulHyubJo) || (curAprType.equals(staATByungRyulHyubJo) && bState.equals(staATAnHam))) {
                             int userCnt = 0;
                             int passCnt = 0;
 							while (k < dlength && docXML2.getElementsByTagName("APRTYPE").item(k).getTextContent().equals(staATByungRyulHyubJo)) {
