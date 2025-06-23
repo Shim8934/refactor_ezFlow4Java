@@ -412,7 +412,7 @@
 				str += setUtilMenu();
 				str += '	</li>';
 				if ('${useTotalSearch}' === 'YES') {
-					str += '<li class="contentlayout_right"><div class="employee_search"><input type="text" placeholder="<spring:message code="main.t00029" />" id="topsearch_btn"><span onclick="toggleTopSearch()"></span></div></li>' 
+					str += '<li class="contentlayout_right"><div class="employee_search"><input type="text" placeholder="<spring:message code="main.t00029" />" id="topsearch_btn"><span class="totalSearchBtn1" onclick="toggleTopSearch()"></span><span class="totalSearchBtn2" onclick="totalSearch()"></span></div></li>' 
 				}
 				str += '	<li class="contentlayout_none" onclick="subMenuClickEvent(\'off\')">';
 				str += setMainMenu();
@@ -512,7 +512,7 @@
 		
 		function totalSearch_key_event(e,obj) {
 		    var curevent = (typeof event == 'undefined' ? e : event);
-		        if (curevent.keyCode == "13") {
+		        if (curevent.keyCode == "13" || event.key == 'Enter') {
 		            totalSearch();
 		        }
 		}
