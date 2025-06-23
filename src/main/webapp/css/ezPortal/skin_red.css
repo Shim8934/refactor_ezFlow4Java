@@ -330,3 +330,11 @@ nav .navUL li.on{color:#A20000;}
 .set-body .btnpositionLayer a.imgbtn span:hover{color:#A20000 !important}
 .form_set.theme li.select:before, .form_set.default li.select .form_image:before{border: 1px solid #A20000;}
 .form_set.theme li.select:before, .form_set.default li.select .form_image:before{background: url(../../images/ezNewPortal/form_select_red.png) no-repeat center rgba(0,0,0,0.2);}
+
+//* 2025.06 custom style */
+/* checkbox */
+.custom_checkbox input[type="checkbox"]:checked {background: #A20000; border-color:#A20000 !important;}
+/* radio */
+.custom_radio input[type="radio"]::after {background-color: #A20000;}
+.custom_radio input[type="radio"]:checked {border-color:#A20000 !important;}
+

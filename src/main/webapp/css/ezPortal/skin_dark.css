@@ -572,3 +572,24 @@ header + .lnb ul li:hover span, .lnb ul li.on span{color:#388CE5;}
 .mainbg .ui-datepicker .ui-datepicker-title select option {
     background-color:#333; /* 드롭다운 옵션 배경색 */
 }
+
+/* 2025.06 custom style */
+/* checkbox */
+.custom_checkbox input[type="checkbox"]:checked {background: #47494B; border-color:#47494B !important;}
+/* radio */
+.custom_radio input[type="radio"]::after {background-color: #47494B;}
+.custom_radio input[type="radio"]:checked {border-color:#47494B !important;}
+
+/* checkbox/radio dark  */
+.custom_checkbox.dark input[type="checkbox"] + label,
+.custom_radio.dark input[type="radio"] + label{color:#cfcfcf;}
+
+.custom_checkbox.dark input[type="checkbox"] {border: 1px solid #fff !important;}
+.custom_checkbox.dark input[type="checkbox"]:checked {border-color:#47494B !important;}
+.custom_checkbox.dark input[type="checkbox"]:disabled:checked::after{border-color:#656565;}
+.custom_checkbox.dark input[type="checkbox"]:disabled{border-color:#a9a9a9 !important;background: #a9a9a9;}
+.custom_checkbox.dark input[type="checkbox"]:disabled:checked {border-color:#a9a9a9;background: #a9a9a9;}
+.custom_radio.dark input[type="radio"] {border: 1px solid #fff !important;}
+.custom_radio.dark input[type="radio"]:disabled {background: #a9a9a9; border-color:#a9a9a9 !important}
+.custom_radio.dark input[type="radio"]:disabled:checked {background: #a9a9a9; border-color:#a9a9a9 !important;}
+.custom_radio.dark input[type="radio"]:disabled:checked::after {display:block !important; background-color: #656565;}

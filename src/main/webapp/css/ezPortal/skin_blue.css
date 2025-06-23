@@ -333,3 +333,10 @@ nav .navUL li.on{color:#003497;}
 
 #theme3Body .main_time .timeCheckIn:hover{background:#FFFFFF; color:#003497; border:1px solid #003497; line-height:30px;}
 #theme3Body .main_time .timeCheckOut:hover{background:#FFFFFF; color:#003497; border:1px solid #003497; line-height:30px;}
+
+/* 2025.06 custom style */
+/* checkbox */
+.custom_checkbox input[type="checkbox"]:checked {background: #003497; border-color:#003497 !important;}
+/* radio */
+.custom_radio input[type="radio"]::after {background-color: #003497;}
+.custom_radio input[type="radio"]:checked {border-color:#003497 !important;}
