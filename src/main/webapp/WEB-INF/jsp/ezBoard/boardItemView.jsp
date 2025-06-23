@@ -2032,10 +2032,9 @@
                         alert("재게시가 완료되었습니다.");
                         window.location.reload();
 
-                        if (boardItemView == "P") {
-                            //window.opener.location.reload();
-                            window.opener.refresh_onclick();
-                        }
+                        //if (boardItemView == "P") {
+                            window.opener.location.reload();
+                        //}
                     }
                 }
             }

@@ -1968,9 +1968,9 @@
                         alert("재게시가 완료되었습니다.");
                         window.location.reload();
 
-                        if (boardItemView == "P") {
+                        //if (boardItemView == "P") {
                             window.opener.location.reload();
-                        }
+                        //}
                     }
                 }
             }
