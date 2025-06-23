@@ -1712,7 +1712,7 @@ function resizableMenuItem(url) {
         }
 		var remainingWidth = mainMenuWidth - rightSectionWidth;
 		
-		var moreButtonWidth = remainingWidth * 0.5;
+		var moreButtonWidth = remainingWidth * 0.45;
 
 		var mainMenuWidthCal = remainingWidth - moreButtonWidth;
         var totalWidth = 0;
