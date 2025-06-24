@@ -1359,8 +1359,8 @@
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel_left">&nbsp;</div>
 		<span  id="presentcell" style="display:none"></span>
 		<div id="left" class="lnb">
-	    	<!-- <div class="lnb_btn"></div> -->
-	        <!-- <div class="lnb_btn_hidden"></div> lnb 숨기기 버튼-->
+	    	<%-- <div class="lnb_btn"></div> --%>
+	        <%-- <div class="lnb_btn_hidden"></div> lnb 숨기기 버튼--%>
 	    	<div class="left_title" title="<spring:message code='ezApprovalG.t102'/>">
 	    		<spring:message code='ezApprovalG.t102'/>
 	        	<span class="sub_iconLNB tree_leftconfig" id="ApprovalConfig" onClick="Open_Func(this)" title="<spring:message code='ezApprovalG.t1800'/>"></span>
@@ -1412,7 +1412,7 @@
 						<li><span class="list_text" id="APPROVAL97" onclick="setPresentValue('<spring:message code='ezApprovalG.PHSKMH01'/>');convMain('97','')"><spring:message code='ezApprovalG.PHSKMH01'/><span id=COUNT97></span></span></li>
 					</c:if>
                    	<c:if test="${approvalFlag == 'S'}">
-                       	<li></span><span class="list_text" id="APPROVAL99" onclick="setPresentValue('<spring:message code='ezApprovalG.hyj04'/>');convMain('99','')"><spring:message code='ezApprovalG.hyj04'/><span id="COUNT99"></span></span></li>
+                       	<li><span class="list_text" id="APPROVAL99" onclick="setPresentValue('<spring:message code='ezApprovalG.hyj04'/>');convMain('99','')"><spring:message code='ezApprovalG.hyj04'/><span id="COUNT99"></span></span></li>
 					</c:if>
 					<c:if test="${approvalFlag == 'G'}">
                        	<li><span class="list_text" id="APPROVAL99" onclick="setPresentValue('<spring:message code='ezApprovalG.t10011'/>');convMain('99','')"><spring:message code='ezApprovalG.t10011'/><span id="COUNT99"></span></span></li>
@@ -1513,11 +1513,11 @@
 								<span id="spn_UserShare_${status.index}" class="node_normal" onclick="treeicon_toggle('UserShare_${status.index}', 'UserContTree', UserContRequestData, 'imgNode_UserShare_${status.index}');" style="cursor: pointer; width: 135px;" title='<c:out value="${userShare.shareName}"></c:out>'><c:out value="${userShare.shareName}"></c:out></span>
 								<div id="UserShare_${status.index}_sub" style="display:none;">
 <%-- 					    			<div class="node_div" id="DeptShare_${status.index}_0" nodename="결재진행문서" nodelevel="1" endnode="true" value="결재진행문서" isleaf="TRUE" expanded="FALSE" style="white-space: nowrap;"> --%>
-<!-- 										<img border="0" class="DOT" src="/images/OrganTree/dot_end.gif" style="width: 18px; height: 18px;"> -->
+<%-- 										<img border="0" class="DOT" src="/images/OrganTree/dot_end.gif" style="width: 18px; height: 18px;"> --%>
 <%-- 										<img id="imgNode_DeptShare_${status.index}_0}" border="0" src="/images/OrganTree_cross/dot_end.gif" style="width: 18px; height: 18px;"> --%>
 <%-- 										<img id="subImgNode_DeptShare_${status.index}_0" border="0" src="/images/OrganTree_cross/fldr.gif" style="width: 18px; height: 18px;"> --%>
 <%-- 										<span onclick="setPresentValue('결재진행문서');convMain('3','','${userShare.shareId}')" style="cursor: pointer; width: 135px;" title="결재진행문서" id="spn_DeptShare_${status.index}_0" class="node_normal">결재진행문서</span> --%>
-<!-- 									</div> -->
+<%-- 									</div> --%>
 									<%-- 2024-11-14 홍승비 - 개인공유함 > 결재완료문서 다국어 처리 --%>
 					    			<div class="node_div" id="DeptShare_${status.index}_1" nodename=<spring:message code='ezApproval.t990042'/> nodelevel="1" endnode="true" value=<spring:message code='ezApproval.t990042'/> isleaf="TRUE" expanded="FALSE" style="white-space: nowrap;">
 										<img border="0" class="DOT" src="/images/OrganTree/dot_end.gif" style="width: 18px; height: 18px;">
@@ -1622,11 +1622,11 @@
 								<span id="spn_UserShare_${status.index}" class="node_normal" onclick="treeicon_toggle('UserShare_${status.index}', 'UserContTree', UserContRequestData, 'imgNode_UserShare_${status.index}');" style="cursor: pointer; width: 135px;" title='<c:out value="${userShare.shareName}"></c:out>'><c:out value="${userShare.shareName}"></c:out></span>
 								<div id="UserShare_${status.index}_sub" style="display:none;">
 <%-- 					    			<div class="node_div" id="DeptShare_${status.index}_0" nodename="결재진행문서" nodelevel="1" endnode="true" value="결재진행문서" isleaf="TRUE" expanded="FALSE" style="white-space: nowrap;"> --%>
-<!-- 										<img border="0" class="DOT" src="/images/OrganTree/dot_end.gif" style="width: 18px; height: 18px;"> -->
+<%-- 										<img border="0" class="DOT" src="/images/OrganTree/dot_end.gif" style="width: 18px; height: 18px;"> --%>
 <%-- 										<img id="imgNode_DeptShare_${status.index}_0}" border="0" src="/images/OrganTree_cross/dot_end.gif" style="width: 18px; height: 18px;"> --%>
 <%-- 										<img id="subImgNode_DeptShare_${status.index}_0" border="0" src="/images/OrganTree_cross/fldr.gif" style="width: 18px; height: 18px;"> --%>
 <%-- 										<span onclick="setPresentValue('결재진행문서');convMain('3','','${userShare.shareId}')" style="cursor: pointer; width: 135px;" title="결재진행문서" id="spn_DeptShare_${status.index}_0" class="node_normal">결재진행문서</span> --%>
-<!-- 									</div> -->
+<%-- 									</div> --%>
 									<%-- 2024-11-14 홍승비 - 개인공유함 > 결재완료문서 다국어 처리 --%>
 					    			<div class="node_div" id="DeptShare_${status.index}_1" nodename=<spring:message code='ezApproval.t990042'/> nodelevel="1" endnode="true" value=<spring:message code='ezApproval.t990042'/> isleaf="TRUE" expanded="FALSE" style="white-space: nowrap;">
 										<img border="0" class="DOT" src="/images/OrganTree/dot_end.gif" style="width: 18px; height: 18px;">

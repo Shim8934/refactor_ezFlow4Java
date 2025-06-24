@@ -10206,42 +10206,61 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		// 2023-08-28 전인하 - 전자결재 > 좌측 드롭다운 이용하여 겸직 변경 > 겸직 변경 시 쿠키로 jobId 삽입
 		String jobId = request.getParameter("jobId");
-
-		Cookie cookieID0 = new Cookie("APRUI0", URLEncoder.encode(deptID, "utf-8"));
-    	cookieID0.setPath("/");
-    	response.addCookie(cookieID0);
-    	
-    	Cookie cookieID1 = new Cookie("APRUI1", URLEncoder.encode(deptName, "utf-8"));
-    	cookieID1.setPath("/");
-    	response.addCookie(cookieID1);
-    	
-    	Cookie cookieID2 = new Cookie("APRUI2", URLEncoder.encode(deptName2, "utf-8"));
-    	cookieID2.setPath("/");
-    	response.addCookie(cookieID2);
-    	
-    	Cookie cookieID3 = new Cookie("APRUI3", URLEncoder.encode(companyName, "utf-8"));
-    	cookieID3.setPath("/");
-    	response.addCookie(cookieID3);
-    	
-    	Cookie cookieID4 = new Cookie("APRUI4", URLEncoder.encode(companyName2, "utf-8"));
-    	cookieID4.setPath("/");
-    	response.addCookie(cookieID4);
-    	
-    	Cookie cookieID5 = new Cookie("APRUI5", URLEncoder.encode(title, "utf-8"));
-    	cookieID5.setPath("/");
-    	response.addCookie(cookieID5);
-    	
-    	Cookie cookieID6 = new Cookie("APRUI6", URLEncoder.encode(title2, "utf-8"));
-    	cookieID6.setPath("/");
-    	response.addCookie(cookieID6);
-    	
-    	Cookie cookieID7 = new Cookie("APRUI7", URLEncoder.encode(companyID, "utf-8"));
-    	cookieID7.setPath("/");
-    	response.addCookie(cookieID7);
-
-		Cookie cookieID8 = new Cookie("APRUI8", URLEncoder.encode(jobId, "utf-8"));
-		cookieID8.setPath("/");
-		response.addCookie(cookieID8);
+		
+		boolean isSecure = request.isSecure(); //http, https 판단
+		String forwardedProto = request.getHeader("X-Forwarded-Proto");
+		
+		if (!isSecure && "https".equalsIgnoreCase(forwardedProto)) {
+			isSecure = true;
+		}
+		
+		if (isSecure) {
+			response.addHeader("Set-Cookie", "APRUI0=" + URLEncoder.encode(deptID, "utf-8") + "; Path=/; SameSite=None; Secure");
+			response.addHeader("Set-Cookie", "APRUI1=" + URLEncoder.encode(deptName, "utf-8") + "; Path=/; SameSite=None; Secure");
+			response.addHeader("Set-Cookie", "APRUI2=" + URLEncoder.encode(deptName2, "utf-8") + "; Path=/; SameSite=None; Secure");
+			response.addHeader("Set-Cookie", "APRUI3=" + URLEncoder.encode(companyName, "utf-8") + "; Path=/; SameSite=None; Secure");
+			response.addHeader("Set-Cookie", "APRUI4=" + URLEncoder.encode(companyName2, "utf-8") + "; Path=/; SameSite=None; Secure");
+			response.addHeader("Set-Cookie", "APRUI5=" + URLEncoder.encode(title, "utf-8") + "; Path=/; SameSite=None; Secure");
+			response.addHeader("Set-Cookie", "APRUI6=" + URLEncoder.encode(title2, "utf-8") + "; Path=/; SameSite=None; Secure");
+			response.addHeader("Set-Cookie", "APRUI7=" + URLEncoder.encode(companyID, "utf-8") + "; Path=/; SameSite=None; Secure");
+			response.addHeader("Set-Cookie", "APRUI8=" + URLEncoder.encode(jobId, "utf-8") + "; Path=/; SameSite=None; Secure");
+		} else {
+			Cookie cookieID0 = new Cookie("APRUI0", URLEncoder.encode(deptID, "utf-8"));
+			cookieID0.setPath("/");
+			response.addCookie(cookieID0);
+			
+			Cookie cookieID1 = new Cookie("APRUI1", URLEncoder.encode(deptName, "utf-8"));
+			cookieID1.setPath("/");
+			response.addCookie(cookieID1);
+			
+			Cookie cookieID2 = new Cookie("APRUI2", URLEncoder.encode(deptName2, "utf-8"));
+			cookieID2.setPath("/");
+			response.addCookie(cookieID2);
+			
+			Cookie cookieID3 = new Cookie("APRUI3", URLEncoder.encode(companyName, "utf-8"));
+			cookieID3.setPath("/");
+			response.addCookie(cookieID3);
+			
+			Cookie cookieID4 = new Cookie("APRUI4", URLEncoder.encode(companyName2, "utf-8"));
+			cookieID4.setPath("/");
+			response.addCookie(cookieID4);
+			
+			Cookie cookieID5 = new Cookie("APRUI5", URLEncoder.encode(title, "utf-8"));
+			cookieID5.setPath("/");
+			response.addCookie(cookieID5);
+			
+			Cookie cookieID6 = new Cookie("APRUI6", URLEncoder.encode(title2, "utf-8"));
+			cookieID6.setPath("/");
+			response.addCookie(cookieID6);
+			
+			Cookie cookieID7 = new Cookie("APRUI7", URLEncoder.encode(companyID, "utf-8"));
+			cookieID7.setPath("/");
+			response.addCookie(cookieID7);
+	
+			Cookie cookieID8 = new Cookie("APRUI8", URLEncoder.encode(jobId, "utf-8"));
+			cookieID8.setPath("/");
+			response.addCookie(cookieID8);
+		}
 
 		logger.debug("ChangeUserInfo ended");
 	}
