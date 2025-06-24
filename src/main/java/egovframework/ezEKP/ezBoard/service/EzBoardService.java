@@ -583,6 +583,8 @@ public interface EzBoardService {
 	
 	public String getBoardNameLocalizing(String userLang, BoardPropertyVO boardProperty) throws Exception;
 
+	public void repostItem(String boardId, String itemID, String userID, int tenantID, String hasReply) throws Exception;
+
 	public BoardItemVO getFileViewerBoardInfo(HttpServletRequest request, LoginVO userInfo, String versionYN) throws Exception;
 
 	public String hasBoardItemFlag(String boardID, int tenantID) throws Exception;
@@ -600,6 +602,4 @@ public interface EzBoardService {
 	public String checkIsNewestVersion(String boardID, String itemID, int tenantID, String version) throws Exception;
 
 	public String getBoardTitle(String contentLocation, int tenantId) throws Exception;
-
-	public void repostItem(String boardId, String itemID, int tenantID, String hasReply) throws Exception;
 }
