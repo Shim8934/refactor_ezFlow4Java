@@ -88,6 +88,9 @@ function SetDocumentElement(pCharName, pValue) {
         keywordStr = getXmlString(keywordXml).replace(/<[/]?KEYWORD>/gi, "");
         message.SetDocumentInfo("NULL", "NULL", "NULL", keywordStr, "NULL");
     } catch (e) {
+        parent.HiddenMailProgress();
+        console.log(e);
+        console.log(e.stack);
         alert("연동정보를 저장하던 도중 오류가 발생했습니다.");
         return false;
     }

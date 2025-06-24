@@ -290,12 +290,3 @@ var strLangFvYGS16 = "削除しました。";
 var strLangFvYGS17 = "お気に入りのグループがありません。";
 var strLangFvYGS18 = "リソースには下位を追加できません。";
 var strLangFvYGS19 = "カテゴリを削除すると、下位のすべてのリソースおよびカテゴリが削除されます。\n本当に削除しますか？";
-
-// 2024-08-26 유길상 - 자원등록 > 최대 예약 가능 기간, 정원
-var strLangMaxYGS01 = "最大予約可能期間を超過しました。";
-var strLangMaxYGS02 = "定員";
-var strLangMaxYGS03 = "名";
-var strLangMaxYGS04 = "定員を入力してください。";
-
-// 2025-05-07 이혜림 - 자원등록 > 최대 예약 가능 기간 제한
-var strLangLHR01 = "最大予約可能期間は1(日)から入力できます。";

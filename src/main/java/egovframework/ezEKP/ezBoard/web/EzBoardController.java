@@ -12618,6 +12618,8 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<TITLE>" + commonUtil.cleanValue((String)boardList.get(j).get("TITLE")) + "</TITLE>");
 					/* 2019-07-04 홍승비 - 게시판 미독건수 읽음표시 처리용 boardGroupID 추가 */
 					resultXML.append("<BOARDGROUPID>" + boardList.get(j).get("BOARDGROUPID") + "</BOARDGROUPID>");
+					resultXML.append("<ITEMREAD_FG>" + (accessCheck((String)boardList.get(j).get("BOARDID"), (String)boardList.get(j).get("ITEMID"),
+							"GENERAL", userInfo, "") ? "Y" : "N") + "</ITEMREAD_FG>");
 				}
 				resultXML.append("</CELL>");
 			}

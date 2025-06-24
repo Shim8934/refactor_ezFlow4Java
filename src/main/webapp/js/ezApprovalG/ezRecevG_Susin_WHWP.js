@@ -334,7 +334,7 @@ function SendDraftMappingSign(ret) {
                 rtnSignInfo.push(psigncell);
                 
                 // 연동정보 저장 함수로, 웹한글문서 접수기안 시 이미지 서명 사용 중에 오류를 발생시킨다. 추후 확인 예정
-			  	SetDocumentElement(psigncell, ret);
+			  	// SetDocumentElement(psigncell, ret);
 			  	signCnt = signCnt + 1
 			  	SingFlag = true;
 			}
@@ -411,7 +411,7 @@ function SendDraftMappingSign(ret) {
                 rtnSignInfo.push(psigncell);
 				
                 // 연동정보 저장 함수로, 웹한글문서 접수기안 시 이미지 서명 사용 중에 오류를 발생시킨다. 추후 확인 예정
-			  	SetDocumentElement(psigncell, ret);
+			  	// SetDocumentElement(psigncell, ret);
 			  	signCnt = signCnt + 1
 			  	SingFlag = true;
 			}

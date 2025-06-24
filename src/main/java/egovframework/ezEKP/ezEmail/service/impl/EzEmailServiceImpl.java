@@ -202,6 +202,7 @@ public class EzEmailServiceImpl implements EzEmailService {
         		mailGeneral.setMailSendResult((String)obj.get("mailSendResult"));
 				mailGeneral.setEditorFontFamily((String)obj.get("editorFontFamily"));
 				mailGeneral.setEditorFontSize((String)obj.get("editorFontSize"));
+				mailGeneral.setSelfCcOption((String)obj.get("selfCcOption"));
         		mailGeneralList.add(mailGeneral);
         	}
         }
@@ -234,6 +235,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 			mailGeneral.setMailSearchPeriod("failure");
 			mailGeneral.setEditorFontFamily(null);
 			mailGeneral.setEditorFontSize(null);
+			mailGeneral.setSelfCcOption("none");
 			
 			mailGeneralList.add(mailGeneral);
 		}
@@ -271,6 +273,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 		String mailSendResultParam = "mailSendResult=" + URLEncoder.encode(mailGeneral.getMailSendResult(), "UTF-8");
 		String editorFontFamilyParam = "editorFontFamily=" + URLEncoder.encode(mailGeneral.getEditorFontFamily(), "UTF-8");
 		String editorFontSizeParam = "editorFontSize=" + URLEncoder.encode(mailGeneral.getEditorFontSize(), "UTF-8");
+		String selfCcOption = "selfCcOption=" + URLEncoder.encode(mailGeneral.getSelfCcOption(), "UTF-8");
 		
 		String modeParam = "mode=";
 		if (mode != null && mode.equals("ALL")) {
@@ -280,7 +283,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 		String inputParams = userIdParam + "&" + listCountParam + "&" + refreshIntervalParam + "&" + keepDeleteLengthParam + "&" + previewModeParam
 				+ "&" + previewWListParam + "&" + previewWContentParam + "&" + previewHListParam + "&" + previewHContentParam + "&" + mailSenderNameParam
 				+ "&" + modeParam +"&" + previewSubTreeParam + "&" + usePreviewSubTreeParam + "&" + previewMailImageParam + "&" + previewMailParam + "&" + textOptionParam
-				+ "&" + mailSearchPeriodParam + "&" + defaultCursorPositionParam + "&" + defaultSeparateSendParam + "&" + mailSendResultParam + "&" + editorFontFamilyParam + "&" + editorFontSizeParam;
+				+ "&" + mailSearchPeriodParam + "&" + defaultCursorPositionParam + "&" + defaultSeparateSendParam + "&" + mailSendResultParam + "&" + editorFontFamilyParam + "&" + editorFontSizeParam
+				+ "&" + selfCcOption;
 
 		logger.debug("inputParams=" + inputParams);
 		

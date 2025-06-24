@@ -73,6 +73,7 @@
             <mvc:exclude-mapping path="/ezTalkGate/**"/>
             <mvc:exclude-mapping path="/ezConn/**"/>
             <mvc:exclude-mapping path="/ezUCMessenger/**"/>  
+            <mvc:exclude-mapping path="/mobile/ezschedule/**"/>  
             <mvc:exclude-mapping path="/user/login/checkPasswordPolicy.do"/>  
             <mvc:exclude-mapping path="/ezSchedule/workspaceScheduleGetList.do"/>
             <mvc:exclude-mapping path="/ezApprovalG/downloadAttachForHwp.do"/>
