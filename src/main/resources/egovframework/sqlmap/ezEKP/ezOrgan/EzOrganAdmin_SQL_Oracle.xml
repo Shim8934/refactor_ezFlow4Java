@@ -5472,6 +5472,28 @@
 		]]>
 	</delete>
 			
+	<select id="EzOrganAdminDAO.getRetireUserDeptList" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				DEPARTMENT
+			FROM
+				TBL_USERMASTER
+         	WHERE
+         		CN = #v_CN#
+         	AND
+         		TENANT_ID = #v_TENANT_ID#
+			UNION
+			SELECT
+				DEPTID
+			FROM
+				TBL_ADDJOBMASTER
+         	WHERE
+         		CN = #v_CN#
+         	AND
+         		TENANT_ID = #v_TENANT_ID#
+		]]>
+	</select>
+
 <!-- 	<procedure id="EzOrganAdminDAO.getCompanyList" parameterClass="Map" resultClass="OrganDeptVO"> -->
 <!-- 		<![CDATA[ -->
 <!-- 			{CALL EZSP_GETCOMPANYLIST(#v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->

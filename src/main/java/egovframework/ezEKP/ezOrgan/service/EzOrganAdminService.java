@@ -88,6 +88,8 @@ public interface EzOrganAdminService {
 	
 	public void retireEntry(String cn, String domain, int tenantID, String offset) throws Exception;
 
+	public List<String> getRetireUserDeptList(String cn, int tenantID) throws Exception;
+
 	public void updateDBData_user(OrganUserVO vo) throws Exception;
 
 	public void updateDBData_userPermission(OrganUserVO vo) throws Exception;

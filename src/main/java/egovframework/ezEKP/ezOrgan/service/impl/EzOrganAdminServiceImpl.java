@@ -771,6 +771,14 @@ public class EzOrganAdminServiceImpl extends EgovAbstractServiceImpl implements 
 	}	
 
 	@Override
+	public List<String> getRetireUserDeptList(String cn, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_TENANT_ID", tenantID);
+		map.put("v_CN", cn);
+		return ezOrganAdminDao.getRetireUserDeptList(map);
+	}
+
+	@Override
 	public int companyCheck(String cn, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("cn", cn);
