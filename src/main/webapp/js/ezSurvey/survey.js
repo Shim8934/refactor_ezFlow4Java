@@ -4468,7 +4468,7 @@ var SurveyCreate     = function() {
 	
 	// 분기 폼 제거
 	function dltLogicForm(type, id) {
-		if (type == 1 || type == 2 || type == 10) {
+		if (type == 1 || type == 2 || type == 10 || type == 11) {
 			var prevWrapper = $("#prevQstn" + id);
 			var opt = prevWrapper.find(".opt");
 			var optLength = opt.length;
@@ -4513,12 +4513,12 @@ var SurveyCreate     = function() {
 			$("#sltVal" + id).text(logic).css("display", "");
 			
 		}
-		else if (type == 1 || type == 2 || type == 9 || type == 10) {
+		else if (type == 1 || type == 2 || type == 9 || type == 10 || type == 11) {
 			var wrapper = $("#prevQstn"+id);
 			var opt = "";
 			var optLength = "";
 			
-			if (type == 1 || type == 2 || type == 10) {
+			if (type == 1 || type == 2 || type == 10 || type == 11) {
 				opt = wrapper.find(".opt");
 				optLength = opt.length;
 				
