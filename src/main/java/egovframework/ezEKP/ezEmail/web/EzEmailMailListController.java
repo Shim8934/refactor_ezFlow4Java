@@ -17,6 +17,7 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 import javax.mail.Address;
@@ -31,13 +32,13 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeUtility;
 import javax.mail.search.FlagTerm;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import egovframework.com.cmm.service.Globals;
 import egovframework.ezEKP.ezAI.util.AICommonUtil;
 import egovframework.ezEKP.ezEmail.vo.*;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -57,7 +58,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -684,6 +684,8 @@ public class EzEmailMailListController {
 							sb.append("<contentclass><![CDATA[IPM.Note]]></contentclass>");
 						}
 					}
+
+					sb.append(String.format("<tags><![CDATA[%s]]></tags>", mailInfo.get("TAGS")));
 
 					sb.append("</response>");
 				}
@@ -1367,7 +1369,8 @@ public class EzEmailMailListController {
 					}
 					
 					sb.append(String.format("<mailConfirm><![CDATA[%s]]></mailConfirm>", mailInfo.get("MAIL_IS_CONFIRMED").equals("1") ? true : false));
-					
+					sb.append(String.format("<tags><![CDATA[%s]]></tags>", mailInfo.get("TAGS")));
+
 					sb.append("</response>");
 				}
 				
@@ -3683,4 +3686,93 @@ public class EzEmailMailListController {
 		return returnValue;
 	}
 
+	@PostMapping("/ezEmail/createTag.do")
+	@ResponseBody
+	public Result createTag(@CookieValue("loginCookie") String loginCookie, @RequestParam String tagName, @RequestParam(required = false) String shareId) throws Exception {
+		logger.debug("createTag started.");
+
+		if (StringUtils.isBlank(tagName)) {
+			logger.debug("createTag ended. tagName must not be blank.");
+			return Result.failure();
+		}
+
+		if (NOT_ALLOWED_TAG_NAME_REGEXP.matcher(tagName).find()) {
+			logger.debug("createTag ended. tagName must not be contains \"!@#$%^&()\\\\/:*?\"<>|'`\"");
+			return Result.failure();
+		}
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+		String userAccount;
+
+		if ("YES".equalsIgnoreCase(useSharedMailbox) && StringUtils.isNotBlank(shareId)) {
+			if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, userInfo.getTenantId())) {
+				logger.debug("the user cannot access the shareId.");
+				return Result.failure("the user cannot access the shareId.");
+			}
+
+			userAccount = shareId + "@" + domainName;
+		} else {
+			userAccount = userInfo.getId() + "@" + domainName;
+		}
+
+		int tagIdx = ezEmailUtil.createTag(userAccount, tagName);
+		logger.debug("createTag ended.");
+
+		return Result.success(tagIdx);
+	}
+
+	@PostMapping("/ezEmail/saveChangesTags.do")
+	@ResponseBody
+	public Result saveChangesTags(@CookieValue("loginCookie") String loginCookie, @RequestBody SaveChangesTagRequest saveChangesTagRequest) throws Exception {
+		logger.debug("saveChagnesTags started. params: {}", saveChangesTagRequest.toString());
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+		String userAccount;
+
+		if ("YES".equalsIgnoreCase(useSharedMailbox) && StringUtils.isNotBlank(saveChangesTagRequest.getShareId())) {
+			if (!ezEmailService.checkUserShareId(userInfo.getId(), saveChangesTagRequest.getShareId(), userInfo.getTenantId())) {
+				logger.debug("the user cannot access the shareId.");
+				return Result.failure("the user cannot access the shareId.");
+			}
+
+			userAccount = saveChangesTagRequest.getShareId() + "@" + domainName;
+		} else {
+			userAccount = userInfo.getId() + "@" + domainName;
+		}
+
+		try (IMAPAccess imapAccess = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+				userAccount, jspw, egovMessageSource, userInfo.getLocale(), ezEmailUtil)) {
+			// 메일함으로 uid를 그룹핑한다.
+			Map<String, List<Long>> mailboxUidsMap = saveChangesTagRequest.getMailPathList().stream()
+					.map(path -> path.split("/"))
+					.filter(paths -> paths.length == 2)
+					.collect(Collectors.groupingBy(paths -> paths[0],
+							Collectors.mapping(paths -> Long.parseLong(paths[1]), Collectors.toList())));
+
+			Flags addFlags = new Flags();
+			Flags removeFlags = new Flags();
+
+			saveChangesTagRequest.getEnableTagList().stream().distinct().map("$Tag-"::concat).forEach(addFlags::add);
+			saveChangesTagRequest.getDisableTagList().stream().distinct().map("$Tag-"::concat).forEach(removeFlags::add);
+
+			for (Map.Entry<String, List<Long>> entry : mailboxUidsMap.entrySet()) {
+				try (Folder folder = imapAccess.getFolder(entry.getKey())) {
+					folder.open(Folder.READ_WRITE);
+					Message[] messagesByUID = ((IMAPFolder) folder).getMessagesByUID(ArrayUtils.toPrimitive(entry.getValue().toArray(new Long[0])));
+					folder.setFlags(messagesByUID, addFlags, true);
+					folder.setFlags(messagesByUID, removeFlags, false);
+				}
+			}
+		} catch (Exception e) {
+			logger.debug("saveChagneTags error:", e);
+			return Result.failure();
+		} finally {
+			logger.debug("saveChagnesTags ended.");
+		}
+
+		return Result.success();
+	}
 }

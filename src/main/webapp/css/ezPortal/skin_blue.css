@@ -333,3 +333,5 @@ nav .navUL li.on{color:#003497;}
 
 #theme3Body .main_time .timeCheckIn:hover{background:#FFFFFF; color:#003497; border:1px solid #003497; line-height:30px;}
 #theme3Body .main_time .timeCheckOut:hover{background:#FFFFFF; color:#003497; border:1px solid #003497; line-height:30px;}
+
+#mainmenu li.view_more.on{color: #003497;}
