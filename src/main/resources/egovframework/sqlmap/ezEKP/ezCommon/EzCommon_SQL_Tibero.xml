@@ -1701,7 +1701,7 @@
 			AND D.JOBID = #jobID#
 		</isNotEmpty>
 		<isEmpty property="jobID">
-			AND D.JOBID IS NULL
+			AND (D.JOBID IS NULL OR D.JOBID = '')
 		</isEmpty>
 	</select>
 
