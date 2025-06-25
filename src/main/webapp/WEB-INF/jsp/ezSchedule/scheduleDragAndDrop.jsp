@@ -121,7 +121,10 @@
 		        input.type = "checkbox";
 		        input.id = "checkboxall";
 		        input.onclick = function () { checkall(); };
-		        objTh.appendChild(input);
+		        var oDiv = document.createElement("div");
+		        oDiv.className = "custom_checkbox";
+		        oDiv.appendChild(input);
+		        objTh.appendChild(oDiv);
 		        objTr.appendChild(objTh);
 	
 		        var objTh2 = document.createElement("TH");

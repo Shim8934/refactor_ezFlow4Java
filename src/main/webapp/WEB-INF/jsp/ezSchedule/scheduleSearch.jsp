@@ -310,7 +310,9 @@
 		    	<tr class="detailSearch" style="display: none;"> 
 		      		<th><spring:message code='ezSchedule.t349'/></th>
 		      		<td>
-		      			<input type="checkbox" value="1" id="usedate" onclick="DateSearch_Click();" style="margin-top: 1px;" /><label for="usedate"><spring:message code='ezSchedule.t350'/></label>
+		      			<div class="custom_checkbox">
+			      			<input type="checkbox" value="1" id="usedate" onclick="DateSearch_Click();" style="margin-top: 1px;" /><label for="usedate"><spring:message code='ezSchedule.t350'/></label>
+		      			</div>
 		            	<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"/> ~
 		      			<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"/>
 		          		<span>&nbsp;(<spring:message code='ezSchedule.t351'/></span> 

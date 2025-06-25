@@ -501,6 +501,7 @@
 		        for (var i = 1; i < tmeptr.length; i++) {
 		            var span = document.createElement("SPAN");
 		            var input = document.createElement("INPUT");
+		            var oDiv = document.createElement("DIV");
 		            input.type = "checkbox";
 
 		            var img = document.createElement("IMG");
@@ -519,7 +520,8 @@
 
 		            var br = document.createElement("BR");
 
-		            span.appendChild(input);
+		            oDiv.appendChild(input);
+		            span.appendChild(oDiv);
 		            span.appendChild(img);
 		            span.appendChild(a);
 		            span.appendChild(br);
@@ -740,7 +742,9 @@
                                             <th><spring:message code='ezSchedule.t363'/></th>
                                             <td colspan="3" id="LabelOwner">
                                                 ${strLabelOwner}
-                                                <input type="checkbox" id="topcheck" value="1" style="margin-left:20px;"> <label for="topcheck"><spring:message code='ezSchedule.kwc01'/></label>
+                                                <div class="custom_checkbox">
+	                                                <input type="checkbox" id="topcheck" value="1" style="margin-left:20px;"> <label for="topcheck"><spring:message code='ezSchedule.kwc01'/></label>
+                                                </div>
                                             </td>
                                         </tr>
                                         </c:if>
@@ -748,7 +752,9 @@
                                             <th><spring:message code='ezSchedule.t363'/></th>
                                             <td colspan="3">
                                             	<select name="ListOwnerID" id="ListOwnerID" onchange="ListOwnerID_Change()" style="height:24px;"></select>
-                                            	<input type="checkbox" id="topcheck" value="1"> <label for="topcheck"><spring:message code='ezSchedule.kwc01'/></label>
+                                                <div class="custom_checkbox">
+	                                            	<input type="checkbox" id="topcheck" value="1"> <label for="topcheck"><spring:message code='ezSchedule.kwc01'/></label>
+                                                </div>
                                             </td>
                                         </tr>
 	                                    <tr>
@@ -767,7 +773,9 @@
 	                                        <th><spring:message code='ezSchedule.t368'/></th>
 	                                        <td id="periodblockTD" <c:if test="${scheduleId != ''}">style="width:80%;"</c:if>>
 	                                        	<span id="periodblock">
-	                                            	<input name="checkbox" type="checkbox" id="alldaycheck" onclick="allday_change()" value="1">
+		                                        	<div class="custom_checkbox">
+		                                            	<input name="checkbox" type="checkbox" id="alldaycheck" onclick="allday_change()" value="1">
+		                                            </div>
 	                                            	<spring:message code='ezSchedule.t369'/>
 	                                           		<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">
 	                                           		<input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" onkeypress="return KeEventControl(this);" onkeydown="return KeEventControl(this);" onkeyup="return KeEventControl(this);" onmousedown="return false"/>
@@ -783,16 +791,22 @@
 	                                        <td>
 												<%-- 단일일정 수정 시 --%>
 	                                        	<span id="completeFG_oneSpan" <c:if test="${dateType != '1' && dateType != '2'}">style="display:none;"</c:if>>
-	                                            	<input name="checkbox" type="checkbox" id="completeFG_one" <c:if test="${completeFG == 'Y' && dateType != '3'}">checked</c:if>>
+													<div class="custom_checkbox">	
+	                                            		<input name="checkbox" type="checkbox" id="completeFG_one" <c:if test="${completeFG == 'Y' && dateType != '3'}">checked</c:if>>
+	                                        		</div>
 	                                            	<spring:message code='ezSchedule.HSBCp02'/>
 	                                            </span>
 	                                            <%-- 반복일정 수정 시 (2021-11-25 기준으로 수정 시 pattern값은 0으로만 전달됨. 반복일정 수정 시 단일/전체 선택 기능이 없기 때문) --%>
                                             	<span id="completeFG_repOneSpan" <c:if test="${dateType != '3' || pattern != '0'}">style="display:none;"</c:if>>
-                                            		<input name="checkbox" type="checkbox" id="completeFG_repOne" onclick="completeFG_change(this.id)" <c:if test="${completeFG == 'Y' && isAllRep == 'N' && dateType == '3'}">checked</c:if>>
+                                            		<div class="custom_checkbox">
+                                            			<input name="checkbox" type="checkbox" id="completeFG_repOne" onclick="completeFG_change(this.id)" <c:if test="${completeFG == 'Y' && isAllRep == 'N' && dateType == '3'}">checked</c:if>>
+                                            		</div>
                                             		<spring:message code='ezSchedule.HSBCp03'/>
                                             	</span>
                                             	<span id="completeFG_repAllSpan" <c:if test="${dateType != '3' || pattern != '0'}">style="display:none;"</c:if>>
-                                            		<input name="checkbox" type="checkbox" id="completeFG_repAll" onclick="completeFG_change(this.id)" <c:if test="${completeFG == 'Y' && isAllRep == 'Y' && dateType == '3'}">checked</c:if>>
+                                            		<div class="custom_checkbox">
+                                            			<input name="checkbox" type="checkbox" id="completeFG_repAll" onclick="completeFG_change(this.id)" <c:if test="${completeFG == 'Y' && isAllRep == 'Y' && dateType == '3'}">checked</c:if>>
+                                            		</div>
                                             		<spring:message code='ezSchedule.HSBCp04'/>
                                             	</span>
 	                                        </td>

@@ -1,4 +1,4 @@
-﻿var PressCtrlKey = false;
+﻿﻿var PressCtrlKey = false;
 var PressShiftKey = false;
 var m_strColorSelect =  "#f1f8ff";
 var m_strColorDefault =  "#FFFFFF";
@@ -1000,7 +1000,11 @@ function ListView() {
 			    	cb.setAttribute("checked", "checked");
 			    }
 			    
-			    extTd.appendChild(cb);
+		        var oDiv = document.createElement("DIV");
+		        oDiv.className = "custom_checkbox";
+			    
+		        oDiv.appendChild(cb);
+			    extTd.appendChild(oDiv);
 			    extTd.innerHTML += ezSchedule_csj1;
 			    objTr.appendChild(extTd);
             }
