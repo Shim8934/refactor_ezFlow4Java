@@ -218,8 +218,8 @@
 	            <tr style="height:60px">
 	                <th style="height:40px;"><spring:message code='ezCommunity.t12' /></th>
 	                <td style="white-space:nowrap;border-right:0px">
-	                    <input type="radio" name="clubConfirmType" value="2" checked><spring:message code='ezCommunity.t13' />
-	                    <input type="radio" name="clubConfirmType" value="3"><spring:message code='ezCommunity.t1015' />
+						<div class="custom_radio"><input type="radio" name="clubConfirmType" value="2" checked><spring:message code='ezCommunity.t13' /></div>
+						<div class="custom_radio"><input type="radio" name="clubConfirmType" value="3"><spring:message code='ezCommunity.t1015' /></div>
 	                </td>
 	                <td style="padding: 5px;white-space:nowrap;border-left:0px">	                
 	                	<div><spring:message code='ezCommunity.t452' /></div>
@@ -229,8 +229,8 @@
 	            <tr style="height:60px">
 	                <th style="height:40px;"><spring:message code='ezCommunity.t15' /></th>
 	                <td style="white-space:nowrap;border-right:0px">
-	                    <input type="radio" name="clubType" value="2" checked><spring:message code='ezCommunity.t16' />
-	                    <input type="radio" name="clubType" value="3"><spring:message code='ezCommunity.t17' />
+						<div class="custom_radio"><input type="radio" name="clubType" value="2" checked><spring:message code='ezCommunity.t16' /></div>
+						<div class="custom_radio"><input type="radio" name="clubType" value="3"><spring:message code='ezCommunity.t17' /></div>
 	                </td>
 	                <td style="padding: 5px;white-space:nowrap;border-left:0px">
 	                	<div><spring:message code='ezCommunity.t1017' /></div>
@@ -240,8 +240,8 @@
 	            <tr style="display: none;height:60px">
 	                <th style="height:40px;"><spring:message code='ezCommunity.t1019' /></th>
 	                <td style="white-space:nowrap;border-right:0px">
-	                    <input type="radio" name="isIn" value="1"><spring:message code='ezCommunity.t1020' />
-	                    <input type="radio" name="isIn" value="2" checked><spring:message code='ezCommunity.t1021' />
+						<div class="custom_radio"><input type="radio" name="isIn" value="1"><spring:message code='ezCommunity.t1020' /></div>
+						<div class="custom_radio"><input type="radio" name="isIn" value="2" checked><spring:message code='ezCommunity.t1021' /></div>
 	                </td>
 	                <td style="padding: 5px;white-space:nowrap;border-left:0px">
 	                	<div><spring:message code='ezCommunity.t459' /></div>

@@ -17,6 +17,7 @@
 		</style>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript">
 			var pPermitCount = "<c:out value = '${pPermitCount}' />";
 	
@@ -111,11 +112,11 @@
 					<td style="padding:5px">
 						<c:choose>
 							<c:when test="${club.c_ClubConfirmType == '2'}">
-								<input type="radio" name="c_ClubConfirmType" value="2" checked >
+								<div class="custom_radio"><input type="radio" name="c_ClubConfirmType" value="2" checked ></div>
 							</c:when>
 							
 							<c:otherwise>
-								<input type="radio" name="c_ClubConfirmType" value="2" >
+								<div class="custom_radio"><input type="radio" name="c_ClubConfirmType" value="2" ></div>
 							</c:otherwise>
 						</c:choose>
 						
@@ -123,11 +124,11 @@
 						
 						<c:choose>
 							<c:when test="${club.c_ClubConfirmType == '3'}">
-								<input type="radio" name="c_ClubConfirmType" value="3" checked >
+								<div class="custom_radio"><input type="radio" name="c_ClubConfirmType" value="3" checked ></div>
 							</c:when>
 							
 							<c:otherwise>
-								<input type="radio" name="c_ClubConfirmType" value="3" >
+								<div class="custom_radio"><input type="radio" name="c_ClubConfirmType" value="3" ></div>
 							</c:otherwise>
 						</c:choose>
 						
@@ -144,11 +145,11 @@
 					<td style="padding:5px">
 						<c:choose>
 							<c:when test="${club.c_ClubGubun == '2' }">
-								<input type="radio" name="c_ClubGubun" value="2" checked >
+								<div class="custom_radio"><input type="radio" name="c_ClubGubun" value="2" checked ></div>
 							</c:when>
 							
 							<c:otherwise>
-								<input type="radio" name="c_ClubGubun" value="2" >
+								<div class="custom_radio"><input type="radio" name="c_ClubGubun" value="2" ></div>
 							</c:otherwise>
 						</c:choose>
 						
@@ -156,11 +157,11 @@
 						
 						<c:choose>
 							<c:when test="${club.c_ClubGubun == '3' }">
-								<input type="radio" name="c_ClubGubun" value="3" checked >
+								<div class="custom_radio"><input type="radio" name="c_ClubGubun" value="3" checked ></div>
 							</c:when>
 							
 							<c:otherwise>
-								<input type="radio" name="c_ClubGubun" value="3" >
+								<div class="custom_radio"><input type="radio" name="c_ClubGubun" value="3" ></div>
 							</c:otherwise>
 						</c:choose>
 						
@@ -177,11 +178,11 @@
 					<td>
 						<c:choose>
 							<c:when test="${club.isIn == '1' }">
-								<input type="radio" name="isIn" value="1" checked >
+								<div class="custom_radio"><input type="radio" name="isIn" value="1" checked ></div>
 							</c:when>
 							
 							<c:otherwise>
-								<input type="radio" name="isIn" value="1" >
+								<div class="custom_radio"><input type="radio" name="isIn" value="1" ></div>
 							</c:otherwise>
 						</c:choose>
 						
@@ -189,11 +190,11 @@
 						
 						<c:choose>
 							<c:when test="${club.isIn == '2' }">
-								<input type="radio" name="isIn" value="2" checked >
+								<div class="custom_radio"><input type="radio" name="isIn" value="2" checked ></div>
 							</c:when>
 							
 							<c:otherwise>
-								<input type="radio" name="isIn" value="2" >
+								<div class="custom_radio"><input type="radio" name="isIn" value="2" ></div>
 							</c:otherwise>
 						</c:choose>
 						

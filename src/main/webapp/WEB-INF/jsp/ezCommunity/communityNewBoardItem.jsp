@@ -1124,13 +1124,13 @@
 								<div style="height: 24px;vertical-align: middle;display: inline-block;">
 									<c:choose>
 										<c:when test="${pReservedItem == 'true' }">
-											<input type="checkbox" id="chk_reservation"
-												onclick="Reservation_onclick()" checked>
+											<div class="custom_checkbox"><input type="checkbox" id="chk_reservation"
+											onclick="Reservation_onclick()" checked></div>
 											<spring:message code='ezCommunity.t913' />
 										</c:when>
 										<c:otherwise>
-											<input type="checkbox" id="chk_reservation"
-												onclick="Reservation_onclick()">
+											<div class="custom_checkbox"><input type="checkbox" id="chk_reservation"
+											onclick="Reservation_onclick()"></div>
 											<spring:message code='ezCommunity.t913' />
 										</c:otherwise>
 									</c:choose> 
@@ -1149,17 +1149,17 @@
 							<td><c:choose>
 									<c:when
 										test="${(pMode != 'modify' && boardInfo.expireDays =='-1') || (pMode == 'modify' && fn:substring(item.endDate, 0, 4) == '9999') || pUrl != '' }">
-										<span id="Chkbox"><input type="checkbox"
+										<span id="Chkbox"><div class="custom_checkbox"><input type="checkbox"
 											id="ChkPermanence" name="ChkPermanence"
-											onclick="return ChkPermanent()" checked>
+											  onclick="return ChkPermanent()" checked></div>
 										<spring:message code='ezCommunity.t930' /></span>
 										<span id="Makedate"><input type="text" id="Edatepicker" readonly="readonly"
 											style="width: 80px; text-align: center"></span>
 									</c:when>
 									<c:otherwise>
-										<span id="Chkbox"><input type="checkbox"
+										<span id="Chkbox"><div class="custom_checkbox"><input type="checkbox"
 											id="ChkPermanence" name="ChkPermanence"
-											onclick="return ChkPermanent()">
+										 	 onclick="return ChkPermanent()"></div>
 										<spring:message code='ezCommunity.t930' /></span>
 										<span id="Makedate"><input type="text" id="Edatepicker" readonly="readonly"
 											style="width: 80px; text-align: center"></span>
@@ -1170,11 +1170,11 @@
 							<th><spring:message code='ezCommunity.t1171' /></th>
 							<c:choose>
 								<c:when test="${item.importance == '1' }">
-									<td><input type="checkbox" id="chkEmergent" checked>
+									<td><div class="custom_checkbox"><input type="checkbox" id="chkEmergent" checked></div>
 									<spring:message code='ezCommunity.t1172' /></td>
 								</c:when>
 								<c:otherwise>
-									<td><input type="checkbox" id="chkEmergent">
+									<td><div class="custom_checkbox"><input type="checkbox" id="chkEmergent"></div>
 									<spring:message code='ezCommunity.t1172' /></td>
 								</c:otherwise>
 							</c:choose>
@@ -1247,7 +1247,7 @@
 									</div>
 										<%--<th><spring:message code='ezCommunity.t141' /></th>--%>
 									<div id="lstAttachLink" class="ui-sortable" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)" style="overflow:auto;">
-										<table id="filelist" class="sublist" style="width: 100%;"><tr><th style="width: 15px;"><input type="checkbox" id="checkboxall"></th><th style="width: 87%;"><spring:message code='ezCommunity.t1135' /></th><th style="width: 13%;"><spring:message code='ezCommunity.t1136' /></th></tr></table>
+										<table id="filelist" class="sublist" style="width: 100%;"><tr><th style="width: 15px;"><div class="custom_checkbox"><input type="checkbox" id="checkboxall"></div></th><th style="width: 87%;"><spring:message code='ezCommunity.t1135' /></th><th style="width: 13%;"><spring:message code='ezCommunity.t1136' /></th></tr></table>
 										<p id="attachInnerNotice" class="attachInnerNotice_p_on"><span class="attachInnerNotice_span"><spring:message code='ezJournal.AttachMJS01' /></span></p></div>
 									<input id="file" type="file" onchange="filechange(event)" multiple="" style="display:none">
 									<input type="hidden" value="upload" onclick="fileupload()">
@@ -1275,7 +1275,7 @@
 									</div>
 										<%--<th><spring:message code='ezCommunity.t141' /></th>--%>
 											<div id="lstAttachLink" class="ui-sortable" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)" style="overflow:auto;">
-												<table id="filelist" class="sublist" style="width: 100%;"><tr><th style="width: 15px;"><input type="checkbox" id="checkboxall"></th><th style="width: 87%;"><spring:message code='ezCommunity.t1135' /></th><th style="width: 13%;"><spring:message code='ezCommunity.t1136' /></th></tr></table>
+												<table id="filelist" class="sublist" style="width: 100%;"><tr><th style="width: 15px;"><div class="custom_checkbox"><input type="checkbox" id="checkboxall"></div></th><th style="width: 87%;"><spring:message code='ezCommunity.t1135' /></th><th style="width: 13%;"><spring:message code='ezCommunity.t1136' /></th></tr></table>
 												<p id="attachInnerNotice" class="attachInnerNotice_p_on"><span class="attachInnerNotice_span"><spring:message code='ezJournal.AttachMJS01' /></span></p></div>
 											<input id="file" type="file" onchange="filechange(event)" multiple="" style="display:none">
 											<input type="hidden" value="upload" onclick="fileupload()">

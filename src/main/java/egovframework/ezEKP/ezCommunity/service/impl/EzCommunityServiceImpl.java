@@ -1141,7 +1141,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			
 			sb.append("<tr>");
 			/* 2018-05-07 홍승비 - 커뮤니티 설문조사 체크박스 사용 (삭제를 위한 해당설문ID, 등록자ID, 커뮤니티ID) */
-			sb.append("<td><input type=\"checkbox\" id=\"" + item.getManagerID()+ ";\" pollRegID=\"" + item.getPollRegUser() + "\" clubNo=\"" + item.getC_clubNo() + "\"/></td>");			
+			sb.append("<td><div class=\"custom_checkbox\"><input type=\"checkbox\" id=\"" + item.getManagerID()+ ";\" pollRegID=\"" + item.getPollRegUser() + "\" clubNo=\"" + item.getC_clubNo() + "\"/></div></td>");			
 			sb.append("<td style=\"text-overflow:ellipsis;overflow:hidden;white-space:nowrap;\" title=\"" + commonUtil.cleanValue(item.getPollSubject()).replaceAll("\\\\", "&#92;") + "\">");
 			sb.append("<a style = \"cursor:pointer\" onclick=movepage(\"" + code + "\",\"" + item.getManagerID() + "\",\"" + pollState.replaceAll(" ", "&nbsp;") + "\")>" + commonUtil.cleanValue(item.getPollSubject()).replaceAll("\\\\", "&#92;") + "</a></td>");
 			sb.append("<td>" + commonUtil.getDateStringInUTC(item.getPollStartDate().substring(0,19), offset, false).substring(0, 10) + " ~ " + commonUtil.getDateStringInUTC(item.getPollEndDate().substring(0,19), offset, false).substring(0, 10) + "</td>");
@@ -1583,7 +1583,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				switch (questionVO.getAnswerType()) {
 					case 1 :
 						sb.append("<tr style='height:25px'><td class=\"t2\" width=\"50\" align=\"center\">");
-						sb.append("<input type=\"radio\" name=pollSelect_" + questionVO.getQuestionNo() + " value=" + answerVO.getAnswerNo());
+						sb.append("<div class=\"custom_radio\"><input type=\"radio\" name=pollSelect_" + questionVO.getQuestionNo() + " value=" + answerVO.getAnswerNo());
 						
 						if (isSave == 1) {
 							if (answerVO.getAnswerNo().equals(Integer.toString(responseVO.getAnswerNo()))) {
@@ -1591,7 +1591,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 							}
 						}
 						
-						sb.append("></td>");
+						sb.append("></div></td>");
 						sb.append("<td class=\"t2\">" + commonUtil.cleanValue(answerVO.getAnswerContent()) + "</td>");
 						
 						/* 2018-05-09 홍승비 - 커뮤니티 설문조사 이미지 대신 색깔 그래프로 표현 */
@@ -1622,7 +1622,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 						break;
 					case 2 :
 						sb.append("<tr style='height:25px'><td class=\"t2\" width=\"50\" align=\"center\">");
-						sb.append("<input type=\"radio\" name=pollSelect_" + questionVO.getQuestionNo() + " value=" + answerVO.getAnswerNo() + " id=\"pollSelectID_" + questionVO.getQuestionNo() + "_" + answerVO.getAnswerNo() + "\"");
+						sb.append("<div class=\"custom_radio\"><input type=\"radio\" name=pollSelect_" + questionVO.getQuestionNo() + " value=" + answerVO.getAnswerNo() + " id=\"pollSelectID_" + questionVO.getQuestionNo() + "_" + answerVO.getAnswerNo() + "\"");
 						
 						if (isSave == 1) {
 							if (answerVO.getAnswerNo().equals(Integer.toString(responseVO.getAnswerNo()))) {
@@ -1630,7 +1630,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 							}
 						}
 						
-						sb.append("></td><td class=\"t2\">");
+						sb.append("></div></td><td class=\"t2\">");
 						
 						if (answerVO.getAnswerNo().equals(Integer.toString(questionVO.getAnswerCount()))) {
 							sb.append(answerVO.getAnswerNo() + ". " + "<input type=\"text\" name=\"answerETC\" style=\"width:270px\">&nbsp;<a href=\"javascript:etcview( '" + egovMessageSource.getMessage("ezCommunity.t627", userInfo.getLocale()) + "', '" + questionVO.getQuestionID() + "' );\">" + egovMessageSource.getMessage("ezCommunity.t688", userInfo.getLocale()) + "</a>");

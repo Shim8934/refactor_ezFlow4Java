@@ -120,7 +120,7 @@
 					}
 					
 					listXML += "<TR>";
-					listXML += "<TD align=center><input type='checkbox' name='chk' id='chk' onclick='checkBox_checked(\"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID") + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID") + "\" , event)'></td>";
+					listXML += "<TD align=center><div class='custom_checkbox'><input type='checkbox' name='chk' id='chk' onclick='checkBox_checked(\"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID") + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID") + "\" , event)'></div></td>";
 					
 					if (pBoardID == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
                         listXML += "<TD class='"+ urgency + " " + bClass + "'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "BoardName") + "</TD>";
@@ -781,7 +781,7 @@
 		<div style = "height:370px;">
 			<table  id="tblList" class="cmhomelist" style="width:100%">
 				<tr>
-					<th style="width:20px;padding-top:2px;"><input type='checkbox' name="checkbox" onclick='checkBox_checkAll()'></th>
+					<th style="width:20px;padding-top:2px;"><div class="custom_checkbox"><input type='checkbox' name="checkbox" onclick='checkBox_checkAll()'></div></th>
 					<c:if test="${pBoardID == '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}' }">
 						<c:choose>
 							<c:when test="${pSortBy == 'BoardName'}">

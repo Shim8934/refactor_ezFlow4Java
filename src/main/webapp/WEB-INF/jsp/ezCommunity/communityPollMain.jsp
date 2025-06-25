@@ -10,7 +10,8 @@
 		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/css/community.css')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>		
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript">
 			var code = "<c:out value = '${code}' />";
 // 		var ch_CommunityAdmin = "${chCommunityAdmin}";
@@ -118,7 +119,7 @@
 		
 		<table id="tblList" class="cmhomelist" style="width:100%;margin-top:12px">
 			<tr>
-				<th style="width:27px;"><input id="checkBoxHeader" type="checkbox" onclick="checkAll(this)"/></th>
+				<th style="width:27px;"><div class='custom_checkbox'><input id="checkBoxHeader" type="checkbox" onclick="checkAll(this)"/></div></th>
 				<th><spring:message code='ezCommunity.t673' /></th>			
 			    <th style="width:150px;"><spring:message code='ezCommunity.t672' /></th>
 			    <th style="width:80px;"><spring:message code='ezCommunity.t674' /></th>

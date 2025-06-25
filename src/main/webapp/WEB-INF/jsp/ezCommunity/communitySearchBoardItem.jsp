@@ -97,7 +97,7 @@
 					}
 					
 					listXML += "<tr id='rowdata'>";
-					listXML += "<td width=20 align=center valign=middle style='padding:0'><input type='checkbox' name='chk' id='chk' onclick='checkBox_checked(\"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID").trim() + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID").trim() + "\", event)'></td>";
+					listXML += "<td width=20 align=center valign=middle style='padding:0'><div class='custom_checkbox'><input type='checkbox' name='chk' id='chk' onclick='checkBox_checked(\"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID").trim() + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID").trim() + "\", event)'></div></td>";
 					listXML += "<td class='"+ urgency +"' title='" + MakeXMLString(SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Abstract").trim().replace("'", "`")) + "' style='cursor:pointer; text-overflow:ellipsis; overflow:hidden' onclick='ItemRead_onclick(\"" + pBoardID + "\", \"" + pBoardName + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID").trim() + "\", \"" + bTag + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID").trim() + "\", event)'><nobr>"
 						+ bTag + strEmergent + strSpace + MakeXMLString(SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Title").trim()) + "</nobr></td>";
 
@@ -884,7 +884,7 @@
 			</tr>
 			<table class="cmhomelist" style="margin-top:10px;width:100%">				
 				<tr>
-				    <th style="padding:0" align="center" width="20"><input type='checkbox' name="checkbox" onclick='checkBox_checkAll()'></th>
+					<th style="padding:0" align="center" width="20"><div class='custom_checkbox'><input type='checkbox' name="checkbox" onclick='checkBox_checkAll()'></div></th>
 				    <c:choose>
 						<c:when test="${pSortBy == 'A.Title'}">
 				    		<th style="cursor:pointer" onClick="SortPage('A.Title desc')"><spring:message code='ezCommunity.t124'/><img src="/images/view-sortup.gif" width="9" height="9"></th>

@@ -66,8 +66,8 @@
 
 		        for(var i = 0; i < SelectNodes(xmlDoc, "DATA/ROW").length; i++) {
 		        	html += "<table id='guestRp_" + SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "NO") + "' class=\"content\" style=\"margin-top:10px;margin-bottom:12px;border-left:1px solid #dfdfdf;border-right:1px solid #dfdfdf;\">";
-		        	html += "<tr style=\"border:1px solid #dfdfdf;\" >";
-		        	html += "<th style=\"height:25px; border:1px solid #dfdfdf; width:20px;\" nowrap><input type=\"checkbox\" name=\"c_no\" value=\"" + SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "C_NO") + "\"></th>";
+		        	html += "<tr style='border:1px solid #dfdfdf;' >";
+		        	html += "<th style='height:25px; border:1px solid #dfdfdf; width:20px;' nowrap><div class='custom_checkbox'><input type='checkbox' name='c_no' value='" + SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "C_NO") + "'></div></th>";
 		        	/* html += "<th style=\"border-left:1px solid none;border-right:1px solid none;width:50px;\" nowrap>" + SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "C_NO") + "</th>"; */
 		        	html += "<th style=\"width:90%; text-align:left;border:1px solid #dfdfdf; border-right: 1px solid transparent; font-weight:normal\" >";
 		        	
