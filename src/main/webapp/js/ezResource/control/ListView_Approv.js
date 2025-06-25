@@ -1,4 +1,4 @@
-﻿//컨트롤키나 쉬프트 키가 눌려졌음을 체크하는 FLAG
+﻿﻿//컨트롤키나 쉬프트 키가 눌려졌음을 체크하는 FLAG
 var PressCtrlKey = false;
 var PressShiftKey = false;
 //모질라 계열의 브라우저에서는 event.ctrlKey 등이 작동하지 않는다.
@@ -528,7 +528,10 @@ function ListView() {
                     oInput.id = "HeaderAllCheckBox";
                     oInput.type = "checkbox";
                     oInput.onclick = function () { event_HeaderCheckBoxClick(this); };
-                    objTd.appendChild(oInput);
+        	        var oDiv = document.createElement("div");
+        	        oDiv.className = "custom_checkbox";
+        	        oDiv.appendChild(oInput);
+                    objTd.appendChild(oDiv);
                 }
                 else {
                     var oText = document.createTextNode(strName);
@@ -770,8 +773,11 @@ function ListView() {
                         oInput.id = oDatas[0].text + ";";
 
                     oInput.type = "checkbox";
-                    oInput.onclick = new Function("chk_onselect(this)");                   
-                    objTd.appendChild(oInput);
+                    oInput.onclick = new Function("chk_onselect(this)");           
+        	        var oDiv = document.createElement("div");
+        	        oDiv.className = "custom_checkbox";
+        	        oDiv.appendChild(oInput);
+                    objTd.appendChild(oDiv);
                 }
                 else {
                     objTd.appendChild(oText);

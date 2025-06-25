@@ -575,28 +575,34 @@
        					</tr>
 						<tr>
 							<th> <spring:message code="ezResource.lyj01"/></th>
-							<td colspan="3" style="width:100%"><input type="radio" name="repeat" id="repeat1" value="1" <c:if test="${repeatFlag eq 1}"> checked </c:if>>
+							<td colspan="3" style="width:100%"><div class="custom_radio"><input type="radio" name="repeat" id="repeat1" value="1" <c:if test="${repeatFlag eq 1}"> checked </c:if>></div>
 								<spring:message code="ezResource.lyj02"/>
-								<input type="radio" name="repeat" id="repeat2" value="0" <c:if test="${repeatFlag eq 0}"> checked </c:if>>
+								<div class="custom_radio"><input type="radio" name="repeat" id="repeat2" value="0" <c:if test="${repeatFlag eq 0}"> checked </c:if>></div>
 								<spring:message code="ezResource.lyj03"/>
 							</td>
 						</tr>
         				<tr>
 							<th> <spring:message code="ezResource.t149"/></th>
 							<td colspan="3">
-									<input type="radio" name="approve" id="approve1" value="1"  <c:if test="${approveFlag eq 1}"> checked </c:if> />
+									<div class="custom_radio">
+										<input type="radio" name="approve" id="approve1" value="1"  <c:if test="${approveFlag eq 1}"> checked </c:if> />
+									</div>
 									<spring:message code="ezResource.t156"/>
-									<input type="radio" name="approve" id="approve0" value="0" <c:if test="${approveFlag eq 0}"> checked </c:if> />
+									<div class="custom_radio">
+										<input type="radio" name="approve" id="approve0" value="0" <c:if test="${approveFlag eq 0}"> checked </c:if> />
+									</div>
 									<spring:message code="ezResource.t157"/>
-									<input type="radio" name="approve" id="approve2" value="2" <c:if test="${approveFlag eq 2}"> checked </c:if>>
+									<div class="custom_radio">
+										<input type="radio" name="approve" id="approve2" value="2" <c:if test="${approveFlag eq 2}"> checked </c:if>>
+									</div>
             						<spring:message code="ezSchedule.t404"/>
 							</td>
 						</tr>
 						<tr>
         					<th><spring:message code="ezResource.kmsr11"/></th>
-        					<td colspan="3" style="width:100%"><input type="radio" name="return" id="return1" value="0" <c:if test="${returnFlag eq 0}"> checked </c:if>>
+        					<td colspan="3" style="width:100%"><div class="custom_radio"><input type="radio" name="return" id="return1" value="0" <c:if test="${returnFlag eq 0}"> checked </c:if>></div>
           					<spring:message code="ezResource.kmsr12"/>&nbsp;
-          					<input type="radio" name="return" id="return2" value="1" <c:if test="${returnFlag eq 1}"> checked </c:if>>
+          					<div class="custom_radio"><input type="radio" name="return" id="return2" value="1" <c:if test="${returnFlag eq 1}"> checked </c:if>></div>
           					<spring:message code="ezResource.kmsr13"/>
           					</td>
       					</tr>

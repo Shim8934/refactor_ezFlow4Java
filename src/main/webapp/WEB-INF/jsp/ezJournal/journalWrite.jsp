@@ -677,12 +677,12 @@
 	                        <td style="width: 35%; border-right: none;">
 	                        	<c:choose>
 	                        		<c:when test="${journal.deptShare eq 'N' && journal.deptShare ne null }">
-			                        	<input type="radio" id="selPublic" name="isPublic" value="Y"/><label for="selPublic"><spring:message code='ezJournal.t78'/></label>
-			                        	<input type="radio" id="selPrivate" name="isPublic" value="N" checked/><label for="selPrivate"><spring:message code='ezJournal.t79'/></label>
+			                        	<div class="custom_radio"><input type="radio" id="selPublic" name="isPublic" value="Y"/></div><label for="selPublic"><spring:message code='ezJournal.t78'/></label>
+			                        	<div class="custom_radio"><input type="radio" id="selPrivate" name="isPublic" value="N" checked/></div><label for="selPrivate"><spring:message code='ezJournal.t79'/></label>
 	                        		</c:when>
 	                        		<c:otherwise>
-			                        	<input type="radio" style="margin-bottom: 3px;" id="selPublic" name="isPublic" value="Y" checked/><label for="selPublic"><spring:message code='ezJournal.t78'/></label>
-			                        	<input type="radio" style="margin-bottom: 3px;" id="selPrivate" name="isPublic" value="N"/><label for="selPrivate"><spring:message code='ezJournal.t79'/></label>
+			                        	<div class="custom_radio"><input type="radio" style="margin-bottom: 3px;" id="selPublic" name="isPublic" value="Y" checked/></div><label for="selPublic"><spring:message code='ezJournal.t78'/></label>
+			                        	<div class="custom_radio"><input type="radio" style="margin-bottom: 3px;" id="selPrivate" name="isPublic" value="N"/></div><label for="selPrivate"><spring:message code='ezJournal.t79'/></label>
 	                        		</c:otherwise>
 	                        	</c:choose>
 	                        </td>

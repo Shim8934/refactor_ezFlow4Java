@@ -516,7 +516,7 @@
 		<div id="contentlist" style="width:100%;">
 			<table class="mainlist" style="width:100%; min-width:700px;">
 	  			<tr>
-	    			<th style="padding:0px; width:30px"><input type="checkbox" name="checkbox" onClick="reverse(this.checked)" id="Checkbox1"></th>
+	    			<th style="padding:0px; width:30px"><div class="custom_checkbox"><input type="checkbox" name="checkbox" onClick="reverse(this.checked)" id="Checkbox1"></div></th>
 	    			<th> <spring:message code='ezResource.t39' /></th>
 	    			<%-- <th style="width:120px"> <spring:message code='ezResource.t366' /></th> --%>
 	    			<th style="width:100px"> <spring:message code='ezResource.t106' /></th>
@@ -528,7 +528,7 @@
 				<c:if test="${!empty resBrdList}" >
 					<c:forEach var="list"  items="${resBrdList}" begin="${start}" varStatus="value">
 	  					<tr>
-	    					<td style="padding:0;"><input type="checkbox" name="chk" id="chk" value="${list.brdID}" ownerid="${list.ownerID}"></td>
+	    					<td style="padding:0;"><div class="custom_checkbox"><input type="checkbox" name="chk" id="chk" value="${list.brdID}" ownerid="${list.ownerID}"></div></td>
 							<td ondblclick="Item_View('${list.brdID}');"	style="cursor: pointer; word-wrap:break-word;" align="left">
 								<c:choose>
 									<c:when test="${list.approveFlag eq 0}">
