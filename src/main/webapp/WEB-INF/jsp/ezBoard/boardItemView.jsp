@@ -237,7 +237,7 @@
 		        		// 수정 수아 재은
 			        	var html = "<div><img src='/images/minus.png' title='<spring:message code='ezEmail.t99000065' />' id='smaller' style='cursor:pointer; margin-bottom: 5px;' />"
 							html += "<img src='/images/plus.png' title='<spring:message code='ezEmail.t99000064' />' id='bigger' style='cursor: pointer; margin-bottom: 5px;' />";
-							html += "<span id='curZoomSize' style='display:none; float:right;'></span></div>";
+							html += "<span id='curZoomSize'  style='position: absolute; top: 2px; right: 0px; background: white; font-size: 12px; padding: 2px; border: 1px solid rgb(204, 204, 204); border-radius: 4px; display: none;'></span></div>";
 							
 						$.ajax({
 							type : "POST",

@@ -48,9 +48,9 @@
 			#txtContent h6 {font-size:0.67em; margin-top:2.33em; margin-bottom:2.33em;}
 			
 			/* 줌 버튼 */
-            .zoom_btn_p{margin-top:1%; margin-left:1%; touch-action: none; display:flex;}
+            .zoom_btn_p{margin: 1% 1% 0 1%; touch-action: none; display:flex;}
             .zoom_btn_p span{
-            display:inline-block; width:50px; height:50px; border:1px solid #d2d2d2; background-repeat:no-repeat; background-position:center; background-color:#f8f8fa; cursor:pointer; background-size:55%; text-indent:-9999px; overflow:hidden;}
+            display:inline-block; width:32px; height:32px; border:1px solid #d2d2d2; background-repeat:no-repeat; background-position:center; background-color:#f8f8fa; cursor:pointer; background-size:55%; text-indent:-9999px; overflow:hidden;}
             .zoom_btn_p span.zoom_in_p{border-radius:8px 0 0 8px; background-image:url(../images/zoom_in.svg?v=1);}
             .zoom_btn_p span.zoom_out_p{border-radius:0 8px 8px 0; background-image:url(../images/zoom_out.svg?v=1);}
             
@@ -157,12 +157,6 @@
 	            	getBoardComment();
 	            }
 	            
-	            // 사용자가 설정한 본문크기값으로 세팅 (원글)
-                if (navigator.userAgent.indexOf('Firefox') != -1) {
-                    document.getElementById("txtContent").style.MozTransform = "scale(" + MozNowZoom + ")";
-                } else {
-                    document.getElementById("txtContent").style.zoom = nowZoom + "%";
-                }
 	        };
 	        
 	        /* 2019-11-07 홍승비 - 댓글삭제 레이어팝업 스크롤 위치 관련 */
@@ -196,8 +190,8 @@
 	                } else {
 	                    return;
 	                }
-	                document.getElementById("txtContent").style.MozTransform = "scale(" + MozNowZoom + ")";
-	                document.getElementById("txtContent").style.MozTransformOrigin = "0 0";
+	                document.getElementById("divContent").style.MozTransform = "scale(" + MozNowZoom + ")";
+	                document.getElementById("divContent").style.MozTransformOrigin = "0 0";
 	            }
 	            else {
 	                if (nowZoom < maxZoom) {
@@ -205,7 +199,7 @@
 	                } else {
 	                    return;
 	                }
-	                document.getElementById("txtContent").style.zoom = nowZoom + "%";
+	                document.getElementById("divContent").style.zoom = nowZoom + "%";
 	            }
 	        }
 	
@@ -216,8 +210,8 @@
 	                } else {
 	                    return;
 	                }
-	                document.getElementById("txtContent").style.MozTransform = "scale(" + MozNowZoom + ")";
-	                document.getElementById("txtContent").style.MozTransformOrigin = "0 0";
+	                document.getElementById("divContent").style.MozTransform = "scale(" + MozNowZoom + ")";
+	                document.getElementById("divContent").style.MozTransformOrigin = "0 0";
 	            }
 	            else {
 	                if (nowZoom > minZoom) {
@@ -225,7 +219,7 @@
 	                } else {
 	                    return;
 	                }
-	                document.getElementById("txtContent").style.zoom = nowZoom + "%";
+	                document.getElementById("divContent").style.zoom = nowZoom + "%";
 	            }
 	        }
 	
@@ -254,7 +248,7 @@
 	
 	                _img1.style.cursor = "pointer";
 	                _img1.style.margin = "5px 4px 5px 0px";
-	                _img1.src = "/images/zoom_out.svg?v=1";
+	                _img1.src = "/images/minus.png";
 	
 	                _img2 = document.createElement("IMG");
 	                _img2.id = "biglImg";
@@ -264,15 +258,41 @@
 	                _img2.style.cursor = "pointer";
 	                _img2.style.margin = "5px";
 	                _img2.style.marginLeft = "-4px";
-	                _img2.src = "/images/zoom_in.svg?v=1";
+	                _img2.src = "/images/plus.png";
 	
-	                document.getElementById("txtContent").appendChild(_img1);
-	                document.getElementById("txtContent").appendChild(_img2);--%>
+	                document.getElementById("divContent").appendChild(_img1);
+	                document.getElementById("divContent").appendChild(_img2);--%>
+	
+                    // 줌 버튼 컨테이너 생성
+                    var zoomBtnContainer = document.createElement("div");
+                    zoomBtnContainer.className = "zoom_btn_p";
+                    
+                    var zoomInSpan = document.createElement("span");
+                    zoomInSpan.className = "zoom_in_p";
+                    zoomInSpan.onclick = function () { Bigger(); };
+                    zoomInSpan.textContent = "확대";  // 텍스트가 시각적으로는 안보이지만 접근성 대비용
+                    
+                    var zoomOutSpan = document.createElement("span");
+                    zoomOutSpan.className = "zoom_out_p";
+                    zoomOutSpan.onclick = function () { Smaller(); };
+                    zoomOutSpan.textContent = "축소";
+                    
+                    zoomBtnContainer.appendChild(zoomInSpan);
+                    zoomBtnContainer.appendChild(zoomOutSpan);
+                    
+                    document.getElementById("txtContent").appendChild(zoomBtnContainer);
 	
 	                var _div = document.createElement("DIV");
 	                _div.id = "divContent";
 	                _div.innerHTML = responseText;
 	                document.getElementById("txtContent").appendChild(_div);
+	                
+	                // 사용자가 설정한 본문크기값으로 세팅 (원글)
+	                if (navigator.userAgent.indexOf('Firefox') != -1) {
+                        document.getElementById("divContent").style.MozTransform = "scale(" + MozNowZoom + ")";
+                    } else {
+                        document.getElementById("divContent").style.zoom = nowZoom + "%";
+                    }
 	                
 	            } catch (e) {}
 	        }
@@ -678,10 +698,6 @@
 	    </script>
 	</head>
 	<body>
-	    <div class="zoom_btn_p">
-            <span class="zoom_in_p" onclick="Bigger()">확대</span>
-            <span class="zoom_out_p" onclick="Smaller()">축소</span>
-        </div>
 		<div id="txtContent" name="txtContent" style="height:100%;margin-left:5px;margin-right:5px;">
 			<span style="margin-top:50px;height:10px;display:inline-block;"></span>
 		</div>

@@ -4300,13 +4300,13 @@ a.commentFileSpan:hover {cursor: pointer; text-decoration: underline;}
 #svClosing {margin-top: 10px;}
 
 /* 줌 버튼 */
-.zoom_btn{position:fixed; top:30%; left:calc(100% - 62px); touch-action: none;}
+.zoom_btn{position:fixed; top:30%; left:calc(100% - 47px); touch-action: none;}
 .zoom_btn span{
-display:block; width:50px; height:50px; border:1px solid #d2d2d2;
+display:block; width:46px; height:46px; border:1px solid #d2d2d2;
 background-repeat:no-repeat; background-position:center; background-color:#f8f8fa;
 cursor:pointer; background-size:55%; text-indent:-9999px; overflow:hidden;}
-.zoom_btn span.zoom_in{border-radius:8px 8px 0 0; background-image:url(../images/zoom_in.svg?v=1);}
-.zoom_btn span.zoom_out{border-radius:0 0 8px 8px; margin-top:-1px; background-image:url(../images/zoom_out.svg?v=1);}
+.zoom_btn span.zoom_in{border-radius:8px 0 0 0; background-image:url(../images/zoom_in.svg?v=1);}
+.zoom_btn span.zoom_out{border-radius:0 0 0 8px; margin-top:-1px; background-image:url(../images/zoom_out.svg?v=1);}
 
 .zoom_btn span:hover{border:1px solid #388CE5;}
 .zoom_btn span.zoom_in:hover{background-image:url(../images/zoom_in_hover.svg?v=1);}
