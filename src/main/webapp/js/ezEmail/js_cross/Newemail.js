@@ -1193,15 +1193,15 @@ function event_xmlhttp_mailPreview_Complete() {
                     var pReceiver_Address = TrimText(pReceiver_.substring(Pos1 + 1, Pos2));
                     
                     if (Cnt == 0) {
-                        pReceiverHtml = "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pReceiver_Address) + "' onclick='show_personinfo(\"" + pReceiver_Address + "\")'>\"" + pReceiver_Name + "\"</span>";
+                        pReceiverHtml = "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pReceiver_Address) + "' onclick='show_personinfo(\"" + pReceiver_Address + "\")'>\"" + pReceiver_Name  + " &lt;" + pReceiver_Address + "&gt;" + "\"</span>";
                         
                     }
 
                     if (pReceiverDetailHtml != "")
                         pReceiverDetailHtml += "&nbsp;,&nbsp;";
-                    pReceiverDetailHtml += "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pReceiver_Address) + "' onclick='show_personinfo(\"" + pReceiver_Address + "\")'>\"" + pReceiver_Name + "\"</span>";
+                    pReceiverDetailHtml += "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pReceiver_Address) + "' onclick='show_personinfo(\"" + pReceiver_Address + "\")'>\"" + pReceiver_Name + " &lt;" + pReceiver_Address + "&gt;" + "\"</span>";
                     if (g_useremail == pReceiver_Address) {
-                        pReceiverHtml = "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pReceiver_Address) + "' onclick='show_personinfo(\"" + pReceiver_Address + "\")'>\"" + pReceiver_Name + "\"</span>";
+                        pReceiverHtml = "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pReceiver_Address) + "' onclick='show_personinfo(\"" + pReceiver_Address + "\")'>\"" + pReceiver_Name + " &lt;" + pReceiver_Address + "&gt;" + "\"</span>";
                     }
 
                     pReceiverCnt++;
@@ -1299,7 +1299,7 @@ function event_xmlhttp_mailPreview_Complete() {
             if(pFromname == ""){
             	pMailSenderHtml = pOCS + "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pFromemail) + "' onclick='show_personinfo(\"" + pFromemail + "\")'>&nbsp;</span>";
             } else {
-            	pMailSenderHtml = pOCS + "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pFromemail) + "' onclick='show_personinfo(\"" + pFromemail + "\")'>\"" + pFromname + "\"</span>";
+            	pMailSenderHtml = pOCS + "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pFromemail) + "' onclick='show_personinfo(\"" + pFromemail + "\")'>\"" + pFromname + " &lt;" + pFromemail + "&gt;" + "\"</span>";
             	
             	if (useCountryIP == "YES" ) {
             		pMailSenderHtml += "<span title=" + pCountryName + ">"

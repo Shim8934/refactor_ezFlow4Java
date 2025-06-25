@@ -5856,7 +5856,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		} else {
 			returnValue = "<span style='cursor:pointer' title='" + (address == null? "" : EgovStringUtil.getSpclStrCnvr(address))
 					+ "' onclick='show_personinfo(\"" + address + "\")'>"
-					+ (name == null ? "" : name) + "</span>";
+					+ (name == null ? "" : name) + " &lt;" + (address == null ? "" : address) + "&gt;" + "</span>";
 		}
 		
 		return returnValue;
