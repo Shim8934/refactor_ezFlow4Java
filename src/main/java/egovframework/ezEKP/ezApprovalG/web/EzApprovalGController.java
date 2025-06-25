@@ -73,7 +73,11 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.streaming.SXSSFSheet;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -8823,224 +8827,86 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 * 전자결재G 내보내기, 전체내보내기 호출 Method
 	 */
 	@RequestMapping(value = "/ezApprovalG/excelExportOut.do", method = {RequestMethod.POST, RequestMethod.GET})
-	@ResponseBody
-	/*
-	public void excelExportOut(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception{
-		logger.debug("excelExportOut started"); 
-		
-		userInfo = commonUtil.aprUserInfo(loginCookie);
-		
-		StringBuilder resultExcel = new StringBuilder(); 
-		String listType = "";
-		
-		listType = request.getParameter("listType");
-		response.setContentType("application/ms-excel");
-		response.setCharacterEncoding("utf-8");
-		response.setHeader("Content-Disposition", "attachment; filename=\"" + EgovDateUtil.getTodayTime().substring(0, 10) + "_" + userInfo.getDeptID() + "_" + CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), messageSource.getMessage("ezApprovalG.kms01", locale)) + ".xls\"");
-		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
-		String allFG = request.getParameter("allFG");
-		
-		String excelValue = "";
-		
-		if (listType.toUpperCase().equals("DOC")) {
-			String containerID = request.getParameter("cont");
-			String pageNum = request.getParameter("PN");
-			String pageSize = request.getParameter("PS");
-			String orderCell = request.getParameter("OC");
-			String orderOption = request.getParameter("OO");
-			
-			excelValue = ezApprovalGService.getContDocList(containerID, userInfo.getId(), "", pageSize, pageNum, orderCell, orderOption, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
-		} else if (listType.toUpperCase().equals("PRINT")) {
-			excelValue = request.getParameter("saveExcelData");
-		} else {
-			String P0 = request.getParameter("P0");
-            String P1 = request.getParameter("P1");
-            String P2 = request.getParameter("P2");
-            String P3 = request.getParameter("P3");
-            String P4 = request.getParameter("P4");
-            String P5 = request.getParameter("P5");
-            String P6 = request.getParameter("P6");
-            String P7 = request.getParameter("P7");
-            String P8 = request.getParameter("P8");
-            String P9 = request.getParameter("P9");
-            String P10 = request.getParameter("P10");
-            String P11 = request.getParameter("P11");
-            String P12 = request.getParameter("P12");
-            String P13 = request.getParameter("P13");
-            String P14 = request.getParameter("P14");
-            String P15 = request.getParameter("P15");
-            String P16 = request.getParameter("P16");
-            String P17 = request.getParameter("P17");
-            String P18 = request.getParameter("P18");
-            String P19 = request.getParameter("P19");
-            String P20 = request.getParameter("P20");
-            String P21 = request.getParameter("P21");
-//            String P22 = request.getParameter("P22");
-            String P23 = request.getParameter("P23");
-            String P24 = request.getParameter("P24");
-            String pageNum = request.getParameter("PN");
-            String pageSize = request.getParameter("PS");
-            String orderCell = request.getParameter("OC");
-            String orderOption = request.getParameter("OO");
-            String subQuery = request.getParameter("SQ");
-            
-            excelValue = ezApprovalGService.getSearchDocList(P24, userInfo.getId(), subQuery, P0, P1, P2, P21, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P23, "", "", pageSize, pageNum, orderCell, orderOption, allFG, userInfo.getCompanyID(), userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset(),  approvalFlag, userInfo.getLocale());
-		}
-		
-		Document objXML = commonUtil.convertStringToDocument(excelValue);
-		
-		resultExcel.append("<table><tr>");
-		
-		for (int k = 0; k < objXML.getElementsByTagName("HEADER").getLength(); k++) {
-			String headerName = objXML.getElementsByTagName("NAME").item(k).getTextContent();
-			String headerWidth = objXML.getElementsByTagName("WIDTH").item(k).getTextContent();
-			
-			int width = Integer.parseInt(headerWidth) * 2;
-			
-			resultExcel.append("<td style='BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: #a6a6a6; BORDER-TOP: windowtext 0.5pt solid; BORDER-RIGHT: windowtext 0.5pt solid;width:" + width + "'><p align=center><STRONG>" + " " + commonUtil.cleanValue(headerName) + "</STRONG></p></td>        ");
-		}
-		resultExcel.append("</tr></table>");
-		
-		resultExcel.append("<table>");
-
-		NodeList objRow = objXML.getElementsByTagName("ROW");
-		
-		for (int k = 0; k < objRow.getLength(); k++) {
-			resultExcel.append("<tr>");
-			Element row = (Element) objRow.item(k);
-			NodeList objCell = row.getElementsByTagName("CELL");
-			
-			for (int p = 0; p < objCell.getLength(); p++) {
-				Element cell = (Element) objCell.item(p);
-   				String cellValue = cell.getElementsByTagName("VALUE").item(0).getTextContent();
-				String headerWidth = objXML.getElementsByTagName("WIDTH").item(p).getTextContent();
-				int width = Integer.parseInt(headerWidth) * 2;
-				if (cellValue.equals("001")) {
-					cellValue = "품의";
-				} else if (cellValue.equals("002")) {
-					cellValue = "협조";
-				} else if (cellValue.equals("003")) {
-					cellValue = "감사";
-				} else if (cellValue.equals("004")) {
-					cellValue = "심사";
-				} else if (cellValue.equals("011")) {
-					cellValue = "수신";
-				} else if (cellValue.equals("012")) {
-					cellValue = "합의";
-				} else if (cellValue.equals("013")) {
-					cellValue = "시행";
-				} else if (cellValue.equals("014")) {
-					cellValue = "검사부 감사";
-				} else if (cellValue.equals("015")) {
-					cellValue = "공람";
-				} else if (cellValue.equals("016")) {
-					cellValue = "회람";
-				} else if (cellValue.equals("017")) {
-					cellValue = "참조";
-				} else if (cellValue.equals("018")) {
-					cellValue = "후결";
-				} else if (cellValue.equals("019")) {
-					cellValue = "발신";
-				} else if (cellValue.equals("020")) {
-					cellValue = "신청";
-				} else if (cellValue.equals("031")) {
-					cellValue = "반송";
-				} else if (cellValue.equals("032")) {
-					cellValue = "회송";
-				}
-					
-				resultExcel.append("<td style='BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BORDER-TOP: windowtext 0.5pt solid; BORDER-RIGHT: windowtext 0.5pt solid;width:" + width + "; mso-number-format: \"@\";'><p align=left>" + commonUtil.cleanValue(cellValue) + " </p></td>       ");
-			}
-			resultExcel.append("</tr>");
-		}
-		resultExcel.append("</table>");
-		
-		response.getWriter().write(resultExcel.toString());
-		
-		logger.debug("excelExportOut ended"); 
-	}
-	*/
 	//2018-10-16 김보미 - 전자결재 엑셀출력 workBook 이용해서 출력하도록 변경
 	public void excelExportOut(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception{
-		logger.debug("excelExportOut started"); 
-		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
-		String listType = request.getParameter("listType") != null ? request.getParameter("listType") : ""; // 반드시 존재하는 값이며 null이 아님
-		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
-		String allFG = request.getParameter("allFG");
-		String excelValue = "";
-		
-		// 전체문서 조회(완료문서) 및 부서공유함 엑셀 다운로드 시 선택한 회사의 문서 리스트를 다운로드하도록 수정함.
-		String orgCompanyID = request.getParameter("orgCompanyID");
-		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
-			userInfo.setCompanyID(orgCompanyID);
-		}
-		
-		// 2024-03-07 기준으로 DocListType 변수를 "DocList"로 설정하는 코드 미존재, listType이 "DOC"으로 전달되지 않아 해당 if 분기는 의미가 없음 
-		if (listType.toUpperCase().equals("DOC")) {
-			String containerID = request.getParameter("cont");
-			String pageNum = request.getParameter("PN");
-			String pageSize = request.getParameter("PS");
-			String orderCell = request.getParameter("OC");
-			String orderOption = request.getParameter("OO");
-			
-			// SQL Injection 제거 > 검색 쿼리를 문자열이 아닌 맵으로 전달 (미사용 분기이므로 주석처리)
-			// excelValue = ezApprovalGService.getContDocList(containerID, userInfo.getId(), "", pageSize, pageNum, orderCell, orderOption, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
-		} else if (listType.toUpperCase().equals("PRINT")) {
-			excelValue = request.getParameter("saveExcelData");
-		} else {
-			String P0 = request.getParameter("P0");
-            String P1 = request.getParameter("P1");
-            String P2 = request.getParameter("P2");
-            String P3 = request.getParameter("P3");
-            String P4 = request.getParameter("P4");
-            String P5 = request.getParameter("P5");
-            String P6 = request.getParameter("P6");
-            String P7 = request.getParameter("P7");
-            String P8 = request.getParameter("P8");
-            String P9 = request.getParameter("P9");
-            String P10 = request.getParameter("P10");
-            String P11 = request.getParameter("P11");
-            String P12 = request.getParameter("P12");
-            String P13 = request.getParameter("P13");
-            String P14 = request.getParameter("P14");
-            String P15 = request.getParameter("P15");
-            String P16 = request.getParameter("P16");
-            String P17 = request.getParameter("P17");
-            String P18 = request.getParameter("P18");
-            String P19 = request.getParameter("P19");
-            String P20 = request.getParameter("P20");
-            String P21 = request.getParameter("P21");
-//            String P22 = request.getParameter("P22");
-            String P23 = request.getParameter("P23");
-            String P24 = request.getParameter("P24");
-            String pageNum = request.getParameter("PN");
-            String pageSize = request.getParameter("PS");
-            String orderCell = request.getParameter("OC");
-            String orderOption = request.getParameter("OO");
-            String subQuery = request.getParameter("SQ");
-            
-			if (approvalFlag.equalsIgnoreCase("G")) {
-				excelValue = ezApprovalGService.getSearchDocList(P24, userInfo.getId(), subQuery, P0, P1, P2, "",P21, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P23, "", "", pageSize, pageNum, orderCell, orderOption, allFG, userInfo.getCompanyID(), userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset(),  approvalFlag, userInfo.getLocale());
-			  //  excelValue = ezApprovalGService.getSearchDocList(P24, userInfo.getId(), subQuery, P0, P1, P2, P21,"", P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P23, "", "", pageSize, pageNum, orderCell, orderOption, allFG, userInfo.getCompanyID(), userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset(),  approvalFlag, userInfo.getLocale());
+		/* 2025-05-30 임채영 : (VOC #159464) : 전체 내보내기 기능 속도 개선  */
+		SXSSFWorkbook workbook = new SXSSFWorkbook(100);
+		try {
+			logger.debug("excelExportOut started");
+			userInfo = commonUtil.aprUserInfo(loginCookie);
+
+			String listType = "";
+
+			listType = request.getParameter("listType");
+
+			String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+			String allFG = request.getParameter("allFG");
+
+			String excelValue = "";
+
+			Map<String, Object> searchQueryMap = new HashMap<>();
+			if (listType.toUpperCase().equals("DOC")) {
+				String containerID = request.getParameter("cont");
+				String pageNum = request.getParameter("PN");
+				String pageSize = request.getParameter("PS");
+				String orderCell = request.getParameter("OC");
+				String orderOption = request.getParameter("OO");
+
+				excelValue = ezApprovalGService.getContDocList(containerID, userInfo.getId(), searchQueryMap, pageSize, pageNum, orderCell, orderOption, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
+			} else if (listType.toUpperCase().equals("PRINT")) {
+				excelValue = request.getParameter("saveExcelData");
 			} else {
-				/* 2024-10-28 홍승비 - SQL Injection 제거 > 전자결재 일반 > 서브쿼리 문자열 대신 각 검색조건에 대응하도록 별도 파라미터 분리 (itemCode, endAprType, endAprState), 엑셀 출력 기능에서는 해당 검색조건을 사용하지 않으므로 공백으로 전달함 */
-				excelValue = ezApprovalGService.getSearchDocListS(P12, userInfo.getId(), subQuery, P0, P1, P2, P9, "", P3, P4, P5, P6, P7, P8, P11, "", allFG, "", "", "", "", pageSize, pageNum, orderCell, orderOption, "", userInfo.getCompanyID(), userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset(), approvalFlag, userInfo.getLocale());
+				String P0 = request.getParameter("P0");
+				String P1 = request.getParameter("P1");
+				String P2 = request.getParameter("P2");
+				String P3 = request.getParameter("P3");
+				String P4 = request.getParameter("P4");
+				String P5 = request.getParameter("P5");
+				String P6 = request.getParameter("P6");
+				String P7 = request.getParameter("P7");
+				String P8 = request.getParameter("P8");
+				String P9 = request.getParameter("P9");
+				String P10 = request.getParameter("P10");
+				String P11 = request.getParameter("P11");
+				String P12 = request.getParameter("P12");
+				String P13 = request.getParameter("P13");
+				String P14 = request.getParameter("P14");
+				String P15 = request.getParameter("P15");
+				String P16 = request.getParameter("P16");
+				String P17 = request.getParameter("P17");
+				String P18 = request.getParameter("P18");
+				String P19 = request.getParameter("P19");
+				String P20 = request.getParameter("P20");
+				String P21 = request.getParameter("P21");
+//            String P22 = request.getParameter("P22");
+				String P23 = request.getParameter("P23");
+				String P24 = request.getParameter("P24");
+				String pageNum = request.getParameter("PN");
+				String pageSize = request.getParameter("PS");
+				String orderCell = request.getParameter("OC");
+				String orderOption = request.getParameter("OO");
+				String subQuery = request.getParameter("SQ");
+
+				if (approvalFlag.equalsIgnoreCase("G")) {
+					excelValue = ezApprovalGService.getSearchDocList(P24, userInfo.getId(), subQuery, P0, P1, P2, "", P21, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P23, "", "", pageSize, pageNum, orderCell, orderOption, allFG, userInfo.getCompanyID(), userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset(), approvalFlag, userInfo.getLocale());
+					//  excelValue = ezApprovalGService.getSearchDocList(P24, userInfo.getId(), subQuery, P0, P1, P2, P21,"", P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P23, "", "", pageSize, pageNum, orderCell, orderOption, allFG, userInfo.getCompanyID(), userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset(),  approvalFlag, userInfo.getLocale());
+				} else {
+					excelValue = ezApprovalGService.getSearchDocListS(P12, userInfo.getId(), subQuery, P0, P1, P2, P9, "", P3, P4, P5, P6, P7, P8, P11, "", allFG, "", "", "", "", pageSize, pageNum, orderCell, orderOption, "", userInfo.getCompanyID(), userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset(), approvalFlag, userInfo.getLocale());
+				}
 			}
-		}
-		
-		Document objXML = commonUtil.convertStringToDocument(excelValue);
-		
-		// 엑셀시작
-		// 2023-05-31 이사라 : 시큐어코딩 리소스 close
-		try (HSSFWorkbook workbook = new HSSFWorkbook()) {
-			HSSFSheet sheet;
-	
-			// 헤더 폰트 굵게
-			HSSFFont headerFont = workbook.createFont();
-			headerFont.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+
+			Document objXML = commonUtil.convertStringToDocument(excelValue);
+
+			//엑셀시작
+			SXSSFSheet sheet = workbook.createSheet("report");
+			sheet.trackAllColumnsForAutoSizing();
 			
-			HSSFCellStyle headerStyle= workbook.createCellStyle();
+			//헤더 폰트 굵게
+			Font headerFont = workbook.createFont();
+			headerFont.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+
+			CellStyle headerStyle = workbook.createCellStyle();
 			headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
 			headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
 			headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
@@ -9050,99 +8916,90 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			headerStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
 			headerStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
 			headerStyle.setFont(headerFont);
-			
-			HSSFCellStyle bodyStyle= workbook.createCellStyle();
+
+			CellStyle bodyStyle = workbook.createCellStyle();
 			bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
 			bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
 			bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
 			bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
 			bodyStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
-			 
+
 			Row row;
 			Cell cell;
-			      
-			sheet = workbook.createSheet("report");
+
 			row = sheet.createRow(0);
-			for (int i = 0; i <objXML.getElementsByTagName("HEADER").getLength(); i++) {
+			for (int i = 0; i < objXML.getElementsByTagName("HEADER").getLength(); i++) {
 				String headerName = objXML.getElementsByTagName("NAME").item(i).getTextContent();
-				
+
 				cell = row.createCell(i);
 				cell.setCellValue(headerName);
 				cell.setCellStyle(headerStyle);
-			    row.setHeight((short)512);
-			    sheet.autoSizeColumn(i);
-			    
-			    /* 2024-11-05 홍승비 - 엑셀 파일 저장 시 동적인 너비 계산이 setColumnWidth()에서 허용하는 최대 제한을 넘지 않도록 수정 (255 * 256 = 65280) */
-			    sheet.setColumnWidth(i, Math.min(65280, sheet.getColumnWidth(i) + 512));
-			} // header
-			
+				row.setHeight((short) 512);
+				sheet.autoSizeColumn(i);
+				sheet.setColumnWidth(i, (sheet.getColumnWidth(i)) + 512);
+			}//header
+
 			NodeList objRow = objXML.getElementsByTagName("ROW");
-	
+
+			Map<String, String> docTypeMap = new HashMap<>();
+			docTypeMap.put("001", "품의");
+			docTypeMap.put("002", "협조");
+			docTypeMap.put("003", "감사");
+			docTypeMap.put("004", "심사");
+			docTypeMap.put("011", "수신");
+			docTypeMap.put("012", "합의");
+			docTypeMap.put("013", "시행");
+			docTypeMap.put("014", "검사부 감사");
+			docTypeMap.put("015", "공람");
+			docTypeMap.put("016", "회람");
+			docTypeMap.put("017", "참조");
+			docTypeMap.put("018", "후결");
+			docTypeMap.put("019", "발신");
+			docTypeMap.put("020", "신청");
+			docTypeMap.put("031", "반송");
+			docTypeMap.put("032", "회송");
+
 			for (int j = 0; j < objRow.getLength(); j++) {
 				row = sheet.createRow((j + 1));
-				
+
 				Element rowElem = (Element) objRow.item(j);
 				NodeList objCell = rowElem.getElementsByTagName("CELL");
-	
+
 				for (int k = 0; k < objCell.getLength(); k++) {
 					Element cellElem = (Element) objCell.item(k);
-	   				String cellValue = cellElem.getElementsByTagName("VALUE").item(0).getTextContent();
-					
-					if (cellValue.equals("001")) {
-						cellValue = "품의";
-					} else if (cellValue.equals("002")) {
-						cellValue = "협조";
-					} else if (cellValue.equals("003")) {
-						cellValue = "감사";
-					} else if (cellValue.equals("004")) {
-						cellValue = "심사";
-					} else if (cellValue.equals("011")) {
-						cellValue = "수신";
-					} else if (cellValue.equals("012")) {
-						cellValue = "합의";
-					} else if (cellValue.equals("013")) {
-						cellValue = "시행";
-					} else if (cellValue.equals("014")) {
-						cellValue = "검사부 감사";
-					} else if (cellValue.equals("015")) {
-						cellValue = "공람";
-					} else if (cellValue.equals("016")) {
-						cellValue = "회람";
-					} else if (cellValue.equals("017")) {
-						cellValue = "참조";
-					} else if (cellValue.equals("018")) {
-						cellValue = "후결";
-					} else if (cellValue.equals("019")) {
-						cellValue = "발신";
-					} else if (cellValue.equals("020")) {
-						cellValue = "신청";
-					} else if (cellValue.equals("031")) {
-						cellValue = "반송";
-					} else if (cellValue.equals("032")) {
-						cellValue = "회송";
-					}
-					
+					String originalValue = cellElem.getElementsByTagName("VALUE").item(0).getTextContent();
+					String cellValue = docTypeMap.getOrDefault(originalValue, originalValue);
+
 					cell = row.createCell(k);
-					cell.setCellValue(cellValue);
+					cell.setCellValue(cellValue == null ? "" : cellValue);
 					cell.setCellStyle(bodyStyle);
-					row.setHeight((short)384);
-					sheet.autoSizeColumn(k);
-				    sheet.setColumnWidth(k, Math.min(65280, sheet.getColumnWidth(k) + 512));
+					row.setHeight((short) 384);
 				}
 			}//body
+	
+			// 각 행,열에 데이터맵핑 후에 각 열의 헤더의 넓이로 해당하는 열의 셀에 모두 일괄적용 
+			int columnSize = objXML.getElementsByTagName("HEADER").getLength();
+			for (int k = 0; k < columnSize; k++) {
+				//autoSizeColumn은 성능 부하가 많이 걸리는 작업이므로, 별도로 HEADER 열의 수만큼 실행으로 변경
+				sheet.autoSizeColumn(k);
+				sheet.setColumnWidth(k, Math.min(255 * 256, sheet.getColumnWidth(k) + 512));
+			}
 			
 			/* 2019-11-18 홍승비 - 전자결재문서 엑셀 저장 시 부서ID 대신 부서명을 파일명에 사용하도록 수정 */
 			// 2020-10-08 김민성- 크롬에서 다운로드시 확장자 사라지는 오류 수정
-			String pFileName = EgovDateUtil.getTodayTime().substring(0, 10) + "_" + userInfo.getDeptName() + "_" + messageSource.getMessage("ezApprovalG.kms01", locale).replace(" ", "_") + ".xls";
+			String pFileName = EgovDateUtil.getTodayTime().substring(0, 10) + "_" + userInfo.getDeptName() + "_" + messageSource.getMessage("ezApprovalG.kms01", locale).replace(" ", "_") + ".xlsx";
 			response.setContentType("application/ms-excel");
 			response.setCharacterEncoding("utf-8");
-			// CWE-113 보안 취약점 대응
-			response.setHeader("Content-Disposition", "attachment; filename=\"" + CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), pFileName.replaceAll("\r", "").replaceAll("\n", "")) + "\"");
-			
+			response.setHeader("Content-Disposition", "attachment; filename=\"" + CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), pFileName) + "\"");
+
 			workbook.write(response.getOutputStream());
-			//workbook.close();
-			
+		} catch (IOException e) {
+			logger.error("### 엑셀 저장 중 IOException 발생 = {}", e.getMessage());
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		} finally {
 			logger.debug("excelExportOut ended");
+			workbook.dispose();
+			workbook.close();
 		}
 	}
 	

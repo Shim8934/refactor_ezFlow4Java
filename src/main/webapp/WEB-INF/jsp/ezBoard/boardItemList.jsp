@@ -569,6 +569,12 @@
 		            endtime = new Date().getTime();
 		            document.getElementById("runtime").innerHTML = "RunTime : <span style='color:black;font-weight:bold'>" + (endtime - starttime) / 1000 + "</span> Sec";
 		            MailOptionHidden();
+					
+					try {
+						if (url === "/ezBoard/getBoardList.do") {
+							window.parent.itemCnt = boardItemCount;
+						}
+					} catch (e) { console.log(e); }
 		        }
 		        catch (e) {
 		            console.log(e);
@@ -1709,7 +1715,7 @@
                             <c:if test ="${useKeyword eq 'Y'}">
                                 <option value="rad_Keyword"><spring:message code='ezApprovalG.t1200'/></option>
                             </c:if>
-                            <option value="rad_Subject_Content"><spring:message code='ezBoard.t208'/> + <spring:message code='ezBoard.garm01'/></option>
+                        <%--<option value="rad_Subject_Content"><spring:message code='ezBoard.t208'/> + <spring:message code='ezBoard.garm01'/></option>--%>
 		    			</select>
 					  <input id="txt_keyword" class="searchinputBox" style="height: 27px;border: 1px solid #cbcbcb;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/>
 					  <input type="text" name="dummy" autocomplete="on" style="width: 0; margin: 0; padding: 0; border: none;">
@@ -1729,7 +1735,7 @@
 	    			<c:if test ="${useKeyword eq 'Y'}">
 	    			    <option value="rad_Keyword"><spring:message code='ezApprovalG.t1200'/></option>
 	    		    </c:if>
-	    		    	<option value="rad_Subject_Content"><spring:message code='ezBoard.t208'/> + <spring:message code='ezBoard.garm01'/></option>
+                <%--<option value="rad_Subject_Content"><spring:message code='ezBoard.t208'/> + <spring:message code='ezBoard.garm01'/></option>--%>
 				  </select>
 				  <input id="txt_keyword" class="searchinputBox" style="height: 27px;border: 1px solid #cbcbcb;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
 		          <a class="searchBtn nofilter"><img src="/images/bsearch_new2.png" border="0" onClick="search('quick')"></a>

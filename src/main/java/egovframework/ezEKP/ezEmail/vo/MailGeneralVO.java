@@ -39,6 +39,8 @@ public class MailGeneralVO {
 	private String editorFontFamily;
 	
 	private String editorFontSize;
+
+	private String selfCcOption; // 나를 항상 참조에 포함 선택. none : 사용안함(default) / cc : 나를 항상 참조에 포함 / bcc : 나를 항상 숨은참조에 포함
 	
 	public String getMailSendResult() {
 		return mailSendResult;
@@ -190,6 +192,13 @@ public class MailGeneralVO {
 	public void setEditorFontSize(String editorFontSize) {
 		this.editorFontSize = editorFontSize;
 	}
+	public String getSelfCcOption() {
+		return selfCcOption;
+	}
+
+	public void setSelfCcOption(String selfCcOption) {
+		this.selfCcOption = selfCcOption;
+	}
 
 	public String toString() {
 		return "listCount=" + listCount + ",refreshInterval=" + refreshInterval + ",keepDeleteLength=" + keepDeleteLength
@@ -197,7 +206,8 @@ public class MailGeneralVO {
 				+ ",previewHList=" + previewHList + ",previewHContent=" + previewHContent + ",mailSenderNm=" + mailSenderNm
 				+ ",previewSubtree=" + previewSubTree + ",previewmailImage=" + previewMailImage + ",previewMail=" + previewMail + ",textOption=" + textOption
 				+ ",mailSearchPeriod=" + mailSearchPeriod + ",defaultCursorPosition=" + defaultCursorPosition + ",defaultSeparateSend=" + defaultSeparateSend
-				+ ",mailSendResult=" + mailSendResult + ",editorFontFamily=" + editorFontFamily + ",editorFontSize=" + editorFontSize ;
+				+ ",mailSendResult=" + mailSendResult + ",editorFontFamily=" + editorFontFamily + ",editorFontSize=" + editorFontSize
+				+ ",selfCcOption=" + selfCcOption;
 	}
 
 }

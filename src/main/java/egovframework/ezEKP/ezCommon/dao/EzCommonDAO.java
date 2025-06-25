@@ -3463,4 +3463,15 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.addMailboxProgressStateColumns");
 		}
 	}
+
+	// 2024-12-05 한태훈 - 게시판 > 게시판 버전관리 테이블 추가
+	public void createTblBoardModifyHistory() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblBoardModifyHistory");
+		} catch (Exception e) {
+			
+			logger.debug("tbl_board_modifyhistory doesn't exist. creating the table...");
+			update("EzCommonDAO.createTblBoardModifyHistory");
+		}
+	}
 }

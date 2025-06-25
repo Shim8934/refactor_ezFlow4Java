@@ -49,6 +49,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import egovframework.ezEKP.ezBoard.vo.BoardKeywordVO;
 import egovframework.ezEKP.ezBoard.vo.BoardReplyAttachVO;
+import egovframework.ezEKP.ezBoard.vo.BoardHistoryVO;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
@@ -761,17 +762,29 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("itemID", itemID);
 		map.put("boardID", boardID);
 		map.put("tenantID", tenantID);
-		
-		ezBoardDAO.deleteBoardItem(map);
-		ezBoardDAO.deleteBoardReply(map);
-		ezBoardDAO.deleteBoardItemRead2(map);
-		
-		if (mode != null && (mode.equals("PHOTO") || mode.equals("MOVIE"))) {
-			BoardListVO boardListVO = new BoardListVO();
-			boardListVO.setItemID(itemID);
-			boardListVO.setTenantID(tenantID);
-			
-			ezBoardDAO.deleteImageItem(boardListVO);
+
+		String useVersion = getUseVersionFlag(boardID, tenantID);
+
+		if (useVersion.equals("Y") && (!mode.isEmpty() && !mode.equals("only"))) {
+			List<String> versionedItemHrefList = ezBoardDAO.getVersionedItemHrefList(map);
+
+			ezBoardDAO.deleteVersionedItem(map);
+			ezBoardDAO.deleteVersionedItemReply(map);
+			ezBoardDAO.deleteVersionedItemRead(map);
+
+			deleteVersionedItemFile(realPath, versionedItemHrefList);
+		} else {
+			ezBoardDAO.deleteBoardItem(map);
+			ezBoardDAO.deleteBoardReply(map);
+			ezBoardDAO.deleteBoardItemRead2(map);
+
+			if (mode != null && (mode.equals("PHOTO") || mode.equals("MOVIE"))) {
+				BoardListVO boardListVO = new BoardListVO();
+				boardListVO.setItemID(itemID);
+				boardListVO.setTenantID(tenantID);
+
+				ezBoardDAO.deleteImageItem(boardListVO);
+			}
 		}
 		
 		ezBoardDAO.insertDeleteReservedItem(map);
@@ -1027,7 +1040,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	}
 
 	@Override
-	public List<HashMap<String, Object>> getBoardListItem(String boardID, String userID, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, Map<String, String> orderByMap, String type, int tenantID) throws Exception {
+	public List<HashMap<String, Object>> getBoardListItem(String boardID, String userID, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, Map<String, String> orderByMap, String type, int tenantID, String useVersion) throws Exception {
 		logger.debug("getBoardListItem started");
 		String pType = type;
 		
@@ -1072,7 +1085,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("iv_PORDERBYCOL2DESC", orderByCol2Desc);
 		map.put("rowCount", endRow - (startRow - 1));
 		map.put("limit", startRow - 1);
-		
+		map.put("useVersion", useVersion != null && useVersion.isEmpty() ? "N" : useVersion);
+
 		logger.debug("getBoardListItem ended");
 		return ezBoardDAO.getBoardListItem(map);
 	}
@@ -1156,6 +1170,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("limit", boardListVO.getStartRow() - 1);
 		map.put("v_KEYWORD", boardVO.getKeyword());
 		map.put("v_useKeywordFlag", boardVO.getUseKeyword());
+		
+		String useVersion = getUseVersionFlag(boardVO.getBoardId(), boardVO.getTenantID());
+		map.put("useVersion", useVersion);
 		
 		// 20240216 : 김진홍 : CSAP 인증 처리 : searchQuery 를 파라미터로 변경
 		for (String key : searchMap.keySet()) {
@@ -1803,6 +1820,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_useKeywordFlag", boardVO.getUseKeyword());
 		map.put("v_KEYWORD", boardVO.getKeyword());
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		
+		String useVersion = getUseVersionFlag(boardVO.getBoardId(), boardVO.getTenantID());
+		map.put("useVersion", useVersion);
 		
 		for (String key : searchMap.keySet()) {
 			map.put(key, searchMap.get(key));
@@ -2477,6 +2497,11 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		}
 		
 		ezBoardDAO.newItem(boardListVO);
+
+		// 버전 등록
+		if (boardListVO.getVersionManage() != null && boardListVO.getVersionManage().equals("Y")) {
+			ezBoardDAO.addModifyHistory(boardListVO);
+		}
 
 		logger.debug("brdNewItem ended");
 	}
@@ -4230,6 +4255,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		String editor = ezCommonService.getTenantConfig("MODULEEDITOR", userInfo.getTenantId());
 		
 		boolean saveResult = false;
+
+		String useVersion = doc.getElementsByTagName("useVersion").item(0) != null ? doc.getElementsByTagName("useVersion").item(0).getTextContent() : "";
+
 		boardListVO.setFilePath(commonUtil.detectPathTraversal(doc.getElementsByTagName("FILEPATH").item(0).getTextContent()));
 		boardListVO.setItemID(commonUtil.detectPathTraversal(doc.getElementsByTagName("ITEMID").item(0).getTextContent()));
 		boardListVO.setBoardID(doc.getElementsByTagName("BOARDID").item(0).getTextContent());
@@ -4297,8 +4325,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		boardListVO.setEndDate(commonUtil.getDateStringInUTC(doc.getElementsByTagName("ENDDATE").item(0).getTextContent(), userInfo.getOffset(), true));
 		boardListVO.setABSTRACT(doc.getElementsByTagName("ABSTRACT").item(0).getTextContent());
 		boardListVO.setAttachments(doc.getElementsByTagName("ATTACHMENTS").item(0).getTextContent());
+
 		boardListVO.setUpperItemIDTree(doc.getElementsByTagName("UPPERITEMIDTREE").item(0).getTextContent());
-		
+
 		//답변의 경우 최근에 답변 달은 것이 최상위로 와야함(by design)
 		if (pMode.equals("reply")) {
 			boardListVO.setUpperItemIDTree(boardListVO.getUpperItemIDTree() + getReverseDateNow() + boardListVO.getItemID());
@@ -4428,9 +4457,24 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			} else {
 				boardListVO.setupdaterID(userInfo.getId());
 			}
+		}
+		
+		if (!useVersion.isEmpty() && useVersion.equals("Y")) {
+			boardListVO.setVersionManage(useVersion);
+			boardListVO.setParentItemID(doc.getElementsByTagName("parentItemID").item(0).getTextContent());
+
+			String version = doc.getElementsByTagName("version").item(0).getTextContent();
+			boardListVO.setVersion(version.isEmpty() ? "0.0" : version);
+		}
+
+		boolean historyModify = doc.getElementsByTagName("historyModify").item(0).getTextContent().equals("true");
+
+		if (pMode.equals("modify") && (!useVersion.isEmpty() && !useVersion.equals("Y"))) {
 			brdUpdateItem(boardListVO, "BOARD");
 		} else if (pMode.equals("temp")) {
 			brdNewItemTemp(boardListVO);
+		} else if (pMode.equals("modify") && historyModify) {
+			brdUpdateItem(boardListVO, "BOARD");
 		} else {
 			brdNewItem(boardListVO);
 		}
@@ -4865,7 +4909,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		map.put("lang", boardVO.getLang());
+		map.put("lang", commonUtil.getMultiData(boardVO.getLang(), boardVO.getTenantID()));
 		map.put("v_PUSERID", boardListVO.getUserID());
 		
 		if (orderByMap.get("orderByCol") != null) {
@@ -7441,5 +7485,83 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				return false;
 			}
 		}
+	}
+	
+	@Override
+	public List<BoardHistoryVO> getModifiedHistoryOfItem(String boardID, String offSetMin, String itemID, String companyID, int tenantID) throws Exception {
+		List<BoardHistoryVO> boardHistoryList = ezBoardDAO.getModifiedHistoryOfItem(boardID, itemID, companyID, tenantID);
+		for (BoardHistoryVO boardHistoryVO : boardHistoryList) {
+			String boardHistoryDate = commonUtil.getDateStringInUTC(boardHistoryVO.getModifiedDate(), offSetMin, false);
+			if (boardHistoryDate.length() < 16) {
+				boardHistoryDate = boardHistoryDate.substring(0, 10);
+			} else {
+				boardHistoryDate = boardHistoryDate.substring(0, 16);
+			}
+			
+			boardHistoryVO.setModifiedDate(boardHistoryDate);
+		}
+				
+		return boardHistoryList;
+	}
+
+	@Override
+	public String getUseVersionFlag(String boardID, int tenantID) throws Exception {
+		return ezBoardDAO.getUseVersionFlag(boardID, tenantID);
+	}
+
+	@Override
+	public String getItemVersion(String itemID, String companyID, int tenantID) throws Exception {
+		return ezBoardDAO.getItemVersion(itemID, companyID, tenantID);
+	}
+
+	@Override
+	public String getParentItemID(String itemID, String companyID, int tenantID) throws Exception {
+		return ezBoardDAO.getParentItemID(itemID, companyID, tenantID);
+	}
+
+	private void deleteVersionedItemFile(String realPath, List<String> versionedItemHrefList) throws Exception {
+		logger.info("deleteVersionedItemFile started");
+
+		versionedItemHrefList.forEach((href) -> {
+			try {
+				new File(realPath + href).delete();
+			} catch (Exception e) {
+				logger.error(e.getMessage(), e);
+			}
+		});
+
+		logger.info("deleteVersionedItemFile ended");
+	}
+
+	@Override
+	public String checkIsNewestVersion(String boardID, String itemID, int tenantID, String version) throws Exception {
+		logger.info("checkIsNewestVersion started");
+
+		String newestVersion = ezBoardDAO.getNewestVersion(boardID, itemID, tenantID);
+
+		logger.info("checkIsNewestVersion ended");
+
+		return version.equals(newestVersion) ? "Y" : "N";
+	}
+	
+	@Override
+	public String getBoardTitle(String contentLocation, int tenantId) throws Exception {
+		logger.debug("getBoardTitle started.");
+
+		String[] tmpStr = contentLocation.split("/");
+		String boardId = tmpStr[5];
+		String fileNm = tmpStr[tmpStr.length-1];
+		int dotIndex = fileNm.lastIndexOf(".");
+		String itemId = (dotIndex != -1) ? fileNm.substring(0, dotIndex) : "";
+
+		Map<String, Object> map = new HashMap<>();
+		map.put("boardID", boardId);
+		map.put("itemID", itemId);
+		map.put("tenantID", tenantId);
+
+		String title = ezBoardDAO.getBoardTitle(map);
+
+		logger.debug("getBoardTitle ended.");
+		return title != null ? title : "";
 	}
 }

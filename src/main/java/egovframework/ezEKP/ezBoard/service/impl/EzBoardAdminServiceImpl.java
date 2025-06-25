@@ -30,6 +30,7 @@ import com.ibm.icu.text.SimpleDateFormat;
 import com.ibm.icu.util.Calendar;
 
 import egovframework.ezEKP.ezBoard.dao.EzBoardAdminDAO;
+import egovframework.ezEKP.ezBoard.dao.EzBoardDAO;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.vo.BoardAttributeVO;
 import egovframework.ezEKP.ezBoard.vo.BoardBackgroundVO;
@@ -38,6 +39,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
+import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -49,6 +51,9 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 	
 	@Resource(name="EzBoardAdminDAO")
 	private EzBoardAdminDAO ezBoardAdminDAO;
+
+	@Resource(name="EzBoardDAO")
+	private EzBoardDAO ezBoardDAO;
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -726,6 +731,7 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_ALLNEWBOARDFLAG", boardPropertyVO.getAllNewBoardFlag());
 		map.put("v_WRITERFLAG", boardPropertyVO.getWriterFlag());
 		map.put("v_STARRATINGFLAG", boardPropertyVO.getStarRatingFlag());
+		map.put("versionManage", boardPropertyVO.getVersionManage());
 		
 		/* 2018-10-18 홍승비 - 게시판'그룹' 이름변경 시 하위게시판처럼 데이터가 업데이트되는 부분 수정 */
 		if (boardPropertyVO.getParentBoardID().equals("top")) {
@@ -1548,4 +1554,27 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		return String.format("%04x", randomValue);
 	}
 
+	@Override
+	public String createModifyHistory(String boardId, int tenantId) throws Exception {
+		logger.debug("createModifyHistory started");
+		String res = "FAIL";
+
+		Map<String, Object> map = new HashMap<>();
+		map.put("boardId", boardId);
+		map.put("tenantId", tenantId);
+
+		List<BoardListVO> targetItems = ezBoardAdminDAO.getCreateHistoryTarget(map);
+
+		try {
+			for (BoardListVO boardListVO : targetItems) {
+				ezBoardDAO.addModifyHistory(boardListVO);
+			}
+			res = "PASS";
+		} catch (Exception e) {
+			logger.error("createModifyHistory fail : " + e.getMessage());
+		}
+
+		logger.debug("createModifyHistory ended");
+		return res;
+	}
 }

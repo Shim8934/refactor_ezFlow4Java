@@ -182,6 +182,13 @@
 
 			var parentItemID = "${parentItemID}";
 
+			var useVersion = "${ useVersion }";
+			var version = "${ version }";
+			var newVersionItemID;
+			var newestVersion = "${ newestVersion }";
+			var parentItemID = "${ parentItemID }";
+			var historyModify = "${ historyModify }";
+
 		    window.onload = function () {
 		    	
 		    	// useHwpDownSecurity가 Y일 때만 Whwp api 호출. 전자결재 일반버전에서는 useHwpDownSecurity의 값에 상관없이 Whwp api 호출하지 않음.
@@ -376,6 +383,28 @@
 			                document.getElementById("txtTitle").focus();
 			    }
 			    catch (e) { }
+
+				if (useVersion === "Y") {
+					let v;
+
+					if (version != "") {
+						v = version.split(".");
+
+						document.getElementById("majorVersion").disabled = true;
+						document.getElementById("minorVersion").disabled = true;
+					} else {
+						v = newestVersion.split(".");
+					}
+
+					var newItemFlag = v[0] === '';
+
+					if (newItemFlag) {
+						document.getElementById("tr_version").style.display = "none";
+					}
+
+					document.getElementById("majorVersion").value = !newItemFlag ? v[0] : "0";
+					document.getElementById("minorVersion").value = !newItemFlag ? v[1] : "0";
+				}
 		    };
 		    
 		    /* 2022-06-21 홍승비 - 에디터 영역 리사이즈 함수 분리 */
@@ -859,6 +888,12 @@
 					}
 				}
 
+				if (document.getElementById("majorVersion") != null && document.getElementById("minorVersion") != null) {
+					if (!checkVersionValidate()) {
+						return;
+					}
+				}
+
 		        newID = "{" +NewGuid+ "}";
 		        var xmlDom = createXmlDom();
 		        var xmlhttp = createXMLHttpRequest();
@@ -871,7 +906,9 @@
 		            if (pMode != "modify") {
 		                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ITEMID", newID);
 		            } else {
-		                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ITEMID", strItemID);
+						var ii = useVersion === "Y" ? (historyModify === "true" ? strItemID : newID) : strItemID;
+
+		                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ITEMID", ii);
 		            }
 		        }
 		        
@@ -1167,8 +1204,15 @@
 				        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "KEYWORD", keyword);
 				    }
 				}
+				
+                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "useVersion", useVersion);
+
+				if (useVersion === "Y") {
+					createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "version", version == null ? "" : version);
+				}
 
 				createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "parentItemID", parentItemID == "" ? newID : parentItemID);
+				createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "historyModify", historyModify);
 
 		        xmlhttp.open("POST", "/ezBoard/saveItem.do?mode=" + pMode + "&guBun=" + gubun, false);
 		        xmlhttp.send(xmlDom);
@@ -2838,6 +2882,7 @@
 				}
 				attachxml = strRet;
 			}
+
 			function openPopupAuth(e) {
 			    var columnName = e.target.getAttribute("columnName");
                 var OpenWin = window.open("/ezBoard/boardSelectUser.do?companyId=" + SSCompanyID + "&columnName=" + columnName, "", GetOpenWindowfeature(970, 670));
@@ -2985,6 +3030,28 @@
 					spUseDept.innerHTML = "${displayName}";
 					document.getElementById("writerFlag").selectedIndex = 0;
 				}
+			}
+
+			function checkVersionValidate() {
+				var majorV = document.getElementById("majorVersion").value;
+				var minorV = document.getElementById("minorVersion").value;
+				version = majorV + "." + minorV;
+
+				if (majorV == "" || minorV == "") {
+					alert("<spring:message code = 'ezBoard.versionManage.msg5' />");
+
+					return false;
+				} else if (isNaN(majorV) || isNaN(minorV)) {
+					alert("<spring:message code = 'ezBoard.versionManage.msg6' />");
+
+					return false;
+				} else if (version <= newestVersion && historyModify !== "true") {
+					alert("<spring:message code = 'ezBoard.versionManage.msg7' />");
+
+					return false;
+				}
+
+				return true;
 			}
 	    </script>
 	    <c:if test="${!isCrossBrowser}">
@@ -3266,6 +3333,17 @@
 		                            <input type="password" id="txtPassWord" style="WIDTH: 150px" maxlength="15" autocomplete="new-password">&nbsp;&nbsp;(<spring:message code='ezBoard.t439' /></td>
 		                    </tr>
 	                    </c:if>
+						<c:if test = "${ (mode eq 'modify' && useVersion eq 'Y' && version ne '') || (historyModify eq 'false' && useVersion eq 'Y') }">
+						<tr id = "tr_version">
+							<th>버전</th>
+							<td colspan = 3>
+								<input type = "text" id = "majorVersion" style = "width : 25px; text-align : center;" maxLength = 2 />
+								<dot style = "vertical-align : bottom">.</dot>
+								<input type = "text" id = "minorVersion" style = "width : 25px; text-align : center;" maxLength = 2 />
+								* 숫자만 입력 가능합니다.
+							</td>
+						</tr>
+						</c:if>
 	                </table>
 	                <table id="tab02" class="content" style="display: none;">
 	                	<c:choose>

@@ -46,6 +46,7 @@
 			var starRatingFlag = "<c:out value='${model.starRatingFlag}'/>";
 			var boardType = "${ model.guBun }";
 			var hasBoardItemFlag = "${ hasBoardItemFlag }";
+			var versionManageFlag = false;
 			
 	        document.onselectstart = function (){
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
@@ -139,6 +140,7 @@
 					$("#chkWriterFlag").prop("checked", true);
 				}
 
+				checkGubun();
 	            /* 2019-04-26 홍승비 - 게시판 설정으로 통합된 TR들을 체크박스 disabled 설정으로 변경 */
 	            /* 2018-07-11 홍승비 - 포토, 썸네일, 익명, URL, 동영상 게시판 선택 시 답변메일발송 tr 보이지 않도록 수정 */
 	            //추가항목
@@ -236,10 +238,18 @@
 	                }
 	            }
 
-				checkGubun();
 				$(".boardTypeEventHandler").on("click", (e) => {
 					checkboardtype(e.target.id);
 				});
+				
+				if (boardType == '0' || boardType == '1' || boardType == '9') {
+					$('#tr_versionManage').show();
+				} else {
+					$('#tr_versionManage').hide();
+				}
+				
+				versionManageFlag = ${ model.versionManage eq 'Y' };
+				$("#versionManageChkBox").prop("checked", versionManageFlag);
 			});
 
 			/* 2019-02-18 홍승비 - 일반설정 저장 시 각 필드 문자, 숫자 입력 제한 적용 */
@@ -528,6 +538,10 @@
 					useAllNewBoard = "N";
 				}
 				
+				let vmf = $("#versionManageChkBox").prop("checked") ? "Y" : "N";	// 버전관리 사용 여부
+				if(!versionManageFlag && vmf === "Y") { /* 2025-06-12 양지혜 - 버전관리 미사용 > 사용 시, 기존 게시글 히스토리 데이터 생성 */
+					if (!createModifyHistory()) { return; }
+				}
 
 	            /* 2018-10-18 홍승비 - 게시판'그룹' 이름변경 시 하위게시판처럼 데이터가 업데이트되는 부분 수정 */
 	            $.ajax({
@@ -549,7 +563,7 @@
 						reactFlag:useBoardReplyReact, useKeyword:useKeyword, publicFlag:publicFlag,
 						tabBoardCheck1:tabBoardCheck1, tabBoardCheck2:tabBoardCheck2, tabBoardCheck3:tabBoardCheck3, 
 						attachmentFlag:attachmentFlag, allNewBoardFlag:useAllNewBoard, writerFlag : writerFlag,
-						starRatingFlag:starRatingFlag
+						starRatingFlag:starRatingFlag, versionManage : vmf
 	            	},
 	            	success : function(){
 	            		alert("<spring:message code='ezBoard.t79'/>");
@@ -792,6 +806,14 @@
 	                chkGeneralBoard.checked = true;
 	                checkboardtype();
 	            }
+
+                // 게시글 버전관리
+                if ($("#chkGeneralBoard").prop("checked") || $("#fileViewerBoardChkBox").prop("checked")) {
+                    $("#tr_versionManage").show();
+                } else {
+                    $("#versionManageChkBox").prop("checked", false);
+                    $("#tr_versionManage").hide();
+                }
 			}
 			
 			function checkApprBoard() {
@@ -1111,6 +1133,33 @@
 
 				$("#" + id).prop("checked", true);
 			}
+
+			/* 2025-06-12 양지혜 - 게시글 버전관리 미사용 > 사용 시 히스토리 데이터 생성 후 진행 */
+			function createModifyHistory() {
+				var pass = false;
+
+				if (window.parent.itemCnt > 0) {
+					if (confirm(strLangVersion01)) {
+						$.ajax({
+							type : "POST",
+							dataType : "text",
+							async : false,
+							url : "/admin/ezBoard/createModifyHistory.do",
+							data : { boardID : BoardID },
+							success: function(result){
+								if (result == "PASS") {
+									pass = true;
+								} else {
+									alert(strLangVersion02);
+								}
+							}
+						});
+					}
+				} else {
+					pass = true;
+				}
+				return pass;
+			}
 	    </script>
 	    <style type="text/css">
 	    	.mainlist tr {
@@ -1320,6 +1369,14 @@
 	                </c:if>
 	            </td>
 	        </tr>
+
+			<tr id = "tr_versionManage" style = "${ style }">
+				<th><spring:message code = "ezBoard.versionManage.msg1" /></th>
+				<td id = "versionManage">
+					<input type = "checkbox" id = "versionManageChkBox"/>
+					<spring:message code = "ezBoard.t162" />
+				</td>
+			</tr>
 	        
 	        <%-- 2019-04-26 홍승비 - 게시판 옵션들을 모아놓은 게시판 설정 TR 추가 --%>
 	        <tr id="boardOptionTR" style="${style}">

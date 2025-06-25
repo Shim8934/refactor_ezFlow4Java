@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import egovframework.ezEKP.ezBoard.vo.BoardKeywordVO;
-
+import egovframework.ezEKP.ezBoard.vo.BoardHistoryVO;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezBoard.vo.BoardAccessVO;
@@ -1250,5 +1250,81 @@ public class EzBoardDAO extends EgovAbstractDAO{
 
 	public String isPostDuplicated2(Map<String, Object> map) throws Exception {
 		return (String) select("EzBoardDAO.isPostDuplicated2", map);
+	}
+
+	public List<BoardHistoryVO> getModifiedHistoryOfItem(String boardID, String itemID, String companyID, int tenantID) throws Exception {
+		return (List<BoardHistoryVO>)list(
+				"EzBoardDAO.getModifiedHistoryOfItem",
+				new HashMap() {{
+					put("boardID", boardID);
+					put("itemID", itemID);
+					put("companyID", companyID);
+					put("tenantID", tenantID);
+				}}
+		);
+	}
+
+	public String getUseVersionFlag(String boardID, int tenantID) throws Exception {
+		return (String)select(
+				"EzBoardDAO.getUseVersionFlag",
+				new HashMap() {{
+					put("boardID", boardID);
+					put("tenantID", tenantID);
+				}}
+		);
+	}
+
+	public String getItemVersion(String itemID, String companyID, int tenantID) throws Exception {
+		return (String)select("EzBoardDAO.getItemVersion",
+				new HashMap() {{
+					put("itemID", itemID);
+					put("companyID", companyID);
+					put("tenantID", tenantID);
+				}}
+		);
+	}
+
+	public void addModifyHistory(BoardListVO b) throws Exception {
+		insert("EzBoardDAO.addModifyHistory", b);
+	}
+
+	public String getParentItemID(String itemID, String companyID, int tenantID) throws Exception {
+		return (String)select("EzBoardDAO.getParentItemID",
+				new HashMap() {{
+					put("itemID", itemID);
+					put("companyID", companyID);
+					put("tenantID", tenantID);
+				}}
+		);
+	}
+
+	public void deleteVersionedItem(Map<String, Object> map) throws Exception {
+		delete("EzBoardDAO.deleteVersionedItem", map);
+	}
+
+	public void deleteVersionedItemReply(Map<String, Object> map) throws Exception {
+		delete("EzBoardDAO.deleteVersionedItemReply", map);
+	}
+
+	public void deleteVersionedItemRead(Map<String, Object> map) throws Exception {
+		delete("EzBoardDAO.deleteVersionedItemRead", map);
+	}
+
+	public List<String> getVersionedItemHrefList(Map<String, Object> map) throws Exception {
+		return (List<String>)list("EzBoardDAO.versionedItemHrefList", map);
+	}
+
+	public String getNewestVersion(String boardID, String itemID, int tenantID) throws Exception {
+		return (String)select("EzBoardDAO.getNewestVersion",
+				new HashMap() {{
+					put("boardID", boardID);
+					put("itemID", itemID);
+					put("tenantID", tenantID);
+				}}
+		);
+	}
+
+	public String getBoardTitle(Map<String, Object> map) throws Exception {
+		return (String) select("EzBoardDAO.getBoardTitle", map);
 	}
 }

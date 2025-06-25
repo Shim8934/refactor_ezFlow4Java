@@ -18,6 +18,7 @@
 	        var pParentBoardID = "<c:out value='${parentBoardID}'/>";
 	        var TabId = "<c:out value='${tabID}'/>";
 			let useFormFlag = "${ useFormFlag }";
+			var itemCnt = -1;
 
 	        document.onselectstart = function () { return false; };
 	        window.onresize = window_resize;

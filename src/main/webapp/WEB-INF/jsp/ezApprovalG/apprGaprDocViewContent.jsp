@@ -116,6 +116,7 @@
 	                var XmlBodyDATA = createXmlDom();
 	                var tempStr = "";
 	                var URL = encodeURI(url);
+					URL = URL.replaceAll("%7B", "{").replaceAll("%7D", "}");
 	                tempStr = ConvertMHTtoHTML(URL);
 	                if (tempStr.indexOf("MIME-Version: 1.0") > 0) {
 	                    Set_EditorContentURL(url);
@@ -162,17 +163,30 @@
 	                var XmlBodyDATA = createXmlDom();
 	                var tempOrgStr = "";
 	                var tempStr = "";
-	                
-	                tempOrgStr = ConvertMHTtoHTML(encodeURI(OrgHref));
-	                tempStr = ConvertMHTtoHTML(encodeURI(Href));
+					var url1 = encodeURI(OrgHref).replaceAll("%7B", "{").replaceAll("%7D", "}");
+					var url2 = encodeURI(Href).replaceAll("%7B", "{").replaceAll("%7D", "}");
+
+	                tempOrgStr = ConvertMHTtoHTML(url1);
+	                tempStr = ConvertMHTtoHTML(url2);
 	                tempOrgXML = loadXMLString(tempOrgStr);
                     tempXML = loadXMLString(tempStr);
                     
                     XmlBodyOrgDATA = GetElementsByTagName(tempOrgXML, 'BODYDATA')[0];
                     XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
 
-                    var _DocOrgHTML = getNodeText(XmlBodyOrgDATA);
-                    var _DocHTML = getNodeText(XmlBodyDATA);
+					var _DocOrgHTML;
+					var _DocHTML;
+
+					if (OrgHref.includes("upload_board") && Href.includes("upload_board")) {
+						var prefix = "<div id = 'body'>";
+						var suffix = "</div>";
+
+						_DocOrgHTML = prefix + getNodeText(XmlBodyOrgDATA) + suffix;
+						_DocHTML = prefix + getNodeText(XmlBodyDATA) + suffix;
+					} else {
+						_DocOrgHTML = getNodeText(XmlBodyOrgDATA);
+						_DocHTML = getNodeText(XmlBodyDATA);
+					}
 
                     // 이미지는 비교하지 않는다.
                     var img_tag = /<IMG(.*?)>/gi;
@@ -190,11 +204,15 @@
                     var _DocBody = "";
 
                     for (var i = 0; i < _OrgHTMLTag.getElementsByTagName("*").length; i++) {
-                        if (_OrgHTMLTag.getElementsByTagName("*")[i].id.toLocaleLowerCase() == "body") {
+						var orgTagID = _OrgHTMLTag.getElementsByTagName("*")[i].id.toLocaleLowerCase();
+
+                        if (orgTagID == "body") {
                             _DocOrgBody = _OrgHTMLTag.getElementsByTagName("*")[i].innerHTML;
 
                             for (var j = 0; j < _HTMLTag.getElementsByTagName("*").length; j++) {
-                                if (_HTMLTag.getElementsByTagName("*")[j].id.toLocaleLowerCase() == "body") {
+								var htmlTagID = _HTMLTag.getElementsByTagName("*")[j].id.toLocaleLowerCase();
+
+                                if (htmlTagID == "body") {
                                     _DocBody = _HTMLTag.getElementsByTagName("*")[j].innerHTML;
 									_OrgHTMLTag.getElementsByTagName("*")[i].innerHTML = $(_DocBody).find("tr").length == $(_DocOrgBody).find("tr").length ? htmldiff(_DocOrgBody, _DocBody) : _DocOrgBody;
                                     break;

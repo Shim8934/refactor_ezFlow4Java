@@ -122,6 +122,7 @@
 		var previewMail = "${general.previewMail}";
 	    var mailSendResult = "${general.mailSendResult}";
 		var defaultCursorPosition = "${general.defaultCursorPosition}"; // 메일쓰기창 기본 커서 위치/ recipient: 받는사람, content : 내용
+		var selfCcOption = "${general.selfCcOption}"; // 나를 항상 참조에 포함 선택. none : 사용안함(default) / cc : 나를 항상 참조에 포함 / bcc : 나를 항상 숨은참조에 포함
 		// sign
 	    var mailsel = "${sign.useFlag}";
 		// color
@@ -272,7 +273,6 @@
 	        // alias, 공용배포그룹 주소로 재전송 시 실제 sender 값 설정
 	        if (["RESEND", "EDIT"].some(cmd => g_cmd.includes(cmd)) && g_from != from) {
 	            var fromAddressElem = document.getElementById("fromAddressList").value;
-	            fromAddressChange(fromAddressElem);
 	        }
 
 			// 2025.02.11 한슬기 : 나를 항상 참조에 포함 설정시
