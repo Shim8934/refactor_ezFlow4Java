@@ -73,13 +73,17 @@
 		<table class="content" style="width:100%">
 			<tr>
 		    	<td colspan="3">
-		    		<input type="radio" id="radio1" name="radiobutton" value="radiobutton"  checked>
+		    		<div class="custom_radio">
+			    		<input type="radio" id="radio1" name="radiobutton" value="radiobutton"  checked>
+		    		</div>
 		      		<label for="radio1"><spring:message code='ezSchedule.jjh02'/></label>
 		      	</td>
 		  	</tr>
 		  	<tr>
 		    	<td colspan="3">
-		    		<input type="radio" id="radio2" name="radiobutton" value="radiobutton" >
+		    		<div class="custom_radio">
+			    		<input type="radio" id="radio2" name="radiobutton" value="radiobutton" >
+		    		</div>
 		      		<label for="radio2"><spring:message code='ezSchedule.jjh03'/></label>
 		      	</td>
 		  	</tr>  

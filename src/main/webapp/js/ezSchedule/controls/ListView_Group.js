@@ -1,4 +1,4 @@
-﻿//컨트롤키나 쉬프트 키가 눌려졌음을 체크하는 FLAG
+﻿﻿//컨트롤키나 쉬프트 키가 눌려졌음을 체크하는 FLAG
 var PressCtrlKey = false;
 var PressShiftKey = false;
 
@@ -532,7 +532,10 @@ function ListView() {
                     oInput.id = "HeaderAllCheckBox";
                     oInput.type = "checkbox";
                     oInput.onclick = function () { event_HeaderCheckBoxClick(this); };
-                    objTd.appendChild(oInput);
+                    var oDiv = document.createElement("DIV");
+                    oDiv.className ="custom_checkbox";
+                    oDiv.appendChild(oInput);
+                    objTd.appendChild(oDiv);
                 }
                 // 2023-09-06 조소정 - 관리자단 > 일정관리 > 일정그룹관리 메뉴에서 테이블 헤더에 span 추가
                 else if (strName == "GROUPCOLOR") {
@@ -759,7 +762,11 @@ function ListView() {
                     
                     oInput.onclick = function () { event_listCheckboxclick(this); }
                     
-                    objTd.appendChild(oInput);
+                    var oDiv = document.createElement("DIV");
+                    oDiv.className ="custom_checkbox";
+                    oDiv.appendChild(oInput);
+                    
+                    objTd.appendChild(oDiv);
                 }
                 // 2023-09-06 조소정 - 관리자단 > 일정관리 > 일정그룹관리 메뉴에서 테이블 바디에 그룹색상 표출
                 else if (strValue == "GROUPCOLOR") {
@@ -1457,7 +1464,7 @@ function show_groupinfo2(obj) {
 	var checkCnt = 0;
 	var allChild = $("#GroupListView")[0].childNodes[1];
     for (var i = 0;i < allChild.childNodes.length; i++) {
-    	if (allChild.childNodes[i].getElementsByTagName("td").item(0).childNodes.item(0).checked){
+    	if (allChild.childNodes[i].getElementsByTagName("td").item(0).childNodes.item(0).getElementsByTagName("input").item(0).checked){
     		checkCnt++;
     	}
     }
@@ -1813,7 +1820,7 @@ function show_groupinfo3(obj) {
     var allChild = $("#GroupListView")[0].childNodes[1];
 
     for (var i = 0; i < allChild.childNodes.length; i++) {
-        if (allChild.childNodes[i].getElementsByTagName("td").item(0).childNodes.item(0).checked) {
+    	if (allChild.childNodes[i].getElementsByTagName("td").item(0).childNodes.item(0).getElementsByTagName("input").item(0).checked){
             checkCnt++;
         }
     }

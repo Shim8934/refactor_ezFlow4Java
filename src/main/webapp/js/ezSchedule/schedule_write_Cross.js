@@ -1,4 +1,4 @@
-﻿document.write("<script type='text/javascript' src='/js/jquery/jquery-1.11.3.min.js'></script>");
+﻿﻿document.write("<script type='text/javascript' src='/js/jquery/jquery-1.11.3.min.js'></script>");
 
 function close_onclick()
 {
@@ -2061,8 +2061,12 @@ function setAttachFileInfo(strXML) {
                 var input = document.createElement("input");
                 input.type = "checkbox";
                 input.name = "fileSelect";
+                
+                var oDiv = document.createElement("div");
+		        oDiv.className = "custom_checkbox";
 
-                objTd.appendChild(input);
+		        oDiv.appendChild(input);
+                objTd.appendChild(oDiv);
                 objTr.appendChild(objTd);
 
                 var objTd2 = document.createElement("TD");
