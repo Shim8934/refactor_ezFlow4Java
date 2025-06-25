@@ -101,7 +101,13 @@
     },
 
     close: function() {
-      if (parent.frames["left"]) {
+      //2022-12-26 김대현 관리자 좌측메뉴판 적용
+      if (parent.frames["stat_left"]) {
+          if (parent.frames["stat_left"].document.getElementById("blockLeft")) {
+            $(parent.frames["stat_left"].document.body).css("overflow", "");
+            $(parent.frames["stat_left"].document.getElementById("blockLeft")).remove();
+          }
+      } else if (parent.frames["left"]) {
     	  if (parent.frames["left"].document.getElementById("blockLeft")) {
     		  $(parent.frames["left"].document.body).css("overflow", "");
     		  $(parent.frames["left"].document.getElementById("blockLeft")).remove();
@@ -110,13 +116,7 @@
     	  if (parent.frames["attitude_menu"].document.getElementById("blockLeft")) {
     		  $(parent.frames["attitude_menu"].document.getElementById("blockLeft")).remove();
     	  }
-          //2022-12-26 김대현 관리자 좌측메뉴판 적용
-      } else if (parent.frames["stat_left"]) {
-        if (parent.frames["stat_left"].document.getElementById("blockLeft")) {
-          $(parent.frames["stat_left"].document.body).css("overflow", "");
-          $(parent.frames["stat_left"].document.getElementById("blockLeft")).remove();
-        }
-      }
+      } 
       
     // 2022-11-02 이사라 - [닷넷연동] 모달 오류나도 넘어가도록 수정
     try{
