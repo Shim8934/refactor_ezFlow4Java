@@ -556,7 +556,11 @@ function getSendOutDocList_after(xml) {
 
         chkUrgent();
 
-        setbuttonenable();
+        if (typeof adminSendOutFlag !== 'undefined') {
+            // 관리자 > 전자결재 > 발송현황 > 리스트 상단 버튼 사용X
+        } else {
+            setbuttonenable();
+        }
 
         //검색 후 페이지네이션이 안되는 현상 수정. 2020-12-02 홍대표.
         SearchFlag = false;
@@ -1176,7 +1180,7 @@ function openViewDocInfo(type) {
         else {
             openLocation = "/ezApprovalG/contDocView.do";
         }
-        openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(formURL) + "&formID=&orgDocID=&sendType=" + GetAttribute(tr, "DATA5");
+        openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(formURL) + "&formID=" + encodeURI(formID) + "&orgDocID=&sendType=" + GetAttribute(tr, "DATA5");
     }
     else {
     	// 2018.07.06 (KLIB) - ezd 확장자 처리
@@ -1885,7 +1889,7 @@ function openergetDocInfo() {
         else if (pListTypeValue == "4" || pListTypeValue == "5" || pListTypeValue == "97")
             getReceivedDocList();
         else if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9")
-            getSendOutDocList();
+            typeof adminSendOutFlag !== 'undefined' ? getAdminSendOutDocList() : getSendOutDocList();
         else
             getDocList();
 
@@ -2509,6 +2513,12 @@ function setbuttonenable() {
     }
     
     document.getElementById("tSearchCondi").style.display = ""; 
+    
+    if (pListTypeValue == "9" && typeof adminPage !== "undefined") {
+        document.getElementById("tbtnViewDoc").style.display = "none";
+        document.getElementById("tbtnTotalSave").style.display = "none";
+        document.getElementById("tSearchCondi").style.display = "none";
+    }
     return true;
 }
 

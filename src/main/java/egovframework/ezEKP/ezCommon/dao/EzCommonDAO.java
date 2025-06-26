@@ -3474,4 +3474,15 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createTblBoardModifyHistory");
 		}
 	}
+
+	/* 2024-07-22 양지혜 - 관리자 > 전자결재 > 발송현황 메뉴 표출여부 */
+	public void insertUseSendOutState(Map<String, Object> map) throws Exception {
+		String propertyValue = (String) select("EzCommonDAO.getTenantConfig", map);
+
+		if (propertyValue == null) {
+			logger.debug("useSendOutState tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertUseSendOutState", map);
+		}
+	}
+
 }

@@ -605,6 +605,9 @@ public interface EzCommonService {
 
 	// 2024-12-05 한태훈 - 게시판 > 게시판 버전관리 테이블 추가
 	public void createTblBoardModifyHistory() throws Exception;
+
+	/* 2024-07-22 양지혜 - 관리자 > 전자결재 > 발송현황 메뉴 표출여부 */
+	public void insertUseSendOutState() throws Exception;
     
 	public String getMoveItemURL(String type, String gubun, String boardId, String itemId) throws Exception;
 }
