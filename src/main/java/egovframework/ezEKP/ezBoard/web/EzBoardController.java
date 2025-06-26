@@ -2630,6 +2630,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		String mode = boardVO.getMode();
 		BoardPropertyVO boardInfo = getBoardInfo(boardVO.getBoardId(), userInfo);
+		
+		boardVO.setBoardType(boardInfo.getGuBun());
 		boardVO.setSubFlag("N");
 		
 		Document searchQueryDoc = commonUtil.convertStringToDocument(boardVO.getSearchQuery());
@@ -4108,7 +4110,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		// 2024-11-19 비공개 게시판의경우 관리자와 글쓴이만 접근 가능 - 관리자일경우는 return true 됨
 		if (rtv && "N".equals(boardItemVO.getPublicFlag())) {
 			// 익명일 경우 비번 체크
-			if ("2".equals(boardProp.getGuBun())) {
+			if ("2".equals(boardProp.getGuBun()) || boardItemVO.getWriterID() == null) {
 				rtv = ezBoardService.chkPasswordAnonymous(boardItemVO.getItemID(), password, userInfo.getTenantId());
 			} else {
 				rtv = boardItemVO.getWriterID().equalsIgnoreCase(userInfo.getId());
@@ -4175,12 +4177,14 @@ public class EzBoardController extends EgovFileMngUtil{
 		String useEzKMS = "NO";
 		String guBun = boardInfo.getGuBun();
 		String userId = userInfo.getId();
+		String offset = userInfo.getOffset();
 		
 		if (!boardInfo.getRead_FG().equals("true")) {
 			return "main/warning";
 		} else if ("5".equals(guBun) && "false".equals(boardInfo.getBoardAdmin_FG())) {
 			// 게시관리자가 아닌 사람은 QNA게시판에서 본인이 쓴 게시물과, 본인이 쓴 게시물에 달린 답 게시물, 공지게시물만 볼 수 있음
-			if (!userId.equals(boardItem.getWriterID()) && !userId.equals(boardItem.getTopWriterID()) && !"1".equals(boardItem.getExtensionAttribute2())) {
+			if (!userId.equals(boardItem.getWriterID()) && !userId.equals(boardItem.getTopWriterID()) 
+					&& !("1".equals(boardItem.getExtensionAttribute2()) && commonUtil.isTodayBetween(boardItem.getNotiStart(), boardItem.getNotiEnd(), offset))) {
 				return "main/warning";
 			}
 		}
@@ -4521,6 +4525,20 @@ public class EzBoardController extends EgovFileMngUtil{
 			return "main/warning";
 		}
 		
+		String guBun = boardInfo.getGuBun();
+		String paramGuBun = request.getParameter("gubun");
+		boolean isTempPhoto = requestURL.contains("TempPhoto");
+		boolean isTempMovie = requestURL.contains("TempMovie");
+		
+		// 포토, 썸네일, 동영상 타입의 게시판이면서 게시하기 호출 url은 일반 게시판으로 들어왔을 때,
+		// 리스트 페이지에서 넘겨받은 게시판타입과 DB에서 받은 게시판타입이 상이할 때,
+		// 관리자페이지에서 게시판 타입이 변경된 것으로 그룹웨어 새로고침을 요구함
+		if ((!Arrays.asList("3", "4", "7").contains(guBun) && (isTempPhoto || isTempMovie)) ||
+			(StringUtils.isNotEmpty(paramGuBun) && !guBun.equals(paramGuBun)) ) {
+			model.addAttribute("gubunExchanged", "Y");
+			return "main/warning_board";
+		}
+		
 		//추가 항목 가져오는 소스 
 		List<BoardAttributeVO> boardAttributeListVO = new ArrayList<BoardAttributeVO>();
 		if (boardInfo.getAttributeYN() != null && boardInfo.getAttributeYN().equals("Y")) {
@@ -4789,6 +4807,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			version = request.getParameter("version") == null ? "" : request.getParameter("version");
 		}
 		model.addAttribute("version", version);
+		model.addAttribute("boardNoticePeriod", ezCommonService.getTenantConfig("boardNoticePeriod", userInfo.getTenantId()));
 		
 		logger.debug("newBoardItem ended");
 		return requestURL;
@@ -4859,6 +4878,10 @@ public class EzBoardController extends EgovFileMngUtil{
         if (boardInfo.getWrite_FG().equals("false")) {
             return "<RESULT>INACCESSIBLE</RESULT>";
         }
+		
+		if (!boardInfo.getGuBun().equals(gubun)) {
+			return 	"<RESULT>GUBUNCHANGED</RESULT>";
+		}
 
         String ret = ezBoardService.insertNewItem(doc, pMode, realPath, userInfo);
         
@@ -6809,6 +6832,14 @@ public class EzBoardController extends EgovFileMngUtil{
 			return "main/warning"; 
 		}
 		
+		String guBun = boardInfo.getGuBun();
+		String paramGuBun = request.getParameter("gubun");
+		
+		if (!Arrays.asList("3", "4").contains(guBun) || (StringUtils.isNotEmpty(paramGuBun) && !guBun.equals(paramGuBun))) {
+			model.addAttribute("gubunExchanged", "Y");
+			return "main/warning_board";
+		}
+		
 		uploadFilePath = commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId());
 		strNow = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
 		
@@ -7133,6 +7164,10 @@ public class EzBoardController extends EgovFileMngUtil{
 		String mainImageID = doc.getElementsByTagName("MAINIMAGEID").item(0).getTextContent();
 		
 		BoardPropertyVO boardInfo = getBoardInfo(doc.getElementsByTagName("BOARDID").item(0).getTextContent(), userInfo);
+		
+		if (!boardInfo.getGuBun().equals(guBun)) {
+			return "<RESULT>GUBUNCHANGED</RESULT>";
+		}
 		
 		if (boardInfo.getWrite_FG().equals("false")) {
 			return "<RESULT>INACCESSIBLE</RESULT>";
@@ -10399,6 +10434,14 @@ public class EzBoardController extends EgovFileMngUtil{
 			return "main/warning"; 
 		}
 		
+		String guBun = boardInfo.getGuBun();
+		String paramGuBun = request.getParameter("gubun");
+		
+		if (!"7".equals(guBun) || (StringUtils.isNotEmpty(paramGuBun) && !guBun.equals(paramGuBun))) {
+			model.addAttribute("gubunExchanged", "Y");
+			return "main/warning_board";
+		}
+		
 		uploadFilePath = commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId());
 		strNow = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
 		
@@ -12618,6 +12661,8 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<TITLE>" + commonUtil.cleanValue((String)boardList.get(j).get("TITLE")) + "</TITLE>");
 					/* 2019-07-04 홍승비 - 게시판 미독건수 읽음표시 처리용 boardGroupID 추가 */
 					resultXML.append("<BOARDGROUPID>" + boardList.get(j).get("BOARDGROUPID") + "</BOARDGROUPID>");
+					resultXML.append("<ITEMREAD_FG>" + (accessCheck((String)boardList.get(j).get("BOARDID"), (String)boardList.get(j).get("ITEMID"),
+							"GENERAL", userInfo, "") ? "Y" : "N") + "</ITEMREAD_FG>");
 				}
 				resultXML.append("</CELL>");
 			}
@@ -13597,5 +13642,28 @@ public class EzBoardController extends EgovFileMngUtil{
 
 		logger.debug("getBoardTitle ended.");
 		return ezBoardService.getBoardTitle(contentLocation, userInfo.getTenantId());
+	}
+
+	/**
+	 * 게시판 > 게시글보기 > 재게시 실행
+	 */
+	@RequestMapping(value = "/ezBoard/repostItem.do", method = RequestMethod.POST, produces = "text/plain; charset=utf-8")
+	@ResponseBody
+	public String repostItem(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
+		logger.debug("repostItem started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+
+		int tenantID = userInfo.getTenantId();
+
+		String boardID = request.getParameter("boardID");
+		String itemID = request.getParameter("itemID");
+		String hasReply = request.getParameter("hasReply");
+
+		ezBoardService.repostItem(boardID, itemID, tenantID, hasReply);
+
+		logger.debug("rePostItem ended, userID = " + userInfo.getId());
+
+		return "SUCCESS";
 	}
 }

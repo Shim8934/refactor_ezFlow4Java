@@ -22,6 +22,8 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -1049,7 +1051,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezBoard/saveBoardProperty.do", method = RequestMethod.POST)
 	@ResponseBody
-	public void saveBoardProperty(@CookieValue("loginCookie") String loginCookie, HttpServletResponse response,	HttpServletRequest request, BoardPropertyVO boardPropertyVO) throws Exception {
+	public String saveBoardProperty(@CookieValue("loginCookie") String loginCookie, HttpServletResponse response,	HttpServletRequest request, BoardPropertyVO boardPropertyVO) throws Exception {
 		logger.debug("saveBoardProperty started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -1060,6 +1062,19 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		boardPropertyVO.setTenantID(userInfo.getTenantId());
 		
 		BoardPropertyVO beforeBoardProperty = ezBoardService.getBoardProperty(boardPropertyVO.getBoardID(), userInfo.getTenantId()); // 게시판 이름 변경 전 정보
+		
+		 BoardMyFavoriteVO myFavoriteVO = new BoardMyFavoriteVO();
+		 myFavoriteVO.setUserId(userInfo.getId());
+	     myFavoriteVO.setBoardId(boardPropertyVO.getBoardID());
+	     myFavoriteVO.setType("4");
+	     myFavoriteVO.setTenantID(userInfo.getTenantId());
+		 
+		int boardItemCount = ezBoardService.getBrdTotalItemCount(myFavoriteVO);
+		
+		if (boardItemCount > 0 && !beforeBoardProperty.getGuBun().equals(boardPropertyVO.getGuBun())) {
+			return "nonEmptyBoard";
+		}
+		
 		ezBoardAdminService.saveBoardProperty(boardPropertyVO);
 		
 		if (!noticeBoardMod.equals("")) { // 공지사항 게시판 설정이 변경되었다면 추가 동작 진행
@@ -1102,6 +1117,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		}
 		
 		logger.debug("saveBoardProperty ended");
+		return "success";
 	}
 	
 	/**
@@ -1697,15 +1713,22 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String boardID = request.getParameter("boardID");
-		String boardName = request.getParameter("boardName");		
-		String boardType = request.getParameter("boardType");
-		String parentBoardID = request.getParameter("parentBoardID");
+		BoardPropertyVO board = ezBoardService.getBoardProperty(boardID, userInfo.getTenantId());
+		
+		String boardName = board.getBoardName();
+		String gubun = board.getGuBun();
+		String parentBoardID = board.getParentBoardID();
 		String tabID = (request.getParameter("tabID") == null ? "1tab1" : request.getParameter("tabID"));
+		
+		if (gubun.equals("10") && tabID.equals("1tab1")) {
+			tabID = "1tab2";
+		}
+		
 		String useFormFlag = ezBoardAdminService.getUseFormFlag(boardID, userInfo.getTenantId());
 		
 		model.addAttribute("boardID", boardID);
 		model.addAttribute("boardName", commonUtil.cleanValue(boardName));
-		model.addAttribute("boardType", boardType);
+		model.addAttribute("guBun", gubun);
 		model.addAttribute("parentBoardID", parentBoardID);
 		model.addAttribute("tabID", tabID);		
 		model.addAttribute("use_Editor", ezCommonService.getTenantConfig("MODULEEDITOR", userInfo.getTenantId()));

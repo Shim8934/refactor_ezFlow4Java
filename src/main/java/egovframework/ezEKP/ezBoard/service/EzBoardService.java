@@ -600,4 +600,6 @@ public interface EzBoardService {
 	public String checkIsNewestVersion(String boardID, String itemID, int tenantID, String version) throws Exception;
 
 	public String getBoardTitle(String contentLocation, int tenantId) throws Exception;
+
+	public void repostItem(String boardId, String itemID, int tenantID, String hasReply) throws Exception;
 }

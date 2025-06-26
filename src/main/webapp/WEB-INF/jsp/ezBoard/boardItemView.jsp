@@ -60,6 +60,7 @@
 		    var strWriteDate = "${boardItem.writeDate}";
 		    var strImportance = "${boardItem.importance}";
 		    var strEndDate = "${boardItem.endDate}";
+		    var strStartDate = "${boardItem.startDate}";
 		    var strContentLocation = "${boardItem.contentLocation}";
 		    var strAttachList = "${boardItem.attachments}";
 		    var SSUserID = "${userInfo.id}";
@@ -1993,6 +1994,50 @@
 					alert("openwindow :: " + e.description);
 				}
 			}
+
+            <%-- 재게시 기능 --%>
+            function btn_Repost_Onclick() {
+                var newStartDate = new Date(strStartDate + " UTC");
+                var newEndDate = new Date(strEndDate);
+                var currentDate = new Date();
+
+                if (newStartDate > currentDate) {
+                    alert("예약게시물 및 공개시기가 지나지 않은 게시물은 재게시가 불가능합니다.");
+                    return;
+                }
+
+                if (newEndDate < currentDate) {
+                    alert("게시기간이 만료된 게시물은 재게시가 불가능합니다.");
+                    return;
+                }
+                
+                btn_Repost_Onclick_complete("OK");
+               
+            }
+            
+            function btn_Repost_Onclick_complete(ret) {
+                if (typeof (ret) == "undefined" || ret == "cancel" || ret == "") return;
+
+                if (ret == "NO") {
+                    alert("<spring:message code='ezBoard.t267' />");
+                    return;
+                }
+                
+                if(confirm("재게시를 하시면 최근 게시물로 등록됩니다.\n재게시 하시겠습니까?")) {
+                    var xmlhttp = createXMLHttpRequest();
+                    xmlhttp.open("POST", "/ezBoard/repostItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&hasReply=" + CheckIfHasReplies(), false);
+                    xmlhttp.send();
+
+                    if (xmlhttp.responseText == "SUCCESS") {
+                        alert("재게시가 완료되었습니다.");
+                        window.location.reload();
+
+                        //if (boardItemView == "P") {
+                            window.opener.location.reload();
+                        //}
+                    }
+                }
+            }
 		</script>
 	</head>
 	<body id="bodyPopup" class="popup" style="overflow:auto; height:100%;">
@@ -2042,6 +2087,9 @@
 		        	<c:choose>
 		        		<c:when test="${pReservedItem == 'true'}">
 		        			<li ID='btn_Modify'><span onclick='btn_Modify_Onclick()'><spring:message code='ezBoard.t316' /></span></li>
+		        			<c:if test="${boardItem.itemLevel == 1 && (boardItem.writerID == userInfo.id || boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK')}"><%-- 답변글은 재게시 버튼 안뜨도록 함 --%>
+                                <li ID='btn_Repost'><span onclick='btn_Repost_Onclick()'>재게시</span></li>
+                            </c:if>
 		                    <li ID='btn_Delete' onclick='btn_Delete_Onclick()'><span class="icon16 popup_icon16_delete switchIcon"></span><span class="iconTexts"><spring:message code='ezBoard.t113' /></span></li>
 		        		</c:when>
 		        		<c:when test="${apprFlag == 'N'}">
@@ -2057,6 +2105,9 @@
 		        		</c:when>
 		        		<c:when test="${apprFlag == 'W'}">
 		        			<li ID='btn_Modify'><span onclick='btn_Modify_Onclick()'><spring:message code='ezBoard.t316' /></span></li>
+		        			<c:if test="${boardItem.itemLevel == 1 && (boardItem.writerID == userInfo.id || boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK')}"><%-- 답변글은 재게시 버튼 안뜨도록 함 --%>
+                                <li ID='btn_Repost'><span onclick='btn_Repost_Onclick()'>재게시</span></li>
+                            </c:if>
 		                    <li ID='btn_Delete' onclick='btn_Delete_Onclick()'><span class="icon16 popup_icon16_delete switchIcon"></span><span class="iconTexts"><spring:message code='ezBoard.t113' /></span></li>
 		        		</c:when>
 		        		<c:otherwise>
@@ -2088,6 +2139,9 @@
 									<!--		강민수92 end -->			        				
 		        					<li ID='btn_Reply'><span onclick='btn_Reply_Onclick()'><spring:message code='ezBoard.t88' /></span></li>
 			        				<li ID='btn_Modify'><span onclick='btn_Modify_Onclick()'><spring:message code='ezBoard.t316' /></span></li>
+			        				<c:if test="${boardItem.itemLevel == 1}">
+                                        <li ID='btn_Repost'><span onclick='btn_Repost_Onclick()'>재게시</span></li>
+                                    </c:if>
 			                        <c:if test="${guBun != '2'}">
 										<li ID='btn_Copy'><span onclick='btn_Copy_Onclick()' ><spring:message code='ezBoard.t274' /></span></li>
 										<%--게시물이동추가--%>

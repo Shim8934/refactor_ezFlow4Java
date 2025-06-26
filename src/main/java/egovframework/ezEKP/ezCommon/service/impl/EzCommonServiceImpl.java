@@ -85,6 +85,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.StringJoiner;
 import java.util.UUID;
 import java.util.regex.Pattern;
@@ -100,6 +101,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	
 	@Autowired
 	private KlibUtil klibUtil;
+
+    @Autowired
+    private Properties config;
 	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
@@ -8526,4 +8530,60 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void createTblBoardModifyHistory() throws Exception {
 		ezCommonDAO.createTblBoardModifyHistory();
 	}
+
+    /* 2024-07-22 양지혜 - 관리자 > 전자결재 > 발송현황 메뉴 표출여부 */
+    @Override
+    public void insertUseSendOutState() throws Exception {
+        List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+        String property = "useSendOutState";
+
+        for (TenantVO tenantVo : tenantIdList) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("tenantID", tenantVo.getTenantId());
+            map.put("property", property.toUpperCase());
+            ezCommonDAO.insertUseSendOutState(map);
+        }
+    }
+    
+    @Override
+    public String getMoveItemURL(String type, String gubun, String boardID, String itemID) throws Exception {
+        logger.debug("getBoardItemURL started.");
+
+        String itemUrl = "";
+        String scheme = "YES".equals(ezCommonService.getTenantConfig("USE_HTTPS", 0)) ? "https://" : "http://";
+        String domain = config.getProperty("config.serverAddress");
+
+        boardID = boardID.replace("{", "%7B").replace("}", "%7D");
+        itemID = itemID.replace("{", "%7B").replace("}", "%7D");
+
+        itemUrl = scheme + domain;
+        if (type.equals("BOARD")) {
+            switch (gubun) {
+                case "3":
+                case "4":
+                    itemUrl += "/ezBoard/boardItemViewPhoto.do?";
+                    break;
+                case "7":
+                    itemUrl += "/ezBoard/boardItemViewMovie.do?";
+                    break;
+                default:
+                    itemUrl += "/ezBoard/boardItemView.do?";
+                    break;
+            }
+            itemUrl += "itemID=" + itemID
+                    + "&boardID=" + boardID;
+//                    + "&location=GENERAL&boardItemView=P&replyFlag=N&hasReply=N"; // 없이 되는지 확인   
+        } else if (type.equals("CLUB")) {
+            itemUrl += "/ezCommunity/commHome/popupCommHome.do?";
+
+            if (itemID.equals("3")) {
+                itemUrl += "code=" + boardID + "&userLevel=4&masterApprov=ask";
+            } else {
+                itemUrl += "code=" + boardID + "&userLevel=" + itemID;
+            }
+        }
+
+        logger.debug("getBoardItemURL ended.");
+        return itemUrl;
+    }
 }

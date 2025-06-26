@@ -202,6 +202,10 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		model.addAttribute("useRegisterCabinetSemiAuto", useRegisterCabinetSemiAuto);
 		
+		/* 2024-07-22 양지혜 - 대외발신현황 사용여부 */
+		String useSendOutState = ezCommonService.getTenantConfig("useSendOutState", userInfo.getTenantId());
+		model.addAttribute("useSendOutState", useSendOutState);
+		
 		logger.debug("apprGLeft ended. approvalFlag = " + approvalFlag);
 		
 		return "/admin/ezApprovalG/apprGLeft";
@@ -4789,6 +4793,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("useAdditionalRole", ezCommonService.getTenantConfig("USE_AdditionalROle", userInfo.getTenantId()));
 		model.addAttribute("userLang", userLang);
 		model.addAttribute("primary", commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()));
+		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
 		
 		logger.debug("sendOut ended.");
 		

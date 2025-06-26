@@ -131,8 +131,9 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			String searchTitle = request.getParameter("searchTitle");
 			String searchLocation = request.getParameter("searchLocation");
 			String searchAll = request.getParameter("searchAll");
-			String idList = request.getParameter("idList");
-			String pidList = request.getParameter("pidList");
+			// API에서 쓰이는 파라미터로, 모바일에서는 사용되지 않는 듯
+//			String idList = request.getParameter("idList");
+//			String pidList = request.getParameter("pidList") != null ? request.getParameter("pidList") : "";
 
 			/* 2023-10-11 기민혁 사용자 일정검색 요소 추가 */
 			String chk_usersearch = request.getParameter("chk_usersearch");
@@ -193,68 +194,20 @@ public class MScheduleGWController extends EgovFileMngUtil {
 					info.setDeptId(SuserDeptId);
 					info.setCompanyId(SuserCompanyId);
 				}
+				
 				sList = scheduleUserSearchListData(startDate, endDate, "T", "", commonUtil.getMinuteUTC(info.getOffSet()), loginInfo);
 			}else {
-				sList = scheduleListData(startDate, endDate, idList, pidList, "", commonUtil.getMinuteUTC(info.getOffSet()), loginInfo, searchTitle, searchLocation, searchAll);
+				sList = mScheduleService.scheduleList(info, startDate, endDate, searchTitle, searchLocation, searchAll, "");
 
 				String useWorkspaceSchedule = ezCommonService.getTenantConfig("useWorkspaceSchedule", info.getTenantId());
+				
 				if (useWorkspaceSchedule == null || useWorkspaceSchedule.equals("")) {
 					useWorkspaceSchedule = "NO";
+				} else if(useWorkspaceSchedule.equalsIgnoreCase("YES")) {
+					String workspaceHostUrl = ezCommonService.getTenantConfig("workspaceHostUrlForMobile", info.getTenantId());
+					result.put("workspaceHostUrl", workspaceHostUrl);
 				}
 
-				try {
-					// 협업 일정 가져오기
-					if(useWorkspaceSchedule.equalsIgnoreCase("yes") && pidList.contains("collaboration")) {
-						String workspaceHostUrl = ezCommonService.getTenantConfig("workspaceHostUrl", info.getTenantId());
-
-						String domain = workspaceHostUrl + "/ezWorkspace/api/GroupwareApi/post/scheduleread/";
-						String params = "userAccountId=" + URLEncoder.encode(userId, "UTF-8") + "&startDate=" + URLEncoder.encode(startDate, "UTF-8")
-								+ "&endDate=" + URLEncoder.encode(endDate, "UTF-8") + "&searchTerm=" + "&bMobile=" + URLEncoder.encode("false", "UTF-8");
-						String workspaceScheduleLists = ezEmailUtil.getWebServiceResult(domain, params);
-
-						if(workspaceScheduleLists != null && !workspaceScheduleLists.equals("")) {
-							JSONParser jsonparser = new JSONParser();
-							JSONArray jsonarray = (JSONArray)jsonparser.parse(workspaceScheduleLists);
-
-							logger.debug("data.length = " + jsonarray.size());
-
-							for(int i=0; i<jsonarray.size(); i++) {
-								ScheduleInfoVO sVo = new ScheduleInfoVO();
-								JSONObject jsonobject = (JSONObject)jsonarray.get(i);
-
-								sVo.setDateType(jsonobject.get("ItemDateType").toString());
-								sVo.setGroupColor("rgb(63, 81, 181)");
-								sVo.setScheduleType("4");
-								sVo.setScheduleId("collaboration:" + jsonobject.get("ItemId").toString());
-								sVo.setParentId("collaboration:" + jsonobject.get("ItemPostId").toString());
-								sVo.setStartDate(jsonobject.get("ItemStartDate").toString().replace("T", " "));
-								sVo.setEndDate(jsonobject.get("ItemEndDate").toString().replace("T", " "));
-								// 협업의 api에 createdate가 없기 때문에 updatedate = createdate로 취급
-								sVo.setCreateDate(jsonobject.get("ItemUpdateDate").toString().replace("T", " "));
-								sVo.setCreatorName(jsonobject.get("ItemUserName").toString());
-								sVo.setTitle(jsonobject.get("ItemPostTitle").toString());
-								sVo.setOwnerId(jsonobject.get("ItemUserAccountId").toString());
-								sVo.setOwnerName(jsonobject.get("ItemUserName").toString());
-								sVo.setRepeatCount(Integer.parseInt(jsonobject.get("ItemRepeatCount").toString()));
-								// 협업에 없는 기능으로 연구소에서 default Y로 요청함.
-								sVo.setIsPublic("Y");
-								// 협업에 없는 기능으로 연구소에서 default N로 요청함.
-								sVo.setShowTop("N");
-
-								int importance = Integer.parseInt(jsonobject.get("ItemImportance").toString()) + 1;
-								sVo.setImportance(importance + "");
-
-								sList.add(sVo);
-							}
-						}
-					}
-				} catch (java.net.UnknownHostException e) {
-					logger.error("workspace host error : " + e.getMessage());
-				} catch (java.net.ConnectException e) {
-					logger.error("workspace connect error : " + e.getMessage());
-				} catch (Exception e) {
-					logger.error("error : " + e.getMessage());
-				}
 				String useGoogleCalendar = ezCommonService.getTenantConfig("useGoogleCalendar", info.getTenantId());
 				if(useGoogleCalendar.equals("YES")) {
 					LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);

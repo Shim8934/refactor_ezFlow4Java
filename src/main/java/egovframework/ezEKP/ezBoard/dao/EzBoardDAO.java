@@ -1327,4 +1327,16 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	public String getBoardTitle(Map<String, Object> map) throws Exception {
 		return (String) select("EzBoardDAO.getBoardTitle", map);
 	}
+
+	public void repostItem(Map<String, Object> map) throws Exception {
+		update("EzBoardDAO.repostItem", map);
+	}
+
+	public List<Map<String, String>> getAnswerList(Map<String, Object> map) throws Exception {
+		return (List<Map<String, String>>) list("EzBoardDAO.getAnswerList", map);
+	}
+
+	public void repostReplyItem(Map<String, Object> map) throws Exception {
+		update("EzBoardDAO.repostReplyItem", map);
+	}
 }

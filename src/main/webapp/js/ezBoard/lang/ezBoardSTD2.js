@@ -112,3 +112,7 @@ var strLangFileViewr01 = "Only one post is allowed in this board.\nTo create a n
 // 2025-06-12 양지혜 - 게시글 버전관리 > 버전 히스토리 생성 안내 문구 추가
 var strLangVersion01 = "Version history will be created to enable post version control.\nIf many posts are already registered, this process may take some time.\nDo you want to continue?";
 var strLangVersion02 = "Unable to save settings due to a failure in creating post version history.\nTurn off version control and try again, or contact the administrator.";
+
+// 2025-05-07 전인하 - 관리자 > 게시판 > 게시물 구분 변경 시 제한 조건 추가
+var strLangJIHgubunChange01 = "If there are posts on this board, the board's division cannot be changed.";
+var strLangJIHgubunChange02 = "The board type has been changed. \nYou can't post now. Please refresh the groupware.";

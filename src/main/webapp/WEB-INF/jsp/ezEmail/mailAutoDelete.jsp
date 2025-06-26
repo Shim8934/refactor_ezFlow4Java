@@ -70,7 +70,8 @@
 		        if (document.getElementById("deleteunread").checked == true){
 		        	requestUrl = "/ezEmail/mailAutoDeleteAdd.do?path=" + encodeURIComponent(document.getElementById("folderpath").lealfolderPath) + 
 		        			"&expiretime=" + encodeURIComponent(document.getElementById("expiretime").value) + "&unread=1" + 
-		        			"&foldername=" + encodeURIComponent(document.getElementById("folderpath").value);
+		        			"&foldername=" + encodeURIComponent(document.getElementById("folderpath").value) +
+							"&autoDeletionOption=" + encodeURIComponent(document.getElementById("autoDeletionOption").value);
 		        	if (shareId != "") {
 			        	requestUrl += "&shareId=" + encodeURIComponent(shareId);
 			        }
@@ -78,7 +79,8 @@
 		        } else {
 		        	requestUrl = "/ezEmail/mailAutoDeleteAdd.do?path=" + encodeURIComponent(document.getElementById("folderpath").lealfolderPath) + 
 		        			"&expiretime=" + encodeURIComponent(document.getElementById("expiretime").value) + "&unread=0" + 
-		        			"&foldername=" + encodeURIComponent(document.getElementById("folderpath").value);
+		        			"&foldername=" + encodeURIComponent(document.getElementById("folderpath").value) +
+							"&autoDeletionOption=" + encodeURIComponent(document.getElementById("autoDeletionOption").value);
 		        	if (shareId != "") {
 			        	requestUrl += "&shareId=" + encodeURIComponent(shareId);
 			        }
@@ -132,6 +134,16 @@
 						</div>
 					</td>
 				</tr>
+				<!-- 2025.02.18 한슬기 : 편지함 메일 자동삭제 방식 선택옵션(지운편지함으로이동(default) : trash / 영구삭제 : permanently) -->
+				<tr>
+					<th><spring:message code='ezEmail.hsg01'/></th>
+					<td>
+						<select id="autoDeletionOption" style="width:140px;">
+							<option value="trash"><spring:message code='ezEmail.hsg02'/></option>
+							<option value="permanently"><spring:message code='ezEmail.t156'/></option>
+						</select>
+					</td>
+				</tr>
 				<tr>
 					<th><spring:message code='ezEmail.t121' /></th>
 					<td>
@@ -152,15 +164,23 @@
 			<br>
 			<table class="popuplist" style="width:750px;">
 				<tr> 
-				<th style="width:450px;" width="450px"><spring:message code='ezEmail.t125' /></th> 
-				<th style="width:100px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;"><spring:message code='ezEmail.t121' /></th> 
+				<th style="width:450px;" width="450px"><spring:message code='ezEmail.t125' /></th>
+				<th style="width:300px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;"><spring:message code='ezEmail.hsg01' /></th>
+				<th style="width:100px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;"><spring:message code='ezEmail.t121' /></th>
 				<th style="width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;"><spring:message code='ezEmail.t123' /></th> 
 				<th style="width:80px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;"><spring:message code='ezEmail.t95' /></th>  
 				</tr> 
 				
 				<c:forEach var="item" items="${list}">
 					<tr> 
-						<td>&nbsp;&nbsp;${item.folderName}</td> 
+						<td>  ${item.folderName}</td>
+						<td style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;">
+							<c:choose>
+								<c:when test="${item.autoDeletionOption eq 'permanently'}"><spring:message code='ezEmail.t156'/></c:when>
+								<c:when test="${item.autoDeletionOption eq 'trash'}"><spring:message code='ezEmail.hsg02' /></c:when>
+								<c:otherwise> - </c:otherwise>
+							</c:choose>
+						</td>
 						<td style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;">
 							${item.expireTime} 
 							<c:choose>

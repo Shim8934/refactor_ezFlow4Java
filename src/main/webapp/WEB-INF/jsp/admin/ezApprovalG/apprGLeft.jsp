@@ -253,7 +253,9 @@
 				    <h2><span class="h2Title" style="display:inline-block;width:100%;" onClick="btnChangeSDept_onclick()"><spring:message code='ezApprovalG.lhr001'/></span></h2>
 					<h2><span class="h2Title" style="display:inline-block;width:100%;" onClick="goPage(17)"><spring:message code='ezApprovalG.t560'/></span></h2>
 				</c:if>
-				<h2 style="display:none;"><span class="h2Title" style="display:inline-block;width:100%;" onClick="goPage('sendout')">발송현황</span></h2>	
+				<c:if test="${useSendOutState == 'YES'}">
+					<h2><span class="h2Title" style="display:inline-block;width:100%;" onClick="goPage('sendout')"><spring:message code='ezApprovalG.yjh08'/></span></h2>
+				</c:if>
 				<c:if test="${useOpenGov == 'YES'}">
 					<h2><span class="h2Title" style="display:inline-block;width:100%;" onClick="goPage(16)"><spring:message code='ezApprovalG.LeftMenu04'/></span></h2>				
 				</c:if>
