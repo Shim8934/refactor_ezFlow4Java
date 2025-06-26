@@ -1961,7 +1961,7 @@
 
                 if(confirm("재게시를 하시면 최근 게시물로 등록됩니다.\n재게시 하시겠습니까?")) {
                     var xmlhttp = createXMLHttpRequest();
-                    xmlhttp.open("POST", "/ezBoard/repostItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID), false);
+                    xmlhttp.open("POST", "/ezBoard/repostItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&userID=" + userInfoID, false);
                     xmlhttp.send();
 
                     if (xmlhttp.responseText == "SUCCESS") {

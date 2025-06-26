@@ -1892,6 +1892,133 @@
 					}
 				});
 			}
+
+            <%-- 재게시 기능 --%>
+            function btn_Repost_Onclick() {
+                var newStartDate = new Date(strStartDate + " UTC");
+                var newEndDate = new Date(strEndDate);
+                var currentDate = new Date();
+
+                if (newStartDate > currentDate) {
+                    alert("예약게시물 및 공개시기가 지나지 않은 게시물은 재게시가 불가능합니다.");
+                    return;
+                }
+
+                if (newEndDate < currentDate) {
+                    alert("게시기간이 만료된 게시물은 재게시가 불가능합니다.");
+                    return;
+                }
+                
+                btn_Repost_Onclick_complete("OK");
+               
+            }
+            
+            function btn_Repost_Onclick_complete(ret) {
+                if (typeof (ret) == "undefined" || ret == "cancel" || ret == "") return;
+
+                if (ret == "NO") {
+                    alert("<spring:message code='ezBoard.t267' />");
+                    return;
+                }
+                
+                if(confirm("재게시를 하시면 최근 게시물로 등록됩니다.\n재게시 하시겠습니까?")) {
+                    var xmlhttp = createXMLHttpRequest();
+                    xmlhttp.open("POST", "/ezBoard/repostItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&userID=" + userInfoID +  "&hasReply=" + CheckIfHasReplies(), false);
+                    xmlhttp.send();
+
+                    if (xmlhttp.responseText == "SUCCESS") {
+                        alert("재게시가 완료되었습니다.");
+                        window.location.reload();
+
+                        //if (boardItemView == "P") {
+                            window.opener.location.reload();
+                        //}
+                    }
+                }
+            }
+            
+            var zoomSettings = {};
+            var MozZoomSettings = {};
+
+            function initializeZoom(num) {
+                zoomSettings[num] = {
+                    nowZoom: parseInt("<c:out value='${contentSize}'/>"),
+                    maxZoom: 200,
+                    minZoom: 100
+                };
+
+                MozZoomSettings[num] = {
+                    MozNowZoom: parseInt("<c:out value='${mozContentSize}'/>"),
+                    MozMaxZoom: 2,
+                    MozMinZoom: 1
+                };
+            }
+
+            function Bigger2(doc, num) {
+                if (zoomSettings[num] === undefined) {
+                    initializeZoom(num);
+                }
+
+                var settings = zoomSettings[num];
+                var MozSettings = MozZoomSettings[num];
+
+                if (navigator.userAgent.indexOf('Firefox') != -1) {
+                    if (MozSettings.MozNowZoom < MozSettings.MozMaxZoom) {
+                        MozSettings.MozNowZoom += 0.1;
+                    } else {
+                        return;
+                    }
+
+                    $(doc).find('.contentDiv' + num).css("MozTransform", "scale(" + MozSettings.MozNowZoom + ")");
+                    $(doc).find('.contentDiv' + num).css("MozTransformOrigin", "0 0");
+                } else {
+                    if (settings.nowZoom < settings.maxZoom) {
+                        settings.nowZoom += 10;
+                    } else {
+                        return;
+                    }
+
+                    $(doc).find(".contentDiv" + num).css("zoom", settings.nowZoom + "%");
+                    $(doc).find("#curZoomSize" + num).text(settings.nowZoom + "%");
+                    $(doc).find("#curZoomSize" + num).show();
+                    setTimeout(function () {
+                        $(doc).find("#curZoomSize" + num).css("display", "none")
+                    }, 1000);
+                }
+            }
+
+            function Smaller2(doc, num) {
+                if (zoomSettings[num] === undefined) {
+                    initializeZoom(num);
+                }
+
+                var settings = zoomSettings[num];
+                var MozSettings = MozZoomSettings[num];
+
+                if (navigator.userAgent.indexOf('Firefox') != -1) {
+                    if (MozSettings.MozNowZoom > MozSettings.MozMinZoom) {
+                        MozSettings.MozNowZoom -= 0.1;
+                    } else {
+                        return;
+                    }
+
+                    $(doc).find('.contentDiv' + num).css("MozTransform", "scale(" + MozSettings.MozNowZoom + ")");
+                    $(doc).find('.contentDiv' + num).css("MozTransformOrigin", "0 0");
+                } else {
+                    if (settings.nowZoom > settings.minZoom) {
+                        settings.nowZoom -= 10;
+                    } else {
+                        return;
+                    }
+
+                    $(doc).find(".contentDiv" + num).css("zoom", settings.nowZoom + "%");
+                    $(doc).find("#curZoomSize" + num).text(settings.nowZoom + "%");
+                    $(doc).find("#curZoomSize" + num).show();
+                    setTimeout(function () {
+                        $(doc).find("#curZoomSize" + num).css("display", "none")
+                    }, 1000);
+                }
+            }
 	        
 			function viewModifyHistory() {
 				var heigth = window.screen.availHeight;
@@ -1994,50 +2121,6 @@
 					alert("openwindow :: " + e.description);
 				}
 			}
-
-            <%-- 재게시 기능 --%>
-            function btn_Repost_Onclick() {
-                var newStartDate = new Date(strStartDate + " UTC");
-                var newEndDate = new Date(strEndDate);
-                var currentDate = new Date();
-
-                if (newStartDate > currentDate) {
-                    alert("예약게시물 및 공개시기가 지나지 않은 게시물은 재게시가 불가능합니다.");
-                    return;
-                }
-
-                if (newEndDate < currentDate) {
-                    alert("게시기간이 만료된 게시물은 재게시가 불가능합니다.");
-                    return;
-                }
-                
-                btn_Repost_Onclick_complete("OK");
-               
-            }
-            
-            function btn_Repost_Onclick_complete(ret) {
-                if (typeof (ret) == "undefined" || ret == "cancel" || ret == "") return;
-
-                if (ret == "NO") {
-                    alert("<spring:message code='ezBoard.t267' />");
-                    return;
-                }
-                
-                if(confirm("재게시를 하시면 최근 게시물로 등록됩니다.\n재게시 하시겠습니까?")) {
-                    var xmlhttp = createXMLHttpRequest();
-                    xmlhttp.open("POST", "/ezBoard/repostItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&hasReply=" + CheckIfHasReplies(), false);
-                    xmlhttp.send();
-
-                    if (xmlhttp.responseText == "SUCCESS") {
-                        alert("재게시가 완료되었습니다.");
-                        window.location.reload();
-
-                        //if (boardItemView == "P") {
-                            window.opener.location.reload();
-                        //}
-                    }
-                }
-            }
 		</script>
 	</head>
 	<body id="bodyPopup" class="popup" style="overflow:auto; height:100%;">

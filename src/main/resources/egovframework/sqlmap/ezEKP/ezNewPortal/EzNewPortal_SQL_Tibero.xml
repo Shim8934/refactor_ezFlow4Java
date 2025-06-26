@@ -1022,7 +1022,7 @@ AND
 					AND 
 					  	A.ENDDATE > #nowDate#
 					ORDER BY
-						A.WRITEDATE DESC
+						A.DOCNO DESC
 				) INFO
 			) P
 		WHERE
@@ -1912,7 +1912,7 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 					AND 
 					  	A.ENDDATE > #nowDate#
 					ORDER BY
-						A.WRITEDATE DESC
+						A.DOCNO DESC
 				) INFO
 			) P
 		WHERE
