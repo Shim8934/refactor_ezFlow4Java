@@ -2061,8 +2061,8 @@
                     <%-- 전자결재 우측 미리보기 상단 아이콘 --%>
                     <div id="right" class="sub_frameIcon" <c:if test="${useAprPreview != 'YES'}">style="display:none;"</c:if>>
                         <div class="sub_frameIconUL" style="width:auto !important;">
-                            <p class="frameIconLI"><span class="icon16 btn_noframe" id="PreViewNone" onclick="PreviewRayerChange('NONE', 'Manage')"></span></p>
-                            <p class="frameIconLI"><span class="icon16 btn_leftframe" id="PreViewleft" onclick="PreviewRayerChange('H', 'Manage')"></span></p>
+                            <p class="frameIconLI"><span class="icon16 btn_noframe" id="PreViewNone" onclick="PreviewRayerChange('NONE', 'Container')"></span></p>
+                            <p class="frameIconLI"><span class="icon16 btn_leftframe" id="PreViewleft" onclick="PreviewRayerChange('H', 'Container')"></span></p>
                         </div>
                     </div>
 				</c:if>
