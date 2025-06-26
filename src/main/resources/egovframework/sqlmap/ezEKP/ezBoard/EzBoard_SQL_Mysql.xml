@@ -4832,10 +4832,10 @@
 			(M1.ITEMID IS NULL OR M1.RN = 1)
 		</isNotEqual>
 		<isNotEmpty property="v_SEARCH_TITLE">
-			AND UPPER(TITLE) like CONCAT('%', #v_SEARCH_TITLE#, '%')
+			AND UPPER(TITLE) like UPPER(CONCAT('%', #v_SEARCH_TITLE#, '%'))
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_CONTENT">
-			AND UPPER(CONTENT) like CONCAT('%', #v_SEARCH_CONTENT#, '%')
+			AND UPPER(CONTENT) like UPPER(CONCAT('%', #v_SEARCH_CONTENT#, '%'))
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_WRITERNAME">
 			AND (UPPER(A.WRITERNAME) like UPPER(CONCAT('%', #v_SEARCH_WRITERNAME#, '%')) OR UPPER(A.WRITERNAME2) like UPPER(CONCAT('%', #v_SEARCH_WRITERNAME#, '%')))
@@ -4940,7 +4940,7 @@
    				ENDDATE > #nowDate#
 		]]>
 		<isNotEmpty property="v_SEARCH_TITLE">
-			AND UPPER(TITLE) like UPPER(CONCAT('%', #v_SEARCH_TITLE#, '%')
+			AND UPPER(TITLE) like UPPER(CONCAT('%', #v_SEARCH_TITLE#, '%'))
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_CONTENT">
 			AND UPPER(CONTENT) like UPPER(CONCAT('%', #v_SEARCH_CONTENT#, '%'))
