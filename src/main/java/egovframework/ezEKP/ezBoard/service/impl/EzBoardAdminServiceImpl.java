@@ -1638,18 +1638,27 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 
 					int tenantId = Integer.parseInt(infoMap.get("TENANT_ID"));
 					LoginVO userInfo = loginService.selectReceiver(infoMap.get("WRITERID"), tenantId);
+					String lang = ezCommonService.selectUserGetLang(infoMap.get("WRITERID"), tenantId);
 
 					String boardID = infoMap.get("BOARDID");
 					String itemID = infoMap.get("ITEMID");
 					String boardName = "";
-					if (userInfo.getPrimary().equals("1")) {
+					Locale locale = null;
+					if (lang.equals("1")) {
 						boardName = infoMap.get("BOARDNAME");
-					} else if (userInfo.getPrimary().equals("2")) {
+						locale = new Locale("ko");
+					} else if (lang.equals("2")) {
 						boardName = infoMap.get("BOARDNAME2");
-					} else if (userInfo.getPrimary().equals("3")) {
+						locale = new Locale("en");
+					} else if (lang.equals("3")) {
 						boardName = infoMap.get("BOARDNAME3");
-					} else if (userInfo.getPrimary().equals("4")) {
+						locale = new Locale("ja");
+					} else if (lang.equals("4")) {
 						boardName = infoMap.get("BOARDNAME4");
+						locale = new Locale("zh");
+					} else {
+						boardName = infoMap.get("BOARDNAME");
+						locale = new Locale("ko");
 					}
 					String title = infoMap.get("TITLE");
 					String gubun = infoMap.get("GUBUN") != null ? infoMap.get("GUBUN") : "0";
@@ -1661,21 +1670,21 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 					recipientMap.put("companyId", userInfo.getCompanyID());
 					recipientMap.put("cn", infoMap.get("WRITERID"));
 					notiRecipientList.add(recipientMap);
-					
+
 					//메일 발송
-					logger.debug("Sending board mail starts.");
+					logger.debug("Sending board mail starts:Q:q.");
 					String strURL = "javascript:Item_View_APPR('" + boardID + "','" + itemID + "','" + gubun + "');";
 					strURL = "<a id='board_a' style='color:blue;text-decoration:underline;cursor:pointer;' onClick=" + strURL + ">";
 
-					String subject = "[" + egovMessageSource.getMessage("ezBoard.lhr02", userInfo.getLocale()) + "] " + boardName + " - " + infoMap.get("TITLE") + " 게시글 공지 기간 만료";
-					
+					String subject = "[" + egovMessageSource.getMessage("ezBoard.lhr02", locale) + "] " + boardName + " - " + infoMap.get("TITLE") + " 게시글 공지 기간 만료";
+
 					StringBuilder bodyContent = new StringBuilder();
-					bodyContent.append("<br>" + egovMessageSource.getMessage("ezBoard.lhr03", userInfo.getLocale()));
-					bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t251", userInfo.getLocale()) + commonUtil.cleanValue(boardName)); // 게 시 판
-					bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t254", userInfo.getLocale()) + strURL + commonUtil.cleanValue(title) + "</a>"); // 제 목
+					bodyContent.append("<br>" + egovMessageSource.getMessage("ezBoard.lhr03", locale));
+					bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t251", locale) + commonUtil.cleanValue(boardName)); // 게 시 판
+					bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t254", locale) + strURL + commonUtil.cleanValue(title) + "</a>"); // 제 목
 
 					String content = commonUtil.createNotiMailContent(bodyContent.toString(), tenantId, userInfo.getLocale());
-					
+
 					InternetAddress to = new InternetAddress();
 					to.setPersonal(userInfo.getDisplayName(), "UTF-8");
 					to.setAddress(userInfo.getEmail());

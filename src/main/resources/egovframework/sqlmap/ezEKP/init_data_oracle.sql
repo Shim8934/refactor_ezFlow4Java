@@ -3688,7 +3688,7 @@ VALUES(0, 'allDaySTimeForReminder', '09:00', 'HH24:MM 형식으로 미리알림 
 
 --2025.05.23 - 이혜림 - 게시판 > 공지사항 등록기간
 INSERT INTO TBL_TENANT_CONFIG(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
-VALUES(@tenant_id_value, 'boardNoticePeriod', '30', '게시판 공지사항의 기간 설정(일단위) (default: 30)', '게시판 공지사항 기간 설정', TO_DATE('2025-05-23 00:00:00','yyyy-mm-dd hh24:mi:ss'), '게시판');
+VALUES(0, 'boardNoticePeriod', '30', '게시판 공지사항의 기간 설정(일단위) (default: 30)', '게시판 공지사항 기간 설정', TO_DATE('2025-05-23 00:00:00','yyyy-mm-dd hh24:mi:ss'), '게시판');
 
 --2024-10-31 한태훈 - 게시판 > 전체게시물 보기 추가
 INSERT ALL
