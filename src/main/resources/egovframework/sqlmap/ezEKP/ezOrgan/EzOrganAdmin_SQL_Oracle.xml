@@ -7055,6 +7055,8 @@
  				description,
 				to_number(mailboxquota) as mailboxquota,
 				to_number(mailboxusage) as mailboxusage,
+				to_number(mailboxusage)/1024 AS mailboxusage_kb,
+				(to_number(mailboxusage)/to_number(mailboxquota))*100 AS mailboxusage_rate,
 				displayName2,
 				description2,
 				0 as isRetire,
@@ -7093,8 +7095,10 @@
 					displayName,
 					department,
 					description,
-					CAST(mailboxquota AS UNSIGNED) as mailboxquota,
-					CAST(mailboxusage AS UNSIGNED) as mailboxusage,
+					to_number(mailboxquota) as mailboxquota,
+					to_number(mailboxusage) as mailboxusage,
+					to_number(mailboxusage)/1024 AS mailboxusage_kb,
+					(to_number(mailboxusage)/to_number(mailboxquota))*100 AS mailboxusage_rate,
 					displayName2,
 					description2,
 					1 as isRetire,
@@ -7132,10 +7136,10 @@
 					department DESC,
 				</isEqual>
 				<isEqual property="orderbyData" compareValue="mailboxusage/1024 ASC">
-					mailboxusage/1024 ASC,
+					mailboxusage_kb ASC,
 				</isEqual>
 				<isEqual property="orderbyData" compareValue="mailboxusage/1024 DESC">
-					mailboxusage/1024 DESC,
+					mailboxusage_kb DESC,
 				</isEqual>
 				<isEqual property="orderbyData" compareValue="mailboxquota ASC">
 					mailboxquota ASC,
@@ -7144,10 +7148,10 @@
 					mailboxquota DESC,
 				</isEqual>
 				<isEqual property="orderbyData" compareValue="(MAILBOXUSAGE/MAILBOXQUOTA)*100 ASC">
-					(MAILBOXUSAGE/MAILBOXQUOTA)*100 ASC,
+					mailboxusage_rate ASC,
 				</isEqual>
 				<isEqual property="orderbyData" compareValue="(MAILBOXUSAGE/MAILBOXQUOTA)*100 DESC">
-					(MAILBOXUSAGE/MAILBOXQUOTA)*100 DESC,
+					mailboxusage_rate DESC,
 				</isEqual>
 		    </isNotEmpty>
  				displayName, cn
