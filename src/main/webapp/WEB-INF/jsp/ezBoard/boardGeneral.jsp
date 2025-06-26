@@ -98,6 +98,7 @@
      			var PreviewHList = document.getElementById("HListUser").value;
      			var PreviewHContent = document.getElementById("HPreUser").value;
      			var allNewBoardListDate = document.getElementById("allNewBoardListDate").value;
+     			var contentSize = document.getElementById("contentSize").value;
      		
      			$.ajax({
      				url : '/ezBoard/board_generallist_save.do',
@@ -110,7 +111,8 @@
      					previewWContent : PreviewWContent,
      					previewHList : PreviewHList,
      					previewHContent : PreviewHContent,
-						allNewBoardListDate : allNewBoardListDate
+						allNewBoardListDate : allNewBoardListDate,
+						contentSize : contentSize
      				} ,
 	     			success : function(data, textStatus, jqXHR) {
 	     				alert('<spring:message code="ezEmail.t42" />');
@@ -283,6 +285,24 @@
 						<spring:message code="ezBoard.t158"/>
 					</td>
 				</tr>
+				<tr>
+                    <th><spring:message code="ezBoard.lhr05" /></th>
+                    <td>
+                        <select id="contentSize" name="contentSize" style="WIDTH: 100px">
+                            <option value='0' <c:if test="${boardListConfig.contentSize eq '0'}">selected</c:if>>100%</option>
+                            <option value='1' <c:if test="${boardListConfig.contentSize eq '1'}">selected</c:if>>110%</option>
+                            <option value='2' <c:if test="${boardListConfig.contentSize eq '2'}">selected</c:if>>120%</option>
+                            <option value='3' <c:if test="${boardListConfig.contentSize eq '3'}">selected</c:if>>130%</option>
+                            <option value='4' <c:if test="${boardListConfig.contentSize eq '4'}">selected</c:if>>140%</option>
+                            <option value='5' <c:if test="${boardListConfig.contentSize eq '5'}">selected</c:if>>150%</option>
+                            <option value='6' <c:if test="${boardListConfig.contentSize eq '6'}">selected</c:if>>160%</option>
+                            <option value='7' <c:if test="${boardListConfig.contentSize eq '7'}">selected</c:if>>170%</option>
+                            <option value='8' <c:if test="${boardListConfig.contentSize eq '8'}">selected</c:if>>180%</option>
+                            <option value='9' <c:if test="${boardListConfig.contentSize eq '9'}">selected</c:if>>190%</option>
+                            <option value='10' <c:if test="${boardListConfig.contentSize eq '10'}">selected</c:if>>200%</option>
+                        </select>
+                    </td>
+                </tr>
         	</table>
     		<div class="btnpositionJsp" style="width:623px;">      
         		<a class="imgbtn" onclick="Change_Click()"><span><spring:message code="ezBoard.t98" /></span></a>

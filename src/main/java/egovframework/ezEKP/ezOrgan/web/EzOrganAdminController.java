@@ -387,6 +387,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.addMemberDeptIdScheduleGatherMember(); // 2024-12-27 한태훈 - 일정관리 > 일정 모아보기 그룹 테이블에 부서컬럼 추가
 			ezCommonService.addMailboxProgressStateColumns(); // 2025-05-23 메일 내보내기/가져오기 비동기 컬럼 추가
 			ezCommonService.createTblBoardModifyHistory(); // 2024-12-05 한태훈 - 게시판 > 게시판 버전관리 테이블 추가
+			ezCommonService.addBoardContentSize(); // 2025-06-16 이혜림 - 게시판 > 본문 크기 컬럼 추가
 		} catch (Exception e) {
     		logger.error(e.getMessage(), e);
     	}

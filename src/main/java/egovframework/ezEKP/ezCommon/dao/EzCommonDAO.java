@@ -3485,4 +3485,15 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 
+
+	// 2025-06-16 이혜림 - 게시판 > 본문 크기 컬럼 추가
+	public void addBoardContentSize() {
+		try {
+			select("EzCommonDAO.checkAddBoardContentSize");
+		} catch (Exception e) {
+			logger.debug("In TBL_Board_Configuration doesn't exist ContentSize column. creating the column...");
+
+			update("EzCommonDAO.addBoardContentSize");
+		}
+	}
 }

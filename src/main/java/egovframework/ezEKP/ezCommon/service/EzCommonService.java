@@ -610,4 +610,7 @@ public interface EzCommonService {
 	public void insertUseSendOutState() throws Exception;
     
 	public String getMoveItemURL(String type, String gubun, String boardId, String itemId) throws Exception;
+
+	// 2025-06-16 이혜림 - 게시판 > 본문 크기 컬럼 추가
+	public void addBoardContentSize() throws Exception;
 }

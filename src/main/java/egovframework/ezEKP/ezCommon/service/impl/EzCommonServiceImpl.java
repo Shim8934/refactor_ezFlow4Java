@@ -8586,4 +8586,10 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         logger.debug("getBoardItemURL ended.");
         return itemUrl;
     }
+
+    // 2025-06-16 이혜림 - 게시판 > 본문 크기 컬럼 추가
+    @Override
+    public void addBoardContentSize() throws Exception {
+        ezCommonDAO.addBoardContentSize();
+    }
 }
