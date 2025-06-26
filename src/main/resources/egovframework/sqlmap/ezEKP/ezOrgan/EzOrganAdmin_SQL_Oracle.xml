@@ -7056,7 +7056,10 @@
 				to_number(mailboxquota) as mailboxquota,
 				to_number(mailboxusage) as mailboxusage,
 				to_number(mailboxusage)/1024 AS mailboxusage_kb,
-				(to_number(mailboxusage)/to_number(mailboxquota))*100 AS mailboxusage_rate,
+				CASE
+					WHEN to_number(mailboxquota) IS NULL OR to_number(mailboxquota) = 0 THEN 0
+					ELSE (to_number(mailboxusage)/to_number(mailboxquota))*100
+				END AS mailboxusage_rate,
 				displayName2,
 				description2,
 				0 as isRetire,
@@ -7098,7 +7101,10 @@
 					to_number(mailboxquota) as mailboxquota,
 					to_number(mailboxusage) as mailboxusage,
 					to_number(mailboxusage)/1024 AS mailboxusage_kb,
-					(to_number(mailboxusage)/to_number(mailboxquota))*100 AS mailboxusage_rate,
+					CASE
+						WHEN to_number(mailboxquota) IS NULL OR to_number(mailboxquota) = 0 THEN 0
+						ELSE (to_number(mailboxusage)/to_number(mailboxquota))*100
+					END AS mailboxusage_rate,
 					displayName2,
 					description2,
 					1 as isRetire,
