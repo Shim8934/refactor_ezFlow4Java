@@ -4739,7 +4739,7 @@
 	
 	<select id="EzBoardDAO.getSearchBoardItemCount" parameterClass="Map" resultClass="Integer">
 		SELECT
-			COUNT(ITEMID)
+			COUNT(A.ITEMID)
 		FROM
 			TBL_BOARD_ITEM A
 		<isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
