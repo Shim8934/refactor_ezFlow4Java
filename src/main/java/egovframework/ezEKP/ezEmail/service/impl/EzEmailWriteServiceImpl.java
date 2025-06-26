@@ -955,6 +955,10 @@ public class EzEmailWriteServiceImpl implements EzEmailWriteService {
 		String mailSendResult = StringUtils.defaultIfBlank(general.getMailSendResult(), "failure");
         general.setMailSendResult(mailSendResult);
 
+        // 2025.02.11 한슬기 : 항상 나를 참조에 포함 설정. selfCcOption = none : 사용안함(default) / cc : 나를 항상 참조에 포함 / bcc : 나를 항상 숨은참조에 포함
+        String selfCcOption =StringUtils.defaultIfBlank(general.getSelfCcOption(), "none");
+        general.setSelfCcOption(selfCcOption);
+
         writevo.setMailGeneralVO(general);
     }
 

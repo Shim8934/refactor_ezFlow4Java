@@ -440,230 +440,285 @@
 						var country = "";
 						var menuNameInputId = 1;
 						var menuRealName = menuNames1;
-						
-						if (userLang == "1") { // 한국어
-							langOrder.forEach(function(lang) {
-								if (item.menuLang == lang) {
-									switch (lang) {
-										case 1:
-											country = menuIconTD1;
-											break;
-										case 2:
-											country = menuIconTD2;
-											menuNameInputId = 2;
-											menuRealName = menuNames2;
-											break;
-										case 3:
-											country = menuIconTD3;
-											menuNameInputId = 3;
-											menuRealName = menuNames3;
-											break;
-										case 4:
-											country = menuIconTD4;
-											menuNameInputId = 4;
-											menuRealName = menuNames4;
-											break;
-										case 5:
-											country = menuIconTD5;
-											menuNameInputId = 5;
-											menuRealName = menuNames5;
-											break;
-										case 6:
-											country = menuIconTD6;
-											menuNameInputId = 6;
-											menuRealName = menuNames6;
-											break;
-										default:
-											break;
-									}
-								}
-							});
-						} else if (userLang == "2") { // 영어
-							langOrder.forEach(function(lang) {
-								if (item.menuLang == lang) {
-									switch (lang) {
-										case 1:
-											country = menuIconTD2;
-											menuNameInputId = 2;
-											menuRealName = menuNames2;
-											break;
-										case 2:
-											country = menuIconTD1;
-											break;
-										case 3:
-											country = menuIconTD3;
-											menuNameInputId = 3;
-											menuRealName = menuNames3;
-											break;
-										case 4:
-											country = menuIconTD4;
-											menuNameInputId = 4;
-											menuRealName = menuNames4;
-											break;
-										case 5:
-											country = menuIconTD5;
-											menuNameInputId = 5;
-											menuRealName = menuNames5;
-											break;
-										case 6:
-											country = menuIconTD6;
-											menuNameInputId = 6;
-											menuRealName = menuNames6;
-											break;
-										default:
-											break;
-									}
-								}
-							});
-						} else if (userLang == "3") { // 일본어
-							langOrder.forEach(function(lang) {
-								if (item.menuLang == lang) {
-									switch (lang) {
-										case 1:
-											country = menuIconTD3;
-											menuNameInputId = 3;
-											menuRealName = menuNames3;
-											break;
-										case 2:
-											country = menuIconTD2;
-											menuNameInputId = 2;
-											menuRealName = menuNames2;
-											break;
-										case 3:
-											country = menuIconTD1;
-											break;
-										case 4:
-											country = menuIconTD4;
-											menuNameInputId = 4;
-											menuRealName = menuNames4;
-											break;
-										case 5:
-											country = menuIconTD5;
-											menuNameInputId = 5;
-											menuRealName = menuNames5;
-											break;
-										case 6:
-											country = menuIconTD6;
-											menuNameInputId = 6;
-											menuRealName = menuNames6;
-											break;
-										default:
-											break;
-									}
-								}
-							});
-						} else if (userLang == "4") { // 중국어
-							langOrder.forEach(function(lang) {
-								if (item.menuLang == lang) {
-									switch (lang) {
-										case 1:
-											country = menuIconTD4;
-											menuNameInputId = 4;
-											menuRealName = menuNames4;
-											break;
-										case 2:
-											country = menuIconTD2;
-											menuNameInputId = 2;
-											menuRealName = menuNames2;
-											break;
-										case 3:
-											country = menuIconTD1;
-											break;
-										case 4:
-											country = menuIconTD3;
-											menuNameInputId = 3;
-											menuRealName = menuNames3;
-											break;
-										case 5:
-											country = menuIconTD5;
-											menuNameInputId = 5;
-											menuRealName = menuNames5;
-											break;
-										case 6:
-											country = menuIconTD6;
-											menuNameInputId = 6;
-											menuRealName = menuNames6;
-											break;
-										default:
-											break;
-									}
-								}
-							});
-						} else if (userLang == "5") { // 베트남어
-							langOrder.forEach(function(lang) {
-								if (item.menuLang == lang) {
-									switch (lang) {
-										case 1:
-											country = menuIconTD5;
-											menuNameInputId = 5;
-											menuRealName = menuNames5;
-											break;
-										case 2:
-											country = menuIconTD2;
-											menuNameInputId = 2;
-											menuRealName = menuNames2;
-											break;
-										case 3:
-											country = menuIconTD1;
-											break;
-										case 4:
-											country = menuIconTD3;
-											menuNameInputId = 3;
-											menuRealName = menuNames3;
-											break;
-										case 5:
-											country = menuIconTD4;
-											menuNameInputId = 4;
-											menuRealName = menuNames4;
-											break;
-										case 6:
-											country = menuIconTD6;
-											menuNameInputId = 6;
-											menuRealName = menuNames6;
-											break;
-										default:
-											break;
-									}
-								}
-							});
-						} else if (userLang == "6") { // 인도네시아어
-							langOrder.forEach(function(lang) {
-								if (item.menuLang == lang) {
-									switch (lang) {
-										case 1:
-											country = menuIconTD6;
-											menuNameInputId = 6;
-											menuRealName = menuNames6;
-											break;
-										case 2:
-											country = menuIconTD2;
-											menuNameInputId = 2;
-											menuRealName = menuNames2;
-											break;
-										case 3:
-											country = menuIconTD1;
-											break;
-										case 4:
-											country = menuIconTD3;
-											menuNameInputId = 3;
-											menuRealName = menuNames3;
-											break;
-										case 5:
-											country = menuIconTD4;
-											menuNameInputId = 4;
-											menuRealName = menuNames4;
-											break;
-										case 6:
-											country = menuIconTD5;
-											menuNameInputId = 5;
-											menuRealName = menuNames5;
-											break;
-										default:
-											break;
-									}
-								}
-							});
-						}
+						if (usePrimaryLangOnly != "YES") {
+                            if (menuNames.length > 1) {
+                                if (userLang == "1") { // 한국어
+                                    langOrder.forEach(function(lang) {
+                                        if (item.menuLang == lang) {
+                                            switch (lang) {
+                                                case 1:
+                                                    country = menuIconTD1;
+                                                    break;
+                                                case 2:
+                                                    country = menuIconTD2;
+                                                    menuNameInputId = 2;
+                                                    menuRealName = menuNames2;
+                                                    break;
+                                                case 3:
+                                                    country = menuIconTD3;
+                                                    menuNameInputId = 3;
+                                                    menuRealName = menuNames3;
+                                                    break;
+                                                case 4:
+                                                    country = menuIconTD4;
+                                                    menuNameInputId = 4;
+                                                    menuRealName = menuNames4;
+                                                    break;
+                                                case 5:
+                                                    country = menuIconTD5;
+                                                    menuNameInputId = 5;
+                                                    menuRealName = menuNames5;
+                                                    break;
+                                                case 6:
+                                                    country = menuIconTD6;
+                                                    menuNameInputId = 6;
+                                                    menuRealName = menuNames6;
+                                                    break;
+                                                default:
+                                                    break;
+                                            }
+                                        }
+                                    });
+                                } else if (userLang == "2") { // 영어
+                                    langOrder.forEach(function(lang) {
+                                        if (item.menuLang == lang) {
+                                            switch (lang) {
+                                                case 1:
+                                                    country = menuIconTD2;
+                                                    menuNameInputId = 2;
+                                                    menuRealName = menuNames2;
+                                                    break;
+                                                case 2:
+                                                    country = menuIconTD1;
+                                                    break;
+                                                case 3:
+                                                    country = menuIconTD3;
+                                                    menuNameInputId = 3;
+                                                    menuRealName = menuNames3;
+                                                    break;
+                                                case 4:
+                                                    country = menuIconTD4;
+                                                    menuNameInputId = 4;
+                                                    menuRealName = menuNames4;
+                                                    break;
+                                                case 5:
+                                                    country = menuIconTD5;
+                                                    menuNameInputId = 5;
+                                                    menuRealName = menuNames5;
+                                                    break;
+                                                case 6:
+                                                    country = menuIconTD6;
+                                                    menuNameInputId = 6;
+                                                    menuRealName = menuNames6;
+                                                    break;
+                                                default:
+                                                    break;
+                                            }
+                                        }
+                                    });
+                                } else if (userLang == "3") { // 일본어
+                                    langOrder.forEach(function(lang) {
+                                        if (item.menuLang == lang) {
+                                            switch (lang) {
+                                                case 1:
+                                                    country = menuIconTD3;
+                                                    menuNameInputId = 3;
+                                                    menuRealName = menuNames3;
+                                                    break;
+                                                case 2:
+                                                    country = menuIconTD2;
+                                                    menuNameInputId = 2;
+                                                    menuRealName = menuNames2;
+                                                    break;
+                                                case 3:
+                                                    country = menuIconTD1;
+                                                    break;
+                                                case 4:
+                                                    country = menuIconTD4;
+                                                    menuNameInputId = 4;
+                                                    menuRealName = menuNames4;
+                                                    break;
+                                                case 5:
+                                                    country = menuIconTD5;
+                                                    menuNameInputId = 5;
+                                                    menuRealName = menuNames5;
+                                                    break;
+                                                case 6:
+                                                    country = menuIconTD6;
+                                                    menuNameInputId = 6;
+                                                    menuRealName = menuNames6;
+                                                    break;
+                                                default:
+                                                    break;
+                                            }
+                                        }
+                                    });
+                                } else if (userLang == "4") { // 중국어
+                                    langOrder.forEach(function(lang) {
+                                        if (item.menuLang == lang) {
+                                            switch (lang) {
+                                                case 1:
+                                                    country = menuIconTD4;
+                                                    menuNameInputId = 4;
+                                                    menuRealName = menuNames4;
+                                                    break;
+                                                case 2:
+                                                    country = menuIconTD2;
+                                                    menuNameInputId = 2;
+                                                    menuRealName = menuNames2;
+                                                    break;
+                                                case 3:
+                                                    country = menuIconTD1;
+                                                    break;
+                                                case 4:
+                                                    country = menuIconTD3;
+                                                    menuNameInputId = 3;
+                                                    menuRealName = menuNames3;
+                                                    break;
+                                                case 5:
+                                                    country = menuIconTD5;
+                                                    menuNameInputId = 5;
+                                                    menuRealName = menuNames5;
+                                                    break;
+                                                case 6:
+                                                    country = menuIconTD6;
+                                                    menuNameInputId = 6;
+                                                    menuRealName = menuNames6;
+                                                    break;
+                                                default:
+                                                    break;
+                                            }
+                                        }
+                                    });
+                                } else if (userLang == "5") { // 베트남어
+                                    langOrder.forEach(function(lang) {
+                                        if (item.menuLang == lang) {
+                                            switch (lang) {
+                                                case 1:
+                                                    country = menuIconTD5;
+                                                    menuNameInputId = 5;
+                                                    menuRealName = menuNames5;
+                                                    break;
+                                                case 2:
+                                                    country = menuIconTD2;
+                                                    menuNameInputId = 2;
+                                                    menuRealName = menuNames2;
+                                                    break;
+                                                case 3:
+                                                    country = menuIconTD1;
+                                                    break;
+                                                case 4:
+                                                    country = menuIconTD3;
+                                                    menuNameInputId = 3;
+                                                    menuRealName = menuNames3;
+                                                    break;
+                                                case 5:
+                                                    country = menuIconTD4;
+                                                    menuNameInputId = 4;
+                                                    menuRealName = menuNames4;
+                                                    break;
+                                                case 6:
+                                                    country = menuIconTD6;
+                                                    menuNameInputId = 6;
+                                                    menuRealName = menuNames6;
+                                                    break;
+                                                default:
+                                                    break;
+                                            }
+                                        }
+                                    });
+                                } else if (userLang == "6") { // 인도네시아어
+                                    langOrder.forEach(function(lang) {
+                                        if (item.menuLang == lang) {
+                                            switch (lang) {
+                                                case 1:
+                                                    country = menuIconTD6;
+                                                    menuNameInputId = 6;
+                                                    menuRealName = menuNames6;
+                                                    break;
+                                                case 2:
+                                                    country = menuIconTD2;
+                                                    menuNameInputId = 2;
+                                                    menuRealName = menuNames2;
+                                                    break;
+                                                case 3:
+                                                    country = menuIconTD1;
+                                                    break;
+                                                case 4:
+                                                    country = menuIconTD3;
+                                                    menuNameInputId = 3;
+                                                    menuRealName = menuNames3;
+                                                    break;
+                                                case 5:
+                                                    country = menuIconTD4;
+                                                    menuNameInputId = 4;
+                                                    menuRealName = menuNames4;
+                                                    break;
+                                                case 6:
+                                                    country = menuIconTD5;
+                                                    menuNameInputId = 5;
+                                                    menuRealName = menuNames5;
+                                                    break;
+                                                default:
+                                                    break;
+                                            }
+                                        }
+                                    });
+                                }
+                            } else {
+                                if (userLang == "1") {
+                                    country = menuIconTD1;
+                                    menuNameInputId = 1;
+                                    menuRealName = menuNames1;
+                                } else if (userLang == "2") {
+                                    country = menuIconTD2;
+                                    menuNameInputId = 2;
+                                    menuRealName = menuNames2;
+                                } else if (userLang == "3") {
+                                    country = menuIconTD3;
+                                    menuNameInputId = 3;
+                                    menuRealName = menuNames3;
+                                } else if (userLang == "4") {
+                                    country = menuIconTD4;
+                                    menuNameInputId = 4;
+                                    menuRealName = menuNames4;
+                                } else if (userLang == "5") {
+                                    country = menuIconTD5;
+                                    menuNameInputId = 5;
+                                    menuRealName = menuNames5;
+                                } else if (userLang == "6") {
+                                    country = menuIconTD6;
+                                    menuNameInputId = 6;
+                                    menuRealName = menuNames6;
+                                }
+                            }
+						} else {
+                            if (userLang == "1") {
+                                country = menuIconTD1;
+                                menuNameInputId = 1;
+                                menuRealName = menuNames1;
+                            } else if (userLang == "2") {
+                                country = menuIconTD2;
+                                menuNameInputId = 2;
+                                menuRealName = menuNames2;
+                            } else if (userLang == "3") {
+                                country = menuIconTD3;
+                                menuNameInputId = 3;
+                                menuRealName = menuNames3;
+                            } else if (userLang == "4") {
+                                country = menuIconTD4;
+                                menuNameInputId = 4;
+                                menuRealName = menuNames4;
+                            } else if (userLang == "5") {
+                                country = menuIconTD5;
+                                menuNameInputId = 5;
+                                menuRealName = menuNames5;
+                            } else if (userLang == "6") {
+                                country = menuIconTD6;
+                                menuNameInputId = 6;
+                                menuRealName = menuNames6;
+                            }
+                        }
 						
 						menusHTML += country + ")</td>";
 						menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='menu";
@@ -943,20 +998,20 @@
 			if (usePrimaryLangOnly == "YES") {
 				menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t077' /></th>";
 				if (primary == "1") {
-					menusHTML += "<td class='menuIconTD'><spring:message code='ezNewPortal.t077' />(<spring:message code='ezNewPortal.t078' />)</td>";
+					menusHTML += "<td class='menuIconTD'><spring:message code='ezNewPortal.t077' /> (<spring:message code='ezNewPortal.t078' />)</td>";
 					menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='menu1' type='text' maxlength='50'></td>";
 					menusHTML += "</tr>";	
 				} else if (primary == "2") {
-					menusHTML += "<td class='menuIconTD'><spring:message code='ezNewPortal.t077' />(<spring:message code='ezNewPortal.t079' />)</td>";
-					menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='menu1' type='text' maxlength='50'></td>";
+					menusHTML += "<td class='menuIconTD'><spring:message code='ezNewPortal.t077' /> (<spring:message code='ezNewPortal.t079' />)</td>";
+					menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='menu2' type='text' maxlength='50'></td>";
 					menusHTML += "</tr>";	
 				} else if (primary == "3") {
-					menusHTML += "<td class='menuIconTD'><spring:message code='ezNewPortal.t077' />(<spring:message code='ezNewPortal.t080' />)</td>";
-					menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='menu1' type='text' maxlength='50'></td>";
+					menusHTML += "<td class='menuIconTD'><spring:message code='ezNewPortal.t077' /> (<spring:message code='ezNewPortal.t080' />)</td>";
+					menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='menu3' type='text' maxlength='50'></td>";
 					menusHTML += "</tr>";	
 				} else if (primary == "4") {
-					menusHTML += "<td class='menuIconTD'><spring:message code='ezNewPortal.t077' />(<spring:message code='ezNewPortal.t080' />)</td>";
-					menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='menu1' type='text' maxlength='50'></td>";
+					menusHTML += "<td class='menuIconTD'><spring:message code='ezNewPortal.t077' /> (<spring:message code='ezNewPortal.t080' />)</td>";
+					menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='menu4' type='text' maxlength='50'></td>";
 					menusHTML += "</tr>";	
 				}
 			} else {
@@ -1031,16 +1086,16 @@
 				}
 
 				menusHTML += "<tr><th rowspan=" + menuLength + " class='menuIconTH'><spring:message code='ezNewPortal.t077' /></th>";
-				menusHTML += "<td class='menuIconTD'><spring:message code='ezNewPortal.t077' />(" + mainTitle + ")</td>";
+				menusHTML += "<td class='menuIconTD'> <spring:message code='ezNewPortal.t077' /> (" + mainTitle + ")</td>";
 				menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='" + mainTitleId + "' type='text' maxlength='50'></td>";
 				menusHTML += "</tr>";
-				menusHTML += "<tr id='" + subTitleTr1Id + "'><td class='menuIconTD'><spring:message code='ezNewPortal.t077' />(" + subTitle1 + ")</td>";
+				menusHTML += "<tr id='" + subTitleTr1Id + "'><td class='menuIconTD'><spring:message code='ezNewPortal.t077' /> (" + subTitle1 + ")</td>";
 				menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='" + subTitle1Id + "' type='text' maxlength='50'></td>";
 				menusHTML += "</tr>";
-				menusHTML += "<tr id='" + subTitleTr2Id + "'><td class='menuIconTD'><spring:message code='ezNewPortal.t077' />(" + subTitle2 + ")</td>";
+				menusHTML += "<tr id='" + subTitleTr2Id + "'><td class='menuIconTD'><spring:message code='ezNewPortal.t077' /> (" + subTitle2 + ")</td>";
 				menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='" + subTitle2Id + "' type='text' maxlength='50'></td>";
 				menusHTML += "</tr>";
-				menusHTML += "<tr id='" + subTitleTr3Id + "'><td class='menuIconTD'><spring:message code='ezNewPortal.t077' />(" + subTitle3 + ")</td>";
+				menusHTML += "<tr id='" + subTitleTr3Id + "'><td class='menuIconTD'><spring:message code='ezNewPortal.t077' /> (" + subTitle3 + ")</td>";
 				menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='" + subTitle3Id + "' type='text' maxlength='50'></td>";
 				menusHTML += "</tr>";
 			}
@@ -1104,11 +1159,11 @@
 			//메뉴 추가 iconTable01 height 지정
 			$(".iconTable01, .iconTable02").css("height", (usePrimaryLangOnly == "YES" ? 106 : (106 + 33 * (menuLength -1))) + "px");
 			
-			if (useJapanese == "NO") {
+			if (useJapanese == "NO" && document.getElementById("ja")) {
 				document.getElementById("ja").style.display = "none";
 			}
 			
-			if (useChinese == "NO") {
+			if (useChinese == "NO" && document.getElementById("zh")) {
 				document.getElementById("zh").style.display = "none";
 			}
 		}

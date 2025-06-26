@@ -135,7 +135,8 @@
 								"<DEFAULTSEPARATESEND>"+ defaultSeparateSendVal + "</DEFAULTSEPARATESEND>" +
 				                "<MAILSENDRESULT>" + document.getElementById("sendResult").value + "</MAILSENDRESULT>" + 
 								"<EDITORFONTFAMILY>" + document.getElementById("editorFontFamily").value + "</EDITORFONTFAMILY>" +
-								"<EDITORFONTSIZE>" + document.getElementById("editorFontSize").value + "</EDITORFONTSIZE>";
+								"<EDITORFONTSIZE>" + document.getElementById("editorFontSize").value + "</EDITORFONTSIZE>"+
+								"<SELFCCOPTION>" + document.getElementById("selfCcOption").value + "</SELFCCOPTION>";
 				
                 if (usePreviewSubTree == "YES") {
                 	sendStr +=  "<PREVIEWSUBTREE>" + previewSubTreeSlb + "</PREVIEWSUBTREE>";
@@ -536,7 +537,22 @@
 			      </td>
 			  </tr>
 		  </c:if>
-		  <tr>
+
+          <!-- 2025.02.11 한슬기 : 국립암센터 나를 항상 참조에 포함 설정 추가(사용안함, 참조, 숨은참조. default : 사용안함) -->
+          <tr>
+			  <th><spring:message code="ezEmail.general.selfCcOption"/></th>
+			  <td>
+				  <select id="selfCcOption" style="width:100px;">
+					  <option value="none" <c:if test="${selfCcOption ne 'cc' and selfCcOption ne 'bcc'}">selected</c:if>><spring:message code='ezEmail.t99000009' /></option>
+					  <option value="cc" <c:if test="${selfCcOption eq 'cc'}">selected</c:if>><spring:message code="ezEmail.t706"/></option>
+					  <option value="bcc" <c:if test="${selfCcOption eq 'bcc'}">selected</c:if>><spring:message code="ezEmail.t562"/></option>
+				  </select>
+			  </td>
+          </tr>
+
+
+
+			<tr>
               <th><spring:message code="ezEmail.send.result"/></th>
               <td>
                   <select id="sendResult" style="width:100px;">

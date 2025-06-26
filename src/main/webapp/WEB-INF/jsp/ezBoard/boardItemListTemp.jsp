@@ -583,12 +583,14 @@
 		
 		        function ItemRead_onclick(obj) {
 		            var feature = GetOpenWindowfeature(765, 700);
-		            if (obj.getAttribute("DATA10") == "3" || obj.getAttribute("DATA10") == "4") {
-		                window.open("/ezBoard/boardNewItemTempPhoto.do?boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&mode=temp" + "&location=TEMP", "", feature, "");
-		            } else if (obj.getAttribute("DATA10") == "7" ) {
-			        	window.open("/ezBoard/boardNewItemTempMovie.do?boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&mode=temp" + "&location=TEMP", "", feature, "");
-			        }  else{
-                    	window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&mode=temp" + "&location=TEMP", "", feature, "");
+		            
+		            var selectedBoardType = obj.getAttribute("DATA10");
+		            if (selectedBoardType  == "3" || selectedBoardType  == "4") {
+	                	window.open("/ezBoard/boardNewItemTempPhoto.do?boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&gubun=" + selectedBoardType + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&mode=temp" + "&location=TEMP", sendName, feature, "");
+		            } else if (selectedBoardType  == "7" ) {
+			        	window.open("/ezBoard/boardNewItemTempMovie.do?boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&gubun=" + selectedBoardType + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&mode=temp" + "&location=TEMP", sendName, feature, "");
+			        } else{
+                    	window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&gubun=" + selectedBoardType + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&mode=temp" + "&location=TEMP", sendName, feature, "");
 		            }
 		            
 		            /* 2018-07-09 홍승비 - 승인게시판 게시물 읽기 시 즉각적으로 폰트 변화하도록 수정 */
@@ -972,13 +974,14 @@
 		    function MailReadOpen_temp() {
 		        obj = selobj;
 		        var feature = GetOpenWindowfeature(765, 820);
-		        if (obj.getAttribute("DATA10") == "3" || obj.getAttribute("DATA10") == "4") {
-		            window.open("/ezBoard/boardNewItemTempPhoto.do?boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&mode=temp" + "&location=TEMP", "", feature, "");
-		        } else if (obj.getAttribute("DATA10") == "7" ) {
+		        var selectedBoardType = obj.getAttribute("DATA10");
+		        if (selectedBoardType == "3" || selectedBoardType == "4") {
+		            window.open("/ezBoard/boardNewItemTempPhoto.do?boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&gubun=" + selectedBoardType + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&mode=temp" + "&location=TEMP", "", feature, "");
+		        } else if (selectedBoardType == "7" ) {
 		        	feature = GetOpenWindowfeature(765, 700);
-		        	window.open("/ezBoard/boardNewItemTempMovie.do?boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&mode=temp" + "&location=TEMP", "", feature, "");
+		        	window.open("/ezBoard/boardNewItemTempMovie.do?boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&gubun=" + selectedBoardType + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&mode=temp" + "&location=TEMP", "", feature, "");
 		        } else {
-	                window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&mode=temp" + "&location=TEMP", "", feature, "");
+	                window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&gubun=" + selectedBoardType + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&mode=temp" + "&location=TEMP", "", feature, "");
 		        }
 		    }
 		    

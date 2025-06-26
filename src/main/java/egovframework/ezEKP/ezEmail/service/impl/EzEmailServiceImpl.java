@@ -202,6 +202,7 @@ public class EzEmailServiceImpl implements EzEmailService {
         		mailGeneral.setMailSendResult((String)obj.get("mailSendResult"));
 				mailGeneral.setEditorFontFamily((String)obj.get("editorFontFamily"));
 				mailGeneral.setEditorFontSize((String)obj.get("editorFontSize"));
+				mailGeneral.setSelfCcOption((String)obj.get("selfCcOption"));
         		mailGeneralList.add(mailGeneral);
         	}
         }
@@ -234,6 +235,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 			mailGeneral.setMailSearchPeriod("failure");
 			mailGeneral.setEditorFontFamily(null);
 			mailGeneral.setEditorFontSize(null);
+			mailGeneral.setSelfCcOption("none");
 			
 			mailGeneralList.add(mailGeneral);
 		}
@@ -271,6 +273,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 		String mailSendResultParam = "mailSendResult=" + URLEncoder.encode(mailGeneral.getMailSendResult(), "UTF-8");
 		String editorFontFamilyParam = "editorFontFamily=" + URLEncoder.encode(mailGeneral.getEditorFontFamily(), "UTF-8");
 		String editorFontSizeParam = "editorFontSize=" + URLEncoder.encode(mailGeneral.getEditorFontSize(), "UTF-8");
+		String selfCcOption = "selfCcOption=" + URLEncoder.encode(mailGeneral.getSelfCcOption(), "UTF-8");
 		
 		String modeParam = "mode=";
 		if (mode != null && mode.equals("ALL")) {
@@ -280,7 +283,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 		String inputParams = userIdParam + "&" + listCountParam + "&" + refreshIntervalParam + "&" + keepDeleteLengthParam + "&" + previewModeParam
 				+ "&" + previewWListParam + "&" + previewWContentParam + "&" + previewHListParam + "&" + previewHContentParam + "&" + mailSenderNameParam
 				+ "&" + modeParam +"&" + previewSubTreeParam + "&" + usePreviewSubTreeParam + "&" + previewMailImageParam + "&" + previewMailParam + "&" + textOptionParam
-				+ "&" + mailSearchPeriodParam + "&" + defaultCursorPositionParam + "&" + defaultSeparateSendParam + "&" + mailSendResultParam + "&" + editorFontFamilyParam + "&" + editorFontSizeParam;
+				+ "&" + mailSearchPeriodParam + "&" + defaultCursorPositionParam + "&" + defaultSeparateSendParam + "&" + mailSendResultParam + "&" + editorFontFamilyParam + "&" + editorFontSizeParam
+				+ "&" + selfCcOption;
 
 		logger.debug("inputParams=" + inputParams);
 		
@@ -450,6 +454,7 @@ public class EzEmailServiceImpl implements EzEmailService {
         		mailDeleteVO.setExpireTime(((Long)obj.get("expireTime")).intValue());
         		mailDeleteVO.setDeleteUnread((String)obj.get("deleteUnread"));
         		mailDeleteVO.setFolderName((String)obj.get("folderName"));
+				mailDeleteVO.setAutoDeletionOption((String) obj.get("autoDeletionOption"));
         		
         		list.add(mailDeleteVO);
         	}
@@ -462,7 +467,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 	}
 	
 	@Override
-	public void setMailDelete(int tenantId, String pUserID, String pPath, int pExpireTime, int pDeleteUnread, String pFolderName) throws Exception {
+	public void setMailDelete(int tenantId, String pUserID, String pPath, int pExpireTime, int pDeleteUnread, String pFolderName, String pAutoDeletionOption) throws Exception {
 		logger.debug("setMailDelete started.");
 		logger.debug("tenantId=" + tenantId + ",pUserID=" + pUserID + ",pPath=" + pPath + ",pExpireTime=" + pExpireTime + ",pDeleteUnread=" + pDeleteUnread + ",pFolderName=" + pFolderName);
 		
@@ -473,8 +478,9 @@ public class EzEmailServiceImpl implements EzEmailService {
 		String expireTimeParam = "expireTime=" + pExpireTime;
 		String deleteUnreadParam = "deleteUnread=" + pDeleteUnread;
 		String folderNameParam = "folderName=" + URLEncoder.encode(pFolderName, "UTF-8");
-		
-		String inputParams = userIdParam + "&" + folderPathParam + "&" + expireTimeParam + "&" + deleteUnreadParam + "&" + folderNameParam;
+		String autoDeletionOptionParam = "autoDeletionOption=" + URLEncoder.encode(pAutoDeletionOption, "UTF-8");
+
+		String inputParams = userIdParam + "&" + folderPathParam + "&" + expireTimeParam + "&" + deleteUnreadParam + "&" + folderNameParam + "&" + autoDeletionOptionParam;
 		logger.debug("inputParams=" + inputParams);
 		
 		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/setMailDelete", inputParams);
@@ -486,7 +492,7 @@ public class EzEmailServiceImpl implements EzEmailService {
         if (!object.get("resultCode").equals("OK") || ((Long)object.get("reasonCode")).intValue() != 0) {
         	throw new Exception("JGwServer ERROR");
         }
-        
+
         logger.debug("setMailDelete ended.");
 	}
 	
@@ -546,7 +552,8 @@ public class EzEmailServiceImpl implements EzEmailService {
         		mailDeleteVO.setExpireTime(((Long)obj.get("expireTime")).intValue());
         		mailDeleteVO.setDeleteUnread((String)obj.get("deleteUnread"));
         		mailDeleteVO.setFolderName((String)obj.get("folderName"));
-        		
+				mailDeleteVO.setAutoDeletionOption((String) obj.get("autoDeletionOption"));
+
         		list.add(mailDeleteVO);
         	}
         }

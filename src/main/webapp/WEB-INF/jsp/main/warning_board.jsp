@@ -29,6 +29,10 @@
 				<dd><spring:message code='ezBoard.t281' /><br/>
 				</dd>
 				</c:when>
+                <c:when test="${gubunExchanged == 'Y'}">
+				    <dd><spring:message code='ezBoard.gubunExchanged.jih001' /><br/>
+				    </dd>
+				</c:when>
 				<c:otherwise>
 				<dd><spring:message code='main.t00001' /><br/>
 				</dd>

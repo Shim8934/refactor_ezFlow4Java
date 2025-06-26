@@ -728,23 +728,26 @@
 				<table class="mainlist emoticonLayerStaticPosition" style="width:100%">
 					<c:choose>
 						<c:when test="${gubun == 2}">
-								<th colspan="2" style="text-align:center; width: 100%; border-left:1px solid #e2e2e2; border-right:1px solid #e2e2e2;
-										 border-top:1px solid #e2e2e2; border-bottom:1px solid #f8f8fa; padding-bottom:3px">
+								<th style="text-align:center; width: 45px; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #f8f8fa; padding-bottom:3px">
 								    <%-- 2023-11-07 전인하 - 게시판 > 이모티콘 아이콘 삽입 --%>
 								    <div class="emoticonRelative">                                       
                                         <img id="_addEmoticon" class="_addEmoticon" src="/images/poll/add_emo_vote.png" onclick="addSticker(this)">
-                                        <textarea id="onelinereply" rows="3" style = "resize:none; width:calc(100% - 45px);" maxlength="500"></textarea>
 									</div>
 								</th>
+                                <th style="text-align:center; width: 90%; border-right:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #f8f8fa; padding-bottom:3px">
+                                    <textarea id="onelinereply" rows="3" style = "resize:none; width:calc(100% - 45px);" maxlength="500"></textarea>
+                                </th>
 						</c:when>
 						<c:otherwise>
-								<th style="text-align:center; width: 85%; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;">
+								<th style="text-align:center; width: 10%; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;">
 								    <%-- 2023-11-07 전인하 - 게시판 > 이모티콘 아이콘 삽입 --%>
 								    <div class="emoticonRelative">								    
                                         <img id="_addEmoticon" class="_addEmoticon" src="/images/poll/add_emo_vote.png" onclick="addSticker(this)">
-                                        <textarea id="onelinereply" rows="3" style = "resize:none; width: 90%" maxlength="500"></textarea>
 								    </div>
 								</th>
+                                <th style="text-align:center; width: 90%; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2; padding-bottom:3px">
+                                    <textarea id="onelinereply" rows="3" style="resize:none; width:calc(100% - 45px);" maxlength="500"></textarea>
+                                </th>
 						</c:otherwise>	
 					</c:choose>
 					<c:choose>

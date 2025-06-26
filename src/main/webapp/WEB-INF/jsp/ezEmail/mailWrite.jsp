@@ -122,6 +122,7 @@
 		var previewMail = "${general.previewMail}";
 	    var mailSendResult = "${general.mailSendResult}";
 		var defaultCursorPosition = "${general.defaultCursorPosition}"; // 메일쓰기창 기본 커서 위치/ recipient: 받는사람, content : 내용
+		var selfCcOption = "${general.selfCcOption}"; // 나를 항상 참조에 포함 선택. none : 사용안함(default) / cc : 나를 항상 참조에 포함 / bcc : 나를 항상 숨은참조에 포함
 		// sign
 	    var mailsel = "${sign.useFlag}";
 		// color
@@ -272,10 +273,14 @@
 	        // alias, 공용배포그룹 주소로 재전송 시 실제 sender 값 설정
 	        if (["RESEND", "EDIT"].some(cmd => g_cmd.includes(cmd)) && g_from != from) {
 	            var fromAddressElem = document.getElementById("fromAddressList").value;
-	            fromAddressChange(fromAddressElem);
 	        }
 
-	    	/* 2025-01-08 홍승비 - 전자결재 메일 발송 > 웹한글문서 메일로 전송 시, 웹한글기안기의 로딩 순서를 보장하도록 수정 */
+			// 2025.02.11 한슬기 : 나를 항상 참조에 포함 설정시
+			if (g_cmd != "EDIT" && isMailToMe != "YES"){
+				setSelfCcOrBcc();
+			}
+
+			/* 2025-01-08 홍승비 - 전자결재 메일 발송 > 웹한글문서 메일로 전송 시, 웹한글기안기의 로딩 순서를 보장하도록 수정 */
 	    	// (BuildWebHwpCtrl() 함수 호출부를 Editor_Complete() 내부로 변경)
 	    	
 	        if (!CrossYN()) {
@@ -2261,13 +2266,33 @@
 				document.getElementById("MsgTo").focus();
 			
 			} else if (defaultCursorPosition == "content") {
-				// 에디터에 커서를 위치시킴
-				message.SetEditorFocus();
-			
+				// 2025.05.16 한슬기 : 에디터에 커서를 위치시킴. 필요시 case를 추가하여 에디터별로 설정
 				setTimeout(function() {
-					   message.SetEditorFocus();
-				   }, 50);
-			
+					switch (pUse_Editor){
+						case "TAGFREE":
+							// 태그프리
+							var editorBody = document.querySelector('#tbContentElement')
+									?.contentDocument?.querySelector('.xfeDesignFrame')
+									?.contentDocument?.body;
+
+							if (editorBody) {
+								editorBody.focus();
+							} else {
+								console.warn("에디터 영역을 찾을 수 없습니다.");
+							}
+							break;
+						case "KUKUDOCS":
+							//쿠쿠닥스
+							message.SetEditorFocus();
+							break;
+
+						default:
+							//쿠쿠닥스
+							message.SetEditorFocus();
+							break;
+					}
+				   }, 500);
+
 			} else if (defaultCursorPosition == "subject") {
 				var inputValue = document.getElementById("eSubject").value;
 			

@@ -158,6 +158,7 @@
 		    var useHWP = "<c:out value='${useHWP}'/>";
 
 			/* 2023-09-25 민지수 - 게시판 > 공지사항 기간설정 시작, 종료시간 변수 */
+			var boardNoticePeriod = "<c:out value='${boardNoticePeriod}'/>";
 			var strNotiStart = "${boardListVO.notiStart}";
 			var strNotiEnd = "${boardListVO.notiEnd}";
 			
@@ -516,7 +517,7 @@
 		        NowDate.setMonth(NowDate.getMonth() - 1);
 				var NtNowDate = new Date(strNow.substring(0, 10));
 				var NtEndDate = new Date(strNow.substring(0, 10));
-				NtEndDate.setMonth(NtEndDate.getMonth() + 1);
+				NtEndDate.setDate(NtEndDate.getDate() + parseInt(boardNoticePeriod));
 
 		        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 		        $("#Sdatepicker").datepicker('setDate', NowDate);
@@ -1387,6 +1388,9 @@
 		            else if (getNodeText(loadXMLString(xmlhttp.responseText)) == "INACCESSIBLE") {
 						alert(strLang173);
 					}
+					else if (getNodeText(GetChildNodes(loadXMLString(xmlhttp.responseText))[0]) == "GUBUNCHANGED") {
+		                alert(strLangJIHgubunChange02);
+		            }
 					else if (getNodeText(GetChildNodes(loadXMLString(xmlhttp.responseText))[0]) == "DUPLICATED") {
 						alert(strLangFileViewr01);
 					}

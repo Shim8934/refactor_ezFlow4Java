@@ -583,6 +583,8 @@ public interface EzBoardService {
 	
 	public String getBoardNameLocalizing(String userLang, BoardPropertyVO boardProperty) throws Exception;
 
+	public void repostItem(String boardId, String itemID, String userID, int tenantID, String hasReply) throws Exception;
+
 	public BoardItemVO getFileViewerBoardInfo(HttpServletRequest request, LoginVO userInfo, String versionYN) throws Exception;
 
 	public String hasBoardItemFlag(String boardID, int tenantID) throws Exception;

@@ -518,6 +518,7 @@ public class EzScheduleDAO extends EgovAbstractDAO {
 	public void updateScheduleGroupMember(Map<String, Object> map) throws Exception {
 		update("EzScheduleDAO.updateScheduleGroupMember", map);
 	}
+
 	
 	@SuppressWarnings("unchecked")
 	public List<ScheSecretaryVO> getPublicExceSchedule(Map<String, Object> param) {
@@ -536,7 +537,6 @@ public class EzScheduleDAO extends EgovAbstractDAO {
 	public void saveIsTagChecked(Map<String, Object> param) {
 		update("EzScheduleDAO.saveIsTagChecked", param);
 	}
-
 	public void upsertUserScheTagColor(ScheduleTypeConfigVO vo) {
 		update("EzScheduleDAO.upsertUserScheTagColor", vo);
 	}
