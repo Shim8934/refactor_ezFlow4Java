@@ -1011,7 +1011,9 @@
 	          <td style="width:48%;">
 				  <span id="spUseDept">${boardListVO.writerName}</span>
 				  <c:if test="${'Y' == boardInfo.writerFlag}">
+				  	<div class="custom_checkbox">
 					  <input type="checkbox" id="chkUseDept" style="margin-left: 0px !important;" onclick="chkUseDept_onclick()">
+				  	</div>
 					  <select id="writerFlag" style="display: none;">
 						  <option value="<c:out value='${writerOption.N}\\${writerOption.N2}\\0' />"></option>
 						  <option value="<c:out value='${writerOption.T}\\${writerOption.T2}\\1' />"></option>

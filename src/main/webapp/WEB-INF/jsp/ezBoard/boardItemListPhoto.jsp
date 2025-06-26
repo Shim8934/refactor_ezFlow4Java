@@ -1545,7 +1545,9 @@
 								<spring:message code='ezBoard.t185' />
 							</th>
 							<td>${boardName} 
-			      				<input type="checkbox" id="chkSearchSub" ><spring:message code='ezBoard.t498' />
+								<div class="custom_checkbox">
+				      				<input type="checkbox" id="chkSearchSub" ><spring:message code='ezBoard.t498' />
+								</div>
 			    			</td>
 						</tr>
 						<tr>

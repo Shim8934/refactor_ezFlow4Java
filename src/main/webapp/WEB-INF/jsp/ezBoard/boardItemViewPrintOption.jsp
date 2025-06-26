@@ -186,12 +186,12 @@
 		<table class="content">
 		<c:if test="${oneLineReplyFlag == '1' || oneLineReplyFlag == '2'}">
 			<tr>
-			    <th><input id='onl' name ='onl'  type='checkbox' /></th>
+			    <th><div class="custom_checkbox"><input id='onl' name ='onl'  type='checkbox' /></div></th>
 			    <td><span id="ext1">&nbsp;<spring:message code='ezBoard.jjh06'/></span></td>
 			</tr>
 		</c:if>
 		<tr>
-		    <th ><input id='att' name='att'  type='checkbox' /></th>
+		    <th ><div class="custom_checkbox"><input id='att' name='att'  type='checkbox' /></div></th>
 		    <td><span id="ext2">&nbsp;<spring:message code='ezBoard.t487'/></span></td>
 		</tr>
 		</table>
