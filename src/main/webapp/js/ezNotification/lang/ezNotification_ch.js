@@ -85,6 +85,7 @@ subType["approval"]["return"] = "恢复付款文件";
 subType["approval"]["default"] = "赞同警报";
 subType["board"]["new"] = "新帖子";
 subType["board"]["return"] = "拒绝批准";
+subType["board"]["expired"] = "公告期限已结束";
 subType["schedule"]["delete"] = "删除事件";
 subType["survey"]["new"] = "新注册";
 subType["poll"]["new"] = "新注册";

@@ -5,19 +5,31 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.StringJoiner;
 
 import javax.annotation.Resource;
+import javax.mail.internet.InternetAddress;
 
+import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezBoard.service.EzBoardService;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezEmail.util.EmailImportance;
+import egovframework.ezEKP.ezNotification.service.EzNotificationService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 
+import egovframework.let.user.login.service.LoginService;
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,6 +72,27 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 
 	@Autowired
 	private EzOrganAdminService ezOrganAdminService;
+
+	@Autowired
+	private EzCommonService ezCommonService;
+
+	@Resource(name = "EzBoardService")
+	private EzBoardService ezBoardService;
+	
+	@Resource(name = "egovMessageSource")
+	private EgovMessageSource egovMessageSource;
+
+	@Resource(name = "EzNotificationService")
+	private EzNotificationService ezNotificationService;
+
+	@Resource(name = "loginService")
+	private LoginService loginService;
+
+	@Resource(name = "EzEmailService")
+	private EzEmailService ezEmailService;
+
+	@Resource(name = "jspw")
+	private String jspw;
 
 	private static final Logger logger = LoggerFactory.getLogger(EzBoardAdminServiceImpl.class);
 
@@ -1577,4 +1610,126 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		logger.debug("createModifyHistory ended");
 		return res;
 	}
+	// 2023-12-07 한태훈 - java에서 encodeURIComponent 메소드 구현
+	@Override
+	public String encodeURIComponent(String s) throws Exception {
+		String result = null;
+		result = URLEncoder.encode(s, "UTF-8")
+				.replaceAll("\\+", "%20")
+				.replaceAll("\\%21", "!")
+				.replaceAll("\\%27", "'")
+				.replaceAll("\\%28", "(")
+				.replaceAll("\\%29", ")")
+				.replaceAll("\\%7E", "~");
+
+		return result;
+	}
+	
+	@Override
+	public void boardNotiEndAlram() throws Exception {
+		logger.debug("boardNotiEndAlram started");
+
+		List<Map<String, String>> ntEndList = ezBoardAdminDAO.boardNotiEndAlram();
+
+		try {
+			if (ntEndList != null && ntEndList.size() != 0) {
+				for (int j = 0; j < ntEndList.size(); j++) {
+					Map<String, String> infoMap = ntEndList.get(j);
+
+					int tenantId = Integer.parseInt(infoMap.get("TENANT_ID"));
+					LoginVO userInfo = loginService.selectReceiver(infoMap.get("WRITERID"), tenantId);
+
+					String boardID = infoMap.get("BOARDID");
+					String itemID = infoMap.get("ITEMID");
+					String boardName = "";
+					if (userInfo.getPrimary().equals("1")) {
+						boardName = infoMap.get("BOARDNAME");
+					} else if (userInfo.getPrimary().equals("2")) {
+						boardName = infoMap.get("BOARDNAME2");
+					} else if (userInfo.getPrimary().equals("3")) {
+						boardName = infoMap.get("BOARDNAME3");
+					} else if (userInfo.getPrimary().equals("4")) {
+						boardName = infoMap.get("BOARDNAME4");
+					}
+					String title = infoMap.get("TITLE");
+					String gubun = infoMap.get("GUBUN") != null ? infoMap.get("GUBUN") : "0";
+
+					List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
+
+					Map<String, Object> recipientMap = new HashMap<String, Object>();
+					recipientMap.put("userType", "PERSON");
+					recipientMap.put("companyId", userInfo.getCompanyID());
+					recipientMap.put("cn", infoMap.get("WRITERID"));
+					notiRecipientList.add(recipientMap);
+					
+					//메일 발송
+					logger.debug("Sending board mail starts.");
+					String strURL = "javascript:Item_View_APPR('" + boardID + "','" + itemID + "','" + gubun + "');";
+					strURL = "<a id='board_a' style='color:blue;text-decoration:underline;cursor:pointer;' onClick=" + strURL + ">";
+
+					String subject = "[" + egovMessageSource.getMessage("ezBoard.lhr02", userInfo.getLocale()) + "] " + boardName + " - " + infoMap.get("TITLE") + " 게시글 공지 기간 만료";
+					
+					StringBuilder bodyContent = new StringBuilder();
+					bodyContent.append("<br>" + egovMessageSource.getMessage("ezBoard.lhr03", userInfo.getLocale()));
+					bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t251", userInfo.getLocale()) + commonUtil.cleanValue(boardName)); // 게 시 판
+					bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t254", userInfo.getLocale()) + strURL + commonUtil.cleanValue(title) + "</a>"); // 제 목
+
+					String content = commonUtil.createNotiMailContent(bodyContent.toString(), tenantId, userInfo.getLocale());
+					
+					InternetAddress to = new InternetAddress();
+					to.setPersonal(userInfo.getDisplayName(), "UTF-8");
+					to.setAddress(userInfo.getEmail());
+					ezEmailService.sendMail(userInfo.getEmail(), jspw, userInfo.getLocale(), to, new InternetAddress[]{to}, null, null, subject, content, false, EmailImportance.NORMAL);
+
+					logger.debug("Sending board mail ends.");
+
+					// 통합알림
+					String notiContent = boardName + " - " + title;
+					String boardType = gubun;
+					String linkUrl = "";
+					String linkUrlMobile = "";
+					String boardStatus = "";
+
+					if (boardID.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
+						boardStatus = "newBoardItemList";
+					} else {
+						boardStatus = "boardItemList";
+					}
+
+					if (boardType != null && (boardType.equals("4") || boardType.equals("3"))) {
+						boardStatus = "photoBoardItem";
+					}
+
+					String tempItemID = encodeURIComponent(itemID);
+					String tempBoardID = encodeURIComponent(boardID);
+					String tempBoardStatus = encodeURIComponent(boardStatus);
+
+					switch (boardType) {
+						case "3":
+						case "4":
+							linkUrl += "/ezBoard/boardItemViewPhoto.do?itemID=" + (tempItemID) + "&boardID=" + (tempBoardID);
+							linkUrlMobile += "/mobile/ezBoard/photoBoardItem.do?boardID=" + (tempBoardID) + "&itemID=" + (tempItemID) + "&type=photoBoardItem&boardItemListType=" + (tempBoardStatus);
+							break;
+						case "7":
+							linkUrl += "/ezBoard/boardItemViewMovie.do?itemID=" + (tempItemID) + "&boardID=" + (tempBoardID);
+							linkUrlMobile += "/mobile/ezBoard/movieBoardItem.do?boardID=" + (tempBoardID) + "&itemID=" + (tempItemID) + "&type=movieBoardItem&boardItemListType=" + (tempBoardStatus);
+							break;
+						default:
+							linkUrl += "/ezBoard/boardItemView.do?itemID=" + (tempItemID) + "&boardID=" + (tempBoardID);
+							linkUrlMobile += "/mobile/ezBoard/boardItem.do?boardID=" + (tempBoardID) + "&itemID=" + (tempItemID) + "&type=boardItem&boardItemListType=" + (tempBoardStatus);
+							break;
+					}
+
+					String notiStatus = ezNotificationService.sendNoti(infoMap.get("WRITERID"), userInfo.getDisplayName(), notiRecipientList, 
+							"BOARD", "expired", notiContent, "popup", "780", "800", linkUrl, linkUrlMobile, "notChkSetting");
+					logger.debug("board " +  "return" + " noti status : " + notiStatus);
+				}
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+
+		logger.debug("boardNotiEndAlram started");
+	}
+
 }

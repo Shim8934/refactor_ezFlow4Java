@@ -84,6 +84,7 @@ subType["approval"]["return"] = "문서회수";
 subType["approval"]["default"] = "결재노티";
 subType["board"]["new"] = "신규게시";
 subType["board"]["return"] = "승인반려";
+subType["board"]["expired"] = "공지만료";
 subType["schedule"]["delete"] = "일정삭제";
 subType["survey"]["new"] = "신규등록";
 subType["poll"]["new"] = "신규등록";

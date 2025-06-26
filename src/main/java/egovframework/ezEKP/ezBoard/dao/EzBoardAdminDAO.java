@@ -405,4 +405,8 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 	public List<BoardListVO> getCreateHistoryTarget(Map<String, Object> map) throws Exception {
 		return (List<BoardListVO>) list("EzBoardAdminDAO.getCreateHistoryTarget", map);
 	}
+	public List<Map<String, String>> boardNotiEndAlram() throws Exception {
+		return (List<Map<String, String>>) list("EzBoardAdminDAO.boardNotiEndAlram");
+	}
+
 }
