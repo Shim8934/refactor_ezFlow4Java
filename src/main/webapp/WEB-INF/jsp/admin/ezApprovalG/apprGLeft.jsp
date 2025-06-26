@@ -254,7 +254,7 @@
 					<h2><span class="h2Title" style="display:inline-block;width:100%;" onClick="goPage(17)"><spring:message code='ezApprovalG.t560'/></span></h2>
 				</c:if>
 				<c:if test="${useSendOutState == 'YES'}">
-					<h2><span style="display:inline-block;width:100%;" onClick="goPage('sendout')"><spring:message code='ezApprovalG.yjh08'/></span></h2>
+					<h2><span class="h2Title" style="display:inline-block;width:100%;" onClick="goPage('sendout')"><spring:message code='ezApprovalG.yjh08'/></span></h2>
 				</c:if>
 				<c:if test="${useOpenGov == 'YES'}">
 					<h2><span class="h2Title" style="display:inline-block;width:100%;" onClick="goPage(16)"><spring:message code='ezApprovalG.LeftMenu04'/></span></h2>				
