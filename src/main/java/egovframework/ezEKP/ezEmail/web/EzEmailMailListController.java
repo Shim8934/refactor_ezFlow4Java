@@ -6,14 +6,18 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.Set;
 import java.util.TimeZone;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -33,6 +37,8 @@ import javax.mail.internet.MimeUtility;
 import javax.mail.search.FlagTerm;
 import javax.servlet.http.HttpServletRequest;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import egovframework.com.cmm.service.Globals;
 import egovframework.ezEKP.ezAI.util.AICommonUtil;
 import egovframework.ezEKP.ezEmail.vo.*;
@@ -46,6 +52,7 @@ import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -56,6 +63,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -3774,5 +3782,281 @@ public class EzEmailMailListController {
 		}
 
 		return Result.success();
+	}
+
+	@GetMapping("/ezEmail/mailKeepMove.do")
+	public ModelAndView mailKeepMovePage(@CookieValue("loginCookie") String loginCookie, @RequestParam String folderId,
+										 @RequestParam(required = false) String shareId, Locale locale) throws Exception {
+		ModelAndView modelAndView = new ModelAndView();
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+		String userEmail;
+
+		if ("YES".equalsIgnoreCase(useSharedMailbox) && shareId != null) {
+			logger.debug("shareId={}", shareId);
+
+			if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 1, userInfo.getTenantId())) {
+				logger.debug("the user cannot access the shareId.");
+				logger.debug("mailKeepMove ended.");
+				modelAndView.setStatus(HttpStatus.FORBIDDEN);
+
+				return modelAndView;
+			}
+
+			userEmail = shareId + "@" + domainName;
+		} else {
+			userEmail = userInfo.getId() + "@" + domainName;
+		}
+
+		try (IMAPAccess imapAccess = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+				userEmail, commonUtil.getUserIdAndPassword(loginCookie).get(1), egovMessageSource, locale, ezEmailUtil);
+			 Folder folder = imapAccess.getFolder(folderId)) {
+			if (folder == null) {
+				logger.error("has not exists folder: {}, user: {}", folderId, userEmail);
+				modelAndView.setStatus(HttpStatus.NOT_FOUND);
+				return modelAndView;
+			}
+
+			folder.open(Folder.READ_ONLY);
+			modelAndView.addObject("folderName", ezEmailUtil.getDisplayNameFromFolderId(folderId, locale));
+			modelAndView.setViewName("/ezEmail/mailKeepMove");
+		}
+
+		return modelAndView;
+	}
+
+	/**
+	 * 메일 이동/복사 실행 함수
+	 */
+	@PostMapping(value="/ezEmail/mailKeepMove.do")
+	@ResponseBody
+	public Result mailKeepMove(@CookieValue("loginCookie") String loginCookie, @RequestParam(value = "mailUids[]") List<String> mailUids, @RequestParam String targetFolderPath,
+                               @RequestParam boolean cleanup, @RequestParam(required = false) String shareId, Locale locale) throws Exception {
+		logger.debug("mailKeepMove started.");
+		logger.debug("mailUids={}, targetFolderPath: {}, cleanup: {}, shareId: {}", mailUids, targetFolderPath, cleanup, shareId);
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+		String userEmail;
+
+		if ("YES".equalsIgnoreCase(useSharedMailbox) && StringUtils.isNotBlank(shareId)) {
+			logger.debug("shareId={}", shareId);
+
+			if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 1, userInfo.getTenantId())) {
+				logger.debug("the user cannot access the shareId.");
+				logger.debug("mailKeepMove ended.");
+
+				return Result.failure(1);
+			}
+
+			userEmail = shareId + "@" + domainName;
+		} else {
+			userEmail = userInfo.getId() + "@" + domainName;
+		}
+
+		Map<String, long[]> folderIdUidMap = ezEmailUtil.getFolderIdUid(mailUids.stream()
+				.filter(StringUtils::isNotBlank).toArray(String[]::new));
+
+		JgwResult jgwGetInboxRuleResult = rest.jgw()
+				.post().url("/jMochaAccess/getInboxRule")
+				.formParam("userId", userEmail)
+				.exchangeJgwResult();
+
+		if (jgwGetInboxRuleResult.failed()) {
+			logger.debug("getInboxRule failed: {}", jgwGetInboxRuleResult);
+			logger.debug("mailKeepMove ended.");
+
+			return Result.failure(2);
+		}
+
+		Map<String, JsonObject> inboxRuleNameMap = new HashMap<>();
+		Set<String> alreadyCallcedJgwAccountSet = new HashSet<>();
+
+		for (JsonElement inboxRuleJson : jgwGetInboxRuleResult.getResultAsJsonElement().getAsJsonArray()) {
+			inboxRuleNameMap.put(inboxRuleJson.getAsJsonObject().get("ruleName").getAsString(), inboxRuleJson.getAsJsonObject());
+		}
+
+		String userKey = UUID.randomUUID().toString();
+
+		// -1 전처리
+		// 0 진행 중
+		// 100 성공
+		// -100 실패: From 헤더 없음
+		// -200 실패: 자동분류 추가 실패(jgw)
+		// -300 실패: 알 수 없는 오류
+		Thread thread = new Thread() {
+			@Override
+			public void run() {
+				Thread.currentThread().setName("mailKeepMove-" + userEmail);
+
+				boolean isNewUserQuotaNeeded = false;
+				boolean isThereUserLevelQuota = false;
+				Double userQuota = 0.0;
+				Double userWarn = 0.0;
+
+				try (IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+						userEmail, commonUtil.getUserIdAndPassword(loginCookie).get(1), egovMessageSource, locale, ezEmailUtil);
+					 IMAPFolder targetFolder = (IMAPFolder) ia.getFolder(targetFolderPath)) {
+					ezEmailService.setMailboxProgress(userKey, userEmail, "KEEPMOVE", userInfo.getTenantId(), -1);
+
+					Map<String, Set<Long>> mailboxMoveTargetMailMap = new HashMap<>();
+					Set<String> fromSet = new HashSet<>();
+
+					for (Map.Entry<String, long[]> folderIdUid : folderIdUidMap.entrySet()) {
+						try (IMAPFolder sourceFolder = (IMAPFolder) ia.getFolder(folderIdUid.getKey())) {
+							sourceFolder.open(Folder.READ_ONLY);
+							Message[] originMessages = sourceFolder.getMessagesByUID(folderIdUid.getValue());
+
+							for (Message originMessage : originMessages) {
+								Address[] fromArray = originMessage.getFrom();
+
+								if (fromArray == null || fromArray.length == 0) {
+									logger.debug("From header is none");
+									logger.debug("mailKeepMove ended.");
+
+									ezEmailService.updateMailboxProgress(userKey, -100);
+									return;
+								}
+
+								String from = ((InternetAddress) fromArray[0]).getAddress();
+								fromSet.add(from);
+							}
+
+							Set<Long> uidSet = mailboxMoveTargetMailMap.computeIfAbsent(folderIdUid.getKey(), k -> new HashSet<>());
+
+							for (long uid : folderIdUid.getValue()) {
+								uidSet.add(uid);
+							}
+						}
+					}
+
+					for (String from : fromSet) {
+						String ruleName = "계속이동: " + from;
+
+						if (!alreadyCallcedJgwAccountSet.contains(from)) {
+							List<String> types = Arrays.asList("condition", "action");
+							List<String> kinds = Arrays.asList("sender", "move");
+							List<String> values = Arrays.asList(from, targetFolderPath);
+
+							Rest.RestBuilder jgwRestBuilder = rest.jgw().post()
+									.formParam("userId", userEmail)
+									.formParam("displayName", ruleName)
+									.formParam("type", types)
+									.formParam("kind", kinds)
+									.formParam("value", values);
+
+							if (inboxRuleNameMap.containsKey(ruleName)) {
+								jgwRestBuilder.url("/jMochaAccess/updateInboxRule")
+										.formParam("ruleId", inboxRuleNameMap.get(ruleName).get("ruleId").getAsString());
+							} else {
+								jgwRestBuilder.url("/jMochaAccess/setInboxRule");
+							}
+
+							JgwResult jgwSetInboxRuleResult = jgwRestBuilder.exchangeJgwResult();
+
+							if (jgwSetInboxRuleResult.failed()) {
+								logger.debug("setInboxRule failed: {}", jgwSetInboxRuleResult);
+								logger.debug("mailKeepMove ended.");
+
+								ezEmailService.updateMailboxProgress(userKey, -200);
+								return;
+							}
+
+							alreadyCallcedJgwAccountSet.add(from);
+						}
+
+						// 기존 메일도 이동할 때 모든 편지함에서 탐색
+						if (cleanup) {
+							List<Map<String, String>> mailList = ezEmailUtil.searchFolderUsingRDBOnly(userEmail, "INBOX////Personal folder////Drafts////Trash////Junk E-Mail", new String[]{"FROM"}, new String[]{from},
+									null, null, true, false, false, "receivedDate", false, 0, 99999, false, null, userInfo.getTenantId(), false, "");
+							for (Map<String, String> mail : mailList) {
+								String[] mailIdStrings = mail.get("MAIL_ID").split("/");
+
+								if (mailIdStrings.length != 2) {
+									logger.warn("invalid mail uid skip: {}", mail);
+									continue;
+								}
+
+								long uid = Long.parseLong(mailIdStrings[1]);
+								mailboxMoveTargetMailMap.computeIfAbsent(mailIdStrings[0], k -> new HashSet<>()).add(uid);
+							}
+						}
+					}
+
+					ezEmailService.updateMailboxProgress(userKey, 0);
+					targetFolder.open(Folder.READ_WRITE);
+
+					int totalCount = mailboxMoveTargetMailMap.values().stream().mapToInt(Set::size).sum();
+					int processedCount = 0;
+
+					for (Map.Entry<String, Set<Long>> mailboxInUids : mailboxMoveTargetMailMap.entrySet()) {
+						try (IMAPFolder sourceFolder = (IMAPFolder) ia.getFolder(mailboxInUids.getKey())) {
+							sourceFolder.open(Folder.READ_WRITE);
+							Message[] messages = sourceFolder.getMessagesByUID(ArrayUtils.toPrimitive(mailboxInUids.getValue().toArray(new Long[0])));
+							String useImapMoveCommand = ezCommonService.getTenantConfig("useImapMoveCommand", userInfo.getTenantId());
+
+							if (useImapMoveCommand.equals("YES")) {
+								for (int offset = 0; offset < messages.length; offset += 20) {
+									Message[] batch = Arrays.copyOfRange(messages, offset, Math.min(offset + 20, messages.length));
+									sourceFolder.moveUIDMessages(batch, targetFolder);
+									processedCount += batch.length;
+									ezEmailService.updateMailboxProgress(userKey, Math.min((int) Math.floor((double) processedCount / totalCount * 100), 99));
+								}
+							} else {
+								// 이동시킬 메시지의 크기가 Quota량을 초과하게 되면 Quota를 재조정한다.
+								Double[] adjustQuotaData = ezEmailUtil.adjustUserQuotaForMessageMove(messages, userEmail, domainName, ia);
+
+								if (!isNewUserQuotaNeeded && adjustQuotaData[0] != null) {
+									isNewUserQuotaNeeded = true;
+
+									userQuota = adjustQuotaData[0];
+									userWarn = adjustQuotaData[1];
+
+									if (adjustQuotaData[2] != null) {
+										isThereUserLevelQuota = true;
+									}
+								}
+
+								for (int offset = 0; offset < messages.length; offset += 20) {
+									Message[] batch = Arrays.copyOfRange(messages, offset, Math.min(offset + 20, messages.length));
+									sourceFolder.copyUIDMessages(batch, targetFolder);
+									sourceFolder.setFlags(batch, new Flags(Flags.Flag.DELETED), true);
+									processedCount += batch.length;
+									ezEmailService.updateMailboxProgress(userKey, Math.min((int) Math.floor((double) processedCount / totalCount * 100), 99));
+								}
+							}
+						}
+					}
+
+					ezEmailService.updateMailboxProgress(userKey, 100);
+				} catch (Exception e) {
+					logger.error("error:", e);
+					try {
+						ezEmailService.updateMailboxProgress(userKey, -300);
+					} catch (Exception e2) {
+						logger.error("updateMailboxProgress error:", e);
+					}
+				} finally {
+					// 사용자 Quota를 변경시켰다면 원래 값으로 복원시킨다.
+					if (isNewUserQuotaNeeded) {
+						try {
+							if (isThereUserLevelQuota) {
+								ezEmailUtil.setUserQuota(userEmail, String.valueOf(userQuota), String.valueOf(userWarn));
+								// 사용자 레벨 Quota 설정값이 없었던 경유에는 해당 설정값을 삭제한다.
+							} else {
+								ezEmailUtil.deleteUserQuota(userEmail);
+							}
+						} catch (Exception e) {
+							logger.error("rollback user quota error:", e);
+						}
+					}
+				}
+			}
+		};
+		thread.start();
+
+		return Result.success(userKey);
 	}
 }

@@ -636,6 +636,27 @@ function move_mail_onclick_Complete(moveUrl) {
         } catch (e) {console.log(e);}
         
         MailListRefresh();
+    } else if (moveUrl['cmd'] === 'KEEP_MOVE') {
+        let itemId = "";
+        for (let i = 0; i < listContentArry.length; i++) {
+            itemId += document.getElementById(listContentArry[i]).getAttribute("_href") + ",";
+        }
+        for (let i = 0; i < listSubContentArry.length; i++) {
+            itemId += document.getElementById(listSubContentArry[i]).getAttribute("_href") + ",";
+        }
+
+        if (isOnlyFixingId) {
+            itemId = currentFixingIdTemp.getAttribute("_href") + ",";
+        }
+
+        keepMove(itemId, moveUrl["url"]);
+
+        // 20200428 조진호 - 메일 리스트에서 체크박스를 이용한 행위 뒤 체크박스가 풀리도록 추가
+        if (listContentArry.length > 0) {
+            for (var i = 1; i <= listContentArry.length; i++) {
+                document.getElementById(listContentArry[listContentArry.length - i]).children[0].children[0].checked = false;
+            }
+        }
     }
 }
 var xmlhttp_mailCopy;
@@ -730,6 +751,109 @@ function event_xmlhttp_mailMoveDelete_Complete() {
         prevShow_Clear();
     }
 }
+
+var mailKeepMoveDialogArguments = {};
+
+function keepMove(itemIDs, copyFolderID) {
+    if (copyFolderID === "Sent") {
+        alert(strLangKeepMoveCantUseSentBox);
+        return;
+    }
+
+    mailKeepMoveDialogArguments.okHandler = keepMoveOkHandler;
+    mailKeepMoveDialogArguments.mailUids = itemIDs;
+    mailKeepMoveDialogArguments.targetFolderId = copyFolderID;
+    let url = '/ezEmail/mailKeepMove.do?folderId=' + encodeURIComponent(copyFolderID);
+
+    if (shareId) {
+        url += '&shareId=' + encodeURIComponent(shareId);
+    }
+
+    const openWindow = window.open(url, 'mail_keepmove', GetOpenWindowfeature(500, 200));
+    try { openWindow.focus(); } catch (e) {console.log(e);}
+}
+
+function keepMoveOkHandler(/** @type boolean*/cleanup) {
+    $.ajax({
+        method: 'post',
+        url: '/ezEmail/mailKeepMove.do',
+        data: {
+            mailUids: mailKeepMoveDialogArguments.mailUids.split(','),
+            targetFolderPath: mailKeepMoveDialogArguments.targetFolderId,
+            cleanup,
+            shareId
+        },
+        success: function (result) {
+            if (result.status === 'ok') {
+                startKeepMoveTimer(result.data);
+            } else {
+                alert(strLang321 + '\n' + Date.now());
+            }
+        },
+        error: function() {
+            alert(strLang321 + '\n' + Date.now());
+        }
+    });
+}
+
+let keepMoveTimerId;
+
+function clearKeepMoveTimer() {
+    if (keepMoveTimerId) {
+        psSetTimeFlag = false;
+        HiddenMailProgressNew();
+        clearTimeout(keepMoveTimerId);
+        keepMoveTimerId = null;
+    }
+}
+
+function startKeepMoveTimer(userKey) {
+    psSetTimeFlag = true;
+    ShowMailProgressNew();
+    keepMoveTimerId = setTimeout(function callAjax()  {
+        $.ajax({
+            type : "POST",
+            url : "/ezEmail/getMailboxProgress.do",
+            data : { userKey },
+            dataType : "json",
+            success : function(data) {
+                // -1 전처리
+                // 0 진행 중
+                // 100 성공
+                // -100 실패: From 헤더 없음
+                // -200 실패: 자동분류 추가 실패(jgw)
+                // -300 실패: 알 수 없는 오류
+                switch (data.progress) {
+                    case 100:
+                        ShowPercent(100);
+                        setTimeout(() => {
+                            clearKeepMoveTimer();
+                            MailListRefresh();
+                            alert(strLang359);
+                        });
+                        break;
+                    case -100:
+                        alert(strLangKeepMoveNoFromHeader);
+                        clearKeepMoveTimer();
+                        break;
+                    case -200:
+                    case -300:
+                        alert(`${strLang321}\n${Date.now()}\n${data.progress}`);
+                        clearKeepMoveTimer();
+                        break;
+                    default:
+                        if (data.progress > -1) {
+                            ShowPercent(data.progress);
+                        }
+                        keepMoveTimerId = setTimeout(callAjax, 1000);
+                }
+            }, error : function(e) {
+                alert("error. " + e.status);
+            }
+        });
+    }, 500);
+}
+
 function refreshUnreadCount() {
     try {
         if (typeof (window.parent.frames.left) != "undefined")

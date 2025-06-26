@@ -144,6 +144,39 @@
                 window.close();
             }
         }
+
+        function onClickKeepMove() {
+            const postTreeSelectIndex = PostTreeView.selectedIndex();
+            if (postTreeSelectIndex == -1) {
+                alert("<spring:message code='ezEmail.t537' />");
+                return;
+            }
+
+            if (isFolderManager && getFolderDeptLevel(postTreeSelectIndex) > 5) {
+                alert("<spring:message code='ezEmail.ksaMailBox01' />");
+                return;
+            }
+
+            const retVal = [];
+            retVal["cmd"] = "KEEP_MOVE";
+            retVal["url"] = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
+            if (getparentnode(PostTreeView.selectedNode()) != null) {
+                retVal["idx"] = gettopvalue(PostTreeView.selectedNode());
+            }
+            else {
+                retVal["idx"] = PostTreeView.selectedIndex();
+            }
+            if (ReturnFunction!=null) {
+                ReturnFunction(retVal);
+                if (!isDivPopUp)
+                    window.close();
+            }
+            else {
+                window.returnValue = retVal;
+                window.close();
+            }
+        }
+
         function getparentnode(currentnode) {
         	try{
             var tmpnode = currentnode.parentNode.parentNode.parentNode.parentNode.previousSibling.id;
@@ -224,6 +257,7 @@
     <div class="btnpositionNew">
     	<a class="imgbtn"><span onclick="return btn_Move_onclick()"><spring:message code='ezEmail.t538' /></span></a>
     	<a class="imgbtn"><span onclick="return btn_Copy_onclick()"><spring:message code='ezEmail.t539' /></span></a>
+        <a class="imgbtn"><span onclick="return onClickKeepMove()"><spring:message code='ezEmail.keepmove' /></span></a>
     </div>
     <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
     <div style="border:0px solid red;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="MailProgress">
