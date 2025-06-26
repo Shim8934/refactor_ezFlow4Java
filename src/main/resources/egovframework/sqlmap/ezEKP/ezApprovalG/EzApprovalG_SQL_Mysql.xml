@@ -32147,7 +32147,7 @@
         UPDATE
             TBL_APRRECEIPTPROCESSINFO
         SET
-            APRSTATE = '011',
+            APRSTATE = #v_APRSTATE#,
             RECEIVEDDEPTID = #v_RECEIVEDDEPTID#,
             RECEIVEDDEPTNAME = #v_RECEIVEDDEPTNAME#,
             RECEIVEDDEPTNAME2 = #v_RECEIVEDDEPTNAME2#,
@@ -32168,7 +32168,7 @@
 		FROM
 			TBL_DEPTMASTER
 		WHERE
-			CN = (SELECT DEPTID FROM TBL_DOCDELIVERY WHERE DOCID = #v_DOCID# AND TENANT_ID = #v_TENANTID# and COMPANYID = #companyID#)
+			CN = (SELECT DEPTID FROM TBL_DOCDELIVERY WHERE DOCID = #v_DOCID# AND TENANT_ID = #v_TENANTID# and COMPANYID = #companyID# and MANAGEDEPTID = #v_DEPTID#)
 		AND
 			TENANT_ID = #v_TENANTID#
 		AND
@@ -34065,6 +34065,8 @@
             TENANT_ID = #v_TENANTID#
         AND 
             COMPANYID = #companyID#
+        AND
+            MANAGEDEPTID = #v_DEPTID#
 	</delete>
 	
 	<select id="EzApprovalG.selectDuplicateRebebuDoc" parameterClass="Map" resultClass="String">
@@ -36169,6 +36171,10 @@
             COMPANYID = #companyID#
 		AND
 			TENANT_ID = #v_TENANTID#
+        <isNotEmpty property="v_DEPTID">
+            AND
+                MANAGEDEPTID != #v_DEPTID#
+        </isNotEmpty>
     </select>
     
     <select id ="EzApprovalG.getDistributeInfo" parameterClass="Map" resultClass="ApprGDeliveryListVO">
@@ -36433,6 +36439,8 @@
             TENANT_ID = #v_TENANTID#
         AND
             COMPANYID = #companyID#
+        AND
+            MANAGEDEPTID = #v_DEPTID#
     </delete>
     
     <select id="EzApprovalG.getPublicityYN" parameterClass="Map" resultClass="String">

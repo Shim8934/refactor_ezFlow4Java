@@ -33692,6 +33692,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
         map.put("v_DOCID", docID);
         map.put("companyID", userInfo.getCompanyID());
         map.put("v_TENANTID", userInfo.getTenantId());
+        map.put("v_DEPTID", deptID);
         
         Map<String, Object> deliveryDeptInfo = ezApprovalGDAO.getDeliveryDeptInfo(map);
         
@@ -33700,6 +33701,13 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
         map.put("v_RECEIVEDDEPTNAME2", (String) deliveryDeptInfo.get("DISPLAYNAME2"));
         map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
 
+        List<ApprGDeliveryListVO> docInfo = ezApprovalGDAO.getDeliveryInfo(map);
+        if (docInfo == null || docInfo.isEmpty()) {
+            map.put("v_APRSTATE","011");
+        } else {
+            map.put("v_APRSTATE","014");
+        }
+        // 2025-06-26 김유진 - 배부대장에 존재하는 문서는 배부된 문서로 014, 그 외는 011 로 상태 변경
         // receivedDept정보 변경, 상태변경 (014 -> 011)
         ezApprovalGDAO.updateReBebuAprReceiptProcessInfo(map);
         
