@@ -1744,13 +1744,18 @@
 				if (MailxmlHTTP.status == 200) {
 					var retXml = loadXMLString(MailxmlHTTP.responseText);
 					document.getElementById('txtTitle').value = "일정게시 : " + getNodeText(retXml.getElementsByTagName("SUBJECT").item(0));
-					var Content = "<P>&nbsp;<br></P><br><DIV><br><br>-----<B>[&nbsp;일정 내용&nbsp;]</B>-----</DIV><DIV><B>날짜 : </B>" + getNodeText(retXml.getElementsByTagName("DATE").item(0)) + "</DIV>";
-					Content = Content + "<DIV><B>작성자 : </B>" + ReplaceText(ReplaceText(getNodeText(retXml.getElementsByTagName("FROMNAME").item(0)), "<", "&lt"), ">", "&gt;") + "</DIV>";
-					Content = Content + "<DIV><B>제목 : </B>" + getNodeText(retXml.getElementsByTagName("SUBJECT").item(0)) + "</DIV><P><br><br>" + getNodeText(retXml.getElementsByTagName("HTMLDESCRIPTION").item(0)) + "</P>";
+					var Content = "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
+					Content += "<p " + defaultFontAndSize + ">-----<B>[&nbsp;일정&nbsp;내용&nbsp;]</B>-----</p>"
+					Content += "<p " + defaultFontAndSize + "><B>날짜 : </B>" + getNodeText(retXml.getElementsByTagName("DATE").item(0)) + "</p>"
+					Content += "<p " + defaultFontAndSize + "><B>작성자 : </B>" + ReplaceText(ReplaceText(getNodeText(retXml.getElementsByTagName("FROMNAME").item(0)), "<", "&lt"), ">", "&gt;") + "</p>"
+					Content += "<p " + defaultFontAndSize + "><B>제목 : </B>" + getNodeText(retXml.getElementsByTagName("SUBJECT").item(0)) + "</p>"
+					Content += "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
+					Content += "<p " + defaultFontAndSize + ">" + getNodeText(retXml.getElementsByTagName("HTMLDESCRIPTION").item(0)) + "</p>"
 					Content = ReplaceText(Content, "id=doctitle", "");
 					Content = ReplaceText(Content, "id=\"doctitle\"", "");
 					Content = ReplaceText(Content, "id=\'doctitle\'", "");
-
+                    Content = '<div '+defaultFontAndSize+'>' + Content + '</div>';
+                    
 					message.SetEditorContent(Content);
 
 					var attCnt = retXml.getElementsByTagName("ATTACHID").length;
