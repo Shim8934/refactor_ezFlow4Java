@@ -159,7 +159,7 @@
 	                <div id="menu">
 	                    <ul>
 	                    <li ID='btn_Delete'><span onclick="btn_Delete_Onclick()"><spring:message code='ezBoard.t89'/></span> </li>
-	                    <li ID='CheckImage' ><span onclick='btn_AllCheck_Onclick()'><input type="checkbox" id="maincheck" style="display:none;"/><spring:message code='ezBoard.t1011'/></span></li>
+	                    <li ID='CheckImage' ><span onclick='btn_AllCheck_Onclick()'><div class="custom_checkbox"><input type="checkbox" id="maincheck" style="display:none;"/></div><spring:message code='ezBoard.t1011'/></span></li>
 	                    </ul>
 	                </div>
 	                <div id="close">
@@ -182,7 +182,9 @@
 	                	<c:set var="resultCount" value="${fn:length(result)}"/>
 	                	<c:forEach begin="1" end="${resultCount}" step="1" varStatus="vs">
 		                    <div style="display:inline-block">
-		                    	<input type="checkbox" value="${imageID[vs.count-1]}" id="check${vs.count - 1}" flag="${flag[vs.count-1]}" onclick="checkMainFg(this)" style="vertical-align: top; position: relative; z-index: 1; left:8px"/>
+		                    	<div class="custom_checkbox">
+			                    	<input type="checkbox" value="${imageID[vs.count-1]}" id="check${vs.count - 1}" flag="${flag[vs.count-1]}" onclick="checkMainFg(this)" style="vertical-align: top; position: relative; z-index: 1; left:8px"/>
+		                    	</div>
 		                    	<img src='${result[vs.count-1]}' width='100px' height ='100px' title='${content[vs.count-1]}' id="image${vs.count - 1}" name='zb_target_resize' style='cursor:pointer; position: relative; right: 13px'/>
 		                    </div>
 	                	</c:forEach>

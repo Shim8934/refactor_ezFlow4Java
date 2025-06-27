@@ -623,15 +623,15 @@
 
  			    if (obj.checked) {
  			        for (var i = 0; i < SelList.GetRowCount() ; i++) {
- 			            SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = true;
+ 			            SelList.GetDataRows()[i].childNodes[0].childNodes[0].childNodes[0].checked = true;
  			            SelList.GetDataRows()[i].style.backgroundColor = m_strColorSelect;
- 			            strListInfo += SelList.GetDataRows()[i].childNodes[0].childNodes[0].id;
+ 			            strListInfo += SelList.GetDataRows()[i].childNodes[0].childNodes[0].childNodes[0].id;
  			            strBoardListInfo += SelList.GetDataRows()[i].getAttribute("DATA1") + "," +  SelList.GetDataRows()[i].getAttribute("DATA2") + ";";
  			        }
  			    }
  			    else {
  			        for (var i = 0; i < SelList.GetRowCount() ; i++) {
- 			            SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = false;
+ 			            SelList.GetDataRows()[i].childNodes[0].childNodes[0].childNodes[0].checked = false;
  			            SelList.GetDataRows()[i].style.backgroundColor = m_strColorDefault;
  			            strListInfo = "";
  			            strBoardListInfo = "";

@@ -556,7 +556,7 @@
 						}
 						listXML += "</span>";
 						listXML += "</div>";
-						listXML += "<p class='topInfoP'><input type='checkbox' id='" + itemID + "," + writerID + ";' onclick='selectAlbumCheckBox(this, event)'>";
+						listXML += "<p class='topInfoP'><div class='custom_checkbox'><input type='checkbox' id='" + itemID + "," + writerID + ";' onclick='selectAlbumCheckBox(this, event)'></div>";
 						listXML += "<span style='font-size:13px;'>";
 
 						if (readFlag == "0") {
@@ -1798,7 +1798,7 @@
 							<spring:message code='ezBoard.t185' />
 						</th>
 						<td>${boardName} 
-		      				<input type="checkbox" id="chkSearchSub" ><spring:message code='ezBoard.t498' />
+		      				<div class="custom_checkbox"><input type="checkbox" id="chkSearchSub" ></div><spring:message code='ezBoard.t498' />
 		    			</td>
 					</tr>
 					<tr>

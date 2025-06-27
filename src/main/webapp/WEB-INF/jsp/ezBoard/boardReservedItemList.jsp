@@ -338,7 +338,7 @@
 	<table class="mainlist" style ="width:100%; min-width: 640px;">
 	  <form name="frmOutbox" action="/ezBoard/boardReservedItemList.do" method="post">
 	    <tr>
-	      <th width="20px"><input type='checkbox' id="HeaderAllCheckBox" name="checkbox" onclick='checkBox_checkAll()'></th>
+	      <th width="20px"><div class="custom_checkbox"><input type='checkbox' id="HeaderAllCheckBox" name="checkbox" onclick='checkBox_checkAll()'></div></th>
 	      <c:choose>
 	      	<c:when test="${sortBy == 'A.Attachments'}">
 		      <th style="cursor:pointer;text-align:center;" width="20px" onClick="SortPage('A.Attachments desc')"><img src="/images/newAttach.gif"><img src="/images/etc/view-sortup.gif" ></th>
@@ -408,7 +408,7 @@
 	    <c:set var="ListInfo"/>
 	    <c:forEach var="reservedList" items="${reservedList}" varStatus="status">
 	    	<tr>
-		    	<td <c:if test="${status.first}">style="height:23px;"</c:if>><input type='checkbox' name='chk' id='chk' onclick='checkBox_checked("${reservedList.boardID}", "${reservedList.itemID}", event)'></td>
+		    	<td <c:if test="${status.first}">style="height:23px;"</c:if>><div class="custom_checkbox"><input type='checkbox' name='chk' id='chk' onclick='checkBox_checked("${reservedList.boardID}", "${reservedList.itemID}", event)'></div></td>
 		    	<c:choose>
 		    		<c:when test="${reservedList.attachments != '0'}">
 		    			<td style="text-align:center;">

@@ -1,4 +1,4 @@
-﻿var g_progresswin;
+﻿﻿var g_progresswin;
 var g_fileList;
 var pAttachListXml="";
 
@@ -310,7 +310,10 @@ function AppendFileAttachInfo(ret) {
         input.type = "checkbox";
         input.id = "checkboxall";
         input.onclick = function () { dadiframe.checkall(); };
-        objTh.appendChild(input);
+        var oDiv = document.createElement("div");
+        oDiv.className = "custom_checkbox";
+        oDiv.appendChild(input);
+        objTh.appendChild(oDiv);
         objTr.appendChild(objTh);
 
         var objTh2 = document.createElement("TH");
@@ -361,8 +364,11 @@ function AppendFileAttachInfo(ret) {
                 var input = document.createElement("input");
                 input.type = "checkbox";
                 input.name = "fileSelect";
-
-                objTd.appendChild(input);
+    	        var oDiv = document.createElement("div");
+    	        oDiv.className = "custom_checkbox";
+    	        
+    	        oDiv.appendChild(input);
+                objTd.appendChild(oDiv);
                 objTr.appendChild(objTd);
 
                 var objTd2 = document.createElement("TD");

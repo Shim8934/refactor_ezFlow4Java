@@ -562,7 +562,7 @@
 						listXML += GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[getColNameIndex(xmlDoc, "WRITEDATE")], "VALUE")[0].textContent;
 						listXML += "</span>";
 						listXML += "</div>";
-						listXML += "<p class='topInfoP'><input type='checkbox' id='" + itemID + "," + writerID + ";' onclick='selectAlbumCheckBox(this, event)'>";
+						listXML += "<div class='custom_checkbox'><p class='topInfoP'><input type='checkbox' id='" + itemID + "," + writerID + ";' onclick='selectAlbumCheckBox(this, event)'>";
 						listXML += "<span style='font-size:13px;'>";
 
 						if (readFlag == "0") {
@@ -574,7 +574,7 @@
 						if (isNew == "Y") {
 							listXML+= "<img src='/images/i_new.gif' style='vertical-align:middle;margin:0px 5px 0px 2px'/>";
 						}
-						listXML += title + "</span></p>";
+						listXML += title + "</span></p></div>";
 						listXML += "<div class='infoDiv'>";
 						listXML += "<span style='font-size:13px;'>";
 						if (getColNameIndex(xmlDoc, "WRITERNAME") != -1) {
@@ -1609,7 +1609,9 @@
 							<spring:message code='ezBoard.t185' />
 						</th>
 						<td>${boardName} 
-		      				<input type="checkbox" id="chkSearchSub" ><spring:message code='ezBoard.t498' />
+							<div class="custom_checkbox">
+			      				<input type="checkbox" id="chkSearchSub" ><spring:message code='ezBoard.t498' />
+							</div>
 		    			</td>
 					</tr>
 					<tr>

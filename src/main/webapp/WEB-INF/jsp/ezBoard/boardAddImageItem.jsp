@@ -215,7 +215,7 @@
 	                    return "false";
 	
 	                var resultHTML = "<table style='margin-top:5px' width='100%' class='content' id='" + "M_" + imageid + "' name='" + imgpath + "'  uniqueId='" + imgUniqueID + "' ><tr>" +
-	                                 "<td style='width:25px;padding:0px; margin:0px;'><input type='checkbox' value='" + "M_" + imageid + "' id='imagecheck" + bodycount + "'  name='checkmenuSub' /></td>" +
+	                                 "<td style='width:25px;padding:0px; margin:0px;'><div class='custom_checkbox'><input type='checkbox' value='" + "M_" + imageid + "' id='imagecheck" + bodycount + "'  name='checkmenuSub' /></div></td>" +
 	                                 "<td style='width:100px; height: 100px;'><img id='" + imageid + "' title='" + localFileName + "' size='" + imgSize + "' uniqueId='" + imgUniqueID + "' style='width: 100px; height: 100px;' name='imgView'></img></td>" +
 	                                 "<td><textarea id='getcontent' style='width:94%; height:80px; margin:5px' maxlength='50' name='imgContent' ></textarea></input></td></tr></table>";
 	
@@ -236,7 +236,7 @@
 	                    return "false";
 
 	                var resultHTML = "<table width='100%' class='content' style='border-top:0 none; table-layout:fixed;' id='" + "M_" + imageid + "' name='" + imgpath + "' uniqueId='" + imgUniqueID + "' ><tr>" +
-	                                     "<td style='width:25px;background:rgb(245, 245, 245);border-top:0 none;'><input type='checkbox' value='" + "M_" + imageid + "' id='imagecheck" + bodycount + "'  name='checkmenuSub' /></td>" +
+	                                     "<td style='width:25px;background:rgb(245, 245, 245);border-top:0 none;'><div class='custom_checkbox'><input type='checkbox' value='" + "M_" + imageid + "' id='imagecheck" + bodycount + "'  name='checkmenuSub' /></div></td>" +
 	                                     "<td style='width:113px; height: 100px;border-top:0 none; padding:6px;'><img id='" + imageid + "' title='" + localFileName + "' size='" + imgSize + "' uniqueId='" + imgUniqueID + "' style='width: 100px; height: 100px;' name='imgView'></img></td>" +
 	                                     "<td style='border-top:0 none; padding:6px 8px 6px 6px;'><textarea type=/text' style='width:100%; height:100px; border:1px solid #ddd; margin:0; padding:0;' maxlength='50' name='imgContent'></textarea></td>" +
 	                                     "</tr></table>";
@@ -570,7 +570,9 @@
 	        </tr>
 	        <tr>
 	            <th style="text-align:left; margin: 0px; padding-left:2px; width:25px; border-right: 0px">
-	                <input id="checkmenu" type="checkbox" onClick="imagecheckAll(this)"  name="checkmenu"/>
+	            	<div class="custom_checkbox">
+		                <input id="checkmenu" type="checkbox" onClick="imagecheckAll(this)"  name="checkmenu"/>
+	            	</div>
 	            </th>  
 	            <th style="text-align:center; height:25px; width:100%; border-left:0px;font-weight: normal;color:#333"><spring:message code='ezBoard.t1010'/></th>
 	        </tr>       
