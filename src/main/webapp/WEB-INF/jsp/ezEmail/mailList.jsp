@@ -607,51 +607,19 @@
 							showLayer(event.currentTarget.querySelector('.layer_select'), event.currentTarget);
 						});
 					});
+				}
 
+				setUpLayerToggle();
+
+				if (useMailTag) {
 					const labelInput = document.getElementById('label-input');
 					// 입력 시 특수문자 입력 못하도록 함
 					inputUtil.makeNotAllowTyping(labelInput, /[!@#$%^&()\\\/:*?"<>|'`]/g);
 					// 띄어쓰기 입력 시 언더바로 치환
 					inputUtil.makeReplaceTyping(labelInput, /\s/g, '_');
+					inputUtil.addOnEnterEvent(labelInput, addLabel);
+					reloadTagsForLabelLayer();
 				}
-
-				setUpLayerToggle();
-
-				$.ajax({
-					cache: false,
-					method: 'get',
-					data: { shareId: shareId },
-					url: '/ezEmail/getUserTagList.do',
-					success: function(result) {
-						if (result.status === 'error') {
-							alert(strLang321);
-							return;
-						}
-
-						const tags = result.data;
-						/** @type HTMLTableElement */
-						const labelTable = document.getElementById('label-table');
-
-						tags.forEach(function(tag) {
-							const row = document.createElement('li');
-							const checkbox = document.createElement('input');
-							checkbox.type = 'checkbox';
-							checkbox.id = 'label-check-' + tag.idx;
-							checkbox.value = tag.idx;
-							checkbox.dataset.name = tag.name;
-							row.appendChild(checkbox);
-							row.appendChild(document.createTextNode(' '));
-							/** @type HTMLLabelElement */
-							const title = document.createElement('label');
-							title.textContent = tag.name;
-							title.title = tagName;
-							title.htmlFor = 'label-check-' + tag.idx;
-							row.appendChild(title);
-							labelTable.appendChild(row);
-						});
-					},
-					error: function() { alert(strLang321); }
-				});
 			}
 		    
 		    $(document).ready(function() {
@@ -1862,6 +1830,50 @@
 		    	});
 		    }
 
+			/** @param {Function} successCallback */
+			function reloadTagsForLabelLayer(successCallback) {
+				$.ajax({
+					cache: false,
+					method: 'get',
+					data: { shareId: shareId },
+					url: '/ezEmail/getUserTagList.do',
+					success: function(result) {
+						if (result.status === 'error') {
+							alert(strLang321);
+							return;
+						}
+
+						const tags = result.data;
+						/** @type HTMLTableElement */
+						const labelTable = document.getElementById('label-table');
+						labelTable.innerHTML = '';
+
+						tags.forEach(function(tag) {
+							const row = document.createElement('li');
+							const checkbox = document.createElement('input');
+							checkbox.type = 'checkbox';
+							checkbox.id = 'label-check-' + tag.idx;
+							checkbox.value = tag.idx;
+							checkbox.dataset.name = tag.name;
+							row.appendChild(checkbox);
+							row.appendChild(document.createTextNode(' '));
+							/** @type HTMLLabelElement */
+							const title = document.createElement('label');
+							title.textContent = tag.name;
+							title.title = tagName;
+							title.htmlFor = 'label-check-' + tag.idx;
+							row.appendChild(title);
+							labelTable.appendChild(row);
+						});
+
+						if (successCallback) {
+							successCallback(tags);
+						}
+					},
+					error: function() { alert(strLang321); }
+				});
+			}
+
 			function showLabelLayer() {
 				if (listContentArry.length === 0 && listSubContentArry.length === 0 && currentFixingId == null) {
 					document.querySelectorAll("#label-table input[type='checkbox']").forEach(/** @type HTMLInputElement */checkbox => {
@@ -1937,29 +1949,31 @@
 						}
 
 						const labelTable = document.getElementById('label-table');
-						const tagIdx = result.data;
-						const tagName = labelInput.value.trim();
+						const checkedTagIdxArray = Array.from(labelTable.querySelectorAll(":checked")).map(input => input.value);
+						const indeterminateTagIdxArray = Array.from(labelTable.querySelectorAll(":indeterminate")).map(input => input.value);
 
-						if (!labelTable.querySelector(`input[value='\${tagIdx}']`)) {
-							const row = document.createElement('li');
-							const checkbox = document.createElement('input');
-							checkbox.type = 'checkbox';
-							checkbox.id = 'label-check-' + tagIdx;
-							checkbox.value = tagIdx;
-							checkbox.dataset.name = tagName;
-							row.appendChild(checkbox);
-							row.appendChild(document.createTextNode(' '));
-							/** @type HTMLLabelElement */
-							const title = document.createElement('label');
-							title.textContent = tagName;
-							title.title = tagName;
-							title.htmlFor = 'label-check-' + tagIdx;
-							row.appendChild(title);
-							labelTable.appendChild(row);
-						}
+						reloadTagsForLabelLayer(() => {
+							labelInput.value = "";
 
-						labelInput.value = "";
-						labelTable.scrollTo(0, labelTable.scrollHeight);
+							for (const checkedTagIdx of checkedTagIdxArray) {
+								labelTable.querySelector(`[value='\${checkedTagIdx}']`).checked = true;
+							}
+
+							for (const indeterminateTagIdx of indeterminateTagIdxArray) {
+								const checkbox = labelTable.querySelector(`[value='\${indeterminateTagIdx}']`);
+								checkbox.checked = false;
+								checkbox.indeterminate = true;
+							}
+
+							const addedTag = labelTable.querySelector(`[value='\${result.data}']`).parentElement;
+							addedTag.addEventListener('blur', e => {
+								e.currentTarget.removeAttribute('tabindex');
+							});
+							addedTag.tabIndex = 0;
+							addedTag.contentEditable = true;
+							addedTag.focus();
+							addedTag.contentEditable = false;
+						});
 					},
 					error: function() {
 						showError();
@@ -2212,6 +2226,7 @@
 	          <c:if test="${useHackingMailReport == 'YES'}">
 			  <li id="hackingMail" title="<spring:message code="ezEmail.zno002" />"><span class="icon16 icon16_spam" onClick="moveHackingMail()"></span></li>		
 			  </c:if>
+				<c:if test="${useMailTag}">
 				<li class="view_more" data-before-show="showLabelLayer" style="position: relative;">
 					<span><spring:message code="ezEmail.tag" /></span>
 					<div id="label-layer" class="layer_select keep_alive tagArea" style="display: none; position: fixed; top: 85px;">
@@ -2226,6 +2241,7 @@
 						</p>
 					</div>
 				</li>
+				</c:if>
 			  <li class="view_more">
 				  <span class="view_icon"><img src="/images/ImgIcon/view_more.png"></span>
 				  <ul class="layer_select">

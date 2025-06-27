@@ -4333,7 +4333,7 @@ body.drag *{user-select:none !important;}
 .tagUL li{height: 33px !important; line-height: 27px !important;}
 #mainmenu li.view_more .layer_select{padding: 7px 0;}
 #mainmenu li.view_more.on{color: #0470E4;}
-.tagUL input{height: auto !important; cursor: pointer; vertical-align: middle; margin-top: 4px;}
+.tagUL input{height: auto !important; cursor: pointer; vertical-align: middle; margin-top: 5px;}
 .tagAdd{margin: 0 10px;}
 .tagArea{padding-top: 13px !important;}
 .tagArea .imgbtn{padding-left: 0;}
