@@ -45,11 +45,11 @@
             <li><span onclick="cancel();"></span></li>
         </ul>
     </div>
-    <table class="content">
+    <table class="content" style="width: 100%;">
         <tr>
-            <td class="pos1">
+            <td class="pos1" style="padding: 15px; text-align: center;">
                 <spring:message code="ezEmail.keepmove.description" arguments="${folderName}" />
-                <div>
+                <div style="margin-top: 10px;">
                     <input id="cleanup" type="checkbox" />
                     <label for="cleanup"><spring:message code="ezEmail.keepmove.checkmessage" /></label>
                 </div>
