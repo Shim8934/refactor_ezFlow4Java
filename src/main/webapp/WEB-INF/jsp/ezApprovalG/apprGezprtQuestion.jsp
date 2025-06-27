@@ -233,13 +233,13 @@
 		<span>▒ <spring:message code='ezApprovalG.t10019'/></span>
 		<span id=pMessageContent></span>
 		<table class="content" style="margin-top:10px">
-			<tr><th><input id='opi' name ='opi'  type='checkbox' ></th>
+			<tr><th><div class='custom_checkbox'><input id='opi' name ='opi'  type='checkbox' ></div></th>
 			<td><span id="ext1"><spring:message code='ezApprovalG.t10020'/></span></td></tr>
-			<tr><th ><input id='att' name='att'  type='checkbox' ></th>
+			<tr><th ><div class='custom_checkbox'><input id='att' name='att'  type='checkbox' ></div></th>
 			<td><span id="ext2"><spring:message code='ezApprovalG.t10021'/></span></td> </tr>
-			<tr><th ><input id='line' name='line' type='checkbox'></th>
+			<tr><th ><div class='custom_checkbox'><input id='line' name='line' type='checkbox'></div></th>
 			<td><span id="ext3"><spring:message code='ezApprovalG.t10022'/></span></td> </tr>
-            <tr><th ><input id='summary' name='summary' type='checkbox'></th>
+			<tr><th ><div class='custom_checkbox'><input id='summary' name='summary' type='checkbox'></div></th>
 			<td><span id="ext3"><spring:message code='ezApprovalG.summary01'/></span></td> </tr>
 		</table>
 		<div class="btnposition btnpositionNew">

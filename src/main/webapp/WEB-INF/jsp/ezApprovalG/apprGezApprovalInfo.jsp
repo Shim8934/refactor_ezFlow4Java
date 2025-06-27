@@ -2644,12 +2644,12 @@
 	            				// 일괄기안이 아닌 경우 (기존 코드)
 	            				if (draftAllFlag != "Y") {
 		            				if (item.fileOpenFlag == "Y") {
-		            					attachTr = "<tr><td style='width:30px'><input onClick='fileOpenFlagChk_onClick(this)' class='fileOpenFlagChk' id='fileOpenFlagChk_" + item.sn + "' type='checkbox' checked /></td>"
+		            					attachTr = "<tr><td style='width:30px'><div class='custom_checkbox'><input onClick='fileOpenFlagChk_onClick(this)' class='fileOpenFlagChk' id='fileOpenFlagChk_" + item.sn + "' type='checkbox' checked /></div></td>"
 			            				+ "<td style='width:30px'>" + item.sn + "</td><td style='width:350px'>" + item.fileName + "</td>"
 			            				+ "<td style='width:70px'>" + item.fileSize + "</td>"
 			            				+ "<td class='fileOpenFlag' id='fileOpenFlag_" + item.sn + "' style='width:60px'>" + "공개" + "</td></tr>";
 		            				} else {
-		            					attachTr = "<tr><td style='width:30px'><input onClick='fileOpenFlagChk_onClick(this)' class='fileOpenFlagChk' id='fileOpenFlagChk_" + item.sn + "' type='checkbox'/></td>"
+		            					attachTr = "<tr><td style='width:30px'><div class='custom_checkbox'><input onClick='fileOpenFlagChk_onClick(this)' class='fileOpenFlagChk' id='fileOpenFlagChk_" + item.sn + "' type='checkbox'/></div></td>"
 			            				+ "<td style='width:30px'>" + item.sn + "</td><td style='width:350px'>" + item.fileName + "</td>"
 			            				+ "<td style='width:70px'>" + item.fileSize + "</td>"
 			            				+ "<td class='fileOpenFlag' id='fileOpenFlag_" + item.sn + "' style='width:60px'>" + "비공개" + "</td></tr>";
@@ -2658,13 +2658,13 @@
 	            				// 일괄기안인 경우, 각 첨부파일 별 안번호를 표시
 	            				else {
 	            					if (item.fileOpenFlag == "Y") {
-		            					attachTr = "<tr><td style='width:30px'><input onClick='fileOpenFlagChk_onClick(this)' anNo='" + pDocIDAry.indexOf(item.docID) + "' class='fileOpenFlagChk' id='fileOpenFlagChk_" + item.sn + "' type='checkbox' checked /></td>"
+		            					attachTr = "<tr><td style='width:30px'><div class='custom_checkbox'><input onClick='fileOpenFlagChk_onClick(this)' anNo='" + pDocIDAry.indexOf(item.docID) + "' class='fileOpenFlagChk' id='fileOpenFlagChk_" + item.sn + "' type='checkbox' checked /></div></td>"
 		            					+ "<td class='anNo' style='width:30px'>" + pDocIDAry.indexOf(item.docID) + "안</td>"
 			            				+ "<td style='width:30px'>" + item.sn + "</td><td style='width:350px'>" + item.fileName + "</td>"
 			            				+ "<td style='width:70px'>" + item.fileSize + "</td>"
 			            				+ "<td class='fileOpenFlag' id='fileOpenFlag_" + item.sn + "' style='width:60px'>" + strLang82 + "</td></tr>";
 		            				} else {
-		            					attachTr = "<tr><td style='width:30px'><input onClick='fileOpenFlagChk_onClick(this)' anNo='" + pDocIDAry.indexOf(item.docID) + "' class='fileOpenFlagChk' id='fileOpenFlagChk_" + item.sn + "' type='checkbox'/></td>"
+		            					attachTr = "<tr><td style='width:30px'><div class='custom_checkbox'><input onClick='fileOpenFlagChk_onClick(this)' anNo='" + pDocIDAry.indexOf(item.docID) + "' class='fileOpenFlagChk' id='fileOpenFlagChk_" + item.sn + "' type='checkbox'/></div></td>"
 		            					+ "<td class='anNo' style='width:30px'>" + pDocIDAry.indexOf(item.docID) + "안</td>"
 			            				+ "<td style='width:30px'>" + item.sn + "</td><td style='width:350px'>" + item.fileName + "</td>"
 			            				+ "<td style='width:70px'>" + item.fileSize + "</td>"
@@ -3181,9 +3181,9 @@
 	                                        <table class="content" style="margin-top: 6px; width: 100%;">
 	                                            <tr>
 	                                                <td colspan="2" style="margin-top: 3px; text-align: center; background-color: #f8f8fa">
-	                                                    <input type="checkbox" name="Reporter" id="Reporter" value="checkbox" onclick="return Reporter_onclick()" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top; margin: 3px 2px 0 0;">
+														<div class="custom_checkbox"><input type="checkbox" name="Reporter" id="Reporter" value="checkbox" onclick="return Reporter_onclick()" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top; margin: 3px 2px 0 0;"></div>
 	                                                    <span style="display: inline-block; margin-top: 4px;"><spring:message code='ezApprovalG.t409'/></span>
-	                                                    <input type="checkbox" id="Suggester" name="Suggester" value="checkbox" onclick="return Suggester_onclick()" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top; margin: 3px 2px 0 0;">
+														<div class="custom_checkbox"><input type="checkbox" id="Suggester" name="Suggester" value="checkbox" onclick="return Suggester_onclick()" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top; margin: 3px 2px 0 0;"></div>
 	                                                    <span style="display: inline-block; margin-top: 4px;"><spring:message code='ezApprovalG.t410'/></span>
 	                                                </td>
 	                                            </tr>
@@ -3212,9 +3212,9 @@
 	                                        <table class="content" style="margin-top: 6px; width: 100%;">
 	                                            <tr>
 	                                            	<td id="td_radio_audit" colspan="2" style="text-align:center; background-color: #f8f8fa">
-	                                                    <input type="radio" name="auditApprLine" value="AD0001"><span><spring:message code='ezAdmin.auditApprLine.02'/></span>&nbsp;&nbsp;
-	                                                    <input type="radio" name="auditApprLine" value="AD0002"><span><spring:message code='ezAdmin.auditApprLine.03'/></span>&nbsp;&nbsp;
-	                                                    <input type="radio" name="auditApprLine" value="AD0003"><span><spring:message code='ezAdmin.auditApprLine.04'/></span>&nbsp;&nbsp;
+														<div class="custom_radio"><input type="radio" name="auditApprLine" value="AD0001"></div><span><spring:message code='ezAdmin.auditApprLine.02'/></span>&nbsp;&nbsp;
+														<div class="custom_radio"><input type="radio" name="auditApprLine" value="AD0002"></div><span><spring:message code='ezAdmin.auditApprLine.03'/></span>&nbsp;&nbsp;
+														<div class="custom_radio"><input type="radio" name="auditApprLine" value="AD0003"></div><span><spring:message code='ezAdmin.auditApprLine.04'/></span>&nbsp;&nbsp;
 	                                                </td>
 	                                            </tr>
 	                                        </table>
@@ -3224,7 +3224,7 @@
 	                            <tr>
 	                            	<c:if test ="${approvalFlag =='G'}">
 	                                <td style="text-align: right;">
-	                                	<span id="passAprLineSpan" style="float:left;display:none"><input id="passAprLine" type="checkbox" style="vertical-align: middle" onchange="passAprLine_onchange(this)"><span style="vertical-align: middle"> <spring:message code='ezApprovalG.garm09'/></span></span>
+										<span id="passAprLineSpan" style="float:left;display:none"><div class="custom_checkbox"><input id="passAprLine" type="checkbox" style="vertical-align: middle" onchange="passAprLine_onchange(this)"></div><span style="vertical-align: middle"> <spring:message code='ezApprovalG.garm09'/></span></span>
 	                                	<a id="btnAddGamsaDept" style="margin-top: 8px; display: none;" class="imgbtn imgbck">
 	                                		<span onclick="return btnAddEtcDept_onclick('013')">감사추가</span>
 	                                	</a>
@@ -3232,7 +3232,7 @@
 	                                 </c:if>
 	                                 <c:if test = "${approvalFlag=='S'}">
 	                                 <td style="padding-top: 10px; text-align: right; vertical-align: top;" id="SaveAprLineTemplet">
-	                                 	<span id="passAprLineSpan" style="float:left;display:none"><input id="passAprLine" type="checkbox" style="vertical-align: middle" onchange="passAprLine_onchange(this)"><span style="vertical-align: middle"> <spring:message code='ezApprovalG.garm09'/></span></span>
+										 <span id="passAprLineSpan" style="float:left;display:none"><div class="custom_checkbox"><input id="passAprLine" type="checkbox" style="vertical-align: middle" onchange="passAprLine_onchange(this)"></div><span style="vertical-align: middle"> <spring:message code='ezApprovalG.garm09'/></span></span>
 	                                 <a class="imgbtn imgbck2">
 	                                 </c:if>
 	                                 	<span id="btn_SaveAprLineTemplet" onclick="return btn_SaveAprLineTemplet_onclick()"><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t384'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApproval.t270'/></c:if></span>
@@ -3648,11 +3648,11 @@
 		                <th><spring:message code='ezApprovalG.t875'/></th>
 		                <td>
 		                    <div style="padding-top: 5px; padding-left: 3px;">
-		                        <input type="checkbox" name="special1" id="special1" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px;"><label for="special1"><span> <spring:message code='ezApprovalG.t1205'/></span></label>&nbsp;
-		                        <input type="checkbox" name="special2" id="special2" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px;"><label for="special2"><span> <spring:message code='ezApprovalG.t984'/></span></label>&nbsp;
-		                        <input type="checkbox" name="special3" id="special3" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px;"><label for="special3"><span> <spring:message code='ezApprovalG.t1206'/></span></label>&nbsp;
-		                        <input type="checkbox" name="special4" id="special4" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px;"><label for="special4"><span> <spring:message code='ezApprovalG.t986'/></span></label>&nbsp;
-		                        <input type="checkbox" name="special5" id="special5" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px;"><label for="special5"><span> <spring:message code='ezApprovalG.t1207'/></span></label>
+								<div class="custom_checkbox"><input type="checkbox" name="special1" id="special1" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px;"><label for="special1"><span> <spring:message code='ezApprovalG.t1205'/></span></label>&nbsp;</div>
+								<div class="custom_checkbox"><input type="checkbox" name="special2" id="special2" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px;"><label for="special2"><span> <spring:message code='ezApprovalG.t984'/></span></label>&nbsp;</div>
+								<div class="custom_checkbox"><input type="checkbox" name="special3" id="special3" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px;"><label for="special3"><span> <spring:message code='ezApprovalG.t1206'/></span></label>&nbsp;</div>
+								<div class="custom_checkbox"><input type="checkbox" name="special4" id="special4" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px;"><label for="special4"><span> <spring:message code='ezApprovalG.t986'/></span></label>&nbsp;</div>
+								<div class="custom_checkbox"><input type="checkbox" name="special5" id="special5" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px;"><label for="special5"><span> <spring:message code='ezApprovalG.t1207'/></span></label></div>
 		                    </div>
 		
 		                </td>
@@ -3673,13 +3673,13 @@
 		            <tr>
 		                <th><spring:message code='ezApprovalG.t1199'/></th>
 		                <td>
-		                    <input type="checkbox" name="AprUrgency" id="AprUrgency" value="checkbox"><spring:message code='ezApprovalG.t10090'/>
+							<div class="custom_checkbox"><input type="checkbox" name="AprUrgency" id="AprUrgency" value="checkbox"></div><spring:message code='ezApprovalG.t10090'/>
 		                </td>
 		            </tr>
 		            <tr>
 		                <th><spring:message code='ezApprovalG.t1210'/></th>
 		                <td>
-		                    <input type="checkbox" name="AprSecurity" id="AprSecurity" value="checkbox" onclick="AprSecurity_onClick()">
+							<div class="custom_checkbox"><input type="checkbox" name="AprSecurity" id="AprSecurity" value="checkbox" onclick="AprSecurity_onClick()"></div>
 		                    <input readonly="readonly" id='idDatepicker' style="PADDING-BOTTOM: 0px; PADDING-LEFT: 3px; PADDING-RIGHT: 3px; PADDING-TOP: 2px; WIDTH: 80px;">
 		                </td>
 		            </tr>
@@ -3719,11 +3719,11 @@
 		                        <spring:message code='ezApprovalG.t10029'/><br />
 		                    </div>
 		                    <div style="padding-left: 3px; padding-bottom: 5px;">
-		                        <input type="radio" name="rdoSecType" value="1" checked onclick="return rdoSecType_onclick(this.value)" style="height: 13px; width: 13px; padding: 0px; margin: 0px 3px 0 0;"><span><spring:message code='ezApprovalG.t47'/></span>&nbsp;
-		                        <input type="radio" name="rdoSecType" value="2" onclick="return rdoSecType_onclick(this.value)" style="height: 13px; width: 13px; padding: 0px; margin: 0px 3px 0 0;"><span><spring:message code='ezApprovalG.t150'/></span>&nbsp;
-		                        <input type="radio" name="rdoSecType" value="3" onclick="return rdoSecType_onclick(this.value)" style="height: 13px; width: 13px; padding: 0px; margin: 0px 3px 0 0;"><span><spring:message code='ezApprovalG.t46'/></span>&nbsp;
+								<div class="custom_radio"><input type="radio" name="rdoSecType" value="1" checked onclick="return rdoSecType_onclick(this.value)" style="height: 13px; width: 13px; padding: 0px; margin: 0px 3px 0 0;"></div><span><spring:message code='ezApprovalG.t47'/></span>&nbsp;
+								<div class="custom_radio"><input type="radio" name="rdoSecType" value="2" onclick="return rdoSecType_onclick(this.value)" style="height: 13px; width: 13px; padding: 0px; margin: 0px 3px 0 0;"></div><span><spring:message code='ezApprovalG.t150'/></span>&nbsp;
+								<div class="custom_radio"><input type="radio" name="rdoSecType" value="3" onclick="return rdoSecType_onclick(this.value)" style="height: 13px; width: 13px; padding: 0px; margin: 0px 3px 0 0;"></div><span><spring:message code='ezApprovalG.t46'/></span>&nbsp;
 		                        <span class="openGov">
-		                        	<input type="checkbox" name="openListFlag" id="openListFlag" value="checkbox" onClick="openListFlag_onClick(this)" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span> 목록공개</span>
+									<div class="custom_checkbox"><input type="checkbox" name="openListFlag" id="openListFlag" value="checkbox" onClick="openListFlag_onClick(this)" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"></div><span> 목록공개</span>
 		                        </span>
 		                    </div>
 		                </td>
@@ -3739,14 +3739,14 @@
 		                <th><spring:message code='ezApprovalG.t989'/></th>
 		                <td>
 		                    <div style="padding-top: 5px; padding-left: 3px;">
-		                        <input type="checkbox" name="selSecLevel1" id="selSecLevel1" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px;"><span> 1호</span>
-		                        <input type="checkbox" name="selSecLevel2" id="selSecLevel2" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px;"><span> 2호</span>
-		                        <input type="checkbox" name="selSecLevel3" id="selSecLevel3" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px;"><span> 3호</span>
-		                        <input type="checkbox" name="selSecLevel4" id="selSecLevel4" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px;"><span> 4호</span>
-		                        <input type="checkbox" name="selSecLevel5" id="selSecLevel5" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px;"><span> 5호</span>
-		                        <input type="checkbox" name="selSecLevel6" id="selSecLevel6" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px;"><span> 6호</span>
-		                        <input type="checkbox" name="selSecLevel7" id="selSecLevel7" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px;"><span> 7호</span>
-		                        <input type="checkbox" name="selSecLevel8" id="selSecLevel8" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px;"><span> 8호</span>
+								<div class="custom_checkbox"><input type="checkbox" name="selSecLevel1" id="selSecLevel1" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px;"></div><span> 1호</span>
+								<div class="custom_checkbox"><input type="checkbox" name="selSecLevel2" id="selSecLevel2" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px;"></div><span> 2호</span>
+								<div class="custom_checkbox"><input type="checkbox" name="selSecLevel3" id="selSecLevel3" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px;"></div><span> 3호</span>
+								<div class="custom_checkbox"><input type="checkbox" name="selSecLevel4" id="selSecLevel4" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px;"></div><span> 4호</span>
+								<div class="custom_checkbox"><input type="checkbox" name="selSecLevel5" id="selSecLevel5" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px;"></div><span> 5호</span>
+								<div class="custom_checkbox"><input type="checkbox" name="selSecLevel6" id="selSecLevel6" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px;"></div><span> 6호</span>
+								<div class="custom_checkbox"><input type="checkbox" name="selSecLevel7" id="selSecLevel7" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px;"></div><span> 7호</span>
+								<div class="custom_checkbox"><input type="checkbox" name="selSecLevel8" id="selSecLevel8" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px;"></div><span> 8호</span>
 		                    </div>
 		                    <div class="openGov">
 		                         <textarea id="txt_Reason" name="txt_Reason" style="height: 40px; width: 100%; box-sizing: border-box; -moz-box-sizing: border-box;"></textarea>
@@ -3762,7 +3762,7 @@
 		            <tr class="openGov">
 		                <th>원문공개열람제한일</th>
 		                <td>
-		                	<input type="checkbox" name="openGovLimitDate" id="openGovLimitDate" value="checkbox" onclick="openGovLimitDate_onClick()">
+							<div class="custom_checkbox"><input type="checkbox" name="openGovLimitDate" id="openGovLimitDate" value="checkbox" onclick="openGovLimitDate_onClick()"></div>
 		                    <input readonly="readonly" id='idDatepickerForOpenGov' style="PADDING-BOTTOM: 0px; PADDING-LEFT: 3px; PADDING-RIGHT: 3px; PADDING-TOP: 2px; WIDTH: 80px;">
 		                </td>
 		            </tr>
@@ -3861,11 +3861,11 @@
 		                        <table class="popuplist" style="width: 100%;">
 		                            <tr>
 		                                <td style="width: 100%; padding-left: 4px; height: 18px; padding-top: 4px; padding-bottom: 4px">
-		                                    <input type="radio" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: middle;" id="isPublic" name="isPublic" value="Y" />&nbsp;<span><spring:message code='ezApproval.t50'/> (<spring:message code='ezApproval.t2000'/>)</span></td>
+											<div class="custom_radio"><input type="radio" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: middle;" id="isPublic" name="isPublic" value="Y" /></div>&nbsp;<span><spring:message code='ezApproval.t50'/> (<spring:message code='ezApproval.t2000'/>)</span></td>
 		                            </tr>
 		                            <tr>
 		                                <td style="width: 100%; padding-left: 4px; height: 18px; padding-bottom: 4px">
-		                                    <input type="radio" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: middle;" id="isPublic" name="isPublic" value="N" />&nbsp;<span><spring:message code='ezApproval.t49'/> (<spring:message code='ezApproval.t2001'/>)</span></td>
+											<div class="custom_radio"><input type="radio" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: middle;" id="isPublic" name="isPublic" value="N" /></div>&nbsp;<span><spring:message code='ezApproval.t49'/> (<spring:message code='ezApproval.t2001'/>)</span></td>
 		                            </tr>
 		                        </table>
 		                    </td>
@@ -3873,13 +3873,13 @@
 		                <tr>
 		                    <th><spring:message code='ezApproval.t337'/></th>
 		                    <td>
-		                        <input id="urgent" type="checkbox" name="checkbox" value="checkbox" />&nbsp;(<spring:message code='ezApproval.t2002'/>)</td>
+								<div class="custom_checkbox"><input id="urgent" type="checkbox" name="checkbox" value="checkbox" /></div>&nbsp;(<spring:message code='ezApproval.t2002'/>)</td>
 		                </tr>
 <!-- 		                보안결재 추가 -->
 			            <tr style="display: none;">
 			                <th><spring:message code='ezApprovalG.t1210'/></th>
 			                <td>
-			                    <input type="checkbox" name="AprSecurity" id="AprSecurity" value="checkbox" onclick="AprSecurity_onClick()">
+								<div class="custom_checkbox"><input type="checkbox" name="AprSecurity" id="AprSecurity" value="checkbox" onclick="AprSecurity_onClick()"></div>
 			                    <input readonly="readonly" id='idDatepicker' style="PADDING-BOTTOM: 0px; PADDING-LEFT: 3px; PADDING-RIGHT: 3px; PADDING-TOP: 2px; WIDTH: 80px;">
 			                </td>
 			            </tr>
@@ -4216,9 +4216,9 @@
 								<tr>
 								    <th><spring:message code='ezApprovalG.t868'/></th><!-- 전자기록물여부 -->
 									<td style="text-align:left">
-										<input type="radio" name="rdoElectronicFlag" value="1" style="height:13px;width:13px;padding:0px;margin:0px;vertical-align:top; display: none;" disabled="disabled">
+										<div class="custom_radio"><input type="radio" name="rdoElectronicFlag" value="1" style="height:13px;width:13px;padding:0px;margin:0px;vertical-align:top; display: none;" disabled="disabled"></div>
 										<%-- <span><spring:message code='ezApprovalG.t981'/></span> --%>
-										<input type="radio" name="rdoElectronicFlag" style="height:13px;width:13px;padding:0px;margin:0px;" value="2" checked>
+										<div class="custom_radio"><input type="radio" name="rdoElectronicFlag" style="height:13px;width:13px;padding:0px;margin:0px;" value="2" checked></div>
 										<span><spring:message code='ezApprovalG.t1070'/></span>
 								    </td>
 								</tr>

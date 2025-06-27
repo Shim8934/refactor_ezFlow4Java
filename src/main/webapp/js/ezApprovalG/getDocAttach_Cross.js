@@ -196,7 +196,7 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
                 var serverName = window.location.hostname;
 
                 /* 2020-11-18 홍승비 - 선택 및 다중 다운로드를 위한 체크박스 추가, 파일 아이콘 위치 정렬 */
-                strAttach = strAttach + "<span style='display:inline-block;'><input type='checkbox' name='fileSelect' fileName=\"" + xmlFileName + "\" filepath=\"" + xmlFilePath +"\">";
+                strAttach = strAttach + "<span style='display:inline-block;'><div class='custom_checkbox'><input type='checkbox' name='fileSelect' fileName=\"" + xmlFileName + "\" filepath=\"" + xmlFilePath +"\"></div>";
                 strAttach = strAttach + "<a href= /ezApprovalG/downloadAttach.do?fileName=" + filename + "&docID=" + tempDocID + "&docStatus=" + INGFlag + "&docAttachSN=" + SelectSingleNodeValue(GetChildNodes(xmlRtn[i])[0], "DATA2") + "&filePath=" + filepath + " onclick='AttachProcess(event)'>";
                 //strAttach = strAttach + "<a href='/myoffice/Common/downloadattach.aspx?filename=" + filename + "&filepath=" + filepath + "' " + strTarget + "' onclick='AttachProcess()'>";
 

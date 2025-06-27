@@ -561,8 +561,8 @@
 <table class="content">
 	<tr>
 	<th><spring:message code='ezApprovalG.t1163'/></th>
-		<td><Input Type="radio" name="rdoRecRole" id="rdoRecRole1" value="0" style="margin:3px 0px 5px 3px" onClick="return SwapRoleList()">&nbsp;<spring:message code='ezApprovalG.t1164'/><span id="roleCheck1"></span><br />
-			<Input Type="radio" name="rdoRecRole" id="rdoRecRole2" value="1" style="margin:3px 0px 5px 3px" onClick="return SwapRoleList()" checked>&nbsp;<spring:message code='ezApprovalG.t1165'/><span id="roleCheck2"></span></td>
+		<td><div class='custom_radio'><Input Type="radio" name="rdoRecRole" id="rdoRecRole1" value="0" style="margin:3px 0px 5px 3px" onClick="return SwapRoleList()"></div>&nbsp;<spring:message code='ezApprovalG.t1164'/><span id="roleCheck1"></span><br />
+			<div class='custom_radio'><Input Type="radio" name="rdoRecRole" id="rdoRecRole2" value="1" style="margin:3px 0px 5px 3px" onClick="return SwapRoleList()" checked></div>&nbsp;<spring:message code='ezApprovalG.t1165'/><span id="roleCheck2"></span></td>
 	</tr>
 </table>
 <table id="DataLayout" style="margin-top:5px; display: none;">

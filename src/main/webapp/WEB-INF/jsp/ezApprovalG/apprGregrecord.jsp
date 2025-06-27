@@ -644,9 +644,9 @@
               </tr>
               <tr>
                 <th ><spring:message code='ezApprovalG.t868'/></th>
-                <td style="text-align:left"><input type="radio" name="rdoElectronicFlag" value="1" style="height:13px;width:13px;padding:0px;margin:0px;vertical-align:top;" checked>
+                  <td style="text-align:left"><div class='custom_radio'><input type="radio" name="rdoElectronicFlag" value="1" style="height:13px;width:13px;padding:0px;margin:0px;vertical-align:top;" checked></div>
                   <span><spring:message code='ezApprovalG.t981'/></span>
-                  <input type="radio" name="rdoElectronicFlag" style="height:13px;width:13px;padding:0px;margin:0px;" value="2">
+                  <div class='custom_radio'><input type="radio" name="rdoElectronicFlag" style="height:13px;width:13px;padding:0px;margin:0px;" value="2"></div>
                   <span><spring:message code='ezApprovalG.t1070'/></span></td>
               </tr>
               <tr>
@@ -665,19 +665,19 @@
               <tr>
                 <th style="border-left: 0px; padding-right: 46px; height: 85px;"><spring:message code='ezApprovalG.t875'/></th>
                 <td style="width:98%; padding:3px;">
-                  <input type="checkbox" name="special1" value="checkbox" style="height:13px;width:13px;padding:0px;margin:1.5px;"><span>&nbsp;<spring:message code='ezApprovalG.t983'/></span><br />
-                  <input type="checkbox" name="special2" value="checkbox" style="height:13px;width:13px;padding:0px;margin:1.5px;"><span>&nbsp;<spring:message code='ezApprovalG.t984'/></span><br>
-                  <input type="checkbox" name="special3" value="checkbox" style="height:13px;width:13px;padding:0px;margin:1.5px;"><span>&nbsp;<spring:message code='ezApprovalG.t985'/></span><br />
-                  <input type="checkbox" name="special4" value="checkbox" style="height:13px;width:13px;padding:0px;margin:1.5px;"><span>&nbsp;<spring:message code='ezApprovalG.t986'/></span><br>
-                  <input type="checkbox" name="special5" value="checkbox" style="height:13px;width:13px;padding:0px;margin:1.5px;"><span>&nbsp;<spring:message code='ezApprovalG.t987'/></span></td>
+                    <div class='custom_checkbox'><input type="checkbox" name="special1" value="checkbox" style="height:13px;width:13px;padding:0px;margin:1.5px;"></div><span>&nbsp;<spring:message code='ezApprovalG.t983'/></span><br />
+                    <div class='custom_checkbox'><input type="checkbox" name="special2" value="checkbox" style="height:13px;width:13px;padding:0px;margin:1.5px;"></div><span>&nbsp;<spring:message code='ezApprovalG.t984'/></span><br>
+                    <div class='custom_checkbox'><input type="checkbox" name="special3" value="checkbox" style="height:13px;width:13px;padding:0px;margin:1.5px;"></div><span>&nbsp;<spring:message code='ezApprovalG.t985'/></span><br />
+                    <div class='custom_checkbox'><input type="checkbox" name="special4" value="checkbox" style="height:13px;width:13px;padding:0px;margin:1.5px;"></div><span>&nbsp;<spring:message code='ezApprovalG.t986'/></span><br>
+                    <div class='custom_checkbox'><input type="checkbox" name="special5" value="checkbox" style="height:13px;width:13px;padding:0px;margin:1.5px;"></div><span>&nbsp;<spring:message code='ezApprovalG.t987'/></span></td>
               </tr>
               <tr>
                 <th style="border-left: 0px;"><spring:message code='ezApprovalG.kes06'/></th>
-                <td><input type="radio" name="rdoSecType" value="1" checked onClick="return rdoSecType_onclick(this.value)"  style="height:13px;width:13px;padding:0px;margin:0px;">
+                  <td><div class='custom_radio'><input type="radio" name="rdoSecType" value="1" checked onClick="return rdoSecType_onclick(this.value)"  style="height:13px;width:13px;padding:0px;margin:0px;"></div>
                   <span><spring:message code='ezApprovalG.t47'/></span>
-                  <input type="radio" name="rdoSecType" value="2" onClick="return rdoSecType_onclick(this.value)"  style="height:13px;width:13px;padding:0px;margin:0px;">
+                  <div class='custom_radio'><input type="radio" name="rdoSecType" value="2" onClick="return rdoSecType_onclick(this.value)"  style="height:13px;width:13px;padding:0px;margin:0px;"></div>
                   <span><spring:message code='ezApprovalG.t150'/></span>
-                  <input type="radio" name="rdoSecType" value="3" onClick="return rdoSecType_onclick(this.value)"  style="height:13px;width:13px;padding:0px;margin:0px;">
+                  <div class='custom_radio'><input type="radio" name="rdoSecType" value="3" onClick="return rdoSecType_onclick(this.value)"  style="height:13px;width:13px;padding:0px;margin:0px;"></div>
                   <span><spring:message code='ezApprovalG.t1072'/></span>
                   <select id="selSecLevel" style="width:60px;display:none" name="select2">
                   </select>
@@ -685,14 +685,14 @@
               </tr>
               <tr>
                 <th style="border-left: 0px; height: 55px;"><spring:message code='ezApprovalG.t989'/></th>
-                <td style="padding:3px;"><input type="checkbox" name="selSecLevel1" value="checkbox" style="height:13px;width:13px;padding:0px;margin:3px 0px 3px 3px;"><span>&nbsp;1<spring:message code='ezApprovalG.t1768'/></span>
-                  <input type="checkbox" name="selSecLevel2" value="checkbox" style="height:13px;width:13px;padding:0px;margin:3px 0px 3px 3px;"><span>&nbsp;2<spring:message code='ezApprovalG.t1768'/></span>
-                  <input type="checkbox" name="selSecLevel3" value="checkbox" style="height:13px;width:13px;padding:0px;margin:3px 0px 3px 3px;"><span>&nbsp;3<spring:message code='ezApprovalG.t1768'/></span>
-                  <input type="checkbox" name="selSecLevel4" value="checkbox" style="height:13px;width:13px;padding:0px;margin:3px 0px 3px 3px;"><span>&nbsp;4<spring:message code='ezApprovalG.t1768'/></span><br>
-                  <input type="checkbox" name="selSecLevel5" value="checkbox" style="height:13px;width:13px;padding:0px;margin:3px 0px 3px 3px;"><span>&nbsp;5<spring:message code='ezApprovalG.t1768'/></span>
-                  <input type="checkbox" name="selSecLevel6" value="checkbox" style="height:13px;width:13px;padding:0px;margin:3px 0px 3px 3px;"><span>&nbsp;6<spring:message code='ezApprovalG.t1768'/></span>
-                  <input type="checkbox" name="selSecLevel7" value="checkbox" style="height:13px;width:13px;padding:0px;margin:3px 0px 3px 3px;"><span>&nbsp;7<spring:message code='ezApprovalG.t1768'/></span>
-                  <input type="checkbox" name="selSecLevel8" value="checkbox" style="height:13px;width:13px;padding:0px;margin:3px 0px 3px 3px;"><span>&nbsp;8<spring:message code='ezApprovalG.t1768'/></span></td>
+                  <td style="padding:3px;"><div class='custom_checkbox'><input type="checkbox" name="selSecLevel1" value="checkbox" style="height:13px;width:13px;padding:0px;margin:3px 0px 3px 3px;"></div><span>&nbsp;1<spring:message code='ezApprovalG.t1768'/></span>
+                    <div class='custom_checkbox'><input type="checkbox" name="selSecLevel2" value="checkbox" style="height:13px;width:13px;padding:0px;margin:3px 0px 3px 3px;"></div><span>&nbsp;2<spring:message code='ezApprovalG.t1768'/></span>
+                    <div class='custom_checkbox'><input type="checkbox" name="selSecLevel3" value="checkbox" style="height:13px;width:13px;padding:0px;margin:3px 0px 3px 3px;"></div><span>&nbsp;3<spring:message code='ezApprovalG.t1768'/></span>
+                    <div class='custom_checkbox'><input type="checkbox" name="selSecLevel4" value="checkbox" style="height:13px;width:13px;padding:0px;margin:3px 0px 3px 3px;"></div><span>&nbsp;4<spring:message code='ezApprovalG.t1768'/></span><br>
+                    <div class='custom_checkbox'><input type="checkbox" name="selSecLevel5" value="checkbox" style="height:13px;width:13px;padding:0px;margin:3px 0px 3px 3px;"></div><span>&nbsp;5<spring:message code='ezApprovalG.t1768'/></span>
+                    <div class='custom_checkbox'><input type="checkbox" name="selSecLevel6" value="checkbox" style="height:13px;width:13px;padding:0px;margin:3px 0px 3px 3px;"></div><span>&nbsp;6<spring:message code='ezApprovalG.t1768'/></span>
+                    <div class='custom_checkbox'><input type="checkbox" name="selSecLevel7" value="checkbox" style="height:13px;width:13px;padding:0px;margin:3px 0px 3px 3px;"></div><span>&nbsp;7<spring:message code='ezApprovalG.t1768'/></span>
+                    <div class='custom_checkbox'><input type="checkbox" name="selSecLevel8" value="checkbox" style="height:13px;width:13px;padding:0px;margin:3px 0px 3px 3px;"></div><span>&nbsp;8<spring:message code='ezApprovalG.t1768'/></span></td>
               </tr>
                <tr>
                 <th style="border-left: 0px;"><spring:message code='ezApprovalG.t109'/></th>

@@ -718,9 +718,9 @@
 		            </select></td>
 		        </tr>
 		        <TR>
-		          <td colspan="2" align=center style="margin-top:3px" ><input type="checkbox" name="Reporter" id="Reporter" value ="checkbox" LANGUAGE="javascript" onClick="return Reporter_onclick()" style="height:13px;width:13px;padding:0px;margin:0px;vertical-align:top;">
+					<td colspan="2" align=center style="margin-top:3px" ><div class='custom_checkbox'><input type="checkbox" name="Reporter" id="Reporter" value ="checkbox" LANGUAGE="javascript" onClick="return Reporter_onclick()" style="height:13px;width:13px;padding:0px;margin:0px;vertical-align:top;"></div>
 		            <span><spring:message code='ezApprovalG.t409'/></span>
-		            <input type="checkbox" id ="Suggester" name="Suggester" value="checkbox" language="javascript" onClick="return Suggester_onclick()" style="height:13px;width:13px;padding:0px;margin:0px;vertical-align:top;">
+					  <div class='custom_checkbox'><input type="checkbox" id ="Suggester" name="Suggester" value="checkbox" language="javascript" onClick="return Suggester_onclick()" style="height:13px;width:13px;padding:0px;margin:0px;vertical-align:top;"></div>
 		            <span><spring:message code='ezApprovalG.t410'/></span>
 		            </td>
 		        </TR>

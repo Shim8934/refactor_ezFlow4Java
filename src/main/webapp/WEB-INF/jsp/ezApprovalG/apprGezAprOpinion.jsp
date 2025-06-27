@@ -125,10 +125,10 @@
 					  <c:if test="${editModeYN == 'Y'}">
 						   <span id="editVersionArea">
 							  <p class="editVersionContainer">
-								  <input type="radio" id="editMode1" name="editMode" value="1" checked>
-								  <label for="editMode1"><spring:message code='ezApprovalG.EKMH01'/></label>
-								  <input type="radio" id="editMode2" name="editMode" value="2">
-								  <label for="editMode2"><spring:message code='ezApprovalG.EKMH02'/></label>
+								  <div class='custom_radio'><input type="radio" id="editMode1" name="editMode" value="1" checked>
+								  <label for="editMode1"><spring:message code='ezApprovalG.EKMH01'/></label></div>
+								  <div class='custom_radio'><input type="radio" id="editMode2" name="editMode" value="2">
+								  <label for="editMode2"><spring:message code='ezApprovalG.EKMH02'/></label></div>
 							  </p>
 					  		</span>
 					  </c:if>

@@ -3023,7 +3023,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					rtnXML.append("<OPTION value=" + colOption[2] + ">" + colOption[1] + "</OPTION>");
 				}
 			} else {
-				rtnXML.append("<input type='radio' id='RSecurity' name='RSecurity' style='height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;' value='" + colOption[2] + "' value2='" + colOption[1] + "' >&nbsp;<span>" + colOption[1] + "</span>&nbsp;&nbsp;");
+				rtnXML.append("<div class='custom_radio'><input type='radio' id='RSecurity' name='RSecurity' style='height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;' value='" + colOption[2] + "' value2='" + colOption[1] + "' ></div>&nbsp;<span>" + colOption[1] + "</span>&nbsp;&nbsp;");
 			}
 		}
 		
@@ -26968,7 +26968,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		for (int k = 0; k < dlength; k++) {
 			String[] colOption = docXML.getElementsByTagName("NAME").item(k).getTextContent().split(";");
-			rtnXML.append("<input type='radio' id='RKeeptype' name='RKeeptype' style='height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;' value='" + colOption[2] + "' value2='" + colOption[1] + "' >&nbsp;<span style='margin-top: 5px;'>" + colOption[1] + "</span>&nbsp;&nbsp;");
+			rtnXML.append("<div class='custom_radio'><input type='radio' id='RKeeptype' name='RKeeptype' style='height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;' value='" + colOption[2] + "' value2='" + colOption[1] + "' ></div>&nbsp;<span style='margin-top: 5px;'>" + colOption[1] + "</span>&nbsp;&nbsp;");
 		}
 		
 		rtnXML.append("</div>");
@@ -36759,12 +36759,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
         for (int i = 0; i < apprGAprLineVOList.size(); i++) {
             String num = String.valueOf(i+1);
-            rtnXML.append("<label><input type='radio' id='ru"+num+"' name='returnUser'; style='vertical-align: top;' ");
+            rtnXML.append("<label><div class='custom_radio'><input type='radio' id='ru"+num+"' name='returnUser'; style='vertical-align: top;' ");
             if (apprGAprLineVOList.get(i).getAprType().equals("018")) {
                 rtnXML.append("checked='checked' ");
             }
             rtnXML.append("data1='" + apprGAprLineVOList.get(i).getAprMemberName() + "' ");
-            rtnXML.append("value='" + apprGAprLineVOList.get(i).getAprMemberSN() + "'/>");
+            rtnXML.append("value='" + apprGAprLineVOList.get(i).getAprMemberSN() + "'/></div>");
             rtnXML.append(apprGAprLineVOList.get(i).getAprMemberSN() + ".&nbsp;");
             rtnXML.append(apprGAprLineVOList.get(i).getAprMemberJobTitle() + "&nbsp;");
             rtnXML.append(apprGAprLineVOList.get(i).getAprMemberName() + "&nbsp;");
