@@ -809,7 +809,9 @@
 					<th><spring:message code='ezTask.t30' /></th>
 					<td><input readonly ="true" type="text" id='_T1' class="textarea">
 					<label FOR="btnT1"> <img id='btnT1' popupLocation='bottomleft' src="/images/i_scheduler.gif" width="19" height="15" style="cursor:pointer"> </label>
-					<input type="checkbox" value="1" id="alldaycheck" checked>
+					<div class="custom_checkbox">
+						<input type="checkbox" value="1" id="alldaycheck" checked>
+					</div>
 					<spring:message code='ezTask.t31' /></td>
 				</tr>
 				<tr>
@@ -823,26 +825,26 @@
 		<table class="popuplist" style="width:100%;margin-bottom:10px">
 			<tr>
 				<td style="padding-left:5px">
-					<input id="mpDaily" type="radio" name="optMainPattern" value="radiobutton" style="margin:0px 0px 0px 0px;vertical-align:middle;" onClick='showMainPattern(0);'>
+					<div class="custom_radio"><input id="mpDaily" type="radio" name="optMainPattern" value="radiobutton" style="margin:0px 0px 0px 0px;vertical-align:middle;" onClick='showMainPattern(0);'></div>
 					<label for="mpDaily" style="vertical-align:middle;"><spring:message code='ezTask.t34' /></label>
-					<input id="mpWeekly" type="radio" name="optMainPattern" value="radiobutton" style="margin:0px 0px 0px 0px;vertical-align:middle;" checked onClick='showMainPattern(1);'>
+					<div class="custom_radio"><input id="mpWeekly" type="radio" name="optMainPattern" value="radiobutton" style="margin:0px 0px 0px 0px;vertical-align:middle;" checked onClick='showMainPattern(1);'></div>
 					<label for="mpWeekly" style="vertical-align:middle;"><spring:message code='ezTask.t35' /></label>
-					<input id="mpMonthly" type="radio" name="optMainPattern" value="radiobutton" style="margin:0px 0px 0px 0px;vertical-align:middle;" onClick='showMainPattern(2);'>
+					<div class="custom_radio"><input id="mpMonthly" type="radio" name="optMainPattern" value="radiobutton" style="margin:0px 0px 0px 0px;vertical-align:middle;" onClick='showMainPattern(2);'></div>
 					<label for="mpMonthly" style="vertical-align:middle;"><spring:message code='ezTask.t36' /></label>
-					<input id="mpYearly" type="radio" name="optMainPattern" value="radiobutton" style="margin:0px 0px 0px 0px;vertical-align:middle;" onClick='showMainPattern(3);'>
+					<div class="custom_radio"><input id="mpYearly" type="radio" name="optMainPattern" value="radiobutton" style="margin:0px 0px 0px 0px;vertical-align:middle;" onClick='showMainPattern(3);'></div>
 					<label for="mpYearly" style="vertical-align:middle;"><spring:message code='ezTask.t37' /></label>
 				</td>
 			</tr>
 			<tr>
 				<td style="height:80px;">
 					<div id='divRecurPatterns0' style="display:none;padding-left:5px;">
-						<input id="id0D1" type="radio" name="optDaily" style="margin:0px 0px 0px 0px;vertical-align:middle;" checked>
+						<div class="custom_radio"><input id="id0D1" type="radio" name="optDaily" style="margin:0px 0px 0px 0px;vertical-align:middle;" checked></div>
 						<label for="txt_De" style="vertical-align:middle;"><spring:message code='ezTask.t41' />&nbsp;
 						<input name="text" type="text" id="txt_De" style="Width:40px;height:18px;text-align: center;" onFocus='window.document.all["optDaily"][0].checked=true;' value="1" maxlength='3'>
 						&nbsp;<spring:message code='ezTask.t39' /></label>
 						<br>
 						<br>
-						<input id="id0D2" type="radio" name="optDaily" style="margin:0px 0px 0px 0px;vertical-align:middle;">
+						<div class="custom_radio"><input id="id0D2" type="radio" name="optDaily" style="margin:0px 0px 0px 0px;vertical-align:middle;"></div>
 						<label for="id0D2" style="vertical-align:middle;"><spring:message code='ezTask.t40' /></label>
 					</div>
 					<div id='divRecurPatterns1'>&nbsp;<spring:message code='ezTask.t41' />
@@ -851,34 +853,34 @@
 						<spring:message code='ezTask.t42' /></label>
 						<table id="daytable" style="margin-top:3px">
 							<tr>
-								<td style="height:0px;"><input type="checkbox" name="day" value="0" style="vertical-align:middle">
+								<td style="height:0px;"><div class="custom_checkbox"><input type="checkbox" name="day" value="0" style="vertical-align:middle"></div>
 								<span style="vertical-align:middle"><spring:message code='ezTask.t43' /></span></td>
-								<td style="height:0px;"><input type="checkbox" name="day" value="1" style="vertical-align:middle">
+								<td style="height:0px;"><div class="custom_checkbox"><input type="checkbox" name="day" value="1" style="vertical-align:middle"></div>
 								<span style="vertical-align:middle"><spring:message code='ezTask.t44' /></span></td>
-								<td style="height:0px;"><input type="checkbox" name="day" value="2" style="vertical-align:middle">
+								<td style="height:0px;"><div class="custom_checkbox"><input type="checkbox" name="day" value="2" style="vertical-align:middle"></div>
 								<span style="vertical-align:middle"><spring:message code='ezTask.t45' /></span></td>
-								<td style="height:0px;"><input type="checkbox" name="day" value="3" style="vertical-align:middle">
+								<td style="height:0px;"><div class="custom_checkbox"><input type="checkbox" name="day" value="3" style="vertical-align:middle"></div>
 								<span style="vertical-align:middle"><spring:message code='ezTask.t46' /></span></td>
 							</tr>
 							<tr>
-								<td style="height:0px;"><input type="checkbox" name="day" value="4" style="vertical-align:middle">
+								<td style="height:0px;"><div class="custom_checkbox"><input type="checkbox" name="day" value="4" style="vertical-align:middle"></div>
 								<span style="vertical-align:middle"><spring:message code='ezTask.t47' /></span></td>
-								<td style="height:0px;"><input type="checkbox" name="day" value="5" style="vertical-align:middle">
+								<td style="height:0px;"><div class="custom_checkbox"><input type="checkbox" name="day" value="5" style="vertical-align:middle"></div>
 								<span style="vertical-align:middle"><spring:message code='ezTask.t48' /></span></td>
-								<td style="height:0px;"><input type="checkbox" name="day" value="6" style="vertical-align:middle">
+								<td style="height:0px;"><div class="custom_checkbox"><input type="checkbox" name="day" value="6" style="vertical-align:middle"></div>
 								<span style="vertical-align:middle"><spring:message code='ezTask.t49' /></span></td>
 								<td style="height:0px;">&nbsp;</td>
 							</tr>
 						</table>
 					</div>
 					<div  id='divRecurPatterns2' style="display:none;padding-left:5px;">
-						<input type="radio" name='optMonthly' id="idOM1" style="margin:0px 0px 0px 0px;vertical-align:middle;" checked>
+						<div class="custom_radio"><input type="radio" name='optMonthly' id="idOM1" style="margin:0px 0px 0px 0px;vertical-align:middle;" checked></div>
 						<label for="idOM1" style="vertical-align:middle"><spring:message code='ezTask.t50' />&nbsp;</label>
 						<input name="Input" id="list_MonthInterval" style="Width:40px;text-align: center;" onFocus='window.document.all["optMonthly"][0].checked=true;' value="1" maxlength="3">
 						&nbsp;<spring:message code='ezTask.t51' />
 						<input name="Input" id="list_MonthlyDays" style="Width:40px;text-align: center;" onFocus='window.document.all["optMonthly"][0].checked=true;' maxlength="2">
 						&nbsp;<spring:message code='ezTask.t52' /><br><br>
-						<input id="id0M2" type="radio" name='optMonthly' style="margin:0px 0px 0px 0px;vertical-align:middle;">
+						<div class="custom_radio"><input id="id0M2" type="radio" name='optMonthly' style="margin:0px 0px 0px 0px;vertical-align:middle;"></div>
 						<label for="id0M2" style="vertical-align:middle"><spring:message code='ezTask.t53' />&nbsp;</label>
 						<input name="Input" id="list_MonthInterval2" style="Width:40px;text-align: center;" onFocus='window.document.all["optMonthly"][1].checked=true;' value="1" maxlength="3">
 						&nbsp;<spring:message code='ezTask.t51' />
@@ -900,7 +902,7 @@
 						</select>
 						&nbsp;<spring:message code='ezTask.t60' />
 					</div>
-					<div id='divRecurPatterns3' style="display:none;padding-left:5px;"><input id="optY1" type="radio" name="optYearly" value="radiobutton" style="margin:0px 0px 0px 0px;vertical-align:middle;" checked>
+					<div id='divRecurPatterns3' style="display:none;padding-left:5px;"><div class="custom_radio"><input id="optY1" type="radio" name="optYearly" value="radiobutton" style="margin:0px 0px 0px 0px;vertical-align:middle;" checked></div>
 						<label for="optY1" style="vertical-align:middle"><spring:message code='ezTask.t50' />&nbsp;</label>
 						<select name="select" id="list_Month" onFocus='window.document.all["optYearly"][0].checked=true;'>
 							<option value="1"><spring:message code='ezTask.t225' /></option>
@@ -919,14 +921,20 @@
 						<input name="Input" class="text" id="list_YearlyDays" style="Width:40px;text-align: center;" onFocus='window.document.all["optYearly"][0].checked=true;' maxlength="2">
 						&nbsp;<spring:message code='ezTask.t62' />
 						<c:if test="${userInfo.lang == 1}" >
-							<input type="checkbox" value="1" id="moonday" style="margin:0px 0px 2px 0px;vertical-align:middle;display:none;">
+							<div class="custom_checkbox">
+								<input type="checkbox" value="1" id="moonday" style="margin:0px 0px 2px 0px;vertical-align:middle;display:none;">
+							</div>
 							<%-- <spring:message code='ezTask.t63' /> --%><br>
 						</c:if>
 						<c:if test="${userInfo.lang != 1}" >
-							<input type="checkbox" value="1" id="moonday" style="margin:0px 0px 2px 0px;vertical-align:middle;display:none;">
+							<div class="custom_checkbox">
+								<input type="checkbox" value="1" id="moonday" style="margin:0px 0px 2px 0px;vertical-align:middle;display:none;">
+							</div>
 						</c:if>
 						<br>
-						<input id="optY2" type="radio" name="optYearly" value="radiobutton" style="margin:0px 0px 0px 0px;vertical-align:middle;">          
+						<div class="custom_radio">
+							<input id="optY2" type="radio" name="optYearly" value="radiobutton" style="margin:0px 0px 0px 0px;vertical-align:middle;">          
+						</div>
 						<label for="optY2" style="vertical-align:middle"><spring:message code='ezTask.t53' />&nbsp;</label>
 						<select name="select" id="list_Month2" onFocus='window.document.all["optYearly"][1].checked=true;'>
 							<option value="1"><spring:message code='ezTask.t225' /></option>
@@ -978,14 +986,14 @@
 		  	<tr>
 		  		<td>
 		  		<div style="height:25px;">
-		  			<input type="radio" name="optRangeEnd" id="range1" value="-1" checked style="vertical-align:middle;margin-top:3px"><span><spring:message code='ezTask.t73' /></span>
+		  			<div class="custom_radio"><input type="radio" name="optRangeEnd" id="range1" value="-1" checked style="vertical-align:middle;margin-top:3px"></div><span><spring:message code='ezTask.t73' /></span>
 		  		</div>
 		  		</td>
 		  	</tr>
 		  	<tr>
 		    	<td>
 		    		<div style="height:32px;">
-						<input type="radio" id="range2" name="optRangeEnd" value="1" style="vertical-align:middle;margin-top:5px"><span><spring:message code='ezTask.t74' /></span>
+						<div class="custom_radio"><input type="radio" id="range2" name="optRangeEnd" value="1" style="vertical-align:middle;margin-top:5px"></div><span><spring:message code='ezTask.t74' /></span>
 						<input id="list_ReCount" maxlength="3" onFocus="range2.checked = true" size="4" value='10'>
 						<span style="vertical-align:middle"><spring:message code='ezTask.t75' /></span>
 					</div>
@@ -993,7 +1001,7 @@
 		  	</tr>
 		  	<tr>
 		    	<td>
-		    		<input id="range3" type="radio" name="optRangeEnd" value="0" style="margin-top:0px"><span style="vertical-align:middle"><spring:message code='ezTask.t76' /></span>
+		    		<div class="custom_radio"><input id="range3" type="radio" name="optRangeEnd" value="0" style="margin-top:0px"></div><span style="vertical-align:middle"><spring:message code='ezTask.t76' /></span>
 					<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">		    		
 		    	</td>
 		  	</tr>

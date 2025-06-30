@@ -1,4 +1,4 @@
-﻿function close_onclick() {
+﻿﻿function close_onclick() {
     /*    if (!confirm("" + strLang8 + "")) {
             parent.DivPopUpHidden();
             window.close();
@@ -963,8 +963,11 @@
                     var input = document.createElement("input");
                     input.type = "checkbox";
                     input.name = "fileSelect";
+        	        var oDiv = document.createElement("div");
+        	        oDiv.className = "custom_checkbox";
     
-                    objTd.appendChild(input);
+        	        oDiv.appendChild(input);
+                    objTd.appendChild(oDiv);
                     objTr.appendChild(objTd);
     
                     var objTd2 = document.createElement("TD");

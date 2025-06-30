@@ -423,7 +423,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 				fileImage = "/images/email/mail_006.gif";
 			}
 
-			sb.append("<input type='checkbox' name='fileSelect' value='" + fileName + "' filePath='" + folderPath + filePath + "' fileName='" + commonUtil.cleanValue(fileName) + "'>");
+			sb.append("<div class='custom_checkbox'><input type='checkbox' name='fileSelect' value='" + fileName + "' filePath='" + folderPath + filePath + "' fileName='" + commonUtil.cleanValue(fileName) + "'></div>");
 			sb.append("<img src='" + fileImage + "' >");
 			sb.append("<a href='/ezTask/downloadAttach.do?filePath=" + URLEncoder.encode(folderPath + filePath, "UTF-8") + "&fileName=" + URLEncoder.encode(fileName, "UTF-8") + "' />");
 			sb.append(commonUtil.cleanValue(fileName) + "&nbsp;(" + fileSize + ")</a><br>");

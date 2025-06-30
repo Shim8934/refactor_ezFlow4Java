@@ -337,13 +337,13 @@
 				if (obj.checked) {
 		            strListInfo += $(obj).attr("taskID") + ";";
 		            strListIdInfo += $(obj).attr("creatorID") + ";";
-		            selectelem = obj.parentNode.parentNode;
-		            obj.parentNode.parentNode.style.backgroundColor = "#edf4fd";
+		            selectelem = obj.parentNode.parentNode.parentNode;
+		            obj.parentNode.parentNode.parentNode.style.backgroundColor = "#edf4fd";
 		        } else {
 		            strListInfo = ReplaceText(strListInfo, $(obj).attr("taskID") + ";", "");
 		            strListIdInfo = ReplaceText(strListIdInfo, $(obj).attr("creatorID") + ";", "");
 		            selectelem = null;
-		            obj.parentNode.parentNode.style.backgroundColor = "#ffffff";
+		            obj.parentNode.parentNode.parentNode.style.backgroundColor = "#ffffff";
 		        }
 		    }
 			
@@ -410,8 +410,8 @@
 	
 				        tr.setAttribute("startdate", startdate);
 	
-				        tr.cells[0].innerHTML += "<input name='myCheckbox' type='checkbox' taskID='" + SelectSingleNodeValue(node, "TASKID") + "' creatorID='" + SelectSingleNodeValue(node, "CREATORID") + "_" + i + 
-				        "'onclick='chk_onselect(this, event)' style='width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle'>"
+				        tr.cells[0].innerHTML += "<div class='custom_checkbox'><input name='myCheckbox' type='checkbox' taskID='" + SelectSingleNodeValue(node, "TASKID") + "' creatorID='" + SelectSingleNodeValue(node, "CREATORID") + "_" + i + 
+				        "'onclick='chk_onselect(this, event)' style='width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle'></div>"
 	
 				        if (SelectSingleNodeValue(node, "IMPORTANCE") == "3")
 				            tr.cells[1].innerHTML += "<img src='/images/ImgIcon/icon-highimportance.gif'>";
@@ -1080,19 +1080,19 @@
 
 				<!-- 완료 -->
 				<li id="right" class="sort_radio" style="float:right;font-weight:normal;color:black;padding-right: 7px;">
-					<input name="check" id="checkRadio1" type="radio" value="finish" onClick="selectTab(1)" style="width:13px;height:13px;vertical-align:middle ">
+					<div class="custom_radio"><input name="check" id="checkRadio1" type="radio" value="finish" onClick="selectTab(1)" style="width:13px;height:13px;vertical-align:middle "></div>
 					<label for="checkRadio1" style="vertical-align:middle"><spring:message code='ezTask.t9001' /></label>
 				</li>
 
 				<!-- 진행중 -->
 				<li id="right" class="sort_radio" style="float:right;font-weight:normal;color:black;margin-right:5px">
-					<input name="check" id="checkRadio2" type="radio" value="ongoing" checked onClick="selectTab(2)" style="width:13px;height:13px;vertical-align:middle ">
+					<div class="custom_radio"><input name="check" id="checkRadio2" type="radio" value="ongoing" checked onClick="selectTab(2)" style="width:13px;height:13px;vertical-align:middle "></div>
 					<label for="checkRadio2" style="vertical-align:middle"><spring:message code='ezTask.t98' /></label>
 				</li>
 
 				<!-- 전체보기 -->
 				<li id="right" class="sort_radio" style="float:right;font-weight:normal;color:black;margin-right:5px">
-					<input name="check" id="checkRadio3" type="radio" value="all" onClick="selectTab(3)" style="width:13px;height:13px;vertical-align:middle ">
+					<div class="custom_radio"><input name="check" id="checkRadio3" type="radio" value="all" onClick="selectTab(3)" style="width:13px;height:13px;vertical-align:middle "></div>
 					<label for="checkRadio3" style="vertical-align:middle"><spring:message code='ezTask.jsh07' /></label>
 				</li>
 
@@ -1129,7 +1129,7 @@
 						<col style ="width:120px;">
 						<tbody id="todo_HEAD">
 						<tr>
-							<th style="text-align:center"><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding: 0px; margin-top: 0px; margin: 0px; vertical-align:middle;"/></th>
+							<th style="text-align:center"><div class="custom_checkbox"><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding: 0px; margin-top: 0px; margin: 0px; vertical-align:middle;"/></div></th>
 							<th style="text-align:center;"><img src="/images/ImgIcon/view-importance.gif"></th>
 							<th ><img src="/images/newAttach.gif"></th>
 							<th ><spring:message code='ezTask.t2005' /></th>
