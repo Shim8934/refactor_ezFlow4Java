@@ -1576,17 +1576,17 @@ function tr_select(pRowID, pTableID, callbackFunc) {
 
         //현재 클릭한 Row를 Select 한다.
         //strAttribute = GetAttribute(oSourceTr, "selected");
-        if (oSourceTr.childNodes[0].childNodes[0].checked) {
+        if (oSourceTr.childNodes[0].childNodes[0].childNodes[0].checked) {
             oSourceTr.setAttribute("selected", "false");
-            oSourceTr.childNodes[0].childNodes[0].checked = false;
+            oSourceTr.childNodes[0].childNodes[0].childNodes[0].checked = false;
             oSourceTr.style.backgroundColor = m_strColorDefault;
-            strListInfo = ReplaceText(strListInfo, oSourceTr.childNodes[0].childNodes[0].id, "");
+            strListInfo = ReplaceText(strListInfo, oSourceTr.childNodes[0].childNodes[0].childNodes[0].id, "");
         }
         else {
             oSourceTr.setAttribute("selected", "true");
-            oSourceTr.childNodes[0].childNodes[0].checked = true;
+            oSourceTr.childNodes[0].childNodes[0].childNodes[0].checked = true;
             oSourceTr.style.backgroundColor = m_strColorSelect;
-            strListInfo += oSourceTr.childNodes[0].childNodes[0].id;
+            strListInfo += oSourceTr.childNodes[0].childNodes[0].childNodes[0].id;
         }
 
         //각 리스트마다 마지막으로 선택한 ID를 보관한다.
@@ -1698,7 +1698,7 @@ function tr_selectBlock(pRowID, pTableID) {
 function tr_mouseover(pRow) {
 
     //var strAttribute = GetAttribute(pRow, "selected");
-    if (pRow.childNodes[0].childNodes[0].checked != true) {
+    if (pRow.childNodes[0].childNodes[0].childNodes[0].checked != true) {
         pRow.style.backgroundColor=m_strColorOver;      
 
     }
@@ -1709,7 +1709,7 @@ function tr_mouseover(pRow) {
 //마우스 아웃
 function tr_mouseout(pRow) {
     var strAttribute = GetAttribute(pRow, "selected");
-    if (pRow.childNodes[0].childNodes[0].checked != true)
+    if (pRow.childNodes[0].childNodes[0].childNodes[0].checked != true)
         pRow.style.backgroundColor=m_strColorDefault;
     else
         pRow.style.backgroundColor=m_strColorSelect;

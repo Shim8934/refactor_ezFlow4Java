@@ -1319,7 +1319,7 @@
 
 			function selectAlbumCheckBox(selectedChkBox, event) { // 체크박스만 클릭 > 다중선택
 				event.stopPropagation(); // 상위 Div의 selectAlbumDiv 이벤트를 방지
-				var parentDiv = selectedChkBox.parentNode.parentNode;
+				var parentDiv = selectedChkBox.parentNode.parentNode.parentNode;
 				var parentP = selectedChkBox.parentNode;
 
 				if (selectedChkBox.checked == true) {
