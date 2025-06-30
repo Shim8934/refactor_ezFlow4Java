@@ -126,7 +126,7 @@
 				<div class="wraperTableDiv">
 					<table class="mainlist surveyTbl" id="tblSurveyList">
 						<tr>
-							<th headers=""    class="inputTh"><input type="checkbox"></th>
+							<th headers=""    class="inputTh"><div class='custom_checkbox'><input type="checkbox"></div></th>
 							<th headers="at"  class="inputTh"><img src="/images/newAttach.gif"></th>
 							<th headers="surveyId"  class="numTh"><spring:message code='ezSurvey.listHeader.pgb03'/></th>
 							<th headers="tt"  class="ttlTh"    ><spring:message code='ezSurvey.t23'/></th>

@@ -528,10 +528,14 @@ var SurveyItem = function() {
 				trElmt.onclick    = function(event) {clickRowFunct(event);};
 				trElmt.ondblclick = function(event) {itemDblClickHandler(this);};
 				
+                var divElmt = document.createElement("div");
+                divElmt.className = "custom_checkbox";
+                
 				var inputElmt  = document.createElement("input");
 				inputElmt.setAttribute("type", "checkbox");
 				inputElmt.onclick = function(event) {getCheckedFunct(event);};
-				tdElmt1.appendChild(inputElmt);
+				divElmt.appendChild(inputElmt);
+				tdElmt1.appendChild(divElmt);
 				
 				if (itemList[i]["attachFlag"] == 1) {
 					var imgAttch  = document.createElement("img");
