@@ -163,11 +163,11 @@
 		<span id=pMessageContent></span>
 		<table class="content" style="margin-top:10px">
 			<tr>
-				<th><input id='opi' name ='opi'  type='checkbox' ></th>
+				<th><div class="custom_checkbox"><input id='opi' name ='opi'  type='checkbox' ></div></th>
 				<td><span id="ext1">&nbsp;<spring:message code='ezCircular.t176' /></span></td>
 			</tr>
 			<tr>
-				<th><input id='att' name='att'  type='checkbox' ></th>
+				<th><div class="custom_checkbox"><input id='att' name='att'  type='checkbox' ></div></th>
 				<td><span id="ext2">&nbsp;<spring:message code='ezCircular.t175' /></span></td>
 			</tr>
 		</table>

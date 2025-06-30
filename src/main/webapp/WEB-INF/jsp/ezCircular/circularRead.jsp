@@ -818,7 +818,9 @@
                                     <c:forEach var="item" items="${attachList}" varStatus="status">
                                     	<div style="margin-top:3px;height:auto;">
                                     		<c:set var="imagePath" value="/images/file.gif" />
-                                    		<input type="checkbox" filename="${item.fileEncodeName}" filepath="${item.filePath}">
+                                    		<div class="custom_checkbox">
+	                                    		<input type="checkbox" filename="${item.fileEncodeName}" filepath="${item.filePath}">
+                                    		</div>
                                     		<c:if test="${item.fileType == 'jpg' || item.fileType == 'jpeg' || item.fileType == 'bmp' || item.fileType == 'gif' || item.fileType == 'png' || item.fileType == 'tif' || item.fileType == 'tiff'}">
                                     			<c:set var="imagePath" value="/images/image.png" />
                                     		</c:if>
