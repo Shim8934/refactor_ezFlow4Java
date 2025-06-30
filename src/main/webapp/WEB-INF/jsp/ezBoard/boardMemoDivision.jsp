@@ -37,7 +37,7 @@
 								inputNameDlg_cross_dialogArguments[5] = list.folder_name;
 							}
 							memoFolderList += "<tr id=" + list.folder_id + " style='cursor:pointer' onclick='event_click(this);' ondblclick='modify_onclick(this);' data1='" + list.folder_id + "' data2='" + list.folder_name +"'>";
-							memoFolderList += "<td style='padding-left:5px;'><input class='myCheckbox' name='myCheckbox' data2='" + list.folder_name +"' data3='" + list.count + "' value=" + list.folder_id + " type='checkbox' onclick='selectRow(this)'></td>";
+							memoFolderList += "<td style='padding-left:5px;'><div class='custom_checkbox'><input class='myCheckbox' name='myCheckbox' data2='" + list.folder_name +"' data3='" + list.count + "' value=" + list.folder_id + " type='checkbox' onclick='selectRow(this)'></div></td>";
 
 							if (parseInt(list.orders) === 0) {
 								memoFolderList += "<td class='title' style='color:gray;' title='" + memoMessages.strLangMemo22 + "'>" + memoMessages.strLangMemo22 + "</td>";
@@ -245,7 +245,7 @@
 		                    <table class="mainlist" style="width: 100%;">
 		                    	<colgroup><col width='7%' /><col width='60%' /><col width='33%' /></colgroup>
 		                        <tr>
-									<th><input id="checkboxAll" type="checkbox" onclick="selectAll()"></th>
+									<th><div class='custom_checkbox'><input id="checkboxAll" type="checkbox" onclick="selectAll()"></div></th>
 		                            <th><spring:message code='ezMemo.t0041' /></th>
 		                            <th><spring:message code='ezMemo.t0042' /></th>
 		                        	<th></th>

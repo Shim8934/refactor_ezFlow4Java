@@ -28,16 +28,16 @@
 					<th class="left-Th"><spring:message code="ezSurvey.t41"/></th> <%-- public setting --%>
 					<td class="right-Td">
 						<div>
-							<span class="inf-spanTxt"><input type="radio" name="publicSpan" value="1" checked><spring:message code="ezSurvey.t42"/></span>
-							<span class="inf-spanTxt"><input type="radio" name="publicSpan" value="0" ><spring:message code="ezSurvey.t43"/></span>
-							<span class="inf-spanTxt"><input type="radio" name="publicSpan" value="2" ><spring:message code="ezSurvey.jih01"/></span>
+							<span class="inf-spanTxt"><div class='custom_radio'><input type="radio" name="publicSpan" value="1" checked></div><spring:message code="ezSurvey.t42"/></span>
+							<span class="inf-spanTxt"><div class='custom_radio'><input type="radio" name="publicSpan" value="0" ></div><spring:message code="ezSurvey.t43"/></span>
+							<span class="inf-spanTxt"><div class='custom_radio'><input type="radio" name="publicSpan" value="2" ></div><spring:message code="ezSurvey.jih01"/></span>
 						</div>
 					</td>
 					<th class="left-Th"><spring:message code="ezSurvey.t46"/></th> <%-- anonymous setting --%>
 					<td class="right-Td">
 						<div>
-							<span class="inf-spanTxt"><input type="radio" name="anonymousSpan" value="0" checked><spring:message code="ezSurvey.t47"/></span>
-							<span class="inf-spanTxt"><input type="radio" name="anonymousSpan" value="1"><spring:message code="ezSurvey.t48"/></span>
+							<span class="inf-spanTxt"><div class='custom_radio'><input type="radio" name="anonymousSpan" value="0" checked></div><spring:message code="ezSurvey.t47"/></span>
+							<span class="inf-spanTxt"><div class='custom_radio'><input type="radio" name="anonymousSpan" value="1"></div><spring:message code="ezSurvey.t48"/></span>
 						</div>
 					</td>
 				</tr>
@@ -54,15 +54,15 @@
 					<th class="left-Th"><spring:message code="ezSurvey.t112"/></th> <%-- mail setting --%>
 					<td class="right-Td">
 						<div>
-							<span class="inf-spanTxt"><input type="radio" name="mailSpan" value="1" checked><spring:message code="ezSurvey.t114"/></span>
-							<span class="inf-spanTxt"><input type="radio" name="mailSpan" value="0"><spring:message code="ezSurvey.t115"/></span>
+							<span class="inf-spanTxt"><div class='custom_radio'><input type="radio" name="mailSpan" value="1" checked></div><spring:message code="ezSurvey.t114"/></span>
+							<span class="inf-spanTxt"><div class='custom_radio'><input type="radio" name="mailSpan" value="0"></div><spring:message code="ezSurvey.t115"/></span>
 						</div>
 					</td>
 					<th class="left-Th"><spring:message code="ezSurvey.t113"/></th> <%-- popup setting --%>
 					<td class="right-Td">
 						<div>
-							<span class="inf-spanTxt"><input type="radio" name="popupSpan" value="1" checked><spring:message code="ezSurvey.t114"/></span>
-							<span class="inf-spanTxt"><input type="radio" name="popupSpan" value="0"><spring:message code="ezSurvey.t115"/></span>
+							<span class="inf-spanTxt"><div class='custom_radio'><input type="radio" name="popupSpan" value="1" checked></div><spring:message code="ezSurvey.t114"/></span>
+							<span class="inf-spanTxt"><div class='custom_radio'><input type="radio" name="popupSpan" value="0"></div><spring:message code="ezSurvey.t115"/></span>
 						</div>
 					</td>
 				</tr>
@@ -70,15 +70,15 @@
 					<th class="left-Th"><spring:message code="ezSurvey.t30"/></th> <%-- respondent setting --%>
 					<td class="right-Td">
 						<div class="survey-flexdiv">
-							<span class="inf-spanTxt"><input type="radio" name="targetSpan" value="0" checked><spring:message code="ezSurvey.t53"/></span>
-							<span class="inf-spanTxt"><input type="radio" name="targetSpan" value="1"><spring:message code="ezSurvey.t54"/></span>
+							<span class="inf-spanTxt"><div class='custom_radio'><input type="radio" name="targetSpan" value="0" checked></div><spring:message code="ezSurvey.t53"/></span>
+							<span class="inf-spanTxt"><div class='custom_radio'><input type="radio" name="targetSpan" value="1"></div><spring:message code="ezSurvey.t54"/></span>
 						</div>
 					</td>
 					<th class="left-Th"><spring:message code="ezSurvey.t49"/></th> <%-- multiple select setting --%>
 					<td class="right-Td">
 						<div>
-							<span class="inf-spanTxt"><input type="radio" name="multipleSpan" value="1"><spring:message code="ezSurvey.t51"/></span>
-							<span class="inf-spanTxt"><input type="radio" name="multipleSpan" value="0" checked><spring:message code="ezSurvey.t50"/></span>
+							<span class="inf-spanTxt"><div class='custom_radio'><input type="radio" name="multipleSpan" value="1"></div><spring:message code="ezSurvey.t51"/></span>
+							<span class="inf-spanTxt"><div class='custom_radio'><input type="radio" name="multipleSpan" value="0" checked></div><spring:message code="ezSurvey.t50"/></span>
 						</div>
 					</td>
 				</tr>

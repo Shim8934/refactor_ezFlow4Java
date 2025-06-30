@@ -21,6 +21,9 @@ function createMemo(memo, flag) {
 		//label.style.position = "absolute";
 		label.style.left = "0px";
 		
+        var inputDiv = document.createElement("div");
+        inputDiv.className = "custom_checkbox";
+        
 		var input = document.createElement("input");
 		input.setAttribute("id", memo.memo_id);
 		input.setAttribute("name", "memo");
@@ -31,7 +34,8 @@ function createMemo(memo, flag) {
 		input.setAttribute("display", memo.display_flag);
 		
 		dl.appendChild(label);
-		dl.appendChild(input);
+		inputDiv.appendChild(input);
+		dl.appendChild(inputDiv);
 		
 	} 
 	
