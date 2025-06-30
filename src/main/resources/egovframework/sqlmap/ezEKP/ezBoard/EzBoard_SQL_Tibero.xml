@@ -4469,6 +4469,8 @@
        			TO_CHAR(UpperItemIDTree) LIKE '%' || #v_pItemID# || '%'
             AND 
             	ItemID <> #v_pItemID#
+			AND
+				(APPRFLAG IS NULL OR APPRFLAG = 'Y')
 		]]>
 	</select>
 	
@@ -11550,6 +11552,23 @@
 				 ORDER BY PRIORITY, IN_SEQ
 			 )
 		WHERE ROWNUM <= 5
+		]]>
+	</select>
+
+	<select id="EzBoardDAO.getReplyBoardItem" parameterClass="Map" resultClass="BoardListVO">
+		<![CDATA[
+		SELECT
+			ITEMID
+		FROM
+			TBL_Board_Item
+		WHERE
+			tenant_id = #v_TENANTID#
+		  AND
+			TO_CHAR(UpperItemIDTree) LIKE '%' || #v_pItemID# || '%'
+		  AND
+			ItemID <> #v_pItemID#
+		  AND
+			APPRFLAG IN ('N', 'C')
 		]]>
 	</select>
 </sqlMap>

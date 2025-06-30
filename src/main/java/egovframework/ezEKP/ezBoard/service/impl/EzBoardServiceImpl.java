@@ -3815,6 +3815,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	public String deleteItem(String itemList, String mode, String boardID, String realPath, LoginVO userInfo, BoardPropertyVO boardInfo) throws Exception {
 		logger.debug("deleteItem started");
 		
+		int tenantId = userInfo.getTenantId();
+		String lang = userInfo.getLang();
+		
 		try {
 			String[] itemListArray = itemList.split(";");
 			
@@ -3831,7 +3834,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 					}
 				}
 			} else {
-				BoardListVO boardListVO = getItemInfo(mode, itemList.split(";")[0].split(",")[0], userInfo.getLang(), userInfo.getTenantId());
+				BoardListVO boardListVO = getItemInfo(mode, itemList.split(";")[0].split(",")[0], lang, tenantId);
 				boardID = boardListVO.getBoardID();
 
 				if (!boardInfo.getDelete_FG().equals("true")) {
@@ -3853,20 +3856,31 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				
 				String tempItem = itemListArray[i].split(",")[0];
 				
-				BoardListVO boardListTempVO = getItemInfo(mode, tempItem, userInfo.getLang(), userInfo.getTenantId());
+				BoardListVO boardListTempVO = getItemInfo(mode, tempItem, lang, tenantId);
 				if (boardListTempVO != null) {
 					logger.debug("deleteItem itemID = " + boardListTempVO.getItemID() + " / title = " + boardListTempVO.getTitle());
 				}
 
 				// 2024-08-27 전인하 - 게시물 삭제할 때 키워드도 함께 삭제함
-				saveKeyword(null, boardID, tempItem, userInfo.getTenantId());
+				saveKeyword(null, boardID, tempItem, tenantId);
 				
 				if (mode != null && mode.equals("temp")) {
-					deleteTempItem(tempItem, boardID, realPath, userInfo.getTenantId());
+					deleteTempItem(tempItem, boardID, realPath, tenantId);
 				} else {
-					deleteItem(mode, tempItem, boardID, realPath, userInfo.getTenantId());
-                    deleteStarRating(tempItem, userInfo.getTenantId());
-					deleteStarRatingSummary(tempItem, userInfo.getTenantId());
+					if("TRUE".equals(brdCheckIfHasReply(tempItem, userInfo.getTenantId()))){
+						// 프론트에서도 답변 게시물 있는지 확인 후 있으면 넘어감.
+						continue;
+					}
+					deleteItem(mode, tempItem, boardID, realPath, tenantId);
+                    deleteStarRating(tempItem, tenantId);
+					deleteStarRatingSummary(tempItem, tenantId);
+					
+					List<BoardListVO> replyBoardItemList = ezBoardDAO.getReplyBoardItem(tempItem, tenantId);
+					for (int j = 0; j < replyBoardItemList.size(); j++) {
+						deleteItem(mode, replyBoardItemList.get(j).getItemID(), boardID, realPath, tenantId);
+						deleteStarRating(replyBoardItemList.get(j).getItemID(), tenantId);
+						deleteStarRatingSummary(replyBoardItemList.get(j).getItemID(), tenantId);
+					}
 				}
 			}
 			

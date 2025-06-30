@@ -4169,6 +4169,8 @@
        			UpperItemIDTree LIKE CONCAT(CONCAT('%', #v_pItemID#), '%')
             AND 
             	ItemID <> #v_pItemID#
+			AND
+       		    (APPRFLAG IS NULL OR APPRFLAG = 'Y')
 		]]>
 	</select>
 	
@@ -11091,5 +11093,22 @@
 		ORDER BY PRIORITY, IN_SEQ
 		LIMIT 5
     ]]>
+	</select>
+	
+	<select id="EzBoardDAO.getReplyBoardItem" parameterClass="Map" resultClass="BoardListVO">
+		<![CDATA[
+			SELECT
+				ItemID
+			FROM
+				TBL_Board_Item
+			WHERE
+				tenant_id = #v_TENANTID#
+			AND
+				UpperItemIDTree LIKE CONCAT(CONCAT('%', #v_pItemID#), '%')
+			AND
+				ItemID <> #v_pItemID#
+			AND
+				APPRFLAG IN ('N', 'C')
+		]]>
 	</select>
 </sqlMap>

@@ -1343,4 +1343,13 @@ public class EzBoardDAO extends EgovAbstractDAO{
     public List<BoardListVO> getGuestBoardList(Map<String, Object> map) throws Exception {
 		return (List<BoardListVO>) list("EzBoardDAO.getGuestBoardList", map);
     }
+
+	public List<BoardListVO> getReplyBoardItem(String itemId, int tenantId) {
+		return (List<BoardListVO>)list("EzBoardDAO.getReplyBoardItem",
+				new HashMap() {{
+					put("v_pItemID", itemId);
+					put("v_TENANTID", tenantId);
+				}}
+		);
+	}
 }
