@@ -264,9 +264,9 @@ function btn_add(obj) {
 
 function btn_add_Complete(rtv) {
 	if (typeof (rtv) != "undefined") {
-		var userId = rtv.split(":")[0];
-		var deptId = rtv.split(":")[4];
-		var jobName = rtv.split(":")[3]; // 같은 부서에 겸직이 되어있는경우 오류가 발생하여 직위 조건 추가
+		var userId = rtv.userId;
+		var deptId = rtv.deptId;
+		var jobName = rtv.jobName; // 같은 부서에 겸직이 되어있는경우 오류가 발생하여 직위 조건 추가
 
 		if (jobName.includes("(겸)")) {
 			jobName = jobName.replace("(겸)", "").trim();
@@ -306,9 +306,9 @@ function btn_modify(term) {
 
 function btn_modify_Complete(rtv) {
 	if (typeof (rtv) != "undefined") {
-		var userId = rtv.split(":")[0];
-		var deptId = rtv.split(":")[4];
-		var jobName = rtv.split(":")[3]; // 같은 부서에 겸직이 되어있는경우 오류가 발생하여 직위 조건 추가
+		var userId = rtv.userId;
+		var deptId = rtv.deptId;
+		var jobName = rtv.jobName; // 같은 부서에 겸직이 되어있는경우 오류가 발생하여 직위 조건 추가
 
 		if (jobName.includes("(겸)")) {
 			jobName = jobName.replace("(겸)", "").trim();
