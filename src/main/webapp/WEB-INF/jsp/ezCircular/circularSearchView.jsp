@@ -604,7 +604,7 @@
 		    	<tr> 
 		      		<th><spring:message code='ezCircular.t137' /></th>
 		      		<td>
-						<input type="checkbox" value="1" id="usepostdate" onclick="DateSearch_Click()"><label for="usepostdate"><spring:message code='ezCircular.t138'/></label>
+						<div class="custom_checkbox"><input type="checkbox" value="1" id="usepostdate" onclick="DateSearch_Click()"></div><label for="usepostdate"><spring:message code='ezCircular.t138'/></label>
 		            	<input type="text" id="Sdatepicker" style="width:80px;text-align:center" disabled/> ~
 		      			<input type="text" id="Edatepicker" style="width:80px;text-align:center" disabled/>
 			  		</td>
