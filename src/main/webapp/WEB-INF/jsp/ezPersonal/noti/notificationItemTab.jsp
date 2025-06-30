@@ -7,7 +7,7 @@
 private static String makeMasterCheckbox(Finder disableItemFinder, int mainType, int platform, int subTypeCount) {
 	String id = "master_" + mainType + platform;
 	java.lang.StringBuilder tagBuilder = new StringBuilder("<div><label for=\"").append(id).append("\"></label>")
-			.append("<input id=\"").append(id).append("\" class=\"master\" type=\"checkbox\" data-main=\"").append(mainType).append("\" data-platform=\"").append(platform);
+			.append("<div class=\"custom_checkbox\"><input id=\"").append(id).append("\" class=\"master\" type=\"checkbox\" data-main=\"").append(mainType).append("\" data-platform=\"").append(platform);
 
 	int countWithoutSubType = disableItemFinder.getCountWithoutSubType(mainType, platform);
 
@@ -19,13 +19,13 @@ private static String makeMasterCheckbox(Finder disableItemFinder, int mainType,
 		}
 	}
 
-	return tagBuilder.append("\" /></div>").toString();
+	return tagBuilder.append("\" /></div></div>").toString();
 }
 
 private static String makeCheckbox(Finder disableItemFinder, int mainType, int subType, int platform) {
 	String id = "" + mainType + subType + platform;
 	java.lang.StringBuilder tagBuilder = new StringBuilder("<div><label for=\"").append(id).append("\"></label>")
-			.append("<input id=\"").append(id)
+			.append("<div class=\"custom_checkbox\"><input id=\"").append(id)
 			.append("\" type=\"checkbox\" data-main=\"").append(mainType)
 			.append("\" data-sub=\"").append(subType)
 			.append("\" data-platform=\"").append(platform);
@@ -34,7 +34,7 @@ private static String makeCheckbox(Finder disableItemFinder, int mainType, int s
 		tagBuilder.append("\" checked=\" ");
 	}
 
-	return tagBuilder.append("\" /></div>").toString();
+	return tagBuilder.append("\" /></div></div>").toString();
 }%>
 <% Finder disableItemFinder = (Finder) request.getAttribute("disableItemFinder"); %>
 <!DOCTYPE html>

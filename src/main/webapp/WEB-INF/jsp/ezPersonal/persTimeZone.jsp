@@ -54,31 +54,31 @@
 		function language_form(){
 			var languageTd = document.getElementById("languageTd");
 
-			languageTd.innerHTML += "<input type='radio' id='" + primaryLang + "' name='rad_flag' onclick='flag_onClick(this, \"rad\");' />"
+			languageTd.innerHTML += "<div class='custom_radio'><input type='radio' id='" + primaryLang + "' name='rad_flag' onclick='flag_onClick(this, \"rad\");' /></div>"
 								 + "<img name='"+ primaryLang + "' class='country" + primaryLang + "' onclick='flag_onClick(this, \"img\");' />";
 			
 			if(primaryLang != 2) {
-				languageTd.innerHTML += "<input type='radio' id='2' name='rad_flag' onclick='flag_onClick(this, \"rad\");' />"
+				languageTd.innerHTML += "<div class='custom_radio'><input type='radio' id='2' name='rad_flag' onclick='flag_onClick(this, \"rad\");' /></div>"
 									 + "<img name='2' class='country2' onclick='flag_onClick(this, \"img\");' />";
 			}
 			if(primaryLang != 1) {
-				languageTd.innerHTML += "<input type='radio' id='1' name='rad_flag' onclick='flag_onClick(this, \"rad\");' />"
+				languageTd.innerHTML += "<div class='custom_radio'><input type='radio' id='1' name='rad_flag' onclick='flag_onClick(this, \"rad\");' /></div>"
 									 + "<img name='1' class='country1' onclick='flag_onClick(this, \"img\");' />";
 			}
 			if(primaryLang != 3 && useJapanese == 'YES') {
-				languageTd.innerHTML += "<input type='radio' id='3' name='rad_flag' onclick='flag_onClick(this, \"rad\");' />"
+				languageTd.innerHTML += "<div class='custom_radio'><input type='radio' id='3' name='rad_flag' onclick='flag_onClick(this, \"rad\");' /></div>"
 									 + "<img name='3' class='country3' onclick='flag_onClick(this, \"img\");' />";
 			}
 			if(primaryLang != 4 && useChinese == 'YES') {
-				languageTd.innerHTML += "<input type='radio' id='4' name='rad_flag' onclick='flag_onClick(this, \"rad\");' />"
+				languageTd.innerHTML += "<div class='custom_radio'><input type='radio' id='4' name='rad_flag' onclick='flag_onClick(this, \"rad\");' /></div>"
 									 + "<img name='4' class='country4' onclick='flag_onClick(this, \"img\");' />";
 			}
 			if(primaryLang != 5 && useVietnamese == 'YES') {
-				languageTd.innerHTML += "<input type='radio' id='5' name='rad_flag' onclick='flag_onClick(this, \"rad\");' />"
+				languageTd.innerHTML += "<div class='custom_radio'><input type='radio' id='5' name='rad_flag' onclick='flag_onClick(this, \"rad\");' /></div>"
 									 + "<img name='5' class='country5' onclick='flag_onClick(this, \"img\");' />";
 			}
 			if(primaryLang != 6 && useIndonesian == 'YES') {
-				languageTd.innerHTML += "<input type='radio' id='6' name='rad_flag' onclick='flag_onClick(this, \"rad\");' />"
+				languageTd.innerHTML += "<div class='custom_radio'><input type='radio' id='6' name='rad_flag' onclick='flag_onClick(this, \"rad\");' /></div>"
 									 + "<img name='6' class='country6' onclick='flag_onClick(this, \"img\");' />";
 			}
 			

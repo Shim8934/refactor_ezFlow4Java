@@ -36,14 +36,14 @@
                     <ul class="check_ul">
                         <li>
                             <div class="input_check">
-                                <input type="checkbox" id="filter_read" onchange="searchNoti('first')" type="checkbox" name="readfilter" maintype="n" value="read" checked="checked">
-                                <label for="filter_read"><spring:message code="ezNotification.hth05"/></label>
+                                <div class='custom_checkbox'><input type="checkbox" id="filter_read" onchange="searchNoti('first')" type="checkbox" name="readfilter" maintype="n" value="read" checked="checked">
+                                <label for="filter_read"><spring:message code="ezNotification.hth05"/></label></div>
                             </div>
                         </li>
                         <li>
                             <div class="input_check">
-                                <input type="checkbox" id="filter_unread" onchange="searchNoti('first')" type="checkbox" name="readfilter" maintype="n" value="unread" checked="checked">
-                                <label for="filter_unread"><spring:message code="ezNotification.hth06"/></label>
+                                <div class='custom_checkbox'><input type="checkbox" id="filter_unread" onchange="searchNoti('first')" type="checkbox" name="readfilter" maintype="n" value="unread" checked="checked">
+                                <label for="filter_unread"><spring:message code="ezNotification.hth06"/></label></div>
                             </div>
                         </li>
                     </ul>
@@ -51,7 +51,7 @@
                     <ul class="check_ul" id="notiType">
                         <li>
                             <div class="input_check">
-                                <input type="checkbox" id="filter_totalcheck" name="notitypefilter" maintype="y" value="total" checked="checked" onchange="totalfilterCheck()">
+                                <div class='custom_checkbox'><input type="checkbox" id="filter_totalcheck" name="notitypefilter" maintype="y" value="total" checked="checked" onchange="totalfilterCheck()"></div>
                                 <label for="filter_totalcheck"><spring:message code="ezNotification.hth08"/></label>
                             </div>
                         </li>

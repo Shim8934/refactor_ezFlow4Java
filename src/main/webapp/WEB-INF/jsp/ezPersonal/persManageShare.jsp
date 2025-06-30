@@ -89,7 +89,7 @@
 					for (var i = 0; i < listdom.getElementsByTagName("ROW").length; i++) {
 						strHTML += "<tr data1='" + getNodeText(listdom.getElementsByTagName("SHAREUSERID")[i]) + "'>";
 						
-						strHTML += "<td style='text-align: center;'><input type='checkbox'/></td>";
+						strHTML += "<td style='text-align: center;'><div class='custom_checkbox'><input type='checkbox'/></div></td>";
 						strHTML += "<td>" + getNodeText(listdom.getElementsByTagName("SHAREUSERNAME")[i]) + "</td>";
 						strHTML += "<td>" + getNodeText(listdom.getElementsByTagName("SHAREUSERDEPTNAME")[i]) + "</td>";
 						strHTML += "<td>" + getNodeText(listdom.getElementsByTagName("SHAREUSERTITLE")[i]) + "</td>";
@@ -189,7 +189,7 @@
 	    					<table id="shareApprovalList" class="mainlist" cellspacing="0" cellpadding="0" border="0" style="width:100%;">
 						    	<thead>
 						    		<tr>
-						    			<th style="width: 30px; text-align: center;"><input type="checkbox" id="checkboxAll" name="checkboxAll" onclick="checkboxAll_click()"/></th>
+						    			<th style="width: 30px; text-align: center;"><div class='custom_checkbox'><input type="checkbox" id="checkboxAll" name="checkboxAll" onclick="checkboxAll_click()"/></div></th>
 						    			<th><spring:message code='ezApprovalG.bhs10'/></th>
 						    			<th><spring:message code='ezApprovalG.bhs11'/></th>
 						    			<th><spring:message code='ezApprovalG.bhs12'/></th>

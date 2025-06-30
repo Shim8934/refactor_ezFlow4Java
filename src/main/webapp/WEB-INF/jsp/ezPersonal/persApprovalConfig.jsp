@@ -212,12 +212,12 @@
 		    		<th><spring:message code='ezPersonal.t513'/></th>
 		    		<td>
 				    	<c:if test="${flag != 'N'}">
-					      <input style="margin-top:0px;" type="radio" id="ApprovPwdY" name="ApprovPwd" checked='checked' onclick ="PassTypeView()" /><label for ="ApprovPwdY" style="cursor:pointer;vertical-align:middle"><spring:message code='ezPersonal.t937'/></label>
-				      	  <input style="margin-top:0px;" type="radio" id="ApprovPwdN" name="ApprovPwd" onclick="PassTypeView()"  /><label for ="ApprovPwdN" style="cursor:pointer;vertical-align:middle"><spring:message code='ezPersonal.t1000'/></label>
+					      <div class="custom_radio"><input style="margin-top:0px;" type="radio" id="ApprovPwdY" name="ApprovPwd" checked='checked' onclick ="PassTypeView()" /><label for ="ApprovPwdY" style="cursor:pointer;vertical-align:middle"><spring:message code='ezPersonal.t937'/></label></div>
+				      	  <div class="custom_radio"><input style="margin-top:0px;" type="radio" id="ApprovPwdN" name="ApprovPwd" onclick="PassTypeView()"  /><label for ="ApprovPwdN" style="cursor:pointer;vertical-align:middle"><spring:message code='ezPersonal.t1000'/></label></div>
 				    	</c:if>
 				    	<c:if test="${flag == 'N'}">
-					      <input style="margin-top:0px;" type="radio" id="ApprovPwdY" name="ApprovPwd" onclick ="PassTypeView()" /><label for ="ApprovPwdY" style="cursor:pointer;vertical-align:middle"><spring:message code='ezPersonal.t937'/></label>
-				      	  <input style="margin-top:0px;" type="radio" id="ApprovPwdN" name="ApprovPwd" checked='checked' onclick="PassTypeView()"  /><label for ="ApprovPwdN" style="cursor:pointer;vertical-align:middle"><spring:message code='ezPersonal.t1000'/></label>
+					      <div class="custom_radio"><input style="margin-top:0px;" type="radio" id="ApprovPwdY" name="ApprovPwd" onclick ="PassTypeView()" /><label for ="ApprovPwdY" style="cursor:pointer;vertical-align:middle"><spring:message code='ezPersonal.t937'/></label></div>
+				      	  <div class="custom_radio"><input style="margin-top:0px;" type="radio" id="ApprovPwdN" name="ApprovPwd" checked='checked' onclick="PassTypeView()"  /><label for ="ApprovPwdN" style="cursor:pointer;vertical-align:middle"><spring:message code='ezPersonal.t1000'/></label></div>
 				    	</c:if>
 				    </td>
 		  		</tr>
