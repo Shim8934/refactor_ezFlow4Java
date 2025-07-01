@@ -365,6 +365,8 @@ var strLangHSG03 = "件名が空白です。";
 
 var strLangKDH01 = "受信確認";
 
+var strLangYJA01 = "ネットワークでアップロード中にエラーが発生しました。";
+
 //new ui
 const strLangFolderManage = "メールフォルダの管理";
 const strLangSubscribe = "購読";

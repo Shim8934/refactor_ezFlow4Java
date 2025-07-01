@@ -365,6 +365,8 @@ var strLangHSG03 = "主题栏为空。";
 
 var strLangKDH01 = "收信确认";
 
+var strLangYJA01 = "通过网络上传时发生错误。";
+
 //new ui
 const strLangFolderManage = "管理文件夹";
 const strLangSubscribe = "订阅";

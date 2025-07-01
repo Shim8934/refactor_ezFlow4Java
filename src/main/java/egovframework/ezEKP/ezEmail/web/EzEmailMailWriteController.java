@@ -91,10 +91,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -667,20 +664,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				} else {
 					fileLocationValue = fileIdentifier;
 				}
-				
-				// 업로드된 파일에 대한 정보를 XML 형식으로 클라이언트에게 반환한다.
-				strXML2 += "<NODE><PUPLOADSN><![CDATA[" + fileIdentifier + "]]></PUPLOADSN>";
-                strXML2 += "<RESULTUPLOADA><![CDATA[" + resultUpload[i] + "]]></RESULTUPLOADA>";
-                strXML2 += "<PFILENAME><![CDATA[" + pFileName[i] + "]]></PFILENAME>";
-                strXML2 += "<FILESIZE><![CDATA[" + fileSize[i] + "]]></FILESIZE>";
-				strXML2 += "<FILELOCATION><![CDATA[" + fileLocationValue + "]]></FILELOCATION>";
-                strXML2 += "<PBIGFILEUPLOAD><![CDATA[" + pBigFileUpload + "]]></PBIGFILEUPLOAD>";
-				
-				if (zipFileUploadCheck) {
-					strXML2 += "<CHECKZIPENCRYPTED><![CDATA[" + checkZipFileEncrypted + "]]></CHECKZIPENCRYPTED>";
-				}
-				
-                strXML2 += "</NODE>";
 
 				String useExternalLargeFileServer = ezCommonService.getTenantConfig("useExternalLargeFileServer", userInfo.getTenantId());
 				// external large file server http upload
@@ -704,9 +687,35 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					RestTemplate restTemplate = new RestTemplate();
 					((SimpleClientHttpRequestFactory) restTemplate.getRequestFactory())
 							.setBufferRequestBody(false);
-					restTemplate.exchange(externalFileServerUrl + "/rest/ezEmail/uploadAttachCommon.do", HttpMethod.POST, entity, String.class);
+
+					try {
+						restTemplate.exchange(externalFileServerUrl + "/rest/ezEmail/uploadAttachCommon.do", HttpMethod.POST, entity, String.class);
+					} catch (Exception e) {
+						logger.error("externalFileUpload failed", e);
+						resultUpload[i] = "extFalse";
+
+						File localFile = new File(fileLocation[i]);
+						File localFileName = new File(fileLocation[i]+"__.txt");
+						localFile.delete();
+						localFileName.delete();
+					}
 
 				}
+
+				// 업로드된 파일에 대한 정보를 XML 형식으로 클라이언트에게 반환한다.
+				strXML2 += "<NODE><PUPLOADSN><![CDATA[" + fileIdentifier + "]]></PUPLOADSN>";
+				strXML2 += "<RESULTUPLOADA><![CDATA[" + resultUpload[i] + "]]></RESULTUPLOADA>";
+				strXML2 += "<PFILENAME><![CDATA[" + pFileName[i] + "]]></PFILENAME>";
+				strXML2 += "<FILESIZE><![CDATA[" + fileSize[i] + "]]></FILESIZE>";
+				strXML2 += "<FILELOCATION><![CDATA[" + fileLocationValue + "]]></FILELOCATION>";
+				strXML2 += "<PBIGFILEUPLOAD><![CDATA[" + pBigFileUpload + "]]></PBIGFILEUPLOAD>";
+
+				if (zipFileUploadCheck) {
+					strXML2 += "<CHECKZIPENCRYPTED><![CDATA[" + checkZipFileEncrypted + "]]></CHECKZIPENCRYPTED>";
+				}
+
+				strXML2 += "</NODE>";
+
             }
 
             pDirTempPath = "";

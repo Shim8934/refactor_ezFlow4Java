@@ -365,6 +365,8 @@ var strLangHSG03 = "제목란이 비어있습니다.";
 
 var strLangKDH01 = "수신확인";
 
+var strLangYJA01 = "망연계를 통한 업로드 중 오류가 발생했습니다.";
+
 // new ui
 const strLangFolderManage = "편지함관리";
 const strLangSubscribe = "구독";

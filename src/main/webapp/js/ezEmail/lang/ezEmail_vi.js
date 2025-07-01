@@ -358,6 +358,8 @@ var strLangHSG03 = "Trường chủ đề trống.";
 
 var strLangKDH01 = "Đọc thông tin";
 
+var strLangYJA01 = "Đã xảy ra lỗi khi tải lên qua mạng.";
+
 //new ui
 const strLangFolderManage = "Manage folder";
 const strLangSubscribe = "Subscribe";

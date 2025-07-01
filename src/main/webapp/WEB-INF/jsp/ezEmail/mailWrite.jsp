@@ -1006,6 +1006,9 @@
 	            else if (getNodeText(GetChildNodes(nodes[i])[1]) == "denied") {
 	                alert(strLang323);
 	            }
+	            else if (getNodeText(GetChildNodes(nodes[i])[1]) == "extFalse") {
+                    alert(strLangYJA01);
+                }
 	            else {
 	                alert(filename + strLang85 + "\n\n" + result);
 	            }
@@ -1034,7 +1037,7 @@
 	        
 	        for (var i = 0; i < nodes.length; i++) {
 	            
-	        	if (getNodeText(GetChildNodes(nodes[i])[1]) != "denied") {
+	        	if (getNodeText(GetChildNodes(nodes[i])[1]) != "denied" && getNodeText(GetChildNodes(nodes[i])[1]) != "extFalse") {
 	                objRows = createNodeAndAppandNode(xmlDoc, objRow, objRows, "FILE");
 	                createNodeAndAppandNodeText(xmlDoc, objRows, objRowRow, "NAME", getNodeText(GetChildNodes(nodes[i])[2]));
 	                createNodeAndAppandNodeText(xmlDoc, objRows, objRowRow, "PATH", getNodeText(GetChildNodes(nodes[i])[4]));
