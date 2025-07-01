@@ -466,6 +466,9 @@ public class MBoardServiceImpl implements MBoardService {
 		} else if (vo.getBoardID().equals("{ZZZZZZZZ-ZZZZ-ZZZZ-ZZZZ-ZZZZZZZZZZZZ}")) {
 			vo.setType("allBoardItemList");
 			vo.setBoardName(egovMessageSource.getMessage("ezBoard.allboard.hth01", new Locale(commonUtil.getTwoLetterLangFromLangNum(mobileInfo.getLang()))));
+		} else if (vo.getBoardID().equals("{YYYYYYYY-YYYY-YYYY-YYYY-YYYYYYYYYYYY}")) {
+			vo.setType("recentBoardItemList");
+			vo.setBoardName(egovMessageSource.getMessage("ezBoard.lyj01", new Locale(commonUtil.getTwoLetterLangFromLangNum(mobileInfo.getLang()))));
 		} else {
 			vo.setType("boardItemList");
 		}
