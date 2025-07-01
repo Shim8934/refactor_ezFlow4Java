@@ -3749,16 +3749,18 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 							String cid = imageName + "@12345678.87654321";
 							String cidWithBrackets = "<" + cid + ">";
 
-							String contentType;
+							String contentType = null;
 
 							try (FileInputStream is = new FileInputStream(imageFile)) {
 								contentType = URLConnection.guessContentTypeFromStream(is);
+							} catch(FileNotFoundException e) {
+								logger.error(e.getMessage(), e);
+							} catch(Exception e) {
+								logger.error(e.getMessage(), e);
+							}
 
-								if (contentType == null) {
-									contentType = Files.probeContentType(imageFile.toPath());
-								}
-							} catch (Exception ex) {
-								throw ex;
+							if (contentType == null) {
+								contentType = Files.probeContentType(imageFile.toPath());
 							}
 
 							MimeBodyPart imagePart = new MimeBodyPart();

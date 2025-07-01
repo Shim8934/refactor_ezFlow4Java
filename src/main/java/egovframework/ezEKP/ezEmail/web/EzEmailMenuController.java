@@ -500,7 +500,8 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 				isSubscribe = false;
 			}
 
-			boolean showAllMail = request.getParameter("am").equalsIgnoreCase("y");
+			String allMail = StringUtils.defaultString(request.getParameter("am"), "n");
+			boolean showAllMail = allMail.equalsIgnoreCase("y");
 
 			StringBuilder subFolderXML = new StringBuilder();
 
