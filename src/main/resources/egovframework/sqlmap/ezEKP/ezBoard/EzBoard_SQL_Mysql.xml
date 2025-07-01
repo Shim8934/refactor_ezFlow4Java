@@ -4739,7 +4739,7 @@
 	
 	<select id="EzBoardDAO.getSearchBoardItemCount" parameterClass="Map" resultClass="Integer">
 		SELECT
-			COUNT(ITEMID)
+			COUNT(A.ITEMID)
 		FROM
 			TBL_BOARD_ITEM A
 		<isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
@@ -5231,7 +5231,8 @@
 			 	PREVIEWWCONTENT ,
 			 	PREVIEWHLIST ,
               	PREVIEWHCONTENT,
-				ALLNEWBOARDLISTDATE 
+				ALLNEWBOARDLISTDATE,
+				CONTENTSIZE
         	FROM 
         	    TBL_BOARD_CONFIGURATION 
        		WHERE  
@@ -6230,7 +6231,8 @@
             	PREVIEWWCONTENT = #previewWContent#,
             	PREVIEWHLIST = #previewHList#,
             	PREVIEWHCONTENT = #previewHContent#,
-				ALLNEWBOARDLISTDATE = #allNewBoardListDate#
+				ALLNEWBOARDLISTDATE = #allNewBoardListDate#,
+				CONTENTSIZE = #contentSize#
             WHERE  
             	TENANT_ID = #tenantID#
             AND
@@ -6240,10 +6242,10 @@
 	<insert id="EzBoardDAO.setBoardList_Config_I" parameterClass="BoardConfigVO">
 		<![CDATA[
 			INSERT INTO TBL_Board_Configuration ( 
-				USERID,   LISTCOUNT,   PREVIEW,   PREVIEWWLIST,   PREVIEWWCONTENT,   PREVIEWHLIST,   PREVIEWHCONTENT, ALLNEWBOARDLISTDATE, TENANT_ID
+				USERID,   LISTCOUNT,   PREVIEW,   PREVIEWWLIST,   PREVIEWWCONTENT,   PREVIEWHLIST,   PREVIEWHCONTENT, ALLNEWBOARDLISTDATE, CONTENTSIZE, TENANT_ID
 			)
           	VALUES ( 
-          		#userId#, #listCount#, #preview#, #previewWList#, #previewWContent#, #previewHList#, #previewHContent#, #allNewBoardListDate#, #tenantID# 
+          		#userId#, #listCount#, #preview#, #previewWList#, #previewWContent#, #previewHList#, #previewHContent#, #allNewBoardListDate#, #contentSize#, #tenantID# 
           	)
 		]]>
 	</insert>

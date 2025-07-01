@@ -128,7 +128,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// 추천 promt 동작
+// 추천 prompt 동작
 function simplePrompt(element) {
     // 이미 요청이 진행 중인 경우 차단
     if (isAiRequestInProgress) {
@@ -185,8 +185,8 @@ async function aiSend(promptData, callback) {
 
     const requestData = createRequestData(promptData);
     // 데이터 조합 테스트용 콘솔로 운영 시 주석 처리
-    console.log(requestData);
-    console.log(JSON.stringify(requestData));
+    //console.log(requestData);
+    //console.log(JSON.stringify(requestData));
 
     try {
         const response = await fetch('/ezAI/ai/stream.do', {
@@ -253,8 +253,7 @@ function parseMarkdownToHtml(rtnData) {
     
     let rtnDataParse = marked.parse(rtnData);
     //DomPurity 라이브러리 사용하여 XSS 방지 처리
-    DOMPurify.sanitize(rtnDataParse);
-    return rtnDataParse;
+    return DOMPurify.sanitize(rtnDataParse);
 }
 
 // 데이터

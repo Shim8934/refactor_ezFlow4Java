@@ -135,6 +135,7 @@
 		<result property="unit"             column="unit"                  columnIndex="12"/>
 		<result property="companyId"        column="company_id"            columnIndex="13"/>
 		<result property="tenantId"         column="tenant_id"             columnIndex="14"/>
+		<result property="resOpenFlag"      column="res_open_flag"         columnIndex="15"/>
 	</resultMap>
 	
 	<!-- OptionVO resultMap -->
@@ -1166,11 +1167,11 @@
 		<![CDATA[
 			insert into tbl_survey_question (
 				question_id,    survey_id,           question_type,  title,    levels, use_status, required_flag,
-				logic_flag,     slider_logic_point,  skip_flag,      skip_num, unit,   company_id, tenant_id
+				logic_flag,     slider_logic_point,  skip_flag,      skip_num, unit,   company_id, tenant_id, res_open_flag
 			)
 			values (
 				#questionId#,  #surveyId#,         #type#,       #content#,  #level#,  #useStatus#, #required#,
-				#logicFlag#,   #sliderLogicPoint#, #skipFlag#,   #skip#,     #unit#,   #companyId#,  #tenantId#
+				#logicFlag#,   #sliderLogicPoint#, #skipFlag#,   #skip#,     #unit#,   #companyId#,  #tenantId#, #resOpenFlag#
 			)
 		]]>
 	</insert>
@@ -1834,4 +1835,17 @@
 		  AND COMPANY_ID = #companyId#
 		  AND TENANT_ID = #tenantId#
 	</select>
+
+	<update id="EzSurveyDAO.endSurveyItem" parameterClass="map">
+		UPDATE
+			TBL_SURVEY
+		SET
+			END_DATE = #updateDate#,
+			UPDATE_DATE = #updateDate#,
+			UPDATE_USER = #userID#
+		WHERE
+			SURVEY_ID = #surveyID#
+		  AND
+			TENANT_ID = #tenantID#
+	</update>
 </sqlMap>

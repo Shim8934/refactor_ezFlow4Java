@@ -73,6 +73,12 @@ function get_childXML_2010(url, broot, bcount, isFolderManager, showAllMail) {
         	requestUrl += "?fm=0";
         }
         
+        if (showAllMail) {
+            requestUrl += "&am=y";
+        } else {
+            requestUrl += "&am=n";
+        }
+        
     	if (typeof(shareId) != "undefined" && shareId != "") {
     		requestUrl += "&shareId=" + encodeURIComponent(shareId);
     	}

@@ -119,14 +119,15 @@
 			var rating = "${itemStarRating.rating}";
 			var updateDate = "<c:out value= '${boardItem.updateDate}'/>";
 
-		    // 수정 수아 재은	    
-		    var nowZoom = 100;
-	        var maxZoom = 200;
-	        var minZoom = 80;
-	
-	        var MozNowZoom = 1;
-	        var MozMaxZoom = 2;
-	        var MozMinZoom = 0.8;
+		    <%--본문 확대/축소 관련--%>
+            var nowZoom = parseInt("<c:out value='${contentSize}'/>"); // 사용자 설정 본문크기값
+            var maxZoom = 200;
+            var minZoom = 100;
+    
+            var MozNowZoom = parseInt("<c:out value='${mozContentSize}'/>"); // 사용자 설정 본문크기값
+            var MozMaxZoom = 2;
+            var MozMinZoom = 1;
+	        
 			/* 2023-04-12 이가은 - 답글 기능을 위한 변수 추가 */
 	        var userInfoName = "${userInfo.displayName}"; 
 			var replyOpenFlag = 0;
@@ -160,7 +161,8 @@
 			var historyModify = "${ historyModify }";
 			var newestVersionFlag = "${ newestVersionFlag }";
 
-	        function Bigger(doc) {     
+	        function Bigger() {
+                var doc = document.getElementById("message").contentWindow.document;
 	            if (navigator.userAgent.indexOf('Firefox') != -1) {
 	                if (MozNowZoom < MozMaxZoom) {
 	                    MozNowZoom += 0.1;
@@ -182,9 +184,11 @@
 	                $(doc).find("#curZoomSize").show();
 	                setTimeout(function(){$(doc).find("#curZoomSize").css("display","none")}, 1000);
 	            }
+	            fontSync("B");
 	        }
 	        
-	        function Smaller(doc) {
+	        function Smaller() {
+	            var doc = document.getElementById("message").contentWindow.document;
 	            if (navigator.userAgent.indexOf('Firefox') != -1) {
 	                if (MozNowZoom > MozMinZoom) {
 	                    MozNowZoom -= 0.1;
@@ -206,7 +210,25 @@
 	                $(doc).find("#curZoomSize").show();
 	                setTimeout(function(){$(doc).find("#curZoomSize").css("display","none")}, 1000);
 	            }
+	            fontSync("S");
 	        }
+	        
+	        function fontSync(type) {
+                for (let i=0; i<5; i++) {
+                    let elementId = "message" + i;
+                    let element = document.getElementById(elementId);
+
+                    if (element) {
+                        if (type == "S") {
+                            Smaller2(element.contentWindow.document, i);
+                        } else {
+                            Bigger2(element.contentWindow.document, i)
+                        }
+                    } else {
+                        break;
+                    }
+                }
+            }
 	        
 		    window.onload = function () {
 		    	makeEmoticonPanel();
@@ -215,7 +237,7 @@
 		        		// 수정 수아 재은
 			        	var html = "<div><img src='/images/minus.png' title='<spring:message code='ezEmail.t99000065' />' id='smaller' style='cursor:pointer; margin-bottom: 5px;' />"
 							html += "<img src='/images/plus.png' title='<spring:message code='ezEmail.t99000064' />' id='bigger' style='cursor: pointer; margin-bottom: 5px;' />";
-							html += "<span id='curZoomSize' style='display:none; float:right;'></span></div>";
+							html += "<span id='curZoomSize'  style='position: absolute; top: 2px; right: 0px; background: white; font-size: 12px; padding: 2px; border: 1px solid rgb(204, 204, 204); border-radius: 4px; display: none;'></span></div>";
 							
 						$.ajax({
 							type : "POST",
@@ -238,12 +260,12 @@
 						doc.close();
 						
 						// 수정 수아 재은
-						doc.getElementById('smaller').onclick = function () {
+						<%-- doc.getElementById('smaller').onclick = function () {
 							Smaller(doc);
 						}
 						doc.getElementById('bigger').onclick = function () {
 							Bigger(doc);
-						}
+						}--%>
 						
 						/* 2024-12-17 김은실 - default.css 추가 */
 						var cssLink0 = document.createElement("link");
@@ -274,6 +296,13 @@
 						rsa.setPublic(document.getElementById('publicModulus').value, document.getElementById('publicExponent').value);
 						
 			            AddLinkTarget();
+			            
+			            // 사용자가 설정한 본문크기값으로 세팅 (원글)
+                        if (navigator.userAgent.indexOf('Firefox') != -1) {
+                            $(doc).find('.contentDiv').css("MozTransform","scale(" + MozNowZoom + ")");
+                        } else {
+                            $(doc).find(".contentDiv").css("zoom",nowZoom + "%");
+                        }
 		        	}
 		        	
 		            SetAttachmentInfo();
@@ -2732,6 +2761,10 @@
                 <img id="cancelImg" class="cancelImg" src="/images/close.png" onclick="closeEmoticonPreview();">
                 <img id="previewImage" class="previewImage">
             </div>            
+        </div>
+        <div class="zoom_btn">
+            <span class="zoom_in" onclick="Bigger()">확대</span>
+            <span class="zoom_out" onclick="Smaller()">축소</span>
         </div>
         <c:if test="${useAI}">
             <c:import url="/WEB-INF/jsp/ezAI/aiSlide.jsp" />

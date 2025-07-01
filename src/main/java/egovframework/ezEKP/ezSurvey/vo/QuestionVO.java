@@ -21,6 +21,7 @@ public class QuestionVO {
 	private AttachVO attach;
 	private AttachVO imgTitle;
 	private List<ResponseVO> responses;
+	private int resOpenFlag;
 	
 	public List<ResponseVO> getResponses() {
 		return responses;
@@ -166,4 +167,11 @@ public class QuestionVO {
 		this.imgTitle = imgTitle;
 	}
 	
+	public int getResOpenFlag() {
+		return resOpenFlag;
+	}
+
+	public void setResOpenFlag(int resOpenFlag) {
+		this.resOpenFlag = resOpenFlag;
+	}
 }

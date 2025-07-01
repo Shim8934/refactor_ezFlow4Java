@@ -135,7 +135,8 @@ public class EzAIGWController {
                     content.append(inputLine);
                 }
                 
-                logger.debug("Response: " + content.toString());
+                // 운영 시 주석처리
+                // logger.debug("Response: " + content.toString());
                 
                 // 응답 처리
                 clientOut.write(content.toString().getBytes(StandardCharsets.UTF_8));
