@@ -3043,7 +3043,7 @@ public class EzNewPortalGWController {
 					pvo.setPortletNameList(portletNameList);
 				}
 
-				if (webType != null && webType.equals("mobile")) {
+				if (webType != null && webType.equals("mobile") && pvo.getPortletCode() != null) {
 					if (pvo.getPortletCode().equals("mNotice")) {
 						data.put("mobileBrdMenuId", pvo.getMenuId());
 					} else if (pvo.getPortletCode().equals("mApprovallist")){
