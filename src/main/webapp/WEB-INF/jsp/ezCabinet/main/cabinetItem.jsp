@@ -36,7 +36,7 @@
 			<ul>
 				<c:choose>
 					<c:when test="${cabinet.permission == '2'}">
-						<li id="addBttn" class="important"><a><span style="color: #0470e4;"><spring:message code='ezCabinet.t45'/></span></a></li>
+						<li id="addBttn" class="important"><a><span><spring:message code='ezCabinet.t45'/></span></a></li>
 						<li id="movBttn"><a><span><spring:message code='ezCabinet.t47'/></span></a></li>
 						<li id="shaBttn"><a><span><spring:message code='ezCabinet.t50'/></span></a></li>
 						<li id="schBttn"><a><span class="icon16 icon16_search"></span></a></li>
