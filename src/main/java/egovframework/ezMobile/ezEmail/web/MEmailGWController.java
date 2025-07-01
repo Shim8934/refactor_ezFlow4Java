@@ -3743,43 +3743,45 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 							String extractedPath = imageMatcher.group(1) != null ? imageMatcher.group(1) : imageMatcher.group(2);
 							String imagePath = realPath + extractedPath;
 							File imageFile = new File(imagePath);
-							String imageExt = FilenameUtils.getExtension(imageFile.getName());
-							String imageName = UUID.randomUUID().toString() + "." + imageExt;
+							if (imageFile.exists()) {
+								String imageExt = FilenameUtils.getExtension(imageFile.getName());
+								String imageName = UUID.randomUUID().toString() + "." + imageExt;
+	
+								String cid = imageName + "@12345678.87654321";
+								String cidWithBrackets = "<" + cid + ">";
+	
+								String contentType = null;
+	
+								try (FileInputStream is = new FileInputStream(imageFile)) {
+									contentType = URLConnection.guessContentTypeFromStream(is);
+								} catch(FileNotFoundException e) {
+									logger.error(e.getMessage(), e);
+								} catch(Exception e) {
+									logger.error(e.getMessage(), e);
+								}
+	
+								if (contentType == null) {
+									contentType = Files.probeContentType(imageFile.toPath());
+								}
+	
+								MimeBodyPart imagePart = new MimeBodyPart();
+								FileDataSource fileSource = new FileDataSource(imageFile);
+	
+								imagePart.setDataHandler(new DataHandler(fileSource));
+								imagePart.setFileName(imageName);
+								imagePart.setHeader("Content-Type", contentType);
+								imagePart.setContentID(cidWithBrackets);
+								imagePart.setDisposition(Part.INLINE);
+	
+								imageParts.add(imagePart);
 
-							String cid = imageName + "@12345678.87654321";
-							String cidWithBrackets = "<" + cid + ">";
-
-							String contentType = null;
-
-							try (FileInputStream is = new FileInputStream(imageFile)) {
-								contentType = URLConnection.guessContentTypeFromStream(is);
-							} catch(FileNotFoundException e) {
-								logger.error(e.getMessage(), e);
-							} catch(Exception e) {
-								logger.error(e.getMessage(), e);
+								// dhlee : 20221027 - 사이냅 웹에디터를 사용하는 닷넷 모바일에서 이미지 업로드를 지원하기 위해 Upload_Common 폴더 관련 처리를 추가함.
+								if (imageMatcher.group(1) == null ) {
+									cid = cid + "\"";
+								}
+	
+								imageMatcher.appendReplacement(sb, "src=\"cid:" + cid);
 							}
-
-							if (contentType == null) {
-								contentType = Files.probeContentType(imageFile.toPath());
-							}
-
-							MimeBodyPart imagePart = new MimeBodyPart();
-							FileDataSource fileSource = new FileDataSource(imageFile);
-
-							imagePart.setDataHandler(new DataHandler(fileSource));
-							imagePart.setFileName(imageName);
-							imagePart.setHeader("Content-Type", contentType);
-							imagePart.setContentID(cidWithBrackets);
-							imagePart.setDisposition(Part.INLINE);
-
-							imageParts.add(imagePart);
-
-							// dhlee : 20221027 - 사이냅 웹에디터를 사용하는 닷넷 모바일에서 이미지 업로드를 지원하기 위해 Upload_Common 폴더 관련 처리를 추가함.
-							if (imageMatcher.group(1) == null ) {
-								cid = cid + "\"";
-							}
-
-							imageMatcher.appendReplacement(sb, "src=\"cid:" + cid);
 						}
 
 						textBody = imageMatcher.appendTail(sb).toString();
