@@ -465,7 +465,10 @@ var CabinetItem = function() {
 				var inputElmt  = document.createElement("input");
 				inputElmt.setAttribute("type", "checkbox");
 				inputElmt.onclick = function(event) {getCheckedFunct(event);};
-				tdElmt1.appendChild(inputElmt);
+		        var oDiv = document.createElement("div");
+		        oDiv.className = "custom_checkbox";
+		        oDiv.appendChild(inputElmt);
+				tdElmt1.appendChild(oDiv);
 				
 				tdElmt2.textContent = getItemType(itemList[i]["itemType"]);
 				tdElmt2.setAttribute("title", tdElmt2.textContent);

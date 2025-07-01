@@ -10,6 +10,7 @@
 		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/ezCabinet/cabinet.css')}">
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	</head>
 	<body class="cabGeneral">
 		<br>
@@ -38,8 +39,8 @@
 								</c:choose>
 							</td>
 							<td>
-								<label style="cursor:pointer;"><input type="radio" role="on"  name="${module.moduleType}" ${module.activeStatus == 1 ? 'checked' : ''}><spring:message code="ezCabinet.t34"/></label>
-								<label style="cursor:pointer;"><input type="radio" role="off" name="${module.moduleType}" ${module.activeStatus != 1 ? 'checked' : ''}><spring:message code="ezCabinet.t35"/></label>
+								<label style="cursor:pointer;"><div class="custom_radio"><input type="radio" role="on"  name="${module.moduleType}" ${module.activeStatus == 1 ? 'checked' : ''}></div><spring:message code="ezCabinet.t34"/></label>
+								<label style="cursor:pointer;"><div class="custom_radio"><input type="radio" role="off" name="${module.moduleType}" ${module.activeStatus != 1 ? 'checked' : ''}></div><spring:message code="ezCabinet.t35"/></label>
 							</td>
 						</tr>
 					</c:forEach>
