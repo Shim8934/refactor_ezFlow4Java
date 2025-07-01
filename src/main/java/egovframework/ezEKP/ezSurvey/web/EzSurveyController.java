@@ -1608,4 +1608,21 @@ public class EzSurveyController extends EgovFileMngUtil {
 
 		logger.debug("endSurveyItem ended");
 	}
+
+	@ResponseBody
+	@RequestMapping(value="/ezSurvey/pauseSurvey.do", method = RequestMethod.POST)
+	public void pauseSurvey(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("pauseSurvey started");
+		try {
+			LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+			String surveyID = request.getParameter("surveyID");
+			String type = request.getParameter("type");
+
+			ezSurveyService.pauseSurvey(surveyID, type, user.getTenantId());
+		} catch (Exception e) {
+			logger.debug("pauseSurvey error. : " + e.getMessage());
+		}
+
+		logger.debug("pauseSurvey ended");
+	}
 }

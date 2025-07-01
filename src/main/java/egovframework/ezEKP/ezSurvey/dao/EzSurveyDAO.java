@@ -325,4 +325,9 @@ public class EzSurveyDAO extends EgovAbstractDAO {
     public void endSurveyItem(Map<String, Object> map) throws Exception {
 		update("EzSurveyDAO.endSurveyItem", map);
     }
+
+	// 2025-07-01 양지혜 - 설문 > 진행중 설문 > 일시정지
+	public void pauseSurvey(Map<String, Object> map) throws Exception {
+		update ("EzSurveyDAO.pauseSurvey", map);
+	}
 }

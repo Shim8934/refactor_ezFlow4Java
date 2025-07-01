@@ -840,18 +840,22 @@ public class EzSurveyGWController {
 
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 
-			/* 응답 시 현재 설문의 상태(수정/삭제)를 확인 */
-			int editingState = surveyService.checkEditingState(surveyId, userInfo.getCompanyID(), userInfo.getTenantId());
-			if (1 == editingState) {
+			/* 응답 시 현재 설문의 상태(수정/삭제/일시정지)를 확인 */
+			int surveyState = surveyService.checkEditingState(surveyId, userInfo.getCompanyID(), userInfo.getTenantId());
+			if (1 == surveyState) {
 				logger.debug("Survey in edit mode. surveyId={}", surveyId);
 				result.put("status", "editing");
 				result.put("code", 8);
 				return result;
-			} else if (-1 == editingState) {
+			} else if (-1 == surveyState) {
 				logger.debug("Survey has been deleted. surveyId={}", surveyId);
 				result.put("status", "deleted");
 				result.put("code", 8);
 				return result;
+			} else if (2 == surveyState) {
+				logger.debug("Survey is in paused state. surveyId={}", surveyId);
+				result.put("status", "paused");
+				result.put("code", 8);
 			} else {
 				result = surveyService.saveResponseItem(responses, surveyId, userInfo);
 			}

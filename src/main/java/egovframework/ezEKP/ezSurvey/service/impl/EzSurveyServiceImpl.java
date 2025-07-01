@@ -1986,10 +1986,12 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		
-		// MODIFY_FLAG : 0(미사용) 1(사용) , USE_STATUS 0(삭제) 1(사용)
+		// MODIFY_FLAG : 0(미사용) 1(사용) , USE_STATUS 0(삭제) 1(사용) 2(일시정지)
 		HashMap<String, Object> resMap = ezSurveyDAO.checkEditingState(map);
 		if ("0".equals(resMap.get("USE_STATUS").toString())) {
 			res = -1;
+		} else if ("2".equals(resMap.get("USE_STATUS").toString())) {
+			res = 2;
 		} else if ("1".equals(resMap.get("MODIFY_FLAG").toString())) {
 			res = 1;
 		}
@@ -2042,5 +2044,17 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 
 		logger.debug("checkfinishSurvey ended");
 		return finishYN;
+	}
+
+	@Override
+	public void pauseSurvey(String surveyID, String type, int tenantId) throws Exception {
+		int useStatus = "P".equals(type) ? 2 : 1;
+
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("surveyId", surveyID);
+		map.put("useStatus", useStatus);
+		map.put("tenantId",  tenantId);
+
+		ezSurveyDAO.pauseSurvey(map);
 	}
 }

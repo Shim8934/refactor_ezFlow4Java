@@ -221,7 +221,7 @@
 	</sql>
 	
 	<sql id="surveyItemList">
-		where use_status = 1 and tenant_id = #tenantId# and modify_flag = 0
+		where use_status in (1, 2) and tenant_id = #tenantId# and modify_flag = 0
 		<isEqual property="searchMode" compareValue="1">
 			<isEqual property="searchOption" compareValue="title" prepend=" and ">
 				title like concat('%', concat(#title#, '%'))
@@ -239,6 +239,8 @@
 					   THEN 'TMP'
 					WHEN SYSDATE < TO_DATE(start_date, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60)
 					   THEN 'WAIT'
+				    WHEN USE_STATUS = 2 AND SYSDATE <= TO_DATE(end_date, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60)
+					   THEN 'PAUSE'
 					WHEN SYSDATE <= TO_DATE(end_date, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60)
 					   THEN 'ING'
 					WHEN SYSDATE > TO_DATE(end_date, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60)
@@ -1862,5 +1864,28 @@
 			SURVEY_ID = #surveyID#
 		  AND
 			TENANT_ID = #tenantID#
+	</update>
+
+	<select id="EzSurveyDAO.checkEditingState" parameterClass="map" resultClass="HashMap">
+		SELECT
+			MODIFY_FLAG,
+			USE_STATUS
+		FROM
+			TBL_SURVEY
+		WHERE
+			SURVEY_ID = #surveyId#
+		  AND COMPANY_ID = #companyId#
+		  AND TENANT_ID = #tenantId#
+	</select>
+
+	<update id="EzSurveyDAO.pauseSurvey" parameterClass="map">
+		UPDATE
+			TBL_SURVEY
+		SET
+			USE_STATUS = #useStatus#
+		WHERE
+			SURVEY_ID = #surveyId#
+		  AND
+			TENANT_ID = #tenantId#
 	</update>
 </sqlMap>

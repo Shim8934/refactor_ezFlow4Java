@@ -84,4 +84,6 @@ public interface EzSurveyService {
 
 	// 2025-06-13 양지혜 - 설문 > 설문 종료여부 확인
 	public String checkfinishSurvey(String endDate, String offset) throws Exception;
+
+	public void pauseSurvey(String surveyID, String type, int tenantId) throws Exception;
 }

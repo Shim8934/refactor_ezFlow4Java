@@ -606,7 +606,7 @@ var SurveyItem = function() {
 				}
 				else {
 					if (pageMode == "processing") {
-						statusStr = SurveyMessages.strProcess;
+						statusStr = itemList[i]["useStatus"] == 2 ? SurveyMessages.strPause : SurveyMessages.strProcess;
 					}
 					else if (pageMode == "finish") {
 						statusStr = SurveyMessages.strFinish;
@@ -622,7 +622,7 @@ var SurveyItem = function() {
 						}
 						else {
 							if (today <= endDate) {
-								statusStr = SurveyMessages.strProcess;
+								statusStr = itemList[i]["useStatus"] == 2 ? SurveyMessages.strPause : SurveyMessages.strProcess;
 							}
 							else {
 								statusStr = SurveyMessages.strFinish;
