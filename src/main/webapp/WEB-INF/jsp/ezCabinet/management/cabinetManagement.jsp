@@ -8,6 +8,7 @@
 		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/ezCabinet/cabinet.css')}">
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	</head>
 	<body class="popup cabMag">
 		<h1 id="cabMagHeader" role='<c:out value="${node}"></c:out>'><spring:message code="ezCabinet.t03"/></h1>

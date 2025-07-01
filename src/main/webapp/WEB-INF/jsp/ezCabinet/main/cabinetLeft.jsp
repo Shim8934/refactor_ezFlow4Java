@@ -11,6 +11,7 @@
 		<link rel="stylesheet" href="${util.addVer('/css/ezCabinet/cabinet.css')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	</head>
 	
 	<body class="newLeft">

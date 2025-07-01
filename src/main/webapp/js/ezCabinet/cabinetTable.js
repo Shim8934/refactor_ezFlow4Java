@@ -219,11 +219,11 @@ function CabinetTable(data) {
 	function toggleRow(row, rowClass) {
 		if (_tableMode == null) {
 			if (rowClass == _unselectClass) {
-				var firstInputCheckBox     = _tableElmt.rows[0].firstElementChild.firstElementChild;
+				var firstInputCheckBox     = _tableElmt.rows[0].firstElementChild.firstElementChild.firstElementChild;
 				firstInputCheckBox.checked = false;
 			}
 			
-			var checkboxElmt     = row.firstElementChild.firstElementChild;
+			var checkboxElmt     = row.firstElementChild.firstElementChild.firstElementChild;
 			checkboxElmt.checked = rowClass == _selectedClass ? true : false;
 		}
 		
@@ -264,7 +264,7 @@ function CabinetTable(data) {
 	
 	function cleanTable() {
 		if (_tableMode == null) {
-			var firstInputCheckBox = _tableElmt.rows[0].firstElementChild.firstElementChild;
+			var firstInputCheckBox = _tableElmt.rows[0].firstElementChild.firstElementChild.firstElementChild;
 			if (firstInputCheckBox) {
 				firstInputCheckBox.checked = false; //Clear first input check box
 				firstInputCheckBox.onclick = function(e) {toggleAllRow(this.checked);};
