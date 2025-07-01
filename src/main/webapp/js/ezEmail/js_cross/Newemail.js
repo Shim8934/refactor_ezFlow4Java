@@ -523,12 +523,13 @@ function Read_StatusChange(pGubun) {
     xmlHTTP.open("POST", url, false);
     xmlHTTP.send(xmlpara);
     
+    clearAllMailSelections();
     // 20200428 조진호 - 메일 리스트에서 체크박스를 이용한 행위 뒤 체크박스가 풀리도록 추가
-    if (listContentArry.length > 0) {
+    /*if (listContentArry.length > 0) {
         for (var i = 1; i <= listContentArry.length; i++) {
             document.getElementById(listContentArry[listContentArry.length - i]).children[0].children[0].checked = false;
         }
-    }
+    }*/
     try {
         if (document.getElementById("HeaderAllCheckBox") != null)
             document.getElementById("HeaderAllCheckBox").checked = false;
@@ -536,6 +537,33 @@ function Read_StatusChange(pGubun) {
     
     MailListRefresh();
 }
+
+function clearAllMailSelections() {
+    const seen = new Set();
+
+    listContentArry.forEach(id => {
+        if (seen.has(id)) {
+            return; // 중복 방지
+        }
+ 
+        seen.add(id);
+
+        const row = document.getElementById(id);
+        if (!row) {
+            return;
+        }
+
+        const checkbox = row.querySelector('input[type="checkbox"]');
+        if (checkbox) {
+            checkbox.checked = false;
+        }
+
+        row.style.backgroundColor = m_strColorDefault; // 선택 해제 시 배경색도 원래대로
+    });
+
+    listContentArry = []; // 배열 초기화
+}
+
 var mail_movecopy_cross_dialogArguments = new Array();
 function move_mail_onclick() {
     if (listContentArry.length == 0 && listSubContentArry.length == 0 && currentFixingId == null) {
@@ -624,12 +652,13 @@ function move_mail_onclick_Complete(moveUrl) {
 
         Mail_CopyPostSend(moveUrl["cmd"], moveUrl["url"], szItemID);
         
+        clearAllMailSelections();
         // 20200428 조진호 - 메일 리스트에서 체크박스를 이용한 행위 뒤 체크박스가 풀리도록 추가
-        if (listContentArry.length > 0) {
+        /*if (listContentArry.length > 0) {
             for (var i = 1; i <= listContentArry.length; i++) {
                 document.getElementById(listContentArry[listContentArry.length - i]).children[0].children[0].checked = false;
             }
-        }
+        }*/
         try {
             if (document.getElementById("HeaderAllCheckBox") != null)
                 document.getElementById("HeaderAllCheckBox").checked = false;
@@ -1975,12 +2004,14 @@ function mail_export_exec(isAllMail) {
 		}
 	}
 	
+	clearAllMailSelections();
 	// 20200428 조진호 - 메일 리스트에서 체크박스를 이용한 행위 뒤 체크박스가 풀리도록 추가
-    if (listContentArry.length > 0) {
+    /*if (listContentArry.length > 0) {
         for (var i = 1; i <= listContentArry.length; i++) {
             document.getElementById(listContentArry[listContentArry.length - i]).children[0].children[0].checked = false;
         }
-    }
+    }*/
+
     try {
         if (document.getElementById("HeaderAllCheckBox") != null)
             document.getElementById("HeaderAllCheckBox").checked = false;
@@ -2336,12 +2367,13 @@ function toggle_flag(obj) {
         flagXmlHttp.onreadystatechange = event_toggle_flag_end;
         flagXmlHttp.send(xmlDom);
         if(typeof obj === "undefined") {
+            clearAllMailSelections();
             // 20200428 조진호 - 메일 리스트에서 체크박스를 이용한 행위 뒤 체크박스가 풀리도록 추가
-            if (listContentArry.length > 0) {
+            /*if (listContentArry.length > 0) {
                 for (var i = 1; i <= listContentArry.length; i++) {
                     document.getElementById(listContentArry[listContentArry.length - i]).children[0].children[0].checked = false;
                 }
-            }
+            }*/
             try {
                 if (document.getElementById("HeaderAllCheckBox") != null)
                     document.getElementById("HeaderAllCheckBox").checked = false;
