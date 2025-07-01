@@ -51,12 +51,12 @@ var leftMenu = (function() {
 	}
 
 	/** 프레임 변화 없이 태그 목록만 새로 가져온다. 활성화/비활성화 여부에 따라 가려지거나 하지 않는다. */
-	function reloadTags() {
+	function reloadTags(additionalArgs) {
 		if (!isAccessable) {
 			return;
 		}
 
-		leftWindow.reloadTags();
+		leftWindow.reloadTags(additionalArgs);
 	}
 
 	return {

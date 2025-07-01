@@ -1405,7 +1405,7 @@
 				});
 			}
 
-			function reloadTags() {
+			function reloadTags(additionalArgs) {
 				$.ajax({
 					cache: false,
 					method: "get",
@@ -1416,6 +1416,8 @@
 							alert(strLang321);
 							return;
 						}
+
+						parent.frames["right"].postMessage({ajaxUrl: 'getUserTagList', tags: result.data, ...additionalArgs});
 
 						var tags = result.data;
 						var tagtitleId = "tagtitle";

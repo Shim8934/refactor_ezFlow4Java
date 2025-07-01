@@ -139,6 +139,7 @@
 			var searchRequiredKeyword = [];
 			var searchRequiredCategory = [];
 			var searchRequirement = [];
+			let drawTagConsumeCallback;
 		    
 		    function defineHost(protocol){
 	    		var host = "";
@@ -619,6 +620,19 @@
 					inputUtil.makeReplaceTyping(labelInput, /\s/g, '_');
 					inputUtil.addOnEnterEvent(labelInput, addLabel);
 					reloadTagsForLabelLayer();
+					window.addEventListener('message', event => {
+						if (event.data.ajaxUrl === 'getUserTagList') {
+							drawTagsToLabelLayer(event.data.tags);
+
+							if (event.data.reloadPrev) {
+								prevShow();
+							}
+
+							if (event.data.reloadList) {
+								MailListRefresh();
+							}
+						}
+					});
 				}
 			}
 		    
@@ -1831,7 +1845,7 @@
 		    }
 
 			/** @param {Function} successCallback */
-			function reloadTagsForLabelLayer(successCallback) {
+			function reloadTagsForLabelLayer() {
 				$.ajax({
 					cache: false,
 					method: 'get',
@@ -1843,35 +1857,50 @@
 							return;
 						}
 
-						const tags = result.data;
-						/** @type HTMLTableElement */
-						const labelTable = document.getElementById('label-table');
-						labelTable.innerHTML = '';
-
-						tags.forEach(function(tag) {
-							const row = document.createElement('li');
-							const checkbox = document.createElement('input');
-							checkbox.type = 'checkbox';
-							checkbox.id = 'label-check-' + tag.idx;
-							checkbox.value = tag.idx;
-							checkbox.dataset.name = tag.name;
-							row.appendChild(checkbox);
-							row.appendChild(document.createTextNode(' '));
-							/** @type HTMLLabelElement */
-							const title = document.createElement('label');
-							title.textContent = tag.name;
-							title.title = tagName;
-							title.htmlFor = 'label-check-' + tag.idx;
-							row.appendChild(title);
-							labelTable.appendChild(row);
-						});
-
-						if (successCallback) {
-							successCallback(tags);
-						}
+						drawTagsToLabelLayer(result.data);
 					},
 					error: function() { alert(strLang321); }
 				});
+			}
+
+			function drawTagsToLabelLayer(tags) {
+				/** @type HTMLTableElement */
+				const labelTable = document.getElementById('label-table');
+				labelTable.innerHTML = '';
+
+				const checkedTagIdxArray = Array.from(labelTable.querySelectorAll(":checked")).map(input => input.value);
+				const indeterminateTagIdxArray = Array.from(labelTable.querySelectorAll(":indeterminate")).map(input => input.value);
+
+				tags.forEach(function(tag) {
+					const row = document.createElement('li');
+					const checkbox = document.createElement('input');
+					checkbox.type = 'checkbox';
+					checkbox.id = 'label-check-' + tag.idx;
+					checkbox.value = tag.idx;
+					checkbox.dataset.name = tag.name;
+
+					if (checkedTagIdxArray.includes(tag.idx)) {
+						checkbox.checked = true;
+					} else if (indeterminateTagIdxArray.includes(tag.idx)) {
+						checkbox.checked = false;
+						checkbox.indeterminate = true;
+					}
+
+					row.appendChild(checkbox);
+					row.appendChild(document.createTextNode(' '));
+					/** @type HTMLLabelElement */
+					const title = document.createElement('label');
+					title.textContent = tag.name;
+					title.title = tag.name;
+					title.htmlFor = 'label-check-' + tag.idx;
+					row.appendChild(title);
+					labelTable.appendChild(row);
+				});
+
+				if (drawTagConsumeCallback) {
+					drawTagConsumeCallback();
+					drawTagConsumeCallback = null;
+				}
 			}
 
 			function showLabelLayer() {
@@ -1948,24 +1977,10 @@
 							leftMenu.reloadTags();
 						}
 
-						const labelTable = document.getElementById('label-table');
-						const checkedTagIdxArray = Array.from(labelTable.querySelectorAll(":checked")).map(input => input.value);
-						const indeterminateTagIdxArray = Array.from(labelTable.querySelectorAll(":indeterminate")).map(input => input.value);
-
-						reloadTagsForLabelLayer(() => {
+						drawTagConsumeCallback = () => {
 							labelInput.value = "";
 
-							for (const checkedTagIdx of checkedTagIdxArray) {
-								labelTable.querySelector(`[value='\${checkedTagIdx}']`).checked = true;
-							}
-
-							for (const indeterminateTagIdx of indeterminateTagIdxArray) {
-								const checkbox = labelTable.querySelector(`[value='\${indeterminateTagIdx}']`);
-								checkbox.checked = false;
-								checkbox.indeterminate = true;
-							}
-
-							const addedTag = labelTable.querySelector(`[value='\${result.data}']`).parentElement;
+							const addedTag = document.querySelector(`#label-table [value='\${result.data}']`).parentElement;
 							addedTag.addEventListener('blur', e => {
 								e.currentTarget.removeAttribute('tabindex');
 							});
@@ -1973,7 +1988,7 @@
 							addedTag.contentEditable = true;
 							addedTag.focus();
 							addedTag.contentEditable = false;
-						});
+						};
 					},
 					error: function() {
 						showError();
@@ -2017,6 +2032,7 @@
 							return;
 						}
 
+						prevShow();
 						MailListRefresh();
 					},
 					error: function() {
