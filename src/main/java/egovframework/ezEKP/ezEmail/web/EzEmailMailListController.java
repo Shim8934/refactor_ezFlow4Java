@@ -3819,7 +3819,8 @@ public class EzEmailMailListController {
 			}
 
 			folder.open(Folder.READ_ONLY);
-			modelAndView.addObject("folderName", ezEmailUtil.getDisplayNameFromFolderId(folderId, locale));
+			String folderName = ezEmailUtil.getDisplayNameFromFolderId(folderId, locale);
+			modelAndView.addObject("folderName", folderName.replace(".", "/"));
 			modelAndView.setViewName("/ezEmail/mailKeepMove");
 		}
 

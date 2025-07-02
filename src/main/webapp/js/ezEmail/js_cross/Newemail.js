@@ -650,13 +650,6 @@ function move_mail_onclick_Complete(moveUrl) {
         }
 
         keepMove(itemId, moveUrl["url"]);
-
-        // 20200428 조진호 - 메일 리스트에서 체크박스를 이용한 행위 뒤 체크박스가 풀리도록 추가
-        if (listContentArry.length > 0) {
-            for (var i = 1; i <= listContentArry.length; i++) {
-                document.getElementById(listContentArry[listContentArry.length - i]).children[0].children[0].checked = false;
-            }
-        }
     }
 }
 var xmlhttp_mailCopy;
@@ -769,7 +762,7 @@ function keepMove(itemIDs, copyFolderID) {
         url += '&shareId=' + encodeURIComponent(shareId);
     }
 
-    const openWindow = window.open(url, 'mail_keepmove', GetOpenWindowfeature(500, 200));
+    const openWindow = window.open(url, 'mail_keepmove', GetOpenWindowfeature(500, 220));
     try { openWindow.focus(); } catch (e) {console.log(e);}
 }
 
@@ -828,9 +821,10 @@ function startKeepMoveTimer(userKey) {
                         ShowPercent(100);
                         setTimeout(() => {
                             clearKeepMoveTimer();
+                            prevShow_Clear();
                             MailListRefresh();
                             alert(strLang359);
-                        });
+                        }, 20);
                         break;
                     case -100:
                         alert(strLangKeepMoveNoFromHeader);

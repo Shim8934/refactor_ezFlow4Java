@@ -446,7 +446,7 @@ function keepMove(itemIDs, copyFolderID) {
     DivPopUpHiddenReadMail();
     document.getElementById("iFrameLayer").src = "about:blank";
     setTimeout(function() {
-        DivPopUpShow(450, 200, url);
+        DivPopUpShow(450, 220, url);
     }, 0);
 }
 
