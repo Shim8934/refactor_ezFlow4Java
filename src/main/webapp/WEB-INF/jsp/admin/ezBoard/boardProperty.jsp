@@ -1364,11 +1364,11 @@
 					
 					<%-- 2023-11-03 민지수 - 카테고리게시판 구분 추가 --%>
 	                <c:if test="${model.guBun == '10' }">
-	                	<input type="checkbox" id="chkCategoryBoard" class = "boardTypeEventHandler" checked />
+	                	<input type="checkbox" id="chkCategoryBoard" onclick="checkboardtype()" checked />
 	                	<spring:message code="ezBoard.MJSCAT01" />
 	                </c:if>
 	                <c:if test="${model.guBun != '10'}">
-	                	<input type="checkbox" id="chkCategoryBoard" class = "boardTypeEventHandler" />
+	                	<input type="checkbox" id="chkCategoryBoard" onclick="checkboardtype()" />
 	                	<spring:message code="ezBoard.MJSCAT01"/>
 	                </c:if>
 	            </td>
