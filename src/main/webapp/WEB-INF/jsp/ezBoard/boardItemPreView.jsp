@@ -256,7 +256,7 @@
 		    		<table id="topTable" class="content" style="width:100%; height:100%;">
 						<!-- 게시자&부서 -->
 						<tr>
-							<th style="width:10%;"><spring:message code='ezBoard.t207'/></th> 
+							<th style="width:10%;"><spring:message code='ezBoard.t223'/></th> 
 							<%-- 2019-09-17 홍승비 - 익명게시판 게시물 작성 시 미리보기 TD 수정 --%>
 							<c:choose>
 								<c:when test="${guBun == '2'}">
