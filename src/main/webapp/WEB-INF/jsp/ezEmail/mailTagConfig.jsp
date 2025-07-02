@@ -317,20 +317,40 @@
 	</div>
 	<table class="content" style="width: 680px;">
 		<tr>
-			<th><spring:message code='ezEmail.tag.config.enable' /></th>
-			<td> 
-				<input type="radio" id='enable_1' name="enable" value="1" onchange="onChangeEnable();"<c:if test="${config.enable}"> checked="checked"</c:if>><label for='enable_1'><spring:message code='ezEmail.tag.config.enabled' /></label>
-				<input type="radio" id='enable_2' name="enable" value="" onchange="onChangeEnable();"<c:if test="${not config.enable}"> checked="checked"</c:if>><label for='enable_2'><spring:message code='ezEmail.tag.config.disabled' /></label>
-			</td>
-		</tr>
-		<tr class="enable_only">
-			<th><spring:message code='ezEmail.tag.config.orderby' /></th>
-			<td>
-				<input type="radio" id='orderby_1' name="orderby" value="" onchange="onChangeOrderBy();"<c:if test="${empty config.orderby}"> checked="checked"</c:if>><label for='orderby_1'><spring:message code='ezEmail.tag.config.orderby.name' /></label>
-				<input type="radio" id='orderby_2' name="orderby" value="count" onchange="onChangeOrderBy();"<c:if test="${config.orderby eq 'count'}"> checked="checked"</c:if>><label for='orderby_2'><spring:message code='ezEmail.tag.config.orderby.count' /></label>
-				<input type="radio" id='orderby_3' name="orderby" value="date" onchange="onChangeOrderBy();"<c:if test="${config.orderby eq 'date'}"> checked="checked"</c:if>><label for='orderby_3'><spring:message code='ezEmail.tag.config.orderby.date' /></label>
-			</td>
-		</tr>
+          <th><spring:message code='ezEmail.tag.config.enable' /></th>
+          <td> 
+            <div class="custom_radio">
+              <label for="enable_1">
+                <input type="radio" id="enable_1" name="enable" value="1" onchange="onChangeEnable();"<c:if test="${config.enable}"> checked="checked"</c:if>>
+                <spring:message code='ezEmail.tag.config.enabled' />
+              </label>
+              <label for="enable_2">
+                <input type="radio" id="enable_2" name="enable" value="" onchange="onChangeEnable();"<c:if test="${not config.enable}"> checked="checked"</c:if>>
+                <spring:message code='ezEmail.tag.config.disabled' />
+              </label>
+            </div>
+          </td>
+        </tr>
+        
+        <tr class="enable_only">
+          <th><spring:message code='ezEmail.tag.config.orderby' /></th>
+          <td>
+            <div class="custom_radio">
+              <label for="orderby_1">
+                <input type="radio" id="orderby_1" name="orderby" value="" onchange="onChangeOrderBy();"<c:if test="${empty config.orderby}"> checked="checked"</c:if>>
+                <spring:message code='ezEmail.tag.config.orderby.name' />
+              </label>
+              <label for="orderby_2">
+                <input type="radio" id="orderby_2" name="orderby" value="count" onchange="onChangeOrderBy();"<c:if test="${config.orderby eq 'count'}"> checked="checked"</c:if>>
+                <spring:message code='ezEmail.tag.config.orderby.count' />
+              </label>
+              <label for="orderby_3">
+                <input type="radio" id="orderby_3" name="orderby" value="date" onchange="onChangeOrderBy();"<c:if test="${config.orderby eq 'date'}"> checked="checked"</c:if>>
+                <spring:message code='ezEmail.tag.config.orderby.date' />
+              </label>
+            </div>
+          </td>
+        </tr>
 	</table>
 	<br />
 	<div class="enable_only">

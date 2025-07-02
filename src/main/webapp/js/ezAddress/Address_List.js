@@ -161,6 +161,7 @@ function MakeAddressList() {
             _TR.setAttribute("_CreatorID", CreatorID);
             _TR.setAttribute("_Sname", Sname);
             _TR.setAttribute("_Semail", Semail);
+            
             if (searchFlag) {
                 document.getElementById("FolderType").style.display = "";
                 _TR.setAttribute("_FolderType", FolderType);
@@ -175,6 +176,7 @@ function MakeAddressList() {
             _TR.onmouseover = function () { event_listMover(this); };
             _TR.onmouseout = function () { event_listMout(this); };
             _TR.onclick = function () { event_listclick(this); };
+            
             if (searchFlag)
                 _TR.ondblclick = function () { event_SearchlistDBClick(this); };
             else
@@ -184,6 +186,12 @@ function MakeAddressList() {
             _TD1.style.width = "20px";
             _TD1.style.margin = "0px";
             _TD1.style.textAlign = "center";
+            
+            //div 래퍼 생성
+            var _divWrapper = document.createElement("div");
+            _divWrapper.className = "custom_checkbox";
+
+            //checkbox 생성
             var _TDCheckBox_Sub = document.createElement("INPUT");
             _TDCheckBox_Sub.type = "checkbox";
             _TDCheckBox_Sub.style.margin = "0px";
@@ -198,7 +206,10 @@ function MakeAddressList() {
             _TDCheckBox_Sub.setAttribute("_Changekey", Changekey);
             _TDCheckBox_Sub.setAttribute("_ModifierID", ModifierID);
             _TDCheckBox_Sub.setAttribute("_CreatorID", CreatorID);
-            _TD1.appendChild(_TDCheckBox_Sub);
+            
+            // checkbox → div → td → tr 구조로 삽입
+            _divWrapper.appendChild(_TDCheckBox_Sub);
+            _TD1.appendChild(_divWrapper);
             _TR.appendChild(_TD1);
 
             var _TD2 = document.createElement("TD");
@@ -693,6 +704,84 @@ function HiddenMailProgress() {
     document.getElementById("mailPanel").style.display = "none";
     document.getElementById("MailProgress").style.display = "none";
 }
+
+var listContentArry = [];
+var listEventCheckbox = false;
+var _RowObject = null;
+
+function event_listCheckboxclick(obj) {
+    const row = obj.closest('tr');
+    if (!row) return;
+
+    const isChecked = obj.checked;
+    const rowId = row.getAttribute("id");
+
+    // 배경색 변경
+    const tds = row.querySelectorAll('td');
+    tds.forEach(td => {
+        td.style.backgroundColor = isChecked ? m_strColorSelect : m_strColorDefault;
+    });
+
+    if (isChecked) {
+        if (!listContentArry.includes(rowId)) {
+            listContentArry.push(rowId);
+        }
+    } else {
+        listContentArry = listContentArry.filter(id => id !== rowId);
+    }
+
+    listEventCheckbox = true;
+}
+
+function event_HeaderCheckBoxClick(obj) {
+    const mailList = document.getElementById("MailList");
+
+    // 데이터 없는 경우 종료
+    if (mailList.childNodes.length === 0 || mailList.querySelector('tr#noData')) return;
+
+    const rows = mailList.querySelectorAll("tr");
+    listContentArry = [];
+
+    rows.forEach((row, index) => {
+        const checkbox = row.querySelector('td .custom_checkbox input[type="checkbox"]');
+        if (!checkbox) return;
+
+        if (obj.checked) {
+            checkbox.checked = true;
+            listContentArry.push(row.id);
+
+            row.querySelectorAll("td").forEach(td => {
+                td.style.backgroundColor = m_strColorSelect;
+            });
+        } else {
+            checkbox.checked = false;
+
+            row.querySelectorAll("td").forEach(td => {
+                td.style.backgroundColor = m_strColorDefault;
+            });
+        }
+    });
+}
+
+function event_listMover(row) {
+    const checkbox = row.querySelector('td .custom_checkbox input[type="checkbox"]');
+    if (checkbox && !checkbox.checked) {
+        row.querySelectorAll("td").forEach(td => {
+            td.style.backgroundColor = m_strColorOver;
+        });
+    }
+}
+
+function event_listMout(row) {
+    const checkbox = row.querySelector('td .custom_checkbox input[type="checkbox"]');
+    if (checkbox && !checkbox.checked) {
+        row.querySelectorAll("td").forEach(td => {
+            td.style.backgroundColor = m_strColorDefault;
+        });
+    }
+}
+
+/*
 var listContentArry = new Array();
 var listEventCheckbox = false;
 var _RowObject = null;
@@ -758,7 +847,7 @@ function event_listMout(obj) {
             obj.childNodes.item(RowCnt).style.backgroundColor = m_strColorDefault;
         }
     }
-}
+}*/
 var PressShiftKey = false;
 var PressCtrlKey = false;
 function event_listOnkeyUp(event) {
@@ -852,6 +941,74 @@ function event_Cardlistclick(obj) {
     else
         listEventCheckbox = false;
 }
+
+function toggleRowStyle(row, color) {
+    row.querySelectorAll("td").forEach(td => td.style.backgroundColor = color);
+}
+
+function updateRowSelection(row, select) {
+    const checkbox = row.querySelector('input[type="checkbox"]');
+    const rowId = row.getAttribute('id');
+    checkbox.checked = select;
+    toggleRowStyle(row, select ? m_strColorSelect : m_strColorDefault);
+
+    if (select && !listContentArry.includes(rowId)) {
+        listContentArry.push(rowId);
+    } else if (!select) {
+        listContentArry = listContentArry.filter(id => id !== rowId);
+    }
+}
+
+function clearAllSelections() {
+    listContentArry.forEach(id => {
+        const row = document.getElementById(id);
+        if (row) updateRowSelection(row, false);
+    });
+    listContentArry = [];
+}
+
+function event_listclick(row) {
+    if (listEventCheckbox) {
+        listEventCheckbox = false;
+        return;
+    }
+
+    const checkbox = row.querySelector('input[type="checkbox"]');
+    const rowId = row.getAttribute('id');
+    const isChecked = checkbox.checked;
+
+    const headerCheckbox = document.getElementById("HeaderAllCheckBox");
+
+    if (headerCheckbox && headerCheckbox.checked) {
+        updateRowSelection(row, !isChecked);
+        return;
+    }
+
+    // Ctrl, Shift 없는 일반 클릭이면 기존 선택 해제
+    if (!PressCtrlKey && !PressShiftKey && listContentArry.length > 0) {
+        clearAllSelections();
+    }
+
+    if (PressShiftKey && listContentArry.length > 0) {
+        let firstId = listContentArry[0];
+        let start = parseInt(firstId.replace("Maillist_", ""), 10);
+        let end = parseInt(rowId.replace("Maillist_", ""), 10);
+
+        if (isNaN(start) || isNaN(end)) return;
+
+        if (start > end) [start, end] = [end, start];
+
+        clearAllSelections();
+
+        for (let i = start; i <= end; i++) {
+            const targetRow = document.getElementById(`Maillist_${i}`);
+            if (targetRow) updateRowSelection(targetRow, true);
+        }
+    } else {
+        updateRowSelection(row, !isChecked);
+    }
+}
+/*
 function event_listclick(obj) {
     if (!listEventCheckbox) {
         if (document.getElementById("HeaderAllCheckBox").checked) {
@@ -968,7 +1125,7 @@ function event_listclick(obj) {
     }
     else
         listEventCheckbox = false;
-}
+}*/
 
 function event_listDBClick(obj) {
     var pAddressID = obj.getAttribute("_AddressID");
