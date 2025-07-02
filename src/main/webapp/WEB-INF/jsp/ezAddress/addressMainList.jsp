@@ -1108,7 +1108,9 @@
 				<table class="mainlist" id="DetailList_header" style="table-layout: fixed;width:100%; display: none;">
 				    <tr>
 						<th style="cursor:pointer;text-align:center;width:20px;">
-					    	<input type="checkbox" id="HeaderAllCheckBox" onClick="event_HeaderCheckBoxClick(this)">
+						    <div class='custom_checkbox'>
+					    	    <input type="checkbox" id="HeaderAllCheckBox" onClick="event_HeaderCheckBoxClick(this)">
+					    	</div>
 						</th>
 						<th style="text-align:center;width:40px;vertical-align: middle;padding:0px"><img src="/images/i_individual.gif" border="0"></th>
 						<th id="CompanyName" style="padding-left:5px; CURSOR:pointer;width:20%;white-space:nowrap;" _OrderOption="1" _OrderName="S_NAME" onClick="OderbyOptionExpression(this)" ><spring:message code='ezAddress.t124' /><span id="S_NAME"></span></th>
