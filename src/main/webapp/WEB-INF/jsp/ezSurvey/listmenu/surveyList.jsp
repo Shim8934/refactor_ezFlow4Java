@@ -136,7 +136,7 @@
 							<th headers="period"  class="endDateTh"><spring:message code='ezSurvey.t26'/></th>
 <%--							<th headers="ut"  class="targetTh" ><spring:message code='ezSurvey.t30'/></th>--%>
 <%--							<th headers="pl"  class="publicTh" ><spring:message code='ezSurvey.t31'/></th>--%>
-<%--							<th headers="an"  class="anoynmTh" ><spring:message code='ezSurvey.t32'/></th>--%>
+							<th headers="an"  class="anoynmTh" ><spring:message code='ezSurvey.t32'/></th>
 							<th headers="participants"    class="statusTh" ><spring:message code='ezSurvey.listHeader.pgb01'/></th>
 							<th headers="participation"    class="statusTh" ><spring:message code='ezSurvey.listHeader.pgb02'/></th>
 							<th headers=""    class="statusTh" ><spring:message code='ezSurvey.t81'/></th>

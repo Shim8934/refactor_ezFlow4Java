@@ -658,7 +658,7 @@ var SurveyItem = function() {
 				trElmt.appendChild(tdPeriod);
 				// trElmt.appendChild(tdElmt6);
 				// trElmt.appendChild(tdElmt7);
-				// trElmt.appendChild(tdElmt8);
+				trElmt.appendChild(tdElmt8);
 				trElmt.appendChild(tdParticipants);
 				trElmt.appendChild(tdParticipation);
 				trElmt.appendChild(tdElmt10);
