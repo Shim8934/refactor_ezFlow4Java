@@ -7387,7 +7387,7 @@
 					)
 		]]>
 		<isNotEmpty property="v_SEARCH_TITLE">
-			AND UPPER(TITLE) like UPPER(CONCAT('%', #v_SEARCH_TITLE#, '%')
+			AND UPPER(TITLE) like UPPER(CONCAT('%', #v_SEARCH_TITLE#, '%'))
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_CONTENT">
 		 	AND (
