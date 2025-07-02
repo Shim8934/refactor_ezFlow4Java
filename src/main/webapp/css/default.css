@@ -2956,8 +2956,8 @@ h2, #menu span {font-size: 12px;}
 .surveyTbl .statusTh {width: 80px; text-align: center;}
 .surveyTbl .noTh   {width: 20px; text-align: center;}
 .surveyTbl .ttlTh  {width: 60%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
-.surveyTbl .createTh {width: 15%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: center;}
-.surveyTbl .endDateTh {width: 15%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: center;}
+.surveyTbl .createTh {width: 16%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: center;}
+.surveyTbl .endDateTh {width: 16%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: center;}
 .surveyTbl .anoynmTh, .surveyTbl .publicTh, .surveyTbl .targetTh {width: 80px; text-align: center;}
 .surveyTbl .statisTh {width: 40px;}
 .spanName, .selectedNode {height: 22px; line-height: 22px; color: #000; padding-top: 1px; font-size: 12px; vertical-align: top; cursor: pointer; background-image: none; background-attachment: scroll; background-repeat: repeat; background-position-x: 0%; background-position-y: 0%; background-color: transparent; margin-left: 2px; white-space: pre;}
