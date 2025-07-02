@@ -10765,7 +10765,7 @@
 		WHERE
 			A.BOARDID = #boardID#
 	  	AND
-			A.COMPANYID = #companyID#
+			(A.COMPANYID = #companyID# OR A.COMPANYID IS NULL)
 	  	AND
 			A.TENANT_ID = #tenantID#
 	  	AND
