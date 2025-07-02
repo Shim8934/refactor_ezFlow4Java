@@ -1215,3 +1215,5 @@ var strLangAtachHIK_02 = "MB까지 가능합니다._JP";
 /* 전자결재 사인 그리기 기능 */
 var strLangJIHSignDraw01 = "署名をした後、決裁してください。";
 var strLangJIHSignDraw02 = "署名の保存中にエラーが発生しました。";
+
+var strLangKm01 = "文書を回収しました。";

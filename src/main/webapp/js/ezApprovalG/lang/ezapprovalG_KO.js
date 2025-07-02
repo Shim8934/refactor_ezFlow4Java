@@ -1216,3 +1216,5 @@ var strLangAtachHIK_02 = "MB까지 가능합니다.";
 /* 전자결재 사인 그리기 기능 */
 var strLangJIHSignDraw01 = "서명을 작성한 뒤 결재해주세요.";
 var strLangJIHSignDraw02 = "사인 저장 중 오류가 발생하였습니다.";
+
+var strLangKm01 = "문서를 회수하였습니다.";

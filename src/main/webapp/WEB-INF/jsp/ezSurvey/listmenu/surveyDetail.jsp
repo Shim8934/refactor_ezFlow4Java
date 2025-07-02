@@ -1345,7 +1345,14 @@
 					}
 				}
 				
-				if (checkResult == 0 || checkResult == "") {
+				if (type != 9 && (checkResult == 0 || checkResult == "")) {
+					alert(id + SurveyMessages.strIncomplete);
+					result = "fail";
+					break;
+				}
+				
+				/*드롭다운 첫번째 허용 */
+				if(type == 9 && checkResult == ""){
 					alert(id + SurveyMessages.strIncomplete);
 					result = "fail";
 					break;

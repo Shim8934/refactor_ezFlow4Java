@@ -619,7 +619,7 @@
 	            }
 	        }
 			
-			function checkboardtype() {
+			function checkboardtype(clickedTargetID) {
 				let nodeBuf;
 				let chkboxArr = document.getElementById("boardTypeList").querySelectorAll("input");
 				let cnt = 0;
@@ -806,7 +806,7 @@
 	            
 	            // 2024-10-04 전인하 - 모든 게시판구분 설정을 제거한다면 일반게시판을 체크하도록 함
 	            if (chkGeneralBoard.checked == false && chkAnonyBoard.checked == false && chkPhotoBoard.checked == false && chkThumbBoard.checked == false && 
-	            chkMovieBoard.checked == false && chkQnABoard.checked == false && chkURLBoard.checked == false && chkHomePageBoard.checked == false && chkCategoryBoard.checked == false) {
+	            chkMovieBoard.checked == false && chkQnABoard.checked == false && chkURLBoard.checked == false && chkHomePageBoard.checked == false && chkCategoryBoard.checked == false && fileViewerBoardChkBox.checked == false) {
 	                chkGeneralBoard.checked = true;
 	                checkboardtype();
 	            }
@@ -1364,11 +1364,11 @@
 					
 					<%-- 2023-11-03 민지수 - 카테고리게시판 구분 추가 --%>
 	                <c:if test="${model.guBun == '10' }">
-	                	<input type="checkbox" id="chkCategoryBoard" onclick="checkboardtype()" checked />
+	                	<input type="checkbox" id="chkCategoryBoard" class = "boardTypeEventHandler" checked />
 	                	<spring:message code="ezBoard.MJSCAT01" />
 	                </c:if>
 	                <c:if test="${model.guBun != '10'}">
-	                	<input type="checkbox" id="chkCategoryBoard" onclick="checkboardtype()" />
+	                	<input type="checkbox" id="chkCategoryBoard" class = "boardTypeEventHandler" />
 	                	<spring:message code="ezBoard.MJSCAT01"/>
 	                </c:if>
 	            </td>

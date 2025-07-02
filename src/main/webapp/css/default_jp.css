@@ -117,3 +117,4 @@ table, th, td{font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, s
 
 .boardTxtURL {width: 70%;}
 .qstnWrapper .quesDiv .fileAttTooltip {width: 160px;}
+#calSearch .checkmark {transform: translateY(-4px);}
