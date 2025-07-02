@@ -10752,22 +10752,6 @@
 	  	AND
 			C.GUID = 0
 	</select>
-
-	<select id = "EzBoardDAO.hasBoardItemFlag" parameterClass = "map" resultClass = "String">
-		SELECT
-			CASE
-				WHEN COUNT(1) >= 1 THEN
-					'Y'
-				ELSE
-					'N'
-				END
-		FROM
-			TBL_BOARD_ITEM
-		WHERE
-			BOARDID = #boardID#
-	  	AND
-			TENANT_ID = #tenantID#
-	</select>
 	
 	<select id="EzBoardDAO.isPostDuplicated1" parameterClass="map" resultClass="Integer">
 		SELECT
