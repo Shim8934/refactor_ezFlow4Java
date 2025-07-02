@@ -4121,12 +4121,13 @@ public class EzBoardController extends EgovFileMngUtil{
 			// 익명일 경우 비번 체크
 			if ("2".equals(boardProp.getGuBun()) || boardItemVO.getWriterID() == null) {
 				rtv = ezBoardService.chkPasswordAnonymous(boardItemVO.getItemID(), password, userInfo.getTenantId());
-			} else {
-				rtv = boardItemVO.getWriterID().equalsIgnoreCase(userInfo.getId());
 			}
 		}
 		
-		//logger.debug("accessCheck rtv      ::     " + rtv);
+		// 어떤 경우든 본인이 작성한 게시글에는 접근할 수 있게 함
+		if (boardItemVO != null) {
+			rtv = boardItemVO.getWriterID().equalsIgnoreCase(userInfo.getId());
+		}
 		logger.debug("accessCheck ended");
 		return rtv;
     }
@@ -4188,7 +4189,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String userId = userInfo.getId();
 		String offset = userInfo.getOffset();
 		
-		if (!boardInfo.getRead_FG().equals("true")) {
+		if (!boardInfo.getRead_FG().equals("true") && !boardItem.getWriterID().equals(userInfo.getId())) {
 			return "main/warning";
 		} else if ("5".equals(guBun) && "false".equals(boardInfo.getBoardAdmin_FG())) {
 			// 게시관리자가 아닌 사람은 QNA게시판에서 본인이 쓴 게시물과, 본인이 쓴 게시물에 달린 답 게시물, 공지게시물만 볼 수 있음
@@ -6520,14 +6521,14 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
 		
-		if (!boardInfo.getRead_FG().equals("true")) {
-			return "main/warning";
-		}
-		
 		if (mode == null || !mode.equals("temp")) {
 			boardItem = ezBoardService.getBrdGetItemInfo(boardID, itemID, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
 		} else {
 			boardItem = ezBoardService.getBrdGetItemInfoTemp(boardID, itemID, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
+		}
+						
+		if (!boardInfo.getRead_FG().equals("true") && !boardItem.getWriterID().equals(userInfo.getId())) {
+			return "main/warning";
 		}
 		
 		ezBoardService.setAsRead(userInfo, boardID, itemID);
@@ -9420,10 +9421,16 @@ public class EzBoardController extends EgovFileMngUtil{
 		String mode = request.getParameter("mode");
 		String likeCount = request.getParameter("likeCount");
 		String disLikeCount = request.getParameter("disLikeCount");
-		
+		BoardListVO boardItem = null;
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
 		
-		if (!boardInfo.getRead_FG().equals("true")) {
+		if (mode == null || !mode.equals("temp")) {
+			boardItem = ezBoardService.getBrdGetItemInfo(boardID, itemID, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
+		} else {
+			boardItem = ezBoardService.getBrdGetItemInfoTemp(boardID, itemID, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
+		}
+		
+		if (!boardInfo.getRead_FG().equals("true") && !boardItem.getWriterID().equals(userInfo.getId())) {
         	return "main/warning";
         }
 		
@@ -10791,15 +10798,15 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
 		
-		if (!boardInfo.getRead_FG().equals("true")) {
-			return "main/warning";
-		}
-		
 		if (mode == null || !mode.equals("temp")) {
 			boardItem = ezBoardService.getBrdGetItemInfo(boardID, itemID, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
 		} else {
 			boardItem = ezBoardService.getBrdGetItemInfoTemp(boardID, itemID, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
 		}
+		
+		if (!boardInfo.getRead_FG().equals("true") && !boardItem.getWriterID().equals(userInfo.getId())) {
+        	return "main/warning";
+        }
 		
 		ezBoardService.setAsRead(userInfo, boardID, itemID);
 		
@@ -11041,10 +11048,16 @@ public class EzBoardController extends EgovFileMngUtil{
 		String mode = request.getParameter("mode");
 		String likeCount = request.getParameter("likeCount");
 		String disLikeCount = request.getParameter("disLikeCount");
-		
+		BoardListVO boardItem = null;
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
 		
-		if (!boardInfo.getRead_FG().equals("true")) {
+		if (mode == null || !mode.equals("temp")) {
+			boardItem = ezBoardService.getBrdGetItemInfo(boardID, itemID, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
+		} else {
+			boardItem = ezBoardService.getBrdGetItemInfoTemp(boardID, itemID, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
+		}
+		
+		if (!boardInfo.getRead_FG().equals("true") && !boardItem.getWriterID().equals(userInfo.getId())) {
         	return "main/warning";
         }
 		
@@ -11838,12 +11851,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		String contentLocation = "";
 		
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
-		
-		// 리스트뷰 보기, 읽기권한이 모두 true여야 접근 가능 (사실상 게시물 접근이므로)
-		if (!boardInfo.getListView_FG().equals("true") || !boardInfo.getRead_FG().equals("true")) {
-			return "main/warning";
-		}
-		
 		String guBun = boardInfo.getGuBun();
 		
 		// 공지사항을 무시하고 가장 최신 게시물 하나의 정보를 가져온다. 기본적으로 관리자단 리스트 표출 순서와 동일함
@@ -11856,7 +11863,10 @@ public class EzBoardController extends EgovFileMngUtil{
 			if (boardItem == null) {
 				return "main/warning";
 			}
-			
+			// 리스트뷰 보기, 읽기권한이 모두 true여야 접근 가능 (사실상 게시물 접근이므로)
+			if (!boardInfo.getListView_FG().equals("true") || (!boardInfo.getRead_FG().equals("true") && !boardItem.getWriterID().equals(userInfo.getId()))) {
+				return "main/warning";
+			}
 			contentLocation = boardItem.getContentLocation();
 			
 			ezBoardService.setAsRead(userInfo, boardID, itemID);

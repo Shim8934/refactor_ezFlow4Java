@@ -788,7 +788,8 @@
 		    }
 		    
 		    function ItemRead_onclick(obj) {
-		        if (Read_FG != "true") {
+		        let pWriterName = obj.getAttribute("data3");
+		        if (Read_FG != "true" && !(pWriterName == null || pWriterName == SSUserID)) {
 		            alert("<spring:message code='ezBoard.t194' />");
 		            return;
 		        }
@@ -1094,11 +1095,6 @@
 		    /* 2018-07-11 홍승비 - 게시물 복사 시 guBun 파라미터 추가 */
 		    var copyboarditem_cross_dialogArguments = new Array();
 		    function CopyItem_onclick() {
-		        if (Read_FG != "true") {
-		            alert("<spring:message code='ezBoard.t202' />");
-		            return;
-		        }
-				
 		        if (strListInfo == "" || strListInfo === "undefined") {
 		            alert("<spring:message code='ezBoard.t201' />");
 		            return;
@@ -1120,6 +1116,10 @@
 		
 		        arrList = strListInfo.split(";");
 		        for (i = 0; i < arrList.length - 1; i++) {
+                    if ((!!arrList[i].split(",")[1] && arrList[i].split(",")[1] != SSUserID) && Read_FG != "true") {
+                        alert("<spring:message code='ezBoard.t194' />");
+                        return;
+                    }
 		            strItemList += arrList[i].split(",")[0] + ";";
 		        }
 		        arrList = null;
@@ -1150,10 +1150,6 @@
 		
 		    var moveboarditem_cross_dialogArguments = new Array();
 		    function MoveItem_onclick() {
-		        if (Read_FG != "true") {
-		            alert("<spring:message code='ezBoard.t202' />");
-		            return;
-		        }
 		        if (strListInfo == "" || strListInfo === "undefined") {
 		            alert("<spring:message code='ezBoard.t497' />");
 		            return;
@@ -1178,6 +1174,10 @@
 		        var i = 0;
 		        arrList = strListInfo.split(";");
 		        for (i = 0; i < arrList.length - 1; i++) {
+                    if ((!!arrList[i].split(",")[1] && arrList[i].split(",")[1] != SSUserID) && Read_FG != "true") {
+                        alert("<spring:message code='ezBoard.t194' />");
+                        return;
+                    }
 		            strItemList += arrList[i].split(",")[0] + ";";
 		        }
 		        arrList = null;
@@ -1219,10 +1219,6 @@
 		        }
 		    }
 		    function SetRead_onclick() {
-		        if (Read_FG != "true") {
-		            alert("<spring:message code='ezBoard.t194' />");
-		            return;
-		        }
 		        if (strListInfo == "" || strListInfo === "undefined") {
 		            alert("<spring:message code='ezBoard.t198' />");
 		            return;
@@ -1234,6 +1230,10 @@
 		            var i = 0;
 		            arrList = strListInfo.split(";");
 		            for (i = 0; i < arrList.length - 1; i++) {
+		                if ((!!arrList[i].split(",")[1] && arrList[i].split(",")[1] != SSUserID) && Read_FG != "true") {
+		                    alert("<spring:message code='ezBoard.t194' />");
+		                    return;
+		                }
 		                strItemList += arrList[i].split(",")[0] + ";";
 		            }
 		            arrList = null;
@@ -1666,17 +1666,16 @@
 				var i = 0;
 				arrList = strListInfo.split(";");
 
-				if (Read_FG != "true") {
-					alert("<spring:message code='ezBoard.t202' />");
-					return;
-				}
-
 				if(arrList.length == "1"){
 					alert("<spring:message code='ezBoard.kmh15'/>");
 					return;
 				}
 
 				for (i = 0; i < arrList.length - 1; i++) {
+                    if ((!!arrList[i].split(",")[1] && arrList[i].split(",")[1] != SSUserID) && Read_FG != "true") {
+                        alert("<spring:message code='ezBoard.t194' />");
+                        return;
+                    }
 					strItemList += arrList[i].split(",")[0] + ";";
 				}
                 
@@ -1718,6 +1717,87 @@
 				}
 			}
 
+	   	 	/*  2023-05-22 기민혁 - 나의보관함 나의 보관함 추가 버튼 클릭시 보관함 관리 페이지 호출 */
+	    	function SaveStorageMyBoard(){
+	    		var arrList = new Array();
+	            var strItemList = "";
+	            var i = 0;
+	            arrList = strListInfo.split(";");
+
+	            if(arrList.length == "1"){
+	            	alert("<spring:message code='ezBoard.kmh01'/>");
+	            	return;
+	            }
+
+	            for (i = 0; i < arrList.length - 1; i++) {
+                    if ((!!arrList[i].split(",")[1] && arrList[i].split(",")[1] != SSUserID) && Read_FG != "true") {
+                        alert("<spring:message code='ezBoard.t194' />");
+                        return;
+                    }
+					strItemList += arrList[i].split(",")[0] + ";";
+				}
+
+    	        var url = "/ezBoard/selUserStorageCont.do";
+    	        ContOpen = GetOpenWindow(url + "?itemID=" + encodeURIComponent(strItemList) + "&boardID=" + encodeURIComponent(pBoardID), "selUserCont", 500, 460, "NO");
+    	        try { ContOpen.focus() } catch (e) { }
+	    	}
+
+	    	// 2023-12-12 전인하 - 게시판 > 분류 선택 셀렉트박스 생성조건 체크 및 생성
+            function searchoptionCheckCategoryExist() {
+                var isCategoryExist = "N";
+                $('#BoardList_TH').children().each(function(index, item) {
+                    if ($(item).attr('colname') == "CATEGORYNAME" && (gubun == '0' || gubun == '5')) {
+                        isCategoryExist = "Y";
+                    }
+                });
+                if ((gubun == '0' || gubun == '5') && isCategoryExist == "Y") {
+                    makeCategorySelectbox();
+                    $('#categorySearch').show();
+                } else {
+                    $('#categorySearch').hide();
+                }
+            }
+
+            // 2023-12-12 전인하 - 게시판 > 분류 선택 셀렉트박스 만들기
+	   	    function makeCategorySelectbox() {
+                var result = getCategoryList();
+                var pCategorySelectBox = document.getElementById("txtCategory");
+                $('#txtCategory').empty();
+
+                var firstOption = document.createElement("option");
+                firstOption.value = "ALL";
+                firstOption.text = "==ALL==";
+                pCategorySelectBox.add(firstOption);
+
+                for (var i = 0; i < result.length; i++) {
+                    var option = document.createElement("option");
+                    option.value = result[i].categoryId;
+                    option.text = result[i].categoryName;
+                    pCategorySelectBox.add(option);
+                }
+	   	    }
+
+            // 2023-12-06 전인하 - 게시판 분류 선택 셀렉트박스 생성
+            function getCategoryList() {
+                var retVal;
+                $.ajax({
+                    type : "GET",
+                    dataType : "json",
+                    async : false,
+                    url : "/ezBoard/getCategoryList.do",
+                    data : {
+                        boardID : pBoardID,
+                        isAdminPage : "user"
+                    },
+                    success: function(result) {
+                        retVal = result;
+                    },
+                    error: function(e) {
+                        console.log(e);
+                    }
+                });
+                return retVal;
+            }
 		</script>
 	</head>
 	<c:choose>

@@ -584,10 +584,6 @@
 		    }
 		
 		    function SetRead_onclick() {
-		        if (Read_FG != "true") {
-		            alert("<spring:message code='ezBoard.t194'/>");
-		            return;
-		        }
 		        if (strListInfo == "") {
 		            alert("<spring:message code='ezBoard.t198'/>");
 		            return;
@@ -599,6 +595,10 @@
 		            var i = 0;
 		            arrList = strListInfo.split(";");
 		            for (i = 0; i < arrList.length - 1; i++) {
+		                if ((!!arrList[i].split(",")[1] && arrList[i].split(",")[1] != SSUserID) && Read_FG != "true") {
+		                    alert("<spring:message code='ezBoard.t194' />");
+		                    return;
+		                }
 		                strItemList += arrList[i].split(",")[0] + ";";
 		            }
 		            arrList = null;

@@ -809,8 +809,9 @@
 		    }
 		
 		    function ItemRead_onclick(obj) {
-		        if (Read_FG != "true") {
-		            alert("<spring:message code='ezBoard.t194'/>");
+		        let pWriterName = obj.getAttribute("data3");
+		        if (Read_FG != "true" && !(pWriterName == null || pWriterName == SSUserID)) {
+		            alert("<spring:message code='ezBoard.t194' />");
 		            return;
 		        }
 		
@@ -1135,10 +1136,6 @@
 		    } */
 		    
 		    function SetRead_onclick() {
-		        if (Read_FG != "true") {
-		            alert("<spring:message code='ezBoard.t194'/>");
-		            return;
-		        }
 		        if (strListInfo == "" || strListInfo === "undefined") {
 		            alert("<spring:message code='ezBoard.t198'/>");
 		            return;
@@ -1149,9 +1146,15 @@
 		            var strItemList = "";
 		            var i = 0;
 		            arrList = strListInfo.split(";");
-		            for (i = 0; i < arrList.length - 1; i++) {
-		                strItemList += arrList[i].split(",")[0] + ";";
-		            }
+		            
+                    for (i = 0; i < arrList.length - 1; i++) {
+                        if ((!!arrList[i].split(",")[1] && arrList[i].split(",")[1] != SSUserID) && Read_FG != "true") {
+                            alert("<spring:message code='ezBoard.t194' />");
+                            return;
+                        }
+                        strItemList += arrList[i].split(",")[0] + ";";
+                    }
+                    
 		            arrList = null;
 		            var xmlhttp = createXMLHttpRequest();
 		            xmlhttp.open("POST", "/ezBoard/setRead.do?boardID=" + encodeURIComponent(pBoardID) + "&itemIDList=" + encodeURIComponent(strItemList), false);
@@ -1553,17 +1556,18 @@
                 var i = 0;
                 arrList = strListInfo.split(";");
 
-                if (Read_FG != "true") {
-                    alert("<spring:message code='ezBoard.t202' />");
-                    return;
-                }
-                
-                if(arrList.length == "1"){
-                    alert("<spring:message code='ezBoard.kmh15'/>");
+                if (arrList.length == "1") {
+                    alert("<spring:message code='ezBoard.kmh15' />");
                     return;
                 }
                 
                 for (i = 0; i < arrList.length - 1; i++) {
+                    if ((!!arrList[i].split(",")[1] && arrList[i].split(",")[1] != SSUserID) && Read_FG != "true"){
+                    alert("<spring:message code='ezBoard.t194'/>");
+                    return;
+                }
+                
+                
                     strItemList += arrList[i].split(",")[0] + ";";
                 }
                 

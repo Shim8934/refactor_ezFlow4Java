@@ -465,8 +465,9 @@
 		    }
 		
 		    function ItemRead_onclick(obj) {
-		        if (Read_FG != "true") {
-		        	alert(strLang175);
+		        let pWriterName = obj.getAttribute("data3");
+		        if (Read_FG != "true" && !(pWriterName == null || pWriterName == SSUserID)) {
+		            alert("<spring:message code='ezBoard.t194' />");
 		            return;
 		        }
 		
