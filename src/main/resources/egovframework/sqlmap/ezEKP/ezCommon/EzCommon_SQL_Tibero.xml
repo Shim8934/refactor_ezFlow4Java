@@ -1701,7 +1701,7 @@
 			AND D.JOBID = #jobID#
 		</isNotEmpty>
 		<isEmpty property="jobID">
-			AND D.JOBID IS NULL
+			AND (D.JOBID IS NULL OR D.JOBID = '')
 		</isEmpty>
 	</select>
 
@@ -7612,4 +7612,60 @@
 		    )
 		)
     </statement>
+
+	<select id="EzCommonDAO.checkMailboxProgressStateColumns" resultClass="String">
+		SELECT STATE FROM JMOCHA_MAILBOX_PROGRESS WHERE ROWNUM = 1
+	</select>
+
+	<statement id="EzCommonDAO.addMailboxProgressStateColumns">
+		ALTER TABLE JMOCHA_MAILBOX_PROGRESS
+			ADD (STATE NVARCHAR2(20), STATE_DESCRIPTION NVARCHAR2(100))
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblBoardModifyHistory">
+	<![CDATA[
+		SELECT
+			ITEMID
+		FROM
+			TBL_BOARD_MODIFYHISTORY
+		WHERE
+			ROWNUM <= 1
+	]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblBoardModifyHistory">
+	CREATE TABLE TBL_BOARD_MODIFYHISTORY (
+	    ITEMID NVARCHAR2(40),
+	    PARENTITEMID NVARCHAR2(40),
+	    VERSION NVARCHAR2(5),
+	    MODIFYUSERID NVARCHAR2(80),
+	    MODIFYUSERNAME NVARCHAR2(120),
+	    MODIFIEDDATE DATE,
+	    TENANT_ID NUMBER(5, 0),
+	    CONSTRAINT PK_TBL_BOARD_MODIFYHISTORY PRIMARY KEY (ITEMID, TENANT_ID)
+	)
+	</statement>
+
+	<insert id="EzCommonDAO.insertUseSendOutState">
+		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+		VALUES (#tenantID#, 'useSendOutState', 'NO', '관리자페이지 대외발송현황 메뉴 표출여부 YES: 사용 NO: 사용안함 (default:NO)', '발송현황 메뉴 표출여부', TO_DATE('2024-07-22 00:00:00', 'yyyy-mm-dd hh24:mi:ss'), '전자결재')
+	</insert>
+
+	<select id="EzCommonDAO.checkAddBoardContentSize" resultClass="String">
+		<![CDATA[
+		SELECT
+			CONTENTSIZE
+		FROM
+			TBL_BOARD_CONFIGURATION
+		WHERE
+			ROWNUM = 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.addBoardContentSize">
+		ALTER TABLE
+		TBL_BOARD_CONFIGURATION
+		ADD
+		CONTENTSIZE NUMBER(2,0) DEFAULT 0
+	</statement>
 </sqlMap>

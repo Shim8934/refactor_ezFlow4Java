@@ -416,4 +416,6 @@ public interface EzCommunityService {
 	public String getClubNameLocalization(String userLang, CommunityClubVO clubVO) throws Exception;
 
 	public String getClubBoardNameLocalization(String userLang, CommunityBoardPropertyVO clubBoardVO) throws Exception;
+
+	public int checkPollPeriod(String code, String pollManagerID, LoginVO userInfo) throws Exception;
 }

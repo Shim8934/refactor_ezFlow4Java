@@ -1,4 +1,8 @@
 ﻿function get_childXML_2010(url, broot, bcount, isFolderManager) {
+    get_childXML_2010(url, broot, bcount, isFolderManager, false);
+}
+
+function get_childXML_2010(url, broot, bcount, isFolderManager, showAllMail) {
     if (navigator.userAgent.indexOf('Trident') == -1) {
         var xmlDOM = createXmlDom();
 
@@ -23,6 +27,12 @@
         	requestUrl += "?fm=1";
         } else {
         	requestUrl += "?fm=0";
+        }
+        
+        if (showAllMail) {
+            requestUrl += "&am=y";
+        } else {
+            requestUrl += "&am=n";
         }
         
     	if (typeof(shareId) != "undefined" && shareId != "") {
@@ -63,6 +73,12 @@
         	requestUrl += "?fm=0";
         }
         
+        if (showAllMail) {
+            requestUrl += "&am=y";
+        } else {
+            requestUrl += "&am=n";
+        }
+        
     	if (typeof(shareId) != "undefined" && shareId != "") {
     		requestUrl += "&shareId=" + encodeURIComponent(shareId);
     	}
@@ -82,9 +98,13 @@
     }
 }
 
-function get_childXML(url, broot, bcount, isFolderManager)
+function get_childXML(url, broot, bcount, isFolderManager) {
+    return get_childXML(url, broot, bcount, isFolderManager, false);
+}
+
+function get_childXML(url, broot, bcount, isFolderManager, showAllMail)
 {
-    return get_childXML_2010(url, broot, bcount, isFolderManager);
+    return get_childXML_2010(url, broot, bcount, isFolderManager, showAllMail);
     
 	var strXML = "<?xml version='1.0'?>" + 
 					"<d:searchrequest xmlns:d='DAV:'>" +

@@ -1279,13 +1279,15 @@
 	        	<div style='height:auto;'>
 					<table class="mainlist emoticonLayerStaticPosition" style="width:100%; min-width:732px; margin-top:8px; padding-bottom: 15px;" >
 						<tr>
-							<th style="text-align:center; width: 85%; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;">
+							<th style="text-align:center; width: 10%; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;">
 							   <%-- 2023-11-07 전인하 - 게시판 > 이모티콘 아이콘 삽입 --%>
                               <div class="emoticonRelative">                                       
                                     <img id="_addEmoticon" class="_addEmoticon" src="/images/poll/add_emo_vote.png" onclick="addSticker(this)">
-                                    <textarea id="onelinereply" rows="3" style = "resize:none; width:90%;" maxlength="500"></textarea>
                               </div>
 							</th>
+							<th>
+                                <textarea id="onelinereply" rows="3" style = "resize:none; width: 90%" maxlength="500"></textarea>
+                            </th>
 							<th style="text-align:center;border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2; border-right:1px solid #e2e2e2; width:15%;">
 								<c:if test='${boardInfo.attachmentFlag eq "Y"}'>
 								    <a class='imgbtn' style="vertical-align: middle"><span onclick="btnfileup('commentFile')"><spring:message code='ezBoard.commentAttach.JIH01' /></span></a><br/>

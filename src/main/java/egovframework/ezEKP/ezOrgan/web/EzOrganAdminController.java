@@ -302,7 +302,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.insertMealPlanTenantConfig(); // 2025-02-05 조수빈 - 식단 사용 여부 컨피그 추가
 			ezCommonService.insertUseSaasYN(); // 2025-05-21 유지아 - 모바일 푸시 알림 테넌트 따라 구분 컨피그 추가
 			ezCommonService.inserExtLargeFilesever(); // 2025-05-22 유지아 - 대용량 첨부파일 외부메일 서버 동시 업로드
-			
+			ezCommonService.insertUseSendOutState(); // 2024-07-22 양지혜 - 관리자 > 전자결재 > 발송현황 메뉴 표출여부 컨피그 추가
 	    	ezCommonService.insertPortalThemePortletInitdata();
 	    	ezCommonService.updateTaskUrl();
 	    	ezCommonService.updateListOptionData(); //2019-03-06 천성준 - 전자결재 회람수신함 관련 리스트헤더 데이터 임시 업데이트문
@@ -385,6 +385,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.createGongramDeleteHistory(); // 2024-12-27 이가은 - 공람완료문서 삭제 히스토리 테이블 생성
 			ezCommonService.addMemberDeptIdScheduleGroupMember(); // 2024-12-27 한태훈 - 일정관리 > 일정 그룹 테이블에 부서컬럼 추가
 			ezCommonService.addMemberDeptIdScheduleGatherMember(); // 2024-12-27 한태훈 - 일정관리 > 일정 모아보기 그룹 테이블에 부서컬럼 추가
+			ezCommonService.addMailboxProgressStateColumns(); // 2025-05-23 메일 내보내기/가져오기 비동기 컬럼 추가
+			ezCommonService.createTblBoardModifyHistory(); // 2024-12-05 한태훈 - 게시판 > 게시판 버전관리 테이블 추가
+			ezCommonService.addBoardContentSize(); // 2025-06-16 이혜림 - 게시판 > 본문 크기 컬럼 추가
 		} catch (Exception e) {
     		logger.error(e.getMessage(), e);
     	}
@@ -2114,6 +2117,15 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         		logger.error(e.getMessage(), e);
         		result = "EMAIL_ERROR";
         	}
+			try {
+				if ("".equalsIgnoreCase(vo.getExtensionAttribute2())){
+					String realPath = commonUtil.getRealPath(request);
+					ezOrganAdminService.deleteDestUserProfileImage(userInfo.getId(), userInfo.getTenantId(), realPath);
+				}
+			} catch (Exception e) {
+				logger.error(e.getMessage(), e);
+			}
+
 		// 새로운 사용자를 등록한다.
 		} else {
 			String domain = ezCommonService.getTenantConfig("DomainName", tenantID);

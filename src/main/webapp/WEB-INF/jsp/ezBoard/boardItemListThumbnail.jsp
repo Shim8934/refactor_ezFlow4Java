@@ -776,7 +776,7 @@
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - 700) / 2;
 		        var pLeft = (pwidth - 765) / 2;
-		        window.open("/ezBoard/newBoardItemPhoto.do?boardID=" + encodeURIComponent(pBoardID) + "&mode=new", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=700,width=765,top=" + pTop + ",left=" + pLeft, "");
+		        window.open("/ezBoard/newBoardItemPhoto.do?boardID=" + encodeURIComponent(pBoardID) + "&gubun=4" + "&mode=new", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=700,width=765,top=" + pTop + ",left=" + pLeft, "");
 		    }
 		
 		    function ItemRead_onclick(obj) {
@@ -1600,7 +1600,7 @@
                             <c:if test ="${useKeyword eq 'Y'}">
                                 <option value="rad_Keyword"><spring:message code='ezApprovalG.t1200'/></option>
                             </c:if>
-                            <option value="rad_Subject_Content"><spring:message code='ezBoard.t208'/> + <spring:message code='ezBoard.garm01'/></option>
+				        <%--<option value="rad_Subject_Content"><spring:message code='ezBoard.t208'/> + <spring:message code='ezBoard.garm01'/></option>--%>
 				    	</select>
 						<input id="txt_keyword" class="searchinputBox" style="height: 27px;border: 1px solid #cbcbcb;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
 				        <a class="searchBtn nofilter"><img src="/images/bsearch_new2.png" border="0" onClick="search('quick')"></a>
@@ -1619,7 +1619,7 @@
                         <c:if test ="${useKeyword eq 'Y'}">
                             <option value="rad_Keyword"><spring:message code='ezApprovalG.t1200'/></option>
                         </c:if>
-                        <option value="rad_Subject_Content"><spring:message code='ezBoard.t208'/> + <spring:message code='ezBoard.garm01'/></option>
+				    <%--<option value="rad_Subject_Content"><spring:message code='ezBoard.t208'/> + <spring:message code='ezBoard.garm01'/></option>--%>
 			    	</select>
 					<input id="txt_keyword" class="searchinputBox" style="height: 27px;border: 1px solid #cbcbcb;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
 					<a class="searchBtn nofilter"><img src="/images/bsearch_new2.png" border="0" onClick="search('quick')"></a>

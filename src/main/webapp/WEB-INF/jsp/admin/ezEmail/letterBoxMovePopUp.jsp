@@ -79,7 +79,11 @@
 				var letterNo = '<c:out value="${letterNo}"/>';
 				var letterId = '<c:out value="${letterId}"/>';
 				var query = "/admin/ezEmail/updateLetterMove.do";
-				 
+
+				if(letterBox == letterBoxNo){
+				    alert("<spring:message code='ezEmail.letter40'/>");
+				    return;
+				}
 				$.ajax({
 					type : "POST",
 					url : query,

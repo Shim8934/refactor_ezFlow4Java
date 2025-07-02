@@ -85,6 +85,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.StringJoiner;
 import java.util.UUID;
 import java.util.regex.Pattern;
@@ -100,6 +101,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	
 	@Autowired
 	private KlibUtil klibUtil;
+
+    @Autowired
+    private Properties config;
 	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
@@ -1786,6 +1790,22 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		logger.debug("=== insert TBL_TENANT_CONFIG Test ===");
 		List<Map<String, Object>> test = new ArrayList<Map<String, Object>>(); // List : 순서보장 Collection
 
+        test.add(new HashMap<String, Object>(){{
+            put("confName","useAI");
+            put("property_value","NO");
+            put("config_name","ezAI 사용여부");
+            put("regdate","2025-05-09 00:00:00");
+            put("description","ezAI 사용여부 (default:NO)");
+            put("config_type","AI");
+        }});
+        test.add(new HashMap<String, Object>(){{
+            put("confName","aiAttachMBSize");
+            put("property_value","10");
+            put("config_name","ezAI 첨부파일 최대용량");
+            put("regdate","2025-05-09 00:00:00");
+            put("description","ezAI에서 허용하는 첨부파일 최대용량 (default:10MB)");
+            put("config_type","AI");
+        }});
 		test.add(new HashMap<String, Object>(){{
 			put("confName","checkPasswordNumber");
 			put("property_value","YES");
@@ -2225,6 +2245,16 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("TYPE_MYSQL", "VARCHAR(510)"); put("TYPE_ORACLE", "NVARCHAR2(255)");
 			put("AFTER_MYSQL", "CHARACTER SET utf8mb4 DEFAULT NULL");
 		}});
+
+        test.add(   // 게시판 버전관리
+            new HashMap() {{
+                put("TABLE", "TBL_BOARD_BOARDINFO");
+                put("COLUMN", "VERSIONMANAGE");
+                put("TYPE_MYSQL", "VARCHAR(1)");
+                put("TYPE_ORACLE", "NCHAR(1)");
+                put("AFTER", "DEFAULT 'N'");
+            }}
+        );
 
 		// TBL_BOARD_BOARDMANAGE
 		test.add(new HashMap<String, Object>(){{ // 2019-09-19 홍승비 - 게시판 권한그룹 적용을 위한 TYPE 칼럼 추가 commit e5c8200214
@@ -2834,6 +2864,21 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("AFTER_MYSQL", "DEFAULT NULL COMMENT '요약전 mht파일이 저장되는 경로정보'"); 
             put("AFTER_ORACLE", "DEFAULT NULL");
 		}});
+        // 2025-06-11 양지혜 - 전자설문 > 맺음말 컬럼 추가
+        test.add(new HashMap<String, Object>(){{
+            put("TABLE","TBL_SURVEY");
+            put("COLUMN", "CLOSING_TEXT");
+            put("TYPE_MYSQL", "longtext"); put("TYPE_ORACLE", "NCLOB");
+            put("AFTER_MYSQL", "DEFAULT NULL COMMENT '맺음말'");
+            put("AFTER_ORACLE", "DEFAULT NULL");
+        }});
+        // 2025-06-19 양지혜 - 전자설문 > 결과공개여부 컬럼 추가
+        test.add(new HashMap<String, Object>(){{
+            put("TABLE","TBL_SURVEY_QUESTION");
+            put("COLUMN", "RES_OPEN_FLAG");
+            put("TYPE_MYSQL", "TINYINT(4)"); put("TYPE_ORACLE", "NUMBER(4,0)");
+            put("AFTER", "DEFAULT 0");
+        }});
 		for (Map<String, Object> map : test) {
 			ezCommonDAO.alterTableAddColumns(map);
         }
@@ -3337,7 +3382,12 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void createJmochaMailboxProgress() throws Exception {
 		ezCommonDAO.createMailboxProgressTable();
 	}
-	
+
+    @Override
+    public void addMailboxProgressStateColumns() {
+        ezCommonDAO.addMailboxProgressStateColumns();
+    }
+
 	// webfolder
 	@Override
 	public List<String> getPermissionGroupIdListOfUser(String userId, String deptId, String companyId, int tenantId) throws Exception {
@@ -8482,4 +8532,71 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		
 		logger.debug("createUserScheduleTypeConfigTable ended");
 	}
+
+	@Override
+	public void createTblBoardModifyHistory() throws Exception {
+		ezCommonDAO.createTblBoardModifyHistory();
+	}
+
+    /* 2024-07-22 양지혜 - 관리자 > 전자결재 > 발송현황 메뉴 표출여부 */
+    @Override
+    public void insertUseSendOutState() throws Exception {
+        List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+        String property = "useSendOutState";
+
+        for (TenantVO tenantVo : tenantIdList) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("tenantID", tenantVo.getTenantId());
+            map.put("property", property.toUpperCase());
+            ezCommonDAO.insertUseSendOutState(map);
+        }
+    }
+    
+    @Override
+    public String getMoveItemURL(String type, String gubun, String boardID, String itemID) throws Exception {
+        logger.debug("getBoardItemURL started.");
+
+        String itemUrl = "";
+        String scheme = "YES".equals(ezCommonService.getTenantConfig("USE_HTTPS", 0)) ? "https://" : "http://";
+        String domain = config.getProperty("config.serverAddress");
+
+        boardID = boardID.replace("{", "%7B").replace("}", "%7D");
+        itemID = itemID.replace("{", "%7B").replace("}", "%7D");
+
+        itemUrl = scheme + domain;
+        if (type.equals("BOARD")) {
+            switch (gubun) {
+                case "3":
+                case "4":
+                    itemUrl += "/ezBoard/boardItemViewPhoto.do?";
+                    break;
+                case "7":
+                    itemUrl += "/ezBoard/boardItemViewMovie.do?";
+                    break;
+                default:
+                    itemUrl += "/ezBoard/boardItemView.do?";
+                    break;
+            }
+            itemUrl += "itemID=" + itemID
+                    + "&boardID=" + boardID;
+//                    + "&location=GENERAL&boardItemView=P&replyFlag=N&hasReply=N"; // 없이 되는지 확인   
+        } else if (type.equals("CLUB")) {
+            itemUrl += "/ezCommunity/commHome/popupCommHome.do?";
+
+            if (itemID.equals("3")) {
+                itemUrl += "code=" + boardID + "&userLevel=4&masterApprov=ask";
+            } else {
+                itemUrl += "code=" + boardID + "&userLevel=" + itemID;
+            }
+        }
+
+        logger.debug("getBoardItemURL ended.");
+        return itemUrl;
+    }
+
+    // 2025-06-16 이혜림 - 게시판 > 본문 크기 컬럼 추가
+    @Override
+    public void addBoardContentSize() throws Exception {
+        ezCommonDAO.addBoardContentSize();
+    }
 }

@@ -689,7 +689,8 @@
 	            createNodeAndInsertText(xmlpara, objNode, "DEFAULTCURSORPOSITION", "${mailGeneral.defaultCursorPosition}");
 	            createNodeAndInsertText(xmlpara, objNode, "DEFAULTSEPARATESEND", "${mailGeneral.defaultSeparateSend}");
 				createNodeAndInsertText(xmlpara, objNode, "EDITORFONTFAMILY", "${mailGeneral.editorFontFamily}");
-				createNodeAndInsertText(xmlpara, objNode, "EDITORFONTSIZE", "${mailGeneral.editorFontSize}");	            
+				createNodeAndInsertText(xmlpara, objNode, "EDITORFONTSIZE", "${mailGeneral.editorFontSize}");
+				createNodeAndInsertText(xmlpara, objNode, "SELFCCOPTION", "${mailGeneral.selfCcOption}");
 	            
 	            xmlhttp.open("POST", "/ezEmail/mailGeneralSave.do", true);
 	            xmlhttp.onreadystatechange = function() {
@@ -1006,7 +1007,36 @@
 	            
 	            ShowMailProgressNew();
 	            ShowPercent(0);
-	            mailboxProgressFun(true, socketUserkey); // progress percent
+	            mailboxProgressFun(true, socketUserkey, (progress, state, stateDescription) => {
+					if (!state) {
+						return;
+					}
+
+                    if (state == "CANCEL") {
+                        console.log('User Cancel');
+                    } else if (state === "SUCCESS") {
+                        if (useEncryptZipForEmail == 'YES' && encryptPw != ""){
+                            ShowPercent(enc);
+                        }
+
+                        var fullpath = "/ezEmail/downloadMailboxZip.do?folderName="
+                            + encodeURIComponent("<c:out value='${folderName}'/>")
+                            + "&temp=" + stateDescription + "&encryptPw=" + encodeURIComponent(encryptPw)
+                            + "&userkey=" + encodeURIComponent(socketUserkey);
+
+                        if (typeof(shareId) != "undefined" && shareId != "") {
+                            fullpath += "&shareId=" + encodeURIComponent(shareId);
+                        }
+
+                        AttachDownFrame.location.href = fullpath;
+                        AttachDownFrame.target = "_blank";
+                    } else {
+						alert("<spring:message code='ezEmail.lhm33' />");
+					}
+
+					HiddenMailProgressNew();
+					mailboxProgressFun(false); // progress percent
+				}); // progress percent
 	            
 		    	$.ajax({
 					type : "POST",
@@ -1014,33 +1044,8 @@
 					async : true,
 					url : requestUrl,
 					data : { folderPath : "<c:out value='${url}'/>", userkey : socketUserkey},
-					success : function(result) {
-						if (result == "") {
-							alert("<spring:message code='ezEmail.lhm33' />");
-						} else if (result == "CANCEL") {
-							console.log('User Cancel');
-						} else {
-							
-							if (useEncryptZipForEmail == 'YES' && encryptPw != ""){
-								ShowPercent(enc);
-							}
-							
-							var fullpath = "/ezEmail/downloadMailboxZip.do?folderName="
-									+ encodeURIComponent("<c:out value='${folderName}'/>")
-									+ "&temp=" + result + "&encryptPw=" + encodeURIComponent(encryptPw)
-									+ "&userkey=" + encodeURIComponent(socketUserkey);
-							
-							if (typeof(shareId) != "undefined" && shareId != "") {
-								fullpath += "&shareId=" + encodeURIComponent(shareId);
-					    	}
-							
-							AttachDownFrame.location.href = fullpath;
-							AttachDownFrame.target = "_blank";
-			          
-						}
-					}, complete : function() {
-		            	HiddenMailProgressNew();
-			            mailboxProgressFun(false); // progress percent
+					error : function() {
+						alert("<spring:message code='ezEmail.ls011' />");
 					}
 				});
 		    }
@@ -1076,7 +1081,7 @@
 	            } else {
 		            ShowPercent(uploading);
 	            }
-	            mailboxProgressFun(true, socketUserkey);
+	            mailboxProgressFun(true, socketUserkey, mailboxImportStateHandler);
             	
 	            var frm = document.getElementById("importMailboxform");
 	            var requestUrl = "/ezEmail/mailboxImportZip.do?folderPath="
@@ -1094,7 +1099,11 @@
 			}
 		 	
 			// 유진-리소스확인
-	        function mailboxImportComplete(result, tempId, userkey) {
+	        function mailboxImportStateHandler(progress, result, userkey) {
+				if (!result) {
+					return;
+				}
+
 				HiddenMailProgressNew();
 				mailboxProgressFun(false);
 				
@@ -1723,17 +1732,29 @@
 			var pgSetTimeout;
 		    var pgSetTime = 2000;
 		    var psSetTimeFlag = false;
-		    function mailboxProgressFun(act, userKey) { // mailboxProgress start or stop
-		    	psSetTimeFlag = act;
-		    	if (act) {
-		    		mailboxProgress(userKey);
+
+			/** @callback ProgressStateHandler
+			 * @param {number} progress
+			 * @param {string} state
+			 * @param {string} stateDescription
+			 * 메일함 작업 진행상황 체크 시마다 호출되는 핸들러 */
+
+			/** @param {boolean} act 작동 시 true, 취소 시 false
+			 * @param {string} userKey
+			 * @param {ProgressStateHandler} stateHandler */
+			function mailboxProgressFun(act, userKey, stateHandler) { // mailboxProgress start or stop
+				psSetTimeFlag = act;
+				if (act) {
+					mailboxProgress(userKey, stateHandler);
 		    	} else {
 		    		clearTimeout(pgSetTimeout);
 		    		mailboxProgressDel(socketUserkey);
 		    	}
 		    }
-		    
-		    function mailboxProgress(userKey) { // get mailbox Export or Import progress
+
+			/** @param {string} userKey
+			 * @param {ProgressStateHandler} stateHandler */
+			function mailboxProgress(userKey, stateHandler) { // get mailbox Export or Import progress
 		    	var uk = userKey;
 		    	
 		    	pgSetTimeout = setTimeout(function getMailboxProgress() {
@@ -1755,6 +1776,10 @@
 	    					if (pg < 100) { 
 								setTimeout(getMailboxProgress, pgSetTime);
 	    					}
+
+							if (stateHandler) {
+								stateHandler(pg, data.state, data.stateDescription);
+							}
 		    			}, error : function(e) {
 		    				alert("error. " + e.status);
 		    			}

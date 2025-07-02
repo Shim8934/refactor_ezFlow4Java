@@ -34,6 +34,7 @@ public class MSurveyVO {
 	private List<MAttachVO> attachList;
 	private int mailFlag;
 	private int popupFlag;
+	private String closingText;
 	
 	public int getUpdateMode() {
 		return updateMode;
@@ -281,5 +282,13 @@ public class MSurveyVO {
 
 	public void setPopupFlag(int popupFlag) {
 		this.popupFlag = popupFlag;
+	}
+
+	public String getClosingText() {
+		return closingText;
+	}
+
+	public void setClosingText(String closingText) {
+		this.closingText = closingText;
 	}
 }

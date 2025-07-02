@@ -3216,7 +3216,7 @@ h2, #menu span {font-size: 12px;}
 .survey-infpp-wrap {width: 100%; height: 450px; margin:0px 0px 15px 0px;}
 .surey-frameeditor {padding: 0px; height: 100%; width:100%; overflow: auto; border: 0px;}
 .svPurpose {width: auto; height: auto; margin:0px 0px 10px 0px;}
-.svPurpose .ppContent {width: auto; height: auto; background-color:white; padding: 10px; border: 1px solid #d7d7d7; overflow: auto;}
+.svPurpose .ppContent {width: auto; height: auto; background-color:white; padding: 10px; border: 1px solid #d7d7d7; overflow: auto; margin-top: 10px;}
 .ppContent img {max-width: 100%;}
 .ppContent p, .ppContent div, .ppContent td, .ppContent ul, .ppContent ol, .ppContent li {margin-top: 0px; margin-bottom: 0px; margin-left: 0px;}
 .ppContent table td  {text-indent: 0px }
@@ -3226,7 +3226,7 @@ h2, #menu span {font-size: 12px;}
 /**** survey information table end****/
 
 /**** survey attach part start ****/
-.survey-otherinf {margin: -1px 0px 0px 0px;}
+.survey-otherinf {margin: 10px 0px 0px 0px;}
 .survey-dropzone {max-height: 130px; border: 1px solid #ddd; overflow-y: auto; overflow-x: hidden; min-height: 67px; box-sizing: border-box;}
 .attach-zone {padding : 15px; background: #fff; border: 1px solid #d7d7d7; margin-bottom: 15px; }
 .attach-zone >div {max-height: 130px; overflow-y: auto; overflow-x: hidden;}
@@ -3406,6 +3406,12 @@ input::-ms-clear {display: none;}
 .required input[type="checkbox"] {display:none;}.required label{cursor:pointer;}
 .required input[type="checkbox"] + label::before{content: ' '; display: inline-block;width:16px; height:14px; background:url(/images/ezSurvey/srvyBg_check.png); vertical-align:middle; margin:-2px 5px 0px 0px; cursor:pointer;}
 .required input[type="checkbox"]:checked + label::before {background:url(/images/ezSurvey/srvyBg_check.png) 16px 0px;}
+
+/* resOpenFlag checkbox label*/
+.resOpenFlag{margin:0px 10px 0px 0px; padding:0px;}
+.resOpenFlag input[type="checkbox"] {display:none;}.required label{cursor:pointer;}
+.resOpenFlag input[type="checkbox"] + label::before{content: ' '; display: inline-block;width:16px; height:14px; background:url(/images/ezSurvey/srvyBg_check.png); vertical-align:middle; margin:-2px 5px 0px 0px; cursor:pointer;}
+.resOpenFlag input[type="checkbox"]:checked + label::before {background:url(/images/ezSurvey/srvyBg_check.png) 16px 0px;}
 
 /* 수정, 취소 버튼 */
 .survey_qsbtn{overflow:hidden; margin:20px 0px 10px 0px; padding:0px; height:40px;}
@@ -4292,3 +4298,30 @@ a.commentFileSpan:hover {cursor: pointer; text-decoration: underline;}
 	bottom: 0px;
 	width:100%;
 }
+
+/* 전자설문 - 맺음말 */
+#closingWrap {margin:10px 0px 10px 0px;}
+#closingWrap div{margin-bottom: 10px;}
+#closingWrap textarea{width:99%;}
+#svClosing {margin-top: 10px;}
+
+/* 줌 버튼 */
+.zoom_btn{position:fixed; top:7%; left:calc(100% - 47px); touch-action: none;}
+.zoom_btn span{
+display:block; width:46px; height:46px; border:1px solid #d2d2d2;
+background-repeat:no-repeat; background-position:center; background-color:#f8f8fa;
+cursor:pointer; background-size:55%; text-indent:-9999px; overflow:hidden;}
+.zoom_btn span.zoom_in{border-radius:8px 0 0 0; background-image:url(../images/zoom_in.svg?v=1);}
+.zoom_btn span.zoom_out{border-radius:0 0 0 8px; margin-top:-1px; background-image:url(../images/zoom_out.svg?v=1);}
+
+.zoom_btn span:hover{border:1px solid #388CE5;}
+.zoom_btn span.zoom_in:hover{background-image:url(../images/zoom_in_hover.svg?v=1);}
+.zoom_btn span.zoom_out:hover{background-image:url(../images/zoom_out_hover.svg?v=1);}
+
+.zoom_btn.drag span{cursor:grabbing;}
+
+[id^="smaller"]{display:none;}
+[id^="bigger"]{display:none;}
+
+body.drag{user-select:none !important;}
+body.drag *{user-select:none !important;}

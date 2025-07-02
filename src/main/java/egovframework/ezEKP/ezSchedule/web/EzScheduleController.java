@@ -2193,7 +2193,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 					ScheduleOwnerInfoVO deptSoi = new ScheduleOwnerInfoVO();
 					
 					deptSoi.setScheduleType("2");
-					deptSoi.setOwnerId(userId);
+					deptSoi.setOwnerId(loginVO.getDeptID());
 					deptSoi.setOwnerName(loginVO.getDeptName1());
 					deptSoi.setOwnerName2(loginVO.getDeptName2());
 					
@@ -5547,6 +5547,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		}
 		// 일정 본문 데이터 가져오기
 		String htmlBody = ezCommonService.getMHTtoHTML("SCHEDULECONTENT", url, tenantId, realPath, request, locale, scheme);
+		htmlBody = htmlBody.replaceAll("(?is)<style[^>]*?>.*?</style>", "");
 		String escapedHtml = StringEscapeUtils.escapeHtml4(htmlBody);
 		sb.append("<HTMLDESCRIPTION>" + escapedHtml + "</HTMLDESCRIPTION>");
 

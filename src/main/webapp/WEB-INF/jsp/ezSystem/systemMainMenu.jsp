@@ -444,20 +444,23 @@
 	    </div>       
 	<script>
 		function personalReset(val) {
-			var wWeight ="390";
-			var wHeight = "250";
-
-			var heigth = window.screen.availHeight;
-			var width = window.screen.availWidth;
-			var left = (width - wWeight) / 2;
-			var top = (heigth - wHeight) / 2;
+	        var wWeight = 390;
+	        var wHeight = 250;
+			
+			// var heigth = window.screen.availHeight;
+			// var width = window.screen.availWidth;
+			// var left = (width - wWeight) / 2;
+			// var top = (heigth - wHeight) / 2;
+	        var left = window.outerWidth / 2 + window.screenX - (wWeight / 2);
+	        var top = window.outerHeight / 2 + window.screenY - (wHeight / 2);
+			
 			console.log(val);
 			if (val == "frame") {
-				window.open("/admin/ezSystem/resetUserSettings.do?type=frame", "", "height = " + wHeight + ", width = " + wWeight
-						+ ", status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1, top=" + top + ",left = " + left);
+				window.open("/admin/ezSystem/resetUserSettings.do?type=frame", "", "height=" + wHeight + ",width=" + wWeight
+						+ ",status=no,toolbar=no,menubar=no,location=no,resizable=1,scrollbars=1,top=" + top + ",left=" + left);
 			} else if (val == "portlet") {
-				window.open("/admin/ezSystem/resetUserSettings.do?type=portlet", "", "height = " + wHeight + ", width = " + wWeight
-						+ ", status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1, top=" + top + ",left = " + left);
+				window.open("/admin/ezSystem/resetUserSettings.do?type=portlet", "", "height=" + wHeight + ",width=" + wWeight
+						+ ",status=no,toolbar=no,menubar=no,location=no,resizable=1,scrollbars=1,top=" + top + ",left=" + left);
 			}
 		}
 		

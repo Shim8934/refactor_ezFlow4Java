@@ -521,7 +521,7 @@ function MakeListInfoHTML(ConentObject) {
                     	
                     	// 2018-10-05 메일리스트에 보낸사람 국기표시 박예연
                     	// 현재 국가도 표시할지 여부 : useShowSystemCountry - YES : 현재 상태 한국도 나오는 상태 , NO 현재국가는 안나오는 상태
-                    	if (useCountryIP == "YES" && g_foldertype == "" && p_countryCode != "") {
+                    	if (useCountryIP == "YES" && (g_foldertype == "" || g_foldertype == "allMail") && p_countryCode != "") {
 	                    			
             				// 본인국가 표시 
             				if (useShowSystemCountry == "YES") {

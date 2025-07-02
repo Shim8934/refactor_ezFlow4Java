@@ -5489,5 +5489,21 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		return "/ezCommunity/selectToDownloadFiles";
 	}
+	
+	@RequestMapping(value = "/ezCommunity/checkPollPeriod.do", method = RequestMethod.POST, produces = "text/plain; charset=utf-8")
+	@ResponseBody
+	public String checkPollPeriod(@CookieValue("loginCookie")String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("checkPollPeriod started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		String code = request.getParameter("code");
+		String pollManagerID = request.getParameter("pollManagerID");
+		
+		int result = ezCommunityService.checkPollPeriod(code, pollManagerID, userInfo);
+
+		logger.debug("checkPollPeriod ended.");
+		return -1 != result ? (1 == result ? "ok" : "Inactive") : "deleted";
+	}
 }
 

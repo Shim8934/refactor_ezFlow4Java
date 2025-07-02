@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -375,7 +376,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public synchronized JSONObject saveSurveyItem(HttpServletRequest request, String realPath, JSONArray questions, String title, String purpose, String startDate, String endDate, int publicFlag, int anonymousFlag, int multipleFlag, int userFlag, int publicDays, JSONArray attchList, JSONArray users, int useStatus, long surveyId, int draftMode, LoginVO userInfo, int mailFlag, int popupFlag) throws Exception {
+	public synchronized JSONObject saveSurveyItem(HttpServletRequest request, String realPath, JSONArray questions, String title, String purpose, String startDate, String endDate, int publicFlag, int anonymousFlag, int multipleFlag, int userFlag, int publicDays, JSONArray attchList, JSONArray users, int useStatus, long surveyId, int draftMode, LoginVO userInfo, int mailFlag, int popupFlag, String closingText) throws Exception {
 		JSONObject result                    = new JSONObject();
 		int tenantId                         = userInfo.getTenantId();
 		String companyId                     = userInfo.getCompanyID();
@@ -448,7 +449,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		survey.setDraftFlag(draftMode);
 		survey.setMailFlag(mailFlag);
 		survey.setPopupFlag(popupFlag);
-		
+		survey.setClosingText(closingText);
 		
 		if (publicFlag == 1) {
 			survey.setOpenDays(publicDays);
@@ -459,6 +460,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			JSONObject questionObj = (JSONObject)questions.get(i);
 			int requiredFlag       = ((Long)questionObj.get("required")).intValue();
 			int questionType       = ((Long)questionObj.get("type")).intValue();
+			int resOpenFlag        = ((Long)questionObj.get("resOpenFlag")).intValue();
 			JSONObject questionAtt = (JSONObject)questionObj.get("attach");
 			JSONObject imgTitle = (JSONObject)questionObj.get("imgTitle");
 			JSONArray options      = (JSONArray)questionObj.get("option");
@@ -526,6 +528,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			question.setRequired(requiredFlag);
 			question.setSkip(questionSkip);
 			question.setSkipFlag(skipFlag);
+			question.setResOpenFlag(resOpenFlag);
 			
 			if (questionType == 7) {
 				if (questionObj.get("sliderLogicPoint") != null && questionLogic == 1) {
@@ -1453,6 +1456,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 				Map<String, Object> resMap = new HashMap<String, Object>();
 				resMap.put("surveyId", surveyId);
 				resMap.put("userId", userInfo.getId());
+				resMap.put("tenantId", userInfo.getTenantId());
 				
 				ezSurveyDAO.deleteRespondents(resMap);
 				ezSurveyDAO.deleteResponseItems(resMap);
@@ -1651,6 +1655,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		data.put("usersCnt"     , survey.getTotalUser());
 		data.put("respondentCnt", totalRespondents);
 		data.put("title"        , survey.getTitle());
+		data.put("isCreator"	, survey.getCreatorId().equals(userInfo.getId()) ? 1 : 0);
 		
 		result.put("data", data);
 		result.put("status", "ok");
@@ -1969,5 +1974,73 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		result.addAll(setSurveyIds);
 
 		return result;
+	}
+	
+	@Override
+	public int checkEditingState(long surveyId, String companyId, int tenantId) throws Exception {
+		logger.debug("checkEditingState started");
+		int res = 0;
+		
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("surveyId", surveyId);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		// MODIFY_FLAG : 0(미사용) 1(사용) , USE_STATUS 0(삭제) 1(사용)
+		HashMap<String, Object> resMap = ezSurveyDAO.checkEditingState(map);
+		if ("0".equals(resMap.get("USE_STATUS").toString())) {
+			res = -1;
+		} else if ("1".equals(resMap.get("MODIFY_FLAG").toString())) {
+			res = 1;
+		}
+		
+		logger.debug("checkEditingState ended");
+		return res;
+	}
+
+	@Override
+	public void deleteResponseItem(long surveyId, LoginVO userInfo) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("surveyId", surveyId);
+		map.put("userId", userInfo.getId());
+		map.put("tenantId", userInfo.getTenantId());
+
+		ezSurveyDAO.deleteRespondents(map);
+		ezSurveyDAO.deleteResponseItems(map);
+	}
+
+	@Override
+	public void endSurveyItem(String surveyID, String userId, int tenantId) throws Exception {
+		logger.debug("endSurveyItem started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("surveyID", Integer.parseInt(surveyID));
+		map.put("userID", userId);
+		map.put("updateDate", commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss"));
+		map.put("tenantID", tenantId);
+
+		logger.debug("endSurveyItem ended");
+		ezSurveyDAO.endSurveyItem(map);
+	}
+
+	@Override
+	public String checkfinishSurvey(String EndStr, String offsetRaw) throws Exception {
+		logger.debug("checkfinishSurvey started");
+		String finishYN = "N";
+		
+		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+		String[] parts = offsetRaw.split("\\|");
+		String offset = parts[1];
+		date.setTimeZone(TimeZone.getTimeZone("GMT" + offset));
+		String nowStr = date.format(new Date());
+		
+		Date nowDate = date.parse(nowStr);
+		Date endDate = date.parse(EndStr);
+		
+		finishYN = nowDate.after(endDate) ? "Y" : "N";
+
+		logger.debug("checkfinishSurvey ended");
+		return finishYN;
 	}
 }

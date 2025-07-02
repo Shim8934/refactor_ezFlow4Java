@@ -42,6 +42,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezAI.util.AICommonUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
@@ -83,6 +84,11 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 
 	@Autowired
 	private EzEmailUtil ezEmailUtil;
+
+	//ai util 추가
+	@Autowired
+	private AICommonUtil aICommonUtil;
+
 	@Resource(name="EzPortalService")
 	private EzPortalService ezPortalService;
 	
@@ -191,6 +197,11 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 
 		String useMobileMailOnly = ezCommonService.getTenantConfig("useMobileMailOnly", userInfo.getTenantId());
 		model.addAttribute("useMobileMailOnly", useMobileMailOnly);
+
+		//ezAi 사용 여부 추가
+		model.addAttribute("useAI", aICommonUtil.checkUseAI(userInfo.getTenantId())?"Y":"N");
+		model.addAttribute("ezAIUrl", config.getProperty("config.ezAIUrl"));
+		model.addAttribute("aiChatbotUrl", config.getProperty("config.ezAIUrl") + "/ChatUi?userId=" + userId + "&tenantId=" + userInfo.getTenantId());
 
 		logger.debug("returnUrl : " + returnUrl);
 		logger.debug("portalMain End");
@@ -319,6 +330,9 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		model.addAttribute("pollingInterval", ezCommonService.getTenantConfig("notiPollingInterval", userInfo.getTenantId()));
 		model.addAttribute("lastNotiPollTime", commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss"));
 		
+		//ezAi 사용 여부 추가
+		model.addAttribute("useAI", aICommonUtil.checkUseAI(userInfo.getTenantId())?"Y":"N");
+
 		logger.debug("portalTopMenu End");
 		return "/ezNewPortal/newPortalTopMenu";
 	}

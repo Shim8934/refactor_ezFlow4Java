@@ -162,4 +162,10 @@ public interface EzBoardAdminService {
 	void deleteScrapContBoard(String boardID) throws Exception;
 	
 	public String getNewGuid() throws Exception;
+
+	public String createModifyHistory(String boardId, int tenantId)  throws Exception;
+
+	public String encodeURIComponent(String url) throws Exception;
+
+	public void boardNotiEndAlram() throws Exception;
 }

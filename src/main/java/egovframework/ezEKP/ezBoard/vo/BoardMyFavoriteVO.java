@@ -67,6 +67,8 @@ public class BoardMyFavoriteVO {
 	/** 2018-06-26 홍승비 - companyID 추가*/
 	private String companyID;
 	
+	private String useVersion;
+	
 	public String getBoardId() {
 		return boardId;
 	}
@@ -259,5 +261,12 @@ public class BoardMyFavoriteVO {
 	public void setCompanyID(String companyID) {
 		this.companyID = companyID;
 	}
-	
+
+	public String getUseVersion() {
+		return useVersion;
+	}
+
+	public void setUseVersion(String useVersion) {
+		this.useVersion = useVersion;
+	}
 }

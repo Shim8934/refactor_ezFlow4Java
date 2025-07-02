@@ -1350,6 +1350,13 @@ public class EzPersonalController extends EgovFileMngUtil {
         date.setTimeZone(TimeZone.getTimeZone("GMT"));
         String nowDate = date.format(new Date()); 
 
+		try {
+			String realPath = commonUtil.getRealPath(req);
+			ezOrganAdminService.deleteDestUserProfileImage(userInfo.getId(), userInfo.getTenantId(), realPath);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+
         // 비즈메카톡과의 프로필 사진 연동을 위해 updateDT 필드를 갱신한다.
         ezOrganAdminService.updateProperty(userInfo.getId(), "updateDT", nowDate, "user", userInfo.getTenantId());
 		

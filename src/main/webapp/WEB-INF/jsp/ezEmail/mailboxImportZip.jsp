@@ -8,7 +8,7 @@
 		<title></title>
 		<script type="text/javascript">
 			window.onload = function() {
-				var result = "${result}";
+				/*var result = "${result}";
 				var userkey = '<c:out value="${userkey}"/>';
 				var tempId = '<c:out value="${tempId}"/>';
 				var useEncryptZipForEmail = "${useEncryptZipForEmail}";
@@ -18,7 +18,7 @@
 				}
 				
 				parent.mailboxImportComplete(result, tempId, userkey);
-				return;
+				return;*/
 			};
 		</script>
 	</head>

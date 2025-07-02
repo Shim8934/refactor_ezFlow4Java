@@ -964,7 +964,29 @@ function searchedMailExportZip() {
 
  	ShowMailProgressNew();
 	ShowPercent(0);
-	mailboxProgressFun(true, socketUserkey);
+	mailboxProgressFun(true, socketUserkey, (progress, state, stateDescription) => {
+        if (!state) {
+            return;
+        }
+
+        if (state === "CANCEL") {
+            console.log('User Cancel');
+        } else if (state !== "") {
+            var fullpath = "/ezEmail/downloadMailZip.do?temp=" + stateDescription + "&encryptPw=" + "";
+
+            if (typeof(shareId) != "undefined" && shareId != "") {
+                fullpath += "&shareId=" + encodeURIComponent(shareId);
+            }
+
+            AttachDownFrame.location.href = fullpath;
+            AttachDownFrame.target = "_blank";
+        } else {
+            alert(strLang104);
+        }
+
+        HiddenMailProgressNew();
+        mailboxProgressFun(false);
+    });
 
 	$.ajax({
 		cache: false,
@@ -972,31 +994,8 @@ function searchedMailExportZip() {
 		url: _url,
 		data: JSON.stringify(jsonData),
 		contentType : "application/json",
-		complete: function(){
-			HiddenMailProgress();
-		},
-		success: function(result){
-			if (result == "CANCEL") {
-				console.log('User Cancel');
-			} else if (result != "") {
-				var fullpath = "/ezEmail/downloadMailZip.do?temp=" + result + "&encryptPw=" + "";
-
-				if (typeof(shareId) != "undefined" && shareId != "") {
-					fullpath += "&shareId=" + encodeURIComponent(shareId);
-		    	}
-
-				AttachDownFrame.location.href = fullpath;
-				AttachDownFrame.target = "_blank";
-			} else {
-				alert(strLang104);
-			}
-		},
 		error: function() {
 			alert(strLang321);
-		},
-		complete : function() {
-        	HiddenMailProgressNew();
-            mailboxProgressFun(false); // progress percent
 		}
 	});
 }

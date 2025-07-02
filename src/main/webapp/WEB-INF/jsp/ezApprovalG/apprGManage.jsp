@@ -636,7 +636,7 @@
 		        	AddOption(sel_status, '<spring:message code="ezApproval.t497"/>', "015");
 		        } else if (pListTypeValue == "9") {
 		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t1308"/>', "I");
-		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t239"/>', "Y");
+		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t239"/>', "T");
 		        	AddOption(sel_status, '<spring:message code="ezApprovalG.F0031"/>', "R");
 		        	AddOption(sel_status, '<spring:message code="ezApproval.t155"/>', "S");
 		        	AddOption(sel_status, strLangAprState21, "V");

@@ -10,6 +10,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
+import egovframework.ezEKP.ezEmail.vo.MailboxProgressVO;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -42,7 +43,7 @@ public interface EzEmailService {
 	public MailColorVO getMailColor(int tenantId) throws Exception;
 	public void setMailColor(int pTenantId, String pImportanceColor, String pInColor, String pOutColor) throws Exception;
 	public List<MailDeleteVO> getMailDelete(int tenantId, String userId) throws Exception;
-	public void setMailDelete(int tenantId, String pUserID, String pPath, int pExpireTime, int pDeleteUnread, String pFolderName) throws Exception;
+	public void setMailDelete(int tenantId, String pUserID, String pPath, int pExpireTime, int pDeleteUnread, String pFolderName, String pAutoDeletionOption) throws Exception;
 	public void deleteMailDelete(int tenantId, String pUserID, String pFolderPath) throws Exception;
 	public List<MailBlobVO> getOrphanedMailBlobList() throws Exception;
 	public List<MailDeletedIdVO> getMailDeletedIdList() throws Exception;
@@ -184,7 +185,8 @@ public interface EzEmailService {
 	
 	public void setMailboxProgress(String userKey, String userId, String action, int tenantId, int percent) throws Exception;
 	public int updateMailboxProgress(String userKey, int percent) throws Exception;
-	public int getMailboxProgress(String userKey) throws Exception;
+	int updateMailboxProgressState(String userKey, String state, String stateDescription);
+	MailboxProgressVO getMailboxProgress(String userKey) throws Exception;
 	public int delMailboxProgress(String userKey) throws Exception;
 	
 	public JSONArray getMailOutOfOfficeTemplateList(String userEmail) throws Exception;

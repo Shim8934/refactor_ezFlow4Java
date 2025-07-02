@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="54" height="52" viewBox="0 0 54 52">
+  <defs>
+    <linearGradient id="linear-gradient" x1="0.5" x2="0.5" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#0195fb"/>
+      <stop offset="0.506" stop-color="#00c1f3"/>
+      <stop offset="1" stop-color="#00efac"/>
+    </linearGradient>
+  </defs>
+  <g id="icon_ai" transform="translate(4000 2077)">
+    <g id="그룹_7277" data-name="그룹 7277" transform="translate(-4 -6)">
+      <path id="합치기_9" data-name="합치기 9" d="M14.624,59.727a34.169,34.169,0,0,1-8.3,2.868.924.924,0,0,1-.965-1.433,29.411,29.411,0,0,0,3.416-6.049A25,25,0,0,1,3.3,45.985Q3.153,46,3,46a3,3,0,0,1-3-3V33a3,3,0,0,1,3-3q.153,0,.3.015A25.061,25.061,0,0,1,19.015,14.3Q19,14.154,19,14a3,3,0,0,1,3-3H32a3,3,0,0,1,3,3q0,.153-.015.3A25.06,25.06,0,0,1,50.7,30.015,3.032,3.032,0,0,1,51,30a3,3,0,0,1,3,3V43a3,3,0,0,1-3,3q-.154,0-.3-.015A25.015,25.015,0,0,1,14.624,59.727Z" transform="translate(-3996 -2082)" fill="url(#linear-gradient)"/>
+      <rect id="사각형_29846" data-name="사각형 29846" width="30" height="17" rx="8.5" transform="translate(-3979 -2054)" fill="#fff"/>
+      <rect id="사각형_29847" data-name="사각형 29847" width="6" height="6" rx="3" transform="translate(-3974 -2048)" fill="#23505d"/>
+      <rect id="사각형_29848" data-name="사각형 29848" width="6" height="6" rx="3" transform="translate(-3958 -2048)" fill="#23505d"/>
+    </g>
+  </g>
+</svg>

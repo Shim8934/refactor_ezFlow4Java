@@ -17,6 +17,9 @@
 		<!-- 컨텍스트 메뉴 관련 -->
 		<link rel="stylesheet" href="${util.addVer('/css/contextMenu.css')}">
 		<link rel="stylesheet" href="${util.addVer('/css/font-awesome-5.0.10/css/fontawesome-all.css')}">
+		<!--20250512 : ai 기능 추가-->
+		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/ai.css')}" />
+
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezMemo/memo.js')}"></script>
@@ -74,6 +77,10 @@
 	    	var memoClickTimer = 0;
 	     	var memoDelay = 200;
 	     	var memoPrevent = false;
+
+			//ezAI 사용 여부
+			var useAI = '<c:out value="${useAI}"/>';
+			var ezAIUrl = '<c:out value="${ezAIUrl}"/>';
 	     	
 			topHeight = "60";
 
@@ -161,6 +168,25 @@
 				   metaTag.setAttribute("content", "width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no");
 			   }
 		   });
+
+		   
+			//20250513 : 김진홍 : 챗봇 창 조절관련 postmessageEvent 추가
+			window.addEventListener("message", function(event) {
+				if (event.origin !== ezAIUrl) return;
+				switch(event.data){
+					case "close":
+						document.getElementById("wrapAIbox").classList.remove("active");
+						break;
+					case "zoom":
+						if(document.getElementById("wrapAIbox").classList.contains("wrapAIzoom")){
+							document.getElementById("wrapAIbox").classList.remove("wrapAIzoom");
+						}
+						else{
+							document.getElementById("wrapAIbox").classList.add("wrapAIzoom");
+						}
+						break;
+				}
+			});
 		</script>
 	</head>
 	<body style="margin:0px 0px 0px 0px;padding: 0px 0px 0px 0px;overflow:hidden;">
@@ -170,6 +196,15 @@
 				</iframe>
 			</div>
 		</div>
+		<!--20250513 : 김진홍 : AI 파트 추가-->
+		<c:if test="${useAI == 'Y'}">
+			<div id="wrapAIbox" class="wrapAIbox">
+				<div class="wrapAI">
+					<iframe id="iframeChatbot" style="width:100%; height:100%;" allow="clipboard-write" frameborder="0" scrolling="NO" src="<c:out value='${aiChatbotUrl}'/>">
+					</iframe>
+				</div>
+			</div>
+		</c:if>
 		<div id="noticeLayer" onclick="hidefunc(this)" style="display:none; right: 0px; width: 100%; height: 100vh; background-color: rgba(0, 0, 0, 0.3); z-index: 9999; position: absolute;">
 			<div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);">
 	        	<iframe id="noticeLayerFrame" style="margin:0; padding:0; border:0 none; width:640px; height:430px; border-radius:20px; box-shadow:0 3px 6px rgba(0,0,0,0.16); background:#fff;" src=""></iframe>

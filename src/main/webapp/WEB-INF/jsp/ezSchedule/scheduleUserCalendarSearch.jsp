@@ -655,7 +655,7 @@
         <td style="border-left:none; width:80px;">
             <div id="searchlist" style="OVERFLOW-Y: auto; width:100px; text-align: center">${SearchName}</div>
         </td>
-        <td style="width:100%;">
+        <td id= "calSearch"style="width:100%;">
             <%--모든 일정--%>
             <label class="IDcontainer" onchange="chk_all()">
                 <input type="checkbox" checked="checked" name="select-all" id="select-all" value="chkAllFalse" style="left:0px; vertical-align:-5px;">

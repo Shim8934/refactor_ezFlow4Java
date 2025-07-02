@@ -1428,8 +1428,17 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	    String photoPath = realPath + commonUtil.getUploadPath("upload_personal.PHOTO", tenantID) + commonUtil.separator;
 		String thumbnailPath = photoPath + "thumbnail" + commonUtil.separator;
 
+		String senderProfileImageName = "";
 		try {
-			String photoFilePath = photoPath + cn + ".jpg";
+
+			senderProfileImageName = ezOrganService.getPropertyValue(cn, "EXTENSIONATTRIBUTE2", tenantID);
+			logger.debug("senderProfileImageName=" + senderProfileImageName);
+
+			if (senderProfileImageName == null) {
+				senderProfileImageName = "";
+			}
+
+			String photoFilePath = photoPath + senderProfileImageName;
 			logger.debug("photoFilePath={}", photoFilePath);
 
 			File photoFile = new File(commonUtil.detectPathTraversal(photoFilePath));

@@ -7,6 +7,7 @@ import java.net.URLEncoder;
 import java.security.PrivateKey;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
@@ -37,6 +38,7 @@ import javax.mail.search.ReceivedDateTerm;
 import javax.mail.search.SearchTerm;
 import javax.servlet.ServletContext;
 
+import egovframework.let.user.login.vo.LoginVO;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.json.simple.JSONArray;
@@ -372,15 +374,19 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 				String path = vo.getPath();
 				String deleteUnread = vo.getDeleteUnread();
 				int expireTime = vo.getExpireTime();
+				String autoDeletionOption = vo.getAutoDeletionOption(); // 2025.02.18 한슬기 : 편지함 메일 자동삭제 방식 선택옵션(지운편지함으로이동(default) : trash / 영구삭제 : permanently)
 
 				logger.debug("userEmail=" + userEmail);
 				logger.debug("path=" + path);
 				logger.debug("deleteUnread=" + deleteUnread);
 				logger.debug("expireTime=" + expireTime);
+				logger.debug("autoDeletionOption={}", autoDeletionOption);
 
 				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 						userEmail, password, egovMessageSource, locale, ezEmailUtil);
-                Folder f = ia.getFolder(path != null ? path : "");
+
+				// Folder -> IMAPFolder로 타입 변경
+				IMAPFolder f = (IMAPFolder) ia.getFolder(path != null ? path : "");
 
 				if (f != null && f.exists()) {
 					f.open(Folder.READ_WRITE);
@@ -397,8 +403,28 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 					Message[] messages = f.search(searchTerm);
 
 					logger.debug("messages length=" + messages.length);
-					
-					f.setFlags(messages, new Flags(Flags.Flag.DELETED), true);
+
+					// 2025.02.18 한슬기 : 편지함 메일 자동삭제 방식 선택옵션에 따라 지운편지함으로 이동시킬지, 영구삭제할지 분기처리(지운편지함으로이동(default) : trash / 영구삭제 : permanently)
+					if ("trash".equalsIgnoreCase(autoDeletionOption)) { // 지운편지함으로 이동
+						IMAPFolder deletedFolder = (IMAPFolder)ia.getFolder(ezEmailUtil.getTrashFolderId(locale)); // Trash
+
+						// 성능개선을 위해 한번에 100개씩 처리
+						for (int i = 0; i < messages.length; i += 100) {
+							int end = Math.min(i + 100, messages.length);
+							f.moveUIDMessages(Arrays.copyOfRange(messages, i, end), deletedFolder);
+							f.expunge();
+						}
+
+					} else if ("permanently".equalsIgnoreCase(autoDeletionOption)) { // 영구삭제
+
+						// 성능개선을 위해 한번에 100개씩 처리
+						for (int i = 0; i < messages.length; i += 100) {
+							int end = Math.min(i + 100, messages.length);
+							f.setFlags(Arrays.copyOfRange(messages, i, end), new Flags(Flags.Flag.DELETED),true);
+							f.expunge();
+						}
+					}
+
 					f.close(true);
 				}
             } catch (MessagingException e) {

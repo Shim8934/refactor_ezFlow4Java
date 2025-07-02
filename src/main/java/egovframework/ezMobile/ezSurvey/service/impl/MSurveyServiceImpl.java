@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
@@ -303,6 +304,9 @@ public class MSurveyServiceImpl extends EgovFileMngUtil implements MSurveyServic
 		} else {
 			result.put("resStatus", "false");
 		}
+
+		String finishYN = checkfinishSurvey(survey.getEndDate(), userInfo.getOffSet()); // 설문 종료여부 체크
+		result.put("finishYN", finishYN);
 
 		result.put("status", "ok");
 		result.put("code", 0);
@@ -680,16 +684,18 @@ public class MSurveyServiceImpl extends EgovFileMngUtil implements MSurveyServic
 		}
 		
 		//Check date
-		String todayStr = formatter2.format(new Date());
-		String endDateStr = survey.getEndDate().substring(0, 10);
-		String startDateStr = survey.getStartDate().substring(0, 10);
-		Date dToday = formatter2.parse(todayStr);
-		Date dEndDate = formatter2.parse(endDateStr);
-		Date dStartDate = formatter2.parse(startDateStr);
+		String todayStr = formatter.format(new Date());
+		Date dToday = formatter.parse(todayStr);
+		Date dEndDate = formatter.parse(survey.getEndDate());
+		Date dStartDate = formatter.parse(survey.getStartDate());
 		
-		if (dStartDate.compareTo(dToday) > 0 || dToday.compareTo(dEndDate) > 0) {
+		if (dStartDate.compareTo(dToday) > 0) {
 			result.put("status", "error");
 			result.put("code", 7);
+			return result;
+		} else if (dToday.compareTo(dEndDate) > 0) {
+			result.put("status", "error");
+			result.put("code", 8);
 			return result;
 		}
 		
@@ -958,5 +964,25 @@ public class MSurveyServiceImpl extends EgovFileMngUtil implements MSurveyServic
 		
 		logger.debug("getSurveyStatistic ended");
 		return result;
+	}
+
+	private String checkfinishSurvey(String EndStr, String offsetRaw) throws Exception {
+		logger.debug("checkfinishSurvey started");
+		String finishYN = "N";
+
+		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+		String[] parts = offsetRaw.split("\\|");
+		String offset = parts[1];
+		date.setTimeZone(TimeZone.getTimeZone("GMT" + offset));
+		String nowStr = date.format(new Date());
+
+		Date nowDate = date.parse(nowStr);
+		Date endDate = date.parse(EndStr);
+
+		finishYN = nowDate.after(endDate) ? "Y" : "N";
+
+		logger.debug("checkfinishSurvey ended");
+		return finishYN;
 	}
 }

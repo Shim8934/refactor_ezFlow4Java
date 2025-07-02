@@ -1086,7 +1086,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			String reFlag = scheRSDom.getElementsByTagName("reFlag").item(i).getTextContent();
 			String gresFlag = scheRSDom.getElementsByTagName("gresFlag").item(i).getTextContent();
 			String allDay = scheRSDom.getElementsByTagName("allDay").item(i).getTextContent();
-			String writeDay = commonUtil.getDateStringInUTC(scheRSDom.getElementsByTagName("writeDay").item(i).getTextContent(), offset, false);
+			String writeDay = scheRSDom.getElementsByTagName("writeDay").item(i).getTextContent();
 				
 			/*if (pType == null || pType.equals("")) {
 				 jobTitle = scheRSDom.getElementsByTagName("jobtitle").item(i).getTextContent();
@@ -1442,7 +1442,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 						temp.setImportance(getScheduleListRept.get(i).getImportance());
 						temp.setEntryList(getScheduleListRept.get(i).getEntryList());
 						temp.setAllDay(getScheduleListRept.get(i).getAllDay());
-						temp.setWriteDay(commonUtil.getDateStringInUTC(getScheduleListRept.get(i).getWriteDay(), offset, true));
+						temp.setWriteDay(getScheduleListRept.get(i).getWriteDay());
 						temp.setAttachFlag(getScheduleListRept.get(i).getAttachFlag());
 						temp.setCharacterID(getScheduleListRept.get(i).getCharacterID());
 						temp.setApproveFlag(getScheduleListRept.get(i).getApproveFlag());

@@ -46,6 +46,19 @@
 			#txtContent h4 {font-size:1em; margin-top:1.33em; margin-bottom:1.33em;}
 			#txtContent h5 {font-size:0.83em; margin-top:1.67em; margin-bottom:1.67em;}
 			#txtContent h6 {font-size:0.67em; margin-top:2.33em; margin-bottom:2.33em;}
+			
+			/* 줌 버튼 */
+            .zoom_btn_p{margin: 1% 1% 0 1%; touch-action: none; display:flex;}
+            .zoom_btn_p span{
+            display:inline-block; width:32px; height:32px; border:1px solid #d2d2d2; background-repeat:no-repeat; background-position:center; background-color:#f8f8fa; cursor:pointer; background-size:55%; text-indent:-9999px; overflow:hidden;}
+            .zoom_btn_p span.zoom_in_p{border-radius:8px 0 0 8px; background-image:url(../images/zoom_in.svg?v=1);}
+            .zoom_btn_p span.zoom_out_p{border-radius:0 8px 8px 0; background-image:url(../images/zoom_out.svg?v=1);}
+            
+            .zoom_btn_p span:hover{border:1px solid #388CE5;}
+            .zoom_btn_p span.zoom_in_p:hover{background-image:url(../images/zoom_in_hover.svg?v=1);}
+            .zoom_btn_p span.zoom_out_p:hover{background-image:url(../images/zoom_out_hover.svg?v=1);}
+            
+            .zoom_btn.drag span{cursor:grabbing;}
 	    </style>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -60,12 +73,14 @@
 		<script type="text/javascript" src="${util.addVer('/js/rsa/rng.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/rsa/rsa.js')}"></script>
 		<script  type="text/javascript">
-	        var nowZoom = 100;
-	        var maxZoom = 200;
-	        var minZoom = 80;
-	        var MozNowZoom = 1;
-	        var MozMaxZoom = 2;
-	        var MozMinZoom = 0.8;
+	        <%--본문 확대/축소 관련--%>
+            var nowZoom = parseInt("<c:out value='${contentSize}'/>"); // 사용자 설정 본문크기값
+            var maxZoom = 200;
+            var minZoom = 100;
+    
+            var MozNowZoom = parseInt("<c:out value='${mozContentSize}'/>"); // 사용자 설정 본문크기값
+            var MozMaxZoom = 2;
+            var MozMinZoom = 1;
 	
 	        var strLang1 = "<spring:message code='ezBoard.t10025'/>";
 	        var strLang2 = "<spring:message code='ezBoard.t10023'/>";
@@ -73,7 +88,7 @@
 	        
 	        var OneLineReplyFlag = "${OneLineReplyFlag}";
 			var isLikeChecked = "<c:out value='${isLikeChecked}'/>";
-			var likeFlag = "<c:out value='${boardInfo.likeFlag}'/>";
+			 var likeFlag = "<c:out value='${boardInfo.likeFlag}'/>";
 			var likeCount = "<c:out value='${likeCount}'/>";
 			var isDisLikeChecked = "<c:out value='${isDisLikeChecked}'/>";
 			var disLikeFlag = "<c:out value='${boardInfo.disLikeFlag}'/>";
@@ -119,6 +134,14 @@
             var attachLimit = "${boardInfo.attachSizeLimit}"; // 개별 첨부파일 limit
             var attachFileNameMaxLength = Number("${attachFileNameMaxLength}"); // 첨부파일명 글자수 제한 limit
             var totalFileSize = 0; // 현재 총 첨부파일 사이즈
+            
+			// 확장컬럼 관련 함수 전역변수로 변경함
+            var userLang = "${extenLang}"
+            var pBoardName = '<c:out value="${boardInfo.boardName}"/>';
+            var boardAttrListTemp = '<c:out value="${boardAttr}"/>';
+            var boardAttrListJson = JSON.parse(replaceEntityCodeToStr(boardAttrListTemp));
+            var boardItemTemp = '<c:out value="${boardItem}"/>';
+            var boardItemJson = JSON.parse(replaceEntityCodeToStr(boardItemTemp));
 
 	        window.onload = function () {
 	            document.getElementById("txtContent").style.textAlign = "center";
@@ -133,6 +156,7 @@
 	            if (OneLineReplyFlag == "2") {
 	            	getBoardComment();
 	            }
+	            
 	        };
 	        
 	        /* 2019-11-07 홍승비 - 댓글삭제 레이어팝업 스크롤 위치 관련 */
@@ -201,17 +225,9 @@
 	
 	        function makeWriteContent(responseText, AttachText) {
 	            try {
-	                nowZoom = 100;
-	                maxZoom = 200;
-	                minZoom = 80;
-	                MozNowZoom = 1;
-	                MozMaxZoom = 2;
-	                MozMinZoom = 0.8;
 	
 	                document.getElementById("txtContent").style.textAlign = "";
 	                document.getElementById("txtContent").innerHTML = "";
-	                var _img1;
-	                var _img2;
 	                
 	                var xmldom = loadXMLString(AttachText);
 	                var _attchDIV;
@@ -223,9 +239,11 @@
 	                    document.getElementById("txtContent").appendChild(_attchDIV);
 	                }
 	
+	                <%--
+	                var _img1;
+                    var _img2;
 	                _img1 = document.createElement("IMG");
 	                _img1.id = "smallImg";
-	                //_img1.setAttribute("onclick", "Smaller()");
 	                _img1.onclick = function () { Smaller(); };
 	
 	                _img1.style.cursor = "pointer";
@@ -234,7 +252,6 @@
 	
 	                _img2 = document.createElement("IMG");
 	                _img2.id = "biglImg";
-	                //_img2.setAttribute("onclick", "Bigger()");
 	                _img2.onclick = function () { Bigger(); };
 	                
 	                
@@ -243,13 +260,39 @@
 	                _img2.style.marginLeft = "-4px";
 	                _img2.src = "/images/plus.png";
 	
-	                document.getElementById("txtContent").appendChild(_img1);
-	                document.getElementById("txtContent").appendChild(_img2);
+	                document.getElementById("divContent").appendChild(_img1);
+	                document.getElementById("divContent").appendChild(_img2);--%>
+	
+                    // 줌 버튼 컨테이너 생성
+                    var zoomBtnContainer = document.createElement("div");
+                    zoomBtnContainer.className = "zoom_btn_p";
+                    
+                    var zoomInSpan = document.createElement("span");
+                    zoomInSpan.className = "zoom_in_p";
+                    zoomInSpan.onclick = function () { Bigger(); };
+                    zoomInSpan.textContent = "확대";  // 텍스트가 시각적으로는 안보이지만 접근성 대비용
+                    
+                    var zoomOutSpan = document.createElement("span");
+                    zoomOutSpan.className = "zoom_out_p";
+                    zoomOutSpan.onclick = function () { Smaller(); };
+                    zoomOutSpan.textContent = "축소";
+                    
+                    zoomBtnContainer.appendChild(zoomInSpan);
+                    zoomBtnContainer.appendChild(zoomOutSpan);
+                    
+                    document.getElementById("txtContent").appendChild(zoomBtnContainer);
 	
 	                var _div = document.createElement("DIV");
 	                _div.id = "divContent";
 	                _div.innerHTML = responseText;
 	                document.getElementById("txtContent").appendChild(_div);
+	                
+	                // 사용자가 설정한 본문크기값으로 세팅 (원글)
+	                if (navigator.userAgent.indexOf('Firefox') != -1) {
+                        document.getElementById("divContent").style.MozTransform = "scale(" + MozNowZoom + ")";
+                    } else {
+                        document.getElementById("divContent").style.zoom = nowZoom + "%";
+                    }
 	                
 	            } catch (e) {}
 	        }
@@ -720,23 +763,26 @@
 				<table class="mainlist emoticonLayerStaticPosition" style="width:100%">
 					<c:choose>
 						<c:when test="${gubun == 2}">
-								<th colspan="2" style="text-align:center; width: 100%; border-left:1px solid #e2e2e2; border-right:1px solid #e2e2e2;
-										 border-top:1px solid #e2e2e2; border-bottom:1px solid #f8f8fa; padding-bottom:3px">
+								<th style="text-align:center; width: 45px; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #f8f8fa; padding-bottom:3px">
 								    <%-- 2023-11-07 전인하 - 게시판 > 이모티콘 아이콘 삽입 --%>
 								    <div class="emoticonRelative">                                       
                                         <img id="_addEmoticon" class="_addEmoticon" src="/images/poll/add_emo_vote.png" onclick="addSticker(this)">
-                                        <textarea id="onelinereply" rows="3" style = "resize:none; width:calc(100% - 45px);" maxlength="500"></textarea>
 									</div>
 								</th>
+                                <th style="text-align:center; width: 90%; border-right:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #f8f8fa; padding-bottom:3px">
+                                    <textarea id="onelinereply" rows="3" style = "resize:none; width:calc(100% - 45px);" maxlength="500"></textarea>
+                                </th>
 						</c:when>
 						<c:otherwise>
-								<th style="text-align:center; width: 85%; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;">
+								<th style="text-align:center; width: 10%; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;">
 								    <%-- 2023-11-07 전인하 - 게시판 > 이모티콘 아이콘 삽입 --%>
 								    <div class="emoticonRelative">								    
                                         <img id="_addEmoticon" class="_addEmoticon" src="/images/poll/add_emo_vote.png" onclick="addSticker(this)">
-                                        <textarea id="onelinereply" rows="3" style = "resize:none; width: 90%" maxlength="500"></textarea>
 								    </div>
 								</th>
+                                <th style="text-align:center; width: 90%; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2; padding-bottom:3px">
+                                    <textarea id="onelinereply" rows="3" style="resize:none; width:calc(100% - 45px);" maxlength="500"></textarea>
+                                </th>
 						</c:otherwise>	
 					</c:choose>
 					<c:choose>
@@ -822,5 +868,8 @@
                 <img id="previewImage" class="previewImage">
             </div>            
         </div>
+        <c:if test="${useAI}">
+            <c:import url="/WEB-INF/jsp/ezAI/aiSlide.jsp" />
+        </c:if>
 	</body>
 </html>

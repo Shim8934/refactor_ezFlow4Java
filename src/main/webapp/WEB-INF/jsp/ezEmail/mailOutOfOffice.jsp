@@ -338,7 +338,8 @@
 		    	var tbContentElement = selectObj.dataset.ele;
 		    	var editorIframe = document.getElementById(tbContentElement).contentWindow;
 		    	
-		    	var content = " ";
+		    	var content = document.getElementById("BujaeBody" + tbContentElement.substring(16)).innerText;
+
 		    	if (objVal === undefined) {
 		    		return;
 		    	} else if (objVal == "none") {

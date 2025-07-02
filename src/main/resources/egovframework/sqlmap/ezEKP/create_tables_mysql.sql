@@ -754,6 +754,8 @@ CREATE TABLE `jmocha_mail_general` (
   `EDITOR_FONT_SIZE` varchar(10) DEFAULT NULL,
   `DEFAULT_SEPARATE_SEND` VARCHAR(10) DEFAULT NULL,
   `DEFAULT_CURSOR_POSITION` VARCHAR(50) DEFAULT NULL,
+  `MAIL_SEARCH_PERIOD` varchar(10) DEFAULT NULL,
+  `SELF_CC_OPTION` varchar(10) DEFAULT 'none',  
   PRIMARY KEY (`USER_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -3806,6 +3808,7 @@ CREATE TABLE `tbl_board_configuration` (
   `PREVIEWHLIST` bigint(10) DEFAULT 0,
   `PREVIEWHCONTENT` bigint(10) DEFAULT 0,
   `ALLNEWBOARDLISTDATE` int(10) DEFAULT 5,
+  `CONTENTSIZE` int(2) DEFAULT 0,
   `TENANT_ID` mediumint(5) NOT NULL,
   PRIMARY KEY (`TENANT_ID`,`USERID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -11987,6 +11990,7 @@ CREATE TABLE `tbl_survey` (
   `mail_flag` tinyint(4) DEFAULT 0,
   `popup_flag` tinyint(4) DEFAULT 0,
   `MAIL_SENT_FLAG` tinyint(4) DEFAULT 0,
+  `CLOSING_TEXT` longtext DEFAULT NULL COMMENT '맺음말',
   PRIMARY KEY (`survey_id`,`tenant_id`,`company_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -12113,6 +12117,7 @@ CREATE TABLE `tbl_survey_question` (
   `unit` bigint(20) DEFAULT -1 COMMENT '슬라이드 질문의 단위',
   `company_id` varchar(80) NOT NULL COMMENT '컴퍼니 아이디',
   `tenant_id` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
+  `res_open_flag` tinyint(4) DEFAULT 0 COMMENT '질문결과 공개여부',
   PRIMARY KEY (`question_id`,`company_id`,`tenant_id`),
   KEY `FK_SURVEY_QUESTION_idx` (`survey_id`),
   CONSTRAINT `FK_SURVEY_QUESTION` FOREIGN KEY (`survey_id`) REFERENCES `tbl_survey` (`survey_id`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -14052,6 +14057,8 @@ CREATE TABLE `jmocha_mailbox_progress` (
   `USER_ID` varchar(80) NOT NULL,
   `ACT` varchar(15) NOT NULL,
   `PERCENT` mediumint(100) NOT NULL,
+  `STATE` varchar(20),
+  `STATE_DESCRIPTION` varchar(100),
   `UPDATEDT` datetime DEFAULT current_timestamp(),
   PRIMARY KEY (`USER_KEY`,`TENANT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -16359,3 +16366,14 @@ CREATE TABLE TBL_STAT_MENU_DEPT_MONTH
     INDEX IDX_MENU (MENU_ID)
 ) ENGINE = INNODB
   DEFAULT CHARSET = UTF8MB4 COMMENT "부서별 메뉴 통계 월별 집계 테이블";
+
+CREATE TABLE TBL_BOARD_MODIFYHISTORY (
+    ITEMID VARCHAR(40) NOT NULL,
+    PARENTITEMID VARCHAR(40) DEFAULT NULL,
+    VERSION VARCHAR(5) DEFAULT NULL,
+    MODIFYUSERID VARCHAR(80) DEFAULT NULL,
+    MODIFYUSERNAME VARCHAR(120) DEFAULT NULL,
+    MODIFIEDDATE datetime DEFAULT NULL,
+    TENANT_ID mediumint(5) NOT NULL,
+    PRIMARY KEY (ITEMID,TENANT_ID)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

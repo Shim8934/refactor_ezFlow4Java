@@ -556,7 +556,7 @@ public class EzTalkGateController {
 		logger.debug("ezTalkGateNoticeBoardId=" + ezTalkGateNoticeBoardId);
 		
 		List<HashMap<String, Object>> boardItemList = ezBoardService.getBoardListItem(ezTalkGateNoticeBoardId, 
-				userInfo.getId(), 1, 5, 0, "", "", new HashMap<String, String>(), "1", userInfo.getTenantId());		
+				userInfo.getId(), 1, 5, 0, "", "", new HashMap<String, String>(), "1", userInfo.getTenantId(), "");
 		logger.debug("boardItemList=" + boardItemList);
 		
 		String nowDate = commonUtil.getTodayUTCTime("");
@@ -595,7 +595,7 @@ public class EzTalkGateController {
 		
 		logger.debug("ezTalkGateNoticeBoardId2=" + ezTalkGateNoticeBoardId2);
 		
-		List<HashMap<String, Object>> boardItemList = ezBoardService.getBoardListItem(ezTalkGateNoticeBoardId2, userInfo.getId(), 1, 5, 0, "", "", new HashMap<String, String>(), "1", userInfo.getTenantId());		
+		List<HashMap<String, Object>> boardItemList = ezBoardService.getBoardListItem(ezTalkGateNoticeBoardId2, userInfo.getId(), 1, 5, 0, "", "", new HashMap<String, String>(), "1", userInfo.getTenantId(), "");
 		
 		String nowDate = commonUtil.getTodayUTCTime("");
 	    nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");

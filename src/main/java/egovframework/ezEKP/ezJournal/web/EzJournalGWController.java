@@ -784,7 +784,7 @@ public class EzJournalGWController {
 			
 			JournalFormInfoVO journalFormInfoVO = ezJournalService.getJournalDivideThisNext(journalIdList, formId, companyId,userId, info.getTenantId());
 			
-			String localeParam = request.getParameter("locale");
+			String localeParam = (String) jsonParam.get("locale").toString();
 			Locale locale = (localeParam != null && !localeParam.isEmpty()) ? new Locale(localeParam): Locale.getDefault();
 			
 			if ("basic".equals(journalFormInfoVO.getFormStatus())) {

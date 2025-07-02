@@ -23,6 +23,7 @@ public class BoardConfigVO {
 	private int tenantID;
 	/** 최근게시물 표출 일수*/
 	private int allNewBoardListDate;
+	private int contentSize;
 	
 	public String getUserId() {
 		return userId;
@@ -91,5 +92,12 @@ public class BoardConfigVO {
 
 	public void setAllNewBoardListDate(int allNewBoardListDate) {
 		this.allNewBoardListDate = allNewBoardListDate;
+	}
+	public int getContentSize() {
+		return contentSize;
+	}
+
+	public void setContentSize(int contentSize) {
+		this.contentSize = contentSize;
 	}
 }

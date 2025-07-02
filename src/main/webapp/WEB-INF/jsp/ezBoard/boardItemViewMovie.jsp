@@ -65,6 +65,7 @@
 				var strWriteDate = "${boardItem.writeDate}";
 				var strImportance = "${boardItem.importance}";
 				var strEndDate = "${boardItem.endDate}";
+				var strStartDate = "${boardItem.startDate}";
 				var strContentLocation = "${boardItem.contentLocation}";
 				var strAttachList = "${boardItem.attachments}";
 				var SSUserID = "${userInfo.id}";
@@ -1151,6 +1152,38 @@
 			    
 			 	return canvas.toDataURL();
 			}
+			
+			<%-- 재게시 기능 --%>
+            function btn_Repost_Onclick() {
+                var newStartDate = new Date(strStartDate + " UTC");
+                var newEndDate = new Date(strEndDate);
+                var currentDate = new Date();
+
+                if (newStartDate > currentDate) {
+                    alert("예약게시물은 재게시가 불가능합니다.");
+                    return;
+                }
+
+                if (newEndDate < currentDate) {
+                    alert("게시기간이 만료된 게시물은 재게시가 불가능합니다.");
+                    return;
+                }
+
+                if(confirm("재게시를 하시면 최근 게시물로 등록됩니다.\n재게시 하시겠습니까?")) {
+                    var xmlhttp = createXMLHttpRequest();
+                    xmlhttp.open("POST", "/ezBoard/repostItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&userID=" + userInfoID, false);
+                    xmlhttp.send();
+
+                    if (xmlhttp.responseText == "SUCCESS") {
+                        alert("재게시가 완료되었습니다.");
+                        window.location.reload();
+
+                        //if (boardItemView == "P") {
+                            window.opener.location.reload();
+                        //}
+                    }
+                }
+            }
 		</script>
 	</head>
 	<body id="bodyPopup" class="popup">
@@ -1187,6 +1220,9 @@
 				                <li ID='btn_ThumbnailModify' ><span  onclick="btn_ThumbnailModify()"><spring:message code='ezBoard.thumbnail.kwc001'/><spring:message code='ezBoard.t316'/></span></li>
 			                    <li ID='btn_AllDelete' ><span  onclick="btn_Delete_Onclick()"><spring:message code='ezBoard.t1004'/></span></li>
 			                    <li ID='btn_AlbumModify' ><span  onclick="btn_albumEdit()"><spring:message code='ezBoard.t1005'/></span></li>
+			                    <c:if test="${boardItem.itemLevel == 1 && (boardItem.writerID == userInfo.id || boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK')}"><%-- 답변글은 재게시 버튼 안뜨도록 함 --%>
+                                    <li ID='btn_Repost'><span onclick='btn_Repost_Onclick()'>재게시</span></li>
+                                </c:if>
 		        			</c:if>
 		                    <li ID='btn_Read' ><span  onclick="ReaderList()"><spring:message code='ezBoard.t1006'/></span></li>
 		                    <li ID='btn_down' ><a id="movieDownload"><span><spring:message code='ezQuestion.t180'/><spring:message code='ezQuestion.t567'/></span></a></li>
@@ -1425,12 +1461,14 @@
         	<div style='height:auto;'>
 				<table class="mainlist emoticonLayerStaticPosition" style="width:100%; min-width:745px; margin-top:8px;" >
 					<tr>
-						<th style="text-align:center; width: 88%; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;">
+						<th style="text-align:center; width: 10%; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;">
                             <%-- 2023-11-07 전인하 - 게시판 > 이모티콘 아이콘 삽입 --%>
                             <div class="emoticonRelative">								    
                                 <img id="_addEmoticon" class="_addEmoticon" src="/images/poll/add_emo_vote.png" onclick="addSticker(this)">
-                                <textarea id="onelinereply" rows="3" style = "resize:none; width:90%;" maxlength="500"></textarea>
                             </div>
+						</th>
+						<th style="text-align:center; width: 88%; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;">
+						    <textarea id="onelinereply" rows="3" style = "resize:none; width:90%;" maxlength="500"></textarea>
 						</th>
 						<th style="text-align:center;border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2; border-right:1px solid #e2e2e2;width:15%;">
                             <c:if test='${boardInfo.attachmentFlag eq "Y"}'>

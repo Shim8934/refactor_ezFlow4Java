@@ -221,7 +221,9 @@ public interface EzCommonService {
 	public void createMailTemplateSequence() throws Exception;
 
 	public void createJmochaMailboxProgress() throws Exception;
-	
+
+	void addMailboxProgressStateColumns();
+
 	public void createWebfolderFileUserTable();
 	
 	public void insertApprContainterConfig() throws Exception;
@@ -601,4 +603,14 @@ public interface EzCommonService {
 	// 2025-04-21 조수빈 - 기본 일정(개인, 부서, 회사)별 사용자 설정 값 저장 테이블 추가
 	public void createUserScheduleTypeConfigTable() throws Exception;
 
+	// 2024-12-05 한태훈 - 게시판 > 게시판 버전관리 테이블 추가
+	public void createTblBoardModifyHistory() throws Exception;
+
+	/* 2024-07-22 양지혜 - 관리자 > 전자결재 > 발송현황 메뉴 표출여부 */
+	public void insertUseSendOutState() throws Exception;
+    
+	public String getMoveItemURL(String type, String gubun, String boardId, String itemId) throws Exception;
+
+	// 2025-06-16 이혜림 - 게시판 > 본문 크기 컬럼 추가
+	public void addBoardContentSize() throws Exception;
 }

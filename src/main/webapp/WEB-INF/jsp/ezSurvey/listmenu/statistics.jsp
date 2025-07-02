@@ -125,6 +125,7 @@
 			var userWindow        = null;
 			var surveyStatistic   = ${data};
 			var questionStatistic = ${questions};
+			var adminYN			  = "<c:out value='${adminYN}'/>";
 			
 			var colors = ["#e04343", "#f79f3f", "#a9cd40", "#00b4c8", "#898cff", "#ff89b5", "#ffdc89", "#90d4f7", "#71e096", "#f5a26f",
 						  "#668de5", "#ed6d79", "#5ad0e5", "#da97e0", "#cff381", "#ff96e3", "#bb96ff", "#67eebd", "#fa9928", "#ef3924",
@@ -230,17 +231,25 @@
 				ulElmt.className = "txt-respul";
 				var respCnt      = responses.length <= 3 ? responses.length : 3;
 				
-				if (responses.length > 3) {
-					var spanUserCnt      = divText.parentElement.querySelector("span[class='response-usercnt']");
-					var viewMore         = document.createElement("span");
-					viewMore.textContent = SurveyMessages.strViewAll;
-					viewMore.className   = "txt-viewmore";
-					viewMore.onclick     = function(e) {showAllTextResponse(question["questionId"]);};
-					spanUserCnt.parentElement.appendChild(viewMore);
+				/* 2025-06-18 양지혜 - 주관식 결과비공개 사용 시, 결과표출 분기처리 추가 */
+				if (question.resOpenFlag == 1 && !(surveyStatistic.isCreator == 1 || adminYN == "Y")) {
+					var txtDiv = document.createElement("div");
+					txtDiv.className = "txtDiv";
+					txtDiv.innerHTML = SurveyMessages.strResOpen03;
+					divText.appendChild(txtDiv);
+				} else {
+					if (responses.length > 3) {
+						var spanUserCnt      = divText.parentElement.querySelector("span[class='response-usercnt']");
+						var viewMore         = document.createElement("span");
+						viewMore.textContent = SurveyMessages.strViewAll;
+						viewMore.className   = "txt-viewmore";
+						viewMore.onclick     = function(e) {showAllTextResponse(question["questionId"]);};
+						spanUserCnt.parentElement.appendChild(viewMore);
+					}
+					
+					createTextList(respCnt, responses, ulElmt);
+					divText.appendChild(ulElmt);
 				}
-				
-				createTextList(respCnt, responses, ulElmt);
-				divText.appendChild(ulElmt);
 			}
 			
 			function createTextList(respCnt, responses, ulElmt) {

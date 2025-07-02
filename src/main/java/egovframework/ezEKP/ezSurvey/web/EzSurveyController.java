@@ -38,9 +38,11 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -81,6 +83,9 @@ public class EzSurveyController extends EgovFileMngUtil {
 	@Autowired
 	private EzSurveyService ezSurveyService;
 
+	@Autowired
+	private SimpMessagingTemplate template;
+	
 	@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
 	
@@ -304,7 +309,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezSurvey/surveyDetail.do", method = RequestMethod.GET)
 	public String jspGetSurveyDetail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetSurveyDetail started");
-		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		LoginVO user = commonUtil.userInfo(loginCookie);
 		String itemId      = request.getParameter("itemId") != null ? request.getParameter("itemId") : "";
 		String mode        = request.getParameter("mode")   != null ? request.getParameter("mode")   : "";
 		
@@ -321,11 +326,13 @@ public class EzSurveyController extends EgovFileMngUtil {
 			String     participation = (String)surveyInf.get("participation");
 			// 20.05.06 강승구 : 설문응답여부 반환
 			String     resStatus 	 = (String)surveyInf.get("resStatus");
+			String	   finishYN      = ezSurveyService.checkfinishSurvey((String)survey.get("endDate"), user.getOffset()); // 설문 종료여부 체크
 			
 			model.addAttribute("survey" , survey);
 			model.addAttribute("creator", creator);
 			model.addAttribute("participation", participation);
 			model.addAttribute("resStatus", resStatus);
+			model.addAttribute("finishYN", finishYN);
 		}
 		else {
 			int reasonCode = ((Long)surveyInf.get("code")).intValue();
@@ -344,12 +351,15 @@ public class EzSurveyController extends EgovFileMngUtil {
 		}
 		
 		String defaultFontFamily = egovMessageSource.getMessage("main.t246", user.getLocale());
-		String defaultFontSize = "13px";
+		String defaultFontSize = "13px";		
+		String adminYN = commonUtil.isAdmin(user.getId(), user.getTenantId(), user.getRollInfo(), "c;l;k") ? "Y" : "N";
 		
 		model.addAttribute("user", user.getId());
+		model.addAttribute("tenantId", user.getTenantId());
 		model.addAttribute("mode", mode);
 		model.addAttribute("defaultFontFamily", defaultFontFamily);
 		model.addAttribute("defaultFontSize", defaultFontSize);
+		model.addAttribute("adminYN", adminYN);
 		
 		logger.debug("jspGetSurveyDetail ended");
 		
@@ -524,6 +534,14 @@ public class EzSurveyController extends EgovFileMngUtil {
 		
 		JSONObject resultObj = surveyRestService.saveSurveyItem(request, surveyItem);
 		
+		/* 수정 시 변경 상태(MODIFY)와 기존 surveyId 포함한 WebSocket 메시지 전송 로직 추가 */
+		if (!"-1".equals(surveyItem.get("surveyId").toString()) && surveyItem.get("draft") == null) {
+			String orgSurveyId = surveyItem.get("surveyId").toString();
+			String result = "{\"status\":\"MODIFY\", \"surveyId\":\"" + orgSurveyId + "\"}";
+			JSONParser parser = new JSONParser();
+			JSONObject json = (JSONObject) parser.parse(result);
+			this.template.convertAndSend("/reply/getSeenUpdateForSurvey" + orgSurveyId + "+" + user.getTenantId(), json);
+		}
 		logger.debug("jsonSaveSurveyItem ended");
 		return resultObj;
 	}
@@ -1552,5 +1570,42 @@ public class EzSurveyController extends EgovFileMngUtil {
 			logger.debug(e.getMessage());
 			return "NO";
 		}
+	}
+
+	@RequestMapping(value="/ezSurvey/deleteResponse.do", method = RequestMethod.POST)
+	@ResponseBody
+	public JSONObject jsonDeleteResponse(@RequestBody JSONObject responseItem, @CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("jsonDeleteResponse started");
+
+		LoginSimpleVO user = loginCookie != null ? commonUtil.userInfoSimple(loginCookie) : new LoginSimpleVO();
+		responseItem.put("userId", user.getId());
+
+		JSONObject resultObj = surveyRestService.deleteResponse(request, responseItem);
+
+		logger.debug("jsonDeleteResponse ended");
+		return resultObj;
+	}
+
+	@ResponseBody
+	@RequestMapping(value="/ezSurvey/endSurveyItem.do", method = RequestMethod.POST)
+	public void closeSurveyItem(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("endSurveyItem started");
+		
+		LoginVO user   = commonUtil.userInfo(loginCookie);
+		String surveyID = request.getParameter("surveyID");
+
+		ezSurveyService.endSurveyItem(surveyID, user.getId(), user.getTenantId());
+
+		/* 설문종료 시 변경 상태(END)와 기존 surveyId 포함한 WebSocket 메시지 전송 로직 추가 */
+		try {
+			String result = "{\"status\":\"END\", \"surveyId\":\"" + surveyID + "\"}";
+			JSONParser parser = new JSONParser();
+			JSONObject json = (JSONObject) parser.parse(result);
+			this.template.convertAndSend("/reply/getSeenUpdateForSurvey" + surveyID + "+" + user.getTenantId(), json);
+		} catch (Exception e) {
+			logger.error("endSurveyItem - getSeenUpdateForSurvey err : " + e.getMessage());
+		}
+
+		logger.debug("endSurveyItem ended");
 	}
 }

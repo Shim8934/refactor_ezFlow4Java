@@ -1215,3 +1215,5 @@ var strLangAtachHIK_02 = "MB.";
 /* 전자결재 사인 그리기 기능 */
 var strLangJIHSignDraw01 = "Please sign and then approve.";
 var strLangJIHSignDraw02 = "An error occurred while saving the signature.";
+
+var strLangKm01 = "The document has been retrieved.";

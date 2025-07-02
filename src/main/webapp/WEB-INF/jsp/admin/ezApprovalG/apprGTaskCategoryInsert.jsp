@@ -351,8 +351,10 @@
 				
 					<th><spring:message code = 'ezApprovalG.t729' /><span style="color:red"> *</span></th>
 					<td>
-						<input type="text" id="tbCateCode" name="tbCateCode" style="wigth:206px" maxlength="8">
-						<a class="imgbtn imgbck"><span onClick="return btnDuplicate_onclick()"><spring:message code = 'ezApprovalG.t730' /></span></a>
+						<div style="display: flex; align-items: center; width: 100%;">
+							<input type="text" id="tbCateCode" name="tbCateCode" style="width:50%;margin-right: 2px;" maxlength="8">
+							<a class="imgbtn imgbck"><span onClick="return btnDuplicate_onclick()"><spring:message code = 'ezApprovalG.t730' /></span></a>
+						</div>
 					</td>
 				</tr>
 				<tr>
@@ -377,8 +379,10 @@
 				</c:choose>
 					<th><spring:message code = 'ezApprovalG.t733' /></th>
 					<td>
-						<input type="text" id="tbPCateCode"  name="tbPCateCode" style="width:206px" readonly="true">
-						<a class="imgbtn imgbck"><span id="btnSelPCode"  onClick="return btnSelPCode_onclick()"><spring:message code = 'ezApprovalG.t690' /></span></a>
+						<div style="display: flex; align-items: center; width: 100%;">
+							<input type="text" id="tbPCateCode"  name="tbPCateCode" style="width:70%; margin-right: 2px;" readonly="true">
+							<a class="imgbtn imgbck"><span id="btnSelPCode"  onClick="return btnSelPCode_onclick()"><spring:message code = 'ezApprovalG.t690' /></span></a>
+						</div>
 					</td>
 				</tr>
 			</tbody>

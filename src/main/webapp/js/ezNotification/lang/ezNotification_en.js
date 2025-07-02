@@ -84,6 +84,7 @@ subType["approval"]["return"] = "Document withdraw";
 subType["approval"]["default"] = "Approval Noti";
 subType["board"]["new"] = "New posting";
 subType["board"]["return"] = "Reject approval";
+subType["board"]["expired"] = "Notice Period Ended";
 subType["schedule"]["delete"] = "Delete Schedule";
 subType["survey"]["new"] = "New registration";
 subType["poll"]["new"] = "New registration";

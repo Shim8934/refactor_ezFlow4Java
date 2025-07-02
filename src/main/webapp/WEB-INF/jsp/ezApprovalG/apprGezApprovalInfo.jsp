@@ -3131,7 +3131,7 @@
 	                    <!-- 2024-06-19 이주원 화살표ui 추가 -->
 	                    <td style="width: 16px; text-align: center; padding-left: 4px;" >
                             <!-- <div style="display: inline-block; margin:auto; padding-left:2.5px;" id="AddRemoveBTN"> -->
-                            <div style="display: inline-block; margin:auto;" id="AddRemoveBTN">
+                            <div style="display: inline-block; margin:auto;" id="AddRemoveBTN2">
                                 <img src="/images/kr/cm/arr_right.gif" alt="" width="16px" height="16px" border="0" style="cursor:pointer;" id="imgInsert" onclick="return list2_onSel_DBclick();">
                                 <br>
                                 <img src="/images/kr/cm/arr_left.gif" alt="" width="16px" height="16px" border="0" style="cursor:pointer;" id="imgDelete" onclick="return AprlineDel_onclick();">

@@ -18,6 +18,8 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezCircular/circularComment.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezCircular/circular.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezPoll/stomp.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezPoll/sockjs.min.js')}"></script>
 		
 		<style>
 			#btnCircularConfirm {
@@ -135,8 +137,19 @@
 			var attachList = "";
 			var deptID = "<c:out value='${deptID}'/>";
 			var company = "<c:out value='${company}'/>"
+			var tenantID = "<c:out value='${userInfo.tenantId}'/>";
+			var stompClient = null;
 
+			window.onunload = function() {
+				if (stompClient !== null) {
+					stompClient.disconnect();
+				}
+			};
+			
 			$(document).ready(function() {
+				getCmtSockConnect(); /* 회람 상태 확인을 위해 웹소켓 연결추가 */
+				stompDisConnProcess(); /* 웹소켓 끊어짐 처리 */
+				
 				if(circularID == "") {
 					alert("<spring:message code='ezCircular.kmsc05'/>");
 					window.close();
@@ -619,6 +632,30 @@
 				top          = heigth / 2;
 				var feature  = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes";
 				return feature;
+			}
+
+			/* 문서 열람 시 수정 이벤트 수신을 위한 WebSocket subscribe 설정 */
+			function getCmtSockConnect() {
+				var socket = new SockJS('/hello');
+				stompClient = Stomp.over(socket);
+				stompClient.connect({}, function (frame) {
+					stompClient.subscribe('/reply/getSeenUpdateForCircular' + circularID + "+" + tenantID, function (updatedInfo) {
+						var status = JSON.parse(updatedInfo.body).status;
+						var updatedCircularId = JSON.parse(updatedInfo.body).circuralrId;
+
+						if (status == "MODIFY" && updatedCircularId == circularID) {
+							alert("<spring:message code='ezCircular.t199' />");
+							window.location.reload();
+						}
+					});
+				});
+			}			
+			function stompDisConnProcess() {
+				setInterval(function(){
+					if(stompClient.connected === false){
+						window.location.reload();
+					}
+				}, 10000);
 			}
 		</script>
 	</head>

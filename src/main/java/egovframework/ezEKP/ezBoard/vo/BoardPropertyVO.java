@@ -169,6 +169,8 @@ public class BoardPropertyVO {
 	private String writerFlag;
 	/** 2024-09-30 이혜림 - 게시판 별점 기능 플래그 추가**/
 	private String starRatingFlag;
+
+	private String versionManage;
 	
 	public int getSs_board_maxRows() {
 		return ss_board_maxRows;
@@ -668,5 +670,13 @@ public class BoardPropertyVO {
 
 	public void setStarRatingFlag(String starRatingFlag) {
 		this.starRatingFlag = starRatingFlag;
+	}
+
+	public String getVersionManage() {
+		return versionManage;
+	}
+
+	public void setVersionManage(String versionManage) {
+		this.versionManage = versionManage;
 	}
 }

@@ -458,6 +458,10 @@
 							window[treeviewStr].putcaption(window[treeviewStr].selectedIndex(), caption + "(" + unreadcount + ")");
 	                    }
 
+	                    // rightFrame을 새로 고침할 필요는 없으나, left tree의 전체 메일함 카운트 값을 수정하기 위해 사용
+	                    // 안읽은 모든 메일 삭제를 하는 경우 unreadcount가 0일때에 속하기 때문에 모든 상황에 적용
+	                    getUnreadCountAll('no');
+
 						var rightFrame = parent.frames["right"];
                         if (rightFrame != "undefined" && typeof rightFrame.folderUnreadCount !== 'undefined') {
                             if (rightFrame != null){
@@ -476,7 +480,8 @@
 	            applyEllipsisMailTree();
 	        }
 	        
-	        function getUnreadCountAll() {
+	        function getUnreadCountAll(refreshRight) {
+	        	var refreshRightOff = refreshRight== 'no';
 	        	var mailboxList = [];
 	        	var nodeCount = window[treeviewStr].nodecount();
 	        	
@@ -534,6 +539,8 @@
 		                    		}
 	                    		}
 	                    		
+	                    		if (refreshRightOff) { return; }
+
                    				try {
                     				var pageSrc = parent.frames["right"].document.location.toString();
             	                    
@@ -581,7 +588,7 @@
 		            if (RtnVal) {
 		            	var href = window[treeviewStr].getvalue(1, "href");
 		            	
-		            	window[treeviewStr].source("<tree><nodes>" + get_childXML("", true, true, false) + "</nodes></tree>");
+		            	window[treeviewStr].source("<tree><nodes>" + get_childXML("", true, true, false, true) + "</nodes></tree>");
 		            	window[treeviewStr].update();
 		                
 		                if (window[treeviewStr].selectedIndex() == -1) {
@@ -589,7 +596,7 @@
 		                }
 		                
 						// openRightFrameDefault()가능?
-		                var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(window[treeviewStr].getvalue(1, "foldername")) + "&url=" + encodeURIComponent(window[treeviewStr].getvalue(1, "href"));
+		                var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(window[treeviewStr].getvalue(2, "foldername")) + "&url=" + encodeURIComponent(window[treeviewStr].getvalue(2, "href"));
 		                
 		            	if (shareId != "") {
 		            		url += "&shareId=" + encodeURIComponent(shareId);
@@ -609,7 +616,7 @@
 	        */
 	        function mailbox_treeview_reload() {
 	        	setTimeout(function() {
-	        		window[treeviewStr].source("<tree><nodes>" + get_childXML("", true, true, false) + "</nodes></tree>");
+	        		window[treeviewStr].source("<tree><nodes>" + get_childXML("", true, true, false, true) + "</nodes></tree>");
 	        		window[treeviewStr].update();
 	                
 	        		getUnreadCountAll();
@@ -1167,7 +1174,7 @@
 			        createNodeAndInsertText(xmlDOM, objNode, "URL", "");
 			        createNodeAndInsertText(xmlDOM, objNode, "BCOUNT", "-1");
 			        
-			        xmlHTTP.open("POST", "/ezEmail/getFolderList.do?shareId=" + encodeURIComponent(shareId), false);
+			        xmlHTTP.open("POST", "/ezEmail/getFolderList.do?shareId=" + encodeURIComponent(shareId) + "&am=y", false);
 			        xmlHTTP.send(xmlDOM);
 
 			        var nodeTreeXml = xmlHTTP.responseText.replace("<DATA>", "").replace("</DATA>", "");

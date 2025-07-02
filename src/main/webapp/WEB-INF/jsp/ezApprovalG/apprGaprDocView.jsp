@@ -566,7 +566,7 @@
 		    }
 		    
 		    function btncallback_onclick() {
-	            var pMsg = "<spring:message code='ezApprovalG.t68'/>";
+	            var pMsg = "<spring:message code='ezApprovalG.km01'/>";
 	            OpenInformationUI(pMsg, btncallback_onclick_Complete);
 	        }
 		    
@@ -626,7 +626,7 @@
 				var RtnVal = getNodeText(GetChildNodes(loadXMLString(result))[0]);
 				if (RtnVal == "TRUE") {
 					SendMailToCancel_Function(GetCurrentlinelist);
-					var pAlertContent = strLang891 + "<br> " + strLang892;
+					var pAlertContent = strLangKm01;
 					OpenAlertUI(pAlertContent, OpenAlertUI_Close);
 					
 					//2019-05-02 김보미 : 근태관리 연동양식일 경우 추가 - 회수
@@ -741,7 +741,7 @@
 	        
 	        //2018-07-10 배현상, 강제회수 분기(btnforcecallback_onclick 생성)
 	        function btnforcecallback_onclick() {
-	        	var pMsg = "<spring:message code='ezApprovalG.t68'/>";
+	        	var pMsg = "<spring:message code='ezApprovalG.km02'/>";
 	        	OpenInformationUI(pMsg, btnforcecallback_onclick_complete);
 	        }
 
@@ -782,7 +782,7 @@
 				var RtnVal = getNodeText(GetChildNodes(loadXMLString(result))[0]);
 				if (RtnVal == "TRUE") {
 					SendMailToCancel_Function(GetCurrentlinelist);
-					var pAlertContent = strLang891 + "<br> " + strLang892;
+					var pAlertContent = strLangKm01;
 					OpenAlertUI(pAlertContent, OpenAlertUI_Close);
 					
 					//2020-04-03 김정언 : 근태관리 연동양식일 경우 추가 - 강제회수

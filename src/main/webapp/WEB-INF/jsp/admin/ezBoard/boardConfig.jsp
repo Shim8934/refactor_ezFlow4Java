@@ -14,10 +14,11 @@
 			var pUse_Editor = "<c:out value='${use_Editor}'/>";	        
 	        var pBoardID = "<c:out value='${boardID}'/>";
 	        var pBoardName = "${boardName}";
-	        var pBoardType = "<c:out value='${boardType}'/>";
+	        var pBoardGuBun = "<c:out value='${guBun}'/>";
 	        var pParentBoardID = "<c:out value='${parentBoardID}'/>";
 	        var TabId = "<c:out value='${tabID}'/>";
 			let useFormFlag = "${ useFormFlag }";
+			var itemCnt = -1;
 
 	        document.onselectstart = function () { return false; };
 	        window.onresize = window_resize;
@@ -31,7 +32,7 @@
 	                document.body.style.UserSelect = 'none';
 	            }
 	            
-				if (pBoardType == 10){ // 카테고리 게시판인 경우 게시물 리스트 숨김처리 및 일반설정탭으로 로드되도록 조건 설정
+				if (pBoardGuBun == 10){ // 카테고리 게시판인 경우 게시물 리스트 숨김처리 및 일반설정탭으로 로드되도록 조건 설정
 					document.getElementById("BoardEnv_sub1").style.display = "none";
 					TabId = "1tab2";
 				} else {
@@ -55,14 +56,16 @@
 
 	            switch (pSelectTab) {
 	                case "BoardEnv_div1":
-	                    if (pBoardType == 3) {
-	                        document.getElementById("BoardEnv_ifrm").src = "/ezBoard/boardItemListPhoto.do?boardID=" + encodeURIComponent(pBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pBoardType + "&adminType=y";
-	                    } else if (pBoardType == 4) {
-	                        document.getElementById("BoardEnv_ifrm").src = "/ezBoard/boardItemListThumbnail.do?boardID=" + encodeURIComponent(pBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pBoardType + "&adminType=y";
-	                    } else if (pBoardType == 7) {
-	                    	document.getElementById("BoardEnv_ifrm").src = "/ezBoard/boardItemListMovie.do?boardID=" + encodeURIComponent(pBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pBoardType + "&adminType=y";
+	                    if (pBoardGuBun == 3) {
+	                        document.getElementById("BoardEnv_ifrm").src = "/ezBoard/boardItemListPhoto.do?boardID=" + encodeURIComponent(pBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pBoardGuBun + "&adminType=y";
+	                    } else if (pBoardGuBun == 4) {
+	                        document.getElementById("BoardEnv_ifrm").src = "/ezBoard/boardItemListThumbnail.do?boardID=" + encodeURIComponent(pBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pBoardGuBun + "&adminType=y";
+	                    } else if (pBoardGuBun == 7) {
+	                    	document.getElementById("BoardEnv_ifrm").src = "/ezBoard/boardItemListMovie.do?boardID=" + encodeURIComponent(pBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pBoardGuBun + "&adminType=y";
+	                    } else if (pBoardGuBun == 9) {
+	                    	document.getElementById("BoardEnv_ifrm").src = "/ezBoard/fileViewerBoard.do?boardID="  + encodeURIComponent(pBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pBoardGuBun
 	                    } else {	      
-	                        document.getElementById("BoardEnv_ifrm").src = "/ezBoard/boardItemList.do?boardID=" + encodeURIComponent(pBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pBoardType + "&adminType=y";
+	                        document.getElementById("BoardEnv_ifrm").src = "/ezBoard/boardItemList.do?boardID=" + encodeURIComponent(pBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pBoardGuBun + "&adminType=y";
 	                    }
 	                    break;
 	                case "BoardEnv_div2":

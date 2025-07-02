@@ -60,6 +60,7 @@
 		    var strWriteDate = "${boardItem.writeDate}";
 		    var strImportance = "${boardItem.importance}";
 		    var strEndDate = "${boardItem.endDate}";
+		    var strStartDate = "${boardItem.startDate}";
 		    var strContentLocation = "${boardItem.contentLocation}";
 		    var strAttachList = "${boardItem.attachments}";
 		    var SSUserID = "${userInfo.id}";
@@ -118,14 +119,15 @@
 			var rating = "${itemStarRating.rating}";
 			var updateDate = "<c:out value= '${boardItem.updateDate}'/>";
 
-		    // 수정 수아 재은	    
-		    var nowZoom = 100;
-	        var maxZoom = 200;
-	        var minZoom = 80;
-	
-	        var MozNowZoom = 1;
-	        var MozMaxZoom = 2;
-	        var MozMinZoom = 0.8;
+		    <%--본문 확대/축소 관련--%>
+            var nowZoom = parseInt("<c:out value='${contentSize}'/>"); // 사용자 설정 본문크기값
+            var maxZoom = 200;
+            var minZoom = 100;
+    
+            var MozNowZoom = parseInt("<c:out value='${mozContentSize}'/>"); // 사용자 설정 본문크기값
+            var MozMaxZoom = 2;
+            var MozMinZoom = 1;
+	        
 			/* 2023-04-12 이가은 - 답글 기능을 위한 변수 추가 */
 	        var userInfoName = "${userInfo.displayName}"; 
 			var replyOpenFlag = 0;
@@ -142,8 +144,25 @@
 			var attachLimit = "${boardInfo.attachSizeLimit}"; // 첨부파일 크기 limit
 			var attachFileNameMaxLength = Number("${attachFileNameMaxLength}");// 첨부파일명 글자수 제한 limit
 			var totalFileSize = 0; // 현재 총 첨부파일 사이즈
+			
+            var userLang = "${extenLang}"
+            var boardAttrListTemp = '<c:out value="${boardAttrJson}"/>';
+            var boardAttrListJson = JSON.parse(replaceEntityCodeToStr(boardAttrListTemp));
+            var boardItemTemp = '<c:out value="${boardItemJson}"/>';
+            var boardItemJson = JSON.parse(replaceEntityCodeToStr(boardItemTemp));
 	        
-	        function Bigger(doc) {     
+			var version = "${ version }";
+			var useVersion = "${ useVersion }";
+			var leftAddr = "${ leftAddr }";
+			var rightAddr = "${ rightAddr }";
+			var selectedAddr = "${ selectedAddr }"
+			var addrInfo = [];
+			var selectedViewFlag = "${ selectedViewFlag }";
+			var historyModify = "${ historyModify }";
+			var newestVersionFlag = "${ newestVersionFlag }";
+
+	        function Bigger() {
+                var doc = document.getElementById("message").contentWindow.document;
 	            if (navigator.userAgent.indexOf('Firefox') != -1) {
 	                if (MozNowZoom < MozMaxZoom) {
 	                    MozNowZoom += 0.1;
@@ -165,9 +184,11 @@
 	                $(doc).find("#curZoomSize").show();
 	                setTimeout(function(){$(doc).find("#curZoomSize").css("display","none")}, 1000);
 	            }
+	            fontSync("B");
 	        }
 	        
-	        function Smaller(doc) {
+	        function Smaller() {
+	            var doc = document.getElementById("message").contentWindow.document;
 	            if (navigator.userAgent.indexOf('Firefox') != -1) {
 	                if (MozNowZoom > MozMinZoom) {
 	                    MozNowZoom -= 0.1;
@@ -189,7 +210,25 @@
 	                $(doc).find("#curZoomSize").show();
 	                setTimeout(function(){$(doc).find("#curZoomSize").css("display","none")}, 1000);
 	            }
+	            fontSync("S");
 	        }
+	        
+	        function fontSync(type) {
+                for (let i=0; i<5; i++) {
+                    let elementId = "message" + i;
+                    let element = document.getElementById(elementId);
+
+                    if (element) {
+                        if (type == "S") {
+                            Smaller2(element.contentWindow.document, i);
+                        } else {
+                            Bigger2(element.contentWindow.document, i)
+                        }
+                    } else {
+                        break;
+                    }
+                }
+            }
 	        
 		    window.onload = function () {
 		    	makeEmoticonPanel();
@@ -198,7 +237,7 @@
 		        		// 수정 수아 재은
 			        	var html = "<div><img src='/images/minus.png' title='<spring:message code='ezEmail.t99000065' />' id='smaller' style='cursor:pointer; margin-bottom: 5px;' />"
 							html += "<img src='/images/plus.png' title='<spring:message code='ezEmail.t99000064' />' id='bigger' style='cursor: pointer; margin-bottom: 5px;' />";
-							html += "<span id='curZoomSize' style='display:none; float:right;'></span></div>";
+							html += "<span id='curZoomSize'  style='position: absolute; top: 2px; right: 0px; background: white; font-size: 12px; padding: 2px; border: 1px solid rgb(204, 204, 204); border-radius: 4px; display: none;'></span></div>";
 							
 						$.ajax({
 							type : "POST",
@@ -221,12 +260,12 @@
 						doc.close();
 						
 						// 수정 수아 재은
-						doc.getElementById('smaller').onclick = function () {
+						<%-- doc.getElementById('smaller').onclick = function () {
 							Smaller(doc);
 						}
 						doc.getElementById('bigger').onclick = function () {
 							Bigger(doc);
-						}
+						}--%>
 						
 						/* 2024-12-17 김은실 - default.css 추가 */
 						var cssLink0 = document.createElement("link");
@@ -257,6 +296,13 @@
 						rsa.setPublic(document.getElementById('publicModulus').value, document.getElementById('publicExponent').value);
 						
 			            AddLinkTarget();
+			            
+			            // 사용자가 설정한 본문크기값으로 세팅 (원글)
+                        if (navigator.userAgent.indexOf('Firefox') != -1) {
+                            $(doc).find('.contentDiv').css("MozTransform","scale(" + MozNowZoom + ")");
+                        } else {
+                            $(doc).find(".contentDiv").css("zoom",nowZoom + "%");
+                        }
 		        	}
 		        	
 		            SetAttachmentInfo();
@@ -269,12 +315,6 @@
 		            }
 		            
 		            // 2024-07-31 전인하 - 게시판 > 확장컬럼 > peoplePicker 타입, textArea 타입 출력값 가공
-		            var userLang = "${extenLang}"
-		            var boardAttrListTemp = '<c:out value="${boardAttrJson}"/>';
-		            var boardAttrListJson = JSON.parse(replaceEntityCodeToStr(boardAttrListTemp));
-		            var boardItemTemp = '<c:out value="${boardItemJson}"/>';
-                    var boardItemJson = JSON.parse(replaceEntityCodeToStr(boardItemTemp));
-                    
 		            for (let i = 0 ; i < boardAttrListJson.length ; i++ ) {
 		                var boardAttr = boardAttrListJson[i];
 		                if (boardAttr.colType == 'people') {
@@ -519,7 +559,7 @@
 		    }
 		    
 		    var checkpassword_dialogArguments = new Array();
-		    function btn_Delete_Onclick() {
+		    function btn_Delete_Onclick(param) {
 		        if (CheckIfHasReplies()) {
 		            alert("<spring:message code='ezBoard.t196' />");
 		            return;
@@ -592,7 +632,7 @@
 		            if (BoardAdmin_FG == "true" || gubun != "2") {
 		                if (!confirm("<spring:message code='ezBoard.t197' />")) return;
 		                var xmlhttp = createXMLHttpRequest();
-		                xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemList=" + encodeURIComponent(pItemID) + ";", false);
+		                xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemList=" + encodeURIComponent(pItemID) + ";" + "&mode=" + param, false);
 		                xmlhttp.send();
 		
 		                if (xmlhttp.responseText == "NO") {
@@ -745,11 +785,11 @@
 		        
 		        var portletId = "";
 		     	// 게시판 포틀릿 리스트 업데이트 되도록 수정
-	            if (parent.opener.refreshBordPortletInfo != undefined) {
+	            if (parent.opener != null && parent.opener.refreshBordPortletInfo != undefined) {
 	            	portletId = "<c:out value='${portletId}'/>";
 	            }
 		     	
-	            if (parent.opener.getBoardList_NewBoardSTD != undefined) {
+	            if (parent.opener != null && parent.opener.getBoardList_NewBoardSTD != undefined) {
 					parent.opener.getBoardList_NewBoardSTD();
 				}
 	            
@@ -772,10 +812,11 @@
 		        }
 		        
 		        if (gubun != "2") {
-					window.location.href = "/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&mode=modify" + "&reservedItem=" + pReservedItem + "&portletId=" + portletId;
-					window.resizeTo(785, 780);
+	                window.location.href = "/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&mode=modify" + "&reservedItem=" + pReservedItem + "&portletId=" + portletId + "&historyModify=" + historyModify + "&version=" + version;
+		            window.resizeTo(785, 780);
 		        }
 		    }
+		    
 		    function btn_Modify_Onclick_Complete(ret) {
 		        if (typeof (ret) == "undefined" || ret == "cancel" || ret == "") return;
 		
@@ -1881,6 +1922,234 @@
 				});
 			}
 
+            <%-- 재게시 기능 --%>
+            function btn_Repost_Onclick() {
+                var newStartDate = new Date(strStartDate + " UTC");
+                var newEndDate = new Date(strEndDate);
+                var currentDate = new Date();
+
+                if (newStartDate > currentDate) {
+                    alert("예약게시물 및 공개시기가 지나지 않은 게시물은 재게시가 불가능합니다.");
+                    return;
+                }
+
+                if (newEndDate < currentDate) {
+                    alert("게시기간이 만료된 게시물은 재게시가 불가능합니다.");
+                    return;
+                }
+                
+                btn_Repost_Onclick_complete("OK");
+               
+            }
+            
+            function btn_Repost_Onclick_complete(ret) {
+                if (typeof (ret) == "undefined" || ret == "cancel" || ret == "") return;
+
+                if (ret == "NO") {
+                    alert("<spring:message code='ezBoard.t267' />");
+                    return;
+                }
+                
+                if(confirm("재게시를 하시면 최근 게시물로 등록됩니다.\n재게시 하시겠습니까?")) {
+                    var xmlhttp = createXMLHttpRequest();
+                    xmlhttp.open("POST", "/ezBoard/repostItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&userID=" + userInfoID +  "&hasReply=" + CheckIfHasReplies(), false);
+                    xmlhttp.send();
+
+                    if (xmlhttp.responseText == "SUCCESS") {
+                        alert("재게시가 완료되었습니다.");
+                        window.location.reload();
+
+                        //if (boardItemView == "P") {
+                            window.opener.location.reload();
+                        //}
+                    }
+                }
+            }
+            
+            var zoomSettings = {};
+            var MozZoomSettings = {};
+
+            function initializeZoom(num) {
+                zoomSettings[num] = {
+                    nowZoom: parseInt("<c:out value='${contentSize}'/>"),
+                    maxZoom: 200,
+                    minZoom: 100
+                };
+
+                MozZoomSettings[num] = {
+                    MozNowZoom: parseInt("<c:out value='${mozContentSize}'/>"),
+                    MozMaxZoom: 2,
+                    MozMinZoom: 1
+                };
+            }
+
+            function Bigger2(doc, num) {
+                if (zoomSettings[num] === undefined) {
+                    initializeZoom(num);
+                }
+
+                var settings = zoomSettings[num];
+                var MozSettings = MozZoomSettings[num];
+
+                if (navigator.userAgent.indexOf('Firefox') != -1) {
+                    if (MozSettings.MozNowZoom < MozSettings.MozMaxZoom) {
+                        MozSettings.MozNowZoom += 0.1;
+                    } else {
+                        return;
+                    }
+
+                    $(doc).find('.contentDiv' + num).css("MozTransform", "scale(" + MozSettings.MozNowZoom + ")");
+                    $(doc).find('.contentDiv' + num).css("MozTransformOrigin", "0 0");
+                } else {
+                    if (settings.nowZoom < settings.maxZoom) {
+                        settings.nowZoom += 10;
+                    } else {
+                        return;
+                    }
+
+                    $(doc).find(".contentDiv" + num).css("zoom", settings.nowZoom + "%");
+                    $(doc).find("#curZoomSize" + num).text(settings.nowZoom + "%");
+                    $(doc).find("#curZoomSize" + num).show();
+                    setTimeout(function () {
+                        $(doc).find("#curZoomSize" + num).css("display", "none")
+                    }, 1000);
+                }
+            }
+
+            function Smaller2(doc, num) {
+                if (zoomSettings[num] === undefined) {
+                    initializeZoom(num);
+                }
+
+                var settings = zoomSettings[num];
+                var MozSettings = MozZoomSettings[num];
+
+                if (navigator.userAgent.indexOf('Firefox') != -1) {
+                    if (MozSettings.MozNowZoom > MozSettings.MozMinZoom) {
+                        MozSettings.MozNowZoom -= 0.1;
+                    } else {
+                        return;
+                    }
+
+                    $(doc).find('.contentDiv' + num).css("MozTransform", "scale(" + MozSettings.MozNowZoom + ")");
+                    $(doc).find('.contentDiv' + num).css("MozTransformOrigin", "0 0");
+                } else {
+                    if (settings.nowZoom > settings.minZoom) {
+                        settings.nowZoom -= 10;
+                    } else {
+                        return;
+                    }
+
+                    $(doc).find(".contentDiv" + num).css("zoom", settings.nowZoom + "%");
+                    $(doc).find("#curZoomSize" + num).text(settings.nowZoom + "%");
+                    $(doc).find("#curZoomSize" + num).show();
+                    setTimeout(function () {
+                        $(doc).find("#curZoomSize" + num).css("display", "none")
+                    }, 1000);
+                }
+            }
+	        
+			function viewModifyHistory() {
+				var heigth = window.screen.availHeight;
+				var width = window.screen.availWidth;
+				var left = (width - 620) / 2;
+				var top = (heigth - 425) / 2;
+				var href = "/ezBoard/modifyHistory?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID);
+				var strFeature = "status:no;dialogHeight: 425px;dialogWidth: 620px;help: no;resizable:yes";
+
+				DivPopUpShow(620, 425, href);
+			}
+
+			function viewContent(loc) {
+				selectedViewFlag = loc;
+
+				getItemAddrInfo(loc);
+
+				var pheight = window.screen.availHeight;
+				var pwidth = window.screen.availWidth;
+				var pTop = (pheight - 720) / 2;
+				var pLeft = (pwidth - 790) / 2;
+				var url = "/ezBoard/boardItemView.do?showAdjacent=&location=GENERAL&historyCheck=true";
+
+				url += "&itemID=" + encodeURIComponent(addrInfo[2]);
+				url += "&boardID=" + encodeURIComponent(addrInfo[1]);
+				url += "&version=" + addrInfo[3];
+				url += "&leftAddr=" + encodeURI(leftAddr);
+				url += "&rightAddr=" + encodeURI(rightAddr);
+				url += "&selectedAddr=" + encodeURI(selectedAddr);
+				url += "&selectedViewFlag=" + loc;
+				url += "&historyModify=true";
+
+				window.open(url, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=790,top=" + pTop + ",left=" + pLeft, "");
+				window.close();
+			}
+
+			function getItemAddrInfo(loc) {
+				switch (loc) {
+					case "left" : {
+						addrInfo = leftAddr.split(";");
+
+						break;
+					}
+
+					case "right" : {
+						addrInfo = rightAddr.split(";");
+
+						break;
+					}
+
+					case "my" : {
+						addrInfo = selectedAddr.split(";");
+
+						break;
+					}
+
+					default : {}
+				}
+			}
+
+			function showModifyHistory() {
+				var compareTargetHref = getCompareTarget();
+
+				if (leftAddr != null) {
+					pUrl = "/ezApprovalG/docViewerCompare.do?docHrefAfter=" + encodeURI(compareTargetHref) + "&docHrefBefore=" + encodeURI(selectedAddr.split(";")[0]);
+
+					openwindow2(pUrl);
+
+					return;
+				}
+			}
+
+			function getCompareTarget() {
+				switch (selectedViewFlag) {
+					case "left" : {
+						return leftAddr.split(";")[0];
+					}
+
+					case "right" : {
+						return rightAddr.split(";")[0];
+					}
+
+					default : {}
+				}
+			}
+
+			function openwindow2(wfileLocation) {
+				try {
+					var heigth = window.screen.availHeight;
+					var width = window.screen.availWidth;
+					var left = 0;
+					var top = 0;
+					var pleftpos;
+
+					heigth = parseInt(heigth) - 70;
+					width = parseInt(width) - 20;
+
+					window.open(wfileLocation, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
+				} catch (e) {
+					alert("openwindow :: " + e.description);
+				}
+			}
 		</script>
 	</head>
 	<body id="bodyPopup" class="popup" style="overflow:auto; height:100%;">
@@ -1888,10 +2157,51 @@
 		  <tr>
 		    <td style="vertical-align: top; height: 10px;">
 		      <div id="menu">
+			  <c:if test = "${ historyCheck eq 'true' }">
+				  <ul>
+					  <c:if test = "${ selectedViewFlag ne 'right' && rightAddr ne '' }">
+					  <li>
+						  <span onclick = "viewContent('right')"><spring:message code='ezBoard.versionManage.msg8' /></span>
+					  </li>
+					  </c:if>
+
+					  <c:if test = "${ selectedViewFlag ne 'my' }">
+					  <li>
+						  <span onclick = "viewContent('my')"><spring:message code='ezBoard.versionManage.msg10' /></span>
+					  </li>
+					  </c:if>
+
+					  <c:if test = "${ selectedViewFlag ne 'left' && leftAddr ne '' }">
+					  <li>
+						  <span onclick = "viewContent('left')"><spring:message code='ezBoard.versionManage.msg9' /></span>
+					  </li>
+					  </c:if>
+
+					  <%-- 수정 : 선택한 버전의 글만 수정 가능 --%>
+					  <c:if test = "${ selectedViewFlag eq 'my' }">
+					  	  <li ID='btn_Modify'><span onclick='btn_Modify_Onclick()'><spring:message code='ezBoard.t316' /></span></li>
+					  </c:if>
+
+					  <%-- 삭제 : 최종 수정본이 아닌 중간 버전의 글만 삭제 가능 --%>
+					  <c:if test = "${ newestVersionFlag ne 'Y' }">
+					  	  <li ID='btn_Delete'><span class="icon16 popup_icon16_delete" onclick='btn_Delete_Onclick(`only`)'></span></li>
+					  </c:if>
+
+					  <c:if test = "${ selectedViewFlag ne 'my' }">
+					  <li>
+						  <span onclick = "showModifyHistory()"><spring:message code='ezBoard.versionManage.msg11' /></span>
+					  </li>
+					  </c:if>
+				  </ul>
+			  </c:if>
+			  <c:if test = "${ historyCheck ne 'true' }">
 		        <ul>
 		        	<c:choose>
 		        		<c:when test="${pReservedItem == 'true'}">
 		        			<li ID='btn_Modify'><span onclick='btn_Modify_Onclick()'><spring:message code='ezBoard.t316' /></span></li>
+		        			<c:if test="${boardItem.itemLevel == 1 && (boardItem.writerID == userInfo.id || boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK')}"><%-- 답변글은 재게시 버튼 안뜨도록 함 --%>
+                                <li ID='btn_Repost'><span onclick='btn_Repost_Onclick()'>재게시</span></li>
+                            </c:if>
 		                    <li ID='btn_Delete' onclick='btn_Delete_Onclick()'><span class="icon16 popup_icon16_delete switchIcon"></span><span class="iconTexts"><spring:message code='ezBoard.t113' /></span></li>
 		        		</c:when>
 		        		<c:when test="${apprFlag == 'N'}">
@@ -1907,6 +2217,9 @@
 		        		</c:when>
 		        		<c:when test="${apprFlag == 'W'}">
 		        			<li ID='btn_Modify'><span onclick='btn_Modify_Onclick()'><spring:message code='ezBoard.t316' /></span></li>
+		        			<c:if test="${boardItem.itemLevel == 1 && (boardItem.writerID == userInfo.id || boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK')}"><%-- 답변글은 재게시 버튼 안뜨도록 함 --%>
+                                <li ID='btn_Repost'><span onclick='btn_Repost_Onclick()'>재게시</span></li>
+                            </c:if>
 		                    <li ID='btn_Delete' onclick='btn_Delete_Onclick()'><span class="icon16 popup_icon16_delete switchIcon"></span><span class="iconTexts"><spring:message code='ezBoard.t113' /></span></li>
 		        		</c:when>
 		        		<c:otherwise>
@@ -1938,12 +2251,20 @@
 									<!--		강민수92 end -->			        				
 		        					<li ID='btn_Reply'><span onclick='btn_Reply_Onclick()'><spring:message code='ezBoard.t88' /></span></li>
 			        				<li ID='btn_Modify'><span onclick='btn_Modify_Onclick()'><spring:message code='ezBoard.t316' /></span></li>
+			        				<c:if test="${boardItem.itemLevel == 1}">
+                                        <li ID='btn_Repost'><span onclick='btn_Repost_Onclick()'>재게시</span></li>
+                                    </c:if>
 			                        <c:if test="${guBun != '2'}">
 										<li ID='btn_Copy'><span onclick='btn_Copy_Onclick()' ><spring:message code='ezBoard.t274' /></span></li>
 										<%--게시물이동추가--%>
 										<li ID='btn_Move'><span onClick="btn_Move_Onclick()"><spring:message code='ezBoard.t134' /></span></li>
 			                        	<li ID='btn_Reader'><span onclick='ReaderList()' ><spring:message code='ezBoard.t320' /></span></li>
 			                    	</c:if>
+									<c:if test = "${ useVersion eq 'Y' }">
+										<li id = "btn_modifyHistory">
+											<span onclick = "viewModifyHistory()"><spring:message code = "ezBoard.versionManage.msg2" /></span>
+										</li>
+									</c:if>
 			                    	<li ID='btn_Delete' onclick='btn_Delete_Onclick()'><span class="icon16 popup_icon16_delete switchIcon"></span><span class="iconTexts"><spring:message code='ezBoard.t113' /></span></li>
 		                        	<li ID='btn_Print' onclick='btn_Print_Onclick()'><span class="icon16 popup_icon16_print switchIcon"></span><span class="iconTexts"><spring:message code='main.t73'/></span></li>
 		                        	<c:if test="${useExternalMailServer eq 'NO' }">
@@ -1958,6 +2279,11 @@
 									<!--		강민수92 end -->			        				
 			                        <li ID='btn_Reply'><span onclick='btn_Reply_Onclick()'><spring:message code='ezBoard.t88' /></span></li>
 			                        <li ID='btn_Read' ><span onclick='ReaderList()' ><spring:message code='ezBoard.t320' /></span></li>
+									<c:if test = "${ useVersion eq 'Y' }">
+										<li id = "btn_modifyHistory">
+											<span onclick = "viewModifyHistory()"><spring:message code = "ezBoard.versionManage.msg2" /></span>
+										</li>
+									</c:if>
 			                        <li ID='btn_Print' onclick='btn_Print_Onclick()'><span class="icon16 popup_icon16_print switchIcon" ></span><span class="iconTexts"><spring:message code='main.t73'/></span></li>
 			                        <li ID='btn_Mail' style="display:none;" onclick='mail_boarditem()' ><span class="icon16 popup_icon16_mail_gray switchIcon" ></span><span class="iconTexts"><spring:message code='ezEmail.t177'/></span></li>
 			        			</c:otherwise>
@@ -1993,6 +2319,7 @@
 						</c:choose>
 					</c:if>
 		        </ul>
+			  </c:if>
 		      </div>    
 		      <div id="close">
 		        <ul>
@@ -2433,5 +2760,12 @@
                 <img id="previewImage" class="previewImage">
             </div>            
         </div>
+        <div class="zoom_btn">
+            <span class="zoom_in" onclick="Bigger()">확대</span>
+            <span class="zoom_out" onclick="Smaller()">축소</span>
+        </div>
+        <c:if test="${useAI}">
+            <c:import url="/WEB-INF/jsp/ezAI/aiSlide.jsp" />
+        </c:if>
 	</body>
 </html>

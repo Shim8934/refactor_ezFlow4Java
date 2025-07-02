@@ -3454,4 +3454,46 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createUserScheduleTypeConfigTable");
 		}
 	}
+
+	public void addMailboxProgressStateColumns() {
+		try {
+			select("EzCommonDAO.checkMailboxProgressStateColumns");
+		} catch (Exception ignore) {
+			logger.debug("JMOCHA_MAILBOX_PROGRESS.STATE, STATE_DESCRIPTION column doesn't exist. creating the column...");
+			update("EzCommonDAO.addMailboxProgressStateColumns");
+		}
+	}
+
+	// 2024-12-05 한태훈 - 게시판 > 게시판 버전관리 테이블 추가
+	public void createTblBoardModifyHistory() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblBoardModifyHistory");
+		} catch (Exception e) {
+			
+			logger.debug("tbl_board_modifyhistory doesn't exist. creating the table...");
+			update("EzCommonDAO.createTblBoardModifyHistory");
+		}
+	}
+
+	/* 2024-07-22 양지혜 - 관리자 > 전자결재 > 발송현황 메뉴 표출여부 */
+	public void insertUseSendOutState(Map<String, Object> map) throws Exception {
+		String propertyValue = (String) select("EzCommonDAO.getTenantConfig", map);
+
+		if (propertyValue == null) {
+			logger.debug("useSendOutState tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertUseSendOutState", map);
+		}
+	}
+
+
+	// 2025-06-16 이혜림 - 게시판 > 본문 크기 컬럼 추가
+	public void addBoardContentSize() {
+		try {
+			select("EzCommonDAO.checkAddBoardContentSize");
+		} catch (Exception e) {
+			logger.debug("In TBL_Board_Configuration doesn't exist ContentSize column. creating the column...");
+
+			update("EzCommonDAO.addBoardContentSize");
+		}
+	}
 }

@@ -1203,6 +1203,16 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			String useReceiptExternal = ezCommonService.getTenantConfig("useReceiptExternal", info.getTenantId());
 			String useOnlyInnerMail = ezCommonService.getTenantConfig("UseOnlyInnerMail", info.getTenantId());
 			String useAutoZipEnc = ezCommonService.getTenantConfig("useAutoZipEnc", info.getTenantId());
+
+			// 2025.02.17 한슬기 : 나를 항상 참조에 포함 옵션(none: 사용안함, cc: 참조에 항상 포함, bcc: 숨은참조에 항상 포함)
+			MailGeneralVO mailGeneralVO = ezEmailService.getMailGeneral(info.getTenantId(), info.getUserId()).get(0);
+			String selfCcOption = mailGeneralVO.getSelfCcOption() == null ? "none" : mailGeneralVO.getSelfCcOption();
+			String lang = info.getLang() == null ? "1" : info.getLang();
+			String userName = "1".equals(lang) ? info.getUserName() :
+					(info.getUserName2() == null || info.getUserName2().isEmpty() ? info.getUserName() : info.getUserName2());
+			String deptName = "1".equals(lang) ? info.getDeptName() :
+					(info.getDeptName2() == null || info.getDeptName2().isEmpty() ? info.getDeptName() : info.getDeptName2());
+
 			if (useReceiptExternal.equals("YES")) {
 				replyReadTime = "YES".equalsIgnoreCase(isDefaultReceiptExternal) ? "2" : "1";
 			} else {
@@ -1564,9 +1574,9 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 						String reStr = ""; 
 								
 						if (cmd.equals("REPLY") || cmd.equals("REPLYALL")) {		
-							reStr = egovMessageSource.getMessage("ezEmail.t511", locale);
+							reStr = egovMessageSource.getMessage("ezEmail.t5111", locale);
 						} else if (cmd.equals("FORWARD")) {
-							reStr = egovMessageSource.getMessage("ezEmail.t513", locale);
+							reStr = egovMessageSource.getMessage("ezEmail.t5131", locale);
 						}
 						
 						if (!subject.startsWith(reStr)) {
@@ -1909,7 +1919,10 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			data.put("signValue", signValue); // 기본 서명 HTML
 			data.put("totBigSizeMailAttachLimit", totBigSizeMailAttachLimit);// 대용량 첨부파일의 최대 크기
 			data.put("useAutoZipEnc", useAutoZipEnc);// 메일쓰기창 첨부파일 업로드 zip 암호 설정 여부
-			
+			data.put("selfCcOption", selfCcOption); // 나를 항상 참조에 포함 옵션(none: 사용안함, cc: 참조에 항상 포함, bcc: 숨은참조에 항상 포함)
+			data.put("userName", userName);
+			data.put("deptName", deptName);
+
 	        result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", data);			
@@ -8031,10 +8044,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			String from = ((InternetAddress)message.getFrom()[0]).getAddress();
 			logger.debug("from=" + from);
 
-			String useFromAddress = StringUtils.defaultIfBlank(ezCommonService.getTenantConfig("Use_FromAddress", userInfo.getTenantId()), "NO");
-			String useDistributionSender = StringUtils.defaultIfBlank(ezCommonService.getCompanyConfig(userInfo.getTenantId(), userInfo.getCompanyId(), "useDistributionSender"), "NO");
-
-			List<String[]> aliasAddressList = ezEmailService.getAliasAddress(mailId, userInfo.getTenantId(), useFromAddress, useDistributionSender);
+			List<String[]> aliasAddressList = ezEmailService.getAliasAddress(mailId, userInfo.getTenantId(), "YES", "NO");
 
 			boolean isUserFrom = false;
 			for (String[] address : aliasAddressList) {
