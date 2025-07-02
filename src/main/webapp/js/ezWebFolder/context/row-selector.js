@@ -5,7 +5,7 @@ var rowContext = (function() {
 		unselected: "bnkWebFolder"
 	};
 	
-	var selectedClassNameRegExp = new RegExp("\\b" + className.selected + "\\b");
+	const selectedClassNameRegExp = new RegExp("\\b" + className.selected + "\\b");
 	
 	var rowWrapElement;
 	var firstSelected;
@@ -114,6 +114,112 @@ var rowContext = (function() {
 		}
 	}
 	
+    // Event handler for checkbox change
+    function onCheckboxChange(event) {
+        event.stopPropagation();
+        const checkbox = event.target;
+        const row = checkbox.closest("tr");
+
+        if (isSingleMode) {
+            clearFocus();
+            setSelectState(row, checkbox.checked);
+            return;
+        }
+
+        if (isFirstSelected()) {
+            firstSelected = row;
+        }
+
+        setSelectState(row, checkbox.checked);
+        updateSelectionArrays(checkbox, row);
+    }
+
+    function updateSelectionArrays(checkbox, row) {
+        if (typeof filePickArr === "undefined") return;
+    
+        const fileId = checkbox.value;
+        const selectedFile = `${folderId}/${fileId}`;
+    
+        if (checkbox.checked) {
+            if (!filePickArr.includes(selectedFile)) {
+                if (typeof selectFileList !== "undefined") {
+                    selectFileList.push(fileId);
+                }
+                filePickArr.push(selectedFile);
+            }
+        } else {
+            const index = filePickArr.indexOf(selectedFile);
+            if (index !== -1) {
+                if (typeof selectFileList !== "undefined") {
+                    const index2 = selectFileList.indexOf(fileId);
+                    if (index2 !== -1) {
+                        selectFileList.splice(index2, 1);
+                    }
+                }
+                filePickArr.splice(index, 1);
+            }
+        }
+    }
+
+    function isFirstSelected() {
+        return (firstSelected === undefined || getSelectedRows().length === 0);
+    }
+
+    function getSelectedRows() {
+        if (!rowWrapElement) return [];
+
+        const selectedRows = Array.from(rowWrapElement.querySelectorAll(`tr.${className.selected}`));
+
+        if (window.contextClickedTr && selectedRows.length <= 1) {
+            return [contextClickedTr];
+        }
+
+        return selectedRows;
+    }
+
+    function getUnselectedRows() {
+        if (!rowWrapElement) return [];
+
+        return Array.from(rowWrapElement.querySelectorAll(`tr.${className.unselected}`));
+    }
+
+    function getRowElement(targetId) {
+        return document.querySelector(`#tblFileList tr[targetid='${targetId}']`);
+    }
+
+    function getRowInfo(row) {
+        return {
+            id: row.getAttribute("targetId"),
+            type: row.getAttribute("targetType"),
+            isFavorite: row.hasAttribute("favorite"),
+            creator: row.getAttribute("targetCreater"),
+            targetFunction: row.getAttribute("targetFunction"),
+            targetPath: row.getAttribute("targetPath")
+        };
+    }
+
+    function isSelected(row) {
+        return selectedClassNameRegExp.test(row.className);
+    }
+
+    function setSelectState(row, isSelected) {
+        const checkbox = row.querySelector("input[type='checkbox']");
+        checkbox.checked = isSelected;
+        row.classList.toggle(className.selected, isSelected);
+        row.classList.toggle(className.unselected, !isSelected);
+
+        row.querySelectorAll("td").forEach(td => {
+            td.style.backgroundColor = isSelected ? m_strColorSelect : m_strColorDefault;
+        });
+    }
+
+    function clearFocus() {
+        getSelectedRows().forEach(row => {
+            setSelectState(row, false);
+        });
+        listContentArry = [];
+    }
+	/*
 	function onCheckboxChange(event) {
 		event.stopPropagation();
 		
@@ -197,7 +303,7 @@ var rowContext = (function() {
 	
 	function isSelected(rowElement) {
 		return rowElement.className.search(selectedClassNameRegExp) >= 0;
-	}
+	}*/
 	
 	function clearFocus() {
 		var selectedRows = getSelectedRows();
@@ -215,17 +321,38 @@ var rowContext = (function() {
 	}
 	
 	function setSelectState(rowElement, isSelect) {
-		var checkboxElement = rowElement.firstChild.firstChild;
+		/*var checkboxElement = rowElement.firstChild.firstChild;
 		
 		if (typeof filePickArr != "undefined"){
 			if("D" == rowElement.getAttribute("targettype")){
 				return;
 			}
-		}
+		}*/
+
+        const checkboxElement = rowElement.querySelector('input[type="checkbox"]');
+        if (!checkboxElement) return;
+
+        if (typeof filePickArr !== "undefined" && rowElement.getAttribute("targettype") === "D") {
+            return;
+        }
+
 		checkboxElement.checked = isSelect;
 		rowElement.setAttribute("class", isSelect ? className.selected : className.unselected);
 
-		if (isSingleMode && isSelect) {
+		if (typeof filePickArr !== "undefined" && isSelect) {
+            const selectedFileId = rowElement.getAttribute("targetId");
+            const selectedFile = folderId + "/" + selectedFileId;
+
+            // 중복 방지
+            if (!filePickArr.includes(selectedFile)) {
+                filePickArr.push(selectedFile);
+                if (typeof selectFileList !== "undefined") {
+                    selectFileList.push(selectedFileId);
+                }
+            }
+        }
+
+		/*if (isSingleMode && isSelect) {
 			var selectedFileId = rowElement.getAttribute("targetId");
 			var selectedFile = folderId + "/" + selectedFileId;
 			if (rowElement.firstChild.firstChild.checked) {
@@ -234,10 +361,10 @@ var rowContext = (function() {
 				}
 				filePickArr.push(selectedFile);
 			}
-		}
+		}*/
 	}
 	
-	function selectAll(isEnable) {
+	/*function selectAll(isEnable) {
 		var targetRows = isEnable ? getUnselectedRows() : getSelectedRows();
 		var length = targetRows.length;
 		
@@ -260,7 +387,37 @@ var rowContext = (function() {
 				}
 			}
 		}
-	}
+	}*/
+
+    function selectAll(isEnable) {
+        const targetRows = isEnable ? getUnselectedRows() : getSelectedRows();
+
+        // 비우기 먼저 (비선택 시)
+        if (typeof filePickArr !== "undefined" && !isEnable) {
+            filePickArr = [];
+            if (typeof selectFileList !== "undefined") {
+                selectFileList = [];
+            }
+        }
+
+        targetRows.forEach(row => {
+            setSelectState(row, isEnable);
+
+            // 선택 추가는 setSelectState 안에서 처리됨 (singleMode도 고려)
+            if (typeof filePickArr !== "undefined" && isEnable) {
+                const selectedFileId = row.getAttribute("targetid");
+                const selectedFile = folderId + "/" + selectedFileId;
+
+                if (filePickArr.indexOf(selectedFile) === -1) {
+                    filePickArr.push(selectedFile);
+                    if (typeof selectFileList !== "undefined") {
+                        selectFileList.push(selectedFileId);
+                    }
+                }
+            }
+        });
+    }
+
 	
 	function setSingleMode() {
 		isSingleMode = true;
