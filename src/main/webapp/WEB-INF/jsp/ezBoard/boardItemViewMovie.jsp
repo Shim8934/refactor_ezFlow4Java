@@ -648,6 +648,7 @@
 							}
 	                 	} catch (e) {console.log(e);}
 		            	
+		            	window.opener.location.reload();
 						window.location.reload();
 		        	}
 		        }

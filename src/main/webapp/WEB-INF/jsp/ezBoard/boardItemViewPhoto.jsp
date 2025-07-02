@@ -1151,6 +1151,7 @@
 							}
 	                 	} catch (e) {console.log(e);}
 			            
+			            window.opener.location.reload();
 			            page_reload();
 		            }
 		                
