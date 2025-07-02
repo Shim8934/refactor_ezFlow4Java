@@ -45,7 +45,7 @@
 	<div class="header-wrapper">
 		<div class="surveydetail-header">
 			<ul class="on">	
-				<c:if test="${(finishYN eq 'N') && ((survey.draftFlag ne 1) && (participation eq 'yes') && (resStatus ne true) || (survey.multiAnswerFlag ne 0)) && survey.useStatus != '2'}">
+				<c:if test="${(finishYN eq 'N') && (survey.draftFlag ne 1) && (participation eq 'yes') && ((resStatus ne true) || (survey.multiAnswerFlag ne 0)) && survey.useStatus != '2'}">
 					<li class="off"><span id="saveResult"><spring:message code="ezSurvey.t17"/></span></li>
 				</c:if>
 				<c:if test="${user == creator.id}">
