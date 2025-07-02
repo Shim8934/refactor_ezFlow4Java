@@ -1430,7 +1430,11 @@
 				ezdocinfog_view_cross_dialogArguments[1] = btnDocInfo_onclick_Complete;
 
 				var mode = getDocMode();
-				DivPopUpShow(430, 530, "/ezApprovalG/ezDocInfoView.do?docID=" + pDocID + "&ingFlag=" + mode);
+				if (typeof approvalFlag !== "undefined" && approvalFlag == "G") {
+					DivPopUpShow(430, 400, "/ezApprovalG/ezDocInfoView.do?docID=" + pDocID + "&ingFlag=" + mode);
+				}else {
+					DivPopUpShow(430, 300, "/ezApprovalG/ezDocInfoView.do?docID=" + pDocID + "&ingFlag=" + mode);
+				}
 			}
 			function btnDocInfo_onclick_Complete() {
 				DivPopUpHidden();

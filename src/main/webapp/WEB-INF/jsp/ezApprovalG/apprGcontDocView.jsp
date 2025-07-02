@@ -504,7 +504,11 @@
                 // 문서정보를 무조건 완료문서 DB에서 가져와, 진행문서를 배부대장에서 조회하는 경우 발생하는 문서정보 조회불가 현상을 수정함
                 var initFlag = docAprEnd == "APR" ? "APR" : "END";
 		        //DivPopUpShow(420, 500, "/ezApprovalG/ezDocInfoGView.do?docID=" + pDocID + "&ingFlag=END"); 문서정보 새로 구현해서 주석
-		        DivPopUpShow(430, 530, "/ezApprovalG/ezDocInfoView.do?docID=" + pDocID + "&ingFlag=" + initFlag);
+				if (typeof approvalFlag !== "undefined" && approvalFlag == "G") {
+					DivPopUpShow(430, 400, "/ezApprovalG/ezDocInfoView.do?docID=" + pDocID + "&ingFlag=" + initFlag);
+				}else {
+					DivPopUpShow(430, 300, "/ezApprovalG/ezDocInfoView.do?docID=" + pDocID + "&ingFlag=" + initFlag);
+				}
 		    }
 		    function btnDocInfo_onclick_Complete() {
 		        DivPopUpHidden();

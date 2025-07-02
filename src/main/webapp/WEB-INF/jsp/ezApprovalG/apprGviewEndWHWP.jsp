@@ -79,7 +79,8 @@
 			
 			// 첨부문서 확인 여부 (첨부문서 창 닫을시 발생하는 오류 방지를 위한 Flag)
 			var isDocAttach = "<c:out value = '${isDocAttach}'/>";
-			
+            
+            var approvalFlag = "<c:out value = '${approvalFlag}'/>";
 	        window.onresize = function () {
 	       		document.getElementById("messageWHWPEditor").style.height = document.documentElement.clientHeight - 150 + "px";
 	       		var mHeight = document.documentElement.clientHeight - 110 - document.getElementById("messageWHWPEditor").offsetTop + "px";
@@ -338,7 +339,11 @@
 				var url = "/ezApprovalG/ezDocInfoView.do?docID=" + pDocID + "&ingFlag=" + ingFlag;
 			    //var feature = "status:no;dialogWidth:420px;dialogHeight:495px;help:no;scroll:no;edge:sunken;";
 			    //var RtnVal = window.showModalDialog(url, "", feature);
-				DivPopUpShow(430, 530, url);
+				if (typeof approvalFlag !== "undefined" && approvalFlag == "G") {
+					DivPopUpShow(430, 400, url);
+				}else {
+					DivPopUpShow(430, 300, url);
+				}
 			}
 			
 			function btnDocInfo_onclick_Complete() {

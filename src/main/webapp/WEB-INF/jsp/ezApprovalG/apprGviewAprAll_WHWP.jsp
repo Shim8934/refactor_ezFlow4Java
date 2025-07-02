@@ -370,7 +370,11 @@
 				ezdocinfog_view_cross_dialogArguments[0] = "";
 			    ezdocinfog_view_cross_dialogArguments[1] = btnDocInfo_onclick_Complete;
 			    var url = "/ezApprovalG/ezDocInfoView.do?docID=" + docID + "&ingFlag=APR";
-			    DivPopUpShow(420, 520, url);
+				if (typeof approvalFlag !== "undefined" && approvalFlag == "G") {
+					DivPopUpShow(420, 400, url);
+				}else {
+					DivPopUpShow(420, 300, url);
+				}
 			}
 			
 			function btnDocInfo_onclick_Complete() {
