@@ -426,12 +426,14 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		}
 		String useWebfolder = ezCommonService.getTenantConfig("useWebfolder", userInfo.getTenantId());
 		String useAutoZipEnc = ezCommonService.getTenantConfig("useAutoZipEnc", userInfo.getTenantId());
-		
+		String useFileExtension = ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId());
+
 		model.addAttribute("useWebfolder", useWebfolder);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
 		model.addAttribute("useAutoZipEnc", useAutoZipEnc);
-		
+		model.addAttribute("useFileExtension", useFileExtension);
+
 		logger.debug("dragAndDropIframe ended.");
 		return "ezEmail/mailDragAndDrop";
 	}
