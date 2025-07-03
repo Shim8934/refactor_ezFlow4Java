@@ -264,34 +264,35 @@
 			        try { OpenWin.focus(); } catch (e) { }
 			    }
 			    else {
+			        debugger;
 			        var rtnValue = window.showModalDialog("/ezPersonal/selectPerson.do?type=" + type + "&dept=" + selectedDept + "&tagName=" + tagName, "",
 		                "dialogHeight:535px;dialogwidth:860px;dialogleft:100px;dialogtop:100px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(860, 535));
 		
 			        if (typeof (rtnValue) != "undefined" && type == "") {
-			            userid = rtnValue.split(":")[0];
-			            document.getElementById(tagName).value = rtnValue.split(":")[1];
-			            deptid = rtnValue.split(":")[2];
+			            userid = rtnValue.userId;
+			            document.getElementById(rtnValue.tagName).value = rtnValue.userName;
+			            deptid = rtnValue.deptId;
 			        }
 			        if (typeof (rtnValue) != "undefined" && type == "Proxy") {
-			            proxyuserid = rtnValue.split(":")[0];
-			            document.getElementById("TextProxyName").value = rtnValue.split(":")[1];
-			            proxydeptid = rtnValue.split(":")[2];
+			            proxyuserid = rtnValue.userId;
+			            document.getElementById("TextProxyName").value = rtnValue.userName;
+			            proxydeptid = rtnValue.deptId;
 			        }
 			    }
 			}
-			function select_person_Complete(rtnValue, tagName) {
+			function select_person_Complete(rtnValue) {
 				if (typeof (rtnValue) != "undefined" && type_Complete == "") {
-			        userid = rtnValue.split(":")[0];
-			        document.getElementById(tagName).value = rtnValue.split(":")[1];
-			        deptid = rtnValue.split(":")[2];
-			        $('#'+tagName).attr('userId', userid);
-		            $('#'+tagName).attr('deptId', deptid);
-		            $('#'+tagName).parent().parent().next().hide();
+			        userid = rtnValue.userId;
+                    document.getElementById(rtnValue.tagName).value = rtnValue.userName;
+                    deptid = rtnValue.deptId;
+			        $('#'+ rtnValue.tagName).attr('userId', userid);
+		            $('#'+ rtnValue.tagName).attr('deptId', deptid);
+		            $('#'+ rtnValue.tagName).parent().parent().next().hide();
 			    }
 			    if (typeof (rtnValue) != "undefined" && type_Complete == "Proxy") {
-			        proxyuserid = rtnValue.split(":")[0];
-			        document.getElementById("TextProxyName").value = rtnValue.split(":")[1];
-			        proxydeptid = rtnValue.split(":")[2];
+                    proxyuserid = rtnValue.userId;
+                    document.getElementById("TextProxyName").value = rtnValue.userName;
+                    proxydeptid = rtnValue.deptId;
 			    }
 			}
 		
