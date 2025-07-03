@@ -177,7 +177,7 @@
 	
 		        var isFileDelete = false;
 		        for (var i = 1; i < filecnt; i++) {
-		            if (document.getElementById("filelist").childNodes[i].childNodes[0].childNodes[0].checked == true) {
+		            if (document.getElementById("filelist").childNodes[i].querySelector("input[type='checkbox']").checked == true) {
 		                var pAttachDelSN;
 		                var pAttachDelFileName;
 		                var is_newfile;
@@ -207,10 +207,10 @@
 	
 		        for (var i = 1; i < filecnt; i++) {
 		            if (document.getElementById("checkboxall").checked == true) {
-		                document.getElementById("filelist").childNodes[i].childNodes[0].childNodes[0].checked = true;
+		                document.getElementById("filelist").childNodes[i].querySelector("input[type='checkbox']").checked = true;
 		            }
 		            else {
-		                document.getElementById("filelist").childNodes[i].childNodes[0].childNodes[0].checked = false;
+		                document.getElementById("filelist").childNodes[i].querySelector("input[type='checkbox']").checked = false;
 		            }
 		        }
 		    }

@@ -107,9 +107,9 @@
 		                           
 								
 		                        if (isUse == "1") {
-			                            _html += "<td style='width:5%;padding-left:5px;'><input  type='checkbox' checked = true onclick='event_statuschange(this);'></td>";
+			                            _html += "<td style='width:5%;padding-left:5px;'><div class='custom_checkbox'><input  type='checkbox' checked = true onclick='event_statuschange(this);'></div></td>";
 		                        } else {
-			                            _html += "<td style='width:5%;padding-left:5px;'><input type='checkbox' onclick='event_statuschange(this);'></td>";
+			                            _html += "<td style='width:5%;padding-left:5px;'><div class='custom_checkbox'><input type='checkbox' onclick='event_statuschange(this);'></div></td>";
 		                        }
 	
 		                        if (userlang == "1") {

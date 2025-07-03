@@ -263,11 +263,11 @@
 		           		<spring:message code='ezSchedule.t402' />
 		            </th>
 		            <td>
-		            	<input id="date" type="radio" name="usage" value="Y" checked style="margin:0px 0px 0px 4px" onClick='showMainPattern(0);' />
+						<div class='custom_radio'><input id="date" type="radio" name="usage" value="Y" checked style="margin:0px 0px 0px 4px" onClick='showMainPattern(0);' /></div>
 		                <label for="date"><spring:message code='ezSchedule.t403' /></label>
 		                <span id="lunarRadio">
-			                <input id="date2" type="radio" name="usage" value="N" style="margin:0px 0px 0px 4px" onClick='showMainPattern(1);'/>
-			                <label for="date2"><spring:message code='ezSchedule.t404' /></label>
+			                <div class='custom_radio'><input id="date2" type="radio" name="usage" value="N" style="margin:0px 0px 0px 4px" onClick='showMainPattern(1);'/>
+								<label for="date2"><spring:message code='ezSchedule.t404' /></label></div>
 		                </span>
 		            </td>
 		        </tr>

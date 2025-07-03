@@ -1,4 +1,4 @@
-﻿﻿//컨트롤키나 쉬프트 키가 눌려졌음을 체크하는 FLAG
+﻿//컨트롤키나 쉬프트 키가 눌려졌음을 체크하는 FLAG
 var PressCtrlKey = false;
 var PressShiftKey = false;
 
@@ -1335,10 +1335,10 @@ function event_listclick(obj, event) {
     if (!listEventCheckbox) {
         if (document.getElementById("HeaderAllCheckBox").checked) {
             var TemplistArray = new Array();
-            if (obj.getElementsByTagName("td").item(0).childNodes.item(0).checked) {
+            if (obj.getElementsByTagName("td").item(0).childNodes.item(0).querySelector('input').checked) {
                 for (var i = 0; i < listContentArry.length; i++) {
                     if (obj.getAttribute("id") == listContentArry[i]) {
-                        obj.childNodes.item(0).childNodes.item(0).checked = false;
+                        obj.childNodes.item(0).childNodes.item(0).querySelector('input').checked = false;
                        /* obj.setAttribute("selected", "false");*/
                         obj.style.backgroundColor = m_strColorDefault;
                     }
@@ -1349,7 +1349,7 @@ function event_listclick(obj, event) {
                 listContentArry = TemplistArray;
             }
             else {
-                obj.childNodes.item(0).childNodes.item(0).checked = true;
+                obj.childNodes.item(0).childNodes.item(0).querySelector('input').checked = true;
                 obj.style.backgroundColor = m_strColorSelect;
                 obj.setAttribute("selected", "true");
                 /*oList.setAttribute("lastSelectedRowID", obj.id);
@@ -1561,7 +1561,7 @@ function tr_unselectedAll(pTableID) {
 
         for (var i = 0; i < SelList.GetRowCount() ; i++) {
             SetAttribute(SelList.GetDataRows()[i], "selected", "false");
-            SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = false;
+            SelList.GetDataRows()[i].childNodes[0].childNodes[0].querySelector('input').checked = false;
             SelList.GetDataRows()[i].style.backgroundColor = m_strColorDefault;
             strListInfo = "";
         }
@@ -1618,7 +1618,7 @@ function tr_selectBlock(pRowID, pTableID) {
 function tr_mouseover(pRow) {
 
     //var strAttribute = GetAttribute(pRow, "selected");
-    if (pRow.childNodes[0].childNodes[0].checked != true) {
+    if (pRow.childNodes[0].childNodes[0].querySelector('input').checked != true) {
         pRow.style.backgroundColor = m_strColorOver;
 
     }
@@ -1629,7 +1629,7 @@ function tr_mouseover(pRow) {
 //마우스 아웃
 function tr_mouseout(pRow) {
     var strAttribute = GetAttribute(pRow, "selected");
-    if (pRow.childNodes[0].childNodes[0].checked != true)
+    if (pRow.childNodes[0].childNodes[0].querySelector('input').checked != true)
         pRow.style.backgroundColor = m_strColorDefault;
     else
         pRow.style.backgroundColor = m_strColorSelect;

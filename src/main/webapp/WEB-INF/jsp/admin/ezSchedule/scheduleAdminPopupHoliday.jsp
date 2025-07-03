@@ -328,9 +328,9 @@
 		            <th style="width:200px; text-align:center"><spring:message code='ezSchedule.t4000' />/<spring:message code='ezSchedule.t101' /></th>
 		            <td>
 		            	<span>
-			                <input id="date" type="radio" name="date" value="0" checked style="margin:0px 0px 0px 4px" onClick="onlySolar(0)" />
+							<div class='custom_radio'><input id="date" type="radio" name="date" value="0" checked style="margin:0px 0px 0px 4px" onClick="onlySolar(0)" /></div>
 			                <label for="date"><spring:message code='ezSchedule.t4000' /></label>
-			                <input id="date2" type="radio" name="date" value="1" style="margin:0px 0px 0px 4px" onClick="onlySolar(1)" />
+							<div class='custom_radio'><input id="date2" type="radio" name="date" value="1" style="margin:0px 0px 0px 4px" onClick="onlySolar(1)" /></div>
 			                <label for="date2"><spring:message code='ezSchedule.t101' /></label>
 		            	</span>
 		            </td>
@@ -340,10 +340,10 @@
 		           		<spring:message code='ezSchedule.t4008' />
 		            </th>
 		            <td>
-		            	<input id="pickDate" type="radio" name="pickDate" value="D" checked style="margin:0px 0px 0px 4px" onClick='showMainPattern(0);' />
+						<div class='custom_radio'><input id="pickDate" type="radio" name="pickDate" value="D" checked style="margin:0px 0px 0px 4px" onClick='showMainPattern(0);' /></div>
 		                <label for="pickDate"><spring:message code='ezSchedule.gha01' /></label>
 		                <span id="lunarRadio">
-			                <input id="pickDate2" type="radio" name="pickDate" value="Y" style="margin:0px 0px 0px 4px" onClick='showMainPattern(1);'/>
+							<div class='custom_radio'><input id="pickDate2" type="radio" name="pickDate" value="Y" style="margin:0px 0px 0px 4px" onClick='showMainPattern(1);'/></div>
 			                <label for="pickDate2"><spring:message code='ezSchedule.gha02' /></label>
 		                </span>
 		            </td>
@@ -393,13 +393,13 @@
 		        <tr>
 		            <th style="width:200px; text-align:center"><spring:message code='ezSchedule.t4007' /></th>
 		            <td>
-		                <input id="repeat" type="checkbox" name="repeat" onchange="isRepeatCheck()"/>
+						<div class='custom_checkbox'><input id="repeat" type="checkbox" name="repeat" onchange="isRepeatCheck()"/></div>
 		            </td>
 		        </tr>
 		        <tr>
 		            <th style="width:200px; text-align:center"><spring:message code='ezSchedule.t4009' /></th>
 		            <td>
-		                <input id="rest" type="checkbox" name="rest" />
+						<div class='custom_checkbox'><input id="rest" type="checkbox" name="rest" /></div>
 		            </td>
 		        </tr>
 		        <c:if test="${holidayType eq 'a'}">
