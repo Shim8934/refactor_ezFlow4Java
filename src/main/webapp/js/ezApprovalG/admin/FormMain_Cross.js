@@ -578,6 +578,13 @@ function MakeFormInfoXML_Detail() {
     	createNodeAndInsertText(xmlpara, objNode, "draftAllFlag", "N");
     }
     
+    /* 2025-07-02 김유진 - 전자결재S 모바일 기안 옵션 추가 */
+    if (document.getElementById("setMobileDraftFlag").checked) {
+    	createNodeAndInsertText(xmlpara, objNode, "mobileDraftFlag", "Y");
+    } else {
+    	createNodeAndInsertText(xmlpara, objNode, "mobileDraftFlag", "N");
+    }
+    
     createNodeAndInsertText(xmlpara, objNode, "KEEPPERIOD", getNodeText(document.getElementById("keepperiod").options[document.getElementById("keepperiod").selectedIndex]));
     createNodeAndInsertText(xmlpara, objNode, "KEEPPERIODCODE", document.getElementById("keepperiod").value);
     createNodeAndInsertText(xmlpara, objNode, "SECURITYLEVEL", document.getElementById("securitylevel").value);

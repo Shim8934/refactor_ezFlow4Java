@@ -3126,6 +3126,14 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
             put("AFTER_MYSQL", "DEFAULT 1 COMMENT '참여자 노출여부'");
             put("AFTER_ORACLE", "DEFAULT 1");
         }});
+        // 2025-08-21 김유진 - 전자결재 > 양식 > 모바일 기안 여부 컬럼 추가
+        test.add(new HashMap<String, Object>(){{
+            put("TABLE","TBL_FORMINFO");
+            put("COLUMN", "MOBILEDRAFTFLAG");
+            put("TYPE_MYSQL", "VARCHAR(4)"); put("TYPE_ORACLE", "VARCHAR2(4)");
+            put("AFTER_MYSQL", "DEFAULT 'N' COMMENT '전자결재S 모바일 기안 여부'");
+            put("AFTER_ORACLE", "DEFAULT 'N'");
+        }});
         
 		for (Map<String, Object> map : test) {
 			ezCommonDAO.alterTableAddColumns(map);

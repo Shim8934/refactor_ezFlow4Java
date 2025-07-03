@@ -375,6 +375,10 @@
 									document.querySelector("#selSihangType").style.display = "none";
 								}
 							}
+							
+							if (result.vo.mobileDraftFlag == "Y" && $("#setMobileDraftFlag").length > 0) {
+							    document.getElementById("setMobileDraftFlag").checked = true;
+							}
 			            }
 						
 						if (usePassAprLine == "YES" && result.vo.passAprLineFlag == "Y") {
@@ -1189,6 +1193,8 @@
 		    	if ($("input:checkbox[id='setConnFlag']").is(":checked")) {
 			    	$("input:checkbox[id='setPassAprLineFlag']").attr("checked", false);
 			    	$("input:checkbox[id='setPassAprLineFlag']").attr("disabled", true);
+			    	$("input:checkbox[id='setMobileDraftFlag']").attr("checked", false);
+                    $("input:checkbox[id='setMobileDraftFlag']").attr("disabled", true);
 			    	
  			    	if (useDraftAll == "YES") {
 				    	$("input:checkbox[id='setDraftAllFlag']").attr("checked", false);
@@ -1196,6 +1202,7 @@
 			    	}
 		    	} else {
 		    		$("input:checkbox[id='setPassAprLineFlag']").attr("disabled", false);
+		    		$("input:checkbox[id='setMobileDraftFlag']").attr("disabled", false);
 		    		
  		    		if (useDraftAll == "YES") {
 		    			$("input:checkbox[id='setDraftAllFlag']").attr("disabled", false);
@@ -1229,6 +1236,19 @@
 			    		$("input:checkbox[id='setDraftAllFlag']").attr("disabled", false);
 		    		}
 		    		$("input:checkbox[id='setConnFlag']").attr("disabled", false);
+		    	}
+		    }
+		    
+		    function changeMobileDraftFlag() {
+		    	if ($("input:checkbox[id='setMobileDraftFlag']").is(":checked")) {
+ 		    		$("input:checkbox[id='setConnFlag']").attr("checked", false);
+                    $("input:checkbox[id='setConnFlag']").attr("disabled", true);
+                    
+                    $("input:checkbox[id='officeFlag']").attr("checked", false);
+                    $("input:checkbox[id='officeFlag']").attr("disabled", true);
+		    	} else {
+		    		$("input:checkbox[id='setConnFlag']").attr("disabled", false);
+		    		$("input:checkbox[id='officeFlag']").attr("disabled", false);
 		    	}
 		    }
 		    
@@ -1484,6 +1504,10 @@
                         <%-- 2022-01-07 홍승비 - 전자결재G 웹한글 일괄기안 기능 표준모듈 반영 --%>
                          <span style="<c:if test="${useDraftAll != 'YES'}">display:none;</c:if>"><input type="checkbox" id="setDraftAllFlag" onclick="changeDraftAllFlag()" /> <spring:message code='ezApprovalG.groupdocK01'/></span>
 						<span style="<c:if test="${usePassAprLine != 'YES'}">display:none;</c:if>"><input type="checkbox" id="setPassAprLineFlag" onclick="changePassAprLineFlag()"/> <spring:message code='ezApprovalG.garm09'/></span>
+						<%-- 2025-07-02 김유진 - 전자결재S 모바일 기안 양식 여부용 --%>
+						<c:if test="${approvalFlag == 'S' && useEditor != 'WebHWP' && useEditor != 'HWP'}">
+						    <span><input type="checkbox" id="setMobileDraftFlag" onclick="changeMobileDraftFlag()"/> <spring:message code='ezApproval.mobileDraft.kyj01'/></span>
+						</c:if>
 					</td>
 				</tr>
 			</table>

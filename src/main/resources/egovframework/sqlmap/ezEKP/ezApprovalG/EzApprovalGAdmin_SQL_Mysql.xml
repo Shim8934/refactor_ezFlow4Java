@@ -945,7 +945,8 @@
 						WHEN O.FORMID IS NOT NULL THEN 'Y'
                     END AS officeFlag,
                     formxslt,
-                    FORMDRAFTALLFLAG
+                    FORMDRAFTALLFLAG,
+                    MOBILEDRAFTFLAG
 				FROM
 					TBL_FORMINFO
 				JOIN 
@@ -1779,7 +1780,8 @@
 				opengovflag,
 				aprOption,
 				SIHANGTYPE,
-				formxslt)
+				formxslt,
+				mobileDraftFlag)
 			VALUES
 				(#v_PFORMCONTAINERID#,
 				#v_PFORMID#,
@@ -1797,7 +1799,8 @@
 				#v_POPENGOVFLAG#,
 				#v_formAprOption#,
 				#v_FORMSIHANGTYPE#,
-				#v_FORMXSLT#)
+				#v_FORMXSLT#,
+				#v_MOBILEDRAFTFLAG#)
 		]]>
 	</insert>
 
@@ -1820,7 +1823,8 @@
 				aprOption = #v_formAprOption#,
 				passaprlineflag = #v_PPASSAPRLINEFLAG#,
 				SIHANGTYPE = #v_FORMSIHANGTYPE#,
-				formxslt = #v_FORMXSLT#
+				formxslt = #v_FORMXSLT#,
+				mobileDraftFlag = #v_MOBILEDRAFTFLAG#
 			WHERE
 				tenant_id = #tenantID#
 			AND
