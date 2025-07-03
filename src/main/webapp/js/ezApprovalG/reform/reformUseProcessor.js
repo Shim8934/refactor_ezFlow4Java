@@ -1046,6 +1046,9 @@ reformUseProc.onLoadHandler = function() {
 		    	case "1": 
 		    		lang = "ko";
 		    		break;
+				case "2": 
+		    		lang = "en";
+		    		break;
 		    	case "3": 
 		    		lang = "ja";
 		    		break;
@@ -1084,6 +1087,25 @@ reformUseProc.onLoadHandler = function() {
 			dayNames: [ '日', '月', '火', '水', '木', '金', '土' ],
 			dayNamesShort: [ '日', '月', '火', '水', '木', '金', '土'  ],
 			dayNamesMin: [ '日', '月', '火', '水', '木', '金', '土'  ],
+			weekHeader: 'Wk',
+			dateFormat: 'yy-mm-dd',
+			firstDay: 0,
+			isRTL: false,
+			duration: 200,
+			showAnim: 'show',
+			showMonthAfterYear: true
+		};
+		
+		$.datepicker.regional['en'] = {
+			closeText: "Close",
+			prevText: "Previous month",
+			nextText: "Next month",
+			currentText: "Today",
+			monthNames: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+			monthNamesShort: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+			dayNames: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
+			dayNamesShort: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
+			dayNamesMin: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa" ],
 			weekHeader: 'Wk',
 			dateFormat: 'yy-mm-dd',
 			firstDay: 0,
