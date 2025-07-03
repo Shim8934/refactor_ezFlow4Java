@@ -17,6 +17,8 @@ public class MSurveyItemSearchVO {
 	private String today;
 	private List<Long> surveyIds;
 	private int userMode;
+	/** 2024-07-11 전인하 - 설문 > 지정공개 대상자 리스트 */
+	private List<Long> surveyResultIds;
 	
 	public MSurveyItemSearchVO() {}
 	
@@ -143,5 +145,12 @@ public class MSurveyItemSearchVO {
 	public void setEndPoint(int endPoint) {
 		this.endPoint = endPoint;
 	}
-	
+
+	public List<Long> surveyResultIds() {
+		return surveyResultIds;
+	}
+
+	public void setSurveyResultIds(List<Long> surveyResultIds) {
+		this.surveyResultIds = surveyResultIds;
+	}
 }

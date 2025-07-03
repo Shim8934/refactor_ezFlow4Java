@@ -16,6 +16,8 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
+import egovframework.ezEKP.ezSurvey.service.EzSurveyService;
+import egovframework.ezEKP.ezSurvey.vo.SurveyVO;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -64,6 +66,9 @@ public class MSurveyServiceImpl extends EgovFileMngUtil implements MSurveyServic
 	@Resource(name="loginService")
 	private LoginService loginService;
 	
+	@Resource(name = "EzSurveyService")
+	private EzSurveyService ezSurveyService;
+	
 	/**
 	 * 2023-08-03 한태훈 - 모바일 전자설문 > 검색 조건에 맞는 설문 목록 가져오기
 	 */
@@ -80,6 +85,12 @@ public class MSurveyServiceImpl extends EgovFileMngUtil implements MSurveyServic
 		String offsetMinute = commonUtil.getMinuteUTC(offset);
 		int totalItems = 0;
 		
+		LoginVO userInfoNew = new LoginVO();
+		userInfoNew.setId(userInfo.getUserId());
+		userInfoNew.setCompanyID(userInfo.getCompanyId());
+		userInfoNew.setDeptID(userInfo.getDeptId());
+		userInfoNew.setTenantId(userInfo.getTenantId());
+		
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String endDate = commonUtil.getDateStringInUTC(formatter.format(new Date()), offset, true);		
 		title = title.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_");
@@ -88,9 +99,11 @@ public class MSurveyServiceImpl extends EgovFileMngUtil implements MSurveyServic
 		
 		if (pageMode.equals("processing") || pageMode.equals("finish") || pageMode.equals("all")) {
 			List<Long> listReceivedSurvey = getUserReceivedSurveyList(userInfo, 0);
+			List<Long> listReceivedResultSurvey = ezSurveyService.getUserReceivedSurveyResultList(userInfoNew, 0);
 			formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			String timeUTC = commonUtil.getDateStringInUTC(formatter.format(new Date()), offset, true);
 			searchVO.setSurveyIds(listReceivedSurvey);
+			searchVO.setSurveyResultIds(listReceivedResultSurvey);
 			searchVO.setToday(timeUTC);
 		}
 		
@@ -180,6 +193,7 @@ public class MSurveyServiceImpl extends EgovFileMngUtil implements MSurveyServic
 		
 		List<MSurveyVO> otherSurvey = listSurvey.stream().filter(i -> !i.getCreatorId().equals(userId)).collect(Collectors.toList());
 		
+		// mode - 설문결과 공개 플래그. 0-비공개, 1-공개, 2-지정공개
 		if (mode == 1) { //delete, reuse check
 			if (otherSurvey.size() > 0) {
 				result.put("code", 3);
@@ -189,8 +203,20 @@ public class MSurveyServiceImpl extends EgovFileMngUtil implements MSurveyServic
 			if (otherSurvey.size() > 0) {
 				List<Long> listOtherSurveyId  = otherSurvey.stream().map(MSurveyVO::getSurveyId).collect(Collectors.toList());
 				List<Long> listReceivedSurvey = getUserReceivedSurveyList(userInfo, 0);
+				List<Long> resultList = new ArrayList<>(listReceivedSurvey);
 				
-				if (!listReceivedSurvey.containsAll(listOtherSurveyId)) {
+				LoginVO userInfoNew = new LoginVO();
+				userInfoNew.setId(userInfo.getUserId());
+				userInfoNew.setCompanyID(userInfo.getCompanyId());
+				userInfoNew.setDeptID(userInfo.getDeptId());
+				userInfoNew.setTenantId(userInfo.getTenantId());
+				
+				if (mode == 2) {
+					List<Long> listReceivedSurveyResult = ezSurveyService.getUserReceivedSurveyResultList(userInfoNew, 0);
+					resultList.removeAll(listReceivedSurveyResult);
+					resultList.addAll(listReceivedSurveyResult);
+				}
+				if (!resultList.containsAll(listOtherSurveyId)) {
 					result.put("code", 3);
 					return result;
 				}
@@ -908,6 +934,12 @@ public class MSurveyServiceImpl extends EgovFileMngUtil implements MSurveyServic
 		
 		MSurveyVO survey  = mSurveyDAO.getSurveyInfo(map);
 		
+		if (survey == null) {
+			result.put("status", "error");
+			result.put("code", 3);
+			return result;
+		}
+		
 		if (!survey.getCreatorId().equals(userInfo.getId())) {
 			//Check public date
 			if (adminYN.equals("N") && survey.getResultPublicFlag() == 0) {
@@ -917,10 +949,15 @@ public class MSurveyServiceImpl extends EgovFileMngUtil implements MSurveyServic
 			} else {
 				//Check requirements
 				List<Long> checkReceivedSurvey = getUserReceivedSurveyList(userInfo, surveyId);
+				List<Long> checkReceivedResultSurvey = ezSurveyService.getUserReceivedSurveyResultList(userInfo, surveyId);
 				
-				if (checkReceivedSurvey == null || checkReceivedSurvey.size() == 0) {
+				if (survey.getResultPublicFlag() != 2 && (checkReceivedSurvey == null || checkReceivedSurvey.size() == 0)) {
 					result.put("status", "error");
 					result.put("code", 3);
+					return result;
+				} else if (survey.getResultPublicFlag() == 2 && (checkReceivedResultSurvey == null || checkReceivedResultSurvey.size() == 0)) {
+					result.put("status", "error");
+					result.put("code", 3); 
 					return result;
 				}
 				
@@ -935,7 +972,7 @@ public class MSurveyServiceImpl extends EgovFileMngUtil implements MSurveyServic
 				calendar.add(Calendar.DATE, openDays);
 				Date endPublicDate         = calendar.getTime();
 				
-				if (adminYN.equals("N") && (today.compareTo(endPublicDate) > 0)) {
+				if (adminYN.equals("N") && (today.compareTo(endPublicDate) > 0) && survey.getResultPublicFlag() != 2) {
 					result.put("status", "error");
 					result.put("code", 7);
 					
