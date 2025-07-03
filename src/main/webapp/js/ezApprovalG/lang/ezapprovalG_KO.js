@@ -1218,3 +1218,6 @@ var strLangJIHSignDraw01 = "서명을 작성한 뒤 결재해주세요.";
 var strLangJIHSignDraw02 = "사인 저장 중 오류가 발생하였습니다.";
 
 var strLangKm01 = "문서를 회수하였습니다.";
+
+var strLangKMH02 = "일괄접수를 진행하시겠습니까?<br>상태가 회송인 문서, 시행문과 합의문 문서는<br>대상에서 제외됩니다.";
+var strLangKMH03 = "일괄접수자전결을 진행하시겠습니까?<br>상태가 회송인 문서, 시행문과 합의문 문서는<br>대상에서 제외됩니다.";

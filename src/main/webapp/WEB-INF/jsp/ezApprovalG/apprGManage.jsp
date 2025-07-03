@@ -1392,7 +1392,11 @@
 					OpenAlertUI(pAlertContent);
 					return;
 				} else {
-					OpenInformationUI(strLangJSBAP03, btnRJunkyulAll_onclick_Complete);
+					if(approvalFlag == "G"){
+						OpenInformationUI(strLangJSBAP03, btnRJunkyulAll_onclick_Complete);
+					}else{
+						OpenInformationUI(strLangKMH03, btnReceiptAll_onclick_Complete);
+					}
 				}
 		    }
 		    
@@ -1614,7 +1618,11 @@
 					OpenAlertUI(pAlertContent);
 					return;
 				} else{
-					OpenInformationUI(strLangJSBAP02, btnReceiptAll_onclick_Complete);
+					if(approvalFlag == "G"){
+						OpenInformationUI(strLangJSBAP02, btnReceiptAll_onclick_Complete);
+					}else{
+						OpenInformationUI(strLangKMH02, btnReceiptAll_onclick_Complete);
+					}
 				}
 		    }
 		    
@@ -2378,6 +2386,7 @@
 		        var feature = "status:no;dialogWidth:270px;dialogHeight:250px;help:no;scroll:no;edge:sunken";
 		        feature = feature + GetShowModalPosition(270, 250);
 		        var RtnVal = window.showModalDialog(url, parameter, feature);
+				
 		        if (RtnVal[0] == "OK") {
 		            arr_userinfo[4] = RtnVal[1];
 		            arr_userinfo[5] = RtnVal[2];

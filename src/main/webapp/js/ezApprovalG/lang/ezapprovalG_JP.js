@@ -1217,3 +1217,6 @@ var strLangJIHSignDraw01 = "署名をした後、決裁してください。";
 var strLangJIHSignDraw02 = "署名の保存中にエラーが発生しました。";
 
 var strLangKm01 = "文書を回収しました。";
+
+var strLangKMH02 = "一括受付を進めますか？ <br>状態が回送の文書、施行文と合意文は対象外です。";
+var strLangKMH03 = "一括受付と最終承認を進めますか？ <br>状態が回送の文書、施行文と合意文は対象外です。";
