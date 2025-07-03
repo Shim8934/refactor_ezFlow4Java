@@ -858,15 +858,15 @@
 				</div>
 			</div>
 
-			<div id="exDiv10" style="display:none;max-width:690px;height:190px;padding-top:27px;margin-bottom:100px">
+			<div id="exDiv10" style="display:none;max-width:730px;height:190px;padding-top:27px;margin-bottom:100px">
 				<div id="close">
 					<ul>
 						<li><a rel="modal:close"><span></span></a></li>
 					</ul>
 				</div>
-				<div class="warning_wrap" style="margin:10px 0px 10px 27px; width:640px;">
+				<div class="warning_wrap" style="margin:10px 0px 10px 27px; width:680px;">
 					<p style="border:0px" id="imgMnt10"></p>
-					<dl sty`le="margin:-108px 0px 0px 150px;">
+					<dl style="margin:-108px 0px 0px 150px;">
 						<dt>${message1}</dt>
 						<br>
 						<dd>${message2}</dd>

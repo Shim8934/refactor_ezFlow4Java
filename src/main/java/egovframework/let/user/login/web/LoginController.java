@@ -846,8 +846,13 @@ public class LoginController {
         			//Show block message
 					// model.addAttribute("message", egovMessageSource.getMessageExtend("fail.common.login.block", new Object[] {numberOfLoginFailPermit}, locale));
 
-					model.addAttribute("message1", egovMessageSource.getMessageExtend("fail.common.login.block", new Object[] { numberOfLoginFailPermit, loginLockedDuration }, locale));
-					model.addAttribute("message2", egovMessageSource.getMessageExtend("fail.common.login.block1", new Object[] { loginLockedDuration }, locale));
+					if (!"0".equalsIgnoreCase(loginLockedDuration)) {
+						model.addAttribute("message1", egovMessageSource.getMessageExtend("fail.common.login.block", new Object[] { numberOfLoginFailPermit, loginLockedDuration }, locale));
+						model.addAttribute("message2", egovMessageSource.getMessageExtend("fail.common.login.block1", new Object[] { loginLockedDuration }, locale));
+					} else {
+						model.addAttribute("message1", egovMessageSource.getMessageExtend("fail.common.login.blockNoDur", new Object[] { numberOfLoginFailPermit}, locale));
+					}
+
 					model.addAttribute("message", "loginBlock");
                 	
                 	// 2021-12-21 이사라 : 접속 로그정보 저장 (실패)
@@ -917,9 +922,14 @@ public class LoginController {
 					if(loginLockedDate.equals("")) {
 						ezCommonService.insertUserConfigInfo(tenantId, _uid, "LoginLockedDate", formatedNow);
 					}
-					
-					model.addAttribute("message1", egovMessageSource.getMessageExtend("fail.common.login.block", new Object[] { numberOfLoginFailPermit, loginLockedDuration }, locale));
-					model.addAttribute("message2", egovMessageSource.getMessageExtend("fail.common.login.block1", new Object[] { loginLockedDuration }, locale));
+
+					if (!"0".equalsIgnoreCase(loginLockedDuration)) {
+						model.addAttribute("message1", egovMessageSource.getMessageExtend("fail.common.login.block", new Object[] { numberOfLoginFailPermit, loginLockedDuration }, locale));
+						model.addAttribute("message2", egovMessageSource.getMessageExtend("fail.common.login.block1", new Object[] { loginLockedDuration }, locale));
+					} else {
+						model.addAttribute("message1", egovMessageSource.getMessageExtend("fail.common.login.blockNoDur", new Object[] { numberOfLoginFailPermit}, locale));
+					}
+
 					model.addAttribute("message", "loginBlock");
 
 	            	return "forward:/user/login/login.do";
@@ -961,8 +971,12 @@ public class LoginController {
 							ezCommonService.updateUserConfigInfo(tenantId, _uid, "LoginLockedDate", formatedNow);
 						}
 
-						model.addAttribute("message1", egovMessageSource.getMessageExtend("fail.common.login.block", new Object[] { numberOfLoginFailPermit, loginLockedDuration }, locale));
-						model.addAttribute("message2", egovMessageSource.getMessageExtend("fail.common.login.block1", new Object[] { loginLockedDuration }, locale));
+						if (!"0".equalsIgnoreCase(loginLockedDuration)) {
+							model.addAttribute("message1", egovMessageSource.getMessageExtend("fail.common.login.block", new Object[] { numberOfLoginFailPermit, loginLockedDuration }, locale));
+							model.addAttribute("message2", egovMessageSource.getMessageExtend("fail.common.login.block1", new Object[] { loginLockedDuration }, locale));
+						} else {
+							model.addAttribute("message1", egovMessageSource.getMessageExtend("fail.common.login.blockNoDur", new Object[] { numberOfLoginFailPermit}, locale));
+						}
 						model.addAttribute("message", "loginBlock");
 
                     	return "forward:/user/login/login.do";
