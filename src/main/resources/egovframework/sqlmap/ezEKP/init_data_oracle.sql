@@ -348,6 +348,8 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_V
 --2024.07.22 양지혜 - 관리자 > 대외발송현황 메뉴 표출여부
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE) VALUES (0, 'useSendOutState', 'NO', '관리자페이지 대외발송현황 메뉴 표출여부 YES: 사용 NO: 사용안함 (default:NO)', '발송현황 메뉴 표출여부', TO_DATE('2024-07-22 00:00:00','yyyy-mm-dd hh24:mi:ss'), '전자결재');
 
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useAI', 'ezAI 사용여부', 'NO', 'ezAI 사용여부. YES: 사용, NO: 미사용 (default: NO)', TO_DATE('2025-05-09 00:00:00.00'), 'AI');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'aiAttachMBSize', 'ezAI 첨부파일 최대용량', '10', 'ezAI에서 허용하는 첨부파일 최대용량 (default:10, 단위: MB)', TO_DATE('2025-05-09 00:00:00.00'), 'AI');
 --Board insert
 
 INSERT INTO TBL_Board_MyBoards (UserID, BoardID, BoardName, BoardName2, TreeviewNum, companyID, tenant_ID) VALUES ('everyone', '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', '새게시물', 'New BoardItem', -1, 'Top', 0);
