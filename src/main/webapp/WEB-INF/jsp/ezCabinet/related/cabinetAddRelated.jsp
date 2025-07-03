@@ -27,8 +27,7 @@
 					<a class="cabRadio">
 						<div class="custom_radio">
 							<input type="radio" name="checkCabinet" id="auto" checked="checked" style="vertical-align:middle;"/>
-						</div>
-						<label for="auto"><span><spring:message code="ezCabinet.t126"/></span></label><br>
+						<label for="auto"><span><spring:message code="ezCabinet.t126"/></span></label></div><br>
 					</a>
 					<a class="cabRadio">
 						<div class="custom_radio">
