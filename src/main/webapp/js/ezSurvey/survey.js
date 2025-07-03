@@ -98,6 +98,7 @@ var SurveyCreate     = function() {
 			fileDivElmt.onclick = function(e) {startUpload();};
 		}
 		else {
+			survPeriodReset(reuseSurvey);
 			if (reuseSurvey["paritipateFlag"] == 1) {setSurveyUsers(reuseSurvey["userList"]);}
 			if (reuseSurvey["attachFlag"] == 1) {surveyFile.render(reuseSurvey["attachList"]);}
 			if (reuseSurvey["purpose"]) {surveyObj["infor"]["purpose"] = reuseSurvey["purpose"];}
@@ -4977,4 +4978,33 @@ function getHTML4(callBack, param1, param2) {
 			hwpHTML = data;
 			callBack(param1, param2);
 		});
+}
+
+function survPeriodReset(orgSurvey) {
+	var today = new Date();
+	var todayStr = getStringFormatForDate(today);
+	var sDateStr = orgSurvey["startDate"].slice(0, 10);
+	var eDateStr = orgSurvey["endDate"].slice(0, 10);
+
+	var nowDate = new Date(todayStr);
+	var sDate = new Date(sDateStr);
+	var eDate = new Date(eDateStr);
+
+	if (nowDate > sDate) {
+		$("#startDate").datepicker("setDate", today);
+	}
+	if (nowDate > eDate) {
+		$("#endDate").datepicker("setDate", today);
+	}
+}
+
+function getStringFormatForDate(dateObj) {
+	var year  = dateObj.getFullYear();
+	var month = dateObj.getMonth() + 1;
+	var day   = dateObj.getDate();
+
+	if (day < 10) {day = "0" + day;}
+	if (month < 10) {month = "0" + month;}
+
+	return year + "-" + month + "-" + day;
 }
