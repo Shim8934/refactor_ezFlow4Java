@@ -127,7 +127,7 @@
     		<c:if test="${isCompanyAdmin == true}">
 	    		<tr>
 	    			<th style="border-left:none; border-bottom:none;"><spring:message code ="ezCircular.t118" /></th>
-	    			<td style="border-top:1px solid #dedede; vertical-align: bottom;"><input type="checkbox" name="allGroupBoard" id="allGroupBoard"><spring:message code ="ezBoard.hsb03" /> <spring:message code ="ezBoard.hsb04" /></td>
+	    			<td style="border-top:1px solid #dedede; vertical-align: bottom;"><div class="custom_checkbox"><input type="checkbox" name="allGroupBoard" id="allGroupBoard"></div><spring:message code ="ezBoard.hsb03" /> <spring:message code ="ezBoard.hsb04" /></td>
 	    		</tr>
     		</c:if>
 		  	</tr>
