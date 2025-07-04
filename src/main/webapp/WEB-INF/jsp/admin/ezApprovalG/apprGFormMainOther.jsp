@@ -1462,34 +1462,34 @@
                 </c:if>
                 <tr>
 					<td colspan="8" style="width:10%; text-align:center;">
-						<input type="checkbox" id="setConnFlag" onclick="changeConnFlag()"/><spring:message code = 'ezApprovalG.t1665' />
+						<div class='custom_checkbox'><input type="checkbox" id="setConnFlag" onclick="changeConnFlag()"/></div><spring:message code = 'ezApprovalG.t1665' />
 						<!-- FormBuilder -->
 						<c:if test="${useReform}">
-							<input type="checkbox" id="reform-checkbox" name="reform-checkbox" onchange="onReformCheckboxClickEvent()"/>
-							<label for="reform-checkbox"><span><spring:message code='reform.using'/></span></label>
+							<div class='custom_checkbox'><input type="checkbox" id="reform-checkbox" name="reform-checkbox" onchange="onReformCheckboxClickEvent()"/>
+								<label for="reform-checkbox"><span><spring:message code='reform.using'/></span></label></div>
 						</c:if>
 						<!-- FormBuilder - end -->
 						
 						<%-- 2021-01-21  심기영 오피스 결재 추가 여부용  --%>
 						<c:if test="${useOfficeApproval == 'YES' && approvalFlag == 'G'}">
-							<input type="checkbox" id="officeFlag" name="officeFlag">
-							<label for="officeFlag"><span><spring:message code='ezApproval.t933'/></span></label>
+							<div class='custom_checkbox'><input type="checkbox" id="officeFlag" name="officeFlag">
+								<label for="officeFlag"><span><spring:message code='ezApproval.t933'/></span></label></div>
 						</c:if>
 						<%-- 2021-01-21  심기영 오피스 결재 추가 여부용  --%>
 						<c:if test="${useOfficeApproval == 'YES' && approvalFlag == 'S'}">
-							<input type="checkbox" id="officeFlag" name="officeFlag">
-							<label for="officeFlag"><span><spring:message code='ezApproval.t933'/></span></label>
+							<div class='custom_checkbox'><input type="checkbox" id="officeFlag" name="officeFlag">
+								<label for="officeFlag"><span><spring:message code='ezApproval.t933'/></span></label></div>
 						</c:if>
-                        <span style="<c:if test="${useOpenGov != 'YES' || approvalFlag != 'G'}">display:none;</c:if>"><input type="checkbox" id="setOpenGovFlag" /> <spring:message code='ezApprovalG.openGovK01'/></span>
+						<span style="<c:if test="${useOpenGov != 'YES' || approvalFlag != 'G'}">display:none;</c:if>"><div class='custom_checkbox'><input type="checkbox" id="setOpenGovFlag" /></div> <spring:message code='ezApprovalG.openGovK01'/></span>
                         <%-- 2022-01-07 홍승비 - 전자결재G 웹한글 일괄기안 기능 표준모듈 반영 --%>
-                         <span style="<c:if test="${useDraftAll != 'YES'}">display:none;</c:if>"><input type="checkbox" id="setDraftAllFlag" onclick="changeDraftAllFlag()" /> <spring:message code='ezApprovalG.groupdocK01'/></span>
-						<span style="<c:if test="${usePassAprLine != 'YES'}">display:none;</c:if>"><input type="checkbox" id="setPassAprLineFlag" onclick="changePassAprLineFlag()"/> <spring:message code='ezApprovalG.garm09'/></span>
+						<span style="<c:if test="${useDraftAll != 'YES'}">display:none;</c:if>"><div class='custom_checkbox'><input type="checkbox" id="setDraftAllFlag" onclick="changeDraftAllFlag()" /></div> <spring:message code='ezApprovalG.groupdocK01'/></span>
+						<span style="<c:if test="${usePassAprLine != 'YES'}">display:none;</c:if>"><div class='custom_checkbox'><input type="checkbox" id="setPassAprLineFlag" onclick="changePassAprLineFlag()"/></div> <spring:message code='ezApprovalG.garm09'/></span>
 					</td>
 				</tr>
 			</table>
             <br />
             <div style="padding-bottom:5px; vertical-align:middle; <c:if test="${approvalFlag != 'S' }">display:none;</c:if>">
-            	<input type="checkbox" id="setAutoItemCode" name="setAutoItemCode" onclick="viewAutoItemCode()" style="vertical-align: middle;"/>
+				<div class='custom_checkbox'><input type="checkbox" id="setAutoItemCode" name="setAutoItemCode" onclick="viewAutoItemCode()" style="vertical-align: middle;"/></div>
             	<span><spring:message code='ezApproval.t00004'/></span>
             </div>
             <table class="content" style="width:100%;">
@@ -1528,17 +1528,17 @@
 			<table class="content" style="width:100%;">
 				<tr><!--의견-->
 					<th style="width:10%"><spring:message code='ezApprovalG.F0013'/></th>
-					<td style="width:10%"><input type="checkbox" id="_a1_" name="aprOption_a"><label for="_a1_"><spring:message code='ezApprovalG.t900009'/></label></td>
+					<td style="width:10%"><div class='custom_checkbox'><input type="checkbox" id="_a1_" name="aprOption_a"><label for="_a1_"><spring:message code='ezApprovalG.t900009'/></label></div></td>
 					<td><spring:message code='ezApprovalG.t900005'/></td>
 				</tr>
 				<tr><!--파일첨부-->
 					<th style="width:10%"><spring:message code='ezApprovalG.t264'/></th>
-					<td style="width:10%"><input type="checkbox" id="_a2_" name="aprOption_a"><label for="_a2_"><spring:message code='ezApprovalG.t900009'/></label></td>
+					<td style="width:10%"><div class='custom_checkbox'><input type="checkbox" id="_a2_" name="aprOption_a"><label for="_a2_"><spring:message code='ezApprovalG.t900009'/></label></div></td>
 					<td><spring:message code='ezApprovalG.t900006'/></td>
 				</tr>
 				<tr><!--문서첨부-->
 					<th style="width:10%"><spring:message code='ezApprovalG.t57'/></th>
-					<td style="width:10%"><input type="checkbox" id="_a3_" name="aprOption_a"><label for="_a3_"><spring:message code='ezApprovalG.t900009'/></label></td>
+					<td style="width:10%"><div class='custom_checkbox'><input type="checkbox" id="_a3_" name="aprOption_a"><label for="_a3_"><spring:message code='ezApprovalG.t900009'/></label></div></td>
 					<td><spring:message code='ezApprovalG.t900007'/></td>
 				</tr>								
 			</table>
@@ -1805,7 +1805,7 @@
 	                        </tr>
 	                        <tr>
 	                            <td style="height:30px;border:1px solid #ddd;text-align:center;">
-	                                <input type="checkbox" name="FixYN" id="FixYN" value ="checkbox" onclick="return FixFlag_onclick()"><spring:message code='ezApproval.t990041'/> &nbsp;&nbsp;&nbsp;&nbsp;
+									<div class='custom_checkbox'><input type="checkbox" name="FixYN" id="FixYN" value ="checkbox" onclick="return FixFlag_onclick()"></div><spring:message code='ezApproval.t990041'/> &nbsp;&nbsp;&nbsp;&nbsp;
 	                            </td>
 	                        </tr>
 	                      </table>
@@ -1844,7 +1844,7 @@
                 	<h2 class="receiver_tltype01" style="margin-bottom:5px;">
 		            	<span style="min-width: 45px;">XSLT</span>
 		            </h2>
-                    <span><input type="checkbox" style="margin-left: 0; vertical-align: middle;" id="setBodyXslt" name="setBodyXslt"><label for="setBodyXslt"><spring:message code='ezApprovalG.xslt'/></label></span>
+					<span><div class='custom_checkbox'><input type="checkbox" style="margin-left: 0; vertical-align: middle;" id="setBodyXslt" name="setBodyXslt"><label for="setBodyXslt"><spring:message code='ezApprovalG.xslt'/></label></div></span>
                     <table class="content" style="width:100%; margin-top: 2px;">
                         <tbody>
 	                        <tr id="tr_setXslt">

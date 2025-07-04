@@ -486,9 +486,9 @@
 	        <tr>
 	            <th><spring:message code = 'ezApprovalG.t798' /></th>
 	            <td>
-	                <input type="radio" id="rdTotal" name="rdTotal" style="margin-top: 0px;" value="radiobutton" checked onclick="return rdTotal_onclick()">
+					<div class='custom_radio'><input type="radio" id="rdTotal" name="rdTotal" style="margin-top: 0px;" value="radiobutton" checked onclick="return rdTotal_onclick()"></div>
 	                <spring:message code = 'ezApprovalG.t1659' />
-	                <input type="radio" id="rdGroup" name="rdGroup" style="margin-top: 0px;" value="radiobutton" onclick="return rdGroup_onclick()">
+					<div class='custom_radio'><input type="radio" id="rdGroup" name="rdGroup" style="margin-top: 0px;" value="radiobutton" onclick="return rdGroup_onclick()"></div>
 	                <spring:message code = 'ezApprovalG.t1660' /></td>
 	        </tr>
 	    </table>

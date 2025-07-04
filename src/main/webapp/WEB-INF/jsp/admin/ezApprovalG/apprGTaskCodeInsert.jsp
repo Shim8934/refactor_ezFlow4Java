@@ -598,9 +598,9 @@
 	        <tr class = 'approvalG'<c:if test="${approvalFlag != 'G' }"> style="display:none;"</c:if>>
 	            <th><spring:message code = 'ezApprovalG.t751' /></th>
 	            <td>
-	                <input type="radio" name="isAllDept" value="0" checked>
+					<div class='custom_radio'><input type="radio" name="isAllDept" value="0" checked></div>
 	                <spring:message code = 'ezApprovalG.t752' />
-	                <input type="radio" name="isAllDept" value="1">
+					<div class='custom_radio'><input type="radio" name="isAllDept" value="1"></div>
 	                <spring:message code = 'ezApprovalG.t753' />
 				</td>
 	        </tr>
@@ -700,8 +700,8 @@
 	        <tr class = 'approvalG'<c:if test="${approvalFlag != 'G' }"> style="display:none;"</c:if>>
 	            <th><spring:message code = 'ezApprovalG.t601' /></th>
 	            <td>
-	                <input type="radio" id="rdoDisplayFlag" name="rdoDisplayFlag" value="0" checked onclick="return rdoDisplayFlag_onclick(this.value)"><spring:message code = 'ezApprovalG.t757' />
-	                <input type="radio" id="rdoDisplayFlag" name="rdoDisplayFlag" value="1" onclick="return rdoDisplayFlag_onclick(this.value)">
+					<div class='custom_radio'><input type="radio" id="rdoDisplayFlag" name="rdoDisplayFlag" value="0" checked onclick="return rdoDisplayFlag_onclick(this.value)"></div>&nbsp;<spring:message code = 'ezApprovalG.t757' />
+					<div class='custom_radio'><input type="radio" id="rdoDisplayFlag" name="rdoDisplayFlag" value="1" onclick="return rdoDisplayFlag_onclick(this.value)"></div>
 	                <spring:message code = 'ezApprovalG.t601' />
 	            </td>
 	        </tr>
@@ -735,11 +735,11 @@
 	        <tr class = 'approvalG'<c:if test="${approvalFlag != 'G' }"> style="display:none;"</c:if>>
 	            <th><spring:message code = 'ezApprovalG.t605' /></th>
 	            <td>
-	                <input type="radio" id="rdoSpecialFlag" name="rdoSpecialFlag" value="0" checked onclick="return rdoSpecialFlag_onclick(this.value)">
+					<div class='custom_radio'><input type="radio" id="rdoSpecialFlag" name="rdoSpecialFlag" value="0" checked onclick="return rdoSpecialFlag_onclick(this.value)"></div>
 	                <spring:message code = 'ezApprovalG.t761' />
-	                <input type="radio" id="rdoSpecialFlag" name="rdoSpecialFlag" value="1" onclick="return rdoSpecialFlag_onclick(this.value)">
+					<div class='custom_radio'><input type="radio" id="rdoSpecialFlag" name="rdoSpecialFlag" value="1" onclick="return rdoSpecialFlag_onclick(this.value)"></div>
 	                <spring:message code = 'ezApprovalG.t762' />
-	                <input type="radio" id="rdoSpecialFlag" name="rdoSpecialFlag" value="2" onclick="return rdoSpecialFlag_onclick(this.value)">
+					<div class='custom_radio'><input type="radio" id="rdoSpecialFlag" name="rdoSpecialFlag" value="2" onclick="return rdoSpecialFlag_onclick(this.value)"></div>
 	                <spring:message code = 'ezApprovalG.t683' />
 	            </td>
 	        </tr>

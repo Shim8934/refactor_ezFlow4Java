@@ -418,7 +418,7 @@
 	            selectelem = null;
 	        } else {
 	            strMoveListIDInfo = ReplaceText(strMoveListIDInfo, $(obj).attr("id") + ";", "");
-	            selectelem = obj.parentNode.parentNode;
+	            selectelem = obj.closest("tr");
 	        }
 	    }
 		
@@ -774,54 +774,6 @@
 				check = "false";
 	        }
 	        
-	        function select_row(elem) {		    	
-				if ($("#checkboxAll").is(":checked")) {					
-					if ($("input[id='" + $(elem).attr("id") + "']").prop("checked") == true && selectelem != null) {//전체 선택 후 개별 선택 시 선택한것 해제
-						$("input[id='" + $(elem).attr("id") + "']").prop("checked", false);
-						$(".row_body[id='" + $(elem).attr("id") + "']").css("background", "#ffffff");
-						strMoveListIDInfo = ReplaceText(strMoveListIDInfo, $(elem).attr("id") + ";", "");
-			    		return;
-					}
-					
-					// 목록에서 하나씩 다른거 선택할 때
-					if ((selectelem != null && selectelem != elem)) {
-						strMoveListIDInfo += $(elem).attr("id") + ";";
-			        	selectelem = null;
-			    	}
-				} else {					
-					// 목록에서 하나씩 다른거 선택할 때
-			    	if ((selectelem != null && selectelem != elem)) {
-	 					$("input[name=myCheckbox]").prop("checked", false);
-	 					$(".row_body").css("background", "#ffffff");	 					
-						strMoveListIDInfo = $(elem).attr("id") + ";";
-			        	selectelem = null;
-			    	}
-				}
-
-				// 체크 후 체크박스 눌러서 체크 해제할 때
-		        if (selectelem != null) {
-					if ($("#checkboxAll").is(":checked")) {
-			        	$("input[id='" + $(elem).attr("id") + "']").prop("checked", false);
-			        	$(".row_body[id='" + $(elem).attr("id") + "']").css("background", "#ffffff");
-						return;
-					} else {
-			        	selectelem.style.backgroundColor = "#ffffff";
-			        	$("input[id='" + $(selectelem).attr("id") + "']").prop("checked", false);
-			            selectelem = null;
-			            return;
-					}
-		        }
-
-		        selectelem = elem;
-		        elem.style.backgroundColor = "#f1f8ff";
-		        $("input[id='" + $(elem).attr("id") + "']").prop("checked", true);
-
-		        // 목록화면 나오고 처음 선택할 때 strMoveListIDInfo 값 셋팅
-		        if (strMoveListIDInfo == "") {
-		        	strMoveListIDInfo = $(elem).attr("id") + ";";
-		        }
-		    }
-			
 		    $(window).on("resize", function(){
 	            windowResize();
 	        });
@@ -1013,7 +965,7 @@
 							<input type="text" id="drafter" name="drafter" style="width:84%; height: 23px;" maxlength="50" onkeypress="return search_keypress(event)"/>
 						</td>
 						<td>
-							<input type="checkbox" style="vertical-align: middle; margin: -1px 4px 0px 0px;" id="usedate" value="1" onclick="DateSearch_Click();"><label for="usedate"><spring:message code='ezSystem.x0032'/></label>
+							<div class='custom_checkbox'><input type="checkbox" style="vertical-align: middle; margin: -1px 4px 0px 0px;" id="usedate" value="1" onclick="DateSearch_Click();"><label for="usedate"><spring:message code='ezSystem.x0032'/></label></div>
 						</td>
 						<td>
 							<span id="topmenu" style="width: 500px">
@@ -1044,7 +996,7 @@
 			<table class="mainlist" style="width:100%;">
 				<thead>
 					<tr id = "doclist">
-						<th style="width:3%;"><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 4px; vertical-align:middle"/></th>
+						<th style="width:3%;"><div class='custom_checkbox'><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 4px; vertical-align:middle"/></div></th>
 						<th style="width:15%;"><spring:message code="ezApproval.t434"></spring:message></th>
 						<th style="width:3%;"><img src="/images/newAttach.gif"></th>
 						<th style="width:*;"><spring:message code="ezApprovalG.t106"></spring:message></th>
