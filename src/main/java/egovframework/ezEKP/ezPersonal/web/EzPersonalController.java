@@ -989,7 +989,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String userId = userInfo.getId();
 		String deptId = userInfo.getDeptID();
 		
-		List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(companyId, tenantId, portletLang, userId, deptId);
+		List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(companyId, tenantId, portletLang, userId, deptId, "");
 		/*HashMap<String, String> usedList = (HashMap<String, String>) ezPortalService.getMainMenuItemUIDList(accessList, moduleList, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId(), topMenuID);*/
 		
 		String useQuestion = ezCommonService.getTenantConfig("useQuestion", tenantId);
@@ -2493,7 +2493,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 	public String notificationItemTab(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("notificationItemTab started.");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
-		Set<String> menuCodeList = ezNewPortalService.getUserMenuList(user.getCompanyID(), user.getTenantId(), user.getLang(), user.getId(), user.getDeptID())
+		Set<String> menuCodeList = ezNewPortalService.getUserMenuList(user.getCompanyID(), user.getTenantId(), user.getLang(), user.getId(), user.getDeptID(), "")
 				.stream().map(MenuInfoVO::getMenuCode).filter(Objects::nonNull).map(String::toLowerCase).collect(Collectors.toSet());
 		model.addAttribute("useMail", menuCodeList.contains("mail"));
 		model.addAttribute("useApproval", menuCodeList.contains("approval"));

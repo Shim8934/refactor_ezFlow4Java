@@ -1836,7 +1836,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		startDateTime = EgovDateUtil.convertDate(startDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
 		endDateTime = EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
 		
-		Map<String, Boolean> menuAccessMap = commonUtil.checkMenuAccess(Arrays.asList(new String[] {"schedule"}), userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getLang(), userInfo.getId(), userInfo.getDeptID());
+		Map<String, Boolean> menuAccessMap = commonUtil.checkMenuAccess(Arrays.asList(new String[] {"schedule"}), userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getLang(), userInfo.getId(), userInfo.getDeptID(), "");
 		boolean useSchedule = menuAccessMap.get("schedule");
 		
 		model.addAttribute("userInfo", userInfo);

@@ -53,7 +53,7 @@ public interface EzNewPortalService {
 	public List<PersonalLightPollVO> getPollPortletResult(String companyId, int tenantId, int itemSeq) throws Exception;
 	public List<Map<String, Object>> getAssemblePollData(PersonalLightPollVO poll, List<PersonalLightPollVO> pollResult) throws Exception;
 	public String getPortalLogoInfo(String companyId, int tenantId, String logoType) throws Exception;
-	public List<MenuInfoVO> getUserMenuList(String companyId, int tenantId, String langType, String userId, String deptId) throws Exception;
+	public List<MenuInfoVO> getUserMenuList(String companyId, int tenantId, String langType, String userId, String deptId, String type) throws Exception;
 	public void updateUserMenuOrder(String companyId, int tenantId, String userId, JSONObject jObj) throws Exception;
 	public void deleteUserMenuOrder(String companyId, int tenantId, String userId) throws Exception;
 	public Map<String, Object> getQuickLinkList(String companyId, int tenantId, int page, int limit, String userId, String deptId) throws Exception;
