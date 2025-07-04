@@ -174,6 +174,8 @@
 		                        	WriterValue = paremtElement[j].value;
 		                        } else if (paremtElement[j].getAttribute('type') == "people") {
 		                            WriterValue = paremtElement[j].innerText;
+		                        } else if (paremtElement[j].tagName == "SELECT") {
+		                            WriterValue = paremtElement[j].value;
 		                        }
 		                    }
 			                
@@ -345,6 +347,10 @@
                                 </c:when>
 								<c:when test="${boardAttributeVO.colType == 'cal'}">
 									<td colspan="5" id="${boardAttributeVO.tableCol}">
+									</td>
+								</c:when>
+								<c:when test="${boardAttributeVO.colType == 'select'}">
+								    <td colspan="5" id="${boardAttributeVO.tableCol}">
 									</td>
 								</c:when>
 	       					</c:choose>
