@@ -647,7 +647,13 @@
 						event.stopPropagation();
 					});
 					
-					checkboxColumn.appendChild(inputElement);
+					//checkboxColumn.appendChild(inputElement);
+                    
+                    const customDiv = document.createElement("div");
+                    customDiv.className = "custom_checkbox";
+                    customDiv.appendChild(inputElement);
+                    
+                    checkboxColumn.appendChild(customDiv);
 					
 					fileIconElement = document.createElement("img");
 					fileIconElement.setAttribute("class", "none-drag");
@@ -1174,7 +1180,7 @@
 					<table class="mainlist" style="width:100%"  id="tblFileList1">
 						<thead id ="BoardList_THEAD">
 							<tr>
-								<th class="wfFilecheck 			headListClick" style="text-align: center;"><input type="checkbox" onchange="rowContext.selectAll(this.checked)" id="checkAll"></th>
+								<th class="wfFilecheck 			headListClick" style="text-align: center;"><div class="custom_checkbox"><input type="checkbox" onchange="rowContext.selectAll(this.checked)" id="checkAll"></div></th>
 								<th class="wfFileFavorite 		headListClick" headers="FAVORITE_STATUS" style=" text-align: center;"><img class="none-drag" src='/images/ImgIcon/icon-flag.gif'/></th><!-- 즐겨찾기 -->
 								<th class="wfFileType 			headListClick" headers="TYPE_ICON" style="text-align: center;"><spring:message code='ezWebFolder.t188'/></th><!-- 유형 -->
 								<th class="wfFileName 			headListClick" headers="FILE_NAME" ><spring:message code='ezWebFolder.t156'/></th><!-- 이름 -->

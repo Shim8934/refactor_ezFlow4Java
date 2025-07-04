@@ -174,7 +174,7 @@
         </ul>
     </div>
 	<div style="margin: 0px 10px; border: none; height: 30px; position: relative;">
-		<div style="position: absolute; top: 0px; right: 0px;">
+		<div class="custom_radio" style="position: absolute; top: 0px; right: 0px;">
 			<input name="treeType" id="radio1" type="radio" value="C" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="folderList('C');"><label for="radio1"><span> <spring:message code='ezWebFolder.t233'/></span></label>
 			<input name="treeType" id="radio2" type="radio" value="D" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="folderList('D');"><label for="radio2"><span> <spring:message code='ezWebFolder.t234'/></span></label>
 			<input name="treeType" id="radio3" type="radio" value="U" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="folderList('U');"><label for="radio3"><span> <spring:message code='ezWebFolder.t235'/></span></label>

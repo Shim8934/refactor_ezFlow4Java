@@ -86,17 +86,17 @@ function TableView() {
 		
 		if (!event.ctrlKey && !event.shiftKey) {
 			var listOfRows = document.getElementsByClassName(_selectedClass);
+			toggleAllRow(false);
 			
 			if (listOfRows.length > 1) {
-				toggleAllRow(false);
 				toggleRow(currentRow, _selectedClass);
 			}
 			else {
-				toggleAllRow(false);
 				toggleRow(currentRow, rowClass);
 			}
 			
 			_lastSelectedRow = currentRow;
+			return;
 		}
 		
 		if (event.shiftKey) {
@@ -126,7 +126,7 @@ function TableView() {
 		return 0;
 	}
 	
-	function toggleAllRow(flag) {
+	/*function toggleAllRow(flag) {
 		var rowClass   = flag == true ? _unselectClass : _selectedClass;
 		var setClass   = flag == true ? _selectedClass : _unselectClass;
 		var listOfRows = document.getElementsByClassName(rowClass);
@@ -146,9 +146,34 @@ function TableView() {
 		var checkboxElmt     = row.firstElementChild.firstElementChild;
 		checkboxElmt.checked = rowClass == _selectedClass ? true : false;
 		row.className        = rowClass;
-	}
+	}*/
+	
+    function toggleAllRow(flag) {
+        const allRows = Array.from(document.querySelectorAll(`#${_tableId} tr`));
 
-	function selectRowsBetweenIndexes(indexArr) {
+        allRows.forEach(function(row) {
+            toggleRow(row, flag ? _selectedClass : _unselectClass);
+        });
+    
+        // 헤더 체크박스 상태도 함께 동기화
+        const headerCheckbox = document.querySelector(`#${_tableheader}  thead tr th div input[type="checkbox"]`);
+        if (headerCheckbox) {
+            headerCheckbox.checked = flag;
+        }
+    }
+
+    function toggleRow(row, rowClass) {
+    	row.className = rowClass;
+    
+    	const checkboxElmt = row.querySelector('input[type="checkbox"]');
+    	checkboxElmt.checked = (rowClass === _selectedClass);
+        
+    	const currentRow = checkboxElmt.closest('tr');
+    	currentRow.classList.remove(_selectedClass, _unselectClass);
+        currentRow.classList.add(checkboxElmt.checked ? _selectedClass : _unselectClass);
+    }
+
+/*function selectRowsBetweenIndexes(indexArr) {
 		indexArr.sort(function(a, b) {return a - b;});
 		
 		var listOfRows = document.getElementById(_tableId).rows;
@@ -156,16 +181,33 @@ function TableView() {
 		for (var i = indexArr[0] + 1; i <= indexArr[1] + 1; i++) {
 			toggleRow(listOfRows[i-1], _selectedClass);
 		}
-	}
+	}*/
+	
+	function selectRowsBetweenIndexes(indexArr) {
+        indexArr.sort((a, b) => a - b);
+        const rows = document.getElementById(_tableId).rows;
+    
+        for (let i = indexArr[0]; i <= indexArr[1]; i++) {
+            toggleRow(rows[i], _selectedClass);
+        }
+    }
 	
 	// process checkbox
 	function getChecked(event) {
 		event.stopPropagation();
 		
 		var checkboxElmt     = event.currentTarget;
-		var currentRow       = checkboxElmt.parentElement.parentElement;
+		//var currentRow       = checkboxElmt.parentElement.parentElement;
+		const currentRow = checkboxElmt.closest('tr');
+        
+        if (!currentRow) { return };
+        	
 		_lastSelectedRow     = currentRow;
-		currentRow.className = checkboxElmt.checked ? _selectedClass : _unselectClass;
+		
+		// 선택 스타일 처리
+		//currentRow.className = checkboxElmt.checked ? _selectedClass : _unselectClass;
+        currentRow.classList.remove(_selectedClass, _unselectClass);
+        currentRow.classList.add(checkboxElmt.checked ? _selectedClass : _unselectClass);
 	}
 	
 	function sortByHeader(cell) {
@@ -311,9 +353,19 @@ function TableView() {
 	function setUserConfigTable() {
 		var tableList              = document.getElementById(_tableId);
 		var tableHeader            = document.getElementById(_tableheader);
-		var firstInputCheckBox     = tableHeader.rows[0].firstElementChild.firstElementChild;
-		firstInputCheckBox.checked = false;
-		firstInputCheckBox.onclick = function(e) {toggleAllRow(this.checked);};
+		//var firstInputCheckBox     = tableHeader.rows[0].firstElementChild.firstElementChild;
+		//firstInputCheckBox.checked = false;
+		//firstInputCheckBox.onclick = function(e) {toggleAllRow(this.checked);};
+		
+		var firstInputCheckBox = tableHeader.querySelector('input[type="checkbox"]');
+        
+        if (firstInputCheckBox) {
+        	firstInputCheckBox.checked = false;
+        	firstInputCheckBox.onclick = function(e) {
+        		e.stopPropagation(); // 혹시라도 상위 이벤트 방지
+        		toggleAllRow(this.checked);
+        	};
+        }
 		
 		while (tableList.rows.length > 0) {
 			tableList.deleteRow(0);
@@ -359,13 +411,17 @@ function TableView() {
 				
 				var inputElmt  = document.createElement("input");
 				inputElmt.setAttribute("type", "checkbox");
-				inputElmt.setAttribute("class", "checkBnk");
+				//inputElmt.setAttribute("class", "checkBnk");
 				inputElmt.setAttribute("value", "0");
 				inputElmt.setAttribute("usedAmount", _dataSource[i]["totalUsed"]);
 				inputElmt.setAttribute("cn", _dataSource[i]["cn"]);
 				inputElmt.onclick = function(event) {getChecked(event);};
 				
-				tdElmt1.appendChild(inputElmt);
+				var customDiv = document.createElement("div");
+                customDiv.className = "custom_checkbox";
+                customDiv.appendChild(inputElmt);
+                
+                tdElmt1.appendChild(customDiv);
 				
 				tdElmt2.setAttribute("style", "overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap; word-wrap: normal;");
 				tdElmt2.textContent = _dataSource[i]["companyName"];
@@ -418,10 +474,20 @@ function TableView() {
 	function setDepartmentConfigTable() {
 		var tableList              = document.getElementById(_tableId);
 		var tableHeader            = document.getElementById(_tableheader);
-		var firstInputCheckBox     = tableHeader.rows[0].firstElementChild.firstElementChild;
-		firstInputCheckBox.checked = false;
-		firstInputCheckBox.onclick = function(e) {toggleAllRow(this.checked);};
+		//var firstInputCheckBox     = tableHeader.rows[0].firstElementChild.firstElementChild;
+		//firstInputCheckBox.checked = false;
+		//firstInputCheckBox.onclick = function(e) {toggleAllRow(this.checked);};
 		
+		var firstInputCheckBox = tableHeader.querySelector('input[type="checkbox"]');
+        
+        if (firstInputCheckBox) {
+        	firstInputCheckBox.checked = false;
+        	firstInputCheckBox.onclick = function(e) {
+        		e.stopPropagation(); // 혹시라도 상위 이벤트 방지
+        		toggleAllRow(this.checked);
+        	};
+        }
+        
 		while (tableList.rows.length > 0) {
 			tableList.deleteRow(0);
 		}
@@ -466,13 +532,18 @@ function TableView() {
 				
 				var inputElmt  = document.createElement("input");
 				inputElmt.setAttribute("type", "checkbox");
-				inputElmt.setAttribute("class", "checkBnk");
+				//inputElmt.setAttribute("class", "checkBnk");
 				inputElmt.setAttribute("value", "0");
 				inputElmt.setAttribute("usedAmount", _dataSource[i]["totalUsed"]);
 				inputElmt.setAttribute("cn", _dataSource[i]["cn"]);
 				inputElmt.onclick = function(event) {getChecked(event);};
 				
-				tdElmt1.appendChild(inputElmt);
+				// custom_checkbox div 추가
+				var customCheckboxDiv = document.createElement("div");
+                customCheckboxDiv.className = "custom_checkbox";
+                customCheckboxDiv.appendChild(inputElmt);
+                
+                tdElmt1.appendChild(customCheckboxDiv);
 				
 				tdElmt2.setAttribute("style", "overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap; word-wrap: normal;");
 				tdElmt2.textContent = _dataSource[i]["companyName"];
@@ -525,9 +596,19 @@ function TableView() {
 	function setCompanyConfigTable() {
 		var tableList              = document.getElementById(_tableId);
 		var tableHeader            = document.getElementById(_tableheader);
-		var firstInputCheckBox     = tableHeader.rows[0].firstElementChild.firstElementChild;
-		firstInputCheckBox.checked = false;
-		firstInputCheckBox.onclick = function(e) {toggleAllRow(this.checked);};
+		//var firstInputCheckBox     = tableHeader.rows[0].firstElementChild.firstElementChild;
+		//firstInputCheckBox.checked = false;
+		//firstInputCheckBox.onclick = function(e) {toggleAllRow(this.checked);};
+		
+		var firstInputCheckBox = tableHeader.querySelector('input[type="checkbox"]');
+        
+        if (firstInputCheckBox) {
+        	firstInputCheckBox.checked = false;
+        	firstInputCheckBox.onclick = function(e) {
+        		e.stopPropagation(); // 혹시라도 상위 이벤트 방지
+        		toggleAllRow(this.checked);
+        	};
+        }
 		
 		while (tableList.rows.length > 0) {
 			tableList.deleteRow(0);
@@ -573,13 +654,17 @@ function TableView() {
 				
 				var inputElmt  = document.createElement("input");
 				inputElmt.setAttribute("type", "checkbox");
-				inputElmt.setAttribute("class", "checkBnk");
+				//inputElmt.setAttribute("class", "checkBnk");
 				inputElmt.setAttribute("value", "0");
 				inputElmt.setAttribute("usedAmount", _dataSource[i]["totalUsed"]);
 				inputElmt.setAttribute("cn", _dataSource[i]["cn"]);
 				inputElmt.onclick = function(event) {getChecked(event);};
 				
-				tdElmt1.appendChild(inputElmt);
+				var customDiv = document.createElement("div");
+                customDiv.className = "custom_checkbox";
+                customDiv.appendChild(inputElmt);
+                
+                tdElmt1.appendChild(customDiv);
 				
 				tdElmt2.setAttribute("style", "overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap; word-wrap: normal;");
 				tdElmt2.textContent = _dataSource[i]["displayName"] + "(" + _dataSource[i]["cn"] + ")";
@@ -632,9 +717,19 @@ function TableView() {
 	function setFileListTable() {
 		var tableList              = document.getElementById(_tableId);
 		var tableHeader            = document.getElementById(_tableheader);
-		var firstInputCheckBox     = tableHeader.rows[0].firstElementChild.firstElementChild;
-		firstInputCheckBox.checked = false;
-		firstInputCheckBox.onclick = function(e) {toggleAllRow(this.checked);};
+		//var firstInputCheckBox     = tableHeader.rows[0].firstElementChild.firstElementChild;
+		//firstInputCheckBox.checked = false;
+		//firstInputCheckBox.onclick = function(e) {toggleAllRow(this.checked);};
+		
+		var firstInputCheckBox = tableHeader.querySelector('input[type="checkbox"]');
+        
+        if (firstInputCheckBox) {
+        	firstInputCheckBox.checked = false;
+        	firstInputCheckBox.onclick = function(e) {
+        		e.stopPropagation(); // 혹시라도 상위 이벤트 방지
+        		toggleAllRow(this.checked);
+        	};
+        }
 		
 		while (tableList.rows.length > 0) {
 			tableList.deleteRow(0);
@@ -701,9 +796,14 @@ function TableView() {
 				var inputElmt = document.createElement("input");
 				inputElmt.setAttribute("type", "checkbox");
 				inputElmt.setAttribute("value", _dataSource[i]["fileId"]);
-				inputElmt.setAttribute("class", "checkBnk");
+				//inputElmt.setAttribute("class", "checkBnk");
 				inputElmt.onclick = function(e) {getChecked(e);};
-				tdElmt1.appendChild(inputElmt);
+				
+				var customDiv = document.createElement("div");
+                customDiv.className = "custom_checkbox";
+                customDiv.appendChild(inputElmt);
+                
+                tdElmt1.appendChild(customDiv);
 				
 				var fileIconElmt = document.createElement("img");
 				fileIconElmt.setAttribute("class", "webFolderImg");
@@ -758,7 +858,8 @@ function TableView() {
 	function setDeletedFileTable() {
 		var tableList               = document.getElementById(_tableId);
 		var tableHeader            = document.getElementById(_tableheader);
-		var firstInputCheckBox     = tableHeader.rows[0].firstElementChild.firstElementChild;
+		//var firstInputCheckBox     = tableHeader.rows[0].firstElementChild.firstElementChild;
+		var firstInputCheckBox     = tableHeader.querySelector("tr th input[type='checkbox']");
 		firstInputCheckBox.checked = false;
 		firstInputCheckBox.onclick = function(e) {toggleAllRow(this.checked);};
 
@@ -819,10 +920,14 @@ function TableView() {
 				var inputElmt = document.createElement("input");
 				inputElmt.setAttribute("type", "checkbox");
 				inputElmt.setAttribute("value", resultElement["trashCanId"]);
-				inputElmt.setAttribute("class", "checkBnk");			
+				//inputElmt.setAttribute("class", "checkBnk");			
 				inputElmt.onclick = function(e) {getChecked(e);};
 				
-				tdCheckbox.appendChild(inputElmt);
+				var customDiv = document.createElement("div");
+                customDiv.className = "custom_checkbox";
+                customDiv.appendChild(inputElmt);
+                
+                tdCheckbox.appendChild(customDiv);
 				
 				var fileIconElmt = document.createElement("img");
 				fileIconElmt = document.createElement("img");
