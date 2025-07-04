@@ -39,6 +39,9 @@
             liElement.setAttribute("name", "LI_EXT");
 
             // checkbox 생성
+            var checkboxDivElement = document.createElement("div");
+            checkboxDivElement.className = "custom_checkbox";
+            
             var checkboxElement = document.createElement("input");
             checkboxElement.setAttribute("type", "checkbox");
             checkboxElement.setAttribute("name", "checkbox");
@@ -66,8 +69,9 @@
             labelElement.appendChild(spanElement);
             labelElement.appendChild(aElement);
             aElement.appendChild(spanDeleteElement);
-            liElement.appendChild(checkboxElement);
-            liElement.appendChild(labelElement);
+            checkboxDivElement.appendChild(checkboxElement);
+            checkboxDivElement.appendChild(labelElement);
+            liElement.appendChild(checkboxDivElement);
 
             // li 태그를 ul 태그 안에 추가
             ulElemnt.appendChild(liElement);

@@ -25,7 +25,7 @@
 		<table class="mainlist" style="width:100%;">
 			<thead id="ipHeader">
 				<tr>
-					<th style="width: 22px; text-align: center;"><input type="checkbox" id="HeaderAllCheckBox" onclick="event_HeaderCheckBoxClick(this)" style="margin: 0px; padding: 0px; width: 13px; height: 13px;"></th>
+					<th style="width: 22px; text-align: center;"><div class="custom_checkbox"><input type="checkbox" id="HeaderAllCheckBox" onclick="event_HeaderCheckBoxClick(this)" style="margin: 0px; padding: 0px; width: 13px; height: 13px;"></div></th>
 		 			<th width="230px;"><spring:message code='ezSystem.jje5'/></th>
 		 			<th width="100px; text-algin:center;"><spring:message code='ezSystem.jje3'/></th>
 		 			<th><spring:message code='ezCommunity.t383'/></th>
@@ -137,6 +137,9 @@
                 _TDCheckBox.style.textAlign = "center";
                 _TDCheckBox.style.cursor = "default";
                 
+				var _TDCheckBox_SubDiv = document.createElement("div");
+				_TDCheckBox_SubDiv.className = "custom_checkbox";
+				
                 var _TDCheckBox_Sub = document.createElement("INPUT");
                 _TDCheckBox_Sub.type = "checkbox";
                 _TDCheckBox_Sub.style.margin = "0px";
@@ -145,7 +148,8 @@
                 _TDCheckBox_Sub.style.height = "13px";
                 _TDCheckBox_Sub.style.cursor = "pointer";
                 
-                _TDCheckBox.appendChild(_TDCheckBox_Sub);
+                _TDCheckBox_SubDiv.appendChild(_TDCheckBox_Sub);
+                _TDCheckBox.appendChild(_TDCheckBox_SubDiv);
                 _TR.appendChild(_TDCheckBox);
                 
                 var _IPADDRESS = document.createElement("TD");
@@ -276,20 +280,20 @@
 			    	
 			    	for (var i = 0; i < selectedList.length; i++) {
 			    		selectedList[i].style.backgroundColor = m_strColorDefault;
-			    		selectedList[i].childNodes.item(0).childNodes.item(0).checked = false;
+			    		selectedList[i].querySelector('input').checked = false;
 			    		selectedList[i].setAttribute("selected", false);
 			    	}
 		    	}
 		    	tdChk = false;
 		    }
 			
-			if (obj.childNodes.item(0).childNodes.item(0).checked) {
+			if (obj.childNodes.item(0).querySelector('input').checked) {
 				obj.style.backgroundColor = m_strColorDefault;
-				obj.childNodes.item(0).childNodes.item(0).checked = false;
+				obj.childNodes.item(0).querySelector('input').checked = false;
 				obj.setAttribute("selected", false);
 			} else {
 				obj.style.backgroundColor = m_strColorSelect;
-				obj.childNodes.item(0).childNodes.item(0).checked = true;
+				obj.childNodes.item(0).querySelector('input').checked = true;
 				obj.setAttribute("selected", true);
 			}
 		}
@@ -306,27 +310,27 @@
 				for (var i = 0; i < ipListElement.length; i++) {
 		        	var ipNode = ipListElement[i];
 		        	ipNode.style.backgroundColor = m_strColorSelect;
-		        	ipNode.childNodes[0].childNodes[0].checked = true;
+		        	ipNode.childNodes[0].childNodes[0].querySelector('input').checked = true;
 		        	ipNode.setAttribute("selected", true);
 		        }
 			} else {
 				for (var i = 0; i < ipListElement.length; i++) {
 		        	var ipNode = ipListElement[i];
 		        	ipNode.style.backgroundColor = m_strColorDefault;
-		        	ipNode.childNodes[0].childNodes[0].checked = false;
+		        	ipNode.childNodes[0].childNodes[0].querySelector('input').checked = false;
 		        	ipNode.setAttribute("selected", false);
 		        }
 			}
 		}
 		
 		function event_listMover(obj) {
-		    if (!obj.childNodes.item(0).childNodes.item(0).checked) {
+		    if (!obj.childNodes.item(0).querySelector('input').checked) {
 		        obj.style.backgroundColor = m_strColorOver;
 		    }
 		}
 		
 		function event_listMout(obj) {
-		    if (!obj.childNodes.item(0).childNodes.item(0).checked) {
+		    if (!obj.childNodes.item(0).querySelector('input').checked) {
 		        obj.style.backgroundColor = m_strColorDefault;
 		    }
 		}
