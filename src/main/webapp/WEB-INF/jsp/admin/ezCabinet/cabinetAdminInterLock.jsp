@@ -47,8 +47,8 @@
 							</c:choose>
 						</td>
 						<td>
-							<label style="cursor:pointer;"><input type="radio" role="on"  name="${module.moduleType}" ${module.activeStatus == 1 ? 'checked' : ''}><spring:message code="ezCabinet.t147"/></label>
-							<label style="cursor:pointer;"><input type="radio" role="off" name="${module.moduleType}" ${module.activeStatus != 1 ? 'checked' : ''}><spring:message code="ezCabinet.t148"/></label>
+							<label style="cursor:pointer;"><div class='custom_radio'><input type="radio" role="on"  name="${module.moduleType}" ${module.activeStatus == 1 ? 'checked' : ''}></div><spring:message code="ezCabinet.t147"/></label>
+							<label style="cursor:pointer;"><div class='custom_radio'><input type="radio" role="off" name="${module.moduleType}" ${module.activeStatus != 1 ? 'checked' : ''}></div><spring:message code="ezCabinet.t148"/></label>
 						</td>
 					</tr>
 				</c:forEach>
