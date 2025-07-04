@@ -512,8 +512,8 @@ function getDocListjson(pageNum) {
 								html += "<tr class='row_body' onclick='select_row(this)' ondblclick='openDoc(this)' docid='docID_" + i.docID + "' id='" + i.docID + "' writerName='" + i.writerName + "' " 
 									 + "DocTitle='" + i.docTitle + "' DocNo='" + i.docNo + "' DeptName='" + i.writerDeptName + "' style='cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'"
 									 + "formid='"+i.formID+"' dochref='"+i.href+"' orgdocid='"+i.orgDocID+"' >";
-								html += "   <td><input type ='checkbox' name='myCheckbox' id='" + i.docID + "' onclick='chk_onselect(this)' writerName='" 
-									 + i.writerName + "' DocTitle='" + i.docTitle + "' DocNo='" + i.docNo + "' DeptName='" + i.writerDeptName + "'></td>";
+								html += "   <td><div class='custom_checkbox'><input type ='checkbox' name='myCheckbox' id='" + i.docID + "' onclick='chk_onselect(this)' writerName='" 
+									 + i.writerName + "' DocTitle='" + i.docTitle + "' DocNo='" + i.docNo + "' DeptName='" + i.writerDeptName + "'></div></td>";
 								html += "	<td title=\'" + i.docNo + "'>"	+ i.docNo	+ "</td>";
 								if (i.hasAttachYn != "N") {
 									html += '<td><img src="\/images\/newAttach.gif"></td>';
@@ -709,7 +709,7 @@ function changeCompID() {
         document.getElementsByName("selSContName")[0].innerHTML = "";
         document.getElementsByName("selTContName")[0].innerHTML = "";
         
-        document.getElementsByName("MoveALL")[0].checked = false;
+        document.getElementsByName("MoveALL")[0].querySelector('input').checked = false;
         document.getElementById("PageNum").innerHTML = "";
     }
 }

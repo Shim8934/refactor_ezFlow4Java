@@ -251,7 +251,7 @@ var strLang601 = "关闭";
 var strLang602 = "zh";
 var strLang603 = "资源的列表最高可登记5个";
 //추가
-var strLangLHM01 = "default_cn";
+var strLangLHM01 = "default";
 var strLangLHM02 = "打印预览";
 var strLangLHM03 = "打印";
 var strLangLHM04 = "取消";

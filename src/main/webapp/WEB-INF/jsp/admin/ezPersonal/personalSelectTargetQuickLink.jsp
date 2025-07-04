@@ -1569,8 +1569,8 @@
 	                            <tr>
 	                                <th><spring:message code = 'ezBoard.t999025' /></th>
 	                                <td>
-	                                    <input type="checkbox" id="admin_OK" disabled onclick="checkbox_onclick(event)">&nbsp;<spring:message code = 'ezPersonal.t1020' />
-	                                    <input type="checkbox" id="admin_NO" disabled onclick="checkbox_onclick(event)">&nbsp;<spring:message code = 'ezPersonal.t1021' />
+										<div class='custom_checkbox'><input type="checkbox" id="admin_OK" disabled onclick="checkbox_onclick(event)"></div>&nbsp;<spring:message code = 'ezPersonal.t1020' />
+										<div class='custom_checkbox'><input type="checkbox" id="admin_NO" disabled onclick="checkbox_onclick(event)"></div>&nbsp;<spring:message code = 'ezPersonal.t1021' />
 	                                </td>
 	                            </tr>
 	                        </table>

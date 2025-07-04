@@ -596,7 +596,7 @@
 		                }
 		                
 						// openRightFrameDefault()가능?
-		                var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(window[treeviewStr].getvalue(1, "foldername")) + "&url=" + encodeURIComponent(window[treeviewStr].getvalue(1, "href"));
+		                var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(window[treeviewStr].getvalue(2, "foldername")) + "&url=" + encodeURIComponent(window[treeviewStr].getvalue(2, "href"));
 		                
 		            	if (shareId != "") {
 		            		url += "&shareId=" + encodeURIComponent(shareId);

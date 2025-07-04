@@ -83,7 +83,7 @@ function checkbox_header() {
 	var doc = window.document;
 	var th = doc.getElementById("AccessListView_TH_0");
 	var acList = doc.getElementById("AccessListView");
-	th.innerHTML = "<input type='checkbox' id = 'checkAll' onchange='checkboxHeaderClick()'></input>";
+	th.innerHTML = "<div class='custom_checkbox'><input type='checkbox' id = 'checkAll' onchange='checkboxHeaderClick()'/></div>";
 	
 	cnt = acList.children[1].childElementCount;
 	var i = 0;
@@ -91,8 +91,8 @@ function checkbox_header() {
 		var seq = acList.children[1].children[i].getAttribute("data1");
 		var inuse = acList.children[1].children[i].getAttribute("inuse");
 		var jinhangFlag = acList.children[1].children[i].children[5].innerHTML;
-		acList.children[1].children[i].children[0].innerHTML = "<input type='checkbox' name='checks' class='checks' id='" + seq + "' value='" + seq +"' onchange='inputFunc(event,"+seq+")'></input>";
-		acList.children[1].children[i].children[6].innerHTML = "<label class='switch' id='switch" + seq + "' inuse='" + inuse +"' onclick='inUseUpdate(event," + seq +")'><input type='checkbox'><span class='slider round'></span></label>";
+		acList.children[1].children[i].children[0].innerHTML = "<div class='custom_checkbox'><input type='checkbox' name='checks' class='checks' id='" + seq + "' value='" + seq +"' onchange='inputFunc(event,"+seq+")'/>";
+		acList.children[1].children[i].children[6].innerHTML = "<label class='switch' id='switch" + seq + "' inuse='" + inuse +"' onclick='inUseUpdate(event," + seq +")'><input type='checkbox'><span class='slider round'></span></label></div>";
 
 		if(jinhangFlag == 1) {
 			acList.children[1].children[i].children[5].innerHTML = "<img src='/images/admin/inuse.png' border='0' class='jinhang' progress='1'>";

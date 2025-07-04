@@ -823,7 +823,7 @@
 	    		
 				if (parent.titleOptionFlag == true) { // 제목
 					var mainDocTitle = ifrm1.contentWindow.GetFieldText("doctitle");
-	    			PutFieldText("doctitle", mainDocTitle);
+	    			PutFieldText("doctitle", stripHTMLTags(mainDocTitle));
 				}
 
 				if (FieldExist("publication")) {
@@ -1042,6 +1042,12 @@
                     }
                 }
             }
+
+			function stripHTMLTags(htmlString) {
+				const tempDiv = document.createElement("div");
+				tempDiv.innerHTML = htmlString;
+				return tempDiv.textContent || tempDiv.innerText || "";
+			}
 	    </script>
 	</head>
 	<body>

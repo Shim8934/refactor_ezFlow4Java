@@ -85,6 +85,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/apprGSummary.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/html2canvas.js')}"></script>
 	    <script type="text/javascript">
 	        var docID = "<c:out value='${docID}'/>";
 	        var docHref = "<c:out value='${docHref}'/>";
@@ -270,7 +271,32 @@
 			}
 			
 			function btnMail_onclick() {
-			    window.open("/ezEmail/mailWrite.do?docHref=" + pDocHrefAry[currentTabIdx] + "&cmd=docsend&docID=" + pDocIDAry[currentTabIdx] + "&target=APPROVALG", "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(890, window.screen.availHeight * 0.8));
+				if(extAry[currentTabIdx] == "hwp")
+					window.open("/ezEmail/mailWrite.do?docHref=" + pDocHrefAry[currentTabIdx] + "&cmd=docsend&docID=" + pDocIDAry[currentTabIdx] + "&target=APPROVALG", "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(890, window.screen.availHeight * 0.8));
+				else{
+					html2canvas(document.getElementById("ifrm" + currentTabIdx).contentWindow.document.getElementById("div_Content")).then(function(canvas) {
+						$.ajax({
+							type:"POST",
+							dataType:"text",
+							data : {
+									imgUrl : canvas.toDataURL("image/png"),
+									docID: pDocID
+							},
+							url: "/ezApprovalG/createMailImg.do",
+							success: function (data) {
+							}
+						});
+					}
+				);
+				var pheight = window.screen.availHeight;
+				var conHeight = pheight * 0.8;
+				var pwidth = window.screen.availWidth;
+				var pTop = (pheight - conHeight) / 2;
+				var pLeft = (pwidth - 890) / 2;
+				var pURL = "/ezApprovalG/sendToMailApproval.do?cmd=docsend&docID=" + pDocID + "&docHref=" + encodeURIComponent(pDocHref)+"&orgCompanyID="+orgCompanyID;
+				var newwin = window.open(pURL, "mailsend", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width =890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+				newwin.focus();
+				}			
 			}	
 	
 			function btnhistory_onclick() {
@@ -394,7 +420,7 @@
 			*/
 			
 			function btnforcecallback_onclick() {
-				var pMsg = "문서를 강제회수하시겠습니까?";
+				var pMsg = "<spring:message code='ezApprovalG.km02'/>";
 				OpenInformationUI(pMsg, btnforcecallback_onclick_Complete);
 			}
 			
@@ -443,7 +469,7 @@
 					//ExcuteInfo("CALLBACK_AFTER", "DRAFT");
 
 					HiddenMailProgress();
-					OpenAlertUI("문서를 회수하였습니다.", function() {
+					OpenAlertUI(strLangKm01, function() {
 						btnClose_onclick();
 					});
 		        } else {
@@ -506,7 +532,7 @@
 		    */
 			
 		    function btncallback_onclick() {
-				var pMsg = "문서를 회수하시겠습니까?";
+				var pMsg = "<spring:message code='ezApprovalG.km01'/>";
 				OpenInformationUI(pMsg, btncallback_onclick_Complete);
 		    }
 		    
@@ -567,7 +593,7 @@
 					//ExcuteInfo("CALLBACK_AFTER", "DRAFT");
 
 					HiddenMailProgress();
-					OpenAlertUI("문서를 회수하였습니다.", function() {
+					OpenAlertUI(strLangKm01, function() {
 						btnClose_onclick();
 					});
 					

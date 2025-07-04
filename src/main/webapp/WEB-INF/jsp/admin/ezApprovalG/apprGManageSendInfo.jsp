@@ -147,15 +147,15 @@
 	        <tr>
 	            <th><spring:message code = 'ezApprovalG.t1583' /></th>
 	            <td style="width: 250px; white-space: nowrap;">
-	                <input type="checkbox" id="special1" name="special1" value="checkbox"><spring:message code = 'ezApprovalG.t1584' />
+					<div class='custom_checkbox'><input type="checkbox" id="special1" name="special1" value="checkbox"></div><spring:message code = 'ezApprovalG.t1584' />
 	            </td>
 
 	            <td style="width: 250px; display: none; white-space: nowrap;">
-	                <input type="checkbox" id="special2" name="special2" value="checkbox"><spring:message code = 'ezApprovalG.t1585' />
+					<div class='custom_checkbox'><input type="checkbox" id="special2" name="special2" value="checkbox"></div><spring:message code = 'ezApprovalG.t1585' />
 	            </td>
 	
 	            <td style="width: 250px; white-space: nowrap;">
-	                <input type="checkbox" id="special3" name="special3" value="checkbox"><spring:message code = 'ezApprovalG.t1586' />
+					<div class='custom_checkbox'><input type="checkbox" id="special3" name="special3" value="checkbox"></div><spring:message code = 'ezApprovalG.t1586' />
 	            </td>
 	        </tr>
 	    </table>

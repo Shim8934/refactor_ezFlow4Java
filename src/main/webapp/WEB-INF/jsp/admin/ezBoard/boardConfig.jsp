@@ -63,7 +63,7 @@
 	                    } else if (pBoardGuBun == 7) {
 	                    	document.getElementById("BoardEnv_ifrm").src = "/ezBoard/boardItemListMovie.do?boardID=" + encodeURIComponent(pBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pBoardGuBun + "&adminType=y";
 	                    } else if (pBoardGuBun == 9) {
-	                    	document.getElementById("BoardEnv_ifrm").src = "/ezBoard/fileViewerBoard?boardID="  + encodeURIComponent(pBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pBoardGuBun
+	                    	document.getElementById("BoardEnv_ifrm").src = "/ezBoard/fileViewerBoard.do?boardID="  + encodeURIComponent(pBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pBoardGuBun
 	                    } else {	      
 	                        document.getElementById("BoardEnv_ifrm").src = "/ezBoard/boardItemList.do?boardID=" + encodeURIComponent(pBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pBoardGuBun + "&adminType=y";
 	                    }

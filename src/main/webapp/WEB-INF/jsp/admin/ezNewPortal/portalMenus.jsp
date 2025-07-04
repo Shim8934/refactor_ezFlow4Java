@@ -76,8 +76,8 @@
 				    <tbody><tr>
 				        <th><spring:message code="ezNewPortal.topMenu.hth01"/></th>
 				        <td>
-				            <input style="margin-top: 0px;" type="radio" id="topDisplayMode" name="topMenuDisplayMode" value="0"><label for="topDisplayMode" style="cursor: pointer; vertical-align: middle"><spring:message code="ezNewPortal.kwc01"/></label>
-				            <input style="margin-top: 0px;" type="radio" id="leftDisplayMode" name="topMenuDisplayMode" value="1"><label for="leftDisplayMode" style="cursor: pointer; vertical-align: middle"><spring:message code="ezPortal.t72"/></label>
+							<div class='custom_radio'><input style="margin-top: 0px;" type="radio" id="topDisplayMode" name="topMenuDisplayMode" value="0"><label for="topDisplayMode" style="cursor: pointer; vertical-align: middle"><spring:message code="ezNewPortal.kwc01"/></label></div>
+							<div class='custom_radio'><input style="margin-top: 0px;" type="radio" id="leftDisplayMode" name="topMenuDisplayMode" value="1"><label for="leftDisplayMode" style="cursor: pointer; vertical-align: middle"><spring:message code="ezPortal.t72"/></label></div>
 				        </td>
 				    </tr>
 				</tbody></table>
