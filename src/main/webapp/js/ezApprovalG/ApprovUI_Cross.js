@@ -2,6 +2,7 @@
 var pOrgAttach;
 var bbtnApprove = "";
 var bbtnReject = "";
+var bbtnReject2 = "";
 var bbtnStay = "";
 var bbtnJunKyul = "";
 var bbtnModAprLine = "";
@@ -1161,7 +1162,8 @@ function chkBtnConfirm(para) {
 
         if (document.getElementById("btnReject").style.display == "")
             bbtnReject = "1";
-
+        if (document.getElementById("btnReject2").style.display == "")
+            bbtnReject2 = "1";
         if (document.getElementById("btnStay").style.display == "")
             bbtnStay = "1";
 
@@ -1221,6 +1223,9 @@ function chkBtnConfirm(para) {
 
         if (bbtnReject == "1")
             setMenuBar("btnReject", true);
+        
+        if (bbtnReject2 == "1")
+            setMenuBar("btnReject2", true);
 
         if (bbtnStay == "1")
             setMenuBar("btnStay", true);
