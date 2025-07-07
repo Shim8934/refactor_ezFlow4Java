@@ -162,7 +162,7 @@
 		        document.getElementById("Gubun").innerHTML = "";
 
 		        if (pCassNo.trim() != "") {
-		            document.getElementById("Gubun").innerHTML = "<table style='width:400px' id='CAS_NO_LIST'><tr><td style='width:100%'><input type='text' id='cas_no1' name='cas_no1' style='width:90%' maxlength='50'>&nbsp;<input type='checkbox' id='DEL_FG1' name='DEL_FG1' /></td></tr></table>";
+		            document.getElementById("Gubun").innerHTML = "<table style='width:400px' id='CAS_NO_LIST'><tr><td style='width:100%'><input type='text' id='cas_no1' name='cas_no1' style='width:90%' maxlength='50'>&nbsp;<div class='custom_checkbox'><input type='checkbox' id='DEL_FG1' name='DEL_FG1' /></div></td></tr></table>";
 		            document.getElementById("AddDel").style.display = "";
 
 		            /* 2021-04-26 홍승비 - 라디오버튼, 체크박스의 각 항목 첫번째 타입명만 ', " 문자를 제대로 표출하는 부분 수정 */
@@ -173,7 +173,7 @@
 		                    oCell01 = oRow.insertCell(-1);
 		                    oCell01.align = "left";
 		                    oCell01.valign = "middle";
-		                    oCell01.innerHTML = "<input type=\"text\" id=\"cas_no" + i + "\" name=\"cas_no" + i + "\" style=\"width:90%\" maxlength=\"50\" />&nbsp;<input type=\"checkbox\" name=\"DEL_FG" + i + "\" id=\"DEL_FG" + i + "\" />";
+		                    oCell01.innerHTML = "<input type=\"text\" id=\"cas_no" + i + "\" name=\"cas_no" + i + "\" style=\"width:90%\" maxlength=\"50\" />&nbsp;<div class=\"custom_checkbox\"><input type=\"checkbox\" name=\"DEL_FG" + i + "\" id=\"DEL_FG" + i + "\" /></div>";
 		                    document.getElementById("cas_no" + i).value = pCassNo.split("|")[(i - 1)];
 		                }
 		                else {
@@ -204,7 +204,7 @@
 		            document.getElementById("Gubun").innerHTML = "";
 		        }
 		        else {
-		            document.getElementById("Gubun").innerHTML = "<table style='width:400px' id='CAS_NO_LIST'><tr><td style='width:100%'><input type='text' id='cas_no1' name='cas_no1' style='width:90%' maxlength='50'>&nbsp;<input type='checkbox' id='DEL_FG1' name='DEL_FG1' /></td></tr></table>";
+		            document.getElementById("Gubun").innerHTML = "<table style='width:400px' id='CAS_NO_LIST'><tr><td style='width:100%'><input type='text' id='cas_no1' name='cas_no1' style='width:90%' maxlength='50'>&nbsp;<div class='custom_checkbox'><input type='checkbox' id='DEL_FG1' name='DEL_FG1' /></div></td></tr></table>";
 		            document.getElementById("AddDel").style.display = "";
 		        }
 		    }
@@ -845,7 +845,7 @@
 				        <th style="width:15%"><spring:message code='ezBoard.hsbEx01'/>(<c:out value="${lang_secondary}"/>)</th>
 				        <td style="width:25%"><input id="txtNameEng"  style="width:97%" maxlength="20"/></td>
 						<th style="width:10%"><spring:message code='ezBoard.t999033'/></th>
-				        <td style="width:10%"><input id="chkRequired" type="checkbox" /></td>
+				        <td style="width:10%"><div class="custom_checkbox"><input id="chkRequired" type="checkbox" /></div></td>
 				    </tr>
 				    <tr>
 				        <th style="width:15%"><spring:message code='ezBoard.t999034'/></th>

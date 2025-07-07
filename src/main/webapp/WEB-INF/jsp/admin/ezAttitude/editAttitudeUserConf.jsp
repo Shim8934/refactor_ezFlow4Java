@@ -129,7 +129,7 @@
 		<table class="content"> 
 			<tr>
 				<th><spring:message code='ezAttitude.t126' /></th>
-				<td><input type="checkbox" id="gubun" name="gubun" <c:if test="${vo.gubun == '0'}">checked="checked"</c:if> /><spring:message code='ezAttitude.t127' /></td>
+				<td><div class="custom_checkbox"><input type="checkbox" id="gubun" name="gubun" <c:if test="${vo.gubun == '0'}">checked="checked"</c:if> /></div><spring:message code='ezAttitude.t127' /></td>
 			</tr>
 			<tr>
 				<th><spring:message code='ezAttitude.t12' /></th>

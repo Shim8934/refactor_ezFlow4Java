@@ -337,7 +337,9 @@
             <tr>
             	<td class="box" style="width: 250px;padding-top:5px;padding-left:3px">
             		<div style="height:25px">
-            			<input type="checkbox" id="withChild" name="withChild" style="vertical-align: middle" />
+            			<div class="custom_checkbox">
+	            			<input type="checkbox" id="withChild" name="withChild" style="vertical-align: middle" />
+            			</div>
             			<label for="withChild"><spring:message code='ezJournal.t226' /></label>
             		</div>
             	</td>

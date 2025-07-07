@@ -72,18 +72,26 @@
 			    	<c:choose>
 				    	<c:when test="${type.journalUse eq 'use'}">
 					    	<td style="text-align: center;">
-					    		<input type="radio" name="${type.journaltypeId }" value="use" checked/>
+					    		<div class="custom_radio">
+						    		<input type="radio" name="${type.journaltypeId }" value="use" checked/>
+					    		</div>
 					    	</td>
 					    	<td style="text-align: center;">
-					    		<input type="radio" name="${type.journaltypeId }" value="no"/>
+					    		<div class="custom_radio">
+						    		<input type="radio" name="${type.journaltypeId }" value="no"/>
+					    		</div>
 					    	</td>
 				    	</c:when>
 				    	<c:otherwise>
 					    	<td style="text-align: center;">
-					    		<input type="radio" name="${type.journaltypeId }" value="use" />
+					    		<div class="custom_radio">
+						    		<input type="radio" name="${type.journaltypeId }" value="use" />
+					    		</div>
 					    	</td>
 					    	<td style="text-align: center;">
-					    		<input type="radio" name="${type.journaltypeId }" value="no" checked/>
+					    		<div class="custom_radio">
+						    		<input type="radio" name="${type.journaltypeId }" value="no" checked/>
+					    		</div>
 					    	</td>
 				    	</c:otherwise>
 			    	</c:choose>

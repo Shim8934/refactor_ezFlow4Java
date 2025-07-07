@@ -220,13 +220,13 @@
 					<spring:message code='ezAttitude.t20' />
 	            </th> 
 	            <td id="dayChkBox" style="width: 500px; text-align:left">
-	            	<input type="checkbox"/><spring:message code='ezAttitude.t21' />
-	            	<input type="checkbox"/><spring:message code='ezAttitude.t22' />
-	            	<input type="checkbox"/><spring:message code='ezAttitude.t23' />
-	            	<input type="checkbox"/><spring:message code='ezAttitude.t24' />
-	            	<input type="checkbox"/><spring:message code='ezAttitude.t25' />
-	            	<input type="checkbox"/><spring:message code='ezAttitude.t26' />
-	            	<input type="checkbox"/><spring:message code='ezAttitude.t27' />
+	            	<div class="custom_checkbox"><input type="checkbox"/></div><spring:message code='ezAttitude.t21' />
+	            	<div class="custom_checkbox"><input type="checkbox"/></div><spring:message code='ezAttitude.t22' />
+	            	<div class="custom_checkbox"><input type="checkbox"/></div><spring:message code='ezAttitude.t23' />
+	            	<div class="custom_checkbox"><input type="checkbox"/></div><spring:message code='ezAttitude.t24' />
+	            	<div class="custom_checkbox"><input type="checkbox"/></div><spring:message code='ezAttitude.t25' />
+	            	<div class="custom_checkbox"><input type="checkbox"/></div><spring:message code='ezAttitude.t26' />
+	            	<div class="custom_checkbox"><input type="checkbox"/></div><spring:message code='ezAttitude.t27' />
 	            </td>
 	        </tr>
 	        <!-- 2019.07.05 연차관리 기능 추가로 인해 사용하는곳이 없으므로 display none으로 해둠. -->
@@ -235,8 +235,8 @@
 					<spring:message code='ezAttitude.t31' />
 	            </th>
 	            <td style="width: 500px; text-align:left">
-	            	<input type="radio" name="close_date_attitude" value="1"/><spring:message code='ezAttitude.t29' />
-	            	<input type="radio" name="close_date_attitude" value="0"/><spring:message code='ezAttitude.t30' />
+	            	<div class="custom_radio"><input type="radio" name="close_date_attitude" value="1"/></div><spring:message code='ezAttitude.t29' />
+	            	<div class="custom_radio"><input type="radio" name="close_date_attitude" value="0"/></div><spring:message code='ezAttitude.t30' />
 	            </td>
 	        </tr>
 	        <tr style="height:30px;">
@@ -244,8 +244,8 @@
 					<spring:message code='ezAttitude.t28' />
 	            </th>
 	            <td style="width: 500px; text-align:left">
-	            	<input type="radio" name="attitude_mod_appl" style="margin-top: -1px;" value="1"/><spring:message code='ezAttitude.t29' />
-	            	<input type="radio" name="attitude_mod_appl" style="margin-top: -1px;" value="0"/><spring:message code='ezAttitude.t30' />
+	            	<div class="custom_radio"><input type="radio" name="attitude_mod_appl" style="margin-top: -1px;" value="1"/></div><spring:message code='ezAttitude.t29' />
+	            	<div class="custom_radio"><input type="radio" name="attitude_mod_appl" style="margin-top: -1px;" value="0"/></div><spring:message code='ezAttitude.t30' />
 	            </td>
 	        </tr>
 		</table>

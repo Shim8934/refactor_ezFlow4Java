@@ -259,8 +259,8 @@
 					<spring:message code = 'ezAttitude.t293' />
 	            </th>
 	            <td style="width: 700px; text-align:left">
-	            	<input type="radio" name="use_annual_auto_gnrt" value="1" onchange="type_change('1');"/><spring:message code = 'ezAttitude.t36' />
-	            	<input type="radio" name="use_annual_auto_gnrt" value="0" onchange="type_change('0');"/><spring:message code = 'ezAttitude.t37' />
+	            	<div class="custom_radio"><input type="radio" name="use_annual_auto_gnrt" value="1" onchange="type_change('1');"/></div><spring:message code = 'ezAttitude.t36' />
+	            	<div class="custom_radio"><input type="radio" name="use_annual_auto_gnrt" value="0" onchange="type_change('0');"/></div><spring:message code = 'ezAttitude.t37' />
 	            </td>
 	        </tr>
 	        <tr id="ags" style="height:30px;">
@@ -268,8 +268,8 @@
 					<spring:message code = 'ezAttitude.t296' />
 	            </th>
 	            <td style="width: 700px; text-align:left">
-	            	<input type="radio" name="annual_gnrt_std" value="1" onchange="type_change('2');"/><spring:message code = 'ezAttitude.t297' />
-	            	<input type="radio" name="annual_gnrt_std" value="0" onchange="type_change('3');"/><spring:message code = 'ezAttitude.t289' />
+	            	<div class="custom_radio"><input type="radio" name="annual_gnrt_std" value="1" onchange="type_change('2');"/></div><spring:message code = 'ezAttitude.t297' />
+	            	<div class="custom_radio"><input type="radio" name="annual_gnrt_std" value="0" onchange="type_change('3');"/></div><spring:message code = 'ezAttitude.t289' />
 	            </td>
 	        </tr>
 	        <tr id="sdp" style="height:30px;">
@@ -285,8 +285,8 @@
 					<spring:message code = 'ezAttitude.t299' />
 	            </th>
 	            <td style="width: 700px; text-align:left">
-	            	<input type="radio" name="use_minus_annual" value="1"/><spring:message code = 'ezAttitude.t29' />
-	            	<input type="radio" name="use_minus_annual" value="0"/><spring:message code = 'ezAttitude.t30' />
+	            	<div class="custom_radio"><input type="radio" name="use_minus_annual" value="1"/></div><spring:message code = 'ezAttitude.t29' />
+	            	<div class="custom_radio"><input type="radio" name="use_minus_annual" value="0"/></div><spring:message code = 'ezAttitude.t30' />
 	            </td>
 	        </tr>
 	        <tr id="uat" style="height:30px;">
@@ -294,8 +294,8 @@
 					<spring:message code = 'ezAttitude.t302' />
 	            </th>
 	            <td style="width: 700px; text-align:left">
-	            	<input type="radio" name="use_annual_tmnt" value="1"/><spring:message code = 'ezAttitude.t36' />
-	            	<input type="radio" name="use_annual_tmnt" value="0"/><spring:message code = 'ezAttitude.t37' />
+	            	<div class="custom_radio"><input type="radio" name="use_annual_tmnt" value="1"/></div><spring:message code = 'ezAttitude.t36' />
+	            	<div class="custom_radio"><input type="radio" name="use_annual_tmnt" value="0"/></div><spring:message code = 'ezAttitude.t37' />
 	            </td>
 	        </tr>
 	        <tr id="ror" style="height:30px;">
@@ -303,8 +303,8 @@
 					<spring:message code = 'ezAttitude.t303' />
 	            </th>
 	            <td style="width: 700px; text-align:left">
-	            	<input type="radio" name="round_off_rule" value="1"/><spring:message code = 'ezAttitude.t304' />
-	            	<input type="radio" name="round_off_rule" value="0"/><spring:message code = 'ezAttitude.t305' />
+	            	<div class="custom_radio"><input type="radio" name="round_off_rule" value="1"/></div><spring:message code = 'ezAttitude.t304' />
+	            	<div class="custom_radio"><input type="radio" name="round_off_rule" value="0"/></div><spring:message code = 'ezAttitude.t305' />
 	            </td>
 	        </tr>
 		</table>

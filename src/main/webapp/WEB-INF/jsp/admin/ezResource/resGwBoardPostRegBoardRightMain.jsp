@@ -188,8 +188,8 @@
    						<table class="popuplist" style="width:100%">
         				<tr>
           					<td style="border:0px;">
-          						<input type="radio" id="brd_mng1" name="brd_mng" value="1" style="vertical-align: middle; margin-bottom:5px;" onClick="optAclLvl_Click(this);" ${optAdmLvl}> <spring:message code="ezResource.t112" />
-            					<input type="radio" id="brd_mng2" name="brd_mng" value="2" style="vertical-align: middle; margin-bottom:5px;" onClick="optAclLvl_Click(this);" ${optUserLvl}> <spring:message code="ezResource.t107" />
+          						<div class="custom_radio"><input type="radio" id="brd_mng1" name="brd_mng" value="1" style="vertical-align: middle; margin-bottom:5px;" onClick="optAclLvl_Click(this);" ${optAdmLvl}></div> <spring:message code="ezResource.t112" />
+            					<div class="custom_radio"><input type="radio" id="brd_mng2" name="brd_mng" value="2" style="vertical-align: middle; margin-bottom:5px;" onClick="optAclLvl_Click(this);" ${optUserLvl}></div> <spring:message code="ezResource.t107" />
             				</td>
         				</tr>
       					</table>
@@ -199,8 +199,8 @@
    						<table class="popuplist" style="width:100%">
         				<tr>
           					<td style="border:0px;">
-          						<input type="radio" id="dept_copy1" name="dept_copy" value="1" style="vertical-align: middle; margin-bottom:5px;" onClick="optDeptCopy_Click(this);" disabled checked> <spring:message code='ezBoard.t95' />
-            					<input type="radio" id="dept_copy2" name="dept_copy" value="2" style="vertical-align: middle; margin-bottom:5px;" onClick="optDeptCopy_Click(this);" disabled> <spring:message code='ezBoard.t96' />
+          						<div class="custom_radio"><input type="radio" id="dept_copy1" name="dept_copy" value="1" style="vertical-align: middle; margin-bottom:5px;" onClick="optDeptCopy_Click(this);" disabled checked></div> <spring:message code='ezBoard.t95' />
+            					<div class="custom_radio"><input type="radio" id="dept_copy2" name="dept_copy" value="2" style="vertical-align: middle; margin-bottom:5px;" onClick="optDeptCopy_Click(this);" disabled></div> <spring:message code='ezBoard.t96' />
             				</td>
         				</tr>
       					</table>

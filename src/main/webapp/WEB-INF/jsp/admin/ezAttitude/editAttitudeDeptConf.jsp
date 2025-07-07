@@ -229,7 +229,7 @@
         <table class="content" style="margin-top: 8px;"> 
 			<tr>
 				<th><spring:message code='ezAttitude.t126' /></th>
-				<td><input type="checkbox" id="gubun" name="gubun" /><spring:message code='ezAttitude.t127' /></td>
+				<td><div class="custom_checkbox"><input type="checkbox" id="gubun" name="gubun" /></div><spring:message code='ezAttitude.t127' /></td>
 			</tr>
 			<tr>
 				<th><spring:message code='ezAttitude.t12' /></th>

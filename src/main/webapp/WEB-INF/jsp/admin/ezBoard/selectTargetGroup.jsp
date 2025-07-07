@@ -2238,8 +2238,8 @@
 					                	<tr>
 					                    	<th><spring:message code='ezBoard.t999025' /></th>
 					                    	<td>
-						                        <input type="checkbox" id="admin_OK" onclick="checkbox_onclick(event)">&nbsp;<spring:message code='ezBoard.t95' />
-						                        <input type="checkbox" id="admin_NO" onclick="checkbox_onclick(event)">&nbsp;<spring:message code='ezBoard.t96' />
+						                        <div class="custom_checkbox"><input type="checkbox" id="admin_OK" onclick="checkbox_onclick(event)"></div>&nbsp;<spring:message code='ezBoard.t95' />
+						                        <div class="custom_checkbox"><input type="checkbox" id="admin_NO" onclick="checkbox_onclick(event)"></div>&nbsp;<spring:message code='ezBoard.t96' />
 						                    </td>
 					                	</tr>
 					            	</tbody>

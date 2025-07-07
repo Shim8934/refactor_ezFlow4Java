@@ -1595,11 +1595,11 @@
 				<td>
                 	<div class="custom_checkbox">
 						<input type="checkbox" id="chkAttachment"
-                	</div>
 							<c:if test="${model.attachmentFlag == 'Y'}">
 								checked
 							</c:if>
-					/>
+						/>
+                	</div>
 					<spring:message code="ezBoard.t162"/>
 				</td>
 			</tr>
@@ -1609,11 +1609,11 @@
 				<td>
                 	<div class="custom_checkbox">
 						<input type="checkbox" id="chkAllNewBoard" onclick="chkAllNewBoard_onclick()"
-                	</div>
 							<c:if test="${model.allNewBoardFlag == 'Y'}">
 								checked
 							</c:if>
-					/>
+						/>
+                	</div>
 					<spring:message code="ezBoard.t162"/>
 				</td>
 			</tr>			

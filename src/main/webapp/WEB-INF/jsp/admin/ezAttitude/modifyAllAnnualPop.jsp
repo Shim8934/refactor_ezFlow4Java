@@ -99,7 +99,9 @@
 	            	<input id="annualCnt" name="annualCnt" type="text" style="width:30px;padding-bottom: 5px;text-align: right;" value="" maxlength="2">
 	            	<label id="banchaTxt"></label><spring:message code='ezAttitude.t68' />
 	            	<span style="width:100px;padding-right: 30px;"></span>
-	            	<input type="checkbox" id="bancha" name="bancha" onchange="setBancha();">
+	            	<div class="custom_checkbox">
+		            	<input type="checkbox" id="bancha" name="bancha" onchange="setBancha();">
+	            	</div>
 	            	<label for="bancha"><spring:message code='ezAttitude.t247' /></label>
 	            </td>
 	        </tr>

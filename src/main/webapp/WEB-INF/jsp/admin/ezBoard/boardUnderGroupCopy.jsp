@@ -71,10 +71,10 @@
 	    <div style="text-align:center; margin:10px;" id="div1">
 		    <div class="txt" style="margin-top:15px">
 		    	<div style="text-align: left">
-		        	<input style="vertical-align: middle;" type="radio" name="radioAcl" value="1" checked="checked"/> <spring:message code="ezBoard.t612" />
+		        	<div class="custom_radio"><input style="vertical-align: middle;" type="radio" name="radioAcl" value="1" checked="checked"/></div> <spring:message code="ezBoard.t612" />
 		        </div>
 		        <div style="text-align: left;margin-top:10px">	
-		        	<input style="vertical-align: middle;" type="radio" name="radioAcl" value="2" /> <spring:message code="ezBoard.t613" />
+		        	<div class="custom_radio"><input style="vertical-align: middle;" type="radio" name="radioAcl" value="2" /></div> <spring:message code="ezBoard.t613" />
 		        </div>	
 		    </div>
 	    </div>
