@@ -1217,3 +1217,6 @@ var strLangJIHSignDraw01 = "서명을 작성한 뒤 결재해주세요.";
 var strLangJIHSignDraw02 = "사인 저장 중 오류가 발생하였습니다.";
 
 var strLangKm01 = "문서를 회수하였습니다.";
+
+var strLangKMH02 = "Bạn có muốn tiếp tục nộp đơn hàng loạt không? <br>Các tài liệu có trạng thái gửi, văn bản thực hiện và thỏa thuận sẽ bị loại trừ khỏi đối tượng.";
+var strLangKMH03 = "Bạn có muốn tiếp tục nộp đơn hàng loạt và phê duyệt cuối cùng không? <br>Các tài liệu có trạng thái gửi, văn bản thực hiện và thỏa thuận sẽ bị loại trừ khỏi đối tượng.";

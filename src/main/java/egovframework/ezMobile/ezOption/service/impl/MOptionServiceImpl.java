@@ -299,7 +299,7 @@ public class MOptionServiceImpl extends EgovAbstractServiceImpl implements MOpti
 		logger.debug("[Service] getMobileMenuList started");
 		userInfoMap.put("mobile", "mobile");
 		
-		String deptPath = ezOrganService.getDeptPath((String) userInfoMap.get("deptId"), Integer.parseInt((String) userInfoMap.get("tenantId")));
+		String deptPath = ezOrganService.getDeptPath((String) userInfoMap.get("deptId"), (int)userInfoMap.get("tenantId"));
 		
 		//path 거꾸로 돌려야해서
 		List<String> deptIds = Arrays.asList(deptPath.split(","));

@@ -222,7 +222,12 @@
 	
 			function btnDocInfo_onclick() {
 			    var url = "/ezApprovalG/ezDocInfoView.do?docID=" + docID + "&ingFlag=APR";
-			    var feature = "status:no;dialogWidth:420px;dialogHeight:540px;help:no;scroll:no;edge:sunken;";
+			    var feature = "";
+				if (typeof approvalFlag !== "undefined" && approvalFlag == "G") {
+					feature = "status:no;dialogWidth:400px;dialogHeight:540px;help:no;scroll:no;edge:sunken;";
+				}else {
+					feature = "status:no;dialogWidth:300px;dialogHeight:540px;help:no;scroll:no;edge:sunken;";
+				}
 			    var RtnVal = window.showModalDialog(url, "", feature);
 			}
 	    </script>

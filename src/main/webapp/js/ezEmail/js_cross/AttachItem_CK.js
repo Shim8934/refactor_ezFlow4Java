@@ -129,7 +129,7 @@ function AddAttachFileInfoXmlParsing(resultXML, reuseAttach) {
         pstrXML += "<HEADER><NAME>" + strLang3 + "</NAME><WIDTH>50</WIDTH></HEADER>";
         pstrXML += "</HEADERS><ROWS>";
         for (i = 0; i < nodes.length; i++) {
-            if (getNodeText(GetChildNodes(nodes[i])[1]) != "denied") {
+            if (getNodeText(GetChildNodes(nodes[i])[1]) != "denied" && getNodeText(GetChildNodes(nodes[i])[1]) != "extFalse" ) {
                 pstrXML += "<ROW><CELL><VALUE>" + getNodeText(GetChildNodes(nodes[i])[2]).replace(re, "&amp;").replace("<","&lt;").replace(">","&gt;")  + "</VALUE>";
                 pstrXML += "<DATA1>" + getNodeText(GetChildNodes(nodes[i])[2]).replace(re, "&amp;").replace("<","&lt;").replace(">","&gt;") + "</DATA1>";
                 pstrXML += "<DATA2>" + getNodeText(GetChildNodes(nodes[i])[0]).replace(re, "&amp;").replace("<","&lt;").replace(">","&gt;") + "</DATA2>";

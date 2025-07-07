@@ -581,7 +581,7 @@
 	        		var resStr = "";
 	        		for (var i = 0; i < mustFields.length; i++) {
 	        			var mustField = mustFields[i];
-	        			var val = $(mustField).text().trim();
+	        			var val = $(mustField).text().replace(/[\u200B-\u200D\uFEFF]/g, '').trim();
 	        			if (val == "") {
 							if ($(mustField).attr('id') == "doctitle"){
 								returnval.push("<spring:message code='ezApprovalG.t1330'/>");

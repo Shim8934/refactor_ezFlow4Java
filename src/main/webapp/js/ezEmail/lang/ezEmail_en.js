@@ -365,6 +365,8 @@ var strLangHSG03 = "Subject field is empty.";
 
 var strLangKDH01 = "Read info";
 
+var strLangYJA01 = "An error occurred while uploading via the network.";
+
 //new ui
 const strLangFolderManage = "Manage folder";
 const strLangSubscribe = "Subscribe";

@@ -8599,4 +8599,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void addBoardContentSize() throws Exception {
         ezCommonDAO.addBoardContentSize();
     }
+
+    @Override
+    public void updateMobilePortletMenuId() throws Exception {
+        ezCommonDAO.updateMobilePortletMenuId();
+    }
 }

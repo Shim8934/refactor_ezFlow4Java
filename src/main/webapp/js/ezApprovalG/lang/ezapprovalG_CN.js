@@ -1216,3 +1216,6 @@ var strLangJIHSignDraw01 = "서명을 작성한 뒤 결재해주세요.";
 var strLangJIHSignDraw02 = "사인 저장 중 오류가 발생하였습니다.";
 
 var strLangKm01 = "문서를 회수하였습니다.";
+
+var strLangKMH02 = "您是否要继续进行批量接收？<br>状态为退回的文件、执行文本和协议文本将被排除在对象之外。";
+var strLangKMH03 = "您是否要继续进行批量接收和最终审批？<br>状态为退回的文件、执行文本和协议文本将被排除在对象之外。";

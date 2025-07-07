@@ -1218,3 +1218,6 @@ var strLangJIHSignDraw01 = "서명을 작성한 뒤 결재해주세요.";
 var strLangJIHSignDraw02 = "사인 저장 중 오류가 발생하였습니다.";
 
 var strLangKm01 = "문서를 회수하였습니다.";
+
+var strLangKMH02 = "Apakah Anda ingin melanjutkan penerimaan secara berkelompok? <br>Dokumen yang statusnya diteruskan, dokumen pelaksanaan dan perjanjian dikecualikan dari target.";
+var strLangKMH03 = "Apakah Anda ingin melanjutkan penerimaan secara berkelompok dan persetujuan akhir? <br>Dokumen yang statusnya diteruskan, dokumen pelaksanaan dan perjanjian dikecualikan dari target.";

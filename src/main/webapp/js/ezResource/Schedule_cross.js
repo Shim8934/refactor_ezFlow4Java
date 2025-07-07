@@ -973,7 +973,6 @@ function SaveSchedule_onClick( cmd , resItem) {
 	
 	if( typeof(resultXML) != "undefined" && getXmlString(resultXML) != "" )
 	{
-		if(doubleSubmitCheck()) return;
 	    //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%//
 	    // 2009.11.26 - 자원등록시 자원관리자에게 자원등록 알림메일 발송
 	    xmlHttp = null;

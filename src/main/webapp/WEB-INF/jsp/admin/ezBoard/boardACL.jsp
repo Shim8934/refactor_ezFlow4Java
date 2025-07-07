@@ -49,6 +49,35 @@
 	            if (pBoardID == "{MMMMMMMM-MMMM-MMMM-MMMM-MMMMMMMMMMMM}") {
 	            	PostSpan.style.display = "none";
 	            }
+
+				// VOC #163284 관리자 탭 선택 오류 
+				if (window.parent && window.parent !== window) {
+					try {
+						const parentUrl = window.parent.location.href;
+
+						if (parentUrl.includes("admin/ezBoard/boardConfig.do")) {
+							const parentDoc = window.parent.document;
+
+							const container = parentDoc.querySelector(".portlet_tabnew01_top");
+
+							if (container) {
+								const spans = container.querySelectorAll('span[divname="BoardEnv_div1"], span[divname="BoardEnv_div2"], span[divname="BoardEnv_div3"], span[divname="BoardEnv_div4"], span[divname="BoardEnv_div5"]');
+
+								spans.forEach(span => {
+									span.removeAttribute("class");
+								});
+
+								const targetSpan = container.querySelector('span[divname="BoardEnv_div3"]');
+								if (targetSpan) {
+									targetSpan.classList.add("tabon");
+									window.parent.Tab1_SelectID = "1tab3";
+								}
+							}
+						}
+					} catch (e) {
+						console.log(e);
+					}
+				}
 	        }
 	
 	        /* 2018-07-19 홍승비 - 권한설정 정보 리스트로 표출하는 분기 스크립트 오류 수정 */

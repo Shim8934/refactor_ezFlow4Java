@@ -230,7 +230,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		return ezNewPortalDAO.getPortalLogoInfo(map);
 	}
 	
-	public List<MenuInfoVO> getUserMenuList(String companyId, int tenantId, String langType, String userId, String deptId) throws Exception {
+	public List<MenuInfoVO> getUserMenuList(String companyId, int tenantId, String langType, String userId, String deptId, String type) throws Exception {
 		logger.debug("[Service] getUserMenuList started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyId", companyId);
@@ -238,6 +238,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("langType", langType);
 		map.put("userId", userId);
 		map.put("deptId", "");
+		map.put("mobile", type);
 		
 		/**
 		 * 2018-11-21 신규작성

@@ -511,10 +511,18 @@
 		        ezdocinfog_view_cross_dialogArguments[1] = btnDocInfo_onclick_Complete;
 		        
 				if (ListTypeValue == "21") {
-			        DivPopUpShow(430, 530, "/ezApprovalG/ezDocInfoView.do?docID=" + DocID + "&ingFlag=TMP");
+					if (typeof approvalFlag !== "undefined" && approvalFlag == "G") {
+						DivPopUpShow(430, 400, "/ezApprovalG/ezDocInfoView.do?docID=" + DocID + "&ingFlag=TMP");
+					}else {
+						DivPopUpShow(430, 300, "/ezApprovalG/ezDocInfoView.do?docID=" + DocID + "&ingFlag=TMP");
+					}
 				} else {
 			        var mode = getDocMode();
-			        DivPopUpShow(430, 530, "/ezApprovalG/ezDocInfoView.do?docID=" + DocID + "&ingFlag=" + mode);
+					if (typeof approvalFlag !== "undefined" && approvalFlag == "G") {
+						DivPopUpShow(430, 400, "/ezApprovalG/ezDocInfoView.do?docID=" + DocID + "&ingFlag=" + mode);
+					}else {
+						DivPopUpShow(430, 300, "/ezApprovalG/ezDocInfoView.do?docID=" + DocID + "&ingFlag=" + mode);
+					}
 				}
 		    }
 		    function btnDocInfo_onclick_Complete() {

@@ -273,7 +273,11 @@
 			    var url = "/ezApprovalG/ezDocInfoView.do?docID=" + docID + "&ingFlag=APR";
 			    //var feature = "status:no;dialogWidth:420px;dialogHeight:495px;help:no;scroll:no;edge:sunken;";
 			    //var RtnVal = window.showModalDialog(url, "", feature);
-			    DivPopUpShow(420, 520, url);
+				if (typeof approvalFlag !== "undefined" && approvalFlag == "G") {
+					DivPopUpShow(420, 400, url);
+				}else {
+					DivPopUpShow(420, 300, url);
+				}
 			}
 			
 			function btnDocInfo_onclick_Complete() {

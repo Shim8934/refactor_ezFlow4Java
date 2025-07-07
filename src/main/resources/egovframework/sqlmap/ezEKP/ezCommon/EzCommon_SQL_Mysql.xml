@@ -7156,4 +7156,580 @@
 		ADD
 		CONTENTSIZE INT(2) DEFAULT 0
 	</statement>
+
+	<select id="EzCommonDAO.checkMobilePortletMenuId" resultClass="Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			TBL_PORTAL_PORTLET
+		WHERE
+			PORTLETCODE = 'mNotice'
+		AND
+		    MENU_ID = 4
+	</select>
+	
+	<!-- PORTLET -->
+	<update id="EzCommonDAO.updateMobileMenuBoardId">
+		UPDATE 
+		    TBL_PORTAL_PORTLET
+		SET 
+		    MENU_ID = (
+				SELECT 
+					MENU_ID
+				FROM 
+					TBL_PORTAL_MENU
+				WHERE 
+					MENUCODE = 'mBoard'
+			)
+		WHERE
+			PORTLETCODE IN ('mFixTop', 'mFixBottom', 'mNotice', 'mPhotoboard')
+		OR
+		    PORTLET_URL LIKE '/mobile/ezNewPortal/boardPortlet.do%'
+	</update>
+	
+	<update id="EzCommonDAO.updateMobileMenuApprovalId">
+		UPDATE 
+		    TBL_PORTAL_PORTLET
+		SET 
+		    MENU_ID = (
+				SELECT 
+					MENU_ID
+				FROM 
+					TBL_PORTAL_MENU
+				WHERE 
+					MENUCODE = 'mApproval'
+			)
+		WHERE
+			PORTLETCODE = 'mApprovallist'
+		OR
+			PORTLET_URL LIKE '/mobile/ezNewPortal/approvalListPortlet.do%'
+	</update>
+	
+	<update id="EzCommonDAO.updateMobileMenuMailId">
+		UPDATE 
+		    TBL_PORTAL_PORTLET
+		SET 
+		    MENU_ID = (
+				SELECT 
+					MENU_ID
+				FROM 
+					TBL_PORTAL_MENU
+				WHERE 
+					MENUCODE = 'mMail'
+			)
+		WHERE
+			PORTLETCODE = 'mReceivedmail'
+	</update>
+	
+	<update id="EzCommonDAO.updateMobileMenuResourceId">
+		UPDATE 
+		    TBL_PORTAL_PORTLET
+		SET 
+		    MENU_ID = (
+				SELECT 
+					MENU_ID
+				FROM 
+					TBL_PORTAL_MENU
+				WHERE 
+					MENUCODE = 'mResource'
+			)
+		WHERE
+			PORTLETCODE = 'mResource'
+	</update>
+	
+	<update id="EzCommonDAO.updateMobileMenuScheduleId">
+		UPDATE 
+		    TBL_PORTAL_PORTLET
+		SET 
+		    MENU_ID = (
+				SELECT 
+					MENU_ID
+				FROM 
+					TBL_PORTAL_MENU
+				WHERE 
+					MENUCODE = 'mSchedule'
+			)
+		WHERE
+			PORTLETCODE = 'mSchedule'
+	</update>
+	
+	<!-- PORTLET_COMP -->
+	<update id="EzCommonDAO.updateMobileMenuBoardIdComp">
+		UPDATE 
+		    TBL_PORTAL_PORTLET_COMP
+		SET 
+		    MENU_ID = (
+				SELECT 
+					MENU_ID
+				FROM 
+					TBL_PORTAL_MENU
+				WHERE 
+					MENUCODE = 'mBoard'
+			)
+		WHERE 
+		    PORTLET_ID IN (
+				SELECT 
+					PORTLET_ID
+				FROM 
+					TBL_PORTAL_PORTLET
+				WHERE 
+					PORTLETCODE IN ('mFixTop', 'mFixBottom', 'mNotice', 'mPhotoboard')
+				OR
+					PORTLET_URL LIKE '/mobile/ezNewPortal/boardPortlet.do%'
+			)
+	</update>
+
+	<update id="EzCommonDAO.updateMobileMenuApprovalIdComp">
+		UPDATE 
+		    TBL_PORTAL_PORTLET_COMP
+		SET 
+		    MENU_ID = (
+				SELECT 
+					MENU_ID
+				FROM 
+					TBL_PORTAL_MENU
+				WHERE 
+					MENUCODE = 'mApproval'
+			)
+		WHERE 
+		    PORTLET_ID IN (
+				SELECT 
+					PORTLET_ID
+				FROM 
+					TBL_PORTAL_PORTLET
+				WHERE 
+					PORTLETCODE = 'mApprovallist'
+				OR
+					PORTLET_URL LIKE '/mobile/ezNewPortal/approvalListPortlet.do%'
+			)
+	</update>
+
+	<update id="EzCommonDAO.updateMobileMenuMailIdComp">
+		UPDATE 
+		    TBL_PORTAL_PORTLET_COMP
+		SET 
+		    MENU_ID = (
+				SELECT 
+					MENU_ID
+				FROM 
+					TBL_PORTAL_MENU
+				WHERE 
+					MENUCODE = 'mMail'
+			)
+		WHERE 
+		    PORTLET_ID IN (
+				SELECT 
+					PORTLET_ID
+				FROM 
+					TBL_PORTAL_PORTLET
+				WHERE 
+					PORTLETCODE = 'mReceivedmail'
+			)
+	</update>
+
+	<update id="EzCommonDAO.updateMobileMenuResourceIdComp">
+		UPDATE 
+		    TBL_PORTAL_PORTLET_COMP
+		SET 
+		    MENU_ID = (
+				SELECT 
+					MENU_ID
+				FROM 
+					TBL_PORTAL_MENU
+				WHERE 
+					MENUCODE = 'mResource'
+			)
+		WHERE 
+		    PORTLET_ID IN (
+				SELECT 
+					PORTLET_ID
+				FROM 
+					TBL_PORTAL_PORTLET
+				WHERE 
+					PORTLETCODE = 'mResource'
+			)
+	</update>
+	
+	<update id="EzCommonDAO.updateMobileMenuScheduleIdComp">
+		UPDATE 
+		    TBL_PORTAL_PORTLET_COMP
+		SET 
+		    MENU_ID = (
+				SELECT 
+					MENU_ID
+				FROM 
+					TBL_PORTAL_MENU
+				WHERE 
+					MENUCODE = 'mSchedule'
+			)
+		WHERE 
+		    PORTLET_ID IN (
+				SELECT 
+					PORTLET_ID
+				FROM 
+					TBL_PORTAL_PORTLET
+				WHERE 
+					PORTLETCODE = 'mSchedule'
+			)
+	</update>
+	
+	<!-- PORTLET_NAME -->
+	<update id="EzCommonDAO.updateMobileMenuBoardIdName">
+		UPDATE 
+		    TBL_PORTAL_PORTLET_NAME
+		SET 
+		    MENU_ID = (
+				SELECT 
+					MENU_ID
+				FROM 
+					TBL_PORTAL_MENU
+				WHERE 
+					MENUCODE = 'mBoard'
+			)
+		WHERE 
+		    PORTLET_ID IN (
+				SELECT 
+					PORTLET_ID
+				FROM 
+					TBL_PORTAL_PORTLET
+				WHERE 
+					PORTLETCODE IN ('mFixTop', 'mFixBottom', 'mNotice', 'mPhotoboard')
+				OR
+					PORTLET_URL LIKE '/mobile/ezNewPortal/boardPortlet.do%'
+			)
+	</update>
+
+	<update id="EzCommonDAO.updateMobileMenuApprovalIdName">
+		UPDATE 
+		    TBL_PORTAL_PORTLET_NAME
+		SET 
+		    MENU_ID = (
+				SELECT 		
+					MENU_ID
+				FROM 
+					TBL_PORTAL_MENU
+				WHERE 
+					MENUCODE = 'mApproval'
+			)
+		WHERE
+			PORTLET_ID IN (
+				SELECT
+					PORTLET_ID
+				FROM
+					TBL_PORTAL_PORTLET
+				WHERE
+					PORTLETCODE = 'mApprovallist'
+				OR
+					PORTLET_URL LIKE '/mobile/ezNewPortal/approvalListPortlet.do%'
+			)
+	</update>
+
+	<update id="EzCommonDAO.updateMobileMenuMailIdName">
+		UPDATE 
+		    TBL_PORTAL_PORTLET_NAME
+		SET 
+		    MENU_ID = (
+				SELECT 
+					MENU_ID
+				FROM 
+					TBL_PORTAL_MENU
+				WHERE 
+					MENUCODE = 'mMail'
+			)
+		WHERE
+			PORTLET_ID IN (
+				SELECT
+					PORTLET_ID
+				FROM
+					TBL_PORTAL_PORTLET
+				WHERE
+					PORTLETCODE = 'mReceivedmail'
+			)
+	</update>
+
+	<update id="EzCommonDAO.updateMobileMenuResourceIdName">
+		UPDATE 
+		    TBL_PORTAL_PORTLET_NAME
+		SET 
+		    MENU_ID = (
+				SELECT 
+				    MENU_ID
+				FROM 
+				    TBL_PORTAL_MENU
+				WHERE 
+				    MENUCODE = 'mResource'
+			)
+		WHERE
+			PORTLET_ID IN (
+				SELECT
+					PORTLET_ID
+				FROM
+					TBL_PORTAL_PORTLET
+				WHERE
+					PORTLETCODE = 'mResource'
+			)
+	</update>
+	
+	<update id="EzCommonDAO.updateMobileMenuScheduleIdName">
+		UPDATE 
+		    TBL_PORTAL_PORTLET_NAME
+		SET 
+		    MENU_ID = (
+				SELECT 
+				    MENU_ID
+				FROM 
+				    TBL_PORTAL_MENU
+				WHERE 
+				    MENUCODE = 'mSchedule'
+			)
+		WHERE
+			PORTLET_ID IN (
+				SELECT
+					PORTLET_ID
+				FROM
+					TBL_PORTAL_PORTLET
+				WHERE
+					PORTLETCODE = 'mSchedule'
+			)
+	</update>
+	
+	<!-- PORTLET_USER -->
+	<update id="EzCommonDAO.updateMobileMenuBoardIdUser">
+		UPDATE
+			TBL_PORTAL_PORTLET_USER
+		SET 
+		    MENU_ID = (
+				SELECT 
+				    MENU_ID
+				FROM 
+				    TBL_PORTAL_MENU
+				WHERE
+				    MENUCODE = 'mBoard'
+			)
+		WHERE
+			PORTLET_ID IN (
+				SELECT
+					PORTLET_ID
+				FROM
+					TBL_PORTAL_PORTLET
+				WHERE
+					PORTLETCODE IN ('mFixTop', 'mFixBottom', 'mNotice', 'mPhotoboard')
+				   OR
+					PORTLET_URL LIKE '/mobile/ezNewPortal/boardPortlet.do%'
+			)
+	</update>
+
+	<update id="EzCommonDAO.updateMobileMenuApprovalIdUser">
+		UPDATE 
+		    TBL_PORTAL_PORTLET_USER
+		SET 
+		    MENU_ID = (
+				SELECT 
+					MENU_ID
+				FROM 
+					TBL_PORTAL_MENU
+				WHERE 
+					MENUCODE = 'mApproval'
+			)
+		WHERE
+			PORTLET_ID IN (
+				SELECT
+					PORTLET_ID
+				FROM
+					TBL_PORTAL_PORTLET
+				WHERE
+					PORTLETCODE = 'mApprovallist'
+				   OR
+					PORTLET_URL LIKE '/mobile/ezNewPortal/approvalListPortlet.do%'
+			)
+	</update>
+
+	<update id="EzCommonDAO.updateMobileMenuMailIdUser">
+		UPDATE 
+		    TBL_PORTAL_PORTLET_USER
+		SET 
+		    MENU_ID = (
+				SELECT
+					MENU_ID
+				FROM 
+					TBL_PORTAL_MENU
+				WHERE 
+					MENUCODE = 'mMail'
+			)
+		WHERE
+			PORTLET_ID IN (
+				SELECT
+					PORTLET_ID
+				FROM
+					TBL_PORTAL_PORTLET
+				WHERE
+					PORTLETCODE = 'mReceivedmail'
+			)
+	</update>
+
+	<update id="EzCommonDAO.updateMobileMenuResourceIdUser">
+		UPDATE
+			TBL_PORTAL_PORTLET_USER
+		SET 
+		    MENU_ID = (
+				SELECT 
+					MENU_ID
+				FROM 
+					TBL_PORTAL_MENU
+				WHERE 
+					MENUCODE = 'mResource'
+			)
+		WHERE
+			PORTLET_ID IN (
+				SELECT
+					PORTLET_ID
+				FROM
+					TBL_PORTAL_PORTLET
+				WHERE
+					PORTLETCODE = 'mResource'
+			)
+	</update>
+	
+	<update id="EzCommonDAO.updateMobileMenuScheduleIdUser">
+		UPDATE
+			TBL_PORTAL_PORTLET_USER
+		SET 
+		    MENU_ID = (
+				SELECT 
+					MENU_ID
+				FROM 
+					TBL_PORTAL_MENU
+				WHERE 
+					MENUCODE = 'mSchedule'
+			)
+		WHERE
+			PORTLET_ID IN (
+				SELECT
+					PORTLET_ID
+				FROM
+					TBL_PORTAL_PORTLET
+				WHERE
+					PORTLETCODE = 'mSchedule'
+			)
+	</update>
+	
+	<!-- THEME_PORTLET -->
+	<update id="EzCommonDAO.updateMobileMenuBoardIdTheme">
+		UPDATE
+			TBL_PORTAL_THEME_PORTLET
+		SET 
+		    MENU_ID = (
+				SELECT 
+				    MENU_ID
+				FROM 
+				    TBL_PORTAL_MENU
+				WHERE
+				    MENUCODE = 'mBoard'
+			)
+		WHERE
+			PORTLET_ID IN (
+				SELECT
+					PORTLET_ID
+				FROM
+					TBL_PORTAL_PORTLET
+				WHERE
+					PORTLETCODE IN ('mFixTop', 'mFixBottom', 'mNotice', 'mPhotoboard')
+				   OR
+					PORTLET_URL LIKE '/mobile/ezNewPortal/boardPortlet.do%'
+			)
+	</update>
+
+	<update id="EzCommonDAO.updateMobileMenuApprovalIdTheme">
+		UPDATE
+			TBL_PORTAL_THEME_PORTLET
+		SET 
+		    MENU_ID = (
+				SELECT 
+					MENU_ID
+				FROM 
+					TBL_PORTAL_MENU
+				WHERE 
+					MENUCODE = 'mApproval'
+			)
+		WHERE
+			PORTLET_ID IN (
+				SELECT
+					PORTLET_ID
+				FROM
+					TBL_PORTAL_PORTLET
+				WHERE
+					PORTLETCODE = 'mApprovallist'
+				   OR
+					PORTLET_URL LIKE '/mobile/ezNewPortal/approvalListPortlet.do%'
+			)
+	</update>
+
+	<update id="EzCommonDAO.updateMobileMenuMailIdTheme">
+		UPDATE
+			TBL_PORTAL_THEME_PORTLET
+		SET 
+		    MENU_ID = (
+				SELECT
+					MENU_ID
+				FROM 
+					TBL_PORTAL_MENU
+				WHERE 
+					MENUCODE = 'mMail'
+			)
+		WHERE
+			PORTLET_ID IN (
+				SELECT
+					PORTLET_ID
+				FROM
+					TBL_PORTAL_PORTLET
+				WHERE
+					PORTLETCODE = 'mReceivedmail'
+			)
+	</update>
+
+	<update id="EzCommonDAO.updateMobileMenuResourceIdTheme">
+		UPDATE
+			TBL_PORTAL_THEME_PORTLET
+		SET 
+		    MENU_ID = (
+				SELECT 
+					MENU_ID
+				FROM 
+					TBL_PORTAL_MENU
+				WHERE 
+					MENUCODE = 'mResource'
+			)
+		WHERE
+			PORTLET_ID IN (
+				SELECT
+					PORTLET_ID
+				FROM
+					TBL_PORTAL_PORTLET
+				WHERE
+					PORTLETCODE = 'mResource'
+			)
+	</update>
+	
+	<update id="EzCommonDAO.updateMobileMenuScheduleIdTheme">
+		UPDATE
+			TBL_PORTAL_THEME_PORTLET
+		SET 
+		    MENU_ID = (
+				SELECT 
+					MENU_ID
+				FROM 
+					TBL_PORTAL_MENU
+				WHERE 
+					MENUCODE = 'mSchedule'
+			)
+		WHERE
+			PORTLET_ID IN (
+				SELECT
+					PORTLET_ID
+				FROM
+					TBL_PORTAL_PORTLET
+				WHERE
+					PORTLETCODE = 'mSchedule'
+			)
+	</update>
 </sqlMap>

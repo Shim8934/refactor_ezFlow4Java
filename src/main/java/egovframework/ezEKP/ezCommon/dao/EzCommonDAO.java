@@ -3496,4 +3496,50 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.addBoardContentSize");
 		}
 	}
+	
+	public void updateMobilePortletMenuId() throws Exception {
+		try {
+			if ((int)select("EzCommonDAO.checkMobilePortletMenuId") == 1) {
+				logger.debug("checkMobilePortletMenuId mobile menuId insert wrong Data. update data...");
+				// portlet
+				update("EzCommonDAO.updateMobileMenuBoardId");
+				update("EzCommonDAO.updateMobileMenuApprovalId");
+				update("EzCommonDAO.updateMobileMenuMailId");
+				update("EzCommonDAO.updateMobileMenuResourceId");
+				update("EzCommonDAO.updateMobileMenuScheduleId");
+				// portlet_comp
+				update("EzCommonDAO.updateMobileMenuBoardIdComp");
+				update("EzCommonDAO.updateMobileMenuApprovalIdComp");
+				update("EzCommonDAO.updateMobileMenuMailIdComp");
+				update("EzCommonDAO.updateMobileMenuResourceIdComp");
+				update("EzCommonDAO.updateMobileMenuScheduleIdComp");
+				// portlet_name
+				update("EzCommonDAO.updateMobileMenuBoardIdName");
+				update("EzCommonDAO.updateMobileMenuApprovalIdName");
+				update("EzCommonDAO.updateMobileMenuMailIdName");
+				update("EzCommonDAO.updateMobileMenuResourceIdName");
+				update("EzCommonDAO.updateMobileMenuScheduleIdName");
+				// portlet_user
+				update("EzCommonDAO.updateMobileMenuBoardIdUser");
+				update("EzCommonDAO.updateMobileMenuApprovalIdUser");
+				update("EzCommonDAO.updateMobileMenuMailIdUser");
+				update("EzCommonDAO.updateMobileMenuResourceIdUser");
+				update("EzCommonDAO.updateMobileMenuScheduleIdUser");
+				// portlet_user
+				update("EzCommonDAO.updateMobileMenuBoardIdUser");
+				update("EzCommonDAO.updateMobileMenuApprovalIdUser");
+				update("EzCommonDAO.updateMobileMenuMailIdUser");
+				update("EzCommonDAO.updateMobileMenuResourceIdUser");
+				update("EzCommonDAO.updateMobileMenuScheduleIdUser");
+				// portlet_theme
+				update("EzCommonDAO.updateMobileMenuBoardIdTheme");
+				update("EzCommonDAO.updateMobileMenuApprovalIdTheme");
+				update("EzCommonDAO.updateMobileMenuMailIdTheme");
+				update("EzCommonDAO.updateMobileMenuResourceIdTheme");
+				update("EzCommonDAO.updateMobileMenuScheduleIdTheme");
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
 }

@@ -59,6 +59,8 @@
 			var orgCompanyID = "<c:out value='${orgCompanyID}' />";
 			
 			var useExternalMailServer = "<c:out value='${useExternalMailServer}'/>";
+
+			var approvalFlag = "<c:out value='${approvalFlag}'/>";
 			
 	        window.onresize = function () {
 	            HwpCtrl.style.height = null;
@@ -271,7 +273,12 @@
 	
 			function btnDocInfo_onclick() {
 				var url = "/ezApprovalG/ezDocInfoView.do?docID=" + pDocID + "&ingFlag=END";
-			    var feature = "status:no;dialogWidth:420px;dialogHeight:515px;help:no;scroll:no;edge:sunken;";
+			    var feature = "";
+				if (typeof approvalFlag !== "undefined" && approvalFlag == "G") {
+					feature = "status:no;dialogWidth:420px;dialogHeight:400px;help:no;scroll:no;edge:sunken;";
+				}else {
+					feature = "status:no;dialogWidth:420px;dialogHeight:300px;help:no;scroll:no;edge:sunken;";
+				}
 			    var RtnVal = window.showModalDialog(url, "", feature);
 			}
 	

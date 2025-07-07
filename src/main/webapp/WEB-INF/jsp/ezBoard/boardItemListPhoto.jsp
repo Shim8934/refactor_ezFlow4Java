@@ -162,6 +162,35 @@
 		        if (document.documentElement.clientWidth < 1300) {
 		            document.getElementById("right").style.display = "none";
 		        }
+
+				// VOC #163284 관리자 탭 선택 오류 
+				if (window.parent && window.parent !== window) {
+					try {
+						const parentUrl = window.parent.location.href;
+
+						if (parentUrl.includes("admin/ezBoard/boardConfig.do")) {
+							const parentDoc = window.parent.document;
+
+							const container = parentDoc.querySelector(".portlet_tabnew01_top");
+
+							if (container) {
+								const spans = container.querySelectorAll('span[divname="BoardEnv_div1"], span[divname="BoardEnv_div2"], span[divname="BoardEnv_div3"], span[divname="BoardEnv_div4"], span[divname="BoardEnv_div5"]');
+
+								spans.forEach(span => {
+									span.removeAttribute("class");
+								});
+
+								const targetSpan = container.querySelector('span[divname="BoardEnv_div1"]');
+								if (targetSpan) {
+									targetSpan.classList.add("tabon");
+									window.parent.Tab1_SelectID = "1tab1";
+								}
+							}
+						}
+					} catch (e) {
+						console.log(e);
+					}
+				}
 		    };
 		    
 		    /* 2018-08-11 장진혁 - 레이어팝업 생성된 상태에서 backspace 누를시 왼쪽프레임 부분 딤 처리 없애기 */
@@ -578,9 +607,9 @@
 		        }
 		        var pheight = window.screen.availHeight;
 		        var pwidth = window.screen.availWidth;
-		        var pTop = (pheight - 720) / 2;
+		        var pTop = (pheight - 700) / 2;
 		        var pLeft = (pwidth - 765) / 2;
-		        window.open("/ezBoard/newBoardItemPhoto.do?boardID=" + encodeURIComponent(pBoardID) + "&gubun=3" + "&mode=new", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+		        window.open("/ezBoard/newBoardItemPhoto.do?boardID=" + encodeURIComponent(pBoardID) + "&gubun=3" + "&mode=new", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=700,width=765,top=" + pTop + ",left=" + pLeft, "");
 		        
 		    }
 		    

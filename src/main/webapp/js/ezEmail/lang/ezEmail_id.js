@@ -359,6 +359,8 @@ var strLangHSG03 = "Kolom subjek kosong.";
 
 var strLangKDH01 = "Baca info";
 
+var strLangYJA01 = "Terjadi kesalahan saat mengunggah melalui jaringan.";
+
 //new ui
 const strLangFolderManage = "Manage folder";
 const strLangSubscribe = "Subscribe";

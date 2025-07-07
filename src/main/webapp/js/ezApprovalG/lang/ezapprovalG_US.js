@@ -1217,3 +1217,6 @@ var strLangJIHSignDraw01 = "Please sign and then approve.";
 var strLangJIHSignDraw02 = "An error occurred while saving the signature.";
 
 var strLangKm01 = "The document has been retrieved.";
+
+var strLangKMH02 = "Would you like to proceed with batch submission? <br>Documents with forwarding status, implementation statements, and agreements are excluded.";
+var strLangKMH03 = "Would you like to proceed with batch submission and final approval? <br>Documents with forwarding status, implementation statements, and agreements are excluded.";
