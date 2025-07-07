@@ -1495,7 +1495,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("upperDeptName", upperDeptName);
 		
 		String formName = "";
-		String formInfoXml = ezApprovalGService.getFormInfoDetail(formId, userInfo.getCompanyID(), userInfo.getTenantId());
+		String formInfoXml = "";
+		if (!draftFlag.equals("REDRAFT")) {
+			formInfoXml = ezApprovalGService.getFormInfoDetail(formId, userInfo.getCompanyID(), userInfo.getTenantId());
+		} else {
+			String pFormID = ezApprovalGService.getFormIdFromApr(isTmpDoc, userInfo.getCompanyID(), userInfo.getTenantId());
+			formInfoXml = ezApprovalGService.getFormInfoDetail(pFormID, userInfo.getCompanyID(), userInfo.getTenantId());
+		}
 		Document formInfo = commonUtil.convertStringToDocument(formInfoXml);
 		if ("1".equals(userInfo.getPrimary())) {
 			formName = formInfo.getElementsByTagName("FORMNAME").item(0).getTextContent().trim();
