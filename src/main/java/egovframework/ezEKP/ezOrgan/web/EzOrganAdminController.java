@@ -274,6 +274,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.createJournalListLang(); // 2025-05-28 황인경 - 업무일지 양식 다국어 관련 컬럼 추가
 			ezCommonService.insertJournalListLang(); // 2025-05-28 황인경 - 업무일지 양식 다국어 관련 데이터 추가
 			ezCommonService.alterScheduleDefaultViewCheck(); // 2025-03-21 권기혁 - 일정관리환경설정 기본 화면 사용 여부 컬럼 추가
+			ezCommonService.updateAttitudeCustomCheckbox(); // 2025-07-07 황인경 -커스텀 체크박스 근태관리 폼 데이터 업데이트
 
 			// tenant config
 	    	ezCommonService.insertTblTenantConfig(); // 2020-01-28 useMailConfirm 컨피그 추가 >> 2020-04-28 tbl_tenant_config add

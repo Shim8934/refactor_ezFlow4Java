@@ -616,4 +616,7 @@ public interface EzCommonService {
 
 	// 2024-09-12 황인경 - 모바일 메뉴 권한 별도 생성으로 인한 포틀릿 데이터 변경
 	public void updateMobilePortletMenuId() throws Exception;
+
+	// 2025-07-07 황인경 - 커스텀 체크박스 근태관리 폼 데이터 업데이트
+	public void updateAttitudeCustomCheckbox() throws Exception;
 }

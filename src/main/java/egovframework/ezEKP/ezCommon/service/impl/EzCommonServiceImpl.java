@@ -8604,4 +8604,15 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void updateMobilePortletMenuId() throws Exception {
         ezCommonDAO.updateMobilePortletMenuId();
     }
+    
+    @Override
+    public void updateAttitudeCustomCheckbox() throws Exception {
+        String result = ezCommonDAO.checkAttitudeCustomCheckbox();
+        if (result != null && result.indexOf("custom_checkbox") == -1) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("form_html", "<tr><th>성명</th><td id=\"writerName\" style=\"\"></td></tr><tr><th>일시 </th><td colspan=\"2\" id=\"attiTime\"><span id=\"periodblock\" datetype=\"5\"><div class=\"custom_checkbox\"><input name=\"checkbox\" type=\"checkbox\" id=\"alldaycheck\" style=\"height:22px;\" onclick=\"allday_change()\" value=\"1\"></div>하루종일 <input type=\"text\" id=\"Sdatepicker\" style=\"width:80px;text-align:center\" readonly=\"readonly\"><input id=\"Stimepicker\" type=\"text\" class=\"time\" style=\"width:43px;margin-left:10px;text-align:center;\" /> ~ <input type=\"text\" id=\"Edatepicker\" style=\"width:80px;text-align:center\" readonly=\"readonly\"><input id=\"Etimepicker\" type=\"text\" class=\"time\" style=\"width:43px;margin-left:10px;text-align:center;\" /></span></td></tr><tr> <th>근무지</th> <td id=\"region\" style=\"\"><input name=\"region\" type=\"text\" style=\"width:98%\" value=\"\"  maxlength=\"200\"></td> </tr><tr> <th>연락처</th> <td id=\"mobile\" style=\"\"><input name=\"mobile\" type=\"text\" style=\"width:98%\" value=\"\"  maxlength=\"50\"></td> </tr><tr> <th>업무대리</th> <td id=\"bizsub\" style=\"\"><input name=\"bizsub\" type=\"text\" style=\"width:98%\" value=\"\"  maxlength=\"120\"></td></tr>");
+            map.put("form_html2", "<tr><th>Name</th><td id=\"writerName\" style=\"\"></td></tr><tr><th>Date </th><td colspan=\"2\" id=\"attiTime\"><span id=\"periodblock\" datetype=\"5\"><div class=\"custom_checkbox\"><input name=\"checkbox\" type=\"checkbox\" id=\"alldaycheck\" style=\"height:22px;\" onclick=\"allday_change()\" value=\"1\"></div>All day <input type=\"text\" id=\"Sdatepicker\" style=\"width:80px;text-align:center\" readonly=\"readonly\"><input id=\"Stimepicker\" type=\"text\" class=\"time\" style=\"width:43px;margin-left:10px;text-align:center;\" /> ~ <input type=\"text\" id=\"Edatepicker\" style=\"width:80px;text-align:center\" readonly=\"readonly\"><input id=\"Etimepicker\" type=\"text\" class=\"time\" style=\"width:43px;margin-left:10px;text-align:center;\" /></span></td></tr><tr> <th>Workplace</th> <td id=\"region\" style=\"\"><input name=\"region\" type=\"text\" style=\"width:98%\" value=\"\"  maxlength=\"200\"></td> </tr><tr> <th>Contact information</th> <td id=\"mobile\" style=\"\"><input name=\"mobile\" type=\"text\" style=\"width:98%\" value=\"\"  maxlength=\"50\"></td> </tr><tr> <th>Substitute</th> <td id=\"bizsub\" style=\"\"><input name=\"bizsub\" type=\"text\" style=\"width:98%\" value=\"\"  maxlength=\"120\"></td></tr>");
+            ezCommonDAO.updateAttitudeCustomCheckbox(map);
+        }
+    }
 }

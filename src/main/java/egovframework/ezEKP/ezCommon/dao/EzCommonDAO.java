@@ -3542,4 +3542,22 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			logger.error(e.getMessage(), e);
 		}
 	}
+	public String checkAttitudeCustomCheckbox()  throws Exception {
+		String result = "";
+		try {
+			result = (String) select("EzCommonDAO.checkAttitudeCustomCheckbox");
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+		return result;
+	}
+	public void updateAttitudeCustomCheckbox(Map<String, Object> map)  throws Exception {
+		try {
+			logger.debug("checkAttitudeCustomCheckbox insert wrong Data. update data...");
+			update("EzCommonDAO.updateAttitudeCustomCheckbox", map);
+			update("EzCommonDAO.updateAttitudeCustomCheckbox2", map);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
 }
