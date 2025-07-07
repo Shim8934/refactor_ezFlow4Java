@@ -740,10 +740,10 @@
 	        if (!listEventCheckbox) {
 	            if (document.getElementById("HeaderAllCheckBox").checked) {
 	                var TemplistArray = new Array();
-	                if (obj.getElementsByTagName("td").item(0).childNodes.item(0).checked) {
+	                if (obj.getElementsByTagName("td").item(0).querySelector('input').checked) {
 	                    for (var i = 0; i < listContentArry.length; i++) {
 	                        if (obj.getAttribute("id") == listContentArry[i]) {
-	                            obj.childNodes.item(0).childNodes.item(0).checked = false;
+	                            obj.childNodes.item(0).querySelector('input').checked = false;
 	                            obj.style.backgroundColor = m_strColorDefault;
 	                        }
 	                        else {
@@ -753,7 +753,7 @@
 	                    listContentArry = TemplistArray;
 	                }
 	                else {
-	                    obj.childNodes.item(0).childNodes.item(0).checked = true;
+	                    obj.childNodes.item(0).querySelector('input').checked = true;
 	                    obj.style.backgroundColor = m_strColorSelect;
 	                    listContentArry[listContentArry.length] = obj.getAttribute("id");
 	                }
@@ -1039,14 +1039,14 @@
 	    
 	    function event_listCheckboxclick(obj) {
 	        if (obj.checked) {
-				obj.parentElement.parentElement.style.backgroundColor = m_strColorSelect;
-	            listContentArry[listContentArry.length] = obj.parentElement.parentElement.getAttribute("id");
+				obj.closest('tr').style.backgroundColor = m_strColorSelect;
+	            listContentArry[listContentArry.length] = obj.closest('tr').getAttribute("id");
 	        }
 	        else {
 	            var TemplistArray = new Array();
 	            for (var i = 0; i < listContentArry.length; i++) {
-	                if (obj.parentElement.parentElement.getAttribute("id") == listContentArry[i]) {
-	                	obj.parentElement.parentElement.style.backgroundColor = m_strColorDefault;
+	                if (obj.closest('tr').getAttribute("id") == listContentArry[i]) {
+	                	obj.closest('tr').style.backgroundColor = m_strColorDefault;
 	                }
 	                else {
 	                    TemplistArray[TemplistArray.length] = listContentArry[i];
