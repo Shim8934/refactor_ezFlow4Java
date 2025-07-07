@@ -1496,17 +1496,17 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String formName = "";
 		String formInfoXml = "";
-		if (!draftFlag.equals("REDRAFT")) {
-			formInfoXml = ezApprovalGService.getFormInfoDetail(formId, userInfo.getCompanyID(), userInfo.getTenantId());
-		} else {
-			String pFormID = ezApprovalGService.getFormIdFromApr(isTmpDoc, userInfo.getCompanyID(), userInfo.getTenantId());
-			formInfoXml = ezApprovalGService.getFormInfoDetail(pFormID, userInfo.getCompanyID(), userInfo.getTenantId());
+		if (StringUtils.isBlank(formId)) {
+			formId = ezApprovalGService.getFormIdFromApr(docID, userInfo.getCompanyID(), userInfo.getTenantId());
 		}
+		formInfoXml = ezApprovalGService.getFormInfoDetail(formId, userInfo.getCompanyID(), userInfo.getTenantId());
 		Document formInfo = commonUtil.convertStringToDocument(formInfoXml);
-		if ("1".equals(userInfo.getPrimary())) {
-			formName = formInfo.getElementsByTagName("FORMNAME").item(0).getTextContent().trim();
-		} else {
-			formName = formInfo.getElementsByTagName("FORMNAME2").item(0).getTextContent().trim();
+		if (formInfo.getElementsByTagName("FORMNAME").item(0) != null) {
+			if ("1".equals(userInfo.getPrimary())) {
+				formName = formInfo.getElementsByTagName("FORMNAME").item(0).getTextContent().trim();
+			} else {
+				formName = formInfo.getElementsByTagName("FORMNAME2").item(0).getTextContent().trim();
+			}
 		}
 		
 		// ai 관련 컨피그 추가
@@ -5609,12 +5609,17 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		// 양식 정보
 		String formName = "";
+		if (StringUtils.isBlank(formId)) {
+			formId = ezApprovalGService.getFormIdFromApr(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+		}
 		String formInfoXml = ezApprovalGService.getFormInfoDetail(formId, userInfo.getCompanyID(), userInfo.getTenantId());
 		Document formInfo = commonUtil.convertStringToDocument(formInfoXml);
-		if ("1".equals(userInfo.getPrimary())) {
-			formName = formInfo.getElementsByTagName("FORMNAME").item(0).getTextContent().trim();
-		} else {
-			formName = formInfo.getElementsByTagName("FORMNAME2").item(0).getTextContent().trim();
+		if (formInfo.getElementsByTagName("FORMNAME").item(0) != null) {
+			if ("1".equals(userInfo.getPrimary())) {
+				formName = formInfo.getElementsByTagName("FORMNAME").item(0).getTextContent().trim();
+			} else {
+				formName = formInfo.getElementsByTagName("FORMNAME2").item(0).getTextContent().trim();
+			}
 		}
 		
 		// ai 관련 컨피그 추가
