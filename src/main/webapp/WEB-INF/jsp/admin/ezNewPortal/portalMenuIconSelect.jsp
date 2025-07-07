@@ -73,13 +73,13 @@
 			
 			if (beforeClass == undefined) {
 				if (type != 'mobile') {
-					$(".icon_nav_webfolder").parent().siblings().prop("checked", true);
+					$(".icon_nav_webfolder").parent().siblings().find("input").prop("checked", true);
 				} else {
 					$(document.getElementById("mobileIconArea").children[0]).find("input").prop("checked", true);
 				}
 			} else {
 				beforeClass = beforeClass.substring(beforeClass.indexOf(" ") + 1);
-				$("." + beforeClass).parent().siblings().prop("checked", true);
+				$("." + beforeClass).parent().siblings().find("input").prop("checked", true);
 			}
 			
 			$("#close").on("click", popupClose);
@@ -92,7 +92,7 @@
 		
 		//아이콘 적용
 		var addIcon = function() {
-			var selClass = $("input:checked").siblings().find("span").attr("class");
+			var selClass = $("input:checked").parent().siblings().find("span").attr("class");
 			$(opener.document).find(".menuIcon").find("span").attr("class", selClass);
 			popupClose();
 		}
