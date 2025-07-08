@@ -20,6 +20,7 @@ var bbtnDocInfo = "";
 var bbtnModAprDept = "";
 var btbtnTotalSave = "";
 var bbtntotaldocinfo = "";
+var btnAddRelatedCabinet = "";
 
 function putBansongSign() {
     var fields = message.GetFieldsList();
@@ -1216,6 +1217,8 @@ function chkBtnConfirm(para) {
 
         if (document.getElementById("btntotaldocinfo").style.display == "")
             bbtntotaldocinfo = "1";       
+        if (document.getElementById("btnAddRelatedCabinet").style.display == "")
+            btnAddRelatedCabinet = "1";
     }
     else {
         if (bbtnApprove == "1")
@@ -1274,6 +1277,9 @@ function chkBtnConfirm(para) {
 
         if (bbtntotaldocinfo == "1")
             setMenuBar("btntotaldocinfo", true);
+        
+        if (btnAddRelatedCabinet == "1")
+            setMenuBar("btnAddRelatedCabinet", true);
     }
 }
 function getDocInfo() {
