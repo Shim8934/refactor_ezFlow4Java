@@ -475,7 +475,7 @@
 			//확인완료
 			function doViewJournal(){
 				$('input:checkbox[name="journalCheckbox"]:checked').each(function() {
-					 var sumJournalId = $(this).parent().parent().attr("id");
+					 var sumJournalId = $(this).parent().parent().parent().attr("id");
 					 journalIdList.push(sumJournalId);
 				 });
 				 
@@ -557,7 +557,7 @@
 				journalIdList.length = 0;
 				if(sumFormId != null && sumFormId != undefined && sumFormId != ""){
 					 $('input:checkbox[name="journalCheckbox"]:checked').each(function() {
-						 var sumJournalId = $(this).parent().parent().attr("id");
+						 var sumJournalId = $(this).parent().parent().parent().attr("id");
 						 journalIdList.push(sumJournalId);
 					 });
 				 	var feature = GetOpenPosition(820, 850);
@@ -654,12 +654,12 @@
 				if($(elem).is(":checked")) {
 					 $('input:checkbox[name="journalCheckbox"]').each(function() {
 						 $(this).prop("checked","true");
-						 $(this).parent().parent().addClass("selectTR");
+						 $(this).parent().parent().parent().addClass("selectTR");
 					 });
 				} else {
 					 $('input:checkbox[name="journalCheckbox"]').each(function() {
 						 $(this).removeProp("checked","true");
-						 $(this).parent().parent().removeClass("selectTR");
+						 $(this).parent().parent().parent().removeClass("selectTR");
 					 });
 				}
 			}
@@ -943,10 +943,10 @@
 			function checkedCheckbox(elem) {
 				if($(elem).is(":checked")) {
 					$(elem).prop("checked","true");
-					$(elem).parent().parent().addClass("selectTR");
+					$(elem).parent().parent().parent().addClass("selectTR");
 				} else {
 					$(elem).removeProp("checked");
-					$(elem).parent().parent().removeClass("selectTR");
+					$(elem).parent().parent().parent().removeClass("selectTR");
 				}
 			}
 			
@@ -959,8 +959,8 @@
 				} else if (journalId.length == 0) {
 					alert("<spring:message code='ezJournal.t148'/>");
 				} else {
-					typeId = journalId.parent().parent().attr("typeId");
-					journalId = journalId.parent().parent().attr("id");
+					typeId = journalId.parent().parent().parent().attr("typeId");
+					journalId = journalId.parent().parent().parent().attr("id");
 					var feature = GetOpenPosition(820, 850);
 					var Openwin = window.open("/ezJournal/journalWrite.do?typeId=" + typeId + "&journalId=" + journalId + "&mode=temp", "",
 									"width=820, height=850, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
@@ -972,7 +972,7 @@
 			function deleteJournal() {
 				journalIdList = [];
 				 $('input:checkbox[name="journalCheckbox"]:checked').each(function() {
-					 journalIdList.push($(this).parent().parent().attr("id"));
+					 journalIdList.push($(this).parent().parent().parent().attr("id"));
 				 });
 				  
 				if (journalIdList.length == 0) {
