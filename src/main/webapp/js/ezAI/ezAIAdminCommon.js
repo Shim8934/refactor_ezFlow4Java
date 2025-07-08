@@ -440,7 +440,7 @@ function EmbeddingRequest() {
                 if (!embeddingFlag) {
                     DeleteFromFileList(responseData.FAIL);
                 } else {
-                    debugger;
+
 
                 }
             }, successCnt > 0 ? "2" : "4");
@@ -1010,8 +1010,6 @@ function AddQueryElement(queryModel, index) {
         QueryModifyBtn.textContent = "수정";
         QueryModifyBtn.addEventListener("click", function () {
             alert("수정");
-            debugger;
-
         });
 
         let QueryDeleteBtn = document.createElement("BUTTON");

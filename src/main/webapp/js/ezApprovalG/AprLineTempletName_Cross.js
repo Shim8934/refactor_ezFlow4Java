@@ -1,7 +1,6 @@
 ﻿
 function GetAprLineTempletList()
 {
-    debugger;
 	if(ConnectFlag)
 	{
 		var result = "";

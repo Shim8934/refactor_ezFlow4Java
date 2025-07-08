@@ -1071,6 +1071,9 @@
 		    		var btnPElem = document.createElement("p");
 		    		btnPElem.className = "btn_checkbox";
 		    		
+					var checkInputDiv = document.createElement("div");
+					checkInputDiv.className = "custom_checkbox";
+			
 		    		var checkInput = document.createElement("input");
 		    		checkInput.type = "checkbox";
 		    		checkInput.setAttribute("name", "checkbox");
@@ -1086,7 +1089,8 @@
 		    		closePElem.className = "notice_btnClose close_type" + result.skinValue;
 		    		closePElem.id = "closeBtn" + popup_number;
 		    		
-		    		btnPElem.appendChild(checkInput);
+		    		checkInputDiv.appendChild(checkInput);
+		    		btnPElem.appendChild(checkInputDiv);
 		    		btnPElem.appendChild(labelElem);
 		    		btnDiv.appendChild(btnPElem);
 		    		
