@@ -33,9 +33,9 @@
 					<th class="left-Th"><spring:message code="ezSurvey.t41"/></th> <%-- public setting --%>
 					<td class="right-Td">
 						<div>
-                            <span class="inf-spanTxt"><div class='custom_radio'><input type="radio" name="publicSpan" value="1" ${survey.resultPublicFlag == 1 ? 'checked' : ''}</div><spring:message code="ezSurvey.t42"/></span>
-                            <span class="inf-spanTxt"><div class='custom_radio'><input type="radio" name="publicSpan" value="0" ${survey.resultPublicFlag == 0 ? 'checked' : ''}</div><spring:message code="ezSurvey.t43"/></span>
-                            <span class="inf-spanTxt"><div class='custom_radio'><input type="radio" name="publicSpan" value="2" ${survey.resultPublicFlag == 2 ? 'checked' : ''}</div><spring:message code="ezSurvey.jih01"/></span>
+                            <span class="inf-spanTxt"><div class='custom_radio'><input type="radio" name="publicSpan" value="1" ${survey.resultPublicFlag == 1 ? 'checked' : ''}/></div><spring:message code="ezSurvey.t42"/></span>
+                            <span class="inf-spanTxt"><div class='custom_radio'><input type="radio" name="publicSpan" value="0" ${survey.resultPublicFlag == 0 ? 'checked' : ''}/></div><spring:message code="ezSurvey.t43"/></span>
+                            <span class="inf-spanTxt"><div class='custom_radio'><input type="radio" name="publicSpan" value="2" ${survey.resultPublicFlag == 2 ? 'checked' : ''}/></div><spring:message code="ezSurvey.jih01"/></span>
                         </div>
 					</td>
 					<th class="left-Th"><spring:message code="ezSurvey.t46"/></th> <%-- anonymous setting --%>
