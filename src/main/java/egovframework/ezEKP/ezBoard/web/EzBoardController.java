@@ -4303,8 +4303,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 		
 		// 어떤 경우든 본인이 작성한 게시글에는 접근할 수 있게 함
-		if (boardItemVO != null) {
-			rtv = boardItemVO.getWriterID().equalsIgnoreCase(userInfo.getId());
+		if (boardItemVO != null && boardItemVO.getWriterID().equalsIgnoreCase(userInfo.getId())) {
+			rtv = true;
 		}
 		logger.debug("accessCheck ended");
 		return rtv;
